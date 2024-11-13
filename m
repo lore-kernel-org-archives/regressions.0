@@ -1,101 +1,181 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10771FE0E1
-	for <regressions@lists.linux.dev>; Wed, 13 Nov 2024 10:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22167C0BE;
+	Wed, 13 Nov 2024 15:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731494269; cv=none; b=Iz+TE8lSBEpOW84GBRuzjmxIhyaobLL8xyIvWjbbtSkgEy+5/tEsTWL4MiXkwkc0sGI+cqGUCQ9Msciv9g+LLArQEMsJnAGSLP7P5/mbzr242OCoaC90HHkJ+/N95yOmGqd+ZPzhgssHwx9YhDoaSGQ2wFsUieYYB674FP8Nrpo=
+	t=1731510629; cv=none; b=mdn8gzzSh6VJy8aex6qSVd4v+Jjn9Ctx841FK++KGcSnKHKUgdMy+3jfDc0NOaDhUXfGAuExuCPQtwy76dyIq/b5u2J0qthpOEi5sJxJIEFz6Z4GPPza1WLUd/mnuF4aVErGibPeuC2gq4ixjfP0nW5KkLVLKkXij7FvQCI+uqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731494269; c=relaxed/simple;
-	bh=ccZyF2YdctOG/jDywK4v0Y0OCscfIVmrLzvgDchdxdM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=PQ1MFASu7pAwMWqlVC6/bBEdpPxZ3e8u+G0lOe1S67VBPMycpCCMTg2WO9gM3+eXF6r3h9mIqNbMZMmS13OydISrarQ8afz4hMRFRWYVYgNK8FrzgbiMwu07TgCQ07A/mxHGID6A+8iE3MlRY7Xjxa8eDF06cWTLYD88vey+ecU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=i0AznSW2; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1731510629; c=relaxed/simple;
+	bh=QYFSOYDdVLfS5YvraGarwe6E2kpCYK3vhWADsFqc9sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmsl6FdUdb8a4Miu8aKWyjfMfH2p/5Wk/DYSB551n3wwBgyfBp9uBZrgjlNJfqdzQUGLleO6PUP0vg6jGXL/F+3phVGUsiTwzwM/Cwm1aOtfeC9H/56aXN+Fsy8LKxdW4ZkCN35c/fkMeB81rFvFVHD/dOXVB5AVHuM8LxX5KHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0gX/QZvp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="i0AznSW2"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 0ADF06002995;
-	Wed, 13 Nov 2024 10:28:04 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id ImfuLPTuPxcW; Wed, 13 Nov 2024 10:28:01 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 67CB2600299D;
-	Wed, 13 Nov 2024 10:28:01 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1731493681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ccZyF2YdctOG/jDywK4v0Y0OCscfIVmrLzvgDchdxdM=;
-	b=i0AznSW2+eCaAbs0rXf2fNSw0BDaUMiCp4ZfpzPLw34VIusbw4RkQZZ0uNvfEzmt6WZht7
-	kEUskLavCse2gMzGyVuhqUMx51AXF096dE4yLqEVfhsArQSx1f91jz1Zp7u24Gn5xBT29F
-	GPpJEZ6QsHx84mZ+AE65ACeewSvp9fw=
-Received: from localhost (unknown [165.225.92.235])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 444D636015A;
-	Wed, 13 Nov 2024 10:27:59 +0000 (WET)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0gX/QZvp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 970A7C4CEC3;
+	Wed, 13 Nov 2024 15:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1731510627;
+	bh=QYFSOYDdVLfS5YvraGarwe6E2kpCYK3vhWADsFqc9sY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0gX/QZvpbG6fUp8FTLfnOoMwoiH1B1SJ4akmGr52ZQdoF3fTBeovk0LUBhV6PRpEQ
+	 w6ZLrZ6ZcZgPOH6gXj5klZdEICyu5oBQgVsn87EKoPszhEw4ewOYxWcgRZzLAphjQj
+	 kn8+oKUp+u97p5cajiMw72S5kcCSaE3ekzWeRkBo=
+Date: Wed, 13 Nov 2024 16:10:23 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Mike <user.service2016@gmail.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Sasha Levin <sashal@kernel.org>,
+	Jeremy =?iso-8859-1?Q?Lain=E9?= <jeremy.laine@m4x.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+Message-ID: <2024111358-catching-unclog-31f3@gregkh>
+References: <ZyMkvAkZXuoTHFtd@eldamar.lan>
+ <ab5e25d8-3381-452e-ad13-5d65c0e12306@leemhuis.info>
+ <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
+ <Zypwz65wRM-FMXte@eldamar.lan>
+ <2024110652-blooming-deck-f0d9@gregkh>
+ <Zysdc3wJy0jAYHzA@eldamar.lan>
+ <CABBYNZKz_5bnBxrBC3SoaGc1MTXXYsgdOXB42B0x+2dcPRkJyw@mail.gmail.com>
+ <2024110703-subsoil-jasmine-fcaa@gregkh>
+ <4f8542be-5175-4cf1-9c39-1809a899601c@leemhuis.info>
+ <2024111225-regulate-ruckus-1a46@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 13 Nov 2024 10:27:53 +0000
-Message-Id: <D5KZA4FBPDXD.2NKXWOH7UM2VJ@tecnico.ulisboa.pt>
-Cc: <kherbst@redhat.com>, <linux-kernel@vger.kernel.org>, <dakr@redhat.com>,
- <lyude@redhat.com>, <bskeggs@nvidia.com>, <simona@ffwll.ch>,
- <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>, "Danilo
- Krummrich" <dakr@kernel.org>
-Subject: Re: [REGRESSION] GM20B pmu timeout
-From: "Diogo Ivo" <diogo.ivo@tecnico.ulisboa.pt>
-To: "Dave Airlie" <airlied@gmail.com>, "Linux regressions mailing list"
- <regressions@lists.linux.dev>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20241010133253.30311-1-diogo.ivo@tecnico.ulisboa.pt>
- <041511ee-4556-422a-8604-30b5e0dfd21c@leemhuis.info>
- <D5DDUQJOZ4HW.1XDOASECJR714@tecnico.ulisboa.pt>
- <44c39c87-90e2-4a74-a185-752c14f6d711@leemhuis.info>
- <CAPM=9txeL+WxYuuGYyhGouXYC0=Y=YS=k=-4G74JbfT2mvkn2g@mail.gmail.com>
-In-Reply-To: <CAPM=9txeL+WxYuuGYyhGouXYC0=Y=YS=k=-4G74JbfT2mvkn2g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024111225-regulate-ruckus-1a46@gregkh>
 
-Hi Dave,
-
-On Tue Nov 12, 2024 at 7:59 PM WET, Dave Airlie wrote:
-> On Tue, 12 Nov 2024 at 22:34, Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
-> >
-> > [CCing Danilo, who committed the culprit]
-> >
-> > On 04.11.24 13:11, Diogo Ivo wrote:
-> > > On Tue Oct 15, 2024 at 7:13 PM WEST, Linux regression tracking (Thors=
-ten Leemhuis) wrote:
-> > >> On 10.10.24 15:32, Diogo Ivo wrote:
+On Tue, Nov 12, 2024 at 01:04:03PM +0100, Greg KH wrote:
+> On Tue, Nov 12, 2024 at 12:54:46PM +0100, Thorsten Leemhuis wrote:
+> > On 07.11.24 05:38, Greg KH wrote:
+> > > On Wed, Nov 06, 2024 at 10:02:40AM -0500, Luiz Augusto von Dentz wrote:
+> > >> On Wed, Nov 6, 2024 at 2:40 AM Salvatore Bonaccorso <carnil@debian.org> wrote:
+> > >>> On Wed, Nov 06, 2024 at 08:26:05AM +0100, Greg KH wrote:
+> > >>>> On Tue, Nov 05, 2024 at 08:23:59PM +0100, Salvatore Bonaccorso wrote:
+> > >>>>> On Tue, Nov 05, 2024 at 12:53:50PM -0500, Luiz Augusto von Dentz wrote:
+> > >>>>>> On Tue, Nov 5, 2024 at 12:29 PM Thorsten Leemhuis
+> > >>>>>> <regressions@leemhuis.info> wrote:
+> > >>>>>>> On 31.10.24 07:33, Salvatore Bonaccorso wrote:
+> > >>>>>>>> On Tue, Jun 18, 2024 at 12:30:18PM +0200, Thorsten Leemhuis wrote:
+> > >>>>>>>>> On 12.06.24 14:04, Greg KH wrote:
+> > >>>>>>>>>> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
+> > >>>>>>>>>>> On 03.06.24 22:03, Mike wrote:
+> > >>>>>>>>>>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
+> > >>>>>>>>>>>> [...]
+> > >>>>>>>>>>>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
+> > >>>>>>>>>>>> time to be
+> > >>>>>>>>>>>> included in Debian stable, so having a patch for 6.1.x will be much
+> > >>>>>>>>>>>> appreciated.
+> > >>>>>>>>>>>> I do not have the time to follow the vanilla (latest) release as is
+> > >>>>>>>>>>>> likely the case for
+> > >>>>>>>>>>>> many other Linux users.
+> > >>>>>>>>>>>>
+> > >>>>>>>>>>> Still no reaction from the bluetooth developers. Guess they are busy
+> > >>>>>>>>>>> and/or do not care about 6.1.y. In that case:
+> > >>>>>>>>>>>
+> > >>>>>>>>>>> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
+> > >>>>>>>>>>> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
+> > >>>>>>>>>>> cause this or if it's missing some per-requisite? If not I wonder if
+> > >>>>>>>>>>> reverting that patch from 6.1.y might be the best move to resolve this
+> > >>>>>>>>>>> regression. Mike earlier in
+> > >>>>>>>>>>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
+> > >>>>>>>>>>> confirmed that this fixed the problem in tests. Jeremy (who started the
+> > >>>>>>>>>>> thread and afaics has the same problem) did not reply.
+> > >>>>>>>>>>
+> > >>>>>>>>>> How was this reverted?  I get a bunch of conflicts as this commit was
+> > >>>>>>>>>> added as a dependency of a patch later in the series.
+> > >>>>>>>>>>
+> > >>>>>>>>>> So if this wants to be reverted from 6.1.y, can someone send me the
+> > >>>>>>>>>> revert that has been tested to work?
+> > >>>>>>>>>
+> > >>>>>>>>> Mike, can you help out here, as you apparently managed a revert earlier?
+> > >>>>>>>>> Without you or someone else submitting a revert I fear this won't be
+> > >>>>>>>>> resolved...
+> > >>>>>>>>
+> > >>>>>>>> Trying to reboostrap this, as people running 6.1.112 based kernel
+> > >>>>>>>> seems still hitting the issue, but have not asked yet if it happens as
+> > >>>>>>>> well for 6.114.
+> > >>>>>>>>
+> > >>>>>>>> https://bugs.debian.org/1086447
+> > >>>>>>>>
+> > >>>>>>>> Mike, since I guess you are still as well affected as well, does the
+> > >>>>>>>> issue trigger on 6.1.114 for you and does reverting changes from
+> > >>>>>>>> a13f316e90fdb1 still fix the issue? Can you send your
+> > >>>>>>>> backport/changes?
+> > >>>>>>>
+> > >>>>>>> Hmmm, no reply. Is there maybe someone in that bug that could create and
+> > >>>>>>> test a new revert to finally get this resolved upstream? Seem we
+> > >>>>>>> otherwise are kinda stuck here.
+> > >>>>>>
+> > >>>>>> Looks like we didn't tag things like 5af1f84ed13a ("Bluetooth:
+> > >>>>>> hci_sync: Fix UAF on hci_abort_conn_sync") and a239110ee8e0
+> > >>>>>> ("Bluetooth: hci_sync: always check if connection is alive before
+> > >>>>>> deleting") that are actually fixes to a13f316e90fdb1.
+> > >>>>>
+> > >>>>> Ah good I see :). None of those were yet applied to the 6.1.y series
+> > >>>>> were the issue is still presend. Would you be up to provide the needed
+> > >>>>> changes to the stable team?  That would be very much appreciated for
+> > >>>>> those affected running the 6.1.y series.
+> > >>>>
+> > >>>> We would need backports for these as they do not apply cleanly :(
 > > >>>
-> > >>> Somewhere between 6.11-rc4 and 6.11-rc5 the following error message=
- is displayed
-> > >>> when trying to initialize a nvc0_screen on the Tegra X1's GM20B:
+> > >>> Looks our mails overlapped, yes came to the same conclusion as I tried
+> > >>> to apply them on top of 6.1.y. I hope Luiz can help here.
 > > >>>
-> > >>> [ 34.431210] nouveau 57000000.gpu: pmu:hpq: timeout waiting for que=
-ue ready
-> > >>> [ 34.438145] nouveau 57000000.gpu: gr: init failed, -110
-> > >>> nvc0_screen_create:1075 - Error allocating PGRAPH context for M2MF:=
- -110
-> > >>> failed to create GPU screen
+> > >>> We have defintively users in Debian affected by this, and two
+> > >>> confirmed that using a newer kernel which contains naturally those
+> > >>> fixes do not expose the problem. If we have backports I might be able
+> > >>> to convice those affected users to test our 6.1.115-1 + patches to
+> > >>> verify the issue is gone.
 > > >>
-> > >> Thx for the report. Hmmm. No reply so far. :-/
->
-> Apologies for the delay and thanks to Thorsten for bringing it up again,
->
-> Does the attached patch fix it?
+> > >> Then perhaps it is easier to just revert that change?
+> > > 
+> > > Please send a revert then.
+> > 
+> > We afaics are kinda stuck here .
+> > 
+> > Seems Mike (who apparently had a local revert that worked) does not care
+> > anymore.
+> > 
+> > It looks like Luiz does not care about 6.1.y either, which is fine, as
+> > participation in stable is optional.
+> > 
+> > And looks like nobody else cares enough and has the skills to
+> > prepare and submit a revert.
+> > 
+> > In the end the one that asked for the changes to be included in the
+> > 6.1.y series thus submit one. Not sure who that is, though, a very quick
+> > search on Lore gave no answer. :-/
+> > 
+> > There is also still the question "might a revert now cause another
+> > regression for users of the 6.1.y series, as the change might improved
+> > things for other users".
+> > 
+> > :-(
+> 
+> I care as this affects Debian, which is the largest user of Linux
+> outside of Android.  I'll try to do a local version of the revert to
+> unstick this...
 
-Yes, the GPU is booting again. Thanks for looking into this!
+Ok, I have a series of reverts that seems to build properly for 6.1.y
+that I'll queue up after this round of stable releases goes out
+tomorrrow to hopefully resolve this.
 
-Diogo
+thanks,
+
+greg k-h
