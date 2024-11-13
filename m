@@ -1,136 +1,160 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA524209F2C
-	for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 19:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A4C1714BC;
+	Wed, 13 Nov 2024 06:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731441559; cv=none; b=hcXOELLyIvZ1Qtt0GGe3X5B6A1GaUR952nlxR95qbdyCjVmNgzMilKi5lERps+OEWjKl2vdbczWTY7vYa8hckKLMl12f/ZISVcMbUywKgxuztzihb++EATR06y+zrTwZ8fELL6k2Y+KRqT/WrqibOin0wJqvD9EaRznXVLVGJCw=
+	t=1731478983; cv=none; b=eacH5fElTsjMpwRxaTHz9SmEeAhi2OyPQtzwg35a5xCgZ+ejlpo4B9ZIy0F7fRVbnVxWtSUNdU+XCEfYhU2ed6h7Fmb65EatcsQ8iXYKXPnxsG2ohclYjNP0UsAjOz7sgTKJxYK6y0q+nnfi4pr+os53ipURyFrpyFBbbjDf6L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731441559; c=relaxed/simple;
-	bh=+E2mWVQga8SPclSL6l2a5Ey348OcVgIUUdZW9s7RwNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i2lTXMP7n0r8JWiIgVP8M4Vvy7/lFZX1XOiBcSZ6QQasanaghbJLAMhlWeUACU+BlqXSMJsAzAWktICFe1YH2bf/GnGyoH0k6ndLShWEG7JH3Jc2hgyhxakdNeF9iw8jJmyWsn+iKOc8vidJ8quZXmvBd4A6VZvURWqp9+9Yduc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqO+nQh2; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731478983; c=relaxed/simple;
+	bh=PBY/30HLJQz2xdzsPOEJYe3ZB7kO0z7wb3VcORiX+Nk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rkwbSgtJF+Bw0dONRhHIjzRYhARsPEtcWgwOYJH5ukBYbRLwP6Vo2lJSW2nEMKK0Urod4xPMmomIsH9yzJnipiiUhfx3BcSPXdOEgrWyxI6GRzY7ZG4F0bgNASWx4z0qgwkMMpUdXJL0uw/SX6Ng+YeGK6U/TI+D8fTs3wdm+bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=plwpOYrE; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqO+nQh2"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53d8c08cfc4so3496273e87.3
-        for <regressions@lists.linux.dev>; Tue, 12 Nov 2024 11:59:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731441555; x=1732046355; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwZYkRsX6YfbHFG1wqjaJ7mBPncYDizCUMOUgXXp8/w=;
-        b=kqO+nQh2DzeHZh0CKIr6qM+BadvNL0LLEKCmT/+AH04MjfjyzhuPA8FvSjTp0AdSAq
-         krq3tNswmWk/FD/XTBF754FRUHCFY4zhvEBXCnRakBY7HB0CpsZNWRAJtlrk4yJq6fYe
-         crBJKFlUJMI2X1pUWeAivzADv1r416/ofiOX+UiS3uSR75xktkv+da3L/um71C6wpM/V
-         kKT5VX7LKVbLU5QFDKz2QCMg/cgwGCMaIjuuINFZTPGD49ssu3hfIIrUpr3xNrxbUOzp
-         OrtL4KpGdhJu1JXcpfN+Jil5lpqqJXZTNwVaiRkPxyBJGZLQzMUnua2pIz+eL494zkC6
-         hLCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731441555; x=1732046355;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XwZYkRsX6YfbHFG1wqjaJ7mBPncYDizCUMOUgXXp8/w=;
-        b=sVsN8pLOz1X02gMSoC3bdZq7t0KIBf64K5Ux75CrRFMQYzrJJvdCCju4i++MnbP4qu
-         IOrg1Fzez1D84Us2d2rY3+BA/EEwKwxCBhz1Gt/9EEFwZwiXb9fqn8tPluMzdE+mH9s3
-         lYdgEqE9LjSVyieJBQHJSz76gfOBJRWzJth3wsqY1o7CoHYNG1vg88DSAQwQTZFYU8tS
-         W9EjrT/dh1w2ZkDnXMVRccF7GjoLtWaC5+dQg1Wft6Fictyc0Ov+3iBNOkMQpai7UZji
-         pbhLUvr9tHiJXT6wICS8F7C4Lrk5acx5sYaU9nX98RKx5xe93PGO3rHUX9E4/kKAGhEs
-         eMUw==
-X-Gm-Message-State: AOJu0YwzHKPPoJYVItobfpVVAAZCU11/zPfrzR8MBzO9SCBl4PXtUpXB
-	fPkbH4D42ZE+aRv9WI3KfcVV0aCAFAAlm3CPm4RucgSbtmWqw75NmZCRVt84Tu5snvtGv+OUW5i
-	Zi+m9UCUU3HlGAxXQifnVtJndUWEJ5w==
-X-Google-Smtp-Source: AGHT+IFbIllrfwGO0FHSAMmQGvZalC2B71K7rphbyHwgZ89xdxqrXmhCIojBrbJ1KXYBreY85U66dvhWmtBRR3bweu8=
-X-Received: by 2002:a05:6512:ea8:b0:530:e323:b1d0 with SMTP id
- 2adb3069b0e04-53d862cd25bmr8266588e87.9.1731441555207; Tue, 12 Nov 2024
- 11:59:15 -0800 (PST)
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="plwpOYrE"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4AD6MmyE6853266, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1731478968; bh=PBY/30HLJQz2xdzsPOEJYe3ZB7kO0z7wb3VcORiX+Nk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version;
+	b=plwpOYrEzxsaseJw6qitztzYN+LEFt0sbuzAR/rcCN5G3E+4eUdkaZWiDJTuMzk9r
+	 oz9fKQe4UHaEF6yuvgjkU1oxtcKyeIHBBm+x0P8ufO4mYRIq4fWuFhDxtXTmMfPQno
+	 0CrKbEGTu//k5ZgyY1Jb8cBEMdBcymzELJYgPKR6ny1VckX72ZUuwfR0nTBTHavHLn
+	 MEji3OXCu+l9wQLkkQ2OjTJZFdBCi2bFYIT1DyD/xpfTDrta7k1GL5WVLsgsvLdmp1
+	 z9g+E2HgN5kJTHPg6IbV7ImZBAXWngFtgwx2UzgwvOGBkWJohTD7rQjatsnvGeKjcc
+	 J60gtcqBHnlvw==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 4AD6MmyE6853266
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Nov 2024 14:22:48 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 13 Nov 2024 14:22:48 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 13 Nov 2024 14:22:48 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2]) by
+ RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2%7]) with mapi id
+ 15.01.2507.035; Wed, 13 Nov 2024 14:22:48 +0800
+From: Kailang <kailang@realtek.com>
+To: Dean Matthew Menezes <dean.menezes@utexas.edu>
+CC: Takashi Iwai <tiwai@suse.de>,
+        "stable@vger.kernel.org"
+	<stable@vger.kernel.org>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>,
+        Linux Sound System <linux-sound@vger.kernel.org>,
+        Greg KH
+	<gregkh@linuxfoundation.org>
+Subject: RE: No sound on speakers X1 Carbon Gen 12
+Thread-Topic: No sound on speakers X1 Carbon Gen 12
+Thread-Index: AQHbIwVT/23eeZo4dEmkKtnQN51H6bKP5WWAgABb9wCAAJxEgP//e3+AgACHy9D//4FDgIAAhkBggAVELQCAAGMKAIABHpMAgBUeUJCABPsHwIAAzyaAgAJLhMA=
+Date: Wed, 13 Nov 2024 06:22:48 +0000
+Message-ID: <ced4ebe356ad4e5796f059df8cdef3dd@realtek.com>
+References: <CAEkK70Tke7UxMEEKgRLMntSYeMqiv0PC8st72VYnBVQD-KcqVw@mail.gmail.com>
+ <2024101613-giggling-ceremony-aae7@gregkh>
+ <433b8579-e181-40e6-9eac-815d73993b23@leemhuis.info>
+ <87bjzktncb.wl-tiwai@suse.de>
+ <CAEkK70TAk26HFgrz4ZS0jz4T2Eu3LWcG-JD1Ov_2ffMp66oO-g@mail.gmail.com>
+ <87cyjzrutw.wl-tiwai@suse.de>
+ <CAEkK70T7NBRA1dZHBwAC7mNeXPo-dby4c7Nn=SYg0vzeHHt-1A@mail.gmail.com>
+ <87ttd8jyu3.wl-tiwai@suse.de>
+ <CAEkK70RAWRjRp6_=bSrecSXXMfnepC2P2YriaHUqicv5x5wJWw@mail.gmail.com>
+ <87h697jl6c.wl-tiwai@suse.de>
+ <CAEkK70TWL_me58QZXeJSq+=Ry3jA+CgZJttsgAPz1wP7ywqj6A@mail.gmail.com>
+ <87ed4akd2a.wl-tiwai@suse.de> <87bjzekcva.wl-tiwai@suse.de>
+ <CAEkK70SgwaFNcxni2JUAfz7Ne9a_kdkdLRTOR53uhNzJkBQ3+A@mail.gmail.com>
+ <877ca2j60l.wl-tiwai@suse.de> <43fe74e10d1d470e80dc2ae937bc1a43@realtek.com>
+ <87ldyh6eyu.wl-tiwai@suse.de> <18d07dccef894f4cb87b78dd548c5bdd@realtek.com>
+ <87h6956dgu.wl-tiwai@suse.de> <c47a3841cd554c678a0c5e517dd2ea77@realtek.com>
+ <CAEkK70SojedmjbXB+a+g+Bys=VWCOpxzV5GkuMSkAgA-jR2FpA@mail.gmail.com>
+ <87ldyctzwt.wl-tiwai@suse.de>
+ <CAEkK70RAek2Y-syVt3S+3Q-kiriO24e8qQGDTrqC-Xt4kHzbCA@mail.gmail.com>
+ <b97c52ec20594eecb074d333095a4560@realtek.com>
+ <CAEkK70QottpLxq-prAEPe8TtPR=QBdQWuUrjf6ZT6PipcfS9xw@mail.gmail.com>
+In-Reply-To: <CAEkK70QottpLxq-prAEPe8TtPR=QBdQWuUrjf6ZT6PipcfS9xw@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+Content-Type: multipart/mixed;
+	boundary="_002_ced4ebe356ad4e5796f059df8cdef3ddrealtekcom_"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241010133253.30311-1-diogo.ivo@tecnico.ulisboa.pt>
- <041511ee-4556-422a-8604-30b5e0dfd21c@leemhuis.info> <D5DDUQJOZ4HW.1XDOASECJR714@tecnico.ulisboa.pt>
- <44c39c87-90e2-4a74-a185-752c14f6d711@leemhuis.info>
-In-Reply-To: <44c39c87-90e2-4a74-a185-752c14f6d711@leemhuis.info>
-From: Dave Airlie <airlied@gmail.com>
-Date: Wed, 13 Nov 2024 05:59:03 +1000
-Message-ID: <CAPM=9txeL+WxYuuGYyhGouXYC0=Y=YS=k=-4G74JbfT2mvkn2g@mail.gmail.com>
-Subject: Re: [REGRESSION] GM20B pmu timeout
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: kherbst@redhat.com, linux-kernel@vger.kernel.org, dakr@redhat.com, 
-	lyude@redhat.com, bskeggs@nvidia.com, simona@ffwll.ch, 
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, Danilo Krummrich <dakr@kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000d9c7020626bca665"
 
---000000000000d9c7020626bca665
-Content-Type: text/plain; charset="UTF-8"
-
-On Tue, 12 Nov 2024 at 22:34, Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> [CCing Danilo, who committed the culprit]
->
-> On 04.11.24 13:11, Diogo Ivo wrote:
-> > On Tue Oct 15, 2024 at 7:13 PM WEST, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 10.10.24 15:32, Diogo Ivo wrote:
-> >>>
-> >>> Somewhere between 6.11-rc4 and 6.11-rc5 the following error message is displayed
-> >>> when trying to initialize a nvc0_screen on the Tegra X1's GM20B:
-> >>>
-> >>> [ 34.431210] nouveau 57000000.gpu: pmu:hpq: timeout waiting for queue ready
-> >>> [ 34.438145] nouveau 57000000.gpu: gr: init failed, -110
-> >>> nvc0_screen_create:1075 - Error allocating PGRAPH context for M2MF: -110
-> >>> failed to create GPU screen
-> >>
-> >> Thx for the report. Hmmm. No reply so far. :-/
-
-Apologies for the delay and thanks to Thorsten for bringing it up again,
-
-Does the attached patch fix it?
-
-if you say it does I'll send it out properly.
-
-Dave.
-
---000000000000d9c7020626bca665
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-nouveau-sync-dma-after-setup-is-called.patch"
-Content-Disposition: attachment; 
-	filename="0001-nouveau-sync-dma-after-setup-is-called.patch"
+--_002_ced4ebe356ad4e5796f059df8cdef3ddrealtekcom_
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Content-ID: <f_m3evkw6p0>
-X-Attachment-Id: f_m3evkw6p0
 
-RnJvbSBjMGY3OGIyMjZkYTQxNzczNTk0NTAwNjllNGExYWYyNDQyNTNmZGRlIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBEYXZlIEFpcmxpZSA8YWlybGllZEByZWRoYXQuY29tPgpEYXRl
-OiBXZWQsIDEzIE5vdiAyMDI0IDA1OjU3OjAzICsxMDAwClN1YmplY3Q6IFtQQVRDSF0gbm91dmVh
-dTogc3luYyBkbWEgYWZ0ZXIgc2V0dXAgaXMgY2FsbGVkLgoKc2V0dXAgc2VlbXMgdG8gY2hhbmdl
-IHNvbWUgb2YgdGhlIGZ3IGNvbnRlbnRzLCBzbyBzeW5jIGFmdGVyIGl0LgoKU2lnbmVkLW9mZi1i
-eTogRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0v
-bm91dmVhdS9udmttL2ZhbGNvbi9mdy5jIHwgMTEgKysrKysrLS0tLS0KIDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL25vdXZlYXUvbnZrbS9mYWxjb24vZncuYyBiL2RyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1
-L252a20vZmFsY29uL2Z3LmMKaW5kZXggYTFjODU0NWYxMjQ5Li5jYWM2ZDY0YWI2N2QgMTAwNjQ0
-Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20vZmFsY29uL2Z3LmMKKysrIGIvZHJp
-dmVycy9ncHUvZHJtL25vdXZlYXUvbnZrbS9mYWxjb24vZncuYwpAQCAtODksMTEgKzg5LDYgQEAg
-bnZrbV9mYWxjb25fZndfYm9vdChzdHJ1Y3QgbnZrbV9mYWxjb25fZncgKmZ3LCBzdHJ1Y3QgbnZr
-bV9zdWJkZXYgKnVzZXIsCiAJCW52a21fZmFsY29uX2Z3X2R0b3Jfc2lncyhmdyk7CiAJfQogCi0J
-LyogYWZ0ZXIgbGFzdCB3cml0ZSB0byB0aGUgaW1nLCBzeW5jIGRtYSBtYXBwaW5ncyAqLwotCWRt
-YV9zeW5jX3NpbmdsZV9mb3JfZGV2aWNlKGZ3LT5mdy5kZXZpY2UtPmRldiwKLQkJCQkgICBmdy0+
-ZncucGh5cywKLQkJCQkgICBzZ19kbWFfbGVuKCZmdy0+ZncubWVtLnNnbCksCi0JCQkJICAgRE1B
-X1RPX0RFVklDRSk7CiAKIAlGTENORldfREJHKGZ3LCAicmVzZXR0aW5nIik7CiAJZnctPmZ1bmMt
-PnJlc2V0KGZ3KTsKQEAgLTEwNSw2ICsxMDAsMTIgQEAgbnZrbV9mYWxjb25fZndfYm9vdChzdHJ1
-Y3QgbnZrbV9mYWxjb25fZncgKmZ3LCBzdHJ1Y3QgbnZrbV9zdWJkZXYgKnVzZXIsCiAJCQlnb3Rv
-IGRvbmU7CiAJfQogCisJLyogYWZ0ZXIgbGFzdCB3cml0ZSB0byB0aGUgaW1nLCBzeW5jIGRtYSBt
-YXBwaW5ncyAqLworCWRtYV9zeW5jX3NpbmdsZV9mb3JfZGV2aWNlKGZ3LT5mdy5kZXZpY2UtPmRl
-diwKKwkJCQkgICBmdy0+ZncucGh5cywKKwkJCQkgICBzZ19kbWFfbGVuKCZmdy0+ZncubWVtLnNn
-bCksCisJCQkJICAgRE1BX1RPX0RFVklDRSk7CisKIAlyZXQgPSBmdy0+ZnVuYy0+bG9hZChmdyk7
-CiAJaWYgKHJldCkKIAkJZ290byBkb25lOwotLSAKMi40Ny4wCgo=
---000000000000d9c7020626bca665--
+SGkgVGFrYXNoaSwNCg0KQXR0YWNoIHBhdGNoIHdpbGwgc29sdmUgaXNzdWUuDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGVhbiBNYXR0aGV3IE1lbmV6ZXMgPGRlYW4u
+bWVuZXplc0B1dGV4YXMuZWR1Pg0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAxMiwgMjAyNCAx
+MToxOCBBTQ0KPiBUbzogS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4NCj4gQ2M6IFRha2Fz
+aGkgSXdhaSA8dGl3YWlAc3VzZS5kZT47IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJlZ3Jl
+c3Npb25zQGxpc3RzLmxpbnV4LmRldjsgSmFyb3NsYXYgS3lzZWxhIDxwZXJleEBwZXJleC5jej47
+IFRha2FzaGkgSXdhaQ0KPiA8dGl3YWlAc3VzZS5jb20+OyBMaW51eCBTb3VuZCBTeXN0ZW0gPGxp
+bnV4LXNvdW5kQHZnZXIua2VybmVsLm9yZz47IEdyZWcNCj4gS0ggPGdyZWdraEBsaW51eGZvdW5k
+YXRpb24ub3JnPg0KPiBTdWJqZWN0OiBSZTogTm8gc291bmQgb24gc3BlYWtlcnMgWDEgQ2FyYm9u
+IEdlbiAxMg0KPiANCj4gDQo+IEV4dGVybmFsIG1haWwuDQo+IA0KPiANCj4gDQo+IFllcywgaXQg
+d29ya3MhDQo=
+
+--_002_ced4ebe356ad4e5796f059df8cdef3ddrealtekcom_
+Content-Type: application/octet-stream; name="0000-x1-gen12-speaker.patch"
+Content-Description: 0000-x1-gen12-speaker.patch
+Content-Disposition: attachment; filename="0000-x1-gen12-speaker.patch";
+	size=2204; creation-date="Fri, 08 Nov 2024 02:53:31 GMT";
+	modification-date="Tue, 12 Nov 2024 06:16:14 GMT"
+Content-Transfer-Encoding: base64
+
+RnJvbSA5NWI2NGJmYzI2YzQ5MmNhMmZiZmYxNzE4ZmRmNDBmN2RhNDk5YjRjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
+dGU6IFR1ZSwgMTIgTm92IDIwMjQgMTQ6MDM6NTMgKzA4MDAKU3ViamVjdDogW1BBVENIXSBBTFNB
+OiBoZGEvcmVhbHRlayAtIHVwZGF0ZSBzZXQgR1BJTzMgdG8gZGVmYXVsdCBmb3IgVGhpbmtwYWQg
+d2l0aCBBTEMxMzE4CgpJZiB1c2VyIG5vIHVwZGF0ZSBCSU9TLCB0aGUgc3BlYWtlciB3aWxsIG5v
+IHNvdW5kLgpUaGlzIHBhdGNoIHN1cHBvcnQgb2xkIEJJT1MgdG8gaGF2ZSBzb3VuZCBmcm9tIHNw
+ZWFrZXIuCgpGaXhlczogMWU3MDc3NjlkZjA3ICgiQUxTQTogaGRhL3JlYWx0ZWsgLSBTZXQgR1BJ
+TzMgdG8gZGVmYXVsdCBhdCBTNCBzdGF0ZSBmb3IgVGhpbmtwYWQgd2l0aCBBTEMxMzE4IikKU2ln
+bmVkLW9mZi1ieTogS2FpbGFuZyBZYW5nIDxrYWlsYW5nQHJlYWx0ZWsuY29tPgpkaWZmIC0tZ2l0
+IGEvc291bmQvcGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMgYi9zb3VuZC9wY2kvaGRhL3BhdGNoX3Jl
+YWx0ZWsuYwppbmRleCA3NGNhMGJiNmMwOTEuLmQ4M2IyOWY5YTcwZiAxMDA2NDQKLS0tIGEvc291
+bmQvcGNpL2hkYS9wYXRjaF9yZWFsdGVrLmMKKysrIGIvc291bmQvcGNpL2hkYS9wYXRjaF9yZWFs
+dGVrLmMKQEAgLTc0NTAsNyArNzQ1MCw2IEBAIHN0YXRpYyB2b2lkIGFsYzI4N19hbGMxMzE4X3Bs
+YXliYWNrX3BjbV9ob29rKHN0cnVjdCBoZGFfcGNtX3N0cmVhbSAqaGluZm8sCiAJCQkJICAgc3Ry
+dWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sCiAJCQkJICAgaW50IGFjdGlvbikKIHsK
+LQlhbGNfd3JpdGVfY29lZl9pZHgoY29kZWMsIDB4MTAsIDB4ODgwNik7IC8qIENoYW5nZSBNTEsg
+dG8gR1BJTzMgKi8KIAlzd2l0Y2ggKGFjdGlvbikgewogCWNhc2UgSERBX0dFTl9QQ01fQUNUX09Q
+RU46CiAJCWFsY193cml0ZV9jb2VmZXhfaWR4KGNvZGVjLCAweDVhLCAweDAwLCAweDk1NGYpOyAv
+KiB3cml0ZSBncGlvMyB0byBoaWdoICovCkBAIC03NDY0LDcgKzc0NjMsNiBAQCBzdGF0aWMgdm9p
+ZCBhbGMyODdfYWxjMTMxOF9wbGF5YmFja19wY21faG9vayhzdHJ1Y3QgaGRhX3BjbV9zdHJlYW0g
+KmhpbmZvLAogc3RhdGljIHZvaWQgYWxjMjg3X3M0X3Bvd2VyX2dwaW8zX2RlZmF1bHQoc3RydWN0
+IGhkYV9jb2RlYyAqY29kZWMpCiB7CiAJaWYgKGlzX3M0X3N1c3BlbmQoY29kZWMpKSB7Ci0JCWFs
+Y193cml0ZV9jb2VmX2lkeChjb2RlYywgMHgxMCwgMHg4ODA2KTsgLyogQ2hhbmdlIE1MSyB0byBH
+UElPMyAqLwogCQlhbGNfd3JpdGVfY29lZmV4X2lkeChjb2RlYywgMHg1YSwgMHgwMCwgMHg1NTRm
+KTsgLyogd3JpdGUgZ3BpbzMgYXMgZGVmYXVsdCB2YWx1ZSAqLwogCX0KIH0KQEAgLTc0NzMsOSAr
+NzQ3MSwxNyBAQCBzdGF0aWMgdm9pZCBhbGMyODdfZml4dXBfbGVub3ZvX3RoaW5rcGFkX3dpdGhf
+YWxjMTMxOChzdHJ1Y3QgaGRhX2NvZGVjICpjb2RlYywKIAkJCSAgICAgICBjb25zdCBzdHJ1Y3Qg
+aGRhX2ZpeHVwICpmaXgsIGludCBhY3Rpb24pCiB7CiAJc3RydWN0IGFsY19zcGVjICpzcGVjID0g
+Y29kZWMtPnNwZWM7CisgICAgICAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY29lZl9mdyBjb2Vmc1td
+ID0geworCQlXUklURV9DT0VGKDB4MjQsIDB4MDAxMyksIFdSSVRFX0NPRUYoMHgyNSwgMHgwMDAw
+KSwgV1JJVEVfQ09FRigweDI2LCAweEMzMDApLAorCQlXUklURV9DT0VGKDB4MjgsIDB4MDAwMSks
+IFdSSVRFX0NPRUYoMHgyOSwgMHhiMDIzKSwKKwkJV1JJVEVfQ09FRigweDI0LCAweDAwMTMpLCBX
+UklURV9DT0VGKDB4MjUsIDB4MDAwMCksIFdSSVRFX0NPRUYoMHgyNiwgMHhDMzAxKSwKKwkJV1JJ
+VEVfQ09FRigweDI4LCAweDAwMDEpLCBXUklURV9DT0VGKDB4MjksIDB4YjAyMyksCisgICAgICAg
+IH07CiAKIAlpZiAoYWN0aW9uICE9IEhEQV9GSVhVUF9BQ1RfUFJFX1BST0JFKQogCQlyZXR1cm47
+CisJYWxjX3VwZGF0ZV9jb2VmX2lkeChjb2RlYywgMHgxMCwgMTw8MTEsIDE8PDExKTsKKwlhbGNf
+cHJvY2Vzc19jb2VmX2Z3KGNvZGVjLCBjb2Vmcyk7CiAJc3BlYy0+cG93ZXJfaG9vayA9IGFsYzI4
+N19zNF9wb3dlcl9ncGlvM19kZWZhdWx0OwogCXNwZWMtPmdlbi5wY21fcGxheWJhY2tfaG9vayA9
+IGFsYzI4N19hbGMxMzE4X3BsYXliYWNrX3BjbV9ob29rOwogfQo=
+
+--_002_ced4ebe356ad4e5796f059df8cdef3ddrealtekcom_--
