@@ -1,82 +1,96 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0FE1FA247;
-	Thu, 14 Nov 2024 10:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571CF1F76B8
+	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 10:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731579542; cv=none; b=Vo+f89riijv6zU9Cs/A4/oD8NG0boHJyz7rd7xjLL2unfC1QA5XUEZPJIsUI2cL7SasDxvWVi3JHRCtWKY/hPETVCT2SrblrnN78adjSrJRHJn2j7U9v0867vVMK3zS6HfPwVVncv73PsM7T2YJd7Sce+KLc4gcKi2UP4a55q2I=
+	t=1731581771; cv=none; b=VLD78wYkFAaCPCArNYcuw7s1ZuEtzMfCSeOw5+9bIE3pxTRaABQUMkc2TpFgd85lYkvu6pzYMZgyj5FE10+dN0m+zz6Zmhf5so9mzWRdeB/iRQXQcQJgcVFfRFuCOc2mM//XjqHPmuiFm6ZpPC5swgXoPm1HZSDX+lGPeYxTrHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731579542; c=relaxed/simple;
-	bh=RjbxQmoUMvyuuDnTElsRG7JQbkfwHHxLkpG1Mksd7GQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=darYKM3/aV90Oh3vPEEev/lp7SP/nGlmxLG37j0pbihrHICf1Khe3c6NZq4IGf4guUg67j3+VPle5dDLimF+d1ydS5MCb7hxSV/TUi/cnB7Lly5Hk9AQY6+/GvpH20Fo6JDKwgLMgLSe9ApydxGvw7QdOdlyb/zQ7awwjAFnWrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Jm2qBYMn; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1731581771; c=relaxed/simple;
+	bh=gsC8e33m5bmfHPkwoaayt4sYjT6yq/Y33Q5Ol3ZRHOU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=kg8JpnC0AUMd2EVO4H/GeXpI9clI33xiKxHVsbCzv3DTYt+AHRx7izbxwVycPpdGg99OvgR8c6bmsZPPm5PPe+9pFgl7WEXioy/v0tvNMteWxPJuLoA0eveWQdz86R27QtVln7E+OT+r0l82fBqzF9jRabbkFVVXP/25by7V0v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JkPXmCVl; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Jm2qBYMn"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JkPXmCVl"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=RjbxQmoUMvyuuDnTElsRG7JQbkfwHHxLkpG1Mksd7GQ=;
-	t=1731579541; x=1732789141; b=Jm2qBYMngGeHhPq9tD9Dkn0U+mNww09OdRRwawAr9/nH0HH
-	rLKHRDWtPOCe4s5/fvlXzxPFTechSRWqeIZK3m76k/l4DTMu22rrYwXuOMe7oD0h19f+oo0GXFq9X
-	1kEOpSJjy32yaefSySxJERKweEyYMxBe4FV5+V451R6fbiJ2r258r9SWGVW8veyW71KWVRrOgBKOk
-	9UdxlOA8Uq2/moogA58AiPmjvR7y3lZrwp/NaRRB/XyfG5ddm4aaFqcw0ZwM0/kLpOHnOgFIrIpFr
-	umzpZqUSoKaUxrJPdToNkSmk/CSieBytT9Ij5Xlf0ClVI8hYuzyw+9rk/zyJ+2cw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tBWwE-00000004h4d-2oLK;
-	Thu, 14 Nov 2024 11:18:58 +0100
-Message-ID: <35bee1c6146cf261ad6b47f585a5b454ad0763ec.camel@sipsolutions.net>
-Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
- and 6.11.5 (probably 6.11rc)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Kalle Valo
-	 <kvalo@kernel.org>, Alf Marius <post@alfmarius.net>
-Cc: Andrey Batyiev <batyiev@gmail.com>, linux-wireless@vger.kernel.org
-Date: Thu, 14 Nov 2024 11:18:57 +0100
-In-Reply-To: <9fa869ddec6c22c0bb299676e27b7b33d3e3b5d7.camel@sipsolutions.net>
-References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
-	 <87wmhg61yp.fsf@kernel.org>
-	 <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
-	 <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
-	 <87ttcauv7x.fsf@kernel.org>
-	 <5f64abc6-017f-4283-bf08-dba1aea28e9d@leemhuis.info>
-	 <9fa869ddec6c22c0bb299676e27b7b33d3e3b5d7.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=gsC8e33m5bmfHPkwoaayt4sYjT6yq/Y33Q5Ol3ZRHOU=; t=1731581769;
+	x=1732013769; b=JkPXmCVlfGLeG+4iFjAn5RH7ef5vLxVr4vAujAwJc7IiT2RAZxSPlHT7OxS8H
+	Rrv/qONcfoxxiShQJvg0IIq5MhmOtZ+o94tM+b24sM5Fa+pPl3jcXyYiKqX1Mq1s5Zsu1emAm0J6V
+	ztGNVC+2dJhYtuU+xOwQiZEdd359aDb8evI+6kJkjMfRKLcKpT2NYKrL7SEg0lc2d2wccfxtxQc53
+	07VtD89INqr3fI/jsRPaJMHANB7xoU+R9whQZOblkQkZuocWcWnkZ9uhVYthRU7SLYxeML5D6WuG8
+	rqoeUpqyAIpoJ2W/WzQjmzqaauBwb95+x3vj1AXLP8kTPlbOhQ==;
+Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1tBXWB-0006jG-6s; Thu, 14 Nov 2024 11:56:07 +0100
+Message-ID: <753d0f67-1df6-4b36-a8cc-2f0059c70980@leemhuis.info>
+Date: Thu, 14 Nov 2024 11:56:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-MW
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1731581769;5f0cc503;
+X-HE-SMSGID: 1tBXWB-0006jG-6s
 
-On Thu, 2024-11-14 at 10:52 +0100, Johannes Berg wrote:
-> On Thu, 2024-11-14 at 10:24 +0100, Linux regression tracking (Thorsten
-> Leemhuis) wrote:
-> >=20
-> > Sigh.
->=20
-> Please. You really should consider adjusting your attitude on all this.=
-=C2=A0
 
-Also, btw, you're always the most vocal about this, and pretty much the
-only feedback at all.
 
-As a result (at least to me), you're creating a reverse incentive. Since
-I'm going to get shouted at all the time _anyway_, why bother putting in
-any extra effort some of the time (realistically can't do it all or even
-most of the time). Just do the simplest thing possible and throw it into
-the tree that'll make it upstream somewhere without any risks (like
-here, what if wireless won't get pulled quickly, Jakub had been on
-vacation recently and things got delayed, and if you miss then it's a
-lot of work, etc.)
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-johannes
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3735
+#regzbot introduced: 338567d1762
+#regzbot summary: drm/amd/display: cannot set output mode to 4k@60Hz anymore
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3732
+#regzbot introduced: 7a1613e47e65ba696708
+#regzbot summary: drm/amdgpu/smu13: audio cut in and out at random times
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3720
+#regzbot introduced: fa57924c76d995
+#regzbot summary: drm/amd/display: slow framerate on monitor connected
+through USB dock
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3742
+#regzbot introduced: 58a261bfc9676
+#regzbot summary: amdgpu: wrong frame timing/jerkiness with 120Hz display
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3705
+#regzbot introduced: e047dd448d2bc12
+#regzbot summary: amdgpu: refresh rate above 120Hz no longer works.
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3693
+#regzbot introduced: 1b04dcca4fb10d
+#regzbot summary: rm/amd/display:Interface freezes
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3690
+#regzbot introduced: c8c68c38b56f4
+#regzbot summary: cpufreq: amd-pstate: incorrect CPU power draw behavior
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3638
+#regzbot introduced: 4de34b04783628
+#regzbot summary: drm/amdgpu: graphics corruption, rendered text
+disappearing, sluggish desktop
+
+
