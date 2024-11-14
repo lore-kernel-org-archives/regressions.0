@@ -1,117 +1,179 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2043.outbound.protection.outlook.com [40.107.236.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DF71667DA
-	for <regressions@lists.linux.dev>; Wed, 13 Nov 2024 22:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731538188; cv=none; b=YsrhrcDGjwDqFs8xSPmUR2GZO/Rxc/0nZED5QnQTEFsJk0TDDA7SMJG/rVMi0bOpJJy7H6+bCDB3vFQxdtGMKN7lsUf2qEwQdClMBi8AYais5YDJlHezSwrLNmDwBnCddTR3yDtfHoam5qKhzvS9QKqStT/0YL/F9MvoSKRnwT0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731538188; c=relaxed/simple;
-	bh=ykcg8Fef1iKHGipEC0cGCA1oJ4uYT/CtTbCPaquxCb0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVGxqXmwmhngyRUm4XQCLpuATlrJNHddjG/q2lH+cKl01bHEHf9EKvqBzL9Gi+2hOTP9fSA/bjHskCDlS8JWiDYwGNfvoKG4S2T5O58YLaqlzxKpAjlBhqB+OUKyg4Vo5w3kDDYz56+N1evGQFXDklARvRclWyUDJ9Ls1D59lbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YWZogl7r; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF121E885B
+	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 06:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731566267; cv=fail; b=C+LHfb2gF21EbTNRerYvi1uhqZy8AiORFqo/RfS2ziBtrq/XW6AbKfpC8S3q/cn0SvI3uBguPWqilcSzN4pT2p6/uE1gkklih2xsb/WDGyIzI5NEyxZCermUOHEVDkYaw5uvORcjnd9HjMQpijq3iHdIKJAsXQM9kA86lSKfqzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731566267; c=relaxed/simple;
+	bh=S1ITSiVYcZCZSfgAvq4w2UeGU0WTmSiCFFr96ctWZPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GzKan7CKCOLVmHgAihdcwOzAp6m2lnPylLS6bc7Jdw5A+pMqvSFAk7E0qUGlXY3gdZo+bYAjBZJgzTvNkxGbihDR6IdsSVrWwq72FwaI8zGH2LoeDTwkLB28sw6+tewkcuubs1ocLuTeN7nQfEakqu1pC5VTZm6p4UjGn+3YMsc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FZph6SXc; arc=fail smtp.client-ip=40.107.236.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YWZogl7r"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6cbf113dc8dso3735036d6.0
-        for <regressions@lists.linux.dev>; Wed, 13 Nov 2024 14:49:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731538185; x=1732142985; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Y/y0P4OqeeWZF74x2AMQJ4Ih3vxd26UzW3OzjwMKNw=;
-        b=YWZogl7rKpG15YqgOHNLgmy0So59q4k5ATPPUnBANfxYMvXJHhWPId8LOMVLzFgIhc
-         tia+6BWq33whl1P9xrwhXhyUUW/9x4n3KOSvlYZPwhGY5KNtU0+V6uuP2FMEfWKZPg4a
-         6oGk8sAflaDgLV8QUIkH6TfD007lNrWSucSECj2pElsCSbZASILfKlAW4Y0v8m0wgRVZ
-         G0f/WvK8VLOHRjqdljdYKLTluS44UciNHf32XXTVJFSk9FuVRr6MBtFQ1hm9DKKSkVNw
-         hHktwLMR3ZDXcHN6M0zwnXYOmVt856p6et/rbzPYZpsKNKw5PkXjB51DKt5ORECCVpCt
-         t6IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731538185; x=1732142985;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9Y/y0P4OqeeWZF74x2AMQJ4Ih3vxd26UzW3OzjwMKNw=;
-        b=mjlQ+JOJbSDAlAd5HpcPH5a9qblq/gn3t7g4+rQ/fUQ9TcKaRukB6S7HZUGl+LNsUq
-         qy7IXWVr6PAr6XN/uQ4NdqUmZV8xyPLtm5JQxSwJDwEHKfsgQGj8ZNQ8ubXhoGl4kIut
-         TFaH0aVvSuXJvyuUMujY3hQPH+EBpQEYQsMlYqRaSQnv8iIxS7n8AzBRj8d8XCEoOFav
-         bhThTo52K9yKqpRZ9fR7+BI8w/Xe+K96nWL2KWmmYwjAXWSqlqbr0KW5a3FoSi1rVhrz
-         piIi37ibCu1Vo/wRz2BrvX6KQ90qIH7jrFiQJCT5VCsK92hqkYfGeoKjOu9RM0eIBlR6
-         XgOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAQkPILOYMLupk7GT80PsRC/ibRoPEmRap8/kjgVFrg07h2iccqR4eC0oD/V/OyJZ5dp18ppX1Zu5F0w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyrG0dEAip7K8PK4GMsFSNo54zv5JeOxMyjp9b0uhxDM7tGENOB
-	tmn3A2Z8+Hf+6swOHYEToDn9zmHI5F3MvZ+n0pRmQC4xKnijMd8WIQnRuumZpIhWknwiPC3uYUb
-	vTk8ie1CgE6hZYeEVe0u17EOamA8+1GoDnAIQfA==
-X-Google-Smtp-Source: AGHT+IEVBkG+Vt0df6B4aIQ1qk8n7CToRwVSEBBWWEQATjd00M09LrjqoT5DZj8Ova9jzgvmF/Hidi0/5UP8wRPD5T4=
-X-Received: by 2002:a05:6214:2aab:b0:6cb:4a88:8cf5 with SMTP id
- 6a1803df08f44-6d39e101afemr119742786d6.2.1731538184672; Wed, 13 Nov 2024
- 14:49:44 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FZph6SXc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K53SvxPv7cJsP/iJK8UvWKQp3FWgRYq9/EzfHvWhCx68ncO896j01alIHX6BRjr9WcqF3I6XsxjWP7+BUfcdIZ+eeXJKNVycmpzRGwg2wKO5jYhgZk9lgSyyjT/TtsQ6giJaooXKzLjhH9JNg16ybKJGHyis/YE5NYP5GkPqt4+/lUZJhWLeG2wH8vELZvgPE6mYphF1KS31BLGZkT/vUdPSA37zbQoccdN16GOQhmc09GLBzJcKSagJ3wje6xmhuQcld2RrZ336/eUZh8NGED84GQh9U48V3nklB9l65+aS2vz2yVpe1yIl1zoKo3qdt6MbziB7YLyjTub7wD5q8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zOvuXLX2rhFAJqerfpdM/r723ToC7BTxrDappF/Y9ak=;
+ b=Uqe/Ti/0GpQNeTuMvw/V40OwKNrwzUD0cF6/Whk6MDS6N4A2NZN8OrxPMXHxDN7rOfxKLHqwOq6GBU9ET/19ChtqLahyVJY22bX5mrhJ85Oeoip1Gd5oSa5AlaLA+JnxYjiIIsJNwU+rbo1Oupd+lrqc47FKM5C2U1iIr1ey6IJwPaV0nX8Ubn79SC4TwVaLBcMLPQFw40GaEqucdLxI1qv59JTsQcLGekaEN6cZ4VUDEinsNjfNRZZ7yA/qgcC4iA69rgqY5tPm6F2nD/8lDR2SE89Mx9kZ5/PXuNeeiugvmGioKmmx8IyPYqXFqJiLF8h7hXOpCVy1LRhbA26dcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zOvuXLX2rhFAJqerfpdM/r723ToC7BTxrDappF/Y9ak=;
+ b=FZph6SXc2l967lhpA3vsAVFt7c+OLUbBVT6RfRnCcXhlRAv7wJghDhLAfGSSUeswKOObYmVozk7k5uIq0OHMV0+OkVeTfdFjQWmucfrtSeaMsSQUOgubR4V1sR/uhkcdgi5j2LiIIujZvadzJDbTOj2ZJxgYAYud87sW/ZmyCjE=
+Received: from PH7PR02CA0014.namprd02.prod.outlook.com (2603:10b6:510:33d::34)
+ by MN2PR12MB4047.namprd12.prod.outlook.com (2603:10b6:208:1de::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Thu, 14 Nov
+ 2024 06:37:39 +0000
+Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
+ (2603:10b6:510:33d:cafe::36) by PH7PR02CA0014.outlook.office365.com
+ (2603:10b6:510:33d::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17 via Frontend
+ Transport; Thu, 14 Nov 2024 06:37:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8158.14 via Frontend Transport; Thu, 14 Nov 2024 06:37:38 +0000
+Received: from [10.252.216.179] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 14 Nov
+ 2024 00:37:28 -0600
+Message-ID: <f6dc7b18-e9af-de0f-7871-6ceb24e24459@amd.com>
+Date: Thu, 14 Nov 2024 12:07:25 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com> <20241113215252.3977066-1-jstultz@google.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [RFC][PATCH] locking: rtmutex: Fix wake_q logic in
+ task_blocks_on_rt_mutex
+Content-Language: en-US
+To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Joel Fernandes <joelaf@google.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider
+	<vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall
+	<bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman
+	<mgorman@suse.de>, Will Deacon <will@kernel.org>, Waiman Long
+	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan
+	<xuewen.yan94@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, <kernel-team@android.com>, Davidlohr
+ Bueso <dave@stgolabs.net>, <regressions@lists.linux.dev>, Thorsten Leemhuis
+	<linux@leemhuis.info>, Anders Roxell <anders.roxell@linaro.org>, Arnd
+ Bergmann <arnd@arndb.de>
+References: <6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com>
+ <20241113215252.3977066-1-jstultz@google.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
 In-Reply-To: <20241113215252.3977066-1-jstultz@google.com>
-From: Anders Roxell <anders.roxell@linaro.org>
-Date: Wed, 13 Nov 2024 23:49:33 +0100
-Message-ID: <CADYN=9+mRq1Z3nR42-CR8CkmS1Oq456_vfKey0QnOg9nrfZuHA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, 
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
-	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|MN2PR12MB4047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8890cd21-c1ae-477e-2b27-08dd0476d53b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Sm5CTVZlengzY25PMEQzcklCbEIrQzRaSlJvOFNySUJaNXlySEw3ZE12Vmc5?=
+ =?utf-8?B?aUpuQ3pMN2R5eDZUVlFNWVBuOUpXVDVsME90NXg4UzNmNEIwTkQwTks0N2N4?=
+ =?utf-8?B?aWZ5VHMrU3VqVnRTdCtYcFVaay9OOGtQWWRkdzIyMDZJdnJmTDNnOFU3SU01?=
+ =?utf-8?B?NUpteTY3V3pHSlJkKzF0NkNHTENuRzJXT2FXS2VsV3RoTVE0WmhTWnBCL3JP?=
+ =?utf-8?B?REVEbERyOVRXWStOSjdpSTRoVFFaWUVYQXptUmdTRVIvZDdrOFEvY3NKNFNv?=
+ =?utf-8?B?dkFrWmQ2NzJDMWVCTmpaNmp5VDc0RS9reFhkRjVsYnVpWmZGalUxa3VPYUVr?=
+ =?utf-8?B?K2xGalA4d3pWcW92UGc4QUFTUzkzZEUzUmswVHNxSXlmWmNlU2xZK1VHVm9n?=
+ =?utf-8?B?V1dwNDdnbHIxR20zUzJtUGpDSUdzMmRXRkwyRy9VSUxEYWlCWGlaSHdlVGxG?=
+ =?utf-8?B?dU5TbXM1alFhcVd3RE1KNnhNQUpINnFNeDZTdyticVFYUnROTDZBS0RzQ1RU?=
+ =?utf-8?B?cTFzWUVNSmI5UXVKUnR6dDk2WmdIdVIwYjNzT1BxZ2laZHJlSnJvZEl0ZGtr?=
+ =?utf-8?B?Skh1VElsaUtJZks1KzRDZXp4RGo1S3d6UEdhZmRIVGtJRmxpMFp1TVd6MGVn?=
+ =?utf-8?B?QWhoZ0l0ZEZZQTRlZGI1VVVJYWpPRHhiV0ZxNi9kMjZnSCtxRm9WL1BhTmx0?=
+ =?utf-8?B?ZFpSRHNqSFgrbFFibWRRdUFRdkh6MElhVUtnVGxaN0ZadXZ3am5RbWg3VXU0?=
+ =?utf-8?B?ZnBBZmpvNHhuTU1FWElDeGlTUFp3NG5IWWVNWHdJQVAvTHQvMHkvK3JjcUNv?=
+ =?utf-8?B?Q3lqNzFlODIxOTllTHJwZi83SkFsY0xjaXVQWmFtY2dNaW1aVTNKUzJ6K25a?=
+ =?utf-8?B?dnBNUTVRMFZpMGFOY3pVczA4VWJXaEgrZE1YRFIvR3FqVGVNTUJSMXRUT1ZO?=
+ =?utf-8?B?Vm1CckhUUmZ1anJUN2x2NmV6UjFDNXUvc1NQMlNudG9PSE40cTArdGJ1Ylk0?=
+ =?utf-8?B?NkxZYStIVVZBL240TUZJZTh1S3A1eTlVSkZ0YXVHeTlKWnpSdGFNVU1Db0w1?=
+ =?utf-8?B?a3AwUDFNYmoxb0tiblZqWUlGVXhuYm5HRjNTQjJ4TVlrejc2aURMUlNCRFRO?=
+ =?utf-8?B?STBDSVFmMFNLdDdXcEl5d2RxY0lRdDlnUVBCRHVCR1pVS0lrVmx5MEh2VHV2?=
+ =?utf-8?B?T3NPWFhMbkxITTZjQmxNdkNLaGhnRjRnVFIxa1Nha0M0ZzRlVEl6dGpTcFVn?=
+ =?utf-8?B?N3pnL0dLRDlYSDY3T0o0K2duYkxFUmxmOUs1RXBMTHpmRXlpQmdXd3l1dmg2?=
+ =?utf-8?B?WGQ2ZTNsdDlaTitnelYzRmVqUXUyTXdtelVDOGpiaGNoYlVjUkFNMjF0Q0Rt?=
+ =?utf-8?B?d2lOR2NtZ3VocS9CQUczbkc0SlFPbWdnSE91OWluRmxUcTZNK1ZPWitDU0Rk?=
+ =?utf-8?B?RjdZdS95YkpwaWVaSWpiNVMvdnlhSGlXU2JYeEdGZWUrNXkwNWFnU24rY2li?=
+ =?utf-8?B?azhJZjU2U2JqSGprajhxSWJ0K0hEeTgxZ3Vya3NhQTRweXlYeWE3N3FOenhz?=
+ =?utf-8?B?YmtNSTdSUzhGVzVnSVJpd05GOUhqa3dLM01HdkNIM2l3WU9KM2lNb2hFZW5X?=
+ =?utf-8?B?TzJPU2swbHlZeFRtNDQ1THRRODhpV2ltMXYvZnJCN0Q1YWxrQXQzdFloZFhV?=
+ =?utf-8?B?T2RFN1VRaWx2eWNPdWV0b2JSR2d1UzhYMXZkcytpOXlrdXVjVnFNRTZBMytY?=
+ =?utf-8?B?VmF3WGtUWHVKOUJEeVRRWjNOeXF4SEdDbFM3bnorTmNkZUZkKzNra09wSGZh?=
+ =?utf-8?B?aXFEano1YlhkY0l5TnBZWk8yYitYVEdVakQvVWJzalhaeEpaSEpWNzB0MXcw?=
+ =?utf-8?B?d1hTckJXY21ycDEwZnorTTlrRWp3MlVkVGRTVElpVkc2K1E9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2024 06:37:38.4836
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8890cd21-c1ae-477e-2b27-08dd0476d53b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD0.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4047
 
-On Wed, 13 Nov 2024 at 22:53, John Stultz <jstultz@google.com> wrote:
->
+Hello John,
+
+On 11/14/2024 3:22 AM, John Stultz wrote:
 > Anders had bisected a crash using PREEMPT_RT with linux-next and
 > isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
 > wakeups from under mutex::wait_lock"), where it seemed the
 > wake_q structure was somehow getting corrupted causing a null
 > pointer traversal.
->
+> 
 > I was able to easily repoduce this with PREEMPT_RT and managed
 > to isolate down that through various call stacks we were
 > actually calling wake_up_q() twice on the same wake_q.
->
+> 
 > I found that in the problematic commit, I had added the
 > wake_up_q() call in task_blocks_on_rt_mutex() around
 > __ww_mutex_add_waiter(), following a similar pattern in
 > __mutex_lock_common().
->
+> 
 > However, its just wrong. We haven't dropped the lock->wait_lock,
 > so its contrary to the point of the original patch. And it
 > didn't match the __mutex_lock_common() logic of re-initializing
 > the wake_q after calling it midway in the stack.
->
+> 
 > Looking at it now, the wake_up_q() call is incorrect and should
 > just be removed. So drop the erronious logic I had added.
->
+> 
 > Anders: Can you double check this resolves the issue for you?
-
-Thank you John for looking into the issue
-It booted just fine on the rockpi4 now, ontop of tag next-2024111.
-
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-
-Cheers,
-Anders
-
->
+> 
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Joel Fernandes <joelaf@google.com>
 > Cc: Qais Yousef <qyousef@layalina.io>
@@ -143,25 +205,35 @@ Anders
 > Reported-by: Arnd Bergmann <arnd@arndb.de>
 > Link: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
 > Signed-off-by: John Stultz <jstultz@google.com>
+
+I've been running rtmutex_lock torture test in addition to a few
+standard micro-benchmarks with the fix on my system on top of
+tip:sched/core and I haven't encountered any splats there. Feel free to
+add:
+
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+-- 
+Thanks and Regards,
+Prateek
+
 > ---
->  kernel/locking/rtmutex.c | 3 ---
->  1 file changed, 3 deletions(-)
->
+>   kernel/locking/rtmutex.c | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
 > diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
 > index c7de80ee1f9d..a01e81179df0 100644
 > --- a/kernel/locking/rtmutex.c
 > +++ b/kernel/locking/rtmutex.c
 > @@ -1248,10 +1248,7 @@ static int __sched task_blocks_on_rt_mutex(struct rt_mutex_base *lock,
->
->                 /* Check whether the waiter should back out immediately */
->                 rtm = container_of(lock, struct rt_mutex, rtmutex);
-> -               preempt_disable();
->                 res = __ww_mutex_add_waiter(waiter, rtm, ww_ctx, wake_q);
-> -               wake_up_q(wake_q);
-> -               preempt_enable();
->                 if (res) {
->                         raw_spin_lock(&task->pi_lock);
->                         rt_mutex_dequeue(lock, waiter);
-> --
-> 2.47.0.277.g8800431eea-goog
->
+>   
+>   		/* Check whether the waiter should back out immediately */
+>   		rtm = container_of(lock, struct rt_mutex, rtmutex);
+> -		preempt_disable();
+>   		res = __ww_mutex_add_waiter(waiter, rtm, ww_ctx, wake_q);
+> -		wake_up_q(wake_q);
+> -		preempt_enable();
+>   		if (res) {
+>   			raw_spin_lock(&task->pi_lock);
+>   			rt_mutex_dequeue(lock, waiter);
+
