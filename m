@@ -1,70 +1,66 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDF2199935
-	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 18:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9B418CBFB
+	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 19:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731609653; cv=none; b=B04zB43XFzDJMqxsAjXK0GFN6BpTaWvF+VDmjJZT3QdeehV0nnSZTQ0yRbkKxODfWs6nJRE8EEA0MVrCMpHL7dIokpBNoH6wycbL1BI8ejFh/kOPhwX3vsOmXjBtgX3p56WKUZI+IjLmwI7R2zi6SG14WAreUseeddAEHa8ydAY=
+	t=1731610857; cv=none; b=UUxU9Pgg5viWaqapGX8QgKhle8Q4Bhsn9vcWRiZ0mK1eWEXFv6HkFLqNju5VnclxJDEJe9xu4nENG6zi8jp7xD0hCKMl+Wr4XCO/vF5lGR681U8JmjJ+Lhk8VdKwY9hz+VyRlPgbbyeux/g1DNs+df6JmMVzDLW0Hsjk040Fq8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731609653; c=relaxed/simple;
-	bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t5MwsOhQ6ZrN8Oaq7jfI0TZnDhc7MnhD96j3KUs3uftzuMd5L7ivVruqU88HoBsFwrVUW6eWqCGoT0lW/arQ7eg9lMYoXqH8xVU79JomVV/QSxJHmNN/RZTHPpwFNKGPFv+95BNPE9xfqgfM07q6n1C3T7N5QN6K7HDJ21foU08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SZsI9Qr/; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1731610857; c=relaxed/simple;
+	bh=ksnwTDE/dUDhebnDpklJdpLWpJpk3HHSBiMjts9oTM0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Eof+ci2tKUilRTT1AfDuP0rHMCKi/prPuxNokOFCkeakBSzsARPE26dJbdu7ntQ3dFCp9jlB0yyG4uPfwg/RZ3VGbXr/e+vrf6dYG+1HGtrUMZoNvEZjlBpzcVtQC8uhmVRSqEaeOge4L37/tC0dq1S/mzU6ya/2YcwfIbxjmJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mqzn4BSS; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZsI9Qr/"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a4031f69fso155802066b.0
-        for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 10:40:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqzn4BSS"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-71ec3392c25so979415b3a.1
+        for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 11:00:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731609650; x=1732214450; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
-        b=SZsI9Qr/oy8ib8tAcqVXCAdKR9dJkH9dENVQdl4+qsZTVeYVHmgNsiBREhQabxsABr
-         8DPRGJn3FtPemc9pl1AzMpPw9g7BS+4nHaY/ljtpFfkezVpRgvmgUFXvrCP6Zh/lNzFJ
-         DmmrWmeWPA5UWzidFpWht684ZEFEmpoYerl6mhI3IMXwJUd8ZuKiTzJHg03yraNwIUKc
-         fDKVtfFH1fxmbzdMxWglHX5qK8neNXLXekhCnJCGaHbF5CiLo8sbUQuKiXRbsiM3132B
-         ONlrDCQK0PzkAMPPcDoLMFbsuiF05b+3YfC50Cs+n/rJv4C/D3isuTySYwWcO1rM13qw
-         3D5A==
+        d=google.com; s=20230601; t=1731610854; x=1732215654; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+vtCKFwRHOyBTbrHTcq12fkzIAClNT27MCjUuoEV7g8=;
+        b=mqzn4BSSLQoexS1Rr6K50RtSf0B3ThDphZ+TpkKWNVOiomt8T4YrRoAETdFj2wCOcm
+         Lih3vyo+U7Hxh0QZr4pou+VakaLlzZ5/uQpiND+Gk3aHRFiLCaPUdOse5qogVntqUY4s
+         l+99i1/QOnDL04kjFTy/vUc72LYhdCG9fY3lCQ2Bf62UuY4ip5D/0w7uKj6hgimuyQE6
+         tMcADCoJVrwY+Ai+8YRl8IkFkTQlEd1n90T4oUXxvZa+M2mujokd+PMGF8d6PHibZV4r
+         NYDcAMFiO2jghP4o3/Or1hovjv9aJfZdgkq0E3bzM3syjkihyUrfXRchx0+ahwxpVlO3
+         GlLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731609650; x=1732214450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
-        b=fi6UusQ+fTqwqpp3DufzIr+ttqkPdCiNuyH+vfIjjdbP+hSQ6AA8jdgjhJE9LxoKJc
-         qdvlnIhxSc5w/mzSie6XfZ0RHtqVsTlxHnpcwKthxnjXfqfaZozKJfwuJYo1D+A4qgot
-         WN6l0gl3WUzROV6aShCUSGn/tJiRWcNu+y4CxhsrX22lkebNWzk2hPzbkIAsWYkMILVu
-         0Oc/z3tfZ0NQbH2Y0wyoBeWbCLYaDEEdjr+q7UNHBwzUOqpeIGylp0XOhdQ+5Li/uIwM
-         iAhvG9g+kYpQtqE+sPsiJB8cIFAy4mh41f/ssnnO0DPvkLTdgaMWV1DIlq/JeqPJxYzx
-         YmIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXE9H+U+csWPwYwJ/4+sMyNeWiIYfZaWHXEUwG0wPTDt2divLPJMQM8ldDIR/4pPVy29tkazeIdSMxAQw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzyZmtKqKrRwLIHY5WGRFWne/Ps5IGyZCDq5Gucp1JX1ECCjwOP
-	e0CXbXWd7snZ+8GQPku+Oz1umE5h0ywa5BsniQUTSG0gLjgPkyo/ND5oH3i9hI+O4GzPFr0ldwa
-	hUFlTKRUjjE2LW/yzdTLxWU+S2t5eA2CJp8M=
-X-Google-Smtp-Source: AGHT+IE6B3oQcO5YzzGjxaKAskCM/mQFBoS4nrImpcvJVjwUqyLRcM6D1MKn+EAI33uAy64uNg76StiD/5f1/A8N1mI=
-X-Received: by 2002:a17:906:c007:b0:aa1:f73b:be43 with SMTP id
- a640c23a62f3a-aa1f73bbf94mr637529866b.32.1731609649877; Thu, 14 Nov 2024
- 10:40:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731610854; x=1732215654;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+vtCKFwRHOyBTbrHTcq12fkzIAClNT27MCjUuoEV7g8=;
+        b=LeyRIUbRQliSpKRI/n7mlkehezX1tLCdEio+TvNgfIzqgLHeKlxIINz47uzVoUJfeB
+         v+Pv/m+N7Oz3hcd3kaaoK+nbKy/1RY4bDU1KzyF1Hpj/irX3aiqcoGLzOwSSdbQgcvbg
+         O/j7T5JoNctXjeyJvDAdDsReJSoZqoUFZgeopyjFN9YQTXidoH8QuQ6EEAsTi/xNfYos
+         QjtkDmFI41RPn9hPGFUYj52v60g0lgiUELnomOfVXx73rWiTnM0REAVBfPOylOTkSWzw
+         l47MXMBCLS+oQUK+tEi8b4TUswH1ihSIdHTj6kOZuy9LIZJQhvv2ZbQOsxLP+ybOTaJY
+         L8WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpnvSwDfsj5ZO//KGTL5JvBIOw5pohGF9MZBSRGdqdTf55Y6LDPTu0OT54nqDXe3n8RcGSRGX/xH5X2Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwwzOTMa1/WGwsfc7A+a7Nn5GRQlLDaATLPlAAZuzBowfLGPVVw
+	Wej/znoI4H79+gfSS6gVRFaT5tqhclQ8r9vbN8R8nxG5jdNnj1YR5VTY4QDO55SC8WIrX5KwLxU
+	05oiR
+X-Google-Smtp-Source: AGHT+IE/GDni8tDvMRvqR7DODgCnOX8yXZFz69Y33hmoz1TmL8eynyASyO7qKiEpJ51ScOibxQmXGliBBDYT
+X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
+ (user=jstultz job=sendgmr) by 2002:a05:6a00:988:b0:71e:4535:9310 with SMTP id
+ d2e1a72fcca58-724769f6913mr101b3a.0.1731610854501; Thu, 14 Nov 2024 11:00:54
+ -0800 (PST)
+Date: Thu, 14 Nov 2024 11:00:47 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com>
- <20241113215252.3977066-1-jstultz@google.com> <f6dc7b18-e9af-de0f-7871-6ceb24e24459@amd.com>
-In-Reply-To: <f6dc7b18-e9af-de0f-7871-6ceb24e24459@amd.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Message-ID: <20241114190051.552665-1-jstultz@google.com>
+Subject: [PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
 From: John Stultz <jstultz@google.com>
-Date: Thu, 14 Nov 2024 10:40:38 -0800
-Message-ID: <CANDhNCqDJ1MTmvgZBtu0tOJJFyZXUTGbv+mKc8_jjkq5Ky0VgQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: John Stultz <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
 	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
 	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
@@ -72,50 +68,88 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
 	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
 	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
 	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
 	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev, 
 	Thorsten Leemhuis <linux@leemhuis.info>, Anders Roxell <anders.roxell@linaro.org>, 
 	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 13, 2024 at 10:37=E2=80=AFPM K Prateek Nayak <kprateek.nayak@am=
-d.com> wrote:
-> On 11/14/2024 3:22 AM, John Stultz wrote:
-> > Anders had bisected a crash using PREEMPT_RT with linux-next and
-> > isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
-> > wakeups from under mutex::wait_lock"), where it seemed the
-> > wake_q structure was somehow getting corrupted causing a null
-> > pointer traversal.
-> >
-> > I was able to easily repoduce this with PREEMPT_RT and managed
-> > to isolate down that through various call stacks we were
-> > actually calling wake_up_q() twice on the same wake_q.
-> >
-> > I found that in the problematic commit, I had added the
-> > wake_up_q() call in task_blocks_on_rt_mutex() around
-> > __ww_mutex_add_waiter(), following a similar pattern in
-> > __mutex_lock_common().
-> >
-> > However, its just wrong. We haven't dropped the lock->wait_lock,
-> > so its contrary to the point of the original patch. And it
-> > didn't match the __mutex_lock_common() logic of re-initializing
-> > the wake_q after calling it midway in the stack.
-> >
-> > Looking at it now, the wake_up_q() call is incorrect and should
-> > just be removed. So drop the erronious logic I had added.
-> >
-...
->
-> I've been running rtmutex_lock torture test in addition to a few
-> standard micro-benchmarks with the fix on my system on top of
-> tip:sched/core and I haven't encountered any splats there. Feel free to
-> add:
->
-> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
->
+Anders had bisected a crash using PREEMPT_RT with linux-next and
+isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
+wakeups from under mutex::wait_lock"), where it seemed the
+wake_q structure was somehow getting corrupted causing a null
+pointer traversal.
 
-Thank you so much for testing! I really appreciate it!
-I'll resend with the provided tags and without the RFC here soon.
--john
+I was able to easily repoduce this with PREEMPT_RT and managed
+to isolate down that through various call stacks we were
+actually calling wake_up_q() twice on the same wake_q.
+
+I found that in the problematic commit, I had added the
+wake_up_q() call in task_blocks_on_rt_mutex() around
+__ww_mutex_add_waiter(), following a similar pattern in
+__mutex_lock_common().
+
+However, its just wrong. We haven't dropped the lock->wait_lock,
+so its contrary to the point of the original patch. And it
+didn't match the __mutex_lock_common() logic of re-initializing
+the wake_q after calling it midway in the stack.
+
+Looking at it now, the wake_up_q() call is incorrect and should
+just be removed. So drop the erronious logic I had added.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Benjamin Segall <bsegall@google.com>
+Cc: Zimuzo Ezeozue <zezeozue@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Metin Kaya <Metin.Kaya@arm.com>
+Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: kernel-team@android.com
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: regressions@lists.linux.dev
+Cc: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Anders Roxell <anders.roxell@linaro.org>
+Fixes: 894d1b3db41c ("locking/mutex: Remove wakeups from under mutex::wait_lock")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Closes: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Signed-off-by: John Stultz <jstultz@google.com>
+---
+ kernel/locking/rtmutex.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index c7de80ee1f9d..a01e81179df0 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -1248,10 +1248,7 @@ static int __sched task_blocks_on_rt_mutex(struct rt_mutex_base *lock,
+ 
+ 		/* Check whether the waiter should back out immediately */
+ 		rtm = container_of(lock, struct rt_mutex, rtmutex);
+-		preempt_disable();
+ 		res = __ww_mutex_add_waiter(waiter, rtm, ww_ctx, wake_q);
+-		wake_up_q(wake_q);
+-		preempt_enable();
+ 		if (res) {
+ 			raw_spin_lock(&task->pi_lock);
+ 			rt_mutex_dequeue(lock, waiter);
+-- 
+2.47.0.338.g60cca15819-goog
+
