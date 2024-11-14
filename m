@@ -1,155 +1,151 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9B418CBFB
-	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 19:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37FF1A2645;
+	Thu, 14 Nov 2024 20:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731610857; cv=none; b=UUxU9Pgg5viWaqapGX8QgKhle8Q4Bhsn9vcWRiZ0mK1eWEXFv6HkFLqNju5VnclxJDEJe9xu4nENG6zi8jp7xD0hCKMl+Wr4XCO/vF5lGR681U8JmjJ+Lhk8VdKwY9hz+VyRlPgbbyeux/g1DNs+df6JmMVzDLW0Hsjk040Fq8c=
+	t=1731616569; cv=none; b=IZ7rB38oUOyWfq/JHixDQ2Olm6ds4c2K3IFrpiXqTt9FCBx6vXVSIhP5A5j3AiO59MO0B766dCBZVxzrZTX26E02HGCrHUf44j20mM5CoTDC63Yamn2J0pdqagDd4o3FkE1xA1roKw2EQwBBjIsXFstMOjxH7fnyfttZfqfW8Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731610857; c=relaxed/simple;
-	bh=ksnwTDE/dUDhebnDpklJdpLWpJpk3HHSBiMjts9oTM0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Eof+ci2tKUilRTT1AfDuP0rHMCKi/prPuxNokOFCkeakBSzsARPE26dJbdu7ntQ3dFCp9jlB0yyG4uPfwg/RZ3VGbXr/e+vrf6dYG+1HGtrUMZoNvEZjlBpzcVtQC8uhmVRSqEaeOge4L37/tC0dq1S/mzU6ya/2YcwfIbxjmJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mqzn4BSS; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
+	s=arc-20240116; t=1731616569; c=relaxed/simple;
+	bh=lSORdJiPT7Wc6EoF0/Oqeke73jDK1EcS/a9kZa+bn9U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L6YMJs9QtA+PiS8rak3N7UgoT6Y9JD1qHwnqMwiEfyGHA8MmkERnE8f0/hN501dOq5iD7G8oApLRX9gvM0CKiak/cn2zzRUcPX2qRBWV05aCYgj6QpaVqyLfAWC4qQXiNzsKXHlGTI3ZW0vNjltmaAI1tC1sioDLzQzedEgr1p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g26WEkE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqzn4BSS"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-71ec3392c25so979415b3a.1
-        for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 11:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731610854; x=1732215654; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+vtCKFwRHOyBTbrHTcq12fkzIAClNT27MCjUuoEV7g8=;
-        b=mqzn4BSSLQoexS1Rr6K50RtSf0B3ThDphZ+TpkKWNVOiomt8T4YrRoAETdFj2wCOcm
-         Lih3vyo+U7Hxh0QZr4pou+VakaLlzZ5/uQpiND+Gk3aHRFiLCaPUdOse5qogVntqUY4s
-         l+99i1/QOnDL04kjFTy/vUc72LYhdCG9fY3lCQ2Bf62UuY4ip5D/0w7uKj6hgimuyQE6
-         tMcADCoJVrwY+Ai+8YRl8IkFkTQlEd1n90T4oUXxvZa+M2mujokd+PMGF8d6PHibZV4r
-         NYDcAMFiO2jghP4o3/Or1hovjv9aJfZdgkq0E3bzM3syjkihyUrfXRchx0+ahwxpVlO3
-         GlLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731610854; x=1732215654;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+vtCKFwRHOyBTbrHTcq12fkzIAClNT27MCjUuoEV7g8=;
-        b=LeyRIUbRQliSpKRI/n7mlkehezX1tLCdEio+TvNgfIzqgLHeKlxIINz47uzVoUJfeB
-         v+Pv/m+N7Oz3hcd3kaaoK+nbKy/1RY4bDU1KzyF1Hpj/irX3aiqcoGLzOwSSdbQgcvbg
-         O/j7T5JoNctXjeyJvDAdDsReJSoZqoUFZgeopyjFN9YQTXidoH8QuQ6EEAsTi/xNfYos
-         QjtkDmFI41RPn9hPGFUYj52v60g0lgiUELnomOfVXx73rWiTnM0REAVBfPOylOTkSWzw
-         l47MXMBCLS+oQUK+tEi8b4TUswH1ihSIdHTj6kOZuy9LIZJQhvv2ZbQOsxLP+ybOTaJY
-         L8WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpnvSwDfsj5ZO//KGTL5JvBIOw5pohGF9MZBSRGdqdTf55Y6LDPTu0OT54nqDXe3n8RcGSRGX/xH5X2Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwwzOTMa1/WGwsfc7A+a7Nn5GRQlLDaATLPlAAZuzBowfLGPVVw
-	Wej/znoI4H79+gfSS6gVRFaT5tqhclQ8r9vbN8R8nxG5jdNnj1YR5VTY4QDO55SC8WIrX5KwLxU
-	05oiR
-X-Google-Smtp-Source: AGHT+IE/GDni8tDvMRvqR7DODgCnOX8yXZFz69Y33hmoz1TmL8eynyASyO7qKiEpJ51ScOibxQmXGliBBDYT
-X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
- (user=jstultz job=sendgmr) by 2002:a05:6a00:988:b0:71e:4535:9310 with SMTP id
- d2e1a72fcca58-724769f6913mr101b3a.0.1731610854501; Thu, 14 Nov 2024 11:00:54
- -0800 (PST)
-Date: Thu, 14 Nov 2024 11:00:47 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g26WEkE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46A11C4CECD;
+	Thu, 14 Nov 2024 20:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731616569;
+	bh=lSORdJiPT7Wc6EoF0/Oqeke73jDK1EcS/a9kZa+bn9U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=g26WEkE2CcDE7x5C4XvBg3dOXZmLyYlqtswgZNoFPp/J+P03xF74ZHb6pigKolwIM
+	 mRbEPbZI9vB5p78gbbRwNjGbAmKUR0J5vuAcKWynNi7q1WKoswAGOIAleTJzWmVZJ3
+	 4FQCuorDUYfybsoTgZL+47gZVjliykFrNlMJ1ujQYUndhv4BZS61PUSwjJ/HvllmXH
+	 2iklC2wqehc1oxHPCCRlBk5EYez3ynIDiWFOs8qmeW+UbBAsez139Bba3Dorgz+mrr
+	 ju6T2h3OOl3XKC8FbcTl4nAAR52VTm/+GZ+xcIGJwylrd0CtwZlPVWc/PgiDbk9N14
+	 NRajdWDQTQEiw==
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id C87A7164D177; Thu, 14 Nov 2024 21:36:06 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Johannes Berg <johannes@sipsolutions.net>
+Cc: Andrey Batyiev <batyiev@gmail.com>, linux-wireless@vger.kernel.org, Greg
+ KH <gregkh@linuxfoundation.org>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, Kalle Valo <kvalo@kernel.org>, Alf Marius
+ <post@alfmarius.net>
+Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
+ and 6.11.5 (probably 6.11rc)
+In-Reply-To: <8a647709-8c33-4ac9-92da-bbf83ae2ed93@leemhuis.info>
+References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
+ <87wmhg61yp.fsf@kernel.org>
+ <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
+ <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
+ <87ttcauv7x.fsf@kernel.org>
+ <5f64abc6-017f-4283-bf08-dba1aea28e9d@leemhuis.info>
+ <9fa869ddec6c22c0bb299676e27b7b33d3e3b5d7.camel@sipsolutions.net>
+ <8a647709-8c33-4ac9-92da-bbf83ae2ed93@leemhuis.info>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Thu, 14 Nov 2024 21:36:06 +0100
+Message-ID: <87bjyhr1s9.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241114190051.552665-1-jstultz@google.com>
-Subject: [PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
-From: John Stultz <jstultz@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: John Stultz <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, 
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
-	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Anders had bisected a crash using PREEMPT_RT with linux-next and
-isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
-wakeups from under mutex::wait_lock"), where it seemed the
-wake_q structure was somehow getting corrupted causing a null
-pointer traversal.
+Hi Thorsten
 
-I was able to easily repoduce this with PREEMPT_RT and managed
-to isolate down that through various call stacks we were
-actually calling wake_up_q() twice on the same wake_q.
+Quoting a bit selectively and out of order to comment on a few unrelated
+aspects of this (meta-)discussion:
 
-I found that in the problematic commit, I had added the
-wake_up_q() call in task_blocks_on_rt_mutex() around
-__ww_mutex_add_waiter(), following a similar pattern in
-__mutex_lock_common().
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
+> On 14.11.24 10:52, Johannes Berg wrote:
+>> On Thu, 2024-11-14 at 10:24 +0100, Linux regression tracking (Thorsten
+>> Leemhuis) wrote:
+>>>
+>>> Sigh.
+>>=20
+>> Please. You really should consider adjusting your attitude on all this.=
+=C2=A0
+>
+> If the revert is only merged during the merge window, it will likely
+> take [...] four additional weeks if we are really unlucky.
+>
+> Things like that bother me -- and thus, yes, sorry, also influence my
+> attitude, which lead to the quoted "sigh". It's just that "fixes are
+> there, they just take a long time to reach mainline and stable releases"
+> is the biggest problem I see during my regression tracking work.
 
-However, its just wrong. We haven't dropped the lock->wait_lock,
-so its contrary to the point of the original patch. And it
-didn't match the __mutex_lock_common() logic of re-initializing
-the wake_q after calling it midway in the stack.
+I understand your frustration, certainly, and I get that you are tasked
+with a thankless job in trying to improve the regression handling
+situation. However, I also agree with Johannes that by letting your
+frustration shine through (which is basically what you're doing with
+that "sigh"), you are turning a general frustration at a difficult
+systemic problem into animosity towards the *person* you are directing
+your email at. This comes across as incredibly condescending, and it
+only fosters animosity in the other direction, even creating a perverse
+incentive to just ignore regressions entirely, as Johannes also pointed
+out in his follow-up email[0].
 
-Looking at it now, the wake_up_q() call is incorrect and should
-just be removed. So drop the erronious logic I had added.
+Or to put it another way: the actual patch being discussed here should
+be held up as an example of a *successful* regression handling: A
+relatively obscure issue was reported, and within a week a fix was
+committed to the relevant subsystem tree. If we had been *anywhere* else
+in the cycle than where we are right now, this would have percolated up
+to Linus' tree in time for the next -rc, or at the very latest one week
+later. Judging from the numbers you presented at LPC, this would be a
+very timely fix in all cases.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Benjamin Segall <bsegall@google.com>
-Cc: Zimuzo Ezeozue <zezeozue@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Metin Kaya <Metin.Kaya@arm.com>
-Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: kernel-team@android.com
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: regressions@lists.linux.dev
-Cc: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Fixes: 894d1b3db41c ("locking/mutex: Remove wakeups from under mutex::wait_lock")
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Closes: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Signed-off-by: John Stultz <jstultz@google.com>
----
- kernel/locking/rtmutex.c | 3 ---
- 1 file changed, 3 deletions(-)
+So yes, it's unfortunate that this happened to land at an unlucky time
+in the cycle, and yes, in the ideal world this would just have been
+fast-tracked. But by reacting with frustration to something that, for
+all intents and purposes, is a proper and timely handling of a
+regression, you are antagonising people and hurting your cause, not
+helping it.
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index c7de80ee1f9d..a01e81179df0 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1248,10 +1248,7 @@ static int __sched task_blocks_on_rt_mutex(struct rt_mutex_base *lock,
- 
- 		/* Check whether the waiter should back out immediately */
- 		rtm = container_of(lock, struct rt_mutex, rtmutex);
--		preempt_disable();
- 		res = __ww_mutex_add_waiter(waiter, rtm, ww_ctx, wake_q);
--		wake_up_q(wake_q);
--		preempt_enable();
- 		if (res) {
- 			raw_spin_lock(&task->pi_lock);
- 			rt_mutex_dequeue(lock, waiter);
--- 
-2.47.0.338.g60cca15819-goog
+As for a concrete suggestion for how this could have been handled
+better, if you had followed up your "Many thx for taking care of this!"
+(which was great!) with a "I noticed there's an opportunity to get this
+in before 6.12 is released, which will mean this gets to users several
+weeks faster. Would you mind asking Linus to (cherry-pick/pull) this out
+of order, as he has indicated he is willing to do", instead of the
+"sigh, you are doing this wrong", you would have a much higher chance of
+actually getting results.
 
+
+As a side note, on this point...
+
+> My approach/attitude is based on actions from Linus and/or what I expect
+> he wants me to do, so let's bring him in to give him a chance to state
+> if I went to far here.
+
+...I will add that I personally find the whole "appeal to authority"
+approach you are taking with the regression handling processes to be
+somewhat off-putting. "Because Linus says so" is a terrible argument for
+doing anything (on its own). If you can't persuade people by the
+strength of your argument, appealing to authority will at best get you
+grudging least-effort compliance, and at worst it will be actively
+harmful because you antagonise people.
+
+And yes, convincing people to change the way they work is hard,
+especially when the ask is for them to do *more* work. That doesn't mean
+it is impossible, but it takes time and patience and a variety of
+approaches to succeed in the long term.
+
+
+Note that I am saying all of the above as someone who is generally
+sympathetic to the goals of your work (as I am sure you are aware, since
+you're using my exchange with Linus about this in your slides :)). I do
+not believe you are trying to antagonise people on purpose, so please
+view the above as a good faith attempt at providing some feedback on how
+you can continue this work without ending up doing so unintentionally.
+
+-Toke
+
+[0] https://lore.kernel.org/r/35bee1c6146cf261ad6b47f585a5b454ad0763ec.came=
+l@sipsolutions.net
