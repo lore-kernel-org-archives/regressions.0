@@ -1,102 +1,121 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23003136327;
-	Thu, 14 Nov 2024 15:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDF2199935
+	for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 18:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731599975; cv=none; b=AaS2X7zR6I7K2PcDf8baNq7XGX4rJNw61KCqDLPEv3dEUCpp4vCBOx8Y/lxeIcx8iUpJhIGVpknPIdKezc4jrbQD1FbocYC8FGKuY24e8O5tz9iEEXxjjrLYTSQyo6oCyoHLIm49FUCUtGd+1FOE5d6K83fJ0UBLk3jySgg7Idk=
+	t=1731609653; cv=none; b=B04zB43XFzDJMqxsAjXK0GFN6BpTaWvF+VDmjJZT3QdeehV0nnSZTQ0yRbkKxODfWs6nJRE8EEA0MVrCMpHL7dIokpBNoH6wycbL1BI8ejFh/kOPhwX3vsOmXjBtgX3p56WKUZI+IjLmwI7R2zi6SG14WAreUseeddAEHa8ydAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731599975; c=relaxed/simple;
-	bh=r/TelsO6eMqcZs26e0NDIxSygpb0lF1YMKIOsmhK8IU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hxc80OydG/pUfn9vZ+Hg16+JIDlA1qv1QkZHaFAGr7psBxDJuz644agV6HZpp0Z/dQSrBAwZE1eYlsVDY7K2mMLNRC/BbdvsQVaNS8SnVs/tum+G3V5EkrByW+U4pNiD3/iXkQqAPNBcTsr1YAYoUG8oLaAOsJ55GC4EVHlej2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=KZp+ZsGR; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1731609653; c=relaxed/simple;
+	bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t5MwsOhQ6ZrN8Oaq7jfI0TZnDhc7MnhD96j3KUs3uftzuMd5L7ivVruqU88HoBsFwrVUW6eWqCGoT0lW/arQ7eg9lMYoXqH8xVU79JomVV/QSxJHmNN/RZTHPpwFNKGPFv+95BNPE9xfqgfM07q6n1C3T7N5QN6K7HDJ21foU08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SZsI9Qr/; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="KZp+ZsGR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=r/TelsO6eMqcZs26e0NDIxSygpb0lF1YMKIOsmhK8IU=;
-	t=1731599974; x=1732809574; b=KZp+ZsGRd4lJX7GSpt6haoPDgPP4hffrOROJNYWaPG+x3CA
-	lcb6IkuniM1jJksGg/X2Hyzv1haaPhxYK0Zsx7Z5fAy0T/PwPRAUInBpIdheaWmbl9Oj7MrudahU2
-	wj1CmRJCY2T0BsKkU34nwJpkBS+xscBD+byGyEuxj4klxXcNm3OQwB30lYHt4p1JNIF9tA2tazGHN
-	EjWI3ZBZRyBv9iAS7sq9nrF6z0kUFYospftCROp3SMKsg6wfWW9CkWko3b0heAT20nprRbc3Xtbi2
-	EoO0XWU6+EqhJ7E8RKm6eni7lyAZxDfGRhP3ItZDuiTW9Af6Op3xHLD4bp5oUXQw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tBcFg-00000004nmK-3PoR;
-	Thu, 14 Nov 2024 16:59:24 +0100
-Message-ID: <4d7c6baf9c1dd3f9623782c614d24d346a5ec7b7.camel@sipsolutions.net>
-Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
- and 6.11.5 (probably 6.11rc)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Linus Torvalds
-	 <torvalds@linux-foundation.org>
-Cc: Andrey Batyiev <batyiev@gmail.com>, linux-wireless@vger.kernel.org, Greg
- KH <gregkh@linuxfoundation.org>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Kalle Valo <kvalo@kernel.org>, Alf Marius
- <post@alfmarius.net>
-Date: Thu, 14 Nov 2024 16:59:23 +0100
-In-Reply-To: <8a647709-8c33-4ac9-92da-bbf83ae2ed93@leemhuis.info>
-References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
-	 <87wmhg61yp.fsf@kernel.org>
-	 <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
-	 <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
-	 <87ttcauv7x.fsf@kernel.org>
-	 <5f64abc6-017f-4283-bf08-dba1aea28e9d@leemhuis.info>
-	 <9fa869ddec6c22c0bb299676e27b7b33d3e3b5d7.camel@sipsolutions.net>
-	 <8a647709-8c33-4ac9-92da-bbf83ae2ed93@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZsI9Qr/"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a4031f69fso155802066b.0
+        for <regressions@lists.linux.dev>; Thu, 14 Nov 2024 10:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731609650; x=1732214450; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
+        b=SZsI9Qr/oy8ib8tAcqVXCAdKR9dJkH9dENVQdl4+qsZTVeYVHmgNsiBREhQabxsABr
+         8DPRGJn3FtPemc9pl1AzMpPw9g7BS+4nHaY/ljtpFfkezVpRgvmgUFXvrCP6Zh/lNzFJ
+         DmmrWmeWPA5UWzidFpWht684ZEFEmpoYerl6mhI3IMXwJUd8ZuKiTzJHg03yraNwIUKc
+         fDKVtfFH1fxmbzdMxWglHX5qK8neNXLXekhCnJCGaHbF5CiLo8sbUQuKiXRbsiM3132B
+         ONlrDCQK0PzkAMPPcDoLMFbsuiF05b+3YfC50Cs+n/rJv4C/D3isuTySYwWcO1rM13qw
+         3D5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731609650; x=1732214450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oEk7BZ8L5KOfLVEi91rmtmNKS5T0Fm6ByTo0N0BCCWw=;
+        b=fi6UusQ+fTqwqpp3DufzIr+ttqkPdCiNuyH+vfIjjdbP+hSQ6AA8jdgjhJE9LxoKJc
+         qdvlnIhxSc5w/mzSie6XfZ0RHtqVsTlxHnpcwKthxnjXfqfaZozKJfwuJYo1D+A4qgot
+         WN6l0gl3WUzROV6aShCUSGn/tJiRWcNu+y4CxhsrX22lkebNWzk2hPzbkIAsWYkMILVu
+         0Oc/z3tfZ0NQbH2Y0wyoBeWbCLYaDEEdjr+q7UNHBwzUOqpeIGylp0XOhdQ+5Li/uIwM
+         iAhvG9g+kYpQtqE+sPsiJB8cIFAy4mh41f/ssnnO0DPvkLTdgaMWV1DIlq/JeqPJxYzx
+         YmIw==
+X-Forwarded-Encrypted: i=1; AJvYcCXE9H+U+csWPwYwJ/4+sMyNeWiIYfZaWHXEUwG0wPTDt2divLPJMQM8ldDIR/4pPVy29tkazeIdSMxAQw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzyZmtKqKrRwLIHY5WGRFWne/Ps5IGyZCDq5Gucp1JX1ECCjwOP
+	e0CXbXWd7snZ+8GQPku+Oz1umE5h0ywa5BsniQUTSG0gLjgPkyo/ND5oH3i9hI+O4GzPFr0ldwa
+	hUFlTKRUjjE2LW/yzdTLxWU+S2t5eA2CJp8M=
+X-Google-Smtp-Source: AGHT+IE6B3oQcO5YzzGjxaKAskCM/mQFBoS4nrImpcvJVjwUqyLRcM6D1MKn+EAI33uAy64uNg76StiD/5f1/A8N1mI=
+X-Received: by 2002:a17:906:c007:b0:aa1:f73b:be43 with SMTP id
+ a640c23a62f3a-aa1f73bbf94mr637529866b.32.1731609649877; Thu, 14 Nov 2024
+ 10:40:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com>
+ <20241113215252.3977066-1-jstultz@google.com> <f6dc7b18-e9af-de0f-7871-6ceb24e24459@amd.com>
+In-Reply-To: <f6dc7b18-e9af-de0f-7871-6ceb24e24459@amd.com>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 14 Nov 2024 10:40:38 -0800
+Message-ID: <CANDhNCqDJ1MTmvgZBtu0tOJJFyZXUTGbv+mKc8_jjkq5Ky0VgQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, 
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
+	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-11-14 at 16:30 +0100, Thorsten Leemhuis wrote:
->=20
-> My approach/attitude is based on actions from Linus and/or what I expect
-> he wants me to do, so let's bring him in to give him a chance to state
-> if I went to far here.
+On Wed, Nov 13, 2024 at 10:37=E2=80=AFPM K Prateek Nayak <kprateek.nayak@am=
+d.com> wrote:
+> On 11/14/2024 3:22 AM, John Stultz wrote:
+> > Anders had bisected a crash using PREEMPT_RT with linux-next and
+> > isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
+> > wakeups from under mutex::wait_lock"), where it seemed the
+> > wake_q structure was somehow getting corrupted causing a null
+> > pointer traversal.
+> >
+> > I was able to easily repoduce this with PREEMPT_RT and managed
+> > to isolate down that through various call stacks we were
+> > actually calling wake_up_q() twice on the same wake_q.
+> >
+> > I found that in the problematic commit, I had added the
+> > wake_up_q() call in task_blocks_on_rt_mutex() around
+> > __ww_mutex_add_waiter(), following a similar pattern in
+> > __mutex_lock_common().
+> >
+> > However, its just wrong. We haven't dropped the lock->wait_lock,
+> > so its contrary to the point of the original patch. And it
+> > didn't match the __mutex_lock_common() logic of re-initializing
+> > the wake_q after calling it midway in the stack.
+> >
+> > Looking at it now, the wake_up_q() call is incorrect and should
+> > just be removed. So drop the erronious logic I had added.
+> >
+...
+>
+> I've been running rtmutex_lock torture test in addition to a few
+> standard micro-benchmarks with the fix on my system on top of
+> tip:sched/core and I haven't encountered any splats there. Feel free to
+> add:
+>
+> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+>
 
-Umm, no. You own your attitude and communication behaviour. That's not
-Linus's fault. Maybe he asked you to pay attention to how fixes enter
-mainline, maybe he didn't, I don't know or don't even care. But the fact
-is that for a very long time now pretty much every single interaction
-we've had has been in one way or the other you complaining about how
-I/we did something. It really does feel like all you care about is
-piling on more pressure.
-
-Also, FTR, I wasn't even involved in the patch.
-
-> Well, Linus is known to have no problem at all with picking up fixes
-> straight from lists if there are good reasons (like the unlucky timing
-> we have here), as long as that does not become the norm. That approach
-> was actually used in the situation I pointed to, as it really is quite
-> similar.
-
-And we've obviously done that in the past. For _important_ fixes. A
-single user reported this, was able to use an older kernel while it's
-getting fixed, and it's on a device that's somewhere around 15 years old
-at this point.
-
-But you seem to think it's *free* to do this. It isn't! It needs
-coordination, asking, it needs to be managed, etc.
->=20
-> The problem is, that bring this up in situations like this is making the
-> "maintainer burnout" problem worse. I hate that and feed sorry for that.
-
-I don't buy it any more. That worked a long time ago, but it's clearly
-the only thing you ever do, and you seem to be pretty comfortable doing
-it over and over and over again.
-
-johannes
+Thank you so much for testing! I really appreciate it!
+I'll resend with the provided tags and without the RFC here soon.
+-john
