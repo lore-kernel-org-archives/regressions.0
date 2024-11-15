@@ -1,121 +1,123 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EADD3BB22
-	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 12:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49471B85C0
+	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 12:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731673482; cv=none; b=fTbRWUTroiivTVc2oAJm79ndEQqSrFVEXD3KObIVhLD/pevn4XJmjPUJk5AdVaul5UGriz8NoNd56oXyfG48uRPWjpOQ2AtrF2RbHBBcW0WZlGUNNtLlZHoTHxbWWP+0Njlp12sM5iJRgxH4Mr58CKLcM5BnE0JonRk9X+dX6D8=
+	t=1731675227; cv=none; b=XYnBxGJNoutdnZ1NECsRHVJIKnGZBPfPmlP1laT4fzW6f5Hmutjwz8dtF+WTCmc9LtssYZ/Pa1lg1VJbKNaQrgTOITYTv/JOXa7AOJj908vcCO0vikz9A3AYgJis5T6tmPodnRkM5lBsFc/ql7QQB+JhhIQnkKX9+Ch4LbdTbtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731673482; c=relaxed/simple;
-	bh=OOkg96nDarw17pu4SZExLC/B13lq1ft66bUs7PctR8E=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JHeYuFH0DoUnohjhj/ejKhvo8wg7AF54gPHYpB9DQw2VsgotWPSzRFhJcO5aoN5Dz1F+yjLxkPSeDHukqk7j5uEXMpD7DiCCTd0mIE/XH5bsTdjEXMJLozPcvpOYOnjd9uU/eM5R88fnyPZisMzh6B5ScUpdhRJGhrrvgwJhO5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=enqXA1Vr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qeqm4aYn; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1731675227; c=relaxed/simple;
+	bh=kC5b4Nc50fbhWMMi5vOolJEMARSuns1Kxgz8mfrxf0I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IHxavAAV/L0NzjVpCbqRm/v9vlNiRBDYy6CYLhfViQs/+jeW04Xnxl3mP/sGgIjk/TNCTa1k56JxaZK6SNoan/RZYFIgG5YM6lVyT2qUlqoxcDdSS4HlKDoMd+LmToyUtQUw0YWoXdb+I5CDPKtM1ATQgqPowsuyOh3evBeWMMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hmgIjsSP; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="enqXA1Vr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qeqm4aYn"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 6FB0F254015C;
-	Fri, 15 Nov 2024 07:24:39 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Fri, 15 Nov 2024 07:24:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1731673479;
-	 x=1731759879; bh=Vr7zlDxyaRus0hI2CWgnS1PT2A4IeVrO5WwxB/xoYsw=; b=
-	enqXA1Vrzlg3/EG0FkE7n7hIc/nJCt8GSxytRbesFASzTHuh5+9KtiorJDnsc7LZ
-	RaT/TocszavZqBWocXIW79dNo5LgAUVKppr7n+vGuEwG9EOlbZXW6/FMEUIy7a/Y
-	zmhcPu4u4vWeR01uy1QSlMMT9qwnXMNZaVgMqVgrSlvFEHATbvfmlM3yp0pepH4k
-	6yz2Xt0N64KDUiSGZ+Mi0/742AbbFSTV3pazoOKNgdHCL+po2Si8z7nCwq4xY+kP
-	NU27Fd+wqXcmGDOsYKRBV08d7Hw9awwuxAYLVm1KumI4Vcmbn89pRzDjfy5qBgfa
-	GgcU1zk5IAopZAmyaQDDXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1731673479; x=
-	1731759879; bh=Vr7zlDxyaRus0hI2CWgnS1PT2A4IeVrO5WwxB/xoYsw=; b=Q
-	eqm4aYn+1muJOq/4d0x7FT3poHrztpAbvJIj3pvp6OiQP/Rd+F7QCRjtMMNHfVQl
-	kK5MDXWkrb3skzEMxnCg/s9PL9qiF+jR6CSfWNaN2caPRpd0BLINIaa7r60TUmrd
-	n3MIMiQjERFlA+RuIXP+vyXBFB/tSR0d/O6vPp/r3BWY9Wkuc6n40TCIDjNw2GpF
-	vYwDhBGUiX/GCm3Zmf7GmdEOiPpMqT3Tb4KlbKDmiLXEGQSgf+PTl1i2pmazMZbV
-	IDvTGdg/TOcEQSnx8IU2yQFh847IYtUU40Na4PHi/S4tXkVEMhL0xdJMPBRa1s1h
-	Z9HpuKJuH18g9jdbJG13A==
-X-ME-Sender: <xms:hj03Z06Ux4JuFD8N7DZPhZR6nE-Fa7XM2qFQKbbD8jkvwLsgUKhokA>
-    <xme:hj03Z15VFqLhi45ibarfnuI2V-gWm5qTq_W_RE7TUp99rpBJaaAH4XDB6KOyCqe7w
-    2yQ_zapZUyMsRvgn1w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrvdeggdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdrug
-    gvqeenucggtffrrghtthgvrhhnpeefhfehteffuddvgfeigefhjeetvdekteekjeefkeek
-    leffjeetvedvgefhhfeihfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhn
-    uggsrdguvgdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheprgigsghovgeskhgvrhhnvghlrdgukhdprhgtphhtthhopehnrghrvghshhdrkhgr
-    mhgsohhjuheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvg
-    eslhhishhtshdrlhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhn
-    sheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehhtghhsehlshhtrdguvg
-    dprhgtphhtthhopehlihhnuhigqdgslhhotghksehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepjhhohhgrnhhnvghsrdhthhhumhhshhhirhhnseifuggtrdgtohhm
-X-ME-Proxy: <xmx:hj03ZzclPUL28JtHrQmJUysdOJUWGljeLUx4mDiqfTCc25ELFg3GJA>
-    <xmx:hj03Z5KuD2k0Xw7gmvZOsW5iJFx7CMCVsVwHVOmvscDDjakO0P_q0w>
-    <xmx:hj03Z4JEYJkisSxjAVfotoQrrSQ9joYrgxTS2zau2ME9mBqZGntaJA>
-    <xmx:hj03Z6yTSDCqXAf1xhRADNauZ7jKIuXJ8ljsd--kw7J216Je76_umA>
-    <xmx:hz03ZxrzVzW1nqLxIbI5_fUOq6TgF3WXATTZWEE_hCyhLvdKd05N4uFL>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A191E2220071; Fri, 15 Nov 2024 07:24:38 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hmgIjsSP"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-50d3998923dso851420e0c.2
+        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 04:53:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731675225; x=1732280025; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NEbeDGIYvAwvzpGJm9/Bl8sSZPwTY7aHupGksBQNqK0=;
+        b=hmgIjsSPOTdUQLBVwihzecNUPbO0vpNM+iCpHkC9tlKWwcxsZCuc5JRBJ+AJ+gKrP1
+         D/HouSVYup1l5nWOfOtK8LZgXMaOENlMNxW+E+MTTTJDLuewWawevntnG39UiCkeFCXr
+         igc5Tb9iGBKpOy0x+cIvCV0IrvWvzuwQgGtsKwbqtjMyNnKDlg40xcDrlkFwaqJddL5L
+         ILU4WDdP2p1j7gm+Iq8i35YkbG9OJjFwaGqA03hdS0Zcnv7PK3TME0O0u8RBxC/UmRfy
+         10YA8TiJGrQ8/N7xH0fBf8bpW1ZtUL/71Gvo+mylg2Hjcj/FoXKJilSlm6JFnrYG/MsX
+         kM/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731675225; x=1732280025;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NEbeDGIYvAwvzpGJm9/Bl8sSZPwTY7aHupGksBQNqK0=;
+        b=my5hdgJUWhGnLVAlwXD0gV71X9isnFJuBMOSvj+6T5qyazMOtqh6Yiyb3Y2+VP3DrV
+         1BnPiZrCD28iALyLm9CoPltXQRYJv8gTmkAZAfBNmb10TM87S0FOLdlwe4VvI9wYE3GM
+         xRldNVRMPTFHSqGs4iKGDIws9vHNrpU8nBvlBGwTSwWAr5f/I2MiGQN8R13urnpCE5uk
+         1oWWc1uWf5mPilJgtG/kChPzqeAhvXXqAqL3Eli9ql0hTJlqELcrMKkFgJGoJy1RYjsa
+         7Ca46LasYmzGBl0mDtY92FiEprklqr9RIB1KMGaxyCbwnRY+PcZKZZVQCzUboiwOMNO1
+         Egfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEzSK1LkeCGtIXo+lk19pqZJzzBC+P1o+5Q00/euhsfSM+Rwg5Iutl0zqjbJC/X9iztQxawAoOQYh1GQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx3JeJhK+Ju5nB/MLRwBYKbbhv/AhhaTiLmd6AKp2S+Uiz7O+jm
+	FENo2C74Ys4EOLADclarccCs6aBBr7HsN8EE4TokbzovSTCeigBk8BSpxOwmF91jwtIimON1C7u
+	j64u3rGx/FMWElrtuYO1FFcSC0Eg3BjciETw79w==
+X-Google-Smtp-Source: AGHT+IEtDEtXKpcCidRqx6bebqrisPTC0Px9Xm1sUVNWuLsQVQUre+hBcxnbLyeeXGplNKk47hIC4CRTO6saY/xxXGY=
+X-Received: by 2002:a05:6122:8c22:b0:50c:79a4:c25 with SMTP id
+ 71dfb90a1353d-51477f7c9f3mr3308737e0c.8.1731675224854; Fri, 15 Nov 2024
+ 04:53:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 15 Nov 2024 13:24:08 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- linux-block <linux-block@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>
-Cc: "Jens Axboe" <axboe@kernel.dk>, "Christoph Hellwig" <hch@lst.de>,
- "Johannes Thumshirn" <johannes.thumshirn@wdc.com>
-Message-Id: <08be7d36-96b0-4334-96dd-b5069bf1eb40@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYtPQ=L8g5i=3vzBOW4dPSPYviKGR0xP-gR=2Ta_FZFBPQ@mail.gmail.com>
-References: 
- <CA+G9fYtPQ=L8g5i=3vzBOW4dPSPYviKGR0xP-gR=2Ta_FZFBPQ@mail.gmail.com>
-Subject: Re: Tinyconfig: include/linux/blkdev.h:1692:17: error: field has incomplete
- type 'struct rq_list'
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 15 Nov 2024 18:23:33 +0530
+Message-ID: <CA+G9fYtThFpgHJvVwmvp274QJ0QBbrsr+qnYi0b5fWJ5oJL2uw@mail.gmail.com>
+Subject: next-20241114: clang: fs/netfs/read_retry.c:235:20: error: variable
+ 'subreq' is uninitialized when used here [-Werror,-Wuninitialized]
+To: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	netfs@lists.linux.dev, clang-built-linux <llvm@lists.linux.dev>, linux-cachefs@redhat.com, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, David Howells <dhowells@redhat.com>, 
+	Jeff Layton <jlayton@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 15, 2024, at 13:19, Naresh Kamboju wrote:
-> The tinyconfig builds failed with clang-19 and gcc-13 on the Linux
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log:
-> ---------
-> In file included from init/main.c:85:
-> include/linux/blkdev.h:1692:17: error: field has incomplete type
-> 'struct rq_list'
->  1692 |         struct rq_list req_list;
->       |                        ^
-> include/linux/blkdev.h:1692:9: note: forward declaration of 'struct rq_list'
->  1692 |         struct rq_list req_list;
->       |                ^
+The following builds failed with clang-19 and clang-nightly on the
+Linux next-20241114 and next-20241115 tags on x86 architecture.
+But the build passed with gcc-13.
 
-Nathan already sent a patch, see
+First seen on Linux next-20241114 tag.
+  Good: next-20241113
+  Bad:  next-20241114
 
-https://lore.kernel.org/all/20241114201103.GA2036469@thelio-3990X/
+build:
+  * clang-19-lkftconfig
+  * clang-nightly-lkftconfig
 
-     Arnd
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build log:
+---------
+fs/netfs/read_retry.c:235:20: error: variable 'subreq' is
+uninitialized when used here [-Werror,-Wuninitialized]
+  235 |         if (list_is_last(&subreq->rreq_link, &stream->subrequests))
+      |                           ^~~~~~
+fs/netfs/read_retry.c:28:36: note: initialize the variable 'subreq' to
+silence this warning
+   28 |         struct netfs_io_subrequest *subreq;
+      |                                           ^
+      |                                            = NULL
+1 error generated.
+make[5]: *** [scripts/Makefile.build:229: fs/netfs/read_retry.o] Error 1
+
+Build image:
+-----------
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241114/testrun/25811023/suite/build/test/clang-19-lkftconfig/details/
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241114/testrun/25811023/suite/build/test/clang-19-lkftconfig/log
+- https://storage.tuxsuite.com/public/linaro/lkft/builds/2opUctayqtTsKWUeLDYKbGaUqa9/
+
+Steps to reproduce:
+------------
+- tuxmake --runtime podman --target-arch x86_64 --toolchain clang-19
+--kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/2opUctayqtTsKWUeLDYKbGaUqa9/config
+LLVM=1 LLVM_IAS=1
+
+metadata:
+----
+  git describe: next-20241114
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git sha: 37c5695cb37a20403947062be8cb7e00f6bed353
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2opUctayqtTsKWUeLDYKbGaUqa9/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2opUctayqtTsKWUeLDYKbGaUqa9/
+  toolchain: clang-19
+  config: lkftconfig
+  arch: x86_64
+
+--
+Linaro LKFT
+https://lkft.linaro.org
