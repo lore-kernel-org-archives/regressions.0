@@ -1,170 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9117D2AE77
-	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 12:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC151A3042
+	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 12:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731672384; cv=none; b=bUA4lXW7YmO4+PtP4a4LnD+010VDW+RsTDgNENqsj86a7eW2yypPRrm/m5rlAcgzxj0irhjn1TR34d7J35V1M2RFpN+fggQZleo4GmKKAB0cD1H3spVoLSG7Ha6iDpNPNSnUfcGkFC7L5Nk6GoAvZh5WLw6CehZDnSGnyi2u6bk=
+	t=1731673201; cv=none; b=ILXCEhaIJb9p8EtfR+yCpgEnVeN2SHMj9zU4bxosNwhDwkhkds4hJo+n8ijHY8/SiC2hwcZnlG7aqkD4/IQvY5eG9jZA303h//yb+eSMqALWWxNWvUr55rT5Y9dShlT+gc/UidzlEiOS/yPF43KXnBEPxua3G9ErvSLGsrlAWYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731672384; c=relaxed/simple;
-	bh=9cLYF5Y9N14G0jya0Gw2sFofAVNisnbAW2MEgFStvNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=bfzZiWcUEjqQ7MAWhY4VzeDUxJloi2UlQKYfM3qe6IYEv3ShwQQrblZWKrdMPzUvof146p3SjuRRKVeznJ4H8Bj//POZ3vapdcguW3YBuxOum3D0F7f1BU80b4ti+ub0muPHLEZW+aMEOk0oWnE5YkOPMTNJCH8jsp82Tst6xUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WLYd1njX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731673201; c=relaxed/simple;
+	bh=uN2T0hKnqxB4NWs/1gfOc+22eYGA6JVtajykVUMCbdg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=knipcIA5Vs/PqmWcRDO2ZiI+RPEZIZa0LW8Cur5oqnuOVOt3N4l+/HwjC8oZ1hwUB9EnCQwYaPlnTFuUwmEp/MV8zkggyAjWWO2QFuepfo90D7CVEmJXsPVnhQ2DQw02oBiZ2kQiqboWT04GGEQ3TsIu6GVqtJabXFlrEcthMxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Obk0s+fc; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLYd1njX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731672381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dXKYfFH14d/tQ6qy22rrt9FvVPPlJ7Javhwa5aga5ck=;
-	b=WLYd1njXLUxByHQAmCtQ+OWv7t0e0tqQAVRZDFvCF1KMqFksmI01ck/yoaJ9Z4vDYD4B8v
-	uTgM/sAt8HAHOqLmuCyPrzHCb/17MtXYfZkWlzykMmiqiFtp+0nL49QBRv2S13rw6y4EYM
-	zFWy74SgfYSRDAa/XEh9H3CyP6YfOpQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-303-r3higaDGO3G4G2605fPnzQ-1; Fri, 15 Nov 2024 07:06:20 -0500
-X-MC-Unique: r3higaDGO3G4G2605fPnzQ-1
-X-Mimecast-MFC-AGG-ID: r3higaDGO3G4G2605fPnzQ
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37d5016d21eso934152f8f.3
-        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 04:06:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Obk0s+fc"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-514543a08d0so813652e0c.0
+        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 04:19:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731673198; x=1732277998; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BrmgfHiQVdWt3bBrDk5codO30Y6e5vUnxjycTHd1oVY=;
+        b=Obk0s+fcwIbfJUYfQ9lOPU2iwBGXggH9njXARRSBIVnV1gA59qtlNIIDAgjIzIadu4
+         vzOcbBiRd005AB7JCqltjXqN0Dg0lOZ/BsCB81R6FtfUrBrd1gJszM7gT4Pkqi6kPOm9
+         /V8MnCDzcCJfeC4DXO8Rz8F8BRMu8dfqRrfH7UOrQh+ZDzpOceeQr/uXD9HH6RRmORJm
+         G4hd6sRvu9ZYpF0HE8p2bkdqNaUJxElOg24D87wvE9rA+Xj0HevLU8nSCM/OU/7pPquI
+         r36TzfBTML+3wbDw1DVhYJuFm8BuFqgQDUej1ViPQSIcEYxzQV5CJdMEo4gKPV1e+X57
+         f08g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731672379; x=1732277179;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dXKYfFH14d/tQ6qy22rrt9FvVPPlJ7Javhwa5aga5ck=;
-        b=p848do28KngwF+R0q2I2M6mEtEu+X2Sz+IVQKmUJyqgLTE5S6NkqRg9c8djzar7VtJ
-         itmToEGTuFmxEjZhCXKUJSVp90yXeRFdtHPeaOiS53/2ZZyUc5/mniIzNvvC5pmhGJFn
-         thKNvGaGmBDZYLV7FaB9SMgcKwVz/9XBSgAE3K0QW5DXp7+0DWfZlCl8GGf8FIODBqsZ
-         omomBKCZAJY1EHimC0Em5euLQcWVTwHwEDsRYN48WpdiNk2xMiA+bITLu3r7ouaA9IJI
-         rlC7WWJ849S6UUIk7MRD2bm891ZGnkCqUXlUpNFgbg5cG/GFWwKeCLGhSfqxlZBY1ZnY
-         23zw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Srl5oQCDNH8A26oDwNojzpdUyL0+EBD6YvuWYwfTH5jEXhVWUlcIcA5AcovUMso985f3RRIMUp2SFw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywfn6O2rYTC0kIFOqCc7FKsvCgWmz8AZInsqqP7Us39o4tv1is8
-	nb1iqadQD2lG+dLtDUVAWyJkJyq2Err2mmH4OV9vy6n1T/e4OpNl5BXYAPecdbRnhp1G4RImTyn
-	UWOZmbR/wjWIYEfr5ucSszps7vS0U8K3PUjeBhu35gYYT3tAN078xAHmg/0I3
-X-Received: by 2002:a05:6000:156b:b0:37d:5436:49b with SMTP id ffacd0b85a97d-3822590476cmr1855822f8f.13.1731672379000;
-        Fri, 15 Nov 2024 04:06:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFwGqn46v0gzfjomgwxM1BVXDUVHtJOb+t3C3YKWqeIhVYhUok1C59X+0aqnseP1q/9ZYQp3A==
-X-Received: by 2002:a05:6000:156b:b0:37d:5436:49b with SMTP id ffacd0b85a97d-3822590476cmr1855796f8f.13.1731672378603;
-        Fri, 15 Nov 2024 04:06:18 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb (host-80-47-4-194.as13285.net. [80.47.4.194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ada408dsm4169808f8f.10.2024.11.15.04.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 04:06:17 -0800 (PST)
-Date: Fri, 15 Nov 2024 12:06:15 +0000
-From: Juri Lelli <juri.lelli@redhat.com>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Joel Fernandes <joelaf@google.com>,
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Benjamin Segall <bsegall@google.com>,
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Metin Kaya <Metin.Kaya@arm.com>,
-	Xuewen Yan <xuewen.yan94@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com,
-	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] locking: rtmutex: Fix wake_q logic in
- task_blocks_on_rt_mutex
-Message-ID: <Zzc5N_3jxOZ3ng3m@jlelli-thinkpadt14gen4.remote.csb>
-References: <20241114190051.552665-1-jstultz@google.com>
+        d=1e100.net; s=20230601; t=1731673198; x=1732277998;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BrmgfHiQVdWt3bBrDk5codO30Y6e5vUnxjycTHd1oVY=;
+        b=fknr9xdThgPdxMilpwg7Uy9w88ealXj5EGjORShv5oipJulDnEIJmUpHe8WXkVSKrB
+         yXFDxkQjEsx1yz4V5hIyucCXbJ2ih5PX1fACl47VwjjCtESK0XrzpY4Pl7lqx5JJZJoh
+         TE3jboD1/jsRHhKkcGquKMj9PAxCQajy7J4HsgB1xBXDrcEX2wQ0/YWW4ySxEGuLDzBX
+         l5MiWp46ix13d1wKCTcX+ARm9UHAqMxRLaCuao1ZQooanBsH+JeP+EWXARpW3ZNOWGFn
+         u6MnFNLu/r41lnHjGSi3RsSlaKgiwT2nFX/LCfqtAXYIc3ZXLM2jhlbnFuge3azb2rMc
+         y8gw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQSEBvQZy1xegd6xtc2t3uV02RIOjmlM0FqLgGl4flOcY+hZPuJso18HlT8Xy75kasPoeVXNAuFc5FAA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMzLzIkyqreOSvfNefNVqJOSVonOXOYKEHsX528ZuytSy89hy4
+	vSTCVJqv8xyEAFjIt+NiOeRfwuTZJrN522fjznpdtql93CnpXuhOzsA9+6pCBtjArbhL8hdOH3R
+	Lf/cpZE2tlDpmUnjTlzzTEYng77y1vtuDjVsVwA==
+X-Google-Smtp-Source: AGHT+IHDI7wr6k8bNzIN8dP+INAqSB/KifXxi0/sCOrtTa5mU7qUxRv4jWPQh+5k7/tidliCeLz9YCf87oIZixyf+pI=
+X-Received: by 2002:a05:6122:3c4d:b0:4f5:199b:2a61 with SMTP id
+ 71dfb90a1353d-51477f99aa8mr2714614e0c.9.1731673197759; Fri, 15 Nov 2024
+ 04:19:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20241114190051.552665-1-jstultz@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: xA3xy1_s4yr5mjoR0mJe21juTmy95tSGf1nK3XYhIwM_1731672379
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 15 Nov 2024 17:49:45 +0530
+Message-ID: <CA+G9fYtPQ=L8g5i=3vzBOW4dPSPYviKGR0xP-gR=2Ta_FZFBPQ@mail.gmail.com>
+Subject: Tinyconfig: include/linux/blkdev.h:1692:17: error: field has
+ incomplete type 'struct rq_list'
+To: open list <linux-kernel@vger.kernel.org>, linux-block <linux-block@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi John,
+The tinyconfig builds failed with clang-19 and gcc-13 on the Linux
+next-20241114 tag
+for the listed architectures,
+ - arm
+ - arm64
+ - i386
+ - powerpc
+ - riscv
+ - s390
+ - x86_64
 
-On 14/11/24 11:00, John Stultz wrote:
-> Anders had bisected a crash using PREEMPT_RT with linux-next and
-> isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
-> wakeups from under mutex::wait_lock"), where it seemed the
-> wake_q structure was somehow getting corrupted causing a null
-> pointer traversal.
-> 
-> I was able to easily repoduce this with PREEMPT_RT and managed
-> to isolate down that through various call stacks we were
-> actually calling wake_up_q() twice on the same wake_q.
-> 
-> I found that in the problematic commit, I had added the
-> wake_up_q() call in task_blocks_on_rt_mutex() around
-> __ww_mutex_add_waiter(), following a similar pattern in
-> __mutex_lock_common().
-> 
-> However, its just wrong. We haven't dropped the lock->wait_lock,
-> so its contrary to the point of the original patch. And it
-> didn't match the __mutex_lock_common() logic of re-initializing
-> the wake_q after calling it midway in the stack.
-> 
-> Looking at it now, the wake_up_q() call is incorrect and should
-> just be removed. So drop the erronious logic I had added.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Joel Fernandes <joelaf@google.com>
-> Cc: Qais Yousef <qyousef@layalina.io>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Benjamin Segall <bsegall@google.com>
-> Cc: Zimuzo Ezeozue <zezeozue@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Metin Kaya <Metin.Kaya@arm.com>
-> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: kernel-team@android.com
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: regressions@lists.linux.dev
-> Cc: Thorsten Leemhuis <linux@leemhuis.info>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Fixes: 894d1b3db41c ("locking/mutex: Remove wakeups from under mutex::wait_lock")
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Closes: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
-> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> Signed-off-by: John Stultz <jstultz@google.com>
-> ---
+First seen on Linux next-20241114 tag.
+  Good: next-20241113
+  Bad:  next-20241114
 
-LGTM.
+build:
+  * gcc-13-tinyconfig
+  * clang-19-tinyconfig
+  * clang-nightly-tinyconfig
 
-Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Best,
-Juri
+Build log:
+---------
+In file included from init/main.c:85:
+include/linux/blkdev.h:1692:17: error: field has incomplete type
+'struct rq_list'
+ 1692 |         struct rq_list req_list;
+      |                        ^
+include/linux/blkdev.h:1692:9: note: forward declaration of 'struct rq_list'
+ 1692 |         struct rq_list req_list;
+      |                ^
+1 error generated.
+make[4]: *** [scripts/Makefile.build:229: init/main.o] Error 1
+In file included from kernel/sched/core.c:41:
+include/linux/blkdev.h:1692:17: error: field has incomplete type
+'struct rq_list'
+ 1692 |         struct rq_list req_list;
+      |                        ^
+include/linux/blkdev.h:1692:9: note: forward declaration of 'struct rq_list'
+ 1692 |         struct rq_list req_list;
+      |                ^
+1 error generated.
+make[5]: *** [scripts/Makefile.build:229: kernel/sched/core.o] Error 1
 
+
+Build image:
+-----------
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241115/testrun/25823523/suite/build/test/clang-19-tinyconfig/log
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241115/testrun/25823523/suite/build/test/clang-19-tinyconfig/details/
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241114/testrun/25810736/suite/build/test/gcc-13-tinyconfig/details/
+- https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJibjMRLtDUebXPN6WOC65CLb/
+
+Steps to reproduce:
+------------
+- # tuxmake --runtime podman --target-arch arm64 --toolchain clang-19
+--kconfig tinyconfig LLVM=1 LLVM_IAS=1
+
+metadata:
+----
+  git describe: next-20241114
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git sha: 37c5695cb37a20403947062be8cb7e00f6bed353
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJibjMRLtDUebXPN6WOC65CLb/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2osJibjMRLtDUebXPN6WOC65CLb/
+  toolchain: clang-19 and gcc-13
+  config: tinyconfig
+  arch: arm, arm64, i386, powerpc, riscv, s390, x86_64
+
+--
+Linaro LKFT
+https://lkft.linaro.org
