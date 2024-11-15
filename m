@@ -1,248 +1,109 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE001CEE9F
-	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 16:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731689912; cv=none; b=S3aGQnJU1v8aivsTFUCaFoIB/SRRZ3q+9hw8TuoaXuEkcK0EV6QoFAUj2iIFBA5e3a/OUrYf6BlHSJH3uOff/chRKvajwYSunnYaJqo+VZoYt2QOYAjsjGBrv/TGGMKx5vv1cIJMRPd3qkuoxO+YGLJFD8hno0uKNNWuZFyFVqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731689912; c=relaxed/simple;
-	bh=+diPlS6drHYTTbEBscxwjk98t3Tr5UjD7fLgAqRxsFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=narYc7GPA2aA+heT4FxyNidkYvPC6k9O+l4r7TCRiBP1DXO6zRQ3wMfLibqtKXEkuy4rPuWOGGCCM0SBdLfqoHQ04wgrGOOPcrBxrWcFX+wp/Fv3b1FVsUi13ciobBdDVM/sPd/E4+bIsl1+uXMlRle+p56u4uHvDftcjvY0bKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYYGkhzr; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C46D16FF37;
+	Fri, 15 Nov 2024 17:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731691005; cv=pass; b=eW9CKu8rxijVKKotDW6P6+s/7NTsIQQe5jCgVW9avl8tEw5SBZ2lahcD2JBYgkQvqHyaRuHSNuupb2gXg5XXIbcjxxS5P1KSzfcOdmifvCIixTAuUHpKrBFKPKqTzBAQznub6TjY2crKxqsgg7KrUfQrXo7x2LL2i0A4ZxcVijg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731691005; c=relaxed/simple;
+	bh=P0SQjPygdVinvsaRou1De9yferdgwM0vFg9ryprllw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zx87DS8yeS/rk30YA7YBfz+w5yEgdM9iwGt+akAe/NCz6hpNTuP1xRi0xx1apUwX6Ua1RWTft3f5Y4Hkub1dRRSYQgMeZBUiANj9/ha6jv1CMTYC4nUGahm/6NfRbZv/a++E6doBKXZXGOQywVwQsv/AEPw7sbLuA6CdZ9n6kNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=aWZvqBfj; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYYGkhzr"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-720b2d8bb8dso1532240b3a.1
-        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 08:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731689909; x=1732294709; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CpNGtLDGMDR9feWtepju5qrqLCKQ8PwkgbQnookjB1M=;
-        b=iYYGkhzrIw1F4L91hORb42YfLwOrG4feUccR1WzjrlNT5dKEtf8CkTYZWfXPdKH/MW
-         lx85xE2fmjpdPWBUEp/pf11m+W2F4Kn78ClNobzOOW8NRJExcq8b4ZIJbJ4dWECf2g0b
-         gu6t01DxM1h+E+tCVPz13Cfter37A7udkMC5zTESib8tt64MiqOiB00PrO8Eq7eo8Con
-         zjYF422FPiVLWMxmwdhVwRHU04OOL4HH2NLpKzwwgMi0yntA7xJkJjyZmrBcLIWNIrzI
-         DQ2VhgVSjTwSETxP4ocS9XGS4jX3kh/ruFA4PP5RrP79X0bbOYcW5Bq/vROUK5Gs0VXR
-         9W+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731689909; x=1732294709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CpNGtLDGMDR9feWtepju5qrqLCKQ8PwkgbQnookjB1M=;
-        b=KSqNbrTQZmfLP0wM3AFDP6UwcW7jJsccl6MiQMi4QooXqnCLYqhNnNdv8oO309NYfL
-         VMu1ruDnblv6wT/z7LIPCy1NuW0k7Bm7339hRlZfG8jZvC1/zpuanJEt423gqYmZNN3o
-         kQQErEsXYv52FMNga3O9rDvsZZJPqLEXzd+4SDy4K/AVMRl3AzfEEhDl3R40hx6XiM3y
-         QtQqy82bqRjiMCyQ+O1LUjG5msHmROM/w72weSBPlxQ8Ng9m+XlRYnKXzrMH4vSQXRF3
-         Nu6o3ttztVhLzVvi6bqjE1O9ZJDdmvl0aKBzFZ61lFSwXM6koaROra+koz4O5yG+tQjq
-         nkyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCrjjDq49lLO5Xd8ndHvWOZudeNXTaQm9OlS9FpJwoQYcloJmohdj9iLHcowevpQ2lN7ceJ0EHG6WWbA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxgW6HeZGjoNPxaLnuliA9b264f7vIIIiW0hbiQv47ObwI62LVk
-	vZ1tGbgBy/sUs8MzrNOTvlXkOeD1uUCbu6ubAzPeMLkMxbJ+QIe+Cg2FUbjx6X/EsEqhb3yJVpi
-	mPoz6xPqCmLb4gS6XSQsBB6myvdg=
-X-Google-Smtp-Source: AGHT+IGe/R9bUVI3bNg2/fNPfBs74Nk+DV6SSIg8JJE7gAmbz+OwtjrcXhiCgVaEjiLNzNi5VoxGkOxgRBd/sMxPlaE=
-X-Received: by 2002:a17:90b:48d1:b0:2ea:10de:1ceb with SMTP id
- 98e67ed59e1d1-2ea15589e04mr3806636a91.25.1731689908784; Fri, 15 Nov 2024
- 08:58:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="aWZvqBfj"
+ARC-Seal: i=1; a=rsa-sha256; t=1731690995; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jqnKaI6QCOuaeC7MpZ5upuw8KUCDmfB2amcnEqgRxBX/I5TgvB3f8Ej3Gm2yKK3sg3qHhoDTWFi6E2TZvZCp6nHaNAsOMdY3uyViar7qiYz7v5ExKefT7GxNjkXXo1wK3YkOmo+EXXnVy7afLl6F/1LTKfboDfYiGiyHCdmyfN0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1731690995; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=QY5aEW+CUnaNR5nMd8AVnCRFH1PuLn6ppZIhLRBH7IY=; 
+	b=eOgjuQbNFoBrx9ThpRSWxMsNcWx3yRXYidMff5btzfWwBGzJvv/+d+wcEryLIJt8UqgpLGTYT+NjHzIExHAj+UTfLiCxmSqvAnIRiGF38D1HkVzmze/5cJ3ei/nBpflZRhOr9ddPNrZSO5M8m94NCycuzp20MyLmOlvSW3NnTvM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
+	dmarc=pass header.from=<laura.nao@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1731690995;
+	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
+	bh=QY5aEW+CUnaNR5nMd8AVnCRFH1PuLn6ppZIhLRBH7IY=;
+	b=aWZvqBfj/Op+zoZylP9l3vWpJV5sYl4XG0ZSGf3PTheg1u5gP4JBCNwwo/cWx1GA
+	noTreI398wKve86/zb5IrIk18CC/tN3ytfnCEM2crKlMTwtAgfqlVtobzhewcn+pwUx
+	w8aP/R1oa8jVDODDIp3Yy9m/M+morlNomTWpGOJA=
+Received: by mx.zohomail.com with SMTPS id 1731690993371333.3476507920801;
+	Fri, 15 Nov 2024 09:16:33 -0800 (PST)
+From: Laura Nao <laura.nao@collabora.com>
+To: laura.nao@collabora.com,
+	alan.maguire@oracle.com
+Cc: bpf@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	kernel@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
+Date: Fri, 15 Nov 2024 18:17:12 +0100
+Message-Id: <20241115171712.427535-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20241113093703.9936-1-laura.nao@collabora.com>
+References: <20241113093703.9936-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZzdxKF39VEmXSSyN@tissot.1015granger.net> <Zzd12OGPDnZTMZ6t@tissot.1015granger.net>
- <CAO9qdTGLn6QWJg71Ad2xcobiTHE5ovoUxSqvrDDrE_i1+uqUQw@mail.gmail.com> <Zzd5YaI99+hieQV+@tissot.1015granger.net>
-In-Reply-To: <Zzd5YaI99+hieQV+@tissot.1015granger.net>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Sat, 16 Nov 2024 01:58:17 +0900
-Message-ID: <CAO9qdTEaYa639ebHX8Qd0_FqOZUZLc_JvYNyxepUthGyDqw_Bw@mail.gmail.com>
-Subject: Re: tmpfs hang after v6.12-rc6
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: akpm@linux-foundation.org, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-nfs@vger.kernel.org, hughd@google.com, 
-	yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> On Sat, Nov 16, 2024 at 01:33:19AM +0900, Jeongjun Park wrote:
-> > 2024=EB=85=84 11=EC=9B=94 16=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 1:=
-25, Chuck Lever <chuck.lever@oracle.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> > >
-> > > On Fri, Nov 15, 2024 at 11:04:56AM -0500, Chuck Lever wrote:
-> > > > I've found that NFS access to an exported tmpfs file system hangs
-> > > > indefinitely when the client first performs a GETATTR. The hanging
-> > > > nfsd thread is waiting for the inode lock in shmem_getattr():
-> > > >
-> > > > task:nfsd            state:D stack:0     pid:1775  tgid:1775  ppid:=
-2      flags:0x00004000
-> > > > Call Trace:
-> > > >  <TASK>
-> > > >  __schedule+0x770/0x7b0
-> > > >  schedule+0x33/0x50
-> > > >  schedule_preempt_disabled+0x19/0x30
-> > > >  rwsem_down_read_slowpath+0x206/0x230
-> > > >  down_read+0x3f/0x60
-> > > >  shmem_getattr+0x84/0xf0
-> > > >  vfs_getattr_nosec+0x9e/0xc0
-> > > >  vfs_getattr+0x49/0x50
-> > > >  fh_getattr+0x43/0x50 [nfsd]
-> > > >  fh_fill_pre_attrs+0x4e/0xd0 [nfsd]
-> > > >  nfsd4_open+0x51f/0x910 [nfsd]
-> > > >  nfsd4_proc_compound+0x492/0x5d0 [nfsd]
-> > > >  nfsd_dispatch+0x117/0x1f0 [nfsd]
-> > > >  svc_process_common+0x3b2/0x5e0 [sunrpc]
-> > > >  ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
-> > > >  svc_process+0xcf/0x130 [sunrpc]
-> > > >  svc_recv+0x64e/0x750 [sunrpc]
-> > > >  ? __wake_up_bit+0x4b/0x60
-> > > >  ? __pfx_nfsd+0x10/0x10 [nfsd]
-> > > >  nfsd+0xc6/0xf0 [nfsd]
-> > > >  kthread+0xed/0x100
-> > > >  ? __pfx_kthread+0x10/0x10
-> > > >  ret_from_fork+0x2e/0x50
-> > > >  ? __pfx_kthread+0x10/0x10
-> > > >  ret_from_fork_asm+0x1a/0x30
-> > > >  </TASK>
-> > > >
-> > > > I bisected the problem to:
-> > > >
-> > > > d949d1d14fa281ace388b1de978e8f2cd52875cf is the first bad commit
-> > > > commit d949d1d14fa281ace388b1de978e8f2cd52875cf
-> > > > Author:     Jeongjun Park <aha310510@gmail.com>
-> > > > AuthorDate: Mon Sep 9 21:35:58 2024 +0900
-> > > > Commit:     Andrew Morton <akpm@linux-foundation.org>
-> > > > CommitDate: Mon Oct 28 21:40:39 2024 -0700
-> > > >
-> > > >     mm: shmem: fix data-race in shmem_getattr()
-> > > >
-> > > > ...
-> > > >
-> > > >     Link: https://lkml.kernel.org/r/20240909123558.70229-1-aha31051=
-0@gmail.com
-> > > >     Fixes: 44a30220bc0a ("shmem: recalculate file inode when fstat"=
-)
-> > > >     Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> > > >     Reported-by: syzbot <syzkaller@googlegroup.com>
-> > > >     Cc: Hugh Dickins <hughd@google.com>
-> > > >     Cc: Yu Zhao <yuzhao@google.com>
-> > > >     Cc: <stable@vger.kernel.org>
-> > > >     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> > > >
-> > > > which first appeared in v6.12-rc6, and adds the line that is waitin=
-g
-> > > > on the inode lock when my NFS server hangs.
-> > > >
-> > > > I haven't yet found the process that is holding the inode lock for
-> > > > this inode.
-> > >
-> > > It is likely that the caller (nfsd4_open()-> fh_fill_pre_attrs()) is
-> > > already holding the inode semaphore in this case.
-> >
-> > Thanks for letting me know!
-> >
-> > It seems that the previous patch I wrote was wrong in how to prevent da=
-ta-race.
-> > It seems that the problem occurs in nfsd because nfsd4_create_file() al=
-ready
-> > holds the inode_lock.
-> >
-> > After further analysis, I found that this data-race mainly occurs when
-> > vfs_statx_path does not acquire the inode_lock, and in other filesystem=
-s,
-> > it is confirmed that inode_lock is acquired in many cases, so I will se=
-nd a
-> > new patch that fixes this problem right away.
->
-> Thanks for your quick response!
->
-> My brief sample of file system ->getattr methods shows that these
-> functions do not grab the inode semaphore at all when calling
-> generic_fillattr(). Likely they expect the method's caller to take
-> it.
->
-> I strongly prefer to see this commit reverted for v6.12-rc first,
-> and then the new fix should be merged via a normal merge window to
-> permit a lengthy period of testing.
->
+On 11/13/24 10:37, Laura Nao wrote:
+> 
+> Currently, KernelCI only retains the bzImage, not the vmlinux binary. The
+> bzImage can be downloaded from the same link mentioned above by selecting
+> 'kernel' from the dropdown menu (modules can also be downloaded the same
+> way). I’ll try to replicate the build on my end and share the vmlinux
+> with DWARF data stripped for convenience.
+> 
 
-Hmm... Of course, revert this patch is not a bad idea, but I think that
-patching it like below can effectively prevent data-race without causing
-recursive locking:
+I managed to reproduce the issue locally and I've uploaded the vmlinux[1]
+(stripped of DWARF data) and vmlinux.raw[2] files, as well as one of the 
+modules[3] and its btf data[4] extracted with:
 
----
- mm/shmem.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko > cros_kbd_led_backlight.ko.raw
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index e87f5d6799a7..d061f8b34d49 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1153,6 +1153,12 @@ static int shmem_getattr(struct mnt_idmap *idmap,
- {
-    struct inode *inode =3D path->dentry->d_inode;
-    struct shmem_inode_info *info =3D SHMEM_I(inode);
-+   bool inode_locked =3D NULL;
-+
-+   if (!inode_is_locked(inode)) {
-+       inode_lock_shared(inode);
-+       inode_locked =3D true;
-+   }
+Looking again at the logs[5], I've noticed the following is reported:
 
-    if (info->alloced - info->swapped !=3D inode->i_mapping->nrpages)
-        shmem_recalc_inode(inode, 0, 0);
-@@ -1166,9 +1172,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
-    stat->attributes_mask |=3D (STATX_ATTR_APPEND |
-            STATX_ATTR_IMMUTABLE |
-            STATX_ATTR_NODUMP);
--   inode_lock_shared(inode);
-    generic_fillattr(idmap, request_mask, inode, stat);
--   inode_unlock_shared(inode);
+[    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
+[    0.416029] BPF:  
+[    0.416083] BPF: Invalid offset
+[    0.416165] BPF: 
 
-    if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
-        stat->blksize =3D HPAGE_PMD_SIZE;
-@@ -1179,6 +1183,9 @@ static int shmem_getattr(struct mnt_idmap *idmap,
-        stat->btime.tv_nsec =3D info->i_crtime.tv_nsec;
-    }
+There are two different definitions of rcu_data in '.data..percpu', one
+is a struct and the other is an integer:
 
-+   if (inode_locked)
-+       inode_unlock_shared(inode);
-+
-    return 0;
- }
+type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
+type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
 
---
+[115801] VAR 'rcu_data' type_id=115572, linkage=static
+[115803] VAR 'rcu_data' type_id=1, linkage=static
 
-What do you think?
+[115572] STRUCT 'rcu_data' size=1152 vlen=69
+[1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64 encoding=(none)
 
-Regards,
+I assume that's not expected, correct?
 
-Jeongjun Park
+I'll dig a bit deeper and report back if I can find anything else.
 
->
-> > > > Because this commit addresses only a KCSAN splat that has been
-> > > > present since v4.3, and does not address a reported behavioral
-> > > > issue, I respectfully request that this commit be reverted
-> > > > immediately so that it does not appear in v6.12 final.
-> > > > Troubleshooting and testing should continue until a fix to the KCSA=
-N
-> > > > issue can be found that does not deadlock NFS exports of tmpfs.
-> > > >
-> > > >
-> > > > --
-> > > > Chuck Lever
-> > > >
-> > >
-> > > --
-> > > Chuck Lever
->
-> --
-> Chuck Lever
+[1] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux
+[2] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux.raw
+[3] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko
+[4] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko.raw
+[5] https://pastebin.com/raw/FvvrPhAY
+
+Best,
+
+Laura
