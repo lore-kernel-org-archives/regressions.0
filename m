@@ -1,109 +1,219 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C46D16FF37;
-	Fri, 15 Nov 2024 17:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731691005; cv=pass; b=eW9CKu8rxijVKKotDW6P6+s/7NTsIQQe5jCgVW9avl8tEw5SBZ2lahcD2JBYgkQvqHyaRuHSNuupb2gXg5XXIbcjxxS5P1KSzfcOdmifvCIixTAuUHpKrBFKPKqTzBAQznub6TjY2crKxqsgg7KrUfQrXo7x2LL2i0A4ZxcVijg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731691005; c=relaxed/simple;
-	bh=P0SQjPygdVinvsaRou1De9yferdgwM0vFg9ryprllw8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zx87DS8yeS/rk30YA7YBfz+w5yEgdM9iwGt+akAe/NCz6hpNTuP1xRi0xx1apUwX6Ua1RWTft3f5Y4Hkub1dRRSYQgMeZBUiANj9/ha6jv1CMTYC4nUGahm/6NfRbZv/a++E6doBKXZXGOQywVwQsv/AEPw7sbLuA6CdZ9n6kNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=aWZvqBfj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE5D1D63DA
+	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 17:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731693418; cv=none; b=gUDCEt0oOv6Fgzs7Pq/eAqUTq+2xBQSxM66d73EpRceslmajNAEl0+NqjnoRRdavHuTf+kFcF1+yzFTI4EcryrWZOhcqij+qHMQWiM4XyZw4pRFj3KE40tgHqpIDoTRfGySBf725nv2BHEj68t1i6LwgUS7uPuFl16HRAchi4iw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731693418; c=relaxed/simple;
+	bh=8G1eQwpfLzzrbWLE731gSlaI/3BoTdKQ9z7j3rLVNJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXEGOdM0S3sNlTJHAeS62Dz7P5Y9CRjgNCETvUxQ0LdK77IqIJ+AJv4shG6SkMok8nuBE//aWH4s2SwIR0IY8tdLuB0yKyS33XLLzTA62FtLFk8HNhFMco8Ql+kqL5jBGZjBSYAiiMBwdktDWbv2qkdS7bbF+SzyuIZUm3Yt+hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft//5tZu; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="aWZvqBfj"
-ARC-Seal: i=1; a=rsa-sha256; t=1731690995; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=jqnKaI6QCOuaeC7MpZ5upuw8KUCDmfB2amcnEqgRxBX/I5TgvB3f8Ej3Gm2yKK3sg3qHhoDTWFi6E2TZvZCp6nHaNAsOMdY3uyViar7qiYz7v5ExKefT7GxNjkXXo1wK3YkOmo+EXXnVy7afLl6F/1LTKfboDfYiGiyHCdmyfN0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1731690995; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=QY5aEW+CUnaNR5nMd8AVnCRFH1PuLn6ppZIhLRBH7IY=; 
-	b=eOgjuQbNFoBrx9ThpRSWxMsNcWx3yRXYidMff5btzfWwBGzJvv/+d+wcEryLIJt8UqgpLGTYT+NjHzIExHAj+UTfLiCxmSqvAnIRiGF38D1HkVzmze/5cJ3ei/nBpflZRhOr9ddPNrZSO5M8m94NCycuzp20MyLmOlvSW3NnTvM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
-	dmarc=pass header.from=<laura.nao@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1731690995;
-	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
-	bh=QY5aEW+CUnaNR5nMd8AVnCRFH1PuLn6ppZIhLRBH7IY=;
-	b=aWZvqBfj/Op+zoZylP9l3vWpJV5sYl4XG0ZSGf3PTheg1u5gP4JBCNwwo/cWx1GA
-	noTreI398wKve86/zb5IrIk18CC/tN3ytfnCEM2crKlMTwtAgfqlVtobzhewcn+pwUx
-	w8aP/R1oa8jVDODDIp3Yy9m/M+morlNomTWpGOJA=
-Received: by mx.zohomail.com with SMTPS id 1731690993371333.3476507920801;
-	Fri, 15 Nov 2024 09:16:33 -0800 (PST)
-From: Laura Nao <laura.nao@collabora.com>
-To: laura.nao@collabora.com,
-	alan.maguire@oracle.com
-Cc: bpf@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
-Date: Fri, 15 Nov 2024 18:17:12 +0100
-Message-Id: <20241115171712.427535-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20241113093703.9936-1-laura.nao@collabora.com>
-References: <20241113093703.9936-1-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft//5tZu"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5cf8ef104a8so1424559a12.2
+        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 09:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731693414; x=1732298214; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yszZ/13xovLyV8+6Bm3HMI1O+tb18eMjfobAQVjAREg=;
+        b=Ft//5tZuNNcSFD7m959zx6K6LJaHMvyd6tDU/3RDHkvkOfznfYyuhFIEC3mN4B72Jp
+         6fnV7GZk13DHTvTb/9VJSoaAPHsDDoGprjOEwQrvyei8OUW8F6k+D1qUF2y4VJwJQFau
+         OHXP5waq14fINeeLYukCSi6oSes5CbICgOC+E6yUxHAU+HRDhJnWYbZR71rYKzd9wznP
+         CWlSmy8GJ7mj4PhaOqFxs34dUuj0VUFwpsbE3pEQijokvpcat8p+IOzTfNHGMzEsYXOq
+         Ei37P2jWiaIjhDOTYtgFKEzHim1DV7ma4KIMaEFa8oTL8y+vWN7AKLd8eC9rTQ5aZPI8
+         AdKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731693414; x=1732298214;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yszZ/13xovLyV8+6Bm3HMI1O+tb18eMjfobAQVjAREg=;
+        b=YIeMXsHgzutLLRAgx38vEcJxqUZwoDwEVbGB39MNg37c6Nh0Q1u3t4Xo7uLxwp3gmx
+         8y6StZrJi+x1HlcQUb38QA7I15yH73e2wKb28EXwKQd/cd/4E5pmZRfUQ7Z/Ohdco0pH
+         LvQLa8iqytmtmpTshRZb0mISmbQPEZ5haE8nlxzo2RnL4vD3Q+ez3S86V1Xj3R3NN9bC
+         8wPvl2nHwAXcVaYRpT5nQyCDB/bYsUQGz/7eww/d/zhbQhw0Rj3ICGenFsWeA62PiV54
+         nKeJdFwa51NiED4j+QSjX0hq6ZuJuOHU1mLkH3nSaGcBmmqH7Z9pqd5jICAeTcBlEqAo
+         QUEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdAb5kr1qwySC0XGLNBgDGro3UdSEB/G2fisRr9K+sxG36IpsRCzTzP87ZdpV4jZvFx4BsWwWpUZMRgQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwygmqHfSzRZqxIfHAfuDDxBvETkIc8F9KRTNT4+atzMDq3Ckxa
+	UG4DBI/A0GN5p+AizIQoqBiuMZpK+oHfd8tGTWabaDyc6vMpWW4c
+X-Google-Smtp-Source: AGHT+IEfFnEwON+HSzkjwOoBuLCF6zULusBXwx1m/nRkf/7DvatVsNMnOVXjMlCBXNRhwhP6OcMSug==
+X-Received: by 2002:a05:6402:280d:b0:5cf:479a:d8a0 with SMTP id 4fb4d7f45d1cf-5cf8fd2faa8mr2727792a12.26.1731693414322;
+        Fri, 15 Nov 2024 09:56:54 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf9566be44sm538792a12.40.2024.11.15.09.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 09:56:53 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 227FABE2EE7; Fri, 15 Nov 2024 18:56:52 +0100 (CET)
+Date: Fri, 15 Nov 2024 18:56:52 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Mike <user.service2016@gmail.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Sasha Levin <sashal@kernel.org>,
+	Jeremy =?iso-8859-1?Q?Lain=E9?= <jeremy.laine@m4x.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Bluetooth kernel BUG with Intel AX211 (regression in 6.1.83)
+Message-ID: <ZzeLZHFWYCT6C8VI@eldamar.lan>
+References: <ab5e25d8-3381-452e-ad13-5d65c0e12306@leemhuis.info>
+ <CABBYNZKQAJGzA8th8A7Foiy7YaSFZDpLvLZqDFsVJ3Yzn8C_5g@mail.gmail.com>
+ <Zypwz65wRM-FMXte@eldamar.lan>
+ <2024110652-blooming-deck-f0d9@gregkh>
+ <Zysdc3wJy0jAYHzA@eldamar.lan>
+ <CABBYNZKz_5bnBxrBC3SoaGc1MTXXYsgdOXB42B0x+2dcPRkJyw@mail.gmail.com>
+ <2024110703-subsoil-jasmine-fcaa@gregkh>
+ <4f8542be-5175-4cf1-9c39-1809a899601c@leemhuis.info>
+ <2024111225-regulate-ruckus-1a46@gregkh>
+ <2024111358-catching-unclog-31f3@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+In-Reply-To: <2024111358-catching-unclog-31f3@gregkh>
 
-On 11/13/24 10:37, Laura Nao wrote:
+Hi Greg,
+
+On Wed, Nov 13, 2024 at 04:10:23PM +0100, Greg KH wrote:
+> On Tue, Nov 12, 2024 at 01:04:03PM +0100, Greg KH wrote:
+> > On Tue, Nov 12, 2024 at 12:54:46PM +0100, Thorsten Leemhuis wrote:
+> > > On 07.11.24 05:38, Greg KH wrote:
+> > > > On Wed, Nov 06, 2024 at 10:02:40AM -0500, Luiz Augusto von Dentz wrote:
+> > > >> On Wed, Nov 6, 2024 at 2:40 AM Salvatore Bonaccorso <carnil@debian.org> wrote:
+> > > >>> On Wed, Nov 06, 2024 at 08:26:05AM +0100, Greg KH wrote:
+> > > >>>> On Tue, Nov 05, 2024 at 08:23:59PM +0100, Salvatore Bonaccorso wrote:
+> > > >>>>> On Tue, Nov 05, 2024 at 12:53:50PM -0500, Luiz Augusto von Dentz wrote:
+> > > >>>>>> On Tue, Nov 5, 2024 at 12:29 PM Thorsten Leemhuis
+> > > >>>>>> <regressions@leemhuis.info> wrote:
+> > > >>>>>>> On 31.10.24 07:33, Salvatore Bonaccorso wrote:
+> > > >>>>>>>> On Tue, Jun 18, 2024 at 12:30:18PM +0200, Thorsten Leemhuis wrote:
+> > > >>>>>>>>> On 12.06.24 14:04, Greg KH wrote:
+> > > >>>>>>>>>> On Thu, Jun 06, 2024 at 12:18:18PM +0200, Thorsten Leemhuis wrote:
+> > > >>>>>>>>>>> On 03.06.24 22:03, Mike wrote:
+> > > >>>>>>>>>>>> On 29.05.24 11:06, Thorsten Leemhuis wrote:
+> > > >>>>>>>>>>>> [...]
+> > > >>>>>>>>>>>> I understand that 6.9-rc5[1] worked fine, but I guess it will take some
+> > > >>>>>>>>>>>> time to be
+> > > >>>>>>>>>>>> included in Debian stable, so having a patch for 6.1.x will be much
+> > > >>>>>>>>>>>> appreciated.
+> > > >>>>>>>>>>>> I do not have the time to follow the vanilla (latest) release as is
+> > > >>>>>>>>>>>> likely the case for
+> > > >>>>>>>>>>>> many other Linux users.
+> > > >>>>>>>>>>>>
+> > > >>>>>>>>>>> Still no reaction from the bluetooth developers. Guess they are busy
+> > > >>>>>>>>>>> and/or do not care about 6.1.y. In that case:
+> > > >>>>>>>>>>>
+> > > >>>>>>>>>>> @Greg: do you might have an idea how the 6.1.y commit a13f316e90fdb1
+> > > >>>>>>>>>>> ("Bluetooth: hci_conn: Consolidate code for aborting connections") might
+> > > >>>>>>>>>>> cause this or if it's missing some per-requisite? If not I wonder if
+> > > >>>>>>>>>>> reverting that patch from 6.1.y might be the best move to resolve this
+> > > >>>>>>>>>>> regression. Mike earlier in
+> > > >>>>>>>>>>> https://lore.kernel.org/all/c947e600-e126-43ea-9530-0389206bef5e@gmail.com/
+> > > >>>>>>>>>>> confirmed that this fixed the problem in tests. Jeremy (who started the
+> > > >>>>>>>>>>> thread and afaics has the same problem) did not reply.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> How was this reverted?  I get a bunch of conflicts as this commit was
+> > > >>>>>>>>>> added as a dependency of a patch later in the series.
+> > > >>>>>>>>>>
+> > > >>>>>>>>>> So if this wants to be reverted from 6.1.y, can someone send me the
+> > > >>>>>>>>>> revert that has been tested to work?
+> > > >>>>>>>>>
+> > > >>>>>>>>> Mike, can you help out here, as you apparently managed a revert earlier?
+> > > >>>>>>>>> Without you or someone else submitting a revert I fear this won't be
+> > > >>>>>>>>> resolved...
+> > > >>>>>>>>
+> > > >>>>>>>> Trying to reboostrap this, as people running 6.1.112 based kernel
+> > > >>>>>>>> seems still hitting the issue, but have not asked yet if it happens as
+> > > >>>>>>>> well for 6.114.
+> > > >>>>>>>>
+> > > >>>>>>>> https://bugs.debian.org/1086447
+> > > >>>>>>>>
+> > > >>>>>>>> Mike, since I guess you are still as well affected as well, does the
+> > > >>>>>>>> issue trigger on 6.1.114 for you and does reverting changes from
+> > > >>>>>>>> a13f316e90fdb1 still fix the issue? Can you send your
+> > > >>>>>>>> backport/changes?
+> > > >>>>>>>
+> > > >>>>>>> Hmmm, no reply. Is there maybe someone in that bug that could create and
+> > > >>>>>>> test a new revert to finally get this resolved upstream? Seem we
+> > > >>>>>>> otherwise are kinda stuck here.
+> > > >>>>>>
+> > > >>>>>> Looks like we didn't tag things like 5af1f84ed13a ("Bluetooth:
+> > > >>>>>> hci_sync: Fix UAF on hci_abort_conn_sync") and a239110ee8e0
+> > > >>>>>> ("Bluetooth: hci_sync: always check if connection is alive before
+> > > >>>>>> deleting") that are actually fixes to a13f316e90fdb1.
+> > > >>>>>
+> > > >>>>> Ah good I see :). None of those were yet applied to the 6.1.y series
+> > > >>>>> were the issue is still presend. Would you be up to provide the needed
+> > > >>>>> changes to the stable team?  That would be very much appreciated for
+> > > >>>>> those affected running the 6.1.y series.
+> > > >>>>
+> > > >>>> We would need backports for these as they do not apply cleanly :(
+> > > >>>
+> > > >>> Looks our mails overlapped, yes came to the same conclusion as I tried
+> > > >>> to apply them on top of 6.1.y. I hope Luiz can help here.
+> > > >>>
+> > > >>> We have defintively users in Debian affected by this, and two
+> > > >>> confirmed that using a newer kernel which contains naturally those
+> > > >>> fixes do not expose the problem. If we have backports I might be able
+> > > >>> to convice those affected users to test our 6.1.115-1 + patches to
+> > > >>> verify the issue is gone.
+> > > >>
+> > > >> Then perhaps it is easier to just revert that change?
+> > > > 
+> > > > Please send a revert then.
+> > > 
+> > > We afaics are kinda stuck here .
+> > > 
+> > > Seems Mike (who apparently had a local revert that worked) does not care
+> > > anymore.
+> > > 
+> > > It looks like Luiz does not care about 6.1.y either, which is fine, as
+> > > participation in stable is optional.
+> > > 
+> > > And looks like nobody else cares enough and has the skills to
+> > > prepare and submit a revert.
+> > > 
+> > > In the end the one that asked for the changes to be included in the
+> > > 6.1.y series thus submit one. Not sure who that is, though, a very quick
+> > > search on Lore gave no answer. :-/
+> > > 
+> > > There is also still the question "might a revert now cause another
+> > > regression for users of the 6.1.y series, as the change might improved
+> > > things for other users".
+> > > 
+> > > :-(
+> > 
+> > I care as this affects Debian, which is the largest user of Linux
+> > outside of Android.  I'll try to do a local version of the revert to
+> > unstick this...
 > 
-> Currently, KernelCI only retains the bzImage, not the vmlinux binary. The
-> bzImage can be downloaded from the same link mentioned above by selecting
-> 'kernel' from the dropdown menu (modules can also be downloaded the same
-> way). I’ll try to replicate the build on my end and share the vmlinux
-> with DWARF data stripped for convenience.
-> 
+> Ok, I have a series of reverts that seems to build properly for 6.1.y
+> that I'll queue up after this round of stable releases goes out
+> tomorrrow to hopefully resolve this.
 
-I managed to reproduce the issue locally and I've uploaded the vmlinux[1]
-(stripped of DWARF data) and vmlinux.raw[2] files, as well as one of the 
-modules[3] and its btf data[4] extracted with:
+Thanks. I have asked affected users which did report the issue in
+Debian if they can test the reverts (hope to get feedback in time
+before the actual 6.1.118 release).
 
-bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko > cros_kbd_led_backlight.ko.raw
-
-Looking again at the logs[5], I've noticed the following is reported:
-
-[    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
-[    0.416029] BPF:  
-[    0.416083] BPF: Invalid offset
-[    0.416165] BPF: 
-
-There are two different definitions of rcu_data in '.data..percpu', one
-is a struct and the other is an integer:
-
-type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
-type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
-
-[115801] VAR 'rcu_data' type_id=115572, linkage=static
-[115803] VAR 'rcu_data' type_id=1, linkage=static
-
-[115572] STRUCT 'rcu_data' size=1152 vlen=69
-[1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64 encoding=(none)
-
-I assume that's not expected, correct?
-
-I'll dig a bit deeper and report back if I can find anything else.
-
-[1] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux
-[2] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux.raw
-[3] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko
-[4] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko.raw
-[5] https://pastebin.com/raw/FvvrPhAY
-
-Best,
-
-Laura
+Regards,
+Salvatore
