@@ -1,80 +1,170 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982B3136338;
-	Fri, 15 Nov 2024 10:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9117D2AE77
+	for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 12:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731668144; cv=none; b=Abxmzbb+KAIY0WLjADVha/K+a9PEkj2AHVQo7iV25hmwhpb+/vCSgm/nw1USGK/Nc7rAu86IsvTcQQ4A0U36MHVV/Ig4/f11UAwlXOvwaKfzBQOp+y/agT2MTG6N6Ys7Fa1RGL+WbnZ3nObOWG2nnbD52dXeTOOe5FwzC6ehvEk=
+	t=1731672384; cv=none; b=bUA4lXW7YmO4+PtP4a4LnD+010VDW+RsTDgNENqsj86a7eW2yypPRrm/m5rlAcgzxj0irhjn1TR34d7J35V1M2RFpN+fggQZleo4GmKKAB0cD1H3spVoLSG7Ha6iDpNPNSnUfcGkFC7L5Nk6GoAvZh5WLw6CehZDnSGnyi2u6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731668144; c=relaxed/simple;
-	bh=7pJa2BsQ8b5xkSAQMM5pofcqK61ow5jhOB4wej/1srM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+JJqbcIo8SXl63V8MfQiQ0kYUHbA6lxjAYNBYEYNy8aixNtGsom0ysgvHpElX+f2YLNHm1PRZ6lidylPscU+KXiKH0jCLSOjzoD4wUaPfXMe1y0Rgi99kjsDl3YARmTNSSZDBNyB6+hppdjvopJ3TZb6jvbV2C2SXevnkP8OLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Lt6LSMoK; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1731672384; c=relaxed/simple;
+	bh=9cLYF5Y9N14G0jya0Gw2sFofAVNisnbAW2MEgFStvNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=bfzZiWcUEjqQ7MAWhY4VzeDUxJloi2UlQKYfM3qe6IYEv3ShwQQrblZWKrdMPzUvof146p3SjuRRKVeznJ4H8Bj//POZ3vapdcguW3YBuxOum3D0F7f1BU80b4ti+ub0muPHLEZW+aMEOk0oWnE5YkOPMTNJCH8jsp82Tst6xUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WLYd1njX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Lt6LSMoK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=7pJa2BsQ8b5xkSAQMM5pofcqK61ow5jhOB4wej/1srM=;
-	t=1731668142; x=1732100142; b=Lt6LSMoKrF+HHJcBHi7hwxnvRpeeffNrChm3UNGeH2hbhsi
-	7NlFVacaRYW5iWUTFf7bF8XJuPWgoE5JTnxLaQwiZz7Sm3OVMGswnznnh64B25bZ06RCfcLOx+eTo
-	qvxdz30kzaxLhEGFFFG5oHYH5mjEqoqcgqvxBMICw1GGM5PjN19lq9wI45tH/O36zzDKjwLYQaL3u
-	RyavIxeOAIuHvV6wrDmt7P3oAGLheD8CBkBMqkZ6taIkLEmRyxqo98qCaNEWAzL2DWgBsbFb1Ir+r
-	vB9U1vRqFj6a7M+ZGfUKssz5apYzHxcyD8xO6rajc+sbRh/scvldJWrruATS0rRw==;
-Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1tBtzG-0008Ij-PB; Fri, 15 Nov 2024 11:55:38 +0100
-Message-ID: <3fac9b27-829c-4357-8d82-2b5789b35216@leemhuis.info>
-Date: Fri, 15 Nov 2024 11:55:28 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLYd1njX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731672381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dXKYfFH14d/tQ6qy22rrt9FvVPPlJ7Javhwa5aga5ck=;
+	b=WLYd1njXLUxByHQAmCtQ+OWv7t0e0tqQAVRZDFvCF1KMqFksmI01ck/yoaJ9Z4vDYD4B8v
+	uTgM/sAt8HAHOqLmuCyPrzHCb/17MtXYfZkWlzykMmiqiFtp+0nL49QBRv2S13rw6y4EYM
+	zFWy74SgfYSRDAa/XEh9H3CyP6YfOpQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-r3higaDGO3G4G2605fPnzQ-1; Fri, 15 Nov 2024 07:06:20 -0500
+X-MC-Unique: r3higaDGO3G4G2605fPnzQ-1
+X-Mimecast-MFC-AGG-ID: r3higaDGO3G4G2605fPnzQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37d5016d21eso934152f8f.3
+        for <regressions@lists.linux.dev>; Fri, 15 Nov 2024 04:06:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731672379; x=1732277179;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXKYfFH14d/tQ6qy22rrt9FvVPPlJ7Javhwa5aga5ck=;
+        b=p848do28KngwF+R0q2I2M6mEtEu+X2Sz+IVQKmUJyqgLTE5S6NkqRg9c8djzar7VtJ
+         itmToEGTuFmxEjZhCXKUJSVp90yXeRFdtHPeaOiS53/2ZZyUc5/mniIzNvvC5pmhGJFn
+         thKNvGaGmBDZYLV7FaB9SMgcKwVz/9XBSgAE3K0QW5DXp7+0DWfZlCl8GGf8FIODBqsZ
+         omomBKCZAJY1EHimC0Em5euLQcWVTwHwEDsRYN48WpdiNk2xMiA+bITLu3r7ouaA9IJI
+         rlC7WWJ849S6UUIk7MRD2bm891ZGnkCqUXlUpNFgbg5cG/GFWwKeCLGhSfqxlZBY1ZnY
+         23zw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Srl5oQCDNH8A26oDwNojzpdUyL0+EBD6YvuWYwfTH5jEXhVWUlcIcA5AcovUMso985f3RRIMUp2SFw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywfn6O2rYTC0kIFOqCc7FKsvCgWmz8AZInsqqP7Us39o4tv1is8
+	nb1iqadQD2lG+dLtDUVAWyJkJyq2Err2mmH4OV9vy6n1T/e4OpNl5BXYAPecdbRnhp1G4RImTyn
+	UWOZmbR/wjWIYEfr5ucSszps7vS0U8K3PUjeBhu35gYYT3tAN078xAHmg/0I3
+X-Received: by 2002:a05:6000:156b:b0:37d:5436:49b with SMTP id ffacd0b85a97d-3822590476cmr1855822f8f.13.1731672379000;
+        Fri, 15 Nov 2024 04:06:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFwGqn46v0gzfjomgwxM1BVXDUVHtJOb+t3C3YKWqeIhVYhUok1C59X+0aqnseP1q/9ZYQp3A==
+X-Received: by 2002:a05:6000:156b:b0:37d:5436:49b with SMTP id ffacd0b85a97d-3822590476cmr1855796f8f.13.1731672378603;
+        Fri, 15 Nov 2024 04:06:18 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb (host-80-47-4-194.as13285.net. [80.47.4.194])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ada408dsm4169808f8f.10.2024.11.15.04.06.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 04:06:17 -0800 (PST)
+Date: Fri, 15 Nov 2024 12:06:15 +0000
+From: Juri Lelli <juri.lelli@redhat.com>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Joel Fernandes <joelaf@google.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Benjamin Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com,
+	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] locking: rtmutex: Fix wake_q logic in
+ task_blocks_on_rt_mutex
+Message-ID: <Zzc5N_3jxOZ3ng3m@jlelli-thinkpadt14gen4.remote.csb>
+References: <20241114190051.552665-1-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] The iwl4965 driver broke somewhere between 6.10.10
- and 6.11.5 (probably 6.11rc)
-To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Johannes Berg <johannes@sipsolutions.net>
-Cc: Andrey Batyiev <batyiev@gmail.com>, linux-wireless@vger.kernel.org,
- Greg KH <gregkh@linuxfoundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Kalle Valo <kvalo@kernel.org>, Alf Marius <post@alfmarius.net>
-References: <60f752e8-787e-44a8-92ae-48bdfc9b43e7@app.fastmail.com>
- <87wmhg61yp.fsf@kernel.org>
- <CAEQQxWx7PXw3O_j1FWn7G+DhUUXt3sEB0qDyA2+udRQ6r28FUA@mail.gmail.com>
- <4f689121-f2c1-45ec-bd5b-105a770af935@app.fastmail.com>
- <87ttcauv7x.fsf@kernel.org>
- <5f64abc6-017f-4283-bf08-dba1aea28e9d@leemhuis.info>
- <9fa869ddec6c22c0bb299676e27b7b33d3e3b5d7.camel@sipsolutions.net>
- <8a647709-8c33-4ac9-92da-bbf83ae2ed93@leemhuis.info> <87bjyhr1s9.fsf@toke.dk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-MW
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <87bjyhr1s9.fsf@toke.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1731668142;1df3a95b;
-X-HE-SMSGID: 1tBtzG-0008Ij-PB
+In-Reply-To: <20241114190051.552665-1-jstultz@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: xA3xy1_s4yr5mjoR0mJe21juTmy95tSGf1nK3XYhIwM_1731672379
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 14.11.24 21:36, Toke Høiland-Jørgensen wrote:
-> I understand your frustration, certainly, and I get that you are tasked
-> with a thankless job in trying to improve the regression handling
-> situation. However, I also agree with Johannes that by letting your
-> frustration shine through [...]
+Hi John,
 
-Thx for the mail. Yeah, you are right, apparently my frustration took
-more hold of me than I was aware of/willing to admit.
+On 14/11/24 11:00, John Stultz wrote:
+> Anders had bisected a crash using PREEMPT_RT with linux-next and
+> isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
+> wakeups from under mutex::wait_lock"), where it seemed the
+> wake_q structure was somehow getting corrupted causing a null
+> pointer traversal.
+> 
+> I was able to easily repoduce this with PREEMPT_RT and managed
+> to isolate down that through various call stacks we were
+> actually calling wake_up_q() twice on the same wake_q.
+> 
+> I found that in the problematic commit, I had added the
+> wake_up_q() call in task_blocks_on_rt_mutex() around
+> __ww_mutex_add_waiter(), following a similar pattern in
+> __mutex_lock_common().
+> 
+> However, its just wrong. We haven't dropped the lock->wait_lock,
+> so its contrary to the point of the original patch. And it
+> didn't match the __mutex_lock_common() logic of re-initializing
+> the wake_q after calling it midway in the stack.
+> 
+> Looking at it now, the wake_up_q() call is incorrect and should
+> just be removed. So drop the erronious logic I had added.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Joel Fernandes <joelaf@google.com>
+> Cc: Qais Yousef <qyousef@layalina.io>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Benjamin Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: kernel-team@android.com
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: regressions@lists.linux.dev
+> Cc: Thorsten Leemhuis <linux@leemhuis.info>
+> Cc: Anders Roxell <anders.roxell@linaro.org>
+> Fixes: 894d1b3db41c ("locking/mutex: Remove wakeups from under mutex::wait_lock")
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Closes: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
+> Tested-by: Anders Roxell <anders.roxell@linaro.org>
+> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> Signed-off-by: John Stultz <jstultz@google.com>
+> ---
 
-Apologies to everyone I steered up, I'll try to do better.
+LGTM.
 
-Ciao, Thorsten
+Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
+
+Best,
+Juri
+
