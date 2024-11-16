@@ -1,226 +1,244 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B2CD51C;
-	Sat, 16 Nov 2024 15:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731769663; cv=fail; b=dMjgUo+dAXQa95LNEve91zjaIu78Z1Zdn3ffPkq0xSO89voEWLHTfimhGjbzPk4ClltVgSeK3+nsBepgmYk6mygUsUeOsPb+UEhXyxkOgn6ZteBcrIQR4qxEHXQBt7mH/Gz5G+Ftx60jIW5uQqTN6UqzJpOi/+AjenmgeJXf8vc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731769663; c=relaxed/simple;
-	bh=C06AvPzzhZDADiZqk3XU6rq+TE00TzsUbOThmYrwJWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ncv/RUFUDKGuR/Yej/PPVXDK5uGdNniz8GYxmi9M90TyMSXLQYn9opsITnv8YoZbeq+NctVwFB/MXNORGCtbGUosQUsQ5Dn2c6qxVyBYV22fY7tOf6vjnCplPpR7BWgaEOr4Wq6LF2LBu0EAxcXGYxOYL9ctB83JAnyCyVBBZpM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cT0Xsqe8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hiWArOGV; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E811822E5
+	for <regressions@lists.linux.dev>; Sat, 16 Nov 2024 16:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731775858; cv=none; b=CiFUI281XY0n27N/TkTA71WBdA92USn2BIrI4X45fB78/9/E6WaTsXhAHzn8mFzikOep3fvlsulmvrboJMBXOpayu5G+S9ZriOD7WBRREq0DfOCGTS+6m8v3vn5oCk669SXzTncsSfrOi45koBn7koGZsxVXEG9AS1Y1/7C5uJA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731775858; c=relaxed/simple;
+	bh=JxVQRUmXu/GR6DOZL4O8huHliPPvYC5bjH4b+yDupQ0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=amBudxJN0HqEjvGEnIK44Yvqc5mUTgxATMQpHJwsPZsE1/kHjRZvCT5uJWwnxD2hls00GfSRb9SYDdmAJfgXzEzYxB7mHBdJgWq2lGHJqs+4g/ZqewkewPbysQqxQfT1N3uAHTS+B+B1eEsPbKxSDsEg596lGiRDWtjl5zA934A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PEHP18wT; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cT0Xsqe8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hiWArOGV"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AGBoFlP003720;
-	Sat, 16 Nov 2024 15:07:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=SXZixXO2Kidiptj6dP
-	3FUZyZc5shPa3u/E2yJY358Sw=; b=cT0Xsqe8Hl+BrFZQlY6/TmEoHrHyMvONuI
-	ijvRNzbLwh11+tnyVWZP1ExauoMn7TzdZ08O5etPj6mElE90mQzu6QT2zV3RPCd/
-	ksRfPO9zURsge3b5hb/sh2fBYsT9RMv2x+cbwcYw/txjc++D0ff/uS/ybkCmzYdv
-	ZxAsAQzEv6qhUiAlC4ynntDdgAqeO8ZH9Dpccrt/Q7GWFDarB8cIPOdgAAhsW+BJ
-	L95n1ZCyOIPpfClu28m/GMTE9HX9k5CRElcRaCS7DuzVsJpITmVJz0stBR9+1vCC
-	X8dh/cje+6WTTP9i+X883aV90jd/GS1yEL7n2Lsa4+7Q2LzHERhg==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42xhtc0f7x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 16 Nov 2024 15:07:37 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4AGAa1YW037084;
-	Sat, 16 Nov 2024 15:07:37 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42xhu5ma9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 16 Nov 2024 15:07:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oqloAtxlslDmyy/VVz/pAghVZHH8MfgVtNNtnxv313SwTwV1q62CLj07jPz2bh1YsP/c7aAGYFWtKYtSoxl6qQ/o4Cmln6cFnaqnpltksKPIVp0C4uhONfU4waazcato7FaxNxY13KTK0cky8SRRHQVVSk0q78fDnFcMbtcbsw3TazY3JVvENV2Hrblo+rg9S0PXHGv+1yOR+3SdsWCs4NyDKpLk2Mai2evPDOKfkfE+kyzUbjilgSl+GDvjAb/VkAtYjyHOa3LBte5x0eCusuZn3GavaiDs7tIAX7e16+6uyB8/YG8p6Xogbl7nCrV77Jhm3jkLqer8Wrc2Pdh6aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SXZixXO2Kidiptj6dP3FUZyZc5shPa3u/E2yJY358Sw=;
- b=nmSJoN1v9DV4sTGnjdEm2dU/XCV4cS8ZG5yN9K45FxV9MXHvmMQOsTMzpWqbh1w1v5oqXAV/qQUKkqawO21ScgPLIwNDc3KSNSMaYgBBcoa6XcAw8OhV8lxWAMvhutjRr9B5K0v32TS71F5jWMYZxdWp+HLJ20UaptHTJWq0Q77qXJC79w2xkpZCtW5QC5qzyAkLO4whJr0afq9bInCKhG9Zh+jUnOQYiRSe4BVBnBYaePyMj3uGQ8iFl84CAelO1qPzRdSVjnJNsSKwNiWsrfvrjNjyawtZAz0Mk7hCb+ZfvNiG3+hT2XDpsiALNWiMw/0e5oT3Q5XSJA3pZR4U/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PEHP18wT"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-84ff43e87cbso215827241.1
+        for <regressions@lists.linux.dev>; Sat, 16 Nov 2024 08:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SXZixXO2Kidiptj6dP3FUZyZc5shPa3u/E2yJY358Sw=;
- b=hiWArOGVCShftpiPtv7atg4DbL8cY1b2aegYUBAqDRY4AKvaHkC69ZBjEVUBgZ5aT/GVVf7XGaIMr9Pid9DJjsW+bHuQi9nwFG788rDi++bqFnWc62RFHa4Q0cSZy15RlJ6qcr0v1lwRmB22lTDXkz5mWiNzSY265YIw/nliawA=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS0PR10MB7361.namprd10.prod.outlook.com (2603:10b6:8:f8::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.17; Sat, 16 Nov
- 2024 15:07:08 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8158.019; Sat, 16 Nov 2024
- 15:07:07 +0000
-Date: Sat, 16 Nov 2024 10:07:03 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Hugh Dickins <hughd@google.com>
-Cc: Jeongjun Park <aha310510@gmail.com>, akpm@linux-foundation.org,
-        stable@vger.kernel.org, regressions@lists.linux.dev,
-        linux-nfs@vger.kernel.org, yuzhao@google.com
-Subject: Re: tmpfs hang after v6.12-rc6
-Message-ID: <Zzi1FzrwmNIMIvnH@tissot.1015granger.net>
-References: <ZzdxKF39VEmXSSyN@tissot.1015granger.net>
- <Zzd12OGPDnZTMZ6t@tissot.1015granger.net>
- <CAO9qdTGLn6QWJg71Ad2xcobiTHE5ovoUxSqvrDDrE_i1+uqUQw@mail.gmail.com>
- <Zzd5YaI99+hieQV+@tissot.1015granger.net>
- <CAO9qdTEaYa639ebHX8Qd0_FqOZUZLc_JvYNyxepUthGyDqw_Bw@mail.gmail.com>
- <ZzeQ1m3xIjrbUMDv@tissot.1015granger.net>
- <b40e7156-7500-5268-4c3d-c61a6382d1f0@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b40e7156-7500-5268-4c3d-c61a6382d1f0@google.com>
-X-ClientProxiedBy: CH5P223CA0002.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:610:1f3::10) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=linaro.org; s=google; t=1731775854; x=1732380654; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/AJbuq7ELapydlmshajvSeNG3RIacjhiudlwSv7Rgic=;
+        b=PEHP18wTT3eJDVJpiOR1q5coXNoGAgkcGlX+wjPrOtLkK8Wu1a6NSugY+gSMq3T3Pq
+         EPwIQd6saOdevDG0/TH4L7Hfi5lIX9trSMqF7HYzbCWZb4gG7fB/QdEAZs+t5G8/oXds
+         cNhGG5qpeUtg/NOPBiKFhUvSvAGITUw8zwmkcfcwnY2FRIxn/PYqcJW+5Zbo4l+RPhYt
+         +Z0Qxm1a5L1BBT25i2jaAUJnEyWV/SBH5njczXOtLTwuWGPEJu9FBAZafdbjFBnpgib+
+         HZ/rJhGJWP9TSrNg0dkid7FvWh7Ih6LTmGuKrD2WUtD1m4R+KRNhqoXDKECCpS5BlZcg
+         KX3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731775854; x=1732380654;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/AJbuq7ELapydlmshajvSeNG3RIacjhiudlwSv7Rgic=;
+        b=qnJmAjthyW29FhXhxZd1pw6+XP3EPX+WHo/WrYCQ/xtgISWDEFmdj6HV6cAf0IEgEl
+         jCg+WzDJrlqnhWksDxAiuKG4av75eMtf8CDSGUbIJbVuqrhoTRBdz8kwWbjVZVol6rnU
+         tdeYztvFFWMHHX9yNr9wHHBRQC9YhswTiLOBdosXqRnZ5z6TSz2g4s4kG+uxs/66GlU0
+         ZmQuJftjoOcj4jPFIAmq2xMz8Wpgy/lbSRqk9AMTEF5Uhu4qCEb5rqVfAZlmIZ+KGu6z
+         jKamvEb5mJ5/MhT1diyKQRsrjOtLyyEitl0Dkb0IWDGnVscYgFJslsTvPaFCT4ib5ZEa
+         lDTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ3L25YXOYoUpeS3VwtnigHifIzQanm2Yl4nMVRgb6PMntnfIWJ/pluzSpmn3gfkBhWXlvyV76kAWXXA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yweojq8ebgQR96L2VK8kxhB6BLXq6B8LnRfo43/SKlZa0f4SaoC
+	133hSMBu3MFXYT7HZcCyxUbsmxKKZecqhrIvAw4OvRA2gWX8G9k+N/OPepn+vyY339iuihURJWK
+	b/NAPBftI9IgSNoz/sQiSEQ2aWiuZ65tlR26GmA==
+X-Google-Smtp-Source: AGHT+IGxwi/IVhPflsdG08C7ZbvkGxsHxai4iTgnUdrVuVk07lklbn089q1LGPkXwyBIKlKfDffXfQwU/VQ3TdNFYOg=
+X-Received: by 2002:a05:6102:3f03:b0:4a3:db6a:dbbf with SMTP id
+ ada2fe7eead31-4ad62bffe1amr7191005137.14.1731775854568; Sat, 16 Nov 2024
+ 08:50:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS0PR10MB7361:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9a57d53-ccf4-4c5f-10ef-08dd06505619
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?d67FZ7l8hb5/t9SX0QC1bwdz2laf0qmC9kRBoh/HT1cwxj+zAZSiO4thsIHq?=
- =?us-ascii?Q?98B+h90s6kjW/tfPC+aNmVkK5mCHrndQudEDDtBSuFb0WWgBptvDlpbeU3oQ?=
- =?us-ascii?Q?yHn1e+kWH0iw1xDnFj8qAxfqIt+znGlWYboziIihF7zeiZMmHQZ7Dk+CIcTM?=
- =?us-ascii?Q?1x6d6+WHjgpiA6za+Nfn8/gjp0sW/wwLfvsutmds38UEiUDB8dGriADPffR9?=
- =?us-ascii?Q?2hnAW9CqCo3IYM5gaTNc4e+z/9Pu3r9i3qemRI5h18C5v/Rjdfid+fifupdG?=
- =?us-ascii?Q?puVtGdS44aDxgict5HfvIhPurZa9iOzlZCRTuzN6k6Fbf0glSg3j473eX6yL?=
- =?us-ascii?Q?DPKMmx/wcEegr7VxZVbNeJyB6LyXtzxdAMf0Tla/MJ1zb4/UT0s6v+SG6tFq?=
- =?us-ascii?Q?31f8Tb/4LYY3xSX0rX09U15yGungV2OVIIDgZVw+Kjqy2lo2Jum6lKZqQwk/?=
- =?us-ascii?Q?1TWJFDyDsENIqV6aTtbXjYkfD90dZNe2do6L5EdnMy7KWVUdhv1C3LyXSHcB?=
- =?us-ascii?Q?TJKlbruEnSWaRAjT0YUlsvkt+D0E2ulPcEWayl3Sr1nX/ftKJOw6LMHcm+cP?=
- =?us-ascii?Q?jyGRybTSBzdGB7OEeYxCblFBIxvpBgc5KWued2+C7yullbvaBuOO3BjAx08t?=
- =?us-ascii?Q?GHLy9JMP356WHc7F87+m1e7alU7fpVpT15aHZ85AoK/nLV8r5JX84Ofxht67?=
- =?us-ascii?Q?QLCm+523jNyynihSJ+JQamlfQlTUPAul++JU6+t22U0e2lJEuuMPM6MPXVPj?=
- =?us-ascii?Q?PpqqhViQzPU/aPwMoyIB6rappYqU6p+EqvZR+FYQgt+LnbSjH0C9hK1uPmVt?=
- =?us-ascii?Q?7qH2og/Di+sL4zS6U0QVxjJ4PZDFbs4ID+mcqu/m78uIacBuiWKInoOCYuAR?=
- =?us-ascii?Q?Z1SVgXeszL5ShAjbZLBVzYVUevy/4E7PXQK8sdBuZlbzZH5+Cu3scIRYuWwU?=
- =?us-ascii?Q?me24+qaO8zRlssfEhZtZUn3nmxvpamq7uSC/B9UA5ITm4uAeh7vMb0CgjizJ?=
- =?us-ascii?Q?VJBHIYIDlryGidmCO3HyDMdASfa82/kTq0Y/HrtSEFuU2tm6nn+C8r94ziKY?=
- =?us-ascii?Q?aXR8GjiQXFhAsMiTIKx7MnZvruRjE6RJcYIDNRD32VRJRRFgHjcx8qHTSMcH?=
- =?us-ascii?Q?0L8KmSnnGRYkKJQT6hY95SLJL4T6v/CozInvHsE1Uwj9qQW4q1gZukp1XFMY?=
- =?us-ascii?Q?6b/Il6FAkxlSBDtDT4/HRQXVZGG/DtpwjuEwYxsnfFh/ViaURYPoMIu0XJ8M?=
- =?us-ascii?Q?SJcN5pMuTKsbE5oRJh1Nf5L+3xtUZq7/rVSB+xZLQTBdrli1AmuYSaxqLzVI?=
- =?us-ascii?Q?uSRpLXg1kcJzi11pFyb9ePKR?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0okR3eBrKJUfooicYJlLMpKGqsr+qsZohaLW+FSclqd3iw+ZE9Ds8cimYvXK?=
- =?us-ascii?Q?Qk/rlJPqVsI9W72cOsNQpLlY/O8Lw/J75CWr30h7+CIQ/YkAamURHRcjZTvW?=
- =?us-ascii?Q?nXg4Vt9qwytrMCJf864bIfD/PmXowMY4/fJWWane9pFEVpMj8lQApxfEtlvb?=
- =?us-ascii?Q?7sbQjSDuBiJEXY0VLFpDkgrLLQM9EeKTOAm/A/zXStWUzy2nThBwHh7W4iJd?=
- =?us-ascii?Q?V2elJYXIKpuQqiUhIh12G4+oPJtXnor/hU+Sp7tdpy1ECktKfo0hzgneqp+O?=
- =?us-ascii?Q?HnxWFrRp9MNmy/ztwNHHtTJQF0ZKaGvIFGXKdgyY5uzZGbwOPAi6OfNwVFjZ?=
- =?us-ascii?Q?P+9kCQHV9uuKflR0WNHu2N8Ux2QMZCDtCdABPYGzciqHDmj2gYpwmo1usKZh?=
- =?us-ascii?Q?HvzbDdKQ+HKXmRMZpdHsOu3t+UVPcsgdDca74W0/fu8dvlzZNEYZ92vTJ59K?=
- =?us-ascii?Q?Kvod5Et8EHQi7Rt/s//tyniuM93R0LI2b77a+8mm7HorhAvX7xFW29QJZDK/?=
- =?us-ascii?Q?gm3VSde9eUPMue2TwdhxcNmEGjEk/DjihBkKst0811lIhj9yRZCoyERFqipP?=
- =?us-ascii?Q?Hl0cR2Df3rJrCGO7MnZ4OqEKcA0iYDhXXLdId3pCdogrt6aodBCARvGHS23/?=
- =?us-ascii?Q?X0TrfVG/fhEgiHBvurm4afqIWeGV213YdudehxR58qRoYkVctUogRc8SV306?=
- =?us-ascii?Q?EU4Mj5yitCuwfKB6TpgGyc9EYL+4PzTn3E85UvnNRe/WOWBsqJ+CkCc1T7H+?=
- =?us-ascii?Q?JwDANu3hXXz2ejmp7hlfZ6XUhLEKdQvGnW/DiTNRUccxtrz3O+We/VJ/VXr6?=
- =?us-ascii?Q?at/kLt9mgu6FtCnRZHc9cefy7dZjUwn34BrRMi4/tzoqRH9kaPuvN5AuYKE2?=
- =?us-ascii?Q?Zwj1nRWkeZcslo/pWsq+Cq1491bUrfV52LfTXbUaGsMDdNOEIMoPr0kBsKoL?=
- =?us-ascii?Q?yRV8dGKFm1irlEzUd2Pd5LiI4Uo7FCyiKFx0LonHBYbLVr96oUfTzBlyXKP5?=
- =?us-ascii?Q?PaBfuGfhBcWYJgv9RlrNcWoBcIgFVbRjVf8fwBJM03opT+6lbI7PRoN9s6JZ?=
- =?us-ascii?Q?+lZm1J038VTw2Ygj4RO1oFoD0c1OXgNmcW8miFn4/IvCU6OCW0XF4/7xnQlv?=
- =?us-ascii?Q?bAwm21TpUattd+iv+TTaeY2as+YQHngHNwJ7AV/ciaXYZfsoaFtE1Lo+XtWd?=
- =?us-ascii?Q?b9hlMKFTios6RyVAzyqqa3ysMRfcdQjQwpq+JC2WM+tsgHl/dg4gmf3ATXnR?=
- =?us-ascii?Q?+nzAB9u1jhpcZyZwPagjXH6oULyQwR2M5Xx4ByA+KZYthTKXZCpbIxn8CO+b?=
- =?us-ascii?Q?wgkup4J9SwyaRkHjHsjmnnAgrSCy/DHxlvdZMaZclccLYGNN18ZCh98pHoeI?=
- =?us-ascii?Q?eHvagfwTAxoDokdWPEdl+qZcoZV1prguQYm752IKcfQAaoiqYR4huvMjU6eW?=
- =?us-ascii?Q?Sq3Vv3pj+/tL4pxbomdENmupopSaU/qutiDBRs5MRptQ6Gky8op3Yrxf2qTv?=
- =?us-ascii?Q?QrtwijmXXQ7Sqmif5CNzNIDgSwuvxCYh2XFx2cpRtC6diOiK/47vmW7ahcZB?=
- =?us-ascii?Q?DuEOqNKEjxy3A0HqoDx9tKfiTR2Y69XpRZ2sVWVQ?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	LXWxataIW4RTjiklLo8dBDa26brGQTBkIzuObyXGYhof8glm53KYWCP2ooFieY54EmWl7g84QF7hgfauAh/iWLye9SBr+FEOQVzaMPgjj9KUFzhTbk/QzD6+nq4B949/rf8UmUC1xzAxLJ7JtQvzGM17u9vbXrlNwcdnOeC9zpIr8GcmwfqccID1QYRtzjJf9y+g9Da7lQnYSqA9YxOKk/HVax497BruunAlHNSpSH6/q1ow7slCDW8KZXCmKEDLbE/+mKk8lW/9qTbSkvSROxMzDY3dLNtT2E36GkSRUyOtQnxOHIaC/9jVwSMYPlBUxo01BY4C3W+fyII88Wx2ESPz1OCWI5+3RGZqQlOQpDZaMgeFNKw1zl4nXIXq/AAWQYfqdHOeVWv1O2NtLlKQW2Ht+ZXtfcpCh8g8IvvcrCPx3oljIKoeBi+oZzi8l7bEu6c0NxDa2BaJvSvlQpzgO9lKuSsCWLMwp/sGlt0uszcZ2OQ0+EL6UlVryaNwXSOHxeCKYBvpTvXEsbmBvkkjeavvO4UBixjpDbrIk6d8C5zKUw0rQRZQiPwtvjnicAaVqokR8U4Aj3aJY9QuRsurQ2CMzTCdGL+29wj9W4smO7I=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9a57d53-ccf4-4c5f-10ef-08dd06505619
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2024 15:07:07.8803
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A77C6dYRCOhponRLjfZxrdwKIN5fw4xdegVnQ6GNB9W/Eoosj9/ueNroMMaSSp1889Jm5NoebPcQ6SBkF2Pr/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7361
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-11-16_13,2024-11-14_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 mlxlogscore=999
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2411160129
-X-Proofpoint-GUID: ozM9C3N9OJ2fOVI2CGy3eM0BJsRj3bQR
-X-Proofpoint-ORIG-GUID: ozM9C3N9OJ2fOVI2CGy3eM0BJsRj3bQR
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Sat, 16 Nov 2024 22:20:43 +0530
+Message-ID: <CA+G9fYvVAvEBbFzhQQ_UBf+PYMojtN1O4qHKXngu33AT8HqEnA@mail.gmail.com>
+Subject: ltp-syscalls/ioctl04: sysfs: cannot create duplicate filename '/kernel/slab/:a-0000176'
+To: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-ext4 <linux-ext4@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 15, 2024 at 05:31:38PM -0800, Hugh Dickins wrote:
-> On Fri, 15 Nov 2024, Chuck Lever wrote:
-> > 
-> > As I said before, I've failed to find any file system getattr method
-> > that explicitly takes the inode's semaphore around a
-> > generic_fillattr() call. My understanding is that these methods
-> > assume that their caller handles appropriate serialization.
-> > Therefore, taking the inode semaphore at all in shmem_getattr()
-> > seems to me to be the wrong approach entirely.
-> > 
-> > The point of reverting immediately is that any fix can't possibly
-> > get the review and testing it deserves three days before v6.12
-> > becomes final. Also, it's not clear what the rush to fix the
-> > KCSAN splat is; according to the Fixes: tag, this issue has been
-> > present for years without causing overt problems. It doesn't feel
-> > like this change belongs in an -rc in the first place.
-> > 
-> > Please revert d949d1d14fa2, then let's discuss a proper fix in a
-> > separate thread. Thanks!
-> 
-> Thanks so much for reporting this issue, Chuck: just in time.
-> 
-> I agree abso-lutely with you: I was just preparing a revert,
-> when I saw that akpm is already on it: great, thanks Andrew.
+The LTP syscalls ioctl04 and sequence test cases reported failures due
+to following
+reasons in the test log on the following environments on
+sashal/linus-next.git tree.
+ - qemu-x86_64
+ - qemu-x86_64-compat
+ - testing still in progress
 
-Thanks to you both for jumping on this!
+LTP test failed log:
+---------------
+<4>[   70.931891] sysfs: cannot create duplicate filename
+'/kernel/slab/:a-0000176'
+...
+<0>[   70.969266] EXT4-fs: no memory for groupinfo slab cache
+<3>[   70.970744] EXT4-fs (loop0): failed to initialize mballoc (-12)
+<3>[   70.977680] EXT4-fs (loop0): mount failed
+ioctl04.c:67: TFAIL: Mounting RO device RO failed: ENOMEM (12)
 
+First seen on commit sha id c12cd257292c0c29463aa305967e64fc31a514d8.
+  Good: 7ff71d62bdc4828b0917c97eb6caebe5f4c07220
+  Bad:  c12cd257292c0c29463aa305967e64fc31a514d8
+  (not able to fetch these ^ commit ids now)
 
-> I was not very keen to see that locking added, just to silence a syzbot
-> sanitizer splat: added where there has never been any practical problem
-> (and the result of any stat immediately stale anyway).  I was hoping we
-> might get a performance regression reported, but a hang serves better!
-> 
-> If there's a "data_race"-like annotation that can be added to silence
-> the sanitizer, okay.  But more locking?  I don't think so.
+qemu-x86_64:
+  * ltp-syscalls/fanotify14
+  * ltp-syscalls/ioctl04
+  * etc..
 
-IMHO the KCSAN splat suggests there is a missing inode_lock/unlock
-pair /somewhere/. Just not in shmem_getattr().
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Earlier in this thread, Jeongjun reported:
-> ... I found that this data-race mainly occurs when vfs_statx_path
-> does not acquire the inode_lock ...
+Test log:
+---------
+tst_tmpdir.c:316: TINFO: Using /scratch/ltp-8XkJXJek4F/LTP_iocSaDyQw
+as tmpdir (ext2/ext3/ext4 filesystem)
+tst_device.c:96: TINFO: Found free device 0 '/dev/loop0'
+<6>[   70.394900] loop0: detected capacity change from 0 to 614400
+tst_test.c:1158: TINFO: Formatting /dev/loop0 with ext2 opts='' extra opts=''
+mke2fs 1.47.1 (20-May-2024)
+tst_test.c:1860: TINFO: LTP version: 20240930
+tst_test.c:1864: TINFO: Tested kernel: 6.12.0-rc7 #1 SMP
+PREEMPT_DYNAMIC @1731766491 x86_64
+tst_test.c:1703: TINFO: Timeout per run is 0h 02m 30s
+ioctl04.c:29: TPASS: BLKROGET returned 0
+<6>[   70.921794] EXT4-fs (loop0): mounting ext2 file system using the
+ext4 subsystem
+ioctl04.c:42: TPASS: BLKROGET returned 1
+ioctl04.c:53: TPASS: Mounting RO device RW failed: EACCES (13)
+<4>[   70.931891] sysfs: cannot create duplicate filename
+'/kernel/slab/:a-0000176'
+<4>[   70.932354] CPU: 0 UID: 0 PID: 992 Comm: ioctl04 Not tainted 6.12.0-rc7 #1
+<4>[   70.932936] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[   70.933433] Call Trace:
+<4>[   70.933894]  <TASK>
+<4>[   70.934161]  dump_stack_lvl+0x96/0xb0
+<4>[   70.934608]  dump_stack+0x14/0x20
+<4>[   70.934909]  sysfs_warn_dup+0x5f/0x80
+<4>[   70.935215]  sysfs_create_dir_ns+0xd0/0xf0
+<4>[   70.935521]  kobject_add_internal+0xa8/0x2e0
+<4>[   70.935944]  kobject_init_and_add+0x8c/0xd0
+<4>[   70.936265]  sysfs_slab_add+0x11a/0x1f0
+<4>[   70.936446]  do_kmem_cache_create+0x433/0x500
+<4>[   70.936622]  __kmem_cache_create_args+0x19c/0x250
+<4>[   70.936827]  ext4_mb_init+0x690/0x7e0
+<4>[   70.937180]  ext4_fill_super+0x1934/0x31e0
+<4>[   70.937547]  ? sb_set_blocksize+0x21/0x70
+<4>[   70.937911]  ? __pfx_ext4_fill_super+0x10/0x10
+<4>[   70.938346]  get_tree_bdev_flags+0x13c/0x1d0
+<4>[   70.938780]  get_tree_bdev+0x14/0x20
+<4>[   70.939118]  ext4_get_tree+0x19/0x20
+<4>[   70.939354]  vfs_get_tree+0x2e/0xe0
+<4>[   70.939717]  path_mount+0x309/0xb00
+<4>[   70.940025]  ? putname+0x5e/0x80
+<4>[   70.940183]  __x64_sys_mount+0x11d/0x160
+<4>[   70.940353]  x64_sys_call+0x1719/0x20b0
+<4>[   70.940516]  do_syscall_64+0xb2/0x1d0
+<4>[   70.940711]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+<4>[   70.941202] RIP: 0033:0x7f667d9dd4ea
+<4>[   70.941527] Code: 48 8b 0d 39 39 0d 00 f7 d8 64 89 01 48 83 c8
+ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00
+00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 06 39 0d 00 f7 d8 64
+89 01 48
+<4>[   70.942905] RSP: 002b:00007ffe22faecf8 EFLAGS: 00000246
+ORIG_RAX: 00000000000000a5
+<4>[   70.943283] RAX: ffffffffffffffda RBX: 00007f667d8d26c8 RCX:
+00007f667d9dd4ea
+<4>[   70.943788] RDX: 00007ffe22fb0e59 RSI: 000055e50098e60b RDI:
+000055e50099cca0
+<4>[   70.944248] RBP: 000055e50098e5d8 R08: 0000000000000000 R09:
+0000000000000000
+<4>[   70.944479] R10: 0000000000000001 R11: 0000000000000246 R12:
+00007ffe22faed0c
+<4>[   70.944704] R13: 000055e50098e60b R14: 0000000000000000 R15:
+0000000000000000
+<4>[   70.945086]  </TASK>
+<3>[   70.946069] kobject: kobject_add_internal failed for :a-0000176
+with -EEXIST, don't try to register things with the same name in the
+same directory.
+<3>[   70.948453] SLUB: Unable to add cache ext4_groupinfo_1k to sysfs
+<4>[   70.951178] __kmem_cache_create_args(ext4_groupinfo_1k) failed
+with error -22
+<4>[   70.952636] CPU: 0 UID: 0 PID: 992 Comm: ioctl04 Not tainted 6.12.0-rc7 #1
+<4>[   70.953183] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[   70.953975] Call Trace:
+<4>[   70.954215]  <TASK>
+<4>[   70.954460]  dump_stack_lvl+0x96/0xb0
+<4>[   70.954877]  dump_stack+0x14/0x20
+<4>[   70.955079]  __kmem_cache_create_args+0x7d/0x250
+<4>[   70.955331]  ext4_mb_init+0x690/0x7e0
+<4>[   70.955698]  ext4_fill_super+0x1934/0x31e0
+<4>[   70.956271]  ? sb_set_blocksize+0x21/0x70
+<4>[   70.958236]  ? __pfx_ext4_fill_super+0x10/0x10
+<4>[   70.958570]  get_tree_bdev_flags+0x13c/0x1d0
+<4>[   70.958812]  get_tree_bdev+0x14/0x20
+<4>[   70.958990]  ext4_get_tree+0x19/0x20
+<4>[   70.959752]  vfs_get_tree+0x2e/0xe0
+<4>[   70.960137]  path_mount+0x309/0xb00
+<4>[   70.960340]  ? putname+0x5e/0x80
+<4>[   70.960560]  __x64_sys_mount+0x11d/0x160
+<4>[   70.961572]  x64_sys_call+0x1719/0x20b0
+<4>[   70.961841]  do_syscall_64+0xb2/0x1d0
+<4>[   70.962060]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+<4>[   70.963017] RIP: 0033:0x7f667d9dd4ea
+<4>[   70.963229] Code: 48 8b 0d 39 39 0d 00 f7 d8 64 89 01 48 83 c8
+ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00
+00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 06 39 0d 00 f7 d8 64
+89 01 48
+<4>[   70.964889] RSP: 002b:00007ffe22faecf8 EFLAGS: 00000246
+ORIG_RAX: 00000000000000a5
+<4>[   70.965471] RAX: ffffffffffffffda RBX: 00007f667d8d26c8 RCX:
+00007f667d9dd4ea
+<4>[   70.965693] RDX: 00007ffe22fb0e59 RSI: 000055e50098e60b RDI:
+000055e50099cca0
+<4>[   70.965938] RBP: 000055e50098e5d8 R08: 0000000000000000 R09:
+0000000000000000
+<4>[   70.966152] R10: 0000000000000001 R11: 0000000000000246 R12:
+00007ffe22faed0c
+<4>[   70.966370] R13: 000055e50098e60b R14: 0000000000000000 R15:
+0000000000000000
+<4>[   70.966593]  </TASK>
+<0>[   70.969266] EXT4-fs: no memory for groupinfo slab cache
+<3>[   70.970744] EXT4-fs (loop0): failed to initialize mballoc (-12)
+<3>[   70.977680] EXT4-fs (loop0): mount failed
+ioctl04.c:67: TFAIL: Mounting RO device RO failed: ENOMEM (12)
 
-That sounds to me like a better place to address this; or at least
-that is a good place to start looking for the problem.
+Summary:
+passed   3
+failed   1
 
--- 
-Chuck Lever
+Build image:
+-----------
+- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-15432-gac3274b9a6ec/testrun/25851045/suite/ltp-syscalls/test/ioctl04/log
+- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-15430-gc12cd257292c/testrun/25848631/suite/ltp-syscalls/test/ioctl04/history/
+- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-15432-gac3274b9a6ec/testrun/25851045/suite/ltp-syscalls/test/ioctl04/details/
+- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2ow28dxrEwN5dFu4vChS2wgU93J
+
+Steps to reproduce:
+------------
+- https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2ow28dxrEwN5dFu4vChS2wgU93J/reproducer
+
+metadata:
+----
+  Linux version: 6.12.0-rc7
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/sashal/linus-next.git
+  git sha: ac3274b9a6ec132398615faaa725c8fa23700219
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ow9ILyg8kMOGCJOc8VDIGOlz1h/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ow9ILyg8kMOGCJOc8VDIGOlz1h/
+  toolchain: gcc-13
+  config: gcc-13-lkftconfig
+  arch: x86_64 and testing is in progress for other architectures
+
+--
+Linaro LKFT
+https://lkft.linaro.org
