@@ -1,67 +1,54 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A4E14E2C0
-	for <regressions@lists.linux.dev>; Mon, 18 Nov 2024 22:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6162A1863F;
+	Tue, 19 Nov 2024 03:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731969478; cv=none; b=YO6MYE/VO+LY9xkoG3p2Gtd20XuB0FGOWZOPd5GNcSj05JOcTevkkFHFdNF4SOG1gv3B+nSPw099Uxlts61NFDY6pExRY/imU0BxGQZi3zl+lqx0nk6OEUHnKfLYkmQPcJ1W4eyOefkdF/tzAcqVtNOD1Pv+zDMmtDBIj/Cd+rw=
+	t=1731988003; cv=none; b=dNext894CsTBFGN5VfQXSjJq88e2eLHLpvuXZRyqQleZQWrmM0p64JSbyfMgP9fgDE7k0CgJTp+Dz3qW782z+sK6VMuZqMlomGsGIVsM2TCpxcJBuwPzx6hqxbq+8mCpRHLaw4Btl13LaQA25ig/CN1IkcuGkadwmOjOTZE/KUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731969478; c=relaxed/simple;
-	bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-	h=From:Message-ID:To:Subject:Date:MIME-Version:Content-Type; b=Kqn66ifv9s4d9o0a9s8W+lNnh5ofFnNAtO/pczZGiv67xVJsu64Spc9sN+L7jcvMIC+kCqMIxPePgr+DcLdFuvzgHjD5AexVbe+FShAOX5+7d1s+POxIRQp5wd2r15owLuW2mMyIBcJrluIp69Jt6Olesqyo1Z/LZIeWMncF/Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g1AKtR0M; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731988003; c=relaxed/simple;
+	bh=cLg56LdjG00AtMTGY+3z7xIAHqbtHAcB02s1qF9G0eY=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=CtN+W/DDD7DP3bdBGwB2dBWzxTbWiqYH6fFHuTzrhbKWCLVi4TSs7WL98izveTdsmFXbEReLpE7BswjzMvm3Wq5rC0MWDnIeNZ944rNglFRe0NRWPk/5C2MLfcXs7Tfo6KzNv5KRQLNZ+C2vnWXpDVSwS8SHPg0NdkiXeW9GKCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhV9Za8c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1AKtR0M"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-431481433bdso32251135e9.3
-        for <regressions@lists.linux.dev>; Mon, 18 Nov 2024 14:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731969474; x=1732574274; darn=lists.linux.dev;
-        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=g1AKtR0Mpm+nfxlIfgZhYPIIaEPIysdsqhYYQMyJCYZGnz3n1Z4/F6V7GWJ5AVfcmL
-         qOgvSnWOtJdfz1lT9PUQYQCEdAHPth6dytHGfn6M36xflZ2c3sagI4t2Ng3gcEJ2bq88
-         /D/Jj+gydps/CR1LJnG8On1Ehy6S0u/dFjorqZvPAi0/XiC3sehmsMroG0mdbjK0Y0Lh
-         EgBHn+gJPJGB/marvXb7xHmN6qiwhkR9TtGJEmVHN3VaVlYlzVAeEXwfFiTiXJ8BSelU
-         Fw8hVLQqlhHU/Jh9HR6SpBPq8EX+/JYPdnlyReET+oAlck6glnrbcBfy8iuMmuh0cD6V
-         6MxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731969474; x=1732574274;
-        h=mime-version:date:subject:to:reply-to:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=xRt/8M6Z7kKGRZk5OCe4fUuHQIPyQsaDXNgxrLqciU1ksOj1v8GDGcRS23in5JrYz1
-         MjYMTGMpx4a+hCxkEXxWjHNVrdswGVy7FOBmi9vbFrrY+VpoYKUXka2WJBaadwwgVmZb
-         hLhI++9rF1fFqAJKMZ8et3qaQzmV+14R6ASG49AgfN2XfLDEpEqltOMChyEiTGeVTcN1
-         U8KA6hB49lb4mwLy9oOWZsODr8aSfJSh0tN/loTkoIo2xWF2LD5LLadNNSc18Wl79Ocx
-         /7RLVSbUr3DQBeBhevy27BpK37nfOWPnt8RwTGfEAvdMeNqYRFAgCcacxGGGorB5SiqA
-         Xfpw==
-X-Gm-Message-State: AOJu0Yy6dU3EHDqJBq/5NJeF56EeR8lMuH6OastlidhhdlCVJkXTZtk7
-	4IDpX5TYjC3Bdt8buBmWA+qB0kmx3FWa2tnNzznklVcx42RjhSomr/gqznvY
-X-Google-Smtp-Source: AGHT+IE3SFHyE5Qki0NW98dZvHjU5gfqvDXNiBgpGmZOBeJfpfKrU5oHl2n5JhG94U3CN9nntvSj4Q==
-X-Received: by 2002:a05:600c:3b2a:b0:431:6153:a246 with SMTP id 5b1f17b1804b1-432df726227mr121167795e9.13.1731969474251;
-        Mon, 18 Nov 2024 14:37:54 -0800 (PST)
-Received: from [87.120.84.56] ([87.120.84.56])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab7220asm168894955e9.6.2024.11.18.14.37.53
-        for <regressions@lists.linux.dev>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2024 14:37:53 -0800 (PST)
-From: William Cheung <eshansarma772@gmail.com>
-X-Google-Original-From: William Cheung <info@gmail.com>
-Message-ID: <d1ca63ae33a009376edda807c6a2928bc65df614432a84df898d66f95e50375c@mx.google.com>
-Reply-To: willchg@hotmail.com
-To: regressions@lists.linux.dev
-Subject: A Proposal
-Date: Mon, 18 Nov 2024 14:37:42 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhV9Za8c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04A8C4CECF;
+	Tue, 19 Nov 2024 03:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731988002;
+	bh=cLg56LdjG00AtMTGY+3z7xIAHqbtHAcB02s1qF9G0eY=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=BhV9Za8cmwBje8VvseR7p6vgKJZULF+9gXVR009GGw6YkYUwFEjqFAePo7UyPPlCX
+	 bXhnTUj9u/F26RcbdyeWq2W2Jz4L3S9oJRP/sabKlSh/7bTRvI0aGvMlNgQTog7pSK
+	 33/vT7qpii+g9TGwJXkUCFRY7sqwacxR2WgQr7kfrEP5503xbhmciyJZ4+oZXPnuAP
+	 yRlDNpO7TP21iVFHgTndzfZTZ7Osn83BkbNBWmfby6reie1Eux4Kv0jrR0dD/NQnnM
+	 7y2030xHsESGFiuQPm7g72YA6yLoNjqF0BDsmIl6IvylybgDMrmgSEa2sNyFIYLep/
+	 FH7ISDqpv6qeA==
+Message-ID: <0c757a374f63ab6d47b9abd95261d348.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2c7789dd-9583-4daa-918a-1bf14635f62e@lechnology.com>
+References: <CA+G9fYs+gwu67Y0Tm2FHfNuUA5eLxT2FAWkfKvYrEbXJUXXiiA@mail.gmail.com> <2c7789dd-9583-4daa-918a-1bf14635f62e@lechnology.com>
+Subject: Re: drivers/clk/davinci/psc.c:281:10: error: incompatible integer to pointer conversion returning 'int' from a function with result type 'struct davinci_lpsc_clk *' [-Wint-conversion]
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: hanchunchao@inspur.com, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+To: David Lechner <david@lechnology.com>, Linux Regressions <regressions@lists.linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, clang-built-linux <llvm@lists.linux.dev>, linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>
+Date: Mon, 18 Nov 2024 19:46:40 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-I have a lucratuve proposal for you, reply for more info.
+Quoting David Lechner (2024-11-18 06:28:21)
+>=20
+> This is caused by [1]. I looked at it again and the patch is wrong.
+> Can you drop it from your tree or should we send another patch to
+> fix the bad patch?
+>=20
+
+I can drop it from the tree.
