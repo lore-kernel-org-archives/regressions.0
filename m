@@ -1,132 +1,104 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF031925B3
-	for <regressions@lists.linux.dev>; Tue, 19 Nov 2024 09:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB831C1ABC;
+	Tue, 19 Nov 2024 10:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732008951; cv=none; b=jBiy1MExsdgTBnwMrMp7ZZULok00Ou87HCqq7fIN/L1AjkMnMsshjB4UmlvnK5/cLizS7YEWkqDP0b8f+JsEiY3GfMTqjOk4TPur/ntdGFO9O0vrfWnWVtpP3ibREXrwgLoA5idA6bdISWMMlm660RmeodWr0X+fEUqXvegBALw=
+	t=1732013042; cv=none; b=mXXVSYLwUFxHn00XZkvec/0GeiV3q7L16G3m9xyQ4wYfQ2dgb6nbjT4xJA6BtjOLRwt6IHIEmG0xDmN+tnCNwO6ZhOW4nuEliBPzVbAlsyeP6n3j5rJxC002smlZoBdrQh3DnNmL8JQlX+hrE97Kr0DKwNKDJwn9M6qlnps58oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732008951; c=relaxed/simple;
-	bh=tOr5zUwmN3yb2nhQ6wi2hnuyw96AxHgJdGY6vzcZcrQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IBuNtduM0u7Jozs8RqYj8SOIpobU9VeNNLCOKnOaiW9RFC0V9z7gjZFZdBXTzV+7e3zs+07IxG7DuACKzhlFTHsNS/6ja7vLDVYJmCs3Z7NpcMxPU425QimmeTLNb3FVJZOh1xlN1PJoFVkmUjyuRrT4Stje7M1pIUNNEIF9VMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWY0MO1+; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732013042; c=relaxed/simple;
+	bh=QipxtI9sgPh0v6Sb4OCkds7xvdtuYriAhhk7Siku4pA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kc3Y09jQSoomVNhe1XWn7O6R+BCPA+cxKctlc1KmOagBo9mWwB4ChpUE3J8NWZwRNRjvCCXtGq261CXKdlWgLc47ADnkCEJ9D5QjLbM9JTQn0tKvVdjtgPa2mpYVHQE69HYOY9EzC7MEX7V1D5FQSyn6Wn3JXrDuWRQSK9xPjSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRz6wpk3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWY0MO1+"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-83ab694ebe5so22623239f.0
-        for <regressions@lists.linux.dev>; Tue, 19 Nov 2024 01:35:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732008948; x=1732613748; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZnYFnM2sFhC5wfCK+6fZ2Ja9fZiE3XOnCzCCHGI4GG0=;
-        b=TWY0MO1+ouxpKVUqALbeepaVKs3CyM81/TscoZUWI8wQFTaQJKzBAPWt6cgBcb7jWQ
-         hSDI8Zdm0qiYb/oi/AxJ+m0v8P/iUSwu70KDwvWC5Es4CG2LaMgJakZvA7PS41bHaOpj
-         /2F89lAou/mqgUEF9Tk9T8i+cDV1LF63p1ShX3JhldZyiOY0dCpMzFI1HJ3nQfePlMbs
-         BSTvoT3AXsaTri5xJqyV6wYefW3rTGmd3bBjr68/5CV61s+eypdKzS+hxwH118TD+9aF
-         h9zqBtiFgQgl/uIC1+NmtblN2Vi6txRqZoCBPlaKnfKFtREwi8qu8o5cUzpWfv0egcmS
-         NJJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732008948; x=1732613748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnYFnM2sFhC5wfCK+6fZ2Ja9fZiE3XOnCzCCHGI4GG0=;
-        b=wUPcoAEr7jEmkbIjujWuydqanXC7MYd8QJ2nHYi5I6Lw9y1RrmdJpCMkshrkJM8xi4
-         EHXmt8hEVc0MpMt8ZmQYolPZKAXAWT5JLN1JVPwDUyxdDArLUCONrIKr6pRivCCjCnT3
-         dbpNbgJHQ1mZfCZq4pF5JB/ITyfzruk6t0T0GREGpdkWs3j52u2psXwjcHFmqV9wJLOl
-         04yfeEpgmtdFErmm1aHlSnlXFKiAhqs/QdkSeNztS2B5L2jMSnnzhFHLrhPKo5pKqvPK
-         BLIZtteTulrbicCJHy+GccSxQD3drV+rwNDbaAODj5PdX3h7FDEKIURuSbajS6TioYTu
-         lpUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXPqftjUlSf2gDT/MwEy4ukcgAhGms62t7yOvxOAPU+JkKlmyy2ul5ZSnBoj7EyeUDJFVtyDvmegwO+g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwK4gO81J5evUsdlpRNgSzstw1yKGu+EXwRvk95fyl2uxYCF9BK
-	BjtajxwWfwnaioNsOeRNHPrOF+p0CDgzKu/6PJncC2CKDYotubn0l7+UxeizXT+Y6/GpGrV1tp0
-	KpvXL7KgjenbSvDGXbO52RwiCFco=
-X-Google-Smtp-Source: AGHT+IHbK7ZHvwSeOtWJ3a+S2WJZt3wsFdIwJInxf7s6NhG7VuTWPA8z9cbCUhbcQ9pqfV4z4beW5CW/veyMnZgCR10=
-X-Received: by 2002:a05:6602:3403:b0:82a:3552:6b26 with SMTP id
- ca18e2360f4ac-83e6c2ea511mr1433295139f.15.1732008948402; Tue, 19 Nov 2024
- 01:35:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRz6wpk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F29C4CECF;
+	Tue, 19 Nov 2024 10:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732013042;
+	bh=QipxtI9sgPh0v6Sb4OCkds7xvdtuYriAhhk7Siku4pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XRz6wpk3rtAPmqvaU7DQ+zTBeK4L0bQ+TSxqmQivKG8vj7BaZoUqGGuDlhOznXSFN
+	 da9p8dWsCH5kUVR9cTD5Uitzy7eH8DUttpTYbn4bULiTqscwEm2Z2GHM+MOPT31sO7
+	 l5LvP3c5M1TMnZKHUnbck4a+gPlwbNy6rLDmgufTLd3Sweqt69Z2tsz5o5Pvt9l3rN
+	 q1bMWmUB50LKV9TWmCc4/lwd/8KM94XexHoyfb50IH2qq3J2r0E/fXPeeO/0bVvXkY
+	 uFhSY4YQciHt5O83ceBXcF5jcptOesyxuZsM9UyIZCdQVmsrdQYYBwf5Qgp/IzMhcO
+	 5TNpqayQdPPug==
+Date: Tue, 19 Nov 2024 11:43:59 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Mingcong Bai <jeffbai@aosc.io>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>, rcu <rcu@vger.kernel.org>,
+	sakiiily@aosc.io, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [Regression] wifi problems since tg3 started throwing rcu stall
+ warnings
+Message-ID: <Zzxr72hkv8DAwjMG@pavilion.home>
+References: <ZxjLQzHKuR-w16hF@pavilion.home>
+ <2b25a988-6965-48e4-a788-58dd8a776e06@leemhuis.info>
+ <e2ffd3d06fad236ea900d4fb439b2240@aosc.io>
+ <937c258b-f34c-4f63-949d-a5e7c8db714d@leemhuis.info>
+ <ZyyQuTfMMSLwStf_@pavilion.home>
+ <a7fc57a1a49b5f710c4354ca21c91dba@aosc.io>
+ <Zy4WKKq18GunXa6S@localhost.localdomain>
+ <814ca9e3-df3b-45ce-ad36-9659b445c499@paulmck-laptop>
+ <ZzNPIOR8aaxfrLE2@localhost.localdomain>
+ <720576d090304a33b7d9ba3348056717@aosc.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241007132555.GA53279@francesco-nb> <20241112075958.GA8092@francesco-nb>
- <20241112092054.GA18139@francesco-nb> <CAA+D8AO3a5WsZ4=V-9CDifDZYjJjwQmQQDDQM7ZKgZ6_-CNDPA@mail.gmail.com>
- <Zzde9xS0zGJhcoUb@gaggiata.pivistrello.it>
-In-Reply-To: <Zzde9xS0zGJhcoUb@gaggiata.pivistrello.it>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Tue, 19 Nov 2024 17:35:36 +0800
-Message-ID: <CAA+D8AMx14hp51aH7Y=Sgu+X+_KxQ8zdJdrQHFY84nKtQsKKrw@mail.gmail.com>
-Subject: Re: clk_imx8mp_audiomix_runtime_resume Kernel panic regression on v6.12
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <frank.li@nxp.com>, abelvesa@kernel.org, 
-	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-imx@nxp.com, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, Adam Ford <aford173@gmail.com>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, Mark Brown <broonie@kernel.org>, 
-	ulf.hansson@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <720576d090304a33b7d9ba3348056717@aosc.io>
 
-On Fri, Nov 15, 2024 at 10:47=E2=80=AFPM Francesco Dolcini <francesco@dolci=
-ni.it> wrote:
->
-> On Fri, Nov 15, 2024 at 11:13:58AM +0800, Shengjiu Wang wrote:
-> > On Tue, Nov 12, 2024 at 5:20=E2=80=AFPM Francesco Dolcini <francesco@do=
-lcini.it> wrote:
-> > >
-> > > On Tue, Nov 12, 2024 at 08:59:58AM +0100, Francesco Dolcini wrote:
-> > > > On Mon, Oct 07, 2024 at 03:25:55PM +0200, Francesco Dolcini wrote:
-> > > > > it seems that an old regression is back on v6.12, reproduced on -=
-rc2
-> > > > > (not sure about rc1).
-> > > > >
-> > > > > The original report is from https://lore.kernel.org/all/202404241=
-64725.GA18760@francesco-nb/
-> > > > > and it was fixed with https://lore.kernel.org/all/1715396125-3724=
--1-git-send-email-shengjiu.wang@nxp.com/.
-> > > > >
-> > > > > Is it now back?
-> > > >
-> > > > I was able to reproduce this issue once more, this time with 6.11.7=
-.
-> > > > As I wrote in another email the issue is not systematic as it used =
-to
-> > > > be.
-> > > >
-> > > > Any idea?
-> > >
-> > > Frank, Shengjiu, could it be that the udelay(5) in imx_pgc_power_up()=
- is
-> > > too short and therefore we have such non-systematic failures?
-> > >
-> >
-> > Francesco,  it seems hard to reproduce it on my i.MX8MP-EVK board.
-> >
-> > If it is easy to reproduce on your side, you can try to enlarge the del=
-ay
-> > time to see if there is any improvement.
->
-> It's hard also for me to reproduce, we just have a relatively extensive
-> test farm and 2 times it happened while doing unrelated tests. I was hopi=
-ng we
-> could have some idea on what's going on, I'll see if I can put together s=
-ome
-> kind of stress test, being able to reproduce it more systematically would
-> certainly help.
->
+Le Fri, Nov 15, 2024 at 11:01:25AM +0800, Mingcong Bai a écrit :
+> Hi Frederic,
+> 
+> <snip>
+> 
+> > Just in case, Mingcong Bai can you test the following patch without the
+> > revert and see if it triggers something?
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 35949ec1f935..b4f8ed8138d3 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -5170,6 +5170,7 @@ void rcutree_migrate_callbacks(int cpu)
+> >  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> >  	bool needwake;
+> > 
+> > +	WARN_ON_ONCE(1);
+> >  	if (rcu_rdp_is_offloaded(rdp))
+> >  		return;
+> > 
+> 
+> Please find attached the dmesg with your patch (and no revert) against
+> 6.12-rc7.
 
-With my test,  the issue reproduced with delay 5us/6us. but hard reproduced
-with 7us.
-I think we may need to use a delay of 10us for safety.
+The added WARN_ON_ONCE() doesn't trigger so the function/path changed by this patch
+isn't taken.
 
-Best regards
-Shengjiu Wang
+My only guess is that the patch changes some code layout that makes a bug more
+likely to appear in networking...
+
+Thanks.
+
+> 
+> Best Regards,
+> Mingcong Bai
+> 
+> > 
+> > 
+> > Thanks.
+> > 
+> > > 
+> > > 							Thanx, Paul
+
+
