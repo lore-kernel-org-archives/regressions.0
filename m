@@ -1,148 +1,132 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F3135A53
-	for <regressions@lists.linux.dev>; Tue, 19 Nov 2024 04:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF031925B3
+	for <regressions@lists.linux.dev>; Tue, 19 Nov 2024 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731991641; cv=none; b=YggIdeR+ms1gadbEAR/N+v+u8klVJdX3qWSHuLTjAKjA8QuKMA6SppMN2aDqEMB0Gig4x94smoNj9CQSThxJzWPA/lNiZqQUq6LhUSbD+PJmZ9nedYhnTHVr6RO/IqJLw0498ZPF6y3iJVpb7lkK1zmdt/Iy7YxLK8/Jtzt8Z7w=
+	t=1732008951; cv=none; b=jBiy1MExsdgTBnwMrMp7ZZULok00Ou87HCqq7fIN/L1AjkMnMsshjB4UmlvnK5/cLizS7YEWkqDP0b8f+JsEiY3GfMTqjOk4TPur/ntdGFO9O0vrfWnWVtpP3ibREXrwgLoA5idA6bdISWMMlm660RmeodWr0X+fEUqXvegBALw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731991641; c=relaxed/simple;
-	bh=Q/uyyfZvTppkNfK9noyT1ACTXFKS1tYlwTrqqRJ0RsY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=NSYGAppUPR0I4d4a5zcz28OCmxXJ605OyGBS7boJDUuoll4gAFwZhAWn+1fSIMEmb4Iy42gvrJgGtRCzJ8suAJts21VteYM2JfyaH3rQa0xO29q6ucE7zJCs5w0NXiZPfI+DRQUbK+L4QG2GEUJMUu1ltz3yTYrYQsZRffi9bBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kZUwPY8a; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1732008951; c=relaxed/simple;
+	bh=tOr5zUwmN3yb2nhQ6wi2hnuyw96AxHgJdGY6vzcZcrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IBuNtduM0u7Jozs8RqYj8SOIpobU9VeNNLCOKnOaiW9RFC0V9z7gjZFZdBXTzV+7e3zs+07IxG7DuACKzhlFTHsNS/6ja7vLDVYJmCs3Z7NpcMxPU425QimmeTLNb3FVJZOh1xlN1PJoFVkmUjyuRrT4Stje7M1pIUNNEIF9VMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWY0MO1+; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZUwPY8a"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-50d4a6ef70aso1271431e0c.3
-        for <regressions@lists.linux.dev>; Mon, 18 Nov 2024 20:47:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWY0MO1+"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-83ab694ebe5so22623239f.0
+        for <regressions@lists.linux.dev>; Tue, 19 Nov 2024 01:35:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731991638; x=1732596438; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mPqe+KWyPScVsgOCo4oxtDNj7oJCSQ2kVcWX01f8TQI=;
-        b=kZUwPY8aW+sIcDaNM5wJoFlo9PRX1A+sZERJuYBfnQJzGpAnneZg3CoXQNZh9DkP5g
-         cjHmemD+rZfssCkTBi4foOUuRXcjkwMSABJw4fucCrEo4gByjcAuIqGm2ITkCRKMjmyj
-         5/ZkmnEr8swYkf/cdbvU8eS81zN5chbWIYHLdVrpLeLJao8lAVzLnYv72yz3omVaPN5w
-         NAGKL1BQflT8CqnD4+MKHx3CofilNRYqK2vp3AR+0e8eTph6+zeWmidWFIGbO0KBhEd7
-         Af9Z/mVtdCJ0h6Vu98apyyS4exd0YHwy1L31XolwWlQ8+cmL+TQo4ymj53SlUElJDwbG
-         tIEA==
+        d=gmail.com; s=20230601; t=1732008948; x=1732613748; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZnYFnM2sFhC5wfCK+6fZ2Ja9fZiE3XOnCzCCHGI4GG0=;
+        b=TWY0MO1+ouxpKVUqALbeepaVKs3CyM81/TscoZUWI8wQFTaQJKzBAPWt6cgBcb7jWQ
+         hSDI8Zdm0qiYb/oi/AxJ+m0v8P/iUSwu70KDwvWC5Es4CG2LaMgJakZvA7PS41bHaOpj
+         /2F89lAou/mqgUEF9Tk9T8i+cDV1LF63p1ShX3JhldZyiOY0dCpMzFI1HJ3nQfePlMbs
+         BSTvoT3AXsaTri5xJqyV6wYefW3rTGmd3bBjr68/5CV61s+eypdKzS+hxwH118TD+9aF
+         h9zqBtiFgQgl/uIC1+NmtblN2Vi6txRqZoCBPlaKnfKFtREwi8qu8o5cUzpWfv0egcmS
+         NJJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731991638; x=1732596438;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mPqe+KWyPScVsgOCo4oxtDNj7oJCSQ2kVcWX01f8TQI=;
-        b=XyZxVi6aNrwFtNU4/ptxklMcG0W2JtUVL/YPPDeaYjwSKuNjpAjxUSyyvB/AoZ6Euf
-         XPz8lhN/oi81RPCPGEzWdjIRuVVpMWMRXd6zvnBRaUX6ovgsyBzXkC327ZKm9Y4NUwBu
-         Bls5fKiQ36TcUgCZBMXXvZKPHffInqAJVTpVBjEolxex4RjqBZo0iIAUkLGt00Wki78a
-         f7XkEMHczXHcPhdXat1zWrG+xN5dxcqbFGpcI4pt0SKIN2PzRk0IXV4wJwstyz0JEozk
-         bqEkwTTpnkUOiYsIcOFfvfvaOPC1o1/2ebBLOpc7c9TeV7RXkZPKd0u1JFgPoEsdJ8TZ
-         jxOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUXCZ0E1H4iNO4iuSxoxeJVugI6po4fKYHOfTuXrADuLGdjnl86EW2HEEIzBLPSoYAZdKoOl0CSw9+zg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy14t4S6rXMOhLaJFFntVxX9GkJ1/08vi5TuGHPfTf6J6n3fQyK
-	Wz9N0HzzCnOuu+i0dW2lBcWMFdtmCkGZ18ddlk4OZAImqtjMk7s2BwXnSWc/1W8ZIXXlvUA2Dbh
-	tDotDfkdrofeX6veaIuIXFsXMvkWTPFWh/0uX9w==
-X-Google-Smtp-Source: AGHT+IGOA7V18nmrZN893zZO79R7F6VuICVIukkpYSjvoyaNP8NEtMqd1I7vjaEq/dCjZaYX+KlmiqJ9X3+ZCLGH27o=
-X-Received: by 2002:a05:6122:3d0d:b0:50d:918d:4da1 with SMTP id
- 71dfb90a1353d-51477ee3893mr14556462e0c.3.1731991638505; Mon, 18 Nov 2024
- 20:47:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732008948; x=1732613748;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZnYFnM2sFhC5wfCK+6fZ2Ja9fZiE3XOnCzCCHGI4GG0=;
+        b=wUPcoAEr7jEmkbIjujWuydqanXC7MYd8QJ2nHYi5I6Lw9y1RrmdJpCMkshrkJM8xi4
+         EHXmt8hEVc0MpMt8ZmQYolPZKAXAWT5JLN1JVPwDUyxdDArLUCONrIKr6pRivCCjCnT3
+         dbpNbgJHQ1mZfCZq4pF5JB/ITyfzruk6t0T0GREGpdkWs3j52u2psXwjcHFmqV9wJLOl
+         04yfeEpgmtdFErmm1aHlSnlXFKiAhqs/QdkSeNztS2B5L2jMSnnzhFHLrhPKo5pKqvPK
+         BLIZtteTulrbicCJHy+GccSxQD3drV+rwNDbaAODj5PdX3h7FDEKIURuSbajS6TioYTu
+         lpUA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXPqftjUlSf2gDT/MwEy4ukcgAhGms62t7yOvxOAPU+JkKlmyy2ul5ZSnBoj7EyeUDJFVtyDvmegwO+g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwK4gO81J5evUsdlpRNgSzstw1yKGu+EXwRvk95fyl2uxYCF9BK
+	BjtajxwWfwnaioNsOeRNHPrOF+p0CDgzKu/6PJncC2CKDYotubn0l7+UxeizXT+Y6/GpGrV1tp0
+	KpvXL7KgjenbSvDGXbO52RwiCFco=
+X-Google-Smtp-Source: AGHT+IHbK7ZHvwSeOtWJ3a+S2WJZt3wsFdIwJInxf7s6NhG7VuTWPA8z9cbCUhbcQ9pqfV4z4beW5CW/veyMnZgCR10=
+X-Received: by 2002:a05:6602:3403:b0:82a:3552:6b26 with SMTP id
+ ca18e2360f4ac-83e6c2ea511mr1433295139f.15.1732008948402; Tue, 19 Nov 2024
+ 01:35:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 19 Nov 2024 10:17:07 +0530
-Message-ID: <CA+G9fYvLE55OjpQ4xs_w15+xBYi1BPJf2xTTFORA1zWAvqw91g@mail.gmail.com>
-Subject: include/linux/mm.h:4224:20: error: redefinition of 'pgalloc_tag_split'
-To: linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Sasha Levin <sashal@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20241007132555.GA53279@francesco-nb> <20241112075958.GA8092@francesco-nb>
+ <20241112092054.GA18139@francesco-nb> <CAA+D8AO3a5WsZ4=V-9CDifDZYjJjwQmQQDDQM7ZKgZ6_-CNDPA@mail.gmail.com>
+ <Zzde9xS0zGJhcoUb@gaggiata.pivistrello.it>
+In-Reply-To: <Zzde9xS0zGJhcoUb@gaggiata.pivistrello.it>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Tue, 19 Nov 2024 17:35:36 +0800
+Message-ID: <CAA+D8AMx14hp51aH7Y=Sgu+X+_KxQ8zdJdrQHFY84nKtQsKKrw@mail.gmail.com>
+Subject: Re: clk_imx8mp_audiomix_runtime_resume Kernel panic regression on v6.12
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <frank.li@nxp.com>, abelvesa@kernel.org, 
+	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, linux-imx@nxp.com, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, Adam Ford <aford173@gmail.com>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, Mark Brown <broonie@kernel.org>, 
+	ulf.hansson@linaro.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The arm64, armv7, riscv and x86 builds failed on the Sasha Linus-next tree.
-Please find more details below
+On Fri, Nov 15, 2024 at 10:47=E2=80=AFPM Francesco Dolcini <francesco@dolci=
+ni.it> wrote:
+>
+> On Fri, Nov 15, 2024 at 11:13:58AM +0800, Shengjiu Wang wrote:
+> > On Tue, Nov 12, 2024 at 5:20=E2=80=AFPM Francesco Dolcini <francesco@do=
+lcini.it> wrote:
+> > >
+> > > On Tue, Nov 12, 2024 at 08:59:58AM +0100, Francesco Dolcini wrote:
+> > > > On Mon, Oct 07, 2024 at 03:25:55PM +0200, Francesco Dolcini wrote:
+> > > > > it seems that an old regression is back on v6.12, reproduced on -=
+rc2
+> > > > > (not sure about rc1).
+> > > > >
+> > > > > The original report is from https://lore.kernel.org/all/202404241=
+64725.GA18760@francesco-nb/
+> > > > > and it was fixed with https://lore.kernel.org/all/1715396125-3724=
+-1-git-send-email-shengjiu.wang@nxp.com/.
+> > > > >
+> > > > > Is it now back?
+> > > >
+> > > > I was able to reproduce this issue once more, this time with 6.11.7=
+.
+> > > > As I wrote in another email the issue is not systematic as it used =
+to
+> > > > be.
+> > > >
+> > > > Any idea?
+> > >
+> > > Frank, Shengjiu, could it be that the udelay(5) in imx_pgc_power_up()=
+ is
+> > > too short and therefore we have such non-systematic failures?
+> > >
+> >
+> > Francesco,  it seems hard to reproduce it on my i.MX8MP-EVK board.
+> >
+> > If it is easy to reproduce on your side, you can try to enlarge the del=
+ay
+> > time to see if there is any improvement.
+>
+> It's hard also for me to reproduce, we just have a relatively extensive
+> test farm and 2 times it happened while doing unrelated tests. I was hopi=
+ng we
+> could have some idea on what's going on, I'll see if I can put together s=
+ome
+> kind of stress test, being able to reproduce it more systematically would
+> certainly help.
+>
 
-Build failed
-arm64:
-  * build/clang-19-lkftconfig
-  * build/gcc-13-lkftconfig
-  * build/gcc-13-lkftconfig-kunit
-  * build/gcc-13-tinyconfig
+With my test,  the issue reproduced with delay 5us/6us. but hard reproduced
+with 7us.
+I think we may need to use a delay of 10us for safety.
 
-arm:
-  * build/clang-19-lkftconfig
-  * build/gcc-13-lkftconfig
-
-riscv:
-  * build/clang-19-lkftconfig
-  * build/gcc-13-lkftconfig
-
-x86:
-  * build/clang-19-lkftconfig
-  * build/gcc-13-lkftconfig
-
-First seen on commit sha id a5b57900c6611b0a44e95b4ed011108435b43898.
-Good: 6f9dfbd5bd86f54c62ebd3a7b41fb37ac4520762
-Bad:  a5b57900c6611b0a44e95b4ed011108435b43898
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build log:
------
-include/linux/mm.h:4224:20: error: redefinition of 'pgalloc_tag_split'
- 4224 | static inline void pgalloc_tag_split(struct folio *folio, int
-old_order, int new_order)
-      |                    ^~~~~~~~~~~~~~~~~
-In file included from include/linux/mm.h:8:
-include/linux/pgalloc_tag.h:247:20: note: previous definition of
-'pgalloc_tag_split' with type 'void(struct folio *, int,  int)'
-  247 | static inline void pgalloc_tag_split(struct folio *folio, int
-old_order, int new_order) {}
-      |                    ^~~~~~~~~~~~~~~~~
-include/linux/mm.h:4228:20: error: redefinition of 'pgalloc_tag_copy'
- 4228 | static inline void pgalloc_tag_copy(struct folio *new, struct
-folio *old)
-      |                    ^~~~~~~~~~~~~~~~
-include/linux/pgalloc_tag.h:248:20: note: previous definition of
-'pgalloc_tag_copy' with type 'void(struct folio *, struct folio *)'
-  248 | static inline void pgalloc_tag_copy(struct folio *new, struct
-folio *old) {}
-      |                    ^~~~~~~~~~~~~~~~
-make[3]: *** [scripts/Makefile.build:102:
-arch/arm64/kernel/asm-offsets.s] Error 1
-
-Boot log:
----------
-- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-17648-ga5b57900c661/testrun/25904050/suite/build/test/gcc-13-lkftconfig-libgpiod/log
-- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-17648-ga5b57900c661/testrun/25904050/suite/build/test/gcc-13-lkftconfig-libgpiod/details/
-- https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.11-17648-ga5b57900c661/testrun/25903704/suite/build/test/gcc-13-lkftconfig/history/
-
-Build image:
------------
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2p3Kl6GpLiKKJQQYlKrOay5O3XI/
-
-Steps to reproduce:
-------------
-- tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
---kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/2p3Kl6GpLiKKJQQYlKrOay5O3XI/config
-
-metadata:
-----
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/sashal/linus-next.git
-git sha: a5b57900c6611b0a44e95b4ed011108435b43898
-kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2p3Kl6GpLiKKJQQYlKrOay5O3XI/config
-build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2p3Kl6GpLiKKJQQYlKrOay5O3XI/
-toolchain: gcc-13 and clang-19
-config: gcc-13-lkftconfig
-arch: arm64, arm, riscv and x86
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Best regards
+Shengjiu Wang
