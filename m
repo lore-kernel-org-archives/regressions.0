@@ -1,164 +1,149 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2C813CFB6
-	for <regressions@lists.linux.dev>; Wed, 20 Nov 2024 18:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06961B5ED8;
+	Wed, 20 Nov 2024 21:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732128393; cv=none; b=H193A1PMPobKq1FZFk0AyCeDdJVR/zEtlvshYpluo4nQI58tkv+SrhCXfhhk9r0Iu12alVU2MxPPQlv6X9IPHjkghJ1B9GZju2cAjxMVjaPZEMnT3KKSM5JnbhN1vFIlZLodG3tOHmLTrZMSYvmCT1T/S070kTpDfgoDyv2WcOk=
+	t=1732138148; cv=none; b=GaFruorIPZtKLJx9rIq6jELtL7IRLzoilEpY9KchZB33cQHIKBOodkk8bBoSBxySCcnm0UXoQhif0VHykMmgURvhTvf0lARsjMBrEm44zeDHH9yVMBA6w57nyNeyF7iE/dwmy8I+/FyqNLncqm3lQGn4ZtQk9lRzsyFg5XIzwqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732128393; c=relaxed/simple;
-	bh=FCvj2/G36BpuLQdzReLtR5lIFwjoErIAljyykkiAk64=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fCWuN31HAtc03BWf8QAjybQN3OX/ZsqArp3Z3pxZP2CqHJE8pwQqE9dMc+zu721FzGScS2huWf206Rg+jB+6bpVzKRC1VQLQCjXr9Lnb77kt23iKgQugWanqpuPbffKGxxon6bFxxbdtsou/280OC/Uk7NBO7/8rlxpjBIGHo0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p1yTgwbM; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
+	s=arc-20240116; t=1732138148; c=relaxed/simple;
+	bh=AH7jBkvW3vmQevUwT1qZe6oh5eRiuiDeIP9puuoH2g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFK12/igTO7kgt0d7Xt/CCJWf9BfJzsIdFLU5+h41P6y9Gy//9/9PkHVs0mcqww37vmMBeMpddTes5mwBnPTbVYAeFuBT9TunP3I218Qg4dRzW9m4tsHGdftTR13N0in5qWXHIyjHTtgOMDNOgt74CJDAORxILfth74jb3TG53s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=umgXeC4i; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1yTgwbM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e388f173db4so3891276.3
-        for <regressions@lists.linux.dev>; Wed, 20 Nov 2024 10:46:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732128390; x=1732733190; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hA7/jTfvEvvp0vYIHl4c3THkQPVUzVNCs6YM2/ZYMNA=;
-        b=p1yTgwbMJ5XR7VfH5OLiR3XVyWIggYGasUj2WqKZRH2MXK42XaO2W3bBNgvboNVvwG
-         rD0hXNct+T0145fwBc3VVemT/wIlUoBE6Dv5LvaQfm+23cKO9a7sOC+Ckxl0IstHAnAS
-         2qBGbisLg5Xhgds3F0+eLh/WMeFDm0WhpqU230rw1ffc8qVbTH2lRGkyqk8guad5JnE+
-         s2r7GMkO8ehjDM0QarrP2LgxxvZl6aiezuq2s7o7lUt221bhXr4pn5B3eJh5m3XwPiyT
-         JGWvfHBBcS5TEzYnnpaqfBNiKm/Ewdvqv4/dwQiKIG7c1GUCP3SpYOrLLZkQIDf9yltJ
-         ZD9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732128390; x=1732733190;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hA7/jTfvEvvp0vYIHl4c3THkQPVUzVNCs6YM2/ZYMNA=;
-        b=neC1cYNUISk9IeSKltytvUzbRWpOr3SXF5p1/B3DBqnAM8R76TXfGA+XUJKNSHVc4E
-         Hg1JCGIgee2C37Mld+RYS0MmA3qSQIutKEdvBWmQK4MBw2xO45KFZpvMvVhrCgag9aZ6
-         LfX4A7SYQIrJf5fVK4yk0LpJf2PAL18vI09NgV8DqZkCFDoYsWd2XCSjWcfAcwh/6dGS
-         PiYCw7vvA4U+pJNqOesGTBjLAxzerxRuQPvrsK/NMld+Z/5bbDC0HDWKvJjfb2729qsX
-         qZIW7C6w0CdbVRtvNaH0RNeeQX2YewS9KmKdt8NCY69wDFN45QQ8OdmxZs9eU/HvmywR
-         XaOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLtKyAq/wY4rKW1T7ibskB22m9nvZ88dtN5DsHe3DZeOOrYcELAGQGSMJmQaVc2HaYQFFD9fjK7OUQPw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNlkwwkqG0iLpYDQCviiyU4fVDFjswkFnPyf7bIy9ctX54ofRK
-	Qn4P7uChZumBQbaq5BDaJMXB5Rmb8mahe1ed3OGStl8PeejL/cDbxSlXd1mm7dtkzRrpkEisFKc
-	sI/nU
-X-Google-Smtp-Source: AGHT+IEDkhYTiI5OseGPF+A421GcX+ypm5rVUXPDgikPovAjusbWISocWyC3x6sPz54Lt/atzxBlsEM+WW+c
-X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
- (user=jstultz job=sendgmr) by 2002:a25:d601:0:b0:e30:d445:a7c with SMTP id
- 3f1490d57ef6-e38cb5470c0mr1453276.1.1732128390415; Wed, 20 Nov 2024 10:46:30
- -0800 (PST)
-Date: Wed, 20 Nov 2024 10:46:15 -0800
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="umgXeC4i"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id B81CA14C1E1;
+	Wed, 20 Nov 2024 22:29:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1732138143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpBeDvQksNg01sH+Wzi0SHUbla6WiWqM9PQqY8u5gPQ=;
+	b=umgXeC4iOmTTUmV1dgALJ1ehGtwZMRzyy5BnORN5sMRzYtGwm0HMdNSsHwch/tGMCaku8n
+	sk6Bwb2/zSPUaQ5/U6NNehRKMmp9dWKn5hbo3LvjhlYfxZXdkHXhAul2fdzNj+05/dFS44
+	5hmrIOxY3+0Bm34ctJce1niJIgeLSpuFgu4joCEPNRcbp3m84zpCTZp3+G8geKnmNmsbkG
+	CgbXDmhWbkM9XMUt2dyIS127mzFn7RxOCAEvnNvuUEKJ6awgs71bzLtUGF1TD4KmPDH7+z
+	Nx1uxUwPV/PMaqo5+mBo5DXhnDhqFYrD05ydOxbG2tJ0gSr6kQ+yWvIhsm81cQ==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 4cec0879;
+	Wed, 20 Nov 2024 21:28:58 +0000 (UTC)
+Date: Thu, 21 Nov 2024 06:28:43 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Ulrich Teichert <ulrich.teichert@kumkeo.de>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>,
+	"y0un9n132@gmail.com" <y0un9n132@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jiri Kosina <jkosina@suse.com>, Sasha Levin <sashal@kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Re: [PATCH 6.1 175/321] x86: Increase brk randomness entropy for
+ 64-bit systems
+Message-ID: <Zz5Ui1lf3cu0bBlN@codewreck.org>
+References: <20240827143838.192435816@linuxfoundation.org>
+ <20240827143844.891898677@linuxfoundation.org>
+ <Zz0_-iJH1WaR3BUZ@codewreck.org>
+ <Zz2JQzi-5pTP_WPx@eldamar.lan>
+ <Zz2YrA740TRgl_13@codewreck.org>
+ <eaf6cfe58733416c928a8ff0d1d1b1ec@kumkeo.de>
+ <202411201000.F3313C02@keescook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241120184625.3835422-1-jstultz@google.com>
-Subject: [RESEND][PATCH] locking: rtmutex: Fix wake_q logic in task_blocks_on_rt_mutex
-From: John Stultz <jstultz@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: John Stultz <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, 
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, kernel-team@android.com, 
-	Davidlohr Bueso <dave@stgolabs.net>, regressions@lists.linux.dev, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202411201000.F3313C02@keescook>
 
-Anders had bisected a crash using PREEMPT_RT with linux-next and
-isolated it down to commit 894d1b3db41c ("locking/mutex: Remove
-wakeups from under mutex::wait_lock"), where it seemed the
-wake_q structure was somehow getting corrupted causing a null
-pointer traversal.
+Thank you for the replies,
 
-I was able to easily repoduce this with PREEMPT_RT and managed
-to isolate down that through various call stacks we were
-actually calling wake_up_q() twice on the same wake_q.
+Kees Cook wrote on Wed, Nov 20, 2024 at 10:08:04AM -0800:
+> It seems like the correct first step is to revert the brk change. It's
+> still not clear to me why the change is causing a problem -- I assume it
+> is colliding with some other program area.
+> 
+> Is the problem strictly with qemu-user-static? (i.e. it was GCC running
+> in qemu-user-static so the crash is qemu, not GCC) That should help me
+> narrow down the issue. There must be some built-in assumption. And it's
+> aarch64 within x86_64 where it happens (is the program within qemu also
+> aarch64 or is it arm32)?
 
-I found that in the problematic commit, I had added the
-wake_up_q() call in task_blocks_on_rt_mutex() around
-__ww_mutex_add_waiter(), following a similar pattern in
-__mutex_lock_common().
+As far as I'm aware I've only seen qemu-user-static fail for aarch64
+(e.g. the arm32 variant works fine, didn't try other arches) in this
+particular configuration (the debian bookworm package has been built
+with --static-pie which is known to cause problems)
 
-However, its just wrong. We haven't dropped the lock->wait_lock,
-so its contrary to the point of the original patch. And it
-didn't match the __mutex_lock_common() logic of re-initializing
-the wake_q after calling it midway in the stack.
+It's also fixed in newer versions of qemu, even with --static-pie,
+because they reworked the way they detect program mapppins in qemu
+commit dd55885516 ("linux-user: Rewrite non-fixed probe_guest_base")
+and that also fixed the issue (in qemu 8.1.0)
 
-Looking at it now, the wake_up_q() call is incorrect and should
-just be removed. So drop the erronious logic I had added.
+So, in short there are many fixes available; it's a qemu bug that
+assumed something about the memory layout and broke with this kaslr
+patch (and for some reason only happened on non-pie static build)
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Benjamin Segall <bsegall@google.com>
-Cc: Zimuzo Ezeozue <zezeozue@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Metin Kaya <Metin.Kaya@arm.com>
-Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: kernel-team@android.com
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: regressions@lists.linux.dev
-Cc: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Fixes: 894d1b3db41c ("locking/mutex: Remove wakeups from under mutex::wait_lock")
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Closes: https://lore.kernel.org/lkml/6afb936f-17c7-43fa-90e0-b9e780866097@app.fastmail.com/
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: John Stultz <jstultz@google.com>
----
-Apologies for being noisy, I recognize its only been a week, but
-I wanted to resend this now as the problematic commit just
-landed in Linus' tree and I've not seen this get queued yet.
 
-thanks
--john
+mjt will at the very least rebuild the package with pie enabled, because
+it's known to cause other issues with aarch64 and that was an oversight
+in the first place, so this issue will go away for debian without any
+further work.
 
----
- kernel/locking/rtmutex.c | 3 ---
- 1 file changed, 3 deletions(-)
+This is the background behind me saying that this probably should be
+reverted in stable branches (to avoid other surprises with old
+userspace), but master can probably keep this commit if it brings
+tangible security benefits (and I think it does)
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index ac1365afcc4a..e858de203eb6 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1248,10 +1248,7 @@ static int __sched task_blocks_on_rt_mutex(struct rt_mutex_base *lock,
- 
- 		/* Check whether the waiter should back out immediately */
- 		rtm = container_of(lock, struct rt_mutex, rtmutex);
--		preempt_disable();
- 		res = __ww_mutex_add_waiter(waiter, rtm, ww_ctx, wake_q);
--		wake_up_q(wake_q);
--		preempt_enable();
- 		if (res) {
- 			raw_spin_lock(&task->pi_lock);
- 			rt_mutex_dequeue(lock, waiter);
+See the debian qemu-side of the bug for details:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1087822
+
+
+> Is there an simple reproducer?
+
+Unfortunately I couldn't get it to reproduce easily, but I think it's
+just a matter of finding the right binary that does problematic mappings
+(e.g. running true in a loop didn't work but running gcc in a loop did)
+
+The most reliable reproducer I've been using is building a reasonably
+large program, we were working on modemmanager at the time so that's
+what I used; if usually fails between 100-300/500 of the build:
+----
+$ docker run -ti --rm --platform linux/arm64/v8 docker.io/arm64v8/alpine:3.20 sh
+/ # apk add bash-completion-dev dbus-dev elogind-dev gobject-introspection-dev gtk-doc libgudev-dev libmbim-dev libqmi-dev linux-headers meson vala clang abuild alpine-sdk curl
+/ # curl -O https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/archive/1.22.0/ModemManager-1.22.0.tar.gz
+/ # tar xf ModemManager-1.22.0.tar.gz
+/ # cd ModemManager-1.22.0/
+/ # abuild-meson \
+        -Db_lto=true \
+        -Dsystemdsystemunitdir=no \
+        -Ddbus_policy_dir=/usr/share/dbus-1/system.d \
+        -Dgtk_doc=true \
+        -Dsystemd_journal=false \
+        -Dsystemd_suspend_resume=true \
+        -Dvapi=true \
+        -Dpolkit=no \
+        . output
+/ # meson compile -C output
+----
+
+If you take any of the command that failed from this build and run it in
+a loop, it'll also eventually fail after a couple hundred of
+invocations, but if your loop doesn't involve any parallelism that'll be
+slower to reproduce.
+
+Note it requires qemu to be broken as well, so you'll have best chances
+with a debian bookworm (VM is fine; a chroot or podman instead of docker
+is also fine; in the chroot case ninja requires at least /dev (and
+possibly /proc) mounted)
+
+
+Thanks,
 -- 
-2.47.0.338.g60cca15819-goog
-
+Dominique Martinet | Asmadeus
