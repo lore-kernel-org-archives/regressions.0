@@ -1,160 +1,126 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF8C1D63EF
-	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 16:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BC1B87C7
+	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 22:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732638426; cv=none; b=sF7ymdzpUvWBp9ZrO+/sbtCoWI+4vCp/hxOoH4AvVZkdOmAr7AjuEVEJY5h8FT/MMZKJdFVNkkH+sPflZRNTkMwfkQ1H8A5yy5+sAoFenn6zhCJQjsIYAd2G+ssJL+8a9X+U6VhYGBLEG5HuNE4R11hbH2zlSM/pBU8kUoopIjg=
+	t=1732660446; cv=none; b=kvtyISw73Zh46uhM8/C3lKF6WW5u3j7/izJ5XLU9qyrtuyykFga2NKwBjmzCNrL6RipsFLcZsyOkf+DLKY3OiYRyTq+CRN/nwbiUY8uvyuZZc3xIwpyOU4EPSGznW/CRYd0QP+Lo5oBggewKKpUCvxCTjCKhj1Dqy90CvlS5S4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732638426; c=relaxed/simple;
-	bh=tdF3p5jMfre5WPiRhxJ6n7OSlkK3elNOqhBX4D1qj+I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UXWOOZ1WeDCqkNRcJBN9+j/obfaafWArtw9iXo33QOheU8g6twZMAB6zfCKWr0RrlO0MCVc0SK1M5WHfPZo1XzbVvNGx7yHH6Dk7j+zl7Wzp5pmKdnobhCLYM4LptFT2nGalXX/bxCaMqS/x4qtKlDcbrGVFPo+/rcLtTccNZTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qGlB97sx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TfsZIWC8; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1732660446; c=relaxed/simple;
+	bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nwZOhDfqtNTV/wflaBeWzvNX7roevtRmul0FXjbkRhV/Y1VO/CPUZRndi18TigzOhpqtPRNGEeYnwdtzxCdftcw8eMYgU4pZvrDBA/RgiI0PeoU9IFhwpqkXEyzpk76roTW+UIhazIaq3s0sn1kovPjmRgbMU2CC07gOi4TKB9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPJlf0SR; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qGlB97sx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TfsZIWC8"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id 547161140199;
-	Tue, 26 Nov 2024 11:27:02 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 26 Nov 2024 11:27:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1732638422;
-	 x=1732724822; bh=JEcS3cFLegK0rV+tV4ShlO64Vj4HRyL/7l6/xZXe0Ts=; b=
-	qGlB97sxykjDRisvkkVbxsMQHNOEAI6fkyCQbhNeNJVTEjTEAZTp0Ep/BmFdJl7Y
-	VWjd/Z6Zclv/PtgZyJhH0bCPa6C3nj7EVCi0AJn8zsS46BvB/YOD1bsH9QMF+aX2
-	MBWcu85db/Tlu3Y2bLHlGijtKRN6F+8yIMVAunfs05WNbV9sJ17lrX9W0dqg3VO6
-	ahJTaPtXqp/4lyI2UuVTGMQh8DPthbDTyyd9Nq+3KMADq40xfmE7l9K1vvfdsQqq
-	RzezTDxBWS8OYsDPKv2KO76TVUWSkGwymaBiIp1VT5tlDgaRHoeI8KyjTu4CuLEX
-	zmN/34y4vDRD58pXJ9GrbA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1732638422; x=
-	1732724822; bh=JEcS3cFLegK0rV+tV4ShlO64Vj4HRyL/7l6/xZXe0Ts=; b=T
-	fsZIWC8hhuhSDlbSYAx0O7kEeJRXQeJOnM03R8mkpsjKnPXn3b8/LY94dszKqvFr
-	ZT45pI2/cLtrBPqlFa+7iWTlp3JsxHDlXhR1oJZumxx25qgK65V9cl4e6tJDYv3P
-	hRz1nsDiBxXODnAAIbAKigWFAOZgF6X+m665dHyLpknxpFMbH7+RCtxFceIET3mg
-	C7bIClY87RqkLndLSCN06QMhePt4twNmGup03NywQ/REl4vk4MUV7uBKDPjexAd3
-	4AsVSf0NKW1N89T0guq5v9aPHlgQueCZ+okRknC57iORmxBP4dEVfx4toLEjc6hD
-	Z3p59cScd2Sy9uM88XZPQ==
-X-ME-Sender: <xms:1fZFZ9zBWL-wOzuf78R6UtqJswZcbdreBoq8fNGd5vuSSuLDgDglAA>
-    <xme:1fZFZ9ROvP0M-CA_5uq-NUERuJalH-pRKpo6EahTevj3ZrPd8UwBC8pwlX9HuEF_r
-    y4UdGDckYrWCGADvIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrgeejgdekhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdrug
-    gvqeenucggtffrrghtthgvrhhnpeefhfehteffuddvgfeigefhjeetvdekteekjeefkeek
-    leffjeetvedvgefhhfeihfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhn
-    uggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopehlrghorghrrdhshhgrohesghhmrghilhdrtghomhdprhgtphhtthhopehguhhs
-    thgrvhhorghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigvlhhlsehlihhnrghrohdr
-    ohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdrohhrgh
-    dprhgtphhtthhopehnrghrvghshhdrkhgrmhgsohhjuheslhhinhgrrhhordhorhhgpdhr
-    tghpthhtoheplhhkfhhtqdhtrhhirghgvgeslhhishhtshdrlhhinhgrrhhordhorhhgpd
-    hrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdp
-    rhgtphhtthhopehprghulhesphgruhhlqdhmohhorhgvrdgtohhm
-X-ME-Proxy: <xmx:1fZFZ3Vg0LJ-BaMH0XPy9Ekjv_rc2ELuSnWcbn3kF1NlXbE51x18uw>
-    <xmx:1fZFZ_ibIQCFPeXS-hU56vxBYIbn_n347eNkjQnKO3YYJWxSIlg3yg>
-    <xmx:1fZFZ_D8U1W8u3mnAgqhRoAbVYB-jaHjJ0V_06J9FPVqb26Po8Z3Wg>
-    <xmx:1fZFZ4LuKJhxliIAtgFfwmdNNcFubpCM8PNfSxQfo63iH-GSIeyEew>
-    <xmx:1vZFZ8KlvwVB_BnmaG2gXMCvhqWnxzFTEYucLR9e43_jb6v9WmFJDQgi>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A0EB42220071; Tue, 26 Nov 2024 11:27:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPJlf0SR"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-8419d05aa66so118818639f.0
+        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 14:34:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732660444; x=1733265244; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
+        b=dPJlf0SRhVaO91vVDa2LtTTFb5y6EffY8zzlnIxyV2LaCtoYRu428lmnVtvVidOEK3
+         IJFuEwXMxz68+z9Nx1kYnoW8iMc0Acj5ouIWy0DPu6viQ6Tl6NegpxPbkfuIailPHMbI
+         BAFK9t+Erit3bvS2AxzWQ9baSZk/ttxI5D4FyVefNXYPCRfz4ejXyHzHOxOOM4KTr4+R
+         OIumin1/++3UdOIXsniSvT6rIQM53qpKKSfFBkQ1OfgoCnJqaVBMOSSPfHkJvfTNAnN+
+         M8bOzfAsION2E98xjZ28/r27WVY+fhNKSFLFIOzkovRhB9E9cGLgD2AaXQTZ+UTpPx7/
+         HAxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732660444; x=1733265244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
+        b=l1Vvu0CP+dsFP6+rL/7ZPXcdC8kMnxZ8LUNljPasRMRLS3ChfUkdwBBVo9b5JOBnBH
+         rN9XrPbFN8+ORc+a2FVN9q4GDklWuuMVUmov7GRX0jQv+rIhSzPHv/N73YY70BPWdvXC
+         7DrpAY0SfeIrQCH1zkCPlUalvqJbQcDTdNfFB3VF/xKjRBGH+e+svqSzwFrx32bn+iOl
+         JE8UsbtDOp0i7fQBp8tViT2l6mhVT8sxKfW2jXauvrBAJ9lkoAhTAG1QssNKWsmJ6XFj
+         5RfJVXdxMBlo5V2RF00HMKbPzYdYY+0s7YzxOJYUPjm6BhlRQe8/zwonxVOyYZp2XSZl
+         pEcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsllnRGA16acJG7iMLALMQHVzZ/MiEkPqSlXjlU6KV7Q8ABB8x+P+Bea7R88gOmfVhxNjExEB+nldFIA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyGZ65QwcRpYc5lTLOSpvl2mM5jy6oHZzD9uhFIJLQJas6SUWxp
+	w9c3V1jfHqL3r+3Mkn6hzy2Gtu2P220WvmM54Ik4jfzxAeG4xMRnOv7iKAcIRG9Bou8lAeiXIAs
+	0F2B0SyyHxyO1OC5E9dJKF6AQLDU=
+X-Gm-Gg: ASbGnctS7/4uvdLCGWgmg9OTI22FPOXqjSHIR3gTU6pwwqLiaI7G1nJvMhBlkNBHIIK
+	G/lkA9t0snu2ykYCO3OzEYuN3t2Dvekj5Swjg9oWMJ1DJGJZ47cdG1rrd6FpJ92BixQ==
+X-Google-Smtp-Source: AGHT+IE+KUQpYGQR7ThM04qKSHGTtBIabX470BMpqzPPr8fqZPNqxQz01x1yzva22I6zYbnxaT+nJXD+77U1WbkVJHo=
+X-Received: by 2002:a05:6602:3416:b0:83a:872f:4b98 with SMTP id
+ ca18e2360f4ac-843eceaecf4mr113347839f.2.1732660444317; Tue, 26 Nov 2024
+ 14:34:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 26 Nov 2024 17:26:41 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>, audit@vger.kernel.org,
- "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>
-Cc: "Eric Paris" <eparis@redhat.com>, "Paul Moore" <paul@paul-moore.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Yafang Shao" <laoar.shao@gmail.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, "Kees Cook" <kees@kernel.org>
-Message-Id: <4153e658-0ca9-469c-ae96-4ac615d894b8@app.fastmail.com>
-In-Reply-To: <29ab783d-86e2-4528-a6ad-083f8baf56d1@app.fastmail.com>
-References: 
- <CA+G9fYvWkS-8f9kOBTzixjGSNN8262StoVv2ERk7mRKcU+p+BA@mail.gmail.com>
- <29ab783d-86e2-4528-a6ad-083f8baf56d1@app.fastmail.com>
-Subject: Re: include/linux/fortify-string.h:293:17: error: call to '__write_overflow'
- declared with attribute error: detected write beyond size of object (1st
- parameter)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
+ <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info>
+In-Reply-To: <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info>
+From: Rui Ueyama <rui314@gmail.com>
+Date: Wed, 27 Nov 2024 07:33:53 +0900
+Message-ID: <CACKH++YYM2uCOrFwELeJZzHuTn5UozE-=7PS3DiVnsJfXg1SDw@mail.gmail.com>
+Subject: Re: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no
+ longer returns it
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: brauner@kernel.org, regressions@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 26, 2024, at 16:12, Arnd Bergmann wrote:
-> On Tue, Nov 26, 2024, at 15:58, Naresh Kamboju wrote:
->> Build error:
->> ---------
->> In function 'sized_strscpy',
->>     inlined from '__audit_ptrace' at kernel/auditsc.c:2732:2:
->> include/linux/fortify-string.h:293:17: error: call to
->> '__write_overflow' declared with attribute error: detected write
->> beyond size of object (1st parameter)
->>   293 |                 __write_overflow();
->>       |                 ^~~~~~~~~~~~~~~~~~
->> In function 'sized_strscpy',
->>     inlined from 'audit_signal_info_syscall' at kernel/auditsc.c:2759:3:
->> include/linux/fortify-string.h:293:17: error: call to
->> '__write_overflow' declared with attribute error: detected write
->> beyond size of object (1st parameter)
->>   293 |                 __write_overflow();
->>       |                 ^~~~~~~~~~~~~~~~~~
->> make[4]: *** [scripts/Makefile.build:229: kernel/auditsc.o] Error 1
+On Mon, Nov 11, 2024 at 9:02=E2=80=AFPM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
 >
-> I have run into this specific one before but failed to
-> come up with a working fix.
+> [adding a few CCs, dropping stable]
 >
-> I think the specific warning started with
+> On 28.10.24 12:15, Rui Ueyama wrote:
+> > I'm the creator and the maintainer of the mold linker
+> > (https://github.com/rui314/mold). Recently, we discovered that mold
+> > started causing process crashes in certain situations due to a change
+> > in the Linux kernel. Here are the details:
+> >
+> > - In general, overwriting an existing file is much faster than
+> > creating an empty file and writing to it on Linux, so mold attempts to
+> > reuse an existing executable file if it exists.
+> >
+> > - If a program is running, opening the executable file for writing
+> > previously failed with ETXTBSY. If that happens, mold falls back to
+> > creating a new file.
+> >
+> > - However, the Linux kernel recently changed the behavior so that
+> > writing to an executable file is now always permitted
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
+mit/?id=3D2a010c412853).
 >
-> https://lore.kernel.org/all/20240828030321.20688-3-laoar.shao@gmail.com/
+> FWIW, that is 2a010c41285345 ("fs: don't block i_writecount during
+> exec") [v6.11-rc1] from Christian Brauner.
 >
-> but reverting that just replaces it with a slightly different
-> warning. In my randconfig tree I have a patch that comments out
-> the two security_task_getlsmprop_obj(), and I don't think I get
-> warnings at the moment, but I no longer see why I would have done
-> that.
+> > That caused mold to write to an executable file even if there's a
+> > process running that file. Since changes to mmap'ed files are
+> > immediately visible to other processes, any processes running that
+> > file would almost certainly crash in a very mysterious way.
+> > Identifying the cause of these random crashes took us a few days.
+> >
+> > Rejecting writes to an executable file that is currently running is a
+> > well-known behavior, and Linux had operated that way for a very long
+> > time. So, I don=E2=80=99t believe relying on this behavior was our mist=
+ake;
+> > rather, I see this as a regression in the Linux kernel.
+> >
+> > Here is a bug report to the mold linker:
+> > https://github.com/rui314/mold/issues/1361
+>
+> Thx for the report. I might be missing something, but from here it looks
+> like nothing happened. So please allow me to ask:
+>
+> What's the status? Did anyone look into this? Is this sill happening?
 
-Update: this seems to reliably avoid the warning, but I'm
-still a bit lost about what exactly gcc warns about. I assume
-this is a false-positive warning somewhere.
-
-Added Kees and Gustavo to Cc in case they know what's going on.
-
-      Arnd
-
-diff --git a/kernel/audit.h b/kernel/audit.h
-index 0211cb307d30..31cc41b167ae 100644
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -145,7 +145,9 @@ struct audit_context {
- 	kuid_t		    target_uid;
- 	unsigned int	    target_sessionid;
- 	struct lsm_prop	    target_ref;
--	char		    target_comm[TASK_COMM_LEN];
-+	struct_group(_target_comm,
-+		char	    target_comm[TASK_COMM_LEN];
-+	);
- 
- 	struct audit_tree_refs *trees, *first_trees;
- 	struct list_head killed_trees;
+Ping? I think this is a fairly major kernel regression. We can't ask
+all our mold linker users to upgrade their linker before upgrading
+their kernel. Isn't "Never break userland" the kernel's policy? I
+wonder why no action or even a discussion has taken place so far.
