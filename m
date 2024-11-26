@@ -1,80 +1,124 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA8F1B87C2
-	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 09:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749D41CEE8C;
+	Tue, 26 Nov 2024 11:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732612735; cv=none; b=l62cbTqE6pu0e29JDcVf1Y5aZnVeiZ6HeXCpI9GzibdcW9VWacyUsZELK6dLzUoB82JD1h3xzMsMCxZ/w0sGrZtxPEMVmvp7Lge/+5yS/cJkiCUkLsusvH3q/jH3YRCdPwj4gmRbrSzpesqHnZbWCNx0PxYpNo8A4z/AFDvSVFE=
+	t=1732621365; cv=none; b=VXiQl1OimPfzfVnZcd06I0Neky66iLiE+PSXWJyvTGeFdjqRve2GIRmaVQaThSi4r4CYrV4bB8tyauAoQrSLU+7vsw6Q4noU9h4yYRgdxHG1+Moi1UNA0CtIZETi0yb45xsxXjcS/U7Ir6St0wEq/4GEaWZMsvC1KUJloDpwVPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732612735; c=relaxed/simple;
-	bh=H8eF2eXLoEAWy3yZQI4qwWZRVJnCj0BbC/ST/Qo9VCA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=by2IVgfrY0qvauWBcQgQfHOP7s9u0eKuD4eEV9gb0NJiq7s8HlplkGrnbpFXVWWI9OOZptpK7ywhM6d4WoV/viPKRoXPhSgJpnRdtcNci8AzOxMt9gDIX8rmzkV3VGEYQRDVVSlXFifz1zwGjhW0DYpxECJPYJA0plYvFV4Ri7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9wX2Hqt; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732621365; c=relaxed/simple;
+	bh=nZWGs2lMItOp5qiSx76l1ZQT4xO8bz5PZ0Yx4S9cOgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jx9CLSVFNme669PB32nfhwa7B9IsZTuqLJwxojDSyFo/D40p2UmIIcpXPl2Fq523VL7ez2eNC21UoqCL1A86ljSXZ2LjUi/XAO/jaywJyZWWUwNwinGTe5SKPOLlasiwk2IsWSDvWLOD4qOzlujGAdHd5mX2hS7eZ5V2Dai9P+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=LpfjVInq; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9wX2Hqt"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e387ad7abdaso5641426276.0
-        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 01:18:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732612732; x=1733217532; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZVDCky70auYLWD6XOWEkaP+WV+CoPiiKjrNT7eFkl2U=;
-        b=h9wX2HqtjzL65arairFPwqD7fmtY7/EA4DC4N58Wg7Q1lNwxblstl2LbRGs2aSEMAb
-         TYpaUdbSkkZsjnbAYFnpGdyBogtf3r81tx+3qL/zNkVJ4kJ2eQCYrvNBdFV0EW7Peryp
-         LJuQS3v8qPMICz6M/5xOxKvwv5W6u7opeY2KkpIZIBIg2XKJ0DeBvBX3/SvCJhcVBuFv
-         T/XR1dvDdJEzBzE/S20hyAAOz2pr0j6W55IiJFdy+gclRhrDAzJJfAWHWbH8mPcUYb86
-         5H0CMwW4aEmcQRqrrMc2yi7S6dXX5V0bu6oGN8YvV03+dW8l/FnV3q6EP0pZb4wM1/eK
-         JF+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732612732; x=1733217532;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZVDCky70auYLWD6XOWEkaP+WV+CoPiiKjrNT7eFkl2U=;
-        b=bQYWzPKyBRXFlhX/hq4PuIMFX6D5zTxAzOg+UpOTBz4wcbficouNvjbz73ko69w4wg
-         xbvEFF9UM9RFt9eUzBjhJ8rbou7XY8mDVHZV/Ksm+3eL3QcpvDiU4Tj/XKMQKpL2RbUP
-         IZU6HmgIqyz/Wi006QRA6P00JFET9FQH0ki5bT7/dcIqGthPYFoGqPHqd84InN6KQWkQ
-         XsU0mqGuboEbgijEh+XEqGwRef4ukgNubOIhzS20jUj8NBDwdIbc9r+T8Wvyp1Rmnbo0
-         L+F2H2GfnPcd0q+ahPKfRLnOOzUQk+YKsarAbTyM+XqwYhWxhaUXe/Ca/xfIpnCDfIh5
-         rQpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSlSxv6J7/JgNsfueootJfHtRdIv/paimfcSEXOnk/eh3vXYVLQhga2yNKW0i9TeW1TkgHxRl/wmwfuA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxYkXeXA/UwHqrZRWakKj1T5XVkfn5Dvhae1w7vlX1avt8XKtKo
-	eGaZ6C30swxT+MIa6ajJIbFMfDc0qT3PIvLdl/uvqbUjvuRYaVv5qV5enGdJI0OyTZ2cfe6wPjh
-	tq13ZEklGS21nXn1hvB1XrAcc3XM=
-X-Gm-Gg: ASbGncu3DHC3k6nfDJxzcjBy8vRYm+eNuf7yGGryU3mTIN3+rk+uIi7TWaXNv14XoAF
-	0MvB2VgI6Pg6MHWKC5I+rqXsDLK8XqmM=
-X-Google-Smtp-Source: AGHT+IHV02X2n+cTXOdwOWnWyjBXRCSdI9G0x+XWqC/yRz8lOxPMnte8V4M5zojwdV+Ku0e8hXCcOj0QHix71W+R8dE=
-X-Received: by 2002:a05:6902:33c6:b0:e38:f11c:f04e with SMTP id
- 3f1490d57ef6-e38f8c27cf1mr11236518276.53.1732612732255; Tue, 26 Nov 2024
- 01:18:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="LpfjVInq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1732621344; x=1733226144; i=christian@heusel.eu;
+	bh=nZWGs2lMItOp5qiSx76l1ZQT4xO8bz5PZ0Yx4S9cOgg=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LpfjVInqY/t13xAA4/HDdgITXrmnhfbP+3XsNud2Bx5Bz8NO+rAtVjwM8EAKwTC+
+	 ouOe4UmJsQnZEnlyWIjaw40FOyQAhJjmOPm2H3wxOE19m+Nxk+qm+0ZygDTbyrGb8
+	 PmcL6zeeCc5jKg+8anD8Ijikpq0Te9MPwSOqkuqTQ0LXaSHKGfmFaZw+y+I7YqBor
+	 W9J3SNeZYEwRinOoDDnic9qAMkUE8YahDnC2Ooov+IZERlKmzvuy9cR5sT1zDlKGi
+	 RGwa98zBKacdfGZkv/+/HJyvBESEBDINUihligBQazk+ri5SOeXa2D8OiSDgkeAi6
+	 uaOG4z7l6N1H5ZZCWQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue012
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1MElhb-1tVXHX0E4B-002Qsz; Tue, 26
+ Nov 2024 12:42:24 +0100
+Date: Tue, 26 Nov 2024 12:42:23 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
+ since 1b6d7f9eb150
+Message-ID: <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
+References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+ <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAP-bSRbCo7=wfUBZ8H7c3Q-7XSG+SB=R4MHHNNGPvBoinsVSZg@mail.gmail.com>
- <CAP-bSRab1C-_aaATfrgWjt9w0fcYUCQCG7u+TCb1FSPSd6CEaA@mail.gmail.com> <20241126065228.GA1133@lst.de>
-In-Reply-To: <20241126065228.GA1133@lst.de>
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-Date: Tue, 26 Nov 2024 09:18:41 +0000
-Message-ID: <CAP-bSRZehc2BxRC_z5MXKQ6qHNPXPgZoOQTtkiK_CFd494D_Fg@mail.gmail.com>
-Subject: Re: [REGRESSION] ioprio performance hangs, bisected
-To: Christoph Hellwig <hch@lst.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, axboe@kernel.dk, bvanassche@acm.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, linux-block@vger.kernel.org, 
-	semen.protsenko@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eaev7d3urdeo2ifc"
+Content-Disposition: inline
+In-Reply-To: <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
+X-Provags-ID: V03:K1:fY0TFxl00akwpsKGVF1gMOkrqTHSP+O92p7nk1Ej9tMrSe6htr9
+ Aua3m5vykN/Ie73rk5XeEQ1tvLltVdjeR5YH2pH4/q8VY8IVW0Q+E89VqBDMg8DJqZAzzUL
+ TM3i8f9JHJycRxKoV4siX3JChLi5Chy0X0aL2JIzUd0rBaGja/Ek91TnmdLQBkh3B/iepoC
+ J0IdN8wKkt+YjJf7hsOCA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8wZXSklPUW4=;ES6jqhBtoMOMtB4EHfeEC9hVx0L
+ z/WKe6JWjDH6OIKyuZYtkk0xjGWxJBYlqhUdhM2WmYcQfF8XSnb0Xjl4rp9NlkBXtnZ7pjQbB
+ l5c0swe5ajmmFdhmgj1lTKSp1PnQEqVhixGcNe3toIMXzoJ0SOQCancv8SqB1t/l02rRIxUa1
+ vs/Maw3FGcLO5SmP6DUpmiBi5yW8lUF8gGGa5dLRpYbcUfC5Cl0dqwRHYLSXWVD7NpUkHUJ1S
+ ZUBu8uyLXATSDYmzEgRTkhrb5kQT0IlM53wWBtN+QjJ7VxhEXpFL3bMON2IG/NpBvKHdb0TZx
+ CleRoUtFAuXhJtNYIojPD3PUMFWeqsDv4ukqSvbz+EvwmQ2+UoC5pRQ2L+RK73YKSGDa0n3Nl
+ ySTobCwdd7WPbjzm48DfKs3M6sv3MCZg7o2/Zqmzff0M6LX6CGA2eqizmc+8L55rrLtJPze99
+ GqPV0Izj4VwXOsSzJ053olKYG0/7RJtxamo/nA9hwv0Y9XYZviKC9VLgllwie58ZabfeH8zqc
+ xmuHOAXf9+yu2Y+E8l4/5t/Hwl5xxQkYmqtuvNSG98N34/XTueysjN6JoosYidLamvXAh/7LW
+ QecRBgt/Gj7Xh9I2aSjUnOcbpbe17//g1QY9tNUOZBjZX/jJfQ2U8SaXlP91P8zWxh9sf9XuU
+ RHpghDwpvJsMvmpOXAIMbrvIZSDerihCkLhOrCynhVDSCG0Z2QcC+jgQ1ypvDLrhJM2HGTTeM
+ iP5P7DtHXGqKVIDYBlqJYJvcVL0lr1uZ+7wCZOtk9wt9TzCddgNviedP+vgl5A3TDsGUK5fy/
+ PjS4SV+AcCR/KHh1ir8Q6E9XTSH+dOofGevjX2CW7v+nav70y9JDwrce4nR+kH0T0C
 
-On Tue, 26 Nov 2024 at 06:52, Christoph Hellwig <hch@lst.de> wrote:
->
-> Fortunately fixing this is not only easy but also improves the
-> code in mq-deadline.  Can you test the patch below?
 
-Yes, the patch fixes my test case.
+--eaev7d3urdeo2ifc
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
+ since 1b6d7f9eb150
+MIME-Version: 1.0
 
-Tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
+> Yeah, this is on the list.
+>=20
+> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
+>=20
+> I had a fix for the AMD boot-time issue already over a month ago
+> but unfortunately took time to get enough feedback.
+>=20
+> BR, Jarkko
+
+I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
+the patchset that was mentioned in bugzilla also helped this issue.
+
+The reporter said that the bug is still present in 6.12.1, so this might
+need further poking =F0=9F=A4=94
+
+Cheers,
+Chris
+
+--eaev7d3urdeo2ifc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmdFtB8ACgkQwEfU8yi1
+JYV6XBAAmTuAUz74VeTWU1f8sqFejobrUE11Yqgi3n9/mzfOrEU6JLqkCgFm3Ztc
+DAxknT1617vmv+RgLv21VdisBoq+u4QSUSua8MqCHZUWMe+huzbpjUUDMOPt1r4r
+bbS4S6tQu4i294MC+qN86TtlHk9VN7VP16EtffLLXHZUxKp3ZgxvnX3XiOGksoCY
+YdfKfWNYgXKrukM1/+azr4AMdAOTGmen2zILfIFdC1xIJ4IU+VlWZuC6usTpMRmG
+KFlAug0I/Q2U9mjw3MfTFQ2g878h+AVMNwgfjRctIKt8t9raKwiXhiOj1yQu496G
+XU/f1CCESOQHnAcrHVVu1h6qdQqB3qZA5vu4yRBj+1SgBVNn67NmyqY2jVvyzsRB
+pteNr9b43xCj9F0WFVBAwPIpagRNtdZrG5EBU6c3NV55tx7ehJu88zk8+L/OeJHX
+9A9V+j3gAgshPJfyvrmSprrP7xxJgIikQNE8SE6QCIae1nBYTr9pndQmOJPGdi2J
+3vy9nsdt4X8XYM2AyOHPwJvrqfXFn8wTtLKhL+5rlq/KYF18qKEwnEaSXTU1+0B8
+wjR4QEFauEDjmLFYGrnUYDcD4UpjDusY/8OriPZA9lROhVJLgoZrHIQj7ngmem34
+8WyGgIAGGGGmo1aONLWw1DO3v622MDYPZ9z1vwJGgl70txhu6U8=
+=D5Sp
+-----END PGP SIGNATURE-----
+
+--eaev7d3urdeo2ifc--
