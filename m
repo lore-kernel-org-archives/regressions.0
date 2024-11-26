@@ -1,124 +1,131 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749D41CEE8C;
-	Tue, 26 Nov 2024 11:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839A1D5ADA
+	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 14:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732621365; cv=none; b=VXiQl1OimPfzfVnZcd06I0Neky66iLiE+PSXWJyvTGeFdjqRve2GIRmaVQaThSi4r4CYrV4bB8tyauAoQrSLU+7vsw6Q4noU9h4yYRgdxHG1+Moi1UNA0CtIZETi0yb45xsxXjcS/U7Ir6St0wEq/4GEaWZMsvC1KUJloDpwVPI=
+	t=1732633133; cv=none; b=q4QHE2FH3CE1aAReXrV+UxTOR7Y5SHL/vGvCrzWC/I5EwuvsM4KHJsr+WwHNczrBw2tFVUx4OLvldaSAqiFtE+mOKSrPBAHaKMNwWYBnLCraJEzpl0hSyoE4hxuB06wLYsasoaF+yjtpo9oHniJfzll4I+MEIuBQUNFwbRQnCQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732621365; c=relaxed/simple;
-	bh=nZWGs2lMItOp5qiSx76l1ZQT4xO8bz5PZ0Yx4S9cOgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jx9CLSVFNme669PB32nfhwa7B9IsZTuqLJwxojDSyFo/D40p2UmIIcpXPl2Fq523VL7ez2eNC21UoqCL1A86ljSXZ2LjUi/XAO/jaywJyZWWUwNwinGTe5SKPOLlasiwk2IsWSDvWLOD4qOzlujGAdHd5mX2hS7eZ5V2Dai9P+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=LpfjVInq; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1732633133; c=relaxed/simple;
+	bh=f1O+zS6/2cw4GKBLIQEa42J3lPvxfz8RoK+Zaaqew1w=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HrYChbyl9ev54S2Q5utPGhovMAvCcOTnP4LIDVEjD9MGeoQP8isdwHv2ikz5Ky4itVkrGZ2URLW1YCEdIXf2x5ETNjdmFR1+QvIy4MrsQXIb2JRZEVB8f3AL+sXtXrzXU8nxk6PoW0xuDFc0lrWm5FXQdnofTiURoNe5UEbCKA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=InPD14mq; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="LpfjVInq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1732621344; x=1733226144; i=christian@heusel.eu;
-	bh=nZWGs2lMItOp5qiSx76l1ZQT4xO8bz5PZ0Yx4S9cOgg=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=LpfjVInqY/t13xAA4/HDdgITXrmnhfbP+3XsNud2Bx5Bz8NO+rAtVjwM8EAKwTC+
-	 ouOe4UmJsQnZEnlyWIjaw40FOyQAhJjmOPm2H3wxOE19m+Nxk+qm+0ZygDTbyrGb8
-	 PmcL6zeeCc5jKg+8anD8Ijikpq0Te9MPwSOqkuqTQ0LXaSHKGfmFaZw+y+I7YqBor
-	 W9J3SNeZYEwRinOoDDnic9qAMkUE8YahDnC2Ooov+IZERlKmzvuy9cR5sT1zDlKGi
-	 RGwa98zBKacdfGZkv/+/HJyvBESEBDINUihligBQazk+ri5SOeXa2D8OiSDgkeAi6
-	 uaOG4z7l6N1H5ZZCWQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue012
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MElhb-1tVXHX0E4B-002Qsz; Tue, 26
- Nov 2024 12:42:24 +0100
-Date: Tue, 26 Nov 2024 12:42:23 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-Message-ID: <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
-References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
- <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="InPD14mq"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5f1dfb0b44dso1090441eaf.2
+        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 06:58:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1732633131; x=1733237931; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7nCMLG4jiyHQ5656b8U7nuMRUbyTISDMqgTqAM6PrCg=;
+        b=InPD14mq8PO+hFOfEOnwwI4NsvQjXbFNAgJ4cqRLJ8qXTfjENICuOzYqKvvnTcAHFl
+         VsScDLvePDdzggcTAV9S8RlRQMUgs4LnkvVCtbPl7sUiUWEwC9pNNX7p9g0fkGANlDDx
+         7FYAPFvhjxTy/Oj6zCVCj/cS8trrANdju2wHvzua4r7CotWTq30y0/EHJHALbsTdH0xa
+         xH/+qG4eOOXrNGYDYujatqitHJeiiLIkRDkzdzj6Q4gSOOyqzlGhyetKQt8MiLzOdeIz
+         lZ2hvUH1LBZfeWR8Izak5PwYDOwBKblj+IIf2J5hm8HnVjFwaIHsDluDKdqWClpeikIH
+         ilUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732633131; x=1733237931;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7nCMLG4jiyHQ5656b8U7nuMRUbyTISDMqgTqAM6PrCg=;
+        b=WP9B2pX/Xmex8c/rQ0CKPojqqV+csEf5dspQ2TBU1jc2CREqYhjY9UsKSWE7uXxViO
+         8nrAmG+RC3JQ+QzVaSsECremEXz0rQIFPldITIBK2F5ubTXjCvyz8bL726tOZ/HdmKSs
+         9NNVbeMOs4B11Ig4qW/phrb5LfetxIu7I+qi7VgAO3MqCPOprNpJ53SlP8JV6M59XfxI
+         MDpjxf3gGO0qILzmL7Q3L48bo+LtbIK/gJbHNxOwd2hy+MUeyx4i/wF4Vz2attZUTyw+
+         n+dSn3xFIA7O/VbzmJFKym9dli3vP3W2ha3EgRz7l+/JSAYQyqwHHVEgocBhoDRa1Fku
+         BSQA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCRniZO7hA2khuW+dtYZMen9ma4DgTvvxJoBwf7Vr2483E8mx7hOwbQFK1GRV95Zxx5xVeQz0zzd6M9w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyZdHseyeGmcTTGH3Mqe24+tmctG/uonLR8JlAQq8AEG9QxcZXR
+	rY+HHPZ7XehCL/LnIOtI1wVfZLk9mIV4TpmVC9JtmM1v5AitUtQzZ976kdlWqbRKdX0AFrirqI3
+	86WsjOdCcj4N5PZ22ZGSFlXzxSruyf8bNp8hgUA==
+X-Gm-Gg: ASbGncsErMVXEAjSvgY1oL/IGPk+76dsOOwU9bK3oeW7WZb70o7WhJwWFx51jHD1B7g
+	FnV63af+KYvn1LN+I7TH3uyChDiZcaKD29hrtoz5nMWPgUNaS2IwINTsZEBer
+X-Google-Smtp-Source: AGHT+IGRSy8nLCOB5VUyzmDCr9fGOBYudcymDUxbY3GaTKPYQmQrsAEqrNE0VfI0dc92xgcP+9l1NMxeYbAjVcNZnXQ=
+X-Received: by 2002:a05:6358:3120:b0:1c3:7275:491 with SMTP id
+ e5c5f4694b2df-1ca796d0650mr815761355d.1.1732633131139; Tue, 26 Nov 2024
+ 06:58:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eaev7d3urdeo2ifc"
-Content-Disposition: inline
-In-Reply-To: <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
-X-Provags-ID: V03:K1:fY0TFxl00akwpsKGVF1gMOkrqTHSP+O92p7nk1Ej9tMrSe6htr9
- Aua3m5vykN/Ie73rk5XeEQ1tvLltVdjeR5YH2pH4/q8VY8IVW0Q+E89VqBDMg8DJqZAzzUL
- TM3i8f9JHJycRxKoV4siX3JChLi5Chy0X0aL2JIzUd0rBaGja/Ek91TnmdLQBkh3B/iepoC
- J0IdN8wKkt+YjJf7hsOCA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8wZXSklPUW4=;ES6jqhBtoMOMtB4EHfeEC9hVx0L
- z/WKe6JWjDH6OIKyuZYtkk0xjGWxJBYlqhUdhM2WmYcQfF8XSnb0Xjl4rp9NlkBXtnZ7pjQbB
- l5c0swe5ajmmFdhmgj1lTKSp1PnQEqVhixGcNe3toIMXzoJ0SOQCancv8SqB1t/l02rRIxUa1
- vs/Maw3FGcLO5SmP6DUpmiBi5yW8lUF8gGGa5dLRpYbcUfC5Cl0dqwRHYLSXWVD7NpUkHUJ1S
- ZUBu8uyLXATSDYmzEgRTkhrb5kQT0IlM53wWBtN+QjJ7VxhEXpFL3bMON2IG/NpBvKHdb0TZx
- CleRoUtFAuXhJtNYIojPD3PUMFWeqsDv4ukqSvbz+EvwmQ2+UoC5pRQ2L+RK73YKSGDa0n3Nl
- ySTobCwdd7WPbjzm48DfKs3M6sv3MCZg7o2/Zqmzff0M6LX6CGA2eqizmc+8L55rrLtJPze99
- GqPV0Izj4VwXOsSzJ053olKYG0/7RJtxamo/nA9hwv0Y9XYZviKC9VLgllwie58ZabfeH8zqc
- xmuHOAXf9+yu2Y+E8l4/5t/Hwl5xxQkYmqtuvNSG98N34/XTueysjN6JoosYidLamvXAh/7LW
- QecRBgt/Gj7Xh9I2aSjUnOcbpbe17//g1QY9tNUOZBjZX/jJfQ2U8SaXlP91P8zWxh9sf9XuU
- RHpghDwpvJsMvmpOXAIMbrvIZSDerihCkLhOrCynhVDSCG0Z2QcC+jgQ1ypvDLrhJM2HGTTeM
- iP5P7DtHXGqKVIDYBlqJYJvcVL0lr1uZ+7wCZOtk9wt9TzCddgNviedP+vgl5A3TDsGUK5fy/
- PjS4SV+AcCR/KHh1ir8Q6E9XTSH+dOofGevjX2CW7v+nav70y9JDwrce4nR+kH0T0C
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 26 Nov 2024 20:28:40 +0530
+Message-ID: <CA+G9fYvWkS-8f9kOBTzixjGSNN8262StoVv2ERk7mRKcU+p+BA@mail.gmail.com>
+Subject: include/linux/fortify-string.h:293:17: error: call to
+ '__write_overflow' declared with attribute error: detected write beyond size
+ of object (1st parameter)
+To: audit@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: eparis@redhat.com, Paul Moore <paul@paul-moore.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+The arm64 hardening.config builds failed on the Linux mainline master
+for the arm64 architectures.
 
---eaev7d3urdeo2ifc
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-MIME-Version: 1.0
+First seen on Linux mainline master 7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5.
+  Good: 9f16d5e6f220661f73b36a4be1b21575651d8833
+  Bad:  7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5
 
-On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
-> Yeah, this is on the list.
->=20
-> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
->=20
-> I had a fix for the AMD boot-time issue already over a month ago
-> but unfortunately took time to get enough feedback.
->=20
-> BR, Jarkko
+arm64:
+  build:
+    * gcc-8-lkftconfig-hardening
+    * gcc-13-lkftconfig-hardening
 
-I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
-the patchset that was mentioned in bugzilla also helped this issue.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-The reporter said that the bug is still present in 6.12.1, so this might
-need further poking =F0=9F=A4=94
+Build error:
+---------
+In function 'sized_strscpy',
+    inlined from '__audit_ptrace' at kernel/auditsc.c:2732:2:
+include/linux/fortify-string.h:293:17: error: call to
+'__write_overflow' declared with attribute error: detected write
+beyond size of object (1st parameter)
+  293 |                 __write_overflow();
+      |                 ^~~~~~~~~~~~~~~~~~
+In function 'sized_strscpy',
+    inlined from 'audit_signal_info_syscall' at kernel/auditsc.c:2759:3:
+include/linux/fortify-string.h:293:17: error: call to
+'__write_overflow' declared with attribute error: detected write
+beyond size of object (1st parameter)
+  293 |                 __write_overflow();
+      |                 ^~~~~~~~~~~~~~~~~~
+make[4]: *** [scripts/Makefile.build:229: kernel/auditsc.o] Error 1
 
-Cheers,
-Chris
+Build image:
+-----------
+- https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/
+- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/log
+- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/details/
+- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/history/
 
---eaev7d3urdeo2ifc
-Content-Type: application/pgp-signature; name="signature.asc"
+Steps to reproduce:
+------------
+- # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13 \
+--kconfig defconfig \
+--kconfig-add https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/netdev.config
+\
+--kconfig-add hardening.config
 
------BEGIN PGP SIGNATURE-----
+metadata:
+----
+  git describe: v6.12-9567-g7eef7e306d3c
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git sha: 7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/
+  toolchain: gcc-13 and gcc-8
+  config: hardening.config
+  arch: arm64
 
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmdFtB8ACgkQwEfU8yi1
-JYV6XBAAmTuAUz74VeTWU1f8sqFejobrUE11Yqgi3n9/mzfOrEU6JLqkCgFm3Ztc
-DAxknT1617vmv+RgLv21VdisBoq+u4QSUSua8MqCHZUWMe+huzbpjUUDMOPt1r4r
-bbS4S6tQu4i294MC+qN86TtlHk9VN7VP16EtffLLXHZUxKp3ZgxvnX3XiOGksoCY
-YdfKfWNYgXKrukM1/+azr4AMdAOTGmen2zILfIFdC1xIJ4IU+VlWZuC6usTpMRmG
-KFlAug0I/Q2U9mjw3MfTFQ2g878h+AVMNwgfjRctIKt8t9raKwiXhiOj1yQu496G
-XU/f1CCESOQHnAcrHVVu1h6qdQqB3qZA5vu4yRBj+1SgBVNn67NmyqY2jVvyzsRB
-pteNr9b43xCj9F0WFVBAwPIpagRNtdZrG5EBU6c3NV55tx7ehJu88zk8+L/OeJHX
-9A9V+j3gAgshPJfyvrmSprrP7xxJgIikQNE8SE6QCIae1nBYTr9pndQmOJPGdi2J
-3vy9nsdt4X8XYM2AyOHPwJvrqfXFn8wTtLKhL+5rlq/KYF18qKEwnEaSXTU1+0B8
-wjR4QEFauEDjmLFYGrnUYDcD4UpjDusY/8OriPZA9lROhVJLgoZrHIQj7ngmem34
-8WyGgIAGGGGmo1aONLWw1DO3v622MDYPZ9z1vwJGgl70txhu6U8=
-=D5Sp
------END PGP SIGNATURE-----
-
---eaev7d3urdeo2ifc--
+--
+Linaro LKFT
+https://lkft.linaro.org
