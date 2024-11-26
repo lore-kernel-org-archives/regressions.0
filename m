@@ -1,131 +1,136 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839A1D5ADA
-	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 14:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967731D5CDD
+	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 15:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732633133; cv=none; b=q4QHE2FH3CE1aAReXrV+UxTOR7Y5SHL/vGvCrzWC/I5EwuvsM4KHJsr+WwHNczrBw2tFVUx4OLvldaSAqiFtE+mOKSrPBAHaKMNwWYBnLCraJEzpl0hSyoE4hxuB06wLYsasoaF+yjtpo9oHniJfzll4I+MEIuBQUNFwbRQnCQk=
+	t=1732633991; cv=none; b=qDU9Wy37zmNFq0RVhoapaAYFtR44MMr61kj2k+zMz5vj4zm4iOwGjCeXXbg2JG8HIPigBZpYz9O8KzkK7khx37WwYu9beFn2FAtJM91u29OaXGMchzW2LJr6Wu47HeHPHL0/1a/+a9zfOU14zSkJYLNMEwHZnpoSNTziOy6nsEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732633133; c=relaxed/simple;
-	bh=f1O+zS6/2cw4GKBLIQEa42J3lPvxfz8RoK+Zaaqew1w=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HrYChbyl9ev54S2Q5utPGhovMAvCcOTnP4LIDVEjD9MGeoQP8isdwHv2ikz5Ky4itVkrGZ2URLW1YCEdIXf2x5ETNjdmFR1+QvIy4MrsQXIb2JRZEVB8f3AL+sXtXrzXU8nxk6PoW0xuDFc0lrWm5FXQdnofTiURoNe5UEbCKA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=InPD14mq; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1732633991; c=relaxed/simple;
+	bh=09qdqt8gx+Pt0FyVLcARJoCsRJAEPy9MkT4OKKUAsqk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=A8u/6llaMLI3nu1hLk1s1pNssEZCGw+z9y3k438Tla/P0cHurs3FCq3Nf0G4ozObV26/eyIsQF/YN9tfgMqkofz98ea5cl0X8TYJs5zzIr3fpm7o1f9Ps7HRTkaK10nfn4sriFjbf74TFS79L1pkgUVVvoVNmzamXVPo+bwVALw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mY9cqW6S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fGHa8JY0; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="InPD14mq"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5f1dfb0b44dso1090441eaf.2
-        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 06:58:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732633131; x=1733237931; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7nCMLG4jiyHQ5656b8U7nuMRUbyTISDMqgTqAM6PrCg=;
-        b=InPD14mq8PO+hFOfEOnwwI4NsvQjXbFNAgJ4cqRLJ8qXTfjENICuOzYqKvvnTcAHFl
-         VsScDLvePDdzggcTAV9S8RlRQMUgs4LnkvVCtbPl7sUiUWEwC9pNNX7p9g0fkGANlDDx
-         7FYAPFvhjxTy/Oj6zCVCj/cS8trrANdju2wHvzua4r7CotWTq30y0/EHJHALbsTdH0xa
-         xH/+qG4eOOXrNGYDYujatqitHJeiiLIkRDkzdzj6Q4gSOOyqzlGhyetKQt8MiLzOdeIz
-         lZ2hvUH1LBZfeWR8Izak5PwYDOwBKblj+IIf2J5hm8HnVjFwaIHsDluDKdqWClpeikIH
-         ilUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732633131; x=1733237931;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7nCMLG4jiyHQ5656b8U7nuMRUbyTISDMqgTqAM6PrCg=;
-        b=WP9B2pX/Xmex8c/rQ0CKPojqqV+csEf5dspQ2TBU1jc2CREqYhjY9UsKSWE7uXxViO
-         8nrAmG+RC3JQ+QzVaSsECremEXz0rQIFPldITIBK2F5ubTXjCvyz8bL726tOZ/HdmKSs
-         9NNVbeMOs4B11Ig4qW/phrb5LfetxIu7I+qi7VgAO3MqCPOprNpJ53SlP8JV6M59XfxI
-         MDpjxf3gGO0qILzmL7Q3L48bo+LtbIK/gJbHNxOwd2hy+MUeyx4i/wF4Vz2attZUTyw+
-         n+dSn3xFIA7O/VbzmJFKym9dli3vP3W2ha3EgRz7l+/JSAYQyqwHHVEgocBhoDRa1Fku
-         BSQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCRniZO7hA2khuW+dtYZMen9ma4DgTvvxJoBwf7Vr2483E8mx7hOwbQFK1GRV95Zxx5xVeQz0zzd6M9w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyZdHseyeGmcTTGH3Mqe24+tmctG/uonLR8JlAQq8AEG9QxcZXR
-	rY+HHPZ7XehCL/LnIOtI1wVfZLk9mIV4TpmVC9JtmM1v5AitUtQzZ976kdlWqbRKdX0AFrirqI3
-	86WsjOdCcj4N5PZ22ZGSFlXzxSruyf8bNp8hgUA==
-X-Gm-Gg: ASbGncsErMVXEAjSvgY1oL/IGPk+76dsOOwU9bK3oeW7WZb70o7WhJwWFx51jHD1B7g
-	FnV63af+KYvn1LN+I7TH3uyChDiZcaKD29hrtoz5nMWPgUNaS2IwINTsZEBer
-X-Google-Smtp-Source: AGHT+IGRSy8nLCOB5VUyzmDCr9fGOBYudcymDUxbY3GaTKPYQmQrsAEqrNE0VfI0dc92xgcP+9l1NMxeYbAjVcNZnXQ=
-X-Received: by 2002:a05:6358:3120:b0:1c3:7275:491 with SMTP id
- e5c5f4694b2df-1ca796d0650mr815761355d.1.1732633131139; Tue, 26 Nov 2024
- 06:58:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mY9cqW6S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fGHa8JY0"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5D6FE1140094;
+	Tue, 26 Nov 2024 10:13:07 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 26 Nov 2024 10:13:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1732633987;
+	 x=1732720387; bh=KArY+wRAq4+tAmshhSnviX78KHjT0+xunqtTv5VSLzU=; b=
+	mY9cqW6S0UDCwVWDNEnXZNERlef8V8q8vGN00snn5hoxRRgkQq8kPDW9y3HwLn5+
+	s+XINfbgssAVFLnS0JFBXxH75f+AQao0Rhp721saYUEiVl+JIe2Llp+hqGcZIHCn
+	jgFNFqJUWHfQL4PFDxrwCElwNn9vmFstvt+Rknlthhv88Advard3NM6BFteJBZBd
+	fQH3hz3y5VNASwjxpaTnDij87QhGEHdgrmOz9ugBT9J4fJokUJYfrxU/BF2pfXmp
+	e0XoDNoGzPDXQ46Z3IvBBMXiEnyfCsuoThN6/Sjy4q6ES/th+RcLJG9ivemiVggv
+	Coukv+dO7ttbehr+OetUNw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1732633987; x=
+	1732720387; bh=KArY+wRAq4+tAmshhSnviX78KHjT0+xunqtTv5VSLzU=; b=f
+	GHa8JY0fM0z9st5fsN7CILUwxegd5o2UmRRmNrlks4eOA1iUMTZdZn9xnHZbfd1O
+	p0MRJh1zOQb6HOezWbV0h07ucYspzhubCSz3nPvrEkJeEU+9fMZA2Ut8MpWmftAx
+	oWvUdD4+qIgNPggB5ROvBBDW16dlUqYGD34WlAEJqKqlmtEplGo0C1lSLJFuFsPH
+	L+z4eUIyjdO3bO6YFseJbYXVkm6bQ5TsRz5RFvlZd1/oOZG7Q728OFDivOoow5dP
+	C0EXC5e/5R8CDWK6swdv4eslwwlU/14rE+uphg2FKfkXonoYcRTbsEqmgAbEkp4+
+	54M1EDhHn/lkVK4S3Ouhg==
+X-ME-Sender: <xms:guVFZ21d6S-LoZAnorRnQO2brWaAzN_SIi1G8SmTelTIaaXvDNhtgA>
+    <xme:guVFZ5HRvv7rgANytyfHFtApasnKcbzXOBbsRf66zZwQK0VMKbtp1IEPuXcVvg08I
+    fF1xwRX3yJFcT16dIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrgeejgdejtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
+    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
+    ucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdrug
+    gvqeenucggtffrrghtthgvrhhnpeefhfehteffuddvgfeigefhjeetvdekteekjeefkeek
+    leffjeetvedvgefhhfeihfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhn
+    uggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopehlrghorghrrdhshhgrohesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgu
+    vghrshdrrhhogigvlhhlsehlihhnrghrohdrohhrghdprhgtphhtthhopegurghnrdgtrg
+    hrphgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdrkhgr
+    mhgsohhjuheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvg
+    eslhhishhtshdrlhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhn
+    sheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehprghulhesphgruhhlqd
+    hmohhorhgvrdgtohhmpdhrtghpthhtohepvghprghrihhssehrvgguhhgrthdrtghomhdp
+    rhgtphhtthhopegruhguihhtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:guVFZ-7Yk84joLjezYyGmV8VZTv1lHAS62S9RMb9Qy0Ks4jJg6yhsA>
+    <xmx:guVFZ32dJG7VVuMvxBy-g9KP1CBKMr4Ame4FyzGbKDSkqdL77PuIdg>
+    <xmx:guVFZ5EglZwbcplgR_vL7I4fajKZfY2xJhNRDBFe1_Vby0T3lVWaeQ>
+    <xmx:guVFZw_AU-vnqPl25-S3doEEDlcaASVNznivic2zVI_fX3flLhwCLw>
+    <xmx:g-VFZ4AXQJr_Ou9N66JhAEIlhWocwcZeW2D6q3_R_SJiMMbBDfdG2Bx1>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6C0CC2220071; Tue, 26 Nov 2024 10:13:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 26 Nov 2024 20:28:40 +0530
-Message-ID: <CA+G9fYvWkS-8f9kOBTzixjGSNN8262StoVv2ERk7mRKcU+p+BA@mail.gmail.com>
-Subject: include/linux/fortify-string.h:293:17: error: call to
- '__write_overflow' declared with attribute error: detected write beyond size
- of object (1st parameter)
-To: audit@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: eparis@redhat.com, Paul Moore <paul@paul-moore.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Date: Tue, 26 Nov 2024 16:12:45 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>, audit@vger.kernel.org,
+ "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>
+Cc: "Eric Paris" <eparis@redhat.com>, "Paul Moore" <paul@paul-moore.com>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Yafang Shao" <laoar.shao@gmail.com>
+Message-Id: <29ab783d-86e2-4528-a6ad-083f8baf56d1@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYvWkS-8f9kOBTzixjGSNN8262StoVv2ERk7mRKcU+p+BA@mail.gmail.com>
+References: 
+ <CA+G9fYvWkS-8f9kOBTzixjGSNN8262StoVv2ERk7mRKcU+p+BA@mail.gmail.com>
+Subject: Re: include/linux/fortify-string.h:293:17: error: call to '__write_overflow'
+ declared with attribute error: detected write beyond size of object (1st
+ parameter)
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The arm64 hardening.config builds failed on the Linux mainline master
-for the arm64 architectures.
+On Tue, Nov 26, 2024, at 15:58, Naresh Kamboju wrote:
+> Build error:
+> ---------
+> In function 'sized_strscpy',
+>     inlined from '__audit_ptrace' at kernel/auditsc.c:2732:2:
+> include/linux/fortify-string.h:293:17: error: call to
+> '__write_overflow' declared with attribute error: detected write
+> beyond size of object (1st parameter)
+>   293 |                 __write_overflow();
+>       |                 ^~~~~~~~~~~~~~~~~~
+> In function 'sized_strscpy',
+>     inlined from 'audit_signal_info_syscall' at kernel/auditsc.c:2759:3:
+> include/linux/fortify-string.h:293:17: error: call to
+> '__write_overflow' declared with attribute error: detected write
+> beyond size of object (1st parameter)
+>   293 |                 __write_overflow();
+>       |                 ^~~~~~~~~~~~~~~~~~
+> make[4]: *** [scripts/Makefile.build:229: kernel/auditsc.o] Error 1
 
-First seen on Linux mainline master 7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5.
-  Good: 9f16d5e6f220661f73b36a4be1b21575651d8833
-  Bad:  7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5
+I have run into this specific one before but failed to
+come up with a working fix.
 
-arm64:
-  build:
-    * gcc-8-lkftconfig-hardening
-    * gcc-13-lkftconfig-hardening
+I think the specific warning started with
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+https://lore.kernel.org/all/20240828030321.20688-3-laoar.shao@gmail.com/
 
-Build error:
----------
-In function 'sized_strscpy',
-    inlined from '__audit_ptrace' at kernel/auditsc.c:2732:2:
-include/linux/fortify-string.h:293:17: error: call to
-'__write_overflow' declared with attribute error: detected write
-beyond size of object (1st parameter)
-  293 |                 __write_overflow();
-      |                 ^~~~~~~~~~~~~~~~~~
-In function 'sized_strscpy',
-    inlined from 'audit_signal_info_syscall' at kernel/auditsc.c:2759:3:
-include/linux/fortify-string.h:293:17: error: call to
-'__write_overflow' declared with attribute error: detected write
-beyond size of object (1st parameter)
-  293 |                 __write_overflow();
-      |                 ^~~~~~~~~~~~~~~~~~
-make[4]: *** [scripts/Makefile.build:229: kernel/auditsc.o] Error 1
+but reverting that just replaces it with a slightly different
+warning. In my randconfig tree I have a patch that comments out
+the two security_task_getlsmprop_obj(), and I don't think I get
+warnings at the moment, but I no longer see why I would have done
+that.
 
-Build image:
------------
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/
-- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/log
-- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/details/
-- https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.12-9567-g7eef7e306d3c/testrun/26066025/suite/build/test/gcc-13-lkftconfig-hardening/history/
-
-Steps to reproduce:
-------------
-- # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13 \
---kconfig defconfig \
---kconfig-add https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/netdev.config
-\
---kconfig-add hardening.config
-
-metadata:
-----
-  git describe: v6.12-9567-g7eef7e306d3c
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git sha: 7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5
-  kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/config
-  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2pNLRwWNgNgfh4C67CGISDtalxY/
-  toolchain: gcc-13 and gcc-8
-  config: hardening.config
-  arch: arm64
-
---
-Linaro LKFT
-https://lkft.linaro.org
+      Arnd
