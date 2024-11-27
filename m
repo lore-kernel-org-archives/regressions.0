@@ -1,126 +1,119 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BC1B87C7
-	for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 22:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A82210E6
+	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 04:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732660446; cv=none; b=kvtyISw73Zh46uhM8/C3lKF6WW5u3j7/izJ5XLU9qyrtuyykFga2NKwBjmzCNrL6RipsFLcZsyOkf+DLKY3OiYRyTq+CRN/nwbiUY8uvyuZZc3xIwpyOU4EPSGznW/CRYd0QP+Lo5oBggewKKpUCvxCTjCKhj1Dqy90CvlS5S4g=
+	t=1732681052; cv=none; b=H7mwL3QoaOAarzwrWIk6DNiFvCy7fWvqh2HXin/B3uaZcF4ioTCAsqG+EqWMVpi/VyhSFvWDDMF42TL7yj/kPf39xCDt9TIU4RWSndvBEN1Pfq6xSIulzO4OjVJ60q6KhjOLe9vemCk2/DNGmG6G6C0wc2fq0mYlYY3fxvC2kgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732660446; c=relaxed/simple;
-	bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
+	s=arc-20240116; t=1732681052; c=relaxed/simple;
+	bh=3XeU/4V/Sr4YWgBMd+JGTL2NUBHoyZBYkokHxbYNh0o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nwZOhDfqtNTV/wflaBeWzvNX7roevtRmul0FXjbkRhV/Y1VO/CPUZRndi18TigzOhpqtPRNGEeYnwdtzxCdftcw8eMYgU4pZvrDBA/RgiI0PeoU9IFhwpqkXEyzpk76roTW+UIhazIaq3s0sn1kovPjmRgbMU2CC07gOi4TKB9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPJlf0SR; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=eevpM1lkZNLilosEoSEu9D1Iw2sPQ6O//C6OQo6gGNEnUR4OsgP7Q2Y4ZSn1rqvtXsVQY/6442ot412XCAeWXnmeH5y5KePdmokZhYDuBqczq3mc6WIm+tpCvfFApiuQ3tTNxp5hFagd5YxK9HFvOL3V69q5YHSyMMWyxcu8cmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=UUc1k0M8; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPJlf0SR"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-8419d05aa66so118818639f.0
-        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 14:34:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="UUc1k0M8"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e38c1ac8e3cso389893276.0
+        for <regressions@lists.linux.dev>; Tue, 26 Nov 2024 20:17:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732660444; x=1733265244; darn=lists.linux.dev;
+        d=paul-moore.com; s=google; t=1732681049; x=1733285849; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
-        b=dPJlf0SRhVaO91vVDa2LtTTFb5y6EffY8zzlnIxyV2LaCtoYRu428lmnVtvVidOEK3
-         IJFuEwXMxz68+z9Nx1kYnoW8iMc0Acj5ouIWy0DPu6viQ6Tl6NegpxPbkfuIailPHMbI
-         BAFK9t+Erit3bvS2AxzWQ9baSZk/ttxI5D4FyVefNXYPCRfz4ejXyHzHOxOOM4KTr4+R
-         OIumin1/++3UdOIXsniSvT6rIQM53qpKKSfFBkQ1OfgoCnJqaVBMOSSPfHkJvfTNAnN+
-         M8bOzfAsION2E98xjZ28/r27WVY+fhNKSFLFIOzkovRhB9E9cGLgD2AaXQTZ+UTpPx7/
-         HAxg==
+        bh=Hm7ENvoP6HhdoXpahiQX6CDXmuqD55Pzj7gK8dROaY0=;
+        b=UUc1k0M8qDlyiw3zbsvD3tiYn2KCynZTf3xJYHS/y7LmTlDIVnAqWsEQzXGeMC23zg
+         iPq8RwCr9NRcq996SY0h5y++xxa4rIDuG9TTYhM2IA5JG6VSQsiRmI31nozGQKhH4aH8
+         u+VdkDzQ4ECYjewuxNU6NSlGOHQ0ZjwCqiIfPkN7ENd945+Y7gratyYKiyZg8HPySLPp
+         YaPajapt+0kOQBR7nO7D+47ysIFW1uH5wG/+y8hsJTiP56yX/Vgs4D8+L4Nb3wb+7RD1
+         D0sxJP1T7UQYGJsNZX8a3DImn0CVsP1xuwLYoanSBb6yGFEUSvUXW9wNShxu/aJQhr5u
+         +Onw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732660444; x=1733265244;
+        d=1e100.net; s=20230601; t=1732681049; x=1733285849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4vrbf3mKf+jSzEqVixBjqytq08FEluiMcVcJeXf93+8=;
-        b=l1Vvu0CP+dsFP6+rL/7ZPXcdC8kMnxZ8LUNljPasRMRLS3ChfUkdwBBVo9b5JOBnBH
-         rN9XrPbFN8+ORc+a2FVN9q4GDklWuuMVUmov7GRX0jQv+rIhSzPHv/N73YY70BPWdvXC
-         7DrpAY0SfeIrQCH1zkCPlUalvqJbQcDTdNfFB3VF/xKjRBGH+e+svqSzwFrx32bn+iOl
-         JE8UsbtDOp0i7fQBp8tViT2l6mhVT8sxKfW2jXauvrBAJ9lkoAhTAG1QssNKWsmJ6XFj
-         5RfJVXdxMBlo5V2RF00HMKbPzYdYY+0s7YzxOJYUPjm6BhlRQe8/zwonxVOyYZp2XSZl
-         pEcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsllnRGA16acJG7iMLALMQHVzZ/MiEkPqSlXjlU6KV7Q8ABB8x+P+Bea7R88gOmfVhxNjExEB+nldFIA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyGZ65QwcRpYc5lTLOSpvl2mM5jy6oHZzD9uhFIJLQJas6SUWxp
-	w9c3V1jfHqL3r+3Mkn6hzy2Gtu2P220WvmM54Ik4jfzxAeG4xMRnOv7iKAcIRG9Bou8lAeiXIAs
-	0F2B0SyyHxyO1OC5E9dJKF6AQLDU=
-X-Gm-Gg: ASbGnctS7/4uvdLCGWgmg9OTI22FPOXqjSHIR3gTU6pwwqLiaI7G1nJvMhBlkNBHIIK
-	G/lkA9t0snu2ykYCO3OzEYuN3t2Dvekj5Swjg9oWMJ1DJGJZ47cdG1rrd6FpJ92BixQ==
-X-Google-Smtp-Source: AGHT+IE+KUQpYGQR7ThM04qKSHGTtBIabX470BMpqzPPr8fqZPNqxQz01x1yzva22I6zYbnxaT+nJXD+77U1WbkVJHo=
-X-Received: by 2002:a05:6602:3416:b0:83a:872f:4b98 with SMTP id
- ca18e2360f4ac-843eceaecf4mr113347839f.2.1732660444317; Tue, 26 Nov 2024
- 14:34:04 -0800 (PST)
+        bh=Hm7ENvoP6HhdoXpahiQX6CDXmuqD55Pzj7gK8dROaY0=;
+        b=WKT1J4/OjnPj91vxWIOWgQCJP3BCT89k77czo2QvciN030dmk7MbryGAJ6I/2zQNet
+         XBw9haQ1FyfacNWeFOP/fP/+Ab3LxBjEorYDOYDT6PJ9o7fqI6lWy3wYlIzT5cC72/ZQ
+         5HvhIdqNaEC+CvnHdK1KkEqeleiHT7lkLpnYHL/yQQxxpvs8eibNsbQMHHiWdodSt3Ek
+         PvS8aV61SnzXQy0Ayc7YjsRTvppLbCD5gcNfDU500TmrxBb8XRRrvgE5VBBy6G5D1/n0
+         ueiKJCc0NY6+jDm6LjDFupngURBBvMo4uSXAOR9XBdXQFiqcPFN3LV1HgE2Eafoe+D7T
+         dbCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUE0AuwSff6vVc21OnMJd51rTodhiBVtvXxSxvg1DjH+AKRm2VTFcl54CqzURQV3m8C8QsIShDRO4sf+Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwFv6Wlse8cEzQqRuwJbqPurcrK4JtCQk4ugmNWwGlcU7wS4dqv
+	O33/blQ34wVcF+06d6NUDvwWJcArv+2wMJM54EZR5dXrhVFlYET24nQcgsGmnD3rVwXqdM0Igl3
+	LZs7+mBgq1lL2ptRX2/AoRu5rahP2POnjdLsX
+X-Gm-Gg: ASbGncsvUvz5lUVN6OAPtEjKGKMKY/q+JTCUM2QvjHeqmqQUjl+CsBbbb96TzEmGLr/
+	sVskj6F4+BSsDpRL1pl+YB0Iqy+9fUQ==
+X-Google-Smtp-Source: AGHT+IGXltr9ckprSIGJ0zk8EcAJ0ecH4ajUfDHmT84fEIG+PhA0s/gKfL7agqnI0QojZ8X6EzqtwtUPYNqjUQ4yOIw=
+X-Received: by 2002:a05:6902:1505:b0:e2b:b9bf:f248 with SMTP id
+ 3f1490d57ef6-e395af39d32mr1792887276.24.1732681049420; Tue, 26 Nov 2024
+ 20:17:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
- <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info>
-In-Reply-To: <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info>
-From: Rui Ueyama <rui314@gmail.com>
-Date: Wed, 27 Nov 2024 07:33:53 +0900
-Message-ID: <CACKH++YYM2uCOrFwELeJZzHuTn5UozE-=7PS3DiVnsJfXg1SDw@mail.gmail.com>
-Subject: Re: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no
- longer returns it
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: brauner@kernel.org, regressions@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>
+References: <CA+G9fYv_Y2tzs+uYhMGtfUK9dSYV2mFr6WyKEzJazDsdk9o5zw@mail.gmail.com>
+ <20241101095620.2526421-1-aliceryhl@google.com> <CAHC9VhS5wLQeF4LX67UgUYVG3oViA7CmSZS_kugH+M5J0XS2Vg@mail.gmail.com>
+ <CAHC9VhTKzXPja5mLHmqOoTiDm1K8k=vtK+x9Hfa6t-7hpMmwag@mail.gmail.com>
+In-Reply-To: <CAHC9VhTKzXPja5mLHmqOoTiDm1K8k=vtK+x9Hfa6t-7hpMmwag@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 26 Nov 2024 23:17:18 -0500
+Message-ID: <CAHC9VhS=gqq6JuXsvzhsX2qEbDyxsvU_5cmx5dZF17kfb_bpsQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: lsm: replace context+len with lsm_context
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: naresh.kamboju@linaro.org, casey@schaufler-ca.com, 
+	anders.roxell@linaro.org, arnd@arndb.de, brauner@kernel.org, 
+	dan.carpenter@linaro.org, kees@kernel.org, linux-kernel@vger.kernel.org, 
+	lkft-triage@lists.linaro.org, ojeda@kernel.org, regressions@lists.linux.dev, 
+	rust-for-linux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	lkft@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 11, 2024 at 9:02=E2=80=AFPM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> [adding a few CCs, dropping stable]
->
-> On 28.10.24 12:15, Rui Ueyama wrote:
-> > I'm the creator and the maintainer of the mold linker
-> > (https://github.com/rui314/mold). Recently, we discovered that mold
-> > started causing process crashes in certain situations due to a change
-> > in the Linux kernel. Here are the details:
+On Fri, Nov 1, 2024 at 1:02=E2=80=AFPM Paul Moore <paul@paul-moore.com> wro=
+te:
+> On Fri, Nov 1, 2024 at 12:56=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> > On Fri, Nov 1, 2024 at 5:56=E2=80=AFAM Alice Ryhl <aliceryhl@google.com=
+> wrote:
+> > >
+> > > This brings the Rust SecurityCtx abstraction [1] up to date with the =
+new
+> > > API where context+len is replaced with an lsm_context [2] struct.
+> > >
+> > > Link: https://lore.kernel.org/r/20240915-alice-file-v10-5-88484f7a3dc=
+f@google.com [1]
+> > > Link: https://lore.kernel.org/r/20241023212158.18718-3-casey@schaufle=
+r-ca.com [2]
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > Closes: https://lore.kernel.org/r/CA+G9fYv_Y2tzs+uYhMGtfUK9dSYV2mFr6W=
+yKEzJazDsdk9o5zw@mail.gmail.com
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/helpers/security.c |  8 ++++----
+> > >  rust/kernel/security.rs | 38 +++++++++++++++++---------------------
+> > >  2 files changed, 21 insertions(+), 25 deletions(-)
 > >
-> > - In general, overwriting an existing file is much faster than
-> > creating an empty file and writing to it on Linux, so mold attempts to
-> > reuse an existing executable file if it exists.
+> > Thanks Alice.  Would you like me to pull this in via the LSM tree with
+> > the associated LSM changes, or would you prefer to do this some other
+> > way?
 > >
-> > - If a program is running, opening the executable file for writing
-> > previously failed with ETXTBSY. If that happens, mold falls back to
-> > creating a new file.
-> >
-> > - However, the Linux kernel recently changed the behavior so that
-> > writing to an executable file is now always permitted
-> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
-mit/?id=3D2a010c412853).
+> > I'm going to merge this into lsm/dev for now so that we fix the issue
+> > in linux-next, but I'm happy to drop it or do something else, let me
+> > know.
 >
-> FWIW, that is 2a010c41285345 ("fs: don't block i_writecount during
-> exec") [v6.11-rc1] from Christian Brauner.
->
-> > That caused mold to write to an executable file even if there's a
-> > process running that file. Since changes to mmap'ed files are
-> > immediately visible to other processes, any processes running that
-> > file would almost certainly crash in a very mysterious way.
-> > Identifying the cause of these random crashes took us a few days.
-> >
-> > Rejecting writes to an executable file that is currently running is a
-> > well-known behavior, and Linux had operated that way for a very long
-> > time. So, I don=E2=80=99t believe relying on this behavior was our mist=
-ake;
-> > rather, I see this as a regression in the Linux kernel.
-> >
-> > Here is a bug report to the mold linker:
-> > https://github.com/rui314/mold/issues/1361
->
-> Thx for the report. I might be missing something, but from here it looks
-> like nothing happened. So please allow me to ask:
->
-> What's the status? Did anyone look into this? Is this sill happening?
+> Nevermind, no I'm not, as I don't have the LSM/security rust helpers
+> in the LSM tree as it looks like those aren't in Linus' tree yet.
 
-Ping? I think this is a fairly major kernel regression. We can't ask
-all our mold linker users to upgrade their linker before upgrading
-their kernel. Isn't "Never break userland" the kernel's policy? I
-wonder why no action or even a discussion has taken place so far.
+With all of the dependencies now in Linus' tree, I'm going to merge
+this into lsm/dev-staging so we can get some crude testing done.
+Thanks again :)
+
+--=20
+paul-moore.com
