@@ -1,220 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7432E201019
-	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 17:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3AF200132
+	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 23:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732728453; cv=none; b=AVkA7X/BSYo/i0EidlLTcrKYtVMD5LwGSwx5+ERdVB7CvbAAYC5QHUZvyrRFAatLezahPNpWRl1rZ17Tf4iyh/jy8bK2myUntyXlHUqa7fBfR1ovMjrbSECQUhZQqDbajXUhySXEbJF1zU47qW5b7V1cBdgzkTCISLwH3ifYe84=
+	t=1732749276; cv=none; b=P+hBLJXX8HJadRHPWBvDYiG35X13TzTjGCfCn0NxjiTfFtV+t5B/vPt3EYeJUXXTNxHpEkthIr3s8GUzFxPyZpE2ktzuXf2XLTgZ6CIn1AIyHwwtiHzjG02lraWJk3rkbRbKFEuKkmmPSPNPnoHUAV4oMdMZhdwfacPJIHfQbwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732728453; c=relaxed/simple;
-	bh=84k0kHnTdC3L+4g7efXnw/e520GNE2hshbg8krGIP5o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NfgT4wHXzj7a0LLy+iNzBIlDnjc5zZjXsMZfMGBLcb3ZP1PcZTOvkJSLOEIDaX00Tt1eSknTxkontLs0yPWOI6OPva+ddKuMAaJFkJjtjCLmfL5BOSVhPMUjR0SsHYApVSS9UZo4xncrwOk8lx0bJSy66VG9Id7PIqJhZcHy00I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YpVwA8uA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732749276; c=relaxed/simple;
+	bh=6Ltkmyej5Wke/PPGa8ytesCUrUFYIIc0zVEnWqiEWaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Tywd0CYn2zVZkms/0iAHtEH/Idlw0/N36x7AS7g1pBmzcmnembxY9nazErfyA2dvKV0P33BH/FyMVCf5UToHGZVxSQLSFjKGmCvOeIj0hR+Z63Lx3yiYjehAmabrp6jQAoVZZ1g3rOIyhrKhkuK7IXhfEHHvvlYd7gwjnJyzRvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fapgvfCu; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YpVwA8uA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732728450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=beOnUcZGQU2mrcIYvueq6R+cVXgzH9B5DJtHxbHnrQM=;
-	b=YpVwA8uAhGpAgB5M35KtDYBImfiFXGeOml28AgJnaglrS46xRoZY+TpZcyM4DcgJl8Hc51
-	60Zs8DO2xcmhtSk9Nn1JucG3+Uxn1sweCrlcpKzBxuZOH45DKiBNNiBrplJ/i3PxwhtuHh
-	pM5gTxpWzCVNfGnBvXgD3oOrRw5nRe4=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-i16NpEV0OT-XtmDXHmzvog-1; Wed, 27 Nov 2024 12:27:28 -0500
-X-MC-Unique: i16NpEV0OT-XtmDXHmzvog-1
-X-Mimecast-MFC-AGG-ID: i16NpEV0OT-XtmDXHmzvog
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-461011bd338so99883661cf.3
-        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 09:27:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fapgvfCu"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2142214abd2so1803255ad.0
+        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 15:14:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732749273; x=1733354073; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Qbsfa3oGMzg1U/98CAfEMqAXTtrg3Szco6BJfPedmc=;
+        b=fapgvfCuiqtv/RxOFdxEWREkp8sKbw40t59RfrPfSH2J5UuM5tLkO4RgYqWHDEWajs
+         cLc/JA7mds+5070wUKLRt3ksWYXm3usWeeWVx4zS7O/B7cRo9SgBmLvv9avwNNAV0OjK
+         cuxpiU+tinAjfsBfz01WHjS09AYE3R56lpqUu1ojH5VdIOMwrz4s/3asI5Wj9yGSdVP5
+         Df8oxyk4OjzRSMajnC3yDAHqiDIogc7l6Yh1KykRlsiLxji0Bg+SOgiWqdugiFuHo5vP
+         BmJX7x2RpGTs5/pLSjfQhuwusZobcA+y/mxo9Fb7YYPm+0PN2Q+7JR9g1zTtwyxjsGTt
+         6h+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732728448; x=1733333248;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=beOnUcZGQU2mrcIYvueq6R+cVXgzH9B5DJtHxbHnrQM=;
-        b=SmNfelnVOswTCZtzspBcCUU2aylgNOgTpllAIPwtf5bLnJ0QUaHnaPbp4VFLm7NjL+
-         8H2PYq/uj8UmV5540iFagOLb/AgKrGDXIwQpE8Xbt066L1bBwtDEJ1YFNzx2i0sG01qH
-         LtnQcEzqMv8tSSAkPKmJCW9uADXzqjlx9WPtG+MWJI/MQeeSG3JbzVKSUqx8jvZwQm87
-         lNg5S1kIttoAe2fgl/ooL5Pz9vE8OJ93uLLNB6aCHlDMi2R68Z5CtQsHRIoyzEwaon9q
-         XV1rHYqAzQsi6n8kYi0Gq7cKVn0n43DAsO12arC6pEqQj7whlY0RjBleXDgsoFJyUNM2
-         TtgA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2gw73fmx3qxiI+wJHu8/1I4qybCXiIqwncg5Vh0QvnY0J235nBzKpMhh6ZfuQfVfDtS1pq9v+XTSLJw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyEJCVBUIOWYAdIbgEzTyQXWmKadoF8yPywVTAZjQELzqokGRBG
-	loOEK80kzQ6WBFMnHgDsnixV5dazuFhasREGfPiaL4gMQRDvwLYY3kL8Ig5pUMCA+ORoqUzFh9x
-	F/s54cd8GpasusJKx+89ru2Qj4zyoLqpkG/aoasdNI8Ly7HShE5S0VDktz6fw
-X-Gm-Gg: ASbGncur+aCIvleMkIYh0e8mhMIzUpYDeM/pPe3W2MOzfJeD01CuZ6HkQ8u3c2WZ5aM
-	/3ZUCzKJ5CPZ7Hu34DeuJhB3VRL5uFUVwdXoDSb/iCACSV0ZJFuy/VS72LhO3cUivucO3ORXynF
-	B9xya5UWDvNbkJ7Y3AHzQyz5iq3OemaCerz5kjKL1x6ShW/YE+shr/Ik26/k+1XtSRvq3VFmSIz
-	GF+fnOsjPL8mJ/wFlyPIvDjodjo2SlURqsX/yl6Xs2CL4sZB+jkhAWp/+1ne4Jv7YU9wO2Pn1t1
-	GjM7Yc1HPKr1HXC6IX96Ep5a0Fuo7Sh00M8=
-X-Received: by 2002:a05:622a:1341:b0:463:1677:c09 with SMTP id d75a77b69052e-466b35ea5femr68921671cf.23.1732728447784;
-        Wed, 27 Nov 2024 09:27:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH+fAMgcLzUudgIW52TJuWeKGmuj/kR1YAzG3qMwrZjsvPqzOjlYx5DSJYQMYJ3GaA+mF1VrQ==
-X-Received: by 2002:a05:622a:1341:b0:463:1677:c09 with SMTP id d75a77b69052e-466b35ea5femr68921251cf.23.1732728447440;
-        Wed, 27 Nov 2024 09:27:27 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46682eee51bsm48523711cf.82.2024.11.27.09.27.25
+        d=1e100.net; s=20230601; t=1732749273; x=1733354073;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Qbsfa3oGMzg1U/98CAfEMqAXTtrg3Szco6BJfPedmc=;
+        b=eUserf+B4Q8uIwkCv2OJbCmOwe3huyJlY18OLL2tbRB1g6ZLkbhGPpdc/FhydAyqfr
+         xvKYI2q91tDjm0kle+gEfjT3cf7SNVkF82/01RC2Z+L5PPwZ6biWRVFzRybC1Fszkdda
+         q7mj0Oa96zgCu3CSvBd3nv8K1d/qePPnr3hLj+dJVAHy1eP7Q9GY0pgsDri1ePmr2u0+
+         Dn7b8rIwWCsZR8AuEea0jhY32supWg2AkATODz0fbnY4TLJpolByORA+HtO8IARuqkKg
+         1gLZVS6eo34j2I/l5STOOspnAUzhp/ElEs2Mqum+Vpbwi4nov/ukxd/RzI/i+dE65biy
+         8fHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNa49YYwZxH3fm9bV5tnK22A2+Y76FdoLF1qn41RLo1E6K3LhGfyqJNUjJTocFoztfzLpM5dHAw5Wv9w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyr6dgDuklj968avxFooOdWByFxTXsVuWSdyGTGAIEJPssH3984
+	OSp2qD9+pPrrgicj2/bbtRtFATl3o15idmzoUFOdWa9Xh6lcpOaR
+X-Gm-Gg: ASbGncuPggXp3Ealpwg8W3JJKZT639OTx54EwTwXlAzUdhm7c5C3yqEtpg5iEYKbR1V
+	RbtKqFKdO32imouz67KScwl4h1pn3pcDKBoB2nWbLrsRwdb9LCs115WW+Vdz9VpvlOdyOAY5/WU
+	wIvr8PxQRQxxmusJ70sWV00MeewH0BfWOmFDTwN4fU1Uvilyg30zLEmpNw7bSkLWVdkzY0o65zg
+	KWA5Sqcy/MrvFinc/46j2JsLtrPzehZsocES+GCGBF/pkDAZwIaIp39WuQNOv9BPji3SN7q+h2u
+	8gtm6MwR
+X-Google-Smtp-Source: AGHT+IG42zwk9rVSv3JinSJ7jGPo3cY4n7KHciWkVFVdIkqCjPRr7Vl0KdkjQqjmAh8XeOcmAt858A==
+X-Received: by 2002:a17:902:dac4:b0:212:1abb:fe75 with SMTP id d9443c01a7336-21501f64128mr57312355ad.54.1732749273617;
+        Wed, 27 Nov 2024 15:14:33 -0800 (PST)
+Received: from amdora.. (c-76-146-136-228.hsd1.wa.comcast.net. [76.146.136.228])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215219c49ebsm903255ad.252.2024.11.27.15.14.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2024 09:27:26 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>, Chenbo Lu
- <chenbo.lu@jobyaviation.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, mingo@redhat.com,
- juri.lelli@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: Performance Degradation After Upgrading to Kernel 6.8
-In-Reply-To: <20241120090354.GE19989@noisy.programming.kicks-ass.net>
-References: <CACodVevaOp4f=Gg467_m-FAdQFceGQYr7_Ahtt6CfpDVQhAsjA@mail.gmail.com>
- <20241120090354.GE19989@noisy.programming.kicks-ass.net>
-Date: Wed, 27 Nov 2024 18:27:23 +0100
-Message-ID: <xhsmhzflkmvt0.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Wed, 27 Nov 2024 15:14:33 -0800 (PST)
+From: John Glotzer <jglotzer@gmail.com>
+To: regressions@leemhuis.info
+Cc: Aaron.Hou@mediatek.com,
+	Chris.Lu@mediatek.com,
+	Deren.Wu@mediatek.com,
+	Hao.Qin@mediatek.com,
+	Sean.Wang@mediatek.com,
+	johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	luiz.dentz@gmail.com,
+	marc.payne@mdpsys.co.uk,
+	marcel@holtmann.org,
+	regressions@lists.linux.dev,
+	steve.lee@mediatek.com,
+	tiwai@suse.de
+Subject: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And Hibernate
+Date: Wed, 27 Nov 2024 15:14:32 -0800
+Message-ID: <20241127231432.8112-1-jglotzer@gmail.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <643d8055-5a9f-4f5b-865b-830d33651dfe@leemhuis.info>
+References: <643d8055-5a9f-4f5b-865b-830d33651dfe@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cLTeHWxyvl7sTek47j4jQ9pYLiILvGczz1QG5h27MK8_1732728448
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Damn, I wrote a reply on the 20th but seems like I never sent it. At least
-I found it saved somewhere, so I don't have to rewrite it...
+I've been following this thread since hitting this issue on my AMD Ryzen 5 7600.
 
-On 20/11/24 10:03, Peter Zijlstra wrote:
-> On Tue, Nov 19, 2024 at 04:30:02PM -0800, Chenbo Lu wrote:
->> Hello,
->> 
->> I am experiencing a significant performance degradation after
->> upgrading my kernel from version 6.6 to 6.8 and would appreciate any
->> insights or suggestions.
->> 
->> I am running a high-load simulation system that spawns more than 1000
->> threads and the overall CPU usage is 30%+ . Most of the threads are
->> using real-time
->> scheduling (SCHED_RR), and the threads of a model are using
->> SCHED_DEADLINE. After upgrading the kernel, I noticed that the
->> execution time of my model has increased from 4.5ms to 6ms.
->> 
->> What I Have Done So Far:
->> 1. I found this [bug
->> report](https://bugzilla.kernel.org/show_bug.cgi?id=219366#c7) and
->> reverted the commit efa7df3e3bb5da8e6abbe37727417f32a37fba47 mentioned
->> in the post. Unfortunately, this did not resolve the issue.
->> 2. I performed a git bisect and found that after these two commits
->> related to scheduling (RT and deadline) were merged, the problem
->> happened. They are 612f769edd06a6e42f7cd72425488e68ddaeef0a,
->> 5fe7765997b139e2d922b58359dea181efe618f9
->
-> And yet you failed to Cc Valentin, the author of said commits :/
->
->> After reverting these two commits, the model execution time improved
->> to around 5 ms.
->> 3. I revert two more commits, and the execution time is back to 4.7ms:
->> 63ba8422f876e32ee564ea95da9a7313b13ff0a1,
->> efa7df3e3bb5da8e6abbe37727417f32a37fba47
->> 
->> My questions are:
->> 1.Has anyone else experienced similar performance degradation after
->> upgrading to kernel 6.8?
->
-> This is 4 kernel releases back, I my memory isn't that long.
->
->> 2.Can anyone explain why these two commits are causing the problem? I
->> am not very familiar with the kernel code and would appreciate any
->> insights.
->
-> There might be a race window between setting the tro and sending the
-> IPI, such that previously the extra IPIs would sooner find the newly
-> pushable task.
->
-> Valentin, would it make sense to set tro before enqueueing the pushable,
-> instead of after it?
+People have reported being able to mitigate by either turning off Bluetooth in system settings
+or by using a systemd sleep script like the one below (this is the approach I've taken,
+it works fine.)
 
-Urgh, those cachelines are beyond cold...
+cat /usr/lib/systemd/system-sleep/sleep-fix.sh
+#!/usr/bin/env bash
+case ${1} in
+    pre)
+    rfkill block all
+    echo "Killed wifi/bluetooth"
+    ;;
+    post)
+    rfkill unblock all
+    echo "Started wifi/bluetooth"
+    ;;
+esac
 
-/me goes reading
+In following the related email threads it seems that this particular email thread has
+not had any activity since 10/21/2024. Now the focus seems to be on firmware download which
+in my admittedly non-expert opinion seems to be not clearly related.
 
-Ok yeah I guess we could have this race vs
+There are multiple reports of this issue on various user forums (Fedora, Arch, Redhat, others)
+but it seems that we've lost focus on the kernel side on addressing this regression.
 
-rto_push_irq_work_func()
-`\
-  rto_next_cpu()
-
-Not sure if that applies to DL too since it doesn't have the PUSH_IPI
-thing, but anyway - Chenbo, could you please try the below?
----
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index d9d5a702f1a61..270a25335c4bc 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -602,16 +602,16 @@ static void enqueue_pushable_dl_task(struct rq *rq, struct task_struct *p)
- 
- 	WARN_ON_ONCE(!RB_EMPTY_NODE(&p->pushable_dl_tasks));
- 
-+	if (!rq->dl.overloaded) {
-+		dl_set_overload(rq);
-+		rq->dl.overloaded = 1;
-+	}
-+
- 	leftmost = rb_add_cached(&p->pushable_dl_tasks,
- 				 &rq->dl.pushable_dl_tasks_root,
- 				 __pushable_less);
- 	if (leftmost)
- 		rq->dl.earliest_dl.next = p->dl.deadline;
--
--	if (!rq->dl.overloaded) {
--		dl_set_overload(rq);
--		rq->dl.overloaded = 1;
--	}
- }
- 
- static void dequeue_pushable_dl_task(struct rq *rq, struct task_struct *p)
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index bd66a46b06aca..1ea45a45ed657 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -385,6 +385,15 @@ static inline void rt_queue_pull_task(struct rq *rq)
- 
- static void enqueue_pushable_task(struct rq *rq, struct task_struct *p)
- {
-+	/*
-+	 * Set RTO first so rto_push_irq_work_func() can see @rq as a push
-+	 * candidate as early as possible.
-+	 */
-+	if (!rq->rt.overloaded) {
-+		rt_set_overload(rq);
-+		rq->rt.overloaded = 1;
-+	}
-+
- 	plist_del(&p->pushable_tasks, &rq->rt.pushable_tasks);
- 	plist_node_init(&p->pushable_tasks, p->prio);
- 	plist_add(&p->pushable_tasks, &rq->rt.pushable_tasks);
-@@ -392,15 +401,15 @@ static void enqueue_pushable_task(struct rq *rq, struct task_struct *p)
- 	/* Update the highest prio pushable task */
- 	if (p->prio < rq->rt.highest_prio.next)
- 		rq->rt.highest_prio.next = p->prio;
--
--	if (!rq->rt.overloaded) {
--		rt_set_overload(rq);
--		rq->rt.overloaded = 1;
--	}
- }
- 
- static void dequeue_pushable_task(struct rq *rq, struct task_struct *p)
- {
-+	/*
-+	 * To match enqueue we should check/unset RTO first, but for that we
-+	 * need to pop @p first. This makes this asymmetric wrt enqueue, but
-+	 * the worst we can get out of this is an extra useless IPI.
-+	 */
- 	plist_del(&p->pushable_tasks, &rq->rt.pushable_tasks);
- 
- 	/* Update the new highest prio pushable task */
-
+Thanks all.
