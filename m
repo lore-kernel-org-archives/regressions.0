@@ -1,57 +1,66 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEC41FCF45
-	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 13:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170AF200117
+	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 15:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732714807; cv=none; b=cO0iP5kBdA0HBfK66+JP6V+aLi6Vu1fYVP2aBzOAt/7vRhaiGZ+GhCoM2zprooCjCFjKancYe/+UgSdmFtA1oy2odiGXjqEh7VJ6mIK1bXWjqJZIDadmPduwV48Qv7JAlZ2mHfhaxnhj2ybw3iYfwMmdQ33JXE98yGMoH/XQkK8=
+	t=1732722911; cv=none; b=AKdOr4pM/gt8lVPEKHgGkgW81/LONBUuLSeX1QDIBx61i5Hi0j/8wZLyDuoRtucmRSdMQhGE1pd+/MwTH9JBfdnMyQlUySh7fGQvKSZ4rElCYzAwReUzJCQv4fcVEJRGpjZfj/I3W0yDyDQp1fkALOlBsHZqO4dm9wzR3TdLIeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732714807; c=relaxed/simple;
-	bh=XybhIwlptG3RWjD6dLrxMlzRYFTvMb5ZDn2ZOdLmhW8=;
+	s=arc-20240116; t=1732722911; c=relaxed/simple;
+	bh=hYOF5+CSvFGGwMZxoKhXQ5ulU8SpkTAOXD2Ro2loI+w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLgI1F/aS6u2YvqyXs7QZ8WP3Xhz+CfHlS18452GZqx2ooY8M/M3cfiGBZOAyiwm7p94POIS7nACdj7U9ZqYVNfrExWBTlB5yBZXcmoTjbwcC3Ecn8n/JKWUoNUMXhI/X0gKgVJnsgILD+nfqG1abv5LosWzxfzM7npOhIk4zhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DW9al19Y; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ArffW3qgcwhkl2F3xlqOeAJ8swScexEeIWJnUisKJOSi0cU/tLs+y07T24fOgvf3xMmzWOgErpMuQTSBMd4EhgVXgHeD6YBIybkz11iYQb+p33iB+7/e9ubMLcem7Nkpn80foheZP4FKcXlzXVUr7pZ9Jc3q5bbEUH/THRZmkJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qgbuv4A3; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW9al19Y"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-841acc8151aso99860539f.1
-        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 05:40:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qgbuv4A3"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38231e9d518so4541111f8f.0
+        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 07:55:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732714804; x=1733319604; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e0OvxuddvI1D8zzGSyN9DJ1VP3rgYrJg8KBeyIV2RRc=;
-        b=DW9al19Y5GBbCcM1YQaghUdPG8mcUlQtIS9UFTKX/LIubVLHNWoUi95wp1ZiX9NCqw
-         Um3FFSpU62xHOQwclAWxs3ddR+FeVVeehRnjsSPaMsrBAMQTtv/XMSIA2FVtMdzD3xUT
-         6SC1m1vlD6WVhM6Kfi3kQG+dPH4nbsibP5GvLtnQ6fl7Gcm/daLTQIWjWjojkqrH1ikZ
-         4cBkmXAdS9aWtT9UuQzoRzxh1SDGKBhHBEtA9eWtN2f2K4uUs4T2PIwi4N+MdtNPHVci
-         bF+CNiymeJ7v8eemICOsDEpN3aZ0ImlfzH9Kd+FbikWXFZaMInjmzEAKV8/uJy/JXbNJ
-         sGjw==
+        d=linux-foundation.org; s=google; t=1732722907; x=1733327707; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hAr4TZdsOU6XWFX8oKIJY4uIFZASuI0VfNTDSWNUv0Q=;
+        b=Qgbuv4A354aFU+ec3muMQop5gx212LQ8vfmsbk76MYqq3kfEN5OS9wRQz3DlTddUjx
+         yU2Vg2Y4OZSiwHXfTo7RKNiHN6c/VXbVZVKIab/vaqlKc8PD0OQUVzIOxNx9ZUswCRw7
+         FnUNXHI9cM8D//Hb2SOB370Qv60LKJf6Hjn3k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732714804; x=1733319604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e0OvxuddvI1D8zzGSyN9DJ1VP3rgYrJg8KBeyIV2RRc=;
-        b=lU7YFz+6jOaMa88p2HNV2Kb79aNxNPhkhNZvGWqYJ1wAlddYqkGA0YAyeSbJCTWBha
-         AKPrNLXux8hf16bcvaDlJkk8KJ92FrZ+FhaYXQ3eUTRzMX9EMgsY+AB+oQ+ivMsgBRWh
-         mLZrL8JYzebEdIS4Njvms+WbtVZYLGa852JKfNln5MPmeynkhwTQzV9i9CbamPfUddSU
-         rWtrL5rZcYySTIVpv2xylKCFoV9tbe8n4GKz2NKIOW/dAeq/AWunT+s8NkBbCNpgbHvh
-         pCWHpEvIDrLc1ujjzL28QqXvSKjvp/3u82Ba68ju1Jh0DAaxrZ4GpHl+vdhq6Jl5Q8Rt
-         /I5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWveoOCwrD1QDqLdA9hu5liC7M7yPuCxoAM3RHqacNO06IEbIO+TFZDLHYAP7wFO//2dgfFbhBdkSB7OA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyogJXXnoAHbCLuDJafPA5gewTPYQ//Vus9jRWHVvGwocXV9Jbf
-	CSuyxxBQ5FhJJKZde6AHOf8b+ibwnC+3/LZ9g+FPWHJtUZSxE2QhxlmaUxOgoTjS51gzDFzSeyQ
-	sxthXXu1l6DkIoB49nteblywEAbY=
-X-Gm-Gg: ASbGnctiY2tKep2af/cS3NllnktI6mbTym416R39S9ZBdDkDyeut6xqXICS3xEBklQ3
-	dDYxvirL3sdmio66VKDTKtFHTHaHnIiuO41HR48C/1obPgbLE9rIpvdOKDjHgAIk0
-X-Google-Smtp-Source: AGHT+IFw+Hy3debmQQWfB5c82VSTFahHQVa4B5dF8Vi5vW9WtYDtqXgFvQqyvh8tCLVLPi7bEbWqP5yucfD+Cnpi3AM=
-X-Received: by 2002:a05:6602:641b:b0:83b:2c8e:c4 with SMTP id
- ca18e2360f4ac-843ecf7adabmr385607039f.9.1732714804645; Wed, 27 Nov 2024
- 05:40:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732722907; x=1733327707;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hAr4TZdsOU6XWFX8oKIJY4uIFZASuI0VfNTDSWNUv0Q=;
+        b=QmtMdiczddcr+jTLpBVyPVqmgyMZDLp4pE0F/QHGIxb090KkLzFDIB5hGqnvT9yBOp
+         Zq1Xmoib0JpacktOnJPDktiR+NktNgjfhplY9hIah4JleKvbGWTeqAbDldgBVQ7gTAFt
+         tKAXjmB7dCSV1MD+jQ8pvuukL03s5EzvSCc507M5dlyZShBhQ8tw+b8nUtWOQx7h/gHv
+         hCJ7vMKHPfCUvh/Gib5qI5DPSJjgI5LfcArFgZ45DeoohzBLGPj5VBa6qsjFYMQDZmfb
+         5s7w2t+AYpVCFmmGzPkrlqY0BNASFue5fobzGVRryN4NhCLhgmOKfiyPpyi20uTuPCKD
+         gZfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFLBnPR8BLNGMYsjbYjXkCqIDdsfX9cqLx9OnXVq5JpRc5wDIyAMF2djpqO27IAb+/iMET3a4j6KNgRw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxGecB5qfun2yvwG6ZdvIangNSBPNGopl2vPg2WzOjIhiLbgNsl
+	WjIDdiRDCjyCR6PBYIsUP51CYBezwxjKIyDlHH1CMH9QXhSeLFeupQm4GksnGYBgXITDFnMrXxf
+	OWPE/Mw==
+X-Gm-Gg: ASbGncvZ8jaVBBZRnAWqtRU9KkcuSMxA9VZEpj91jmRvc4OLqFR3PWC9r+22Ms6XlAO
+	PmFIMRpG5A/9Fn8Nb+KdiiaVkLxVJNSTi35/jPn+pVBf9xoduSrTCiODhCFI4QIfSgPw6eDm7+s
+	3n5iJVdO9Qt/OWl5ctYo5Sp2Xr6JpENZzybV32Fm0akRSl9xUPJkubjW6+4Co+mSlPfKADVcMPb
+	51CsJIS3AhKMAxSajN9Irr0l69w4rUEaXB3Cseotv1MGpyQ9/OR0CU4S1w/vn8/Fk+j5cblMeVo
+	m7ZQVlQbFaemhq2cw9+OUKri
+X-Google-Smtp-Source: AGHT+IEnD+Fo/pQqlR8UPDXQa7MRhog9+KEbQDiYnTeVBzImavEdGcEGs/TVpvBEQKnqezrYUHT85w==
+X-Received: by 2002:a05:6000:18a2:b0:382:4485:2dae with SMTP id ffacd0b85a97d-385c6ebefd8mr3312445f8f.25.1732722907216;
+        Wed, 27 Nov 2024 07:55:07 -0800 (PST)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3407sm6192806a12.17.2024.11.27.07.55.06
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Nov 2024 07:55:06 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5cfe5da1251so8372155a12.1
+        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 07:55:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUcGreye+gbO19c0V1WLKJQoWc+JuGbmP0wef7Y8NPlAmRGoOxK+oYdwyqOK9uP9iddnb6mewx2KmabJA==@lists.linux.dev
+X-Received: by 2002:a17:906:30c5:b0:aa5:1b7a:5579 with SMTP id
+ a640c23a62f3a-aa580f202d9mr211472566b.21.1732722905907; Wed, 27 Nov 2024
+ 07:55:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,143 +71,28 @@ References: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
  <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info> <CACKH++YYM2uCOrFwELeJZzHuTn5UozE-=7PS3DiVnsJfXg1SDw@mail.gmail.com>
  <20241127-frisst-anekdote-3e6d724cb311@brauner>
 In-Reply-To: <20241127-frisst-anekdote-3e6d724cb311@brauner>
-From: Rui Ueyama <rui314@gmail.com>
-Date: Wed, 27 Nov 2024 22:39:53 +0900
-Message-ID: <CACKH++ZXsLOhtReCucvxkqUATcXNtuW3A=idjskOt+fdme35Jg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 27 Nov 2024 07:54:49 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi+3qEU9S9sgRLesCMKJ1w_e6zwEt0f30=8NSKhN+2LjA@mail.gmail.com>
+Message-ID: <CAHk-=wi+3qEU9S9sgRLesCMKJ1w_e6zwEt0f30=8NSKhN+2LjA@mail.gmail.com>
 Subject: Re: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no
  longer returns it
 To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jan Kara <jack@suse.cz>, 
-	Amir Goldstein <amir73il@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
 	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
 	LKML <linux-kernel@vger.kernel.org>, 
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Rui Ueyama <rui314@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 27, 2024 at 9:11=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Wed, Nov 27, 2024 at 07:33:53AM +0900, Rui Ueyama wrote:
-> > On Mon, Nov 11, 2024 at 9:02=E2=80=AFPM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> > >
-> > > [adding a few CCs, dropping stable]
-> > >
-> > > On 28.10.24 12:15, Rui Ueyama wrote:
-> > > > I'm the creator and the maintainer of the mold linker
-> > > > (https://github.com/rui314/mold). Recently, we discovered that mold
-> > > > started causing process crashes in certain situations due to a chan=
-ge
-> > > > in the Linux kernel. Here are the details:
-> > > >
-> > > > - In general, overwriting an existing file is much faster than
-> > > > creating an empty file and writing to it on Linux, so mold attempts=
- to
-> > > > reuse an existing executable file if it exists.
-> > > >
-> > > > - If a program is running, opening the executable file for writing
-> > > > previously failed with ETXTBSY. If that happens, mold falls back to
-> > > > creating a new file.
-> > > >
-> > > > - However, the Linux kernel recently changed the behavior so that
-> > > > writing to an executable file is now always permitted
-> > > > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
-/commit/?id=3D2a010c412853).
-> > >
-> > > FWIW, that is 2a010c41285345 ("fs: don't block i_writecount during
-> > > exec") [v6.11-rc1] from Christian Brauner.
-> > >
-> > > > That caused mold to write to an executable file even if there's a
-> > > > process running that file. Since changes to mmap'ed files are
-> > > > immediately visible to other processes, any processes running that
-> > > > file would almost certainly crash in a very mysterious way.
-> > > > Identifying the cause of these random crashes took us a few days.
-> > > >
-> > > > Rejecting writes to an executable file that is currently running is=
- a
-> > > > well-known behavior, and Linux had operated that way for a very lon=
-g
-> > > > time. So, I don=E2=80=99t believe relying on this behavior was our =
-mistake;
-> > > > rather, I see this as a regression in the Linux kernel.
-> > > >
-> > > > Here is a bug report to the mold linker:
-> > > > https://github.com/rui314/mold/issues/1361
-> > >
-> > > Thx for the report. I might be missing something, but from here it lo=
-oks
-> > > like nothing happened. So please allow me to ask:
-> > >
-> > > What's the status? Did anyone look into this? Is this sill happening?
+On Wed, 27 Nov 2024 at 04:11, Christian Brauner <brauner@kernel.org> wrote:
 >
 > Linus, it seems that the mold linker relies on the deny_write_access()
 > mechanism for executables. The mold linker tries to open a file for
 > writing and if ETXTBSY is returned mold falls back to creating a new
 > file.
->
-> There is now a fix in mold upstream in
-> https://github.com/rui314/mold/commit/8e4f7b53832d8af4f48a633a8385cbc932d=
-1944e
->
-> However, mold upstream still insists on a revert (no judgement on my
-> part in case that sentence is misinterpreted).
 
-I don't have a strong opinion on whether returning ETXTBSY is
-desirable or not. We can cooperate to make a smooth transition to the
-new behavior of open(2). That being said, making an abrupt kernel
-change that breaks userland in a very mysterious way is, in my
-opinion, not acceptable. I'm not personally affected by this issue,
-but I needed to speak for our users who may upgrade their kernels
-before upgrading their linker.
+Uhhuh. Ok, unfortunate, but this is clearly a real use case, so of
+course we'll revert the kernel change.
 
-> Note, that the revert will cause issues for the fanotify pre-content
-> hook patch series in [1] which was the cause for the removal of the
-> deny_write_access() protection for executables so that on page faults
-> the contents of executables could be filled-in by userspace. This is
-> useful when dealing with very large executables and is apparently used
-> by Meta.
->
-> [1]: https://lore.kernel.org/r/20241121112218.8249-1-jack@suse.cz
->
-> While Amir tells me that they may have a way around this I expect this
-> to be hacky.
->
-> This will also trigger a revert/rework of the LTP testsuite which has
-> adapted various tests to the deny_write_access() removal for
-> executables.
->
-> There's been some delay in responding to this after my initial comment
-> on Github because I entered into a month of sickness. So I just got
-> reminded of this issue now. In any case, here's a tag that you can pull
-> if you agree with the revert.
->
-> The following changes since commit 7eef7e306d3c40a0c5b9ff6adc9b273cc894db=
-d5:
->
->   Merge tag 'for-6.13/dm-changes' of git://git.kernel.org/pub/scm/linux/k=
-ernel/git/device-mapper/linux-dm (2024-11-25 18:54:00 -0800)
->
-> are available in the Git repository at:
->
->   git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.13.=
-exec.deny_write_access.revert
->
-> for you to fetch changes up to 3b832035387ff508fdcf0fba66701afc78f79e3d:
->
->   Revert "fs: don't block i_writecount during exec" (2024-11-27 12:51:30 =
-+0100)
->
-> ----------------------------------------------------------------
-> vfs-6.13.exec.deny_write_access.revert
->
-> ----------------------------------------------------------------
-> Christian Brauner (1):
->       Revert "fs: don't block i_writecount during exec"
->
->  fs/binfmt_elf.c       |  2 ++
->  fs/binfmt_elf_fdpic.c |  5 ++++-
->  fs/binfmt_misc.c      |  7 +++++--
->  fs/exec.c             | 23 +++++++++++++++--------
->  kernel/fork.c         | 26 +++++++++++++++++++++++---
->  5 files changed, 49 insertions(+), 14 deletions(-)
+           Linus
