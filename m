@@ -1,98 +1,220 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170AF200117
-	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 15:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7432E201019
+	for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 17:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732722911; cv=none; b=AKdOr4pM/gt8lVPEKHgGkgW81/LONBUuLSeX1QDIBx61i5Hi0j/8wZLyDuoRtucmRSdMQhGE1pd+/MwTH9JBfdnMyQlUySh7fGQvKSZ4rElCYzAwReUzJCQv4fcVEJRGpjZfj/I3W0yDyDQp1fkALOlBsHZqO4dm9wzR3TdLIeI=
+	t=1732728453; cv=none; b=AVkA7X/BSYo/i0EidlLTcrKYtVMD5LwGSwx5+ERdVB7CvbAAYC5QHUZvyrRFAatLezahPNpWRl1rZ17Tf4iyh/jy8bK2myUntyXlHUqa7fBfR1ovMjrbSECQUhZQqDbajXUhySXEbJF1zU47qW5b7V1cBdgzkTCISLwH3ifYe84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732722911; c=relaxed/simple;
-	bh=hYOF5+CSvFGGwMZxoKhXQ5ulU8SpkTAOXD2Ro2loI+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ArffW3qgcwhkl2F3xlqOeAJ8swScexEeIWJnUisKJOSi0cU/tLs+y07T24fOgvf3xMmzWOgErpMuQTSBMd4EhgVXgHeD6YBIybkz11iYQb+p33iB+7/e9ubMLcem7Nkpn80foheZP4FKcXlzXVUr7pZ9Jc3q5bbEUH/THRZmkJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qgbuv4A3; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1732728453; c=relaxed/simple;
+	bh=84k0kHnTdC3L+4g7efXnw/e520GNE2hshbg8krGIP5o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NfgT4wHXzj7a0LLy+iNzBIlDnjc5zZjXsMZfMGBLcb3ZP1PcZTOvkJSLOEIDaX00Tt1eSknTxkontLs0yPWOI6OPva+ddKuMAaJFkJjtjCLmfL5BOSVhPMUjR0SsHYApVSS9UZo4xncrwOk8lx0bJSy66VG9Id7PIqJhZcHy00I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YpVwA8uA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qgbuv4A3"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38231e9d518so4541111f8f.0
-        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 07:55:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1732722907; x=1733327707; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hAr4TZdsOU6XWFX8oKIJY4uIFZASuI0VfNTDSWNUv0Q=;
-        b=Qgbuv4A354aFU+ec3muMQop5gx212LQ8vfmsbk76MYqq3kfEN5OS9wRQz3DlTddUjx
-         yU2Vg2Y4OZSiwHXfTo7RKNiHN6c/VXbVZVKIab/vaqlKc8PD0OQUVzIOxNx9ZUswCRw7
-         FnUNXHI9cM8D//Hb2SOB370Qv60LKJf6Hjn3k=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YpVwA8uA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732728450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=beOnUcZGQU2mrcIYvueq6R+cVXgzH9B5DJtHxbHnrQM=;
+	b=YpVwA8uAhGpAgB5M35KtDYBImfiFXGeOml28AgJnaglrS46xRoZY+TpZcyM4DcgJl8Hc51
+	60Zs8DO2xcmhtSk9Nn1JucG3+Uxn1sweCrlcpKzBxuZOH45DKiBNNiBrplJ/i3PxwhtuHh
+	pM5gTxpWzCVNfGnBvXgD3oOrRw5nRe4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-170-i16NpEV0OT-XtmDXHmzvog-1; Wed, 27 Nov 2024 12:27:28 -0500
+X-MC-Unique: i16NpEV0OT-XtmDXHmzvog-1
+X-Mimecast-MFC-AGG-ID: i16NpEV0OT-XtmDXHmzvog
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-461011bd338so99883661cf.3
+        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 09:27:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732722907; x=1733327707;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hAr4TZdsOU6XWFX8oKIJY4uIFZASuI0VfNTDSWNUv0Q=;
-        b=QmtMdiczddcr+jTLpBVyPVqmgyMZDLp4pE0F/QHGIxb090KkLzFDIB5hGqnvT9yBOp
-         Zq1Xmoib0JpacktOnJPDktiR+NktNgjfhplY9hIah4JleKvbGWTeqAbDldgBVQ7gTAFt
-         tKAXjmB7dCSV1MD+jQ8pvuukL03s5EzvSCc507M5dlyZShBhQ8tw+b8nUtWOQx7h/gHv
-         hCJ7vMKHPfCUvh/Gib5qI5DPSJjgI5LfcArFgZ45DeoohzBLGPj5VBa6qsjFYMQDZmfb
-         5s7w2t+AYpVCFmmGzPkrlqY0BNASFue5fobzGVRryN4NhCLhgmOKfiyPpyi20uTuPCKD
-         gZfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFLBnPR8BLNGMYsjbYjXkCqIDdsfX9cqLx9OnXVq5JpRc5wDIyAMF2djpqO27IAb+/iMET3a4j6KNgRw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxGecB5qfun2yvwG6ZdvIangNSBPNGopl2vPg2WzOjIhiLbgNsl
-	WjIDdiRDCjyCR6PBYIsUP51CYBezwxjKIyDlHH1CMH9QXhSeLFeupQm4GksnGYBgXITDFnMrXxf
-	OWPE/Mw==
-X-Gm-Gg: ASbGncvZ8jaVBBZRnAWqtRU9KkcuSMxA9VZEpj91jmRvc4OLqFR3PWC9r+22Ms6XlAO
-	PmFIMRpG5A/9Fn8Nb+KdiiaVkLxVJNSTi35/jPn+pVBf9xoduSrTCiODhCFI4QIfSgPw6eDm7+s
-	3n5iJVdO9Qt/OWl5ctYo5Sp2Xr6JpENZzybV32Fm0akRSl9xUPJkubjW6+4Co+mSlPfKADVcMPb
-	51CsJIS3AhKMAxSajN9Irr0l69w4rUEaXB3Cseotv1MGpyQ9/OR0CU4S1w/vn8/Fk+j5cblMeVo
-	m7ZQVlQbFaemhq2cw9+OUKri
-X-Google-Smtp-Source: AGHT+IEnD+Fo/pQqlR8UPDXQa7MRhog9+KEbQDiYnTeVBzImavEdGcEGs/TVpvBEQKnqezrYUHT85w==
-X-Received: by 2002:a05:6000:18a2:b0:382:4485:2dae with SMTP id ffacd0b85a97d-385c6ebefd8mr3312445f8f.25.1732722907216;
-        Wed, 27 Nov 2024 07:55:07 -0800 (PST)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3a3407sm6192806a12.17.2024.11.27.07.55.06
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Nov 2024 07:55:06 -0800 (PST)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5cfe5da1251so8372155a12.1
-        for <regressions@lists.linux.dev>; Wed, 27 Nov 2024 07:55:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUcGreye+gbO19c0V1WLKJQoWc+JuGbmP0wef7Y8NPlAmRGoOxK+oYdwyqOK9uP9iddnb6mewx2KmabJA==@lists.linux.dev
-X-Received: by 2002:a17:906:30c5:b0:aa5:1b7a:5579 with SMTP id
- a640c23a62f3a-aa580f202d9mr211472566b.21.1732722905907; Wed, 27 Nov 2024
- 07:55:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732728448; x=1733333248;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=beOnUcZGQU2mrcIYvueq6R+cVXgzH9B5DJtHxbHnrQM=;
+        b=SmNfelnVOswTCZtzspBcCUU2aylgNOgTpllAIPwtf5bLnJ0QUaHnaPbp4VFLm7NjL+
+         8H2PYq/uj8UmV5540iFagOLb/AgKrGDXIwQpE8Xbt066L1bBwtDEJ1YFNzx2i0sG01qH
+         LtnQcEzqMv8tSSAkPKmJCW9uADXzqjlx9WPtG+MWJI/MQeeSG3JbzVKSUqx8jvZwQm87
+         lNg5S1kIttoAe2fgl/ooL5Pz9vE8OJ93uLLNB6aCHlDMi2R68Z5CtQsHRIoyzEwaon9q
+         XV1rHYqAzQsi6n8kYi0Gq7cKVn0n43DAsO12arC6pEqQj7whlY0RjBleXDgsoFJyUNM2
+         TtgA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2gw73fmx3qxiI+wJHu8/1I4qybCXiIqwncg5Vh0QvnY0J235nBzKpMhh6ZfuQfVfDtS1pq9v+XTSLJw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyEJCVBUIOWYAdIbgEzTyQXWmKadoF8yPywVTAZjQELzqokGRBG
+	loOEK80kzQ6WBFMnHgDsnixV5dazuFhasREGfPiaL4gMQRDvwLYY3kL8Ig5pUMCA+ORoqUzFh9x
+	F/s54cd8GpasusJKx+89ru2Qj4zyoLqpkG/aoasdNI8Ly7HShE5S0VDktz6fw
+X-Gm-Gg: ASbGncur+aCIvleMkIYh0e8mhMIzUpYDeM/pPe3W2MOzfJeD01CuZ6HkQ8u3c2WZ5aM
+	/3ZUCzKJ5CPZ7Hu34DeuJhB3VRL5uFUVwdXoDSb/iCACSV0ZJFuy/VS72LhO3cUivucO3ORXynF
+	B9xya5UWDvNbkJ7Y3AHzQyz5iq3OemaCerz5kjKL1x6ShW/YE+shr/Ik26/k+1XtSRvq3VFmSIz
+	GF+fnOsjPL8mJ/wFlyPIvDjodjo2SlURqsX/yl6Xs2CL4sZB+jkhAWp/+1ne4Jv7YU9wO2Pn1t1
+	GjM7Yc1HPKr1HXC6IX96Ep5a0Fuo7Sh00M8=
+X-Received: by 2002:a05:622a:1341:b0:463:1677:c09 with SMTP id d75a77b69052e-466b35ea5femr68921671cf.23.1732728447784;
+        Wed, 27 Nov 2024 09:27:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH+fAMgcLzUudgIW52TJuWeKGmuj/kR1YAzG3qMwrZjsvPqzOjlYx5DSJYQMYJ3GaA+mF1VrQ==
+X-Received: by 2002:a05:622a:1341:b0:463:1677:c09 with SMTP id d75a77b69052e-466b35ea5femr68921251cf.23.1732728447440;
+        Wed, 27 Nov 2024 09:27:27 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46682eee51bsm48523711cf.82.2024.11.27.09.27.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2024 09:27:26 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>, Chenbo Lu
+ <chenbo.lu@jobyaviation.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, mingo@redhat.com,
+ juri.lelli@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: Performance Degradation After Upgrading to Kernel 6.8
+In-Reply-To: <20241120090354.GE19989@noisy.programming.kicks-ass.net>
+References: <CACodVevaOp4f=Gg467_m-FAdQFceGQYr7_Ahtt6CfpDVQhAsjA@mail.gmail.com>
+ <20241120090354.GE19989@noisy.programming.kicks-ass.net>
+Date: Wed, 27 Nov 2024 18:27:23 +0100
+Message-ID: <xhsmhzflkmvt0.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACKH++YAtEMYu2nTLUyfmxZoGO37fqogKMDkBpddmNaz5HE6ng@mail.gmail.com>
- <4a2bc207-76be-4715-8e12-7fc45a76a125@leemhuis.info> <CACKH++YYM2uCOrFwELeJZzHuTn5UozE-=7PS3DiVnsJfXg1SDw@mail.gmail.com>
- <20241127-frisst-anekdote-3e6d724cb311@brauner>
-In-Reply-To: <20241127-frisst-anekdote-3e6d724cb311@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 27 Nov 2024 07:54:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi+3qEU9S9sgRLesCMKJ1w_e6zwEt0f30=8NSKhN+2LjA@mail.gmail.com>
-Message-ID: <CAHk-=wi+3qEU9S9sgRLesCMKJ1w_e6zwEt0f30=8NSKhN+2LjA@mail.gmail.com>
-Subject: Re: [REGRESSION] mold linker depends on ETXTBSY, but open(2) no
- longer returns it
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Rui Ueyama <rui314@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: cLTeHWxyvl7sTek47j4jQ9pYLiILvGczz1QG5h27MK8_1732728448
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Wed, 27 Nov 2024 at 04:11, Christian Brauner <brauner@kernel.org> wrote:
+Damn, I wrote a reply on the 20th but seems like I never sent it. At least
+I found it saved somewhere, so I don't have to rewrite it...
+
+On 20/11/24 10:03, Peter Zijlstra wrote:
+> On Tue, Nov 19, 2024 at 04:30:02PM -0800, Chenbo Lu wrote:
+>> Hello,
+>> 
+>> I am experiencing a significant performance degradation after
+>> upgrading my kernel from version 6.6 to 6.8 and would appreciate any
+>> insights or suggestions.
+>> 
+>> I am running a high-load simulation system that spawns more than 1000
+>> threads and the overall CPU usage is 30%+ . Most of the threads are
+>> using real-time
+>> scheduling (SCHED_RR), and the threads of a model are using
+>> SCHED_DEADLINE. After upgrading the kernel, I noticed that the
+>> execution time of my model has increased from 4.5ms to 6ms.
+>> 
+>> What I Have Done So Far:
+>> 1. I found this [bug
+>> report](https://bugzilla.kernel.org/show_bug.cgi?id=219366#c7) and
+>> reverted the commit efa7df3e3bb5da8e6abbe37727417f32a37fba47 mentioned
+>> in the post. Unfortunately, this did not resolve the issue.
+>> 2. I performed a git bisect and found that after these two commits
+>> related to scheduling (RT and deadline) were merged, the problem
+>> happened. They are 612f769edd06a6e42f7cd72425488e68ddaeef0a,
+>> 5fe7765997b139e2d922b58359dea181efe618f9
 >
-> Linus, it seems that the mold linker relies on the deny_write_access()
-> mechanism for executables. The mold linker tries to open a file for
-> writing and if ETXTBSY is returned mold falls back to creating a new
-> file.
+> And yet you failed to Cc Valentin, the author of said commits :/
+>
+>> After reverting these two commits, the model execution time improved
+>> to around 5 ms.
+>> 3. I revert two more commits, and the execution time is back to 4.7ms:
+>> 63ba8422f876e32ee564ea95da9a7313b13ff0a1,
+>> efa7df3e3bb5da8e6abbe37727417f32a37fba47
+>> 
+>> My questions are:
+>> 1.Has anyone else experienced similar performance degradation after
+>> upgrading to kernel 6.8?
+>
+> This is 4 kernel releases back, I my memory isn't that long.
+>
+>> 2.Can anyone explain why these two commits are causing the problem? I
+>> am not very familiar with the kernel code and would appreciate any
+>> insights.
+>
+> There might be a race window between setting the tro and sending the
+> IPI, such that previously the extra IPIs would sooner find the newly
+> pushable task.
+>
+> Valentin, would it make sense to set tro before enqueueing the pushable,
+> instead of after it?
 
-Uhhuh. Ok, unfortunate, but this is clearly a real use case, so of
-course we'll revert the kernel change.
+Urgh, those cachelines are beyond cold...
 
-           Linus
+/me goes reading
+
+Ok yeah I guess we could have this race vs
+
+rto_push_irq_work_func()
+`\
+  rto_next_cpu()
+
+Not sure if that applies to DL too since it doesn't have the PUSH_IPI
+thing, but anyway - Chenbo, could you please try the below?
+---
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index d9d5a702f1a61..270a25335c4bc 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -602,16 +602,16 @@ static void enqueue_pushable_dl_task(struct rq *rq, struct task_struct *p)
+ 
+ 	WARN_ON_ONCE(!RB_EMPTY_NODE(&p->pushable_dl_tasks));
+ 
++	if (!rq->dl.overloaded) {
++		dl_set_overload(rq);
++		rq->dl.overloaded = 1;
++	}
++
+ 	leftmost = rb_add_cached(&p->pushable_dl_tasks,
+ 				 &rq->dl.pushable_dl_tasks_root,
+ 				 __pushable_less);
+ 	if (leftmost)
+ 		rq->dl.earliest_dl.next = p->dl.deadline;
+-
+-	if (!rq->dl.overloaded) {
+-		dl_set_overload(rq);
+-		rq->dl.overloaded = 1;
+-	}
+ }
+ 
+ static void dequeue_pushable_dl_task(struct rq *rq, struct task_struct *p)
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index bd66a46b06aca..1ea45a45ed657 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -385,6 +385,15 @@ static inline void rt_queue_pull_task(struct rq *rq)
+ 
+ static void enqueue_pushable_task(struct rq *rq, struct task_struct *p)
+ {
++	/*
++	 * Set RTO first so rto_push_irq_work_func() can see @rq as a push
++	 * candidate as early as possible.
++	 */
++	if (!rq->rt.overloaded) {
++		rt_set_overload(rq);
++		rq->rt.overloaded = 1;
++	}
++
+ 	plist_del(&p->pushable_tasks, &rq->rt.pushable_tasks);
+ 	plist_node_init(&p->pushable_tasks, p->prio);
+ 	plist_add(&p->pushable_tasks, &rq->rt.pushable_tasks);
+@@ -392,15 +401,15 @@ static void enqueue_pushable_task(struct rq *rq, struct task_struct *p)
+ 	/* Update the highest prio pushable task */
+ 	if (p->prio < rq->rt.highest_prio.next)
+ 		rq->rt.highest_prio.next = p->prio;
+-
+-	if (!rq->rt.overloaded) {
+-		rt_set_overload(rq);
+-		rq->rt.overloaded = 1;
+-	}
+ }
+ 
+ static void dequeue_pushable_task(struct rq *rq, struct task_struct *p)
+ {
++	/*
++	 * To match enqueue we should check/unset RTO first, but for that we
++	 * need to pop @p first. This makes this asymmetric wrt enqueue, but
++	 * the worst we can get out of this is an extra useless IPI.
++	 */
+ 	plist_del(&p->pushable_tasks, &rq->rt.pushable_tasks);
+ 
+ 	/* Update the new highest prio pushable task */
+
