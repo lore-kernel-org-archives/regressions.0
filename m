@@ -1,216 +1,105 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAC13232
-	for <regressions@lists.linux.dev>; Thu, 28 Nov 2024 16:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732810757; cv=fail; b=ECJb+3tD+UAcKcXdQ7KSgLxlrfZsjArVTwGCz6ePICTy2oQntHjDFNKRJ3HM66pQKHt3c/wQ3lkda9h0/bCcAH6w7dGKjVvRLXaWBAiqS+dMQR+alLICicy3M2ryqkJ5b4OfkB2yznnrIyvo7KZFSp+jyzpb85KRLU+82qo6hdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732810757; c=relaxed/simple;
-	bh=CquD65D8onRlfX4dxmnnWXrz7Q9sT/M7dyI8f4wY3oY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QvDcdWXYco5bohtOJy1wO6L359LtC0e2ngnoQ3F9MOqlFbR/ffsaMJ0UwCp0mVR9kMLSrrGRhTu07srsh7pqRXoLLn/GX2T54/vlxN3zSM9X2W/OfdK2hwyH7Oes6PnI4zQHjfHznkFF1/JuRE7ITy9pGadsrM08/KgRAuPjMiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZAx9tWd0; arc=fail smtp.client-ip=40.107.93.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZAx9tWd0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A9oH/Kpyvq3T3U1l/0gSOko9BGjARWv8zoghDOKNS6OYgiP510hMMyKftd8RcGRdr39jK84afr+ex4hnwyUE8IUDuJyF6l7P2HSvdP4bafoUA7QgmN0KZI7UygGlTHDMdIU/usWKdITbUXiPk9Sbuf3TrEhi6//BnKiRu3KW6cHZ8fnTz4hAUW3vPxzHM2x/yutxdap+d9U++4P2YgLal8cnp6MmEk6qn+2eMoRaG2BEe9f+dXPcCkiLRWg+dzgmEgpKI2FDcMZSMtCdpT283KuZuQxq0lIvjvRGkiJ/c3rTlmWuMo4hkWzucpf+ayAMpZ6ei7GGPBjEqFapvKXFTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kj/7rLSVtHrAXqXnPTG09ubgDLunEhXuYmz1vj5fkWY=;
- b=JwQ8nNgnNHI/6kJ0ZQ6RMiaTArABgIcx1ik7ysZ25IWteRnpF2Q1AH0/BcJsDemFjCRRTuWcyTTuDOqlEsXoyowlWC2blwokIf9z0bSRFQRQyzqQb+73Wn1qFHI3nwSo/EnUxpi3hqaV0qcP90YWfvuENHKm2ekzazZFtgIHPOTNc4IY4tUtf040GIMFq/PJWUUAU4en/NxFU98Is9z57cAMuy3mkzz79Ifwkobz/AI4pKRPS7JMm41HWz2PF1o6kxV4K+wPXx6W9xa7TTNF6jnr/pLj4euBNY3hzc66ZmrTwe5/MD0PWMdW+rx5Hv3elQfii+trRQkbs70EWHkJzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kj/7rLSVtHrAXqXnPTG09ubgDLunEhXuYmz1vj5fkWY=;
- b=ZAx9tWd0iJMHzYk3abF2Noiv4BID/Jr0T9MErI6mDLdg9i4VTYjEE4+9A0gHuSt0LpqbzBl2nz8eBbiMwZzNbSH2lWl+2LaM1aO4TWdCQifLO6DXFxh05+Cx9a5zCavG8v+Ozuzd96XXb35oy9f6zLWuS6BNwFHBG7KQ8shXtIE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13)
- by DS0PR12MB8366.namprd12.prod.outlook.com (2603:10b6:8:f9::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.13; Thu, 28 Nov
- 2024 16:19:09 +0000
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062]) by CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062%4]) with mapi id 15.20.8207.010; Thu, 28 Nov 2024
- 16:19:09 +0000
-Message-ID: <fb8910ef-bf42-424e-9d43-4d7dd1fc9fd1@amd.com>
-Date: Thu, 28 Nov 2024 11:19:06 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amd: Sanity check the ACPI EDID
-To: Mario Limonciello <superm1@kernel.org>, amd-gfx@lists.freedesktop.org
-Cc: alex.hung@amd.com, regressions@lists.linux.dev,
- Mario Limonciello <mario.limonciello@amd.com>,
- Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
- Chris Bainbridge <chris.bainbridge@gmail.com>
-References: <20241128032500.2088288-1-superm1@kernel.org>
-Content-Language: en-US
-From: Harry Wentland <harry.wentland@amd.com>
-In-Reply-To: <20241128032500.2088288-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQXPR0101CA0019.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:15::32) To CO6PR12MB5427.namprd12.prod.outlook.com
- (2603:10b6:5:358::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645C114D6ED
+	for <regressions@lists.linux.dev>; Thu, 28 Nov 2024 23:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732834952; cv=none; b=rCYijTKzR9ZJKEMEWKIQD9l9m25M8U+kLat3RgG0yOUBI7gJyBT8cDb4kyFStNs1tIlD921LlUgtQaBlIAkUcj2Kxa1/ATNloAhtK7J+ZvHaloIU8MVdKKsa96Xt8pALMIUDolAA2vZa8HAozKRYa9yMoYfJ9MJ0VAYnmx4VKuU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732834952; c=relaxed/simple;
+	bh=uWjIpIEOgElQIMv1XFirw5baSTrsZqB12pjmk7cD6bY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b15u68ZAnyDqK8yVjOPYWMgriCWF681EnHxhtmm0A/xMPq0F3IO2IQTQ1VlYWF7VfTFbs/2X6DdHXJwDtqa/cMUspMYOnGVlHf40VdahL1Ghvwqjq68ThCZyoQK3RBAEBCjy/r/gn3wTrgoRBppqaEkKEHuLe2scgrUblE67O2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af40d.dynamic.kabel-deutschland.de [95.90.244.13])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 33CAF61E5FE05;
+	Fri, 29 Nov 2024 00:01:56 +0100 (CET)
+Message-ID: <5c9bf757-a035-499c-a1ef-ac33c1c6e75b@molgen.mpg.de>
+Date: Fri, 29 Nov 2024 00:01:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5427:EE_|DS0PR12MB8366:EE_
-X-MS-Office365-Filtering-Correlation-Id: c564c378-4106-4610-b39a-08dd0fc863af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RlJWL0pBTWU0cEg1bE9yYUZScVoxcytsemR2dWc2SzVyUHBKRnBNVHNqbnI2?=
- =?utf-8?B?eDFnQklwQldvaVAwSms2ektBcld4K0UrcUNJRnRmdUdSdjBMM2J0QlpIWTVi?=
- =?utf-8?B?Z3l2eVhRUG4rSU0wQ0llYm9FWTRCckhwWk50SGdPWHBBUGpTdU0vcjdWUFZt?=
- =?utf-8?B?N3Fjd2JYbHQzbXdxTStGL2p6VkZwaW5jQys0dENOZ1p4M3lPTExqeVgxSW9Z?=
- =?utf-8?B?aStRdTFLZXNQTXluZnAxNm1iWjQ2MkNZcnF1R1FVU1htSkNtVU9uMCtQQ3R4?=
- =?utf-8?B?WjlVb0k5Y0xQYSs3QnFnaVdkSzBxeUMyQnZoRDNwdnpBdEpHKzlCZWVjUHBt?=
- =?utf-8?B?UnhDZ1RnWUc3MEt3SGRYK2FieXBacm5QeFB2SWtpOFE5SmlrM1R1QjdTNWxZ?=
- =?utf-8?B?YVY1Z01XbWc3Ris4eWhPSDRTbFAvV21GZ29sSjJ5LzRjSktzLzJhdHFJOURt?=
- =?utf-8?B?QVZFalFTTnBsV3FmUlJzMlB1N2RaZWFCY2RTU3MxcHdxQzJVSURXc0RqSkZZ?=
- =?utf-8?B?bHorNDlIL0RWamhza2RpeDNoMUxTK0o5MzczT0ZXcFJFR3pQZDRNZ3NVdWhI?=
- =?utf-8?B?UGJWM3NSSmUvc3Q3Z1h6bWJUSE56MzRIYUYvTGh6eC9pRDVCSkczcEV5Ukhl?=
- =?utf-8?B?SkdtOUoxK0ZkcW52QzhzMXltNTc0MzZNYzBsRmU1bjUwZEtzclpPYVJlbWVE?=
- =?utf-8?B?QVdISEhwQkpNajRMalQvVk55VEs2UzJIdG1RRHlDQ1hoTzNiV1RBOW1LWWZP?=
- =?utf-8?B?Z1k5eGhEVHJ6V2J6WXFqSUthR0tYT1dyMmRsZTRVVU9ic2QzTWIzMHBOTGpL?=
- =?utf-8?B?OHBKU3BLbVkvejdrNUR6MDR5NmdwREFCNWhLbnhyQURRVHV6cWxxd0VOR2Jz?=
- =?utf-8?B?LzZaVCtQZExEWkRqd1ZCQTNEcTlQb0RHVzFhOFpMWGlyTEdGOUdzaXE3MXd4?=
- =?utf-8?B?am9uQUQyOGZhTUZ0elZ1dnI1K25keDV1SllFbHpVc3Erb3c2cjhsaGxCZmdS?=
- =?utf-8?B?STEzYXhDZE5GWHhMWTBrZkQ4Z3hsU2RpeTZKRzV2TXhDbThrb3NVTHhBd2pr?=
- =?utf-8?B?cWlyRDFUbmJrMis4YlJwN2gxYmpKK0FlZkQzS3VsTDRzZzNFMzR1YnBHUU1i?=
- =?utf-8?B?K1BSVUlEOGVrVHNxNFdUNmhIMXZMMk11WU93ei9lNENieWsyVEVYSHBUOTV5?=
- =?utf-8?B?WWV2aE1ObkRBdjR1UG9qN1BjaUt1VEJSN2FmY1dGQnh1c2NjSkFMc2hheDAr?=
- =?utf-8?B?OTBSV2FqU0JuUTkxeUZGNTNGK1lmRU1ZZWRBQkYzeEN1OUxaL1JuMXVBSzlS?=
- =?utf-8?B?VW0vZEpZTm9vUnBUdk8yMlJROExLYkxtOUF3STZBcWZ1MzJFYUlRYmpuRTRJ?=
- =?utf-8?B?QnBnbTVGU2tlT044WVFJaVlDTWlzemJpdmxFN0xGMVRSN0t6ZENEdkx1R0Jq?=
- =?utf-8?B?aU9Sd2NTUVJlRktlUTVWRzNRYWxoZ1FGNjdVYlBkeGJaOGFsNnVVRTRRV2Uz?=
- =?utf-8?B?OWNsMnZaK1lsWS9LbzVock5iRkl4SVZXZG9JNFpjdDVnTUdHamRIL3pTaFlx?=
- =?utf-8?B?QWVPZk5naE8wVklISzhNckVMcWYyaU5kRnMwNyt2eUhvbGdpY1p1cW9ESkkv?=
- =?utf-8?B?czRySURhcDZhTWltSmF0RTNscWhDWXhML2FQQ1NDNVY2MElMY21Mb2FUYXRS?=
- =?utf-8?B?YWljV3hOVjdxWllUWXErNWd1ODhuQmdnTHl4RTdBSXdpbHQ1bHdHaEpvYXA2?=
- =?utf-8?Q?NSCH9cNJVKw6FMwbyk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5427.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VUc4aC9DVkNKVU4zR3JtUU5acFQ1dlRzUHlJTXBrcWNhSzJJQlhIemEwd2VJ?=
- =?utf-8?B?bjQxUnMrcmNwaVdjYlFSRDY5QUpPZ014K0tPMDZGczZVMjdDaWxOZFpKRjVh?=
- =?utf-8?B?R3dSNTZMMkErcU1OY1dWeUNuT2xJMXRpNGtZSlhNVndLdHRpWnZDMElhcWJz?=
- =?utf-8?B?UDdHeGVzYW1kTVI3VEVIYjcxTmRjb0FtbmFhNGRxeGN6SVVzbzBISFhYc2xC?=
- =?utf-8?B?U2VaVURqWjI1UWhzaElWQ1JTRkhRUTlOQjFYelV1VTMrdUlyZ3RBVHlXWGtM?=
- =?utf-8?B?YzVRazA0dEVIVFVNTVUwaGpNai9wVGlja2IrUlhiVDYwNHd6bDRhVnBQTU9n?=
- =?utf-8?B?cDU2dVhEUU11ZEFZVktpR212NmYwZVRGMUJSMnJYQ0llSFZyd1RvZmRFTFBu?=
- =?utf-8?B?OGx2em11cHJ4L0VhczhwVG5GNXJWYzVoNTE3R0NaVnYxbHJNQm5RaDRGbVJV?=
- =?utf-8?B?ejFpL2xrSXBJVzZUYis3Qk94cWFZSWRNMitjZVBHODNUbGp6MytYa1hvL2tk?=
- =?utf-8?B?ckhoOEpvVTQ5aE84Uko2M1MySTBvUncwSWd6a29FbkNzbVhLdXJrNUdRd2JI?=
- =?utf-8?B?dWRLSXVRb2dnczlJN0lxWHEveE55ZndpSGhWS0dKNHNZKy9VemYzaDFMMENL?=
- =?utf-8?B?MGdUaVBLei8wcndwWmg3d2p2RGRFN3YxR2ZSeW90SU5TaldtWmpXbE50UW02?=
- =?utf-8?B?bzVLL1lvL3RONzBwVU8vQTNMSVZVYUJMcThvWjcvM1hQY2c4VXBsbWRYa0xU?=
- =?utf-8?B?ZE5nNmZhcm50UGhacEluTHhLYWh6ZzNOMUNMVUtsNDk3ZGVuNVNoNG5LbUxV?=
- =?utf-8?B?M3pMbXRVYzRXM01La0YxZXBUZ3VkYjNOQnUwRGQ0ZmdFM2lRcmVLKzFYc2pG?=
- =?utf-8?B?NWtnaERnVDQ5eTFMcEQvT3huQ3Z3WmV2RGw4WmdHc2dGd2pwTjNGalRYOGky?=
- =?utf-8?B?R0dFSUpSckVoK2RhaXhTUy9lZFRHK2R6SmVYMGxJaGd0R2NPYzhwYUxMUERR?=
- =?utf-8?B?YktDUXB2YmlrMU9kdityL1NpSTROOUxSaHlob3VlZ05TQUZsRE16Q2FYcWlB?=
- =?utf-8?B?S2JoL3ZNblhhZjgwSjlYeGg1L0pDamtOaVROWDY3OU5iWTFPOHdOZkJBZzdB?=
- =?utf-8?B?dGNFbXNwZk82bzZtM2NrNGJGT1RCa3J6L083QVdxd0cxSjZTb2taUEVaejl0?=
- =?utf-8?B?OEMzVEpMclV3aXpFQlhwTUI2b1daUlF4MXJmdzhvZWZjbjhOeHFsZmJVSVdG?=
- =?utf-8?B?bzNjVHdhaUxPWTllSG9UUVhGOVk1cWRSemxHRWs2WmpUdHFGL2djQ1ZtckM3?=
- =?utf-8?B?RWlJY0ZURjlZS0lBY1lnQUI4TmdqSlpKa2gyLzJDVGN6NGVjbVFWcmdtMGdt?=
- =?utf-8?B?YnZHS0FLMVNnT0Z3WDdmTjg5ckRmdzBCa0RvNlpkUWYza3B6MHdqUEdiVC83?=
- =?utf-8?B?Zi94UmVMUCtVTDZDT0MwaXUxOXd1Yzg1a3V5SU5nbmVrelFjRXRNWFRjOUox?=
- =?utf-8?B?dHFvSjJkanpmeHJ6OXVueGRFUE04MmM5MWY1VkV1N2hLaGQ2blNoc09YVjRj?=
- =?utf-8?B?VXRYclRhVCtjZHpDazBlVTdpbEowZm5CNldpMkVFVXhaS2dhMW1pUVMvcktT?=
- =?utf-8?B?dXo3bzdJQVBlc0pBU3BjSHBpUUxFTHVMb1RLUGFhZytsQ2I4cjlZTlZjL3hN?=
- =?utf-8?B?OUdoT1E5Um9xQnZOQ0c5V1M0VHl4eFFKa21XRFA0REE4c2FUMXZTWGl0MGJj?=
- =?utf-8?B?RGhCUlRoYkhyTWRtZzBEbXlHT3ovaE1ndCs0dlJaWE1ZdnZPZ2tlaHZvWHpB?=
- =?utf-8?B?M2dETkx3ajVvRzVqQlFaNXYwQ0ZiRFJKWFhGTjlxczk2dG5NLzVrVjd1dkoz?=
- =?utf-8?B?Njc0NTlFc29LOWQ1MGJJbU53WnBtNEwvUFo5VVkyQ1FhMGtmTnptRVBEK3lL?=
- =?utf-8?B?dTViTERRN256Qy8zcjZJVUZSRER2OHV4Zjh3akltYUJST0phZHQvSHJZc0ho?=
- =?utf-8?B?ZUlaMll3WXVZeTEwejFBMXQyOTNVaGYwcXFydmNORVdPZzFUNEp2UXU4d3k0?=
- =?utf-8?B?a3VWSmZBaUtEdTF4a05WQWIxUXJ4MUw1NWhEVTFYekNCTGU2cWdaMktGdktU?=
- =?utf-8?Q?Wa+1nqiF1lBTwHaVOfDI/tR7x?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c564c378-4106-4610-b39a-08dd0fc863af
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5427.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2024 16:19:09.8399
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /g0dOaJCk8SPhMyWKZw3VI60+rbjAEUN+plrsm3ZnnIgrvJagzXiT2qO6Je8PUrdGdmQt+2ERnti1Or7yQVaXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8366
+User-Agent: Mozilla Thunderbird
+Subject: Re: WARNING: drivers/net/wireless/ath/ath10k/mac.c:8750
+ ath10k_mac_update_vif_chan+0x237/0x2e0 [ath10k_core]
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+References: <637c5bb4-5278-44be-9ac3-9c0ef9297162@molgen.mpg.de>
+ <8734jcx60e.fsf@kernel.org>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <8734jcx60e.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024-11-27 22:25, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+Dear Kalle,
+
+
+Thank you for your reply.
+
+
+Am 27.11.24 um 12:36 schrieb Kalle Valo:
+> Paul Menzel writes:
 > 
-> An HP Pavilion Aero Laptop 13-be0xxx/8916 has an ACPI EDID, but using
-> it is causing corruption. It's got illogical values of not specifying
-> a digital interface. Sanity check the ACPI EDID to avoid tripping such
-> problems.
+>> On the Dell XPS 13 9360 with Linux 6.12.0-08446-g228a1157fb9f, I
+>> noticed the trace below:
 > 
-> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> Reported-and-tested-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3782
-> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-
-Harry
-
-> ---
->  .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c   | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> For others, commit 228a1157fb9f is from current merge window so the
+> first release will be in v6.13-rc1.
 > 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> index b0fea0856866d..6cbbb71d752be 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> @@ -907,14 +907,14 @@ dm_helpers_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
->  	struct drm_connector *connector = data;
->  	struct acpi_device *acpidev = ACPI_COMPANION(connector->dev->dev);
->  	unsigned char start = block * EDID_LENGTH;
-> -	void *edid;
-> +	struct edid *edid;
->  	int r;
->  
->  	if (!acpidev)
->  		return -ENODEV;
->  
->  	/* fetch the entire edid from BIOS */
-> -	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
-> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, (void *)&edid);
->  	if (r < 0) {
->  		drm_dbg(connector->dev, "Failed to get EDID from ACPI: %d\n", r);
->  		return r;
-> @@ -924,7 +924,14 @@ dm_helpers_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
->  		goto cleanup;
->  	}
->  
-> -	memcpy(buf, edid + start, len);
-> +	/* sanity check */
-> +	if (edid->revision < 4 || !(edid->input & DRM_EDID_INPUT_DIGITAL) ||
-> +	    (edid->input & DRM_EDID_DIGITAL_TYPE_MASK) == DRM_EDID_DIGITAL_TYPE_UNDEF) {
-> +		r = -EINVAL;
-> +		goto cleanup;
-> +	}
-> +
-> +	memcpy(buf, (void *)edid + start, len);
->  	r = 0;
->  
->  cleanup:
+>> [16805.002289] ------------[ cut here ]------------
+>> [16805.002296] WARNING: CPU: 3 PID: 65835 at drivers/net/wireless/ath/ath10k/mac.c:8750 ath10k_mac_update_vif_chan+0x237/0x2e0 [ath10k_core]
+> 
+> [...]
+> 
+>> I do not see such a message in the logs since September 19th, so I
+>> believe it’s a regression.
+> 
+> Have you seen it only this one time or multiple times?
 
+I have seen it only this one time.
+
+> What kernels have you been testing prior? I'm trying to pinpoint what
+> versions kernel version work and what have this warning.
+Before I ran 6.12.0-07749-g28eb75e178d3 without seeing this. As it only 
+occurred once, that does not give any pointer though.
+
+
+Kind regards,
+
+Paul
+
+
+PS:
+
+$ last reboot
+reboot   system boot  6.12.0-10296-gaa Thu Nov 28 22:42 - still running
+reboot   system boot  6.12-rc6-amd64   Wed Nov 27 14:04 - 22:42 (1+08:37)
+reboot   system boot  6.12.0-10296-gaa Wed Nov 27 13:21 - 14:02  (00:40)
+reboot   system boot  6.12.0-09568-g2f Tue Nov 26 18:41 - crash
+reboot   system boot  6.12.0-08446-g22 Sat Nov 23 12:27 - 18:40 (3+06:13)
+reboot   system boot  6.12.0-07749-g28 Fri Nov 22 10:14 - 10:24 (1+00:09)
+reboot   system boot  6.12.0           Wed Nov 20 09:24 - crash
+reboot   system boot  6.12.0-rc7       Wed Nov 20 09:22 - 09:23  (00:01)
+reboot   system boot  6.12.0-rc7       Tue Nov 12 08:19 - 23:27 (7+15:08)
+reboot   system boot  6.12.0-rc7       Mon Nov 11 21:54 - 00:16  (02:21)
+reboot   system boot  6.11-amd64       Mon Nov 11 21:52 - crash
+reboot   system boot  6.12.0-rc7       Mon Nov 11 20:43 - 21:52  (01:08)
+reboot   system boot  6.12.0-rc7       Mon Nov 11 17:51 - 17:52  (00:01)
+reboot   system boot  6.12.0-rc6-00077 Fri Nov  8 08:39 - 17:50 (3+09:11)
+reboot   system boot  6.12.0-rc6-00077 Thu Nov  7 07:26 - 23:24  (15:58)
+reboot   system boot  6.12.0-rc5-00047 Mon Nov  4 08:26 - crash
+reboot   system boot  6.12.0-rc5-00047 Mon Nov  4 05:42 - 05:43  (00:00)
+reboot   system boot  6.12.0-rc5-00047 Sun Nov  3 06:54 - 22:10  (15:15)
+reboot   system boot  6.12.0-rc5-00047 Sat Nov  2 07:34 - 22:05  (14:31)
