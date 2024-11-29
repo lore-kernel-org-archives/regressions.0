@@ -1,121 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FD21714D3;
-	Fri, 29 Nov 2024 08:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FCE1E489
+	for <regressions@lists.linux.dev>; Fri, 29 Nov 2024 19:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732870433; cv=none; b=MvqxlINwWAV2Ved/KhvtYKaOfR/fvK/8Q6Xhe3c9y0D2Tw9pjpsWWN3nninb8y8U4yLlftUQo+oEf8kn7PUBIiGWXxvZP3ma4VdT8FYIrTzQ1ZQjeDY4F/Y3nwGIoiJv1cSC0EJ8xOhfn6AGUIdJXmMA7ITe//6rcTpbSd/YL7E=
+	t=1732909878; cv=none; b=L0lPGdexq8Pm9F+fb4l1ao/yE2qi9H+5UJhk0LKm83zyxId7zthqd/5mBZqegFI3r6l1IcmbJsM19TjPeXD5qrvZkYpj0R3W6GDSg+s8tRFQqjvNfUzPxVArXPhlhn9b3bFPdexuqzVlehj1+r8Ofmc33LUjKnd/TAiQ2BpB+IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732870433; c=relaxed/simple;
-	bh=PWjGAU76nJzuPec0ckBdi9FcYElbQvNbyAFXD40o/MY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=M8NqWm1z0fqhoKar5QLIEF2TPFDp1eSKc1YJVeXPtbRfaAKikjSy54CxI574pCJrs6T0hrC1SxT+w8xOq0SQ0/4gHTAYTHek07T4esUcQNioexPZ0V0QaSxvml0Floc79JezaHZgGdWssHGNs2v9QJvAdVusiWmeSk1yeW5xyx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBLEKQrV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732909878; c=relaxed/simple;
+	bh=iTaxrum4RWbRMxEoY8krvugViqTvIJqlx4xVF8pjTSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n9njk8hOAH2ekaLGECpZcrAxhoh3U3lJ/HNDk3AY6/G4UYo4by9mCiejSvbGqwn5i2gWl7oWk5wY4WbGp4jOcRRyvQtlj11TuaJdDjARLvvtGy1gc9YsDWyMVRzYMftjk/ymUdlGIwmvLFGFbozAScJav98Tb71HDH6F0O4yHO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rtPQRD5E; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBLEKQrV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DED1C4CED2;
-	Fri, 29 Nov 2024 08:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732870432;
-	bh=PWjGAU76nJzuPec0ckBdi9FcYElbQvNbyAFXD40o/MY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=VBLEKQrV000Q1wZNquGeBb4ypPUKC6cnNAoJnOtXORzuqE+c+xHNqnMjNFZ5C4QXX
-	 qMakgu6HRuTKDtUoCeFQrHRewR25vEepbHPN/x1nJgjC5Dea0i77fXr2Uhdim16Ibg
-	 0qGcskpXexy+GBIp7FYhjJB6e4psoTb3vMht7kcWszhJcSb16eE0QUYQ+natd8BNJI
-	 jWIiIdvGSQxLCCzb//wiuvaNaO13RsAcBtI+hfLwDjz+TKRGbAaAs6L2ubufayHT7z
-	 Hok3kGlV9/GeWTHrfUU5QXnXyK7mc6pA/Zytl4BUzoY4R4zMw+QNKgL5TOupHxuuiV
-	 Igl4NeIyQfxwA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: linux-wireless@vger.kernel.org,  ath10k@lists.infradead.org,  LKML
- <linux-kernel@vger.kernel.org>,  regressions@lists.linux.dev
-Subject: Re: WARNING: drivers/net/wireless/ath/ath10k/mac.c:8750
- ath10k_mac_update_vif_chan+0x237/0x2e0 [ath10k_core]
-References: <637c5bb4-5278-44be-9ac3-9c0ef9297162@molgen.mpg.de>
-	<8734jcx60e.fsf@kernel.org>
-	<5c9bf757-a035-499c-a1ef-ac33c1c6e75b@molgen.mpg.de>
-Date: Fri, 29 Nov 2024 10:53:48 +0200
-In-Reply-To: <5c9bf757-a035-499c-a1ef-ac33c1c6e75b@molgen.mpg.de> (Paul
-	Menzel's message of "Fri, 29 Nov 2024 00:01:55 +0100")
-Message-ID: <8734jav2sj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rtPQRD5E"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5cfc18d5259so18393a12.1
+        for <regressions@lists.linux.dev>; Fri, 29 Nov 2024 11:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732909875; x=1733514675; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DakFNAdlgvG9kZOIFDKFoMmE+nLP/gOLaXT7j6tD6Ds=;
+        b=rtPQRD5EbxBpZGowFMZJMo7Cu8sEsh5h0SLlGY957t9GeP1YLlPErbxVHuIaFrjdia
+         VEy3EMvq+6zgfkdc7iEufGuji1HYAEtJEPt0TPwVSr4+tKod8UZbxi1JOuU8UnuE484n
+         MrrSsB7jDvbWzRvaTIAgJSrNgZxGzCetYsaS7KIFx/G4liZfkrcdLMEnbEBe6CYtu2JM
+         SHlT6BX3P4ZyLI47V4EpOwY8qSk/OMKHFMJRvd/QdoEa9zo7pggeg7tE7YXA891gznAK
+         6sI3+g5KN24rfSX2BNRLLDt9NmTXJGHaFYvhf92YFjuTyZXpiRVfic96JXoK4dV9OwS6
+         OIvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732909875; x=1733514675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DakFNAdlgvG9kZOIFDKFoMmE+nLP/gOLaXT7j6tD6Ds=;
+        b=Uc39vgepRP2p2sVyfjBYX1kWlKL/YkVu1OfS71yvGThdQdu6TYhX7m5S0UNfcO2VZ8
+         jabZx5ih0EFvu7KzsGqrqFIgv3fABWylKdLfazxako6uLKL0MLrUcAHZnECMOf4ffnKz
+         rgaUoGFcZmiO4d23MNsWnXAVrUK4+/nB8Lec0h6gUJzSI8Lh0KhS23773/z6fBaBeBXt
+         pvlfsX+yfXNFmXnO3zQpEuM44wt7uXlpAbDfTGdjNm4UF/Z++9S230wbNlnm3KtdLixq
+         d87bbmo+YQrjDRZ6EMXm+iMZAruI1oVTgtk/P9VXCCTJXU0/73k0Sban4jBj8rqud/W6
+         ET/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUoBvLYkuXhfDiyX9BZ3eaoVYgN/Q4Z/8g/5hHx612+N9HuO/C3cdjVf/jUz/EmLDRfoAwmQffHCK+L0Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzypMdvaeFqR06mqr2j1cXp3utRlvh3Wjj7DLJu5io6pgYxiGes
+	IG/jWAkOxgp42jcQXVGaOydAGU/gcp7R6ip+h+BtqvPifA21g0cBMtNhfR10bUtZT4crJKoGDwj
+	Xkox7bASJcKEd9yQMCbJafqDYwPzEgG19vySj
+X-Gm-Gg: ASbGncsNgPr0/nMISFiGERiBzEZ34WQjscTeYzdb0l5UF3HqVuH2WXqHbB0snMyhDEF
+	rSizJ3c7hY1EwLBWMduO5FNxe4A88r0+yRquezvQ2zCG+52SaNq5QpERsbVc=
+X-Google-Smtp-Source: AGHT+IGlaSsjv6kt+38Zjk6dLy2h4xxAeTLK604DNvrzBYzm9ozC/f76QckgvNB7y/dBp8gVjL8EAn6TLInXBILZe3U=
+X-Received: by 2002:a05:6402:35c2:b0:5d0:a982:91a7 with SMTP id
+ 4fb4d7f45d1cf-5d0a982a46bmr75993a12.6.1732909874361; Fri, 29 Nov 2024
+ 11:51:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org>
+In-Reply-To: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 29 Nov 2024 20:50:38 +0100
+Message-ID: <CAG48ez0vg9W=oatvEqxvTSYNUx7htY23LxPrYCiuLZhZQuaGjg@mail.gmail.com>
+Subject: Re: GPM & Emacs broken in Linux 6.7 -- ok to relax check?
+To: Jared Finder <jared@finder.org>, =?UTF-8?Q?Hanno_B=C3=B6ck?= <hanno@hboeck.de>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
+	kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Paul Menzel <pmenzel@molgen.mpg.de> writes:
++regression list, LKML, maintainers, patch authors
 
-> Dear Kalle,
+On Fri, Nov 29, 2024 at 8:38=E2=80=AFPM Jared Finder <jared@finder.org> wro=
+te:
+> The change to restrict access to TIOCLINUX that was added in Linux 6.7
+> breaks Emacs rendering of the mouse pointer. This change was previous
+> discussed in
+> https://lwn.net/ml/kernel-hardening/20230402160815.74760f87.hanno@hboeck.=
+de/.
+
+This landed as commit 8d1b43f6a6df ("tty: Restrict access to
+TIOCLINUX' copy-and-paste subcommands").
+
+#regzbot introduced: 8d1b43f6a6df
+
+> An associated Emacs bug report, bug #74220, is discussed at
+> https://lists.gnu.org/archive/html/bug-gnu-emacs/2024-11/msg00275.html.
 >
+> I wanted to ask if it made sense for the restriction to not apply to the
+> following three selection modes for TIOCL_SETSEL:
 >
-> Thank you for your reply.
+> TIOCL_SELPOINTER   3 /* show the pointer */
+> TIOCL_SELCLEAR   4 /* clear visibility of selection */
+> TIOCL_SELMOUSEREPORT   16 /* report beginning of selection */
 >
+> On a glance over the selection code, none of these interact with
+> vc_sel.buffer and therefore are unrelated to the exploit linked in the
+> original report. Only SELPOINTER is necessary to be available to fix
+> Emacs bug #74220. I imagine such a change would involve moving the
+> capability check from tioclinux(), case TIOCL_SETSEL to inside
+> vc_do_selection().
 >
-> Am 27.11.24 um 12:36 schrieb Kalle Valo:
->> Paul Menzel writes:
->>=20
->>> On the Dell XPS 13 9360 with Linux 6.12.0-08446-g228a1157fb9f, I
->>> noticed the trace below:
->> For others, commit 228a1157fb9f is from current merge window so the
->> first release will be in v6.13-rc1.
->>=20
->>> [16805.002289] ------------[ cut here ]------------
->>> [16805.002296] WARNING: CPU: 3 PID: 65835 at drivers/net/wireless/ath/a=
-th10k/mac.c:8750 ath10k_mac_update_vif_chan+0x237/0x2e0 [ath10k_core]
->> [...]
->>=20
->>> I do not see such a message in the logs since September 19th, so I
->>> believe it=E2=80=99s a regression.
->> Have you seen it only this one time or multiple times?
+> Note: This is my first time emailing a Linux kernel mailing list, so
+> please let me know if there's any additional conventions I should be
+> following here.
+
+FYI, for next time: There is some documentation at
+https://docs.kernel.org/admin-guide/reporting-regressions.html
+specifically for reporting regressions (with a focus on what to do so
+that your regression report doesn't get lost).
+
+> Thank you for your time.
 >
-> I have seen it only this one time.
-
-Ok. Was it a network you regularly connect to or a new network? That
-could also make a difference.
-
->> What kernels have you been testing prior? I'm trying to pinpoint what
->> versions kernel version work and what have this warning.
+>    -- MJF
 >
-> Before I ran 6.12.0-07749-g28eb75e178d3 without seeing this. As it
-> only occurred once, that does not give any pointer though.
-
-Yeah, if you have seen it only once it is difficult to make any
-conclusions. It could be as well an older bug which happens rarely. If
-you see it again, let us know.
-
-> PS:
->
-> $ last reboot
-> reboot   system boot  6.12.0-10296-gaa Thu Nov 28 22:42 - still running
-> reboot   system boot  6.12-rc6-amd64   Wed Nov 27 14:04 - 22:42 (1+08:37)
-> reboot   system boot  6.12.0-10296-gaa Wed Nov 27 13:21 - 14:02  (00:40)
-> reboot   system boot  6.12.0-09568-g2f Tue Nov 26 18:41 - crash
-> reboot   system boot  6.12.0-08446-g22 Sat Nov 23 12:27 - 18:40 (3+06:13)
-> reboot   system boot  6.12.0-07749-g28 Fri Nov 22 10:14 - 10:24 (1+00:09)
-> reboot   system boot  6.12.0           Wed Nov 20 09:24 - crash
-> reboot   system boot  6.12.0-rc7       Wed Nov 20 09:22 - 09:23  (00:01)
-> reboot   system boot  6.12.0-rc7       Tue Nov 12 08:19 - 23:27 (7+15:08)
-> reboot   system boot  6.12.0-rc7       Mon Nov 11 21:54 - 00:16  (02:21)
-> reboot   system boot  6.11-amd64       Mon Nov 11 21:52 - crash
-> reboot   system boot  6.12.0-rc7       Mon Nov 11 20:43 - 21:52  (01:08)
-> reboot   system boot  6.12.0-rc7       Mon Nov 11 17:51 - 17:52  (00:01)
-> reboot   system boot  6.12.0-rc6-00077 Fri Nov  8 08:39 - 17:50 (3+09:11)
-> reboot   system boot  6.12.0-rc6-00077 Thu Nov  7 07:26 - 23:24  (15:58)
-> reboot   system boot  6.12.0-rc5-00047 Mon Nov  4 08:26 - crash
-> reboot   system boot  6.12.0-rc5-00047 Mon Nov  4 05:42 - 05:43  (00:00)
-> reboot   system boot  6.12.0-rc5-00047 Sun Nov  3 06:54 - 22:10  (15:15)
-> reboot   system boot  6.12.0-rc5-00047 Sat Nov  2 07:34 - 22:05  (14:31)
-
-Oh nice, looks really useful. I need to install that.
-
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
