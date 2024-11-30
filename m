@@ -1,97 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1629B0;
-	Sat, 30 Nov 2024 02:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502401C6A3
+	for <regressions@lists.linux.dev>; Sat, 30 Nov 2024 06:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732934666; cv=none; b=Ojsd9NPI0+vn8QzPl3VDUoAUyTL3ycUcv+uvzKDCiNtlLdF+VGUAvgoQiM+MQMnMs5fDVBYIKVFDYfofbLFEdj7sGx0ZJJCptcsz1JXMuJhDVNtbJLqbFF6RjVMb6PPasihZ2fUBU4ShghEGzSxFFoaGhrDvMWP6xIemQFwh+ws=
+	t=1732947043; cv=none; b=OroFCX5zD800aPIvsV5jefvuDqaYvNK7Y7TcRXFTftMSwofY5MkeD520XcRJdDddr4hrsH0nhwMvBT++L2tBuJWVDLFWTxAJKXtiAWox8rvKaJkXUIC8GH51lbX7vYPyIqOjx6PjyxfyXjmO/Nrt7bjht9iUM9pawaP9uGyMXqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732934666; c=relaxed/simple;
-	bh=x07AbXnYtdGORKpShT3ofiSwhdl9R8Rkyj5bJS57toQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=O7HmntDFREW/X3isWcIndhJxADUUx/5APV6/Q+UUubeEfEfnb4+phy/adwW42gRiwJ7heafKy6Sm60KaLK0xHFfrWexJfnqzWkrtREZgaKRiXIUV/ZX1MfDUkF+peRN8Yjc5luKLlHibSbUj5H3TmJ0yGdILvj+N6mlkNmJzmPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMlX06WB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732947043; c=relaxed/simple;
+	bh=x5pvY7QeB2hU6DCrlLsOPv0rtVWwVD5kjFqKWvAwFQQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CAZ7/z/OHNiW3IlFRgBK2zIvcdRvB5P2FUTjfFD9j10CXnM/BiAtQz8N0tw/LPKzOhsBtyC1/gZefoXsQoYcGO0XpuOi7LYctU5/LsV8qGq5AQOoiLy3LftA+Kj2h5Sp9P72faHyiY6aRfZlPOjPZtcSmy9eZpf9lX9rWBFEKfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=R43Mfy4g; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMlX06WB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46163C4CED2;
-	Sat, 30 Nov 2024 02:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732934665;
-	bh=x07AbXnYtdGORKpShT3ofiSwhdl9R8Rkyj5bJS57toQ=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=aMlX06WBJ5JAfV2v66xaao5eHkN8N/mogdEl82PyQpERsrGuaeAxrG2OaUFgJL0/p
-	 SbfglhMBB/+c0PufctWiwPMGI3VoNUrYNWL+16dPOUlG8xvkSklmvVlD95xriKb0MC
-	 t5cpUIFT2MOBGiqFwo6HwTrv9EZrh5O5RhMrsEICpwDAWZE9h3mu8VCDP9IAIO03aR
-	 C1UXK6DBg+NUyDxEJ6I0hEceRcNQ3tO696hNOOLqiKMcXmvdSl4/4wlaHYn8Ymu/SS
-	 YnfrgRrSsqftY5GfgwmAZU3xIojsE3VdgxEW3pyRZ0nfBs8emhxBYVcROn+dKMHzJe
-	 FzMrFl2OZUiSQ==
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="R43Mfy4g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=gIoTD
+	7f1fIu8H1dclXCi7rJHwAV5+VzXKP6fC6h8sxw=; b=R43Mfy4gF4ANTOXrT84bG
+	NrqqurkZkj/JiCQhjbPntv9zzBxcQuMS38XcGbjNyK01D9akX+HB+Dmq8asfUW4w
+	QN8VEpbJSIKV8QcmsauN/Onj83X0uNfYl4otmH1VAp1FDl7IZZeoWSrm4B+DTXGC
+	crOwUk6edPh/7JkeWkmvEc=
+Received: from localhost.localdomain (unknown [111.35.188.140])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3XzItrEpnUFMcCA--.50644S4;
+	Sat, 30 Nov 2024 14:10:06 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: chris.bainbridge@gmail.com
+Cc: axboe@kernel.dk,
+	bvanassche@acm.org,
+	hch@lst.de,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	semen.protsenko@linaro.org
+Subject: Re: [REGRESSION] ioprio performance hangs, bisected
+Date: Sat, 30 Nov 2024 14:09:49 +0800
+Message-Id: <20241130060949.122381-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAP-bSRZehc2BxRC_z5MXKQ6qHNPXPgZoOQTtkiK_CFd494D_Fg@mail.gmail.com>
+References: <CAP-bSRZehc2BxRC_z5MXKQ6qHNPXPgZoOQTtkiK_CFd494D_Fg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 30 Nov 2024 04:44:21 +0200
-Message-Id: <D5Z62H0XCOQM.J4V5ZDH9E7C7@kernel.org>
-Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "James Bottomley" <James.Bottomley@hansenpartnership.com>,
- <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Christian Heusel" <christian@heusel.eu>
-X-Mailer: aerc 0.18.2
-References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
- <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
- <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
-In-Reply-To: <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3XzItrEpnUFMcCA--.50644S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtw48AF4kCF43GF48uF48Zwb_yoW3Jwc_ZF
+	W0qF9rtFyFgrsxKrnxJ3WxZFnI9r93W3Z3X3y7GFsrJry3WFWq9an5ZFW8Awnrt3yUAa93
+	Crsaqa4jqryS9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRiqjgDUUUUU==
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqRqnqmdKpauZbwAAsr
 
-On Tue Nov 26, 2024 at 1:42 PM EET, Christian Heusel wrote:
-> On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
-> > Yeah, this is on the list.
-> >=20
-> > See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
-> >=20
-> > I had a fix for the AMD boot-time issue already over a month ago
-> > but unfortunately took time to get enough feedback.
-> >=20
-> > BR, Jarkko
->
-> I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
-> the patchset that was mentioned in bugzilla also helped this issue.
->
-> The reporter said that the bug is still present in 6.12.1, so this might
-> need further poking =F0=9F=A4=94
+Would fix/revert reach 6.13-rc1? I think this regression has
+significant nagative impact on daily usage. From time to time,
+my system would *stuck* for seconds, sometimes even when
+ just `cat` some small file it would take seconds, and once,
+my desktop failed to resume from a suspend, I had to power cycle the system;
+Polling /proc/diskstats,  I noticed Block-IO read latency,
+delta(# of milliseconds spent reading)/delta(# of reads completed),
+is very high, ~200ms average, and frequently reaches 10s.
+ (Strangely block-io write latency seems normal.)
+My bisect also land on this commit, revert or apply this patch would
+fix it.
 
-I'd suggest a workaround for the time being.
+Kind of think that 6.13-rc1 would be very unpleseant to use without
+a fix/revert for this.
 
-In 6.12 we added this for (heavy) IMA use:
 
-tpm.disable_pcr_integrity=3D [HW,TPM]
-                        Do not protect PCR registers from unintended physic=
-al
-                        access, or interposers in the bus by the means of
-                        having an integrity protected session wrapped aroun=
-d
-                        TPM2_PCR_Extend command. Consider this in a situati=
-on
-                        where TPM is heavily utilized by IMA, thus protecti=
-on
-                        causing a major performance hit, and the space wher=
-e
-                        machines are deployed is by other means guarded.
+David
 
-Similarly it might make sense to have "tpm.disable_random_integrity"
-that disables the feature introduced by the failing commit.
-
-What do you think?
-
->
-> Cheers,
-> Chris
-
-BR, Jarkko
