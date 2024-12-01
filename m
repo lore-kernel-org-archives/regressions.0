@@ -1,71 +1,78 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C798468
-	for <regressions@lists.linux.dev>; Sat, 30 Nov 2024 17:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EA42B9BC;
+	Sun,  1 Dec 2024 17:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732986033; cv=none; b=Pbdk7QjmhSz/jX6cMBpKww1T/6fHuvtahbgJA08C28ekDxI/vb4Onl3m7dQQN65/wXyg0BipncNYnOg+bE38sji3TzLkVXCbf5H5e8U7h6ceLnM9bFS7LeaGycnUeD0ArIwxw8y2Q5L2ROAPVb5/hWT6QEsg7tozqRzxcRZ/zxU=
+	t=1733073491; cv=none; b=m06uOmAnqnRbXs6e55cJCP1W19owS3UxVjFjzJ3K3ukE/tPTsCQVmyTd9lwAbrZF/XJzowVGg2rwESc49Fa+cHRRVyDcJauMr8UEXLFGatLr+RL/oWgHSMrDGMAVXYvBRsbP0CicKpKAc+uT7fbCWZbaQ18bvqitD1H8Nty/6n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732986033; c=relaxed/simple;
-	bh=Mex2PmB+lb1e6ar9mx92l20Ruaz93Dtf08qL0dt5sVQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=TkFQZdTv8YPwJKZ1liJ+BlIrmvelAkPiS0t3VN7MIdMSfgNGS37avPs0itXNHhrQEp8AwdsivpJHWneR2TcSEfrfaYfZdKtx5EVfNcrP19Bi4r5qlbQzMk26CntjTB6QqOpy23EjdYnaMbW6sJpDNZyFnMC5MwohFUFdq+CUGjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=VpsFLVa6 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1733073491; c=relaxed/simple;
+	bh=ixAb3G+gyaDihaREd6dxUYUL1vTc6ZznxSeuj77UxO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4sRUU3yl6JgxdPyE3EfvE8RBgGa9duXow3nafTR+Rb+axY7yjy8xKWYVWunQPfO9FuMAFJO2MM3MHvDmfULw8hJo0NQcyNY+jxg2uxM+cob7oGDSkWGrOiNtw1KxTgx/Hg/GtvdJ8noPO8R2FZKFYR4eytaSl+GePQv6+2Vyps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aepSuJBX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="VpsFLVa6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=na6BrjzcVfZyNtqJpP0Qfw+RMkb2Q5lrEVXf1+Vsfss=; b=V
-	psFLVa6s+tEzpmw/940rrbzqECzmJbVqwLbtVTWKb/Pp+vncKwSOQ42CntLoLT24
-	mDMqcsWGpqsCnWMAI1GTRZ44sfmUeVh0nBzdscleIOHvcRdNL/4oCwM8GAguDXzo
-	7P4un3hpNofC16pQ4BYmsN82sbV+zNQK5sAGiUwYmo=
-Received: from 00107082$163.com ( [111.35.188.140] ) by
- ajax-webmail-wmsvr-40-121 (Coremail) ; Sun, 1 Dec 2024 00:59:45 +0800 (CST)
-Date: Sun, 1 Dec 2024 00:59:45 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Jens Axboe" <axboe@kernel.dk>
-Cc: chris.bainbridge@gmail.com, bvanassche@acm.org, hch@lst.de, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev, semen.protsenko@linaro.org
-Subject: Re: [REGRESSION] ioprio performance hangs, bisected
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <09db95ba-b396-4734-9ff0-9331579c92b7@kernel.dk>
-References: <CAP-bSRZehc2BxRC_z5MXKQ6qHNPXPgZoOQTtkiK_CFd494D_Fg@mail.gmail.com>
- <20241130060949.122381-1-00107082@163.com>
- <09db95ba-b396-4734-9ff0-9331579c92b7@kernel.dk>
-X-NTES-SC: AL_Qu2YAPWTukEj4yGQYOkXn0oTju85XMCzuv8j3YJeN500kiTuyDE8bG5ZHEnH/PmCOyCmoQmnSDptzMZCd5BjXpPiisEkb4hIt4eeUdsJzlGJ
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aepSuJBX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C228C4CED2;
+	Sun,  1 Dec 2024 17:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733073490;
+	bh=ixAb3G+gyaDihaREd6dxUYUL1vTc6ZznxSeuj77UxO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aepSuJBXnaOuxIUPeidI/zH1BKBte0CriE5xYsH7PTNlNxVRMnigSCaXDiZxBSQSH
+	 MCdx3pf1SLbR5s0KqgB7EWe0GPy1aL7jvT36Zw8gms39ERd3YoDCExjsHCGrGJYcBS
+	 9YiO6S8cYVofo55T20x8yJOSAYwtrciVppyYeHqNY43LIrdgWuytTdtrRLqOrFfxKu
+	 8ZH26+QhxsUTOiSzepFj/Y+cFM7mv9cfLk1zp3V9L+mcYNYF/0ivn5smZq7zHdrcs+
+	 vunvQF7H9pD7kvsEPEkmnYlIb6vHpb6tJP646ygg0xpQYvQl0hJnUPR0FMxDDsQUWZ
+	 q24BIx8IX8/Xw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tHnaA-000000008OJ-3dmX;
+	Sun, 01 Dec 2024 18:18:06 +0100
+Date: Sun, 1 Dec 2024 18:18:06 +0100
+From: Johan Hovold <johan@kernel.org>
+To: regressions@lists.linux.dev
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mayank Rana <quic_mrana@quicinc.com>
+Subject: Re: [PATCH] bus: mhi: host: pci_generic: fix MHI BAR mapping
+Message-ID: <Z0yaTpOOml1VisXb@hovoldconsulting.com>
+References: <20241201171120.31616-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <3a051f26.3be2.1937e0398a5.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eSgvCgDnv_mCREtnOeszAA--.32805W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hKnqmdLIM0JDgACsJ
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241201171120.31616-1-johan+linaro@kernel.org>
 
-CkF0IDIwMjQtMTItMDEgMDA6MDA6MjAsICJKZW5zIEF4Ym9lIiA8YXhib2VAa2VybmVsLmRrPiB3
-cm90ZToKPk9uIDExLzI5LzI0IDExOjA5IFBNLCBEYXZpZCBXYW5nIHdyb3RlOgo+PiBXb3VsZCBm
-aXgvcmV2ZXJ0IHJlYWNoIDYuMTMtcmMxPyBJIHRoaW5rIHRoaXMgcmVncmVzc2lvbiBoYXMKPj4g
-c2lnbmlmaWNhbnQgbmFnYXRpdmUgaW1wYWN0IG9uIGRhaWx5IHVzYWdlLiBGcm9tIHRpbWUgdG8g
-dGltZSwKPj4gbXkgc3lzdGVtIHdvdWxkICpzdHVjayogZm9yIHNlY29uZHMsIHNvbWV0aW1lcyBl
-dmVuIHdoZW4KPj4gIGp1c3QgYGNhdGAgc29tZSBzbWFsbCBmaWxlIGl0IHdvdWxkIHRha2Ugc2Vj
-b25kcywgYW5kIG9uY2UsCj4+IG15IGRlc2t0b3AgZmFpbGVkIHRvIHJlc3VtZSBmcm9tIGEgc3Vz
-cGVuZCwgSSBoYWQgdG8gcG93ZXIgY3ljbGUgdGhlIHN5c3RlbTsKPj4gUG9sbGluZyAvcHJvYy9k
-aXNrc3RhdHMsICBJIG5vdGljZWQgQmxvY2stSU8gcmVhZCBsYXRlbmN5LAo+PiBkZWx0YSgjIG9m
-IG1pbGxpc2Vjb25kcyBzcGVudCByZWFkaW5nKS9kZWx0YSgjIG9mIHJlYWRzIGNvbXBsZXRlZCks
-Cj4+IGlzIHZlcnkgaGlnaCwgfjIwMG1zIGF2ZXJhZ2UsIGFuZCBmcmVxdWVudGx5IHJlYWNoZXMg
-MTBzLgo+PiAgKFN0cmFuZ2VseSBibG9jay1pbyB3cml0ZSBsYXRlbmN5IHNlZW1zIG5vcm1hbC4p
-Cj4+IE15IGJpc2VjdCBhbHNvIGxhbmQgb24gdGhpcyBjb21taXQsIHJldmVydCBvciBhcHBseSB0
-aGlzIHBhdGNoIHdvdWxkCj4+IGZpeCBpdC4KPj4gCj4+IEtpbmQgb2YgdGhpbmsgdGhhdCA2LjEz
-LXJjMSB3b3VsZCBiZSB2ZXJ5IHVucGxlc2VhbnQgdG8gdXNlIHdpdGhvdXQKPj4gYSBmaXgvcmV2
-ZXJ0IGZvciB0aGlzLgo+Cj5UaGUgcHVsbCBpbmNsdWRpbmcgdGhpcyBmaXggaGFzIGJlZW4gc2Vu
-dCBvZmYgdG8gTGludXMgeWVzdGVyZGF5LAo+aXQgc2hvdWxkIG1ha2UgLXJjMS4KPgo+LS0gCj5K
-ZW5zIEF4Ym9lCgpHb29kIHRvIGtub3d+CgpUaGFua3MKRGF2aWQ=
+[ Forgot to CC the regressions list ]
+
+On Sun, Dec 01, 2024 at 06:11:20PM +0100, Johan Hovold wrote:
+> A recent change converting the MHI pci_generic driver to use
+> pcim_iomap_region() failed to update the BAR parameter which is an index
+> rather than a mask.
+> 
+> This specifically broke the modem on machines like the Lenovo ThinkPad
+> X13s and x1e80100 CRD:
+> 
+> 	mhi-pci-generic 0004:01:00.0: failed to map pci region: -22
+> 	mhi-pci-generic 0004:01:00.0: probe with driver mhi-pci-generic failed with error -22
+> 
+> Fixes: bd23e836423e ("bus: mhi: host: pci_generic: Use pcim_iomap_region() to request and map MHI BAR")
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Mayank Rana <quic_mrana@quicinc.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+> 
+> The offending patch was marked as "Compile tested only", but that just
+> makes you wonder *why* the patch was never tested...
+> 
+> 	https://lore.kernel.org/all/20241004023351.6946-1-manivannan.sadhasivam@linaro.org/
+ 
+#regzbot ^introduced: bd23e836423e
+
+Johan
