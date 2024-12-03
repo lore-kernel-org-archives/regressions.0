@@ -1,84 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828882AEE4;
-	Tue,  3 Dec 2024 01:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75741183CBE;
+	Tue,  3 Dec 2024 06:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733188809; cv=none; b=N1fEPDj/gQTp0EfZUmYZzGI2KEKpKuvqbMetojGzVMK9gzUaerUFR5UPAqhH9Vgno11HK2typs4PWufwpPpumAzOLSuIa1EmAMbWQPDwhHnfdZIiznT9oXe1a+ZVVpJCn7z4lLvWufRbRMwTW5NBjlrA7MDtCeJNLNjD07uNfvk=
+	t=1733207887; cv=none; b=FqPjv6zyJCraBNa4IL3loPEblkJHYC7irXoz+XZ87UKb0slc+nVJoim2B6/JzcGnDr7ABcx4WCJTOliT5VbmlseQa9YZcYmcRyMZyIqvmV19nt6hm6dJmz/lZ3yd2ow4gOCFTj5hk/2M4BJXrcm3AugCyRQaDSZCcUxjkATcS0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733188809; c=relaxed/simple;
-	bh=MlLe+tQnKFPxKjr103hSotPdb7+hcXhDgSGjZw8wjYw=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=FzhJB4TB0vbaAciMlsrI14mMkw2+M1KVzoMOFBFNiz8eD/N2GIguasx2Flgg3VyiegZFxV/m8bti0B6x2qUVdxAErnE6iwF+BLlVk4/sapSRqDjudb33p91LR43SzJmRdHz9xZaajMEyR7xQOM+S4HkqZ59I0PMMRk2NAPBsvt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2oZ6GQY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733207887; c=relaxed/simple;
+	bh=P1NNfEKNKNDLAevqjUa8oUcSnkwU53Z/TBjQw9BmQfo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=VtfuHamUzOD79huX8DkXIcpQ3TsA4Yp+e9XudQclTwmcRJ1/q8U1UytpD8k8CDwWaw2Vv7SDrA5sz1RMjmvZbH4kj6M2nKefHouYsk6Wr1dkKZHF5o21L2B4+0iJ7FVt23F61PJlCEEaZWf3mKwEivNOoP4X+KEw/OkoGq9IOP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXz/mLSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2oZ6GQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF276C4CED1;
-	Tue,  3 Dec 2024 01:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXz/mLSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97683C4CECF;
+	Tue,  3 Dec 2024 06:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733188809;
-	bh=MlLe+tQnKFPxKjr103hSotPdb7+hcXhDgSGjZw8wjYw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=p2oZ6GQYhnDuqmez6879D5czXf0H6LNu6J1eW3rs+MvGQWnBsoKGf0BaTXYQ56GFH
-	 WDxPxrlOAZ3B7Wd//3Zaiyjotmz/MVtlFWsB4WQGrYJWORihiDILquwT7mfTNA6P8t
-	 3aAGOVbKNId3LYEiBZ3SVAUJ+U5lo/cDjVRDn91RnE87qZIFXWfCf8PYoK2zHRU/TZ
-	 SpoqmRYpyVNbwUe+qoQc1spQtpOF9Ti46eOJiu/uUA4TcralsI5BA7UgfDHmL4pfoM
-	 qKJ5B5cxUEtKwOD/NP54U5V6GdTv+oripnJjQR1ln4KiOgHASDb0CdwX5CCrzvvOcz
-	 LHjoKZnNbPdOQ==
-Message-ID: <3fd004add188460bf2bdd1a718387c7f.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1733207887;
+	bh=P1NNfEKNKNDLAevqjUa8oUcSnkwU53Z/TBjQw9BmQfo=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=tXz/mLSBpVjIekJQC5Bqibjiq0InYtSCGqxv3vOexPs++FgpI0y6TaGPFBxBLNM33
+	 RgyFZRj0ChvDZUUw5j+Wtx4+Lo9nSzzImD1BF1I2kVjUMpfVARzQRRO95FHQ4MUlTL
+	 XUP3YbmhZ46q9fhWilUOkV14HczBDgVV72GmJOZI7WSM7aOceo5dib5gXCgNZVYzPQ
+	 Xs+i2B0d5RHyYtkTXHIOkxoogKrt72r92p6qaK4HSo3oGGu3xpucakWMQrAdVq9Xf4
+	 GNvL4adbfV9jExE3Uqjrb0B4YsEI+J/Y0nPJT6N/oatCiDc0mqjp0EMBbRKRT6Zwi8
+	 2WuqG097msy4g==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241202100621.29209-1-johan+linaro@kernel.org>
-References: <20241202100621.29209-1-johan+linaro@kernel.org>
-Subject: Re: [PATCH] Revert "clk: Fix invalid execution of clk_set_rate"
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, Johan Hovold <johan+linaro@kernel.org>, Aishwarya TCV <aishwarya.tcv@arm.com>, Chuan Liu <chuan.liu@amlogic.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Date: Mon, 02 Dec 2024 17:20:06 -0800
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 03 Dec 2024 07:38:02 +0100
+Message-Id: <D61UX1CMHLZ5.27V9844S1S1D0@kernel.org>
+Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>,
+ <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
+ since 1b6d7f9eb150
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, "Christian Heusel"
+ <christian@heusel.eu>
+X-Mailer: aerc 0.18.2
+References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+ <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
+ <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
+ <D5Z62H0XCOQM.J4V5ZDH9E7C7@kernel.org>
+ <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
+In-Reply-To: <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
 
-Quoting Johan Hovold (2024-12-02 02:06:21)
-> This reverts commit 25f1c96a0e841013647d788d4598e364e5c2ebb7.
->=20
-> The offending commit results in errors like
->=20
->         cpu cpu0: _opp_config_clk_single: failed to set clock rate: -22
->=20
-> spamming the logs on the Lenovo ThinkPad X13s and other Qualcomm
-> machines when cpufreq tries to update the CPUFreq HW Engine clocks.
->=20
-> As mentioned in commit 4370232c727b ("cpufreq: qcom-hw: Add CPU clock
-> provider support"):
->=20
->         [T]he frequency supplied by the driver is the actual frequency
->         that comes out of the EPSS/OSM block after the DCVS operation.
->         This frequency is not same as what the CPUFreq framework has set
->         but it is the one that gets supplied to the CPUs after
->         throttling by LMh.
->=20
-> which seems to suggest that the driver relies on the previous behaviour
-> of clk_set_rate().
+On Mon Dec 2, 2024 at 11:15 PM CET, Stefan Berger wrote:
+>
+>
+> On 11/29/24 9:44 PM, Jarkko Sakkinen wrote:
+> > On Tue Nov 26, 2024 at 1:42 PM EET, Christian Heusel wrote:
+> >> On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
+> >>> Yeah, this is on the list.
+> >>>
+> >>> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
+> >>>
+> >>> I had a fix for the AMD boot-time issue already over a month ago
+> >>> but unfortunately took time to get enough feedback.
+> >>>
+> >>> BR, Jarkko
+> >>
+> >> I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
+> >> the patchset that was mentioned in bugzilla also helped this issue.
+> >>
+> >> The reporter said that the bug is still present in 6.12.1, so this mig=
+ht
+> >> need further poking =F0=9F=A4=94
+> >=20
+> > I'd suggest a workaround for the time being.
+> >=20
+> > In 6.12 we added this for (heavy) IMA use:
+> >=20
+> > tpm.disable_pcr_integrity=3D [HW,TPM]
+> >                          Do not protect PCR registers from unintended p=
+hysical
+> >                          access, or interposers in the bus by the means=
+ of
+> >                          having an integrity protected session wrapped =
+around
+> >                          TPM2_PCR_Extend command. Consider this in a si=
+tuation
+> >                          where TPM is heavily utilized by IMA, thus pro=
+tection
+> >                          causing a major performance hit, and the space=
+ where
+> >                          machines are deployed is by other means guarde=
+d.
+> >=20
+> > Similarly it might make sense to have "tpm.disable_random_integrity"
+> > that disables the feature introduced by the failing commit.
+> >=20
+>
+> I am wondering what could be the not-so-obvious root cause for this?=20
+> Could it be due to a (TPM or RNG-related) lock? I guess the audio=20
+> popping could occur if an application cannot meet timing requirements=20
+> when it runs into some sort of blocking lock...
 
-I don't understand why a clk provider is needed there. Is anyone looking
-into the real problem?
+I'm travelling this week. I'll take a look in detail next weke. Obvious
+thing is that latency has rised on getting the result for TPM2_GetRandom
+but it should sleep while waiting. I.e. not sure what causes "busyness".
 
->=20
-> Since this affects many Qualcomm machines, let's revert for now.
->=20
-> Fixes: 25f1c96a0e84 ("clk: Fix invalid execution of clk_set_rate")
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Link: https://lore.kernel.org/all/e2d83e57-ad07-411b-99f6-a4fc3c4534fa@ar=
-m.com/
-> Cc: Chuan Liu <chuan.liu@amlogic.com>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
+I think in general having disable_* for trusted keys, random and PCR
+extension i.e. features that bus integrity protection touches would
+be great for debugging these issues in all cases.
 
-Applied to clk-fixes
+BR, Jarkko
