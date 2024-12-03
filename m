@@ -1,106 +1,109 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5499D1F12E3
-	for <regressions@lists.linux.dev>; Tue,  3 Dec 2024 14:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4787E1F7083
+	for <regressions@lists.linux.dev>; Tue,  3 Dec 2024 14:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733234884; cv=none; b=aRamc+NSdDcljRU4zOT3HyHUHBaF8+i7R6Ke3uXZ1AolxElRr1rdWvcwgu8xaYdhYxDhhbvWOK0g19neoPUYPpSLAmBmIreCjCIWebms06Np6NDCrHgPVizBOBxjTHTYllnWHQJ5BzAPA971tsxlgSP6t0JQqQnoo87TjNdpVv0=
+	t=1733237116; cv=none; b=aH4geKTYpPpAT27Ijbjq/sLHay+drXvnGNptZxs630yJUh806LgeB4vzZe3JlApKgfvPseBlNMOFD+ohvk5kbuXUEkftR0h2tgO02WCn162kEklJsceq4NHvgzNn+dJp9TN0qOU98ZXU5Aq3i+AmpEC0ehFabqUoL6TJLhJvE9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733234884; c=relaxed/simple;
-	bh=dkRPz5hCP91YP+K/ZzeXcVdSbccaZFfQZLPNFXn+Ooc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oVjXeEU1XcLhvFkLKRjFXCTHjvNVEzmMhHuR3BMdqntT50OVRJ0HKtPx7i3x1QIMRclypWEyf9aawE5UsGlAD/jhBq0MjeK1tX9KBEiS+/vPrXbX0kS0lQOg9zoplsZWe0zShQmi7oBuiMaR6YWlM3XUQtQtqUP/ec7xnj3oMEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dc4hzatD; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1733237116; c=relaxed/simple;
+	bh=XN8ES0rHOFOYBm7jewQYFcVIpPB9gtMoX1yXuz3STQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjUjaeql589RzyNBKqZwVQCRlCUB1guIZxdihOQjNWtU2okHP8tdGfk2YUsb8FkhgfglOaC8HLsFslEsdwreB5MvQIvFnjMa/i164SF3dgkDHb8jxsbN/xnNyxPMNhjWjTBsEtYkHYLNxuDFzUulwFOiS7Vyeu4jxO1sVoYlkhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eu5UVPaI; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dc4hzatD"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5d0ea1226edso1881384a12.0
-        for <regressions@lists.linux.dev>; Tue, 03 Dec 2024 06:08:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eu5UVPaI"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5cf6f367f97so6769064a12.0
+        for <regressions@lists.linux.dev>; Tue, 03 Dec 2024 06:45:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733234881; x=1733839681; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1733237112; x=1733841912; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kgJ5Ld604A5Q3ZbtbqRhmhZWPfDB0owJn+W381THr6w=;
-        b=Dc4hzatDKoMYRB+3dAfdvShMZLXx/U5JZAG/dDXr+iaD5kehtYpEsV9WDw8YzYA4MT
-         zy1QG8wCtWeZC+kxfa3pVw+YiM4jZhAVfctDK8tYVkt0lTF32cx9A/1ja/FZT8FDE2/5
-         Z7iKhgvZDHCiLMh62CXO+H1IOZmP64rMT6zW5jd/UEjfjxu7QGMSULclHXCKEhf3MjnO
-         BQl1TVH7Fmhc8+nQbN1tr/djGXrxBwKtDgK87QVTMEs9zPs+pl75w9XkRavMHNcf5mnh
-         pZ39Dw5Ugja6S2nUe4/hfIMkRvvZDto7KzsibT5PKjL4YgfzWDrsLqdpj/eUryaJKxRr
-         QBpQ==
+        bh=Z02kD3ptGLXxLPiul0GJ51OSn05xcfsBoxVOvzJnNTk=;
+        b=eu5UVPaI9Z5+YkifzEYaCQhr68cA1EY/7yrR+Gnu/c7eJkn1b9mIjjGh4gFKzWQYCy
+         jq4T3TonDKlWlxX1NKiWJ1j6uwRryLwjFWCWFTIkWPOwJI0NNrzdkgziwM0G8SsXHbQ8
+         qBiugvrycIBTffxFZVrorEV+Smnt1CblZmQllqOGzSUL1QiuvpwNzoQM5EkLaYGfWecX
+         u3oqVfycsCXBfnVK3vpAo8fmkAEDJHcRJBipAuioiBh1WgyKkXSZA/VULtE+Or8ot6KA
+         5k/x8RNlftdRopCAWdnE3s0WOmDrR9E/lvWyRo05EK33PjvFN6MAEO73dzEVMSN7LaKy
+         9m5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733234881; x=1733839681;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kgJ5Ld604A5Q3ZbtbqRhmhZWPfDB0owJn+W381THr6w=;
-        b=OSb9gwyhm1zP4jScPEIl2Uy1yHTb21kjAhPImM429DAf58dHlqNoZ0HKtWTsAXEQc7
-         d7jVLfKpWWM3RAB0276Die3kbmn5S7GvE6UxV4pSWVK7kvYbtVh+vGNqiswMGaRJB7zG
-         GiarSxHj9ksN0ap/RxMIOp6OwxFoaP/SSFHLfmmLApo10t3qq7TuvGDr04i+8wiWLSOa
-         QmgPyC1V984XCtht7aTgIp3rCXNIZE+qW/mbkyRusR8QJUfWd2d1SLe3VfEoCaRQ0uyM
-         zWVMmc+RjlSo0bfc6Xu6QrYqYGfl8Luap/tXpIepEkAS6Y0YumlEKdZy86KKjYCL0JX1
-         U4OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5/fOmSZBXXzPt6ajV+1aCcbGraAajWUgHWyX7wqd7aE4jw48yOxmG6LfvZNurY9iO4i23gAj2KmazHA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy9wU5sRPS1fSCaF+mliv4FW7jpxWJ/i6pFWNewXEz+ifNj0Y0i
-	n4J94eUzV+mFMb5q8O9+HY8xoLG5/Yl4VVSQvvALbfn+hlx8kDoYujNG2tpDwN2Dzud11nxh7sx
-	Qhw==
-X-Google-Smtp-Source: AGHT+IEaY8KyMwf/CJRU3fMSCPPQTKC0ZN/MBI985OtghEJefG+CwM21x0l4ouja8k3Nx433ZCD451zKp0s=
-X-Received: from edxi12.prod.google.com ([2002:a05:6402:54c:b0:5cf:d3d9:308])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:13d1:b0:5d0:b2c8:8d04
- with SMTP id 4fb4d7f45d1cf-5d10cb5cc5amr2112502a12.18.1733234880753; Tue, 03
- Dec 2024 06:08:00 -0800 (PST)
-Date: Tue, 3 Dec 2024 15:07:58 +0100
-In-Reply-To: <Z08NV4Z-L0anDxGk@google.com>
+        d=1e100.net; s=20230601; t=1733237112; x=1733841912;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z02kD3ptGLXxLPiul0GJ51OSn05xcfsBoxVOvzJnNTk=;
+        b=w5OBJDXiXMj6xZ9/as3GyLl2QJtWo5ML3qjnadl7WK6qjDHMAYJjbtE55C6aeCHpp6
+         XgKNMZF9sbl1Rd5zaBQoGTJh8gung2xmY9Y1/nKw5AdgfNIxJuCCnKWGkoMPlpHPQTfN
+         iBuuJZS4hx9vairIoo9fBno3O0E0BRaEvydexh4GHnoI3gH02AB70hvJBjhvj3BWG2pJ
+         BENXVk9TQFUl/ZOvH+PGBDFNkLYsa+gPGmcBSHcvf2JJil+a/V3xO0dzyPrvFjGZbXlw
+         ensGgb0aoif1o0qXlWYi06Cu9+v19/LcgQCT+Dlc9j7UY9LgAAfPhMuw/a2mDUZxhhXj
+         IhNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsEeZ+7b0Qs7Kh/ZIRnm7KfpBuT0Y+KfRsszHY81G7IZ1qYgbju5bgRWdwtSb7BjHi1KbAhCRqYBR/cA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyyQ2aqRQYa1R59whtEvbbKydiv98M1Ur2QnBFOU5jFJPkEZ8Iz
+	aeeYIZifHLbMRKb7NrwDRQItSYR0oJJ0Tb+0G2k9OxBhQH98j/rc
+X-Gm-Gg: ASbGnctL2ixKvUgvjAPbAiRqhFwkjysVEmKtXoH2Gv7ZzEoTQwmf4QVdFr3sdIQifnz
+	mGbq1us6N4NqEya5S7FeYSj8t368hsnH+VvWYNMab3iahi/mJnpyEgifxeppvaXAEuUOecl8Aus
+	RpuQ7UDkGfYv+JAzzioMzYF4UTa2L9wErvG6OtgEQPJ8Ek47qUCbnIMnNtwhewht5k0/6QCm2kT
+	DCVUVCRvXWSATPH8OQ5UCaFoZ+IYOb6i6Z8vmZsVLEVcpnb5VIN6WFYErwqOFPuyV7EtB3gBg/9
+	CCD2gxIaww==
+X-Google-Smtp-Source: AGHT+IE/Bn2fcuUlIImOBoxukH5+B0LMPADawiYsSHDX+FHVMxtEyUFbGv8mThyhcbxmpLz0M1ZQog==
+X-Received: by 2002:a05:6402:1d54:b0:5d0:f830:ef4e with SMTP id 4fb4d7f45d1cf-5d10cba37a1mr2595659a12.34.1733237112236;
+        Tue, 03 Dec 2024 06:45:12 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d097d9f5fdsm6172512a12.15.2024.12.03.06.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2024 06:45:11 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 7684CBE2EE7; Tue, 03 Dec 2024 15:45:10 +0100 (CET)
+Date: Tue, 3 Dec 2024 15:45:10 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: Michael Krause <mk-debian@galax.is>, gregkh@linuxfoundation.org,
+	Steve French <stfrench@microsoft.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-cifs@vger.kernel.org
+Subject: Re: backporting 24a9799aa8ef ("smb: client: fix UAF in
+ smb2_reconnect_server()") to older stable series
+Message-ID: <Z08ZdhIQeqHDHvqu@eldamar.lan>
+References: <2024040834-magazine-audience-8aa4@gregkh>
+ <Z0rZFrZ0Cz3LJEbI@eldamar.lan>
+ <2e1ad828-24b3-488d-881e-69232c8c6062@galax.is>
+ <1037557ef401a66691a4b1e765eec2e2@manguebit.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org> <CAG48ez0vg9W=oatvEqxvTSYNUx7htY23LxPrYCiuLZhZQuaGjg@mail.gmail.com>
- <Z08NV4Z-L0anDxGk@google.com>
-Message-ID: <Z08QvvfLSWGIDfBD@google.com>
-Subject: Re: GPM & Emacs broken in Linux 6.7 -- ok to relax check?
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: Jann Horn <jannh@google.com>
-Cc: Jared Finder <jared@finder.org>, "Hanno =?utf-8?B?QsO2Y2s=?=" <hanno@hboeck.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
-	kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1037557ef401a66691a4b1e765eec2e2@manguebit.com>
 
-On Tue, Dec 03, 2024 at 02:53:27PM +0100, G=C3=BCnther Noack wrote:
-> Hanno, you are the original author of this patch and you have done a more
-> detailed analysis on the TIOCLINUX problems than me -- do you agree that =
-this
-> weakened check would still be sufficient to protect against the TIOCLINUX
-> problems?  (Or in other words, if we permitted TIOCL_SELPOINTER, TIOCL_SE=
-LCLEAR
-> and TIOCL_SELMOUSEREPORT for non-CAP_SYS_ADMIN processes, would you still=
- see a
-> way to misuse that functionality?)
+Paulo,
 
-P.S.: For reference, some more detailed reasoning why I think that that pro=
-posal
-would be OK:
+On Tue, Dec 03, 2024 at 10:18:25AM -0300, Paulo Alcantara wrote:
+> Michael Krause <mk-debian@galax.is> writes:
+> 
+> > On 11/30/24 10:21 AM, Salvatore Bonaccorso wrote:
+> >> Michael, did a manual backport of 24a9799aa8ef ("smb: client: fix UAF
+> >> in smb2_reconnect_server()") which seems in fact to solve the issue.
+> >> 
+> >> Michael, can you please post your backport here for review from Paulo
+> >> and Steve?
+> >
+> > Of course, attached.
+> >
+> > Now I really hope I didn't screw it up :)
+> 
+> LGTM.  Thanks Michael for the backport.
 
-It would protect at least against the "minittyjack.c" example that was atta=
-ched
-to https://www.openwall.com/lists/oss-security/2023/03/14/3
+Thanks a lot for the review. So to get it accepted it needs to be
+brough into the form which Greg can pick up. Michael can you do that
+and add your Signed-off line accordingly?
 
-The trick used there was:
-
-* ioctl() with TIOCLINUX with TIOCL_SETSEL with TIOCL_SELLINE,
-  to make a selection (a.k.a. changing the contents of vc_sel)
-* ioctl() with TIOCLINUX and TIOCL_PASTESEL to paste the selection.
-  (The implementation for that is in selection.c/paste_selection()
-  and is just copying from vc_sel.)
-
-So as long as we are protecting the change to vc_sel, that should be OK in =
-my
-mind.
-
-=E2=80=94G=C3=BCnther
+Regards,
+Salvatore
