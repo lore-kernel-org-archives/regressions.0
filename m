@@ -1,115 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75741183CBE;
-	Tue,  3 Dec 2024 06:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA641BD9EB;
+	Tue,  3 Dec 2024 08:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733207887; cv=none; b=FqPjv6zyJCraBNa4IL3loPEblkJHYC7irXoz+XZ87UKb0slc+nVJoim2B6/JzcGnDr7ABcx4WCJTOliT5VbmlseQa9YZcYmcRyMZyIqvmV19nt6hm6dJmz/lZ3yd2ow4gOCFTj5hk/2M4BJXrcm3AugCyRQaDSZCcUxjkATcS0c=
+	t=1733214307; cv=none; b=U1GDNIJM4l4a9a62akNAyzt8vAjRU0wkTnZY+ATfz8fX5r6D54uNNwE5YlGSHE4vFBGMd9sqJH4exxlfBUWg6XM2b03gBRDXcXo1FUpOPzI1G9hSnP0fXgr9J4ctT3PAmWNvXloZ2UY3Ui5VM4tFj/bLWFoJ6iok2yQz+4U5Ug0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733207887; c=relaxed/simple;
-	bh=P1NNfEKNKNDLAevqjUa8oUcSnkwU53Z/TBjQw9BmQfo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=VtfuHamUzOD79huX8DkXIcpQ3TsA4Yp+e9XudQclTwmcRJ1/q8U1UytpD8k8CDwWaw2Vv7SDrA5sz1RMjmvZbH4kj6M2nKefHouYsk6Wr1dkKZHF5o21L2B4+0iJ7FVt23F61PJlCEEaZWf3mKwEivNOoP4X+KEw/OkoGq9IOP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXz/mLSB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733214307; c=relaxed/simple;
+	bh=BTa+wgiNyFIm2OTLgqY7mmgwN8DZyO7pNyzVFgh+TMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gnufi+d/LAcR06WHRwA08R+abQCjqjxoWtL3lv/EhCb8L+hGpvu/6Bd1tl3PNbURxNPSX01kvoFVi14UYcsKSVoQpaNA1f1nb8SVWtNNznEGJvHWtxWbrsAcztXzbjCJhRuuJ5lbwrqggVOATYVasUPZj5d6Br8YhUyygbJ9ZFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckxK2dTU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXz/mLSB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97683C4CECF;
-	Tue,  3 Dec 2024 06:38:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckxK2dTU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C84C4CECF;
+	Tue,  3 Dec 2024 08:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733207887;
-	bh=P1NNfEKNKNDLAevqjUa8oUcSnkwU53Z/TBjQw9BmQfo=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=tXz/mLSBpVjIekJQC5Bqibjiq0InYtSCGqxv3vOexPs++FgpI0y6TaGPFBxBLNM33
-	 RgyFZRj0ChvDZUUw5j+Wtx4+Lo9nSzzImD1BF1I2kVjUMpfVARzQRRO95FHQ4MUlTL
-	 XUP3YbmhZ46q9fhWilUOkV14HczBDgVV72GmJOZI7WSM7aOceo5dib5gXCgNZVYzPQ
-	 Xs+i2B0d5RHyYtkTXHIOkxoogKrt72r92p6qaK4HSo3oGGu3xpucakWMQrAdVq9Xf4
-	 GNvL4adbfV9jExE3Uqjrb0B4YsEI+J/Y0nPJT6N/oatCiDc0mqjp0EMBbRKRT6Zwi8
-	 2WuqG097msy4g==
+	s=k20201202; t=1733214307;
+	bh=BTa+wgiNyFIm2OTLgqY7mmgwN8DZyO7pNyzVFgh+TMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ckxK2dTUgLzQ2DQRimHhuFTZClvmg9v2v6qZS5ZW0HEZnEHX0Z9eN6C5SXg8A9DTz
+	 RwVg/W0dCHB+K9d5zC0zxTHlRp+jrc3LBuUREF8+/+7ZCaR0IqJMITxwZKu9AxPUBq
+	 juo6vTmP4pnjcH40huRrykLqxdvwUNlm0JrL0O0s7+dXX1aCrImZzWUCC7HwXFMvH+
+	 l8cqYI570GOD5Unw6DhAgn4RuuRPddA7Z5b7Yd9L+CEirC3AxjpL/hJ906pLS2HJGv
+	 uoGxRgeknk0X+D0bw6c5aoFF7bFixA/20M4dG/5SzmujY6Qqw8uwUPdgZuubr+T4yD
+	 gWv8VrbCKXxAA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tIODN-0000000082S-3VtQ;
+	Tue, 03 Dec 2024 09:25:02 +0100
+Date: Tue, 3 Dec 2024 09:25:01 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Chuan Liu <chuan.liu@amlogic.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] Revert "clk: Fix invalid execution of clk_set_rate"
+Message-ID: <Z07AXbQvvZwI8Ki6@hovoldconsulting.com>
+References: <20241202100621.29209-1-johan+linaro@kernel.org>
+ <3fd004add188460bf2bdd1a718387c7f.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 03 Dec 2024 07:38:02 +0100
-Message-Id: <D61UX1CMHLZ5.27V9844S1S1D0@kernel.org>
-Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "James Bottomley" <James.Bottomley@hansenpartnership.com>,
- <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, "Christian Heusel"
- <christian@heusel.eu>
-X-Mailer: aerc 0.18.2
-References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
- <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
- <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
- <D5Z62H0XCOQM.J4V5ZDH9E7C7@kernel.org>
- <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
-In-Reply-To: <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fd004add188460bf2bdd1a718387c7f.sboyd@kernel.org>
 
-On Mon Dec 2, 2024 at 11:15 PM CET, Stefan Berger wrote:
->
->
-> On 11/29/24 9:44 PM, Jarkko Sakkinen wrote:
-> > On Tue Nov 26, 2024 at 1:42 PM EET, Christian Heusel wrote:
-> >> On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
-> >>> Yeah, this is on the list.
-> >>>
-> >>> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
-> >>>
-> >>> I had a fix for the AMD boot-time issue already over a month ago
-> >>> but unfortunately took time to get enough feedback.
-> >>>
-> >>> BR, Jarkko
-> >>
-> >> I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
-> >> the patchset that was mentioned in bugzilla also helped this issue.
-> >>
-> >> The reporter said that the bug is still present in 6.12.1, so this mig=
-ht
-> >> need further poking =F0=9F=A4=94
-> >=20
-> > I'd suggest a workaround for the time being.
-> >=20
-> > In 6.12 we added this for (heavy) IMA use:
-> >=20
-> > tpm.disable_pcr_integrity=3D [HW,TPM]
-> >                          Do not protect PCR registers from unintended p=
-hysical
-> >                          access, or interposers in the bus by the means=
- of
-> >                          having an integrity protected session wrapped =
-around
-> >                          TPM2_PCR_Extend command. Consider this in a si=
-tuation
-> >                          where TPM is heavily utilized by IMA, thus pro=
-tection
-> >                          causing a major performance hit, and the space=
- where
-> >                          machines are deployed is by other means guarde=
-d.
-> >=20
-> > Similarly it might make sense to have "tpm.disable_random_integrity"
-> > that disables the feature introduced by the failing commit.
-> >=20
->
-> I am wondering what could be the not-so-obvious root cause for this?=20
-> Could it be due to a (TPM or RNG-related) lock? I guess the audio=20
-> popping could occur if an application cannot meet timing requirements=20
-> when it runs into some sort of blocking lock...
+[ +CC: Viresh and Sudeep ]
 
-I'm travelling this week. I'll take a look in detail next weke. Obvious
-thing is that latency has rised on getting the result for TPM2_GetRandom
-but it should sleep while waiting. I.e. not sure what causes "busyness".
+On Mon, Dec 02, 2024 at 05:20:06PM -0800, Stephen Boyd wrote:
+> Quoting Johan Hovold (2024-12-02 02:06:21)
+> > This reverts commit 25f1c96a0e841013647d788d4598e364e5c2ebb7.
+> > 
+> > The offending commit results in errors like
+> > 
+> >         cpu cpu0: _opp_config_clk_single: failed to set clock rate: -22
+> > 
+> > spamming the logs on the Lenovo ThinkPad X13s and other Qualcomm
+> > machines when cpufreq tries to update the CPUFreq HW Engine clocks.
+> > 
+> > As mentioned in commit 4370232c727b ("cpufreq: qcom-hw: Add CPU clock
+> > provider support"):
+> > 
+> >         [T]he frequency supplied by the driver is the actual frequency
+> >         that comes out of the EPSS/OSM block after the DCVS operation.
+> >         This frequency is not same as what the CPUFreq framework has set
+> >         but it is the one that gets supplied to the CPUs after
+> >         throttling by LMh.
+> > 
+> > which seems to suggest that the driver relies on the previous behaviour
+> > of clk_set_rate().
+> 
+> I don't understand why a clk provider is needed there. Is anyone looking
+> into the real problem?
 
-I think in general having disable_* for trusted keys, random and PCR
-extension i.e. features that bus integrity protection touches would
-be great for debugging these issues in all cases.
+I mentioned this to Mani yesterday, but I'm not sure if he has had time
+to look into it yet. And I forgot to CC Viresh who was involved in
+implementing this. There is comment of his in the thread where this
+feature was added:
 
-BR, Jarkko
+	Most likely no one will ever do clk_set_rate() on this new
+	clock, which is fine, though OPP core will likely do
+	clk_get_rate() here.
+
+which may suggest that some underlying assumption has changed. [1]
+
+There are some more details in that thread that should explain why
+things were implemented the way they were:
+
+	https://lore.kernel.org/linux-arm-msm/20221117053145.10409-1-manivannan.sadhasivam@linaro.org/
+
+> > Since this affects many Qualcomm machines, let's revert for now.
+> > 
+> > Fixes: 25f1c96a0e84 ("clk: Fix invalid execution of clk_set_rate")
+> > Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> > Link: https://lore.kernel.org/all/e2d83e57-ad07-411b-99f6-a4fc3c4534fa@arm.com/
+> > Cc: Chuan Liu <chuan.liu@amlogic.com>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> 
+> Applied to clk-fixes
+
+Thanks.
+
+Johan
+
+[1] https://lore.kernel.org/linux-arm-msm/20221118055730.yrzpuih3zfko5c2q@vireshk-i7/
