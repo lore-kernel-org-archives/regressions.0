@@ -1,111 +1,145 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46947218E82
-	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 12:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E035A2185BF
+	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 14:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733403599; cv=none; b=SzJ3pUpOAdZK9/li/uxUwsm/ZL6fV6C14KA9IKYXEhYDL/UhaTYiIYqDOY6W1bT/n76hX/qFqdr/YNhKIH6Usaa+dPv7h2QBBzdzax1NvVGvgrGw35naX7q/ZvgrY3McFjxtVcNhEnqZszsx2sw25vJyDJer0FjNwicFu70aBH4=
+	t=1733409927; cv=none; b=DKBDPDopCwi0m3CVRv1s3oacKO3LjUhxj84B3C0mgmQeeg0E9QNNbhEgtpYo1PVEaiOIEOq9YRHMSJ5y46Mh72jUrhHfOFhqf39lr9aPv4AOPLVmJRkvjcSweoKh823XtYACTKRbPR/gf1iXxhjTaxBxQ/MbseasuiubReIM2Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733403599; c=relaxed/simple;
-	bh=3OLFaKBgiFhJWCsDnLEuwFuf20ClzJ0AMK/6ux9BfP4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jnwtEAmWXEv3JOR64e+Zeu3o99m4q97IDEPm7z+NPSkCncx5isgg3NnuY2JQW7jpyIIc8qGP7q6jDeRvNDkf3tvDQz3c/ww2Qu/3gLy2Q+FhgvIMm/FMp7nAXCparz+mk75Jijdq4uMFKAC3e4XrQeSUp+ISDRIC8daX5U7Qlqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KAQROyvF; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733409927; c=relaxed/simple;
+	bh=pbEz5c98jHDR4/DFEeITucEm+AUIz6sv1d8BE2tw6rI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=KqOMIB3SL4z3bx2pU1JdwEQfTGqFz4pg2FO8/1K4EMnwVf0CcnZzKRthc+p1BjGFhla/O2UUT2nctMy1kLMOpcanYrDeJNnrmJlB4DLoGehkFrYW5BVA7bgfbK91QATmVGdjxORRinmycyNRa8xYXyKW7xhQICyxo9NcQWnXv2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A4aE6/oO; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAQROyvF"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d0d71d7f00so1316903a12.3
-        for <regressions@lists.linux.dev>; Thu, 05 Dec 2024 04:59:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4aE6/oO"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-85ba9c6eecdso219608241.3
+        for <regressions@lists.linux.dev>; Thu, 05 Dec 2024 06:45:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733403597; x=1734008397; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gj8VFVjPSZEkv+oUvBeuosT9Pxl2p7BzaNCPNYLTVfQ=;
-        b=KAQROyvFquhUTV1QiP9bwbcaD/uOjcru9snQj6Smfy5MS22wy/ov+gXgcoN/eMVKck
-         04X8X0sL0TGpHT0gZrjxp6pbFVS2CrN0YvinCtvCTqcc/TO7IrUN/IXCaSVI2Q/J4wYS
-         AU0ezfEZBbISxUWIVIeG7uWf/rSd2GMRVPmx4sTutxl6//r/pycRotHrcibLhStNKCmR
-         NApEMgzlbzbyKPa76kFW6t93MokHUsuzv/p90Pp6FcUi4E+vL6cQyqbEUL3HDVhYd8dq
-         u/HqgApPGlNkriGmhbZB2k61ljOEqX7JheyNeu3+OuPQceOBR7iZGUq4wBeynBaJAN+p
-         plvA==
+        d=linaro.org; s=google; t=1733409925; x=1734014725; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Fgrv+GN2LBEaeVJ/FTM/TTU+8nfkJLCFn3FWcldv84Y=;
+        b=A4aE6/oOXolE3gMOJswxSMl55Z6cIP5TkOrvkHClyq4BVTNwu5k4PNtJmYUETHiyW/
+         kyzG2FFGY2onjHbeI/s9ZEuyd7YSOgJRDpZmn1k5IJT4fRTtGmViRU/pvi0mGWADWXle
+         4F7ZrncUowcERVHNwAvRtFyKO7CbF2ffeDaBTjxzw7J/DijNsN3rl8+60PZm/INkGkSW
+         Ya2ap4pL09skxvI5FuyWbDGmvm0Vo+6GnTe2iTMiyxTAjAFHkJ2Nd2E2lQEHYhbrb8RV
+         yxk+zuh15Tv30ov0jWZoK6WA3+DBOYBfsYAWAUbvyzZuvLHHXmXQqNy35B4jf68O73/G
+         c3xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733403597; x=1734008397;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gj8VFVjPSZEkv+oUvBeuosT9Pxl2p7BzaNCPNYLTVfQ=;
-        b=LNbljXxO4wIGY6cPDCAFLeo4bmYlX67TUF+Czz1VIkfjsxXvojvwb27Fcix7MGVGTs
-         xRF99thK+qAENjKg+zogorWJsClCb4mPw62dm/BrSPr5G1aZ0PHxBtDowo7wm/evNmK5
-         6i3zUOp+pDGa35U+6NvfboURPayFwp94QxBSwBImAXr0KLAOOqXhmbM9Rm/9o2nggSXW
-         roGePho+Q2ppHGsFGNWzR8glP2ww0amDDjCrn82mrsu/EyMQFQZSukXeNPAJ+T/Tzw0P
-         WsfMhmjWZBJl08U3JWW1cSGXPXnHCS/cvrjZM6xnJeQML/xBrLlL9iEi4acjEB3mnddd
-         9OEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHDNdGi+b+1+SQ7I53byTcXu+nyB8LVufu8F7uBHU/ZM4yz5aiqunxM9bUMJnBpHT7yzbVmW7mmHm3Lg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/rA1cRNSqUujzvdU/1bG/1IyeqyDIDAffoue+R/7+PYjaLv3g
-	iHuxMXiJhtnCWILwiD5mCIAlKwwK4ATY6AhaGo+4S3NABsa5Cbu4
-X-Gm-Gg: ASbGnct3Qma4kDbtSSFryK1SRy02a9mhd/TiKjm5l7Ah0i4vXt2W6asQuto2B2WhBYh
-	mWdWRycxtVGQYSZm0TOVMhj7eV+lM6pzMWN5TIeUm1Cm2VPXaQg7kCYLeP7N58t0PHVxUYLrdte
-	prgfHwVuDayyo55ksjbYEeuJyxcyaiFV4zFOBEQLE6QYU7pkWzTrqT1wYakGpDvBaU0r0jvpegk
-	2V7o1OcODu5u+AxDvyciGs+RaNoPyOqWnN7XsgGE2Ly4iNPeJOyR7d9rBdKkyldedXPnQF7oFZ7
-	TEQYPJ7rql5nBoHz/+5jBtDsOLFGTSbxQg==
-X-Google-Smtp-Source: AGHT+IEF+6FFvVmIuxk1MISOcv5BF4xk0eVILKN9vM5sXj6JFuPJooKQkMvDCoXx5Oq1Cpz44ra8Kw==
-X-Received: by 2002:a17:906:9a95:b0:aa6:c55:739a with SMTP id a640c23a62f3a-aa60c5574a7mr571964266b.50.1733403596420;
-        Thu, 05 Dec 2024 04:59:56 -0800 (PST)
-Received: from [155.185.125.95] (wifi-125-dhcprange-125-95.wifi.unimo.it. [155.185.125.95])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e4dc95sm88774466b.38.2024.12.05.04.59.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2024 04:59:56 -0800 (PST)
-Message-ID: <ad78ad62-ebd2-40d7-8a6d-623ae947584c@gmail.com>
-Date: Thu, 5 Dec 2024 13:59:55 +0100
+        d=1e100.net; s=20230601; t=1733409925; x=1734014725;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fgrv+GN2LBEaeVJ/FTM/TTU+8nfkJLCFn3FWcldv84Y=;
+        b=eCMrF29KjR9kjc5W/m49PveXfN9F3hfmrxsJtay5mhsmCx/s3s+x/UZ8xLx7+fj5r0
+         DaPFKU/0kJl2of+AvYm51mTT+8gKndi86IcHlKBUIUEAbiSZMy7D6IbJS38T2pfFHyKi
+         N+CxkK6+Xaas8QfCxQgXgwKgTCIqjy6DQoLzAXet3AqdvFDa5NH966/XoyHMyvzFx6aA
+         plhULNzREMHa2Jh9S2eSWjoLCRnZZS7Dzr2rV6zgfAEuCmrLIQX32c5aZPeOG/pWGO5A
+         j6u9fqr7ykHftUm7rjRlLMNS5+X0HPLiXFNC2XOUsddcrXPNCfMu3LkgReD+6BvRHSxF
+         Nnug==
+X-Forwarded-Encrypted: i=1; AJvYcCWw4JyO3WrgKkwLkfl5qGtXSd6Ms0x0lTM9tW5w2HThZfTxlLNcx9ph1RUeDuglbCpXRBnB12lFx/FPlw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwxQFv1V1FNJm+LiSJsnGdIEmv/PPZ1hF77T1xNA8LVASgKdESx
+	GshBdUIQ56kYBnCVKfHcxBcNPvncH9qwZJyR2yKgUJx36ydX/J9llDpyLOZI4vxJcZjYb9WWEX+
+	4Fdr7JbzBORVChi+/oKyINKHCR+Eac3bIYozO3A==
+X-Gm-Gg: ASbGnctmHgdnllYWdiTKQFB+C4WKzHzeHLe0kGW/YhwcsJxeMNk86xmRvHVfnFyHwMx
+	RbDR0ZZBIOkAD9sIs3v5cw9oFqYtfLnaX
+X-Google-Smtp-Source: AGHT+IFOiMg1tiV2s1ALxvVSXDETAQk3njW8DcCcpMAV58xChVISoFfkqq0962KUxkCR0Kys6OBR8oG4VmY9Ee3TIiA=
+X-Received: by 2002:a05:6122:2a4a:b0:515:f27f:fd6a with SMTP id
+ 71dfb90a1353d-515f27fff47mr1440208e0c.8.1733409924732; Thu, 05 Dec 2024
+ 06:45:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergio Callegari <sergio.callegari@gmail.com>
-Subject: Re: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And
- Hibernate
-To: jglotzer@gmail.com
-Cc: Aaron.Hou@mediatek.com, Chris.Lu@mediatek.com, Deren.Wu@mediatek.com,
- Hao.Qin@mediatek.com, Sean.Wang@mediatek.com, johan.hedberg@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, luiz.dentz@gmail.com,
- marc.payne@mdpsys.co.uk, marcel@holtmann.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, steve.lee@mediatek.com, tiwai@suse.de
-References: <20241127231432.8112-1-jglotzer@gmail.com>
-Content-Language: it, en-US-large
-In-Reply-To: <20241127231432.8112-1-jglotzer@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 5 Dec 2024 20:15:13 +0530
+Message-ID: <CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MRLfAbM3f6ke0g@mail.gmail.com>
+Subject: arm64: include/linux/compiler_types.h:542:38: error: call to
+ '__compiletime_assert_1050' declared with attribute error: clamp() low limit
+ min greater than high limit max_avail
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, netfilter-devel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Johannes Berg <johannes.berg@intel.com>, toke@kernel.org, 
+	Al Viro <viro@zeniv.linux.org.uk>, kernel@jfarr.cc, kees@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-John Glotzer <jglotzer@gmail.com> wrote
+The arm64 build started failing from Linux next-20241203 tag with gcc-8
+due to following build warnings / errors.
 
-> In following the related email threads it seems that this particular email thread has
-> not had any activity since 10/21/2024. Now the focus seems to be on firmware download which
-> in my admittedly non-expert opinion seems to be not clearly related.
+First seen on Linux next-20241203 tag
+GOOD: Linux next-20241128 tag
+BAD: Linux next-20241203 tag and next-20241205 tag
 
-Since then, it has become apparent that
+* arm64, build
+  - gcc-8-defconfig
+  - gcc-8-defconfig-40bc7ee5
 
-- The issue affects many laptops that fail to resume from hibernation 
-with recent kernels. It is not just about wifi/bt mt7922 combos attached 
-via USB, but also and most important those attached via PCIe, e.g.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+Build log:
+===========
+net/netfilter/ipvs/ip_vs_conn.c: In function 'ip_vs_conn_init':
+include/linux/compiler_types.h:542:38: error: call to
+'__compiletime_assert_1050' declared with attribute error: clamp() low
+limit min greater than high limit max_avail
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+                                      ^
+include/linux/compiler_types.h:523:4: note: in definition of macro
+'__compiletime_assert'
+    prefix ## suffix();    \
+    ^~~~~~
+include/linux/compiler_types.h:542:2: note: in expansion of macro
+'_compiletime_assert'
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro
+'compiletime_assert'
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^~~~~~~~~~~~~~~~~~
+include/linux/minmax.h:188:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+  BUILD_BUG_ON_MSG(statically_true(ulo > uhi),    \
+  ^~~~~~~~~~~~~~~~
+include/linux/minmax.h:195:2: note: in expansion of macro '__clamp_once'
+  __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_),
+__UNIQUE_ID(h_))
+  ^~~~~~~~~~~~
+include/linux/minmax.h:206:28: note: in expansion of macro '__careful_clamp'
+ #define clamp(val, lo, hi) __careful_clamp(__auto_type, val, lo, hi)
+                            ^~~~~~~~~~~~~~~
+net/netfilter/ipvs/ip_vs_conn.c:1498:8: note: in expansion of macro 'clamp'
+  max = clamp(max, min, max_avail);
+        ^~~~~
 
-- The new firmware (241106...) does not seem to solve the issue on all 
-the affected systems.
+Links:
+---
+- https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAOE9K3Dz9gRywrldKTyaXQoT/
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/log
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/details/
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/history/
 
-- it is relatively easy to script actions to kill BT before 
-sleep/hibernation and unkill it after resume, but they are suboptimal. 
-Users will typically set them up after multiple failures to resume, 
-which often means after data loss.
+Steps to reproduce:
+------------
+# tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
+--kconfig defconfig
 
-Would it be possible to (at least temporarily) revert the changes 
-occurred from 6.10 to 6.11 that triggered this problem?
+metadata:
+----
+  git describe: next-20241203
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git sha: c245a7a79602ccbee780c004c1e4abcda66aec32
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAOE9K3Dz9gRywrldKTyaXQoT/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAOE9K3Dz9gRywrldKTyaXQoT/
+  toolchain: gcc-8
+  config: gcc-8-defconfig
+  arch: arm64
 
-Sergio
-
+--
+Linaro LKFT
+https://lkft.linaro.org
