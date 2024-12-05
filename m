@@ -1,105 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935531EB2F;
-	Thu,  5 Dec 2024 12:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46947218E82
+	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 12:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733402582; cv=none; b=pMUZaYHxk02KVSig9VR7ss41rL8VJ62fXXPTSh84MaDuFgaS5mG1XtWooi7s6cnEUjWJFrVtEPKq4eWScCKxDsz9UrouM047BDTYUzt2ZWROIdhEOR5mfwSg7p8dxL+T6v+/oicwZL7tsXt/ODuORIImzw5wx7SGr5qouNjQ+pA=
+	t=1733403599; cv=none; b=SzJ3pUpOAdZK9/li/uxUwsm/ZL6fV6C14KA9IKYXEhYDL/UhaTYiIYqDOY6W1bT/n76hX/qFqdr/YNhKIH6Usaa+dPv7h2QBBzdzax1NvVGvgrGw35naX7q/ZvgrY3McFjxtVcNhEnqZszsx2sw25vJyDJer0FjNwicFu70aBH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733402582; c=relaxed/simple;
-	bh=c3AR7VNa7Axc5m38pbb3JDhLhtCHLJu8X5574bwf74g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNNjwZvB6UiIYAfo3xOxABY+0fHvII0nJrR7sgy4mB27fje1UMjD12K1/wSl7vumxx8vtxtsA38GT/wBCgNWJXMjc5VWmaIEKQVErw26Pd5IdAVE7nftvj+Nx913TBUQgNr7aF+SRMucegYO5rYF0cSovIVvJMbkhmACZtbOfuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOA0mi7h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733403599; c=relaxed/simple;
+	bh=3OLFaKBgiFhJWCsDnLEuwFuf20ClzJ0AMK/6ux9BfP4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jnwtEAmWXEv3JOR64e+Zeu3o99m4q97IDEPm7z+NPSkCncx5isgg3NnuY2JQW7jpyIIc8qGP7q6jDeRvNDkf3tvDQz3c/ww2Qu/3gLy2Q+FhgvIMm/FMp7nAXCparz+mk75Jijdq4uMFKAC3e4XrQeSUp+ISDRIC8daX5U7Qlqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KAQROyvF; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOA0mi7h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32814C4CED1;
-	Thu,  5 Dec 2024 12:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733402582;
-	bh=c3AR7VNa7Axc5m38pbb3JDhLhtCHLJu8X5574bwf74g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lOA0mi7hywXG0d1/uUAbtg3DcTJlVSax9QJsdZgt0ieX6jlMsrD3Kkp7t7JyfgnWa
-	 gX36OYbKePx/iZOVpgctI6S+Tgcn+hEVOFPo+Jxq5qO48sHCerU4K3347ptbycxrE5
-	 E12W+zUXlvveSzct/HkIePaI9Po744epVRKlRAWCIu2bVCl+UuttGWHgXVFl7YY9Wr
-	 tzyWjs96JtblLskq9yKUhn4+C6uCrutDN83OhIaAGZIyi27+/gU73M0Z1BSvvYezl0
-	 znAbvVwImgmYgk4puLJgsz6CJ6m7TxLXTR5V8A023xdK7cK4JbNYEH6Z8k1nrFDrr9
-	 a9OpeN9bjGh/g==
-Date: Thu, 5 Dec 2024 13:42:55 +0100
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, Lee Jones <lee@kernel.org>, regressions@lists.linux.dev, 
-	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	soc@kernel.org, arm@kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH leds v5 12/12] ARM: dts: turris-omnia: Add global LED
- brightness change interrupt
-Message-ID: <ofd5ru77wypfysflpblafbbdgrcmzztqwoewfjfuusrnbma4aw@y3oc3etutisi>
-References: <20241104141924.18816-1-kabel@kernel.org>
- <20241104141924.18816-13-kabel@kernel.org>
- <87bjyv9ecb.fsf@BLaptop.bootlin.com>
- <778f08f1774fcad5fcc39114dbb721793ebf95d6.camel@gmail.com>
- <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAQROyvF"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d0d71d7f00so1316903a12.3
+        for <regressions@lists.linux.dev>; Thu, 05 Dec 2024 04:59:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733403597; x=1734008397; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gj8VFVjPSZEkv+oUvBeuosT9Pxl2p7BzaNCPNYLTVfQ=;
+        b=KAQROyvFquhUTV1QiP9bwbcaD/uOjcru9snQj6Smfy5MS22wy/ov+gXgcoN/eMVKck
+         04X8X0sL0TGpHT0gZrjxp6pbFVS2CrN0YvinCtvCTqcc/TO7IrUN/IXCaSVI2Q/J4wYS
+         AU0ezfEZBbISxUWIVIeG7uWf/rSd2GMRVPmx4sTutxl6//r/pycRotHrcibLhStNKCmR
+         NApEMgzlbzbyKPa76kFW6t93MokHUsuzv/p90Pp6FcUi4E+vL6cQyqbEUL3HDVhYd8dq
+         u/HqgApPGlNkriGmhbZB2k61ljOEqX7JheyNeu3+OuPQceOBR7iZGUq4wBeynBaJAN+p
+         plvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733403597; x=1734008397;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gj8VFVjPSZEkv+oUvBeuosT9Pxl2p7BzaNCPNYLTVfQ=;
+        b=LNbljXxO4wIGY6cPDCAFLeo4bmYlX67TUF+Czz1VIkfjsxXvojvwb27Fcix7MGVGTs
+         xRF99thK+qAENjKg+zogorWJsClCb4mPw62dm/BrSPr5G1aZ0PHxBtDowo7wm/evNmK5
+         6i3zUOp+pDGa35U+6NvfboURPayFwp94QxBSwBImAXr0KLAOOqXhmbM9Rm/9o2nggSXW
+         roGePho+Q2ppHGsFGNWzR8glP2ww0amDDjCrn82mrsu/EyMQFQZSukXeNPAJ+T/Tzw0P
+         WsfMhmjWZBJl08U3JWW1cSGXPXnHCS/cvrjZM6xnJeQML/xBrLlL9iEi4acjEB3mnddd
+         9OEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHDNdGi+b+1+SQ7I53byTcXu+nyB8LVufu8F7uBHU/ZM4yz5aiqunxM9bUMJnBpHT7yzbVmW7mmHm3Lg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/rA1cRNSqUujzvdU/1bG/1IyeqyDIDAffoue+R/7+PYjaLv3g
+	iHuxMXiJhtnCWILwiD5mCIAlKwwK4ATY6AhaGo+4S3NABsa5Cbu4
+X-Gm-Gg: ASbGnct3Qma4kDbtSSFryK1SRy02a9mhd/TiKjm5l7Ah0i4vXt2W6asQuto2B2WhBYh
+	mWdWRycxtVGQYSZm0TOVMhj7eV+lM6pzMWN5TIeUm1Cm2VPXaQg7kCYLeP7N58t0PHVxUYLrdte
+	prgfHwVuDayyo55ksjbYEeuJyxcyaiFV4zFOBEQLE6QYU7pkWzTrqT1wYakGpDvBaU0r0jvpegk
+	2V7o1OcODu5u+AxDvyciGs+RaNoPyOqWnN7XsgGE2Ly4iNPeJOyR7d9rBdKkyldedXPnQF7oFZ7
+	TEQYPJ7rql5nBoHz/+5jBtDsOLFGTSbxQg==
+X-Google-Smtp-Source: AGHT+IEF+6FFvVmIuxk1MISOcv5BF4xk0eVILKN9vM5sXj6JFuPJooKQkMvDCoXx5Oq1Cpz44ra8Kw==
+X-Received: by 2002:a17:906:9a95:b0:aa6:c55:739a with SMTP id a640c23a62f3a-aa60c5574a7mr571964266b.50.1733403596420;
+        Thu, 05 Dec 2024 04:59:56 -0800 (PST)
+Received: from [155.185.125.95] (wifi-125-dhcprange-125-95.wifi.unimo.it. [155.185.125.95])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e4dc95sm88774466b.38.2024.12.05.04.59.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2024 04:59:56 -0800 (PST)
+Message-ID: <ad78ad62-ebd2-40d7-8a6d-623ae947584c@gmail.com>
+Date: Thu, 5 Dec 2024 13:59:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
+User-Agent: Mozilla Thunderbird
+From: Sergio Callegari <sergio.callegari@gmail.com>
+Subject: Re: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And
+ Hibernate
+To: jglotzer@gmail.com
+Cc: Aaron.Hou@mediatek.com, Chris.Lu@mediatek.com, Deren.Wu@mediatek.com,
+ Hao.Qin@mediatek.com, Sean.Wang@mediatek.com, johan.hedberg@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, luiz.dentz@gmail.com,
+ marc.payne@mdpsys.co.uk, marcel@holtmann.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, steve.lee@mediatek.com, tiwai@suse.de
+References: <20241127231432.8112-1-jglotzer@gmail.com>
+Content-Language: it, en-US-large
+In-Reply-To: <20241127231432.8112-1-jglotzer@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 05, 2024 at 01:38:10PM +0100, Marek Behún wrote:
-> On Wed, Dec 04, 2024 at 07:48:51AM +0100, Klaus Kudielka wrote:
-> > On Mon, 2024-11-04 at 17:02 +0100, Gregory CLEMENT wrote:
-> > > Marek Behún <kabel@kernel.org> writes:
-> > > 
-> > > > When global LED brightness is changed by pressing the front button on
-> > > > Turris Omnia, the MCU can produce an interrupt to the CPU. Add the
-> > > > description of this interrupt to the LED controller node.
-> > > > 
-> > > > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > > 
-> > > As the binding had been acked, and this change won't produce any
-> > > regression I can already get it.
-> > > 
-> > > Applied on mvebu/dt
-> > > 
-> > > Thanks,
-> > > 
-> > > Gregory
-> > > 
-> > 
-> > This patch made it into v6.13-rc1, and completely breaks the LEDS on my Turris Omnia CZNIC11.
-> > The entries in /sys/class/leds disappeared, and instead the kernel says:
-> > 
-> > [   11.746116] i2c 1-002b: deferred probe pending: (reason unknown)
-> > 
-> > If I just revert the patch on top of v6.13-rc1, all is good again. Kernel config attached, for reference.
-> > 
-> > Best regards, Klaus
-> > 
-> > #regzbot introduced: 68bc6a71f56875a7dbde4f44aa4404c214651e1c
-> 
-> This is because the patch went into 6.13 but the rest of the patches
-> did not, Lee wants to take them for 6.14 :-(
-> 
-> Apply this series and it will work.
-> 
-> https://lore.kernel.org/linux-leds/20241111100355.6978-1-kabel@kernel.org/T/
+John Glotzer <jglotzer@gmail.com> wrote
 
-Alternatively you can overcome this issue if you enable the
-turris-omnia-mcu driver in 6.13:
+> In following the related email threads it seems that this particular email thread has
+> not had any activity since 10/21/2024. Now the focus seems to be on firmware download which
+> in my admittedly non-expert opinion seems to be not clearly related.
 
-  CONFIG_CZNIC_PLATFORMS=y
-  CONFIG_TURRIS_OMNIA_MCU=y/m
-(and also the subsequent options).
+Since then, it has become apparent that
 
-Marek
+- The issue affects many laptops that fail to resume from hibernation 
+with recent kernels. It is not just about wifi/bt mt7922 combos attached 
+via USB, but also and most important those attached via PCIe, e.g.
+
+MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+
+- The new firmware (241106...) does not seem to solve the issue on all 
+the affected systems.
+
+- it is relatively easy to script actions to kill BT before 
+sleep/hibernation and unkill it after resume, but they are suboptimal. 
+Users will typically set them up after multiple failures to resume, 
+which often means after data loss.
+
+Would it be possible to (at least temporarily) revert the changes 
+occurred from 6.10 to 6.11 that triggered this problem?
+
+Sergio
+
