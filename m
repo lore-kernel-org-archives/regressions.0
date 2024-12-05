@@ -1,194 +1,168 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1701891AB
-	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 16:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED884207659
+	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 16:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733414424; cv=none; b=C3zEzZt9tOg5ld1AufeadQO4DmqiPTG0Mt7jLTuLa2xWMdhawgarFT0YomPsDmPD7U/ijOBecUYV1gwvWtuMwaafXb21Gzn6BVqr/C7wVsjjx2uzQGArETNEIHR6aYetQWVaKmOZQGiNeDqV1IuPhZ0sGEWeqfOsleNZlh2uCGE=
+	t=1733417583; cv=none; b=KGQoElILFhENDMxw5vwrc9RwpR54kUxXPbGpZGOJAmuTvQRuubIIqyrX4k480vVuUbTsPiKnhJbUSVFANLk5T53PwszkvTsTcJhbcvKixzJAtVGDzcCF+Y4s2kC2IqLuFQUbWG0b5/Tn7qIXGSZglQ4sgHGrY9jwQU+wlj6c+rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733414424; c=relaxed/simple;
-	bh=AXRLyPnlMp9NFNYGxxbppZ4FKyyl2/ZDxFwMNPYVYNI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=WI/MMOJ/KP7Ahbqpco9HrmekxiAalFjfOO034ghPF5Z++D/I1fazwI+VKDZU3cbsqkRbbiLkftNR0XBl9dJ1qWN4g7fVx1eUZdwMd2oF4swVJ4drZB1EE3UkXtp3iwhRSIEtk7++Gyl3l35qTK7HynPhM5arjZ2vSaNlsrxf7lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-279-lmsYNeUrOlaLvsVDlHEuig-1; Thu, 05 Dec 2024 16:00:19 +0000
-X-MC-Unique: lmsYNeUrOlaLvsVDlHEuig-1
-X-Mimecast-MFC-AGG-ID: lmsYNeUrOlaLvsVDlHEuig
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 5 Dec
- 2024 15:59:36 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 5 Dec 2024 15:59:36 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Dan Carpenter' <dan.carpenter@linaro.org>, Naresh Kamboju
-	<naresh.kamboju@linaro.org>
-CC: open list <linux-kernel@vger.kernel.org>, "lkft-triage@lists.linaro.org"
-	<lkft-triage@lists.linaro.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Linux ARM
-	<linux-arm-kernel@lists.infradead.org>, "netfilter-devel@vger.kernel.org"
-	<netfilter-devel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Anders
- Roxell" <anders.roxell@linaro.org>, Johannes Berg <johannes.berg@intel.com>,
-	"toke@kernel.org" <toke@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-	"kernel@jfarr.cc" <kernel@jfarr.cc>, "kees@kernel.org" <kees@kernel.org>
-Subject: RE: arm64: include/linux/compiler_types.h:542:38: error: call to
- '__compiletime_assert_1050' declared with attribute error: clamp() low limit
- min greater than high limit max_avail
-Thread-Topic: arm64: include/linux/compiler_types.h:542:38: error: call to
- '__compiletime_assert_1050' declared with attribute error: clamp() low limit
- min greater than high limit max_avail
-Thread-Index: AQHbRyiOROIHG94lCEKLQVwMYBVLZbLXxsYA
-Date: Thu, 5 Dec 2024 15:59:36 +0000
-Message-ID: <68a3ca49c2644af5b2995038ca88a51b@AcuMS.aculab.com>
-References: <CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MRLfAbM3f6ke0g@mail.gmail.com>
- <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain>
-In-Reply-To: <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1733417583; c=relaxed/simple;
+	bh=OyMQfIrxSzriwv8hX5lVDVFWmfDKiMyaBU/TmxWr4wI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSXExohfiIUVbcB7PBSvtQLfpUErgq2QJogpucKcSfIfdvOXn7wWLki7uyeNKCXqwkZVMCBwerevD8DFbbLXIINjfsmgSZ8JimaErjfSo7qZyMHgsncinZinu+goIbnsURWa8tmyJTlLopz+kS9kbicY2glbKZJwXspGo2VF5h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KxMdPVrw; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KxMdPVrw"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-724e14b90cfso1241074b3a.2
+        for <regressions@lists.linux.dev>; Thu, 05 Dec 2024 08:53:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733417581; x=1734022381; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3M40H5CkYQDVeDAAfwHVgOu/JLVGUmGE+3t86nRTx/0=;
+        b=KxMdPVrwoWZO+HE1abWR0c7haV5MC6vw4TwXrSviFGykIcomkUqdqHrDyyjYVimqjN
+         5X8nDeYrkXBgc0mSK78YKTv5z1cZDK3tt7+k0FUM6AZyoRwwFO0dkUnkKHbVz83YyTfN
+         XR1oed3hpZJvS33F2pXJKpKbV5PMraZuJDyuXCyxQDjcOiiMvHKH74QZiE933ueVoMUE
+         Ij7JIvOBy9JXqxhSCcCME+h0abFmoJaIjswdGHcEvLN9iHxIDS0pKhSm0fJnCipr/OFZ
+         B74X3+UOsRjWZZlhG52MqIv+tLSyixRbJRHK14K/oDpZHCuDVLHZ0Zud7+Rg07YD4dxv
+         3Xbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733417581; x=1734022381;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3M40H5CkYQDVeDAAfwHVgOu/JLVGUmGE+3t86nRTx/0=;
+        b=VppxWJHBsUvZyGERrMkQeepQHRS3siYZbrlV4T2h9z0eeEEKs09fb6S/2rTy0QAGSd
+         f7uO0vfdBcfTF38wsjtYXIsoZbpdMx84f7BMlgfULS7xMmfUkx6K/lbx7z1B/SACgsdc
+         8ljXRO2Ij6uRZV+Ubc5HuEKH0oJY3xgz9IZtKQhtqF8EtkuF2bLFEi4s2maKatRJ0AQ7
+         Fg7bYIYd3wayIVjneDJZJyql6/nEPf68i2hG4snK/AvS63hz+PyyDp1r5cHYGT5aOvOU
+         qXF43JKTf8u1eYM0QwXXVkuUAwTBqRd99Ab2Sz1uwGC/MBoLKe756CYy0DTOWTp05axZ
+         VWAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpEB0Q9elparSNwOqWntadeHp5++OczcmsjzgFBRsvL3+MkYW/8/FUlZK/kh+WMLccpCSKV6iwoPhqYQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxzXA4FHxg0EtGR/J86+qmrwaq0N1SSQZn/5HvwOdHMeQfjqK62
+	v3ziVC6tD2/uGAc4tyQYq96A1kUGD4UgI3jlVwVB6+FgUMDSittmxpVqsWkRng==
+X-Gm-Gg: ASbGncvSaRTcgyDfTEHuclScqtPwG76LSeWtBgWHwwXfNTLI80aOrFNMLXrQkjm8PmK
+	GNWDVRO1ZGutNEhOHNM/tDilNJJCOryMPRFYajmE/4Q74dQ9ZXafob+QoHmbrQThGm3D4TfSn9C
+	QvON0UMyrOjulLOm8mYlDEXdMOxd+eJRz0adx0gASXwFXS/a3TOeoHYKKDvsRBny5OWzF4kwYX/
+	Z9HULVqCf/zgOyZaKVbtX6SGhc45DAoJN+QxAvrgUC3ajeBb6P7kdRijWfY8g==
+X-Google-Smtp-Source: AGHT+IFYO3XDZ6IIHPLOsjky3D00Q3xsDrNzgdjwZkcMxnvdQlHnJg11TlcIOJ2l2C46xAjuD8l7Zw==
+X-Received: by 2002:a17:902:e810:b0:215:734f:ffe5 with SMTP id d9443c01a7336-215bd128365mr145479605ad.32.1733417581263;
+        Thu, 05 Dec 2024 08:53:01 -0800 (PST)
+Received: from thinkpad ([120.60.133.114])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8f0921asm14725025ad.178.2024.12.05.08.52.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2024 08:53:00 -0800 (PST)
+Date: Thu, 5 Dec 2024 22:22:51 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Chuan Liu <chuan.liu@amlogic.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] Revert "clk: Fix invalid execution of clk_set_rate"
+Message-ID: <20241205165251.fbf3ty6jgdqt4r3x@thinkpad>
+References: <20241202100621.29209-1-johan+linaro@kernel.org>
+ <3fd004add188460bf2bdd1a718387c7f.sboyd@kernel.org>
+ <Z07AXbQvvZwI8Ki6@hovoldconsulting.com>
+ <20241203092151.izcsgzqep4imbcwe@thinkpad>
+ <afa086b0b30ab5b810178f92fac96837.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: GThrrYuh_nolUDf5xwnZpEgz8kvGoBBhYqcHC-AXXMo_1733414417
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <afa086b0b30ab5b810178f92fac96837.sboyd@kernel.org>
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
-> Sent: 05 December 2024 15:16
->=20
-> Add David to the CC list.
+On Tue, Dec 03, 2024 at 11:30:07AM -0800, Stephen Boyd wrote:
+> Quoting Manivannan Sadhasivam (2024-12-03 01:21:51)
+> > On Tue, Dec 03, 2024 at 09:25:01AM +0100, Johan Hovold wrote:
+> > > [ +CC: Viresh and Sudeep ]
+> > > 
+> > > On Mon, Dec 02, 2024 at 05:20:06PM -0800, Stephen Boyd wrote:
+> > > > Quoting Johan Hovold (2024-12-02 02:06:21)
+> > > > > This reverts commit 25f1c96a0e841013647d788d4598e364e5c2ebb7.
+> > > > > 
+> > > > > The offending commit results in errors like
+> > > > > 
+> > > > >         cpu cpu0: _opp_config_clk_single: failed to set clock rate: -22
+> > > > > 
+> > > > > spamming the logs on the Lenovo ThinkPad X13s and other Qualcomm
+> > > > > machines when cpufreq tries to update the CPUFreq HW Engine clocks.
+> > > > > 
+> > > > > As mentioned in commit 4370232c727b ("cpufreq: qcom-hw: Add CPU clock
+> > > > > provider support"):
+> > > > > 
+> > > > >         [T]he frequency supplied by the driver is the actual frequency
+> > > > >         that comes out of the EPSS/OSM block after the DCVS operation.
+> > > > >         This frequency is not same as what the CPUFreq framework has set
+> > > > >         but it is the one that gets supplied to the CPUs after
+> > > > >         throttling by LMh.
+> > > > > 
+> > > > > which seems to suggest that the driver relies on the previous behaviour
+> > > > > of clk_set_rate().
+> > > > 
+> > > > I don't understand why a clk provider is needed there. Is anyone looking
+> > > > into the real problem?
+> > > 
+> > > I mentioned this to Mani yesterday, but I'm not sure if he has had time
+> > > to look into it yet. And I forgot to CC Viresh who was involved in
+> > > implementing this. There is comment of his in the thread where this
+> > > feature was added:
+> > > 
+> > >       Most likely no one will ever do clk_set_rate() on this new
+> > >       clock, which is fine, though OPP core will likely do
+> > >       clk_get_rate() here.
+> > > 
+> > > which may suggest that some underlying assumption has changed. [1]
+> > > 
+> 
+> Yikes.
+> 
+> > 
+> > I just looked into the issue this morning. The commit that triggered the errors
+> > seem to be doing the right thing (although the commit message was a bit hard to
+> > understand), but the problem is this check which gets triggered now:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clk/clk.c?h=v6.13-rc1#n2319
+> > 
+> > Since the qcom-cpufreq* clocks doesn't have parents now (they should've been
+> > defined anyway) and there is no CLK_SET_RATE_PARENT flag set, the check returns
+> > NULL for the 'top' clock. Then clk_core_set_rate_nolock() returns -EINVAL,
+> > causing the reported error.
+> > 
+> > But I don't quite understand why clk_core_set_rate_nolock() fails if there is no
+> > parent or CLK_SET_RATE_PARENT is not set. The API is supposed to set the rate of
+> > the passed clock irrespective of the parent. Propagating the rate change to
+> > parent is not strictly needed and doesn't make sense if the parent is a fixed
+> > clock like XO.
+> 
+> The recalc_rate clk_op is telling the framework that the clk is at a
+> different rate than is requested by the clk consumer _and_ than what the
+> framework thinks the clk is currently running at. The clk_set_rate()
+> call is going to attempt to satisfy that request, and because there
+> isn't a determine_rate/round_rate clk_op it assumes the clk can't change
+> rate so it looks to see if there's a parent that can be changed to
+> satisfy the rate. There isn't a parent either, so the clk_set_rate()
+> call fails because the rate can't be achieved on this clk.
+> 
+> It may work to have a determine_rate clk_op that is like the recalc_rate
+> one that says "this rate you requested is going to turn into whatever
+> the hardware is running at" by simply returning the rate that the clk is
+> running at.
 
-I've been forwarded this one before.
-It is not unreasonable really.
+Sounds reasonable to me. Fix submitted incorporating your suggestion, thanks!
 
-Is all stems from order_base_2(totalram_pages()).
-order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
-And the compiler is generating two copies of the code.
-(Basically optimising for the zero case.)
-And the one for totalram_pages() being zero hits the check in clamp().
+- Mani
 
-Flipping to clamp(max_avail, min, max) will stop it bleating.
-
-More interesting would be 'launder' the 0 in order_base_2().
-By adding something like:
-#define optimiser_hide_val(x) ({ \
-=09__auto_type(_x) =3D (x); \
-=09optimiser_hide_var(_x); \
-=09_x; \
-})
-and change order_base_2() to be:
-=09n > 1 ? ilog2(n - 1) + 1 : optimiser_hide_val(0);
-(ISTR there is a split for constant v non-constant before then.)
-
-=09David
-
->=20
-> regards,
-> dan carpenter
->=20
-> On Thu, Dec 05, 2024 at 08:15:13PM +0530, Naresh Kamboju wrote:
-> > The arm64 build started failing from Linux next-20241203 tag with gcc-8
-> > due to following build warnings / errors.
-> >
-> > First seen on Linux next-20241203 tag
-> > GOOD: Linux next-20241128 tag
-> > BAD: Linux next-20241203 tag and next-20241205 tag
-> >
-> > * arm64, build
-> >   - gcc-8-defconfig
-> >   - gcc-8-defconfig-40bc7ee5
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Build log:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > net/netfilter/ipvs/ip_vs_conn.c: In function 'ip_vs_conn_init':
-> > include/linux/compiler_types.h:542:38: error: call to
-> > '__compiletime_assert_1050' declared with attribute error: clamp() low
-> > limit min greater than high limit max_avail
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
-> >                                       ^
-> > include/linux/compiler_types.h:523:4: note: in definition of macro
-> > '__compiletime_assert'
-> >     prefix ## suffix();    \
-> >     ^~~~~~
-> > include/linux/compiler_types.h:542:2: note: in expansion of macro
-> > '_compiletime_assert'
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
-> >   ^~~~~~~~~~~~~~~~~~~
-> > include/linux/build_bug.h:39:37: note: in expansion of macro
-> > 'compiletime_assert'
-> >  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >                                      ^~~~~~~~~~~~~~~~~~
-> > include/linux/minmax.h:188:2: note: in expansion of macro 'BUILD_BUG_ON=
-_MSG'
-> >   BUILD_BUG_ON_MSG(statically_true(ulo > uhi),    \
-> >   ^~~~~~~~~~~~~~~~
-> > include/linux/minmax.h:195:2: note: in expansion of macro '__clamp_once=
-'
-> >   __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_),
-> > __UNIQUE_ID(h_))
-> >   ^~~~~~~~~~~~
-> > include/linux/minmax.h:206:28: note: in expansion of macro '__careful_c=
-lamp'
-> >  #define clamp(val, lo, hi) __careful_clamp(__auto_type, val, lo, hi)
-> >                             ^~~~~~~~~~~~~~~
-> > net/netfilter/ipvs/ip_vs_conn.c:1498:8: note: in expansion of macro 'cl=
-amp'
-> >   max =3D clamp(max, min, max_avail);
-> >         ^~~~~
-> >
-> > Links:
-> > ---
-> > - https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAOE9K3Dz9gR=
-ywrldKTyaXQoT/
-> > - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-
-> 20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/log
-> > - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-
-> 20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/details/
-> > - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-
-> 20241203/testrun/26189105/suite/build/test/gcc-8-defconfig/history/
-> >
-> > Steps to reproduce:
-> > ------------
-> > # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
-> > --kconfig defconfig
-> >
-> > metadata:
-> > ----
-> >   git describe: next-20241203
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-=
-next.git
-> >   git sha: c245a7a79602ccbee780c004c1e4abcda66aec32
-> >   kernel config:
-> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAOE9K3Dz9gRyw=
-rldKTyaXQoT/config
-> >   build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2pj=
-AOE9K3Dz9gRywrldKTyaXQoT/
-> >   toolchain: gcc-8
-> >   config: gcc-8-defconfig
-> >   arch: arm64
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+மணிவண்ணன் சதாசிவம்
