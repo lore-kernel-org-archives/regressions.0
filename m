@@ -1,125 +1,168 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6E71D61BC;
-	Thu,  5 Dec 2024 10:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7861D8DE8
+	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 10:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733394960; cv=none; b=M1ChUJQ06AYBBN2a8bE0tM2BcPIp0Jbx69gZFtzKSdHQRR2ltvDtp6ELJT/0CLXXht39MQdRRn3b38jlmYFxMTnrnHc2+XvjL2l55SdaPh+YATq5Vy4Kq1tzi84nG1Okc6PQ97ixXIGKi3F9KfE3MIaB4SSzna25ITF07u0x2Jw=
+	t=1733396378; cv=none; b=msGr1RyyYL7iMunBpi6EO8TMI5pr99THE+COIzWoeas/0QUxGWr0D/iXn8RJ+Qgrtx54bQ6S+VRBc7/2YbWtzBTRPb+0mhngdH1luMkfIvl1taIDwukEfufHfZ+iBH+FQLM/7CPXOhbs1BnZh8fXmTow4D9dHyXr76EEy15/qnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733394960; c=relaxed/simple;
-	bh=7IXKdskA+LLIPp8jR5IiT8OqfYI64uIJlxwsBYx/fLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QT7FPK21TW+fXB0quP6qkFC5uf8/cQWHCA82KxgQy4y90yEXlTIfFue3PtINW9KCqG5XjccxdDzsIiYQvY2IUSUEWvezSEO4JnSOZ3NIE4euSZYN2cgASMCtpVarontMBczJpK2uOzJSUW2GC/TT3VNpcNlqTxc6Xd1hSX/tkq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+91KHrp; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733396378; c=relaxed/simple;
+	bh=252cpp28CjA+InBEBkejnfANuYhNFASK63iHMtN9SsM=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=ttSRAKjDh6r/eNzNoNjMwq82/W3b4rK+dW7m7fxPjoyR6NicKN+XdC/IyWg2L9V0Fg1BSRoVuQyOPKKnneW1uemhRqDTqj7Hty+lMim9iTNffmSQm0s2jn1DxWViqVgeKaPsYV4BHo3aFeRZGzI73Yk+13AoRWzlrmLSPSCZHXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jDuPysIe; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+91KHrp"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ffd6b7d77aso8614351fa.0;
-        Thu, 05 Dec 2024 02:35:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733394955; x=1733999755; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sGBlXjWXX6UA1pnUb6eFZF67zXS/U/rRQY47JDY/d7M=;
-        b=V+91KHrpeV3GVqdd4n4YjBv6HgcE2MK8D4y3TzZgU2qVZHkm8pDgu2LCJDsVqicAsZ
-         2syJpZoX9G/7oGM64ZOquVgwr1uSJy2k8WrT0vA/BRwoGK0tCmjIQx7y+XucOYDdSj/T
-         iB7p4TDVwzi7X0ihLnNch5ptId/KeAbVPiAmCGVSpUL2VmZB+/R3Zg7e7ekAMNrewzyB
-         qiGBtwTI/+vmo6uoHyncOMPd30j3KVFsZ4D1qvR74HLrF0bW60DaayPrBT3Sp3lXpCem
-         AiDXwGCzrMTuU5ytA5XGHqPFyYkirUoy/kILOO+U7E8cpoYYniEe2eTNr+e3l884z2t9
-         wWDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733394955; x=1733999755;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sGBlXjWXX6UA1pnUb6eFZF67zXS/U/rRQY47JDY/d7M=;
-        b=CfpbbsCL8y7KLPetda5nXkMhW07o7zZafu/LS6Gk46OJ+WhxOtj9h/NvbXY5WjOrw2
-         /LiXGc4+fNTTJf+VqaE9mXliL+t4kJrHZlIlgWCWeKqsnuU6aQmw52u+k+ZV4YcRcrXB
-         w76Ayj2CXAsg37OqobvkcT896lM3nnAVDzvgE4Mj07zrmNiwzxQn24R6J0MhhlraOn8A
-         /6mldrG7/fl0+FmUPGnegH4l97r44z6zxWuZf3YTtGn1qFN7D6yFlXIVgmFrhVnsLS5a
-         /7d4fr4mMNEf/j+XJsSwZ/IvGGPLKgnpWFyx2Og3viUPnePZcmv8LZO27ttV2+APNSnZ
-         YxuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDQZL8Nyjw3BgAmWBlJk67gTnv79U/V0jGGrYvwCa/bqkeRbhQx1OkSvzZnzfgZ/cKYNHGcBNwWDz/yGEfOzE=@lists.linux.dev, AJvYcCWLpczzmvKGHjvLNdef+dHSZ1CzTaDehmu5JJohT95SxGthqlNTPlpdB2G8y7x9MAeWxSkgJ13+Jqw7SM4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwxEAjEvlkE1s+KJJ2RTWBAaQ+t+7z2aUxifh53+mH7gzjY3AYQ
-	oKsNw27BEMj50ych9UFs1iyYCHB91QRjRIfNjDUbu57Pbjb73Z+xRXPFGcboSQSW4X281gBLS1Y
-	AzslSaioTYKmc9pDDgGRvNaGMTmk=
-X-Gm-Gg: ASbGncvozMwxi3rxMxw+PwxctIN33VWHN+dCJjEpjrtGVPp/I2k0XJb6Y9GK21Hn868
-	15A8/1wel5CVQP5j9LL0hIsHiBXErakE=
-X-Google-Smtp-Source: AGHT+IF9hnQNVk6ZpYzIQHDzAkhYHiH62b9JV3oF6rG0cJLloFhfMCIv2naxMshN7F04Gzkb9fWAIsCQyME/4ARi2mw=
-X-Received: by 2002:a2e:a554:0:b0:2ff:c99f:dcea with SMTP id
- 38308e7fff4ca-30009caa60bmr70105361fa.34.1733394955215; Thu, 05 Dec 2024
- 02:35:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jDuPysIe"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Y3rxb6DXkz9srM;
+	Thu,  5 Dec 2024 11:59:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1733396371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aBP8+Ta6VPCfT/d+af6u0urgv8qVbZAuyQUjcoZOP6Q=;
+	b=jDuPysIerMVBKQ3bBZrvYbDQxBzbSuHW3DsNKhe6lKA/EXGwm9Nwq6lkO5j2SohElPIjaq
+	Tcqs/mSBhu+egNw6zLahZsQyR6Lvr1nyU39D/YomEv5l38Q7BK8jZASX8k/0IrlS1zrxyB
+	hNFkncCx7rpfmz9zSWW+jFMq5fCluujh7/BGM47/2eMxJakVHlxCDY88Pqn1C3G8M1Yl83
+	kldptISIRW3cYBgETDlSSJ53+hyjGLqbH5L9GYEKNiPC20AnvnwEyVdYHq2X3YggYbkHQs
+	NocbwesIOVx7RqwMrIHLfnnI8Hwduvi+3NBocux1cvfpmMwfC1hJ7KnG0XF5bg==
+Message-ID: <5fcdfd16-d598-4a86-962e-9d22b0524b12@mailbox.org>
+Date: Thu, 5 Dec 2024 11:59:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241115171712.427535-1-laura.nao@collabora.com>
- <20241204155305.444280-1-laura.nao@collabora.com> <Z1GBXHM1M4-Ws9Br@krava>
-In-Reply-To: <Z1GBXHM1M4-Ws9Br@krava>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 5 Dec 2024 11:35:43 +0100
-Message-ID: <CAFULd4YMoOmKUb+_rqdMv=Nu=8UNSdxe9EtN+R4kHB4Ag7cGpA@mail.gmail.com>
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Laura Nao <laura.nao@collabora.com>, alan.maguire@oracle.com, bpf@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, kernel@collabora.com, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: kbusch@kernel.org, hch@lst.de, linux-mm@kvack.org
+From: Simon Polack <spolack@mailbox.org>
+Subject: [REGRESSION] 6.13-rc1: Loading nvme module leads to
+ mm/page_alloc.c:4727 __alloc_pages_noprof+0x321/0x330
+Cc: regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+ 'linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: 6kb6byan7tnwaj8ou1yqqcxjxf6ybgto
+X-MBO-RS-ID: e39f74d05971d8e3050
 
-On Thu, Dec 5, 2024 at 11:33=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Dec 04, 2024 at 04:53:05PM +0100, Laura Nao wrote:
-> > On 11/15/24 18:17, Laura Nao wrote:
-> > > I managed to reproduce the issue locally and I've uploaded the vmlinu=
-x[1]
-> > > (stripped of DWARF data) and vmlinux.raw[2] files, as well as one of =
-the
-> > > modules[3] and its btf data[4] extracted with:
-> > >
-> > > bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko > cros_kbd=
-_led_backlight.ko.raw
-> > >
-> > > Looking again at the logs[5], I've noticed the following is reported:
-> > >
-> > > [    0.415885] BPF:          type_id=3D115803 offset=3D177920 size=3D=
-1152
-> > > [    0.416029] BPF:
-> > > [    0.416083] BPF: Invalid offset
-> > > [    0.416165] BPF:
-> > >
-> > > There are two different definitions of rcu_data in '.data..percpu', o=
-ne
-> > > is a struct and the other is an integer:
-> > >
-> > > type_id=3D115801 offset=3D177920 size=3D1152 (VAR 'rcu_data')
-> > > type_id=3D115803 offset=3D177920 size=3D1152 (VAR 'rcu_data')
-> > >
-> > > [115801] VAR 'rcu_data' type_id=3D115572, linkage=3Dstatic
-> > > [115803] VAR 'rcu_data' type_id=3D1, linkage=3Dstatic
-> > >
-> > > [115572] STRUCT 'rcu_data' size=3D1152 vlen=3D69
-> > > [1] INT 'long unsigned int' size=3D8 bits_offset=3D0 nr_bits=3D64 enc=
-oding=3D(none)
-> > >
-> > > I assume that's not expected, correct?
-> > >
-> > > I'll dig a bit deeper and report back if I can find anything else.
-> >
-> > I ran a bisection, and it appears the culprit commit is:
-> > https://lore.kernel.org/all/20241021080856.48746-2-ubizjak@gmail.com/
->
-> which tree are you using, I can't see this in linu-next ?
+Hello,
 
-The offending commit is now part of linus tree:
+i noticed a regression after upgrading from 6.12.1 to 6.13-rc1. The logs 
+indicate a error in mm/page_alloc.c which is called from the nvme 
+module. Other modules seem to be not producing that warning, therefore i 
+have included nvme maintainers as well.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D001217defda86d0d6a5a9e6cf77a6b813857e7e3
+The issue is seen on a Dell Latitude 5340 Notebook which is runnning 
+Fedora 41 using vanilla kernel and the system seems to be still 
+perfectly working, aside from the call trace.
 
-Uros.
+Please bare with me in case i forgot to include relevant recipients or 
+deviate from the exact process, as this is my first reported issue.
+
+Best,
+Simon
+
+
+CPU Model:
+13th Gen Intel(R) Core(TM) i5-1345U
+
+Affected Release:
+Linux version 6.13.0-0.rc1.20241203gtcdd30ebb.314.vanilla.fc41.x86_64 
+(mockbuild@51edd079414046e884973245b9e58270) (gcc (GCC) 14.2.1 20240912 
+(Red Hat 14.2.1-3), GNU ld version 2.43.1-2.fc41) #1 SMP PREEMPT_DYNAMIC 
+Tue Dec  3 07:44:07 UTC 2024
+
+Last known good release:
+Linux fedora 6.12.1-400.vanilla.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Fri 
+Nov 22 16:32:03 UTC 2024 x86_64 GNU/Linux
+
+
+Related logs:
+[    2.301170] nvme 0000:01:00.0: platform quirk: setting simple suspend
+[    2.301276] nvme nvme0: pci function 0000:01:00.0
+[..]
+[    2.325090] ------------[ cut here ]------------
+[    2.325094] WARNING: CPU: 7 PID: 206 at mm/page_alloc.c:4727 
+__alloc_pages_noprof+0x321/0x330
+[    2.325099] Modules linked in: drm_buddy nvme ttm crct10dif_pclmul 
+crc32_pclmul crc32c_intel polyval_clmulni drm_display_helper nvme_core 
+polyval_generic
+ghash_clmulni_intel sha512_ssse3 intel_ish_ipc(+) hid_multitouch(+) 
+sha256_ssse3 ucsi_acpi typec_ucsi sha1_ssse3 intel_ishtp cec nvme_auth 
+typec video i2c_hi
+d_acpi i2c_hid wmi pinctrl_tigerlake serio_raw pkcs8_key_parser fuse
+[    2.325115] CPU: 7 UID: 0 PID: 206 Comm: kworker/u48:5 Not tainted 
+6.13.0-0.rc1.20241203gtcdd30ebb.314.vanilla.fc41.x86_64 #1
+[    2.325118] Hardware name: Dell Inc. Latitude 5340/07MV6Y, BIOS 
+1.17.0 09/09/2024
+[    2.325119] Workqueue: async async_run_entry_fn
+[    2.325124] RIP: 0010:__alloc_pages_noprof+0x321/0x330
+[    2.325126] Code: e1 7f f7 c2 00 00 04 00 0f 45 d9 89 d9 83 e1 f7 81 
+e2 00 00 00 10 0f 45 d9 e9 76 fd ff ff 80 e3 3f eb e8 c6 05 a5 1c 50 02 
+01 <0f> 0b eb
+  9e e8 c6 7e d1 00 66 0f 1f 44 00 00 90 90 90 90 90 90 90
+[    2.325127] RSP: 0018:ffffc183c06efb50 EFLAGS: 00010246
+[    2.325129] RAX: 0000000000000000 RBX: 0000000000000cc0 RCX: 
+0000000000000000
+[    2.325130] RDX: 0000000000000000 RSI: 000000000000000e RDI: 
+0000000000000cc0
+[    2.325131] RBP: 000000000000000e R08: 0000000000000cc0 R09: 
+ffff9d854939aec0
+[    2.325132] R10: ffffc183c06efbb8 R11: 00000000ffffffff R12: 
+0000000000000000
+[    2.325133] R13: ffffffffffffffff R14: 0000000000000000 R15: 
+000000000000000e
+[    2.325134] FS:  0000000000000000(0000) GS:ffff9d88bf780000(0000) 
+knlGS:0000000000000000
+[    2.325135] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.325136] CR2: 000055a61ee27018 CR3: 000000010c092001 CR4: 
+0000000000f70ef0
+[    2.325138] PKRU: 55555554
+[    2.325139] Call Trace:
+[    2.325141]  <TASK>
+[    2.325142]  ? __alloc_pages_noprof+0x321/0x330
+[    2.325144]  ? __warn.cold+0x93/0xfa
+[    2.325146]  ? __alloc_pages_noprof+0x321/0x330
+[    2.325149]  ? report_bug+0xff/0x140
+[    2.325152]  ? handle_bug+0x58/0x90
+[    2.325155]  ? exc_invalid_op+0x17/0x70
+[    2.325157]  ? asm_exc_invalid_op+0x1a/0x20
+[    2.325159]  ? __alloc_pages_noprof+0x321/0x330
+[    2.325162]  __dma_direct_alloc_pages.isra.0+0x1ed/0x330
+[    2.325166]  dma_direct_alloc_pages+0x3f/0x190
+[    2.325168]  dma_alloc_noncontiguous+0xd9/0x270
+[    2.325171]  nvme_setup_host_mem+0x400/0x480 [nvme]
+[    2.325176]  ? nvme_init_ctrl_finish+0x2ac/0x330 [nvme_core]
+[    2.325190]  nvme_probe.cold+0x13b/0x240 [nvme]
+[    2.325194]  local_pci_probe+0x42/0x90
+[    2.325198]  pci_device_probe+0xdd/0x290
+[    2.325200]  really_probe+0xdb/0x340
+[    2.325203]  ? pm_runtime_barrier+0x54/0x90
+[    2.325205]  __driver_probe_device+0x78/0x110
+[    2.325208]  driver_probe_device+0x1f/0xa0
+[    2.325210]  __driver_attach_async_helper+0x5e/0xe0
+[    2.325212]  async_run_entry_fn+0x31/0x130
+[    2.325215]  process_one_work+0x176/0x330
+[    2.325218]  worker_thread+0x252/0x390
+[    2.325221]  ? __pfx_worker_thread+0x10/0x10
+[    2.325223]  kthread+0xcf/0x100
+[    2.325225]  ? __pfx_kthread+0x10/0x10
+[    2.325226]  ret_from_fork+0x31/0x50
+[    2.325229]  ? __pfx_kthread+0x10/0x10
+[    2.325230]  ret_from_fork_asm+0x1a/0x30
+[    2.325233]  </TASK>
+[    2.325234] ---[ end trace 0000000000000000 ]---
+[    2.331289] nvme nvme0: allocated 64 MiB host memory buffer (16 
+segments).
+
+
+
+#regzbot introduced: v6.12.1..v6.13-rc1
+
