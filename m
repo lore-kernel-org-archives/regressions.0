@@ -1,142 +1,152 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264AE204564;
-	Fri,  6 Dec 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E423212F91
+	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 20:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733508909; cv=none; b=qAZnRhrB2MzkXDoqPX6lBDsL07rxmQGxOty073FaF/gflip0XjaPu5Mxa8OEyq8u1c+ljUAv1Ak8mOmVPPAeawy+AzvJ0oNvrQR2rr66CXyO1Dq0UqCeTUgcKgP0nfDUeJsck5JA5R5SHGc1r4foA/FH9eyld6GjqfKTAMAH920=
+	t=1733518711; cv=none; b=rFjy4hfIhgrPSpzuKtw+h3BMoxKfP8BfOwBGU0qFscFIhVBg0SRuSSCT44OG0P43x57VqBjBra3F9mtQ7Gb/s7u93e1Ga23CK8DZb6GtR+cYXrzEj4ehj5RgoZtljgW6WF0C9a7JyMKLkx1ys3/LSLxuei7tldQs5twL6D79bGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733508909; c=relaxed/simple;
-	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gbAs35zQnq7MYdk8DE323BUudSMDCRG6y4HnWrSQPlUEbJ+A9MHzti38YYEe4lSUAcCuAAjVuHvzjq/ZA6m4mojlNsTa8mKIwIuX4dSzWBbafU2NkgyR8l4yprFanTA68lGK7Vvc6acCfWi/3SQdD2B8QCMnFgoEV8yE9BHuAus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VOJX02fW; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733518711; c=relaxed/simple;
+	bh=W2maDa1Gl94YQC1GdMNwaimsBgJBUMXVg6CCTmDJu7I=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MskjFKpYLu1hiTE5XIH2Dl7hg9snxaS5qO4F+5vRTvBmlTiOs70zSBKaQe+7AYCzv2UL34fF7ijDBf3l9YFlIdGYpYLl17UoTxcMJNhbb1gFRIZ1i9OErTcVnDdJ0C3ZsI46pTVvq1jqyofzY78m53WDkYjUqVtUMC5H943aZak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=t3UsSFDI; arc=none smtp.client-ip=193.238.174.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VOJX02fW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733508904; x=1734113704; i=w_armin@gmx.de;
-	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=VOJX02fW6UMM2Ig/br6qRyauJ1QF8JLVRmHy9HCTz48Wd6rZf2CAVcGTa1w5BXC4
-	 bKSa6IygSk9xoecARwW1H48FfWdg6SwLMwyx/edxunPtgPnCdZum+64UoxPeytZ+x
-	 5h0V7HDswvlIDJiEFJYVdRq+JFlZSP81LtXDwoAXE95EU3jGrJc2fpGS3bYKlbzLY
-	 taZPbtLE4GTWCCrniGmax64xw88EWo7KtvZ7TRwi+EFIOCMidKb0edfNcM4ISOfLp
-	 clHDIjxTNwDsRGB1zjBP7JGFedHMvdf/7RWcE+VRzTNZdHUHVBZVe8lIcOEusBKvx
-	 oHOXWW15x8x4tXT0vQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRTN9-1syUyT2l2j-00SMxY; Fri, 06
- Dec 2024 19:15:04 +0100
-Message-ID: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
-Date: Fri, 6 Dec 2024 19:15:04 +0100
+	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="t3UsSFDI"
+Received: from mx.ssi.bg (localhost [127.0.0.1])
+	by mx.ssi.bg (Potsfix) with ESMTP id A1A2821D95;
+	Fri,  6 Dec 2024 22:58:27 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
+	:content-type:content-type:date:from:from:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
+	 bh=4mzhTxfyer3pXCCutNPdBm4ebsOpNX+qmHb589hpJEA=; b=t3UsSFDIjjo9
+	9YpFOYo1J/D81iTJz2RzrFXKfmaII/WXesh0Dc5N5on1An9bH1QWb8nB3oGH9Tg2
+	fkjTeWyzosNG0cbUqMOXnl2tGM4hYQ0Vcu1rBhT8A4LZDrdq9M5sQQ/RqQ6cnnSj
+	c0Bqv5LmmMCWq3vN1LqP+9trPWhMEgY2LVp6DkjdNYfgSVxLdoH/7v2lp0045qYk
+	0N+zLxweluiNWZaF98nN4XdK8VIfLEQtOK1+o0AP5utHqlCnK6lWeLGeFp1e9FFO
+	u9fteAPfLaSBSl9IundxYpH2Y/9QtA6MlBZ/3hGleSL6YA5NlgnuZKtlTLMQl2To
+	wTju1EWyMr6FY9eT5SxiEagKeC8mN+qwDD3e6eay06fnLTjqQur7NKPQaIe2fD6a
+	rdOkcJ+jf0moCEVA83RCsajcOJYcDtAqqnvtgyNkCiMD21mS5PkGLpFaNVt/Ks2/
+	+/lkEygRzXTllCnvCiZgSyWdAOMpcGauqlbJcBzyFTqw7dqEd1s//YcqSkCch8fB
+	BLoPR9dEG+4YKgDcyZCXmsHsmXc0Ax35NkPEvvCBSVIPY2vfrsMcHHfz63FshGaw
+	rr11pPRVHEk/KluC97orXlAvJJnCVtGwFl1sVwSGP2ZgfY0hIeRRhp4OKPGFJ+ng
+	1lc0gwoEI8v7LIG4fRcDT+rGr46d9Q0=
+Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
+	by mx.ssi.bg (Potsfix) with ESMTPS;
+	Fri,  6 Dec 2024 22:58:26 +0200 (EET)
+Received: from ja.ssi.bg (unknown [213.16.62.126])
+	by ink.ssi.bg (Postfix) with ESMTPSA id 34E4315F19;
+	Fri,  6 Dec 2024 22:58:17 +0200 (EET)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 4B6KwDGo064449;
+	Fri, 6 Dec 2024 22:58:14 +0200
+Date: Fri, 6 Dec 2024 22:58:13 +0200 (EET)
+From: Julian Anastasov <ja@ssi.bg>
+To: David Laight <David.Laight@ACULAB.COM>
+cc: "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "'Naresh Kamboju'" <naresh.kamboju@linaro.org>,
+        "'Dan Carpenter'" <dan.carpenter@linaro.org>,
+        "'pablo@netfilter.org'" <pablo@netfilter.org>,
+        "'open list'" <linux-kernel@vger.kernel.org>,
+        "'lkft-triage@lists.linaro.org'" <lkft-triage@lists.linaro.org>,
+        "'Linux Regressions'" <regressions@lists.linux.dev>,
+        "'Linux ARM'" <linux-arm-kernel@lists.infradead.org>,
+        "'netfilter-devel@vger.kernel.org'" <netfilter-devel@vger.kernel.org>,
+        "'Arnd Bergmann'" <arnd@arndb.de>,
+        "'Anders Roxell'" <anders.roxell@linaro.org>,
+        "'Johannes Berg'" <johannes.berg@intel.com>,
+        "'toke@kernel.org'" <toke@kernel.org>,
+        "'Al Viro'" <viro@zeniv.linux.org.uk>,
+        "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
+        "'kees@kernel.org'" <kees@kernel.org>
+Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
+ systems.
+In-Reply-To: <494a4dc2ba2041dfb9f45d86e972b953@AcuMS.aculab.com>
+Message-ID: <184af1fd-2bc4-11c1-9319-0ca879e53d99@ssi.bg>
+References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com> <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg> <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com> <c0a2ee53-f6ff-f4d4-e9ab-6a3bf850bec5@ssi.bg>
+ <494a4dc2ba2041dfb9f45d86e972b953@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
-To: Yura Strilets <yurastr100@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JqhSvlqpwvBpTYv7338/mK4fck667VMNfCQkH9+BWs/WWr9tOGZ
- +Rd8cc5JI9glx4k3ekGfxdwTwKxC4mUCDUGKnc5pnRZL3X4+ZnInmS+EbXrIkacJC1quNxb
- sPRgvFLJ1QuWLIlNV7869HvEP7+LmUOIKTa5RrC0eRgpoUUBeMCOYSlQrzirFS3U1MqEWLN
- A/yKWS/tcUasqVBhhlyJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/mExfcB00e0=;wdRbfLWlH151AbiciLd3nOP3XG/
- W55jS0mdHCFOt3wrLDfv4a23GICYMdQRq3s4CPsX+B4BRqfDiVijBTWeDUlAdAcIN4saX0aXl
- Qlt82jvP5V6I4IpNTJXAiFpx1EkGdkMtsTmvK49kflN875VRJFhfVyOMyThm7MAxR7KaR9LE0
- e8IsUSQDJCRsSOjIAsTFoE+n2KNEyBd14dBkllBiQs3HxS46Z3py6mkD02HCjqVWCFlo46N8a
- FiQh1vEeGnLg9fszYcNXC8SvZNrBv1qxfC8ujCN6y+4YZH63+KGVNK5IiHY+EFxqTqJ6rsedO
- EiMr/Dk02IWW26gS6VWPdbGMKP4FrhbmIWS8Wfq7Pu37k81cfD9aK5pinYcFeQyZJZcxo/NL0
- YZPOfPIVTFnwS35TwGC4GMrsBdror3VF1o6Fa5EJtri+xisFDE9fxELB2ZUjKf84p3wH8v0Sc
- UvHFfRCRcgL+6UXOE41mlghuJQLmHFbqsZyDt2LoNljbSIOL7lw8rU47ZbvIV3zWMlD90eQo0
- RwhFQRPuE0p0w4Wzl3QWOl03jZNHi53QEam3Pi2qW3AihW2ARVbFZpQJluczZOAjVTKdzZuHD
- /waX4Bl+S3uyNhPCao76DhEAEKXwHyiTA630u6+kX3JaooQd158UeW2gKVeK69g7uqjIAQXfC
- LWvql5eeNaB7wfNd17ekBK3KujdgFYz5mKYbwo6izPpMzYx2cEI8IhWxXXCJUo4Ny8o1a8RhC
- cViLVl7Fk3XMxlIURC6OA/qpeRRKYHuJFBnv5T4rD5KS83OoJBnW3kJxXf7uJLTI9rfBFmSgN
- f3evI/Fav3i/QDunwRtyI/SV/YT/TIw5QLZ0u/7D5bNd1PsJ4SYXGvO6I3DvY8OOTuJcOo+uk
- 5iM5xQkA/4ux+/zj4RBiwdxG5/mZ0DtqwAVshUs0dYY62AOdft2P1KovRDU6Q9UePkXZU5V7U
- evHy+Y7k1t9InBBDfkJDUhlMyML0VD9o7NPc6RHiLFKTQouHhibAhjeI8qRra+gYgnO+H6PXs
- /dNUXEyvA8lcHOhLu7zv1FN6IdXU0F+QgGsrTle2Fttbp5i7lLZTeAc3BGg8bbAXGdd53woVj
- XVyK5ZlNzJRiR5rHfQpPIMqiQq0yfw
+Content-Type: text/plain; charset=US-ASCII
 
-Am 06.12.24 um 14:33 schrieb Yura Strilets:
 
-> Hello,
->
-> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
-> mic, kb backlight, my asus) stopped working and the
-> /sys/(...)/asus::kbd_backlight interface is missing, which,
-> considering the dmesg, looks like an asus-wmi driver issue.
->
-> I've been able to bisect the issue to the commit
-> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
-> Fix thermal profile initialization"
->
-> Additionally, here's some maybe-helpful information:
-> my laptop's model -- ASUS Zenbook UX3402VA
-> linux distro -- Arch Linux
-> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
-> kernel(attached in [1]) and missing options are default
-> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
-> be seen below and full logs are at [2] and [3]
->
-> =3D=3D bad.log =3D=3D
-> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
-> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
-> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
-> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
- ASUSWMI, use
-> DSTS
-> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
-olicy
-> (retval): 0x0
-> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
-ofile
-> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
- asus-nb-wmi
-> failed with error -5
-> =3D=3D end =3D=3D
->
-> =3D=3D good.log =3D=3D
-> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
-> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
-> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
-> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
- ASUSWMI, use
-> DSTS
-> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
-ble event queue
-> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
-> /devices/platform/asus-nb-wmi/input/input15
-> =3D=3D end =3D=3D
->
-> [1] .config - https://pastebin.com/raw/3nDSV8Sm
-> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
-> [3] good.log - https://pastebin.com/raw/EazfLAWA
->
-> Thanks,
-> Yurii
->
-I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alre=
-ady submitted upstream and will likely
-show up in the stable kernels soon.
+	Hello,
 
-Thanks,
-Armin Wolf
+On Fri, 6 Dec 2024, David Laight wrote:
+
+> From: Julian Anastasov
+> > Sent: 06 December 2024 16:23
+> ...
+> > 	I'm not sure how much memory we can see in small system,
+> > IMHO, problem should not be possible in practice:
+> > 
+> > - nobody expects 0 from totalram_pages() in the code
+> > 
+> > - order_base_2(sizeof(struct ip_vs_conn)) is probably 8 on 32-bit
+> 
+> It is 0x120 bytes on 64bit, so 8 could well be right.
+
+	That is already for 9 :)
+
+> > > Is all stems from order_base_2(totalram_pages()).
+> > > order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
+> > > And the compiler generates two copies of the code that follows
+> > > for the 'constant zero' and ilog2() values.
+> > > And the 'zero' case compiles clamp(20, 8, 0) which is errored.
+> > > Note that it is only executed if totalram_pages() is zero,
+> > > but it is always compiled 'just in case'.
+> > 
+> > 	I'm confused with these compiler issues,
+> 
+> The compiler is just doing its job.
+> Consider this expression:
+> 	(x >= 1 ? 2 * x : 1) - 1
+> It is likely to get converted to:
+> 	(x >= 1 ? 2 * x - 1 : 0)
+> to avoid the subtract when x < 1.
+> 
+> The same thing is happening here.
+> order_base_2() has a (condition ? fn() : 0) in it.
+> All the +/- constants get moved inside, on 64bit that is +12 -2 -1 -9 = 0.
+> Then the clamp() with constants gets moved inside:
+> 	(condition ? clamp(27, 8, fn() + 0) : clamp(27, 8, 0 + 0))
+> Now, at runtime, we know that 'condition' is true and (fn() >= 8)
+> so the first clamp() is valid and the second one never used.
+> But this isn't known by the compiler and clamp() detects the invalid
+> call and generates a warning.
+
+	I see, such optimizations are beyond my expectations,
+I used max_avail var to separate the operations between
+different macro calls but in the end they are mixed together...
+
+> > if you
+> > think we should go with the patch just decide if it is a
+> > net or net-next material. Your change is safer for bad
+> > max_avail values but I don't expect to see problem while
+> > running without the change, except the building bugs.
+> > 
+> > 	Also, please use nf/nf-next tag to avoid any
+> > confusion with upstreaming...
+> 
+> I've copied Andrew M - he's taken the minmax.h change into his mm tree.
+> This is one of the build breakages.
+> 
+> It probably only needs to go into next for now (via some route).
+> But I can image the minmax.h changes getting backported a bit.
+
+	OK, then can you send v2 with Fixes header, precised comments
+and nf tag, it fixes a recent commit, so it can be backported easily...
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
 
