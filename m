@@ -1,152 +1,147 @@
-Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E423212F91
-	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 20:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8654D1B5EB5
+	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 21:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733518711; cv=none; b=rFjy4hfIhgrPSpzuKtw+h3BMoxKfP8BfOwBGU0qFscFIhVBg0SRuSSCT44OG0P43x57VqBjBra3F9mtQ7Gb/s7u93e1Ga23CK8DZb6GtR+cYXrzEj4ehj5RgoZtljgW6WF0C9a7JyMKLkx1ys3/LSLxuei7tldQs5twL6D79bGw=
+	t=1733519925; cv=none; b=PDXm+u9zD5GUVo51FtnWBh2a1xP7DzD5bGhPiFiFJdRLkPF4aAJG+y9DvQS75/NNJ0uKU3KQaJxl8NJVcpJ2It4WMeuUOR0TD4A0sZ6BgkVA9HCEWyRuxS+OGu2GWPKeNFMIqcyh3lly8F23CcO8DATMbjWbPIBKr7RcJoP9vSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733518711; c=relaxed/simple;
-	bh=W2maDa1Gl94YQC1GdMNwaimsBgJBUMXVg6CCTmDJu7I=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MskjFKpYLu1hiTE5XIH2Dl7hg9snxaS5qO4F+5vRTvBmlTiOs70zSBKaQe+7AYCzv2UL34fF7ijDBf3l9YFlIdGYpYLl17UoTxcMJNhbb1gFRIZ1i9OErTcVnDdJ0C3ZsI46pTVvq1jqyofzY78m53WDkYjUqVtUMC5H943aZak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=t3UsSFDI; arc=none smtp.client-ip=193.238.174.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1733519925; c=relaxed/simple;
+	bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=PROitza5Vzbx4YRRJZOg+RxzMogEmeCuJrWTFi9b234ve58Bh1smdp8wlP0YcSgfTCpBlcajfM/Y831eW4rZVkmn2inkkh1xyk+vNLw3CpCql1qRBS0ZIrzRok4ad29tfas4zsf57gPRlAwkJx+KOLkyJLELF2r/CxFtJHfsFqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ne+B9wrk; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="t3UsSFDI"
-Received: from mx.ssi.bg (localhost [127.0.0.1])
-	by mx.ssi.bg (Potsfix) with ESMTP id A1A2821D95;
-	Fri,  6 Dec 2024 22:58:27 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
-	:content-type:content-type:date:from:from:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
-	 bh=4mzhTxfyer3pXCCutNPdBm4ebsOpNX+qmHb589hpJEA=; b=t3UsSFDIjjo9
-	9YpFOYo1J/D81iTJz2RzrFXKfmaII/WXesh0Dc5N5on1An9bH1QWb8nB3oGH9Tg2
-	fkjTeWyzosNG0cbUqMOXnl2tGM4hYQ0Vcu1rBhT8A4LZDrdq9M5sQQ/RqQ6cnnSj
-	c0Bqv5LmmMCWq3vN1LqP+9trPWhMEgY2LVp6DkjdNYfgSVxLdoH/7v2lp0045qYk
-	0N+zLxweluiNWZaF98nN4XdK8VIfLEQtOK1+o0AP5utHqlCnK6lWeLGeFp1e9FFO
-	u9fteAPfLaSBSl9IundxYpH2Y/9QtA6MlBZ/3hGleSL6YA5NlgnuZKtlTLMQl2To
-	wTju1EWyMr6FY9eT5SxiEagKeC8mN+qwDD3e6eay06fnLTjqQur7NKPQaIe2fD6a
-	rdOkcJ+jf0moCEVA83RCsajcOJYcDtAqqnvtgyNkCiMD21mS5PkGLpFaNVt/Ks2/
-	+/lkEygRzXTllCnvCiZgSyWdAOMpcGauqlbJcBzyFTqw7dqEd1s//YcqSkCch8fB
-	BLoPR9dEG+4YKgDcyZCXmsHsmXc0Ax35NkPEvvCBSVIPY2vfrsMcHHfz63FshGaw
-	rr11pPRVHEk/KluC97orXlAvJJnCVtGwFl1sVwSGP2ZgfY0hIeRRhp4OKPGFJ+ng
-	1lc0gwoEI8v7LIG4fRcDT+rGr46d9Q0=
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mx.ssi.bg (Potsfix) with ESMTPS;
-	Fri,  6 Dec 2024 22:58:26 +0200 (EET)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id 34E4315F19;
-	Fri,  6 Dec 2024 22:58:17 +0200 (EET)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 4B6KwDGo064449;
-	Fri, 6 Dec 2024 22:58:14 +0200
-Date: Fri, 6 Dec 2024 22:58:13 +0200 (EET)
-From: Julian Anastasov <ja@ssi.bg>
-To: David Laight <David.Laight@ACULAB.COM>
-cc: "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "'Naresh Kamboju'" <naresh.kamboju@linaro.org>,
-        "'Dan Carpenter'" <dan.carpenter@linaro.org>,
-        "'pablo@netfilter.org'" <pablo@netfilter.org>,
-        "'open list'" <linux-kernel@vger.kernel.org>,
-        "'lkft-triage@lists.linaro.org'" <lkft-triage@lists.linaro.org>,
-        "'Linux Regressions'" <regressions@lists.linux.dev>,
-        "'Linux ARM'" <linux-arm-kernel@lists.infradead.org>,
-        "'netfilter-devel@vger.kernel.org'" <netfilter-devel@vger.kernel.org>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Anders Roxell'" <anders.roxell@linaro.org>,
-        "'Johannes Berg'" <johannes.berg@intel.com>,
-        "'toke@kernel.org'" <toke@kernel.org>,
-        "'Al Viro'" <viro@zeniv.linux.org.uk>,
-        "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
-        "'kees@kernel.org'" <kees@kernel.org>
-Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-In-Reply-To: <494a4dc2ba2041dfb9f45d86e972b953@AcuMS.aculab.com>
-Message-ID: <184af1fd-2bc4-11c1-9319-0ca879e53d99@ssi.bg>
-References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com> <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg> <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com> <c0a2ee53-f6ff-f4d4-e9ab-6a3bf850bec5@ssi.bg>
- <494a4dc2ba2041dfb9f45d86e972b953@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ne+B9wrk"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a0ec0a94fso312517066b.1
+        for <regressions@lists.linux.dev>; Fri, 06 Dec 2024 13:18:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733519920; x=1734124720; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+        b=ne+B9wrkgsYfcawsl/Yha+EIxSRx3c6V87WEhRIvDNDusBYNP70UxIRJ4CFkz6GVbv
+         Kx/uFkPxrJOscHZrNkrIiOgNgRySji0BappBewaOQodjA/8ZukI/XyFjajPCn9bAuXC3
+         f5fcW1VxSFwBeSx9eW3GIQ0cL7JhnSWE6Jdnrb13kshATvikpg1eca9NHCg++HVvReYH
+         fQk3aM3NwmhvG/WkWw2n9btkG5rFGihww8gSKzo8d+K3rfQDgJ3DtEhnHXa45DqyKtj7
+         PQFI4HbOFYjm6qeg4KUM8do32osAdibr2iGwSErqVtKszTnWGH1GDHXAD9zFgZvZ86OF
+         +YLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733519920; x=1734124720;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+G0VUTcrCnTC5rX+UjcLwTptgU7q/HBq1U1Y2xggPl4=;
+        b=GqBZHguwwiPcrCxEckG+pktDaQP2RFTuCCYUdz3d+/jd+CgbrFCnf2TVJixkozzCDk
+         Vob7OA/P1iZI4Oxzcka8HptjGcOrpt0ZgoEMahKlTb+vzC6iZu6Iaje9ZMnZ2Aa5wgM3
+         kKL17S1NDoim4k+RY9SaZRrFZZmOw+9LrmTDR30MtAZ9/qekeLTJ938I4FBTRyRcid1J
+         s/XA69uzn+wLbJOZ8xfi1lASoXEJgWgEzXQ218eqDjEvvT82WuQn/Ar9XSf9wUSm96QZ
+         TqHoHKdAH/VEQkx3DMjSbSzA7GyThT7v7Ssx6Agl3IIIiGY6RVnRvtVNtTFU4HbCV8kx
+         Tf8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWSgp2co3NF3e8UahOOajldjW7kz1wZ7XMr57rUX/6Q2itMhAa5plXaSKsVD4Qx+cnrrDS5yzsHpRsADg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy3dzjyHfBDi3vS9cjVfoMo9wB9LKV7ox4Ls/yxXcOsRfe/hcF6
+	WVMKPggackokrDesk1VgemIUqRSXWN6lQT0fH9LfC9wY75yq/aLdqZy/h4TG
+X-Gm-Gg: ASbGncvWcfwZO4IE5MRMe92UJMkzmBvsU7Qal4+9l27wD1vbXPq6K8U+n//B8G//lDP
+	sunwmfXhac6LaNx67HzgMVhy9s6NO4Hnt8Cc+5kD9PCsq3DdBOvtL4wPebNAM4FY/MKMGsLmotj
+	1X8DrQ6T04RW6qtlXqMxDzhDb2lLUm/SHMK2FBPo1lNLsqkqPBLOGgXtsV+uKjQ1gwETdNeG1Vu
+	lh1SsdFAQJG1HxnkyZcJB7dHHUhDEAI8L3xS01Dpk6lZw==
+X-Google-Smtp-Source: AGHT+IGcoxybZrhqT6jfLtgMG6i7/mc41GHYgMF8CO/3DtZQeH/elgJdfj7dasDNeMyogMXK8EXInA==
+X-Received: by 2002:a17:907:7714:b0:aa6:3418:d9d4 with SMTP id a640c23a62f3a-aa63a073aa6mr302410166b.17.1733519919441;
+        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
+Received: from [127.0.0.1] ([45.152.72.7])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa625e96a3esm291696566b.59.2024.12.06.13.18.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 13:18:39 -0800 (PST)
+Date: Fri, 6 Dec 2024 23:18:36 +0200 (GMT+02:00)
+From: Yurii Strilets <yurastr100@gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Message-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
+In-Reply-To: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
+References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com> <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
+Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
 
+Thank you very much for the fix!
+I am terribly sorry about a faulty report, I did just find out I had an iss=
+ue during the mainline build.
 
-	Hello,
+Dec 6, 2024 20:15:05 Armin Wolf <W_Armin@gmx.de>:
 
-On Fri, 6 Dec 2024, David Laight wrote:
-
-> From: Julian Anastasov
-> > Sent: 06 December 2024 16:23
-> ...
-> > 	I'm not sure how much memory we can see in small system,
-> > IMHO, problem should not be possible in practice:
-> > 
-> > - nobody expects 0 from totalram_pages() in the code
-> > 
-> > - order_base_2(sizeof(struct ip_vs_conn)) is probably 8 on 32-bit
-> 
-> It is 0x120 bytes on 64bit, so 8 could well be right.
-
-	That is already for 9 :)
-
-> > > Is all stems from order_base_2(totalram_pages()).
-> > > order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
-> > > And the compiler generates two copies of the code that follows
-> > > for the 'constant zero' and ilog2() values.
-> > > And the 'zero' case compiles clamp(20, 8, 0) which is errored.
-> > > Note that it is only executed if totalram_pages() is zero,
-> > > but it is always compiled 'just in case'.
-> > 
-> > 	I'm confused with these compiler issues,
-> 
-> The compiler is just doing its job.
-> Consider this expression:
-> 	(x >= 1 ? 2 * x : 1) - 1
-> It is likely to get converted to:
-> 	(x >= 1 ? 2 * x - 1 : 0)
-> to avoid the subtract when x < 1.
-> 
-> The same thing is happening here.
-> order_base_2() has a (condition ? fn() : 0) in it.
-> All the +/- constants get moved inside, on 64bit that is +12 -2 -1 -9 = 0.
-> Then the clamp() with constants gets moved inside:
-> 	(condition ? clamp(27, 8, fn() + 0) : clamp(27, 8, 0 + 0))
-> Now, at runtime, we know that 'condition' is true and (fn() >= 8)
-> so the first clamp() is valid and the second one never used.
-> But this isn't known by the compiler and clamp() detects the invalid
-> call and generates a warning.
-
-	I see, such optimizations are beyond my expectations,
-I used max_avail var to separate the operations between
-different macro calls but in the end they are mixed together...
-
-> > if you
-> > think we should go with the patch just decide if it is a
-> > net or net-next material. Your change is safer for bad
-> > max_avail values but I don't expect to see problem while
-> > running without the change, except the building bugs.
-> > 
-> > 	Also, please use nf/nf-next tag to avoid any
-> > confusion with upstreaming...
-> 
-> I've copied Andrew M - he's taken the minmax.h change into his mm tree.
-> This is one of the build breakages.
-> 
-> It probably only needs to go into next for now (via some route).
-> But I can image the minmax.h changes getting backported a bit.
-
-	OK, then can you send v2 with Fixes header, precised comments
-and nf tag, it fixes a recent commit, so it can be backported easily...
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
-
+> Am 06.12.24 um 14:33 schrieb Yura Strilets:
+>=20
+>> Hello,
+>>=20
+>> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
+>> mic, kb backlight, my asus) stopped working and the
+>> /sys/(...)/asus::kbd_backlight interface is missing, which,
+>> considering the dmesg, looks like an asus-wmi driver issue.
+>>=20
+>> I've been able to bisect the issue to the commit
+>> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
+>> Fix thermal profile initialization"
+>>=20
+>> Additionally, here's some maybe-helpful information:
+>> my laptop's model -- ASUS Zenbook UX3402VA
+>> linux distro -- Arch Linux
+>> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
+>> kernel(attached in [1]) and missing options are default
+>> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
+>> be seen below and full logs are at [2] and [3]
+>>=20
+>> =3D=3D bad.log =3D=3D
+>> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
+>> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
+>> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
+>> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+ ASUSWMI, use
+>> DSTS
+>> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
+olicy
+>> (retval): 0x0
+>> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
+ofile
+>> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
+ asus-nb-wmi
+>> failed with error -5
+>> =3D=3D end =3D=3D
+>>=20
+>> =3D=3D good.log =3D=3D
+>> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
+>> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
+>> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
+>> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+ ASUSWMI, use
+>> DSTS
+>> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
+ble event queue
+>> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
+>> /devices/platform/asus-nb-wmi/input/input15
+>> =3D=3D end =3D=3D
+>>=20
+>> [1] .config - https://pastebin.com/raw/3nDSV8Sm
+>> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
+>> [3] good.log - https://pastebin.com/raw/EazfLAWA
+>>=20
+>> Thanks,
+>> Yurii
+>>=20
+> I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alr=
+eady submitted upstream and will likely
+> show up in the stable kernels soon.
+>=20
+> Thanks,
+> Armin Wolf
