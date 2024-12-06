@@ -1,180 +1,96 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B735E1C1F19
-	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 13:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1466B1FF7D4;
+	Fri,  6 Dec 2024 13:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733490529; cv=none; b=iGS2pqYpniTsRR+iWcXmM4d8plT1v3Q+Ual2uEP1IsSPbV2TISuX0FbIB513pAYb/ZB/GzX5UVxAgRy3sTv1KRB7Nnbzfy3T4W/4cN9NK4bivbxFVdYWOpaECJyhaLJiokkwHmEI4W3c9ItmCJNI8fpGzFcAvLtR8QcpEh4Y2EE=
+	t=1733490931; cv=none; b=cEDihQTYfuG1wwe8RHEO8vX9Tss2HpoeFsz34gq1T7N7pMXOFLv4k3QB7ENlue0HvbMl9TmqjGQyYXqvofFjnYTGAwsMyQwtLaBXpPy/AbBe9kS2dCpYLVZ/LbTmGTsV0tAEgoc0dsE+0Wn4epTmWQaCvBqQ0hPhdwS6Av+p0Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733490529; c=relaxed/simple;
-	bh=QF8c2MhUemDCUpYqGQBweZ1Ws7IWDc/WAQA2tfJjVVU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=fsBRufi/sp2nA8jGo3LkrhB9wWZETsYrZvt0czDMyz8Bv020ndJWKN90ezujEgFpn0R6R4ZV9LXTTcLbgCbzF2KICfZHJ1KxxZc5Hyp1/VOiSmTBCLIV1m4aT7wz4B7OR+xaG7HgOtYQqILtwNkho9E4/VpiQPmqhFtAOGwdN8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-168-rEnKtWNUMFWeQM5TnnsDWQ-1; Fri, 06 Dec 2024 13:08:45 +0000
-X-MC-Unique: rEnKtWNUMFWeQM5TnnsDWQ-1
-X-Mimecast-MFC-AGG-ID: rEnKtWNUMFWeQM5TnnsDWQ
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 6 Dec
- 2024 13:07:59 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 6 Dec 2024 13:07:59 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Julian Anastasov' <ja@ssi.bg>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 'Naresh Kamboju'
-	<naresh.kamboju@linaro.org>, 'Dan Carpenter' <dan.carpenter@linaro.org>,
-	"'pablo@netfilter.org'" <pablo@netfilter.org>, 'open list'
-	<linux-kernel@vger.kernel.org>, "'lkft-triage@lists.linaro.org'"
-	<lkft-triage@lists.linaro.org>, 'Linux Regressions'
-	<regressions@lists.linux.dev>, 'Linux ARM'
-	<linux-arm-kernel@lists.infradead.org>, "'netfilter-devel@vger.kernel.org'"
-	<netfilter-devel@vger.kernel.org>, 'Arnd Bergmann' <arnd@arndb.de>, "'Anders
- Roxell'" <anders.roxell@linaro.org>, 'Johannes Berg'
-	<johannes.berg@intel.com>, "'toke@kernel.org'" <toke@kernel.org>, 'Al Viro'
-	<viro@zeniv.linux.org.uk>, "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
-	"'kees@kernel.org'" <kees@kernel.org>
-Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Topic: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Index: AdtHyTlbE/fm67s0Ria1gsbgnJ6KcgAD9raAAACnwVA=
-Date: Fri, 6 Dec 2024 13:07:59 +0000
-Message-ID: <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com>
-References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com>
- <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg>
-In-Reply-To: <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1733490931; c=relaxed/simple;
+	bh=RBQPiZLaF/HhYgZcAn4z7acnCKkfab9JJzcgHdj2gco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbHi7KE7U5g68mqSkcVeZdkqvrSITK6mN8jQaz+Rjoj6AItjtgv5H2ZeIjcUZm1YzIXJ/v2K4pRBnXdIm9q3Oyi57RCx0Z6CdgAjmYtIS7SvZ3VFfdsjxop1/wXyw65QrXom6b9CblXdhcXBcWzwgOYqtYXEE1oAgDgNmnJTXqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6QeHy05; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6QeHy05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C9DC4CED2;
+	Fri,  6 Dec 2024 13:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733490930;
+	bh=RBQPiZLaF/HhYgZcAn4z7acnCKkfab9JJzcgHdj2gco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R6QeHy05RXBSsTKwcBOYlJr2HkerKo9KqPFDRbXA6hFsWiGonVcZluo4sks33Ow1L
+	 cFU7qPOwcNsmP7qio8uAeGLVOEfGvAfemTa6vPS7gK2Y093SZZ3OxmjlW3npcci3Jj
+	 2ennJ8B3UOZYsw6TwDSbGqNwtpwLl1DwHYmU8KWjHNpHK9NVIKsgKDWiZ38Uvp8dEO
+	 YBG9l7V+Rca9oWH2ZnSoDrdoMsoo6VwM9UHDb6HBnIVvT4+/V2P5cjYyWgs65vGAGe
+	 9CqPaR419CkRVg3c0twz2p+hTf1sjwO7ozndhp4o/zvJctY7/fDwvIS3+8ZE/v8UzY
+	 P4A+JwrZ8KuAw==
+Date: Fri, 6 Dec 2024 14:15:24 +0100
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, 
+	Gregory CLEMENT <gregory.clement@bootlin.com>, Lee Jones <lee@kernel.org>, regressions@lists.linux.dev, 
+	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	soc@kernel.org, arm@kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH leds v5 12/12] ARM: dts: turris-omnia: Add global LED
+ brightness change interrupt
+Message-ID: <7rkcryouxg2s5misf7nx3vsf72rhaq2twhlksj62bzmaagdwfv@p3xy6rhzgntz>
+References: <20241104141924.18816-1-kabel@kernel.org>
+ <20241104141924.18816-13-kabel@kernel.org>
+ <87bjyv9ecb.fsf@BLaptop.bootlin.com>
+ <778f08f1774fcad5fcc39114dbb721793ebf95d6.camel@gmail.com>
+ <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
+ <ofd5ru77wypfysflpblafbbdgrcmzztqwoewfjfuusrnbma4aw@y3oc3etutisi>
+ <CAPy0QmsF1qr3A-89BDQHu-QVXpMhMGWt8e74FfDkqVT6Ha7q-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3j0BVj-5y8Bk75vKFLYj-G04RChfP5L5vBvx-80uWNw_1733490524
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPy0QmsF1qr3A-89BDQHu-QVXpMhMGWt8e74FfDkqVT6Ha7q-g@mail.gmail.com>
 
-From: Julian Anastasov
-> Sent: 06 December 2024 12:19
->=20
-> On Fri, 6 Dec 2024, David Laight wrote:
->=20
-> > The intention of the code seems to be that the minimum table
-> > size should be 256 (1 << min).
-> > However the code uses max =3D clamp(20, 5, max_avail) which implies
->=20
-> =09Actually, it tries to reduce max=3D20 (max possible) below
-> max_avail: [8 .. max_avail]. Not sure what 5 is here...
-
-Me mistyping values between two windows :-)
-
-Well min(max, max_avail) would be the reduced upper limit.
-But you'd still fall foul of the compiler propagating the 'n > 1'
-check in order_base_2() further down the function.
-
-> > the author thought max_avail could be less than 5.
-> > But clamp(val, min, max) is only well defined for max >=3D min.
-> > If max < min whether is returns min or max depends on the order of
-> > the comparisons.
->=20
-> =09Looks like max_avail goes below 8 ? What value you see
-> for such small system?
-
-I'm not, but clearly you thought the value could be small otherwise
-the code would only have a 'max' limit.
-(Apart from a 'sanity' min of maybe 2 to stop the code breaking.)
-
->=20
-> > Change to clamp(max_avail, 5, 20) which has the expected behaviour.
->=20
-> =09It should be clamp(max_avail, 8, 20)
->=20
+On Fri, Dec 06, 2024 at 10:04:49AM +0100, Klaus Kudielka wrote:
+> On Thu, Dec 5, 2024 at 1:43 PM Marek Behún <kabel@kernel.org> wrote:
+> > On Thu, Dec 05, 2024 at 01:38:10PM +0100, Marek Behún wrote:
+> > >
+> > > This is because the patch went into 6.13 but the rest of the patches
+> > > did not, Lee wants to take them for 6.14 :-(
+> > >
+> > > Apply this series and it will work.
+> > >
+> > > https://lore.kernel.org/linux-leds/20241111100355.6978-1-kabel@kernel.org/T/
 > >
-> > Replace the clamp_val() on the line below with clamp().
-> > clamp_val() is just 'an accident waiting to happen' and not needed here=
-.
->=20
-> =09OK
->=20
-> > Fixes: 4f325e26277b6
-> > (Although I actually doubt the code is used on small memory systems.)
+> > Alternatively you can overcome this issue if you enable the
+> > turris-omnia-mcu driver in 6.13:
 > >
-> > Detected by compile time checks added to clamp(), specifically:
-> > minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
->=20
-> =09Existing or new check? Does it happen that max_avail
-> is a constant, so that a compile check triggers?
-
-Is all stems from order_base_2(totalram_pages()).
-order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
-And the compiler generates two copies of the code that follows
-for the 'constant zero' and ilog2() values.
-And the 'zero' case compiles clamp(20, 8, 0) which is errored.
-Note that it is only executed if totalram_pages() is zero,
-but it is always compiled 'just in case'.
-
->=20
+> >   CONFIG_CZNIC_PLATFORMS=y
+> >   CONFIG_TURRIS_OMNIA_MCU=y/m
+> > (and also the subsequent options).
 > >
-> > Signed-off-by: David Laight <david.laight@aculab.com>
->=20
-> =09The code below looks ok to me but can you change the
-> comments above to more correctly specify the values and if the
-> problem is that max_avail goes below 8 (min).
->=20
-> > ---
-> >  net/netfilter/ipvs/ip_vs_conn.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs=
-_conn.c
-> > index 98d7dbe3d787..c0289f83f96d 100644
-> > --- a/net/netfilter/ipvs/ip_vs_conn.c
-> > +++ b/net/netfilter/ipvs/ip_vs_conn.c
-> > @@ -1495,8 +1495,8 @@ int __init ip_vs_conn_init(void)
-> >  =09max_avail -=3D 2;=09=09/* ~4 in hash row */
-> >  =09max_avail -=3D 1;=09=09/* IPVS up to 1/2 of mem */
-> >  =09max_avail -=3D order_base_2(sizeof(struct ip_vs_conn));
->=20
-> =09More likely we can additionally clamp max_avail here:
->=20
-> =09max_avail =3D max(min, max_avail);
->=20
-> =09But your solution solves the problem with less lines.
+> > Marek
+> 
+> Thanks, I will try that when I'm back at the hardware (in a week or so).
+> 
+> Do I correctly understand the situation:
+> For the Turris Omnia LEDs there is now a temporary dependency on
+> CONFIG_TURRIS_OMNIA_MCU, which will vanish in 6.14?
+> 
+> Best regards, Klaus
 
-And less code in the path that is actually executed.
+No, the leds-turris-omnia driver will have hard dependency on turris-omnia-mcu
+driver instead. You won't be able to select leds-turris-omnia without enabling
+turris-omnia-mcu.
 
-=09David
+This is because leds-turris-omnia depends on the IRQ line provided by the
+turris-omnia-mcu driver.
 
->=20
-> > -=09max =3D clamp(max, min, max_avail);
-> > -=09ip_vs_conn_tab_bits =3D clamp_val(ip_vs_conn_tab_bits, min, max);
-> > +=09max =3D clamp(max_avail, min, max);
-> > +=09ip_vs_conn_tab_bits =3D clamp(ip_vs_conn_tab_bits, min, max);
-> >  =09ip_vs_conn_tab_size =3D 1 << ip_vs_conn_tab_bits;
-> >  =09ip_vs_conn_tab_mask =3D ip_vs_conn_tab_size - 1;
-> >
-> > --
-> > 2.17.1
->=20
-> Regards
->=20
-> --
-> Julian Anastasov <ja@ssi.bg>
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+Marek
