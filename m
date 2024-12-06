@@ -1,89 +1,88 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6572227BB6
-	for <regressions@lists.linux.dev>; Thu,  5 Dec 2024 18:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E80113C8FF
+	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 02:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733424137; cv=none; b=t90e1K6xeGBZ16a4LrJncBAHB5k2k+CgwfmkwAImNRjlpGy3ft9iUqOsK6OFDXVljJ9z8wwXNNVQ5+CzMKTBvXNK0jf7yniI4Y1F+nGds8yxw27qm9tdkfQ2MdmZji0lTFx75tEaT8mqJYVzSJP7RblbQU9bj4t6aoEDfOlwYD8=
+	t=1733451594; cv=none; b=c3Jc/OKSXayTdyhMxliGz71S2gjFLvfovLfESlOK7dgKyYUqxNFa/hIQQJmbalKKEMvNN9ZPXjjHJgdygz60WFRi4XcIX66HSFR7zE9RdiT0qBldN9RPvy1m1bqaI8CEfN9jtyl/atwVQFgV7GBxE+uKyZMHfv5iS3dtvJ8G1ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733424137; c=relaxed/simple;
-	bh=gA/VeNm6V5/8b09vX/49ut5uvV/G8q+I9tBmKj7pctU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MoFRRyvdRa7gQaVPB5FExqo+wOo1XZBtVEAYE28ZTLYTPUYkZZOIOID0LCJoZtbvAhwO2AezJxRf0eRBOY8ZDoSZdQbwFI3cwy/PQXkD+VKVMlKS5jFtuPL6QWJmjJ6MvHNT9iyLGnf5nsAPiH3vdxOon4oLVxDj/jGBEQFCtdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E9wfeQBs; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E9wfeQBs"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4afbf632c82so242772137.0
-        for <regressions@lists.linux.dev>; Thu, 05 Dec 2024 10:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733424134; x=1734028934; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tR8Gx4YF+iGaCMV6DuY+XQYSDcjVdzyIfn9PDc6LDOM=;
-        b=E9wfeQBspvXhFN7gJF0nbv0a0W42kBC9eD/TsZmmuv/9FSIdt/fZ/D02PjhoVFpWxb
-         Rs0PN+k66sLQkoPjcjCRj7xBJ3CuNJHj9Qn+ujD9koMURjUW2RezyyuvKb/iCrjz6PEQ
-         SVTohdJ9/prwCTywv93Ys02FU4PVRD6Yrx7NcqgC0Djpw7yzsty7aXOVCP+FQEXSW9Kl
-         iD5dbp2fZeyZPN4PPenrJwPzb5+yfd8qB6a5Dd61J5NGyzut1TKjE6TIBWB+7MI+hCwB
-         aI3SLV5aTc2dmTJf7vdZMWx/Fu7Z8wht2hcDLyuQEynSWNR+lsfdzsxPD1yCeCSNqyP6
-         dAvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733424134; x=1734028934;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tR8Gx4YF+iGaCMV6DuY+XQYSDcjVdzyIfn9PDc6LDOM=;
-        b=tnBJ6VM9+6JBQkRpiXwyBIomrenu1KPr9ourc4vkyxzK4V1/o8dVn+CNYH5pXHna2r
-         6XeFFDbn3IytlzgVyBFlrmmSNt+tgpyYNdey8VmXjqOFVPMXzvyhv+h0bvqPG6Kpg4By
-         4eZsNpt5suy/mzkvnsqyTjF46syH01MIwBoDo/P3qc26vJfnjzKJo2h9g5TjTRJPVZUR
-         Eonbp08W54nlUlyBS+PYOsc1HfbUdIG/l0wvGSzaHgVQwRSlR9cDvcjTYBXfiF8DEw0S
-         +UU8didsv9W2aK7BkLxuB+caVPsqX4WMdv/JSVKjjI8kgFtKVkQrQGs/45KUuQRZehOe
-         Z5JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0WYd/bw4R53mPJDT+d5ru4enJ0mjsupi1wqUV7tclW0O+HDNIQzOHBWNLJL9TthWDN6n9S5FUB99A2w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzeE75Vxk/GspZRtB5sbEYe3RR3tM4s5okWID+QAkdcTuKTltQ+
-	i1XaB9WomY4Q/uUXb/ZGrY7Rb+s/Ntsf8d5wJcGlt32WCDAgIlzX9ZrGVGZPYBJdXDOlE+LT7Pp
-	+1aFdOr2D8gwxssqUyS0xVu+FL9w+WFuB2wL3cQ==
-X-Gm-Gg: ASbGncs8Q2jxjoKfg9BvXVLCdQL7XBG3LY0BnQ/YcU+1taludmzpo2R8SdeoUjwtold
-	eLZjhOoD/eWG8+xBkmRJEoAB87EOVbjur
-X-Google-Smtp-Source: AGHT+IG269PkgdVPpsUfRMnNfyCTRw+6b9s1FqQamygLLFlRX39CxuzaR647OcbZrJKkKII8mvW1s/GWCnxsPXgxkTM=
-X-Received: by 2002:a05:6102:3909:b0:4af:bf45:39a8 with SMTP id
- ada2fe7eead31-4afcaa4f74cmr835447137.16.1733424134670; Thu, 05 Dec 2024
- 10:42:14 -0800 (PST)
+	s=arc-20240116; t=1733451594; c=relaxed/simple;
+	bh=LnI0Na3/B3DR4dG1oO0Wy0h54NsiJph8a4Tm/NLGsLI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=qpb+6fGAqtrOSrzRZvv67JZSbsCfx2cACU3EuUpaQyaqwEgwhCK/osldMJLJjBtQ7h2xvoSr5PE9mCV1yHjM2ilocC+mYS2rJ3x5OKKYRtC8d0PClIJwQzgJg3Lz0LlRqT2RpTxqrCO4jU1oJEj5bjTo1xE3Atr2qLqxQrfRsyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-38-yTzVEjDMP82plyYRPmALzQ-1; Fri, 06 Dec 2024 02:19:43 +0000
+X-MC-Unique: yTzVEjDMP82plyYRPmALzQ-1
+X-Mimecast-MFC-AGG-ID: yTzVEjDMP82plyYRPmALzQ
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 6 Dec
+ 2024 02:18:59 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 6 Dec 2024 02:18:59 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Naresh Kamboju' <naresh.kamboju@linaro.org>, Dan Carpenter
+	<dan.carpenter@linaro.org>
+CC: open list <linux-kernel@vger.kernel.org>, "lkft-triage@lists.linaro.org"
+	<lkft-triage@lists.linaro.org>, Linux Regressions
+	<regressions@lists.linux.dev>, Linux ARM
+	<linux-arm-kernel@lists.infradead.org>, "netfilter-devel@vger.kernel.org"
+	<netfilter-devel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Anders
+ Roxell" <anders.roxell@linaro.org>, Johannes Berg <johannes.berg@intel.com>,
+	"toke@kernel.org" <toke@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+	"kernel@jfarr.cc" <kernel@jfarr.cc>, "kees@kernel.org" <kees@kernel.org>
+Subject: RE: arm64: include/linux/compiler_types.h:542:38: error: call to
+ '__compiletime_assert_1050' declared with attribute error: clamp() low limit
+ min greater than high limit max_avail
+Thread-Topic: arm64: include/linux/compiler_types.h:542:38: error: call to
+ '__compiletime_assert_1050' declared with attribute error: clamp() low limit
+ min greater than high limit max_avail
+Thread-Index: AQHbR0VgROIHG94lCEKLQVwMYBVLZbLYdnCQ
+Date: Fri, 6 Dec 2024 02:18:59 +0000
+Message-ID: <bd95d7249ff94e31beb11b3f71a64e87@AcuMS.aculab.com>
+References: <CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MRLfAbM3f6ke0g@mail.gmail.com>
+ <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain>
+ <CA+G9fYv5gW1gByakU1yyQ__BoAKWkCcg=vGGyNep7+5p9_2uJA@mail.gmail.com>
+In-Reply-To: <CA+G9fYv5gW1gByakU1yyQ__BoAKWkCcg=vGGyNep7+5p9_2uJA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MRLfAbM3f6ke0g@mail.gmail.com>
- <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain>
-In-Reply-To: <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 6 Dec 2024 00:12:03 +0530
-Message-ID: <CA+G9fYv5gW1gByakU1yyQ__BoAKWkCcg=vGGyNep7+5p9_2uJA@mail.gmail.com>
-Subject: Re: arm64: include/linux/compiler_types.h:542:38: error: call to
- '__compiletime_assert_1050' declared with attribute error: clamp() low limit
- min greater than high limit max_avail
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: David Laight <David.Laight@aculab.com>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, netfilter-devel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Johannes Berg <johannes.berg@intel.com>, toke@kernel.org, 
-	Al Viro <viro@zeniv.linux.org.uk>, kernel@jfarr.cc, kees@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: CK1VwR2uygqDpa4MOumoJ9hH7UPpUtXeSxI71rRNWOA_1733451582
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Thu, 5 Dec 2024 at 20:46, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> Add David to the CC list.
+RnJvbTogTmFyZXNoIEthbWJvanUNCj4gU2VudDogMDUgRGVjZW1iZXIgMjAyNCAxODo0Mg0KPiAN
+Cj4gT24gVGh1LCA1IERlYyAyMDI0IGF0IDIwOjQ2LCBEYW4gQ2FycGVudGVyIDxkYW4uY2FycGVu
+dGVyQGxpbmFyby5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gQWRkIERhdmlkIHRvIHRoZSBDQyBsaXN0
+Lg0KPiANCj4gQW5kZXJzIGJpc2VjdGVkIHRoaXMgcmVwb3J0ZWQgaXNzdWUgYW5kIGZvdW5kIHRo
+ZSBmaXJzdCBiYWQgY29tbWl0IGFzLA0KPiANCj4gIyBmaXJzdCBiYWQgY29tbWl0Og0KPiAgIFtl
+ZjMyYjkyYWM2MDViYTFiNzY5MjgyNzMzMGI5YzYwMjU5ZjBhZjQ5XQ0KPiAgIG1pbm1heC5oOiB1
+c2UgQlVJTERfQlVHX09OX01TRygpIGZvciB0aGUgbG8gPCBoaSB0ZXN0IGluIGNsYW1wKCkNCg0K
+VGhhdCAnanVzdCcgY2hhbmdlZCB0aGUgdGVzdCB0byB1c2UgX19idWlsdGluX2NvbnN0YW50X3Ao
+KSBhbmQNCnRodXMgZ2V0cyBjaGVja2VkIGFmdGVyIHRoZSBvcHRpbWlzZXIgaGFzIHJ1bi4NCg0K
+SSBjYW4gcGFyYXBocmFzZSB0aGUgY29kZSBhczoNCnVuc2lnbmVkIGludCBmbih1bnNpZ25lZCBp
+bnQgeCkNCnsNCglyZXR1cm4gY2xhbXAoMTAsIDUsIHggPT0gMCA/IDAgOiB4IC0gMSk7DQp9DQp3
+aGljaCBpcyBuZXZlciBhY3R1YWxseSBjYWxsZWQgd2l0aCB4IDw9IDUuDQpUaGUgY29tcGlsZXIg
+Y29udmVydHMgaXQgdG86DQoJcmV0dXJuIHggPCAwID8gY2xhbXAoMTAsIDUsIDApIDogY2xhbXAo
+MTAsIDUsIHgpOw0KKFByb2JhYmx5IGJlY2F1c2UgaXQgY2FuIHNlZSB0aGF0IGNsYW1wKDEwLCA1
+LCAwKSBpcyBjb25zdGFudC4pDQpBbmQgdGhlbiB0aGUgY29tcGlsZS10aW1lIHNhbml0eSBjaGVj
+ayBpbiBjbGFtcCgpIGZpcmVzLg0KDQpUaGUgb3JkZXIgb2YgdGhlIGFyZ3VtZW50cyB0byBjbGFt
+cCBpcyBqdXN0IHdyb25nIQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
+aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
+DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-Anders bisected this reported issue and found the first bad commit as,
-
-# first bad commit:
-  [ef32b92ac605ba1b7692827330b9c60259f0af49]
-  minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
-
-
- - Naresh
