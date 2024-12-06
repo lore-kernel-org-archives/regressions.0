@@ -1,159 +1,142 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C557522068F
-	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 17:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264AE204564;
+	Fri,  6 Dec 2024 18:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733507655; cv=none; b=P9TL+lfmTYYr87WC4WZ4cojbNjuoN+WqaDIqrQ0oc2w+n4nk9tHt25J8MyWzwBDWgAoo8ySkWaEGMbVd0cDKyVMWrMxWodvxl6aic548oJuzScvX2oQwxy9QLZX5vCEbA3dGgXqNjsiPkV5WYHs7D6cNCga1J9QfIgY5cBItzwg=
+	t=1733508909; cv=none; b=qAZnRhrB2MzkXDoqPX6lBDsL07rxmQGxOty073FaF/gflip0XjaPu5Mxa8OEyq8u1c+ljUAv1Ak8mOmVPPAeawy+AzvJ0oNvrQR2rr66CXyO1Dq0UqCeTUgcKgP0nfDUeJsck5JA5R5SHGc1r4foA/FH9eyld6GjqfKTAMAH920=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733507655; c=relaxed/simple;
-	bh=CAvPxwbRXQNLTTqGkA10Ah9zjMscuWnJ5epuxY56l/w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=UdXFGgWRVyKmybxlXQrVI4c9owYj7X6n66pxGTTXk2F14zsTBQmA4AHcVk5A9D2h10Rbr7AzX3AzAKBT3Y2ltjE7YngWTTVWBaOuA7Jvx/cROqv6rRLoa79fvjg9jw9cBnVRYCkDPlHzMLuv9hOpov4QBrx1HV5Mhlg4N48Gz6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-128-v2x3GVjoN7yhLXzRYoHP7Q-1; Fri, 06 Dec 2024 17:54:11 +0000
-X-MC-Unique: v2x3GVjoN7yhLXzRYoHP7Q-1
-X-Mimecast-MFC-AGG-ID: v2x3GVjoN7yhLXzRYoHP7Q
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 6 Dec
- 2024 17:53:24 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 6 Dec 2024 17:53:24 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Julian Anastasov' <ja@ssi.bg>, 'Andrew Morton'
-	<akpm@linux-foundation.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 'Naresh Kamboju'
-	<naresh.kamboju@linaro.org>, 'Dan Carpenter' <dan.carpenter@linaro.org>,
-	"'pablo@netfilter.org'" <pablo@netfilter.org>, 'open list'
-	<linux-kernel@vger.kernel.org>, "'lkft-triage@lists.linaro.org'"
-	<lkft-triage@lists.linaro.org>, 'Linux Regressions'
-	<regressions@lists.linux.dev>, 'Linux ARM'
-	<linux-arm-kernel@lists.infradead.org>, "'netfilter-devel@vger.kernel.org'"
-	<netfilter-devel@vger.kernel.org>, 'Arnd Bergmann' <arnd@arndb.de>, "'Anders
- Roxell'" <anders.roxell@linaro.org>, 'Johannes Berg'
-	<johannes.berg@intel.com>, "'toke@kernel.org'" <toke@kernel.org>, 'Al Viro'
-	<viro@zeniv.linux.org.uk>, "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
-	"'kees@kernel.org'" <kees@kernel.org>
-Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Topic: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Index: AdtHyTlbE/fm67s0Ria1gsbgnJ6KcgAD9raAAACnwVAAB9xJgAACKUOg
-Date: Fri, 6 Dec 2024 17:53:24 +0000
-Message-ID: <494a4dc2ba2041dfb9f45d86e972b953@AcuMS.aculab.com>
-References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com>
- <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg>
- <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com>
- <c0a2ee53-f6ff-f4d4-e9ab-6a3bf850bec5@ssi.bg>
-In-Reply-To: <c0a2ee53-f6ff-f4d4-e9ab-6a3bf850bec5@ssi.bg>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1733508909; c=relaxed/simple;
+	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gbAs35zQnq7MYdk8DE323BUudSMDCRG6y4HnWrSQPlUEbJ+A9MHzti38YYEe4lSUAcCuAAjVuHvzjq/ZA6m4mojlNsTa8mKIwIuX4dSzWBbafU2NkgyR8l4yprFanTA68lGK7Vvc6acCfWi/3SQdD2B8QCMnFgoEV8yE9BHuAus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VOJX02fW; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VOJX02fW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1733508904; x=1734113704; i=w_armin@gmx.de;
+	bh=acY9QYkkj2FPlaqOV9k2ALcWmvnYFb5Djq/L+K2WqAI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=VOJX02fW6UMM2Ig/br6qRyauJ1QF8JLVRmHy9HCTz48Wd6rZf2CAVcGTa1w5BXC4
+	 bKSa6IygSk9xoecARwW1H48FfWdg6SwLMwyx/edxunPtgPnCdZum+64UoxPeytZ+x
+	 5h0V7HDswvlIDJiEFJYVdRq+JFlZSP81LtXDwoAXE95EU3jGrJc2fpGS3bYKlbzLY
+	 taZPbtLE4GTWCCrniGmax64xw88EWo7KtvZ7TRwi+EFIOCMidKb0edfNcM4ISOfLp
+	 clHDIjxTNwDsRGB1zjBP7JGFedHMvdf/7RWcE+VRzTNZdHUHVBZVe8lIcOEusBKvx
+	 oHOXWW15x8x4tXT0vQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRTN9-1syUyT2l2j-00SMxY; Fri, 06
+ Dec 2024 19:15:04 +0100
+Message-ID: <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
+Date: Fri, 6 Dec 2024 19:15:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3-JjyUbGcCeBUvkoNmxdPZy9K5k2-HMwWjUh-P8KgAI_1733507650
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
+To: Yura Strilets <yurastr100@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JqhSvlqpwvBpTYv7338/mK4fck667VMNfCQkH9+BWs/WWr9tOGZ
+ +Rd8cc5JI9glx4k3ekGfxdwTwKxC4mUCDUGKnc5pnRZL3X4+ZnInmS+EbXrIkacJC1quNxb
+ sPRgvFLJ1QuWLIlNV7869HvEP7+LmUOIKTa5RrC0eRgpoUUBeMCOYSlQrzirFS3U1MqEWLN
+ A/yKWS/tcUasqVBhhlyJA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/mExfcB00e0=;wdRbfLWlH151AbiciLd3nOP3XG/
+ W55jS0mdHCFOt3wrLDfv4a23GICYMdQRq3s4CPsX+B4BRqfDiVijBTWeDUlAdAcIN4saX0aXl
+ Qlt82jvP5V6I4IpNTJXAiFpx1EkGdkMtsTmvK49kflN875VRJFhfVyOMyThm7MAxR7KaR9LE0
+ e8IsUSQDJCRsSOjIAsTFoE+n2KNEyBd14dBkllBiQs3HxS46Z3py6mkD02HCjqVWCFlo46N8a
+ FiQh1vEeGnLg9fszYcNXC8SvZNrBv1qxfC8ujCN6y+4YZH63+KGVNK5IiHY+EFxqTqJ6rsedO
+ EiMr/Dk02IWW26gS6VWPdbGMKP4FrhbmIWS8Wfq7Pu37k81cfD9aK5pinYcFeQyZJZcxo/NL0
+ YZPOfPIVTFnwS35TwGC4GMrsBdror3VF1o6Fa5EJtri+xisFDE9fxELB2ZUjKf84p3wH8v0Sc
+ UvHFfRCRcgL+6UXOE41mlghuJQLmHFbqsZyDt2LoNljbSIOL7lw8rU47ZbvIV3zWMlD90eQo0
+ RwhFQRPuE0p0w4Wzl3QWOl03jZNHi53QEam3Pi2qW3AihW2ARVbFZpQJluczZOAjVTKdzZuHD
+ /waX4Bl+S3uyNhPCao76DhEAEKXwHyiTA630u6+kX3JaooQd158UeW2gKVeK69g7uqjIAQXfC
+ LWvql5eeNaB7wfNd17ekBK3KujdgFYz5mKYbwo6izPpMzYx2cEI8IhWxXXCJUo4Ny8o1a8RhC
+ cViLVl7Fk3XMxlIURC6OA/qpeRRKYHuJFBnv5T4rD5KS83OoJBnW3kJxXf7uJLTI9rfBFmSgN
+ f3evI/Fav3i/QDunwRtyI/SV/YT/TIw5QLZ0u/7D5bNd1PsJ4SYXGvO6I3DvY8OOTuJcOo+uk
+ 5iM5xQkA/4ux+/zj4RBiwdxG5/mZ0DtqwAVshUs0dYY62AOdft2P1KovRDU6Q9UePkXZU5V7U
+ evHy+Y7k1t9InBBDfkJDUhlMyML0VD9o7NPc6RHiLFKTQouHhibAhjeI8qRra+gYgnO+H6PXs
+ /dNUXEyvA8lcHOhLu7zv1FN6IdXU0F+QgGsrTle2Fttbp5i7lLZTeAc3BGg8bbAXGdd53woVj
+ XVyK5ZlNzJRiR5rHfQpPIMqiQq0yfw
 
-From: Julian Anastasov
-> Sent: 06 December 2024 16:23
-...
-> =09I'm not sure how much memory we can see in small system,
-> IMHO, problem should not be possible in practice:
->=20
-> - nobody expects 0 from totalram_pages() in the code
->=20
-> - order_base_2(sizeof(struct ip_vs_conn)) is probably 8 on 32-bit
+Am 06.12.24 um 14:33 schrieb Yura Strilets:
 
-It is 0x120 bytes on 64bit, so 8 could well be right.
+> Hello,
+>
+> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
+> mic, kb backlight, my asus) stopped working and the
+> /sys/(...)/asus::kbd_backlight interface is missing, which,
+> considering the dmesg, looks like an asus-wmi driver issue.
+>
+> I've been able to bisect the issue to the commit
+> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
+> Fix thermal profile initialization"
+>
+> Additionally, here's some maybe-helpful information:
+> my laptop's model -- ASUS Zenbook UX3402VA
+> linux distro -- Arch Linux
+> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
+> kernel(attached in [1]) and missing options are default
+> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
+> be seen below and full logs are at [2] and [3]
+>
+> =3D=3D bad.log =3D=3D
+> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
+> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
+> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
+> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+ ASUSWMI, use
+> DSTS
+> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal p=
+olicy
+> (retval): 0x0
+> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal pr=
+ofile
+> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driver=
+ asus-nb-wmi
+> failed with error -5
+> =3D=3D end =3D=3D
+>
+> =3D=3D good.log =3D=3D
+> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
+> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
+> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
+> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not=
+ ASUSWMI, use
+> DSTS
+> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, ena=
+ble event queue
+> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
+> /devices/platform/asus-nb-wmi/input/input15
+> =3D=3D end =3D=3D
+>
+> [1] .config - https://pastebin.com/raw/3nDSV8Sm
+> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
+> [3] good.log - https://pastebin.com/raw/EazfLAWA
+>
+> Thanks,
+> Yurii
+>
+I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was alre=
+ady submitted upstream and will likely
+show up in the stable kernels soon.
 
-> - PAGE_SHIFT: 12 (for 4KB) or more?
->=20
-> =09So, if totalram_pages() returns below 128 pages (4KB each)
-> max_avail will be below 19 (7 + 12), then 19 is reduced with 2 + 1
-> and becomes 16, finally with 8 (from the 2nd order_base_2) to reach
-> 16-8=3D8. You need a system with less than 512KB (19 bits) to trigger
-> problem in clamp() that will lead to max below 8.
-
-Which pretty much won't happen, I think my (dead) sun3 has more than that.
-
-> Further, without
-> checks, for ip_vs_conn_tab_bits=3D1 we need totalram_pages() to return 0
-> pages.
->=20
-> > > > Detected by compile time checks added to clamp(), specifically:
-> > > > minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
-> > >
-> > > =09Existing or new check? Does it happen that max_avail
-> > > is a constant, so that a compile check triggers?
-> >
-> > Is all stems from order_base_2(totalram_pages()).
-> > order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
-> > And the compiler generates two copies of the code that follows
-> > for the 'constant zero' and ilog2() values.
-> > And the 'zero' case compiles clamp(20, 8, 0) which is errored.
-> > Note that it is only executed if totalram_pages() is zero,
-> > but it is always compiled 'just in case'.
->=20
-> =09I'm confused with these compiler issues,
-
-The compiler is just doing its job.
-Consider this expression:
-=09(x >=3D 1 ? 2 * x : 1) - 1
-It is likely to get converted to:
-=09(x >=3D 1 ? 2 * x - 1 : 0)
-to avoid the subtract when x < 1.
-
-The same thing is happening here.
-order_base_2() has a (condition ? fn() : 0) in it.
-All the +/- constants get moved inside, on 64bit that is +12 -2 -1 -9 =3D 0=
-.
-Then the clamp() with constants gets moved inside:
-=09(condition ? clamp(27, 8, fn() + 0) : clamp(27, 8, 0 + 0))
-Now, at runtime, we know that 'condition' is true and (fn() >=3D 8)
-so the first clamp() is valid and the second one never used.
-But this isn't known by the compiler and clamp() detects the invalid
-call and generates a warning.
-
-> if you
-> think we should go with the patch just decide if it is a
-> net or net-next material. Your change is safer for bad
-> max_avail values but I don't expect to see problem while
-> running without the change, except the building bugs.
->=20
-> =09Also, please use nf/nf-next tag to avoid any
-> confusion with upstreaming...
-
-I've copied Andrew M - he's taken the minmax.h change into his mm tree.
-This is one of the build breakages.
-
-It probably only needs to go into next for now (via some route).
-But I can image the minmax.h changes getting backported a bit.
-
-=09David
-
->=20
-> Regards
->=20
-> --
-> Julian Anastasov <ja@ssi.bg>
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+Thanks,
+Armin Wolf
 
