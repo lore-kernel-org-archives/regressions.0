@@ -1,157 +1,136 @@
-Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6331145B24
-	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 16:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453901F4E21;
+	Fri,  6 Dec 2024 17:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733502208; cv=none; b=RAu5WbIl/BQZd8K18ZsKeBvp0y1tM1QQV4kqNJ3Kc1fZSF1iTSmm8GQf0AIZ3LqwJWsdfkC+bBzlhAVzrmlLencA2H8xgkCt5xkr3JwKdo2hbogY7eMZ9IxUc6mAF4t6V8aMAeylMHOlib2nMyi3w8sc/6ku984y57gh/8gHs7Y=
+	t=1733505854; cv=none; b=MLRegSwCAU7rb0JCel5dP3Z8yuugDGsl1A+cJ6iwm3TVLVaLdvPq35uK0WIPklDA69iOxTBGyEinRXQ+EA7ZCjzhGdoL/z4y0wPG+bz3ghrVHP7Qm7WG1Y5W5RdFBJAK0tD180CNqu216/tPC7oVM/bzGkAtclha5R6Tn6N/FbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733502208; c=relaxed/simple;
-	bh=K3MjHXQZtPWDPl2K6xXNdF3L6j0v60HTDtwhM7VhARo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZZvhrTZpU1P55WQDWH7+llIvNA5FiUwl+mx+4CTLTjtY6zvGnrpaOkd/ghB2sSaARQh13dvpW89QSSIDQ1uWMkSo5FF4nieej14Rt0YuzSxYR3skz1O4+34yMDDQU6SBRkmexdPkbaMTJdVnEswQLWjd41Y5JuXwGZ30TYfxG8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=HQUi70o4; arc=none smtp.client-ip=193.238.174.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1733505854; c=relaxed/simple;
+	bh=9BDcKEAhfhMZi3RjBnhUfLl8xU6wPyN7nhmV8t6I0vQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lhsdhKXOTTdTfXHWNBikZsbItg8x/8WScyqau6nOZPJ7B9t6grGn9tDoBuZGbv+thHv28bh8/pAO+LAn62+or4gCmCfeyUj9Af7PxbdsX80wdLlddVNt9zUYeDok40IHFcmPXO5jW+uObz+QYtUQ7TDFrQi7osnWjrs/bf/4kuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jazwbNVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="HQUi70o4"
-Received: from mx.ssi.bg (localhost [127.0.0.1])
-	by mx.ssi.bg (Potsfix) with ESMTP id E383921D96;
-	Fri,  6 Dec 2024 18:23:23 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
-	:content-type:content-type:date:from:from:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
-	 bh=CgMFn6VL5GFx5RytU/0EGmFMlUt3Qngt2zSqkoPE5/Y=; b=HQUi70o4FvhS
-	cYB/jbDWZNy7y7Y0wnXFbM1qfSackMkaIsrqnXlO16IINMJ9dRw5sYmPWzR9fXnC
-	KPGqmxFi/Ym9rQagN9p6nMghefF9h7/8ZAhKu5GNOlC2QxdLuvYrstPODqkXfc6u
-	gXhAukX9GrZdptE4etIdKq4l1PB2nk3/28QZdDczn8vleamPQfevWNnyfZcNwgAz
-	II4GU5JFSVJUwKpG+aJ7fPr3lLYuC5xJmwhvDtPXiAxnCnMqLbfEaNpGIvKIUSDT
-	DIir0w4RQWAIL4flwzjupJ7meqHkbz7ZIuhDyyMFHdHZ+wWpXZywJvGnAzIXitmR
-	7ck2B6tjrUg99kF9vTtbzHcaIh9HvY0juJxHuPcuzZCMy77v/Ifa6Sqdc9Ga9bkP
-	yPR45NwSwtIxFNLuo4Wlm4Z9ACLqzA2kYk0pt/W5/hq1drwzCiggnBY6bBizYRts
-	sKt3/GcJxgEmlBadj752x52QKgCg1+Spe++dmaobPxFk2BRxzNkmqZz6meaypWKU
-	XKZ9T0kSaqOLA+dIN4/kLEZvZ08DYHAEZ/8jwRntDOqQ+48BcOqf/XCooU8WV7a/
-	ubwQHoZvsceIMXOJVDxhY7ZYKNrGPpVJWmscWMFxYa6ZlR4VzPNeypmAFPDDkaH3
-	WFEOG3Snd9faZJsMbczS5ClYFm94/v0=
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mx.ssi.bg (Potsfix) with ESMTPS;
-	Fri,  6 Dec 2024 18:23:23 +0200 (EET)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id E617B15F19;
-	Fri,  6 Dec 2024 18:23:14 +0200 (EET)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 4B6GNBkf041510;
-	Fri, 6 Dec 2024 18:23:12 +0200
-Date: Fri, 6 Dec 2024 18:23:11 +0200 (EET)
-From: Julian Anastasov <ja@ssi.bg>
-To: David Laight <David.Laight@ACULAB.COM>
-cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "'Naresh Kamboju'" <naresh.kamboju@linaro.org>,
-        "'Dan Carpenter'" <dan.carpenter@linaro.org>,
-        "'pablo@netfilter.org'" <pablo@netfilter.org>,
-        "'open list'" <linux-kernel@vger.kernel.org>,
-        "'lkft-triage@lists.linaro.org'" <lkft-triage@lists.linaro.org>,
-        "'Linux Regressions'" <regressions@lists.linux.dev>,
-        "'Linux ARM'" <linux-arm-kernel@lists.infradead.org>,
-        "'netfilter-devel@vger.kernel.org'" <netfilter-devel@vger.kernel.org>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Anders Roxell'" <anders.roxell@linaro.org>,
-        "'Johannes Berg'" <johannes.berg@intel.com>,
-        "'toke@kernel.org'" <toke@kernel.org>,
-        "'Al Viro'" <viro@zeniv.linux.org.uk>,
-        "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
-        "'kees@kernel.org'" <kees@kernel.org>
-Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-In-Reply-To: <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com>
-Message-ID: <c0a2ee53-f6ff-f4d4-e9ab-6a3bf850bec5@ssi.bg>
-References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com> <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg> <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jazwbNVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3777C4CEDE;
+	Fri,  6 Dec 2024 17:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733505853;
+	bh=9BDcKEAhfhMZi3RjBnhUfLl8xU6wPyN7nhmV8t6I0vQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jazwbNVL8wgxmXqa7v94y4RXzWRAHjPxZOrK4pkCbQDWHZmmzKKGSGijD74i/G1Cq
+	 0u+EDx4LXvUxlHr4r+Ms28LCb9GZ8Vz/oP4TKcW0drHs/IGWcxCdpGU3MS2iCdH4Ri
+	 RAocRq+xv5FKF8Byrh6OObWnzYwDA2ruSWFZhAxiONU21zd1P9mPkjKS5SBVG2pXaC
+	 lOavV2MAd8caiG4Ky2u/F0zxmiVG8ByDUohtLA4pdlED78yT+pMnoRClEjV/zCC7XS
+	 qvXWxq33JyYQ4lKDvH4mvP94eOMUOUAW9Q/5V0Ebb93bRMnW6BH8D8cuL2+SgmNTTf
+	 mfDkkZW+o2dnQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1tJc3q-000000005Oc-2blJ;
+	Fri, 06 Dec 2024 18:24:15 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH] Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
+Date: Fri,  6 Dec 2024 18:24:02 +0100
+Message-ID: <20241206172402.20724-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+
+This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
+
+A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+ports can break SuperSpeed device hotplugging. The host controller is
+enumerated, but the device is not:
+
+	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
+	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
+	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
+	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
+	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
+	hub 3-0:1.0: USB hub found
+	hub 3-0:1.0: 1 port detected
+	hub 4-0:1.0: USB hub found
+	hub 4-0:1.0: 1 port detected
+
+Once this happens on either of the two ports, no amount of disconnecting
+and reconnecting makes the SuperSpeed device be enumerated, while
+FullSpeed device enumeration still works.
+
+With retimer (and orientation detection) support not even merged yet,
+let's revert at least until we have stable host mode in mainline.
+
+Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
+Cc: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+
+I have not been able to reproduce this on the (third port of) the CRD,
+but I hit this constantly with the T14s so let's start with reverting
+there.
+
+Note that Stephan has already identified another problem with the
+offending commit here:
+
+	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
+
+Johan
 
 
-	Hello,
+#regzbot introduced: 1a48dd7b9ac8
 
-On Fri, 6 Dec 2024, David Laight wrote:
 
-> From: Julian Anastasov
-> > Sent: 06 December 2024 12:19
-> > 
-> > On Fri, 6 Dec 2024, David Laight wrote:
-> > 
-> > > The intention of the code seems to be that the minimum table
-> > > size should be 256 (1 << min).
-> > > However the code uses max = clamp(20, 5, max_avail) which implies
-> > 
-> > 	Actually, it tries to reduce max=20 (max possible) below
-> > max_avail: [8 .. max_avail]. Not sure what 5 is here...
-> 
-> Me mistyping values between two windows :-)
-> 
-> Well min(max, max_avail) would be the reduced upper limit.
-> But you'd still fall foul of the compiler propagating the 'n > 1'
-> check in order_base_2() further down the function.
-> 
-> > > the author thought max_avail could be less than 5.
-> > > But clamp(val, min, max) is only well defined for max >= min.
-> > > If max < min whether is returns min or max depends on the order of
-> > > the comparisons.
-> > 
-> > 	Looks like max_avail goes below 8 ? What value you see
-> > for such small system?
-> 
-> I'm not, but clearly you thought the value could be small otherwise
-> the code would only have a 'max' limit.
-> (Apart from a 'sanity' min of maybe 2 to stop the code breaking.)
 
-	I'm not sure how much memory we can see in small system,
-IMHO, problem should not be possible in practice:
+ .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-- nobody expects 0 from totalram_pages() in the code
-
-- order_base_2(sizeof(struct ip_vs_conn)) is probably 8 on 32-bit
-
-- PAGE_SHIFT: 12 (for 4KB) or more?
-
-	So, if totalram_pages() returns below 128 pages (4KB each)
-max_avail will be below 19 (7 + 12), then 19 is reduced with 2 + 1
-and becomes 16, finally with 8 (from the 2nd order_base_2) to reach
-16-8=8. You need a system with less than 512KB (19 bits) to trigger 
-problem in clamp() that will lead to max below 8. Further, without
-checks, for ip_vs_conn_tab_bits=1 we need totalram_pages() to return 0
-pages.
-
-> > > Detected by compile time checks added to clamp(), specifically:
-> > > minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
-> > 
-> > 	Existing or new check? Does it happen that max_avail
-> > is a constant, so that a compile check triggers?
-> 
-> Is all stems from order_base_2(totalram_pages()).
-> order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
-> And the compiler generates two copies of the code that follows
-> for the 'constant zero' and ilog2() values.
-> And the 'zero' case compiles clamp(20, 8, 0) which is errored.
-> Note that it is only executed if totalram_pages() is zero,
-> but it is always compiled 'just in case'.
-
-	I'm confused with these compiler issues, if you
-think we should go with the patch just decide if it is a
-net or net-next material. Your change is safer for bad
-max_avail values but I don't expect to see problem while
-running without the change, except the building bugs.
-
-	Also, please use nf/nf-next tag to avoid any
-confusion with upstreaming...
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+index 5a4a72a030d4..b4b6260c670c 100644
+--- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
++++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+@@ -1515,6 +1515,10 @@ &usb_1_ss0 {
+ 	status = "okay";
+ };
+ 
++&usb_1_ss0_dwc3 {
++	dr_mode = "host";
++};
++
+ &usb_1_ss0_dwc3_hs {
+ 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
+ };
+@@ -1543,6 +1547,10 @@ &usb_1_ss1 {
+ 	status = "okay";
+ };
+ 
++&usb_1_ss1_dwc3 {
++	dr_mode = "host";
++};
++
+ &usb_1_ss1_dwc3_hs {
+ 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
+ };
+-- 
+2.45.2
 
