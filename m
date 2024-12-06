@@ -1,136 +1,180 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B74202C4B;
-	Fri,  6 Dec 2024 12:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B735E1C1F19
+	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 13:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733488516; cv=none; b=LlYBgKhL3dzpyfZQZYqLA/YrQzuDKstlB1Dgl76YebMp5vJ2Fca+nYAJPaWGk+9sswnXzMki59VqYYlfSPwTjpXbQV2xrVNvNB7NME14C06SY3Gwy/y3ASR5x1ohNoJKboMhc8oY7hDpW4KgvM9qzcs5RAnEsDeCj7mwDXVWsc8=
+	t=1733490529; cv=none; b=iGS2pqYpniTsRR+iWcXmM4d8plT1v3Q+Ual2uEP1IsSPbV2TISuX0FbIB513pAYb/ZB/GzX5UVxAgRy3sTv1KRB7Nnbzfy3T4W/4cN9NK4bivbxFVdYWOpaECJyhaLJiokkwHmEI4W3c9ItmCJNI8fpGzFcAvLtR8QcpEh4Y2EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733488516; c=relaxed/simple;
-	bh=tglxYqpw8kY5WRMteTGZtIlEcVhj/Jpqf8p32WV1aVE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACPe06nhZpIT4UnH32T8csKuUBMARB2CvFsef45pK6b44uVRwYJdknOogsUfzb/fxyh46zz0k5FIkmowIPNjmuyPrtU1/gONEA1giYPiUPP7iS+r4ZQAyi2s2fT6AGIbbSmNey1UxHYpxyFXKlJSSou9OMGhwUeB3euQh0QjfwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMBrakDH; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMBrakDH"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa503cced42so285329366b.3;
-        Fri, 06 Dec 2024 04:35:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733488512; x=1734093312; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g6PvnI7O8BCrsugwoXvIAfj4V3SCjwh4w+40SQgRUeo=;
-        b=mMBrakDH+8HRucoRRNmquMppvWTz8A0i00JLJklYYtGhhtatbNzXVLMRBelXDn2Jys
-         JVUzSlN4XbUbeRMb7WyxZCDYy1ZYX6kMYFrFSFsYDpWmM1PsqvBbHc/YCm3u2gFAyxja
-         UCX+CfvqAZL0eX2DPyS2IUhLEVcqMuqoxmncpJZ9SFJdHyR9qcelHztEec4QKm9/eYee
-         uH74M0KGaNDk9IOx8dPPMXl609ESbOQMg8snZMGDoQAOFJSiNkKLx6FT4jrX8Ur/Jejg
-         HUvIFUpIKSz3/TPz26RoMI+qrwOxz49D3kNt9VUy1OpUZweEHVuoT4jAZTXX6rLIeEm9
-         DTmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733488512; x=1734093312;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g6PvnI7O8BCrsugwoXvIAfj4V3SCjwh4w+40SQgRUeo=;
-        b=m65MA38wFU5QIEq6yQADxAMPv+9BGyGD0W8amDe5YvAPHQqLerR1l3UzP91i8rUEKe
-         /al/g7o0v9d/dUPwoEP3zyULl3GEAcbDWV3rt3LFkgNq+mlWbfTtugpg2VGRksvkKCJY
-         0m3FOh4FuMZkLMqO+ef9RMZa/bQCabqMv0kYZcfBvK3+i3AbAg2exmXQLbwk7uOSB9px
-         qNSmCMPnVic8nKheSZlOiFK6iLOf8fqBb1eOScZaOVdj4icCGvRB4Y1GUmTw7SBfFBE6
-         PkO8sC+RWOCVAF5xZFlEifuozmimF4kNA60lpvtHUwonxUgHD5cHuxOWGOu7Ud1ZLcTx
-         ikag==
-X-Forwarded-Encrypted: i=1; AJvYcCWU0fGmD8Vdmv+0CwSC6OiEmzuSBJZ+Q/qv7xWNJddt7ULLCH/0yUhN0GrO71VaWK9fGPkQvRM6idhkeno=@lists.linux.dev, AJvYcCXegWolWBlaAy8JHENP3MtT8eTmca4uboMYiHMJXd2A4w0IifhMFUbddM3pEdV2gtBEwmnJO0xYE645pVmxQ5U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YykPgui2ELMB+ty+RSCawO6JcOyzwj/TQuXkqB71JQDqjYpTcyT
-	FFqN89yK3vRKfnLOq+TgHuzqD667mijNujodQM2p93b5I3DcqqRa
-X-Gm-Gg: ASbGncuMNPIDKhzaIEl2LA/vQwk6qDvHo2g3uPDesV/WEZz+yRRTpjhBB6i21ldyxu8
-	Adcn+5x2rDZk+c+QTfqsaZ1Yg4UAe52UHUbHX9O/UB3RFrxbxHRMI/qjN5hII2FdOqyonMV7pXB
-	rj3C9DqMsff4i9b8CMfVo3JlxGDATpwZl30aJCKJfMfonej27dSBqho5kLs6f/mtfmGCssxs8Ei
-	EnTocqRLDYjSqLw8/dBawWTFGQ+TJRvnksCcfs5ATqdoW7+gBIZJVr77xZqbRQhTuVe4eeFdFO0
-	IsVMpsRrhsrVu2qgaqJJMsg=
-X-Google-Smtp-Source: AGHT+IHPxphMS4Qk/qebUjsQnqXB+pmqqV+jQbEkFsAiVmVVudNvGQtOHi6M0kzkTx8dBwklanyjTQ==
-X-Received: by 2002:a17:906:2931:b0:aa6:313b:469e with SMTP id a640c23a62f3a-aa63a3776bdmr171084666b.52.1733488512309;
-        Fri, 06 Dec 2024 04:35:12 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa6260e0389sm232510066b.174.2024.12.06.04.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 04:35:11 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 6 Dec 2024 13:35:10 +0100
-To: Laura Nao <laura.nao@collabora.com>
-Cc: alan.maguire@oracle.com, bpf@vger.kernel.org,
-	chrome-platform@lists.linux.dev, kernel@collabora.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
-Message-ID: <Z1LvfndLE1t1v995@krava>
-References: <20241113093703.9936-1-laura.nao@collabora.com>
- <20241115171712.427535-1-laura.nao@collabora.com>
+	s=arc-20240116; t=1733490529; c=relaxed/simple;
+	bh=QF8c2MhUemDCUpYqGQBweZ1Ws7IWDc/WAQA2tfJjVVU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=fsBRufi/sp2nA8jGo3LkrhB9wWZETsYrZvt0czDMyz8Bv020ndJWKN90ezujEgFpn0R6R4ZV9LXTTcLbgCbzF2KICfZHJ1KxxZc5Hyp1/VOiSmTBCLIV1m4aT7wz4B7OR+xaG7HgOtYQqILtwNkho9E4/VpiQPmqhFtAOGwdN8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-168-rEnKtWNUMFWeQM5TnnsDWQ-1; Fri, 06 Dec 2024 13:08:45 +0000
+X-MC-Unique: rEnKtWNUMFWeQM5TnnsDWQ-1
+X-Mimecast-MFC-AGG-ID: rEnKtWNUMFWeQM5TnnsDWQ
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 6 Dec
+ 2024 13:07:59 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 6 Dec 2024 13:07:59 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Julian Anastasov' <ja@ssi.bg>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 'Naresh Kamboju'
+	<naresh.kamboju@linaro.org>, 'Dan Carpenter' <dan.carpenter@linaro.org>,
+	"'pablo@netfilter.org'" <pablo@netfilter.org>, 'open list'
+	<linux-kernel@vger.kernel.org>, "'lkft-triage@lists.linaro.org'"
+	<lkft-triage@lists.linaro.org>, 'Linux Regressions'
+	<regressions@lists.linux.dev>, 'Linux ARM'
+	<linux-arm-kernel@lists.infradead.org>, "'netfilter-devel@vger.kernel.org'"
+	<netfilter-devel@vger.kernel.org>, 'Arnd Bergmann' <arnd@arndb.de>, "'Anders
+ Roxell'" <anders.roxell@linaro.org>, 'Johannes Berg'
+	<johannes.berg@intel.com>, "'toke@kernel.org'" <toke@kernel.org>, 'Al Viro'
+	<viro@zeniv.linux.org.uk>, "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
+	"'kees@kernel.org'" <kees@kernel.org>
+Subject: RE: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
+ systems.
+Thread-Topic: [PATCH net] Fix clamp() of ip_vs_conn_tab on small memory
+ systems.
+Thread-Index: AdtHyTlbE/fm67s0Ria1gsbgnJ6KcgAD9raAAACnwVA=
+Date: Fri, 6 Dec 2024 13:07:59 +0000
+Message-ID: <2a91ee407ed64d24b82e5fc665971add@AcuMS.aculab.com>
+References: <33893212b1cc4a418cec09aeeed0a9fc@AcuMS.aculab.com>
+ <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg>
+In-Reply-To: <5ec10e7c-d050-dab8-1f1b-d0ca2d922eef@ssi.bg>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241115171712.427535-1-laura.nao@collabora.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3j0BVj-5y8Bk75vKFLYj-G04RChfP5L5vBvx-80uWNw_1733490524
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
-> On 11/13/24 10:37, Laura Nao wrote:
-> > 
-> > Currently, KernelCI only retains the bzImage, not the vmlinux binary. The
-> > bzImage can be downloaded from the same link mentioned above by selecting
-> > 'kernel' from the dropdown menu (modules can also be downloaded the same
-> > way). I’ll try to replicate the build on my end and share the vmlinux
-> > with DWARF data stripped for convenience.
-> > 
-> 
-> I managed to reproduce the issue locally and I've uploaded the vmlinux[1]
-> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one of the 
-> modules[3] and its btf data[4] extracted with:
-> 
-> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko > cros_kbd_led_backlight.ko.raw
-> 
-> Looking again at the logs[5], I've noticed the following is reported:
-> 
-> [    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
-> [    0.416029] BPF:  
-> [    0.416083] BPF: Invalid offset
-> [    0.416165] BPF: 
-> 
-> There are two different definitions of rcu_data in '.data..percpu', one
-> is a struct and the other is an integer:
-> 
-> type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
-> type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
-> 
-> [115801] VAR 'rcu_data' type_id=115572, linkage=static
-> [115803] VAR 'rcu_data' type_id=1, linkage=static
-> 
-> [115572] STRUCT 'rcu_data' size=1152 vlen=69
-> [1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64 encoding=(none)
-> 
-> I assume that's not expected, correct?
+From: Julian Anastasov
+> Sent: 06 December 2024 12:19
+>=20
+> On Fri, 6 Dec 2024, David Laight wrote:
+>=20
+> > The intention of the code seems to be that the minimum table
+> > size should be 256 (1 << min).
+> > However the code uses max =3D clamp(20, 5, max_avail) which implies
+>=20
+> =09Actually, it tries to reduce max=3D20 (max possible) below
+> max_avail: [8 .. max_avail]. Not sure what 5 is here...
 
-yes, that seems wrong.. but I can't reproduce with your config
-together with pahole 1.24 .. could you try with latest one?
+Me mistyping values between two windows :-)
 
-jirka
+Well min(max, max_avail) would be the reduced upper limit.
+But you'd still fall foul of the compiler propagating the 'n > 1'
+check in order_base_2() further down the function.
 
-> 
-> I'll dig a bit deeper and report back if I can find anything else.
-> 
-> [1] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux
-> [2] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux.raw
-> [3] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko
-> [4] https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko.raw
-> [5] https://pastebin.com/raw/FvvrPhAY
-> 
-> Best,
-> 
-> Laura
-> 
+> > the author thought max_avail could be less than 5.
+> > But clamp(val, min, max) is only well defined for max >=3D min.
+> > If max < min whether is returns min or max depends on the order of
+> > the comparisons.
+>=20
+> =09Looks like max_avail goes below 8 ? What value you see
+> for such small system?
+
+I'm not, but clearly you thought the value could be small otherwise
+the code would only have a 'max' limit.
+(Apart from a 'sanity' min of maybe 2 to stop the code breaking.)
+
+>=20
+> > Change to clamp(max_avail, 5, 20) which has the expected behaviour.
+>=20
+> =09It should be clamp(max_avail, 8, 20)
+>=20
+> >
+> > Replace the clamp_val() on the line below with clamp().
+> > clamp_val() is just 'an accident waiting to happen' and not needed here=
+.
+>=20
+> =09OK
+>=20
+> > Fixes: 4f325e26277b6
+> > (Although I actually doubt the code is used on small memory systems.)
+> >
+> > Detected by compile time checks added to clamp(), specifically:
+> > minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
+>=20
+> =09Existing or new check? Does it happen that max_avail
+> is a constant, so that a compile check triggers?
+
+Is all stems from order_base_2(totalram_pages()).
+order_base_2(n) is 'n > 1 ? ilog2(n - 1) + 1 : 0'.
+And the compiler generates two copies of the code that follows
+for the 'constant zero' and ilog2() values.
+And the 'zero' case compiles clamp(20, 8, 0) which is errored.
+Note that it is only executed if totalram_pages() is zero,
+but it is always compiled 'just in case'.
+
+>=20
+> >
+> > Signed-off-by: David Laight <david.laight@aculab.com>
+>=20
+> =09The code below looks ok to me but can you change the
+> comments above to more correctly specify the values and if the
+> problem is that max_avail goes below 8 (min).
+>=20
+> > ---
+> >  net/netfilter/ipvs/ip_vs_conn.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs=
+_conn.c
+> > index 98d7dbe3d787..c0289f83f96d 100644
+> > --- a/net/netfilter/ipvs/ip_vs_conn.c
+> > +++ b/net/netfilter/ipvs/ip_vs_conn.c
+> > @@ -1495,8 +1495,8 @@ int __init ip_vs_conn_init(void)
+> >  =09max_avail -=3D 2;=09=09/* ~4 in hash row */
+> >  =09max_avail -=3D 1;=09=09/* IPVS up to 1/2 of mem */
+> >  =09max_avail -=3D order_base_2(sizeof(struct ip_vs_conn));
+>=20
+> =09More likely we can additionally clamp max_avail here:
+>=20
+> =09max_avail =3D max(min, max_avail);
+>=20
+> =09But your solution solves the problem with less lines.
+
+And less code in the path that is actually executed.
+
+=09David
+
+>=20
+> > -=09max =3D clamp(max, min, max_avail);
+> > -=09ip_vs_conn_tab_bits =3D clamp_val(ip_vs_conn_tab_bits, min, max);
+> > +=09max =3D clamp(max_avail, min, max);
+> > +=09ip_vs_conn_tab_bits =3D clamp(ip_vs_conn_tab_bits, min, max);
+> >  =09ip_vs_conn_tab_size =3D 1 << ip_vs_conn_tab_bits;
+> >  =09ip_vs_conn_tab_mask =3D ip_vs_conn_tab_size - 1;
+> >
+> > --
+> > 2.17.1
+>=20
+> Regards
+>=20
+> --
+> Julian Anastasov <ja@ssi.bg>
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
