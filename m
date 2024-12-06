@@ -1,96 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1466B1FF7D4;
-	Fri,  6 Dec 2024 13:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FD51EB21
+	for <regressions@lists.linux.dev>; Fri,  6 Dec 2024 13:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733490931; cv=none; b=cEDihQTYfuG1wwe8RHEO8vX9Tss2HpoeFsz34gq1T7N7pMXOFLv4k3QB7ENlue0HvbMl9TmqjGQyYXqvofFjnYTGAwsMyQwtLaBXpPy/AbBe9kS2dCpYLVZ/LbTmGTsV0tAEgoc0dsE+0Wn4epTmWQaCvBqQ0hPhdwS6Av+p0Ck=
+	t=1733491984; cv=none; b=XcnmD4QRaYIn3/lXp5ZymDYv+KX0l8jDLLs/XQcZcOjRejC//a2gweYRB2hcwqAmaN8O/ApyheXlgGQk4y7Zjs/EIoyNtZC5NU2L5vwya9RgiBh9ZTkfzAWPk3937sEuBO6xPRyryuGh0Hv7iEXYFhYEcziUkZJM1a81QrvjScQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733490931; c=relaxed/simple;
-	bh=RBQPiZLaF/HhYgZcAn4z7acnCKkfab9JJzcgHdj2gco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbHi7KE7U5g68mqSkcVeZdkqvrSITK6mN8jQaz+Rjoj6AItjtgv5H2ZeIjcUZm1YzIXJ/v2K4pRBnXdIm9q3Oyi57RCx0Z6CdgAjmYtIS7SvZ3VFfdsjxop1/wXyw65QrXom6b9CblXdhcXBcWzwgOYqtYXEE1oAgDgNmnJTXqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6QeHy05; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733491984; c=relaxed/simple;
+	bh=vLP1tsrLrBn5UbOMsUTvwsyw2ImcPlXlTvJJHcQ03AA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=SquCsVFBsB/VkpNQugzc/dLTgfb/CG9Vlj9g6svumuzY6HeX5ZhF2/WsfUXDWwKteUbrolNk6rIxDCGQxY1/XUJtRPpADfe+pRwjJSzzCbhasXI4sI+XGMz0on+Ta1uL+hwWpk1qdV2ffP3vWeNMNFiGCOqAdEH5zR3hAROfX0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hd0b42ts; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6QeHy05"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C9DC4CED2;
-	Fri,  6 Dec 2024 13:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733490930;
-	bh=RBQPiZLaF/HhYgZcAn4z7acnCKkfab9JJzcgHdj2gco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R6QeHy05RXBSsTKwcBOYlJr2HkerKo9KqPFDRbXA6hFsWiGonVcZluo4sks33Ow1L
-	 cFU7qPOwcNsmP7qio8uAeGLVOEfGvAfemTa6vPS7gK2Y093SZZ3OxmjlW3npcci3Jj
-	 2ennJ8B3UOZYsw6TwDSbGqNwtpwLl1DwHYmU8KWjHNpHK9NVIKsgKDWiZ38Uvp8dEO
-	 YBG9l7V+Rca9oWH2ZnSoDrdoMsoo6VwM9UHDb6HBnIVvT4+/V2P5cjYyWgs65vGAGe
-	 9CqPaR419CkRVg3c0twz2p+hTf1sjwO7ozndhp4o/zvJctY7/fDwvIS3+8ZE/v8UzY
-	 P4A+JwrZ8KuAw==
-Date: Fri, 6 Dec 2024 14:15:24 +0100
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, Lee Jones <lee@kernel.org>, regressions@lists.linux.dev, 
-	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	soc@kernel.org, arm@kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH leds v5 12/12] ARM: dts: turris-omnia: Add global LED
- brightness change interrupt
-Message-ID: <7rkcryouxg2s5misf7nx3vsf72rhaq2twhlksj62bzmaagdwfv@p3xy6rhzgntz>
-References: <20241104141924.18816-1-kabel@kernel.org>
- <20241104141924.18816-13-kabel@kernel.org>
- <87bjyv9ecb.fsf@BLaptop.bootlin.com>
- <778f08f1774fcad5fcc39114dbb721793ebf95d6.camel@gmail.com>
- <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
- <ofd5ru77wypfysflpblafbbdgrcmzztqwoewfjfuusrnbma4aw@y3oc3etutisi>
- <CAPy0QmsF1qr3A-89BDQHu-QVXpMhMGWt8e74FfDkqVT6Ha7q-g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd0b42ts"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f7657f9f62so20102101fa.3
+        for <regressions@lists.linux.dev>; Fri, 06 Dec 2024 05:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733491981; x=1734096781; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GSrFoYGsGUHyZVE4nB9VSg0Tyg06nqGrBpnSKe/0vDQ=;
+        b=hd0b42tsad9RjAsfrDGhDnPGsNK1C+wrIDfv6fc1Cwvmy+JzhfHIT0NVc2OK07MFhn
+         fKhBBoLYIpveAh4uG7WJNCl7jt5Z6eLQ78txd8INC86CnaLH7np6lr254npYNLOHLVHH
+         M3a1VdON64KNuIMV0e2fjZao9q7pG3plC01+Dardtk1eVkuuEZAk4pfovDm7OR2mK6dC
+         uglvJbTbAaci4giLnRWeDpxPd2WnlAkbKggNadmGXHulqQFO9kCtriVnVCHaLLtzBk0a
+         A8LKQgW/xb2ZaghBvu6GpoGjpm+lnY92PeeHiE+hMLqtZCHrlYPBjzx4Uf6L4lceVj0X
+         bb5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733491981; x=1734096781;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GSrFoYGsGUHyZVE4nB9VSg0Tyg06nqGrBpnSKe/0vDQ=;
+        b=MasUF8AIS3MhY6+hSJ6foRuEWMvRBHYhPiQGW+GLmEH5Mu5JkhyC7figtWRgN3htuN
+         kRZBk1Dhw6Z2dkwWo/kq5DFxrJr+Gpat+pBbbjkgjyTT/SRwuxprRXxoloASpgKCuH4N
+         Q8rW8sOLALoAjuOq1yswvaFlLC0pC8EdiNVCIbnhq0NBubThgAk3W/DY04KjJhzKNOl3
+         BPqvsNwYs48X2w7avXNuqeFurHcDbOpll4R21mK2vgUyrNvzfjolFMfORzYl0eccOR69
+         PtSqIBk3IbvL7X5plmKH77KKpbEIkSn8df+BTERugt1TYMrn7OmQ8fXX0Ov7XklJN3pD
+         87tw==
+X-Gm-Message-State: AOJu0YxwAfL2QjE5mu4JhPv+4tL17rJIOpTe6Y1ayAVrHI7EpxJZ8jDo
+	/mtsIdMHrFgo4RT9SzEUlcUBWZTHsR6ZQvInT44biyVraVrRxsOV
+X-Gm-Gg: ASbGncv1R6O/KpNxjNYOl6uaUSHFElt036yw2PLybJSd0rFcQ/yDgwLOlbSvHNX2Pnv
+	l8b/h6lcrH9+hxDFoDtieTcq5lKrmbBzm07euxXiKCkjPcXAvkw0C9TzqHkbpcEmWwQE5t1r4eV
+	PRuxhO4rvTqUJUMgNzx5iGUsF05S37v7fM2g5JstwG4U/F036DW8NRpA97YCQJeX5/Lzb3S2xmv
+	ot+lwJ8IQpk1aJbzlcSUbAvTNlDSGVhqZaZyhH1bYBjiQcDDpsF
+X-Google-Smtp-Source: AGHT+IFN6Nih4BPUS9vHqQD9JB0tRflwPG1VssIbKhDZvAyx2rQwUJqNR0m9Anlg6c9QjKZZHtkGjw==
+X-Received: by 2002:a05:651c:901:b0:2fb:4b0d:9092 with SMTP id 38308e7fff4ca-3002f89e98dmr14923121fa.1.1733491980769;
+        Fri, 06 Dec 2024 05:33:00 -0800 (PST)
+Received: from [192.168.0.205] ([45.152.72.7])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30038254e47sm794911fa.61.2024.12.06.05.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 05:33:00 -0800 (PST)
+Message-ID: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
+Date: Fri, 6 Dec 2024 15:33:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+From: Yura Strilets <yurastr100@gmail.com>
+Subject: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
+To: platform-driver-x86@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPy0QmsF1qr3A-89BDQHu-QVXpMhMGWt8e74FfDkqVT6Ha7q-g@mail.gmail.com>
 
-On Fri, Dec 06, 2024 at 10:04:49AM +0100, Klaus Kudielka wrote:
-> On Thu, Dec 5, 2024 at 1:43 PM Marek Behún <kabel@kernel.org> wrote:
-> > On Thu, Dec 05, 2024 at 01:38:10PM +0100, Marek Behún wrote:
-> > >
-> > > This is because the patch went into 6.13 but the rest of the patches
-> > > did not, Lee wants to take them for 6.14 :-(
-> > >
-> > > Apply this series and it will work.
-> > >
-> > > https://lore.kernel.org/linux-leds/20241111100355.6978-1-kabel@kernel.org/T/
-> >
-> > Alternatively you can overcome this issue if you enable the
-> > turris-omnia-mcu driver in 6.13:
-> >
-> >   CONFIG_CZNIC_PLATFORMS=y
-> >   CONFIG_TURRIS_OMNIA_MCU=y/m
-> > (and also the subsequent options).
-> >
-> > Marek
-> 
-> Thanks, I will try that when I'm back at the hardware (in a week or so).
-> 
-> Do I correctly understand the situation:
-> For the Turris Omnia LEDs there is now a temporary dependency on
-> CONFIG_TURRIS_OMNIA_MCU, which will vanish in 6.14?
-> 
-> Best regards, Klaus
+Hello,
 
-No, the leds-turris-omnia driver will have hard dependency on turris-omnia-mcu
-driver instead. You won't be able to select leds-turris-omnia without enabling
-turris-omnia-mcu.
+After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad, 
+mic, kb backlight, my asus) stopped working and the 
+/sys/(...)/asus::kbd_backlight interface is missing, which, considering 
+the dmesg, looks like an asus-wmi driver issue.
 
-This is because leds-turris-omnia depends on the IRQ line provided by the
-turris-omnia-mcu driver.
+I've been able to bisect the issue to the commit 
+[b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi: Fix 
+thermal profile initialization"
 
-Marek
+Additionally, here's some maybe-helpful information:
+my laptop's model -- ASUS Zenbook UX3402VA
+linux distro -- Arch Linux
+.config for bisection -- was taken from /proc/config.gz at 6.12.1 arch 
+kernel(attached in [1]) and missing options are default
+dmesg logs -- The "grep asus" parts of both good and bad scenarios can 
+be seen below and full logs are at [2] and [3]
+
+== bad.log ==
+[    3.664546] asus_wmi: ASUS WMI generic driver loaded
+[    3.713358] asus_wmi: Initialization: 0x1
+[    3.714126] asus_wmi: SFUN value: 0x21
+[    3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[    3.757420] asus_wmi: Failed to set throttle thermal policy (retval): 0x0
+[    3.757425] asus_wmi: Failed to set default thermal profile
+[    3.757429] asus-nb-wmi asus-nb-wmi: probe with driver asus-nb-wmi 
+failed with error -5
+== end ==
+
+== good.log ==
+[    4.557898] asus_wmi: ASUS WMI generic driver loaded
+[    4.776587] asus_wmi: Initialization: 0x1
+[    4.777253] asus_wmi: SFUN value: 0x21
+[    4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+[    4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, enable event queue
+[    4.805497] input: Asus WMI hotkeys as 
+/devices/platform/asus-nb-wmi/input/input15
+== end ==
+
+[1] .config - https://pastebin.com/raw/3nDSV8Sm
+[2] bad.log - https://pastebin.com/raw/fvR5Sjzt
+[3] good.log - https://pastebin.com/raw/EazfLAWA
+
+Thanks,
+Yurii
