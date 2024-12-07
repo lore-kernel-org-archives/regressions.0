@@ -1,161 +1,166 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393EA22C6D1;
-	Fri,  6 Dec 2024 22:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A2F1552FA
+	for <regressions@lists.linux.dev>; Sat,  7 Dec 2024 21:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733522565; cv=none; b=ROkjmB5oxtCjMt0URlRialdvMy74yLBWF2IJbHbEQYUxcDj+sR3qWMnnqkbnIvRXuX7VBCxtgkHsQYz6ZTpqqu2OpZtIBMNQWLsrfifQsfZWH7bCSuSTp3Vmz8TL8zgo2tpKM9KTIGH/IkbiHLrhuTwbMD3VN6q4NWflmt94tpc=
+	t=1733608148; cv=none; b=qKjEgWK22nMO3IwT0vykfqSz0KWpxyVWAaoHFV4UCzfRcisZpKUBVFemeoI75Iq73uvqh+bSLRfGnYY27FYI43641c127qs+Bp5AZFU2/bZFGs4S3/f3wQ9xkOBWqXoBIGfQA3ejJ/h5Old4TNcYWeDkS/8B3yseDlDHpGZJA8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733522565; c=relaxed/simple;
-	bh=4X935N0oxWWz1ukJT9s+jNSeaCMgBhqdCh2wNJQkshs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZFuMNYwZFylPj1bN6TwAgHC4z/Ir66heOI84yaJeMGXj00XmrvZn0D2a9roX5LoLjj/1/9OSuOWdVU4mtqlWwPT9ftKWs/cqu08SPTUk5gEAEeJ57uo8qidgyAesSc4Xkwd6/HuB/H6InamNVA5M8rnOLEV0zmsMWuAcJDHecys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Lku9mo2Y; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1733608148; c=relaxed/simple;
+	bh=XP3j1/4hGEAC2iNDIke1mBk6kVbZ+dv9A+GBgBQwQy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEU8gFx8I2tYWQlwD9RDEEsTPkGub1zCrq3JS/MKNoUU4y+WGVLpj7LCDaSq3v8voPFGWy3OQHdbkKFCY+/evPzfw2CTdWYrwWQ+P7b6G2XVqM0x4qm1OMbVEJFWCen3P3cmyglDPr1PnK9WDrdYgyzYP3CjaknH4A9X3PvIAHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FukmEAgX; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Lku9mo2Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1733522560; x=1734127360; i=w_armin@gmx.de;
-	bh=4X935N0oxWWz1ukJT9s+jNSeaCMgBhqdCh2wNJQkshs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Lku9mo2Y/PR6uoPIC5iAW1ExyZnpWaV7Jjsj27z7mJXIjweWohPfBfkovUKK6VE0
-	 rmEhNF8BamwENN7MCoRH7GiioaL12oei1jcXsSp8ZieK0JhSl1x36YHADtgBeFeR1
-	 QCpXwZvKvHDDDnbdje+jcotpMaW5P1IjIugB6NXBpKmvZIFCrEZXaneBuaCCio4PP
-	 vc92XqKjxv55KiET+D4A3DivZlT1lG7pb6qyMTzfPlfCipV8Ne9O2XiCH/OgIXeAp
-	 zofWY57D2cCUNbqzs6PYvXIwtrcJkfohuxREgm3GStrmVG5T33LCcDoNPjFB3uoEF
-	 SmlcCgnfFQSh469t3Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([91.14.230.110]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYvY2-1t6Md61MwK-00NEDT; Fri, 06
- Dec 2024 23:02:40 +0100
-Message-ID: <9a3b1797-d978-4e46-abbd-e4e62a9fcdd2@gmx.de>
-Date: Fri, 6 Dec 2024 23:02:39 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FukmEAgX"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-434e9716feaso3445415e9.3
+        for <regressions@lists.linux.dev>; Sat, 07 Dec 2024 13:49:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733608144; x=1734212944; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wsfew4ZFMeZbleew2kyM9F4xOEfh/La2iijlA6czpC8=;
+        b=FukmEAgXblu9vZGThEpbwpSRw6+4PXuNOR0Q0Bt+52sClaS9W2uI5JbF393Qwxkb+u
+         BHFQG4UCxpwCZ5o6IY+N3gQOUqS7LrbXCrpzrIp3I8SXesfjyCgu+xtdiexj2KYDpNFv
+         mrI5Y8An42RdJH8dNbMGHk2ypLwHJIlFn9kw0CKkr0n2CRdJ3NABMdgSHweWEUFWy96t
+         80HrgHDFDl+76+4gCoJsq0D0P1riam3SoB0lyULcdCMpyoeEtWGpmE8PfErhLa6iO/qi
+         TJVJ4wzlUpSu6DxmXuW/TrPCFW8qheXZn2ZtOBkmTLhcd7vzk6YEcRf0DE07OIjwXXPI
+         1a1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733608144; x=1734212944;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wsfew4ZFMeZbleew2kyM9F4xOEfh/La2iijlA6czpC8=;
+        b=BkyKxaywesZW/qF5enzAF3H42zRSPfs+PKWtTNPjZzq8Sz6qdOSKabCtrS7wRz8BSZ
+         CGAY7sUvHs4M8xzHa+Vtskpa9zv681bbwj+0IQ7PYD5epsSLRx840X9hYTkJt2feCzgF
+         XtUphh1GDjDDJAHhhL0LiLZZXL2ys9MFv4gjCODBX1PB20yUtBHsk0ttIm5mcqWYGmTb
+         ukN6zCL8HLbU2wrLgROY0PLPef6/SALH8YlTxqFKbfSaDWmasV5ikqzH/xXBstgp78eH
+         fqt1JVab4xY1WHTMia2ZTbcZUjsnqoj9b8D5tEbe8znpO1TukUPjcNPBAYX+e36LiU6r
+         u61g==
+X-Forwarded-Encrypted: i=1; AJvYcCX4AS22jnTfWKvk7UxhMm8u40yh1/jEjs/sTPCLpCRBOZrdo8LzrqtUXrCeUEPp9XmsFxpopm68zM0YAg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJaaNGouwk4Ntb4jicUYVBpz34DEodivqAH/JhmPYfQrWCdihY
+	jopdZjdCTvWg4jvLnhKcGKKVsGc95zC0a45XeuwKre8BZVKvKQ4ZT4JvxBidwwY=
+X-Gm-Gg: ASbGnctOm1/2qS6BFCGUX3WkMd3YCmp22hB253dV33Kvs2e6KmdGoc5l+ey6brf/91b
+	Qctf35vr3RXlXNIEheKCySFwSEUiCQcAwIMgfKbA6WIt/EW6chc5uX8s9xigkBhCsWjx4JhuozP
+	IzOzQJ0LT60E0R6toVV8lTZ5DIb1rzQlVgGXxL6wiPDmMZ6QCzdv4Rj0yGbdkimhUYM3yGNqOAh
+	txWTvhy4DQ2Vvvq7LoMuGGHSwcQ/plK/EH2yQ/nX86prMC+
+X-Google-Smtp-Source: AGHT+IH+ko/7VIODrYwfCnjU0zGn4D+6rRMhVzbvM2RWWXIDLkbwi9KP0/YKC1XI4EiPxhf0nmocBw==
+X-Received: by 2002:a05:6000:709:b0:385:dd10:215d with SMTP id ffacd0b85a97d-3862b3d3554mr5627621f8f.44.1733608143816;
+        Sat, 07 Dec 2024 13:49:03 -0800 (PST)
+Received: from linaro.org ([82.76.168.176])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3862de365f0sm5026157f8f.3.2024.12.07.13.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Dec 2024 13:49:02 -0800 (PST)
+Date: Sat, 7 Dec 2024 23:49:00 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on
+ usb-c ports"
+Message-ID: <Z1TCzEj05Anzwcc6@linaro.org>
+References: <20241206172402.20724-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] asus-wmi driver fails on my laptop
-To: Yurii Strilets <yurastr100@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <33bfcda8-3d3d-46b9-84f0-44e0e9f44230@gmail.com>
- <bf3b9efd-6700-485a-bd0e-f81de1e11fcf@gmx.de>
- <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <78eb0efb-bbaf-4cba-840a-9aa507798075@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wGrki7D3sUn8tpO4E/PodOKa3bhj678JNctpuqBJ8anGintRVh/
- o2xf6sjoJVFPzGz3Cp9OD1l/lHZy69CkRsOOVvMEiTq3x2NbY6XYa4O1D9eBgQW9Cgx4A/8
- i6LkGPsJ29Innk/N+kvwHkiXiyh9qEpkp0QRh/xWGO34sn9VKuRLoebAt5KwQz+6jGbtD8N
- OlK018yfvAxhhh1iMMaMw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uMWPUruiFwQ=;7f4p2zOLOwRgYZn0ncG0htKeAki
- qGAjkt50AOHorcDl1Uq2jaCxn69WL2cdxYfy07DT49stBu3+8XxuHZIDOds5ixwi3UtNH7EDa
- 1FwcKEnke2N2ZfogtRQvEpPMckGXGjv8O0ao9zUMWvmTc24bbmK8kt/Q12MEJuHgDZ7j2Kyro
- UktZOTs/aUiBc2ddM/77udrm71bW/sCnSwCJKaq9iaqkT5GciRlP4wID5qQ4Qj+WHWNz38T2f
- PNThAtFv1+aavtgyE9oraAsBevKodozSKtOkWYjJ95gwSX6d9XsaRQX+Je4eeLxwlnpsz/XgC
- MSJTT/lgYeHMC4OKaRAk6KU6ChSvybjJG/qFP1kNVn5tGL9jbR9mdR5Yd7MxT0us/njgo4v/d
- fVB4T9BR6tPES1drCP50o5UbeP2geC80HhKXRQPm7Za9noCMF8vcQMauEWDh409klHD3VBMgk
- UXphhwysp49ix35ifPBEM3jASw4siKO8N0z6urprsXjCgBjQgE1DKIRme0OA8xNAOuKyca/KZ
- zY972gc05kqb0rPFw/KWxyjRT0VAC+yNw2SsXhkXgvgLFWlKIFpgoEsyeUXruA+Ehlc2wiJZg
- 6CGRV6ZaSXyycWGbAZUQvaNPn64NGCSmh1C5TDXE920WAEEWdJP9hwJc1ncjd6TGEcPThV7jz
- mHHZwc8vs1Evhsjy251PwiKjs3sEuH4PXF4AuSRCHPYDrR+1kmIAInON2GAs2p6h4xDf1y1v3
- 6MmFGQRo7b6icHCS5rt3a2aI4JWHoQEhTxXcoZzzW0LBp+oI5ydcTGVXYR7YFQhCDmziJ4xFn
- Y0ShUkveGccDD9xM+k/izRw8BuGcJQGFlcgPsySKsuSP+q4icwAiFynXxQb2FfIXl40gKM8z6
- tufpH5AlqtLuZ6i6dVBMqH12QbNjSHeQ+uvko4LcdOXUqU5kTMj9LdclRjimk0uVtEhpKJWt2
- mi2m2zN5cPnB68AnI1RYRtrTsT1EHTZ1aHBXvux3ObYq5b8fmanz4zJfPO5dozyX6aXh2tLx8
- FvFZf4qeI8oZUygSB/IjRBfAoRda5LgCbjdCgQPTQv8qceChEYOzrrQya+d55tCkpROM9mjz+
- RY3NE7kJXkGBJNLs33DyJMQKNHD8eR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206172402.20724-1-johan+linaro@kernel.org>
 
-Am 06.12.24 um 22:18 schrieb Yurii Strilets:
+On 24-12-06 18:24:02, Johan Hovold wrote:
+> This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
+> 
+> A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+> ports can break SuperSpeed device hotplugging. The host controller is
+> enumerated, but the device is not:
+> 
+> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
+> 	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
+> 	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
+> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
+> 	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
+> 	hub 3-0:1.0: USB hub found
+> 	hub 3-0:1.0: 1 port detected
+> 	hub 4-0:1.0: USB hub found
+> 	hub 4-0:1.0: 1 port detected
+> 
+> Once this happens on either of the two ports, no amount of disconnecting
+> and reconnecting makes the SuperSpeed device be enumerated, while
+> FullSpeed device enumeration still works.
+> 
+> With retimer (and orientation detection) support not even merged yet,
+> let's revert at least until we have stable host mode in mainline.
+> 
+> Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
+> Cc: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-> Thank you very much for the fix!
-> I am terribly sorry about a faulty report, I did just find out I had an =
-issue during the mainline build.
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
-There is nothing faulty about your report, the necessary fix is still not =
-available in any stable kernels.
-On the contrary i am happy that so many users are reporting this issue, be=
-cause otherwise we would have
-never heard of it :)
-
-Thanks,
-Armin Wolf
-
-> Dec 6, 2024 20:15:05 Armin Wolf <W_Armin@gmx.de>:
->
->> Am 06.12.24 um 14:33 schrieb Yura Strilets:
->>
->>> Hello,
->>>
->>> After upgrading from 6.11 to 6.12 a bunch of Fn+Fx buttons(touchpad,
->>> mic, kb backlight, my asus) stopped working and the
->>> /sys/(...)/asus::kbd_backlight interface is missing, which,
->>> considering the dmesg, looks like an asus-wmi driver issue.
->>>
->>> I've been able to bisect the issue to the commit
->>> [b012170fed282151f7ba8988a347670c299f5ab3] "platform/x86: asus-wmi:
->>> Fix thermal profile initialization"
->>>
->>> Additionally, here's some maybe-helpful information:
->>> my laptop's model -- ASUS Zenbook UX3402VA
->>> linux distro -- Arch Linux
->>> .config for bisection -- was taken from /proc/config.gz at 6.12.1 arch
->>> kernel(attached in [1]) and missing options are default
->>> dmesg logs -- The "grep asus" parts of both good and bad scenarios can
->>> be seen below and full logs are at [2] and [3]
->>>
->>> =3D=3D bad.log =3D=3D
->>> [=C2=A0=C2=A0=C2=A0 3.664546] asus_wmi: ASUS WMI generic driver loaded
->>> [=C2=A0=C2=A0=C2=A0 3.713358] asus_wmi: Initialization: 0x1
->>> [=C2=A0=C2=A0=C2=A0 3.714126] asus_wmi: SFUN value: 0x21
->>> [=C2=A0=C2=A0=C2=A0 3.714131] asus-nb-wmi asus-nb-wmi: Detected ATK, n=
-ot ASUSWMI, use
->>> DSTS
->>> [=C2=A0=C2=A0=C2=A0 3.757420] asus_wmi: Failed to set throttle thermal=
- policy
->>> (retval): 0x0
->>> [=C2=A0=C2=A0=C2=A0 3.757425] asus_wmi: Failed to set default thermal =
-profile
->>> [=C2=A0=C2=A0=C2=A0 3.757429] asus-nb-wmi asus-nb-wmi: probe with driv=
-er asus-nb-wmi
->>> failed with error -5
->>> =3D=3D end =3D=3D
->>>
->>> =3D=3D good.log =3D=3D
->>> [=C2=A0=C2=A0=C2=A0 4.557898] asus_wmi: ASUS WMI generic driver loaded
->>> [=C2=A0=C2=A0=C2=A0 4.776587] asus_wmi: Initialization: 0x1
->>> [=C2=A0=C2=A0=C2=A0 4.777253] asus_wmi: SFUN value: 0x21
->>> [=C2=A0=C2=A0=C2=A0 4.777256] asus-nb-wmi asus-nb-wmi: Detected ATK, n=
-ot ASUSWMI, use
->>> DSTS
->>> [=C2=A0=C2=A0=C2=A0 4.777258] asus-nb-wmi asus-nb-wmi: Detected ATK, e=
-nable event queue
->>> [=C2=A0=C2=A0=C2=A0 4.805497] input: Asus WMI hotkeys as
->>> /devices/platform/asus-nb-wmi/input/input15
->>> =3D=3D end =3D=3D
->>>
->>> [1] .config - https://pastebin.com/raw/3nDSV8Sm
->>> [2] bad.log - https://pastebin.com/raw/fvR5Sjzt
->>> [3] good.log - https://pastebin.com/raw/EazfLAWA
->>>
->>> Thanks,
->>> Yurii
->>>
->> I am aware of this issue, the necessary fix (commit 25fb5f47f34d) was a=
-lready submitted upstream and will likely
->> show up in the stable kernels soon.
->>
->> Thanks,
->> Armin Wolf
+> ---
+> 
+> I have not been able to reproduce this on the (third port of) the CRD,
+> but I hit this constantly with the T14s so let's start with reverting
+> there.
+> 
+> Note that Stephan has already identified another problem with the
+> offending commit here:
+> 
+> 	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
+> 
+> Johan
+> 
+> 
+> #regzbot introduced: 1a48dd7b9ac8
+> 
+> 
+> 
+>  .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> index 5a4a72a030d4..b4b6260c670c 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> @@ -1515,6 +1515,10 @@ &usb_1_ss0 {
+>  	status = "okay";
+>  };
+>  
+> +&usb_1_ss0_dwc3 {
+> +	dr_mode = "host";
+> +};
+> +
+>  &usb_1_ss0_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_ss0_hs_in>;
+>  };
+> @@ -1543,6 +1547,10 @@ &usb_1_ss1 {
+>  	status = "okay";
+>  };
+>  
+> +&usb_1_ss1_dwc3 {
+> +	dr_mode = "host";
+> +};
+> +
+>  &usb_1_ss1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_ss1_hs_in>;
+>  };
+> -- 
+> 2.45.2
+> 
