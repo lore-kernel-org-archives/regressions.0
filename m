@@ -1,122 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A024421A43F;
-	Mon,  9 Dec 2024 11:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061B722ACE3;
+	Mon,  9 Dec 2024 12:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733743237; cv=none; b=ED1M4QtW+xVdW1I1PA+21zYpq971LKAt/KD/7+3YRaiRVu9snlytzHzFWIA2tMUJQfkIXq3p6RdSEMQThMuWwpLQYw2F4NZIpbtL/mxUZlUTUUwLgg2mYNM5jzkFEymBgCtPovSPIWDjUmTq7171ncAI2OyQbdjyKTo1GIkMguE=
+	t=1733749119; cv=none; b=uVR/AKjCCb7om7ShQhU3qjC7282o09KCD7XvEcYrBpaRvCHJ09WwpZCG6hA7QE9ErnO5Vh4d7sJI3Z9jGTnkilnjRwjvtMUZUHdHUACTqtVXPewDpbtaUeSF3/C307OI5b8hnn3mbCGx/3k1FixaUH0+9fJoKnAQE5OXOGGA7dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733743237; c=relaxed/simple;
-	bh=3N4d65t8tlhYSC9lPSzOeAEj9EIZZf5ZHkBDz8Cb1h4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9Yl0EMpJ6DvsQTWmEspQErigPKjlGe6gkyyqc/u+V+uWg0/YOgFwZ/D7HDzJ+B5JSSjYZMX75st/aIBm95TRfxgDywgXm9FRB7ZKeLE42+P8RhcyiwrZALeac2DF64g1M+VVLRQ0Rb44M5tqZI+Vh77dY3WM/6cn1lPAJXdRpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7b0x2Q+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733749119; c=relaxed/simple;
+	bh=l6YxVhjjcPNXX3KSThtrFQnv9KW0AjVXF9OlJ6931KE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=TyhJHGuV7y6kKX6njCQND4HqEIfnGwxoQ2pDBwPv6dPt9mosxMeHmTRHaFleRDWQV+rZyFZe+85DzhSpaLit4vB6Tn4ClLjLsyIzn6AUJCdvVLraZdQIc5ANsLIl7yfp+aS0dUHnaNyWP0ZE1Kss/lYFet8Lj30f+pOZEsdAP2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IztltQZe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7b0x2Q+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1820DC4CEE6;
-	Mon,  9 Dec 2024 11:20:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IztltQZe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A72C4CED1;
+	Mon,  9 Dec 2024 12:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733743237;
-	bh=3N4d65t8tlhYSC9lPSzOeAEj9EIZZf5ZHkBDz8Cb1h4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D7b0x2Q+Fxpzs2aBXIahli02huv675iF4LEw99zGOmTykQFRCw7NJui1LwCiyH+aS
-	 02717DdIJ/9NjAjXVdYBiMK21cA+yqoB0tqVMTnPQfAg07I5g19CNoztGoroXiV6ad
-	 3adKoMcLdeXmGuTSpjgfko8zOCQvcW0WqYqnFKWxI0hyvSYlWedYvhBF48ZMI2UwoO
-	 3EFqlluLvR6RyE2q/Y4N1iWlF3olc5vx+UvdgahUIwnoBHM+GPipr5NV11Bs5MK+pT
-	 Fv+sEzfba3fkFFNpgUyv+5cDl49hCXOgfM2snxRp1wLH7yujFXk6eOU5KN19ysq9ld
-	 5NRtYnYWIpuPw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1tKboc-0000000086B-2EEI;
-	Mon, 09 Dec 2024 12:20:38 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jonathan Marek <jonathan@marek.ca>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 1/2] Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
-Date: Mon,  9 Dec 2024 12:19:04 +0100
-Message-ID: <20241209111905.31017-2-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241209111905.31017-1-johan+linaro@kernel.org>
-References: <20241209111905.31017-1-johan+linaro@kernel.org>
+	s=k20201202; t=1733749118;
+	bh=l6YxVhjjcPNXX3KSThtrFQnv9KW0AjVXF9OlJ6931KE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=IztltQZeEnfq3iGifVzcriBgdPEb0+E6XtU55bFpXDEhSP3M7o9rZrzcL9SRsLPx/
+	 yxspvMGP9HJ+Sw449LZVeq782KIwxU1t7Ll1WkILEoCUPO92LU+ymmXNdEtiLOCjyr
+	 AGTOudAaNcWNIC5D2LbV1Af5f6A3e5PMoNzOUzjPgJJ1jOO2hpzA2EQ0FUUFJ0Yflv
+	 A00+fDQnz6EEer1inW3rFY4OeO0rhYoP40SrR/yprV9+AhanRVRJq+oBcn0mjS/jq0
+	 7/1q4zPHI59e8VktfH4m/1gv5hAZ/YQJrOX9rF3dXdV89jRNj2gBGoX0uc7DmD1GSM
+	 cqKrM2te6hf/w==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 09 Dec 2024 14:58:33 +0200
+Message-Id: <D676RN3ZW2H1.2JNMSLG0WGS3V@kernel.org>
+Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>,
+ <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
+ since 1b6d7f9eb150
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, "Christian Heusel"
+ <christian@heusel.eu>
+X-Mailer: aerc 0.18.2
+References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
+ <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
+ <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
+ <D5Z62H0XCOQM.J4V5ZDH9E7C7@kernel.org>
+ <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
+In-Reply-To: <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
 
-This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
+On Tue Dec 3, 2024 at 12:15 AM EET, Stefan Berger wrote:
+>
+>
+> On 11/29/24 9:44 PM, Jarkko Sakkinen wrote:
+> > On Tue Nov 26, 2024 at 1:42 PM EET, Christian Heusel wrote:
+> >> On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
+> >>> Yeah, this is on the list.
+> >>>
+> >>> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
+> >>>
+> >>> I had a fix for the AMD boot-time issue already over a month ago
+> >>> but unfortunately took time to get enough feedback.
+> >>>
+> >>> BR, Jarkko
+> >>
+> >> I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
+> >> the patchset that was mentioned in bugzilla also helped this issue.
+> >>
+> >> The reporter said that the bug is still present in 6.12.1, so this mig=
+ht
+> >> need further poking =F0=9F=A4=94
+> >=20
+> > I'd suggest a workaround for the time being.
+> >=20
+> > In 6.12 we added this for (heavy) IMA use:
+> >=20
+> > tpm.disable_pcr_integrity=3D [HW,TPM]
+> >                          Do not protect PCR registers from unintended p=
+hysical
+> >                          access, or interposers in the bus by the means=
+ of
+> >                          having an integrity protected session wrapped =
+around
+> >                          TPM2_PCR_Extend command. Consider this in a si=
+tuation
+> >                          where TPM is heavily utilized by IMA, thus pro=
+tection
+> >                          causing a major performance hit, and the space=
+ where
+> >                          machines are deployed is by other means guarde=
+d.
+> >=20
+> > Similarly it might make sense to have "tpm.disable_random_integrity"
+> > that disables the feature introduced by the failing commit.
+> >=20
+>
+> I am wondering what could be the not-so-obvious root cause for this?=20
+> Could it be due to a (TPM or RNG-related) lock? I guess the audio=20
+> popping could occur if an application cannot meet timing requirements=20
+> when it runs into some sort of blocking lock...
 
-A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
-ports can break SuperSpeed device hotplugging. The host controller is
-enumerated, but the device is not:
+The problem is that we don't know yet but we do know that it previously
+worked.
 
-	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
-	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
-	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
-	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
-	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
-	hub 3-0:1.0: USB hub found
-	hub 3-0:1.0: 1 port detected
-	hub 4-0:1.0: USB hub found
-	hub 4-0:1.0: 1 port detected
+Or more importantly: that is the hypothesis. So it would be in all cases
+useful to create such patch for A/B testing at minimum.
 
-Once this happens on either of the two ports, no amount of disconnecting
-and reconnecting makes the SuperSpeed device be enumerated, while
-FullSpeed device enumeration still works.
-
-With retimer (and orientation detection) support not even merged yet,
-let's revert at least until we have stable host mode in mainline.
-
-Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
-Cc: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-index 5a4a72a030d4..b4b6260c670c 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-@@ -1515,6 +1515,10 @@ &usb_1_ss0 {
- 	status = "okay";
- };
- 
-+&usb_1_ss0_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss0_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
- };
-@@ -1543,6 +1547,10 @@ &usb_1_ss1 {
- 	status = "okay";
- };
- 
-+&usb_1_ss1_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
- };
--- 
-2.45.2
-
+BR, Jarkko
