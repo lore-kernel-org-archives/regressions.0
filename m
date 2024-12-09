@@ -1,123 +1,186 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C9E1ACEBE
-	for <regressions@lists.linux.dev>; Mon,  9 Dec 2024 13:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2844B1A23AB
+	for <regressions@lists.linux.dev>; Mon,  9 Dec 2024 13:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733750594; cv=none; b=ltqcCqZ1X74jI8sLlhgsgz6OWsKXshfLcWxIBG+UdogHL2D3WW/2qxnZynY4CLx3Q+lrWZ+tJELEnsFvPFm0U7G56B8nl8OdCr7E3Xqfj35w8A7/Ef63cBO/vRiDgdLXPI8gVNZm0YVLtrNlOL5TUAcGis4sq2nyVwqiwlfb2v0=
+	t=1733751798; cv=none; b=XKPJwmAk4TL3bvd3OiD74W86UPhXc1NZUq3OjBBuYVFgPzDEarQtQExLh5AI9P66oUVHQjdgeUwlQXCfpCO/77WJt8XianRBATMtzFLOtAy9faBoet7QOryxseAZLHC1BalzzMEpAiPO3RUfBzGQeSQPMTXL1D6H66eUv7oLZJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733750594; c=relaxed/simple;
-	bh=04S6B0nJf9Hn+gzERCF/uMkmUx0R4j34PMLxCp3iOME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqLtS/TalFVQZy3llfAzTpBFPLbDFMBolL8Ap6zMwprEfJARS+kPmWGiZ99hQMVc3bY29wGaI/3kR1BUeHyOMPGKe/LbheaETQLSdqPXpXdOV1AjuNpIQBQITfF04A2gvVz5L8U8zREoWK6C2Nz8T/KedbTh/Q4B21BdvYCRezs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tndrhbw9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1733751798; c=relaxed/simple;
+	bh=FjlMcLVOkwvJGS1dA7zQDolkS7fK1VeBJjE48EGXPf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T/vGc5Uw8n7NuyoveCdtBuPSB8tjAAht4gU0jQUlCfbSYdBsv/F2FMghrky9rdaqpKZys+pxJ0zHb6WYFTL57w7TK/1nPqMRzJZzUoWJcuuPBBiTZE6groat1CSW+CC9sPbgVc8D62UCCS22s53NGhJYAMLevbdO+dYdly7do3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWSrEw5B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uuBoGu83; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWSrEw5B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uuBoGu83; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tndrhbw9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53e399e3310so2382995e87.1
-        for <regressions@lists.linux.dev>; Mon, 09 Dec 2024 05:23:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733750589; x=1734355389; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P1Q3KowuVs0mZ0rb0Ic9ZcrPzwsNDNKvHLsAlNmDHFg=;
-        b=tndrhbw9bRAGDE0LkX7MohYn/rEQkP6DNp6Uhlpste3s/a7zZSGZi+pvSddryDOmfa
-         q4OUoPtom6bH0wJEqpbXDcxl57tX8xQamK09qnRi2bzVAsk58ouwbdcPucSmzf23ahpZ
-         2G+xxqVSaqc+JdrF6NfDsh2ELcRNO5lH090lgKXMpsDJgYEOBJsTjNBUUFV1ZCeU9QMY
-         AfaKFlo8m7Ha4iwHsasmcmdC4cznYYxoxLGpcHGovBkD2mgjPReWfAcGKBIEToRQ9K1r
-         VCHjo/GeGyFEVwr9caZgdbGxHbhggz3Ej+YP5AnKX0uIOaHSgJTKYY/IfgEPtjGZ6o6x
-         PcPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733750589; x=1734355389;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P1Q3KowuVs0mZ0rb0Ic9ZcrPzwsNDNKvHLsAlNmDHFg=;
-        b=FGOpQKuKpAw84QnRThiJerivEOI+4DZFqae4kzZBLWpEHUb2baNVZbLx9crb4Woc//
-         y4L8eVM5OldX7KBIDm0GPd73Ekaun3VEefzWzQBetQjKNcDLpHxrwuILgAY0YRj1jymz
-         D7vn+CVvK0qtVUUqt70f4iFppcSW6zF/hSztlS8QshWFlIodGNmtfNmJ7Z2U/w4S2Uca
-         oWZGSMeOnjE3f39gKbsAtrzIWv+jBeB6PK29tKs/yXR7QcehNchYOxaeQxm3/jox8MOy
-         lYlvNJNyNym0T69gScRG0VR0L/H2pe4REAJ5QItTYFTwWOGdWYfdPVxte5YX2a3+Au+G
-         2gQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdD2Yt3kqOSDTejZ0ttn5WI1up2WJWcIztiaQSiYK28YMWDEU1YgGBHVRBSylUH596pBZcztcMDKO5wg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzgNzYns3X2z0Ug3BlXADLjdqjshpcQqeand6OyuEDgU2qYnPDr
-	WvFpcj1CJ7r3IbjBfE/yFhDrrLG32KUSoHwOY88pF92RAlrGTNRmL/VFkCJXjXg=
-X-Gm-Gg: ASbGncsZBV3by/9ny80QkMSj5xOhizeGq+GDrpy0XQj34KOW8o1zedg6F2gHcVpEILj
-	/u820RfNknL/K3XpscYY6TaCXFJnM2wv+yBzMZlu1aL8SdK4haoFCA9oacB4IZ1TzDNIuAX2yq5
-	diPk+bg4f25ikRJJL76Ui9Hg/IglNglTXZUWAzmoqRKcUtKtMXJ1WWtPxnyJ3DoE7Xqq27cAEQT
-	kwcsF2EHhcWcjxTStZj31fVNykOY9KyTRT9BuYgZ9u5KOBthiTWDtssnJDoqPyc7t91voliKyvo
-	AhTZFGf1131+A8+sqCesXZ+EAJRoDw==
-X-Google-Smtp-Source: AGHT+IHzRS3kKeuBIaVbiSldvKszXqHDXCVoEU74JuhkpXf+Z7S09whtCDZ/ssVTFfacSGsQVfKscw==
-X-Received: by 2002:a2e:a817:0:b0:302:17e7:e18a with SMTP id 38308e7fff4ca-30217e7e59cmr24900501fa.26.1733750589475;
-        Mon, 09 Dec 2024 05:23:09 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3003b760a56sm8652811fa.18.2024.12.09.05.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2024 05:23:08 -0800 (PST)
-Date: Mon, 9 Dec 2024 15:23:05 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Marek <jonathan@marek.ca>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v2 0/2] arm64: dts: qcom: x1e80100: fix USB OTG
- regressions
-Message-ID: <iw2c4fceyppf2w2gueevsqsz2z7hatbqo33vufx3veatprczu5@u4k3j2igy6ee>
-References: <20241209111905.31017-1-johan+linaro@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWSrEw5B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uuBoGu83";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWSrEw5B";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uuBoGu83"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 485691F45B;
+	Mon,  9 Dec 2024 13:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733751795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UNSDTGcfdwKtSsMNDCxvNvguijub6F6CQsFlt7CsUi4=;
+	b=ZWSrEw5Be/BMJESU8aXhy83SN5Ivy95ksWEJs1tW26Cfp3pZNZq6UvHwJXMwT6QbWq4ww+
+	JfqHSv2ORTaQAf0J2lP7g3IryXidX3P16WN6vs2wUIqI5y/Ff8KKCLQtaGwOBGoj5DTxkK
+	+/Ww8nXLmM46gRUZ7hAvjKMLM0ccZDA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733751795;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UNSDTGcfdwKtSsMNDCxvNvguijub6F6CQsFlt7CsUi4=;
+	b=uuBoGu83uE0k9Tj4oPlOrm4n8oK7Vw8J5n5hwHALWZHvD2zwRXPsYeUawuaQN2mk3gSYtG
+	c6BDi4fC2nfBwyBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZWSrEw5B;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uuBoGu83
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733751795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UNSDTGcfdwKtSsMNDCxvNvguijub6F6CQsFlt7CsUi4=;
+	b=ZWSrEw5Be/BMJESU8aXhy83SN5Ivy95ksWEJs1tW26Cfp3pZNZq6UvHwJXMwT6QbWq4ww+
+	JfqHSv2ORTaQAf0J2lP7g3IryXidX3P16WN6vs2wUIqI5y/Ff8KKCLQtaGwOBGoj5DTxkK
+	+/Ww8nXLmM46gRUZ7hAvjKMLM0ccZDA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733751795;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UNSDTGcfdwKtSsMNDCxvNvguijub6F6CQsFlt7CsUi4=;
+	b=uuBoGu83uE0k9Tj4oPlOrm4n8oK7Vw8J5n5hwHALWZHvD2zwRXPsYeUawuaQN2mk3gSYtG
+	c6BDi4fC2nfBwyBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1B722138D2;
+	Mon,  9 Dec 2024 13:43:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id snlvBfPzVmcAcAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 09 Dec 2024 13:43:15 +0000
+Message-ID: <900b873f-6eba-4dba-b155-dc5f7594becf@suse.de>
+Date: Mon, 9 Dec 2024 14:43:14 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241209111905.31017-1-johan+linaro@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/fbdev-dma: regression
+To: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux Framebuffer <linux-fbdev@vger.kernel.org>
+References: <20220621104617.8817-1-tzimmermann@suse.de>
+ <CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com>
+ <d2562174-eebe-4462-9a9a-03936b3bcf89@leemhuis.info>
+ <b4d28b98-a85c-4095-9c1b-8ebdfa13861c@suse.de>
+ <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
+ <da4288a6-96cc-4095-bd73-d66b68e9ed01@suse.de>
+ <CAEXMXLQw1yqUGbWcrKZdOuGvA4eZMG0utiyQ2PVRvTeuFedGbA@mail.gmail.com>
+ <9c902ac0-a94d-4465-98ff-840132e482b1@suse.de>
+ <CAEXMXLSLau0sEy8WSZ3=ofK97xP8aPcDQEnT=JFkkt7K=Rzivw@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAEXMXLSLau0sEy8WSZ3=ofK97xP8aPcDQEnT=JFkkt7K=Rzivw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 485691F45B
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Dec 09, 2024 at 12:19:03PM +0100, Johan Hovold wrote:
-> A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
-> ports can break SuperSpeed device hotplugging.
-> 
-> Abel noticed that the corresponding commit for the CRD also triggers a
-> hard reset during resume from suspend.
-> 
-> With retimer (and orientation detection) support not even merged yet,
-> let's revert at least until we have stable host mode in mainline.
-> 
-> Note that Stephan and Dmitry have already identified other problems with
-> the offending commits here:
-> 
-> 	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
-> 	https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
-> 
-> Johan
-> 
-> 
-> Changes in v2
->  - revert also the corresponding patch for the CRD which breaks suspend
+Hi
 
-As you are reverting two commits, please revert the third one too, it
-breaks pmic-glink.
 
-> 
-> 
-> Johan Hovold (2):
->   Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
->   Revert "arm64: dts: qcom: x1e80100-crd: enable otg on usb ports"
-> 
->  .../boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts  |  8 ++++++++
->  arch/arm64/boot/dts/qcom/x1e80100-crd.dts            | 12 ++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> -- 
-> 2.45.2
-> 
+Am 07.12.24 um 23:36 schrieb Nuno Gonçalves:
+> On Mon, Dec 2, 2024 at 12:18 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Thanks for testing. Attached is another patch. It attempts to restore
+>> the fbdev handling as before the regression. Please give it a try.
+> This one fixes it for me. Thanks
+
+Thanks you so much for testing. I'll prepare a real patch. Can I add 
+your Reported-by and Tested-by tags?
+
+Best regards
+Thomas
+
 
 -- 
-With best wishes
-Dmitry
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
