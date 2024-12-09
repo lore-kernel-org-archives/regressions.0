@@ -1,41 +1,91 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA726215065
-	for <regressions@lists.linux.dev>; Mon,  9 Dec 2024 08:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1868D218AA6;
+	Mon,  9 Dec 2024 11:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733731447; cv=none; b=E8ee2TcgCsri7N2oeJJmOizz5VHVCpzAlPkL8HiEJwqvnQ61RqID3g+lF8uqfs66ZxUTc5P6958EUWbf2Bh5tc7js59HzObRTKpBQYjw/P/6k1cdVE24At/HMoIrLtauFOlYsT/9v71RcuUplz96J6mugmQYZ4SjSUdk+Yfcljo=
+	t=1733743237; cv=none; b=WT3NXPzjesEFg+qofdqGSSJcwg57IM+LHEDQlYKQ70VMy2yz0WGEGyzQsX+P3nRtrZXL/2hIsKEpRs4BikCoys7vVvuNPZbT1TkFQbh1sbe3AmVXu6Kv81mUixbW/mOygoWrR5pfMN9ZcWIuDeS9AZeQPytORkfZwruuvMWhlP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733731447; c=relaxed/simple;
-	bh=5t3WINfmpl6qeP57QN3uRj4igdODIRNBNLbjh+/Wgnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGZWmQJfF2nhCh7nF6Ac3W3b9V8JPldwGslLcMQ1pM8kxlVHwFC/rvbhL4G5pTcgFP7+4jzVERwSkc1q6P/ba6lXUQ9d/2DAiWvSCbZsmJrdfcVWctij6rWq+59T0BszNRWOOcieiVhrWWoERqkI1KYoCxb74tmMXo8NiEJ0S0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E98C668D0A; Mon,  9 Dec 2024 09:04:02 +0100 (CET)
-Date: Mon, 9 Dec 2024 09:04:02 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Simon Polack <spolack@mailbox.org>, kbusch@kernel.org, hch@lst.de,
-	linux-mm@kvack.org, regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org, 'linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] 6.13-rc1: Loading nvme module leads to
- mm/page_alloc.c:4727 __alloc_pages_noprof+0x321/0x330
-Message-ID: <20241209080402.GA24898@lst.de>
-References: <5fcdfd16-d598-4a86-962e-9d22b0524b12@mailbox.org> <81b0b8bf-632f-4f71-8357-41ebf7421919@redhat.com>
+	s=arc-20240116; t=1733743237; c=relaxed/simple;
+	bh=11vQLLmphFwGU+kKNcSh9cY4RnEZ6CybkaKni0OR3eE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tKA3ku08DNJIrNVr8MAz4mznxJsa4QiuZqqmwt0RpurM4/7QUADaRf3UVUkF0NI4ZdX7axoolpjYYNWt0GALVGO11+O9X743ULE7Up3tDeC/F+SVil6wPzcseig7FCRNc3mFqknMA+nU79Muy+93N0DLSSnRp4Ma6AcrglZprCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhCRyQMy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhCRyQMy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47D9C4CED1;
+	Mon,  9 Dec 2024 11:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733743237;
+	bh=11vQLLmphFwGU+kKNcSh9cY4RnEZ6CybkaKni0OR3eE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IhCRyQMy3NIaBeMIgCV7dcFcIhpN4w+cPr9FSmscCMbqg3DG6c6CPGceUHM1gPZMC
+	 xn4lASh/8mwyq2DOKcc4EMEayGfFJuIss8D5zXGsmtJeJqCL7wllDKrYaXwjZHdBTU
+	 zmLHK4ztJ+eR1hzupos2aYPwEXmf2m5TD75xEG3Qvzll9qDoW8qgP/Ko5Dg9ojcGpA
+	 8wKYfUIRE3zlF+/qpgZOoQgijeZuQFtVJodJNccT/3BFQn9q748nGBVuzS8bTnYptX
+	 nMfjtRS5DdveL/zDfHo++7+YPZiV8MoZnnp6aEl/oNfcIdO6gf/HD2kbTmSvYQzcbS
+	 BoIUBD0iDuAug==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1tKboc-00000000869-1f8e;
+	Mon, 09 Dec 2024 12:20:38 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 0/2] arm64: dts: qcom: x1e80100: fix USB OTG regressions
+Date: Mon,  9 Dec 2024 12:19:03 +0100
+Message-ID: <20241209111905.31017-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81b0b8bf-632f-4f71-8357-41ebf7421919@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-This should be fixed in -rc2.
+A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+ports can break SuperSpeed device hotplugging.
+
+Abel noticed that the corresponding commit for the CRD also triggers a
+hard reset during resume from suspend.
+
+With retimer (and orientation detection) support not even merged yet,
+let's revert at least until we have stable host mode in mainline.
+
+Note that Stephan and Dmitry have already identified other problems with
+the offending commits here:
+
+	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
+	https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
+
+Johan
+
+
+Changes in v2
+ - revert also the corresponding patch for the CRD which breaks suspend
+
+
+Johan Hovold (2):
+  Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
+  Revert "arm64: dts: qcom: x1e80100-crd: enable otg on usb ports"
+
+ .../boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts  |  8 ++++++++
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dts            | 12 ++++++++++++
+ 2 files changed, 20 insertions(+)
+
+-- 
+2.45.2
 
