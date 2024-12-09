@@ -1,113 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061B722ACE3;
-	Mon,  9 Dec 2024 12:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C9E1ACEBE
+	for <regressions@lists.linux.dev>; Mon,  9 Dec 2024 13:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733749119; cv=none; b=uVR/AKjCCb7om7ShQhU3qjC7282o09KCD7XvEcYrBpaRvCHJ09WwpZCG6hA7QE9ErnO5Vh4d7sJI3Z9jGTnkilnjRwjvtMUZUHdHUACTqtVXPewDpbtaUeSF3/C307OI5b8hnn3mbCGx/3k1FixaUH0+9fJoKnAQE5OXOGGA7dQ=
+	t=1733750594; cv=none; b=ltqcCqZ1X74jI8sLlhgsgz6OWsKXshfLcWxIBG+UdogHL2D3WW/2qxnZynY4CLx3Q+lrWZ+tJELEnsFvPFm0U7G56B8nl8OdCr7E3Xqfj35w8A7/Ef63cBO/vRiDgdLXPI8gVNZm0YVLtrNlOL5TUAcGis4sq2nyVwqiwlfb2v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733749119; c=relaxed/simple;
-	bh=l6YxVhjjcPNXX3KSThtrFQnv9KW0AjVXF9OlJ6931KE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TyhJHGuV7y6kKX6njCQND4HqEIfnGwxoQ2pDBwPv6dPt9mosxMeHmTRHaFleRDWQV+rZyFZe+85DzhSpaLit4vB6Tn4ClLjLsyIzn6AUJCdvVLraZdQIc5ANsLIl7yfp+aS0dUHnaNyWP0ZE1Kss/lYFet8Lj30f+pOZEsdAP2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IztltQZe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733750594; c=relaxed/simple;
+	bh=04S6B0nJf9Hn+gzERCF/uMkmUx0R4j34PMLxCp3iOME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rqLtS/TalFVQZy3llfAzTpBFPLbDFMBolL8Ap6zMwprEfJARS+kPmWGiZ99hQMVc3bY29wGaI/3kR1BUeHyOMPGKe/LbheaETQLSdqPXpXdOV1AjuNpIQBQITfF04A2gvVz5L8U8zREoWK6C2Nz8T/KedbTh/Q4B21BdvYCRezs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tndrhbw9; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IztltQZe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A72C4CED1;
-	Mon,  9 Dec 2024 12:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733749118;
-	bh=l6YxVhjjcPNXX3KSThtrFQnv9KW0AjVXF9OlJ6931KE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=IztltQZeEnfq3iGifVzcriBgdPEb0+E6XtU55bFpXDEhSP3M7o9rZrzcL9SRsLPx/
-	 yxspvMGP9HJ+Sw449LZVeq782KIwxU1t7Ll1WkILEoCUPO92LU+ymmXNdEtiLOCjyr
-	 AGTOudAaNcWNIC5D2LbV1Af5f6A3e5PMoNzOUzjPgJJ1jOO2hpzA2EQ0FUUFJ0Yflv
-	 A00+fDQnz6EEer1inW3rFY4OeO0rhYoP40SrR/yprV9+AhanRVRJq+oBcn0mjS/jq0
-	 7/1q4zPHI59e8VktfH4m/1gv5hAZ/YQJrOX9rF3dXdV89jRNj2gBGoX0uc7DmD1GSM
-	 cqKrM2te6hf/w==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tndrhbw9"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53e399e3310so2382995e87.1
+        for <regressions@lists.linux.dev>; Mon, 09 Dec 2024 05:23:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733750589; x=1734355389; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P1Q3KowuVs0mZ0rb0Ic9ZcrPzwsNDNKvHLsAlNmDHFg=;
+        b=tndrhbw9bRAGDE0LkX7MohYn/rEQkP6DNp6Uhlpste3s/a7zZSGZi+pvSddryDOmfa
+         q4OUoPtom6bH0wJEqpbXDcxl57tX8xQamK09qnRi2bzVAsk58ouwbdcPucSmzf23ahpZ
+         2G+xxqVSaqc+JdrF6NfDsh2ELcRNO5lH090lgKXMpsDJgYEOBJsTjNBUUFV1ZCeU9QMY
+         AfaKFlo8m7Ha4iwHsasmcmdC4cznYYxoxLGpcHGovBkD2mgjPReWfAcGKBIEToRQ9K1r
+         VCHjo/GeGyFEVwr9caZgdbGxHbhggz3Ej+YP5AnKX0uIOaHSgJTKYY/IfgEPtjGZ6o6x
+         PcPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733750589; x=1734355389;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P1Q3KowuVs0mZ0rb0Ic9ZcrPzwsNDNKvHLsAlNmDHFg=;
+        b=FGOpQKuKpAw84QnRThiJerivEOI+4DZFqae4kzZBLWpEHUb2baNVZbLx9crb4Woc//
+         y4L8eVM5OldX7KBIDm0GPd73Ekaun3VEefzWzQBetQjKNcDLpHxrwuILgAY0YRj1jymz
+         D7vn+CVvK0qtVUUqt70f4iFppcSW6zF/hSztlS8QshWFlIodGNmtfNmJ7Z2U/w4S2Uca
+         oWZGSMeOnjE3f39gKbsAtrzIWv+jBeB6PK29tKs/yXR7QcehNchYOxaeQxm3/jox8MOy
+         lYlvNJNyNym0T69gScRG0VR0L/H2pe4REAJ5QItTYFTwWOGdWYfdPVxte5YX2a3+Au+G
+         2gQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdD2Yt3kqOSDTejZ0ttn5WI1up2WJWcIztiaQSiYK28YMWDEU1YgGBHVRBSylUH596pBZcztcMDKO5wg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgNzYns3X2z0Ug3BlXADLjdqjshpcQqeand6OyuEDgU2qYnPDr
+	WvFpcj1CJ7r3IbjBfE/yFhDrrLG32KUSoHwOY88pF92RAlrGTNRmL/VFkCJXjXg=
+X-Gm-Gg: ASbGncsZBV3by/9ny80QkMSj5xOhizeGq+GDrpy0XQj34KOW8o1zedg6F2gHcVpEILj
+	/u820RfNknL/K3XpscYY6TaCXFJnM2wv+yBzMZlu1aL8SdK4haoFCA9oacB4IZ1TzDNIuAX2yq5
+	diPk+bg4f25ikRJJL76Ui9Hg/IglNglTXZUWAzmoqRKcUtKtMXJ1WWtPxnyJ3DoE7Xqq27cAEQT
+	kwcsF2EHhcWcjxTStZj31fVNykOY9KyTRT9BuYgZ9u5KOBthiTWDtssnJDoqPyc7t91voliKyvo
+	AhTZFGf1131+A8+sqCesXZ+EAJRoDw==
+X-Google-Smtp-Source: AGHT+IHzRS3kKeuBIaVbiSldvKszXqHDXCVoEU74JuhkpXf+Z7S09whtCDZ/ssVTFfacSGsQVfKscw==
+X-Received: by 2002:a2e:a817:0:b0:302:17e7:e18a with SMTP id 38308e7fff4ca-30217e7e59cmr24900501fa.26.1733750589475;
+        Mon, 09 Dec 2024 05:23:09 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3003b760a56sm8652811fa.18.2024.12.09.05.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 05:23:08 -0800 (PST)
+Date: Mon, 9 Dec 2024 15:23:05 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Marek <jonathan@marek.ca>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 0/2] arm64: dts: qcom: x1e80100: fix USB OTG
+ regressions
+Message-ID: <iw2c4fceyppf2w2gueevsqsz2z7hatbqo33vufx3veatprczu5@u4k3j2igy6ee>
+References: <20241209111905.31017-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 09 Dec 2024 14:58:33 +0200
-Message-Id: <D676RN3ZW2H1.2JNMSLG0WGS3V@kernel.org>
-Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "James Bottomley" <James.Bottomley@hansenpartnership.com>,
- <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED] tpm: Popping noise in USB headphones
- since 1b6d7f9eb150
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, "Christian Heusel"
- <christian@heusel.eu>
-X-Mailer: aerc 0.18.2
-References: <7d052744-4bfa-40bc-ba06-1b4c47a5eb87@heusel.eu>
- <D54YWMOV7KOO.2X0N035UHEFBD@kernel.org>
- <b3a01060-f59b-430d-afcc-48c5ec628bcb@heusel.eu>
- <D5Z62H0XCOQM.J4V5ZDH9E7C7@kernel.org>
- <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
-In-Reply-To: <ce7fa562-7cb7-4adc-934a-560b94ce44f0@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241209111905.31017-1-johan+linaro@kernel.org>
 
-On Tue Dec 3, 2024 at 12:15 AM EET, Stefan Berger wrote:
->
->
-> On 11/29/24 9:44 PM, Jarkko Sakkinen wrote:
-> > On Tue Nov 26, 2024 at 1:42 PM EET, Christian Heusel wrote:
-> >> On 24/10/25 05:47PM, Jarkko Sakkinen wrote:
-> >>> Yeah, this is on the list.
-> >>>
-> >>> See: https://bugzilla.kernel.org/show_bug.cgi?id=3D219383#c5
-> >>>
-> >>> I had a fix for the AMD boot-time issue already over a month ago
-> >>> but unfortunately took time to get enough feedback.
-> >>>
-> >>> BR, Jarkko
-> >>
-> >> I'm not sure if this is supposed to be fixed, but AFAIK we hoped that
-> >> the patchset that was mentioned in bugzilla also helped this issue.
-> >>
-> >> The reporter said that the bug is still present in 6.12.1, so this mig=
-ht
-> >> need further poking =F0=9F=A4=94
-> >=20
-> > I'd suggest a workaround for the time being.
-> >=20
-> > In 6.12 we added this for (heavy) IMA use:
-> >=20
-> > tpm.disable_pcr_integrity=3D [HW,TPM]
-> >                          Do not protect PCR registers from unintended p=
-hysical
-> >                          access, or interposers in the bus by the means=
- of
-> >                          having an integrity protected session wrapped =
-around
-> >                          TPM2_PCR_Extend command. Consider this in a si=
-tuation
-> >                          where TPM is heavily utilized by IMA, thus pro=
-tection
-> >                          causing a major performance hit, and the space=
- where
-> >                          machines are deployed is by other means guarde=
-d.
-> >=20
-> > Similarly it might make sense to have "tpm.disable_random_integrity"
-> > that disables the feature introduced by the failing commit.
-> >=20
->
-> I am wondering what could be the not-so-obvious root cause for this?=20
-> Could it be due to a (TPM or RNG-related) lock? I guess the audio=20
-> popping could occur if an application cannot meet timing requirements=20
-> when it runs into some sort of blocking lock...
+On Mon, Dec 09, 2024 at 12:19:03PM +0100, Johan Hovold wrote:
+> A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+> ports can break SuperSpeed device hotplugging.
+> 
+> Abel noticed that the corresponding commit for the CRD also triggers a
+> hard reset during resume from suspend.
+> 
+> With retimer (and orientation detection) support not even merged yet,
+> let's revert at least until we have stable host mode in mainline.
+> 
+> Note that Stephan and Dmitry have already identified other problems with
+> the offending commits here:
+> 
+> 	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
+> 	https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
+> 
+> Johan
+> 
+> 
+> Changes in v2
+>  - revert also the corresponding patch for the CRD which breaks suspend
 
-The problem is that we don't know yet but we do know that it previously
-worked.
+As you are reverting two commits, please revert the third one too, it
+breaks pmic-glink.
 
-Or more importantly: that is the hypothesis. So it would be in all cases
-useful to create such patch for A/B testing at minimum.
+> 
+> 
+> Johan Hovold (2):
+>   Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
+>   Revert "arm64: dts: qcom: x1e80100-crd: enable otg on usb ports"
+> 
+>  .../boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts  |  8 ++++++++
+>  arch/arm64/boot/dts/qcom/x1e80100-crd.dts            | 12 ++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> -- 
+> 2.45.2
+> 
 
-BR, Jarkko
+-- 
+With best wishes
+Dmitry
