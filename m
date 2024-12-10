@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B89C19DF47;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B90D19E7F7;
 	Tue, 10 Dec 2024 11:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733829333; cv=none; b=OPf93M6D10kmWUUvH0PUkWEHZ6Z7ecnccTwbiHYrw/XECvqAp7yLxU0UBn4yM7WyTK1QEegZOAEYeawoBJKWpYNYNbI957b9wlKToN+harab1h63cS2Z4fPrvh3QjFFnbHjaTlMY5mIu6xPPf14Q7jZ1dILdBa6ut76GuzRyaOo=
+	t=1733829333; cv=none; b=ttj3cZRE+rPTxMvGCu2Nnf4k5QL6T+JzIMkOVaJY3TIkmC4aEgQL/drFVgbZQ/EKhpGCb+Knz7IQsmW9tw9RcYEGI8KEB+uOSetBnfvL7ebkQCEoAOJSsOCYPU0gIEPgDQQCy3RI8UdfBAhjf73kaVam6W+Pav/hHLgH12yHSxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733829333; c=relaxed/simple;
-	bh=jdcd1UtGAai1fWkfFvIjFbaFosjgIwsdkMA1Odz4TBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BjWjdBkMRftLVSlfD5M+VrhvW2EpUNX9KokVVIHbRczb9FINWGwtexVi003eAEtVzAkUxYuhPf1PRby5rWrqdzI9cO/LIBOZg/WdKHSqsUueGg7Ib9W61l/V3roCMhAyDLenROoTefiCUdmIG44IznJC8V0mAaxZBA0xiEuiRxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsTkJWQF; arc=none smtp.client-ip=10.30.226.201
+	bh=C/nxZoelFigpsBolaDCTXgQLK8zb6hqv3BnVAoSkfSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FsfwdD1CMa0YCfLoxnH8jDSYg5UeFJkZCCkmYHKY3PtwdYYkmk4B4on6LtHo8iPYsv0uvzGh7RpPXgaxo+DPpGhBGJ0cBeMdjyqV3eo+fVIhpar+yFElksit96ELlQ7TR8FEGkHL2Chex5lYfgfJ7W3fElbJuGiv5RZOV9Clg5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKINalxr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsTkJWQF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E923BC4CEDE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKINalxr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD3E6C4CED6;
 	Tue, 10 Dec 2024 11:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733829333;
-	bh=jdcd1UtGAai1fWkfFvIjFbaFosjgIwsdkMA1Odz4TBs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GsTkJWQFLMDh8XT2TNa5sRDHFrEk7swEAJNd1uWiqBm15nzHa4xdoe0RcG+aky1LD
-	 6oEq07JV/XA/37WYHwsL72a66D9qaeoOnOdx6wun0CtT4kd1WebewtGU6EJPNEHPKb
-	 nGJNGxodstAW93jUftu5ogS0S36EZuAoiBgrI6HH61QdtnynUcKbB9Te0m7KhqOsUC
-	 AAs4RkQjPZqb/lywENU68w1dLXSKVXAVJr1hBmF49ImQhnz2YkCBoHE/LKwA3L1EGX
-	 u1UfocytMG3ezmLtu2K1OjPWDI676DYsbO53R+kqI1OnnlonyLofy2L1DOZ34zJbbM
-	 bfWE5k/Pg0Q3g==
+	s=k20201202; t=1733829332;
+	bh=C/nxZoelFigpsBolaDCTXgQLK8zb6hqv3BnVAoSkfSc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eKINalxrMHiU17W1SY8KEe7MEmFs/xaibfZr0J6zjzk893hALy6v+74L5UEXnYxrB
+	 h89FXWd6wLJqJ0Dr4MxHRnPlFjPBPquFCkCPJelO9NHMWrwrfySwwGKO9nIuyRCXif
+	 rLD1SAI/elRF9ovp3G3fsNpU4uquzAFntTBx1FkgLOkRB5MJbO1EJDeTCtltZrTFE9
+	 MF/HnXz/gT4wWZ94i27KK9vzbGnUcSW20kyU6bfQfb2hX6ppxgiKZkJDw7UoBPDcwP
+	 cTKh+gqKpO5hUT9ujqTsguSwT+U0tW5HkN0LB/cu48Iq55AuOPI2siSv++BaJYEdw/
+	 nEfrpVr+8T8jQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tKyDH-000000006qo-1i6i;
+	id 1tKyDG-000000006qj-2COV;
 	Tue, 10 Dec 2024 12:15:35 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -45,12 +44,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	regressions@lists.linux.dev,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 2/3] Revert "arm64: dts: qcom: x1e80100-crd: enable otg on usb ports"
-Date: Tue, 10 Dec 2024 12:14:43 +0100
-Message-ID: <20241210111444.26240-3-johan+linaro@kernel.org>
+Subject: [PATCH v3 0/3] arm64: dts: qcom: x1e80100: fix USB OTG regressions
+Date: Tue, 10 Dec 2024 12:14:41 +0100
+Message-ID: <20241210111444.26240-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241210111444.26240-1-johan+linaro@kernel.org>
-References: <20241210111444.26240-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,63 +56,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 2dd3250191bcfe93b0c9da46624af830310400a7.
+A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+ports can break SuperSpeed device hotplugging.
 
-A recent change enabling OTG mode on the x1e81000 CRD breaks suspend.
-Specifically, the device hard resets during resume if suspended with all
-controllers in device mode (i.e. no USB device connected).
+Abel noticed that the corresponding commit for the CRD also triggers a
+hard reset during resume from suspend.
 
-The corresponding change on the T14s also led to SuperSpeed hotplugs not
-being detected.
+Dmitry had already reported that enabling role switching can break UCSI.
 
 With retimer (and orientation detection) support not even merged yet,
 let's revert at least until we have stable host mode in mainline.
 
-Fixes: 2dd3250191bc ("arm64: dts: qcom: x1e80100-crd: enable otg on usb ports")
-Reported-by: Abel Vesa <abel.vesa@linaro.org>
-Cc: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/arm64/boot/dts/qcom/x1e80100-crd.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Note that Stephan has also identified other problems with the offending
+commits here:
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-index 199f6b42aa11..66360390ae7d 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-@@ -1840,6 +1840,10 @@ &usb_1_ss0 {
- 	status = "okay";
- };
- 
-+&usb_1_ss0_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss0_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
- };
-@@ -1868,6 +1872,10 @@ &usb_1_ss1 {
- 	status = "okay";
- };
- 
-+&usb_1_ss1_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
- };
-@@ -1896,6 +1904,10 @@ &usb_1_ss2 {
- 	status = "okay";
- };
- 
-+&usb_1_ss2_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss2_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss2_hs_in>;
- };
+	https://lore.kernel.org/all/ZxZO6Prrm2ITUZMQ@linaro.org/
+
+Johan
+
+
+Changes in v3
+ - revert also the dtsi change that enable role-switching since it
+   breaks UCSI (and DisplayPort alt mode) when the controllers are in
+   host mode
+
+Changes in v2
+ - revert also the corresponding patch for the CRD which breaks suspend
+
+
+
+Johan Hovold (3):
+  Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
+  Revert "arm64: dts: qcom: x1e80100-crd: enable otg on usb ports"
+  Revert "arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers"
+
+ .../boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts  |  8 ++++++++
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dts            | 12 ++++++++++++
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi               |  6 ------
+ 3 files changed, 20 insertions(+), 6 deletions(-)
+
 -- 
 2.45.2
 
