@@ -1,117 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9CB1DC998;
-	Tue, 10 Dec 2024 11:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733829333; cv=none; b=XROf0Q4kUbjeULyadbeMqwOaFeRYqksIT0gmYXvqrBg6cBjzL1X4uLOv6zHGmJlRsAPvEq3fuwz/4rCf9RXDQdrdufSvREPS3mW0dR9YOFRcHqBKnjINgs1BDumiOmctVFWlb5Kph97q13hN2AqTOId4vrGKEsc9Z3obOpW98pA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733829333; c=relaxed/simple;
-	bh=L5GszgCqF7LF91WytrVze1o325SqKK7siXqfCAphg8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vANOLqqTjPNxAczGlFF0o4xxFgWu+T+33MRt3KArfE6T0Bz00LZgB+hTGmBNJiszp/42fXnod/O86m4/YJzg3lqyFL/o4WF2Ely7CP86+UK8Qh3o3az5IeTdHlUN7XT3kpSeUZWFycbxO4dzNTSRaweV7tqKqhyYD03ztUH1bvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWGeXlYy; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C5E22087;
+	Tue, 10 Dec 2024 13:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733838882; cv=pass; b=kmBFtLopr58X5a7HZ79XzWw2eHzQpW5v/HRG4lZehrM6bo/SwG14J8y2xLdZsjzL9TUOpQ9ygoLPclEILcGh76Tj0+V83BITidEB2kuB3VgbBAQBws8lB8nQml6ixP+nnG+xZ/nALqlKcp+7LeLZ72MDOAH9tRMZR8pyqwVuWvw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733838882; c=relaxed/simple;
+	bh=dst/ymbl8Rp99uil+6kvqc6lEF+yzYq7BByo2zD2l+o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oVpyBiIX0FoHGZkP80q2O6KhYOsORNxCgkHR6H9SR9fFYcWWhsfEG4mKzr4cbbxWc9swJUNB/fkTlynUoV/gQspNAXBC1rc+gX4rPV4gYcv1HyOvTrE1z9ny0lgzmTGt0WCvel6tz5GaddRaUtSLIEGRkGtCxeWC8vXs6v9tHCk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=PXPTL8i7; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWGeXlYy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B82C4CEE1;
-	Tue, 10 Dec 2024 11:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733829333;
-	bh=L5GszgCqF7LF91WytrVze1o325SqKK7siXqfCAphg8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XWGeXlYyjKaptStKljVza2s2LLXqYEJ2ql9iD+F1/Tc9RkpILl9SwxUM+IO/VJcKm
-	 SnGhgVAwB6rgl8/V0PHk2/LTCXQNFvJU07dBJif1FUeXZaE43LKvwLAEFt0WNgtmvk
-	 dIjx1kPii1WGsBkxNOTsKsv3PdK56BRqBag12Ctx86hxXe8simkO9UCRLQdlmlww2s
-	 ISdVEQiudx8RaKMNC7MZsVRW8swO8AniHjkIpe5dBq0GRHMFGiXz7mDAmWcJ3hpWoN
-	 syYkuKwC3jeBCJPrFfwUWyzPoIodTdLBeoQ17+76pNlaaPdXIZgqoEBZtK0DF1roQj
-	 DkY+OFV9T+yTw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1tKyDH-000000006qx-28JG;
-	Tue, 10 Dec 2024 12:15:35 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jonathan Marek <jonathan@marek.ca>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="PXPTL8i7"
+ARC-Seal: i=1; a=rsa-sha256; t=1733838869; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=YZAsY7L4zjav6r3vV8B8icXQzxtB/Hb2Jh0GluSm5J6jjalWCiHiFcpRXpLByoGdLvjuEgxfrDyIiEPwtqyw2hYnurEUou5lGWatA+HdoQ9z3G5Pos8YsUCNV8evKrtDu822pUSoCfSh4SJQTomRMMYvvGws/03vhgoHRA4wWs8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1733838869; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YMmppZyizEstfKri+9ofz1mcWacCaY/jsGFVQd+cu04=; 
+	b=hAmMBDdl7jW6Ssf+FsTeJG2kUM3GK6YEtN3Uibm0TEj9CGN+2ILFsOb4024YpGgyVqRSGJoPuW3ngDe37kOE8zrUT9zCE7hzOki3/ZKo2knRk9+//Sh1z4/lGzyi38k5gQ/M4OfVXjbDn83jZ+xXIwwuUqu76T3pSGkRqMpmNf4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
+	dmarc=pass header.from=<laura.nao@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1733838869;
+	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
+	bh=YMmppZyizEstfKri+9ofz1mcWacCaY/jsGFVQd+cu04=;
+	b=PXPTL8i76B99cQxhJqqbbRlwstoVGH2mtAe4ecvD7UkoxmyiHCUOfzr3lvEvvm2f
+	f/0B4DVAwQ2TJICvzN+3nqoDqaVeF75kyWfjZHlU7dIkD6Eajsy8Hsh4jz4lFjoXPRN
+	Rw1DdNb1NLewPZJW3bZWqQsJZMHn8JSQO8ofZ8t0=
+Received: by mx.zohomail.com with SMTPS id 1733838867736641.1510856864684;
+	Tue, 10 Dec 2024 05:54:27 -0800 (PST)
+From: Laura Nao <laura.nao@collabora.com>
+To: olsajiri@gmail.com
+Cc: alan.maguire@oracle.com,
+	bpf@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	kernel@collabora.com,
+	laura.nao@collabora.com,
 	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 3/3] Revert "arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers"
-Date: Tue, 10 Dec 2024 12:14:44 +0100
-Message-ID: <20241210111444.26240-4-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241210111444.26240-1-johan+linaro@kernel.org>
-References: <20241210111444.26240-1-johan+linaro@kernel.org>
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on
+Date: Tue, 10 Dec 2024 14:55:01 +0100
+Message-Id: <20241210135501.251505-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <Z1LvfndLE1t1v995@krava>
+References: <Z1LvfndLE1t1v995@krava>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-This reverts commit f042bc234c2e00764b8aa2c9e2f8177cdc63f664.
+Hi Jiri,
 
-A recent change enabling role switching for the x1e80100 USB-C
-controllers breaks UCSI and DisplayPort Alternate Mode when the
-controllers are in host mode:
+Thanks for the feedback!
 
-	ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
+On 12/6/24 13:35, Jiri Olsa wrote:
+> On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
+>> On 11/13/24 10:37, Laura Nao wrote:
+>>>
+>>> Currently, KernelCI only retains the bzImage, not the vmlinux
+>>> binary. The
+>>> bzImage can be downloaded from the same link mentioned above by
+>>> selecting
+>>> 'kernel' from the dropdown menu (modules can also be downloaded the
+>>> same
+>>> way). I’ll try to replicate the build on my end and share the
+>>> vmlinux
+>>> with DWARF data stripped for convenience.
+>>>
+>>
+>> I managed to reproduce the issue locally and I've uploaded the
+>> vmlinux[1]
+>> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one of
+>> the
+>> modules[3] and its btf data[4] extracted with:
+>>
+>> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko >
+>> cros_kbd_led_backlight.ko.raw
+>>
+>> Looking again at the logs[5], I've noticed the following is reported:
+>>
+>> [    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
+>> [    0.416029] BPF:
+>> [    0.416083] BPF: Invalid offset
+>> [    0.416165] BPF:
+>>
+>> There are two different definitions of rcu_data in '.data..percpu',
+>> one
+>> is a struct and the other is an integer:
+>>
+>> type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
+>> type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
+>>
+>> [115801] VAR 'rcu_data' type_id=115572, linkage=static
+>> [115803] VAR 'rcu_data' type_id=1, linkage=static
+>>
+>> [115572] STRUCT 'rcu_data' size=1152 vlen=69
+>> [1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64
+>> encoding=(none)
+>>
+>> I assume that's not expected, correct?
+> 
+> yes, that seems wrong.. but I can't reproduce with your config
+> together with pahole 1.24 .. could you try with latest one?
 
-As enabling OTG mode currently breaks SuperSpeed hotplug and suspend,
-and with retimer (and orientation detection) support not even merged
-yet, let's revert at least until we have stable host mode in mainline.
+I just tested next-20241210 with the latest pahole version (1.28 from
+the master branch[1]), and the issue does not occur with this version
+(I can see only one instance of rcu_data in the BTF data, as expected).
 
-Fixes: f042bc234c2e ("arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers")
-Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
-Link: https://lore.kernel.org/lkml/Z1gbyXk-SktGjL6-@hovoldconsulting.com/
-Cc: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+I can confirm that the same kernel revision still exhibits the issue
+with pahole 1.24.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 1740fdf7b1de..4c1e01605e87 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -4422,8 +4422,6 @@ usb_1_ss2_dwc3: usb@a000000 {
- 
- 				dma-coherent;
- 
--				usb-role-switch;
--
- 				ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
-@@ -4677,8 +4675,6 @@ usb_1_ss0_dwc3: usb@a600000 {
- 
- 				dma-coherent;
- 
--				usb-role-switch;
--
- 				ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
-@@ -4777,8 +4773,6 @@ usb_1_ss1_dwc3: usb@a800000 {
- 
- 				dma-coherent;
- 
--				usb-role-switch;
--
- 				ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--- 
-2.45.2
+If helpful, I can also test versions between 1.24 and 1.28 to identify
+which ones work.
+
+Thanks,
+
+Laura
+
+[1] https://git.kernel.org/pub/scm/devel/pahole/pahole.git
+
+> 
+> jirka
+> 
+>>
+>> I'll dig a bit deeper and report back if I can find anything else.
+>>
+>> [1]
+>> https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux
+>> [2]
+>> https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/vmlinux.raw
+>> [3]
+>> https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko
+>> [4]
+>> https://people.collabora.com/~laura.nao/dbg-btf-mismatch-next-20241113/cros_kbd_led_backlight.ko.raw
+>> [5] https://pastebin.com/raw/FvvrPhAY
+>>
+>> Best,
+>>
+>> Laura
+>>
 
