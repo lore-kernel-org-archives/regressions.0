@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9671BEF97;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9CB1DC998;
 	Tue, 10 Dec 2024 11:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733829333; cv=none; b=qFHr1GwVjgmXRe2edfI9I0E4jsxUL9ie67JVO6/KiMkb0N6dz4tIAq+PaQSHB3DEqlD/S1Z+AqfKka43oyETPmZ2vL0o38R3+T9qWY8nyynOGKtBJGtWikXexaX7aU6LoD0unTnRZkmTZzEQeXI0omEr/ljHah3qj0HKe/ny51w=
+	t=1733829333; cv=none; b=XROf0Q4kUbjeULyadbeMqwOaFeRYqksIT0gmYXvqrBg6cBjzL1X4uLOv6zHGmJlRsAPvEq3fuwz/4rCf9RXDQdrdufSvREPS3mW0dR9YOFRcHqBKnjINgs1BDumiOmctVFWlb5Kph97q13hN2AqTOId4vrGKEsc9Z3obOpW98pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733829333; c=relaxed/simple;
-	bh=3N4d65t8tlhYSC9lPSzOeAEj9EIZZf5ZHkBDz8Cb1h4=;
+	bh=L5GszgCqF7LF91WytrVze1o325SqKK7siXqfCAphg8o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a+e/W/upcXRWrzmcG+cDJoA1O8MdSoIoe2xerMb1trhHe54YC/g00PYW5Vt+Wm2zfmubHG5YjSbl93sfw1sjKCYaVHuXM2/bjvNlx7PEMHPOB6uE35gzcrNPVC04/iFaEKCjs3UJndLvUVqzqiFBq1xyPvUHrt7JksRbQ2pnxPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4mlVDAb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=vANOLqqTjPNxAczGlFF0o4xxFgWu+T+33MRt3KArfE6T0Bz00LZgB+hTGmBNJiszp/42fXnod/O86m4/YJzg3lqyFL/o4WF2Ely7CP86+UK8Qh3o3az5IeTdHlUN7XT3kpSeUZWFycbxO4dzNTSRaweV7tqKqhyYD03ztUH1bvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWGeXlYy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4mlVDAb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A608C4CEE2;
-	Tue, 10 Dec 2024 11:15:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWGeXlYy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B82C4CEE1;
+	Tue, 10 Dec 2024 11:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1733829333;
-	bh=3N4d65t8tlhYSC9lPSzOeAEj9EIZZf5ZHkBDz8Cb1h4=;
+	bh=L5GszgCqF7LF91WytrVze1o325SqKK7siXqfCAphg8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S4mlVDAbH9KdjdnOoIkt1/GRuhhKdbR4qtQ3aDhQoqWpMflIsDBJjAnG5egKtNADH
-	 Yu0xwA/WN4PFyyxs1avV9rdtlyDd1UdbiAKETgR1DLenVMBdZGcuBD+FpwbgjogEBh
-	 F8teBHEMogfv6EilsM6UOxf6VbiDWgToTC4iJxNWA3YeeGcuOlOciFOJ5LS2EE27ur
-	 Wk8IDaRRkiBqzqvS9pSAMCEnOSmXxeyxpgb5milZR+04cy4NIA9uEQbOOmPDP51uwk
-	 sR6HOS3XYSMzUzPHGEvErEu7tZABdreF9/sUGj9HhJWMEYK3tEEX9rPRnkoGjO97Zv
-	 5rJG7xOJXJuww==
+	b=XWGeXlYyjKaptStKljVza2s2LLXqYEJ2ql9iD+F1/Tc9RkpILl9SwxUM+IO/VJcKm
+	 SnGhgVAwB6rgl8/V0PHk2/LTCXQNFvJU07dBJif1FUeXZaE43LKvwLAEFt0WNgtmvk
+	 dIjx1kPii1WGsBkxNOTsKsv3PdK56BRqBag12Ctx86hxXe8simkO9UCRLQdlmlww2s
+	 ISdVEQiudx8RaKMNC7MZsVRW8swO8AniHjkIpe5dBq0GRHMFGiXz7mDAmWcJ3hpWoN
+	 syYkuKwC3jeBCJPrFfwUWyzPoIodTdLBeoQ17+76pNlaaPdXIZgqoEBZtK0DF1roQj
+	 DkY+OFV9T+yTw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tKyDH-000000006qm-1I55;
+	id 1tKyDH-000000006qx-28JG;
 	Tue, 10 Dec 2024 12:15:35 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -45,9 +45,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	regressions@lists.linux.dev,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 1/3] Revert "arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports"
-Date: Tue, 10 Dec 2024 12:14:42 +0100
-Message-ID: <20241210111444.26240-2-johan+linaro@kernel.org>
+Subject: [PATCH v3 3/3] Revert "arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers"
+Date: Tue, 10 Dec 2024 12:14:44 +0100
+Message-ID: <20241210111444.26240-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241210111444.26240-1-johan+linaro@kernel.org>
 References: <20241210111444.26240-1-johan+linaro@kernel.org>
@@ -59,64 +59,59 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
+This reverts commit f042bc234c2e00764b8aa2c9e2f8177cdc63f664.
 
-A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
-ports can break SuperSpeed device hotplugging. The host controller is
-enumerated, but the device is not:
+A recent change enabling role switching for the x1e80100 USB-C
+controllers breaks UCSI and DisplayPort Alternate Mode when the
+controllers are in host mode:
 
-	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
-	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
-	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
-	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
-	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
-	hub 3-0:1.0: USB hub found
-	hub 3-0:1.0: 1 port detected
-	hub 4-0:1.0: USB hub found
-	hub 4-0:1.0: 1 port detected
+	ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
 
-Once this happens on either of the two ports, no amount of disconnecting
-and reconnecting makes the SuperSpeed device be enumerated, while
-FullSpeed device enumeration still works.
+As enabling OTG mode currently breaks SuperSpeed hotplug and suspend,
+and with retimer (and orientation detection) support not even merged
+yet, let's revert at least until we have stable host mode in mainline.
 
-With retimer (and orientation detection) support not even merged yet,
-let's revert at least until we have stable host mode in mainline.
-
-Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
+Fixes: f042bc234c2e ("arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers")
+Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Link: https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
+Link: https://lore.kernel.org/lkml/Z1gbyXk-SktGjL6-@hovoldconsulting.com/
 Cc: Jonathan Marek <jonathan@marek.ca>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-index 5a4a72a030d4..b4b6260c670c 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-@@ -1515,6 +1515,10 @@ &usb_1_ss0 {
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 1740fdf7b1de..4c1e01605e87 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -4422,8 +4422,6 @@ usb_1_ss2_dwc3: usb@a000000 {
  
-+&usb_1_ss0_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss0_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
- };
-@@ -1543,6 +1547,10 @@ &usb_1_ss1 {
- 	status = "okay";
- };
+ 				dma-coherent;
  
-+&usb_1_ss1_dwc3 {
-+	dr_mode = "host";
-+};
-+
- &usb_1_ss1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
- };
+-				usb-role-switch;
+-
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+@@ -4677,8 +4675,6 @@ usb_1_ss0_dwc3: usb@a600000 {
+ 
+ 				dma-coherent;
+ 
+-				usb-role-switch;
+-
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+@@ -4777,8 +4773,6 @@ usb_1_ss1_dwc3: usb@a800000 {
+ 
+ 				dma-coherent;
+ 
+-				usb-role-switch;
+-
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
 2.45.2
 
