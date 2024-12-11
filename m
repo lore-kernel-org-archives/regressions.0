@@ -1,61 +1,61 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2835D381AA
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 13:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F5B2336BF
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 13:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733925464; cv=none; b=ID2F7hJijz8CB+aOzFQ+Q8OhyCa6R8dXosf2CEaYz7z+sYELnS4Qu2gMo5fTHQjM656AoPcxrLNa5+1INtCd7Mql/CnCLbrs+lg1CF30lEFWjAhnfDdnabjuR7liNXnqNRc03xor2jJHqrrgN5g3uihwWcIjmN0FV/CI1AmB8lQ=
+	t=1733925477; cv=none; b=KTsGZLbUrACBcuCbCDWrx9oPmNpOXaSbmwQfSYekjOocwTDaBSUWXbjcFJnLmAfJ1pj7Waqil2TmPIPbpM+lJuuVGvH3WPwafNwbe/tNAhijkQYOOd06k4qq7FMlNUMGt6gg47VxfngbXl51tPjsTmjZFftUiKmInT59pJAbUkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733925464; c=relaxed/simple;
-	bh=VDR/LFkNhR6c+K0FS5fF1XjxZAJmm0jHxt2NQS8CF3M=;
+	s=arc-20240116; t=1733925477; c=relaxed/simple;
+	bh=zhm5/qneWDtFKip5gZc5Ug51qbj4ZyGlCNuuB0VT+aQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8fpLuWm0Pyr6oCIlfVOj6T8Bq4JfhrL21SUHt18rzdYwyxHqe/RCmqJtSFpH+0/8KXNSnDX0nxnyOe8Yg2OY/iSUrNo8edcKcNrGjatd6BvekXmm1H7Htuan2F3HekqE54WyhDq3hV/X6Dr+7ydNRkZ7HsEL14TfHnZf2jETXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iDsoGdtU; arc=none smtp.client-ip=209.85.128.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=RHXN4XwJiBHH3F7hlYJ+4eC0vXqpKxByODIP5ZP6MKGXKfttjzLZVuFpA9KBCrrwJNFt8cQKWtORpO7ggVn2By2Njo2X0PNZICQ3ApWQnwJspelH09eIq7G7ZykrKWxe6UV1oePcGlqOuE2cGRfD+aH0/fTo/xmm6XED4GFXqKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y7QxoAYQ; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iDsoGdtU"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso4353915e9.1
-        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 05:57:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7QxoAYQ"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-434ab938e37so44128345e9.0
+        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 05:57:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733925460; x=1734530260; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1733925473; x=1734530273; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mwRyufZV4Hv4BKUozZCvb8TTCpopa4m9EKT2fS3FdAQ=;
-        b=iDsoGdtUvUqX3y137d1Kt4/FadtpFYICM687Aiq/cXT16KI/4MpEKLx86VPWQVjEmz
-         2X4FhZMQgTEaTP6qrUouK10DFMJBeNw2GCnPHhC5yKhz547OBeL8kYfPl/LniyMGpDUo
-         X9fIIEiZTTgZ3sD0Eiv1RTWrqVhKi8Sw3P9XV2ju6+zjMKIkefKbjuD/30vZcrgGBTcC
-         0JzDT2N+lH5xnmE5TIAo0oneQw8RpboSKYqe6ZLUa/V1yVhdYagt25sqeSBb7fLGn/tO
-         coS7l/OtBt29GEv69MY/aAiVpaBxraFzaTKtXS0WSaw1zk3KpZjyYbZOiKmJafvHcne6
-         eczw==
+        bh=n+Nq0JPihsIDotmBgK7j9oUK4hXd8/xtAenPkWmVRYY=;
+        b=y7QxoAYQHb0DrMrP8azfSSN2p0deBgc33zUc8JAW6YGDEGbrmd7nw181D/xa8LaSyu
+         LUmm4ZAJAIj5LhLKzKCrMFDvmqh8rbkWQRPMoVjGk9xCsqVJKHJvAQ6B47EPDMXOJDtf
+         dFSqpCD7fP6LYHt9QxfRjz4QY3fP0dgGQI81tI+alkto9oUqTzWXz0DKKbSVRLGYCTNE
+         tNIig1Lo7BuGFCn2hT7A6Iu35XGA47mYqfrT80Fcjhg7/YsjTUB/M1Z/PoPH8+gisApk
+         SezpaVteAy+ymuLsAfp6KG0XC2pTgEexwRbMuuXF1IlP/3oweMvSWEMRFJVrwoBLoS5l
+         Wm4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733925460; x=1734530260;
+        d=1e100.net; s=20230601; t=1733925473; x=1734530273;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mwRyufZV4Hv4BKUozZCvb8TTCpopa4m9EKT2fS3FdAQ=;
-        b=oKgtfA27UGw81zyEX8aPL2B7mDTpz/lAqZd6JUvesfhyFP0qES3gYSxCOcd72OVxm6
-         4SGoZimRW62OsWGdFR1Y7uSc+C/AlqS0rRfAF5eLJT/RQok0V15FXJIMc7ZBWxB+lfHZ
-         jX8mN3hZjeHAzTu5wEKbCKOW9PFdkGwZJbqwMp84X+vGRZ14mihJEXZu9gQMFckeSGoT
-         A9vtj8XBGy5VsdqmM2PdA1NV76YDmpxUV3L6me8HYcK08K0HFq7GJiRepNA2qDjw7M2e
-         2i7TZAoF9v/xtIM6lkxqLJAh+0bafVFHyskCcyUHLME32NrcoLZZy9j15eeWDb79DT4h
-         qTww==
-X-Forwarded-Encrypted: i=1; AJvYcCWIYnXlEp7FbK/MZK7k880gao4H60PQIVRsGYBju79VKwqHyeHYlq1HQSHD1uXgInfQsApeI9USDvj9fA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyw7g2g/G2LQSmrLSboLJUglaUqCntYvKk1DG8q9Oa92Xx/A8S5
-	hmQ67o816YHjQDUhUSaglIGkVUq2anVTZ1KTMd9uunYjfu+TD42/mwYaSIhPEMI=
-X-Gm-Gg: ASbGnctcIZdF0iuIJS6TgVH7V1HVAS4t24fdQDF/i8Uy9j5gnzZoVpNdRWU6YGHH+Dt
-	sPFLgiZ2XEu2tCWPtSsmPlrKfis5dlBdknaPu1DdefM/ExgKv69P90rN+gf4K/k7Lr56+7OUx7F
-	lBmlYoGQDlXCCp1YEBeJhO6lV9JAxd3r7a3P7XmMeMLav2MeXdaFc1+dSEvoW1GKtyGWbAGRPix
-	9XbSjkFogdh1Eba4AL2J+Wq8fi6rQ+sO9Kvk8/elHsbPtzv52Tw
-X-Google-Smtp-Source: AGHT+IHHGvcjsAaWoQmNtBBOZEdx4io9usowsti1WQThV36SDH9Hnc+lVGaPEvltgGcV3XhTkCAoMw==
-X-Received: by 2002:a05:600c:1616:b0:436:185f:dfae with SMTP id 5b1f17b1804b1-4361c5a3918mr21096715e9.6.1733925460593;
-        Wed, 11 Dec 2024 05:57:40 -0800 (PST)
+        bh=n+Nq0JPihsIDotmBgK7j9oUK4hXd8/xtAenPkWmVRYY=;
+        b=i+iEpxnIsPBmlgeVfG1qf4y8cXmVK/WhrG2Gy7AoO0tV5nT/bBCODMnma4zj20xmsA
+         D7fpuTnbdNAT4ac47QKV22pG34ZTGkmxkmq9ypRER3jeXFaE1HUl/yJZE+idyHRsDy6g
+         sLQrQJM59OE2DQp+Zt6yQFjZkrvZkVHvQqJtmJIgCHVWu9pUozIDEzgXqgreZ5fUrUbB
+         akHdokpkcmYqitWnPJC6GLEDfz8QLMCZX/GN68ExmHRjwlF3h9fIGvrXY1bZw224sAk7
+         uLqQ7GXwh0/f9IIDrvPRdIT8juJev7NjpYQS7e0B4SyaM2G0BPDDZyllVaAzo3gHX8G5
+         kRvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRX4Qw/ukjH4gvJ8SHTk7rFQW4LIGWr8+AAHHCYBJnf5Z+6QajUI9YK4ltSq4Z0IcsLH094oGdkEgXmA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxPua50XPlqafQxZ1DaliDluiZCgkH2PcXKqx8B+AnCZHTMYYCI
+	dOn8BeMDRNEgfswVLRG6UvkTHnWVGokTMElQZmh5IljZynKT7X+nUoP4m0RdyIc=
+X-Gm-Gg: ASbGncsHWJSlcfWH+K5APq/F3PTSmtI2Viu2WDupDAOLfJ9lTML5XAWyqbJa7HMYi2e
+	vUKkOVBXSgC44AU2Tv6+qcqfSbH3OsGV8o7o2ap4/gpZXuRBDPeT9rNmmfslVL7+rpMLBYWSvrK
+	30pIshMEDGTF4siJBWeXFMQ7mjV4j8mwBbeFG29y42dPMT+Eg1dMVCvZ81dq0c1VDJy+oNH2775
+	LqDIhyCi0/43zwTCRtL/R4RrNNFZ/eAGNu/zKDqD7GdA+3nG+5L
+X-Google-Smtp-Source: AGHT+IGJCYJTlBedjQm+GK+uiVv40a+NR20VpMjki58l34sVua7BTMisnr0pAsT6vjoKEaDgR/Mj5Q==
+X-Received: by 2002:a05:600c:35c9:b0:434:a929:42bb with SMTP id 5b1f17b1804b1-4361c3a336dmr23180715e9.18.1733925473454;
+        Wed, 11 Dec 2024 05:57:53 -0800 (PST)
 Received: from linaro.org ([82.76.168.176])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-387824a4a31sm1355432f8f.30.2024.12.11.05.57.39
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43621ebf8e8sm1879635e9.32.2024.12.11.05.57.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 05:57:40 -0800 (PST)
-Date: Wed, 11 Dec 2024 15:57:38 +0200
+        Wed, 11 Dec 2024 05:57:52 -0800 (PST)
+Date: Wed, 11 Dec 2024 15:57:50 +0200
 From: Abel Vesa <abel.vesa@linaro.org>
 To: Johan Hovold <johan+linaro@kernel.org>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -68,11 +68,11 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	Stephan Gerhold <stephan.gerhold@linaro.org>,
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v3 2/3] Revert "arm64: dts: qcom: x1e80100-crd: enable
- otg on usb ports"
-Message-ID: <Z1maUvW26Cl/VXLr@linaro.org>
+Subject: Re: [PATCH v3 1/3] Revert "arm64: dts: qcom: x1e78100-t14s: enable
+ otg on usb-c ports"
+Message-ID: <Z1maXuaVQiO3vGM6@linaro.org>
 References: <20241210111444.26240-1-johan+linaro@kernel.org>
- <20241210111444.26240-3-johan+linaro@kernel.org>
+ <20241210111444.26240-2-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -81,37 +81,49 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210111444.26240-3-johan+linaro@kernel.org>
+In-Reply-To: <20241210111444.26240-2-johan+linaro@kernel.org>
 
-On 24-12-10 12:14:43, Johan Hovold wrote:
-> This reverts commit 2dd3250191bcfe93b0c9da46624af830310400a7.
+On 24-12-10 12:14:42, Johan Hovold wrote:
+> This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
 > 
-> A recent change enabling OTG mode on the x1e81000 CRD breaks suspend.
-> Specifically, the device hard resets during resume if suspended with all
-> controllers in device mode (i.e. no USB device connected).
+> A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
+> ports can break SuperSpeed device hotplugging. The host controller is
+> enumerated, but the device is not:
 > 
-> The corresponding change on the T14s also led to SuperSpeed hotplugs not
-> being detected.
+> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
+> 	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
+> 	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
+> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
+> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
+> 	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
+> 	hub 3-0:1.0: USB hub found
+> 	hub 3-0:1.0: 1 port detected
+> 	hub 4-0:1.0: USB hub found
+> 	hub 4-0:1.0: 1 port detected
+> 
+> Once this happens on either of the two ports, no amount of disconnecting
+> and reconnecting makes the SuperSpeed device be enumerated, while
+> FullSpeed device enumeration still works.
 > 
 > With retimer (and orientation detection) support not even merged yet,
 > let's revert at least until we have stable host mode in mainline.
 > 
-> Fixes: 2dd3250191bc ("arm64: dts: qcom: x1e80100-crd: enable otg on usb ports")
-> Reported-by: Abel Vesa <abel.vesa@linaro.org>
+> Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
 > Cc: Jonathan Marek <jonathan@marek.ca>
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
 Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
 > ---
->  arch/arm64/boot/dts/qcom/x1e80100-crd.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-> index 199f6b42aa11..66360390ae7d 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
-> @@ -1840,6 +1840,10 @@ &usb_1_ss0 {
+> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> index 5a4a72a030d4..b4b6260c670c 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> @@ -1515,6 +1515,10 @@ &usb_1_ss0 {
 >  	status = "okay";
 >  };
 >  
@@ -122,7 +134,7 @@ Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 >  &usb_1_ss0_dwc3_hs {
 >  	remote-endpoint = <&pmic_glink_ss0_hs_in>;
 >  };
-> @@ -1868,6 +1872,10 @@ &usb_1_ss1 {
+> @@ -1543,6 +1547,10 @@ &usb_1_ss1 {
 >  	status = "okay";
 >  };
 >  
@@ -132,17 +144,6 @@ Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 > +
 >  &usb_1_ss1_dwc3_hs {
 >  	remote-endpoint = <&pmic_glink_ss1_hs_in>;
->  };
-> @@ -1896,6 +1904,10 @@ &usb_1_ss2 {
->  	status = "okay";
->  };
->  
-> +&usb_1_ss2_dwc3 {
-> +	dr_mode = "host";
-> +};
-> +
->  &usb_1_ss2_dwc3_hs {
->  	remote-endpoint = <&pmic_glink_ss2_hs_in>;
 >  };
 > -- 
 > 2.45.2
