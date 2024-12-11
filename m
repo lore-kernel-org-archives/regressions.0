@@ -1,178 +1,245 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB521EE7BC
-	for <regressions@lists.linux.dev>; Tue, 10 Dec 2024 22:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733870608; cv=none; b=V72W4ybyI7qsLXDQwxVVgcd5TTkQIfZF3PhMwNfkPNW0aCVTY2K8+Cm+0XToI6+YtvLwAAKWTRFuGAiQHVxt28Tk8zvzgJKWDhnxBFiUNktaW1DWgJYK2h0ki4qvXpNRr2JFZLzVIwA0eOpgLOhuSoo3TU+xTUSVFDfVhkcHAfs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733870608; c=relaxed/simple;
-	bh=3Eq7AMhO7ZTya8w6ZdwS9S7NprMbQ+yUU2/rRO1Y3Pg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ecUXY+midsSfL7ZjhLT3a9DEZhNCO+BsmftdsVdZtRDUKuo8FZ1lIH/muFfBZgIA2eB3dsuCATqNQyEegDS2MApQ22MUqQw6UEKtIx5ie8xnoQxzjhydN16SeR9LlFJ+kijzBI3QzqIFuhK9XY0iVE0cPaLKhwdQ12QI3/TFUEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SB36u3bu; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212B2AD1C
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 04:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733892286; cv=fail; b=tgp6Az35hluNVwb2NR2MVK+mjV+94FOTHx0z0Hd/aZhmG8tXqsqRHaJ0MWAHEQkrvlpxNRQSTJatXpeWbQtCVaY14nNdkA1UnE3lbLUR7KV/I2omRurl54kvKnnTGldTL0FUDhlzk39YGCnt5i7fsdldLTXyhXNbW/1PIVsAmEM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733892286; c=relaxed/simple;
+	bh=spQZckInpaHp95Ajm6sEmnI11MjWfRHNqMXZUkgZBKU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rX78t4jb8UCFm9nC3TRHZJkMZ/PPDWWbPzA6nu3p8ZMXiPG1IEs9/oE4940O4xW9fQN7y1xyXuHAr2b4Zn0jOhCwu0Y/7XsKdHoK8Ce9CavpjnffXujJryDNvHnbWN+jAlUuvCNtGZ179PLIiH8vEpzO8iiXeHDZZjlzICaxpAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6bizE6c; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SB36u3bu"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-211c1c131c4so721165ad.1
-        for <regressions@lists.linux.dev>; Tue, 10 Dec 2024 14:43:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733870606; x=1734475406; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=h3X5Qr+8k9X+2hvuHngUho46v83TFcRfFs+gwv7G7uE=;
-        b=SB36u3buHHezVXbfh7jxDOBRAXBPhpTJ9hsSano6aWwsJ1RAce8b3PtBXs4HI0b/TP
-         fG3aTk9kB3/vFsPFmxKV6K/iIsBqm4xUlTaKOEuTtEKbr2vaa9tY4ptUc//HXInMK81k
-         9UTCI3pqiBI2BdcDHpFEW4tnCYdt633SDId11FiC2L+0uuohCkCfjPUY6puAbWKKUnE9
-         7dzcZf+7AG6qbJgE7cUijnSQP2umOdItOQhjxdGguoHHQimbMK6D/0zVXqnESxdoRYeJ
-         4X345SOC/zIkQZbiCU7+tcd970VbELY+6DlYC3+YHw/XRPVSWBLMtJiJqc0Q8dNn0H4Q
-         rOTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733870606; x=1734475406;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h3X5Qr+8k9X+2hvuHngUho46v83TFcRfFs+gwv7G7uE=;
-        b=dFn/0KGUqkyLnh3r8YmDb1NfwmkxikB9KlY/s7NHjUSIMK3jXvGOv0vAklnAfh+m9Y
-         f6xlkbGbvFGosh2RyXXLWeRJi07HBlojstFwysq5m2rztNX7Am7BX2yLFmFn0CrqMMoe
-         Q+Rw24+EbJ8b1mqj2QG9hH2m7HVnZN93ZOWzKC6f7skIvaDSJgIw/qnTU4pRCF4Xj8W4
-         gpRaN+yPbRBmgHftAJL/xv7ClLV1yJuFHS/Z+XOgLq8V7HWzlCi4OyfTsxHXYUc1kHV9
-         TrKBayxTC9sT9R0NaRFo3sePkYanxSFqFAjYXl6ipbrawyE0VSD4BfNfuLEhv8M4Wyeo
-         0m/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXQHa8cM7TuYA8CFT7iHfGNZadE+CD9hwNufUSreaiipTsbWLoJEQAm6pqXBDiRfbRHNCB7YZYsWzL+zQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnZh0q7vTCv34ehi4HH7v8E1XDOD983qGjgSXemO4MZJk9cnvA
-	9bbJWOhB6WksMa1nUO2yB3PJ937/hUqySm/yZkEasQjfYwv93BW04VdTQWn2dkdloyzGZXcQz2S
-	KnQ==
-X-Google-Smtp-Source: AGHT+IHYFqYGkifAALeF4QNpnm5GdQyLqJOcPHyuQMgLXtkVCm1AQZ1NNcY7Jl1J9ugq/G8HQT+Vqw7hlFw=
-X-Received: from pjbqb3.prod.google.com ([2002:a17:90b:2803:b0:2e2:9f67:1ca3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1811:b0:2ee:ad18:b310
- with SMTP id 98e67ed59e1d1-2f12881b569mr669555a91.18.1733870605922; Tue, 10
- Dec 2024 14:43:25 -0800 (PST)
-Date: Tue, 10 Dec 2024 14:43:24 -0800
-In-Reply-To: <9e827d41-a054-5c04-6ecb-b23f2a4b5913@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6bizE6c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733892285; x=1765428285;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=spQZckInpaHp95Ajm6sEmnI11MjWfRHNqMXZUkgZBKU=;
+  b=R6bizE6cpy3YqrxTBM89RjddTMYzzK8bvTxIevAxU9noMQVgnnQxRxMj
+   SBOt7H3SY3NEQ/E8JERvuhcZKf93YInCcxGKRJmBQuF1xLC9RGVEGXu/M
+   ihjxrNyyWugpK+we4gf72SLwvDkEX/q/CrgbPIZHt0r0ZiujD1881DB6c
+   zMvj/+l9dqHC5nEdu+MTzQZLrP5RCROgqHbhlE5om6jRs9RoNx0nx7Bmn
+   3Zq19L37zeKimBqj+HJ5K3aXqCCJ4b8ss/4XHICJfW8SYUCFkaTYwrCMq
+   neVyX3JnIwY2OqsUuw5ICc+goohZFYIXWLBLdPxKy7kWm1S9wW9EUAzbX
+   Q==;
+X-CSE-ConnectionGUID: X13bBZkaTeK42mX0vr9k2A==
+X-CSE-MsgGUID: HQJHr0bpSHyHc6K6rgkMOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="34398861"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="34398861"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 20:44:44 -0800
+X-CSE-ConnectionGUID: 2qcRB1h7QOu+6HEuI2WTbA==
+X-CSE-MsgGUID: +6t2NmcxR2K2QJMSp+vbqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118895570"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Dec 2024 20:44:44 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 10 Dec 2024 20:44:43 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 10 Dec 2024 20:44:43 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 10 Dec 2024 20:44:42 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aLSOOo/5CQC3m8DG+gGacQIlL5M2dBp16MGJxa24cSIZurzehged5Be25i1R7HzUWeAN3fyDwpv63nFPx91UGXsveF6BPK2ntLxw9RQZRr9wQPlTbIPI9Z+gdvcFShWOk690gQY4H3/v09d/LRpfLp06pR6AagDjTpIV8B91usFYdQcZ63w1CNSOxmC81SzxKKC1Cntc+faSmzmqIQdAmvD0tZkfJ5XJ/SGdlF9HaSploKsrljmlsVjGmGWRq0yibhaIXlM96HVDKuZeUlKhqidJbcvK5rOIIaOwLxZjid4xioYmGTannU8xI7/yF2HmmXSVmF26yefAcOuvAzeJ2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S5ONMMYAPKKJLj489lNgej+dZrEt+sdq0qBKo0uf5MQ=;
+ b=TkNLQpWX+ZsleQhgnziBpWkpXNky+iI5FrRRwzb2yhpIcBjmfk2sCRwCVrIHDBaDsuBjr0rXvUEwM0VNyAK8bwU2DVFgk1DYCEX5145WdYYApsQYoigY6NyZEnaCBDqbmpiBh35IYyczCNj1Kcq5Sd6Al+Aow4GH2mWQtYjmlrnuMeV8an8r87xk7MFdcVaXQtH2WH0P+ODxAqKF+8Lecv2fSfVi0egDg1/WERaTpHT8nTNde32o369iZXG/v2xbdOHyphewFlLs6ZN4qaa6jbKT48NkmcJ1ympuCq5eTxSF7Il/6pLe/mYwOvShDF+DbtiI6AGO3uV0UBv9JoE9lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB7620.namprd11.prod.outlook.com (2603:10b6:a03:4d1::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Wed, 11 Dec
+ 2024 04:44:39 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8230.010; Wed, 11 Dec 2024
+ 04:44:39 +0000
+Date: Tue, 10 Dec 2024 20:44:36 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Raghavendra K T <raghavendra.kt@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: <bharata@amd.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Alistair Popple <apopple@nvidia.com>, "Andy
+ Shevchenko" <andriy.shevchenko@linux.intel.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, Baoquan He <bhe@redhat.com>,
+	<ilpo.jarvinen@linux.intel.com>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, Fontenot Nathan <Nathan.Fontenot@amd.com>,
+	Wei Huang <wei.huang2@amd.com>, <regressions@lists.linux.dev>
+Subject: Re: [RFC PATCH] resource: Fix CXL node not populated issue
+Message-ID: <675918b414c17_10a0832943b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20241202111941.2636613-1-raghavendra.kt@amd.com>
+ <674fd2b4942f1_3e0f629420@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <33b4b93b-5ab6-4a3b-b3b2-c9b3cbc9d929@amd.com>
+ <6752acd92baf0_10a08329424@dwillia2-xfh.jf.intel.com.notmuch>
+ <2b5bb8d8-6a7d-4a58-bde7-ce42d0a23f61@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2b5bb8d8-6a7d-4a58-bde7-ce42d0a23f61@amd.com>
+X-ClientProxiedBy: MW4PR03CA0112.namprd03.prod.outlook.com
+ (2603:10b6:303:b7::27) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <52914da7-a97b-45ad-86a0-affdf8266c61@mailbox.org>
- <Z1hiiz40nUqN2e5M@google.com> <93a3edef-dde6-4ef6-ae40-39990040a497@mailbox.org>
- <9e827d41-a054-5c04-6ecb-b23f2a4b5913@amd.com>
-Message-ID: <Z1jEDFpanEIVz1sY@google.com>
-Subject: Re: [REGRESSION] from 74a0e79df68a8042fb84fd7207e57b70722cf825: VFIO
- PCI passthrough no longer works
-From: Sean Christopherson <seanjc@google.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Simon Pilkington <simonp.git@mailbox.org>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7620:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b849029-adb8-4d3d-d98f-08dd199e8561
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ugOpUEEGc/mK+3HD11Wht5uzNiC4Oq2FCcHA33VLHHol7jnxsA+rGsUUyp9E?=
+ =?us-ascii?Q?G84RTb2C6DM51puzdxvBgG+iaRVnnTpJvwtIlep0Iso7ub9wf4qERoLrZ6TA?=
+ =?us-ascii?Q?T8GmN6x4bSNYmU6BwvYKqte8eblE+KUjHpj0H94Ef8D7GqcCioP+jAXKJGBf?=
+ =?us-ascii?Q?+pxr937v0bfRHqBJh6TZWhQ5yEnIXvW5oaJRxb/ePwQGPdYWX/TQJzIbgsMz?=
+ =?us-ascii?Q?2uAjce5IByXkZZVT2e8ej6qwJTK5IRjwVb0ZZhmU4VmTfLyiwbVQUEQ4yaxb?=
+ =?us-ascii?Q?myzVX5tqbAprulVR8gnz6R7Byb96PLA2rBl1qczs8NPFK4QC2ZtpBYkpSXuG?=
+ =?us-ascii?Q?B7Tx2t7Ss/zRJ8T9XSibxkcngSgh7LPxyPJiwX59j97nxSTsZNUVbnwoO6Y0?=
+ =?us-ascii?Q?cHdU4Vh9n6mzovgz504gXk4V7wapWD4TUQKssnSgJEzI14E/+0jVObDselxu?=
+ =?us-ascii?Q?NHRVneTGTo2unQPQN9KeYDjIXksNGuxcaQsoNxYP0Hm6GzGv0sX5i6GBzza8?=
+ =?us-ascii?Q?8bibB0XgGGFqj6Tk0qryI580+bcK/HidG6dLiz6Gv94H53uT11WQzxzvEabw?=
+ =?us-ascii?Q?npvne9gzyE0GiYZU0FluSgt0+4AjxVTJmUaiSifK7FEqSrsZUIkjlkXOBl+5?=
+ =?us-ascii?Q?klNRbVGuhvi4v0cwq7voIydgJ5MulktrV/Hlh8O3Z66cGUp60JPbuUsN3o/W?=
+ =?us-ascii?Q?H5tyntOnbORNlsq/KyvNiY2qq0Tlj7Yb5BrlgYxvKt3v99Uf7yjaYYiTL8nK?=
+ =?us-ascii?Q?oxWUujaH5o52OX1rgCDFtEShGtc8B3yFAry8J/2ZZW2LU5YU1x6pMj6CZOLM?=
+ =?us-ascii?Q?ck+YeC/1t0WU+EKFGnWbDXOB0fCuGKV+d/+mDuLO3pgLB4XKQJ5KNz378PVG?=
+ =?us-ascii?Q?yrDrC5mvrE8BrR661oMnJ3mJjwz/QbTBCUqjajKQwt6f6/eAUB7GBqdlBNbr?=
+ =?us-ascii?Q?iBfKeIqr/asF+Lzw7un3mrG6btd/pm79X2nKsDISFzDaNTtuAWeupW6RM2U6?=
+ =?us-ascii?Q?WHqe1DwlcTLQqfwYMVmF3RoaJsTNlMFkQSw/yiGzg3mA3nwxi9r7zrL8VU9p?=
+ =?us-ascii?Q?AKWpifBEiyKTt7laQ9l+WBNUMQJBtDSiYnuaGNQ3ST/yUeinZ8xBaGsO/dlv?=
+ =?us-ascii?Q?dsLaPxZA+sT+EqTpRSuUHOGxZjMDuCTRg1yxHz/U/4fcJetBNa7xEfxgrgef?=
+ =?us-ascii?Q?9kZAfE27ChqGtLCUXuQNbt2kE8ZcTYA26bIwU1L7kurQq2uJyiQVRCo8tmGC?=
+ =?us-ascii?Q?d4MZuG5HXWO1lV2kaOG+PmQmICYSLWSt5xK/uxOEc9R8PHeGDOYGspMBMlQw?=
+ =?us-ascii?Q?naRxde9X/AWy/BZzJZTop/oHVAR7kn2g+196QwVuf4en0g=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TLe2My2gMQYNyvgxZJ7yqBgtRR8tjmQIDFJ90CZKsgMYFZay3QD6Mf0pqR+X?=
+ =?us-ascii?Q?wyob+mLkB0HhYk953eJhDrdxk8T2fOunhRZ3nPJyreh2F59QPuqzaByY28a8?=
+ =?us-ascii?Q?uN+0Cn5GaFEApBXQPyv6ApgR3QazWGbU5PE9On7UKgQO7zhv/6ANgQK4aSFV?=
+ =?us-ascii?Q?D8YueNQwEiy23I93uuBjfiH5qqFtfbRWARhcapF3DU6Jxlxw+KaMh9NH0vTI?=
+ =?us-ascii?Q?z0drEPHaO/7v1N/qzu5+ogFPGQ+qrlR/cF7On4lpWR381NhKOHKl/PBPLcyo?=
+ =?us-ascii?Q?dH8SKT3jc5CB9/cmCbB9CyuiSwoRKNXkfFCm3OQxNTi/vtfxVW6Qf71/2eXI?=
+ =?us-ascii?Q?dOIYyKdDr3pdKwV83HRiCOBQ6TVktxtbUU5jsF8ybVPTnkRT/4rSmEKL88yb?=
+ =?us-ascii?Q?NSagOCkz6G5D7MwUsdJLnUfRQeI2UtZcBeCJGCfLo4VsC34vj1/xjj8IeI6c?=
+ =?us-ascii?Q?qt9jQctIhlq+fqQt9U/whTivFKDr507MuBkzPVvCMC4ZMjhw+3H9dc2EE5Nr?=
+ =?us-ascii?Q?ueB3iY6tKjRwmyeVZ//sb8jJDO6V+5xuZB3dDnaC2tYhslxULooNxNw5lVk2?=
+ =?us-ascii?Q?8C5pm8He+mINgb24TIEHRga42SinP3Lk5Zu4MpJrrHONZltseazT9Z3kpQ7x?=
+ =?us-ascii?Q?NsA9lChQ4ph9M7cko8QGUYDF6ivMG6DNsTyjFDrNGjyrFVZVoTkyUpUhZvpS?=
+ =?us-ascii?Q?jx5jccnCMGEFSbjXnh0HgkgbMQiInfn2y27wU688Vwu6pMoSxjyQaNvhbIxE?=
+ =?us-ascii?Q?LVFUapd4kfa2VIB1ETEH2YnmCV3S59NmnMc/jaxH5WD9r9R5tg5QsJJk6I5h?=
+ =?us-ascii?Q?cDt+46vh9240iPtRKmELRHysH5Y/vqsvgNS/CH5lzBpxD0er0UIRt3/hKf7e?=
+ =?us-ascii?Q?lsxKg0D/J1s1xueba1MloTWbXwkVkC1maUU+gHpiAON9pbJwGojtUgDiPGOC?=
+ =?us-ascii?Q?HjiYCvuF1ZbLhaQAFr+G06eBfn5hppKq1RNkyHpKjLey76qG/shi8UrrfMBm?=
+ =?us-ascii?Q?P0RaDAEkfxM8IsnlNxB9TDmI/BXK9kHp+p9U99U93LRM1+UT+il6mOYzhMDo?=
+ =?us-ascii?Q?LipAr702uH66Dh8O0WY19LS6wWhZyHvDj7yS0AEUVWcR0yypDTIsTOQdO37M?=
+ =?us-ascii?Q?iNFm0qkGKSJ839I8hOFL9eO+77u3b7BP+Q6h2bolez4k8j8NaOzLBQG5gVxT?=
+ =?us-ascii?Q?+T/kf68FhmNRLtxvgcrvC1v5XJ4K/tZT9nsUb5mtH4XD8oUbnG2smuy4Olz6?=
+ =?us-ascii?Q?P4ZN7x8jKHc50tH9RXsbMCG/PqNp3vPdiv9L4ov41E9CAEBxfFsGpMK18C2l?=
+ =?us-ascii?Q?ZYqwGqyrC0C6fRGmqMfnILmK2zl5IplHZYfnGArVv732ma0eUI53+D3GLR/s?=
+ =?us-ascii?Q?OsBqYceihXJqABcvyqUBfAE7UVN3Te4UuNA16XLxL0+zW5yQ5KjHy2z0m6Rg?=
+ =?us-ascii?Q?OPOj7FEdqI0fIFHZFYyULUMkOxAul/MTixn+hIT2W/h1Y39lNR5By2l4vVjv?=
+ =?us-ascii?Q?igGbc7v7SjLC+acQTy4BCOT1Y/gChYh1SbDs8832jSHHmU59bBDT0DRrdKOM?=
+ =?us-ascii?Q?T7l9f+f6kOEV5uNU9PU0qOleWDMlQ9S+FXC8uC5lN3iysEmWbQJ9gmtkwyY1?=
+ =?us-ascii?Q?VA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b849029-adb8-4d3d-d98f-08dd199e8561
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 04:44:39.1817
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FBUwz/z7HHo7SOdAfB+vcIPqYnwU7n23cGzxb62uJTwUHUF5JBMMA4QXABpy7zkRbLz/kKYzcXZ61tWkwN89c7uO7bnNMqEN5yv4fQjdy3Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7620
+X-OriginatorOrg: intel.com
 
-On Tue, Dec 10, 2024, Tom Lendacky wrote:
-> On 12/10/24 14:33, Simon Pilkington wrote:
-> > On 10/12/2024 16:47, Sean Christopherson wrote:
-> >> Can you run with the below to see what bits the guest is trying to set (or clear)?
-> >> We could get the same info via tracepoints, but this will likely be faster/easier.
-> >>
-> >> ---
-> >>  arch/x86/kvm/svm/svm.c | 12 +++++++++---
-> >>  1 file changed, 9 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> >> index dd15cc635655..5144d0283c9d 100644
-> >> --- a/arch/x86/kvm/svm/svm.c
-> >> +++ b/arch/x86/kvm/svm/svm.c
-> >> @@ -3195,11 +3195,14 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> >>  	case MSR_AMD64_DE_CFG: {
-> >>  		u64 supported_de_cfg;
-> >>  
-> >> -		if (svm_get_feature_msr(ecx, &supported_de_cfg))
-> >> +		if (WARN_ON_ONCE(svm_get_feature_msr(ecx, &supported_de_cfg)))
-> >>  			return 1;
-> >>  
-> >> -		if (data & ~supported_de_cfg)
-> >> +		if (data & ~supported_de_cfg) {
-> >> +			pr_warn("DE_CFG supported = %llx, WRMSR = %llx\n",
-> >> +				supported_de_cfg, data);
-> >>  			return 1;
-> >> +		}
-> >>  
-> >>  		/*
-> >>  		 * Don't let the guest change the host-programmed value.  The
-> >> @@ -3207,8 +3210,11 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> >>  		 * are completely unknown to KVM, and the one bit known to KVM
-> >>  		 * is simply a reflection of hardware capabilities.
-> >>  		 */
-> >> -		if (!msr->host_initiated && data != svm->msr_decfg)
-> >> +		if (!msr->host_initiated && data != svm->msr_decfg) {
-> >> +			pr_warn("DE_CFG current = %llx, WRMSR = %llx\n",
-> >> +				svm->msr_decfg, data);
-> >>  			return 1;
-> >> +		}
-> >>  
-> >>  		svm->msr_decfg = data;
-> >>  		break;
-> >>
-> >> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
-> > 
-> > Relevant dmesg output with some context below. VM locked up as expected.
-> > 
-> > [   85.834971] vfio-pci 0000:0c:00.0: resetting
-> > [   85.937573] vfio-pci 0000:0c:00.0: reset done
-> > [   86.494210] vfio-pci 0000:0c:00.0: resetting
-> > [   86.494264] vfio-pci 0000:0c:00.1: resetting
-> > [   86.761442] vfio-pci 0000:0c:00.0: reset done
-> > [   86.761480] vfio-pci 0000:0c:00.1: reset done
-> > [   86.762392] vfio-pci 0000:0c:00.0: resetting
-> > [   86.865462] vfio-pci 0000:0c:00.0: reset done
-> > [   86.977360] virbr0: port 1(vnet1) entered learning state
-> > [   88.993052] virbr0: port 1(vnet1) entered forwarding state
-> > [   88.993057] virbr0: topology change detected, propagating
-> > [  103.459114] kvm_amd: DE_CFG current = 0, WRMSR = 2
-> > [  161.442032] virbr0: port 1(vnet1) entered disabled state // VM shut down
+Raghavendra K T wrote:
 > 
-> That is the MSR_AMD64_DE_CFG_LFENCE_SERIALIZE bit. Yeah, that actually
-> does change the behavior of LFENCE and isn't just a reflection of the
-> hardware.
 > 
-> Linux does set that bit on boot, too (if LFENCE always serializing isn't
-> advertised 8000_0021_EAX[2]), so I'm kind of surprised it didn't pop up
-> there.
+> On 12/6/2024 1:20 PM, Dan Williams wrote:
+> > Raghavendra K T wrote:
+> >>
+> [...]
+> >> B. /proc/iomem
+> >>
+> >> $ vimdiff success fail
+> >>
+> >>    4050000000-604fffffff : Soft Reserved
+> >>     |  164 4050000000-604fffffff : Soft Reserved
+> >>     165   4050000000-604fffffff : CXL Window 0
+> >>          |  165   4050000000-604fffffff : CXL Window 0
+> >>     166     4080000000-5fffffffff : dax1.0
+> >>          |
+> >> ------------------------------------------------------------------------
+> >>     167       4080000000-5fffffffff : System RAM (kmem)
+> >>          |
+> >> --------------------------------------------------------------------
+> > 
+> > My eyes only know how to read unified diff (diff -u) format. Is this
+> > saying that in the failure case the System RAM range for dax1.0 is
+> > missing?
+> 
+> 
+> Sorry for that formatting. I realized later.
+> Yes. dax1.0 missing in the failure case.
+> 
+> Looks like problem is that,
+> 
+> 4050000000-604fffffff : Soft Reserved
+>    4050000000-604fffffff : CXL Window 0
+>       4080000000-5fffffffff : dax1.0
+>          4080000000-5fffffffff : System RAM (kmem)
+> 
+> this use case where,
+> 
+> |A<------------->D|  CXL window
+> |..|B<-->C|.......|    kmem
+> 
+> B->C range that falls within A->D as in above somehow
+> not covered after the patch.
 
-Linux may be running afoul of this, but it would only become visible if someone
-checked dmesg.  Even the "unsafe" MSR accesses in Linux gracefully handle faults
-these days, the only symptom would be a WARN.
+I was able to reproduce a similar set of conditions with the cxl_test
+environment:
 
-> I imagine that the above CPUID bit isn't set, so an attempt is made to
-> set the MSR bit.
+f010000000-f04fffffff : Soft Reserved
+  f010000000-f04fffffff : CXL Window 0
+    f020000000-f03fffffff : region3
+      f020000000-f03fffffff : dax3.0
+        f020000000-f03fffffff : System RAM (kmem)
 
-Yep.  And LFENCE_RDTSC _is_ supported, otherwise the supported_de_cfg check would
-have failed.  Which means it's a-ok for the guest to set the bit, i.e. KVM won't
-let the guest incorrectly think it's running on CPU for which LFENCE is serializing.
 
-Unless you (Tom) disagree, I vote to simply drop the offending code, i.e. make
-all supported bits fully writable from the guest.  KVM is firmly in the wrong here,
-and I can't think of any reason to disallow the guest from clearing LFENCE_SERIALIZE.
+...but that did not result in the bug. So there are some other details
+missing. Can you proceed with providing the dmesg from the good and the
+bad cases?
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 6a350cee2f6c..5a82ead3bf0f 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3201,15 +3201,6 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-                if (data & ~supported_de_cfg)
-                        return 1;
- 
--               /*
--                * Don't let the guest change the host-programmed value.  The
--                * MSR is very model specific, i.e. contains multiple bits that
--                * are completely unknown to KVM, and the one bit known to KVM
--                * is simply a reflection of hardware capabilities.
--                */
--               if (!msr->host_initiated && data != svm->msr_decfg)
--                       return 1;
--
-                svm->msr_decfg = data;
-                break;
-        }
-
+gist.github.com is useful for this.
