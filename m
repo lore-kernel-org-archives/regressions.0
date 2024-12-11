@@ -1,183 +1,156 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF2024632C
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 17:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CA5259498;
+	Wed, 11 Dec 2024 21:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733938993; cv=none; b=VdfUD3o/DeHBSPWKQigZm0llFfDOCwsdvtpj3WNM3vFIXlEr+0R+K+yGfKFKsiUcBvlDykBl6NCjOA/eH90wpFczleFYIZ31i7FtEOI5qqThtwAOv/UjDj/mjAZ4nUQOOmwaBGT5ZuXHBGMPj9/OZpQ9iimuIFyUDXi0NYjZ8gU=
+	t=1733951430; cv=none; b=bgD8bcZVL9mvZwAtMaKwvM/YBIRTdW1+qjHWZHXlaeeIt7JdpG9bgbAQBf4h8FYROfqahcQViK9YSItork3YjAWFU9bbn8xUmS3LFis9usJY7OBUBri6AGP32C8eja07pSlwTrFYNdetvSXSkyfi0U5aq1BwNGxrBtmb3L99zjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733938993; c=relaxed/simple;
-	bh=49SKRixadurapl3Gf/n3BAdrM2d4z6xw6c6GK+sdzfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M6JRdneZNDmo+JsPBrxgDb3rww0zW+qyR3WNN252v8xkkPESflWNp3V5LQ77jeHsSQnEYygolyCwdELtdN2P7SoOFKYOW+1Wvf9LDReCfuxp+hmToZqWQFYzKmwqG5pF1WZzgaHAxiVH6Oq3MmdchXM48e/BEz2vZJvLd+2+83U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Nq4tv77V; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1733951430; c=relaxed/simple;
+	bh=OrSrCRThbnz38HRK4gbxPzXWxGq7zO/a92bWosVgsHM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cy4VQsoWPVSda8egGq3L37TsTcn+74UjShCA51C2oUjCu3JUHXGb/5Q2191lhD1Yc6UaANXJZMxEM5FC+WBwp3IX05J/TPGSGJe6N2F74MbXOTFDQDzzltVtN1/FjK2uAmGTLZYZRxkQ5EXw/WrI0Xa82IVo2eEk5JxQU4/xdO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aN1LQL/J; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Nq4tv77V"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Y7jcP3NMYz9tF2;
-	Wed, 11 Dec 2024 18:43:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1733938981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NMs1sLGLbCKoPzxD2qKl1ngo8hgDqG1n8l4Vt1q2uJM=;
-	b=Nq4tv77VX8S/nEzIV7jQ9qZ/gF1BEiP6Vzuqzywx2L+xZlmou1UQH6X4Rk5o/rKyb2oKbY
-	xN89lb7raDshjyJWzteYfpYoV6+FbPLFLg3JYinuSa6m/NOAWs4hRycedyHUyF/XhUqnj6
-	MSHClgxlxuq6Uwit7f0AI0JzFbHD5AjBgzYEcVvgauI7pw2iJCOWf9nBCYD27qo1+rFfiq
-	3mNvCCY9/+iKJr3HCLq0Z4G8z4nAB78XXay/fqesJU6R5g8ewVv81gDypLAJdVzQeD9c4Q
-	E5WaMjzdlW9JZOO5uyxMfONWguwydir4hC3YfieOXHg4eXop51PNpb5seRUKUw==
-Message-ID: <e1c96619-4402-4577-b2b8-a694bd5569c7@mailbox.org>
-Date: Wed, 11 Dec 2024 18:42:58 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN1LQL/J"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-434a852bb6eso68675085e9.3;
+        Wed, 11 Dec 2024 13:10:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733951427; x=1734556227; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yZz00LLpT83ITUjYV+X2dbIbEBxGxb+OmoGdlRCf7RU=;
+        b=aN1LQL/JehHHWVFAguCw0+zNqW5ZGMa/OeuSB7+N/rDcXkdw/jF6JqsFTF2TkOcF5n
+         BJ0spEVjboSEF/V4Ek8E/zz+D9lg8ilso2sKKy6O3OC+Q+wsO2uHJgR4y7lPQgEV0oXA
+         tgz9DIRl3YIjq3yUC+lz7O1KAI11UMYefnO0Ia/U6B0nkNYjL2bJAm5CgWQU4k2gZ+BQ
+         bl2fnZn3accBor6SmDVMj09cnDDDlEZsmpAtKs/X3lDT+twNmldZoyt0zIzndLf1Q4qn
+         FjPGgSC7bBQFPaeu0aI5pQLYD1KF2CP2MpV0QggxMR7kOU/sCW48vfQ941r+o8zaDdUN
+         hUgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733951427; x=1734556227;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZz00LLpT83ITUjYV+X2dbIbEBxGxb+OmoGdlRCf7RU=;
+        b=RhpAcBVkWI5kcAbIrfdp3XAATFKNSY3DgOh/mZHQAiuY6cHCmDYXIUW055TXSDGn5x
+         reTe4N32SgPW6YCECfmgWTrrFRkxuQOTsfgE+aFkVkO2WvWcqwrOuMKiYgujvNi/6Guc
+         1Vy4zPL6YIOriQIr1ItLvLWOf4kdcWZ9Xa1jxQFb3mHj8ov0gVwOzL1DIdKEUq+49zfC
+         SdsVHAYtqbbQH6ZHzzHR212k19ltMkA3OGixG/41+4yJtmyqM2oXhSo1hFzpTHEIE+5v
+         +jkxxVpVCUgCm0bis4ksiRAszwiqssFfBbSoIQEzriS5NBTqej1DDI3j2NqansgvJkHL
+         9dpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuTBysLecphwC32RtFenjTR7JmCgEiuKAMZGdKoJzJVhyZrUR2Bvg4QJE5/ToR9XfT4pjOObzdA3cEEihDsCw=@lists.linux.dev, AJvYcCXYjQI8/9MEw1aOHHhjqsTFCfZvce7P7d1Gzc7Bnd0snReICcsULyojEF60fiI66Wl+HECA8hYLEJMI2aI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMJJwAxm2PkwmchN1yCwxX4VLqs1u0T/aIR9kOB8EAUu04u83N
+	F3JacJrjPTX1fK5d2G+08ubcfYs6DCOaPmilRyFC/pbLYx1GywJ6
+X-Gm-Gg: ASbGncs0P0ibtpvDRnqOJzsWk2OLewLrAFVCKeG0pjy8euKdT15foxwCuLiZiFfi+B3
+	J4xvv0eQf5FG/vxPwXUe+K+UnKnKIju0RY4pv2eBoQw/u/wXOty3371mfnf7WhUrKj/H5QtcoZo
+	oaT921tatyqpxEBqoL4hffyBp1wEXVGa/akP4D98lqTxV1MeFOKAjZ9ZqgOzsdMqarlTSKlX42f
+	k6cTe7iG78ofSjoCqKCLCc3mKRVf2BhlR+oTU5MeBOz3/G/j8RgN4rrulN0ApE=
+X-Google-Smtp-Source: AGHT+IEoFF9lfFi/tcgC2R9iqPaNL1Un1IvsKyFFFNVGF8Q2i3Q3Ttd2SniT7E4tri3YhTDfR23Oqg==
+X-Received: by 2002:a05:600c:4446:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4361c3723acmr35152305e9.13.1733951426556;
+        Wed, 11 Dec 2024 13:10:26 -0800 (PST)
+Received: from krava (85-193-35-130.rib.o2.cz. [85.193.35.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4361e323828sm17329325e9.0.2024.12.11.13.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 13:10:26 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 11 Dec 2024 22:10:24 +0100
+To: Laura Nao <laura.nao@collabora.com>
+Cc: olsajiri@gmail.com, alan.maguire@oracle.com, bpf@vger.kernel.org,
+	chrome-platform@lists.linux.dev, kernel@collabora.com,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on
+Message-ID: <Z1n_wGj0CGjh_gLP@krava>
+References: <Z1LvfndLE1t1v995@krava>
+ <20241210135501.251505-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] from 74a0e79df68a8042fb84fd7207e57b70722cf825: VFIO
- PCI passthrough no longer works
-To: Tom Lendacky <thomas.lendacky@amd.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- regressions@lists.linux.dev
-References: <52914da7-a97b-45ad-86a0-affdf8266c61@mailbox.org>
- <Z1hiiz40nUqN2e5M@google.com>
- <93a3edef-dde6-4ef6-ae40-39990040a497@mailbox.org>
- <9e827d41-a054-5c04-6ecb-b23f2a4b5913@amd.com> <Z1jEDFpanEIVz1sY@google.com>
- <c64099db-33b3-9438-536e-7882bae614e0@amd.com>
-Content-Language: en-GB
-From: Simon Pilkington <simonp.git@mailbox.org>
-In-Reply-To: <c64099db-33b3-9438-536e-7882bae614e0@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: xdc69urognmmw5b6skbn8y398iernif8
-X-MBO-RS-ID: 73b08729dd3458e0d66
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241210135501.251505-1-laura.nao@collabora.com>
 
-On 11/12/2024 15:37, Tom Lendacky wrote:
-> On 12/10/24 16:43, Sean Christopherson wrote:
->> On Tue, Dec 10, 2024, Tom Lendacky wrote:
->>> On 12/10/24 14:33, Simon Pilkington wrote:
->>>> On 10/12/2024 16:47, Sean Christopherson wrote:
->>>>> Can you run with the below to see what bits the guest is trying to set (or clear)?
->>>>> We could get the same info via tracepoints, but this will likely be faster/easier.
->>>>>
->>>>> ---
->>>>>  arch/x86/kvm/svm/svm.c | 12 +++++++++---
->>>>>  1 file changed, 9 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->>>>> index dd15cc635655..5144d0283c9d 100644
->>>>> --- a/arch/x86/kvm/svm/svm.c
->>>>> +++ b/arch/x86/kvm/svm/svm.c
->>>>> @@ -3195,11 +3195,14 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->>>>>  	case MSR_AMD64_DE_CFG: {
->>>>>  		u64 supported_de_cfg;
->>>>>  
->>>>> -		if (svm_get_feature_msr(ecx, &supported_de_cfg))
->>>>> +		if (WARN_ON_ONCE(svm_get_feature_msr(ecx, &supported_de_cfg)))
->>>>>  			return 1;
->>>>>  
->>>>> -		if (data & ~supported_de_cfg)
->>>>> +		if (data & ~supported_de_cfg) {
->>>>> +			pr_warn("DE_CFG supported = %llx, WRMSR = %llx\n",
->>>>> +				supported_de_cfg, data);
->>>>>  			return 1;
->>>>> +		}
->>>>>  
->>>>>  		/*
->>>>>  		 * Don't let the guest change the host-programmed value.  The
->>>>> @@ -3207,8 +3210,11 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->>>>>  		 * are completely unknown to KVM, and the one bit known to KVM
->>>>>  		 * is simply a reflection of hardware capabilities.
->>>>>  		 */
->>>>> -		if (!msr->host_initiated && data != svm->msr_decfg)
->>>>> +		if (!msr->host_initiated && data != svm->msr_decfg) {
->>>>> +			pr_warn("DE_CFG current = %llx, WRMSR = %llx\n",
->>>>> +				svm->msr_decfg, data);
->>>>>  			return 1;
->>>>> +		}
->>>>>  
->>>>>  		svm->msr_decfg = data;
->>>>>  		break;
->>>>>
->>>>> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
->>>>
->>>> Relevant dmesg output with some context below. VM locked up as expected.
->>>>
->>>> [   85.834971] vfio-pci 0000:0c:00.0: resetting
->>>> [   85.937573] vfio-pci 0000:0c:00.0: reset done
->>>> [   86.494210] vfio-pci 0000:0c:00.0: resetting
->>>> [   86.494264] vfio-pci 0000:0c:00.1: resetting
->>>> [   86.761442] vfio-pci 0000:0c:00.0: reset done
->>>> [   86.761480] vfio-pci 0000:0c:00.1: reset done
->>>> [   86.762392] vfio-pci 0000:0c:00.0: resetting
->>>> [   86.865462] vfio-pci 0000:0c:00.0: reset done
->>>> [   86.977360] virbr0: port 1(vnet1) entered learning state
->>>> [   88.993052] virbr0: port 1(vnet1) entered forwarding state
->>>> [   88.993057] virbr0: topology change detected, propagating
->>>> [  103.459114] kvm_amd: DE_CFG current = 0, WRMSR = 2
->>>> [  161.442032] virbr0: port 1(vnet1) entered disabled state // VM shut down
->>>
->>> That is the MSR_AMD64_DE_CFG_LFENCE_SERIALIZE bit. Yeah, that actually
->>> does change the behavior of LFENCE and isn't just a reflection of the
->>> hardware.
->>>
->>> Linux does set that bit on boot, too (if LFENCE always serializing isn't
->>> advertised 8000_0021_EAX[2]), so I'm kind of surprised it didn't pop up
->>> there.
->>
->> Linux may be running afoul of this, but it would only become visible if someone
->> checked dmesg.  Even the "unsafe" MSR accesses in Linux gracefully handle faults
->> these days, the only symptom would be a WARN.
->>
->>> I imagine that the above CPUID bit isn't set, so an attempt is made to
->>> set the MSR bit.
->>
->> Yep.  And LFENCE_RDTSC _is_ supported, otherwise the supported_de_cfg check would
->> have failed.  Which means it's a-ok for the guest to set the bit, i.e. KVM won't
->> let the guest incorrectly think it's running on CPU for which LFENCE is serializing.
->>
->> Unless you (Tom) disagree, I vote to simply drop the offending code, i.e. make
->> all supported bits fully writable from the guest.  KVM is firmly in the wrong here,
->> and I can't think of any reason to disallow the guest from clearing LFENCE_SERIALIZE.
->>
->> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->> index 6a350cee2f6c..5a82ead3bf0f 100644
->> --- a/arch/x86/kvm/svm/svm.c
->> +++ b/arch/x86/kvm/svm/svm.c
->> @@ -3201,15 +3201,6 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->>                 if (data & ~supported_de_cfg)
->>                         return 1;
->>  
->> -               /*
->> -                * Don't let the guest change the host-programmed value.  The
->> -                * MSR is very model specific, i.e. contains multiple bits that
->> -                * are completely unknown to KVM, and the one bit known to KVM
->> -                * is simply a reflection of hardware capabilities.
->> -                */
->> -               if (!msr->host_initiated && data != svm->msr_decfg)
->> -                       return 1;
->> -
+On Tue, Dec 10, 2024 at 02:55:01PM +0100, Laura Nao wrote:
+> Hi Jiri,
 > 
-> That works for me.
+> Thanks for the feedback!
 > 
-> Thanks,
-> Tom
+> On 12/6/24 13:35, Jiri Olsa wrote:
+> > On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
+> >> On 11/13/24 10:37, Laura Nao wrote:
+> >>>
+> >>> Currently, KernelCI only retains the bzImage, not the vmlinux
+> >>> binary. The
+> >>> bzImage can be downloaded from the same link mentioned above by
+> >>> selecting
+> >>> 'kernel' from the dropdown menu (modules can also be downloaded the
+> >>> same
+> >>> way). I’ll try to replicate the build on my end and share the
+> >>> vmlinux
+> >>> with DWARF data stripped for convenience.
+> >>>
+> >>
+> >> I managed to reproduce the issue locally and I've uploaded the
+> >> vmlinux[1]
+> >> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one of
+> >> the
+> >> modules[3] and its btf data[4] extracted with:
+> >>
+> >> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko >
+> >> cros_kbd_led_backlight.ko.raw
+> >>
+> >> Looking again at the logs[5], I've noticed the following is reported:
+> >>
+> >> [    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
+> >> [    0.416029] BPF:
+> >> [    0.416083] BPF: Invalid offset
+> >> [    0.416165] BPF:
+> >>
+> >> There are two different definitions of rcu_data in '.data..percpu',
+> >> one
+> >> is a struct and the other is an integer:
+> >>
+> >> type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
+> >> type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
+> >>
+> >> [115801] VAR 'rcu_data' type_id=115572, linkage=static
+> >> [115803] VAR 'rcu_data' type_id=1, linkage=static
+> >>
+> >> [115572] STRUCT 'rcu_data' size=1152 vlen=69
+> >> [1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64
+> >> encoding=(none)
+> >>
+> >> I assume that's not expected, correct?
+> > 
+> > yes, that seems wrong.. but I can't reproduce with your config
+> > together with pahole 1.24 .. could you try with latest one?
 > 
->>                 svm->msr_decfg = data;
->>                 break;
->>         }
->>
+> I just tested next-20241210 with the latest pahole version (1.28 from
+> the master branch[1]), and the issue does not occur with this version
+> (I can see only one instance of rcu_data in the BTF data, as expected).
+> 
+> I can confirm that the same kernel revision still exhibits the issue
+> with pahole 1.24.
+> 
+> If helpful, I can also test versions between 1.24 and 1.28 to identify
+> which ones work.
 
-Thanks for the prompt response on this Sean & Tom.
+I managed to reproduce finally with gcc-12, but had to use pahole 1.25,
+1.24 failed with unknown attribute
 
-Regards,
-Simon
+	[95096] VAR 'rcu_data' type_id=94868, linkage=static
+	[95098] VAR 'rcu_data' type_id=4, linkage=static
+	type_id=95096 offset=177088 size=1152 (VAR 'rcu_data')
+	type_id=95098 offset=177088 size=1152 (VAR 'rcu_data')
+
+will try to check what's going on
+
+jirka
