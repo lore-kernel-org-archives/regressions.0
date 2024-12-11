@@ -1,124 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2AC225A52
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF35823FD22
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733920686; cv=none; b=qv6WuGCh4yBM9JHW+H/s5/tw/Jf16yRwXCd2Nb2u//RQj4Kmia8CpgypVRDOw8JaDMk0KbYkh17FeevhMg80hfTpLUhEzHVmU+s32TVtHoju6UJQYHBzfvQTeTmQXyRJxdXx3Y2CCzzqQLLI/94os16ep0Co/cFFQ08yUDDzN5M=
+	t=1733921186; cv=none; b=L8TxnkHFYBAdVn/PxpsWcgW9xSljd+NAjME0CYC70kT6Z786NwQYgc3jFhJmPOt3S6NaB2yLNI7INNTggCxvYwYsD1F3xvMQTgEYQIqaQ08eUJeiiPbM6dOLW3WSYHHOY3bYSd9rL2dP3EPvRmtA1XcUj9qRB9yhktVSb8yNQbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733920686; c=relaxed/simple;
-	bh=6A/dn3jhCarDUX1HaOcKFvjQuIdb9vSoHfumK815F90=;
+	s=arc-20240116; t=1733921186; c=relaxed/simple;
+	bh=ljytafcL4yuL6A3mBTqsDzIsfHaoog36bhny0bY+VLA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hCur0wtg7wYo8DP99YeqsYNnp5X2XgQMAyLyXn3cJR+Z40jQ2BFO0xsEVBLlxzy/TZHh+p9imw2j5PY54PpgR5c/wTfscqZICkMWAv2OSfzQCG1mX1PsYgoY/53XzDi35UviiV0Mn2WGDAFJpQ6FJS/Nm8+v65KDiyXmCAq77ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4DSz1GL; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=M1Q6qg5HNA4oi4Vt9s97d1I/Vqgx6HB7far7Vo2obKfGnSY4K5f+PjIyQurMFCbGh6BeVb7yUCMaCrPInWPJX6sxxZxKd1OYXkRgJ5Z4JpEtpuoH/TL4bHF+2wUSd6XfkuxA5ETeOX9RRYhJJ7tDtlJ3jsm/4aiLiEAONt7IJCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M/YrYZUa; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4DSz1GL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6ABC4CEE2
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733920686;
-	bh=6A/dn3jhCarDUX1HaOcKFvjQuIdb9vSoHfumK815F90=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q4DSz1GLCbO8+y0aP5+TQn+JjZKD3ctl3GQzExXHYIGHidHL7mAXgTvSucnbISs3A
-	 uLFE4RwEqMyU3BH2GzAeSvtYS3n8goBVm08DdxqEhH2bf6HkTHTeiSe3DkrplF7F9z
-	 CB4DlVQmKTKRyWVPwAomyA63vGwAa+y0GZ9oOZrz7WkCRVWKQS7JTib8/P6sEc4dtS
-	 s82zbC5xFXIVoDQsiAZJZtjNmqcw71X+IQ2KFj77WCggvT5zhBz20C3QtKU/bjDmax
-	 /blejr9s+lXe7vJEBZAI9JCOtkiwnOV8fiKXhEs+yGs+dfZcYWazx1LGfnTuPAYGp1
-	 QCLHJY2AI5gHA==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3022598e213so28209931fa.0
-        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 04:38:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXlCXA5QN2OCPMuUbT7BPmXmA36j3oVzAr/4umVKlWLsDqKqVJfYtyXu7Fwy3cTZeBMBJPsZm6l/BHVaw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YypCu4QK1JOL0201emQHaULwhmJSRKa3IRo1jaKW1zkkchNJqzB
-	xfCnn9OnQ30dxUE59uG5zjkRJ1J8gx05hP9Y4fIsCecftBpKv8/5E1hSkmpv0vdXJxyhDGv/wIP
-	auxa1UzTFDz4gtas3oCZ8NZrddG0=
-X-Google-Smtp-Source: AGHT+IG209dne0Tl3T71dc7VTtvkNHUQ3p5KRJK5FqQ+uJfsXMe55P5rmszraCwAe9lOAQ+gFW57du1YR1C48KbWC1I=
-X-Received: by 2002:a2e:bc25:0:b0:300:1aa5:4938 with SMTP id
- 38308e7fff4ca-30240cfb89amr8571701fa.18.1733920684444; Wed, 11 Dec 2024
- 04:38:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M/YrYZUa"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-300479ca5c6so37152401fa.3
+        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 04:46:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733921183; x=1734525983; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fMRrLT8PBkUb9uwSo3UZOKSbeLIunajxVCGqM67QreU=;
+        b=M/YrYZUawpD3IXPeJjOMeOcgMx0fae/7lHD2HBC7yLbf31qYhvL2NoP/4ech3Vwums
+         IjrjzOB+CtpDvea8RhX/qX1HXJ5RxQNp2c0emSTsB2NLf5PZnScNu8BYrOwtdDUi1BH5
+         UEkihtcLov5RoJDTWaRJfsfyWWaVP1t9QZxVFyTfFPd/PPZvUmsZvpuMOI2Fx6HKgHjv
+         nxhZzPAh6HZlDnDCjKszuh+UqRN9XSCsDL0Wn+pZrrwQRF+yn/8W1H9dM1m3TLTZi1qi
+         zGIpvqTAq0hpqBZfDdLFs16eRZr/7h20nqO5m8eDAr9b3lWyo311zaL7xI8/SQ2sDqdZ
+         1cYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733921183; x=1734525983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fMRrLT8PBkUb9uwSo3UZOKSbeLIunajxVCGqM67QreU=;
+        b=p1S8+GzrdJk7wWqj6EZP7vFhflxNJJD19fYHu5Ls7ghrPh9Rn/FEfoQ1yyktBbwWpJ
+         Gdb4XRcOUYR1s4Ea/TLDWr0GSBPnF5EeIFiIP6DtPKPN10Y+lsEV3uN0IL4KUJppIflD
+         yz0LMG0vnJK2LDcIwhGGytgkEFxw3agAesTHyk+sR0T7ItqLpsf4q8NFi8kRdpRHMR4W
+         MEZc8PfeHSGPO4AevoXCdRUnKXdMk6M24YdMK2TRPrHYO+52UTXmsGwoUu76Z0JI9M8m
+         deXcloiKYImZFmY2GG1FrMiPM+Lyjl6MrprxKw7TTdKbu7aQujqczOE+P7Cd1zStKAo5
+         hbKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrSXY01uM0z1E6a0ClY80AmF8gKqjFuYVTGFpqm49glxYaQygA0dkI89tLT0nlfrsdPPCRKLWHV0iSAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwzPIJBkNl0xBRUckyMDS1Mxa4Ou7joC+Grur1bWmMeIGdjfhEc
+	DzNbpsle/4sq52Z1y+uKzRMkeP8WrktZGEarBS4cE0XVChhohnF2s+kL8fXh+jXaLxRSJFJxUuc
+	TBAf5ZAj/XGNj27YrIO383WQzHicdpD8xRZMbuw==
+X-Gm-Gg: ASbGncuO1tlEd3XRRf/sYnQoaAxmE+hPy4ReiCG7YrrPoQRjuw//rX/OcH+G6Izb/ej
+	kRNUZ8WVrQUY6vL5NtBwu7SDTTnJcMZ3g2xU2X0GSUbVhkJC3pRPRh04nc4DmC3kTNMpEPA==
+X-Google-Smtp-Source: AGHT+IGSGpq67S3KPhxv0QaGyYpi7Ds7VIRtelTKmN8kUlCb5EZQ5DwEZ8oJuL//LObkvog2EV/g3poagrgtfeFDHng=
+X-Received: by 2002:a2e:9fcb:0:b0:302:2620:ec89 with SMTP id
+ 38308e7fff4ca-30240cfb673mr9672121fa.19.1733921182952; Wed, 11 Dec 2024
+ 04:46:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Z1l6XbHP6BTTZSwr@mail-itl> <fe8db5b2-7524-49ea-ab8e-21f831dc009f@suse.com>
- <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com> <Z1mF0UZPNLjYAJI7@mail-itl>
-In-Reply-To: <Z1mF0UZPNLjYAJI7@mail-itl>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 11 Dec 2024 13:37:52 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
-Message-ID: <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
-Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
-To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	Jason Andryuk <jandryuk@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, regressions@lists.linux.dev, 
-	xen-devel <xen-devel@lists.xenproject.org>
+References: <CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MRLfAbM3f6ke0g@mail.gmail.com>
+ <8dde5a62-4ce6-4954-86c9-54d961aed6df@stanley.mountain> <CA+G9fYv5gW1gByakU1yyQ__BoAKWkCcg=vGGyNep7+5p9_2uJA@mail.gmail.com>
+ <bd95d7249ff94e31beb11b3f71a64e87@AcuMS.aculab.com>
+In-Reply-To: <bd95d7249ff94e31beb11b3f71a64e87@AcuMS.aculab.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 11 Dec 2024 13:46:11 +0100
+Message-ID: <CAMRc=Mf8CmKs-_FddnLFU7aoOAPU6Xv8MqyZo8x9Uv-Eu+hs_g@mail.gmail.com>
+Subject: Re: arm64: include/linux/compiler_types.h:542:38: error: call to
+ '__compiletime_assert_1050' declared with attribute error: clamp() low limit
+ min greater than high limit max_avail
+To: David Laight <David.Laight@aculab.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	"netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Johannes Berg <johannes.berg@intel.com>, 
+	"toke@kernel.org" <toke@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	"kernel@jfarr.cc" <kernel@jfarr.cc>, "kees@kernel.org" <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-(cc Greg)
-
-On Wed, 11 Dec 2024 at 13:30, Marek Marczykowski-G=C3=B3recki
-<marmarek@invisiblethingslab.com> wrote:
+On Fri, Dec 6, 2024 at 3:20=E2=80=AFAM David Laight <David.Laight@aculab.co=
+m> wrote:
 >
-> On Wed, Dec 11, 2024 at 01:24:08PM +0100, Ard Biesheuvel wrote:
-> > On Wed, 11 Dec 2024 at 12:53, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> w=
+> From: Naresh Kamboju
+> > Sent: 05 December 2024 18:42
+> >
+> > On Thu, 5 Dec 2024 at 20:46, Dan Carpenter <dan.carpenter@linaro.org> w=
 rote:
 > > >
-> > > Jason, Ard,
-> > >
-> > > I guess there are some prereq patches missing in stable 6.6.y branch?
-> > >
-> > >
-> > > Juergen
-> > >
-> > > On 11.12.24 12:41, Marek Marczykowski-G=C3=B3recki wrote:
-> > > > Hi,
-> > > >
-> > > > With Linux 6.6.64 I get the following crash on domU boot:
-> > > >
-> > > > (XEN) d5v0 Triple fault - invoking HVM shutdown action 1
-> > > > (XEN) *** Dumping Dom5 vcpu#0 state: ***
-> > > > (XEN) ----[ Xen-4.19.0  x86_64  debug=3Dn  Tainted:  M     ]----
-...
-> > > >
-> > > > Linux 6.6.63 works fine.
-> > > >
-> > > > Looking at the changes, I suspect one of those:
-> > > >
-> > > >      83d123e27623 x86/pvh: Call C code via the kernel virtual mappi=
-ng
-> > > >      f662b4a69e1d x86/pvh: Set phys_base when calling xen_prepare_p=
-vh()
-> > > >
+> > > Add David to the CC list.
 > >
-> > The second patch shouldn't have been backported. It is unnecessary,
-> > given that in the old situation, the kernel image needs to be loaded
-> > at a fixed address. And it assumes  that %rbp is set to the physical
-> > load offset, but those patches were not backported.
+> > Anders bisected this reported issue and found the first bad commit as,
+> >
+> > # first bad commit:
+> >   [ef32b92ac605ba1b7692827330b9c60259f0af49]
+> >   minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
 >
-> It has this tag:
+> That 'just' changed the test to use __builtin_constant_p() and
+> thus gets checked after the optimiser has run.
 >
->     Stable-dep-of: e8fbc0d9cab6 ("x86/pvh: Call C code via the kernel vir=
-tual mapping")
+> I can paraphrase the code as:
+> unsigned int fn(unsigned int x)
+> {
+>         return clamp(10, 5, x =3D=3D 0 ? 0 : x - 1);
+> }
+> which is never actually called with x <=3D 5.
+> The compiler converts it to:
+>         return x < 0 ? clamp(10, 5, 0) : clamp(10, 5, x);
+> (Probably because it can see that clamp(10, 5, 0) is constant.)
+> And then the compile-time sanity check in clamp() fires.
+>
+> The order of the arguments to clamp is just wrong!
+>
+>         David
 >
 
-That was added by the stable maintainers - someone grabbed a patch
-from the middle of an unrelated series to make e8fbc0d9cab6 apply
-without lexical conflicts.
+The build is still failing with today's next, should the offending
+commit be reverted?
 
-> Does it mean neither of them should be backported?
->
-> But then, the e8fbc0d9cab6 has "Fixes:" tag (pointing at very old
-> commit).
->
-
-If someone thinks e8fbc0d9cab6 should be backported, they should
-rebase it onto v6.6.y, not backport random other patches until
-git-apply stops complaining. And ideally, someone would build and boot
-the result to check whether it works.
-
-For now, it would be better to revert both.
+Bartosz
