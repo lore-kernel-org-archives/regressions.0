@@ -1,156 +1,210 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CA5259498;
-	Wed, 11 Dec 2024 21:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649531F2389
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 23:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733951430; cv=none; b=bgD8bcZVL9mvZwAtMaKwvM/YBIRTdW1+qjHWZHXlaeeIt7JdpG9bgbAQBf4h8FYROfqahcQViK9YSItork3YjAWFU9bbn8xUmS3LFis9usJY7OBUBri6AGP32C8eja07pSlwTrFYNdetvSXSkyfi0U5aq1BwNGxrBtmb3L99zjo=
+	t=1733959317; cv=none; b=G3Ls1ERXbndHDsFAEUDem1EZhdEqTHh1hMhmmvjeCnyWKK1wP/YQoCTco6soo7Asr4wLlKXogB7xwCdBTdBK+3V6oaAda4ZVroIwD7c6qQ8bFoFkCZR/PLJjNiXIe3uF8idzLv7ODqjBCSj6ZlNTIIOPH9haq8xLCZAe7Vnvp0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733951430; c=relaxed/simple;
-	bh=OrSrCRThbnz38HRK4gbxPzXWxGq7zO/a92bWosVgsHM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cy4VQsoWPVSda8egGq3L37TsTcn+74UjShCA51C2oUjCu3JUHXGb/5Q2191lhD1Yc6UaANXJZMxEM5FC+WBwp3IX05J/TPGSGJe6N2F74MbXOTFDQDzzltVtN1/FjK2uAmGTLZYZRxkQ5EXw/WrI0Xa82IVo2eEk5JxQU4/xdO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aN1LQL/J; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733959317; c=relaxed/simple;
+	bh=v1DYXGhF/uypWf2eJL6oU0sHrTP7Z1jM0RXmunwqHhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oiZK022J0UFVH1hZJN3PcYcDZ/6Mr+cQJ1D1q6oZGYr4+CpfZqj1VvO6A6lO69QKT3kHIMqYHJJJhAJk6Xl1/9PaS14w3B9PS+2sN2FeBLVTROFYcI6X2GnjFqOs7e0ySBVLGqkd3rUqfueS1Nc+2jgnM/CUP1fHHrAz6OWASSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=meZ7K8wp; arc=none smtp.client-ip=217.72.192.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN1LQL/J"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-434a852bb6eso68675085e9.3;
-        Wed, 11 Dec 2024 13:10:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733951427; x=1734556227; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yZz00LLpT83ITUjYV+X2dbIbEBxGxb+OmoGdlRCf7RU=;
-        b=aN1LQL/JehHHWVFAguCw0+zNqW5ZGMa/OeuSB7+N/rDcXkdw/jF6JqsFTF2TkOcF5n
-         BJ0spEVjboSEF/V4Ek8E/zz+D9lg8ilso2sKKy6O3OC+Q+wsO2uHJgR4y7lPQgEV0oXA
-         tgz9DIRl3YIjq3yUC+lz7O1KAI11UMYefnO0Ia/U6B0nkNYjL2bJAm5CgWQU4k2gZ+BQ
-         bl2fnZn3accBor6SmDVMj09cnDDDlEZsmpAtKs/X3lDT+twNmldZoyt0zIzndLf1Q4qn
-         FjPGgSC7bBQFPaeu0aI5pQLYD1KF2CP2MpV0QggxMR7kOU/sCW48vfQ941r+o8zaDdUN
-         hUgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733951427; x=1734556227;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yZz00LLpT83ITUjYV+X2dbIbEBxGxb+OmoGdlRCf7RU=;
-        b=RhpAcBVkWI5kcAbIrfdp3XAATFKNSY3DgOh/mZHQAiuY6cHCmDYXIUW055TXSDGn5x
-         reTe4N32SgPW6YCECfmgWTrrFRkxuQOTsfgE+aFkVkO2WvWcqwrOuMKiYgujvNi/6Guc
-         1Vy4zPL6YIOriQIr1ItLvLWOf4kdcWZ9Xa1jxQFb3mHj8ov0gVwOzL1DIdKEUq+49zfC
-         SdsVHAYtqbbQH6ZHzzHR212k19ltMkA3OGixG/41+4yJtmyqM2oXhSo1hFzpTHEIE+5v
-         +jkxxVpVCUgCm0bis4ksiRAszwiqssFfBbSoIQEzriS5NBTqej1DDI3j2NqansgvJkHL
-         9dpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuTBysLecphwC32RtFenjTR7JmCgEiuKAMZGdKoJzJVhyZrUR2Bvg4QJE5/ToR9XfT4pjOObzdA3cEEihDsCw=@lists.linux.dev, AJvYcCXYjQI8/9MEw1aOHHhjqsTFCfZvce7P7d1Gzc7Bnd0snReICcsULyojEF60fiI66Wl+HECA8hYLEJMI2aI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMJJwAxm2PkwmchN1yCwxX4VLqs1u0T/aIR9kOB8EAUu04u83N
-	F3JacJrjPTX1fK5d2G+08ubcfYs6DCOaPmilRyFC/pbLYx1GywJ6
-X-Gm-Gg: ASbGncs0P0ibtpvDRnqOJzsWk2OLewLrAFVCKeG0pjy8euKdT15foxwCuLiZiFfi+B3
-	J4xvv0eQf5FG/vxPwXUe+K+UnKnKIju0RY4pv2eBoQw/u/wXOty3371mfnf7WhUrKj/H5QtcoZo
-	oaT921tatyqpxEBqoL4hffyBp1wEXVGa/akP4D98lqTxV1MeFOKAjZ9ZqgOzsdMqarlTSKlX42f
-	k6cTe7iG78ofSjoCqKCLCc3mKRVf2BhlR+oTU5MeBOz3/G/j8RgN4rrulN0ApE=
-X-Google-Smtp-Source: AGHT+IEoFF9lfFi/tcgC2R9iqPaNL1Un1IvsKyFFFNVGF8Q2i3Q3Ttd2SniT7E4tri3YhTDfR23Oqg==
-X-Received: by 2002:a05:600c:4446:b0:434:fa73:a907 with SMTP id 5b1f17b1804b1-4361c3723acmr35152305e9.13.1733951426556;
-        Wed, 11 Dec 2024 13:10:26 -0800 (PST)
-Received: from krava (85-193-35-130.rib.o2.cz. [85.193.35.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4361e323828sm17329325e9.0.2024.12.11.13.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 13:10:26 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 11 Dec 2024 22:10:24 +0100
-To: Laura Nao <laura.nao@collabora.com>
-Cc: olsajiri@gmail.com, alan.maguire@oracle.com, bpf@vger.kernel.org,
-	chrome-platform@lists.linux.dev, kernel@collabora.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on
-Message-ID: <Z1n_wGj0CGjh_gLP@krava>
-References: <Z1LvfndLE1t1v995@krava>
- <20241210135501.251505-1-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="meZ7K8wp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1733959297; x=1734564097; i=christian@heusel.eu;
+	bh=X+C0SkHj3MaQtDSgienyW0MYtS9PYkivpmVdSFfEqAs=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=meZ7K8wpISnGb7HlNSceUMlXxcFdIy5ldwCI0nJ/h2znE5vOdfisEQGVxfnjcEPg
+	 sNkfQvXTfmyR0wb207zB/BwnibGuBKyVBSEt2vB4yfTmlDUY999MVL5ZblFZo7vq6
+	 PV3WYIAeNI5OBHBoSr5GBRomfE3kZcrbyzoewoTnqm3akHkIvqSYK7dqll6DJ8pjZ
+	 uHTaWVrT8SYjdMDg7+OeiFFB+Zm7nkIkIKaf3m3LeymwvCNSzMRfcVA4r8TdC0LGw
+	 fkel85g7Tud6xL3+UwFbjBDmsDfBkOS9kWiN3ID49PHMr7QnGeyIScIFwIQiZRPqP
+	 urt8cv0MvRvO6sZZxQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1Mo6zF-1twmb41wmx-00fwPC; Thu, 12
+ Dec 2024 00:21:37 +0100
+Date: Thu, 12 Dec 2024 00:21:36 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>, =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
+	Jason Andryuk <jandryuk@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, regressions@lists.linux.dev, 
+	xen-devel <xen-devel@lists.xenproject.org>
+Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
+Message-ID: <222e15c2-ca70-421e-8034-9dace7087920@heusel.eu>
+References: <Z1l6XbHP6BTTZSwr@mail-itl>
+ <fe8db5b2-7524-49ea-ab8e-21f831dc009f@suse.com>
+ <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com>
+ <Z1mF0UZPNLjYAJI7@mail-itl>
+ <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
+ <Z1mWFcm_036BrvEq@mail-itl>
+ <2024121144-false-playtime-968e@gregkh>
+ <CAMj1kXEH4jaFyFMMN41UqdkjfSrN19cwJsiAYnX6jETvDagF-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eiwstsylbaon5chu"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241210135501.251505-1-laura.nao@collabora.com>
+In-Reply-To: <CAMj1kXEH4jaFyFMMN41UqdkjfSrN19cwJsiAYnX6jETvDagF-g@mail.gmail.com>
+X-Provags-ID: V03:K1:gYOQOD8hQSxhz/imGEOxyxSITQEnr51PQ7bwoMIEojzMxnDQlrr
+ wRBmSyAVuIljmPHF8pmYIBqn07c59anH/TtteXadd2OZppBhArWssnkxI2gMjeDaYM1v32j
+ FVs3R0xzbshxbk2AAVBFQAWSx+zyZ3xc+329hxy3Hva1UvQIxAb3RKxwU/J4CrMtvonuLAU
+ chlnTa1IV25Tq4zwzaRog==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dDW7J3i4cKs=;sEte6PkHw1QrIQQmlfc6bdJ0xQj
+ 3xvV+jsFn/MVN/uyiK+HOJM4WkUZCv3jJSn7qIuDXSaYNtnlytLYm49WlysiFGZ/jOPJXxLzn
+ fu0o4mv2051dToibcTJgV2SJZ52pYKlRHcYxNPjLx0Pzl5w7zfDojUhLvqqiazPKPJSEgGQB6
+ DntUmKj2WowVf1TCGWhuiqdGlJ22HGO4bxRUvEv43u6jxk0jC83Z0y1UwLCFblU1TUTHcJ9+a
+ uNI47KVMcYIqpujCfPONaIrclmExxqb6LEtJMA0Pu1j5kzfjRJ8s6wTAI6qUyGm1Mp/dmvxKP
+ kYvmYVIge0TcatPSl49NVjR2/BlyLkLGGaPZ64UEkX5ptaDyjZl/4OemDJdTMDrqC5yF2Y0ly
+ js8JuetTUx21VqJ1U/vmRxAS5S3lX5+6EpmrCaI1+jLkEO56yYjcvfZhIRtAl+O1l31wA7A5f
+ Q/vu1RcgfAXx7kdBd5//+K6R8aYQj+YnEt8RuWX/G1xmNgg3y3Qg0P8oALlK2AEeKmbHTJSFx
+ QI+PjX/h9g421R1wTeNNnHcHgiB2TKAJJ1K88YYt83jyEcEA3gpAg3xXLl1AxzJn3bEISk4yR
+ HOvt0h23d8KfdCIkaQNS+bqFdfNjN+5/zRSbo01xGVpahPZp9RYSHJ2tTT8UOWeHTIZwjar9D
+ 1tTGv/8hEKrlnWV/2oqdyaYef1t5tOQ5PWSvuPINxdLWxbJIAHPJkPxV4umpTXA21RF/aeSdO
+ UNchJgEoT9LYUdzenHsgp5d6C1Y7T1nnnuslGk4t3NXkpMuhKkWJUwDUml+4NaMcegLFKrG5+
+ a0vpOyNes2g8sQkuSVfwjUk0fjTPfPqtn7WmxmpbgCxsFbFOGJEycZWdUctfEEKvpPlA5MB8B
+ vI2uqa8DIXoewE7fH/CuwiUxQ2oCOamnlpJLrGJt5XMpbkIf5HIsMY/Op2sl4A8u80aLOACH/
+ JsNExE0uWd7EZhl4BR6gvkLDgy9aLmYyle/gM7BkgD2dJxJ54/PVM98WBR3w+iTgrJ9w310WU
+ 8QRERib5sQHfnwmM09nJxTLxi0BJbfHWiv/HNQi
 
-On Tue, Dec 10, 2024 at 02:55:01PM +0100, Laura Nao wrote:
-> Hi Jiri,
-> 
-> Thanks for the feedback!
-> 
-> On 12/6/24 13:35, Jiri Olsa wrote:
-> > On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
-> >> On 11/13/24 10:37, Laura Nao wrote:
-> >>>
-> >>> Currently, KernelCI only retains the bzImage, not the vmlinux
-> >>> binary. The
-> >>> bzImage can be downloaded from the same link mentioned above by
-> >>> selecting
-> >>> 'kernel' from the dropdown menu (modules can also be downloaded the
-> >>> same
-> >>> way). I’ll try to replicate the build on my end and share the
-> >>> vmlinux
-> >>> with DWARF data stripped for convenience.
-> >>>
-> >>
-> >> I managed to reproduce the issue locally and I've uploaded the
-> >> vmlinux[1]
-> >> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one of
-> >> the
-> >> modules[3] and its btf data[4] extracted with:
-> >>
-> >> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko >
-> >> cros_kbd_led_backlight.ko.raw
-> >>
-> >> Looking again at the logs[5], I've noticed the following is reported:
-> >>
-> >> [    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
-> >> [    0.416029] BPF:
-> >> [    0.416083] BPF: Invalid offset
-> >> [    0.416165] BPF:
-> >>
-> >> There are two different definitions of rcu_data in '.data..percpu',
-> >> one
-> >> is a struct and the other is an integer:
-> >>
-> >> type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
-> >> type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
-> >>
-> >> [115801] VAR 'rcu_data' type_id=115572, linkage=static
-> >> [115803] VAR 'rcu_data' type_id=1, linkage=static
-> >>
-> >> [115572] STRUCT 'rcu_data' size=1152 vlen=69
-> >> [1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64
-> >> encoding=(none)
-> >>
-> >> I assume that's not expected, correct?
-> > 
-> > yes, that seems wrong.. but I can't reproduce with your config
-> > together with pahole 1.24 .. could you try with latest one?
-> 
-> I just tested next-20241210 with the latest pahole version (1.28 from
-> the master branch[1]), and the issue does not occur with this version
-> (I can see only one instance of rcu_data in the BTF data, as expected).
-> 
-> I can confirm that the same kernel revision still exhibits the issue
-> with pahole 1.24.
-> 
-> If helpful, I can also test versions between 1.24 and 1.28 to identify
-> which ones work.
 
-I managed to reproduce finally with gcc-12, but had to use pahole 1.25,
-1.24 failed with unknown attribute
+--eiwstsylbaon5chu
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
+MIME-Version: 1.0
 
-	[95096] VAR 'rcu_data' type_id=94868, linkage=static
-	[95098] VAR 'rcu_data' type_id=4, linkage=static
-	type_id=95096 offset=177088 size=1152 (VAR 'rcu_data')
-	type_id=95098 offset=177088 size=1152 (VAR 'rcu_data')
+On 24/12/11 04:10PM, Ard Biesheuvel wrote:
+> On Wed, 11 Dec 2024 at 14:46, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Dec 11, 2024 at 02:39:33PM +0100, Marek Marczykowski-G=F3recki =
+wrote:
+> > > On Wed, Dec 11, 2024 at 01:37:52PM +0100, Ard Biesheuvel wrote:
+> > > > (cc Greg)
+> > > >
+> > > > On Wed, 11 Dec 2024 at 13:30, Marek Marczykowski-G=F3recki
+> > > > <marmarek@invisiblethingslab.com> wrote:
+> > > > >
+> > > > > On Wed, Dec 11, 2024 at 01:24:08PM +0100, Ard Biesheuvel wrote:
+> > > > > > On Wed, 11 Dec 2024 at 12:53, J=FCrgen Gro=DF <jgross@suse.com>=
+ wrote:
+> > > > > > >
+> > > > > > > Jason, Ard,
+> > > > > > >
+> > > > > > > I guess there are some prereq patches missing in stable 6.6.y=
+ branch?
+> > > > > > >
+> > > > > > >
+> > > > > > > Juergen
+> > > > > > >
+> > > > > > > On 11.12.24 12:41, Marek Marczykowski-G=F3recki wrote:
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > With Linux 6.6.64 I get the following crash on domU boot:
+> > > > > > > >
+> > > > > > > > (XEN) d5v0 Triple fault - invoking HVM shutdown action 1
+> > > > > > > > (XEN) *** Dumping Dom5 vcpu#0 state: ***
+> > > > > > > > (XEN) ----[ Xen-4.19.0  x86_64  debug=3Dn  Tainted:  M     =
+]----
+> > > > ...
+> > > > > > > >
+> > > > > > > > Linux 6.6.63 works fine.
+> > > > > > > >
+> > > > > > > > Looking at the changes, I suspect one of those:
+> > > > > > > >
+> > > > > > > >      83d123e27623 x86/pvh: Call C code via the kernel virtu=
+al mapping
+> > > > > > > >      f662b4a69e1d x86/pvh: Set phys_base when calling xen_p=
+repare_pvh()
+> > > > > > > >
+> > > > > >
+> > > > > > The second patch shouldn't have been backported. It is unnecess=
+ary,
+> > > > > > given that in the old situation, the kernel image needs to be l=
+oaded
+> > > > > > at a fixed address. And it assumes  that %rbp is set to the phy=
+sical
+> > > > > > load offset, but those patches were not backported.
+> > > > >
+> > > > > It has this tag:
+> > > > >
+> > > > >     Stable-dep-of: e8fbc0d9cab6 ("x86/pvh: Call C code via the ke=
+rnel virtual mapping")
+> > > > >
+> > > >
+> > > > That was added by the stable maintainers - someone grabbed a patch
+> > > > from the middle of an unrelated series to make e8fbc0d9cab6 apply
+> > > > without lexical conflicts.
+> > > >
+> > > > > Does it mean neither of them should be backported?
+> > > > >
+> > > > > But then, the e8fbc0d9cab6 has "Fixes:" tag (pointing at very old
+> > > > > commit).
+> > > > >
+> > > >
+> > > > If someone thinks e8fbc0d9cab6 should be backported, they should
+> > > > rebase it onto v6.6.y, not backport random other patches until
+> > > > git-apply stops complaining. And ideally, someone would build and b=
+oot
+> > > > the result to check whether it works.
+> > > >
+> > > > For now, it would be better to revert both.
+> > >
+> > > I can confirm that reverting both commits fixes the issue.
+> >
+> > Ok, thanks, let me go rip all of these out and do a new release now to
+> > fix the issue.  Sorry about that, and thanks so much for the testing and
+> > letting us know!
+> >
+>=20
+> I guess 6.11 is beyond repair?
+>=20
 
-will try to check what's going on
+Yes 6.11 is not a supported stable series anymore.
 
-jirka
+    $ curl -s https://kernel.org/releases.json | \
+        jq '.releases[] | select(.version=3D=3D"6.11.11") .iseol'
+    -> true
+
+Cheers,
+Chris
+
+--eiwstsylbaon5chu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmdaHoAACgkQwEfU8yi1
+JYUe1xAArNQyyXyedV1N5sISRckfRL/ugQDTAAVDy53kYTtPjn3nyQX0oX0qceAC
+AB0OQewAksKLHbxOOteciFC0muwh3XOBSDR9HcpsMTGeyGuW0V33olkDB81+o2S2
+5Hl7xPl3KRYg/ygKOUABKoaXOjtZ2KHOpHzBm3QNgsYo/uFqW1IUp/t7o0EqAGdd
+F68aoYA7f+oYcPWuuppuvvZBjvmU9TSIcuIuLwgqjcQpzWzlxe5I3djc8dVHNZQY
+SUVffEP2GGZ+QhUFXObqi6NeI195toUpsjUjUDagBS9Bt0ui3I5ETCw1opZ4J6Lt
+imLxfKetO7Lqjpmtu8wxNNkG7gKyvcuEr3ks/ag9zWt/Wv0KHFjxnS+SueskXDgT
+xGXGifcoCOmiZE2CUE+91eaBrj6hRLthX5JUW03vrO1EAVx5kOevGVv6Elirr/y0
+4isn6P6Vjjb0oY3ypeTCnrNwE7TF25T0QoiAUEGUhGV9YTWAMuOceeeszKXlQPf4
+JVTLq6W4e1FEQef8t6rkSA8RNRGGfOgCNoQ2b7SNFmqPeo70O05Zdwom3P3JJOzR
+WZf0FUHUOwIw++pMKfRBQ6ZARrI5izfo1mvN5+qo977FdFKof3AqvbxtFbbzcjF/
+R2BRG1WqXRbHfQQtras4pzPAWtLC01vq478WyoCsBGDToDRoUaY=
+=afDJ
+-----END PGP SIGNATURE-----
+
+--eiwstsylbaon5chu--
