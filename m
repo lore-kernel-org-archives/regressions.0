@@ -1,90 +1,454 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219181C5CD7
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 08:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04021F8683
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 09:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733907263; cv=none; b=uv607DjcQgdNHTxaeBzlXrgHCNakzqKut77wPNbrNIQvMtOvThx04u/sxeeim2vy0fmgXi2MLZrNYutD7UI4VvfuTF3sF5r4Hn1/MPjmJtKBa16VrJzOQYe9nF3d1IgACz60O061LGqeri2LkOA8BwxQsvG9I2PMeg3caQgWODA=
+	t=1733908016; cv=none; b=IB0CL1Qq1MrZLwPxTlx4esri6JcIC3hwTqzFOWai7+MfepQaHQPomLZ+yoB27N/eTdUIDwLFIGExan/90DWw2DEvrfmGytkOa7qSxPuq6XnauNcvVT4kXuugdUL//KxPw36bPID8vWyi3QuzrsIs5DB8ZjDjiUddIXClxB3RwMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733907263; c=relaxed/simple;
-	bh=gt/brD+bFKcK0ciXmNboabynGmPsZN1ysJlSHAaLOWs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iXpw3N/U2FhR3tkPGjKScuMWlslRqOa8jBjGRP0qg7lyCztKSEc1ykNvqIFXdi4VDDyJwPVEfnkeJJiAAA8UOmvAQXAoxmvlLSag4ZXz8zHpEfqSAvk9kxDVOhL+O+n5M+qUKGxCBDXR2uE4tBE9sMHFg630CPcYsOT+HyP0GfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jgRS2uZJ; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1733908016; c=relaxed/simple;
+	bh=YZaWfcKZHNGWRR0Sf+SedxNkXO9Bdy0UhZ/0uQqMxWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NtfUbOaaoyyuetrq0fNsSFQwRDffuK63Yr/7yMPZ1ZDsckkL1OUIxXgO6WTmQWCQojWQ6dWKJVbPZ54AZ6qTM7Dox7m2bROTs83U9Pk6lMHPSUThe+De9maPGR9LBqCidN9yHcDEKi0m8hg2dDy2SAK6nOaZ0qysk7IForO30jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xnpjIA3X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IK72y9UF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xnpjIA3X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IK72y9UF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jgRS2uZJ"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xnpjIA3X";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IK72y9UF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xnpjIA3X";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IK72y9UF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Y7TtJ3jS2z9snp;
-	Wed, 11 Dec 2024 09:54:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1733907256;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hgxGiDC40w1nBBtzUl+GNZ+rfEtSNj7LHPhUGuQr2aw=;
-	b=jgRS2uZJNbPEVpIg0Vr8fWPf3xxgJzwuh4TArvMRlD9w4XwhDGYFI0KEyebhNhgGXe4GvS
-	iwyXoiNqIxiTTd+my5L91J9W5hXPwfF2o/+9sXsMlNjlRqiph8c3vL4ZsMynrDI7EJtSn5
-	8Zaj2Op4NrSS/426FhGFX91TSCSwX+JxNQ/+//7B+UpKmFonktE/Oil31RBk5UCkOrGPuv
-	xm7KuTWswkAM8XaIaaoOmO6fYuufgO5dEpKI+UWu+68iVwOs+3DqAOtF3iSDCSGn6cuxjj
-	vmvAMzEV/OSU1FN8zeOJu8kAM7bYRhqDuzMFB2bsW6C028mEFBGlqg1Z87EYEg==
-Message-ID: <376c445a-9437-4bdd-9b67-e7ce786ae2c4@mailbox.org>
-Date: Wed, 11 Dec 2024 09:54:14 +0100
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C483521166;
+	Wed, 11 Dec 2024 09:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733908010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VVMQAKxvJUrIeQiVpoHxZbbRnNcqkrPAIforSAvOHMo=;
+	b=xnpjIA3XGtAkDvQhrJTGzwDFMKAuLKx/Ch1DfE2Dw/x/YAhvEiIYhfU5VLbi9P0Su/SoVz
+	MKmctPKy5KJ2g1cW7YISZCEaf5X0QF0IRMkZom/UNiKGP6H7Id1+4X1AOQUfNXROFpwwIv
+	AT7bT5zPLIqD+yU7PGgL7XGxxblHiio=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733908010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VVMQAKxvJUrIeQiVpoHxZbbRnNcqkrPAIforSAvOHMo=;
+	b=IK72y9UFrbBnNch0TqC2An96mve4H1VtvCQSjRHtZsf73oud1IpFD8RjxPKajcdvOydnn0
+	gAH0c/Es/df68RBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xnpjIA3X;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=IK72y9UF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1733908010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VVMQAKxvJUrIeQiVpoHxZbbRnNcqkrPAIforSAvOHMo=;
+	b=xnpjIA3XGtAkDvQhrJTGzwDFMKAuLKx/Ch1DfE2Dw/x/YAhvEiIYhfU5VLbi9P0Su/SoVz
+	MKmctPKy5KJ2g1cW7YISZCEaf5X0QF0IRMkZom/UNiKGP6H7Id1+4X1AOQUfNXROFpwwIv
+	AT7bT5zPLIqD+yU7PGgL7XGxxblHiio=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1733908010;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VVMQAKxvJUrIeQiVpoHxZbbRnNcqkrPAIforSAvOHMo=;
+	b=IK72y9UFrbBnNch0TqC2An96mve4H1VtvCQSjRHtZsf73oud1IpFD8RjxPKajcdvOydnn0
+	gAH0c/Es/df68RBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A1601344A;
+	Wed, 11 Dec 2024 09:06:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Z/iQHCpWWWctQwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 11 Dec 2024 09:06:50 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: javierm@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	regressions@leemhuis.info
+Cc: nunojpg@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	regressions@lists.linux.dev,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/fbdev-dma: Add shadow buffering for deferred I/O
+Date: Wed, 11 Dec 2024 10:06:28 +0100
+Message-ID: <20241211090643.74250-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] from 74a0e79df68a8042fb84fd7207e57b70722cf825: VFIO
- PCI passthrough no longer works
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- regressions@lists.linux.dev, Tom Lendacky <thomas.lendacky@amd.com>
-References: <52914da7-a97b-45ad-86a0-affdf8266c61@mailbox.org>
- <Z1hiiz40nUqN2e5M@google.com>
- <93a3edef-dde6-4ef6-ae40-39990040a497@mailbox.org>
- <9e827d41-a054-5c04-6ecb-b23f2a4b5913@amd.com> <Z1jEDFpanEIVz1sY@google.com>
-Content-Language: en-GB
-From: Simon Pilkington <simonp.git@mailbox.org>
-In-Reply-To: <Z1jEDFpanEIVz1sY@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: 89z9y4wrg7c6jtbyixkhzihp6uj115ee
-X-MBO-RS-ID: c5aa5748a771390c19e
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C483521166
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,leemhuis.info];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,lists.freedesktop.org,lists.linux.dev,suse.de,vger.kernel.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 10/12/2024 23:43, Sean Christopherson wrote:
-> Unless you (Tom) disagree, I vote to simply drop the offending code, i.e. make
-> all supported bits fully writable from the guest.  KVM is firmly in the wrong here,
-> and I can't think of any reason to disallow the guest from clearing LFENCE_SERIALIZE.
-> 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 6a350cee2f6c..5a82ead3bf0f 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3201,15 +3201,6 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->                 if (data & ~supported_de_cfg)
->                         return 1;
->  
-> -               /*
-> -                * Don't let the guest change the host-programmed value.  The
-> -                * MSR is very model specific, i.e. contains multiple bits that
-> -                * are completely unknown to KVM, and the one bit known to KVM
-> -                * is simply a reflection of hardware capabilities.
-> -                */
-> -               if (!msr->host_initiated && data != svm->msr_decfg)
-> -                       return 1;
-> -
->                 svm->msr_decfg = data;
->                 break;
->         }
-> 
+DMA areas are not necessarily backed by struct page, so we cannot
+rely on it for deferred I/O. Allocate a shadow buffer for drivers
+that require deferred I/O and use it as framebuffer memory.
 
-This also produces a good kernel.
+Fixes driver errors about being "Unable to handle kernel NULL pointer
+dereference at virtual address" or "Unable to handle kernel paging
+request at virtual address".
+
+The patch splits drm_fbdev_dma_driver_fbdev_probe() in an initial
+allocation, which creates the DMA-backed buffer object, and a tail
+that sets up the fbdev data structures. There is a tail function for
+direct memory mappings and a tail function for deferred I/O with
+the shadow buffer.
+
+It is no longer possible to use deferred I/O without shadow buffer.
+It can be re-added if there exists a reliably test for usable struct
+page in the allocated DMA-backed buffer object.
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reported-by: Nuno Gonçalves <nunojpg@gmail.com>
+CLoses: https://lore.kernel.org/dri-devel/CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com/
+Tested-by: Nuno Gonçalves <nunojpg@gmail.com>
+Fixes: 5ab91447aa13 ("drm/tiny/ili9225: Use fbdev-dma")
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: <stable@vger.kernel.org> # v6.11+
+---
+ drivers/gpu/drm/drm_fbdev_dma.c | 217 +++++++++++++++++++++++---------
+ 1 file changed, 155 insertions(+), 62 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_fbdev_dma.c b/drivers/gpu/drm/drm_fbdev_dma.c
+index b14b581c059d..02a516e77192 100644
+--- a/drivers/gpu/drm/drm_fbdev_dma.c
++++ b/drivers/gpu/drm/drm_fbdev_dma.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: MIT
+ 
+ #include <linux/fb.h>
++#include <linux/vmalloc.h>
+ 
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fbdev_dma.h>
+@@ -70,37 +71,102 @@ static const struct fb_ops drm_fbdev_dma_fb_ops = {
+ 	.fb_destroy = drm_fbdev_dma_fb_destroy,
+ };
+ 
+-FB_GEN_DEFAULT_DEFERRED_DMAMEM_OPS(drm_fbdev_dma,
++FB_GEN_DEFAULT_DEFERRED_DMAMEM_OPS(drm_fbdev_dma_shadowed,
+ 				   drm_fb_helper_damage_range,
+ 				   drm_fb_helper_damage_area);
+ 
+-static int drm_fbdev_dma_deferred_fb_mmap(struct fb_info *info, struct vm_area_struct *vma)
++static void drm_fbdev_dma_shadowed_fb_destroy(struct fb_info *info)
+ {
+ 	struct drm_fb_helper *fb_helper = info->par;
+-	struct drm_framebuffer *fb = fb_helper->fb;
+-	struct drm_gem_dma_object *dma = drm_fb_dma_get_gem_obj(fb, 0);
++	void *shadow = info->screen_buffer;
++
++	if (!fb_helper->dev)
++		return;
+ 
+-	if (!dma->map_noncoherent)
+-		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
++	if (info->fbdefio)
++		fb_deferred_io_cleanup(info);
++	drm_fb_helper_fini(fb_helper);
++	vfree(shadow);
+ 
+-	return fb_deferred_io_mmap(info, vma);
++	drm_client_buffer_vunmap(fb_helper->buffer);
++	drm_client_framebuffer_delete(fb_helper->buffer);
++	drm_client_release(&fb_helper->client);
++	drm_fb_helper_unprepare(fb_helper);
++	kfree(fb_helper);
+ }
+ 
+-static const struct fb_ops drm_fbdev_dma_deferred_fb_ops = {
++static const struct fb_ops drm_fbdev_dma_shadowed_fb_ops = {
+ 	.owner = THIS_MODULE,
+ 	.fb_open = drm_fbdev_dma_fb_open,
+ 	.fb_release = drm_fbdev_dma_fb_release,
+-	__FB_DEFAULT_DEFERRED_OPS_RDWR(drm_fbdev_dma),
++	FB_DEFAULT_DEFERRED_OPS(drm_fbdev_dma_shadowed),
+ 	DRM_FB_HELPER_DEFAULT_OPS,
+-	__FB_DEFAULT_DEFERRED_OPS_DRAW(drm_fbdev_dma),
+-	.fb_mmap = drm_fbdev_dma_deferred_fb_mmap,
+-	.fb_destroy = drm_fbdev_dma_fb_destroy,
++	.fb_destroy = drm_fbdev_dma_shadowed_fb_destroy,
+ };
+ 
+ /*
+  * struct drm_fb_helper
+  */
+ 
++static void drm_fbdev_dma_damage_blit_real(struct drm_fb_helper *fb_helper,
++					   struct drm_clip_rect *clip,
++					   struct iosys_map *dst)
++{
++	struct drm_framebuffer *fb = fb_helper->fb;
++	size_t offset = clip->y1 * fb->pitches[0];
++	size_t len = clip->x2 - clip->x1;
++	unsigned int y;
++	void *src;
++
++	switch (drm_format_info_bpp(fb->format, 0)) {
++	case 1:
++		offset += clip->x1 / 8;
++		len = DIV_ROUND_UP(len + clip->x1 % 8, 8);
++		break;
++	case 2:
++		offset += clip->x1 / 4;
++		len = DIV_ROUND_UP(len + clip->x1 % 4, 4);
++		break;
++	case 4:
++		offset += clip->x1 / 2;
++		len = DIV_ROUND_UP(len + clip->x1 % 2, 2);
++		break;
++	default:
++		offset += clip->x1 * fb->format->cpp[0];
++		len *= fb->format->cpp[0];
++		break;
++	}
++
++	src = fb_helper->info->screen_buffer + offset;
++	iosys_map_incr(dst, offset); /* go to first pixel within clip rect */
++
++	for (y = clip->y1; y < clip->y2; y++) {
++		iosys_map_memcpy_to(dst, 0, src, len);
++		iosys_map_incr(dst, fb->pitches[0]);
++		src += fb->pitches[0];
++	}
++}
++
++static int drm_fbdev_dma_damage_blit(struct drm_fb_helper *fb_helper,
++				     struct drm_clip_rect *clip)
++{
++	struct drm_client_buffer *buffer = fb_helper->buffer;
++	struct iosys_map dst;
++
++	/*
++	 * For fbdev emulation, we only have to protect against fbdev modeset
++	 * operations. Nothing else will involve the client buffer's BO. So it
++	 * is sufficient to acquire struct drm_fb_helper.lock here.
++	 */
++	mutex_lock(&fb_helper->lock);
++
++	dst = buffer->map;
++	drm_fbdev_dma_damage_blit_real(fb_helper, clip, &dst);
++
++	mutex_unlock(&fb_helper->lock);
++
++	return 0;
++}
+ static int drm_fbdev_dma_helper_fb_dirty(struct drm_fb_helper *helper,
+ 					 struct drm_clip_rect *clip)
+ {
+@@ -112,6 +178,10 @@ static int drm_fbdev_dma_helper_fb_dirty(struct drm_fb_helper *helper,
+ 		return 0;
+ 
+ 	if (helper->fb->funcs->dirty) {
++		ret = drm_fbdev_dma_damage_blit(helper, clip);
++		if (drm_WARN_ONCE(dev, ret, "Damage blitter failed: ret=%d\n", ret))
++			return ret;
++
+ 		ret = helper->fb->funcs->dirty(helper->fb, NULL, 0, 0, clip, 1);
+ 		if (drm_WARN_ONCE(dev, ret, "Dirty helper failed: ret=%d\n", ret))
+ 			return ret;
+@@ -128,14 +198,80 @@ static const struct drm_fb_helper_funcs drm_fbdev_dma_helper_funcs = {
+  * struct drm_fb_helper
+  */
+ 
++static int drm_fbdev_dma_driver_fbdev_probe_tail(struct drm_fb_helper *fb_helper,
++						 struct drm_fb_helper_surface_size *sizes)
++{
++	struct drm_device *dev = fb_helper->dev;
++	struct drm_client_buffer *buffer = fb_helper->buffer;
++	struct drm_gem_dma_object *dma_obj = to_drm_gem_dma_obj(buffer->gem);
++	struct drm_framebuffer *fb = fb_helper->fb;
++	struct fb_info *info = fb_helper->info;
++	struct iosys_map map = buffer->map;
++
++	info->fbops = &drm_fbdev_dma_fb_ops;
++
++	/* screen */
++	info->flags |= FBINFO_VIRTFB; /* system memory */
++	if (dma_obj->map_noncoherent)
++		info->flags |= FBINFO_READS_FAST; /* signal caching */
++	info->screen_size = sizes->surface_height * fb->pitches[0];
++	info->screen_buffer = map.vaddr;
++	if (!(info->flags & FBINFO_HIDE_SMEM_START)) {
++		if (!drm_WARN_ON(dev, is_vmalloc_addr(info->screen_buffer)))
++			info->fix.smem_start = page_to_phys(virt_to_page(info->screen_buffer));
++	}
++	info->fix.smem_len = info->screen_size;
++
++	return 0;
++}
++
++static int drm_fbdev_dma_driver_fbdev_probe_tail_shadowed(struct drm_fb_helper *fb_helper,
++							  struct drm_fb_helper_surface_size *sizes)
++{
++	struct drm_client_buffer *buffer = fb_helper->buffer;
++	struct fb_info *info = fb_helper->info;
++	size_t screen_size = buffer->gem->size;
++	void *screen_buffer;
++	int ret;
++
++	/*
++	 * Deferred I/O requires struct page for framebuffer memory,
++	 * which is not guaranteed for all DMA ranges. We thus create
++	 * a shadow buffer in system memory.
++	 */
++	screen_buffer = vzalloc(screen_size);
++	if (!screen_buffer)
++		return -ENOMEM;
++
++	info->fbops = &drm_fbdev_dma_shadowed_fb_ops;
++
++	/* screen */
++	info->flags |= FBINFO_VIRTFB; /* system memory */
++	info->flags |= FBINFO_READS_FAST; /* signal caching */
++	info->screen_buffer = screen_buffer;
++	info->fix.smem_len = screen_size;
++
++	fb_helper->fbdefio.delay = HZ / 20;
++	fb_helper->fbdefio.deferred_io = drm_fb_helper_deferred_io;
++
++	info->fbdefio = &fb_helper->fbdefio;
++	ret = fb_deferred_io_init(info);
++	if (ret)
++		goto err_vfree;
++
++	return 0;
++
++err_vfree:
++	vfree(screen_buffer);
++	return ret;
++}
++
+ int drm_fbdev_dma_driver_fbdev_probe(struct drm_fb_helper *fb_helper,
+ 				     struct drm_fb_helper_surface_size *sizes)
+ {
+ 	struct drm_client_dev *client = &fb_helper->client;
+ 	struct drm_device *dev = fb_helper->dev;
+-	bool use_deferred_io = false;
+ 	struct drm_client_buffer *buffer;
+-	struct drm_gem_dma_object *dma_obj;
+ 	struct drm_framebuffer *fb;
+ 	struct fb_info *info;
+ 	u32 format;
+@@ -152,19 +288,9 @@ int drm_fbdev_dma_driver_fbdev_probe(struct drm_fb_helper *fb_helper,
+ 					       sizes->surface_height, format);
+ 	if (IS_ERR(buffer))
+ 		return PTR_ERR(buffer);
+-	dma_obj = to_drm_gem_dma_obj(buffer->gem);
+ 
+ 	fb = buffer->fb;
+ 
+-	/*
+-	 * Deferred I/O requires struct page for framebuffer memory,
+-	 * which is not guaranteed for all DMA ranges. We thus only
+-	 * install deferred I/O if we have a framebuffer that requires
+-	 * it.
+-	 */
+-	if (fb->funcs->dirty)
+-		use_deferred_io = true;
+-
+ 	ret = drm_client_buffer_vmap(buffer, &map);
+ 	if (ret) {
+ 		goto err_drm_client_buffer_delete;
+@@ -185,45 +311,12 @@ int drm_fbdev_dma_driver_fbdev_probe(struct drm_fb_helper *fb_helper,
+ 
+ 	drm_fb_helper_fill_info(info, fb_helper, sizes);
+ 
+-	if (use_deferred_io)
+-		info->fbops = &drm_fbdev_dma_deferred_fb_ops;
++	if (fb->funcs->dirty)
++		ret = drm_fbdev_dma_driver_fbdev_probe_tail_shadowed(fb_helper, sizes);
+ 	else
+-		info->fbops = &drm_fbdev_dma_fb_ops;
+-
+-	/* screen */
+-	info->flags |= FBINFO_VIRTFB; /* system memory */
+-	if (dma_obj->map_noncoherent)
+-		info->flags |= FBINFO_READS_FAST; /* signal caching */
+-	info->screen_size = sizes->surface_height * fb->pitches[0];
+-	info->screen_buffer = map.vaddr;
+-	if (!(info->flags & FBINFO_HIDE_SMEM_START)) {
+-		if (!drm_WARN_ON(dev, is_vmalloc_addr(info->screen_buffer)))
+-			info->fix.smem_start = page_to_phys(virt_to_page(info->screen_buffer));
+-	}
+-	info->fix.smem_len = info->screen_size;
+-
+-	/*
+-	 * Only set up deferred I/O if the screen buffer supports
+-	 * it. If this disagrees with the previous test for ->dirty,
+-	 * mmap on the /dev/fb file might not work correctly.
+-	 */
+-	if (!is_vmalloc_addr(info->screen_buffer) && info->fix.smem_start) {
+-		unsigned long pfn = info->fix.smem_start >> PAGE_SHIFT;
+-
+-		if (drm_WARN_ON(dev, !pfn_to_page(pfn)))
+-			use_deferred_io = false;
+-	}
+-
+-	/* deferred I/O */
+-	if (use_deferred_io) {
+-		fb_helper->fbdefio.delay = HZ / 20;
+-		fb_helper->fbdefio.deferred_io = drm_fb_helper_deferred_io;
+-
+-		info->fbdefio = &fb_helper->fbdefio;
+-		ret = fb_deferred_io_init(info);
+-		if (ret)
+-			goto err_drm_fb_helper_release_info;
+-	}
++		ret = drm_fbdev_dma_driver_fbdev_probe_tail(fb_helper, sizes);
++	if (ret)
++		goto err_drm_fb_helper_release_info;
+ 
+ 	return 0;
+ 
+-- 
+2.47.1
 
