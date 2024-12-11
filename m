@@ -1,200 +1,124 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB40238E23
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2AC225A52
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733920215; cv=none; b=I+rzW5K06chRwlThgmkXqoBYzR3tbOfCMjzN8sMQzfiAAynCt8nirOSbiA+SRhwoI/2RsUelcVftCtQIcsF5OmyALwA9UgG42IAQ8XlGHJnkRGbjeaWJwq/ty0KoXv1479WYRHHAwRDxkeJo9Ll556G0Ergyvrtl9MGcYWLTKAw=
+	t=1733920686; cv=none; b=qv6WuGCh4yBM9JHW+H/s5/tw/Jf16yRwXCd2Nb2u//RQj4Kmia8CpgypVRDOw8JaDMk0KbYkh17FeevhMg80hfTpLUhEzHVmU+s32TVtHoju6UJQYHBzfvQTeTmQXyRJxdXx3Y2CCzzqQLLI/94os16ep0Co/cFFQ08yUDDzN5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733920215; c=relaxed/simple;
-	bh=CP6rrfdOFvUK+MrdYq2z1Hpdj973qHBtG5l9/5OKT00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vDtDvKFd0IcQjOUq+A+J8eTPApl54agM4WPy2MLvwua3Zzv+64N3uTe1IOKpa7rD3yTRMlVJ5XBF9JOOoIc8WhkJDlhc3VRMidXE+KwsJni483rezh0tLkfeicqEl2gz5/+f3c+NUbzGiAcOcc0BGxGaSi4XdgpfNUlu5nwnLMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=I8Eya5tw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wLju/yEA; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1733920686; c=relaxed/simple;
+	bh=6A/dn3jhCarDUX1HaOcKFvjQuIdb9vSoHfumK815F90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hCur0wtg7wYo8DP99YeqsYNnp5X2XgQMAyLyXn3cJR+Z40jQ2BFO0xsEVBLlxzy/TZHh+p9imw2j5PY54PpgR5c/wTfscqZICkMWAv2OSfzQCG1mX1PsYgoY/53XzDi35UviiV0Mn2WGDAFJpQ6FJS/Nm8+v65KDiyXmCAq77ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4DSz1GL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="I8Eya5tw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wLju/yEA"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 0272C2540260;
-	Wed, 11 Dec 2024 07:30:11 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Wed, 11 Dec 2024 07:30:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1733920211;
-	 x=1734006611; bh=4bUVCNxlLLsfq6OFY06A5OLQ0L1wV01UZdhndtveAMU=; b=
-	I8Eya5twAQM5obhHH7eChwe9cAz2crqW7dupEat7/fDVBRBhKgA2ris/oAlhAwTg
-	hA0oDcr5C/zp2YE+xNbNiPS8k8uMnJ8A7gZpiOgFNwMm9VdNRB+LrpYCZv8PQkbQ
-	OEUetmNBlLwQ5NGKd5s77RYtKaGAH4w3vppfrq5HjiWJA/rTMz8I/Vm6te2YZtbf
-	EPq490v8RUskIQPmm1NLRZ7fTIjKkC+iHLLxYleMGTFrLwa+jYKQZkHHd05sh5MS
-	BhMe/a4uDhzg93xqWjQPjxAIKNPguTXtMGzeCqDS9NUlezdo0XYFBy/SuTC5K/dh
-	5ll482V9Zt3KgLULvp+lLg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1733920211; x=1734006611; bh=4bUVCNxlLLsfq6OFY06A5OLQ0L1wV01UZdh
-	ndtveAMU=; b=wLju/yEA8UQY2xaIngAa2kBrRyRCyr7U+FBTlWZ21s3lb20kn/4
-	QTliJTUrnYtSj0oNjXXgLq8LDCR8JajtMKPVvuZpX2TUrB3vCGlGDyFawQvaDBvw
-	ZbnMgsbbW2dGT6ZiZtJa2jZ/vNoQO1kruOgQh+A8xOtJhWprVjAx8TZ8pdSaRROo
-	SqonOm+eMHyhMCSiKbVKWVesGMeUmWw3Cj6PNUCxZhzeKxzOSvwSuJG0KSLrjv3n
-	Xds4k9k/kO7j6mUxV0sM9FwPyayrDPvvKzJRfb9Otjq5DuAGYuKMozlrIqyd85B0
-	QhDWbH1ZZOK3k+oE6IjYbmlksppmIrYbbwg==
-X-ME-Sender: <xms:04VZZ56Qh2Il86Mf7fIw3LAUvfe4pO4kKYzpiAKf9VM56FYpmB_azw>
-    <xme:04VZZ26jRF2JUkjyVJmeBRzIemcNBNjHx2af0LJn0jWlhD35dSTiUxIF0srbUjc1T
-    Tqh2aaLvuKUIw>
-X-ME-Received: <xmr:04VZZwfC1mWvkH_KdxwA9smUju1PlBGyLHFFheTBMcau4f7XGnNNAtSjyBfwOKTLN00VPIWR1ylBlJUkpMDkPFLd5hI4_CD3rg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrkedtgdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredttdejnecu
-    hfhrohhmpeforghrvghkucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrg
-    hrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffr
-    rghtthgvrhhnpefgudelteefvefhfeehieetleeihfejhfeludevteetkeevtedtvdegue
-    etfeejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsg
-    gprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhgusges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhgrhhoshhssehsuhhsvgdrtghomhdprh
-    gtphhtthhopehjrghnughrhihukhesghhmrghilhdrtghomhdprhgtphhtthhopehsshht
-    rggsvghllhhinhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopeholhgvkhhsrghnug
-    hrpghthihshhgthhgvnhhkohesvghprghmrdgtohhmpdhrtghpthhtoheprhgvghhrvghs
-    shhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopeigvghnqdguvg
-    hvvghlsehlihhsthhsrdigvghnphhrohhjvggtthdrohhrgh
-X-ME-Proxy: <xmx:04VZZyJTGoT5ciliFfMXt5VdeGMxCEIRijCjQU95mzfiwb6TL5KbUw>
-    <xmx:04VZZ9K1gUFFcCbci094lwAYqt8ri6GiFBRaduhlwl8_IvvyOHotDg>
-    <xmx:04VZZ7yyE6jX0hO1uQ0pF_M8oA2TV_EOZ1REyql2GwmNmHGot9CyzA>
-    <xmx:04VZZ5KT5YLe5yM5TPhgVATq5efxxsIfz14YGdleoPAiWmww--buZA>
-    <xmx:04VZZyrl9XcRtDs9kI_WjQvz_O0crRiMBxJPJe9r2Jf8ZGY9ozI8jsiB>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Dec 2024 07:30:10 -0500 (EST)
-Date: Wed, 11 Dec 2024 13:30:08 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Jason Andryuk <jandryuk@gmail.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev,
-	xen-devel <xen-devel@lists.xenproject.org>
-Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
-Message-ID: <Z1mF0UZPNLjYAJI7@mail-itl>
-References: <Z1l6XbHP6BTTZSwr@mail-itl>
- <fe8db5b2-7524-49ea-ab8e-21f831dc009f@suse.com>
- <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4DSz1GL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6ABC4CEE2
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 12:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733920686;
+	bh=6A/dn3jhCarDUX1HaOcKFvjQuIdb9vSoHfumK815F90=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=q4DSz1GLCbO8+y0aP5+TQn+JjZKD3ctl3GQzExXHYIGHidHL7mAXgTvSucnbISs3A
+	 uLFE4RwEqMyU3BH2GzAeSvtYS3n8goBVm08DdxqEhH2bf6HkTHTeiSe3DkrplF7F9z
+	 CB4DlVQmKTKRyWVPwAomyA63vGwAa+y0GZ9oOZrz7WkCRVWKQS7JTib8/P6sEc4dtS
+	 s82zbC5xFXIVoDQsiAZJZtjNmqcw71X+IQ2KFj77WCggvT5zhBz20C3QtKU/bjDmax
+	 /blejr9s+lXe7vJEBZAI9JCOtkiwnOV8fiKXhEs+yGs+dfZcYWazx1LGfnTuPAYGp1
+	 QCLHJY2AI5gHA==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3022598e213so28209931fa.0
+        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 04:38:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXlCXA5QN2OCPMuUbT7BPmXmA36j3oVzAr/4umVKlWLsDqKqVJfYtyXu7Fwy3cTZeBMBJPsZm6l/BHVaw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YypCu4QK1JOL0201emQHaULwhmJSRKa3IRo1jaKW1zkkchNJqzB
+	xfCnn9OnQ30dxUE59uG5zjkRJ1J8gx05hP9Y4fIsCecftBpKv8/5E1hSkmpv0vdXJxyhDGv/wIP
+	auxa1UzTFDz4gtas3oCZ8NZrddG0=
+X-Google-Smtp-Source: AGHT+IG209dne0Tl3T71dc7VTtvkNHUQ3p5KRJK5FqQ+uJfsXMe55P5rmszraCwAe9lOAQ+gFW57du1YR1C48KbWC1I=
+X-Received: by 2002:a2e:bc25:0:b0:300:1aa5:4938 with SMTP id
+ 38308e7fff4ca-30240cfb89amr8571701fa.18.1733920684444; Wed, 11 Dec 2024
+ 04:38:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/VG+ezqUWUhYwfd+"
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com>
-
-
---/VG+ezqUWUhYwfd+
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Dec 2024 13:30:08 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Jason Andryuk <jandryuk@gmail.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev,
-	xen-devel <xen-devel@lists.xenproject.org>
+References: <Z1l6XbHP6BTTZSwr@mail-itl> <fe8db5b2-7524-49ea-ab8e-21f831dc009f@suse.com>
+ <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com> <Z1mF0UZPNLjYAJI7@mail-itl>
+In-Reply-To: <Z1mF0UZPNLjYAJI7@mail-itl>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 11 Dec 2024 13:37:52 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
+Message-ID: <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
 Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
+To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
+	Jason Andryuk <jandryuk@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, regressions@lists.linux.dev, 
+	xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2024 at 01:24:08PM +0100, Ard Biesheuvel wrote:
-> On Wed, 11 Dec 2024 at 12:53, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wro=
-te:
+(cc Greg)
+
+On Wed, 11 Dec 2024 at 13:30, Marek Marczykowski-G=C3=B3recki
+<marmarek@invisiblethingslab.com> wrote:
+>
+> On Wed, Dec 11, 2024 at 01:24:08PM +0100, Ard Biesheuvel wrote:
+> > On Wed, 11 Dec 2024 at 12:53, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> w=
+rote:
+> > >
+> > > Jason, Ard,
+> > >
+> > > I guess there are some prereq patches missing in stable 6.6.y branch?
+> > >
+> > >
+> > > Juergen
+> > >
+> > > On 11.12.24 12:41, Marek Marczykowski-G=C3=B3recki wrote:
+> > > > Hi,
+> > > >
+> > > > With Linux 6.6.64 I get the following crash on domU boot:
+> > > >
+> > > > (XEN) d5v0 Triple fault - invoking HVM shutdown action 1
+> > > > (XEN) *** Dumping Dom5 vcpu#0 state: ***
+> > > > (XEN) ----[ Xen-4.19.0  x86_64  debug=3Dn  Tainted:  M     ]----
+...
+> > > >
+> > > > Linux 6.6.63 works fine.
+> > > >
+> > > > Looking at the changes, I suspect one of those:
+> > > >
+> > > >      83d123e27623 x86/pvh: Call C code via the kernel virtual mappi=
+ng
+> > > >      f662b4a69e1d x86/pvh: Set phys_base when calling xen_prepare_p=
+vh()
+> > > >
 > >
-> > Jason, Ard,
-> >
-> > I guess there are some prereq patches missing in stable 6.6.y branch?
-> >
-> >
-> > Juergen
-> >
-> > On 11.12.24 12:41, Marek Marczykowski-G=C3=B3recki wrote:
-> > > Hi,
-> > >
-> > > With Linux 6.6.64 I get the following crash on domU boot:
-> > >
-> > > (XEN) d5v0 Triple fault - invoking HVM shutdown action 1
-> > > (XEN) *** Dumping Dom5 vcpu#0 state: ***
-> > > (XEN) ----[ Xen-4.19.0  x86_64  debug=3Dn  Tainted:  M     ]----
-> > > (XEN) CPU:    4
-> > > (XEN) RIP:    0008:[<ffffffff82b64050>]
-> > > (XEN) RFLAGS: 0000000000010086   CONTEXT: hvm guest (d5v0)
-> > > (XEN) rax: ffffffff82b64050   rbx: ffffffffffe00000   rcx: 00000000c0=
-000101
-> > > (XEN) rdx: 0000000000000000   rsi: 0000000003a00038   rdi: 0000000002=
-a9bc98
-> > > (XEN) rbp: 0000000000000000   rsp: 0000000002aa0ce8   r8:  0000000000=
-000000
-> > > (XEN) r9:  0000000000000000   r10: 0000000000000000   r11: 0000000000=
-000000
-> > > (XEN) r12: 0000000000000000   r13: 0000000000000000   r14: 0000000000=
-000000
-> > > (XEN) r15: 0000000000000000   cr0: 0000000080000011   cr4: 0000000000=
-000020
-> > > (XEN) cr3: 0000000002022000   cr2: 0000000000000000
-> > > (XEN) fsb: 0000000000000000   gsb: 0000000002a9ccc0   gss: 0000000000=
-000000
-> > > (XEN) ds: 0010   es: 0010   fs: 0000   gs: 0000   ss: 0010   cs: 0008
-> > >
-> > > Linux 6.6.63 works fine.
-> > >
-> > > Looking at the changes, I suspect one of those:
-> > >
-> > >      83d123e27623 x86/pvh: Call C code via the kernel virtual mapping
-> > >      f662b4a69e1d x86/pvh: Set phys_base when calling xen_prepare_pvh=
-()
-> > >
->=20
-> The second patch shouldn't have been backported. It is unnecessary,
-> given that in the old situation, the kernel image needs to be loaded
-> at a fixed address. And it assumes  that %rbp is set to the physical
-> load offset, but those patches were not backported.
+> > The second patch shouldn't have been backported. It is unnecessary,
+> > given that in the old situation, the kernel image needs to be loaded
+> > at a fixed address. And it assumes  that %rbp is set to the physical
+> > load offset, but those patches were not backported.
+>
+> It has this tag:
+>
+>     Stable-dep-of: e8fbc0d9cab6 ("x86/pvh: Call C code via the kernel vir=
+tual mapping")
+>
 
-It has this tag:
+That was added by the stable maintainers - someone grabbed a patch
+from the middle of an unrelated series to make e8fbc0d9cab6 apply
+without lexical conflicts.
 
-    Stable-dep-of: e8fbc0d9cab6 ("x86/pvh: Call C code via the kernel virtu=
-al mapping")
+> Does it mean neither of them should be backported?
+>
+> But then, the e8fbc0d9cab6 has "Fixes:" tag (pointing at very old
+> commit).
+>
 
-Does it mean neither of them should be backported?
+If someone thinks e8fbc0d9cab6 should be backported, they should
+rebase it onto v6.6.y, not backport random other patches until
+git-apply stops complaining. And ideally, someone would build and boot
+the result to check whether it works.
 
-But then, the e8fbc0d9cab6 has "Fixes:" tag (pointing at very old
-commit).
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---/VG+ezqUWUhYwfd+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmdZhdEACgkQ24/THMrX
-1yyjMQf9FzYK4Yw9Mm1IB6080FxLcOdQKmLoy8zrgu/4DPqQr+eN8jte4FbvsL18
-ilp4g8VystkEOyUOA7M6TI54ottRMRdM3KPQ2Cny9LV6SPsq5PKL3DFl5pYaAbgM
-BgxJye/H36pS3A7D++w88A37dd7Orc6S9r4xo/VTskL9zAx3eqTeBclA5wazsSJ+
-wjOOwGxeDrfrHL+gWXL7P4lEXDSRYZsEa7W90DNqnBuKM0TFSinUeuyP8urI2yDZ
-3a81wUDPuLaj3UijeFkp8lGlpBciUzvslgJWNSbp/pbZWoZdwQeZzV3yQIfZAxbw
-5CAEDyZinCheMVPTB/jTfKdBb+l7RQ==
-=OW2f
------END PGP SIGNATURE-----
-
---/VG+ezqUWUhYwfd+--
+For now, it would be better to revert both.
