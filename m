@@ -1,150 +1,274 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2060.outbound.protection.outlook.com [40.107.236.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F5B2336BF
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 13:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733925477; cv=none; b=KTsGZLbUrACBcuCbCDWrx9oPmNpOXaSbmwQfSYekjOocwTDaBSUWXbjcFJnLmAfJ1pj7Waqil2TmPIPbpM+lJuuVGvH3WPwafNwbe/tNAhijkQYOOd06k4qq7FMlNUMGt6gg47VxfngbXl51tPjsTmjZFftUiKmInT59pJAbUkI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733925477; c=relaxed/simple;
-	bh=zhm5/qneWDtFKip5gZc5Ug51qbj4ZyGlCNuuB0VT+aQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHXN4XwJiBHH3F7hlYJ+4eC0vXqpKxByODIP5ZP6MKGXKfttjzLZVuFpA9KBCrrwJNFt8cQKWtORpO7ggVn2By2Njo2X0PNZICQ3ApWQnwJspelH09eIq7G7ZykrKWxe6UV1oePcGlqOuE2cGRfD+aH0/fTo/xmm6XED4GFXqKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y7QxoAYQ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB9718628F
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 14:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733927854; cv=fail; b=WgR7PTvfUVt/g2gvy0lFtIelYmIgA/AfwB58Ih46wlPBhg6cNGxkk8M7+2to7rvMoDUKPvlTioAW1oBPHdg8pS2pddofsB+qjr/j+SY2N7r4emL20NlnY2OSjCrxG9tZrpGzOgKUB6MQNv4h3mIUFXNSP0YEAj408gay3aBGXRs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733927854; c=relaxed/simple;
+	bh=KukEGMtLXeqFpZ3TadZDc5cOfzdXMjkDrw2dgGTS7Go=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=Q3WOSVhWefjgp4jZgFmUuKrFZ4Bpo7VlkoOLNvEtDA3x+gmRrJVqlPGfiE6nv+uC9yxIdA9srGnZ0/gMTJqzQDHRmxOyYOX255tCyzN2c5GP3CD7KsmPIape/CV3hJMQSF8wv+fOUz2x/jKmGt8+V0wQ8/r9kLJJiiQuM6tunpk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UsIky6zH; arc=fail smtp.client-ip=40.107.236.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7QxoAYQ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-434ab938e37so44128345e9.0
-        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 05:57:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733925473; x=1734530273; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n+Nq0JPihsIDotmBgK7j9oUK4hXd8/xtAenPkWmVRYY=;
-        b=y7QxoAYQHb0DrMrP8azfSSN2p0deBgc33zUc8JAW6YGDEGbrmd7nw181D/xa8LaSyu
-         LUmm4ZAJAIj5LhLKzKCrMFDvmqh8rbkWQRPMoVjGk9xCsqVJKHJvAQ6B47EPDMXOJDtf
-         dFSqpCD7fP6LYHt9QxfRjz4QY3fP0dgGQI81tI+alkto9oUqTzWXz0DKKbSVRLGYCTNE
-         tNIig1Lo7BuGFCn2hT7A6Iu35XGA47mYqfrT80Fcjhg7/YsjTUB/M1Z/PoPH8+gisApk
-         SezpaVteAy+ymuLsAfp6KG0XC2pTgEexwRbMuuXF1IlP/3oweMvSWEMRFJVrwoBLoS5l
-         Wm4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733925473; x=1734530273;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n+Nq0JPihsIDotmBgK7j9oUK4hXd8/xtAenPkWmVRYY=;
-        b=i+iEpxnIsPBmlgeVfG1qf4y8cXmVK/WhrG2Gy7AoO0tV5nT/bBCODMnma4zj20xmsA
-         D7fpuTnbdNAT4ac47QKV22pG34ZTGkmxkmq9ypRER3jeXFaE1HUl/yJZE+idyHRsDy6g
-         sLQrQJM59OE2DQp+Zt6yQFjZkrvZkVHvQqJtmJIgCHVWu9pUozIDEzgXqgreZ5fUrUbB
-         akHdokpkcmYqitWnPJC6GLEDfz8QLMCZX/GN68ExmHRjwlF3h9fIGvrXY1bZw224sAk7
-         uLqQ7GXwh0/f9IIDrvPRdIT8juJev7NjpYQS7e0B4SyaM2G0BPDDZyllVaAzo3gHX8G5
-         kRvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRX4Qw/ukjH4gvJ8SHTk7rFQW4LIGWr8+AAHHCYBJnf5Z+6QajUI9YK4ltSq4Z0IcsLH094oGdkEgXmA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxPua50XPlqafQxZ1DaliDluiZCgkH2PcXKqx8B+AnCZHTMYYCI
-	dOn8BeMDRNEgfswVLRG6UvkTHnWVGokTMElQZmh5IljZynKT7X+nUoP4m0RdyIc=
-X-Gm-Gg: ASbGncsHWJSlcfWH+K5APq/F3PTSmtI2Viu2WDupDAOLfJ9lTML5XAWyqbJa7HMYi2e
-	vUKkOVBXSgC44AU2Tv6+qcqfSbH3OsGV8o7o2ap4/gpZXuRBDPeT9rNmmfslVL7+rpMLBYWSvrK
-	30pIshMEDGTF4siJBWeXFMQ7mjV4j8mwBbeFG29y42dPMT+Eg1dMVCvZ81dq0c1VDJy+oNH2775
-	LqDIhyCi0/43zwTCRtL/R4RrNNFZ/eAGNu/zKDqD7GdA+3nG+5L
-X-Google-Smtp-Source: AGHT+IGJCYJTlBedjQm+GK+uiVv40a+NR20VpMjki58l34sVua7BTMisnr0pAsT6vjoKEaDgR/Mj5Q==
-X-Received: by 2002:a05:600c:35c9:b0:434:a929:42bb with SMTP id 5b1f17b1804b1-4361c3a336dmr23180715e9.18.1733925473454;
-        Wed, 11 Dec 2024 05:57:53 -0800 (PST)
-Received: from linaro.org ([82.76.168.176])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43621ebf8e8sm1879635e9.32.2024.12.11.05.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 05:57:52 -0800 (PST)
-Date: Wed, 11 Dec 2024 15:57:50 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jonathan Marek <jonathan@marek.ca>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v3 1/3] Revert "arm64: dts: qcom: x1e78100-t14s: enable
- otg on usb-c ports"
-Message-ID: <Z1maXuaVQiO3vGM6@linaro.org>
-References: <20241210111444.26240-1-johan+linaro@kernel.org>
- <20241210111444.26240-2-johan+linaro@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UsIky6zH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VmTVECsR0+R9NGdnaAPTbpcIU3089WSJlzvPVTrSY0PiODosptOd3N4sr3QUJncSJ27vCvUDVdd7I8/0YOEvdPT4zpU2RpwAM7Weuzk3nKRXQ4TI/WK78tvByf96+63VCh31KOU8ECeOBYprOLdb8Hzh5iF6FXBTsjQlMlZHYKo5Q2e5Y7xxn9HPxZMZ+WACQCGLtx+X9hwv+5ODdk1z2/P3WYXUZg1UyKkwp+eu1RZ+kS4skPiPu6Qq8TBk7iZ91TEknzYBaYbBcVc6U3Vt9Pisj10JLcFiw5bMJwfj3Lu8+Q6NNCLXbH1p6IPq/l1GLBh2/URPdikhbIW91qkEyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bMv4iFTb1m6U/leJ0sl5ZvxLbpowdemdEfNdk1QiLX8=;
+ b=h2XxkikDqF+aeo4sogJVlvWFxdzySf2NhP6FGT/1vMxKHP0Qx9oCKVVJ9qwLmIybaPuueq7+pXTsERqCB0bPn1sJOhFSyjNvEMYA4R01TJJD11Q1hLg1RYAzzu50KXGvRwVaJJxQc2sk2N/RUdMUbdbFR6PXpamA/QEFo08sehA49g7Jmh99TBQHrRHukJSI8ab3prbGvveqylsoPfv55Jw1nPBZO4U4RphK5IrhWQNWpmAdtfNpleLe/R9o53xf2B3XyJV1gEjhL/eKNAAtoKC0B30lsGO6kEzHOtPhiuCi1pzKWkNxo5Ibp8ysP+h1X6jiC+6I9DyemO2lodkmvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bMv4iFTb1m6U/leJ0sl5ZvxLbpowdemdEfNdk1QiLX8=;
+ b=UsIky6zHeF0NQdGT4AILE13m/CD38oGvAINWVuaS/IOSsUdcnguA+k7O4ixEAfYkaeX8TIDWQSpbDncT5abp47QkacE4YFrYhakwqe6Nn7GiULsP2uUKXfhMBZJp9Nh1gCAwIFM69UwhH08VkaYV0eBFAxTp3rxYIKBayiJBSnk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by SA1PR12MB6972.namprd12.prod.outlook.com (2603:10b6:806:24f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.15; Wed, 11 Dec
+ 2024 14:37:28 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8251.008; Wed, 11 Dec 2024
+ 14:37:28 +0000
+Message-ID: <c64099db-33b3-9438-536e-7882bae614e0@amd.com>
+Date: Wed, 11 Dec 2024 08:37:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-US
+To: Sean Christopherson <seanjc@google.com>
+Cc: Simon Pilkington <simonp.git@mailbox.org>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, regressions@lists.linux.dev
+References: <52914da7-a97b-45ad-86a0-affdf8266c61@mailbox.org>
+ <Z1hiiz40nUqN2e5M@google.com>
+ <93a3edef-dde6-4ef6-ae40-39990040a497@mailbox.org>
+ <9e827d41-a054-5c04-6ecb-b23f2a4b5913@amd.com> <Z1jEDFpanEIVz1sY@google.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [REGRESSION] from 74a0e79df68a8042fb84fd7207e57b70722cf825: VFIO
+ PCI passthrough no longer works
+In-Reply-To: <Z1jEDFpanEIVz1sY@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR05CA0012.namprd05.prod.outlook.com
+ (2603:10b6:805:de::25) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241210111444.26240-2-johan+linaro@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|SA1PR12MB6972:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e880088-5bdc-4326-ba74-08dd19f15654
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RnFDZkxCOXB1L0xqSFBoMEYraVZtZ1dvQlJpNzNuTTBXUm1oS010WlpsT0or?=
+ =?utf-8?B?TVcvYUpvRVJjWmhaOXNsTC9hUDdNbmxtd1hQNmh4Ti8zblJDQU9BV1UwSTJM?=
+ =?utf-8?B?UGppNmpNQkpDZkdkb2xQQjUwMHBRYXY3TGxsQVgvTE5ySExUejZZRjhFa2p6?=
+ =?utf-8?B?aTU0MHdzQXQwQTRENWYxNlFmWitUR2lETGhlNTlpU2RGY1lsRlpUdURLR1ZH?=
+ =?utf-8?B?dHBTa0diL1M5L1FwZXMwbmhuRFEyVmZ1bWsvVEk5bTFoeDVBdktpNFl4WVh4?=
+ =?utf-8?B?dW9ZaWhqaGkrSEdMUGxhL3RXTE13dFBTNHZxZk4rRXl4UExHN3I0UWpuVzZl?=
+ =?utf-8?B?KytDZVdzeXRmR1lkUFBlUGNKeFBZclNvTlprT1dJOEM5WnZQN2tKdUdFMmts?=
+ =?utf-8?B?MDVMTklxNjNlVEVVbXNlaW5aT25Mdmw3UDIvSm4yR092dEFlMlhVcm43V3dz?=
+ =?utf-8?B?MFdNcUxFK2w0VlVYRXhsbHArK2VFYnVSOWM0U1lucjZLVlpGWGh5UVlKR1hX?=
+ =?utf-8?B?TmxVcVZhSkNDVkFaN3FNdEdLRE9ZRkZJajltMUhiNGRDOGRBa3FKd2E5eFFz?=
+ =?utf-8?B?cUxGbi9aMHhpcktlVlFBTHBWb09ncFp6bTZvSnlzSE16NlVrdFdURWNUbTRC?=
+ =?utf-8?B?V2wzUkVFU2hMWHFZRm9RSGNhWERQcTdtZU5SZm1uRGJyc2pUSkFTK1hjZ05q?=
+ =?utf-8?B?WFIyazIvTTBXNGV2YWRwU21hcnBwcTluZFdSblg4dVY3ZnBtd0NRZHpxeGZ2?=
+ =?utf-8?B?REtiWFdCTUE3Z2V2U2hWZXE3QzJaeDEzQUhua2h2UTdKS2ZNdW0wMFZGYzJr?=
+ =?utf-8?B?VlJYNkR5WDljS0ptTUJRcXg0THo3Q2VBdzlqcGdYUzk2TmFHcjEyd291NW1G?=
+ =?utf-8?B?WEc3Y1lUNmZ2cUo1dFlzZ0FzU3JUK2pjM0hSZGVjek81a0t1aHI1cVUva1E5?=
+ =?utf-8?B?dkphZGJJdjZ3K0Z0K3NjbFVsRkVnYjRWN0l3STRHNGxyUDl3WnlhTXpuQzJM?=
+ =?utf-8?B?N1hGR0NUR0wyOHhHY3FFR2IyWjlLOVRtN0lEM3VodVY3UHhWWm1BSjBBVnRR?=
+ =?utf-8?B?YnZ3SW0xcTBWZnlQOGE1R01yQ2RocWxUcmR0UTViRVZhSTRSZ2REaWtWcXhz?=
+ =?utf-8?B?UTY3NDZ5VTNteVZucHRkTlJKSlRmMVlKL0xTc3JDUWdaQzVkU2ZOSUtCaDVE?=
+ =?utf-8?B?dmFqSHoxcTJ0NVExWmZ6RXNiM3Z4YXJ6SHZtNmtwM0FwMGhPRHpMVFo0Mkpy?=
+ =?utf-8?B?bUtrWEU3ZEhCSy8vU0dWZm5vZGpxZjZtOTN4eDBFYlJ3U0FaRzByN2xsZjBV?=
+ =?utf-8?B?eUkxSVZkU04xd2l3L29JUzZ1VnFFNFdnSlpQbFJQZ1FoQ1FlV211MWgvWS8w?=
+ =?utf-8?B?VU1VNm9tOStiYjVPQmlZK3VUTHhoby83MUFLTjkyQnUvWXNmVmkyQ3k4RWVC?=
+ =?utf-8?B?OExLdEtqV2FpcllsRlNqTWpjZG0zZEVyR2dBYUdROHpKb001RHZrZW1laUpi?=
+ =?utf-8?B?WDhDU0dhVWJNb0svRHhDU1ZqNTg5Q2RCQ2YySlR6UHhUVmVFTnpGVGM0bjRT?=
+ =?utf-8?B?U3cwTlM0VGJtVWR1Rlh6cm1Bb016YUJmVDYrd1dZQ3BqZ3dzb1RBWm9ybk1h?=
+ =?utf-8?B?cXorc2lRb0xGUjVyd0FmMjZLdG5xNTR1MlpFbys3bzZicW9Rc2crdVZHWTQy?=
+ =?utf-8?B?VWlYOW9PQUZuMWhMUk5ib1hLY1F0MExrcWdvZ3VNQ2FRbFN1UW1rUUI2RktG?=
+ =?utf-8?B?dEU0WGowb0MxSVNteHp5NWRsUkhKc2IvZVB4NUcydHRaUy8wT3NzS0dkS3NT?=
+ =?utf-8?B?UStzTnpScWM3QW4yQituZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bi9BUitCRHdKNGFra3d1WXovWW40K1czN0R6VTZDSVBjRFFxNlpId2hEemN5?=
+ =?utf-8?B?N0ZMMzVIWDdjZ2VFZ1JDcmE4S0VZZWtMZTZlazFlelBpdTJnSGFqTTZLb0E0?=
+ =?utf-8?B?UWxUb2FKL0hReGw4dnNVMitUMCsyb25SYkRxYW1WTDZrTDVqYXJ1cndXSzhy?=
+ =?utf-8?B?VDZySUlLUUlJYTM0WEw2bnZjc1RlRFVGNmJYNUZ0dGU1anFBbHdTeFAwOW1m?=
+ =?utf-8?B?YnZ1dndjMmJWODBlaHlxQTRBZDlHdHc1Y2lxSlBzVkN4ZXNIQ3RXSlFxVkYz?=
+ =?utf-8?B?R290SnVFeERiTTArSVViRDB6aWROK0VIWVl5WVBBV1ovNnFpZHp3Y2JtdVlG?=
+ =?utf-8?B?U3NTQ3krVmpxNGV4SWN3NDdKQXlpQnFEUHJqWnpXQmNFMVcxcC9xWCtENXYy?=
+ =?utf-8?B?UmZBVC83b2R2RDdUZVdoZmp1L1ViZ2RwdU5QeG1RMExsemd0b3FUa2lrLy9v?=
+ =?utf-8?B?bTdjRUoyV3lIZFpKd2djaXpQWWsrbXh2Q2IvQkdsZUx1NUd2VDNSTVVpSjds?=
+ =?utf-8?B?dzBpVmcvemdUckcrTE1rd1QzVk5iMmxvcjFTOEt6S241NGVENUZLbEJ0bkhJ?=
+ =?utf-8?B?VGlQL1RLUVJzeXZtNHZmajBjazJCenYvNWU5SjFDMC9GSTJMMnBSZ3VTOUpz?=
+ =?utf-8?B?K1o5Uk94b1pYOE44SFVJSlEwVDd0QnpnM0MxM0FlN1FidENZeXY3NmRKWTRs?=
+ =?utf-8?B?eHdERk9iblRwZndYMDNxVUJ1N0t0RlltQVlQejFWdmtkcUFiNVpmU0JqeFpn?=
+ =?utf-8?B?ZFpwRWxFWGJhWE9nRGdPMEk5V2l0NXA4a1FNVGxzdTlJc21nT0JhYnZoaklL?=
+ =?utf-8?B?VldBaWRmdGp3NDF0empJd1VRL20xcGRMdVZBY2dEQ1BIT0Mxa3Mrb09HbFNa?=
+ =?utf-8?B?RCtXUFdBZFZDOGEyT0FLYWgyRHNVUXhwK21iNmpYYWgyYVV3Yjl5THFIOVNm?=
+ =?utf-8?B?T1NFY1htK201NnhmVC9ha3NsU1dMQVJoQ2lLeVBHaG1xM3F1MEt3b2lxMDQ2?=
+ =?utf-8?B?MXpQMXZGdTJsZkxROGdUeXQ0eENVejdyMGdzYm1nWEl0aFF1RzJGMkNmM1Q1?=
+ =?utf-8?B?TC9ZZmhLZDNNV09qQW05aUpoSDZCaXM1VkxaQnR4bjlUNjhqK3ZIWjVGNVBK?=
+ =?utf-8?B?T0RMLyswNXFNcUFrcHI2ZjV1d1lWZ1BTUVRzNXpCOC81cHdwTmhwQlptOVAx?=
+ =?utf-8?B?MU0xaENqM0x0MGNXa3dvOVB4UVFZTGtkdHkvN0pOZ0pmMWE3V3lCSkU2YytQ?=
+ =?utf-8?B?QjVsRTBZYU5ESVBCR2FkNmQ2OUtFTFJBNEhJOXpJeVI0bVBvcTdRc3FXZ0gr?=
+ =?utf-8?B?VnpGNHpETFJiOTFxaTFUNG4wTVhKNUtlNHJyZzBIc3U2WDRpNXdzT00ra2lr?=
+ =?utf-8?B?V0hwejVkRndDRXg0NjFCbmw0Zkx6ZHh3dFo4Q3JLSWNPbWtrVzVsQ2VkcEtB?=
+ =?utf-8?B?UlREbjNGenZ4SnAwWE9BcVpXTEVSV0NJaWFyVEJ2MVdaeDRXWHJodEJUaE41?=
+ =?utf-8?B?VlZXbjV0ZlloemlKZEVBUEhQaVk1MmREMWp4TXNpM1FDclV4c3BiOW5hVEo4?=
+ =?utf-8?B?dG9yT1JtWkExV2xhVUZTT2MwK3M4ekpPRFZ3RXhocWdkTzkwL29xUXBRTkVp?=
+ =?utf-8?B?SDRqdUFSN3NqN1ZlRUtlWVpoaGVlbi9tTGcweHhyVjg1ajlMdzJWWWV5eXpU?=
+ =?utf-8?B?c2dnN0JsWWJmclFhRkR4OVlXdC8yQkdqU1ZwUll6S1BRMURheU9QU3hsbHF5?=
+ =?utf-8?B?cWV6dGFERUxqdnliTmw2Lzl5cTJ2Q1FBblFWTWpXNGQxRGRqN3RZR083b1Bw?=
+ =?utf-8?B?U3ROcnQwSXVobS9ZTXpvbzY2UnFjK2VSVE5temR5KzFqNndwZ1dHZS9aTmpz?=
+ =?utf-8?B?V1JFUStSUGhmZVE5QW1tWHZKeXg5ZElNc251WGdkTUE3d2R0Z3d6eXlVbERH?=
+ =?utf-8?B?U2RwMzczdzRLUWphdlJJWEd0dnE1d25paiszNDRmbjRBcHR5cGY1c0lIK3Fr?=
+ =?utf-8?B?WHUvcnVKcXdia2xiSjhWL0hwdHlRODcwUXhYTWljM21lb2kwSXI0VFJNUG1r?=
+ =?utf-8?B?eWJUcVNZL1ZKSG41VEQ0clY0amlrejBhNWVhNW1scDFrcTBoRFdqaXpUQnJ3?=
+ =?utf-8?Q?x26E1M3wftAMJ1LcHxruupTFR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e880088-5bdc-4326-ba74-08dd19f15654
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 14:37:28.4259
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TCRWF94G2um6wIhpTXFWvhAF3/7o/KEn47K+hS6NTWK+wZiC8aZP2dVnXLvCvR+xrDY8pF+MXoH1tat0TZEPig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6972
 
-On 24-12-10 12:14:42, Johan Hovold wrote:
-> This reverts commit 1a48dd7b9ac809d1bd0fd2fef509abba83433846.
+On 12/10/24 16:43, Sean Christopherson wrote:
+> On Tue, Dec 10, 2024, Tom Lendacky wrote:
+>> On 12/10/24 14:33, Simon Pilkington wrote:
+>>> On 10/12/2024 16:47, Sean Christopherson wrote:
+>>>> Can you run with the below to see what bits the guest is trying to set (or clear)?
+>>>> We could get the same info via tracepoints, but this will likely be faster/easier.
+>>>>
+>>>> ---
+>>>>  arch/x86/kvm/svm/svm.c | 12 +++++++++---
+>>>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+>>>> index dd15cc635655..5144d0283c9d 100644
+>>>> --- a/arch/x86/kvm/svm/svm.c
+>>>> +++ b/arch/x86/kvm/svm/svm.c
+>>>> @@ -3195,11 +3195,14 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>>>>  	case MSR_AMD64_DE_CFG: {
+>>>>  		u64 supported_de_cfg;
+>>>>  
+>>>> -		if (svm_get_feature_msr(ecx, &supported_de_cfg))
+>>>> +		if (WARN_ON_ONCE(svm_get_feature_msr(ecx, &supported_de_cfg)))
+>>>>  			return 1;
+>>>>  
+>>>> -		if (data & ~supported_de_cfg)
+>>>> +		if (data & ~supported_de_cfg) {
+>>>> +			pr_warn("DE_CFG supported = %llx, WRMSR = %llx\n",
+>>>> +				supported_de_cfg, data);
+>>>>  			return 1;
+>>>> +		}
+>>>>  
+>>>>  		/*
+>>>>  		 * Don't let the guest change the host-programmed value.  The
+>>>> @@ -3207,8 +3210,11 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>>>>  		 * are completely unknown to KVM, and the one bit known to KVM
+>>>>  		 * is simply a reflection of hardware capabilities.
+>>>>  		 */
+>>>> -		if (!msr->host_initiated && data != svm->msr_decfg)
+>>>> +		if (!msr->host_initiated && data != svm->msr_decfg) {
+>>>> +			pr_warn("DE_CFG current = %llx, WRMSR = %llx\n",
+>>>> +				svm->msr_decfg, data);
+>>>>  			return 1;
+>>>> +		}
+>>>>  
+>>>>  		svm->msr_decfg = data;
+>>>>  		break;
+>>>>
+>>>> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+>>>
+>>> Relevant dmesg output with some context below. VM locked up as expected.
+>>>
+>>> [   85.834971] vfio-pci 0000:0c:00.0: resetting
+>>> [   85.937573] vfio-pci 0000:0c:00.0: reset done
+>>> [   86.494210] vfio-pci 0000:0c:00.0: resetting
+>>> [   86.494264] vfio-pci 0000:0c:00.1: resetting
+>>> [   86.761442] vfio-pci 0000:0c:00.0: reset done
+>>> [   86.761480] vfio-pci 0000:0c:00.1: reset done
+>>> [   86.762392] vfio-pci 0000:0c:00.0: resetting
+>>> [   86.865462] vfio-pci 0000:0c:00.0: reset done
+>>> [   86.977360] virbr0: port 1(vnet1) entered learning state
+>>> [   88.993052] virbr0: port 1(vnet1) entered forwarding state
+>>> [   88.993057] virbr0: topology change detected, propagating
+>>> [  103.459114] kvm_amd: DE_CFG current = 0, WRMSR = 2
+>>> [  161.442032] virbr0: port 1(vnet1) entered disabled state // VM shut down
+>>
+>> That is the MSR_AMD64_DE_CFG_LFENCE_SERIALIZE bit. Yeah, that actually
+>> does change the behavior of LFENCE and isn't just a reflection of the
+>> hardware.
+>>
+>> Linux does set that bit on boot, too (if LFENCE always serializing isn't
+>> advertised 8000_0021_EAX[2]), so I'm kind of surprised it didn't pop up
+>> there.
 > 
-> A recent change enabling OTG mode on the Lenovo ThinkPad T14s USB-C
-> ports can break SuperSpeed device hotplugging. The host controller is
-> enumerated, but the device is not:
+> Linux may be running afoul of this, but it would only become visible if someone
+> checked dmesg.  Even the "unsafe" MSR accesses in Linux gracefully handle faults
+> these days, the only symptom would be a WARN.
 > 
-> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 3
-> 	xhci-hcd xhci-hcd.5.auto: hcc params 0x0110ffc5 hci version 0x110 quirks 0x000080a000000810
-> 	xhci-hcd xhci-hcd.5.auto: irq 247, io mem 0x0a800000
-> 	xhci-hcd xhci-hcd.5.auto: xHCI Host Controller
-> 	xhci-hcd xhci-hcd.5.auto: new USB bus registered, assigned bus number 4
-> 	xhci-hcd xhci-hcd.5.auto: Host supports USB 3.1 Enhanced SuperSpeed
-> 	hub 3-0:1.0: USB hub found
-> 	hub 3-0:1.0: 1 port detected
-> 	hub 4-0:1.0: USB hub found
-> 	hub 4-0:1.0: 1 port detected
+>> I imagine that the above CPUID bit isn't set, so an attempt is made to
+>> set the MSR bit.
 > 
-> Once this happens on either of the two ports, no amount of disconnecting
-> and reconnecting makes the SuperSpeed device be enumerated, while
-> FullSpeed device enumeration still works.
+> Yep.  And LFENCE_RDTSC _is_ supported, otherwise the supported_de_cfg check would
+> have failed.  Which means it's a-ok for the guest to set the bit, i.e. KVM won't
+> let the guest incorrectly think it's running on CPU for which LFENCE is serializing.
 > 
-> With retimer (and orientation detection) support not even merged yet,
-> let's revert at least until we have stable host mode in mainline.
+> Unless you (Tom) disagree, I vote to simply drop the offending code, i.e. make
+> all supported bits fully writable from the guest.  KVM is firmly in the wrong here,
+> and I can't think of any reason to disallow the guest from clearing LFENCE_SERIALIZE.
 > 
-> Fixes: 1a48dd7b9ac8 ("arm64: dts: qcom: x1e78100-t14s: enable otg on usb-c ports")
-> Cc: Jonathan Marek <jonathan@marek.ca>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-
-> ---
->  .../arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-> index 5a4a72a030d4..b4b6260c670c 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-> @@ -1515,6 +1515,10 @@ &usb_1_ss0 {
->  	status = "okay";
->  };
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 6a350cee2f6c..5a82ead3bf0f 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -3201,15 +3201,6 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>                 if (data & ~supported_de_cfg)
+>                         return 1;
 >  
-> +&usb_1_ss0_dwc3 {
-> +	dr_mode = "host";
-> +};
-> +
->  &usb_1_ss0_dwc3_hs {
->  	remote-endpoint = <&pmic_glink_ss0_hs_in>;
->  };
-> @@ -1543,6 +1547,10 @@ &usb_1_ss1 {
->  	status = "okay";
->  };
->  
-> +&usb_1_ss1_dwc3 {
-> +	dr_mode = "host";
-> +};
-> +
->  &usb_1_ss1_dwc3_hs {
->  	remote-endpoint = <&pmic_glink_ss1_hs_in>;
->  };
-> -- 
-> 2.45.2
+> -               /*
+> -                * Don't let the guest change the host-programmed value.  The
+> -                * MSR is very model specific, i.e. contains multiple bits that
+> -                * are completely unknown to KVM, and the one bit known to KVM
+> -                * is simply a reflection of hardware capabilities.
+> -                */
+> -               if (!msr->host_initiated && data != svm->msr_decfg)
+> -                       return 1;
+> -
+
+That works for me.
+
+Thanks,
+Tom
+
+>                 svm->msr_decfg = data;
+>                 break;
+>         }
 > 
