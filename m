@@ -1,123 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF83122913A
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 13:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F6233690
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 13:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733924781; cv=none; b=gWNoKhvPLPCsZJyo/rV5wF4D2MBGsOornWM9PqfWEWlRmHvwuODhvWv7aiNk7t5P/OzKsuW7WQ+F7/4MCI0Jj6XErBJWw33VbBViUp47lyU7D4M5l7SGJahs5M2DqRp7Rj+evrUfTXvAunvSMfrty3Ef7TUxVVM0Wm7w+2AYuWA=
+	t=1733925449; cv=none; b=IFwBxJqAPi9iqfkKnvDf7k38QNJItkq+YfidLVxL6SxGLfHARgOK2GMsdHUD8QJdw3pBWnrqN06k59LeTsqxc2AuMtzXuy5bWywA9Ui+c+3X8YCw2Ug4tDptDM6i5+RiVqeiC4xF3UA3sSxBs2LlUwBBIYw8Y3xlIyAT19KCnX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733924781; c=relaxed/simple;
-	bh=HWXtI3f+E3Tiyx/D2Axaq2OXYBsQB19LK8Y6k/NMFa4=;
+	s=arc-20240116; t=1733925449; c=relaxed/simple;
+	bh=JhwlRQCUlSido+cOopKgWGuxkf6VA5zfN500pz/rIjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUOgC+Nen81EYGgdrT9r25wnnQyky65FNxQ/TGrLLI8t63AzyHfL9/pUq8r1zHwgq4orYjju1o+JAPfGpBvEy9SeWwlzUfAxl6OfGdiBdyxBBvlLuC/r4ZmjkdZp4vfGXjk6tCPH2rjj02ZlSN0lGVI4p9CPrw8hAmGvZPuAo0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GNzfBd67; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pz7hYBrHsVLkYzMl4/3FPp7Tbn9Fw09xERuFZclQFu5Q/abB4l37L8367cNxVP3RXAi8Z3s7XNz9wj1OdeBEzYc1fphztijP9Jt/p/t/ZIx1+9x/Z38cCMJYKkDRbjZtHNy9bI+2dlJYN7eujt/RwNU9pFtYudawtnB+xixIIhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ShjSKmxz; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GNzfBd67"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15CFC4CED2;
-	Wed, 11 Dec 2024 13:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1733924781;
-	bh=HWXtI3f+E3Tiyx/D2Axaq2OXYBsQB19LK8Y6k/NMFa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GNzfBd674DDIOAg5OzFCuPFaVwl6fbNgxNIu1CkZanOXGwI+NrhDOXBsHHeBPkeTt
-	 UrNtTMANfXbCfoJE2TQTtQHOA9Oan73/P823xcRHVCqUJjbwBCE3R/+oipXBUom/gA
-	 +wKAaoiJkQqd627paFrzhARWOUajZ4uSAjbZC84c=
-Date: Wed, 11 Dec 2024 14:46:19 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	Jason Andryuk <jandryuk@gmail.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev,
-	xen-devel <xen-devel@lists.xenproject.org>
-Subject: Re: [REGRESSION] Linux 6.6.64 crashes when booting as PVH domU
-Message-ID: <2024121144-false-playtime-968e@gregkh>
-References: <Z1l6XbHP6BTTZSwr@mail-itl>
- <fe8db5b2-7524-49ea-ab8e-21f831dc009f@suse.com>
- <CAMj1kXHSiCo7FH0Mo-_R9HjxhthddPUZfgm5c8yj7vjGvgfTPg@mail.gmail.com>
- <Z1mF0UZPNLjYAJI7@mail-itl>
- <CAMj1kXFVd+2n1fRoOriwmAPH8yX22gSy7_m_1SVjtoG3r_=-Tw@mail.gmail.com>
- <Z1mWFcm_036BrvEq@mail-itl>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ShjSKmxz"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso4274775e9.3
+        for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 05:57:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733925446; x=1734530246; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O4+3IBZgQdDXFwyfmcTHMczi/2LVRqIwQiyJZ1onodg=;
+        b=ShjSKmxzbwWpQGNGW5cB4QN4drAMPmtmOj1GnqLrno/WO9eKIol8fyHLOFPSd1d1Tp
+         lsnt0Co7OU1wYlRNfjCxIxOMvqtwPOxJ31gYdM3JXWKwjSlCe97N+2vkEUjcqCBlmH7V
+         S+PNRJXRSF6A9BtyOP7aanaDGyy+Kxq8UNijIJNq+whBiyl0erXJGyiCf8t5ZjqpAPvR
+         o+rZ4o6p2tMkirKSKmvBDiWUKhe4UXCR+KqhGjE/V3yIVrWyD3Ae81qnDMxrnAgpE5y4
+         HTrFOC48Ti+7S5a6ImFB1M7yCQCMzWhUw5Sz4OzcYZEnmMb8tXzFaQD08JflJQVepZB/
+         qL/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733925446; x=1734530246;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O4+3IBZgQdDXFwyfmcTHMczi/2LVRqIwQiyJZ1onodg=;
+        b=XEeOaKO9OJQuxSuauEz9AJkEO6XjArJeLnhle0qKu+Zfo02l2kqp4cik3Bi5V3sR5y
+         rSeUCvBWXDZ+GGicwf4jqDn+oOvCcL4EV00jkEhqwbo/8pjW5SmfNYx/4WCGBtWDehvy
+         0OxD9WPGyyesWYbSdL+fEiPIw7qYZykxsA/37HW2rZ8TU19be54CXxyrKJ6B9FkquV7t
+         w/0uYaI5nBrord/Hkhlx0dpc2j9LbKNaXwl7M+F/H08tBEXjysecP2qByeLr3gAALUSR
+         567rsRqr8YOjXpswgZ8UkUVOudLvQuhlTS1hcIB7L19TgDVGCL7vWwoaLtsJ9rKsg/di
+         6CHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXBuKBYHUgSd6aqA21PXHqJ5Lc2zMdffxKJLEINj79Rwm2BdQT56tnfz8hkGM/k2Za8pdcOvUf0DrpgQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXUI0h2FH5OujmihiaJhzcGGDCtUXmivoAKqAhTUJmoi/FfLHx
+	zsufdEukOu0GguyuJy+HuF0u9Slb2lS4HOW6Gata2DztvZnCpEo03Ptk3Y0edeU=
+X-Gm-Gg: ASbGncuGXlOZI4hi4W8DpjOtU/GoW6CdX9GnvtlTkyGSwPX0Ty2X1J2iiQsw5hbMKY7
+	MY9XOGxDZ0QkUqM16HmjgAS1ZJyld+ST89rewtFlSn5pHIpMg9r42IhNhnjD9IHzILoG3Uqwfmw
+	W8ajM4fMq4Dn0nAh9F5tHKLgrBelUl0q6OUeZxVSAbRf/K6yNP9htqhJ0j/1uuAtkUywcDy07YR
+	IbGq6R3PIV2KVj0BiNwXwqnTky3+iTx1SZWLo18xpq4HamL1xnp
+X-Google-Smtp-Source: AGHT+IGj6e56QapjjDkMGtxmigoFIildblF7J2AdVirl2LbBPSwWrReDkRoqBxNuZpY75ur5m0i4WQ==
+X-Received: by 2002:a05:600c:b86:b0:434:f5c0:32b1 with SMTP id 5b1f17b1804b1-4361c3755afmr24750765e9.15.1733925444346;
+        Wed, 11 Dec 2024 05:57:24 -0800 (PST)
+Received: from linaro.org ([82.76.168.176])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-387824c8aadsm1332447f8f.60.2024.12.11.05.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 05:57:23 -0800 (PST)
+Date: Wed, 11 Dec 2024 15:57:22 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v3 3/3] Revert "arm64: dts: qcom: x1e80100: enable OTG on
+ USB-C controllers"
+Message-ID: <Z1maQhIyS1LVfDc6@linaro.org>
+References: <20241210111444.26240-1-johan+linaro@kernel.org>
+ <20241210111444.26240-4-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z1mWFcm_036BrvEq@mail-itl>
+In-Reply-To: <20241210111444.26240-4-johan+linaro@kernel.org>
 
-On Wed, Dec 11, 2024 at 02:39:33PM +0100, Marek Marczykowski-Górecki wrote:
-> On Wed, Dec 11, 2024 at 01:37:52PM +0100, Ard Biesheuvel wrote:
-> > (cc Greg)
-> > 
-> > On Wed, 11 Dec 2024 at 13:30, Marek Marczykowski-Górecki
-> > <marmarek@invisiblethingslab.com> wrote:
-> > >
-> > > On Wed, Dec 11, 2024 at 01:24:08PM +0100, Ard Biesheuvel wrote:
-> > > > On Wed, 11 Dec 2024 at 12:53, Jürgen Groß <jgross@suse.com> wrote:
-> > > > >
-> > > > > Jason, Ard,
-> > > > >
-> > > > > I guess there are some prereq patches missing in stable 6.6.y branch?
-> > > > >
-> > > > >
-> > > > > Juergen
-> > > > >
-> > > > > On 11.12.24 12:41, Marek Marczykowski-Górecki wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > With Linux 6.6.64 I get the following crash on domU boot:
-> > > > > >
-> > > > > > (XEN) d5v0 Triple fault - invoking HVM shutdown action 1
-> > > > > > (XEN) *** Dumping Dom5 vcpu#0 state: ***
-> > > > > > (XEN) ----[ Xen-4.19.0  x86_64  debug=n  Tainted:  M     ]----
-> > ...
-> > > > > >
-> > > > > > Linux 6.6.63 works fine.
-> > > > > >
-> > > > > > Looking at the changes, I suspect one of those:
-> > > > > >
-> > > > > >      83d123e27623 x86/pvh: Call C code via the kernel virtual mapping
-> > > > > >      f662b4a69e1d x86/pvh: Set phys_base when calling xen_prepare_pvh()
-> > > > > >
-> > > >
-> > > > The second patch shouldn't have been backported. It is unnecessary,
-> > > > given that in the old situation, the kernel image needs to be loaded
-> > > > at a fixed address. And it assumes  that %rbp is set to the physical
-> > > > load offset, but those patches were not backported.
-> > >
-> > > It has this tag:
-> > >
-> > >     Stable-dep-of: e8fbc0d9cab6 ("x86/pvh: Call C code via the kernel virtual mapping")
-> > >
-> > 
-> > That was added by the stable maintainers - someone grabbed a patch
-> > from the middle of an unrelated series to make e8fbc0d9cab6 apply
-> > without lexical conflicts.
-> > 
-> > > Does it mean neither of them should be backported?
-> > >
-> > > But then, the e8fbc0d9cab6 has "Fixes:" tag (pointing at very old
-> > > commit).
-> > >
-> > 
-> > If someone thinks e8fbc0d9cab6 should be backported, they should
-> > rebase it onto v6.6.y, not backport random other patches until
-> > git-apply stops complaining. And ideally, someone would build and boot
-> > the result to check whether it works.
-> > 
-> > For now, it would be better to revert both.
+On 24-12-10 12:14:44, Johan Hovold wrote:
+> This reverts commit f042bc234c2e00764b8aa2c9e2f8177cdc63f664.
 > 
-> I can confirm that reverting both commits fixes the issue.
+> A recent change enabling role switching for the x1e80100 USB-C
+> controllers breaks UCSI and DisplayPort Alternate Mode when the
+> controllers are in host mode:
+> 
+> 	ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
+> 
+> As enabling OTG mode currently breaks SuperSpeed hotplug and suspend,
+> and with retimer (and orientation detection) support not even merged
+> yet, let's revert at least until we have stable host mode in mainline.
+> 
+> Fixes: f042bc234c2e ("arm64: dts: qcom: x1e80100: enable OTG on USB-C controllers")
+> Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Link: https://lore.kernel.org/all/hw2pdof4ajadjsjrb44f2q4cz4yh5qcqz5d3l7gjt2koycqs3k@xx5xvd26uyef
+> Link: https://lore.kernel.org/lkml/Z1gbyXk-SktGjL6-@hovoldconsulting.com/
+> Cc: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-Ok, thanks, let me go rip all of these out and do a new release now to
-fix the issue.  Sorry about that, and thanks so much for the testing and
-letting us know!
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
-greg k-h
+> ---
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index 1740fdf7b1de..4c1e01605e87 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -4422,8 +4422,6 @@ usb_1_ss2_dwc3: usb@a000000 {
+>  
+>  				dma-coherent;
+>  
+> -				usb-role-switch;
+> -
+>  				ports {
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+> @@ -4677,8 +4675,6 @@ usb_1_ss0_dwc3: usb@a600000 {
+>  
+>  				dma-coherent;
+>  
+> -				usb-role-switch;
+> -
+>  				ports {
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+> @@ -4777,8 +4773,6 @@ usb_1_ss1_dwc3: usb@a800000 {
+>  
+>  				dma-coherent;
+>  
+> -				usb-role-switch;
+> -
+>  				ports {
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+> -- 
+> 2.45.2
+> 
