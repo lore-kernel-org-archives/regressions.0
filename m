@@ -1,245 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212B2AD1C
-	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 04:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733892286; cv=fail; b=tgp6Az35hluNVwb2NR2MVK+mjV+94FOTHx0z0Hd/aZhmG8tXqsqRHaJ0MWAHEQkrvlpxNRQSTJatXpeWbQtCVaY14nNdkA1UnE3lbLUR7KV/I2omRurl54kvKnnTGldTL0FUDhlzk39YGCnt5i7fsdldLTXyhXNbW/1PIVsAmEM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733892286; c=relaxed/simple;
-	bh=spQZckInpaHp95Ajm6sEmnI11MjWfRHNqMXZUkgZBKU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rX78t4jb8UCFm9nC3TRHZJkMZ/PPDWWbPzA6nu3p8ZMXiPG1IEs9/oE4940O4xW9fQN7y1xyXuHAr2b4Zn0jOhCwu0Y/7XsKdHoK8Ce9CavpjnffXujJryDNvHnbWN+jAlUuvCNtGZ179PLIiH8vEpzO8iiXeHDZZjlzICaxpAM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6bizE6c; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D761C1BD4F1
+	for <regressions@lists.linux.dev>; Wed, 11 Dec 2024 05:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733895600; cv=none; b=ic9VZNDJgXz97HFJtzzvbNKg5bvQeJC5Bqfy5wTn6K+f8cDfR3fPXcfsWUs9JS3xktkDbyKtPkH5Q0AcFiR7ELGHvP5iZrwBTIfTEHa3B0LI39ekiEjBUF0CRB6NX2/sH2Nz0+O34knVTWliJpZIlRX3z2q9KzirBg7uqAuhb3A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733895600; c=relaxed/simple;
+	bh=cmLSSNnhREF3JwUwweEtDJM+TE6MLim68CUGz24LJFw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pQxuqh5gWR6UGQdoq5RGjZinscr3YMXS1RaDUUR4kOTyVV755AF4xxqLcncSvbbvsX8nyCOpklbSNvfbf/+v+MFEIKZf3kOdhofMLjWTEUhRJca1Ye3uSDJHd3bD6DucnQ2zSXKDqXxkTMO98ZUoMXjK2KVukc5wROhiuWerf90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jUx2oT2Z; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6bizE6c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733892285; x=1765428285;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=spQZckInpaHp95Ajm6sEmnI11MjWfRHNqMXZUkgZBKU=;
-  b=R6bizE6cpy3YqrxTBM89RjddTMYzzK8bvTxIevAxU9noMQVgnnQxRxMj
-   SBOt7H3SY3NEQ/E8JERvuhcZKf93YInCcxGKRJmBQuF1xLC9RGVEGXu/M
-   ihjxrNyyWugpK+we4gf72SLwvDkEX/q/CrgbPIZHt0r0ZiujD1881DB6c
-   zMvj/+l9dqHC5nEdu+MTzQZLrP5RCROgqHbhlE5om6jRs9RoNx0nx7Bmn
-   3Zq19L37zeKimBqj+HJ5K3aXqCCJ4b8ss/4XHICJfW8SYUCFkaTYwrCMq
-   neVyX3JnIwY2OqsUuw5ICc+goohZFYIXWLBLdPxKy7kWm1S9wW9EUAzbX
-   Q==;
-X-CSE-ConnectionGUID: X13bBZkaTeK42mX0vr9k2A==
-X-CSE-MsgGUID: HQJHr0bpSHyHc6K6rgkMOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11282"; a="34398861"
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="34398861"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2024 20:44:44 -0800
-X-CSE-ConnectionGUID: 2qcRB1h7QOu+6HEuI2WTbA==
-X-CSE-MsgGUID: +6t2NmcxR2K2QJMSp+vbqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118895570"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Dec 2024 20:44:44 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 10 Dec 2024 20:44:43 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 10 Dec 2024 20:44:43 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 10 Dec 2024 20:44:42 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aLSOOo/5CQC3m8DG+gGacQIlL5M2dBp16MGJxa24cSIZurzehged5Be25i1R7HzUWeAN3fyDwpv63nFPx91UGXsveF6BPK2ntLxw9RQZRr9wQPlTbIPI9Z+gdvcFShWOk690gQY4H3/v09d/LRpfLp06pR6AagDjTpIV8B91usFYdQcZ63w1CNSOxmC81SzxKKC1Cntc+faSmzmqIQdAmvD0tZkfJ5XJ/SGdlF9HaSploKsrljmlsVjGmGWRq0yibhaIXlM96HVDKuZeUlKhqidJbcvK5rOIIaOwLxZjid4xioYmGTannU8xI7/yF2HmmXSVmF26yefAcOuvAzeJ2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S5ONMMYAPKKJLj489lNgej+dZrEt+sdq0qBKo0uf5MQ=;
- b=TkNLQpWX+ZsleQhgnziBpWkpXNky+iI5FrRRwzb2yhpIcBjmfk2sCRwCVrIHDBaDsuBjr0rXvUEwM0VNyAK8bwU2DVFgk1DYCEX5145WdYYApsQYoigY6NyZEnaCBDqbmpiBh35IYyczCNj1Kcq5Sd6Al+Aow4GH2mWQtYjmlrnuMeV8an8r87xk7MFdcVaXQtH2WH0P+ODxAqKF+8Lecv2fSfVi0egDg1/WERaTpHT8nTNde32o369iZXG/v2xbdOHyphewFlLs6ZN4qaa6jbKT48NkmcJ1ympuCq5eTxSF7Il/6pLe/mYwOvShDF+DbtiI6AGO3uV0UBv9JoE9lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ2PR11MB7620.namprd11.prod.outlook.com (2603:10b6:a03:4d1::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Wed, 11 Dec
- 2024 04:44:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%5]) with mapi id 15.20.8230.010; Wed, 11 Dec 2024
- 04:44:39 +0000
-Date: Tue, 10 Dec 2024 20:44:36 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Raghavendra K T <raghavendra.kt@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-CC: <bharata@amd.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton
-	<akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Alistair Popple <apopple@nvidia.com>, "Andy
- Shevchenko" <andriy.shevchenko@linux.intel.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Baoquan He <bhe@redhat.com>,
-	<ilpo.jarvinen@linux.intel.com>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Fontenot Nathan <Nathan.Fontenot@amd.com>,
-	Wei Huang <wei.huang2@amd.com>, <regressions@lists.linux.dev>
-Subject: Re: [RFC PATCH] resource: Fix CXL node not populated issue
-Message-ID: <675918b414c17_10a0832943b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20241202111941.2636613-1-raghavendra.kt@amd.com>
- <674fd2b4942f1_3e0f629420@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <33b4b93b-5ab6-4a3b-b3b2-c9b3cbc9d929@amd.com>
- <6752acd92baf0_10a08329424@dwillia2-xfh.jf.intel.com.notmuch>
- <2b5bb8d8-6a7d-4a58-bde7-ce42d0a23f61@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2b5bb8d8-6a7d-4a58-bde7-ce42d0a23f61@amd.com>
-X-ClientProxiedBy: MW4PR03CA0112.namprd03.prod.outlook.com
- (2603:10b6:303:b7::27) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jUx2oT2Z"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-518802a1e7eso1299722e0c.3
+        for <regressions@lists.linux.dev>; Tue, 10 Dec 2024 21:39:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733895598; x=1734500398; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=L2JyqkiU/6R1xmttvdUUGuANembyWIMM8crCm1+D1nE=;
+        b=jUx2oT2ZnS65tHPT8pM4XWPjrcQUaBpK9KDSNGdz6SJyDOGHLnab9jsE13G8kzN7uN
+         +5HEIoXcXnWAQHVwF0VKhaSKFiiAsEcH0Hff2kXJ+zNTaatPB6RprwNV76APden8zC4e
+         wPyY5yqqP4BMeoy/hHZWxRuyf17WEGrYNB7tM+GgBKkM6YVSkwrXxDsFMl8YOKegYJ96
+         rwFsWhe12MVxxPuUZ4BBputL4AsjvFVDkaeWzXMC8iTA777M2i6FC9T7TvBg2ayE+mQe
+         bZuPTsnaaTvP47xlhGRMwjwy4hjVtVD584dxvGNUy6orRE2lr7ae3Xr3idbR2k9YEuK4
+         V5OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733895598; x=1734500398;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L2JyqkiU/6R1xmttvdUUGuANembyWIMM8crCm1+D1nE=;
+        b=WW+ObzB+DnyTzbrJqOXOObh8mSkvyGUwA3kIb4pKl86xAQ0cGclYmiZkue7y+2vNwN
+         vVYw6/l9wKyuahzEA6zBP51QFy2HDcLqIeLK1BGQt2iPrg4caGovuDr1A5USmRpPr+Fx
+         Fuui9IxahaSSRNx9T7IJW05GNnV4IMn4Qyk/hox2e05pZp8He8jQM8rsqgtgTboPvy9i
+         oXZLyr3PQQ4QxYAgrIM4PGRRWLpZ7/S1jakSnL6alizp6/mJQLaZEaE34kH2YEzDRMH7
+         YfZCNmWejgq8Fu3aMEAmdv/VNdXArKKTLbng8Jb5NSz73MkCMTLaEMiNws93hRqtZ26h
+         UPuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMJm/KplOXfCgSKR3TLtqIEdtCXdrt6rRNRcKEH1nlN2/Lpl6vNVgHW1OcFFT4uZ9tHoxBlra5friX6A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy7hLKvA71i81Vvd22Tg4Cfiiu8hU0QFjrlrgaITkZlG1cgQg1+
+	oZOJgfGCr29nPXQs9dreL7UXtHXHkJN24LMUnlVu4ugJUR9OlyElvkxN7yleUdcctug7I08Gy9d
+	+KEH2rgUgqqos2r7/C/VB1Vvj2Z5FG5cent/SIg==
+X-Gm-Gg: ASbGnctllsKJNn91r/LUKtfGUvJaBxU8+5DtEILmDP3PuZulFzUv/iZsnZ3GADUVH3J
+	rRVfgl6lFlP0ls1qy2G59P50OJ8VNDg99ag==
+X-Google-Smtp-Source: AGHT+IGaVQqa3Q+BI6ngTSIj2GVkueSl4Jrs/cm3+CtAoLXynlarl8woucxcn3CryRSjN8OBkzE56/rteEslmfJ/Svc=
+X-Received: by 2002:a05:6122:8292:b0:515:e4c4:3664 with SMTP id
+ 71dfb90a1353d-518a3cc3352mr1602173e0c.9.1733895597732; Tue, 10 Dec 2024
+ 21:39:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7620:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b849029-adb8-4d3d-d98f-08dd199e8561
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ugOpUEEGc/mK+3HD11Wht5uzNiC4Oq2FCcHA33VLHHol7jnxsA+rGsUUyp9E?=
- =?us-ascii?Q?G84RTb2C6DM51puzdxvBgG+iaRVnnTpJvwtIlep0Iso7ub9wf4qERoLrZ6TA?=
- =?us-ascii?Q?T8GmN6x4bSNYmU6BwvYKqte8eblE+KUjHpj0H94Ef8D7GqcCioP+jAXKJGBf?=
- =?us-ascii?Q?+pxr937v0bfRHqBJh6TZWhQ5yEnIXvW5oaJRxb/ePwQGPdYWX/TQJzIbgsMz?=
- =?us-ascii?Q?2uAjce5IByXkZZVT2e8ej6qwJTK5IRjwVb0ZZhmU4VmTfLyiwbVQUEQ4yaxb?=
- =?us-ascii?Q?myzVX5tqbAprulVR8gnz6R7Byb96PLA2rBl1qczs8NPFK4QC2ZtpBYkpSXuG?=
- =?us-ascii?Q?B7Tx2t7Ss/zRJ8T9XSibxkcngSgh7LPxyPJiwX59j97nxSTsZNUVbnwoO6Y0?=
- =?us-ascii?Q?cHdU4Vh9n6mzovgz504gXk4V7wapWD4TUQKssnSgJEzI14E/+0jVObDselxu?=
- =?us-ascii?Q?NHRVneTGTo2unQPQN9KeYDjIXksNGuxcaQsoNxYP0Hm6GzGv0sX5i6GBzza8?=
- =?us-ascii?Q?8bibB0XgGGFqj6Tk0qryI580+bcK/HidG6dLiz6Gv94H53uT11WQzxzvEabw?=
- =?us-ascii?Q?npvne9gzyE0GiYZU0FluSgt0+4AjxVTJmUaiSifK7FEqSrsZUIkjlkXOBl+5?=
- =?us-ascii?Q?klNRbVGuhvi4v0cwq7voIydgJ5MulktrV/Hlh8O3Z66cGUp60JPbuUsN3o/W?=
- =?us-ascii?Q?H5tyntOnbORNlsq/KyvNiY2qq0Tlj7Yb5BrlgYxvKt3v99Uf7yjaYYiTL8nK?=
- =?us-ascii?Q?oxWUujaH5o52OX1rgCDFtEShGtc8B3yFAry8J/2ZZW2LU5YU1x6pMj6CZOLM?=
- =?us-ascii?Q?ck+YeC/1t0WU+EKFGnWbDXOB0fCuGKV+d/+mDuLO3pgLB4XKQJ5KNz378PVG?=
- =?us-ascii?Q?yrDrC5mvrE8BrR661oMnJ3mJjwz/QbTBCUqjajKQwt6f6/eAUB7GBqdlBNbr?=
- =?us-ascii?Q?iBfKeIqr/asF+Lzw7un3mrG6btd/pm79X2nKsDISFzDaNTtuAWeupW6RM2U6?=
- =?us-ascii?Q?WHqe1DwlcTLQqfwYMVmF3RoaJsTNlMFkQSw/yiGzg3mA3nwxi9r7zrL8VU9p?=
- =?us-ascii?Q?AKWpifBEiyKTt7laQ9l+WBNUMQJBtDSiYnuaGNQ3ST/yUeinZ8xBaGsO/dlv?=
- =?us-ascii?Q?dsLaPxZA+sT+EqTpRSuUHOGxZjMDuCTRg1yxHz/U/4fcJetBNa7xEfxgrgef?=
- =?us-ascii?Q?9kZAfE27ChqGtLCUXuQNbt2kE8ZcTYA26bIwU1L7kurQq2uJyiQVRCo8tmGC?=
- =?us-ascii?Q?d4MZuG5HXWO1lV2kaOG+PmQmICYSLWSt5xK/uxOEc9R8PHeGDOYGspMBMlQw?=
- =?us-ascii?Q?naRxde9X/AWy/BZzJZTop/oHVAR7kn2g+196QwVuf4en0g=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TLe2My2gMQYNyvgxZJ7yqBgtRR8tjmQIDFJ90CZKsgMYFZay3QD6Mf0pqR+X?=
- =?us-ascii?Q?wyob+mLkB0HhYk953eJhDrdxk8T2fOunhRZ3nPJyreh2F59QPuqzaByY28a8?=
- =?us-ascii?Q?uN+0Cn5GaFEApBXQPyv6ApgR3QazWGbU5PE9On7UKgQO7zhv/6ANgQK4aSFV?=
- =?us-ascii?Q?D8YueNQwEiy23I93uuBjfiH5qqFtfbRWARhcapF3DU6Jxlxw+KaMh9NH0vTI?=
- =?us-ascii?Q?z0drEPHaO/7v1N/qzu5+ogFPGQ+qrlR/cF7On4lpWR381NhKOHKl/PBPLcyo?=
- =?us-ascii?Q?dH8SKT3jc5CB9/cmCbB9CyuiSwoRKNXkfFCm3OQxNTi/vtfxVW6Qf71/2eXI?=
- =?us-ascii?Q?dOIYyKdDr3pdKwV83HRiCOBQ6TVktxtbUU5jsF8ybVPTnkRT/4rSmEKL88yb?=
- =?us-ascii?Q?NSagOCkz6G5D7MwUsdJLnUfRQeI2UtZcBeCJGCfLo4VsC34vj1/xjj8IeI6c?=
- =?us-ascii?Q?qt9jQctIhlq+fqQt9U/whTivFKDr507MuBkzPVvCMC4ZMjhw+3H9dc2EE5Nr?=
- =?us-ascii?Q?ueB3iY6tKjRwmyeVZ//sb8jJDO6V+5xuZB3dDnaC2tYhslxULooNxNw5lVk2?=
- =?us-ascii?Q?8C5pm8He+mINgb24TIEHRga42SinP3Lk5Zu4MpJrrHONZltseazT9Z3kpQ7x?=
- =?us-ascii?Q?NsA9lChQ4ph9M7cko8QGUYDF6ivMG6DNsTyjFDrNGjyrFVZVoTkyUpUhZvpS?=
- =?us-ascii?Q?jx5jccnCMGEFSbjXnh0HgkgbMQiInfn2y27wU688Vwu6pMoSxjyQaNvhbIxE?=
- =?us-ascii?Q?LVFUapd4kfa2VIB1ETEH2YnmCV3S59NmnMc/jaxH5WD9r9R5tg5QsJJk6I5h?=
- =?us-ascii?Q?cDt+46vh9240iPtRKmELRHysH5Y/vqsvgNS/CH5lzBpxD0er0UIRt3/hKf7e?=
- =?us-ascii?Q?lsxKg0D/J1s1xueba1MloTWbXwkVkC1maUU+gHpiAON9pbJwGojtUgDiPGOC?=
- =?us-ascii?Q?HjiYCvuF1ZbLhaQAFr+G06eBfn5hppKq1RNkyHpKjLey76qG/shi8UrrfMBm?=
- =?us-ascii?Q?P0RaDAEkfxM8IsnlNxB9TDmI/BXK9kHp+p9U99U93LRM1+UT+il6mOYzhMDo?=
- =?us-ascii?Q?LipAr702uH66Dh8O0WY19LS6wWhZyHvDj7yS0AEUVWcR0yypDTIsTOQdO37M?=
- =?us-ascii?Q?iNFm0qkGKSJ839I8hOFL9eO+77u3b7BP+Q6h2bolez4k8j8NaOzLBQG5gVxT?=
- =?us-ascii?Q?+T/kf68FhmNRLtxvgcrvC1v5XJ4K/tZT9nsUb5mtH4XD8oUbnG2smuy4Olz6?=
- =?us-ascii?Q?P4ZN7x8jKHc50tH9RXsbMCG/PqNp3vPdiv9L4ov41E9CAEBxfFsGpMK18C2l?=
- =?us-ascii?Q?ZYqwGqyrC0C6fRGmqMfnILmK2zl5IplHZYfnGArVv732ma0eUI53+D3GLR/s?=
- =?us-ascii?Q?OsBqYceihXJqABcvyqUBfAE7UVN3Te4UuNA16XLxL0+zW5yQ5KjHy2z0m6Rg?=
- =?us-ascii?Q?OPOj7FEdqI0fIFHZFYyULUMkOxAul/MTixn+hIT2W/h1Y39lNR5By2l4vVjv?=
- =?us-ascii?Q?igGbc7v7SjLC+acQTy4BCOT1Y/gChYh1SbDs8832jSHHmU59bBDT0DRrdKOM?=
- =?us-ascii?Q?T7l9f+f6kOEV5uNU9PU0qOleWDMlQ9S+FXC8uC5lN3iysEmWbQJ9gmtkwyY1?=
- =?us-ascii?Q?VA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b849029-adb8-4d3d-d98f-08dd199e8561
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2024 04:44:39.1817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FBUwz/z7HHo7SOdAfB+vcIPqYnwU7n23cGzxb62uJTwUHUF5JBMMA4QXABpy7zkRbLz/kKYzcXZ61tWkwN89c7uO7bnNMqEN5yv4fQjdy3Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7620
-X-OriginatorOrg: intel.com
+References: <CA+G9fYvcBvbabg+m7brKfpGCGZUcK+KHHTFX7hFvW6GmN2XF0g@mail.gmail.com>
+In-Reply-To: <CA+G9fYvcBvbabg+m7brKfpGCGZUcK+KHHTFX7hFvW6GmN2XF0g@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 11 Dec 2024 11:09:46 +0530
+Message-ID: <CA+G9fYuHGTKM5P+nEifZwfALPfO9uw7sraCrGo-c3YzR=JjwJg@mail.gmail.com>
+Subject: Re: selftests: core: unshare_test: WARNING: at mm/util.c:671 __kvmalloc_node_noprof
+To: open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, LTP List <ltp@lists.linux.it>
+Cc: Shuah Khan <shuah@kernel.org>, David Gow <davidgow@google.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Barry Song <baohua@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Raghavendra K T wrote:
-> 
-> 
-> On 12/6/2024 1:20 PM, Dan Williams wrote:
-> > Raghavendra K T wrote:
-> >>
-> [...]
-> >> B. /proc/iomem
-> >>
-> >> $ vimdiff success fail
-> >>
-> >>    4050000000-604fffffff : Soft Reserved
-> >>     |  164 4050000000-604fffffff : Soft Reserved
-> >>     165   4050000000-604fffffff : CXL Window 0
-> >>          |  165   4050000000-604fffffff : CXL Window 0
-> >>     166     4080000000-5fffffffff : dax1.0
-> >>          |
-> >> ------------------------------------------------------------------------
-> >>     167       4080000000-5fffffffff : System RAM (kmem)
-> >>          |
-> >> --------------------------------------------------------------------
-> > 
-> > My eyes only know how to read unified diff (diff -u) format. Is this
-> > saying that in the failure case the System RAM range for dax1.0 is
-> > missing?
-> 
-> 
-> Sorry for that formatting. I realized later.
-> Yes. dax1.0 missing in the failure case.
-> 
-> Looks like problem is that,
-> 
-> 4050000000-604fffffff : Soft Reserved
->    4050000000-604fffffff : CXL Window 0
->       4080000000-5fffffffff : dax1.0
->          4080000000-5fffffffff : System RAM (kmem)
-> 
-> this use case where,
-> 
-> |A<------------->D|  CXL window
-> |..|B<-->C|.......|    kmem
-> 
-> B->C range that falls within A->D as in above somehow
-> not covered after the patch.
+[Gentle Reminder]
 
-I was able to reproduce a similar set of conditions with the cxl_test
-environment:
+On Mon, 26 Aug 2024 at 18:50, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> The following kernel warning is noticed on all arch and all devices while
+> running selftests: core: unshare_test on Linux next-20240823 and next-20240826.
+>
+> First seen on next-20240823.
+>   Good: next-20240822
+>   BAD:  next-20240823 and next-20240826
 
-f010000000-f04fffffff : Soft Reserved
-  f010000000-f04fffffff : CXL Window 0
-    f020000000-f03fffffff : region3
-      f020000000-f03fffffff : dax3.0
-        f020000000-f03fffffff : System RAM (kmem)
+This is an open issue from August.
+The reported kernel warning is still seen on linux next and mainline
+while running selftests: core: unshare_test.
 
+Linux version: 6.13.0-rc2-next-20241210
 
-...but that did not result in the bug. So there are some other details
-missing. Can you proceed with providing the dmesg from the good and the
-bad cases?
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Crash log:
+> --------
+> # selftests: core: unshare_test
+> <4>[   61.084149] ------------[ cut here ]------------
+> <4>[ 61.085175] WARNING: CPU: 0 PID: 477 at mm/util.c:671
+> __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+> <4>[   61.088958] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
+> sha512_ce sha512_arm64 drm fuse backlight dm_mod ip_tables x_tables
+> <4>[   61.093141] CPU: 0 UID: 0 PID: 477 Comm: unshare_test Not
+> tainted 6.11.0-rc5-next-20240826 #1
+> <4>[   61.094558] Hardware name: linux,dummy-virt (DT)
+> <4>[   61.096763] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT
+> -SSBS BTYPE=--)
+> <4>[ 61.097841] pc : __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+> <4>[ 61.099701] lr : __kvmalloc_node_noprof (mm/util.c:661)
+> <4>[   61.100448] sp : ffff800080abbce0
+> <4>[   61.100819] x29: ffff800080abbcf0 x28: fff0000004549280 x27:
+> 0000000000000000
+> <4>[   61.101744] x26: 0000000000000000 x25: 0000000000000000 x24:
+> fff0000003615e40
+> <4>[   61.102512] x23: fff0000003615ec0 x22: bfafa45863b285c8 x21:
+> 0000000200002000
+> <4>[   61.103232] x20: 00000000ffffffff x19: 0000000000400cc0 x18:
+> 0000000000000000
+> <4>[   61.104053] x17: 0000000000000000 x16: 0000000000000000 x15:
+> 0000000000000000
+> <4>[   61.104927] x14: 0000000000000000 x13: 0000000000000000 x12:
+> 0000000000000000
+> <4>[   61.105752] x11: 0000000000000000 x10: 0000000000000000 x9 :
+> 0000000000000000
+> <4>[   61.106606] x8 : 0000000000000001 x7 : 0000000000000001 x6 :
+> 0000000000000005
+> <4>[   61.107377] x5 : 0000000000000000 x4 : fff0000004549280 x3 :
+> 0000000000000000
+> <4>[   61.108207] x2 : 0000000000000000 x1 : 000000007fffffff x0 :
+> 0000000000000000
+> <4>[   61.109262] Call trace:
+> <4>[ 61.109619] __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
+> <4>[ 61.110248] alloc_fdtable (fs/file.c:133)
+> <4>[ 61.110751] expand_files
+> (include/linux/atomic/atomic-arch-fallback.h:457
+> include/linux/atomic/atomic-instrumented.h:33 fs/file.c:177
+> fs/file.c:238)
+> <4>[ 61.111171] ksys_dup3 (fs/file.c:1337)
+> <4>[ 61.111596] __arm64_sys_dup3 (fs/file.c:1355)
+> <4>[ 61.112006] invoke_syscall (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/syscall.c:54)
+> <4>[ 61.112480] el0_svc_common.constprop.0
+> (include/linux/thread_info.h:127 (discriminator 2)
+> arch/arm64/kernel/syscall.c:140 (discriminator 2))
+> <4>[ 61.112955] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+> <4>[ 61.113384] el0_svc (arch/arm64/include/asm/irqflags.h:55
+> arch/arm64/include/asm/irqflags.h:76
+> arch/arm64/kernel/entry-common.c:165
+> arch/arm64/kernel/entry-common.c:178
+> arch/arm64/kernel/entry-common.c:713)
+> <4>[ 61.113742] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:731)
+> <4>[ 61.115181] el0t_64_sync (arch/arm64/kernel/entry.S:598)
+> <4>[   61.115709] ---[ end trace 0000000000000000 ]---
+>
+>
+> Crash Log links,
+> --------
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/log
+>
+> Crash failed comparison:
+> ----------
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/history/
+>
+> metadata:
+> ----
+>   git describe: next-20240823 and next-20240826
+>   git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git sha: c79c85875f1af04040fe4492ed94ce37ad729c4d
+>
+> Please let me know if you need more information.
+>
 
-gist.github.com is useful for this.
+Kernel warning log:
+-----------------
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241210/testrun/26261199/suite/kselftest-core/test/core_unshare_test/log
+
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
