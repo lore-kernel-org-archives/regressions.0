@@ -1,493 +1,424 @@
-Received: from mail2.galax.is (ns2.galax.is [185.101.96.227])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4289F18A921
-	for <regressions@lists.linux.dev>; Thu, 12 Dec 2024 21:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.101.96.227
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734040153; cv=none; b=hUdshWZBFLGN2BtELYit9AQCGn1u+ZSnXWtf8WmPsHhVuU+j1EW9T7IX9gL6GkGHIDGVHgJ6wo3Pe3TsUb/00xlvggyOurxjE76H0Apg6AYtOTnMAnTFXfL9XLSrblbqcrUjBqfiaYF8d1C3t9CBwUf/Wm9v/KIO/854/hkyu8A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734040153; c=relaxed/simple;
-	bh=xP9T+H5GlGvFJugqpliS922vS07kjYPrWyReE9BojeU=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=QkZ6S2DP5CxxoK8UQSXnD4oxnd1Vu4DueyBCCajPupG3AOypfLETUDoEbjd9Ue2dLLyECZmGTaoKMKRhvEpr0reDKoVaLxZZvcOO8K9HhNjZUJqWi8slJxpW2sf00wezC4OtOH3NsMndxJtiMyXO+5GaHDiHGUhCMybdjYdbPRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=galax.is; spf=pass smtp.mailfrom=galax.is; dkim=pass (2048-bit key) header.d=galax.is header.i=@galax.is header.b=Vi34sEHB; arc=none smtp.client-ip=185.101.96.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=galax.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=galax.is
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1DC2F2F;
+	Thu, 12 Dec 2024 21:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734040202; cv=fail; b=ctBe3PmYN+y3kmkHaCIKc8EnXFpE7QmxmXPs6jPsVcGAWKAyqQN9Bw/rYInKx122eJa+2h4OOMAtEIREfoH0ORazs+uXZySC2t39NV0YoPlvAuDEcFTExmbdF0Jj6b6K93jiURdJMusT6JjkhWOBXQXxdN9o2yMS3UldCK+C8Xo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734040202; c=relaxed/simple;
+	bh=pyPMddn0eENSeccR2Pw1/xiEeqcLGGb/XsKAG0PADLs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=CSWgS/3vvWOjg9r+f+Q1WU5rk1nDe1CCTh0hO8pc2ddFSiRLJRpEW9s2JEZ8qxTcfLiBDjfA21ejcJo9+V1aTLXQFBULCE9Av5mrWiJzAdvfiUu0WoTgkr7iA7x9/TiLpTZgqX58D0lhlt59MyMtxfYbg2N5Ro8riIWvbpfeHcc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YKFKs2ZL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=e+rAoLRU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=galax.is header.i=@galax.is header.b="Vi34sEHB"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=galax.is; s=default;
-	t=1734040136; bh=xP9T+H5GlGvFJugqpliS922vS07kjYPrWyReE9BojeU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vi34sEHB3RIBvF+TM7t/1DM9XUIPc+23wSJz0ZPLaN2ao2GPXrkr0O78qcHdxz36x
-	 zo1OyfFBB1nqYXhoSrNNovdeqTOJ8LPE4IyPwRhglMFCISdc17j3TqOlsSBd1E7RpV
-	 VOu91CTjT20dtiTSWjLYpzlNThPtHRIOWo6GNjB7pC79Mn5Ju+GB1kUyaEJGm+DK/c
-	 br93m2CfwhyECxLxDbsSfN7JcSi3MqlYii5GR2pFRiJEc9IRAeuPO4HC0725crUN3+
-	 /WMYmNsL+aTA1UiDtNZtoI9c4iST/KJZppAPpa63TX8nBAVrHJRbLOuGGpJYklJff4
-	 hN2hQpX53YVdA==
-Received: from [IPV6:2001:4091:a245:803b:2c86:ca27:4c03:eab6] (unknown [IPv6:2001:4091:a245:803b:2c86:ca27:4c03:eab6])
-	by mail2.galax.is (Postfix) with ESMTPSA id 094161FF38;
-	Thu, 12 Dec 2024 22:48:55 +0100 (CET)
-Content-Type: multipart/mixed; boundary="------------tn0XGAUH9758TAJ8z3vOiT6p"
-Message-ID: <e9f36681-2d7e-4153-9cdf-cf556e290a53@galax.is>
-Date: Thu, 12 Dec 2024 22:48:55 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YKFKs2ZL";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="e+rAoLRU"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BCLjwSX002524;
+	Thu, 12 Dec 2024 21:49:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=A6NakWSAF3/53SVmJPMNWhCEdizR2swmygZpjgPbFYw=; b=
+	YKFKs2ZLefB+lJkQMi4S5uao0vn7fTaajQV10eSVWNl5O3Pz99BRBKUt2Zu5vhTT
+	w98MbiMGCvnOYaNVLZSkH+H/piW6hn/c/veNqFj+NSlPfOEJsbmTbkO+N69s212Z
+	UH0MhKGBjo/RxEzkq9Yrom176GrRxdMcITVo/bx7jJ1locFvmESx9P8QMWJcecET
+	1VffoT1oIh4MChFXwWrj1V1BayUcBBVJ9bLLT6gxjMuZZOqfKjg5DYwDKSQHjmwm
+	iTZN1BVJhKMYs/6OGbIt7Ze/e1T9Wddz24cemGh/9mFds1hKvOhDOkZxuihYhj/U
+	AK/rA7PtS/fjUwbUHBTeyQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43cewtcbh6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Dec 2024 21:49:57 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BCKGVZY036233;
+	Thu, 12 Dec 2024 21:49:57 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43cctc0sn1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Dec 2024 21:49:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=guIXAM9kU0vuJf60omKrzFvLUDdr6FzCkZ5UzSpaJCxGL0dk/+dFKo4p2GtdYLp1pd+/DNZF0/cu4GzfYcXh9IYS9QTJCUY6SkC3FLkzZaq7JLBhOMOwCDFjO+WBTVZQweu59hXdix3lfUAK7zeHUVJs/ABuXObCe/FikC4HiSEthyL5Vei7ogmQ5b0zWQnSN8FbZkSCNYY7LQJDIFXU8TXqkOhMjz38ZIqLMQf03pICsiyrg7e5fVS5gg6rD6UO8tZmiWY9ElcduUO/h/XFeQ2Z+rNDohVgRnMOpwlHcvkLTO+lcUKgNGZK4FCnTFaQ6eK/dZvlPZBgD3Vk/P4TCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A6NakWSAF3/53SVmJPMNWhCEdizR2swmygZpjgPbFYw=;
+ b=DU3sVzZFTmn+5bWp0Q/eV0Ahy4ySdx9ydF2JRhtxIcqqDzvOo5Nqar4F0BRW72ghpPWHelX6KmqpOz2F7lYPvRdpAVc16mBebfVg1Yn13qwLKbA+HTCVrKIW9XGKU6y73G1SeJs9ZcBnQ7eelB0CrGLsDGsU3HIhWw1ayj11bDmsmsVJcfBeVeIqLUvJ/PZh3jEAox8Ck9/kevyaLsBFJn8k54tdsUO8P0240zgMWZZ0aMvvKtJA4/9c1QkoW0Qn/D2D07GkkJS2tMfgM5JrwfGvfvIrBrny0N7jWsnwpp+LSamZcow2818deefT6/ri7DiDZg0DgPlYh+yJ6DU+xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A6NakWSAF3/53SVmJPMNWhCEdizR2swmygZpjgPbFYw=;
+ b=e+rAoLRUWkSh/T0tJP8bneMIkUfxaf3bk2LGYAcakQMygRGj8CjsvLFEjGHlrTU2nVjZxKAqSeaRzTmLf+783AXKOCrGY/F0k8Rtz91G54pnzjL4MorVhhlqptk4PZLZf227D5XajeEUofTqh2W/hGuLf5s4+2yT7tWP5Z673ic=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by CH0PR10MB4905.namprd10.prod.outlook.com (2603:10b6:610:ca::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.16; Thu, 12 Dec
+ 2024 21:49:54 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%4]) with mapi id 15.20.8251.015; Thu, 12 Dec 2024
+ 21:49:53 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Jiri Olsa <olsajiri@gmail.com>, Jiri Olsa <olsajiri@gmail.com>
+Cc: Laura Nao <laura.nao@collabora.com>, alan.maguire@oracle.com,
+        bpf@vger.kernel.org, chrome-platform@lists.linux.dev,
+        kernel@collabora.com, linux-kernel@vger.kernel.org,
+        regressions@lists.linux.dev
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on
+In-Reply-To: <Z1qrVu2Pv6qXI9tD@krava>
+References: <Z1LvfndLE1t1v995@krava>
+ <20241210135501.251505-1-laura.nao@collabora.com> <Z1n_wGj0CGjh_gLP@krava>
+ <Z1qrVu2Pv6qXI9tD@krava>
+Date: Thu, 12 Dec 2024 13:49:51 -0800
+Message-ID: <87zfl0mv0g.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN1PR14CA0019.namprd14.prod.outlook.com
+ (2603:10b6:408:e3::24) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: backporting 24a9799aa8ef ("smb: client: fix UAF in
- smb2_reconnect_server()") to older stable series
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
- Paulo Alcantara <pc@manguebit.com>, Michael Krause <mk-debian@galax.is>,
- Steve French <stfrench@microsoft.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-cifs@vger.kernel.org
-References: <2024040834-magazine-audience-8aa4@gregkh>
- <Z0rZFrZ0Cz3LJEbI@eldamar.lan>
- <2e1ad828-24b3-488d-881e-69232c8c6062@galax.is>
- <1037557ef401a66691a4b1e765eec2e2@manguebit.com>
- <Z08ZdhIQeqHDHvqu@eldamar.lan>
- <3441d88b-92e6-4f89-83a4-9230c8701d73@galax.is>
- <2024121243-perennial-coveting-b863@gregkh>
-From: Michael Krause <mk@galax.is>
-Content-Language: de-LU, en-US
-Autocrypt: addr=mk@galax.is; keydata=
- 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 4K4=
-In-Reply-To: <2024121243-perennial-coveting-b863@gregkh>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|CH0PR10MB4905:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b840872-3452-4817-af8d-08dd1af6e959
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ym5PMEJEeWxFb1RkajBRY1BxWG5qeWMyemVQTmxLazBsWlBVSXVOOTlGd0s0?=
+ =?utf-8?B?aE1McWVlRWFBMnZmeUgyT3RVMThlUWIxclB2RmpZOXhsSU5JOGlYV1crbDh6?=
+ =?utf-8?B?aFBBRkNwc3REVTZqbHJRb2NhV3RsbjZZanFDTjRsbDkzRWhVZysvdkVCc3M0?=
+ =?utf-8?B?REZ0WDRqRUF2V29sR21NakE5Z2dpeU1MeDR5Rkh2OEFJV1A5b1kxRUFtaXkv?=
+ =?utf-8?B?K0Z6L0pINlRYL1dtZHFhOEJCcEZHZXExZnI0VXdWVERudlJ6MmpNUTZyVHo5?=
+ =?utf-8?B?emZkZVFLSHF0Mm9LWmFMbjNML1hmUlNCOEZXWlNkeHhKK3dUYkw2aFZ2dElE?=
+ =?utf-8?B?SUF1UVo5YW5NNjhaVGZUUDlmZWVEanU1aHkwWTdJaUw1eTdVY1l4eURUa0h0?=
+ =?utf-8?B?bExnakQxTEZXUlJtTlY1dlpnVzhJdUZxR1kyeFlnekRjd09RNTJMdnhBZElH?=
+ =?utf-8?B?VnJ5dXJyNk9vKzVidmpQODZSSW5aZkh5dVBQT1pJSklyeVNtSU0vQjArckVC?=
+ =?utf-8?B?aFNnVkpXcnF6UC9uN3NkTHdXSnIwMWJZTS9oTVdCdEZNWTlXaGxvYmpSRHBt?=
+ =?utf-8?B?Z0MvYng1TDZDS0QrNDYxWUpuOWhpL3NLRGlYL1lWVjlsaUcxbWs0UllLVFhx?=
+ =?utf-8?B?K3QrVzdiOU5iZnZHTEVaL2tyaExDcVVxVEZoNmNkbi9BcFNxRDZnQkFhaEx1?=
+ =?utf-8?B?WEk4Zm5aMHZSOFF6ZmVWYjlDTXdGbFduQzR1dlNwdHlQdDhZUjVzRTBpcnFx?=
+ =?utf-8?B?YWtHOTFySSszNm9oRFpOYllNbEQzVDNxcHFBNWgwU0dnV1kybm8xK0x4RVBZ?=
+ =?utf-8?B?NHZ4SW4vWTBrUjdHclhyMWVyT2VKS3JHa1F1eVZOdkZ2WEI0Um51d0ZiRnNY?=
+ =?utf-8?B?U3huZ2I2NklET3VUWmEvbG1yU2dTR2o2N0dsQlJqVzd1MEJnNzZqNkNCb0RX?=
+ =?utf-8?B?aWI1bElQd0puYnBhK1M1VkZyci8vRlJrRGI1QnJCODRLZ25TNERQOTRjN25K?=
+ =?utf-8?B?TVI3U2x3YXlZN2ZXajVuYnNwblBQU2dibTM1NERVVnVKRG84VWt3c3loTXc0?=
+ =?utf-8?B?TG1pMkNYdDRlbjRwVnBwZG9zbzJhc1dBUFdHSkpCMUdhbDBCNWpjbHNCeHha?=
+ =?utf-8?B?bFovTTd6cDdRemJlQVZVaFZjNjhiUjBZcDZTTDBxZUExdlA5UmJmMjRqVEcy?=
+ =?utf-8?B?OE10elZRay8rOTZHK3IxMUo3NFhScTIxV05ER0R3WWVrSE9PMGFlcDFKUVhM?=
+ =?utf-8?B?MDBYNjNocU84ak83YjBtMjRkY0pSK0NidXJxSVp0YmlyTFIrcTQxU3lRZGhq?=
+ =?utf-8?B?dDl6eks1c0IveHU1MmViaU9UNFFVOTI3b2RTV3IzUy9xL01hZTZ3cDhGK1M2?=
+ =?utf-8?B?QlJkem9uM3hWSERpRmlBNmNhYXJmRDhwVk5zMjNVdU1Jd3hiZ1hadEdEVnl6?=
+ =?utf-8?B?ZUpMbDVNM0lJNjgzRHNrQ2ExTzlPTjJNNCtnNXp4c25namNqNzFGVHk5NlZW?=
+ =?utf-8?B?WElWK2RGbEp0NEtHWGdMZ2hnWkxHQlB6bjRISzJuckxhR1FhRDl3akpicTdQ?=
+ =?utf-8?B?K3RrdzlJSEdSUytqWFNMSlBHaThBWTJmSG5jWjNtVXBPS05jNkE3YXoyaVZF?=
+ =?utf-8?B?eUE2alpueldJMkdOamJIb0E3R2w0dC8xejZpUlYzSUk4eVJiZm9KaldscW5s?=
+ =?utf-8?B?NFRMcEFpS01DL0FDRnRCWEg1K2VPckJKYS9ta2MwZjViUUpGT2c1dC91VHk4?=
+ =?utf-8?B?UFNvekovL1lFMThLcHBEMk9uVXBhaDR6Z24vSmk5RjVkUWtRYi9reTFwdVV3?=
+ =?utf-8?B?dHJDeEJkUzlLYzQ1cmFOdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NEJDRkhzdUE1OEFabmxIbzBwb0dGdlpoQnJ6MXdFbGVoZlNTWVpjVmZZSTZk?=
+ =?utf-8?B?L3lITUxMZlJCNDV3Z0RBdTFxczJETlRFRmtYajcxMWlZdE4xWE1jdjJGWlF0?=
+ =?utf-8?B?SUVsNkNFZVRQbFJFREkzWWdaUExnbWk3bXB6NnRhTHBiUGlkaU12VHZvK3Fm?=
+ =?utf-8?B?cE1uU3cvWGJlS1lXVHQ1c1FxZlE2UnMzYVl5UDVBRVNHUTIwc3ZwUjErTzdJ?=
+ =?utf-8?B?T3BWZkZYNHltbEpCYis2Yit3RzloU2NvRks2STVjVWZ2SDNNV2ZHNjVNcy9H?=
+ =?utf-8?B?MVhqUkVzRklJOEV3QXV4eE5OZW1XZWUyVHBYNk82citzTjVpdEZCRW1IYURk?=
+ =?utf-8?B?TUdkUjdCMWNJVkYzWGZCVmNNZjlTeWJld1orTU5wZC9mS0VlU2lFWS9rTDN6?=
+ =?utf-8?B?WHY3ZEI1YStuSUV6V3lvSWJlU1NDQzJYalJJUDl3S3VkN3hDUXdQazVPRE1u?=
+ =?utf-8?B?bEhIWTFnWjY1KzZLTVdvOFJhL3ZPUWpMWFlKT2ZBcWYxV29PVHoyNjZTbjdC?=
+ =?utf-8?B?WlRiQmtIOWJoZXBXazV1VXZxSUJMU2pEckF1ak8rc2F4OVNMcmorMEZobWds?=
+ =?utf-8?B?YUY0Vk1CdGV2NDBqcFJaTDhlWXVMcDFmUUt5KzlCN0lucE5sektlMkFvRHJE?=
+ =?utf-8?B?RlRJSkFIU1l1QTAzQXd4TjhSQVJOeGFFazRpWVhwaG5TWi91ak0xMi9iWVNN?=
+ =?utf-8?B?Vm5USEhQOEhPU0RXL2laVDRHMXNCeDUyY1BZVGs2QWRobG1mZk5jV3U1MFFY?=
+ =?utf-8?B?Zi9iZSt3RWExVXM4UkhvaTBDVmFZVGlSM2Q2QjUvZ2JkZnJKYy9CRk9aQUdn?=
+ =?utf-8?B?dFZRY2FYejRoa1MxWkUwQktMT3BrdEdpczZGSGNKTWprV1cyK3hYNUkyOFhS?=
+ =?utf-8?B?THJYYkQ5NHkyZTV5akhsaXl6SEpBZ2pZb05OQkY3enY3RW1XZHJRVDNXODhJ?=
+ =?utf-8?B?WVJ2K1hraHZEbXZ1eFZib0hndDhpa0ZoS3k2TmRlcEQ0ZDNZOG44T0MwNE4v?=
+ =?utf-8?B?MXI3UXpuSG1ZQ2d3YWRsRkpoRTR1ZHdOUS9ISHlKZGVmQmVDRFFRZENhMEx5?=
+ =?utf-8?B?TkFRM0w4QzJIWnltNnBPNDBpbUNCcVNkRlhuVmhVdkliamhLWEJOL1ZkaFgv?=
+ =?utf-8?B?dURVUTNHQUpYY2Vpc0l4T0pTdUVuUHZua3R1ZUpXc05HdlpaOHorUmI5ZkZN?=
+ =?utf-8?B?WVRhbE9OU1IwaDNFVjhVYzJPc01YOFRrZnJEWlBMUHg0dWphUllhVFhGOE90?=
+ =?utf-8?B?ZVFoekVFU1JaTUhOdzZVUUNlVFJtOFdJdkhMT2YrbXl3Rm9DQTE2SWYvSEhm?=
+ =?utf-8?B?ek9zeTc1NHBDeVJ2RmtvdDYvVTkrZjUrVFVOdktMVU1NR2hyUGZadC8zTU9I?=
+ =?utf-8?B?SDlxNTU5UCtHT1B3NmVaUmg2OGZTakRzZEJJQVkvMEVUUkFHWWtuTEpXaWVp?=
+ =?utf-8?B?ZE9OMnN0QzVRM2NFTXVhWklyckRMWmd0TnNBUXh0NUVud3QrUHY2OTdsTTZv?=
+ =?utf-8?B?d3czUmJ5VCs1MjRNZFAxMDZ5WEJQb2V2NHFxdVA3VjNkdEowNlJUVWV5eWsy?=
+ =?utf-8?B?emV3ZkFibEQ5Q2xYS0FmbWJTWVFTU0ptaVdUbXJuNEYreHdjZEVwcnF3eDhw?=
+ =?utf-8?B?cHFsWFJYNVllaG1FODlIU1R2djFtOERGMS9FMzRuVzA4NFcreW5mTUN1YjJo?=
+ =?utf-8?B?eDN2TitpcHZNVUVKUFlmdWNHR2NaaFRzWk1HZHAxWlNCWE9OYkwrR1VCOEN4?=
+ =?utf-8?B?NHNkeVRIeTVSQmNyTkJ0ZWZ2NmRWdFBDb2JIVFl4SUtvaFNCa2JqQ1pDc05X?=
+ =?utf-8?B?Y0tHS3dPS1FFcDRJbDAvUTVXWEkxdFIyd1UwNTF5ZTJlLzJ3aGhtVzg2S3dE?=
+ =?utf-8?B?Q3NBVG9WVHVKMjJMdVJOSFQ0aVRHWHIrdisyQ2RHekhoQTNWRmRYUm8xNDhh?=
+ =?utf-8?B?T3BrY25kK2pXSEE2UGFlRHg1dG1mMi8rd3Foa2V0ZGczL2k4YzBXSjJud0Y1?=
+ =?utf-8?B?ZHFqcVFkRzFHVnhEZ1pRdzVBdURvdkYyVkJkZm50RzcrK0gzMFNrL0dnOEsr?=
+ =?utf-8?B?RUM2T3ZxU0plTENmYUNLR1JkQW9ta24yU1B4S3JpMGtrcTBKMWMvSzZyVTNT?=
+ =?utf-8?B?Q05NTjNHVHIvQ1V3UVh5L3BYMEpsSFdFbmtja3ZJWGZXdUNsS3l2dUtSZkNE?=
+ =?utf-8?B?TlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	hhA+cSrLw2JzWXnHHz86ZgjQvzK/eV21WXUskb238cHQpWMO0mItOdRnB9D6IUAGY1QlkWp+68s8hWMzeHDGMmvNgUUNIL8yN0CfL6a5mSNbXyyVnfFWsyT9rShCrfEbVdcFCNnr13uP2/z3kDRi7NZ7Rh2QrNy3VtJ9fPg23aX5csfPP5UautGkZxYUpM8l8omOM85zfRTbU+rYQ1riy1Yz5UAUaca5M7tk/1IPqbj2CRFoHhMnrxY2tSQ0YO69LrxCDJaU6HRvZQnYP4/TxjW7J0+iY8qUF8ojBwIWz64Pj9f3fWV7hzFHFQFjbjcZEHdYKH9zqlQ+wkhxKawQAYiMQ8LU+aGKQeOvIQ38mUZDmCZ36rH2txe3nN+plwwq7lqON4vr97SYJXjd5AvETJIgeXF6dkADHNf7UmHOnCAud2ibtn9YS5SWi3IVJ0DY2/Ee/YlMncPmAiCndigT02l+li6HpMVTj7cSVo4isuCZ/ybkNFa1EoWLbNfJVyOCxhU/X97Of2FoA9MjugWK2Dh5hv8YZ9sYThQtjlClq2ahINjs9Hs6uzYfpJEh7cSpJDwsmxAOWDlCMsy2Y2Az9XaKjVdxNjzqIOZhBJdqLi8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b840872-3452-4817-af8d-08dd1af6e959
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 21:49:53.8757
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5uVoTGcDOYUc9Zf/mH6CVVUfn5/U6ta5oH3uGNQ9mxCfaubCw1uI/9ltMWVdr0qguICO9pwp9FFvEtxPQ+JDtt/FH0+EAiBrEyNWErWG9/k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4905
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-12_10,2024-12-12_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2412120158
+X-Proofpoint-ORIG-GUID: P55vrvp2vnFig2jffjMKENTzzrYE6UU4
+X-Proofpoint-GUID: P55vrvp2vnFig2jffjMKENTzzrYE6UU4
 
-This is a multi-part message in MIME format.
---------------tn0XGAUH9758TAJ8z3vOiT6p
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Jiri Olsa <olsajiri@gmail.com> writes:
+> On Wed, Dec 11, 2024 at 10:10:24PM +0100, Jiri Olsa wrote:
+>> On Tue, Dec 10, 2024 at 02:55:01PM +0100, Laura Nao wrote:
+>> > Hi Jiri,
+>> >=20
+>> > Thanks for the feedback!
+>> >=20
+>> > On 12/6/24 13:35, Jiri Olsa wrote:
+>> > > On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
+>> > >> On 11/13/24 10:37, Laura Nao wrote:
+>> > >>>
+>> > >>> Currently, KernelCI only retains the bzImage, not the vmlinux
+>> > >>> binary. The
+>> > >>> bzImage can be downloaded from the same link mentioned above by
+>> > >>> selecting
+>> > >>> 'kernel' from the dropdown menu (modules can also be downloaded th=
+e
+>> > >>> same
+>> > >>> way). I=E2=80=99ll try to replicate the build on my end and share =
+the
+>> > >>> vmlinux
+>> > >>> with DWARF data stripped for convenience.
+>> > >>>
+>> > >>
+>> > >> I managed to reproduce the issue locally and I've uploaded the
+>> > >> vmlinux[1]
+>> > >> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one o=
+f
+>> > >> the
+>> > >> modules[3] and its btf data[4] extracted with:
+>> > >>
+>> > >> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko >
+>> > >> cros_kbd_led_backlight.ko.raw
+>> > >>
+>> > >> Looking again at the logs[5], I've noticed the following is reporte=
+d:
+>> > >>
+>> > >> [    0.415885] BPF: 	 type_id=3D115803 offset=3D177920 size=3D1152
+>> > >> [    0.416029] BPF:
+>> > >> [    0.416083] BPF: Invalid offset
+>> > >> [    0.416165] BPF:
+>> > >>
+>> > >> There are two different definitions of rcu_data in '.data..percpu',
+>> > >> one
+>> > >> is a struct and the other is an integer:
+>> > >>
+>> > >> type_id=3D115801 offset=3D177920 size=3D1152 (VAR 'rcu_data')
+>> > >> type_id=3D115803 offset=3D177920 size=3D1152 (VAR 'rcu_data')
+>> > >>
+>> > >> [115801] VAR 'rcu_data' type_id=3D115572, linkage=3Dstatic
+>> > >> [115803] VAR 'rcu_data' type_id=3D1, linkage=3Dstatic
+>> > >>
+>> > >> [115572] STRUCT 'rcu_data' size=3D1152 vlen=3D69
+>> > >> [1] INT 'long unsigned int' size=3D8 bits_offset=3D0 nr_bits=3D64
+>> > >> encoding=3D(none)
+>> > >>
+>> > >> I assume that's not expected, correct?
+>> > >=20
+>> > > yes, that seems wrong.. but I can't reproduce with your config
+>> > > together with pahole 1.24 .. could you try with latest one?
+>> >=20
+>> > I just tested next-20241210 with the latest pahole version (1.28 from
+>> > the master branch[1]), and the issue does not occur with this version
+>> > (I can see only one instance of rcu_data in the BTF data, as expected)=
+.
+>> >=20
+>> > I can confirm that the same kernel revision still exhibits the issue
+>> > with pahole 1.24.
+>> >=20
+>> > If helpful, I can also test versions between 1.24 and 1.28 to identify
+>> > which ones work.
+>>=20
+>> I managed to reproduce finally with gcc-12, but had to use pahole 1.25,
+>> 1.24 failed with unknown attribute
+>>=20
+>> 	[95096] VAR 'rcu_data' type_id=3D94868, linkage=3Dstatic
+>> 	[95098] VAR 'rcu_data' type_id=3D4, linkage=3Dstatic
+>> 	type_id=3D95096 offset=3D177088 size=3D1152 (VAR 'rcu_data')
+>> 	type_id=3D95098 offset=3D177088 size=3D1152 (VAR 'rcu_data')
+>
+> so for me the difference seems to be using gcc-12 and this commit in linu=
+x tree:
+>   dabddd687c9e percpu: cast percpu pointer in PERCPU_PTR() via unsigned l=
+ong
+>
+> which adds extra __pcpu_ptr variable into dwarf, and it has the same
+> address as the per cpu variable and that confuses pahole
+>
+> it ends up with adding per cpu variable twice.. one with real type
+> (type_id=3D94868) and the other with unsigned long type (type_id=3D4)
+>
+> however this got fixed in pahole 1.28 commit:
+>   47dcb534e253 btf_encoder: Stop indexing symbols for VARs
+>
+> which filters out __pcpu_ptr variable completely, adding Stephen to the l=
+oop
 
-On 12/12/24 1:26 PM, Greg KH wrote:
-> On Tue, Dec 10, 2024 at 12:05:00AM +0100, Michael Krause wrote:
->> On 12/3/24 3:45 PM, Salvatore Bonaccorso wrote:
->>> Paulo,
->>>
->>> On Tue, Dec 03, 2024 at 10:18:25AM -0300, Paulo Alcantara wrote:
->>>> Michael Krause <mk-debian@galax.is> writes:
->>>>
->>>>> On 11/30/24 10:21 AM, Salvatore Bonaccorso wrote:
->>>>>> Michael, did a manual backport of 24a9799aa8ef ("smb: client: fix UAF
->>>>>> in smb2_reconnect_server()") which seems in fact to solve the issue.
->>>>>>
->>>>>> Michael, can you please post your backport here for review from Paulo
->>>>>> and Steve?
->>>>>
->>>>> Of course, attached.
->>>>>
->>>>> Now I really hope I didn't screw it up :)
->>>>
->>>> LGTM.  Thanks Michael for the backport.
->>>
->>> Thanks a lot for the review. So to get it accepted it needs to be
->>> brough into the form which Greg can pick up. Michael can you do that
->>> and add your Signed-off line accordingly?
->> Happy to. Hope this is in the proper format:
-> 
-> It's corrupted somehow:
-> 
-> patching file fs/smb/client/connect.c
-> patch: **** malformed patch at line 202:  		if (rc)
-> 
-> 
-> Can you resend it or attach it?
-> 
+Thanks for sharing this. Your analysis is spot-on, but I can fill in the
+details a bit. I just grabbed 6.13-rc2 and built it with gcc 11 and
+pahole 1.27, and observed the same issue:
+
+  $ bpftool btf dump file vmlinux | grep "VAR 'rcu_data"
+  [4045] VAR 'rcu_data' type_id=3D3962, linkage=3Dstatic
+  [4047] VAR 'rcu_data' type_id=3D1, linkage=3Dstatic
+          type_id=3D4045 offset=3D196608 size=3D520 (VAR 'rcu_data')
+          type_id=3D4047 offset=3D196608 size=3D520 (VAR 'rcu_data')
+
+In pahole 1.27, the (simplified) process for generating variables for
+BTF is:
+
+1. Look through the ELF symbol table, and find all symbols whose
+addresses are within the percpu section, and add them to a list.
+
+2. Look through the DWARF: for each tag of type DW_TAG_variable,
+determine if the variable is "global". If so, and if the address matches
+one of the symbols found in Step 1, continue.
+
+3. Except for one special case, pahole doesn't check whether the DWARF
+variable's name matches the symbol name. It simply emits a variable
+using the name of the symbol from Step 1, and the type information from
+Step 2.
+
+The result of this process, in this case, is:
+
+1. kernel/rcu/tree.c contains a declaration of "rcu_data". This results
+in an ELF symbol in vmlinux of the same name. Great!
+
+  $ eu-readelf -s vmlinux | grep '\brcu_data\b'
+  12319: 0000000000030000    520 OBJECT  LOCAL  DEFAULT       21 rcu_data
+
+
+2. A DWARF entry is emitted for "rcu_data" which has a matching location
+(DW_AT_location has value DW_OP_addr 0x30000, matching the ELF symbol).
+So far so good - pahole emits a BTF variable with the expected type.
+
+  $ llvm-dwarfdump --name=3Drcu_data
+  ...
+  0x01af03f1: DW_TAG_variable
+                DW_AT_name        ("rcu_data")
+                DW_AT_decl_file   ("/home/stepbren/repos/linux-upstream/ker=
+nel/rcu/tree.c")
+                DW_AT_decl_line   (80)
+                DW_AT_decl_column (8)
+                DW_AT_type        (0x01aefb38 "rcu_data")
+                DW_AT_alignment   (0x40)
+                DW_AT_location    (DW_OP_addr 0x30000)
+
+3. In kernel/rcu/tree.c, we also have the following declaration at line
+5227 which uses per_cpu_ptr() on &rcu_data:
+
+5222 void rcutree_migrate_callbacks(int cpu)
+5223 {
+5224 	unsigned long flags;
+5225 	struct rcu_data *my_rdp;
+5226 	struct rcu_node *my_rnp;
+5227 	struct rcu_data *rdp =3D per_cpu_ptr(&rcu_data, cpu);
+                               ^^^^^^^^^^^
+
+With the new changes in dabddd687c9e ("percpu: cast percpu pointer in
+PERCPU_PTR() via unsigned long"), this expands to a lexical block which
+contains a variable named "__pcpu_ptr", of type unsigned long. The
+compiler emits the following DW_TAG_variable in the DWARF:
+
+0x01b05d20:         DW_TAG_variable
+                      DW_AT_name        ("__pcpu_ptr")
+                      DW_AT_decl_file   ("/home/stepbren/repos/linux-upstre=
+am/kernel/rcu/tree.c")
+                      DW_AT_decl_line   (5227)
+                      DW_AT_decl_column (25)
+                      DW_AT_type        (0x01adb52e "long unsigned int")
+                      DW_AT_location    (DW_OP_addr 0x30000, DW_OP_stack_va=
+lue)
+
+Since the DW_AT_location has a DW_OP_addr - pahole understands this to
+mean that the variable is located in global memory, and thus has
+VSCOPE_GLOBAL. But of course, the actual "scope" of this variable is not
+global, it is limited to the lexical block, which is completely hidden
+away by the macro. But pahole 1.27 does not consider this, and since the
+address matches the "rcu_data" symbol, it emits a variable of type "long
+unsigned int" under the name "rcu_data" -- despite the fact that the
+DWARF info has a name of "__pcpu_ptr".
+
+The changes I made in 1.28 address this (unintentionally) by:
+
+1. Requiring global variables be both "in the global scope" (i.e. in the
+CU-level, rather than any function or other lexical block.
+2. Requiring global variables have global memory (some of them could be
+register variables, despite having global scope -- e.g.
+current_stack_pointer).
+3. No longer using the ELF symbol table, and instead using the DWARF
+names for variables.
+
+With #1, we would filter this variable. And with #3, even if the
+variable were not filtered, we would output (a bunch of) variables with
+the correct __pcpu_ptr variable name, which is unhelpful but at least
+helps us understand where these things come from.
+
+Rebuilding with GCC 14, we can see that the "__pcpu_ptr" variable no
+longer has a DW_AT_location:
+
+0x01afa82f:         DW_TAG_variable
+                      DW_AT_name        ("__pcpu_ptr")
+                      DW_AT_decl_file   ("/home/stepbren/repos/linux-upstre=
+am/kernel/rcu/tree.c")
+                      DW_AT_decl_line   (5227)
+                      DW_AT_decl_column (25)
+                      DW_AT_type        (0x01ad0267 "long unsigned int")
+
+This is the reason that pahole 1.27 now recognizes it as
+VSCOPE_OPTIMIZED. Without a memory location pahole can't do anything to
+match it against the "rcu_data" variable so nothing is emitted, and we
+don't get the issue.
+
+I'm not sure if this adds at all to the discussion, since the overall
+answer is the same, an upgrade of pahole and/or gcc. (Pahole would be
+recommended; GCC just changed the generated DWARF and I could imagine
+other situations popping up elsewhere).
+
+
+Thanks,
+Stephen
+
+> with gcc-14 the __pcpu_ptr variable has VSCOPE_OPTIMIZED scope, so it won=
+'t
+> get into btf even without above pahole fix
+>
+> I suggest gcc/pahole upgrade ;-)
+>
 > thanks,
-> 
-> greg k-h
-
-Ugh, how embarrassing. I'm sorry, I "fixed" some minor whitespace issue directly in the patch and apparently did something wrong.
-
-I redid the white space fix before diffing again and attach and inline the new version. The chunks are a bit alternated to the earlier version now unfortunately. This one applies..
-
-
-
-
-
-
- From 411fb6398fe3c3c08a000d717bff189f08d2041c Mon Sep 17 00:00:00 2001
-From: Paulo Alcantara <pc@manguebit.com>
-Date: Mon, 1 Apr 2024 14:13:10 -0300
-Subject: [PATCH] smb: client: fix UAF in smb2_reconnect_server()
-
-commit 24a9799aa8efecd0eb55a75e35f9d8e6400063aa upstream.
-
-The UAF bug is due to smb2_reconnect_server() accessing a session that
-is already being teared down by another thread that is executing
-__cifs_put_smb_ses().  This can happen when (a) the client has
-connection to the server but no session or (b) another thread ends up
-setting @ses->ses_status again to something different than
-SES_EXITING.
-
-To fix this, we need to make sure to unconditionally set
-@ses->ses_status to SES_EXITING and prevent any other threads from
-setting a new status while we're still tearing it down.
-
-The following can be reproduced by adding some delay to right after
-the ipc is freed in __cifs_put_smb_ses() - which will give
-smb2_reconnect_server() worker a chance to run and then accessing
-@ses->ipc:
-
-kinit ...
-mount.cifs //srv/share /mnt/1 -o sec=krb5,nohandlecache,echo_interval=10
-[disconnect srv]
-ls /mnt/1 &>/dev/null
-sleep 30
-kdestroy
-[reconnect srv]
-sleep 10
-umount /mnt/1
-...
-CIFS: VFS: Verify user has a krb5 ticket and keyutils is installed
-CIFS: VFS: \\srv Send error in SessSetup = -126
-CIFS: VFS: Verify user has a krb5 ticket and keyutils is installed
-CIFS: VFS: \\srv Send error in SessSetup = -126
-general protection fault, probably for non-canonical address
-0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP NOPTI
-CPU: 3 PID: 50 Comm: kworker/3:1 Not tainted 6.9.0-rc2 #1
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
-04/01/2014
-Workqueue: cifsiod smb2_reconnect_server [cifs]
-RIP: 0010:__list_del_entry_valid_or_report+0x33/0xf0
-Code: 4f 08 48 85 d2 74 42 48 85 c9 74 59 48 b8 00 01 00 00 00 00 ad
-de 48 39 c2 74 61 48 b8 22 01 00 00 00 00 74 69 <48> 8b 01 48 39 f8 75
-7b 48 8b 72 08 48 39 c6 0f 85 88 00 00 00 b8
-RSP: 0018:ffffc900001bfd70 EFLAGS: 00010a83
-RAX: dead000000000122 RBX: ffff88810da53838 RCX: 6b6b6b6b6b6b6b6b
-RDX: 6b6b6b6b6b6b6b6b RSI: ffffffffc02f6878 RDI: ffff88810da53800
-RBP: ffff88810da53800 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff88810c064000
-R13: 0000000000000001 R14: ffff88810c064000 R15: ffff8881039cc000
-FS: 0000000000000000(0000) GS:ffff888157c00000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe3728b1000 CR3: 000000010caa4000 CR4: 0000000000750ef0
-PKRU: 55555554
-Call Trace:
-  <TASK>
-  ? die_addr+0x36/0x90
-  ? exc_general_protection+0x1c1/0x3f0
-  ? asm_exc_general_protection+0x26/0x30
-  ? __list_del_entry_valid_or_report+0x33/0xf0
-  __cifs_put_smb_ses+0x1ae/0x500 [cifs]
-  smb2_reconnect_server+0x4ed/0x710 [cifs]
-  process_one_work+0x205/0x6b0
-  worker_thread+0x191/0x360
-  ? __pfx_worker_thread+0x10/0x10
-  kthread+0xe2/0x110
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork+0x34/0x50
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork_asm+0x1a/0x30
-  </TASK>
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[Michael Krause: Naive, manual merge because the 3rd hunk would not
-                  apply.]
-Signed-off-by: Michael Krause <mk-debian@galax.is>
----
-  fs/smb/client/connect.c | 80 ++++++++++++++++++-----------------------
-  1 file changed, 35 insertions(+), 45 deletions(-)
-
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 87ce71b39b77..20c50736456a 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -259,7 +259,13 @@ cifs_mark_tcp_ses_conns_for_reconnect(st
-  
-  	spin_lock(&cifs_tcp_ses_lock);
-  	list_for_each_entry_safe(ses, nses, &pserver->smb_ses_list, smb_ses_list) {
--		/* check if iface is still active */
-+		spin_lock(&ses->ses_lock);
-+		if (ses->ses_status == SES_EXITING) {
-+			spin_unlock(&ses->ses_lock);
-+			continue;
-+		}
-+		spin_unlock(&ses->ses_lock);
-+
-  		spin_lock(&ses->chan_lock);
-  		if (!cifs_chan_is_iface_active(ses, server)) {
-  			spin_unlock(&ses->chan_lock);
-@@ -1977,31 +1983,6 @@ out:
-  	return rc;
-  }
-  
--/**
-- * cifs_free_ipc - helper to release the session IPC tcon
-- * @ses: smb session to unmount the IPC from
-- *
-- * Needs to be called everytime a session is destroyed.
-- *
-- * On session close, the IPC is closed and the server must release all tcons of the session.
-- * No need to send a tree disconnect here.
-- *
-- * Besides, it will make the server to not close durable and resilient files on session close, as
-- * specified in MS-SMB2 3.3.5.6 Receiving an SMB2 LOGOFF Request.
-- */
--static int
--cifs_free_ipc(struct cifs_ses *ses)
--{
--	struct cifs_tcon *tcon = ses->tcon_ipc;
--
--	if (tcon == NULL)
--		return 0;
--
--	tconInfoFree(tcon);
--	ses->tcon_ipc = NULL;
--	return 0;
--}
--
-  static struct cifs_ses *
-  cifs_find_smb_ses(struct TCP_Server_Info *server, struct smb3_fs_context *ctx)
-  {
-@@ -2035,35 +2016,44 @@ void cifs_put_smb_ses(struct cifs_ses *s
-  {
-  	unsigned int rc, xid;
-  	unsigned int chan_count;
-+	bool do_logoff;
-+	struct cifs_tcon *tcon;
-  	struct TCP_Server_Info *server = ses->server;
-  
-+	spin_lock(&cifs_tcp_ses_lock);
-  	spin_lock(&ses->ses_lock);
--	if (ses->ses_status == SES_EXITING) {
-+	cifs_dbg(FYI, "%s: id=0x%llx ses_count=%d ses_status=%u ipc=%s\n",
-+		 __func__, ses->Suid, ses->ses_count, ses->ses_status,
-+		 ses->tcon_ipc ? ses->tcon_ipc->tree_name : "none");
-+	if (ses->ses_status == SES_EXITING || --ses->ses_count > 0) {
-  		spin_unlock(&ses->ses_lock);
--		return;
--	}
--	spin_unlock(&ses->ses_lock);
--
--	cifs_dbg(FYI, "%s: ses_count=%d\n", __func__, ses->ses_count);
--	cifs_dbg(FYI,
--		 "%s: ses ipc: %s\n", __func__, ses->tcon_ipc ? ses->tcon_ipc->tree_name : "NONE");
--
--	spin_lock(&cifs_tcp_ses_lock);
--	if (--ses->ses_count > 0) {
-  		spin_unlock(&cifs_tcp_ses_lock);
-  		return;
-  	}
--	spin_unlock(&cifs_tcp_ses_lock);
--
-  	/* ses_count can never go negative */
-  	WARN_ON(ses->ses_count < 0);
-  
--	if (ses->ses_status == SES_GOOD)
--		ses->ses_status = SES_EXITING;
--
--	cifs_free_ipc(ses);
-+	spin_lock(&ses->chan_lock);
-+	cifs_chan_clear_need_reconnect(ses, server);
-+	spin_unlock(&ses->chan_lock);
-+
-+	do_logoff = ses->ses_status == SES_GOOD && server->ops->logoff;
-+	ses->ses_status = SES_EXITING;
-+	tcon = ses->tcon_ipc;
-+	ses->tcon_ipc = NULL;
-+ 	spin_unlock(&ses->ses_lock);
-+	spin_unlock(&cifs_tcp_ses_lock);
-  
--	if (ses->ses_status == SES_EXITING && server->ops->logoff) {
-+	/*
-+	 * On session close, the IPC is closed and the server must release all
-+	 * tcons of the session.  No need to send a tree disconnect here.
-+	 *
-+	 * Besides, it will make the server to not close durable and resilient
-+	 * files on session close, as specified in MS-SMB2 3.3.5.6 Receiving an
-+	 * SMB2 LOGOFF Request.
-+	 */
-+	tconInfoFree(tcon);
-+	if (do_logoff) {
-  		xid = get_xid();
-  		rc = server->ops->logoff(xid, ses);
-  		if (rc)
--- 
-2.45.2
-
---------------tn0XGAUH9758TAJ8z3vOiT6p
-Content-Type: text/x-patch; charset=UTF-8;
- name="backport-6.1-smb-client-fix-UAF-in-smb2_reconnect_server.v2.patch"
-Content-Disposition: attachment;
- filename*0="backport-6.1-smb-client-fix-UAF-in-smb2_reconnect_server.v2.";
- filename*1="patch"
-Content-Transfer-Encoding: base64
-
-RnJvbSA0MTFmYjYzOThmZTNjM2MwOGEwMDBkNzE3YmZmMTg5ZjA4ZDIwNDFjIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBQYXVsbyBBbGNhbnRhcmEgPHBjQG1hbmd1ZWJpdC5j
-b20+CkRhdGU6IE1vbiwgMSBBcHIgMjAyNCAxNDoxMzoxMCAtMDMwMApTdWJqZWN0OiBbUEFU
-Q0hdIHNtYjogY2xpZW50OiBmaXggVUFGIGluIHNtYjJfcmVjb25uZWN0X3NlcnZlcigpCgpj
-b21taXQgMjRhOTc5OWFhOGVmZWNkMGViNTVhNzVlMzVmOWQ4ZTY0MDAwNjNhYSB1cHN0cmVh
-bS4KClRoZSBVQUYgYnVnIGlzIGR1ZSB0byBzbWIyX3JlY29ubmVjdF9zZXJ2ZXIoKSBhY2Nl
-c3NpbmcgYSBzZXNzaW9uIHRoYXQKaXMgYWxyZWFkeSBiZWluZyB0ZWFyZWQgZG93biBieSBh
-bm90aGVyIHRocmVhZCB0aGF0IGlzIGV4ZWN1dGluZwpfX2NpZnNfcHV0X3NtYl9zZXMoKS4g
-IFRoaXMgY2FuIGhhcHBlbiB3aGVuIChhKSB0aGUgY2xpZW50IGhhcwpjb25uZWN0aW9uIHRv
-IHRoZSBzZXJ2ZXIgYnV0IG5vIHNlc3Npb24gb3IgKGIpIGFub3RoZXIgdGhyZWFkIGVuZHMg
-dXAKc2V0dGluZyBAc2VzLT5zZXNfc3RhdHVzIGFnYWluIHRvIHNvbWV0aGluZyBkaWZmZXJl
-bnQgdGhhbgpTRVNfRVhJVElORy4KClRvIGZpeCB0aGlzLCB3ZSBuZWVkIHRvIG1ha2Ugc3Vy
-ZSB0byB1bmNvbmRpdGlvbmFsbHkgc2V0CkBzZXMtPnNlc19zdGF0dXMgdG8gU0VTX0VYSVRJ
-TkcgYW5kIHByZXZlbnQgYW55IG90aGVyIHRocmVhZHMgZnJvbQpzZXR0aW5nIGEgbmV3IHN0
-YXR1cyB3aGlsZSB3ZSdyZSBzdGlsbCB0ZWFyaW5nIGl0IGRvd24uCgpUaGUgZm9sbG93aW5n
-IGNhbiBiZSByZXByb2R1Y2VkIGJ5IGFkZGluZyBzb21lIGRlbGF5IHRvIHJpZ2h0IGFmdGVy
-CnRoZSBpcGMgaXMgZnJlZWQgaW4gX19jaWZzX3B1dF9zbWJfc2VzKCkgLSB3aGljaCB3aWxs
-IGdpdmUKc21iMl9yZWNvbm5lY3Rfc2VydmVyKCkgd29ya2VyIGEgY2hhbmNlIHRvIHJ1biBh
-bmQgdGhlbiBhY2Nlc3NpbmcKQHNlcy0+aXBjOgoKa2luaXQgLi4uCm1vdW50LmNpZnMgLy9z
-cnYvc2hhcmUgL21udC8xIC1vIHNlYz1rcmI1LG5vaGFuZGxlY2FjaGUsZWNob19pbnRlcnZh
-bD0xMApbZGlzY29ubmVjdCBzcnZdCmxzIC9tbnQvMSAmPi9kZXYvbnVsbApzbGVlcCAzMApr
-ZGVzdHJveQpbcmVjb25uZWN0IHNydl0Kc2xlZXAgMTAKdW1vdW50IC9tbnQvMQouLi4KQ0lG
-UzogVkZTOiBWZXJpZnkgdXNlciBoYXMgYSBrcmI1IHRpY2tldCBhbmQga2V5dXRpbHMgaXMg
-aW5zdGFsbGVkCkNJRlM6IFZGUzogXFxzcnYgU2VuZCBlcnJvciBpbiBTZXNzU2V0dXAgPSAt
-MTI2CkNJRlM6IFZGUzogVmVyaWZ5IHVzZXIgaGFzIGEga3JiNSB0aWNrZXQgYW5kIGtleXV0
-aWxzIGlzIGluc3RhbGxlZApDSUZTOiBWRlM6IFxcc3J2IFNlbmQgZXJyb3IgaW4gU2Vzc1Nl
-dHVwID0gLTEyNgpnZW5lcmFsIHByb3RlY3Rpb24gZmF1bHQsIHByb2JhYmx5IGZvciBub24t
-Y2Fub25pY2FsIGFkZHJlc3MKMHg2YjZiNmI2YjZiNmI2YjZiOiAwMDAwIFsjMV0gUFJFRU1Q
-VCBTTVAgTk9QVEkKQ1BVOiAzIFBJRDogNTAgQ29tbToga3dvcmtlci8zOjEgTm90IHRhaW50
-ZWQgNi45LjAtcmMyICMxCkhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKFEzNSAr
-IElDSDksIDIwMDkpLCBCSU9TIDEuMTYuMy0xLmZjMzkKMDQvMDEvMjAxNApXb3JrcXVldWU6
-IGNpZnNpb2Qgc21iMl9yZWNvbm5lY3Rfc2VydmVyIFtjaWZzXQpSSVA6IDAwMTA6X19saXN0
-X2RlbF9lbnRyeV92YWxpZF9vcl9yZXBvcnQrMHgzMy8weGYwCkNvZGU6IDRmIDA4IDQ4IDg1
-IGQyIDc0IDQyIDQ4IDg1IGM5IDc0IDU5IDQ4IGI4IDAwIDAxIDAwIDAwIDAwIDAwIGFkCmRl
-IDQ4IDM5IGMyIDc0IDYxIDQ4IGI4IDIyIDAxIDAwIDAwIDAwIDAwIDc0IDY5IDw0OD4gOGIg
-MDEgNDggMzkgZjggNzUKN2IgNDggOGIgNzIgMDggNDggMzkgYzYgMGYgODUgODggMDAgMDAg
-MDAgYjgKUlNQOiAwMDE4OmZmZmZjOTAwMDAxYmZkNzAgRUZMQUdTOiAwMDAxMGE4MwpSQVg6
-IGRlYWQwMDAwMDAwMDAxMjIgUkJYOiBmZmZmODg4MTBkYTUzODM4IFJDWDogNmI2YjZiNmI2
-YjZiNmI2YgpSRFg6IDZiNmI2YjZiNmI2YjZiNmIgUlNJOiBmZmZmZmZmZmMwMmY2ODc4IFJE
-STogZmZmZjg4ODEwZGE1MzgwMApSQlA6IGZmZmY4ODgxMGRhNTM4MDAgUjA4OiAwMDAwMDAw
-MDAwMDAwMDAxIFIwOTogMDAwMDAwMDAwMDAwMDAwMApSMTA6IDAwMDAwMDAwMDAwMDAwMDAg
-UjExOiAwMDAwMDAwMDAwMDAwMDAxIFIxMjogZmZmZjg4ODEwYzA2NDAwMApSMTM6IDAwMDAw
-MDAwMDAwMDAwMDEgUjE0OiBmZmZmODg4MTBjMDY0MDAwIFIxNTogZmZmZjg4ODEwMzljYzAw
-MApGUzogMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmODg4MTU3YzAwMDAwKDAwMDAp
-CmtubEdTOjAwMDAwMDAwMDAwMDAwMDAKQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENS
-MDogMDAwMDAwMDA4MDA1MDAzMwpDUjI6IDAwMDA3ZmUzNzI4YjEwMDAgQ1IzOiAwMDAwMDAw
-MTBjYWE0MDAwIENSNDogMDAwMDAwMDAwMDc1MGVmMApQS1JVOiA1NTU1NTU1NApDYWxsIFRy
-YWNlOgogPFRBU0s+CiA/IGRpZV9hZGRyKzB4MzYvMHg5MAogPyBleGNfZ2VuZXJhbF9wcm90
-ZWN0aW9uKzB4MWMxLzB4M2YwCiA/IGFzbV9leGNfZ2VuZXJhbF9wcm90ZWN0aW9uKzB4MjYv
-MHgzMAogPyBfX2xpc3RfZGVsX2VudHJ5X3ZhbGlkX29yX3JlcG9ydCsweDMzLzB4ZjAKIF9f
-Y2lmc19wdXRfc21iX3NlcysweDFhZS8weDUwMCBbY2lmc10KIHNtYjJfcmVjb25uZWN0X3Nl
-cnZlcisweDRlZC8weDcxMCBbY2lmc10KIHByb2Nlc3Nfb25lX3dvcmsrMHgyMDUvMHg2YjAK
-IHdvcmtlcl90aHJlYWQrMHgxOTEvMHgzNjAKID8gX19wZnhfd29ya2VyX3RocmVhZCsweDEw
-LzB4MTAKIGt0aHJlYWQrMHhlMi8weDExMAogPyBfX3BmeF9rdGhyZWFkKzB4MTAvMHgxMAog
-cmV0X2Zyb21fZm9yaysweDM0LzB4NTAKID8gX19wZnhfa3RocmVhZCsweDEwLzB4MTAKIHJl
-dF9mcm9tX2ZvcmtfYXNtKzB4MWEvMHgzMAogPC9UQVNLPgoKQ2M6IHN0YWJsZUB2Z2VyLmtl
-cm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogUGF1bG8gQWxjYW50YXJhIChSZWQgSGF0KSA8cGNA
-bWFuZ3VlYml0LmNvbT4KU2lnbmVkLW9mZi1ieTogU3RldmUgRnJlbmNoIDxzdGZyZW5jaEBt
-aWNyb3NvZnQuY29tPgpbTWljaGFlbCBLcmF1c2U6IE5haXZlLCBtYW51YWwgbWVyZ2UgYmVj
-YXVzZSB0aGUgM3JkIGh1bmsgd291bGQgbm90CiAgICAgICAgICAgICAgICAgYXBwbHkuXQpT
-aWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEtyYXVzZSA8bWstZGViaWFuQGdhbGF4LmlzPgotLS0K
-IGZzL3NtYi9jbGllbnQvY29ubmVjdC5jIHwgODAgKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCA0
-NSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9zbWIvY2xpZW50L2Nvbm5lY3QuYyBi
-L2ZzL3NtYi9jbGllbnQvY29ubmVjdC5jCmluZGV4IDg3Y2U3MWIzOWI3Ny4uMjBjNTA3MzY0
-NTZhIDEwMDY0NAotLS0gYS9mcy9zbWIvY2xpZW50L2Nvbm5lY3QuYworKysgYi9mcy9zbWIv
-Y2xpZW50L2Nvbm5lY3QuYwpAQCAtMjU5LDcgKzI1OSwxMyBAQCBjaWZzX21hcmtfdGNwX3Nl
-c19jb25uc19mb3JfcmVjb25uZWN0KHN0CiAKIAlzcGluX2xvY2soJmNpZnNfdGNwX3Nlc19s
-b2NrKTsKIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoc2VzLCBuc2VzLCAmcHNlcnZlci0+
-c21iX3Nlc19saXN0LCBzbWJfc2VzX2xpc3QpIHsKLQkJLyogY2hlY2sgaWYgaWZhY2UgaXMg
-c3RpbGwgYWN0aXZlICovCisJCXNwaW5fbG9jaygmc2VzLT5zZXNfbG9jayk7CisJCWlmIChz
-ZXMtPnNlc19zdGF0dXMgPT0gU0VTX0VYSVRJTkcpIHsKKwkJCXNwaW5fdW5sb2NrKCZzZXMt
-PnNlc19sb2NrKTsKKwkJCWNvbnRpbnVlOworCQl9CisJCXNwaW5fdW5sb2NrKCZzZXMtPnNl
-c19sb2NrKTsKKwogCQlzcGluX2xvY2soJnNlcy0+Y2hhbl9sb2NrKTsKIAkJaWYgKCFjaWZz
-X2NoYW5faXNfaWZhY2VfYWN0aXZlKHNlcywgc2VydmVyKSkgewogCQkJc3Bpbl91bmxvY2so
-JnNlcy0+Y2hhbl9sb2NrKTsKQEAgLTE5NzcsMzEgKzE5ODMsNiBAQCBvdXQ6CiAJcmV0dXJu
-IHJjOwogfQogCi0vKioKLSAqIGNpZnNfZnJlZV9pcGMgLSBoZWxwZXIgdG8gcmVsZWFzZSB0
-aGUgc2Vzc2lvbiBJUEMgdGNvbgotICogQHNlczogc21iIHNlc3Npb24gdG8gdW5tb3VudCB0
-aGUgSVBDIGZyb20KLSAqCi0gKiBOZWVkcyB0byBiZSBjYWxsZWQgZXZlcnl0aW1lIGEgc2Vz
-c2lvbiBpcyBkZXN0cm95ZWQuCi0gKgotICogT24gc2Vzc2lvbiBjbG9zZSwgdGhlIElQQyBp
-cyBjbG9zZWQgYW5kIHRoZSBzZXJ2ZXIgbXVzdCByZWxlYXNlIGFsbCB0Y29ucyBvZiB0aGUg
-c2Vzc2lvbi4KLSAqIE5vIG5lZWQgdG8gc2VuZCBhIHRyZWUgZGlzY29ubmVjdCBoZXJlLgot
-ICoKLSAqIEJlc2lkZXMsIGl0IHdpbGwgbWFrZSB0aGUgc2VydmVyIHRvIG5vdCBjbG9zZSBk
-dXJhYmxlIGFuZCByZXNpbGllbnQgZmlsZXMgb24gc2Vzc2lvbiBjbG9zZSwgYXMKLSAqIHNw
-ZWNpZmllZCBpbiBNUy1TTUIyIDMuMy41LjYgUmVjZWl2aW5nIGFuIFNNQjIgTE9HT0ZGIFJl
-cXVlc3QuCi0gKi8KLXN0YXRpYyBpbnQKLWNpZnNfZnJlZV9pcGMoc3RydWN0IGNpZnNfc2Vz
-ICpzZXMpCi17Ci0Jc3RydWN0IGNpZnNfdGNvbiAqdGNvbiA9IHNlcy0+dGNvbl9pcGM7Ci0K
-LQlpZiAodGNvbiA9PSBOVUxMKQotCQlyZXR1cm4gMDsKLQotCXRjb25JbmZvRnJlZSh0Y29u
-KTsKLQlzZXMtPnRjb25faXBjID0gTlVMTDsKLQlyZXR1cm4gMDsKLX0KLQogc3RhdGljIHN0
-cnVjdCBjaWZzX3NlcyAqCiBjaWZzX2ZpbmRfc21iX3NlcyhzdHJ1Y3QgVENQX1NlcnZlcl9J
-bmZvICpzZXJ2ZXIsIHN0cnVjdCBzbWIzX2ZzX2NvbnRleHQgKmN0eCkKIHsKQEAgLTIwMzUs
-MzUgKzIwMTYsNDQgQEAgdm9pZCBjaWZzX3B1dF9zbWJfc2VzKHN0cnVjdCBjaWZzX3NlcyAq
-cwogewogCXVuc2lnbmVkIGludCByYywgeGlkOwogCXVuc2lnbmVkIGludCBjaGFuX2NvdW50
-OworCWJvb2wgZG9fbG9nb2ZmOworCXN0cnVjdCBjaWZzX3Rjb24gKnRjb247CiAJc3RydWN0
-IFRDUF9TZXJ2ZXJfSW5mbyAqc2VydmVyID0gc2VzLT5zZXJ2ZXI7CiAKKwlzcGluX2xvY2so
-JmNpZnNfdGNwX3Nlc19sb2NrKTsKIAlzcGluX2xvY2soJnNlcy0+c2VzX2xvY2spOwotCWlm
-IChzZXMtPnNlc19zdGF0dXMgPT0gU0VTX0VYSVRJTkcpIHsKKwljaWZzX2RiZyhGWUksICIl
-czogaWQ9MHglbGx4IHNlc19jb3VudD0lZCBzZXNfc3RhdHVzPSV1IGlwYz0lc1xuIiwKKwkJ
-IF9fZnVuY19fLCBzZXMtPlN1aWQsIHNlcy0+c2VzX2NvdW50LCBzZXMtPnNlc19zdGF0dXMs
-CisJCSBzZXMtPnRjb25faXBjID8gc2VzLT50Y29uX2lwYy0+dHJlZV9uYW1lIDogIm5vbmUi
-KTsKKwlpZiAoc2VzLT5zZXNfc3RhdHVzID09IFNFU19FWElUSU5HIHx8IC0tc2VzLT5zZXNf
-Y291bnQgPiAwKSB7CiAJCXNwaW5fdW5sb2NrKCZzZXMtPnNlc19sb2NrKTsKLQkJcmV0dXJu
-OwotCX0KLQlzcGluX3VubG9jaygmc2VzLT5zZXNfbG9jayk7Ci0KLQljaWZzX2RiZyhGWUks
-ICIlczogc2VzX2NvdW50PSVkXG4iLCBfX2Z1bmNfXywgc2VzLT5zZXNfY291bnQpOwotCWNp
-ZnNfZGJnKEZZSSwKLQkJICIlczogc2VzIGlwYzogJXNcbiIsIF9fZnVuY19fLCBzZXMtPnRj
-b25faXBjID8gc2VzLT50Y29uX2lwYy0+dHJlZV9uYW1lIDogIk5PTkUiKTsKLQotCXNwaW5f
-bG9jaygmY2lmc190Y3Bfc2VzX2xvY2spOwotCWlmICgtLXNlcy0+c2VzX2NvdW50ID4gMCkg
-ewogCQlzcGluX3VubG9jaygmY2lmc190Y3Bfc2VzX2xvY2spOwogCQlyZXR1cm47CiAJfQot
-CXNwaW5fdW5sb2NrKCZjaWZzX3RjcF9zZXNfbG9jayk7Ci0KIAkvKiBzZXNfY291bnQgY2Fu
-IG5ldmVyIGdvIG5lZ2F0aXZlICovCiAJV0FSTl9PTihzZXMtPnNlc19jb3VudCA8IDApOwog
-Ci0JaWYgKHNlcy0+c2VzX3N0YXR1cyA9PSBTRVNfR09PRCkKLQkJc2VzLT5zZXNfc3RhdHVz
-ID0gU0VTX0VYSVRJTkc7Ci0KLQljaWZzX2ZyZWVfaXBjKHNlcyk7CisJc3Bpbl9sb2NrKCZz
-ZXMtPmNoYW5fbG9jayk7CisJY2lmc19jaGFuX2NsZWFyX25lZWRfcmVjb25uZWN0KHNlcywg
-c2VydmVyKTsKKwlzcGluX3VubG9jaygmc2VzLT5jaGFuX2xvY2spOworCisJZG9fbG9nb2Zm
-ID0gc2VzLT5zZXNfc3RhdHVzID09IFNFU19HT09EICYmIHNlcnZlci0+b3BzLT5sb2dvZmY7
-CisJc2VzLT5zZXNfc3RhdHVzID0gU0VTX0VYSVRJTkc7CisJdGNvbiA9IHNlcy0+dGNvbl9p
-cGM7CisJc2VzLT50Y29uX2lwYyA9IE5VTEw7CisgCXNwaW5fdW5sb2NrKCZzZXMtPnNlc19s
-b2NrKTsKKwlzcGluX3VubG9jaygmY2lmc190Y3Bfc2VzX2xvY2spOwogCi0JaWYgKHNlcy0+
-c2VzX3N0YXR1cyA9PSBTRVNfRVhJVElORyAmJiBzZXJ2ZXItPm9wcy0+bG9nb2ZmKSB7CisJ
-LyoKKwkgKiBPbiBzZXNzaW9uIGNsb3NlLCB0aGUgSVBDIGlzIGNsb3NlZCBhbmQgdGhlIHNl
-cnZlciBtdXN0IHJlbGVhc2UgYWxsCisJICogdGNvbnMgb2YgdGhlIHNlc3Npb24uICBObyBu
-ZWVkIHRvIHNlbmQgYSB0cmVlIGRpc2Nvbm5lY3QgaGVyZS4KKwkgKgorCSAqIEJlc2lkZXMs
-IGl0IHdpbGwgbWFrZSB0aGUgc2VydmVyIHRvIG5vdCBjbG9zZSBkdXJhYmxlIGFuZCByZXNp
-bGllbnQKKwkgKiBmaWxlcyBvbiBzZXNzaW9uIGNsb3NlLCBhcyBzcGVjaWZpZWQgaW4gTVMt
-U01CMiAzLjMuNS42IFJlY2VpdmluZyBhbgorCSAqIFNNQjIgTE9HT0ZGIFJlcXVlc3QuCisJ
-ICovCisJdGNvbkluZm9GcmVlKHRjb24pOworCWlmIChkb19sb2dvZmYpIHsKIAkJeGlkID0g
-Z2V0X3hpZCgpOwogCQlyYyA9IHNlcnZlci0+b3BzLT5sb2dvZmYoeGlkLCBzZXMpOwogCQlp
-ZiAocmMpCi0tIAoyLjQ1LjIKCg==
-
---------------tn0XGAUH9758TAJ8z3vOiT6p--
+> jirka
