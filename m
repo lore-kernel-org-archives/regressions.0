@@ -1,331 +1,143 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE5C1AF0CE;
-	Fri, 13 Dec 2024 09:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7141DF242
+	for <regressions@lists.linux.dev>; Fri, 13 Dec 2024 12:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734081944; cv=pass; b=dfjUEHNZs7wPE+T6CUduy1+NPAeVsMO7MlRgIMgcjIMtSZIGodNYjgsIcYAA1GMAG6dOx/x5RrwrDdDHAWlyiF/QqlcILRHCJ6UBE76u8mPG6qipsary0OoHAErX00mvswyfxLntkKR0jZHH+smagZL6/WBkyN0HUVZ0UtmebBs=
+	t=1734092057; cv=fail; b=kid0FStzWV8TiIRbY2HdD7koOxrA2Q2pCu0/JSeoZzaoNaUOh7qhEN4GBbBMaRPGcJnm0ku3me5Srr0P/dPNXo8EaX/2C+AqS0RFXmd1oYn+dwUJ3yPGsEp5Sww6PFVJWsLU4Y2FjRVlpGUQ4EBHZ2OXYJ6xklgLZn+gtcVgCyU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734081944; c=relaxed/simple;
-	bh=wpZWKto3YUjaWLEDbKUz1Yi+7s3Zag5arrGJ3uJk7Aw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n4l2Q43VBtEHu/XIjuUd2hB0qZYCO9aEzWSBGBp6EIgOqSX9/dOgOMQC3iE20B7XGCbQxT9kJ1xuGjoMRnOm0QoGdpXJLIGpAz20R9T9ndxESlwx2YsiSxV62VfaQP1Q5uF5riBTHGbdTxsIyf6t+38/OP7VJGL5IyP7qt9D4rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b=PgKYW9tR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1734092057; c=relaxed/simple;
+	bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FGJZTD5WjmFFxTFLdwg1AvqzKPSjglPJuxZBmf6D3fXQ+uY9pwv+h6bqr4Pq12D5Mum0ZmUGNlD6wJaVAZ5PHzfO++vMDlVmxlP/LD5yvP8F8FNJZQ07863uxZvRV0ADaBwcvdv+XcdTqqzOyrvRznbegGRTkigFMyT0DToEhJg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=q4sPn34s; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=kh504LIt; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=laura.nao@collabora.com header.b="PgKYW9tR"
-ARC-Seal: i=1; a=rsa-sha256; t=1734081928; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=HjqkwyGBy8oFpiH2OzBbdgLIjA6J/qJ+Z1tRCrZTgBlKf9fweZBx+lpCzz+ouQURY0eWWu3JaL90KEe68uYm8CwyzJyyYvgiRzMJSSiGzjrUeH9RuI9IACgRKCs1U0UmuBr+3sU0Jj8PTZGoVciWjUboCCD0noHSV8/XVzFpT/s=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1734081928; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=YnSfpiMRcV4J4vXvcSY+ixR1XW0AUmLlpepzk/A6xy0=; 
-	b=SOrr3tKcIvCFh9e4zcoVhw49t0Y8eTXDC+HrYHiwjEH9Dik1C0BBD9zyXfn4vkXrjTskZEbTOW0AI5I/jUYqfLaencplbOlarQlRO+FnO10fBrMsRTbdljr7Il1bijhnf9dohQTWZZMuZYpdKdxpo0uHT8Wp/aj6U8o2FuDuMw0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=laura.nao@collabora.com;
-	dmarc=pass header.from=<laura.nao@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1734081928;
-	s=zohomail; d=collabora.com; i=laura.nao@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Reply-To;
-	bh=YnSfpiMRcV4J4vXvcSY+ixR1XW0AUmLlpepzk/A6xy0=;
-	b=PgKYW9tRgcP27jptrUtgW/N7L044UtUVDMmc9SmjC8RI7T+kb16sYU6NEcbRVAVM
-	7+N1lrMDCFr213kX5FwRldujDhgDiMum4wERmccIHfx+o37ewO/JQm46bDnsM28/peK
-	xV4jhmgljik4IjgBh3dLnmfxJ9scQuTlZDUfUEu8=
-Received: by mx.zohomail.com with SMTPS id 1734081926159795.2400700570497;
-	Fri, 13 Dec 2024 01:25:26 -0800 (PST)
-From: Laura Nao <laura.nao@collabora.com>
-To: stephen.s.brennan@oracle.com
-Cc: alan.maguire@oracle.com,
-	bpf@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	olsajiri@gmail.com,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on
-Date: Fri, 13 Dec 2024 10:26:03 +0100
-Message-Id: <20241213092603.13399-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <87zfl0mv0g.fsf@oracle.com>
-References: <87zfl0mv0g.fsf@oracle.com>
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="q4sPn34s";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="kh504LIt"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id E862D480525;
+	Fri, 13 Dec 2024 07:14:08 -0500 (EST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1734092048;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
+ b=q4sPn34soKydu57/9MOjEXYwGdmyeJj2hCmSyqsRycrtjy3yZwIRXBe34Y97lrnBhAqrm
+ J9yAY6yvZ5xLWmRBA==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1734092048;
+	cv=none; b=mCeFMKbRbWJPrZtEHGL/TRg+QOJAvmLaaQ0ncKPgHKhoJaeJ562QKEct8Xayqy2MYu9go083lqz2jj1Yd72FM/HNgPcItTiHL/mQUv27I/CxfaqmtnAcbOiRQ5LIiaPUbQM0jYSlNEYZbQGQHyzr+WYDVdE82C56dz+iTWBZlEfel9Ke+PrwbYPKgW48so3oxYnMmqpgGeNhmRl88ulY8Dl0tADvFZ+Vc/ILl+U5fDFC/1mFlb7UyB8pWyAktpfv2zvKJDfk8q2qJjQzVWSxITVqibyNZhK4y2MabECkM6749LXBfo1DqWpxDffJQsaRQSG/p1L2C6DOeISMNrEHrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1734092048; c=relaxed/simple;
+	bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=nAgS6qbKdI0yR3Gu075nKMDm1nY/aqPSU838DZqGbuK21hsThoP3rWs97j2ktbjKwY4NfeQcosTmTzsJiLzPFdV9RVQe1iuMu5F4OLzfBfF1fYd1CZV2o+zcJuqtabdy0ZJ/27wyfIAdlx0U5lfWYPufg5SLtQ6xdDJORZVKi57e6gGyyMjZSnoUgBAOZfv8BmNkojGqFIreUDvoGiX+WU82Vk61hhDtbWKPlkj4x6XFQru09xdUADM9iYmSifAO7/qkclq0mOdvUFrbd/UN6HHpHguvJlMYFwUA9LPSJIcOOpxoTn2Alw4HHRWk6fw4o86v8f8H53h7VIJXIzZPBA==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1734092048;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
+ b=kh504LItE0Pj3pt4Wkqr//E6SOjF0D4S63h1tl240YyGFqwfOb48xV3OhaZ8xMxMEIMEL
+ oD0H/yDDT1LT/fA/ae/hW9Y4HpdZsH+CeUAl3hmLPy/9eXPcN0fuccZjFEM1IkygQPWjQWh
+ SgjClSUWvd8i3qqMFt1Vw8LomD/2/WGJSYdi0hbApWQ/dB//nA7n7pdm46JnPp07+o/T+CR
+ AZmEt+tslcQrGRDtRXK13XQrZwP3UMO7M7NS/mBCSQCVKlZ1DJnWnbt3TsqcehPTDD1COfr
+ Xul01E3Xe0eeh/+IQV+oO7FzcXPBymRWlCpAv/ThshpCo/AsQDw/FXGf3dZQ==
+Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by srv8.sapience.com (Postfix) with ESMTPS id B90A4280018;
+	Fri, 13 Dec 2024 07:14:08 -0500 (EST)
+Message-ID: <dd13efc9b3fe3e3acd599ca91b714fa92f6cb9a8.camel@sapience.com>
+Subject: Re: 6.13-rc1 graphics fail
+From: Genes Lists <lists@sapience.com>
+To: Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	lucas.demarchi@intel.com, thomas.hellstrom@linux.intel.com, 
+	rodrigo.vivi@intel.com, airlied@gmail.com, tzimmermann@suse.de, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org
+Date: Fri, 13 Dec 2024 07:14:07 -0500
+In-Reply-To: <7db24095f935d874fae466853b0984103f97b40f.camel@sapience.com>
+References: <3b097dddd7095bccabe6791b90899c689f271a35.camel@sapience.com>
+		 <Z07Mg2_6y2MW22qV@intel.com>
+	 <7db24095f935d874fae466853b0984103f97b40f.camel@sapience.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-yjX0hr7VVXVlChB9wdQW"
+User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-On 12/12/24 22:49, Stephen Brennan wrote:
-> Jiri Olsa <olsajiri@gmail.com> writes:
->> On Wed, Dec 11, 2024 at 10:10:24PM +0100, Jiri Olsa wrote:
->>> On Tue, Dec 10, 2024 at 02:55:01PM +0100, Laura Nao wrote:
->>>> Hi Jiri,
->>>>
->>>> Thanks for the feedback!
->>>>
->>>> On 12/6/24 13:35, Jiri Olsa wrote:
->>>>> On Fri, Nov 15, 2024 at 06:17:12PM +0100, Laura Nao wrote:
->>>>>> On 11/13/24 10:37, Laura Nao wrote:
->>>>>>>
->>>>>>> Currently, KernelCI only retains the bzImage, not the vmlinux
->>>>>>> binary. The
->>>>>>> bzImage can be downloaded from the same link mentioned above by
->>>>>>> selecting
->>>>>>> 'kernel' from the dropdown menu (modules can also be downloaded
->>>>>>> the
->>>>>>> same
->>>>>>> way). I’ll try to replicate the build on my end and share the
->>>>>>> vmlinux
->>>>>>> with DWARF data stripped for convenience.
->>>>>>>
->>>>>>
->>>>>> I managed to reproduce the issue locally and I've uploaded the
->>>>>> vmlinux[1]
->>>>>> (stripped of DWARF data) and vmlinux.raw[2] files, as well as one
->>>>>> of
->>>>>> the
->>>>>> modules[3] and its btf data[4] extracted with:
->>>>>>
->>>>>> bpftool -B vmlinux btf dump file cros_kbd_led_backlight.ko >
->>>>>> cros_kbd_led_backlight.ko.raw
->>>>>>
->>>>>> Looking again at the logs[5], I've noticed the following is
->>>>>> reported:
->>>>>>
->>>>>> [    0.415885] BPF: 	 type_id=115803 offset=177920 size=1152
->>>>>> [    0.416029] BPF:
->>>>>> [    0.416083] BPF: Invalid offset
->>>>>> [    0.416165] BPF:
->>>>>>
->>>>>> There are two different definitions of rcu_data in
->>>>>> '.data..percpu',
->>>>>> one
->>>>>> is a struct and the other is an integer:
->>>>>>
->>>>>> type_id=115801 offset=177920 size=1152 (VAR 'rcu_data')
->>>>>> type_id=115803 offset=177920 size=1152 (VAR 'rcu_data')
->>>>>>
->>>>>> [115801] VAR 'rcu_data' type_id=115572, linkage=static
->>>>>> [115803] VAR 'rcu_data' type_id=1, linkage=static
->>>>>>
->>>>>> [115572] STRUCT 'rcu_data' size=1152 vlen=69
->>>>>> [1] INT 'long unsigned int' size=8 bits_offset=0 nr_bits=64
->>>>>> encoding=(none)
->>>>>>
->>>>>> I assume that's not expected, correct?
->>>>>
->>>>> yes, that seems wrong.. but I can't reproduce with your config
->>>>> together with pahole 1.24 .. could you try with latest one?
->>>>
->>>> I just tested next-20241210 with the latest pahole version (1.28
->>>> from
->>>> the master branch[1]), and the issue does not occur with this
->>>> version
->>>> (I can see only one instance of rcu_data in the BTF data, as
->>>> expected).
->>>>
->>>> I can confirm that the same kernel revision still exhibits the
->>>> issue
->>>> with pahole 1.24.
->>>>
->>>> If helpful, I can also test versions between 1.24 and 1.28 to
->>>> identify
->>>> which ones work.
->>>
->>> I managed to reproduce finally with gcc-12, but had to use pahole
->>> 1.25,
->>> 1.24 failed with unknown attribute
->>>
->>> 	[95096] VAR 'rcu_data' type_id=94868, linkage=static
->>> 	[95098] VAR 'rcu_data' type_id=4, linkage=static
->>> 	type_id=95096 offset=177088 size=1152 (VAR 'rcu_data')
->>> 	type_id=95098 offset=177088 size=1152 (VAR 'rcu_data')
->>
->> so for me the difference seems to be using gcc-12 and this commit in
->> linux tree:
->>    dabddd687c9e percpu: cast percpu pointer in PERCPU_PTR() via
->>    unsigned long
->>
->> which adds extra __pcpu_ptr variable into dwarf, and it has the same
->> address as the per cpu variable and that confuses pahole
->>
->> it ends up with adding per cpu variable twice.. one with real type
->> (type_id=94868) and the other with unsigned long type (type_id=4)
->>
->> however this got fixed in pahole 1.28 commit:
->>    47dcb534e253 btf_encoder: Stop indexing symbols for VARs
->>
->> which filters out __pcpu_ptr variable completely, adding Stephen to
->> the loop
-> 
-> Thanks for sharing this. Your analysis is spot-on, but I can fill in
-> the
-> details a bit. I just grabbed 6.13-rc2 and built it with gcc 11 and
-> pahole 1.27, and observed the same issue:
-> 
->    $ bpftool btf dump file vmlinux | grep "VAR 'rcu_data"
->    [4045] VAR 'rcu_data' type_id=3962, linkage=static
->    [4047] VAR 'rcu_data' type_id=1, linkage=static
->            type_id=4045 offset=196608 size=520 (VAR 'rcu_data')
->            type_id=4047 offset=196608 size=520 (VAR 'rcu_data')
-> 
-> In pahole 1.27, the (simplified) process for generating variables for
-> BTF is:
-> 
-> 1. Look through the ELF symbol table, and find all symbols whose
-> addresses are within the percpu section, and add them to a list.
-> 
-> 2. Look through the DWARF: for each tag of type DW_TAG_variable,
-> determine if the variable is "global". If so, and if the address
-> matches
-> one of the symbols found in Step 1, continue.
-> 
-> 3. Except for one special case, pahole doesn't check whether the DWARF
-> variable's name matches the symbol name. It simply emits a variable
-> using the name of the symbol from Step 1, and the type information
-> from
-> Step 2.
-> 
-> The result of this process, in this case, is:
-> 
-> 1. kernel/rcu/tree.c contains a declaration of "rcu_data". This
-> results
-> in an ELF symbol in vmlinux of the same name. Great!
-> 
->    $ eu-readelf -s vmlinux | grep '\brcu_data\b'
->    12319: 0000000000030000    520 OBJECT  LOCAL  DEFAULT       21
->    rcu_data
-> 
-> 
-> 2. A DWARF entry is emitted for "rcu_data" which has a matching
-> location
-> (DW_AT_location has value DW_OP_addr 0x30000, matching the ELF
-> symbol).
-> So far so good - pahole emits a BTF variable with the expected type.
-> 
->    $ llvm-dwarfdump --name=rcu_data
->    ...
->    0x01af03f1: DW_TAG_variable
->                  DW_AT_name        ("rcu_data")
->                  DW_AT_decl_file
->                  ("/home/stepbren/repos/linux-upstream/kernel/rcu/tree.c")
->                  DW_AT_decl_line   (80)
->                  DW_AT_decl_column (8)
->                  DW_AT_type        (0x01aefb38 "rcu_data")
->                  DW_AT_alignment   (0x40)
->                  DW_AT_location    (DW_OP_addr 0x30000)
-> 
-> 3. In kernel/rcu/tree.c, we also have the following declaration at
-> line
-> 5227 which uses per_cpu_ptr() on &rcu_data:
-> 
-> 5222 void rcutree_migrate_callbacks(int cpu)
-> 5223 {
-> 5224 	unsigned long flags;
-> 5225 	struct rcu_data *my_rdp;
-> 5226 	struct rcu_node *my_rnp;
-> 5227 	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
->                                 ^^^^^^^^^^^
-> 
-> With the new changes in dabddd687c9e ("percpu: cast percpu pointer in
-> PERCPU_PTR() via unsigned long"), this expands to a lexical block
-> which
-> contains a variable named "__pcpu_ptr", of type unsigned long. The
-> compiler emits the following DW_TAG_variable in the DWARF:
-> 
-> 0x01b05d20:         DW_TAG_variable
->                        DW_AT_name        ("__pcpu_ptr")
->                        DW_AT_decl_file
->                        ("/home/stepbren/repos/linux-upstream/kernel/rcu/tree.c")
->                        DW_AT_decl_line   (5227)
->                        DW_AT_decl_column (25)
->                        DW_AT_type        (0x01adb52e "long unsigned
->                        int")
->                        DW_AT_location    (DW_OP_addr 0x30000,
->                        DW_OP_stack_value)
-> 
-> Since the DW_AT_location has a DW_OP_addr - pahole understands this to
-> mean that the variable is located in global memory, and thus has
-> VSCOPE_GLOBAL. But of course, the actual "scope" of this variable is
-> not
-> global, it is limited to the lexical block, which is completely hidden
-> away by the macro. But pahole 1.27 does not consider this, and since
-> the
-> address matches the "rcu_data" symbol, it emits a variable of type
-> "long
-> unsigned int" under the name "rcu_data" -- despite the fact that the
-> DWARF info has a name of "__pcpu_ptr".
-> 
-> The changes I made in 1.28 address this (unintentionally) by:
-> 
-> 1. Requiring global variables be both "in the global scope" (i.e. in
-> the
-> CU-level, rather than any function or other lexical block.
-> 2. Requiring global variables have global memory (some of them could
-> be
-> register variables, despite having global scope -- e.g.
-> current_stack_pointer).
-> 3. No longer using the ELF symbol table, and instead using the DWARF
-> names for variables.
-> 
-> With #1, we would filter this variable. And with #3, even if the
-> variable were not filtered, we would output (a bunch of) variables
-> with
-> the correct __pcpu_ptr variable name, which is unhelpful but at least
-> helps us understand where these things come from.
-> 
-> Rebuilding with GCC 14, we can see that the "__pcpu_ptr" variable no
-> longer has a DW_AT_location:
-> 
-> 0x01afa82f:         DW_TAG_variable
->                        DW_AT_name        ("__pcpu_ptr")
->                        DW_AT_decl_file
->                        ("/home/stepbren/repos/linux-upstream/kernel/rcu/tree.c")
->                        DW_AT_decl_line   (5227)
->                        DW_AT_decl_column (25)
->                        DW_AT_type        (0x01ad0267 "long unsigned
->                        int")
-> 
-> This is the reason that pahole 1.27 now recognizes it as
-> VSCOPE_OPTIMIZED. Without a memory location pahole can't do anything
-> to
-> match it against the "rcu_data" variable so nothing is emitted, and we
-> don't get the issue.
-> 
-> I'm not sure if this adds at all to the discussion, since the overall
-> answer is the same, an upgrade of pahole and/or gcc. (Pahole would be
-> recommended; GCC just changed the generated DWARF and I could imagine
-> other situations popping up elsewhere).
->
 
-Thank you for the help with debugging and for the detailed explanation!  
-                                                                         
-We'll proceed with updating pahole to v1.28 in the KernelCI build        
-environment.                                                             
-                                                                         
-Best,                                                                    
-                                                                         
-Laura                                                                    
-                                                                         
-#regzbot resolve: fixed by changes in pahole 1.28
- 
-> 
-> Thanks,
-> Stephen
-> 
->> with gcc-14 the __pcpu_ptr variable has VSCOPE_OPTIMIZED scope, so it
->> won't
->> get into btf even without above pahole fix
->>
->> I suggest gcc/pahole upgrade ;-)
->>
->> thanks,
->> jirka
+--=-yjX0hr7VVXVlChB9wdQW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2024-12-03 at 06:34 -0500, Genes Lists wrote:
+> On Tue, 2024-12-03 at 11:16 +0200, Ville Syrj=C3=A4l=C3=A4 wrote:
+> > > ...
+>=20
+> > Probably https://gitlab.freedesktop.org/drm/i915/kernel/-
+> > /issues/13057
+> >=20
+> Very helpful.
+>=20
+> I tested your patch set on Linus' tree commit
+> cdd30ebb1b9f36159d66f088b61aee264e649d7a :
+>=20
+> =C2=A0 =C2=A0=C2=A0https://patchwork.freedesktop.org/series/141911/
+>=20
+> and confirm that this fixes the problem=C2=A0
+>=20
+> Thank you.
+>=20
+>=20
+
+Just a CC to regressions list for tracking.
+
+First report here:=C2=A0
+https://lore.kernel.org/lkml/3b097dddd7095bccabe6791b90899c689f271a35.c
+amel@sapience.com/
+
+Fixed by patch set as noted above, but not yet in mainline or linux-
+next.
+
+Thank you again Ville for quickly coming up with a fix.
+
+--=20
+Gene
+
+
+--=-yjX0hr7VVXVlChB9wdQW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ1wlEAAKCRA5BdB0L6Ze
+2191AP9B/XFuJzoozY9SuPe5rgJMEoYgdU1lPwVq7uI22li+UAEAtoZSAumqaeVA
+FYnoRJYhHfK4M/sUzUz5a0qaLhX4Egw=
+=3Hbb
+-----END PGP SIGNATURE-----
+
+--=-yjX0hr7VVXVlChB9wdQW--
