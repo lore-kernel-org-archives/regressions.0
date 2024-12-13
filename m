@@ -1,143 +1,111 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7141DF242
-	for <regressions@lists.linux.dev>; Fri, 13 Dec 2024 12:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734092057; cv=fail; b=kid0FStzWV8TiIRbY2HdD7koOxrA2Q2pCu0/JSeoZzaoNaUOh7qhEN4GBbBMaRPGcJnm0ku3me5Srr0P/dPNXo8EaX/2C+AqS0RFXmd1oYn+dwUJ3yPGsEp5Sww6PFVJWsLU4Y2FjRVlpGUQ4EBHZ2OXYJ6xklgLZn+gtcVgCyU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734092057; c=relaxed/simple;
-	bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FGJZTD5WjmFFxTFLdwg1AvqzKPSjglPJuxZBmf6D3fXQ+uY9pwv+h6bqr4Pq12D5Mum0ZmUGNlD6wJaVAZ5PHzfO++vMDlVmxlP/LD5yvP8F8FNJZQ07863uxZvRV0ADaBwcvdv+XcdTqqzOyrvRznbegGRTkigFMyT0DToEhJg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=q4sPn34s; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=kh504LIt; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E651E04BF;
+	Fri, 13 Dec 2024 14:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734100415; cv=none; b=Gq0JklIqPs46PCLnGfbvLXqChgO21wPR0GxFy9s8BWCBiO7t/2NhFJiYscVKhrZxOFw2nfxkI6s8S986hOI3oeQNzWe0PFwU1Ihxa/0kRF9xEoCIqtm9Jr0SqFjJ7ZCjA/CHskoOYABCis1dAhggbbCzUv9pmocSRHrunrNXhik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734100415; c=relaxed/simple;
+	bh=PxRIzyngJAldqq4VCoyyeFAPVgtSl6U/ZhJk5pQ33xA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjsIW+GwP+dcsPZZDwHz86z+WjZT9ehMlwEqhFVTq1CZBrKsJS+HsDqTk8HYpSO4SFakoaOht5aF/n6LwggsJSW6bzWHB+BTOjeliUMmVY41bwUX7xUyGFSB2nLT62S3IklqKQrujtLyy8bjonanIumKnWB3ReG2cA6FOU/s2sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YOt/nXPx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="q4sPn34s";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="kh504LIt"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id E862D480525;
-	Fri, 13 Dec 2024 07:14:08 -0500 (EST)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1734092048;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
- b=q4sPn34soKydu57/9MOjEXYwGdmyeJj2hCmSyqsRycrtjy3yZwIRXBe34Y97lrnBhAqrm
- J9yAY6yvZ5xLWmRBA==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1734092048;
-	cv=none; b=mCeFMKbRbWJPrZtEHGL/TRg+QOJAvmLaaQ0ncKPgHKhoJaeJ562QKEct8Xayqy2MYu9go083lqz2jj1Yd72FM/HNgPcItTiHL/mQUv27I/CxfaqmtnAcbOiRQ5LIiaPUbQM0jYSlNEYZbQGQHyzr+WYDVdE82C56dz+iTWBZlEfel9Ke+PrwbYPKgW48so3oxYnMmqpgGeNhmRl88ulY8Dl0tADvFZ+Vc/ILl+U5fDFC/1mFlb7UyB8pWyAktpfv2zvKJDfk8q2qJjQzVWSxITVqibyNZhK4y2MabECkM6749LXBfo1DqWpxDffJQsaRQSG/p1L2C6DOeISMNrEHrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1734092048; c=relaxed/simple;
-	bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=nAgS6qbKdI0yR3Gu075nKMDm1nY/aqPSU838DZqGbuK21hsThoP3rWs97j2ktbjKwY4NfeQcosTmTzsJiLzPFdV9RVQe1iuMu5F4OLzfBfF1fYd1CZV2o+zcJuqtabdy0ZJ/27wyfIAdlx0U5lfWYPufg5SLtQ6xdDJORZVKi57e6gGyyMjZSnoUgBAOZfv8BmNkojGqFIreUDvoGiX+WU82Vk61hhDtbWKPlkj4x6XFQru09xdUADM9iYmSifAO7/qkclq0mOdvUFrbd/UN6HHpHguvJlMYFwUA9LPSJIcOOpxoTn2Alw4HHRWk6fw4o86v8f8H53h7VIJXIzZPBA==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1734092048;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=on+3kOjcl/tu3R48ep6Fp66Q8LyJDxFH/zcLNPzbXow=;
- b=kh504LItE0Pj3pt4Wkqr//E6SOjF0D4S63h1tl240YyGFqwfOb48xV3OhaZ8xMxMEIMEL
- oD0H/yDDT1LT/fA/ae/hW9Y4HpdZsH+CeUAl3hmLPy/9eXPcN0fuccZjFEM1IkygQPWjQWh
- SgjClSUWvd8i3qqMFt1Vw8LomD/2/WGJSYdi0hbApWQ/dB//nA7n7pdm46JnPp07+o/T+CR
- AZmEt+tslcQrGRDtRXK13XQrZwP3UMO7M7NS/mBCSQCVKlZ1DJnWnbt3TsqcehPTDD1COfr
- Xul01E3Xe0eeh/+IQV+oO7FzcXPBymRWlCpAv/ThshpCo/AsQDw/FXGf3dZQ==
-Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id B90A4280018;
-	Fri, 13 Dec 2024 07:14:08 -0500 (EST)
-Message-ID: <dd13efc9b3fe3e3acd599ca91b714fa92f6cb9a8.camel@sapience.com>
-Subject: Re: 6.13-rc1 graphics fail
-From: Genes Lists <lists@sapience.com>
-To: Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lucas.demarchi@intel.com, thomas.hellstrom@linux.intel.com, 
-	rodrigo.vivi@intel.com, airlied@gmail.com, tzimmermann@suse.de, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org
-Date: Fri, 13 Dec 2024 07:14:07 -0500
-In-Reply-To: <7db24095f935d874fae466853b0984103f97b40f.camel@sapience.com>
-References: <3b097dddd7095bccabe6791b90899c689f271a35.camel@sapience.com>
-		 <Z07Mg2_6y2MW22qV@intel.com>
-	 <7db24095f935d874fae466853b0984103f97b40f.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-yjX0hr7VVXVlChB9wdQW"
-User-Agent: Evolution 3.54.2 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YOt/nXPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D478C4CED2;
+	Fri, 13 Dec 2024 14:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1734100414;
+	bh=PxRIzyngJAldqq4VCoyyeFAPVgtSl6U/ZhJk5pQ33xA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YOt/nXPxQgz3yWLmPb1Mu4UWkbSo9EgR71TMdP1Dt9VeiEPbUDOyGFDvt5Dhv7duq
+	 6lahiweo04d9zs30z/TNlZNyTal8nLEznFhyFcQG65q1/H3W5yz7oK79m3dn6smqzL
+	 0BRKH6AT8GjeHRhMkrBLbJ7c/Ab1KRKXLNSG2Yko=
+Date: Fri, 13 Dec 2024 15:33:31 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Michael Krause <mk@galax.is>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Michael Krause <mk-debian@galax.is>,
+	Steve French <stfrench@microsoft.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-cifs@vger.kernel.org
+Subject: Re: backporting 24a9799aa8ef ("smb: client: fix UAF in
+ smb2_reconnect_server()") to older stable series
+Message-ID: <2024121316-refresh-skintight-c338@gregkh>
+References: <2024040834-magazine-audience-8aa4@gregkh>
+ <Z0rZFrZ0Cz3LJEbI@eldamar.lan>
+ <2e1ad828-24b3-488d-881e-69232c8c6062@galax.is>
+ <1037557ef401a66691a4b1e765eec2e2@manguebit.com>
+ <Z08ZdhIQeqHDHvqu@eldamar.lan>
+ <3441d88b-92e6-4f89-83a4-9230c8701d73@galax.is>
+ <2024121243-perennial-coveting-b863@gregkh>
+ <e9f36681-2d7e-4153-9cdf-cf556e290a53@galax.is>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9f36681-2d7e-4153-9cdf-cf556e290a53@galax.is>
 
+On Thu, Dec 12, 2024 at 10:48:55PM +0100, Michael Krause wrote:
+> On 12/12/24 1:26 PM, Greg KH wrote:
+> > On Tue, Dec 10, 2024 at 12:05:00AM +0100, Michael Krause wrote:
+> > > On 12/3/24 3:45 PM, Salvatore Bonaccorso wrote:
+> > > > Paulo,
+> > > > 
+> > > > On Tue, Dec 03, 2024 at 10:18:25AM -0300, Paulo Alcantara wrote:
+> > > > > Michael Krause <mk-debian@galax.is> writes:
+> > > > > 
+> > > > > > On 11/30/24 10:21 AM, Salvatore Bonaccorso wrote:
+> > > > > > > Michael, did a manual backport of 24a9799aa8ef ("smb: client: fix UAF
+> > > > > > > in smb2_reconnect_server()") which seems in fact to solve the issue.
+> > > > > > > 
+> > > > > > > Michael, can you please post your backport here for review from Paulo
+> > > > > > > and Steve?
+> > > > > > 
+> > > > > > Of course, attached.
+> > > > > > 
+> > > > > > Now I really hope I didn't screw it up :)
+> > > > > 
+> > > > > LGTM.  Thanks Michael for the backport.
+> > > > 
+> > > > Thanks a lot for the review. So to get it accepted it needs to be
+> > > > brough into the form which Greg can pick up. Michael can you do that
+> > > > and add your Signed-off line accordingly?
+> > > Happy to. Hope this is in the proper format:
+> > 
+> > It's corrupted somehow:
+> > 
+> > patching file fs/smb/client/connect.c
+> > patch: **** malformed patch at line 202:  		if (rc)
+> > 
+> > 
+> > Can you resend it or attach it?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Ugh, how embarrassing. I'm sorry, I "fixed" some minor whitespace issue directly in the patch and apparently did something wrong.
+> 
+> I redid the white space fix before diffing again and attach and inline the new version. The chunks are a bit alternated to the earlier version now unfortunately. This one applies..
 
---=-yjX0hr7VVXVlChB9wdQW
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Doesn't apply for me:
 
-On Tue, 2024-12-03 at 06:34 -0500, Genes Lists wrote:
-> On Tue, 2024-12-03 at 11:16 +0200, Ville Syrj=C3=A4l=C3=A4 wrote:
-> > > ...
->=20
-> > Probably https://gitlab.freedesktop.org/drm/i915/kernel/-
-> > /issues/13057
-> >=20
-> Very helpful.
->=20
-> I tested your patch set on Linus' tree commit
-> cdd30ebb1b9f36159d66f088b61aee264e649d7a :
->=20
-> =C2=A0 =C2=A0=C2=A0https://patchwork.freedesktop.org/series/141911/
->=20
-> and confirm that this fixes the problem=C2=A0
->=20
-> Thank you.
->=20
->=20
+checking file fs/smb/client/connect.c
+Hunk #1 FAILED at 259.
+Hunk #2 FAILED at 1977.
+Hunk #3 FAILED at 2035.
+3 out of 3 hunks FAILED
+checking file fs/smb/client/connect.c
 
-Just a CC to regressions list for tracking.
+Any ideas?
 
-First report here:=C2=A0
-https://lore.kernel.org/lkml/3b097dddd7095bccabe6791b90899c689f271a35.c
-amel@sapience.com/
+thanks,
 
-Fixed by patch set as noted above, but not yet in mainline or linux-
-next.
-
-Thank you again Ville for quickly coming up with a fix.
-
---=20
-Gene
-
-
---=-yjX0hr7VVXVlChB9wdQW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ1wlEAAKCRA5BdB0L6Ze
-2191AP9B/XFuJzoozY9SuPe5rgJMEoYgdU1lPwVq7uI22li+UAEAtoZSAumqaeVA
-FYnoRJYhHfK4M/sUzUz5a0qaLhX4Egw=
-=3Hbb
------END PGP SIGNATURE-----
-
---=-yjX0hr7VVXVlChB9wdQW--
+greg k-h
