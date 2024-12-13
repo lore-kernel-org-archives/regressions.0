@@ -1,49 +1,49 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCFB1E048B
-	for <regressions@lists.linux.dev>; Fri, 13 Dec 2024 16:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41129139587
+	for <regressions@lists.linux.dev>; Fri, 13 Dec 2024 16:17:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734106493; cv=none; b=QcJNGtAsy9Us27J9ZhlwsNdwCDMu6rPam+v5C+LwsNdUokGPZB1gyNNLT4zQgBHG7a90YJi9NSei8AowS3FJBNfeV+gLf+4RQeNCIWusSeM+Ok4j+6pGXa2PXPo3vWC+m8MaNNcOz3VVdjMWMV6l9lKZHSZYXOXz/j1o/Sx1PmI=
+	t=1734106641; cv=none; b=NOllIcn7/iwInx9W22aqkabIkJRPWub/oHz5DH7M+H287nnRI3yobolV7csFEM1NeKvqTrY58xGiP9GHspHxNy3bKk/Qmtljc/COYN+4f+tgpFMTPrlNshoZejrAPAN0b7MM9SUJRSD/UuFB4mR7S0jkv/VGhSfg1mOcan9Md6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734106493; c=relaxed/simple;
-	bh=x7lwD+mrt5JjAxRXerCJyGSk5TUHCt49xsw/U2O91Jw=;
+	s=arc-20240116; t=1734106641; c=relaxed/simple;
+	bh=+dJ68RIsRoIe9ROeamp5ETBUKbEHGag5dwxVODWz2hM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JeVgdCs4bQ2Cvt5AdqBumOPlcKkN1IfcOmYQPIH7rdDIL7dlCHtOsU9yih2EnnjPJhwRXzfKJhDVKqzuGCjF+msIznvGqRH/5hf0PH9RKIY4pSD9rz52YhmtEp+kpHRDi8nnN9OLUxFF2BbmJR/lpKKQuLP4j9N7j+moMNmxLHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=T6G2F/8E; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version:Content-Type; b=ZPcTjGzAm6fqIoIAXk/kOF6+hgF/8W2wX9kW84EDxH1q80UsG3aQC1cTyyyryHnZgI2My8WWTym6kbH6bHy7wgR+nf3u04cyjppKJaUjmBC5mbN0/otc0f5guGkLnPkLk19KALR7+Et6zi9yEFksw3SKpzWaZQvRjiUMpPvyQAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=rh9IxRmI; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="T6G2F/8E"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 507A9403FA
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="rh9IxRmI"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 779FE403FA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1734106491; bh=hz+uPLbCXHfkagOv/3/QLncBIXVL2PUgXiHHOfdp8J4=;
+	t=1734106639; bh=FiuX+b/jLcioRKLB2x5/1NihUC8qYW6jvfUzEWIHeas=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=T6G2F/8EL5T0/QERFYTgNzryWi7awAEMtwmkj2jCUzW0wS6kgGlsiHfib+5Sovaog
-	 T2wpDyIO0ocElZ74vDxF0AzzzhxssElVPm0Cdy+XImdhuN9oIpBNRI+x+DCJYWmAVz
-	 xgpq2ki3zfHN27DwWDN2FVvS1h0t6rSArnBuOLXYgGIxCqcnyPPUMohrsDQ0PphOKd
-	 qoIe1DSSu3egab8Z7WDctbCL0OVwRknKYhzyCuIONABfPt67e9KHMBQf5eXB4vg61g
-	 drJgdCCFJTyOilmQrieANgnq+0FPg11wlpTgOQM9MoIb0paogj8DIsQ6W5DSwJCecw
-	 MS/zzH6I4FRfg==
+	b=rh9IxRmIHB5oqzQhcq2dnDPFQuek5G5FcsoXRBmuA635/0BK4a0AyAaxJ5Dn730zI
+	 ziOUI/HO8weG6xuoLkF8caFFnKAcOosJTefI79Hvn8DWaZMBxDjHIiZT9gOPs3twte
+	 ivezLpkZqwnqRvuupLm+DirbaevYM1TgGnzKcJnSsauQ3oZe39Fu1jYb4xTzv6k6b0
+	 wUYEtJceGpofnIZQTfwzrboixcUZ1HJ/+6D2cYc6iaMVfPgybcNkHYWWMsvOGw2DO1
+	 XjwevGsDgQ/zL1/FQV8uJWl4beb2jSZWHjc2F4veUfGqq/vAevOV7fx9Mji8eeYXJ8
+	 /V9Wf+vKjr0YQ==
 Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 507A9403FA;
-	Fri, 13 Dec 2024 16:14:51 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id 779FE403FA;
+	Fri, 13 Dec 2024 16:17:19 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
  regressions@lists.linux.dev, linux-doc@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, Greg KH
  <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/6] docs: more detailed instructions on handling
- regressions
-In-Reply-To: <aed019088599c6dc8aab8879dfda35785e01d316.1733825632.git.linux@leemhuis.info>
+Subject: Re: [PATCH v1 2/6] docs: 6.Followthrough.rst: when to involved
+ Linus in regressions
+In-Reply-To: <9344b8bf12ce5ebe838d154d5c4f1baf515a9452.1733825632.git.linux@leemhuis.info>
 References: <cover.1733825632.git.linux@leemhuis.info>
- <aed019088599c6dc8aab8879dfda35785e01d316.1733825632.git.linux@leemhuis.info>
-Date: Fri, 13 Dec 2024 09:14:50 -0700
-Message-ID: <87msgzwoed.fsf@trenco.lwn.net>
+ <9344b8bf12ce5ebe838d154d5c4f1baf515a9452.1733825632.git.linux@leemhuis.info>
+Date: Fri, 13 Dec 2024 09:17:18 -0700
+Message-ID: <87ikrnwoa9.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,26 +54,46 @@ Content-Type: text/plain
 
 Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-> Add a few more specific guidelines on handling regressions to the
-> kernel's two most prominent guides about contributing to Linux, as
-> developers apparently work with quite different interpretations of what
-> Linus expects.
+> Add a few notes on when to involve Linus in regressions. Part of this
+> spells out slightly obvious things infrequent developers might not be
+> aware of, while others are based on a recent statement from Linus[1].
 >
-> Changes like this were asked for during the Maintainers Summit 2024. The
-> four rules of thumb spelled out are all closely based on statements
-> Linus made there; LWN documented all except "Expedite fixing regressions
-> that reached a release deemed for end users.." in their coverage [1].
+> This removes equivalent paragraphs from a section in
+> Documentation/process/handling-regressions.rst, which will become mostly
+> obsolete through this and follow-up changes.
+>
+> Link: https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/ [1]
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+>  Documentation/process/6.Followthrough.rst      | 17 +++++++++++++++++
+>  Documentation/process/handling-regressions.rst | 17 -----------------
+>  2 files changed, 17 insertions(+), 17 deletions(-)
+>
+> diff --git a/Documentation/process/6.Followthrough.rst b/Documentation/process/6.Followthrough.rst
+> index ed5e32348f2403..f9ae3a86ee0c49 100644
+> --- a/Documentation/process/6.Followthrough.rst
+> +++ b/Documentation/process/6.Followthrough.rst
+> @@ -217,6 +217,23 @@ On procedure:
+>     on the fix and the alignment with pull requests it might be beneficial to
+>     have them in there for a day or two.
+>  
+> + - If a regression seems tangly, precarious, or urgent, consider CCing Linus on
+> +   discussions and patch reviews; do the same if the responsible maintainers
+> +   are suspected to be unavailable.
 
-"deemed" used in this way is a bit strange.  "intended" perhaps?
+I'm not quite sure what "tangly" or "precarious" means in this case?
 
-> +On timing:
+> + - For urgent fixes, consider asking Linus to pick them up straight from the
+> +   mailing list: he is totally fine with that for occasional and uncontroversial
+> +   fixes.  Such requests should ideally come directly from maintainers or happen
+> +   in accordance with them.
 > +
-> + - Expedite fixing regressions that reached releases deemed for end users
-> +   through new mainline releases or stable backports during the past year.
+> + - In case you are unsure if a fix is worth the risk applying just days before
+> +   a new mainline release, send Linus a mail with the usual lists, developers,
+> +   and maintainers in CC; in it, summarize the situation while asking him to
 
-Here too.
+s/usual/appropriate/ ?
 
-That little nit is all I can find to complain about in this one, though
-:)
+That's all.
 
 jon
