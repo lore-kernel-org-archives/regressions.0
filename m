@@ -1,129 +1,79 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C98199223
-	for <regressions@lists.linux.dev>; Sat, 14 Dec 2024 17:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1585F3D96A;
+	Sat, 14 Dec 2024 18:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734197522; cv=none; b=uch8KNve57oZdoyUiEJczr17VyxXpMPjO48frtVSPkJPFAgqxu781u87xUXD/YUD4OJLul7nIiyB/92gjQdjpEsp5k8o1Ql8a928vze37Se5W5eI7xYr96OfXasD9W4aA/TTjpjLZ9UjQkZ2RLuRXvramahacBaXRWy8r9DPMQA=
+	t=1734201570; cv=none; b=VoPurDihiSsNUDO2MzPzFtto3rTZZdd8RQ3dXeVC7G8DT6iGJqKH6xoufuN67C3/hm42gKDSBs7at0v/N2PGgoAr4tyU3rNr6jFHe9/o9G5M8gCBeiYQKthmN9c78ha6E+MQ8De7fvoWzNT9TkOFQzzweg8c0AQdyjZT44oBGuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734197522; c=relaxed/simple;
-	bh=GdcIoMV9rDgh/h7XI/XexxU3pMPlgPu8UDf7JNbHBG0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sMxUKxLB0AbDLOnKW1/ud/bfPE5bUJJVUEuZ2I66qTZ/qeZmIyjJaXZQFlrvtXlCx+jo3EZGfpYXA+Po9BdZqKwqvlzcLux1l2C4qyhVPY9q5SaHbZybPCai2DKmsPv7S6G5HPSSURXJx22Ozmc4Dj9W2ApYwHjnyQaU4MfbQo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-312-61ot2vfuOIOCZzeUwr6qww-1; Sat, 14 Dec 2024 17:31:50 +0000
-X-MC-Unique: 61ot2vfuOIOCZzeUwr6qww-1
-X-Mimecast-MFC-AGG-ID: 61ot2vfuOIOCZzeUwr6qww
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 14 Dec
- 2024 17:30:53 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 14 Dec 2024 17:30:53 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>, 'Naresh Kamboju'
-	<naresh.kamboju@linaro.org>, 'Dan Carpenter' <dan.carpenter@linaro.org>,
-	'Julian Anastasov' <ja@ssi.bg>, "'pablo@netfilter.org'"
-	<pablo@netfilter.org>, Andrew Morton <akpm@linux-foundation.org>
-CC: 'open list' <linux-kernel@vger.kernel.org>,
-	"'lkft-triage@lists.linaro.org'" <lkft-triage@lists.linaro.org>, "'Linux
- Regressions'" <regressions@lists.linux.dev>, 'Linux ARM'
-	<linux-arm-kernel@lists.infradead.org>, "'netfilter-devel@vger.kernel.org'"
-	<netfilter-devel@vger.kernel.org>, 'Arnd Bergmann' <arnd@arndb.de>, "'Anders
- Roxell'" <anders.roxell@linaro.org>, 'Johannes Berg'
-	<johannes.berg@intel.com>, "'toke@kernel.org'" <toke@kernel.org>, 'Al Viro'
-	<viro@zeniv.linux.org.uk>, "'kernel@jfarr.cc'" <kernel@jfarr.cc>,
-	"'kees@kernel.org'" <kees@kernel.org>
-Subject: [PATCH net-next] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Topic: [PATCH net-next] Fix clamp() of ip_vs_conn_tab on small memory
- systems.
-Thread-Index: AdtOTfU+VQ/Jz9m3Sa6gMqrna34atA==
-Date: Sat, 14 Dec 2024 17:30:53 +0000
-Message-ID: <24a6bfd0811b4931b6ef40098b33c9ee@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1734201570; c=relaxed/simple;
+	bh=690nWsXz4Lf8yy+mzkl2dnwSFpMN1lTj0VULWgijlAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mggyI7yRoAADiRLCcDrmXV/F6m7HUC45gU/f+EWyi7eRwEw3HA/RoxV67Jy50us8bF3rZH8l8QTjXEWKc9QW+SPGnNbyAFT4tZy/6z1CaAR0WZmgJLd5dF93Z5GZhd9Yt1dl9C0TYir6KrpwkqsdWo3wJ6IpR5UIw761p/PNwwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oBA5WTgl; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oBA5WTgl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uEzDBKUgWX6jFkMv5xG4qzSLHSlbdmivdkGAeIJ/mE8=; b=oBA5WTglzbT94FzYbKTyyMZT8O
+	T84h7fLYg9ZWCKUlaCIQX66FGXqejGTz0echBNFiJY8ksiLRqqQ2HUIhzVqRDYQxbkwEZebpQOKdK
+	D04mdZ0KZ2FX7PUpaRlvdifIvv09KnhEJCaE9MOGg/LVdTLmb5JRzGF4CDR1TSDPF2/MtC4v+VFLw
+	emX/qE/CMjVIHztj0rUl9p7qa5HbEvVqq2TKx2SIOEoIKwUdexyDEJEGMPBP0A4RGbMIlIcixTTWm
+	PyP2rf+OeRz2CtbIKzRySrc9c+1xwWLHbMQospqim7cZPdI404VCuwU+W9NPk0jUiiL6OwT5fzDNx
+	JoV7BeIA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tMX2z-00000004OWx-2QfO;
+	Sat, 14 Dec 2024 18:39:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CF0E930035F; Sat, 14 Dec 2024 19:39:24 +0100 (CET)
+Date: Sat, 14 Dec 2024 19:39:24 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ranguvar <ranguvar@ranguvar.io>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"regressions@leemhuis.info" <regressions@leemhuis.info>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [REGRESSION][BISECTED] from bd9bbc96e835: cannot boot Win11 KVM
+ guest
+Message-ID: <20241214183924.GC10560@noisy.programming.kicks-ass.net>
+References: <nscDY8Zl-c9zxKZ0qGQX8eqpyHf-84yh3mPJWUUWkaNsx5A06rvv6tBOQSXXFjZzXeQl_ZVUbgGvK9yjH6avpoOwmZZkm3FSILtaz2AHgLk=@ranguvar.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 4x4V4GgXWEfpXkzhaI39bvd625aJevi4fo3nHOzMUbk_1734197509
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nscDY8Zl-c9zxKZ0qGQX8eqpyHf-84yh3mPJWUUWkaNsx5A06rvv6tBOQSXXFjZzXeQl_ZVUbgGvK9yjH6avpoOwmZZkm3FSILtaz2AHgLk=@ranguvar.io>
 
-The 'max_avail' value is calculated from the system memory
-size using order_base_2().
-order_base_2(x) is defined as '(x) ? fn(x) : 0'.
-The compiler generates two copies of the code that follows
-and then expands clamp(max, min, PAGE_SHIFT - 12) (11 on 32bit).
-This triggers a compile-time assert since min is 5.
+On Sat, Dec 14, 2024 at 06:30:11AM +0000, Ranguvar wrote:
+> Hello, all,
+> 
+> Any assistance with proper format and process is appreciated as I am
+> new to these lists.  After the commit bd9bbc96e835 "sched: Rework
+> dl_server" I am no longer able to boot my Windows 11 23H2 guest using
+> pinned/exclusive CPU cores and passing a PCIe graphics card.  This
+> setup worked for me since at least 5.10, likely earlier, with minimal
+> changes.
+> 
+> Most or all cores assigned to guest VM report 100% usage, and many
+> tasks on the host hang indefinitely (10min+) until the guest is
+> forcibly stopped.  This happens only once the Windows kernel begins
+> loading - its spinner appears and freezes.
 
-In reality a system would have to have less than 512MB memory
-for the bounds passed to clamp to be reversed.
+Do the patches here:
 
-Swap the order of the arguments to clamp() to avoid the warning.
+  https://lkml.kernel.org/r/20241213032244.877029-1-vineeth@bitbyteword.org
 
-Replace the clamp_val() on the line below with clamp().
-clamp_val() is just 'an accident waiting to happen' and not needed here.
+help?
 
-Detected by compile time checks added to clamp(), specifically:
-minmax.h: use BUILD_BUG_ON_MSG() for the lo < hi test in clamp()
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYsT34UkGFKxus63H6UVpYi5GRZkezT9MR=
-LfAbM3f6ke0g@mail.gmail.com/
-Fixes: 4f325e26277b ("ipvs: dynamically limit the connection hash table")
-Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: David Laight <david.laight@aculab.com>
----
-
-Julian seems to be waiting for a 'v2' from me.
-Changed target tree to 'net-next'.
-I've re-written the commit message.
-Copied Andrew Morton - he might want to take the change through the 'mm' tr=
-ee.
-Plausibly the 'fixes' tag should refer to the minmax.h change?
-This will need back-porting if the minmax set get back-ported.
-
-I'm not sure whether there ought to be an attribution to Dan Carpenter <dan=
-.carpenter@linaro.org>
-
- net/netfilter/ipvs/ip_vs_conn.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/netfilter/ipvs/ip_vs_conn.c b/net/netfilter/ipvs/ip_vs_con=
-n.c
-index 98d7dbe3d787..c0289f83f96d 100644
---- a/net/netfilter/ipvs/ip_vs_conn.c
-+++ b/net/netfilter/ipvs/ip_vs_conn.c
-@@ -1495,8 +1495,8 @@ int __init ip_vs_conn_init(void)
- =09max_avail -=3D 2;=09=09/* ~4 in hash row */
- =09max_avail -=3D 1;=09=09/* IPVS up to 1/2 of mem */
- =09max_avail -=3D order_base_2(sizeof(struct ip_vs_conn));
--=09max =3D clamp(max, min, max_avail);
--=09ip_vs_conn_tab_bits =3D clamp_val(ip_vs_conn_tab_bits, min, max);
-+=09max =3D clamp(max_avail, min, max);
-+=09ip_vs_conn_tab_bits =3D clamp(ip_vs_conn_tab_bits, min, max);
- =09ip_vs_conn_tab_size =3D 1 << ip_vs_conn_tab_bits;
- =09ip_vs_conn_tab_mask =3D ip_vs_conn_tab_size - 1;
-=20
---=20
-2.17.1
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+I'm not really skilled with the whole virt thing, and I definitely do
+not have Windows guests at hand. If the above patches do not work; would
+it be possible to share an image or something?
