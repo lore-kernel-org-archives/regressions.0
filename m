@@ -1,112 +1,101 @@
-Received: from mail-10625.protonmail.ch (mail-10625.protonmail.ch [79.135.106.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6259D3EA69
-	for <regressions@lists.linux.dev>; Sat, 14 Dec 2024 06:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7231E1CD2C;
+	Sat, 14 Dec 2024 07:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734157985; cv=none; b=BTwbyhMV6BBi+gFAspodL1qnps9EJwxmMmdKMMdmRW1JB7pKY32IJqYCR062NTXz/LmuT+OoFMxRSBVGwfd4c//pz710HH8znWJKBij7G7AVlG3hqs8fou653pJOS0NeYo95VxBWEhlNYdoAwd4TkQOOyYfjKhSc6egIUVzDZD0=
+	t=1734162464; cv=none; b=t0LkP0c3QH5unutEIVmf9BIelI4rAlh0fPy6CQkOmgAuSiRkBoUf3YYg/xgHgm90MMfLkRPxBHpLPo0aDDXqfWQMi9BTzoGglpQxeK+T5/zHUELrhkSSpMb+RoZPl8nCRzG3OTpHnTTgP/lWWllnoV8hYFjGT4ImvQyTUOLeOV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734157985; c=relaxed/simple;
-	bh=ievqeHVfDN1p5eeUqf09eDC9oeLJXp2DUIrALupbiTc=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Joy6tp+w5N5VilS25I3Rz1H4i36g5bj8Nx2S8VeS5rJBuYn4r3oIPoTcCnAd7TEqhcxoch5xfHUwvadIzU7OwYUhYFI0f8jjR/be+hd3vVRCayShf/ruOGSLeedS/2WHuTZ3ArDkkT7HrnWtL/uiP/GH1n71Bz14pfnqBVyI5TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ranguvar.io; spf=pass smtp.mailfrom=ranguvar.io; dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b=Lo1AA0qS; arc=none smtp.client-ip=79.135.106.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ranguvar.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ranguvar.io
+	s=arc-20240116; t=1734162464; c=relaxed/simple;
+	bh=YIbX2MgGl3xGze3jMMeFEJiLRt0XWfpz5HfIdkZ+pIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szkzXHmS11v3DkMRY/7IRyFOB2uDt37U2UECOZh7Jq4F4X0cidu1SYk7Ux5i5tLaGLs6alLbYsvRtB0KS5oelzqX9pTk/NJZj67nHapdXEz6ytwVh52nF5Uh9miuh1vok68hPcmhYAy6hh063T8QCifE7SKEH/qVFnRNXOC/xT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2PG3gvYR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b="Lo1AA0qS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ranguvar.io;
-	s=protonmail3; t=1734157981; x=1734417181;
-	bh=ievqeHVfDN1p5eeUqf09eDC9oeLJXp2DUIrALupbiTc=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=Lo1AA0qSzQJTJKMajvxYqwDGjWAbrWc0jLytj2YyxV9CyuAjjscbPD/WXCJyuYRqP
-	 mDGxnd5Onj24epykQ/I2WKMDi8NjHsw2cYKduHqQAY6drz9gUgRQ/1pTPSY+W2AWVW
-	 Gy3KlKEC0sNvKN+QoFwvVSkcQ+zjzmusiEKEJSjD1ioUCNVWHa5gqJ3wh0hunpCE18
-	 sLFnTl8iXRKwAAQSBZgFRz1JAkI0ycaR42OLh9hyFVEdWvhMEVOwXFkrSgLilT4mGP
-	 P1/2BKEikVb4Cs0wX8V0QTKr2D3IRrATySNP5UHQ+492YNQOjbMfH1pySa0rLKJ0pT
-	 mOwpiZhxyD1Ww==
-Date: Sat, 14 Dec 2024 06:32:57 +0000
-To: Peter Zijlstra <peterz@infradead.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Ranguvar <ranguvar@ranguvar.io>
-Cc: "regressions@leemhuis.info" <regressions@leemhuis.info>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [REGRESSION][BISECTED] from bd9bbc96e835: cannot boot Win11 KVM guest
-Message-ID: <jGQc86Npv2BVcA61A7EPFQYcclIuxb07m-UqU0w22FA8_o3-0_xc6OQPp_CHDBZhId9acH4hyiOqki9w7Q0-WmuoVqsCoQfefaHNdfcV2ww=@ranguvar.io>
-Feedback-ID: 7618196:user:proton
-X-Pm-Message-ID: 17d298ae81f0994ea02c3104009042b0d1197e8b
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2PG3gvYR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3503EC4CED1;
+	Sat, 14 Dec 2024 07:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1734162463;
+	bh=YIbX2MgGl3xGze3jMMeFEJiLRt0XWfpz5HfIdkZ+pIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2PG3gvYRb5L837h6bmde+6JNYeDyCcawdsc0kBqnKck0ckF+WyJrFxdybO9YRUoHI
+	 ZQe4xD3BhacPnAopunOstxKiloQ4T8g6GfqrpxyPHpINwWLUMsihEBEODII2VeC9Mm
+	 JmXYXvNqOBH+6bH7zpBCVCg0JBP8W/020A13QX5o=
+Date: Sat, 14 Dec 2024 08:47:40 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jared Finder <jared@finder.org>
+Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Jann Horn <jannh@google.com>,
+	Hanno =?iso-8859-1?Q?B=F6ck?= <hanno@hboeck.de>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
+	regressions@lists.linux.dev,
+	kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: GPM & Emacs broken in Linux 6.7 -- ok to relax check?
+Message-ID: <2024121418-blazer-valiant-c51a@gregkh>
+References: <ee3ec63269b43b34e1c90dd8c9743bf8@finder.org>
+ <CAG48ez0vg9W=oatvEqxvTSYNUx7htY23LxPrYCiuLZhZQuaGjg@mail.gmail.com>
+ <Z08NV4Z-L0anDxGk@google.com>
+ <Z08QvvfLSWGIDfBD@google.com>
+ <ca2a101ccf5ae790dd2cac58ff832922@finder.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca2a101ccf5ae790dd2cac58ff832922@finder.org>
 
-Hello, all,
+On Fri, Dec 13, 2024 at 09:13:54PM -0800, Jared Finder wrote:
+> On 2024-12-03 06:07, Günther Noack wrote:
+> > On Tue, Dec 03, 2024 at 02:53:27PM +0100, Günther Noack wrote:
+> > > Hanno, you are the original author of this patch and you have done a
+> > > more
+> > > detailed analysis on the TIOCLINUX problems than me -- do you agree
+> > > that this
+> > > weakened check would still be sufficient to protect against the
+> > > TIOCLINUX
+> > > problems?  (Or in other words, if we permitted TIOCL_SELPOINTER,
+> > > TIOCL_SELCLEAR
+> > > and TIOCL_SELMOUSEREPORT for non-CAP_SYS_ADMIN processes, would you
+> > > still see a
+> > > way to misuse that functionality?)
+> > 
+> > P.S.: For reference, some more detailed reasoning why I think that that
+> > proposal
+> > would be OK:
+> > 
+> > It would protect at least against the "minittyjack.c" example that was
+> > attached
+> > to https://www.openwall.com/lists/oss-security/2023/03/14/3
+> > 
+> > The trick used there was:
+> > 
+> > * ioctl() with TIOCLINUX with TIOCL_SETSEL with TIOCL_SELLINE,
+> >   to make a selection (a.k.a. changing the contents of vc_sel)
+> > * ioctl() with TIOCLINUX and TIOCL_PASTESEL to paste the selection.
+> >   (The implementation for that is in selection.c/paste_selection()
+> >   and is just copying from vc_sel.)
+> > 
+> > So as long as we are protecting the change to vc_sel, that should be OK
+> > in my
+> > mind.
+> 
+> It's been silent for about a week and a half here. How long do we wait
+> before creating a patch here? This is a regression so I'm assuming we
+> shouldn't wait too long.
+> 
+> I'm happy to create the patch if that's helpful. I'd need help with process
+> for submitting it for inclusion in the latest kernel as well as backports to
+> earlier impacted versions. I've never submitted code to Linux before.
 
-Any assistance with proper format and process is appreciated as I am new to=
- these lists.
-After the commit bd9bbc96e835 "sched: Rework dl_server" I am no longer able=
- to boot my Windows 11 23H2 guest using pinned/exclusive CPU cores and pass=
-ing a PCIe graphics card.
-This setup worked for me since at least 5.10, likely earlier, with minimal =
-changes.
+Sure, make a patch and we will be glad to help you out in getting it
+accepted if it looks good.
 
-Most or all cores assigned to guest VM report 100% usage, and many tasks on=
- the host hang indefinitely (10min+) until the guest is forcibly stopped.
-This happens only once the Windows kernel begins loading - its spinner appe=
-ars and freezes.
+thanks,
 
-Still broken on 6.13-rc2, as well as 6.12.4 from Arch's repository.
-When testing these, the failure is similar, but tasks on the host are slow =
-to execute instead of stalling indefinitely, and hung tasks are not reporte=
-d in dmesg. Only one guest core may show 100% utilization instead of many o=
-r all of them. This seems to be due to a separate regression which also imp=
-acts my usecase [0].
-After patching it [1], I then find the same behavior as bd9bbc96e835, with =
-hung tasks on host.
-
-git bisect log: [2]
-dmesg from 6.11.0-rc1-1-git-00057-gbd9bbc96e835, with decoded hung task bac=
-ktraces: [3]
-dmesg from arch 6.12.4: [4]
-dmesg from arch 6.12.4 patched for svm.c regression, has hung tasks, backtr=
-aces could not be decoded: [5]
-config for 6.11.0-rc1-1-git-00057-gbd9bbc96e835: [6]
-config for arch 6.12.4: [7]
-
-If it helps, my host uses an AMD Ryzen 5950X CPU with latest UEFI and AMD W=
-X 5100 (Polaris, GCN 4.0) PCIe graphics.
-I use libvirt 10.10 and qemu 9.1.2, and I am passing three PCIe devices eac=
-h from dedicated IOMMU groups: NVIDIA RTX 3090 graphics, a Renesas uPD72020=
-1 USB controller, and a Samsung 970 EVO NVMe disk.
-
-I have in kernel cmdline `iommu=3Dpt isolcpus=3D1-7,17-23 rcu_nocbs=3D1-7,1=
-7-23 nohz_full=3D1-7,17-23`.
-Removing iommu=3Dpt does not produce a change, and dropping the core isolat=
-ion freezes the host on VM startup.
-Enabling/disabling kvm_amd.nested or kvm.enable_virt_at_load did not produc=
-e a change.
-
-Thank you for your attention.
-- Devin
-
-#regzbot introduced: bd9bbc96e8356886971317f57994247ca491dbf1
-
-[0]: https://lore.kernel.org/regressions/52914da7-a97b-45ad-86a0-affdf8266c=
-61@mailbox.org/
-[1]: https://lore.kernel.org/regressions/376c445a-9437-4bdd-9b67-e7ce786ae2=
-c4@mailbox.org/
-[2]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/bisect.log
-[3]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.11.0-rc=
-1-1-git-00057-gbd9bbc96e835-decoded.log
-[4]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.12.4-ar=
-ch1-1.log
-[5]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.12.4-ar=
-ch1-1-patched.log
-[6]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/config-6.11.0-r=
-c1-1-git-00057-gbd9bbc96e835
-[7]: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/=
-6.12.4.arch1-1/config
+greg k-h
