@@ -1,81 +1,91 @@
-Received: from mail-4323.proton.ch (mail-4323.proton.ch [185.70.43.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F171487F6
-	for <regressions@lists.linux.dev>; Sun, 15 Dec 2024 18:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621DC1B87C7;
+	Sun, 15 Dec 2024 21:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734288665; cv=none; b=USYilW6z8P8+AVk/1DHeX/7O66p2nx/OKyXt2AB+wlNM7T77HljBJRIQ5kQRwmIm904uWe4h1fqxl+3JUOCXGGHFmxopUBmhabuk3LKC5qQJMALx/ay5HvwdmOTK4nEsI590om4CHscBxeW8lkMdPj1Fr0+rLEX7rPSMLLT75ds=
+	t=1734297997; cv=none; b=SK+121wiMi0aUjK5A1EnLrZdB+3HeXF3Lm1igj5M3XwcMuDOs9+KckYmCPXqqbJ2u1nWmuZyS+dOSGBLklwm/WCdxDEYsymBHKlr1a3AXnz40nrYH51XWsDlViVMhrkMpGdLFuuLVVsx7SoT2FE/AXzrIgk4UbXx9cPb4sCTFaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734288665; c=relaxed/simple;
-	bh=7/Dgqqcjbm6yKbTp8//eYY4ngx6e+/q0fiDNY3v30QU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qQc/M8p1hruUfCdqSZ3TuxmgJfTqWKc+MoW3pmZkK2WKjkw26WhdFKpMZRCLjZszH/ehuDATwwaGCbssSY3N/LjfblJBbqAt9cNPD4sjsUo0+kIPiiy0U2LCnsR3t4VJ3F+aL8/PSLzGWSiYm5EI/r4vhVSQn1wZj4v6HwjzPYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ranguvar.io; spf=pass smtp.mailfrom=ranguvar.io; dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b=cqbhMGbZ; arc=none smtp.client-ip=185.70.43.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ranguvar.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ranguvar.io
+	s=arc-20240116; t=1734297997; c=relaxed/simple;
+	bh=/wCfD8PYxsv1hEHkNP3Aza2mADy3dTGKMocVP/4mrKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gDN79kCMhPbnvAdgMf40C61L+8VRG2sVb60Hp5usBWoQATPz3Pu/xhF24CL8XFuPqj04sCv4YHEp1a9Tx29mwPBd41GAVVY2qyJRs7adIVV0v4K+OmQHnQQIQeBQE3BIBIkF8r8KJF4YSavblukFN2q+44XCCjR6h7gRHuu3Y+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCqJOY+Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b="cqbhMGbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ranguvar.io;
-	s=protonmail3; t=1734288652; x=1734547852;
-	bh=7/Dgqqcjbm6yKbTp8//eYY4ngx6e+/q0fiDNY3v30QU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=cqbhMGbZK+KNUUMxX3obwFI4a7pmi9gXJCtW0YSJ/UKs2bNK4nl7o1aks9XMu6ikd
-	 GZ/r7DDRm88TWqYtS7QIMxADynHoIFrcR+YbGIybVIwaZfjgIniJE6AG5wbyTl06vR
-	 XfNIqeJ6xlbGd6beOKg+fL/usWTYc762oxZKGaFgEWG2xifqijB2bWrdqdAGBvxZ2p
-	 JercwAhGAqOtQ3w+Q1PIdY1DHMxU+NVlPfGHadXUbCHMRQ6qom9YFr9+CkdLAIRa4w
-	 1z4pZIwW490aFIPEpT+ssWnjnRD2s2iKD4RBBnLAdNC7i/SlypB+kl+OlkSYpVUcmN
-	 L6m7G7GwV+aWw==
-Date: Sun, 15 Dec 2024 18:50:47 +0000
-To: Peter Zijlstra <peterz@infradead.org>
-From: Ranguvar <ranguvar@ranguvar.io>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "regressions@leemhuis.info" <regressions@leemhuis.info>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [REGRESSION][BISECTED] from bd9bbc96e835: cannot boot Win11 KVM guest
-Message-ID: <fShmVVohdysEOcF0kM7iw3wVZhoCx4aNsqS3JlreZjMMMjGAilrVaBtF_hooXSDKL5-GrlNZPXLB7sD6hHflU8T4Rn4Gdncs_OfgapXLQPQ=@ranguvar.io>
-In-Reply-To: <20241214183924.GC10560@noisy.programming.kicks-ass.net>
-References: <nscDY8Zl-c9zxKZ0qGQX8eqpyHf-84yh3mPJWUUWkaNsx5A06rvv6tBOQSXXFjZzXeQl_ZVUbgGvK9yjH6avpoOwmZZkm3FSILtaz2AHgLk=@ranguvar.io> <20241214183924.GC10560@noisy.programming.kicks-ass.net>
-Feedback-ID: 7618196:user:proton
-X-Pm-Message-ID: 92e6293f4752c10039e1de9cdcf0a1e3c52683f1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCqJOY+Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1A0C4CECE;
+	Sun, 15 Dec 2024 21:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734297996;
+	bh=/wCfD8PYxsv1hEHkNP3Aza2mADy3dTGKMocVP/4mrKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YCqJOY+Z383UEd4ZnNbqRNrMjT3zblk3FAZ6cxSnXMOGkagpgfs4g+gnj9oBBBcTs
+	 E+CCYQim53VrLdVbDcEvvprbDbuF1+6rwACMAbTa1fR9awoPe6r5fWZceaB1Zv9ncp
+	 EWRhyT+uLP79eiJiCk48HvgPs25ULNJD1Q2Mdzxt/gwnMSH8Gg8cJs9VQLF9UuakL7
+	 LEYWi0rMd+89n4aWRtBKLWnMAdT0h7QQgznz11khTmMrioPemdG9jFvHHvK9CG0Gg/
+	 LiadWLdGw8ortZv4acIB1KN4vBezDFF/DShgkL9M/Dfxkkr7BU2Ly2kww990uqGPZ6
+	 NErEKWXBfFrEQ==
+Date: Sun, 15 Dec 2024 22:26:31 +0100
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Lee Jones <lee@kernel.org>, regressions@lists.linux.dev, Pavel Machek <pavel@ucw.cz>, 
+	linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH leds v5 12/12] ARM: dts: turris-omnia: Add global LED
+ brightness change interrupt
+Message-ID: <6gxg466bl7tbyfq5yoenpw5t3vcfcyywv3jydwwwiqik2pzqsv@3g4gk6m62mdk>
+References: <20241104141924.18816-1-kabel@kernel.org>
+ <20241104141924.18816-13-kabel@kernel.org>
+ <87bjyv9ecb.fsf@BLaptop.bootlin.com>
+ <778f08f1774fcad5fcc39114dbb721793ebf95d6.camel@gmail.com>
+ <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
+ <ofd5ru77wypfysflpblafbbdgrcmzztqwoewfjfuusrnbma4aw@y3oc3etutisi>
+ <ec61714eaa3d84498cd69dc673fb11996550a3ea.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec61714eaa3d84498cd69dc673fb11996550a3ea.camel@gmail.com>
 
-On Saturday, December 14th, 2024 at 18:39, Peter Zijlstra <peterz@infradead=
-.org> wrote:
-> Do the patches here:
->=20
-> https://lkml.kernel.org/r/20241213032244.877029-1-vineeth@bitbyteword.org
->=20
-> help?
+On Sun, Dec 15, 2024 at 12:39:10PM +0100, Klaus Kudielka wrote:
+> On Thu, 2024-12-05 at 13:42 +0100, Marek Behún wrote:
+> > On Thu, Dec 05, 2024 at 01:38:10PM +0100, Marek Behún wrote:
+> > > 
+> > > This is because the patch went into 6.13 but the rest of the patches
+> > > did not, Lee wants to take them for 6.14 :-(
+> > > 
+> > > Apply this series and it will work.
+> > > 
+> > > https://lore.kernel.org/linux-leds/20241111100355.6978-1-kabel@kernel.org/T/
+> > 
+> > Alternatively you can overcome this issue if you enable the
+> > turris-omnia-mcu driver in 6.13:
+> > 
+> >   CONFIG_CZNIC_PLATFORMS=y
+> >   CONFIG_TURRIS_OMNIA_MCU=y/m
+> > (and also the subsequent options).
+> > 
+> > Marek
+> 
+> Testing reveals:
+> I have to enable CONFIG_TURRIS_OMNIA_MCU_GPIO as well, to make the LEDS work again with v6.13-rc2.
+> 
+> So far, so good.
+> 
+> But the upcoming dependency in 6.14 will be on CONFIG_TURRIS_OMNIA_MCU, not on CONFIG_TURRIS_OMNIA_MCU_GPIO.
+> Is this correct?
 
-I was able to apply both patches to Arch's 6.12.4 along with the svm.c regr=
-ession patch.
-Unfortunately it's the same broken behavior and kernel messages as bd9bbc96=
-e835.
-=20
-> I'm not really skilled with the whole virt thing, and I definitely do
-> not have Windows guests at hand. If the above patches do not work; would
-> it be possible to share an image or something?
+On both, see the first added line at
+  https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git/commit/?h=for-leds-next&id=d82e09d62b3bdbfa9dac2daf3c3c071b6a79d2aa
 
-I'm not sure if the fault is triggered by the pinned CPU cores, the PCIe pa=
-ssthrough, or the NVIDIA graphics driver on guest side.
-I'm also unsure if then a Windows installation ISO or Linux live ISO might =
-suffice to trigger the bug.
-
-Unfortunately this guest cannot be taken down very often during this month.
-As time allows though I will attempt to create a reduced and generified cop=
-y of my domain xml file such that you could import it using `virsh define` =
-and then add some install or OS image.
-
-Just let me know if I should test anything else or if you have any ideas ab=
-out approaching with debug tools.
-
-Thank you again.
-- Devin
+Marek
