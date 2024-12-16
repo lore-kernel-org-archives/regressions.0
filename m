@@ -1,180 +1,132 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA4714E2C0
-	for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 15:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC0F1CEAD8
+	for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 16:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734363775; cv=none; b=U1YaUL2YWxAdq0lzfVE6ogrc7Q6FsCNT0NpfARdc53ih07b5YTgQnA+IXUNboO+rZK4Wwmzbnx7Lbqi4CET1hd5eia5dbh5Sxn5ocUXm1axZXnqnjQjkM5v4/8FUao76No/XaqiHrveDyagfosfI6/iX2ieMMxVCEikL0D5aFHk=
+	t=1734366860; cv=none; b=kU/k+HsCUKhYNstWmyRX++GZAPuuRFP6Hjxe4Y/DWh7dtuH33PRnEJiS7M+9kcVXWiPHi63RwsFg8LdBMfByzmv+Rn8qtir2MaYuMMADeTw+mBQUR2xy+YcraXWGa5niXvicKjrSfoVIZIBe/YqMnTTD8WhgSNypgycAKpIWubs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734363775; c=relaxed/simple;
-	bh=eMMn65xwm4dD/xAdLn9gKjV0SsQ8nbUdBJWkRou7Isc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Eml81ZbXhfU29NB4Keg12G+NHuefiYjxGEmJPzUu4FBnvDdHC/kUtsFneipb26SZwQ7DtgJ6BhoMOy0t5P2Bzm/j5x/8bSNB6KXo5XvNDGvrOmq/UxI58pouWWZuZQ/lZ2ayVgoFm56cehNBc+vBtSmKGHfrNztra92kVolbsz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xauZPPd7; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1734366860; c=relaxed/simple;
+	bh=J4P8Yn+HmBStOiyf7871d8RgqIDPsmAX5U/1I64nh6s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=n4CBQ/+8mUPc5CsIKFzRf8Uqe3GRAjXobJ1+xf7TFrZmpwR7j6M68BbI4F0hIvIOFzemT/8NBKdV4FcmTN5MZtkjGGM5r0J9ooe+HNlx45vnpCagG4+1dxxdpA4Zkj09my2JGuUvnEbgvA1FeVm9WWrg95Q2bVOinA3QgZEItzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZcNpFABj; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xauZPPd7"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa680e17f6dso301517166b.1
-        for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 07:42:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZcNpFABj"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5161d5b8650so1087131e0c.3
+        for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 08:34:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734363772; x=1734968572; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XHBbj5S9UT6s3cvDeZW+WmfAzA4JgRXAeW+4cg5L7G8=;
-        b=xauZPPd7Vu17XRVWDkttlTE5z4Ut2o1g41Xrr4rj7M2H3W2ZtIWh80H4d0UqsVzfZH
-         EyC6ax5r8I4LcoXgiEwTjT040aVQNEnly/WMoNMNTkgrkZVuDJZHXgbAP5VAAle722WA
-         xJbPTZUPhPMOZOQZv02uWOo80B/meQm1a3uRIcbHwVBwSuW6kqdQZy1N6oRo9MulXm0x
-         MP14yf9iKnWHentwC7/eBhF5LfI/6XxqiOu7BaK1brbqr+V7x9i3ErXtXIKSph3shdQE
-         s/dwTEBjhnbqoLnYu6fTOPTByko6iGaIqPS7w7/m657g40s3fWgskelCfAP/4TSYq6zY
-         jHQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734363772; x=1734968572;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+        d=linaro.org; s=google; t=1734366856; x=1734971656; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=XHBbj5S9UT6s3cvDeZW+WmfAzA4JgRXAeW+4cg5L7G8=;
-        b=bcdjkAxbCs86P88YsPDiQtOSTD2qngy3rfVgPudrvy1k/tqO0iCq04JWc/i7P8OwjC
-         Mbp7g6pFqrOwboC+JDCwRqs79OX59DdCnDllocZUKjgjZnSHroysyKUsTXXJmUzGzbxY
-         UX7i0kKOmf9Hdl3o2MGWXegATi3yjIz9cm1C6gJ1Y8m734rdLASGpSkFV+24tr6h/Nj2
-         A5hAraLYSrusZMdoHUT5ZD3X+1BVMyYZlhPl+H0pU7RQyksiVCGbmvQVAnZp3P++mzXI
-         lmPx6O1SKt5poih+CCT/kJaQQaXIluDgZvuAR2ISV+82aFZlw7f4LNZFJlVySgT1Nsz/
-         +mqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmsK8+L6hlcOjhWmhEwS7jVw8xY+yoUnz95XyJ+c1do0A8ItiOnlfkcR3FmUylLGXBpu4A3FNZ1QeG7g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz6a1vhc/Ypa1W++uh1yLNKUm5hSaYVgLH05s5qnuq4/ipM50Ck
-	MWfVbF3+boa4g1j7/Hc/pMRENYIBQuFCANVFXcbdOreAAM2jGfF2OcSXIQx4rGEo7W57PXyJDoC
-	dMA==
-X-Google-Smtp-Source: AGHT+IEvwXRrJ0+fa0U2GbRoAPbJ3JzjYjdBqCukKbZUpFxMjfFCZNl882cgyP5mMr8ZRoTCv2E7CFLm3os=
-X-Received: from edrl20.prod.google.com ([2002:aa7:c3d4:0:b0:5d1:58a5:ef17])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2398:b0:5d6:688d:b683
- with SMTP id 4fb4d7f45d1cf-5d6688db9aamr10240026a12.9.1734363772620; Mon, 16
- Dec 2024 07:42:52 -0800 (PST)
-Date: Mon, 16 Dec 2024 16:42:50 +0100
-In-Reply-To: <2024121653-unblessed-mummified-c630@gregkh>
+        bh=voYB97BSoIttk6TNFpCBTpCkCub3HvTPki1P0fPd0XM=;
+        b=ZcNpFABj6LnPIUSUI27fEhdMmoRTlvg7wO5pcH8kSvUhR6RV+/Bf+KPxoZOpKOIm9i
+         Zox2nw5gtsDEPzPNQUAI1fwBj9AEEdRqbZxbGrsNaFWYWkM+3sheqcHyUuexLFyUDdiC
+         /SRZTRk7qDnnBzn+0JgHnxA9LbmemPqUIkX2/xZRSyr9kzaaZBXVK5vXkDWc9TUro2wX
+         dgNr5HVFHLC64POW5HCYs703QeHz7qAPOHe4uRUvxb3ATmI7sCP0UT+6ZOWPCG3ZqUOM
+         S/Z1hOrhaC02Ql5RTgmz8pmznQxcWX7CdjxHmKhLLkqZ5jF6HThbUALejVHu0elJG8Qa
+         1Idg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734366856; x=1734971656;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=voYB97BSoIttk6TNFpCBTpCkCub3HvTPki1P0fPd0XM=;
+        b=RyeSUJPuzlEjHyPJ5k0zqxUM9FqD7eI6KvAgyUBxRPtU4+VVC+A66drg0Guu5AwJpJ
+         LFy6onVB2B6/sC4Mv8Bg35aUdbHTds8vBolV4oTxntGbLBmzkz4824oJJXhqVumqdQ5s
+         q3lxnfC420Ngs2PAwhdvFaoy7gdqWhdwbbe42lrFTFtgaTL1AcZ59eWLrpcKwtU++Boi
+         oR4BQK5GEyGqwN7W+Xu2m52EUfAIgmKuwtUixw+13QiX2UnJiOK/zP8iCNJVClD50kjW
+         q+vVpW9AoGp1GhNOqYJaLs4so+kfGJpEIZhcxVU0NYzwTa6s6fVuclWzyQ7La0Z8JwsK
+         CNMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbLDlXst59PwoTu5o5s6XtugZf2AKITkAslxfL+3Owoip6rAMvFFN95Ok/EozQMkpzAjLefIQ8YyDWGg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/6UW03AlEQQHYFeNBiTmlwL57UinYJ4fb7j05YSrLAsgGdpLH
+	Efnmu5DNKO/C21HIHEc1zFeGId5x3dyPztLP/QMDuwJBz3yrHYtzclCUopQ/pKcDUQ1L/tnw0lY
+	FBLZjx2hJKv/2MbL01rC8CKP7JhrXR6I7S0P76Q==
+X-Gm-Gg: ASbGnctNwNOFIVGqCgz2i0lc0vm+pw+9z9Hiwi7SAFiQp0Q8wCiPVZj7vMd+ZF9XxjB
+	RWvPhz7uc8inlcEq+LM0WlLpqWAayAZD6jU8HdkhEkNUGp7ujVaZZfXG/aNApSCQ7nbjQdLw=
+X-Google-Smtp-Source: AGHT+IHwcIqoyILkP+1sx25KZjFSaAGwKZBXcw1KXTOsA6DOwlBCczCOTJUK1dfVqLl4hiOpY/+Ngz4hZael7fpPyHY=
+X-Received: by 2002:a05:6122:1e01:b0:516:18cd:c1fc with SMTP id
+ 71dfb90a1353d-518ca30617amr12733009e0c.8.1734366856629; Mon, 16 Dec 2024
+ 08:34:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <2024121418-blazer-valiant-c51a@gregkh> <20241216150722.4079213-2-gnoack@google.com>
- <2024121653-unblessed-mummified-c630@gregkh>
-Message-ID: <Z2BKetPygDM36X-X@google.com>
-Subject: Re: [PATCH] tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jann Horn <jannh@google.com>, "Hanno =?utf-8?B?QsO2Y2s=?=" <hanno@hboeck.de>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 16 Dec 2024 22:04:05 +0530
+Message-ID: <CA+G9fYtpAwXa5mUQ5O7vDLK2xN4t-kJoxgUe1ZFRT=AGqmLSRA@mail.gmail.com>
+Subject: next-20241216: drivers/crypto/qce/sha.c:365:3: error: cannot jump
+ from this goto statement to its label
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
+Cc: thara gopinath <thara.gopinath@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello!
+The arm and arm64 builds failed on Linux next-20241216 due to following
+build warnings / errors with clang-19 and clang-nightly toolchain.
+Whereas the gcc-13 builds pass.
 
-On Mon, Dec 16, 2024 at 04:17:15PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Dec 16, 2024 at 03:07:23PM +0000, G=C3=BCnther Noack wrote:
-> > With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX wi=
-th
-> > subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
-> > TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
-> >=20
-> > TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this I=
-OCTL
-> > let callers change the selection buffer and could be used to simulate
-> > keypresses.  These three TIOCL_SETSEL selection modes, however, are saf=
-e to
-> > use, as they do not modify the selection buffer.
-> >=20
-> > This fixes a mouse support regression that affected Emacs (invisible mo=
-use
-> > cursor).
-> >=20
-> > Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@finder=
-.org
-> > Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste=
- subcommands")
-> > Signed-off-by: G=C3=BCnther Noack <gnoack@google.com>
-> > ---
-> >  drivers/tty/vt/selection.c | 14 ++++++++++++++
-> >  drivers/tty/vt/vt.c        |  3 +--
-> >  2 files changed, 15 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-> > index 564341f1a74f..0bd6544e30a6 100644
-> > --- a/drivers/tty/vt/selection.c
-> > +++ b/drivers/tty/vt/selection.c
-> > @@ -192,6 +192,20 @@ int set_selection_user(const struct tiocl_selectio=
-n __user *sel,
-> >  	if (copy_from_user(&v, sel, sizeof(*sel)))
-> >  		return -EFAULT;
-> > =20
-> > +	/*
-> > +	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK t=
-o
-> > +	 * use without CAP_SYS_ADMIN as they do not modify the selection.
-> > +	 */
-> > +	switch (v.sel_mode) {
-> > +	case TIOCL_SELCLEAR:
-> > +	case TIOCL_SELPOINTER:
-> > +	case TIOCL_SELMOUSEREPORT:
-> > +		break;
-> > +	default:
-> > +		if (!capable(CAP_SYS_ADMIN))
-> > +			return -EPERM;
-> > +	}
->=20
-> Shouldn't you check this _before_ doing the copy_from_user() to emulate
-> the previous logic properly?
+arm, arm64:
+  * build/clang-19-defconfig
+  * build/clang-nightly-defconfig
 
-You are right, I believe this can technically return a different error code=
-.
+First seen on Linux next-20241216.
+  Good: next-20241216
+  Bad:  next-20241213
 
-There is a data dependency between the two though - the capability check sh=
-ould
-only happen for certain values of v.sel_mode, and v is only populated by
-copy_from_user().
+Build log:
+-----------
+fs/netfs/read_retry.c:235:20: warning: variable 'subreq' is
+uninitialized when used here [-Wuninitialized]
+  235 |         if (list_is_last(&subreq->rreq_link, &stream->subrequests))
+      |                           ^~~~~~
+fs/netfs/read_retry.c:28:36: note: initialize the variable 'subreq' to
+silence this warning
+   28 |         struct netfs_io_subrequest *subreq;
+      |                                           ^
+      |                                            = NULL
+1 warning generated.
+drivers/crypto/qce/sha.c:365:3: error: cannot jump from this goto
+statement to its label
+  365 |                 goto err_free_ahash;
+      |                 ^
+drivers/crypto/qce/sha.c:373:6: note: jump bypasses initialization of
+variable with __attribute__((cleanup))
+  373 |         u8 *buf __free(kfree) = kzalloc(keylen + QCE_MAX_ALIGN_SIZE,
+      |             ^
+1 error generated.
 
-As far as I can tell, this only makes a difference in scenarios where both
-copy_from_user() and the capability check would fail.
+Links:
+-------
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241216/testrun/26350650/suite/build/test/clang-19-defconfig/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241216/testrun/26350650/suite/build/test/clang-19-defconfig/history/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241216/testrun/26351207/suite/build/test/clang-19-defconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2qHsa6j5c1HY3GRZFGrxu2ELo3f/
 
-Do you think we have to emulate it down to this level of detail?
+Steps to reproduce:
+------------
+# tuxmake --runtime podman --target-arch arm64 --toolchain clang-19
+--kconfig defconfig LLVM=1 LLVM_IAS=1
 
+metadata:
+----
+  git describe: next-20241216
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git sha: e25c8d66f6786300b680866c0e0139981273feba
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2qHsa8wFmfrlj0VdDqAG408o3l2/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2qHsa8wFmfrlj0VdDqAG408o3l2/
+  toolchain: clang-19
+  config: clang-19-defconfig
+  arch: arm64, arm
 
-As background, we have only introduced the CAP_SYS_ADMIN check recently in
-8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste subcommand=
-s")
-The patch landed in Linux 6.7 and was discussed in
-https://lore.kernel.org/all/20230828164117.3608812-1-gnoack@google.com/.
-
-I suspect that existing callers of the TIOCL_SETSEL IOCTL are probably all
-written at a time before the capability check existed.  ((a) These IOCTLs a=
-re
-used for the console mouse support, and (b) these "modes" for the TIOCL_SET=
-SEL
-subcode for the TIOCLINUX IOCTL are not documented in the man page either.)
-
->=20
-> > +
-> >  	return set_selection_kernel(&v, tty);
-> >  }
-> > =20
-> > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> > index 96842ce817af..ed65b3b80fbd 100644
-> > --- a/drivers/tty/vt/vt.c
-> > +++ b/drivers/tty/vt/vt.c
-> > @@ -3345,8 +3345,7 @@ int tioclinux(struct tty_struct *tty, unsigned lo=
-ng arg)
-> > =20
-> >  	switch (type) {
-> >  	case TIOCL_SETSEL:
-> > -		if (!capable(CAP_SYS_ADMIN))
-> > -			return -EPERM;
-> > +		/* CAP_SYS_ADMIN check happens in set_selection_user(). */
->=20
-> No need to mention this here, it's obvious in the function itself.
-
-OK, thanks.  I will remove it in the next version.
-
-=E2=80=94G=C3=BCnther
+ --
+Linaro LKFT
+https://lkft.linaro.org
