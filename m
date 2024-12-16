@@ -1,115 +1,133 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCCF4EB38;
-	Mon, 16 Dec 2024 17:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811CA81ACA;
+	Mon, 16 Dec 2024 17:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734369784; cv=none; b=fLZcqeGHL+f4/ouTCuSQklDPUv/UH2W5culz7UlXNLZcVElzdSG2cJ4Lklg0+nJozcdIf53+VljQGfYuIcqNFzU3UCsnjTf7qbq0H6FrchM3BovPPD4FnkMYMTExmP02x8vnOuKN5GdjTHXcWut+LlXK8J1cBadZi21Z6UPYGs8=
+	t=1734370190; cv=none; b=TgbueM4CGbYAh8Gc/aMhsQWn672lE4vYLupQTBtHxf/0tIj6BNam6jJdIEbxlBxSFPtYoTzswAljBKkiQCqmtCcvclvU3sBwN5nOTeWEmQKiB3+4GlnCa49dGms3VhKC/Dq4ZY8MQMKxtiuln+K6y+WzlitxDt1nw+d7vwDTkwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734369784; c=relaxed/simple;
-	bh=fzlQ95lRUf70t6aa2i5KzdnifjEDoPpkgsMLZez+sw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DhSiCZwDdEOGJtT+4h5iBD+3LSLvKNOOwhAHWtO0YKcbV4RE3hDKHVd2w6oDjO+7ro9vWwhLK6rUKZIVjL2av43DHrW2CaER2XzV/xLlrkDLkduiZp4NK3n1R1YLlwiFgbyMaej74EEUvAGFJnsiqfJhqL3G0Er/0jo/MA9o0FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=L98pygMw; arc=none smtp.client-ip=212.227.126.134
+	s=arc-20240116; t=1734370190; c=relaxed/simple;
+	bh=Aqp5JQUyar1Nhsh0hfXQQWR7hCjBN5RQcuO1OxMhWjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFCpq2dJlemgXpKzPZ6pGbdEAIaoJOjYBu/zQgLi0UhitIeE2ZA/2QoLNin859t5sEwSgpoYqBGnKUZoqEkBYS6LRC46jlMn0eujlxgzdPKdHoKNW7ajXY/PBJyFmBT1ttQ8nCGOuU7GDdPNu7HYscunXxKFZB00QkT6OkCeoN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=rry198nb; arc=none smtp.client-ip=212.227.126.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="L98pygMw"
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="rry198nb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1734369776; x=1734974576; i=christian@heusel.eu;
-	bh=d1bs32I9MhR7rMd4Z9on5F9rIKFrxNTKssAa/K6qKuw=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	s=s1-ionos; t=1734370177; x=1734974977; i=christian@heusel.eu;
+	bh=XHTOXjtFzX3uG72tT/c/v8D3oa+Tv+PlZ4tb+OBu6SE=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=L98pygMw47/B3sD6YPgiUMnJYcIO3qQQgtdPQiJArxkSd4dRY/Pu+v2jc5DxOYU7
-	 zmLcg3+TvukFTrfCHrY71kdSU7FG7B7zsWpxUd/TE0UqUgGCgoUoEA/5gOYQw3y9Q
-	 0+QciIJaDzyEKfL64q/BzFgO9gb9OtIp7OFLid9PkiqkGY1BpyWXEYbRPlGOCkxFh
-	 KAhZqzglmfpH0/HCB8utUEt3s0veBWkQ7u+CLeENCqEzDMW3kmm4wHxBuDd+VekfJ
-	 ts1kfjcauEIEnrfqLmLW55F+ENgK5XNQ/fyJdc3VBfcAl6DGwrZgeMP0ILOnlsXC7
-	 7xmjfJMT+QwDRhoxcw==
+	b=rry198nbYYNUczk4IXoU18rtgSqHKRPjeQT7UEbLNhhCXMzvAOzTNS8yZ1l2fWBf
+	 rmsTRU+vwXBsoCEyiX0w4rJnPA9xCVpUVQiKnmjXc66ewv96wUoLKCl5ufPdHJG36
+	 Jb4nqHCkB7kGwxIqjGPmo9M6H5eY5NS0pbwhou0VfpMdG4UUbu/HyEdV4B2POOfGP
+	 jkFg2TngwwU2ycN+jNRI3TFr/eM0K3P72q5PnKK0KGHA/zfbuexRCiJKP31kaJuCr
+	 /3zucgXuOJO5nBQUo6mVllEk9OaB4OnTXlfQ/FJv6y2nvX7kEbOsQTP+ZFKXvUHII
+	 +vB8Q6LGdaGotk3yQw==
 X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from meterpeter.lan ([141.70.80.5]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MXGak-1t517200Qo-00KL1X; Mon, 16 Dec 2024 18:17:18 +0100
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue009
+ [212.227.15.167]) with ESMTPSA (Nemesis) id 1MNbtD-1tD1GE2qRH-00YQQJ; Mon, 16
+ Dec 2024 18:29:37 +0100
+Date: Mon, 16 Dec 2024 18:29:36 +0100
 From: Christian Heusel <christian@heusel.eu>
-To: stable@vger.kernel.org,
-	=?UTF-8?q?Philip=20M=C3=BCller?= <philm@manjaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
-	"David (Ming Qiang) Wu" <David.Wu3@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian Heusel <christian@heusel.eu>
-Subject: [PATCH 6.1.y] amdgpu/uvd: get ring reference from rq scheduler
-Date: Mon, 16 Dec 2024 18:17:10 +0100
-Message-ID: <20241216171710.1729859-1-christian@heusel.eu>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <719b5eb1-a5a9-4dbe-b3b1-399fb299bafb@manjaro.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Philip =?utf-8?Q?M=C3=BCller?= <philm@manjaro.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [Regression] 6.1.120, 6.6.66 and 6.12.5 crashes on Vega with a
+ Null pointer deference
+Message-ID: <0ad783ab-3066-4c99-b6f7-51b2c6d02f70@heusel.eu>
 References: <719b5eb1-a5a9-4dbe-b3b1-399fb299bafb@manjaro.org>
+ <0d681c5a-a138-4f8a-865e-a192458ae893@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mkOgkVZHRWV7wYNDILo3Yw3U45ypoJdo+ZVnfIUNAhsPXIFgx/S
- j7Fk31qZ9xKtR6A/2zqI//yYvGV0tgrkFl7HFGS8pDIYdTg3vNqEzEUnXbpw2oxJpY4sDuC
- Dwpk+fe1Hbd2TuSTzBUn4LlRQWQBAsrY66SS8sDYR5By7BLqMnsxmu6kJ3VCRaXq6eDFcch
- JS+c1eN8/mLgOkbtBm1UQ==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="73enmikddozleb3t"
+Content-Disposition: inline
+In-Reply-To: <0d681c5a-a138-4f8a-865e-a192458ae893@amd.com>
+X-Provags-ID: V03:K1:uEjS9MqKaiciOhoq9KHT7ZFxhxVxy36lLpdcAlvdDq8M46wSsXi
+ yABn8OSLny/Fp9mTqnQKO37Wyn9GohuvtnrmdIMLxCUDGtDJE2ZcHC3ekkUUjjirr9uxxZG
+ V605u4fpARvL5NqHtdteA1zx1OkSOQD4kD0njQMcAbEr6QxVobtlKDt1y1GLNik+i+UgoGL
+ K2DBqrz5jHZTLpYI+m+cw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uMg9kehp6Gc=;lgDaH3A+LBPlOAf2MVjjNolizi+
- d7Z1UW59tgmyr7F+E5gLMwNqC+VWuvCJTcJTiZLkz/cpOVLV1UqVsTtdjCDsm/OfXAoGj9lQB
- /k/7A158rWyQsuV9PB6ezMihE0zHY+yI39XWapibCO83RGW8YMzo3EIMBbGyHVCYRzyPqEzdt
- 4fbnJRV+ja6/7+0W0smCKiopva3vbeeSYVkuvhGIl0iie8u4txtIeOQ3ymxhjPqHqfNFFgEBM
- toy4334m7sBFJf+WfWWaWvklhZ0CE6OO6zYWYMuNM47IGQfEb2bBLqzv7O81pIpGFoUyHxgct
- 3NNFgJZGegLlhbAM/lAzv3PjrmljibiFUamvWwp2CF6BE4KuPYYcHZYPfquky6ECS/Bo+OV06
- 6VnyQK8zVsVs4UNSO6yVBXWKnUvLJ7PMyP+8u/v/DMF/AExg+YDzSqB5mWSivaNkUDc5usJCQ
- 4pXJW0303CNdKj77IFL8RIpQoKAFyZAjLLxR8eIrWB84dH++Cl+5yp0tKjFJI1hbPJnrHiFp1
- YjV3l585DhPrBouYaUWoMvxJbZ72S3tw2z/XSza4jO6o32b1YcGZ9OZ4mLutP32i1Htc4GIMh
- G/Bch3D5YP7/Hr2i6SWTKbx/B4Y+SCD8I24/2pWPulfhCpT2S5CFB7C3rmkfMIto4NkWpLRDz
- mXpS360aQIwEeQovTckVBX3cnQCJunkE556bC9CtuA0yw1TW9KBXOaRMw1yvnmXBN1Xf9foNz
- PpbG/2AYdoIkUyH5Mq3Pk82pXGBa7eQSGSloJs4E88pq84jSRafP8KCYj0lwhUbxOFU3F+VyB
- ycEC7g3DsCmSqUyd0AWKg9RKDA+xfCKjpvDHpArF7+/7wxEK5LuZnWQA3AWpIwnt2pYByOVha
- p4+qC3CfYlkvlQ4XKUTLXSrwyqjiBj72SiXUvw4QEL2CJO39okBDLezO4R93fHunhAg52tA9y
- WZ/S4nuYvyJJU5J+zLP8SnZYwbP2cjcATShsOLj/9XGvEEIt8MzaRu8ICnwtQz19fF8cfuFCF
- jqZUcYpS+F2aSVM/LhQfXsAoGcUYMoeRMEseIC+
+UI-OutboundReport: notjunk:1;M01:P0:BHfzC8pRETU=;hDEmawdYHb+ixlxbeseMLrl4i5M
+ F7ZW5VDz+7p5h7hQrAjxdhIaNxOV3PqSCB/zyzV+i+/qITmqeu+AH+05TgzaX1KD54c5541rX
+ SY27BAauuRuHmvrN++qdlzLaxg2uWY74SRXCzHJgDAB+uw+FNbTdZ0vSv1RpZZLrpvcLlLugk
+ ftYI4sDn8vbHDBiA6tH/MtfiZyq7GP10NaP42447H5jEOGn0ZPhVZiSe9O+kfc+sdWn/wVT5b
+ wY523X8UaVYuNUNxx8diJ8yiRMeDs0nCg/ueuohIhuIqI2Q8ykgjG9zXaEV2m4n7u7IIpQ6f2
+ n8gQSdywhIPCcZ3GbOPJSQxSn2JaXNmLI2jp41UjdCFqj+s2Q87Q50FxTWRjLTtZxW0DrfZkg
+ yxT8EVBruxLLX6/+WXZZ7iMrJmou8eehrfcmJkaYLKv3NB7Ud2yPZUyS2KMydCorEEpX79BSr
+ vY4RYjxmJ30lad6AwMU5QyXThPL+U3yINpCOaLvM+pX2uNzgebzYPUycAO2b+vYGM7CflH2MC
+ ox/IVx+wBtvjpsXtMwZtfceOpCUl1TFNE1hU/6h3FYlXDUeQFqiK0PiSHfii7DF7E8URVVfsu
+ ThY9Ma4k2SlTimfSqvoRbCh+fMTs+XuwJk5SdiJ7XAcIn0ZhlFgir1Rls7yJYRA7pjPpvR8PZ
+ t+wFR10F9X1roCsbWPtoq4CWAv096lNF587KRT/azzzoyX1tPfAu4Oe2J5oktGOIEorR1PIDk
+ S9VSfqFaLc5fiqtjCMVh0Vx54eWaz0ZjGFq8dzwr8pB7o/mk0eBCNiggiVN2rBwsyyA+jrV4Z
+ gSgd0cyMeB+ga61fXBqpn4lOIkLRzY0oHlPB1rDbx7E/9D76fUvaQ58zi0UZu1FmdvsEq5+gN
+ 6SefzcWjQpkwzonCeZtBz+lEgW63Ob6cQ0AXFIM8BMxBJFYWtJ5PwVwVfcs86t5UCMq7VFI6N
+ vVpI9xqtrXenCUBosFemB82QqXzc9u5qHCCSu6T8h6WYJeh3ytTpuF7zkb5vNZa/9iInuUS2d
+ GsDVbE6Uz+ISi9qZYsjhpJZjDvgpUkSGXyPXCRW
 
-From: "David (Ming Qiang) Wu" <David.Wu3@amd.com>
 
-base.sched may not be set for each instance and should not
-be used for cases such as non-IB tests.
+--73enmikddozleb3t
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [Regression] 6.1.120, 6.6.66 and 6.12.5 crashes on Vega with a
+ Null pointer deference
+MIME-Version: 1.0
 
-Fixes: 2320c9e6a768 ("drm/sched: memset() 'job' in drm_sched_job_init()")
-Signed-off-by: David (Ming Qiang) Wu <David.Wu3@amd.com>
-Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-(cherry picked from commit 47f402a3e08113e0f5d8e1e6fcc197667a16022f)
-Signed-off-by: Christian Heusel <christian@heusel.eu>
-=2D--
- drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 24/12/16 08:13AM, Mario Limonciello wrote:
+> On 12/15/2024 10:37, Philip M=FCller wrote:
+> > Hi Greg,
+> >=20
+> > Due to backporting 2320c9e of to 6.1.120, 6.6.66 and 6.12.5 kernel
+> > series we have the following bug report: https://gitlab.freedesktop.org/
+> > drm/amd/-/issues/3831
+> >=20
+> > The commit 47f402a3e08113e0f5d8e1e6fcc197667a16022f should be backported
+> > to 6.1, 6.6 and 6.12 stable branches.
+> >=20
+>=20
+> Add regressions list to keep track of this.
+>=20
+> Add Sasha for awareness.  It looks like this is a case that autosel picked
+> the commit, but the "fix" hasn't been picked for it.
+>=20
+> Either the original commit should revert or the fix should pick up too.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c b/drivers/gpu/drm/amd/a=
-mdgpu/uvd_v7_0.c
-index e668b3baa8c60..1c5d79528ca75 100644
-=2D-- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-@@ -1284,7 +1284,7 @@ static int uvd_v7_0_ring_patch_cs_in_place(struct am=
-dgpu_cs_parser *p,
- 					   struct amdgpu_job *job,
- 					   struct amdgpu_ib *ib)
- {
--	struct amdgpu_ring *ring =3D to_amdgpu_ring(job->base.sched);
-+	struct amdgpu_ring *ring =3D amdgpu_job_ring(job);
- 	unsigned i;
+ignore the three backport proposals that were sent as an answer to the
+initial report, it seems like sasha has already picked these up without
+me noticing!
 
- 	/* No patching necessary for the first instance */
-=2D-
-2.47.1
+Cheers,
+Chris
 
+--73enmikddozleb3t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmdgY4AACgkQwEfU8yi1
+JYV6PQ//a4/OcGCZu+jMlIV1PzDlZPlssUgs6ZVxBqsYqyqHfqU2Kg9B2uKobjyE
+MfFGRQLk4kmKb38iNwvTk9MzznOye1Au92lNiZ62aJ1RvIVbwEJzVJmYP5aJbDht
+G1W7DJLAiJQO0+MtBUiTNn62elL4LQzY/qt97MLfvDekKXw1EMLRVrTHl4zqfOL4
+yQDdo6MMhHdYAnXwwvCJIEgRnKyRa+kRVX3x90Wj8uanm/qu+EFe/tKc+0j4EApu
+xcmmlAMLUWKsOXhoVZrCDUis/fO5TnmIS3jZ1Uy4aYjfwJ15VP+bRgHJLN8UGOma
+Yf+gVs5b6ZKkQRn4L9DmGP6jRhj/Qbqd1e3LPsWRTpYHz7nfvuu51gEFSN+fMgpr
+EDON6r7YUPjgTcloX55kke6NJp1gFqxCHjvXUyhNae8K/TcesaGvEpApZk0KbzoR
+fZ2dqLSHoeILuL9J/ug5DvcoWXeK/f8gXyJ7Iqzk9MHmnParUoxQFBbrYKB4Itlj
+XsaWN7nQCleKIQaUnV8O1UOEoEljVlKYmxhmdoFHr8WKv8AQ8OItW3x7vp/RxClk
+VRRwAu1Qs7IRWcX9Z6OGtc5tFNmFk02pc9vWamoZhzt6CHAtm0be+hYpaH1R9qTn
+laP/FDgswrpeZH8VF6IlWRQN8HO+lTP2fT/gYMHhNTEa8xiit8A=
+=6NJu
+-----END PGP SIGNATURE-----
+
+--73enmikddozleb3t--
