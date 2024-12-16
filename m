@@ -1,212 +1,113 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8622200BB4
-	for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 16:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5A0206269;
+	Mon, 16 Dec 2024 17:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734367849; cv=none; b=aY2Py7pauGzGPbMCOMgiKBAkRnBwrF7Ld3TYFEUvjYdtW3a0RieC1iivYtI4vSN/QYSB7gdYDgt8Lm6ZeTGrOvAXpp1fYDlZxesbuwz9/MJCvciSSqT7J13Jj1ooWoINU+7xJXOKD0Eyit/vTqvGLU3ySRlVL/UuN8ndm90u/3I=
+	t=1734369189; cv=none; b=EQI/AI9MMG6AuS1BaST5kR2BInQq6P5jhqYZoD+QpI/PtvSYe1DXjABipKO4+Ahx/kGghAVIxFOiuc4tHTf6SludEGLyXUonBDZIJVeX08peaqJOrgWfySlWgqZuC3Z3wfip3hy5vE6SXZLuyvqznKbYC1lIFATSi7XJThNJn/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734367849; c=relaxed/simple;
-	bh=Ws7MFMOo1yp0zcdnE+z67WTJ71dQGMM1e4ky5oUz3/U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eN92d82bqMEYyGYmTXwGfRjGfzatxpVJXvxwUEunJN+W9N+ltDZ7LHlRQE10oih69OBhVkvGhFpHWDdtXdzgE4LZ/b7Da/HG94dPCVqWzgAzKueCfETRBX9PYs/awWknkdhXxYWk2Okdv7ItvY2ipJdzRjk3LiqySDqTsN9IZek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x5DXECnc; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1734369189; c=relaxed/simple;
+	bh=6N+eu+/irAyGfKsQGYlEcT3OSWa09XZOE7Y+4BDwTaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IHKa3QMd8YnmSRZiXkHZPvghuY8tRNCF60F7e//IsOS3rXIc1auJTmpkfDfdPirw0X+h+vd3fUsR7g3toUvYDCPkKXTZ7KAlvm1La3fRuXP/wlZeqptSohv/WShGadUPfqIWraRR/rh/Pi/tjnvogD2DqnUQUQOSW/nIyqvVtQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=NZi4WoX3; arc=none smtp.client-ip=212.227.126.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x5DXECnc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ef79d9c692so5924376a91.0
-        for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 08:50:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734367847; x=1734972647; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vJosb+4Wbiprv0ODxaMx5IvZrjA8SClHnMgL0HeBnaY=;
-        b=x5DXECncaC6QictooKFLP97FvflUq9fIvBXA7u+eVQu2p0FG1AIBYLp3BIOk8+U6Hp
-         TZ1EgrxXz5XMTTB8PNH8MVAeVIWmhFuMdFRxOOkU8ORXuTsvbx17NW2Lj0Vpk7FrKOB9
-         ZNeHNUfeGRwZ/kh2e1UdgQLknBTuGhtnfrLSoQ3LjpcGGGZpIvzdwBf6gWYBgL2kWwvR
-         HMvM1rifpjzUortRr+khmZyVJAqCWqwqSg8JRxaXU+OMvZFBrtj3HAf9kxnQjhKSWG8c
-         tnugloPRviwoJEjTIBOhk4XTYm6huJhpWZI+5yoirA9KQZ6qyx7xsxsWZNyzCjNrXE/k
-         B1Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734367847; x=1734972647;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vJosb+4Wbiprv0ODxaMx5IvZrjA8SClHnMgL0HeBnaY=;
-        b=wkOm+9L04T8zMS92O6foDXTPH4ay7PN7EsUx0SrMOQnJetZH9vMk/rfopsIPP+ymKX
-         sk7jy3vCs0JhN1nPY3cCNxrg3nZnqMW8amVsZhZ5uz1CPEAO2ZXqws+HRw4zteOvDo+A
-         smeJp8jERZpkIG/TJ99AFyQ1WGjv5ZAXAPEBe3epDg85Q4YODTKBXn+H+OF0ycuQ3QjE
-         NGKxLd5t8RiS/8rJrLVae6nd5hxIANWUc+EbNUBV1nvev8C3WgHZf/haj9D4MThgMyXi
-         Trw15NGWYB5Y5j5LEd2sAm3fk7aVxpCr7DCq0ZfXN+l6tpauH2GMsSut4L8AWnjL73BJ
-         JH0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVbWhPxQjudu3y3ygAuS4HV/cZfj+BDuYwfp2DX4/GLFwTNUut2hkne6LZJVlMTxDYIhIBB8VmkAg/Y2Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw9M7nM7X0q+CfC2PfqOO9j7OZ/rPgSyEyARF0dcGXhTZVOZF4t
-	DeE8j8PkGRiVJOsqDApsBw/Z/4oi3lmB9dcX1hT+rNtWC+cbQORk0SF1OVNdJHYwiAZz0vgW36r
-	CYg==
-X-Google-Smtp-Source: AGHT+IE+GQ4hpyr2SyTZPDfVu3iw4e4PoTjMGkYTGBOyTwq6Rx4HMxnTZuidojWjumXVntbHNHmCJouC/MY=
-X-Received: from pjbqa16.prod.google.com ([2002:a17:90b:4fd0:b0:2ea:7d73:294e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ece:b0:2ea:3f34:f18d
- with SMTP id 98e67ed59e1d1-2f28fb6e6e6mr21248228a91.10.1734367847198; Mon, 16
- Dec 2024 08:50:47 -0800 (PST)
-Date: Mon, 16 Dec 2024 08:50:45 -0800
-In-Reply-To: <gvam6amt25mlvpxlpcra2caesdfpr5a75cba3e4n373tzqld3k@ciutribtvmjj>
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="NZi4WoX3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1734369163; x=1734973963; i=christian@heusel.eu;
+	bh=KjNS+UnMdiex2ZH4y6IXBjpzth/EivtUkC1wsD2jnk0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=NZi4WoX3NifmeJI7D1Ig+Y0IMVog1RYs83u1zZmfgi7Li7YOQKCae/QUbzxrGVf9
+	 uKrU3voorVpmYhKiOtZnbo10ZKXBLQH1TOFLzHefWmKnSt/Yb+suDJosh02JtCzV6
+	 4PbP2LE8GTkVn3O5dP0/zwFSyLWkfbNhkmoFicz1ZoqwJfs8OVj3CtJUGnuWiypZg
+	 OYjghoFuuoGIjQxJEF/U475iF2g+PLdYs6Eu7IBivJjt3hS0w2p7FK3XeI69KvRO6
+	 JtJj2Z0JpOP87EgCGhNoUbtsgqUTwG7EOseh43itPcsnThTg6plAnOS+rkALSDKzS
+	 v0ET2KDwHjIqA2ng8g==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from meterpeter.lan ([141.70.80.5]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MqK6l-1tt0dk1B6R-00aMJQ; Mon, 16 Dec 2024 18:12:43 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: stable@vger.kernel.org,
+	=?UTF-8?q?Philip=20M=C3=BCller?= <philm@manjaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+	"David (Ming Qiang) Wu" <David.Wu3@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 6.12.y] amdgpu/uvd: get ring reference from rq scheduler
+Date: Mon, 16 Dec 2024 18:12:28 +0100
+Message-ID: <20241216171228.1728499-1-christian@heusel.eu>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <719b5eb1-a5a9-4dbe-b3b1-399fb299bafb@manjaro.org>
+References: <719b5eb1-a5a9-4dbe-b3b1-399fb299bafb@manjaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <jGQc86Npv2BVcA61A7EPFQYcclIuxb07m-UqU0w22FA8_o3-0_xc6OQPp_CHDBZhId9acH4hyiOqki9w7Q0-WmuoVqsCoQfefaHNdfcV2ww=@ranguvar.io>
- <20241214185248.GE10560@noisy.programming.kicks-ass.net> <gvam6amt25mlvpxlpcra2caesdfpr5a75cba3e4n373tzqld3k@ciutribtvmjj>
-Message-ID: <Z2BaZSKtaAPGSCqb@google.com>
-Subject: Re: [REGRESSION][BISECTED] from bd9bbc96e835: cannot boot Win11 KVM guest
-From: Sean Christopherson <seanjc@google.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ranguvar <ranguvar@ranguvar.io>, 
-	Juri Lelli <juri.lelli@gmail.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"regressions@leemhuis.info" <regressions@leemhuis.info>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+fUa3ShK9Sh/SKPXOk4BYlKgezEhcZKlV7wVKIgGjTzVDwX6X+1
+ 3lQL8/VqCkyG7YMewt0naIRj2Jg2n4QUlrywYcidewKuiSru8Eny+OtRItaW2qy+sXzABXm
+ A/ISKvQUshx93Wq1PC66Q+At4Yee1XavPfqiJ19c/8Ju6uXuh3Na3f5uAJ/g6rxun4JEoI1
+ fGZlLVaC+3RaUfV6YocOw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:EbG3xVjeA4k=;qruDq3JtGbyRrSFwWJdLPi+PY/7
+ Wr0/IhasTwsWuw28ruSxciyzPQo52BJyPuIQ4PB/I6736aG+fD8LuxNjpJaOU/eOXQvrl/0Rr
+ bOaKRSoUopw1HkS+yZuNCn+Wjmok0Clo9rZ/LrFIixHdVdR2Oay7iQzBwo4aEycgjTAkDnKxz
+ GfMM7SgaDHJfubqsvJW4kMnskrN+nkC9+9Aly6IMIbw9DbyFfZrwh9to51aIU1jS9uRG/FhEG
+ zMLhgu74nZ7sOR12Tj3W2e60MBBbE81bkE8yPoVDiPc11+AsgKFEjONk/BMouATHL/84sBU1y
+ vs71EeQ7StgK9irilWR4RY0y5kzalu7wSpTEnououNaIOfQttqG6WqzlMRLqMOeT82tm9aEOf
+ 2JqZC7z99f4qwOBUsbJ6wzxwyVrRol0k4dJgnjYbDsiHWwz/GrKJjICx7iLPWDpdWe0SR/my5
+ 9s849B9T91hNsduvJNZCGVPtunzFTduStEoFM9/uPlcexzxS6EUV34g3xkc0sqM4vMRc9OUto
+ pliC+j2vCtRw1biEoQ2GcerRp3fqPY1p8ELwJ3dhiB+NrPqIsYXURbjLAAcNpHsg7tURXXRdV
+ 6vzrf+o7Udme9wbqwbUyNq/EMHoSnz6YELQDod2CfsvyAuzaCTPUKQLccWKKPF2rWvUQY8otC
+ YVT5WCBbpiHW6cg2T/9iccbyifh+BDL1EzuRoi6aJyk3lL6FWNd68IX88C4UeUzhW095PcsNQ
+ cXwFyszJZvHMUCGmzmkfh3kzLf5t0m7+RGnS6D2+oY5AJZcc90jDmukxR9jzq9d4n27VG4J7Z
+ 4icruPtmnP9jolVfvhcUh00ULVhiu6edcRpOj87ApRiESQvoiIaE2c3pY6se0qMkT50MuuFQo
+ o6rus/1vV177nGv1kuxQifNzKWdGD+zqy3hx3w4U8ndUZ9JkTh+93KI944N/zfmGX9dE63w3c
+ 57PDGVWiHC1WRTYI0YPh4h8oW4LJN+bCONdwZ5/x7s4CmBIRugG2Rf6E2f58JntF7COrgCZZ/
+ Hq/hgYGR/Yfn7wTZlJSwSbQ5AYx+fHAz90ZfEoQ
 
-On Mon, Dec 16, 2024, Juri Lelli wrote:
-> On 14/12/24 19:52, Peter Zijlstra wrote:
-> > On Sat, Dec 14, 2024 at 06:32:57AM +0000, Ranguvar wrote:
-> > > Hello, all,
-> > > 
-> > > Any assistance with proper format and process is appreciated as I am new
-> > > to these lists.  After the commit bd9bbc96e835 "sched: Rework dl_server"
-> > > I am no longer able to boot my Windows 11 23H2 guest using
-> > > pinned/exclusive CPU cores and passing a PCIe graphics card.  This setup
-> > > worked for me since at least 5.10, likely earlier, with minimal changes.
-> > > 
-> > > Most or all cores assigned to guest VM report 100% usage, and many tasks
-> > > on the host hang indefinitely (10min+) until the guest is forcibly
-> > > stopped.  This happens only once the Windows kernel begins loading - its
-> > > spinner appears and freezes.
-> > > 
-> > > Still broken on 6.13-rc2, as well as 6.12.4 from Arch's repository.  When
-> > > testing these, the failure is similar, but tasks on the host are slow to
-> > > execute instead of stalling indefinitely, and hung tasks are not reported
-> > > in dmesg. Only one guest core may show 100% utilization instead of many
-> > > or all of them. This seems to be due to a separate regression which also
-> > > impacts my usecase [0].  After patching it [1], I then find the same
-> > > behavior as bd9bbc96e835, with hung tasks on host.
-> > > 
-> > > git bisect log: [2]
-> > > dmesg from 6.11.0-rc1-1-git-00057-gbd9bbc96e835, with decoded hung task backtraces: [3]
-> > > dmesg from arch 6.12.4: [4]
-> > > dmesg from arch 6.12.4 patched for svm.c regression, has hung tasks, backtraces could not be decoded: [5]
-> > > config for 6.11.0-rc1-1-git-00057-gbd9bbc96e835: [6]
-> > > config for arch 6.12.4: [7]
-> > > 
-> > > If it helps, my host uses an AMD Ryzen 5950X CPU with latest UEFI and AMD
-> > > WX 5100 (Polaris, GCN 4.0) PCIe graphics.  I use libvirt 10.10 and qemu
-> > > 9.1.2, and I am passing three PCIe devices each from dedicated IOMMU
-> > > groups: NVIDIA RTX 3090 graphics, a Renesas uPD720201 USB controller, and
-> > > a Samsung 970 EVO NVMe disk.
-> > > 
-> > > I have in kernel cmdline `iommu=pt isolcpus=1-7,17-23 rcu_nocbs=1-7,17-23
-> > > nohz_full=1-7,17-23`.  Removing iommu=pt does not produce a change, and
-> > > dropping the core isolation freezes the host on VM startup.
+From: "David (Ming Qiang) Wu" <David.Wu3@amd.com>
 
-As in, dropping all of isolcpus, rcu_nocbs, and nohz_full?  Or just dropping
-isolcpus?
+base.sched may not be set for each instance and should not
+be used for cases such as non-IB tests.
 
-> > > Enabling/disabling kvm_amd.nested or kvm.enable_virt_at_load did not
-> > > produce a change.
-> > > 
-> > > Thank you for your attention.
-> > > - Devin
-> > > 
-> > > #regzbot introduced: bd9bbc96e8356886971317f57994247ca491dbf1
-> > > 
-> > > [0]: https://lore.kernel.org/regressions/52914da7-a97b-45ad-86a0-affdf8266c61@mailbox.org/
-> > > [1]: https://lore.kernel.org/regressions/376c445a-9437-4bdd-9b67-e7ce786ae2c4@mailbox.org/
-> > > [2]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/bisect.log
-> > > [3]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.11.0-rc1-1-git-00057-gbd9bbc96e835-decoded.log
-> > 
-> > Hmm, this has:
-> > 
-> > [  978.035637] sched: DL replenish lagged too much
-> > 
-> > Juri, have we seen that before?
-> 
-> Not in the context of dl_server. Hummm, looks like replenishment wasn't
-> able to catch up with the clock or something like that (e.g.
-> replenishment didn't happen for a long time).
+Fixes: 2320c9e6a768 ("drm/sched: memset() 'job' in drm_sched_job_init()")
+Signed-off-by: David (Ming Qiang) Wu <David.Wu3@amd.com>
+Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+(cherry picked from commit 47f402a3e08113e0f5d8e1e6fcc197667a16022f)
+=2D--
+ drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't see anything in the logs that suggests KVM is doing something funky.  My
-guess is that the issue is related to isolcpus+rcu_nocbs+nohz_full, and that KVM
-setups are one of the more common use cases for such configurations.  But that's
-just a wild guess on my part.
+diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c b/drivers/gpu/drm/amd/a=
+mdgpu/uvd_v7_0.c
+index 6068b784dc69..9a30b8c10838 100644
+=2D-- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
+@@ -1289,7 +1289,7 @@ static int uvd_v7_0_ring_patch_cs_in_place(struct am=
+dgpu_cs_parser *p,
+ 					   struct amdgpu_job *job,
+ 					   struct amdgpu_ib *ib)
+ {
+-	struct amdgpu_ring *ring =3D to_amdgpu_ring(job->base.sched);
++	struct amdgpu_ring *ring =3D amdgpu_job_ring(job);
+ 	unsigned i;
 
-The hang from [4] occurs because KVM can't complete a memslot update.  Given that
-this shows up with GPU passthrough, odds are good the guest is trying to relocate
-a GPU bar and the relocation hangs because the KVM-side update hangs.
+ 	/* No patching necessary for the first instance */
+=2D-
+2.47.1
 
-There are some interesting/unique paths in KVM's memslot code, but this is a
-simple hang on SRCU synchronization.
-
-   INFO: task CPU 0/KVM:2134 blocked for more than 122 seconds.
-         Not tainted 6.11.0-rc1-1-git-00057-gbd9bbc96e835 #12
-   "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-   task:CPU 0/KVM       state:D stack:0     pid:2134  tgid:2114  ppid:1      flags:0x00004002
-   Call Trace:
-    <TASK>
-   __schedule (kernel/sched/core.c:5258 kernel/sched/core.c:6594) 
-   schedule (./arch/x86/include/asm/preempt.h:84 (discriminator 13) kernel/sched/core.c:6672 (discriminator 13) kernel/sched/core.c:6686 (discriminator 13)) 
-   schedule_timeout (kernel/time/timer.c:2558) 
-   wait_for_completion (kernel/sched/completion.c:96 kernel/sched/completion.c:116 kernel/sched/completion.c:127 kernel/sched/completion.c:148) 
-   __synchronize_srcu (kernel/rcu/srcutree.c:1408) 
-   kvm_swap_active_memslots+0x133/0x180 kvm
-   kvm_set_memslot+0x3de/0x680 kvm
-   kvm_vm_ioctl+0x11da/0x18d0 kvm
-   __x64_sys_ioctl (fs/ioctl.c:52 fs/ioctl.c:907 fs/ioctl.c:893 fs/ioctl.c:893) 
-   do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1) arch/x86/entry/common.c:83 (discriminator 1)) 
-
-And in [5], the host hang that first pops is also on wait_for_completion(), in
-code that is potentially trying to queue work on all CPUs (I've no idea if
-cpu_needs_drain() can be true on the isolated CPUs).
-
-	cpumask_clear(&has_work);
-	for_each_online_cpu(cpu) {
-		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
-
-		if (cpu_needs_drain(cpu)) {
-			INIT_WORK(work, lru_add_drain_per_cpu);
-			queue_work_on(cpu, mm_percpu_wq, work);
-			__cpumask_set_cpu(cpu, &has_work);
-		}
-	}
-
-	for_each_cpu(cpu, &has_work)
-		flush_work(&per_cpu(lru_add_drain_work, cpu));
-
-  sched: DL replenish lagged too much
-  systemd[1]: Starting Cleanup of Temporary Directories...
-  systemd[1]: systemd-tmpfiles-clean.service: Deactivated successfully.
-  systemd[1]: Finished Cleanup of Temporary Directories.
-  systemd[1]: systemd-journald.service: State 'stop-watchdog' timed out. Killing.
-  systemd[1]: systemd-journald.service: Killing process 647 (systemd-journal) with signal SIGKILL.
-  systemd[1]: Starting system activity accounting tool...
-  systemd[1]: sysstat-collect.service: Deactivated successfully.
-  systemd[1]: Finished system activity accounting tool.
-  INFO: task khugepaged:263 blocked for more than 122 seconds.
-        Not tainted 6.12.4-arch1-1 #1
-  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  task:khugepaged      state:D stack:0     pid:263   tgid:263   ppid:2      flags:0x00004000
-  Call Trace:
-   <TASK>
-   __schedule+0x3b0/0x12b0
-   schedule+0x27/0xf0
-   schedule_timeout+0x12f/0x160
-   wait_for_completion+0x86/0x170
-   __flush_work+0x1bf/0x2c0
-   __lru_add_drain_all+0x13e/0x1e0
-   khugepaged+0x66/0x930
-   kthread+0xd2/0x100
-   ret_from_fork+0x34/0x50
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
