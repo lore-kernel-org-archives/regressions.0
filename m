@@ -1,133 +1,116 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811CA81ACA;
-	Mon, 16 Dec 2024 17:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A90220627E
+	for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 17:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734370190; cv=none; b=TgbueM4CGbYAh8Gc/aMhsQWn672lE4vYLupQTBtHxf/0tIj6BNam6jJdIEbxlBxSFPtYoTzswAljBKkiQCqmtCcvclvU3sBwN5nOTeWEmQKiB3+4GlnCa49dGms3VhKC/Dq4ZY8MQMKxtiuln+K6y+WzlitxDt1nw+d7vwDTkwI=
+	t=1734371169; cv=none; b=eP6Ef+3d5v/YttKdbtDhYkz2FTf+qzh5UGh0Yd/Csp8Vu5f2ggmIJu0PeZX7IZOMya4seRZXS6UAml1KSQ9xXz/5rxYSiLsNGqfGN6VTN6JedYKyktEVWqJsmMDHHa2SEcSmbivQEQZRe+YxlBMYc9T4j63DyVMSESlG3SdXV6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734370190; c=relaxed/simple;
-	bh=Aqp5JQUyar1Nhsh0hfXQQWR7hCjBN5RQcuO1OxMhWjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mFCpq2dJlemgXpKzPZ6pGbdEAIaoJOjYBu/zQgLi0UhitIeE2ZA/2QoLNin859t5sEwSgpoYqBGnKUZoqEkBYS6LRC46jlMn0eujlxgzdPKdHoKNW7ajXY/PBJyFmBT1ttQ8nCGOuU7GDdPNu7HYscunXxKFZB00QkT6OkCeoN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=rry198nb; arc=none smtp.client-ip=212.227.126.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1734371169; c=relaxed/simple;
+	bh=LDxIv1E3Cfi6mUhdbKPkPLS8LWB9TYypt4l83RYATcY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=q/G6Flm2J6MMgf738N+BWGbMjcPZa2Sxcy4QapHa1sR/NLCYj+api6ihr8xJ8jj3HW7d6FM/cSzPqV7Hb2sm54Too3u0usG4JGIvGW/9JD06W4n4tXu0bryutcgVt3cqafBpO6mU3P8+/EnGuIqTRXoqjJPt/LmOR8bYpWp77FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEZoO+Tp; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="rry198nb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1734370177; x=1734974977; i=christian@heusel.eu;
-	bh=XHTOXjtFzX3uG72tT/c/v8D3oa+Tv+PlZ4tb+OBu6SE=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=rry198nbYYNUczk4IXoU18rtgSqHKRPjeQT7UEbLNhhCXMzvAOzTNS8yZ1l2fWBf
-	 rmsTRU+vwXBsoCEyiX0w4rJnPA9xCVpUVQiKnmjXc66ewv96wUoLKCl5ufPdHJG36
-	 Jb4nqHCkB7kGwxIqjGPmo9M6H5eY5NS0pbwhou0VfpMdG4UUbu/HyEdV4B2POOfGP
-	 jkFg2TngwwU2ycN+jNRI3TFr/eM0K3P72q5PnKK0KGHA/zfbuexRCiJKP31kaJuCr
-	 /3zucgXuOJO5nBQUo6mVllEk9OaB4OnTXlfQ/FJv6y2nvX7kEbOsQTP+ZFKXvUHII
-	 +vB8Q6LGdaGotk3yQw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue009
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MNbtD-1tD1GE2qRH-00YQQJ; Mon, 16
- Dec 2024 18:29:37 +0100
-Date: Mon, 16 Dec 2024 18:29:36 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Philip =?utf-8?Q?M=C3=BCller?= <philm@manjaro.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [Regression] 6.1.120, 6.6.66 and 6.12.5 crashes on Vega with a
- Null pointer deference
-Message-ID: <0ad783ab-3066-4c99-b6f7-51b2c6d02f70@heusel.eu>
-References: <719b5eb1-a5a9-4dbe-b3b1-399fb299bafb@manjaro.org>
- <0d681c5a-a138-4f8a-865e-a192458ae893@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEZoO+Tp"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso43299605e9.0
+        for <regressions@lists.linux.dev>; Mon, 16 Dec 2024 09:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734371166; x=1734975966; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LDxIv1E3Cfi6mUhdbKPkPLS8LWB9TYypt4l83RYATcY=;
+        b=XEZoO+TptzHQo0qYsUOIpUIBBnEDPHTfuw2ILwfeIeaD5KJgl4luQUKNPO8G8mVaDX
+         1yWMTuk+9tS9tBMDRpoTHCaYgcGPYHGZGf0t9XJ4I4rPPUEuy7GvhQEvk0/qD00V5YUE
+         vs7Uho7B/xT5iPr2dXRmsYPd4mf1z0AQoeOC9pkcYTa/4WpyCWOC0G00c+fo+c/3EVC/
+         nKP9FuKB7MIry5fFB3RqqzvFMMGFboiIIVKg6B8ayvpwdxxlojg0yTCIQ/s9f+GTIT4C
+         LM5Deu3QiAlfBlh7vnbaYvdhXyrpB0CGf4HKezvGO+lpzr8tSGpH7V2zm3ma4FJOcB6/
+         2UkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734371166; x=1734975966;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LDxIv1E3Cfi6mUhdbKPkPLS8LWB9TYypt4l83RYATcY=;
+        b=ISiVABWYHBsMug+qKMYidlLX3rgYdGLb2thV7tR63P/N+nehDDdZN5xGGuit13sx1y
+         aFmKyw5FYogadxSOOgvW/9SOlIw+p3UmGOHl/Mh2b1ZGGYkdQolbdOFwvTsSO4sYQifY
+         WB+iI8X1Z2CTUqw4mmNzAaD0mmnX0RyUh4B4j0EI3qyameahWCSKXIJy/5Otx/14lB83
+         AMERrjDtV/ow3PE7nLyuxs+xwpaQ1YWMF0alyZcx/Dnxunm0Uv53edcBJFVchKVI2j1z
+         86qZ3rMYdLYebS16ctl0DFjgqWfq7+iiOHitb4Bg4j/k8P5PlQrOws0WI14y7OfbUCka
+         MM1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXQKZDEtQHtnxuTxte9sZz86ScLMkUGN72NqU9JL3Ze8I7VEK7esDBhqLcFO4QyhAUHPnSZuogcPOyTLw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIVT/8gZ+DkzG27KTKyv3Ja9ohiIdHv9jAAEgr6yFV2DxXWSdT
+	PU7qHdt7I0aGhQp2pZ80TNMZ3nnR1deoary4tDpXNltSCfnudvz1
+X-Gm-Gg: ASbGncsem3dFrnLVdecRqtSQeEp28Zf98LNLAcEFzpfR33fgcm8yxuk/ssPAfLSCnS0
+	65zSXYLugcgy3SDVb1eUIR4Nt4ajqxiKGJm1hiuXZlmBOb5hm2KjnAZcRaH9K+4Cag6P0SX+kpn
+	CvU8OOjBVE5f6jNChF5o0uPIJ/9B7PC0KvtUPSbo58ECirI/90xa/+/VdqcYXp6u1k728AOpUEv
+	r8h2ZYWWvUMdFmMGH3B7KSbgbCjyOcLG5Mzbz6qLiChILVvg4Jdq7Ca5mxcUo/Hd+IW67hL6BVW
+	+5fy10QYdgQreHb0iqTahKh8efw=
+X-Google-Smtp-Source: AGHT+IGBJ/riXVZwoF0GRkipPWTNb3OBIdWhOHkRurhkAMxRMKmBaoGRuVMikgREKTp4489NMTgdUA==
+X-Received: by 2002:a5d:6d87:0:b0:385:e94d:b152 with SMTP id ffacd0b85a97d-3889ad37d1fmr11079777f8f.54.1734371165558;
+        Mon, 16 Dec 2024 09:46:05 -0800 (PST)
+Received: from ?IPv6:2a02:168:6806:0:fc42:464d:ef2d:52a3? ([2a02:168:6806:0:fc42:464d:ef2d:52a3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-388c80608e3sm8635591f8f.103.2024.12.16.09.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 09:46:04 -0800 (PST)
+Message-ID: <2f870913fcbf89043b6cfe26d32f9ae6d45cddd2.camel@gmail.com>
+Subject: Re: [PATCH leds v5 12/12] ARM: dts: turris-omnia: Add global LED
+ brightness change interrupt
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Marek =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Lee Jones
+ <lee@kernel.org>, 	regressions@lists.linux.dev, Pavel Machek
+ <pavel@ucw.cz>, 	linux-leds@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ soc@kernel.org, 	arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Hans de
+ Goede	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian
+ Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, 	devicetree@vger.kernel.org
+Date: Mon, 16 Dec 2024 18:46:04 +0100
+In-Reply-To: <6gxg466bl7tbyfq5yoenpw5t3vcfcyywv3jydwwwiqik2pzqsv@3g4gk6m62mdk>
+References: <20241104141924.18816-1-kabel@kernel.org>
+	 <20241104141924.18816-13-kabel@kernel.org>
+	 <87bjyv9ecb.fsf@BLaptop.bootlin.com>
+	 <778f08f1774fcad5fcc39114dbb721793ebf95d6.camel@gmail.com>
+	 <2iocrd4a7l4avfhqmobbexo7k4u2poidkvvj7lpqh7vp7mprkm@pfgytqnmt2si>
+	 <ofd5ru77wypfysflpblafbbdgrcmzztqwoewfjfuusrnbma4aw@y3oc3etutisi>
+	 <ec61714eaa3d84498cd69dc673fb11996550a3ea.camel@gmail.com>
+	 <6gxg466bl7tbyfq5yoenpw5t3vcfcyywv3jydwwwiqik2pzqsv@3g4gk6m62mdk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="73enmikddozleb3t"
-Content-Disposition: inline
-In-Reply-To: <0d681c5a-a138-4f8a-865e-a192458ae893@amd.com>
-X-Provags-ID: V03:K1:uEjS9MqKaiciOhoq9KHT7ZFxhxVxy36lLpdcAlvdDq8M46wSsXi
- yABn8OSLny/Fp9mTqnQKO37Wyn9GohuvtnrmdIMLxCUDGtDJE2ZcHC3ekkUUjjirr9uxxZG
- V605u4fpARvL5NqHtdteA1zx1OkSOQD4kD0njQMcAbEr6QxVobtlKDt1y1GLNik+i+UgoGL
- K2DBqrz5jHZTLpYI+m+cw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BHfzC8pRETU=;hDEmawdYHb+ixlxbeseMLrl4i5M
- F7ZW5VDz+7p5h7hQrAjxdhIaNxOV3PqSCB/zyzV+i+/qITmqeu+AH+05TgzaX1KD54c5541rX
- SY27BAauuRuHmvrN++qdlzLaxg2uWY74SRXCzHJgDAB+uw+FNbTdZ0vSv1RpZZLrpvcLlLugk
- ftYI4sDn8vbHDBiA6tH/MtfiZyq7GP10NaP42447H5jEOGn0ZPhVZiSe9O+kfc+sdWn/wVT5b
- wY523X8UaVYuNUNxx8diJ8yiRMeDs0nCg/ueuohIhuIqI2Q8ykgjG9zXaEV2m4n7u7IIpQ6f2
- n8gQSdywhIPCcZ3GbOPJSQxSn2JaXNmLI2jp41UjdCFqj+s2Q87Q50FxTWRjLTtZxW0DrfZkg
- yxT8EVBruxLLX6/+WXZZ7iMrJmou8eehrfcmJkaYLKv3NB7Ud2yPZUyS2KMydCorEEpX79BSr
- vY4RYjxmJ30lad6AwMU5QyXThPL+U3yINpCOaLvM+pX2uNzgebzYPUycAO2b+vYGM7CflH2MC
- ox/IVx+wBtvjpsXtMwZtfceOpCUl1TFNE1hU/6h3FYlXDUeQFqiK0PiSHfii7DF7E8URVVfsu
- ThY9Ma4k2SlTimfSqvoRbCh+fMTs+XuwJk5SdiJ7XAcIn0ZhlFgir1Rls7yJYRA7pjPpvR8PZ
- t+wFR10F9X1roCsbWPtoq4CWAv096lNF587KRT/azzzoyX1tPfAu4Oe2J5oktGOIEorR1PIDk
- S9VSfqFaLc5fiqtjCMVh0Vx54eWaz0ZjGFq8dzwr8pB7o/mk0eBCNiggiVN2rBwsyyA+jrV4Z
- gSgd0cyMeB+ga61fXBqpn4lOIkLRzY0oHlPB1rDbx7E/9D76fUvaQ58zi0UZu1FmdvsEq5+gN
- 6SefzcWjQpkwzonCeZtBz+lEgW63Ob6cQ0AXFIM8BMxBJFYWtJ5PwVwVfcs86t5UCMq7VFI6N
- vVpI9xqtrXenCUBosFemB82QqXzc9u5qHCCSu6T8h6WYJeh3ytTpuF7zkb5vNZa/9iInuUS2d
- GsDVbE6Uz+ISi9qZYsjhpJZjDvgpUkSGXyPXCRW
 
-
---73enmikddozleb3t
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [Regression] 6.1.120, 6.6.66 and 6.12.5 crashes on Vega with a
- Null pointer deference
-MIME-Version: 1.0
-
-On 24/12/16 08:13AM, Mario Limonciello wrote:
-> On 12/15/2024 10:37, Philip M=FCller wrote:
-> > Hi Greg,
+On Sun, 2024-12-15 at 22:26 +0100, Marek Beh=C3=BAn wrote:
+> On Sun, Dec 15, 2024 at 12:39:10PM +0100, Klaus Kudielka wrote:
+> > Testing reveals:
+> > I have to enable CONFIG_TURRIS_OMNIA_MCU_GPIO as well, to make the LEDS=
+ work again with v6.13-rc2.
 > >=20
-> > Due to backporting 2320c9e of to 6.1.120, 6.6.66 and 6.12.5 kernel
-> > series we have the following bug report: https://gitlab.freedesktop.org/
-> > drm/amd/-/issues/3831
+> > So far, so good.
 > >=20
-> > The commit 47f402a3e08113e0f5d8e1e6fcc197667a16022f should be backported
-> > to 6.1, 6.6 and 6.12 stable branches.
-> >=20
+> > But the upcoming dependency in 6.14 will be on CONFIG_TURRIS_OMNIA_MCU,=
+ not on CONFIG_TURRIS_OMNIA_MCU_GPIO.
+> > Is this correct?
 >=20
-> Add regressions list to keep track of this.
->=20
-> Add Sasha for awareness.  It looks like this is a case that autosel picked
-> the commit, but the "fix" hasn't been picked for it.
->=20
-> Either the original commit should revert or the fix should pick up too.
+> On both, see the first added line at
+> =C2=A0 https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git/commi=
+t/?h=3Dfor-leds-next&id=3Dd82e09d62b3bdbfa9dac2daf3c3c071b6a79d2aa
 
-ignore the three backport proposals that were sent as an answer to the
-initial report, it seems like sasha has already picked these up without
-me noticing!
+Indeed, sorry for missing that. So, I'd say:
 
-Cheers,
-Chris
+#regzbot fix: d82e09d62b3bdbfa9dac2daf3c3c071b6a79d2aa
 
---73enmikddozleb3t
-Content-Type: application/pgp-signature; name="signature.asc"
+and we leave 6.13 as it is.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmdgY4AACgkQwEfU8yi1
-JYV6PQ//a4/OcGCZu+jMlIV1PzDlZPlssUgs6ZVxBqsYqyqHfqU2Kg9B2uKobjyE
-MfFGRQLk4kmKb38iNwvTk9MzznOye1Au92lNiZ62aJ1RvIVbwEJzVJmYP5aJbDht
-G1W7DJLAiJQO0+MtBUiTNn62elL4LQzY/qt97MLfvDekKXw1EMLRVrTHl4zqfOL4
-yQDdo6MMhHdYAnXwwvCJIEgRnKyRa+kRVX3x90Wj8uanm/qu+EFe/tKc+0j4EApu
-xcmmlAMLUWKsOXhoVZrCDUis/fO5TnmIS3jZ1Uy4aYjfwJ15VP+bRgHJLN8UGOma
-Yf+gVs5b6ZKkQRn4L9DmGP6jRhj/Qbqd1e3LPsWRTpYHz7nfvuu51gEFSN+fMgpr
-EDON6r7YUPjgTcloX55kke6NJp1gFqxCHjvXUyhNae8K/TcesaGvEpApZk0KbzoR
-fZ2dqLSHoeILuL9J/ug5DvcoWXeK/f8gXyJ7Iqzk9MHmnParUoxQFBbrYKB4Itlj
-XsaWN7nQCleKIQaUnV8O1UOEoEljVlKYmxhmdoFHr8WKv8AQ8OItW3x7vp/RxClk
-VRRwAu1Qs7IRWcX9Z6OGtc5tFNmFk02pc9vWamoZhzt6CHAtm0be+hYpaH1R9qTn
-laP/FDgswrpeZH8VF6IlWRQN8HO+lTP2fT/gYMHhNTEa8xiit8A=
-=6NJu
------END PGP SIGNATURE-----
-
---73enmikddozleb3t--
+Klaus
