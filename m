@@ -1,164 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-10627.protonmail.ch (mail-10627.protonmail.ch [79.135.106.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E362A27726
-	for <regressions@lists.linux.dev>; Wed, 18 Dec 2024 02:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A2A15EFA0
+	for <regressions@lists.linux.dev>; Wed, 18 Dec 2024 06:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734489390; cv=none; b=tahgMdafIpDIRMVETAyEPgXTu5fV/fxnY9LTUjk+K9v93F3knqh7kxrv+dm6rnZ2lUHbB/n7xnmqQ/FZ6b9nkvBUnIdNHs0Fi7ST9iVDDq6DPnJ0gmpkAJjvsJW8CiBqZ55G3o2fzOiHIk969DGqK3uffO2dTg3MHYEmQazr/Lk=
+	t=1734502887; cv=none; b=rw2aAALq4BxvRj5nJ/2fU07xIqPblE7TlN445CxPb8zMS9SzO7jOq4xdqI813nJ49E91o7Rz9R+KzCUMIFG4PQJShw+PttdHS5fjQCXMFPqRgdGbgXyCSEfpl6MrK2qwg+0ElLj/0Mw4cjJfXp7Vo9aybtp4NEf8Sl3gzZ4qpYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734489390; c=relaxed/simple;
-	bh=hsdsyqKmhofb811PsgzKXzLjBJs7OHf4kS0LRTy7jPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AYit3eUZJzrEobvF+RU8DnBFUSCxpG85o18oLqP0ffodepVu+wHNl18TiwrUA/FDh9lDQeGD/GWoVS5rA0n2FLCjvIOOQVeEv/70M5cofxz8AYUObKs2GKdoFg+RotbIfxsf5ZDTnOJmwkCzJ7kkpmpPBOoOa8KAUVezkAHGA2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UEZS8tCH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1734502887; c=relaxed/simple;
+	bh=P/NUSBKCiSbjFDZH9M6o3quQcZVDMs9PSO0zpu8NIBE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=isGHIN9qUyIIw0b0D0LPlvWudDnM/YM65BEpeTuQ2XDvj+R3oislGdzFG9uuNlF9A1rqeLzdD3SVn0arwXcLVLysGblPQByRnJ308ambcxM+gdScTYJgw3TzFiPIMVJTMpju1o8Ci5e5ZN30oGBmPvcvw/hRUpv+YO/TEmwmJVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ranguvar.io; spf=pass smtp.mailfrom=ranguvar.io; dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b=ienVjLSt; arc=none smtp.client-ip=79.135.106.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ranguvar.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ranguvar.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEZS8tCH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734489387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NJcW79ovDm+qtYUxO5FhhfDWiJMRuMDIYWMjjeUpx5o=;
-	b=UEZS8tCHjPJcCHwt+2drgvDzQoage4tVCwZQI6tX58ZyeH1JOHHFL7XdVfenrvvbFWHxSS
-	GFIL5tznM945lPOhPstCTevKaPVZ9O+WbcI4HLhOhlhxKYPJ4lyptRaniWsY3TRwDOKB+z
-	97cvoPF+927yzyUGBBEfS8Dp5QrjBJA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-qe6AfCQ_MPaEG5lhsHeh_A-1; Tue,
- 17 Dec 2024 21:36:24 -0500
-X-MC-Unique: qe6AfCQ_MPaEG5lhsHeh_A-1
-X-Mimecast-MFC-AGG-ID: qe6AfCQ_MPaEG5lhsHeh_A
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25A3719560B2;
-	Wed, 18 Dec 2024 02:36:23 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.33])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C45419560AD;
-	Wed, 18 Dec 2024 02:36:17 +0000 (UTC)
-Date: Wed, 18 Dec 2024 10:36:12 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: 6.13/regression/bisected - after commit f1be1788a32e I see in
- the kernel log "possible circular locking dependency detected"
-Message-ID: <Z2I1HAKhKrCR51XO@fedora>
-References: <CABXGCsMS-em+jU0M9TnoVwViUfDudv4juN9yccsh-p+kuAneBw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ranguvar.io header.i=@ranguvar.io header.b="ienVjLSt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ranguvar.io;
+	s=protonmail3; t=1734502877; x=1734762077;
+	bh=P/NUSBKCiSbjFDZH9M6o3quQcZVDMs9PSO0zpu8NIBE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=ienVjLStZDwaJN3QOFXfiZ3Hf/Lr7NVfqOCD2Ji/V8VUVMo858uiwZrY2egBxLVbA
+	 XadMqAVFdlcB3Oty8evGkwOGgRweaD8YYqSfgYEgsjZB/ULjfG9ckJjmJ9kEZHlU91
+	 DKLVqykzRsdUuCn87UwzD/Gk3NEGllV+4oLIExWOWogLHOLXZW/2H4SSw0R9oZBtwQ
+	 LEks5vBzcbgYO2G0LfA3sr44te0jNQUo070hq5u9fUGlbouN6aK8JZA1eZo8qzoROC
+	 mr373pg6lfBLS91kA8lNs4dARSltVgs966uTKQT6pG1bg+7AF+DF5Z7Ynf34R/R9xl
+	 YncbWZh8m/Ifw==
+Date: Wed, 18 Dec 2024 06:21:10 +0000
+To: Juri Lelli <juri.lelli@redhat.com>, Sean Christopherson <seanjc@google.com>
+From: Ranguvar <ranguvar@ranguvar.io>
+Cc: Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@gmail.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "regressions@leemhuis.info" <regressions@leemhuis.info>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [REGRESSION][BISECTED] from bd9bbc96e835: cannot boot Win11 KVM guest
+Message-ID: <stYazPax2Mcu7VeTPJu8XXGkOiaVyF8LaZzfHDEG4izEwt4-Ztoo-cmNAv19O9nryHkybONeruyS8yNKOcV0CSicHcd6q_ptGOmADHgut2U=@ranguvar.io>
+In-Reply-To: <Z2E858-8jA6_xWFd@jlelli-thinkpadt14gen4.remote.csb>
+References: <jGQc86Npv2BVcA61A7EPFQYcclIuxb07m-UqU0w22FA8_o3-0_xc6OQPp_CHDBZhId9acH4hyiOqki9w7Q0-WmuoVqsCoQfefaHNdfcV2ww=@ranguvar.io> <20241214185248.GE10560@noisy.programming.kicks-ass.net> <gvam6amt25mlvpxlpcra2caesdfpr5a75cba3e4n373tzqld3k@ciutribtvmjj> <Z2BaZSKtaAPGSCqb@google.com> <b6d8WzC2p_tpdLs36QeL_oqtEKy_pRy-PdeOxa08JtTcPhHNNOCjN73b799C0gv8NnmIJKH9gD6J4W-Dv5JKEVdrbMoVUp3wSOrqEY_LrDg=@ranguvar.io> <Z2E858-8jA6_xWFd@jlelli-thinkpadt14gen4.remote.csb>
+Feedback-ID: 7618196:user:proton
+X-Pm-Message-ID: 17fcd3b8fe3df59a24ded1b614f05a19f3022687
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABXGCsMS-em+jU0M9TnoVwViUfDudv4juN9yccsh-p+kuAneBw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 18, 2024 at 06:51:31AM +0500, Mikhail Gavrilov wrote:
-> Hi,
-> After commit f1be1788a32e I see in the kernel log "possible circular
-> locking dependency detected" with follow stack trace:
-> [  740.877178] ======================================================
-> [  740.877180] WARNING: possible circular locking dependency detected
-> [  740.877182] 6.13.0-rc3-f44d154d6e3d+ #392 Tainted: G        W    L
-> [  740.877184] ------------------------------------------------------
-> [  740.877186] btrfs-transacti/839 is trying to acquire lock:
-> [  740.877188] ffff888182336a50
-> (&q->q_usage_counter(io)#2){++++}-{0:0}, at: __submit_bio+0x335/0x520
-> [  740.877197]
->                but task is already holding lock:
-> [  740.877198] ffff8881826f7048 (btrfs-tree-00){++++}-{4:4}, at:
-> btrfs_tree_read_lock_nested+0x27/0x170
-> [  740.877205]
->                which lock already depends on the new lock.
-> 
-> [  740.877206]
->                the existing dependency chain (in reverse order) is:
-> [  740.877207]
->                -> #4 (btrfs-tree-00){++++}-{4:4}:
-> [  740.877211]        lock_release+0x397/0xd90
-> [  740.877215]        up_read+0x1b/0x30
-> [  740.877217]        btrfs_search_slot+0x16c9/0x31f0
-> [  740.877220]        btrfs_lookup_inode+0xa9/0x360
-> [  740.877222]        __btrfs_update_delayed_inode+0x131/0x760
-> [  740.877225]        btrfs_async_run_delayed_root+0x4bc/0x630
-> [  740.877226]        btrfs_work_helper+0x1b5/0xa50
-> [  740.877228]        process_one_work+0x899/0x14b0
-> [  740.877231]        worker_thread+0x5e6/0xfc0
-> [  740.877233]        kthread+0x2d2/0x3a0
-> [  740.877235]        ret_from_fork+0x31/0x70
-> [  740.877238]        ret_from_fork_asm+0x1a/0x30
-> [  740.877240]
->                -> #3 (&delayed_node->mutex){+.+.}-{4:4}:
-> [  740.877244]        __mutex_lock+0x1ab/0x12c0
-> [  740.877247]        __btrfs_release_delayed_node.part.0+0xa0/0xd40
-> [  740.877249]        btrfs_evict_inode+0x44d/0xc20
-> [  740.877252]        evict+0x3a4/0x840
-> [  740.877255]        dispose_list+0xf0/0x1c0
-> [  740.877257]        prune_icache_sb+0xe3/0x160
-> [  740.877259]        super_cache_scan+0x30d/0x4f0
-> [  740.877261]        do_shrink_slab+0x349/0xd60
-> [  740.877264]        shrink_slab+0x7a4/0xd20
-> [  740.877266]        shrink_one+0x403/0x830
-> [  740.877268]        shrink_node+0x2337/0x3a60
-> [  740.877270]        balance_pgdat+0xa4f/0x1500
-> [  740.877272]        kswapd+0x4f3/0x940
-> [  740.877274]        kthread+0x2d2/0x3a0
-> [  740.877276]        ret_from_fork+0x31/0x70
-> [  740.877278]        ret_from_fork_asm+0x1a/0x30
-> [  740.877280]
->                -> #2 (fs_reclaim){+.+.}-{0:0}:
-> [  740.877283]        fs_reclaim_acquire+0xc9/0x110
-> [  740.877286]        __kmalloc_noprof+0xeb/0x690
-> [  740.877288]        sd_revalidate_disk.isra.0+0x4356/0x8e00
-> [  740.877291]        sd_probe+0x869/0xfa0
-> [  740.877293]        really_probe+0x1e0/0x8a0
-> [  740.877295]        __driver_probe_device+0x18c/0x370
-> [  740.877297]        driver_probe_device+0x4a/0x120
-> [  740.877299]        __device_attach_driver+0x162/0x270
-> [  740.877300]        bus_for_each_drv+0x115/0x1a0
-> [  740.877303]        __device_attach_async_helper+0x1a0/0x240
-> [  740.877305]        async_run_entry_fn+0x97/0x4f0
-> [  740.877307]        process_one_work+0x899/0x14b0
-> [  740.877309]        worker_thread+0x5e6/0xfc0
-> [  740.877310]        kthread+0x2d2/0x3a0
-> [  740.877312]        ret_from_fork+0x31/0x70
-> [  740.877314]        ret_from_fork_asm+0x1a/0x30
-> [  740.877316]
->                -> #1 (&q->limits_lock){+.+.}-{4:4}:
-> [  740.877320]        __mutex_lock+0x1ab/0x12c0
-> [  740.877321]        nvme_update_ns_info_block+0x476/0x2630 [nvme_core]
-> [  740.877332]        nvme_update_ns_info+0xbe/0xa60 [nvme_core]
-> [  740.877339]        nvme_alloc_ns+0x1589/0x2c40 [nvme_core]
-> [  740.877346]        nvme_scan_ns+0x579/0x660 [nvme_core]
-> [  740.877353]        async_run_entry_fn+0x97/0x4f0
-> [  740.877355]        process_one_work+0x899/0x14b0
-> [  740.877357]        worker_thread+0x5e6/0xfc0
-> [  740.877358]        kthread+0x2d2/0x3a0
-> [  740.877360]        ret_from_fork+0x31/0x70
-> [  740.877362]        ret_from_fork_asm+0x1a/0x30
-> [  740.877364]
->                -> #0 (&q->q_usage_counter(io)#2){++++}-{0:0}:
+The bug is caused by Windows kernel as a KVM guest.
+Cannot reproduce with Ubuntu 24.10 install iso and nouveau driver.
+Windows 11 23H2 install iso reproduces reliably.
 
+Two [0] more [1] kernel logs below.
+Decode worked only on the first - spent too long trying to fix it.
 
-This is another deadlock caused by dependency between q->limits_lock and
-q->q_usage_counter, same with the one under discussion:
+On Tuesday, December 17th, 2024 at 08:57, Juri Lelli <juri.lelli@redhat.com=
+> wrote:
+>
+> On 16/12/24 20:40, Ranguvar wrote:
+>
+> > On Monday, December 16th, 2024 at 16:50, Sean Christopherson seanjc@goo=
+gle.com wrote:
+> >
+> > > On Mon, Dec 16, 2024, Juri Lelli wrote:
+> > >
+> > > > On 14/12/24 19:52, Peter Zijlstra wrote:
+> > > >
+> > > > > On Sat, Dec 14, 2024 at 06:32:57AM +0000, Ranguvar wrote:
+> > > > >
+> > > > > > I have in kernel cmdline `iommu=3Dpt isolcpus=3D1-7,17-23 rcu_n=
+ocbs=3D1-7,17-23 nohz_full=3D1-7,17-23`. Removing iommu=3Dpt does not produ=
+ce a change, and
+> > > > > > dropping the core isolation freezes the host on VM startup.
+> > >
+> > > As in, dropping all of isolcpus, rcu_nocbs, and nohz_full? Or just dr=
+opping
+> > > isolcpus?
+> >
+> > Thanks for looking.
+> > I had dropped all three, but not altered the VM guest config, which is:
+> >
+> > <cputune>
+> > <vcpupin vcpu=3D'0' cpuset=3D'2'/>
+> > <vcpupin vcpu=3D'1' cpuset=3D'18'/>
+> > ...
+> > <vcpupin vcpu=3D'11' cpuset=3D'23'/>
+> > <emulatorpin cpuset=3D'1,17'/>
+> > <iothreadpin iothread=3D'1' cpuset=3D'1,17'/>
+> > <vcpusched vcpus=3D'0' scheduler=3D'fifo' priority=3D'95'/>
+> > ...
+> > <iothreadsched iothreads=3D'1' scheduler=3D'fifo' priority=3D'50'/>
+>
+>
+> Are you disabling/enabling/configuring RT throttling (sched_rt_{runtime,
+> period}_us) in your configuration?
+>
 
-https://lore.kernel.org/linux-block/20241216080206.2850773-2-ming.lei@redhat.com/
+I don't touch these.
 
-The dependency of queue_limits_start_update() over blk_mq_freeze_queue()
-should be cut.
+[ranguvar@khufu ~]$ cat /proc/sys/kernel/sched_rt_period_us
+1000000
+[ranguvar@khufu ~]$ cat /proc/sys/kernel/sched_rt_runtime_us
+950000
 
+I removed myself from realtime group also (used by PipeWire) but still the =
+same breakage.
 
-Thanks,
-Ming
+> > </cputune>
+> >
+> > CPU mode is host-passthrough, cache mode is passthrough.
+> >
+> > The 24GB VRAM did cause trouble when setting up resizeable BAR months a=
+go as well. It necessitated a special qemu config:
+> > qemu:commandline
+> > <qemu:arg value=3D'-fw_cfg'/>
+> > <qemu:arg value=3D'opt/ovmf/PciMmio64Mb,string=3D65536'/>
+> > </qemu:commandline>
 
+I removed this config block as it appears unnecessary now.
+No impact on this issue.
+
+I tried also changed the size of the BAR from 32GB to 256MB manually before=
+ running the guest.
+
+lspci:
+Region 1: Memory at 7000000000 (64-bit, prefetchable) [size=3D32G]
+Region 3: Memory at 7800000000 (64-bit, prefetchable) [size=3D32M]
+
+after unbinding vfio_pci, writing '8' to to resource1_resize, and rebinding=
+:
+Region 1: Memory at 1040000000 (64-bit, prefetchable) [size=3D256M]
+Region 3: Memory at 1050000000 (64-bit, prefetchable) [size=3D32M]
+
+No impact.
+
+[0]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.11.0-rc=
+1-1-git-00057-gbd9bbc96e835-20241216-decoded.log
+[1]: https://ranguvar.io/pub/paste/linux-6.12-vm-regression/dmesg-6.11.0-rc=
+1-1-git-00057-gbd9bbc96e835-20241217.log
