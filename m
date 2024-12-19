@@ -1,44 +1,81 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2654221447
-	for <regressions@lists.linux.dev>; Thu, 19 Dec 2024 14:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366C9225792
+	for <regressions@lists.linux.dev>; Thu, 19 Dec 2024 15:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734617313; cv=none; b=UHwuUw6tyTaFsoPKd0OmDuyEMAoST8IWB6UnY4uTgnnrRGW+WFeEaJU+Lm86Whml9aDFTvUsfctw2QpdtoMPKnbQsN9onJzsCzD8mK84YHCm9EH41bRqS+94O45UKIV5cXrhB3X21y1xE9SK+sn8nqIHWPDyk1NYHCpbEuU90wc=
+	t=1734621065; cv=none; b=f0QqkXNaJflE8WhWNz/EeGLcqkSBMT4SeFZC/JgaCu6JW0jDrOVQT1Tm65EbaAe6yBe5Wc1PiTGU5Oo0gmki6iK2szbpDDqC9Fz+koUKZ1TDPtIqQOGq0YKTBmVusBW3nZOiBTnC6ddqQ/SgX06PyEjQKgP+BLrVPfkx4voR4fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734617313; c=relaxed/simple;
-	bh=OdomRgGMAZ+7Gkruf2FnLnYNtL0pl4buhoaas7USuKU=;
+	s=arc-20240116; t=1734621065; c=relaxed/simple;
+	bh=zxUwCM5sVQtWZUAPNomSOSSJKwXbR7V6Cjxc3p7Fj7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iFmtqWHU9vvrcyikYZTkOE3c7DB+qdnQJxqkLMOzHJDCqTpWKfvYVv2L/H6LgJN2ohFhSTL8IiyC/pqCDo+cir/ZidP2SQBUoQOmcer1AU8iHsiyZ2joPVGkyiAVJ0O7pTjAnFEU1Z1IVaFhVf93fEf/9yoLik6Sw8+nxJABv34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=gjLyOcRC; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	 Content-Type:Content-Disposition:In-Reply-To; b=m7JZwzC0FqEV48K5/V5CieOgQ1YYRPwIg0JUit6GcdCzYJjyRP7obXP6moWMMxdOZOHQ6O5hUBQyIpqn2abpzRPne9EB41XFn51Er76SKWpM879SEYZqMGXkVoVYi5n0w4G3grk6NiuCUjhi8sFv76FCtdi/ME/MXxrprtIAWUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MOaQhy0Y; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="gjLyOcRC"
-Received: from fpc (unknown [5.228.116.177])
-	by mail.ispras.ru (Postfix) with ESMTPSA id BC810518E772;
-	Thu, 19 Dec 2024 14:08:20 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru BC810518E772
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1734617300;
-	bh=PN/lSWUQsKtbBz9TrgKcGUiuAKNHPffA9fG0t4d/ctI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gjLyOcRCBBPdEA4FdVhs+aytu2hIJmCXVKqfH8lH8bca9ShEbTVwHWRDW0MBkVOWV
-	 L+/JnhlBRVPFFkYpOXCYM0c+mhONBLobXBTFtJCzI+p2uEPoSJXcLWPxMG4PRApxEX
-	 /9L7qDp3BbB6fJOQ5CPhMSF1fgc3XtKXNJd3s22U=
-Date: Thu, 19 Dec 2024 17:08:15 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>, Takashi Iwai <tiwai@suse.de>
-Subject: Re: 6.13/regression/bisected - 133577cad6bf led to error in kernel
- log "DMA-API: snd_hda_intel 0000:03:00.1: device driver failed to check map
- error[device address=0x00000000ffff0000] [size=20480 bytes] [mapped as
- single]"
-Message-ID: <20241219-38d93005e76a60255bb87042-pchelkin@ispras.ru>
-References: <CABXGCsNB3RsMGvCucOy3byTEOxoc-Ys+zB_HQ=Opb_GhX1ioDA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MOaQhy0Y"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aa67333f7d2so152978366b.0
+        for <regressions@lists.linux.dev>; Thu, 19 Dec 2024 07:11:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734621060; x=1735225860; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a8c0Ewl7BQkquEtJaiXqSJPyhaxk2Iz2kiqNEhnfoII=;
+        b=MOaQhy0Ys/ucTGiMw5EzGOmhQkq4/a2EjWUp5rHH9W6M/6UphQ5+iobcjexj8GlQbD
+         df+cU+X2NKie294rNevUHY3DO1mFOU+mf9m1GPAFg4w8XoRXSnlF+DXWTodxwoi4JRvA
+         wzds3liJFA9i0AEoljW9Yrdswy3+2dNoj9pvfprWAxjqlYe+SeGTFA1EkfMUfpb3u/fw
+         vVgmsh81wAJgwaffE/DFKHN1mfft458ZhKLenB8vPVj1V9RdcNahjtlXtVmm9tP3nyxz
+         et6WgooPE5AsHp1v3m7emianYhTsqy0S81v+QerAeJSkoMag5MmhjNHf28XfX07Bt//m
+         2LMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734621060; x=1735225860;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a8c0Ewl7BQkquEtJaiXqSJPyhaxk2Iz2kiqNEhnfoII=;
+        b=Uc7eafgUrihLwNPzoIsqkFiuAnjNJ0eeMCuhfPOvyf+lLR3tif+GDgRFDKC8pNM2x+
+         ghk8aS+ma86abFqM5jwyQ1DhQxxfbJru/Wjz3uyq/29lhknZhmA4iKSZ3KoA3TQa3/uV
+         cC6s0gxj9FMmcHHht710IUdZGOdZThcS0FlR22mhATkcLNJUgNuXnDOeTTIqmqdfpRei
+         RKDHlt/ZAkGGWWe1jIqMpNH3nOA1XmuM0M0Eq/3UX0NJoKsV9wkD//I76TVEpjviOhaj
+         C0qbmW6zj6y0s30wmezY0W60+4cVRb3oi26yiTaj26yMRIr0q+ZoWG5rbxrIo9hUcUUt
+         Z5Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVp5odK1aW+d3uec+DzPxCcsaajy/YzT4XUJNEU90Mib9my36MkW/+KHJ9K2FZR/JzM0+VpZx88ftQ+xg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx5nbEh81+H6VYblYscrp6DjAe9I2yZVrl00RYONw9rHSof0oWG
+	NBtd+G5aq1jD2+H/nHadNsCOXNW8mtlF8v88Mn/noBxvu16eERqC9WdGoeTDpLc=
+X-Gm-Gg: ASbGncuwPohdS7DB71svlxVt8zDmlwgdxuS9sG3vEHzcRmgbEekKZEXXjh1er8dPhF3
+	P+atgQ8qwh6uVABtwsHEiVdNIMIR4/8TG+VijdQZkHOmusptkd14IrojLuvVfJ4T5MK5J01g6jF
+	eZpQO+deb4wbhTEftmJxZmvwcqoI7rlexSGF3jgYlY+1bOFqXBzcvT+9/bQjOP5sLJvFLtzHQhw
+	se8B6zeqH927uDyGWQ4UPYemwwh63aySSvwKxQ9eVENwY/NhIIUGyFCAaDaPQ==
+X-Google-Smtp-Source: AGHT+IEpIUPQqVgupeRzlOrpnAifiL/wITich3F10TXkppCOZb1lR3IE5oC8DUkcXCbnI2ox83X/9w==
+X-Received: by 2002:a17:906:3092:b0:aa6:b5e0:8c59 with SMTP id a640c23a62f3a-aabf47f6a50mr576895266b.35.1734621060458;
+        Thu, 19 Dec 2024 07:11:00 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e8301bdsm74864266b.31.2024.12.19.07.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2024 07:10:59 -0800 (PST)
+Date: Thu, 19 Dec 2024 18:10:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, qemu-devel@nongnu.org,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-ext4 <linux-ext4@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, linux-mm <linux-mm@kvack.org>,
+	Linux btrfs <linux-btrfs@vger.kernel.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, Qu Wenruo <wqu@suse.com>,
+	David Sterba <dsterba@suse.com>
+Subject: Re: qemu-arm64: CONFIG_ARM64_64K_PAGES=y kernel crash on qemu-arm64
+ with Linux next-20241210 and above
+Message-ID: <a3406049-7ab5-45b9-80bf-46f73ef73a4f@stanley.mountain>
+References: <CA+G9fYvf0YQw4EY4gsHdQ1gCtSgQLPYo8RGnkbo=_XnAe7ORhw@mail.gmail.com>
+ <CA+G9fYv7_fMKOxA8DB8aUnsDjQ9TX8OQtHVRcRQkFGqdD0vjNQ@mail.gmail.com>
+ <ac1e1168-d3af-43c5-9df7-4ef5a1dbd698@gmx.com>
+ <feecfdc2-4df6-47cf-8f96-5044858dc881@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,186 +84,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABXGCsNB3RsMGvCucOy3byTEOxoc-Ys+zB_HQ=Opb_GhX1ioDA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <feecfdc2-4df6-47cf-8f96-5044858dc881@gmx.com>
 
-Hello Mikhail,
-
-thanks for the detailed report!
-
-On Thu, 19. Dec 17:41, Mikhail Gavrilov wrote:
-> Hi,
-> I'm trying to find the first bad commit that is led to error in kernel log
-> "DMA-API: snd_hda_intel 0000:03:00.1: device driver failed to check
-> map error[device address=0x00000000ffff0000] [size=20480 bytes]
-> [mapped as single]"
-> 
-> But instead of it, I found the merge commit
-> 133577cad6bf48e5a7848c4338124081393bfe8a
-> Merge: c4bb3a2d641c aef7ee7649e0
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Sat Nov 30 15:36:17 2024 -0800
-> 
->     Merge tag 'dma-mapping-6.13-2024-11-30' of
-> git://git.infradead.org/users/hch/dma-mapping
-> 
->     Pull dma-mapping fix from Christoph Hellwig:
-> 
->      - fix physical address calculation for struct dma_debug_entry (Fedor
->        Pchelkin)
-> 
->     * tag 'dma-mapping-6.13-2024-11-30' of
-> git://git.infradead.org/users/hch/dma-mapping:
->       dma-debug: fix physical address calculation for struct dma_debug_entry
-> 
->  kernel/dma/debug.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+On Thu, Dec 19, 2024 at 10:44:12AM +1030, Qu Wenruo wrote:
 > 
 > 
-> I am sure that after reverting this merge
-> > git revert -n 133577cad6bf48e5a7848c4338124081393bfe8a -m 1
-> the error message was gone.
+> 在 2024/12/19 06:37, Qu Wenruo 写道:
+> > 
+> > 
+> > 在 2024/12/19 02:22, Naresh Kamboju 写道:
+> > > On Wed, 18 Dec 2024 at 17:33, Naresh Kamboju
+> > > <naresh.kamboju@linaro.org> wrote:
+> > > > 
+> > > > The following kernel crash noticed on qemu-arm64 while running the
+> > > > Linux next-20241210 tag (to next-20241218) kernel built with
+> > > >   - CONFIG_ARM64_64K_PAGES=y
+> > > >   - CONFIG_ARM64_16K_PAGES=y
+> > > > and running LTP smoke tests.
+> > > > 
+> > > > First seen on Linux next-20241210.
+> > > >    Good: next-20241209
+> > > >    Bad:  next-20241210 and next-20241218
+> > > > 
+> > > > qemu-arm64: 9.1.2
+> > > > 
+> > > > Anyone noticed this ?
+> > > > 
+> > > 
+> > > Anders bisected this reported regression and found,
+> > > # first bad commit:
+> > >    [9c1d66793b6faa00106ae4c866359578bfc012d2]
+> > >    btrfs: validate system chunk array at btrfs_validate_super()
+> > 
+> > Weird, I run daily fstests with 64K page sized aarch64 VM.
+> > 
+> > But never hit a crash on this.
+> > 
+> > And the original crash call trace only points back to ext4, not btrfs.
+> > 
 
-Somehow I think this may be related to
+Yeah.  But it's in the memory allocator so it looks like memory
+corruption.  After the ext4 crash then random other stuff starts
+crashing as well when it allocates memory.
 
-commit c880a5146642e9d35f88aaa353ae98ffd4fc3f99
-Author: Takashi Iwai <tiwai@suse.de>
-Date:   Thu Sep 12 17:52:24 2024 +0200
+> > Mind to test it with KASAN enabled?
+> 
 
-    ALSA: memalloc: Use proper DMA mapping API for x86 WC buffer allocations
-    
-    The x86 WC page allocation assumes incorrectly the DMA address
-    directly taken from the page.  Also it checks the DMA ops
-    inappropriately for switching to the own method.
-    
-    This patch rewrites the stuff to use the proper DMA mapping API
-    instead.
-    
-    Link: https://patch.msgid.link/20240912155227.4078-2-tiwai@suse.de
-    Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Anders is going to try that later and report back.
 
+> Another thing is, how do you enable both 16K and 64K page size at the
+> same time?
+> 
+> The Kconfig should only select one page size IIRC.
 
-It added the following change
-
-+       dmab->addr = dma_map_single(dmab->dev.dev, p, size, DMA_BIDIRECTIONAL);
-+       if (dmab->addr == DMA_MAPPING_ERROR) {
-+               do_free_pages(dmab->area, size, true);
-+               return NULL;
-+       }
+Right.  We tested 4k, 16k and 64k.  4k pages worked.
 
 > 
-> Let's try to figure it out together and find the right bad commit.
+> And for the bisection, does it focus on the test failure or the crash?
 > 
-> The kernel logs from each bisect step I saved in the attached zip archive.
-> 
-> > grep -R "device driver failed to check map error" . | sort
 
-And the error message printed indicates the exact same thing. This is the
-fragment of the dma-debug kernel code raising the observed error.
+The crash.
 
-	/*
-	 * Drivers should use dma_mapping_error() to check the returned
-	 * addresses of dma_map_single() and dma_map_page().
-	 * If not, print this warning message. See Documentation/core-api/dma-api.rst.
-	 */
-	if (entry->map_err_type == MAP_ERR_NOT_CHECKED) {
-		err_printk(ref->dev, entry,
-			   "device driver failed to check map error"
-			   "[device address=0x%016llx] [size=%llu bytes] "
-			   "[mapped as %s]",
-			   ref->dev_addr, ref->size,
-			   type2name[entry->type]);
-	}
-
-That is, dma_mapping_error() is needed to update the internal state of
-dma-debug structures in case of a failure. Otherwise, it'll complain.
-
-Could you test please if the following diff avoids the error message?
-
-diff --git a/sound/core/memalloc.c b/sound/core/memalloc.c
-index 13b71069ae18..b3853583d2ae 100644
---- a/sound/core/memalloc.c
-+++ b/sound/core/memalloc.c
-@@ -505,7 +505,7 @@ static void *snd_dma_wc_alloc(struct snd_dma_buffer *dmab, size_t size)
-        if (!p)
-                return NULL;
-        dmab->addr = dma_map_single(dmab->dev.dev, p, size, DMA_BIDIRECTIONAL);
--       if (dmab->addr == DMA_MAPPING_ERROR) {
-+       if (dma_mapping_error(dmab->dev.dev, dmab->addr)) {
-                do_free_pages(dmab->area, size, true);
-                return NULL;
-        }
-
-> ./dmesg-6.12.0-05-cfd47302ac64b595beb0a67a337b81942146448a.txt:[
-> 73.891387] DMA-API: snd_hda_intel 0000:03:00.1: device driver failed
-> to check map error[device address=0x00000000ffff0000] [size=20480
-> bytes] [mapped as single]
-> ./dmesg-6.12.0-10-133577cad6bf48e5a7848c4338124081393bfe8a.txt:[
-> 36.391584] DMA-API: snd_hda_intel 0000:03:00.1: device driver failed
-> to check map error[device address=0x00000000ffff0000] [size=20480
-> bytes] [mapped as single]
-> 
-> As you can see, the "bad" result happens in steps 05 and 10.
-> 
-> git bisect start
-> # status: waiting for both good and bad commits
-> # good: [7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5] Merge tag
-> 'for-6.13/dm-changes' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm
-> git bisect good 7eef7e306d3c40a0c5b9ff6adc9b273cc894dbd5
-> # status: waiting for bad commit, 1 good commit known
-> # bad: [e70140ba0d2b1a30467d4af6bcfe761327b9ec95] Get rid of
-> 'remove_new' relic from platform driver struct
-> git bisect bad e70140ba0d2b1a30467d4af6bcfe761327b9ec95
-> # 01 - good: [e33a6d83e1786d5e310ae746c67f5f4e2f93ba35] Merge tag
-> 'usb-6.13-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> git bisect good e33a6d83e1786d5e310ae746c67f5f4e2f93ba35
-> # 02 - good: [2eff01ee2881becc9daaa0d53477ec202136b1f4] Merge tag
-> 'char-misc-6.13-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-> git bisect good 2eff01ee2881becc9daaa0d53477ec202136b1f4
-> # 03 - good: [831c1926ee728c3e747255f7c0f434762e8e863d] Merge tag
-> 'uml-for-linus-6.13-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/uml/linux
-> git bisect good 831c1926ee728c3e747255f7c0f434762e8e863d
-> # 04 - good: [6a34dfa15d6edf7e78b8118d862d2db0889cf669] Merge tag
-> 'kbuild-v6.13' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
-> git bisect good 6a34dfa15d6edf7e78b8118d862d2db0889cf669
-> # 05 - bad: [cfd47302ac64b595beb0a67a337b81942146448a] Merge tag
-> 'block-6.13-20242901' of git://git.kernel.dk/linux
-> git bisect bad cfd47302ac64b595beb0a67a337b81942146448a
-> # 06 - good: [e8b8344de3980709080d86c157d24e7de07d70ad] block, bfq:
-> fix bfqq uaf in bfq_limit_depth()
-> git bisect good e8b8344de3980709080d86c157d24e7de07d70ad
-> # 07 - good: [c4bb3a2d641c02ac2c7aa45534b4cefdf9bf416b] Merge tag
-> 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-> git bisect good c4bb3a2d641c02ac2c7aa45534b4cefdf9bf416b
-> # 08 - good: [0c0a4eae26ac78379d0c1db053de168a8febc6c9] io_uring:
-> check for overflows in io_pin_pages
-> git bisect good 0c0a4eae26ac78379d0c1db053de168a8febc6c9
-> # 09 - good: [7eb75ce7527129d7f1fee6951566af409a37a1c4] io_uring/tctx:
-> work around xa_store() allocation error issue
-> git bisect good 7eb75ce7527129d7f1fee6951566af409a37a1c4
-> # 10 - bad: [133577cad6bf48e5a7848c4338124081393bfe8a] Merge tag
-> 'dma-mapping-6.13-2024-11-30' of
-> git://git.infradead.org/users/hch/dma-mapping
-> git bisect bad 133577cad6bf48e5a7848c4338124081393bfe8a
-> # 11 - good: [aef7ee7649e02f7fc0d2e5e532f352496976dcb1] dma-debug: fix
-> physical address calculation for struct dma_debug_entry
-> git bisect good aef7ee7649e02f7fc0d2e5e532f352496976dcb1
-> # first bad commit: [133577cad6bf48e5a7848c4338124081393bfe8a] Merge
-> tag 'dma-mapping-6.13-2024-11-30' of
-> git://git.infradead.org/users/hch/dma-mapping
-> 
-> Where did I go wrong?
-> 
-> My machine specs: https://linux-hardware.org/?probe=059108072c
-> I attached below also build config.
-> 
-> -- 
-> Best Regards,
-> Mike Gavrilov.
-
-
+regards,
+dan carpenter
 
