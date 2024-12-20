@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9993670818;
-	Fri, 20 Dec 2024 12:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E46211498;
+	Fri, 20 Dec 2024 12:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734697059; cv=none; b=ArP6yVvc6p8S+KMEQ165l2B7gfcWgy9hAG2bbAnE6sp2HyM7iqspN/SgmvrM9HSox1zu2usjAWazd3vJ/crSrQILgi5VQNDRAvY3NmtRnyhhLYHnAAsO5evw7QCfEglAQQkriE1STADduvpobnGcSna3DJ/ej3BaNHIsoT5Ltzg=
+	t=1734698522; cv=none; b=hk3K/v065uUTPumeoNiuHBW6a7+HJcxnIBFH3jAU+IzHCnPgUa5Bus9jgWmzGp6AkzHGtnGKkehnLSwOUH/ER80IX7ff8X0/YvkLYHB9GwkjzyqvLCc5WDOFX7R/A3sUshHKE8gxSf+nMCAH9xbhGsIflJBIrkWHbu3qex33D2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734697059; c=relaxed/simple;
-	bh=EQaMA6e2Y2MZEvX+SWyAU79drm8IWa6fbbIN0TiuXkU=;
+	s=arc-20240116; t=1734698522; c=relaxed/simple;
+	bh=pnYBF3E4vWCpPpYInPX3k7y2ni1fA4RKcTnmhA3lFDM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWsJ+Ocs9lQmwDRCHr1/Jtf/P2leK7jfePezI8VKiT0pEtgOLHZIDPVOw64ftIxFLzEGBUFqxVZzRx3pTCPPAYg6iHr5p/+sXRv2Pts3rIFjAVuZDe9qfGwX53uGQBV1g4UZkxDjpWVeU+iC/NN3dSB6QXIP0xttluTajZh8Kd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EBt7PZDc; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=XVKu4DM58fRNeDyuNvL17w9jMJ8KMSu0vxbg9Qy7JTDfXoL+ytob+Eaf9R+l7vNXIQtvxJMqCpbEEWitoCuQ3JlSpO/rAlTH71c6jtDS4FBYTlapyfXJb9YN/I/tRnwNS0dW4rej6sPVlcwDZjr/fK0Aq3HXyfWinADslIIQB4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ccAgNdx7; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EBt7PZDc"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ccAgNdx7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=njaYmSj7NsgZuP9t2XDk5YRe4rS9Fua7MTZGdrM8j+U=; t=1734697056;
-	x=1735129056; b=EBt7PZDcM1xpidh4nTPjdmCRP8erqLt87+V6Thuk+ipG+R3AEO+LsAbPUuscL
-	7yWMhluTXjJqkwBcP01dpNfflBcoLbfuHNzG37uFYyHIje6QtbS6IBPsgy+M6OflG9Ily9m+rmYhu
-	LYT4Mtx6qdk9T40EgBu/d6ipjT+3MrU1mVW893SnAUYeWMBJmOrOYl6LWx+utgW4I/hLv7DRj2Qu6
-	/hvK0/HobN9kbs2mgPz9y7NyeORiqaa1rfGDv3sGtuVfEkRznLFsKmTMOggpREKdm2tcwGc82xUx/
-	B1HsLCYbHoYI0QbexLv9DfxXf+AFTJMN8kz6snFQEvAS7o5bsg==;
+	References; bh=43EC6zhLcA6SScyhCcW1aE5Xq1dSus45K3fz9GCKFAY=; t=1734698520;
+	x=1735130520; b=ccAgNdx70FmR/7usHurP7+F+F8ThWlURzUNd9bsAD6/fXU+sdll4GsRLzQ7xl
+	EU+elnNBpthNvMSt5IzNNyZlYRG4nPYKRIVjQIlzle95jGOMeNh8sdKnvGVb9nZbTxD3sELHVS6rz
+	Q9Fm078OP5WpPith7sGkrln2dyUdkJi7bd80OebRkutZL8C41VhEvZOm1YQ2uBQhZv7CvgVjcs/W9
+	zmAg5g/pywYaHE/QPS/Y223Py05895lx6lCqN0tsaY7J/2Fu9g9cqT7zT7yJWGEysbwVzHYlZBjYM
+	t/xWajyv2hVP+iAlP1jk1dPc/FpwsVsUhEPFxcVNIr4VSijujw==;
 Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tObwa-00Clko-0f;
-	Fri, 20 Dec 2024 13:17:24 +0100
-Message-ID: <9227dbbf-54b6-4fa8-a14f-22e5a1ec6a96@leemhuis.info>
-Date: Fri, 20 Dec 2024 13:17:23 +0100
+	id 1tOcKJ-00CqtN-0q;
+	Fri, 20 Dec 2024 13:41:55 +0100
+Message-ID: <b431f1c0-1705-4ac9-a43f-f01d3d442dc6@leemhuis.info>
+Date: Fri, 20 Dec 2024 13:41:54 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,15 +40,15 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/6] docs: more detailed instructions on handling
- regressions
+Subject: Re: [PATCH v1 2/6] docs: 6.Followthrough.rst: when to involved Linus
+ in regressions
 To: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
  regressions@lists.linux.dev, linux-doc@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Greg KH <gregkh@linuxfoundation.org>
 References: <cover.1733825632.git.linux@leemhuis.info>
- <aed019088599c6dc8aab8879dfda35785e01d316.1733825632.git.linux@leemhuis.info>
- <87msgzwoed.fsf@trenco.lwn.net>
+ <9344b8bf12ce5ebe838d154d5c4f1baf515a9452.1733825632.git.linux@leemhuis.info>
+ <87ikrnwoa9.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -94,38 +94,45 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  ysaCIZqWxrlhHWWmJMvowVMkB92uPVkxs5IMhSxHS4c2PfZ6D5kvrs3URvIc6zyOrgIaHNzR
  8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
  ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
-In-Reply-To: <87msgzwoed.fsf@trenco.lwn.net>
+In-Reply-To: <87ikrnwoa9.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734697056;53bda1af;
-X-HE-SMSGID: 1tObwa-00Clko-0f
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734698520;c6904247;
+X-HE-SMSGID: 1tOcKJ-00CqtN-0q
 
-On 13.12.24 17:14, Jonathan Corbet wrote:
+On 13.12.24 17:17, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
 > 
->> Add a few more specific guidelines on handling regressions to the
->> kernel's two most prominent guides about contributing to Linux, as
->> developers apparently work with quite different interpretations of what
->> Linus expects.
+>> Add a few notes on when to involve Linus in regressions. Part of this
+>> spells out slightly obvious things infrequent developers might not be
+>> aware of, while others are based on a recent statement from Linus[1].
 >>
->> Changes like this were asked for during the Maintainers Summit 2024. The
->> four rules of thumb spelled out are all closely based on statements
->> Linus made there; LWN documented all except "Expedite fixing regressions
->> that reached a release deemed for end users.." in their coverage [1].
->
-> "deemed" used in this way is a bit strange.  "intended" perhaps?
+>> This removes equivalent paragraphs from a section in
+>> Documentation/process/handling-regressions.rst, which will become mostly
+>> obsolete through this and follow-up changes.
+>>
+>> Link: https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/ [1]
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  Documentation/process/6.Followthrough.rst      | 17 +++++++++++++++++
+>>  Documentation/process/handling-regressions.rst | 17 -----------------
+>>  2 files changed, 17 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/Documentation/process/6.Followthrough.rst b/Documentation/process/6.Followthrough.rst
+>> index ed5e32348f2403..f9ae3a86ee0c49 100644
+>> --- a/Documentation/process/6.Followthrough.rst
+>> +++ b/Documentation/process/6.Followthrough.rst
+>> @@ -217,6 +217,23 @@ On procedure:
+>>     on the fix and the alignment with pull requests it might be beneficial to
+>>     have them in there for a day or two.
+>>  
+>> + - If a regression seems tangly, precarious, or urgent, consider CCing Linus on
+>> +   discussions and patch reviews; do the same if the responsible maintainers
+>> +   are suspected to be unavailable.
+> 
+> I'm not quite sure what "tangly" or "precarious" means in this case?
 
-Yeah, guess that is better. I had trouble finding something short that
-clearly excludes pre-releases.
+Hmmm. Something like "complicated", but that didn't feel right and then
+like went too far. I'll to with "urgent, tricky, or controversial" instead.
 
-> That little nit is all I can find to complain about in this one, though
-> :)
-
-Sorry for replying so late and many thx for looking into this series.
-Will only reply to the stuff where it's worth spending a few more words
-and pick up the rest of your suggestions without mentioning it to save
-us all some time.
-
-Thx again!
-
-Ciao, Thoprsten
+Ciao, Thorsten
