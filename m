@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472751C549D;
-	Fri, 20 Dec 2024 14:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA10F1C4A05;
+	Fri, 20 Dec 2024 14:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734704523; cv=none; b=KzVdakeFlpqgltLxeto+hPQTUkmJV4bZ7bkYj7dtjXEIKTPobepLSH6sD45M/A9pUJhw3YABHdXNVVo9VAfnfeWjezt9Q1U0Q4bB66Wjq/ZzAi1ANekaa2QQ5q+w72APeMK77JSfyPq9U+dFVgO3hf5rtUS1rCHE8yRTpdtPFgA=
+	t=1734704654; cv=none; b=I2jbQot9uI5M5RnZAdpEurswwg7jEoH+m5XGa8hnMv7fLQH/mjXAQsof48qgOpDDEz9Q5Yi/k61QXwWjITWH241NbAkj5KcvyHX8FhdwodaZ3HbplUhTsCWMbawoKYpqJi6cjUB1NiNSLIbc/2h5f3+stJsD3s39twpHJqF0XiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734704523; c=relaxed/simple;
-	bh=6ArJcFBQQB2oJcmVZRYL1rVdtW3Ohr6SmPhnc+nLql0=;
+	s=arc-20240116; t=1734704654; c=relaxed/simple;
+	bh=DWgibCmd/znRaMr8xYiLRXNep76dZyQpfRmgTpYmtLk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gSat58wtas/fc2GvKoUeOIAK9/sw0yj5lROnYQLgDwRhfkBeP/oXYYobJhto6maQkFWNk8O5be6uAAEXL2ZvgIG+fxFzCNXfMXz1OWYUoYB3hGJXkObtwe/4F6Pv29SuLT03il7uwq2o6dTeplAmePr10tn1nEeQb3HWnXD8FK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EC1qmtGk; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=Fb3NkLQRYTHo7XQO4STZLp0azImaIQKEgqd4ji/WR5Bky8RIHwdUSMy/5y3ls2W/ZVO8nlW8MVPxfYKNhWAHR6kj58gN1U/WQ2U/hpvPzmY98EiWNM3b/MsuqdfpX5ZdP1P1USvgw/SDcuPDfq9yuyEI3suV1IGESJqSM/f9Y/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oaLECanP; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EC1qmtGk"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oaLECanP"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=GQIsePj3NVclb14wDGgSac+mieoBv/Hr9lJbpQDCGvM=; t=1734704521;
-	x=1735136521; b=EC1qmtGkoRCZxSUqZ2iZNiw0NZ4oX3EXA1QXJiDdOdVLI9PCNsmVz/HXTBc6R
-	wjFdTJoAKjrebz5E8Z3h9wXTZRZfCWIsirjUkPl90dgs4nXCG2L+fkZ76cRE2yAIcQCOX3s5/abZu
-	TEaYR27pwk+LJHbOzWe8I1780bDoGyaksnvLiVEDxq/Mw6XcQSD40NuUc7T3xwFckws2KIPAQga/Z
-	CZ5dsvTyvPlFIlWkRa0ys5feOl34AVph4weIWnudyrfTZwM779riPgzDxzf04VWAc0J3CGuA2WRB0
-	4QPyLdY18haorspSQndKOkWV9+Rszbqz7J3uWRNyJgmqyt0egw==;
+	References; bh=TGuEWdSP/t4XKJxQ1YB7bM4x/aTyW0B7EWiMWUWypec=; t=1734704653;
+	x=1735136653; b=oaLECanPRhP+WeWE1EREQFfkl0xOLRGIwOZYBpPTZenCTzaEvwBVitDp3mW/G
+	teYGkuQMyJXN03zuozb58DyR0fu/9cfOmIH5Nna9CdvpPUvg5bCgz/CvyepwyC8ia0X+J/Sxv37hP
+	iNz9OrpxhODq2ujk4dS9kT9WSKWY2K+yC3eZilVncPfvwxyoHnlGC4OqKPRFDodGfxbEUTCJVQxJl
+	NDcW9dJ67Z9pTdlkG2tMtFuJtPEVdRZwQiyEmTfwKGik3MaSC6DZkpn9d+WxChO4W2XY8YHLlCeMZ
+	7hx+/zrSvgag0wBK6ENKV6e8lXOKQeWFYYwo0OKOQmWLxcCIWw==;
 Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tOdt6-00D8dp-27;
-	Fri, 20 Dec 2024 15:21:56 +0100
-Message-ID: <55e50653-a636-4009-a008-726de6b8be18@leemhuis.info>
-Date: Fri, 20 Dec 2024 15:21:55 +0100
+	id 1tOdvF-00D8xb-0q;
+	Fri, 20 Dec 2024 15:24:09 +0100
+Message-ID: <417b661e-7e09-4d93-9f82-c3da1203571e@leemhuis.info>
+Date: Fri, 20 Dec 2024 15:24:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,15 +40,15 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 5/6] docs: 6.Followthrough.rst: more specific advice on
- fixing regressions
+Subject: Re: [PATCH v1 6/6] docs: 6.Followthrough.rst: advice on handling
+ regressions fixes
 To: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
  regressions@lists.linux.dev, linux-doc@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Greg KH <gregkh@linuxfoundation.org>
 References: <cover.1733825632.git.linux@leemhuis.info>
- <fb5f1b83786c31cbbf56621b14d595a3091d9a40.1733825632.git.linux@leemhuis.info>
- <875xnnwnsb.fsf@trenco.lwn.net>
+ <e7344ff7a57b61380152defaa5ec13f06ac5d7d0.1733825632.git.linux@leemhuis.info>
+ <871pybwnnt.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -94,49 +94,38 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  ysaCIZqWxrlhHWWmJMvowVMkB92uPVkxs5IMhSxHS4c2PfZ6D5kvrs3URvIc6zyOrgIaHNzR
  8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
  ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
-In-Reply-To: <875xnnwnsb.fsf@trenco.lwn.net>
+In-Reply-To: <871pybwnnt.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734704521;afa45d94;
-X-HE-SMSGID: 1tOdt6-00D8dp-27
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734704653;1bed571d;
+X-HE-SMSGID: 1tOdvF-00D8xb-0q
 
-On 13.12.24 17:28, Jonathan Corbet wrote:
->> + - Expedite fixing regressions that recently reached releases deemed for end
->> +   users through new mainline releases or stable backports.  If the culprit
->> +   reached it in the past six weeks, aim to mainline a fix before the end of the
->> +   week after the next; if it landed during the past year, taking one more week
->
-> Can we say "within ten days" or some such instead?
+On 13.12.24 17:30, Jonathan Corbet wrote:
+> Thorsten Leemhuis <linux@leemhuis.info> writes:
+> 
+>> Add some advice on how to handle regressions as developer, reviewer, and
+>> maintainer, as resolving regression without unnecessary delays requires
+>> multiple people working hand in hand.
+>>
+>> This removes equivalent paragraphs from a section in
+>> Documentation/process/handling-regressions.rst, which will become mostly
+>> obsolete through this and follow-up changes.
+>>
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  Documentation/process/6.Followthrough.rst     | 24 ++++++++++++++++---
+>>  .../process/handling-regressions.rst          | 16 -------------
+>>  2 files changed, 21 insertions(+), 19 deletions(-)
+> 
+> Nothing really to complain about here (though I do worry a bit about the
+> idea that calling something a regression fix allows bypassing all of our
+> usual testing).
 
-Well, I chose that approach due to various small reasons that add up:
-
-- Many of us know that -rc releases are not special, but a lot of people
-seem to focus on them. For all of them it's not much of a differences if
-a fix is mainlined on Monday (Pacific Time) or Friday of the same week.
-
-- Greg often prepares new stable releases early during a week, so for
-any fix that needs to land there it's ideal if it reaches a new -rc, as
-then Greg will often pick it automatically soon afterwards; anything
-merged on Monday or Tuesday will likely miss a new stable-rc and thus
-often take a week longer to reach users, unless it's one of those weeks
-where Greg does more than one release per week.
-
-- I highly doubt that many subsystem maintainers will care much about
-such a "10 days for individual regressions" target, as that might easily
-mean they have to send additional PRs just to reach that goal. IOW: it
-will likely be ignored or even laughed at. And I don't blame them.
-That's why I went with something that developers and subsystem
-maintainers can actually implement, especially for the bigger subsystems
-where the weekdays when PRs to Linus are usually send are known.
-
-Side note & reminder: overall the biggest problem I see wrt to fixing
-regressions is that fixes exists, just take a quite a while to make it
-through the ranks (review, merge to subsystem tree, PR to linux).
-Especially the last step. Which is why patch 6 has that "Furthermore try
-to avoid holding onto regression fixes over weekends -- especially when
-some are marked for backporting to stable series." in it.
+Well, from Linus statements on the recent maintainers summit it seems he
+does not care too much about that. But I had a similar feeling, which is
+why I softened that bit somewhat into that "They for example are not
+required to spend time in linux-next, but depending on the fix and the
+alignment with pull requests it might be beneficial to have them in
+there for a day or two."
 
 Ciao, Thorsten
-
-
-
