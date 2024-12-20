@@ -1,131 +1,138 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA10F1C4A05;
-	Fri, 20 Dec 2024 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FC19ADBA
+	for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 19:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734704654; cv=none; b=I2jbQot9uI5M5RnZAdpEurswwg7jEoH+m5XGa8hnMv7fLQH/mjXAQsof48qgOpDDEz9Q5Yi/k61QXwWjITWH241NbAkj5KcvyHX8FhdwodaZ3HbplUhTsCWMbawoKYpqJi6cjUB1NiNSLIbc/2h5f3+stJsD3s39twpHJqF0XiU=
+	t=1734724201; cv=none; b=DGQt86uNOIdL6gZ6R6nfP1/jvxYEu/yoagrZahUsxeImiDJWXKXK/l/FCzE825nig3Mf0UNt5NJUyH85byfOMkKYZkT7s1LApzplV2Hs4xpe/qLyzcIwzjJTlEI0GlbT9SQ7I9InJa6MXGQKIybnzmZeko8fnPZrSYiDU27WKeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734704654; c=relaxed/simple;
-	bh=DWgibCmd/znRaMr8xYiLRXNep76dZyQpfRmgTpYmtLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fb3NkLQRYTHo7XQO4STZLp0azImaIQKEgqd4ji/WR5Bky8RIHwdUSMy/5y3ls2W/ZVO8nlW8MVPxfYKNhWAHR6kj58gN1U/WQ2U/hpvPzmY98EiWNM3b/MsuqdfpX5ZdP1P1USvgw/SDcuPDfq9yuyEI3suV1IGESJqSM/f9Y/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oaLECanP; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1734724201; c=relaxed/simple;
+	bh=EpsJakmyH9YSpaer6E1J1FTY7JPT3aDCwC4b8DqvOJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Zz+RFTPRMY9UcaImlYd+LU8ZkUHOybO1XQEuIuL70sJzRdlPV3IU6hcS2MymiABFrF9cUp7BRK/1MYbJ4EJtLorlMipmKpdkWvu4Zo9C9K4Ah4qB2Rnh4RjfofMms5miBs1zRet+ECDSbwhnlBRYIstq8e6aF2nvifKbl/aO7zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cj9DwAaD; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oaLECanP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=TGuEWdSP/t4XKJxQ1YB7bM4x/aTyW0B7EWiMWUWypec=; t=1734704653;
-	x=1735136653; b=oaLECanPRhP+WeWE1EREQFfkl0xOLRGIwOZYBpPTZenCTzaEvwBVitDp3mW/G
-	teYGkuQMyJXN03zuozb58DyR0fu/9cfOmIH5Nna9CdvpPUvg5bCgz/CvyepwyC8ia0X+J/Sxv37hP
-	iNz9OrpxhODq2ujk4dS9kT9WSKWY2K+yC3eZilVncPfvwxyoHnlGC4OqKPRFDodGfxbEUTCJVQxJl
-	NDcW9dJ67Z9pTdlkG2tMtFuJtPEVdRZwQiyEmTfwKGik3MaSC6DZkpn9d+WxChO4W2XY8YHLlCeMZ
-	7hx+/zrSvgag0wBK6ENKV6e8lXOKQeWFYYwo0OKOQmWLxcCIWw==;
-Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tOdvF-00D8xb-0q;
-	Fri, 20 Dec 2024 15:24:09 +0100
-Message-ID: <417b661e-7e09-4d93-9f82-c3da1203571e@leemhuis.info>
-Date: Fri, 20 Dec 2024 15:24:08 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj9DwAaD"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8e52so3619876a12.1
+        for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 11:49:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734724198; x=1735328998; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=CC7HPO/I2vxnnbATSGWhXRaNRcFje7+bdn9wnsTcce4=;
+        b=cj9DwAaDILH6tNxenxlhmbth+V5OySjsiMZo0uUTQQkiVXb/O5EsXamC1/Ws/w+zLj
+         94ktcBoi/hFu9gfEtYjeIAq4ECDkexy2nUn6beFdqqQHSl0KVg0CxeSmkfFWU2BfQkYI
+         rwBI5IpUwOFzz8oRQkHrcx2xolVxDkEkReGpvTymyI/tIo+mxaZzyYVtF7gilD05FSNB
+         rcs+puPAAnmLfDQ1bDRCYnCTDDHBkPuzAbDEOvQgt9R0zVOcEA75m38vovHpDUhIRy+R
+         ucubcBKG2ICni4yrx7P6HeWOk9QgvrxulFyd/L5bHfhlPkpDUzyIaZa+yx8RfHuCji8l
+         eh+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734724198; x=1735328998;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CC7HPO/I2vxnnbATSGWhXRaNRcFje7+bdn9wnsTcce4=;
+        b=XWepvWQqToc9IfNuNCNzeeNvf/Je65WSItGojipr5obm/ktvwV/+2clq1xic0lkaqV
+         3LB4CE3pUs3J8wrTe/7ynlRgB6lSwdHfwoPUC91qMMF9vqYd62YrlGRHWWFEFGJhb1IW
+         8ONOhHrScr/lRHm76gurZ4/I4/daN4y/9BqVQfyb9Gp3pdaD3VXnl0j6m2A2/3JX5YM4
+         SxgTax1IOx2CLxZYW37J8ScDQphNybh+A8F6QedkeNgFRDr+BZ6F/Ou3QrFvemX2FMkc
+         CEf22XqYvtVQa+UhYNli2BMsDG21j8PHDxYh9SJM2eeWyDAj86T5H3UG/VNDO2yrq3Ax
+         wuZQ==
+X-Gm-Message-State: AOJu0YyE730an408rT3pLiKLtDKk6cA7lTSgh8p22MbmkDUKXtPfFJ7N
+	O2xRKVVG2T8CRjq1ZzENU+MG5iTcaeTDA1PcZL25bRyRF5OaSS25
+X-Gm-Gg: ASbGncsyNf6jw3ieceXjTZNhE/joUtpajIVEeWy+r6TtU/STDCdOaLZZis9nqZTcIBF
+	XbfZPI2sLI4LJ5ogI83ZhDdckVUQdiNm6XbFNrgh6zmrM9sxJBR2XL3NIUt2gcMh2p97vxd0pz9
+	miBeY2VJdC+Fuw3l+FQk53GPjUQH7xy+qScj6WvG4fON7CMn/N/0AU+IwWOgXQSg7JUI4mxSWuU
+	aUF3pAYXp3/LErRpfarpWaNfWQy/0L4MJLUTus209fw0MiCos1Ubx60JxalYCY+G+U0us92QBOn
+	7m3pB2VrDMJFgH78
+X-Google-Smtp-Source: AGHT+IFdVrNmfcy1kGOF3NSBclOemYsDkCUQHayb8FORkO0KPdukKE0qeYugOEgfwCT7kyptMaY5kw==
+X-Received: by 2002:a05:6402:1e90:b0:5d3:ff30:b4cc with SMTP id 4fb4d7f45d1cf-5d81de39866mr3841332a12.33.1734724197570;
+        Fri, 20 Dec 2024 11:49:57 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80678c5a4sm2008707a12.38.2024.12.20.11.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2024 11:49:56 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 8C044BE2EE7; Fri, 20 Dec 2024 20:49:55 +0100 (CET)
+Date: Fri, 20 Dec 2024 20:49:55 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: regressions@lists.linux.dev, Zhao Mengmeng <zhaomengmeng@kylinos.cn>,
+	Jan Kara <jack@suse.cz>
+Cc: Daniel Reichelt <debian@nachtgeist.net>, linux-kernel@vger.kernel.org
+Subject: [regression] linux: Loop-mounted UDF ISOs no  longer readable
+Message-ID: <Z2XKY0f6on1UbwWb@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 6/6] docs: 6.Followthrough.rst: advice on handling
- regressions fixes
-To: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
- regressions@lists.linux.dev, linux-doc@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <cover.1733825632.git.linux@leemhuis.info>
- <e7344ff7a57b61380152defaa5ec13f06ac5d7d0.1733825632.git.linux@leemhuis.info>
- <871pybwnnt.fsf@trenco.lwn.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <871pybwnnt.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734704653;1bed571d;
-X-HE-SMSGID: 1tOdvF-00D8xb-0q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13.12.24 17:30, Jonathan Corbet wrote:
-> Thorsten Leemhuis <linux@leemhuis.info> writes:
+Hi Jan, hi Zhao,
+
+In Debian we got he following report, full quoted below from Daniel
+Reichelt, dass after updating to 6.1.115 (and later, confirmed up to
+6.1.119), loop-mounted UDF ISOs are no longer readable:
+
+> Hi,
 > 
->> Add some advice on how to handle regressions as developer, reviewer, and
->> maintainer, as resolving regression without unnecessary delays requires
->> multiple people working hand in hand.
->>
->> This removes equivalent paragraphs from a section in
->> Documentation/process/handling-regressions.rst, which will become mostly
->> obsolete through this and follow-up changes.
->>
->> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
->> ---
->>  Documentation/process/6.Followthrough.rst     | 24 ++++++++++++++++---
->>  .../process/handling-regressions.rst          | 16 -------------
->>  2 files changed, 21 insertions(+), 19 deletions(-)
+> in 6.1.112-1 I could loop-mount Windows Setup ISOs (downloaded from M$; hashes
+> are fine; 10/11, DE/EN don't seem to make any difference) and access their
+> content perfectly fine, i.e. share the /sources/ sub-directory via samba for
+> netinstall scenarios.
 > 
-> Nothing really to complain about here (though I do worry a bit about the
-> idea that calling something a regression fix allows bypassing all of our
-> usual testing).
+> Starting with 6.1.115-1, the ISOs can be mounted, the root-dir is accessible
+> and `stat $mntpt/sources` gives output as well. However `ls $mntpt/sources`
+> hangs and the kernel log is spammed with entries like
+> 
+> ---------------8<-------------------------
+> 2024-12-11T14:53:19.616728+01:00 srv kernel: [182394.024828] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.629970+01:00 srv kernel: [182394.038041] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.641623+01:00 srv kernel: [182394.049714] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.654841+01:00 srv kernel: [182394.062928] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.666495+01:00 srv kernel: [182394.074615] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.679747+01:00 srv kernel: [182394.087833] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.691394+01:00 srv kernel: [182394.099510] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.704646+01:00 srv kernel: [182394.112727] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.716283+01:00 srv kernel: [182394.124400] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.729539+01:00 srv kernel: [182394.137618] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.741185+01:00 srv kernel: [182394.149279] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.754422+01:00 srv kernel: [182394.162494] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> 2024-12-11T14:53:19.766071+01:00 srv kernel: [182394.174159] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
+> 2024-12-11T14:53:19.779289+01:00 srv kernel: [182394.187375] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
+> ---------------8<-------------------------
+> 
+> 
+> 6.1.119-1 shows the same behaviour.
+> Let me know if you need additional info.
 
-Well, from Linus statements on the recent maintainers summit it seems he
-does not care too much about that. But I had a similar feeling, which is
-why I softened that bit somewhat into that "They for example are not
-required to spend time in linux-next, but depending on the fix and the
-alignment with pull requests it might be beneficial to have them in
-there for a day or two."
+We have not a full bisect, but Daniel confirmed already in
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089698#22 some
+observations:
 
-Ciao, Thorsten
+> OK:
+>   6.1.112-1
+> BAD:
+>   6.1.115-1
+>   6.1.119-1
+> OK again:
+>   6.3.1-1~exp1
+>   current trixie
+>   current sid
+
+(current trixie is 6.11.10 based kernel, current sid is based on
+6.12.5 kernel).
+
+Dies this ring some bell to you?
+
+#regzbot introduced: v6.1.112..v6.1.115
+#regzbot monitor: https://bugs.debian.org/1089698
+
+Regards,
+Salvatore
