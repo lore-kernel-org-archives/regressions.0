@@ -1,162 +1,131 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07001C54A4
-	for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 12:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9993670818;
+	Fri, 20 Dec 2024 12:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734696950; cv=none; b=uo7tfXdxTxftWUKxPVpFBcBlNH9CiszH5ZHD5j1E5OMF07W1/CrT8A7g1fyJDdR9VT0EKmvNmrSyAry1WaHTLD0RvdD/pivHw9GQTQDiCAmars+SjLo3Whrw1GuNcD+ClH1XEHJiEdaktGQc7D8pLBsZLid9PqyHkIZYB8Cbg4k=
+	t=1734697059; cv=none; b=ArP6yVvc6p8S+KMEQ165l2B7gfcWgy9hAG2bbAnE6sp2HyM7iqspN/SgmvrM9HSox1zu2usjAWazd3vJ/crSrQILgi5VQNDRAvY3NmtRnyhhLYHnAAsO5evw7QCfEglAQQkriE1STADduvpobnGcSna3DJ/ej3BaNHIsoT5Ltzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734696950; c=relaxed/simple;
-	bh=1FfFAy6dqhyPeiJL2W7VmhgU8cgOK5qtgPPuAHaz88E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tbhfm+oEnc85B/elkiF6d4jfC3ZEgjNq3Xl4qfijo5xQzSUq/njuP8N9T9M//rQRvLgzWTfO74XYGPb/EWtYYXyGQIN9M4eKjVjdK2volgprDdPgo9zoYAdgOQV3iktEvsmAZsSee1nsTEoO/vmMRv7sdUyTvkzbdYm89872xWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com; spf=pass smtp.mailfrom=hyperbeam.com; dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b=OrbhLgfv; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyperbeam.com
+	s=arc-20240116; t=1734697059; c=relaxed/simple;
+	bh=EQaMA6e2Y2MZEvX+SWyAU79drm8IWa6fbbIN0TiuXkU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWsJ+Ocs9lQmwDRCHr1/Jtf/P2leK7jfePezI8VKiT0pEtgOLHZIDPVOw64ftIxFLzEGBUFqxVZzRx3pTCPPAYg6iHr5p/+sXRv2Pts3rIFjAVuZDe9qfGwX53uGQBV1g4UZkxDjpWVeU+iC/NN3dSB6QXIP0xttluTajZh8Kd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EBt7PZDc; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b="OrbhLgfv"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-71e3eb8d224so476683a34.2
-        for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 04:15:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hyperbeam-com.20230601.gappssmtp.com; s=20230601; t=1734696947; x=1735301747; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NdpCDurukw6jqUijSW3kFmnh8o3vQPLCGbMsoFLI7qs=;
-        b=OrbhLgfvwitrkY4LqWAMNpbxtH1D9dOMJEolxy9gmFlBaefLdSaidhGeoDSEOt1iJ0
-         c7AajdRBsauqsx75/emFaZGw6+IUycM1AsK8P4VdB8qxvS+08laElsdewjv83ZPvNQZ0
-         SL3df/Cmt9EL99zeUGyIf63moCC4QNvZYyFyFfr68xOZZZ/SwjZVrG1+pPnvle/1DK52
-         LbNcvtU+nsTB1kIJHONiwMA2AYS50MKf7SP6xJM/WATEK40HiJTvHruZw5Pn5ioC3ZYj
-         pvvmIXnCRxkavRRsSLrS+myuKqGttJ16YRnPm8JPuSFucjr0akqJskMq4RP+lf/HGPsa
-         Rabg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734696947; x=1735301747;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NdpCDurukw6jqUijSW3kFmnh8o3vQPLCGbMsoFLI7qs=;
-        b=eC0pIY5GjFE/O5HUIuQ2SCLHXI+TebvEqwVnofqLt9Lh2grQLL7wij5wZNpqwUpsFs
-         vIS9Gd/S4pWJ4MYMq2TqzrUnryUgi9dfRg7jfT6opI/EGBTvJ8H1xa4K/Y54lOGwvPJP
-         RviZQ/PME62IOx6y5SrQNmCM3VWf0F0bxis7n+ao3xkwXRcdkmySMlwHkaUGvitI6PCV
-         XlYomsBHXrzCt9DPHSghKYW7sSZr5ZUYHPuankRrD7G6gnIpypHkzedDplkONKXW2Y0X
-         eMt34k6Dy/VfpDcc4wPRoedHo1mVQftWTCO4ZfhtwsyTtFihNTkA75KXgj9Oa4nzafeW
-         32GA==
-X-Gm-Message-State: AOJu0Yw66iN2j85u50eK1fHJ2/8nZoMTafZ+HuK4oFpOwSO7r9PKx1zQ
-	0B8BJAeQgQIH7RkFx81khccZuj5OuIbDk5gRw3IDMFSfuZxBRXZfiypsqazWw6hSYFWTYKg8OTp
-	06mjmtqohu+4azyPsct8FkdEAr7FLviOswNmlfDcssaRmVPvyJ89wlScd
-X-Gm-Gg: ASbGncuxsQIlu2i8orNWIZG1+vWPKYryvIXBM//H6M9/BHQCIBv5lX4oGoEitC3fEAX
-	lVuH4yzDVjtV/TagxZZwLmUqutoNneSekZ23zjZUIVz9LRpodE+NslAu5SsdiPf76X0YG
-X-Google-Smtp-Source: AGHT+IHBm+h34Iyifc5RhtxtU/PklG1tn/zIhV+W/kyF4TCUigoyIsLVIH5PX8uPvbtzTrsBD2ftS8V8zwthhFP36Sk=
-X-Received: by 2002:a05:6870:2a41:b0:29e:5de2:cffb with SMTP id
- 586e51a60fabf-2a7fb0bf91fmr1174528fac.17.1734696947496; Fri, 20 Dec 2024
- 04:15:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EBt7PZDc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=njaYmSj7NsgZuP9t2XDk5YRe4rS9Fua7MTZGdrM8j+U=; t=1734697056;
+	x=1735129056; b=EBt7PZDcM1xpidh4nTPjdmCRP8erqLt87+V6Thuk+ipG+R3AEO+LsAbPUuscL
+	7yWMhluTXjJqkwBcP01dpNfflBcoLbfuHNzG37uFYyHIje6QtbS6IBPsgy+M6OflG9Ily9m+rmYhu
+	LYT4Mtx6qdk9T40EgBu/d6ipjT+3MrU1mVW893SnAUYeWMBJmOrOYl6LWx+utgW4I/hLv7DRj2Qu6
+	/hvK0/HobN9kbs2mgPz9y7NyeORiqaa1rfGDv3sGtuVfEkRznLFsKmTMOggpREKdm2tcwGc82xUx/
+	B1HsLCYbHoYI0QbexLv9DfxXf+AFTJMN8kz6snFQEvAS7o5bsg==;
+Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1tObwa-00Clko-0f;
+	Fri, 20 Dec 2024 13:17:24 +0100
+Message-ID: <9227dbbf-54b6-4fa8-a14f-22e5a1ec6a96@leemhuis.info>
+Date: Fri, 20 Dec 2024 13:17:23 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "Amby @ Hyperbeam" <amby@hyperbeam.com>
-Date: Fri, 20 Dec 2024 12:15:36 +0000
-Message-ID: <CAFyAQLvdZVRFYW+xbHCu3j354O4=YDVyygXdw3ozEMfFbHkdig@mail.gmail.com>
-Subject: netfilter regression on aarch64 16k page size
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, pablo@netfilter.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] docs: more detailed instructions on handling
+ regressions
+To: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
+ regressions@lists.linux.dev, linux-doc@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <cover.1733825632.git.linux@leemhuis.info>
+ <aed019088599c6dc8aab8879dfda35785e01d316.1733825632.git.linux@leemhuis.info>
+ <87msgzwoed.fsf@trenco.lwn.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <87msgzwoed.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734697056;53bda1af;
+X-HE-SMSGID: 1tObwa-00Clko-0f
 
-Greetings,
-We are seeing a regression in 6.6.66 which I have narrowed down to this commit:
-stable: 86c27603514cb8ead29857365cdd145404ee9706
-upstream: 7ffc7481153bbabf3332c6a19b289730c7e1edf5
+On 13.12.24 17:14, Jonathan Corbet wrote:
+> Thorsten Leemhuis <linux@leemhuis.info> writes:
+> 
+>> Add a few more specific guidelines on handling regressions to the
+>> kernel's two most prominent guides about contributing to Linux, as
+>> developers apparently work with quite different interpretations of what
+>> Linus expects.
+>>
+>> Changes like this were asked for during the Maintainers Summit 2024. The
+>> four rules of thumb spelled out are all closely based on statements
+>> Linus made there; LWN documented all except "Expedite fixing regressions
+>> that reached a release deemed for end users.." in their coverage [1].
+>
+> "deemed" used in this way is a bit strange.  "intended" perhaps?
 
-Kernel version: 6.6.66 on aarch64 with 16k page size
-Last known good version: 6.6.65
+Yeah, guess that is better. I had trouble finding something short that
+clearly excludes pre-releases.
 
-Steps to repro:
-- run a 16k page size kernel (check with getconf PAGESIZE)
-- try to load an nftables config file on the problem
+> That little nit is all I can find to complain about in this one, though
+> :)
 
-Expected:
-- no errors
+Sorry for replying so late and many thx for looking into this series.
+Will only reply to the stuff where it's worth spending a few more words
+and pick up the rest of your suggestions without mentioning it to save
+us all some time.
 
-Actual:
-- system enters a broken state, with the following trace in dmesg:
-[   40.939230] Unable to handle kernel paging request at virtual
-address ffff00015ad7e4cc
-[   40.939841] Mem abort info:
-[   40.940079]   ESR = 0x0000000096000021
-[   40.940389]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   40.940820]   SET = 0, FnV = 0
-[   40.941042]   EA = 0, S1PTW = 0
-[   40.941289]   FSC = 0x21: alignment fault
-[   40.941570] Data abort info:
-[   40.941805]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-[   40.942229]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[   40.942857]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[   40.943313] swapper pgtable: 16k pages, 48-bit VAs, pgdp=00000000474f0000
-[   40.943865] [ffff00015ad7e4cc] pgd=180000043f7e8003,
-p4d=180000043f7e8003, pud=180000043f7e4003, pmd=180000043f52c003,
-pte=006800019ad7cf07
-[   40.945664] Internal error: Oops: 0000000096000021 [#1] SMP
-[   40.946055] Modules linked in: zstd zram zsmalloc nf_log_syslog
-nft_log nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject
-nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables
-crct10dif_ce polyval_ce polyval_generic ghash_ce tcp_bbr sch_fq fuse
-nfnetlink vsock_loopback vmw_vsock_virtio_transport_common
-vmw_vsock_vmci_transport vmw_vmci vsock bpf_preload qemu_fw_cfg
-ip_tables squashfs virtio_net net_failover virtio_blk gpio_keys
-failover virtio_mmio virtio_scsi virtio_console virtio_balloon
-virtio_gpu virtio_dma_buf megaraid_sas
-[   40.950262] CPU: 7 PID: 116 Comm: kworker/7:1 Not tainted 6.6.67-1-lts #1
-[   40.951542] Hardware name: netcup KVM Server, BIOS VPS 2000 ARM G11
-08/07/2024
-[   40.952287] Workqueue: events_power_efficient nft_rhash_gc [nf_tables]
-[   40.952798] pstate: 20401005 (nzCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-[   40.953401] pc : nft_rhash_gc+0x208/0x2c0 [nf_tables]
-[   40.954054] lr : nft_rhash_gc+0x134/0x2c0 [nf_tables]
-[   40.954806] sp : ffff800081fb3cf0
-[   40.955138] x29: ffff800081fb3d50 x28: 0000000000000000 x27: 0000000000000000
-[   40.955974] x26: ffff0000cc760ef0 x25: ffff0000ccba9c80 x24: ffff0000cc758f78
-[   40.956750] x23: 0000000000000010 x22: ffff0000ca789000 x21: ffff0000cc760f78
-[   40.957455] x20: ffffd62d3ac3be40 x19: ffff00015ad7e4c0 x18: 0000000000000000
-[   40.959005] x17: 0000000000000000 x16: ffffd62d37926880 x15: 000000400002fef8
-[   40.959614] x14: ffffffffffffffff x13: 0000000000000030 x12: ffff0000cc760ef0
-[   40.960197] x11: 0000000000000000 x10: ffff800081fb3d08 x9 : ffff0000cba89fe0
-[   40.960739] x8 : 0000000000000003 x7 : 0000000000000000 x6 : 0000000000000000
-[   40.961287] x5 : 0000000000000040 x4 : ffff0000cba89ff0 x3 : ffff00015ad7e4c0
-[   40.961814] x2 : ffff00015ad7e4cc x1 : ffff00015ad7e4cc x0 : 0000000000000004
-[   40.962339] Call trace:
-[   40.962531]  nft_rhash_gc+0x208/0x2c0 [nf_tables]
-[   40.962911]  process_one_work+0x178/0x3e0
-[   40.963710]  worker_thread+0x2ac/0x3e0
-[   40.964530]  kthread+0xf0/0x108
-[   40.966259]  ret_from_fork+0x10/0x20
-[   40.967287] Code: 54fff9a4 d503201f d2800080 91003261 (f820303f)
-[   40.968245] ---[ end trace 0000000000000000 ]---
+Thx again!
 
-faddr2line gave me the following:
-nft_rhash_gc+0x208/0x2c0:
-__lse_atomic64_or at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic_lse.h:132
-(inlined by) arch_atomic64_or at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic.h:65
-(inlined by) raw_atomic64_or at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-arch-fallback.h:3771
-(inlined by) raw_atomic_long_or at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-long.h:1069
-(inlined by) arch_set_bit at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/atomic.h:18
-(inlined by) set_bit at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/instrumented-atomic.h:29
-(inlined by) nft_set_elem_dead at
-/root/gg/setup/linux-lts/src/linux-6.6.67/./include/net/netfilter/nf_tables.h:1576
-(inlined by) nft_rhash_gc at
-/root/gg/setup/linux-lts/src/linux-6.6.67/net/netfilter/nft_set_hash.c:375
-
-By looking at the diff between 6.6.65 and 6.6.66 I was able to narrow
-it down to the above commit and I can confirm that reverting it fixes
-the issue.
-
-Best
--- 
-Amby Balaji
-Co-founder & CTO
-Hyperbeam, Inc.
+Ciao, Thoprsten
