@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB121C5F37;
-	Fri, 20 Dec 2024 13:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3871A8405;
+	Fri, 20 Dec 2024 13:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734700416; cv=none; b=Pa6TKGRQ8Nm2irMgQcFE6dRpkkoyb9zsQbiRpvIWQvpQM5Sc5iiQIv/+E4VwBGi8V7hNhTILn3ENmwNb/npOZIBQQYWEGgfj0w+4fn7xHhFUvRcake0H7mzmK8N26dV9VgxHqnEiUc150KYKll1NHw+u6/RQJsLY2FWlgr2W2Kg=
+	t=1734700699; cv=none; b=daTeGKKhFHDoz2pG0tbdjc3IgVllY2mFq9nQyzV1+AwjczmK2THfeSm4Ji/K8+UmhysPmETPXJoKS0l8DwxHlGOwsXmqW0S7ngLzPvbunAcwpZiRC0XLSRf5af/y8Ha/g59FBMIpGRdaOCNtrA/XPYIVscT6M6UAmDFsb4O6zBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734700416; c=relaxed/simple;
-	bh=nw71UcSITtn+v9KH8wZOwlxUZfijdplRRsef/oVpDVw=;
+	s=arc-20240116; t=1734700699; c=relaxed/simple;
+	bh=gJbC5k+MNQm/2C6Fbrc9K74QdIty2hYiMEhuFHJN118=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hWKvgpZraNAAuIhtCQofzTo5yoxbnSMwsqIqU7z1qrDR8HxiRqrB7fw2NG6Pza54CLtU54SCyeE1q3U+YqUtBT+xl1Aahv6ij7owSgw5RfheSHH1l51kUmgNlnU4QHzATDBMS8JLVdsnSWfPL7k0flMg1d5NEp7th+uUCw/+wkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SlgCrKFE; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=W6C5nPdZHeRhS555Zy+ZQH0D+hc6GakdB6hbCP2Nzw42vid/6qM3cQJKdNT0bwNPoFBXVPp2IYLRJZNfVzlC4QLF7FCLflJvOtn7Efv8z3n1vJh2+70J1AqjrAA9uAyBBYSf0tS0xHWd0RVJZdqcTWISE1urKyyKo+835/YgdGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YUb/eihg; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SlgCrKFE"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YUb/eihg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=eCyqR2M+g78rWHNsbS2JU6hYufz9nzoWytPFPK9eYn4=; t=1734700414;
-	x=1735132414; b=SlgCrKFEou7HrE7LiSkjh/ElEp0gmgyHcztAe91Ggu+TkMufZBdvJmNiRVcvA
-	wSiBkhy5Ki5ofZEuvmj3mMLL2feTJ/cdAlPMNnlyUE5ISGGxIxEB//pgrd8qEj0Qfn5HP7glDfozQ
-	0Cs4YJOojXChcm/2aZAWkHuVdmL2gACDikPiWznCTJP5al+JVeFYFpPTZlLZftcLYwJ6woqeSAtYM
-	ysgyeX4mHpsQGpdeqHGpPlpoZWPChgTwkc974J1e2Xx61ul//wx8Z0IhYi8QGn8p5EfPdW+S/umlG
-	uldoYW86Jb7ftOax5OemfN5YfvElV1U8Lk4ZGzg7MQ7P0AAiOQ==;
+	References; bh=TKbUKCEr4WPI3Q6PPPDctimFPTXm2GIzwWdMd0YHRl4=; t=1734700697;
+	x=1735132697; b=YUb/eihgON6h4u885iQ+4/4Ie7aEsszJ46ldYHpVH7yh4LaEBX11Ttj8TfyxQ
+	1zGsjCDhVXXQenoA9ViduID4fGQeya6baHC08xVsrKVToVgCfL2/zwOHy9Vt/xEJ2dbi08BSMne46
+	FY5ZdcTKewpINAOlC/dAOTnSICCd1MXQNROVFQNeJpKUrRhxGrNTeG55Uj1tvbiYP+IxkMDvSgEht
+	Wp7Jz19kojtlvfPfbLbOqeU7U8TPN8SuMSclJG18rDDDt/S+NaA3RDUKmkVI6C6BoKNoH+tX+l3AN
+	Hx1po5Tj8nUQD1MkTwYP3zg42g0MVIGP9E/Sn2OOzkAD3S5muQ==;
 Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tOcor-00Cwa9-0G;
-	Fri, 20 Dec 2024 14:13:29 +0100
-Message-ID: <38f33891-ce19-4df5-9bab-d53443393305@leemhuis.info>
-Date: Fri, 20 Dec 2024 14:13:28 +0100
+	id 1tOctP-00CxJr-1c;
+	Fri, 20 Dec 2024 14:18:11 +0100
+Message-ID: <13cc09ff-1a4c-46bf-941c-ddc28e60b0ce@leemhuis.info>
+Date: Fri, 20 Dec 2024 14:18:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,15 +40,15 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/6] docs: 6.Followthrough.rst: interaction with stable
- wrt to regressions
+Subject: Re: [PATCH v1 4/6] docs: 6.Followthrough.rst: tags to use in
+ regressions fixes
 To: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
  regressions@lists.linux.dev, linux-doc@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Greg KH <gregkh@linuxfoundation.org>
 References: <cover.1733825632.git.linux@leemhuis.info>
- <d7793d2e788e7d98a67e90f85a77d42dab1b8da1.1733825632.git.linux@leemhuis.info>
- <87ed2bwo46.fsf@trenco.lwn.net>
+ <5913a87f05a5fe53afb9aae151f60f83bda128e8.1733825632.git.linux@leemhuis.info>
+ <87a5czwnxv.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -94,67 +94,41 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  ysaCIZqWxrlhHWWmJMvowVMkB92uPVkxs5IMhSxHS4c2PfZ6D5kvrs3URvIc6zyOrgIaHNzR
  8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
  ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
-In-Reply-To: <87ed2bwo46.fsf@trenco.lwn.net>
+In-Reply-To: <87a5czwnxv.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734700414;2d5cffaf;
-X-HE-SMSGID: 1tOcor-00Cwa9-0G
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1734700697;172ed285;
+X-HE-SMSGID: 1tOctP-00CxJr-1c
 
-
-
-On 13.12.24 17:20, Jonathan Corbet wrote:
+On 13.12.24 17:24, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
-> 
->> Add a few notes on how the interaction with the stable team works when
->> it comes to mainline regressions that also affect stable series.
->>
->> This removes equivalent paragraphs from a section in
->> Documentation/process/handling-regressions.rst, which will become mostly
->> obsolete through this and follow-up changes.
->>
->> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
->> ---
->>  Documentation/process/6.Followthrough.rst     | 22 +++++++++++++++++++
->>  .../process/handling-regressions.rst          | 19 ----------------
->>  2 files changed, 22 insertions(+), 19 deletions(-)
->>
+> [...]
 >> diff --git a/Documentation/process/6.Followthrough.rst b/Documentation/process/6.Followthrough.rst
->> index f9ae3a86ee0c49..763a80d21240f0 100644
+>> index 763a80d21240f0..2ba16a71aba9b4 100644
 >> --- a/Documentation/process/6.Followthrough.rst
 >> +++ b/Documentation/process/6.Followthrough.rst
->> @@ -234,6 +234,28 @@ On procedure:
+>> @@ -234,6 +234,22 @@ On procedure:
 >>     requests again should ideally come directly from maintainers or happen in
 >>     accordance with them.
->>  
->> +Regarding stable and longterm series:
->> +
->> + - You are free to leave handling regressions to the stable team if the problem
->> +   at no point in time occurred with mainline or was fixed there already.
->> +
->> + - When receiving reports about regressions in recent stable or longterm kernel
->> +   series, consider evaluating at least briefly if the issue might happen in
->> +   current mainline as well -- and if that seems likely, take hold of the
->> +   report.  If in doubt, ask the reporter to check mainline.
->> +
->> + - Fix regressions quickly in mainline, whenever you want to swiftly resolve one
->> +   that recently made it into a mainline, stable, or longterm release; in urgent
->> +   cases hence involve Linus to fast-track fixes (see above).  This route is
+> [...]
+>> + - Did the culprit make it into a proper mainline release during the past
+>> +   twelve months? Or is it a recent mainline commit backported to stable or
+>> +   longterm releases in the past few weeks? Then you are kindly asked to ensure
+>> +   stable inclusion as described by Documentation/process/stable-kernel-rules.rst.
+>> +   Usually you want to realized thos by adding a "Cc: stable@vger.kernel.org" to
 > 
-> I'm not quite sure what that sentence is intended to say.  Might
-> something like s/quickly/first/ better convey the intent?  Maybe also
-> s/want/need/ ?
+> Something went a bit astray in that sentence.  "you want to do this" ?
 
-Hmmm. I went with this:
+Uhhps, yeah, went with 'Many developers realize this by adding a "Cc:
+stable@vger.kernel.org" to the patch description.'. That also leaves...
 
-"""
- - You must fix any regression in mainline first that also happens in
-mainline, stable, or longterm releases due to the same change.  That's
-because the stable team only addresses such problems once they were
-fixed in mainline. In urgent cases hence involve Linus to fast-track
-fixes (see above).
-"""
+>> +   the patch description.  Note, a "Fixes:" tag alone does not guarantee a
+>> +   backport, as the stable team does not pick up all such changes and might
+>> +   silently drop them in case trouble arises.
+> 
+> In the past we have had subsystem maintainers who didn't want people to
+> put CC: stable tags into their own patches; not sure if that's still the case?
 
-I liked the old approach a bit better, but yeah, I guess it overloaded
-the first sentence. :-/
+...it somewhat open for such subsystems, if there still are any.
 
 Ciao, Thorsten
