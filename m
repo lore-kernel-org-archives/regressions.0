@@ -1,193 +1,162 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F131853
-	for <regressions@lists.linux.dev>; Thu, 19 Dec 2024 23:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07001C54A4
+	for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 12:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734651200; cv=none; b=e6fxiCn0AD2Ds8vBpFEcv/947z2fGPgfqkrD0QyO2oZGt/A44n7x1b8uhP8X9F755OEXVFaT/4bPjn3jziGEfwLHRygddAK1g2Eigc0XzasEICVO0zHuAJhgWwrLtMc/9g3YIdxfS+olRhEQbd003z0Eu2bzRy8cCDa7qxqNGJI=
+	t=1734696950; cv=none; b=uo7tfXdxTxftWUKxPVpFBcBlNH9CiszH5ZHD5j1E5OMF07W1/CrT8A7g1fyJDdR9VT0EKmvNmrSyAry1WaHTLD0RvdD/pivHw9GQTQDiCAmars+SjLo3Whrw1GuNcD+ClH1XEHJiEdaktGQc7D8pLBsZLid9PqyHkIZYB8Cbg4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734651200; c=relaxed/simple;
-	bh=IGUlTiZB+8SYnvIyjl7ycth1V8p6AFVwQwmiellDTDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aPE2pmYwtccXm1GSnvT6N7soPc2jEY1u4GZLW2aaoihNvf3ErA8gj//NI9JW1tkIbZlThc2nMtTFW+qkv7wIxNF2oVJnQ0Vk2b89TQ9USnoZ269VzgNBOnittjhB/+YpjI4Fz+MrSEPLsfBiciAzaWA6NoCyq0Das9CiY72cSGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DSg+/rKv; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1734696950; c=relaxed/simple;
+	bh=1FfFAy6dqhyPeiJL2W7VmhgU8cgOK5qtgPPuAHaz88E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tbhfm+oEnc85B/elkiF6d4jfC3ZEgjNq3Xl4qfijo5xQzSUq/njuP8N9T9M//rQRvLgzWTfO74XYGPb/EWtYYXyGQIN9M4eKjVjdK2volgprDdPgo9zoYAdgOQV3iktEvsmAZsSee1nsTEoO/vmMRv7sdUyTvkzbdYm89872xWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com; spf=pass smtp.mailfrom=hyperbeam.com; dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b=OrbhLgfv; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyperbeam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DSg+/rKv"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38632b8ae71so1020200f8f.0
-        for <regressions@lists.linux.dev>; Thu, 19 Dec 2024 15:33:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b="OrbhLgfv"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-71e3eb8d224so476683a34.2
+        for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 04:15:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1734651196; x=1735255996; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=plXzy0mqccglcjN60lQtMmRi6JM3/4v7bNfZ+B+BCEo=;
-        b=DSg+/rKvM8BQgHCkjX/gdAMoxZlI+Ra59YqCH/dodUgHWyRol9X+6xdYWW9SaohA6D
-         t7vpVzBvALPzPttiEsurT59h3PipZyZDamuk3PchuDRxC/YvsEg3gXNUeGERhsiomMND
-         NiY0TG3yLZDmuyefBbhcP8sB5hIbo49ChpexHPz0cXl0g9Gu+SIvDBwepL+d6XHXYS0I
-         OxG6jTHU1aLIZvsuwncaElG3XCc5ihDKPEJTrc2L6XqAR+A55cTtpAtLxuDriF1qZZC1
-         mU0un8PPyCmrbohPvLgf9IuVUZxUaV6fHb6FWhFC/vF0bCcdTIsU9imr7pqwxlnrT1zV
-         WuJw==
+        d=hyperbeam-com.20230601.gappssmtp.com; s=20230601; t=1734696947; x=1735301747; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NdpCDurukw6jqUijSW3kFmnh8o3vQPLCGbMsoFLI7qs=;
+        b=OrbhLgfvwitrkY4LqWAMNpbxtH1D9dOMJEolxy9gmFlBaefLdSaidhGeoDSEOt1iJ0
+         c7AajdRBsauqsx75/emFaZGw6+IUycM1AsK8P4VdB8qxvS+08laElsdewjv83ZPvNQZ0
+         SL3df/Cmt9EL99zeUGyIf63moCC4QNvZYyFyFfr68xOZZZ/SwjZVrG1+pPnvle/1DK52
+         LbNcvtU+nsTB1kIJHONiwMA2AYS50MKf7SP6xJM/WATEK40HiJTvHruZw5Pn5ioC3ZYj
+         pvvmIXnCRxkavRRsSLrS+myuKqGttJ16YRnPm8JPuSFucjr0akqJskMq4RP+lf/HGPsa
+         Rabg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734651196; x=1735255996;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=plXzy0mqccglcjN60lQtMmRi6JM3/4v7bNfZ+B+BCEo=;
-        b=UL8t1lLa5tA7N7TN+Lj7t7MyMwUasVV+S6XJXrZ5NxTwfvqE6O/9tKXRnITFge42CG
-         e1EgNPQRUBUFt52tCiNOcEbxuxKlWZQIjOWtIO0ZfRnu1DbqaSvSkxlP/MhCa1GXRgBy
-         2HvMU3dPXgKNCXcag/kAZxzjwX2khMMRyRyUnBlthth8Ad8haOPP2UIgVKIt6g3x6cmt
-         a40yzSS72K6sy/16gZ2JIJgXvAxJFQ5hifnfPa97FMI/ioKvULTDBR5zAx0OsBSWZYIA
-         idwWl9/7l8HJou45b2vVJIKQ7ysJiRfMm/g9wxxTJC+zoEyrLtO1oR9QI+0IBf931jW9
-         0/LA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6dXWsVzd69CNC/VzW0WTVulm4dQD+3HaniiKGQsNZOswLnEiFOLH2LutDWEukm5TYkHKgiVnz+OCyKw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyamnybcKM0hIuB6v4aP63IQmBYuOtiDKCAR6zDnCq2kJVw4AsU
-	jb4USrSQNiyoqK1K0P/KoymFH0ATZq3cA1UHrOQC0AUPZ1VrbJyeNvm1kgffDdM=
-X-Gm-Gg: ASbGncvf0omvNQ6WW67RXSnlaTF1QReHLndIxkBI8uh2g3ESAFTMv6FrPL3nERnyk4c
-	95m2eb/pvdiiwz0N14Sa/dFvSXBvn6yBVdhf1AFmk/tqXmBfVsop0tYxMfKdtjd2CiU6lyHeI8m
-	Uj7tuWpXtlo1akqS/+8svrf30I/Zg7IUTzbyhdPom7FZAa37zvBbLG1UVKDGPYtMijkizNF9Jd/
-	8APdYdFw/W7wTynkiCibLpIKKtXmeEXU4RQ2g9i3iKae1Xf0inTtxiE8764NWMvnQApmVwnMPhp
-	WutLw7mm
-X-Google-Smtp-Source: AGHT+IF6jsLKrygiCsaqg3pCcyY8MzhIQvO7tqSo5RX2vJWoS0uQZfdMN1myWFcxAw/3ExiSRCwNfw==
-X-Received: by 2002:a5d:5e09:0:b0:385:f16d:48b4 with SMTP id ffacd0b85a97d-38a223f7510mr934878f8f.40.1734651196065;
-        Thu, 19 Dec 2024 15:33:16 -0800 (PST)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad8162d0sm1883546b3a.12.2024.12.19.15.33.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2024 15:33:15 -0800 (PST)
-Message-ID: <023311e6-9666-4fe0-9c22-6a8409065539@suse.com>
-Date: Fri, 20 Dec 2024 10:03:08 +1030
+        d=1e100.net; s=20230601; t=1734696947; x=1735301747;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NdpCDurukw6jqUijSW3kFmnh8o3vQPLCGbMsoFLI7qs=;
+        b=eC0pIY5GjFE/O5HUIuQ2SCLHXI+TebvEqwVnofqLt9Lh2grQLL7wij5wZNpqwUpsFs
+         vIS9Gd/S4pWJ4MYMq2TqzrUnryUgi9dfRg7jfT6opI/EGBTvJ8H1xa4K/Y54lOGwvPJP
+         RviZQ/PME62IOx6y5SrQNmCM3VWf0F0bxis7n+ao3xkwXRcdkmySMlwHkaUGvitI6PCV
+         XlYomsBHXrzCt9DPHSghKYW7sSZr5ZUYHPuankRrD7G6gnIpypHkzedDplkONKXW2Y0X
+         eMt34k6Dy/VfpDcc4wPRoedHo1mVQftWTCO4ZfhtwsyTtFihNTkA75KXgj9Oa4nzafeW
+         32GA==
+X-Gm-Message-State: AOJu0Yw66iN2j85u50eK1fHJ2/8nZoMTafZ+HuK4oFpOwSO7r9PKx1zQ
+	0B8BJAeQgQIH7RkFx81khccZuj5OuIbDk5gRw3IDMFSfuZxBRXZfiypsqazWw6hSYFWTYKg8OTp
+	06mjmtqohu+4azyPsct8FkdEAr7FLviOswNmlfDcssaRmVPvyJ89wlScd
+X-Gm-Gg: ASbGncuxsQIlu2i8orNWIZG1+vWPKYryvIXBM//H6M9/BHQCIBv5lX4oGoEitC3fEAX
+	lVuH4yzDVjtV/TagxZZwLmUqutoNneSekZ23zjZUIVz9LRpodE+NslAu5SsdiPf76X0YG
+X-Google-Smtp-Source: AGHT+IHBm+h34Iyifc5RhtxtU/PklG1tn/zIhV+W/kyF4TCUigoyIsLVIH5PX8uPvbtzTrsBD2ftS8V8zwthhFP36Sk=
+X-Received: by 2002:a05:6870:2a41:b0:29e:5de2:cffb with SMTP id
+ 586e51a60fabf-2a7fb0bf91fmr1174528fac.17.1734696947496; Fri, 20 Dec 2024
+ 04:15:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: qemu-arm64: CONFIG_ARM64_64K_PAGES=y kernel crash on qemu-arm64
- with Linux next-20241210 and above
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, qemu-devel@nongnu.org,
- open list <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- linux-ext4 <linux-ext4@vger.kernel.org>, lkft-triage@lists.linaro.org,
- linux-mm <linux-mm@kvack.org>, Linux btrfs <linux-btrfs@vger.kernel.org>,
- =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- David Sterba <dsterba@suse.com>
-References: <CA+G9fYvf0YQw4EY4gsHdQ1gCtSgQLPYo8RGnkbo=_XnAe7ORhw@mail.gmail.com>
- <CA+G9fYv7_fMKOxA8DB8aUnsDjQ9TX8OQtHVRcRQkFGqdD0vjNQ@mail.gmail.com>
- <ac1e1168-d3af-43c5-9df7-4ef5a1dbd698@gmx.com>
- <feecfdc2-4df6-47cf-8f96-5044858dc881@gmx.com>
- <a3406049-7ab5-45b9-80bf-46f73ef73a4f@stanley.mountain>
- <0c46224b-ed2b-4c8e-aa96-d8f657f59b9f@stanley.mountain>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <0c46224b-ed2b-4c8e-aa96-d8f657f59b9f@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Amby @ Hyperbeam" <amby@hyperbeam.com>
+Date: Fri, 20 Dec 2024 12:15:36 +0000
+Message-ID: <CAFyAQLvdZVRFYW+xbHCu3j354O4=YDVyygXdw3ozEMfFbHkdig@mail.gmail.com>
+Subject: netfilter regression on aarch64 16k page size
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, pablo@netfilter.org
+Content-Type: text/plain; charset="UTF-8"
 
+Greetings,
+We are seeing a regression in 6.6.66 which I have narrowed down to this commit:
+stable: 86c27603514cb8ead29857365cdd145404ee9706
+upstream: 7ffc7481153bbabf3332c6a19b289730c7e1edf5
 
+Kernel version: 6.6.66 on aarch64 with 16k page size
+Last known good version: 6.6.65
 
-在 2024/12/20 02:07, Dan Carpenter 写道:
-> On Thu, Dec 19, 2024 at 06:10:56PM +0300, Dan Carpenter wrote:
->>>> Mind to test it with KASAN enabled?
->>>
->>
->> Anders is going to try that later and report back.
->>
-> 
-> Anders ran it and emailed me.  I was going to tell him to respond to
-> the thread but I decided to steal the credit.  #GreatArtists
-> 
->   BTRFS info (device loop0): using crc32c (crc32c-arm64) checksum algorithm
->   ==================================================================
->   BUG: KASAN: slab-out-of-bounds in __bitmap_set+0xf8/0x100
->   Read of size 8 at addr fff0000020e4a3c8 by task chdir01/479
->   
->   CPU: 1 UID: 0 PID: 479 Comm: chdir01 Not tainted 6.13.0-rc3-next-20241218 #1
->   Hardware name: linux,dummy-virt (DT)
->   Call trace:
->    show_stack+0x20/0x38 (C)
->    dump_stack_lvl+0x8c/0xd0
->    print_report+0x118/0x5e0
->    kasan_report+0xb4/0x100
->    __asan_report_load8_noabort+0x20/0x30
->    __bitmap_set+0xf8/0x100
->    btrfs_subpage_set_uptodate+0xd8/0x1d0 [btrfs]
->    set_extent_buffer_uptodate+0x1ac/0x288 [btrfs]
->    __alloc_dummy_extent_buffer+0x2cc/0x488 [btrfs]
+Steps to repro:
+- run a 16k page size kernel (check with getconf PAGESIZE)
+- try to load an nftables config file on the problem
 
-Thanks a lot. The problem is still inside the dummy extent buffer 
-allocation.
+Expected:
+- no errors
 
-This time it's again related to the uninitialized fs_info->* variables.
+Actual:
+- system enters a broken state, with the following trace in dmesg:
+[   40.939230] Unable to handle kernel paging request at virtual
+address ffff00015ad7e4cc
+[   40.939841] Mem abort info:
+[   40.940079]   ESR = 0x0000000096000021
+[   40.940389]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   40.940820]   SET = 0, FnV = 0
+[   40.941042]   EA = 0, S1PTW = 0
+[   40.941289]   FSC = 0x21: alignment fault
+[   40.941570] Data abort info:
+[   40.941805]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
+[   40.942229]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   40.942857]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   40.943313] swapper pgtable: 16k pages, 48-bit VAs, pgdp=00000000474f0000
+[   40.943865] [ffff00015ad7e4cc] pgd=180000043f7e8003,
+p4d=180000043f7e8003, pud=180000043f7e4003, pmd=180000043f52c003,
+pte=006800019ad7cf07
+[   40.945664] Internal error: Oops: 0000000096000021 [#1] SMP
+[   40.946055] Modules linked in: zstd zram zsmalloc nf_log_syslog
+nft_log nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject
+nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables
+crct10dif_ce polyval_ce polyval_generic ghash_ce tcp_bbr sch_fq fuse
+nfnetlink vsock_loopback vmw_vsock_virtio_transport_common
+vmw_vsock_vmci_transport vmw_vmci vsock bpf_preload qemu_fw_cfg
+ip_tables squashfs virtio_net net_failover virtio_blk gpio_keys
+failover virtio_mmio virtio_scsi virtio_console virtio_balloon
+virtio_gpu virtio_dma_buf megaraid_sas
+[   40.950262] CPU: 7 PID: 116 Comm: kworker/7:1 Not tainted 6.6.67-1-lts #1
+[   40.951542] Hardware name: netcup KVM Server, BIOS VPS 2000 ARM G11
+08/07/2024
+[   40.952287] Workqueue: events_power_efficient nft_rhash_gc [nf_tables]
+[   40.952798] pstate: 20401005 (nzCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
+[   40.953401] pc : nft_rhash_gc+0x208/0x2c0 [nf_tables]
+[   40.954054] lr : nft_rhash_gc+0x134/0x2c0 [nf_tables]
+[   40.954806] sp : ffff800081fb3cf0
+[   40.955138] x29: ffff800081fb3d50 x28: 0000000000000000 x27: 0000000000000000
+[   40.955974] x26: ffff0000cc760ef0 x25: ffff0000ccba9c80 x24: ffff0000cc758f78
+[   40.956750] x23: 0000000000000010 x22: ffff0000ca789000 x21: ffff0000cc760f78
+[   40.957455] x20: ffffd62d3ac3be40 x19: ffff00015ad7e4c0 x18: 0000000000000000
+[   40.959005] x17: 0000000000000000 x16: ffffd62d37926880 x15: 000000400002fef8
+[   40.959614] x14: ffffffffffffffff x13: 0000000000000030 x12: ffff0000cc760ef0
+[   40.960197] x11: 0000000000000000 x10: ffff800081fb3d08 x9 : ffff0000cba89fe0
+[   40.960739] x8 : 0000000000000003 x7 : 0000000000000000 x6 : 0000000000000000
+[   40.961287] x5 : 0000000000000040 x4 : ffff0000cba89ff0 x3 : ffff00015ad7e4c0
+[   40.961814] x2 : ffff00015ad7e4cc x1 : ffff00015ad7e4cc x0 : 0000000000000004
+[   40.962339] Call trace:
+[   40.962531]  nft_rhash_gc+0x208/0x2c0 [nf_tables]
+[   40.962911]  process_one_work+0x178/0x3e0
+[   40.963710]  worker_thread+0x2ac/0x3e0
+[   40.964530]  kthread+0xf0/0x108
+[   40.966259]  ret_from_fork+0x10/0x20
+[   40.967287] Code: 54fff9a4 d503201f d2800080 91003261 (f820303f)
+[   40.968245] ---[ end trace 0000000000000000 ]---
 
-In this case, it's the fs_info->sectorsize_bits which is not 
-initialized, thus its default value is 0.
+faddr2line gave me the following:
+nft_rhash_gc+0x208/0x2c0:
+__lse_atomic64_or at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic_lse.h:132
+(inlined by) arch_atomic64_or at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic.h:65
+(inlined by) raw_atomic64_or at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-arch-fallback.h:3771
+(inlined by) raw_atomic_long_or at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-long.h:1069
+(inlined by) arch_set_bit at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/atomic.h:18
+(inlined by) set_bit at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/instrumented-atomic.h:29
+(inlined by) nft_set_elem_dead at
+/root/gg/setup/linux-lts/src/linux-6.6.67/./include/net/netfilter/nf_tables.h:1576
+(inlined by) nft_rhash_gc at
+/root/gg/setup/linux-lts/src/linux-6.6.67/net/netfilter/nft_set_hash.c:375
 
-Then in btrfs_subpage_set_uptodate(), we use (len >> sectorsize_bits) to 
-calculate how many bits must be set.
+By looking at the diff between 6.6.65 and 6.6.66 I was able to narrow
+it down to the above commit and I can confirm that reverting it fixes
+the issue.
 
-But since sectorsize_bits is 0, the @len (4K) is utilized, resulting the 
-out-of-boundary access.
-
-The root cause is the same as the initial failure, that we can not use a 
-lot of functions to do such early verification, thus I'll create a 
-dedicated helper to do the sanity check to avoid memory allocation nor 
-early access to fs_info.
-
-Thanks everyone involved in exposing this bug!
-Qu
-
->    alloc_dummy_extent_buffer+0x4c/0x78 [btrfs]
->    btrfs_check_system_chunk_array+0x30/0x308 [btrfs]
->    btrfs_validate_super+0x7e8/0xd40 [btrfs]
->    open_ctree+0x958/0x3c98 [btrfs]
->    btrfs_get_tree+0xce4/0x13d8 [btrfs]
->    vfs_get_tree+0x7c/0x290
->    fc_mount+0x20/0xa8
->    btrfs_get_tree+0x72c/0x13d8 [btrfs]
->    vfs_get_tree+0x7c/0x290
->    path_mount+0x748/0x1518
->    __arm64_sys_mount+0x234/0x4f8
->    invoke_syscall.constprop.0+0x78/0x1f0
->    do_el0_svc+0xcc/0x1d8
->    el0_svc+0x38/0xa8
->    el0t_64_sync_handler+0x10c/0x138
->    el0t_64_sync+0x198/0x1a0
-> 
-> Here are the full logs.
-> https://people.linaro.org/~anders.roxell/next-20241218-issue-arm64-64k+kasan/
-> 
-> regards,
-> dan carpenter
-
+Best
+-- 
+Amby Balaji
+Co-founder & CTO
+Hyperbeam, Inc.
