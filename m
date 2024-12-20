@@ -1,138 +1,197 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FC19ADBA
-	for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 19:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF71A157A48
+	for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 20:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734724201; cv=none; b=DGQt86uNOIdL6gZ6R6nfP1/jvxYEu/yoagrZahUsxeImiDJWXKXK/l/FCzE825nig3Mf0UNt5NJUyH85byfOMkKYZkT7s1LApzplV2Hs4xpe/qLyzcIwzjJTlEI0GlbT9SQ7I9InJa6MXGQKIybnzmZeko8fnPZrSYiDU27WKeU=
+	t=1734724857; cv=none; b=kjgSAYMsEKQ4DX1gz9Ii1mAMN/3Xo0tHwqiV1VSOK8lSF75RZdXn6SOvv9M1/EsADAw4B5cvBgSwW3FUw2wFSIiOtyZDx9QFcO2bK8WSRlv3zVnRVKWr902sXS5ZeOWJNvFMQR/ta7hqVSiTrTSxHH5Va2b8exKX2ytNDYFj6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734724201; c=relaxed/simple;
-	bh=EpsJakmyH9YSpaer6E1J1FTY7JPT3aDCwC4b8DqvOJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Zz+RFTPRMY9UcaImlYd+LU8ZkUHOybO1XQEuIuL70sJzRdlPV3IU6hcS2MymiABFrF9cUp7BRK/1MYbJ4EJtLorlMipmKpdkWvu4Zo9C9K4Ah4qB2Rnh4RjfofMms5miBs1zRet+ECDSbwhnlBRYIstq8e6aF2nvifKbl/aO7zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cj9DwAaD; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734724857; c=relaxed/simple;
+	bh=vHQ9MOun9c8j7IMACjEC8awv3eg0zjdQekEg8RSPYIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HB+1+8c1tBft5hyWff/hXQPUY3RqmCu9ncR37deufqLBTynWz7n1e4SH1B4mMbQ5KzzJMEngNVP3C9MyGaUH/IoJiYceAAEmdN/hzEy6hremM6l+8jzrYudzrK/LIjMKNQtiRqNODh0Q9n3mbxW92j6eifeHwDqDWVycvij9gIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com; spf=pass smtp.mailfrom=hyperbeam.com; dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b=WbrfaJYp; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyperbeam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj9DwAaD"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8e52so3619876a12.1
-        for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 11:49:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b="WbrfaJYp"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5f33d944ce0so1573842eaf.1
+        for <regressions@lists.linux.dev>; Fri, 20 Dec 2024 12:00:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734724198; x=1735328998; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=CC7HPO/I2vxnnbATSGWhXRaNRcFje7+bdn9wnsTcce4=;
-        b=cj9DwAaDILH6tNxenxlhmbth+V5OySjsiMZo0uUTQQkiVXb/O5EsXamC1/Ws/w+zLj
-         94ktcBoi/hFu9gfEtYjeIAq4ECDkexy2nUn6beFdqqQHSl0KVg0CxeSmkfFWU2BfQkYI
-         rwBI5IpUwOFzz8oRQkHrcx2xolVxDkEkReGpvTymyI/tIo+mxaZzyYVtF7gilD05FSNB
-         rcs+puPAAnmLfDQ1bDRCYnCTDDHBkPuzAbDEOvQgt9R0zVOcEA75m38vovHpDUhIRy+R
-         ucubcBKG2ICni4yrx7P6HeWOk9QgvrxulFyd/L5bHfhlPkpDUzyIaZa+yx8RfHuCji8l
-         eh+Q==
+        d=hyperbeam-com.20230601.gappssmtp.com; s=20230601; t=1734724855; x=1735329655; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cWyQyvBS/31pZhfagIYYSYNwUzVM4tOGatv05Sh9AWo=;
+        b=WbrfaJYpeAv5JxDlrZ5fBlmWIspO3T9shYJMpHxCuKCuPZjNm6tTHXrtW+HEwbf+dM
+         4EejNtgiKS2imk2nB87qE2F+1OeUwC9bNNFD0XXcZtXrMgBPd46u/JgYiub+B+LRYx35
+         +7I1zLmERC52iaHUL6UtRd+HkLBYQqyV09zOp3LhsUctBrynLFAhowTThGKsD6eQDDxM
+         Y491dEHjinbWG32zjGaqMeTyN5NxNBecmkN+0sFlC81xbiPzKbML4Itt95ksmRku+oXJ
+         BiIQOF2wCGh+0HNg04BWBpOOBAACCBFLH3f+qaWHXXoh2soMZIqHm6XOMZNm1wSUPxuC
+         fl1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734724198; x=1735328998;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1734724855; x=1735329655;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CC7HPO/I2vxnnbATSGWhXRaNRcFje7+bdn9wnsTcce4=;
-        b=XWepvWQqToc9IfNuNCNzeeNvf/Je65WSItGojipr5obm/ktvwV/+2clq1xic0lkaqV
-         3LB4CE3pUs3J8wrTe/7ynlRgB6lSwdHfwoPUC91qMMF9vqYd62YrlGRHWWFEFGJhb1IW
-         8ONOhHrScr/lRHm76gurZ4/I4/daN4y/9BqVQfyb9Gp3pdaD3VXnl0j6m2A2/3JX5YM4
-         SxgTax1IOx2CLxZYW37J8ScDQphNybh+A8F6QedkeNgFRDr+BZ6F/Ou3QrFvemX2FMkc
-         CEf22XqYvtVQa+UhYNli2BMsDG21j8PHDxYh9SJM2eeWyDAj86T5H3UG/VNDO2yrq3Ax
-         wuZQ==
-X-Gm-Message-State: AOJu0YyE730an408rT3pLiKLtDKk6cA7lTSgh8p22MbmkDUKXtPfFJ7N
-	O2xRKVVG2T8CRjq1ZzENU+MG5iTcaeTDA1PcZL25bRyRF5OaSS25
-X-Gm-Gg: ASbGncsyNf6jw3ieceXjTZNhE/joUtpajIVEeWy+r6TtU/STDCdOaLZZis9nqZTcIBF
-	XbfZPI2sLI4LJ5ogI83ZhDdckVUQdiNm6XbFNrgh6zmrM9sxJBR2XL3NIUt2gcMh2p97vxd0pz9
-	miBeY2VJdC+Fuw3l+FQk53GPjUQH7xy+qScj6WvG4fON7CMn/N/0AU+IwWOgXQSg7JUI4mxSWuU
-	aUF3pAYXp3/LErRpfarpWaNfWQy/0L4MJLUTus209fw0MiCos1Ubx60JxalYCY+G+U0us92QBOn
-	7m3pB2VrDMJFgH78
-X-Google-Smtp-Source: AGHT+IFdVrNmfcy1kGOF3NSBclOemYsDkCUQHayb8FORkO0KPdukKE0qeYugOEgfwCT7kyptMaY5kw==
-X-Received: by 2002:a05:6402:1e90:b0:5d3:ff30:b4cc with SMTP id 4fb4d7f45d1cf-5d81de39866mr3841332a12.33.1734724197570;
-        Fri, 20 Dec 2024 11:49:57 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80678c5a4sm2008707a12.38.2024.12.20.11.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 11:49:56 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 8C044BE2EE7; Fri, 20 Dec 2024 20:49:55 +0100 (CET)
-Date: Fri, 20 Dec 2024 20:49:55 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: regressions@lists.linux.dev, Zhao Mengmeng <zhaomengmeng@kylinos.cn>,
-	Jan Kara <jack@suse.cz>
-Cc: Daniel Reichelt <debian@nachtgeist.net>, linux-kernel@vger.kernel.org
-Subject: [regression] linux: Loop-mounted UDF ISOs no  longer readable
-Message-ID: <Z2XKY0f6on1UbwWb@eldamar.lan>
+        bh=cWyQyvBS/31pZhfagIYYSYNwUzVM4tOGatv05Sh9AWo=;
+        b=JRF8gBYOOmhXfDNz2I/izmsdIOgs4Guzmbw7VFeNuDwD6+J0ZOTCcIhxvrf8DqHK5G
+         aOpGBHhhNMsCawiLg+Qt9zK867lTXSqC1B6H1b4YVkdfef0mtd4tssjm5Vi2Iv8XGJqJ
+         REomGxobe5jPaZtZ8w7PujCx+miCgFcDkk6etbrnHNlL0/w23hBwFnANVjkY/g58zMUj
+         siswTD6CqEu6fuPcQQv7S3XLU3wKY7GMm/aokJg2xvj8tGZW82Xq4pQOV4bh3CYC/IZS
+         z6z4mu8MptwrnGaIPSu1j0XKolq2lV81xr1Q1jbcnVi6504wMjUtb/HbHN7DBBnGf2iv
+         oInA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQpmVTmXa20mUFgDUFjBmZrFcI2NIS0G6gFDpVlooBxrZycvWCIlypa0PQi1cdIIPvSTXW/Og6VYTFdQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyibkE2xaAg3LuoZ2QnhEXKN4bx7FyEHbHvNpF7K6KAUFNYgdTn
+	N0k5er8xnllAZmDtrdhyAjnNbTKk+H1+AtiYGIEQLOlLgk1MGe8lkiSsAL8oajSJ3nsXEnnDvDD
+	Pzjtst+cYSAguXu+GWYsJeySMWfCv1dj909UqnQ==
+X-Gm-Gg: ASbGncuhCV7tl61fZsnRLbxlx9CRqxQ7NS8yW0utsIWN1g4OH1dJnzuwKHHs2pvjQib
+	2bC6W4s0E85hNWj1B5/h0wTM8P4tfh8LEsKznDBZCoVQTDQZjbhbvd3ceUI/1mbk7RPb3
+X-Google-Smtp-Source: AGHT+IEeIEon9OZsXMC3D1tFzGDF0ozIN/TNpmhgniTzEKmthZl9Zwap9xzsOKh5OrYVZO5V45ftQxbqmm4ocDG/NU0=
+X-Received: by 2002:a4a:ee08:0:b0:5f2:8c8:a977 with SMTP id
+ 006d021491bc7-5f62e79d1aemr2191582eaf.8.1734724854865; Fri, 20 Dec 2024
+ 12:00:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAFyAQLvdZVRFYW+xbHCu3j354O4=YDVyygXdw3ozEMfFbHkdig@mail.gmail.com>
+ <Z2Vyh91HQ7i6O-6R@calendula> <Z2V3fhnOaOMcCtUt@calendula>
+In-Reply-To: <Z2V3fhnOaOMcCtUt@calendula>
+From: "Amby @ Hyperbeam" <amby@hyperbeam.com>
+Date: Fri, 20 Dec 2024 20:00:43 +0000
+Message-ID: <CAFyAQLt3i4Q56aCRXjWZkz=A8rotoPtHKcosRXiM+RF7AYBb4w@mail.gmail.com>
+Subject: Re: netfilter regression on aarch64 16k page size
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jan, hi Zhao,
+The patch worked, thank you!
 
-In Debian we got he following report, full quoted below from Daniel
-Reichelt, dass after updating to 6.1.115 (and later, confirmed up to
-6.1.119), loop-mounted UDF ISOs are no longer readable:
-
+On Fri, 20 Dec 2024 at 13:56, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+>
 > Hi,
-> 
-> in 6.1.112-1 I could loop-mount Windows Setup ISOs (downloaded from M$; hashes
-> are fine; 10/11, DE/EN don't seem to make any difference) and access their
-> content perfectly fine, i.e. share the /sources/ sub-directory via samba for
-> netinstall scenarios.
-> 
-> Starting with 6.1.115-1, the ISOs can be mounted, the root-dir is accessible
-> and `stat $mntpt/sources` gives output as well. However `ls $mntpt/sources`
-> hangs and the kernel log is spammed with entries like
-> 
-> ---------------8<-------------------------
-> 2024-12-11T14:53:19.616728+01:00 srv kernel: [182394.024828] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.629970+01:00 srv kernel: [182394.038041] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.641623+01:00 srv kernel: [182394.049714] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.654841+01:00 srv kernel: [182394.062928] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.666495+01:00 srv kernel: [182394.074615] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.679747+01:00 srv kernel: [182394.087833] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.691394+01:00 srv kernel: [182394.099510] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.704646+01:00 srv kernel: [182394.112727] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.716283+01:00 srv kernel: [182394.124400] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.729539+01:00 srv kernel: [182394.137618] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.741185+01:00 srv kernel: [182394.149279] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.754422+01:00 srv kernel: [182394.162494] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> 2024-12-11T14:53:19.766071+01:00 srv kernel: [182394.174159] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> 2024-12-11T14:53:19.779289+01:00 srv kernel: [182394.187375] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> ---------------8<-------------------------
-> 
-> 
-> 6.1.119-1 shows the same behaviour.
-> Let me know if you need additional info.
+>
+> Could you give a try to this quick patch?
+>
+> I will have to add BUILD_BUG_ON() as well to make sure struct
+> nft_set_ext is aligned so this atomic operation does not break again.
+>
+> Thanks.
+>
+> On Fri, Dec 20, 2024 at 02:35:06PM +0100, Pablo Neira Ayuso wrote:
+> > Hi,
+> >
+> > Thanks for your report, it is an unalign atomic that results from
+> > this.
+> >
+> > I will post a patch asap to address this.
+> >
+> > On Fri, Dec 20, 2024 at 12:15:36PM +0000, Amby @ Hyperbeam wrote:
+> > > Greetings,
+> > > We are seeing a regression in 6.6.66 which I have narrowed down to this commit:
+> > > stable: 86c27603514cb8ead29857365cdd145404ee9706
+> > > upstream: 7ffc7481153bbabf3332c6a19b289730c7e1edf5
+> > >
+> > > Kernel version: 6.6.66 on aarch64 with 16k page size
+> > > Last known good version: 6.6.65
+> > >
+> > > Steps to repro:
+> > > - run a 16k page size kernel (check with getconf PAGESIZE)
+> > > - try to load an nftables config file on the problem
+> > >
+> > > Expected:
+> > > - no errors
+> > >
+> > > Actual:
+> > > - system enters a broken state, with the following trace in dmesg:
+> > > [   40.939230] Unable to handle kernel paging request at virtual
+> > > address ffff00015ad7e4cc
+> > > [   40.939841] Mem abort info:
+> > > [   40.940079]   ESR = 0x0000000096000021
+> > > [   40.940389]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > > [   40.940820]   SET = 0, FnV = 0
+> > > [   40.941042]   EA = 0, S1PTW = 0
+> > > [   40.941289]   FSC = 0x21: alignment fault
+> > > [   40.941570] Data abort info:
+> > > [   40.941805]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
+> > > [   40.942229]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > > [   40.942857]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > > [   40.943313] swapper pgtable: 16k pages, 48-bit VAs, pgdp=00000000474f0000
+> > > [   40.943865] [ffff00015ad7e4cc] pgd=180000043f7e8003,
+> > > p4d=180000043f7e8003, pud=180000043f7e4003, pmd=180000043f52c003,
+> > > pte=006800019ad7cf07
+> > > [   40.945664] Internal error: Oops: 0000000096000021 [#1] SMP
+> > > [   40.946055] Modules linked in: zstd zram zsmalloc nf_log_syslog
+> > > nft_log nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject
+> > > nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables
+> > > crct10dif_ce polyval_ce polyval_generic ghash_ce tcp_bbr sch_fq fuse
+> > > nfnetlink vsock_loopback vmw_vsock_virtio_transport_common
+> > > vmw_vsock_vmci_transport vmw_vmci vsock bpf_preload qemu_fw_cfg
+> > > ip_tables squashfs virtio_net net_failover virtio_blk gpio_keys
+> > > failover virtio_mmio virtio_scsi virtio_console virtio_balloon
+> > > virtio_gpu virtio_dma_buf megaraid_sas
+> > > [   40.950262] CPU: 7 PID: 116 Comm: kworker/7:1 Not tainted 6.6.67-1-lts #1
+> > > [   40.951542] Hardware name: netcup KVM Server, BIOS VPS 2000 ARM G11
+> > > 08/07/2024
+> > > [   40.952287] Workqueue: events_power_efficient nft_rhash_gc [nf_tables]
+> > > [   40.952798] pstate: 20401005 (nzCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
+> > > [   40.953401] pc : nft_rhash_gc+0x208/0x2c0 [nf_tables]
+> > > [   40.954054] lr : nft_rhash_gc+0x134/0x2c0 [nf_tables]
+> > > [   40.954806] sp : ffff800081fb3cf0
+> > > [   40.955138] x29: ffff800081fb3d50 x28: 0000000000000000 x27: 0000000000000000
+> > > [   40.955974] x26: ffff0000cc760ef0 x25: ffff0000ccba9c80 x24: ffff0000cc758f78
+> > > [   40.956750] x23: 0000000000000010 x22: ffff0000ca789000 x21: ffff0000cc760f78
+> > > [   40.957455] x20: ffffd62d3ac3be40 x19: ffff00015ad7e4c0 x18: 0000000000000000
+> > > [   40.959005] x17: 0000000000000000 x16: ffffd62d37926880 x15: 000000400002fef8
+> > > [   40.959614] x14: ffffffffffffffff x13: 0000000000000030 x12: ffff0000cc760ef0
+> > > [   40.960197] x11: 0000000000000000 x10: ffff800081fb3d08 x9 : ffff0000cba89fe0
+> > > [   40.960739] x8 : 0000000000000003 x7 : 0000000000000000 x6 : 0000000000000000
+> > > [   40.961287] x5 : 0000000000000040 x4 : ffff0000cba89ff0 x3 : ffff00015ad7e4c0
+> > > [   40.961814] x2 : ffff00015ad7e4cc x1 : ffff00015ad7e4cc x0 : 0000000000000004
+> > > [   40.962339] Call trace:
+> > > [   40.962531]  nft_rhash_gc+0x208/0x2c0 [nf_tables]
+> > > [   40.962911]  process_one_work+0x178/0x3e0
+> > > [   40.963710]  worker_thread+0x2ac/0x3e0
+> > > [   40.964530]  kthread+0xf0/0x108
+> > > [   40.966259]  ret_from_fork+0x10/0x20
+> > > [   40.967287] Code: 54fff9a4 d503201f d2800080 91003261 (f820303f)
+> > > [   40.968245] ---[ end trace 0000000000000000 ]---
+> > >
+> > > faddr2line gave me the following:
+> > > nft_rhash_gc+0x208/0x2c0:
+> > > __lse_atomic64_or at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic_lse.h:132
+> > > (inlined by) arch_atomic64_or at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic.h:65
+> > > (inlined by) raw_atomic64_or at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-arch-fallback.h:3771
+> > > (inlined by) raw_atomic_long_or at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-long.h:1069
+> > > (inlined by) arch_set_bit at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/atomic.h:18
+> > > (inlined by) set_bit at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/instrumented-atomic.h:29
+> > > (inlined by) nft_set_elem_dead at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/net/netfilter/nf_tables.h:1576
+> > > (inlined by) nft_rhash_gc at
+> > > /root/gg/setup/linux-lts/src/linux-6.6.67/net/netfilter/nft_set_hash.c:375
+> > >
+> > > By looking at the diff between 6.6.65 and 6.6.66 I was able to narrow
+> > > it down to the above commit and I can confirm that reverting it fixes
+> > > the issue.
+> > >
+> > > Best
+> > > --
+> > > Amby Balaji
+> > > Co-founder & CTO
+> > > Hyperbeam, Inc.
 
-We have not a full bisect, but Daniel confirmed already in
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089698#22 some
-observations:
 
-> OK:
->   6.1.112-1
-> BAD:
->   6.1.115-1
->   6.1.119-1
-> OK again:
->   6.3.1-1~exp1
->   current trixie
->   current sid
 
-(current trixie is 6.11.10 based kernel, current sid is based on
-6.12.5 kernel).
-
-Dies this ring some bell to you?
-
-#regzbot introduced: v6.1.112..v6.1.115
-#regzbot monitor: https://bugs.debian.org/1089698
-
-Regards,
-Salvatore
+-- 
+Amby Balaji
+Co-founder & CTO
+Hyperbeam, Inc.
