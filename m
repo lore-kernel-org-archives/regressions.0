@@ -1,116 +1,184 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06303F9D2
-	for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 09:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE14F1F0E44
+	for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 11:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734774780; cv=none; b=u5JH9a6BOiTYyQrqDfqHvZ6gKaWJ6K1yfyzzcoaU9dNf25dI1JhyeojudPdPB/XGXvY2j0Xpl4diEzY0AxYI9eZfwkndi5yOmkA9VPXGRuoFz/ZiSW5USAXd/IuHHTCfF7tQ72Fn0vbpQdJEmmqSFKLOtflSFl6xW1Uqd3Pl4GI=
+	t=1734779201; cv=none; b=ScDptM//9ukTfwLY33duv9BCEY7VIlh09AXv9b4Ncke5lgIjU7+PJmIWtEmSJJdwLa9XwFCHBsMZCizEFghmLRORBRMe6y7WLFAWzNVsV6zW0UEfUq5x6m7XaoAyA8XbkfflMbEm1P0qVtrvcOP66bQ8uzZ77oZfK7sjUiTFalQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734774780; c=relaxed/simple;
-	bh=DeopnxgzWv0Cqe0zQdIGhe7mTeKy3V4rGekfmmHMBXM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qnfX0XkvSU7iwlMuSTCwUMKqN+slCiuUyyhXD8ZtUZKUAX5UnqArtbWhPiHMff0QRQf3hZukcW7/jOhOTL8LQCr4n42p40KFAo4i50r/SebngWLF4u3DHv77XN91yRVldJS40oeuQifNMrsjJLPjjTVcQRM/VH1Y3d6Rxtj24qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQAJgZlA; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734779201; c=relaxed/simple;
+	bh=HKrvtGIaAK3Jab0O+wQO5OrK+dBoeEExyYJNxAwz//M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VoZABq+twzi/4WJmuhPecYb/GRyLtk3dtETJ6rc16DuNZ+uwbb1YpY6xpMPvAAFJu0OhUA2nP/1yJmrLlkqolwe4xYFLx72oIX5nUowq+0gBbpz9avqmjVtrGueAcBDJE7+a5XJjfSdGmiy+/QCcBoFd7vfGL/YK/pmgQExSS9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yCNhE0Qc; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQAJgZlA"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43626213fffso23370155e9.1
-        for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 01:52:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yCNhE0Qc"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-aabf8e856e2so331315866b.0
+        for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 03:06:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734774777; x=1735379577; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=F7wU5N3Rc+yxdkSrB3ZsiwvxSqXteUyf9TiI9dS8GWc=;
-        b=NQAJgZlAo9FRnNP0PxDXqk1wa71iqHKVaKLCcs2/Qe0d6syZJDDOApU//QnhWg4K2V
-         WAGPfTmiOPMw4avJEf7ctZvrJQsa1eW9LHzf4QFmQui0LYgSYt6dUihPBYNleGnDF3xD
-         fJ1inV5EBBtImV2EIx+5XH5Mcq5xrGTcMjG7uW++UMUt0PaPvIEAmXKkVtagjOKz5T8c
-         vOsKZo0yjfQ2DKKAcCjkEcqsPdPqbdouslEptcmVo8EttIGrRK/TLShwMcxSbSz/aChH
-         eGYiRYWgvnZasSH5R6cOvjGDi9hFOJByhm/qG+O2ADuCfYqy5Snfhzdc4+z+rQJHHLZE
-         ecug==
+        d=google.com; s=20230601; t=1734779197; x=1735383997; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9c9a3iVDE+5v7pmjMQqm1QHn7yy3OkjMxC3jrRl0psE=;
+        b=yCNhE0QcgCpabfiCSheZ2Ad/AZ2/lUX3xshj4YdZ8QRYGu7SiSX29MWlQIaMzEjJpB
+         6Edr1VuoIpVvJeOO+Kua2/k6ElWMpUgApKPT4vUiZOJQXSie/BEw9t9bzXDSnd93sJVI
+         1BOoEQf40wtav4nhp6ZYuHd70k9ebYgaR+5coISKLpR1yoIkli0UXd9NNAqGtXlTlp+x
+         gkTrK1ywbACGW9gsCt5/f0DJU8EPdmn6p3Y8U6SW/pkYlan5ggT+Wn8G8yGbgWZk7oM2
+         fxRUEaIvYFSqSG8hGHuYO10fpAQVn5JkvMFed9JpnZqEN3gigEvChcvBWtSiJlrul0WI
+         mVtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734774777; x=1735379577;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7wU5N3Rc+yxdkSrB3ZsiwvxSqXteUyf9TiI9dS8GWc=;
-        b=q+QxH4c4+ZFFGVVTbKX0c+Hdw8RJx3FvcT1JLHTgk3J6fdRk4Wkp0wG11Lp70la67N
-         CYNsoMe4W7ID3uGtmP0tCrrkBGVRST9Jnr4tVgsBqnQ3kX3lKsxvthL83gU5FJCQjJVz
-         Ezj/U6jLS32cd613zsg/+Rg+OdnhWVRaQC64r9NoEWkj0BiSP8zdg+upHFW8eiYyw4zI
-         0Xw3UUrWA9gQvqKnDMOsu784/YfZuHg6WT26pTkT25cAiu+KOqcyICRqnXs4dU0rPgIz
-         2W3KF/cNkNvGQu3fsN7/xCu+nGSugoPn7YY2cRiItljR4JprChP2id6Tn42V2SQOE5Hw
-         nHKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHjCQZXvqC61fip2AIWAkUT9sMKXxNBYlaNfEzBkApaJQyPjyiYJrsrZ70eyh1wiWmJD8W8xbzExxEXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzSnqxoelSRzP3lMQNsk1FlT6SduaVpiRWWXA4ofd1hNTclTUY+
-	ne5GhGCvCN5R5ssSiEmTICn+dtYo3gzAs9ZoBzFLQedBjOvxRRTh
-X-Gm-Gg: ASbGncuVRAvrWaaCSAxaN/ZfPvprXvvgpfc7alyI8vXPyskJJVyIEIU7YURIwy8YOsU
-	JzYOC79thjop4PXkVk5tdmSuPrv26ptYqamKstwsIgrtsT1oU0hW6HsFHeyustKcF9EBKmN3V8k
-	oQP/S4g7sJRgANDRTYv7cjKMnJk617VxLXvWGTrMq9E4WlHpu20eaS3tad1HrDJUJiXZJAt3AVT
-	pzVzJ1VtgZyMNFxyvFVxkjCuHswOEbHBSMQmoqqGNGC+IIazFTDFr1KegqBHBOI1IDCjFyTSq3B
-	+jaMosG1sMcpryUQHGYtqBiS2UIQ8ErutFugwZQ=
-X-Google-Smtp-Source: AGHT+IHjxLdXW8mbGjkft5APD+lMWkYg/9/MWVjfMYYRs7EuMja17eWwm0wb+Q5Gfbj7nNRta4GP2Q==
-X-Received: by 2002:a05:600c:4f89:b0:431:15f1:421d with SMTP id 5b1f17b1804b1-4365fc09731mr81614135e9.16.1734774776704;
-        Sat, 21 Dec 2024 01:52:56 -0800 (PST)
-Received: from [192.168.10.194] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436612899f0sm70967715e9.38.2024.12.21.01.52.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Dec 2024 01:52:56 -0800 (PST)
-Message-ID: <1eeecc68-be5f-46e6-aed6-594c4b32df21@gmail.com>
-Date: Sat, 21 Dec 2024 10:52:54 +0100
+        d=1e100.net; s=20230601; t=1734779197; x=1735383997;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9c9a3iVDE+5v7pmjMQqm1QHn7yy3OkjMxC3jrRl0psE=;
+        b=vX7JvrZmVI4DC0ISwDGQ+ylsvK5psUcEKT3FKNSo0qkfbIPJhUuAMFYAsk6KL620pH
+         vk6/LkHnjBgzZalInRVdjP73beY0ia1zr4Ub1TUbO4RAD4Owe+r2Is5ddkM3tkT83gYw
+         CGUuV0uG2eNlqlUEci1ObnZvQbDlfEo6r9WlErav1iC2yG8aPyrVwlz+ALnX1SGBc5Pv
+         kUpQ5xPcM8rOfPWf3Hx4bCGWt1aozfRKy221mBcvsn+n1hblS8a2wdu67PfjtqALv4P4
+         JVUp68Eb0t1c607l2H2fw75jYMkAJDR64rEA8TszYqKTVIQUVx7gTEoWIM6HqM4tSqpg
+         UReg==
+X-Forwarded-Encrypted: i=1; AJvYcCUth71v5uVuPa5ucHNYxdAWcM0W58Rd/j34/nLUH6zmbu6kCuq8S0QbdDpvaQoU9wXqZcx4GohJDU0oOg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YznnI3yfEBYvd7N2NZkMJeB7scj3iD9pbvgP2BCDWD06wa1ZmB5
+	79EBJsoFRiurvZnn7nM8XVJfGf/LEIM0QUGV6OyQO9li9nD1I+0EwQ/0bUzr+oUHJp4nE+3abwK
+	70A==
+X-Google-Smtp-Source: AGHT+IEToD+6DqkOSrJAGdf3lwcpFc2nJisfO7vLafkdBubYriBDAdyrh0akWL0n3H+qY6NTTVgq7uQb4Ik=
+X-Received: from ejcvw10.prod.google.com ([2002:a17:907:a70a:b0:aa6:9dde:9b22])
+ (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:2dab:b0:aa6:aa8e:c89c
+ with SMTP id a640c23a62f3a-aac335626acmr489665766b.39.1734779197235; Sat, 21
+ Dec 2024 03:06:37 -0800 (PST)
+Date: Sat, 21 Dec 2024 12:06:35 +0100
+In-Reply-To: <Z2BKetPygDM36X-X@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And
- Hibernate
-From: Sergio Callegari <sergio.callegari@gmail.com>
-To: jglotzer@gmail.com
-Cc: Aaron.Hou@mediatek.com, Chris.Lu@mediatek.com, Deren.Wu@mediatek.com,
- Hao.Qin@mediatek.com, Sean.Wang@mediatek.com, johan.hedberg@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, luiz.dentz@gmail.com,
- marc.payne@mdpsys.co.uk, marcel@holtmann.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, steve.lee@mediatek.com, tiwai@suse.de
-References: <20241127231432.8112-1-jglotzer@gmail.com>
- <ad78ad62-ebd2-40d7-8a6d-623ae947584c@gmail.com>
-Content-Language: en-US, it-IT
-In-Reply-To: <ad78ad62-ebd2-40d7-8a6d-623ae947584c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <2024121418-blazer-valiant-c51a@gregkh> <20241216150722.4079213-2-gnoack@google.com>
+ <2024121653-unblessed-mummified-c630@gregkh> <Z2BKetPygDM36X-X@google.com>
+Message-ID: <Z2ahOy7XaflrfCMw@google.com>
+Subject: Re: [PATCH] tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN
+From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jann Horn <jannh@google.com>, "Hanno =?utf-8?B?QsO2Y2s=?=" <hanno@hboeck.de>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello Greg, Hanno and everyone else!
 
-On 06/12/2024 03:29, John Glotzer wrote:
- > Sergio,
- >
- > My apologies, I neglected to mention that my setup is PCI, and not USB.
- >
-Thanks for confirming, good to see that the issue can be reliably 
-reproduced with a setup similar to mine!
+On Mon, Dec 16, 2024 at 04:42:50PM +0100, G=C3=BCnther Noack wrote:
+> On Mon, Dec 16, 2024 at 04:17:15PM +0100, Greg Kroah-Hartman wrote:
+> > On Mon, Dec 16, 2024 at 03:07:23PM +0000, G=C3=BCnther Noack wrote:
+> > > With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX =
+with
+> > > subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
+> > > TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
+> > >=20
+> > > TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this=
+ IOCTL
+> > > let callers change the selection buffer and could be used to simulate
+> > > keypresses.  These three TIOCL_SETSEL selection modes, however, are s=
+afe to
+> > > use, as they do not modify the selection buffer.
+> > >=20
+> > > This fixes a mouse support regression that affected Emacs (invisible =
+mouse
+> > > cursor).
+> > >=20
+> > > Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@find=
+er.org
+> > > Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-pas=
+te subcommands")
+> > > Signed-off-by: G=C3=BCnther Noack <gnoack@google.com>
+> > > ---
+> > >  drivers/tty/vt/selection.c | 14 ++++++++++++++
+> > >  drivers/tty/vt/vt.c        |  3 +--
+> > >  2 files changed, 15 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+> > > index 564341f1a74f..0bd6544e30a6 100644
+> > > --- a/drivers/tty/vt/selection.c
+> > > +++ b/drivers/tty/vt/selection.c
+> > > @@ -192,6 +192,20 @@ int set_selection_user(const struct tiocl_select=
+ion __user *sel,
+> > >  	if (copy_from_user(&v, sel, sizeof(*sel)))
+> > >  		return -EFAULT;
+> > > =20
+> > > +	/*
+> > > +	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK=
+ to
+> > > +	 * use without CAP_SYS_ADMIN as they do not modify the selection.
+> > > +	 */
+> > > +	switch (v.sel_mode) {
+> > > +	case TIOCL_SELCLEAR:
+> > > +	case TIOCL_SELPOINTER:
+> > > +	case TIOCL_SELMOUSEREPORT:
+> > > +		break;
+> > > +	default:
+> > > +		if (!capable(CAP_SYS_ADMIN))
+> > > +			return -EPERM;
+> > > +	}
+> >=20
+> > Shouldn't you check this _before_ doing the copy_from_user() to emulate
+> > the previous logic properly?
+>=20
+> You are right, I believe this can technically return a different error co=
+de.
+>=20
+> There is a data dependency between the two though - the capability check =
+should
+> only happen for certain values of v.sel_mode, and v is only populated by
+> copy_from_user().
+>=20
+> As far as I can tell, this only makes a difference in scenarios where bot=
+h
+> copy_from_user() and the capability check would fail.
+>=20
+> Do you think we have to emulate it down to this level of detail?
 
- >
- > What I am struggling to understand is given how easy this issue is to 
-reproduce -  an AMD CPU, Mediatek MT7922 wifi/bluetooth chip,
- > and a 6.11 kernel, you suspend, and then wake up, kernel panics -  I 
-would have thought that the interested parties would
- > make this a priority.
- >
-I wonder it it might be possible to revert back to the code in kernel 
-6.10 (that worked fine), until the current issue can be triaged and fixed.
+Another observation which makes it clearer that copy_from_user() failing he=
+re
+should really not happen in practice:
 
-The other way round, I am getting the impression that other changes are 
-getting stacked on top of the faulty ones, further complicating the picture.
+The 'argp' pointer that gets passed to ioctl(2) here is a pointer to a regi=
+on in
+memory whose first byte is a TIOCLINUX subcommand, and at the time we do th=
+e
+copy_from_user(), this subcommand byte has already been successfully copied=
+ over
+from user space.  The region that we are now copying with copy_from_user() =
+here
+is directly after this byte, and should under normal circumstances work as =
+well
+-- I believe that callers would have to construct a specifically crafted io=
+ctl()
+so that the first copy-from-userspace works and the second one fails (refer=
+ring
+to a byte just before a page boundary, or something like that...?)
 
-As of today, with kernel 6.11.11, the issue has /worsened/ for me. On 
-6.11.4 I could hibernate/resume by kfkilling bluetooth only, which was 
-not so bad, since I only use bluetooth rarely. With 6.11.11 I need to 
-rfkill the wlan too.
+I'll send a V2 of this patch with the comment removed, the 'Cc: stable' add=
+ed,
+but where the CAP_SYS_ADMIN check is still done after copy_from_user(), wit=
+h the
+reasoning that:
 
-Can this be confirmed too?
+ 1. A previous get_user() from an adjacent memory region already worked
+    (making this a very unlikely failure)
+ 2. I do not see a good alternative to reorder the code here, because we ne=
+ed
+    the data from copy_from_user() in order to know whether the CAP_SYS_ADM=
+IN
+    check even needs to be performed.
 
-Sergio
+Hanno: If you are OK with this patch, I'd still appreciate a more formal
+"Reviewed-By" or "Tested-By" from you. :)
 
+Thanks, and Happy Holidays!
+=E2=80=94G=C3=BCnther
