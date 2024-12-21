@@ -1,139 +1,73 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from diary.svmhdvn.name (diary.svmhdvn.name [174.136.98.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218F51F2397
-	for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 11:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA81DC98C
+	for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 22:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=174.136.98.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734779452; cv=none; b=cHkJWKX6endoHqLd/+nPOOWwdYVc9KkIHxHf3YEtMbKL80zUjUYFKPZTy6eF8zjxmF5V/2f8IOLxqLSGroOz3E24Xn4bs6U9JeSiSg2iee7N/b4mtFNOHo7pGxe2iiwiL/QMPgz4N+tWM9CuOuJoi7iDG2yl6E35IFo0NGYi+FU=
+	t=1734820945; cv=none; b=hrpkiN0LJOuwSkRDlnhO99Ipwf4XhQ1NDfnr2JPyZLtoXdntdDMYVtVps2kVssmth8lttoyICVJtizBPEmkHqasN0R9orTxjD67UKW2cG/6zAD9qEAAaZZnCt/mgt2Uy55t3OzdAK95M4iXXBxq06VnALAxSGPi2uLEy9ohsvo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734779452; c=relaxed/simple;
-	bh=XhWNXFHaJ9glrnThaW+6uFMdg7Jt0dVoQ8ReWmSarVw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BV/eAfagGaUXZ0CQPCGAJTehx8YksrZnFczwP9YkCetborCfkVMn3iQbi+fAcV93MCSYB8VVyus6pvSndJ3Vif6jsf7XAXTnizC3M2EJdEsQ5P436kzQK52D0KwQe4zwCNDrBjQf8GPgNqbYHLF4zdQTHe6mvHSFjChJKFHgxgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MgGpsqdZ; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1734820945; c=relaxed/simple;
+	bh=yS+bnikUls+gxphI2NHeQo2aumEG3eqFwSybwO5fkrE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To; b=qA7DHgPMfwyjsf38EUJZZx/MmmD9M799v/YsnAe8pKput7hhFkXH+btonNhoL3ESTgTQu7EJJWQFNewfnwwKsMY4NdORKasLAfVqZAqLWI/iS8rrOciyshEK1hO5jYZIsfr9+HfyMysvFv+uDgo4kZrG+TYU2+g7LWjYa0z733Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=svmhdvn.name; spf=pass smtp.mailfrom=svmhdvn.name; dkim=pass (2048-bit key) header.d=svmhdvn.name header.i=@svmhdvn.name header.b=trl652hQ; arc=none smtp.client-ip=174.136.98.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=svmhdvn.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svmhdvn.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MgGpsqdZ"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5d3f0411814so2710137a12.0
-        for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 03:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734779449; x=1735384249; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=acFqHgTTvDfsaGKKoef1ZEN8Prd2tlZbEpNeYt8pW4w=;
-        b=MgGpsqdZ194OH0s6FGoxk/u0XfWHu+zKQ0jA87z9aiya5d2k6xdcT3m7iVW0yq+TpL
-         dbElXhBwfHHeMqhkbNQAWPS93g1Hb4s/zt13k3OGA2+LtB/MlSyi5cnVHtGG9sRWYOmk
-         DE+8E61dzltaAkQtie/psGaDb+eMS4UoIfCb9xwsYFn5vYSPO+Ci6lahwBtq+RR1FKGJ
-         JNek02PoOS8M0ujLLedKJQYjbtpK+nDqsI+LdtR1NLJGPEj7ChmLpzrWfzK5MqEO9FET
-         HFLb7DDRBqgyNfP68axjbuAEJP7hUpWR3y/As0KITEl/XCYHae2WuYcIRmWBoWM9li9Q
-         HMog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734779449; x=1735384249;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=acFqHgTTvDfsaGKKoef1ZEN8Prd2tlZbEpNeYt8pW4w=;
-        b=IQJg5vIT7jktKjB6iGB0LNDaU4GXbdTsx24sKpI34CkpLQLV5HD8d2EJkYU6jWZ7TN
-         WKqca1dlQbYR+nyiAacNCEr5v6vIEVfLqszIUKx7TKf6tHcrNxjhDBdeQPGMvIldmGme
-         cTtrJHlvcCB++AeUNLNlQgdB0mTM6vQhi1+awXCU5G1dsfbN6Qa8ZGQ+ZRyZiUTsLANA
-         CeX94ab/0LuB2gYogSob6SvBE9OPGZoTPTH3aGQIWsNMUr7Z2JgHdLXVnvtgo1xe/oAi
-         g1ZIaJd/MoQgwqPnqwsJ4mq/azhO744y0yDVGqhMh7PsEJYsz+w/laMpAChsmBdhFpW8
-         bI/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWsvonR91BbZHEYkrYI+FWOJdKuvdhCrO0Irm/kJVo3huSebuz9eXWq7yvLVX6fSz1+2A9ntfM1qW7uVA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMtInF3rwDu8m8o1xeG6O62F6wKxMPJ/+qo1ORcHm8hiVu69aM
-	XmLX1Co/YYvUYQtl4k3H3xMde8jZMm34zfkJEyteHmeFNEGjeLgA7I8IC6cc1i2y1mK2ChwruLW
-	GYQ==
-X-Google-Smtp-Source: AGHT+IGeWbKxpk3gdrLwTVMOGxYTHG++3ekHtzTCNYqK+VxLg7d/tlVkzABgBueeFhOF/tGOx98kdsq6Gwg=
-X-Received: from edzf16.prod.google.com ([2002:a05:6402:1950:b0:5d2:7367:4c84])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:254f:b0:5cf:e71c:ff97
- with SMTP id 4fb4d7f45d1cf-5d81ddfbe45mr4289512a12.24.1734779449412; Sat, 21
- Dec 2024 03:10:49 -0800 (PST)
-Date: Sat, 21 Dec 2024 11:10:45 +0000
-In-Reply-To: <Z2ahOy7XaflrfCMw@google.com>
+	dkim=pass (2048-bit key) header.d=svmhdvn.name header.i=@svmhdvn.name header.b="trl652hQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svmhdvn.name;
+	s=diary1; t=1734820548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h9vROm/ucFrO1Zn4KeEKv/82NzYWKSb+97vYad00O+U=;
+	b=trl652hQOgNnOU5zQ6CZeRa2MYaQA3yT9JHZ+kaD5IU5bLnPZ/rD2U/ES0YvhKijfUQLdV
+	UG9LahF9SPPDaX94egagfw0Rps/YtczC24pZCjpocYdf9cX0SjhqZ4CNPTVLvw0Fhc/+Lc
+	5QQpA3PSiG+VY+oi2cvHY/QLDRVun0GEgfXQVafTQWQ6WqYXihLF1oLmQ9D5rqYQ/hifDT
+	iJWGIaMxgzCeoNrTUOGOG1bb+vm2ykjhfpg2j2lt17d+lFaS1lhQix1OSLuhr94Yn4ZtuN
+	CWs3JJ4fVV1i4e2kPREX2ZvASlvlac5fwfpeStNJzdc7e/fAh7R8cPJkkZm2RQ==
+Received: 
+	by diary.svmhdvn.name (OpenSMTPD) with ESMTPSA id 5ec79cca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sat, 21 Dec 2024 22:35:46 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <Z2ahOy7XaflrfCMw@google.com>
-X-Mailer: git-send-email 2.47.1.613.gc27f4b7a9f-goog
-Message-ID: <20241221111045.1082615-1-gnoack@google.com>
-Subject: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without CAP_SYS_ADMIN
-From: "=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jann Horn <jannh@google.com>, "=?UTF-8?q?Hanno=20B=C3=B6ck?=" <hanno@hboeck.de>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, 
-	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 21 Dec 2024 17:35:37 -0500
+Message-Id: <D6HQK0PSRVBC.XEUGZC9N1O5K@svmhdvn.name>
+Subject: [REGRESSION] amdgpu: thinkpad e495 backlight brightness resets
+ after suspend
+Cc: <regressions@lists.linux.dev>, <stable@vger.kernel.org>,
+ <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+ <Xinhui.Pan@amd.com>, <christian.koenig@amd.com>
+From: "Siva Mahadevan" <me@svmhdvn.name>
+To: <alexander.deucher@amd.com>
+X-Mailer: aerc 0.18.2
 
-With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX with
-subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
-TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
+#regzbot introduced: 99a02eab8
 
-TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this IOCTL
-let callers change the selection buffer and could be used to simulate
-keypresses.  These three TIOCL_SETSEL selection modes, however, are safe to
-use, as they do not modify the selection buffer.
+Observed behaviour:
+linux-stable v6.12.5 has a regression on my thinkpad e495 where
+suspend/resume of the laptop results in my backlight brightness settings
+to be reset to some very high value. After resume, I'm able to increase
+brightness further until max brightness, but I'm not able to decrease it
+anymore.
 
-This fixes a mouse support regression that affected Emacs (invisible mouse
-cursor).
+Behaviour prior to regression:
+linux-stable v6.12.4 correctly maintains the same brightness setting on
+the backlight that was set prior to suspend/resume.
 
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@finder.org
-Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste sub=
-commands")
-Signed-off-by: G=C3=BCnther Noack <gnoack@google.com>
----
- drivers/tty/vt/selection.c | 14 ++++++++++++++
- drivers/tty/vt/vt.c        |  2 --
- 2 files changed, 14 insertions(+), 2 deletions(-)
+Notes:
+I bisected this issue between v6.12.4 and v6.12.5 to commit 99a02eab8
+titled "drm/amdgpu: rework resume handling for display (v2)".
 
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 564341f1a74f..0bd6544e30a6 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -192,6 +192,20 @@ int set_selection_user(const struct tiocl_selection __=
-user *sel,
- 	if (copy_from_user(&v, sel, sizeof(*sel)))
- 		return -EFAULT;
-=20
-+	/*
-+	 * TIOCL_SELCLEAR, TIOCL_SELPOINTER and TIOCL_SELMOUSEREPORT are OK to
-+	 * use without CAP_SYS_ADMIN as they do not modify the selection.
-+	 */
-+	switch (v.sel_mode) {
-+	case TIOCL_SELCLEAR:
-+	case TIOCL_SELPOINTER:
-+	case TIOCL_SELMOUSEREPORT:
-+		break;
-+	default:
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+	}
-+
- 	return set_selection_kernel(&v, tty);
- }
-=20
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 96842ce817af..be5564ed8c01 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3345,8 +3345,6 @@ int tioclinux(struct tty_struct *tty, unsigned long a=
-rg)
-=20
- 	switch (type) {
- 	case TIOCL_SETSEL:
--		if (!capable(CAP_SYS_ADMIN))
--			return -EPERM;
- 		return set_selection_user(param, tty);
- 	case TIOCL_PASTESEL:
- 		if (!capable(CAP_SYS_ADMIN))
---=20
-2.47.1.613.gc27f4b7a9f-goog
-
+Hardware:
+* lenovo thinkpad e495
+* AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx
+* VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
+  Picasso/Raven 2 [Radeon Vega Series / Radeon Vega Mobile Series]
+  (rev c2)
