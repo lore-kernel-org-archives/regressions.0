@@ -1,220 +1,151 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5501821345
-	for <regressions@lists.linux.dev>; Sun, 22 Dec 2024 21:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E6E192B62;
+	Sun, 22 Dec 2024 22:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734903543; cv=none; b=BXSZTK3Ql5LaD8Y28ghnsJrGyZfpeUSD7RYTahQcYd8K//P5MSSnxdtD9QLXgae2B62IgFch/5a+vkpn9JwAjtEVs9dTMUWC487Mk8CoL1LdWsRtvfqaSE63LeMVZ4U+fMitjc6/Y+BG7taM7nzc6UjPRqFYgyhIqUa9YdKzdoE=
+	t=1734906968; cv=none; b=trVUNzOJM58aV7fhtNY2Yi5oDcIhCFk0g5ijz/Hm0nJ9vsdIzYH3msb4kOcoKbwwJF6yoHNGN7JaZ4T0uuXWVetrc7sfNjpvYegRA9yo1qy/NQwvOA5UhKwQ2mKgpg2ybIIcPpKj2Vt5oBO7OfiiQsMcuftmRIS/m2B7llOxOTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734903543; c=relaxed/simple;
-	bh=zMot9bOlkKVW2dVkPszCD+yWeb6v8YR8HtcyWdqZWGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D9dEvhIklOuOhwtJQVwiFRFl4tH2kG3WzAe6XYRgt8k+iQYpwBIBSmP/9M4WN83Ve08Oia7q8XVahJTXz57LDfesbx1VW+jRU8XKrjjNJ0xl3SbnTMPaULEPjiHyrsvrLqC9zo4/wXzZRhlg/3IdorYia3yPP3jWSRA2gu0pvEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com; spf=pass smtp.mailfrom=hyperbeam.com; dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b=Z7XdpT3G; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hyperbeam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyperbeam.com
+	s=arc-20240116; t=1734906968; c=relaxed/simple;
+	bh=/43HSdEtYyVjDZJjnecKHUCc3uqTj+JIRgsPRb+NMrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pBkIIqyy99mssrkcJr7D4b88K2ZTwzaMucYKPw8Jr7S2LuuvJ8oty2hOlk5d96HJSYOEN04H2GBX2QRMTMnIHaVonweYaj6q4MDqbHJ77N3fhVvOlmGRHsK1DI0UQB4BkMfFWwYg1cmm298axJKTbe5LoaCvzHsn5xsqycxcdmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLOakvNX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hyperbeam-com.20230601.gappssmtp.com header.i=@hyperbeam-com.20230601.gappssmtp.com header.b="Z7XdpT3G"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-29f88004a92so2183821fac.1
-        for <regressions@lists.linux.dev>; Sun, 22 Dec 2024 13:39:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hyperbeam-com.20230601.gappssmtp.com; s=20230601; t=1734903540; x=1735508340; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKGqThtPvCObYLRSiCusoHuc+WO5JOWiJwHmBwj4Noc=;
-        b=Z7XdpT3GP98InXUIq56YzJ/S5uFIhVmUKgIwhoZ5+u0D/DmbrOh0vXZY7pFunw+jAz
-         JXsLsFNtMb5+zNwcsRtdlUP28ekho4odzy8A/BNNxMsJMJ7HITHEsFvDALIGTWmtJ+XO
-         45DJdW8tzZbrJ3OMJi9P/SX9i6iYDoclv0WniimO3XHZRlqXvn+3hS0vMGSk2cBASC54
-         shPPQSd7a79Qbtdunjg0fUj8XV/JLrOhvdeGBbjRXFZ8TAzpHccVQhDZSrp0C2zfTOqa
-         JhSkT2Kd+U0EI50RwuI03gf+WhoCNR7UrLs5jWxBt0W8zP4NFpEtpA+sArdjVtBOLaBx
-         6WNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734903540; x=1735508340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DKGqThtPvCObYLRSiCusoHuc+WO5JOWiJwHmBwj4Noc=;
-        b=dygz11isViLd0kqwGaMYcFIVWgCJ2eof6pAt1EY/Ot+WzTnq7w46t3lterDUEZZohm
-         oBPwXgSsyMlzIsYX8ekX+OhdLkhBsoscVnL2P58Fdwx0VFw0ybiHe2AHDTs9zRNN0dMx
-         mIlr90QafC9CJjypR0v3qAFVecuBxZsNydjAsKFAaQUxLwm/EYuvXuKxBmyKMZVH0wxe
-         URvhjC2u9olm4tn45bK38NjogyFKmdbcDNr6T9SW0K5Qv0NwQvuY2tJ+dNQVNOMwfkjo
-         uielGKjn5n5bx4hrup8JHnuKNZZhr1D7rTTVbH6tDWyzwFf0EXwbYzNKAnXe3OX7XpuE
-         sKXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ7aIYP7FTHrOoouCHdY9vvCoxUpEWe2s4LqbtX8TrJSD2qLZRJ3HVWAfJm1SMsdYOyJhW5mcpc3wq0w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyPWu+EC2pXD1EQaSBLxiYnuqeFi7wVvpVh3RKM3bbSqiFGEmJK
-	Lwi3DVwrTW2/DvIQLda5PscLIqdX5YOx6oF05EmXg/2dgmwyohbToVrnuSJ67WsAYEmDERn1znp
-	2tcOVPaWHaoH2JkjGasgsAy7TIAF0o1j1SiF7Cw==
-X-Gm-Gg: ASbGnctBL45nl12LID4immP8B46IrTzSx6yyP6odmqP4uCRYmFIpMqkKrMdUJZBUVh2
-	47ZmbqvWCCXABppIYGqFgG67i6YOetToH7oO7vEwdeytnp8ntfYhMe8shzV2yZ0ahXXcM
-X-Google-Smtp-Source: AGHT+IHekh+ftIf2tzdHtH0LxGVmid/lAS/slmlSIxoJUPPs13YnMxudnri5gABPKQ3mIFEKwhJCEh7UryccrUeYFk8=
-X-Received: by 2002:a05:6871:6503:b0:297:23a8:1e0 with SMTP id
- 586e51a60fabf-2a7faa8a66cmr5935156fac.0.1734903540285; Sun, 22 Dec 2024
- 13:39:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLOakvNX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA08C4CECD;
+	Sun, 22 Dec 2024 22:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734906967;
+	bh=/43HSdEtYyVjDZJjnecKHUCc3uqTj+JIRgsPRb+NMrQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=PLOakvNX3nznLdM0zf+oPLS6/dOKix5wtjclqBXG/Qckr1H+w6xdsT/6d9qj/ldfn
+	 T3yaEIvxehrVnx3mmaGehfkVd2uu8krKqTuFeXZfRXOBd7+Li3Qe8SguMQj3uKplEs
+	 F1HkZ2rnDpj3VTvDwxgGDe7BuiOD/fvmT5GSVYdPoFKamg/o61PJqQPRoplUydRZ19
+	 tJvJDWfYAydIUOeSC6f8CtwhetQNqT36B6B/bnV+Q93Wz3yO+3YLRpFrEpddtdGefH
+	 8+secFKHbkoobdiwm9KyMbjEbFIxYKmn6c76YeFf91bmuvTEWNVwSOFBroYe3ei8Lu
+	 cE4uEv3Bh44eA==
+Date: Sun, 22 Dec 2024 16:36:04 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>,
+	Peter Xu <peterx@redhat.com>,
+	Athul Krishna <athul.krishna.kr@protonmail.com>
+Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
+ graphics artifacts after 6.12 kernel upgrade]
+Message-ID: <20241222223604.GA3735586@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFyAQLvdZVRFYW+xbHCu3j354O4=YDVyygXdw3ozEMfFbHkdig@mail.gmail.com>
- <Z2Vyh91HQ7i6O-6R@calendula> <Z2V3fhnOaOMcCtUt@calendula> <CAFyAQLt3i4Q56aCRXjWZkz=A8rotoPtHKcosRXiM+RF7AYBb4w@mail.gmail.com>
- <Z2fkSV6624wnlTjb@calendula>
-In-Reply-To: <Z2fkSV6624wnlTjb@calendula>
-From: "Amby @ Hyperbeam" <amby@hyperbeam.com>
-Date: Sun, 22 Dec 2024 21:38:49 +0000
-Message-ID: <CAFyAQLugB7ELuVZn2tNvKxyNwObU50+61W93e10uAKuF-KEJ+A@mail.gmail.com>
-Subject: Re: netfilter regression on aarch64 16k page size
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This also works
+Forwarding since not everybody follows bugzilla.  Apparently bisected
+to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
 
-On Sun, 22 Dec 2024 at 10:05, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> Hi again,
->
-> I posted this alternative fix:
->
-> https://patchwork.ozlabs.org/project/netfilter-devel/patch/20241222100239.336289-1-pablo@netfilter.org/
->
-> in case you have a chance to test it too.
->
-> Thanks.
->
-> On Fri, Dec 20, 2024 at 08:00:43PM +0000, Amby @ Hyperbeam wrote:
-> > The patch worked, thank you!
-> >
-> > On Fri, 20 Dec 2024 at 13:56, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Could you give a try to this quick patch?
-> > >
-> > > I will have to add BUILD_BUG_ON() as well to make sure struct
-> > > nft_set_ext is aligned so this atomic operation does not break again.
-> > >
-> > > Thanks.
-> > >
-> > > On Fri, Dec 20, 2024 at 02:35:06PM +0100, Pablo Neira Ayuso wrote:
-> > > > Hi,
-> > > >
-> > > > Thanks for your report, it is an unalign atomic that results from
-> > > > this.
-> > > >
-> > > > I will post a patch asap to address this.
-> > > >
-> > > > On Fri, Dec 20, 2024 at 12:15:36PM +0000, Amby @ Hyperbeam wrote:
-> > > > > Greetings,
-> > > > > We are seeing a regression in 6.6.66 which I have narrowed down to this commit:
-> > > > > stable: 86c27603514cb8ead29857365cdd145404ee9706
-> > > > > upstream: 7ffc7481153bbabf3332c6a19b289730c7e1edf5
-> > > > >
-> > > > > Kernel version: 6.6.66 on aarch64 with 16k page size
-> > > > > Last known good version: 6.6.65
-> > > > >
-> > > > > Steps to repro:
-> > > > > - run a 16k page size kernel (check with getconf PAGESIZE)
-> > > > > - try to load an nftables config file on the problem
-> > > > >
-> > > > > Expected:
-> > > > > - no errors
-> > > > >
-> > > > > Actual:
-> > > > > - system enters a broken state, with the following trace in dmesg:
-> > > > > [   40.939230] Unable to handle kernel paging request at virtual
-> > > > > address ffff00015ad7e4cc
-> > > > > [   40.939841] Mem abort info:
-> > > > > [   40.940079]   ESR = 0x0000000096000021
-> > > > > [   40.940389]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > > > > [   40.940820]   SET = 0, FnV = 0
-> > > > > [   40.941042]   EA = 0, S1PTW = 0
-> > > > > [   40.941289]   FSC = 0x21: alignment fault
-> > > > > [   40.941570] Data abort info:
-> > > > > [   40.941805]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-> > > > > [   40.942229]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> > > > > [   40.942857]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> > > > > [   40.943313] swapper pgtable: 16k pages, 48-bit VAs, pgdp=00000000474f0000
-> > > > > [   40.943865] [ffff00015ad7e4cc] pgd=180000043f7e8003,
-> > > > > p4d=180000043f7e8003, pud=180000043f7e4003, pmd=180000043f52c003,
-> > > > > pte=006800019ad7cf07
-> > > > > [   40.945664] Internal error: Oops: 0000000096000021 [#1] SMP
-> > > > > [   40.946055] Modules linked in: zstd zram zsmalloc nf_log_syslog
-> > > > > nft_log nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject
-> > > > > nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables
-> > > > > crct10dif_ce polyval_ce polyval_generic ghash_ce tcp_bbr sch_fq fuse
-> > > > > nfnetlink vsock_loopback vmw_vsock_virtio_transport_common
-> > > > > vmw_vsock_vmci_transport vmw_vmci vsock bpf_preload qemu_fw_cfg
-> > > > > ip_tables squashfs virtio_net net_failover virtio_blk gpio_keys
-> > > > > failover virtio_mmio virtio_scsi virtio_console virtio_balloon
-> > > > > virtio_gpu virtio_dma_buf megaraid_sas
-> > > > > [   40.950262] CPU: 7 PID: 116 Comm: kworker/7:1 Not tainted 6.6.67-1-lts #1
-> > > > > [   40.951542] Hardware name: netcup KVM Server, BIOS VPS 2000 ARM G11
-> > > > > 08/07/2024
-> > > > > [   40.952287] Workqueue: events_power_efficient nft_rhash_gc [nf_tables]
-> > > > > [   40.952798] pstate: 20401005 (nzCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-> > > > > [   40.953401] pc : nft_rhash_gc+0x208/0x2c0 [nf_tables]
-> > > > > [   40.954054] lr : nft_rhash_gc+0x134/0x2c0 [nf_tables]
-> > > > > [   40.954806] sp : ffff800081fb3cf0
-> > > > > [   40.955138] x29: ffff800081fb3d50 x28: 0000000000000000 x27: 0000000000000000
-> > > > > [   40.955974] x26: ffff0000cc760ef0 x25: ffff0000ccba9c80 x24: ffff0000cc758f78
-> > > > > [   40.956750] x23: 0000000000000010 x22: ffff0000ca789000 x21: ffff0000cc760f78
-> > > > > [   40.957455] x20: ffffd62d3ac3be40 x19: ffff00015ad7e4c0 x18: 0000000000000000
-> > > > > [   40.959005] x17: 0000000000000000 x16: ffffd62d37926880 x15: 000000400002fef8
-> > > > > [   40.959614] x14: ffffffffffffffff x13: 0000000000000030 x12: ffff0000cc760ef0
-> > > > > [   40.960197] x11: 0000000000000000 x10: ffff800081fb3d08 x9 : ffff0000cba89fe0
-> > > > > [   40.960739] x8 : 0000000000000003 x7 : 0000000000000000 x6 : 0000000000000000
-> > > > > [   40.961287] x5 : 0000000000000040 x4 : ffff0000cba89ff0 x3 : ffff00015ad7e4c0
-> > > > > [   40.961814] x2 : ffff00015ad7e4cc x1 : ffff00015ad7e4cc x0 : 0000000000000004
-> > > > > [   40.962339] Call trace:
-> > > > > [   40.962531]  nft_rhash_gc+0x208/0x2c0 [nf_tables]
-> > > > > [   40.962911]  process_one_work+0x178/0x3e0
-> > > > > [   40.963710]  worker_thread+0x2ac/0x3e0
-> > > > > [   40.964530]  kthread+0xf0/0x108
-> > > > > [   40.966259]  ret_from_fork+0x10/0x20
-> > > > > [   40.967287] Code: 54fff9a4 d503201f d2800080 91003261 (f820303f)
-> > > > > [   40.968245] ---[ end trace 0000000000000000 ]---
-> > > > >
-> > > > > faddr2line gave me the following:
-> > > > > nft_rhash_gc+0x208/0x2c0:
-> > > > > __lse_atomic64_or at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic_lse.h:132
-> > > > > (inlined by) arch_atomic64_or at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./arch/arm64/include/asm/atomic.h:65
-> > > > > (inlined by) raw_atomic64_or at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-arch-fallback.h:3771
-> > > > > (inlined by) raw_atomic_long_or at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/linux/atomic/atomic-long.h:1069
-> > > > > (inlined by) arch_set_bit at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/atomic.h:18
-> > > > > (inlined by) set_bit at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/asm-generic/bitops/instrumented-atomic.h:29
-> > > > > (inlined by) nft_set_elem_dead at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/./include/net/netfilter/nf_tables.h:1576
-> > > > > (inlined by) nft_rhash_gc at
-> > > > > /root/gg/setup/linux-lts/src/linux-6.6.67/net/netfilter/nft_set_hash.c:375
-> > > > >
-> > > > > By looking at the diff between 6.6.65 and 6.6.66 I was able to narrow
-> > > > > it down to the above commit and I can confirm that reverting it fixes
-> > > > > the issue.
-> > > > >
-> > > > > Best
-> > > > > --
-> > > > > Amby Balaji
-> > > > > Co-founder & CTO
-> > > > > Hyperbeam, Inc.
-> >
-> >
-> >
-> > --
-> > Amby Balaji
-> > Co-founder & CTO
-> > Hyperbeam, Inc.
+Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
+verify that reverting it is enough to avoid these artifacts?
 
+#regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
 
+----- Forwarded message from bugzilla-daemon@kernel.org -----
+
+Date: Sat, 21 Dec 2024 10:10:02 +0000
+From: bugzilla-daemon@kernel.org
+To: bjorn@helgaf9e54c3a2f5bas.com
+Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
+Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
+
+https://bugzilla.kernel.org/show_bug.cgi?id=219619
+
+            Bug ID: 219619
+           Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
+                    upgrade
+           Product: Drivers
+           Version: 2.5
+          Hardware: AMD
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: PCI
+          Assignee: drivers_pci@kernel-bugs.osdl.org
+          Reporter: athul.krishna.kr@protonmail.com
+        Regression: No
+
+Created attachment 307382
+  --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit
+dmesg
+
+Device: Asus Zephyrus GA402RJ
+CPU: Ryzen 7 6800HS
+GPU: RX 6700S
+Kernel: 6.13.0-rc3-g8faabc041a00
+
+Problem:
+Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
+screen artifacts, ultimately qemu will pause with unrecoverable error.
+
+Commit:
+f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
+commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
+Author: Alex Williamson <alex.williamson@redhat.com>
+Date:   Mon Aug 26 16:43:53 2024 -0400
+
+    vfio/pci: implement huge_fault support
+
+    With the addition of pfnmap support in vmf_insert_pfn_{pmd,pud}() we can
+    take advantage of PMD and PUD faults to PCI BAR mmaps and create more
+    efficient mappings.  PCI BARs are always a power of two and will typically
+    get at least PMD alignment without userspace even trying.  Userspace
+    alignment for PUD mappings is also not too difficult.
+
+    Consolidate faults through a single handler with a new wrapper for
+    standard single page faults.  The pre-faulting behavior of commit
+    d71a989cf5d9 ("vfio/pci: Insert full vma on mmap'd MMIO fault") is removed
+    in this refactoring since huge_fault will cover the bulk of the faults and
+    results in more efficient page table usage.  We also want to avoid that
+    pre-faulted single page mappings preempt huge page mappings.
+
+    Link: https://lkml.kernel.org/r/20240826204353.2228736-20-peterx@redhat.com
+    Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+    Signed-off-by: Peter Xu <peterx@redhat.com>
+    Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+    Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+    Cc: Borislav Petkov <bp@alien8.de>
+    Cc: Catalin Marinas <catalin.marinas@arm.com>
+    Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+    Cc: Dave Hansen <dave.hansen@linux.intel.com>
+    Cc: David Hildenbrand <david@redhat.com>
+    Cc: Gavin Shan <gshan@redhat.com>
+    Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+    Cc: Heiko Carstens <hca@linux.ibm.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jason Gunthorpe <jgg@nvidia.com>
+    Cc: Matthew Wilcox <willy@infradead.org>
+    Cc: Niklas Schnelle <schnelle@linux.ibm.com>
+    Cc: Paolo Bonzini <pbonzini@redhat.com>
+    Cc: Ryan Roberts <ryan.roberts@arm.com>
+    Cc: Sean Christopherson <seanjc@google.com>
+    Cc: Sven Schnelle <svens@linux.ibm.com>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Cc: Vasily Gorbik <gor@linux.ibm.com>
+    Cc: Will Deacon <will@kernel.org>
+    Cc: Zi Yan <ziy@nvidia.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+
+ drivers/vfio/pci/vfio_pci_core.c | 60 ++++++++++++++++++++++++++++------------
+ 1 file changed, 43 insertions(+), 17 deletions(-)
 
 -- 
-Amby Balaji
-Co-founder & CTO
-Hyperbeam, Inc.
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.
+
+----- End forwarded message -----
