@@ -1,73 +1,106 @@
-Received: from diary.svmhdvn.name (diary.svmhdvn.name [174.136.98.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA81DC98C
-	for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 22:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=174.136.98.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E22131E2D
+	for <regressions@lists.linux.dev>; Sun, 22 Dec 2024 07:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734820945; cv=none; b=hrpkiN0LJOuwSkRDlnhO99Ipwf4XhQ1NDfnr2JPyZLtoXdntdDMYVtVps2kVssmth8lttoyICVJtizBPEmkHqasN0R9orTxjD67UKW2cG/6zAD9qEAAaZZnCt/mgt2Uy55t3OzdAK95M4iXXBxq06VnALAxSGPi2uLEy9ohsvo0=
+	t=1734852385; cv=none; b=DEV3skjXRrXXODAKyJzgMn8u29j5BtGpw1PjgGHbKae+OQNM3X120h7wWEezdwYCK9mdmZpiV1faquDz7n+Q0thIv/329vQiXGOZLYYfkcw7bnykP86rGB9130pop2CU/5SLBdXRrvYM9Dn6rIssRzmBBlLFrd5W3a2ndqP5tN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734820945; c=relaxed/simple;
-	bh=yS+bnikUls+gxphI2NHeQo2aumEG3eqFwSybwO5fkrE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To; b=qA7DHgPMfwyjsf38EUJZZx/MmmD9M799v/YsnAe8pKput7hhFkXH+btonNhoL3ESTgTQu7EJJWQFNewfnwwKsMY4NdORKasLAfVqZAqLWI/iS8rrOciyshEK1hO5jYZIsfr9+HfyMysvFv+uDgo4kZrG+TYU2+g7LWjYa0z733Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=svmhdvn.name; spf=pass smtp.mailfrom=svmhdvn.name; dkim=pass (2048-bit key) header.d=svmhdvn.name header.i=@svmhdvn.name header.b=trl652hQ; arc=none smtp.client-ip=174.136.98.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=svmhdvn.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svmhdvn.name
+	s=arc-20240116; t=1734852385; c=relaxed/simple;
+	bh=pWy3kdeXldtGu26IRD8vfzEq3yKKT5gvwB+rRFZtji4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TsTTtLss6txnFsQzygs1mei1pSU17VkPRdaSnjhgEYCiMDdM3oAbEHFpcFI4b+oeIUAW7oUxGWp+oTynVB+7ds/V9AnlplW6AvL1SfqJMleHMDLLn8XidM1V8Du9BAAoCoVgs4naZcTmkbmoUnUfWk7SPVPZfhaeGm8i5ZJV27A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UInkVsn4; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svmhdvn.name header.i=@svmhdvn.name header.b="trl652hQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svmhdvn.name;
-	s=diary1; t=1734820548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=h9vROm/ucFrO1Zn4KeEKv/82NzYWKSb+97vYad00O+U=;
-	b=trl652hQOgNnOU5zQ6CZeRa2MYaQA3yT9JHZ+kaD5IU5bLnPZ/rD2U/ES0YvhKijfUQLdV
-	UG9LahF9SPPDaX94egagfw0Rps/YtczC24pZCjpocYdf9cX0SjhqZ4CNPTVLvw0Fhc/+Lc
-	5QQpA3PSiG+VY+oi2cvHY/QLDRVun0GEgfXQVafTQWQ6WqYXihLF1oLmQ9D5rqYQ/hifDT
-	iJWGIaMxgzCeoNrTUOGOG1bb+vm2ykjhfpg2j2lt17d+lFaS1lhQix1OSLuhr94Yn4ZtuN
-	CWs3JJ4fVV1i4e2kPREX2ZvASlvlac5fwfpeStNJzdc7e/fAh7R8cPJkkZm2RQ==
-Received: 
-	by diary.svmhdvn.name (OpenSMTPD) with ESMTPSA id 5ec79cca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Sat, 21 Dec 2024 22:35:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UInkVsn4"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43622354a3eso21892545e9.1
+        for <regressions@lists.linux.dev>; Sat, 21 Dec 2024 23:26:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734852382; x=1735457182; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Arrz5Exy1wRkGEREWcrB7cZbEldgJTKm7kgF6NXkEjg=;
+        b=UInkVsn4OOwj72N+q8Y3MeA+v0sJ34/KjkgmP7cZJDy8mhgxygKRgPZICSuIrKiqwf
+         mq2xMiMF5h8Bq3ekmU4P4cBPNMuMD0Ad2HW51mE3A7ea+GD0lsM9+YqCk8eoxYDmZZuW
+         ACM9v9LCdR7SVFmsLm+xgA30PrLo6e8aLiPUjoKZa+1sBDRcwQSROEObOaYFfqaSbXh4
+         rZg2aWMxGc1qqg/5yF9YJJXY7Z/JTTVyLHpoJxNI4WGbLF5OXLd3HZzRPfstjTlNcKME
+         lWiweOcEPR1Jg2FSbPDAv/EraaIHcdAaMqeKA/neZK0wutAhEPmVMN0J0mmiLx71MUXe
+         hcsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734852382; x=1735457182;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Arrz5Exy1wRkGEREWcrB7cZbEldgJTKm7kgF6NXkEjg=;
+        b=a8Eo/lIQ3DUDd40rBAdzd+k5h5XzQMDk+sELN/bXeA7i3/01J4yhApB7c4hkSi/4cy
+         u8OoVQjXT6ILHRGXPtci9bw0D3YacCdbYw4ElsLSb0NHsjntUs8G5jdeEOxI3Ozps3Xa
+         jkaDoYht/5ubLLDRw4xVxg23cNBz8v7FmzVVj0ajt46BUFtIiDLw08PvkpSVKihJT0aJ
+         EyBVo84z56ePqB6YyGOKssOt/7WDiPpT47R+6eanU7oo2Xv+SKfAdRv9PMLDbKUkf3oY
+         WSjMPCoLy4HiQl6IBoKi67OFvogJBijphySSBZ7vs+iXijKgUNb6XGkbPj15OnXzJAyh
+         cZTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWq/VT6lqpTR8ft+8PH6W7ENucIMrYkxzyLKZ9Mhq4WmfqtGkSQDtggxdDkT9Ba5732rSFXOUdJKgjHfg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjHl9mi+7P8yN6OqtCgB7rVmAqD/mcNVb41LPL4qeOMkFp8v2j
+	lqxRj87NlTY/XeXkf74KPqCtI5xtutpa3X1HBkwjrqEmOdWWKj+x
+X-Gm-Gg: ASbGncvOjL7xXZqSd/uUYiL9fzblbnTiws43/lN0oROCw+F2dZ+XLaZa8rWMEys1W2U
+	j/sORdFaaaDEvmzy81+kyWNYgDuOiRVC2DwRkDFNn08IJnmgTv/ljOW9/oOMgY56e9vJ0N5HreZ
+	cvFvRywTFn0Uiiw+JMhME29OTZwrC3V/T+IC3y5ukAJLusfPub2OaYel96RGLJI48TO/TCNlh0s
+	t/Eezj2waIG4c9znlRUjN7ZRsMo1tw3DeStBrgVSY1Ath8BvyOzA14qrnuV34pbAx2HTSqTBtGG
+	N7rDARGMXLa7+1JdDzh64A1nvT1iUeirW9V5jg==
+X-Google-Smtp-Source: AGHT+IGXRsiI3dpki18d/giNKINZ0eDQrO8MV2boHkATHk8Hsg2zha8flfwfsiyW3NkgTMnCjM/zuw==
+X-Received: by 2002:a05:600c:468f:b0:434:f335:855 with SMTP id 5b1f17b1804b1-43668b78324mr57816825e9.28.1734852382178;
+        Sat, 21 Dec 2024 23:26:22 -0800 (PST)
+Received: from ?IPV6:2a0d:6fc2:56d6:3b00:20f3:5417:1c06:8272? ([2a0d:6fc2:56d6:3b00:20f3:5417:1c06:8272])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c828ba0sm8086400f8f.14.2024.12.21.23.26.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Dec 2024 23:26:21 -0800 (PST)
+Message-ID: <a1c2d1e1-4180-48a9-a5c4-7a04feef97c8@gmail.com>
+Date: Sun, 22 Dec 2024 09:26:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 21 Dec 2024 17:35:37 -0500
-Message-Id: <D6HQK0PSRVBC.XEUGZC9N1O5K@svmhdvn.name>
-Subject: [REGRESSION] amdgpu: thinkpad e495 backlight brightness resets
- after suspend
-Cc: <regressions@lists.linux.dev>, <stable@vger.kernel.org>,
- <amd-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
- <Xinhui.Pan@amd.com>, <christian.koenig@amd.com>
-From: "Siva Mahadevan" <me@svmhdvn.name>
-To: <alexander.deucher@amd.com>
-X-Mailer: aerc 0.18.2
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Distorted sound on Acer Aspire A115-31 laptop
+To: Kailang <kailang@realtek.com>,
+ Linux Sound Mailing List <linux-sound@vger.kernel.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions Mailing List <regressions@lists.linux.dev>,
+ Linux Stable Mailing List <stable@vger.kernel.org>
+References: <e142749b-7714-4733-9452-918fbe328c8f@gmail.com>
+ <b4763f69b4004b19ab5c5e0a8f675282@realtek.com>
+ <0625722b-5404-406a-b571-ff79693fe980@gmail.com>
+ <ff166dfd38db410d8a82489ff487b437@realtek.com>
+Content-Language: en-US
+From: Evgeny Kapun <abacabadabacaba@gmail.com>
+In-Reply-To: <ff166dfd38db410d8a82489ff487b437@realtek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-#regzbot introduced: 99a02eab8
+ > Headphone or Headset. Which did you use?
+ > I don't know your platform has headset mic support or not.
 
-Observed behaviour:
-linux-stable v6.12.5 has a regression on my thinkpad e495 where
-suspend/resume of the laptop results in my backlight brightness settings
-to be reset to some very high value. After resume, I'm able to increase
-brightness further until max brightness, but I'm not able to decrease it
-anymore.
+I use headphones (no mic). I suppose my laptop should support a mic, 
+because there is an icon next to the headset socket which shows a 
+headset with a mic.
 
-Behaviour prior to regression:
-linux-stable v6.12.4 correctly maintains the same brightness setting on
-the backlight that was set prior to suspend/resume.
+ > Could you record sound via headphone?
+ >
+ > I want to know how the voice distortion.
 
-Notes:
-I bisected this issue between v6.12.4 and v6.12.5 to commit 99a02eab8
-titled "drm/amdgpu: rework resume handling for display (v2)".
+I've run some experiments to determine the nature of the distortions, 
+and I found that on affected kernels, what I'm hearing is the difference 
+between the left and the right channel of what is playing. So, if I play 
+a mono sound, I hear nothing at all (or rather, almost nothing). If I 
+manually mute one of the channels, I hear the sound normally (through 
+both ears, while on older kernels muting individual channels actually 
+works). If I invert one of the channels, I hear the sound normally as 
+well. If I play a stereo sound (for example, a music track), I hear 
+distortions.
 
-Hardware:
-* lenovo thinkpad e495
-* AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx
-* VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
-  Picasso/Raven 2 [Radeon Vega Series / Radeon Vega Mobile Series]
-  (rev c2)
