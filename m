@@ -1,111 +1,235 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C9E14D43D
-	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 15:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FEB182BC
+	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 15:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734966536; cv=none; b=kj9wyw0OLb9wAH0ZK+VvPPOJsZID+UCEPUyPC1uy5rsfC0L5NbHgg07/WHqSP42d0BA32abMF097uSspznueSrOGr9mWpS30v7RyZDWZc2hORBvU4fDwFa4axogCVRjwMeNXd7cPa2zMKkGTAMn/qofDBpIt15OTq3lYyc2mnWI=
+	t=1734968266; cv=none; b=is/6rWloyjhq6x4HI1xRPtIDrKuZPZJAvGl52lGXCmy3VEC2fme/MdWbBFgvWYKcxalBsOijvax7xf1GL09i7TooIfstyeZxlcBfZwh7mXfmerQt6rcXR3f11nu5bYlr50juOAob2MB7OV0z/Aa0YjpJgOeCq0oH7e2oTd56zXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734966536; c=relaxed/simple;
-	bh=5kuDSeTzV1Jw0BuP6ho8M1FKxQboDclJcHPZg3xW6zs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VRj7RfaHCdpK8QZPILKmIGqNj0uKr+C8vNWlLSSeSC4U05myaU4Rch9EY4Cc901mFcwNdkLHjD/5MUqQls2PbnAfockC+Zb1pwkWQDOThpXnGTBgyPIPO7AV2K037ucye063ke0ZP4f1xgfDTpumSKIIfzNS/u4PfqwNC34cdnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SiDyW1En; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734968266; c=relaxed/simple;
+	bh=uSoEy26PAONsbjs6n7npHxlu8oqiaGz3d5VLu10pbEc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mb10+DtzHMzTHQo7rkIn6DgGJryT8f7Xj+VbrJitX4jpuMPITOYH6mHjW7vOawbkjlbTGva9viPPx47IVjSBmWkitDjfNEdVj1jCr4RUVEpSLIcKCMmtIhulFLK9ilLAeZnbYs9sNgoqZD112EfpEdHZFTEwrLGriETxkrkKwSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U+p2iZBV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiDyW1En"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee534d6800so807312a91.2
-        for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 07:08:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734966534; x=1735571334; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tF0sOZnUj8sAyucMQ2ztc2c0IcnVX/ElkSfDdu250GM=;
-        b=SiDyW1EncRz7pj5RuB9ALM6CjlMbWEWysFDEa0NVdr6zNiX+eUiw+LDmfG3LL0oXqs
-         LAfdcgR3H9RwuCTBZxj+VuWHsG5+eFrSX6nxYVwN/76r4mWum2CLImajMhc2cCGvA/un
-         4/R+iwOga6jXyEAoZtmP+bgfwnsh/skHBZr0i/ZCrADenL7gqiOicSmM4I6tE+tuFF60
-         md96PFthbc1/Gb4ywDd8n5afmJ9tQL80JhMOB+pyctrCp3EIn/vgTLSAFskejVhtyJH3
-         sBm8Od1Ur9ydTVnQcQROktL7FnSc9XLaUwKhJoKwenH54vOxyO2AJ0akfq4OLe9bNzJr
-         qeTA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+p2iZBV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734968263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gERxao5u7e+QeAFFNB7FHNxaHvWvlD9w4fuFOgxVmVU=;
+	b=U+p2iZBV/L/Pj5D9wpXyYgbLXLDlekIB3n+0HkMtMoS2qVh235WmiBi+2omf/EzavjuTYj
+	ze9u4Ytk8TZqia/cLoHvOxodQ+clGq96ESbURxx06+UjfDWi0skTtUkHHrZOScs1t9uhCF
+	Z5p+YnkgOJAyblprNp65vCp+vyx36wc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-i7jGvPhnMdSXyBQWlsK9yg-1; Mon, 23 Dec 2024 10:37:42 -0500
+X-MC-Unique: i7jGvPhnMdSXyBQWlsK9yg-1
+X-Mimecast-MFC-AGG-ID: i7jGvPhnMdSXyBQWlsK9yg
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-385d80576abso2640222f8f.3
+        for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 07:37:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734966534; x=1735571334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tF0sOZnUj8sAyucMQ2ztc2c0IcnVX/ElkSfDdu250GM=;
-        b=A+dZ+wbBDF0/o7u261h8yCwXXrnsIvixbdirbCj8gGQBBABYensSbKbnbyti5BUq9m
-         gSZ8Fo30ALERyonEeedV4dePbZ/3MqmLKxFjvUM1sjjuiJ77Kg2Lzf4J3El8PnRyx+Jm
-         wHvZzl/hdt+CNFwo6h80Rm70y2p58HcnLkVBeC09TmKQNBrUG9bWRmgZ/2Tu36/0X++F
-         yjmzyi9xknCijoeKTAi/S2Axfswqe3Kie4hpCM10eZZxtNItZUBEKvROYwyLeDzIFJsM
-         xuGk3/sqgA/vcr12iLMROygfTpwuCgb4+4kFeM8CeD+ANhUhTfU+oDxH2qc/FkNJRb++
-         mYMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUw6wF1jVaVy9f/j4PxDUHMDe6u45dPT6dw8Q6RoRdpyfr2ObLbBXfe+/9MLjVSqcNFmAGQR4tsMOjN8w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwbgsSV4JijXgIImCO45KeLQag3uU+diV3w/YRLOvnpS8mYq/QN
-	r+xr4VDu32Ym33BvGbkybFAdv75gxAzvqNU/PYV6fx+Bx+bA5aLogas6YvtLPh3z8FXkoxjak7w
-	4jW6CM2K2t90uCwCYg2CF2skntdE=
-X-Gm-Gg: ASbGnct30MwuOiFvVYdZat4vlheip97J6MHxL7hLZXp5UisQi3fSe8qfDKzba1I08Yl
-	KYplL4pNZcjZHcSWmf/WecBTosP1I3KGS0jE8sQ==
-X-Google-Smtp-Source: AGHT+IEkapHYNlUUKAjZj8egJF18AjyOabciUQrTJCmtjvX4x7gga/YoC2xZlf0T/eu7KxDIYeGVatztWXLKQd3DHZE=
-X-Received: by 2002:a17:90a:c884:b0:2ee:b665:12ce with SMTP id
- 98e67ed59e1d1-2f452debc21mr7690176a91.1.1734966534558; Mon, 23 Dec 2024
- 07:08:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1734968261; x=1735573061;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gERxao5u7e+QeAFFNB7FHNxaHvWvlD9w4fuFOgxVmVU=;
+        b=JxbVnJUYzpFgVxhJkUydUmI4lfkbYT6PzMspPy/bTK+inex7Nx1A/9W2IdLv2uFjy1
+         +NIaR8n2t0w9tabuKoB87GPg0L8bXsaLRXAjxRvUemYc9IeORq0xs7WzLy9ox1XOU5yk
+         4g/Ft93R2BTCeREA4dqRXeHhHnwyIdW2RHhRLbGy9zsdrH+DO4Tp93oBc7IiVBrfEmfa
+         wCcydK2rSxheoEu3X9Qh2SwoDhTmZRm7qd/JjMBP5OsuGvM5cnMI9H/lNwnZyY7kGuTv
+         MluN3GMAInZ+25CLWI6he9PaywXZfLs042i5Fv8XvwBPYbnrun+sTiGloJKbY6Nk9+sw
+         YlWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLHCSGzRf0evWKfoF4jEmpAC4rA9afmRWijbtubbui8u+zQe4654jNeuPXXr1Bk/nmhroYq1e3xNmFQw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwAOy56pk0lFNtN045ZW1OaZf+GD0TC1vX80i/cBkJmVx2Bb8ti
+	UJBHLggAYfqnHHFK1/FEJ3XJy50INZB2MQJkGUbR+UQxs2/5n59co8olTvNENLwjGsF4Sp0qbg0
+	3hRHkjI/zAkTo/eCHprXrxZlShr1D8NEfSZj1Hpbrk7xLf1P2OoWTTtrs21Cv
+X-Gm-Gg: ASbGncuaUNkq0juHECI6yW6HMLsUS4jLjTQuCAUxEp7PP+9iWkouo6+zd/a5QdqoWLG
+	3sH/r5Upx1oSA3QzIQy2EsApAUK8Y+hMUdYlA0YdOq+yvilmBRoSRJnnWjKOB+MH3AnCJf5TLBK
+	D3qIw7beAdzxgkV6kAV+VZC2pI6/O+izwxED8sRPVpP6dPYPM97x9qQgaLaFkbyeioQKXMOaX/s
+	dPnCsFfPVyMtxe1HANL5QrHVNE6X4yaMCvVcJGFTnQDGtvqzadxvLUtZQ8=
+X-Received: by 2002:a05:6000:70a:b0:382:4ab4:b3e5 with SMTP id ffacd0b85a97d-38a2213e228mr12437160f8f.0.1734968260984;
+        Mon, 23 Dec 2024 07:37:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOnMCRNQXx31Qgp9j0WYinV6Gw587GcKHuh8+AHujQ7z9thka6NjL/Uwdm0+hCZkHSiJVi9Q==
+X-Received: by 2002:a05:6000:70a:b0:382:4ab4:b3e5 with SMTP id ffacd0b85a97d-38a2213e228mr12437145f8f.0.1734968260634;
+        Mon, 23 Dec 2024 07:37:40 -0800 (PST)
+Received: from [192.168.10.3] ([151.81.118.45])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-436611ea3e0sm141436085e9.7.2024.12.23.07.37.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2024 07:37:39 -0800 (PST)
+Message-ID: <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+Date: Mon, 23 Dec 2024 16:37:38 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <D6HQK0PSRVBC.XEUGZC9N1O5K@svmhdvn.name>
-In-Reply-To: <D6HQK0PSRVBC.XEUGZC9N1O5K@svmhdvn.name>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 23 Dec 2024 10:08:41 -0500
-Message-ID: <CADnq5_M-aPD6tNppQ3_6dC8dgt7zeLXZPE5CdCjQEuEDxS=mWA@mail.gmail.com>
-Subject: Re: [REGRESSION] amdgpu: thinkpad e495 backlight brightness resets
- after suspend
-To: Siva Mahadevan <me@svmhdvn.name>
-Cc: alexander.deucher@amd.com, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Xinhui.Pan@amd.com, christian.koenig@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: linuxppc-dev@lists.ozlabs.org, Darren Stevens <darren@stevens-zone.net>,
+ Pat Wall <pjwall@mac.com>, Pat Wall <pjwall@me.com>,
+ Christian Zigotzky <info@xenosoft.de>, madskateman@gmail.com,
+ "R.T.Dickinson" <rtd2@xtra.co.nz>, hypexed@yahoo.com.au,
+ regressions@lists.linux.dev
+References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
+ <6CC404E2-2442-47FE-877C-252B1F2872C2@xenosoft.de>
+ <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
+ <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
+ <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
+ <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
+ <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
+ <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
+ <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
+ <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
+ <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: UWHRVGcRD1Yk47DLHNOg7a2rFkhNp5t81jJi9G9q3q8_1734968261
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 23, 2024 at 4:08=E2=80=AFAM Siva Mahadevan <me@svmhdvn.name> wr=
-ote:
->
-> #regzbot introduced: 99a02eab8
->
-> Observed behaviour:
-> linux-stable v6.12.5 has a regression on my thinkpad e495 where
-> suspend/resume of the laptop results in my backlight brightness settings
-> to be reset to some very high value. After resume, I'm able to increase
-> brightness further until max brightness, but I'm not able to decrease it
-> anymore.
->
-> Behaviour prior to regression:
-> linux-stable v6.12.4 correctly maintains the same brightness setting on
-> the backlight that was set prior to suspend/resume.
->
-> Notes:
-> I bisected this issue between v6.12.4 and v6.12.5 to commit 99a02eab8
-> titled "drm/amdgpu: rework resume handling for display (v2)".
 
-Odd.  That commit shouldn't affect the backlight per se.
 
+On Mon, Dec 23, 2024 at 3:41 PM Christian Zigotzky <chzigotzky@xenosoft.de> wrote:
+> Bisecting: a merge base must be tested
+> [e9001a382fa2c256229adc68d55212028b01d515] Merge tag
+> 'kvmarm-fixes-6.12-3' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
 >
-> Hardware:
-> * lenovo thinkpad e495
-> * AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx
-> * VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
->   Picasso/Raven 2 [Radeon Vega Series / Radeon Vega Mobile Series]
->   (rev c2)
+> The host system doesn't boot.
+> Unfortunately, there isn't a guest kernel boot log via serial log.
 
-Please file a ticket here:
-https://gitlab.freedesktop.org/drm/amd/-/issues
-and attach your full dmesg output and we'll take a look.
+No big deal since the boot hang was fixed via rebase.
+
+>      git checkout -b bisection-rebase
+> b467ab82a9fde4b46c0cd2c299220857afb0e0d4
+>      git rebase v6.12
+>
+> The host kernel boots but the guest kernel doesn't boot so KVM HV
+> doesn't work.
+
+As expected, so that's good.
+
+>      git bisect start
+>      git bisect bad bisection-rebase
+>      git bisect good v6.12
+>
+> [skipping bisection process]
+>
+> `edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4 is the first bad commit
+
+Ok, that means that the culprit is commit 419cfb983ca93 (the above
+is the rebased hash).  Thank you very much, your work was really
+helpful!
+
+Can you test this simple patch?
+
+--------------- 8< ----------------
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] KVM: allow  NULL writable argument to __kvm_faultin_pfn
+
+kvm_follow_pfn() is able to work with NULL in the .map_writable field
+of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
+despite KVM for e500 trying to use it.  Indeed .map_writable is not
+particularly useful if the flags include FOLL_WRITE and readonly
+guest memory is not supported, so add support to __kvm_faultin_pfn()
+for this case.
+
+Fixes: 1c7b627e9306 ("KVM: Add kvm_faultin_pfn() to specifically service guest page faults")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index de2c11dae231..5177e56fdbd5 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct kvm_memory_slot *slot, gfn_t gfn,
+  		.refcounted_page = refcounted_page,
+  	};
+  
+-	if (WARN_ON_ONCE(!writable || !refcounted_page))
++	if (WARN_ON_ONCE(!refcounted_page))
+  		return KVM_PFN_ERR_FAULT;
+  
+-	*writable = false;
++	if (writable)
++		*writable = false;
+  	*refcounted_page = NULL;
+  
+  	return kvm_follow_pfn(&kfp);
 
 Thanks,
 
-Alex
+Paolo
+
+> commit edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4
+> Author: Sean Christopherson seanjc@google.com
+> Date: Thu Oct 10 11:23:56 2024 -0700
+>
+> KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
+>
+> Convert PPC e500 to use __kvm_faultin_pfn()+kvm_release_faultin_page(),
+> and continue the inexorable march towards the demise of
+> kvm_pfn_to_refcounted_page().
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Message-ID: <20241010182427.1434605-55-seanjc@google.com>
+>
+> arch/powerpc/kvm/e500_mmu_host.c | 8 +++-----
+> 1 file changed, 3 insertions(+), 5 deletions(-)`
+>
+> Cheers,
+> Christian
+>
+> --
+> Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
+>
+
