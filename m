@@ -1,200 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFDF1A8F8B
-	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 16:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AEF186E2D
+	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 18:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734973154; cv=none; b=Kzbu8Kg13L1irltHbXa6ZfQrqhVdT2G9qYgDBHySR2/buhzR810JfVZ+3Mp00ipnMbjows56PFGu4WdFjdBaJI2iITHGSPZBO3vyLeia1WBH5WstP2Lt3eCtnYHftY2h5IjciEwL1nG9isbod5ZfJM3I5vOksZzdOl+BfwGXtEI=
+	t=1734977733; cv=none; b=D9sqZ5B5kqmcg9BVlZgxEIJvRz4VUIMFNOerG+cmK7t7f0SPsc5G91aXR3RL5pX89Hp126nMOzd9ApFhvQB8LDkSELuRdScWbDhl65pGleWMHQ+bGmeQlIRwDnJh0zKhvjvjsmwbEJuwaNcjD/8QqdsB7ggPuHY9BFxaTUFg2Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734973154; c=relaxed/simple;
-	bh=/eXm46f1zqFCIapOpV+LJv6AU7meQGgq4bWoJc1Vl4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=H3nXWJmfrLzrtdFRpmKm4BO21T5dvu9PG8psTx0saSkQGtm9qnMx8upi9/pZJ3/nYpYQ9lVImkc5hZvkhnJj6y2Ri2/AvXAWs8exllaZXvW00i/LvGQeayT6BiqbAMLE2nXzUmFKpCllkLOVE/i68Apa/ACF4h2JcuxfWQK8tyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YT82LOSv; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1734977733; c=relaxed/simple;
+	bh=8pDFmu8/1sF75hrfCbh9g3oxXjJ5jWjyvYPRTNtqsUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hkgltFkJYSXcMYSKJ2T4jZlNGYFFxnbUrK3RDdNoFoGuCVEogVGIsSMR/IZn7Z6V73sPJojbUI/9nxD5Z0CXiL5oPDj43jQz3bAfoldUJguANDikN13/4WPeZUYt2ScQbOdQ5FRFw10zZsTfy7zN8ZHBHxL0TC3JBcvl3g1RCDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTlLp5aH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YT82LOSv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTlLp5aH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734973151;
+	s=mimecast20190719; t=1734977730;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vYhwmX9VYIzFjXFoGAhiV3rOfBz1b4KM/wduvPShNVk=;
-	b=YT82LOSvFSY5Ii/EF8dpDUr/76bjQ3/uAYK8+i+FPsmFYdBeHqrJ9EsDRAMEWLwGmgG7Qi
-	ZUBE25Aov4QhyKR1uV2/0DekDXnp9KaxOggKi/SxYV6B/i5k2ldSn4fd30Uq3MY8HrSiBN
-	wrI920jbUlCxpZBu/igstRRvliUnOKY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
+	b=PTlLp5aHnAsmdorl96AwAGAWQgbWGJpYB5yuFVEZg/wL0WT/0JutW25xhakLax8MvgyKUh
+	/fpbTB+c6Fu76DV8uVCeeoKkVJqRc5fhBc9eBkrp+3Qw52JFXLuaoAsghR0F4Ooz3MQTaw
+	1BsUugxQniZOIFzXV+p8itg49cV9IaE=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470--6TwccGHNGqbXrgjmplQ6Q-1; Mon, 23 Dec 2024 11:59:10 -0500
-X-MC-Unique: -6TwccGHNGqbXrgjmplQ6Q-1
-X-Mimecast-MFC-AGG-ID: -6TwccGHNGqbXrgjmplQ6Q
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6d87ee5fb22so65035656d6.1
-        for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 08:59:10 -0800 (PST)
+ us-mta-7-9teMYoCCNSWMFAlQnR7UxA-1; Mon, 23 Dec 2024 13:15:29 -0500
+X-MC-Unique: 9teMYoCCNSWMFAlQnR7UxA-1
+X-Mimecast-MFC-AGG-ID: 9teMYoCCNSWMFAlQnR7UxA
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-71e1a724b99so28224a34.0
+        for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 10:15:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734973150; x=1735577950;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vYhwmX9VYIzFjXFoGAhiV3rOfBz1b4KM/wduvPShNVk=;
-        b=WwSaLyjcfjOKuWrR4yLGURcF2HPcJHNcB3urvi92QCxLEsddzScae4kfBA9Mg+zrBs
-         hR+ejuySGCywVyg1I12/PZZr8B3nAu39N/oy/itsNQsFRfY1NaoweeJteRTNJQiJwRLo
-         BKDomQJXM/sgMzc7nePfbAsUAN++jla0fq+Dfg5C8gz2A8uQw2qg9jd6zYw8tFEtNRMJ
-         6wmVGgIFFAC3bfez1sR6MsCSKy+WWDGAawNcKv0k5YjnMMS4c481u3VnPq4qQQ+olBNl
-         4RkJ3ukSiLa7txIZQ0D0Tof3timy/sRLdy2cFnfNy4mpNp/Upcp1yy9C6QCMfLswE6As
-         3fzg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9PtDe4PZSe3xMUidT3HUPUSqIjkajPuKKNeDP2v1f2Hb4SP1Fxgv9pwcmQj9qYzDC5ezRML67Vhf2hg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YylNeOFjmYjNIZeb6WqivzKrKfFqRB/q5bVSM+SWocG8/+87KsE
-	OiEFYt5M0nBKq0jD6iPkeavOo/ASvbVcmaNsJbRguqiE51n8UVpYxq/2gkxW+92UYjp00Np7kEG
-	DJE28SkuT1FFsFcuK2xfyLktUywjEiJx39GjLgwjKh7A8xGR7RJ5CqyThuioC
-X-Gm-Gg: ASbGncvLZa8V3/uo70ymuCOVY/+frGrR/gNRdb1IazNLatfbWnNAiBt+ju680zo7dvd
-	iZQDpmp7df+W0K6Z3DhM+Z8rk8hhWZ4n8wffZ80P2rzTUhmS8dex6dY9tk3K1wn+9HmA03yb+QA
-	gP/dK/vn13xNA7oWAol9TI3+gYq4w6XVY+t4of1tI5VasnA7NB6GI0zz2G/Odg9xY1cvwrz896O
-	vRBAkahQlsbaibwXWq0Uy7XJtkJ0Qkr+/QK2y++i3qH8dSlzkjl1+oWWKLIEisGl9xmT8JFbrJz
-	AaTXRq9t3fX4S+TTYw==
-X-Received: by 2002:a05:6214:27eb:b0:6d8:f612:e27d with SMTP id 6a1803df08f44-6dd2339ff38mr220808626d6.32.1734973149769;
-        Mon, 23 Dec 2024 08:59:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEiyg9xnnEYGXGK2rAB5forgSszecTTud5B0dq/EWmsMFf8C8vl0ZI9iiiIPpJtiZdzHVnwOw==
-X-Received: by 2002:a05:6214:27eb:b0:6d8:f612:e27d with SMTP id 6a1803df08f44-6dd2339ff38mr220808336d6.32.1734973149413;
-        Mon, 23 Dec 2024 08:59:09 -0800 (PST)
-Received: from x1n (pool-99-254-114-190.cpe.net.cable.rogers.com. [99.254.114.190])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd181c0fc5sm45137506d6.92.2024.12.23.08.59.08
+        d=1e100.net; s=20230601; t=1734977728; x=1735582528;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
+        b=B4H/3jk2l0AGbV/tX8MbADYCnh5i0hpu8cPDR1MbejAJy/N74r/z5y9kq2ixuVUttr
+         rAwStvH2ou2znGII/UlGOUkzmQh78m5GQEpoaiYbBqPLzP4MBv0dMws274Rloj2Qk1Qw
+         Pnk42/+EPWI3uW+CAKW/dt2Wb20/fELTK2Va50GmFfIPV5/RJ5n+Vm4+K6PfegBGPJgq
+         76aJMS+AlvXctuqLd5Fg38egl0Kzn3Q38S7NFI6Qk5+wSCuUtAj3Nu1U5pd4uKvjxZtd
+         PWMK+znrvBTJozy2U/X4dNvTeIaD9hC3ZsFWMy61JCNzP8SeV/G41i2ilyWB2pFKaUNf
+         o1ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUtOkneHugYPxuNIDa3GnIY8BtsvQGddjoa90VIbwa5ce0Swl4EZS2BqCPgd4z+myux6SX4PpweaVq2CA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw3c+IwTPvZ8GP0W+Ki2BFMJxkgCefZfji3RyWy1wwhcyI2iT0n
+	hmgVw6C0vR2Q0hf02hMXrZzZee7twSqhaBw3iMT2r9x++HrK4gGQhyg4xFlZSH3bXFnuFZ4vXip
+	P8L/GGgMjtK6aUB09aVW8tKjl7PCbBHQcK0iN+p6HhRScgbT9sZf0FLyYiGn4
+X-Gm-Gg: ASbGncvbbPM5gX+1ALUqtuy8Akf9E/PrPmOdZrbcgPemSu8AN+ewyThpF4Xep7kJ9TI
+	eR0+Bl0ZJZNms5SJ+cGgWWLnSZ9ik1BstWbjw0kDs/KF6HN67rxJnV87F5KwghEpdXUoZ//8S3v
+	lqbkOb7HLNdmkh5UpwbVDpg64B0LFZGvu0tXJTQ9DREw8KBkCy0uAdrBSfVoVWkx9Rjc5tjTVce
+	rs6negG1cr9EmK/yJsScU1sCiUg7PZJDjaekl+zihGn5gcPr99PgT86ttM6
+X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341869a34.2.1734977728568;
+        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHL84ulGDZQJL2507Y3H15s+slqjLTXHJpf42Oh15OEYbs2ukq1so9LGjZjnTqyXM9iw8VcMg==
+X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341863a34.2.1734977728249;
+        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71fc97642e8sm2400002a34.5.2024.12.23.10.15.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2024 08:59:08 -0800 (PST)
-Date: Mon, 23 Dec 2024 11:59:06 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+        Mon, 23 Dec 2024 10:15:27 -0800 (PST)
+Date: Mon, 23 Dec 2024 11:15:25 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Peter Xu <peterx@redhat.com>, Athul Krishna
+ <athul.krishna.kr@protonmail.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "kvm@vger.kernel.org"
+ <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
  graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <Z2mW2k8GfP7S0c5M@x1n>
+Message-ID: <20241223111525.0249057e.alex.williamson@redhat.com>
+In-Reply-To: <Z2mW2k8GfP7S0c5M@x1n>
 References: <20241222223604.GA3735586@bhelgaas>
- <Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
+	<Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
+	<Z2mW2k8GfP7S0c5M@x1n>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: CdN0gQn9uwLNOKsuGwtYVZi8Z6wwRYISC1LzKx8azHs_1734973150
+X-Mimecast-MFC-PROC-ID: w42AriLFTJp3o2PiVW4ABfve3QdkzTog6SwmeQ6Bl-k_1734977728
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 23, 2024 at 07:37:46AM +0000, Athul Krishna wrote:
-> Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.
+On Mon, 23 Dec 2024 11:59:06 -0500
+Peter Xu <peterx@redhat.com> wrote:
 
-I suppose Alex should have some more thoughts, probably after the holidays.
-Before that, one quick question to ask..
-
+> On Mon, Dec 23, 2024 at 07:37:46AM +0000, Athul Krishna wrote:
+> > Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.  
 > 
-> -------- Original Message --------
-> On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> I suppose Alex should have some more thoughts, probably after the holidays.
+> Before that, one quick question to ask..
+
+Yeah, apologies in advance for latency over the next couple weeks.
+
+> > -------- Original Message --------
+> > On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >   
+> > >  Forwarding since not everybody follows bugzilla.  Apparently bisected
+> > >  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
+> > >  
+> > >  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
+> > >  verify that reverting it is enough to avoid these artifacts?
+> > >  
+> > >  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
+> > >  
+> > >  ----- Forwarded message from bugzilla-daemon@kernel.org -----
+> > >  
+> > >  Date: Sat, 21 Dec 2024 10:10:02 +0000
+> > >  From: bugzilla-daemon@kernel.org
+> > >  To: bjorn@helgaf9e54c3a2f5bas.com
+> > >  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
+> > >  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
+> > >  
+> > >  https://bugzilla.kernel.org/show_bug.cgi?id=219619
+> > >  
+> > >              Bug ID: 219619
+> > >             Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
+> > >                      upgrade
+> > >             Product: Drivers
+> > >             Version: 2.5
+> > >            Hardware: AMD
+> > >                  OS: Linux
+> > >              Status: NEW
+> > >            Severity: normal
+> > >            Priority: P3
+> > >           Component: PCI
+> > >            Assignee: drivers_pci@kernel-bugs.osdl.org
+> > >            Reporter: athul.krishna.kr@protonmail.com
+> > >          Regression: No
+> > >  
+> > >  Created attachment 307382  
+> > >    --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit  
+> > >  dmesg  
 > 
-> >  Forwarding since not everybody follows bugzilla.  Apparently bisected
-> >  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
-> >  
-> >  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
-> >  verify that reverting it is enough to avoid these artifacts?
-> >  
-> >  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
-> >  
-> >  ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> >  
-> >  Date: Sat, 21 Dec 2024 10:10:02 +0000
-> >  From: bugzilla-daemon@kernel.org
-> >  To: bjorn@helgaf9e54c3a2f5bas.com
-> >  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
-> >  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
-> >  
-> >  https://bugzilla.kernel.org/show_bug.cgi?id=219619
-> >  
-> >              Bug ID: 219619
-> >             Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
-> >                      upgrade
-> >             Product: Drivers
-> >             Version: 2.5
-> >            Hardware: AMD
-> >                  OS: Linux
-> >              Status: NEW
-> >            Severity: normal
-> >            Priority: P3
-> >           Component: PCI
-> >            Assignee: drivers_pci@kernel-bugs.osdl.org
-> >            Reporter: athul.krishna.kr@protonmail.com
-> >          Regression: No
-> >  
-> >  Created attachment 307382
-> >    --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit
-> >  dmesg
+> vfio-pci 0000:03:00.0: vfio_bar_restore: reset recovery - restoring BARs
 
-vfio-pci 0000:03:00.0: vfio_bar_restore: reset recovery - restoring BARs
-pcieport 0000:00:01.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:03:00.1
-vfio-pci 0000:03:00.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-vfio-pci 0000:03:00.0:   device [1002:73ef] error status/mask=00100000/00000000
-vfio-pci 0000:03:00.0:    [20] UnsupReq               (First)
-vfio-pci 0000:03:00.0: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-vfio-pci 0000:03:00.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-vfio-pci 0000:03:00.1:   device [1002:ab28] error status/mask=00100000/00000000
-vfio-pci 0000:03:00.1:    [20] UnsupReq               (First)
-vfio-pci 0000:03:00.1: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-vfio-pci 0000:03:00.1: AER:   Error of this Agent is reported first
-pcieport 0000:02:00.0: AER: broadcast error_detected message
-pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-pcieport 0000:02:00.0: AER: broadcast resume message
-pcieport 0000:02:00.0: AER: device recovery successful
-pcieport 0000:02:00.0: AER: broadcast error_detected message
-pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-pcieport 0000:02:00.0: AER: broadcast resume message
-pcieport 0000:02:00.0: AER: device recovery successful
+Is the reset recovery message seen even with the suspect commit
+reverted?  Timestamps here would be useful for correlation.
 
-> >  
-> >  Device: Asus Zephyrus GA402RJ
-> >  CPU: Ryzen 7 6800HS
-> >  GPU: RX 6700S
-> >  Kernel: 6.13.0-rc3-g8faabc041a00
-> >  
-> >  Problem:
-> >  Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
-> >  screen artifacts, ultimately qemu will pause with unrecoverable error.
+> pcieport 0000:00:01.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:03:00.1
+> vfio-pci 0000:03:00.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
+> vfio-pci 0000:03:00.0:   device [1002:73ef] error status/mask=00100000/00000000
+> vfio-pci 0000:03:00.0:    [20] UnsupReq               (First)
+> vfio-pci 0000:03:00.0: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
+> vfio-pci 0000:03:00.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
+> vfio-pci 0000:03:00.1:   device [1002:ab28] error status/mask=00100000/00000000
+> vfio-pci 0000:03:00.1:    [20] UnsupReq               (First)
+> vfio-pci 0000:03:00.1: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
+> vfio-pci 0000:03:00.1: AER:   Error of this Agent is reported first
+> pcieport 0000:02:00.0: AER: broadcast error_detected message
+> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
+> pcieport 0000:02:00.0: AER: broadcast resume message
+> pcieport 0000:02:00.0: AER: device recovery successful
+> pcieport 0000:02:00.0: AER: broadcast error_detected message
+> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
+> pcieport 0000:02:00.0: AER: broadcast resume message
+> pcieport 0000:02:00.0: AER: device recovery successful
+> 
+> > >  
+> > >  Device: Asus Zephyrus GA402RJ
+> > >  CPU: Ryzen 7 6800HS
+> > >  GPU: RX 6700S
+> > >  Kernel: 6.13.0-rc3-g8faabc041a00
+> > >  
+> > >  Problem:
+> > >  Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
+> > >  screen artifacts, ultimately qemu will pause with unrecoverable error.  
+> 
+> Is there more information on what setup can reproduce it?
+> 
+> For example, does it only happen with Windows guests?  Does the GPU
+> vendor/model matter?
 
-Is there more information on what setup can reproduce it?
+And the CPU vendor, this was predominately tested by me on Intel +
+NVIDIA.  I'm also not seeing any similar reports on r/VFIO, which is a
+bit strange as there are a lot of bleeding edge users there.  The bz is
+reported against 6.13.0-rc3-g8faabc041a00 and a revert against
+v6.13-rc1 was reported as stable.  Has this actually been confirmed on
+v6.12, or might something in v6.13-rc have introduced a new issue?
 
-For example, does it only happen with Windows guests?  Does the GPU
-vendor/model matter?
+> > >  Commit:
+> > >  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
+> > >  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
+> > >  Author: Alex Williamson <alex.williamson@redhat.com>
+> > >  Date:   Mon Aug 26 16:43:53 2024 -0400
+> > >  
+> > >      vfio/pci: implement huge_fault support  
+> 
+> Personally I have no clue yet on how this could affect it.  I was initially
+> worrying on any implicit cache mode changes on the mappings, but I don't
+> think any of such was involved in this specific change.
+> 
+> This commit majorly does two things: (1) allow 2M/1G mappings for BARs
+> instead of small 4Ks always, and (2) always lazy faults rather than
+> "install everything in the 1st fault".  Maybe one of the two could have
+> some impact in some way.
 
-> >  
-> >  Commit:
-> >  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
-> >  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
-> >  Author: Alex Williamson <alex.williamson@redhat.com>
-> >  Date:   Mon Aug 26 16:43:53 2024 -0400
-> >  
-> >      vfio/pci: implement huge_fault support
+Athul, can you test reverting both f9e54c3a2f5b and d71a989cf5d9?  That
+would provide the faulting behavior without yet making use of huge
+pfnmaps.  Thanks,
 
-Personally I have no clue yet on how this could affect it.  I was initially
-worrying on any implicit cache mode changes on the mappings, but I don't
-think any of such was involved in this specific change.
-
-This commit majorly does two things: (1) allow 2M/1G mappings for BARs
-instead of small 4Ks always, and (2) always lazy faults rather than
-"install everything in the 1st fault".  Maybe one of the two could have
-some impact in some way.
-
-IIUC basic paths were covered and hopefully should work, so I wonder what's
-the specialty. Might be relevant to above questions on the reproduceable
-setups.
-
-Thanks,
-
--- 
-Peter Xu
+Alex
 
