@@ -1,172 +1,115 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4863D1632F3
-	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 07:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E4663C
+	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 09:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734939473; cv=none; b=hUcO+5aPPOMz2+fDXi4o2kgiYovJ/OXalIl0re4q/0jo5zEk0MfF/dGNo4tjAb4S1ZBkL9z6vzRY1GIOZ+8pau03zLspeCu/Hdoo2IJ0JUQIYqFCKRx6nuGmtw1DwfOwSwLigiizcRBZA8lespWdQ+/6GZAMQzvC3q7oJYsY/24=
+	t=1734944438; cv=none; b=Lo2pkBfC2NxgHgx9y3GBTp0G0LoCwr0xYIXZUbwjmXyPCuuwwHdCiChrbxdZppx0zY7cOawVZnuqxaY5HUciR82acfh6Zds3ydWfMmmYGU5JI4Q8UnyH4S4PLJdwWBsw8U+QVZWmkCqdWSLojxX4MdqbnTK+tx4fUO9Wnbg5M10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734939473; c=relaxed/simple;
-	bh=P/4242QLq3nVMegiA2aERKECD/KhF7C8dCgei73v83g=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T2rX691v4iABj+reD+Fx5Dp1RxTWYjLQZ+hVvbHKG4wMkqo2JyxgGC83/vbhqox/ZTiXH9DkB+phzj/ZEsddjfblIqF58vDyyDnWH3o75iEIojvRG+3lopa2tnPx4PD6tWpP7vx2qQX6vBLOqsq3MD3B6VSmEIBxGQf0ke+qviM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=FsKqc4ev; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="FsKqc4ev"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1734939469; x=1735198669;
-	bh=MdDjYfT+KDtz3lpfNwxg/Y9kIsJlKMLPKSqWl9jRiEY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=FsKqc4evvDR157Lswcqd1GU5mNtXiqDCfpVTSelzK4QhkwZCMRdE+KmwU8P0jTz/n
-	 VtFYGkYeTKgx+qQ4DXG1MWtCkBHBYSrphKNIIZuEvsyURdIXuLXG0pRLyuYxGKQD7l
-	 dMQuTrHpH5ksdOm95NHru0E1gsLjyFc423T0+1S+byrWwVm5oMch8+vDyJkLI5S7iH
-	 9gZqYTslfDViBlHf9HYk4wUwRj+7+A06clhkq8JldMNwZJEU8wJjVYewMI2no/ZokZ
-	 V4baTO5UxvfM/6D//xM+JezzFWYw/3IRFSnznxNEbLpI2SMuwJdIw75h9j0+f7KCdY
-	 oq5mGTZEZfbjQ==
-Date: Mon, 23 Dec 2024 07:37:46 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-From: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "peterx@redhat.com" <peterx@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
-In-Reply-To: <20241222223604.GA3735586@bhelgaas>
-References: <20241222223604.GA3735586@bhelgaas>
-Feedback-ID: 97021173:user:proton
-X-Pm-Message-ID: 95968d894a95988886d3bb7e373efb2a8c6469ac
+	s=arc-20240116; t=1734944438; c=relaxed/simple;
+	bh=apyhCkR287niL3d1YSrr5GRuLr/eMGYqCRcXMCyQTUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d+3nAM7IJC0m8Q52b+K5dXthonOs6tOqOT7ph5557Undr87cyVlDjrcE/avfEtqCAs9sdyyj6J5tpoBsOQE9P4AlGl9WlkpOpPIPgvTPWY7PuFtdJBzFdxjGA0O0sjFY9QhfceUTZcW1ePG3orsNO1Iuip32RYbRAZvWf5zzvSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5cceec60c10c11efa216b1d71e6e1362-20241223
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.41,REQID:1f166ce3-27bc-402a-9223-73f7bf98c3b8,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-9
+X-CID-INFO: VERSION:1.1.41,REQID:1f166ce3-27bc-402a-9223-73f7bf98c3b8,IP:0,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:-9
+X-CID-META: VersionHash:6dc6a47,CLOUDID:69e0115593e5ce402bd46120ef31f18b,BulkI
+	D:241223111037IFXEDWP6,BulkQuantity:1,Recheck:0,SF:17|19|24|38|45|64|66|78
+	|80|81|82|83|102|841,TC:nil,Content:0,EDM:-3,IP:1,URL:1,File:nil,RT:nil,Bu
+	lk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0
+	,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_IBB,TF_CID_SPAM_ULS
+X-UUID: 5cceec60c10c11efa216b1d71e6e1362-20241223
+X-User: zhaomengmeng@kylinos.cn
+Received: from [192.168.109.86] [(123.150.8.42)] by mailgw.kylinos.cn
+	(envelope-from <zhaomengmeng@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 910367675; Mon, 23 Dec 2024 17:00:31 +0800
+Message-ID: <f6362e58-3d7d-4949-82bd-28e5f284a258@kylinos.cn>
+Date: Mon, 23 Dec 2024 17:00:27 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1089698: linux: Loop-mounted UDF ISOs no longer readable
+To: Daniel Reichelt <debian@nachtgeist.net>,
+ Salvatore Bonaccorso <carnil@debian.org>, jack@suse.cz
+Cc: 1089698@bugs.debian.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <173392552823.2176723.16461319920125128905.reportbug@enterprise.startrek.nachtgeist.net>
+ <Z17iMjM5jqc0o3uu@eldamar.lan>
+ <173392552823.2176723.16461319920125128905.reportbug@enterprise.startrek.nachtgeist.net>
+ <d1ed7b71-b6a4-4feb-9126-c05bdd7db7d1@nachtgeist.net>
+ <Z2XLm0XdGof_nNIt@eldamar.lan>
+ <befd89c7-474f-4713-a2b0-6bcc1f2461b0@nachtgeist.net>
+From: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
+In-Reply-To: <befd89c7-474f-4713-a2b0-6bcc1f2461b0@nachtgeist.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.
+On 2024/12/23 11:10, Daniel Reichelt wrote:
+> On 20.12.24 20:55, Salvatore Bonaccorso wrote:
+>> Additionally I have now reported the issue on the regressions list as
+>> well:
+>>
+>> https://lore.kernel.org/regressions/Z2XKY0f6on1UbwWb@eldamar.lan/T/#u
+> 
+> Splendid, thanks!
+> 
+> 
+> Quick update: 6.2 is also OK, so we have:
+> 
+> OK still:
+>   6.1.112-1
+> UNKNOWN - not in [1], yet to be bisected/compiled
+>   6.1.113
+>   6.1.114
+> BAD:
+>   6.1.115-1
+>   6.1.119-1
+>   6.1.120 not part of [1], but out-of-tree build was bad
+> OK again:
+>   6.2 (upstream vanilla)
+>   6.3.1-1~exp1
+>   6.11.10 (current Debian testing/Trixie)
+>   6.12.5  (current Debian unstable/sid)
+> 
+> 
+> [1] https://snapshot.debian.org/package/linux/
 
--------- Original Message --------
-On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi Jan, I have tested v6.1 upstream kernel with x86_64_defconfig, it turns out:
 
->  Forwarding since not everybody follows bugzilla.  Apparently bisected
->  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
-> =20
->  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
->  verify that reverting it is enough to avoid these artifacts?
-> =20
->  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault suppo=
-rt")
-> =20
->  ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> =20
->  Date: Sat, 21 Dec 2024 10:10:02 +0000
->  From: bugzilla-daemon@kernel.org
->  To: bjorn@helgaf9e54c3a2f5bas.com
->  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.1=
-2 kernel upgrade
->  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
-> =20
->  https://bugzilla.kernel.org/show_bug.cgi?id=3D219619
-> =20
->              Bug ID: 219619
->             Summary: vfio-pci: screen graphics artifacts after 6.12 kerne=
-l
->                      upgrade
->             Product: Drivers
->             Version: 2.5
->            Hardware: AMD
->                  OS: Linux
->              Status: NEW
->            Severity: normal
->            Priority: P3
->           Component: PCI
->            Assignee: drivers_pci@kernel-bugs.osdl.org
->            Reporter: athul.krishna.kr@protonmail.com
->          Regression: No
-> =20
->  Created attachment 307382
->    --> https://bugzilla.kernel.org/attachment.cgi?id=3D307382&action=3Ded=
-it
->  dmesg
-> =20
->  Device: Asus Zephyrus GA402RJ
->  CPU: Ryzen 7 6800HS
->  GPU: RX 6700S
->  Kernel: 6.13.0-rc3-g8faabc041a00
-> =20
->  Problem:
->  Launching games or gpu bench-marking tools in qemu windows 11 vm will ca=
-use
->  screen artifacts, ultimately qemu will pause with unrecoverable error.
-> =20
->  Commit:
->  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
->  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
->  Author: Alex Williamson <alex.williamson@redhat.com>
->  Date:   Mon Aug 26 16:43:53 2024 -0400
-> =20
->      vfio/pci: implement huge_fault support
-> =20
->      With the addition of pfnmap support in vmf_insert_pfn_{pmd,pud}() we=
- can
->      take advantage of PMD and PUD faults to PCI BAR mmaps and create mor=
-e
->      efficient mappings.  PCI BARs are always a power of two and will typ=
-ically
->      get at least PMD alignment without userspace even trying.  Userspace
->      alignment for PUD mappings is also not too difficult.
-> =20
->      Consolidate faults through a single handler with a new wrapper for
->      standard single page faults.  The pre-faulting behavior of commit
->      d71a989cf5d9 ("vfio/pci: Insert full vma on mmap'd MMIO fault") is r=
-emoved
->      in this refactoring since huge_fault will cover the bulk of the faul=
-ts and
->      results in more efficient page table usage.  We also want to avoid t=
-hat
->      pre-faulted single page mappings preempt huge page mappings.
-> =20
->      Link: https://lkml.kernel.org/r/20240826204353.2228736-20-peterx@red=
-hat.com
->      Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->      Signed-off-by: Peter Xu <peterx@redhat.com>
->      Cc: Alexander Gordeev <agordeev@linux.ibm.com>
->      Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->      Cc: Borislav Petkov <bp@alien8.de>
->      Cc: Catalin Marinas <catalin.marinas@arm.com>
->      Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
->      Cc: Dave Hansen <dave.hansen@linux.intel.com>
->      Cc: David Hildenbrand <david@redhat.com>
->      Cc: Gavin Shan <gshan@redhat.com>
->      Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
->      Cc: Heiko Carstens <hca@linux.ibm.com>
->      Cc: Ingo Molnar <mingo@redhat.com>
->      Cc: Jason Gunthorpe <jgg@nvidia.com>
->      Cc: Matthew Wilcox <willy@infradead.org>
->      Cc: Niklas Schnelle <schnelle@linux.ibm.com>
->      Cc: Paolo Bonzini <pbonzini@redhat.com>
->      Cc: Ryan Roberts <ryan.roberts@arm.com>
->      Cc: Sean Christopherson <seanjc@google.com>
->      Cc: Sven Schnelle <svens@linux.ibm.com>
->      Cc: Thomas Gleixner <tglx@linutronix.de>
->      Cc: Vasily Gorbik <gor@linux.ibm.com>
->      Cc: Will Deacon <will@kernel.org>
->      Cc: Zi Yan <ziy@nvidia.com>
->      Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> =20
->   drivers/vfio/pci/vfio_pci_core.c | 60 ++++++++++++++++++++++++++++-----=
--------
->   1 file changed, 43 insertions(+), 17 deletions(-)
-> =20
->  --
->  You may reply to this email to add a comment.
-> =20
->  You are receiving this mail because:
->  You are watching the assignee of the bug.
-> =20
->  ----- End forwarded message -----
->  
+v6.1.112 is good as Daniel reported,
+v6.1.114 is bad, but the log is little different.
+                                              
+[   21.307158] UDF-fs: error (device sr0): udf_fiiter_advance_blk: extent after position 12280 not allocated in directory (ino 312)                                                           
+[   21.307832] UDF-fs: error (device sr0): udf_verify_fi: directory (ino 312) has entry where CRC length (2) does not match entry length (24)                                                 
+[   21.308738] UDF-fs: error (device sr0): udf_fiiter_advance_blk: extent after position 12280 not allocated in directory (ino 312)                                                           
+[   21.309785] UDF-fs: error (device sr0): udf_verify_fi: directory (ino 312) has entry where CRC length (2) does not match entry length (24)                                                 
+[   21.310996] UDF-fs: error (device sr0): udf_fiiter_advance_blk: extent after position 12280 not allocated in directory (ino 312)          
+
+I also manually revert my patch "udf: refactor udf_current_aext() to handle error" based on v6.1.115, and
+it's still broken, looks like something wrong in v6.1.114. Can you have a look? 
+
+Besides, I noticed that v6.1 LTS backports only 1 of 3 of the refactor patches wich I submitted, that may be a problem.
+
+
+> 
+> Thanks to y'all!
+> Daniel
+
