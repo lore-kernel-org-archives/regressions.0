@@ -1,144 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC541AF4E9;
-	Tue, 24 Dec 2024 09:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735034390; cv=none; b=rnExPDa3Jk+a85Xb3w2QHks7vz+4jMt6l/G63VeWovqio+JTpjsjH3UL4PEFmL6VYN1Lob0X9XlDbvp/ARFGWmMimq3kYif/GltG0Mx4BWxULCkxLB3sM0arUGbTcuXPP/mXmi3EXKQX8Fo0+gy3U7c2WFp1E1t3I2TA/MQM+NM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735034390; c=relaxed/simple;
-	bh=uVXDQpKxvUgof3vd8dijg6f2wM9tZGhj+GNZAov5yHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWoXqbTMxofZEfC6GZv9laCPg8prkXboW83WZaDXStxal8hIO5IewSY4Q3DnvsTe0Oyz80/Xd9TDr25Nx+rVcbeAylKgy6Q5odHHRm/9xOrtenRnwMISD7YjiMrR2o36x3JSgK9ioA1NNJzjONCFTPaZtxVWjRp5v4Sp4ymKmmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=d2kS7tjN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18702190063
+	for <regressions@lists.linux.dev>; Tue, 24 Dec 2024 11:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735038677; cv=pass; b=GjsufCLEyT6t5DxKDjFp5zG4RCq2pnRrz5vG51cezx+NKgcWHwBxUd79UBlscEgwq/oKXkxELkvPRrJFAv4kCgCqGGg2InUAJGYUU6A+/XPi+2AnUklYFjgUoixhPHXd7RixpkkZ7HDDp30dVSIu9lohqCLuENZcxMmsorkyNv0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735038677; c=relaxed/simple;
+	bh=vRcm7AzzguwwFFah648ByCCWYsWweYNo0LSzdlj6A7A=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=V29sGQ54cxDuOOo5FqWhuRYo0MP8f7wGTbMXb8AsdREpGEpClcknrDORQsm2btSQzjEIZYsIsgKGUzYB9sDg8oxHBh7zT5KmpxRNKFMZd7dgmNgEY1cTG8pUiQUdJHeghVnTyVREcEiX9YIpieHAD3Xmr3oDJI1MWSmEQoVS8FU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=Tg0O577v; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=zcKwnPtc; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="d2kS7tjN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C85DBC4CED0;
-	Tue, 24 Dec 2024 09:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1735034390;
-	bh=uVXDQpKxvUgof3vd8dijg6f2wM9tZGhj+GNZAov5yHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d2kS7tjNMNP0pE59liRa7vbUDZHnnOdZiEI3uMBuC2dcKFFMTcdZhGxqGguv4ZqNB
-	 qObseyE76I6iTEU2BjDeq1rX4Pzy2UrEOAAGiBARjBh3U94mtZUtdQjt7dXNrgf3Iu
-	 G560rnLSNGvyMGzjup47vJFxdeAAgakPhrWQLIVI=
-Date: Tue, 24 Dec 2024 10:59:46 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
-Cc: Jan Kara <jack@suse.cz>, sashal@kernel.org,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Daniel Reichelt <debian@nachtgeist.net>,
-	linux-kernel@vger.kernel.org, 1089698@bugs.debian.org,
-	regressions@lists.linux.dev
-Subject: Re: [regression] linux: Loop-mounted UDF ISOs no longer readable
-Message-ID: <2024122420-litter-cadillac-53cd@gregkh>
-References: <Z2XKY0f6on1UbwWb@eldamar.lan>
- <b681e1ea-bb7d-4d8f-b62c-cae1e4116d21@kylinos.cn>
- <6c8e6c68-b0a1-47b4-82a4-c68490fdc876@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="Tg0O577v";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="zcKwnPtc"
+ARC-Seal: i=1; a=rsa-sha256; t=1735038308; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=F+3TvCAvdM1U2Ft/4mROPp+0LCTUyI9FGyIybhs1OwyJ6i06lq78na3CDUcKs/sn+r
+    hTVyg4LAujTV1NJ5aZOytozjifUG3S79PXUY6hNlOQN27lHpAbxGS7JuoGdbpFUCvTuR
+    PHp8+NuxXoQmD0KWjrkixi0u5KKGeNT2a8T5Ecidt43PNQNMr8mEaKsAFTnpdxRwZiBr
+    q+Rrpj1E2VyvUVeltIbce5PDD9Qs6NCNJWBUB4+l04RWqdt8VVDvMhzhjJPf1rzmfDFw
+    u4nCErdfTREK4/DwRTXDpWew6RpOX/oRrR+LaJ3DWeLbuZGKp7qJcDLRsjVS8bQ6Fegi
+    iyEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735038308;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=rWDJsGx4IEgo+D26UaSNArr51NpFOgRXg8WQAw+PHug=;
+    b=Hb2s3kei6EtzagwXPu8z/2KNN0Lo2es2ZHp3tVP6Jnj2oLNTe3e7kMnxOrAvfFsOlR
+    qQfRSphbTTqd/rdsBzrlEUNZaO7fDhpJ/zQ/7gQSKFajdZ7FMH0biUwEa9P4pel+3iMg
+    uclR3EME70GB+ARmovfOUA2/zT0w+Hz6Rvui/6MwIKlEWVRWXN2MfiieFKuY69CFpoXf
+    LEQWLsvPfyd+MW6LBqv3FJx7FT1dKwtH0TCOCxyrYWJwsqOxQB6lk8TzFGqjSHATzQ8w
+    0jZXY04fC+gn20yuHdxpYfYAENYMNzguJ/0od/c1cDLbp/CoY9cBrRHwLzKq/cy1af/V
+    SmWQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735038308;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=rWDJsGx4IEgo+D26UaSNArr51NpFOgRXg8WQAw+PHug=;
+    b=Tg0O577v02zDr2cRLhEKVViHsKFGL52rxQ/dmvYDj/MjmbXgsI/+sl1vzKUtezsEFS
+    dc1PydjMly3Hn4+wYS/x6bOUCbIsT+HAnRtl3Z1QdRbX8vf0V/sx4P91dxjvaOO9KIX9
+    SBAHIKzTT7oVh+npNcU3IjP1n7us1jI4HUQey65YxFcyPa2jPbgGBj2v1OjOWUFMFm0r
+    UqSMI3RqCTsB4BVC/t309uIJaozBBNpwkfVEwmq7+sF2yvsCj2Zqz2vnAe8CkxycMJns
+    aK4g6AdTkqTMkRgyBQ9ZZr02AguAtfK/kbYc27e8NsXwwf3BXqUXhyLrrdtBQ3pA2w2O
+    OEeQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735038308;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=rWDJsGx4IEgo+D26UaSNArr51NpFOgRXg8WQAw+PHug=;
+    b=zcKwnPtcHCDq46eqRSqXdwh33m+ZyHti9bFvqha5VqURMiX49en2VAFLwSWIabnd+J
+    EM2qSbabqpzi5Ls+CnAQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EisT29BnYJMBKrhBYBGwL4fUrhbbg=="
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 51.2.16 AUTH)
+    with ESMTPSA id ebe9c90BOB57CN9
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 24 Dec 2024 12:05:07 +0100 (CET)
+Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Darren Stevens <darren@stevens-zone.net>,
+ Pat Wall <pjwall@mac.com>, Pat Wall <pjwall@me.com>,
+ Christian Zigotzky <info@xenosoft.de>, madskateman@gmail.com,
+ "R.T.Dickinson" <rtd2@xtra.co.nz>, hypexed@yahoo.com.au,
+ regressions@lists.linux.dev
+References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
+ <6CC404E2-2442-47FE-877C-252B1F2872C2@xenosoft.de>
+ <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
+ <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
+ <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
+ <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
+ <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
+ <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
+ <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
+ <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
+ <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+ <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
+Date: Tue, 24 Dec 2024 12:05:06 +0100
+X-Mailer: BrassMonkey/33.4.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c8e6c68-b0a1-47b4-82a4-c68490fdc876@kylinos.cn>
+In-Reply-To: <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 24, 2024 at 05:46:59PM +0800, Zhao Mengmeng wrote:
-> On 2024/12/23 10:48, Zhao Mengmeng wrote:
-> > On 2024/12/21 03:49, Salvatore Bonaccorso wrote:
-> >> Hi Jan, hi Zhao,
-> >>
-> >> In Debian we got he following report, full quoted below from Daniel
-> >> Reichelt, dass after updating to 6.1.115 (and later, confirmed up to
-> >> 6.1.119), loop-mounted UDF ISOs are no longer readable:
-> > 
-> > Sorry to hear that...
-> > 
-> >>> Hi,
-> >>>
-> >>> in 6.1.112-1 I could loop-mount Windows Setup ISOs (downloaded from M$; hashes
-> >>> are fine; 10/11, DE/EN don't seem to make any difference) and access their
-> >>> content perfectly fine, i.e. share the /sources/ sub-directory via samba for
-> >>> netinstall scenarios.
-> >>>
-> >>> Starting with 6.1.115-1, the ISOs can be mounted, the root-dir is accessible
-> >>> and `stat $mntpt/sources` gives output as well. However `ls $mntpt/sources`
-> >>> hangs and the kernel log is spammed with entries like
-> >>>
-> >>> ---------------8<-------------------------
-> >>> 2024-12-11T14:53:19.616728+01:00 srv kernel: [182394.024828] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.629970+01:00 srv kernel: [182394.038041] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.641623+01:00 srv kernel: [182394.049714] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.654841+01:00 srv kernel: [182394.062928] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.666495+01:00 srv kernel: [182394.074615] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.679747+01:00 srv kernel: [182394.087833] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.691394+01:00 srv kernel: [182394.099510] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.704646+01:00 srv kernel: [182394.112727] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.716283+01:00 srv kernel: [182394.124400] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.729539+01:00 srv kernel: [182394.137618] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.741185+01:00 srv kernel: [182394.149279] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.754422+01:00 srv kernel: [182394.162494] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> 2024-12-11T14:53:19.766071+01:00 srv kernel: [182394.174159] UDF-fs: error (device loop3): udf_fiiter_advance_blk: extent after position 12272 not allocated in directory (ino 312)
-> >>> 2024-12-11T14:53:19.779289+01:00 srv kernel: [182394.187375] UDF-fs: error (device loop3): udf_verify_fi: directory (ino 312) has too big (2088) entry at pos 12272
-> >>> ---------------8<-------------------------
-> >>>
-> >>>
-> >>> 6.1.119-1 shows the same behaviour.
-> >>> Let me know if you need additional info.
-> >>
-> >> We have not a full bisect, but Daniel confirmed already in
-> >> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089698#22 some
-> >> observations:
-> >>
-> >>> OK:
-> >>>   6.1.112-1
-> >>> BAD:
-> >>>   6.1.115-1
-> >>>   6.1.119-1
-> >>> OK again:
-> >>>   6.3.1-1~exp1
-> >>>   current trixie
-> >>>   current sid
-> >>
-> >> (current trixie is 6.11.10 based kernel, current sid is based on
-> >> 6.12.5 kernel).
-> >>
-> >> Dies this ring some bell to you?
-> > 
-> > I'll take a look at it. Will post it here if anything new founded.
-> > 
-> >> #regzbot introduced: v6.1.112..v6.1.115
-> >> #regzbot monitor: https://bugs.debian.org/1089698
-> >>
-> >> Regards,
-> >> Salvatore
-> > 
-> --------------------
-> Update on 2024.12.24:
-> 
-> Hi Jan, Sasha, after some testing and code digging, I found that v6.1 LTS may need 
-> this patch to solve Daniel's issue:
-> 
-> commit 1ea1cd11c72d1405a6b98440a9d5ea82dfa07166
-> Author: Jan Kara <jack@suse.cz>
-> Date:   Wed Jan 25 11:43:03 2023 +0100
-> 
->     udf: Fix directory iteration for longer tail extents
->     
->     When directory's last extent has more that one block and its length is
->     not multiple of a block side, the code wrongly decided to move to the
->     next extent instead of processing the last partial block. This led to
->     directory corruption. Fix the rounding issue.
->     
->     Signed-off-by: Jan Kara <jack@suse.cz>
+On 23/12/24 16:37, Paolo Bonzini wrote:
+>
+>
+> On Mon, Dec 23, 2024 at 3:41 PM Christian Zigotzky 
+> <chzigotzky@xenosoft.de> wrote:
+>> Bisecting: a merge base must be tested
+>> [e9001a382fa2c256229adc68d55212028b01d515] Merge tag
+>> 'kvmarm-fixes-6.12-3' of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+>>
+>> The host system doesn't boot.
+>> Unfortunately, there isn't a guest kernel boot log via serial log.
+>
+> No big deal since the boot hang was fixed via rebase.
+>
+>>      git checkout -b bisection-rebase
+>> b467ab82a9fde4b46c0cd2c299220857afb0e0d4
+>>      git rebase v6.12
+>>
+>> The host kernel boots but the guest kernel doesn't boot so KVM HV
+>> doesn't work.
+>
+> As expected, so that's good.
+>
+>>      git bisect start
+>>      git bisect bad bisection-rebase
+>>      git bisect good v6.12
+>>
+>> [skipping bisection process]
+>>
+>> `edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4 is the first bad commit
+>
+> Ok, that means that the culprit is commit 419cfb983ca93 (the above
+> is the rebased hash).  Thank you very much, your work was really
+> helpful!
+>
+> Can you test this simple patch?
+>
+> --------------- 8< ----------------
+> From: Paolo Bonzini <pbonzini@redhat.com>
+> Subject: [PATCH] KVM: allow  NULL writable argument to __kvm_faultin_pfn
+>
+> kvm_follow_pfn() is able to work with NULL in the .map_writable field
+> of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
+> despite KVM for e500 trying to use it.  Indeed .map_writable is not
+> particularly useful if the flags include FOLL_WRITE and readonly
+> guest memory is not supported, so add support to __kvm_faultin_pfn()
+> for this case.
+>
+> Fixes: 1c7b627e9306 ("KVM: Add kvm_faultin_pfn() to specifically 
+> service guest page faults")
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index de2c11dae231..5177e56fdbd5 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct 
+> kvm_memory_slot *slot, gfn_t gfn,
+>          .refcounted_page = refcounted_page,
+>      };
+>
+> -    if (WARN_ON_ONCE(!writable || !refcounted_page))
+> +    if (WARN_ON_ONCE(!refcounted_page))
+>          return KVM_PFN_ERR_FAULT;
+>
+> -    *writable = false;
+> +    if (writable)
+> +        *writable = false;
+>      *refcounted_page = NULL;
+>
+>      return kvm_follow_pfn(&kfp);
+>
+> Thanks,
+>
+> Paolo
 
-It's already queued up for the next 6.1.y release in a few days, so if
-you could test the -rc that is out for review right now, that would be
-great!
+Hello Paolo,
 
-thanks,
+Thanks a lot for your patch.
 
-greg k-h
+I tested it with the RC4 of kernel 6.13 today but unfortunately it 
+doesn't solve the KVM HV issue. The guest system doesn't boot and I 
+can't see any error messages. (console=ttyS0)
+
+Regards,
+
+Christian
+
+-- 
+Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
+
