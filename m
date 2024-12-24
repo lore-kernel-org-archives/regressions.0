@@ -1,212 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AEF186E2D
-	for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 18:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2102FB6;
+	Tue, 24 Dec 2024 02:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734977733; cv=none; b=D9sqZ5B5kqmcg9BVlZgxEIJvRz4VUIMFNOerG+cmK7t7f0SPsc5G91aXR3RL5pX89Hp126nMOzd9ApFhvQB8LDkSELuRdScWbDhl65pGleWMHQ+bGmeQlIRwDnJh0zKhvjvjsmwbEJuwaNcjD/8QqdsB7ggPuHY9BFxaTUFg2Gc=
+	t=1735008895; cv=none; b=np/0d1Wm3twQeK2csyOmSog8CtlfGidibTXrYeYXSjG0CHERECXwPF2TysSekY4pvkWr1p5oZsu1klVzqWPW2CL5GJtuKMN3qVj3GnNRaojySlqieVTIYvGjLVngfqyYaia5nViMtV/ugWloAPXVCVP5mMx2sF8SYnvU6c4dbkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734977733; c=relaxed/simple;
-	bh=8pDFmu8/1sF75hrfCbh9g3oxXjJ5jWjyvYPRTNtqsUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hkgltFkJYSXcMYSKJ2T4jZlNGYFFxnbUrK3RDdNoFoGuCVEogVGIsSMR/IZn7Z6V73sPJojbUI/9nxD5Z0CXiL5oPDj43jQz3bAfoldUJguANDikN13/4WPeZUYt2ScQbOdQ5FRFw10zZsTfy7zN8ZHBHxL0TC3JBcvl3g1RCDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTlLp5aH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1735008895; c=relaxed/simple;
+	bh=xWS3vrD8hACtXK4k8pMX7q+Vj94Gb4GP2O+23x0XvNg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hmfXmitryI6lo8qbNzv7m8VUSM1XGkzAXtSbno9n0YAaCrJm/kVbqTJoDsQhvC6lsDi4ixlZxIOOc3+iRsgnPZTumKH1Nex3bDtLZXUbkaxg2AHrSEw/GX/55umwtiDsn/M/hbDx+bORFVcrD8YNEjLow2O1bvBgizDKDuFmkEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=YF/OG5Ww; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTlLp5aH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734977730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
-	b=PTlLp5aHnAsmdorl96AwAGAWQgbWGJpYB5yuFVEZg/wL0WT/0JutW25xhakLax8MvgyKUh
-	/fpbTB+c6Fu76DV8uVCeeoKkVJqRc5fhBc9eBkrp+3Qw52JFXLuaoAsghR0F4Ooz3MQTaw
-	1BsUugxQniZOIFzXV+p8itg49cV9IaE=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-9teMYoCCNSWMFAlQnR7UxA-1; Mon, 23 Dec 2024 13:15:29 -0500
-X-MC-Unique: 9teMYoCCNSWMFAlQnR7UxA-1
-X-Mimecast-MFC-AGG-ID: 9teMYoCCNSWMFAlQnR7UxA
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-71e1a724b99so28224a34.0
-        for <regressions@lists.linux.dev>; Mon, 23 Dec 2024 10:15:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734977728; x=1735582528;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i779kwZKwslACzFfkM+4lV0vJyXdo9Mbz+mQvKzFbgg=;
-        b=B4H/3jk2l0AGbV/tX8MbADYCnh5i0hpu8cPDR1MbejAJy/N74r/z5y9kq2ixuVUttr
-         rAwStvH2ou2znGII/UlGOUkzmQh78m5GQEpoaiYbBqPLzP4MBv0dMws274Rloj2Qk1Qw
-         Pnk42/+EPWI3uW+CAKW/dt2Wb20/fELTK2Va50GmFfIPV5/RJ5n+Vm4+K6PfegBGPJgq
-         76aJMS+AlvXctuqLd5Fg38egl0Kzn3Q38S7NFI6Qk5+wSCuUtAj3Nu1U5pd4uKvjxZtd
-         PWMK+znrvBTJozy2U/X4dNvTeIaD9hC3ZsFWMy61JCNzP8SeV/G41i2ilyWB2pFKaUNf
-         o1ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUtOkneHugYPxuNIDa3GnIY8BtsvQGddjoa90VIbwa5ce0Swl4EZS2BqCPgd4z+myux6SX4PpweaVq2CA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw3c+IwTPvZ8GP0W+Ki2BFMJxkgCefZfji3RyWy1wwhcyI2iT0n
-	hmgVw6C0vR2Q0hf02hMXrZzZee7twSqhaBw3iMT2r9x++HrK4gGQhyg4xFlZSH3bXFnuFZ4vXip
-	P8L/GGgMjtK6aUB09aVW8tKjl7PCbBHQcK0iN+p6HhRScgbT9sZf0FLyYiGn4
-X-Gm-Gg: ASbGncvbbPM5gX+1ALUqtuy8Akf9E/PrPmOdZrbcgPemSu8AN+ewyThpF4Xep7kJ9TI
-	eR0+Bl0ZJZNms5SJ+cGgWWLnSZ9ik1BstWbjw0kDs/KF6HN67rxJnV87F5KwghEpdXUoZ//8S3v
-	lqbkOb7HLNdmkh5UpwbVDpg64B0LFZGvu0tXJTQ9DREw8KBkCy0uAdrBSfVoVWkx9Rjc5tjTVce
-	rs6negG1cr9EmK/yJsScU1sCiUg7PZJDjaekl+zihGn5gcPr99PgT86ttM6
-X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341869a34.2.1734977728568;
-        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHL84ulGDZQJL2507Y3H15s+slqjLTXHJpf42Oh15OEYbs2ukq1so9LGjZjnTqyXM9iw8VcMg==
-X-Received: by 2002:a05:6830:34a9:b0:71e:48b1:ad29 with SMTP id 46e09a7af769-720ff691e28mr2341863a34.2.1734977728249;
-        Mon, 23 Dec 2024 10:15:28 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71fc97642e8sm2400002a34.5.2024.12.23.10.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2024 10:15:27 -0800 (PST)
-Date: Mon, 23 Dec 2024 11:15:25 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Peter Xu <peterx@redhat.com>, Athul Krishna
- <athul.krishna.kr@protonmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
- graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <20241223111525.0249057e.alex.williamson@redhat.com>
-In-Reply-To: <Z2mW2k8GfP7S0c5M@x1n>
-References: <20241222223604.GA3735586@bhelgaas>
-	<Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
-	<Z2mW2k8GfP7S0c5M@x1n>
-Organization: Red Hat
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="YF/OG5Ww"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4BO2sjYE32799716, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1735008885; bh=xWS3vrD8hACtXK4k8pMX7q+Vj94Gb4GP2O+23x0XvNg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version;
+	b=YF/OG5WwGtcW4D/WJ7NE+etukVeRT66eDsZ9QzQ1ISx/bj9VCCYeV1N8bno+uQ49g
+	 QcubdElEWAndvP9XKxYNLgD7rRcgMwMKM3bhy/g++5hMDLG2FnOwO+HwHgnopJ7BcP
+	 SFCAK2Wmx5U2561mVIOvB7S+ltwZLh+mMVViIhvO+eH8Zi/HRJfbxPENPBYa9NWSRy
+	 9TptdxInk5XNcGNrmxuJnKqqqt0pkqa3uawUXbIVQDbVZJ0FPkyUACusmTCfQgNveT
+	 WZkbYXNt3MYewwizKccLdyz6CLsbepv0onggBjFFjHWziHCmp093uEJTieXH+qNJa8
+	 2edrGu85Y6KYA==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 4BO2sjYE32799716
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Dec 2024 10:54:45 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 24 Dec 2024 10:54:45 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 24 Dec 2024 10:54:45 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2]) by
+ RTEXMBS01.realtek.com.tw ([fe80::147b:e1e8:e867:41c2%7]) with mapi id
+ 15.01.2507.035; Tue, 24 Dec 2024 10:54:45 +0800
+From: Kailang <kailang@realtek.com>
+To: Evgeny Kapun <abacabadabacaba@gmail.com>, Takashi Iwai <tiwai@suse.de>
+CC: Linux Sound Mailing List <linux-sound@vger.kernel.org>,
+        "Linux Kernel
+ Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux Regressions Mailing List
+	<regressions@lists.linux.dev>,
+        Linux Stable Mailing List
+	<stable@vger.kernel.org>
+Subject: RE: [REGRESSION] Distorted sound on Acer Aspire A115-31 laptop
+Thread-Topic: [REGRESSION] Distorted sound on Acer Aspire A115-31 laptop
+Thread-Index: AQHbTvIxtyWK99B6LkqZbi3R9/JZE7LtROwAgAQfxYCAAA3tgIAB5qEAgAFmuDA=
+Date: Tue, 24 Dec 2024 02:54:45 +0000
+Message-ID: <58300a2a06e34f3e89bf7a097b3cd4ca@realtek.com>
+References: <e142749b-7714-4733-9452-918fbe328c8f@gmail.com>
+ <8734ijwru5.wl-tiwai@suse.de>
+ <57883f2e-49cd-4aa4-9879-7dcdf7fec6df@gmail.com>
+ <87ldw89l7e.wl-tiwai@suse.de>
+ <fc506097-9d04-442c-9efd-c9e7ce0f3ace@gmail.com>
+In-Reply-To: <fc506097-9d04-442c-9efd-c9e7ce0f3ace@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+Content-Type: multipart/mixed;
+	boundary="_002_58300a2a06e34f3e89bf7a097b3cd4carealtekcom_"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: w42AriLFTJp3o2PiVW4ABfve3QdkzTog6SwmeQ6Bl-k_1734977728
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Dec 2024 11:59:06 -0500
-Peter Xu <peterx@redhat.com> wrote:
+--_002_58300a2a06e34f3e89bf7a097b3cd4carealtekcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-> On Mon, Dec 23, 2024 at 07:37:46AM +0000, Athul Krishna wrote:
-> > Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.  
-> 
-> I suppose Alex should have some more thoughts, probably after the holidays.
-> Before that, one quick question to ask..
+DQpQbGVhc2UgdGVzdCBhdHRhY2ggcGF0Y2guDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gRnJvbTogRXZnZW55IEthcHVuIDxhYmFjYWJhZGFiYWNhYmFAZ21haWwuY29tPg0KPiBT
+ZW50OiBNb25kYXksIERlY2VtYmVyIDIzLCAyMDI0IDk6MjkgUE0NCj4gVG86IFRha2FzaGkgSXdh
+aSA8dGl3YWlAc3VzZS5kZT4NCj4gQ2M6IExpbnV4IFNvdW5kIE1haWxpbmcgTGlzdCA8bGludXgt
+c291bmRAdmdlci5rZXJuZWwub3JnPjsgS2FpbGFuZw0KPiA8a2FpbGFuZ0ByZWFsdGVrLmNvbT47
+IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc+OyBMaW51eCBSZWdyZXNzaW9ucyBNYWlsaW5nIExpc3QNCj4gPHJlZ3Jlc3Npb25zQGxpc3Rz
+LmxpbnV4LmRldj47IExpbnV4IFN0YWJsZSBNYWlsaW5nIExpc3QNCj4gPHN0YWJsZUB2Z2VyLmtl
+cm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUkVHUkVTU0lPTl0gRGlzdG9ydGVkIHNvdW5kIG9u
+IEFjZXIgQXNwaXJlIEExMTUtMzEgbGFwdG9wDQo+IA0KPiANCj4gRXh0ZXJuYWwgbWFpbC4NCj4g
+DQo+IA0KPiANCj4gPj4gT3IgZG8geW91IG5lZWQgYWxzYS1pbmZvIHdpdGggYSBuZXcga2VybmVs
+LCBidXQgd2l0aCB0aGUgb2ZmZW5kaW5nDQo+ID4+IGNvbW1pdCByZXZlcnRlZD8NCj4gPiBZZXMs
+IHRoYXQnbGwgYmUgdGhlIGJlc3QgZm9yIGVsaW1pbmF0aW5nIG90aGVyIHBvc3NpYmxlIGFydGlm
+YWN0cy4NCj4gDQo+IEhlcmUgYXJlIHR3byBhbHNhLWluZm8gb3V0cHV0cyBmb3IgdGhlIHNhbWUg
+a2VybmVsIHZlcnNpb24sIGV4Y2VwdCB0aGF0IG9uZSBoYXMNCj4gdGhlIHByb2JsZW1hdGljIGNv
+bW1pdCByZXZlcnRlZC4NCg==
 
-Yeah, apologies in advance for latency over the next couple weeks.
+--_002_58300a2a06e34f3e89bf7a097b3cd4carealtekcom_
+Content-Type: application/octet-stream; name="0000-acer-a115.patch"
+Content-Description: 0000-acer-a115.patch
+Content-Disposition: attachment; filename="0000-acer-a115.patch"; size=904;
+	creation-date="Tue, 24 Dec 2024 02:52:43 GMT";
+	modification-date="Tue, 24 Dec 2024 02:51:38 GMT"
+Content-Transfer-Encoding: base64
 
-> > -------- Original Message --------
-> > On 23/12/24 04:06, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > >  Forwarding since not everybody follows bugzilla.  Apparently bisected
-> > >  to f9e54c3a2f5b ("vfio/pci: implement huge_fault support").
-> > >  
-> > >  Athul, f9e54c3a2f5b appears to revert cleanly from v6.13-rc1.  Can you
-> > >  verify that reverting it is enough to avoid these artifacts?
-> > >  
-> > >  #regzbot introduced: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
-> > >  
-> > >  ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> > >  
-> > >  Date: Sat, 21 Dec 2024 10:10:02 +0000
-> > >  From: bugzilla-daemon@kernel.org
-> > >  To: bjorn@helgaf9e54c3a2f5bas.com
-> > >  Subject: [Bug 219619] New: vfio-pci: screen graphics artifacts after 6.12 kernel upgrade
-> > >  Message-ID: <bug-219619-41252@https.bugzilla.kernel.org/>
-> > >  
-> > >  https://bugzilla.kernel.org/show_bug.cgi?id=219619
-> > >  
-> > >              Bug ID: 219619
-> > >             Summary: vfio-pci: screen graphics artifacts after 6.12 kernel
-> > >                      upgrade
-> > >             Product: Drivers
-> > >             Version: 2.5
-> > >            Hardware: AMD
-> > >                  OS: Linux
-> > >              Status: NEW
-> > >            Severity: normal
-> > >            Priority: P3
-> > >           Component: PCI
-> > >            Assignee: drivers_pci@kernel-bugs.osdl.org
-> > >            Reporter: athul.krishna.kr@protonmail.com
-> > >          Regression: No
-> > >  
-> > >  Created attachment 307382  
-> > >    --> https://bugzilla.kernel.org/attachment.cgi?id=307382&action=edit  
-> > >  dmesg  
-> 
-> vfio-pci 0000:03:00.0: vfio_bar_restore: reset recovery - restoring BARs
+ZGlmZiAtLWdpdCBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jIGIvc291bmQvcGNpL2hk
+YS9wYXRjaF9yZWFsdGVrLmMKaW5kZXggNjFiYTVkYzM1YjhiLi4yOTM0Nzk5YjZlMDcgMTAwNjQ0
+Ci0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jCisrKyBiL3NvdW5kL3BjaS9oZGEv
+cGF0Y2hfcmVhbHRlay5jCkBAIC0xMDE1OCw2ICsxMDE1OCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgaGRhX3F1aXJrIGFsYzI2OV9maXh1cF90YmxbXSA9IHsKIAlTTkRfUENJX1FVSVJLKDB4MTAy
+NSwgMHgxMzA4LCAiQWNlciBBc3BpcmUgWjI0LTg5MCIsIEFMQzI4Nl9GSVhVUF9BQ0VSX0FJT19I
+RUFEU0VUX01JQyksCiAJU05EX1BDSV9RVUlSSygweDEwMjUsIDB4MTMyYSwgIkFjZXIgVHJhdmVs
+TWF0ZSBCMTE0LTIxIiwgQUxDMjMzX0ZJWFVQX0FDRVJfSEVBRFNFVF9NSUMpLAogCVNORF9QQ0lf
+UVVJUksoMHgxMDI1LCAweDEzMzAsICJBY2VyIFRyYXZlbE1hdGUgWDUxNC01MVQiLCBBTEMyNTVf
+RklYVVBfQUNFUl9IRUFEU0VUX01JQyksCisJU05EX1BDSV9RVUlSSygweDEwMjUsIDB4MTM2MCwg
+IkFjZXIgQXNwaXJlIEExMTUiLCBBTEMyNTVfRklYVVBfQUNFUl9NSUNfTk9fUFJFU0VOQ0UpLAog
+CVNORF9QQ0lfUVVJUksoMHgxMDI1LCAweDE0MWYsICJBY2VyIFNwaW4gU1A1MTMtNTROIiwgQUxD
+MjU1X0ZJWFVQX0FDRVJfTUlDX05PX1BSRVNFTkNFKSwKIAlTTkRfUENJX1FVSVJLKDB4MTAyNSwg
+MHgxNDJiLCAiQWNlciBTd2lmdCBTRjMxNC00MiIsIEFMQzI1NV9GSVhVUF9BQ0VSX01JQ19OT19Q
+UkVTRU5DRSksCiAJU05EX1BDSV9RVUlSSygweDEwMjUsIDB4MTQzMCwgIkFjZXIgVHJhdmVsTWF0
+ZSBCMzExUi0zMSIsIEFMQzI1Nl9GSVhVUF9BQ0VSX01JQ19OT19QUkVTRU5DRSksCg==
 
-Is the reset recovery message seen even with the suspect commit
-reverted?  Timestamps here would be useful for correlation.
-
-> pcieport 0000:00:01.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:03:00.1
-> vfio-pci 0000:03:00.0: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-> vfio-pci 0000:03:00.0:   device [1002:73ef] error status/mask=00100000/00000000
-> vfio-pci 0000:03:00.0:    [20] UnsupReq               (First)
-> vfio-pci 0000:03:00.0: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-> vfio-pci 0000:03:00.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Requester ID)
-> vfio-pci 0000:03:00.1:   device [1002:ab28] error status/mask=00100000/00000000
-> vfio-pci 0000:03:00.1:    [20] UnsupReq               (First)
-> vfio-pci 0000:03:00.1: AER:   TLP Header: 60001004 000000ff 0000007d fe7eb000
-> vfio-pci 0000:03:00.1: AER:   Error of this Agent is reported first
-> pcieport 0000:02:00.0: AER: broadcast error_detected message
-> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-> pcieport 0000:02:00.0: AER: broadcast resume message
-> pcieport 0000:02:00.0: AER: device recovery successful
-> pcieport 0000:02:00.0: AER: broadcast error_detected message
-> pcieport 0000:02:00.0: AER: broadcast mmio_enabled message
-> pcieport 0000:02:00.0: AER: broadcast resume message
-> pcieport 0000:02:00.0: AER: device recovery successful
-> 
-> > >  
-> > >  Device: Asus Zephyrus GA402RJ
-> > >  CPU: Ryzen 7 6800HS
-> > >  GPU: RX 6700S
-> > >  Kernel: 6.13.0-rc3-g8faabc041a00
-> > >  
-> > >  Problem:
-> > >  Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
-> > >  screen artifacts, ultimately qemu will pause with unrecoverable error.  
-> 
-> Is there more information on what setup can reproduce it?
-> 
-> For example, does it only happen with Windows guests?  Does the GPU
-> vendor/model matter?
-
-And the CPU vendor, this was predominately tested by me on Intel +
-NVIDIA.  I'm also not seeing any similar reports on r/VFIO, which is a
-bit strange as there are a lot of bleeding edge users there.  The bz is
-reported against 6.13.0-rc3-g8faabc041a00 and a revert against
-v6.13-rc1 was reported as stable.  Has this actually been confirmed on
-v6.12, or might something in v6.13-rc have introduced a new issue?
-
-> > >  Commit:
-> > >  f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
-> > >  commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
-> > >  Author: Alex Williamson <alex.williamson@redhat.com>
-> > >  Date:   Mon Aug 26 16:43:53 2024 -0400
-> > >  
-> > >      vfio/pci: implement huge_fault support  
-> 
-> Personally I have no clue yet on how this could affect it.  I was initially
-> worrying on any implicit cache mode changes on the mappings, but I don't
-> think any of such was involved in this specific change.
-> 
-> This commit majorly does two things: (1) allow 2M/1G mappings for BARs
-> instead of small 4Ks always, and (2) always lazy faults rather than
-> "install everything in the 1st fault".  Maybe one of the two could have
-> some impact in some way.
-
-Athul, can you test reverting both f9e54c3a2f5b and d71a989cf5d9?  That
-would provide the faulting behavior without yet making use of huge
-pfnmaps.  Thanks,
-
-Alex
-
+--_002_58300a2a06e34f3e89bf7a097b3cd4carealtekcom_--
