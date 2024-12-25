@@ -1,128 +1,162 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D3E17A5BD
-	for <regressions@lists.linux.dev>; Wed, 25 Dec 2024 23:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C6829D05
+	for <regressions@lists.linux.dev>; Wed, 25 Dec 2024 23:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735168197; cv=none; b=QXlJ3lOHi2zh95Ro+3WglSQJLxEOS1QasVwXGD//2cMNbb13ck7NGTro9T1ZkPGG7GuYOiMra+cWJLNbGCjg+kg/5XV/ayvyM4xmjB1NLQDc8sPJ4+kImh+hH0Xs4rf+cnshkCW1aOtun8IhNQ+xsCN3wRNyRXz1N3c9dVGl7YA=
+	t=1735169157; cv=none; b=ptHIUqZ8DAz1JbRNqVqt5K/dOoR6+zlCUJCDsNAhTx0QXQJKxx1/JG1uL0Ns1pXuUKhqvnkuTf1ddfJ43rkliau8MfSHPHrqbB/ukoqmhzbchK+KgfjWIkX7cYpEHX+1R3hqBFMQ3XzzawwPJ4QJ0BawLS2om0nCmsOBs3+c70s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735168197; c=relaxed/simple;
-	bh=cXgffOIK+UGqcvAJB+/E8oSILbxrECit01h1rPWtz2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WyzhQuT1mGrCqOtFzxWDBgHktczGqXqvsrpKPFvSdPUuT7n5GjVkF8SXDPwDSuSyjEsIgK2FOetIHmxPyMoNQCuapMyX9ecxA/ZQaj7Hx5fTDyyRuVM6rk1XGr1nVLWgwgKsoLRxmsRqsNSTFUJdTxIMQZtrLiW/OhYba/qsSac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e50SzOj2; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1735169157; c=relaxed/simple;
+	bh=6T5iIgsuxbgf3BujVDmKCzyPpBxDE863nJwEayyFNU0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MiR+ZxwuQ/BTuJvGfX8etJjXzKufjd+UPOFyP72S2E+aE3BV5Xp9rJwD6eg/UZ44iNZ7jdRbQNaJYNrpwaA4SdZBgQAz/4tIYyeRQjhKagtw99rLRVKbQXYrSIyoty8Ga7g8CzvA/ZZKTlQ+S5ZhK05E3PlqoT8SUfzTQT2HyI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=uuvyGtnA; arc=none smtp.client-ip=129.70.45.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e50SzOj2"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d27243ba8bso11663687a12.2
-        for <regressions@lists.linux.dev>; Wed, 25 Dec 2024 15:09:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735168194; x=1735772994; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c9v+px78eG66InOEEBnkMK4cXXwgTr2T0JPbH4BNA8E=;
-        b=e50SzOj28/SYxgGpfee7Sw6vpD6cPlOxEfNtDqwX2NFgaTXGI2+KBWMVw087ddzRFl
-         21XEmBcB0vi6ZpAQRmjY2thULaLlZl7rEKmTo1w0p8fv5Xw/lOpjokCNYAkS0bsFHnZz
-         r8dEH/H1tQOAZq5bwK/OND8840J3BdG/FouCObACmz696cwdCtikVIaidSdxPNS6vSpl
-         7iz8a4WOZ7iRsQ6YOVA9jpswXOgVV2rclTaTAEhbhFraCojSQUCYK8KzfMkmwQ1oeCS3
-         3Y/eba961D8/sDRwKyuD3LpybCQoSXPYDt2/MKioHSBoqz+eXjPHfAKlBKbxDj7YUCnR
-         xBLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735168194; x=1735772994;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c9v+px78eG66InOEEBnkMK4cXXwgTr2T0JPbH4BNA8E=;
-        b=EwP0RO5C97pxc+FgCPxz9116MEEL9iAcK9qwGykRrIsvKPr8k9lpHgudjMtvwarJcG
-         vUwswK5mnncJSntjgAOc4phYfAx3/uz7PmuA862yMXHp1X2NR4ho5F5lsse+CvR7qZXu
-         4CzEcuVlgGvXwyc4NUjqW2Y5pQGBCjSUWloypZes25dAuwL80g6vlXJ8I0o/4Sym+hsi
-         XwQZ5Pno+98Re9v8zodQWf4vNUM9VfjBplwndjqHFviAnX7Hr0Zt8zn7M/78bLKsqcUS
-         usQzidIjZXYvenYSkO56EhzMhDupYfdsy7HuTC86JJGcEG7BHGorbyfoR4jz9GNpbC2j
-         9enw==
-X-Forwarded-Encrypted: i=1; AJvYcCVU23Lo6mPhPCz4eDVSMdWNKTKUYKcW+QCRcSLcAa11YYu4SFgUnZy33ekDFzEB9oFvecnCBfRalFX4Tg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/tnXJkVDjwGumnlRdXsWCsjRCz7P+TQEjTJWg9B/GF1OnloVL
-	O1up4d7raEWzx7/Klq1m5LB9r74WzUYK+49Tq7ZycKmgfkupMdkk
-X-Gm-Gg: ASbGncspyluY6zhZhxhwXG23gDT/2//FB9qpF4HZZgiqKBjy1QNBJsgnAMwm+9LvFOn
-	z1wMPGHeEwmCAZ3sf+u3dh6ijNYEQwj3tEwU0MhtY3SD6E22otVj4gND2K37BtLwshGr0NPAs92
-	RtpaCQmPzDwZXqw5fpYbwXuUdxhW7CauZUJfHhuYYNLJlWp74pjTCkyGgl6myN0V6KoE1V8cTCF
-	tUmX3VshP8o2PY5s9mO5N0S+tqhgDLcB+59w82g1xvolLz03/abEryGPDH9QR0=
-X-Google-Smtp-Source: AGHT+IFmA+25Ix88Cs6aGxcufnGYvRlbbn3zhK/hJN7bbVC8PbiIb0lazhzgSE8YiH5F8BHuqE5i5g==
-X-Received: by 2002:a05:6402:50d0:b0:5d1:1f1:a283 with SMTP id 4fb4d7f45d1cf-5d81dd849efmr17082749a12.4.1735168193836;
-        Wed, 25 Dec 2024 15:09:53 -0800 (PST)
-Received: from debian.local ([31.94.62.22])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80678c8dbsm8065745a12.40.2024.12.25.15.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2024 15:09:52 -0800 (PST)
-Date: Wed, 25 Dec 2024 23:09:49 +0000
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
-	regressions@lists.linux.dev, tjakobi@math.uni-bielefeld.de,
-	rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd: Fix random crashes due to bad kfree
-Message-ID: <Z2yQvTyg_MWwrlj3@debian.local>
+	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="uuvyGtnA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=math.uni-bielefeld.de; s=default; t=1735168746;
+	bh=6T5iIgsuxbgf3BujVDmKCzyPpBxDE863nJwEayyFNU0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uuvyGtnAWVpb9RpC5Ab6AjWWOpkZ4mvQEH4CSLuqIcksl/lVB6+lVMuNC13vOTes1
+	 Fm9N2c2DrWhUKneBjRtMOhBiU8QXH7mWSG/W7Tpki7jnf4IdWYGhpgoafWszmmWkPs
+	 feA/FxPcgMB3uIDV4ey91RcathqO3vDcYCBj5sxgmERWHunBzOwKVGzjpjDQiZlKDf
+	 Edc1I1DojJVPLYr5Z0BfguoCedAUOIE+h5HJnAI6KYFw6rKC8RPQ59Zhq1glAnINst
+	 r02ENVBAXAAyjvliw3fFfdoXktJqAxr2A2Gch1HyI4JYcAP/m0+ab1FGdjAUmH19C5
+	 wPuR4cw4G7Vng==
+Received: from [192.168.2.10] (58-32-133-N4.customer.vsm.sh [170.133.32.58])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id 23B41206CD;
+	Thu, 26 Dec 2024 00:19:06 +0100 (CET)
+Message-ID: <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
+Date: Thu, 26 Dec 2024 00:19:02 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amd: Fix random crashes due to bad kfree
+To: Chris Bainbridge <chris.bainbridge@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
+ regressions@lists.linux.dev, rafael@kernel.org, lenb@kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z2yQvTyg_MWwrlj3@debian.local>
+Content-Language: en-US
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
+ 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
+ JRHWPGCL3BhOxQ==
+In-Reply-To: <Z2yQvTyg_MWwrlj3@debian.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
-available for eDP") added function dm_helpers_probe_acpi_edid, which
-fetches the EDID from the BIOS by calling acpi_video_get_edid.
-acpi_video_get_edid returns a pointer to the EDID, but this pointer does
-not originate from kmalloc - it is actually the internal "pointer" field
-from an acpi_buffer struct (which did come from kmalloc).
-dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
-resulting in memory corruption which leads to random, intermittent
-crashes (e.g. 4% of boots will fail with some Oops).
+Hi Chris!
 
-Fix this by allocating a new array (which can be safely freed) for the
-EDID data in acpi_video_get_edid, and correctly freeing the acpi_buffer.
+On 12/26/24 00:09, Chris Bainbridge wrote:
 
-The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
-remove the extraneous kmemdup here as the EDID data is now copied in
-acpi_video_get_edid.
+> Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
+> available for eDP") added function dm_helpers_probe_acpi_edid, which
+> fetches the EDID from the BIOS by calling acpi_video_get_edid.
+> acpi_video_get_edid returns a pointer to the EDID, but this pointer does
+> not originate from kmalloc - it is actually the internal "pointer" field
+> from an acpi_buffer struct (which did come from kmalloc).
+> dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
+> resulting in memory corruption which leads to random, intermittent
+> crashes (e.g. 4% of boots will fail with some Oops).
+>
+> Fix this by allocating a new array (which can be safely freed) for the
+> EDID data in acpi_video_get_edid, and correctly freeing the acpi_buffer.
 
-Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
----
- drivers/acpi/acpi_video.c              | 3 ++-
- drivers/gpu/drm/nouveau/nouveau_acpi.c | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Hmm, maybe I'm missing something here. But shouldn't it suffice to just 
+remove the kfree call in dm_helpers_probe_acpi_edid()?
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 8274a17872ed..151d1d534264 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -1485,7 +1485,8 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
- 		if (!length)
- 			continue;
- 
--		*edid = buffer->buffer.pointer;
-+		*edid = kmemdup(buffer->buffer.pointer, length, GFP_KERNEL);
-+		kfree(buffer);
- 		return length;
- 	}
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
-index 8f0c69aad248..21b56cc7605c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
-@@ -384,7 +384,7 @@ nouveau_acpi_edid(struct drm_device *dev, struct drm_connector *connector)
- 	if (ret < 0)
- 		return NULL;
- 
--	return kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
-+	return edid;
- }
- 
- bool nouveau_acpi_video_backlight_use_native(void)
--- 
-2.39.5
+With best wishes,
+Tobias
 
+>
+> The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
+> remove the extraneous kmemdup here as the EDID data is now copied in
+> acpi_video_get_edid.
+>
+> Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
+> ---
+>   drivers/acpi/acpi_video.c              | 3 ++-
+>   drivers/gpu/drm/nouveau/nouveau_acpi.c | 2 +-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+> index 8274a17872ed..151d1d534264 100644
+> --- a/drivers/acpi/acpi_video.c
+> +++ b/drivers/acpi/acpi_video.c
+> @@ -1485,7 +1485,8 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
+>   		if (!length)
+>   			continue;
+>   
+> -		*edid = buffer->buffer.pointer;
+> +		*edid = kmemdup(buffer->buffer.pointer, length, GFP_KERNEL);
+> +		kfree(buffer);
+>   		return length;
+>   	}
+>   
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+> index 8f0c69aad248..21b56cc7605c 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+> @@ -384,7 +384,7 @@ nouveau_acpi_edid(struct drm_device *dev, struct drm_connector *connector)
+>   	if (ret < 0)
+>   		return NULL;
+>   
+> -	return kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
+> +	return edid;
+>   }
+>   
+>   bool nouveau_acpi_video_backlight_use_native(void)
