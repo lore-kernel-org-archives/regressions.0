@@ -1,158 +1,166 @@
-Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E5A1D416E
-	for <regressions@lists.linux.dev>; Thu, 26 Dec 2024 12:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735216159; cv=none; b=EOhJzwdMgbi2RR8uRR7SmImhal7YziBCNc4Fry6NBsZ9pqNSoLBS9xk966LnQLppSI4TCHSUioRqi+BJGvvZ8icyEpMfeFYmfqzF2Ls/umVtyT0MuJcszoy5K3WLGWgw0y8gTwvngQLQcJwhd4JAt7mTT9JjY0Cnq4IF/zdrA8w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735216159; c=relaxed/simple;
-	bh=HgPTb3LOTRkHnpcTm/hPvSnOhZx/f+9kcrrTOI1ni20=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=R0zSCoLOajzUpGNOJdbs+RiD3lh45dclXpeEluKqQ/RFzfZ1S6zq5VHgPbcHGMwx7n5mBDqTUcQhtcYwjaprquZktD+Q+KlFBztAgP8kdLx77TuPHEVA2xDdkZAQPD9YmMMUjk9N2exA+IkEfnznmU1FHLgVMjxuxasAgGnmBeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=fdjEFYpx; arc=none smtp.client-ip=129.70.45.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450081BCA11
+	for <regressions@lists.linux.dev>; Thu, 26 Dec 2024 14:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735223404; cv=pass; b=FPnme73sDU8THRy6vWCba33jGzhMUrqoAX4r8K2tKl56RUz12VHw3eK1Btz2htVsfY+0NGiOcqxJV8psLuavDrN6Q5EuAuf7S5DP4HUtPf44HQ/3AdC3GslZmQY2L6JeRhXTuZ93r3mqJnWTlxWDqf3vfD9HAyF301PtLWYIfkI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735223404; c=relaxed/simple;
+	bh=h2cyKbAoVIcKRSztkR2Rrxygjk5DKM2MKk4l7ceUPMQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=CfGhEL7Ldk8sx3Jm8sOZ1jJKEDkuhwCG3D+4gjmefIkUxcxrTSuKPMu9hyQv0LvOYimEAIMM2PvqPKbX9hjZSVYv1cS1sVCHIkBU6r1JkqGaQZvQe1RnKgarotD2rSMoUwie51RDdPwZlk2olLFCKoEO3CF6ZtRpfck8p0jVHz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=aFrLiE3T; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=KEAKNImO; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="fdjEFYpx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=math.uni-bielefeld.de; s=default; t=1735216155;
-	bh=HgPTb3LOTRkHnpcTm/hPvSnOhZx/f+9kcrrTOI1ni20=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=fdjEFYpxCIe6/bpy3Wr6m2faS/mi5snJ2rWO8nUJulcEch5K5TBCYRJ0g5vmhMS7U
-	 AxN/KMVKuQ6KBQtpxyqoktOac4CUN3gx/OXqejYtBVF9PGBPbwpFqvk/4ooANeunOn
-	 6YDgJYb+WXFJlDVdmQ7s9+5ameh7DhfpJymHeo43ihHdSNck/qSdv7yKBZeqNYCFDE
-	 t2UKveihHIBEdzKBqKhYLbzuR5UXTHJZy1BTkgCtWLirT44T5MEYrzsALA4Ba7pQ1+
-	 S1zdEGer9BVVHr2ffWlpgEjI+nMFDDU5bhc94Wjn5EtdLCsh4Qq+2DPDkHXGaAwvfM
-	 aU3IWk5arDd9w==
-Received: from [192.168.2.10] (58-32-133-N4.customer.vsm.sh [170.133.32.58])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id 8C772206CD;
-	Thu, 26 Dec 2024 13:29:15 +0100 (CET)
-Message-ID: <319c2913-78fa-4b35-828e-7d4d1d691a93@math.uni-bielefeld.de>
-Date: Thu, 26 Dec 2024 13:29:15 +0100
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="aFrLiE3T";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="KEAKNImO"
+ARC-Seal: i=1; a=rsa-sha256; t=1735223207; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=jFZl+uoO22iXNoLnO2iM7BUzohCaaHN8CBdksmIpfGI8wHgffEvT8EAfda33oTQS+P
+    z8f1zXhPfIo0NS78PAbpkRXnWjsUXlzhTUKUW9FL5FLGICjZp2+M5lTO4PCGsW7DBatl
+    osP5Q6hJ5B6CAdvffbToO6pOaCbDwidGXuFwYMP9Z90tav5EQttJg/z89S5SegYNxO/v
+    Kf61e821JB8v/Kqle0fzLeXcJ6PY8x1s6THPnBFPFA7jpkg4ZCWn/SRuoMgTmvRsFGlQ
+    fR0VknsWvhDePMIsqnirP9FbL56ZpLdWIT1sRKXuB3Ju6MjjEG0VnCMmq9lUZiDedTUA
+    taeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735223207;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=3VgK3myThIvIiqjtg3uv+l8MN6kZ/aVub4La46X66d0=;
+    b=LQxs5Ot/A9jX4BuMwWiB84ICmgVob5dpgAibpKTM+WvwihEJo62MFb02SDizz3EsBV
+    /qbX0/ITo2+uZko6liNUzdQCUo99v4TspIl1PGhmsHwoPWo3buLZH2IU72ABpVmizTbG
+    qhpKG71dcB6/yFzwH1vy8+jqrd5jdlMqvJEZ6j+PP1g2zAHTE+d+wYNZWPy0+6amwPKK
+    4D1lTQZI6NCgBwR3vZURlHT8DWp7c2tqGNXGjnlYX3krS/uAfTtb0O4nAQwvfskY0XlS
+    +/iPVnPcDROe5QbQGhR302liiuSZM7EmJX/lH0V97eRJj3pg8AkLt08h3EPL2duI5L8c
+    JzXw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735223207;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=3VgK3myThIvIiqjtg3uv+l8MN6kZ/aVub4La46X66d0=;
+    b=aFrLiE3TZIyuqE9+SgxyTJ4CEVednk34jrLiwhJzF2zcatFL6m1vRRpR7d2WObT3qw
+    hyfl/oPJayyf+beW13GDkmhqdIiiszIwwHS95Khjb8WED5PINXmc6AG6CFWwAxbdcG1C
+    VXTSJwQPuWSkpj+yLjxog/A1T05YdG+f8QedLGc7k32JuHpU7KvJFTL9FT1d09rMNV3t
+    6rzXzQiNhdFa4DOCDPUNZd8JFIHbIevlpKrO0MLRjYPs4eD/6pzJWWkL0PaGac605ROB
+    W5HzgM5EhK+yrPjTZXvqBjYTuQxi4Vhp8L6IjNfvgK45YmqtL9KX+RSFPWiUnZgobsKX
+    xr1A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735223207;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=3VgK3myThIvIiqjtg3uv+l8MN6kZ/aVub4La46X66d0=;
+    b=KEAKNImOTSQNtzPMQ5xAGMyzAPAbyAw/8x8YJRlsj8VogIDjMJZIC85MJi4UP/munW
+    GHAcOfrkG904NMtlt4Aw==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 51.2.16 AUTH)
+    with ESMTPSA id ebe9c90BQEQlE4n
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 26 Dec 2024 15:26:47 +0100 (CET)
+Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
+ Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
+ madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ hypexed@yahoo.com.au, regressions@lists.linux.dev
+References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
+ <6CC404E2-2442-47FE-877C-252B1F2872C2@xenosoft.de>
+ <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
+ <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
+ <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
+ <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
+ <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
+ <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
+ <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
+ <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
+ <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+ <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+ <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
+ <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
+ <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
+ <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
+Date: Thu, 26 Dec 2024 15:26:46 +0100
+X-Mailer: BrassMonkey/33.4.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [PATCH] drm/amd: Fix random crashes due to bad kfree
-To: Chris Bainbridge <chris.bainbridge@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
- regressions@lists.linux.dev, rafael@kernel.org, lenb@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Z2yQvTyg_MWwrlj3@debian.local>
- <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
- <Z2yw_eJwR5ih1Npr@debian.local>
-Content-Language: en-US
-Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
- 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
- JRHWPGCL3BhOxQ==
-In-Reply-To: <Z2yw_eJwR5ih1Npr@debian.local>
+In-Reply-To: <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 12/26/24 02:27, Chris Bainbridge wrote:
-
-> On Thu, Dec 26, 2024 at 12:19:02AM +0100, Tobias Jakobi wrote:
->> Hi Chris!
->>
->> On 12/26/24 00:09, Chris Bainbridge wrote:
->>
->>> Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
->>> available for eDP") added function dm_helpers_probe_acpi_edid, which
->>> fetches the EDID from the BIOS by calling acpi_video_get_edid.
->>> acpi_video_get_edid returns a pointer to the EDID, but this pointer does
->>> not originate from kmalloc - it is actually the internal "pointer" field
->>> from an acpi_buffer struct (which did come from kmalloc).
->>> dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
->>> resulting in memory corruption which leads to random, intermittent
->>> crashes (e.g. 4% of boots will fail with some Oops).
->>>
->>> Fix this by allocating a new array (which can be safely freed) for the
->>> EDID data in acpi_video_get_edid, and correctly freeing the acpi_buffer.
->> Hmm, maybe I'm missing something here. But shouldn't it suffice to just
->> remove the kfree call in dm_helpers_probe_acpi_edid()?
-> Yes, that would work to fix the bad kfree, but there would be a small
-> memory leak of the acpi_buffer struct. It's not a huge problem since
-> this code is rarely run, and the Nouveau code has never tried to free
-> the edid buffer and apparently nobody noticed, but it would be better to
-> do the correct thing.
-
-OK, thanks for explaining. I didn't immediately understand that 
-something was leaking memory. Only that we were freeing something that 
-we are not supposed to free.
-
-> One other curiosity is this comment in the code that allocates the
-> memory:
+On 26/12/24 08:00, Paolo Bonzini wrote:
 >
-> case ACPI_ALLOCATE_BUFFER:
-> 	/*
-> 	 * Allocate a new buffer. We directectly call acpi_os_allocate here to
-> 	 * purposefully bypass the (optionally enabled) internal allocation
-> 	 * tracking mechanism since we only want to track internal
-> 	 * allocations. Note: The caller should use acpi_os_free to free this
-> 	 * buffer created via ACPI_ALLOCATE_BUFFER.
-> 	 */
 >
-> Which makes me wonder if all the calls to kfree on acpi_buffer structs
-> with ACPI_ALLOCATE_BUFFER in acpi_video.c should actually be calls to
-> acpi_os_free instead? I used kfree just for consistency with the
-> existing code.
+> Il mer 25 dic 2024, 13:48 Christian Zigotzky <chzigotzky@xenosoft.de 
+> <mailto:chzigotzky@xenosoft.de>> ha scritto:
+>
+>     > But do you see anything on the host dmesg (without and with the
+>     > patch), for example a WARN?
+>     Unfortunately no log during the start of KVM HV.
+>
+>
+> Ok.
+>
+>     > Also you might try edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4 + the
+>     > patch, to see if there are two bugs.
+>     >
+>     > Paolo
+>     >
+>     I think you mean 419cfb983ca93e75e905794521afefcfa07988bb because
+>     "git
+>     checkout edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4" doesn't work.
+>
+>     Error message: fatal: reference is not a tree:
+>     edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4
+>
+>     git checkout 419cfb983ca93e75e905794521afefcfa07988bb
+>
+>
+> That's the upstream commit that doesn't boot. 
+> edebc0a1b7ab5ff19b4f5cd011c93196fc34b3e4 was the rebased version of 
+> the same commit, where your bisection finished.
+>
+> Paolo
 
-Wouldn't it make more sense to do the memdup handling in 
-acpi_video_device_EDID()? This way you have both alloc and free in the 
-same function. But I'm no expert when it comes to the ACPI kernel code. 
-Just my two cents :-D
+Hi Paolo,
 
-With best wishes,
-Tobias
+This has solved the issue:
+
+cp linux-6.12.6/arch/powerpc/kvm/e500_mmu_host.c 
+a/arch/powerpc/kvm/e500_mmu_host.c
+
+cp linux-6.12.6/include/linux/kvm_host.h a/include/linux/kvm_host.h
+
+cp linux-6.12.6/virt/kvm/kvm_main.c a/virt/kvm/kvm_main.c
+
+cp linux-6.12.6/virt/kvm/kvm_mm.h a/virt/kvm/kvm_mm.h
+
+I created a patch for reverting the code that leads to the issue.
+
+Link: 
+https://github.com/chzigotzky/kernels/blob/main/patches/X5000/kvm_ppc_revert.patch
+
+Maybe you can find a hint to the issue in this revert patch.
+
+I will further test KVM HV with the patched kernel.
+
+Thanks,
+Christian
+
+-- 
+Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
 
