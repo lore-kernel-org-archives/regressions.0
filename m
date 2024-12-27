@@ -1,161 +1,133 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6721F63D5
-	for <regressions@lists.linux.dev>; Fri, 27 Dec 2024 15:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735311752; cv=pass; b=OMlD5QFtfRTD7X2aVSjYGZVJx/pk/0Tj27jpy5d165ba6HcB/gKLgiA922nxGoEXi6O7yW8w37t/42yorcBT9S73bfcNb5BUvV4lmD2gE6EvOv3UYUiIJ/z2PUry48xu8rKAJY+PRHcZDWbVnHFSjyalIn1LmF5ELM6wsbVAC64=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735311752; c=relaxed/simple;
-	bh=OT/T4oOlqJVfSP1QgopSzXcMJ2HAo0Birc36UFMdvUY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aS6wt4WLQ7WRFG+cH6hWJkRhJegtKpg3wBkfJ9vRHgCI5LN3iK0NerNQwNBr3zTxRYOn1k9Vr7Esxl5YQWzP9p2hPUkFC+8GNaSfToTn73oUZp7iji6VwMwlg4sN9DJKdDeiMJEV3EXSs/iINDOC9eDk67IBFH65hMdNXnG4PLE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=AylfYbO6; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=dhV2yzcv; arc=pass smtp.client-ip=85.215.255.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D298D1F6695
+	for <regressions@lists.linux.dev>; Fri, 27 Dec 2024 15:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735313323; cv=none; b=Jj+gjtOqPBEg9b2d3fBb1iwLYNwJOWYmEL25mViKmeETtJPgLfeFAOniclHpuRLIj7P91ht7HxTY/XLR9v09dpETA8l5MATLDn1H21yVvjdN3j3TOpZfw//a1MJHG99U6SBLZ3YcIB+cWkLwUiBQykmg6Lj+nBpCinmyTfHYttg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735313323; c=relaxed/simple;
+	bh=iz88ImqigGmwxXebl1cIPLdUhieWgQW1xVvBsQCc6P8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TYia8H9MGMWVAzbUu6vfDk6zwcJwmaLzSM00+eT9hSqaj2NZNJQYORIUk6xdnQjMYywvwjXTcLw3VkfaQIGNX9v1TlpIwT3o+Ri0gzRNtTGSX+m0qylk+bAixm7eFwg0xgThAanNPoRchmJvIyFVIemMF3N88OqhE9oV/qMhXno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijlwqLQ/; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="AylfYbO6";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="dhV2yzcv"
-ARC-Seal: i=1; a=rsa-sha256; t=1735311017; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=ia+ryY/EBTr1eSs4Jgvo0wg/acQGslg0yXSsTFzoD/uAKbkCUG/g50hW6jz0WwCqrJ
-    hrxs31tOGrr1LsXreWjSRKcmsOUmCQU1qxuzikz0al5L+e0JpYoJ+ugJZfc8CTVfhdM4
-    axZZNGkyrk91fp6pn4Kkp3QhS1c+9ddVSavxS3DKkGBYc/GXXl6O0Qttt4W0aRLWW6zJ
-    /ADlDRnkbr1p3X6rLbZ7ASKiZQY8kchXj2C7aTodZM9QAzRdMcA4edzkUC6Rx1BLoBox
-    LGWglioKJz1OkYKcQRAvKbLsqZEaE50uS56ctmIgSTaDn+lzknUsfhaIM1zrD7fsKxLE
-    sdMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735311017;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=BjWYSJ6fvF4/SmUz8RmXgP90G+cmY6OavQUF53QjL08=;
-    b=oGZRCCFKCDaaIF2MP9/Q5fLrPVv6SxImDgiYTOVLBiMZUnLN0ruwAu+AZVDYwMttFA
-    xAizsfnao8J02u9AzUgAfvw8tjAPwbXICsCMU1xgUNTfk66Xtg/EFKiGNQJ9zbXqg5jb
-    HZE2IhMuzrm8dVH89dGakJYF3oxJbHbCB045dyQVlYxIFVqYJasfcTH+dD9Nk+9AGiQP
-    j6UYaCOHAkLEammn8yLz+EANlXAkEvdJSc66Ez7H4R0QTHD4kCtxzFmlnv3LQW2tDLVx
-    N4FOKbaqcRTwdtoubrEtpaUfE6HR9s3QXwm6P4jZxgi1Pz7UzbJ2Jrvk+vAJj70WCVs2
-    VBhg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735311017;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=BjWYSJ6fvF4/SmUz8RmXgP90G+cmY6OavQUF53QjL08=;
-    b=AylfYbO6xm3Yv4FE+fGsxr8QxwGOygb2M3xNwTp6IoJae1Z86sie5bL0bjM4GhL3u0
-    xDv+ZIt5vPdPnc9L9Y+rdFAsm3tE69oGu4Z+5zzHkLRGm+P1qXqU8XJdVDTwBLmWsrGx
-    sAQ61VMqhGGv6CWEogzxa9TbxiWOOb+k7AC6+0+TV9kiZuili0fPocVdLpmqqQSSBxr/
-    ofhBAhwk0ta8nAcM/pSu2Vc/SCvER01zLKwWQ8ZH8bcTWM/P64zutBDwgR5J4oLuJVOR
-    P2qexdZ+zeuFmnVIXkAonovc2mjPTmzMn7c1NM+5wvpULByfKbgLz/NUV4A+Nb18QeyV
-    etBA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735311017;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=BjWYSJ6fvF4/SmUz8RmXgP90G+cmY6OavQUF53QjL08=;
-    b=dhV2yzcvKU4sqGMM+s/eQ3WbKZq4AYOh7CUqZ75jKdN5s6KwiIXEP/0frCkht3Fdpy
-    7gItKWjv3JMa6SSwAXCg==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c90BREoHFQ3
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Fri, 27 Dec 2024 15:50:17 +0100 (CET)
-Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
- Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
- madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- hypexed@yahoo.com.au, regressions@lists.linux.dev
-References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
- <6CC404E2-2442-47FE-877C-252B1F2872C2@xenosoft.de>
- <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
- <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
- <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
- <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
- <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
- <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
- <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
- <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
- <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
- <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
- <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
- <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
- <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
- <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
- <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
- <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-Message-ID: <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
-Date: Fri, 27 Dec 2024 15:50:16 +0100
-X-Mailer: BrassMonkey/33.4.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijlwqLQ/"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3eba7784112so3396722b6e.2
+        for <regressions@lists.linux.dev>; Fri, 27 Dec 2024 07:28:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735313321; x=1735918121; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fa0fqKDzdWUWgl9YIyEjQ+EFtrp32SWDVcpDJH2NtZk=;
+        b=ijlwqLQ/YkX9uf4jtlplapDyzGXCVvaLAL55qvn7qZp9tTgObqfKM25EcsNulIT6Sp
+         ysuvR0zd2cwwkOT9UQmzDFg88eCCS52AqgCkk94rExYrVb3mnKB0OTr1InMccl9XYd6S
+         w6F/n7xzI0fKwD39Ot6oC0OfMnunJApJOzKpOMS4brLtUIwKkcT0j+eL7Kok/A6Zq+qX
+         APknX/Bt60Onkxv4yChmNWgpk8L121sAZAIQVduk+X85HmPMGEPmSXQ5pe7Zpj28lpC5
+         FApSnjQ5LaMbiMMRu4HwH8T/2oCp2zyWtFKELGUKX8Hbf4r4R/4bWhH1VTTL2Je5sriZ
+         Rb1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735313321; x=1735918121;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fa0fqKDzdWUWgl9YIyEjQ+EFtrp32SWDVcpDJH2NtZk=;
+        b=q2t+XeBAFeEsn9gjnqH3hN4PUXSiti3t5knd4UqJYALtz6LDawv+ArolukFE8ZeyrA
+         MKlX2rhGAuwHLkL88WMLqmMiJzhFZBerR9o5LXS5S1MwLDQA/HTw0hEKa3SXR2V8wSQm
+         uTK3oTy9hFSshKgR0eryTJ0rzUmyhlr94zGfzrsCpjhBvEogWNG/EWwbN9cWZH/Y9x3N
+         PHtlIymXuB9MNtAIYMy1eOkVMltxadl1b0K8NFQB7cDgALm3O6Duofnn7IV33RnZPfnC
+         jhyhQw7nqySVNG/T3AE9YsF98T/3GZop3c1lcxXgan31nt2QJUxSZl9EHJ/xUNC121nE
+         i1pQ==
+X-Gm-Message-State: AOJu0YxOaAS39Gkqtz/kPMMAxPpgYLJc28TTn41H4nP7TZaHKTMbntcV
+	zV3Ru8aPOZZNZXIxW2EiPxA36Z+N0Qmsx6oKaN89exmlT3/2B1r8w8yEkPKCHctvLVvKNinGpZI
+	cgCJH2TDovKSJyKuI4LMiWXTAF9y4lMyS
+X-Gm-Gg: ASbGnctTPbYJ5wh6jM20iV8JLygtlapnok2bAowKBHTG/ZshCqzsAB0NGSEQo6WeOHQ
+	+Bt+OnFcxzvWHAdyxUIPPUJEwls/K0NuHjyxLF6q2s3iHRs9eJs48oTdrJcOh4E8WRQa9Jg==
+X-Google-Smtp-Source: AGHT+IHlhtXNIIP6CcHFNHWTlNhXv4FVZELDr908El/Jcm2tR2FkPTydUKVEgkkTa60SXlVH8rmnaZ3k4WO4gW7MuV8=
+X-Received: by 2002:a05:6808:1514:b0:3eb:6631:ec29 with SMTP id
+ 5614622812f47-3ed88eced6fmr15642422b6e.6.1735313320894; Fri, 27 Dec 2024
+ 07:28:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAKUwrzBKjtxYkGoL-=mrJ9PoN_PACW0VO1Si1rUdLXfvW_h1cA@mail.gmail.com>
+ <CAKUwrzDtcu2JGdVve0BF9nUR-25M3bZrSyJ6xLLiwjCehmWCxw@mail.gmail.com>
+ <2024122755-status-provolone-58f2@gregkh> <CAKUwrzA2ue3g3Ys=Vg=eeunE1mw-RSockLPoqnU=F6jB1jjVBw@mail.gmail.com>
+ <2024122716-previous-plethora-0ebb@gregkh>
+In-Reply-To: <2024122716-previous-plethora-0ebb@gregkh>
+From: Alvaro Kuolas <kuolas@gmail.com>
+Date: Fri, 27 Dec 2024 12:28:30 -0300
+Message-ID: <CAKUwrzBH13SzGGSpDbxf44T1JnuKyHoL4y_KSdEQjAqpG1fz1A@mail.gmail.com>
+Subject: Re: Longer boot times with kernel 6.11.7 and newer (including 6.12.6).
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/12/24 06:20, Paolo Bonzini wrote:
-> Please test the kvm-e500-bisection-rebase branch of 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git, which has the patch 
-> applied already:
-> - first test commit 0096d3855a5e80b9d4e43e5a291e8c79aa4abbc2, and report if it fails
+The problem is related to upower and Realtek ALC4080 USB audio chip.
+
+https://gitlab.freedesktop.org/upower/upower/-/issues/288
+
+Disabling the USB audio chip in the motherboard BIOS settings makes
+the system boot without delays.
+
+Thanks Greg for all your help.
+
+On Fri, Dec 27, 2024 at 9:41=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
 >
-> - then the entire branch, bisecting between 0096d3855a5e80b9d4e43e5a291e8c79aa4abbc2 and the top if it fails.
+> On Fri, Dec 27, 2024 at 09:35:31AM -0300, Alvaro Kuolas wrote:
+> >    "as expected" is what, faster boot?
+> >
+> > Sorry for my wording. I mean the system boots faster and it is more
+> > responsive without commit cfc72b86fa20cbf44d2b6cc27b35eb15080232ab.
+> >
+> > I noticed this problem on my system when logging in after a Fedora 41
+> > update. From GDM login screen to Gnome desktop running with the commit =
+is
+> > roughly ~19sec and without it is ~5sec. This freeze on GDM login is why=
+ I
+> > started debugging.
+> >
+> > At first I reinstalled from the latest iso F41, then tried to block upo=
+wer
+> > update, and later I tried different kernel versions. That is when I hit
+> > this commit.
+> >
+> > I have compiled 6.13-rc4 with commit
+> > cfc72b86fa20cbf44d2b6cc27b35eb15080232ab and without, I will start test=
+ing
+> > why this behaviour is on my machine and in other machines I have access=
+ to.
+> > I will try to look at why upower takes that much time, and why Gnome lo=
+ses
+> > responsiveness, and check if it is only on my system (Ryzen 7900X, B650=
+E,
+> > Vega10GL) or if it happens on other systems as well. I can change this
+> > testing to 6.12 stable if it is for the better.
+> >
+> > Thank you for your time and comments on this subject, I really apprecia=
+te
+> > it.
 >
-> Paolo
+> If you look at commit 15fffc6a5624 ("driver core: Fix uevent_show() vs
+> driver detach race"), it shows what the original fix was attempting to
+> resolve, by removing a lock on the path of reading the uevent sysfs
+> file.
 >
-
-Hello Paolo,
-
-git clone https://git.kernel.org/pub/scm/virt/kvm/kvm.git -b 
-kvm-e500-bisection-rebase a
-
-git checkout 0096d3855a5e80b9d4e43e5a291e8c79aa4abbc2
-
-Output:
-
-... HEAD is now at 0096d3855a5e KVM: PPC: e500: Use __kvm_faultin_pfn() 
-to handle page faults
-
-make -j8 CROSS_COMPILE=powerpc-linux-gnu- ARCH=powerpc oldconfig
-
-make -j8 CROSS_COMPILE=powerpc-linux-gnu- ARCH=powerpc uImage
-
-The host kernel and the guest kernel boots with "-enable-kvm" so KVM HV 
-works.
-
-Paolo wrote:
-
-then the entire branch, bisecting between 
-0096d3855a5e80b9d4e43e5a291e8c79aa4abbc2 and the top if it fails.
-
----
-
-git log
-
-commit 15ac24da3251e47fe3a63ea52d8c5ecb0b26b02c (HEAD -> 
-kvm-e500-bisection-rebase, origin/kvm-e500-bisection-rebase)
-Author: Paolo Bonzini <pbonzini@redhat.com>
-Date:   Wed Nov 13 12:39:45 2024 +0100
-
-I tested the top additionally and the host and guest boot.
-
-BTW, I also tested KVM PR on my P.A. Semi Nemo board yesterday. KVM PR 
-isn’t affected. PA6T-1682M is a Book3S SoC with AltiVec support.
-
-Thanks,
-Christian
-
--- 
-Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
-
+> It's odd that gnome wants to read that file so much, so perhaps you
+> should look into what is happening there.  That file should ONLY be read
+> once at boot, during the "cold plug" portion of the boot process, and
+> not afterward as that wouldn't make much sense.  Perhaps a speed up
+> could be just fixing userspace to not do that anymore.
+>
+> good luck!
+>
+> greg k-h
