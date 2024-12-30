@@ -1,131 +1,198 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF43156C6F
-	for <regressions@lists.linux.dev>; Sat, 28 Dec 2024 15:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735398438; cv=pass; b=b6KGcN3LZvKBRaRFenj6HOUz1bTnsJxy1BW0b356DKoW7yviWOczTSAlheHziPL6graCraNWbKQUezQZOYNna4Jdran7GrmuhTom2TJDL8/c7lWRKvkIHtOYMLvX6bgsH6G3wgcDfPMZWBq1Fvncm6iYIG513GeiiUM0n0vw0nc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735398438; c=relaxed/simple;
-	bh=37VKn5PLSOeqkXzIPtEdx5FmaRPfL25988paX84Qwm4=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RMkX58aElUsIFcW46DWpWgybdEC9GGMWrjZE9DG2FoyYZooogEl7fpEuIrgklody+Lz6PYnOeJhS2lBTbUsfauZ6nUIU8qukAsfrfGaK4qXszYjv6A/mjNChAGsnbIrfxBrrjv2T3jwhYPCVyJN+siQNnQ+wZU/n+uom/aDE4HQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=UN31UaZy; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=uyOjos4P; arc=pass smtp.client-ip=85.215.255.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B03195
+	for <regressions@lists.linux.dev>; Mon, 30 Dec 2024 00:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735517382; cv=none; b=igpdqcnyY22VngO6fpO5j9KWJ8yh1+nlWknFPlXeDcgNIhhzf055HRWmomkCdajRGaerTPmXwAL2xxlLCWbUlFLYPfAGqaf5RV2Q1Zzuk+Kr8aTAOzo+zWitqVYH0MX0rcUvgVAd6z92J2CFyUhJz3NQqUT+HuGM5/KUJKR0Do4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735517382; c=relaxed/simple;
+	bh=BUtQMCSg1Oj0Chy5Kbp17AuO/+h+n58htkK175/Z7iA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Br7/9n+cl4JDg7IxouDrbbpsJk7ofJg12eDUQ8VwPIH9HbeyaU7/AEQfjdtigzSHj6q7UDIV5s62bHEQxcQIOXJKoVYCK2aKoWyMzYxUSJFtUDaViTExgv8eD7xMvL+W2H3aPDLVN5BNg1Z7SQSeGWD56HRLS5P0b7mbIDIY9/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TLHrPksM; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="UN31UaZy";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="uyOjos4P"
-ARC-Seal: i=1; a=rsa-sha256; t=1735398248; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=k0uwYPQkHAo+8e10ZExX2OgkwOUEDmRCKDXAVyQbQRcxcuy0gmEK6MlQr9AVuiEfRV
-    KdUqZTmQF+Ze6CsGc2zX7zuJtxQ4KTdukAhDnH78gRjwIGEIdIB4xJkw83j/IB5kjjPy
-    CoTfP1HNeWU96KeZPyKufNMAH2ew383rPeKiL21M9X8KO/T6rHQK3se4cJMUbqA41zlV
-    OgHlXp4wEW3l52MszVcdcxqRsI9XReEa7jTqGY1D4EBPpEvL33CLLTw3eOKGD/814j2V
-    KQjHJHWRqnUQksWjmqjNs6YXclHyV9XbogQOb6Tyuw2+EmR2PQF+mKB6b2a/k3K4gnsa
-    Ov+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735398248;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=qLxJud3QT2FgeecmWR6c8W7nxF/FxSeDZmpBcbT+vgo=;
-    b=iMVebN6WQ904H83JEYgS30s/E7pL4dNL/G6/yI7vmG0KMU3e1eb37UzVergMygIO9A
-    PYTba4s97ajifu5c+J6AjA3fW8lTZeZL5XEYX0Io6vt/Pkqq+ox54OYIZ/MBRJ9A4cIC
-    kV1aD82wAVjmjkheV6iZS70F28DFyejbS3Yvd//ynrY56Qp6NsQpS4Yip4nvEtO1UJkg
-    x78nF9k36a7svFNHtK8bu9+cMA+M7H1VsZZ087wB8gMT4wA5/AnMhuIJdrilk0n+43VB
-    ppQTC9hJ4crDomZ3V7vpFEHv10JMmGN7hUl0JomfUjL2SwwHFFDSr0gaqsR2TXiMxRv1
-    skVA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735398248;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=qLxJud3QT2FgeecmWR6c8W7nxF/FxSeDZmpBcbT+vgo=;
-    b=UN31UaZy21+kxhhtDhwgkrhb6UtxXfskPWW/9daTjm+fhmoU3rJF9qaQU/WRlCClLu
-    iqUtfCArxEyEbAXlFjobPtbBT+vTGbHGTWHQGiS20MLNBgVMf1yGVfIBgbiup5rqvwVO
-    jyldTWFEyMbL1OqLp1eyK81fn4VichrwaYEoKLPnSL18nh9nCV7LuxDsFl7+AcZCrkji
-    OFQE4RH0jprXd49VTs4uBybao1wxsPHtlMSYnPaIv86B0veCswNEwe32vuSrvLN8xaG7
-    47griSASZgkAcXNvDa4mUD7NErUHXG4lO6j4UuvC/Gh9zsN/OWk2z5uJu6B5kHTIJ9WL
-    5nEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735398248;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=qLxJud3QT2FgeecmWR6c8W7nxF/FxSeDZmpBcbT+vgo=;
-    b=uyOjos4Pq9zzk9G4p64LWmL+PBVpNZn2d12XwMvg1I/3h9NSTw73WqY43spAeFumVQ
-    /ALsIidT4PMm9gpGsQCw==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c90BSF47GYz
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sat, 28 Dec 2024 16:04:07 +0100 (CET)
-Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
- Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
- madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- hypexed@yahoo.com.au, regressions@lists.linux.dev
-References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
- <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
- <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
- <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
- <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
- <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
- <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
- <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
- <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
- <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
- <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
- <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
- <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
- <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
- <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
- <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
- <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
- <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
-Message-ID: <02c39ee9-7b54-8384-6ddc-b979abc9e7c9@xenosoft.de>
-Date: Sat, 28 Dec 2024 16:04:07 +0100
-X-Mailer: BrassMonkey/33.4.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLHrPksM"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-219f6ca9a81so770545ad.1
+        for <regressions@lists.linux.dev>; Sun, 29 Dec 2024 16:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1735517380; x=1736122180; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s5aXoDdVCtXt3iybNZCPNId+3b30Me5/dyFiUes8QNc=;
+        b=TLHrPksMnjB6JRjTExhe3NhXqycG/p+z1iQXhm8veChS1cpX+z4NqL+QHXnEe1cE6d
+         Q2D7KUf0AJhLjkbAlAUC/3cVL0cTzGB+/pty6SqgSno7tS/Hij83//+sEa9oDOrMlWjq
+         OZMWIggelFJqTrIGbsJJgMzIOaGeXRarmBzF6wBXuBoRneNjoA1wBWHf9ikugLbFgQ30
+         ejtgrTd6hEJ4drm1XL9o/oARA6D/3Rly2xAdDozTgBaJcoTxDVwFmtcukKtNRMk5fR25
+         Bh9JSDTJ2TXqQtREEWZmCEafd7RVn840VLkWXvfkkgzh8sYCV0dQC/PPbHhQB9AHkPJA
+         9jCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735517380; x=1736122180;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s5aXoDdVCtXt3iybNZCPNId+3b30Me5/dyFiUes8QNc=;
+        b=EB9hhF9DLFWPPy0givitGF654OypuhySVH5SNRBB0iLPtcXtIaxcsOGXLis7nxt2rN
+         GIpNmbe7cvMa75o0xVTy/Ir4VTkdfTEU+yg9grbR7bXAYGPVZ1vvoNilrCrA39lH8oVy
+         nsVo+RxIx6QsD/SYtssqaZOSmhE68/kbh0cE6UKCO/Ws47zjvraBDw0Zewyu+bi2vlVy
+         OyDuhvU8MrtWrMbYh9/cCk45MbjIS3gZ+BK0W4xdYhWk/bYyMmmXbT17DFEDPTvWPz1R
+         2cem5m3wT4Iye29qH8cmI3u0PxW7KdZqFYIn/W71GCetxryI3r1+p/xP+46p25siLQg5
+         T7GA==
+X-Gm-Message-State: AOJu0YxgA7tGZRtp29iSPUV2jnD+ocql3mDzBhiXQR0no05G1qPSDB9I
+	n8/p7wgRAI49e4dmqeFVNMNDrymV3R5hkfJtHV2ylrVgHmBrn7OmQRU6IrdRqJxYhn8CQp//l08
+	5Gf8BVd/CwT0M5fjaw0GHbdDCfLouBpLB6Dyc
+X-Gm-Gg: ASbGncvL9xPO6oqI6vjBqdRkRIqY2jARNyMi3n+VC+DLigoFEU+T4qz/NIgjtwtWXO5
+	e/L/hanerfmFnx303ShwZGBufwyejwGiZuBK6
+X-Google-Smtp-Source: AGHT+IED0OOOeYrHXZaLoyVsabfnYVRzwby1oeJPfnt9kAFzELRgCktOS5laqmNdNl1xrBm57Qduh7AC85xJGT7lOaU=
+X-Received: by 2002:a17:902:e5c1:b0:216:4d90:47af with SMTP id
+ d9443c01a7336-219e7769cdcmr13926205ad.29.1735517379928; Sun, 29 Dec 2024
+ 16:09:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: =?UTF-8?Q?Marek_Ma=C5=9Blanka?= <mmaslanka@google.com>
+Date: Mon, 30 Dec 2024 01:09:13 +0100
+Message-ID: <CAGcaFA2hdThQV6mjD_1_U+GNHThv84+MQvMWLgEuX+LVbAyDxg@mail.gmail.com>
+Subject: ROX allocations broke livepatch for modules since 6.13-rc1
+To: rppt@kernel.org, akpm@linux-foundation.org, mcgrof@kernel.org
+Cc: regressions@lists.linux.dev, linux-modules@vger.kernel.org, 
+	linux-mm@kvack.org, live-patching@vger.kernel.org, joe.lawrence@redhat.com, 
+	jpoimboe@kernel.org, pmladek@suse.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi All,
+Hi Mike and others,
 
-I found out which area is responsible for the KVM HV issue while 
-reducing the revert patch.
+I discovered that the patch "[v7,4/8] module: prepare to handle ROX allocations
+for text" has disrupted livepatch functionality. Specifically, this occurs when
+livepatch is prepared to patch a kernel module and when the livepatch module
+contains a "special" relocation section named
+".klp.rela.<MODULE_NAME>.<SECTION_NAME>" to access local symbols.
+The problem is caused by this changes:
 
-If I replace the following line in the file 
-'a/arch/powerpc/kvm/e500_mmu_host.c' then KVM HV works again.
+@@ -2454,7 +2497,24 @@  static int post_relocation(struct module *mod,
+const struct load_info *info)
+  add_kallsyms(mod, info);
 
--        pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
-+        pfn = gfn_to_pfn_memslot(slot, gfn);
+  /* Arch-specific module finalizing. */
+- return module_finalize(info->hdr, info->sechdrs, mod);
++ ret = module_finalize(info->hdr, info->sechdrs, mod);
++ if (ret)
++ return ret;
++
++ for_each_mod_mem_type(type) {
++ struct module_memory *mem = &mod->mem[type];
++
++ if (mem->is_rox) {
++ if (!execmem_update_copy(mem->base, mem->rw_copy,
++ mem->size))
++ return -ENOMEM;
++
++ vfree(mem->rw_copy);
++ mem->rw_copy = NULL;
++ }
++ }
++
++ return module_post_finalize(info->hdr, info->sechdrs, mod);
+ }
 
+Specifically these lines:
++ vfree(mem->rw_copy);
++ mem->rw_copy = NULL;
+which frees the "mem->rw_copy" too early. It's called from:
+load_module (kernel/module/main.c:3312)
+  post_relocation
 
-On 28/12/24 15:55, Paolo Bonzini wrote:
- > The fix is already found, I will send it out shortly but everybody is on
- > vacation now
+The "mem->rw_copy" is needed later:
+load_module (kernel/module/main.c:3339)
+  prepare_coming_module
+    klp_module_coming
+      klp_init_object_loaded
+        klp_apply_object_relocs
+          klp_write_object_relocs
+            klp_write_section_relocs
+              apply_relocate_add
+                write_relocate_add
+                  __write_relocate_add
+                    module_writable_address
+                      __module_writable_address
+                        return loc + (mem->rw_copy - mem->base);
+                                                       ^
 
-Thanks a lot! Could you please post the patch on this list? I would like 
-to patch the RC5 of kernel 6.13 next week.
+Here's example OOPS:
+[   25.823395] deku: loading out-of-tree module taints kernel.
+[   25.823521] deku: tainting kernel with TAINT_LIVEPATCH
+[   25.827238] BUG: unable to handle page fault for address: 00000000000012ba
+[   25.827819] #PF: supervisor read access in kernel mode
+[   25.828153] #PF: error_code(0x0000) - not-present page
+[   25.828588] PGD 0 P4D 0
+[   25.829063] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+[   25.829742] CPU: 2 UID: 0 PID: 452 Comm: insmod Tainted: G
+ O  K    6.13.0-rc4-00078-g059dd502b263 #7820
+[   25.830417] Tainted: [O]=OOT_MODULE, [K]=LIVEPATCH
+[   25.830768] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.16.0-20220807_005459-localhost 04/01/2014
+[   25.831651] RIP: 0010:memcmp+0x24/0x60
+[   25.832190] Code: 90 90 90 90 90 90 f3 0f 1e fa 49 89 f0 48 89 d6
+48 83 fa 07 77 3a 31 d2 48 85 f6 74 1a 31 c0 eb 09 48 83 c0 01 48 39
+c6 74 0d <0f> b6 14 07 41 0f b6 0c 00 29 ca 74 ea 89 d0 c3 cc cc cc cc
+48 83
+[   25.833378] RSP: 0018:ffffa40b403a3ae8 EFLAGS: 00000246
+[   25.833637] RAX: 0000000000000000 RBX: ffff93bc81d8e700 RCX: ffffffffc0202000
+[   25.834072] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 00000000000012ba
+[   25.834548] RBP: ffffa40b403a3b68 R08: ffffa40b403a3b30 R09: 0000004a00000002
+[   25.835088] R10: ffffffffffffd222 R11: f000000000000000 R12: 0000000000000000
+[   25.835666] R13: ffffffffc02032ba R14: ffffffffc007d1e0 R15: 0000000000000004
+[   25.836139] FS:  00007fecef8c3080(0000) GS:ffff93bc8f900000(0000)
+knlGS:0000000000000000
+[   25.836519] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   25.836977] CR2: 00000000000012ba CR3: 0000000002f24000 CR4: 00000000000006f0
+[   25.837442] Call Trace:
+[   25.838297]  <TASK>
+[   25.838803]  ? __die+0x29/0x70
+[   25.839067]  ? page_fault_oops+0x15f/0x450
+[   25.839299]  ? exc_page_fault+0x6e/0x160
+[   25.839506]  ? asm_exc_page_fault+0x26/0x30
+[   25.839978]  ? uinput_ioctl_handler_isra_0+0x120/0xe66 [deku]
+[   25.840519]  ? uinput_misc_exit+0x3e0/0x3e0 [uinput]
+[   25.840892]  ? memcmp+0x24/0x60
+[   25.841083]  __write_relocate_add.constprop.0+0xc7/0x2b0
+[   25.841460]  ? __pfx_text_poke+0x10/0x10
+[   25.841701]  apply_relocate_add+0x75/0xa0
+[   25.841973]  klp_write_section_relocs+0x10e/0x140
+[   25.842304]  klp_write_object_relocs+0x70/0xa0
+[   25.842682]  klp_init_object_loaded+0x21/0xf0
+[   25.842972]  klp_enable_patch+0x43d/0x900
+[   25.843227]  ? deku_exit+0x30/0x30 [deku]
+[   25.843572]  do_one_initcall+0x4c/0x220
+[   25.843936]  ? do_init_module+0x28/0x260
+[   25.844186]  do_init_module+0x6a/0x260
+[   25.844423]  init_module_from_file+0x9c/0xe0
+[   25.844702]  idempotent_init_module+0x172/0x270
+[   25.845008]  __x64_sys_finit_module+0x69/0xc0
+[   25.845253]  do_syscall_64+0x9e/0x1a0
+[   25.845498]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[   25.846056] RIP: 0033:0x7fecef9eb25d
+[   25.846444] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e
+fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8b bb 0d 00 f7 d8 64 89
+01 48
+[   25.847563] RSP: 002b:00007ffd0c5d6de8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000139
+[   25.848082] RAX: ffffffffffffffda RBX: 000055b03f05e470 RCX: 00007fecef9eb25d
+[   25.848456] RDX: 0000000000000000 RSI: 000055b001e74e52 RDI: 0000000000000003
+[   25.848969] RBP: 00007ffd0c5d6ea0 R08: 0000000000000040 R09: 0000000000004100
+[   25.849411] R10: 00007fecefac7b20 R11: 0000000000000246 R12: 000055b001e74e52
+[   25.849905] R13: 0000000000000000 R14: 000055b03f05e440 R15: 0000000000000000
+[   25.850336]  </TASK>
+[   25.850553] Modules linked in: deku(OK+) uinput
+[   25.851408] CR2: 00000000000012ba
+[   25.852085] ---[ end trace 0000000000000000 ]---
 
-Thanks,
-Christian
+Please let me know if you need help to test or reproduce this issue.
 
--- 
-Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
-
+Best regards,
+Marek
