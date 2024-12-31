@@ -1,62 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9AF18CBFB;
-	Tue, 31 Dec 2024 08:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735633656; cv=none; b=fbDQx8/Z/Oo/lDiP5l+rkuIZaA89DIyMablPXOjtQGA1kRCsbXEDwRxUGejWfzCrarLQ4pCn5lZnZA0SZPi1d/gIlLO6Pe6Z3G5lLWGAjdrNfbPiJaLDvaoKra06yalM6wnJ4c+64Sv8Q4TKWK3PifPXWW7pOAbyKPndY0Y1tQU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735633656; c=relaxed/simple;
-	bh=vdaYmVIu4nzrIC3ahqNYkLwlI2zA1IocyzDKY4qLhfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E6eHh9TZ/QYZRIuJtMMbwQVWFvjtzqbMMWJF8GRdRJJLFye9Inw0i4By7/Ul4pRLs9j6sb5qc2cqG2mok7R61e43fGCeNIWL+9aKWUpiEnsNSBykIBW2uj/BtKhsV8HpfZS0tJVbC5PVslp/8942o70K0VxTzKhbvcm6VqQSRnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ThiEI3QX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BA118BC0F
+	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 10:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735642699; cv=pass; b=CjPojSxhVdrvZf1FcbT05W/pvOlfri+YIm4G89V7Nv9Y0D5AW78/6mNFqLtFzKH05XvFaokhUGjxvfwHKors1VpINJALMkV4Fy1QNmMYJdoAuv6BGDFzwz8Ka0srGprvRr1m7BR23FWmuDWD9Iw8qLEkGV0puZVf67DXVIWdufY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735642699; c=relaxed/simple;
+	bh=kzwXWSmP6+gv/q0FQ5dWCf2XwNILMBbzbaJm9HqGtVI=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=GDQsM1eNrCGMxLL3BJIwFw2yhheUnmL73JrjzJGvqzqx6eRBRPXPPaIaqVv7+kup60xKamhBnIWd0cArF2+U7CgggKk+0ZjhTUZ4JO5VVKftE0q/iH8SPu8w9Y3v4qndEzY+EIOUb7wdBVYWTYeA2T6tAXueVJzfZ8NZ/Br18wo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=WBKKlMDJ; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=d0ie64Lg; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ThiEI3QX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA08C4CED6;
-	Tue, 31 Dec 2024 08:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1735633656;
-	bh=vdaYmVIu4nzrIC3ahqNYkLwlI2zA1IocyzDKY4qLhfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ThiEI3QXEa+Ti8tLVeKyEokiIu/JQ7MIv3TUj1t6HEP/3kdlBc6sDvhAqF8Oc7xN5
-	 j/pa9gEpn6uZkiShsapOB+vo48xy0+WIzjJ0cWjzVaj1yR6AJs6oBrgHDMDG7x9nbx
-	 CRVS6mggf3cNX0ksqVCpN7FpuUdb7gXOXZDvp6B8=
-Date: Tue, 31 Dec 2024 09:26:49 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Zhang Zekun <zhangzekun11@huawei.com>
-Cc: dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-	rafael.j.wysocki@intel.com, regressions@lists.linux.dev,
-	tj@kernel.org, alex.williamson@redhat.com, chenjun102@huawei.com
-Subject: Re: Possible hungtask issue will be introduced with device_lock() in
- uevent_show()
-Message-ID: <2024123128-monetize-outtakes-3260@gregkh>
-References: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
- <20241231075608.84009-1-zhangzekun11@huawei.com>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="WBKKlMDJ";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="d0ie64Lg"
+ARC-Seal: i=1; a=rsa-sha256; t=1735642647; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=CQx/fdeC3neetaD0yV4C2VRlnuH/bwLWiE4kS6NkDxvIKJNm1IItl46yqUDFKpvOo5
+    npX6vxMgu/yGvMVyiU/y5hDudI+9jgjPTQHC/iZN7hDZxrx7K0rj24i8mRmzA+lONOYT
+    Eje/JxgcbrBhC/g0Fi2ccOf8IsN4byGmfLhzr0g7I70/fKIZizjEaFbfqNxTXDzLWnrQ
+    hd2+GSV6nIhHVjm7mS8EhkeoZ8+9926XcnegTGoWvQVrk72YpaPUxV8/C+lJaH/jKQfy
+    GPWgB9itJPJSnSAHmwCdVxQIESazCX04ODWVkt29afjyDhVtrkGS6TXWc45X9qK8JMIZ
+    Q2Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735642647;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
+    b=V74hRAsYz6xDzUFYwPS+qWgetNhzKgDu+xPtWjxNITMWABMY0jE88OXYPNn8VqoUVh
+    sk38HzSwW8wgvTJuGY2y3krv2t7reVFFaP7VZRpTqGsQvEs6ANuBWcmxtsbFU9UuRg1r
+    dml/2iquz+IPzEjPm1nCatXw/IVf6wP6kMWkRmVcOHc+sbJLZNMDOpkv9iyeJwEGOvl5
+    oBZ5kU7gPWaAgCYNCASB7yPA0njkE2QjFbrIblk1CIGf/7PVeaY/giYfO7unE02/k+OM
+    RMNFZGqu4LNFr8AhDx3CAv2AfgSlfsIo0KLzs4k2FL3K/Ok/NYtH5RvMBeeieHAJ3Rq8
+    U8hg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735642647;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
+    b=WBKKlMDJQNIA9H+yDoiod5yGr72N6LOMqWeHmcD8SHInC/iZY7EsBJPahs8MuQ4zqq
+    CjnCn87hOZPzb2iSoSgDYmw6U/UwIh+QPfQ50JDn0JmMx7cdgwrqgta5RklL+Ct6y/5j
+    k/7xN6+XQE7frIYT7tVBt3UxK8MCD8/Aww6nR/6tKDpkIZKnetThLjh++CZKIEokwWxP
+    27AQ99Ae0KOtRuVt/Ibi76i0CL788EOO440UWsRs5r7qbswD9YuPFbD/ZPvDahHT2mgH
+    FhlSMSlFPB9RrNKlaPK3llfKcWgEx/kCfeMmtI8wpcKBARzB/qjYFyXjjPfXHbwKPLx9
+    GFag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735642647;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
+    b=d0ie64LgFvcJarmmwFJekk5YvG/KXQkyxbuk0qLgP0Sb5fzW3KOSJYdoKN7LdplfIU
+    7SSi5rwd2Hjfk3a1byDA==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 51.2.16 AUTH)
+    with ESMTPSA id ebe9c90BVAvQKm6
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 31 Dec 2024 11:57:26 +0100 (CET)
+Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
+ Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
+ madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ hypexed@yahoo.com.au, regressions@lists.linux.dev
+References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
+ <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
+ <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
+ <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
+ <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
+ <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
+ <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
+ <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
+ <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
+ <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+ <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+ <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
+ <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
+ <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
+ <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
+ <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
+ <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
+ <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
+Message-ID: <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
+Date: Tue, 31 Dec 2024 11:57:26 +0100
+X-Mailer: BrassMonkey/33.4.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241231075608.84009-1-zhangzekun11@huawei.com>
+In-Reply-To: <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 31, 2024 at 03:56:08PM +0800, Zhang Zekun wrote:
-> Hi, Dan, Greg,
-> 
-> We have found a potential tungtask issue has been introduce by commit 9a71892cbcdb ("Revert "driver core: Fix uevent_show() vs driver detach race""), which revert the rcu in device_uevent but reintroduce the device_lock() in uevent_show(). The reproduce procedure is quite simple:
+Hi All,
 
-The revert just puts the original logic back in place, so this is not
-anything new that has been introduced, right?  It's just that the
-attempted fix didn't work, so a different fix needs to happen.
+I have compiled the RC5 of kernel 6.13 [1] with the latest revert patch. [2]
 
-If you could help debug the original fix, that would be most appreciated
-as none of us here are arguing that there isn't a bug present, only that
-the fix caused different problems which required it to be reverted.
+After that, I successfully tested the following QEMU/KVM HV components.
 
-thanks,
+- Guest performance: good
+- Guest boot time: short
+- KVM HV works (-enable-kvm)
+- SMP works (-smp 4)
+- QEMU User Networking (SLIRP) via VirtIO_net works (Tested it with SSH 
+and with a web browser)
+- QEMU USB Audio works (Tested it with some audio files in the guest system)
+- VirtIO GPU works
+- Virtual mouse and keyboard controller works (VirtIO input)
+- 9p mount of a host folder via VirtIO works in the guest system
+- Serial output from the guest works (console=ttyS0,115200)
+- Shutdown and reboot works
 
-greg k-h
+The issue still exists but I hope Paolo's patch can fix the issue. [3]
+
+Cheers,
+Christian
+
+[1] https://github.com/chzigotzky/kernels/releases/tag/v6.13.0-rc5
+[2] 
+https://github.com/chzigotzky/kernels/blob/main/patches/X5000/kvm_ppc_revert.patch
+[3] https://github.com/chzigotzky/kernels/issues/4
+
+-- 
+Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
+
