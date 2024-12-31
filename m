@@ -1,138 +1,143 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BA118BC0F
-	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 10:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735642699; cv=pass; b=CjPojSxhVdrvZf1FcbT05W/pvOlfri+YIm4G89V7Nv9Y0D5AW78/6mNFqLtFzKH05XvFaokhUGjxvfwHKors1VpINJALMkV4Fy1QNmMYJdoAuv6BGDFzwz8Ka0srGprvRr1m7BR23FWmuDWD9Iw8qLEkGV0puZVf67DXVIWdufY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735642699; c=relaxed/simple;
-	bh=kzwXWSmP6+gv/q0FQ5dWCf2XwNILMBbzbaJm9HqGtVI=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GDQsM1eNrCGMxLL3BJIwFw2yhheUnmL73JrjzJGvqzqx6eRBRPXPPaIaqVv7+kup60xKamhBnIWd0cArF2+U7CgggKk+0ZjhTUZ4JO5VVKftE0q/iH8SPu8w9Y3v4qndEzY+EIOUb7wdBVYWTYeA2T6tAXueVJzfZ8NZ/Br18wo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=WBKKlMDJ; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=d0ie64Lg; arc=pass smtp.client-ip=85.215.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2914713C80C
+	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 15:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735659873; cv=none; b=rJhgEP4qIGiOBtbE3TBL4hmCmuZmopoGRNxOl3gtrUTLx/B5IuvpGEMWhcWCY9eNq+/pZ7eFs+4vakIrmjYGeRQ1+J5xnf0R2oIgTXzf+2bICkfbHML/C9LyBdp1fodWBiJge2X0Xl6xj7vF3gUomBw29L/F3I77wbRaJAncejs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735659873; c=relaxed/simple;
+	bh=pcso5QigbbAnuT+DuyzSaPqrZyUWD4UHqT822PHDIUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZUn5NyzJP0/Vyoi471ByQiMjMMuV7TyLMzmnCQvW2KCI4c/mR6TSXav+xckBaIxo1jNN/CgLozQbbY/CKA2ElZtdoXDwZKtIHzeQWw9pSzqiuIcHq0viP+Dc6WoS7Hpwu4JStAfAbLIN2mxs3KSZnar1K9TxDEERPZnxLPYIk8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=FCFhtfBf; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="WBKKlMDJ";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="d0ie64Lg"
-ARC-Seal: i=1; a=rsa-sha256; t=1735642647; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=CQx/fdeC3neetaD0yV4C2VRlnuH/bwLWiE4kS6NkDxvIKJNm1IItl46yqUDFKpvOo5
-    npX6vxMgu/yGvMVyiU/y5hDudI+9jgjPTQHC/iZN7hDZxrx7K0rj24i8mRmzA+lONOYT
-    Eje/JxgcbrBhC/g0Fi2ccOf8IsN4byGmfLhzr0g7I70/fKIZizjEaFbfqNxTXDzLWnrQ
-    hd2+GSV6nIhHVjm7mS8EhkeoZ8+9926XcnegTGoWvQVrk72YpaPUxV8/C+lJaH/jKQfy
-    GPWgB9itJPJSnSAHmwCdVxQIESazCX04ODWVkt29afjyDhVtrkGS6TXWc45X9qK8JMIZ
-    Q2Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735642647;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
-    b=V74hRAsYz6xDzUFYwPS+qWgetNhzKgDu+xPtWjxNITMWABMY0jE88OXYPNn8VqoUVh
-    sk38HzSwW8wgvTJuGY2y3krv2t7reVFFaP7VZRpTqGsQvEs6ANuBWcmxtsbFU9UuRg1r
-    dml/2iquz+IPzEjPm1nCatXw/IVf6wP6kMWkRmVcOHc+sbJLZNMDOpkv9iyeJwEGOvl5
-    oBZ5kU7gPWaAgCYNCASB7yPA0njkE2QjFbrIblk1CIGf/7PVeaY/giYfO7unE02/k+OM
-    RMNFZGqu4LNFr8AhDx3CAv2AfgSlfsIo0KLzs4k2FL3K/Ok/NYtH5RvMBeeieHAJ3Rq8
-    U8hg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735642647;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
-    b=WBKKlMDJQNIA9H+yDoiod5yGr72N6LOMqWeHmcD8SHInC/iZY7EsBJPahs8MuQ4zqq
-    CjnCn87hOZPzb2iSoSgDYmw6U/UwIh+QPfQ50JDn0JmMx7cdgwrqgta5RklL+Ct6y/5j
-    k/7xN6+XQE7frIYT7tVBt3UxK8MCD8/Aww6nR/6tKDpkIZKnetThLjh++CZKIEokwWxP
-    27AQ99Ae0KOtRuVt/Ibi76i0CL788EOO440UWsRs5r7qbswD9YuPFbD/ZPvDahHT2mgH
-    FhlSMSlFPB9RrNKlaPK3llfKcWgEx/kCfeMmtI8wpcKBARzB/qjYFyXjjPfXHbwKPLx9
-    GFag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735642647;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=e2TiCoA7eJaGUxv2X5diaZ853ViVgcepiDe1Q/wZFFA=;
-    b=d0ie64LgFvcJarmmwFJekk5YvG/KXQkyxbuk0qLgP0Sb5fzW3KOSJYdoKN7LdplfIU
-    7SSi5rwd2Hjfk3a1byDA==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c90BVAvQKm6
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 31 Dec 2024 11:57:26 +0100 (CET)
-Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
- Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
- madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- hypexed@yahoo.com.au, regressions@lists.linux.dev
-References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
- <f31e176f-200d-f96c-2971-4da0fe8f1245@xenosoft.de>
- <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
- <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
- <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
- <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
- <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
- <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
- <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
- <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
- <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
- <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
- <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
- <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
- <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
- <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
- <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
- <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
-Message-ID: <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
-Date: Tue, 31 Dec 2024 11:57:26 +0100
-X-Mailer: BrassMonkey/33.4.0
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="FCFhtfBf"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 0D773240027
+	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 16:44:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1735659869; bh=pcso5QigbbAnuT+DuyzSaPqrZyUWD4UHqT822PHDIUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=FCFhtfBfFE+eYx+KL359vZ2RNQuAvRTS38ocLKWrcB9iQa4s6/CS9+8DT5nwgNNRw
+	 yD7qJ+YEP5fqvO/Xvzwf0Yn0g6B9Yp05yXu/tJUjFJsI0Cgy31CF+70HHKgszwWjte
+	 2/AC0N5EoCpUNgwfBHaJ9CkXIyFPe8uZBCFqw2Jd1d/0uf+T4+PhYLvu71AWkkjGlT
+	 6CgyvdDR9fnRU0B1jxSXnw0cIKRHxhSPqeIXcGK7+gTs42YisWjRGbVi8jxmRuRgaV
+	 eXx5HKd88o9YR7GKpbiP/XJsJKadMa0obWdBQSU1aDgv03UdCZ7/K+Gm83YrbzlfNF
+	 j9VcYA1qPCxEg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YMy2N2jMJz9rxD;
+	Tue, 31 Dec 2024 16:44:28 +0100 (CET)
+Message-ID: <bba03a61-9504-40d0-9b2c-115b4f70e8ca@posteo.de>
+Date: Tue, 31 Dec 2024 15:44:13 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
+ graphics artifacts after 6.12 kernel upgrade]
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>,
+ Athul Krishna <athul.krishna.kr@protonmail.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, "kvm@vger.kernel.org"
+ <kvm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20241222223604.GA3735586@bhelgaas>
+ <Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
+ <Z2mW2k8GfP7S0c5M@x1n> <16ea1922-c9ce-4d73-b9b6-8365ca3fcf32@posteo.de>
+ <20241230182737.154cd33a.alex.williamson@redhat.com>
+Content-Language: en-US
+From: Precific <precification@posteo.de>
+In-Reply-To: <20241230182737.154cd33a.alex.williamson@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi All,
 
-I have compiled the RC5 of kernel 6.13 [1] with the latest revert patch. [2]
 
-After that, I successfully tested the following QEMU/KVM HV components.
+On 31.12.24 02:27, Alex Williamson wrote:
+> On Mon, 30 Dec 2024 21:03:30 +0000
+> Precific <precification@posteo.de> wrote:
+> 
+>> In my case, commenting out (1) the huge_fault callback assignment from
+>> f9e54c3a2f5b suffices for GPU initialization in the guest, even if (2)
+>> the 'install everything' loop is still removed.
+>>
+>> I have uploaded host kernel logs with vfio-pci-core debugging enabled
+>> (one log with stock sources, one large log with vfio-pci-core's
+>> huge_fault handler patched out):
+>> https://bugzilla.kernel.org/show_bug.cgi?id=219619#c1
+>> I'm not sure if the logs of handled faults say much about what
+>> specifically goes wrong here, though.
+>>
+>> The dmesg portion attached to my mail is of a Linux guest failing to
+>> initialize the GPU (BAR 0 size 16GB with 12GB of VRAM).
+> 
+> Thanks for the logs with debugging enabled.  Would you be able to
+> repeat the test with QEMU 9.2?  There's a patch in there that aligns
+> the mmaps, which should avoid mixing 1G and 2MB pages for huge faults.
+> With this you should only see order 18 mappings for BAR0.
+> 
+> Also, in a different direction, it would be interesting to run tests
+> disabling 1G huge pages and 2MB huge pages independently.  The
+> following would disable 1G pages:
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 1ab58da9f38a..dd3b748f9d33 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1684,7 +1684,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+>   							     PFN_DEV), false);
+>   		break;
+>   #endif
+> -#ifdef CONFIG_ARCH_SUPPORTS_PUD_PFNMAP
+> +#if 0
+>   	case PUD_ORDER:
+>   		ret = vmf_insert_pfn_pud(vmf, __pfn_to_pfn_t(pfn + pgoff,
+>   							     PFN_DEV), false);
+> 
+> This should disable 2M pages:
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 1ab58da9f38a..d7dd359e19bb 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1678,7 +1678,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+>   	case 0:
+>   		ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
+>   		break;
+> -#ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
+> +#if 0
+>   	case PMD_ORDER:
+>   		ret = vmf_insert_pfn_pmd(vmf, __pfn_to_pfn_t(pfn + pgoff,
+>   							     PFN_DEV), false);
+> 
+> And applying both together should be functionally equivalent to
+> pre-v6.12.  Thanks,
+> 
+> Alex
+> 
 
-- Guest performance: good
-- Guest boot time: short
-- KVM HV works (-enable-kvm)
-- SMP works (-smp 4)
-- QEMU User Networking (SLIRP) via VirtIO_net works (Tested it with SSH 
-and with a web browser)
-- QEMU USB Audio works (Tested it with some audio files in the guest system)
-- VirtIO GPU works
-- Virtual mouse and keyboard controller works (VirtIO input)
-- 9p mount of a host folder via VirtIO works in the guest system
-- Serial output from the guest works (console=ttyS0,115200)
-- Shutdown and reboot works
+Logs with QEMU 9.1.2 vs. 9.2.0, all huge_page sizes/1G only/2M only: 
+https://bugzilla.kernel.org/show_bug.cgi?id=219619#c3
 
-The issue still exists but I hope Paolo's patch can fix the issue. [3]
+You're right, I was still using QEMU 9.1.2. With 9.2.0, the 
+passed-through GPU works fine indeed with both Linux and Windows guests.
 
-Cheers,
-Christian
+The huge_fault calls are aligned nicely with QEMU 9.2.0. Only the lower 
+16MB of BAR 0 see repeated calls at 2M/4K page sizes but no misalignment.
+The QEMU 9.1.2 'stock' log shows a misalignment with 1G faults (order 
+18), e.g., huge_faulting 0x40000 pages at page offset 0 and later 
+0x4000. I'm not sure if that is a problem, or if the offsets are simply 
+masked off to the correct alignment.
+QEMU 9.1.2 also works with 1G pages disabled. Perhaps coincidentally, 
+the offsets are aligned properly for order 9 (0x200 'page offset' 
+increments) from what I've seen.
 
-[1] https://github.com/chzigotzky/kernels/releases/tag/v6.13.0-rc5
-[2] 
-https://github.com/chzigotzky/kernels/blob/main/patches/X5000/kvm_ppc_revert.patch
-[3] https://github.com/chzigotzky/kernels/issues/4
-
--- 
-Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
-
+Thanks,
+Precific
