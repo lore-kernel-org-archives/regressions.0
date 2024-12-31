@@ -1,247 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5177C7FD
-	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 01:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD7F17B421
+	for <regressions@lists.linux.dev>; Tue, 31 Dec 2024 08:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735608465; cv=none; b=vGMiUvQgls5Ti9S8QIKN0tDEp9bjoH3vB+tBAYiSngDcyQsAbr9ivRsH1iHL+GfKV2n2T9DbhVcgTfojlllmTADR1mhDQYqmk6S7Ut0s8cTL76+73CDu4ppCERbNiSIC1Krm61kEwtywuQZhZ1t3WzGzjuLhU8aeHSX/6PaRVgg=
+	t=1735632205; cv=none; b=b8LIvWAMqOP748I+mmBTgwVW04YNFNLvqkN0Vidz7H5prOElYEPOWqdldkajfZq5Vait0Zn1YD0lJYcLEowUCCiIXtHMQzXCS+5sRadJTJtoYC+Gi1oiEl9LVjTEb0LW9jNQfO32E/JRDYAsutuOFrH3dP7qSFe529JDzmvsAsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735608465; c=relaxed/simple;
-	bh=cYwx81FiscoKPuQUcoEjGxNvsT4PQHMGFwYOIJGDDdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XrLA/Wyvgc0cbOEzEO+YDZLCIcq6c23yQFRWAqmMws9XFJwJAtpARpxeRS865IlskhUvTM5ZCS7CPvrkkyy12injp6iZ8SbGoyJ8gYT/WI+KwaCS4cRpu8cW9bV5UgMqif+mRAcxf0COGrwzN49G6U1Obb6dbo9K2b+tRia1ivU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jad/fU/O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jad/fU/O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735608462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PbSubt0jW6XprDSYA3GtrEByRivXdyFWNaGrTU8y1fc=;
-	b=Jad/fU/OCM9L5VEhnJKUoIKvFmTknev/rXjkVT2cSen7WsLXQ781G3+TynKgr7Dv7g97wB
-	zuKwaivCaLM+eMYv/4o1sAzsaZumSKMtwhx+SzYuT8oKMgJq4iVf9ZD8l55UWCYAiF6IQz
-	lYNSVM+puEtEBkLNR12NrI8Y+ZLKVAA=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-298-OBLu52-iM_e_BwYYwkVaiA-1; Mon, 30 Dec 2024 20:27:40 -0500
-X-MC-Unique: OBLu52-iM_e_BwYYwkVaiA-1
-X-Mimecast-MFC-AGG-ID: OBLu52-iM_e_BwYYwkVaiA
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a7ea122d0bso11718225ab.0
-        for <regressions@lists.linux.dev>; Mon, 30 Dec 2024 17:27:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735608460; x=1736213260;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PbSubt0jW6XprDSYA3GtrEByRivXdyFWNaGrTU8y1fc=;
-        b=KrMEBKCRpW2eE4Xt3hle8lTqSKIGppqmr52BxR5KsMwUZvndvzNQXTUzzU77HdEKnK
-         U/6x85VjyS/PfL0rrZI7c07XPdxEP2YwY4BXBI96fRhMjdXAYxLT2CvrBCBDC1LoWCvB
-         9SbbA7NM18pUj8vAVgz0ddMfuey+e3alXFvVu//1DsIV4U9WCVMrwyOU0/Zi79dYMumk
-         lo1OMYISFD758Za2AxcqbIi5YRrulr6YB81/wqtr6li0EuMxpGZosmu8o25nPA8j47JA
-         7EE2u1GbYSvyXEVSkD/0aDg4b0MFSa7tnNCNqkZa/SaZhITJsaBu1XT7W0rlG7f3Q5hI
-         7d7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWVDnb+twnI2ptfs9EWmViG8CUHlFEJqhtwxRvJipEeOwp4dC5yiJdsaBWoryAGqmPn2WLbLZAkuWEn9Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzHjcj++FHc1zwixoezvumAaxV5TrmXDHQ36kuAzkitodc8Ogvu
-	YvezSznX+l97lGkpfSqAhmEHRvcJrNjEkzyHG3pf//y9mJi7Ho8JFoVig2Ou0J0GsWyKF6zKKoe
-	BMos9LTCoIsjogtgi02pJYdy8caRUHWfcCu82vZb6KsncSm53KqRWbVhKuCBN
-X-Gm-Gg: ASbGncs3gz8p90wCqV0X2h/PBl0l7gsYjlzrOJqkNDmPqTmI/wtFSPN6nzhzQq070FT
-	qf5qYaAZTm1XdI6pC7FHZtrJnIuO23gMvJuvByNPTu1vnj9t5hWJX2Kklcmmdm/275RheiXxJxz
-	g3MQa+nfdbLLMxDpTmueY77mHc1cS8UrGaQDhFDDgGogQRVUsBMz1YbpQUAiAUT0LW/j3sDakC7
-	l6U1iKbyvPu8VnEUw/fTZ001EpOktG7prkhChMkOVkDMJs5lrzNAhRA2NCX
-X-Received: by 2002:a05:6e02:1c81:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3c2cbd89eedmr90279605ab.0.1735608459894;
-        Mon, 30 Dec 2024 17:27:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH7XZPI30EYeszFNZ0Jt4u4Phtf61lCBYw7J/duvSKrhB3IGnVslVa4n/XJNjdJsoxpLUzIVA==
-X-Received: by 2002:a05:6e02:1c81:b0:3a7:bd4c:b17e with SMTP id e9e14a558f8ab-3c2cbd89eedmr90279545ab.0.1735608459520;
-        Mon, 30 Dec 2024 17:27:39 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68bf67e8fsm5815988173.58.2024.12.30.17.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 17:27:38 -0800 (PST)
-Date: Mon, 30 Dec 2024 18:27:37 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Precific <precification@posteo.de>
-Cc: Peter Xu <peterx@redhat.com>, Athul Krishna
- <athul.krishna.kr@protonmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Linux PCI
- <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
- graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <20241230182737.154cd33a.alex.williamson@redhat.com>
-In-Reply-To: <16ea1922-c9ce-4d73-b9b6-8365ca3fcf32@posteo.de>
-References: <20241222223604.GA3735586@bhelgaas>
-	<Hb6kvXlGizYbogNWGJcvhY3LsKeRwROtpRluHKsGqRcmZl68J35nP60YdzW1KSoPl5RO_dCxuL5x9mM13jPBbU414DEZE_0rUwDNvzuzyb8=@protonmail.com>
-	<Z2mW2k8GfP7S0c5M@x1n>
-	<16ea1922-c9ce-4d73-b9b6-8365ca3fcf32@posteo.de>
-Organization: Red Hat
+	s=arc-20240116; t=1735632205; c=relaxed/simple;
+	bh=bO7wcxaoDkG+9muBJ1RtLs5F4IVZZojm9IIP+mZ6yk0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iaojfU8AizwlhMvI+FwSfqdkGHTSrWYACGG4MYOcrDwVd2bOxmt5VFgSRstMaerTgekZ6QshNB1oWatAEAnSynHh83HTPQo4wv3c0dLQnOP9+ew8bB6W8FysODYX2L4RBICzh4yGWAEmllwNCg1PrXNCG3pa/ZEEJZCBpgDMoGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YMll05XtrzhZW2;
+	Tue, 31 Dec 2024 16:00:28 +0800 (CST)
+Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1C27180A9E;
+	Tue, 31 Dec 2024 16:03:14 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by kwepemf500003.china.huawei.com
+ (7.202.181.241) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 31 Dec
+ 2024 16:03:13 +0800
+From: Zhang Zekun <zhangzekun11@huawei.com>
+To: <dan.j.williams@intel.com>
+CC: <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+	<rafael.j.wysocki@intel.com>, <regressions@lists.linux.dev>, <tj@kernel.org>,
+	<alex.williamson@redhat.com>, <chenjun102@huawei.com>,
+	<zhangzekun11@huawei.com>
+Subject: Possible hungtask issue will be introduced with device_lock() in uevent_show() 
+Date: Tue, 31 Dec 2024 15:56:08 +0800
+Message-ID: <20241231075608.84009-1-zhangzekun11@huawei.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
+References: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -UtlmUj9Z2DXVqzPrfrTykrIuJG9OIL_hIlDBJ2vDR4_1735608460
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemf500003.china.huawei.com (7.202.181.241)
 
-On Mon, 30 Dec 2024 21:03:30 +0000
-Precific <precification@posteo.de> wrote:
+Hi, Dan, Greg,
 
-> On 23.12.24 17:59, Peter Xu wrote:
-> > On Mon, Dec 23, 2024 at 07:37:46AM +0000, Athul Krishna wrote:  
-> >> Can confirm. Reverting f9e54c3a2f5b from v6.13-rc1 fixed the problem.  
-> >>>   
-> >>>   Device: Asus Zephyrus GA402RJ
-> >>>   CPU: Ryzen 7 6800HS
-> >>>   GPU: RX 6700S
-> >>>   Kernel: 6.13.0-rc3-g8faabc041a00
-> >>>   
-> >>>   Problem:
-> >>>   Launching games or gpu bench-marking tools in qemu windows 11 vm will cause
-> >>>   screen artifacts, ultimately qemu will pause with unrecoverable error.  
-> > 
-> > Is there more information on what setup can reproduce it?
-> > 
-> > For example, does it only happen with Windows guests?  Does the GPU
-> > vendor/model matter?  
-> 
-> In my case, both Windows and Linux guests fail to initialize the GPU in 
-> the first place since 6.12; QEMU does not crash. I also found commit 
-> f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 by bisection.
-> 
-> CPU: AMD 7950X3D
-> GPU (guest): AMD RX 6700XT (12GB)
-> Mainboard: ASRock X670E Steel Legend
-> Kernel: 6.12.0-rc0 .. 6.13.0-rc2
-> 
-> Based on a handful of reports on the Arch forum and on r/vfio, my guess 
-> is that affected users have Resizable BAR or similar settings enabled in 
-> the firmware, which usually applies the maximum possible BAR size 
-> advertised by the GPU on startup. Non-2^n-sized VRAM buffers may be 
-> another commonality.
-> 
-> Some other reports I found that could fit to this regression:
-> [1] https://bbs.archlinux.org/viewtopic.php?id=301352
->    - Several reports (besides mine), not clear which of those cases are 
-> triggered by the vfio-pci commit. One case is clearly caused by a 
-> different commit in KVM. Potential candidates for the vfio-pci commit 
-> (speculation): (a) 6700XT GPU; (b) 5950X CPU, RTX 3090 GPU
-> [2] https://old.reddit.com/r/VFIO/comments/1hkvedq/
->    - Two users, 7900XT and 7900XTX, reported that reverting 6.12 or 
-> disabling ReBAR resolves Windows guest GPU initialization.
-> 
-> On my 6700XT (PCI address 03:00.0, 12GB of VRAM), I get the following 
-> Resizable BAR default configuration with the host firmware/UEFI setting 
-> enabled:
-> 
-> [root]# lspci -s 03:00.0 -vv
-> ...
-> Capabilities: [200 v1] Physical Resizable BAR
-> 	BAR 0: current size: 16GB, supported: 256MB 512MB 1GB 2GB 4GB 8GB 16GB
-> 	BAR 2: current size: 256MB, supported: 2MB 4MB 8MB 16MB 32MB 64MB 128MB 
-> 256MB
-> ...
-> 
-> The 16GB configuration above fails with 6.12 (unless I revert commit 
-> f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101).
-> Now, if I change BAR 0 to 8GB (as below), which is below the GPU's VRAM 
-> size of 12GB, the Linux guest manages to initialize the GPU.
+We have found a potential tungtask issue has been introduce by commit 9a71892cbcdb ("Revert "driver core: Fix uevent_show() vs driver detach race""), which revert the rcu in device_uevent but reintroduce the device_lock() in uevent_show(). The reproduce procedure is quite simple:
 
-Interesting test.
+$ lspci -n -s 0000:00:03.0
+00:03.0 0108: 8086:5845 (rev 02)
+$ echo 8086 5845 > /sys/bus/pci/drivers/vfio-pci/new_id
+$ ls /dev/vfio
+3  vfio
+$ ./a.out &  (Binary program compiled with the following vfio demo program)
+$ echo 1 > /sys/devices/pci0000:00/0000:00:03.0/remove
 
-> [root]# echo "0000:03:00.0" > /sys/bus/pci/drivers/vfio-pci/unbind
-> [root]# #13: 8GB, 14: 16GB
-> [root]# echo 13 > /sys/bus/pci/devices/0000:03:00.0/resource0_resize
-> [root]# echo "0000:03:00.0" > /sys/bus/pci/drivers/vfio-pci/bind
-> 
-> On my mainboard, 'Resizable BAR off' sets BAR 0 to 256MB, which also 
-> works with 6.12.
-> 
-> Only the size of BAR 0 (VRAM) appears to be relevant here. BAR 2 sizes 
-> of 2MB vs. 256MB have no effect on the outcome.
-> 
-> >   
-> >>>   
-> >>>   Commit:
-> >>>   f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101 is the first bad commit
-> >>>   commit f9e54c3a2f5b79ecc57c7bc7d0d3521e461a2101
-> >>>   Author: Alex Williamson <alex.williamson@redhat.com>
-> >>>   Date:   Mon Aug 26 16:43:53 2024 -0400
-> >>>   
-> >>>       vfio/pci: implement huge_fault support  
-> > 
-> > Personally I have no clue yet on how this could affect it.  I was initially
-> > worrying on any implicit cache mode changes on the mappings, but I don't
-> > think any of such was involved in this specific change.
-> > 
-> > This commit majorly does two things: (1) allow 2M/1G mappings for BARs
-> > instead of small 4Ks always, and (2) always lazy faults rather than
-> > "install everything in the 1st fault".  Maybe one of the two could have
-> > some impact in some way.  
-> 
-> In my case, commenting out (1) the huge_fault callback assignment from 
-> f9e54c3a2f5b suffices for GPU initialization in the guest, even if (2) 
-> the 'install everything' loop is still removed.
-> 
-> I have uploaded host kernel logs with vfio-pci-core debugging enabled 
-> (one log with stock sources, one large log with vfio-pci-core's 
-> huge_fault handler patched out):
-> https://bugzilla.kernel.org/show_bug.cgi?id=219619#c1
-> I'm not sure if the logs of handled faults say much about what 
-> specifically goes wrong here, though.
-> 
-> The dmesg portion attached to my mail is of a Linux guest failing to 
-> initialize the GPU (BAR 0 size 16GB with 12GB of VRAM).
+The root cause of the hung task is due to the device_lock() in uevent_show() is blocked by device_realease_driver() in pci remove routeine which is also blocked to wait for vfio_device->refcount == 0, which can never come because it's refcount has been lifted in the same user process.
+Besides, the patch proposed by Dan [1] can not prevent hungtask from happening. For 6.13-rc5, in the following case:
 
-Thanks for the logs with debugging enabled.  Would you be able to
-repeat the test with QEMU 9.2?  There's a patch in there that aligns
-the mmaps, which should avoid mixing 1G and 2MB pages for huge faults.
-With this you should only see order 18 mappings for BAR0.
+ioctl(..,VFIO_GROUP_GET_DEVICE_FD,..)
+        ...
+        vfio_device_get_from_name()
+        vfio_devcie->refcount -> 2
+                                        pci_stop_and_remove_bus_device()
+                                        pci_remove_bus()
+                                        device_unregister()
+                                        ...
+                                        device_release_driver()
+                                        device_lock()
+                                        device_remove()
+                                                vfio_unregister_group_dev()
+                                                vfio_devcie_put()
+                                                vfio_devcie->refcount -> 1
+                                                wait_for(vfio_devcie->refcount = 0)
+uevent_show()
+        device_lock()
 
-Also, in a different direction, it would be interesting to run tests
-disabling 1G huge pages and 2MB huge pages independently.  The
-following would disable 1G pages:
+[1] https://lore.kernel.org/all/172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com/#R
+                                                        
+-------------------->8---------------------------------
+int main(int argc, char *argv[])
+{
+        char buf[128];
+        int container, group, device, uevent, ret;
+        struct vfio_group_status group_status =
+                                        { .argsz = sizeof(group_status) };
+        struct vfio_iommu_type1_info iommu_info = { .argsz = sizeof(iommu_info) };
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 1ab58da9f38a..dd3b748f9d33 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1684,7 +1684,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
- 							     PFN_DEV), false);
- 		break;
- #endif
--#ifdef CONFIG_ARCH_SUPPORTS_PUD_PFNMAP
-+#if 0
- 	case PUD_ORDER:
- 		ret = vmf_insert_pfn_pud(vmf, __pfn_to_pfn_t(pfn + pgoff,
- 							     PFN_DEV), false);
+        container = open("/dev/vfio/vfio", O_RDWR);
+        group = open("/dev/vfio/3", O_RDWR);
+        ioctl(group, VFIO_GROUP_GET_STATUS, &group_status);
+        ioctl(group, VFIO_GROUP_SET_CONTAINER, &container);
+        ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_IOMMU);
+        ioctl(container, VFIO_IOMMU_GET_INFO, &iommu_info);
+        device = ioctl(group, VFIO_GROUP_GET_DEVICE_FD, "0000:00:03.0");
+        uevent = open("/sys/devices/pci0000:00/0000:00:03.0/uevent", O_RDWR);
 
-This should disable 2M pages:
+        sleep(10);  /* Remove the pci device here */
+        ret = read(uevent, buf, 128); /* We will get hung task here */
+        printf("ret %d\n", ret);
+        return 0;
+}
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 1ab58da9f38a..d7dd359e19bb 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1678,7 +1678,7 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
- 	case 0:
- 		ret = vmf_insert_pfn(vma, vmf->address, pfn + pgoff);
- 		break;
--#ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
-+#if 0
- 	case PMD_ORDER:
- 		ret = vmf_insert_pfn_pmd(vmf, __pfn_to_pfn_t(pfn + pgoff,
- 							     PFN_DEV), false);
-
-And applying both together should be functionally equivalent to
-pre-v6.12.  Thanks,
-
-Alex
-
+Thanks,
+Zekun
