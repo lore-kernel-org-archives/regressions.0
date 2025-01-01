@@ -1,177 +1,99 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.166])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB25433AB
-	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 17:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.166
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735752134; cv=pass; b=Jkcoio5pDsJIMMrgFsNrgflbdf4FJpgkaJQwhYFIGYkyuoNHUEzd+NkyYri66KC4BqqgXThG79yaq5m8fGJVLXI25/NUApZq6UU6WmmSmVZRxdK8UgeG2tg3/fBavrstyOBAzXxYC1gw0TqBzJMXCpay4JOFfdqIMuJ8jBIFR8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735752134; c=relaxed/simple;
-	bh=aoP3dii/aaHTVA3VDcULMnSvQ7sBl0uO0+O8zLrhTCg=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oqsoLX+Oqs3lEJN50VUKJnFhxGAWTozIQ819qa5qA1XFQ3Q3ua5iUuNF/lolVNTWKngvSrFjGP1V8sYJSXA18K9lmRurdAo52azHCthEfHFmrMCdxPbDDhbdQ+0qLohB3aCl5jEhVHIY5Wscr4pBpgf69v+U0HPaAMp6ODTfdbA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=crah09jU; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=sr7jbfKY; arc=pass smtp.client-ip=81.169.146.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29841E260C
+	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 20:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735764943; cv=none; b=GuRgcDaq/HLe+NUXR8NmPEnTWg1/E4cL+BKK2Wg7lEXVIXFfmFG8yglR+cstLutrai63dmqT0/5x8Zm0Pj/hl1w5aoFrzPF1DCpHqHKyZR6uUyzHpAHXRBhNaq0R/O1AaFloJxVG7WCnKIbY+HKwdg/Za9KuvDgy9A4cM4aeBog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735764943; c=relaxed/simple;
+	bh=wJxE0VhI4245QsBRaUlZMHe9srJx5wH1Gs8qUjCkXj8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AmCVkyEg9IgAlMXs7uDBXpiIYgZem/s9mAxLGVJgM6ZMq7QOMKnYRljHipvFGaOgYugqZy4GOVAYwjF7+7bcJFxTyZwzZr/15wQFjpwbhdLnAGh2ufRNA1dD0Uj2rUTepcftFnQUsjBUif45EvM2B6xDSEdDn09pLhPTnlSZ00A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CbUTOZ5H; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="crah09jU";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="sr7jbfKY"
-ARC-Seal: i=1; a=rsa-sha256; t=1735752085; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Xb0OyH65vYAUU2k36UEUqpbhlr7aRC2+XPxiCiRkEFjrZX30kI2rqy+CemzxK4Ot8K
-    LAz3nOIOEwts4mwphfi2U9pb1rLKbqvwBtVDxmv4oMGnkIRYtg8lLeALKcmFD+zMB6MK
-    16GlpWEIl+EOnGkervjiv0PHNwLosnhX4StwepFCqAXoiKUB2m7LtSGmNR8P5prMaBra
-    Qk/LiroR3g8umvVoV0qNpCBP+znd1tE5kfzaVJKA6I6iULs7lfxqI2KHsyLRJY0NELjS
-    CiTmD985eApZ7RxUz1cILirKae1ypGdkLpW1MHBDsmQlQcbkS9blOYVNrX1aHo9OnEu6
-    7RUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735752085;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
-    b=tCYYcUmtvCWrQEzaIkfXlLBdq5hp65w2JBUFVleTQC/J7/8INEloBuw19Yd55uFB1X
-    RajGgkY22UNiTqMpQkku//W7GJLIbDAjcEN2A6gKw5T6LM92yxt4sKr5LsVd9msMojje
-    h8c4OqjfJwhqCZMI2H6xEPEMQLKb/gnd9GXvgKlgk4wv95v2ugS3pgbrOhhEe7X+d793
-    19M7VwRnu64H63U7tvd528TnrJH7LLS5qur6Vqw02moxRSfXAy+gDbD1KCg3+Ni4YhDA
-    V4OmDJ47Yj+bvLT1S1JeO3cp7sf09P4g/OVza5QeIK0HIj67pSu2AwfhOB9uXYO/ir2M
-    A82g==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735752085;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
-    b=crah09jU/SxjBDi/Sw97Pp8kvEck3R4Ilvs1L+DDRIUTNVEIcxDjlEpjHp601YOUYf
-    I0WbIAZdMB6XZFPPg3fcuC/zgz5EQjprYhIYzJWKhgNaaM0y6iGhAU3TAq6xJYpeiCSt
-    lDvzAxisnCm47WBpMdl/Y6JNSSx/yeNXk8zDrajHhd5gyj9qxAUIT0i0w+2X/M3wT8sL
-    +g3ptNOUBf73hXykcNMlfDLrwF52qsZ+7+BbJ/+0hFD3EDXaTrFXCeSFbiYgrWj29ZxA
-    15CliqHyithDCNRkzO+y6ZEUWVWwHlTXcU0xpMEKAJXkZAr6c1QVDaK4On9DRgSBhPKf
-    ozyw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735752085;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
-    b=sr7jbfKYTZ9UsIdT+4EXUkVQBN6pODND3ai+r4/6lGw4dwr9Ij4O7vplyissEVSSig
-    siVS9zq/4b+MvnhAhZAg==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c9101HLPMvK
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 1 Jan 2025 18:21:25 +0100 (CET)
-Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
- Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
- madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- hypexed@yahoo.com.au, regressions@lists.linux.dev
-References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
- <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
- <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
- <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
- <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
- <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
- <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
- <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
- <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
- <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
- <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
- <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
- <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
- <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
- <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
- <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
- <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
- <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
-Message-ID: <f7ac9e24-d701-3d54-f35a-8863082a6c6a@xenosoft.de>
-Date: Wed, 1 Jan 2025 18:21:24 +0100
-X-Mailer: BrassMonkey/33.4.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CbUTOZ5H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1735764942; x=1767300942;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=wJxE0VhI4245QsBRaUlZMHe9srJx5wH1Gs8qUjCkXj8=;
+  b=CbUTOZ5HBVWRrF8tWs2F8FGoM+QNL/qT5ya7dsFDigKXsd5I5s2p5dFh
+   8ZvQuCTCyox2RTJH+pQUq5cGCYG5U/SEkp8F6puveKbiauBTd8a/sO6bR
+   Gg+SxGQb1ruOWr8Jr6tNykEpGmwQP43yMxbkSPjnBBWPIaEORgNHxEIKh
+   ZHwFu8EKPzMIKEWedUgRSHXz7hUY6LYM3+mbMuoDdhcyBlzK5NrbpTFj5
+   VB5hPpEg73c6BUQc4BDgbLoM0DCPMZVBDrVOYWG5yRIqnVPOk8cdd/quZ
+   BXxlFGYhU2tWMqcfW3d314s3cBJ3JkAwR3n2/sSukiRG5rl/O7PyiR0uh
+   A==;
+X-CSE-ConnectionGUID: PSGH+KzPQwmazs/xC3hq5w==
+X-CSE-MsgGUID: 4H16MZOvSI+oTFTqlbS7gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11302"; a="53405764"
+X-IronPort-AV: E=Sophos;i="6.12,283,1728975600"; 
+   d="scan'208";a="53405764"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jan 2025 12:55:41 -0800
+X-CSE-ConnectionGUID: 3qFIqEp2QQ6I44z0qmp8mw==
+X-CSE-MsgGUID: Zjq9/VaAT+y6TKOAdzZ7+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="106377707"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO [10.245.246.202]) ([10.245.246.202])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jan 2025 12:55:39 -0800
+Message-ID: <5ca1c5b64c313108ea2aa005ae273f1ba8051e7f.camel@linux.intel.com>
+Subject: Re: [REGRESSION][BISECTED] Re: 6.12.7 stable new error: event
+ xe_bo_move has unsafe dereference of argument 4
+From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+To: Genes Lists <lists@sapience.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, lucas.demarchi@intel.com,
+ stable@vger.kernel.org, 	regressions@lists.linux.dev, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Date: Wed, 01 Jan 2025 21:55:26 +0100
+In-Reply-To: <0ef755e06b8f0bf1ee4dfd7e743d6222fd795b70.camel@sapience.com>
+References: <2e9332ab19c44918dbaacecd8c039fb0bbe6e1db.camel@sapience.com>
+			<9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com>
+			<20241230141329.5f698715@batman.local.home>
+			<20241230145002.3cc11717@gandalf.local.home>
+			<5f756542aaaf241d512458f306707bda3b249671.camel@sapience.com>
+		 <20241230160311.4eec04da@gandalf.local.home>
+	 <0ef755e06b8f0bf1ee4dfd7e743d6222fd795b70.camel@sapience.com>
+Organization: Intel Sweden AB, Registration Number: 556189-6027
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 01/01/25 14:30, Christian Zigotzky wrote:
-> Hello Paolo,
->
-> First, I wish you a Happy New Year. Thanks a lot for your patch! I 
-> patched the RC5 of kernel 6.13 with your patch and KVM HV works! :-)
->
-> kvm_hv_final.patch:
->
-> virt/kvm/kvm_main.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index de2c11dae231..5177e56fdbd5 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct 
-> kvm_memory_slot *slot, gfn_t gfn,
->                 .refcounted_page = refcounted_page,
->         };
->
-> -       if (WARN_ON_ONCE(!writable || !refcounted_page))
-> +       if (WARN_ON_ONCE(!refcounted_page))
->                 return KVM_PFN_ERR_FAULT;
->
-> -       *writable = false;
-> +       if (writable)
-> +               *writable = false;
->         *refcounted_page = NULL;
->
->         return kvm_follow_pfn(&kfp);
-> ---
->
-> patch -p0 < kvm_hv_final.patch
->
-> patching file a/virt/kvm/kvm_main.c
->
-> Now, we have a good patch after 56 test kernels!!!!!!!!!
->
-> I will test all QEMU/KVM HV components and report, if they work.
->
-> Cheers,
-> Christian
->
-Test results:
+Hi!
 
-- Guest performance: good
-- Guest boot time: short
-- KVM HV works (-enable-kvm)
-- SMP works (-smp 4)
-- QEMU User Networking (SLIRP) via VirtIO_net works (Tested it with SSH 
-and with a web browser)
-- QEMU USB Audio works (Tested it with some audio files in the guest system)
-- VirtIO GPU works
-- Virtual mouse and keyboard controller work (VirtIO input)
-- 9p mount of a host folder via VirtIO works in the guest system
-- Serial output from the guest works (console=ttyS0,115200)
-- Shutdown and reboot work
+On Mon, 2024-12-30 at 16:07 -0500, Genes Lists wrote:
+> On Mon, 2024-12-30 at 16:03 -0500, Steven Rostedt wrote:
+> > >=20
+> >=20
+> > I'll start making it into an official patch. Can I add your
+> > "Tested-
+> > by" to it?
+> >=20
+> > -- Steve
+> Terrific thank you and sure:
+> =C2=A0Tested-by: Gene C <arch@sapience.com>
+>=20
+>=20
 
-Final result: I have not noticed any changes compared to KVM HV with 
-kernel 6.12.
+FWIW, we actually worked around this during the holiday in the drm-xe-
+next branch in the xe driver since it was breaking our CI. Was planning
+to include it for drm-xe-fixes for tomorrow. Since xe appeared to be
+the only driver hitting this, our assumption was that it'd be better
+fixed in the driver.
 
-@Paolo
-There has been a lot of work in KVM for kernel 6.13.
-Could you please just explain in a few words the news about KVM? I would 
-like to share the KVM news with our users.
-
-Thanks
-
--- 
-Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
+Thanks,
+Thomas
 
