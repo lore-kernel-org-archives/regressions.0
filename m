@@ -1,100 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5B10A1F
-	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 06:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735714178; cv=none; b=HqDQoTtuphkQdrzryPYQ7tQ8lWdNftN5lFKqZLcuMWs1e2UsZIu6VASpAi+d5w6GKDpJ5xwW17Co0M6S/lAbEk6UJwg3lIslXd8P5tEY8epFfeO6YLmt6fUTGeMIKHlteRyRe+Ude0ie5yCGHWtU0yZF7tpIDRt9PmVn2c83HmY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735714178; c=relaxed/simple;
-	bh=k04Mmt26oKB9EiMp1UIMTNMPa56NZCmIvsr7qlrb55A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CpdhRDD5dpg0LRNHTE535iO4WBtVobOgy4QqHf1ynZuTiawHnDCgjkKUFGRwSspYPcx+kELjI4rCoXWP7Dy34A0jZTHvuP/xUpvb7fnpiFlS7Tftm3WsSiZALMP4mp7DdXcRe7SJn6SA1gqaKdTGlDcggBFl+aB8qnO/Kd8zjps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GzOE1rRp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6FD944E
+	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 13:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735738262; cv=pass; b=bma1afAdCGhQQQDmhPA9taqx+EIJyvOrExD48FCSIM6LulGIh7woJyYUNo/1rDXOjvjY2eGOh/u/HFbAaBK7LfCsiR7bWAHJJfEQCc1EOrtHJIOaIPZNVyVTgnz6WI1I5AIy6NIgnsTvWKFNPOFdGP3zZE26M/3r6ahLLDwUlT4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735738262; c=relaxed/simple;
+	bh=IbXP8n1BspuUPKOQazSUI38gVoFDJztSfHRKohd5q/M=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WUPSi7xo1HFRIR+qYR9gw6+Uuet/nAlNepueponQ8rIABB2qC0rPSocWio5RXZsBe06lpFMRjXMb0q7qgrqbJyKgAS5OLpwY5Yf8r9pjemBpvDHf0VbNGpyPabhEmDw4cTAOBp5Nat9/TeZ6yViWlBdweE5CbbIWI/rP42q7s1U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=nkt5bk3i; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=L9f4MZx5; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GzOE1rRp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735714174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YRIIgCXg3JsYIvS3NMssQ9//coF9ig5NRKK0Y4BlSBg=;
-	b=GzOE1rRpVuOpjRaj2EIpD7lQ4e6LIFY5pJexbz4bAyebrGGQhHNGIAru8KO+zSv2i8y/47
-	GmGHjsBQAm49BeUFqAgX70mDT0rU2S0NMT9v8PN1fNOTWwysfcd8C7z7Kxa5tYARaje6Dt
-	X51RHMo9wW8nBnFPmWKLgiVqvcA8kpk=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-hpPfv1w2NzOgUfkeFTMczg-1; Wed,
- 01 Jan 2025 01:49:32 -0500
-X-MC-Unique: hpPfv1w2NzOgUfkeFTMczg-1
-X-Mimecast-MFC-AGG-ID: hpPfv1w2NzOgUfkeFTMczg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B92019560A3;
-	Wed,  1 Jan 2025 06:49:31 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 426C6195394B;
-	Wed,  1 Jan 2025 06:49:29 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	Christian Zigotzky <chzigotzky@xenosoft.de>,
-	linuxppc-dev@lists.ozlabs.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] KVM: allow NULL writable argument to __kvm_faultin_pfn
-Date: Wed,  1 Jan 2025 01:49:28 -0500
-Message-ID: <20250101064928.389504-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="nkt5bk3i";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="L9f4MZx5"
+ARC-Seal: i=1; a=rsa-sha256; t=1735738209; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Be4H4ZTBwIQ4ZUuAVP4JYGkIVN2XHSx315Fe0yUQURm0XsTqPHRlDHmOkjbzdODl2h
+    Y3R+nq8GkdzvsU7d8BJ4W2UvuidHm9cRldDvr+S4nFG7qhgfc98O8oIBpqHggUeHF31f
+    j+zGTk6FWewpIMmLeXAFn0ecIbGJDQY+EprrGdeqMl2r0Lae/RAZacXDbPwdeIAfXKjY
+    wbX7un8bbk6rsZxOJFqC0oLnwht0ZVPpYxkk3Y3c7ljU59Pc9rIE/Bl8j+GRAxCfhDcp
+    8SLsTl5n2sJK7JMOhineyeu60AQV+2qMXRZAzf6gLeDdymadpvL/yA3h+VTf7uhv3cun
+    b9HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735738209;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
+    b=ffpmu+eMZRCJMD3NpCLJME6R4p4sSia0saAYsw5SWHZDSDO0Lv6fqY8QVsSi2yoT62
+    G9AE2bt/mLeZuI8fitDl0s9HaA4gNWd2Au5rS3R1E1iXddYNeCDmusRP89dsUEo50YCd
+    mmYXt+olgocNIrscqRK6CzyBldArxOe5VSkXckhb7fqiPtpmfwamyXr2XpNdW9COaxcq
+    Ho5nrVvhXAq3R9alwb/JJkM9fa1437od2mtVX3q+mT9a1KIA4v6xVBQTGD355iEvJE6f
+    2NBwbKxuVpE07C80LkO3cyIQmAnLoeJKSaaqD7VBEOAyLwLlIuW/Ld+uWSgQQi7+ks23
+    wwPg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735738209;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
+    b=nkt5bk3imQ367aAb2GHIv0WTXCZAnL1Ek1UzXF20hp8xHu9Lr4CMU/dpa57dxJKF7F
+    n8TyWx7/kimRztDlLkNu84A2VTV+nYVN1so7H+B+o8e9ZuCWJ/xNEivwcYKHpQU0myEZ
+    fn4M9+aswJ4l1K8xIx7iTgpp0rFXCZw2bg96Wd7pQ34f6jhVtbssgmgrOx3cG/NispJw
+    UcUlXENKMejqjNOcsO7J34k5IrKc1oBfKLFnFZdwELBBK3wItcZ6zFQimVWWzBRl5GN2
+    P0BSYrIu6lftv+EBN9eiEIMDogsdG4VHySGRwqr9+HfXqGxB+twy3a/IYllS0MTso1FM
+    RHDQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735738209;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
+    b=L9f4MZx5mlf5xD0ISgacPiT/IgF5B1s66j3dKJy9YWpV9uOZI/sbmE1e6aTYrNIQ1B
+    iODjBSbPUoqZtzkjzjDA==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 51.2.16 AUTH)
+    with ESMTPSA id ebe9c9101DU8MgH
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 1 Jan 2025 14:30:08 +0100 (CET)
+Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Darren Stevens <darren@stevens-zone.net>, Pat Wall <pjwall@mac.com>,
+ Pat Wall <pjwall@me.com>, Christian Zigotzky <info@xenosoft.de>,
+ madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ hypexed@yahoo.com.au, regressions@lists.linux.dev
+References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
+ <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
+ <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
+ <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
+ <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
+ <0769459a-10ee-4573-a3ce-541c01429948@redhat.com>
+ <fdd0528d-96f2-bc8d-783c-30600b0c15d8@xenosoft.de>
+ <CABgObfa6ei-=dSRaPgj7OP07Y4nKAbTt3cRgMSCGRHUmkguOdQ@mail.gmail.com>
+ <7d8b5b78-b20c-d915-4a94-7082d7e01600@xenosoft.de>
+ <f944fadf-2dfe-4dd3-a086-ae7bb6c0bff6@redhat.com>
+ <31895b11-5084-95bc-0f14-faaea023b7f8@xenosoft.de>
+ <2881940a-2da0-4498-b447-f09fffb14189@redhat.com>
+ <50149f09-174f-ad6e-e97d-3d8889b412a6@xenosoft.de>
+ <CABgObfYqGVQk0nvPZqzc1Q7K0jg-Gxk2tVmrk75R6TaLUt9exQ@mail.gmail.com>
+ <10826e5f-d3a6-7792-4466-0bf21082a155@xenosoft.de>
+ <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
+ <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
+ <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
+Message-ID: <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
+Date: Wed, 1 Jan 2025 14:30:08 +0100
+X-Mailer: BrassMonkey/33.4.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-kvm_follow_pfn() is able to work with NULL in the .map_writable field
-of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
-despite KVM for e500 trying to use it.  Indeed .map_writable is not
-particularly useful if the flags include FOLL_WRITE and readonly
-guest memory is not supported, so add support to __kvm_faultin_pfn()
-for this case.
+Hello Paolo,
 
-Fixes: 1c7b627e9306 ("KVM: Add kvm_faultin_pfn() to specifically service guest page faults")
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: regressions@lists.linux.dev
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+First, I wish you a Happy New Year. Thanks a lot for your patch! I 
+patched the RC5 of kernel 6.13 with your patch and KVM HV works! :-)
+
+kvm_hv_final.patch:
+
+virt/kvm/kvm_main.c | 5 +++--
+  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
 index de2c11dae231..5177e56fdbd5 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct kvm_memory_slot *slot, gfn_t gfn,
- 		.refcounted_page = refcounted_page,
- 	};
- 
--	if (WARN_ON_ONCE(!writable || !refcounted_page))
-+	if (WARN_ON_ONCE(!refcounted_page))
- 		return KVM_PFN_ERR_FAULT;
- 
--	*writable = false;
-+	if (writable)
-+		*writable = false;
- 	*refcounted_page = NULL;
- 
- 	return kvm_follow_pfn(&kfp);
+@@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct 
+kvm_memory_slot *slot, gfn_t gfn,
+                 .refcounted_page = refcounted_page,
+         };
+
+-       if (WARN_ON_ONCE(!writable || !refcounted_page))
++       if (WARN_ON_ONCE(!refcounted_page))
+                 return KVM_PFN_ERR_FAULT;
+
+-       *writable = false;
++       if (writable)
++               *writable = false;
+         *refcounted_page = NULL;
+
+         return kvm_follow_pfn(&kfp);
+---
+
+patch -p0 < kvm_hv_final.patch
+
+patching file a/virt/kvm/kvm_main.c
+
+Now, we have a good patch after 56 test kernels!!!!!!!!!
+
+I will test all QEMU/KVM HV components and report, if they work.
+
+Cheers,
+Christian
+
 -- 
-2.43.5
+Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
 
