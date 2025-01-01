@@ -1,70 +1,70 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6FD944E
-	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 13:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB25433AB
+	for <regressions@lists.linux.dev>; Wed,  1 Jan 2025 17:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.166
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735738262; cv=pass; b=bma1afAdCGhQQQDmhPA9taqx+EIJyvOrExD48FCSIM6LulGIh7woJyYUNo/1rDXOjvjY2eGOh/u/HFbAaBK7LfCsiR7bWAHJJfEQCc1EOrtHJIOaIPZNVyVTgnz6WI1I5AIy6NIgnsTvWKFNPOFdGP3zZE26M/3r6ahLLDwUlT4=
+	t=1735752134; cv=pass; b=Jkcoio5pDsJIMMrgFsNrgflbdf4FJpgkaJQwhYFIGYkyuoNHUEzd+NkyYri66KC4BqqgXThG79yaq5m8fGJVLXI25/NUApZq6UU6WmmSmVZRxdK8UgeG2tg3/fBavrstyOBAzXxYC1gw0TqBzJMXCpay4JOFfdqIMuJ8jBIFR8A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735738262; c=relaxed/simple;
-	bh=IbXP8n1BspuUPKOQazSUI38gVoFDJztSfHRKohd5q/M=;
+	s=arc-20240116; t=1735752134; c=relaxed/simple;
+	bh=aoP3dii/aaHTVA3VDcULMnSvQ7sBl0uO0+O8zLrhTCg=;
 	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WUPSi7xo1HFRIR+qYR9gw6+Uuet/nAlNepueponQ8rIABB2qC0rPSocWio5RXZsBe06lpFMRjXMb0q7qgrqbJyKgAS5OLpwY5Yf8r9pjemBpvDHf0VbNGpyPabhEmDw4cTAOBp5Nat9/TeZ6yViWlBdweE5CbbIWI/rP42q7s1U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=nkt5bk3i; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=L9f4MZx5; arc=pass smtp.client-ip=85.215.255.51
+	 In-Reply-To:Content-Type; b=oqsoLX+Oqs3lEJN50VUKJnFhxGAWTozIQ819qa5qA1XFQ3Q3ua5iUuNF/lolVNTWKngvSrFjGP1V8sYJSXA18K9lmRurdAo52azHCthEfHFmrMCdxPbDDhbdQ+0qLohB3aCl5jEhVHIY5Wscr4pBpgf69v+U0HPaAMp6ODTfdbA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=crah09jU; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=sr7jbfKY; arc=pass smtp.client-ip=81.169.146.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="nkt5bk3i";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="L9f4MZx5"
-ARC-Seal: i=1; a=rsa-sha256; t=1735738209; cv=none;
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="crah09jU";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="sr7jbfKY"
+ARC-Seal: i=1; a=rsa-sha256; t=1735752085; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=Be4H4ZTBwIQ4ZUuAVP4JYGkIVN2XHSx315Fe0yUQURm0XsTqPHRlDHmOkjbzdODl2h
-    Y3R+nq8GkdzvsU7d8BJ4W2UvuidHm9cRldDvr+S4nFG7qhgfc98O8oIBpqHggUeHF31f
-    j+zGTk6FWewpIMmLeXAFn0ecIbGJDQY+EprrGdeqMl2r0Lae/RAZacXDbPwdeIAfXKjY
-    wbX7un8bbk6rsZxOJFqC0oLnwht0ZVPpYxkk3Y3c7ljU59Pc9rIE/Bl8j+GRAxCfhDcp
-    8SLsTl5n2sJK7JMOhineyeu60AQV+2qMXRZAzf6gLeDdymadpvL/yA3h+VTf7uhv3cun
-    b9HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735738209;
+    b=Xb0OyH65vYAUU2k36UEUqpbhlr7aRC2+XPxiCiRkEFjrZX30kI2rqy+CemzxK4Ot8K
+    LAz3nOIOEwts4mwphfi2U9pb1rLKbqvwBtVDxmv4oMGnkIRYtg8lLeALKcmFD+zMB6MK
+    16GlpWEIl+EOnGkervjiv0PHNwLosnhX4StwepFCqAXoiKUB2m7LtSGmNR8P5prMaBra
+    Qk/LiroR3g8umvVoV0qNpCBP+znd1tE5kfzaVJKA6I6iULs7lfxqI2KHsyLRJY0NELjS
+    CiTmD985eApZ7RxUz1cILirKae1ypGdkLpW1MHBDsmQlQcbkS9blOYVNrX1aHo9OnEu6
+    7RUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1735752085;
     s=strato-dkim-0002; d=strato.com;
     h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
     From:Subject:Sender;
-    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
-    b=ffpmu+eMZRCJMD3NpCLJME6R4p4sSia0saAYsw5SWHZDSDO0Lv6fqY8QVsSi2yoT62
-    G9AE2bt/mLeZuI8fitDl0s9HaA4gNWd2Au5rS3R1E1iXddYNeCDmusRP89dsUEo50YCd
-    mmYXt+olgocNIrscqRK6CzyBldArxOe5VSkXckhb7fqiPtpmfwamyXr2XpNdW9COaxcq
-    Ho5nrVvhXAq3R9alwb/JJkM9fa1437od2mtVX3q+mT9a1KIA4v6xVBQTGD355iEvJE6f
-    2NBwbKxuVpE07C80LkO3cyIQmAnLoeJKSaaqD7VBEOAyLwLlIuW/Ld+uWSgQQi7+ks23
-    wwPg==
+    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
+    b=tCYYcUmtvCWrQEzaIkfXlLBdq5hp65w2JBUFVleTQC/J7/8INEloBuw19Yd55uFB1X
+    RajGgkY22UNiTqMpQkku//W7GJLIbDAjcEN2A6gKw5T6LM92yxt4sKr5LsVd9msMojje
+    h8c4OqjfJwhqCZMI2H6xEPEMQLKb/gnd9GXvgKlgk4wv95v2ugS3pgbrOhhEe7X+d793
+    19M7VwRnu64H63U7tvd528TnrJH7LLS5qur6Vqw02moxRSfXAy+gDbD1KCg3+Ni4YhDA
+    V4OmDJ47Yj+bvLT1S1JeO3cp7sf09P4g/OVza5QeIK0HIj67pSu2AwfhOB9uXYO/ir2M
+    A82g==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735738209;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1735752085;
     s=strato-dkim-0002; d=xenosoft.de;
     h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
     From:Subject:Sender;
-    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
-    b=nkt5bk3imQ367aAb2GHIv0WTXCZAnL1Ek1UzXF20hp8xHu9Lr4CMU/dpa57dxJKF7F
-    n8TyWx7/kimRztDlLkNu84A2VTV+nYVN1so7H+B+o8e9ZuCWJ/xNEivwcYKHpQU0myEZ
-    fn4M9+aswJ4l1K8xIx7iTgpp0rFXCZw2bg96Wd7pQ34f6jhVtbssgmgrOx3cG/NispJw
-    UcUlXENKMejqjNOcsO7J34k5IrKc1oBfKLFnFZdwELBBK3wItcZ6zFQimVWWzBRl5GN2
-    P0BSYrIu6lftv+EBN9eiEIMDogsdG4VHySGRwqr9+HfXqGxB+twy3a/IYllS0MTso1FM
-    RHDQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735738209;
+    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
+    b=crah09jU/SxjBDi/Sw97Pp8kvEck3R4Ilvs1L+DDRIUTNVEIcxDjlEpjHp601YOUYf
+    I0WbIAZdMB6XZFPPg3fcuC/zgz5EQjprYhIYzJWKhgNaaM0y6iGhAU3TAq6xJYpeiCSt
+    lDvzAxisnCm47WBpMdl/Y6JNSSx/yeNXk8zDrajHhd5gyj9qxAUIT0i0w+2X/M3wT8sL
+    +g3ptNOUBf73hXykcNMlfDLrwF52qsZ+7+BbJ/+0hFD3EDXaTrFXCeSFbiYgrWj29ZxA
+    15CliqHyithDCNRkzO+y6ZEUWVWwHlTXcU0xpMEKAJXkZAr6c1QVDaK4On9DRgSBhPKf
+    ozyw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1735752085;
     s=strato-dkim-0003; d=xenosoft.de;
     h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
     From:Subject:Sender;
-    bh=MANAM0Pqzv56k0Hi7gGwE49vT+P242uw3gzFSvfK6+c=;
-    b=L9f4MZx5mlf5xD0ISgacPiT/IgF5B1s66j3dKJy9YWpV9uOZI/sbmE1e6aTYrNIQ1B
-    iODjBSbPUoqZtzkjzjDA==
+    bh=5hq9xnb8DY/iuwXktmMmUz/CVLXuk5ve6jKKAReX3SE=;
+    b=sr7jbfKYTZ9UsIdT+4EXUkVQBN6pODND3ai+r4/6lGw4dwr9Ij4O7vplyissEVSSig
+    siVS9zq/4b+MvnhAhZAg==
 X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EivHj9FnXlZguLZm8PSmufN+FD/uA=="
 Received: from void-ppc.a-eon.tld
     by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c9101DU8MgH
+    with ESMTPSA id ebe9c9101HLPMvK
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Wed, 1 Jan 2025 14:30:08 +0100 (CET)
+    Wed, 1 Jan 2025 18:21:25 +0100 (CET)
 Subject: KVM: PPC: Book3E: KVM HV host module doesn't work anymore
 From: Christian Zigotzky <chzigotzky@xenosoft.de>
 To: Paolo Bonzini <pbonzini@redhat.com>
@@ -74,7 +74,6 @@ Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
  madskateman@gmail.com, "R.T.Dickinson" <rtd2@xtra.co.nz>,
  hypexed@yahoo.com.au, regressions@lists.linux.dev
 References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
- <04e5da1a-65e2-ce12-27a5-5fdba9f0408d@xenosoft.de>
  <5e8e202d-4a0b-ced3-8034-796cda679e8a@xenosoft.de>
  <e6672ce2-2bf9-4a1e-b4b8-e1396ccbb56a@xenosoft.de>
  <1539b4dd-9a52-4f87-882d-cb605018d1f4@xenosoft.de>
@@ -91,8 +90,9 @@ References: <F693EFBE-3F0D-4B7C-89D8-EA8DCAB3CAB7@xenosoft.de>
  <CABgObfY-R+ASCGbhDNaQPBLRk4jHiOOvOrN9+e-ub3=-VzKEYw@mail.gmail.com>
  <4d291b7d-a65e-2ec9-146c-4063d14ef85f@xenosoft.de>
  <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
-Message-ID: <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
-Date: Wed, 1 Jan 2025 14:30:08 +0100
+ <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
+Message-ID: <f7ac9e24-d701-3d54-f35a-8863082a6c6a@xenosoft.de>
+Date: Wed, 1 Jan 2025 18:21:24 +0100
 X-Mailer: BrassMonkey/33.4.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -100,51 +100,77 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <bfb4f3bc-23f3-3a9a-195e-afd73ab675cd@xenosoft.de>
+In-Reply-To: <1b8945df-fa30-ffb3-d270-b2642242f055@xenosoft.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hello Paolo,
+On 01/01/25 14:30, Christian Zigotzky wrote:
+> Hello Paolo,
+>
+> First, I wish you a Happy New Year. Thanks a lot for your patch! I 
+> patched the RC5 of kernel 6.13 with your patch and KVM HV works! :-)
+>
+> kvm_hv_final.patch:
+>
+> virt/kvm/kvm_main.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index de2c11dae231..5177e56fdbd5 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct 
+> kvm_memory_slot *slot, gfn_t gfn,
+>                 .refcounted_page = refcounted_page,
+>         };
+>
+> -       if (WARN_ON_ONCE(!writable || !refcounted_page))
+> +       if (WARN_ON_ONCE(!refcounted_page))
+>                 return KVM_PFN_ERR_FAULT;
+>
+> -       *writable = false;
+> +       if (writable)
+> +               *writable = false;
+>         *refcounted_page = NULL;
+>
+>         return kvm_follow_pfn(&kfp);
+> ---
+>
+> patch -p0 < kvm_hv_final.patch
+>
+> patching file a/virt/kvm/kvm_main.c
+>
+> Now, we have a good patch after 56 test kernels!!!!!!!!!
+>
+> I will test all QEMU/KVM HV components and report, if they work.
+>
+> Cheers,
+> Christian
+>
+Test results:
 
-First, I wish you a Happy New Year. Thanks a lot for your patch! I 
-patched the RC5 of kernel 6.13 with your patch and KVM HV works! :-)
+- Guest performance: good
+- Guest boot time: short
+- KVM HV works (-enable-kvm)
+- SMP works (-smp 4)
+- QEMU User Networking (SLIRP) via VirtIO_net works (Tested it with SSH 
+and with a web browser)
+- QEMU USB Audio works (Tested it with some audio files in the guest system)
+- VirtIO GPU works
+- Virtual mouse and keyboard controller work (VirtIO input)
+- 9p mount of a host folder via VirtIO works in the guest system
+- Serial output from the guest works (console=ttyS0,115200)
+- Shutdown and reboot work
 
-kvm_hv_final.patch:
+Final result: I have not noticed any changes compared to KVM HV with 
+kernel 6.12.
 
-virt/kvm/kvm_main.c | 5 +++--
-  1 file changed, 3 insertions(+), 2 deletions(-)
+@Paolo
+There has been a lot of work in KVM for kernel 6.13.
+Could you please just explain in a few words the news about KVM? I would 
+like to share the KVM news with our users.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index de2c11dae231..5177e56fdbd5 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2975,10 +2975,11 @@ kvm_pfn_t __kvm_faultin_pfn(const struct 
-kvm_memory_slot *slot, gfn_t gfn,
-                 .refcounted_page = refcounted_page,
-         };
-
--       if (WARN_ON_ONCE(!writable || !refcounted_page))
-+       if (WARN_ON_ONCE(!refcounted_page))
-                 return KVM_PFN_ERR_FAULT;
-
--       *writable = false;
-+       if (writable)
-+               *writable = false;
-         *refcounted_page = NULL;
-
-         return kvm_follow_pfn(&kfp);
----
-
-patch -p0 < kvm_hv_final.patch
-
-patching file a/virt/kvm/kvm_main.c
-
-Now, we have a good patch after 56 test kernels!!!!!!!!!
-
-I will test all QEMU/KVM HV components and report, if they work.
-
-Cheers,
-Christian
+Thanks
 
 -- 
 Sent with BrassMonkey 33.4.0 (https://github.com/wicknix/brass-monkey/releases/tag/33.4.0)
