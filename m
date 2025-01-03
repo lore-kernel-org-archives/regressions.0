@@ -1,49 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4C31B85FA;
-	Fri,  3 Jan 2025 06:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4D75A79B
+	for <regressions@lists.linux.dev>; Fri,  3 Jan 2025 12:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735885602; cv=none; b=uK/0o89KF68cARfY/aK+LX3waaHZ9oHOVbLdxgh0HcLWpISJsqePXadU5RtmsNiZs53miRwfZ8STBm2NPhqjrBQ+IMGMz9Yg6aLIUi6ivjt8uJYNts51uLqRkj3AzjU6RxYHoyT+RcZfLAIPUF1CXq/SsWxk4U0MoKdkn4iYvF8=
+	t=1735908513; cv=none; b=qVhqMkHDBoR8+G1JLj9KivTIdRQlqyULB160ZNF9h9j6kA29YBb25PSczqi9OxPuK/FdNAWaxKB+agMN+eFHyB5odQLgOoq55erWfi1+2pjo6Krh3IVwez2AzyWAJnkzwWZ2z9/vrTMgPXuPWX8uQp8ZGoXLJwm5QdaQs7X3H9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735885602; c=relaxed/simple;
-	bh=aF/+aLAuMH/kL/bHHyraAzqvwP02S0rlgq64vO4nxuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aX+HOzEEuGdfJXYP28Clufmh9je28R77MgS8wTDoVCOIiKk8qcKyGojjBPApKSnYMYA7egYNeQ08/P1Dm8lSdsFAnYfFLV1hb2Qb7s7wAcBdiuxQej+XtKFlh3Roi7ekfVkv/AMk+gt94KRpBM8vY5VD/SPbLcCJFcmPEp6BXpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DzR20blO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735908513; c=relaxed/simple;
+	bh=Gx2tBk5b5iiiVDk5sGoYvRMPKAo2Jskn32iHs1ldREI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qWh2W4STbsX8MRMHNhvh4dvsfPkV+Q9edGAE8kAbCvV6zIp9N2iNWJBFZOtGkA7WlcDS9g05U1lKUK58xgJpdcFeBnUEMELF+IXj84W5tXWPFJyTux65jpDH2PBYnQbwOedPL1lt4k4NXrkeZkCTeI3IC2fMOyNhk8YEDiu1m4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=G/wY73s8; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DzR20blO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64841C4CECE;
-	Fri,  3 Jan 2025 06:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1735885601;
-	bh=aF/+aLAuMH/kL/bHHyraAzqvwP02S0rlgq64vO4nxuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DzR20blOC5nqMo+VGpx4e2e6Y9gh4AGyzEb3fCxuz1S5zikCiX+Q1UZqBSjIOCoef
-	 8gGmwwTDzjq4D4Cph+yT1p3f8CEvnc87aYXXZmVj5kyoS/EVwmn4RE3beTsGZzBRCH
-	 nwlMDHXDn4H9ARFRdeDkyVi3vgGMoASANHfaxzmQ=
-Date: Fri, 3 Jan 2025 07:26:38 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, peterx@redhat.com,
-	precification@posteo.de, athul.krishna.kr@protonmail.com,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] vfio/pci: Fallback huge faults for unaligned pfn
-Message-ID: <2025010322-overblown-symptom-d4cd@gregkh>
-References: <20250102183416.1841878-1-alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="G/wY73s8"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id A623D240028
+	for <regressions@lists.linux.dev>; Fri,  3 Jan 2025 13:48:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1735908502; bh=Gx2tBk5b5iiiVDk5sGoYvRMPKAo2Jskn32iHs1ldREI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=G/wY73s8tteF8dQ5OHyZ0AG2IAIkfS6ko1dXyyV5klNvJNJljeZ5u8OAeWxqg6KOr
+	 RqUl71SLbwmZqE+99KgOFwQ/HbLXiGbmxoQnryss1X0/IwCJOoPaRlLvpUIVOKjKqh
+	 uVpYBLvK4L63/6m9Rby59nHojHzL9Vpyn5a11d1iSQ0vil9orXZ/FzmXfcdmTapzY7
+	 ROu9rbQgN9dE+UvH61NPlumrvfXkh1rIT1FBJULqKeExjfyTT1+a52YFk8hKCfvhtN
+	 1ptqHcQpVJWHa/VDiw1Ii+xhWB02nWJ80vyDgaGGSveANNUZUTULrVsH3iu6Tz/AFB
+	 XJOAGxhreu5CQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YPjzn5DTTz6twV;
+	Fri,  3 Jan 2025 13:48:21 +0100 (CET)
+Message-ID: <83b8a4d8-6b8d-449d-9bbc-8f7af1ed0048@posteo.de>
+Date: Fri,  3 Jan 2025 12:48:06 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: Re: [PATCH] vfio/pci: Fallback huge faults for unaligned pfn
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peterx@redhat.com,
+ athul.krishna.kr@protonmail.com, regressions@lists.linux.dev
+References: <20250102183416.1841878-1-alex.williamson@redhat.com>
+Content-Language: en-US
+From: Precific <precification@posteo.de>
 In-Reply-To: <20250102183416.1841878-1-alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 02, 2025 at 11:32:54AM -0700, Alex Williamson wrote:
+On Thu, Jan 02, 2025 at 19:32:54 +0100, Alex Williamson wrote:
 > The PFN must also be aligned to the fault order to insert a huge
 > pfnmap.  Test the alignment and fallback when unaligned.
 > 
@@ -52,37 +61,6 @@ On Thu, Jan 02, 2025 at 11:32:54AM -0700, Alex Williamson wrote:
 > Reported-by: Athul Krishna <athul.krishna.kr@protonmail.com>
 > Reported-by: Precific <precification@posteo.de>
 > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
 
-Hi,
+Tested-by: Precific <precification@posteo.de>
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
