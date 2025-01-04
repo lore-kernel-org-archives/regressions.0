@@ -1,262 +1,163 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57A913777E
-	for <regressions@lists.linux.dev>; Sat,  4 Jan 2025 17:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736012594; cv=none; b=N70zKPEuZ3pTjXtXeLZWGjjNe0zr8Kx4xs65Dj068A7l2JJUGQ+i+hSsFveWuniChLiLVIJOfl+AudRq2r2Kt7E9z4Yc4VDpdqjwkSM3PHPaIL+740XuvUetIGTvKGveS80kOolVDkdVD33i2KSJAxRHO6DpfrdTZIc/gCNatqA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736012594; c=relaxed/simple;
-	bh=M5qC+yzPsHXGOJmWwMV/pgP7Tg3RNM1jdjWBMQZrbmo=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Uv9Yvuw5oD2sKHxVn+YyxrfXTjsblsJ05Dgv4Zg7UWNqwH8kvUcPlGVveP6xqn8efIFndI61gQ5IVROZN+UShNQxz1JRSGdoWwTFPO+clkKyvqXR72epnrh1pRjYRXsvcSYUvjP/97uDJtrk+95TEJcoHTnDfZmETko+XwJquXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KGKac8gu; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E528714D708
+	for <regressions@lists.linux.dev>; Sat,  4 Jan 2025 20:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736021354; cv=fail; b=epIpqPMN5Vt9YxviC/TRIHGrWefQB5Cww2rhvl2PSIJmlsNYe7mo3guv+xjg3MZvazxlbbwCzaG2SqV7RVZ5g0OmoPDnsR9PYjNMbJ8CMOPpNOXqNJlBBqSsX5iIiy3lJc8j5F8l0ACTjRPy3HBdXi8m8/OhDQme6uaCoA9A9ug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736021354; c=relaxed/simple;
+	bh=TXXMK3ueHNVgj1Xw102IRPlmmg+47Vt2x/v9kCxDVjs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Iz8o9+AS9TqKZ99VXJ9uUyo5qAp4J7CajdzVoBndmkACJQh1B1bxLwYyXpHT1aLR6NCIUu9inlRTPFeas6jIgnL/ELY7ApPI5alEZgbTh4loGU49EhMGij57FmsOhLhrXptmy4RSTt/USMKag0OVeCKDb53Xgc72U2+bBz/JzbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=gdYAxMyI; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=U+fTYE3L; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGKac8gu"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3862d6d5765so7692974f8f.3
-        for <regressions@lists.linux.dev>; Sat, 04 Jan 2025 09:43:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736012591; x=1736617391; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DDSJyQ6F94m2ttAwkSGm2/AFzKvt4sFEJ2cRvllZEqw=;
-        b=KGKac8guz87W81TAlbfL5br2d5jtVjI1XCm0v3ZDPtEWslA5M9AdGP8KoKqu6ycfdf
-         cKTl26MtNMDfyXAoCCK5cd7yIURcA3FrfrqGePa39V+YtpxsHioNfx9P5ZuvGRnq5MdR
-         5WbRxZ2Tn/JDcTlCcWDrilIliVGvaBjKhp7ThUnzYbjSXR2cgx5Y/ft+lOg5BA/7O+qe
-         X7a6jFkZEQJKaZA0dKgkU2BWE8pA3AYfICxZT2MQLgaKUKTikZN6oEecyTpzLAeBHWdZ
-         ETG1m6twGAa4SCs7JRyEtd6axKECRO2pQPbyt31amdJwhEfHYtD817Uimf/MitzZluqW
-         7H4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736012591; x=1736617391;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DDSJyQ6F94m2ttAwkSGm2/AFzKvt4sFEJ2cRvllZEqw=;
-        b=SgCUMMpIkDJdvxBMHzKIQln0H4XyxK7GPYmoWZNv2GxFdfMZRwLp6F2Mm88oFZi2LY
-         NejQTsd5Usby1DrjLQW0/er9EZ+ULKJhhuwS0NoKxfaJ1rqn9ZYswqafXGtfAYTRRlOd
-         8TYR+6+ex+DElusbWuLQI1437nGdu3MscTp8Z1o1BiiXWX88eezDVtYZ+1/Z6dOT0E2b
-         n1ifUcWb313D4S4ULpt8GeGWNDFSE2ETprF3omev7Ddhp+TJbFsm7UQqFL9WsNBPQKoi
-         W1/KTxnQkb3ly5fwV8r+2mV7UeIqNSR26UUg14QnBzGQfmOlvrajJ59alb05/nC/1lWM
-         gMDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUY85vhpMYwzCZQC7c+gAX2dBIhYAiZFb37pdvQ6CayEmes4JNPjANhHutoQf4rbwPM9zGM04q1fIHzhw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxyo1X0e9owZfWAZNTpYQ/6f1afMFXakQ/l0RsMagbTgALhvnMM
-	yUrHz88CApr/l5Hm6aWwQ6OIvF6ET73FE1vGKaVfiTzPm+SSRoSd
-X-Gm-Gg: ASbGncueIuADPOYrK+OrfUgHOJqVvkGlzo+lTWyXyE9oZpKnle29y2unIYG9QKi5kbm
-	AhJL/TJGrCiVIYZyKgg7HMjRfhzhGzNzYBC3dXo+7PN0ft/Bg63kawO3QAEm4TOxECzmMD6r6Zb
-	IsEr2Vu+mwXqYCwa0HJyMDFf8L0eT4gfF56oAXMRF7uxLva2znVuhrDoEzUQyt3khBqfI5VraSS
-	KuBNYlpHF9uD/CHrxREopiSs1kdYtTkTsw9xyQCVFDvX0Bb8IIbGr3/95bqcYKA5i6qagU=
-X-Google-Smtp-Source: AGHT+IGaJoY/1fD09aZAag7bMuFPGbWyB/PQrJdO5193y0TrZSLsLCJWbRDxRbkxPOvztGjnB9sQyA==
-X-Received: by 2002:adf:9591:0:b0:38a:624b:e619 with SMTP id ffacd0b85a97d-38a624be73fmr8331311f8f.43.1736012591136;
-        Sat, 04 Jan 2025 09:43:11 -0800 (PST)
-Received: from [192.168.1.177] ([45.143.100.199])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43656b119ccsm550816245e9.24.2025.01.04.09.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jan 2025 09:43:10 -0800 (PST)
-From: Andrea Amorosi <andrea.amorosi76@gmail.com>
-X-Google-Original-From: Andrea Amorosi <Andrea.Amorosi76@gmail.com>
-Message-ID: <73129e45-cf51-4e8d-95e8-49bc39ebc246@gmail.com>
-Date: Sat, 4 Jan 2025 18:43:09 +0100
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="gdYAxMyI";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="U+fTYE3L"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id B34CC480A2B;
+	Sat, 04 Jan 2025 15:09:11 -0500 (EST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1736021351;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=7ggGgX62pkjAuf332zjLZgniYwxyVyVEojisAlm65fw=;
+ b=gdYAxMyINb+GmfEn5cT2I5ExCsgJPbPowCrwETvPjFrIwcbWf+WgNhbmC1blGi7cTLuq7
+ FQg7snQsPpUj88uDQ==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1736021351;
+	cv=none; b=vZieBKqdMwEAZr6S7rJXlgZy1WxTpN+Y5C8hqfKVkUSsLGSvPG2Y16ID984jdM6n5gOq3VJnkAurk3qFDdmbxG4pzgeLaX2FuL5Snph5TT3rS2BO3wa+wxm04D9WGR3UUMGraKVdJxak1p+COgEUJUlPJGX5M7EKl30jE/2jSsTFJzmVkeqcWXnwHM8ea965pYmUHSGqgM7VcChNDA0uzL3VNjfV8LWdjaAjXsX7+W5CmO+JpRMZl5AnJVWXZdTduhTKLxakzPDgSO4uWYIVvSK/mgEfmFjsmQok13oApqr3u6E7fEtqH/pMd6IWrFjyI1IuTW0GFQao6A5nkxfdUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1736021351; c=relaxed/simple;
+	bh=TXXMK3ueHNVgj1Xw102IRPlmmg+47Vt2x/v9kCxDVjs=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=ctxCc4ZVMgtJr65pJ1vToXP/eGTDgw7XIZwsFUHS//PTs4mXLdEFUVgyyvtTMsIQzMJIaxb3sLx+OTXYb5cog7ooHQ2xF82x2yfAqHfbG/TeNmOkXwmgPiYnNbWX/vy+fIThY6WLZcqyHlnShNKY9X/V1jrhbe5/KRSxvuBuLhq2O/lZWwZUPZipBYPx5hqwDyCEe7cmDTQJ+Q3xQzTWVoUeNFySIDe3TG8VSrk08QgsSEir39k02dIkYH9NxxhpkYp8PgVZ0uixg2XRWmotb1LE17J0+bhawLfUwvsXok2tE97D3DsZ0KtnuX8ravYLf1Al9DCb7ln5pqaIOT8gBA==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1736021351;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=7ggGgX62pkjAuf332zjLZgniYwxyVyVEojisAlm65fw=;
+ b=U+fTYE3LbZx+hEbXF3PjXCcX02uHutJLrPeFG+ic+F0WsdB7DOCFsmoGtcpndv4YgPwOt
+ +XkOyhsvTqpOQWh9UaEeJ1FX5kd8PMVH9hJ/rNMs/DLSmIxMk9vFx6Bf57tsXvq63lHNtgY
+ wk1D8+YfBHxCXmTQcrqYqqeBBHWBFdKwDBkGe/5iQAVNZXzB/tFvxnQjRkzj4Ki2QoWbV1v
+ flYDNcUiQLGoOIthpyQH+HY0oR6f2rXMWTQTdcFVoRr0tml+dv5jyB46+BBdsiwiM8lt8rh
+ egpUr6sKCsW/g1a0Wbwkgl90tMTf7xII+jzTmuQNQo10qO722aBQNW42ezNw==
+Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by srv8.sapience.com (Postfix) with ESMTPS id 76D94280011;
+	Sat, 04 Jan 2025 15:09:11 -0500 (EST)
+Message-ID: <d5ef54d76188ec51d9e053fd097dc3f5bb6e6519.camel@sapience.com>
+Subject: Re: [REGRESSION][BISECTED] Re: 6.12.7 stable new error: event
+ xe_bo_move has unsafe dereference of argument 4
+From: Genes Lists <lists@sapience.com>
+To: Andrea Amorosi <andrea.amorosi76@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, lucas.demarchi@intel.com, 
+	regressions@lists.linux.dev, rostedt@goodmis.org, stable@vger.kernel.org, 
+	thomas.hellstrom@linux.intel.com
+Date: Sat, 04 Jan 2025 15:09:10 -0500
+In-Reply-To: <73129e45-cf51-4e8d-95e8-49bc39ebc246@gmail.com>
+References: <9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com>
+	 <73129e45-cf51-4e8d-95e8-49bc39ebc246@gmail.com>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-Cksclr6ZgK3uvhQ/YUvo"
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [REGRESSION][BISECTED] Re: 6.12.7 stable new error: event xe_bo_move
- has unsafe dereference of argument 4
-To: lists@sapience.com
-Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, lucas.demarchi@intel.com,
- regressions@lists.linux.dev, rostedt@goodmis.org, stable@vger.kernel.org,
- thomas.hellstrom@linux.intel.com
-References: <9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com>
-Content-Language: it-IT
-In-Reply-To: <9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi to all,
 
-I've just updated my archlinux to |6.12.8-arch1-1 and I still get the 
-same issue:|
+--=-Cksclr6ZgK3uvhQ/YUvo
+Content-Type: multipart/alternative; boundary="=-hlkAZ8gh2/Rp7zinC2F3"
 
-|gen 04 18:01:34 D9330 kernel: ------------[ cut here ]------------
-gen 04 18:01:34 D9330 kernel: WARNING: CPU: 2 PID: 209 at 
-kernel/trace/trace_events.c:577 trace_event_raw_init+0x159/0x660
-gen 04 18:01:34 D9330 kernel: Modules linked in: xe(+) drm_ttm_helper 
-gpu_sched drm_suballoc_helper drm_gpuvm drm_exec uas usb_storage i915 
-i2c_algo_bit drm_buddy ttm serio_raw atkbd intel>
-gen 04 18:01:34 D9330 kernel: CPU: 2 UID: 0 PID: 209 Comm: (udev-worker) 
-Not tainted 6.12.8-arch1-1 #1 099de49ddaebb26408f097c48b36e50b2c8e21c9
-gen 04 18:01:34 D9330 kernel: Hardware name: Dell Inc. Latitude 
-9330/0RN079, BIOS 1.25.0 11/12/2024
-gen 04 18:01:34 D9330 kernel: RIP: 0010:trace_event_raw_init+0x159/0x660
-gen 04 18:01:34 D9330 kernel: Code: 89 ea 0f 83 3b 04 00 00 e8 44 db ff 
-ff 84 c0 74 10 8b 0c 24 48 c7 c0 fe ff ff ff 48 d3 c0 49 21 c6 4d 85 f6 
-0f 84 d6 fe ff ff <0f> 0b bb 01 00 00 00 41 >
-gen 04 18:01:34 D9330 kernel: RSP: 0018:ffffa9b940987730 EFLAGS: 00010206
-gen 04 18:01:34 D9330 kernel: RAX: ffffffffffffffdf RBX: 
-ffffffffc0ca4731 RCX: 0000000000000005
-gen 04 18:01:34 D9330 kernel: RDX: 0000000000000002 RSI: 
-0000000000000001 RDI: ffffffffc0ca4727
-gen 04 18:01:34 D9330 kernel: RBP: ffffffffc0ca4640 R08: 
-0000000000000039 R09: 0000000000000000
-gen 04 18:01:34 D9330 kernel: R10: 0000000000000076 R11: 
-000000000000004e R12: 00000000000000f2
-gen 04 18:01:34 D9330 kernel: R13: ffffffffc0ca5760 R14: 
-0000000000000018 R15: 0000000000000000
-gen 04 18:01:34 D9330 kernel: FS:  00007ba0e9fe9880(0000) 
-GS:ffff9d957f500000(0000) knlGS:0000000000000000
-gen 04 18:01:34 D9330 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
-0000000080050033
-gen 04 18:01:34 D9330 kernel: CR2: 00007ba0e9dac000 CR3: 
-00000001019ac000 CR4: 0000000000f50ef0
-gen 04 18:01:34 D9330 kernel: PKRU: 55555554
-gen 04 18:01:34 D9330 kernel: Call Trace:
-gen 04 18:01:34 D9330 kernel:  <TASK>
-gen 04 18:01:34 D9330 kernel:  ? trace_event_raw_init+0x159/0x660
-gen 04 18:01:34 D9330 kernel:  ? __warn.cold+0x93/0xf6
-gen 04 18:01:34 D9330 kernel:  ? trace_event_raw_init+0x159/0x660
-gen 04 18:01:34 D9330 kernel:  ? report_bug+0xff/0x140
-gen 04 18:01:34 D9330 kernel:  ? handle_bug+0x58/0x90
-gen 04 18:01:34 D9330 kernel:  ? exc_invalid_op+0x17/0x70
-gen 04 18:01:34 D9330 kernel:  ? asm_exc_invalid_op+0x1a/0x20
-gen 04 18:01:34 D9330 kernel:  ? trace_event_raw_init+0x159/0x660
-gen 04 18:01:34 D9330 kernel:  event_init+0x28/0x70
-gen 04 18:01:34 D9330 kernel:  trace_module_notify+0x1a4/0x260
-gen 04 18:01:34 D9330 kernel:  notifier_call_chain+0x5a/0xd0
-gen 04 18:01:34 D9330 kernel: blocking_notifier_call_chain_robust+0x65/0xc0
-gen 04 18:01:34 D9330 kernel:  load_module+0x1822/0x1cf0
-gen 04 18:01:34 D9330 kernel:  ? vmap+0x83/0xe0
-gen 04 18:01:34 D9330 kernel:  ? __vunmap_range_noflush+0x325/0x470
-gen 04 18:01:34 D9330 kernel:  ? init_module_from_file+0x89/0xe0
-gen 04 18:01:34 D9330 kernel:  init_module_from_file+0x89/0xe0
-gen 04 18:01:34 D9330 kernel: idempotent_init_module+0x11e/0x310
-gen 04 18:01:34 D9330 kernel:  __x64_sys_finit_module+0x5e/0xb0
-gen 04 18:01:34 D9330 kernel:  do_syscall_64+0x82/0x190
-gen 04 18:01:34 D9330 kernel:  ? vfs_read+0x299/0x370
-gen 04 18:01:34 D9330 kernel:  ? syscall_exit_to_user_mode+0x37/0x1c0
-gen 04 18:01:34 D9330 kernel:  ? do_syscall_64+0x8e/0x190
-gen 04 18:01:34 D9330 kernel:  ? terminate_walk+0xee/0x100
-gen 04 18:01:34 D9330 kernel:  ? path_openat+0x495/0x12e0
-gen 04 18:01:34 D9330 kernel:  ? syscall_exit_to_user_mode+0x37/0x1c0
-gen 04 18:01:34 D9330 kernel:  ? do_syscall_64+0x8e/0x190
-gen 04 18:01:34 D9330 kernel:  ? do_filp_open+0xc4/0x170
-gen 04 18:01:34 D9330 kernel:  ? __pfx_page_put_link+0x10/0x10
-gen 04 18:01:34 D9330 kernel:  ? do_sys_openat2+0x9c/0xe0
-gen 04 18:01:34 D9330 kernel:  ? syscall_exit_to_user_mode+0x37/0x1c0
-gen 04 18:01:34 D9330 kernel:  ? do_syscall_64+0x8e/0x190
-gen 04 18:01:34 D9330 kernel:  ? do_syscall_64+0x8e/0x190
-gen 04 18:01:34 D9330 kernel: entry_SYSCALL_64_after_hwframe+0x76/0x7e
-gen 04 18:01:34 D9330 kernel: RIP: 0033:0x7ba0ea7e01fd
-gen 04 18:01:34 D9330 kernel: Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 
-90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 
-8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 >
-gen 04 18:01:34 D9330 kernel: RSP: 002b:00007ffe5dee8d58 EFLAGS: 
-00000246 ORIG_RAX: 0000000000000139
-gen 04 18:01:34 D9330 kernel: RAX: ffffffffffffffda RBX: 
-00005f717b3029c0 RCX: 00007ba0ea7e01fd
-gen 04 18:01:34 D9330 kernel: RDX: 0000000000000004 RSI: 
-00007ba0e9fe305d RDI: 0000000000000031
-gen 04 18:01:34 D9330 kernel: RBP: 00007ffe5dee8e10 R08: 
-0000000000000001 R09: 00007ffe5dee8da0
-gen 04 18:01:34 D9330 kernel: R10: 0000000000000040 R11: 
-0000000000000246 R12: 00007ba0e9fe305d
-gen 04 18:01:34 D9330 kernel: R13: 0000000000020000 R14: 
-00005f717b303600 R15: 00005f717b304360
-gen 04 18:01:34 D9330 kernel:  </TASK>
-gen 04 18:01:34 D9330 kernel: ---[ end trace 0000000000000000 ]---
-gen 04 18:01:34 D9330 kernel: event xe_bo_move has unsafe dereference of 
-argument 4
-gen 04 18:01:34 D9330 kernel: print_fmt: "move_lacks_source:%s, migrate 
-object %p [size %zu] from %s to %s device_id:%s", REC->move_lacks_source 
-? "yes" : "no", REC->bo, REC->size, xe_mem_>|
+--=-hlkAZ8gh2/Rp7zinC2F3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-|
-|
+On Sat, 2025-01-04 at 18:43 +0100, Andrea Amorosi wrote:
+> Hi to all,
+>=20
+> I've just updated my archlinux to |6.12.8-arch1-1 and I still get the
+> same issue:|
+>=20
+>=20
+Right - 6.12.8 (and Arch build of same) does not have Steve Rostedt's
+patch.
+The patch is in mainline and I believe it will be in 6.12.9.
 
-|Later I get this other one which I do not know if it is related to the 
-previous one or not:|
+Since the warning logged is a false positive it is benign.
 
-|gen 04 18:01:45 D9330 kernel: ------------[ cut here ]------------
-gen 04 18:01:45 D9330 kernel: WARNING: CPU: 7 PID: 139 at 
-drivers/usb/typec/ucsi/ucsi.c:1361 ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi]
-gen 04 18:01:45 D9330 kernel: Modules linked in: fat kvm_intel 
-snd_soc_core mei_vsc snd_compress spi_pxa2xx_platform intel_ishtp_hid 
-iwlmvm dell_rbtn hid_multitouch dw_dmac ac97_bus moused>
-gen 04 18:01:45 D9330 kernel:  processor_thermal_rapl cfg80211 ucsi_acpi 
-soundcore mei_me intel_rapl_common intel_lpss_pci i2c_mux typec_ucsi 
-thunderbolt intel_lpss mei processor_thermal_w>
-gen 04 18:01:45 D9330 kernel:  video cec spi_intel nvme_auth i8042 wmi serio
-gen 04 18:01:45 D9330 kernel: CPU: 7 UID: 0 PID: 139 Comm: kworker/7:1 
-Tainted: G        W  OE      6.12.8-arch1-1 #1 
-099de49ddaebb26408f097c48b36e50b2c8e21c9
-gen 04 18:01:45 D9330 kernel: Tainted: [W]=WARN, [O]=OOT_MODULE, 
-[E]=UNSIGNED_MODULE
-gen 04 18:01:45 D9330 kernel: Hardware name: Dell Inc. Latitude 
-9330/0RN079, BIOS 1.25.0 11/12/2024
-gen 04 18:01:45 D9330 kernel: Workqueue: events_long ucsi_init_work 
-[typec_ucsi]
-gen 04 18:01:45 D9330 kernel: RIP: 0010:ucsi_reset_ppm+0x1b4/0x1c0 
-[typec_ucsi]
-gen 04 18:01:45 D9330 kernel: Code: 8b 44 24 04 a9 00 00 00 08 0f 85 36 
-ff ff ff 4c 89 74 24 10 48 8b 05 cb be 59 cf 49 39 c5 79 8f bb 92 ff ff 
-ff e9 1b ff ff ff <0f> 0b e9 50 ff ff ff e8 >
-gen 04 18:01:45 D9330 kernel: RSP: 0018:ffffa9b9407bfda8 EFLAGS: 00010206
-gen 04 18:01:45 D9330 kernel: RAX: 0000000008000000 RBX: 
-0000000000000000 RCX: 0000000000000002
-gen 04 18:01:45 D9330 kernel: RDX: 00000000fffeaba3 RSI: 
-ffffa9b9407bfdac RDI: ffff9d92089d7800
-gen 04 18:01:45 D9330 kernel: RBP: ffff9d92089d7800 R08: 
-0000000000000000 R09: 0000000000000014
-gen 04 18:01:45 D9330 kernel: R10: 0000000000000001 R11: 
-0000000000000000 R12: ffffa9b9407bfdac
-gen 04 18:01:45 D9330 kernel: R13: 00000000fffeaba0 R14: 
-ffff9d92089d7860 R15: ffff9d92089d78c0
-gen 04 18:01:45 D9330 kernel: FS:  0000000000000000(0000) 
-GS:ffff9d957f780000(0000) knlGS:0000000000000000
-gen 04 18:01:45 D9330 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
-0000000080050033
-gen 04 18:01:45 D9330 kernel: CR2: 0000585143bba648 CR3: 
-000000023a822000 CR4: 0000000000f50ef0
-gen 04 18:01:45 D9330 kernel: PKRU: 55555554
-gen 04 18:01:45 D9330 kernel: Call Trace:
-gen 04 18:01:45 D9330 kernel:  <TASK>
-gen 04 18:01:45 D9330 kernel:  ? ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi 
-97866a6a8562a088cda45de0ae83658868b451bb]
-gen 04 18:01:45 D9330 kernel:  ? __warn.cold+0x93/0xf6
-gen 04 18:01:45 D9330 kernel:  ? ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi 
-97866a6a8562a088cda45de0ae83658868b451bb]
-gen 04 18:01:45 D9330 kernel:  ? report_bug+0xff/0x140
-gen 04 18:01:45 D9330 kernel:  ? handle_bug+0x58/0x90
-gen 04 18:01:45 D9330 kernel:  ? exc_invalid_op+0x17/0x70
-gen 04 18:01:45 D9330 kernel:  ? asm_exc_invalid_op+0x1a/0x20
-gen 04 18:01:45 D9330 kernel:  ? ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi 
-97866a6a8562a088cda45de0ae83658868b451bb]
-gen 04 18:01:45 D9330 kernel:  ? ucsi_reset_ppm+0xc6/0x1c0 [typec_ucsi 
-97866a6a8562a088cda45de0ae83658868b451bb]
-gen 04 18:01:45 D9330 kernel:  ucsi_init_work+0x3c/0xac0 [typec_ucsi 
-97866a6a8562a088cda45de0ae83658868b451bb]
-gen 04 18:01:45 D9330 kernel:  process_one_work+0x17b/0x330
-gen 04 18:01:45 D9330 kernel:  worker_thread+0x2ce/0x3f0
-gen 04 18:01:45 D9330 kernel:  ? __pfx_worker_thread+0x10/0x10
-gen 04 18:01:45 D9330 kernel:  kthread+0xcf/0x100
-gen 04 18:01:45 D9330 kernel:  ? __pfx_kthread+0x10/0x10
-gen 04 18:01:45 D9330 kernel:  ret_from_fork+0x31/0x50
-gen 04 18:01:45 D9330 kernel:  ? __pfx_kthread+0x10/0x10
-gen 04 18:01:45 D9330 kernel:  ret_from_fork_asm+0x1a/0x30
-gen 04 18:01:45 D9330 kernel:  </TASK>
-gen 04 18:01:45 D9330 kernel: ---[ end trace 0000000000000000 ]---
-|
 
-|
-|
+--=20
+Gene
 
-|
-|
 
+--=-hlkAZ8gh2/Rp7zinC2F3
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head><body><div>On Sat, 2025-01-04 at 18:43 +0100, Andrea Amorosi=
+ wrote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-l=
+eft:2px #729fcf solid;padding-left:1ex"><div>Hi to all,<br></div><div><br><=
+/div><div>I've just updated my archlinux to |6.12.8-arch1-1 and I still get=
+ the <br></div><div>same issue:|<br></div><div><br></div><div><br></div></b=
+lockquote><div>Right - 6.12.8 (and Arch build of same) does not have Steve =
+Rostedt's patch.</div><div>The patch is in mainline and I believe it will b=
+e in 6.12.9.</div><div><br></div><div>Since the warning logged is a false p=
+ositive it is benign.</div><blockquote type=3D"cite" style=3D"margin:0 0 0 =
+.8ex; border-left:2px #729fcf solid;padding-left:1ex"></blockquote><div><br=
+></div><div><span><pre>-- <br></pre><div><span style=3D"background-color: i=
+nherit;">Gene</span></div><div><br></div></span></div></body></html>
+
+--=-hlkAZ8gh2/Rp7zinC2F3--
+
+--=-Cksclr6ZgK3uvhQ/YUvo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ3mVZgAKCRA5BdB0L6Ze
+29bOAQCva2nE9UkY4r7NY6ZxOBYBSiK+zSNJ4X6xuDreHzc8AgEAsviZ9znI2WfU
+nHJ8Ky3w16QE0ubSMYekNRu/z6FL0gw=
+=tVZk
+-----END PGP SIGNATURE-----
+
+--=-Cksclr6ZgK3uvhQ/YUvo--
