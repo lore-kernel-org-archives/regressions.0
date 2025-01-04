@@ -1,66 +1,80 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4D75A79B
-	for <regressions@lists.linux.dev>; Fri,  3 Jan 2025 12:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6869DA933
+	for <regressions@lists.linux.dev>; Sat,  4 Jan 2025 06:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735908513; cv=none; b=qVhqMkHDBoR8+G1JLj9KivTIdRQlqyULB160ZNF9h9j6kA29YBb25PSczqi9OxPuK/FdNAWaxKB+agMN+eFHyB5odQLgOoq55erWfi1+2pjo6Krh3IVwez2AzyWAJnkzwWZ2z9/vrTMgPXuPWX8uQp8ZGoXLJwm5QdaQs7X3H9M=
+	t=1735970586; cv=none; b=BFxWIMvIVebFfTo0kxACKeee+2KQY6+xU+cDOeenKW0n/XpYuxK83sGOASj3ZEJc3crmUh9x0nDRGgE+0haXhkWQqH2dyQa6Ncz10HYHpZPUlvMuObWrN9A0jVBz9znUTRmu6EqeazK/SoV1moQLGzR6j5SkasM5hFcJX737X2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735908513; c=relaxed/simple;
-	bh=Gx2tBk5b5iiiVDk5sGoYvRMPKAo2Jskn32iHs1ldREI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qWh2W4STbsX8MRMHNhvh4dvsfPkV+Q9edGAE8kAbCvV6zIp9N2iNWJBFZOtGkA7WlcDS9g05U1lKUK58xgJpdcFeBnUEMELF+IXj84W5tXWPFJyTux65jpDH2PBYnQbwOedPL1lt4k4NXrkeZkCTeI3IC2fMOyNhk8YEDiu1m4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=G/wY73s8; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="G/wY73s8"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id A623D240028
-	for <regressions@lists.linux.dev>; Fri,  3 Jan 2025 13:48:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1735908502; bh=Gx2tBk5b5iiiVDk5sGoYvRMPKAo2Jskn32iHs1ldREI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=G/wY73s8tteF8dQ5OHyZ0AG2IAIkfS6ko1dXyyV5klNvJNJljeZ5u8OAeWxqg6KOr
-	 RqUl71SLbwmZqE+99KgOFwQ/HbLXiGbmxoQnryss1X0/IwCJOoPaRlLvpUIVOKjKqh
-	 uVpYBLvK4L63/6m9Rby59nHojHzL9Vpyn5a11d1iSQ0vil9orXZ/FzmXfcdmTapzY7
-	 ROu9rbQgN9dE+UvH61NPlumrvfXkh1rIT1FBJULqKeExjfyTT1+a52YFk8hKCfvhtN
-	 1ptqHcQpVJWHa/VDiw1Ii+xhWB02nWJ80vyDgaGGSveANNUZUTULrVsH3iu6Tz/AFB
-	 XJOAGxhreu5CQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YPjzn5DTTz6twV;
-	Fri,  3 Jan 2025 13:48:21 +0100 (CET)
-Message-ID: <83b8a4d8-6b8d-449d-9bbc-8f7af1ed0048@posteo.de>
-Date: Fri,  3 Jan 2025 12:48:06 +0000
+	s=arc-20240116; t=1735970586; c=relaxed/simple;
+	bh=iWKMqPl9zhS9lLKpidAxrYHLtbqSTwOCsk5y1q9qXVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mQCT/5U3mF9pHJjlBIEV9MpB0q9G3cbsKlfNf00uBF28eAS82iS6GZYpRZfsEUpzzOnbHll1OervN9Ebc62Saoni5WIkx4PCTP7Dj/JcOVMIldzowP+8n0V5s2aZslYcbsxTkDzNj2Q3JjH46cSA9XDqkSjIzPlSZtmHvTNMMNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YQ8tD3Qd3z1kxfb;
+	Sat,  4 Jan 2025 14:00:04 +0800 (CST)
+Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59E3D14011D;
+	Sat,  4 Jan 2025 14:03:00 +0800 (CST)
+Received: from [10.174.176.82] (10.174.176.82) by
+ kwepemf500003.china.huawei.com (7.202.181.241) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 4 Jan 2025 14:02:59 +0800
+Message-ID: <7b599394-d1a1-4e13-9c5c-48321172ec65@huawei.com>
+Date: Sat, 4 Jan 2025 14:02:54 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] vfio/pci: Fallback huge faults for unaligned pfn
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: kvm@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, peterx@redhat.com,
- athul.krishna.kr@protonmail.com, regressions@lists.linux.dev
-References: <20250102183416.1841878-1-alex.williamson@redhat.com>
-Content-Language: en-US
-From: Precific <precification@posteo.de>
-In-Reply-To: <20250102183416.1841878-1-alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Possible hungtask issue will be introduced with device_lock() in
+ uevent_show()
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	<rafael.j.wysocki@intel.com>, <regressions@lists.linux.dev>, <tj@kernel.org>,
+	<alex.williamson@redhat.com>, <chenjun102@huawei.com>
+References: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
+ <20241231075608.84009-1-zhangzekun11@huawei.com>
+ <2024123128-monetize-outtakes-3260@gregkh>
+From: "zhangzekun (A)" <zhangzekun11@huawei.com>
+In-Reply-To: <2024123128-monetize-outtakes-3260@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf500003.china.huawei.com (7.202.181.241)
 
-On Thu, Jan 02, 2025 at 19:32:54 +0100, Alex Williamson wrote:
-> The PFN must also be aligned to the fault order to insert a huge
-> pfnmap.  Test the alignment and fallback when unaligned.
+
+
+在 2024/12/31 16:26, Greg KH 写道:
+> On Tue, Dec 31, 2024 at 03:56:08PM +0800, Zhang Zekun wrote:
+>> Hi, Dan, Greg,
+>>
+>> We have found a potential tungtask issue has been introduce by commit 9a71892cbcdb ("Revert "driver core: Fix uevent_show() vs driver detach race""), which revert the rcu in device_uevent but reintroduce the device_lock() in uevent_show(). The reproduce procedure is quite simple:
 > 
-> Fixes: f9e54c3a2f5b ("vfio/pci: implement huge_fault support")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219619
-> Reported-by: Athul Krishna <athul.krishna.kr@protonmail.com>
-> Reported-by: Precific <precification@posteo.de>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> The revert just puts the original logic back in place, so this is not
+> anything new that has been introduced, right?  It's just that the
+> attempted fix didn't work, so a different fix needs to happen.
+Hi, Greg,
 
-Tested-by: Precific <precification@posteo.de>
+Yes, there is nothing new introduced here. We have been testing the rcu 
+fix (commit 15fffc6a5624 ("driver core: Fix uevent_show() vs driver 
+detach race")) for monthes but has not obersved problems.
 
+Noticing that, brmails+k write in bugzilla "Also, I can't say why the 
+issue appeared in the past even without this commit being present, as I 
+haven't bisected any kernel version before v6.6.45.". I doubt that there 
+could still have problem described in bugzilla [1] even if commit 
+c0a40097f0bc ("drivers: core: synchronize really_probe() and 
+dev_uevent()") has been reverted, and the problem is not directly 
+introduced by rcu in dev_uevent.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=219244
+
+Thanks,
+Zekun
