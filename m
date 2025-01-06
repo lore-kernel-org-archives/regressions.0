@@ -1,129 +1,67 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A16BA34
-	for <regressions@lists.linux.dev>; Mon,  6 Jan 2025 19:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C18BA34;
+	Mon,  6 Jan 2025 19:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736191266; cv=none; b=uKOseYb2XwfmPOrXM9CiWggKYjLj/TXh5rh3vnR2o4bn747hJorWgmodVExyYbQGPO3dRACrhIPVeA2iriB/nR3g+S9qK/5o9PtPAfkWFqbbHIQhqr3F8zM66/YT3FD8/X/5H6x6TdBWAaUeb1ssXAHmfBDnkzpG5ziCizAPb/w=
+	t=1736192402; cv=none; b=su0aZVMC1ehEi5AwbfLQkH6TO7jD5OBxBeR1u9GCDl7n1Ez0PMooYK9DTbdXiOPqfR3ExgY9l5odT7Tx3Q+ok7ebKbhJfin9baSPHybEV6SnjBP/1LK+OFHJkG3ut3humF///HeAWgn0Ew+OvWdBB8GgQ2JGetCt9QpCZeA7T+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736191266; c=relaxed/simple;
-	bh=4ySUSAJ0vB6Fw+bFb5+oI1l044QaOGC+UqVjSNduFgw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PJnfFZVFqjmIGcm266oQbzfXNqr4+uWz9d0JfnYposeMNt7RylHoj+06kdWdlxQQWhJSYCyZnWLQRY1XixKCscdSjN2coPW/94f07si/gYJsU3JBb0V/+fUBFqV6L6WNd36WDX4KWDThvFzPfTPk6V2fM+1OjDOCtKIwvd8OUVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=EvFfMhRK; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="EvFfMhRK"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YRkKy25yPz9sTm;
-	Mon,  6 Jan 2025 20:11:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1736190662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NRmWwyUBRYp+VaPBjk2Ubbo32d54ltoCUzwiU82RV3g=;
-	b=EvFfMhRKeTxgExEJ1eMmKhIE919wSuoQI99WzFqXxrwL39ZsmdzIoKQ4un8DHG+Gexea61
-	NWSS0fYr2vxjJOxQEW8f5JDQdSp1E3xDFFiWNnIAV9xAUYzeIzKbJVxIQ0fjk2DiVJb/Lk
-	tTx8E6GAiJOByTUW6w6lSQQQ7qfJ75j2iiyomBN7FdOL1iRqmmFUz4bSOJcONWR4JtdTsy
-	JR9r+KJjs6mTV7xtTRVggGIMUn8lfVtKMea/X0HeL23D/aLNN2Nj7XaBw3FxzxFQ4t5GUb
-	ONqrX+FcCZzVyWsU0tv+hDcG4fuXANu+rysNT8BRS3I3sII31foPc8vc5XIBhg==
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,  Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>,  Bjorn Andersson <andersson@kernel.org>,
-  Konrad Dybcio <konradybcio@kernel.org>,  Chris Lew
- <quic_clew@quicinc.com>,  Abel Vesa <abel.vesa@linaro.org>,
-  linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  regressions@lists.linux.dev,  stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-In-Reply-To: <Zwj3jDhc9fRoCCn6@linaro.org> (Stephan Gerhold's message of "Fri,
-	11 Oct 2024 12:01:48 +0200")
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
-	<Zwj3jDhc9fRoCCn6@linaro.org>
-Date: Mon, 06 Jan 2025 20:10:52 +0100
-Message-ID: <87wmf7ahc3.fsf@oltmanns.dev>
+	s=arc-20240116; t=1736192402; c=relaxed/simple;
+	bh=0tJu/wUpm3Odc0y/zeqCNZw0V3O+hTweQ90dTSbXhGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VHROpThqlxHa+evmRbFmbB9PED9HmpvV3/1RbgJD9ZXuDWyMAw6MTTrbz/CuZyei+1rgB5EH7uaSd/Wb7DT584uIgKTRg8/ort7uGN167EOVTjhfFkJ+74947FF9vLoxDV9a843egAIQP0Nawxx8N5Eu+7qdwKCoMUkzHAovBnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC4EC4CED2;
+	Mon,  6 Jan 2025 19:40:00 +0000 (UTC)
+Date: Mon, 6 Jan 2025 14:41:26 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Genes Lists <lists@sapience.com>
+Cc: Andrea Amorosi <andrea.amorosi76@gmail.com>,
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, lucas.demarchi@intel.com,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ thomas.hellstrom@linux.intel.com
+Subject: Re: [REGRESSION][BISECTED] Re: 6.12.7 stable new error: event
+ xe_bo_move has unsafe dereference of argument 4
+Message-ID: <20250106144126.20d7f599@gandalf.local.home>
+In-Reply-To: <d5ef54d76188ec51d9e053fd097dc3f5bb6e6519.camel@sapience.com>
+References: <9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com>
+	<73129e45-cf51-4e8d-95e8-49bc39ebc246@gmail.com>
+	<d5ef54d76188ec51d9e053fd097dc3f5bb6e6519.camel@sapience.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4YRkKy25yPz9sTm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2024-10-11 at 12:01:48 +0200, Stephan Gerhold <stephan.gerhold@linaro.org> wrote:
-> On Thu, Oct 10, 2024 at 09:42:46AM +0200, Johan Hovold wrote:
->> When using the in-kernel pd-mapper on x1e80100, client drivers often
->> fail to communicate with the firmware during boot, which specifically
->> breaks battery and USB-C altmode notifications. This has been observed
->> to happen on almost every second boot (41%) but likely depends on probe
->> order:
->>
->>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to send altmode request: 0x10 (-125)
->>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to request altmode notifications: -125
->>
->>     ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: failed to send UCSI read request: -125
->>
->>     qcom_battmgr.pmic_glink_power_supply pmic_glink.power-supply.0: failed to request power notifications
->>
->> In the same setup audio also fails to probe albeit much more rarely:
->>
->>     PDR: avs/audio get domain list txn wait failed: -110
->>     PDR: service lookup for avs/audio failed: -110
->>
->> Chris Lew has provided an analysis and is working on a fix for the
->> ECANCELED (125) errors, but it is not yet clear whether this will also
->> address the audio regression.
->>
->> Even if this was first observed on x1e80100 there is currently no reason
->> to believe that these issues are specific to that platform.
->>
->> Disable the in-kernel pd-mapper for now, and make sure to backport this
->> to stable to prevent users and distros from migrating away from the
->> user-space service.
->>
->> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
->> Cc: stable@vger.kernel.org	# 6.11
->> Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
->> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
->> ---
->>
->> It's now been over two months since I reported this regression, and even
->> if we seem to be making some progress on at least some of these issues I
->> think we need disable the pd-mapper temporarily until the fixes are in
->> place (e.g. to prevent distros from dropping the user-space service).
->>
->
-> This is just a random thought, but I wonder if we could insert a delay
-> somewhere as temporary workaround to make the in-kernel pd-mapper more
-> reliable. I just tried replicating the userspace pd-mapper timing on
-> X1E80100 CRD by:
->
->  1. Disabling auto-loading of qcom_pd_mapper
->     (modprobe.blacklist=qcom_pd_mapper)
->  2. Adding a systemd service that does nothing except running
->     "modprobe qcom_pd_mapper" at the same point in time where the
->     userspace pd-mapper would usually be started.
+On Sat, 04 Jan 2025 15:09:10 -0500
+Genes Lists <lists@sapience.com> wrote:
 
-Thank you so much for this idea. I'm currently using this workaround on
-my sdm845 device (where the in-kernel pd-mapper is breaking the
-out-of-tree call audio functionality).
+> On Sat, 2025-01-04 at 18:43 +0100, Andrea Amorosi wrote:
+> > Hi to all,
+> > 
+> > I've just updated my archlinux to |6.12.8-arch1-1 and I still get the
+> > same issue:|
+> > 
+> >   
+> Right - 6.12.8 (and Arch build of same) does not have Steve Rostedt's
+> patch.
+> The patch is in mainline and I believe it will be in 6.12.9.
 
-Is there any work going on on making the timing of the in-kernel
-pd-mapper more reliable?
+For completeness, the patch in question is this:
 
-Cheers,
-  Frank
+  https://lore.kernel.org/20241231000646.324fb5f7@gandalf.local.home
 
-> This seems to work quite well for me, I haven't seen any of the
-> mentioned errors anymore in a couple of boot tests. Clearly, there is no
-> actual bug in the in-kernel pd-mapper, only worse timing.
->
-> Thanks,
-> Stephan
+-- Steve
+
+
+> 
+> Since the warning logged is a false positive it is benign.
+> 
+> 
+
