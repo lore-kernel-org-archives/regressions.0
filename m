@@ -1,145 +1,129 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E121DE4DA
-	for <regressions@lists.linux.dev>; Mon,  6 Jan 2025 18:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A16BA34
+	for <regressions@lists.linux.dev>; Mon,  6 Jan 2025 19:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736189876; cv=none; b=GP5On89g/YYWFw8lG4SWoHGbDrkq7NHvWk7BHtZq3Oi6kKpzJRIHDmaPSG6umnIImQDSRb+VzIwVlR212RqOk5QiOLRt7q3eWa8Q0Y2h+hdUE02+pzmJTgtCOSe9+azU6OUYXmHxv5QcHJ03nEqfZnS8sjc4oriAvYzuSQbJOns=
+	t=1736191266; cv=none; b=uKOseYb2XwfmPOrXM9CiWggKYjLj/TXh5rh3vnR2o4bn747hJorWgmodVExyYbQGPO3dRACrhIPVeA2iriB/nR3g+S9qK/5o9PtPAfkWFqbbHIQhqr3F8zM66/YT3FD8/X/5H6x6TdBWAaUeb1ssXAHmfBDnkzpG5ziCizAPb/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736189876; c=relaxed/simple;
-	bh=2OZKrS1dUkLlPuhPdhwGi7QnWZ+8XGoT1QDIIrdkEpI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SkQYYZcv1L+7d/n7nwCeq9bjYmQ4EDwsMBRrYqPSPc0E8HhDfnuqW5HQruhAzwgKm17FTJRFkgj4jSFBm7NX8SJsG1b2e0cKQwX6u1w+0YyfRg5XcUv0+g1nXWZN/4PqYrp1W36r3y6SQBIEIHWVggriCbJDDkXO8S/Fi3deZH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=075skolL; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1736191266; c=relaxed/simple;
+	bh=4ySUSAJ0vB6Fw+bFb5+oI1l044QaOGC+UqVjSNduFgw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PJnfFZVFqjmIGcm266oQbzfXNqr4+uWz9d0JfnYposeMNt7RylHoj+06kdWdlxQQWhJSYCyZnWLQRY1XixKCscdSjN2coPW/94f07si/gYJsU3JBb0V/+fUBFqV6L6WNd36WDX4KWDThvFzPfTPk6V2fM+1OjDOCtKIwvd8OUVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=EvFfMhRK; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="075skolL"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2165433e229so212423955ad.1
-        for <regressions@lists.linux.dev>; Mon, 06 Jan 2025 10:57:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736189874; x=1736794674; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aNADIekx2j0/enI87SMjtmQjX7teTUCuYI/dNHjl3o=;
-        b=075skolLsukqed0BLXR9EDcIOiHCMsKQQQ09q3+i6vtZzdeu3O7Md+rHzy1HurPiot
-         /uGEwjhkiBIHligF4d+jZiLjaV6qDXNW4YdyPnvFrHcY7zLns88xvSfE1UyWZR06P3BS
-         0L+NTmxlvlfmES0XqYXFHNiTr85ZvVypo4YP5ni+U9YLjjI33+EnUnG70nr5h3ndeXE5
-         zK6SJBBanmXYbePT0OpOVsKqm28/+Dw4C4DkGnTMwqLhnYv89wfzTk64ptLoIzlce7+Z
-         Nqzwhpwk1THZISFkFe+eVrKc++PghD9i17Bi4V8n61vsf5kuq58lkquPTuG7dUGanCLx
-         OzTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736189874; x=1736794674;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aNADIekx2j0/enI87SMjtmQjX7teTUCuYI/dNHjl3o=;
-        b=J28+of5cQgktYQQbf9Av+wLZM+tc0zgZFlQczJ/yu3Cc6A+lA3m3QZLDUpbMg/4Gr7
-         t08nESybAdrwMYm8OKfR1Fn6NASgfjwCWMkZ6W4bPnevgxKXRNODaejowVaa2jok8epX
-         hP0YxCWYhDMMzCLv6TGJ+44F/av8ABnMmE7UjXcuUHu9Zmz6c5G66xWomtrtLOsulOdV
-         tl0Zjem2Bt9k+V9Y2+HDQOxXJTc/f+nsnURfbDaD1/ladirVxIABEin7fDqyZ//f9aN5
-         aD+k7TcvUjZ9mh3UlvOihSGxvLTGeX5Jw38HpWMV9LxdVnJiULdwOVTYOEbgE+tI3JEV
-         WPww==
-X-Forwarded-Encrypted: i=1; AJvYcCUoZToRVCMRWCNMhcN3EwR5My8OlXCo4tIbz/aKvIllTfESpf2qgdqnQwD8o8k64B5EzTqMYJLWsPyb/g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxcpm6xESY+BsDkKeE9y60k7ANQl38Uk86AqplvI8VLO3bNKqwr
-	1HcbFNPQKhlxC+z3SdbmjNUZRQ+uwm4fQfrmbbrFaYj5beVFun/Q1qxy58QTm67vTgtXdgtC7rF
-	c3A==
-X-Google-Smtp-Source: AGHT+IFTUQyqLv9XSGGLv1fnVkWYgSUL4cT3Eg9R6oafiMKaRGpJd6axUPFHZbm1bK48Dbcs7JdFs6gpXoI=
-X-Received: from pgbcv4.prod.google.com ([2002:a05:6a02:4204:b0:7fd:4d08:df94])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:8412:b0:1e1:b727:1801
- with SMTP id adf61e73a8af0-1e5e07a55e8mr87767148637.27.1736189874330; Mon, 06
- Jan 2025 10:57:54 -0800 (PST)
-Date: Mon, 6 Jan 2025 10:57:53 -0800
-In-Reply-To: <20250101064928.389504-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="EvFfMhRK"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YRkKy25yPz9sTm;
+	Mon,  6 Jan 2025 20:11:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1736190662;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NRmWwyUBRYp+VaPBjk2Ubbo32d54ltoCUzwiU82RV3g=;
+	b=EvFfMhRKeTxgExEJ1eMmKhIE919wSuoQI99WzFqXxrwL39ZsmdzIoKQ4un8DHG+Gexea61
+	NWSS0fYr2vxjJOxQEW8f5JDQdSp1E3xDFFiWNnIAV9xAUYzeIzKbJVxIQ0fjk2DiVJb/Lk
+	tTx8E6GAiJOByTUW6w6lSQQQ7qfJ75j2iiyomBN7FdOL1iRqmmFUz4bSOJcONWR4JtdTsy
+	JR9r+KJjs6mTV7xtTRVggGIMUn8lfVtKMea/X0HeL23D/aLNN2Nj7XaBw3FxzxFQ4t5GUb
+	ONqrX+FcCZzVyWsU0tv+hDcG4fuXANu+rysNT8BRS3I3sII31foPc8vc5XIBhg==
+From: Frank Oltmanns <frank@oltmanns.dev>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,  Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>,  Bjorn Andersson <andersson@kernel.org>,
+  Konrad Dybcio <konradybcio@kernel.org>,  Chris Lew
+ <quic_clew@quicinc.com>,  Abel Vesa <abel.vesa@linaro.org>,
+  linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  regressions@lists.linux.dev,  stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
+In-Reply-To: <Zwj3jDhc9fRoCCn6@linaro.org> (Stephan Gerhold's message of "Fri,
+	11 Oct 2024 12:01:48 +0200")
+References: <20241010074246.15725-1-johan+linaro@kernel.org>
+	<Zwj3jDhc9fRoCCn6@linaro.org>
+Date: Mon, 06 Jan 2025 20:10:52 +0100
+Message-ID: <87wmf7ahc3.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250101064928.389504-1-pbonzini@redhat.com>
-Message-ID: <Z3wnsQQ67GBf1Vsb@google.com>
-Subject: Re: [PATCH] KVM: allow NULL writable argument to __kvm_faultin_pfn
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Christian Zigotzky <chzigotzky@xenosoft.de>, linuxppc-dev@lists.ozlabs.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Rspamd-Queue-Id: 4YRkKy25yPz9sTm
 
-On Wed, Jan 01, 2025, Paolo Bonzini wrote:
-> kvm_follow_pfn() is able to work with NULL in the .map_writable field
-> of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
-> despite KVM for e500 trying to use it.  Indeed .map_writable is not
-> particularly useful if the flags include FOLL_WRITE and readonly
-> guest memory is not supported, so add support to __kvm_faultin_pfn()
-> for this case.
+On 2024-10-11 at 12:01:48 +0200, Stephan Gerhold <stephan.gerhold@linaro.org> wrote:
+> On Thu, Oct 10, 2024 at 09:42:46AM +0200, Johan Hovold wrote:
+>> When using the in-kernel pd-mapper on x1e80100, client drivers often
+>> fail to communicate with the firmware during boot, which specifically
+>> breaks battery and USB-C altmode notifications. This has been observed
+>> to happen on almost every second boot (41%) but likely depends on probe
+>> order:
+>>
+>>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to send altmode request: 0x10 (-125)
+>>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to request altmode notifications: -125
+>>
+>>     ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: failed to send UCSI read request: -125
+>>
+>>     qcom_battmgr.pmic_glink_power_supply pmic_glink.power-supply.0: failed to request power notifications
+>>
+>> In the same setup audio also fails to probe albeit much more rarely:
+>>
+>>     PDR: avs/audio get domain list txn wait failed: -110
+>>     PDR: service lookup for avs/audio failed: -110
+>>
+>> Chris Lew has provided an analysis and is working on a fix for the
+>> ECANCELED (125) errors, but it is not yet clear whether this will also
+>> address the audio regression.
+>>
+>> Even if this was first observed on x1e80100 there is currently no reason
+>> to believe that these issues are specific to that platform.
+>>
+>> Disable the in-kernel pd-mapper for now, and make sure to backport this
+>> to stable to prevent users and distros from migrating away from the
+>> user-space service.
+>>
+>> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+>> Cc: stable@vger.kernel.org	# 6.11
+>> Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
+>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+>> ---
+>>
+>> It's now been over two months since I reported this regression, and even
+>> if we seem to be making some progress on at least some of these issues I
+>> think we need disable the pd-mapper temporarily until the fixes are in
+>> place (e.g. to prevent distros from dropping the user-space service).
+>>
+>
+> This is just a random thought, but I wonder if we could insert a delay
+> somewhere as temporary workaround to make the in-kernel pd-mapper more
+> reliable. I just tried replicating the userspace pd-mapper timing on
+> X1E80100 CRD by:
+>
+>  1. Disabling auto-loading of qcom_pd_mapper
+>     (modprobe.blacklist=qcom_pd_mapper)
+>  2. Adding a systemd service that does nothing except running
+>     "modprobe qcom_pd_mapper" at the same point in time where the
+>     userspace pd-mapper would usually be started.
 
-I would prefer to keep the sanity check to minimize the risk of a page fault
-handler not supporting opportunistic write mappings.  e500 is definitely the
-odd one out here.
+Thank you so much for this idea. I'm currently using this workaround on
+my sdm845 device (where the in-kernel pd-mapper is breaking the
+out-of-tree call audio functionality).
 
-What about adding a dedicated wrapper for getting a writable PFN?  E.g. (untested)
+Is there any work going on on making the timing of the in-kernel
+pd-mapper more reliable?
 
----
- arch/powerpc/kvm/e500_mmu_host.c | 2 +-
- arch/x86/kvm/vmx/vmx.c           | 3 +--
- include/linux/kvm_host.h         | 8 ++++++++
- 3 files changed, 10 insertions(+), 3 deletions(-)
+Cheers,
+  Frank
 
-diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
-index e5a145b578a4..2251bb30b8ec 100644
---- a/arch/powerpc/kvm/e500_mmu_host.c
-+++ b/arch/powerpc/kvm/e500_mmu_host.c
-@@ -444,7 +444,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 
- 	if (likely(!pfnmap)) {
- 		tsize_pages = 1UL << (tsize + 10 - PAGE_SHIFT);
--		pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
-+		pfn = kvm_faultin_writable_pfn(slot, gfn, &page);
- 		if (is_error_noslot_pfn(pfn)) {
- 			if (printk_ratelimit())
- 				pr_err("%s: real page not found for gfn %lx\n",
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 893366e53732..7012b583f2e8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6800,7 +6800,6 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
- 	struct page *refcounted_page;
- 	unsigned long mmu_seq;
- 	kvm_pfn_t pfn;
--	bool writable;
- 
- 	/* Defer reload until vmcs01 is the current VMCS. */
- 	if (is_guest_mode(vcpu)) {
-@@ -6836,7 +6835,7 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *vcpu)
- 	 * controls the APIC-access page memslot, and only deletes the memslot
- 	 * if APICv is permanently inhibited, i.e. the memslot won't reappear.
- 	 */
--	pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &refcounted_page);
-+	pfn = kvm_faultin_writable_pfn(slot, gfn, &refcounted_page);
- 	if (is_error_noslot_pfn(pfn))
- 		return;
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index c788d0bd952a..b0af7c7f99da 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1287,6 +1287,14 @@ static inline kvm_pfn_t kvm_faultin_pfn(struct kvm_vcpu *vcpu, gfn_t gfn,
- 				 write ? FOLL_WRITE : 0, writable, refcounted_page);
- }
- 
-+static inline kvm_pfn_t kvm_faultin_writable_pfn(const struct kvm_memory_slot *slot,
-+						 gfn_t gfn, struct page **refcounted_page)
-+{
-+	bool writable;
-+
-+	return __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, refcounted_page);
-+}
-+
- int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
- 			int len);
- int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len);
-
-base-commit: 2c3412e999738bfd60859c493ff47f5c268814a3
--- 
+> This seems to work quite well for me, I haven't seen any of the
+> mentioned errors anymore in a couple of boot tests. Clearly, there is no
+> actual bug in the in-kernel pd-mapper, only worse timing.
+>
+> Thanks,
+> Stephan
