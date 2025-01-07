@@ -1,133 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2991E2844;
-	Tue,  7 Jan 2025 10:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630201DED74
+	for <regressions@lists.linux.dev>; Tue,  7 Jan 2025 11:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736244146; cv=none; b=tJc7L8z+zd2WUn3TbaG/625Gkm/FJ1NVrbmdfATBxmrk/HnNibUXqDQt/xdYVGYKRF0oxfyZFVIJ5t3kb7NMS66IezikvyoWOpH2RBPs08MTozq8qFoVC3hhpaloUt6BdVMbAancL01UuTK6QEuF+6vRC1wT6SFSoBR9Mgx93Xc=
+	t=1736250078; cv=none; b=dJooBCThK5vswFC8I2Yeo0SMUCIpoPJg3P3yhOEpcP07mmUF0NkvpRahiWcHIIxsWqx0xEvocfBd8ZVIjKAu+W6Js9c29pL5dgy/Yk/j3Tgkyb79vDfQHltT7CHHcopGoEsqsSSxX25Sq+RwYN8rSfH4R7OgVz7aW5KfobNVvCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736244146; c=relaxed/simple;
-	bh=oADHnbZATzA2ZnfqMNg7CD77SamiQZ6JB3QIapIFSds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxRdImMOq50SH+7Ll+qysKvtF4fsRuaxEouQSXPoFKiDgeJ7OdbBtoDIUQ6wHaVYu7kWr9o5+Aj8NQoHnJR7/CbN3zZQU+Y38fQHx0+wAJ5ag7hsGj6kxO+YZc4rTiQjNVar9baiCyAQOrMMEW3Grc05qEojdXC1eV8nUjAZyT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY77fHPY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736250078; c=relaxed/simple;
+	bh=0pza3bwk5VB8BW9/XtO0Too3nId4ZFh7bd0shAKjjR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o/FiR8YJVasFpmpX1idl11BOFxyIha6H59Hgxhcn+ipXFCuAMCieLeRenUhkwxhwiqlrHpDcsAGxhBzUaDCvc568Ga3LhZZ+iWuLdlGGUh1f+CwrioisN1jbBHy45RLby5+Lr/y2anyCN0WBCrYhKeaw9Gx4C3Jtxt/D93ayANU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vQigwj9D; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY77fHPY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99308C4CED6;
-	Tue,  7 Jan 2025 10:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736244146;
-	bh=oADHnbZATzA2ZnfqMNg7CD77SamiQZ6JB3QIapIFSds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EY77fHPY31XBbldMniykkpECaCjyjIN85uISneldfTT3O9iYHzEQExVs+s4C+P0kb
-	 +/dXxDKoowmO1GKi4BGhpbCUxnO9TIVdNS0x6Ec5By+aYMWhYc6aJvLCFR3Lm5A8ho
-	 V/SXxpkaRLcaaXvMAVWQTNM5NYLVhUPniKmgOXBJLORfI2etDGi/OMrarclWQrewQO
-	 EuU5SL2hSxm+PcAFdL6wIdnV+EWL8kJ10SWJFEB6EG0rH9gXrJIa4xH6WMCl/9CuEc
-	 BnBcXLcsG6qs2CKuM5QCR0nEpos78ylI0Ii7ipEmFR3J+XyciKZXTXMVqyF8Y1ce12
-	 3SFBiw3/FSdTg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tV6Po-000000007Vf-2ihU;
-	Tue, 07 Jan 2025 11:02:24 +0100
-Date: Tue, 7 Jan 2025 11:02:24 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Frank Oltmanns <frank@oltmanns.dev>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Chris Lew <quic_clew@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-Message-ID: <Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
- <Zwj3jDhc9fRoCCn6@linaro.org>
- <87wmf7ahc3.fsf@oltmanns.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQigwj9D"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4b10dd44c8bso4331924137.3
+        for <regressions@lists.linux.dev>; Tue, 07 Jan 2025 03:41:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736250073; x=1736854873; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=p0U6xR+KMJ/ZDNg9k+5YwQ1r7WvfsnOjA6ep33rXvR4=;
+        b=vQigwj9DX9WBlZ74UIr40WTr6mUyLd92netrL6pI16ymNpyueily6B1SrIah5ALEUm
+         JA2JQ/wOUoQFtbMws0xJ2zPZOV8OsANAaSWg3U7vTlV0PqXsB/n1bgq+tuyabDr8RZaP
+         SEmuXNOMdqItHJKtsjqWnvZYdOssYHr32L4IHBu84MXnD4BvGUG2pmq6bCZ2nzX9ka+L
+         8z3/IWuKsdxNui9KKrcB9B4KOZ1HD2QZc6sM6AnWcDj37P5NOUiO6uX01/m+l/aulJlz
+         INQiBs44XnADb8QZPbA6mmha8RocaQJ0brYExafoYNndJL/kM4t42M3t3J5PVDA8daPr
+         ieFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736250073; x=1736854873;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p0U6xR+KMJ/ZDNg9k+5YwQ1r7WvfsnOjA6ep33rXvR4=;
+        b=OPQ7U5MufJBSJ+MWlYqEWqz4ayRZsDw7rhKo75tJjK6fCwLY27iPz3DC+L5ZzV88u0
+         ApDzkBAcEOYpeGY7msZrIXfP8Y3Gz2uozGhjx/nlVIVn1QX7ZtYLfxFEd79A6pvtUrc2
+         rOeqUCXwdS507vcO+Uc+FSGY4GLbHcqJaSHD75ypeAvgLBQlQBqYMO/KvKfHYi/FA3dQ
+         vy/HbRZICj9bJBReRRm9fkjp9Gh/8993ObsQa6CiG17S9Ue2rB1gcn4MT+jxqZmCjnfg
+         L0ruby7HtLIF3ZIzhkVuFOzdYhFRF+oELh9K+un2qHcC8MHDulLVbzfq7fVEpjug6xjq
+         Kvjg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+Tr9jMTZgl8Spc8EsvocJrbDeD671orGxSi7Buzb11CnfHRn1/7vZe0SO83NPbq+iENFxVvhwVKl9Mw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZiuzrezzXK2Y9VpBJMEW3BX15Q4fpS3vVrp4SZd6A8lWpuW1R
+	pY5Kt0pg9asVzwAiAYV87UzrA5yVyhZ++H7F27cbr48euguh7W53pQb1Md0Z1hHqlesZmxE3Ebu
+	isOA+DCmmZajZNm5ZU5iWMXHKhPpnUNXtKI3WUg==
+X-Gm-Gg: ASbGncu3VY3BTPq4fWgzh4gfKYw4K9yack4hMGoGZiJLv4vGhwnRReuyAV1vJcJ+BSh
+	8NZOo7+FRjNaZAfNVHrEnyC0G/9OS6zD/ZCI4gGw=
+X-Google-Smtp-Source: AGHT+IFlrZGEmTLCdRSkS8bxaWr/+Iy+4mFrJw/0APd/FQcIexe2OfzgbAXEcUybds18TRaa22+7xMfF3e2oAA6kj8A=
+X-Received: by 2002:a05:6102:50a7:b0:4b2:cbe5:fbc5 with SMTP id
+ ada2fe7eead31-4b2cc462478mr48491328137.20.1736250073246; Tue, 07 Jan 2025
+ 03:41:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wmf7ahc3.fsf@oltmanns.dev>
+References: <CA+G9fYsQmFT3m1J0uGfWGJjci8MQoB7BNcmhBR175PAbxx9fBg@mail.gmail.com>
+In-Reply-To: <CA+G9fYsQmFT3m1J0uGfWGJjci8MQoB7BNcmhBR175PAbxx9fBg@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 7 Jan 2025 17:11:02 +0530
+X-Gm-Features: AbW1kvYCfezhjbMbtQ_nJkahyeD4N9-Jae2I7ouGzU7ede-dxwkC-kxAeSWqs4M
+Message-ID: <CA+G9fYt3KUxWNkUbYaDtEL+Nj7fwKRq2eWj-KdVi7+AWFzrJ2Q@mail.gmail.com>
+Subject: Re: WARNING: CPU: 1 PID: 23 at kernel/workqueue.c:4317 enable_work
+ (kernel/workqueue.c:4317 (discriminator 1) kernel/workqueue.c:4488
+ (discriminator 1))
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-mm <linux-mm@kvack.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 06, 2025 at 08:10:52PM +0100, Frank Oltmanns wrote:
-> On 2024-10-11 at 12:01:48 +0200, Stephan Gerhold <stephan.gerhold@linaro.org> wrote:
-> > On Thu, Oct 10, 2024 at 09:42:46AM +0200, Johan Hovold wrote:
-> >> When using the in-kernel pd-mapper on x1e80100, client drivers often
-> >> fail to communicate with the firmware during boot, which specifically
-> >> breaks battery and USB-C altmode notifications. This has been observed
-> >> to happen on almost every second boot (41%) but likely depends on probe
-> >> order:
-> >>
-> >>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to send altmode request: 0x10 (-125)
-> >>     pmic_glink_altmode.pmic_glink_altmode pmic_glink.altmode.0: failed to request altmode notifications: -125
-> >>
-> >>     ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: failed to send UCSI read request: -125
-> >>
-> >>     qcom_battmgr.pmic_glink_power_supply pmic_glink.power-supply.0: failed to request power notifications
-> >>
-> >> In the same setup audio also fails to probe albeit much more rarely:
-> >>
-> >>     PDR: avs/audio get domain list txn wait failed: -110
-> >>     PDR: service lookup for avs/audio failed: -110
-> >>
-> >> Chris Lew has provided an analysis and is working on a fix for the
-> >> ECANCELED (125) errors, but it is not yet clear whether this will also
-> >> address the audio regression.
-> >>
-> >> Even if this was first observed on x1e80100 there is currently no reason
-> >> to believe that these issues are specific to that platform.
-> >>
-> >> Disable the in-kernel pd-mapper for now, and make sure to backport this
-> >> to stable to prevent users and distros from migrating away from the
-> >> user-space service.
-> >>
-> >> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
-> >> Cc: stable@vger.kernel.org	# 6.11
-> >> Link: https://lore.kernel.org/lkml/Zqet8iInnDhnxkT9@hovoldconsulting.com/
-> >> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> >> ---
-> >>
-> >> It's now been over two months since I reported this regression, and even
-> >> if we seem to be making some progress on at least some of these issues I
-> >> think we need disable the pd-mapper temporarily until the fixes are in
-> >> place (e.g. to prevent distros from dropping the user-space service).
-> >>
-> >
-> > This is just a random thought, but I wonder if we could insert a delay
-> > somewhere as temporary workaround to make the in-kernel pd-mapper more
-> > reliable. I just tried replicating the userspace pd-mapper timing on
-> > X1E80100 CRD by:
-> >
-> >  1. Disabling auto-loading of qcom_pd_mapper
-> >     (modprobe.blacklist=qcom_pd_mapper)
-> >  2. Adding a systemd service that does nothing except running
-> >     "modprobe qcom_pd_mapper" at the same point in time where the
-> >     userspace pd-mapper would usually be started.
-> 
-> Thank you so much for this idea. I'm currently using this workaround on
-> my sdm845 device (where the in-kernel pd-mapper is breaking the
-> out-of-tree call audio functionality).
+On Mon, 6 Jan 2025 at 23:45, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> The following warnings have been noticed on today's Linux next kernel
+> on the arm64, x86 and arm devices.
+>
+> This is first seen on next-20250106.
+> GOOD: next-20241220
+> BAD: next-20250106
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Boot warnings logs:
+> ===============
+> [    0.132875] workqueue: work disable count underflowed
+> [    0.137989] WARNING: CPU: 1 PID: 23 at kernel/workqueue.c:4317
+> enable_work (kernel/workqueue.c:4317 (discriminator 1)
+> kernel/workqueue.c:4488 (discriminator 1))
+> [    0.146001] Modules linked in:
+> [    0.149098] CPU: 1 UID: 0 PID: 23 Comm: cpuhp/1 Not tainted
+> 6.13.0-rc5-next-20250106 #1
+> [    0.157180] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [    0.162892] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    0.169918] pc : enable_work (kernel/workqueue.c:4317
+> (discriminator 1) kernel/workqueue.c:4488 (discriminator 1))
+> [    0.173886] lr : enable_work (kernel/workqueue.c:4317
+> (discriminator 1) kernel/workqueue.c:4488 (discriminator 1))
+>
 
-Thanks for letting us know that the audio issue affects sdm845 as well
-(I don't seem to hit it on sc8280xp and the X13s).
+Anders bisected this regression and found the bad commit,
 
-> Is there any work going on on making the timing of the in-kernel
-> pd-mapper more reliable?
+# first bad commit:
+    [adcfb264c3ed51fbbf5068ddf10d309a63683868]
+     vmstat: disable vmstat_work on vmstat_cpu_down_prep()
 
-The ECANCELLED regression has now been fixed, but the audio issue
-remains to be addressed (I think Bjorn has done some preliminary
-investigation).
+Git bisect log,
+-----------
+# bad: [9d89551994a430b50c4fffcb1e617a057fa76e20] Linux 6.13-rc6
+# good: [fc033cf25e612e840e545f8d5ad2edd6ba613ed5] Linux 6.13-rc5
+git bisect start 'v6.13-rc6' 'v6.13-rc5'
+# good: [ee063c23e48212a6af163f8d45560a92fcaec125] Merge tag
+'nios2_update_for_v6.14' of
+git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux
+git bisect good ee063c23e48212a6af163f8d45560a92fcaec125
+# good: [a984e234fcdce25a276be882c799e5fda1b32812] Merge tag
+'io_uring-6.13-20250103' of git://git.kernel.dk/linux
+git bisect good a984e234fcdce25a276be882c799e5fda1b32812
+# good: [7a5b6fc8bd70cbb22b1e9eacd7edaf5626e9fc74] Merge tag
+'clk-fixes-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+git bisect good 7a5b6fc8bd70cbb22b1e9eacd7edaf5626e9fc74
+# good: [d0e6983a6d1719738cf8d13982a68094f0a1872a] mm: shmem: fix
+incorrect index alignment for within_size policy
+git bisect good d0e6983a6d1719738cf8d13982a68094f0a1872a
+# bad: [0210d251162f4033350a94a43f95b1c39ec84a90] scripts/sorttable:
+fix orc_sort_cmp() to maintain symmetry and transitivity
+git bisect bad 0210d251162f4033350a94a43f95b1c39ec84a90
+# bad: [8debfc5b1aa569d3d2ac836af2553da037611c61] mm/damon/core: fix
+new damon_target objects leaks on damon_commit_targets()
+git bisect bad 8debfc5b1aa569d3d2ac836af2553da037611c61
+# bad: [adcfb264c3ed51fbbf5068ddf10d309a63683868] vmstat: disable
+vmstat_work on vmstat_cpu_down_prep()
+git bisect bad adcfb264c3ed51fbbf5068ddf10d309a63683868
+# good: [d77b90d2b2642655b5f60953c36ad887257e1802] mm: shmem: fix the
+update of 'shmem_falloc->nr_unswapped'
+git bisect good d77b90d2b2642655b5f60953c36ad887257e1802
+# first bad commit: [adcfb264c3ed51fbbf5068ddf10d309a63683868] vmstat:
+disable vmstat_work on vmstat_cpu_down_prep()
 
-There is also a NULL-deref in an MHI path that is triggered by the
-in-kernel pd-mapper for which Chris has posted a workaround here:
-
-	https://lore.kernel.org/r/20241104-qrtr_mhi-v1-1-79adf7e3bba5@quicinc.com
-
-Johan
+- Naresh
