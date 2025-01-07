@@ -1,114 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F201E47C8
-	for <regressions@lists.linux.dev>; Tue,  7 Jan 2025 12:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9971E19ABCE;
+	Tue,  7 Jan 2025 13:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736252933; cv=none; b=qQp67Up/8noMqd3HO37K/WQROTSPXU6dHR8mArO25CAm00+ma7MvZzT7kiFQoZE0kup8e8lsHmOSBqub4p/v5IIlSvOw6RMeF/HmKeLbjtdCHZVtfRkS6YmBIKBOL8/Vr3ePbYoNDHVlSpAkFtQycfk31q6bjk3dOnFfUhjApGI=
+	t=1736255962; cv=none; b=AlhSsUgO2SLXPCTDxRQD3VNviczxVsOaY/6qZtTvhE7Y44qx+WY94+zQkf68Peg8L33GLOCtz4BJWWnPhUpxndyfVHEY5lUpL5yQgjnGy+mmxwclthclTJOVLvNPrF5ghTvy2OgYU82abn5IguFE7MNpNXqfyfJzkaW3PgqlxLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736252933; c=relaxed/simple;
-	bh=QojtHw8LGUnm3rpVHZvfd9J5sm2jpmcnC6VJnQLY43w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lkqVocoswXgbasoyl6oAg36JvTKjyFv/Q9ndvDN7EBPFlfHhqC5sPoUX9FSPupCie+kwM87pGg2DmJLZchCWz0gA2Tq4bMwsl0zz+eEfQbwASSNp8wPasbvlGR9RntDeDsopbkhBinywXPOOeArXvmQtu3Hj+w/B82yViBsyAUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=abvcRWwj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1736255962; c=relaxed/simple;
+	bh=3Wqoaaw8eFj7KSekPj1twbgKltqjloEP8R1TKuD+RmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nqeT6vYfQEkWZky9gBE+NxSyis5mKWpKAVN2jyAENgzG6Z9UTbaXdfTrPRPC36Z/Bkx1JUmDtT+KxjxQvP6zBnx2uAJmQXvVQjMJ2tvi0sqTlZF0nsYjNoxDRhwy2dHVIOHgGCwOlUevxQg2utFmcvrbJKgHl3jxaGiY+rUO7AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3FXqKEn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abvcRWwj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736252932; x=1767788932;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QojtHw8LGUnm3rpVHZvfd9J5sm2jpmcnC6VJnQLY43w=;
-  b=abvcRWwjHh+G0LyVkdHTvAIXNW1hUnMIXwP6wQtDV/EZrxXjDz/xdgbm
-   ZEC8S9CzXKufRZcNsOh8cR4M4PB7om9QkOr2zs+AvibNF2uMALdiwa9/G
-   aZTSZyE9hY2ACVlnVEo9dd8W2CAGab2TG1dHuj078jGhFF/XvuQs+keqw
-   rKF1x9lMkSqCUMtW8pN494khLt/KtNZWvHkdxg42wdsUhfPE86Sxs4yin
-   jpcEhFdMdyxJdPze7/zS48rwdOlR5DHrWfP0iyxwhbxoZus5ycPIDHHQ0
-   VDyLRYi7VcBvLCZXyhMKMWMZt/J+3oQQmkmBPKTiTDb6D/YFqvbS0WlY1
-   g==;
-X-CSE-ConnectionGUID: 0rGjcb1NSmCcW/o1yfXbjQ==
-X-CSE-MsgGUID: 37I2GVReRqGfdjSPTxa0yQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="61812287"
-X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
-   d="scan'208";a="61812287"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 04:28:52 -0800
-X-CSE-ConnectionGUID: hhglC8DaS+C5uTVkKsSkPg==
-X-CSE-MsgGUID: /GyccoMoS+Sl2SiIElHSBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
-   d="scan'208";a="102941846"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa008.fm.intel.com with ESMTP; 07 Jan 2025 04:28:50 -0800
-Message-ID: <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
-Date: Tue, 7 Jan 2025 14:29:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3FXqKEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DAE6C4CEDD;
+	Tue,  7 Jan 2025 13:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736255962;
+	bh=3Wqoaaw8eFj7KSekPj1twbgKltqjloEP8R1TKuD+RmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n3FXqKEnV2Uk1LwH8d3Ftv2LcNrad8FM3suXsuDIZnZ3NDCRn2AenzqiYuk0Mp0L6
+	 kEIxR365YfrJ9zEu9VO/7u7tgTQs64Fp+R5sWJxo6kzDYy8tt1Q9GeRPOU4GR4h6c0
+	 8zQ+teqR7Oq7vAhOM0AeHAJnbyvJtl1cg64faErT74drz/Rd5VL7YS4icQpnO5kyUS
+	 JD5N0MQSuet1ttLJ9hgmJcczDRM/FsGnSyPr7VJhMvNzx9Om7uwr86/6pCCGuItkx4
+	 mTscB/pgXhVjdyJlql9Q63az3SP4GmhHMM5K8+pG8oD1nOFFscgeYU9BibG++6b6YU
+	 VDZmK9eVJqL+A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tV9UO-000000006Mg-2yON;
+	Tue, 07 Jan 2025 14:19:20 +0100
+Date: Tue, 7 Jan 2025 14:19:20 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Markus.Elfring@web.de, quic_mrana@quicinc.com, rafael@kernel.org,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+Message-ID: <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
+References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
+ <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: xhci port capability storage change broke
- fastboot android bootloader utility
-To: Forest <forestix@nom.one>
-Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net>
- <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com>
- <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com>
 
-On 6.1.2025 1.42, Forest wrote:
-> On Thu, 2 Jan 2025 16:13:34 +0200, Mathias Nyman wrote:
+On Mon, Nov 11, 2024 at 02:11:53PM +0530, Krishna chaitanya chundru wrote:
+> The Controller driver is the parent device of the PCIe host bridge,
+> PCI-PCI bridge and PCIe endpoint as shown below.
 > 
->> It's not clear to me why this patch would cause regression.
->>
->> Could you enable xhci and usb core dynamic debug before connecting the
->> device, and then share dmesg after the issue is triggered.
->>
->> dmesg of a working case would also be good to have for comparison.
+>         PCIe controller(Top level parent & parent of host bridge)
+>                         |
+>                         v
+>         PCIe Host bridge(Parent of PCI-PCI bridge)
+>                         |
+>                         v
+>         PCI-PCI bridge(Parent of endpoint driver)
+>                         |
+>                         v
+>                 PCIe endpoint driver
 > 
-> I booted kernel 9b780c845fb6 (the last good one), logged in to my desktop,
-> waited a couple of minutes to let things settle, and then ran 'fastboot
-> getvar kernel' twice with the android device in bootloader mode.
-> Here's the dmesg output:
+> Now, when the controller device goes to runtime suspend, PM framework
+> will check the runtime PM state of the child device (host bridge) and
+> will find it to be disabled. So it will allow the parent (controller
+> device) to go to runtime suspend. Only if the child device's state was
+> 'active' it will prevent the parent to get suspended.
 
-Thanks for the logs.
-  
-Looks like we enable USB2 Link Power Management (LPM) in the failing case
-> 
-> [  226.002756] xhci_hcd 0000:0c:00.0: enable port 3 USB2 hardware LPM
-> [  226.002765] xhci_hcd 0000:0c:00.0: Set up evaluate context for LPM MEL change.
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Does disabling USB2 hardware LPM for the device make it work again?
+> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+>  		pcie_bus_configure_settings(child);
+>  
+>  	pci_bus_add_devices(bus);
+> +
+> +	/*
+> +	 * Ensure pm_runtime_enable() is called for the controller drivers,
+> +	 * before calling pci_host_probe() as pm frameworks expects if the
+> +	 * parent device supports runtime pm then it needs to enabled before
+> +	 * child runtime pm.
+> +	 */
+> +	pm_runtime_set_active(&bridge->dev);
+> +	pm_runtime_no_callbacks(&bridge->dev);
+> +	devm_pm_runtime_enable(&bridge->dev);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_host_probe);
 
-Adding USB_QUIRK_NO_LPM quirk "k" for your device vid:pid should do it.
-i.e. add "usbcore.quirks=0fce:0dde:k" parameter to your kernel cmdline.
+I just noticed that this change in 6.13-rc1 is causing the following
+warning on resume from suspend on machines like the Lenovo ThinkPad
+X13s:
 
-Or alternatively disable usb2 lpm  during runtime via sysfs
-(after enumeration, assuming device is "1-3" as in the log):
-# echo 0 > /sys/bus/usb/devices/1-3/power/usb2_hardware_lpm
+	pci0004:00: pcie4: Enabling runtime PM for inactive device with active children
 
-If those work then we need to figure out if we incorrectly try to enable
-USB2 hardware LPM, or if device just can't handle LPM even if it claims
-to be LPM capable.
+which may have unpopulated ports (this laptop SKU does not have a modem).
 
-Host hardware LPM capability can be checked from xhci reg-ext-protocol
-fields from debugfs.
-cat /sys/kernel/debug/usb/xhci/0000:0c:00.0/reg-ext-protocol:*
-(please print content of _all_ reg_ext_protocol* files, LPM capability is
-bit 19 of EXTCAP_PORTINFO)
+Reverting dc421bb3c0db ("PCI: Enable runtime PM of the host bridge")
+makes the warning go away.
 
-Device USB2 LPM capability can be checked from the devices BOS descriptor,
-visible (as sudo/root) with lsusb -v -d 0fce:0dde
+Johan
 
-Thanks
-Mathias
+
+#regzbot introduced: dc421bb3c0db
