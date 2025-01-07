@@ -1,143 +1,114 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630201DED74
-	for <regressions@lists.linux.dev>; Tue,  7 Jan 2025 11:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F201E47C8
+	for <regressions@lists.linux.dev>; Tue,  7 Jan 2025 12:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736250078; cv=none; b=dJooBCThK5vswFC8I2Yeo0SMUCIpoPJg3P3yhOEpcP07mmUF0NkvpRahiWcHIIxsWqx0xEvocfBd8ZVIjKAu+W6Js9c29pL5dgy/Yk/j3Tgkyb79vDfQHltT7CHHcopGoEsqsSSxX25Sq+RwYN8rSfH4R7OgVz7aW5KfobNVvCQ=
+	t=1736252933; cv=none; b=qQp67Up/8noMqd3HO37K/WQROTSPXU6dHR8mArO25CAm00+ma7MvZzT7kiFQoZE0kup8e8lsHmOSBqub4p/v5IIlSvOw6RMeF/HmKeLbjtdCHZVtfRkS6YmBIKBOL8/Vr3ePbYoNDHVlSpAkFtQycfk31q6bjk3dOnFfUhjApGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736250078; c=relaxed/simple;
-	bh=0pza3bwk5VB8BW9/XtO0Too3nId4ZFh7bd0shAKjjR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o/FiR8YJVasFpmpX1idl11BOFxyIha6H59Hgxhcn+ipXFCuAMCieLeRenUhkwxhwiqlrHpDcsAGxhBzUaDCvc568Ga3LhZZ+iWuLdlGGUh1f+CwrioisN1jbBHy45RLby5+Lr/y2anyCN0WBCrYhKeaw9Gx4C3Jtxt/D93ayANU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vQigwj9D; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1736252933; c=relaxed/simple;
+	bh=QojtHw8LGUnm3rpVHZvfd9J5sm2jpmcnC6VJnQLY43w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lkqVocoswXgbasoyl6oAg36JvTKjyFv/Q9ndvDN7EBPFlfHhqC5sPoUX9FSPupCie+kwM87pGg2DmJLZchCWz0gA2Tq4bMwsl0zz+eEfQbwASSNp8wPasbvlGR9RntDeDsopbkhBinywXPOOeArXvmQtu3Hj+w/B82yViBsyAUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=abvcRWwj; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQigwj9D"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4b10dd44c8bso4331924137.3
-        for <regressions@lists.linux.dev>; Tue, 07 Jan 2025 03:41:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736250073; x=1736854873; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p0U6xR+KMJ/ZDNg9k+5YwQ1r7WvfsnOjA6ep33rXvR4=;
-        b=vQigwj9DX9WBlZ74UIr40WTr6mUyLd92netrL6pI16ymNpyueily6B1SrIah5ALEUm
-         JA2JQ/wOUoQFtbMws0xJ2zPZOV8OsANAaSWg3U7vTlV0PqXsB/n1bgq+tuyabDr8RZaP
-         SEmuXNOMdqItHJKtsjqWnvZYdOssYHr32L4IHBu84MXnD4BvGUG2pmq6bCZ2nzX9ka+L
-         8z3/IWuKsdxNui9KKrcB9B4KOZ1HD2QZc6sM6AnWcDj37P5NOUiO6uX01/m+l/aulJlz
-         INQiBs44XnADb8QZPbA6mmha8RocaQJ0brYExafoYNndJL/kM4t42M3t3J5PVDA8daPr
-         ieFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736250073; x=1736854873;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p0U6xR+KMJ/ZDNg9k+5YwQ1r7WvfsnOjA6ep33rXvR4=;
-        b=OPQ7U5MufJBSJ+MWlYqEWqz4ayRZsDw7rhKo75tJjK6fCwLY27iPz3DC+L5ZzV88u0
-         ApDzkBAcEOYpeGY7msZrIXfP8Y3Gz2uozGhjx/nlVIVn1QX7ZtYLfxFEd79A6pvtUrc2
-         rOeqUCXwdS507vcO+Uc+FSGY4GLbHcqJaSHD75ypeAvgLBQlQBqYMO/KvKfHYi/FA3dQ
-         vy/HbRZICj9bJBReRRm9fkjp9Gh/8993ObsQa6CiG17S9Ue2rB1gcn4MT+jxqZmCjnfg
-         L0ruby7HtLIF3ZIzhkVuFOzdYhFRF+oELh9K+un2qHcC8MHDulLVbzfq7fVEpjug6xjq
-         Kvjg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Tr9jMTZgl8Spc8EsvocJrbDeD671orGxSi7Buzb11CnfHRn1/7vZe0SO83NPbq+iENFxVvhwVKl9Mw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZiuzrezzXK2Y9VpBJMEW3BX15Q4fpS3vVrp4SZd6A8lWpuW1R
-	pY5Kt0pg9asVzwAiAYV87UzrA5yVyhZ++H7F27cbr48euguh7W53pQb1Md0Z1hHqlesZmxE3Ebu
-	isOA+DCmmZajZNm5ZU5iWMXHKhPpnUNXtKI3WUg==
-X-Gm-Gg: ASbGncu3VY3BTPq4fWgzh4gfKYw4K9yack4hMGoGZiJLv4vGhwnRReuyAV1vJcJ+BSh
-	8NZOo7+FRjNaZAfNVHrEnyC0G/9OS6zD/ZCI4gGw=
-X-Google-Smtp-Source: AGHT+IFlrZGEmTLCdRSkS8bxaWr/+Iy+4mFrJw/0APd/FQcIexe2OfzgbAXEcUybds18TRaa22+7xMfF3e2oAA6kj8A=
-X-Received: by 2002:a05:6102:50a7:b0:4b2:cbe5:fbc5 with SMTP id
- ada2fe7eead31-4b2cc462478mr48491328137.20.1736250073246; Tue, 07 Jan 2025
- 03:41:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="abvcRWwj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736252932; x=1767788932;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QojtHw8LGUnm3rpVHZvfd9J5sm2jpmcnC6VJnQLY43w=;
+  b=abvcRWwjHh+G0LyVkdHTvAIXNW1hUnMIXwP6wQtDV/EZrxXjDz/xdgbm
+   ZEC8S9CzXKufRZcNsOh8cR4M4PB7om9QkOr2zs+AvibNF2uMALdiwa9/G
+   aZTSZyE9hY2ACVlnVEo9dd8W2CAGab2TG1dHuj078jGhFF/XvuQs+keqw
+   rKF1x9lMkSqCUMtW8pN494khLt/KtNZWvHkdxg42wdsUhfPE86Sxs4yin
+   jpcEhFdMdyxJdPze7/zS48rwdOlR5DHrWfP0iyxwhbxoZus5ycPIDHHQ0
+   VDyLRYi7VcBvLCZXyhMKMWMZt/J+3oQQmkmBPKTiTDb6D/YFqvbS0WlY1
+   g==;
+X-CSE-ConnectionGUID: 0rGjcb1NSmCcW/o1yfXbjQ==
+X-CSE-MsgGUID: 37I2GVReRqGfdjSPTxa0yQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11308"; a="61812287"
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="61812287"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2025 04:28:52 -0800
+X-CSE-ConnectionGUID: hhglC8DaS+C5uTVkKsSkPg==
+X-CSE-MsgGUID: /GyccoMoS+Sl2SiIElHSBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,295,1728975600"; 
+   d="scan'208";a="102941846"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa008.fm.intel.com with ESMTP; 07 Jan 2025 04:28:50 -0800
+Message-ID: <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
+Date: Tue, 7 Jan 2025 14:29:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYsQmFT3m1J0uGfWGJjci8MQoB7BNcmhBR175PAbxx9fBg@mail.gmail.com>
-In-Reply-To: <CA+G9fYsQmFT3m1J0uGfWGJjci8MQoB7BNcmhBR175PAbxx9fBg@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 7 Jan 2025 17:11:02 +0530
-X-Gm-Features: AbW1kvYCfezhjbMbtQ_nJkahyeD4N9-Jae2I7ouGzU7ede-dxwkC-kxAeSWqs4M
-Message-ID: <CA+G9fYt3KUxWNkUbYaDtEL+Nj7fwKRq2eWj-KdVi7+AWFzrJ2Q@mail.gmail.com>
-Subject: Re: WARNING: CPU: 1 PID: 23 at kernel/workqueue.c:4317 enable_work
- (kernel/workqueue.c:4317 (discriminator 1) kernel/workqueue.c:4488
- (discriminator 1))
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-mm <linux-mm@kvack.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: xhci port capability storage change broke
+ fastboot android bootloader utility
+To: Forest <forestix@nom.one>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net>
+ <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com>
+ <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 6 Jan 2025 at 23:45, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The following warnings have been noticed on today's Linux next kernel
-> on the arm64, x86 and arm devices.
->
-> This is first seen on next-20250106.
-> GOOD: next-20241220
-> BAD: next-20250106
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Boot warnings logs:
-> ===============
-> [    0.132875] workqueue: work disable count underflowed
-> [    0.137989] WARNING: CPU: 1 PID: 23 at kernel/workqueue.c:4317
-> enable_work (kernel/workqueue.c:4317 (discriminator 1)
-> kernel/workqueue.c:4488 (discriminator 1))
-> [    0.146001] Modules linked in:
-> [    0.149098] CPU: 1 UID: 0 PID: 23 Comm: cpuhp/1 Not tainted
-> 6.13.0-rc5-next-20250106 #1
-> [    0.157180] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [    0.162892] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    0.169918] pc : enable_work (kernel/workqueue.c:4317
-> (discriminator 1) kernel/workqueue.c:4488 (discriminator 1))
-> [    0.173886] lr : enable_work (kernel/workqueue.c:4317
-> (discriminator 1) kernel/workqueue.c:4488 (discriminator 1))
->
+On 6.1.2025 1.42, Forest wrote:
+> On Thu, 2 Jan 2025 16:13:34 +0200, Mathias Nyman wrote:
+> 
+>> It's not clear to me why this patch would cause regression.
+>>
+>> Could you enable xhci and usb core dynamic debug before connecting the
+>> device, and then share dmesg after the issue is triggered.
+>>
+>> dmesg of a working case would also be good to have for comparison.
+> 
+> I booted kernel 9b780c845fb6 (the last good one), logged in to my desktop,
+> waited a couple of minutes to let things settle, and then ran 'fastboot
+> getvar kernel' twice with the android device in bootloader mode.
+> Here's the dmesg output:
 
-Anders bisected this regression and found the bad commit,
+Thanks for the logs.
+  
+Looks like we enable USB2 Link Power Management (LPM) in the failing case
+> 
+> [  226.002756] xhci_hcd 0000:0c:00.0: enable port 3 USB2 hardware LPM
+> [  226.002765] xhci_hcd 0000:0c:00.0: Set up evaluate context for LPM MEL change.
 
-# first bad commit:
-    [adcfb264c3ed51fbbf5068ddf10d309a63683868]
-     vmstat: disable vmstat_work on vmstat_cpu_down_prep()
+Does disabling USB2 hardware LPM for the device make it work again?
 
-Git bisect log,
------------
-# bad: [9d89551994a430b50c4fffcb1e617a057fa76e20] Linux 6.13-rc6
-# good: [fc033cf25e612e840e545f8d5ad2edd6ba613ed5] Linux 6.13-rc5
-git bisect start 'v6.13-rc6' 'v6.13-rc5'
-# good: [ee063c23e48212a6af163f8d45560a92fcaec125] Merge tag
-'nios2_update_for_v6.14' of
-git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux
-git bisect good ee063c23e48212a6af163f8d45560a92fcaec125
-# good: [a984e234fcdce25a276be882c799e5fda1b32812] Merge tag
-'io_uring-6.13-20250103' of git://git.kernel.dk/linux
-git bisect good a984e234fcdce25a276be882c799e5fda1b32812
-# good: [7a5b6fc8bd70cbb22b1e9eacd7edaf5626e9fc74] Merge tag
-'clk-fixes-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
-git bisect good 7a5b6fc8bd70cbb22b1e9eacd7edaf5626e9fc74
-# good: [d0e6983a6d1719738cf8d13982a68094f0a1872a] mm: shmem: fix
-incorrect index alignment for within_size policy
-git bisect good d0e6983a6d1719738cf8d13982a68094f0a1872a
-# bad: [0210d251162f4033350a94a43f95b1c39ec84a90] scripts/sorttable:
-fix orc_sort_cmp() to maintain symmetry and transitivity
-git bisect bad 0210d251162f4033350a94a43f95b1c39ec84a90
-# bad: [8debfc5b1aa569d3d2ac836af2553da037611c61] mm/damon/core: fix
-new damon_target objects leaks on damon_commit_targets()
-git bisect bad 8debfc5b1aa569d3d2ac836af2553da037611c61
-# bad: [adcfb264c3ed51fbbf5068ddf10d309a63683868] vmstat: disable
-vmstat_work on vmstat_cpu_down_prep()
-git bisect bad adcfb264c3ed51fbbf5068ddf10d309a63683868
-# good: [d77b90d2b2642655b5f60953c36ad887257e1802] mm: shmem: fix the
-update of 'shmem_falloc->nr_unswapped'
-git bisect good d77b90d2b2642655b5f60953c36ad887257e1802
-# first bad commit: [adcfb264c3ed51fbbf5068ddf10d309a63683868] vmstat:
-disable vmstat_work on vmstat_cpu_down_prep()
+Adding USB_QUIRK_NO_LPM quirk "k" for your device vid:pid should do it.
+i.e. add "usbcore.quirks=0fce:0dde:k" parameter to your kernel cmdline.
 
-- Naresh
+Or alternatively disable usb2 lpm  during runtime via sysfs
+(after enumeration, assuming device is "1-3" as in the log):
+# echo 0 > /sys/bus/usb/devices/1-3/power/usb2_hardware_lpm
+
+If those work then we need to figure out if we incorrectly try to enable
+USB2 hardware LPM, or if device just can't handle LPM even if it claims
+to be LPM capable.
+
+Host hardware LPM capability can be checked from xhci reg-ext-protocol
+fields from debugfs.
+cat /sys/kernel/debug/usb/xhci/0000:0c:00.0/reg-ext-protocol:*
+(please print content of _all_ reg_ext_protocol* files, LPM capability is
+bit 19 of EXTCAP_PORTINFO)
+
+Device USB2 LPM capability can be checked from the devices BOS descriptor,
+visible (as sudo/root) with lsusb -v -d 0fce:0dde
+
+Thanks
+Mathias
