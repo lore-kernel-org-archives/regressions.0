@@ -1,93 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A4E335BA;
-	Wed,  8 Jan 2025 14:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5F1FDE15;
+	Wed,  8 Jan 2025 14:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736345195; cv=none; b=uHoN8mWYJ+dQYlXrA2Y4x1Xrg3bn9E/z2KdAMG+Xn1LjosgACdtn18Qt5vGrUFnQMxoS/+9ym/tAGoMsUBhXJQcTWtYFqd45V5ed7ijU+6BojG/Q/ILUfqk4e5NkjkKT4WqmJFno46lFDLCb/WOyZqGhY5jmvb2ahHR7ksUkptM=
+	t=1736347145; cv=none; b=KD4UGykLQoD0CO+52ZAzB5N0HhOjxfS8a6vNIx3LEy4ntiXQxKPHs+1dzH7zItZ4JVzmz1ONWvw4rW/mAua7g4QWXl5RmAebvHOPDm4WfnqtFOlG5dzrNNecnfqON0jTShLmd6b4/EXpJH4BwE36btHfqwjaCvLEeXIsg814QDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736345195; c=relaxed/simple;
-	bh=/bSSok/L1u3GkPDCyoTVot0lx7NpmTj6KZbxWz+MHEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=onjHeTi8paGgDCp8ZTYimZ/wQYWPEVW21Dz+lT5vjSGhWj9FxJd3CEl4YZ2RlUND2ejV89n6KUb8HkgdihoSIXOmMcIKBNAZvYhvE9DDidViRVQiN1JBd9/TdwccPWyD2QcJFHeJ0R+VODUk2gYsvpXNh91uCdSkiE5FBlOyUB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9oY2mKn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736347145; c=relaxed/simple;
+	bh=8Ia+Munolo2hOcL7KhB/f4+uIkZ6KctIJfvMEBR3UtU=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=YTxhCgue6XIT8jHT+Ol34mrXsADyVe357BmREJ+r7OtzSjPd/qejkuy25kHE4Ravf7aco/94CM3eATbbQTE3/2NyibRBlKMmk3zIvxMh42z0YlppTWAwUOBB5jWA/hYEepgDIwtxmDh5FZuxwFSSepi0yWBBWlLe0SgNi58T1Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wvjfuGAe; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9oY2mKn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB53C4CED3;
-	Wed,  8 Jan 2025 14:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736345194;
-	bh=/bSSok/L1u3GkPDCyoTVot0lx7NpmTj6KZbxWz+MHEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c9oY2mKnZ0yyu4trMUOd36WJ1SbzDYXqfD7T5LRGRmVPUO8lSVyVYDUuDotMGWv3S
-	 +lpkickgIpAuVk8xp/TRxCq/rD29INGpkmo2KZPdSgvUkZAAzcvvxlQeobd8LSO9w1
-	 4cIV/FLJ6J0of0wBW1+BNmI2kzVLdwZ11pe0LfKfkEy7Un1gQQ98blaxkSX3Sykvu9
-	 lvhOmltrYs29nzv9uEM1KT7zkJo1Tr/8W1IO58KBI40bjGEbuP1F9WZaDoGugpPJHI
-	 XwLJYkUUfSe7v9Y7dChWPzb1EcbIHFYWYqUPULce58nkcQkyq7OLpVojBMPGCnBRQm
-	 oava1y/+/HfwQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tVWhe-000000005Ia-2oyd;
-	Wed, 08 Jan 2025 15:06:34 +0100
-Date: Wed, 8 Jan 2025 15:06:34 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Frank Oltmanns <frank@oltmanns.dev>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Chris Lew <quic_clew@quicinc.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-Message-ID: <Z36Gag6XhOrsIXqK@hovoldconsulting.com>
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
- <Zwj3jDhc9fRoCCn6@linaro.org>
- <87wmf7ahc3.fsf@oltmanns.dev>
- <Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wvjfuGAe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=0Q5SkpUB7nvYDr5G8znzFgNJ4lPKjcvCCPURLA9g7mQ=; t=1736347143; x=1736779143; 
+	b=wvjfuGAeJRwyE14j8QD68eomPWo/8wMYzrLBa2YMriscG2nDa3sHImqu5UY5/ZJ7eG/7/aya/Yx
+	Sap+GN56V5Bg7H5lduyHqnggGFz5esaCQwGu8eopq7A4PqQuyyl1WrE1sSoLqfDxQrooDdmUlsoDk
+	igB/cN6o3iEMYnSv3/MH72IEdxejMonpD4zpGqZ6zeFkOunJmSXdUDrTMGYS2QQjLN1fSy2LjHvT8
+	F6Gya6or+uSDJDAkj1ly0zdGFG6yvVUaR8HmaLVNapI08JpAGQJhsEE/lIiUzvhZfv4f1N4J41j5a
+	8eb/fTyd8B9oFj8EqzeNm9joTY6JbsotYj3g==;
+Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1tVXCw-006qbM-24;
+	Wed, 08 Jan 2025 15:38:54 +0100
+Message-ID: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
+Date: Wed, 8 Jan 2025 15:38:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+To: Adrian Huang <ahuang12@lenovo.com>, Christoph Hellwig <hch@lst.de>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: [Regression] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1736347143;3f0162a6;
+X-HE-SMSGID: 1tVXCw-006qbM-24
 
-On Tue, Jan 07, 2025 at 11:02:24AM +0100, Johan Hovold wrote:
-> On Mon, Jan 06, 2025 at 08:10:52PM +0100, Frank Oltmanns wrote:
+[side note TWIMC: regression tracking is sadly kinda dormant temporarily
+(hopefully this will change again soon), but this was brought to my
+attention and looked kinda important]
 
-> > Thank you so much for this idea. I'm currently using this workaround on
-> > my sdm845 device (where the in-kernel pd-mapper is breaking the
-> > out-of-tree call audio functionality).
+Hi, Thorsten here, the Linux kernel's regression tracker.
+
+Adrian, Christoph I noticed a report about a regression in
+bugzilla.kernel.org that appears to be caused by a change you too
+handled a while ago -- or it exposed an earlier problem:
+
+3710e2b056cb92 ("nvme-pci: clamp max_hw_sectors based on DMA optimized
+limitation") [v6.4-rc3]
+
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=219609 :
+
+> Bug 219609 - File corruptions on SSD in 1st M.2 socket of AsRock X600M-STX + Ryzen 8700G
+>
+> there are one or two bugs which were originally reported at
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1076372 . For details
+> (logs, etc.), see there. Here, I will post a summary and try to point
+> out the most relevant observations:
 > 
-> Thanks for letting us know that the audio issue affects sdm845 as well
-> (I don't seem to hit it on sc8280xp and the X13s).
-
-And today I also hit this on the sc8280xp CRD reference design, so as
-expected, there is nothing SoC specific about the audio service
-regression either:
-
-[   11.235564] PDR: avs/audio get domain list txn wait failed: -110
-[   11.241976] PDR: service lookup for avs/audio failed: -110
-
-even if it may be masked by random changes in timing.
-
-These means it affects also machines like the X13s which already have
-audio enabled.
-
-> > Is there any work going on on making the timing of the in-kernel
-> > pd-mapper more reliable?
+> Bug 1: Write errors with Lexar NM790 NVME
 > 
-> The ECANCELLED regression has now been fixed, but the audio issue
-> remains to be addressed (I think Bjorn has done some preliminary
-> investigation).
+> * Occur since Debian kernel 6.5, but reproduced with upstream kernel
+> 6.11.5 (the only upstream kernel I tested)
+> * Only occur in 1st M.2 socket (not in the 2nd one on rear side)
+> * Easiest way to reproduce them is to use f3 (
+> https://fight-flash-fraud.readthedocs.io/en/latest/usage.html ). f3
+> reports overwritten sectors
+> * The errors seem not to occur in the last files of 500 file (=500 GB)
+> test runs and I never detected file system corruption (just defect
+> files; I produced probably more than thousand ones). The reason for the
+> latter observation is maybe, that file system information are written
+> last. (See see message 113 in the Debian bug report)
+> 
+> (Possible) Bug 2: Read errors with Kingston FURY Renegade
+> 
+> * Only occur in 1st M.2 socket (did not tested the rear socket, because
+> the warranty seal would to be broken in order to remove the heat sink)
+> * Almost impossible to reproduce it, only detected it in Debian kernel
+> that bases on 6.1.112
+> * 1st occurrence: I detected in an SSD intensive computation (as data
+> cache) which produced wrong results after a few days (but not in the
+> first days). The error could be reproduced with f3: The corruptions were
+> massive and different files were affected in subsequent f3read runs (==>
+> read errors). Unfortunately I did not stored the f3 logs. (I still have
+> the corrupt computation results, so it was real.)
+> * 2nd occurrence: A single defect sector (read error) in a multi-day
+> attempt to reproduce the error with the same kernel (Debian 6.1.112),
+> see message 113 in the Debian bug report
+> 
+> Consideration / Notes:
+> * These serial links (PCIe) need to be calibrated. Calibration issues
+> would explain while the errors (dis)appear under certain condition. But
+> errors like this should be detected (nothing could be found in the
+> kernel logs). Is the error correction possibly inactive? However, this
+> still does not explain why f2 reports overwritten sectors, unless the
+> signal errors occur during command / address transmission.
+> * Testing is difficult, because the machine is installed remotely and in
+> use. ATM, till about end of Janaury, can run tests for bug 1.
+> * On the AsRock X600M-STX mainboard (without chipset), the CPU (Ryzen
+> 8700G) runs in SoC (system on chip) mode. Maybe someone did not tested
+> this properly ...
+> 
+[...]
 
-Hopefully Bjorn or Chris have some plan on how to address the audio
-regression.
+> With the help of TJ from the Debian kernel team ( https://
+> bugs.debian.org/cgi-bin/bugreport.cgi?bug=1076372 ), at least a
+> workaround could be found.
+> 
+> The bug is triggered by the patch "nvme-pci: clamp max_hw_sectors
+> based on DMA optimized limitation" (see https://lore.kernel.org/linux-
+> iommu/20230503161759.GA1614@lst.de/ ) introduced in 6.3.7
+> 
+> To examine the situation, I added this debug info (all files are
+> located in `drivers/nvme/host`):
+> 
+>> --- core.c.orig       2025-01-03 14:27:38.220428482 +0100
+>> +++ core.c    2025-01-03 12:56:34.503259774 +0100
+>> @@ -3306,6 +3306,7 @@
+>>               max_hw_sectors = nvme_mps_to_sectors(ctrl, id->mdts);
+>>       else
+>>               max_hw_sectors = UINT_MAX;
+>> +     dev_warn(ctrl->device, "id->mdts=%d,  max_hw_sectors=%d, 
+>> ctrl->max_hw_sectors=%d\n", id->mdts, max_hw_sectors, ctrl->max_hw_sectors);
+>>       ctrl->max_hw_sectors =
+>>               min_not_zero(ctrl->max_hw_sectors, max_hw_sectors);
+> 
+> 6.3.6 (last version w/o mentioned patch and w/o data corruption) says:
+> 
+>> [  127.196212] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
+>> ctrl->max_hw_sectors=16384
+>> [  127.203530] nvme nvme0: allocated 40 MiB host memory buffer.
+> 
+> 6.3.7 (first version w/ mentioned patch and w/ data corruption) says:
+> 
+>> [   46.436384] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
+>> ctrl->max_hw_sectors=256
+>> [   46.443562] nvme nvme0: allocated 40 MiB host memory buffer.
+> 
+> After I reverted the mentioned patch (
+> 
+>> --- pci.c.orig        2025-01-03 14:28:05.944819822 +0100
+>> +++ pci.c     2025-01-03 12:54:37.014579093 +0100
+>> @@ -3042,7 +3042,8 @@
+>>        * over a single page.
+>>        */
+>>       dev->ctrl.max_hw_sectors = min_t(u32,
+>> -             NVME_MAX_KB_SZ << 1, dma_opt_mapping_size(&pdev->dev) >> 9);
+>> +//           NVME_MAX_KB_SZ << 1, dma_opt_mapping_size(&pdev->dev) >> 9);
+>> +             NVME_MAX_KB_SZ << 1, dma_max_mapping_size(&pdev->dev) >> 9);
+>>       dev->ctrl.max_segments = NVME_MAX_SEGS;
+>>  
+>>       /*
+> 
+> ), 6.11.5 (used this version because sources were laying around) works and says:
+> 
+>> [    1.251370] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
+>> ctrl->max_hw_sectors=16384
+>> [    1.261168] nvme nvme0: allocated 40 MiB host memory buffer.
+> 
+> Thus, the corruption occurs if `ctrl->max_hw_sectors` is set to another (a smaller) value than defined by `id->mdts`. 
+> 
+> If this should be allowed, the mentioned patch is not the (root) cause, but reversion is at least a workaround.
 
-Johan
+See the ticket for more details. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+
