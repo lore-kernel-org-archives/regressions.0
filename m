@@ -1,196 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5F1FDE15;
-	Wed,  8 Jan 2025 14:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4664A1FDE15
+	for <regressions@lists.linux.dev>; Wed,  8 Jan 2025 14:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736347145; cv=none; b=KD4UGykLQoD0CO+52ZAzB5N0HhOjxfS8a6vNIx3LEy4ntiXQxKPHs+1dzH7zItZ4JVzmz1ONWvw4rW/mAua7g4QWXl5RmAebvHOPDm4WfnqtFOlG5dzrNNecnfqON0jTShLmd6b4/EXpJH4BwE36btHfqwjaCvLEeXIsg814QDI=
+	t=1736347297; cv=none; b=iL1Dmlj0A3zc1zo6csmbYMv1nBvkziEa5l8AD4yTwX7sv3hnzzq4RBOFNfRNwcjlNLPfqoFFL0aPnxVmOkVOpcipAi4aGZ6kdvetjqEoY8wlyMs9wyURO86HmZgYhuEQW8ya3KWHwTMLmoyc9BhYP297VNm0Ja/CEfVCBirp97A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736347145; c=relaxed/simple;
-	bh=8Ia+Munolo2hOcL7KhB/f4+uIkZ6KctIJfvMEBR3UtU=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=YTxhCgue6XIT8jHT+Ol34mrXsADyVe357BmREJ+r7OtzSjPd/qejkuy25kHE4Ravf7aco/94CM3eATbbQTE3/2NyibRBlKMmk3zIvxMh42z0YlppTWAwUOBB5jWA/hYEepgDIwtxmDh5FZuxwFSSepi0yWBBWlLe0SgNi58T1Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wvjfuGAe; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1736347297; c=relaxed/simple;
+	bh=2ZQNK22CDDsOnlzthXlIGxkPF9H21YpseKace6terSU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EYwdpLPkAuCxRqSNyLp0qgulLALXYAnnj6KyR3mtQh7hy9Pkv9S32vFeDBmAU6rU/R95OqpcYDDNZIw+kscfaBz/WSAAsA+wjklDnBtTvKLc9lwgeNrDRt+ryftcB8brmvc53dvJn2Pqh1qud3wszEKFPQG/V3p8G1sAA8X21ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hv9uC0U9; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wvjfuGAe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=0Q5SkpUB7nvYDr5G8znzFgNJ4lPKjcvCCPURLA9g7mQ=; t=1736347143; x=1736779143; 
-	b=wvjfuGAeJRwyE14j8QD68eomPWo/8wMYzrLBa2YMriscG2nDa3sHImqu5UY5/ZJ7eG/7/aya/Yx
-	Sap+GN56V5Bg7H5lduyHqnggGFz5esaCQwGu8eopq7A4PqQuyyl1WrE1sSoLqfDxQrooDdmUlsoDk
-	igB/cN6o3iEMYnSv3/MH72IEdxejMonpD4zpGqZ6zeFkOunJmSXdUDrTMGYS2QQjLN1fSy2LjHvT8
-	F6Gya6or+uSDJDAkj1ly0zdGFG6yvVUaR8HmaLVNapI08JpAGQJhsEE/lIiUzvhZfv4f1N4J41j5a
-	8eb/fTyd8B9oFj8EqzeNm9joTY6JbsotYj3g==;
-Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tVXCw-006qbM-24;
-	Wed, 08 Jan 2025 15:38:54 +0100
-Message-ID: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
-Date: Wed, 8 Jan 2025 15:38:53 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hv9uC0U9"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ef775ec883so24262883a91.1
+        for <regressions@lists.linux.dev>; Wed, 08 Jan 2025 06:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736347296; x=1736952096; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SQLM+LoHGnaCGsXSe5lLcsoCAmL6bhSjsazuawUJ1sE=;
+        b=Hv9uC0U9AglW2H6mb5HFtHOEUqk3dI8aUJLYvJiFpbgDCw/G/IHmaj2koWYhokZlev
+         H9iNMsvh6VKPsAICuIiGU/Z7N1YXrGhO0MadoUNFYJlF66xfom1n8Ep7n7XXENt9X3vK
+         ulnl37zaTiTD75L+y4q8wN33kVYWlI/3IMRRD0y5cTvqbRijd58rxDhhkabdT8aYs8xV
+         wFyv/p5+cSvGTDk2ELC/F6MISNu+GDRvx0pjwm9a2JVze6QQReeuiNGw/Zg48+uwebAw
+         O6YEUVPimzqThNyVysVYkf7ff/9p9W2M4vZ3KvuWNO3EacAQRRWoGz/djLLd5lQUNcW/
+         lpvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736347296; x=1736952096;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SQLM+LoHGnaCGsXSe5lLcsoCAmL6bhSjsazuawUJ1sE=;
+        b=g2UdiBSfgQw5LjaLdQYIf+u0vBQ6VuLHj04EVT/nkxosGmKIl26o/9zI0MOR9CWDmj
+         tQ19hmOCmisvQQ0KaxrDF4m0zCLJ+8QMEc5ctacH8V/wEyKd4o+o3Q9wKHK9/KaHUo6A
+         ctX3B9VP2ID1dfCZeAts41MuuHXC/AH6wqTfjKjvsza2v3x0pf+T8lgcLltPxvDey5a9
+         JhtXXycoV90TniAQn2L7ZqOyuFPSa1J8KAGVvXwlundu1PywYdoemOxX7KSIX9jDNHFG
+         VYwiSnf44F9G6Eu0fr4+xUzLxT8iA/8F0mb8Yi14je+oxTnp+Wfg+C2BQxJIHqgR1k/Y
+         WmDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlCuq5BRhRMGAjoP4GfPXSXER+KwPoCgrTUu1C6k9bPLbUhGO3dE6tBY1R+cPyIcLXxen7x7faKglLgg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyf5NhVZA1du1jrFrQL0Q+n7LQeN4TTD/RR7gsQmrYjqS9laluP
+	pQwjUAYfsRyv1t8L+8niUPbOObenC1YUSHzQ41RZcBncBKQz1Sw7wDMVxvz70PG3Y9yducdK9us
+	Kgg==
+X-Google-Smtp-Source: AGHT+IGmkPaMq6fyPiGwNEznCVmXKv73lSbOSvpsyNn1ze2H+LKp+qpzjKZzXeZPKeZkIqzTmMcSaKGlbq8=
+X-Received: from pfbbt23.prod.google.com ([2002:a05:6a00:4397:b0:727:3c81:f42a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e01:b0:725:e37d:cd35
+ with SMTP id d2e1a72fcca58-72d21ff4af7mr4989790b3a.18.1736347295712; Wed, 08
+ Jan 2025 06:41:35 -0800 (PST)
+Date: Wed, 8 Jan 2025 06:41:34 -0800
+In-Reply-To: <Z3wnsQQ67GBf1Vsb@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-To: Adrian Huang <ahuang12@lenovo.com>, Christoph Hellwig <hch@lst.de>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
- Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: [Regression] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1736347143;3f0162a6;
-X-HE-SMSGID: 1tVXCw-006qbM-24
+Mime-Version: 1.0
+References: <20250101064928.389504-1-pbonzini@redhat.com> <Z3wnsQQ67GBf1Vsb@google.com>
+Message-ID: <Z36OnrAGOL9c7cku@google.com>
+Subject: Re: [PATCH] KVM: allow NULL writable argument to __kvm_faultin_pfn
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Christian Zigotzky <chzigotzky@xenosoft.de>, linuxppc-dev@lists.ozlabs.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-[side note TWIMC: regression tracking is sadly kinda dormant temporarily
-(hopefully this will change again soon), but this was brought to my
-attention and looked kinda important]
+On Mon, Jan 06, 2025, Sean Christopherson wrote:
+> On Wed, Jan 01, 2025, Paolo Bonzini wrote:
+> > kvm_follow_pfn() is able to work with NULL in the .map_writable field
+> > of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
+> > despite KVM for e500 trying to use it.  Indeed .map_writable is not
+> > particularly useful if the flags include FOLL_WRITE and readonly
+> > guest memory is not supported, so add support to __kvm_faultin_pfn()
+> > for this case.
+> 
+> I would prefer to keep the sanity check to minimize the risk of a page fault
+> handler not supporting opportunistic write mappings.  e500 is definitely the
+> odd one out here.
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Adrian, Christoph I noticed a report about a regression in
-bugzilla.kernel.org that appears to be caused by a change you too
-handled a while ago -- or it exposed an earlier problem:
-
-3710e2b056cb92 ("nvme-pci: clamp max_hw_sectors based on DMA optimized
-limitation") [v6.4-rc3]
-
-As many (most?) kernel developers don't keep an eye on the bug tracker,
-I decided to write this mail. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=219609 :
-
-> Bug 219609 - File corruptions on SSD in 1st M.2 socket of AsRock X600M-STX + Ryzen 8700G
->
-> there are one or two bugs which were originally reported at
-> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1076372 . For details
-> (logs, etc.), see there. Here, I will post a summary and try to point
-> out the most relevant observations:
-> 
-> Bug 1: Write errors with Lexar NM790 NVME
-> 
-> * Occur since Debian kernel 6.5, but reproduced with upstream kernel
-> 6.11.5 (the only upstream kernel I tested)
-> * Only occur in 1st M.2 socket (not in the 2nd one on rear side)
-> * Easiest way to reproduce them is to use f3 (
-> https://fight-flash-fraud.readthedocs.io/en/latest/usage.html ). f3
-> reports overwritten sectors
-> * The errors seem not to occur in the last files of 500 file (=500 GB)
-> test runs and I never detected file system corruption (just defect
-> files; I produced probably more than thousand ones). The reason for the
-> latter observation is maybe, that file system information are written
-> last. (See see message 113 in the Debian bug report)
-> 
-> (Possible) Bug 2: Read errors with Kingston FURY Renegade
-> 
-> * Only occur in 1st M.2 socket (did not tested the rear socket, because
-> the warranty seal would to be broken in order to remove the heat sink)
-> * Almost impossible to reproduce it, only detected it in Debian kernel
-> that bases on 6.1.112
-> * 1st occurrence: I detected in an SSD intensive computation (as data
-> cache) which produced wrong results after a few days (but not in the
-> first days). The error could be reproduced with f3: The corruptions were
-> massive and different files were affected in subsequent f3read runs (==>
-> read errors). Unfortunately I did not stored the f3 logs. (I still have
-> the corrupt computation results, so it was real.)
-> * 2nd occurrence: A single defect sector (read error) in a multi-day
-> attempt to reproduce the error with the same kernel (Debian 6.1.112),
-> see message 113 in the Debian bug report
-> 
-> Consideration / Notes:
-> * These serial links (PCIe) need to be calibrated. Calibration issues
-> would explain while the errors (dis)appear under certain condition. But
-> errors like this should be detected (nothing could be found in the
-> kernel logs). Is the error correction possibly inactive? However, this
-> still does not explain why f2 reports overwritten sectors, unless the
-> signal errors occur during command / address transmission.
-> * Testing is difficult, because the machine is installed remotely and in
-> use. ATM, till about end of Janaury, can run tests for bug 1.
-> * On the AsRock X600M-STX mainboard (without chipset), the CPU (Ryzen
-> 8700G) runs in SoC (system on chip) mode. Maybe someone did not tested
-> this properly ...
-> 
-[...]
-
-> With the help of TJ from the Debian kernel team ( https://
-> bugs.debian.org/cgi-bin/bugreport.cgi?bug=1076372 ), at least a
-> workaround could be found.
-> 
-> The bug is triggered by the patch "nvme-pci: clamp max_hw_sectors
-> based on DMA optimized limitation" (see https://lore.kernel.org/linux-
-> iommu/20230503161759.GA1614@lst.de/ ) introduced in 6.3.7
-> 
-> To examine the situation, I added this debug info (all files are
-> located in `drivers/nvme/host`):
-> 
->> --- core.c.orig       2025-01-03 14:27:38.220428482 +0100
->> +++ core.c    2025-01-03 12:56:34.503259774 +0100
->> @@ -3306,6 +3306,7 @@
->>               max_hw_sectors = nvme_mps_to_sectors(ctrl, id->mdts);
->>       else
->>               max_hw_sectors = UINT_MAX;
->> +     dev_warn(ctrl->device, "id->mdts=%d,  max_hw_sectors=%d, 
->> ctrl->max_hw_sectors=%d\n", id->mdts, max_hw_sectors, ctrl->max_hw_sectors);
->>       ctrl->max_hw_sectors =
->>               min_not_zero(ctrl->max_hw_sectors, max_hw_sectors);
-> 
-> 6.3.6 (last version w/o mentioned patch and w/o data corruption) says:
-> 
->> [  127.196212] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
->> ctrl->max_hw_sectors=16384
->> [  127.203530] nvme nvme0: allocated 40 MiB host memory buffer.
-> 
-> 6.3.7 (first version w/ mentioned patch and w/ data corruption) says:
-> 
->> [   46.436384] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
->> ctrl->max_hw_sectors=256
->> [   46.443562] nvme nvme0: allocated 40 MiB host memory buffer.
-> 
-> After I reverted the mentioned patch (
-> 
->> --- pci.c.orig        2025-01-03 14:28:05.944819822 +0100
->> +++ pci.c     2025-01-03 12:54:37.014579093 +0100
->> @@ -3042,7 +3042,8 @@
->>        * over a single page.
->>        */
->>       dev->ctrl.max_hw_sectors = min_t(u32,
->> -             NVME_MAX_KB_SZ << 1, dma_opt_mapping_size(&pdev->dev) >> 9);
->> +//           NVME_MAX_KB_SZ << 1, dma_opt_mapping_size(&pdev->dev) >> 9);
->> +             NVME_MAX_KB_SZ << 1, dma_max_mapping_size(&pdev->dev) >> 9);
->>       dev->ctrl.max_segments = NVME_MAX_SEGS;
->>  
->>       /*
-> 
-> ), 6.11.5 (used this version because sources were laying around) works and says:
-> 
->> [    1.251370] nvme nvme0: id->mdts=7,  max_hw_sectors=1024, 
->> ctrl->max_hw_sectors=16384
->> [    1.261168] nvme nvme0: allocated 40 MiB host memory buffer.
-> 
-> Thus, the corruption occurs if `ctrl->max_hw_sectors` is set to another (a smaller) value than defined by `id->mdts`. 
-> 
-> If this should be allowed, the mentioned patch is not the (root) cause, but reversion is at least a workaround.
-
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
-
+Per a quick chat at PUCK, Paolo is going to try and fix the e500 code to actually
+use the @writable param as it's intended.
