@@ -1,326 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7695C22256D
-	for <regressions@lists.linux.dev>; Thu,  9 Jan 2025 13:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2A221D581;
+	Thu,  9 Jan 2025 15:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736429918; cv=none; b=EasOD2REJagmD3yFAEs/pK45BHwNJKRvN0mhUydyaJ6vYRqw8kVdRTL9cQZ6CAwW18jolVHLVZYqGFzaDT396dsjrTEyXIY0MGYJWp1FBSVSAyASOAM0WsOqKZkUzbtfFkuFlFXMWZNE9yniAbnFIHn6VEGSi0PPz/UbdhbA4wA=
+	t=1736437467; cv=none; b=FGK5zvkmBJf7f2UvRJD2GHCG5LI+IOT+FBEiJX89cdEUkIuMakJPBgN6XCvdneJARAbBQeUGwKJJoJ4K6NX48SeTIem3p5v5bnPQvXfYSamQe4zWWzILvq4PMQ88aNhHfCCxtakcM7o94soz/h9WcQEAQv/MasWCQnBWQ2Bzta8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736429918; c=relaxed/simple;
-	bh=P7sSfp0wHvngJJFC7alhWn4VcAvboR/GnnVkh2D7CyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=I1ysYpdsAo6MborSQzDzQgTkd3Y2KqqLVAp1BgezjRx6sZjFt3K3BO/cDfUbL3H4SCPY9m3ELMkSWbY4qnZDfoZdfY/TDXKRcI1T0Jcxk27g43s0fGQgRLaXPsog8LOV9jkTMyzryzh+WvWAumuA0CdwH+xzgA2PQRR3+sE/LS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PBK1e7qP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736437467; c=relaxed/simple;
+	bh=uCwnW2QHusFHY5vfykiSiwwtuUDSfO5eo+ln8H42ydk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XIo5MkLva7rOEws9Fv2A/b5HOUrSJVUAnEkSUcLvXMtgYBkHHK8bOvZRf6eaMu+TK/ZwG1A4U6colMOa9rziJTYSs5zTvOMhQCVzZ5g96AfO6tL+ID116pEVW9lEzR71yE+wMkJ3z/04bDHtdEG0+ypPe/TPmaM7MSvszkejtR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de; spf=pass smtp.mailfrom=simg.de; dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b=o0Sl8cEo; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBK1e7qP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736429915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6U5GaYmzSeHIwPHM2TLhTcGPV4HaT+bdvS3rFAmfbSs=;
-	b=PBK1e7qPRfjQstjzxxBUvbTgE6H/ZSRe009kwpwlbG1qUcjOZ4MTlzcvliQWeZIBEcfBTJ
-	5ZjMAUYbA1E4f5FT8ZKCDNvvXm0OI41D77t9AgVggYQBeJmQH+Rzyv+qUhUiFi4ky2SjFi
-	I7n3oSfQY1TghGe20RRrLFWI8iqEpxk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-wub1xd56PTmX69YDmET_dQ-1; Thu, 09 Jan 2025 08:38:34 -0500
-X-MC-Unique: wub1xd56PTmX69YDmET_dQ-1
-X-Mimecast-MFC-AGG-ID: wub1xd56PTmX69YDmET_dQ
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5d3f01eeef8so757628a12.0
-        for <regressions@lists.linux.dev>; Thu, 09 Jan 2025 05:38:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736429913; x=1737034713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6U5GaYmzSeHIwPHM2TLhTcGPV4HaT+bdvS3rFAmfbSs=;
-        b=CMHSgjX4WBHCRkOXE4LCKrtIiT+hGyWbQwE0duoZGPFQXuf789CkzuM9/oIc0ZQ0oM
-         m1gLCkmHTg9NZna9mVJiANshZ3fDEszRABDKvzMypilt17ucw/yi7BpvjTPEQPbCov8F
-         oebvm6c3LlL/RbOGEqjUDCfdKtljtzTmv42MSZMnTp4R25vbVFo1TVAAxhf76GMcuTpE
-         qTAsNdCrCZ37NhGWPKr5y9qG1jl3azGDCQaU/0VHLGfcNqXsXDTOautJsnlQ2KiML5iy
-         PiqknTOUKw7b0dEqs++eZsY6mqQsbhH060k67qNREVf/oJz6AtrKMPsTH30hdlhevKML
-         hyNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoLKDw9z94XOOZcphtC9nLPzdVifIJ6Fgklc44dsRqATdL9s/wavOA37bC1sY5bIPHgheJ9rNnMFvxCQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxsqt+3dHmgV3payEmAnY0m2FJGxJ9OBo6V2Re4MjdX0BOAogQi
-	Wc+ehVaPwXI/zQkuAV9XISeyTLyZGNcacH+jC8hva7Eq60us+UDVUN/mx9DGD5+uHce6wXJwfxQ
-	fS82dOJqYnKKSVz7Bcx4LJNQ0UNuo/r4k+dkyJMWJachEY4V37Q2A/hbRYWzQ
-X-Gm-Gg: ASbGncv64aKMwGGprmNykLc70G1Yf93BWdezi/AZNMOdw3E9TePFgIpgTKKxc6AAEHW
-	xiKTPiFIQzlxEL+xaU57HYP0D1ngQNkZRdjWZmkP51KJHegnt9r9k8+GsbR7V1ekgp7PLHIeg6B
-	K6YwVy7RQ2M247I+Et8ia22oOpeOr95r5ubK0ozvIwV1jJLhqjSKSRS6VnDeDWIdmOGUMi0MBHS
-	zqpsnVjyY38P0FvisdC7eTcZixNDZRN3162AMvWh+4/L8xSNeCg+KCQSjfz
-X-Received: by 2002:a05:6402:5251:b0:5d0:bf5e:eb8 with SMTP id 4fb4d7f45d1cf-5d972e63ddfmr13854955a12.23.1736429913097;
-        Thu, 09 Jan 2025 05:38:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEvrvZyCjR9P8H1XfDQSbpZ1ii019x3nOmgFJfPU4BSjpH27IgNbkbMhVv45gD16B6Iwt+Skw==
-X-Received: by 2002:a05:6402:5251:b0:5d0:bf5e:eb8 with SMTP id 4fb4d7f45d1cf-5d972e63ddfmr13854906a12.23.1736429912705;
-        Thu, 09 Jan 2025 05:38:32 -0800 (PST)
-Received: from [192.168.10.47] ([151.62.105.73])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c90d6a4csm73856966b.71.2025.01.09.05.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 05:38:32 -0800 (PST)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: oliver.upton@linux.dev,
-	Will Deacon <will@kernel.org>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	seanjc@google.com,
-	linuxppc-dev@lists.ozlabs.org,
-	regressions@lists.linux.dev
-Subject: [PATCH 5/5] KVM: e500: perform hugepage check after looking up the PFN
-Date: Thu,  9 Jan 2025 14:38:17 +0100
-Message-ID: <20250109133817.314401-6-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250109133817.314401-1-pbonzini@redhat.com>
-References: <20250109133817.314401-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b="o0Sl8cEo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simg.de;
+	s=s1-ionos; t=1736437453; x=1737042253; i=linux-kernel@simg.de;
+	bh=REyuMx279JI4Y7DCVWjAQsyCew4AYt/M1mTsC7OYiDQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=o0Sl8cEoA1jUFCVW4uKPC8HPSUEuXRAIpJGZh9RY5+jaJeV0HzE97IthxkR+9QVS
+	 qAWZHDyAnkr7MMzTGhEwpjdOz/6AAwvsIUB7WkKCxfmf10apAFYIw23u8d2jiZYfM
+	 9Yuz5b7apPl1fBtbqDG1ZQnKvadOif1NmTlcjorPDz92XUSB5RjwCGpeNVj5nHBpc
+	 uQrTnIQP3G8vmQiUVtMKu/4UR/qNv7uHX5SA4+hDr2+Wrm2PXN7cDUdPfUWr49xZQ
+	 vw9CwkwN8Ftdd6hWFaKSzU6rS81DdrCteq0XPeE8TCj0oPbiFmRNnXE3kTEpc3gfT
+	 x/8N4CcRF5Tw4WtAaA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.1.60] ([87.158.38.246]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MKbTo-1tAvuD0Hng-00XAQG; Thu, 09 Jan 2025 16:44:13 +0100
+Message-ID: <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
+Date: Thu, 9 Jan 2025 16:44:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: s-XjuDJTmGy1YxpEciYlzWl2txvNNjWB0PI2bWOAVYU_1736429913
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+To: Keith Busch <kbusch@kernel.org>, bugzilla-daemon@kernel.org,
+ bgravato@gmail.com
+Cc: Adrian Huang <ahuang12@lenovo.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, linux-kernel@simg.de,
+ Thorsten Leemhuis <regressions@leemhuis.info>, Christoph Hellwig <hch@lst.de>
+References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
+ <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de>
+ <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
+Content-Language: en-US
+From: Stefan <linux-kernel@simg.de>
+In-Reply-To: <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pqvYp2/0Kr1HTTx2WHZQ3d71DlJObzzmVe3t2OohI9vggNfMS8J
+ MSZ9jBJ7XF1WDCv4h8bnLPz/RgQf5k1N2O5MhVSiomCWr6v5mw2WOPsnI4D6cMuTnm5A9wc
+ j89tEVi/HX5QThtj61g+uZQHANxo1tuN+SzIz2m4X6Ee07TqzGfhvVbcMlqxCHIejgk0v8+
+ bKspjKhV1yAUSN6OIKd5g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Xa9uewqKT84=;Qf8twounhvs9z9UcFY0Kv5+wVVW
+ Wtyn4NVV+0k28Ep2xwnsiYRk3q8shF4yctjv16Pe+fTJxRoSTX8ibjKFV5NN/GOJUdJ2zTo5G
+ tGKKLGJQiW3/iRa6sM8wgidsHNuF4q8YasbcBn9QSsSYrQ/WM9n5q7Jzl4XlBSFJc+j5qZLxe
+ a7ehVeGIA31ySFENuRJtYkwPBOSvrqTCAlzIIoTWWDUCaeCOKYW0nTB5UPbL7AzxESCVM5s0a
+ wHN5bn6Sl7l5BD62WFUsnOeZrUxyHyA4Mj1c9+MXHa8UTW1CRhhAqJyjTE7w3h85Z/klW7zqS
+ 1778qui2rMJs3DHLIYmQeQ1A2tSodyQ2fk1VJJOikSWamGcp7132Y8p1Rp/5qpuPkAypKYFmJ
+ 9a9lddlDiojDJfRUEDLxoPOG0Dz6BaGEgwqMH8b3vY0vJgwpxinsp52xm5CGlLug67uxihf8J
+ g6L5RAB1NCs5jStcldhN41npLFWR2+hFHVRHpHhdbzsePegK9DcpyCuAHCsucbEOiUtCSET3Y
+ 3M9uLhLjsukKL7EYIlMVmAr17ZRUsdugcLrdkMg5aup95WKWl6k50fRmByfmPsvRJrsKENm9I
+ MtktBqc5AW0vviWXsUYmnUMHxqwb7nZmqiYbpzeI6J1E22iXysmGtFfTnaM86CUxdyPwvne7l
+ 4fuP7xsv4yvX/cJz2MX1/Wi76gIODrYm1FqkcYhd/2rmD8fleD/A5H4QQxoJCB4Eg17IsJmGy
+ nsr1+AOndU9vWTvFMEDkQFlhZS+eL6s1TwfKJbXNO6nuoDHvZRgqTQpQxLVmNACqC6eQqWiXc
+ hQVhG//QOXxnZa8H4h0QkShtgNMpIRHvf43iXPrnqNhPuEL+FyOzr9Psb6pQYQpsa2MYl/ffz
+ gpxPDcz+7aW1ayAXP8GXSwZEVTVP+yk7UMmQS+t4j/DZZFdlKhP4efp/OrzqMmKUeZqc7e/mR
+ 2JuOCMQmZE2IMK2Zos2vlwO7fRdjccDw58sLnHqvhy28kPw0DODZO44qX+guOxypLXZV4jbuA
+ QcanY5NYTuf/GGbp/79Az9hqilRNVC6e2z/f0aE
 
-e500 KVM tries to bypass __kvm_faultin_pfn() in order to map VM_PFNMAP
-VMAs as huge pages.  This is a Bad Idea because VM_PFNMAP VMAs could
-become noncontiguous as a result of callsto remap_pfn_range().
+Hi,
 
-Instead, use the already existing host PTE lookup to retrieve a
-valid host-side mapping level after __kvm_faultin_pfn() has
-returned.  Then find the largest size that will satisfy the
-guest's request while staying within a single host PTE.
+due to Thorstens hints, I'm trying to reply to both, the bug tracker and
+the mailing list.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/powerpc/kvm/e500_mmu_host.c | 180 ++++++++++++-------------------
- 1 file changed, 70 insertions(+), 110 deletions(-)
+> --- Comment #13 from Keith Busch (kbusch@kernel.org) ---
+> If I'm summarizing correctly, we're seeing corruption on Lexar, Kingston=
+,
+> and now Samsung NVMe's?
 
-diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
-index 7752b7f24c51..0457bbc2526f 100644
---- a/arch/powerpc/kvm/e500_mmu_host.c
-+++ b/arch/powerpc/kvm/e500_mmu_host.c
-@@ -326,15 +326,14 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 	struct tlbe_ref *ref)
- {
- 	struct kvm_memory_slot *slot;
--	unsigned long pfn = 0; /* silence GCC warning */
-+	unsigned int psize;
-+	unsigned long pfn;
- 	struct page *page = NULL;
- 	unsigned long hva;
--	int pfnmap = 0;
- 	int tsize = BOOK3E_PAGESZ_4K;
- 	int ret = 0;
- 	unsigned long mmu_seq;
- 	struct kvm *kvm = vcpu_e500->vcpu.kvm;
--	unsigned long tsize_pages = 0;
- 	pte_t *ptep;
- 	unsigned int wimg = 0;
- 	pgd_t *pgdir;
-@@ -361,111 +360,12 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 
- 	hva = gfn_to_hva_memslot(slot, gfn);
- 
--	if (tlbsel == 1) {
--		struct vm_area_struct *vma;
--		mmap_read_lock(kvm->mm);
--
--		vma = find_vma(kvm->mm, hva);
--		if (vma && hva >= vma->vm_start &&
--		    (vma->vm_flags & VM_PFNMAP)) {
--			/*
--			 * This VMA is a physically contiguous region (e.g.
--			 * /dev/mem) that bypasses normal Linux page
--			 * management.  Find the overlap between the
--			 * vma and the memslot.
--			 */
--
--			unsigned long start, end;
--			unsigned long slot_start, slot_end;
--
--			pfnmap = 1;
--			writable = vma->vm_flags & VM_WRITE;
--
--			start = vma->vm_pgoff;
--			end = start +
--			      vma_pages(vma);
--
--			pfn = start + ((hva - vma->vm_start) >> PAGE_SHIFT);
--
--			slot_start = pfn - (gfn - slot->base_gfn);
--			slot_end = slot_start + slot->npages;
--
--			if (start < slot_start)
--				start = slot_start;
--			if (end > slot_end)
--				end = slot_end;
--
--			tsize = (gtlbe->mas1 & MAS1_TSIZE_MASK) >>
--				MAS1_TSIZE_SHIFT;
--
--			/*
--			 * e500 doesn't implement the lowest tsize bit,
--			 * or 1K pages.
--			 */
--			tsize = max(BOOK3E_PAGESZ_4K, tsize & ~1);
--
--			/*
--			 * Now find the largest tsize (up to what the guest
--			 * requested) that will cover gfn, stay within the
--			 * range, and for which gfn and pfn are mutually
--			 * aligned.
--			 */
--
--			for (; tsize > BOOK3E_PAGESZ_4K; tsize -= 2) {
--				unsigned long gfn_start, gfn_end;
--				tsize_pages = 1UL << (tsize - 2);
--
--				gfn_start = gfn & ~(tsize_pages - 1);
--				gfn_end = gfn_start + tsize_pages;
--
--				if (gfn_start + pfn - gfn < start)
--					continue;
--				if (gfn_end + pfn - gfn > end)
--					continue;
--				if ((gfn & (tsize_pages - 1)) !=
--				    (pfn & (tsize_pages - 1)))
--					continue;
--
--				gvaddr &= ~((tsize_pages << PAGE_SHIFT) - 1);
--				pfn &= ~(tsize_pages - 1);
--				break;
--			}
--		} else if (vma && hva >= vma->vm_start &&
--			   is_vm_hugetlb_page(vma)) {
--			unsigned long psize = vma_kernel_pagesize(vma);
--
--			tsize = (gtlbe->mas1 & MAS1_TSIZE_MASK) >>
--				MAS1_TSIZE_SHIFT;
--
--			/*
--			 * Take the largest page size that satisfies both host
--			 * and guest mapping
--			 */
--			tsize = min(__ilog2(psize) - 10, tsize);
--
--			/*
--			 * e500 doesn't implement the lowest tsize bit,
--			 * or 1K pages.
--			 */
--			tsize = max(BOOK3E_PAGESZ_4K, tsize & ~1);
--		}
--
--		mmap_read_unlock(kvm->mm);
--	}
--
--	if (likely(!pfnmap)) {
--		tsize_pages = 1UL << (tsize + 10 - PAGE_SHIFT);
--		pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &page);
--		if (is_error_noslot_pfn(pfn)) {
--			if (printk_ratelimit())
--				pr_err("%s: real page not found for gfn %lx\n",
--				       __func__, (long)gfn);
--			return -EINVAL;
--		}
--
--		/* Align guest and physical address to page map boundaries */
--		pfn &= ~(tsize_pages - 1);
--		gvaddr &= ~((tsize_pages << PAGE_SHIFT) - 1);
-+	pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &page);
-+	if (is_error_noslot_pfn(pfn)) {
-+		if (printk_ratelimit())
-+			pr_err("%s: real page not found for gfn %lx\n",
-+			       __func__, (long)gfn);
-+		return -EINVAL;
- 	}
- 
- 	spin_lock(&kvm->mmu_lock);
-@@ -483,7 +383,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 	 * can't run hence pfn won't change.
- 	 */
- 	local_irq_save(flags);
--	ptep = find_linux_pte(pgdir, hva, NULL, NULL);
-+	ptep = find_linux_pte(pgdir, hva, NULL, &psize);
- 	if (ptep) {
- 		pte_t pte = READ_ONCE(*ptep);
- 
-@@ -500,6 +400,66 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 		}
- 	}
- 
-+	if (psize && tlbsel == 1) {
-+		unsigned long psize_pages, tsize_pages;
-+		unsigned long start, end;
-+		unsigned long slot_start, slot_end;
-+
-+		psize_pages = 1UL << (psize - PAGE_SHIFT);
-+		start = pfn & ~(psize_pages - 1);
-+		end = start + psize_pages;
-+
-+		slot_start = pfn - (gfn - slot->base_gfn);
-+		slot_end = slot_start + slot->npages;
-+
-+		if (start < slot_start)
-+			start = slot_start;
-+		if (end > slot_end)
-+			end = slot_end;
-+
-+		tsize = (gtlbe->mas1 & MAS1_TSIZE_MASK) >>
-+			MAS1_TSIZE_SHIFT;
-+
-+		/*
-+		 * Any page size that doesn't satisfy the host mapping
-+		 * will fail the start and end tests.
-+		 */
-+		tsize = min(psize - PAGE_SHIFT + BOOK3E_PAGESZ_4K, tsize);
-+
-+		/*
-+		 * e500 doesn't implement the lowest tsize bit,
-+		 * or 1K pages.
-+		 */
-+		tsize = max(BOOK3E_PAGESZ_4K, tsize & ~1);
-+
-+		/*
-+		 * Now find the largest tsize (up to what the guest
-+		 * requested) that will cover gfn, stay within the
-+		 * range, and for which gfn and pfn are mutually
-+		 * aligned.
-+		 */
-+
-+		for (; tsize > BOOK3E_PAGESZ_4K; tsize -= 2) {
-+			unsigned long gfn_start, gfn_end;
-+			tsize_pages = 1UL << (tsize - 2);
-+
-+			gfn_start = gfn & ~(tsize_pages - 1);
-+			gfn_end = gfn_start + tsize_pages;
-+
-+			if (gfn_start + pfn - gfn < start)
-+				continue;
-+			if (gfn_end + pfn - gfn > end)
-+				continue;
-+			if ((gfn & (tsize_pages - 1)) !=
-+			    (pfn & (tsize_pages - 1)))
-+				continue;
-+
-+			gvaddr &= ~((tsize_pages << PAGE_SHIFT) - 1);
-+			pfn &= ~(tsize_pages - 1);
-+			break;
-+		}
-+	}
-+
- 	kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg, writable);
- 	kvmppc_e500_setup_stlbe(&vcpu_e500->vcpu, gtlbe, tsize,
- 				ref, gvaddr, stlbe);
--- 
-2.47.1
+The Kingston read errors may be something different. They are described
+in detail in messages #108 and #113 of the Debian Bug Tracker
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1076372
 
+With the Kington, I never saw the write errors that occur with Lexar and
+Samsung on newer Kernels (and which are easy to reproduce).
+
+(ATM I cannot provide test results from the Kingston SSD because the
+Lexar is installed, the PC is installed remotely and in use. Thus I
+can't swap the SSDS that often.)
+
+> # cat /sys/block/nvme0n1/queue/fua
+
+Returns "1"
+
+> --- Comment #15 from Keith Busch (kbusch@kernel.org) --- as a test,
+> could you turn off the volatile write cache?
+>
+> # sudo nvme set-feature /dev/nvme0n1 -f 6 -v 0
+Had to modify that a little bit:
+
+   $ nvme get-feature /dev/nvme0n1 -f 6
+   get-feature:0x06 (Volatile Write Cache), Current value:0x00000001
+   $ nvme set-feature /dev/nvme0 -f 6 /dev/nvme0n1 -v 0
+   set-feature:0x06 (Volatile Write Cache), value:00000000,
+cdw12:00000000, save:0
+   $ nvme get-feature /dev/nvme0n1 -f 6
+   get-feature:0x06 (Volatile Write Cache), Current value:00000000
+
+Corruptions disappear (under 6.13.0-rc6) if volatile write cache is
+disabled (and appear again if I turn it on with "-v 1").
+
+But, lspci says I have a
+
+   Shenzhen Longsys Electronics Co., Ltd. Lexar NM790 NVME SSD
+(DRAM-less) (rev 01) (prog-if 02 [NVM Express])
+
+Note the "DRAM-less". This is confirmed by
+https://www.techpowerup.com/ssd-specs/lexar-nm790-4-tb.d1591. Instead of
+this, the SSD has a (*non-*volatile) SLC write cache and it uses 40 MB
+Host-Memory-Buffer (HMB).
+
+May there be an issue with the HMB allocation/usage ?
+
+Is the mainboard firmware involved into HMB allocation/usage ? That
+would explain, why volatile write caching via HMB works in the 2nd M.2
+socket.
+
+BTW, controller is MaxioTech MAP1602A, which is different from the
+Samsung controllers.
+
+> --- Comment #14 from Bruno Gravato (bgravato@gmail.com) --- The only
+>  difference in the specs between the two M.2 slots is that one is
+> gen5x4 (the main one, which is the one with problems) and the other
+> is gen4x4 (this works fine, no errors).
+
+AFAIK this primary M.2 socket is connected to dedicated PCIe lanes of
+the CPU. On my PC, it runs in Gen4 mode (limited by SSD).
+
+The secondary M.2 socket on the rear side is probably connected to PCIe
+lanes which are usually used by a chipset -- but that socket works.
+
+Regards Stefan
