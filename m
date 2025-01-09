@@ -1,66 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA3121E0BF
-	for <regressions@lists.linux.dev>; Thu,  9 Jan 2025 13:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970222206B0
+	for <regressions@lists.linux.dev>; Thu,  9 Jan 2025 13:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736429905; cv=none; b=RgzNhfESEapV+M8VjXZp7a4O+VK8SkhwzI6QV19pFHGBzcAmxy/1Q8TEb5YJxSlVz8nth9Cl7smAyVfd64hUxMlqMt869oHNhs8l/U7xtDdg9Oqvd8xudo1QpQd5IUFA1isfv6pONp1jDqZR8aNrttozonHsbg8qs9lZwltoDy0=
+	t=1736429911; cv=none; b=VreVSYqZDRwSGgJ1tThGDU0zvXNY9hzolGeDrzNOBNnfzhwm2i8eyQC0Z23kuvacsoP3Ebk6IhAwZF+LWQYXDVnm6F10jD5vdkqj4Nigq2n8v3Sp6CLvUl9Q8dVIOxU7YODtxOYU1oqJCy3pmDtcbkXoq2+4OjDL7NjFnmCKHhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736429905; c=relaxed/simple;
-	bh=tj0EaTI4xDK9nr89rwD+fHqfvdYzjn0WO9cVa0FoTrY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=aB35zbZeRyUbdrQ6o698OXAEEPlkvDT2q2jUXxbANjzZ3gczP16YnwHeTkwgMzgQf+47HNTPWQ4aTUPVuLUUIsGbgOOiMoC+UmSLEG2PaO/p39x+KSIY8JXLLw6thj/JyB4UyWjOb9ZHc2yEtSghCE1ehqFSk+Rv6zdIFjI/2vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PpVaWtBK; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1736429911; c=relaxed/simple;
+	bh=CLPtAWyQrS2entG2WH31BYmUD0uC+KITDZ/IYJGu0jo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=qnrkNcTZFYPrgfclqeZW1Rp4PJpqxgQRxYnazoWf5dDIyjq7gn/N/4cNgaOjtBXcV0i62PovPKsipUrYIfxhXXUpAZbxXRgYbXBSg0CB53JnI3gjxUmXN53WVjdglvDh+vbxu6jgkinOOmoZB4eAiVH1DqHyRwiq7MbofGgRxDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PCp7uBfJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PpVaWtBK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PCp7uBfJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736429902;
+	s=mimecast20190719; t=1736429908;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uldQPwdfE7L9Dk1HaWI6s1M7Pg4/zwkf9XHa0qYWEsU=;
-	b=PpVaWtBKyMcH6VP/1k6uoSfR9XALWS3Hbsk6W2+sH2gun9hZDq1+9t3GPYbmEtqNxwlwTI
-	1ipL99SzNY0TMm1Smb4wdY361+WxsVpiJcyimp0LjTN9um/8xfKqwXHLR08xgf+waSLKf0
-	aXXYKKmQ6zVZoXK5yzuGLEWC3+VDynU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d/K9YNVS7ltWEgnQj5oYbH5hWmhcl5BqPq+/x8nLjmU=;
+	b=PCp7uBfJ9YTZNgzPiqD6ghIY3gKdbwCfJqIBf1sfw3po9sQAHP9OC5+3LczZ5rQoPpzdbG
+	h31E4eDysYTqGYF3t2szbeL3jpAfKFOxCQgb93iP0TqpuuCzNl0sR6wo5C0/uLXW5Om6XL
+	kzf3CSZBcfVQyBEJPQymrL1fj9whZuA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-vZdtvF6iOGKK1VHHW_x7TQ-1; Thu, 09 Jan 2025 08:38:21 -0500
-X-MC-Unique: vZdtvF6iOGKK1VHHW_x7TQ-1
-X-Mimecast-MFC-AGG-ID: vZdtvF6iOGKK1VHHW_x7TQ
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aa6704ffcaeso89955966b.2
-        for <regressions@lists.linux.dev>; Thu, 09 Jan 2025 05:38:21 -0800 (PST)
+ us-mta-576-f0xhXq3nPSeEAnQe3b9XCA-1; Thu, 09 Jan 2025 08:38:27 -0500
+X-MC-Unique: f0xhXq3nPSeEAnQe3b9XCA-1
+X-Mimecast-MFC-AGG-ID: f0xhXq3nPSeEAnQe3b9XCA
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-aa68952272bso104195266b.2
+        for <regressions@lists.linux.dev>; Thu, 09 Jan 2025 05:38:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736429900; x=1737034700;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uldQPwdfE7L9Dk1HaWI6s1M7Pg4/zwkf9XHa0qYWEsU=;
-        b=kuN7s+klNkvilIFrjiFIqw2anrJHC44lH1M1+kALr0O0pA9ul29gZa71j2p7uzuKp6
-         h9I9b91TYOthOXYyStJ6Bq31Nddz4nxu+2cCYUTQIkbQgJM/A6tv14k86h1mecr7I41w
-         eIT8A2vcH37PCKf4jpwEXkQsimtIka4pM9kMYTyuOZT7bSitCHjSs8DkccTNjZ3K7MCB
-         26Hz8Vb3gIhVWjBKqDe+4zn7ZZcpv4HVTFh6PUu+X6T2A6W2nhI29ROY/7g5BxYRm8jH
-         iNKAd7rPAx3SYjjcgzvvplX98QcO3IKihfYErTh/0++06ciSprlwizxildLcd0OOVWQS
-         tuBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6FNu8IfFcLKlBOt/TTmcQBNHvqAhGBhK2OWzjZcwqijhjlWj5PfPR5mFUBNie7hSXZ3xjuqMtv/oJGA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz3WuCPi7cZ5S0aU56yl6NCMQlv4+4vONEFbFJI3KL0lxJVOaFe
-	MJQVhN26NQ5jND29bspytg/X38uvW+EeNy4XcZns7MHmKsvcG6ODTNRwV0asJoNqwSwJCgC0ZiT
-	ALFCShx3+GGQmATCE8Jz4P4YQ2HXoRfrEvKumo4xSLSEXL1rDiVeN7fzo2mEZ
-X-Gm-Gg: ASbGncuSBin0Ki4BjD8TXNZf+1aL8oWQLvjxhGungACFGoRLbE+WHbajZ9Y7eKd+R03
-	2+XM4pNRT1mVfB7dVor8H6j/wgzQ6egvDkXaSb5fA5Dbd6Sh4kBBRhHHAj0RZX36xJ8vyCS3+90
-	ChUDA4Ge3vID6jgQCB+SmK+Un77Z+znEmx8BfF+FOAMeSMrrsM8LA/SFylLC0Ak8qJoCaLR0j41
-	HaUOJ1vOSwxBy30Erz+Ott+xIE49A5yTDh2Za0LI+vpJykdIWxgAKjT2YBG
-X-Received: by 2002:a17:907:36c8:b0:aa6:4494:e354 with SMTP id a640c23a62f3a-ab2abc92570mr698464966b.42.1736429900053;
-        Thu, 09 Jan 2025 05:38:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGidjwN/yFK9ZauIimr2u7AiwN7b2XDO8B6ecoGAlxpK3GFkQSMXGdYvA9XVkfNkK6maNXm2Q==
-X-Received: by 2002:a17:907:36c8:b0:aa6:4494:e354 with SMTP id a640c23a62f3a-ab2abc92570mr698462166b.42.1736429899595;
-        Thu, 09 Jan 2025 05:38:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1736429906; x=1737034706;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d/K9YNVS7ltWEgnQj5oYbH5hWmhcl5BqPq+/x8nLjmU=;
+        b=FIDwNuW3lwbXq8x4Emkav9NgDqpP2B4qK63AhW9b7DWy6sLiLGzxeI9Zm2d6FxHY+q
+         FD4a5sCipfsUPRfthZ5EpRDlgJ9iY7Sl9uK89h6WvIz96hMJIsF8XruA8L4VcXw2bxQ6
+         XX9EdFzp9RQJTmzv7pXKxREir7U0gc2t2a/Xo46tUc1KmG8p6qAopyrP2fgqfcHi/9Pi
+         VADhXeBZayiZtKP6J5chyqbM0YBwqBdnHCA5wHmQ/ZIJl9Ff9iR3mUS4Qrx1xL+RrEGD
+         h7frRwdtGoC07VyqfQeGE+eFRVYxYHqZK2ZD5/iYvpJ54Ur/rXZ7Zkybv0STbIrjpwI0
+         uC5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUBE1ws6mF2KY2o42fy3T5KOIF6f2NaoRfRjLQW0a6PATQIFY5trMbDtIm6qXs9L2Jjo/r7n1fSMahx5A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YziOvYxi5PUWMVGjjfR/QZFYG39lMf+LzkwDd/xzyF0DZwBxs6W
+	59W9IIL58N0/uVy7kCibnjZ8s7VPpODRFzZpraPo30IyaeaOANKYTvx67iacNZHCuHnlMjfYUMz
+	M9wr1PK/uRjE2fm4Fs0yrdXGghNDqEurJeEL/fnAfz2DYTWclD3BfP/mWmj0a2bzdlDoGV4Y=
+X-Gm-Gg: ASbGncsd3rHmnQ37QEqfXT0GSxPLtU/VxeCkwYcwmpfNUzNDepk1axtZ1uTMieKcjrl
+	3+cPL5WojFu1T8EOB5v5sC+c1n87jzB5e6uNgEQ988Kw5h7ajamfkM8Z4YccwTkP0+t4eEUL/mm
+	7Y+++37BmPhaoGqKOyTqcAb7CgrFPiJrQ2XbqxjL1bQkNA+FxJQlK+X7lAzs3KYdmD2yjc8/MLz
+	DHu5N5//FelNjdbZjM7mnS5NzX/7COH6bW2N4NxXX6VgWyUNWahDny1qI0J
+X-Received: by 2002:a17:907:94cc:b0:aa6:7cae:dba7 with SMTP id a640c23a62f3a-ab2ab6a851amr624677666b.4.1736429906037;
+        Thu, 09 Jan 2025 05:38:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGTbBeYDIBQ3z954w6dfAEk3XY9Iu9HEUTdIMdZmv3AtPH2uw4HEV5T8fdkL1pcscV4BnFyug==
+X-Received: by 2002:a17:907:94cc:b0:aa6:7cae:dba7 with SMTP id a640c23a62f3a-ab2ab6a851amr624675766b.4.1736429905640;
+        Thu, 09 Jan 2025 05:38:25 -0800 (PST)
 Received: from [192.168.10.47] ([151.62.105.73])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d9904a5277sm591739a12.80.2025.01.09.05.38.18
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c95648e7sm72802566b.95.2025.01.09.05.38.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 05:38:19 -0800 (PST)
+        Thu, 09 Jan 2025 05:38:23 -0800 (PST)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -71,10 +73,12 @@ Cc: oliver.upton@linux.dev,
 	seanjc@google.com,
 	linuxppc-dev@lists.ozlabs.org,
 	regressions@lists.linux.dev
-Subject: [PATCH 0/5] KVM: e500: map readonly host pages for read, and cleanup
-Date: Thu,  9 Jan 2025 14:38:12 +0100
-Message-ID: <20250109133817.314401-1-pbonzini@redhat.com>
+Subject: [PATCH 2/5] KVM: e500: use shadow TLB entry as witness for writability
+Date: Thu,  9 Jan 2025 14:38:14 +0100
+Message-ID: <20250109133817.314401-3-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250109133817.314401-1-pbonzini@redhat.com>
+References: <20250109133817.314401-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -82,60 +86,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uN1SUVtklgrqbdRgsnLeo8jDXClhHtgcSA0rnMLFGr0_1736429900
+X-Mimecast-MFC-PROC-ID: 0eWxTy_AUl8LgrKXyE6BeS46TC0-3sGXfXbb5YNCIPk_1736429906
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-[Oliver/Will/Anup/Andrew, you're Cc'd because of an observation below
- on VM_PFNMAP mappings. - Paolo]
+kvmppc_e500_ref_setup is returning whether the guest TLB entry is writable,
+which is than passed to kvm_release_faultin_page.  This makes little sense
+for two reasons: first, because the function sets up the private data for
+the page and the return value feels like it has been bolted on the side;
+second, because what really matters is whether the _shadow_ TLB entry is
+writable.  If it is not writable, the page can be released as non-dirty.
+Shift from using tlbe_is_writable(gtlbe) to doing the same check on
+the shadow TLB entry.
 
-The new __kvm_faultin_pfn() function is upset by the fact that e500
-KVM ignores host page permissions - __kvm_faultin requires a "writable"
-outgoing argument, but e500 KVM is passing NULL.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/powerpc/kvm/e500_mmu_host.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-While a simple fix would be possible that simply allows writable to
-be NULL, it is quite ugly to have e500 KVM ignore completely the host
-permissions and map readonly host pages as guest-writable.  A more
-complete fix is present in the second to fourth patches (the first is
-an independent bugfix, Cc'd to stable).
-
-The last one removes the VMA-based attempts at building huge shadow TLB
-entries, in favor of using a PTE lookup similar to what is done for x86.
-This special casing of VM_PFNMAP does not work well with remap_pfn_range()
-as it assumes that VM_PFNMAP areas are contiguous.  Note that the same
-incorrect logic is there in ARM's get_vma_page_shift() and RISC-V's
-kvm_riscv_gstage_ioremap().
-
-Fortunately, for e500 most of the code is already there; it just has to
-be changed to compute the range from find_linux_pte()'s output rather
-than find_vma().  The new code works for both VM_PFNMAP and hugetlb
-mappings, so the latter is removed.
-
-If this does not work out I'll go for something like
-https://lore.kernel.org/kvm/Z3wnsQQ67GBf1Vsb@google.com/, but
-with the helper in arch/powerpc/kvm/e500_mmu_host.c.
-
-The series is compile-tested only.  Christian, please test
-this as we do not have e500 hardware readily availabe.
-
-Thanks,
-
-Paolo
-
-Supersedes: <20250101064928.389504-1-pbonzini@redhat.com>
-
-Paolo Bonzini (5):
-  KVM: e500: retry if no memslot is found
-  KVM: e500: use shadow TLB entry as witness for writability
-  KVM: e500: track host-writability of pages
-  KVM: e500: map readonly host pages for read
-  KVM: e500: perform hugepage check after looking up the PFN
-
- arch/powerpc/kvm/e500.h          |   2 +
- arch/powerpc/kvm/e500_mmu_host.c | 202 +++++++++++++------------------
- 2 files changed, 89 insertions(+), 115 deletions(-)
-
+diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
+index 732335444d68..06e23c625be0 100644
+--- a/arch/powerpc/kvm/e500_mmu_host.c
++++ b/arch/powerpc/kvm/e500_mmu_host.c
+@@ -242,7 +242,7 @@ static inline int tlbe_is_writable(struct kvm_book3e_206_tlb_entry *tlbe)
+ 	return tlbe->mas7_3 & (MAS3_SW|MAS3_UW);
+ }
+ 
+-static inline bool kvmppc_e500_ref_setup(struct tlbe_ref *ref,
++static inline void kvmppc_e500_ref_setup(struct tlbe_ref *ref,
+ 					 struct kvm_book3e_206_tlb_entry *gtlbe,
+ 					 kvm_pfn_t pfn, unsigned int wimg)
+ {
+@@ -251,8 +251,6 @@ static inline bool kvmppc_e500_ref_setup(struct tlbe_ref *ref,
+ 
+ 	/* Use guest supplied MAS2_G and MAS2_E */
+ 	ref->flags |= (gtlbe->mas2 & MAS2_ATTRIB_MASK) | wimg;
+-
+-	return tlbe_is_writable(gtlbe);
+ }
+ 
+ static inline void kvmppc_e500_ref_release(struct tlbe_ref *ref)
+@@ -493,10 +491,11 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
+ 			goto out;
+ 		}
+ 	}
+-	writable = kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg);
+ 
++	kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg);
+ 	kvmppc_e500_setup_stlbe(&vcpu_e500->vcpu, gtlbe, tsize,
+ 				ref, gvaddr, stlbe);
++	writable = tlbe_is_writable(stlbe);
+ 
+ 	/* Clear i-cache for new pages */
+ 	kvmppc_mmu_flush_icache(pfn);
 -- 
 2.47.1
 
