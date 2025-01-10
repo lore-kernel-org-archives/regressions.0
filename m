@@ -1,95 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gbr-app-1.alpinelinux.org (gbr-app-1.alpinelinux.org [213.219.36.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF0220C02B;
-	Fri, 10 Jan 2025 11:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6602C20E329
+	for <regressions@lists.linux.dev>; Fri, 10 Jan 2025 13:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.219.36.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736508293; cv=none; b=O0OtENtYsChtWlgKwwOYJ2aAZ1/pEyg1Rkx3uTnZ4FUiPdGpuodnoIiFqLIjw7fhm/izjPyNL1MidPDhtkl2j7G6BCrwASkWbGVirf6+183ouQ5LTP5uodfttzULSoLpY4Q75sn8kH+d6n5kQFtbyzvmX3s6q5Mj6hysQ5FUsSs=
+	t=1736517010; cv=none; b=doU81d1eW0O5TExkobpDHmi8/PaAi2ioECQjHdze3bKn5J8qlwfwJBHnejiz7L2ROzOENhZbFPI58IlEEFiwXqAH9Jq3is27EfreiYrmMpIGn/41lxHKblU/gFKx6vAgqaJlYD5YXIjbQu4LjNrRnhaHBPZMAOPg4rFgPzyOS5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736508293; c=relaxed/simple;
-	bh=DHGnjopH6C4NMV+3lFpgBWFUy5Du06runOsZvrEz6oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PaAU76W8z2EKCBowyYsbsGlBrzAZDEMIjEXmveBSMO+UW7aKmqrd6lN7ymgfSSFZloBOHGA54Y7CL7klBcy7PD17wh7Erjfw44fxT6LujxNqbXj60UMhUmT1n4PlwPlE+Mss7InLFqmJDtgOZD8IKqoJwqeMvpHmubMu7eDXj00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2sj99Fa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736517010; c=relaxed/simple;
+	bh=YJ755cDs+D875wWnarRFX9kBWozuIJhH2j3k/5Ovgz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iJe/S14Msi1CLbuD2YTVzgIdRrTMLFA++rQ35dZDOx5HNn28uFp/ujwDpdvV3uBYbEeHM2XlyYhUu6one/R799u8ZTuJ2koLyTKdHdgFJmG99ghFFGBo2rPjAy8cjf8dbI8UmLC6io8/C0cO6CmfsY2mAKmMflFbensUTyxJ/u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org; spf=pass smtp.mailfrom=alpinelinux.org; dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b=fG5ICY40; arc=none smtp.client-ip=213.219.36.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpinelinux.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2sj99Fa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88380C4CED6;
-	Fri, 10 Jan 2025 11:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736508292;
-	bh=DHGnjopH6C4NMV+3lFpgBWFUy5Du06runOsZvrEz6oc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k2sj99Fa6m8krVxYtbkeLN92EtZ7b3ys8x6DOPc1oknJv26PLbXasu2lT5dGbDgnW
-	 tbA/VX/vzjVzQh+6HLCNLw6NFjd0OKAyR7exvTFHatrGpNwrsUOW+MWAkwFv4NeLHT
-	 5uOzSB38RqrtV2oASlNkiKIBpu1349K9DZEEcEmWS+4UjuphoDJgdP3VCUs/0l5Mjk
-	 E3a+8h1psni4YhusYvSYf2J5bEzgF+DPOAXk88q9MchxtLk5RFIvHa248PQcYF7UXS
-	 YuKg+bpxW3S6Jaurr5LZXx6cSCPl4OAVJBdLUHsir06/bCp60qhCtI5m5xNjyYyllY
-	 2WFFsCHulNm3g==
-Date: Fri, 10 Jan 2025 12:24:47 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] BU40N Blu-Ray drive broken since
- 7627a0edef54
-Message-ID: <Z4EDf4ecHyfTq3Hp@x1-carbon>
-References: <e2be6f70-dff6-4b79-bd49-70ec7e27fc1c@heusel.eu>
+	dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b="fG5ICY40"
+Received: from ncopa-desktop (unknown [IPv6:2001:4646:fb05:0:ad82:2c09:779f:8848])
+	(Authenticated sender: ncopa@alpinelinux.org)
+	by gbr-app-1.alpinelinux.org (Postfix) with ESMTPSA id C49D22266EA;
+	Fri, 10 Jan 2025 13:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpinelinux.org;
+	s=smtp; t=1736516408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7VT1CASTILdcekWmkvd1KQ0cV341wJHTu62CXzb1NpA=;
+	b=fG5ICY40w4dIFz1Lrw2nwl+h8WDpTRMxQNeEUMEyg2fAQ5JQ+0unGVNCZ/GukfssWVqwZ7
+	Uvuj1DGDEni6jZsTwSzdNJ3Qdh5oDzR04oTvpr8hoG7l2JKUhhnv7iv5LvoEf9Zy7mrOFv
+	sfELz0IQnaW/fpOKm4iUjiWrHbB44v8=
+Date: Fri, 10 Jan 2025 14:40:04 +0100
+From: Natanael Copa <ncopa@alpinelinux.org>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Subject: regression in 6.6.70:  kexec_core.c:1075:(.text+0x1bffd0):
+ undefined reference to `machine_crash_shutdown'
+Message-ID: <20250110144004.1fca120a@ncopa-desktop>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-alpine-linux-musl)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2be6f70-dff6-4b79-bd49-70ec7e27fc1c@heusel.eu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 10, 2025 at 10:04:46AM +0100, Christian Heusel wrote:
-> Hello everyone,
-> 
-> we have recently received a report by a user in the Arch Linux Forums
-> user that their Blue Ray player, a HL-DT-ST BD-RE BU40N stopped working
-> somewhere since kernel version v6.8.0. We have then bisected the issue
-> together with them within the mainline kernel sources to the following
-> commit that changes the default power policy:
-> 
->     7627a0edef54 ("ata: ahci: Drop low power policy board type")
-> 
-> The user reports that adding "ahci.mobile_lpm_policy=1" as a kernel
-> parameter fixes the issue for them.
-> 
-> Additionally fellow forum user @loqs came up with a quirk patch, that
-> sadly was reported to not work:
-> 
-> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-> index c085dd8..ef01ccd 100644
-> --- a/drivers/ata/libata-core.c
-> +++ b/drivers/ata/libata-core.c
-> @@ -4118,6 +4118,9 @@ static const struct ata_dev_quirks_entry __ata_dev_quirks[] = {
->  	{ "SAMSUNG MZ7TD256HAFV-000L9", NULL,       ATA_QUIRK_NOLPM },
->  	{ "SAMSUNG MZ7TE512HMHP-000L1", "EXT06L0Q", ATA_QUIRK_NOLPM },
->  
-> +	/* Hitachi-LG Data Storage models with LPM issues */
-> +	{ "HL-DT-ST BD-RE BU40N", NULL, ATA_QUIRK_NOLPM },
-> +
->  	/* devices that don't properly handle queued TRIM commands */
->  	{ "Micron_M500IT_*",		"MU01",	ATA_QUIRK_NO_NCQ_TRIM |
->  						ATA_QUIRK_ZERO_AFTER_TRIM },
-> 
-> So if anyone has feedback on why the patch does not work or any
-> alternative ideas for a solution that would be highly appreciated!
+Hi!
 
-It would be nice if you could share a dmesg.
+When updating the Alpine Linux kernel to 6.6.70 I bumped into a new compile error:
 
-If you have applied the quirk properly, I would expect to see something
-similar to:
-
-[    2.989363] ata2.00: Model 'QEMU DVD-ROM', rev '2.5+', applying quirks: nolpm
+  LD      .tmp_vmlinux.kallsyms1
+ld: vmlinux.o: in function `__crash_kexec':
+/home/ncopa/aports/main/linux-lts/src/linux-6.6/kernel/kexec_core.c:1075:(.text+0x1bffd0): undefined reference to `machine_crash_shutdown'
+ld: vmlinux.o: in function `do_kexec_load':
+/home/ncopa/aports/main/linux-lts/src/linux-6.6/kernel/kexec.c:166:(.text+0x1c1b4e): undefined reference to `arch_kexec_protect_crashkres'
+ld: /home/ncopa/aports/main/linux-lts/src/linux-6.6/kernel/kexec.c:105:(.text+0x1c1b94): undefined reference to `arch_kexec_unprotect_crashkres'
+make[2]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/scripts/Makefile.vmlinux:37: vmlinux] Error 1
+make[1]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/Makefile:1164: vmlinux] Error 2
+make: ***
+[/home/ncopa/aports/main/linux-lts/src/linux-6.6/Makefile:234:
+__sub-make] Error 2
 
 
-Kind regards,
-Niklas
+$ grep -E '(CRASH_CORE|_KEXEC)' .config
+CONFIG_CRASH_CORE=y
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC=y
+# CONFIG_KEXEC_FILE is not set
+# CONFIG_KEXEC_JUMP is not set
+CONFIG_ARCH_SUPPORTS_KEXEC=y
+CONFIG_ARCH_SUPPORTS_KEXEC_FILE=y
+CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY=y
+CONFIG_ARCH_SUPPORTS_KEXEC_SIG=y
+CONFIG_ARCH_SUPPORTS_KEXEC_SIG_FORCE=y
+CONFIG_ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG=y
+CONFIG_ARCH_SUPPORTS_KEXEC_JUMP=y
+
+
+Looking at the git history I notice this commit:
+
+> From e5b1574a8ca28c40cf53eda43f6c3b016ed41e27 Mon Sep 17 00:00:00 2001
+> From: Baoquan He <bhe@redhat.com>
+> Date: Wed, 24 Jan 2024 13:12:46 +0800
+> Subject: x86, crash: wrap crash dumping code into crash related ifdefs
+>
+> [ Upstream commit a4eeb2176d89fdf2785851521577b94b31690a60 ]
+>
+> Now crash codes under kernel/ folder has been split out from kexec
+> code, crash dumping can be separated from kexec reboot in config
+> items on x86 with some adjustments.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.6.y&id=e5b1574a8ca28c40cf53eda43f6c3b016ed41e27
+
+So a wild guess is that the commit(s) that splits out crash codes under
+kernel/ directory from kexec code also needs to be backported to
+linux-6.6.y?
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.12.y&id=02aff8480533817a29e820729360866441d7403d
+
+Thanks!
+
+-nc
