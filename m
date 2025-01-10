@@ -1,112 +1,83 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A361A9B38
-	for <regressions@lists.linux.dev>; Thu,  9 Jan 2025 19:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7B51FA4;
+	Fri, 10 Jan 2025 00:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736449647; cv=none; b=uQtATvQTZBz4xnn3uj2gThB4nxbYIsGLivWKsRa4Xc/a/8Z7kE8T9UGk85hQUMR12R+OS0TpHQ66KvdpqAk6cnhENOgraIdAjZCcmk+i9nc1DOLBVeQjgYx6Z9CMmfMw5RQZSfjYM/SNpri7X3ecMOo7kRt3SeAO8snpcXNMoKo=
+	t=1736467815; cv=none; b=cfHrTCESEz4LknqqmOM+dWOdtpS4T/VM2K6Qo3BXhl2PwfBpWQNlrE8Mh13hNNys6L2M7x02kc39s8beinqXFpMPCFHS0Xyotr9dGTEb+DXeg7ol6YX8gWaCWqDupTpJJjS72KupcGRWQHLAhGhmPVwQaPy7lNvgE7L4RVzrxXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736449647; c=relaxed/simple;
-	bh=MKdvbtlSNREUD9tQ3WDTw2X1xsQst3yft3V5eJgw5mU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=deFA1wSpi10qoLKEZAIA/T6wA7+L6LLkmco0lgAckMFFOfINHxQ4khB0i8hy6Op6iOLbbcIUGV+kswbQkZOuvCEnXVFyK1oH+JlaQYcdxc9pfmUKy0qtUCKOJ5z3Qy+kMOqePINKMMO/B7LAicrKkdDpp9j9sOo6iMjbfCbk9BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Df+/4cDp; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1736467815; c=relaxed/simple;
+	bh=Y0Ev5vFJ6GI2V8OhWS1fMtIGvX6uJFWfskQrPfOqLoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bukFM2EhpRAtr09lSdxZhl3S2e3kF7q4zpb8F47tnJakgubTCf+QAX4tc99OuHg0HzJ8GgmYQJgozMHWmc6b9jJHJqI0E3qSjDwcSUgHSkhj/WHCL7k4LhdpcYd5aSQBuzrUqyrRYLPxlfO+F3+L112LZG7RkC119VlidkE+QWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8ddMMcO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Df+/4cDp"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f46b7851fcso3594035a91.1
-        for <regressions@lists.linux.dev>; Thu, 09 Jan 2025 11:07:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736449646; x=1737054446; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAFl8oxMn+4OWiBfmOCqt1n9SmilznMI/rM3XM++rFU=;
-        b=Df+/4cDpNXPeVW18+WmajnaHH7Zn5+VqMs9ONr3j/AO0bhQ0srhlOwAKdBH1m8Gf54
-         /a0Lk6YEbex8lQeIElxpQKke/8629ub43+lMy6psCWm1j73/xC8WL1WzjNv/XgV59A8u
-         cXhF0Gzlw7p1X3X7F1VRtTvDQdR/6JpV6Ot3y7mzCIl85ErYHgCDSf2vuuvo+I4Nxz+H
-         t+v+3bsm8Bu+Uz4x5HrX4R45ZlnDOswIlNaWtj0ntPkqg5wIPdUaJ/ykwthqlV+u5LFL
-         yqCQgo/6Mu8daIqsgraP72A8eyfoueAGGzSVbIlB6vrDOotDpOWA9rT1fLNwJQugtiT+
-         uDyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736449646; x=1737054446;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAFl8oxMn+4OWiBfmOCqt1n9SmilznMI/rM3XM++rFU=;
-        b=cnVw6ZgWUoXAIqXMkdx5WXGZ+pWPoFgudLNektdqMXh7IAdgPFSMLxRoPIWJY39Jpx
-         w17LFDKQfO7oZxiuY+uhIhO1TbjpbHG0EavDdvipuQk/dUeja7Gz35HWb13KB3lj57r+
-         eiYB9ujBqXMF4yqxZo5bjS3++HawcE/Vrw53PQ7rwc8uI1szGfU2Ti3WoZrca3+e9kEa
-         fJZBmsR35uPRdckfNFg0ckpbRI3kRWV2T8BgfcZ9h0L7n3hhIqIrCUmMQUtsu+J/Daru
-         xd3xl5TLztnp4gmWFvagty5dZW2vCCucjCkaEo9tGlw9RVQonYwLu2FrTRKuJvqCQyV3
-         jBTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVp0Zmcneh/mNA5+x5qdmOnbWiW5oLJCmw1GE0RKNemQztuJYPBcb/A5Qyj8LwO4kS5Nw/J4RAekYplrA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/Pm84yIeyFU/ryHHKmSCCf84XbQlVtS04hgjdgRO0d//Qf/6/
-	Ak5LuoltqB3A3RMAs+XJietu2X2k5t/iYxM31oc3CWLt8efR1QPIXdQZfgbiCOHU9Dk1Rt6VGpl
-	9cw==
-X-Google-Smtp-Source: AGHT+IGfqHfrrOW1TXoHzJjl1gNv82mqMiJA/BmNQ6TyvR9A3FEwcV69xv4bF8nQUa/IsMCkbReXjlWsoDg=
-X-Received: from pjb12.prod.google.com ([2002:a17:90b:2f0c:b0:2ea:5469:76c2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f91:b0:2ee:d797:40a4
- with SMTP id 98e67ed59e1d1-2f548f09ef9mr12271408a91.8.1736449645722; Thu, 09
- Jan 2025 11:07:25 -0800 (PST)
-Date: Thu, 9 Jan 2025 11:07:24 -0800
-In-Reply-To: <20250109133817.314401-6-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8ddMMcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9CAFC4CED2;
+	Fri, 10 Jan 2025 00:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736467815;
+	bh=Y0Ev5vFJ6GI2V8OhWS1fMtIGvX6uJFWfskQrPfOqLoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s8ddMMcOHDytrw8LpPlwyuzfeUNjRam3nGoUqXYlTGBsUDoSSmIRSIKaz3mn58tjf
+	 imZ4xGWe7H/vJjfs9kL/evXzb0mklqLXTfHAj0LP3hNr6X5vDnU9ZyzFAPjckuwYev
+	 shlD+oX6cugaJtXxYAoW4Gw9tyvRiSCpyJ3+TMw7kW9QXX5Rb/b+qqc5+e/pn2H+K5
+	 osPCMoa4NbeLa39ylst2LNq9GsPnonbntrQIUYvq9Lqb0urIGm8XkNEXECOl1kAaYw
+	 1FcQzqemS48nnOLyAiJtZqs5TzwmGRYlFNOc18VRtx080WmphedESbP6x6zh7u08TH
+	 oBIKIhiSvYgpw==
+Date: Thu, 9 Jan 2025 17:10:12 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Adrian Huang <ahuang12@lenovo.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Regression] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX
+Message-ID: <Z4BlZCWzu3OV3V2U@kbusch-mbp>
+References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
+ <Z36UsE5dj6j5HhkX@kbusch-mbp>
+ <20250109082849.GC20724@lst.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250109133817.314401-1-pbonzini@redhat.com> <20250109133817.314401-6-pbonzini@redhat.com>
-Message-ID: <Z4AebPhhcQfGVmNO@google.com>
-Subject: Re: [PATCH 5/5] KVM: e500: perform hugepage check after looking up
- the PFN
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oliver.upton@linux.dev, 
-	Will Deacon <will@kernel.org>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, linuxppc-dev@lists.ozlabs.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109082849.GC20724@lst.de>
 
-On Thu, Jan 09, 2025, Paolo Bonzini wrote:
-> @@ -483,7 +383,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
->  	 * can't run hence pfn won't change.
->  	 */
->  	local_irq_save(flags);
-> -	ptep = find_linux_pte(pgdir, hva, NULL, NULL);
-> +	ptep = find_linux_pte(pgdir, hva, NULL, &psize);
->  	if (ptep) {
->  		pte_t pte = READ_ONCE(*ptep);
+On Thu, Jan 09, 2025 at 09:28:49AM +0100, Christoph Hellwig wrote:
+> On Wed, Jan 08, 2025 at 08:07:28AM -0700, Keith Busch wrote:
+> > It should always be okay to do smaller transfers as long as everything
+> > stays aligned the logical block size. I'm guessing the dma opt change
+> > has exposed some other flaw in the nvme controller. For example, two
+> > consecutive smaller writes are hitting some controller side caching bug
+> > that a single larger trasnfer would have handled correctly. The host
+> > could have sent such a sequence even without the patch reverted, but
+> > happens to not be doing that in this particular test.
+> 
+> Yes.  This somehow reminds of the bug with an Intel SSD that got
+> really upset with quickly following writes to different LBAs inside the
+> same indirection unit.
 
-LOL, this code is such a mess.  If no ptep is found, IRQs are left disabled.  The
-bug has existed since commit 691e95fd7396 ("powerpc/mm/thp: Make page table walk
-safe against thp split/collapse"), i.e. we didn't accidentally delete a
-local_irq_restore() at some point.
+Good old https://bugzilla.redhat.com/show_bug.cgi?id=1402533 ...
 
-@@ -468,14 +469,23 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
- 
- 
-        pgdir = vcpu_e500->vcpu.arch.pgdir;
-+       /*
-+        * We are just looking at the wimg bits, so we don't
-+        * care much about the trans splitting bit.
-+        * We are holding kvm->mmu_lock so a notifier invalidate
-+        * can't run hence pfn won't change.
-+        */
-+       local_irq_save(flags);
-        ptep = find_linux_pte_or_hugepte(pgdir, hva, NULL);
-        if (ptep) {
-                pte_t pte = READ_ONCE(*ptep);
- 
--               if (pte_present(pte))
-+               if (pte_present(pte)) {
-                        wimg = (pte_val(pte) >> PTE_WIMGE_SHIFT) &
-                                MAS2_WIMGE_MASK;
--               else {
-+                       local_irq_restore(flags);
-+               } else {
-+                       local_irq_restore(flags);
-                        pr_err_ratelimited("%s: pte not present: gfn %lx,pfn %lx\n",
-                                           __func__, (long)gfn, pfn);
-                        ret = -EINVAL;
+> But as the new smaller size is nicely aligned
+> that seems unlikely.  Maybe the higher number of commands simply overloads
+> the buggy firmware?
+
+Maybe the higher size creates different splits that better straddle some
+unreported internal boundary we don't know about. This all just points
+to some probabilisitic scenario that somehow happens more often with
+a lower transfer limit.
+
+The bugzilla reports disabling VWC makes the problem go away. That may
+be a timing thing or a caching thing, but suggests a kernel bug is less
+likely (yay!?); not easy to tell so far. It's just concerning multiple
+vendor devices are reporting a similiar observation, so maybe these are
+not even the same root problem.
