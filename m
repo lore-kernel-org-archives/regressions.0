@@ -1,111 +1,189 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACCB18622
-	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 14:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736605319; cv=none; b=sjP3gTszkHPUOkm/wo5jDxvcTqyxJz9fc2lN93DswpoXshB+NcsTeFTX7WaM94blt8G8XZR2nwiDERknOoVslZim7mx/umJPyV2+DzR5QYdMHBCMUdNneF8cilx0ep8dXxLXD+GtX+PpN9OlaShCWGOAKJL4dlE1jDPzI7/bf9k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736605319; c=relaxed/simple;
-	bh=clD0JYRcF/C1xi3xGggMAmmDiTfzk5reKILZo8Lx1Jk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EO86lQvPvPJgsa6uwsHZZXyGWa4ujdJyjgGNs5LDZCd/VOrwh3uIncu77nkdwJST+d0xziAmYgSI5M98ToyXSJ+KmL0hRzefUNif36yehmZjaogkR7MpPEOTuoHE1NMREci7C7gSuAzX5O81FsOd4WQIA0txBwyVJpKJ7WwbQi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=A5pqBkVs; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE641AC435
+	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 14:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736606895; cv=pass; b=jNsC6q321OS59+qeu7ONrjaB3JcofsBsIdUFzTx0Vx6yDqIfWZk07+VIX5djvgUBD3J7RQoulgABtnkHu8jGoHYB+QIcpcWq9mu4ghNVfmNcglXh0nS/D8qshSTufOsMOXsODCljX8DXRrvFsA4joMcIDZuccxafD4DOFF95qYw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736606895; c=relaxed/simple;
+	bh=A5hUsZpX4kwHZ5z13ZE4CGkSD85ppexj2cymgd5/F04=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=n40nyxJE+1MKOI14tKnoS2GzLNsMGKu1LID2Q3rTbyQ6+fum8gr/ZEMj+wpfBLGybbxc3JKQ3V7glA3tBcgxVGKt0VxpSSo4ZRMtDUwKvMhVs76lyyeCPs3Ys8n47pRPZ6niKEK+7tJUDGUeMQULk4uFea91p5yJXDKYjF1IkYM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=IbJasbds; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=QfQSnP0z; arc=pass smtp.client-ip=85.215.255.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="A5pqBkVs"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YVgh16vjqz9sbF;
-	Sat, 11 Jan 2025 15:21:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1736605314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9N85Y4Z2qowL9rTsrfCGNbRfvRafyq+lZp7gyIycm2Y=;
-	b=A5pqBkVsu2yTZLCKZ6G5TbUuy775lMfStvRSvT9rho0HWJHCLdCBslmRTySoVQ7P5IEQ5V
-	MPGuIeQg9vt4A2eew/P0Fde+v3LmM6yXx6KUHPWhgwb6vdXp8RyIA+5jTUEjZd8DWC38t2
-	unhxNNZZm+3yBDJDq0HkWyGJiMTkfFSWv/R6vuP9eHjT2StDL66530WT8ObshImA10MoRN
-	KRHqCz7gefx6kHRAD7E7ASsMZrgb2CzWhEejRLEEShp26toivf9rgD6T2iI3gwkpCgS1C0
-	SlfJv6/Jz23ZVgvjUdHg5LK8rSzgUH+K7JV3FU/w0VR++5X/l0dVfwwx5kULmA==
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-  Chris Lew <quic_clew@quicinc.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,  Johan Hovold
- <johan+linaro@kernel.org>,  Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>,  Konrad Dybcio <konradybcio@kernel.org>,
-  Abel Vesa <abel.vesa@linaro.org>,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,
-  stable@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-In-Reply-To: <Z36Gag6XhOrsIXqK@hovoldconsulting.com> (Johan Hovold's message
-	of "Wed, 8 Jan 2025 15:06:34 +0100")
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
-	<Zwj3jDhc9fRoCCn6@linaro.org> <87wmf7ahc3.fsf@oltmanns.dev>
-	<Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
-	<Z36Gag6XhOrsIXqK@hovoldconsulting.com>
-Date: Sat, 11 Jan 2025 15:21:35 +0100
-Message-ID: <87wmf18m8g.fsf@oltmanns.dev>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="IbJasbds";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="QfQSnP0z"
+ARC-Seal: i=1; a=rsa-sha256; t=1736606868; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=om/vED0/Sahl5HNXMWabjBxkbojeojay8ryan9mYjl3xth6lgMuxqAVXy1ueh8q3/4
+    pJI93WWe1FCDVkhpLsYHpmhdwQ56/11zfRZ7vQDdy+KQ/RKBn8w+FLKeZ1ILtFebT8sh
+    AsCR9aDEvEwsEorZWisTuK0/5KMmHHCHLIql6C/HXAy6cdrTNkXQcvf/FP4kHYLESqt0
+    OyfqljjTwvEHQCbt7SH0oU4+x7mfef5Iy+ctnz8IgzylRtARoSvusGLpj89tUeMFPIBD
+    S4HmicOvshQQluDL8ywkjNAKmY07+1oPqQOL4Zt618kw+MD6TTUHnl1bdUyq8XlwWmno
+    ZXIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1736606868;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
+    From:Subject:Sender;
+    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
+    b=rKhK3hPpV+VJsLxTdx94FdAf783/3czbCHA3s+73OZRxfz1OwZd5x8RYkrbsFsFuLI
+    WA0am9KkIddV3aKuO5I1KUxwIGlBBHm+o0NwQN2B4ZAohQchXYOJzKh/mW1MyZJc3s+Y
+    Vc6eapfv3krgDAEw71aEuID8oEuc33x6KACHApjiyDoJEsfmUM//6a76xI8ercnwFVNE
+    qrk+nW80WYFDF6TrEWa6BVmiai3JRQuPLs0I9JpFanXh8StVx+Rhe1TO/ne9z9/hmww0
+    ilfmlrkZ4Xv8H2g51DcZTYfHp1rRip4cab/KvkUFXHGqjri5vZfvXKtcvG/3oO0pCsPF
+    hsPA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1736606868;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
+    From:Subject:Sender;
+    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
+    b=IbJasbdsd4Tk/yX5RFbEZL0rLMzn7bhqMP1hkDBhpodmz5v2mheTsWIcOttXba4eum
+    gO3PfbGhni9PCA7iOEkBdJFRGRQRBkWQEgRtd1qRjZ3fuJz0UaVrkhAh9Cr86J2Yte9X
+    gffFYbSd+pwRwYy+ArF1U9bVbZD2PcuSha48RE+suzcp5w90TXelWBP9r+vqjFyytpvG
+    pVBlTgTc1+FcSJzpL/pR4HFRItSv2atGltawLN+JXQo+XlfP1LM664Ka+DtpcRfMj5lY
+    RkMovrGcNvm7wmBo0RJI+DogAdUbizA85cq0fSuo5s2y0P6q5zrauASe3s41neGp9sKF
+    tPvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1736606868;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
+    From:Subject:Sender;
+    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
+    b=QfQSnP0z3Ok54I5Vi70PB3VZelgWffKaILeBOAdC4dKe6Up/xBk/vuClXCFrIP66Ro
+    fsRJO8DlaePnsFzyAOBQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EipGzhGnb3rrLiUtW3TtSfq8MBVvg=="
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 51.2.16 AUTH)
+    with ESMTPSA id ebe9c910BElmocD
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sat, 11 Jan 2025 15:47:48 +0100 (CET)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0 (1.0)
+Subject: [PATCH] KVM: allow NULL writable argument to __kvm_faultin_pfn
+Date: Sat, 11 Jan 2025 15:47:37 +0100
+Message-Id: <4C777C7B-4DC0-4428-BB70-34BECAC4828F@xenosoft.de>
+References: <Z3wnsQQ67GBf1Vsb@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>,
+ mad skateman <madskateman@gmail.com>,
+ Darren Stevens <darren@stevens-zone.net>, hypexed@yahoo.com.au,
+ Christian Zigotzky <info@xenosoft.de>
+In-Reply-To: <Z3wnsQQ67GBf1Vsb@google.com>
+To: Sean Christopherson <seanjc@google.com>
+X-Mailer: iPhone Mail (22C152)
 
-On 2025-01-08 at 15:06:34 +0100, Johan Hovold <johan@kernel.org> wrote:
-> On Tue, Jan 07, 2025 at 11:02:24AM +0100, Johan Hovold wrote:
->> On Mon, Jan 06, 2025 at 08:10:52PM +0100, Frank Oltmanns wrote:
->
->> > Thank you so much for this idea. I'm currently using this workaround on
->> > my sdm845 device (where the in-kernel pd-mapper is breaking the
->> > out-of-tree call audio functionality).
->>
->> Thanks for letting us know that the audio issue affects sdm845 as well
->> (I don't seem to hit it on sc8280xp and the X13s).
->
-> And today I also hit this on the sc8280xp CRD reference design, so as
-> expected, there is nothing SoC specific about the audio service
-> regression either:
->
-> [   11.235564] PDR: avs/audio get domain list txn wait failed: -110
-> [   11.241976] PDR: service lookup for avs/audio failed: -110
->
-> even if it may be masked by random changes in timing.
->
-> These means it affects also machines like the X13s which already have
-> audio enabled.
 
-I've blocklisted the in-kernel pd-mapper module for now and have
-switched back to the userspace pd-mapper.
 
-I don't know if it's helpful or not, but I don't get these error logs
-when using to the in-kernel pd-mapper. It's just that the phone's mic
-only works on approximately every third boot (unless I defer loading the
-module).
+> On 06 January 2025 at 07:57 pm, Sean Christopherson <seanjc@google.com> wr=
+ote:
+>=20
+> =EF=BB=BFOn Wed, Jan 01, 2025, Paolo Bonzini wrote:
+>> kvm_follow_pfn() is able to work with NULL in the .map_writable field
+>> of the homonymous struct.  But __kvm_faultin_pfn() rejects the combo
+>> despite KVM for e500 trying to use it.  Indeed .map_writable is not
+>> particularly useful if the flags include FOLL_WRITE and readonly
+>> guest memory is not supported, so add support to __kvm_faultin_pfn()
+>> for this case.
+>=20
+> I would prefer to keep the sanity check to minimize the risk of a page fau=
+lt
+> handler not supporting opportunistic write mappings.  e500 is definitely t=
+he
+> odd one out here.
+>=20
+> What about adding a dedicated wrapper for getting a writable PFN?  E.g. (u=
+ntested)
+>=20
+> ---
+> arch/powerpc/kvm/e500_mmu_host.c | 2 +-
+> arch/x86/kvm/vmx/vmx.c           | 3 +--
+> include/linux/kvm_host.h         | 8 ++++++++
+> 3 files changed, 10 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_=
+host.c
+> index e5a145b578a4..2251bb30b8ec 100644
+> --- a/arch/powerpc/kvm/e500_mmu_host.c
+> +++ b/arch/powerpc/kvm/e500_mmu_host.c
+> @@ -444,7 +444,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc=
+_vcpu_e500 *vcpu_e500,
+>=20
+>    if (likely(!pfnmap)) {
+>        tsize_pages =3D 1UL << (tsize + 10 - PAGE_SHIFT);
+> -        pfn =3D __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
+> +        pfn =3D kvm_faultin_writable_pfn(slot, gfn, &page);
+>        if (is_error_noslot_pfn(pfn)) {
+>            if (printk_ratelimit())
+>                pr_err("%s: real page not found for gfn %lx\n",
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 893366e53732..7012b583f2e8 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6800,7 +6800,6 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *=
+vcpu)
+>    struct page *refcounted_page;
+>    unsigned long mmu_seq;
+>    kvm_pfn_t pfn;
+> -    bool writable;
+>=20
+>    /* Defer reload until vmcs01 is the current VMCS. */
+>    if (is_guest_mode(vcpu)) {
+> @@ -6836,7 +6835,7 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *=
+vcpu)
+>     * controls the APIC-access page memslot, and only deletes the memslot
+>     * if APICv is permanently inhibited, i.e. the memslot won't reappear.
+>     */
+> -    pfn =3D __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &refcount=
+ed_page);
+> +    pfn =3D kvm_faultin_writable_pfn(slot, gfn, &refcounted_page);
+>    if (is_error_noslot_pfn(pfn))
+>        return;
+>=20
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index c788d0bd952a..b0af7c7f99da 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1287,6 +1287,14 @@ static inline kvm_pfn_t kvm_faultin_pfn(struct kvm_=
+vcpu *vcpu, gfn_t gfn,
+>                 write ? FOLL_WRITE : 0, writable, refcounted_page);
+> }
+>=20
+> +static inline kvm_pfn_t kvm_faultin_writable_pfn(const struct kvm_memory_=
+slot *slot,
+> +                         gfn_t gfn, struct page **refcounted_page)
+> +{
+> +    bool writable;
+> +
+> +    return __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, refcounted=
+_page);
+> +}
+> +
+> int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset=
+,
+>            int len);
+> int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long l=
+en);
+>=20
+> base-commit: 2c3412e999738bfd60859c493ff47f5c268814a3
+> --
 
->
->> > Is there any work going on on making the timing of the in-kernel
->> > pd-mapper more reliable?
->>
->> The ECANCELLED regression has now been fixed, but the audio issue
->> remains to be addressed (I think Bjorn has done some preliminary
->> investigation).
->
-> Hopefully Bjorn or Chris have some plan on how to address the audio
-> regression.
+This patch works. Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
 
-If you come up with a patch, I'd be glad to test it on my
-xiaomi-beryllium device.
+Thanks=
 
-Thanks again,
-  Frank
-
->
-> Johan
