@@ -1,171 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C95D1FC8;
-	Sat, 11 Jan 2025 17:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC1C1AB6FF
+	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 18:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736617417; cv=none; b=T/oJvV1R512qUHY220Uek4JgxBJ/rtShULDMK/3arhIeGDJOE802vDPK0D9aglJBlEg8KBYqOQHt81ykO+r8w+eKAFL3pKS9NJ2XQvEokjQBxW3PH0TYwdAEr3du3kaZPEG6iV5fnBg4LPPlC/SuiHjRVeWDFo4VGNf+xvaDpJQ=
+	t=1736621991; cv=none; b=fColBYT2WKi6tCjFfyyh0Pdf0i0Ax5svdLiKuWt25aLevlnCF4Ocamk3aqcyj6wYB2LGCLtVPHb1i3M1wZTxiGEa+ntyrTw+74Ck1pS5k99xzBVT31AyYO5QtXdUVCePp9rsWtkALAAvpfvpIrxOKc95WLjd6vM6LginnhR4gDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736617417; c=relaxed/simple;
-	bh=gfwzQfof4FDZzhjP1I8FK4NWQ2wQZrEEDHH9veGrIXk=;
+	s=arc-20240116; t=1736621991; c=relaxed/simple;
+	bh=oX5yPNdl+nQlEHEz0LVIlKvTWgYDyu44Yx/Y3chKZus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FeZ8noG896bwfb0JLUJLVidm4xsR14L86LnAQjPt0V09clut0M33CWTFhKaas7JejificMt8h3XbJx8JtNN+0zjtuSj7ZhSgg8GsXL98QxIr0Z7jP/fu1AV/aCqKxgonvW/XwFvbciz2t2lie5isbFXbI6JXy+mHH9tJAg1WfaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAk+4vcR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nEeA4HLJikWFUZqLXI2uFL0Qb7J+deGnIAEabr4+u2QNh9AcODtn3kw5YkHwqBfYBYcoNwYvrLnpY6NYTc39wZFeZIjI80fl84/Ynf0bZ9QfsGvJTHdeCi0ny2e5JKKgjA2Y4SXyFNrhNrUVDYiunjK6XpB0sCVQr1Bh+UV0CBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMGE9DMa; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAk+4vcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFB5C4CED2;
-	Sat, 11 Jan 2025 17:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736617416;
-	bh=gfwzQfof4FDZzhjP1I8FK4NWQ2wQZrEEDHH9veGrIXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TAk+4vcRAWVH7DLIjuAcmIWQH2hTQoO8I/VFZgL3IeATxvuh+mifQNiieVXvNHWEc
-	 HgYYkUO6JGvS4Kr2bm1wI57qlWqNVeaaC72ytPy0Bj8RA/z3f8iEO6IBLBhSY5/GWa
-	 CT+SGTMj19zr+dJDWHfohI7AvH016fgaeh5GcCovfJZjMYAjMqMskjTQYxfRzGdF0V
-	 5GMoTeCMhYw52NOKgzIqf7Y5yTWlbzV+EoV1iYuVLQCaOWkkwTGhXSgIZqzzsCIexP
-	 bs4ZMnGTMqVXElkPXycxl0GfJFQ3SW/9In6Kr2utuCN72J4kcq6TSZK3jX47fAU28S
-	 0LtnxcIF6IG0w==
-Date: Sat, 11 Jan 2025 12:43:35 -0500
-From: Sasha Levin <sashal@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	LTP List <ltp@lists.linux.it>, Barry Song <baohua@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
-	David Gow <davidgow@google.com>, Shuah Khan <shuah@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [LTP] selftests: core: unshare_test: WARNING: at mm/util.c:671
- __kvmalloc_node_noprof
-Message-ID: <Z4Ktx-wizYLYnQfM@lappy>
-References: <CA+G9fYvcBvbabg+m7brKfpGCGZUcK+KHHTFX7hFvW6GmN2XF0g@mail.gmail.com>
- <CA+G9fYuHGTKM5P+nEifZwfALPfO9uw7sraCrGo-c3YzR=JjwJg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMGE9DMa"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43622267b2eso33281165e9.0
+        for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 10:59:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736621988; x=1737226788; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3DgohbenACHXn6wOW4eU9gM7Gu7Z7kDdY29V2QFR8Y=;
+        b=bMGE9DMa2mvrxnCiW1VYqreNTjnAfoImc56Iy/O0gUqQBaDrFtxu4RGkvliWPX1/Pp
+         W2sxcSB13iz/JS797jpzl6KYkgN0aUkEhNDVfg8d3vN2XPdr5K56pdpc2VIRfXAqD+mB
+         KG5kjjrXhQ/WrdITFk6V4TGD9zBxGzaO4QyHdKsmCVr1u/pCLuIj7Gm+frihgOryZlzx
+         JooLeKby9JwF3V3Y38LeMkwmAQ+kKhSSLSrHjLRsNNKSbknuANR8mtxxBupTJWkLCHZX
+         B2ohc2C9OMAtUz49wE+MTNdJ4qtrzd2/irkW/40mn3YQ4Uepf0eKb0Tax4QeMBEE6ImC
+         zHSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736621988; x=1737226788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3DgohbenACHXn6wOW4eU9gM7Gu7Z7kDdY29V2QFR8Y=;
+        b=FdUWtR8SyVqcFBCHF5HoTxMRIje1kjup3OL6a8AGFcPvcjG6KPXnc2upDDuJDlcpW8
+         VL26C8NE6cEs7cZYQrdMWk8fRRVurNs1CxjdjBFufktuND9DkdIZGos2JW4tFJV6dkUd
+         Qubxi/66ulaG0CfNQgNMz/GUzlMgHskRj3z0gDmLroVoMJ3pd1zHi+NCRhMYMJioAWD0
+         MKtH3xzteQtqPF+9hl6ENxS6oCJ4qzmkpRB7AJeiw13NoCxI+E2TrgVjwlOZL/qT+qRB
+         LIHZdzTQj1seve4aSk2OyICYOL7S6nTnv5UaNKhuv7BkJVQBK+NHVOZY+ZqPO03wR8zv
+         SQ+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUwAWE4kmcvzFby8wpnIh4LvCQqNyAKU2Q9QGwWZpODDQsLVWyMwo8wtccumHhrmAAifWy5MIl+jNe4UA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGkRIx/i7xZXPvdnO6uxRSsRRPDxvA3lCfpjlmL13sq/0OLudX
+	WfaueCOhdXE9xBakNJLPPcY8cdngLfoUqDKRC/bp9dCvmFpBrf97
+X-Gm-Gg: ASbGnctL/P3Ji3TEGivsWAXKFkKJ94Cq07HFETW1rRmUsTUBuqnJ8If0Sl+byk6KzVe
+	FLr0vIKnoigczbJGlRGJQksMATgfTW5V3EM7s4qR+39QOGO5ysZuidWNTTC7xKoA5fCZU1aL5eJ
+	3cDzFvQ0uJrC0WuIoWoydYcQCdw30EZ14oo7oM6nBSrmB0kKceAe3RznI66E/ikddfRv948wG+N
+	O/2J5OajqibzW6KFfKPn18q6TBDZ10eVr7ZI7zjlchanKyKk1Hadz0ccjiogZUhig==
+X-Google-Smtp-Source: AGHT+IEPA1ZIEy2BVvJIreSvtc7pK5EpKKeAI+bCNXKQkeEEBtMKu5+tlqaQ1Ywp2IM9xt0CHUsflQ==
+X-Received: by 2002:a05:600c:348c:b0:436:ed33:1535 with SMTP id 5b1f17b1804b1-436ed3316a4mr93947005e9.12.1736621987670;
+        Sat, 11 Jan 2025 10:59:47 -0800 (PST)
+Received: from debian.local ([83.105.230.12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e6263fsm92372725e9.39.2025.01.11.10.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2025 10:59:47 -0800 (PST)
+Date: Sat, 11 Jan 2025 18:59:45 +0000
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
+	regressions@lists.linux.dev, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] ACPI: video: Fix random crashes due to bad kfree
+Message-ID: <Z4K_oQL7eA9Owkbs@debian.local>
+References: <Z2yQvTyg_MWwrlj3@debian.local>
+ <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
+ <Z2yw_eJwR5ih1Npr@debian.local>
+ <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYuHGTKM5P+nEifZwfALPfO9uw7sraCrGo-c3YzR=JjwJg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
 
-On Wed, Dec 11, 2024 at 11:09:46AM +0530, Naresh Kamboju wrote:
->[Gentle Reminder]
->
->On Mon, 26 Aug 2024 at 18:50, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>
->> The following kernel warning is noticed on all arch and all devices while
->> running selftests: core: unshare_test on Linux next-20240823 and next-20240826.
->>
->> First seen on next-20240823.
->>   Good: next-20240822
->>   BAD:  next-20240823 and next-20240826
->
->This is an open issue from August.
->The reported kernel warning is still seen on linux next and mainline
->while running selftests: core: unshare_test.
+Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
+available for eDP") added function dm_helpers_probe_acpi_edid, which
+fetches the EDID from the BIOS by calling acpi_video_get_edid.
+acpi_video_get_edid returns a pointer to the EDID, but this pointer does
+not originate from kmalloc - it is actually the internal "pointer" field
+from an acpi_buffer struct (which did come from kmalloc).
+dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
+resulting in memory corruption which leads to random, intermittent
+crashes (e.g. 4% of boots will fail with some Oops).
 
-I attempted a bisection of the range provided above, and that has landed
-on: 611fbeb44a77 ("selftests:core: test coverage for dup_fd() failure
-handling in unshare_fd()"), so the underlying issue was probably there
-for much longer.
+Fix this by allocating a new array (which can be safely freed) for the
+EDID data, and correctly freeing the acpi_buffer pointer.
 
-Al, any thoughts on what could trigger this? I'm assuming you had
-something in mind when you added the above test?
+The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
+remove the extraneous kmemdup here as the EDID data is now copied in
+acpi_video_device_EDID.
 
->Linux version: 6.13.0-rc2-next-20241210
->> Crash log:
->> --------
->> # selftests: core: unshare_test
->> <4>[   61.084149] ------------[ cut here ]------------
->> <4>[ 61.085175] WARNING: CPU: 0 PID: 477 at mm/util.c:671
->> __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
->> <4>[   61.088958] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
->> sha512_ce sha512_arm64 drm fuse backlight dm_mod ip_tables x_tables
->> <4>[   61.093141] CPU: 0 UID: 0 PID: 477 Comm: unshare_test Not
->> tainted 6.11.0-rc5-next-20240826 #1
->> <4>[   61.094558] Hardware name: linux,dummy-virt (DT)
->> <4>[   61.096763] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT
->> -SSBS BTYPE=--)
->> <4>[ 61.097841] pc : __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
->> <4>[ 61.099701] lr : __kvmalloc_node_noprof (mm/util.c:661)
->> <4>[   61.100448] sp : ffff800080abbce0
->> <4>[   61.100819] x29: ffff800080abbcf0 x28: fff0000004549280 x27:
->> 0000000000000000
->> <4>[   61.101744] x26: 0000000000000000 x25: 0000000000000000 x24:
->> fff0000003615e40
->> <4>[   61.102512] x23: fff0000003615ec0 x22: bfafa45863b285c8 x21:
->> 0000000200002000
->> <4>[   61.103232] x20: 00000000ffffffff x19: 0000000000400cc0 x18:
->> 0000000000000000
->> <4>[   61.104053] x17: 0000000000000000 x16: 0000000000000000 x15:
->> 0000000000000000
->> <4>[   61.104927] x14: 0000000000000000 x13: 0000000000000000 x12:
->> 0000000000000000
->> <4>[   61.105752] x11: 0000000000000000 x10: 0000000000000000 x9 :
->> 0000000000000000
->> <4>[   61.106606] x8 : 0000000000000001 x7 : 0000000000000001 x6 :
->> 0000000000000005
->> <4>[   61.107377] x5 : 0000000000000000 x4 : fff0000004549280 x3 :
->> 0000000000000000
->> <4>[   61.108207] x2 : 0000000000000000 x1 : 000000007fffffff x0 :
->> 0000000000000000
->> <4>[   61.109262] Call trace:
->> <4>[ 61.109619] __kvmalloc_node_noprof (mm/util.c:671 (discriminator 1))
->> <4>[ 61.110248] alloc_fdtable (fs/file.c:133)
->> <4>[ 61.110751] expand_files
->> (include/linux/atomic/atomic-arch-fallback.h:457
->> include/linux/atomic/atomic-instrumented.h:33 fs/file.c:177
->> fs/file.c:238)
->> <4>[ 61.111171] ksys_dup3 (fs/file.c:1337)
->> <4>[ 61.111596] __arm64_sys_dup3 (fs/file.c:1355)
->> <4>[ 61.112006] invoke_syscall (arch/arm64/include/asm/current.h:19
->> arch/arm64/kernel/syscall.c:54)
->> <4>[ 61.112480] el0_svc_common.constprop.0
->> (include/linux/thread_info.h:127 (discriminator 2)
->> arch/arm64/kernel/syscall.c:140 (discriminator 2))
->> <4>[ 61.112955] do_el0_svc (arch/arm64/kernel/syscall.c:152)
->> <4>[ 61.113384] el0_svc (arch/arm64/include/asm/irqflags.h:55
->> arch/arm64/include/asm/irqflags.h:76
->> arch/arm64/kernel/entry-common.c:165
->> arch/arm64/kernel/entry-common.c:178
->> arch/arm64/kernel/entry-common.c:713)
->> <4>[ 61.113742] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:731)
->> <4>[ 61.115181] el0t_64_sync (arch/arm64/kernel/entry.S:598)
->> <4>[   61.115709] ---[ end trace 0000000000000000 ]---
->>
->>
->> Crash Log links,
->> --------
->>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/log
->>
->> Crash failed comparison:
->> ----------
->>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240826/testrun/24953436/suite/log-parser-test/test/check-kernel-exception-warning-cpu-pid-at-mmutilc-__kvmalloc_node_noprof/history/
->>
->> metadata:
->> ----
->>   git describe: next-20240823 and next-20240826
->>   git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->>   git sha: c79c85875f1af04040fe4492ed94ce37ad729c4d
->>
->> Please let me know if you need more information.
->>
->
->Kernel warning log:
->-----------------
-> - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241210/testrun/26261199/suite/kselftest-core/test/core_unshare_test/log
->
->> --
->> Linaro LKFT
->> https://lkft.linaro.org
->
->-- 
->Mailing list info: https://lists.linux.it/listinfo/ltp
+Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
+---
+Changes in v2:
+	- check kmemdup() return value
+	- move buffer management into acpi_video_device_EDID()
+	- return actual length value of buffer
+---
+ drivers/acpi/acpi_video.c              | 50 ++++++++++++++------------
+ drivers/gpu/drm/nouveau/nouveau_acpi.c |  2 +-
+ 2 files changed, 29 insertions(+), 23 deletions(-)
 
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 8274a17872ed..3c627bdf2d1b 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -610,16 +610,29 @@ acpi_video_device_lcd_get_level_current(struct acpi_video_device *device,
+ 	return 0;
+ }
+ 
++/*
++ *  Arg:
++ *	device	: video output device (LCD, CRT, ..)
++ *	edid    : address for returned EDID pointer
++ *	length  : _DDC length to request (must be a multiple of 128)
++ *
++ *  Return Value:
++ *	Length of EDID (positive value) or error (negative value)
++ *
++ *  Get EDID from ACPI _DDC. On success, a pointer to the EDID data is written
++ *  to the edid address, and the length of the EDID is returned. The caller is
++ *  responsible for freeing the edid pointer.
++ */
++
+ static int
+-acpi_video_device_EDID(struct acpi_video_device *device,
+-		       union acpi_object **edid, int length)
++acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length)
+ {
+-	int status;
++	acpi_status status;
+ 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+ 	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+ 	struct acpi_object_list args = { 1, &arg0 };
+-
++	int ret;
+ 
+ 	*edid = NULL;
+ 
+@@ -636,16 +649,17 @@ acpi_video_device_EDID(struct acpi_video_device *device,
+ 
+ 	obj = buffer.pointer;
+ 
+-	if (obj && obj->type == ACPI_TYPE_BUFFER)
+-		*edid = obj;
+-	else {
++	if (obj && obj->type == ACPI_TYPE_BUFFER) {
++		*edid = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
++		ret = *edid ? obj->buffer.length : -ENOMEM;
++	} else {
+ 		acpi_handle_debug(device->dev->handle,
+ 				 "Invalid _DDC data for length %d\n", length);
+-		status = -EFAULT;
+-		kfree(obj);
++		ret = -EFAULT;
+ 	}
+ 
+-	return status;
++	kfree(obj);
++	return ret;
+ }
+ 
+ /* bus */
+@@ -1435,9 +1449,7 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
+ {
+ 	struct acpi_video_bus *video;
+ 	struct acpi_video_device *video_device;
+-	union acpi_object *buffer = NULL;
+-	acpi_status status;
+-	int i, length;
++	int i, length, ret;
+ 
+ 	if (!device || !acpi_driver_data(device))
+ 		return -EINVAL;
+@@ -1477,16 +1489,10 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
+ 		}
+ 
+ 		for (length = 512; length > 0; length -= 128) {
+-			status = acpi_video_device_EDID(video_device, &buffer,
+-							length);
+-			if (ACPI_SUCCESS(status))
+-				break;
++			ret = acpi_video_device_EDID(video_device, edid, length);
++			if (ret > 0)
++				return ret;
+ 		}
+-		if (!length)
+-			continue;
+-
+-		*edid = buffer->buffer.pointer;
+-		return length;
+ 	}
+ 
+ 	return -ENODEV;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+index 8f0c69aad248..21b56cc7605c 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
++++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+@@ -384,7 +384,7 @@ nouveau_acpi_edid(struct drm_device *dev, struct drm_connector *connector)
+ 	if (ret < 0)
+ 		return NULL;
+ 
+-	return kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
++	return edid;
+ }
+ 
+ bool nouveau_acpi_video_backlight_use_native(void)
 -- 
-Thanks,
-Sasha
+2.39.5
+
