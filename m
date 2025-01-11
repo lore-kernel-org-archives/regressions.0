@@ -1,119 +1,111 @@
-Received: from d.mail.sonic.net (d.mail.sonic.net [64.142.111.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5137A634;
-	Sat, 11 Jan 2025 00:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACCB18622
+	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 14:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736554427; cv=none; b=L4GuppSJfO+hJuPBJMnCQFnPfVzz6GK3xruM9kcWm3v+8TI9ncH6/UXgc0Rlm5u8sROwnTGpvXDN02/KUYaoIZ8p6zfIUP9B9PdCE12npZ9C7BjyUof6yf22ZvyB3dFsBRUrohpd8bCO9fIkPQLZbuo1g99kUx3D0fG5X8k6IAw=
+	t=1736605319; cv=none; b=sjP3gTszkHPUOkm/wo5jDxvcTqyxJz9fc2lN93DswpoXshB+NcsTeFTX7WaM94blt8G8XZR2nwiDERknOoVslZim7mx/umJPyV2+DzR5QYdMHBCMUdNneF8cilx0ep8dXxLXD+GtX+PpN9OlaShCWGOAKJL4dlE1jDPzI7/bf9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736554427; c=relaxed/simple;
-	bh=kclRYrzwiJTudSJ7PWmOn5xrtuuT/jLmOYfxjO14luw=;
-	h=From:To:Cc:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=b/YnQXvDOJUeziuFiqFspoMm0v+x//yWjzOyakwL5ibSof+5FO4STmljpfOCdQXPZYoUhSyBtJGiJN5Ag8zWf0pqSP4UIXEMzeJCeJWQ0xmBYk01u7/ARJU+zLfXmY5B9PPqwrx78KZEQgIy+6h8mEtRd4vKZfaRhpoC5gRY58Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one; spf=pass smtp.mailfrom=nom.one; arc=none smtp.client-ip=64.142.111.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nom.one
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nom.one
-Received: from 192-184-189-209.static.sonic.net (192-184-189-209.static.sonic.net [192.184.189.209])
-	(authenticated bits=0)
-	by d.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 50B00EEu029325;
-	Fri, 10 Jan 2025 16:00:15 -0800
-From: Forest <forestix@nom.one>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] usb: xhci port capability storage change broke fastboot android bootloader utility
-Date: Fri, 10 Jan 2025 16:00:14 -0800
-Message-ID: <4kb3ojp4t59rm79ui8kj3t8irsp6shlinq@sonic.net>
-References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net> <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com> <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net> <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
-In-Reply-To: <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
+	s=arc-20240116; t=1736605319; c=relaxed/simple;
+	bh=clD0JYRcF/C1xi3xGggMAmmDiTfzk5reKILZo8Lx1Jk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EO86lQvPvPJgsa6uwsHZZXyGWa4ujdJyjgGNs5LDZCd/VOrwh3uIncu77nkdwJST+d0xziAmYgSI5M98ToyXSJ+KmL0hRzefUNif36yehmZjaogkR7MpPEOTuoHE1NMREci7C7gSuAzX5O81FsOd4WQIA0txBwyVJpKJ7WwbQi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=A5pqBkVs; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="A5pqBkVs"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YVgh16vjqz9sbF;
+	Sat, 11 Jan 2025 15:21:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1736605314;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9N85Y4Z2qowL9rTsrfCGNbRfvRafyq+lZp7gyIycm2Y=;
+	b=A5pqBkVsu2yTZLCKZ6G5TbUuy775lMfStvRSvT9rho0HWJHCLdCBslmRTySoVQ7P5IEQ5V
+	MPGuIeQg9vt4A2eew/P0Fde+v3LmM6yXx6KUHPWhgwb6vdXp8RyIA+5jTUEjZd8DWC38t2
+	unhxNNZZm+3yBDJDq0HkWyGJiMTkfFSWv/R6vuP9eHjT2StDL66530WT8ObshImA10MoRN
+	KRHqCz7gefx6kHRAD7E7ASsMZrgb2CzWhEejRLEEShp26toivf9rgD6T2iI3gwkpCgS1C0
+	SlfJv6/Jz23ZVgvjUdHg5LK8rSzgUH+K7JV3FU/w0VR++5X/l0dVfwwx5kULmA==
+From: Frank Oltmanns <frank@oltmanns.dev>
+To: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+  Chris Lew <quic_clew@quicinc.com>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,  Johan Hovold
+ <johan+linaro@kernel.org>,  Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>,  Konrad Dybcio <konradybcio@kernel.org>,
+  Abel Vesa <abel.vesa@linaro.org>,  linux-arm-msm@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,
+  stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
+In-Reply-To: <Z36Gag6XhOrsIXqK@hovoldconsulting.com> (Johan Hovold's message
+	of "Wed, 8 Jan 2025 15:06:34 +0100")
+References: <20241010074246.15725-1-johan+linaro@kernel.org>
+	<Zwj3jDhc9fRoCCn6@linaro.org> <87wmf7ahc3.fsf@oltmanns.dev>
+	<Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
+	<Z36Gag6XhOrsIXqK@hovoldconsulting.com>
+Date: Sat, 11 Jan 2025 15:21:35 +0100
+Message-ID: <87wmf18m8g.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Sonic-CAuth: UmFuZG9tSVaSU/DEmVq8Q9sjepS3hiIcO0KswngLP56zoXBeZaDHVok+yHcCGfiAyfG35PHV8XW6+QXh85FxDgqCuSXsTchD
-X-Sonic-ID: C;Jv0ICa/P7xGmAIGchs+snA== M;oEccCa/P7xGmAIGchs+snA==
-X-Spam-Flag: No
-X-Sonic-Spam-Details: 0.0/5.0 by cerberusd
+Content-Type: text/plain
 
-On Tue, 7 Jan 2025 14:29:35 +0200, Mathias Nyman wrote:
-
->Does disabling USB2 hardware LPM for the device make it work again?
+On 2025-01-08 at 15:06:34 +0100, Johan Hovold <johan@kernel.org> wrote:
+> On Tue, Jan 07, 2025 at 11:02:24AM +0100, Johan Hovold wrote:
+>> On Mon, Jan 06, 2025 at 08:10:52PM +0100, Frank Oltmanns wrote:
 >
->Adding USB_QUIRK_NO_LPM quirk "k" for your device vid:pid should do it.
->i.e. add "usbcore.quirks=0fce:0dde:k" parameter to your kernel cmdline.
-
-That fixed my test case on Debian kernel 6.12.8-amd64, which is among those
-that have been failing.
-
->Or alternatively disable usb2 lpm  during runtime via sysfs
->(after enumeration, assuming device is "1-3" as in the log):
-># echo 0 > /sys/bus/usb/devices/1-3/power/usb2_hardware_lpm
-
-That did not fix it. Maybe it's too late once the device is connected and
-enumerated?
-
->If those work then we need to figure out if we incorrectly try to enable
->USB2 hardware LPM, or if device just can't handle LPM even if it claims
->to be LPM capable.
+>> > Thank you so much for this idea. I'm currently using this workaround on
+>> > my sdm845 device (where the in-kernel pd-mapper is breaking the
+>> > out-of-tree call audio functionality).
+>>
+>> Thanks for letting us know that the audio issue affects sdm845 as well
+>> (I don't seem to hit it on sc8280xp and the X13s).
 >
->Host hardware LPM capability can be checked from xhci reg-ext-protocol
->fields from debugfs.
->cat /sys/kernel/debug/usb/xhci/0000:0c:00.0/reg-ext-protocol:*
->(please print content of _all_ reg_ext_protocol* files, LPM capability is
->bit 19 of EXTCAP_PORTINFO)
+> And today I also hit this on the sc8280xp CRD reference design, so as
+> expected, there is nothing SoC specific about the audio service
+> regression either:
+>
+> [   11.235564] PDR: avs/audio get domain list txn wait failed: -110
+> [   11.241976] PDR: service lookup for avs/audio failed: -110
+>
+> even if it may be masked by random changes in timing.
+>
+> These means it affects also machines like the X13s which already have
+> audio enabled.
 
-# cd /sys/kernel/debug/usb/xhci/0000:0c:00.0/
-# grep . reg-ext-protocol:*
-reg-ext-protocol:00:EXTCAP_REVISION = 0x03200802
-reg-ext-protocol:00:EXTCAP_NAME = 0x20425355
-reg-ext-protocol:00:EXTCAP_PORTINFO = 0x40000101
-reg-ext-protocol:00:EXTCAP_PORTTYPE = 0x00000000
-reg-ext-protocol:00:EXTCAP_MANTISSA1 = 0x00050134
-reg-ext-protocol:00:EXTCAP_MANTISSA2 = 0x000a4135
-reg-ext-protocol:00:EXTCAP_MANTISSA3 = 0x000a4136
-reg-ext-protocol:00:EXTCAP_MANTISSA4 = 0x00144137
-reg-ext-protocol:01:EXTCAP_REVISION = 0x03100802
-reg-ext-protocol:01:EXTCAP_NAME = 0x20425355
-reg-ext-protocol:01:EXTCAP_PORTINFO = 0x20000402
-reg-ext-protocol:01:EXTCAP_PORTTYPE = 0x00000000
-reg-ext-protocol:01:EXTCAP_MANTISSA1 = 0x00050134
-reg-ext-protocol:01:EXTCAP_MANTISSA2 = 0x000a4135
-reg-ext-protocol:02:EXTCAP_REVISION = 0x02000802
-reg-ext-protocol:02:EXTCAP_NAME = 0x20425355
-reg-ext-protocol:02:EXTCAP_PORTINFO = 0x00190c06
-reg-ext-protocol:02:EXTCAP_PORTTYPE = 0x00000000
+I've blocklisted the in-kernel pd-mapper module for now and have
+switched back to the userspace pd-mapper.
 
-# grep EXTCAP_PORTINFO reg-ext-protocol:*
-reg-ext-protocol:00:EXTCAP_PORTINFO = 0x40000101
-reg-ext-protocol:01:EXTCAP_PORTINFO = 0x20000402
-reg-ext-protocol:02:EXTCAP_PORTINFO = 0x00190c06
+I don't know if it's helpful or not, but I don't get these error logs
+when using to the in-kernel pd-mapper. It's just that the phone's mic
+only works on approximately every third boot (unless I defer loading the
+module).
 
->>> bool(0x40000101 & 1 << 19)
-False
->>> bool(0x20000402 & 1 << 19)
-False
->>> bool(0x00190c06 & 1 << 19)
-True
+>
+>> > Is there any work going on on making the timing of the in-kernel
+>> > pd-mapper more reliable?
+>>
+>> The ECANCELLED regression has now been fixed, but the audio issue
+>> remains to be addressed (I think Bjorn has done some preliminary
+>> investigation).
+>
+> Hopefully Bjorn or Chris have some plan on how to address the audio
+> regression.
 
->Device USB2 LPM capability can be checked from the devices BOS descriptor,
->visible (as sudo/root) with lsusb -v -d 0fce:0dde
+If you come up with a patch, I'd be glad to test it on my
+xiaomi-beryllium device.
 
-# lsusb -v -d 0fce:0dde |grep -B 5 LPM
-  USB 2.0 Extension Device Capability:
-    bLength                 7
-    bDescriptorType        16
-    bDevCapabilityType      2
-    bmAttributes   0x00000006
-      BESL Link Power Management (LPM) Supported
+Thanks again,
+  Frank
 
-I think that says the device claims support for LPM, yes?
-
-Maybe relevant: The failing test and lsusb were both run with the device in
-fastboot mode, which allows talking to the bootloader. Is it possible that a
-device would support LPM in normal operating modes, but not in bootloader
-mode, yet present the same capabilities data structure in both modes?
+>
+> Johan
