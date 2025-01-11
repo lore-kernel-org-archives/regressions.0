@@ -1,70 +1,66 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE641AC435
-	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 14:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967C41F16B
+	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 14:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.166
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736606895; cv=pass; b=jNsC6q321OS59+qeu7ONrjaB3JcofsBsIdUFzTx0Vx6yDqIfWZk07+VIX5djvgUBD3J7RQoulgABtnkHu8jGoHYB+QIcpcWq9mu4ghNVfmNcglXh0nS/D8qshSTufOsMOXsODCljX8DXRrvFsA4joMcIDZuccxafD4DOFF95qYw=
+	t=1736607023; cv=pass; b=LnJGODXGmdhwqvAps2JYsGM+2rv8XqhlgZbDnJ43cH3XNNpAhAqrEWtCt0puTQeBmhAKgHnP1KNbY47CgMvApz6zwu9OtMKz2QbT//gBVAmQUfRCDRgZRKUvGUgOEe7eHsjQbGmnYpLOfGawMUWx26FjqYjvKtdS/qDRccYPDmU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736606895; c=relaxed/simple;
-	bh=A5hUsZpX4kwHZ5z13ZE4CGkSD85ppexj2cymgd5/F04=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=n40nyxJE+1MKOI14tKnoS2GzLNsMGKu1LID2Q3rTbyQ6+fum8gr/ZEMj+wpfBLGybbxc3JKQ3V7glA3tBcgxVGKt0VxpSSo4ZRMtDUwKvMhVs76lyyeCPs3Ys8n47pRPZ6niKEK+7tJUDGUeMQULk4uFea91p5yJXDKYjF1IkYM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=IbJasbds; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=QfQSnP0z; arc=pass smtp.client-ip=85.215.255.53
+	s=arc-20240116; t=1736607023; c=relaxed/simple;
+	bh=GmNUYXbW0stz9YpjVbxk2xCGykrIz+exrdpJcUmHzp8=;
+	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:Cc:To; b=BeKfV0mPAMdpNnWt3aA5WAwBJd/uX7tzk+tRdxhcaOAHcPyj7isHo9T/RPUeiws584OhsuFV8rG9seK+MuPbC6K1JJTuvTrQCVfomYolVd/ALSDZ33EVAlU0ABL4Gn8++UJv3qoMGVWkWqTeSOg86EVGmqbpDgbHP5YomNSPjQM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=RKqrya7d; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=zVLeKOdJ; arc=pass smtp.client-ip=81.169.146.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="IbJasbds";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="QfQSnP0z"
-ARC-Seal: i=1; a=rsa-sha256; t=1736606868; cv=none;
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="RKqrya7d";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="zVLeKOdJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1736607000; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=om/vED0/Sahl5HNXMWabjBxkbojeojay8ryan9mYjl3xth6lgMuxqAVXy1ueh8q3/4
-    pJI93WWe1FCDVkhpLsYHpmhdwQ56/11zfRZ7vQDdy+KQ/RKBn8w+FLKeZ1ILtFebT8sh
-    AsCR9aDEvEwsEorZWisTuK0/5KMmHHCHLIql6C/HXAy6cdrTNkXQcvf/FP4kHYLESqt0
-    OyfqljjTwvEHQCbt7SH0oU4+x7mfef5Iy+ctnz8IgzylRtARoSvusGLpj89tUeMFPIBD
-    S4HmicOvshQQluDL8ywkjNAKmY07+1oPqQOL4Zt618kw+MD6TTUHnl1bdUyq8XlwWmno
-    ZXIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1736606868;
+    b=lRkvNHqyK5XlAuh6r6jERbRFWgRju6SpO5pl7k9amkYTo4xl4mdc7vmBJpGfaWcmag
+    vsSn0B0tVezSp0ALVD5vRiiPAuiW/+UYT0sLETpS3upBH6T1w54gOgQuZa/BxEHM9ZiZ
+    J8R54nh76kEG/N40KasJONAauicgoaoMjZalzfVI9kl918TKbiVNMDs6DaxWwThFp1Lp
+    XdlFqtdLP8Nev3BygDZSKa3/tgHAUqoY9bDDk5WTQAxFoglRYjbf1Y9XbUHDFRghokZt
+    sAwaQ1HcW1dXkQ2TbLLa7DiF3kD5daJwljpEGFwAM+zchYQi57ZukaRpwDFKtP5rCUe6
+    niyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1736607000;
     s=strato-dkim-0002; d=strato.com;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
-    b=rKhK3hPpV+VJsLxTdx94FdAf783/3czbCHA3s+73OZRxfz1OwZd5x8RYkrbsFsFuLI
-    WA0am9KkIddV3aKuO5I1KUxwIGlBBHm+o0NwQN2B4ZAohQchXYOJzKh/mW1MyZJc3s+Y
-    Vc6eapfv3krgDAEw71aEuID8oEuc33x6KACHApjiyDoJEsfmUM//6a76xI8ercnwFVNE
-    qrk+nW80WYFDF6TrEWa6BVmiai3JRQuPLs0I9JpFanXh8StVx+Rhe1TO/ne9z9/hmww0
-    ilfmlrkZ4Xv8H2g51DcZTYfHp1rRip4cab/KvkUFXHGqjri5vZfvXKtcvG/3oO0pCsPF
-    hsPA==
+    h=To:Cc:Date:Message-Id:Subject:From:Cc:Date:From:Subject:Sender;
+    bh=/S7RsMxdj1ne5QxEiHyZk2JZuHApikcEL56Y6qd2g7o=;
+    b=Ou5WaLEckLFyXU81Vzs5gC4Pkmu7+70nXMXwTeY7ItOz4OnZD+iYFn9DYkRHMqIB/y
+    +seDmwmeQyqi1wC7vbDPTsWPManxhWoXzFR1UGQhD/cHGLWX7gHYf+jN7kYId/wOca2g
+    pH0gFD5DQ7nWDWqpJvx7Ex052aPs93zhgdPvxQalAvlnHQkgtURe7rY7xuhGlKJ/SKrM
+    tsTuEivngZmA8b6icJDbVvGQ63SplcTerxo6yoDd7tv7FYyqXzyAZe3/jhQJAysvKA+B
+    tYfKj6vJZCCrOQS68GjXvnZV8pssACeyqMj0ATSDyu+x4e9xxW5S8QtArnh2vh1ZstC0
+    tI3Q==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1736606868;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1736607000;
     s=strato-dkim-0002; d=xenosoft.de;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
-    b=IbJasbdsd4Tk/yX5RFbEZL0rLMzn7bhqMP1hkDBhpodmz5v2mheTsWIcOttXba4eum
-    gO3PfbGhni9PCA7iOEkBdJFRGRQRBkWQEgRtd1qRjZ3fuJz0UaVrkhAh9Cr86J2Yte9X
-    gffFYbSd+pwRwYy+ArF1U9bVbZD2PcuSha48RE+suzcp5w90TXelWBP9r+vqjFyytpvG
-    pVBlTgTc1+FcSJzpL/pR4HFRItSv2atGltawLN+JXQo+XlfP1LM664Ka+DtpcRfMj5lY
-    RkMovrGcNvm7wmBo0RJI+DogAdUbizA85cq0fSuo5s2y0P6q5zrauASe3s41neGp9sKF
-    tPvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1736606868;
+    h=To:Cc:Date:Message-Id:Subject:From:Cc:Date:From:Subject:Sender;
+    bh=/S7RsMxdj1ne5QxEiHyZk2JZuHApikcEL56Y6qd2g7o=;
+    b=RKqrya7dtMMHzvNn0jdXw35N2hBWMwbq9SGzB2/IBrpwxb6rOLtVwyZ5sNWaVYunY3
+    A8dPjC/+X/8qiq4sIAVVjrhqvgZLB+o4dPEkJ46E4dKBBtCycysdZ6gkwlNDJzjKPGhJ
+    8GAdNNsYaL00Z574rjL2MBq+k4NqHZ+3dNJj7LURFcbi8dSxZR7V2eqThQKMro3lcEFw
+    hI2Vg9CXOboisxvEwS3l889HLtcruzFknlj/znABBAf5OV0/Ti7I3DCp/ZZodXp3OmdA
+    4SeWpfIXc4Fs06La8CKzrloHynCri+S8G/v9qNo/inCctIZHIWR5+83M+pQKLbs9/muN
+    Hdbg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1736607000;
     s=strato-dkim-0003; d=xenosoft.de;
-    h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:Cc:Date:
-    From:Subject:Sender;
-    bh=B8Z4pHbqoRqk3L39a4j21vmLxDvw20WM3wKz6CMTLd4=;
-    b=QfQSnP0z3Ok54I5Vi70PB3VZelgWffKaILeBOAdC4dKe6Up/xBk/vuClXCFrIP66Ro
-    fsRJO8DlaePnsFzyAOBQ==
+    h=To:Cc:Date:Message-Id:Subject:From:Cc:Date:From:Subject:Sender;
+    bh=/S7RsMxdj1ne5QxEiHyZk2JZuHApikcEL56Y6qd2g7o=;
+    b=zVLeKOdJfaID0ByuekF5FZelS+RSwf4wEMLCgD/pLvWoBUUyYpwHhhN2D+fCi9muen
+    kP9wsx0DYYwCHlUQ6kBQ==
 X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6Kxrf+5Dj7x4QgaMrvdtcX133EipGzhGnb3rrLiUtW3TtSfq8MBVvg=="
 Received: from smtpclient.apple
     by smtp.strato.de (RZmta 51.2.16 AUTH)
-    with ESMTPSA id ebe9c910BElmocD
+    with ESMTPSA id ebe9c910BEo0ocG
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Sat, 11 Jan 2025 15:47:48 +0100 (CET)
+    Sat, 11 Jan 2025 15:50:00 +0100 (CET)
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 From: Christian Zigotzky <chzigotzky@xenosoft.de>
@@ -75,20 +71,18 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0 (1.0)
 Subject: [PATCH] KVM: allow NULL writable argument to __kvm_faultin_pfn
-Date: Sat, 11 Jan 2025 15:47:37 +0100
-Message-Id: <4C777C7B-4DC0-4428-BB70-34BECAC4828F@xenosoft.de>
-References: <Z3wnsQQ67GBf1Vsb@google.com>
+Message-Id: <B5B8A435-B985-47CB-8240-AFDAB3692B6A@xenosoft.de>
+Date: Sat, 11 Jan 2025 15:49:50 +0100
 Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>,
  mad skateman <madskateman@gmail.com>,
  Darren Stevens <darren@stevens-zone.net>, hypexed@yahoo.com.au,
  Christian Zigotzky <info@xenosoft.de>
-In-Reply-To: <Z3wnsQQ67GBf1Vsb@google.com>
 To: Sean Christopherson <seanjc@google.com>
 X-Mailer: iPhone Mail (22C152)
 
-
+=EF=BB=BF
 
 > On 06 January 2025 at 07:57 pm, Sean Christopherson <seanjc@google.com> wr=
 ote:
@@ -124,36 +118,36 @@ host.c
 > @@ -444,7 +444,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc=
 _vcpu_e500 *vcpu_e500,
 >=20
->    if (likely(!pfnmap)) {
->        tsize_pages =3D 1UL << (tsize + 10 - PAGE_SHIFT);
+>   if (likely(!pfnmap)) {
+>       tsize_pages =3D 1UL << (tsize + 10 - PAGE_SHIFT);
 > -        pfn =3D __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
 > +        pfn =3D kvm_faultin_writable_pfn(slot, gfn, &page);
->        if (is_error_noslot_pfn(pfn)) {
->            if (printk_ratelimit())
->                pr_err("%s: real page not found for gfn %lx\n",
+>       if (is_error_noslot_pfn(pfn)) {
+>           if (printk_ratelimit())
+>               pr_err("%s: real page not found for gfn %lx\n",
 > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
 > index 893366e53732..7012b583f2e8 100644
 > --- a/arch/x86/kvm/vmx/vmx.c
 > +++ b/arch/x86/kvm/vmx/vmx.c
 > @@ -6800,7 +6800,6 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *=
 vcpu)
->    struct page *refcounted_page;
->    unsigned long mmu_seq;
->    kvm_pfn_t pfn;
+>   struct page *refcounted_page;
+>   unsigned long mmu_seq;
+>   kvm_pfn_t pfn;
 > -    bool writable;
 >=20
->    /* Defer reload until vmcs01 is the current VMCS. */
->    if (is_guest_mode(vcpu)) {
+>   /* Defer reload until vmcs01 is the current VMCS. */
+>   if (is_guest_mode(vcpu)) {
 > @@ -6836,7 +6835,7 @@ void vmx_set_apic_access_page_addr(struct kvm_vcpu *=
 vcpu)
->     * controls the APIC-access page memslot, and only deletes the memslot
->     * if APICv is permanently inhibited, i.e. the memslot won't reappear.
->     */
+>    * controls the APIC-access page memslot, and only deletes the memslot
+>    * if APICv is permanently inhibited, i.e. the memslot won't reappear.
+>    */
 > -    pfn =3D __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, &writable, &refcount=
 ed_page);
 > +    pfn =3D kvm_faultin_writable_pfn(slot, gfn, &refcounted_page);
->    if (is_error_noslot_pfn(pfn))
->        return;
+>   if (is_error_noslot_pfn(pfn))
+>       return;
 >=20
 > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
 > index c788d0bd952a..b0af7c7f99da 100644
@@ -161,7 +155,7 @@ ed_page);
 > +++ b/include/linux/kvm_host.h
 > @@ -1287,6 +1287,14 @@ static inline kvm_pfn_t kvm_faultin_pfn(struct kvm_=
 vcpu *vcpu, gfn_t gfn,
->                 write ? FOLL_WRITE : 0, writable, refcounted_page);
+>                write ? FOLL_WRITE : 0, writable, refcounted_page);
 > }
 >=20
 > +static inline kvm_pfn_t kvm_faultin_writable_pfn(const struct kvm_memory_=
@@ -176,7 +170,7 @@ _page);
 > +
 > int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset=
 ,
->            int len);
+>           int len);
 > int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long l=
 en);
 >=20
