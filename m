@@ -1,220 +1,138 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC1C1AB6FF
-	for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 18:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C7D153BE4
+	for <regressions@lists.linux.dev>; Sun, 12 Jan 2025 09:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736621991; cv=none; b=fColBYT2WKi6tCjFfyyh0Pdf0i0Ax5svdLiKuWt25aLevlnCF4Ocamk3aqcyj6wYB2LGCLtVPHb1i3M1wZTxiGEa+ntyrTw+74Ck1pS5k99xzBVT31AyYO5QtXdUVCePp9rsWtkALAAvpfvpIrxOKc95WLjd6vM6LginnhR4gDw=
+	t=1736675737; cv=none; b=aN4F81SYXeu//pLHgg+MDcV6C4diEb+GsuvqVwVauaDzPrmNEnjJUNY8Ai3PWl/kHW17DDRU3J32ES0LbFXCOnv9tbysUwHJ1ynNH2jIVW/jDLokjfeshlrQp0WcPEXtMUGa8F884kG05b7gGWAx1kYinwGk5gf0J9ScOkamEDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736621991; c=relaxed/simple;
-	bh=oX5yPNdl+nQlEHEz0LVIlKvTWgYDyu44Yx/Y3chKZus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEeA4HLJikWFUZqLXI2uFL0Qb7J+deGnIAEabr4+u2QNh9AcODtn3kw5YkHwqBfYBYcoNwYvrLnpY6NYTc39wZFeZIjI80fl84/Ynf0bZ9QfsGvJTHdeCi0ny2e5JKKgjA2Y4SXyFNrhNrUVDYiunjK6XpB0sCVQr1Bh+UV0CBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMGE9DMa; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736675737; c=relaxed/simple;
+	bh=5LgN3kghoTo+6hcMs9ps9ijUlydUFsGCZ5ZnuL33xl4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=KyH9rBZz3gBLoQGggC7x7FXZyGJpX9oLxtyfWmz0Dpb693cPmOa7g8MpOMNGj3i1X9cSu+Ix1KhfjbXcQRL0agi9+dlQxwlGNZ+x/0P+T//Ow6JsUY+f8tf46Ob8muv0M17SORBUZsLeym+MehR4wQxMdCeztT5gzwT3s2ZPEow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gj/iOerU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMGE9DMa"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43622267b2eso33281165e9.0
-        for <regressions@lists.linux.dev>; Sat, 11 Jan 2025 10:59:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736621988; x=1737226788; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L3DgohbenACHXn6wOW4eU9gM7Gu7Z7kDdY29V2QFR8Y=;
-        b=bMGE9DMa2mvrxnCiW1VYqreNTjnAfoImc56Iy/O0gUqQBaDrFtxu4RGkvliWPX1/Pp
-         W2sxcSB13iz/JS797jpzl6KYkgN0aUkEhNDVfg8d3vN2XPdr5K56pdpc2VIRfXAqD+mB
-         KG5kjjrXhQ/WrdITFk6V4TGD9zBxGzaO4QyHdKsmCVr1u/pCLuIj7Gm+frihgOryZlzx
-         JooLeKby9JwF3V3Y38LeMkwmAQ+kKhSSLSrHjLRsNNKSbknuANR8mtxxBupTJWkLCHZX
-         B2ohc2C9OMAtUz49wE+MTNdJ4qtrzd2/irkW/40mn3YQ4Uepf0eKb0Tax4QeMBEE6ImC
-         zHSg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gj/iOerU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736675734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LbPMvXWxkqoPEVecK8C7xcWKRlslEHctKLKomp3MgmA=;
+	b=Gj/iOerUo+UE0anCbABSP6rVFVb+IFje1InB0Vzsx9h0s/UXtbQ/jgbJRZLl8kicY6aM31
+	8GYGPEQXpeMYTcSfpRtOH+CtcYDPHZRG/tqnfRCsHg8ktuo6MCCpqa3WmgJcOI4N9AIxC3
+	SBFEnm6ar8sN8HUbf4t9EPbidswq9Ek=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-622-pdFrRNauMRm_mWxqXuztXg-1; Sun, 12 Jan 2025 04:55:32 -0500
+X-MC-Unique: pdFrRNauMRm_mWxqXuztXg-1
+X-Mimecast-MFC-AGG-ID: pdFrRNauMRm_mWxqXuztXg
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5d3cef3ed56so3297143a12.1
+        for <regressions@lists.linux.dev>; Sun, 12 Jan 2025 01:55:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736621988; x=1737226788;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L3DgohbenACHXn6wOW4eU9gM7Gu7Z7kDdY29V2QFR8Y=;
-        b=FdUWtR8SyVqcFBCHF5HoTxMRIje1kjup3OL6a8AGFcPvcjG6KPXnc2upDDuJDlcpW8
-         VL26C8NE6cEs7cZYQrdMWk8fRRVurNs1CxjdjBFufktuND9DkdIZGos2JW4tFJV6dkUd
-         Qubxi/66ulaG0CfNQgNMz/GUzlMgHskRj3z0gDmLroVoMJ3pd1zHi+NCRhMYMJioAWD0
-         MKtH3xzteQtqPF+9hl6ENxS6oCJ4qzmkpRB7AJeiw13NoCxI+E2TrgVjwlOZL/qT+qRB
-         LIHZdzTQj1seve4aSk2OyICYOL7S6nTnv5UaNKhuv7BkJVQBK+NHVOZY+ZqPO03wR8zv
-         SQ+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUwAWE4kmcvzFby8wpnIh4LvCQqNyAKU2Q9QGwWZpODDQsLVWyMwo8wtccumHhrmAAifWy5MIl+jNe4UA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwGkRIx/i7xZXPvdnO6uxRSsRRPDxvA3lCfpjlmL13sq/0OLudX
-	WfaueCOhdXE9xBakNJLPPcY8cdngLfoUqDKRC/bp9dCvmFpBrf97
-X-Gm-Gg: ASbGnctL/P3Ji3TEGivsWAXKFkKJ94Cq07HFETW1rRmUsTUBuqnJ8If0Sl+byk6KzVe
-	FLr0vIKnoigczbJGlRGJQksMATgfTW5V3EM7s4qR+39QOGO5ysZuidWNTTC7xKoA5fCZU1aL5eJ
-	3cDzFvQ0uJrC0WuIoWoydYcQCdw30EZ14oo7oM6nBSrmB0kKceAe3RznI66E/ikddfRv948wG+N
-	O/2J5OajqibzW6KFfKPn18q6TBDZ10eVr7ZI7zjlchanKyKk1Hadz0ccjiogZUhig==
-X-Google-Smtp-Source: AGHT+IEPA1ZIEy2BVvJIreSvtc7pK5EpKKeAI+bCNXKQkeEEBtMKu5+tlqaQ1Ywp2IM9xt0CHUsflQ==
-X-Received: by 2002:a05:600c:348c:b0:436:ed33:1535 with SMTP id 5b1f17b1804b1-436ed3316a4mr93947005e9.12.1736621987670;
-        Sat, 11 Jan 2025 10:59:47 -0800 (PST)
-Received: from debian.local ([83.105.230.12])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e6263fsm92372725e9.39.2025.01.11.10.59.46
+        d=1e100.net; s=20230601; t=1736675731; x=1737280531;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LbPMvXWxkqoPEVecK8C7xcWKRlslEHctKLKomp3MgmA=;
+        b=nMt6Tt5UQwp19PC0oSBF3j0a0553TSrg5m9S8r32KgTje9wkIWpyha41EegEv56agX
+         p8VLYySCMW2Q8f+HopUhmDC1riwO3IA9V/wADTuTsj4r34IGBSXoD0AJ7Mi2m3jhdA3/
+         nDCLzEsL00aSi5uYyF0KEN8q2Q/wWiBikbbLOLmimAx79uabsKBQZ8V8hkCNfJa1ZtDM
+         AoRHI6tLxYTLWBFPc/EJAHzEyK+QHJMnuR9D9az44iApGLSCbgWHB8sjrIqPOHQhgh/t
+         Wn+SMKCiVFo2EKAcCnF281aaYzhelgdDe2iAMtKOl0VYuraFuRyJHmvR6EqdlKaFDipB
+         +8sg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKbV11OoiyZ0CC3yhDX3BevnpFs4ilAmiBu0k5DLjva71c5UdSTu5yMsgOlyUYvuXtTiT84K3tmSgYaQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz8C+h2JKqCuAgWL895v26hDbd1KOR5ayQ0IjHpBzvCqj3rzQpm
+	dZHXEGbbbqmP9IHQL6VocjBEF4du+RiCJKBj7DXJ7ui9PDsMtUtVlnR7VwbklPTGHlyfwLwl9CI
+	K1L2oE4OdE7NLsYCHEY8A0ZTBOAfdjY4y594iN9+ZXpKxGjamfr5Mblkmhjw2
+X-Gm-Gg: ASbGnctkuZkHfeInGZWB2HOnHy0GJHenZwzlYCZ+RHxn/9UvoMvD+JcuL0ggOLykFw6
+	MBVs1OzQfSEilBDR8G4cXwlgKVHx16pfjICNdSm/nxVKrKNv7r7it6Mp2iPMpjXz1Oc2izntOET
+	lODiMG3o+7Qi9ubu9pEeNgbdjGmFVkFVqaEvOSP7bpoJhuaVCZTSzYYvyFV8Dp154pQ8B2moSmp
+	smH4Y8FgFMre0+Z/o/Ydg2NJWuKTz9XlPZ4E7SKqhrR/rsP2oTBWq+dmXg=
+X-Received: by 2002:a05:6402:354c:b0:5d3:ba42:e9d6 with SMTP id 4fb4d7f45d1cf-5d972e14828mr16993853a12.17.1736675731150;
+        Sun, 12 Jan 2025 01:55:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEVLh0vGs9D36Q0IyXZ3HUQ2iOTSRSffuWayJjX6NDL6ISEn6UK/f5SUb1xvo4fnr5VPoS7bQ==
+X-Received: by 2002:a05:6402:354c:b0:5d3:ba42:e9d6 with SMTP id 4fb4d7f45d1cf-5d972e14828mr16993834a12.17.1736675730719;
+        Sun, 12 Jan 2025 01:55:30 -0800 (PST)
+Received: from [192.168.10.3] ([151.62.105.73])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d9903c3206sm3714091a12.46.2025.01.12.01.55.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2025 10:59:47 -0800 (PST)
-Date: Sat, 11 Jan 2025 18:59:45 +0000
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
-	regressions@lists.linux.dev, lenb@kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] ACPI: video: Fix random crashes due to bad kfree
-Message-ID: <Z4K_oQL7eA9Owkbs@debian.local>
-References: <Z2yQvTyg_MWwrlj3@debian.local>
- <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
- <Z2yw_eJwR5ih1Npr@debian.local>
- <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
+        Sun, 12 Jan 2025 01:55:29 -0800 (PST)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: seanjc@google.com,
+	linuxppc-dev@lists.ozlabs.org,
+	regressions@lists.linux.dev,
+	Christian Zigotzky <chzigotzky@xenosoft.de>
+Subject: [PATCH v2 0/5] KVM: e500: map readonly host pages for read, and cleanup
+Date: Sun, 12 Jan 2025 10:55:22 +0100
+Message-ID: <20250112095527.434998-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: NwW2UwlWCoF5UO9Eh1ZDmEwSTv3MSAGttpJrvMPr4EU_1736675731
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
-available for eDP") added function dm_helpers_probe_acpi_edid, which
-fetches the EDID from the BIOS by calling acpi_video_get_edid.
-acpi_video_get_edid returns a pointer to the EDID, but this pointer does
-not originate from kmalloc - it is actually the internal "pointer" field
-from an acpi_buffer struct (which did come from kmalloc).
-dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
-resulting in memory corruption which leads to random, intermittent
-crashes (e.g. 4% of boots will fail with some Oops).
+The new __kvm_faultin_pfn() function is upset by the fact that e500
+KVM ignores host page permissions - __kvm_faultin requires a "writable"
+outgoing argument, but e500 KVM is passing NULL.
 
-Fix this by allocating a new array (which can be safely freed) for the
-EDID data, and correctly freeing the acpi_buffer pointer.
+While a simple fix would be possible that simply allows writable to
+be NULL, it is quite ugly to have e500 KVM ignore completely the host
+permissions and map readonly host pages as guest-writable.  A more
+complete fix is present in the second to fourth patches (the first is
+an independent bugfix, Cc'd to stable).
 
-The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
-remove the extraneous kmemdup here as the EDID data is now copied in
-acpi_video_device_EDID.
+The last one removes the VMA-based attempts at building huge shadow TLB
+entries, in favor of using a PTE lookup similar to what is done for x86.
+This special casing of VM_PFNMAP does not work well with remap_pfn_range()
+as it assumes that VM_PFNMAP areas are contiguous.  Note that the same
+incorrect logic is there in ARM's get_vma_page_shift() and RISC-V's
+kvm_riscv_gstage_ioremap().
 
-Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if available for eDP")
----
-Changes in v2:
-	- check kmemdup() return value
-	- move buffer management into acpi_video_device_EDID()
-	- return actual length value of buffer
----
- drivers/acpi/acpi_video.c              | 50 ++++++++++++++------------
- drivers/gpu/drm/nouveau/nouveau_acpi.c |  2 +-
- 2 files changed, 29 insertions(+), 23 deletions(-)
+Fortunately, for e500 most of the code is already there; it just has to
+be changed to compute the range from find_linux_pte()'s output rather
+than find_vma().  The new code works for both VM_PFNMAP and hugetlb
+mappings, so the latter is removed.
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 8274a17872ed..3c627bdf2d1b 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -610,16 +610,29 @@ acpi_video_device_lcd_get_level_current(struct acpi_video_device *device,
- 	return 0;
- }
- 
-+/*
-+ *  Arg:
-+ *	device	: video output device (LCD, CRT, ..)
-+ *	edid    : address for returned EDID pointer
-+ *	length  : _DDC length to request (must be a multiple of 128)
-+ *
-+ *  Return Value:
-+ *	Length of EDID (positive value) or error (negative value)
-+ *
-+ *  Get EDID from ACPI _DDC. On success, a pointer to the EDID data is written
-+ *  to the edid address, and the length of the EDID is returned. The caller is
-+ *  responsible for freeing the edid pointer.
-+ */
-+
- static int
--acpi_video_device_EDID(struct acpi_video_device *device,
--		       union acpi_object **edid, int length)
-+acpi_video_device_EDID(struct acpi_video_device *device, void **edid, int length)
- {
--	int status;
-+	acpi_status status;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object *obj;
- 	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
- 	struct acpi_object_list args = { 1, &arg0 };
--
-+	int ret;
- 
- 	*edid = NULL;
- 
-@@ -636,16 +649,17 @@ acpi_video_device_EDID(struct acpi_video_device *device,
- 
- 	obj = buffer.pointer;
- 
--	if (obj && obj->type == ACPI_TYPE_BUFFER)
--		*edid = obj;
--	else {
-+	if (obj && obj->type == ACPI_TYPE_BUFFER) {
-+		*edid = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
-+		ret = *edid ? obj->buffer.length : -ENOMEM;
-+	} else {
- 		acpi_handle_debug(device->dev->handle,
- 				 "Invalid _DDC data for length %d\n", length);
--		status = -EFAULT;
--		kfree(obj);
-+		ret = -EFAULT;
- 	}
- 
--	return status;
-+	kfree(obj);
-+	return ret;
- }
- 
- /* bus */
-@@ -1435,9 +1449,7 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
- {
- 	struct acpi_video_bus *video;
- 	struct acpi_video_device *video_device;
--	union acpi_object *buffer = NULL;
--	acpi_status status;
--	int i, length;
-+	int i, length, ret;
- 
- 	if (!device || !acpi_driver_data(device))
- 		return -EINVAL;
-@@ -1477,16 +1489,10 @@ int acpi_video_get_edid(struct acpi_device *device, int type, int device_id,
- 		}
- 
- 		for (length = 512; length > 0; length -= 128) {
--			status = acpi_video_device_EDID(video_device, &buffer,
--							length);
--			if (ACPI_SUCCESS(status))
--				break;
-+			ret = acpi_video_device_EDID(video_device, edid, length);
-+			if (ret > 0)
-+				return ret;
- 		}
--		if (!length)
--			continue;
--
--		*edid = buffer->buffer.pointer;
--		return length;
- 	}
- 
- 	return -ENODEV;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
-index 8f0c69aad248..21b56cc7605c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
-@@ -384,7 +384,7 @@ nouveau_acpi_edid(struct drm_device *dev, struct drm_connector *connector)
- 	if (ret < 0)
- 		return NULL;
- 
--	return kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
-+	return edid;
- }
- 
- bool nouveau_acpi_video_backlight_use_native(void)
+If this does not work out I'll go for something like
+https://lore.kernel.org/kvm/Z3wnsQQ67GBf1Vsb@google.com/, but
+with the helper in arch/powerpc/kvm/e500_mmu_host.c.
+
+Patches 2-5 were tested by the reporter, Christian Zigotzky.  Since
+the difference with v1 is minimal, I am going to send it to Linus
+today.
+
+Thanks,
+
+Paolo
+
+v1->v2: do not bother checking again that a memslot exists, instead
+	add a fix to restore irqs even if !ptep
+
+
+Paolo Bonzini (5):
+  KVM: e500: always restore irqs
+  KVM: e500: use shadow TLB entry as witness for writability
+  KVM: e500: track host-writability of pages
+  KVM: e500: map readonly host pages for read
+  KVM: e500: perform hugepage check after looking up the PFN
+
+ arch/powerpc/kvm/e500.h          |   2 +
+ arch/powerpc/kvm/e500_mmu_host.c | 199 +++++++++++++------------------
+ 2 files changed, 85 insertions(+), 116 deletions(-)
+
 -- 
-2.39.5
+2.47.1
 
