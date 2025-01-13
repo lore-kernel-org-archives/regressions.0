@@ -1,93 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176BF1B4124;
-	Sun, 12 Jan 2025 13:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C0346B5;
+	Mon, 13 Jan 2025 09:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736687692; cv=none; b=AE9ucIxVHnNDTb6rJ76hmoDyQs/F5tL8wJueAEeve8xFxJAFD3FsA6Cq1NfS6EOgZ7h3Yonna946i+Hp0y62pCLWAcc/WogJOnhOxig7tPr/Ft1UmrcFldYB4NkkXjNuokDwdvZnDrf6c8T9++SEu2x6i66LdtTBIL1t6JlWVI0=
+	t=1736759235; cv=none; b=PRd1fYwPgCCjpiOVQsZ0yhncClrRT5LxtWdwD1/VXcbt43zy09B4DV49Lwoc6A4xGg/DwWMCsStzITm6ERhXt1iTMTe1rST4NfIr58iOr+xN7AVwZdzzQJGsHe5i6etOhSB8qTD/u4hzwg1sKMGhWq6y5KV4ROu9hnk8Hq51Nuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736687692; c=relaxed/simple;
-	bh=kI/O3cVLgBjh8681nMP7WFYZyRBeeZ68L8dK6c5DHww=;
+	s=arc-20240116; t=1736759235; c=relaxed/simple;
+	bh=ba+6Bzic80ymbn2zGb9LkgdvSGg7IBi+B5HOhD0RHgw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDkBeqOVakDBBJ4fx5ywByp2OggRV2gNXkGtIBDZZ9aKqWhYhH0qCk+hDIzqib3tvvPjHICYSoLzmaDxCSzKBNXcIr1WCPDOfj0YQjCpJ+3Sy6Ei1Ae2cy/TmAGPPZVeOqVs49x0zLK/rijTpGHPiv1Tse8OEI/pAqw44IAHb3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zgiIuc24; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lNnt+AatALbTuFb9S7t/dMktYJikbRPNHinECUmfVTz2T0e0aw/4/E5v5GS4YTpCWe1leoewgYarWBRHgC8pDupL2ZbJfqXh4+Iy5VhBb+VAnc1MsXZjXfOB7KIXqp5Z0qMipGqF4icjv9HJJvboXrBg/ogkM2Ii/vYmazCFQrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwIzQp7J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zgiIuc24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF5BEC4CEDF;
-	Sun, 12 Jan 2025 13:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1736687691;
-	bh=kI/O3cVLgBjh8681nMP7WFYZyRBeeZ68L8dK6c5DHww=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwIzQp7J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6522DC4CED6;
+	Mon, 13 Jan 2025 09:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736759235;
+	bh=ba+6Bzic80ymbn2zGb9LkgdvSGg7IBi+B5HOhD0RHgw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zgiIuc24rI8dlCpPSP0k5yA3s2zt2vr3+IUUC+Q7WlR6v6D1rx/7K3G2Z6SiMeudt
-	 /mgQ3BAP7PGhVGfJa31EC50K/5XZBe9kDjuHR4yP1NeSBfxO7YnHpnCyPwr/OBw7tP
-	 z9K6YohlAizj2X0SUbOJz8JaBEirXiyeddYtK3rQ=
-Date: Sun, 12 Jan 2025 14:14:48 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>
-Cc: Jann Horn <jannh@google.com>,
-	Hanno =?iso-8859-1?Q?B=F6ck?= <hanno@hboeck.de>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	b=jwIzQp7J9tHIhk/zHII29F2G6hu6Xof140j5CFwNIpEFGLa7PBErTvzI/8OkATJF8
+	 RPj3rRbPcqcrib5LaJZotmSF8vhe1xSnpTNH8P1CCehjdiJvY+dFcIAEpTzHAm5BED
+	 MkUNiVsd1TlvjmGeSAPhy8lWPVW+AtHacekaXHhDLb4SWRFqLUCmWJd3n6kNMLsqAE
+	 Y9n9rGy0LHwd33x7+awp/7fFmcaOT8O1X9QjSHadUDUQWH+2R3XWMVa6jDeOyn6Npr
+	 gGoHiXRlGeDYuyGQfevVUd001Z8wSD8rX/tJcRuEyeaw0hMs4nMA+aR2Pyninfokp9
+	 bipP+SvLsziuw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tXGPj-000000000J5-383H;
+	Mon, 13 Jan 2025 10:07:15 +0100
+Date: Mon, 13 Jan 2025 10:07:15 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Frank Oltmanns <frank@oltmanns.dev>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Chris Lew <quic_clew@quicinc.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
 	stable@vger.kernel.org
-Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
- CAP_SYS_ADMIN
-Message-ID: <2025011205-spinout-rewrap-2dfa@gregkh>
-References: <Z2ahOy7XaflrfCMw@google.com>
- <20250110142122.1013222-1-gnoack@google.com>
+Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
+Message-ID: <Z4TXww5rAkMR8OmM@hovoldconsulting.com>
+References: <20241010074246.15725-1-johan+linaro@kernel.org>
+ <Zwj3jDhc9fRoCCn6@linaro.org>
+ <87wmf7ahc3.fsf@oltmanns.dev>
+ <Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
+ <Z36Gag6XhOrsIXqK@hovoldconsulting.com>
+ <87wmf18m8g.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250110142122.1013222-1-gnoack@google.com>
+In-Reply-To: <87wmf18m8g.fsf@oltmanns.dev>
 
-On Fri, Jan 10, 2025 at 02:21:22PM +0000, Günther Noack wrote:
-> With this, processes without CAP_SYS_ADMIN are able to use TIOCLINUX with
-> subcode TIOCL_SETSEL, in the selection modes TIOCL_SETPOINTER,
-> TIOCL_SELCLEAR and TIOCL_SELMOUSEREPORT.
-> 
-> TIOCL_SETSEL was previously changed to require CAP_SYS_ADMIN, as this IOCTL
-> let callers change the selection buffer and could be used to simulate
-> keypresses.  These three TIOCL_SETSEL selection modes, however, are safe to
-> use, as they do not modify the selection buffer.
-> 
-> This fixes a mouse support regression that affected Emacs (invisible mouse
-> cursor).
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/r/ee3ec63269b43b34e1c90dd8c9743bf8@finder.org
-> Fixes: 8d1b43f6a6df ("tty: Restrict access to TIOCLINUX' copy-and-paste subcommands")
-> Signed-off-by: Günther Noack <gnoack@google.com>
-> ---
-> Changes in V2:
-> 
->  * Removed comment in vt.c (per Greg's suggestion)
-> 
->  * CC'd stable@
-> 
->  * I *kept* the CAP_SYS_ADMIN check *after* copy_from_user(),
->    with the reasoning that:
-> 
->    1. I do not see a good alternative to reorder the code here.
->       We need the data from copy_from_user() in order to know whether
->       the CAP_SYS_ADMIN check even needs to be performed.
->    2. A previous get_user() from an adjacent memory region already worked
->       (making this a very unlikely failure)
-> 
-> I would still appreciate a more formal Tested-by from Hanno (hint, hint) :)
+On Sat, Jan 11, 2025 at 03:21:35PM +0100, Frank Oltmanns wrote:
+> On 2025-01-08 at 15:06:34 +0100, Johan Hovold <johan@kernel.org> wrote:
 
-This really is v3, as you sent a v2 last year, right?
+> > And today I also hit this on the sc8280xp CRD reference design, so as
+> > expected, there is nothing SoC specific about the audio service
+> > regression either:
+> >
+> > [   11.235564] PDR: avs/audio get domain list txn wait failed: -110
+> > [   11.241976] PDR: service lookup for avs/audio failed: -110
+> >
+> > even if it may be masked by random changes in timing.
+> >
+> > These means it affects also machines like the X13s which already have
+> > audio enabled.
+> 
+> I've blocklisted the in-kernel pd-mapper module for now and have
+> switched back to the userspace pd-mapper.
+> 
+> I don't know if it's helpful or not, but I don't get these error logs
+> when using to the in-kernel pd-mapper. It's just that the phone's mic
+> only works on approximately every third boot (unless I defer loading the
+> module).
 
-b4 got really confused, but I think I figured it out.  Whenever you
-resend, bump the version number please, otherwise it causes problems.
-Remember, some of use deal with thousands of patches a week...
+Ok, then it sounds like you're hitting a separate bug that is also
+triggered by the changed timings with the in-kernel pd-mapper.
 
-thanks,
+Are there any hints in the logs about what goes wrong in your setup? And
+the speakers are still working, it's just affecting the mic?
 
-greg k-h
+Johan
