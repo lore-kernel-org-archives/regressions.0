@@ -1,69 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6D71FA16B;
-	Mon, 13 Jan 2025 23:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718C51F543C
+	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 23:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736810271; cv=none; b=pnsPzCCnZ5WC54BgGehQjpjrJpptxr1s4by6P0ywffo+OAaC/mDfx3toiltM0XeGx4lSGFltedC9edA7cUEZrLvaDfOKmXQf2OFRaR+MbDmsQFJhWqond3ZtXaU8tlu9BKBIKnJQmhhmCxLfseDJIPb7ExcA20xELIhWWUTDh+c=
+	t=1736811117; cv=none; b=g3Nwxn6xYrKJtJI7RYDsfOD0f1x2dONgGsBQc+oZNZjxhrBpQw7dDl8OmzWmfY0tQ+JTDJLUjZgmkCOlvw+6dqfseB9q4yxZ0glTQBdYaE9gtRRoGYTNccujSuDPtvVASJcBblXR3Sx47ZfnRbCKlVmgvwsKLI/uvdzzUuFIp2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736810271; c=relaxed/simple;
-	bh=lpPz3KIoYsNKggLSdbQpd1eZ1ajQzwS8JiFc/wdHVME=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tun4CyWeIYF1WTclr0/6qfxAzSNnV4yZ+3txFe5//pcQS5gHs6H2NnoQejc9JCPmD7N13rTwYz7WxKgpVCXVCra13ndJp1HPTzfGSECX3xcSvBXjXJAHO5KwQNn5iIyMQCCy4z+kGZcvS1hKOuCsAgKgaSSBtgn7ydnC6Rg+cg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WqXOsmoJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736811117; c=relaxed/simple;
+	bh=kl7hgw8cOEL/RQmyCLlKD8bQX86VflovZEM2Ocs6qLo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VCJKlj9HngDmytLyMjdvCF5l/2YZvPwiQjROASp1UNXItuHUt9Bmd8YWB8dW+icjUxQRxM/qvRidc18+ooa5BUcdts5aZC5msVDVAiDcO/6KwwFn177bLBNfGPryvKhz/tU36BbgwJ9esBFHJ1t5SPfD1TE17pUH8cR69K+F7rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=gejk0Z8d; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VPzsKNq8; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WqXOsmoJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28477C4CED6;
-	Mon, 13 Jan 2025 23:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1736810270;
-	bh=lpPz3KIoYsNKggLSdbQpd1eZ1ajQzwS8JiFc/wdHVME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WqXOsmoJUtXRUxxGx8ODSj+hKxpQo2BOAmJ5NddyCHsC7C/Hd3rkL2e0QGjizcktc
-	 ThuxGqeJL/U4DDbJBHf/qIMaHf2pLngjV8lbWXWn0ugWWuEa+xhdQHXgREhhnzATDy
-	 fi0I8lOigirxtjca/jrj+I3OKutr2cMZA31ctIno=
-Date: Mon, 13 Jan 2025 15:17:49 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-Id: <20250113151749.b687c35e9f4c6d596449f433@linux-foundation.org>
-In-Reply-To: <Z4WFjBVHpndct7br@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gejk0Z8d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VPzsKNq8"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 56B80114015A;
+	Mon, 13 Jan 2025 18:31:54 -0500 (EST)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-09.internal (MEProxy); Mon, 13 Jan 2025 18:31:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1736811114;
+	 x=1736897514; bh=+BEVA3pe2gCidtgg232kaeLaU3AF5fInSG/U3XwNmwU=; b=
+	gejk0Z8d/by6y0unuWIhQ9s9jpdNr/NVr0hPgD6sYqIJJWtnkgoU1Ml7j/7W9EDb
+	WIQbv3jUFmnJb7SGJ2FMopkY3nHk40XsHf6rMaIgzyjLB/hT0q2Lj9diKgnOrk2r
+	MCKyTiogjoKHLY2yDXmN8pEN30rKkxIdxdcfsGZ1j9nwNDixrpIt981kFnbRXNz6
+	Ug18jgvWxvkp4w+kcduVXRU1ESyL1vhYVaQFLGVTPZZ+jiUUEItk610hw7b0lG6S
+	mTLHkrxCrtQOWyH3Q6/+Pr22ZVBfS+fxH5Mca5OYyCzllVWvF89L5p1OA0Q0PtQR
+	3s/8M+CKyUmrVGarVHs63Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736811114; x=
+	1736897514; bh=+BEVA3pe2gCidtgg232kaeLaU3AF5fInSG/U3XwNmwU=; b=V
+	PzsKNq8QCkI3dIHoxHSgLFo7/Kj4J01vCJDf1oZaOIJdHKJDZdTkRqJTg+io4QxZ
+	v4vcxECVr9NzSrH3VVyuURMCgMWSxY4xQ74PSpeXy3kpQRJXHuTWEZdpO+6kJfXS
+	1TyvqC8UQwetQw9a1mqv1+tFbbb+lhtpnrShYXbZy9w0TnKZQt5mPhTgAl/VRQc3
+	BABJv8e9INQI/qJHYM/Vqg3hxnYbgST3zx8AWpcvogcm/epyBdWJy8EgdB2qMznV
+	OZfGZlhqB34Gc0LvE0EAQ9Kq0GLLO2UWR2lp7zshexyukxmwrREx5hqeOgMTPGEo
+	UfmRy4sTkZXhIjcZFJ2XA==
+X-ME-Sender: <xms:aKKFZyaSH_nE_7jnJWxfqKZeebTQX4fg6GBXBBRs1XLRUhL7yKEJEg>
+    <xme:aKKFZ1Z6vWbQsnYkzjJaxCA1aI5fB7aJMew8WbrsyFW6DXypAwscZKXq4bER4XC3e
+    QWxlfFv_oMII6ylFcY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehhedguddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
+    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepkeffudeguedtgeektefgfeei
+    teevhfeffffhkeehfedtjeetjedufeekvdffvefhnecuffhomhgrihhnpeguvggsihgrnh
+    drohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphhtthhope
+    elpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrghlphhh
+    rgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprh
+    gtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhm
+    pdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
+    dprhgtphhtthhopehmrghtrdhjohhntgiihihksehovddrphhlpdhrtghpthhtohepsghh
+    vgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrh
+    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrh
+    drkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:aKKFZ8-yPk1ulHIntCsZECMlz8CUPs5hL5JLATc5IwdgBXTX51bTng>
+    <xmx:aKKFZ0qID9bDVaOQoL7RvXpjJI_Y_B_8_o1F0KH7E-TLcT6hFPsk9w>
+    <xmx:aKKFZ9pHiyVl02CRVqNujbt4I6BGtvDroYAUslKVg0PIICjTUB8zQw>
+    <xmx:aKKFZyQQuuh-xmzDSAgWhRhtHM_7s9ji8TNlJ9aCpsIaLhVjxB-Q9Q>
+    <xmx:aqKFZxfty_dXusmhlEnjjjGtbceuV0pG-PKyRzXZotTksMHk94Sy6ojG>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C96D91C20066; Mon, 13 Jan 2025 18:31:52 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Date: Mon, 13 Jan 2025 23:29:28 +0000
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "Baoquan He" <bhe@redhat.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Arnd Bergmann" <arnd@arndb.de>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ regressions@lists.linux.dev
+Message-Id: <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com>
+In-Reply-To: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
+References: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
+Subject: Re: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 13 Jan 2025 22:28:44 +0100 Roberto Ricci <io@r-ricci.it> wrote:
 
-> After rebooting the system via kexec, hibernating and rebooting the machine, this oops occurs:
-> 
-> ...
+
+=E5=9C=A82025=E5=B9=B41=E6=9C=8813=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=E5=
+=8D=8810:16=EF=BC=8CMateusz Jo=C5=84czyk=E5=86=99=E9=81=93=EF=BC=9A
+> Hello,
 >
-> # kexec -l /boot/vmlinuz-6.13.0-rc7 --initrd=/boot/initramfs-6.13.0-rc7 --reuse-cmdline
-> # reboot
-> # printf reboot >/sys/power/disk
-> # printf disk >/sys/power/state
-> ```
-> 
-> If kexec is not used, hibernation works fine.
-> 
-> This started happening since the 6.8 series; 6.7 works fine.
-> I performed a bisection and it pointed to
-> 18d565ea95fe ("kexec_file: fix incorrect temp_start value in locate_mem_hole_top_down()").
-> 
-> #regzbot introduced: 18d565ea95fe553f442c5bbc5050415bab3c3fa4
-> 
-> I will send the kernel config and dmesg in replies to this email.
+> On Linux 6.13-rc6 for mipsel in QEMU on the Malta platform, the RTC CM=
+OS
+> driver does not load and /sys/class/rtc is empty. I have tested this w=
+ith
+> "make malta_defconfig", which compiles this driver into the kernel=20
+> (CONFIG_RTC_DRV_CMOS=3Dy).
 
-Thanks.  Are you able to confirm that reverting 18d565ea95fe fixes things?
+Hi Mateusz,
+
+Thanks for tracking it down, this is indeed a huge effort.
+
+>
+> I have bisected this down to:
+>
+> commit 4bfb53e7d317c01f296b2feb2fae7c421c1d52dc
+> Author: Jiaxun Yang<jiaxun.yang@flygoat.com>
+> Date:=C2=A0=C2=A0 Thu Sep 21 19:04:22 2023 +0800
+>
+>  =C2=A0=C2=A0=C2=A0 mips: add <asm-generic/io.h> including
+>  =C2=A0=C2=A0=C2=A0 With the adding, some default ioremap_xx methods d=
+efined in
+>  =C2=A0=C2=A0=C2=A0 asm-generic/io.h can be used. E.g the default iore=
+map_uc() returning
+>  =C2=A0=C2=A0=C2=A0 NULL.
+>  =C2=A0=C2=A0=C2=A0 We also massaged various headers to avoid nested i=
+ncludes.
+
+#regzbot introduced: 4bfb53e7d317c01f296b2feb2fae7c421c1d52dc
+
+>
+> I have tried to debug this.
+>
+> The fallout is apparently limited to the CMOS RTC driver, other
+> drivers that access IO ports seem to function correctly (e.g. the
+> PATA driver). Also, the read_persistent_clock64 function in
+> arch/mips/mti-malta/malta-time.c, which accesses the same hardware
+> works correctly.
+>
+> The CMOS RTC driver is likely special because this device is defined
+> in a devicetree (arch/mips/boot/dts/mti/malta.dts) and there it is
+> the only defined device on the ISA bus.
+>
+> That driver fails to load because the call to
+>
+> platform_get_resource(pdev, IORESOURCE_IO, 0);
+>
+> in cmos_platform_probe in drivers/rtc/rtc-cmos.c returns NULL.
+>
+> The mediator seems to be that this bad commit causes=20
+> arch/mips/include/asm/io.h
+> to #include <asm-generic/io.h> at the end. As a side effect, this caus=
+es
+> the PCI_IOBASE macro to be defined:
+>
+> #ifndef PCI_IOBASE
+> #define PCI_IOBASE ((void __iomem *)0)
+> #endif
+>
+> That PCI_IOBASE value above is AFAIK incorrect for MIPS (it should be
+> defined to mips_io_port_base as far as I can tell), but this does not=20
+> matter much here.
+
+You are right, this is what should be done.
+
+A quick fix would be #undef PCI_IOBASE in arch/mips/include/asm/io.h
+just after including #include <asm-generic/io.h>, with ralink and loongs=
+on64
+as exception.
+
+In the long term, we should scrutinize platform usage of mips_io_base
+following ralink's approach.
+
+>
+> When that macro is defined, pci_address_to_pio() in pci.c calls the
+> logic_pio_trans_cpuaddr() function, which fails. Removing that ifdef
+> in this function "fixes" the issue and allows that driver to load and =
+work
+> apparently correctly:
+>
+> ----------8<------------------
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 661f98c6c63a..368cd9ca6801 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4213,14 +4213,10 @@ EXPORT_SYMBOL_GPL(pci_pio_to_address);
+> unsigned long __weak pci_address_to_pio(phys_addr_t address)
+> {
+> -#ifdef PCI_IOBASE
+> - return logic_pio_trans_cpuaddr(address);
+> -#else
+> if (address > IO_SPACE_LIMIT)
+> return (unsigned long)-1;
+> return (unsigned long) address;
+> -#endif
+> }
+> /**
+> ----------8<------------------
+>
+> Additionally, the following message appears in dmesg on affected kerne=
+ls:
+>
+> LOGIC PIO: addr 0x00000070 not registered in io_range_list
+>
+> (0x0070 is the IO port address of the CMOS RTC).
+>
+> When I added dump_stack() in logic_pio_trans_cpuaddr(), which prints=20
+> this warning,
+> I got the following:
+>
+> ----------8<------------------
+> Call Trace:
+> [<801185c8>] show_stack+0x38/0x118
+> [<8010be24>] dump_stack_lvl+0x7c/0xbc
+> [<80841060>] logic_pio_trans_cpuaddr+0x88/0x98
+> [<80604bec>] __of_address_to_resource+0x208/0x228
+> [<805ff45c>] of_device_alloc+0x7c/0x1ac
+> [<805ff778>] of_platform_device_create_pdata+0x60/0xf8
+> [<805ff9cc>] of_platform_bus_create+0x1b0/0x238
+> [<805ffa14>] of_platform_bus_create+0x1f8/0x238
+> [<805ffbd8>] of_platform_populate+0x80/0xf8
+> [<80a60008>] of_platform_default_populate_init+0xcc/0xe4
+> [<8011010c>] do_one_initcall+0x50/0x2b4
+> [<80a3d0f0>] kernel_init_freeable+0x1f8/0x2a0
+> [<8086975c>] kernel_init+0x24/0x118
+> [<801124f8>] ret_from_kernel_thread+0x14/0x1c
+> ----------8<------------------
+>
+> It appears that some call to logic_pio_register_range() from=20
+> lib/logic_pio.c is missing.
+> Perhaps the reserve_pio_range() function in arch/mips/loongson64/init.=
+c=20
+> could
+> be reused, but that's too deep water for me.
+
+Sadly that is not going to work as those MIPS platforms are not using
+vmmap for PCI IO access :-(
+
+>
+> Steps to reproduce:
+>
+> ----------8<------------------
+>
+> wget=20
+> https://ftp.debian.org/debian/dists/Debian12.9/main/installer-mipsel/c=
+urrent/images/malta/netboot/initrd.gz
+>
+> CROSS_COMPILE=3Dmipsel-linux-gnu- ARCH=3Dmips make malta_defconfig
+>
+> CROSS_COMPILE=3Dmipsel-linux-gnu- ARCH=3Dmips make -j4
+>
+> qemu-system-mipsel -machine malta -cpu 24Kf -m 1g -nographic -kernel=20
+> vmlinuz \
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -initrd initrd.gz \
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -append "console=3DttyS0 debug i=
+gnore_loglevel"
+>
+> ----------8<------------------
+>
+>
+> Greetings,
+>
+> Mateusz
+
+--=20
+- Jiaxun
