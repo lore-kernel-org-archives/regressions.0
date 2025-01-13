@@ -1,269 +1,231 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2113.outbound.protection.outlook.com [40.107.103.113])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E80618FDAB
-	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 22:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736806700; cv=fail; b=DEU2aGOGyY1ee7AXjoc9E+ubViA+tnBMRGu8bGlzQPQB0Gzrs0P3RXzjxO6qU8HJP0vaytQS578GwwrEsv8I5a9EEfQ+TgwViEJcSmZF0mpQmwxyqgzxXVgG3d69nUfFo5+Ctqny3UKi1RgWSDls+sFxqbv6seU31FBvObVHQTU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736806700; c=relaxed/simple;
-	bh=2kwtlPAczaf39vAg8rIiPE355rTfxzqyaWeiY3A1EvY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZZO4EYkRnPILKDGks2FZAwy31BeJ1sKqylVXi0c4Z8MwyXdzFa/FQKeaeGvQAErRI+29lSHWlFOWm7VwHlkdleMOzCoVGNEbgtfsqqywDQGFdltm+fYBZlDbZMaGHhZjgaJhEsu/+P1F7ANE2YLYMZ8Hr4lKvRJi6OQwx4QOJXE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unibo.it; spf=pass smtp.mailfrom=unibo.it; dkim=pass (1024-bit key) header.d=unibo.it header.i=@unibo.it header.b=QgwxXO2u; arc=fail smtp.client-ip=40.107.103.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unibo.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unibo.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248311F9425
+	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 22:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736807006; cv=none; b=Zu5y5qW3x86A/OfyTRGqpmVtXDRFpwNCaAZanKuyU3brMlewZaN8kgLHRxvychLh1LbWnMc/Km5+ILBJhoe0t5Ygynzo7UdM/rBbM6q0v7cTeg3lT0JcgiQL3JhPjqzYpjuW7oAqvGmjN8M9cmGPb2+fMqI+jbUPgsiLZ4VRKBE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736807006; c=relaxed/simple;
+	bh=hryTG4iC6jy+KTUIyVTeZ6i2VoJFQf6juDnitnrA5G8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Lgb8UQfsYmP0aa66RmuKKipJoPIw3uH568aWGot7A5COQOLtJnA7To5L6OGZ+tUb1nu+eyt7Zu2r5CAtl89FVAkxsoxqtIFH18YIjh0gssv9qPVKlhq4GdXBPvhAis32agvcxCazDTaimFnDKKi7EiWiU8AOttgdWadKNNK2kVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b=HbE9dRPk; arc=none smtp.client-ip=193.222.135.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=unibo.it header.i=@unibo.it header.b="QgwxXO2u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jX/wLjswQcwa3t7D2tdod95uD8yIbJfSmeO1/SULDG1NJ5f7ow7SqKGJdCNHrz2DJcCkyZ5z3VNRvoXjGS0ls6wPwg4ZEq955ydKUm9Sc6an62uR6Xe9iSXclz7ZSmIOCuXYb9cUtax7VkYJzpXLc/q+jlgtXHIEqqIbOxdUunDAmapD64gKbAv3zF8OKRL6nspT5AnSXsJxODa5FdSCJsIRlLdKikIn+BaBVboBwKmmpAbxzAu1SuWs6gJ/oruWnk+6ZE0fyqCWqdBOgDi3MrzKQREN2HnoET52tLmDC56iM9ptl0Ow2tPZmnZSd4NfH6j3XpTxs2g0mFTGuRx9pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I7y0yBUlXbzUeTsxb7aa1uH7j62vJ2RnkyPXuMutW8E=;
- b=SuN8ZNIQHrIq4iMzUViJ9KXLSNecT4tvhPndfJbAGqZm+LXwQJNM2zFw/cdyqrcWGqCkIRfT1GBISFkWe4OON9XfEVnGDaegwSBF7rHz8hXP5TcVfMtPYi6kdjRy89xE9E5yBo3NR63YNnVRMZDuOgaFIf3ReDNBaKBdEtIKjnbtENS+ZcXyQpuv+GhW/B9pcIJVdRZDW1J4kYBvteDOo9PFfG23BL3xGz+mo0lXrAKbMxhBNgG79KbcdAoHBl2rAKvHFR9EWdah/97/wsAfnlS6Ftg6BJyeDxk+CDLUPnTp/OPn9qOjj0bQ9Y9OJZHVCa2IEcmIEXerD2KNiVvbng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=unibo.it; dmarc=pass action=none header.from=unibo.it;
- dkim=pass header.d=unibo.it; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unibo.it; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I7y0yBUlXbzUeTsxb7aa1uH7j62vJ2RnkyPXuMutW8E=;
- b=QgwxXO2u6CqswYf1rbb4DMbR1yk50FtvZKyOv99MQPXNHXfTvrcTYH0dg9/Hz1+pB4w3FcPYy/H8rZvrOkE2A6huk6IvGC+4vFOK57p6G65XJ2SNNADFGfd0Vt+Kil6iAEDkM2m5wmrdaeJPWW7NNUrLhg6kuZKkuIz55ov0mck=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=unibo.it;
-Received: from AS4PR01MB10106.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:4f5::11) by DU0PR01MB9552.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:350::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.17; Mon, 13 Jan
- 2025 22:18:15 +0000
-Received: from AS4PR01MB10106.eurprd01.prod.exchangelabs.com
- ([fe80::de5d:230e:da8:61da]) by AS4PR01MB10106.eurprd01.prod.exchangelabs.com
- ([fe80::de5d:230e:da8:61da%7]) with mapi id 15.20.8335.017; Mon, 13 Jan 2025
- 22:18:15 +0000
-Message-ID: <9ae25475-e8f4-4ee1-8022-7621fbe8ebc6@unibo.it>
-Date: Mon, 13 Jan 2025 23:18:13 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before
- downloading the fw
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Takashi Iwai <tiwai@suse.de>
-Cc: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
- "marcel@holtmann.org" <marcel@holtmann.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
- =?UTF-8?B?RGVyZW4gV3UgKOatpuW+t+S7gSk=?= <Deren.Wu@mediatek.com>,
- "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
- =?UTF-8?B?U3RldmUgTGVlICjmnY7oppboqqAp?= <steve.lee@mediatek.com>,
- "marc.payne@mdpsys.co.uk" <marc.payne@mdpsys.co.uk>,
- Sean Wang <Sean.Wang@mediatek.com>, =?UTF-8?B?QWFyb24gSG91ICjkvq/kv4rku7Ap?=
- <Aaron.Hou@mediatek.com>, =?UTF-8?B?Q2hyaXMgTHUgKOmZuOeomuazkyk=?=
- <Chris.Lu@mediatek.com>, =?UTF-8?B?SGFvIFFpbiAo56em5rWpKQ==?=
- <Hao.Qin@mediatek.com>
-References: <20240822052310.25220-1-hao.qin@mediatek.com>
- <ZuB3omUkdUHLggYu@mdpsys.co.uk>
- <790e542aa9d08c7efeee6ef298fce2a87d8035e4.camel@mediatek.com>
- <ZuneSM4SvyUFX86j@mdpsys.co.uk>
- <9bfbbf24ac2480d94d3455f7e33e4b5502b38ced.camel@mediatek.com>
- <CABBYNZKYsL9jcF2n9TsA1BjU-CjXOdXu7MDLP9Sz_Ly8hBAf1w@mail.gmail.com>
- <c01e6dfa730dd10a7d4dba60fe31e82b9c296b37.camel@mediatek.com>
- <Zuyk1c6Gkxx3G0PB@mdpsys.co.uk>
- <f9e8688ebe559e10c019d0cbab4e8b1f5a7d2339.camel@mediatek.com>
- <ff502f63-2d87-4dee-a893-cce53353df8b@leemhuis.info>
- <87iktk4d9l.wl-tiwai@suse.de>
- <75f671b6-ce2a-4404-b662-2c9c7d28a598@leemhuis.info>
- <d0f70e662f5e9329cff43f92a5c191601cc599f1.camel@mediatek.com>
- <0a988691-8c18-4dca-ac78-94e36a9b8b37@leemhuis.info>
- <f3c6f6f857d19c867941c86c644042fa195621ac.camel@mediatek.com>
- <643d8055-5a9f-4f5b-865b-830d33651dfe@leemhuis.info>
- <87ttcqt0hx.wl-tiwai@suse.de>
- <746e7fa8-41ba-483f-a674-2121fa0ea2d8@leemhuis.info>
-From: Sergio Callegari <sergio.callegari@unibo.it>
-Content-Language: en-US, it-IT
-Organization: =?UTF-8?Q?DEI/ARCES_Alma_mater_Studiorum_=E2=80=94_University_?=
- =?UTF-8?Q?of_Bologna?=
-In-Reply-To: <746e7fa8-41ba-483f-a674-2121fa0ea2d8@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MI2P293CA0013.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::8) To AS4PR01MB10106.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:4f5::11)
+	dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b="HbE9dRPk"
+Received: (wp-smtpd smtp.tlen.pl 37735 invoked from network); 13 Jan 2025 23:16:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=20241105;
+          t=1736806598; bh=euJpLW1zkbk+VbgLUiGx7r4CAGyIyXiDnKb4R+fjfYw=;
+          h=From:Subject:To:Cc;
+          b=HbE9dRPkzw7zBmE3q6NkS3m0mwwSYDW8/7inMVWTXJfmQvubYld9o8yhoo46uyI3C
+           HRmu7LVJucOcNzLcb24Jyd/8rAo112zNduV56cYSuLZ4IqolF23jVIdkBbrhsMqsa4
+           PcCFznUMpSFdhg97RYyvpfy+tu/w/wyFGvpdhoJ9Eep1HVavWn/O5mQeJRCRMD/B8Y
+           f0+yv7uNn9BM0jN4lkub3T/6jMYvIuOgV3gb0jqtBnMa81BPT+zVcPxQCl4d1qW01b
+           FI7w6gFnlR09n44R7lR5yzKqkeo4Jd59jrobQm0uNIYilTBTnOu5EhTO8E1Pdjp0Rf
+           JeYFq0srWFOmA==
+Received: from apn-78-30-75-199.dynamic.gprs.plus.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[78.30.75.199])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-mips@vger.kernel.org>; 13 Jan 2025 23:16:38 +0100
+Message-ID: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
+Date: Mon, 13 Jan 2025 23:16:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR01MB10106:EE_|DU0PR01MB9552:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f3ad130-849f-486f-af05-08dd34202ca8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y09wV1AxNUZaNVYyK2NNaEdrL1RIdTdmZW5GZkYwUkFrNks4NHR0TGYzTUY1?=
- =?utf-8?B?am5qNnZWZ0hSUFBERG9XWmxVMEJtbDdTRjdCR2YvazF4T2IrRWduTk04ZVZs?=
- =?utf-8?B?VHNtUnRZeFFiYkZCSnZ4cGNLYXNTVnNMYVBnVjN3T1V5Zjg3WHgxYnd0YlZY?=
- =?utf-8?B?TEJKMDJHU29TVnpzLzZKQndCN0MvVkE1Qk5lS3ZNeENjMzdFbTZjYVR3SVNG?=
- =?utf-8?B?eEExbE9sM3BETHRlRlZIRXhXS25ORUcyOWdzWGVMbmM5SUl5bitWS1JLbjI5?=
- =?utf-8?B?c0RmbUs1aEkxVDdsQmQxQ25MTThuNVhBelVMTHZpTkE2UGNkaGJ0dDVZUnNS?=
- =?utf-8?B?MktjbHo4dFNpVWUxdnYwNk5oR1Rhdkxxa0E4eTZHYXhrcWQrdEFBeVVxUkV4?=
- =?utf-8?B?SzNKbGRwVmsvSG9aZG1Idy92YjJQK2FNZXEwZUc5OXZJbUxvU1o0N2VNQmt5?=
- =?utf-8?B?NmRLZVgxVHNkTmpTK3B2MGw4K0E1YU9kVjJRSlRyQVBkYWRRMFVzMzBrTEFP?=
- =?utf-8?B?bU5LL0lDOXlFWXhRSTRJZjZyRjY2V3BSQlMySWFhcjV2YTM1TzdhVzhDcEE5?=
- =?utf-8?B?Mk4vZFluZ1Z2ZThmeFB0STZDLzZCQnJjZDBWQ08rd1RFSVFhSWF6NTl5ZkNq?=
- =?utf-8?B?UUo4cGcySEpzTGJ3MVF3REtROVNOREQ3Lzhvb2FoOUVnQ2RUbUtYNDZGdjlF?=
- =?utf-8?B?akNhK1VUK0hjdE1Md2NzMHQyMUpXYnhneXVCT0JMeUZ0cHdHUWswVW5zU3ZL?=
- =?utf-8?B?dGR1TzVDeGRERzd6Q0ZwMTNJdExPSUJvQ3gzV3FNdmxDM2hBdnA5R2ZDSlkv?=
- =?utf-8?B?cUF3VDRjMERCZ3RlczJZQlgvbmhlOW1vaXVIQ1J1azdBZ0RvNnY1RVdycVY2?=
- =?utf-8?B?R2QydHhqUEFKdXZkSnZFSjFERThJejJnSFpOcTBMR0FNZmc4cVJGNDBIU0ho?=
- =?utf-8?B?SnFGMU1TdlpjTFZjNVNNSVo4VXFpSHpQZ09MWnpzd2V0WFdnV3JzSzhRdjhD?=
- =?utf-8?B?SlZoamtsZFVtZTBxMmY0TzljWThOKzNpenFSUmZacGVzVE1Ya3NlTnZkRUdI?=
- =?utf-8?B?UFVTRjZPSmpFRlpzL1U3SnJsODc4K3NHelQzOEhvR0c0RkxRQVhoMnJCalVo?=
- =?utf-8?B?RytWck9OR3ZZTGZXVzVyY3VQQUM4TXFnL0Q3WWRaZyt1SmtBekN0eWUzSXIr?=
- =?utf-8?B?M3hXdXovdm1BSmtTVDJ6TFFVcHFJWUdrN3FSSzMyTU1KU3U3d0JiUGlsRkVF?=
- =?utf-8?B?RHhzUFhQNGlaamgzRHVNRUYzdzBLdGdsdkFzb1UyUTdDZXlaU2J6REpZUDFz?=
- =?utf-8?B?YklMYUJZNUFtbDEySmVtVTd0d1BOSXcwbHZUbEF6WnhmNk9xTlhHNTcvZkxl?=
- =?utf-8?B?c0w1eGJXaFNlZE1MMlJXOGpELzdNbG8zQzVsNWRoenV3NzR1UU81aU9SZXhs?=
- =?utf-8?B?bk5CNi92K1k3YnVQQnJVeWYyYVh1UWdPUENlVmoyQ2o4SVdtRHNrQWJaMzk1?=
- =?utf-8?B?QlhJWTMyS21DTDQrckdmald6SFk3bEhCTTRCem03MkRxRHBJL285M1VVbmVl?=
- =?utf-8?B?NU5ReHczRmN0MWI4YnZWaEVuazR0ZzlpS2pLT3BZTm02UmVwQW1qR3VPUkhX?=
- =?utf-8?B?UFl5czl6b09iZVh0em9lWVNwMDZyZzlybjRablZLeS8va2FzWWJNZDkydE5v?=
- =?utf-8?B?U3ZFWE1sektGR28rZUM1UXNDTk1JbU1WWWpSN3ZSTnFpUDZwd09GV05KMnpZ?=
- =?utf-8?B?MitWaUhxYytGbTZJMVF6Mll5ejd5Yk16K1V5QTMxNjQ5dkd3T1BiejlCOUZP?=
- =?utf-8?B?QUNiUHZuTEVOc09xcit3NHdnWG5JdUY0cnY5T3JSR3Rlb0V6elVVTkdGT3hV?=
- =?utf-8?Q?oRp566fs1+vzF?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR01MB10106.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L0I4eWlScERyODF0RGdRZXlmdHIxRFpzMGw5amFKTEhmU2NNZFV6TjdjNFJ0?=
- =?utf-8?B?K250ckE3alhQb3N5L25RVlAzVllhQ1dXR2doZDBFQXFJM2t2eU52OENZM05r?=
- =?utf-8?B?L05lRUowYzJwbERGS1NncDJUTDRTUmtPTVBqTGI1VkJMVXAzMDR4NkV2bEYx?=
- =?utf-8?B?V2lualdQU1lFaCtzMjdNTFNOYXUzOHZTQURnTzVwdVE0TVlGaGR1OXVLMDlY?=
- =?utf-8?B?Z29BR0NHa1F1QjVib3hFMTc2dXFmWnVFSWhqak9UdlBXYzltMlNhV250Q3Fu?=
- =?utf-8?B?aVU0TENReTVmNVpjRHhvWXFWUzFYMDlVcWlsd3dPL2g4VWprWGdjWkxuUE9p?=
- =?utf-8?B?eHhnTHAwdTBkWTZTK3ZkdUZlaktGUW8wSkIvdkJvN1JOdnZoRGVXakc4V211?=
- =?utf-8?B?cnk0Ym9JRWY4REsrTFdCQ3M5dHFmQmcwbEpaZmEwT0xFT0pMYzN3SGh0RnJj?=
- =?utf-8?B?L2s2N29wYThVQjR6SC8wZGw2TUdUS2R2a0RNRUtUQm9MaVNwMFkrRXNFMkt0?=
- =?utf-8?B?ek51ZEd6OTkyU3R0OUpRQXRRMnlpeXBnT1FJY2RMbncvWEZXdWNJS2YyTW9l?=
- =?utf-8?B?TTdRRXh0OVhLRFZ1MExzZXFHUVZ2bzllb1NCdTlQTWQxRUNWdytXYlVHRTgz?=
- =?utf-8?B?eXlkd04wY0RBZ1duZCtMUzdXUlhSNU1CamQweVBYVUZIeE9lWEQzSEg2UXh4?=
- =?utf-8?B?R0J6dWd3SkdVN3J1dCtTMUUrRUNwK0Q0SzhXZGw1Y05CUW1yeTRMajhzNVFG?=
- =?utf-8?B?eU5zT1BqZ1B6L0cvQW9INzlMckZmbVN2clp0aENUK05Ob0k1QjJJOTh4aERi?=
- =?utf-8?B?UGJSS0lFQVNqbVppc05sYzN6SzlKLzRSaXNJSEJaVmRDQno3eWtyZnpHRXFt?=
- =?utf-8?B?R3htYUUrenhqRVBWOEFWd0lsVURobFlYNjJrU0x1SWQ4TW9VQ1FnY3pSZGJK?=
- =?utf-8?B?aS84a0dxUE5sQkE2MjdicUxvbnJ0QXM0cWJnK0I3VHdsMTRZV2tjUVpSeWUx?=
- =?utf-8?B?aFVjYjFaMzNIV0JyUmNaWHlQZm5aQlZvSEpXeTNEY2psNTd1OTJza0c5aloy?=
- =?utf-8?B?RnRZS01tZ3MxbVY4cU9sbU5LMU1TUHE1R25FVEdxVzhoeTJMMFpwZGh6UnVl?=
- =?utf-8?B?ZFAzWlFoTkk0UXdZMjNhb0Y1MFJNQ2ErTE5zeHpHR1J1M293SXp0SXRxWEtj?=
- =?utf-8?B?OW12OWV2QjV1Wkp6emVwTlQzd3R1b2lyRzB2dzdJbmJ4RmVTQVRrVlFJUHJP?=
- =?utf-8?B?YmpFTEljb3B0NEFMMGlJd1J5VTh1R2wwNzF5ZHIxbk9EOGIrd0pIeVh1cjBI?=
- =?utf-8?B?dDdueUVwTE45MUxSM0xUN3VtQXdPaGhFOHYvb0xFbk5RUXM1Tlh1NElZeXg4?=
- =?utf-8?B?S0xGUEEzQzJhaEZCcjZCUi9RMXh2dnYxOTZpSk01OE5ISGZZaFhuSVdwQVB1?=
- =?utf-8?B?MFRUeUw5LytodlBMeW5kS0MzSGV1K0h6Q29FWDgvcDFWa2I2SGpic2wyRmI0?=
- =?utf-8?B?YW0wRlIyTkplbmIyNXh3SWZ5cnpNanBzbVY0ZjlhcE0yVkRzNW52RHJ3T1o5?=
- =?utf-8?B?ZFNaQVExTi9JRGFsWWhQdHZKOW1JWmVqT0NrNEF2WXMxZGprVnBlWnJwYUVW?=
- =?utf-8?B?SlhsaTR6cENVczhGUHRZSE15Ym4wWDNuUXVXSHNBQ3hFQnNBWG1LSnFoOHM2?=
- =?utf-8?B?R0Rwc3JUOXAvR1o3NHlIc01odk9IYkRaTlNLYkZpQi9oM3lVeksrVDYwZDlF?=
- =?utf-8?B?TEx4WU50ZmJ5SXlvSnN1MFJtblhmNTE5eHlqZ2xrSloyQmxscmlGNDk4NXg1?=
- =?utf-8?B?L0VLWjkrandkUFRnckJ1cGJqRXRubWE1WnJQdWNpOC9UZ0pPVWEwRGR1YlIv?=
- =?utf-8?B?cUJ4WVY4RnVkcHkvUkFXTlJMU1lMV0pTM2hUWW45QmtTenduWHRhWCt3NlVp?=
- =?utf-8?B?VlhkSkNkSW1FeWpKLzBRbW9wZ0dHbTFhVFZCRWs5eUd4Z2xDbFYyUFVmUUpl?=
- =?utf-8?B?ZS9JLzFLZ2tCSCtlTlFVQUwrcEhQOStXSVlCWUVtZ2JheTliNDI2cjZjSmVm?=
- =?utf-8?B?RVNTL2RIR2J6RHZQdnd6dHpWcjgyZUluRXBCL1psUjgrMjJKa1h5ZVdZTzM3?=
- =?utf-8?B?UUszN0pnYm5Ic0NobVVlV3JwcTlNUmlkWnRFL09XOU52MGx4V3NPWEFQTFQ2?=
- =?utf-8?B?bnc9PQ==?=
-X-OriginatorOrg: unibo.it
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f3ad130-849f-486f-af05-08dd34202ca8
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR01MB10106.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2025 22:18:15.2427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e99647dc-1b08-454a-bf8c-699181b389ab
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q73sZq6Pb6Ki3qpS0cMDfTSrYvXoDRm/F6IGq6CJSfYvQCfTZ8XVO3w7/APqKCBHCR5sbUdSu9/p8D8nW61i7QGrA6pvOTQ7yHx34f5WeAc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR01MB9552
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Subject: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
+To: linux-mips@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Language: en-GB, pl
+Cc: Baoquan He <bhe@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ regressions@lists.linux.dev
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: c9664bb3b9bbec77d370e7263eeb3f67
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [wXPk]                               
 
-Sorry for getting one more message in this discussion, but the issue is 
-still biting.
+Hello,
 
-On 11/11/2024 10:21, Linux regression tracking (Thorsten Leemhuis) wrote:
- > On 02.11.24 11:04, Takashi Iwai wrote:
- >> On Fri, 01 Nov 2024 15:22:13 +0100,
- >> Thorsten Leemhuis wrote:
- >>>
- >>> Thx for the insights, but it feels like this is not the complete story.
- >>>  From Takashi's mail earlier in the thread it appears to me that 
-there is
- >>> a regression that the patch at the start of the thread fixes:
- >>> https://lore.kernel.org/all/87iktk4d9l.wl-tiwai@suse.de/
-To the best of my understanding the patch mentioned here is now in 6.11 
-and 6.12. However, it does not fix the regression from 6.10.
- >>> So it appears to me (please correct me if I'm wrong, which I might be)
- >>> there is some regression that must be fixed independently of any
- >>> firmware changes; not sure, maybe it's a different regression that the
- >>> one Marc saw.
-The new firmware does not fix it either.
- >> That's hard to judge, unfortunately.  The only fact is that 6.11 and
- >> 6.12-rc are still buggy and fail to boot due to the kernel Oops from
- >> Mediatek BT stuff.  The patch
- >> 
-https://lore.kernel.org/all/20240822052310.25220-1-hao.qin@mediatek.com/
- >> seems working around it, but it doesn't mean that this is the right
- >> fix, either.
-I understand this is also in current 6.11 and 6.12 that still hang on 
-resume from hibernate.
+On Linux 6.13-rc6 for mipsel in QEMU on the Malta platform, the RTC CMOS
+driver does not load and /sys/class/rtc is empty. I have tested this with
+"make malta_defconfig", which compiles this driver into the kernel 
+(CONFIG_RTC_DRV_CMOS=y).
 
-Unclear to me who can reproduce the bug. From reports it looks like it 
-should be relatively easy to reproduce. Framework laptops as well as 
-Asus ROG Zephyrus 14 2022 do show the issue.
- >> My wild guess is that there are substantial problems at btmtk stuff
- >> about the firmware management.  It blocks unbinding if something goes
- >> wrong, and this bug surfaced casually due to another change.
- >>> I just don't know what's the best way forward to resolve the regresson.
- >>> A revert of the culprit? The patch at the start of this thread?
- >>> Something else?
-The issue was not present in 6.10. Having an idea of what to revert 
-would ease testing from the users side.
- >> Either a revert of the firmware or the patch that triggered the issue
- >> would be helpful as a temporary workaround, yes.  We need a quick
- >> duct-tape coverage, then fix the fundamental failure.
-The fact that 6.10 has gone EOL has already left all those on rolling 
-distros with no usable kernel unless one overrides the kernel from those 
-offered by distros. So, yes, having some duct-tape solution would 
-definitively help.
- > I agree, but seems everybody else sees it differently or does not care
- > enough to do anything about it.
+I have bisected this down to:
 
-Substituting an intel wifi card for the mediatek one is a relatively 
-cheap solution, but given that the issue seems a regression it is not 
-the expected one. Wonder if 6.10 was working /while being wrong too/ for 
-some weird combination of factors.
+commit 4bfb53e7d317c01f296b2feb2fae7c421c1d52dc
+Author: Jiaxun Yang<jiaxun.yang@flygoat.com>
+Date:   Thu Sep 21 19:04:22 2023 +0800
 
- > Or is some firmware update that fixes things within reach by now?
- > Assuming here that the firmware is the only problem here (not sure at
- > all if that is the case), as users never should be expected to update
- > the firmware to fix a regression caused by a kernel change.
-The more recent firmware does not seem to fix the issue.
-The issue has in fact worsened. Until not long ago it was enough to 
-rfkill bt to work around the issue. Now, this does not suffice and I 
-need to switch down the wifi too.
- >>> Takashi, Luiz, can you help me out here? I guess I otherwise soon will
- >>> have to involve higher level maintainers to sort this out (e.g. the 
--net
- >>> maintainers and/or Linus).
- >> I can build a test kernel and ask the reporter for testing if once
- >> something is provided, of course.  Just ping me.
-Is there any patch to try against 6.11 or 6.12 at this point?
- > Hmmm. Given the above I wonder if it would be good if you could make the
- > reporter test a kernel with the revert and see if that helps -- and if
- > it does then consider submitting that (with Linus and the -net
- > maintainers in CC) to see if that gets anybody into action.
- >
- > Ciao, Thorsten
-Thanks for the attention,
-Sergio
+     mips: add <asm-generic/io.h> including
+     With the adding, some default ioremap_xx methods defined in
+     asm-generic/io.h can be used. E.g the default ioremap_uc() returning
+     NULL.
+     We also massaged various headers to avoid nested includes.
+
+I have tried to debug this.
+
+The fallout is apparently limited to the CMOS RTC driver, other
+drivers that access IO ports seem to function correctly (e.g. the
+PATA driver). Also, the read_persistent_clock64 function in
+arch/mips/mti-malta/malta-time.c, which accesses the same hardware
+works correctly.
+
+The CMOS RTC driver is likely special because this device is defined
+in a devicetree (arch/mips/boot/dts/mti/malta.dts) and there it is
+the only defined device on the ISA bus.
+
+That driver fails to load because the call to
+
+platform_get_resource(pdev, IORESOURCE_IO, 0);
+
+in cmos_platform_probe in drivers/rtc/rtc-cmos.c returns NULL.
+
+The mediator seems to be that this bad commit causes 
+arch/mips/include/asm/io.h
+to #include <asm-generic/io.h> at the end. As a side effect, this causes
+the PCI_IOBASE macro to be defined:
+
+#ifndef PCI_IOBASE
+#define PCI_IOBASE ((void __iomem *)0)
+#endif
+
+That PCI_IOBASE value above is AFAIK incorrect for MIPS (it should be
+defined to mips_io_port_base as far as I can tell), but this does not 
+matter much here.
+
+When that macro is defined, pci_address_to_pio() in pci.c calls the
+logic_pio_trans_cpuaddr() function, which fails. Removing that ifdef
+in this function "fixes" the issue and allows that driver to load and work
+apparently correctly:
+
+----------8<------------------
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 661f98c6c63a..368cd9ca6801 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4213,14 +4213,10 @@ EXPORT_SYMBOL_GPL(pci_pio_to_address);
+unsigned long __weak pci_address_to_pio(phys_addr_t address)
+{
+-#ifdef PCI_IOBASE
+- return logic_pio_trans_cpuaddr(address);
+-#else
+if (address > IO_SPACE_LIMIT)
+return (unsigned long)-1;
+return (unsigned long) address;
+-#endif
+}
+/**
+----------8<------------------
+
+Additionally, the following message appears in dmesg on affected kernels:
+
+LOGIC PIO: addr 0x00000070 not registered in io_range_list
+
+(0x0070 is the IO port address of the CMOS RTC).
+
+When I added dump_stack() in logic_pio_trans_cpuaddr(), which prints 
+this warning,
+I got the following:
+
+----------8<------------------
+Call Trace:
+[<801185c8>] show_stack+0x38/0x118
+[<8010be24>] dump_stack_lvl+0x7c/0xbc
+[<80841060>] logic_pio_trans_cpuaddr+0x88/0x98
+[<80604bec>] __of_address_to_resource+0x208/0x228
+[<805ff45c>] of_device_alloc+0x7c/0x1ac
+[<805ff778>] of_platform_device_create_pdata+0x60/0xf8
+[<805ff9cc>] of_platform_bus_create+0x1b0/0x238
+[<805ffa14>] of_platform_bus_create+0x1f8/0x238
+[<805ffbd8>] of_platform_populate+0x80/0xf8
+[<80a60008>] of_platform_default_populate_init+0xcc/0xe4
+[<8011010c>] do_one_initcall+0x50/0x2b4
+[<80a3d0f0>] kernel_init_freeable+0x1f8/0x2a0
+[<8086975c>] kernel_init+0x24/0x118
+[<801124f8>] ret_from_kernel_thread+0x14/0x1c
+----------8<------------------
+
+It appears that some call to logic_pio_register_range() from 
+lib/logic_pio.c is missing.
+Perhaps the reserve_pio_range() function in arch/mips/loongson64/init.c 
+could
+be reused, but that's too deep water for me.
+
+Steps to reproduce:
+
+----------8<------------------
+
+wget 
+https://ftp.debian.org/debian/dists/Debian12.9/main/installer-mipsel/current/images/malta/netboot/initrd.gz
+
+CROSS_COMPILE=mipsel-linux-gnu- ARCH=mips make malta_defconfig
+
+CROSS_COMPILE=mipsel-linux-gnu- ARCH=mips make -j4
+
+qemu-system-mipsel -machine malta -cpu 24Kf -m 1g -nographic -kernel 
+vmlinuz \
+        -initrd initrd.gz \
+        -append "console=ttyS0 debug ignore_loglevel"
+
+----------8<------------------
+
+
+Greetings,
+
+Mateusz
+
 
