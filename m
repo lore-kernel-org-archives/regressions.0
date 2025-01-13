@@ -1,188 +1,106 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9648B14F9F4
-	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 16:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736787312; cv=fail; b=XATEXcPVb1a3VQ2rUyKxGZQaMuThv+YUUtVSn1zMa/2bkSBViGE6nGakhgJSFA8cYsYOTvZXwkrTcjHkK+O9c3Qrj3AzD64KxeiLec4n7GoxdZSZVHUzA4BFwxf8DLNZOIF7GaYpNW2A6HSsJBEDR31UWuRbKesEiBN2NVuKckw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736787312; c=relaxed/simple;
-	bh=gXKgdTWxfvNgx24T2zV+JaE5rsZk1jTeEGclnt7mWsw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A8FxVp6TA56473I9VyYXRsyd02rVDkv5WJkbFI9Pe79IKwEBOKJl26OMavW5luBhrIpJQdFbz8v5BfFuGeyU6XSPpYu7DEOPUU9f6BCPoUikorcwoUGukoIOGqSCPt2O/YZnvmvJgLRH/xSrPy6DR2xqtMJkThcRqlIHBsRJqbA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=ICdZ5kYC; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=md32p62r; arc=fail smtp.client-ip=72.84.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167681CB31D
+	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 20:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736799170; cv=none; b=PJeHscLeLkD36tenLvW299A1+H+OZ9CUEKugxI3X6I89+R7cQfeH4ryV2nBgZXyJOGtSvxwEt74xVgDrMEPl6a9u+df0OFDwUX0Zr+HrLE/usvjHYyGXnWSNaafPtxtc55Yu1PJh9/byI8t2ytyMXEYqGhBnznxPRvl4Gcd/9XA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736799170; c=relaxed/simple;
+	bh=VO71TFfgjbrSIr+nIvPjvtiNtN2bS1Ejb31IvQuMFAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DVoDjKtRWoejJTQCLnPS4EwZFOVQqPydSmQXWG8arsl/Rt2IKCphj1qa8R8UH0WwDLJjCqtEsFV7e51lAc1nYRQ6RsCiO+yWNDvepizKGcm8qzG3CLifRoa+6jaOmA4RPjLM2xavGff9nc9BWeEfygnpW+8Wu1ilqmXj5bTrzzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJ7dPa49; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="ICdZ5kYC";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="md32p62r"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id A510D480A41;
-	Mon, 13 Jan 2025 11:48:29 -0500 (EST)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1736786909;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=u/YC2T5rfqWAbWfWzUHFz42ptWsYmEPR92N33rWxDU0=;
- b=ICdZ5kYCWccA3K3n6LxQi7qbHyuSiA0NGpqmAgptrUmeBJCA/nkD8Bv6Xh3qpZiY6WVYl
- CQpeIMBlBf0DCJwDg==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1736786909;
-	cv=none; b=AOYSOxEQC6ZVQfOe7U47CLTo285X5F2m8Uz9j+oiBm27Ajc6cRLzYh1f7b37GFU+FKgkt9zBZj/7lwrzsbLnoforxkyuSRYxZu1QEDMmHamkG8aW1KAzCZjo0wUNNTW/LaPQUbOTFHVRGKrnvgYTzPuSX7SUGLzHPaDEHBUBuqL6ObcAcauCgtn/TmHY1WaRQgPmXNz4u8DdLNjbsUTSAAQZNC5jqrKJviXG2b1pEalpY+KRhjSnnKMT6iJiHlWc+tSDbCUYK8gaDqPHmyyYS8q5VHoiaJwOQUUb4EsHMrfvOfx/DBMj4wiHskl3zglhJKDEIVD7JcwbZt/efH8yOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1736786909; c=relaxed/simple;
-	bh=gXKgdTWxfvNgx24T2zV+JaE5rsZk1jTeEGclnt7mWsw=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
-	 MIME-Version; b=RzyrnPbxPvbYnFlmlN7NfEZHkVK5GJn0EycLC1F7yu3u0Mv3yox0o7AVfaQ5SNvo0Qs9WZjhb+saXN0bKkiufxrH+i8OFDGPVOKCBdL9Pu0+T7QAiw/9sVV6VYaoQg2vsCBegSI61OVBJvEeA7CGW5hMoO5NF2r7NCdEZEM5qW9lRPAtztUXn2+WZ4oeW9ClJ6s5KrIe94JJzAGIuZscEmxsiOoH1pEc+HZcmakFvFft+6rkHFY/yaNceb38ugL/UGEVINFjgSreF7TrU/AdWyBneras5TAkAiE0p2SYV8FNmO0S6GHL/NVHjid0kRRXHNSdfYlKMM8C6CCV5dLh4w==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1736786909;
- h=message-id : subject : from : to : cc : date : in-reply-to :
- references : content-type : mime-version : from;
- bh=u/YC2T5rfqWAbWfWzUHFz42ptWsYmEPR92N33rWxDU0=;
- b=md32p62rxgVOFtmUnLVggYBN0rA6F8vjQ3Z/yiKUmdXwoTG5P2hwO4RefON/IwwEqLvvV
- x2j+2fCZKaWtvTJTzC1Iob9BBV+0IGou1ccuo4HWhjXESD8Ny3IUzzvyvQ2+GrO3O48ygRZ
- 6teFsEhO+G9b95hRasdxuAWBHjWWvNs3p+W+upNirlNZYxxc5+URWSF+vPAfYZU7x8+5WVW
- rX3CCxdI9Y7DYEn9+aqF+s9CPxG0A+D3EXYrYajJBjuEeFiQQmuaheZWF9FcWamJ9VmRbkS
- xI2Lq5fmUI99v1VGtDjzNEYn3mke3zZ7RhwcCyC0Y4hPRKQRYVTwqsTx/YbQ==
-Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by srv8.sapience.com (Postfix) with ESMTPS id 6CC52280050;
-	Mon, 13 Jan 2025 11:48:29 -0500 (EST)
-Message-ID: <1c418b7b67b1e75bed5068a86165939648bd1952.camel@sapience.com>
-Subject: Re: [REGRESSION] Re: 6.13-rc1 graphics fail -> resolved
-From: Genes Lists <lists@sapience.com>
-To: Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	lucas.demarchi@intel.com, thomas.hellstrom@linux.intel.com, 
-	rodrigo.vivi@intel.com, airlied@gmail.com, tzimmermann@suse.de, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org
-Date: Mon, 13 Jan 2025 11:48:28 -0500
-In-Reply-To: <53757618ad585771809d0b37915c4d97fab06fdb.camel@sapience.com>
-References: <3b097dddd7095bccabe6791b90899c689f271a35.camel@sapience.com>
-				 <Z07Mg2_6y2MW22qV@intel.com>
-			 <7db24095f935d874fae466853b0984103f97b40f.camel@sapience.com>
-		 <dd13efc9b3fe3e3acd599ca91b714fa92f6cb9a8.camel@sapience.com>
-	 <53757618ad585771809d0b37915c4d97fab06fdb.camel@sapience.com>
-Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
- keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
- 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
- sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
- vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
- BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
-Content-Type: multipart/signed; micalg="pgp-sha384";
-	protocol="application/pgp-signature"; boundary="=-lcoIbt6gV8L3KOHuxPSh"
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJ7dPa49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 960DCC4CEE5
+	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 20:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736799169;
+	bh=VO71TFfgjbrSIr+nIvPjvtiNtN2bS1Ejb31IvQuMFAE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EJ7dPa49b1O9B8dg8wg+GUJLNOMr3Mq41AUFMX0KJzwGuf0+MdelqsQChhgIh3cgI
+	 eBLI3iIL1FCdKLSFxZi2YEk05pduXPCM5azvGQuApTIVzJAmFOcz0ru+EID/akFR8w
+	 KqvyGWnJsEjBuenI5YK54XUXVs6UlMoHEl6lgh9zlZGyfxxZzGDaoaT1GmN7wWjtnZ
+	 fGhfJl9QiwGhyk8FU1fC9NDVRpRJPr+wj8K9RZIJZ/GGgLe12K9AJKWPPScFIpDtHo
+	 CGPBehOWZBoFvML3dFpXMHF5CEY6ofuTZrDCpUJitsrXl8UBc+YJnRP/+X5uDrNSmr
+	 S98h7WNC8++jQ==
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3eba5848ee4so1191006b6e.3
+        for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 12:12:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxcI+vPOfcMZ1yubUEfzdv2nZddHWYlmtW2IGxiyi4cY8GfwzYGb39tOKD+GaycbXvvvihNP6oIpDetw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1DOb+uMLi3tCQqftEbZ4w2UkMqsCSMxCVH/y9TgPS9e8IgTjm
+	CbXMabbfTy4RlEiQSAzaPTFBQS84IsDH1H58BP8zkuSkx7Mnjw4fKDk8dtXigI2gTtIJODQlraA
+	7l4a4O4mbdoM7dT6tlUWbgO+CtZs=
+X-Google-Smtp-Source: AGHT+IFDg16HTytPYaVRyH/8xx6u66EXlnnAVIt9DAQCoXWFaXHoTaenWY5JbLpFyrCHF6H+M9XGT/5CBd32kBtLvSA=
+X-Received: by 2002:a05:6808:14c3:b0:3eb:4137:53bb with SMTP id
+ 5614622812f47-3ef2ed64538mr15530049b6e.31.1736799168905; Mon, 13 Jan 2025
+ 12:12:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-
---=-lcoIbt6gV8L3KOHuxPSh
+References: <Z2yQvTyg_MWwrlj3@debian.local> <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
+ <Z2yw_eJwR5ih1Npr@debian.local> <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
+ <Z4K_oQL7eA9Owkbs@debian.local> <c6e622b2-64e4-41cf-acfb-31ae493571d2@amd.com>
+ <ed72f369-bc74-44d8-9cce-34aa125176fa@amd.com>
+In-Reply-To: <ed72f369-bc74-44d8-9cce-34aa125176fa@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 13 Jan 2025 21:12:38 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gwS72w6byCpRqRmzJO_u_fK_f9cmRZiEyd5Dj4N+FTvg@mail.gmail.com>
+X-Gm-Features: AbW1kvZxA99UjPRblh6jzrEs3eL3h3OldUrIIIJvmVyRjY0jVsu8_oUgWNLXqlQ
+Message-ID: <CAJZ5v0gwS72w6byCpRqRmzJO_u_fK_f9cmRZiEyd5Dj4N+FTvg@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: video: Fix random crashes due to bad kfree
+To: Mario Limonciello <mario.limonciello@amd.com>, 
+	Chris Bainbridge <chris.bainbridge@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, 
+	amd-gfx@lists.freedesktop.org, alex.hung@amd.com, regressions@lists.linux.dev, 
+	lenb@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>, Borislav Petkov <bp@alien8.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-01-04 at 06:06 -0500, Genes Lists wrote:
-> On Fri, 2024-12-13 at 07:14 -0500, Genes Lists wrote:
-> > On Tue, 2024-12-03 at 06:34 -0500, Genes Lists wrote:
-> > > On Tue, 2024-12-03 at 11:16 +0200, Ville Syrj=C3=A4l=C3=A4 wrote:
-> > > > > ...
-> > >=20
-> > > > Probably https://gitlab.freedesktop.org/drm/i915/kernel/-
-> > > > /issues/13057
-> > > >=20
-> > > Very helpful.
-> > >=20
-> > > I tested your patch set on Linus' tree commit
-> > > cdd30ebb1b9f36159d66f088b61aee264e649d7a :
-> > >=20
-> > > =C2=A0 =C2=A0=C2=A0https://patchwork.freedesktop.org/series/141911/
-> > >=20
-> > > and confirm that this fixes the problem=C2=A0
-> > >=20
-> > > Thank you.
-> > >=20
-> > >=20
-> >=20
-> > Just a CC to regressions list for tracking.
-> >=20
-> > First report here:=C2=A0
-> > https://lore.kernel.org/lkml/3b097dddd7095bccabe6791b90899c689f271a
-> > 35.c
-> > amel@sapience.com/
-> >=20
-> > Fixed by patch set as noted above, but not yet in mainline or
-> > linux-
-> > next.
-> >=20
-> > Thank you again Ville for quickly coming up with a fix.
-> >=20
->=20
-> Follow up to check on where things stand with getting the fix into
-> mainline?=C2=A0
->=20
-> Obviously it would be really good to get this fixed before 6.13 gets
-> released.
->=20
-> Thanks and happy 2025!
->=20
->=20
+On Mon, Jan 13, 2025 at 4:59=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 1/13/2025 08:19, Mario Limonciello wrote:
+> > On 1/11/2025 12:59, Chris Bainbridge wrote:
+> >> Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
+> >> available for eDP") added function dm_helpers_probe_acpi_edid, which
+> >> fetches the EDID from the BIOS by calling acpi_video_get_edid.
+> >> acpi_video_get_edid returns a pointer to the EDID, but this pointer do=
+es
+> >> not originate from kmalloc - it is actually the internal "pointer" fie=
+ld
+> >> from an acpi_buffer struct (which did come from kmalloc).
+> >> dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
+> >> resulting in memory corruption which leads to random, intermittent
+> >> crashes (e.g. 4% of boots will fail with some Oops).
+> >>
+> >> Fix this by allocating a new array (which can be safely freed) for the
+> >> EDID data, and correctly freeing the acpi_buffer pointer.
+> >>
+> >> The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
+> >> remove the extraneous kmemdup here as the EDID data is now copied in
+> >> acpi_video_device_EDID.
+> >>
+> >> Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> >> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
+> >> available for eDP")
+> >
+> > Two minor documentation related comments to consider, otherwise I think
+> > the code change looks good.  Feel free to include:
+> >
+> > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+> A few more tags to collate from another thread:
+>
+> Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
+> Closes:
+> https://lore.kernel.org/amd-gfx/20250110175252.GBZ4FedNKqmBRaY4T3@fat_cra=
+te.local/T/#m324a23eb4c4c32fa7e89e31f8ba96c781e496fb1
+> Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-Update -=C2=A0I no longer see this problem.
-
-Quick test (meaning I booted machine once) using:
-
-   linux 6.13-rc7  (previously 6.13-rc1=20
-   mesa 24.3.3     (previously 24.3.0)
-
-Works fine.
-
-I note that the patches
-(https://patchwork.freedesktop.org/series/141911/) are not in the this
-kernel. i.e. the file drivers/gpu/drm/i915/display/intel_fb.c still has
-around line 1694 or so:
-
-  if (IS_ALIGNED(fb->base.offsets[i], PAGE_SIZE))
-
-whereas the patch changes PAGE_SIZE to 64.
-
-I have not yet tracked down what has changed but wanted to report back,
-since 6.13 is not far off.
-
-Could it be other kernel patches or perhaps changes in mesa itself?
-Thanks for resolving it.=C2=A0
-
-I will continue to test and report back if I see anything different.
-
-gene
-
---=20
-Gene
-
-
---=-lcoIbt6gV8L3KOHuxPSh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZ4VD3AAKCRA5BdB0L6Ze
-29+GAQDqPq9U47rna6xu60to4v/XS1tldIke6T8g/P6VrP/Z7wEA/jugeRZfnyyA
-W2WxhZXWWc13GR0Vx9ySBlvrwgTy/A0=
-=qiFq
------END PGP SIGNATURE-----
-
---=-lcoIbt6gV8L3KOHuxPSh--
+Applied as a fix for 6.13, thanks everyone!
