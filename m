@@ -1,122 +1,326 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E20D240236
-	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 15:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736781845; cv=none; b=ZBtSRwWogNfS8kHkPK47e15mGBNMGUdjXBEJKPvHgZNA2MQAFZlbFcQ2/NSIfCYZfBNLTlv/0ws6oVdj9nCmNxjavl1PKcPvC3nyIbnPD7pLpQ2LxFtI0QF4tvdsGxrLLTee1mYRHkm2AW4r6rY3euN94mcvA5jJ+Gaxh1GKxbA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736781845; c=relaxed/simple;
-	bh=Y4C88y0bn7yemxHxuSxh2GU1VXk+r1LxVa7cPbs2r/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wwaw1a9+iPkY6LS8wbXVPGnfJiEq9+ujwmf4+tKDWLa3FoqiInJEoag29QBq5nfYj72xXPKXEhlxlz0JkSPH5MyDX0RSFgSEyC99wyrzy/gjgKNkuRPXhzn5wvlKCQfJAt/jJzFGxBP8od7/C29kHHurKpJZhgVLW2IceF2JD6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LlYguDc4; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76311C5D6F
+	for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 15:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736783968; cv=fail; b=Grvf284TnRwp23Sm0x2s7XIT6IlTWNhSYQ3LIt5iliB9kGNxRp1ofyIfhnRbNWD3XFTGAgc+FSAEOBTVwErqmuGiFhqtvoP8TMWbduLUuZZW8Ti4hd55tTaJi9L0u9mreCIRQZ2iJNSJvu7DCXpB0FXwkbT6nnL7b4mfEdBxz+I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736783968; c=relaxed/simple;
+	bh=CSTWBF0uChfkL8RuDOkaqxQ5+hTDzilT5Qa4vQe3FVM=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bmdkEU+eHQzJyeGINOOgi1TbhFyRqpFGuDi+oQOjSO+T60/j+2hECnDXQrtwpWLAlrI+AGPHNVrbgcjU1ZfMLf/TtPa17QeA6SS5iZYALSIhJutfo3SAQRGisSci1vMvrsDRWdgTH+n69e6A6ijqjI6PpSVthFqkxIVglEXXU0A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nWaTlSgA; arc=fail smtp.client-ip=40.107.243.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlYguDc4"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3f28881d6so6579983a12.1
-        for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 07:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736781842; x=1737386642; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9hHRvdWIv3F+jnUoOkVpVXG9f4b9fdriEI3v5kii1U=;
-        b=LlYguDc4sTAqmH4ewRKyLwsFwVilRP9/vKyZgmdq3+xIVr6CpWtGndgm0dxZiDEZra
-         HP7gQiXel+GyQ1XxXAYzAEaxvAp2SWGufgL3AQPsp+gWKaY87/YkBklICPZLZp/WK+T+
-         hb8EiBx+zY4LBeFFMmzjpJTnWmWUriMSXL8zsuso2XbqcGrY+jse/HMZQQ299ZJyfgcb
-         lXux6cvpuwNj+8j9UTEhULrss2SDNCs/wpSNMhXfT4IhpEFK3D4gWLIeEk7bKeUnww8E
-         tnvYKkzsQTk3UYM1WbaTp8LdH+xVjJ7GpyDKlWm79y+jz4C/ZBUnLm94jMKSxzy8YWm9
-         w3uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736781842; x=1737386642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g9hHRvdWIv3F+jnUoOkVpVXG9f4b9fdriEI3v5kii1U=;
-        b=SaKtCHxr99grwh6LYhQ6C3T+CIaACN/CYvu8M4QAupuHdbdDY8fR/4qLvxLaxWvsug
-         HFWJyKonB3kZtypwKcZBoHLrMexz8pMG15czuwKM6vI+640kehw4UN48z/ayvQDmmM2B
-         XgB6mvpdxwbqh25wzXrTvgR+XoX9X2kDfw5mTNi8CUJPiF8JURlNwh5JsIM9Hr4ETOAn
-         zVzN3u9r9De1w+WhGTXrroFK/Iotv3r5MO6G/ppuJFdxdZ5fBjRobyT1KfQvKAwqQo7y
-         LNTEGiRktMDL8xr88+5GLz1KqZJCCYveMAYfDvaFY7+jvztlAJ9EtYDgc7+0CJHAdwbl
-         f+Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5AvP5QmmMgp7Wev9NqVZnKL8p79HBmBpfsZZr9ocUf9nPlUcrqGVwDPGvYypKcP3kcQhyUNPj95ws4Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/JUtvAhwMWp6NaW3Tx/OFrZyGmKsl3aYP/Iurezgw4H8xx8FB
-	jYMxAwBQga9kyNrT+V33ZxCeMj9GWVUA5OUi39iV3mA686WF062d
-X-Gm-Gg: ASbGncur6hdqexiRdQRYVIqds+COg9fNZoxWW1rgklZiC0dmxW/YrPz3CKq/k13w1TN
-	uHCbHfDFVnc/9xvxnjbfxe831n7AlBqkp8zU+JfjKf/TaPg7+PLkJimYpozOgY87AG4kxwK8+Lv
-	MbONarZTgAkau1z172aaKlfJXMIqIRdSkfrri91z0zyNg290X3pVG7Jjj0bWs3j8++bIB3OsXug
-	Gb0W9g/GF1F8iXcYDpXng/MpoJlAo89wdvYDFdYEh3x37O7/fbESXm1S5U7jsvelg==
-X-Google-Smtp-Source: AGHT+IFp9q5BqpiqnmEIEQZ9KMekGm9HnKIKXgsVhC0LmjI6TvAV9EQs0D5RE2AFUsi6ms0+LgB3ew==
-X-Received: by 2002:a05:6402:26cf:b0:5d4:55e:f99e with SMTP id 4fb4d7f45d1cf-5d972e1d7dfmr52385362a12.18.1736781841946;
-        Mon, 13 Jan 2025 07:24:01 -0800 (PST)
-Received: from debian.local ([83.105.230.12])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9134403sm522348066b.90.2025.01.13.07.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2025 07:24:01 -0800 (PST)
-Date: Mon, 13 Jan 2025 15:23:59 +0000
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: "Lai, Yi" <yi1.lai@linux.intel.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-	yi1.lai@intel.com, syzkaller-bugs@googlegroups.com,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH V2 3/3] block: model freeze & enter queue as lock for
- supporting lockdep
-Message-ID: <Z4UwD64zKZqG_7gP@debian.local>
-References: <20241025003722.3630252-1-ming.lei@redhat.com>
- <20241025003722.3630252-4-ming.lei@redhat.com>
- <ZyHV7xTccCwN8j7b@ly-workstation>
- <ZyHchfaUe2cEzFMm@fedora>
- <ZyHzb8ExdDG4b8lo@ly-workstation>
- <CAFj5m9+bL23T7mMwR7g_8umTzkNJa14n8AhR3_g6QjB2YCcc5A@mail.gmail.com>
- <ZyIM0dWzxC9zBIuf@ly-workstation>
- <ZyITwN0ihIFiz9M2@fedora>
- <Z0/K0bDHBUWlt0Hl@ly-workstation>
- <Z4Ulmv7e0-Q4wMGq@debian.local>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nWaTlSgA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I51kA+qBLArP1p0hO9RLqU9mT4gkMRat87KwdXgfr+I8XVaOReh/GQaenBYV1IsRe3LXmXUtxc4FuW1zdizFokL0i4Ad00U9ciwcLVp1aaF9Ro7QotlrGLN8C/lZi8gQ+JEFiPL3iLbKOcd5JGowxqRHnqyBGCsttNPaferuIHFJtPpW2XIPzyL/Xow2kEG/xe84+1743VGc86Ogj+IoaCR23h1ODDILbELfzD24ZxmVIn0w1LNqKr6KR8DfyHyLgoGcSPtSGbA8KPdcbXOFvrAX6xzIIuB3zOOwxkEVHdlsL3gHiKlgP1dvkdCmFUeOVKAmc3IY7S+vqDg3iozCfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+ABqzL03q5IJFHO8JGpUvjQacJcDqjFg8RF6X+swTOw=;
+ b=HIbVUktUIv0gtf09hhxD7C6nRJJUzlvtcx5xvaQmvuMKrkGxBKHueCmujMchOYCYyT9gU0+niWkp2fpoVRg8KCrJgQpfigEgU5vpopeHMg8TNKoEem/YK0AWwk3e/JP/7Z6HftfTVJQqIUT0J/9V0CaNfJZASqVbmcYLh8X+XNktzxW2wUb5iqOTHZMh9qAsse1SYMajp20DMyC50J90OGrqFkudzS8FLPZYsN+4GdMezD7Kfbo/oB+vGVfRI8rs6Bg3WRb9YPmx3Wf1u7n43pl2d7LN8MBuffkZcUotgnPv8cw/p6p/qq8gw5oeXxCkfG8pRLjZ8AWKgWH1Z2DZyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+ABqzL03q5IJFHO8JGpUvjQacJcDqjFg8RF6X+swTOw=;
+ b=nWaTlSgAhUCzJ6/SHdq9js98WC+3vJ8y65KUeKbi7b5KHinxKK2iFFGS0+dlMm9ho/paw91glByWebSbK8WFgSAJL9hyps4+onW7ji0av7Wr/uYPvGofHkB/zbovGdtSUVUmJU3h0ZauVMDR6qYulRZUQgfXOT1fvxCQgikyOGs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SN7PR12MB8819.namprd12.prod.outlook.com (2603:10b6:806:32a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.17; Mon, 13 Jan
+ 2025 15:59:24 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8335.017; Mon, 13 Jan 2025
+ 15:59:24 +0000
+Message-ID: <ed72f369-bc74-44d8-9cce-34aa125176fa@amd.com>
+Date: Mon, 13 Jan 2025 09:59:22 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ACPI: video: Fix random crashes due to bad kfree
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Chris Bainbridge <chris.bainbridge@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
+ amd-gfx@lists.freedesktop.org, alex.hung@amd.com,
+ regressions@lists.linux.dev, lenb@kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Borislav Petkov <bp@alien8.de>
+References: <Z2yQvTyg_MWwrlj3@debian.local>
+ <b98f2fa5-fbe8-4958-bf20-fa5d28c5a38b@math.uni-bielefeld.de>
+ <Z2yw_eJwR5ih1Npr@debian.local>
+ <CAJZ5v0i=ap+w4QZ8f2DsaHY6D=XUEuSNjyQ-2_=DGOLfZjdn+w@mail.gmail.com>
+ <Z4K_oQL7eA9Owkbs@debian.local>
+ <c6e622b2-64e4-41cf-acfb-31ae493571d2@amd.com>
+Content-Language: en-US
+In-Reply-To: <c6e622b2-64e4-41cf-acfb-31ae493571d2@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0090.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::35) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4Ulmv7e0-Q4wMGq@debian.local>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB8819:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6c35e29-4c76-4573-badb-08dd33eb3ffb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SFR6eFpQRFlySjdxcmRmZU9QTnVpNWJiWkh5SWRzKzNKY2FJQnJ6WGlkS1E3?=
+ =?utf-8?B?WDIvRkxadjhwSEJsbDF4QlMxR3hERzZrUU9hbXU1UVFRMHBtR3dabUU2Z2ZE?=
+ =?utf-8?B?K1R6OE1ONzl2WlNTbmJ6WExqYlkxTmRyWUhEbnBieGM3WUhwQ2ZoYkVaeHh0?=
+ =?utf-8?B?YkdiYkUwa3Fyb1hyN3o1aGxCeHFDbVBOcmppd3ozTE0vc1FnTTU3aVdIYTEw?=
+ =?utf-8?B?Z3h2cSs0MFhvbkVIYnd6TXF4RklyRFNYWmZobkRRQ1hpU2h5STM4alV6eFNa?=
+ =?utf-8?B?Tkc4eEp5SU9WYWQxS0QyU2ozcVZhQ0dLMUV3L1ZYd3dITUNsUGs3NVgySWxN?=
+ =?utf-8?B?bzl3OFV4QUN1NVV6d2o4K2t1UDJ1NjBuZkVQVlNoZUxmLzRMSFExUjdXV2V4?=
+ =?utf-8?B?Zkg4YzN4ZzkwTFRqYmw2cUVpdnprMkFRTFlaeWl2Sm9FQkZxODhVZnhIZjlr?=
+ =?utf-8?B?Yjl4MXR5eWtlcGFGaDhuZUp3bTVIQ21Ba3dxRkoxd3k5MDM5NmR1N0FXRGJP?=
+ =?utf-8?B?aHd6dGFVQTF2RXE3QzZiNFJvL0x1V1VIR1ZJbEtLTy9KTkZMRUt3UVhBaytB?=
+ =?utf-8?B?TFR0QzE3enRFeWhOdnZpWGpuYk5zRHhrUEtMWnd4RENhdXVVZHFVSWoydVo5?=
+ =?utf-8?B?d3N5bnJKL3IzNHMwRnEvTk4xSXplMWw0QlFtYmlHejh5eE5zWlYxeWVibEkw?=
+ =?utf-8?B?cldUMUZPTHAzR2theFdCUHRGRE1vVUYwS25wMk1reG13QWRvaVRFYzVMTktC?=
+ =?utf-8?B?R1JPMjgvTUlsa2NrblJvN0VHM01LV3k0TXVUM3ZTMlVWTUNNTnZxM2Z2MWlU?=
+ =?utf-8?B?RTRZK1YwSFhQWHhMUStXK0l1U2FOOHdRNTk3Uk9aRHM1Ym1UWXhIMzRydXNM?=
+ =?utf-8?B?cmFMNWNYTEpQcWlKNTQ3RFErVnFiTHJZWFNEdzR2NW9HclQyZG96VVhCc3NV?=
+ =?utf-8?B?UnhSTDRjbUIvb2huVEgrTlVBRXFQQm91enB0R2ZPT1ErY21XaG16TVIycENh?=
+ =?utf-8?B?WDhDdGVVeGZjQnZmY1I5dnZPN3ZFZndLTFhvSlE5NVVqRkt2eEoybDZsRVJs?=
+ =?utf-8?B?K2VTWm5mMDArdHBjS3plSjh6UitGWkVTdjVTVndBYzZ3RlRZbndYNXpWUEJJ?=
+ =?utf-8?B?SUNyME8rbVZZWkpFUGQ3dTNMTDBxUmI5b1lSdFNCSjZMS3hGSThxYVJtbWF1?=
+ =?utf-8?B?Z2tKMFZZV1FuL09JSEJrSVVvYWFTODBKM3ZJaUJyeUNmN2I5RjZoRG5CbCtr?=
+ =?utf-8?B?VnBkNEdwV2lnRHpJTEVwKzRERkFrOGNpSXZUUUlWVVI5Y3lCbXplbzhCaDQr?=
+ =?utf-8?B?MkJnaDNzRTJRQXA0ajlmUVJudmFiLzI3dkowVE80akoxNGYwWmpROGVPWm9T?=
+ =?utf-8?B?MVBJcDd2RU9PVUJ0RjQvY00ycXFaSDhYNVVSa2VCUkNjUVpIQ2hjK0ZKbFA0?=
+ =?utf-8?B?cTJRTzVUYTVBT1hIN2xSMG16ZFpBRkVNODVyZ3A1YURKZ3BrNGdpNUZUKytJ?=
+ =?utf-8?B?bXhUMk1ZRVNOaDdaNysvUXlTdXFQZUtpeFZibkI4Y1dXb0F1SG5kVjZwa2FR?=
+ =?utf-8?B?VU1DeDRDM1RuWkpzUVhqa3B2aTRJZVV6L1NScXJYc212ZFk3TDBucG9XdHo2?=
+ =?utf-8?B?NWN5MGJ6d2NobE5FbklJQXVpRDE4bzBVbm1qV1dpL0pMVmwvZ1BZb3ZIU0do?=
+ =?utf-8?B?aExEQkFvUkZQaTJTT1RrSVBlVFJkUEFvVXBUTGg2d3RodjhiRzhhQTdzM1ha?=
+ =?utf-8?B?NkNpYmN1cnNwWDd4Ykg0bVVGeEhvVCtLNjh2MEdJSHdzRWo2Z2w0OHFVRFVy?=
+ =?utf-8?B?VGIray90N3ZmOCtvbzJXUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjJ2YVNpN3VOTVZiU3VJTkhMdnBtM0t1Y1JnZmh6WCtVaVMzVmlrYit4RytN?=
+ =?utf-8?B?SmZ3LzhiS25uREEwSExhY1VsQ3RLUmNpcnNWUllsWGVRSnFuOGh2YXEzaWZq?=
+ =?utf-8?B?dHNhOFVqTmZ5bmtFd2F3cmNKeGJQUzVBbEZLY1pKMFdaVm1xaHN6eHZrMzky?=
+ =?utf-8?B?cTdNQlI3Z2JyaDhXNTVFRjdjTHlUdzV3ZXBOV09oUlo0YThZaXhFeUcwNk9K?=
+ =?utf-8?B?VytQOGZGNzYxUUtGTkNrdWhKK0Q5U2FUS0h0cDJabWNHbVhhMGtQTS9aU3Vq?=
+ =?utf-8?B?Rm1xOHJCcG1lQXJlVUEyUGRBbEZudFY4cC9sN1lWOEZrVCtES21US0FuVVps?=
+ =?utf-8?B?VW1sL29VaG1selRvd2RObENpUVhuL3h5MGlsdEp6eEUxS21zMFJDeU1RL0tY?=
+ =?utf-8?B?L3c2cFNHaGZpaktvS3dRZ2NqenlhaE41VFdPY3h6UERYTDNMKzJzS2toeEJO?=
+ =?utf-8?B?RStFVlJFRWFvc2NYdTFyUDJlelVXVVZWcllZcDBzL1ZSTyt0SkpBM2Z0cXFT?=
+ =?utf-8?B?K090K2RQT3VaRFVZMEsvME0wekhwaHZ6V3pVNitCSENmZnIrcDFlcWZQemhK?=
+ =?utf-8?B?M1ZHUldKNk8yL1JYWFBBVGlpTnVxOGJnemZSOTB6cDF5L2EzMGlPb1lzTE16?=
+ =?utf-8?B?d2VvZE1zTUZjdVZXY0txYWlsL0hRNmt1QW5aTUE0V0lQdEUzbVV3NVk2ZDZx?=
+ =?utf-8?B?bGpsV3JneHdXYWp2d1lDZG5wd3ExZGNVK3dxV3MwQXg1czJEcHE0YndWNmZj?=
+ =?utf-8?B?Tlh6REM0Z3R2U1RYVVFLSmRBS0twa3ZiSjd3NUkycFRFTGU5RmlpbUViQnM5?=
+ =?utf-8?B?bVAzOWxaMVdrWkdQRmNJdklIK3YwdVBwcFdodGF6Ty9Obk5ia2M5NnFmQThJ?=
+ =?utf-8?B?eFdrczRsd2tjcEV2ZnpWQ0FTNzRaWmk3VGYyZGNKc2pHRXhqZ3BUTzlDMGtn?=
+ =?utf-8?B?anRhZzNvUm9GdCsxajRRaTQ2eEdBU3RZQXA4Sjk4b01iUUxrVkQ2eGxqQ3hz?=
+ =?utf-8?B?bUw4SzNKMjFlbmVIR3ZTOWM4MWw2c0M3VlVyNDQ4LzRBandiNGlCdEJyK3k2?=
+ =?utf-8?B?bTIzNGdyOEtOdDVYOEFWNFZFUk9sMk9wMmtzTXU1WlhiQ002WkdmVVVVb0N0?=
+ =?utf-8?B?UlB6QWc3RmlNcVpxL0p3alBNb3RaUHB1ckRwT3Flb0tTTUlBM2Zvd3VKaERh?=
+ =?utf-8?B?SWhmWi82YVJHRE1RRkx1Q2FUbHdLUjVuOCtXM1FZaXJOdW5tZmZadUZqSFBx?=
+ =?utf-8?B?QTdsZUJUY1QyOVl6VWJ0UnU5amlPdUVNL2p5V1h4aTFpQ0c0VDdUZmNWY0FE?=
+ =?utf-8?B?bUFWa2RLajVxbGkwemlUTTB6bEs4WHIxKzNsUWUxQnh4V3dGamxvUjJMblVV?=
+ =?utf-8?B?Qzg0eGhOZ2l4bDRIejFVWHBnc2ZwZ2FUV3JGaGhiREttYlhkSjhha3h3WHph?=
+ =?utf-8?B?dUU1Qzdmc3BMUWNoV2xOSUEvMk1kSU5KYWdtbUVKTDBibHd1S2dRM3ArUDh5?=
+ =?utf-8?B?RWRZUWkrSmk2WXVmRlZWS0RhQjR2Vm05ckxKeFA4OEdZb0xLVWQ3Q01GeGxZ?=
+ =?utf-8?B?ZjFFa2dtOVcvWjBLREZMWmgzUUtjeVVweTB1cFBSSlh4cEJqWXpya1RLSHpx?=
+ =?utf-8?B?S0E0czB1cGRvRDg1YllpQTdpRXBRWk13Rkx6WHdvVDBZa3A0WEw5TUY1N21v?=
+ =?utf-8?B?UXI4aVVNcU9XSzRnaFdXTG9hRXY2aytKNERuWXovUnVSODN4Qjg4QTZiMk5v?=
+ =?utf-8?B?bVI4NmJXdkhOOUxLSDVUV09sem51WU83YzZwY0xmT2hDZTdlSHlYMkphZ05l?=
+ =?utf-8?B?N2w5RjdrVWR4R2xhSGU3VjVoblZ6NkRWWWJOdU1nQm9NZ0FveVRxa2RQUUdD?=
+ =?utf-8?B?VnhOZU1lSjBTQ094aGxOdnNpaGpOVjc3NEtRU2xVQW5TbEpRT2xMd1hwNG1K?=
+ =?utf-8?B?SkJKKzExakRjZVAyZERSVHkxRTFUUzNIVDBERkI0RTdNTEpkaStpVmpWb0tY?=
+ =?utf-8?B?RWd2RCtoRTJ5Uk9jTm5NQ2x4WTF6VHZGWHQyOHJleHc0eVQ4amhZM2NvQThq?=
+ =?utf-8?B?a0hUOGNOcGxJYmhPS3Z0d0dlVnJJV3pYOHNGeS8vSnB0Z3IrSEVKSWl4ZlVR?=
+ =?utf-8?Q?/Tvzx8bphES4feZhbyb3zTGt8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6c35e29-4c76-4573-badb-08dd33eb3ffb
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2025 15:59:24.1765
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VxiufaHczsxeiJH9cQnuf0ul1qSs2tiWUhkqzDpdILKGSZ9aJWhALbJxinjQG8LvS2Gt+AForNMb0mmgnEhI1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8819
 
-On Mon, Jan 13, 2025 at 02:39:22PM +0000, Chris Bainbridge wrote:
-> Hi,
+On 1/13/2025 08:19, Mario Limonciello wrote:
+> On 1/11/2025 12:59, Chris Bainbridge wrote:
+>> Commit c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if
+>> available for eDP") added function dm_helpers_probe_acpi_edid, which
+>> fetches the EDID from the BIOS by calling acpi_video_get_edid.
+>> acpi_video_get_edid returns a pointer to the EDID, but this pointer does
+>> not originate from kmalloc - it is actually the internal "pointer" field
+>> from an acpi_buffer struct (which did come from kmalloc).
+>> dm_helpers_probe_acpi_edid then attempts to kfree the EDID pointer,
+>> resulting in memory corruption which leads to random, intermittent
+>> crashes (e.g. 4% of boots will fail with some Oops).
+>>
+>> Fix this by allocating a new array (which can be safely freed) for the
+>> EDID data, and correctly freeing the acpi_buffer pointer.
+>>
+>> The only other caller of acpi_video_get_edid is nouveau_acpi_edid:
+>> remove the extraneous kmemdup here as the EDID data is now copied in
+>> acpi_video_device_EDID.
+>>
+>> Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+>> Fixes: c6a837088bed ("drm/amd/display: Fetch the EDID from _DDC if 
+>> available for eDP")
 > 
-> With latest mainline 6.13-rc6, I have been getting intermittent lock
-> warnings when using a btrfs filesystem. The warnings bisect to this
-> commit:
+> Two minor documentation related comments to consider, otherwise I think 
+> the code change looks good.  Feel free to include:
 > 
-> f1be1788a32e8fa63416ad4518bbd1a85a825c9d is the first bad commit
-> commit f1be1788a32e8fa63416ad4518bbd1a85a825c9d
-> Author: Ming Lei <ming.lei@redhat.com>
-> Date:   Fri Oct 25 08:37:20 2024 +0800
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+
+A few more tags to collate from another thread:
+
+Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
+Closes: 
+https://lore.kernel.org/amd-gfx/20250110175252.GBZ4FedNKqmBRaY4T3@fat_crate.local/T/#m324a23eb4c4c32fa7e89e31f8ba96c781e496fb1
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+
 > 
->     block: model freeze & enter queue as lock for supporting lockdep
-
-I just read through this thread and noticed:
-
-> The warning has been fixed by the following patches in for-6.14/block:
->
-> blktrace: move copy_[to|from]_user() out of ->debugfs_lock
-> blktrace: don't centralize grabbing q->debugfs_mutex in blk_trace_ioctl
+>> ---
+>> Changes in v2:
+>>     - check kmemdup() return value
+>>     - move buffer management into acpi_video_device_EDID()
+>>     - return actual length value of buffer
+>> ---
+>>   drivers/acpi/acpi_video.c              | 50 ++++++++++++++------------
+>>   drivers/gpu/drm/nouveau/nouveau_acpi.c |  2 +-
+>>   2 files changed, 29 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+>> index 8274a17872ed..3c627bdf2d1b 100644
+>> --- a/drivers/acpi/acpi_video.c
+>> +++ b/drivers/acpi/acpi_video.c
+>> @@ -610,16 +610,29 @@ acpi_video_device_lcd_get_level_current(struct 
+>> acpi_video_device *device,
+>>       return 0;
+>>   }
+>> +/*
+>> + *  Arg:
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/log/?h=for-6.14/block
+> As you've pretty much written kernel doc, us it better to just make this 
+> proper kerneldoc (IE use /**)?
+> 
+>> + *    device    : video output device (LCD, CRT, ..)
+>> + *    edid    : address for returned EDID pointer
+>> + *    length  : _DDC length to request (must be a multiple of 128)
+>> + *
+>> + *  Return Value:
+>> + *    Length of EDID (positive value) or error (negative value)
+>> + *
+>> + *  Get EDID from ACPI _DDC. On success, a pointer to the EDID data 
+>> is written
+>> + *  to the edid address, and the length of the EDID is returned. The 
+>> caller is
+> 
+> Since 'EDID' and 'edid' mean different things in the context of this 
+> description for the purpose of clarity I think it would be better to say 
+> "the edid pointer address".
+> 
+>> + *  responsible for freeing the edid pointer.
+>> + */
+>> +
+>>   static int
+>> -acpi_video_device_EDID(struct acpi_video_device *device,
+>> -               union acpi_object **edid, int length)
+>> +acpi_video_device_EDID(struct acpi_video_device *device, void **edid, 
+>> int length)
+>>   {
+>> -    int status;
+>> +    acpi_status status;
+>>       struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>>       union acpi_object *obj;
+>>       union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+>>       struct acpi_object_list args = { 1, &arg0 };
+>> -
+>> +    int ret;
+>>       *edid = NULL;
+>> @@ -636,16 +649,17 @@ acpi_video_device_EDID(struct acpi_video_device 
+>> *device,
+>>       obj = buffer.pointer;
+>> -    if (obj && obj->type == ACPI_TYPE_BUFFER)
+>> -        *edid = obj;
+>> -    else {
+>> +    if (obj && obj->type == ACPI_TYPE_BUFFER) {
+>> +        *edid = kmemdup(obj->buffer.pointer, obj->buffer.length, 
+>> GFP_KERNEL);
+>> +        ret = *edid ? obj->buffer.length : -ENOMEM;
+>> +    } else {
+>>           acpi_handle_debug(device->dev->handle,
+>>                    "Invalid _DDC data for length %d\n", length);
+>> -        status = -EFAULT;
+>> -        kfree(obj);
+>> +        ret = -EFAULT;
+>>       }
+>> -    return status;
+>> +    kfree(obj);
+>> +    return ret;
+>>   }
+>>   /* bus */
+>> @@ -1435,9 +1449,7 @@ int acpi_video_get_edid(struct acpi_device 
+>> *device, int type, int device_id,
+>>   {
+>>       struct acpi_video_bus *video;
+>>       struct acpi_video_device *video_device;
+>> -    union acpi_object *buffer = NULL;
+>> -    acpi_status status;
+>> -    int i, length;
+>> +    int i, length, ret;
+>>       if (!device || !acpi_driver_data(device))
+>>           return -EINVAL;
+>> @@ -1477,16 +1489,10 @@ int acpi_video_get_edid(struct acpi_device 
+>> *device, int type, int device_id,
+>>           }
+>>           for (length = 512; length > 0; length -= 128) {
+>> -            status = acpi_video_device_EDID(video_device, &buffer,
+>> -                            length);
+>> -            if (ACPI_SUCCESS(status))
+>> -                break;
+>> +            ret = acpi_video_device_EDID(video_device, edid, length);
+>> +            if (ret > 0)
+>> +                return ret;
+>>           }
+>> -        if (!length)
+>> -            continue;
+>> -
+>> -        *edid = buffer->buffer.pointer;
+>> -        return length;
+>>       }
+>>       return -ENODEV;
+>> diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/ 
+>> nouveau/nouveau_acpi.c
+>> index 8f0c69aad248..21b56cc7605c 100644
+>> --- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
+>> +++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+>> @@ -384,7 +384,7 @@ nouveau_acpi_edid(struct drm_device *dev, struct 
+>> drm_connector *connector)
+>>       if (ret < 0)
+>>           return NULL;
+>> -    return kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
+>> +    return edid;
+>>   }
+>>   bool nouveau_acpi_video_backlight_use_native(void)
+> 
 
-I tested linux-block/for-6.14/block with a directory copy and did not
-get the lockdep warning, so it looks like it might be the same issue
-that has already been fixed (?). If so, it would be nice if the fix
-could make it in to v6.13, otherwise many people will get hit with this
-warning, and end up tracking it down and re-reporting it.
-
-#regzbot title: intermittent block/fs/kswapd0 lockdep warning
-#regzbot introduced: f1be1788a32e ^
