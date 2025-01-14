@@ -1,99 +1,142 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA9A22BAAA
-	for <regressions@lists.linux.dev>; Tue, 14 Jan 2025 06:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09667233547
+	for <regressions@lists.linux.dev>; Tue, 14 Jan 2025 07:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736835781; cv=none; b=sQYz7uHKwmnenwUoh0UKccsy+fJqWvzf3jF+OO1Fmka43ZCB4w6ula2yTc3rFlhT1yxPGhwGicR4rG0QLBwCchngYg2wv/keIaLA84dUpDtUA7P6pk+E8kw043XXEHx7kIYzJEgB4qkh/qm5B0J2PrDd5ZeWBIGlOlwvfMzHuOE=
+	t=1736838130; cv=none; b=ErhjQneeoWJAe2YetKsLHE2MJOExDDgGgyXBXTppwlH2wj4l/QC5YVl0xQhW9O9LJ5qKYNzEXOJigZvFvXKSqEq2d8NbyGaGSj1IfKvx8Sq8+Kdifv7+105Cm1F3M1lEiKF8wd5aBN9pTaz/hG3p/TpAj8Em1Bu+QwUIlI5OMCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736835781; c=relaxed/simple;
-	bh=jVuIhZRUvgPZRSCuVQ6t/tU5d52q/hnSXQjFm8iDUIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cLsSVbc+90Kl/xXzFmXrKjFVNTwJtpUv8jK13FjmkVelYi+et96IrcYMzXDqt0yfNyDud84+71ZURqAqZouN1ZDns+pTyB7RA0u8VBrTDLmjrFVKnFnLgwfgE2azDixQrmg04fAljE6o/dBNl4WehT0XAU066iotxAkop7B62kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBVUCu+1; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736838130; c=relaxed/simple;
+	bh=686+NrDAW9bNTmitxH84eF07Uu0lZ60Ztj/3HztO0cs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=lOmekPI6A/jvdxmHfoZe34AlR0VZdE8rYuJUYUkQIExv5hpjU23GO9D7CkYLfqX7kKCSlP3gjtMcpLZpWp+9qwBSz/3xdw5vPV4t9gZsqo6eQ707z//+w9z1I+Q9MBBXrs1VqX3ZPWar0CBq5MgxzVIMYf8ZMzQp1YS1+VVLF/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AY62WAM6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CSVczRPd; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBVUCu+1"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f8befb03d0so515802eaf.1
-        for <regressions@lists.linux.dev>; Mon, 13 Jan 2025 22:22:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736835779; x=1737440579; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jVuIhZRUvgPZRSCuVQ6t/tU5d52q/hnSXQjFm8iDUIU=;
-        b=fBVUCu+19RqmdKYWUm+69lNwoDHfjfTfZtMc+QL+PWD35ZsbYZXEv77Rfll+QvjMOw
-         zQlI9xYzBbcUweOFkc0IxRbzm0/s5+AAObzIXI5LscO5ASL5j6wiGi6oMPCXtMbDjiCA
-         Oef+eFU0ZAdhvlK6rjlOxfKgjoRdNGO3psEhny46iucxnAP+9nW0trpGrkQXViuhEwgJ
-         MgE+7jyM4Yjgx0lGUDh3Q+MNXadxm9SPcdnot3znU8dkywmHgk+6oIX7Tj5lf4wyEwwi
-         YpNvn+FJiN8bsMHgxdno9AQhtVtXKquUtnmTlgaskB/rLdPrp6ph+t7Q7k25Kvy1U13i
-         yMmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736835779; x=1737440579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jVuIhZRUvgPZRSCuVQ6t/tU5d52q/hnSXQjFm8iDUIU=;
-        b=GN7ltLgACIGNfVDkrjL47NdkfIuZmBen7D9QDi7QVEkpxAH8VBs43tzQ+Fa0hneprJ
-         u1g9qX+BChMiUASewwobrklB4N5SfvCOuQs+TwQzTk624+4GMawa8M6Pbz69JQoaAzHu
-         M4Nv5U4uV7hUh5gC32LBRMIk3HblgGoXoEWhbStVk1qkeRHp9g3eaOf4FSsatn9ruHNc
-         l0Fm2EXdMabPDYkyYGVBt9nZy/YyDOkEzJYm654eHucVt371/EmIAagEcM08wHjXwg7u
-         JQ8W/bzTjF2c9AQ50o45tzOUQshcg0uP6Xijy8pt6GrFJVU6vtYoZKJg+itBi2KHKc7o
-         89fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWyOV9dBATX7ow+kmoKb4GxLrFkhG3UyAwqe/TVVxcVvERj6Z46Maho0IBdxWzetdFoNawGl3DKYgaQA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXdYgjZGe1Hfb8IGJVI/xbP1xlmKjDlS0K0vc0Uditw3m9pnbn
-	DyadRIjj41NOjr++cpTn/aTleItQh81i8uMo4HfLOu6ya214F/0YK45WSVoVm1MCZA0KNFjNbju
-	/ovcxbB7U+WVzR9ePQD5TeR5+fe4=
-X-Gm-Gg: ASbGnctYRuT8GtxUfpCB1aoRV5XI0PLV+DevWyW1EVlqvQ8ps+VFj7CHnk5uD+esf6L
-	sZt4niVi2fClyRTGDoBVeBKd8pDcHspdBHHYDvvqT
-X-Google-Smtp-Source: AGHT+IGfwjdSn2wvrk/Kn99SIO9d89rRMrWGfTmIqA+a1OvCy95oe+MDxJlwx6rYYI3XBhfWwPUKgcPlma7D2Mh57yY=
-X-Received: by 2002:a4a:d024:0:b0:5f7:3654:4595 with SMTP id
- 006d021491bc7-5f7365448a1mr9262674eaf.5.1736835778552; Mon, 13 Jan 2025
- 22:22:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AY62WAM6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CSVczRPd"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id E84B52540181;
+	Tue, 14 Jan 2025 02:02:06 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 14 Jan 2025 02:02:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1736838126;
+	 x=1736924526; bh=7kJin29ZAC23nvJ94hHXdVdtuact9nb0rLVCyOJc/Ug=; b=
+	AY62WAM6EucRhw+Z1jYD+ea3XeTZEcga4DHHHkmxFpvjw2b0088aD7DCHEv32Mug
+	iGTrdHusthm32hGuebL3Ofppl8iwlf0j9ActKEiybolrwBWYULHfiFtYKZp9FeKL
+	24CmPnhkGfFWWqyR1EOz1bqpyXOAW1GorKa/ltsJvzGCyYwYdFhxnz0CCXOxS+O6
+	b+t40AXk+ahcwCqRWX4pkqsB7Akw99hyDGjPFuBkYGdE7UjWjs2ZWROVwUXluXPJ
+	8BALfan4df5OqmGNwFEVEc3WWgqL+cnOSykvrW0khRhbJCAvL0cNbnE6z/Agjpd2
+	4Ya3cQa7kHKF1ZHjUxLeTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736838126; x=
+	1736924526; bh=7kJin29ZAC23nvJ94hHXdVdtuact9nb0rLVCyOJc/Ug=; b=C
+	SVczRPd3x0+kkG8K6OSYA9CjZgMcJswyS0uYCdyumP9LGMf9WYWxKj2iIy91dTwd
+	S3Ktkfa+z28uYZSMDQFSuUhupGwRrkIcmOh1v2JWti2Y+zvKu7/vzmOpXv4H1jSx
+	7/HlIbhYVqE1x8maW0KLoNsQmqBRZ3ZzPS8aVvxrPyTHUnK+Kf4+rVcDOYb4EqVk
+	WFCE1zMNFiwlJOmkejtKOoN21YVTeNGxM1munxwQ0R5sZdjVA97Rt9m1lta5WGYX
+	htF3HSdJLuYypbaiQDa6k4WqZxB5P1mJ77S7FRG3Zto5VceFlKA11gi3QQXcXzEY
+	D1mpDvMpSZAVYPnvQmm2A==
+X-ME-Sender: <xms:7QuGZ0nr6AK2KPHCQdZVZy54GiTOKplJlCMI0YYDVv1SVAS4E-sQhQ>
+    <xme:7QuGZz3g0f3lUHDl1Pje69-LKwdx8WdHNyn8QZbi77FsSnT0CwYWoAHtVznERuvAA
+    Gca28CGK4_OxSa9ulI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehhedguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeel
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrg
+    drfhhrrghnkhgvnhdruggvpdhrtghpthhtoheprghlvgigrghnughrvgdrsggvlhhlohhn
+    ihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflh
+    ihghhorghtrdgtohhmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdr
+    lhhinhhugidruggvvhdprhgtphhtthhopehmrghtrdhjohhntgiihihksehovddrphhlpd
+    hrtghpthhtohepsghhvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidq
+    rghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    mhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:7QuGZyqgbzc6rQe2LNsiaE71tDkSvsbEs-GUdE1oVSLutjpBUSY_xA>
+    <xmx:7QuGZwlaCDz0i3IMU8hbiN8K5x4tkvTjJKPNfiXj5dvqrfouh8NqRw>
+    <xmx:7QuGZy0wAhte3KEYbz62VzUQIXeco0FC3zdaUHAfVFI75Aj-GkC3Ug>
+    <xmx:7QuGZ3uNmWfGr489SuEPDKsRl6G9BTmOvvXCdE7WLOZIS7sKaaJksQ>
+    <xmx:7guGZzLnTn241FI9LYPGMo04omKtlvr-6pDXW1m4Gf0PfqVw7kkX0RTB>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D02FE2220074; Tue, 14 Jan 2025 02:02:05 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsMS-em+jU0M9TnoVwViUfDudv4juN9yccsh-p+kuAneBw@mail.gmail.com>
- <Z2I1HAKhKrCR51XO@fedora>
-In-Reply-To: <Z2I1HAKhKrCR51XO@fedora>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 14 Jan 2025 11:22:47 +0500
-X-Gm-Features: AbW1kvbG-gRPiizkMDvNUL8NfFTZ0lsrGVH1cK-7cHH13_zaYnOPeuTxEDq9p_A
-Message-ID: <CABXGCsM87Ezc9Z6TAfGaMLZsdD63O2CUyhxThoUnLw7_NmZXxA@mail.gmail.com>
-Subject: Re: 6.13/regression/bisected - after commit f1be1788a32e I see in the
- kernel log "possible circular locking dependency detected"
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, linux-block@vger.kernel.org, 
-	Damien Le Moal <dlemoal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Date: Tue, 14 Jan 2025 08:01:22 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
+Cc: "Baoquan He" <bhe@redhat.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ regressions@lists.linux.dev
+Message-Id: <436dc4cb-6d99-415e-b20c-52f3221f85fc@app.fastmail.com>
+In-Reply-To: <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com>
+References: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
+ <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com>
+Subject: Re: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 18, 2024 at 7:36=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
-e:
+On Tue, Jan 14, 2025, at 00:29, Jiaxun Yang wrote:
+> =E5=9C=A82025=E5=B9=B41=E6=9C=8813=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=
+=E5=8D=8810:16=EF=BC=8CMateusz Jo=C5=84czyk=E5=86=99=E9=81=93=EF=BC=9A
+>> The mediator seems to be that this bad commit causes=20
+>> arch/mips/include/asm/io.h
+>> to #include <asm-generic/io.h> at the end. As a side effect, this cau=
+ses
+>> the PCI_IOBASE macro to be defined:
+>>
+>> #ifndef PCI_IOBASE
+>> #define PCI_IOBASE ((void __iomem *)0)
+>> #endif
+>>
+>> That PCI_IOBASE value above is AFAIK incorrect for MIPS (it should be
+>> defined to mips_io_port_base as far as I can tell), but this does not=20
+>> matter much here.
 >
-> This is another deadlock caused by dependency between q->limits_lock and
-> q->q_usage_counter, same with the one under discussion:
+> You are right, this is what should be done.
 >
-> https://lore.kernel.org/linux-block/20241216080206.2850773-2-ming.lei@red=
-hat.com/
+> A quick fix would be #undef PCI_IOBASE in arch/mips/include/asm/io.h
+> just after including #include <asm-generic/io.h>, with ralink and loon=
+gson64
+> as exception.
 >
-> The dependency of queue_limits_start_update() over blk_mq_freeze_queue()
-> should be cut.
->
+> In the long term, we should scrutinize platform usage of mips_io_base
+> following ralink's approach.
 
-I see that conversation ended without sending any patches.
-https://lore.kernel.org/linux-block/23008fc2-6e83-4d83-8ea1-4a3f6c0e000c@li=
-nux.ibm.com/
+I think we are close to the point of being able to remove the broken
+default PCI_IOBASE: the NULL pointer here is almost always wrong, and
+mainly existed to shut up build failures on architectures that have
+no port I/O at all. I know that sparc32 and m68k have cases that
+actually rely on the broken PCI_IOBASE, so those need a local workaround,
+not sure if some mips platform also falls into this category, as
+I have not looked here in detail.
 
-I am still experiencing this issue in 6.13-rc6
+Hopefully we can get to a point where any reference to port I/O
+(inb/outb, PCI_IOPORT, mips_io_port_base, ...) is guarded by
+an #ifdef CONFIG_HAS_IOPORT check, and this is set exactly on
+those platforms that set mips_io_port_base to a valid address.
 
---=20
-Best Regards,
-Mike Gavrilov.
+      Arnd
