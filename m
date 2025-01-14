@@ -1,165 +1,153 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BED11885BF
-	for <regressions@lists.linux.dev>; Tue, 14 Jan 2025 16:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9153596E
+	for <regressions@lists.linux.dev>; Tue, 14 Jan 2025 17:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736872842; cv=none; b=AT3kiwtWkp5BYXvV+Ab810DPEMBaB39/njuq0Clk6j7WgtNVYus8UQLYXLCeE8/+frkxH4KdGGNeFrL/aiH4zHyliHzDLQ5TlsenySFGmtBF3brcX8yq+L8XPzb6U55eOBo3CZYShRICBj69Vd9N+mxQlZBc8CIubLW3w+8Z8yI=
+	t=1736874368; cv=none; b=H0xWAKKl21yXJ04kxu0tAE2oa24dcWSfS3pbIbBUqOMpdErbxF6VULND+eJIuy7m/Pju2XhbZmPe7O8K9biTWLMb4cgebUiwdFCL1hhsQe7sBig7eKlvWzchPZbaP1I8P8iFzKiWWz3QVC35TyZfdGmDYr9lWug/Z3fW5wUsrY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736872842; c=relaxed/simple;
-	bh=4Ww6OB6L3VaADeKLXpxhHhwWl/zI3yHYx7PJzqKx/NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNGGsckS6zYhiv4R0wlz/uZm1vKAJ+HPth6ly5GVxO2O2FUETFWOxN4prrgTBcj2LdmAMcembW6w4FRDLFv150ZiAbP/U3AxnqqR3CMCnu1BDj2u7KbiTQj3BBOoAYlPrvQ2sBM+MRI2qu3WaokS7/mWUGnRFHrcWIcTHaX+qXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=UJ4xXpBt; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1736874368; c=relaxed/simple;
+	bh=yb7FbtCTyLqmWXFGQhLOIkxdhpM5YZ2XgFdoGK+nrS0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RVWt8oRRvhD2kDkuDXmcKLdWktQnOdcQJPg1IaIX8PoAw/xB30BvMTGzV/nwIfLLZKR15KXOh3lf7F422NuS9M67zdCKAsDtz8P6u1u5TAgJxpLJWPypaZ6/tSamh9x0fQCLIoCMI3GMlWPpj50w9oWQLbqm5VEKvOeWSJK2tkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=u99tG0OS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S5xvtpxz; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="UJ4xXpBt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1736872814; x=1737477614; i=christian@heusel.eu;
-	bh=4Ww6OB6L3VaADeKLXpxhHhwWl/zI3yHYx7PJzqKx/NE=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=UJ4xXpBtgTrqmSFhd0TX1JjahnQOke18ebuhUM7hAzPmNfaDnzFFagaK4onWGmah
-	 CSDpQWLb3Q12IUDRMaeRyUFkrjPaffWXTbubo0+pFpHDot0dVuWKBDYPNIPnZ6cfP
-	 ZcAJBhJv3Hxov7wWzzdgdaB+Ze5MruauyFKiiEHQoAsQUADipLRIezm5QhEGgSR39
-	 V35u3kFQ54tC0kErQh0Y6D9jSU/4oOMfWoa263KQxg7lsXBWGvEvcC+tkMggObQw2
-	 VhmTfkoJESwls5db/6ePGe9auxmj4ZCLgvpZgCr5VQ7fw7110BLDHOtarEjqPTWZI
-	 2xeywtAZI+vuausvAA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1Mj7yt-1t1xz10lFt-00nEM5; Tue, 14
- Jan 2025 17:40:14 +0100
-Date: Tue, 14 Jan 2025 17:40:12 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] BU40N Blu-Ray drive broken since
- 7627a0edef54
-Message-ID: <5232263d-5836-402d-9c5e-e3c601181080@heusel.eu>
-References: <e2be6f70-dff6-4b79-bd49-70ec7e27fc1c@heusel.eu>
- <Z4EDf4ecHyfTq3Hp@x1-carbon>
- <69589dad-c0c8-4a72-9f3d-c1b0c29c96c1@heusel.eu>
- <e167b28c-94a2-45bf-8330-2487baf7199b@heusel.eu>
- <Z4U-rc3VUeegHGAg@ryzen>
- <Z4aLWmt1Y2jL1-pD@ryzen>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="u99tG0OS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S5xvtpxz"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 7EAC91140174;
+	Tue, 14 Jan 2025 12:06:05 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 14 Jan 2025 12:06:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1736874365;
+	 x=1736960765; bh=Q6ScP+1iZgmBbgN+RLbsV/rWVS+1L9QG0ApgTsWV8Gs=; b=
+	u99tG0OSgH0+kSlGz77vKynDUwFvCGjowpMCp2lzt0rh2J89cVtl9KOLl6bDweRX
+	yx++rX0xPLKI100YTJ8ElhqdUTgqjTR1DR0uu5wWGCepSdgMVpcNUdQuvfu/W8iz
+	1R9s9wMsGtfGDlqnSQIf80R+ilM/MHFmXuGZvhsBPWMd6FeXFxVKVUcwxOVh7gWx
+	I556K3gwdyfLWfAInKQpIVu1r3h36jnZPv+BFHtnIbrnum87M/Yq2bG9oeIDNgu2
+	fiL0qv7EET7CqMve9Wmzt6sVu5ZSsdn2dKv/XRk6Rwtw5jEa0zHYXUQtF3t4zsD8
+	s2hveqd9Tkxv8CLDHBdYmw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736874365; x=
+	1736960765; bh=Q6ScP+1iZgmBbgN+RLbsV/rWVS+1L9QG0ApgTsWV8Gs=; b=S
+	5xvtpxzthR9ieYnoBMMEHWv+wviqKz7gGG4xyFiSWar4iyjXGJthHNJR6D1J+0+L
+	tVTQiuZGW0tXY5PjQAbiS8+5CxYFqORE62Mq1BbphfICMLphnogJp9N+yO/S8DL9
+	kHige455B2vmkLO3ASHSueDSA2lLNVHehwK1bZVlgKjMpbgbF9BsgR6FyuUVKoPO
+	F7ADuCBkQUyd2bwCdFXvXQzpyZbeQ+2yvRtUyUr8U+NdTHowDgdbeTs4nYNyq7AJ
+	piWvYPjoOHkMA9s+HCXaG0skYvksXmLsMLpiyBoFvD/l1OD9Sujv9lXgl2COdgU1
+	xR1VLv1xw+rQOrZqh/1/g==
+X-ME-Sender: <xms:fJmGZ2zbiZXaalQbZvEawuyNxicvoaV6km_cF0SipePNP8IvOF9Qeg>
+    <xme:fJmGZySRW77Utq1Et4SE9hdz5JUSFx9XiU_hI2O2Zp9w21HXBXvwn8rcAhdmZK6wS
+    cw70KJ9mcT0nMknIxc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehiedgleeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddu
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrg
+    drfhhrrghnkhgvnhdruggvpdhrtghpthhtoheprghlvgigrghnughrvgdrsggvlhhlohhn
+    ihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflh
+    ihghhorghtrdgtohhmpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdho
+    rhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidrug
+    gvvhdprhgtphhtthhopehmrghtrdhjohhntgiihihksehovddrphhlpdhrtghpthhtohep
+    mhgrtghrohesohhrtggrmhdrmhgvrdhukhdprhgtphhtthhopegshhgvsehrvgguhhgrth
+    drtghomhdprhgtphhtthhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrgh
+X-ME-Proxy: <xmx:fJmGZ4V8803dZ07mO_CQyyRs7Jr9e2mm93MX_J6cpgA3sKpOgAoVCw>
+    <xmx:fJmGZ8juClgKvJ-WMjFhX4yTgR9qoN9VDZGwg8hj90clRiv9YKuzPA>
+    <xmx:fJmGZ4Af0xt1WoacGAS7OgSrNSwT3oNhMBx1wu-GQHp-GNJxpTX2PA>
+    <xmx:fJmGZ9IFGBLOReE9bDbSVxajdWbdZ_-6TAUvbzXcKk4wRo3lXi1CCw>
+    <xmx:fZmGZ86RQI2-3QGMxbDIvVtYr1oTr1nqb3KBkmxDaJ-Ux8NwlX-x4tLX>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 45F502220073; Tue, 14 Jan 2025 12:06:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="v7cnc46tonprs2m5"
-Content-Disposition: inline
-In-Reply-To: <Z4aLWmt1Y2jL1-pD@ryzen>
-X-Provags-ID: V03:K1:8BGG6VpEEVCyle+SNBNEMAWPgf6YrYXeqB1YTd+jSH4TF9h4pDq
- ZssZHVOzPpni9wqbsEKtOEoRDXCKW4kTB1/DbZzOZFh8cfl/7Nz+KNibo6h2QKq9I35Q1qt
- Ekt5XF3yu+KKxJzJtZw25baSG4jbRd3jwGLf1T3hh9+BCdojedwWoaF+f+/FqsWNLIdEbBj
- iDKAWVGlblRY+CrrBN1Zw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:TxNZ5Y3jAFU=;5C4XnQms+SMckVtXIBWhF9vPagj
- nvEbRFqX6wZFDueYwYpjDTy8FK8ZgU8rwP907hwpbK7FnDIhThzb+HogoTf0ZJeY2N0+lLr7Y
- APTdoPIzvajB42r8z4ozNL+Et5ly+hes80rm8+LN3hsx++gZZH0e9FRzVHIQyfBvWSGGw2Go3
- IixerEzw1TDcuo/gveuXelwIRj50garV03QGJ1GSMMcfFPIAXhqyyFH9Qm9Dlq75gT/KbVaRf
- Xb3Hd35eJkbXDAdaXdtabKFVIxy3KQtwJtnB8tiYPHJYkLqdCBoldUt3blJXCPrBkPmlBspbs
- HIDmY6GnTAAkNOq9p/geEYWct4yHLoEW60mZ3k6N43SFx42RN430QVhF8U3Snl7+THd4NIiNp
- 3lNc+/XzXESHM+PShswVZN4JyCPtY18kFFNOhmP8Q8VS//lNWIMlDVA53/KD/P4BBpalN3n3/
- wLLPooZCe+ffq2GmZei8aCcsJqIqfr+f42iN9HAkkJuMu/i08DEAFBy6tOwy7eiIYDDbe5i4c
- +kEgNKym+Te/1XRicVnzFwMnUkMUGaalPD77lledJQ5abRy4xf6hKhOT/atL9hs0ApbyFzIVT
- pdaYP4v7RrLNy+XkpXe/4UqY36mJpCJ3/eTahKcmH22DDgJVUv5Qt3OYYwgsDVyRk82HVE587
- sFXMbW6T5R+SZ50JjiOdM6PhK8J8au7ATeY0eOd1WQ7DrYORqBTRwTeKvyJtzoPySr3C9j4cP
- B19bNuxHnLmGEGL1dgZK5NsFltog5eByQQ58VBMrsaqnG9wt7Li+lpLjZjNLpCDowIDea6/lj
- ZHSJ6jbPNc20ehvb8VXSVJO/7kTfKsRBDm17rK9CDmXpXW/5MQ7DHWQ20FPe1S83OunfEOy7z
- j9qMz1HSCcPi7BbSMBNENpZUWbXqMy17Pw9u6fbktZOBFArsxGoFeqYGkXtj3ocQz1mcyaMc+
- yclP9hw2vEoqkBGDXBwSFUb/nc/yabla2jcdIbUdOQXRfLORwJBz7/xeG5pc1HniWY9+Fb1is
- 2Up3AfGlY1T3evDWpc/C/KU1tUVcfLD9kcx5eZm
+Date: Tue, 14 Jan 2025 18:04:02 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ "Baoquan He" <bhe@redhat.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ regressions@lists.linux.dev
+Message-Id: <13d0c3f1-7e6b-4f25-ae00-9e41a15ec36c@app.fastmail.com>
+In-Reply-To: <alpine.DEB.2.21.2501141605550.50458@angie.orcam.me.uk>
+References: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
+ <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com>
+ <CAMuHMdXbuRLgDP2JtmdhnJF=AhpPa88356KU1yF1f8GMirWrcQ@mail.gmail.com>
+ <08fe1ebb-b9c4-46c7-a6ab-5a336ec3b771@app.fastmail.com>
+ <alpine.DEB.2.21.2501141605550.50458@angie.orcam.me.uk>
+Subject: Re: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+On Tue, Jan 14, 2025, at 17:11, Maciej W. Rozycki wrote:
+> On Tue, 14 Jan 2025, Arnd Bergmann wrote:
+>> >> A quick fix would be #undef PCI_IOBASE in arch/mips/include/asm/io.h
+>> >> just after including #include <asm-generic/io.h>, with ralink and loongson64
+>> >> as exception.
+>> >
+>> > Shouldn't arch/mips/include/asm/io.h do
+>> >
+>> >     #define PCI_IOBASE mips_io_port_base
+>> >
+>> > unconditionally, _before_ including  <asm-generic/io.h>?
+>> 
+>> Yes, I think this would make the most sense, but the ordering
+>> with the PCI initialization needs to be done carefully,
+>> to ensure that PCI_IOBASE has its final value before the first
+>> call to pci_remap_iospace().
+>
+>  Is defining PCI_IOBASE going to do the right thing for non-PCI MIPS 
+> platforms, or should the definition be #ifdef CONFIG_PCI rather than 
+> unconditional?  FWIW I think all PCI MIPS platforms support port I/O.
 
---v7cnc46tonprs2m5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION][BISECTED] BU40N Blu-Ray drive broken since
- 7627a0edef54
-MIME-Version: 1.0
+PCI_IOBASE should be defined whenever CONFIG_HAS_IOPORT is set.
+Ideally that should allow using the generic inb/outb and
+ioread/iowrite helpers from include/asm-generic/io.h, but
+unfortunately those don't support the address swizzling required
+on SGI and Octeon platforms.
 
-On 25/01/14 05:05PM, Niklas Cassel wrote:
-> Hello Christian,
+These platforms look like they currently set a NULL pointer
+as the I/O port base:
 
-Hello Niklas,
+arch/mips/alchemy/common/setup.c:       set_io_port_base(0);
+arch/mips/ath79/setup.c:        set_io_port_base(KSEG1);
+arch/mips/bcm63xx/setup.c:      set_io_port_base(0);
+arch/mips/bmips/setup.c:        set_io_port_base(0);
+arch/mips/lantiq/prom.c:        set_io_port_base((unsigned long) KSEG1);
 
-> Looking at the Arch Linux thread, it seems that the person reporting the
-> problem says that even on a working kernel, you only see the device the
-> user presses the open button on the Blu-Ray player.
->=20
-> This suggests to me that it sends a hotplug/PhyRdy event when the user
-> presses the open button.
->=20
-> In Linux, if we don't detect anything connected to the port during initial
-> boot, and if the port is not marked (by firmware) as either Hotplug Capab=
-le,
-> or External, then we mask the PhyRdy interrupt.
->=20
-> We could reconsider this, and leave the PhyRdy interrupt enabled even for=
- a
-> port that is not Hotplug Capable or External, if there is no devices dete=
-cted
-> on the port.
->=20
->=20
-> However, a device should really show up after a COMRESET... A device that
-> does not do so seems to be non-spec compliant.
-> It would be nice if we could understand why this device does not show up
-> after a COMRESET. (If it did, we most likely would not need the workaround
-> suggested above.)
->=20
-> Could you please run with this debug prints, which might tell us what is
-> going on:
+At least some of these, possibly all, also have a PCI or PCMCIA
+host controller driver that sets a different value later
+when that bus is probed.
 
-Thanks for investigating this further, I was typing my previous mail and
-sent it just after yours because I didn't see it x)
+I don't see any I/O space getting set up for ath25, dec, ingenic,
+loongson32, pic32, eyeq, nintendo64, and realtek-rtl. It looks to
+me like any I/O port access on these turns into a misaligned NULL
+pointer dereference, but there is a good chance I'm missing how
+it gets set up there.
 
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> <snip-patch>
-
-Building a kernel with the patch applied just now! I will get back to
-you once I have heard back from the user.
-
-On a sidenote it seems like your mail client or something converts the
-tabs to spaces on these inline patches, which makes them quite hard to
-apply for me (I had to manually apply and format-patch).
-Could add them as attachment in the future or reply via git send-mail?
-
-> Kind regards,
-> Niklas
-
-Cheers,
-Chris
-
---v7cnc46tonprs2m5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmeGk2wACgkQwEfU8yi1
-JYUfgxAAhR1uKAdukCdNrArWkOWMz/D2cGcLjEFI3jBGTPxa7VM3o9dQBAvqufS2
-DNd89R9a8Tq1/S6PAYWNDS8Fl7aJyO8capQFj6uPvBJtYGkGGaVaL0HYVLyefgxx
-fTc6/W59OoRFVb1SxWiSfMMwXsmsFVq+jB/sH8BlOQz7qmJmRMfaeB096OeFA/9Y
-fa7jDiae6GfJnHlg8SoQt//KsE45XEqMA03eRrsIlcQa5kY1MXGk2eYSVsGWCKXm
-1raAvhZRNOkbhWYQooGyohevXf0Oeujipj7As3XOJMVLd2Ddlwh9b/sh0i3e67Kf
-bHqTSXN+6mMmiHzpw08YoArk/g+/2XRqNoYE964eKBE5H54xSNWIQt13wgl76+3R
-tJVqApPWt313zu6+jZT8BLkOzyQRb4COmqY2WvgN9JNwqy5ihYH5jBLjxIax9JC3
-GKFYdrDD7GSu/qT8QfQPCx7/ZTyQ1pGrPOfQlYJkehsAePrk0UDnxfEWvbGJETix
-0uMwqGcJChYt9HYJmeGm1PH19haX4PftKq6Z1nI0sIFIU975CQJ9Pf7AW6Z8PLsu
-imD38hQPr7y9fLDRTE0Y7vVZfX3+SkQudJRF4j8P0ZF+m+y+upfdk7XYyk4WzwN9
-cecrUMGHM7uIC6jTlWnoDoKAZlTRH5aCV99CGMhDUR5Wk6gF0DY=
-=pSaz
------END PGP SIGNATURE-----
-
---v7cnc46tonprs2m5--
+       Arnd.
