@@ -1,108 +1,166 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ABDE1917ED
-	for <regressions@lists.linux.dev>; Tue, 14 Jan 2025 19:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA4E1FC7FE;
+	Tue, 14 Jan 2025 21:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736881839; cv=none; b=mTy/cYu/bJTqz4npTrdIlsNO95RzkOdY8sutkutGnBGxd3OJlEjHj+77U+R7ikpgrFOapKwUaN9LNILaAhP7jR7Z8jCfiaYexsYMwEfSzvp7747MVrzprxYZXER6DX5i8kcC96473Obp3lCignfwdSFvwtrFGYGhP1rbepUh4Fs=
+	t=1736889416; cv=none; b=RtpgWCK+aBh4iJXob8lP+RpB/M2St0wBJBN7zqb7n0ey5vFGG8rQlJOUHC5mzqIVTna6bjAi0B1IU122a15c1rzQTHOgSewnSprQo4Cud8dmKXyhaU6ePbfqM2F2lN4wiN+gnMdkG8aBjywv9zyetNzjsbC57USOi/DfPToPCAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736881839; c=relaxed/simple;
-	bh=r2ye69cdwNDbsX3S2TzJaJ3k24emtxeCPGVD/kKC9YY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hfUC3F7tHMO3piVXaWoDduf4FF4egMgRytdnww5+dRThOBTsiagMRjYY1/TkpuDT62+S4jbwIn73o1eBlVNzh+y6GsvOvapIm6lKkXtixX0+QVfTgAJ3oF3z4tEu6Tada7PaNF3oFCfJoR1OXlQ4eURGSRQCIUUb7JcTvf47G+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id E09EC92009C; Tue, 14 Jan 2025 20:10:34 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id DA84C92009B;
-	Tue, 14 Jan 2025 19:10:34 +0000 (GMT)
-Date: Tue, 14 Jan 2025 19:10:34 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Arnd Bergmann <arnd@arndb.de>
-cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
-    Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-    =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
-    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-    Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-    Baoquan He <bhe@redhat.com>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-    regressions@lists.linux.dev
-Subject: Re: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
-In-Reply-To: <13d0c3f1-7e6b-4f25-ae00-9e41a15ec36c@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2501141707380.50458@angie.orcam.me.uk>
-References: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl> <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com> <CAMuHMdXbuRLgDP2JtmdhnJF=AhpPa88356KU1yF1f8GMirWrcQ@mail.gmail.com> <08fe1ebb-b9c4-46c7-a6ab-5a336ec3b771@app.fastmail.com>
- <alpine.DEB.2.21.2501141605550.50458@angie.orcam.me.uk> <13d0c3f1-7e6b-4f25-ae00-9e41a15ec36c@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1736889416; c=relaxed/simple;
+	bh=UcyyUw1NL2zJARRiyOt9twFY5flZXJf4yqpIFYxTQWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ItRnbt6xmt84ptTJzKfBEvqhy/Dd4nZ6DwoO6TOJzvjZZ9KJc6kkLp/Sb1H827qBPoPXpJlHVTjWoF4ipWjO8ASj/RHrlEqK2jgixw+fS2sjLgjGfRs/+lSyW59d2C73xjHHpJ8TfbsEjjLiIR/qUgQ7jr1G+dQoxm6TaEXY7t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XCz5E6dJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XCz5E6dJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 318BBC4CEE0;
+	Tue, 14 Jan 2025 21:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736889416;
+	bh=UcyyUw1NL2zJARRiyOt9twFY5flZXJf4yqpIFYxTQWo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=XCz5E6dJpITBeUKsfy6WjKJr9t5zkZ/JyRhPloWcQlrBmej06S/2NoGA7b/KRaR4F
+	 QTJDrrRk1O4tPxNYiPc+iuqtFNMITvU6d+GW5+YisKV8y532dfZJgIyUuARWxJzOu4
+	 3zih0DUdn8WTd1jnxOxPEzCgvpoPl3T3uhh5+ZPPLcYQj29xm47wXky5dYKmwOI+ef
+	 +AoVBGxOh2/rWJtClmCXaU5VPCIHOVx5hHOFxRPuD3Y0GVTRHmcKLeyZCGV0202q1R
+	 UT4sWMq5tzC6mXI627KRvYwGymLbiMxRvIa0fkYxddHGY/UCPE7M0C2OJZQh8YdyHG
+	 K1WfrGI+vVBig==
+Date: Tue, 14 Jan 2025 15:16:53 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: rafael@kernel.org, ulf.hansson@linaro.org,
+	Johan Hovold <johan@kernel.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Markus.Elfring@web.de, quic_mrana@quicinc.com,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+Message-ID: <20250114211653.GA487608@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250113162549.a2y7dlwnsfetryyw@thinkpad>
 
-On Tue, 14 Jan 2025, Arnd Bergmann wrote:
-
-> >> Yes, I think this would make the most sense, but the ordering
-> >> with the PCI initialization needs to be done carefully,
-> >> to ensure that PCI_IOBASE has its final value before the first
-> >> call to pci_remap_iospace().
-> >
-> >  Is defining PCI_IOBASE going to do the right thing for non-PCI MIPS 
-> > platforms, or should the definition be #ifdef CONFIG_PCI rather than 
-> > unconditional?  FWIW I think all PCI MIPS platforms support port I/O.
+On Mon, Jan 13, 2025 at 09:55:49PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
+> > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
+> > 
+> > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+> > > >>   		pcie_bus_configure_settings(child);
+> > > >>   
+> > > >>   	pci_bus_add_devices(bus);
+> > > >> +
+> > > >> +	/*
+> > > >> +	 * Ensure pm_runtime_enable() is called for the controller drivers,
+> > > >> +	 * before calling pci_host_probe() as pm frameworks expects if the
+> > > >> +	 * parent device supports runtime pm then it needs to enabled before
+> > > >> +	 * child runtime pm.
+> > > >> +	 */
+> > > >> +	pm_runtime_set_active(&bridge->dev);
+> > > >> +	pm_runtime_no_callbacks(&bridge->dev);
+> > > >> +	devm_pm_runtime_enable(&bridge->dev);
+> > > >> +
+> > > >>   	return 0;
+> > > >>   }
+> > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
+> > > > 
+> > > > I just noticed that this change in 6.13-rc1 is causing the
+> > > > following warning on resume from suspend on machines like the
+> > > > Lenovo ThinkPad X13s:
+> > 
+> > > Can you confirm if you are seeing this issue is seen in the
+> > > boot-up case also. As this part of the code executes only at the
+> > > boot time and will not have effect in resume from suspend.
+> > 
+> > No, I only see it during resume. And enabling runtime PM can (and
+> > in this case, obviously does) impact system suspend as well. 
+> > 
+> > > > 	pci0004:00: pcie4: Enabling runtime PM for inactive device with active children
+> > 
+> > > I believe this is not causing any functional issues.
+> > 
+> > It still needs to be fixed.
+> > 
+> > > > which may have unpopulated ports (this laptop SKU does not
+> > > > have a modem).
+> > 
+> > > Can you confirm if this warning goes away if there is some
+> > > endpoint connected to it.
+> > 
+> > I don't have anything to connect to the slot in this machine, but
+> > this seems to be the case as I do not see this warning for the
+> > populated slots, nor on the CRD reference design which has a modem
+> > on PCIe4.
 > 
-> PCI_IOBASE should be defined whenever CONFIG_HAS_IOPORT is set.
-
- Right, this will be more correctly scoped, so #ifdef CONFIG_HAS_IOPORT 
-then.
-
-> Ideally that should allow using the generic inb/outb and
-> ioread/iowrite helpers from include/asm-generic/io.h, but
-> unfortunately those don't support the address swizzling required
-> on SGI and Octeon platforms.
-
- Address swizzling should be generic: for an endianness boundary crossing 
-depending on its wiring there's always either a byte-lane or a bit-lane 
-matching policy (of course both may be implemented in the same system via 
-different mapping windows, such as with the Broadcom SiByte BCM1250 SoC 
-though we only use one in Linux, or with some kind of a bus configuration 
-register) and either byte swapping or address swizzling is required 
-accordingly for the relevant use cases.  But I guess for just a bunch of 
-systems that implement the bit-lane matching policy there's little 
-incentive for complicating the generic helpers.
-
-> These platforms look like they currently set a NULL pointer
-> as the I/O port base:
+> Yes, this is only happening for unpopulated slots and the warning
+> shows up only if runtime PM is enabled for both PCI bridge and host
+> bridge. This patch enables the runtime PM for host bridge and if the
+> PCI bridge runtime PM is also enabled (only happens now for
+> ACPI/BIOS based platforms), then the warning shows up only if the
+> PCI bridge was RPM suspended (mostly happens if there was no device
+> connected) during the system wide resume time.
 > 
-> arch/mips/alchemy/common/setup.c:       set_io_port_base(0);
-> arch/mips/ath79/setup.c:        set_io_port_base(KSEG1);
-> arch/mips/bcm63xx/setup.c:      set_io_port_base(0);
-> arch/mips/bmips/setup.c:        set_io_port_base(0);
-> arch/mips/lantiq/prom.c:        set_io_port_base((unsigned long) KSEG1);
+> For the sake of reference, PCI host bridge is the parent of PCI
+> bridge.
 > 
-> At least some of these, possibly all, also have a PCI or PCMCIA
-> host controller driver that sets a different value later
-> when that bus is probed.
+> Looking at where the warning gets triggered (in
+> pm_runtime_enable()), we have the below checks:
+> 
+> dev->power.runtime_status == RPM_SUSPENDED
+> !dev->power.ignore_children
+> atomic_read(&dev->power.child_count) > 0
+> 
+> When pm_runtime_enable() gets called for PCI host bridge:
+> 
+> dev->power.runtime_status = RPM_SUSPENDED
+> dev->power.ignore_children = 0
+> dev->power.child_count = 1
+> 
+> First 2 passes seem legit, but the issue is with the 3rd one. Here,
+> the child_count of 1 means that the PCI host bridge has an 'active'
+> child (which is the PCI bridge). The PCI bridge was supposed to be
+> RPM_SUSPENDED as the resume process should first resume the parent
+> (PCI host bridge). But this is not the case here.
+> 
+> Then looking at where the child_count gets incremented, it leads to
+> pm_runtime_set_active() of device_resume_noirq().
+> pm_runtime_set_active() is only called for a device if
+> dev_pm_skip_suspend() succeeds, which requires
+> DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime
+> suspended.
+> 
+> This criteria matches for PCI bridge. So its status was set to
+> 'RPM_ACTIVE' even though the parent PCI host bridge was still in the
+> RPM_SUSPENDED state. I don't think this is a valid condition as seen
+> from the warning triggered for PCI host bridge when
+> pm_runtime_enable() is called from device_resume_early():
+> 
+> pci0004:00: pcie4: Enabling runtime PM for inactive device with
+> active children
+> 
+> I'm not sure of what the fix is in this case. But removing the
+> DPM_FLAG_SMART_SUSPEND flag from PCI bridge driver (portdrv) makes
+> the warning go away. This indicates that something is wrong with the
+> DPM_FLAG_SMART_SUSPEND flag handling in PM core.
+> 
+> Ulf/Rafael, thoughts?
 
-$ grep set_io_port_base arch/mips/pci/*
+What's the plan for this?  Does anybody have a proposal?
 
-reveals some, i.e. alchemy, and bmips I believe uses the generic handler.  
-Other ones may not support port I/O after all, especially where the 
-platform in question is meant to be used in PCI device mode.
+IIUC there is no functional issue, but the new warning must be fixed,
+and it would sure be nice to do it before v6.13.  If there *is* a
+functional problem, we need to consider a revert ASAP.
 
-> I don't see any I/O space getting set up for ath25, dec, ingenic,
-> loongson32, pic32, eyeq, nintendo64, and realtek-rtl. It looks to
-> me like any I/O port access on these turns into a misaligned NULL
-> pointer dereference, but there is a good chance I'm missing how
-> it gets set up there.
-
- There's no PCI with the dec platform (i.e. either no I/O bus at all or 
-TURBOchannel), so the PCI I/O space is irrelevant, and obviously the MIPS 
-architecture has no native I/O space.  I don't know about the other ones, 
-but I supppose at least some of them could be SoCs or systems with no PCI 
-either.
-
-  Maciej
+Bjorn
