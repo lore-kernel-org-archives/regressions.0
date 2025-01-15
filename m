@@ -1,125 +1,108 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F01C4D599;
-	Wed, 15 Jan 2025 16:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23972101E6;
+	Wed, 15 Jan 2025 17:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736958394; cv=none; b=ipZPP7J2/5UD6IZw8jgb5pR+NWEFmdR8vDhOqEHFPdAV5a0qGr/vZiCuPDRJ23pYxpD5Qy9HL4V7A6U1VKetSryKru8FQoAGcs77tL2dS6V5Sb/QAXzz4I3ovwpWRYyesr6HAn+wC6jBddXew/jJolc7cZr4vSDx5wjVl5SWRV8=
+	t=1736962702; cv=none; b=nlyQ6idZSX5bu6zTvT9PsrZ53iqeyyjqs7fwP9PAoJQSpQ1uhWcXEvIRY6alRl7tq0rfxNF4vRz17gag9dDcqc2tCmH+DZWzVh1fjK7RERwgwmrKaVeBZ8htSUAklRoJ/ride5hXgDquLBl+Dbx8KsdsXbDYKwCAt3GaLS1TX0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736958394; c=relaxed/simple;
-	bh=RltW2sS2ZYMoz6QtuOL8V8aRWEPd79GUWtcQFb6H7tI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqIQF1fqojg5I/+twMsCQjrQfrPjTG9cIkOZlwEsByLOhSWWns2sqgmgX061JqtzdZRhCv1skjHNIJfs1MU8Ru+RypHhjrtWuPQ6xYrH3MHLa2EWUjB0LJ9XxC7z9f0eVMogsUiU8jmYsM3RrA7O+oFEhRf2tVDeiPEmMHxpTtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de; spf=pass smtp.mailfrom=simg.de; dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b=YWsVxS4X; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=simg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simg.de
+	s=arc-20240116; t=1736962702; c=relaxed/simple;
+	bh=8q3dKUnAbdu/O8CUZiTaxpUmetNImX1ysBcGf0/581g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QD/S0sxgIhXG2K41I8zF1K5Ufw1xdwWdykscjBcpSzdpb6ZqKdOyAqWXw3pckJE3+gx0N0nliQ2d7vRvBoT4LWUXPo8Bo4mTMDaappyCaSoKznffYQtSiK3RJ86F7YuRHgb61L5IM0d6e0Dh8sNF3rTazd6ufsEbHMuG37tVNUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ozhbgjiw; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=simg.de header.i=linux-kernel@simg.de header.b="YWsVxS4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simg.de;
-	s=s1-ionos; t=1736958375; x=1737563175; i=linux-kernel@simg.de;
-	bh=RltW2sS2ZYMoz6QtuOL8V8aRWEPd79GUWtcQFb6H7tI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=YWsVxS4XUviVD6iRL/DAP5GU43rw1YNHdSrhkJ8cBjso6aWLoXdYMWOMp3BRTlXY
-	 gdxROmotnfqln9Xn9241J0pZkMOOSmyxGZdZ3dNApNpZSDkzqngxWWSMZO9/U2W2X
-	 lI+0W/ZMzu9n0GrG8uQIfeqMYGg5ydrRY9UNA2eazGxRu7dZ/ulEgZM5XDCChrOaX
-	 bPdZj2EoMgL7uAEht1D+zFef8teiG7zd/Q7RmaVfBWDfSSYEqFhfKOv1u6aB/9pDb
-	 aCyLux2u/3NWUAO+m+Rydk8k2td3JTWn3TZyWvYSgNKWu4BJ11DO4l2ebVpoJ8q1s
-	 RSYqbHBH5nI+lKex9A==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.1.60] ([93.217.99.181]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPowd-1ttDsK2rlj-00SSnq; Wed, 15 Jan 2025 17:26:15 +0100
-Message-ID: <7e5b72e9-7f7f-4e68-a42a-4411cc5778b1@simg.de>
-Date: Wed, 15 Jan 2025 17:26:14 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ozhbgjiw"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21649a7bcdcso122465565ad.1;
+        Wed, 15 Jan 2025 09:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736962700; x=1737567500; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffTN+8BxxrgtsYW9mnk7jYQ9FtHVNVrRyvbSAwFbRGI=;
+        b=OzhbgjiwEgjtsAXHBkQtwOx754TUiCVfZmQlU41AXAQIVBf1PUNKrM2zkDZAnnOycH
+         rdA9UeqI9eegXEp9jawX4vHVNUISu/70k2nmYfZTOz7g17Ju49SV1etzFwIapyX9VX0E
+         Z2j7PV3PrJyubWT6fivXOZn8qaGcNyvpmK73jUKXYle3/poG97ZDmIERRFNsU3RRbpEG
+         VtmulYFuc5eLM6z8rj62i5l6NaIWh6QoBoqePU0oAJVXykekY03KdT9EAgs2Pcx54gGk
+         GpdFdHKW0f9y/bVG464IsWNloYapjnnHcts3N8hEQpJle8DS2IbSmJeDaMfSC2eNXTPd
+         EpyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736962700; x=1737567500;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ffTN+8BxxrgtsYW9mnk7jYQ9FtHVNVrRyvbSAwFbRGI=;
+        b=UpNNi3c5Zb8bWl9kt8cO+/LbiTiSQklRoL653CP5U1gPc1Hs2lDrXbZFg1dWWsOV9P
+         bYKDKAQU6ROGDZBlydtxMJe997PFdnrWOucnbqb1ymiQFSbVv4M+sTtu7T6Ln333opNC
+         qGxx6g5ganZY0WfHSg6S6tTrmWtdCuD4I5fiBNHlyZtr6jYIJfOQejClD8uhirL6kjvp
+         GHPnfxG32VEu2k8Z59UlBP9l45DDYHtifznK2bEH3UxN86/EP0HfIXwQVTahsoWxYudZ
+         4PnCDnnvbVwtiFzqbb2BICLkZsDof37LckZo/qaokRfHTGPZ3TfoMOzw+XS94WRjT7MI
+         n5Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVI7OyRfl4ppY0kN3fzcqDFiuXI5COx5VOVEw7VPpfVMUsR3VXJNA1P3Ib5G2kQ10HJnG5dyUWLkQ2vo9U=@lists.linux.dev, AJvYcCXFmuuJ9UVQ7zqXRM/v14g9IWLQP6uOogV9WqdsrEDO9qJ5gzMcaR9St+uII2LIec7WfdsS28d7APA9AQdASxk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxyUzq+BqZ0B5esxbwhjkY8g8GV9gyJaeHm3puKVfzKalwSpUsg
+	xRBgTdm/crFvlb/4nyLB0fIjUPjpK1tMSkaba1k0Zoyq5HuPOD+3
+X-Gm-Gg: ASbGncvDjhPKT9cD8l4BoSxpZGvc+d2MgQkSixhLe29YKrfYhi9duxyYEoN6yGfDwRW
+	hOHEjAJ6eJISWOQfpnKqLaYKqIT/yyupjXPHiuTwGlGGvY3qWkMcY6Xif6b5HR1uNFZAVXgcZyq
+	cKkosyJYPfxu8JlRuD70pGGv9ydCJ9KBZCaSmxtTQFeRKwIaZb+IjyY5pQQy89TYfJ/41mjzEjO
+	Ei2g5Rh927HhYxQQj/ex18PV/DtTy1hUhG5cLkdVOTkPXtG1IvjVEQZ8enQKiA=
+X-Google-Smtp-Source: AGHT+IHweyN8ETy0hN0cfZvqN7G9Q8blcc9XGv+ulNoTPKJ0X3+8BdzOQkFAqN3Thq5VSuJTcAXEpA==
+X-Received: by 2002:aa7:88cc:0:b0:71e:4930:162c with SMTP id d2e1a72fcca58-72d21f4ac63mr42651910b3a.6.1736962700388;
+        Wed, 15 Jan 2025 09:38:20 -0800 (PST)
+Received: from localhost ([2601:647:6881:9060:2b45:4736:5bcb:52eb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d405489bdsm9406934b3a.33.2025.01.15.09.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 09:38:19 -0800 (PST)
+Date: Wed, 15 Jan 2025 09:38:18 -0800
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Alan Maguire <alan.maguire@oracle.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Laura Nao <laura.nao@collabora.com>,
+	bpf@vger.kernel.org, chrome-platform@lists.linux.dev,
+	kernel@collabora.com, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	"dwarves@vger.kernel.org" <dwarves@vger.kernel.org>
+Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
+Message-ID: <Z4fyijoUoeTnOuDM@pop-os.localdomain>
+References: <20241115171712.427535-1-laura.nao@collabora.com>
+ <20241204155305.444280-1-laura.nao@collabora.com>
+ <CAFULd4a+GjfN5EgPM-utJNfwo5vQ9Sq+uqXJ62eP9ed7bBJ50w@mail.gmail.com>
+ <Z10MkXtzyY9RDqSp@pop-os.localdomain>
+ <3be0346a-8bc9-4be1-8418-b26c7aa4a862@oracle.com>
+ <c067bc3d-62d6-4677-9daf-17c57f007e67@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX + Ryzen 8700G
-To: Bruno Gravato <bgravato@gmail.com>, bugzilla-daemon@kernel.org
-Cc: bugzilla-daemon@kernel.org, Keith Busch <kbusch@kernel.org>,
- Adrian Huang <ahuang12@lenovo.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>, Christoph Hellwig <hch@lst.de>
-References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
- <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de>
- <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
- <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
- <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
- <6c2a34ac-d158-4109-a166-e6d06cafa360@simg.de>
- <CAOBLbT9LrqdHQ4-gGkRyB+vU3WnGo8f7X7m2=qK29+x=3QpzPw@mail.gmail.com>
-Content-Language: en-US
-From: Stefan <linux-kernel@simg.de>
-In-Reply-To: <CAOBLbT9LrqdHQ4-gGkRyB+vU3WnGo8f7X7m2=qK29+x=3QpzPw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:s6m+XZFkNT4XqeH9ZJr2u+oy+7X2xp4vVEBn5fsWllVwF3JOyUU
- GJ5KAyZxl0py8rBIkROyWGo4qucHklto2Cq8exPWuYx1T1wP+n2eJBZczG2IaYAqBLl3bxl
- as7rUiIibF09qncBYdfUM6zLxbrYDbA1zuIAf+U/H9xzI2pSqwRQ/loUN6h9q+ZjdibKQ/X
- ltj6/mI14UKIJOm1cDGhg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kKnzRXl7azo=;TFVJ7dn1EfZPsiykdqQCXIRgMV3
- iYE7wBSQ7tzcgf11PLvSox2WYT2fSzMwl74uQYIb+fenOrprLQES6IeILrBDhDNmCLjFAdosw
- ZXVzJCns+DAIpSX+jFJJqpu760nRvR+JFO1LXtpO7ZDd3EzlxpyPgwULeK9e7wOLr/3tuStcS
- Mn9fzB5IdM1yTi3sBgRbH5AdwChPQr+Ip7NaAyZvPH5u+iAo+lgsI++d33/m1VZ/pvhoCsyoT
- gd9gyWeUjOJ7vSW1uKwo7/OeLIb3SVZvg2qrHnzkeZ9VTbjVVexoyEA5B/TpW6eUXmQgG7hMW
- GDvlqxKipG2sdt8q+lrqZrPjt4eV0mUpnMo/T+MRP9/LerM7zzZvYecRrBeUmOk2oTDq4EmMe
- blu+B3gdGImBCfkEGTjWO1Yk2JceguDKNchqpfp0Sxd25qEssLk8Lk+HI3QasTast6iodYA9r
- faQ/gMtk4alJAZXpgDhoecU3CYnlVluEq6XjmgvP4u2j8dG6QpsivKPTNKe9Hpql+PbhWJW23
- RT516kfCuZ+3AWBGYjDyPmxgVWWnv3FKfZduFcO+m03H3T56rdZRztKq0ypVhkOfDUUkrMK6o
- 0Qcbwp1z5Wp8vZUc5JH7zbG3yvbQXDUrlUbLrW/YvhwScNOatyMJZFnecb+h4O7AH3VgSiMWR
- sXuMQB00End/OEri+A+w9lMTAjfmRH9KsGvakCFVl2tsEYvxHMAQn6H9NgRoKpRhMr/8M7Txs
- JhR+NB+NKZa5igiUy94SmYQ6f8RqMWLEDRQsJYDwTx/l4Ao75CvzRNNy9RpXBm/QYWuiF+8x2
- jF+OhXFKnBJC+B/EFdrRplZkgXpgWGo51rOdjWBxhXn6Aj9HeIxZpE4b+7uUGXFhANT4J/FDX
- Ghh+iDJAmNTe92Zf1K14UziqqTTPcCQtvfFaNsRRy+EiNDZmVrkLHs7JceWyd1ulXkMAal2BI
- 6HJ4MLMYdXtRWyAcoZlfnTKWk6IhYIvoix/O6ap7/lwLXyQRFJXeQXYW063CakMC9DK4GdRoI
- h5YllOImqm3FZDjTTzlQNtO8pXG68JPbeiwQyofkIPK1kr397DLkQRE/CdQ1CkhxIfDf/fnPA
- 3151QV0ylu9BIGYszbJyg09aQApEdln/4jDdywCKA/w6hkGQNYmFAjshNkzFrUfcVH1EUOC+o
- =
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c067bc3d-62d6-4677-9daf-17c57f007e67@oracle.com>
 
+On Mon, Dec 16, 2024 at 03:19:01PM +0000, Alan Maguire wrote:
+> Seems like there's a few approaches we can take in fixing this:
+> 
+> 1. designate "__pcpu_" prefix as a variable prefix to filter out. This
+> resolves the immediate problem but is too narrowly focused IMO and we
+> may end up playing whack-a-mole with other dummy variable prefixes.
+> 2. resurrect ELF section variable information fully; i.e. record a list
+> of variables per ELF section (or at least per ELF section we care
+> about). If variable is not on the list for the ELF section, do not
+> encode it.
+> 3. midway between the two; for the 0 address case specifically, verify
+> that the variable name really _is_ in the associated ELF section. No
+> need to create a local ELF table variable representation, we could just
+> walk the table in the case of the 0 addresses.
+> 
+> Diff for approach 3 is as follows
 
-Hi,
+Hi Alan,
 
-Am 15.01.25 um 14:14 schrieb Bruno Gravato:
-> If yours behaves like mine, I'd expect that if you swap the disks in
-> config 2, that you won't have any errors as well...
+Thanks for your detailed analysis.
 
-yeah, I would just need to plug something into the 2nd M.2 socket. But
-that can't be done remotely. I will do that on weekend or in next week.
-
-BTW, is there a kernel parameter to ignore a NVME/PCI device? If the
-corruptions appear again after disabling the 2nd SSD, it is more likely
-that it is a kernel problem, e.g. a driver writing to memory reserved
-for some other driver/component. Such a bug may only occur under rare
-conditions. AFAIU, the patch "nvme-pci: place descriptor addresses in
-iod" form 6.3-rc1 attempts to use some space which is otherwise unused.
-Unfortunately I was not able to revert that patch because later changes
-depend on it.
-
-So, I now only tried out whether just `NVME_MAX_SEGS 127` helps (see
-message from Matthias). Answer is no. This only seem to by an upper
-limit, because `/sys/class/block/nvme0n1/queue/max_segments` reports 33
-with unmodified kernels >=3D 6.3.7. With older kernels or kernels with
-reversed patch "nvme-pci: clamp max_hw_sectors based on DMA optimized
-limitation" (introduced in 6.3.7) this value is 127 and corruptions
-disappear.
-
-I guess, this value somehow has to be 127. In my case it is sufficient
-to revert the patch form 6.3.7. In Matthias's case, the values then
-becomes 128 and has to be limited additionally using `NVME_MAX_SEGS 127`
-
-Regards Stefan
-
-
+Is your patch formally submitted and merged? A quick code search with
+variable_in_sec() tells me no, but I could very easily miss things here,
+hence I am asking you. :)
