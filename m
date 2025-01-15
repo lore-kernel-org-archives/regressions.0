@@ -1,160 +1,168 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F7B1E3DCC
-	for <regressions@lists.linux.dev>; Wed, 15 Jan 2025 08:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3C223F269;
+	Wed, 15 Jan 2025 08:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736928931; cv=none; b=BO7P4ZJrMzwtjsexcsp31rBXdE1jLN5tANySgtUUZgx+Wc6jCa4kY7pLTWGtywMDK6OTlytIMMT5p10V5t/laJL2cB4DNYQ0A4l3STuAvoagfJt70A+HdYyIsrH2ZGI2NRhGXZPuYRTLVVxgGHtTqZ95LB1VgZP0h0tp9ACKLHA=
+	t=1736930419; cv=none; b=g9WMd0T+3egTD8Dj4PyP29UOW2mXQVIWyQnW8m1JY8bJBupmPTrIO1cCg9tN/kyxa6mo+NWACPGwu5x+odvfOxyWLr2jnzmnY5Id5J/5xfzOiF3pOB9dafo8FEnew5JUwqKwuYc65Bm/n+oug3vmywuUyD7lKH9eMYSyCAJUoRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736928931; c=relaxed/simple;
-	bh=958AKdnms29VmzQsx3U3fJCjHZGQyQWTl/6eBHqs4dA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AV6bY+K1bwybxaKoPWDNY3duFiC84uwpGWYU2RV0Y4BtQy7CsULSzdC24q0Zf/YQjODJz6nfn8xeDbfGZ+ECO0XsAW8QpTOAzVQO3ps5S+Mxqhn/pdCPhnJtSCFJUO9/+cjMuAL4oJBnR/wneOUS5Rk9wVn67hDe7TNYbJNO/JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=pTsFUaf4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qD0xLSu6; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1736930419; c=relaxed/simple;
+	bh=A5vDtaKwCUYk4D/fYrU86gKCpU7MX1HzZn2F2HXS338=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZjV+aJjgBwVZB2AvjtYKH2AFCYGyiItnkrg9/Ek14M8HbqZSJGuv41NeZhNc5LmGop/AOkCxiW8880pzsJSW1twM5KGAgNpiC3gyYU1P7wIScTslciKMmWkeQwQEzQ+rvavrNThK/H2W2/vy9bjVelZj/WekSdGMbsgRuzF9cOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=t54iOFNm; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="pTsFUaf4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qD0xLSu6"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id BBD7C114013F;
-	Wed, 15 Jan 2025 03:15:27 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Wed, 15 Jan 2025 03:15:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1736928927;
-	 x=1737015327; bh=FzGVK01lv8D6xNZRF4wWlQghCDQyf9wVZs1wXiqfIaM=; b=
-	pTsFUaf4+FQOK+2AaV6Ise2cIpROAXabBhuEDW0uMfMipkY5Wc6grRJNuHV8FM13
-	2YydVl0QiUr1N0CNtoaVEsNsxBEHf8djgdvElet2K5XR+7MBkpjWl5NwW46LKvPA
-	hHW9xLr0+ZcNzk65N0739yCQkr+zmJRtmpgq5NB53+lJGGibVz0ti/LBf9dGuYpG
-	ca90+QchzXziblsVorvYzRexlGuryoSrFRzHamXqDowlJ6hSLMAKmuLEnIS4lGn3
-	EsDgfhVnsIWPMBck9S6SAmP2x3tf3/IVSp1AsUuCWM0XH2wHSvkXeDngi/9UQDyY
-	bzuvQErz4OJG/w24TtUc5A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1736928927; x=
-	1737015327; bh=FzGVK01lv8D6xNZRF4wWlQghCDQyf9wVZs1wXiqfIaM=; b=q
-	D0xLSu6k84LYgjZAYNCZ2P0C3i+5j5x8IqlleWxE6Ho54TsP7DFPBGtuixOI1FNr
-	/bmMK652qsn/WWSjXMlMy1LWEVIfAtSbLNgWZL+v2J3HHu3/I9V9qzVGk4tFAGuR
-	R66Ft1PDNlKNymDxPxYPA8CjG6d05LL/HkZbsGL/xYM/D+2BBNyK25dQM280MfxP
-	dupeNdzXoJ5nn8cdzdYOgdi4NzqpNxo2UnLllHvEHRwPnFvnnzt31Zi5gkqDyvwr
-	dkfo3cUlwP81CHuvij5rElVGv+KOfZj2ipYWpDH1SXdYgk05e9Lh0hs/S2B2x15f
-	7D6if05qqdMUEApoEj8bg==
-X-ME-Sender: <xms:n26HZ9kQWzQVWJ0RV7fLy1yQ3PEjgaZ4xvhCt_Ydv5JTk9IsUb24AA>
-    <xme:n26HZ40-6xkSdRkvg0WLE7L8-i7180KrN7G8atrVTdCkfyo50fNw3xUA5MFDg4Wb-
-    6ktQNTBNxSZL-U1jrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudehjedgudduhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    uddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphh
-    grrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhho
-    nhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdr
-    ohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrd
-    guvghvpdhrtghpthhtohepmhgrthdrjhhonhgtiiihkhesohdvrdhplhdprhgtphhtthho
-    pehmrggtrhhosehorhgtrghmrdhmvgdruhhkpdhrtghpthhtohepsghhvgesrhgvughhrg
-    htrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:n26HZzqouEoiBC6zNnMnD2UxmlN3JfwydK5oDAaxgxPkiPdIK7Evew>
-    <xmx:n26HZ9koH15F4e1yNvbfjFBEgJG__R_kKQ_QAW1Iyr9yaKZK41vYnw>
-    <xmx:n26HZ70eRyT7Xoq1jl8H-XTNjIS4Q1LEVsVeJV6JjTt2_hfue3zS4Q>
-    <xmx:n26HZ8uACBUQfXY0KwzBPjlDz21VA1nI17VfmZFtP_XUeY7X5NOWwg>
-    <xmx:n26HZ0vaViJUmp3HZFBXvrkDBZWI6uP92fCdkXUVL00S1nL8Iqfb_u-4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 057F42220072; Wed, 15 Jan 2025 03:15:26 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="t54iOFNm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=q6hBrcRMQhF/pox7UFnnZR0yegceyTy2ATLnjvMiHHU=; t=1736930417;
+	x=1737362417; b=t54iOFNmVPxvKLLwPjKsiSIPYw2Ifa42zzaPi4RMHNkXuMB7+5w1mTRHDEeTb
+	IBfgSKPV23e1u9fqTg7PTOMDIn5IRHWXuu/O4MK7XyKuhoxNQHaS6ZtLSrA83w3Aa4lE4xPIlKh9W
+	e8uVUIVaFqnFQSVAIP7Z+PNpzT+T1m23Bf9sWsS0p/R1Eg+trlqOLMfAscjI1/W2zioA6Qf/Y+Oo/
+	imKfO/liqoBkEZuDyhp9ySY5Lpy7qKi5glVM0ln+oCrMWHei08eQNlivmmHYTECwxKQ+WGNSpHg/l
+	bYDD/MIycePE1ZYIzryczRprAxGEehn6ZY4bFeYZAmdGIuhxwQ==;
+Received: from [2a02:8108:8980:2478:87e9:6c79:5f84:367d]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1tXywX-002TwE-1b;
+	Wed, 15 Jan 2025 09:40:05 +0100
+Message-ID: <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info>
+Date: Wed, 15 Jan 2025 09:40:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 15 Jan 2025 09:15:06 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
- "Baoquan He" <bhe@redhat.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- regressions@lists.linux.dev
-Message-Id: <606d36ca-4cd3-4793-8b64-70b812e1e74f@app.fastmail.com>
-In-Reply-To: <alpine.DEB.2.21.2501141707380.50458@angie.orcam.me.uk>
-References: <90b5b76d-25b6-4cdc-91ed-07ac930dc519@o2.pl>
- <99f75c66-4c2d-45dc-a808-b5ba440c7551@app.fastmail.com>
- <CAMuHMdXbuRLgDP2JtmdhnJF=AhpPa88356KU1yF1f8GMirWrcQ@mail.gmail.com>
- <08fe1ebb-b9c4-46c7-a6ab-5a336ec3b771@app.fastmail.com>
- <alpine.DEB.2.21.2501141605550.50458@angie.orcam.me.uk>
- <13d0c3f1-7e6b-4f25-ae00-9e41a15ec36c@app.fastmail.com>
- <alpine.DEB.2.21.2501141707380.50458@angie.orcam.me.uk>
-Subject: Re: [REGRESSION] mipsel: no RTC CMOS on the Malta platform in QEMU
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+To: Bruno Gravato <bgravato@gmail.com>, Stefan <linux-kernel@simg.de>
+Cc: Keith Busch <kbusch@kernel.org>, bugzilla-daemon@kernel.org,
+ Adrian Huang <ahuang12@lenovo.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
+References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
+ <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de>
+ <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
+ <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
+ <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1736930417;15830067;
+X-HE-SMSGID: 1tXywX-002TwE-1b
 
-On Tue, Jan 14, 2025, at 20:10, Maciej W. Rozycki wrote:
-> On Tue, 14 Jan 2025, Arnd Bergmann wrote:
->
->> Ideally that should allow using the generic inb/outb and
->> ioread/iowrite helpers from include/asm-generic/io.h, but
->> unfortunately those don't support the address swizzling required
->> on SGI and Octeon platforms.
->
->  Address swizzling should be generic: for an endianness boundary crossing 
-> depending on its wiring there's always either a byte-lane or a bit-lane 
-> matching policy (of course both may be implemented in the same system via 
-> different mapping windows, such as with the Broadcom SiByte BCM1250 SoC 
-> though we only use one in Linux, or with some kind of a bus configuration 
-> register) and either byte swapping or address swizzling is required 
-> accordingly for the relevant use cases.  But I guess for just a bunch of 
-> systems that implement the bit-lane matching policy there's little 
-> incentive for complicating the generic helpers.
+On 15.01.25 07:37, Bruno Gravato wrote:
+> I finally got the chance to run some more tests with some interesting
+> and unexpected results...
 
-I checked the other architectures as well now, and I'm fairly
-sure we had some architectures in the past that implemented the
-same swizzling, but it seems that those all got removed over
-time, and now it's literally just MIPS with SGI (ip27/ip30/ip32,
-not ip22) and Octeon. From the comment above octeon_should_swizzle_table[]
-it appears that this is actually configurable in a register
-but was set up at the time to do SGI-compatible address swizzling,
-when it could have just use a software byteswap (CONFIG_SWAP_IO_SPACE)
-like the rest of the world.
+FWIW, I briefly looked into the issue in between as well and can
+reproduce it[1] locally with my Samsung SSD 990 EVO Plus 4TB in the main
+M.2 slot of my DeskMini X600 using btrfs on a mainline kernel with a
+config from Fedora rawhide.
 
-I double-checked the setting of CONFIG_SWAP_IO_SPACE, and found
-that it's mostly consistent in setting this for all big-endian
-platforms, the exceptions are:
+So what can we that are affected by the problem do to narrow it down?
 
-- ath79 is big-endian but does not set SWAP_IO_SPACE. I assume
-  it works because there is a very limited set of PCIe cards
-  actually in use on this platform, notably ath9k wireless.
-  If readl()/writel()/inl()/outl()  don't do a software byteswap, there
-  is probably similar hardware logic in place as on octeon and SGI,
-  and the lack of address swizzling may mean sub-word access to PCI
-  registers is broken.
-  The ath9k driver only uses ioread32()/iowrite32(), which works
-  regardless of the address swizzling, but many other devices
-  would be broken.
+What does it mean that disabling the NVMe devices's write cache often
+but apparently not always helps? It it just reducing the chance of the
+problem occurring or accidentally working around it?
 
-- eyeq and rb532 are always little-endian, so SWAP_IO_SPACE
-  does nothing despite being selected.
+hch initially brought up that swiotlb seems to be used. Are there any
+BIOS setup settings we should try? I tried a few changes yesterday, but
+I still get the "PCI-DMA: Using software bounce buffering for IO
+(SWIOTLB)" message in the log and not a single line mentioning DMAR.
 
-- nintendo64 has no PCI, and I guess the readl()/writel()
-  in drivers/block/n64cart.c, sound/mips/snd-n64.c etc
-  end up using readl()/writel() as native on-chip register
-  accessors instead of byteswapping ones.
+Ciao, Thorsten
 
-       Arnd
+[1] see start of this thread and/or
+https://bugzilla.kernel.org/show_bug.cgi?id=219609 for details
+
+> I put another disk (WD Black SN750) in the main M.2 slot (the
+> problematic one), but kept my main disk (Solidigm P44 Pro) in the
+> secondary M.2 slot (where it doesn't have any issues).
+> I rerun my test: step 1) copy a large number of files to the WD disk
+> (main slot), step 2) run btrfs scrub on it and expect some checksum
+> errors
+> To my surprise there were no errors!
+> I tried it twice with different kernels (6.2.6 and 6.11.5) and booting
+> from either disk (I have linux installations on both).
+> Still no errors.
+> 
+> I then removed the Solidigm disk from the secondary and kept the WD
+> disk in the main M.2 slot.
+> Rerun my tests (on kernel 6.11.5) and bang! btrfs scrub now detected
+> quite a few checksum errors!
+> 
+> I then tried disabling volatile write cache with "nvme set-feature
+> /dev/nvme0 -f 6 -v 0"
+> "nvme get-feature /dev/nvme0 -f 6" confirmed it was disabled, but
+> /sys/block/nvme0n1/queue/fua still showed 1... Was that supposed to
+> turn into 0?
+> 
+> I re-run my test, but I still got checksum errors on btrfs scrub. So
+> disabling volatile write cache (assuming I did it correctly) didn't
+> make a difference in my case.
+> 
+> I put the Solidigm disk back into the secondary slot, booted and rerun
+> the test on the WD disk (main slot) just to be triple sure and still
+> no errors.
+> 
+> So it looks like the corruption only happens if only the main M.2 slot
+> is occupied and the secondary M.2 slot is free.
+> With two nvme disks (one on each M.2 slot), there were no errors at all.
+> 
+> Stefan, did you ever try running your tests with 2 nvme disks
+> installed on both slots? Or did you use only one slot at a time?
+
+$ journalctl -k | grep -i -e DMAR -e IOMMU -e AMD-Vi -e SWIOTLB
+AMD-Vi: Using global IVHD EFR:0x246577efa2254afa, EFR2:0x0
+iommu: Default domain type: Translated
+iommu: DMA domain TLB invalidation policy: lazy mode
+pci 0000:00:00.2: AMD-Vi: IOMMU performance counters supported
+pci 0000:00:01.0: Adding to iommu group 0
+pci 0000:00:01.3: Adding to iommu group 1
+pci 0000:00:02.0: Adding to iommu group 2
+pci 0000:00:02.3: Adding to iommu group 3
+pci 0000:00:03.0: Adding to iommu group 4
+pci 0000:00:04.0: Adding to iommu group 5
+pci 0000:00:08.0: Adding to iommu group 6
+pci 0000:00:08.1: Adding to iommu group 7
+pci 0000:00:08.2: Adding to iommu group 8
+pci 0000:00:08.3: Adding to iommu group 9
+pci 0000:00:14.0: Adding to iommu group 10
+pci 0000:00:14.3: Adding to iommu group 10
+pci 0000:00:18.0: Adding to iommu group 11
+pci 0000:00:18.1: Adding to iommu group 11
+pci 0000:00:18.2: Adding to iommu group 11
+pci 0000:00:18.3: Adding to iommu group 11
+pci 0000:00:18.4: Adding to iommu group 11
+pci 0000:00:18.5: Adding to iommu group 11
+pci 0000:00:18.6: Adding to iommu group 11
+pci 0000:00:18.7: Adding to iommu group 11
+pci 0000:01:00.0: Adding to iommu group 12
+pci 0000:02:00.0: Adding to iommu group 13
+pci 0000:03:00.0: Adding to iommu group 14
+pci 0000:03:00.1: Adding to iommu group 15
+pci 0000:03:00.2: Adding to iommu group 16
+pci 0000:03:00.3: Adding to iommu group 17
+pci 0000:03:00.4: Adding to iommu group 18
+pci 0000:03:00.6: Adding to iommu group 19
+pci 0000:04:00.0: Adding to iommu group 20
+pci 0000:04:00.1: Adding to iommu group 21
+pci 0000:05:00.0: Adding to iommu group 22
+AMD-Vi: Extended features (0x246577efa2254afa, 0x0): PPR NX GT [5] IA GA
+PC GA_vAPIC
+AMD-Vi: Interrupt remapping enabled
+AMD-Vi: Virtual APIC enabled
+PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+perf/amd_iommu: Detected AMD IOMMU #0 (2 banks, 4 counters/bank).
