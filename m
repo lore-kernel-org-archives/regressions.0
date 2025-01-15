@@ -1,77 +1,50 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23972101E6;
-	Wed, 15 Jan 2025 17:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC271922F9;
+	Wed, 15 Jan 2025 18:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736962702; cv=none; b=nlyQ6idZSX5bu6zTvT9PsrZ53iqeyyjqs7fwP9PAoJQSpQ1uhWcXEvIRY6alRl7tq0rfxNF4vRz17gag9dDcqc2tCmH+DZWzVh1fjK7RERwgwmrKaVeBZ8htSUAklRoJ/ride5hXgDquLBl+Dbx8KsdsXbDYKwCAt3GaLS1TX0I=
+	t=1736966122; cv=none; b=KBQykQAsWKDMnQNdgjCpDWSFsYjrRMgFJJuJOHcTcG67SW6VLW0lQixivoXekUWZ9yXaz8KNB+K0wtQD+lF7nun1wX8IHYUoKzJBIx4O08EUpgA28WUZJvixKhlNO7HIgUhmp6YZo2jaFy8fxFvEXndwvSmleYhkjUEe0mIPES4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736962702; c=relaxed/simple;
-	bh=8q3dKUnAbdu/O8CUZiTaxpUmetNImX1ysBcGf0/581g=;
+	s=arc-20240116; t=1736966122; c=relaxed/simple;
+	bh=S6tzmQE1ZAVO52pimezl/35d5AV8ilM+LBCng+gq5aI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QD/S0sxgIhXG2K41I8zF1K5Ufw1xdwWdykscjBcpSzdpb6ZqKdOyAqWXw3pckJE3+gx0N0nliQ2d7vRvBoT4LWUXPo8Bo4mTMDaappyCaSoKznffYQtSiK3RJ86F7YuRHgb61L5IM0d6e0Dh8sNF3rTazd6ufsEbHMuG37tVNUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ozhbgjiw; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hkro5//oMUQKpDF7edlL+NA2Nd/xbT9utTEZ9BynCSonsOf1I+IZ9494Pqnxtt2zD0fcpjEfla8QmMLC/gVgcFu1SEhlAIG/qx7LjsNt7ScZrty2sQ5LdoVzywbiqoXewgX0GojGEbqAY8mLI6syuAw9egySnGWZmqaeAiKXDeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHW76ZYy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ozhbgjiw"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21649a7bcdcso122465565ad.1;
-        Wed, 15 Jan 2025 09:38:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736962700; x=1737567500; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffTN+8BxxrgtsYW9mnk7jYQ9FtHVNVrRyvbSAwFbRGI=;
-        b=OzhbgjiwEgjtsAXHBkQtwOx754TUiCVfZmQlU41AXAQIVBf1PUNKrM2zkDZAnnOycH
-         rdA9UeqI9eegXEp9jawX4vHVNUISu/70k2nmYfZTOz7g17Ju49SV1etzFwIapyX9VX0E
-         Z2j7PV3PrJyubWT6fivXOZn8qaGcNyvpmK73jUKXYle3/poG97ZDmIERRFNsU3RRbpEG
-         VtmulYFuc5eLM6z8rj62i5l6NaIWh6QoBoqePU0oAJVXykekY03KdT9EAgs2Pcx54gGk
-         GpdFdHKW0f9y/bVG464IsWNloYapjnnHcts3N8hEQpJle8DS2IbSmJeDaMfSC2eNXTPd
-         EpyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736962700; x=1737567500;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ffTN+8BxxrgtsYW9mnk7jYQ9FtHVNVrRyvbSAwFbRGI=;
-        b=UpNNi3c5Zb8bWl9kt8cO+/LbiTiSQklRoL653CP5U1gPc1Hs2lDrXbZFg1dWWsOV9P
-         bYKDKAQU6ROGDZBlydtxMJe997PFdnrWOucnbqb1ymiQFSbVv4M+sTtu7T6Ln333opNC
-         qGxx6g5ganZY0WfHSg6S6tTrmWtdCuD4I5fiBNHlyZtr6jYIJfOQejClD8uhirL6kjvp
-         GHPnfxG32VEu2k8Z59UlBP9l45DDYHtifznK2bEH3UxN86/EP0HfIXwQVTahsoWxYudZ
-         4PnCDnnvbVwtiFzqbb2BICLkZsDof37LckZo/qaokRfHTGPZ3TfoMOzw+XS94WRjT7MI
-         n5Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVI7OyRfl4ppY0kN3fzcqDFiuXI5COx5VOVEw7VPpfVMUsR3VXJNA1P3Ib5G2kQ10HJnG5dyUWLkQ2vo9U=@lists.linux.dev, AJvYcCXFmuuJ9UVQ7zqXRM/v14g9IWLQP6uOogV9WqdsrEDO9qJ5gzMcaR9St+uII2LIec7WfdsS28d7APA9AQdASxk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxyUzq+BqZ0B5esxbwhjkY8g8GV9gyJaeHm3puKVfzKalwSpUsg
-	xRBgTdm/crFvlb/4nyLB0fIjUPjpK1tMSkaba1k0Zoyq5HuPOD+3
-X-Gm-Gg: ASbGncvDjhPKT9cD8l4BoSxpZGvc+d2MgQkSixhLe29YKrfYhi9duxyYEoN6yGfDwRW
-	hOHEjAJ6eJISWOQfpnKqLaYKqIT/yyupjXPHiuTwGlGGvY3qWkMcY6Xif6b5HR1uNFZAVXgcZyq
-	cKkosyJYPfxu8JlRuD70pGGv9ydCJ9KBZCaSmxtTQFeRKwIaZb+IjyY5pQQy89TYfJ/41mjzEjO
-	Ei2g5Rh927HhYxQQj/ex18PV/DtTy1hUhG5cLkdVOTkPXtG1IvjVEQZ8enQKiA=
-X-Google-Smtp-Source: AGHT+IHweyN8ETy0hN0cfZvqN7G9Q8blcc9XGv+ulNoTPKJ0X3+8BdzOQkFAqN3Thq5VSuJTcAXEpA==
-X-Received: by 2002:aa7:88cc:0:b0:71e:4930:162c with SMTP id d2e1a72fcca58-72d21f4ac63mr42651910b3a.6.1736962700388;
-        Wed, 15 Jan 2025 09:38:20 -0800 (PST)
-Received: from localhost ([2601:647:6881:9060:2b45:4736:5bcb:52eb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d405489bdsm9406934b3a.33.2025.01.15.09.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 09:38:19 -0800 (PST)
-Date: Wed, 15 Jan 2025 09:38:18 -0800
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Alan Maguire <alan.maguire@oracle.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>, Laura Nao <laura.nao@collabora.com>,
-	bpf@vger.kernel.org, chrome-platform@lists.linux.dev,
-	kernel@collabora.com, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	"dwarves@vger.kernel.org" <dwarves@vger.kernel.org>
-Subject: Re: [REGRESSION] module BTF validation failure (Error -22) on next
-Message-ID: <Z4fyijoUoeTnOuDM@pop-os.localdomain>
-References: <20241115171712.427535-1-laura.nao@collabora.com>
- <20241204155305.444280-1-laura.nao@collabora.com>
- <CAFULd4a+GjfN5EgPM-utJNfwo5vQ9Sq+uqXJ62eP9ed7bBJ50w@mail.gmail.com>
- <Z10MkXtzyY9RDqSp@pop-os.localdomain>
- <3be0346a-8bc9-4be1-8418-b26c7aa4a862@oracle.com>
- <c067bc3d-62d6-4677-9daf-17c57f007e67@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHW76ZYy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2A1C4CED1;
+	Wed, 15 Jan 2025 18:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736966121;
+	bh=S6tzmQE1ZAVO52pimezl/35d5AV8ilM+LBCng+gq5aI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rHW76ZYyU0pQEHMv3s588MddxpeqZ1qOd52PdcCKWZIgnAbZmc397pMJmSqVhJtKw
+	 vJtQrQGV8uT9gLB36+qh9a9FqYkdY+sDSokoTfUNDO8mRh33UB6nW9CdeePjQSee2v
+	 0QnVEC+uCvPqx3Y+wNe9KdeaxfLKFQjEw6FwYLiPMNcW16Co8W8gl91Wv7e24dGI8F
+	 NQmFkeeyD9c7FktIIvoFnZLlE3UtKR3Cqg9IS5CDI9GhClcAL78lkfc4HyMI8v/A9V
+	 J+cHi0x7crPjtgtT2JSRVt/HDO0kOSq70+sX4myrhxYKpxvL2mZ2AtRzQx+L3g6YQo
+	 cLsIln/KaSvvA==
+Date: Wed, 15 Jan 2025 19:35:17 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION][BISECTED] BU40N Blu-Ray drive broken since
+ 7627a0edef54
+Message-ID: <Z4f_5YgMH3lC8ppL@ryzen>
+References: <e2be6f70-dff6-4b79-bd49-70ec7e27fc1c@heusel.eu>
+ <Z4EDf4ecHyfTq3Hp@x1-carbon>
+ <69589dad-c0c8-4a72-9f3d-c1b0c29c96c1@heusel.eu>
+ <e167b28c-94a2-45bf-8330-2487baf7199b@heusel.eu>
+ <Z4U-rc3VUeegHGAg@ryzen>
+ <Z4aLWmt1Y2jL1-pD@ryzen>
+ <5232263d-5836-402d-9c5e-e3c601181080@heusel.eu>
+ <f7583d39-890f-4a7f-a5fb-63379e0c9304@heusel.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -80,29 +53,183 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c067bc3d-62d6-4677-9daf-17c57f007e67@oracle.com>
+In-Reply-To: <f7583d39-890f-4a7f-a5fb-63379e0c9304@heusel.eu>
 
-On Mon, Dec 16, 2024 at 03:19:01PM +0000, Alan Maguire wrote:
-> Seems like there's a few approaches we can take in fixing this:
-> 
-> 1. designate "__pcpu_" prefix as a variable prefix to filter out. This
-> resolves the immediate problem but is too narrowly focused IMO and we
-> may end up playing whack-a-mole with other dummy variable prefixes.
-> 2. resurrect ELF section variable information fully; i.e. record a list
-> of variables per ELF section (or at least per ELF section we care
-> about). If variable is not on the list for the ELF section, do not
-> encode it.
-> 3. midway between the two; for the 0 address case specifically, verify
-> that the variable name really _is_ in the associated ELF section. No
-> need to create a local ELF table variable representation, we could just
-> walk the table in the case of the 0 addresses.
-> 
-> Diff for approach 3 is as follows
+Hello Christian,
 
-Hi Alan,
+On Tue, Jan 14, 2025 at 06:51:19PM +0100, Christian Heusel wrote:
+> > > Looking at the Arch Linux thread, it seems that the person reporting the
+> > > problem says that even on a working kernel, you only see the device the
+> > > user presses the open button on the Blu-Ray player.
+> > > 
+> > > This suggests to me that it sends a hotplug/PhyRdy event when the user
+> > > presses the open button.
+> > > 
+> > > In Linux, if we don't detect anything connected to the port during initial
+> > > boot, and if the port is not marked (by firmware) as either Hotplug Capable,
+> > > or External, then we mask the PhyRdy interrupt.
+> > > 
+> > > We could reconsider this, and leave the PhyRdy interrupt enabled even for a
+> > > port that is not Hotplug Capable or External, if there is no devices detected
+> > > on the port.
 
-Thanks for your detailed analysis.
+Short story:
+I was thinking about this a lot, and unfortunately I came to the conclusion
+that we cannot with good conscience write such a workaround.
 
-Is your patch formally submitted and merged? A quick code search with
-variable_in_sec() tells me no, but I could very easily miss things here,
-hence I am asking you. :)
+The reason is that we would increase the power usage on all SATA ports that
+have no devices connected to them at boot, not just for his controller, but
+for all SATA controller all around the world, just to have a workaround for
+this non-spec compliant SATA Blu-Ray player.
+(The reason is that would not be able to offline the port, which will shut
+down the PHY).
+
+I suggest that your user simply does:
+# echo max_performance > /sys/class/scsi_host/host3/link_power_management_policy
+or
+$ sudo sh -c "echo max_performance > /sys/class/scsi_host/host3/link_power_management_policy"
+
+
+
+Long story:
+Each port can be marked External or Hotplug capable by firmware, if so,
+ahci_update_initial_lpm_policy() will override the configured
+CONFIG_SATA_MOBILE_LPM_POLICY and set it to 0.
+(This is because hotplug and LPM are mutually exclusive.)
+
+In this case, the lpm-pol is printed as 3 for all ports, this means that
+CONFIG_SATA_MOBILE_LPM_POLICY was set to 3, and that none of the ports
+were marked as external or hotplug capable by firmware.
+
+Note that even though the target LPM policy is printed early in the boot,
+the actual enablement of LPM is not done now, that is done _after_ all
+devices have been detected.
+
+> [    0.594488] ata3: SATA max UDMA/133 abar m2048@0xa091a000 port 0xa091a200 irq 126 lpm-pol 3
+> [    0.594491] ata4: SATA max UDMA/133 abar m2048@0xa091a000 port 0xa091a280 irq 126 lpm-pol 3
+> [    0.594494] ata5: SATA max UDMA/133 abar m2048@0xa091a000 port 0xa091a300 irq 126 lpm-pol 3
+> [    0.594497] ata6: SATA max UDMA/133 abar m2048@0xa091a000 port 0xa091a380 irq 126 lpm-pol 3
+
+
+Note that when the AHCI driver is loaded, it will call ahci_reset_controller(),
+which does a HBA reset, which will implicitly send a COMRESET to all ports.
+
+Thus, when we dump PxSSTS (SStatus), all ports have already been reset once,
+and we can see that:
+
+0h No device detected and Phy communication not established
+1h Device presence detected but Phy communication not established
+3h Device presence detected and Phy communication established
+4h Phy in offline mode as a result of the interface being disabled
+   or running in a BIST loopback mode
+
+
+> [    0.594618] ata3: before wakeup PxSSTS 0x133 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    0.594675] ata5: before wakeup PxSSTS 0x133 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    0.594717] ata6: before wakeup PxSSTS 0x4 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    0.595698] ata4: before wakeup PxSSTS 0x0 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+
+This is stored in the lowest hex value, so:
+ata3: 0x3
+ata5: 0x3
+ata6: 0x4
+ata4: 0x0
+
+
+> [    1.113233] ata4: before reset PxSSTS 0x0 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.113363] ata6: before reset PxSSTS 0x4 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.113481] ata5: before reset PxSSTS 0x133 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.113603] ata3: before reset PxSSTS 0x133 PxSCTL 0x0 PxCMD 0x4016 PxDEVSLP 0x0
+
+After sending a wakeup to force all devices to active mode,
+there was no change (this was extra test code added by me).
+
+
+> [    1.926827] ata3: after reset PxSSTS 0x133 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.927224] ata6: after reset PxSSTS 0x4 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.927707] ata4: after reset PxSSTS 0x0 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.928128] ata5: after reset PxSSTS 0x133 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+
+After reset, we still don't see ata4 moving to 0x3.
+From the controller perspective, there is nothing plugged in.
+
+
+> [    1.926827] ata3: after reset PxSSTS 0x133 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.934957] ata3.00: ATA-8: WDC WD20EARX-00PASB0, 51.0AB51, max UDMA/133
+> [    1.935576] ata3.00: 3907029168 sectors, multi 16: LBA48 NCQ (depth 32), AA
+
+On ata3, which did detect a device presence, we see a WDC drive.
+After this, we will call set_lpm() for port ata3. Since the LPM policy is 0x3,
+we will disable hotplug IRQ (since low power modes are and hotplug are mutually
+exclusive).
+
+
+> [    1.927224] ata6: after reset PxSSTS 0x4 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.927365] ata6: before offline PxSSTS 0x4 PxSCTL 0x300 PxCMD 0xc017 PxDEVSLP 0x0
+
+On ata6, we don't detect any device.
+After this, we will call set_lpm() for port ata6. Since the LPM policy is 0x3,
+we will disable hotplug IRQ (since low power modes are and hotplug are mutually
+exclusive). Because there is no device detected, we will also offline the port,
+to save even more power. (Since the port is not external or hotplug capable,
+we know that there can never come a device later.)
+
+
+> [    1.927707] ata4: after reset PxSSTS 0x0 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.927851] ata4: before offline PxSSTS 0x0 PxSCTL 0x300 PxCMD 0xc017 PxDEVSLP 0x0
+
+On ata4, we don't detect any device.
+After this, we will call set_lpm() for port ata4. Since the LPM policy is 0x3,
+we will disable hotplug IRQ (since low power modes are and hotplug are mutually
+exclusive). Because there is no device detected, we will also offline the port,
+to save even more power (since the port is not external or hotplug capable,
+we know that there can never come a device later).
+
+
+> [    1.928128] ata5: after reset PxSSTS 0x133 PxSCTL 0x300 PxCMD 0x4016 PxDEVSLP 0x0
+> [    1.931381] ata5.00: ATA-9: SAMSUNG MZ7TD256HAFV-000L9, DXT04L6Q, max UDMA/133
+> [    1.931684] ata5.00: 500118192 sectors, multi 1: LBA48 NCQ (depth 32), AA
+> [    1.931212] ata5.00: Model 'SAMSUNG MZ7TD256HAFV-000L9', rev 'DXT04L6Q', applying quirks: nolpm
+> [    1.931224] ata5.00: LPM support broken, forcing max_power
+
+On ata5, which did detect a device presence, we see a Samsung drive.
+Looking up at this device string in our list of quirks, wee see that this
+device does not handle low power states very well, we therefore override
+the LPM policy for the port that this device is connected to to max_power 0x0).
+After this, we will call set_lpm() for port ata5. Since the LPM policy is 0x0,
+we will not disable the hotplug IRQ.
+
+
+
+This seem to be in line with AHCI "10.1.1 Firmware Specific Initialization",
+step 5.
+
+"""
+Wait for a positive indication that a device is attached to the port (the
+maximum amount of time to wait for presence indication is specified in the
+Serial ATA Revision 2.6 specification). This is done by polling PxSSTS.DET.
+If PxSSTS.DET returns a value of 1h or 3h when read, then system software
+shall continue to the next step, otherwise if the polling process times out
+system software moves to the next implemented port and returns to step 1.
+"""
+
+
+
+Note that the Samsung drive is not well behaved, as it does not handle low
+power modes very well, that is why we quirk it.
+But in order to be able to quirk a device, you need to actually have a
+working communication with the device. (And a COMRESET is supposed to
+re-initialize communication).
+
+We can not quirk the Blu-Ray device, since it does not seem to reply to
+a COMRESET.
+
+Perhaps there is a firmware update for this device?
+
+Feel free to write to LG or whoever creates this device and we will be
+happy help out as best as we can.
+
+
+
+Kind regards,
+Niklas
