@@ -1,105 +1,108 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ABE1FF1D3;
-	Fri, 17 Jan 2025 13:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC19146013
+	for <regressions@lists.linux.dev>; Fri, 17 Jan 2025 14:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737121003; cv=none; b=DWJkQIiCLm+m9q30DoTrZca4W73JLzhkTOljZwYibEBmoyPfcEAaGqHAU6VURCuDmN7WJKu79ArecGI+OkX2SZkbKN/V94vKHStQ+hw5oJDhoQbpgCwx6FtG1OAqa1LQdvrbIdxp4xofcByfgtxDW5bSzRm5sfga37223hbKgK4=
+	t=1737125379; cv=none; b=hvdeKgOcU/UfomHx0mW6QuTJxgQutERdVAdToYXsLH5DIaQffUlTbNh04EFcTSh2pFajqjDixMQA3SIcj2NwduASCbk7BSA48MifJmR36KH/4kxQWGusuBrq+VE9ZJA0ZSse10571Yl9MKPglOaric3XFH1PNUl6yjwK9IGIFNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737121003; c=relaxed/simple;
-	bh=QVo7L/phiOwok7BqC1abUFsogRLeFl2Re0mMohXr1z4=;
+	s=arc-20240116; t=1737125379; c=relaxed/simple;
+	bh=J7NtJ/2CGnRPUrqXAzSrynFAm0A1v3zdhB9kY4SE/QQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EODYvIz0hLj5R4MvRNJYAcNuwWniZ+H6hCJ5y5d3BjaZVS54nynlgaAtOfx5QF0r35BkW2KWf7rAU0otuHLGmg/7Jo2cAF4wK0R+CFsYZCIHEN9u1CZDIBU8qtycTt9u968KOEB6emz07jG2Co7rU7DNaza1f2zP1kd3LSr/EBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9wu+q4c; arc=none smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=hHrCzB7YdBaGG4OxldbUkkPqQ+U+ln8MO+TYB2iOkoAB9858KAbzwdijSqEDwO6mPSFlr37vKsqwufBx6z/nhG0W4Rn8Vk9XAeoL6Bs9ISMyd4MrUI+VMPcg+wNpmLMiKy/ztbs+VSx8FDF5c4ObxJjPt1SJR5RktR4jSWvVvjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5+KbfJZ; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9wu+q4c"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f441791e40so2950864a91.3;
-        Fri, 17 Jan 2025 05:36:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5+KbfJZ"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso1188029a12.1
+        for <regressions@lists.linux.dev>; Fri, 17 Jan 2025 06:49:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737121001; x=1737725801; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1737125377; x=1737730177; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QVo7L/phiOwok7BqC1abUFsogRLeFl2Re0mMohXr1z4=;
-        b=B9wu+q4czSZh3xunHzZT6GP1m7KMY4cSGTrSzmLXe8GeKJ7a2LvnqlU3rlswr2x8SF
-         nG6ru1wufaMImaqi7YvgWZf5dTQGcy5YQK0rdCpyUWwR7Q1ZQMtheJv1oa1n3HqsQ12H
-         JnZu03nMZDoGstevunygozqxjzwwQevgsWNOpm8xDu52HbfmuLHxgRkHtcrk1fHCZnDo
-         x+96IWY1CQayHT1Z3J7fvu5KijX+MZFJNMmbqRwwmicrNtoglSCmrDKqsoHcnmjU/7lw
-         u2CLYN7FxAps6dwkqU5uNcMCr4DOW4UkwWG99F27MnENrlvS7G14j6b7SKvd8OLAA4GR
-         M8XA==
+        bh=J7NtJ/2CGnRPUrqXAzSrynFAm0A1v3zdhB9kY4SE/QQ=;
+        b=D5+KbfJZ9gpqMjb3RGdmi9Xj0Nqv1kPSJuaRTaYj5W5CsWTkEfMuYvIVxGAGrBnZ8R
+         Ueik4/67tQPkEYjjRBKHeVvQd6ACwRxc/cLiGdYNGpihylRq1FfTm/7rxynoZPQN57sD
+         ocyOZSINUR2Ibsa7R1EmsTtyOcrt5wsd0LiWKhRHCCvoykgWLZs0KmVMkFSwYYAPRNuU
+         WNR5AfwYrOIKl7tkqtrcFaQJyc33OEEq6aUxpNFQar50KEocIP61aCWAOEJIunZPEtFX
+         4XhDySOJlZn4v4zrzl4f4jS4ucBieq2vlcwBXzFWlCL0sI8IT442sU1G/WAmfhvhagZw
+         rgwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737121001; x=1737725801;
+        d=1e100.net; s=20230601; t=1737125377; x=1737730177;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QVo7L/phiOwok7BqC1abUFsogRLeFl2Re0mMohXr1z4=;
-        b=BWdgB2+HSARyrFxaE33E9OBKrTvpxLDWSj6ypHginHW0ezQdpgQ2Xr96kTA9lBH+x9
-         gAMLdFf8StHAKrmWH8OMMC1EQFe5yttRP6QJ7E3xJLQAIxis2bNi2+9g6LCIhoFfnO8X
-         qIwcYJEL+KRwuFK7cgtp2r5a3NGVPy2XjEQss1YK7jn+7L9cZGwwd6zxeXsIyE2dGG80
-         nV5JiU6jGQt1UAcYNI5XpYYAzfpc0x7YrNO20ZrZsxXEZfgoFul7fq1VWb2AaAFvNvUJ
-         B4zqq6+wQNiJViAcsBxAkEdCn60ylosxAQZc4oKSYhwl3XzQ2LqDP4rJXNNcFUisyKl/
-         +Ozg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAhI2y2kwb57xwiDvwky6esFQZLcfkttDKrN49ZbEUfusBxY12iIEUaO7+ZnRHxt5We8DbJA==@lists.linux.dev, AJvYcCXJDI1+v/pkjFqDx748UPlZEqyK5tlvUvB3WFOoWSUxQim5FsnKPcXO4KWsDo6l7/OZ1Hl422EMBOCNWLk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxYB8sPE9mzVYA86OkOf+yaj94oVVQBQxvFQmnuZWRAN47CW7vL
-	H1JO65Cj7HevflazUP0UsIK4SSt9Lit+mut/a7hXBh6geGeT6hVhcg7729NfY6Iva29WispNMJN
-	wYd5KUzhzG0pUF4HqwEgXH/uoXd4=
-X-Gm-Gg: ASbGncvwxBZ/2tl90hRmd4i3EkKtNxrgaBb1QFrYge59eLm0Cuog2bOK/o9llL4vw7D
-	+yj90QuzXixe+oTyev9klteEu57Oe/lpfFOlwfErR627JMtuj2aEYo6/ZgLq452YvnFr0
-X-Google-Smtp-Source: AGHT+IEHTPv5hTMRK4zXvRVqJQFfmEi87cZRYjPzN5FnPgoIlZsbqiWaV272Z4i2e3oeYxmEo6z79pG4EFV4U7uQ5JI=
-X-Received: by 2002:a17:90a:d44c:b0:2f1:30c8:6e75 with SMTP id
- 98e67ed59e1d1-2f782d98026mr3192289a91.32.1737121000939; Fri, 17 Jan 2025
- 05:36:40 -0800 (PST)
+        bh=J7NtJ/2CGnRPUrqXAzSrynFAm0A1v3zdhB9kY4SE/QQ=;
+        b=UKYhcOiXaZNdCZmTi+fxmVcAj8SVcjvm2iNk/vUCW2CsjnWeSTRUWPnhNnpqRLsSbN
+         MjQpUEQ9KmhjRpfH4omo59zxQdFq5iZ844SP70Sn3ymJvezOq+IXrV+b/KtaxnEMsqyA
+         7zaeIKbfyXtxf21ogw4p05JX3q9vILwHadAxodXE0Fv0kQDOUTqVnagZd/9x5ajCtOmX
+         XRsHCURQ/ocKpF1cuwLnTsvlhOk4opc9q5ruPSqsEvHHKEfTASRUJqfkeItT6RP1bCFa
+         UkKAEYU6simFslrA0BFr+UochuQ7p8gDrho7n9+7Vb9hO4I6LNmIgJ1F+PCW6qt7RyEc
+         9zSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQZX2xsaie0fo0ZbVZAyRdSTmGBeURjPTIzWQZE5U+MBYdEcgw419E3ITxZIf3MhLNtC/Hu/ia/ouwKA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbBFyJNv1voJbBvgNMhHm4cvLkh60zEyxspjLDrn+0uMZ3hrjO
+	nhcujdxiy3vxZMafRxpebMZfEW0jdXRFw1HxSBAeS4VoBxssBovOAoKLsNVaXGpuVoU0Yg5853e
+	25g2cGLVAIngFwozmXRdKDW0Pmf8=
+X-Gm-Gg: ASbGncuzScA08HaSMGEH4woioYpb19pSYENsOygzZ77f3m37BvvnseLpalZujCEmtL4
+	9SU6U+x9RZB3gyLHtdFeKYGubafIUHXb90+zlekAiWNMmCclAplg=
+X-Google-Smtp-Source: AGHT+IGpEcOBlkQvfFQwR1IfdaH3ql+5HBvL7fnpTjZQnIXw+y5aVXFA9OTwVbCl4BUwqlz7q2N78jpEoIqUI049McU=
+X-Received: by 2002:a05:6402:3514:b0:5d0:e9a8:4c96 with SMTP id
+ 4fb4d7f45d1cf-5db7dc6a1d7mr2569157a12.9.1737125376429; Fri, 17 Jan 2025
+ 06:49:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
- <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de>
- <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info> <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
- <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
- <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de>
- <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info>
-In-Reply-To: <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info>
-From: Bruno Gravato <bgravato@gmail.com>
-Date: Fri, 17 Jan 2025 13:36:24 +0000
-X-Gm-Features: AbW1kvbkbBkK34A4Ax02ZPC_Ze-dz19Wri7acxvdXEP8qeEWMyEJBFXk8nhdLsQ
-Message-ID: <CAOBLbT-MFfEw_JYdGOJYxN7S_gjPmG27fMotCwZ==s0i4pdRYw@mail.gmail.com>
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX + Ryzen 8700G
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Christoph Hellwig <hch@lst.de>, Stefan <linux-kernel@simg.de>, Keith Busch <kbusch@kernel.org>, 
-	bugzilla-daemon@kernel.org, Adrian Huang <ahuang12@lenovo.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, linux-nvme@lists.infradead.org, 
-	Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Mario Limonciello <mario.limonciello@amd.com>
+References: <CAKd8=GsoKj5eG6VAMkrxMbzNyoBX=JiwafrfXman8xMNK+XU_w@mail.gmail.com>
+ <2025011703-erupt-oblivion-82a0@gregkh>
+In-Reply-To: <2025011703-erupt-oblivion-82a0@gregkh>
+From: Lars Pedersen <lapeddk@gmail.com>
+Date: Fri, 17 Jan 2025 15:49:25 +0100
+X-Gm-Features: AbW1kvavePghQR7w76HiBZJJQWzrG1w3Qh6lfSk_xp_TBweAsK6Fg0BTdYxCGGM
+Message-ID: <CAKd8=GtrnvEgZv4y-UYNTJWt0oU9zLxZUYGnm9__H2yXKwyOGg@mail.gmail.com>
+Subject: Re: SPI regression seen on ARM am335x in kernel 6.12.8 and 6.6.71
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, broonie@kernel.org, 
+	linux-spi@vger.kernel.org, psiddaiah@mvista.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 17 Jan 2025 at 09:51, Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
-> * Not totally sure, but it seems most or everyone affected is using a
-> Ryzen 8000 CPU -- and now one user showed up that mentioned a DeskMini
-> x600 with a Ryzen 7000 CPU is not affected (see ticket for details). But
-> that might be due to other aspects. A former colleague of mine who can
-> reproduce the problem will later test if a different CPU line really is
-> making a difference.
+On Fri, 17 Jan 2025 at 13:32, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jan 16, 2025 at 03:21:13PM +0100, Lars Pedersen wrote:
+> > Hi. We have discovered an SPI regression when upgrading from 6.1.99 to
+> > a newer LTS version. Same error on kernel 6.6.71 and 6.12.8.
+> >
+> > I think we have identified the problem down to the reference clock
+> > calculation that seems to end up to zero in the spi-omap2-mcspi
+> > driver.
+> >
+> > Also we think it relates to commit
+> > 4c6ac5446d060f0bf435ccc8bc3aa7b7b5f718ad, where OMAP2_MCSPI_MAX_FREQ
+> > is used as fallback on error. In our case it seems to hit the else
+> > case.
+> >
+> > Snippets for device tree, spi-omap2-mcspi driver and kernel divide by
+> > zero error log with dynamic debug enabled.
+>
+> If you revert the offending commit, does that solve the issue?
+>
+> thanks,
+>
+> greg k-h
 
-One other different aspect for that user besides the 7000 series CPU
-is that he's using a wifi card as well (that sits in a M.2 wifi slot
-just below the main M.2 disk slot), so I wonder if that may play a
-role? I think most of us have no wifi card installed. I think I have a
-M.2 wifi card on my former NUC, I'll see if it's compatible with the
-deskmini and try it out.
+Hi Greg.
 
-The other reason could be some disk models aren't affected... I think
-Stefan reported no issues on a Firecuda 520.
+No it doesn't solve the issue by reverting the commit. The commit
+isn't the regression, but it attempts to handle it in the if/else
+statement. Everything starts to work again if we hard code it to
+"mcspi->ref_clk_hz = OMAP2_MCSPI_MAX_FREQ;", so it seems like the if
+else statement isn't 100% foolproof (or we have missed a setting in
+the device tree).
 
-I ordered a Crucial T500 1TB yesterday. It's for another machine, but
-I will try it on the deskmini x600 before deploying on the other
-machine. I should receive it in a week or so.
+Thanks
 
-Bruno
+/Lars Pedersen
