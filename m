@@ -1,96 +1,90 @@
-Received: from mr5.vodafonemail.de (mr5.vodafonemail.de [145.253.228.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C9671750
-	for <regressions@lists.linux.dev>; Fri, 17 Jan 2025 21:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8657D5FB95;
+	Sat, 18 Jan 2025 01:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737150907; cv=none; b=ZD0uRRX1czunXAWwVanzkkoqlZz1fOagZghhS6+YqKIiDSbzO7rEJx2wqrK9ImazxG/AnW3/pLvU6IRz/1pUAsoJgEQaXXsKcKmeIp+QW/nW5fPOtEEXQc1kEyH1x0rViCwsfF4//6KtpfjrXLI51/4fp74huz7krScGceBJ9wM=
+	t=1737162233; cv=none; b=h/m6JKlMCSNT17aYTu47+AWtw/hykDHb3UnT5YWmnWwD5O3NsUSdQwZm+gv29gxzjkDiDncFZOtguZO+osz+GFseA5l2TuX/GZnhTr8dHc8wc2mJC59BP6ePmiaO8n6PnIC3zOqCWbcELT+ReHBoLN0kBR2aPxFqgyZIelZjWRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737150907; c=relaxed/simple;
-	bh=EgUvX/yubHLFXVGDlOx5BcpIID1kRUY/frGe5pWJVwU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=cyNOJ6ZmAKbLL3W2rr13CyejqaCRP6M/PK9moOOC5ffTy88JS3bBdFiZlTyAkTykseV3+R480Wwq1UxVgAciNtfw5OAhWnliATHLQTQHyfeiU+f90OC7AJTpKSTeTfqrnCirCAxE6S86npWIYdjnIXUDSB+DtyNBPB8vEMu1Ng0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vodafonemail.de; spf=pass smtp.mailfrom=vodafonemail.de; dkim=pass (1024-bit key) header.d=vodafonemail.de header.i=@vodafonemail.de header.b=OY51NRjE; arc=none smtp.client-ip=145.253.228.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vodafonemail.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vodafonemail.de
+	s=arc-20240116; t=1737162233; c=relaxed/simple;
+	bh=zWGX9MPXZ+eT05lfY+zSlGG4+MCjUc0nj6r4y/eop1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cjVAINC6QwmV/grl/CaiEQKSoYKT3XvzmsXro65bdKri3AWytTxFM6TA2ECVWwr0isp6lVFoL8cpMCYINJkT3phG+4JwkJ2HJJBH71uCgRYesz8YoF2YG/KTbDiTnsrCxt+fYn2jQCbboUP3Jj49HjxyEb6S40zrpF6ttoQzQps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5A4JJ00; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=vodafonemail.de header.i=@vodafonemail.de header.b="OY51NRjE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vodafonemail.de;
-	s=vfde-mb-mr2-23sep; t=1737150382;
-	bh=9AwIqC5aMeeG2nanENIKbL/veGn0lLTvGb6kKGXu6P0=;
-	h=Message-ID:Date:User-Agent:From:Subject:To:Content-Language:
-	 Content-Type:From;
-	b=OY51NRjE9ism995iRHLichPOMm8MsBg55+YTqpksSnM/1tzS7k70ybZbAcwUL3yT9
-	 cWK17mN8pDGz77/vz1Dkl96nl93Ty00wBNT+4AXZqxcedJduRZYuU2t5cM3RFyoYE1
-	 lFFuQ9HMJwX4FG7S2via3RvD8rIP0/KUGbKWJeb0=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr5.vodafonemail.de (Postfix) with ESMTPS id 4YZYG55t6kz1y9x;
-	Fri, 17 Jan 2025 21:46:21 +0000 (UTC)
-Received: from [192.168.178.41] (port-92-196-123-118.dynamic.as20676.net [92.196.123.118])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4YZYFr2Fjjz8sZc;
-	Fri, 17 Jan 2025 21:46:05 +0000 (UTC)
-Message-ID: <6555309b-830d-449b-800c-55306c19c659@vodafonemail.de>
-Date: Fri, 17 Jan 2025 22:45:59 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5A4JJ00"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282DFC4CEDD;
+	Sat, 18 Jan 2025 01:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737162233;
+	bh=zWGX9MPXZ+eT05lfY+zSlGG4+MCjUc0nj6r4y/eop1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A5A4JJ00iRZwlrZHeRlT3YXeDYbUT5aWmbI/gl9MDBODe1bLqnN+ECj4FL6sQn00c
+	 jbHpLSc/jefQmu2tDc3csjz2pywdk62sw7GvELSpSY1VuBKDpdHyBz+1INclZg1ZAU
+	 mc557uV7XrpR+h3KI3HWhV+d8wjx6Ry2tVHjLKrYGIZkgEgf8j+VcMqisxefQRUzbd
+	 8tzSXvB0ppbxIYpp6WwqwgMvNgQwJ+xL/VnyZHABvNP/ubYmFzvsHj9Ng6OgBTaqYi
+	 nUofy4HSWgjY8booxIgSMElCMo8oUrMN7LAYPfEHlm4d/URbIbFn+KfgUHdNT9Ix2N
+	 K4Pai9QxTZhAA==
+Date: Fri, 17 Jan 2025 18:03:49 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Stefan <linux-kernel@simg.de>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	bugzilla-daemon@kernel.org, Bruno Gravato <bgravato@gmail.com>,
+	Adrian Huang <ahuang12@lenovo.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+Message-ID: <Z4r99SQYV9v5vBuR@kbusch-mbp>
+References: <401f2c46-0bc3-4e7f-b549-f868dc1834c5@leemhuis.info>
+ <Z36UsE5dj6j5HhkX@kbusch-mbp>
+ <20250109082849.GC20724@lst.de>
+ <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
+ <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de>
+ <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+ <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info>
+ <20250117080507.GA25953@lst.de>
+ <00b01ab3-ec9d-4a35-a593-c9fc764e0f04@simg.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Farblos <farblos@vodafonemail.de>
-Subject: Frequent kernel messages related to IR keymap rc-cec with kernel
- 6.12.10 and HDMI monitor
-To: stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- linux-media@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Content-Language: de-DE-frami, en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 1677
-X-purgate-ID: 155817::1737150377-F97F9465-8A32A04D/0/0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00b01ab3-ec9d-4a35-a593-c9fc764e0f04@simg.de>
 
-This is on Debian testing with the following kernel, built from
-the tarball on kernel.org:
+On Fri, Jan 17, 2025 at 10:31:55PM +0100, Stefan wrote:
+> As already mentioned, my SSD has no DRAM and uses HMB (Host memory
+> buffer). 
 
-  Linux sappc1 6.12.10 #4 SMP PREEMPT_DYNAMIC Fri Jan 17 22:17:45 CET 2025 x86_64 GNU/Linux
+HMB and volatile write caches are not necessarily intertwined. A device
+can have both. Generally speaking, you'd expect the HMB to have SSD
+metadata, not user data, where a VWC usually just has user data. The
+spec also requires the device maintain data integrity even with an
+unexpected sudden loss of access to the HMB, but that isn't the case
+with a VWC.
 
-It is running on an 12th gen Intel Framework laptop, with monitor
-connected through Framework's USB-C-to-HDMI adapter (the 3rd gen
-one):
+>(It has non-volatile SLC cache.) Disabling volatile write cache
+> has no significant effect on read/write performance of large files,
 
-  https://knowledgebase.frame.work/hdmi-expansion-card-generations-Sk7AQKUv2
+Devices are free to have whatever hierarchy of non-volatile caches they
+want without advertising that to the host, but if they're calling those
+"volatile" then I think something has been misinterpreted.
 
-Since my kernel got upgraded to version 6.12.*, I get frequently
-journal messages like these:
+> because the HMB size in only 40MB. But things like file deletions may be
+> slower.
+> 
+> AFAIS the corruption occur with both kinds of SSD's, the ones that have
+> own DRAM and he ones that use HMB.
 
-  Jan 15 15:24:51 host01 kernel: Registered IR keymap rc-cec
-  Jan 15 15:24:51 host01 kernel: rc rc0: DP-3 as /devices/pci0000:00/0000:00:02.0/rc/rc0
-  Jan 15 15:24:51 host01 kernel: input: DP-3 as /devices/pci0000:00/0000:00:02.0/rc/rc0/input146
-  Jan 15 15:24:51 host01 systemd-logind[1456]: Watching system buttons on /dev/input/event11 (DP-3)
-  Jan 15 15:24:51 host01 Xorg[1663]: (II) config/udev: Adding input device DP-3 (/dev/input/event11)
-
-I tried to ignore these as long as they have been showing up during boot
-only or when screen resolution got changed using xrandr, but today I
-noticed that these repeat every 30 secs or so when my screen saver is
-active.  Which then kind of floods the journal.
-
-With the previous 6.11.* kernel series I would see these messages
-only once, during startup.  When using a DisplayPort adapter instead
-of the HDMI adapter, these messages do not show up either.
-
-I guess that it is not the CEC subsystem being responsible here, but
-rather some other component which triggers it more frequently than
-earlier.  Any help on how to find more about this issue appreciated.
-
-Please CC me in replies.
-
-Thanks!
+Yeah, that was the point of the experiment. If corruption happens when
+it's off, then that helps rule out host buffer size/alignment (which is
+where this bz started) as a triggering condition. Disabling VWC is not a
+"fix", it's just a debug data point. If corruption goes away with it
+off, though, then we can't really conclude anything for this issue.
