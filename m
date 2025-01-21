@@ -1,122 +1,123 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF4186294
-	for <regressions@lists.linux.dev>; Tue, 21 Jan 2025 05:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F30A1B4134
+	for <regressions@lists.linux.dev>; Tue, 21 Jan 2025 07:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737436825; cv=none; b=o8K+xNdoLzoSNcsjNRAvWbRqqcAUb1TTE459Az4YWOR5hHDg2nH9JxXrvXZE1ggFkRDeK+95m2cMOBci8cZU3DmOgsVKt73TkHGiuZnIKOdnNJUAmrLDCkXLOcbGdzszbsuQqjIPW8Ue+l+oULSBwhFnWjbKfNTPYjxXn+mRrto=
+	t=1737445323; cv=none; b=DZpmscuu0Ov/vwUoC+hyOQqd8oCGJvK7i2Y0mN0RtHqEAMyYFqrjD/++I2kVVoar3UTzSZbbhha6BGDqg5/5twneK4O4llDXhQmTpFRwRgLyYWp/CJwiq2ziEVZfUxf7RG/PCfepFszcfZp/L3V4kKVUuXOyQMo9wet1Yx7x88Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737436825; c=relaxed/simple;
-	bh=eKOK2EO91ur0UC7MMxZ4derhiPJDvIpQSa4AutwErLQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=cKYAvlFqaFDoR1gOCCqdlhG5OFgCLHYnsK/aLAVrSYCL3ueD+OfHXi5Nq5rCHeQmeuw5++gtzyni/FecY3vE03Wg8oxerA4rX93fKJZe+Z9V5k4rx3ifXk/Kq4fPz+H7PBO3xhZbJMPZHo00ZtwT7BaZYEup2CKdiEurvOfdPu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kx1iq2KC; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737445323; c=relaxed/simple;
+	bh=qsy6JmiVJF4S5wiCjBpb9sjc3adaXv95wl7FmfsQkGo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pNOwB7fRZSkj68tCV4LZeKtczGHmhp0/dyJz8HOz8Jx+FGUc6uhre7h1M++KJpDhIkr9DGAbD32eJVM1Y6eNkb9YJW/rHsuAWPA1RRr9LSarJKSWEjyLjGttQ3B3+kmix2HafyYrIc6f8w7zGgQAE880Tko6dExw2oK7PYaFT6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=lsoifdUU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Wa6h0j56; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kx1iq2KC"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee46851b5eso6973770a91.1
-        for <regressions@lists.linux.dev>; Mon, 20 Jan 2025 21:20:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737436824; x=1738041624; darn=lists.linux.dev;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IECYlM40D+zruDOMOUzD+1MoRjtsBCDwEaB3RwH3myQ=;
-        b=kx1iq2KCtazc520XroqFuJbMB8un4s7WtRh+2u2fNOx6d1oJBTYKDynrzE87sC2NwM
-         m4MzZxfwxMbalH3A4x0GXxH2uRLeFsxpNRfunt0DDOoUNVsaWZ7RkPwh2GfyyyeLZFGv
-         s8OUnalmV0xeCTYT2gg47T/gF0iyhatblc87WhNMZNZ8lHeeLCRdPPloN4I7Ru+5JiBn
-         IDyFPCRCSgc/PmepmMs2CRvrk+PQqgqGHGXJLH4ZatyyZ3pXolQmGne4Ay3FbolZo5av
-         sFwbBtkO9ZLLvK65cbnSZ1zCn3YmGGa/eJpiwx+ncavw9LH7b9BDAuNJihQ9xWgOaD2L
-         RU/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737436824; x=1738041624;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IECYlM40D+zruDOMOUzD+1MoRjtsBCDwEaB3RwH3myQ=;
-        b=DYrpZw9Epz2qayiKnUcyEjpjj/GSj5T4qlvw97EH4D653M0GkL1pAaW8tqtVEDcJqh
-         Ban0Q2MhYm7k5QZ5lh4KmJFdwGjJKMrCeLT2SQOqq2sIO+LtAkWgK0A7HqFOrZRK/rFI
-         3sgyr6C9xrDqW0dbo4ZUDZMIEeQcRBB32b1rjjlx1wZYXd+oYSRuKv8Llo9XBAdvMFFl
-         hfR8xWaffK3RX6bVRgHKMVSGzVc2EW5VI5/nGNAJPdTDbbvWrhAojvehqPTYvA+K66yN
-         G1qswo/4QaRLEwtfl8NAgw6dItxhXf+BH1TfVCwmwks4jTfDNoNczG0eGiIi3MZXITCO
-         ahWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXptyOKznKN4p2qqKivLUicXUofEw0Gts+xFBBMACfDCr597QXjdlft3PSBUm6ZcWHeb5jlJ96ajVWbkQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwIJkDSaLUuKJczBCsU2QKsR1/cR9X/9QGYBXI92igN7lxruiYr
-	O2B1m1p3QZNg3u+QBp/2rNGivWGASCnJvQwOgnZGw8fm4beUwd51
-X-Gm-Gg: ASbGnctzxu5XWb4iWP3Zk5dGudUSmQsD2UylIibDM9BhLVWd78LgXJO6GZrP+xBrV/9
-	G8yqOra9idcOwslY4SgsTKOnQQpnHwsG1I9teXUTTLCqtMHBM/0KjtRvhFQ920KwYwPiTK/tpIz
-	ejXA7Na3WNMZpRGZ9brbabdH8W3xGiwKaeVSx+fJg1G58F/XM/8Ehr6oFzj2xJAN9yAptPfuztT
-	3+lS9wXr696Hhck8xghOY9Q/K9/eQ3YwTYMUZDEeuppW2Y82hg7ISswOV0sIDb8
-X-Google-Smtp-Source: AGHT+IGa3qnJZ7ymaxLp0C027bTDyMwNmCEpA39KybaLiQC4CMLlAIO95Bkd2Ge8d/PPw9qHJOVgMQ==
-X-Received: by 2002:a17:90b:3503:b0:2ee:9d65:65a7 with SMTP id 98e67ed59e1d1-2f782d7ff77mr21978137a91.29.1737436823682;
-        Mon, 20 Jan 2025 21:20:23 -0800 (PST)
-Received: from localhost ([138.44.251.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f72c2bb332sm13067266a91.36.2025.01.20.21.20.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2025 21:20:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="lsoifdUU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wa6h0j56"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 72B891140198;
+	Tue, 21 Jan 2025 02:42:00 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 21 Jan 2025 02:42:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1737445320;
+	 x=1737531720; bh=9OiF7r3Rql105Zia0h2LASumVCmwQ5qUHnyz2aj97rs=; b=
+	lsoifdUUj2RIajNgeyvBlEdL+BPY/yQCpMdJSPdBjDCQG3pPBQxMQApXz22sscRS
+	RG4Ol8FAYUvckKdDZXO65nXlZRrhbCtqc7lxo88Ot8qoERmFBzTX3ZnJOUfx/U3J
+	ireWOUpcA9g13ebOZl/8K0JN0bycoXHOmJUzxO9QNX6l5+sTC1MmJbiEl3f1CeTB
+	kqmhi6HAcZQQcwytcCFGOdXmqIgVy7GtzRRq2YqvRJ4/7B71GMdpPeFznTXOgJAh
+	ilBU61Y4i0KzW6tkrOkZPijHN1JAaV5dqAi4TZ1lqtpdCZpcstuA2xK1lHqAG5V9
+	wo6GNQMa6mQaDG0B8UM3sg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1737445320; x=
+	1737531720; bh=9OiF7r3Rql105Zia0h2LASumVCmwQ5qUHnyz2aj97rs=; b=W
+	a6h0j56mcm7A+IXYqbD/KjUVoQXkYQuZxjhX+Igvw4JNjDFhkcna3R6nZaX/Y/y7
+	e/lWYvXMCKXcTOZU/KAZLQqBuYCiY+DZT2He1rZjTvhvUhyd50JsN8eOeUzWjLrK
+	yR9N3iDVcchENtbZbCOsHGdz6EAC/Ucm02IExiPATDktpL6cXDM60/FYFMOQriOC
+	Fwo5u5nFQGCWPiqwI5nT2Hnpu1Lj8+tj0ThNBZ+3YHiFWaw89PuiU13V9HuEP9DF
+	qNwbUpdTjPydx9y/StJFD1sOAMeUBSxb51AwPpfIt4loaLCCLwBvzHBwGONXtD50
+	vijq5aMSfma1YHD5qgmHw==
+X-ME-Sender: <xms:yE-PZ7cVbT7Fot3OtAXE1Lim99lvdJFVfOfIwM1-5euTtipaHP-eyw>
+    <xme:yE-PZxPFnpQ8qFuAp7dK_fGT58eeIiEJYUCL2cAiFWytYOUD0tGNeSDb2jCZLa_EM
+    UMntuq6-NBhcCUiq7k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudejtddguddutdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrnhhnhhesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepshhhvghnhhgrnhesghhoohhglhgvrdgtohhmpdhrtghpthht
+    ohepgihurhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    khgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghsrghhihhrohihsehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:yE-PZ0hTjQs8sUsTN36JhFc9qax9FwFNRyLiykti_kwn0oqK-6E_jQ>
+    <xmx:yE-PZ8-RQl9nTLraS_KGH5sFr-i6tKNQA1fDMTAW3FeY7CTPdYZ7YQ>
+    <xmx:yE-PZ3vTb4fTLmEweJJ3JnB3TCm2h5x2NyTlSAr3tNuz-4euS8Hy-A>
+    <xmx:yE-PZ7Ep6ELT25NvZ29poHaoobJ6uSsLh1s6c7cGDVd0xL-QjnoxYw>
+    <xmx:yE-PZ7EKEFDzQj4xvtxl6ClaJh1cZSwPTmLtbxRQCbIyOfCQx_0vRhlH>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 180B12220072; Tue, 21 Jan 2025 02:41:59 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Date: Tue, 21 Jan 2025 08:41:38 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, "Han Shen" <shenhan@google.com>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Rong Xu" <xur@google.com>, "Jann Horn" <jannh@google.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
+Message-Id: <fef7c633-5577-4cdf-803a-a1fe10787186@app.fastmail.com>
+In-Reply-To: 
+ <CAK7LNASo+wGhpCVhBi+ew1mOtLbSXgx3AiQ6D7RtXO5P=R0EfQ@mail.gmail.com>
+References: <20250120212839.1675696-1-arnd@kernel.org>
+ <CAK7LNASo+wGhpCVhBi+ew1mOtLbSXgx3AiQ6D7RtXO5P=R0EfQ@mail.gmail.com>
+Subject: Re: [PATCH] [RFC, DO NOT APPLY] vmlinux.lds: revert link speed regression
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 Jan 2025 15:20:17 +1000
-Message-Id: <D77HY793RN09.1HTCXBIUXFKSI@gmail.com>
-Cc: <seanjc@google.com>, <linuxppc-dev@lists.ozlabs.org>,
- <regressions@lists.linux.dev>, "Christian Zigotzky"
- <chzigotzky@xenosoft.de>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/5] KVM: e500: always restore irqs
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Paolo Bonzini" <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
- <kvm@vger.kernel.org>
-X-Mailer: aerc 0.19.0
-References: <20250112095527.434998-1-pbonzini@redhat.com>
- <20250112095527.434998-2-pbonzini@redhat.com>
-In-Reply-To: <20250112095527.434998-2-pbonzini@redhat.com>
 
-On Sun Jan 12, 2025 at 7:55 PM AEST, Paolo Bonzini wrote:
-> If find_linux_pte fails, IRQs will not be restored.  This is unlikely
-> to happen in practice since it would have been reported as hanging
-> hosts, but it should of course be fixed anyway.
+On Tue, Jan 21, 2025, at 01:19, Masahiro Yamada wrote:
+> On Tue, Jan 21, 2025 at 6:29=E2=80=AFAM Arnd Bergmann <arnd@kernel.org=
+> wrote:
+>>
+>>                 linux-6.12      linux-6.13
+>> ld.lld v20      1.2s            1.2s
+>> ld.bfd v2.36    3.2s            5.2s
+>> ld.bfd v2.39    59s             388s
+>>
 >
-> Cc: stable@vger.kernel.org
-> Reported-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Is this problem specific to the BFD linker from binutils?
 
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+I only tried the bfd and lld linkers, but I assume it's limited
+to the bfd one.
 
-> ---
->  arch/powerpc/kvm/e500_mmu_host.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu=
-_host.c
-> index e5a145b578a4..6824e8139801 100644
-> --- a/arch/powerpc/kvm/e500_mmu_host.c
-> +++ b/arch/powerpc/kvm/e500_mmu_host.c
-> @@ -479,7 +479,6 @@ static inline int kvmppc_e500_shadow_map(struct kvmpp=
-c_vcpu_e500 *vcpu_e500,
->  		if (pte_present(pte)) {
->  			wimg =3D (pte_val(pte) >> PTE_WIMGE_SHIFT) &
->  				MAS2_WIMGE_MASK;
-> -			local_irq_restore(flags);
->  		} else {
->  			local_irq_restore(flags);
->  			pr_err_ratelimited("%s: pte not present: gfn %lx,pfn %lx\n",
-> @@ -488,8 +487,9 @@ static inline int kvmppc_e500_shadow_map(struct kvmpp=
-c_vcpu_e500 *vcpu_e500,
->  			goto out;
->  		}
->  	}
-> +	local_irq_restore(flags);
-> +
->  	writable =3D kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg);
-> -
->  	kvmppc_e500_setup_stlbe(&vcpu_e500->vcpu, gtlbe, tsize,
->  				ref, gvaddr, stlbe);
-> =20
+> Did you observe a link speed regression with LLVM=3D1 build?
 
+No, the ld.lld line above is what I see with LLVM=3D1, it's
+very fast (1.2s) both before and after the change. New
+ld.bfd versions were much slower before the regression
+for this particular config and got even slower (seven minutes
+for each of the three vmlinux link stages).
+
+      Arnd
