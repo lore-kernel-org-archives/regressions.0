@@ -1,92 +1,122 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA0B3D68
-	for <regressions@lists.linux.dev>; Tue, 21 Jan 2025 04:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DF4186294
+	for <regressions@lists.linux.dev>; Tue, 21 Jan 2025 05:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737435200; cv=none; b=KJUPegyju/Iw6DE4rLTwOzWoUFJA1eqQQXOvA/yhpnHuMNEaZDY/hGB5PufignBxWipiSk6vI6lDyeh9gDlkDlO7+V08iHomoj+wasg7qXmzIobwuAzNM2SwMvr67SkEchd1cm8hBY8fYzyM/JLOySWQK6wgkWD6gVW6ZRjdF5g=
+	t=1737436825; cv=none; b=o8K+xNdoLzoSNcsjNRAvWbRqqcAUb1TTE459Az4YWOR5hHDg2nH9JxXrvXZE1ggFkRDeK+95m2cMOBci8cZU3DmOgsVKt73TkHGiuZnIKOdnNJUAmrLDCkXLOcbGdzszbsuQqjIPW8Ue+l+oULSBwhFnWjbKfNTPYjxXn+mRrto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737435200; c=relaxed/simple;
-	bh=X+O8DDbzBtjzpox+koeeDac6d6MNWDTtYL7qjF4qdV8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Q+UKRIWQqn9AN8owwlMdThuRcA8oZd3OivpDPyBxwBfnQzuFok+9XtdY290hZVyZctKOfT67V32CaRJ7lqHRZebemuR0XNGXJPC9cfbLoPRBb9qMwzND5yBoQPq+MsXaAYNh1BlN78bVQmDcmN04j/fMmRalWk+WV2RQHqQFvGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GiGDzGb1; arc=none smtp.client-ip=209.85.221.175
+	s=arc-20240116; t=1737436825; c=relaxed/simple;
+	bh=eKOK2EO91ur0UC7MMxZ4derhiPJDvIpQSa4AutwErLQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=cKYAvlFqaFDoR1gOCCqdlhG5OFgCLHYnsK/aLAVrSYCL3ueD+OfHXi5Nq5rCHeQmeuw5++gtzyni/FecY3vE03Wg8oxerA4rX93fKJZe+Z9V5k4rx3ifXk/Kq4fPz+H7PBO3xhZbJMPZHo00ZtwT7BaZYEup2CKdiEurvOfdPu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kx1iq2KC; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiGDzGb1"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5160f80e652so1367040e0c.2
-        for <regressions@lists.linux.dev>; Mon, 20 Jan 2025 20:53:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kx1iq2KC"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee46851b5eso6973770a91.1
+        for <regressions@lists.linux.dev>; Mon, 20 Jan 2025 21:20:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737435196; x=1738039996; darn=lists.linux.dev;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X+O8DDbzBtjzpox+koeeDac6d6MNWDTtYL7qjF4qdV8=;
-        b=GiGDzGb1W8gzF7L2iP7DnHOD97ipXUcS2XUgweMn31iHQjl0G+sDsrx/7ftiOI5jOy
-         +VB5IN1+MCWkpX1S0nS/UCGXGFeI9KBV1nTJg7fYVCNk8e80rTTI4W0vBBMXXpjeaoie
-         NLBYZVcN640JDBWWMSO+VBv7zBeKu3J0gQhkohcBtOVHw0L8OAXOte+LS/z/BVQbVq22
-         TcWQjjNRpxPgiwChsTqLjk5By7Q2CyIM8avqSKyZfL70hWZVPJBZvMZKKb0z0L8daibt
-         9QQhwZdb7DYKRiREa1jKYZJ5ZrWcCK6zyY06+gWMf4AgluT2Uxi5ArXHcBs+eJ3qsNKh
-         W4iw==
+        d=gmail.com; s=20230601; t=1737436824; x=1738041624; darn=lists.linux.dev;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IECYlM40D+zruDOMOUzD+1MoRjtsBCDwEaB3RwH3myQ=;
+        b=kx1iq2KCtazc520XroqFuJbMB8un4s7WtRh+2u2fNOx6d1oJBTYKDynrzE87sC2NwM
+         m4MzZxfwxMbalH3A4x0GXxH2uRLeFsxpNRfunt0DDOoUNVsaWZ7RkPwh2GfyyyeLZFGv
+         s8OUnalmV0xeCTYT2gg47T/gF0iyhatblc87WhNMZNZ8lHeeLCRdPPloN4I7Ru+5JiBn
+         IDyFPCRCSgc/PmepmMs2CRvrk+PQqgqGHGXJLH4ZatyyZ3pXolQmGne4Ay3FbolZo5av
+         sFwbBtkO9ZLLvK65cbnSZ1zCn3YmGGa/eJpiwx+ncavw9LH7b9BDAuNJihQ9xWgOaD2L
+         RU/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737435196; x=1738039996;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X+O8DDbzBtjzpox+koeeDac6d6MNWDTtYL7qjF4qdV8=;
-        b=B5Z9TjuUg1d09dS9OcRu0AEvFvFJ2Un2oLUEZzl8C0FoR/X2BZzWYzPtdKAhdCzP0c
-         0pb43SPEhLo5/h9xYQxeRmUWgAHa/QIjU20xvgHHh0vNjCwpuBhTQnPGD2c+4BEoWaJp
-         +KB05sESFCwfVeBbLar8+qbj3S/Vz1l12GeDKWcAMwEc/QoUssjtphgA4y6XkmmM3B2P
-         8b11yqdFOz3P3+KTFG9NZ+RdrFLT50ldD+q/650qYyEoaS+/QHSrZ+hN9NgKrxMjuh0p
-         eubO8GdMC7+9trLl0PG+jem4KWprgFqRGES5V3vJhg4o6y0lxN+X+JeifKuDAjVLkAit
-         e4nA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSlBiOAEAJCAogRzty4hWcmv/TlqwyeGzh1X8JsFTUTUk5ggBKXGjEm2wxxUIHfx9HiWzNAH34WDBfRw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwdtopzhG6lOHkaBgFSpFD2UHwngFXsslqJuYmE0NHZOCGrMUf9
-	lOpINpfWRaXdmANQ9es4j4QvqITui4AImG2UGJBBKgiL5R3STWVTht8Yfm/c2S9WV6XNFcMZ8B+
-	YTO1VqSmcgayFY/OcAKtvfdvN264=
-X-Gm-Gg: ASbGncvadCeLLBsR7w/xexrXAhbbcFnKT6qkf+iUegJAECMmJFipFYEyrwBlp5alo1G
-	AdzpLkSypTO+r549p0A7M9wYgiQTzrc2cWlcxMJX/Z0SmRD6scQ==
-X-Google-Smtp-Source: AGHT+IF5e4RxDf/3lSSGVOyWX7VEZO9PZ2c89baHfSfBAz1QtzUHvvlyRehbsxBcJxAqae0gM00FTrBQjpGc05axmZw=
-X-Received: by 2002:a05:6122:338b:b0:516:230b:eec with SMTP id
- 71dfb90a1353d-51d5b265b25mr11982258e0c.5.1737435196447; Mon, 20 Jan 2025
- 20:53:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737436824; x=1738041624;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IECYlM40D+zruDOMOUzD+1MoRjtsBCDwEaB3RwH3myQ=;
+        b=DYrpZw9Epz2qayiKnUcyEjpjj/GSj5T4qlvw97EH4D653M0GkL1pAaW8tqtVEDcJqh
+         Ban0Q2MhYm7k5QZ5lh4KmJFdwGjJKMrCeLT2SQOqq2sIO+LtAkWgK0A7HqFOrZRK/rFI
+         3sgyr6C9xrDqW0dbo4ZUDZMIEeQcRBB32b1rjjlx1wZYXd+oYSRuKv8Llo9XBAdvMFFl
+         hfR8xWaffK3RX6bVRgHKMVSGzVc2EW5VI5/nGNAJPdTDbbvWrhAojvehqPTYvA+K66yN
+         G1qswo/4QaRLEwtfl8NAgw6dItxhXf+BH1TfVCwmwks4jTfDNoNczG0eGiIi3MZXITCO
+         ahWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXptyOKznKN4p2qqKivLUicXUofEw0Gts+xFBBMACfDCr597QXjdlft3PSBUm6ZcWHeb5jlJ96ajVWbkQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwIJkDSaLUuKJczBCsU2QKsR1/cR9X/9QGYBXI92igN7lxruiYr
+	O2B1m1p3QZNg3u+QBp/2rNGivWGASCnJvQwOgnZGw8fm4beUwd51
+X-Gm-Gg: ASbGnctzxu5XWb4iWP3Zk5dGudUSmQsD2UylIibDM9BhLVWd78LgXJO6GZrP+xBrV/9
+	G8yqOra9idcOwslY4SgsTKOnQQpnHwsG1I9teXUTTLCqtMHBM/0KjtRvhFQ920KwYwPiTK/tpIz
+	ejXA7Na3WNMZpRGZ9brbabdH8W3xGiwKaeVSx+fJg1G58F/XM/8Ehr6oFzj2xJAN9yAptPfuztT
+	3+lS9wXr696Hhck8xghOY9Q/K9/eQ3YwTYMUZDEeuppW2Y82hg7ISswOV0sIDb8
+X-Google-Smtp-Source: AGHT+IGa3qnJZ7ymaxLp0C027bTDyMwNmCEpA39KybaLiQC4CMLlAIO95Bkd2Ge8d/PPw9qHJOVgMQ==
+X-Received: by 2002:a17:90b:3503:b0:2ee:9d65:65a7 with SMTP id 98e67ed59e1d1-2f782d7ff77mr21978137a91.29.1737436823682;
+        Mon, 20 Jan 2025 21:20:23 -0800 (PST)
+Received: from localhost ([138.44.251.158])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f72c2bb332sm13067266a91.36.2025.01.20.21.20.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jan 2025 21:20:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Simon Kaegi <simon.kaegi@gmail.com>
-Date: Mon, 20 Jan 2025 23:53:05 -0500
-X-Gm-Features: AbW1kvY52NMdhNnCuLwEWyTpy5IPpTIJwa4s6ajou_UZAt_vLAbRecztOcnY4hI
-Message-ID: <CACW2H-7QEMKA+LUAzFJ+srmRCzSuLk2G7shWt0SGR9SfmxwOjA@mail.gmail.com>
-Subject: [REGRESSION] vsocket timeout with kata containers agent 3.10.1 and
- kernel 6.6.70
-To: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Eric Dumazet <edumazet@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Martin KaFai Lau <kafai@fb.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 21 Jan 2025 15:20:17 +1000
+Message-Id: <D77HY793RN09.1HTCXBIUXFKSI@gmail.com>
+Cc: <seanjc@google.com>, <linuxppc-dev@lists.ozlabs.org>,
+ <regressions@lists.linux.dev>, "Christian Zigotzky"
+ <chzigotzky@xenosoft.de>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/5] KVM: e500: always restore irqs
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Paolo Bonzini" <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
+ <kvm@vger.kernel.org>
+X-Mailer: aerc 0.19.0
+References: <20250112095527.434998-1-pbonzini@redhat.com>
+ <20250112095527.434998-2-pbonzini@redhat.com>
+In-Reply-To: <20250112095527.434998-2-pbonzini@redhat.com>
 
-#regzbot introduced v6.6.69..v6.6.70
-#regzbot introduced: ad91a2dacbf8c26a446658cdd55e8324dfeff1e7
+On Sun Jan 12, 2025 at 7:55 PM AEST, Paolo Bonzini wrote:
+> If find_linux_pte fails, IRQs will not be restored.  This is unlikely
+> to happen in practice since it would have been reported as hanging
+> hosts, but it should of course be fixed anyway.
+>
+> Cc: stable@vger.kernel.org
+> Reported-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-We hit this regression when updating our guest vm kernel from 6.6.69
-to 6.6.70 -- bisecting, this problem was introduced in
-ad91a2dacbf8c26a446658cdd55e8324dfeff1e7 -- net: restrict SO_REUSEPORT
-to inet sockets
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-We're getting a timeout when trying to connect to the vsocket in the
-guest VM when launching a kata containers 3.10.1 agent which
-unsurprisingly ... uses a vsocket to communicate back to the host.
+> ---
+>  arch/powerpc/kvm/e500_mmu_host.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu=
+_host.c
+> index e5a145b578a4..6824e8139801 100644
+> --- a/arch/powerpc/kvm/e500_mmu_host.c
+> +++ b/arch/powerpc/kvm/e500_mmu_host.c
+> @@ -479,7 +479,6 @@ static inline int kvmppc_e500_shadow_map(struct kvmpp=
+c_vcpu_e500 *vcpu_e500,
+>  		if (pte_present(pte)) {
+>  			wimg =3D (pte_val(pte) >> PTE_WIMGE_SHIFT) &
+>  				MAS2_WIMGE_MASK;
+> -			local_irq_restore(flags);
+>  		} else {
+>  			local_irq_restore(flags);
+>  			pr_err_ratelimited("%s: pte not present: gfn %lx,pfn %lx\n",
+> @@ -488,8 +487,9 @@ static inline int kvmppc_e500_shadow_map(struct kvmpp=
+c_vcpu_e500 *vcpu_e500,
+>  			goto out;
+>  		}
+>  	}
+> +	local_irq_restore(flags);
+> +
+>  	writable =3D kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg);
+> -
+>  	kvmppc_e500_setup_stlbe(&vcpu_e500->vcpu, gtlbe, tsize,
+>  				ref, gvaddr, stlbe);
+> =20
 
-We updated this commit and added an additional sk_is_vsock check and
-recompiled and this works correctly for us.
-- if (valbool && !sk_is_inet(sk))
-+ if (valbool && !(sk_is_inet(sk) || sk_is_vsock(sk)))
-
-My understanding is limited here so I've added Stefano as he is likely
-to better understand what makes sense here.
-
-This commit was backported from v6.13 to v6.12.8..6.12.9.
-
--Simon
