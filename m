@@ -1,45 +1,52 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119A14C74
-	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 13:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF971213E99;
+	Wed, 22 Jan 2025 14:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737550883; cv=none; b=iDVeDoxBBhzCS3/HioBy6VfM333t1KDSaOsJO5ulQql6Dg11U0RB4M0g+7xi1hY8EdT8w+1XYGXWG50+TXC92l2vMZCsEhpGVpKYQs6yS9iqlfvEO7WzwOlQOgpRuprZWnBMBGdJx05NDAGf0+U0aRgE5uPdn+dnT9MQn2jEa2g=
+	t=1737557812; cv=none; b=Ep1IhZ4M6kiDQdFqGB64xdbWZqTaNBjBF9K+/momL8cy7JGI5kB6yVUb5RfQ61z+2DM6XNuiPzsiF4Lr5+0e8Whna9KvGJED2rGhfwiBeh3zjQZIxEFoDFQDMxuZKM9uNV3VHIaaLwLGCw9gnRsgNt6iP3QSZFkbJ7vQnVDazsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737550883; c=relaxed/simple;
-	bh=7+EgZBd/xRCCf4ESV6cwj0q/MEOM2EvCQU/M+W1ss5o=;
+	s=arc-20240116; t=1737557812; c=relaxed/simple;
+	bh=55PFLsFoEltYFgfsyNLmyyR53/uMhwaNH9mEvYQPIsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fUrxR5BYXriOVC0xot+rYIfUIUAHEMQ96S/iGYpJZ7yRksdgU+GWwM7UGS8uPgP+esGr4aAQLYWY5Xmt4Kkt3dBH/9tbKw7GnqzMNAwz+4Cz+njWc6Ax3vWlstpWjzhdEeEMm9jcbsjE/Z4XptGEwVC5alIw/D1KN/PCBfZKYe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=FTfL7UZT; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=LolN3qNDWZjmSgl6JBavIUPjDV0d5vNaW9wIMQpgPEy//rgpfQvNJ2nM7BKZ2dKnx6F1hRBTG09DbJs8HQfuGXuXQuywKOhBpWO68gvRA+0cfxPQ43hfIR4s2esd+AZ8lXKcvksb2zZIeI1H+MLdxMeiL5H4u1nDmWe/IBT3pJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWKuKHK0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="FTfL7UZT"
-Date: Wed, 22 Jan 2025 14:01:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1737550876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n2phdRioz+FPeu2qwKUYHdIsmJATa7bzMGgHi9VlFHo=;
-	b=FTfL7UZTsxDgahGFlDHjMsxRy3TFUFJosHWHwbYxc4KCdjdAX3AfEFqEEPWVggte/W5i5T
-	//NlabcvalcZnazUIma/vyF+Khg5JhBmNHpX+Two97l1iHu5OVmmHSJEudrM87NaC8E4XJ
-	B3d1BBuPQb+lXA0Vl8cCHR5z3kOWytna4TrKneHGzFBTD8I0HQNpriqRUSPCyoLkRRneC2
-	XkSCx9dCoMJjYweVEFoFZPbWMneS6aBsbksvf58yvSlaAgtC38ZLcf0VsRqqrB/6VKSr9X
-	WcUilMOUdRLXuDxp5EvpaQrImwCJwsy14MqbAmmW3SMk+ON4WVCRsmY2duYdlg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: RuiRui Yang <ruyang@redhat.com>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
-	ytcoode@gmail.com, kexec@lists.infradead.org,
-	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z5DsGE4n2uYWedRX@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWKuKHK0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D84C4CED2;
+	Wed, 22 Jan 2025 14:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737557812;
+	bh=55PFLsFoEltYFgfsyNLmyyR53/uMhwaNH9mEvYQPIsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uWKuKHK0PvVE5y3AJTA18/x7biF1Uy7ZiyPpcq+NsuJjNI/DvFrQ4ZSXyN6mZsf8Y
+	 Ao4Sy2/qoq45n3mWdAFhqpptawODaPWnucBpIEgbw0t05HOHNzKPGCfPTPjwtwQ2D6
+	 erET/S+VHDDoxZA4EsqwTfKQDTc8WI61GWapkCpdf3kynsW39kG75MkAHysxSC6Rcq
+	 w0LOsB5c7TYdT+BMez4l/slRavXYaXCFIm7aBMYVIuB0y4b0uQ9KzdMAJuWe97HDvB
+	 /T/nw6i2vVyXGZ/OgKgpdgU/lC5yefAhyFh940CCkPv/tJhPwHCWtacncIMg2GlPEE
+	 UWc+5EUnH7iOA==
+Date: Wed, 22 Jan 2025 07:56:49 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Alyssa Ross <hi@alyssa.is>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	michael.christie@oracle.com, Tejun Heo <tj@kernel.org>,
+	Luca Boccassi <bluca@debian.org>, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] KVM: x86: switch hugepage recovery thread to vhost_task
+Message-ID: <Z5EHMbv8uezcRM3l@kbusch-mbp>
+References: <fdb5aac8-a657-40ec-9e0b-5340bc144b7b@redhat.com>
+ <Z2RhNcJbP67CRqaM@kbusch-mbp.dhcp.thefacebook.com>
+ <CABgObfYUztpGfBep4ewQXUVJ2vqG_BLrn7c19srBoiXbV+O3+w@mail.gmail.com>
+ <Z4Uy1beVh78KoBqN@kbusch-mbp>
+ <0862979d-cb85-44a8-904b-7318a5be0460@redhat.com>
+ <Z4cmLAu4kdb3cCKo@google.com>
+ <Z4fnkL5-clssIKc-@kbusch-mbp>
+ <CABgObfZWdwsmfT-Y5pzcOKwhjkAdy99KB9OUiMCKDe7UPybkUQ@mail.gmail.com>
+ <Z4gGf5SAJwnGEFK0@kbusch-mbp>
+ <twoqrb4bdyujvnf432lqvm3eqzvhqsbotag3q3snecgqwm7lzw@izuns3gun2a6>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,110 +55,30 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <twoqrb4bdyujvnf432lqvm3eqzvhqsbotag3q3snecgqwm7lzw@izuns3gun2a6>
 
-On 2025-01-22 Wed 17:45:41 +0800, RuiRui Yang wrote:
-> > I can reproduce this with kernel 6.13-rc7 in a qemu x86_64 virtual machine
-> > running Void Linux, with the following commands:
+On Wed, Jan 22, 2025 at 12:38:25PM +0100, Alyssa Ross wrote:
+> On Wed, Jan 15, 2025 at 12:03:27PM -0700, Keith Busch wrote:
+> > On Wed, Jan 15, 2025 at 06:10:05PM +0100, Paolo Bonzini wrote:
+> > > You can implement something like pthread_once():
 > >
-> > ```
-> > # kexec -l /boot/vmlinuz-6.13.0-rc7 --initrd=/boot/initramfs-6.13.0-rc7 --reuse-cmdline
-> > # reboot
-> > # printf reboot >/sys/power/disk
-> > # printf disk >/sys/power/state
-> > ```
+> > ...
+> >
+> > > Where to put it I don't know.  It doesn't belong in
+> > > include/linux/once.h.  I'm okay with arch/x86/kvm/call_once.h and just
+> > > pull it with #include "call_once.h".
+> >
+> > Thanks for the suggestion, I can work with that. As to where to put it,
+> > I think the new 'struct once' needs to be a member of struct kvm_arch,
+> > so I've put it in arch/x86/include/asm/.
+> >
+> > Here's the result with that folded in. If this is okay, I'll send a v2,
+> > and can split out the call_once as a prep patch with your attribution if
+> > you like.
 > 
-> Which kexec-tools version have you used?  I'm just asking to see which
-> syscall is used for loading the new kernel.   From your bisect results
-> it seems kexec_file_load, but just a double check as kexec_load and
-> kexec_file_load use different sources for building the e820 table.
+> Has there been any progress here?  I'm also affected by the crosvm
+> regression, and it's been backported to the LTS stable kernel.
 
-I have kexec-tools 2.0.29. strace confirms that kexec_file_load() is being used:
-
-```
-execve("/usr/sbin/kexec", ["kexec", "-l", "/boot/vmlinuz-6.13.0_ricci", "--initrd=/boot/initramfs-6.13.0_"..., "--reuse-cmdline"], 0x7ffeab8e8910 /* 15 vars */) = 0
-brk(NULL)                               = 0x55f2897ea000
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=10415, ...}) = 0
-mmap(NULL, 10415, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff2d596e000
-close(3)                                = 0
-openat(AT_FDCWD, "/usr/lib/liblzma.so.5", O_RDONLY|O_CLOEXEC) = 3
-read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
-fstat(3, {st_mode=S_IFREG|0755, st_size=194704, ...}) = 0
-mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d596c000
-mmap(NULL, 192544, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d593c000
-mmap(0x7ff2d5940000, 122880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) = 0x7ff2d5940000
-mmap(0x7ff2d595e000, 49152, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7ff2d595e000
-mmap(0x7ff2d596a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2e000) = 0x7ff2d596a000
-close(3)                                = 0
-openat(AT_FDCWD, "/usr/lib/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
-read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
-fstat(3, {st_mode=S_IFREG|0755, st_size=100488, ...}) = 0
-mmap(NULL, 102416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5922000
-mmap(0x7ff2d5925000, 57344, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7ff2d5925000
-mmap(0x7ff2d5933000, 28672, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x11000) = 0x7ff2d5933000
-mmap(0x7ff2d593a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17000) = 0x7ff2d593a000
-close(3)                                = 0
-openat(AT_FDCWD, "/usr/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\236\2\0\0\0\0\0"..., 832) = 832
-pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
-fstat(3, {st_mode=S_IFREG|0755, st_size=12652992, ...}) = 0
-pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
-mmap(NULL, 2006416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5738000
-mmap(0x7ff2d5760000, 1413120, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7ff2d5760000
-mmap(0x7ff2d58b9000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x181000) = 0x7ff2d58b9000
-mmap(0x7ff2d590f000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1d6000) = 0x7ff2d590f000
-mmap(0x7ff2d5915000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5915000
-close(3)                                = 0
-mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5735000
-arch_prctl(ARCH_SET_FS, 0x7ff2d5735740) = 0
-set_tid_address(0x7ff2d5735a10)         = 587
-set_robust_list(0x7ff2d5735a20, 24)     = 0
-rseq(0x7ff2d5736060, 0x20, 0, 0x53053053) = 0
-mprotect(0x7ff2d590f000, 16384, PROT_READ) = 0
-mprotect(0x7ff2d593a000, 4096, PROT_READ) = 0
-mprotect(0x7ff2d596a000, 4096, PROT_READ) = 0
-mprotect(0x55f260483000, 20480, PROT_READ) = 0
-mprotect(0x7ff2d59a9000, 8192, PROT_READ) = 0
-prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
-munmap(0x7ff2d596e000, 10415)           = 0
-access("/proc/xen", F_OK)               = -1 ENOENT (No such file or directory)
-getrandom("\xa1\x28\xc8\xbe\xf9\xc2\xac\xa0", 8, GRND_NONBLOCK) = 8
-brk(NULL)                               = 0x55f2897ea000
-brk(0x55f28980b000)                     = 0x55f28980b000
-openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
-lseek(3, 0, SEEK_CUR)                   = 0
-read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 8192) = 8192
-close(3)                                = 0
-openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
-read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
-close(3)                                = 0
-openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
-mmap(NULL, 26566656, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d3ddf000
-read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
-close(3)                                = 0
-close(3)                                = -1 EBADF (Bad file descriptor)
-memfd_create("kernel", MFD_ALLOW_SEALING) = 3
-write(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
-openat(AT_FDCWD, "/proc/cmdline", O_RDONLY) = 4
-read(4, "BOOT_IMAGE=/boot/vmlinuz-6.13.0_"..., 128) = 128
-read(4, "el=512M\n", 128)               = 8
-read(4, "", 120)                        = 0
-read(4, "", 376)                        = 0
-openat(AT_FDCWD, "/boot/initramfs-6.13.0_ricci.img", O_RDONLY) = 5
-kexec_file_load(3, 5, 98, "root=UUID=71b5e20d-efaa-4c09-b18"..., 0) = 0
-close(3)                                = 0
-sync()                                  = 0
-exit_group(0)                           = ?
-+++ exited with 0 +++
-```
-
-The issue persists with the latest 6.13 kernel.
-
-I also noticed that the bug is not 100% deterministic, but occurs most
-of the times. I could test again with KMSAN and KCSAN, if I have a bit
-of time this week.
+Would you be able to try the proposed patch here and reply with a
+Tested-by if it's successful for you? I'd also like to unblock this,
+whether this patch is in the right direction or try something else.
