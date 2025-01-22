@@ -1,153 +1,112 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2FF2135B9
-	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 16:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37448215196
+	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 18:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737562491; cv=none; b=M50rIs2JFHStSZfpbCn2oqymVaUrXoC+rKRQVjE16CBheUIXhnoHlA41OJVUMQKwU97o6fbG0b1jEKUmlrSNlM2zKjFftRqfOBLKptwBdBllVf7+0ShEOdkGhIof4XkFy3dfyAsf+3w5+ijEjiGfsQ9Q+IxAzjlr93CNUgx4GFQ=
+	t=1737571692; cv=none; b=gr+RLEkv1DqwexUabPnaj10oVMyB5p2AMwjGYpSFBXCif4UQjIu9fwVCja64yV8Hc7isZLNHj5SxQGUmzgu3Eo3+7WlewSvAFVWk/Zm7pLUok2S8nn1v5XDajXlIY6BH4GtSzxUIim6TADTWI2QfHvZY78i8EMwThLngsnJIhz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737562491; c=relaxed/simple;
-	bh=L90sZMVSRI61zDd+r0xCrvsVnNL+fFVXJgWGwi3VFZs=;
+	s=arc-20240116; t=1737571692; c=relaxed/simple;
+	bh=l3nganunuTO0I8caZ29KPDKWn49joghDgA/HwxSNAhI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RubiP60SDSZXEyYZGIpN7Fg+syJ7vYGzU3Ukm8l+vyTzhjfRuehiBk0j21H5g5s8XvTc5xHTWWh0Z3Ta1AwvFKGLLWOF/8kWns2QKTxFrqqACr+Vq+TYu0Bg21FHGPJyvkVVzKmVwPC4ZQbzTm9slieijFprUkRM13vsN6uvb7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UpfDFxgf; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=S6icUW+VMMB3ggjVJ6yyXTOT7nTn9FrRGZG4/0rzGau//nEBZOMaayS6YT6h+QVDHM5hI0M8kMySxV1DS4bSryQrFil3r/K5K/vyaMpxCR/uwEbPWAn9xE5UncFUmReeik16/ZZa5mynAqhz9OtLlyYm9j/qMKY0cEg8kRg5pPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3+5zqzWu; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpfDFxgf"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5188b485988so2147390e0c.3
-        for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 08:14:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3+5zqzWu"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4678c9310afso29551cf.1
+        for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 10:48:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737562485; x=1738167285; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1737571690; x=1738176490; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L90sZMVSRI61zDd+r0xCrvsVnNL+fFVXJgWGwi3VFZs=;
-        b=UpfDFxgf9oSq6ims9rN6q6XWqxom6pGFu56EGo1bNjtAobrYilX9puhqYaXTnEbShq
-         UWgd3gUzURtV7GFmH2H8gmBM3zpx0+VoPEghK5lxpRqXD2hqgxAsWPO6EJJZ82i/LFDb
-         IYiaBXkm0sKEJMW8hhZ510VhqXAq9kGBloE4oxNmYXT5t/KizA2DrtegQElrrPUoflIm
-         d+Jmc2a1x5NGub9JFJL0ATFvch5texZKLJhufVnT4JT1HPENMsVcZHm7fiDIxIQKQ4lK
-         CvkCEfp8cCSEQXIdRdxwcGvP/7fxS6Yv675K5UMyyvpQXnCTYBMAycTJR75MvJWt57io
-         a4zg==
+        bh=KKydrizajiZyiDzpM90s5csJ2UY4C/EjmVPrhqEURc8=;
+        b=3+5zqzWuZzqB+LhockD+8KLYKedlQYIll/XJiPqRZyxvuc8YrJ5cLhlpjBAC7tgOrD
+         8y5AmkRdMlJUc+50DXwqn/OUEsp1QwT/9bVzdBkh73BKfQoo4jyiScuYrrBOiyJShaks
+         kb2uQJ0G6xCQHi2FPWOid38kWScqnM/FtEJQS9os3GXlu3bER8c8hRu6dYFeG6qc5IRM
+         b+KM1jATHkfOblpoQdg757FDWny/W3unbVBVHEjrgGggVfIJIPL9PdUuOvtK/2WocN2U
+         kYt265H8dSfcQEgg5zuYEK1gJKu7G2PWP2q84o+ZEbM5JJdDFpQjT24u5peL3QPyxtBZ
+         HAZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737562485; x=1738167285;
+        d=1e100.net; s=20230601; t=1737571690; x=1738176490;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L90sZMVSRI61zDd+r0xCrvsVnNL+fFVXJgWGwi3VFZs=;
-        b=Dj98BBnuiLYhTDYfKm1c/t2RyYns2WsPVnGQKkHA/WMZ8cMNVVmVfwjpHEjltjfszS
-         5EudJ98YrvxGfV+rkuNBriB06muIvsgUAk6peLGyMTuJgO5HXusk77eBxSOdlgTLJ9PZ
-         74ZcYIyWbTvlGM0yw4W/q77OFrE047ghmF9Z8hhWyjIu7rVPsI7w7A3MagjUL5MInP3r
-         heGnTUmPim9DaYMvPAFEg2Xp7yeQ21XNGdb1EhGq2i2oq86irniG5RzcCsWMDEHdnqNj
-         Z0/FugW0nNfl3UrkR8obO3fhd3esPkUPtCAdNnrdYekLxaRd3HoSYavanftpMKP4e8pN
-         NUoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVARbHw2STbYNX2AXR3JfL+Co8n1j5VHKHGZBSfsHYGUs+HcmdmDHQI0MTDDH9JsehfMXwOlLdd32IbQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDIgTR/0mLez1ZbpD6E3s6U13Up+3gA0bDQtxkJ2+Sy/+0dPoH
-	FDnsF43bzxCDyo/AG0jG/YDsco3Nz/bULSi0VPsOObvXhERASK7MOpzif+yTe33Z4n+3Ew5XER+
-	CiMH91NacJtzHSRONmRY2fDAk5Rg=
-X-Gm-Gg: ASbGncuJU9VZ9MLRaza61NpalmyFQWEAS139fN4Q4P76HmEcbmthcu87A/ERPvR5q7n
-	DTGTpqjPd4ubGFirbAoKSpXI89qcah5n/dhov79ujV30swSecCQ==
-X-Google-Smtp-Source: AGHT+IH9Ho83lBV6TMHgYgljDAwNsqtklElSNEk9D5aJEBsAKrdJ/QgR1X1viYVpeLp+Sc9VJAf6nhfXBEx1VpGYIzY=
-X-Received: by 2002:a05:6122:3704:b0:50a:b604:2bb2 with SMTP id
- 71dfb90a1353d-51d5b39b8a2mr18644132e0c.11.1737562485302; Wed, 22 Jan 2025
- 08:14:45 -0800 (PST)
+        bh=KKydrizajiZyiDzpM90s5csJ2UY4C/EjmVPrhqEURc8=;
+        b=sHU+scWys76ZuWiNacGs6noi8m23yitGoXFbbl4NVSvYOQZQgsBOA5rtU8QizYHUbr
+         CZJS7upA7EvxVXQEBI1BtP7lih6BuNAhZ6RnPeqGd3RSe0Eotn6uf7KIJ/OJioBmBjCW
+         kBh95i6kYMtE/ejVtIB6G5twcK9LLGSBEQY4PBctLanBpsAsW0ABhZ5q6UXaFmMdVs2Q
+         fA4RpE6otprP76TRtq2dhLooMw3XNc1oX96ssTtZ6GGME/7y0so9+BqBL3EMwe6Yd6rJ
+         ustbQ6yPN5FyXOpPn5NmAWr2YT+wuU/PSt+jvqgW7jpM5rGE3wopeJdWU0bHxOQsjp9L
+         vyvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVA3HkP475uY/Z7SF1OBSnsJ4zP8k6wswjQ7EqfkS5cj6rQykOe0I+V5mXcfdTW5BZEAFVyI3O4iRtk5A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwhGpCbrjiW7Oj2AXeCdUcjENRWQLVTnPX8EUSznY+/BtkTWPbQ
+	ftPlZc5Fi693M2dasOlxJfmcjy/T2Mjd/sdiRsrdLHwB6Qm0M7j416CtPIH24Uecx54qzUA4dGS
+	Fctltxbps8gp3hlbfw8H2g0ycNE3ChZIQ9YIe
+X-Gm-Gg: ASbGncvbL7oy7IY8L464RHmdYMcyP0vxfYvpE8kVQoBLKNupBuQ5iLn/DS8AITvIyYS
+	c/U6iHA46DrY5iLtQ8GBnLbj5wWglnagPcRGKcQXBVJCg78ktFjU933aHKj19FbpUx92OYX6WzB
+	RbOMwemuVxt3RRGiGJ
+X-Google-Smtp-Source: AGHT+IHcSKNZCGpPW7UbU8PKxihWgjo1H8ZK9FqkFOttjj+ZTAxgYbApIiufTqEle+NmXwKtaJOVCFj2ZCwtoALKiUE=
+X-Received: by 2002:ac8:7f0d:0:b0:46e:2561:e8a9 with SMTP id
+ d75a77b69052e-46e5c0fc91bmr118661cf.2.1737571689712; Wed, 22 Jan 2025
+ 10:48:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACW2H-7QEMKA+LUAzFJ+srmRCzSuLk2G7shWt0SGR9SfmxwOjA@mail.gmail.com>
- <CAGxU2F4_59X-Fj7vRCoDqM394699uxqLQZ5yCuH+jXUYcYO81g@mail.gmail.com>
- <CAGxU2F40eWaLxS8tsQaFeQ_ndjwdQXMj7VghH3VidcbkcVPrgw@mail.gmail.com>
- <CACW2H-4UivUO+aVt-Bb7GGwxLWite7hKSBzJ5WhSXyvWCkh8bg@mail.gmail.com>
- <CAGxU2F57EgVGbPifRuCvrUVjx06mrOXNdLcPdqhV9bdM0VqGvg@mail.gmail.com> <CAGxU2F4F2jETc9+NFi=9xNkthAbRDOKCVa4-UeOpyfzHjtLdeg@mail.gmail.com>
-In-Reply-To: <CAGxU2F4F2jETc9+NFi=9xNkthAbRDOKCVa4-UeOpyfzHjtLdeg@mail.gmail.com>
-From: Simon Kaegi <simon.kaegi@gmail.com>
-Date: Wed, 22 Jan 2025 11:14:34 -0500
-X-Gm-Features: AWEUYZmZcU1GmKMuuZTPJ57CKZtgRLQaOvxIv78qf1vkO56jfpONopN1Ypi4Jw8
-Message-ID: <CACW2H-4Z6PTUrQQas=YGeM4vjxSPbw3iBm3=dymPUiMsWvbT3A@mail.gmail.com>
-Subject: Re: [REGRESSION] vsocket timeout with kata containers agent 3.10.1
- and kernel 6.6.70
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: heruoqing@iscas.ac.cn, Eric Dumazet <edumazet@google.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Martin KaFai Lau <kafai@fb.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
+References: <20250120212839.1675696-1-arnd@kernel.org> <CAF1bQ=QFxE8AvnpOeSjSeL1buxDDACKVNufLjw99cQir0pyS_Q@mail.gmail.com>
+ <c5855908-df1f-46be-a8cf-aba066b52585@app.fastmail.com>
+In-Reply-To: <c5855908-df1f-46be-a8cf-aba066b52585@app.fastmail.com>
+From: Rong Xu <xur@google.com>
+Date: Wed, 22 Jan 2025 10:47:54 -0800
+X-Gm-Features: AbW1kvbLk69MQRckuu9UcPreOF9jS0FZVYh5fU54olNNQd-dqqvtjn73DZA4fRA
+Message-ID: <CAF1bQ=SEybO_+UMDqspA+9OecYqJhE56D-zJyxEUiPcj+Af_fA@mail.gmail.com>
+Subject: Re: [PATCH] [RFC, DO NOT APPLY] vmlinux.lds: revert link speed regression
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-kbuild@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, Han Shen <shenhan@google.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks so much Stefano and to Moritz Sanft
-https://github.com/containerd/ttrpc-rust/pull/280
-
-We've rebuilt and everything is again working as expected - all resolved.
-
-Thanks again everyone
--Simon
-
-On Wed, Jan 22, 2025 at 6:12=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
-.com> wrote:
->
-> On Wed, 22 Jan 2025 at 10:23, Stefano Garzarella <sgarzare@redhat.com> wr=
-ote:
-> >
-> > CCing Ruoqing He
-> >
-> > On Wed, 22 Jan 2025 at 04:48, Simon Kaegi <simon.kaegi@gmail.com> wrote=
+On Tue, Jan 21, 2025 at 1:18=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
 :
-> > >
-> > > Thanks Stefano,
-> > >
-> > > The feedback about vsock expectations was exactly what I was hoping
-> > > you could provide.
-> >
-> > You're welcome ;-)
-> >
-> > >
-> > > In the Kata agent we're not directly setting SO_REUSEPORT as a socket
-> > > option so I think what you suggest where SO_REUSEORT is being set
-> > > indiscriminately is happening a layer down perhaps in the tokio or ni=
-x
-> > > crates we use. I unfortunately do not have an easy way to reproduce
-> > > the problem without setting up kata containers and what's more you
-> > > need to then rebuild a recent kata flavoured minimal kernel to see th=
-e
-> > > issue.
-> >
-> > I talked with Ruoqing He yesterday about this issue since he knows
-> > Kata better than me :-)
-> >
-> > He pointed out that Kata is using ttrpc-rust and he shared with me this=
- code:
-> > https://github.com/containerd/ttrpc-rust/blob/0610015a92c340c6d88f81c0d=
-6f9f449dfd0ecba/src/common.rs#L175
-> >
-> > The change (setting SO_REUSEPORT) was introduced more than 4 years
-> > ago, but I honestly don't think it solved the problem mentioned in the
-> > commit:
-> > https://github.com/containerd/ttrpc-rust/commit/9ac87828ee870ecf5fb5fea=
-a45cc0c9e3d34e236
-> > So far it didn't give any problems because it was allowed on every
-> > socket, but effectively it was a NOP for AF_VSOCK.
-> >
-> > IIUC that code, it supports 2 address families: AF_VSOCK and AF_UNIX.
-> > For AF_VSOCK we've made it clear that SO_REUSEPORT is useless, but for
-> > AF_UNIX it's even more useless since there's no concept of a port, so
-> > in my opinion `setsockopt(fd, sockopt::ReusePort, &true)?;` can be
-> > removed completely.
-> > Or at least not fail the entire function if it's unsupported, whereas
-> > now it fails and the next bind is not done.
-> >
-> > I don't know where this code is called, but removing that line is
-> > likely to make everything work correctly.
 >
-> It looks like they already released a new version of ttrpc to fix it:
-> https://github.com/containerd/ttrpc-rust/pull/281
+> On Tue, Jan 21, 2025, at 18:45, Rong Xu wrote:
+> > On Mon, Jan 20, 2025 at 1:29=E2=80=AFPM Arnd Bergmann <arnd@kernel.org>=
+ wrote:
+> >
+> > Yes. The order could be conditional. As a matter of fact, the first
+> > version was conditional.
+> > I changed it based on the reviewer comments to reduce conditions for
+> > more maintainable code.
+> > I would like to work from the ld.bfd side to see if we can fix the prob=
+lem.
 >
-> And Kata is updating its dependency:
-> https://github.com/kata-containers/kata-containers/pull/10775
+> Makes sense. At least once we understand what makes the linker so slow
+> and fix future versions, it should also be possible to come up with
+> a more effective workaround for the existing linkers that suffer from it.
+
+@Arnd: Can you send me the instructions to reproduce this regression?
+
+I tried my x86-64 machine in v6.13 kernel with the following ld.bfd:
+(1) GNU ld (GNU Binutils) 2.36.90.20210703
+(2) GNU ld (GNU Binutils) 2.39.90.20221231
+(3) GNU ld (GNU Binutils for Debian) 2.42.50.20240625
+They all used about ~2s to link vmlinux.o.
+
+The config I used was "make randconfig".
+
+Thanks,
+
+-Rong
+
 >
-> I hope it will fix your issue!
->
-> Stefano
->
+>      Arnd
