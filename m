@@ -1,150 +1,157 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D9E211A27
-	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 11:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119A14C74
+	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 13:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737545911; cv=none; b=VgDx3xMt8pHOHR8ymvqb19+rLXbfiTymyyRyKKLQDc2OQi2Iv+c1mM70i/gq4/f+SsKDysJM+KQxnw2cDvAG4hY77B+gHw+sg8GVcnqocCcgrZO0xfJVCszvvEhccUNf0zfkd3+meY3/58ChfCtXSkVsSwDqnhCtsYBX9ToBY54=
+	t=1737550883; cv=none; b=iDVeDoxBBhzCS3/HioBy6VfM333t1KDSaOsJO5ulQql6Dg11U0RB4M0g+7xi1hY8EdT8w+1XYGXWG50+TXC92l2vMZCsEhpGVpKYQs6yS9iqlfvEO7WzwOlQOgpRuprZWnBMBGdJx05NDAGf0+U0aRgE5uPdn+dnT9MQn2jEa2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737545911; c=relaxed/simple;
-	bh=J6psTmPSOU3QKpSJiKJxeAXXel0SZEi6GTHPuAuKZM8=;
+	s=arc-20240116; t=1737550883; c=relaxed/simple;
+	bh=7+EgZBd/xRCCf4ESV6cwj0q/MEOM2EvCQU/M+W1ss5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=btg6RDhR30ZPXTDUPzVCzsFNl1WGiRJnOZDr8HwOqj/9AMFDV2orqSTRPlvh6ahgr1AW1h5NScQQ6pKvynIGLG6rJ7Yd4SNkYkgioiOBwKRWL8iaWX2lBJIX5cpWj8gHYJox2xrK7OM+Q2kx8X8YppJFV1TRhoJUSVOufXigNiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=ECELAQlC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kaj9xJl+; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
+	 Content-Type:Content-Disposition:In-Reply-To; b=fUrxR5BYXriOVC0xot+rYIfUIUAHEMQ96S/iGYpJZ7yRksdgU+GWwM7UGS8uPgP+esGr4aAQLYWY5Xmt4Kkt3dBH/9tbKw7GnqzMNAwz+4Cz+njWc6Ax3vWlstpWjzhdEeEMm9jcbsjE/Z4XptGEwVC5alIw/D1KN/PCBfZKYe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=FTfL7UZT; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="ECELAQlC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kaj9xJl+"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 1BE09114016C;
-	Wed, 22 Jan 2025 06:38:28 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Wed, 22 Jan 2025 06:38:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1737545907; x=1737632307; bh=G8MsUq4Yg2
-	w0NbfNEjbUAvvjkMooYocwMqwISkeqwRs=; b=ECELAQlCZh+3wWqHTR3gkm3IKl
-	gxBsRMiF2EKFJQEatuh7cwdJiGhN5dozRoIhj/9iTNTqD6xaSB9mX55rdlEd42GV
-	UVHHBifG9TtTo8HqNsY+PcXKTkATPd9m02ZSvTvxDnc1mtsuuq/HzWYIJmn+HMby
-	TqBYTGO2BO8EPuB8NIMmCkJ2+j793ADkKSLrcuXoZ5UfHRBDTWeLZadRzReKXq8n
-	C02DiMUB3KE/gl0ZdgSmiNKQR5hMsPdpDHdwPKerlz/Y87unmgGOCLd75A4TSRpS
-	WUnPFKJBRfhV5/m/Ut50PFrzidQaBiv9jwgvgUeRkD7MXthhymoZWgoQbIhg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1737545907; x=1737632307; bh=G8MsUq4Yg2w0NbfNEjbUAvvjkMooYocwMqw
-	ISkeqwRs=; b=kaj9xJl+/kjO73YRAKA75oZUYvBLH+xw6B0HpYpwMzuYIU6idlj
-	B0FH5PZfk8daVL468Q1UTGVGoF9NsbW0kVQ20PYmcMSd9WA5FJdNp4aVIgpV/W4D
-	lrsjcXHQkHCoXfrd/BS2mUdxKFJzuHbbH9TvSD8ZZro8MlMkjPhAXlhGJSLzfFgj
-	SFd2jFpwptJAkGx1sbuENHkU6QglKhV/I7S/e3QAZSR6wbtkkYFP+NjOIdkaPuH4
-	VCXuWbh6KyXNwyhbHsaG98BX/szcuixl66qWZgFn2EmBo0ztxVWmVgRgTtC2LGxi
-	Opx0uSudVPMWr873ehtjMvkJ9v6VRP//XBQ==
-X-ME-Sender: <xms:s9iQZ1cr7X83bJNzUiAMJWGI4E-sedRZdDTOgyzvf-i5fxWnNlmpWA>
-    <xme:s9iQZzO6FTtw5CpEhLEyIzDGX1JTt6mjOC340Q20_s7efpgeJkBHnxvyCIGGZrPXm
-    3zQuVWk2jZHwUODvw>
-X-ME-Received: <xmr:s9iQZ-hx7oU8dvgSyPaIdC8JkTPskVNfkcz2N60rjM2yvgZKPja8Jp6vpxrDvj4sw_B9Wytitn6gOovJZyQB6VIaDCY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudejfedgudehiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtdfsredttddv
-    necuhfhrohhmpeetlhihshhsrgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenuc
-    ggtffrrghtthgvrhhnpedtjeeuteekheefueeluefgveeiffekhfetfeeivdefheeuhfej
-    gedvieffiefhieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehhihesrghlhihsshgrrdhishdpnhgspghrtghpthhtohepuddtpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopegslhhutggrseguvggsihgrnhdrohhrghdprhgtph
-    htthhopehsvggrnhhjtgesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhgsuhhstghh
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtjheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgt
-    phhtthhopehmihgthhgrvghlrdgthhhrihhsthhivgesohhrrggtlhgvrdgtohhmpdhrtg
-    hpthhtohepphgsohhniihinhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehkvhhm
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:s9iQZ-9boLcqCIG8iGSsTn5LWMO3pFQu56TwLW494CMAYE0ix2qZOA>
-    <xmx:s9iQZxujd4BTUKHTrnmBfqhlO2Gu0Ofbn2V7R9x_GKWeYug4LdbAuw>
-    <xmx:s9iQZ9FQRXcYgGSSIwl0Iz1qr8guVbbDhQt9YSKCp3Q6QowKW-tFsQ>
-    <xmx:s9iQZ4PAaEBzihQC8uNL-JA5Il5RhUiwSs7C40SipBSQycr1sur5Xg>
-    <xmx:s9iQZykySSZF3JGjL29Vv404HXDFRyqk6lGXo4Zw3SnJQrv8FiyibfXc>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 22 Jan 2025 06:38:27 -0500 (EST)
-Received: by sf.qyliss.net (Postfix, from userid 1000)
-	id 83C5DC223DF; Wed, 22 Jan 2025 12:38:25 +0100 (CET)
-Date: Wed, 22 Jan 2025 12:38:25 +0100
-From: Alyssa Ross <hi@alyssa.is>
-To: Keith Busch <kbusch@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, michael.christie@oracle.com, Tejun Heo <tj@kernel.org>, 
-	Luca Boccassi <bluca@debian.org>, stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] KVM: x86: switch hugepage recovery thread to vhost_task
-Message-ID: <twoqrb4bdyujvnf432lqvm3eqzvhqsbotag3q3snecgqwm7lzw@izuns3gun2a6>
-References: <Z2RYyagu3phDFIac@kbusch-mbp.dhcp.thefacebook.com>
- <fdb5aac8-a657-40ec-9e0b-5340bc144b7b@redhat.com>
- <Z2RhNcJbP67CRqaM@kbusch-mbp.dhcp.thefacebook.com>
- <CABgObfYUztpGfBep4ewQXUVJ2vqG_BLrn7c19srBoiXbV+O3+w@mail.gmail.com>
- <Z4Uy1beVh78KoBqN@kbusch-mbp>
- <0862979d-cb85-44a8-904b-7318a5be0460@redhat.com>
- <Z4cmLAu4kdb3cCKo@google.com>
- <Z4fnkL5-clssIKc-@kbusch-mbp>
- <CABgObfZWdwsmfT-Y5pzcOKwhjkAdy99KB9OUiMCKDe7UPybkUQ@mail.gmail.com>
- <Z4gGf5SAJwnGEFK0@kbusch-mbp>
+	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="FTfL7UZT"
+Date: Wed, 22 Jan 2025 14:01:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1737550876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n2phdRioz+FPeu2qwKUYHdIsmJATa7bzMGgHi9VlFHo=;
+	b=FTfL7UZTsxDgahGFlDHjMsxRy3TFUFJosHWHwbYxc4KCdjdAX3AfEFqEEPWVggte/W5i5T
+	//NlabcvalcZnazUIma/vyF+Khg5JhBmNHpX+Two97l1iHu5OVmmHSJEudrM87NaC8E4XJ
+	B3d1BBuPQb+lXA0Vl8cCHR5z3kOWytna4TrKneHGzFBTD8I0HQNpriqRUSPCyoLkRRneC2
+	XkSCx9dCoMJjYweVEFoFZPbWMneS6aBsbksvf58yvSlaAgtC38ZLcf0VsRqqrB/6VKSr9X
+	WcUilMOUdRLXuDxp5EvpaQrImwCJwsy14MqbAmmW3SMk+ON4WVCRsmY2duYdlg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: RuiRui Yang <ruyang@redhat.com>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+	ytcoode@gmail.com, kexec@lists.infradead.org,
+	linux-pm@vger.kernel.org, akpm@linux-foundation.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z5DsGE4n2uYWedRX@desktop0a>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pbsm6sup57jukwpk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z4gGf5SAJwnGEFK0@kbusch-mbp>
+In-Reply-To: <CALu+AoQhCjUPr2dnYdN751dyUgNUpyx1HCfyztF5GaP3QRzibQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
+On 2025-01-22 Wed 17:45:41 +0800, RuiRui Yang wrote:
+> > I can reproduce this with kernel 6.13-rc7 in a qemu x86_64 virtual machine
+> > running Void Linux, with the following commands:
+> >
+> > ```
+> > # kexec -l /boot/vmlinuz-6.13.0-rc7 --initrd=/boot/initramfs-6.13.0-rc7 --reuse-cmdline
+> > # reboot
+> > # printf reboot >/sys/power/disk
+> > # printf disk >/sys/power/state
+> > ```
+> 
+> Which kexec-tools version have you used?  I'm just asking to see which
+> syscall is used for loading the new kernel.   From your bisect results
+> it seems kexec_file_load, but just a double check as kexec_load and
+> kexec_file_load use different sources for building the e820 table.
 
---pbsm6sup57jukwpk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH] KVM: x86: switch hugepage recovery thread to vhost_task
-MIME-Version: 1.0
+I have kexec-tools 2.0.29. strace confirms that kexec_file_load() is being used:
 
-On Wed, Jan 15, 2025 at 12:03:27PM -0700, Keith Busch wrote:
-> On Wed, Jan 15, 2025 at 06:10:05PM +0100, Paolo Bonzini wrote:
-> > You can implement something like pthread_once():
->
-> ...
->
-> > Where to put it I don't know.  It doesn't belong in
-> > include/linux/once.h.  I'm okay with arch/x86/kvm/call_once.h and just
-> > pull it with #include "call_once.h".
->
-> Thanks for the suggestion, I can work with that. As to where to put it,
-> I think the new 'struct once' needs to be a member of struct kvm_arch,
-> so I've put it in arch/x86/include/asm/.
->
-> Here's the result with that folded in. If this is okay, I'll send a v2,
-> and can split out the call_once as a prep patch with your attribution if
-> you like.
+```
+execve("/usr/sbin/kexec", ["kexec", "-l", "/boot/vmlinuz-6.13.0_ricci", "--initrd=/boot/initramfs-6.13.0_"..., "--reuse-cmdline"], 0x7ffeab8e8910 /* 15 vars */) = 0
+brk(NULL)                               = 0x55f2897ea000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=10415, ...}) = 0
+mmap(NULL, 10415, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff2d596e000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/liblzma.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=194704, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d596c000
+mmap(NULL, 192544, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d593c000
+mmap(0x7ff2d5940000, 122880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) = 0x7ff2d5940000
+mmap(0x7ff2d595e000, 49152, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x22000) = 0x7ff2d595e000
+mmap(0x7ff2d596a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2e000) = 0x7ff2d596a000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=100488, ...}) = 0
+mmap(NULL, 102416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5922000
+mmap(0x7ff2d5925000, 57344, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7ff2d5925000
+mmap(0x7ff2d5933000, 28672, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x11000) = 0x7ff2d5933000
+mmap(0x7ff2d593a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17000) = 0x7ff2d593a000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\236\2\0\0\0\0\0"..., 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+fstat(3, {st_mode=S_IFREG|0755, st_size=12652992, ...}) = 0
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+mmap(NULL, 2006416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff2d5738000
+mmap(0x7ff2d5760000, 1413120, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7ff2d5760000
+mmap(0x7ff2d58b9000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x181000) = 0x7ff2d58b9000
+mmap(0x7ff2d590f000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1d6000) = 0x7ff2d590f000
+mmap(0x7ff2d5915000, 52624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5915000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d5735000
+arch_prctl(ARCH_SET_FS, 0x7ff2d5735740) = 0
+set_tid_address(0x7ff2d5735a10)         = 587
+set_robust_list(0x7ff2d5735a20, 24)     = 0
+rseq(0x7ff2d5736060, 0x20, 0, 0x53053053) = 0
+mprotect(0x7ff2d590f000, 16384, PROT_READ) = 0
+mprotect(0x7ff2d593a000, 4096, PROT_READ) = 0
+mprotect(0x7ff2d596a000, 4096, PROT_READ) = 0
+mprotect(0x55f260483000, 20480, PROT_READ) = 0
+mprotect(0x7ff2d59a9000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7ff2d596e000, 10415)           = 0
+access("/proc/xen", F_OK)               = -1 ENOENT (No such file or directory)
+getrandom("\xa1\x28\xc8\xbe\xf9\xc2\xac\xa0", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x55f2897ea000
+brk(0x55f28980b000)                     = 0x55f28980b000
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+lseek(3, 0, SEEK_CUR)                   = 0
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 8192) = 8192
+close(3)                                = 0
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 4096) = 4096
+close(3)                                = 0
+openat(AT_FDCWD, "/boot/vmlinuz-6.13.0_ricci", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=26563072, ...}) = 0
+mmap(NULL, 26566656, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff2d3ddf000
+read(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
+close(3)                                = 0
+close(3)                                = -1 EBADF (Bad file descriptor)
+memfd_create("kernel", MFD_ALLOW_SEALING) = 3
+write(3, "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 26563072) = 26563072
+openat(AT_FDCWD, "/proc/cmdline", O_RDONLY) = 4
+read(4, "BOOT_IMAGE=/boot/vmlinuz-6.13.0_"..., 128) = 128
+read(4, "el=512M\n", 128)               = 8
+read(4, "", 120)                        = 0
+read(4, "", 376)                        = 0
+openat(AT_FDCWD, "/boot/initramfs-6.13.0_ricci.img", O_RDONLY) = 5
+kexec_file_load(3, 5, 98, "root=UUID=71b5e20d-efaa-4c09-b18"..., 0) = 0
+close(3)                                = 0
+sync()                                  = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+```
 
-Has there been any progress here?  I'm also affected by the crosvm
-regression, and it's been backported to the LTS stable kernel.
+The issue persists with the latest 6.13 kernel.
 
-(CCing the stable and regressions lists to make sure the regression is
-tracked.)
-
-#regzbot introduced: d96c77bd4eeb
-
---pbsm6sup57jukwpk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCZ5DYrwAKCRBbRZGEIw/w
-omlXAQDBgeu+m7LZSkjFkp1AZv0g2BuJYTB3+jR3gfIKInXsygEA/RPqyDiFix9/
-FzCbNsxxPIW+EnrJ8Hk/fHMvJDEG6Qo=
-=oPrN
------END PGP SIGNATURE-----
-
---pbsm6sup57jukwpk--
+I also noticed that the bug is not 100% deterministic, but occurs most
+of the times. I could test again with KMSAN and KCSAN, if I have a bit
+of time this week.
