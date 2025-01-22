@@ -1,142 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAD3211A30
-	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 11:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D9E211A27
+	for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 11:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737544348; cv=none; b=es2N9MMdTy7JfcIQtsXPvwBNCt/njYBVE9im7xr/CL3wMifLuyD5lgfgBAK2t1w2W9OGc/SelKeD7IHnb7I6aja98/UoBL96JxnETEk6gN6alWrFPKwuyRPUKZITvDMCocb5E5hI5bbhCFaOaVCC0PS9uMQQun+BImBZEJkuIhk=
+	t=1737545911; cv=none; b=VgDx3xMt8pHOHR8ymvqb19+rLXbfiTymyyRyKKLQDc2OQi2Iv+c1mM70i/gq4/f+SsKDysJM+KQxnw2cDvAG4hY77B+gHw+sg8GVcnqocCcgrZO0xfJVCszvvEhccUNf0zfkd3+meY3/58ChfCtXSkVsSwDqnhCtsYBX9ToBY54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737544348; c=relaxed/simple;
-	bh=4fB9E+KmYyYbAg5lWiXyt35tPkvFepjgQsIxIDXs3qg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YQ416eF6rq6hJKxRKyLc+h6JSRwpK0U8YbwOWq7aTCrfQLuocAoKbL+bgjkjkksU3WDo7lLzs+WeVlIrfWQFYk03cyvN7WJWRTANuXEWhSlM6c1qgbwYzmHpy2ZY3VNPkGO/mwhfuRiZceVivWIw99xbqgI05JpSMRGzQ90DmCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bQnMBDCW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737545911; c=relaxed/simple;
+	bh=J6psTmPSOU3QKpSJiKJxeAXXel0SZEi6GTHPuAuKZM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=btg6RDhR30ZPXTDUPzVCzsFNl1WGiRJnOZDr8HwOqj/9AMFDV2orqSTRPlvh6ahgr1AW1h5NScQQ6pKvynIGLG6rJ7Yd4SNkYkgioiOBwKRWL8iaWX2lBJIX5cpWj8gHYJox2xrK7OM+Q2kx8X8YppJFV1TRhoJUSVOufXigNiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=ECELAQlC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kaj9xJl+; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bQnMBDCW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737544345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fB9E+KmYyYbAg5lWiXyt35tPkvFepjgQsIxIDXs3qg=;
-	b=bQnMBDCWbMZKGzPYKxge3TP60pEQ6w3o2ZIZOIxBhLG8OMGTYQ44RXgNsUHrJ5sXmRyDf8
-	U6aN/LhxQx5GJUqQ6sufnLf8EWZv7nmUi4rdo8hueszDcqwkc5771bK1UhVwG7Z7Pb3pJu
-	CM+OQJ89GOQjvoJ5yUhxh68fRhVmqbA=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-26i6YeGkOWO6Ea3KYE1ZsA-1; Wed, 22 Jan 2025 06:12:23 -0500
-X-MC-Unique: 26i6YeGkOWO6Ea3KYE1ZsA-1
-X-Mimecast-MFC-AGG-ID: 26i6YeGkOWO6Ea3KYE1ZsA
-Received: by mail-yb1-f200.google.com with SMTP id 3f1490d57ef6-e572df6db3eso14627915276.3
-        for <regressions@lists.linux.dev>; Wed, 22 Jan 2025 03:12:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737544343; x=1738149143;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4fB9E+KmYyYbAg5lWiXyt35tPkvFepjgQsIxIDXs3qg=;
-        b=IMiHumTW9Loxaik0dCHOSBHdzbCcYslFVh8APtMTNvtAUfkXl6dOiTX+3VIgplhR9f
-         uLa1IWBLZtkeMcjrGVm1WFOCS2WCo/19gYQ2lfgo31leHJJKaLwH4FVj5dG93P7RaBSC
-         j45WnUrvv/OPm/KPyUzU05tDUNzrmqhfU79StgIOh9OkbgjUOQz01cI8Zu8znTpRKoJj
-         czjRD23DfRl6STvbnm+2yEZSP9eXW729gumA/su1MALiMhXtQgWEpq1abg1A3e1EEx3J
-         NpjfSCalrcIviY59F0YE1P9Nr9ENab9saqsj3Vins4rx3TGpytl4FjStSJrOAlGE0oVv
-         znKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgwyIX+XMEYuqPJ11s+itvECb6ACNB6SS7JJ05YNxRhGuXtlV87EoeQnG6KLtGkRT4+Bf7rsBoJ3zWXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzmo0Io9ZU5Sgtvq5854MtkJ7mnQ8+x9jqYeDl6TIYRt1yFN2lJ
-	AqmedpsTCZisUPlNK1etyQl+Qvs43bvUXotpaivGE6Jt36XLo+2QvO2MdaKDXly5nCOWQiWsk+e
-	JWIM/x3xa/EOUi1UDCt3I6IugJGquceAUTcQEbFHc0a8dAtZ1V7W1PfAH7Dnu0L6WSkVXiViUX+
-	H8r8Vee04gAhmtoIadTl+Tur65v76q+BWnvfk=
-X-Gm-Gg: ASbGncsPCSwUpCBeUn1KSuSztsukVGvEqkyD4L49K9JAtWC4PAoBhUCL3uvvxmeUbDk
-	wNyHVyubkwi1HyCiKKTB6gEMvNCBMGjIXGsjMhZjcjRGVHpmkU+c=
-X-Received: by 2002:a05:690c:6e03:b0:6ef:8dd0:fff9 with SMTP id 00721157ae682-6f6eb658933mr154474907b3.8.1737544343101;
-        Wed, 22 Jan 2025 03:12:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGivNJoBau9Ozv+j4BLL8zIkIWqyaCieeW/hTHYpqiyzk9GAipA8Dm6H1I6pMdN4JZDkGTQorzWf3a9mxHQw3w=
-X-Received: by 2002:a05:690c:6e03:b0:6ef:8dd0:fff9 with SMTP id
- 00721157ae682-6f6eb658933mr154474787b3.8.1737544342764; Wed, 22 Jan 2025
- 03:12:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="ECELAQlC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kaj9xJl+"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.stl.internal (Postfix) with ESMTP id 1BE09114016C;
+	Wed, 22 Jan 2025 06:38:28 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 22 Jan 2025 06:38:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1737545907; x=1737632307; bh=G8MsUq4Yg2
+	w0NbfNEjbUAvvjkMooYocwMqwISkeqwRs=; b=ECELAQlCZh+3wWqHTR3gkm3IKl
+	gxBsRMiF2EKFJQEatuh7cwdJiGhN5dozRoIhj/9iTNTqD6xaSB9mX55rdlEd42GV
+	UVHHBifG9TtTo8HqNsY+PcXKTkATPd9m02ZSvTvxDnc1mtsuuq/HzWYIJmn+HMby
+	TqBYTGO2BO8EPuB8NIMmCkJ2+j793ADkKSLrcuXoZ5UfHRBDTWeLZadRzReKXq8n
+	C02DiMUB3KE/gl0ZdgSmiNKQR5hMsPdpDHdwPKerlz/Y87unmgGOCLd75A4TSRpS
+	WUnPFKJBRfhV5/m/Ut50PFrzidQaBiv9jwgvgUeRkD7MXthhymoZWgoQbIhg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1737545907; x=1737632307; bh=G8MsUq4Yg2w0NbfNEjbUAvvjkMooYocwMqw
+	ISkeqwRs=; b=kaj9xJl+/kjO73YRAKA75oZUYvBLH+xw6B0HpYpwMzuYIU6idlj
+	B0FH5PZfk8daVL468Q1UTGVGoF9NsbW0kVQ20PYmcMSd9WA5FJdNp4aVIgpV/W4D
+	lrsjcXHQkHCoXfrd/BS2mUdxKFJzuHbbH9TvSD8ZZro8MlMkjPhAXlhGJSLzfFgj
+	SFd2jFpwptJAkGx1sbuENHkU6QglKhV/I7S/e3QAZSR6wbtkkYFP+NjOIdkaPuH4
+	VCXuWbh6KyXNwyhbHsaG98BX/szcuixl66qWZgFn2EmBo0ztxVWmVgRgTtC2LGxi
+	Opx0uSudVPMWr873ehtjMvkJ9v6VRP//XBQ==
+X-ME-Sender: <xms:s9iQZ1cr7X83bJNzUiAMJWGI4E-sedRZdDTOgyzvf-i5fxWnNlmpWA>
+    <xme:s9iQZzO6FTtw5CpEhLEyIzDGX1JTt6mjOC340Q20_s7efpgeJkBHnxvyCIGGZrPXm
+    3zQuVWk2jZHwUODvw>
+X-ME-Received: <xmr:s9iQZ-hx7oU8dvgSyPaIdC8JkTPskVNfkcz2N60rjM2yvgZKPja8Jp6vpxrDvj4sw_B9Wytitn6gOovJZyQB6VIaDCY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudejfedgudehiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtdfsredttddv
+    necuhfhrohhmpeetlhihshhsrgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenuc
+    ggtffrrghtthgvrhhnpedtjeeuteekheefueeluefgveeiffekhfetfeeivdefheeuhfej
+    gedvieffiefhieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehhihesrghlhihsshgrrdhishdpnhgspghrtghpthhtohepuddtpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopegslhhutggrseguvggsihgrnhdrohhrghdprhgtph
+    htthhopehsvggrnhhjtgesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhgsuhhstghh
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtjheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgt
+    phhtthhopehmihgthhgrvghlrdgthhhrihhsthhivgesohhrrggtlhgvrdgtohhmpdhrtg
+    hpthhtohepphgsohhniihinhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehkvhhm
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:s9iQZ-9boLcqCIG8iGSsTn5LWMO3pFQu56TwLW494CMAYE0ix2qZOA>
+    <xmx:s9iQZxujd4BTUKHTrnmBfqhlO2Gu0Ofbn2V7R9x_GKWeYug4LdbAuw>
+    <xmx:s9iQZ9FQRXcYgGSSIwl0Iz1qr8guVbbDhQt9YSKCp3Q6QowKW-tFsQ>
+    <xmx:s9iQZ4PAaEBzihQC8uNL-JA5Il5RhUiwSs7C40SipBSQycr1sur5Xg>
+    <xmx:s9iQZykySSZF3JGjL29Vv404HXDFRyqk6lGXo4Zw3SnJQrv8FiyibfXc>
+Feedback-ID: i12284293:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Jan 2025 06:38:27 -0500 (EST)
+Received: by sf.qyliss.net (Postfix, from userid 1000)
+	id 83C5DC223DF; Wed, 22 Jan 2025 12:38:25 +0100 (CET)
+Date: Wed, 22 Jan 2025 12:38:25 +0100
+From: Alyssa Ross <hi@alyssa.is>
+To: Keith Busch <kbusch@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, michael.christie@oracle.com, Tejun Heo <tj@kernel.org>, 
+	Luca Boccassi <bluca@debian.org>, stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] KVM: x86: switch hugepage recovery thread to vhost_task
+Message-ID: <twoqrb4bdyujvnf432lqvm3eqzvhqsbotag3q3snecgqwm7lzw@izuns3gun2a6>
+References: <Z2RYyagu3phDFIac@kbusch-mbp.dhcp.thefacebook.com>
+ <fdb5aac8-a657-40ec-9e0b-5340bc144b7b@redhat.com>
+ <Z2RhNcJbP67CRqaM@kbusch-mbp.dhcp.thefacebook.com>
+ <CABgObfYUztpGfBep4ewQXUVJ2vqG_BLrn7c19srBoiXbV+O3+w@mail.gmail.com>
+ <Z4Uy1beVh78KoBqN@kbusch-mbp>
+ <0862979d-cb85-44a8-904b-7318a5be0460@redhat.com>
+ <Z4cmLAu4kdb3cCKo@google.com>
+ <Z4fnkL5-clssIKc-@kbusch-mbp>
+ <CABgObfZWdwsmfT-Y5pzcOKwhjkAdy99KB9OUiMCKDe7UPybkUQ@mail.gmail.com>
+ <Z4gGf5SAJwnGEFK0@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACW2H-7QEMKA+LUAzFJ+srmRCzSuLk2G7shWt0SGR9SfmxwOjA@mail.gmail.com>
- <CAGxU2F4_59X-Fj7vRCoDqM394699uxqLQZ5yCuH+jXUYcYO81g@mail.gmail.com>
- <CAGxU2F40eWaLxS8tsQaFeQ_ndjwdQXMj7VghH3VidcbkcVPrgw@mail.gmail.com>
- <CACW2H-4UivUO+aVt-Bb7GGwxLWite7hKSBzJ5WhSXyvWCkh8bg@mail.gmail.com> <CAGxU2F57EgVGbPifRuCvrUVjx06mrOXNdLcPdqhV9bdM0VqGvg@mail.gmail.com>
-In-Reply-To: <CAGxU2F57EgVGbPifRuCvrUVjx06mrOXNdLcPdqhV9bdM0VqGvg@mail.gmail.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 22 Jan 2025 12:12:11 +0100
-X-Gm-Features: AWEUYZm4I96U--kvnleoCVg9EscJc162Swo5mHUXkxNMgLxL8V4-FdeLmULkThY
-Message-ID: <CAGxU2F4F2jETc9+NFi=9xNkthAbRDOKCVa4-UeOpyfzHjtLdeg@mail.gmail.com>
-Subject: Re: [REGRESSION] vsocket timeout with kata containers agent 3.10.1
- and kernel 6.6.70
-To: Simon Kaegi <simon.kaegi@gmail.com>, heruoqing@iscas.ac.cn
-Cc: Eric Dumazet <edumazet@google.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Martin KaFai Lau <kafai@fb.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ptr4dnlBYPG2jXSAIOaTZ0FCVnTuX4L4fWunMc_HZDg_1737544343
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pbsm6sup57jukwpk"
+Content-Disposition: inline
+In-Reply-To: <Z4gGf5SAJwnGEFK0@kbusch-mbp>
 
-On Wed, 22 Jan 2025 at 10:23, Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> CCing Ruoqing He
->
-> On Wed, 22 Jan 2025 at 04:48, Simon Kaegi <simon.kaegi@gmail.com> wrote:
-> >
-> > Thanks Stefano,
-> >
-> > The feedback about vsock expectations was exactly what I was hoping
-> > you could provide.
->
-> You're welcome ;-)
->
-> >
-> > In the Kata agent we're not directly setting SO_REUSEPORT as a socket
-> > option so I think what you suggest where SO_REUSEORT is being set
-> > indiscriminately is happening a layer down perhaps in the tokio or nix
-> > crates we use. I unfortunately do not have an easy way to reproduce
-> > the problem without setting up kata containers and what's more you
-> > need to then rebuild a recent kata flavoured minimal kernel to see the
-> > issue.
->
-> I talked with Ruoqing He yesterday about this issue since he knows
-> Kata better than me :-)
->
-> He pointed out that Kata is using ttrpc-rust and he shared with me this code:
-> https://github.com/containerd/ttrpc-rust/blob/0610015a92c340c6d88f81c0d6f9f449dfd0ecba/src/common.rs#L175
->
-> The change (setting SO_REUSEPORT) was introduced more than 4 years
-> ago, but I honestly don't think it solved the problem mentioned in the
-> commit:
-> https://github.com/containerd/ttrpc-rust/commit/9ac87828ee870ecf5fb5feaa45cc0c9e3d34e236
-> So far it didn't give any problems because it was allowed on every
-> socket, but effectively it was a NOP for AF_VSOCK.
->
-> IIUC that code, it supports 2 address families: AF_VSOCK and AF_UNIX.
-> For AF_VSOCK we've made it clear that SO_REUSEPORT is useless, but for
-> AF_UNIX it's even more useless since there's no concept of a port, so
-> in my opinion `setsockopt(fd, sockopt::ReusePort, &true)?;` can be
-> removed completely.
-> Or at least not fail the entire function if it's unsupported, whereas
-> now it fails and the next bind is not done.
->
-> I don't know where this code is called, but removing that line is
-> likely to make everything work correctly.
 
-It looks like they already released a new version of ttrpc to fix it:
-https://github.com/containerd/ttrpc-rust/pull/281
+--pbsm6sup57jukwpk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] KVM: x86: switch hugepage recovery thread to vhost_task
+MIME-Version: 1.0
 
-And Kata is updating its dependency:
-https://github.com/kata-containers/kata-containers/pull/10775
+On Wed, Jan 15, 2025 at 12:03:27PM -0700, Keith Busch wrote:
+> On Wed, Jan 15, 2025 at 06:10:05PM +0100, Paolo Bonzini wrote:
+> > You can implement something like pthread_once():
+>
+> ...
+>
+> > Where to put it I don't know.  It doesn't belong in
+> > include/linux/once.h.  I'm okay with arch/x86/kvm/call_once.h and just
+> > pull it with #include "call_once.h".
+>
+> Thanks for the suggestion, I can work with that. As to where to put it,
+> I think the new 'struct once' needs to be a member of struct kvm_arch,
+> so I've put it in arch/x86/include/asm/.
+>
+> Here's the result with that folded in. If this is okay, I'll send a v2,
+> and can split out the call_once as a prep patch with your attribution if
+> you like.
 
-I hope it will fix your issue!
+Has there been any progress here?  I'm also affected by the crosvm
+regression, and it's been backported to the LTS stable kernel.
 
-Stefano
+(CCing the stable and regressions lists to make sure the regression is
+tracked.)
 
+#regzbot introduced: d96c77bd4eeb
+
+--pbsm6sup57jukwpk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCZ5DYrwAKCRBbRZGEIw/w
+omlXAQDBgeu+m7LZSkjFkp1AZv0g2BuJYTB3+jR3gfIKInXsygEA/RPqyDiFix9/
+FzCbNsxxPIW+EnrJ8Hk/fHMvJDEG6Qo=
+=oPrN
+-----END PGP SIGNATURE-----
+
+--pbsm6sup57jukwpk--
