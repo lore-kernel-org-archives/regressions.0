@@ -1,125 +1,118 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1958C11
-	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 03:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4D21D540
+	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 09:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737948433; cv=none; b=Qd4lQ0dbytIXktqAfe7QbmQ+2wBq530IkNPz4sXbnhfpdTMmK7GLC5EXDt+GEyT/IuL6ypQYOvjyJcyOe9HWxgkYGI/WiH+PvM0INtPO6z2qnSOFtoGaW8u1rMKxrrUIbwkwBgHrbJE5iIob5701zBgY9ivtgpCnGBqg36ZBt5k=
+	t=1737970993; cv=none; b=UMnX7bIHPS4iWMnCIFdGwX6KlVZoq+LBivOierCIXsPoAsD4e8w204+AdGM0sYPYNN8JH5g/q6dIWJMt3HqjQGd+ryGeOliWnlnuQXKLueE8CgL+BPC0N28CQsUbGN1Ny3YBIxOFXvjmv9MN57g82Nd3AqZb1SDwSEAIYwzOqoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737948433; c=relaxed/simple;
-	bh=HVbQuaSI1DnXfN8+nVJSXnhggj7yx7c5oTISzXRo8ik=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=CNIxB3OKIzweReoUNPX3Sdj87jq0J+Low+Lp0eWUt7qWYg95GKvSa8+CxHeurFSelgcxKG5J9R4K0r+ArfmsAK3LhcrqMbSlSg0KaYfamxrDbP6w+949EWjGVoI2+yNAaH/6Nv94LmKZR/Vu8YZv8ZQ8T66TAkmZdNcWXA+41oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4YhDL84yXCzRm1g;
-	Mon, 27 Jan 2025 11:24:32 +0800 (CST)
-Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
-	by mail.maildlp.com (Postfix) with ESMTPS id 267911402CF;
-	Mon, 27 Jan 2025 11:27:08 +0800 (CST)
-Received: from [10.174.176.82] (10.174.176.82) by
- kwepemf500003.china.huawei.com (7.202.181.241) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 27 Jan 2025 11:27:07 +0800
-Message-ID: <7b535c35-9aeb-4a60-ab42-438f70835137@huawei.com>
-Date: Mon, 27 Jan 2025 11:27:01 +0800
+	s=arc-20240116; t=1737970993; c=relaxed/simple;
+	bh=xtvdBoA3cwqsMwflfoLoRaGjPZhkrO4EFSq7d0kAxkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndI8C5Z1plUjtd/PBD48Kx+35LcLEHsB+DRN/hM4jKmsChG5cqFDhSBFApSA467V4SSVY4j5oCCmQmecWrYY/vx7+ssHP+FyHR+GD55IEW+bXqmNiHowBtRTy8lFTdbon8o9MW65rvVc6OsH3LZOjhdy4ppKF/HxqHrB9PTCsp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nlc2d1Qy; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nlc2d1Qy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737970991; x=1769506991;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   mime-version:in-reply-to;
+  bh=xtvdBoA3cwqsMwflfoLoRaGjPZhkrO4EFSq7d0kAxkg=;
+  b=nlc2d1Qyp5GUeGdC8C+q2Io2VZhxuH0BEz4xmvw69vaLGWFXyBuosJV7
+   t9G9robT40YOgLD/zS+u7eCpW4Icx/vdz+2WETYAnsLxp5rDe8Pu377nh
+   2uvemSEystN4JwF4YUHJWNkpQLHDcfQiyOabHKxnsv0STt220wkLB2jlW
+   vjve+Vm/44U6NgmHD9gLQY463exCxp79ey24GbM7fS7ETEq1Sx2s7wvuz
+   pk62w2Vaj37yC1371+LynhOEppk5joiZiYZYVB1XFVPe/u2WVEQS6uC7E
+   Fg6/fL857PMFeTOJj0562RbSG/R/bHPEP2acq1Y9g+UKu9fgGpr7GFwgq
+   w==;
+X-CSE-ConnectionGUID: ZpieYlGQTsKgKrdA/9RwsA==
+X-CSE-MsgGUID: wOOq/UWNQgCoXS4hPPsDWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11327"; a="37678665"
+X-IronPort-AV: E=Sophos;i="6.13,238,1732608000"; 
+   d="scan'208";a="37678665"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 01:43:11 -0800
+X-CSE-ConnectionGUID: A01s2DWgTUeQF2/SIRrHDA==
+X-CSE-MsgGUID: LLkVV6qUR5Ct2l9j2jDqRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,238,1732608000"; 
+   d="scan'208";a="139265070"
+Received: from ideak-desk.fi.intel.com ([10.237.72.78])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 01:43:08 -0800
+Date: Mon, 27 Jan 2025 11:44:00 +0200
+From: Imre Deak <imre.deak@intel.com>
+To: Chris Bainbridge <chris.bainbridge@gmail.com>
+Cc: Leo Li <sunpeng.li@amd.com>,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	Harry Wentland <harry.wentland@amd.com>, zaeem.mohamed@amd.com,
+	pekka.paalanen@collabora.com,
+	"Wheeler, Daniel" <daniel.wheeler@amd.com>,
+	"Deucher, Alexander" <alexander.deucher@amd.com>,
+	amd-gfx list <amd-gfx@lists.freedesktop.org>,
+	dri-devel <dri-devel@lists.freedesktop.org>,
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	lyude@redhat.com
+Subject: Re: [BUG,BISECTED] WARNING dcn20_find_secondary_pipe
+Message-ID: <Z5dVYAPYu1d34dlC@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <CABXGCsNgx6gQCqBq-L2P15ydaN_66sM9CgGa9GQYNzQsaa6Dkg@mail.gmail.com>
+ <CABXGCsNztS8MLteq5=fcddwuQ1TCzeOM8TdVtpJ3crK=sV5PTQ@mail.gmail.com>
+ <CABXGCsMdxHJ-MLkS0pm51Sk8g0PTghsuZxmowvj5t44bVN4ndA@mail.gmail.com>
+ <ffd2c40c-1c2e-4465-b26f-88d5e08a80d9@amd.com>
+ <CABXGCsOoL5vD0+FRALFQFr3ZBpb2z5mpGKzAD5RHoW9_sb5yaQ@mail.gmail.com>
+ <f68020a3-c413-482d-beb2-5432d98a1d3e@amd.com>
+ <Z5Zm-STfRzJ_PIkI@debian.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "zhangzekun (A)" <zhangzekun11@huawei.com>
-Subject: Re: Possible hungtask issue will be introduced with device_lock() in
- uevent_show()
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <rafael.j.wysocki@intel.com>,
-	<regressions@lists.linux.dev>, <tj@kernel.org>, <alex.williamson@redhat.com>,
-	<chenjun102@huawei.com>, Greg KH <gregkh@linuxfoundation.org>
-References: <172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com>
- <20241231075608.84009-1-zhangzekun11@huawei.com>
- <2024123128-monetize-outtakes-3260@gregkh>
- <7b599394-d1a1-4e13-9c5c-48321172ec65@huawei.com>
- <6791a45f711e2_9b922948@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-In-Reply-To: <6791a45f711e2_9b922948@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf500003.china.huawei.com (7.202.181.241)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5Zm-STfRzJ_PIkI@debian.local>
 
-
-> Hi Zekun,
+On Sun, Jan 26, 2025 at 04:46:49PM +0000, Chris Bainbridge wrote:
+> Hardware is HP Pavilion Aero 13 laptop with Dell WD19 dock and three
+> external monitors. I get a warning with recent kernel builds when
+> enabling the external monitors with xrandr after initial boot:
 > 
-> If you have some cycles to help investigate the replacement fix that
-> would be much appreciated.
+> 16:57:49 kernel: WARNING: CPU: 4 PID: 1347 at drivers/gpu/drm/amd/amdgpu/../display/dc/resource/dcn20/dcn20_resource.c:1734 dcn20_find_secondary_pipe+0x1a6/0x400 [amdgpu]
+>
+> [...]
 > 
-> So far I came up with this:
+> The bisect leads to a merge commit 43102a2012c2 ("Merge tag
+> 'drm-misc-fixes-2024-09-26'"). Neither parent commit produces the
+> warning, but the merged commit does.
 > 
-> http://lore.kernel.org/172790598832.1168608.4519484276671503678.stgit@dwillia2-xfh.jf.intel.com
+> There are two commits that interact to cause this warning:
 > 
-> ...but have not had time to debug the 0day report.
+> 2a2a865aee43 ("drm/amd/display: Add all planes on CRTC to state for
+> overlay cursor").
 > 
-> My worry is still that Linux has long since shipped the expectation that
-> reading 'uevent' bounces the device_lock() which, among other things,
-> makes sure that any in-flight driver probing has completed.
+> and
 > 
-> The report of USB devices disappearing is consistent with a udev
-> operation failing due to the driver not being done attaching, or
-> something similar.
+> 70a6587dca37 ("drm/dp_mst: Fix DSC decompression detection in Synaptics
+> branch devices")
 > 
-> So even though you have not seen any issues, I suspect small differences
-> in the devices on your system and the reporter's system, or udev rule
-> differences could result in a failure to trigger the regression.
-> 
-> 
-Hi, Dan
+> 2a2a865aee43 was added to the mainline Linux repo first, but the warning
+> only appears following the merge of 70a6587dca37.
 
-The patch trys to prevent the potential dead lock by letting 
-device_lock() gets before kernfs_get_active(), but I think it might not 
-be enough to solve all the potential dead lock. The device_lock() will 
-be held while removing the driver in device_release_driver(), which 
-means will be held through driver's .remove(). If .remove() is waiting 
-for resources to be released by userspace process, and then the 
-userspace process call device_lock() in uevent_show(), we will have dead 
-locks here.
+The effect of 70a6587dca37 is to enable DSC only if the dock supports
+this. IIRC the WD19 dock does support DSC in both of the branch devices
+within it, so not sure how the commit makes a difference on it.
 
-In the following case:
+Checking if it's the DP_DSC_SUPPORT DPCD register AUX read which fails,
+or if the DP_DSC_DECOMPRESSION_IS_SUPPORTED flag is not set in the
+register would tell more (maybe by using drm.debug=0x100).
 
-device_release_driver
-device_lock()          blocked by
-<operation 1> ---------------------------> <operation 2>
-                                            uevent_show()
-                                            device_lock()
+In any case not sure how the reported DSC capability would relate to
+the above warn in dcn20_find_secondary_pipe(), the driver should handle
+a dock both with and without DSC support.
 
-
-In [1], It is beacause that pci_stop_and_remove_bus_device() will call 
-device_release_driver() first and then call device_del() to remove the 
-uevent sysfs attributes （Sorry for mistakes made in [1], 
-device_release_driver() is called by pci_stop_bus_device()). So, I think 
-it might not be a good idea to hold the device_lock() through uevent_show().
-
-ioctl(..,VFIO_GROUP_GET_DEVICE_FD,..)
-         ...
-         vfio_device_get_from_name()
-         vfio_devcie->refcount -> 2
-                                         pci_stop_and_remove_bus_device()
-                                         pci_stop_bus_device（）
-                                         device_release_driver()
-                                         device_lock()
-                                         device_remove()
-												vfio_unregister_group_dev()
-												vfio_device_put_registration()
-												vfio_devcie->refcount -> 1
-												wait for refcount == 0
-uevent_show()
-         device_lock()
-
-[1] 
-https://lore.kernel.org/lkml/20241231075608.84009-1-zhangzekun11@huawei.com/
-
-Best Regards,
-Zekun
+> #regzbot introduced: 43102a2012c2
