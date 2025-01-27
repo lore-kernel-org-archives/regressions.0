@@ -1,114 +1,240 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356E7157493
-	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 17:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813541917D6
+	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 19:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737998455; cv=none; b=Q36HbYzfOi02a6po/N/GKRKc6rZqmB0FLPAFXaStobLI07lcPP7uGSB+vLfV4uon24se6X71e6CxrhrHzz+LO8z8AfJDaAcWxMikQs50utpgVOsBoWc0tBZa63Ik/6w79qRolWldyoDp3Q1B+tBsBdmiKhPTFof2YoRA6/k+5u0=
+	t=1738007860; cv=none; b=Ph3QhLRIUCQyFeTZwjUzjFOOpekYY448DNqCpc68CPmr4CW/FRrIO3KHJGVLCp2CErgZCQt1EHMtilyIVnVuxmSPVb3jySZhu3FQvD5RoaO+AAbbb8ZDEjj+5Oi4EuhGW3t6WodBUGhxy0O8rasTAjW4YZ4rdckz3klLsylYa5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737998455; c=relaxed/simple;
-	bh=yqPicxUgCQMEwQTzgfNwfR3qsG9uHV2+cIxR1WbFFdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xt1Qk3Wqg9+yM2L7EvCTph/FQ19QitgEAy20J/O+m9bWyZb3fmiSYGFkk1AfQ92plOrxRZiLwg5ajpdbJeKTm094bqHIsxIKBr+VA5hw1fAzt4IV2SD2dgHRo7w0ADWzjoetk8hqF4OOjeF3qXlnjHon4/XOVGub5GA9Z2Sf560=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aR04RmbD; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738007860; c=relaxed/simple;
+	bh=0FQQNYJHrCHJeLMJ2LS4Zd/Go9CcRwLyMKTld/I0v8k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DFH/vk43iAWF+Kbf73WR19o0lpzfK5NnAF0u+tw/28MafJlTYdzhKO6P8RhK9mY4n/s0gM9laVXK/TCOpgG5bJ4JTH0vjm6gPezeEFOJl50tX/1z8AwIc5U3/GdPPmyl4U7nBss/+0MVhC4L4BdqGFYz9ePsL8PoxNfAPUsc6hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qH8YefRN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aR04RmbD"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4363ae65100so52342525e9.0
-        for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 09:20:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737998452; x=1738603252; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=28lhis4UtCxFF+i+kMA+ZCR2L5v7+n/05OVkMSX+dvk=;
-        b=aR04RmbDKyPIckjuapGB8Ekww3wMYUzCtXOv7VDqOk/tpqJBDTjWi3I97OYjXPfMtQ
-         UohPpdQq1doPNTqn5TZ5ZbFgPjxj7b2TZFSk80bO8DrwmfecsbMXF5f/5fOLA1gP9SjW
-         wTnAkZYFAMtkHygfFNcm0FQEJrnWC0ff/+efm4tFjRiV91F9vsxydcsV/T4MYxfmYZL7
-         r9fPfFLK2uevNsRFCWsFYXTXVe29c4rQcFwev0kwe+St5LdKIXelp7mlZTNxvb3UrmY5
-         dTPCPWL7yTYr5bta5X4zcPtvtbGxq+XTTWh1HTJvtraRLOv5F6TWegcbRVORvMoOWLvn
-         zYcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737998452; x=1738603252;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=28lhis4UtCxFF+i+kMA+ZCR2L5v7+n/05OVkMSX+dvk=;
-        b=fqhY4GKvIMo6cQK4G1jgZq3cUpesa0qTluLGIhMahqT3eND2CcWP6u3+n565QcLQfs
-         AYyP3NuF4jX9GagAy70yNnOmRy5lXCVWSjiYsVxWZKyEHNdv0T9KT/2dbFemaqc0v2zT
-         vDinFaSN0teNHRrIjVkaIBoD0nbxxijAtAhE4mFgaqiVe3GbKKgGL7iB4aq4thDMol1X
-         7dCoCYkG+Ix6nM1vI7qvkG0z1tfarXBdSjaYZfKk0ax5YbFPZcbpw+vUqEsXsFdQ7Uh7
-         VugH9CF5ycskGGO5MQxTVTBQ811avNE64/KWRyJjuyqr8e/r0jgwXf50e9hNDDgxINC5
-         nE6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWODzCOiS81V/e0PGm2URh2CQtgZhowEyxbJEaeKuxwnPlcq+d8pO3pZzni1Sg41E2RXweHQ9zmNmlvig==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwgI0dqu/NEVgAdSoLw5PGpP+Pir18kFOQ5F/7q51F8egcToGI2
-	qeevXEx4hDQtYB+eyzDQnhhIzzkFkpcpdKMlRSiRefQezR8vXGqM
-X-Gm-Gg: ASbGncshnDgNFNWq0RM42twfJMabEGmajSy/kc/3AXkrSVQinYzaUBSjsU7HArNHRDO
-	nAX9GhsZkp2FchYk0LM/g2wWyDyUoQTSwGsfxN6hFjVvsTWfQ1GJcSS1OgrSuXhHGJaDwH5DVEc
-	lwVm5/DAzsOwGGk/ZSiR3g2DSqsTWC10CvfiLpUwOTPR28pg9lE9KbsLz8Pf/dO3e5pHcls5/3E
-	d35nmM02akjZIHjmIdgOG40fz79fQGYJ8QGznAH3g4FaDqiXUAcLndLevKRvTBbQ1EHuLvzrwDc
-	nNlCXk6jH8PPcg==
-X-Google-Smtp-Source: AGHT+IFIGDGFCCTrTcCnx+mL8c9X5JFtSEWhZsxLfsbzes6Hwq8V9rn2BPbiep8h5DEXXBw5N3/J6w==
-X-Received: by 2002:a05:6000:2a9:b0:38a:50f7:24fa with SMTP id ffacd0b85a97d-38bf57bed8emr43897711f8f.54.1737998452253;
-        Mon, 27 Jan 2025 09:20:52 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.145.92])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab675e64da5sm618850466b.60.2025.01.27.09.20.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jan 2025 09:20:51 -0800 (PST)
-Message-ID: <999aeda3-5565-44a3-96d4-00dcd91a4cbd@gmail.com>
-Date: Mon, 27 Jan 2025 17:21:15 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qH8YefRN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D419BC4CEE6
+	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 19:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738007859;
+	bh=0FQQNYJHrCHJeLMJ2LS4Zd/Go9CcRwLyMKTld/I0v8k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qH8YefRNrFrmtGDBqXEh8EMTf0XRVxnZwwP80GJGbpHt39ujvRvZ6Zu/YLR5Upwnl
+	 ZLnd8PMl19MBuD7LrnLjcqCGYxxEGH1vt9ayGYXErJjlVxrf4Y5SyzsXhsRf/S4xF1
+	 fw6HJ4AiOMIMCESpDbKPghCLjA9oI9qQbTpiFQIw3Vk6zbqhEfTcUyqizg9SNUQqbX
+	 XxwSpc+qdDMFNRuefu5aJKDqIBsTNEquD9XUM+/uxthy5IA/45LEL7+j4IE89CkGN1
+	 1bpgiBRdD/iI1JMKnZ9fBIXKbUSshGb3CL8cg73BmV+jdi0z0vmx0KAdb96jqU9Evy
+	 HthNmqmohHS1A==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5f2ed0b70d6so2360777eaf.3
+        for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 11:57:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV4EwJwgu+2xkRx5nPaWtz2M2lx2L6P2bVfN5+naz7RcK26R8ztJXSgxgYLEgUlAca2nbA81n7+rm5enw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxt61fCSYlK0y9sl+EsmiyRUXAWtwqqXvuNFKIWOr34MA0RsxW9
+	9SW5m15IiVeHllIoN/8oP9xIXC9fiIrPJb1WmN5K9NAbl5GDfWQMScoxRHc/CSYPbazKwG3qRt9
+	PCKFoZUJtM5qO+kmPxO6XZuB2jZw=
+X-Google-Smtp-Source: AGHT+IEWMTQD0uVdyod+sr7GU7wtPx6+jbF5hXizyEE6NR1yMYaBOq7d3oMmZWolBM3eKha0C7/HuV9ERdARRyyouQ4=
+X-Received: by 2002:a05:6820:2710:b0:5f8:a3df:a9b with SMTP id
+ 006d021491bc7-5fa388a07c8mr24179204eaf.8.1738007858991; Mon, 27 Jan 2025
+ 11:57:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1093243: Upgrade to 6.1.123 kernel causes mariadb hangs
-To: Xan Charbonnet <xan@charbonnet.com>, Jens Axboe <axboe@kernel.dk>,
- Salvatore Bonaccorso <carnil@debian.org>
-Cc: 1093243@bugs.debian.org, Bernhard Schmidt <berni@debian.org>,
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <173706089225.4380.9492796104667651797.reportbug@backup22.biblionix.com>
- <dde09d65-8912-47e4-a1bb-d198e0bf380b@charbonnet.com>
- <Z5KrQktoX4f2ysXI@eldamar.lan>
- <fa3b4143-f55d-4bd0-a87f-7014b0fad377@gmail.com>
- <Z5MkJ5sV-PK1m6_H@eldamar.lan>
- <a29ad9ab-15c2-4788-a839-009ca6fdd00f@gmail.com>
- <df3b4c93-ea70-4b66-9bb5-b5cf6193190e@charbonnet.com>
- <8af1733b-95a8-4ac9-b931-6a403f5b1652@gmail.com>
- <Z5P5FNVjn9dq5AYL@eldamar.lan>
- <13ba3fc4-eea3-48b1-8076-6089aaa978fb@kernel.dk>
- <a2f5ea66-7506-4256-b69c-a2d6c2f72eb4@charbonnet.com>
- <dfc6006d-10cf-4090-aafd-77d62c341911@charbonnet.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <dfc6006d-10cf-4090-aafd-77d62c341911@charbonnet.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
+ <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
+ <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
+ <20250113162549.a2y7dlwnsfetryyw@thinkpad> <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
+In-Reply-To: <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 27 Jan 2025 20:57:26 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
+X-Gm-Features: AWEUYZnhse4LT7h59hjCPJr-pPx1IdSDJ1ByJ4nwIaHU25iwJKkaWU7LGgCHgts
+Message-ID: <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, rafael@kernel.org, 
+	Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
+	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
+	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: multipart/mixed; boundary="0000000000000dbe52062cb57da8"
 
-On 1/27/25 16:38, Xan Charbonnet wrote:
-> The MariaDB developers are wondering whether another corruption bug, MDEV-35334 ( https://jira.mariadb.org/browse/MDEV-35334 ) might be related.
-> 
-> The symptom was described as:
-> the first 1 byte of a .ibd file is changed from 0 to 1, or the first 4 bytes are changed from 0 0 0 0 to 1 0 0 0.
-> 
-> Is it possible that an io_uring issue might be causing that as well? Thanks.
+--0000000000000dbe52062cb57da8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The hang bug is just that, waiters not waking up. The completions
-users get back should still be correct when they get them, and it's
-not even close to code that might corrupt data.
+On Mon, Jan 27, 2025 at 3:32=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+>
+> On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > + Ulf (for the runtime PM related question)
+> >
+> > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
+> > > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru w=
+rote:
+> > > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
+> > >
+> > > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge=
+ *bridge)
+> > > > >>                  pcie_bus_configure_settings(child);
+> > > > >>
+> > > > >>          pci_bus_add_devices(bus);
+> > > > >> +
+> > > > >> +        /*
+> > > > >> +         * Ensure pm_runtime_enable() is called for the control=
+ler drivers,
+> > > > >> +         * before calling pci_host_probe() as pm frameworks exp=
+ects if the
+> > > > >> +         * parent device supports runtime pm then it needs to e=
+nabled before
+> > > > >> +         * child runtime pm.
+> > > > >> +         */
+> > > > >> +        pm_runtime_set_active(&bridge->dev);
+> > > > >> +        pm_runtime_no_callbacks(&bridge->dev);
+> > > > >> +        devm_pm_runtime_enable(&bridge->dev);
+> > > > >> +
+> > > > >>          return 0;
+> > > > >>   }
+> > > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
+> > > > >
+> > > > > I just noticed that this change in 6.13-rc1 is causing the follow=
+ing
+> > > > > warning on resume from suspend on machines like the Lenovo ThinkP=
+ad
+> > > > > X13s:
+> > >
+> > > > Can you confirm if you are seeing this issue is seen in the boot-up
+> > > > case also. As this part of the code executes only at the boot time =
+and
+> > > > will not have effect in resume from suspend.
+> > >
+> > > No, I only see it during resume. And enabling runtime PM can (and in
+> > > this case, obviously does) impact system suspend as well.
+> > >
+> > > > >   pci0004:00: pcie4: Enabling runtime PM for inactive device with=
+ active children
+> > >
+> > > > I believe this is not causing any functional issues.
+> > >
+> > > It still needs to be fixed.
+> > >
+> > > > > which may have unpopulated ports (this laptop SKU does not have a=
+ modem).
+> > >
+> > > > Can you confirm if this warning goes away if there is some endpoint
+> > > > connected to it.
+> > >
+> > > I don't have anything to connect to the slot in this machine, but thi=
+s
+> > > seems to be the case as I do not see this warning for the populated
+> > > slots, nor on the CRD reference design which has a modem on PCIe4.
+> > >
+> >
+> > Yes, this is only happening for unpopulated slots and the warning shows=
+ up only
+> > if runtime PM is enabled for both PCI bridge and host bridge. This patc=
+h enables
+> > the runtime PM for host bridge and if the PCI bridge runtime PM is also=
+ enabled
+> > (only happens now for ACPI/BIOS based platforms), then the warning show=
+s up only
+> > if the PCI bridge was RPM suspended (mostly happens if there was no dev=
+ice
+> > connected) during the system wide resume time.
+> >
+> > For the sake of reference, PCI host bridge is the parent of PCI bridge.
+> >
+> > Looking at where the warning gets triggered (in pm_runtime_enable()), w=
+e have
+> > the below checks:
+> >
+> > dev->power.runtime_status =3D=3D RPM_SUSPENDED
+> > !dev->power.ignore_children
+> > atomic_read(&dev->power.child_count) > 0
+> >
+> > When pm_runtime_enable() gets called for PCI host bridge:
+> >
+> > dev->power.runtime_status =3D RPM_SUSPENDED
+> > dev->power.ignore_children =3D 0
+> > dev->power.child_count =3D 1
+> >
+> > First 2 passes seem legit, but the issue is with the 3rd one. Here, the
+> > child_count of 1 means that the PCI host bridge has an 'active' child (=
+which is
+> > the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED as the=
+ resume
+> > process should first resume the parent (PCI host bridge). But this is n=
+ot the
+> > case here.
+> >
+> > Then looking at where the child_count gets incremented, it leads to
+> > pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_active=
+() is
+> > only called for a device if dev_pm_skip_suspend() succeeds, which requi=
+res
+> > DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime susp=
+ended.
+> >
+> > This criteria matches for PCI bridge. So its status was set to 'RPM_ACT=
+IVE' even
+> > though the parent PCI host bridge was still in the RPM_SUSPENDED state.=
+ I don't
+> > think this is a valid condition as seen from the warning triggered for =
+PCI host
+> > bridge when pm_runtime_enable() is called from device_resume_early():
+> >
+> > pci0004:00: pcie4: Enabling runtime PM for inactive device with active =
+children
+>
+> Thanks for the detailed analysis, much appreciated.
+>
+> So this seems to boil down to the fact that the PM core calls
+> pm_runtime_set_active() for a device, when it really should not. If
+> there is a clever way to avoid that, I think we need Rafael's opinion
+> on.
 
-I believe someone mentioned corruption reports from killing the hang
-task, I'd assume it should tolerate even sigkills (?). It's much more
-likely it's either some other kernel or even io_uring issue, or the
-db doesn't handle it right since the update. For that other report,
-did they update the kernel? I don't see a dmesg log in the report,
-that could also be useful to have in case some subsystem complained.
+Actually, not really.
 
--- 
-Pavel Begunkov
+The status of the child and the child count of the parent have no
+meaning until runtime PM is enabled for the parent.  They can be
+manipulated freely before this happens with no consequences and all
+will be fine as long as those settings are consistent when runtime PM
+is enabled for the parent.
 
+Now, they aren't consistent at that point because
+dev_pm_skip_suspend() returns false for the parent as it has
+DPM_FLAG_SMART_SUSPEND clear.
+
+To me, this looks like a coding mistake because all devices that have
+power.must_resume set should also be set to RPM_ACTIVE before
+re-enabling runtime PM for them, so the attached patch should work.
+
+--0000000000000dbe52062cb57da8
+Content-Type: text/x-patch; charset="US-ASCII"; name="pm-sleep-must_resume.patch"
+Content-Disposition: attachment; filename="pm-sleep-must_resume.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m6fgz9y50>
+X-Attachment-Id: f_m6fgz9y50
+
+LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAgNiArKystLS0KIDEgZmlsZSBjaGFu
+Z2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgotLS0gYS9kcml2ZXJzL2Jhc2Uv
+cG93ZXIvbWFpbi5jCisrKyBiL2RyaXZlcnMvYmFzZS9wb3dlci9tYWluLmMKQEAgLTY1NiwxMiAr
+NjU2LDEyIEBACiAJICogc28gY2hhbmdlIGl0cyBzdGF0dXMgYWNjb3JkaW5nbHkuCiAJICoKIAkg
+KiBPdGhlcndpc2UsIHRoZSBkZXZpY2UgaXMgZ29pbmcgdG8gYmUgcmVzdW1lZCwgc28gc2V0IGl0
+cyBQTS1ydW50aW1lCi0JICogc3RhdHVzIHRvICJhY3RpdmUiLCBidXQgZG8gdGhhdCBvbmx5IGlm
+IERQTV9GTEFHX1NNQVJUX1NVU1BFTkQgaXMgc2V0Ci0JICogdG8gYXZvaWQgY29uZnVzaW5nIGRy
+aXZlcnMgdGhhdCBkb24ndCB1c2UgaXQuCisJICogc3RhdHVzIHRvICJhY3RpdmUiIHVubGVzcyBp
+dHMgcG93ZXIubXVzdF9yZXN1bWUgZmxhZyBpcyBjbGVhciwgaW4KKwkgKiB3aGljaCBjYXNlIGl0
+IGlzIG5vdCBuZWNlc3NhcnkgdG8gdXBkYXRlIGl0cyBQTS1ydW50aW1lIHN0YXR1cy4KIAkgKi8K
+IAlpZiAoc2tpcF9yZXN1bWUpCiAJCXBtX3J1bnRpbWVfc2V0X3N1c3BlbmRlZChkZXYpOwotCWVs
+c2UgaWYgKGRldl9wbV9za2lwX3N1c3BlbmQoZGV2KSkKKwllbHNlIGlmIChkZXYtPnBvd2VyLm11
+c3RfcmVzdW1lKQogCQlwbV9ydW50aW1lX3NldF9hY3RpdmUoZGV2KTsKIAogCWlmIChkZXYtPnBt
+X2RvbWFpbikgewo=
+--0000000000000dbe52062cb57da8--
