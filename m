@@ -1,257 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mr6.vodafonemail.de (mr6.vodafonemail.de [145.253.228.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FD31D5CFF
-	for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 16:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD88413AA2D
+	for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 21:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738080442; cv=none; b=pfofj9yUCwKVsVwov05Fg6zhy+sDgeridMFe74fo1le9521jx2FUrEHWfY+MFrcFx1x6IO6dY/+yb1kri21SdsNnIFgqTxoo67qfygpy4LMMSn2Qb1vtF2C5lRJ3Lg9ab/HVvF5a/yjlzULIiE1kpFojTQ6Z9PGdNTam4HUVYYI=
+	t=1738101055; cv=none; b=WvlEoOtl3XsmZ+Itzc1EWvRqoaHPhQot/9L+oSxhqXWm3RIAZt4+ls/L32asqZGBeTbMrgFVU/VLjvfmCE0gX3XMNiToUkzEt/LhLH9xWK5sUaP9SLvLkphEd2U+ng/ZUIvxQcRxmlrCsyT2BPYGplSnYu0RZxkU1MWbYQlaXGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738080442; c=relaxed/simple;
-	bh=KZcE1bukQorwGQCYZJKJZzamF7Is7wgBgtj2gMrFu7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hpflIsm4z1c7lXXKJpAM/tY6rnJ8S+tndWPpi0GWJSQnaslrfyN8ViVU84wK+LUif4sPFhGGeX+DRLRqdhKh/otDycY5916oYdWwCodsHKWNJVMP6Dvak6WG5uTuIztnbIKu6MuZxEOwzPPVJO+E/hbvxwlyq17at0Ar0TNLn5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXT5VuPU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738101055; c=relaxed/simple;
+	bh=HKMbHG41kO96ZF2P48iZY660NW4iqDPvky++tHvVjE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CKGko+iso+tg/amLVycvpiJ1dKemJnwoMgUhKKTIKlicdiYEaLVIwzrhMI1V1VLnBloolB/e2sdbF5LiVxVHFknDZ5Mc8vDKEXEw6v4Z4spxep7hChgy2OjrFhEicbOCxP+mKujkcmP+rQ+noGyJwfkfXSzrBmDG8mqlYrk8+6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arcor.de; spf=pass smtp.mailfrom=arcor.de; dkim=pass (1024-bit key) header.d=arcor.de header.i=@arcor.de header.b=heZJGV8J; arc=none smtp.client-ip=145.253.228.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arcor.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arcor.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXT5VuPU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E2DC4CEE6
-	for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 16:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738080441;
-	bh=KZcE1bukQorwGQCYZJKJZzamF7Is7wgBgtj2gMrFu7U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QXT5VuPUkPFrTNsXMBCgL/4JEjK3LimZ7Cqd8yBIpszco7wflbiRcn0RACxL+AwWv
-	 BUAKiyCeysqDqXs8hjID4AUi2fCdrWCVf3JDJQvNy4MgAa1W1+IrmRdyK+lBQzqkLO
-	 Fr4hTtHY7OGqWiAGjbKiix4JII/o0UVMLbI+0prt1ccdOPlrfeeAXTYe9FEan3qI6o
-	 X/2MhZKfxPM3UHxZFTFilI8hAezvgg7moEifAICCSuc90WFY7Z8WErlFSJgFp9VI6N
-	 n89HnJC5mGsuJblsILhO0tWogckgigHTkP1YbJ8XLH15dnPUy45MDlJkr1zijJgULu
-	 mJMh1Et54IcJA==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5f321876499so3074439eaf.1
-        for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 08:07:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXoIMXDHwPdYJdmsxIWCxrSxBtk3pGIQErVmJ8wGXdmIUsWcwBEKtuQ1qaJ61HCrsEvrNpsXJeMWg7zXA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzir/469PxqQurriJZMkavxdP67AOdMCbNmT1euphDCgBNQOUoS
-	u+AB0qkqx24lLs46rO5USPYB3rECEGZ1P9PM7ejqIfL2J+bHP/HN5PcW83l+NOnztgIqd//gHkK
-	wu2DYJ133Xsce9atWxVeKqkL+r2M=
-X-Google-Smtp-Source: AGHT+IFppnrp+e0tvUYXh1qQv3AmDN9KyKq0jV/1mxaQcS7c99bB3bgMMoQyY9H+pYrZo17m5R0do2ONTCA2fS7+yYU=
-X-Received: by 2002:a05:6820:503:b0:5fa:3ba7:d27 with SMTP id
- 006d021491bc7-5fbf5168bdcmr2118524eaf.4.1738080440777; Tue, 28 Jan 2025
- 08:07:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=arcor.de header.i=@arcor.de header.b="heZJGV8J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arcor.de;
+	s=vfde-mb-mr2-23sep; t=1738100684;
+	bh=tGbpeM79xiFk5lp0rBzeLonbHibRpHMeiZL0TF7ClVQ=;
+	h=Message-ID:Date:User-Agent:Subject:To:References:From:
+	 Content-Language:In-Reply-To:Content-Type:From;
+	b=heZJGV8J+vPNhcQzzlETPmmSiTlBizcsmYUW+lKUe46CVMEbFLGR5yYtzDzk+6iCe
+	 dcZAg33greGdgjO0FE3IemqWlsZv3l3+XDSPdGbPBnrxAiTtWTEjpSDUuRuH4B+YQH
+	 CjVk8Dokht4vNahB2wCpK2t27hhDwB9LMsJ0UAvA=
+Received: from smtp.vodafone.de (unknown [10.0.0.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr6.vodafonemail.de (Postfix) with ESMTPS id 4YjJj82c6tz1xqh;
+	Tue, 28 Jan 2025 21:44:44 +0000 (UTC)
+Received: from [192.168.178.41] (port-83-236-36-1.dynamic.as20676.net [83.236.36.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4YjJhm5f97z8snN;
+	Tue, 28 Jan 2025 21:44:21 +0000 (UTC)
+Message-ID: <6c663851-52f7-42fe-92a4-3e33f46a8dd5@arcor.de>
+Date: Tue, 28 Jan 2025 22:44:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
- <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
- <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
- <20250113162549.a2y7dlwnsfetryyw@thinkpad> <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
- <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
- <CAJZ5v0iAa8r9F8MMt7WhbfSRF5MeWnrDRUTeG5HrY5TBHtfZaw@mail.gmail.com> <20250128155830.xc6y2swqqw5okt32@thinkpad>
-In-Reply-To: <20250128155830.xc6y2swqqw5okt32@thinkpad>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 28 Jan 2025 17:07:09 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0imDLwgP+d753s5dVG9cybbK+PFiKwoYmsC13AhjWJ8EQ@mail.gmail.com>
-X-Gm-Features: AWEUYZnjD4AXkuQo0i_7dvCWA9QyU7OzVrOMlqY1zImHh0g0icCNwlXFK9LDjsc
-Message-ID: <CAJZ5v0imDLwgP+d753s5dVG9cybbK+PFiKwoYmsC13AhjWJ8EQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
-	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
-	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.12.10: Regression in Hans' commit 613f2150 leading to excessive
+ sysfs entry recreation?
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, stable@vger.kernel.org,
+ linux-media@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Farblos <farblos@vodafonemail.de>
+References: <6555309b-830d-449b-800c-55306c19c659@vodafonemail.de>
+ <D69CB9C3-AF3E-4E60-B35B-FBBE1D363207@arcor.de>
+ <0c8c26e3-f806-4238-80e7-14ec0a288589@xs4all.nl>
+From: Jens Schmidt <jens.schmidt140@arcor.de>
+Content-Language: de-DE-frami, en-US
+In-Reply-To: <0c8c26e3-f806-4238-80e7-14ec0a288589@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 506
+X-purgate-ID: 155817::1738100680-837FD465-FE86B99C/0/0
 
-On Tue, Jan 28, 2025 at 4:58=E2=80=AFPM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Tue, Jan 28, 2025 at 12:47:09PM +0100, Rafael J. Wysocki wrote:
-> > On Mon, Jan 27, 2025 at 8:57=E2=80=AFPM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > On Mon, Jan 27, 2025 at 3:32=E2=80=AFPM Ulf Hansson <ulf.hansson@lina=
-ro.org> wrote:
-> > > >
-> > > > On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > + Ulf (for the runtime PM related question)
-> > > > >
-> > > > > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
-> > > > > > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chu=
-ndru wrote:
-> > > > > > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
-> > > > > >
-> > > > > > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_=
-bridge *bridge)
-> > > > > > > >>                  pcie_bus_configure_settings(child);
-> > > > > > > >>
-> > > > > > > >>          pci_bus_add_devices(bus);
-> > > > > > > >> +
-> > > > > > > >> +        /*
-> > > > > > > >> +         * Ensure pm_runtime_enable() is called for the c=
-ontroller drivers,
-> > > > > > > >> +         * before calling pci_host_probe() as pm framewor=
-ks expects if the
-> > > > > > > >> +         * parent device supports runtime pm then it need=
-s to enabled before
-> > > > > > > >> +         * child runtime pm.
-> > > > > > > >> +         */
-> > > > > > > >> +        pm_runtime_set_active(&bridge->dev);
-> > > > > > > >> +        pm_runtime_no_callbacks(&bridge->dev);
-> > > > > > > >> +        devm_pm_runtime_enable(&bridge->dev);
-> > > > > > > >> +
-> > > > > > > >>          return 0;
-> > > > > > > >>   }
-> > > > > > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
-> > > > > > > >
-> > > > > > > > I just noticed that this change in 6.13-rc1 is causing the =
-following
-> > > > > > > > warning on resume from suspend on machines like the Lenovo =
-ThinkPad
-> > > > > > > > X13s:
-> > > > > >
-> > > > > > > Can you confirm if you are seeing this issue is seen in the b=
-oot-up
-> > > > > > > case also. As this part of the code executes only at the boot=
- time and
-> > > > > > > will not have effect in resume from suspend.
-> > > > > >
-> > > > > > No, I only see it during resume. And enabling runtime PM can (a=
-nd in
-> > > > > > this case, obviously does) impact system suspend as well.
-> > > > > >
-> > > > > > > >   pci0004:00: pcie4: Enabling runtime PM for inactive devic=
-e with active children
-> > > > > >
-> > > > > > > I believe this is not causing any functional issues.
-> > > > > >
-> > > > > > It still needs to be fixed.
-> > > > > >
-> > > > > > > > which may have unpopulated ports (this laptop SKU does not =
-have a modem).
-> > > > > >
-> > > > > > > Can you confirm if this warning goes away if there is some en=
-dpoint
-> > > > > > > connected to it.
-> > > > > >
-> > > > > > I don't have anything to connect to the slot in this machine, b=
-ut this
-> > > > > > seems to be the case as I do not see this warning for the popul=
-ated
-> > > > > > slots, nor on the CRD reference design which has a modem on PCI=
-e4.
-> > > > > >
-> > > > >
-> > > > > Yes, this is only happening for unpopulated slots and the warning=
- shows up only
-> > > > > if runtime PM is enabled for both PCI bridge and host bridge. Thi=
-s patch enables
-> > > > > the runtime PM for host bridge and if the PCI bridge runtime PM i=
-s also enabled
-> > > > > (only happens now for ACPI/BIOS based platforms), then the warnin=
-g shows up only
-> > > > > if the PCI bridge was RPM suspended (mostly happens if there was =
-no device
-> > > > > connected) during the system wide resume time.
-> > > > >
-> > > > > For the sake of reference, PCI host bridge is the parent of PCI b=
-ridge.
-> > > > >
-> > > > > Looking at where the warning gets triggered (in pm_runtime_enable=
-()), we have
-> > > > > the below checks:
-> > > > >
-> > > > > dev->power.runtime_status =3D=3D RPM_SUSPENDED
-> > > > > !dev->power.ignore_children
-> > > > > atomic_read(&dev->power.child_count) > 0
-> > > > >
-> > > > > When pm_runtime_enable() gets called for PCI host bridge:
-> > > > >
-> > > > > dev->power.runtime_status =3D RPM_SUSPENDED
-> > > > > dev->power.ignore_children =3D 0
-> > > > > dev->power.child_count =3D 1
-> > > > >
-> > > > > First 2 passes seem legit, but the issue is with the 3rd one. Her=
-e, the
-> > > > > child_count of 1 means that the PCI host bridge has an 'active' c=
-hild (which is
-> > > > > the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED =
-as the resume
-> > > > > process should first resume the parent (PCI host bridge). But thi=
-s is not the
-> > > > > case here.
-> > > > >
-> > > > > Then looking at where the child_count gets incremented, it leads =
-to
-> > > > > pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_=
-active() is
-> > > > > only called for a device if dev_pm_skip_suspend() succeeds, which=
- requires
-> > > > > DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtim=
-e suspended.
-> > > > >
-> > > > > This criteria matches for PCI bridge. So its status was set to 'R=
-PM_ACTIVE' even
-> > > > > though the parent PCI host bridge was still in the RPM_SUSPENDED =
-state. I don't
-> > > > > think this is a valid condition as seen from the warning triggere=
-d for PCI host
-> > > > > bridge when pm_runtime_enable() is called from device_resume_earl=
-y():
-> > > > >
-> > > > > pci0004:00: pcie4: Enabling runtime PM for inactive device with a=
-ctive children
-> > > >
-> > > > Thanks for the detailed analysis, much appreciated.
-> > > >
-> > > > So this seems to boil down to the fact that the PM core calls
-> > > > pm_runtime_set_active() for a device, when it really should not. If
-> > > > there is a clever way to avoid that, I think we need Rafael's opini=
-on
-> > > > on.
-> > >
-> > > Actually, not really.
-> > >
-> > > The status of the child and the child count of the parent have no
-> > > meaning until runtime PM is enabled for the parent.  They can be
-> > > manipulated freely before this happens with no consequences and all
-> > > will be fine as long as those settings are consistent when runtime PM
-> > > is enabled for the parent.
-> > >
-> > > Now, they aren't consistent at that point because
-> > > dev_pm_skip_suspend() returns false for the parent as it has
-> > > DPM_FLAG_SMART_SUSPEND clear.
-> > >
-> > > To me, this looks like a coding mistake because all devices that have
-> > > power.must_resume set should also be set to RPM_ACTIVE before
-> > > re-enabling runtime PM for them, so the attached patch should work.
-> >
-> > Having reflected on it a bit I think that it's better to avoid
-> > changing the existing behavior too much, so attached is a new version
-> > of the patch.
-> >
-> > It is along the same lines as before, but it doesn't go as far as the
-> > previous version.  Namely, in addition to what the existing code does,
-> > it will cause the runtime PM status to be set to RPM_ACTIVE for the
-> > devices whose dependents will have it set which should address the
-> > problem at hand if I'm not mistaken.
-> >
-> > I'd appreciated giving it a go on a system where the warning is printed=
-.
-> >
->
-> This patch indeed makes the warning go away and I don't spot any other is=
-sues.
-> So you can add my Tested-by tag while submitting the fix.
->
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> Thanks a lot!
+On 2025-01-28  16:45, Hans Verkuil wrote:
 
-Thank you!
+> Well spotted! Yes, it is related to that commit.
+> 
+> I'll take a closer look at this tomorrow since this test against
+> cec_caps needs work.
+
+Thanks.
+
+Only I feel that I messed up my first ever kernel bug by using
+the wrong MUA at the wrong time ... if there is any "reported by"
+thingy to attribute to me (no feelings hurt if not), please
+attribute to my "Open Source alter ego" 
+
+  Farblos <farblos@vodafonemail.de>
+
+Thanks again.
+
+Jens
+
