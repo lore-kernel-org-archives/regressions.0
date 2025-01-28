@@ -1,240 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813541917D6
-	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 19:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6C9A2D
+	for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 00:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738007860; cv=none; b=Ph3QhLRIUCQyFeTZwjUzjFOOpekYY448DNqCpc68CPmr4CW/FRrIO3KHJGVLCp2CErgZCQt1EHMtilyIVnVuxmSPVb3jySZhu3FQvD5RoaO+AAbbb8ZDEjj+5Oi4EuhGW3t6WodBUGhxy0O8rasTAjW4YZ4rdckz3klLsylYa5Y=
+	t=1738022688; cv=none; b=dE1PiZT4m10M+fUxyD/oBWaXmCzlZQzH7V89PQZCNANlYqYrIg+1SVg6vFgqU3LN/jFqrNi87KUcqVVlE+DnowaxR0u9xVUCVjtRgIT7GQMG6get//WtLXh/HWGeI4hxeBenekl/g6ctqzFVNnSBUsSfhhvaeW9AU0etr1JsTWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738007860; c=relaxed/simple;
-	bh=0FQQNYJHrCHJeLMJ2LS4Zd/Go9CcRwLyMKTld/I0v8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DFH/vk43iAWF+Kbf73WR19o0lpzfK5NnAF0u+tw/28MafJlTYdzhKO6P8RhK9mY4n/s0gM9laVXK/TCOpgG5bJ4JTH0vjm6gPezeEFOJl50tX/1z8AwIc5U3/GdPPmyl4U7nBss/+0MVhC4L4BdqGFYz9ePsL8PoxNfAPUsc6hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qH8YefRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738022688; c=relaxed/simple;
+	bh=KAoXkSlt8feMSrltKDXWXOGB2MEJXpz7rGCHgc2mJfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KMik6PU6MdfT86NPyozHD1JcSCjWxovdcjXrhnkrttncYPwcYASCylEZQ/LY62q5y0qJ3/dL2cw90Fjy2vyxR9vabn9aKOoN6Z5059/ISPNJXGDzIn8aXmg+MGeZxSlhpOUsdR/5/XThPedNfi9Gj7wm9HJuRMOiH8ohL885BQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=edaVHAcc; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qH8YefRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D419BC4CEE6
-	for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 19:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738007859;
-	bh=0FQQNYJHrCHJeLMJ2LS4Zd/Go9CcRwLyMKTld/I0v8k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qH8YefRNrFrmtGDBqXEh8EMTf0XRVxnZwwP80GJGbpHt39ujvRvZ6Zu/YLR5Upwnl
-	 ZLnd8PMl19MBuD7LrnLjcqCGYxxEGH1vt9ayGYXErJjlVxrf4Y5SyzsXhsRf/S4xF1
-	 fw6HJ4AiOMIMCESpDbKPghCLjA9oI9qQbTpiFQIw3Vk6zbqhEfTcUyqizg9SNUQqbX
-	 XxwSpc+qdDMFNRuefu5aJKDqIBsTNEquD9XUM+/uxthy5IA/45LEL7+j4IE89CkGN1
-	 1bpgiBRdD/iI1JMKnZ9fBIXKbUSshGb3CL8cg73BmV+jdi0z0vmx0KAdb96jqU9Evy
-	 HthNmqmohHS1A==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5f2ed0b70d6so2360777eaf.3
-        for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 11:57:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV4EwJwgu+2xkRx5nPaWtz2M2lx2L6P2bVfN5+naz7RcK26R8ztJXSgxgYLEgUlAca2nbA81n7+rm5enw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxt61fCSYlK0y9sl+EsmiyRUXAWtwqqXvuNFKIWOr34MA0RsxW9
-	9SW5m15IiVeHllIoN/8oP9xIXC9fiIrPJb1WmN5K9NAbl5GDfWQMScoxRHc/CSYPbazKwG3qRt9
-	PCKFoZUJtM5qO+kmPxO6XZuB2jZw=
-X-Google-Smtp-Source: AGHT+IEWMTQD0uVdyod+sr7GU7wtPx6+jbF5hXizyEE6NR1yMYaBOq7d3oMmZWolBM3eKha0C7/HuV9ERdARRyyouQ4=
-X-Received: by 2002:a05:6820:2710:b0:5f8:a3df:a9b with SMTP id
- 006d021491bc7-5fa388a07c8mr24179204eaf.8.1738007858991; Mon, 27 Jan 2025
- 11:57:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edaVHAcc"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so53668865e9.1
+        for <regressions@lists.linux.dev>; Mon, 27 Jan 2025 16:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738022685; x=1738627485; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eemsbZ6okcf087qLiLh0gj3mgI7cIF5l0GwYOpi1ILo=;
+        b=edaVHAcchVJiZTlIA1MPXpnsb1cJRFFa2bWB97j4yqFLaGphQkA4PobfWxthKdyJht
+         gIQjtwTR3Pkfraz1MLKeaB35aM0u0zS+2D8dG2zelMo+NPJrnZKaTsVxjJ/rrZtz1onf
+         3kNnqheOGw2pwugUQ+mOp9M7JgeIPzIcxdThZe6Lwtyd+2i6y7bNPEGwxsVcC5baCZtq
+         /p7u/9kaFvhYay3aYT8JqsMPne9lUj02b7f4UN0VEITKpvNZqdcm7GQoVsfJzlFa7EWV
+         RNOka4oIIiFtv6A4t+9hz14bTPxC9IrfOJ6L5dsgmZsy4LyUM8eQLn9aonXRixXqqV92
+         Ggkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738022685; x=1738627485;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eemsbZ6okcf087qLiLh0gj3mgI7cIF5l0GwYOpi1ILo=;
+        b=jjGisa6n9Nq2a0cxhU+nUq3oRI6YqqmO9MVPrXifw4dKPUWHczU8ghP5sYpbvqlSCj
+         5HEG25vl4lv7M0ySjXqJyIuCZSqEh4afHYDTC3k+WJFITaHAAbOF/WVsfHoqvovjlUak
+         rZhhJJUcxQZQ0UCA0VahJg4mcXu/b4TqcEx/DTmp0CjgT75t1zs2rqdpfMa8voARSxFU
+         M4hVAI8PX437RzyZNs2Rj/uLoO/YEMDWoGPJXesAIlDVe8xqdLclbcyLIhfajODmHCyA
+         SrSd0Lj/+LlFMh8ToD7Q1tA/TQONSJcqkU/1NHIkgcWpNMIh7Nla9SkI31bu2JV7Zcye
+         LZXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEijOl9S+tcc4UorklHdjpnvElnS0wkpHiO35q18IomejlgCXHrpQjIb3fBqZlGbh6sEvRoa13t12wNw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0YTUnvCp3r/tlRty1WxoKyY1Cz9cSvp/cIbmjMpj29nzMb1VK
+	3GV1jhd7BS7N3FPe0sMZk/APuyH4dLipsUECNbx0mFnVrh3GWayU
+X-Gm-Gg: ASbGncs5qQBIyeYou/i5IOrkOwPa41tG7JMRulpKO8wEjzOrkSZWNeaqigZmtg+NLWk
+	4nx4tSpqp8ODVKck9jJx70UAozqKsGQFxi9VhaW39J9dYlHgXIkuzvVHGI3H9QjkNJgt1vlG0kQ
+	8fHTCCTh3cjKK7uDlhULEiTQN7SDOmD04ZRYKBFjCVgdXuO7D8yKZqrmpmog863Itgg5dX7EeGq
+	Xr6gi/Fn1hLk1VjIuBjZ6DtnorNbBR2j/zQXJZNCF+dAfLfUALQcUl0Iyc8OodlDC5p64BRBPLX
+	NXxHb9oqiPrK
+X-Google-Smtp-Source: AGHT+IG3Clop1tgKlMpwwSYZCqVDTcwopkBm9/c1BM3OKVdp95GghBpZ6D2AUX9Zc6zxF8d2aoHbaA==
+X-Received: by 2002:a05:600c:4e12:b0:42c:b9c8:2bb0 with SMTP id 5b1f17b1804b1-438913bdcd2mr351880695e9.4.1738022684533;
+        Mon, 27 Jan 2025 16:04:44 -0800 (PST)
+Received: from [192.168.0.50] ([79.119.240.80])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438bd48a2f1sm148410705e9.17.2025.01.27.16.04.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jan 2025 16:04:43 -0800 (PST)
+Message-ID: <585f1075-a662-489b-bd5c-cf9f24291804@gmail.com>
+Date: Tue, 28 Jan 2025 02:04:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241111-runtime_pm-v7-0-9c164eefcd87@quicinc.com>
- <20241111-runtime_pm-v7-2-9c164eefcd87@quicinc.com> <Z30p2Etwf3F2AUvD@hovoldconsulting.com>
- <7882105f-93a3-fab9-70a2-2dc55d6becfc@quicinc.com> <Z3057yuNjnn0NPqk@hovoldconsulting.com>
- <20250113162549.a2y7dlwnsfetryyw@thinkpad> <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
-In-Reply-To: <CAPDyKFr=iudHra-AESDW3xM4iNqOD-v8wseBEK0NAHYUH0kE7w@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 27 Jan 2025 20:57:26 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
-X-Gm-Features: AWEUYZnhse4LT7h59hjCPJr-pPx1IdSDJ1ByJ4nwIaHU25iwJKkaWU7LGgCHgts
-Message-ID: <CAJZ5v0h-NrdoAdJ5ZTC1wZhh2BzonSW6ek1ux01-c7L5SLby8A@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Enable runtime pm of the host bridge
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, rafael@kernel.org, 
-	Johan Hovold <johan@kernel.org>, Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, 
-	Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Markus.Elfring@web.de, 
-	quic_mrana@quicinc.com, m.szyprowski@samsung.com, linux-pm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="0000000000000dbe52062cb57da8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before
+ downloading the fw
+To: John Glotzer <jglotzer@gmail.com>, sergio.callegari@unibo.it
+Cc: Aaron.Hou@mediatek.com, Chris.Lu@mediatek.com, Deren.Wu@mediatek.com,
+ Hao.Qin@mediatek.com, Sean.Wang@mediatek.com, johan.hedberg@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, luiz.dentz@gmail.com,
+ marc.payne@mdpsys.co.uk, marcel@holtmann.org, regressions@lists.linux.dev,
+ steve.lee@mediatek.com, tiwai@suse.de
+References: <9ae25475-e8f4-4ee1-8022-7621fbe8ebc6@unibo.it>
+ <20250118165840.73110-1-jglotzer@gmail.com>
+Content-Language: en-US
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+In-Reply-To: <20250118165840.73110-1-jglotzer@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---0000000000000dbe52062cb57da8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 18/01/2025 18:58, John Glotzer wrote:
+> (Note: additional discussion has taken place under
+> Re: [REGRESSION] bluetooth: mt7921: Crash on Resume From Suspend And Hibernate)
+> 
+> Hi,
+> 
+> I have dug further into this issue and I think I have a root cause analysis that
+> makes sense (at least it does for me :) ).
+> The TLDR is that the root cause is the following commit that was introduced with the 6.11 kernel.
+> 
+> https://github.com/torvalds/linux/commit/d53ab629cff57
+> 
+> Furthermore, the problem must be the call to usleep_range() in
+> drivers/net/wireless/mediatek/mt76/mt792x_core.c as this is the only behavioral change.
+> 
+> Notice that this commit first shows up in v6.11-rc1 and is present for all subsequent releases,
+> which matches perfectly the breakage pattern seen by the user community.
+> 
+> What, then, is the evidence for this?
+> 
+> First of all the entire community has been unanimous in the observation that the issue
+> started with the 6.11 kernel. The universal experience has been that any kernel prior
+> to that had no issues, and all kernels starting with 6.11 were affected. Also no attempts
+> to mitigate the issue in code by attacking the problem via the firmware download code paths have
+> been fruitful.
+> 
+> The next piece of solid data is outlined here:
+> 
+> https://github.com/alimert-t/suspend-freeze-fix-for-mt7921e
+> 
+> Here the lead paragraph states:
+> "A suspend/resume issue occurs on systems with the MediaTek MT7921 Wi-Fi adapter when
+> running on Kernel 6.11.-. After suspending, the system fails to resume / freezes and requires a hard
+> reset."
+> 
+> The mitigation for this issue has consisted of one of two approches:
+> 
+> - rfkill bluetooth and wifi on sleep and reverse the process on wake
+> - add the parameter mt7921e.disable_aspm=y to the kernel command line
+> (anecdotally I have seen reports of people doing things like turning off bluetooth
+>  and/or wifi before suspending or for that matter rmmod mt7921e before suspending).
+> 
+> I personally have used both of these methods with a sucess rate of 100%.
+> 
+> The way to unlock the puzzle is to examine the 6.11 code with an eye towards
+> - what changed between v6.10 and v6.11?
+> - what is the intersection between this changeset and the disable_aspm paramter?
+> 
+> To cut to the chase the answer to both these questions is just the contents of
+> https://github.com/torvalds/linux/commit/d53ab629cff57. I confirmed this by
+> diffing v6.10 and v6.11 and then going through the diff looking for disable_aspm.
+> 
+> The following lines were added to drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> 
+> 	if (!mt7921_disable_aspm && mt76_pci_aspm_supported(pdev))
+> 		dev->aspm_supported = true;
+> 
+> The bitfield aspm_supported was added to the struct mt792x_dev in drivers/net/wireless/mediatek/mt76/mt792x.h
+> 
+> and if this bitfield is true then the call to usleep_range is made in  __mt792xe_mcu_drv_pmctrl()
+> in drivers/net/wireless/mediatek/mt76/mt792x_core.c.
+> 
+> 		if (dev->aspm_supported)
+> 			usleep_range(2000, 3000);
+> 
+> By setting mt7921e.disable_aspm=y on the kernel command line, this code pathway is avoided
+> and no crash or lockup happens when the device is woken back up.
+> 
+> Disclaimers:
+> 
+> - I don't claim to know the root cause for why the call to usleep_range() leads to a crash or a
+>   freeze.
+> 
+> - I don't know the details of the specific issue the code for commit d53ab629cff57 was designed
+>   to fix, hence I don't know the consequences of removing the call to usleep_range(). However,
+>   I do know that the user experience has been significantly impacted negatively by the introduction
+>   of d53ab629cff57 into the 6.11 kernel.
+> 
+> Thanks for your attention,
+> 
+> John Glotzer
+> 
+> 
 
-On Mon, Jan 27, 2025 at 3:32=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> On Mon, 13 Jan 2025 at 17:25, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > + Ulf (for the runtime PM related question)
-> >
-> > On Tue, Jan 07, 2025 at 03:27:59PM +0100, Johan Hovold wrote:
-> > > On Tue, Jan 07, 2025 at 07:40:39PM +0530, Krishna Chaitanya Chundru w=
-rote:
-> > > > On 1/7/2025 6:49 PM, Johan Hovold wrote:
-> > >
-> > > > >> @@ -3106,6 +3106,17 @@ int pci_host_probe(struct pci_host_bridge=
- *bridge)
-> > > > >>                  pcie_bus_configure_settings(child);
-> > > > >>
-> > > > >>          pci_bus_add_devices(bus);
-> > > > >> +
-> > > > >> +        /*
-> > > > >> +         * Ensure pm_runtime_enable() is called for the control=
-ler drivers,
-> > > > >> +         * before calling pci_host_probe() as pm frameworks exp=
-ects if the
-> > > > >> +         * parent device supports runtime pm then it needs to e=
-nabled before
-> > > > >> +         * child runtime pm.
-> > > > >> +         */
-> > > > >> +        pm_runtime_set_active(&bridge->dev);
-> > > > >> +        pm_runtime_no_callbacks(&bridge->dev);
-> > > > >> +        devm_pm_runtime_enable(&bridge->dev);
-> > > > >> +
-> > > > >>          return 0;
-> > > > >>   }
-> > > > >>   EXPORT_SYMBOL_GPL(pci_host_probe);
-> > > > >
-> > > > > I just noticed that this change in 6.13-rc1 is causing the follow=
-ing
-> > > > > warning on resume from suspend on machines like the Lenovo ThinkP=
-ad
-> > > > > X13s:
-> > >
-> > > > Can you confirm if you are seeing this issue is seen in the boot-up
-> > > > case also. As this part of the code executes only at the boot time =
-and
-> > > > will not have effect in resume from suspend.
-> > >
-> > > No, I only see it during resume. And enabling runtime PM can (and in
-> > > this case, obviously does) impact system suspend as well.
-> > >
-> > > > >   pci0004:00: pcie4: Enabling runtime PM for inactive device with=
- active children
-> > >
-> > > > I believe this is not causing any functional issues.
-> > >
-> > > It still needs to be fixed.
-> > >
-> > > > > which may have unpopulated ports (this laptop SKU does not have a=
- modem).
-> > >
-> > > > Can you confirm if this warning goes away if there is some endpoint
-> > > > connected to it.
-> > >
-> > > I don't have anything to connect to the slot in this machine, but thi=
-s
-> > > seems to be the case as I do not see this warning for the populated
-> > > slots, nor on the CRD reference design which has a modem on PCIe4.
-> > >
-> >
-> > Yes, this is only happening for unpopulated slots and the warning shows=
- up only
-> > if runtime PM is enabled for both PCI bridge and host bridge. This patc=
-h enables
-> > the runtime PM for host bridge and if the PCI bridge runtime PM is also=
- enabled
-> > (only happens now for ACPI/BIOS based platforms), then the warning show=
-s up only
-> > if the PCI bridge was RPM suspended (mostly happens if there was no dev=
-ice
-> > connected) during the system wide resume time.
-> >
-> > For the sake of reference, PCI host bridge is the parent of PCI bridge.
-> >
-> > Looking at where the warning gets triggered (in pm_runtime_enable()), w=
-e have
-> > the below checks:
-> >
-> > dev->power.runtime_status =3D=3D RPM_SUSPENDED
-> > !dev->power.ignore_children
-> > atomic_read(&dev->power.child_count) > 0
-> >
-> > When pm_runtime_enable() gets called for PCI host bridge:
-> >
-> > dev->power.runtime_status =3D RPM_SUSPENDED
-> > dev->power.ignore_children =3D 0
-> > dev->power.child_count =3D 1
-> >
-> > First 2 passes seem legit, but the issue is with the 3rd one. Here, the
-> > child_count of 1 means that the PCI host bridge has an 'active' child (=
-which is
-> > the PCI bridge). The PCI bridge was supposed to be RPM_SUSPENDED as the=
- resume
-> > process should first resume the parent (PCI host bridge). But this is n=
-ot the
-> > case here.
-> >
-> > Then looking at where the child_count gets incremented, it leads to
-> > pm_runtime_set_active() of device_resume_noirq(). pm_runtime_set_active=
-() is
-> > only called for a device if dev_pm_skip_suspend() succeeds, which requi=
-res
-> > DPM_FLAG_SMART_SUSPEND flag to be set and the device to be runtime susp=
-ended.
-> >
-> > This criteria matches for PCI bridge. So its status was set to 'RPM_ACT=
-IVE' even
-> > though the parent PCI host bridge was still in the RPM_SUSPENDED state.=
- I don't
-> > think this is a valid condition as seen from the warning triggered for =
-PCI host
-> > bridge when pm_runtime_enable() is called from device_resume_early():
-> >
-> > pci0004:00: pcie4: Enabling runtime PM for inactive device with active =
-children
->
-> Thanks for the detailed analysis, much appreciated.
->
-> So this seems to boil down to the fact that the PM core calls
-> pm_runtime_set_active() for a device, when it really should not. If
-> there is a clever way to avoid that, I think we need Rafael's opinion
-> on.
+John and Sergio, have y'all tried kernel 6.12.8 or newer?
+People say the suspend problem is fixed:
 
-Actually, not really.
-
-The status of the child and the child count of the parent have no
-meaning until runtime PM is enabled for the parent.  They can be
-manipulated freely before this happens with no consequences and all
-will be fine as long as those settings are consistent when runtime PM
-is enabled for the parent.
-
-Now, they aren't consistent at that point because
-dev_pm_skip_suspend() returns false for the parent as it has
-DPM_FLAG_SMART_SUSPEND clear.
-
-To me, this looks like a coding mistake because all devices that have
-power.must_resume set should also be set to RPM_ACTIVE before
-re-enabling runtime PM for them, so the attached patch should work.
-
---0000000000000dbe52062cb57da8
-Content-Type: text/x-patch; charset="US-ASCII"; name="pm-sleep-must_resume.patch"
-Content-Disposition: attachment; filename="pm-sleep-must_resume.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m6fgz9y50>
-X-Attachment-Id: f_m6fgz9y50
-
-LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAgNiArKystLS0KIDEgZmlsZSBjaGFu
-Z2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgotLS0gYS9kcml2ZXJzL2Jhc2Uv
-cG93ZXIvbWFpbi5jCisrKyBiL2RyaXZlcnMvYmFzZS9wb3dlci9tYWluLmMKQEAgLTY1NiwxMiAr
-NjU2LDEyIEBACiAJICogc28gY2hhbmdlIGl0cyBzdGF0dXMgYWNjb3JkaW5nbHkuCiAJICoKIAkg
-KiBPdGhlcndpc2UsIHRoZSBkZXZpY2UgaXMgZ29pbmcgdG8gYmUgcmVzdW1lZCwgc28gc2V0IGl0
-cyBQTS1ydW50aW1lCi0JICogc3RhdHVzIHRvICJhY3RpdmUiLCBidXQgZG8gdGhhdCBvbmx5IGlm
-IERQTV9GTEFHX1NNQVJUX1NVU1BFTkQgaXMgc2V0Ci0JICogdG8gYXZvaWQgY29uZnVzaW5nIGRy
-aXZlcnMgdGhhdCBkb24ndCB1c2UgaXQuCisJICogc3RhdHVzIHRvICJhY3RpdmUiIHVubGVzcyBp
-dHMgcG93ZXIubXVzdF9yZXN1bWUgZmxhZyBpcyBjbGVhciwgaW4KKwkgKiB3aGljaCBjYXNlIGl0
-IGlzIG5vdCBuZWNlc3NhcnkgdG8gdXBkYXRlIGl0cyBQTS1ydW50aW1lIHN0YXR1cy4KIAkgKi8K
-IAlpZiAoc2tpcF9yZXN1bWUpCiAJCXBtX3J1bnRpbWVfc2V0X3N1c3BlbmRlZChkZXYpOwotCWVs
-c2UgaWYgKGRldl9wbV9za2lwX3N1c3BlbmQoZGV2KSkKKwllbHNlIGlmIChkZXYtPnBvd2VyLm11
-c3RfcmVzdW1lKQogCQlwbV9ydW50aW1lX3NldF9hY3RpdmUoZGV2KTsKIAogCWlmIChkZXYtPnBt
-X2RvbWFpbikgewo=
---0000000000000dbe52062cb57da8--
+https://bugzilla.kernel.org/show_bug.cgi?id=219514#c11
