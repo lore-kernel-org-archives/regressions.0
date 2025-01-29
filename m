@@ -1,79 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289B514A635;
-	Wed, 29 Jan 2025 14:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD811E25EC
+	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 18:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738162223; cv=none; b=S+rGZZ6jGMHABj49HDhVEPOrW6Sj6Y+bLrrNSDA1H44L2yEuAmDmo8Tm7KcGMYACVUwf/iIorm6stU2HrD62h1Iv/GN67XV/h5S2uJsJZJHxrywc7kxH7NF3x/al5YMhnzhTu0SWHWbohYBacCjLDAzqdIin3kocdvZQDsZDSM0=
+	t=1738175479; cv=none; b=V2x1ei2glMAwMJbk7WbpVRJ2kqyMsST5nvi2c+9H8APGkTwTBI5GEROll1L1UOoIgC7u7y76jauH3fj2fE0Zh91Ou7jG7cCJEJk6xspejWFxCu/iRpI5fcUtfc2JfXhav/Hp3gVAB6TFHRbnC5bKJycS6pbjVjmKIZFrZO9msfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738162223; c=relaxed/simple;
-	bh=Yulc6gJaTzGVoS9ctTWsVTmw0HAG9Y+R9cKgd4fepeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZpYdHnkBZZcEycTWLruZZa6a4cS/xEGRVv24rKkLQSEhy9TClctIZPlrfhe8/YlDepnfQ1mfUDgaygsX8MkIQD3BqsXvTg6FSqchyskZOUqv8zc6KfaWZRT+U07u63sthbFLSZbbvWHAhG7Ex7U2tPnb3eUmPG6kLGCWb0vqg0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjJriJO6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738175479; c=relaxed/simple;
+	bh=g942N+5cFH8Z7ggAYbYwuoCxKSmc/5Ox8xjlY1inj9I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S1+Ft23KyqXVZQLkPg50lWzLwclU8TBo4z6yQyz9yJZJ8qUQzev3lb1tctZCVpeJ5iCOMxwebTNDUBzDRGizUuBLCvTzXD30J6azd67eVuks/xSLkfXpb8Iu1weO6CzW7WCOE/RiqdPr22z4CkTt+cc+wioYIxnwqh3ODJiiG1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnaG9UED; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjJriJO6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA68C4CED1;
-	Wed, 29 Jan 2025 14:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738162222;
-	bh=Yulc6gJaTzGVoS9ctTWsVTmw0HAG9Y+R9cKgd4fepeQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OjJriJO65H3ftNFlkfAjt2ManhpLdvdPy3FlOlQ4vyK0XIdBe47wDizeToGtuHSiF
-	 7LFWxyVWq9wGi/VsxMyoaZXkRTPtsXlcE8V0HrM7S9709NJM07bP6/aOtBBclwwBr3
-	 FGnSwDrNI4TW7cFrnVH5gImtdBKqXdVkQaJXEcjNOyftS4Mjh4kCY9qy2yFv+zYq6u
-	 DFqUwR3UBBFzu9ZLwhmFlMAzdCe8MOi//Amfhhkn/2uOJ9OPpl+GrFqyflBRjnURLb
-	 7BBxtn4QMCUHmrOvgO/zBA8bGyf0SgzhC94Qm3rDdlHK86R6ExitPGSEsRqsa10Sa9
-	 sgX1jF/eyk0kQ==
-Date: Wed, 29 Jan 2025 08:50:19 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jan Beulich <jbeulich@suse.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-Message-ID: <20250129145019.GA459546@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnaG9UED"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-29fcbf3d709so2278824fac.2
+        for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 10:31:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738175477; x=1738780277; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cBAmHsVRYatgodxfmWfN1c6yV3AJ+2DuOOOfnLu1pdU=;
+        b=dnaG9UEDaRZlCPcAZ2kqTxi6VgQRJfqI9LMtEfnoVyGOlrD6eiaF90dE9Uv+w864cz
+         cEJTFMELZDo7Nd1HIGTuESiGzhKCY9inWr1z7pSCESI+WcGOUJS5kCXb+nNjspuFQcnQ
+         uK0A2rDAQ/6mvhoyl/rVzeZrp/Mqw6z0AWVZnVbfVXTDO3EpvSNbykk8bKNhYYsQ6oRb
+         W9YAxr8Uw8eit92h3+tsrOR5D9uaaYr/7hpmPgk8deY80ls5A+rETLzPflBtEDMiU7C3
+         LpwZoGIDbRn1CYs31l7cFyBOg1zrrOQO41YhFYxwn46JSDrCsTVJSLlOT5Kc3sF1T/u1
+         tqwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738175477; x=1738780277;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cBAmHsVRYatgodxfmWfN1c6yV3AJ+2DuOOOfnLu1pdU=;
+        b=s7Yb72YtKYluJI0j4nznbrMLv4/e+kZcyL7G0JbbjYfTgMwj0ulpzn8Oc2ogMcSucS
+         qvKF0I+3gSoThsDWUA5elxGwk3NAYn22zkdzhQLWM77lrYUVeLB43xqhoFONw36KRDu+
+         SlxXFUfeGKOBZ87vCIHAZaNmjOAAwGXq00OeYnFi1EWHlLy+cqrrRnGar8Rqc6Zb8vsm
+         jKMtw0rRGHkxk+ti8mVICKdVWBl9Uc8LAKyT7ko3NmGiTlrEVXGFkfxU3F0fWG1rwIbu
+         T7/XnpfxTWgam2RoCoDjuRj4to1mkdfLjFhk8LwDlpvySf/bEtaX525mvU84Oayed8bh
+         vkhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbNqrS/b1A2HbDlu8bDjigyrxLcw3FMIirUj6tXSO7Q2qQNNqlo1HScENcxmBJ4QUObPCSq9v86R6kKA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0/o/MILl5TYetUKq2DpR2A100Q/Kj5fuJwnW7CCjGzweiLiKO
+	GL4ADVPSUmOC+EjLCSZHPnbvztbctw6HcbIHQYYII6ci/jhv1JXa
+X-Gm-Gg: ASbGnctQdImNvZjNGDOLKwmJHHknCYgWi6z2aK5GPlGEP16ezOcEAMR5feq51Y0zbrW
+	M958Qfmb8ITnUjPwGynwkvCfPM8awTVX8/8tUMhRm3jkSE82KZx6ttUTJT9Rx5nkXzuFIRJJfDh
+	/4+ee3dBYzjx+RbX4EqcSUIvJDW60PPihQ0eZPzKv0YqjgrO8RowCzoG+4UPX512xKzrtr+hSCY
+	psONZb68xXUpqorJwd84AxFiGo4lrD5HAfmc/C6QnlCy/pk+6b6DCEC3VTq66nCWLn93NBxFgZS
+	ISB/OftXtrqrMMr8G4oSz7pr2viHfoV/QxkS
+X-Google-Smtp-Source: AGHT+IFoQgrhZqWDNWjsi+GsbUHYEMoaVrN1HbdaP4CDNbX4DiAKWLHn2kW1C0kpPifUGxx4C7Cu5g==
+X-Received: by 2002:a05:6870:2a44:b0:297:2479:a35b with SMTP id 586e51a60fabf-2b32efdb093mr2435058fac.1.1738175477149;
+        Wed, 29 Jan 2025 10:31:17 -0800 (PST)
+Received: from localhost.localdomain ([23.151.240.73])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b28f4134e0sm4482433fac.40.2025.01.29.10.31.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2025 10:31:16 -0800 (PST)
+From: John Glotzer <jglotzer@gmail.com>
+To: rtl8821cerfe2@gmail.com
+Cc: Aaron.Hou@mediatek.com,
+	Chris.Lu@mediatek.com,
+	Deren.Wu@mediatek.com,
+	Hao.Qin@mediatek.com,
+	Sean.Wang@mediatek.com,
+	jglotzer@gmail.com,
+	johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	luiz.dentz@gmail.com,
+	marc.payne@mdpsys.co.uk,
+	marcel@holtmann.org,
+	regressions@lists.linux.dev,
+	sergio.callegari@unibo.it,
+	steve.lee@mediatek.com,
+	tiwai@suse.de
+Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before downloading the fw
+Date: Wed, 29 Jan 2025 12:31:09 -0600
+Message-ID: <20250129183109.10770-1-jglotzer@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <585f1075-a662-489b-bd5c-cf9f24291804@gmail.com>
+References: <585f1075-a662-489b-bd5c-cf9f24291804@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <841e1793-4635-4f06-b0c9-37530215c08b@suse.com>
 
-On Wed, Jan 29, 2025 at 02:52:33PM +0100, Jan Beulich wrote:
-> On 29.01.2025 14:32, Bjorn Helgaas wrote:
-> > On Wed, Jan 29, 2025 at 04:47:28AM +0100, Marek Marczykowski-Górecki wrote:
-> >> On Tue, Jan 28, 2025 at 09:40:18PM -0600, Bjorn Helgaas wrote:
-> >>> I guess the code at [2] is running in user mode and uses Linux
-> >>> syscalls for config access?  Is it straceable?
-> >>
-> >> Nope, it's running as the hypervisor and mediates Linux's access to the
-> >> hardware. In fact, Linux PV kernel (which dom0 is by default under Xen)
-> >> is running in ring 3...
-> >>
-> >> But I can add some more logging there.
-> > 
-> > So I guess the hypervisor performs the config access on behalf of the
-> > Linux PV kernel?  Obviously Linux thinks CRS/RRS SV is enabled, but I
-> > suppose all the lspci output is similarly based on whatever the
-> > hypervisor does, so how do we know the actual hardware config?
-> 
-> The hypervisor only intercepts config space writes; reads, particularly
-> when going via mmcfg, ought to be unaffected, and hence what lspci shows
-> should be "the actual hardware config".
+Good news/TLDR
+   Yes, so far I have resumed from sleep 2x without any issues
+   with both of my workarounds disabled (kernel command line/systemd rfkill on sleep).
 
-FWIW, on x86, the first 256 bytes of config space for domain 0 uses
-raw_pci_ops even when mmcfg is available (see raw_pci_read()).  This
-normally means IO ports 0xcf8/0xcfc.
+What I don't yet understand
+   This commit
+   (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/drivers/bluetooth/btusb.c?id=v6.12.8&id2=v6.12.7)
+   was a pure USB fix. My mt7922 device (not a USB dongle but built into the motherboard)
+   seems to be both a bluetooth device (bound to btusb driver) *and* a Wifi device (bound to mt7921e driver).
+
+   I remain puzzled as to how is it that the issue that is on the USB side was *also* fixed by
+   adding mt7921e.disable_aspm=y to the kernel command line (since that would act on the wifi/pci pathway)?
