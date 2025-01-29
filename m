@@ -1,89 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CF019CD1E
-	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 11:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140D81D90B1
+	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738148461; cv=none; b=fm3Vwh05afv96HgicUcZPbe08jUy58CaG1ROnp+ncBgpbMl0GGktK6w5pZUmOoHXMsbs6MJP6vxgMcL+ZquRLtBW5zXbRnoRyMPO2NtLmenDKyizO83udsshCiu+P+/LDpBZVhc5Gmd1LINW0kMnso66hjZJGAmsu2kgyAMvsSo=
+	t=1738151604; cv=none; b=N0RhDJxWaI+iadn5FndE/iJqDRN+w9a4eYyECD1KSr3Ck1FuDjE2Ej5VOlW8hZngeUolJ3H+IIu5b+Wm6s9Vjf/h02t16CRjc46WQ7sZBMEsyeYu4E/+8nvGOypLcXFW1mvjtcaqqFJhYpdrS1nFYMwhGdetjbXI9nxM897mvqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738148461; c=relaxed/simple;
-	bh=NLY9YZjD1ag07UaqOsQMc+/23yy2LzLeb1dAft7nyYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=skwXw9xKqwAPkd1Gz4VTcszqHQDxiEjGTWRy24zs0DrRV5r1SES0ko7S6xFj3N2SpsTUD2qPQ/MeowFVsJo73kla52zR9v/I5NDjYFT/QDNK7bqecD+3aMQhz0SjwtpCKbQzTsgU3NvehRxtiDKvnEjV04lGIEhh5e/sZgZs5BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=naETcXE/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738151604; c=relaxed/simple;
+	bh=kjClw47FHDQHlQQV0V96Wr3SEi2HA2uZHAK1YtvAQLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GR0DqFXtHWZsFietix92M2KxUtOoF9Adh6CgCnRyssIEWuxigMv6QvLicUzQ88rWzwZRfNOa8fsH6oq7rdIjtzMBhwLAiAHwFVwmsuO+RBE9OSTARR27bfSi7u6SnrIVGcvaYyDaC9mTSTbzbUlZwJaUTdceeHrjvz7bTgvntsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=NB+xIyjG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IjVVgQeY; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="naETcXE/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738148460; x=1769684460;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NLY9YZjD1ag07UaqOsQMc+/23yy2LzLeb1dAft7nyYE=;
-  b=naETcXE/JZ/9a26TDI/QeXR7hVPtwMU+3QeUnS2MKF0vKJcv2nziCebD
-   vfBa+vJy2+nSl1T5LSKIQrLBYcYz/ot//s0wXkd43HY7kIA7p3+QiVwLn
-   VilmPNpUp3ubgirDj5HSpx7ndj72HZVmhhD+PvFKbHocD57Y39dJqHduR
-   KuWH6BQbrr3bJqZ94Cl6cBFG2SRJavamc1J8d0SndukaRcQ7NMCI2A59w
-   /o5mmptw67S3+2ZCPsMU4UhZcqB3ey5ioQy2GHVzXR0A+eIoN5khy1Gvq
-   /0Wl3bedAzCMq4a3VX36qLvdiNfsqhABhR6P62XQ0sjJ5f93TzQ/kLILf
-   w==;
-X-CSE-ConnectionGUID: RL82Q1W7QKmobq/GNaEIFw==
-X-CSE-MsgGUID: dpWDKZ+qS8OasQEcMn21Lg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11329"; a="38687013"
-X-IronPort-AV: E=Sophos;i="6.13,243,1732608000"; 
-   d="scan'208";a="38687013"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2025 03:00:59 -0800
-X-CSE-ConnectionGUID: dG+oDfcPRsK/YpJ5VLsn3A==
-X-CSE-MsgGUID: BpLnQVSHQDaN1B/CTQMVJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114132173"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by orviesa005.jf.intel.com with ESMTP; 29 Jan 2025 03:00:57 -0800
-Message-ID: <ee229b33-2082-4e03-8f2b-df5b4a86a77d@linux.intel.com>
-Date: Wed, 29 Jan 2025 13:01:58 +0200
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="NB+xIyjG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IjVVgQeY"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 923C31140142;
+	Wed, 29 Jan 2025 06:53:20 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 29 Jan 2025 06:53:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738151600;
+	 x=1738238000; bh=5kVjsOjJ1lV0xf8PMGyEsjXHM5+QwpgL4ePKOXTO7Gw=; b=
+	NB+xIyjGD2gE9KRKrDaxud6TIUdIG1QSObSAQ9M3vAtucwPxhjGblTtuQSJvGVWy
+	ndVPifH5YN1yhfBT+2lPAk1PQQdhCfpOJX5FeaU7oFust2aNlAk5MEpYe8uUvm/y
+	KvjdAklO5cUcMzhF3VfkFnJcryeOg5ChWKfSv/tvdZIl89P8IbOMoZVB3zClWsby
+	q6yCVtxGqOrufdW5mYdLVc5V80Z8z0A/uu3ysZvc2IKEmB5b5FHoD/+lhojZOlNq
+	vZH9U9ruW0il/Dg8YbkhzwU7Dsp1B1C3dEdaHdxjOYJ11QxS4yUMlMcRuPoUp+Y/
+	lBAlAOLzwlaCTF7/o0rZAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738151600; x=1738238000; bh=5kVjsOjJ1lV0xf8PMGyEsjXHM5+QwpgL4eP
+	KOXTO7Gw=; b=IjVVgQeYtvf6xJclgFgzYn4q4xdff5x8LH0/x3m/Ks+X6mzqUy8
+	Spn0KawrTC1u6+JuRsSyeuMjX2mFJIpI7BRvhL/MY6zle5kyDzBIy0WsPbbn5we/
+	d82fXF/dBmEbzXPmzZAoXVdYlv8J9D+3FfUuLwDPApXb9ENm7PvQcZu3FmSUOTn9
+	rtVoF3ayXZ+SyhDDYdxoUafO1B2M0AozfCSLBUd3+fRtDiREwgu/yJ8En2WdBZTY
+	yHDMZwjXBUVSY63tZq+4YgEKP1BDW+ORHHw1x3I1NbGflRkrDfg+JSCQ1W/29/1+
+	uODGXGjFnBuuZMHJeXXbE51LfNu5zbn7afQ==
+X-ME-Sender: <xms:rxaaZxZHIhPNfz9J7puVjg0g-XbQhGEV4mw8LhRtIO2uUmuGbkOdUg>
+    <xme:rxaaZ4YktNWiCg_5XxfU_9Mx8-UQyqULE9inctYc1Qs2AD7rkbpxkjYNimRKTHLSC
+    BdpnWGXM7geEQ>
+X-ME-Received: <xmr:rxaaZz9JbK0JxP83b6LWLXBxVtmvSThIFhiKHeZqFTwKg7X87NikVRWKKA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeen
+    ucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomh
+    grrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggft
+    rfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettddvge
+    euteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnh
+    gspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjsggv
+    uhhlihgthhesshhushgvrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhogh
+    hlvgdrtghomhdprhgtphhtthhopehjghhrohhsshesshhushgvrdgtohhmpdhrtghpthht
+    oheprhhoghgvrhdrphgruhestghithhrihigrdgtohhmpdhrtghpthhtohepsghorhhish
+    drohhsthhrohhvshhkhiesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepgigvnhdquggv
+    vhgvlheslhhishhtshdrgigvnhhprhhojhgvtghtrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgv
+    ghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehnsg
+    gusehnsggurdhnrghmvg
+X-ME-Proxy: <xmx:rxaaZ_o14Y1yYSHINJ9lVdCij1hHDGJS00znShf0NjFe1WjVNb3HYA>
+    <xmx:rxaaZ8pbHoprt6ZkjabWHGfbHbJso-CoBM7yp-91YaBaM_QWI6OsCg>
+    <xmx:rxaaZ1Qtg2BTUuYw-qyH0eOUvmvmW0h5Z75JtwutuAbyEhG7skIiRA>
+    <xmx:rxaaZ0pWoQYrxpW1Qkjonw9uwntE0msRt4vCjY7Z27VW-S7GDqWGzQ>
+    <xmx:sBaaZ561c46PVu3fMc4UG3ul1Y9PryvVUZgBzi3sKqsBcp5BAgtaD89n>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 29 Jan 2025 06:53:17 -0500 (EST)
+Date: Wed, 29 Jan 2025 12:53:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <Z5oWq4YgMgwWvl2G@mail-itl>
+References: <Z5mOKQUrgeF_r6te@mail-itl>
+ <20250129030315.GA392478@bhelgaas>
+ <Z5mfA32bvEn6yD-C@mail-itl>
+ <22ad7276-624d-49fb-a2bb-1b7908318a4e@suse.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: xhci port capability storage change broke
- fastboot android bootloader utility
-To: Forest <forestix@nom.one>
-Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net>
- <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com>
- <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
- <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
- <4kb3ojp4t59rm79ui8kj3t8irsp6shlinq@sonic.net>
- <8a5bef2e-7cf9-4f5c-8281-c8043a090feb@linux.intel.com>
- <2tq7pj5g33d76j2uddbv5k8iiuakchso16@sonic.net>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <2tq7pj5g33d76j2uddbv5k8iiuakchso16@sonic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="a+GZJj6pK/SHY+Cv"
+Content-Disposition: inline
+In-Reply-To: <22ad7276-624d-49fb-a2bb-1b7908318a4e@suse.com>
 
-On 24.1.2025 21.44, Forest wrote:
-> On Mon, 13 Jan 2025 17:05:09 +0200, Mathias Nyman wrote:
-> 
->> I'd recommend a patch that permanently adds USB_QUIRK_NO_LPM for this device.
->> Let me know if you want to submit it yourself, otherwise I can do it.
-> 
-> It looks like I can't contribute a patch after all, due to an issue with my
-> Signed-off-by signature.
-> 
-> So, can you take care of the quirk patch for this device?
-> 
-> Thank you.
 
-Sure, I'll send it after rc1 is out next week
+--a+GZJj6pK/SHY+Cv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 29 Jan 2025 12:53:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
 
-Thanks
-Mathias
+On Wed, Jan 29, 2025 at 10:17:20AM +0100, Jan Beulich wrote:
+> On 29.01.2025 04:22, Marek Marczykowski-G=C3=B3recki wrote:
+> > On Tue, Jan 28, 2025 at 09:03:15PM -0600, Bjorn Helgaas wrote:
+> >> The report claims the problem only happens with Xen.  I'm not a Xen
+> >> person, and I don't know how to find the relevant config accessors.
+> >> The snippets of kernel messages I see at [1] all mention pciback, so
+> >> that's my only clue of where to look.  Bottom line, I have no idea
+> >> what the config accessor path is, and maybe we could learn something
+> >> by looking at whatever it is.
+> >=20
+> > AFAIK there are no separate config accessors under Xen dom0, the default
+> > ones are used. xen-pcifront takes over PCI config space access (and few
+> > more) only in a domU (and only for PV), when PCI passthrough is used.
+> > Here, it didn't went that far...
+> >=20
+> > But then, Xen may intercept such access [2]. If I read it right, it
+> > should allow all access (is_hardware_domain(dom0)=3D=3Dtrue, and also t=
+he
+> > device is not on ro_map - otherwise reset wouldn't work at all).
+>=20
+> The other day you mentioned (on Matrix I think) that you observe mmcfg
+> not being used on that system. Am I misremembering? (Since the capability
+> where the control bit lives is an extended one, that capability would
+> neither be read nor modified when mmcfg is unavailable.)
+
+Yes, but later (once dom0 starts) it switched back to mmcfg. Now I see
+this:
+(XEN) PCI: MCFG configuration 0: base e0000000 segment 0000 buses 00 - ff
+(XEN) PCI: Using MCFG for segment 0000 bus 00-ff
+
+Another thing I noticed in the bug report - the reporter says warm
+reboot from 6.11 (where it works) to 6.12 avoids the issue (not sure
+about further reboots). Cold boot directly to 6.12 results in this buggy
+behavior.
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--a+GZJj6pK/SHY+Cv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmeaFqsACgkQ24/THMrX
+1ywvTQf/YYurxRaUAGuLjE9v/1EfWAM03m/V7lXiOvaN91b2+QkGZhFeQjEnpgwC
+1y+Qyhfyd/CYfTs5pX/3OJ2PvGHDOMBaRKHrPer+C31qBYf2025xPK/M345aLiHp
+XMjaIaI6JCVvVO718jleh/+mqtCGCPW4VB4liMmyHGquUrs72mBacofGKYEgh149
+sL3UEpSrAoFmy9mxVkNdGJLSZp6oW6zuXpkAJx4QeW5TzgY0F26BZUCDi5Py1R0m
+DvDmauAZRPKJH6/7lpw4aacRrLk9Y/dIbX51ELBxP1n3BcDmyHLEw1TECE+NPTGX
+HOfpgyyvw+YPtsG6sbXgLqYOoyZsaQ==
+=uRq/
+-----END PGP SIGNATURE-----
+
+--a+GZJj6pK/SHY+Cv--
