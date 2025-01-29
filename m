@@ -1,104 +1,97 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD811E25EC
-	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 18:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB2A18FDC5;
+	Wed, 29 Jan 2025 18:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738175479; cv=none; b=V2x1ei2glMAwMJbk7WbpVRJ2kqyMsST5nvi2c+9H8APGkTwTBI5GEROll1L1UOoIgC7u7y76jauH3fj2fE0Zh91Ou7jG7cCJEJk6xspejWFxCu/iRpI5fcUtfc2JfXhav/Hp3gVAB6TFHRbnC5bKJycS6pbjVjmKIZFrZO9msfg=
+	t=1738176087; cv=none; b=o2GdABd7zoavPtqvmeVTIc3/5Ysr2Zi81QScv6jhv3c6dSz4I2dQzvEsualIWKJJbceYKjUNa5JjAfSSFA65Qdtue7QzDsmZwf3/1a1cEdFBnb6nTRY3Ha74cSGPvug/2TWOmcspi8Rq3dG/sAktHXCU2eRUIc01h5WaxotIcUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738175479; c=relaxed/simple;
-	bh=g942N+5cFH8Z7ggAYbYwuoCxKSmc/5Ox8xjlY1inj9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S1+Ft23KyqXVZQLkPg50lWzLwclU8TBo4z6yQyz9yJZJ8qUQzev3lb1tctZCVpeJ5iCOMxwebTNDUBzDRGizUuBLCvTzXD30J6azd67eVuks/xSLkfXpb8Iu1weO6CzW7WCOE/RiqdPr22z4CkTt+cc+wioYIxnwqh3ODJiiG1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnaG9UED; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738176087; c=relaxed/simple;
+	bh=5hxn5iZljywfObaDAbFoAUgvQSBwEmGyxtCxix3eKfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N46xFQUNFBnGE88ZUPBgEiyIWag+jXN0BOdlHzHwet2Niq+rDw1+A8N3Woc07mfBAVvXKCISA/5R2RrI5lYG9O9e7LICAjKL6UlGRJdLxxNXWxFrGTrxtQYlFnILLupyPduxV2VIFGNLoVMCQJ2+AXj65KZLPyavcexOOM+vU8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sq68vWiz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnaG9UED"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-29fcbf3d709so2278824fac.2
-        for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 10:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738175477; x=1738780277; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cBAmHsVRYatgodxfmWfN1c6yV3AJ+2DuOOOfnLu1pdU=;
-        b=dnaG9UEDaRZlCPcAZ2kqTxi6VgQRJfqI9LMtEfnoVyGOlrD6eiaF90dE9Uv+w864cz
-         cEJTFMELZDo7Nd1HIGTuESiGzhKCY9inWr1z7pSCESI+WcGOUJS5kCXb+nNjspuFQcnQ
-         uK0A2rDAQ/6mvhoyl/rVzeZrp/Mqw6z0AWVZnVbfVXTDO3EpvSNbykk8bKNhYYsQ6oRb
-         W9YAxr8Uw8eit92h3+tsrOR5D9uaaYr/7hpmPgk8deY80ls5A+rETLzPflBtEDMiU7C3
-         LpwZoGIDbRn1CYs31l7cFyBOg1zrrOQO41YhFYxwn46JSDrCsTVJSLlOT5Kc3sF1T/u1
-         tqwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738175477; x=1738780277;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cBAmHsVRYatgodxfmWfN1c6yV3AJ+2DuOOOfnLu1pdU=;
-        b=s7Yb72YtKYluJI0j4nznbrMLv4/e+kZcyL7G0JbbjYfTgMwj0ulpzn8Oc2ogMcSucS
-         qvKF0I+3gSoThsDWUA5elxGwk3NAYn22zkdzhQLWM77lrYUVeLB43xqhoFONw36KRDu+
-         SlxXFUfeGKOBZ87vCIHAZaNmjOAAwGXq00OeYnFi1EWHlLy+cqrrRnGar8Rqc6Zb8vsm
-         jKMtw0rRGHkxk+ti8mVICKdVWBl9Uc8LAKyT7ko3NmGiTlrEVXGFkfxU3F0fWG1rwIbu
-         T7/XnpfxTWgam2RoCoDjuRj4to1mkdfLjFhk8LwDlpvySf/bEtaX525mvU84Oayed8bh
-         vkhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbNqrS/b1A2HbDlu8bDjigyrxLcw3FMIirUj6tXSO7Q2qQNNqlo1HScENcxmBJ4QUObPCSq9v86R6kKA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz0/o/MILl5TYetUKq2DpR2A100Q/Kj5fuJwnW7CCjGzweiLiKO
-	GL4ADVPSUmOC+EjLCSZHPnbvztbctw6HcbIHQYYII6ci/jhv1JXa
-X-Gm-Gg: ASbGnctQdImNvZjNGDOLKwmJHHknCYgWi6z2aK5GPlGEP16ezOcEAMR5feq51Y0zbrW
-	M958Qfmb8ITnUjPwGynwkvCfPM8awTVX8/8tUMhRm3jkSE82KZx6ttUTJT9Rx5nkXzuFIRJJfDh
-	/4+ee3dBYzjx+RbX4EqcSUIvJDW60PPihQ0eZPzKv0YqjgrO8RowCzoG+4UPX512xKzrtr+hSCY
-	psONZb68xXUpqorJwd84AxFiGo4lrD5HAfmc/C6QnlCy/pk+6b6DCEC3VTq66nCWLn93NBxFgZS
-	ISB/OftXtrqrMMr8G4oSz7pr2viHfoV/QxkS
-X-Google-Smtp-Source: AGHT+IFoQgrhZqWDNWjsi+GsbUHYEMoaVrN1HbdaP4CDNbX4DiAKWLHn2kW1C0kpPifUGxx4C7Cu5g==
-X-Received: by 2002:a05:6870:2a44:b0:297:2479:a35b with SMTP id 586e51a60fabf-2b32efdb093mr2435058fac.1.1738175477149;
-        Wed, 29 Jan 2025 10:31:17 -0800 (PST)
-Received: from localhost.localdomain ([23.151.240.73])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b28f4134e0sm4482433fac.40.2025.01.29.10.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2025 10:31:16 -0800 (PST)
-From: John Glotzer <jglotzer@gmail.com>
-To: rtl8821cerfe2@gmail.com
-Cc: Aaron.Hou@mediatek.com,
-	Chris.Lu@mediatek.com,
-	Deren.Wu@mediatek.com,
-	Hao.Qin@mediatek.com,
-	Sean.Wang@mediatek.com,
-	jglotzer@gmail.com,
-	johan.hedberg@gmail.com,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	luiz.dentz@gmail.com,
-	marc.payne@mdpsys.co.uk,
-	marcel@holtmann.org,
-	regressions@lists.linux.dev,
-	sergio.callegari@unibo.it,
-	steve.lee@mediatek.com,
-	tiwai@suse.de
-Subject: Re: [PATCH] Bluetooth: btmtk: Remove resetting mt7921 before downloading the fw
-Date: Wed, 29 Jan 2025 12:31:09 -0600
-Message-ID: <20250129183109.10770-1-jglotzer@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <585f1075-a662-489b-bd5c-cf9f24291804@gmail.com>
-References: <585f1075-a662-489b-bd5c-cf9f24291804@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sq68vWiz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 190DAC4CED1;
+	Wed, 29 Jan 2025 18:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738176086;
+	bh=5hxn5iZljywfObaDAbFoAUgvQSBwEmGyxtCxix3eKfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sq68vWizLTz/E46jd+nKqx5TgguHufQfdToMDUIa08iDq26xuxq0VWMVmuXm/1Oh1
+	 lQttb3h4Aevmwbimu7VfbaRixwg74sivlPkJrcNAuOEcSOpE8QEbEZnjgQ4nrI5jy/
+	 8ISGmfS3+UaFNmk+zjMurYBn+8DXwTmlfcmSm8dypdjkltRTZ2fsNXIZdfiZW2vmix
+	 uR+0S+2MAc+rg3Jfq02FFlBKGzmLInwwrigNDHQzORV1QxSWl2qTk9cqo1FCgX/eZH
+	 53hCCsu26YSSTkJzq4uDA7BYnO0kxqc0mk/kIdb2frFH2KlEgc/DYCbvjUKVt6ZgiP
+	 ODTH0QjMjPd4g==
+Date: Thu, 30 Jan 2025 00:11:22 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org, FUKAUMI Naoki <naoki@radxa.com>,
+	Michael Zimmermann <sigmaepsilon92@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] USB 3 and PCIe broken on rk356x due to missing phy
+ reset
+Message-ID: <Z5p2Ugfegw5ty0GU@vaman>
+References: <20241230154211.711515682@linuxfoundation.org>
+ <91993fed-6398-4362-8c62-87beb9ade32b@sairon.cz>
+ <2025012925-stammer-certify-68db@gregkh>
+ <5040940.GXAFRqVoOG@diego>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5040940.GXAFRqVoOG@diego>
 
-Good news/TLDR
-   Yes, so far I have resumed from sleep 2x without any issues
-   with both of my workarounds disabled (kernel command line/systemd rfkill on sleep).
+On 29-01-25, 14:55, Heiko Stübner wrote:
+> Hi Greg,
+> 
+> Am Mittwoch, 29. Januar 2025, 14:36:07 CET schrieb Greg Kroah-Hartman:
+> > On Wed, Jan 29, 2025 at 02:27:05PM +0100, Jan Čermák wrote:
+> > > Hi Greg, everyone,
+> > > 
+> > > unfortunately, this patch introduced a regression on rk356x boards, as the
+> > > current DTS is missing the reset names. This was pointed out in 6.12 series
+> > > by Chukun Pan [1], it applies here as well. Real world examples of breakages
+> > > are M.2 NVMe on ODROID-M1S [2] and USB 3 ports on ODROID-M1 [3]. This patch
+> > > shouldn't have been applied without the device tree change or extra fallback
+> > > code, as suggested in the discussion for Chukun's original commits [4].
+> > > Version 6.6.74 is still affected by the bug.
+> > > 
+> > > Regards,
+> > > Jan
+> > > 
+> > > [1]
+> > > https://lore.kernel.org/stable/20241231021010.17792-1-amadeus@jmu.edu.cn/
+> > > [2] https://github.com/home-assistant/operating-system/issues/3837
+> > > [3] https://github.com/home-assistant/operating-system/issues/3841
+> > > [4] https://lore.kernel.org/all/20250103033016.79544-1-amadeus@jmu.edu.cn/
+> > > 
+> > > #regzbot introduced: v6.6.68..v6.6.69
+> > 
+> > So where should it be reverted from, 6.6.y and 6.12.y?  Or should a
+> > different specific commit be backported instead?
+> 
+> Alternatively, ways forward would be:
+> 
+> - 6.13 contains the devicetree change, the failing phy-patch
+>   requires:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8b9c12757f919157752646faf3821abf2b7d2a64
+> 
+> - there is a pending fix to the phy driver that acts as a fallback for
+>   old DTs, waiting for phy maintainers coming back from winter-break
+>   https://lore.kernel.org/all/20250106100001.1344418-2-amadeus@jmu.edu.cn/
 
-What I don't yet understand
-   This commit
-   (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/drivers/bluetooth/btusb.c?id=v6.12.8&id2=v6.12.7)
-   was a pure USB fix. My mt7922 device (not a USB dongle but built into the motherboard)
-   seems to be both a bluetooth device (bound to btusb driver) *and* a Wifi device (bound to mt7921e driver).
+Okay, I will pick and add it in fixes and push up
 
-   I remain puzzled as to how is it that the issue that is on the USB side was *also* fixed by
-   adding mt7921e.disable_aspm=y to the kernel command line (since that would act on the wifi/pci pathway)?
+-- 
+~Vinod
