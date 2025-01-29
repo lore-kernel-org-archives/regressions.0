@@ -1,66 +1,66 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA66D7DA67
-	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 13:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F28A80C02
+	for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 13:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738158759; cv=none; b=CGRpvfguQO9qsHE7aA1GmVOog7+BgrtIPZJtzy9BI53lYVbF4v7/rJ8EOcMTpOAl+8zUvhCy2FGvlzhopSboC9MOVJqtMG4ZRcMXpLhPY0JRPLQ/3js4lyenQhxk8gOKN84GdpzGjVKua6P5b1LCIx+t6eXNSjoomaELtX6XT6k=
+	t=1738158886; cv=none; b=aksJNMXwk5sVOTEyXaTzNRBWV5zW3LgGZMRIk9yeU2nhBvPurvzFk5MXWxYuB23EbV82gZkW/13zMbKjKaQebRxQEqxUqzhjIUlhLUFrK0Ad/jwSe6U9JbZqsPSjWrU1PK/WNGttEj8K4lwecZSs8LJeYY1rdZhDzjkXQQvu3b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738158759; c=relaxed/simple;
-	bh=+1xZukUKwXtjex5ct0NGGMDZj25/Cnt/rW7lyksKsm4=;
+	s=arc-20240116; t=1738158886; c=relaxed/simple;
+	bh=Bp8j6cdeU44uJZZirV15PQkOdv67IumSfT+gpLwKhU0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N+hgRC+nSo5AGejnvnhbVaOoq76WbMnn1m0a95TaFuqjCYq499/tHRc2d23vRRSrt3QkXBC9fwcAHwi9AppxgCmyfRaXCpMY350mNOOM6xBcEIHiJks/WEGc++AvQwtQtsD3MtinM4/YdZdLqQpwUyJsq6ewTnQ7sl3/p2RdxBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R8FO4HB4; arc=none smtp.client-ip=209.85.218.47
+	 In-Reply-To:Content-Type; b=oQJYS2CrALR+W3vW1g7VJzT09mUUrkamJ/g+5iTL5x45rNzHwMOnaAO6j8yP/mLDukhnilzdDrjh7wq0muEp+vcN6FLTGAA6O09hDmQWjcB0GfaqDSKjhp7xgS6rD6DnvmcTykdKCuCe992VARV4oParonQD4wC4PN9X/2lkNIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=X+jTh11y; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R8FO4HB4"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaec111762bso1530296566b.2
-        for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 05:52:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="X+jTh11y"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaf57c2e0beso1370063066b.3
+        for <regressions@lists.linux.dev>; Wed, 29 Jan 2025 05:54:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738158755; x=1738763555; darn=lists.linux.dev;
+        d=suse.com; s=google; t=1738158882; x=1738763682; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8eKaDXN8nT3fRF/O7B9dAo9AcUGAfO6x7aOxDrfogQM=;
-        b=R8FO4HB4Y9LKu75FeQ1kKCqwUNY6c4QSg6fLven2G/PEpIWgucHS2ysgSXnW8+QU1C
-         RlhOQ9owA1uaXHvTYmdibJX9bDMI6gvARjD0d1aEsfH/GBJ85PEKdQJZoMP9GzTmQlHR
-         dZrDm8CAB/FwaE2OhqTvBfshRhic6f1a0YuEfEbmUgtgIOC32JDVu5dNGy3HgyTTghgu
-         csGm/ROI2Nsni+BjVKMi27Fuv657Kcq/9jTGRvEGOuysBIkUI8gUPs7dN0wdf/hJ8n/r
-         mVeYyNOPLAANAwL/aMOxYhN6GzKwdyECLf7dW+ypfshzNI6T3wG+U/FrzeuBRJlFr+LI
-         nnkA==
+        bh=OAzk2HvSci2RB9DJCTTtog02Zihvy8J06+hb0uPWlXE=;
+        b=X+jTh11ygZ8zd0FXUtcQ4Uz//MftdHUFeKToLZ6YHfM+DQw45QQj0JhUPcx4gIs1hC
+         fTA5JSHGbc2YCQT07gysQXXHLhc5exbs8lj+l5oFvFcfFj+On4aNtFcOa5DIzzvspWht
+         rHRX58VKZJZWeK80i++zBXxHBBjpi1pbrqyznrBEYkRL2MZsGdWswPB8U/2eQHbD1ss8
+         G3q2uB73lIHd87HaX7ciN+yrKVF7xrrcZyGOv1xEobqJ6Ia7qe23NX5HiymBhQvx2IJY
+         43pM6iJfvsSDlHO/YePp+YrVezwaw3tVfwUm7vqLURS1l84hCPlaIBX3gEQNx59mOig0
+         ECTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738158755; x=1738763555;
+        d=1e100.net; s=20230601; t=1738158882; x=1738763682;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8eKaDXN8nT3fRF/O7B9dAo9AcUGAfO6x7aOxDrfogQM=;
-        b=d2Db3RNuwWbUSlsH9o9YJRiU/uWy97brjcEDUKLnhWYVwcj4zS5HOOZOimmXYla8Fp
-         8cJ1w2m02EYtrosnzjfs8iLbcK1stF98066WrazJ9vmQRmvoAZSgc7vWoPwUL3vIX2GD
-         D11Op3I6/ErEeAfBo1vIXieai7XHxkngCpFdo0JGVylk67yKzFwj1On9z8V2C0k/3gmi
-         4QUSIE1wayTWkFwVbyNN+PdcdV5iYVOFL063HKzLizrqKIavdMcGb6ssYTT6fFqpEhvv
-         VDNmKpn3z96JfZtlBba28oNApJNW1m4JTAV9jnl2YP1LhCkgg30JwMipgaThu1BX3mwQ
-         BFdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtOHg6m31JXjvRetYHiM1EBNBG8yvnKNRWX2vUBYAKngYTo9mFagqFRABFyEzaRL40IU4yRWYWl62TOA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw3qsbUoWautetMmnF+wPKkf4YP5ZjKSu0JpYRCYlTlNJetNuvq
-	WLZc9negQZl4VBd6PoT5aCj8t2yP6r9vL74P+nm+rDsi/omwUhZG835njfb0Vw==
-X-Gm-Gg: ASbGncsQCkZIUDo7odpNo/qeWO5CP2Ze29Ayu8Hxtref6FOI5rMwUudqIx1LEESGuZI
-	DuhQUjRxfftmt30CqkOuVGLsNbKdl39OJHYv2krvVVqKAGsouUhpUNdKXH0C+FyCLjiQ3gZNSGW
-	bUskEETUJ9caV6IQLsQqA8acvYzwIo7syDTBkP6FjmeVb1aA/6lOzvCi+r1v5k2jzgB0L9rASFJ
-	I0tvkuDVnKLltgKrfazX6qodL0aArtt59+cKZvs2RlltQ2WQ3dO630ThRzMlyWvCuwP6kpxuNWa
-	ueMEltjIF1OPWk4WTzPsZdf73nED41d5uxldSaH543BantrAJHeRrQITPN8p5vD1vi++zEOeU2y
-	p
-X-Google-Smtp-Source: AGHT+IHcgMv7g287Jp7sQNzuwSuVOp0aN6zu3mmbpSWX1c3/xC3MYcqnhyGJQi8cda92/TBxiW4uDQ==
-X-Received: by 2002:a17:907:2d0c:b0:aa6:995d:9ef1 with SMTP id a640c23a62f3a-ab6cfcb39e9mr349160266b.12.1738158754501;
-        Wed, 29 Jan 2025 05:52:34 -0800 (PST)
+        bh=OAzk2HvSci2RB9DJCTTtog02Zihvy8J06+hb0uPWlXE=;
+        b=u3i92bI58NNPT2PE3/ywIg77I9DiV9xs7bF9zCzbbusecNN2IWJdy9Y7Xknoo4C/kc
+         RbX+EQ4eM1E/Fvz2P7xIXZh/9s5xYS6QA5lJ/UDHCQeXCXh9rTS5phGTtA2eJRkdw2Xw
+         8uzBYxkfEYx1Mn+N3ueqVGp6AnHt4boS3n7BAdWAv1uYdGx1zZGtW8t8H5+572IsehL0
+         RX8v9mxqev3tuR0+fz5CS7x+AXmvXxyqip2GUsqX7xtQZCudyBitEnKFnuBqQB/nFfgY
+         JgL857k1KWG/XdB3kUzx4w8uaDIOcSvl7xw1VGvBZB8Nugykn4PYjBIWfqGqMJQyLPNP
+         9TrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXM5ZCe0NLhtW9g4KbkpCzCINphudp//Ni78bYvGjBBSZj7vXerXmcrUEAblUUpMxulFn6cN0fvVyciwg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzBp4r+g8z7GA0hXvAkVdtm+utldoPtTYnYk4NvBHz5zT2lIhBA
+	brJsH0kBnWa5L5I9zj9rRBmHJT3M3Ul3iA3T5zWhygwaL+e/D7lkUBgknvLvjw==
+X-Gm-Gg: ASbGnct20W8yKheCfDMJZ+ws9vfat+aVuPlMC8BQeQFxA98sNxTi+QcnOTVawJ0nMIi
+	9uTgxdFQV3zHYN7o5HQxvbgKIAVKwImXdIRPsl6+6/WAnOMyDua+V28PqQaZxSKfZAh6VymJomI
+	5eTIafCWcrFP9Tp5aouqq2FCOja5tPbtR6DKsZKszmD55VX6mu3gw5XktLMLk8kaxE4IyAAPfJS
+	+9x/qpNNm7JFNQkavqiIXUg/oQUF1mBnT10C8bsDEP3ZRifzTqUfXl+pSJ5cc6GQmF4XRtD/Fo0
+	N8gi36Tfmw5SJVrOFxGSGpHCWpxgm9HnNR5vAbXYtmloEYMRnI6uE3TiTnYd1Xub8jRJwDgQ77P
+	nmofJRZiTu4w=
+X-Google-Smtp-Source: AGHT+IFyfwTg1PMxVWwmOGjd5ZetF6IndRyOwzliuiWStKYzttmQsbLKfxXAr/xuK9TPm1p1YNzOiA==
+X-Received: by 2002:a17:907:7b85:b0:aa6:81dc:6638 with SMTP id a640c23a62f3a-ab6cfcbb881mr280647966b.16.1738158882265;
+        Wed, 29 Jan 2025 05:54:42 -0800 (PST)
 Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6760b76acsm975243866b.113.2025.01.29.05.52.33
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6760fbb2esm985639866b.140.2025.01.29.05.54.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2025 05:52:34 -0800 (PST)
-Message-ID: <841e1793-4635-4f06-b0c9-37530215c08b@suse.com>
-Date: Wed, 29 Jan 2025 14:52:33 +0100
+        Wed, 29 Jan 2025 05:54:42 -0800 (PST)
+Message-ID: <8acfd9b2-caae-4fe7-8d37-19e2d9be23a8@suse.com>
+Date: Wed, 29 Jan 2025 14:54:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -71,15 +71,16 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
  reset in Xen PV dom0 (regression, Linux 6.12)
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+Cc: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+ =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
  Boris Ostrovsky <boris.ostrovsky@oracle.com>,
  xen-devel <xen-devel@lists.xenproject.org>, linux-kernel@vger.kernel.org,
  regressions@lists.linux.dev, Felix Fietkau <nbd@nbd.name>,
  Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
- linux-pci@vger.kernel.org,
- =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-References: <20250129133252.GA451735@bhelgaas>
+ linux-pci@vger.kernel.org
+References: <20250129132843.GA451331@bhelgaas>
 Content-Language: en-US
 From: Jan Beulich <jbeulich@suse.com>
 Autocrypt: addr=jbeulich@suse.com; keydata=
@@ -105,29 +106,40 @@ Autocrypt: addr=jbeulich@suse.com; keydata=
  EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
  wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
  nAuWpQkjM1ASeQwSHEeAWPgskBQL
-In-Reply-To: <20250129133252.GA451735@bhelgaas>
+In-Reply-To: <20250129132843.GA451331@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 29.01.2025 14:32, Bjorn Helgaas wrote:
-> On Wed, Jan 29, 2025 at 04:47:28AM +0100, Marek Marczykowski-Górecki wrote:
->> On Tue, Jan 28, 2025 at 09:40:18PM -0600, Bjorn Helgaas wrote:
->>> I guess the code at [2] is running in user mode and uses Linux
->>> syscalls for config access?  Is it straceable?
+On 29.01.2025 14:28, Bjorn Helgaas wrote:
+> On Wed, Jan 29, 2025 at 10:17:20AM +0100, Jan Beulich wrote:
+>> On 29.01.2025 04:22, Marek Marczykowski-Górecki wrote:
+>>> On Tue, Jan 28, 2025 at 09:03:15PM -0600, Bjorn Helgaas wrote:
+>>>> The report claims the problem only happens with Xen.  I'm not a Xen
+>>>> person, and I don't know how to find the relevant config accessors.
+>>>> The snippets of kernel messages I see at [1] all mention pciback, so
+>>>> that's my only clue of where to look.  Bottom line, I have no idea
+>>>> what the config accessor path is, and maybe we could learn something
+>>>> by looking at whatever it is.
+>>>
+>>> AFAIK there are no separate config accessors under Xen dom0, the default
+>>> ones are used. xen-pcifront takes over PCI config space access (and few
+>>> more) only in a domU (and only for PV), when PCI passthrough is used.
+>>> Here, it didn't went that far...
+>>>
+>>> But then, Xen may intercept such access [2]. If I read it right, it
+>>> should allow all access (is_hardware_domain(dom0)==true, and also the
+>>> device is not on ro_map - otherwise reset wouldn't work at all).
 >>
->> Nope, it's running as the hypervisor and mediates Linux's access to the
->> hardware. In fact, Linux PV kernel (which dom0 is by default under Xen)
->> is running in ring 3...
->>
->> But I can add some more logging there.
+>> The other day you mentioned (on Matrix I think) that you observe mmcfg
+>> not being used on that system. Am I misremembering? (Since the capability
+>> where the control bit lives is an extended one, that capability would
+>> neither be read nor modified when mmcfg is unavailable.)
 > 
-> So I guess the hypervisor performs the config access on behalf of the
-> Linux PV kernel?  Obviously Linux thinks CRS/RRS SV is enabled, but I
-> suppose all the lspci output is similarly based on whatever the
-> hypervisor does, so how do we know the actual hardware config?
+> If you're referring to the Configuration RRS Software Visibility
+> Enable bit, that's in the PCIe Capability Root Control register, which
+> is in the PCI-compatible config space (the first 256 bytes), not the
+> extended config space.
 
-The hypervisor only intercepts config space writes; reads, particularly
-when going via mmcfg, ought to be unaffected, and hence what lspci shows
-should be "the actual hardware config".
+Oh, I clearly didn't read Marek's earlier mail correctly. I'm sorry for that.
 
 Jan
