@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E602EC0;
-	Wed, 29 Jan 2025 13:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F3C1FDD;
+	Wed, 29 Jan 2025 13:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738157575; cv=none; b=Aqa+yJEHsXKY90VCF014Xh1skQUdPQg/DuN6E1cqLe58vqvteE4DbUwdPOW0kyqyrFOmGCD4s3vbO3H+SISgVJIW1V4iY3PRS4WjoU8iTIufoCJ9ulE/38+S7no6k4/BtfbgEA105Ph59n4ydVMc3PdVzzdivelh+2GpJMV2bJc=
+	t=1738157827; cv=none; b=LCmVdeUH+pqTj0ZXDD5PhpY4kAJPm6ex0AhijI4Ux+iYjfj7XWkuqfYv/ArdM30bbIYdSI8iT3ajayNhJk4i34k0am74z3CCB+zCfbh4yL/SuuYsYm3ushKvJ50vpwrYCyVV9oMrI2uqXQ1GKIqHkiSHrEEUevP858sliBP0ubs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738157575; c=relaxed/simple;
-	bh=Oj1ZVJfnXAYooWc8hOhsJbc/6YWDuBpD07JCgUIgQDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dsrnsIJulIqxyKaN7Aq2YDuoPu39Dq3nq/oaRzS9dTh2Vgk70f40LtHgmWHRpdltZir+XglZ9Jq5d7jcvMATBfOEF5kFE+F0x1RyaVzoFQJaMsQUfp9nztjv/Vj7ElpBF/vAyEzHDN1pJsLPkQKsbNM4yaeU4bcQqlPg56V/2JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER6EE5lE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738157827; c=relaxed/simple;
+	bh=u6M3Ft/QSXJZVKqG9Y87RFNcgGFOdiX+iAQqcAeFpyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9a3Crxp26AnQZRo//78KKVa4Ho8zDQd7TQnaRIvcFiWTj79XMK22Tmdk5lKfjbhUxsEAwSH3fzMl4OPDRxF4r8H7+ysCMpeGWClBnCcEoiIEBEHee6xDfi2EhANU8JCMEPtup8Dg2ajeVsY4nGws3vlJ6vHq6OiOqhQde6xHcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DYkoqYs0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER6EE5lE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D71C4CED3;
-	Wed, 29 Jan 2025 13:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738157574;
-	bh=Oj1ZVJfnXAYooWc8hOhsJbc/6YWDuBpD07JCgUIgQDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ER6EE5lEstGLOFLOhrOEHtH6rntIFrgDIMN1DNORpww68H/ycR4TEz1rI7+79XuIo
-	 aHC+ivPaam3BB+Jvaan3QqFydC9knTEJmIUqUbNaHSVvmwe2sdaJ8ySeTyGoWCSsKr
-	 SY2LA5gghaI61hwBPoxbHbLbYl1L05Azl+6gom1EZO5+fkinCspr2cO0MR6r3LspIX
-	 Q/3e1uqmM1P4t82Og8dij20d3qLF7dEaTSyrxN9B5ql5cuOS22SJvLUR4wsjoMKBhW
-	 EqJU97GBj9KeW4UUo6yPiEahGWtwkL2P5/L9fkMwE1/ph2nSooJKL8NMHJbTcUI5Kf
-	 V2g2Cc46V6YVg==
-Date: Wed, 29 Jan 2025 07:32:52 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
-	Jan Beulich <jbeulich@suse.com>
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-Message-ID: <20250129133252.GA451735@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DYkoqYs0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6504EC4CED3;
+	Wed, 29 Jan 2025 13:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738157826;
+	bh=u6M3Ft/QSXJZVKqG9Y87RFNcgGFOdiX+iAQqcAeFpyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DYkoqYs0FY1o7F/u3llruer+SgXWqV63IabAK789tl6vAzybGkBjWGSXNCbaXt+W7
+	 7Flzcu7Rrh1RlfTldrAscdMwO6OMfFg9gnQ3zxnMT+nQWinfQKKiTohlzWQ/EotcTz
+	 BtcI+Wz4m8UGGF+02z31CZ3fMPOhvVZ4HWA/TRAQ=
+Date: Wed, 29 Jan 2025 14:36:07 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: stable@vger.kernel.org, FUKAUMI Naoki <naoki@radxa.com>,
+	Michael Zimmermann <sigmaepsilon92@gmail.com>,
+	Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>,
+	Vinod Koul <vkoul@kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] USB 3 and PCIe broken on rk356x due to missing phy
+ reset
+Message-ID: <2025012925-stammer-certify-68db@gregkh>
+References: <20241230154211.711515682@linuxfoundation.org>
+ <20241230154212.527901746@linuxfoundation.org>
+ <91993fed-6398-4362-8c62-87beb9ade32b@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,22 +45,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5mk0K5xltK6iZXN@mail-itl>
+In-Reply-To: <91993fed-6398-4362-8c62-87beb9ade32b@sairon.cz>
 
-On Wed, Jan 29, 2025 at 04:47:28AM +0100, Marek Marczykowski-Górecki wrote:
-> On Tue, Jan 28, 2025 at 09:40:18PM -0600, Bjorn Helgaas wrote:
-> > I guess the code at [2] is running in user mode and uses Linux
-> > syscalls for config access?  Is it straceable?
+On Wed, Jan 29, 2025 at 02:27:05PM +0100, Jan Čermák wrote:
+> Hi Greg, everyone,
 > 
-> Nope, it's running as the hypervisor and mediates Linux's access to the
-> hardware. In fact, Linux PV kernel (which dom0 is by default under Xen)
-> is running in ring 3...
+> unfortunately, this patch introduced a regression on rk356x boards, as the
+> current DTS is missing the reset names. This was pointed out in 6.12 series
+> by Chukun Pan [1], it applies here as well. Real world examples of breakages
+> are M.2 NVMe on ODROID-M1S [2] and USB 3 ports on ODROID-M1 [3]. This patch
+> shouldn't have been applied without the device tree change or extra fallback
+> code, as suggested in the discussion for Chukun's original commits [4].
+> Version 6.6.74 is still affected by the bug.
 > 
-> But I can add some more logging there.
+> Regards,
+> Jan
+> 
+> [1]
+> https://lore.kernel.org/stable/20241231021010.17792-1-amadeus@jmu.edu.cn/
+> [2] https://github.com/home-assistant/operating-system/issues/3837
+> [3] https://github.com/home-assistant/operating-system/issues/3841
+> [4] https://lore.kernel.org/all/20250103033016.79544-1-amadeus@jmu.edu.cn/
+> 
+> #regzbot introduced: v6.6.68..v6.6.69
 
-So I guess the hypervisor performs the config access on behalf of the
-Linux PV kernel?  Obviously Linux thinks CRS/RRS SV is enabled, but I
-suppose all the lspci output is similarly based on whatever the
-hypervisor does, so how do we know the actual hardware config?
+So where should it be reverted from, 6.6.y and 6.12.y?  Or should a
+different specific commit be backported instead?
 
-> > > [2] https://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=xen/arch/x86/pv/emul-priv-op.c;h=70150c27227661baa253af8693ff00f2ab640a98;hb=HEAD#l295
+And this isn't an issue on 6.13, right?
+
+thanks,
+
+greg k-h
