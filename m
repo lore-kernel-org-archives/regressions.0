@@ -1,87 +1,140 @@
-Received: from mr6.vodafonemail.de (mr6.vodafonemail.de [145.253.228.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD88413AA2D
-	for <regressions@lists.linux.dev>; Tue, 28 Jan 2025 21:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B11710A1F;
+	Wed, 29 Jan 2025 01:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738101055; cv=none; b=WvlEoOtl3XsmZ+Itzc1EWvRqoaHPhQot/9L+oSxhqXWm3RIAZt4+ls/L32asqZGBeTbMrgFVU/VLjvfmCE0gX3XMNiToUkzEt/LhLH9xWK5sUaP9SLvLkphEd2U+ng/ZUIvxQcRxmlrCsyT2BPYGplSnYu0RZxkU1MWbYQlaXGM=
+	t=1738113330; cv=none; b=Xiy19j5kjVjZdXsDPbeBrCa98bZ2iB0viLkouJ/y9nCKlTEKtBvRU7xEP7tWWvrpsGqC/Edlmm09SMwZCJ5yCyLngOVmNoak0ep5jXrtGuiUmNLVKswMEPv3Kyo8nrzKogcon2n1GS8eJBoErZMeAB4B3otJl5Y0pVFwo0Qxfug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738101055; c=relaxed/simple;
-	bh=HKMbHG41kO96ZF2P48iZY660NW4iqDPvky++tHvVjE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CKGko+iso+tg/amLVycvpiJ1dKemJnwoMgUhKKTIKlicdiYEaLVIwzrhMI1V1VLnBloolB/e2sdbF5LiVxVHFknDZ5Mc8vDKEXEw6v4Z4spxep7hChgy2OjrFhEicbOCxP+mKujkcmP+rQ+noGyJwfkfXSzrBmDG8mqlYrk8+6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arcor.de; spf=pass smtp.mailfrom=arcor.de; dkim=pass (1024-bit key) header.d=arcor.de header.i=@arcor.de header.b=heZJGV8J; arc=none smtp.client-ip=145.253.228.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arcor.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arcor.de
+	s=arc-20240116; t=1738113330; c=relaxed/simple;
+	bh=LPH+rFFvj0cEdutC7LtIU0vNsmeZQG7HJPWEn8vdN3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WsiAJvmWWWV9zPxslo3liHXELmn86m3AOGj8uRkX6XxRZxQyTViLKcn+JekbjU93UOyo1YV9sXf3Hn+tWikYCX/Q69wzCxHGfkKTkZA3BuB8blPWVdOLQiDLm7pDsY+tAkIWfVx5+zOhZGYiJfJi7N7FNMSTyhbVzP2F0S/Ak8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV9OlV/a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arcor.de header.i=@arcor.de header.b="heZJGV8J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arcor.de;
-	s=vfde-mb-mr2-23sep; t=1738100684;
-	bh=tGbpeM79xiFk5lp0rBzeLonbHibRpHMeiZL0TF7ClVQ=;
-	h=Message-ID:Date:User-Agent:Subject:To:References:From:
-	 Content-Language:In-Reply-To:Content-Type:From;
-	b=heZJGV8J+vPNhcQzzlETPmmSiTlBizcsmYUW+lKUe46CVMEbFLGR5yYtzDzk+6iCe
-	 dcZAg33greGdgjO0FE3IemqWlsZv3l3+XDSPdGbPBnrxAiTtWTEjpSDUuRuH4B+YQH
-	 CjVk8Dokht4vNahB2wCpK2t27hhDwB9LMsJ0UAvA=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr6.vodafonemail.de (Postfix) with ESMTPS id 4YjJj82c6tz1xqh;
-	Tue, 28 Jan 2025 21:44:44 +0000 (UTC)
-Received: from [192.168.178.41] (port-83-236-36-1.dynamic.as20676.net [83.236.36.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4YjJhm5f97z8snN;
-	Tue, 28 Jan 2025 21:44:21 +0000 (UTC)
-Message-ID: <6c663851-52f7-42fe-92a4-3e33f46a8dd5@arcor.de>
-Date: Tue, 28 Jan 2025 22:44:21 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV9OlV/a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D51C4CED3;
+	Wed, 29 Jan 2025 01:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738113329;
+	bh=LPH+rFFvj0cEdutC7LtIU0vNsmeZQG7HJPWEn8vdN3Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=iV9OlV/aXWEEdLHO2uvdr6xaCFhmHutsN2xpsLTRCNq2ST+c6gCBo6fi6NBvY/82X
+	 RqfudEpz9SDziEyepzeBi/dwX51b7VPEjIu2iEdjwsJ/qv6KrjptJohHIQJH1rYeKn
+	 G2md0z7KlR0jvwPODLzLE1jexGtQXpw2qeHFEtG/l+Lz7oGBvQgOA1lFEjMnpWJdnr
+	 V/gUaKp2W66i76UxCCRSkIl+3+XZb4utYI+NC3GHw6XOvsXwtUZ4c8/bYubYizdFMZ
+	 6S/4D8RImB6QC5xpgk8TPVKMevaOwjiXqVBZL2jtzjif7CueSC6RkTXr44ZLEEthad
+	 s2vGUM3FxWKJA==
+Date: Tue, 28 Jan 2025 19:15:26 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <20250129011526.GA184585@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.12.10: Regression in Hans' commit 613f2150 leading to excessive
- sysfs entry recreation?
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, stable@vger.kernel.org,
- linux-media@vger.kernel.org
-Cc: regressions@lists.linux.dev,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Farblos <farblos@vodafonemail.de>
-References: <6555309b-830d-449b-800c-55306c19c659@vodafonemail.de>
- <D69CB9C3-AF3E-4E60-B35B-FBBE1D363207@arcor.de>
- <0c8c26e3-f806-4238-80e7-14ec0a288589@xs4all.nl>
-From: Jens Schmidt <jens.schmidt140@arcor.de>
-Content-Language: de-DE-frami, en-US
-In-Reply-To: <0c8c26e3-f806-4238-80e7-14ec0a288589@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 506
-X-purgate-ID: 155817::1738100680-837FD465-FE86B99C/0/0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4pHll_6GX7OUBzQ@mail-itl>
 
-On 2025-01-28  16:45, Hans Verkuil wrote:
+On Fri, Jan 17, 2025 at 01:05:30PM +0100, Marek Marczykowski-Górecki wrote:
+> After updating PV dom0 to Linux 6.12, The Mediatek MT7922 device reports
+> all 0xff when accessing its config space. This happens only after device
+> reset (which is also triggered when binding the device to the
+> xen-pciback driver).
 
-> Well spotted! Yes, it is related to that commit.
+Thanks for the report and for all the debugging you've already done!
+
+> Reproducer:
 > 
-> I'll take a closer look at this tomorrow since this test against
-> cec_caps needs work.
+>     # lspci -xs 01:00.0
+>     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+>     00: c3 14 16 06 00 00 10 00 00 00 80 02 10 00 00 00
+>     ...
+>     # echo 1 > /sys/bus/pci/devices/0000:01:00.0/reset
+>     # lspci -xs 01:00.0
+>     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+>     00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>
+> The same operation done on Linux 6.12 running without Xen works fine.
+> 
+> git bisect points at:
+> 
+>     commit d591f6804e7e1310881c9224d72247a2b65039af
+>     Author: Bjorn Helgaas <bhelgaas@google.com>
+>     Date:   Tue Aug 27 18:48:46 2024 -0500
+> 
+>     PCI: Wait for device readiness with Configuration RRS
+> 
+> part of that commit:
+> @@ -1311,9 +1320,15 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>                         return -ENOTTY;
+>                 }
+>  
+> -               pci_read_config_dword(dev, PCI_COMMAND, &id);
+> -               if (!PCI_POSSIBLE_ERROR(id))
+> -                       break;
+> +               if (root && root->config_crs_sv) {
+> +                       pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+> +                       if (!pci_bus_crs_vendor_id(id))
+> +                               break;
+> +               } else {
+> +                       pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +                       if (!PCI_POSSIBLE_ERROR(id))
+> +                               break;
+> +               }
+>  
+>     
+> Adding some debugging, the PCI_VENDOR_ID read in pci_dev_wait() returns
+> initially 0xffffffff. If I extend the condition with
+> "&& !PCI_POSSIBLE_ERROR(id)", then the issue disappear. But reading the
+> patch description, it would break VF.
+> I'm not sure where the issue is, but given it breaks only when running
+> with Xen, I guess something is wrong with "Configuration RRS Software
+> Visibility" in that case.
 
-Thanks.
+I'm missing something.  If you get 0xffffffff, that is not the 0x0001
+Vendor ID, so pci_dev_wait() should exit immediately.  But the log at
+https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-2582927149
+says it *doesn't* exit and eventually times out.
 
-Only I feel that I messed up my first ever kernel bug by using
-the wrong MUA at the wrong time ... if there is any "reported by"
-thingy to attribute to me (no feelings hurt if not), please
-attribute to my "Open Source alter ego" 
+And the lspci above shows ~0 data for much of the header, even though
+the device must be ready by then.
 
-  Farblos <farblos@vodafonemail.de>
+I don't have any good ideas, but since the problem only happens with
+Xen, and it seems to affect more than just the Vendor ID, maybe you
+could instrument xen_pcibk_config_read() and see if there's something
+wonky going on there?
 
-Thanks again.
+> BTW, shouldn't PCI_VENDOR_ID be accessed via pci_read_config_word()
+> instead of pci_read_config_dword()?
 
-Jens
+Per PCIe r6.0, sec 2.3.2:
 
+  If Configuration RRS Software Visibility is enabled (see below):
+
+    For a Configuration Read Request that includes both bytes of the
+    Vendor ID field of a device Function's Configuration Space Header,
+    the Root Complex must complete the Request to the host by
+    returning a read-data value of 0001h for the Vendor ID field and
+    all ‘1’s for any additional bytes included in the request.
+
+Since either a word (16 bit) or dword (32 bit) read includes both
+bytes of Vendor ID, I think either should work.  We use a 32-bit read
+in the enumeration path, where we need both Vendor ID and Device ID,
+but we don't care about the Device ID here, so it probably doesn't
+really matter here.
