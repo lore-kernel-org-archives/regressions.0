@@ -1,120 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503021E376C;
-	Wed, 29 Jan 2025 18:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AD77081B;
+	Wed, 29 Jan 2025 21:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738176508; cv=none; b=Kd7hKhPHnPn4Ko2nmVSHMkRRQrX3sHGyipWBSnHMZu4EH4VcXQHFMzKQTiiBjLt2y/EYqYHTr8+iwNGbgwl8OsMikyK8fLl6JqBm+eG4ZcI34tXargUNL/a0HGD2tRmpPvk5X0U8CibXyPQXniUX3Yd4n/9tLxrPURQPe5t8uKw=
+	t=1738184815; cv=none; b=NzGSqIUPC9uAiX7HfqZISgBSjpE6u1yZkq8L5ZAKzCClNpGvEsihgKbpDT42dszZOnycyS+IkaBek/DbFhWIjF9AtEYsZlafbIVW/l7LSME85X9nnjVUd8pXzGmdZ4muuFHiPs66QsBbMjioDx+9DPHp8n6/xGAjUQxys8/6Aew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738176508; c=relaxed/simple;
-	bh=5x5C3oXKgTMBkuDA8TFCAbx9AmZk4D3MjTvrIrifUXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JZskeGeEgCrJUlzBfA8gOoUp9+e6WbNBupNqe+LGTOY8hfvN00Q6BlretomnJWG74DyCj8n0We8CX0060WO8ywZCTLRoyACXe4TpGURvREpr8ZSFasvBui8rJLaW7viaGEdmtP/9KQFJd8cIVgyinVxNdJ02vea7cY3FmhVKmcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvX932J5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738184815; c=relaxed/simple;
+	bh=ay1HQ+bDvetSMc+UNYbtxOuXq6jA/VSfWbLnyKSw6Hs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nxuFvHifDTFS86WJwG2dKGuL3cvB0/V4QPghedh4WxBRS7gxPaW4VxwnRshe2hzZBMn/tLZURLi9PlM1PiFF5bbGw+qMcAaLhqMaiNRwGaLVsVRD0xHeovq1XyUKvAz0DcjVD1F04zlNd/olXAcsOs46mRnpkZMFP+V5jQgemG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=072AC6SY; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvX932J5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B5BC4CED1;
-	Wed, 29 Jan 2025 18:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738176507;
-	bh=5x5C3oXKgTMBkuDA8TFCAbx9AmZk4D3MjTvrIrifUXk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DvX932J5IFZQf2YexIlDBTZ5Df9aWNzivuNpCN5l7X4KAeZwbG0RZ0NyHVY8Hoi3x
-	 4HvDF7qV+6rNmC84cpQZE22mdmEfWpz1LtheIrgOA4lWfW7gGfCDe2afYg4yMGcGE+
-	 ecyPV2je07PaXbi8BzPgoPNTwFNg4V6myMKgUiCEwJ3Sogm9GtaJDhCNMYegeAvWqb
-	 /nxRHnPUyJJPdIi5+qliYETKlYoBWLt8HNvGgKrfobvjvOKX3KkYkRy8esy6Fse3vl
-	 k1TVeaVbk1Qk7dkdv7GAuLkFDJyLE1cjyi2D3+iO/S3SXLPFvKRfnaGvAVGaNtmmIt
-	 5oGFcJOGrkdLw==
-Date: Wed, 29 Jan 2025 12:48:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-Message-ID: <20250129184825.GA484760@bhelgaas>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="072AC6SY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/kf6ODXYcMXx2paQtH81CD+vnYtFAqJ2OGlXqXU64uo=; b=072AC6SYK+vyqiVTfqvv8NEiH0
+	ECnmTD1/ildUN7Nv6FI0Yp/BwsrR3zff8YtbOzwC1kko9pQAqt83UHpC7UTc9v5trdjI4ueZRYdmF
+	xqxxTM37wRcqgt60E3daFRixHfdV6z2ueZGW8ZNoTMIKgh+u2HpPUUP3lZGbsyMfMil6thxCyKVr7
+	qNAdCn+0RBeDTWK9ul5Uxge46sojhUEJndG5DqNVsbZr0Px3J2Ky7cLruM8RZPOCsWvWu9/B0Wsd9
+	1jl+4vi23g8QVzagZzRUsCVrdX9P5Wf9lXhGARyyW3OXbvtNIJI7I46Lj3ybcLSxakSXxIygshL22
+	nzKQ5ATQ==;
+Received: from i53875b5c.versanet.de ([83.135.91.92] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tdFGn-0008V1-5i; Wed, 29 Jan 2025 22:06:45 +0100
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ FUKAUMI Naoki <naoki@radxa.com>,
+ Michael Zimmermann <sigmaepsilon92@gmail.com>,
+ Chukun Pan <amadeus@jmu.edu.cn>, regressions@lists.linux.dev
+Subject:
+ Re: [REGRESSION] USB 3 and PCIe broken on rk356x due to missing phy reset
+Date: Wed, 29 Jan 2025 22:06:44 +0100
+Message-ID: <3060177.e9J7NaK4W3@diego>
+In-Reply-To: <Z5p2Ugfegw5ty0GU@vaman>
+References:
+ <20241230154211.711515682@linuxfoundation.org> <5040940.GXAFRqVoOG@diego>
+ <Z5p2Ugfegw5ty0GU@vaman>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5mOKQUrgeF_r6te@mail-itl>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 29, 2025 at 03:10:49AM +0100, Marek Marczykowski-Górecki wrote:
-> On Tue, Jan 28, 2025 at 07:15:26PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jan 17, 2025 at 01:05:30PM +0100, Marek Marczykowski-Górecki wrote:
-> > > After updating PV dom0 to Linux 6.12, The Mediatek MT7922 device reports
-> > > all 0xff when accessing its config space. This happens only after device
-> > > reset (which is also triggered when binding the device to the
-> > > xen-pciback driver).
-> > 
-> > Thanks for the report and for all the debugging you've already done!
-> > 
-> > > Reproducer:
-> > > 
-> > >     # lspci -xs 01:00.0
-> > >     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
-> > >     00: c3 14 16 06 00 00 10 00 00 00 80 02 10 00 00 00
-> > >     ...
-> > >     # echo 1 > /sys/bus/pci/devices/0000:01:00.0/reset
-> > >     # lspci -xs 01:00.0
-> > >     01:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
-> > >     00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > >
-> > > The same operation done on Linux 6.12 running without Xen works fine.
-> > > 
-> > > git bisect points at:
-> > > 
-> > >     commit d591f6804e7e1310881c9224d72247a2b65039af
-> > >     Author: Bjorn Helgaas <bhelgaas@google.com>
-> > >     Date:   Tue Aug 27 18:48:46 2024 -0500
-> > > 
-> > >     PCI: Wait for device readiness with Configuration RRS
-> > > 
-> > > part of that commit:
-> > > @@ -1311,9 +1320,15 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-> > >                         return -ENOTTY;
-> > >                 }
-> > >  
-> > > -               pci_read_config_dword(dev, PCI_COMMAND, &id);
-> > > -               if (!PCI_POSSIBLE_ERROR(id))
-> > > -                       break;
-> > > +               if (root && root->config_crs_sv) {
-> > > +                       pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
-> > > +                       if (!pci_bus_crs_vendor_id(id))
-> > > +                               break;
-> > > +               } else {
-> > > +                       pci_read_config_dword(dev, PCI_COMMAND, &id);
-> > > +                       if (!PCI_POSSIBLE_ERROR(id))
-> > > +                               break;
-> > > +               }
-> > >  
-> > >     
-> > > Adding some debugging, the PCI_VENDOR_ID read in pci_dev_wait() returns
-> > > initially 0xffffffff. If I extend the condition with
-> > > "&& !PCI_POSSIBLE_ERROR(id)", then the issue disappear. But reading the
-> > > patch description, it would break VF.
-> > > I'm not sure where the issue is, but given it breaks only when running
-> > > with Xen, I guess something is wrong with "Configuration RRS Software
-> > > Visibility" in that case.
-> > 
-> > I'm missing something.  If you get 0xffffffff, that is not the 0x0001
-> > Vendor ID, so pci_dev_wait() should exit immediately.  
-> 
-> I'm not sure what is going on there either, but my _guess_ is that the
-> loop exits too early due to the above. And it makes some further actions
-> to fail.
+Hi Vinod,
 
-Seems like a good guess worth investigating.  Maybe log all config
-accesses to this device after the FLR and see what we're doing?
+Am Mittwoch, 29. Januar 2025, 19:41:22 CET schrieb Vinod Koul:
+> On 29-01-25, 14:55, Heiko St=C3=BCbner wrote:
+> > Hi Greg,
+> >=20
+> > Am Mittwoch, 29. Januar 2025, 14:36:07 CET schrieb Greg Kroah-Hartman:
+> > > On Wed, Jan 29, 2025 at 02:27:05PM +0100, Jan =C4=8Cerm=C3=A1k wrote:
+> > > > Hi Greg, everyone,
+> > > >=20
+> > > > unfortunately, this patch introduced a regression on rk356x boards,=
+ as the
+> > > > current DTS is missing the reset names. This was pointed out in 6.1=
+2 series
+> > > > by Chukun Pan [1], it applies here as well. Real world examples of =
+breakages
+> > > > are M.2 NVMe on ODROID-M1S [2] and USB 3 ports on ODROID-M1 [3]. Th=
+is patch
+> > > > shouldn't have been applied without the device tree change or extra=
+ fallback
+> > > > code, as suggested in the discussion for Chukun's original commits =
+[4].
+> > > > Version 6.6.74 is still affected by the bug.
+> > > >=20
+> > > > Regards,
+> > > > Jan
+> > > >=20
+> > > > [1]
+> > > > https://lore.kernel.org/stable/20241231021010.17792-1-amadeus@jmu.e=
+du.cn/
+> > > > [2] https://github.com/home-assistant/operating-system/issues/3837
+> > > > [3] https://github.com/home-assistant/operating-system/issues/3841
+> > > > [4] https://lore.kernel.org/all/20250103033016.79544-1-amadeus@jmu.=
+edu.cn/
+> > > >=20
+> > > > #regzbot introduced: v6.6.68..v6.6.69
+> > >=20
+> > > So where should it be reverted from, 6.6.y and 6.12.y?  Or should a
+> > > different specific commit be backported instead?
+> >=20
+> > Alternatively, ways forward would be:
+> >=20
+> > - 6.13 contains the devicetree change, the failing phy-patch
+> >   requires:
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D8b9c12757f919157752646faf3821abf2b7d2a64
+> >=20
+> > - there is a pending fix to the phy driver that acts as a fallback for
+> >   old DTs, waiting for phy maintainers coming back from winter-break
+> >   https://lore.kernel.org/all/20250106100001.1344418-2-amadeus@jmu.edu.=
+cn/
+>=20
+> Okay, I will pick and add it in fixes and push up
+
+thanks a lot :-)
+
+Heiko
+
+
+
