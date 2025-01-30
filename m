@@ -1,155 +1,355 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690F4A35
-	for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 20:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D689322B;
+	Thu, 30 Jan 2025 21:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738268435; cv=none; b=qPb9COCB5xXDykbO7k+fQ7Dl1wFkK74CPJRC89NkyJDrwrMz3xrQ9UIIpmuffyozJIGkzvxY4Jg2nDWzzjjBNew+Cb5ESDXDHAfdbCeNH3B7HqEG1XZwujCYZ2CALpMkcbhGWRT9kx7LRJQ5/CN35BMPJm5GFB+/tOq7eXnWd/w=
+	t=1738272687; cv=none; b=AQm8eR0V52B9qNgZxhxueVzPjhwLgt9Im72oKSp7ZG5gNMCQZXfRPRNUQHnuoSSrI9WxNRkZnuvJxqKarke3hN6kAlCDmEfc+iPeaqVmgAbgsN6VdRuLIFd21KXsqf6wSMA8JeBVccMPVdxVMqyRX+IhyzOwRegSmc2QKCXB0Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738268435; c=relaxed/simple;
-	bh=SIbUKVwFJlUugci4+H5i9sWdbPUhf/EKe0j2bUNxU6M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TnaD+LOt4VGTM4BrvxqN/wc1jfst15NUUNIkxInEVWLQe/OmmG3D+DZ111aoMyGSmkwH1oxRRarB4++AkTAELGs7wNYumDWkhLUnCMHqoYn9/m35Kw9KtPiXmoX8TDudiSMWpWdFm6E1x+AS7bJqu9fvGkL8OGK+RVNhQi1Q7YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N9huTITu; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738272687; c=relaxed/simple;
+	bh=/VPTNf6kv2G1qLnaa7PZxmpgicixURiI5N/N0YxT8Qg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=BP/xaLgjIdV1T/s+NRfKYvchuqyJKyYXvfImofma/0FGBT5YVt3jyDed9Ejf4vB6zZvitU8FrHdMGPuPl6C+9jqjMqt1f7el3Dq+C4lBvBEYNScLmeJM5LR8ZQZSZcx1N6+KjIZclKDURYOrsH7X4uQibOqpPE0uU61FguAk1L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReNjQK5o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9huTITu"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21669fd5c7cso21620725ad.3
-        for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 12:20:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738268434; x=1738873234; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ClwtUPqUK9mSoT/sTkcB+DgzCNDLW9NdfFhJAOH8qy8=;
-        b=N9huTITuHe/I8FaLSq0YXbUrSdkO155dlp2K0t/iiW3xVaRl5+W4drVHVMaNO0XBEh
-         mmQ41iCjhuZMJCI83WIuBgwM7pGjNQXRmhQBpSNOiWBvKT86VZXRGSKnwaxUOphH3mYp
-         4044ksHV4Poz10QbRHuGDzkWSAtMLOFZLBq8iPf2M7ec5pXA4SuPGNAtPfuep6i272Wm
-         W+jr8Z9yQvNOje4yUXXowCzObXfvhMQfAQM9sbHkkRFinU0HftrZY1A6HQ/Vgb42HYYs
-         yWgnn2LjIJFen9rmn7fyUN3XcdCMH+Tz67sD8x/uVf3Np5rUjNHWFPZHhoPNDgX0Mp/Q
-         aVWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738268434; x=1738873234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ClwtUPqUK9mSoT/sTkcB+DgzCNDLW9NdfFhJAOH8qy8=;
-        b=n7uf7ccxaRLwWj65+eM1oCBciU+i6P+rIZHjllSA3zscKePpE1sgVFHASlWJTdF/AB
-         8y68e5GhrgYh7jGsGIakP+jwBDNlWGzB5DbrXujPzN5bKPbJ+S54Gjb6aeDn/ddeDJ8L
-         1/y1yPhB27WkAbIYOJtiSXllnHV5c0w80KUZU7m4lQAaP3lOxEnWWRsGW/b2eqpKcnBE
-         BN9waGbTEHbd4kUcjcEF7QjmsNZ879aALwlMECi0elKm4323Dt1hqRrwikLp6jpyl0eI
-         BacBoW03Y+0hB8xBG8mIDjLwB5bL2uIZIff7faiEv+zlaoIvJQ+hGK07z9JValJyBLhn
-         Vtqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuS/qx5ryRxNAfOcazBtNtyHaraFlBETrP4Jhip8cK6eit8ZtAnkSKMMpVOOqJlkyvI5Z/s3FhbSE/DQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxY57P6mV0svmTCiWHewAA4ixO4dWcDKTrt2QKnfH8nJ26uKC4Z
-	prCFkHaTGo/fnR8433gHog4tgOqf69rJigrxKEjdpeRx5A4tJUDZZQFG8W/Rr05FxK/6/CCNw15
-	jTfhL5YRkJmPDYq5hhVOwbvvjjlw=
-X-Gm-Gg: ASbGncv+yZ7mmbm5jyQUFDi73+7hjp45Yr0Sw4jlNOZyU+nGiqkXQtUbzMwXZqVEeOc
-	AUQ3a1nEq1V7Ay+yM3KhvAgA61p6Ioa+dmLkR95Dbbid045tNeik9G2VZt5C8ktIsFsH0+tqk
-X-Google-Smtp-Source: AGHT+IFO6MMzXBrOGKn80G2XfMMuDquQJiiKg5+z19PUqvvjVTQsOFEcthp4PY5JwLDacbszHCoPQNvHsyHTGtORZ78=
-X-Received: by 2002:a05:6a21:4c11:b0:1db:f68a:d943 with SMTP id
- adf61e73a8af0-1ed7a5f8e53mr12606037637.17.1738268433490; Thu, 30 Jan 2025
- 12:20:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReNjQK5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FE9C4CED2;
+	Thu, 30 Jan 2025 21:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738272686;
+	bh=/VPTNf6kv2G1qLnaa7PZxmpgicixURiI5N/N0YxT8Qg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ReNjQK5ofR+danry2PSj58WLHyoCBOBn6MTWxBLdCn0E52DaEZ0FGNcMJ8WpiowW0
+	 TvBvTxD6gZVI7uQC8RNoJCVAfaxTf0YX3DyV79eupdJezctz/M+1RS++/TEhckq+AF
+	 jLRoItDft8LUGYLznwD45iVKeTK5uTZtaeTH4zyyBD3mR3pvDt3UZaMAn01TRKTJyp
+	 nrkZk5/jvTY2TVGJjAvaoawQ3i5QHQfQ4hYpjuFQFIh75akmjxeDR7sWeHgvCXFXDo
+	 n/coqTkDmcxYb981tPQBajlC06YbcVHA1Qz9Dcj/YMgVld90zDpMzVVdJcCkfZA5cl
+	 T5PmI1XdPzpxA==
+Date: Thu, 30 Jan 2025 15:31:23 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <20250130213123.GA633869@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYsHGrgZsEEVvP0XMcAhLyCYnrCPgZJ1puT6cfQBCGUB9g@mail.gmail.com>
- <20250130200112.6ba7316e@pumpkin>
-In-Reply-To: <20250130200112.6ba7316e@pumpkin>
-From: Adam Ford <aford173@gmail.com>
-Date: Thu, 30 Jan 2025 14:20:21 -0600
-X-Gm-Features: AWEUYZns1cg1rhB0SZf6MqVVUTtFBKQq2h0TBzHzypdynHuEzFz6dZCga_Xf-eA
-Message-ID: <CAHCN7xJosvgN3R6xJ0E7CB_-0gMqX_qBFPSA1q30_hQ0ftg3Qw@mail.gmail.com>
-Subject: Re: linus: arm64: error: call to '__compiletime_assert_536' declared
- with attribute error: FIELD_PREP: value too large for the field
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, linux-phy@lists.infradead.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, David Laight <david.laight@aculab.com>, 
-	Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Frieder Schrempf <frieder.schrempf@kontron.de>, Pei Xiao <xiaopei01@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cfe0af0e-132b-4390-a3b0-dde0e6326e19@suse.com>
 
-On Thu, Jan 30, 2025 at 2:01=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Thu, 30 Jan 2025 15:22:06 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> > The arm64 build failed with defconfig with gcc-8 toolchain failed due t=
-o
-> > following build warnings / errors on the mainline linux master branch.
-> > But the gcc-13 builds pass.
-> >
-> > First seen on v6.13-9485-g72deda0abee6 on Jan. 30, 2025
-> > Good:  v6.13-9338-g05dbaf8dd8bf on Jan. 29, 2025
-> > Bad:  v6.13-9485-g72deda0abee6 on Jan. 30, 2025
-> >
-> > arm64:
-> >   build:
-> >     * gcc-8-i386_defconfig
-> >
-> > Reported-by: Linux Kernel Functional Testing
-> >
-> > Build log:
-> > ---
-> > ake --silent --keep-going --jobs=3D8
-> > O=3D/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=3Darm64
-> > CROSS_COMPILE=3Daarch64-linux-gnu-
-> > CROSS_COMPILE_COMPAT=3Darm-linux-gnueabihf- 'CC=3Dsccache
-> > aarch64-linux-gnu-gcc' 'HOSTCC=3Dsccache gcc'
-> > In file included from <command-line>:
-> > In function 'fsl_samsung_hdmi_phy_configure_pll_lock_det.isra.10',
-> >     inlined from 'fsl_samsung_hdmi_phy_configure' at
-> > drivers/phy/freescale/phy-fsl-samsung-hdmi.c:469:2:
-> > include/linux/compiler_types.h:542:38: error: call to
-> > '__compiletime_assert_536' declared with attribute error: FIELD_PREP:
-> > value too large for the field
+On Thu, Jan 30, 2025 at 10:30:33AM +0100, Jan Beulich wrote:
+> On 30.01.2025 05:55, Marek Marczykowski-Górecki wrote:
+> > I've added logging of all config read/write to this device. Full log at
+> > [1].
 > ...
-> > drivers/phy/freescale/phy-fsl-samsung-hdmi.c:344:9: note: in expansion
-> > of macro 'FIELD_PREP'
-> >   writeb(FIELD_PREP(REG12_CK_DIV_MASK, div), phy->regs + PHY_REG(12));
-> >          ^~~~~~~~~~
->
-> Yep...
-> Broken by d567679f2b6a8
->
-> Preceded by:
->         /* Find int_pllclk speed */
->         for (div =3D 0; div < 4; div++) {
->                 int_pllclk =3D pclk / (1 << div);
->                 if (int_pllclk < (50 * MHZ))
->                         break;
->         }
-> with:
-> #define REG12_CK_DIV_MASK       GENMASK(5, 4)
->
-> The compiler has optimised (pessimised?) the code somewhat.
-> If pclk is very large the loop doesn't 'break' so div =3D=3D 4.
 
-I believe a fix was submitted:
-https://patchwork.kernel.org/project/linux-phy/patch/5b9a5f765f075263498f9a=
-7b62b0b1030d87b6ba.1736476210.git.xiaopei01@kylinos.cn/
+I suspect there's something wrong with the Root Port RRS SV
+configuration.
 
-It appears to be waiting for approval and/or merge.  If someone wants
-to test it.  I added Pei,the author of the fix, to the CC in this
-thread.
+Can you add the two patches below?
 
-adam
+I don't *think* either should make a difference.  The first enables
+RRS SV earlier and maybe in a cleaner place; the second should avoid
+some pointless capability searches that clutter the logs.
+
+What does d0v1/d0v2/d0v3 mean?
+
+Can you add 00:02.2, the Root Port leading to bus 01, so we can see
+the RRS SV configuration?  Maybe also lspci -vv for both 00:02.2 and
+01:00.0?
+
+Maybe include timestamps and try an FLR without Xen (which I assume
+works correctly) so we can see how long the device typically takes to
+become ready?
+
+Notes below on the snippet that you commented on, Jan.  I think it
+makes sense until the read after FLR returns 0xffffffff.
+
+> > (XEN) d0v1 conf read cf8 0x80010034 bytes 1 offset 0 data 0x80
+
+PCI_CAPABILITY_LIST, first cap at 0x80
+
+> > (XEN) d0v1 conf read cf8 0x80010080 bytes 2 offset 0 data 0xe010
+
+PCI_CAP_ID_EXP (0x10) at 0x80, next cap at 0xe0
+
+> > (XEN) d0v1 conf read cf8 0x800100e0 bytes 2 offset 0 data 0xf805
+
+PCI_CAP_ID_MSI (0x05) at 0xe0, next cap at 0xf8
+
+> > (XEN) d0v1 conf read cf8 0x800100f8 bytes 2 offset 0 data 0x1
+
+PCI_CAP_ID_PM (0x01) at 0xf8, end of cap list
+
+These caps match the offsets from the lspci output in the full log:
+
+  1:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+	  Subsystem: MEDIATEK Corp. Device e616
+	  Flags: fast devsel, IRQ 255
+	  Memory at 8010900000 (64-bit, prefetchable) [disabled] [size=1M]
+	  Memory at 90b00000 (64-bit, non-prefetchable) [disabled] [size=32K]
+	  Capabilities: [80] Express Endpoint, IntMsgNum 0
+	  Capabilities: [e0] MSI: Enable- Count=1/32 Maskable+ 64bit+
+	  Capabilities: [f8] Power Management version 3
+
+> > (XEN) d0v1 conf write cf8 0x80010004 bytes 2 offset 0 data 0x400
+
+Set PCI_COMMAND_INTX_DISABLE, disable BARs, Bus Master.  Looks like
+the end of pci_dev_save_and_disable().
+
+> > (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 2 data 0x9
+
+PCIe Cap at 0x80, PCI_EXP_DEVCTL is 0x08, PCI_EXP_DEVSTA is 0x0a.
+
+0x80010088 would be PCI_EXP_DEVCTL (a 2-byte register), maybe offset 2
+gets us to PCI_EXP_DEVSTA?  Not sure.
+
+  0x0001 PCI_EXP_DEVSTA_CED /* Correctable Error Detected */
+  0x0008 PCI_EXP_DEVSTA_URD /* Unsupported Request Detected */
+
+Not impossible that these would be set.  Lots of URs happen during
+enumeration and we're not very good about cleaning these up.
+Correctable errors are common for some devices.  lspci -vv would
+decode the PCIe cap registers, including this.
+
+> > (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 0 data 0x2910
+
+PCI_EXP_DEVCTL:
+  0x2000 PCI_EXP_DEVCTL_READRQ_512B
+  0x0800 PCI_EXP_DEVCTL_NOSNOOP_EN
+  0x0100 PCI_EXP_DEVCTL_EXT_TAG
+  0x0010 PCI_EXP_DEVCTL_RELAX_EN
+
+> > (XEN) d0v1 conf write cf8 0x80010088 bytes 2 offset 0 data 0xa910
+
+PCI_EXP_DEVCTL:
+  set 0x8000 PCI_EXP_DEVCTL_BCR_FLR
+
+This looks like the actual FLR being initiated.
+
+> This is the express capability's Link Control 2 Register afaict.
+
+Unless I'm missing something this is actually Device Control.  So far
+I think this all looks OK.  The next part:
+
+> > (XEN) d0v2 conf read cf8 0x80010000 bytes 4 offset 0 data 0xffffffff
+
+looks like a problem.  The normal successful read gets 0x061614c3.
+After the FLR, if RRS SV is enabled, we should get either 0x0001ffff
+or 0x061614c3.
+
+Here we would exit the loop in pci_dev_wait() because we didn't see
+0x0001 and we expect that the device is ready and we got a valid
+Vendor ID.
+
+So we proceed to restoring config space via pci_restore_state(), where
+we restore some PCIe registers and the header (first 64 bytes).  My
+*guess* is the device isn't ready (or at least not responding) since
+all the reads return ~0.
+
+> > [1] https://gist.github.com/marmarek/b4391c71801145e52590e877c559c5e0
 
 
-adam
 
-> It then does FIELD_PREP(GENMASK(5, 4), 4) - which is an error.
->
->         David
->
->
->
+commit c2fd12204dcb ("PCI: Enable Configuration RRS SV early")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu Jan 30 15:16:40 2025 -0600
+
+    PCI: Enable Configuration RRS SV early
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..0b013b196d00 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1373,8 +1373,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
+ 			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
+ 
+-	pci_enable_rrs_sv(dev);
+-
+ 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
+ 	    !is_cardbus && !broken) {
+ 		unsigned int cmax, buses;
+@@ -1615,6 +1613,11 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pdev->pcie_cap = pos;
+ 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+ 	pdev->pcie_flags_reg = reg16;
++
++	type = pci_pcie_type(pdev);
++	if (type == PCI_EXP_TYPE_ROOT_PORT)
++		pci_enable_rrs_sv(pdev);
++
+ 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+ 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
+ 
+@@ -1631,7 +1634,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	 * correctly so detect impossible configurations here and correct
+ 	 * the port type accordingly.
+ 	 */
+-	type = pci_pcie_type(pdev);
+ 	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
+ 		/*
+ 		 * If pdev claims to be downstream port but the parent
+
+
+
+commit 4ea25d50c7c1 ("PCI: Avoid needless capability searches")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu Jan 30 14:33:00 2025 -0600
+
+    PCI: Avoid needless capability searches
+    
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..02d592b81bc6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1742,19 +1742,17 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+ 
+ static int pci_save_pcix_state(struct pci_dev *dev)
+ {
+-	int pos;
+ 	struct pci_cap_saved_state *save_state;
++	u8 pos;
++
++	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
++	if (!save_state)
++		return -ENOMEM;
+ 
+ 	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+ 	if (!pos)
+ 		return 0;
+ 
+-	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+-	if (!save_state) {
+-		pci_err(dev, "buffer not found in %s\n", __func__);
+-		return -ENOMEM;
+-	}
+-
+ 	pci_read_config_word(dev, pos + PCI_X_CMD,
+ 			     (u16 *)save_state->cap.data);
+ 
+@@ -1763,14 +1761,19 @@ static int pci_save_pcix_state(struct pci_dev *dev)
+ 
+ static void pci_restore_pcix_state(struct pci_dev *dev)
+ {
+-	int i = 0, pos;
+ 	struct pci_cap_saved_state *save_state;
++	u8 pos;
++	int i = 0;
+ 	u16 *cap;
+ 
+ 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+-	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+-	if (!save_state || !pos)
++	if (!save_state)
+ 		return;
++
++	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
++	if (!pos)
++		return;
++
+ 	cap = (u16 *)&save_state->cap.data[0];
+ 
+ 	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index e0bc90597dca..007e4a082e6f 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -35,16 +35,14 @@ void pci_save_ltr_state(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
+ 		return;
+ 
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
++	if (!save_state)
++		return;
++
+ 	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
+ 	if (!ltr)
+ 		return;
+ 
+-	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+-	if (!save_state) {
+-		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
+-		return;
+-	}
+-
+ 	/* Some broken devices only support dword access to LTR */
+ 	cap = &save_state->cap.data[0];
+ 	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
+@@ -57,8 +55,11 @@ void pci_restore_ltr_state(struct pci_dev *dev)
+ 	u32 *cap;
+ 
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
++	if (!save_state)
++		return;
++
+ 	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
+-	if (!save_state || !ltr)
++	if (!ltr)
+ 		return;
+ 
+ 	/* Some broken devices only support dword access to LTR */
+diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+index a4ff7f5f66dd..c39f3be518d4 100644
+--- a/drivers/pci/vc.c
++++ b/drivers/pci/vc.c
+@@ -355,20 +355,17 @@ int pci_save_vc_state(struct pci_dev *dev)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
+-		int pos, ret;
+ 		struct pci_cap_saved_state *save_state;
++		int pos, ret;
++
++		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
++		if (!save_state)
++			return -ENOMEM;
+ 
+ 		pos = pci_find_ext_capability(dev, vc_caps[i].id);
+ 		if (!pos)
+ 			continue;
+ 
+-		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
+-		if (!save_state) {
+-			pci_err(dev, "%s buffer not found in %s\n",
+-				vc_caps[i].name, __func__);
+-			return -ENOMEM;
+-		}
+-
+ 		ret = pci_vc_do_save_buffer(dev, pos, save_state, true);
+ 		if (ret) {
+ 			pci_err(dev, "%s save unsuccessful %s\n",
+@@ -392,12 +389,15 @@ void pci_restore_vc_state(struct pci_dev *dev)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
+-		int pos;
+ 		struct pci_cap_saved_state *save_state;
++		int pos;
++
++		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
++		if (!save_state)
++			continue;
+ 
+ 		pos = pci_find_ext_capability(dev, vc_caps[i].id);
+-		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
+-		if (!save_state || !pos)
++		if (!pos)
+ 			continue;
+ 
+ 		pci_vc_do_save_buffer(dev, pos, save_state, false);
