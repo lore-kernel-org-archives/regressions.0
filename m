@@ -1,362 +1,162 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DF015C0
-	for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 09:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9A7D2FB
+	for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 09:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738229439; cv=none; b=ZPnscpmFZEuWun4MpRWwwp3xNka5AwRSVR6BgKAo/lwes3gwtGFuXexvYih1ifB+vikIlLEv8t4MgQVk2/UDikywrBEKyHMBXw84VYzsjRhKhymLEtcRjf/NKVVPa5EXcGeCmq373hFohk9nX5StzJQFXQA23LjDQnGVV6FspKo=
+	t=1738229496; cv=none; b=EpucPByJG90fttKkrwnu86BxOoENRDSAeYI3BwkZwQEgdpFqClgjtqkpQV23BwjeOGWIccsxwL6jTFJqlsDnfG2Lr89lMCyC9cB5FPRDDudkQZbasn8BB8DqgSAzNteNOvuYkOA0RtRtiuW29byFfmvyymt1BRHYAD6NiHYS+94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738229439; c=relaxed/simple;
-	bh=X9dWZj4DOifg6j2W5YvbRi0pTVYC3fIHLwZLH1WnbPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G28ZM3W+BEvlkkscFWXuk8ouZUPnOblU+UU+NtNP/OfkjgnjMJXllw+/3IjTRz2wqGHLXWUGwkY0jXfqv3jLaK2desFeSm/jZ/V89RRelyiQLUN+VRNeGToOOwbKS8peGAMQLMZT6pQaJNc6O/0D43q16rM2/X9elxPwCGmW40Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KgjG2QE4; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738229496; c=relaxed/simple;
+	bh=FABrqX+Hjw484256YaPHen56rdftKHMIcVK00b4E1jA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=sUEDSovlurlGicUuIDXe9aMOI3psqlXAbRCuIBt+XVMU8AJRHe9c/xKQPkPazQYFf0yVtd03TX3eFM0cxwj1VIDtOLygz1OEdqENVdw0G/fAeOk6ov36dyASrhXmSmaMwcUbB7aBLcv7V1LjBRUE3tWDSxJtq8PkCmJEGMNziyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C6y+29Ay; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KgjG2QE4"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so763533a12.2
-        for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 01:30:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C6y+29Ay"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4afe1009960so153941137.0
+        for <regressions@lists.linux.dev>; Thu, 30 Jan 2025 01:31:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738229435; x=1738834235; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DWNKTu1xMedq7YoRUSSpTvvZsiNpq+yhrTRNnSA0368=;
-        b=KgjG2QE4i4bIoqc/UNlJFGrUQHa9foSPLaX0J/jalFNJcvFG1uNzHaHaNDNv0Nhea7
-         yFjWJT5W+1+TUcVic19cPmivmzjSNukamW82LwpksBiDh2fWV20omP31xuDEDV0kBnfq
-         5ZyxlwFJLYpeaSeJH7Fkf5jGxFaE3eNJaXpdSKEQ2dRbKiMFrH02ZOrvJMdhTIdfNsm8
-         ghX7pxz2KeNQznbUzR4e7u6rsYVZ5Q4wgpM8MxFv9eQ4+y+CylYDhpaIPA57MyDdDID7
-         2F+YMYqBTJRYa3uUwIYwlVDPv1Bkh2xKk3YDfLZljcttbGg1KAy+MKXTWw/rqxWK+14Z
-         M1Xw==
+        d=linaro.org; s=google; t=1738229492; x=1738834292; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dmWcBJcs6Wk755m4D9DSq+3kzSFiV3zXYSE9SNe/ZDI=;
+        b=C6y+29AyXkLoINUP9oERIw5vPENsFuVeHpw85tcI90gjY8EmBTaXVb6na9bvqmu8VX
+         GNKmB38ijSSS/YsZHqnc3G+frW4ncGjjnLfnTBaPO+t60stdkb8T4uwvv+mfh81buey3
+         N6lJWYj4ADTpNPee/QRuXYs0SntuEW8ViW1hT/P0BlG+PKELKqieAcAB6nbi9BdAT/03
+         D1OixDeSO4Lo9Q1pYDr7wpeQx6j30Jw75OW+QG5sGXxkTuf9L5VmxVImhKxKsP4tIIX/
+         RPiccWOufxkZwzw6Hw478+6IwEYmJ/L6ActVOQ2T+6gQLM4ybh56zrmzE5BGIGZZ0JO3
+         jkzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738229435; x=1738834235;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DWNKTu1xMedq7YoRUSSpTvvZsiNpq+yhrTRNnSA0368=;
-        b=J3JQ7ptpcn/zkHk2hMiV75iRE3euJ0qGl8D8v/7Ivkg7kYjtYv5JvCqSf/pCAvURPQ
-         w4y6ukMeOApwlTr2l44uIg2d9CrPK1xIhPu4FA3QmF+L7XkLkXKjJfde1ZgBvduB8NZ3
-         LdGZhVwFU7A5qY/GJyKqfkYviN1oOY5+yWNSipYurxpPthhm84pwyuCZoY5BkQB7cSnK
-         Kx0XUSDqXnQ7unSBP1Z2G8y+pX8K2HurFiULPYSQFSN+dRfKps/fZtukTcjyuigQaF7X
-         ieAx3HzVNj38s5lUAAFB5NP92MV4FuagasRhajOV+sT1UCyGXhWpp2PRuiT+zeHhzgQv
-         bYLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWzGXUQ26SuDU521lUQKfoqENnfLRnoun5LsROA3o6etu+PRhfLig1bJ6yfiv6bl4UsPaNyYuNmEPdvw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzOEBNS7i1NQOkRvIzVfr/apbtDgTRcFsyn1ExGz4A/GhU+H8r3
-	ZSfQJwa3dTn1QQpiWc30nXBAweqUpcvrtfK4PtTyRj5HAqemVsCc16SK9oYn0g==
-X-Gm-Gg: ASbGncsJ1QHERuy0RHucVrS268CS2dqPuCeO/bitttwMSwNAUfS9Mb8xBgSak4eRCgv
-	cSX5tkuwvlq+FdwLsk6BSPQg+oq8Rjgd4q57+Mc/xrJ719EN/gIws/YwKAsfrBRxMx9P22FRzTF
-	0mbeDSoq9WFmYIArjM+4/3yJEu5SxhRbsurYaqsliiwbBD92BNH4g4kzVVZQ+gIx7LSsVtwsW97
-	PVXTD2PsLmeJCBQnBcV8ZonsMFW4iSXWFwhH4RbK0IIOI4rXd9d58VLAclKEEIu2v8MgpTP5ZRo
-	j+5ZivzHli4eSfLNn8xdgRf4Qr4BAqlAxyQXjxnQo6ps8adaPCD6oYkamOdvMTeOVSwy2W1W3pK
-	C
-X-Google-Smtp-Source: AGHT+IF0gyawJlcEkylXCscP5ByYoAc8DNLoaGkczxxW7yrMEL0xgpxHngznG1VR9QUPt+Fv9sC/Rw==
-X-Received: by 2002:a05:6402:34c8:b0:5d9:84ee:ff31 with SMTP id 4fb4d7f45d1cf-5dc5efa8c21mr15653014a12.3.1738229434702;
-        Thu, 30 Jan 2025 01:30:34 -0800 (PST)
-Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc7204517csm775702a12.0.2025.01.30.01.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2025 01:30:34 -0800 (PST)
-Message-ID: <cfe0af0e-132b-4390-a3b0-dde0e6326e19@suse.com>
-Date: Thu, 30 Jan 2025 10:30:33 +0100
+        d=1e100.net; s=20230601; t=1738229492; x=1738834292;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dmWcBJcs6Wk755m4D9DSq+3kzSFiV3zXYSE9SNe/ZDI=;
+        b=ti3TiQsR+Moj6Kdk889it0X8nRj9LFVhLAjDjyUgs4GA0xpURH8ZYGmDSBbMtKi95x
+         qzjAyPkPuMZKGmm0z9hy2MkqGTtRy813qnHz9U11EfQw8zRMy9WaXaqgHYA0xlid6KCB
+         pU6XynRLAqM1m2xLc1G/MBi+2CdKLEPFf6hxbUdSvU2eCG5Yw/HwqwXkobWsN5JHsvoX
+         0DJgI08uoqoI8B9YsVouPQPbfJpWN8sn/bvFw6Y8FS3172+NQnhQEtTXnJuClqPc2CbT
+         yKdA9MjlAsQtQz8VXdd+InB6/9Ayg/gukx1SNBYub69qwSJ2NqIRh90KvDw4GDctwCcO
+         Q99g==
+X-Forwarded-Encrypted: i=1; AJvYcCUugWXzsENPANGL4EjHgmsHuftcaEnM7iZ4RTT/5BIfqkC8Ea4Ji1tsLnT4vZ1HF1vO6GiL76G9d/Vvmw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxl8QmWkzW09KTGxr5c/kzPdRIvLHiVTiYMs60KHIRf2MOLcxhc
+	i5I48BlXJkYzaWB9HcFiitLEqKv5uUZUFv3GHIco8KGXbXgnfldA8bUUBAwLBm1+bUwxfzLEWKl
+	fWcXuwA5AQLYjH8069vSCDG/BF+OjTJTbB6Bt3Q==
+X-Gm-Gg: ASbGncskpm7eLChorcJyvuDMVYjL9PB8zRGZKDzQSRN+SR0NPtnUxY5x4R7r3GUoKW0
+	G+pUYKcjr2yZXA9CgiYuLpQUxlQzmgsG1BVRMI7bsHc2RKqqnsFwbkwKQtled8GFQsAFIKHv3TI
+	vzZiKrDVHOZdVJH0NXyd1PAJhEr++ODw==
+X-Google-Smtp-Source: AGHT+IHHO4p75yBvoZrH4CWt7Sm3+WjJipBubc0F5yEZyIihuApBbf7n+j83VZzoGbXPEsG7JEuXYNAUETI3Fr3UyNs=
+X-Received: by 2002:a05:6102:161e:b0:4b2:5d16:f75 with SMTP id
+ ada2fe7eead31-4b9a4ec7f86mr5303490137.4.1738229492696; Thu, 30 Jan 2025
+ 01:31:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-To: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
- <marmarek@invisiblethingslab.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel <xen-devel@lists.xenproject.org>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-References: <Z5mOKQUrgeF_r6te@mail-itl> <20250129184825.GA484760@bhelgaas>
- <Z5sGW4b0pMtm38Y-@mail-itl>
-Content-Language: en-US
-From: Jan Beulich <jbeulich@suse.com>
-Autocrypt: addr=jbeulich@suse.com; keydata=
- xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
- hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
- 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
- /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
- O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
- MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
- nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
- 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
- Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
- AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
- e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
- hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
- IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
- FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
- t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
- AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
- HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
- mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
- m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
- EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
- wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
- nAuWpQkjM1ASeQwSHEeAWPgskBQL
-In-Reply-To: <Z5sGW4b0pMtm38Y-@mail-itl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 30 Jan 2025 15:01:21 +0530
+X-Gm-Features: AWEUYZmjjTJhG4gbVvsZPMKcHyLA3_iG79mE5k3okwZmPnMLWYy8tDLAX5wqlig
+Message-ID: <CA+G9fYtNfM399_=_ff81zeRJv=0+z7oFJfPGmJgTp6yrJmU+1w@mail.gmail.com>
+Subject: linux: master: x86_64: gcc-8: error: call to '__compiletime_assert_909'
+ declared with attribute error: clamp() low limit dsc_min_bpc * 3 greater than
+ high limit dsc_max_bpc * 3
+To: lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: David Laight <david.laight@aculab.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.01.2025 05:55, Marek Marczykowski-Górecki wrote:
-> I've added logging of all config read/write to this device. Full log at
-> [1].
-> 
-> A little explanation:
-> - it's done in pci_conf_read/pci_conf_write in https://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=xen/arch/x86/pci.c;h=97b792e578f1093194466081ad3651ade21cae7d;hb=HEAD
-> - cf8 means cf8 port value (BDF + register)
-> - bytes is read/write size (1/2/4)
-> - offset is the offset in the register (on top of cf8), but not in data
-> - data is either retrieved value, or written value, depending on
->   function
-> - it's logging only accesses to 01:00.0
-> 
-> interesting part:
-> 
-> lspci before reset:
-> (XEN) d0v3 conf read cf8 0x80010000 bytes 4 offset 0 data 0x61614c3
-> (XEN) d0v3 conf read cf8 0x80010004 bytes 4 offset 0 data 0x100000
-> (XEN) d0v3 conf read cf8 0x80010008 bytes 4 offset 0 data 0x2800000
-> (XEN) d0v3 conf read cf8 0x8001000c bytes 4 offset 0 data 0x10
-> (XEN) d0v3 conf read cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v3 conf read cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v3 conf read cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v3 conf read cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x80010028 bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x8001002c bytes 4 offset 0 data 0xe61614c3
-> (XEN) d0v3 conf read cf8 0x80010030 bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x80010034 bytes 4 offset 0 data 0x80
-> (XEN) d0v3 conf read cf8 0x80010038 bytes 4 offset 0 data 0
-> (XEN) d0v3 conf read cf8 0x8001003c bytes 4 offset 0 data 0x1ff
-> (XEN) d0v3 conf read cf8 0x80010080 bytes 4 offset 0 data 0x2e010
-> (XEN) d0v3 conf read cf8 0x800100e0 bytes 4 offset 0 data 0x18af805
-> (XEN) d0v3 conf read cf8 0x800100f8 bytes 4 offset 0 data 0xc8030001
-> 
-> reset:
-> (XEN) d0v1 conf read cf8 0x800100fc bytes 2 offset 0 data 0x8
-> (XEN) d0v1 conf read cf8 0x800100fc bytes 2 offset 0 data 0x8
-> (XEN) d0v1 conf read cf8 0x8001008c bytes 4 offset 0 data 0x145dc12
-> (XEN) d0v1 conf read cf8 0x80010000 bytes 4 offset 0 data 0x61614c3
-> (XEN) d0v1 conf read cf8 0x80010004 bytes 4 offset 0 data 0x100000
-> (XEN) d0v1 conf read cf8 0x80010008 bytes 4 offset 0 data 0x2800000
-> (XEN) d0v1 conf read cf8 0x8001000c bytes 4 offset 0 data 0x10
-> (XEN) d0v1 conf read cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v1 conf read cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v1 conf read cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v1 conf read cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x80010028 bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x8001002c bytes 4 offset 0 data 0xe61614c3
-> (XEN) d0v1 conf read cf8 0x80010030 bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x80010034 bytes 4 offset 0 data 0x80
-> (XEN) d0v1 conf read cf8 0x80010038 bytes 4 offset 0 data 0
-> (XEN) d0v1 conf read cf8 0x8001003c bytes 4 offset 0 data 0x1ff
-> (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 0 data 0x2910
-> (XEN) d0v1 conf read cf8 0x80010090 bytes 2 offset 0 data 0x1c2
-> (XEN) d0v1 conf read cf8 0x800100a8 bytes 2 offset 0 data 0x400
-> (XEN) d0v1 conf read cf8 0x800100b0 bytes 2 offset 0 data 0x2
-> (XEN) d0v1 conf read cf8 0x80010004 bytes 2 offset 2 data 0x10
-> (XEN) d0v1 conf read cf8 0x80010034 bytes 1 offset 0 data 0x80
-> (XEN) d0v1 conf read cf8 0x80010080 bytes 2 offset 0 data 0xe010
-> (XEN) d0v1 conf read cf8 0x800100e0 bytes 2 offset 0 data 0xf805
-> (XEN) d0v1 conf read cf8 0x800100f8 bytes 2 offset 0 data 0x1
-> (XEN) d0v1 conf write cf8 0x80010004 bytes 2 offset 0 data 0x400
-> (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 2 data 0x9
-> (XEN) d0v1 conf read cf8 0x80010088 bytes 2 offset 0 data 0x2910
-> (XEN) d0v1 conf write cf8 0x80010088 bytes 2 offset 0 data 0xa910
+The x86_64 and i386 build failed with defconfig with gcc-8 toolchain due to
+following build warnings / errors on the Torvalds Linux master branch.
+But gcc-13 builds pass.
 
-This is the express capability's Link Control 2 Register afaict. As per
-the copy of the 6.0 spec that I have the top 4 bits have only two
-defined encodings - 0b0000 and 0b0001. 0b1000, as is being set here, is
-not defined.
+First seen on v6.13-9485-g72deda0abee6 on Jan. 27, 2025
+Good:  v6.13-7644-gc2da8b3f914f on Jan. 27, 2025
+Bad:  v6.13-8265-g9c5968db9e62 on Jan. 27, 2025
 
-Yet then the earlier questions remain: Why has this suddenly become a
-problem? And why would this depend on how the present session was
-started, and what was running in the previous session? Is this write
-perhaps conditional upon something that has changed?
+i386:
+  build:
+    * gcc-8-i386_defconfig
 
-Jan
+x86_64:
+  build:
+    * gcc-8-x86_64_defconfig
 
-> (XEN) d0v2 conf read cf8 0x80010000 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf read cf8 0x80010090 bytes 2 offset 0 data 0xffff
-> (XEN) d0v2 conf write cf8 0x80010090 bytes 2 offset 0 data 0xfffc
-> (XEN) d0v2 conf write cf8 0x80010090 bytes 2 offset 0 data 0xffff
-> (XEN) d0v2 conf write cf8 0x80010088 bytes 2 offset 0 data 0x2910
-> (XEN) d0v2 conf write cf8 0x80010090 bytes 2 offset 0 data 0x1c2
-> (XEN) d0v2 conf write cf8 0x800100a8 bytes 2 offset 0 data 0x400
-> (XEN) d0v2 conf write cf8 0x800100b0 bytes 2 offset 0 data 0x2
-> (XEN) d0v2 conf read cf8 0x8001003c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001003c bytes 4 offset 0 data 0x1ff
-> (XEN) d0v2 conf read cf8 0x80010038 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010038 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010034 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010034 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010030 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010030 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001002c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001002c bytes 4 offset 0 data 0xe61614c3
-> (XEN) d0v2 conf read cf8 0x80010028 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010028 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010024 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010024 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010020 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010020 bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x8001001c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001001c bytes 4 offset 0 data 0
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010018 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010018 bytes 4 offset 0 data 0x90b00004
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010014 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010014 bytes 4 offset 0 data 0x80
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x80010010 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010010 bytes 4 offset 0 data 0x1090000c
-> (XEN) d0v2 conf read cf8 0x8001000c bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x8001000c bytes 4 offset 0 data 0x10
-> (XEN) d0v2 conf read cf8 0x80010008 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010008 bytes 4 offset 0 data 0x2800000
-> (XEN) d0v2 conf read cf8 0x80010004 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010004 bytes 4 offset 0 data 0x100000
-> (XEN) d0v2 conf read cf8 0x80010000 bytes 4 offset 0 data 0xffffffff
-> (XEN) d0v2 conf write cf8 0x80010000 bytes 4 offset 0 data 0x61614c3
-> (XEN) d0v2 conf read cf8 0x80010004 bytes 2 offset 2 data 0xffff
-> (XEN) d0v2 conf read cf8 0x80010034 bytes 1 offset 0 data 0xff
-> (XEN) d0v2 conf read cf8 0x800100fc bytes 2 offset 0 data 0xffff
-> 
-> 
-> [1] https://gist.github.com/marmarek/b4391c71801145e52590e877c559c5e0
-> 
+Reported-by: Linux Kernel Functional Testing
 
+Build log:
+---
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=x86_64 SRCARCH=x86
+CROSS_COMPILE=x86_64-linux-gnu- 'CC=sccache x86_64-linux-gnu-gcc'
+'HOSTCC=sccache gcc'
+In file included from <command-line>:
+In function 'intel_dp_dsc_compute_pipe_bpp_limits.isra.80',
+    inlined from 'intel_dp_compute_config_limits' at
+drivers/gpu/drm/i915/display/intel_dp.c:2547:3:
+include/linux/compiler_types.h:542:38: error: call to
+'__compiletime_assert_909' declared with attribute error: clamp() low
+limit dsc_min_bpc * 3 greater than high limit dsc_max_bpc * 3
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+                                      ^
+include/linux/compiler_types.h:523:4: note: in definition of macro
+'__compiletime_assert'
+    prefix ## suffix();    \
+    ^~~~~~
+include/linux/compiler_types.h:542:2: note: in expansion of macro
+'_compiletime_assert'
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro
+'compiletime_assert'
+ #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                     ^~~~~~~~~~~~~~~~~~
+include/linux/minmax.h:188:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+  BUILD_BUG_ON_MSG(statically_true(ulo > uhi),    \
+  ^~~~~~~~~~~~~~~~
+include/linux/minmax.h:195:2: note: in expansion of macro '__clamp_once'
+  __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_),
+__UNIQUE_ID(h_))
+  ^~~~~~~~~~~~
+include/linux/minmax.h:206:28: note: in expansion of macro '__careful_clamp'
+ #define clamp(val, lo, hi) __careful_clamp(__auto_type, val, lo, hi)
+                            ^~~~~~~~~~~~~~~
+drivers/gpu/drm/i915/display/intel_dp.c:2506:25: note: in expansion of
+macro 'clamp'
+  limits->pipe.max_bpp = clamp(limits->pipe.max_bpp, dsc_min_bpc * 3,
+dsc_max_bpc * 3);
+                         ^~~~~
+make[7]: *** [scripts/Makefile.build:194:
+drivers/gpu/drm/i915/display/intel_dp.o] Error 1
+
+
+Links:
+---
+ build log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/log
+ details: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/details/
+ history: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.13-9485-g72deda0abee6/testrun/27066663/suite/build/test/gcc-8-x86_64_defconfig/history/
+
+Steps to reproduce:
+------------
+$ tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8
+--kconfig x86_64_defconfig
+
+metadata:
+---
+  git describe: v6.13-9485-g72deda0abee6
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git sha: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+  kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2sKEcVft7ytiSSvOSnAuAxlCgRH/config
+  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2sKEcVft7ytiSSvOSnAuAxlCgRH/
+  toolchain: gcc8
+  config: gcc-8-defconfig
+  arch: i386 and x86_64
+
+--
+Linaro LKFT
+https://lkft.linaro.org
