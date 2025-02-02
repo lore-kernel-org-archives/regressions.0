@@ -1,133 +1,166 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C103AD27;
-	Sun,  2 Feb 2025 08:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338D98528E
+	for <regressions@lists.linux.dev>; Sun,  2 Feb 2025 09:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738485169; cv=none; b=DLVpZktvplKOYFno8kc/3lUBqFo9zNWnNXXDjHhfC2slExKY3vhRjS1W30qw0pb1441Qwn5ySd3nkQ6FKDcjUqKa6/6OYTlWeq/HgRGXMQsnI012Jelxw1SKIMFbzR6uckSSb+3u9ke0+U19NZcIPR1FTYzDnnTxJjManWS63ps=
+	t=1738488421; cv=none; b=k4ORrC9hmD3D9BP6A8mUJeRqnO/ECVjguSh53hqww70p4QCDkQv3kzoXGdCrX/yNdMg1eulnKY+x6l06QxrLTkIkakHYbaDQ3GFB8o+18suBGADEs1ipqWC3dmc5pu9GjxL1Tm91Ly3pRWZg+yMtpmRT/W9F8W6RFCPH6i1YUSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738485169; c=relaxed/simple;
-	bh=h5gZJXr1gG8fo7EF0ILDnAS2K7ODCxc8o+NZCCDv9tQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lFWU/+O2UFJKajkjLNx1V//gfa0ElSWG7vncCfvGN37b2nGZiKFvC1Eyr+FDxbDkq7p5mg6GYlTKy1gYqrJli2x57Opuczh47MEFkCAyhS9fPDGnlxTP+GqfwPr0mMBhd7eCDHAjG2K2tr62Ys1/sWENteMmBa+wFQy29BCrYzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhIpfbzT; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738488421; c=relaxed/simple;
+	bh=inNoeeya3Z3kNOhz2JZ01m6Wk60ZO4TuWq8wITeqdT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfWq6tA+zCyYmEt3R4oh4RFGzr5fYPvYyFdO9zP/mV1w782vWQxuniF5hCKCyRpK8vDkrQ0NrFUkXOBrTA1rO/XZ9t8nvSlxU8MzFxNlUaSnn9R1gJt1g8irNCF95bpJpdnpl3gkem1RNbhXB51iy9zErmXbN392qKDl1KNgbdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=g62jND9n; arc=none smtp.client-ip=212.227.126.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhIpfbzT"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f441791e40so4397282a91.3;
-        Sun, 02 Feb 2025 00:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738485168; x=1739089968; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h5gZJXr1gG8fo7EF0ILDnAS2K7ODCxc8o+NZCCDv9tQ=;
-        b=VhIpfbzTnqkGF6t1hvCEo8MFGEsSEdh+vdvJ+EjHwbprXn2Btu7VnvXh+Hf92yO2W6
-         QDLV73EbuZoAkGPdbpKrIrGq/iLtZzMWFus/JExyIUhoBGEJuoAuJ7ra9aeZPBm6aNev
-         DocuTepIj6wcb8Vi/ZRUwT0AMOTFYJ5xqOTuL5oJF8TQLyLYRGewxcQGP6KGle63D/sH
-         DMP7/ji8vEcCuNxObv4gAXGADOonR1IrA0CgrFgsY35vYsI58gycyAJWVUowdZWE4OnA
-         Snju9S+LJ89LHhcNxc/YPgKDWsvYzaUUfqhVeb7uICpayY0vXY0WuO7K4seEkb+yvd+Z
-         ZV+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738485168; x=1739089968;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h5gZJXr1gG8fo7EF0ILDnAS2K7ODCxc8o+NZCCDv9tQ=;
-        b=sW6JohGkffnN/uYVBlTQRAhWNRSg1lfrn/e5SEVjKqT6n8Qr4kDYV7B3diw0iOO5VG
-         aMwk02M/7OLysjiRBXd9tugv8IXbHWPaP4VGaYPszIRml6twl0lRoTLzJd5K/QqSSTyD
-         XWN+zbTfxLU92mFMvk09Ij4g5myiVPqwWkd/h6Z1K0Zyl/s552fqhIs+rSmcj8MiKAYa
-         fMiNdWg/XWyiKOi8rJ1v2Wm/ENVx4J9MdsBTfecTr367xeKpA8QOg06YgHRHk3NbzT+u
-         F+McF4j+Nu1N/72t1XX5DGd01Irb/m0ffDDXlOIXAh/9iLo9LOza+aN0ZHWTnuRccWww
-         /LZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5hWogWSCIg4ejfFeoWXIGpvP98A4yZ7TYsReQG7IKvSJka+6O6okNBa5niNuWM+SwDCZYbQ==@lists.linux.dev, AJvYcCWjPq4J6IfXKntR8fqpmZr9KrRCdFP8XNDN7dFC332L91aFtmRfawegvG7buAm6zfwAwMpCmDGFilxBDh8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxhJgk+QCI1ew18x9KEpDT0tMiKZ+w4uttlnosPHR+5QIWHrDdh
-	2rngHiX8gQdnHucqIdPqIdRe5vnWHmal6/ibmItemWH7IhuJlLopsL9KOxxhd3eL/Lerz9Itzop
-	0wMgHsNkwEMGxv2ycEfXb7JN6274=
-X-Gm-Gg: ASbGncsl5bB282PrJ962R9uHpoKSt7/G2JNfMc0oMK6LP/6REHlF/bAEU6vC75Iv6Ir
-	WcdD6W2jKTF0N+kli6NG/f2OwmIK8ewgZpi3VCxeJU15T6umYWEb5hboMXeOTT47c4ysqBiK2gc
-	B6Xeu6r+Wx5/WBf7LlvpJl8o23Mzc=
-X-Google-Smtp-Source: AGHT+IF4Xed2UK/m1b70t2nhQ8MCa/ZGxcKczWbWLCesTg1dtRBkKclSXAXCoFAdI2mFiGLkTfshl1Z+s2zbAA4wYng=
-X-Received: by 2002:a17:90b:2742:b0:2f2:a796:26b with SMTP id
- 98e67ed59e1d1-2f83abb3480mr24835867a91.1.1738485167545; Sun, 02 Feb 2025
- 00:32:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="g62jND9n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1738488411; x=1739093211; i=christian@heusel.eu;
+	bh=inNoeeya3Z3kNOhz2JZ01m6Wk60ZO4TuWq8wITeqdT4=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g62jND9nC7Yu8hLy9FDAGWU3UpNPNJEWys/HgEtlujwsB6+g2QsBGFXXtkKm3xZC
+	 iYu4QW239XythK0Ee+SLYH2joK0xjyYmCxKyiNwjznP1/7WrqmEVpZmUfY3icFmYN
+	 eoez00M18JBUsfsPhn+Xl3a6saYc0wv5i+tMyeCqmgopSankkWmG6psY2Dp+iu4V/
+	 zOmL9pYrjMrczFjo0VY+yClbiOit9OXp8DCWiN7DqAc9qYnMk0izvkLoZh4bZVbJW
+	 8hS1+TlBS9eAhJL3YXuj2fCGmYm0n45d1i0Im9aagB9mWkVwTC28XfREP2qpNv/xc
+	 /gFDl4UP7DvN//g7JQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([85.201.80.150]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MTiDV-1u1NEV3Dx7-00OzKw; Sun, 02 Feb 2025 10:26:50 +0100
+Date: Sun, 2 Feb 2025 10:26:49 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: "Ahmed, Shehab Sarar" <shehaba2@illinois.edu>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: TCP Fast Retransmission Issue
+Message-ID: <fa131e75-7398-4add-8665-333b92bb500b@heusel.eu>
+References: <DS0PR11MB77682EBD149E7965F1D8E8F1FDEB2@DS0PR11MB7768.namprd11.prod.outlook.com>
+ <DS0PR11MB7768A5B80C9BF2366CFEC89BFDEB2@DS0PR11MB7768.namprd11.prod.outlook.com>
+ <f86dd0f6-6a2e-40f3-b0be-d9816ccb20cc@heusel.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250109082849.GC20724@lst.de> <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info>
- <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de> <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
- <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de>
- <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
- <20250128074133.GA22435@lst.de> <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de>
- <Z5jTKTfKUeLm4uJT@gallifrey> <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
-In-Reply-To: <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
-From: Bruno Gravato <bgravato@gmail.com>
-Date: Sun, 2 Feb 2025 08:32:31 +0000
-X-Gm-Features: AWEUYZkyNSsitq97aeori6flZ7edGQ2TehN5fCXAeaoGoRvqgLYMRyksBa46SfI
-Message-ID: <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com>
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX + Ryzen 8700G
-To: Stefan <linux-kernel@simg.de>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, Christoph Hellwig <hch@lst.de>, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Keith Busch <kbusch@kernel.org>, Adrian Huang <ahuang12@lenovo.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, linux-nvme@lists.infradead.org, 
-	Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pdou3xkbdw3rclph"
+Content-Disposition: inline
+In-Reply-To: <f86dd0f6-6a2e-40f3-b0be-d9816ccb20cc@heusel.eu>
+X-Provags-ID: V03:K1:YD1GHiD6TWjPs+5ut6u4eYdRLry6OGktT764oaLQwhVFihoNKMT
+ Y+odj/wmWIxR0wC2l6Rb/efJHyAKX2NhKxP2C+J3I/GDu6YE5sfeLp3uP85THBz/2aebrKm
+ EAnqJZsToqUjT4Tno6IK0hOIoa4IUzZU/toBo9glmJIF5SDmexgwWnUC6P4azXkOVIIX4Ia
+ 0b0IvPGl41Abrq5hSG1pQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FlJoDDHhkiU=;1cOjWEAYL48s22JEW51Pa4+m6Oi
+ DYj5lvLs6r1aRK/zllA4lE+69IbKsorQCU3Sh9B7b0gW2SSXrYFSTFZzxkHylt4Tkl6CNNwcN
+ XN+dC0abi/I/r/ZcpsquCrtptY5eWhKvRKS9QkjnyE82immBTSibBQKjarDOx85ZCIiyBZcH8
+ rmVmA9Zt9nklKDg/uo/klvZjRK9tzlwu5EUjB9E8xq1KTXupHIuEH9JzIOPCp0kepJB/Hnk0o
+ uFO+info/vpdLqZ7AHoCjfvJ/RhuMxipOgUcS3Jk0ePql7FnafVtZQ5mkB70sR3oEWJCzKvva
+ LEOzvu3jA6S+i8vdfsBDAJLcJInj/N+PjIY5EFyRhAWFyRC9D+CCKGAwS27OqQCP6F8+KDT0y
+ h7sbmrtPpQGwfWk2of4uvaqPLQZcVW1UrTYiM37LflCq3bhJqxzO/KElx8O7MthjcXOieSBgU
+ RxHjE0d/76Bsf8p/F4Hd+5C7ERkiNwkdsZJrIEN7plm2lmzMbbOOxTFM6+M4Q3gUtQpaMdgNy
+ 3WYyE2bDTS08zhavaoOgjDtZj+PurpsVU83CSkvmi/EKJOkbyv0qVIUdKt0vi0lfCKRUq/q+5
+ m6p+spWz3Dsp2z26Hoedm9HH5qfcM3o3Jyz+vIJK+CZCEBh9ghImN7r7ezGJ8uLxEgy+afzA1
+ JOFya9UMyH+28BGXenZIzBzycNdEhCvTEcjeRcfV80f8TSnDYxpbMuxRURqErUHMAOF1q1fVh
+ L3X/h+QXyhjSwIkFJivy5p1Jm5fZCnSX9GD1KchZ/u/m6wTQFw3sfASbyW79GNRL6AvmdWeuv
+ gHmsbjKo2r8R1fwoNojgebk18A8sdx8LZDMGh+Rw70NCXfdGVsLR6HarwnC8uSRU3FRAxlRb9
+ au+eU5jXkq+3doUDoy8V8dS+SwpvYkHCTreT8+lkMViLAzHW3E7tg6J/9Tm7QAfSXVSQFcAQH
+ bSYWEaFTwKQswHpZwRIxbZIaO9Z6IWT7ZqzvErZLJiHJuTHBUpA6qPB/IvPN/rFMsFOAPWamk
+ cOYtR3bFW4t9KqXhFAD2TPdZK6kVSIcO02qtXvC9zP1N2pjMxSw9Q2Qd9oHx+6RutMi8nHW9U
+ QlHmFXirKBxjSW4CgKM825ZGiDqR+rOTs12XmENbwsUzG2Z0HrMsGPqGt75gM5xaFQjuxkdRx
+ YR5NM/kOFBRyqUl3+NaaBB8gKucUfW3XyK0dE/FqxeO/eyw4qY7lKz5RYrCLTVw9EboGYiC07
+ 570ufMN8lxHfAQKIxvHj/iSaUPRzZUeR2w==
 
-I just realized I replied only to the bugzilla list. Sorry about that.
 
-So I'm forwarding my reply to everyone else who was in CC and may not
-be getting the bugzilla emails.
+--pdou3xkbdw3rclph
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: TCP Fast Retransmission Issue
+MIME-Version: 1.0
 
-> > Is there any characterisation of the corrupted data; last time I
-> > looked at the bz there wasn't.
->
-> Yes, there is. (And I already reported it at least on the Debian bug
-> tracker, see links in the initial message.)
->
-> f3 reports overwritten sectors, i.e. it looks like the pseudo-random
-> test pattern is written to wrong position. These corruptions occur in
-> clusters whose size is an integer multiple of 2^17 bytes in most cases
-> (about 80%) and 2^15 in all cases.
->
-> The frequency of these corruptions is roughly 1 cluster per 50 GB written.
->
-> Can others confirm this or do they observe a different characteristic?
+On 25/02/02 10:26AM, Christian Heusel wrote:
+> On 25/02/01 07:09PM, Ahmed, Shehab Sarar wrote:
+> > Hello,
+>=20
+> Hello,
+>=20
+> > While experimenting with bbr protocol, I manipulated the network condit=
+ions by maintaining a high RTT for about one second before abruptly reducin=
+g it. Some packets sent during the high RTT phase experienced long delays i=
+n reaching the destination, while later packets, benefiting from the lower =
+RTT, arrived earlier. This out-of-order arrival triggered the receiver to g=
+enerate duplicate acknowledgments (dup ACKs). Due to the low RTT, these dup=
+ ACKs quickly reached the sender. Upon receiving three dup ACKs, the sender=
+ initiated a fast retransmission for an earlier packet that was not lost bu=
+t was simply taking longer to arrive. Interestingly, despite the fast-retra=
+nsmitted packet experienced a lower RTT, the original delayed packet still =
+arrived first. When the receiver received this packet, it sent an ACK for t=
+he next packet in sequence. However, upon later receiving the fast-retransm=
+itted packet, an issue arose in its logic for updating the acknowledgment n=
+umber. As a result, even after the next expected packet was received, the a=
+cknowledgment number was not updated correctly. The receiver continued send=
+ing dup ACKs, ultimately forcing bbr into the retransmission timeout (RTO) =
+phase.
+> >=20
+> > I generated this issue in linux kernel version 5.15.0-117-generic with =
+Ubuntu 20.04. I attempted to confirm whether the issue persists with the la=
+test Linux kernel. However, I discovered that the behavior of bbr has chang=
+ed in the most recent kernel version, where it now sends chunks of packets =
+instead of sending them one by one over time. As a result, I was unable to =
+reproduce the specific sequence of events that triggered the bug we identif=
+ied. Consequently, I could not confirm whether the bug still exists in the =
+latest kernel.
+> >=20
+> > I believe that the issue (if still exists) will have to be resolved in =
+the location net/ipv4/tcp_input.c or something like that. There are so many=
+ authors here that I do not know who to CC here. So, sending this email to =
+you. Sorry if this is not the best way to report this issue.
+>=20
+> does this cause problems for real applications? To me it sounds a bit
+> like a constructed issue, but I'm also not really proficient about the
+> stack mentioned about :p
+>=20
+> I'm asking because this is important for how we treat this report, see
+> the "Reporting Regression"[0] document for more details on what we
+> consider to be an regression.
+>=20
+> > Thanks
+> > Shehab
+>=20
+> Cheers,
+> Christian
 
-In my tests I was using real data: a backup of my files.
+(forgot the link)
 
-On one such test I copied over 300K files, variables sizes and types
-totalling about 60GB. A bit over 20 files got corrupted.
-I tried copying the files over the network (ethernet) using rsync/ssh.
-I also tried restoring the files using restic (over ssh as well). And
-I also tried copying the files locally from a SATA disk. In all cases
-I got similar results with some files being corrupted.
-The destination nvme disk was using btrfs and running btrfs scrub
-after the copy detects quite a few checksum errors.
+[0]: https://docs.kernel.org/admin-guide/reporting-regressions.html#what-is=
+-a-regression-and-what-is-the-no-regressions-rule
 
-I analyzed some of those corrupted files and one of them happened to
-be a text file (linux kernel source code).
-A big portion of the text was replaced with text from another file in
-the same directory (being text made it easy to find where it came
-from).
-So this was a contiguous block of text that was overwritten with a
-contiguous block of text from another file.
-If I remember correctly the other file was not corrupted (so the
-blocks weren't swapped). It looked like a certain block of text was
-written twice: on the correct file and on another file in the same
-directory.
+--pdou3xkbdw3rclph
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I also got some jpeg images corrupted. I was able to open and view
-(partially) those images and it looked like a portion of the image was
-repeated in a different part of it), so blocks of the same file were
-probably duplicated and overwritten within itself.
+-----BEGIN PGP SIGNATURE-----
 
-The blocks being overwritten seemed to be different sizes on different files.
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmefOlkACgkQwEfU8yi1
+JYWsWQ//enVk+r09f42STqtlW1PW3P73k7s5d84+MBgIpzGQElQW2b6ZIcla3AhZ
+0DVunS34Eereg+NbEbrQupzv2qOGMeukaAst6VSs+grnXguUYWBTwTKg5oPXlrp9
+gQ3Cw4Bs75FC66qg/8PxQG08PKwrbGW0foPMxECO2Mw5GkM0jvaoidCHVgVnly6+
+wl6+ms5cgeB5l8dpEtCid29V01OlZsYHdOOsatb2t++l8alYECXe3oplgaexARmW
+TgIOGcMJAMFhzXMNNfqGsDSZ8USPV4Nal4anCsIhlI5peoXs+MmfJWblj4CCj8P6
+aAs3hvFTWhaaEGNDpe6TLRwK7XMfnTUHCvTiiLbwxP2DhNp1bql35UBcPyqNc6pM
+onJrTxB3+yjo4vUhgX0Kn/0k2hjhKXa9gxqLt1q8oroN47UbyDOhXC5hy0P1kTXz
+aPTzFg4uKw/e1ZFL6GK4Rb1NCmJ41lQOLrNSyIIV3QTzOMTYNK9xHM8EY19ZP7ZF
+kFfHhzsm8MNk9sAFLgGbaibpnXWOEW3JVV5QIGIL3JA1gFIq8ZZqHlyHTbELW7vs
+BRGRriat0s6Ti1verOY4CDcKuA+VYlyWsrXqWjshh2fbNeePKwM4ApJ1OyDHWR79
+zGA9D1stv7mbkzmY+FiTI/utme1VrHRkUR6cp3bLzA8Ze/2Wn/A=
+=ZYSx
+-----END PGP SIGNATURE-----
 
-Bruno
+--pdou3xkbdw3rclph--
