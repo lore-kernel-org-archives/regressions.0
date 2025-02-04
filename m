@@ -1,246 +1,169 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A66A207E13;
-	Tue,  4 Feb 2025 14:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B120B807
+	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 15:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738679795; cv=none; b=UyCYMp5hVL7sJIuFBvSPFkb324Q6W3AYS/G68frgh8cncSalSYUjlgvbSM2nO9xxKaymt6h9btiPFj4LmlADRNQeo0vaH5Zyb6QNZj/FA8Cjw6LI0Lu0VD/fgnLTcyPs4TGjsQYbdhBXEMBK62TISrjbVgR46BSmQtoya/Idcjk=
+	t=1738681860; cv=none; b=pYF2xMUf7YQ31i5+2qeNZv29rMxJacFWZCfhNU9cW4R5mvijbGotoCiW1e3R1H1Ltbl9wtDcNCLIubVExiJMHGCVwKSTwznb85BkPYAwrwDWLXTSQzleulADUuzejjsCt51UarMv0Sm5sNn9PKNoDCmKjTkPkXKvVQ96my6dg+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738679795; c=relaxed/simple;
-	bh=2OfiAE3BjhZPyjDDoqHlXy1A3Xu34fHmnCjC6o04Amo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p43rgknzgwXs8i5S2kfeMcGD6pSB42ISBGw8RI3HJJrSL+mMWZKDhOMg5WE4YD/YL6H7I+drwV37kxpKnQvFWEj3KwOZ4xhtaR35vUstOZyxLIaCGCy3Rk/oYv10AtmcX9uTUgsKHRVJIM/NKQCSwwu9dU06Zl7/Ye2keeD7ksg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nh+aYPBL; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738681860; c=relaxed/simple;
+	bh=Bzu4jtQIUnIF8X4IR31+HofzpffJIQYmIBgKgA2+fO4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LqCR3af7O07EqxlXiQ3jZS3ckqHOu3WmFlABUtb+O9e1V9WGRZZqZhlhvn0a6wAmEmdG9iKTdb/mCyAnUwXUcmJV/b6asa/7AvkYfw/BzMIW803+V/CtdqpKY/47FdwU5DG/wTfXHgz9JfieqX3E8RlaNaYMYsJnn8A6LlPwuxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0X9vjul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nh+aYPBL"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso41586145e9.0;
-        Tue, 04 Feb 2025 06:36:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738679792; x=1739284592; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RRXFmx47Swzpej4Yg7u4uG0EqwNxFusRlkdCHqjIDuk=;
-        b=nh+aYPBLRE/tJNbvocXUmSk8mYYmp3SzsdD4Ziyw6iaFvL3+nQWoNp54UU/jUOasqT
-         tO2LlUZ67F7tHSB9Y1gvJ5uWdv3YFGJTU08pLMxxRo/DTXqpt9HMFJmO9zJ6Q91RNPgq
-         5u8CEsxys3Dd+jfIMpoB3AcNLA3sYdXFp27o1Fg852fj9MyXNCk2+ocxBjMmTzypLekw
-         SgkBK4V5EuO57nBcd0SNnPoI/w4zjBLhbX1K0HCt2fYAs+cxbmErjZBs/KhA9M0zh57Z
-         IH+rGncF47bm5lr/M7cNDmArTyj4f51bwKA147Ey2jBJir4jlEt+mNYSxI4YtoX/pl8C
-         XhVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738679792; x=1739284592;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RRXFmx47Swzpej4Yg7u4uG0EqwNxFusRlkdCHqjIDuk=;
-        b=A1JmowEDmJU/0KA9nQv0HVzFws20dJWxZ055ogST0VtcWuDVR81+7gXt40JcRvaSo3
-         B3V4m9Gj+lc8bimabthHhYmHAh4KDcmc66dH1QVYjjJtN2mxiyjz+hQhafxD1nMv6Sas
-         UulwjsNJ/+rekNlJGQsF34pG2JJyquVEjc8knrKnE+/OGD0C6zLYw1K0jQwL5Zu+eaUX
-         /UPpkOlp/g04OtDvy68UqWSa6bQyTLQoVe1Fb0zaQBlweCoHW/I4l5rh7s8huPVSX9lm
-         VGqDir62nEHm8SwPFFmDtTtW8H+pAkH4kGgRzHmxuy5htepxyz9Q0FYBgaHtbr/LXeO3
-         rInA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+T0uwqWrGcQ0sGmmx9HivhUFEsVIu6R90wnzY1hIfU5FAeSSqaKRTLF62YLXiaNoevo+UFw==@lists.linux.dev, AJvYcCWnL2zjBAVtz0VxEj3NWtm8zeDFEo9lcFuSw7/lg+xFyT8h7Puw1d5mZPMJ641346QMd3A5+n0NXZ2wR+U=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzMbUuXZsb5o1b8i4uun3huP1zCvOQJLH+HQ8dTVaEUzq9fu9eQ
-	C1MuRRQH5DE/v/38cXeexMU+ulctQq5rep6l3Mo3EX47x/0gvfkJ
-X-Gm-Gg: ASbGnctaLJJgdPp8hjaM3rAsIgl1dCDDblKLgvCPoyTP+QQgV1/l//7rZDvnkLdbP/K
-	KSAVqmTetyRi0fhRRetH0kfMNzvIWGFWhvGWqQjxdBD1M1nl0HmLCmdW4ruH+8UHVIu1ot/qQsC
-	Au3P0qZ5vivK50d2op0c4v3wYI/772sUv8vnEbWHF8TdaAZ3jlnt9CFLDeA8tO8lNPRKykyY1uN
-	j1INjldiPBK2X7E0UvmC4ilVBgUiE8pk0jRz6Qod+VumSKZ6YvrSDOFasvtlnZCjHsuWOm+UdCf
-	n9XNwR0V9kNHSfZWSYzS5GxRrN4Qq8prJ3uf7WXDvoVeyQ4818KxRtTuWaFFqn08s/mm5JkAudN
-	aJg==
-X-Google-Smtp-Source: AGHT+IHi7/2GKpcdSjTAWwC6JBPMZH0RMa4KtzNjlcdd4DLL0nuLjpKiK5fg5XRwBNd0E03fFoUvMw==
-X-Received: by 2002:a05:600c:4286:b0:436:1b0b:2633 with SMTP id 5b1f17b1804b1-43905f782a9mr26556025e9.9.1738679791319;
-        Tue, 04 Feb 2025 06:36:31 -0800 (PST)
-Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df51sm232194865e9.30.2025.02.04.06.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:36:29 -0800 (PST)
-Date: Tue, 4 Feb 2025 15:36:27 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Mikko Perttunen <cyndis@kapsi.fi>, Robin Murphy <robin.murphy@arm.com>, 
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org, 
-	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
-	regressions@lists.linux.dev, linux-tegra@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [REGRESSION] Invalid gather when using Tegra210 media engines
-Message-ID: <vfn52yxf3udhyjqrgc3binmsdjzjd2salojsvaad7hsukozknp@u6rziyz2vz2o>
-References: <c6a6f114-3acd-4d56-a13b-b88978e927dc@tecnico.ulisboa.pt>
- <20250203170617.GE2296753@ziepe.ca>
- <4ea1a48c-9020-4793-ac9b-b51fc289e442@tecnico.ulisboa.pt>
- <20250203174331.GF2296753@ziepe.ca>
- <a0f776ba-bfd2-41fd-8370-14818b86bfbe@arm.com>
- <20250203191346.GG2296753@ziepe.ca>
- <ff901d60-dd54-440f-a0da-4b72052eafd6@kapsi.fi>
- <20250204132112.GH2296753@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0X9vjul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F063C4CEE4
+	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 15:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738681859;
+	bh=Bzu4jtQIUnIF8X4IR31+HofzpffJIQYmIBgKgA2+fO4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b0X9vjulsBaGpMeKOu2J/+tjRqQ8yeAb6yzDQvv265BDEER9fgBSE1lvT++F6Z3Rf
+	 3gDviT9zN8Je7742jAP52p8plZ4v3GOu9N/QyGadWZXP7CU0ugFhHpUSelL9YILmrB
+	 OPgeddJKbZRzJFFp0eXTPHjwfOzSM8COs8Kd+JkYpsNpGMfoC6iTTcZ/L3nipEhyUF
+	 Yeuh425D/zFXRokdXCW5LxOs+txL4c8t5u+ufx624wS9EOKaSjyPhmZKgTPgToSXUp
+	 qM3sxJ6AORc0XdX4GGYFXY9VaGa0EEQzAehPOUb9BUapnYGOROB2eKVzjidGyeYueL
+	 Npfws2dBVij/w==
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3ebb4aae80dso2491632b6e.2
+        for <regressions@lists.linux.dev>; Tue, 04 Feb 2025 07:10:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX/YXmv4puaGZvA/13Bn6TyVE3duZfa0nw6ButMv3IQwjOu8aOiz4Hgo5hS+T1+mO/LU4qZWHS3UAQU5A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw4+KECfLzKCN5TzWsgEFW7dEE75ZSw01pcas4KmX0ob5ZJk5xH
+	mjtOREO1k+vnHytKPSrKmLVaFbEOzgBv8cfA1Xt1OTVn+0few/Zo250guBlWeK08LxIfcdfyCw8
+	UOzbtXmKOtLUu0AOO2d5qcS0HZcA=
+X-Google-Smtp-Source: AGHT+IGd7nEAjJRKGOJuEdhdnKBoJU/T/F7ZhSfENXDZPw2xh36kHN/a8fzVyl8RsbVmv800Yz99C3pZxsEaXQQO4m8=
+X-Received: by 2002:a05:6808:3307:b0:3eb:84f6:923a with SMTP id
+ 5614622812f47-3f323a91921mr17333887b6e.22.1738681858808; Tue, 04 Feb 2025
+ 07:10:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s77jwfgx65ngiaut"
-Content-Disposition: inline
-In-Reply-To: <20250204132112.GH2296753@ziepe.ca>
-
-
---s77jwfgx65ngiaut
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+ <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com> <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com>
+In-Reply-To: <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 4 Feb 2025 16:10:46 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j157A=v6S8X4+QXRrmUfk2uN5DkRJ5RXd4e4o3hVucqg@mail.gmail.com>
+X-Gm-Features: AWEUYZlS4aGIFuwoDNhbxBZ986dhW5tdw0Z6J7ryEiKR2Y-8ET-o7hvETdycpIQ
+Message-ID: <CAJZ5v0j157A=v6S8X4+QXRrmUfk2uN5DkRJ5RXd4e4o3hVucqg@mail.gmail.com>
+Subject: Re: [Regression in 6.14-rc1] System suspend/resume broken by PCI
+ commit 1db806ec06b7c
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jian-Hong Pan <jhp@endlessos.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"Thorsten Leemhuis (regressions address)" <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION] Invalid gather when using Tegra210 media engines
-MIME-Version: 1.0
 
-On Tue, Feb 04, 2025 at 09:21:12AM -0400, Jason Gunthorpe wrote:
-> On Tue, Feb 04, 2025 at 12:26:46PM +0900, Mikko Perttunen wrote:
-> > On 2/4/25 4:13 AM, Jason Gunthorpe wrote:
-> > > On Mon, Feb 03, 2025 at 06:49:07PM +0000, Robin Murphy wrote:
-> > > > I'd hope the historical reasons for not supporting IOMMU_DOMAIN_DMA=
- in
-> > > > tegra-smmu no longer apply, given that all the default domain stuff=
- has now
-> > > > been integrated into host1x for the newer arm-smmu based Tegras.
-> > >=20
-> > > Indeed I do see appropriate looking calls to the normal DMA API, and
-> > > the other mapping path is conditionalized by !host->domain.
-> > >=20
-> > > So, why didn't it work for Diogo? Even in identity mode the DMA API
-> > > will return correct DMA addresses and the !host->domain path will skip
-> > > mapping them.
-> > >=20
-> > > Poking around I wonder if there is some assumption that if other parts
-> > > of the stack, maybe the DRM driver, are using the special domain than
-> > > everyone is? It seems to blindly pass around IOVA without really
-> > > checking who is consuming it.
-> >=20
-> > I'm not sure where that would be, but it's certainly possible given that
-> > this combination of code paths wouldn't have been tested.
->=20
-> I saw some weird stuff.. Like tegra_bo_pin() does:
->=20
-> 	/*
-> 	 * If we've manually mapped the buffer object through the IOMMU, make su=
-re to return the
-> 	 * existing IOVA address of our mapping.
-> 	 */
-> 	if (!obj->mm) {
-> 	} else {
-> 		map->phys =3D obj->iova;
-> 		map->chunks =3D 1;
->=20
-> And obj->iova isn't obviously linked to a dma map on dev.. The comment
-> reads like it is making the assumption that there is only one iommu
-> domain shared by everyone (without checking dev is part of that
-> scheme)
+Hi Ilpo,
 
-Yes, that's correct. We used to have a bit more code around to deal with
-single domain (Tegra SMMU is supported on some platforms where we have a
-maximum of 4 address spaces, hence we have to be very careful about what
-devices share which address space).
+On Tue, Feb 4, 2025 at 8:48=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 3 Feb 2025, Rafael J. Wysocki wrote:
+>
+> > On Mon, Feb 3, 2025 at 9:12=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
+.org> wrote:
+> > >
+> > > Hi,
+>
+> Hi Rafael,
+>
+> > > The following commit:
+> > >
+> > > commit 1db806ec06b7c6e08e8af57088da067963ddf117
+> > > Author: Jian-Hong Pan <jhp@endlessos.org>
+> > > Date:   Fri Nov 15 15:22:02 2024 +0800
+> > >
+> > >    PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
+> > >
+> > >    After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+> > >    suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS sta=
+te for
+> > >    "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for=
+ both
+> > >    "dev" and its parent.
+> > >
+> > >    The problem is that unless pci_save_state() has been used in some =
+other
+> > >    path and has already saved the parent L1SS state, we will restore =
+junk to
+> > >    the parent, which means the L1 Substates likely won't work correct=
+ly.
+> > >
+> > >    Save the L1SS config for both the device and its parent in
+> > >    pci_save_aspm_l1ss_state().  When restoring, we need both because =
+L1SS must
+> > >    be enabled at the parent (the Downstream Port) before being enable=
+d at the
+> > >    child (the Upstream Port).
+> > >
+> > >    Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endless=
+os.org
+> > >    Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability fo=
+r
+> > > suspend/resume")
+> > >    Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > >    Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > >    Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > >    [bhelgaas: parallel save/restore structure, simplify commit log, p=
+atch at
+> > >    https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+> > >    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > >    Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+> > >
+> > > broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
+> > > pass suspend/resume testing after "echo devices > /sys/power/pm_test"=
+.
+> > >
+> > > It looks like PCIe links are all down during resume after the above
+> > > commit, but it is rather hard to collect any data in that state.
+> > >
+> > > Reverting the above commit on top of 6.14-rc1 makes things work again=
+,
+> > > no problem.
+> > >
+> > > I'm unsure what exactly the problem is ATM, but I'm going to check a
+> > > couple of theories.
+> >
+> > The attached change makes it work again, FWIW, but moving the
+> > parent->l1ss check alone below the pdev l1ss saving doesn't help.
+> >
+> > So it is either the parent check against NULL or the
+> > pcie_downstream_port(pdev) one that breaks it.  I guess the former,
+> > but I'll test it tomorrow.
+>
+> Neither of those is the root cause
 
-In fact the host1x and DRM drivers also support Tegra20, which didn't
-have an IOMMU at all, but one of those really old GARTs. On top of that
-it only supported a 32 *M*iB window. I think others have concluded that
-today we can't practically use GART and it's better to use something
-like CMA for those cases. So maybe that's not an argument anymore.
+Well, not quite.
 
-Most of these restrictions no longer apply as of Tegra124 (I think) and
-starting with Tegra186 the IOMMU is an ARM SMMU, so none of these work-
-arounds should be needed there. Most of this code exists for very legacy
-reasons, but there's still people with Tegra30, Tegra114, Tegra124 and
-Tegra210, all of which are susceptible to this (at least partially).
+> but it's bit hard to see from the code
+> itself because the parent->saved_state check your test patch also removed
 
-> > > Christian was telling me DMABUF had some drivers that made the
-> > > (incorrect!) assumption they were all sharing translation.
-> > >=20
-> > > It does seem like a nice project for someone who has the hardware to
-> > > rip out all of this custom domain stuff and just have the iommu layer
-> > > setup a shared dma-iommu domain.
-> >=20
-> > This has been a long-standing project. The issue is that some boot chai=
-ns
-> > set up the display expecting identity mappings,
+My patch hasn't removed that check.
 
-I should revive an old patch series that attempted to get rid of most of
-this. The plan was indeed to remove all of the direct IOMMU API code and
-use DMA API exclusively. There were a couple of issues with it, such as
-performance regressions due to the extra mappings required, but I think
-I got pretty far in mitigating most of those.
+Besides, suspend/resume works on my system without commit
+1db806ec06b7c6e0 and the parent->saved_state only affects the parent,
+so it clearly cannot be the culprit here.
 
-In the end I got frustrated with it a few years back because there are
-some corner cases that I couldn't make work and testing of this becomes
-increasingly complicated. And yes, display was specifically an issue on
-Tegra210 platforms (earlier platforms didn't usually set up display on
-boot).
+> looks very logical on a glance (but that's the problematic line).
+>
+> The fix is already here with the explanation:
+>
+> https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@lin=
+ux.intel.com/T/#u
 
-One additional problem with supporting the reserved-memory identity
-mappings is that existing firmware doesn't set things up correctly and
-these devices are software EOL'ed, so no new releases are planned that
-could contain a fix for this.
+So it turns out that the minimum fux that works here is what I posted.
+That is, the upfront pcie_downstream_port(pdev) check needs to be
+dropped and the !parent check needs to be moved after saving the
+pdev's state.
 
-> The smmu driver can match on compatible strings and leave some devices
-> in identity mode, if that helps. Other drivers are doing this to work
-> around various issues.
-
-This might indeed be a viable path. Again, we need to be careful about
-the older devices, but maybe a shared dma-iommu domain would work these
-days.
-
-We definitely want to transition to a DMA IOMMU domain later on, but it
-would need to be after display has had a chance to set things up. And it
-would still need a firmware that actually passes the right information
-to DT because otherwise we'd still get SMMU faults from the display
-hardware trying to scan out from memory that it doesn't own (or I guess
-scanning out garbage from memory that's now being used for other
-purposes).
-
-> > See https://lore.kernel.org/linux-iommu/20220512190052.1152377-5-thierr=
-y.reding@gmail.com/
->=20
-> But using RMR seems like a better solution?
-
-reserved-memory is the DT equivalent of ACPI's RMR, as far as I
-understand. Or at least, it's the closest thing to it. We don't have
-ACPI on these devices, hence why we do this via reserved-memory DT
-nodes. But again, the problem is that firmware doesn't currently pass
-this correctly to the kernel, so we'd need a new release for that. I'd
-need to find out what can be done to achieve this. One big issue might
-be that it'd be a DT ABI break, technically. So upstream Linux would
-only work reliably using that new version. That might be fine if we can
-make some sort of official release.
-
-> We could perhaps also figure out some way to leave the translation in
-> identity until the DRM driver completes the reset, then the DRM driver
-> could activate the DMA API translation manually.
-
-Yeah. We do something similar for Tegra186 and later where we have the
-memory controller redirect accesses to the SMMU only after the device
-has been attached. I'm not sure if we can do that for the old Tegra
-SMMU, though. It would probably still require a firmware update to make
-sure this can be properly handed off to the kernel.
-
-Thierry
-
---s77jwfgx65ngiaut
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeiJegACgkQ3SOs138+
-s6FGYg//R+2hX7Er3Nt3qSKe0ctG9++lWg5Zoe3ePz3HvRIASVmsr4K5q+4Op+vI
-h1oBcxXET5dpgYLGo2etIk0KmpLjflCfRB5MkzM1U1lvUGcDWyGpp75bJhDp5rDI
-lNLw2Qj8VdwmcRv+t1tng5haEZtrAKN1afr7MJ6efEie5+zJIOtKrppoCw/BSkyl
-Ln9KtQqE7SiaYVZIkyIhW7kr/ez09BJlssV9JtUQBDiOZnvIppKS24rNlUKqdSgN
-BvFhLq7arEDyVn1TS/vzSqBmSEXtdv0oYKemiuyCFoI98JSTOLOLM1m8H0djblJ1
-4m09WolC5SVMip+smHZBU9hupNKQNZcWQpdlv1KYY/PbxGsHT/O6W660yrk2R14A
-fRARzZ+GMoBFzu0AVtdZi5yMKhJx3GhDv1TLCQ1prVQPn59kI/ONG44oVAoE/FLS
-/ispuyxkTbx1+Aev9yR7GAzk0SQ+7j338o2VvWw9E+258WaAxxFxFulvkHakQGuH
-sb1KquYznexEibF8UL9ALNnSvo5x0s2cvc9ORbS+Q8ox5ESJFoRKhIzm3QlirzMf
-7j4e+SpjFhndL8LbVoqcY3BOlb0CUu5QciBWOyYIvDBz/8NpqASpxD/vBn8hycbb
-4cm+4gzVLHZm3SHJ6JW3tJgW/Ev8WhlxWTvJ4EB3F2s1IdCu5Pc=
-=QY9n
------END PGP SIGNATURE-----
-
---s77jwfgx65ngiaut--
+IOW, it looks like on this platform, it is necessary to save the l1ss
+state for a Root Port.
