@@ -1,159 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EBE204C3C
-	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 07:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF834206F33;
+	Tue,  4 Feb 2025 09:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738655306; cv=none; b=GvN7/x3NEoagsTikmK/k/mP5zvq2YGmBihKZV6WDKz8hNeiBSltStakQvvdHnEewu7uHwyWgpQArDLmGMvEBolFeSGL+IfbR4Z+E9zAqlw+d7rRDpKbqujsx+S1+mOVd6xm751GQtzKt5WGYPhlEadWn6ESQK9spzi64EzVgKjg=
+	t=1738660393; cv=none; b=ECkzn5KkIbl7UmUv9vGh69QmYVX5J7SVv7yRCydWGT5zK/tTh8r28qps7BzTyHMId1LcSHB7GLJH1QloHlYEZ7J24bVnY8PbKTDqm9muCxec3DSi6xFQs45jyTkbJ1r2mXVRN6EUh5yDnWhaQ/B2wS/xxDk1vpgUFuzC4saJvcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738655306; c=relaxed/simple;
-	bh=PHPbFfxd4PoN/8hUEayeHJE+d2SjCCEAqdBeVbnf1OY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=s4yi4oEQHgp9drSJQ/kZq4zCl09yGx/B/Nsbs6qGvIZm35T491IrtSjuSKs0Il2jv4c4SK/mK4PATMbJaEnAM4/A+kL2mD2MtHcgLTJuvrjit/1SSnY8D+8gy+PJaKiZeSEGsTcb8tfUliPe1ZC3XJlODafsYPIpbNuYhHYHP3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEM0Dbhb; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738660393; c=relaxed/simple;
+	bh=Zj7E2MeqphGb/FoGa7alLHmNq9sT8LOGDhFNQC0kVjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vAUVVmJjrNRvm0aBwlLJqfWOLMDY4zDYGNV/IB7F54tlBSUF+MfjRwQH9kabMDvprY4dFf3QuTc4lrdM3991qJh8dWheI8EJkfACGuZLEhytOvNSPwL8B70NJR6w0H1XDb5XkY2cXHeZ7sTQQ57YO52VUJ9qpkIRO9hSuvzeB90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMWPVjQd; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEM0Dbhb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738655304; x=1770191304;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=PHPbFfxd4PoN/8hUEayeHJE+d2SjCCEAqdBeVbnf1OY=;
-  b=EEM0DbhbzPmEjUCP/LY6wncqvHN7w04gStnHldYpdOWeEFwcbNVH7KCH
-   5Bu1kY1NwI18DBjYjCf6Eu+SQ5j96B9ecNR5emq/akDX9kl3sPmsjYjGY
-   kKdM+rTSpy5mh8UbgQsJgUTJ/MKbSToJiYD3qTOXfPXj3SUVsrZ0Paft1
-   /m/EG7bADUjtv2qF1FOjQfzXayDZiGMxmup73OuYJfkETyJKoePvOzJYp
-   8Ru6EuvKQHHtERIo8+UOI4IHCZSobmF+dW3UnR5vF/6cXa116tbwpZBOo
-   O8DgfvtTuAHIvq0zFX0/6HHAuRzBgRcV1mJYFwmOwozSp3DmrqDRFy7aP
-   Q==;
-X-CSE-ConnectionGUID: H1JB1t1+RnuJvKuVjrw9GA==
-X-CSE-MsgGUID: 5yGTBU7qTxGnVH6vhPyxAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39323878"
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="39323878"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 23:48:22 -0800
-X-CSE-ConnectionGUID: HCLipMDFQcmDRry5t9IVpA==
-X-CSE-MsgGUID: TBL5DaWnSDenYU0QEuTOfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
-   d="scan'208";a="115520840"
-Received: from oandoniu-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 23:48:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 4 Feb 2025 09:48:15 +0200 (EET)
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>, 
-    Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    "Thorsten Leemhuis (regressions address)" <regressions@leemhuis.info>, 
-    Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [Regression in 6.14-rc1] System suspend/resume broken by PCI
- commit 1db806ec06b7c
-In-Reply-To: <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com>
-Message-ID: <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com>
-References: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com> <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMWPVjQd"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so8940975a91.0;
+        Tue, 04 Feb 2025 01:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738660391; x=1739265191; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
+        b=dMWPVjQduAdIak9+vMyZlKLFS/I9Dz9Z6vEcRz+dfQZSC/0IAbLUyav7hKQT2Qr2zI
+         8gaPdeb6LNoCpzPHoVoCQvH0nRAD70MjDD/avrC6Jj+1Ri+UtVHJxmTvsFu/NU3V72bQ
+         IoqaeUX9iVoaSB4RzeFEaq3LUOm8wxhkFu0vNFu9DJDe322CxyneTBH9QorSwHxeGfJw
+         WLkuq6yeq6K4TcgJ+pxu1Xk8fI0eMUqurOx7PSDs+w90kEZcT32I2xzmeNcFXjPFb+ml
+         GO9wAqrrFMYx7ifacDck3YbsD91sO0TJq7NKqG/ijZBxedYUGOnvC4Ti7S/wahvxlE26
+         kG7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738660391; x=1739265191;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
+        b=oLW1xfJEXkgb92UYFihWfxXheT8sR2MsZyZLPy+4VQOL5S0mosBdDukK+rESBSMvlM
+         taJCepP9hjfePKjHFk4mR/olzR5pef7sXejuJk+rgHtWyQWEuqUQEfuTPOkFafHsi48S
+         BoHLHOvtNBK0cphy3JhqG9esheh6wChBnuiB04bNyUj7MDJIcYJ8xoV5rjzgV0DgUxhZ
+         tAeeBTvodMwsMEM0qQww83us0ydr3YPtHIsuGgu35EbFFfmixxaTIOhabCLKyggABaiq
+         RuCgniDTJTOgenn2K/RNq58ryRfDMR8WyDXHuf+WVj/MxfX00KdfwWpv9t2j9slXjlWK
+         fkPw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7WOJhQi692LgPBEEpXov6Y2RKUMUXoENRil2bHOnteRmlZ5MfPeDKKjDAweg4rWeh2nUl8rNl3t9mzWA=@lists.linux.dev, AJvYcCVehH/bhAcr05ts2zxAdKjndj+StaGA1HYhdD3LzLiphK6odzAtKiiIc1k2dRu+rlb7CZ660w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw2mdaZ3oGQF6ZTKumcENd2ygPkD8g88hACPUkuEsqFGPc9l0/7
+	8nNgLmVX8yVnNdiQxhaGvM++Gk6/gcJ88zuRry2vnB6kPwFIa275BN/1HKkIMHUnHOEZiBbBwU9
+	QI1M8Hj6lM+PmZN84fg7A8tYlGxg=
+X-Gm-Gg: ASbGncvRKnaRReaHajdwBF+5NRpHf/ioJPruKnvpYX932H86yCEHKXG9Nzil265AwmD
+	o0BRPW7E5u+UsLGUdgKDTKwOYocA3jF/44uwKU0eZAdy5LpY/9F58ZRY4igKvhRH2UDsIad7AT5
+	Mox/xvELUUCVd1xP3JCmp5Y/ke3uQ=
+X-Google-Smtp-Source: AGHT+IEjr+5p9ULMzoc/xpn7zcsHmFh9pQft0Sd8GQkkXIpsHHX4xJoLdzK+6o4pH/qlQ/u3VVH/AFYlbacH5FUEJZE=
+X-Received: by 2002:a17:90b:51cc:b0:2ea:498d:809f with SMTP id
+ 98e67ed59e1d1-2f83ac5e467mr32092446a91.26.1738660391086; Tue, 04 Feb 2025
+ 01:13:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1986258784-1738655026=:1609"
-Content-ID: <5be0ceb7-b569-5b1f-6635-7ad6318f540e@linux.intel.com>
+References: <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
+ <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de>
+ <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
+ <20250128074133.GA22435@lst.de> <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de>
+ <Z5jTKTfKUeLm4uJT@gallifrey> <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
+ <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com> <20250204061208.GA29300@lst.de>
+In-Reply-To: <20250204061208.GA29300@lst.de>
+From: Bruno Gravato <bgravato@gmail.com>
+Date: Tue, 4 Feb 2025 09:12:54 +0000
+X-Gm-Features: AWEUYZklsTO1DdX17XI0s3UrJDzPBR2NguTIOGWaQniEHqaiG2AWZWpwapwJWK0
+Message-ID: <CAOBLbT_kn+5H-+RYM1UOAkxhfJnpqKMNv9_d_Ys9CgY_=TcdsA@mail.gmail.com>
+Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
+ X600M-STX + Ryzen 8700G
+To: Christoph Hellwig <hch@lst.de>
+Cc: Stefan <linux-kernel@simg.de>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Keith Busch <kbusch@kernel.org>, Adrian Huang <ahuang12@lenovo.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, linux-nvme@lists.infradead.org, 
+	Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+	LKML <linux-kernel@vger.kernel.org>, bugzilla-daemon@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 4 Feb 2025 at 06:12, Christoph Hellwig wrote:
+>
+> On Sun, Feb 02, 2025 at 08:32:31AM +0000, Bruno Gravato wrote:
+> > In my tests I was using real data: a backup of my files.
+> >
+> > On one such test I copied over 300K files, variables sizes and types
+> > totalling about 60GB. A bit over 20 files got corrupted.
+> > I tried copying the files over the network (ethernet) using rsync/ssh.
+> > I also tried restoring the files using restic (over ssh as well). And
+> > I also tried copying the files locally from a SATA disk. In all cases
+> > I got similar results with some files being corrupted.
+> > The destination nvme disk was using btrfs and running btrfs scrub
+> > after the copy detects quite a few checksum errors.
+>
+> So you used various different data sources, and the desintation was
+> always the nvme device in the suspect slot.
+>
 
---8323328-1986258784-1738655026=:1609
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d9a4dd33-9aa6-f9fb-99e4-67e607e89262@linux.intel.com>
+Yes, regardless of the data source, the destination was always a
+single nvme disk on the main M.2 nvme slot, with the secondary M.2
+nvme slot empty.
+I tried 3 different disks (WD, Crucial and Solidigm) with similar results.
+If I put any of those disks on the secondary M.2 slot (with the main
+slot empty) the problem doesn't occur.
+The one that intrigues me most is if I put 2 nvme disks in, occupying
+both M.2 slots, the problem doesn't occur either.
+The secondary slot must be empty for the issue to happen.
 
-On Mon, 3 Feb 2025, Rafael J. Wysocki wrote:
+I didn't try using the main M.2 slot as source instead of target, to
+see if the problem also occurs on reading as well.
+I could try that if you think it's worth testing.
 
-> On Mon, Feb 3, 2025 at 9:12=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
-rg> wrote:
-> >
-> > Hi,
 
-Hi Rafael,
-
-> > The following commit:
+> > I analyzed some of those corrupted files and one of them happened to
+> > be a text file (linux kernel source code).
+> > A big portion of the text was replaced with text from another file in
+> > the same directory (being text made it easy to find where it came
+> > from).
+> > So this was a contiguous block of text that was overwritten with a
+> > contiguous block of text from another file.
+> > If I remember correctly the other file was not corrupted (so the
+> > blocks weren't swapped). It looked like a certain block of text was
+> > written twice: on the correct file and on another file in the same
+> > directory.
+>
+> That's a very interesting pattern.
+>
+> > I also got some jpeg images corrupted. I was able to open and view
+> > (partially) those images and it looked like a portion of the image was
+> > repeated in a different part of it), so blocks of the same file were
+> > probably duplicated and overwritten within itself.
 > >
-> > commit 1db806ec06b7c6e08e8af57088da067963ddf117
-> > Author: Jian-Hong Pan <jhp@endlessos.org>
-> > Date:   Fri Nov 15 15:22:02 2024 +0800
-> >
-> >    PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
-> >
-> >    After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
-> >    suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state=
- for
-> >    "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for b=
-oth
-> >    "dev" and its parent.
-> >
-> >    The problem is that unless pci_save_state() has been used in some ot=
-her
-> >    path and has already saved the parent L1SS state, we will restore ju=
-nk to
-> >    the parent, which means the L1 Substates likely won't work correctly=
-=2E
-> >
-> >    Save the L1SS config for both the device and its parent in
-> >    pci_save_aspm_l1ss_state().  When restoring, we need both because L1=
-SS must
-> >    be enabled at the parent (the Downstream Port) before being enabled =
-at the
-> >    child (the Upstream Port).
-> >
-> >    Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos=
-=2Eorg
-> >    Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
-> > suspend/resume")
-> >    Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
-> >    Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> >    Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> >    [bhelgaas: parallel save/restore structure, simplify commit log, pat=
-ch at
-> >    https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
-> >    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >    Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
-> >
-> > broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
-> > pass suspend/resume testing after "echo devices > /sys/power/pm_test".
-> >
-> > It looks like PCIe links are all down during resume after the above
-> > commit, but it is rather hard to collect any data in that state.
-> >
-> > Reverting the above commit on top of 6.14-rc1 makes things work again,
-> > no problem.
-> >
-> > I'm unsure what exactly the problem is ATM, but I'm going to check a
-> > couple of theories.
->=20
-> The attached change makes it work again, FWIW, but moving the
-> parent->l1ss check alone below the pdev l1ss saving doesn't help.
->=20
-> So it is either the parent check against NULL or the
-> pcie_downstream_port(pdev) one that breaks it.  I guess the former,
-> but I'll test it tomorrow.
-
-Neither of those is the root cause but it's bit hard to see from the code=
-=20
-itself because the parent->saved_state check your test patch also removed=
-=20
-looks very logical on a glance (but that's the problematic line).
-
-The fix is already here with the explanation:
-
-https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux=
-=2Eintel.com/T/#u
-
---=20
- i.
---8323328-1986258784-1738655026=:1609--
+> > The blocks being overwritten seemed to be different sizes on different files.
+>
+> This does sound like a fairly common pattern due to SSD FTL issues,
+> but I still don't want to rule out swiotlb, which due to the bucketing
+> could maybe also lead to these, but I can't really see how.  But the
+> fact that the affected systems seem to be using swiotlb despite no
+> good reason for them to do so still leaves me puzzled.
+>
