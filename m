@@ -1,142 +1,151 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF834206F33;
-	Tue,  4 Feb 2025 09:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE743212B1F
+	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 13:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660393; cv=none; b=ECkzn5KkIbl7UmUv9vGh69QmYVX5J7SVv7yRCydWGT5zK/tTh8r28qps7BzTyHMId1LcSHB7GLJH1QloHlYEZ7J24bVnY8PbKTDqm9muCxec3DSi6xFQs45jyTkbJ1r2mXVRN6EUh5yDnWhaQ/B2wS/xxDk1vpgUFuzC4saJvcg=
+	t=1738675276; cv=none; b=EcHf1wchczO2MYRrdv2P72xCJuko6+EHRHKYLKwRAMepLDSX1Wjef3F6pZlEMhHmes/Q19Tnz++qSYyU/+KxAnDJPUxp3DYT7Q8rVPCsB4RRvaZHbdh5sJIY8PNzAzp2MMV6a0PtcQ8UIGq+M/EYy4ZuDnt/ZSSHk83JNKKhrpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660393; c=relaxed/simple;
-	bh=Zj7E2MeqphGb/FoGa7alLHmNq9sT8LOGDhFNQC0kVjI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vAUVVmJjrNRvm0aBwlLJqfWOLMDY4zDYGNV/IB7F54tlBSUF+MfjRwQH9kabMDvprY4dFf3QuTc4lrdM3991qJh8dWheI8EJkfACGuZLEhytOvNSPwL8B70NJR6w0H1XDb5XkY2cXHeZ7sTQQ57YO52VUJ9qpkIRO9hSuvzeB90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMWPVjQd; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738675276; c=relaxed/simple;
+	bh=DYoArqhz9bnwOrJj2sFoc+2pshtV2jJmtePZZiRSIq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DSJYvxg3pt5qvfZR+9JFKmjETS/igGIWToxVXDeumXut0jWaZvtpL2/xFChhh4ac0LvARbflikzEbXPlWD2g2GJxZWZpDk3QBC7ivIwKMfCs5+vhqk5n3SbKYH+Sx9IlcGUKCAeuv9/k9WH/SrNkvGngsKzyxl/HpVm6Cl1o5xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=YjKtZSDy; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMWPVjQd"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so8940975a91.0;
-        Tue, 04 Feb 2025 01:13:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YjKtZSDy"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6ed0de64aso477301185a.0
+        for <regressions@lists.linux.dev>; Tue, 04 Feb 2025 05:21:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738660391; x=1739265191; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
-        b=dMWPVjQduAdIak9+vMyZlKLFS/I9Dz9Z6vEcRz+dfQZSC/0IAbLUyav7hKQT2Qr2zI
-         8gaPdeb6LNoCpzPHoVoCQvH0nRAD70MjDD/avrC6Jj+1Ri+UtVHJxmTvsFu/NU3V72bQ
-         IoqaeUX9iVoaSB4RzeFEaq3LUOm8wxhkFu0vNFu9DJDe322CxyneTBH9QorSwHxeGfJw
-         WLkuq6yeq6K4TcgJ+pxu1Xk8fI0eMUqurOx7PSDs+w90kEZcT32I2xzmeNcFXjPFb+ml
-         GO9wAqrrFMYx7ifacDck3YbsD91sO0TJq7NKqG/ijZBxedYUGOnvC4Ti7S/wahvxlE26
-         kG7Q==
+        d=ziepe.ca; s=google; t=1738675273; x=1739280073; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RYGog+BswJMrw0pyjx8F7JNxxtJRa9tDqKmDTEz+voo=;
+        b=YjKtZSDy4sTpXKMk1S70s35GL/+a9XfnS9cUMWSAKjfrL0//V5CYwBHodg2hiMM07p
+         OKkq38BGgm3QGAMrdOGiqBJYPSZywNY6/OvgVWrIAvi+hw1VwBFxPRF9Wlb3EYQac0ch
+         RY7t0eYdCvwLimNvmb+5gfqnGgxfZwVAXaTbHleQM+foEXWMx49xbtoslFT2lz4eXZ2V
+         PfybdkQhL6wTg/ZFMsCJGUJ5DZXQ2LPwuFbbG13fXeXrXTA0vgOTTk3BgJHjU7fiv/Aa
+         4fUkRW+y0SQJFrXzkp3m2uh+s6ail40Gm14C5yUbdUmlhrwiUcJyJW/vUplASce014Kq
+         uCRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738660391; x=1739265191;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+AHMI1n0um1Uc2f0ky1zL1PO/sMw1al2b0gfWEzKF20=;
-        b=oLW1xfJEXkgb92UYFihWfxXheT8sR2MsZyZLPy+4VQOL5S0mosBdDukK+rESBSMvlM
-         taJCepP9hjfePKjHFk4mR/olzR5pef7sXejuJk+rgHtWyQWEuqUQEfuTPOkFafHsi48S
-         BoHLHOvtNBK0cphy3JhqG9esheh6wChBnuiB04bNyUj7MDJIcYJ8xoV5rjzgV0DgUxhZ
-         tAeeBTvodMwsMEM0qQww83us0ydr3YPtHIsuGgu35EbFFfmixxaTIOhabCLKyggABaiq
-         RuCgniDTJTOgenn2K/RNq58ryRfDMR8WyDXHuf+WVj/MxfX00KdfwWpv9t2j9slXjlWK
-         fkPw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7WOJhQi692LgPBEEpXov6Y2RKUMUXoENRil2bHOnteRmlZ5MfPeDKKjDAweg4rWeh2nUl8rNl3t9mzWA=@lists.linux.dev, AJvYcCVehH/bhAcr05ts2zxAdKjndj+StaGA1HYhdD3LzLiphK6odzAtKiiIc1k2dRu+rlb7CZ660w==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw2mdaZ3oGQF6ZTKumcENd2ygPkD8g88hACPUkuEsqFGPc9l0/7
-	8nNgLmVX8yVnNdiQxhaGvM++Gk6/gcJ88zuRry2vnB6kPwFIa275BN/1HKkIMHUnHOEZiBbBwU9
-	QI1M8Hj6lM+PmZN84fg7A8tYlGxg=
-X-Gm-Gg: ASbGncvRKnaRReaHajdwBF+5NRpHf/ioJPruKnvpYX932H86yCEHKXG9Nzil265AwmD
-	o0BRPW7E5u+UsLGUdgKDTKwOYocA3jF/44uwKU0eZAdy5LpY/9F58ZRY4igKvhRH2UDsIad7AT5
-	Mox/xvELUUCVd1xP3JCmp5Y/ke3uQ=
-X-Google-Smtp-Source: AGHT+IEjr+5p9ULMzoc/xpn7zcsHmFh9pQft0Sd8GQkkXIpsHHX4xJoLdzK+6o4pH/qlQ/u3VVH/AFYlbacH5FUEJZE=
-X-Received: by 2002:a17:90b:51cc:b0:2ea:498d:809f with SMTP id
- 98e67ed59e1d1-2f83ac5e467mr32092446a91.26.1738660391086; Tue, 04 Feb 2025
- 01:13:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738675273; x=1739280073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RYGog+BswJMrw0pyjx8F7JNxxtJRa9tDqKmDTEz+voo=;
+        b=oQf8hGQ6pEtwrokkhkJO4977chUwoM5p7sK1WZeZet47WE9HyrsfK2MHWuh3ua6oQo
+         HTinzH2aumsNGHSi0Bg38/nHzwWEA8f3JwfofwXRGSRSBRdLHdxVoaIkXunRCurQZl1K
+         mdw5qFPQ8jrf0GxAUSISM5ygCDMTVOuozU7OmRX/g9GfQ/ryVfyTTkZA438uLCF4Skjo
+         DWDoxA4W+9CNxInW2lxQ8RTdYH+o7vnu2HpkMIsZc07LnKpmcVZt7DEZ1bThkMZnrcSr
+         qGOZLLXIjDpDMDRn7lSEflIQR5bvUkxCCXnLttJT+W6G5rm4Mr8jmDDMUYDmKFDwvOvO
+         OOAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwsGQqapR8jlChNpZpCCi5Gx/gm75EyLPo4dVdzGH7WKTcvHy6tK5oKQ2po60p/CPWkDRpImjWfZgtwA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzrdCN8Z5pWSdcG/H8MdA7BVIy8ZN0TrwI41MqLhrgeMC3MUfM6
+	1bF8h7pV+m8e1To5zJD4gZdgGvOw9el9ip9TTBM6zPjlhMo2XD4tt8pOAvNbKlc=
+X-Gm-Gg: ASbGnctN7DXwmtmjYHIumdorWJdA9+zqYuZ723XGxVtno7JnQFcdEjXSi3MLuS6hdjC
+	RcIPU62twjjf+TRiQa8VMl0o+nYtborX5u1BRR+khh5Cl2pBANmfCWFseFOkvf8GDa4m/CQJNmv
+	Elq0+XyYvSh0Lwh3WWMjbPzbZZzMrcJEDI+y+3DAY2tdc4lmw6Inw4ntIFZKcOad1GprYAdg9H2
+	NVQR6Nm2ccf3gRxA80wW+d7tgDtzQdtgahjtiIyeAJjY8YRp1ypWY+As9CHxVlRcaDwVNwlpaLh
+	QvoKGGedPtnKcS300elfCov51r2r6JwPbN4GEjOBzHYCFPpNJY5pIFsR1k6R6TZA
+X-Google-Smtp-Source: AGHT+IFUKUoX2jULeFPKEB1swp6FZ+1r6kccPcITYBbJl4Daknruc2a86ltK8n50/s0eCiuq5Mvn3w==
+X-Received: by 2002:a05:620a:43a1:b0:7bc:db7a:4f78 with SMTP id af79cd13be357-7c02ec1063cmr525137685a.4.1738675273573;
+        Tue, 04 Feb 2025 05:21:13 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a905b6esm637056485a.68.2025.02.04.05.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 05:21:13 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tfIrY-0000000BRLd-1okT;
+	Tue, 04 Feb 2025 09:21:12 -0400
+Date: Tue, 4 Feb 2025 09:21:12 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org,
+	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com,
+	jroedel@suse.de, regressions@lists.linux.dev,
+	linux-tegra@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [REGRESSION] Invalid gather when using Tegra210 media engines
+Message-ID: <20250204132112.GH2296753@ziepe.ca>
+References: <c6a6f114-3acd-4d56-a13b-b88978e927dc@tecnico.ulisboa.pt>
+ <20250203170617.GE2296753@ziepe.ca>
+ <4ea1a48c-9020-4793-ac9b-b51fc289e442@tecnico.ulisboa.pt>
+ <20250203174331.GF2296753@ziepe.ca>
+ <a0f776ba-bfd2-41fd-8370-14818b86bfbe@arm.com>
+ <20250203191346.GG2296753@ziepe.ca>
+ <ff901d60-dd54-440f-a0da-4b72052eafd6@kapsi.fi>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com>
- <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de>
- <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <10e39c88-4667-4c61-b3eb-3dd7ee3074c3@leemhuis.info>
- <20250128074133.GA22435@lst.de> <379bba80-df0f-44c5-a15e-fd4393c52b8f@simg.de>
- <Z5jTKTfKUeLm4uJT@gallifrey> <e01fdde0-4760-487d-af0e-2aecf9d7ade2@simg.de>
- <CAOBLbT8V5DkuXzzgp2dPOZkGomqiLa_cdC=e=uWBtcWpP7L=Ww@mail.gmail.com> <20250204061208.GA29300@lst.de>
-In-Reply-To: <20250204061208.GA29300@lst.de>
-From: Bruno Gravato <bgravato@gmail.com>
-Date: Tue, 4 Feb 2025 09:12:54 +0000
-X-Gm-Features: AWEUYZklsTO1DdX17XI0s3UrJDzPBR2NguTIOGWaQniEHqaiG2AWZWpwapwJWK0
-Message-ID: <CAOBLbT_kn+5H-+RYM1UOAkxhfJnpqKMNv9_d_Ys9CgY_=TcdsA@mail.gmail.com>
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of AsRock
- X600M-STX + Ryzen 8700G
-To: Christoph Hellwig <hch@lst.de>
-Cc: Stefan <linux-kernel@simg.de>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Keith Busch <kbusch@kernel.org>, Adrian Huang <ahuang12@lenovo.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, linux-nvme@lists.infradead.org, 
-	Jens Axboe <axboe@fb.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	LKML <linux-kernel@vger.kernel.org>, bugzilla-daemon@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff901d60-dd54-440f-a0da-4b72052eafd6@kapsi.fi>
 
-On Tue, 4 Feb 2025 at 06:12, Christoph Hellwig wrote:
->
-> On Sun, Feb 02, 2025 at 08:32:31AM +0000, Bruno Gravato wrote:
-> > In my tests I was using real data: a backup of my files.
-> >
-> > On one such test I copied over 300K files, variables sizes and types
-> > totalling about 60GB. A bit over 20 files got corrupted.
-> > I tried copying the files over the network (ethernet) using rsync/ssh.
-> > I also tried restoring the files using restic (over ssh as well). And
-> > I also tried copying the files locally from a SATA disk. In all cases
-> > I got similar results with some files being corrupted.
-> > The destination nvme disk was using btrfs and running btrfs scrub
-> > after the copy detects quite a few checksum errors.
->
-> So you used various different data sources, and the desintation was
-> always the nvme device in the suspect slot.
->
+On Tue, Feb 04, 2025 at 12:26:46PM +0900, Mikko Perttunen wrote:
+> On 2/4/25 4:13 AM, Jason Gunthorpe wrote:
+> > On Mon, Feb 03, 2025 at 06:49:07PM +0000, Robin Murphy wrote:
+> > > I'd hope the historical reasons for not supporting IOMMU_DOMAIN_DMA in
+> > > tegra-smmu no longer apply, given that all the default domain stuff has now
+> > > been integrated into host1x for the newer arm-smmu based Tegras.
+> > 
+> > Indeed I do see appropriate looking calls to the normal DMA API, and
+> > the other mapping path is conditionalized by !host->domain.
+> > 
+> > So, why didn't it work for Diogo? Even in identity mode the DMA API
+> > will return correct DMA addresses and the !host->domain path will skip
+> > mapping them.
+> > 
+> > Poking around I wonder if there is some assumption that if other parts
+> > of the stack, maybe the DRM driver, are using the special domain than
+> > everyone is? It seems to blindly pass around IOVA without really
+> > checking who is consuming it.
+> 
+> I'm not sure where that would be, but it's certainly possible given that
+> this combination of code paths wouldn't have been tested.
 
-Yes, regardless of the data source, the destination was always a
-single nvme disk on the main M.2 nvme slot, with the secondary M.2
-nvme slot empty.
-I tried 3 different disks (WD, Crucial and Solidigm) with similar results.
-If I put any of those disks on the secondary M.2 slot (with the main
-slot empty) the problem doesn't occur.
-The one that intrigues me most is if I put 2 nvme disks in, occupying
-both M.2 slots, the problem doesn't occur either.
-The secondary slot must be empty for the issue to happen.
+I saw some weird stuff.. Like tegra_bo_pin() does:
 
-I didn't try using the main M.2 slot as source instead of target, to
-see if the problem also occurs on reading as well.
-I could try that if you think it's worth testing.
+	/*
+	 * If we've manually mapped the buffer object through the IOMMU, make sure to return the
+	 * existing IOVA address of our mapping.
+	 */
+	if (!obj->mm) {
+	} else {
+		map->phys = obj->iova;
+		map->chunks = 1;
 
+And obj->iova isn't obviously linked to a dma map on dev.. The comment
+reads like it is making the assumption that there is only one iommu
+domain shared by everyone (without checking dev is part of that
+scheme)
 
-> > I analyzed some of those corrupted files and one of them happened to
-> > be a text file (linux kernel source code).
-> > A big portion of the text was replaced with text from another file in
-> > the same directory (being text made it easy to find where it came
-> > from).
-> > So this was a contiguous block of text that was overwritten with a
-> > contiguous block of text from another file.
-> > If I remember correctly the other file was not corrupted (so the
-> > blocks weren't swapped). It looked like a certain block of text was
-> > written twice: on the correct file and on another file in the same
-> > directory.
->
-> That's a very interesting pattern.
->
-> > I also got some jpeg images corrupted. I was able to open and view
-> > (partially) those images and it looked like a portion of the image was
-> > repeated in a different part of it), so blocks of the same file were
-> > probably duplicated and overwritten within itself.
-> >
-> > The blocks being overwritten seemed to be different sizes on different files.
->
-> This does sound like a fairly common pattern due to SSD FTL issues,
-> but I still don't want to rule out swiotlb, which due to the bucketing
-> could maybe also lead to these, but I can't really see how.  But the
-> fact that the affected systems seem to be using swiotlb despite no
-> good reason for them to do so still leaves me puzzled.
->
+> > Christian was telling me DMABUF had some drivers that made the
+> > (incorrect!) assumption they were all sharing translation.
+> > 
+> > It does seem like a nice project for someone who has the hardware to
+> > rip out all of this custom domain stuff and just have the iommu layer
+> > setup a shared dma-iommu domain.
+> 
+> This has been a long-standing project. The issue is that some boot chains
+> set up the display expecting identity mappings,
+
+The smmu driver can match on compatible strings and leave some devices
+in identity mode, if that helps. Other drivers are doing this to work
+around various issues.
+
+> See https://lore.kernel.org/linux-iommu/20220512190052.1152377-5-thierry.reding@gmail.com/
+
+But using RMR seems like a better solution?
+
+We could perhaps also figure out some way to leave the translation in
+identity until the DRM driver completes the reset, then the DRM driver
+could activate the DMA API translation manually.
+
+Jason
