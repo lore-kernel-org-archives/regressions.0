@@ -1,76 +1,71 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE743212B1F
-	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 13:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A66A207E13;
+	Tue,  4 Feb 2025 14:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738675276; cv=none; b=EcHf1wchczO2MYRrdv2P72xCJuko6+EHRHKYLKwRAMepLDSX1Wjef3F6pZlEMhHmes/Q19Tnz++qSYyU/+KxAnDJPUxp3DYT7Q8rVPCsB4RRvaZHbdh5sJIY8PNzAzp2MMV6a0PtcQ8UIGq+M/EYy4ZuDnt/ZSSHk83JNKKhrpM=
+	t=1738679795; cv=none; b=UyCYMp5hVL7sJIuFBvSPFkb324Q6W3AYS/G68frgh8cncSalSYUjlgvbSM2nO9xxKaymt6h9btiPFj4LmlADRNQeo0vaH5Zyb6QNZj/FA8Cjw6LI0Lu0VD/fgnLTcyPs4TGjsQYbdhBXEMBK62TISrjbVgR46BSmQtoya/Idcjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738675276; c=relaxed/simple;
-	bh=DYoArqhz9bnwOrJj2sFoc+2pshtV2jJmtePZZiRSIq0=;
+	s=arc-20240116; t=1738679795; c=relaxed/simple;
+	bh=2OfiAE3BjhZPyjDDoqHlXy1A3Xu34fHmnCjC6o04Amo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DSJYvxg3pt5qvfZR+9JFKmjETS/igGIWToxVXDeumXut0jWaZvtpL2/xFChhh4ac0LvARbflikzEbXPlWD2g2GJxZWZpDk3QBC7ivIwKMfCs5+vhqk5n3SbKYH+Sx9IlcGUKCAeuv9/k9WH/SrNkvGngsKzyxl/HpVm6Cl1o5xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=YjKtZSDy; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=p43rgknzgwXs8i5S2kfeMcGD6pSB42ISBGw8RI3HJJrSL+mMWZKDhOMg5WE4YD/YL6H7I+drwV37kxpKnQvFWEj3KwOZ4xhtaR35vUstOZyxLIaCGCy3Rk/oYv10AtmcX9uTUgsKHRVJIM/NKQCSwwu9dU06Zl7/Ye2keeD7ksg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nh+aYPBL; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YjKtZSDy"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6ed0de64aso477301185a.0
-        for <regressions@lists.linux.dev>; Tue, 04 Feb 2025 05:21:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nh+aYPBL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso41586145e9.0;
+        Tue, 04 Feb 2025 06:36:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738675273; x=1739280073; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1738679792; x=1739284592; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RYGog+BswJMrw0pyjx8F7JNxxtJRa9tDqKmDTEz+voo=;
-        b=YjKtZSDy4sTpXKMk1S70s35GL/+a9XfnS9cUMWSAKjfrL0//V5CYwBHodg2hiMM07p
-         OKkq38BGgm3QGAMrdOGiqBJYPSZywNY6/OvgVWrIAvi+hw1VwBFxPRF9Wlb3EYQac0ch
-         RY7t0eYdCvwLimNvmb+5gfqnGgxfZwVAXaTbHleQM+foEXWMx49xbtoslFT2lz4eXZ2V
-         PfybdkQhL6wTg/ZFMsCJGUJ5DZXQ2LPwuFbbG13fXeXrXTA0vgOTTk3BgJHjU7fiv/Aa
-         4fUkRW+y0SQJFrXzkp3m2uh+s6ail40Gm14C5yUbdUmlhrwiUcJyJW/vUplASce014Kq
-         uCRQ==
+        bh=RRXFmx47Swzpej4Yg7u4uG0EqwNxFusRlkdCHqjIDuk=;
+        b=nh+aYPBLRE/tJNbvocXUmSk8mYYmp3SzsdD4Ziyw6iaFvL3+nQWoNp54UU/jUOasqT
+         tO2LlUZ67F7tHSB9Y1gvJ5uWdv3YFGJTU08pLMxxRo/DTXqpt9HMFJmO9zJ6Q91RNPgq
+         5u8CEsxys3Dd+jfIMpoB3AcNLA3sYdXFp27o1Fg852fj9MyXNCk2+ocxBjMmTzypLekw
+         SgkBK4V5EuO57nBcd0SNnPoI/w4zjBLhbX1K0HCt2fYAs+cxbmErjZBs/KhA9M0zh57Z
+         IH+rGncF47bm5lr/M7cNDmArTyj4f51bwKA147Ey2jBJir4jlEt+mNYSxI4YtoX/pl8C
+         XhVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738675273; x=1739280073;
+        d=1e100.net; s=20230601; t=1738679792; x=1739284592;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RYGog+BswJMrw0pyjx8F7JNxxtJRa9tDqKmDTEz+voo=;
-        b=oQf8hGQ6pEtwrokkhkJO4977chUwoM5p7sK1WZeZet47WE9HyrsfK2MHWuh3ua6oQo
-         HTinzH2aumsNGHSi0Bg38/nHzwWEA8f3JwfofwXRGSRSBRdLHdxVoaIkXunRCurQZl1K
-         mdw5qFPQ8jrf0GxAUSISM5ygCDMTVOuozU7OmRX/g9GfQ/ryVfyTTkZA438uLCF4Skjo
-         DWDoxA4W+9CNxInW2lxQ8RTdYH+o7vnu2HpkMIsZc07LnKpmcVZt7DEZ1bThkMZnrcSr
-         qGOZLLXIjDpDMDRn7lSEflIQR5bvUkxCCXnLttJT+W6G5rm4Mr8jmDDMUYDmKFDwvOvO
-         OOAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwsGQqapR8jlChNpZpCCi5Gx/gm75EyLPo4dVdzGH7WKTcvHy6tK5oKQ2po60p/CPWkDRpImjWfZgtwA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzrdCN8Z5pWSdcG/H8MdA7BVIy8ZN0TrwI41MqLhrgeMC3MUfM6
-	1bF8h7pV+m8e1To5zJD4gZdgGvOw9el9ip9TTBM6zPjlhMo2XD4tt8pOAvNbKlc=
-X-Gm-Gg: ASbGnctN7DXwmtmjYHIumdorWJdA9+zqYuZ723XGxVtno7JnQFcdEjXSi3MLuS6hdjC
-	RcIPU62twjjf+TRiQa8VMl0o+nYtborX5u1BRR+khh5Cl2pBANmfCWFseFOkvf8GDa4m/CQJNmv
-	Elq0+XyYvSh0Lwh3WWMjbPzbZZzMrcJEDI+y+3DAY2tdc4lmw6Inw4ntIFZKcOad1GprYAdg9H2
-	NVQR6Nm2ccf3gRxA80wW+d7tgDtzQdtgahjtiIyeAJjY8YRp1ypWY+As9CHxVlRcaDwVNwlpaLh
-	QvoKGGedPtnKcS300elfCov51r2r6JwPbN4GEjOBzHYCFPpNJY5pIFsR1k6R6TZA
-X-Google-Smtp-Source: AGHT+IFUKUoX2jULeFPKEB1swp6FZ+1r6kccPcITYBbJl4Daknruc2a86ltK8n50/s0eCiuq5Mvn3w==
-X-Received: by 2002:a05:620a:43a1:b0:7bc:db7a:4f78 with SMTP id af79cd13be357-7c02ec1063cmr525137685a.4.1738675273573;
-        Tue, 04 Feb 2025 05:21:13 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a905b6esm637056485a.68.2025.02.04.05.21.12
+        bh=RRXFmx47Swzpej4Yg7u4uG0EqwNxFusRlkdCHqjIDuk=;
+        b=A1JmowEDmJU/0KA9nQv0HVzFws20dJWxZ055ogST0VtcWuDVR81+7gXt40JcRvaSo3
+         B3V4m9Gj+lc8bimabthHhYmHAh4KDcmc66dH1QVYjjJtN2mxiyjz+hQhafxD1nMv6Sas
+         UulwjsNJ/+rekNlJGQsF34pG2JJyquVEjc8knrKnE+/OGD0C6zLYw1K0jQwL5Zu+eaUX
+         /UPpkOlp/g04OtDvy68UqWSa6bQyTLQoVe1Fb0zaQBlweCoHW/I4l5rh7s8huPVSX9lm
+         VGqDir62nEHm8SwPFFmDtTtW8H+pAkH4kGgRzHmxuy5htepxyz9Q0FYBgaHtbr/LXeO3
+         rInA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+T0uwqWrGcQ0sGmmx9HivhUFEsVIu6R90wnzY1hIfU5FAeSSqaKRTLF62YLXiaNoevo+UFw==@lists.linux.dev, AJvYcCWnL2zjBAVtz0VxEj3NWtm8zeDFEo9lcFuSw7/lg+xFyT8h7Puw1d5mZPMJ641346QMd3A5+n0NXZ2wR+U=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMbUuXZsb5o1b8i4uun3huP1zCvOQJLH+HQ8dTVaEUzq9fu9eQ
+	C1MuRRQH5DE/v/38cXeexMU+ulctQq5rep6l3Mo3EX47x/0gvfkJ
+X-Gm-Gg: ASbGnctaLJJgdPp8hjaM3rAsIgl1dCDDblKLgvCPoyTP+QQgV1/l//7rZDvnkLdbP/K
+	KSAVqmTetyRi0fhRRetH0kfMNzvIWGFWhvGWqQjxdBD1M1nl0HmLCmdW4ruH+8UHVIu1ot/qQsC
+	Au3P0qZ5vivK50d2op0c4v3wYI/772sUv8vnEbWHF8TdaAZ3jlnt9CFLDeA8tO8lNPRKykyY1uN
+	j1INjldiPBK2X7E0UvmC4ilVBgUiE8pk0jRz6Qod+VumSKZ6YvrSDOFasvtlnZCjHsuWOm+UdCf
+	n9XNwR0V9kNHSfZWSYzS5GxRrN4Qq8prJ3uf7WXDvoVeyQ4818KxRtTuWaFFqn08s/mm5JkAudN
+	aJg==
+X-Google-Smtp-Source: AGHT+IHi7/2GKpcdSjTAWwC6JBPMZH0RMa4KtzNjlcdd4DLL0nuLjpKiK5fg5XRwBNd0E03fFoUvMw==
+X-Received: by 2002:a05:600c:4286:b0:436:1b0b:2633 with SMTP id 5b1f17b1804b1-43905f782a9mr26556025e9.9.1738679791319;
+        Tue, 04 Feb 2025 06:36:31 -0800 (PST)
+Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df51sm232194865e9.30.2025.02.04.06.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 05:21:13 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tfIrY-0000000BRLd-1okT;
-	Tue, 04 Feb 2025 09:21:12 -0400
-Date: Tue, 4 Feb 2025 09:21:12 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mikko Perttunen <cyndis@kapsi.fi>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org,
-	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com,
-	jroedel@suse.de, regressions@lists.linux.dev,
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev
+        Tue, 04 Feb 2025 06:36:29 -0800 (PST)
+Date: Tue, 4 Feb 2025 15:36:27 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Mikko Perttunen <cyndis@kapsi.fi>, Robin Murphy <robin.murphy@arm.com>, 
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org, 
+	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
+	regressions@lists.linux.dev, linux-tegra@vger.kernel.org, iommu@lists.linux.dev
 Subject: Re: [REGRESSION] Invalid gather when using Tegra210 media engines
-Message-ID: <20250204132112.GH2296753@ziepe.ca>
+Message-ID: <vfn52yxf3udhyjqrgc3binmsdjzjd2salojsvaad7hsukozknp@u6rziyz2vz2o>
 References: <c6a6f114-3acd-4d56-a13b-b88978e927dc@tecnico.ulisboa.pt>
  <20250203170617.GE2296753@ziepe.ca>
  <4ea1a48c-9020-4793-ac9b-b51fc289e442@tecnico.ulisboa.pt>
@@ -78,74 +73,174 @@ References: <c6a6f114-3acd-4d56-a13b-b88978e927dc@tecnico.ulisboa.pt>
  <a0f776ba-bfd2-41fd-8370-14818b86bfbe@arm.com>
  <20250203191346.GG2296753@ziepe.ca>
  <ff901d60-dd54-440f-a0da-4b72052eafd6@kapsi.fi>
+ <20250204132112.GH2296753@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s77jwfgx65ngiaut"
 Content-Disposition: inline
-In-Reply-To: <ff901d60-dd54-440f-a0da-4b72052eafd6@kapsi.fi>
+In-Reply-To: <20250204132112.GH2296753@ziepe.ca>
 
-On Tue, Feb 04, 2025 at 12:26:46PM +0900, Mikko Perttunen wrote:
-> On 2/4/25 4:13 AM, Jason Gunthorpe wrote:
-> > On Mon, Feb 03, 2025 at 06:49:07PM +0000, Robin Murphy wrote:
-> > > I'd hope the historical reasons for not supporting IOMMU_DOMAIN_DMA in
-> > > tegra-smmu no longer apply, given that all the default domain stuff has now
-> > > been integrated into host1x for the newer arm-smmu based Tegras.
-> > 
-> > Indeed I do see appropriate looking calls to the normal DMA API, and
-> > the other mapping path is conditionalized by !host->domain.
-> > 
-> > So, why didn't it work for Diogo? Even in identity mode the DMA API
-> > will return correct DMA addresses and the !host->domain path will skip
-> > mapping them.
-> > 
-> > Poking around I wonder if there is some assumption that if other parts
-> > of the stack, maybe the DRM driver, are using the special domain than
-> > everyone is? It seems to blindly pass around IOVA without really
-> > checking who is consuming it.
-> 
-> I'm not sure where that would be, but it's certainly possible given that
-> this combination of code paths wouldn't have been tested.
 
-I saw some weird stuff.. Like tegra_bo_pin() does:
+--s77jwfgx65ngiaut
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] Invalid gather when using Tegra210 media engines
+MIME-Version: 1.0
 
-	/*
-	 * If we've manually mapped the buffer object through the IOMMU, make sure to return the
-	 * existing IOVA address of our mapping.
-	 */
-	if (!obj->mm) {
-	} else {
-		map->phys = obj->iova;
-		map->chunks = 1;
+On Tue, Feb 04, 2025 at 09:21:12AM -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 04, 2025 at 12:26:46PM +0900, Mikko Perttunen wrote:
+> > On 2/4/25 4:13 AM, Jason Gunthorpe wrote:
+> > > On Mon, Feb 03, 2025 at 06:49:07PM +0000, Robin Murphy wrote:
+> > > > I'd hope the historical reasons for not supporting IOMMU_DOMAIN_DMA=
+ in
+> > > > tegra-smmu no longer apply, given that all the default domain stuff=
+ has now
+> > > > been integrated into host1x for the newer arm-smmu based Tegras.
+> > >=20
+> > > Indeed I do see appropriate looking calls to the normal DMA API, and
+> > > the other mapping path is conditionalized by !host->domain.
+> > >=20
+> > > So, why didn't it work for Diogo? Even in identity mode the DMA API
+> > > will return correct DMA addresses and the !host->domain path will skip
+> > > mapping them.
+> > >=20
+> > > Poking around I wonder if there is some assumption that if other parts
+> > > of the stack, maybe the DRM driver, are using the special domain than
+> > > everyone is? It seems to blindly pass around IOVA without really
+> > > checking who is consuming it.
+> >=20
+> > I'm not sure where that would be, but it's certainly possible given that
+> > this combination of code paths wouldn't have been tested.
+>=20
+> I saw some weird stuff.. Like tegra_bo_pin() does:
+>=20
+> 	/*
+> 	 * If we've manually mapped the buffer object through the IOMMU, make su=
+re to return the
+> 	 * existing IOVA address of our mapping.
+> 	 */
+> 	if (!obj->mm) {
+> 	} else {
+> 		map->phys =3D obj->iova;
+> 		map->chunks =3D 1;
+>=20
+> And obj->iova isn't obviously linked to a dma map on dev.. The comment
+> reads like it is making the assumption that there is only one iommu
+> domain shared by everyone (without checking dev is part of that
+> scheme)
 
-And obj->iova isn't obviously linked to a dma map on dev.. The comment
-reads like it is making the assumption that there is only one iommu
-domain shared by everyone (without checking dev is part of that
-scheme)
+Yes, that's correct. We used to have a bit more code around to deal with
+single domain (Tegra SMMU is supported on some platforms where we have a
+maximum of 4 address spaces, hence we have to be very careful about what
+devices share which address space).
 
-> > Christian was telling me DMABUF had some drivers that made the
-> > (incorrect!) assumption they were all sharing translation.
-> > 
-> > It does seem like a nice project for someone who has the hardware to
-> > rip out all of this custom domain stuff and just have the iommu layer
-> > setup a shared dma-iommu domain.
-> 
-> This has been a long-standing project. The issue is that some boot chains
-> set up the display expecting identity mappings,
+In fact the host1x and DRM drivers also support Tegra20, which didn't
+have an IOMMU at all, but one of those really old GARTs. On top of that
+it only supported a 32 *M*iB window. I think others have concluded that
+today we can't practically use GART and it's better to use something
+like CMA for those cases. So maybe that's not an argument anymore.
 
-The smmu driver can match on compatible strings and leave some devices
-in identity mode, if that helps. Other drivers are doing this to work
-around various issues.
+Most of these restrictions no longer apply as of Tegra124 (I think) and
+starting with Tegra186 the IOMMU is an ARM SMMU, so none of these work-
+arounds should be needed there. Most of this code exists for very legacy
+reasons, but there's still people with Tegra30, Tegra114, Tegra124 and
+Tegra210, all of which are susceptible to this (at least partially).
 
-> See https://lore.kernel.org/linux-iommu/20220512190052.1152377-5-thierry.reding@gmail.com/
+> > > Christian was telling me DMABUF had some drivers that made the
+> > > (incorrect!) assumption they were all sharing translation.
+> > >=20
+> > > It does seem like a nice project for someone who has the hardware to
+> > > rip out all of this custom domain stuff and just have the iommu layer
+> > > setup a shared dma-iommu domain.
+> >=20
+> > This has been a long-standing project. The issue is that some boot chai=
+ns
+> > set up the display expecting identity mappings,
 
-But using RMR seems like a better solution?
+I should revive an old patch series that attempted to get rid of most of
+this. The plan was indeed to remove all of the direct IOMMU API code and
+use DMA API exclusively. There were a couple of issues with it, such as
+performance regressions due to the extra mappings required, but I think
+I got pretty far in mitigating most of those.
 
-We could perhaps also figure out some way to leave the translation in
-identity until the DRM driver completes the reset, then the DRM driver
-could activate the DMA API translation manually.
+In the end I got frustrated with it a few years back because there are
+some corner cases that I couldn't make work and testing of this becomes
+increasingly complicated. And yes, display was specifically an issue on
+Tegra210 platforms (earlier platforms didn't usually set up display on
+boot).
 
-Jason
+One additional problem with supporting the reserved-memory identity
+mappings is that existing firmware doesn't set things up correctly and
+these devices are software EOL'ed, so no new releases are planned that
+could contain a fix for this.
+
+> The smmu driver can match on compatible strings and leave some devices
+> in identity mode, if that helps. Other drivers are doing this to work
+> around various issues.
+
+This might indeed be a viable path. Again, we need to be careful about
+the older devices, but maybe a shared dma-iommu domain would work these
+days.
+
+We definitely want to transition to a DMA IOMMU domain later on, but it
+would need to be after display has had a chance to set things up. And it
+would still need a firmware that actually passes the right information
+to DT because otherwise we'd still get SMMU faults from the display
+hardware trying to scan out from memory that it doesn't own (or I guess
+scanning out garbage from memory that's now being used for other
+purposes).
+
+> > See https://lore.kernel.org/linux-iommu/20220512190052.1152377-5-thierr=
+y.reding@gmail.com/
+>=20
+> But using RMR seems like a better solution?
+
+reserved-memory is the DT equivalent of ACPI's RMR, as far as I
+understand. Or at least, it's the closest thing to it. We don't have
+ACPI on these devices, hence why we do this via reserved-memory DT
+nodes. But again, the problem is that firmware doesn't currently pass
+this correctly to the kernel, so we'd need a new release for that. I'd
+need to find out what can be done to achieve this. One big issue might
+be that it'd be a DT ABI break, technically. So upstream Linux would
+only work reliably using that new version. That might be fine if we can
+make some sort of official release.
+
+> We could perhaps also figure out some way to leave the translation in
+> identity until the DRM driver completes the reset, then the DRM driver
+> could activate the DMA API translation manually.
+
+Yeah. We do something similar for Tegra186 and later where we have the
+memory controller redirect accesses to the SMMU only after the device
+has been attached. I'm not sure if we can do that for the old Tegra
+SMMU, though. It would probably still require a firmware update to make
+sure this can be properly handed off to the kernel.
+
+Thierry
+
+--s77jwfgx65ngiaut
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeiJegACgkQ3SOs138+
+s6FGYg//R+2hX7Er3Nt3qSKe0ctG9++lWg5Zoe3ePz3HvRIASVmsr4K5q+4Op+vI
+h1oBcxXET5dpgYLGo2etIk0KmpLjflCfRB5MkzM1U1lvUGcDWyGpp75bJhDp5rDI
+lNLw2Qj8VdwmcRv+t1tng5haEZtrAKN1afr7MJ6efEie5+zJIOtKrppoCw/BSkyl
+Ln9KtQqE7SiaYVZIkyIhW7kr/ez09BJlssV9JtUQBDiOZnvIppKS24rNlUKqdSgN
+BvFhLq7arEDyVn1TS/vzSqBmSEXtdv0oYKemiuyCFoI98JSTOLOLM1m8H0djblJ1
+4m09WolC5SVMip+smHZBU9hupNKQNZcWQpdlv1KYY/PbxGsHT/O6W660yrk2R14A
+fRARzZ+GMoBFzu0AVtdZi5yMKhJx3GhDv1TLCQ1prVQPn59kI/ONG44oVAoE/FLS
+/ispuyxkTbx1+Aev9yR7GAzk0SQ+7j338o2VvWw9E+258WaAxxFxFulvkHakQGuH
+sb1KquYznexEibF8UL9ALNnSvo5x0s2cvc9ORbS+Q8ox5ESJFoRKhIzm3QlirzMf
+7j4e+SpjFhndL8LbVoqcY3BOlb0CUu5QciBWOyYIvDBz/8NpqASpxD/vBn8hycbb
+4cm+4gzVLHZm3SHJ6JW3tJgW/Ev8WhlxWTvJ4EB3F2s1IdCu5Pc=
+=QY9n
+-----END PGP SIGNATURE-----
+
+--s77jwfgx65ngiaut--
