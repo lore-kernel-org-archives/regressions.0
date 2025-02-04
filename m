@@ -1,101 +1,159 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC7A25A655;
-	Tue,  4 Feb 2025 06:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EBE204C3C
+	for <regressions@lists.linux.dev>; Tue,  4 Feb 2025 07:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738650373; cv=none; b=jaYui6EKC7kZSQP+gamanVIyxsrtcbHAO4B9u86QQJ5lGC2N+Nn6gjn4LODapGenCf4rXLDqkWkmb6fqgnbToAGGasPM7D5uw/AwpdFC/1MD/Nw3ljGvyhle5ZwgqFC73+juQlHLzQRfw4AHEDbKiPB5uXsmn9B8rXYbwzQp43M=
+	t=1738655306; cv=none; b=GvN7/x3NEoagsTikmK/k/mP5zvq2YGmBihKZV6WDKz8hNeiBSltStakQvvdHnEewu7uHwyWgpQArDLmGMvEBolFeSGL+IfbR4Z+E9zAqlw+d7rRDpKbqujsx+S1+mOVd6xm751GQtzKt5WGYPhlEadWn6ESQK9spzi64EzVgKjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738650373; c=relaxed/simple;
-	bh=DLyHuE7sBiuH1plr2pK6VDDhcA0imwUEYWT9w5+hooQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B4y/VbNnSHYRUoR41gHmyZhnl5irPGm5kh2IBHjFQfBsnZVC/AMDPjlW3ZEsGYjdPW9C4cYttgOlnRMI+kbudrgQHp5VrQTrHcLH4B4BFOci+0lICyUFWrQKe990lTZUdeyOEMW5uXc5yWUC5zW9mm/ja++pFMZnh61n2V40/jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 077F668AFE; Tue,  4 Feb 2025 07:26:06 +0100 (CET)
-Date: Tue, 4 Feb 2025 07:26:05 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Christoph Hellwig <hch@lst.de>, Bruno Gravato <bgravato@gmail.com>,
-	Stefan <linux-kernel@simg.de>, Keith Busch <kbusch@kernel.org>,
-	bugzilla-daemon@kernel.org, Adrian Huang <ahuang12@lenovo.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [Bug 219609] File corruptions on SSD in 1st M.2 socket of
- AsRock X600M-STX + Ryzen 8700G
-Message-ID: <20250204062605.GB29300@lst.de>
-References: <Z36UsE5dj6j5HhkX@kbusch-mbp> <20250109082849.GC20724@lst.de> <210e7b28-de05-44bc-9604-83a79ae131b0@leemhuis.info> <726275aa-a3c2-4dbd-9055-a14db93efa29@simg.de> <CAOBLbT8103fAyoFNF8=YcEM1sM6HodcUe=Ee5NsE2hUkfCYv7g@mail.gmail.com> <3b693647-5e82-4c39-8017-22cada56eb55@leemhuis.info> <20250117080507.GA25953@lst.de> <f81bb87a-c181-4973-be05-f7df84133a46@leemhuis.info> <20250117095522.GA2391@lst.de> <266965cf-9cf9-4434-be42-458e92d7366d@leemhuis.info>
+	s=arc-20240116; t=1738655306; c=relaxed/simple;
+	bh=PHPbFfxd4PoN/8hUEayeHJE+d2SjCCEAqdBeVbnf1OY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=s4yi4oEQHgp9drSJQ/kZq4zCl09yGx/B/Nsbs6qGvIZm35T491IrtSjuSKs0Il2jv4c4SK/mK4PATMbJaEnAM4/A+kL2mD2MtHcgLTJuvrjit/1SSnY8D+8gy+PJaKiZeSEGsTcb8tfUliPe1ZC3XJlODafsYPIpbNuYhHYHP3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEM0Dbhb; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEM0Dbhb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738655304; x=1770191304;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=PHPbFfxd4PoN/8hUEayeHJE+d2SjCCEAqdBeVbnf1OY=;
+  b=EEM0DbhbzPmEjUCP/LY6wncqvHN7w04gStnHldYpdOWeEFwcbNVH7KCH
+   5Bu1kY1NwI18DBjYjCf6Eu+SQ5j96B9ecNR5emq/akDX9kl3sPmsjYjGY
+   kKdM+rTSpy5mh8UbgQsJgUTJ/MKbSToJiYD3qTOXfPXj3SUVsrZ0Paft1
+   /m/EG7bADUjtv2qF1FOjQfzXayDZiGMxmup73OuYJfkETyJKoePvOzJYp
+   8Ru6EuvKQHHtERIo8+UOI4IHCZSobmF+dW3UnR5vF/6cXa116tbwpZBOo
+   O8DgfvtTuAHIvq0zFX0/6HHAuRzBgRcV1mJYFwmOwozSp3DmrqDRFy7aP
+   Q==;
+X-CSE-ConnectionGUID: H1JB1t1+RnuJvKuVjrw9GA==
+X-CSE-MsgGUID: 5yGTBU7qTxGnVH6vhPyxAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39323878"
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="39323878"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 23:48:22 -0800
+X-CSE-ConnectionGUID: HCLipMDFQcmDRry5t9IVpA==
+X-CSE-MsgGUID: TBL5DaWnSDenYU0QEuTOfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,258,1732608000"; 
+   d="scan'208";a="115520840"
+Received: from oandoniu-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.75])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 23:48:19 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 4 Feb 2025 09:48:15 +0200 (EET)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>, 
+    Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    "Thorsten Leemhuis (regressions address)" <regressions@leemhuis.info>, 
+    Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [Regression in 6.14-rc1] System suspend/resume broken by PCI
+ commit 1db806ec06b7c
+In-Reply-To: <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com>
+Message-ID: <9aa469fd-da5b-70fc-147e-dd4a50cf5af6@linux.intel.com>
+References: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com> <CAJZ5v0i=yBSFW82E=s=mx7ztVzmnoUwbxkDRnYyDztAWK9VcsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <266965cf-9cf9-4434-be42-458e92d7366d@leemhuis.info>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/mixed; BOUNDARY="8323328-1986258784-1738655026=:1609"
+Content-ID: <5be0ceb7-b569-5b1f-6635-7ad6318f540e@linux.intel.com>
 
-On Fri, Jan 17, 2025 at 11:30:47AM +0100, Thorsten Leemhuis wrote:
-> >> Side note: that "PCI-DMA: Using software bounce buffering for IO
-> >>>> (SWIOTLB)" message does show up on two other AMD machines I own as
-> >> well. One also has a Ryzen 8000, the other one a much older one.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The message will aways show with > 4G of memory.  It only implies swiotlb
-is initialized, not that any device actually uses it.
+--8323328-1986258784-1738655026=:1609
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <d9a4dd33-9aa6-f9fb-99e4-67e607e89262@linux.intel.com>
 
-> >> And BTW a few bits of the latest development in the bugzilla ticket
-> >> (https://bugzilla.kernel.org/show_bug.cgi?id=219609 ):
-> >>
-> >> * iommu=pt and amd_iommu=off seems to work around the problem (in
-> >> addition to disabling the iommu in the BIOS setup).
+On Mon, 3 Feb 2025, Rafael J. Wysocki wrote:
 
-iommu_pt calls iommu_set_default_passthrough, which sets
-iommu_def_domain_type to IOMMU_DOMAIN_IDENTITY.  I.e. the hardware
-IOMMu is left on, but treated as a 1:1 mapping by Linux.
+> On Mon, Feb 3, 2025 at 9:12=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+> >
+> > Hi,
 
-amd_iommu=off sets amd_iommu_disabled, which calls disable_iommus,
-which from a quick read disables the hardware IOMMU.
+Hi Rafael,
 
-In either case we'll end up using dma-direct instead of dma-iommu.
+> > The following commit:
+> >
+> > commit 1db806ec06b7c6e08e8af57088da067963ddf117
+> > Author: Jian-Hong Pan <jhp@endlessos.org>
+> > Date:   Fri Nov 15 15:22:02 2024 +0800
+> >
+> >    PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
+> >
+> >    After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+> >    suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state=
+ for
+> >    "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for b=
+oth
+> >    "dev" and its parent.
+> >
+> >    The problem is that unless pci_save_state() has been used in some ot=
+her
+> >    path and has already saved the parent L1SS state, we will restore ju=
+nk to
+> >    the parent, which means the L1 Substates likely won't work correctly=
+=2E
+> >
+> >    Save the L1SS config for both the device and its parent in
+> >    pci_save_aspm_l1ss_state().  When restoring, we need both because L1=
+SS must
+> >    be enabled at the parent (the Downstream Port) before being enabled =
+at the
+> >    child (the Upstream Port).
+> >
+> >    Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos=
+=2Eorg
+> >    Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+> > suspend/resume")
+> >    Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> >    Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> >    Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> >    [bhelgaas: parallel save/restore structure, simplify commit log, pat=
+ch at
+> >    https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+> >    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >    Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+> >
+> > broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
+> > pass suspend/resume testing after "echo devices > /sys/power/pm_test".
+> >
+> > It looks like PCIe links are all down during resume after the above
+> > commit, but it is rather hard to collect any data in that state.
+> >
+> > Reverting the above commit on top of 6.14-rc1 makes things work again,
+> > no problem.
+> >
+> > I'm unsure what exactly the problem is ATM, but I'm going to check a
+> > couple of theories.
+>=20
+> The attached change makes it work again, FWIW, but moving the
+> parent->l1ss check alone below the pdev l1ss saving doesn't help.
+>=20
+> So it is either the parent check against NULL or the
+> pcie_downstream_port(pdev) one that breaks it.  I guess the former,
+> but I'll test it tomorrow.
 
-> > 
-> > That suggests the problem is related to the dma-iommu code, and
-> > my strong suspect is the swiotlb bounce buffering for untrusted
-> > device.  If you feel adventurous, can you try building a kernel
-> > where dev_use_swiotlb() in drivers/iommu/dma-iommu.c is hacked
-> > to always return false?
-> 
-> Tried that, did not help: I still get corrupted data.
+Neither of those is the root cause but it's bit hard to see from the code=
+=20
+itself because the parent->saved_state check your test patch also removed=
+=20
+looks very logical on a glance (but that's the problematic line).
 
-.. which together with this implies that the problem only happens
-when using the dma-iommu code (with or without swiotlb buffering
-for unaligned / untrusted data), and does not happen with
-dma-direct.
+The fix is already here with the explanation:
 
-If we assume it also is related to the optimal dma size, which
-the original report suggests, the values for that might be
-interesting.  For dma-iommu this is:
+https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux=
+=2Eintel.com/T/#u
 
-	PAGE_SIZE << (IOVA_RANGE_CACHE_MAX_SIZE - 1);
-
-where IOVA_RANGE_CACHE_MAX_SIZE is 6, i.e.
-
-	PAGE_SIZE << 5 or 131072 for x86_64.
-
-for dma-direct it falls back to dma_max_mapping_size, which is
-SIZE_MAX without swiotlb, or swiotlb_max_mapping_size, which
-is a bit complicate due to minimum alignment, but in this case
-should evaluate to: 258048, which is almost twice as big.
-
-And all this unfortunately leaves me really confused.  If someone is
-interested in playing around with at the risk of data corruption it would
-be interesting to hack hardcoded values into dma_opt_mapping_size, e.g.
-plug in the 131072 used by dma-iommu while using dma-direct with the
-above iommu disable options.
+--=20
+ i.
+--8323328-1986258784-1738655026=:1609--
