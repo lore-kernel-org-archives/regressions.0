@@ -1,90 +1,93 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDA9192B90
-	for <regressions@lists.linux.dev>; Wed,  5 Feb 2025 15:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A072147E3
+	for <regressions@lists.linux.dev>; Wed,  5 Feb 2025 21:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738771186; cv=none; b=damAbB9IEkpO5NPEHhpjS4ZowQWP9Wx78P9+ypY1tpO8N+kIdDlFhEd3uFMuNt3amRibXGLErCi+QSKT2RS/WO35Lg7lRweTVtOeXr7ssjKQprNgV6dKU2dYCJhPdeeEg+8CvEbhu8fbxhGYZP6EcpRprZiocRaGPFzi/54KHa8=
+	t=1738792129; cv=none; b=faQD/E3J8L0CP/nPYZFcQlNPzwFe9kZUF/ikGeID9WWxTssu3LQNXKgEMEdWQ/1EqtIM9adzjL9hNPHUmAtMkR59pup+RyXPrSrnqTd/OUfJB+A9cx5q6Fz++AN9Lp6GohHfZcpfNqSIfWYDfeOtTHTc6Eg/w61u8e45Zrv1ris=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738771186; c=relaxed/simple;
-	bh=C+ypM6NN3GL5xf4/fC8/MdSGCXqBHvyUDySzw8C9sIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UwVV4b1z2bvz5qobaTB54/wON0agOtANL4lcZ6HZ1srhcUmemirFl6maKpT6hCIftEk/cQNYKFmH3c0hWc15B6HtCk6D44o5IIazZvNS7Mqcp4VagBHscqzSIdx9RUZFqAvBLp6rAN/GMVwsCOc3jzUeLW874ozYaFUHpW9Asqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Q6pivajQ; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Q6pivajQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YQmaHYcX4kSHNC5WcNtxux8lMrgIRKUaKugL4PZ1nTI=; b=Q6pivajQwCs/0BR8aHjA2zgzhx
-	XSLlH5hTv7B02RtMAVVWhc0AMRRbF5jEkLar2wEGpnOq8YhV4OVBXGbULrkZR6cBqDcmVC+blfQ66
-	/aLTDjcz2vsW0vb9+WEiNn4TG79qsLgy5Y3R/CzqozJgG1J+kRnQnC1Quny8KFEuIjJfVNFGPjX9V
-	ShIwVYQbFccDc37snxuf6t1fN5pz6+9yLNDh1tQNV4j2kXFff1uKbPyzLq+jvE65jl32nVqBAtYFV
-	D0/k7YzDcFyJ8dkEFVnHdLfH2xUniqdmjMhSpHk1/VPB/qCGXPy5JdH6JPfcgOp9S7+T8sa4/UmFA
-	+ZtZPljA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36620)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tfhoJ-0007bW-14;
-	Wed, 05 Feb 2025 15:59:31 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tfhoG-0002X9-1F;
-	Wed, 05 Feb 2025 15:59:28 +0000
-Date: Wed, 5 Feb 2025 15:59:28 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Domenico Andreoli <domenico.andreoli@linux.com>
-Cc: Jason Montleon <jason@montleon.com>, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
-	"si.yanteng@linux.dev" <si.yanteng@linux.dev>,
-	"pabeni@redhat.com" <pabeni@redhat.com>
-Subject: Re: [REGRESSION,6.14.0-rc1]: rk_gmac-dwmac: no ethernet device shows
- up (NanoPi M4)
-Message-ID: <Z6OK4PXGa_ixzQQc@shell.armlinux.org.uk>
-References: <Z6CfoZtq7CBgc393@localhost>
- <INKEBRCGF47MsjO5WHpLcf1OTcQHw2KG6_Ez-K9QiTwAnb4MRVErnxoUT1euX_o9oRrxUILDRDvlOZ7ezguCU4maUyvkk-UqU52l6xLsF8U=@montleon.com>
- <Z6NEyCRHTVfnM1vf@localhost>
+	s=arc-20240116; t=1738792129; c=relaxed/simple;
+	bh=HGlN6Lerm3dgGJK7wrSbhUF1CVnE4TgF1Bj6J2HcwDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hkT5qysBs40yt4xJ9vRc0B5pNrx4bgDkr+/RCo+cyPbWL/PltDBv7haUUM3e63abL1IUWLpp3doj0xckonwaZm5AVKxpwaMegCw9nimcQWz41P47EKI6/h0Hizs1DBQd0kPv+hIt6nEDKHc8efEI99YoO8gFUuGtVlbJoRZYgdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [10.59.18.202] (p57a7ad4d.dip0.t-ipconnect.de [87.167.173.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6C6F761E64795;
+	Wed, 05 Feb 2025 22:48:25 +0100 (CET)
+Message-ID: <e30f47ea-396e-45c7-a2aa-d141d27dae4c@molgen.mpg.de>
+Date: Wed, 5 Feb 2025 22:48:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6NEyCRHTVfnM1vf@localhost>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+ pci_pm_resume returns -110`
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+References: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
+ <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 05, 2025 at 12:00:24PM +0100, Domenico Andreoli wrote:
-> On Wed, Feb 05, 2025 at 04:19:58AM +0000, Jason Montleon wrote:
-> > On Monday, February 3rd, 2025 at 5:51 AM, Domenico Andreoli <domenico.andreoli@linux.com> wrote:
-> > > Hi,
-> > >
-> > > This morning I tried 6.14.0-rc1 on my NanoPi M4, the ethernet does not
-> > > show up.
-> > 
-> > I am experiencing similar behavior on the Lichee Pi 4A with thead-dwmac. It works fine on 6.12.12 and 6.13.1, but with 6.14-rc1 I don't see these last several lines of output as in your case. I did also see the same new error:
-> > +stmmaceth ffe7070000.ethernet: Can't specify Rx FIFO size
-> > 
-> > It looks like this message was introduced in the following commit and if I build with it reverted my ethernet interfaces work again.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/ethernet/stmicro?h=v6.14-rc1&id=8865d22656b442b8d0fb019e6acb2292b99a9c3c
+Dear Ilpo,
+
+
+Thank you for your instant reply.
+
+
+Am 05.02.25 um 09:44 schrieb Ilpo Järvinen:
+> On Tue, 4 Feb 2025, Paul Menzel wrote:
 > 
-> Confirmed, reverting it resurrects the ethernet also for me.
+>> #regzbot introduced: b46c89c08f41..aa22f4da2a46
 
-This is a known issue. A revert has been submitted:
+>> On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
+>> 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
 
-https://lore.kernel.org/r/E1tfeyR-003YGJ-Gb@rmk-PC.armlinux.org.uk
+(Just a side note, these are actually logged with level error.)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>>      rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
+>>      rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+>>      rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+>>
+>> These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
+>>
+>> It looks like the first warning is not always logged:
+>>
+>>      $ sudo dmesg | grep rtsx
+>>      [    8.612537] rtsx_pci 0000:3b:00.0: enabling device (0000 -> 0002)
+>>      [ 2010.081170] rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
+>>      [ 2010.236503] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+>>      [ 2010.236525] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+>>      [ 4115.541202] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+>>      [ 4115.541216] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+>>
+>> Logs from Linux 6.14-rc1 are attached. Bisection is only possible after next
+>> Sunday.
+> 
+> Please try if this fix helps:
+> 
+> https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
+
+Yes, after applying the patch these errors were *not* logged in three 
+ACPI S3 suspend/resume cycles.
+
+
+Kind regards,
+
+Paul
