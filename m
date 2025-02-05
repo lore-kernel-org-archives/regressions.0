@@ -1,113 +1,81 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F32B1FECBC
-	for <regressions@lists.linux.dev>; Wed,  5 Feb 2025 22:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090715198F;
+	Wed,  5 Feb 2025 23:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738794222; cv=none; b=QYzzFBqQgMBUoOtAXs6eQ4ZMRxuT36qw82Ds/6JfqMU9Rw+1iUQLaExFEmZFRaKmftWlpcCO5mfYeTzidWgvrUFh8kGBNvawMf/FUf1ScBeEi7S2FRLLOhRKekfIytmKgEC7WbC6UI/0ZJ9VHuupYHOnu/o+xnwMfRKb9WaCd5w=
+	t=1738798700; cv=none; b=LtJIfBYAkTzPzReS5DukAizG1109lRzBZLtgZm0/zSaRLjwficG0IwK0cYMHrY2ZmV/uMyvF1Ml+l3FY6LdSglhLinQZwDPAtRThpN9ZvNxor9V9+7jnnvrLR86FSm6kM4t/Buy5LbIuBuWxhuv/OX6NP4mpl0dfpJ5vAbSP0TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738794222; c=relaxed/simple;
-	bh=z6eD1FP///AwBHcopqgetq8mUPl1qy7sZPeZfpBTrHo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KUu7A/W77DMC3EzSqZkCX6yn5Cm2WZktZFGjA1qAx7bsOopW4VRYOUpflMlp3CpKLjUCelWJGoIUqg7UxcCWTbuCHLx1yFGvxDZspDyrX05Yi8Zw078eFoSEtP30xc/h9LuUqL5w0LM30cuvvoEvpLDmOzJBKaFKFlXhVI/Bqws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=gOiTxQ+J; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	s=arc-20240116; t=1738798700; c=relaxed/simple;
+	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A25zyAbZ4D3yVKZ4HOczJ5BofKrTfLMvqTmq+hSxkHqCJpaoj7pV34My7fiCfgNVFzITjI2CwEUNNAISXWgSUauaLxbyVcT+R+hH6ZCI6zInER7lE+n0mHXd20ylEJ7QV23c/ArOXTN+n16PJpV5hzNXvX3qzhyFEzBpb/wbEHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMFoi0SA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="gOiTxQ+J"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YpFBJ2WGkz9sdr;
-	Wed,  5 Feb 2025 23:23:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1738794216;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3A8gIWsEr9yJWnJxL6/MIgQmtdybjtwSXxHXk23OHxc=;
-	b=gOiTxQ+JTd3yBcrxaeqqNlL8wZPKmTjD0ErC8yTAtJFh0MGwxBdGqyAPeaRV5JsbRdpr4C
-	nrcy8XpEEbaJkbx+stTfxLi0F4JLhX5wtkSn5G6kTFmEu0P3tPu944l29uIg9H74Fo0fRm
-	R1qnA1HDUK2vlu8gd+Ej9o9H4nmsoZ14tetw/3WoiLnqPh/fvddhRTmHW/9t3ZlyS0KR6e
-	POZjzclH7hzkKKPggUhsCT8ItwlnIPxYhjMsDpchvOoeAvN3JdhElJaot8BbP3hnQObOYl
-	6C/h/r5g49hO9f03xyYpjsTAr1yDHg9sos/YthUo2t1LoCEBNWYQMYq8XfT2fQ==
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,  Chris Lew
- <quic_clew@quicinc.com>,  Stephan Gerhold <stephan.gerhold@linaro.org>,
-  Johan Hovold <johan+linaro@kernel.org>,  Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>,  Konrad Dybcio <konradybcio@kernel.org>,
-  Abel Vesa <abel.vesa@linaro.org>,  linux-arm-msm@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  regressions@lists.linux.dev,
-  stable@vger.kernel.org, Caleb Connolly <caleb.connolly@linaro.org>, Joel
- Selvaraj <joelselvaraj.oss@gmail.com>, Alexey Minnekhanov
- <alexeymin@postmarketos.org>
-Subject: Re: [PATCH] soc: qcom: mark pd-mapper as broken
-In-Reply-To: <Z4TXww5rAkMR8OmM@hovoldconsulting.com> (Johan Hovold's message
-	of "Mon, 13 Jan 2025 10:07:15 +0100")
-References: <20241010074246.15725-1-johan+linaro@kernel.org>
-	<Zwj3jDhc9fRoCCn6@linaro.org> <87wmf7ahc3.fsf@oltmanns.dev>
-	<Z3z7sHn6yrUvsc6Y@hovoldconsulting.com>
-	<Z36Gag6XhOrsIXqK@hovoldconsulting.com> <87wmf18m8g.fsf@oltmanns.dev>
-	<Z4TXww5rAkMR8OmM@hovoldconsulting.com>
-Date: Wed, 05 Feb 2025 23:23:22 +0100
-Message-ID: <874j182fqd.fsf@oltmanns.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMFoi0SA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D626C4CED1;
+	Wed,  5 Feb 2025 23:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738798700;
+	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aMFoi0SA4J27vdHiguS7Q6MqT2JEgBmPxCY9mMLTDr3ZatvBYMKD3FgzMY4+lTZU6
+	 QyHbffl3O+luWnVo/l9BFLMqw8IwZ/ISZepE7E3ulNTJPQpS4uaz6iclvBsvio2+UW
+	 k2ryhBeFE3Xp7neTIGe9kXLVckLZ9Ianad/pI4W9kG4nY86qfCSNJuJjzZuvxPh9vm
+	 lSHi/NdYJT6z8DfOuyHfGM9Kdmx9xyTBRbWKnOzNtzJ64JBoLkvIlqY2PVV7el7TK6
+	 0bRKY8OAEldZ9OAPwEhBm/6x81Xbg9PBiSvowheCuS8Vz1LqdyiwlFAEfxvV1BC2Dp
+	 x1bfEH4U9Hzng==
+Date: Wed, 5 Feb 2025 17:38:17 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+ pci_pm_resume returns -110`
+Message-ID: <20250205233817.GA949434@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Queue-Id: 4YpFBJ2WGkz9sdr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e30f47ea-396e-45c7-a2aa-d141d27dae4c@molgen.mpg.de>
 
-On 2025-01-13 at 10:07:15 +0100, Johan Hovold <johan@kernel.org> wrote:
-> On Sat, Jan 11, 2025 at 03:21:35PM +0100, Frank Oltmanns wrote:
->> On 2025-01-08 at 15:06:34 +0100, Johan Hovold <johan@kernel.org> wrote:
->
->> > And today I also hit this on the sc8280xp CRD reference design, so as
->> > expected, there is nothing SoC specific about the audio service
->> > regression either:
->> >
->> > [   11.235564] PDR: avs/audio get domain list txn wait failed: -110
->> > [   11.241976] PDR: service lookup for avs/audio failed: -110
->> >
->> > even if it may be masked by random changes in timing.
->> >
->> > These means it affects also machines like the X13s which already have
->> > audio enabled.
->>
->> I've blocklisted the in-kernel pd-mapper module for now and have
->> switched back to the userspace pd-mapper.
->>
->> I don't know if it's helpful or not, but I don't get these error logs
->> when using to the in-kernel pd-mapper. It's just that the phone's mic
->> only works on approximately every third boot (unless I defer loading the
->> module).
->
-> Ok, then it sounds like you're hitting a separate bug that is also
-> triggered by the changed timings with the in-kernel pd-mapper.
+On Wed, Feb 05, 2025 at 10:48:24PM +0100, Paul Menzel wrote:
+> Thank you for your instant reply.
+> 
+> Am 05.02.25 um 09:44 schrieb Ilpo Järvinen:
+> > On Tue, 4 Feb 2025, Paul Menzel wrote:
+> > 
+> > > #regzbot introduced: b46c89c08f41..aa22f4da2a46
+> 
+> > > On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
+> > > 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
+> 
+> (Just a side note, these are actually logged with level error.)
+> 
+> > >      rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
+> > >      rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+> > >      rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+> > > 
+> > > These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
+> ...
 
-I worked on finding out what's causing the issue on sdm845 and I've
-submitted a patch here: [1]
+> > Please try if this fix helps:
+> > 
+> > https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
+> 
+> Yes, after applying the patch these errors were *not* logged in three ACPI
+> S3 suspend/resume cycles.
 
-> Are there any hints in the logs about what goes wrong in your setup?
-
-Unfortunately not, see [1].
-
-> And
-> the speakers are still working, it's just affecting the mic?
-
-Yes, it's only affecting the mic in my setup on xiaomi-beryllium, but
-there seem to be issues with the speaker on oneplus-enchilada that can
-be fixed with the same approach.
-
-Best regards,
-  Frank
-
-[1]: https://lore.kernel.org/all/20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev/
-
->
-> Johan
+Thanks, I added your Reported-by to the patch, which should appear in
+v6.14-rc2.  Happy to also add your Tested-by if you feel confident
+enough.
