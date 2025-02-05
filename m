@@ -1,109 +1,107 @@
-Received: from mail-10625.protonmail.ch (mail-10625.protonmail.ch [79.135.106.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A6917F7
-	for <regressions@lists.linux.dev>; Wed,  5 Feb 2025 04:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A85C22A1C5
+	for <regressions@lists.linux.dev>; Wed,  5 Feb 2025 08:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738729213; cv=none; b=oFEGtCEDpyQo/6iU1gwbCQ6zXcslCYTjwnRnBhu79eY+UVaH+1e/FpvIUSCtEG4ZUj8ueN2OYzY8+qvnUq+wem0CLAvWKPW5L0qGCSx0DIXis8NjEztG/Coxo2FLn9k7E5NsAnwr4f+PBBgaYguW9rKgmv7IxRKhXBAJsFKJOmo=
+	t=1738745080; cv=none; b=C7WNQ46VvX4jXODeNfsFDEIMI4D2QSTUwd7VjP/Wdpqu8Y1YbyzcV9z8VH6V7K2T39z+odmX0hdFhOmkUV0fb2Lk/bsrh0nqhuvf3dcFV/o3NgQ3TtN1PY0vBlsKBjXqS6EduST1Tj4A4r8T6Rbat1kAGmqPe+wptD/5ZnO9uG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738729213; c=relaxed/simple;
-	bh=diuf4Q6Qz1Ac77ejlgBsdm102NX+oVHubnbGNjCevZc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=omS6OyFIUZj5oCzbWNQlGkP7zxqKUQBGgVIHccUjx10v4xCYNl91vM4OuFPbB3Ef2Coe5yvTm281mXsVj13apupUEnnelPahUEuQwqc8gS2dVi3Ia4chjIwN0QsgGjBhQsYKO8/fwKx+gt0PCgDmm+7enOQ/JabVBvrceszHEHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=montleon.com; spf=pass smtp.mailfrom=montleon.com; dkim=pass (2048-bit key) header.d=montleon.com header.i=@montleon.com header.b=GzfIYBeD; arc=none smtp.client-ip=79.135.106.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=montleon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=montleon.com
+	s=arc-20240116; t=1738745080; c=relaxed/simple;
+	bh=TDI1x3pPPXADltJ6RYlbixxnTojq86IDBEnZD6rWzk4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kOCqMvy7HrlOkKmwR7bOk0kDFz1Ak5pgpocaIsMzfwCHzvwifjpWasN7X0VkwiPL3KgHOq5jE24lHbD+DacqBcw8u5av25gkU14wLj3K9JPGBLlW9TNothfO4r1NB3/Y88FrMR1jzDDhIwULx/yRwxXhFTQb+cJhAFiSMry/ZVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GBM0I/rl; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=montleon.com header.i=@montleon.com header.b="GzfIYBeD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=montleon.com;
-	s=protonmail2; t=1738729202; x=1738988402;
-	bh=diuf4Q6Qz1Ac77ejlgBsdm102NX+oVHubnbGNjCevZc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=GzfIYBeDbxiwtT9P9AhqKrOEQWPqebRn1RC+8DgxW3bNL98oBUItDP2SMI8zPmJOs
-	 lttBADT9wC8D/updemPL6obJ2ZwiEDb5UVRFowGoNMJ/Bkg43kTnr/aGj9pM/JX6iH
-	 jYR50NQOUrNTPPPIYwhj0DpIjVsxG1DAhnQdqMAW33L1s+YTobyctWGSlR5fKljGcC
-	 Q11EfD/woNXYOu0WR/QFg5bcKxUsoPvgxi5Bp38RU00jgAvsrJoHNKIN2hp46yJ3kt
-	 HSOHosxW+99aePWoiS9c2GKXvueQwivAkfsvL4SWM54G4xIbPuf0R65Wu2pmHIXY4E
-	 BBQ/hCRveLeNg==
-Date: Wed, 05 Feb 2025 04:19:58 +0000
-To: Domenico Andreoli <domenico.andreoli@linux.com>
-From: Jason Montleon <jason@montleon.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>, "si.yanteng@linux.dev" <si.yanteng@linux.dev>, "pabeni@redhat.com" <pabeni@redhat.com>
-Subject: Re: [REGRESSION,6.14.0-rc1]: rk_gmac-dwmac: no ethernet device shows up (NanoPi M4)
-Message-ID: <INKEBRCGF47MsjO5WHpLcf1OTcQHw2KG6_Ez-K9QiTwAnb4MRVErnxoUT1euX_o9oRrxUILDRDvlOZ7ezguCU4maUyvkk-UqU52l6xLsF8U=@montleon.com>
-In-Reply-To: <Z6CfoZtq7CBgc393@localhost>
-References: <Z6CfoZtq7CBgc393@localhost>
-Feedback-ID: 31263673:user:proton
-X-Pm-Message-ID: 91cf9ed08671796c68fcff7b4943b9d063c50cc0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBM0I/rl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738745080; x=1770281080;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TDI1x3pPPXADltJ6RYlbixxnTojq86IDBEnZD6rWzk4=;
+  b=GBM0I/rlqvdFSYAuS1WCBxgVlKJZsTfR1wLW3/E59myapsr01p+oyt+h
+   3+t4dw8RNLJBH5glvHbnHK8R43jU7Zsw2ZKZ/a52KPWcdiE2NR9UewpoX
+   vofA5LS6pNxs2WjIPmF0kTyAkJVrQ3BaVdzwjDZZ3ZtrscpJKhrvaVIcG
+   b7+9Au2vbrsSB/AHKQMu4uIEJBm3WMtu9SaxOkKVWxl2IvxQ2dQc3LkLL
+   IO0/eJ+UmkJ7vgR7jYxpIR250YnF6Lr3cJDJnK4fylMepoeUOXpWqx5OG
+   MBILb1vwxocRxuIvHzxPU2FcwmSKRBKbNRvWo9Q+pa55jQqKTmtSDws2C
+   Q==;
+X-CSE-ConnectionGUID: I+zuWSqtRN+B2r356dMBUQ==
+X-CSE-MsgGUID: Dfxa4JJURSWbndbUvlbL4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50291165"
+X-IronPort-AV: E=Sophos;i="6.13,261,1732608000"; 
+   d="scan'208";a="50291165"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:44:39 -0800
+X-CSE-ConnectionGUID: p2+Imi2eRdyiwjOQsJsGLQ==
+X-CSE-MsgGUID: XrWhEZReRxuR6iSdF5Wd6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="115809554"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.255])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 00:44:35 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 5 Feb 2025 10:44:31 +0200 (EET)
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    linux-pm@vger.kernel.org, regressions@lists.linux.dev, 
+    Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+ pci_pm_resume returns -110`
+In-Reply-To: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
+Message-ID: <027efc9e-bc70-49af-7d48-fb474533993d@linux.intel.com>
+References: <d7246feb-4f3f-4d0c-bb64-89566b170671@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Monday, February 3rd, 2025 at 5:51 AM, Domenico Andreoli <domenico.andre=
-oli@linux.com> wrote:
+On Tue, 4 Feb 2025, Paul Menzel wrote:
 
->
->
-> Hi,
->
-> This morning I tried 6.14.0-rc1 on my NanoPi M4, the ethernet does not
-> show up.
+> #regzbot introduced: b46c89c08f41..aa22f4da2a46
+> 
+> Dear Linux folks,
+> 
+> 
+> On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
+> 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
+> 
+>     rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot,
+> device inaccessible
+>     rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
+>     rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
+> 
+> These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
+> 
+> It looks like the first warning is not always logged:
+> 
+>     $ sudo dmesg | grep rtsx
+>     [    8.612537] rtsx_pci 0000:3b:00.0: enabling device (0000 -> 0002)
+>     [ 2010.081170] rtsx_pci 0000:3b:00.0: Unable to change power state from D0
+> to D3hot, device inaccessible
+>     [ 2010.236503] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+> pci_pm_resume returns -110
+>     [ 2010.236525] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error
+> -110
+>     [ 4115.541202] rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
+> pci_pm_resume returns -110
+>     [ 4115.541216] rtsx_pci 0000:3b:00.0: PM: failed to resume async: error
+> -110
+> 
+> Logs from Linux 6.14-rc1 are attached. Bisection is only possible after next
+> Sunday.
 
-I am experiencing similar behavior on the Lichee Pi 4A with thead-dwmac. It=
- works fine on 6.12.12 and 6.13.1, but with 6.14-rc1 I don't see these last=
- several lines of output as in your case. I did also see the same new error=
-:
-+stmmaceth ffe7070000.ethernet: Can't specify Rx FIFO size
+Please try if this fix helps:
 
-It looks like this message was introduced in the following commit and if I =
-build with it reverted my ethernet interfaces work again.
+https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d=
-rivers/net/ethernet/stmicro?h=3Dv6.14-rc1&id=3D8865d22656b442b8d0fb019e6acb=
-2292b99a9c3c
-
-Thanks,
-Jason
-
-> This is the diff of the output of `dmesg | grep rk_gmac-dwmac` on 6.13.0
-> and 6.14.0-rc1:
->
-> --- m4.ok.log 2025-02-03 11:37:03.991757775 +0100
-> +++ m4.nok.log 2025-02-03 11:37:17.249455484 +0100
-> @@ -15,4 +15,13 @@
-> rk_gmac-dwmac fe300000.ethernet: COE Type 2
-> rk_gmac-dwmac fe300000.ethernet: TX Checksum insertion supported
-> rk_gmac-dwmac fe300000.ethernet: Wake-Up On Lan supported
-> -rk_gmac-dwmac fe300000.ethernet: Normal descriptors
-> -rk_gmac-dwmac fe300000.ethernet: Ring mode enabled
-> -rk_gmac-dwmac fe300000.ethernet: Enable RX Mitigation via HW Watchdog Ti=
-mer
-> -rk_gmac-dwmac fe300000.ethernet end0: renamed from eth0
-> -rk_gmac-dwmac fe300000.ethernet end0: Register MEM_TYPE_PAGE_POOL RxQ-0
-> -rk_gmac-dwmac fe300000.ethernet end0: PHY [stmmac-0:01] driver [Generic =
-PHY] (irq=3DPOLL)
-> -rk_gmac-dwmac fe300000.ethernet end0: No Safety Features support found
-> -rk_gmac-dwmac fe300000.ethernet end0: PTP not supported by HW
-> -rk_gmac-dwmac fe300000.ethernet end0: configuring for phy/rgmii link mod=
-e
-> -rk_gmac-dwmac fe300000.ethernet end0: Link is Up - 1Gbps/Full - flow con=
-trol rx/tx
-> +rk_gmac-dwmac fe300000.ethernet: Can't specify Rx FIFO size
->
-> The configration was updated with `make olddefconfig`, as usual. I
-> could not find any new option that I might need to enable, if that is
-> what went wrong.
->
-> Is there anything I can do to help diagnose this?
->
-> Thanks,
-> Dom
+-- 
+ i.
 
