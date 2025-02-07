@@ -1,182 +1,84 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A111A76AE
-	for <regressions@lists.linux.dev>; Fri,  7 Feb 2025 10:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35461547F8
+	for <regressions@lists.linux.dev>; Fri,  7 Feb 2025 10:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738923956; cv=none; b=sznSd+J9folzB9Wi2XSlp33WOh+0vazQTa0TvSC8DLynMjOIVZ3ueBR+HLmid6scVSKoqcBWXFiFv/t09JY8aDmHRaYfRxOo1fHZ+jJY2bgV6waAVOZFHqPyvyjzJT/d7GcZqH6aIg3mdRJKS6Fj/lI44gA/4HO2Onfa/D/eRbY=
+	t=1738925004; cv=none; b=GsJFWPuensxNADwrlrBGnP+UQSlCb3ZPJJC2WI6tBMYSC/O5kodk/TxJkZiEqMJIUg96sJbIX8ABI3gu7gxpfRz/0zJbVJCnQ9GGda5Ck4gc53ZMPEDSP2p245FoxXrv2Wbx2gVe1Sdr2c1tQC7z6MgJQkTNoffMlHUw6lKsauI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738923956; c=relaxed/simple;
-	bh=C3yZNhdQLr150OHj7m4T/ffxAPLe/FGRnyvM3fsCSoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qfJxY1lg2nOO6egYWnY4OTZNHElKNdBJDxvLr7yurkhZASwfz/V0VKY2NLZsCgftM71lRW8vMhG0vnZBYOs75HDHyWCjqin/qNEaJlkmequGjwKJhdjyJb5+RTvOa3mPLBcXyuN4Omd0YCDzryOh6729Z8UcEuPIkBe6kxQ3fIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ti6rnxIW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2fvq+82; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ti6rnxIW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2fvq+82; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1738925004; c=relaxed/simple;
+	bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lhteeB8KjRNuULhIzyhFaKZPNhgS3truyqbh9ZYy24waP9YqaEdh8YQm9SqWHNxDG7KrKn84YkUXDMFmwTPwpIXBnlYFtNmVGwHD7UvmMh73YvKT3arn3MMIw9/Yp3s0LixZLYVOcSQg8gi0aBp98lqG/RQfdGwnzRKnt3KAJEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=bR9Xz6fY; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ti6rnxIW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2fvq+82";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ti6rnxIW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2fvq+82"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C54DA21161;
-	Fri,  7 Feb 2025 10:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738923946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
-	b=ti6rnxIWRJ1nov7ayMX9xq+I3tE4k/Vw/TJ0Cayy9Y4Nl7fngepsfvkiRfsgF0RvBEA24C
-	coem/XYMHlCYZsb+rEz1+67BvsM8Xxu7EbEkavyRJbru1ZV9r7v0xlF3uGfr0iF9j/IBWU
-	1K+RVjG5QntnZfy2oA59+8Psdeky8Lg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738923946;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
-	b=Y2fvq+82EAXGOwkXuJIcpHmhBTdEIJytTHko3ByToSLDahHgUkbh7rypd7fwchBekWRyXa
-	krUbd1P9TfgeZfDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ti6rnxIW;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Y2fvq+82
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738923946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
-	b=ti6rnxIWRJ1nov7ayMX9xq+I3tE4k/Vw/TJ0Cayy9Y4Nl7fngepsfvkiRfsgF0RvBEA24C
-	coem/XYMHlCYZsb+rEz1+67BvsM8Xxu7EbEkavyRJbru1ZV9r7v0xlF3uGfr0iF9j/IBWU
-	1K+RVjG5QntnZfy2oA59+8Psdeky8Lg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738923946;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
-	b=Y2fvq+82EAXGOwkXuJIcpHmhBTdEIJytTHko3ByToSLDahHgUkbh7rypd7fwchBekWRyXa
-	krUbd1P9TfgeZfDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD558139CB;
-	Fri,  7 Feb 2025 10:25:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dxPpKarfpWcQcAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 07 Feb 2025 10:25:46 +0000
-Message-ID: <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
-Date: Fri, 7 Feb 2025 11:25:46 +0100
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bR9Xz6fY"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46fd4bf03cbso29009401cf.0
+        for <regressions@lists.linux.dev>; Fri, 07 Feb 2025 02:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1738925001; x=1739529801; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
+        b=bR9Xz6fY4PAu7OOLg2f0MYf8JZJkl8JZ3pJ5owNDXZ6KrpI//OYpZbQYjIgu5F1zlS
+         aYPHiCnmhZEG2HH0Uapz0dBc03yXvl3YnXbL656mXPHKi3sSpj/ZBXTlKEfPd10w/e3K
+         Eb3AzLSlZFLiw5syFjW2oCub/8OK0Y91JzOK0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925001; x=1739529801;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
+        b=h9koUz5ldkzbseR/WgB/9+ukc8yVsEzGz3sS1zxLJ+dV37hCS051S6Cl4CbydVyKty
+         5k8zlLYOWPKuzztsy7Te3yLEcPYWe4EV/gt4M/WKW+pqOxSguFxosWiCxt9ztP4Antiw
+         6GFvCVQO/aL65cinsoj0J9nWnlSE+b5Jpk6kNwIlEwK2CD0i1k0MKIoTcDlf+wchDSVT
+         EvV7vzlMsYa/MgbAW918UBcPMxTHPDAmh0UMMseU6Zhc7f0zsgIKdFagtIhHNZR4UJQc
+         BPm9H8Bnc4gHGNu0C2le2R6M8BGSehlXl7HBOrZd6yKtcgc/ww8UpnK5D8DvVDP4ySC5
+         lqYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVX6b8lignrnEs5LEzSgdsWFX6RIxLjW7nQPUpSIN50cUp+rLwGyMFvQ4/7s48eZFybqGyw0pbSyglPeQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy7LlWlUoIdv5p23GEDB0ogXqVTvZC/BVgrd/LmUngSuDwQpGXl
+	uLYVG3OX5N4UrcjFdu2vcF/YPuDtlOSgWkJTYCOWZUUAZGyFqRVYvN3YsxOQ+Tag17kScOS8amA
+	mD2d5wgtqa4qWvxfXju0qzdPWzskFM33exXQRsA==
+X-Gm-Gg: ASbGnct8EL/0M4FqYA/E+vBPlybDHU3QT7v8sUBzSwsuD+P5EJG2KfZk8FPrZqn1HLy
+	dKfJYQk2GBfgLTmRXu34DLRaGsazE1WWyLrETvdmYJrom1XZhwPGnwlD4yVxbrvJZQLsQ+Q==
+X-Google-Smtp-Source: AGHT+IGkFRBaRLP1f7W9gqHW6Q2AKQLytp/hmZC95VfJ6xO6/ON3OM06vkit9Bhnsvf31fWFt29Royhe6fq1H0cZIa8=
+X-Received: by 2002:a05:622a:4887:b0:467:6486:beea with SMTP id
+ d75a77b69052e-47167ae4440mr41388981cf.38.1738925001678; Fri, 07 Feb 2025
+ 02:43:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: Christian Heusel <christian@heusel.eu>, Josef Bacik
- <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Joanne Koong <joannelkoong@gmail.com>,
- linux-mm <linux-mm@kvack.org>
 References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
  <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C54DA21161
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[heusel.eu,toxicpanda.com,redhat.com,lists.linux.dev,vger.kernel.org,gmail.com,kvack.org];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+ <Z6XWVU6ZTCIl3jnc@casper.infradead.org> <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
+In-Reply-To: <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Fri, 7 Feb 2025 11:43:11 +0100
+X-Gm-Features: AWEUYZlIBtfn2RHJWB88UL-DRtlyctc8WdFktH0eXJTCByl5CkmXjOsWS504hvk
+Message-ID: <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
+ related applications since v6.13
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>, Christian Heusel <christian@heusel.eu>, 
+	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Joanne Koong <joannelkoong@gmail.com>, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/7/25 10:45, Matthew Wilcox wrote:
-> On Fri, Feb 07, 2025 at 10:34:52AM +0100, Miklos Szeredi wrote:
->> Seems like page allocation gets an inconsistent page (mapcount != -1)
->> in the report below.
-> 
-> I think you're misreading the report.  _mapcount is -1.  Which means
-> mapcount is 0.
-> 
->> > Feb 06 08:54:47 archvm kernel: BUG: Bad page state in process rnote  pfn:67587
->> > Feb 06 08:54:47 archvm kernel: page: refcount:-1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x67587
+On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
 
-refcount of -1 doesn't look healthy too, should be 0 at this point?
+> Could be a use-after free of the page, which sets PG_lru again. The list
+> corruptions in __rmqueue_pcplist also suggest some page manipulation after
+> free. The -1 refcount suggests somebody was using the page while it was
+> freed due to refcount dropping to 0 and then did a put_page()?
 
->> > Feb 06 08:54:47 archvm kernel: flags: 0xfffffc8000020(lru|node=0|zone=1|lastcpupid=0x1fffff)
->> > Feb 06 08:54:47 archvm kernel: raw: 000fffffc8000020 dead000000000100 dead000000000122 0000000000000000
-> 
-> flags lru.next lru.prev mapping
-> 
->> > Feb 06 08:54:47 archvm kernel: raw: 0000000000000000 0000000000000000 ffffffffffffffff 0000000000000000
-> 
-> index private mapcount:refcount memcg_data
-> 
->> > Feb 06 08:54:47 archvm kernel: page dumped because: PAGE_FLAGS_CHECK_AT_PREP flag(s) set
-> 
-> So the problem is the lru flag is set.
-> 
->> > Feb 06 08:54:47 archvm kernel:  dump_stack_lvl+0x5d/0x80
->> > Feb 06 08:54:47 archvm kernel:  bad_page.cold+0x7a/0x91
->> > Feb 06 08:54:47 archvm kernel:  __rmqueue_pcplist+0x200/0xc50
->> > Feb 06 08:54:47 archvm kernel:  get_page_from_freelist+0x2ae/0x1740
->> > Feb 06 08:54:47 archvm kernel:  __alloc_frozen_pages_noprof+0x184/0x330
->> > Feb 06 08:54:47 archvm kernel:  alloc_pages_mpol+0x7d/0x160
->> > Feb 06 08:54:47 archvm kernel:  folio_alloc_mpol_noprof+0x14/0x40
->> > Feb 06 08:54:47 archvm kernel:  vma_alloc_folio_noprof+0x69/0xb0
->> > Feb 06 08:54:47 archvm kernel:  do_anonymous_page+0x32a/0x8b0
-> 
-> It's very weird, because PG_lru is also in PAGE_FLAGS_CHECK_AT_FREE.
-> So it should already have been checked and not be set.  I'm on holiday
+Can you suggest any debug options that could help pinpoint the offender?
 
-Could be a use-after free of the page, which sets PG_lru again. The list
-corruptions in __rmqueue_pcplist also suggest some page manipulation after
-free. The -1 refcount suggests somebody was using the page while it was
-freed due to refcount dropping to 0 and then did a put_page()?
-
-> until Monday, so I'm not going to dive into this any further.
-
-
-
+Thanks,
+Miklos
