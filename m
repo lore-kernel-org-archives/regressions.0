@@ -1,211 +1,78 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8133728E8
-	for <regressions@lists.linux.dev>; Sat,  8 Feb 2025 00:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8916E7DA8C;
+	Sat,  8 Feb 2025 10:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738974190; cv=none; b=gpnhxukP/QY+tjwffjZOrEbOgKvAxH4S9YwAhmdc6GKHxiMKpYvZGA8YKdW+PHrQvwjXBfsvQ2OYVEsG1hi2LiwbDLnTptFSGN3Sl6M3F8cyNKVBCwO6rU7jTXj/3FdIJmfQAuqeGPjr1aGA9ImvqhdSnv15+HQfytS3ELlaPEQ=
+	t=1739009519; cv=none; b=tlHYT40Wjz6/qxVh66/0z/DFxk7veVVLeZJnYwmgnOw+JspEeygLPPq+eBeuaSfo2RS/2+GrZrqHNNAMPOkQl7WHxETHIH3Y+HkjQf2es5uJRjbPBIK1dmlNkQQY7wx72IUvJSMEnJ/YDVK7j/C6aExf1w8Rbsi1/ULeQWTkb0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738974190; c=relaxed/simple;
-	bh=ry6MqBL4uPyr0sqR/k4Epg3DTn1nUp6TOZStvyfvzek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CU8b1FBrEMWh+uk3sOP1Auvj/R1oUg578MNZ8vxcBVeWMhFQa2m78V2ZROKmZZaQDOrH4tMTaH8uIXrJze2Gx4A9hNHGFaF2v3bJEUGGm4DbZsB/lTOToSNg44x/OSw+l39AbAb0sIvB3Z4aPnmR+cHuI2KtGmXfC+xYxJBmNO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajGUVVUI; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739009519; c=relaxed/simple;
+	bh=MkuBmQus/e8uwIsd5zQOF1zf//X1fSM4hZUt0+5WeJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouAUFQhzMCcn2D+DNOy+HDvgLMlPk0Xrbek4XHb+quzgKaJKae9mMIQpJXNLoC5yerl9/kF+LJKMxCHWU00EldAzoyb24JHjRE9pevMGjPfLkPtKh+KmrqGE2TSeNPKHBlNiaINNZqY/sFJ7RP469zLr4Bt/I64zVoozQ5TX0Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NU8jo/aU; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajGUVVUI"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-467a3f1e667so16716811cf.0
-        for <regressions@lists.linux.dev>; Fri, 07 Feb 2025 16:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738974187; x=1739578987; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wMMA64lDvybDlSuA0rt3djW23m9gTKqcOUi9JQbLAKk=;
-        b=ajGUVVUIfPg7zrqlagykQawZM/vTtaHRuwnLkuQuVmf3lF/0tqZO00MMz1Bmi0W9D4
-         F0bYEFcKWPLBUVvhNpLjHo9JFv8IjdswXxUVT3zUXULamPjha4FhEHvqLqM+jo858mDY
-         gC1GcATlQGTJFyKZaX7oT7TCoWzTwM12ON+0TQEKsnsYmyBog8kv/zQJ9CCDSlVaIE1D
-         0B8QqM3jzFr3g/fFzIbN3yfF3HLzDb/zMs1DvDZjsQFeaUs1f2X5+1a94Y1rN4j9PQ2X
-         wDUpnBqsBbNpIwULeEvfdgAT+m3dvRVPVH0G/NGCu5kq4QuFfi5rBW1fulpH58FWqpeq
-         lB9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738974187; x=1739578987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wMMA64lDvybDlSuA0rt3djW23m9gTKqcOUi9JQbLAKk=;
-        b=VksxIaGHhYVX8hDVPTwy9AfYZfVGFicpl8j14+DxEw+V7QzNpiBNXHIc0gSC5a3Xuv
-         VrVXQy8RlO6Zy1tHsPA5k/y6yMSnkcDhCzkLFmq5jUb4XR3M7vRmSZMp6/Nm4rbyFvwT
-         6knsbjUHIsE3Oai0IxoNMvIkpW0cVH4Gh2Ih4fKUwnH4iSAIEp9vAEQDFkJAl3PBKL/u
-         o3TEnxgCW7na4FahzBfrxdL0QkjZ2qZyFXoDI3wXppUAQ9rR//rYLKU1+/G4Qxc2LPnT
-         fgG2j6u/tWyb94EdL1kgtB7rvWMMIJ3cbrabziuc9/ks6dkM1EvFTdlwPf/k9KwaYNLR
-         t3cw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK8sHD2bmAZEBcuvbb+nbMc0zPhuDkat8syR935/QwojnrxzGblCDJraCjmlZarR+VOPUYyYZMVyaIiA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyulJHp805ls5DuPLXJ7lvWn8Jn5sCJ28TKwkfHBMWFCHtCswUa
-	rwzA5TC+IBRT9hbwKJea8sWiKZz5Njplhy242q9AV+J6Eogh1oaty5aFLPOwHHqjemhNlt4bz2z
-	0WsY0EMBAcixM/PuE1OTVkm9faW4=
-X-Gm-Gg: ASbGnctC82HC/lOEKXvgeSiaybNUPT+/XD74YWvvFKvsmLOo0IfMhOjycZA+4O9F7/j
-	6vyWOdCBtD0VPytBX5Zr2V+P0q3jOGM6zEX6EynnW5rnhrVSy+mvTh3NvqF6zFeG+Oz4JoiftpQ
-	==
-X-Google-Smtp-Source: AGHT+IFynXnfoPvMksQZzaLkrmUUnGS4bSe4CamOZn8jJ/vYzyH5WcI7y0Y0eR9P7OnCEJANNBRyyGlLcn/pqDWXcug=
-X-Received: by 2002:a05:622a:1802:b0:468:fb3c:5e75 with SMTP id
- d75a77b69052e-47167b31c04mr90216311cf.38.1738974187204; Fri, 07 Feb 2025
- 16:23:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NU8jo/aU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=g3Z94bETGQeiDOIJu0r91P2vvPEJCA5AYCK0Qiv6LYE=; b=NU8jo/aUuMYlL2bMSPJulrSSFS
+	Kz9EhAwK1QsnNlf8Bu5FQJoBrR+SF8RZs/jjxHDIZt/wHZIcCzSmBgQzL10ISIQV0yxh5ihCkaifg
+	stTtauwYH0SPg0QB3G4T2ld6GHKGCxdQCd7AP8ySh063u+eymiFc5gK29quNsuxT+qCremQV92JNi
+	Vlq+HmT2ihV0qN9+MEbf/uia8gjUOky9f/BpArQeF7G+oxDVl67E3TrA367gW5ZXOHRNxq67GICiW
+	/x7Jvo2Ij3xpQ5gL6tigzRr4pUDs5BJcNTUkLMhOFB8CUlAWeqWpXLtrXctqDcVXLvswVdPszNYu7
+	tfGooJQg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tghoQ-0000000A8iq-0fM5;
+	Sat, 08 Feb 2025 10:11:46 +0000
+Date: Sat, 8 Feb 2025 10:11:45 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Josef Bacik <josef@toxicpanda.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Christian Heusel <christian@heusel.eu>,
+	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm <linux-mm@kvack.org>,
+	Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
+ FUSE/Flatpak related applications since v6.13
+Message-ID: <Z6ct4bEdeZwmksxS@casper.infradead.org>
+References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
+ <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+ <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
+ <20250207172917.GA2072771@perftesting>
+ <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+ <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz> <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
-In-Reply-To: <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Fri, 7 Feb 2025 16:22:56 -0800
-X-Gm-Features: AWEUYZnFp_ULZNnOUQ3w9lhp7jHrWUkkYz1PD0CpILo4xK1xPJS4vjBA4OF3cJg
-Message-ID: <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Christian Heusel <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm <linux-mm@kvack.org>, 
-	=?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
 
-On Fri, Feb 7, 2025 at 10:39=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 2/7/25 18:29, Josef Bacik wrote:
-> > On Fri, Feb 07, 2025 at 05:49:34PM +0100, Vlastimil Babka wrote:
-> >> On 2/7/25 10:34, Miklos Szeredi wrote:
-> >> > [Adding Joanne, Willy and linux-mm].
-> >> >
-> >> >
-> >> > On Thu, 6 Feb 2025 at 11:54, Christian Heusel <christian@heusel.eu> =
-wrote:
-> >> >>
-> >> >> Hello everyone,
-> >> >>
-> >> >> we have recently received [a report][0] on the Arch Linux Gitlab ab=
-out
-> >> >> multiple users having system crashes when using Flatpak programs an=
-d
-> >> >> related FUSE errors in their dmesg logs.
-> >> >>
-> >> >> We have subsequently bisected the issue within the mainline kernel =
-tree
-> >> >> to the following commit:
-> >> >>
-> >> >>     3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> >>
-> >> I see that commit removes folio_put() from fuse_readpages_end(). Also =
-it now
-> >> uses readahead_folio() in fuse_readahead() which does folio_put(). So =
-that's
-> >> suspicious to me. It might be storing pointers to pages to ap->pages w=
-ithout
-> >> pinning them with a refcount.
-> >>
-> >> But I don't understand the code enough to know what's the proper fix. =
-A
-> >> probably stupid fix would be to use __readahead_folio() instead and ke=
-ep the
-> >> folio_put() in fuse_readpages_end().
-> >
-> > Agreed, I'm also confused as to what the right thing is here.  It appea=
-rs the
-> > rules are "if the folio is locked, nobody messes with it", so it's not =
-"correct"
-> > to hold a reference on the folio while it's being read.  I don't love t=
-his way
-> > of dealing with folios, but that seems to be the way it's always worked=
-.
-> >
-> > I went and looked at a few of the other file systems and we have NFS wh=
-ich holds
-> > it's own reference to the folio while the IO is outstanding, which FUSE=
- is most
-> > similar to NFS so this would make sense to do.
-> >
-> > Btrfs however doesn't do this, BUT we do set_folio_private (or whatever=
- it's
-> > called) so that keeps us from being reclaimed since we'll try to lock t=
-he folio
-> > before we do the reclaim.
-> >
-> > So perhaps that's the issue here?  We need to have a private on the fol=
-io + the
-> > folio locked to make sure it doesn't get reclaimed while it's out being=
- read?
-> >
-> > I'm knee deep in other things, if we want a quick fix then I think your
-> > suggestion is correct Vlastimil.  But I definitely want to know what Wi=
-lly
-> > expects to be the proper order of operations here, and if this is exact=
-ly what
-> > we're supposed to be doing then something else is going wrong and we sh=
-ould try
-> > to reproduce locally and figure out what's happening.  Thanks,
->
-> Thanks, Josef. I guess we can at least try to confirm we're on the right =
-track.
-> Can anyone affected see if this (only compile tested) patch fixes the iss=
-ue?
-> Created on top of 6.13.1.
+On Fri, Feb 07, 2025 at 04:22:56PM -0800, Joanne Koong wrote:
+> > Thanks, Josef. I guess we can at least try to confirm we're on the right track.
+> > Can anyone affected see if this (only compile tested) patch fixes the issue?
+> > Created on top of 6.13.1.
+> 
+> This fixes the crash for me on 6.14.0-rc1. I ran the repro using
+> Mantas's instructions for Obfuscate. I was able to trigger the crash
+> on a clean build and then with this patch, I'm not seeing the crash
+> anymore.
 
-This fixes the crash for me on 6.14.0-rc1. I ran the repro using
-Mantas's instructions for Obfuscate. I was able to trigger the crash
-on a clean build and then with this patch, I'm not seeing the crash
-anymore.
+Since this patch fixes the bug, we're looking for one call to folio_put()
+too many.  Is it possibly in fuse_try_move_page()?  In particular, this
+one:
 
->
-> ----8<----
-> From c0fdf9174f6c17c93a709606384efe2877a3a596 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Fri, 7 Feb 2025 19:35:25 +0100
-> Subject: [PATCH] fuse: prevent folio use-after-free in readahead
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  fs/fuse/file.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 7d92a5479998..a40d65ffb94d 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount *fm=
-, struct fuse_args *args,
->                 fuse_invalidate_atime(inode);
->         }
->
-> -       for (i =3D 0; i < ap->num_folios; i++)
-> +       for (i =3D 0; i < ap->num_folios; i++) {
->                 folio_end_read(ap->folios[i], !err);
-> +               folio_put(ap->folios[i]);
-> +       }
->         if (ia->ff)
->                 fuse_file_put(ia->ff, false);
->
-> @@ -1048,7 +1050,7 @@ static void fuse_readahead(struct readahead_control=
- *rac)
->                 ap =3D &ia->ap;
->
->                 while (ap->num_folios < cur_pages) {
-> -                       folio =3D readahead_folio(rac);
-> +                       folio =3D __readahead_folio(rac);
->                         ap->folios[ap->num_folios] =3D folio;
->                         ap->descs[ap->num_folios].length =3D folio_size(f=
-olio);
->                         ap->num_folios++;
-> --
-> 2.48.1
->
->
+        /* Drop ref for ap->pages[] array */
+        folio_put(oldfolio);
+
+I don't know fuse very well.  Maybe this isn't it.
