@@ -1,88 +1,75 @@
-Received: from server-598995.kolorio.com (server-598995.kolorio.com [162.241.152.247])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC09244EA7
-	for <regressions@lists.linux.dev>; Sat,  8 Feb 2025 22:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.241.152.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F254C9F;
+	Sun,  9 Feb 2025 06:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739052475; cv=none; b=gdZUjvwyAjfiltYytHVQNWHSjIRFv3akpfN9tBgwnfk5OpUU/oWmgCLEPosjNmg1GB86BKOOwIXt5nZ5qFjhvcL37HTHH0P1H1ucslxEzaFQVCFVMbQq4ZzNsR7sONwMVTqp7SZFmpQCE3gtyFUo+AmiXaTMypycPq1p7U6Egjw=
+	t=1739083798; cv=none; b=RLrzko0Sbo0simagWz6Zo3Khf8/84/n6czNIWyHozn3XQWsKpxq/ImFm7AcXlrzktFponFSevE2f6/f0YU3MBOQqxGQfAlssrNskRqakoTIFYbd4A86XXpfIb5NpUDPxxhkT6XOYcvjB4nlh4V1T64UWZ5jq+r5UDbT+sDLknj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739052475; c=relaxed/simple;
-	bh=gl4+7vNxgV9+JzZtw7EthQ6aGDgi0WVn3wQV/lnKiyo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V9nzKCpGJZnr9732gxvIbp9iOW6VGK5uW3KmCQWtpeZ2Ma0H5Fh5CMo+x+0G3yz88go3oh4tuuGPKTUml2mvVIEYAASIFuVCjKuVs8hU3cQ3ki7MaIfUQ83Cl0gk3WeJaM8SAjhxIcdWYxAVG4nX4lEEs3Cp6aB/SSBJ9rGJ3Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=truemaisha.co.tz; spf=pass smtp.mailfrom=truemaisha.co.tz; dkim=pass (2048-bit key) header.d=truemaisha.co.tz header.i=@truemaisha.co.tz header.b=EaTTIwtw; arc=none smtp.client-ip=162.241.152.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=truemaisha.co.tz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truemaisha.co.tz
+	s=arc-20240116; t=1739083798; c=relaxed/simple;
+	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSAwQbDtFBFCLpXC91Th8WNPQs6QRnHBusrKZTogKzd+fVxKNhrVp+t/GuXbWR5nZ9WnWkJzoDHBnAQ9pq750m67s7g8UZBTd2vhM+s6C+TK5j0AcS3Uy40mGGjdCsNAkjgnLziz1l7rEXxqGaemPkLf7nK0ZelhKFrnxP2/ypA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kX8v6eGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=truemaisha.co.tz header.i=@truemaisha.co.tz header.b="EaTTIwtw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=truemaisha.co.tz; s=default; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gl4+7vNxgV9+JzZtw7EthQ6aGDgi0WVn3wQV/lnKiyo=; b=EaTTIwtwsK+o6CKXA+BlhobKOz
-	saiqwiwRIx6nkZyOy/tY1liU0+KPPbyKWWHF5npBqhCK1D2MeWybKxyv8cwejl3bpedOwwp3+m0b5
-	rj1H3JrA0ExqqdBTtpcM986VNBxEVmAQukVeB7fBzPO9+IMkE5mBKOGKJ7nSJnYrSIp87YyT+we9X
-	OLo/GdpQMSncBd1o7ZgMToYLbq8Zg7FtSBBnxkMwi3ZwGvMqAivI5IMhQ4fUnP0Z6bUn9L1Ey+CJI
-	bQis36DKkjlRHlsF32YUfMgh/w2J/tmFPLXU75ZYnQRQOxVWLWhxObm0dgxaPJSc/xIPCk2UBSBYi
-	ce16VolQ==;
-Received: from [74.208.124.33] (port=59577 helo=truemaisha.co.tz)
-	by server-598995.kolorio.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <chrispinerick@truemaisha.co.tz>)
-	id 1tgszN-00032Y-2b
-	for regressions@lists.linux.dev;
-	Sat, 08 Feb 2025 16:07:51 -0600
-Reply-To: dsong@aa4financialservice.com
-From: David Song <chrispinerick@truemaisha.co.tz>
-To: regressions@lists.linux.dev
-Subject: Re: The business loan- 
-Date: 08 Feb 2025 22:07:52 +0000
-Message-ID: <20250208210542.83290D18B73870DB@truemaisha.co.tz>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kX8v6eGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68352C4CEDD;
+	Sun,  9 Feb 2025 06:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739083798;
+	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kX8v6eGXEVj0C76VGZFm66rlS47CF9w30+mjGHAQnZMIwbgRVy3mP/VaYJFS8dSun
+	 4vtx+8rORGyFZ/eXDsLdFTiayzNK77mFso4cmQU7cGGojwmY1vrVxVUdXzU6vOfHt2
+	 OTHEAKq94yVxrwGZJuyjbdl03rntNM3XsB1DW67A=
+Date: Sun, 9 Feb 2025 07:49:54 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jared Finder <jared@finder.org>
+Cc: kees@kernel.org, gnoack@google.com, hanno@hboeck.de, jannh@google.com,
+	jirislaby@kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
+ CAP_SYS_ADMIN
+Message-ID: <2025020909-reshape-dynasty-0587@gregkh>
+References: <202501100850.5E4D0A5@keescook>
+ <cd83bd96b0b536dd96965329e282122c@finder.org>
+ <2025020812-refusing-selection-a717@gregkh>
+ <fceb96ee879249d18be0261e57388542@finder.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server-598995.kolorio.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - truemaisha.co.tz
-X-Get-Message-Sender-Via: server-598995.kolorio.com: authenticated_id: chrispinerick@truemaisha.co.tz
-X-Authenticated-Sender: server-598995.kolorio.com: chrispinerick@truemaisha.co.tz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fceb96ee879249d18be0261e57388542@finder.org>
 
-Hello,
+On Sat, Feb 08, 2025 at 08:03:27AM -0800, Jared Finder wrote:
+> On 2025-02-08 07:28, Greg KH wrote:
+> > On Sat, Feb 08, 2025 at 07:18:22AM -0800, Jared Finder wrote:
+> > > Hi, I'm the original reporter of this regression (noticed because it
+> > > impacted GNU Emacs) and I'm wondering if there's any traction on
+> > > creating an
+> > > updated patch? This thread appears to have stalled out. I haven't
+> > > seen any
+> > > reply for three weeks.
+> > 
+> > It's already in 6.14-rc1 as commit 2f83e38a095f ("tty: Permit some
+> > TIOCL_SETSEL modes without CAP_SYS_ADMIN").
+> 
+> Great! Is this expected to get backported to 6.7 through 6.13? I would like
+> to note the expected resolution correctly in Emacs' bug tracker.
 
-My name is David Song, at AA4 FS, we are a consultancy and
-brokerage Firm specializing in Growth Financial Loan and joint
-partnership venture. We specialize in investments in all Private
-and public sectors in a broad range of areas within our Financial
-Investment Services.
+Yes, it should show up in the next round of stable kernel updates later
+this week.
 
- We are experts in financial and operational management, due
-diligence and capital planning in all markets and industries. Our
-Investors wish to invest in any viable Project presented by your
-Management after reviews on your Business Project Presentation
-Plan.
+But note, it will only show up in the 6.12.y and 6.13.y kernels, as all
+others in your range are end-of-life and shouldn't be used by anyone at
+this point in time.
 
- We look forward to your Swift response. We also offer commission
-to consultants and brokers for any partnership referrals.
+thanks,
 
- Regards,
-David Song
-Senior Broker
-
-AA4 Financial Services
-13 Wonersh Way, Cheam,
-Sutton, Surrey, SM2 7LX
-Email: dsong@aa4financialservice.com
-
+greg k-h
