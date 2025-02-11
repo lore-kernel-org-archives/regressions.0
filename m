@@ -1,210 +1,217 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56335194C6A
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 10:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C7D1F891F;
+	Tue, 11 Feb 2025 14:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270910; cv=none; b=YkMkrLR3xTf2PTttI2S2l3aa1oMIUQZMk7tLpwmkwUHQppFGf4Nzc6ev9LAXG07RlgXla/TQ+RQuwklXFTT9hsmhbQ0rOCu/3y4ZkYGuPmhHkiMjCtADE/BKBAG8fRelBpy/bfStYoGgcnZSapzhgLwfhcjMOAkGposXaEBcfU0=
+	t=1739282471; cv=none; b=SFPZrQ43jO/UHz3VdfjUo3nZt4wp2wZ9aQ8WwEqX5Lz4D+lPRTQjVqlRfcLhW/AUGouHWfFBNknAIHuFrBt6dstSEs7ZkoGEIoSJkSWU0cjtujBj1NRhYNMNo+rxp4EA7Z/1l2hr83DIOXjNXL5kdxbuS0DKP3hgTDO1PWEG3Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270910; c=relaxed/simple;
-	bh=UerPirAcW+nkYfZL4ZWlBNq/4Xh35eAiYuHhOLWAPos=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZtC237ugWUVQPdC5QRhrqGmtjYCzzlUVO6/VvcsDTxhO1RwGywIGee/EJZ4cJznLZigJi01isLELBpWBnBNMPNcUMb8vYSA33O3IrBHbMPMCBqbzP4nBEJBaL5E9I1L/hY55RGixlHIFa0DEuoHkqAsj4Iw3SV9SSArovQC/1cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4bbc047a3c3so1494558137.1
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 02:48:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739270907; x=1739875707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KKBYxCaYYpe4xFUvgehK9MXy/sIDCvhlqBo2hvhtNmc=;
-        b=dr91Jtv+H7t/50NcZcxCZxWXd4gXmo+eSIgmGR1Q7CEZ+ETYgJbnLQsdU9C3TSGRof
-         atDw28s3QXBNov6xIFhanO2Zxi21JVbbpw0T3IOUvFg9PL0gmb0vGMlwEm5SQYpTlAAB
-         51P96VOGMMZ3mjL6A6SewKepr3NCxmr696egzYncSckD8p8kbBWxrHIGNQiguZPKTDPG
-         S44dkrF7fO3CnxT4jI7UywA5fS0/sfd6fnIFcaqfdFLAYCT536F+Kgp6tFg/at7VvC4M
-         tzQLNQnShBJ1HAUMrsIzWZSrXWArHq8TxCn0vY/MrrP9LPPpE/6cl92/Wp8OrwGBJWiR
-         jELw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNN+5IaQSNHtBoP7oHa6+Me0b50+krJ7EJNZBJZ4RQwAeDnCRiZ9LuVqIzfVghvGkfabmgHnljlY/7Lw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyDl7qKxF3A+L5JHXH9lhWmCJtg7nHI5EB+LhFV9EbkC6T+Ij+i
-	OIvYP+/+M6CtQrCKPZly5uOdxA1w64Q+AXV7ZkJ0ludbJnif+kBsv/IrWJ/buNE=
-X-Gm-Gg: ASbGncvMfuHnkAd5f/wIXQ9M4ZKrn2pTxdyNJ87g/z1XTZSxgIcTnubZ1WIm5XCoEof
-	DS5K2Ad8M3/pEj6BEzaDT5eNz1M2cWjGBMgQW1QZI8ijYEKfR0uxuOEF8yDeHu8D8sf5z7utduA
-	4CElL2u4m73nDlLKrTcC0MiOShDE/2DS5HBCoG9eQV3Pql14udyqXiy6/y7pb7cZoWdOTOc+DCp
-	mjJmvUdM2otjJwibR7mD7Ulsg2r925bK7hS3i43USwig/yKJGw4kA/Fl1fZhS7caW1jRdg/l2hk
-	54KpZM4UbIAZrw7P8gk3UqLYyUFmk8dXlXKlLWIDfd575fYAbvAysw==
-X-Google-Smtp-Source: AGHT+IHp+zcVyMJMoBh1XFMhyOELEgZLwfkeWdhVWJ7HPhYhPxR6IVASYPbUvuvxnDp/AMMXesV4eg==
-X-Received: by 2002:a05:6102:36b:b0:4bb:9b46:3f71 with SMTP id ada2fe7eead31-4bb9b46989emr4885410137.8.1739270906672;
-        Tue, 11 Feb 2025 02:48:26 -0800 (PST)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f965f74csm1853895241.11.2025.02.11.02.48.25
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 02:48:25 -0800 (PST)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4bbe31ef430so400315137.3
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 02:48:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVC5dkflj671UROirTPbj8PidrAKvEIRgRMPghelQzgNUeTmahj3OIAEnoJcXilM2xpjZU6OSJEB1sIHw==@lists.linux.dev
-X-Received: by 2002:a05:6102:2ac7:b0:4bb:c8e5:aa6d with SMTP id
- ada2fe7eead31-4bbc8e5ad50mr4378402137.17.1739270905440; Tue, 11 Feb 2025
- 02:48:25 -0800 (PST)
+	s=arc-20240116; t=1739282471; c=relaxed/simple;
+	bh=W4EbBbuyk3MpknoCIOAaHOmpmm2WzX6Vs/PF/x622I4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=igNpd60pfPRaYS6j20lO7b125Phpymuhnk3J0RiBhwL+Q8HJdB4bO/m+lk1CoSIGUg9MfJ/uM7pHuPyVFOI/cqycTRvcLE9qS+VmxAtCBQTbLUqLUXJcLAfN5zESlnkD+aIEEDN/RMfbOyy1YwVXkJVtq/NVZfhVN+pevotZsdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO1i98Qj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO1i98Qj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88CFAC4CEDD;
+	Tue, 11 Feb 2025 14:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739282470;
+	bh=W4EbBbuyk3MpknoCIOAaHOmpmm2WzX6Vs/PF/x622I4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MO1i98QjauLQEkR3Kc2jCjTk4qRtMKjUtLgq+2ba88HwI1W+xtibo+hkFXIqzcOsU
+	 ZuoG8c//mA7HBFSDFfxWsZWvivwNXx2UfV8RlcB/sP2i6b5TI7otyrka2jTh+FE8XT
+	 JxZbSHESobO3K+X3JaeIiQ17BxxaexGP9eox4IGqjle9Z9oAIUY//CfLJR+Cy3crGz
+	 zgFnNV1nVLSo4c/Qt3zUwHK4UzS6dIn2YfeODiEiLtIhwRkplrrSWRhKrUy+aOU3ZA
+	 6zvixRrDRM2B5z8WCWz3qOcCTRJW6WAyCqpULOLh31axI7P958wyOAZNpzXmNNO3sn
+	 bUt0vDdyzS7vQ==
+Message-ID: <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
+ FUSE/Flatpak related applications since v6.13
+From: Jeff Layton <jlayton@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>
+Cc: Joanne Koong <joannelkoong@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+  Miklos Szeredi <miklos@szeredi.hu>, Christian Heusel
+ <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>, Mantas
+ =?UTF-8?Q?Mikul=C4=97nas?=	 <grawity@gmail.com>
+Date: Tue, 11 Feb 2025 09:01:08 -0500
+In-Reply-To: <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
+References: 
+	<CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+		 <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
+		 <20250207172917.GA2072771@perftesting>
+		 <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+		 <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
+		 <Z6ct4bEdeZwmksxS@casper.infradead.org>
+		 <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
+		 <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz>
+		 <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
+		 <20250210191235.GA2256827@perftesting>
+		 <Z6pjSYyzFJHaQo73@casper.infradead.org>
+	 <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
- <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz> <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
-In-Reply-To: <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Feb 2025 11:48:13 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com>
-X-Gm-Features: AWEUYZlRIwnbJ4xR6KQkMkb3NhTJ5vBwKhACfgor7fj8riEEVlYdsOTpWfe2clE
-Message-ID: <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
- subsystem status
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Joe Perches <joe@perches.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, workflows@vger.kernel.org, 
-	"Theodore Ts'o" <tytso@mit.edu>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe,
+On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
+> On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
+> > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
+> > > From: Josef Bacik <josef@toxicpanda.com>
+> > > Date: Mon, 10 Feb 2025 14:06:40 -0500
+> > > Subject: [PATCH] fuse: drop extra put of folio when using pipe splice
+> > >=20
+> > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I converte=
+d
+> > > us to using the new folio readahead code, which drops the reference o=
+n
+> > > the folio once it is locked, using an inferred reference on the folio=
+.
+> > > Previously we held a reference on the folio for the entire duration o=
+f
+> > > the readpages call.
+> > >=20
+> > > This is fine, however I failed to catch the case for splice pipe
+> > > responses where we will remove the old folio and splice in the new
+> > > folio.  Here we assumed that there is a reference held on the folio f=
+or
+> > > ap->folios, which is no longer the case.
+> > >=20
+> > > To fix this, simply drop the extra put to keep us consistent with the
+> > > non-splice variation.  This will fix the UAF bug that was reported.
+> > >=20
+> > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2=
+b3dbfaa881e@heusel.eu/
+> > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
+> > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> > > ---
+> > >  fs/fuse/dev.c | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > >=20
+> > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> > > index 5b5f789b37eb..5bd6e2e184c0 100644
+> > > --- a/fs/fuse/dev.c
+> > > +++ b/fs/fuse/dev.c
+> > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_copy_st=
+ate *cs, struct page **pagep)
+> > >  	}
+> > > =20
+> > >  	folio_unlock(oldfolio);
+> > > -	/* Drop ref for ap->pages[] array */
+> > > -	folio_put(oldfolio);
+> > >  	cs->len =3D 0;
+> >=20
+> > But aren't we now leaking a reference to newfolio?  ie shouldn't
+> > we also:
+> >=20
+> > -	folio_get(newfolio);
+> >=20
+> > a few lines earlier?
+> >=20
+>=20
+>=20
+> I think that ref was leaking without Josef's patch, but your proposed
+> fix seems correct to me. There is:
+>=20
+> - 1 reference stolen from the pipe_buffer
+> - 1 reference taken for the pagecache in replace_page_cache_folio()
+> - the folio_get(newfolio) just after that
+>=20
+> The pagecache ref doesn't count here, and we only need the reference
+> that was stolen from the pipe_buffer to replace the one in pagep.
 
-On Tue, 11 Feb 2025 at 11:32, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
-> On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
-> > The subsystem status is currently reported with --role(stats) by
-> > adjusting the maintainer role for any status different from Maintained.
-> > This has two downsides:
-> >
-> > - if a subsystem has only reviewers or mailing lists and no maintainers=
-,
-> >   the status is not reported (i.e. typically, Orphan subsystems have no
-> >   maintainers)
-> >
-> > - the Supported status means that someone is paid for maintaining, but
-> >   it is reported as "supporter" for all the maintainers, which can be
-> >   incorrect. People have been also confused about what "supporter"
-> >   means.
-> >
-> > This patch introduces a new --substatus option and functionality aimed
-> > to report the subsystem status separately, without adjusting the
-> > reported maintainer role. After the e-mails are output, the status of
-> > subsystems will follow, for example:
-> >
-> > ...
-> > linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
-> > LIBRARY CODE status: Supported
-> >
-> > In order to allow replacing the role rewriting seamlessly, the new
-> > option works as follows:
-> >
-> > - it is automatically enabled when --email and --role are enabled
-> >   (the defaults include --email and --rolestats which implies --role)
-> >
-> > - usages with --norolestats e.g. for git's --cc-cmd will thus need no
-> >   adjustments
-> >
-> > - the most common Maintained status is not reported at all, to reduce
-> >   unnecessary noise
-> >
-> > - THE REST catch-all section (contains lkml) status is not reported
-> >
-> > - the existing --subsystem and --status options are unaffected so their
-> >   users will need no adjustments
-> >
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->
-> This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
-> breaks one of my scripts that I use to semi-automatically determine
-> recipents for patch series.
->
-> It works as follows:
->
->         $ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-AIU=
--export-its-clocks-through-cl.patch
->         #!/bin/sh
->
->         addrecipent \
->         -t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWARE A=
-ND FLATTENED DEVICE TREE BINDINGS) \
->         -t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:OPEN=
- FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
->         -t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FIRMW=
-ARE AND FLATTENED DEVICE TREE BINDINGS) \
->         -t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer:AR=
-M/Amlogic Meson SoC support) \
->         -t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Amlog=
-ic Meson SoC support) \
->         -c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Amlogi=
-c Meson SoC support) \
->         -c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" $(:=
- reviewer:ARM/Amlogic Meson SoC support) \
->         -t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND - SO=
-C LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
->         -t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SOC LA=
-YER / DYNAMIC AUDIO POWER MANAGEM...) \
->         -t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
->         -t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
->         -c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AND F=
-LATTENED DEVICE TREE BINDINGS) \
->         -c "linux-arm-kernel@lists.infradead.org" $(: moderated list:ARM/=
-Amlogic Meson SoC support) \
->         -c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlogic =
-Meson SoC support) \
->         -c "linux-kernel@vger.kernel.org" $(: open list) \
->         -c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAYER =
-/ DYNAMIC AUDIO POWER MANAGEM...) \
->         audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-thr=
-ough-cl.patch
+Actually, no. I'm wrong here. A little after the folio_get(newfolio)
+call, we do:
 
-Hey, that looks familiar ;-)
+        /*
+         * Release while we have extra ref on stolen page.  Otherwise
+         * anon_pipe_buf_release() might think the page can be reused.
+         */
+        pipe_buf_release(cs->pipe, buf);
 
-> the output is usually redirected to a file that I edit before running
-> it. The additional line in the output of
->
->         scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK-let=
--AIU-export-its-clocks-through-cl.patch
->
-> with your change breaks that script.
-
-You forgot to list the additional output?
-
-I gave it a try with my script, and with one of my own patches.
-Example additional output is:
-
-     --cc "ARM/Microchip" $(: AT91] SoC support status: Supported \
-    --cc "QAT DRIVER status: Supported \
-    --cc "ARM/ASPEED MACHINE SUPPORT status: Supported \
-    --cc "MELEXIS MLX90614 DRIVER status: Supported \
-    --cc "ARM/NUVOTON MA35 ARCHITECTURE status: Supported \
-    --cc "ARM/RISC-V/RENESAS ARCHITECTURE status: Supported \
-
-Iff this extra output is good to have, why not include it in the comment
-next to the existing entries with the email addresses, so it will be
-handled automatically by all scripting on top?
-
-Now, as both Uwe and I edit our generated scripts before running them,
-we can delete the unwanted lines, but it's more work...
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+...so that accounts for the extra reference. I think the newfolio
+refcounting is correct as-is.
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Jeff Layton <jlayton@kernel.org>
