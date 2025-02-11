@@ -1,58 +1,58 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216B5267F57
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 21:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8AF266F16
+	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 21:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739308270; cv=none; b=gZ/fK67V8YeVQ+c0cluYo3UEZADCDvwIHEFYC1u/r25ajJEvGM225fxFb6M8i5PJJSgvtr2Uxj3RRVDKx6qOhsuhHVAXXEL3hOLP/mKHuCCd8CxshLtiL/81HvxVrFAaoB43kA6Mm4Gk5yd92a1mxkMkuphm4jp0X6pYw8FjSG4=
+	t=1739308906; cv=none; b=QJHCpi7B78LKm8OASFQ/XzES+v/P4GnahYgvkDCe7+bLa3ITbMdEWK6WpuLHQGj4o7K9nM1v/hy7yFik7/4mwnFRQakqKXDJlLpVrp9hhbHWZ0oM5DGCZm5CQAi+AjfEdsX/fHOggHZjnBSaYbo02i7vOnblwhDqp2wzLatu57M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739308270; c=relaxed/simple;
-	bh=g9hKvS61hmxPsx0BwGIxRf+eowTqjK810sZKQBmho+8=;
+	s=arc-20240116; t=1739308906; c=relaxed/simple;
+	bh=yah4m2+8MkEn7/6Orz97UvZ+6/UmNEr/IWyRGPDJMEE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PNs47uOVBX7p55AvULZF70/0Qx5XXGHACvJ5JTJtihPuB0soISWedikdUS8UU5V773ASahjiltaysSMv9c6s95N3Z0JRTFnhXBN3PriMQzbhA3kHtFW9YPiQ2BzAviw58fQSfMm54mQkaXSUaxlwqidA1ROGnRN1u+MZc2wjy1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2+pJONo; arc=none smtp.client-ip=209.85.160.176
+	 To:Cc:Content-Type; b=lSu2xzneTPEC/VfrVfpEslMoLyIfQv9G4XZOne8vtqjYj5FDQq87Sf0797OYCMfGBvljC5a4sBtyxg1+Ihb4ToDA8zmKY1+0AO2SsiTAEZXPhXPntHr8EYUrHJaWsBi0AX3Y9v69KQweJV0uKPXnmXDuepNev3PHIXgxkGfv7MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUJ0JHU8; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2+pJONo"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47197412ccbso35524581cf.1
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 13:11:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUJ0JHU8"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46c8474d8f6so50009611cf.3
+        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 13:21:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739308267; x=1739913067; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1739308903; x=1739913703; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yAuMfXRaQLdMu9tTkvgqRg79Mjm8+DLzP2FAOqvmZcg=;
-        b=M2+pJONoKkV56rtEz7FudpvzhkNpngQvqsh28FDzzNN6gfW4Ay8SIJeRLJv+5DoPJ6
-         H9O/UxfMqy/TpWgnahBZChDmmnzEizbq2HUAo8Wk+Y+HV8P6wzFT9xUX3gUKKEJe88TW
-         7uUR6oDQHfwTGPDHZs1YargRjP5+OilEFmdyFJ8wfeQjmFc1FObQhvzRsl2rHOTBpfuz
-         lLTbr/lQ0Ms0s40dZhz13iN1KBb5xgNh4dXjqhIYfLfsWxsS6DdjDMFNc+tTic5AqQFE
-         kWOJDqv2/acKXaH8NUUi8fVuNsE9APZa0MKy9HNGuXqzNN3wyQOTK6sDX4CZ9sMJzgdm
-         Ancg==
+        bh=fSbVqMiTkl0LXiSTIcddvXxCMvvitAPamcbDbPBQmiQ=;
+        b=aUJ0JHU8cjKh4bjam5iookOrqP0akVUhW9+Y4+p9vr3dfy1ZGkdSxym8jjSdteSVXx
+         Hx/5SKfKTj0g5lSfVxfHmQDOb5Oea6hU3E6GgDmFJce2ERu5pci9yLJg3kGLCv87VT56
+         kG+RXp8wD2r+eyz2n2n5gBu+ELobHlb44RGVKGtdMVe7FtDgV4Tk9/pcARuk9f/byBgf
+         H/PooUY9gbs7VH9t0gHCvIrR8NXOqG9ePAiPAqnCx4cdvBGLops8n73Kn4LpOlxixrh2
+         FDUL0slhK+JJREVCOf2n/sBE0eoihc5yhTfkI4usOBkebQZMT2biyaw1n6iVfejMvcJC
+         wp/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739308267; x=1739913067;
+        d=1e100.net; s=20230601; t=1739308903; x=1739913703;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yAuMfXRaQLdMu9tTkvgqRg79Mjm8+DLzP2FAOqvmZcg=;
-        b=E5/W7o+EsWp65ecEk7EvpbAVqsuIOhxtFKK98EYdH5NWa6CXWJLL5Y0z+pKjX0cHgj
-         FR++IwCBT36xBLse5cnXf3UpW0E2b6STOCD1VrbGNKUERpCck06dv4wli3mcZ1eBRfyE
-         pCtlfhRDZ8TmZMFKC3NbwO3nrcbIASOElyGaufh23nssZLH3PKrVPve2sL23h30958Kc
-         edHVe/9y+YA/AOR20Y8VX7j5vSDzMRMjkwv0ljKTtRhEOHRGnZAdlBez5d4lW8z4KY3S
-         7LGrCxiN99zNmiFvbil9FJINh/hgekC5TDSFG5SIZH6HG+peZGc5aR4CjGlnKwIHlVj9
-         zd7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUi3CP2wD7enzdKhZXz2eMFVsUngudMbQ6El+ukRlaBvcqPvW6ebpFHT3quNnsrGXIKJrqaMKJaR+odPg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywad2Bqwogbrz/8hm+h5gczPtKmAgnAQF3a5op84ZF261TE7num
-	tUmIILqUwKnARhBanKg5bnsGulcZCj+9EZ1cTxqz3hyCCoPI5rrH7oQ3MUIHxMg2q9+b+C0VuH5
-	acm3tn6Yao2ryyFJKuZDY+ZOfuEU=
-X-Gm-Gg: ASbGncsJOdQ2W18Cf9ZM/u6SUwr17VCV+zuwkaUChOcJFJgme7d5jM7HRKzGlt9S1kR
-	4qORM5P0xQb9OT3MLfbq89KPkPOUvcf5pK6UgL0DG2kDDrZBYeeEJCBssxsz17BP07zNO/NHy7g
+        bh=fSbVqMiTkl0LXiSTIcddvXxCMvvitAPamcbDbPBQmiQ=;
+        b=TdGWhDjdKD7jMvcYlwhYnBD21B0km1Cak/uBz75Nfk0LkiYgMtyKa5STeozUeRFMJs
+         jS5uazKFdeEEyRfCHxSkN6jydw6k/s8Yj1iJEAl4XUtWjYaAqiiq52QpoS948krm200n
+         IE3mjA2EkUm5SpKr/l7W3E86OdAqQOCKRTZNQgsiY5UNZCmSP4qpsuva2Y4Pp8/Q/pps
+         bz8z97KuK9OScj1sv9tAVKbhGQTGV47UF/iIDLhFPZBdRP/7ghr2ZqDuNHedN+GxP+vu
+         cNPGCgIobw0N5JEWaBBfxcvJC6eIITTZ9GPUzemv9+WxL+2/FlmvvawsYsFKcYM4sI0o
+         KA2A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ehOZQWuaaAU4PjoqIeJYi7gKEEBNTNLL5v5UAAYzftEbh8+VonYM6c8XQzj1SKO8Q1cQbiKxBo0UlQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxOjysi1O36Qexd626Iuvd+Xl97AsNpOFYZ1VOzWE1RpSrMX7pb
+	6weI3OG+Np2tvIOFBJumQZLTAz+T/Knvg6o2UaSOGO0T8CvLrraWQyS17Xu9Y/fMafvBAg/cN5R
+	KCo0LEbClhd4rMImLfisl2IjvPro=
+X-Gm-Gg: ASbGncvnu96CdVmKkfST5ziPTrBqjI0wmNk47ViH1kXD0fdFDlx0Dn0KDdENoLZn4dL
+	RNKrdsxOqsRgWmgsin6ry6d0v16m7k51DqoxPuFw4Y7KrGXJ2bQOOc/V0mY+H5Ej/3NHfMTYy7A
 	==
-X-Google-Smtp-Source: AGHT+IHCak+6ZWfjbFFqHo/xIJzNDSDRrtPztkntxLpbJYNa1dGRVwPhhxVAUraO3P9FIWxcs/XZadwLeW1Xhm4Q+m0=
-X-Received: by 2002:a05:622a:1b12:b0:471:a2d5:acda with SMTP id
- d75a77b69052e-471afe6d09bmr8881191cf.26.1739308266948; Tue, 11 Feb 2025
- 13:11:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFKtQ8UVZLdbtYyP9WyYfW9qhBvBgtzQYc9asKQ0u4aMfE1y2wI3lrrdXfr8aSY2alE3XEyecLsRiaNx7vXddo=
+X-Received: by 2002:ac8:7fd4:0:b0:467:7a27:f3bb with SMTP id
+ d75a77b69052e-471b07141bamr5850091cf.49.1739308903079; Tue, 11 Feb 2025
+ 13:21:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,115 +67,112 @@ References: <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
  <20250210191235.GA2256827@perftesting> <Z6pjSYyzFJHaQo73@casper.infradead.org>
  <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
  <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
- <CAJnrk1ZkhNdCf_v4KHmsFoh3EcEaKY0Z8SVn2nJouVDxTZxv=A@mail.gmail.com> <dd9b064f0b140f9b83175ae15208d7a56af4651c.camel@kernel.org>
-In-Reply-To: <dd9b064f0b140f9b83175ae15208d7a56af4651c.camel@kernel.org>
+ <CAJnrk1ZkhNdCf_v4KHmsFoh3EcEaKY0Z8SVn2nJouVDxTZxv=A@mail.gmail.com> <85f1b4ca-cdc7-48d0-a985-4185eff1b49a@suse.cz>
+In-Reply-To: <85f1b4ca-cdc7-48d0-a985-4185eff1b49a@suse.cz>
 From: Joanne Koong <joannelkoong@gmail.com>
-Date: Tue, 11 Feb 2025 13:10:40 -0800
-X-Gm-Features: AWEUYZmion1fONaEjSH0uaM2LEumNjfTl_1CMECZgdbOS8CnCTXNSiA_nTE9X5Q
-Message-ID: <CAJnrk1aoS-XOL5uOE+ZJCT_dPCmZywMguqgJ772N7Kj11RoO4A@mail.gmail.com>
+Date: Tue, 11 Feb 2025 13:21:31 -0800
+X-Gm-Features: AWEUYZkpMikWRVzu_vH7tBi2VNxxuVFAUWBL_42-xI-v2Um0L-YoYF3TFagCMm0
+Message-ID: <CAJnrk1ZFfb7p01nkN=+tTJFt925PEAQyB=zRcsUM7Ue+TV2pZA@mail.gmail.com>
 Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
  related applications since v6.13
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>, 
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <miklos@szeredi.hu>, 
 	Christian Heusel <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
 	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 11:41=E2=80=AFAM Jeff Layton <jlayton@kernel.org> w=
-rote:
+On Tue, Feb 11, 2025 at 1:01=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
 >
-> On Tue, 2025-02-11 at 11:23 -0800, Joanne Koong wrote:
+> On 2/11/25 20:23, Joanne Koong wrote:
 > > On Tue, Feb 11, 2025 at 6:01=E2=80=AFAM Jeff Layton <jlayton@kernel.org=
 > wrote:
-> > >
-> > > On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
-> > > > On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
-> > > > > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
-> > > > > > From: Josef Bacik <josef@toxicpanda.com>
-> > > > > > Date: Mon, 10 Feb 2025 14:06:40 -0500
-> > > > > > Subject: [PATCH] fuse: drop extra put of folio when using pipe =
-splice
-> > > > > >
-> > > > > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I co=
-nverted
-> > > > > > us to using the new folio readahead code, which drops the refer=
-ence on
-> > > > > > the folio once it is locked, using an inferred reference on the=
- folio.
-> > > > > > Previously we held a reference on the folio for the entire dura=
-tion of
-> > > > > > the readpages call.
-> > > > > >
-> > > > > > This is fine, however I failed to catch the case for splice pip=
-e
-> > > > > > responses where we will remove the old folio and splice in the =
-new
-> > > > > > folio.  Here we assumed that there is a reference held on the f=
-olio for
-> > > > > > ap->folios, which is no longer the case.
-> > > > > >
-> > > > > > To fix this, simply drop the extra put to keep us consistent wi=
-th the
-> > > > > > non-splice variation.  This will fix the UAF bug that was repor=
-ted.
-> > > > > >
-> > > > > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-=
-8431-2b3dbfaa881e@heusel.eu/
-> > > > > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> > > > > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> > > > > > ---
-> > > > > >  fs/fuse/dev.c | 2 --
-> > > > > >  1 file changed, 2 deletions(-)
-> > > > > >
-> > > > > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> > > > > > index 5b5f789b37eb..5bd6e2e184c0 100644
-> > > > > > --- a/fs/fuse/dev.c
-> > > > > > +++ b/fs/fuse/dev.c
-> > > > > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_c=
-opy_state *cs, struct page **pagep)
-> > > > > >   }
-> > > > > >
-> > > > > >   folio_unlock(oldfolio);
-> > > > > > - /* Drop ref for ap->pages[] array */
-> > > > > > - folio_put(oldfolio);
-> > > > > >   cs->len =3D 0;
-> > > > >
-> > > > > But aren't we now leaking a reference to newfolio?  ie shouldn't
-> > > > > we also:
-> > > > >
-> > > > > -   folio_get(newfolio);
-> > > > >
-> > > > > a few lines earlier?
-> > > > >
-> > > >
-> > > >
-> > > > I think that ref was leaking without Josef's patch, but your propos=
-ed
-> > > > fix seems correct to me. There is:
-> > > >
-> > > > - 1 reference stolen from the pipe_buffer
-> > > > - 1 reference taken for the pagecache in replace_page_cache_folio()
-> > > > - the folio_get(newfolio) just after that
-> > > >
-> > > > The pagecache ref doesn't count here, and we only need the referenc=
-e
-> > > > that was stolen from the pipe_buffer to replace the one in pagep.
-> > >
-> > > Actually, no. I'm wrong here. A little after the folio_get(newfolio)
-> > > call, we do:
-> > >
-> > >         /*
-> > >          * Release while we have extra ref on stolen page.  Otherwise
-> > >          * anon_pipe_buf_release() might think the page can be reused=
-.
-> > >          */
-> > >         pipe_buf_release(cs->pipe, buf);
-> > >
-> > > ...so that accounts for the extra reference. I think the newfolio
-> > > refcounting is correct as-is.
+> >>
+> >> On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
+> >> > On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
+> >> > > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
+> >> > > > From: Josef Bacik <josef@toxicpanda.com>
+> >> > > > Date: Mon, 10 Feb 2025 14:06:40 -0500
+> >> > > > Subject: [PATCH] fuse: drop extra put of folio when using pipe s=
+plice
+> >> > > >
+> >> > > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I con=
+verted
+> >> > > > us to using the new folio readahead code, which drops the refere=
+nce on
+> >> > > > the folio once it is locked, using an inferred reference on the =
+folio.
+> >> > > > Previously we held a reference on the folio for the entire durat=
+ion of
+> >> > > > the readpages call.
+> >> > > >
+> >> > > > This is fine, however I failed to catch the case for splice pipe
+> >> > > > responses where we will remove the old folio and splice in the n=
+ew
+> >> > > > folio.  Here we assumed that there is a reference held on the fo=
+lio for
+> >> > > > ap->folios, which is no longer the case.
+> >> > > >
+> >> > > > To fix this, simply drop the extra put to keep us consistent wit=
+h the
+> >> > > > non-splice variation.  This will fix the UAF bug that was report=
+ed.
+> >> > > >
+> >> > > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8=
+431-2b3dbfaa881e@heusel.eu/
+> >> > > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
+> >> > > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> >> > > > ---
+> >> > > >  fs/fuse/dev.c | 2 --
+> >> > > >  1 file changed, 2 deletions(-)
+> >> > > >
+> >> > > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> >> > > > index 5b5f789b37eb..5bd6e2e184c0 100644
+> >> > > > --- a/fs/fuse/dev.c
+> >> > > > +++ b/fs/fuse/dev.c
+> >> > > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_co=
+py_state *cs, struct page **pagep)
+> >> > > >   }
+> >> > > >
+> >> > > >   folio_unlock(oldfolio);
+> >> > > > - /* Drop ref for ap->pages[] array */
+> >> > > > - folio_put(oldfolio);
+> >> > > >   cs->len =3D 0;
+> >> > >
+> >> > > But aren't we now leaking a reference to newfolio?  ie shouldn't
+> >> > > we also:
+> >> > >
+> >> > > -   folio_get(newfolio);
+> >> > >
+> >> > > a few lines earlier?
+> >> > >
+> >> >
+> >> >
+> >> > I think that ref was leaking without Josef's patch, but your propose=
+d
+> >> > fix seems correct to me. There is:
+> >> >
+> >> > - 1 reference stolen from the pipe_buffer
+> >> > - 1 reference taken for the pagecache in replace_page_cache_folio()
+> >> > - the folio_get(newfolio) just after that
+> >> >
+> >> > The pagecache ref doesn't count here, and we only need the reference
+> >> > that was stolen from the pipe_buffer to replace the one in pagep.
+> >>
+> >> Actually, no. I'm wrong here. A little after the folio_get(newfolio)
+> >> call, we do:
+> >>
+> >>         /*
+> >>          * Release while we have extra ref on stolen page.  Otherwise
+> >>          * anon_pipe_buf_release() might think the page can be reused.
+> >>          */
+> >>         pipe_buf_release(cs->pipe, buf);
+> >>
+> >> ...so that accounts for the extra reference. I think the newfolio
+> >> refcounting is correct as-is.
 > >
 > > I think we do need to remove the folio_get(newfolio); here or we are
 > > leaking the reference.
@@ -227,6 +224,23 @@ h
 > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2b3=
 dbfaa881e@heusel.eu/
 > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
+>
+> Can we add some tags?
+>
+> Reported-by: Christian Heusel <christian@heusel.eu>
+> Closes: https://lore.kernel.org/all/2f681f48-00f5-4e09-8431-2b3dbfaa881e@=
+heusel.eu/
+> Closes: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-=
+/issues/110
+> Reported-by: Mantas Mikul=C4=97nas <grawity@gmail.com>
+> Closes: https://lore.kernel.org/all/34feb867-09e2-46e4-aa31-d9660a806d1a@=
+gmail.com/
+> Closes: https://bugzilla.opensuse.org/show_bug.cgi?id=3D1236660
+> Cc: <stable@vger.kernel.org>
+>
+
+Ok, I'll add these tags in and formally submit this patch to Miklos's tree.
+
 > > Signed-off-by: Joanne Koong <joannelkoong@gmail.com>
 > > ---
 > >  fs/fuse/file.c | 10 +++++++++-
@@ -262,32 +276,25 @@ e case
 > > +                        * (see fuse_try_move_page()).
 > > +                        */
 > > +                       folio_get(folio);
+>
+> It would be more efficient to use __readahead_folio() instead of doing a =
+folio_get()
+> to counter a folio_put() in readahead_folio(). An adjusted comment can ex=
+plain why
+> we use __readahead_folio().
+
+imo, the explicit get makes the code the most readable, but I also
+don't feel strongly enough about it to insist. I'll make this change
+in the patch.
+
+>
 > >                         ap->folios[ap->num_folios] =3D folio;
 > >                         ap->descs[ap->num_folios].length =3D folio_size=
 (folio);
 > >                         ap->num_folios++;
+> > --
+> > 2.43.5
+> >
+> >> --
+> >> Jeff Layton <jlayton@kernel.org>
 >
-> That makes sense. My mistake was assuming the pointer in passed in via
-> pagep would hold a reference, and that the replacement folio would
-> carry one. I like the above better than assuming we have implicit
-> reference due to readpages. It's slightly more expensive due to the
-> refcounting, but it seems less brittle.
->
-> We should couple this with a comment over fuse_try_move_page().
-> Something like this maybe?
->
-> /*
->  * Attempt to steal a page from the splice() pipe and move it into the
->  * pagecache. If successful, the pointer in @pagep will be updated. The
->  * folio that was originally in @pagep will lose a reference and the new
->  * folio returned in @pagep will carry a reference.
->  */
-
-Great idea, I'll add this in.
-
->
-> ...
->
-> In any case, for this patch:
->
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
