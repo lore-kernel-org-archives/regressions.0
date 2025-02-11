@@ -1,329 +1,225 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ADA1F3BB1
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 10:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9548A1F1533
+	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 10:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268541; cv=none; b=mejIcUxK6x6+y8sEnsFm6s0heE7Z9RTv2WPzjSYd+DesRTK5rMGDxTjP6YVrxd4BYFKtNVLgnuo23bNSXNkKWuo5AIMdmUwSkRlHVfKaVU/m6AL43ib17kvCb0YlRmJhGK6YRXH/yGIGWhBsUs0YVG2cG6ejLU3fo58Zw4uYFuk=
+	t=1739269948; cv=none; b=L6xHRyjDdDFU4n37LHYLTPnxWX7/Ty28uDzzZZABr4D6tX4Hop6raghfy3vO80owDbDMCAVrAs7WLePkhHxZPmRUNfboCNAA/FLlsFZEfm0HoW/DtzwP1q/X036SD2jmTDPQY7HYAMUBSivti1OnIvnBAJXsoCJpCYgEotzgLwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268541; c=relaxed/simple;
-	bh=K6S6iD5Rl8d3VWop+gMF8fxHP2/hz2ZGqmmyv6NoDeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Taf1XJ1aXmv3IqtXiYvhsyzwTWVBaCYrHU9fnYmoqgVlqBESo5dNG7R5yeya6mZrPiIvpF3QLYVkA9j2nIJvn7YjuEDmoc6tfiIXtwt5oNfminFrPHI7kLbrgunhAnvNORe+4u5I6CJW0eZhoIcCDS6D5HrqsKAf0n21wFhdK+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dKza1lTV; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739269948; c=relaxed/simple;
+	bh=w63Y7CdySXiNEBrlXLpVDv44ltZ/eunR/96BkjIzWl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXHiuBmauLf/NSw+FTMdoNQk/m7cjhsCkuh2Rg8hRcJTYGROMKGLKueumb5pSXbCZxsrPF0qr46P+jZakUBnrzQut39uYvQmSJLImsiejV0G2jwMpo/RUEhqP3b6xparUFvmgejwHmg0lNS0vPfQxCCEsKzigxtgiS5GtO1QyyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Kb2lH/NU; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dKza1lTV"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-867120d67baso1130308241.0
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 02:08:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Kb2lH/NU"
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-aaeec07b705so848181966b.2
+        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 02:32:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739268538; x=1739873338; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xEn3cm/UNrP7SZZldloJXkuufWri2Kvjnrj9hrLDPQo=;
-        b=dKza1lTVDZOuaECuSZOW72ITXl2FFfZF4fQfwG60tGMhASxFT+xGXO6MZfC6Enx8oD
-         ra/RKvjl95kJQqU6RrWSKvTonNJ0VwSRsKbrBuLROIUjH1JUt+ehlITq/jP4v6PLYMGe
-         ecoGWn4I+W8iW0Mb1BvXX2IOKttc0jnv4jpFt4yOnaXRaB9/QpFHbA2g9fxnotIADs9Y
-         bR3JxTqTpnlBTfXO2clfs0Wtp1L1WSDkIm4SEufK20Zo3lrQdBXDDloIEfM6czHemJ2Y
-         kftSvwWGaLiGkzZoZdFfcT/2cBOELwW/psAASyJktBl8NhkdFdmeEN8kbxHFyOe+wSOq
-         ySYA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739269944; x=1739874744; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M0yLasoamk0iZKc/1URT52HRA1WbzmjHTzzeFRUfCcY=;
+        b=Kb2lH/NUwIZw4B6ZbFrmXczMpkNT1lqVLgvCJCYD5/de8hAeyLV055kjt3uapR/vKi
+         c58Ze+PXeW1EkOaol/xGSMp+mqibdvjLR5Pf13LTzIS5XYbdU9d1+i9P4Vfp8c4ZgjY+
+         jf9FcRw0AVG9Plpk6WruuquCJTktHMFWHWbCdDRdyq81VISZLxeLhyKgly0NJYJI+a78
+         /Ozfw3h9y/7E5AwlvS88rRiczUuE9DWbt0hXac/Ukl/EpYGMnDUFcJGOZiN10rIzDGd/
+         qI316PUtO7tmNr+kwIge1GyLCngy/cwwc+vQqE+ulCRLZ9C8ylpasdU8P/LvuaC6DS1e
+         7SCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739268538; x=1739873338;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xEn3cm/UNrP7SZZldloJXkuufWri2Kvjnrj9hrLDPQo=;
-        b=u6GTPpZvpn50alDTRY5OyhlakNlfobnjAniNXqzKB9wgMG326KLsv2MVwzfPMoeg54
-         ieyOF/QjUVJFOSEKFEVWqX2EIly2UBd4LK4j4iYwO4v9+rfWBUmTWCHPU/nL4b2gL1Qu
-         YIG+3lNq4AAdxr3Y62oPo4kUJXrqxYBSWCdmpZLRRK+Bm87zsxxUXsvl4wiq5nHzNep3
-         mupty3oxOldsvZ70H8al0tcpXPtGj194AIhQAnYhsPzuFV8s2DSE9nKl+nJ+deFAaWmU
-         XBRz2xvWGYebswaqcWqYBPj8HpMw7jtMsrrEkJCR7O3FUN4gyuUzpRWU4u+AJeixHNEW
-         hnZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW012WEDq5mL1beysA+udLD8nW6J6NxoDJLnioWdIOO+kpuMU1YEPopnzc+HgcsePjX+5+Z8yp5pZFi6w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwBeOBEot5aPVm8XAiX8pfZbROG1wJcIpEx1IlDEJDc5ZLVH0ie
-	ZpiJT/6ORgGGTMfcOPXahBiBlzNNbFxm1iqhwYLusNLHUbGPoM1E+FRlFgkdDt/i29/0VKBk9qI
-	lha8+Ocb6kTAwavsfI6iXOA07vZP/dlknzwFmgQ==
-X-Gm-Gg: ASbGncv84aNlZV8osd9zYxRyRoMZHRNXGSnwUP73+OYMSdLGFdkd/QV/9WHJfX+JUzX
-	hJRR2wXCq4eFb9Y4cLSfFPoGRyu+x321y1tvPsfMxAzZwthSHku05RUyP3n+8QNL1PedgluK5B3
-	Ei7bxNaZ97R+zX8ujj6RQlQ92L8eMkaQ==
-X-Google-Smtp-Source: AGHT+IHp1zdj8ZibeFlCfAdtduHOD6KnRYnX/ZueNTg9nfqkFNPLIXpI43V2qHdRl3eZSUUEm/vQoAR49cYDijtPvYw=
-X-Received: by 2002:a05:6102:3e0b:b0:4af:ba51:a25f with SMTP id
- ada2fe7eead31-4ba85f1d603mr11334067137.20.1739268538258; Tue, 11 Feb 2025
- 02:08:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739269944; x=1739874744;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M0yLasoamk0iZKc/1URT52HRA1WbzmjHTzzeFRUfCcY=;
+        b=sXX28H2cSHWplp5spTY5tHj5l8e/0dePFITy40LNizFOGzbR76MspSkB9MGcTsE7pD
+         C6RklnJ7/QGxPFfMrATh+rRixle1knpandow7mf9k6capKcHrZ/jUSnc4iuBDu8pLY0Y
+         anbb670wy60pAXxG9l0wopMXZHSNr3l1iGGXnA1Bby8B3LHbv9Ekm+ZBrGfsX8YPg12s
+         PmjO6V7D+h9tSL8bFqjVtwTb/h7fFJKcFqO+PgD6ak8A1eBiYruYTp9n8+Ul+aK+lmTh
+         3udX+o+zYw6S/gl0IQSbRBsPNh6IVFu38WVCxpOiWzELeZ112O69qKeZP7/X5WZbNWTX
+         2yLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWblamUvc2P6oYIwrPm4RtskmY+c8kZK4xZIYqBtq5J0PzQTra/XsvV9UyjrdO89lq3cJ4FW646jQbb6A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgwPrsZ28Tf2vODdIw8Hq2+qzOxF7B43x6LbwSaw/b/x48voEd
+	L9umGBWKK2/NHwTsqb851eTcjzxHLeAukNycGrdjheQQ07x3v2QGuzaa+D/4ks8=
+X-Gm-Gg: ASbGncvu9OK0Or2wkD9YZvOAbOcFNA+Xf3FsUV5uN4RRxEi1yvJH+NwTmCXklU0HZQB
+	XCxg+cNYPiDkc60jHEBxQpOgADac+JwklE1yaPuXi/o/26P98EhcIYFguFoURPaBMO302FrPyo0
+	CWz8wvhNyuhhmCVnqFlnm8VkNBXzEmiIwLRPDAKT5WBVwYtxTYwgcR+DQ0pZ90RcgkLc4pqvjxu
+	NdOmgjj3dV+S4UdE6YusvA/4GYVsdHGUcZDogwZPgO0K2S0SxLLsdUyI+D3VAQUlW4UTfZTjCwb
+	98w2MwI3zrrys54+wsJvTfbSIE/dPeDIcomFGYhG4ZlO0c+tunQRp1ElSQ==
+X-Google-Smtp-Source: AGHT+IGMf65w2KZ71XB7DG3+IsqQbafXRMHudaXgA2XcbRe3nKeXX4+v4pxIqUh75A9POaOb6Z8Wvg==
+X-Received: by 2002:a17:907:3da7:b0:ab3:a18f:fe7f with SMTP id a640c23a62f3a-ab789aeacd7mr1759262266b.28.1739269943684;
+        Tue, 11 Feb 2025 02:32:23 -0800 (PST)
+Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ced6fe0dsm254720166b.179.2025.02.11.02.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 02:32:23 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:32:21 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
+	Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
+ subsystem status
+Message-ID: <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
+References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
+ <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYt5QwJ4_F8fJj7jx9_0Le9kOVSeG38ox9qnKqwsrDdvHQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYt5QwJ4_F8fJj7jx9_0Le9kOVSeG38ox9qnKqwsrDdvHQ@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 11 Feb 2025 15:38:46 +0530
-X-Gm-Features: AWEUYZlxubnV84-s1VVkx9iBxiTYmg01jsC7etcGK75gbLsVTjiAfHyBl1JrU90
-Message-ID: <CA+G9fYtf=NaCuLrs2BtfXRQvxDap214i4bJSC+mEqTWPV7676Q@mail.gmail.com>
-Subject: Re: next-20250210: WARNING: at include/linux/rwsem.h:85 madvise_unlock
-To: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, rcu <rcu@vger.kernel.org>, 
-	LTP List <ltp@lists.linux.it>, Linux Regressions <regressions@lists.linux.dev>, 
-	lkft-triage@lists.linaro.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, SeongJae Park <sj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oui4r6js4wl7mw6b"
+Content-Disposition: inline
+In-Reply-To: <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz>
 
-On Tue, 11 Feb 2025 at 14:53, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Regressions on arm64 Juno-r2 device while running LTP syscalls tests
-> madvise01 warnings on the Linux next-20250210 tag.
->
-> First seen on next-20250210
-> Good: next-20250207
-> Bad: next-20250210
->
-> This regression is reproducible with CONFIG_ARM64_64K_PAGES=y
->
-> Test regression: LTP madvise01 WARNING include/linux/rwsem.h madvise_unlock
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> ## Test log
-> command: madvise01
-> [ 1190.422933] /usr/local/bin/kirk[359]: starting test madvise01 (madvise01)
-> tst_tmpdir.c:316: TINFO: Using /tmp/LTP_madSbRtkW as tmpdir (tmpfs filesystem)
-> tst_test.c:1860: TINFO: LTP version: 20240930
-> [ 1190.607278] Injecting memory failure for pfn 0x8e13f at process
-> virtual address 0xffff8c8c0000
-> tst_test.c:1864: TINFO:[
-> ** replaying previous printk message **
-> [ 1190.618980] Memory failure: 0x8e13f: recovery action for clean LRU
-> page: Recovered
-> [ 1190.619013] ------------[ cut here ]------------
-> [ 1190.619016] WARNING: CPU: 2 PID: 137820 at include/linux/rwsem.h:85
-> madvise_unlock (include/linux/rwsem.h:85 (discriminator 1)
-> include/linux/rwsem.h:205 (discriminator 1)
-> include/linux/mmap_lock.h:70 (discriminator 1)
-> include/linux/mmap_lock.h:169 (discriminator 1)
-> include/linux/mmap_lock.h:176 (discriminator 1) mm/madvise.c:1599
-> (discriminator 1))
-> Tested kernel: 6.14.0-rc2-next-20[ 1190.646322] Modules linked in: tun
-> overlay btrfs blake2b_generic xor xor_neon raid6_pq zstd_compress
-> panfrost hdlcd tda998x onboard_usb_dev drm_shmem_helper drm_client_lib
-> cec gpu_sched drm_dma_helper drm_kms_helper fuse drm backlight
-> ip_tables x_tables
-> 250210 #1 SMP PREEMPT @1739162484[ 1190.671777] CPU: 2 UID: 0 PID:
-> 137820 Comm: madvise01 Not tainted 6.14.0-rc2-next-20250210 #1
-> [ 1190.683191] Hardware name: ARM Juno development board (r2) (DT)
-> aarch64
-> tst_test.c:1703: TINFO:[ 1192.996920] pstate: a0000005 (NzCv daif -PAN
-> -UAO -TCO -DIT -SSBS BTYPE=--)
-> Timeout per run is 0h 05m 24s
-> [ 1193.006802] pc : madvise_unlock (include/linux/rwsem.h:85
-> (discriminator 1) include/linux/rwsem.h:205 (discriminator 1)
-> include/linux/mmap_lock.h:70 (discriminator 1)
-> include/linux/mmap_lock.h:169 (discriminator 1)
-> include/linux/mmap_lock.h:176 (discriminator 1) mm/madvise.c:1599
-> (discriminator 1))
-> [ 1211.692758] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [ 1211.692776] rcu: 1-...0: (0 ticks this GP)
-> idle=f3a4/1/0x4000000000000000 softirq=946757/946757 fqs=2625
-> [ 1211.692794] rcu: 2-...0: (1 GPs behind)
-> idle=2fac/1/0x4000000000000002 softirq=357256/357257 fqs=2625
-> [ 1211.692809] rcu: (detected by 4, t=5252 jiffies, g=196909, q=138 ncpus=6)
-> [ 1211.692821] Sending NMI from CPU 4 to CPUs 1:
-> [ 1221.694021] Sending NMI from CPU 4 to CPUs 2:
-> [ 1231.695220] rcu: rcu_preempt kthread timer wakeup didn't happen for
-> 5001 jiffies! g196909 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-> [ 1231.695231] rcu: Possible timer handling issue on cpu=4 timer-softirq=26922
-> [ 1231.695238] rcu: rcu_preempt kthread starved for 5002 jiffies!
-> g196909 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=4
-> [ 1231.695251] rcu: Unless rcu_preempt kthread gets sufficient CPU
-> time, OOM is now expected behavior.
-> [ 1231.695257] rcu: RCU grace-period kthread stack dump:
-> [ 1231.695262] task:rcu_preempt     state:I stack:0     pid:18
-> tgid:18    ppid:2      task_flags:0x208040 flags:0x00000008
-> [ 1231.695280] Call trace:
-> [ 1231.695286] __switch_to (arch/arm64/kernel/process.c:704) (T)
-> [ 1231.695306] __schedule (kernel/sched/core.c:5381 kernel/sched/core.c:6765)
-> [ 1231.695318] schedule (kernel/sched/core.c:6843 kernel/sched/core.c:6857)
-> [ 1231.695330] schedule_timeout (include/linux/timer.h:185
-> kernel/time/sleep_timeout.c:100)
-> [ 1231.695347] rcu_gp_fqs_loop (kernel/rcu/tree.c:2024 (discriminator 15))
-> [ 1231.695365] rcu_gp_kthread (kernel/rcu/tree.c:2229 (discriminator 2))
-> [ 1231.695380] kthread (kernel/kthread.c:464)
-> [ 1231.695395] ret_from_fork (arch/arm64/kernel/entry.S:863)
-> [ 1231.695410] rcu: Stack dump where RCU GP kthread last ran:
-> [ 1231.695417] CPU: 4 UID: 0 PID: 0 Comm: swapper/4 Not tainted
-> 6.14.0-rc2-next-20250210 #1
-> [ 1231.695428] Hardware name: ARM Juno development board (r2) (DT)
-> [ 1231.695434] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [ 1231.695445] pc : cpuidle_enter_state (drivers/cpuidle/cpuidle.c:292)
-> [ 1231.695467] lr : cpuidle_enter_state
-> (arch/arm64/include/asm/irqflags.h:26
-> arch/arm64/include/asm/irqflags.h:48 drivers/cpuidle/cpuidle.c:290)
-> [ 1231.695481] sp : ffff80008378fd90
-> [ 1231.695486] x29: ffff80008378fd90 x28: 0000000000000000 x27: 0000000000000000
-> [ 1231.695503] x26: 0000000000000000 x25: 0000000000000001 x24: 0000011a1e4785a4
-> [ 1231.695519] x23: 0000000000000001 x22: ffff00080314a080 x21: 0000011a1e83fe44
-> [ 1231.695536] x20: 0000000000000001 x19: ffff00097d625778 x18: ffff8000a0c2fc10
-> [ 1231.695552] x17: 000000040044ffff x16: 00500072f5507510 x15: 0000000000000000
-> [ 1231.695568] x14: ffff0008007bc800 x13: ffff8008fad70000 x12: 0000000034d4d91d
-> [ 1231.695585] x11: 0000000000000000 x10: 0000000000001000 x9 : ffff8000815901a4
-> [ 1231.695601] x8 : ffff80008378fc98 x7 : 0000000000000001 x6 : ffff8000829f9000
-> [ 1231.695617] x5 : ffff0008007bc800 x4 : ffff8000829f95e0 x3 : 0000000000000000
-> [ 1231.695633] x2 : 0000000000000000 x1 : 0000000100000001 x0 : 0000000100000001
-> [ 1231.695649] Call trace:
-> [ 1231.695653] cpuidle_enter_state (drivers/cpuidle/cpuidle.c:292) (P)
-> [ 1231.695671] cpuidle_enter (drivers/cpuidle/cpuidle.c:391 (discriminator 2))
-> [ 1231.695692] do_idle (kernel/sched/idle.c:155
-> kernel/sched/idle.c:230 kernel/sched/idle.c:325)
-> [ 1231.695716] cpu_startup_entry (kernel/sched/idle.c:423 (discriminator 1))
-> [ 1231.695732] secondary_start_kernel
-> (arch/arm64/include/asm/atomic_ll_sc.h:95 (discriminator 2)
-> arch/arm64/include/asm/atomic.h:28 (discriminator 2)
-> include/linux/atomic/atomic-arch-fallback.h:546 (discriminator 2)
-> include/linux/atomic/atomic-arch-fallback.h:994 (discriminator 2)
-> include/linux/atomic/atomic-instrumented.h:436 (discriminator 2)
-> include/linux/sched/mm.h:37 (discriminator 2)
-> arch/arm64/kernel/smp.c:214 (discriminator 2))
-> [ 1231.695749] __secondary_switched (arch/arm64/kernel/head.S:421)
-> madvise01.c:68: TINFO: Mounting [ 1231.961851] lr : do_madvise
-> (mm/madvise.c:1748)
-> [ 1242.412862] sp : ffff8000a188fdc0
-> tmp_madvise to /tmp/LTP_madSbRtkW/tmp_madvise fstyp=tmpfs flags=0[
-> 1242.416214] x29: ffff8000a188fdc0 x28: ffff000813417c00 x27:
-> 0000000000000000
->
-> madvise01.c:113: TPASS: madvise[ 1294.712666] rcu: INFO: rcu_preempt
-> detected stalls on CPUs/tasks:
-> [ 1294.712685] rcu: 2-...0: (1 GPs behind)
-> idle=2fac/1/0x4000000000000002 softirq=357256/357257 fqs=7636
-> [ 1294.712704] rcu: (detected by 4, t=26007 jiffies, g=196909, q=184 ncpus=6)
-> [ 1294.712716] Sending NMI from CPU 4 to CPUs 2:
-> [ 1304.713915] rcu: rcu_preempt kthread timer wakeup didn't happen for
-> 8168 jiffies! g196909 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-> [ 1304.713927] rcu: Possible timer handling issue on cpu=3 timer-softirq=35895
-> [ 1304.713933] rcu: rcu_preempt kthread starved for 8169 jiffies!
-> g196909 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=3
-> [ 1304.713945] rcu: Unless rcu_preempt kthread gets sufficient CPU
-> time, OOM is now expected behavior.
-> [ 1304.713951] rcu: RCU grace-period kthread stack dump:
-> [ 1304.713955] task:rcu_preempt     state:I stack:0     pid:18
-> tgid:18    ppid:2      task_flags:0x208040 flags:0x00000008
-> [ 1304.713974] Call trace:
-> [ 1304.713979] __switch_to (arch/arm64/kernel/process.c:704) (T)
-> [ 1304.714000] __schedule (kernel/sched/core.c:5381 kernel/sched/core.c:6765)
-> [ 1304.714013] schedule (kernel/sched/core.c:6843 kernel/sched/core.c:6857)
-> [ 1304.714024] schedule_timeout (include/linux/timer.h:185
-> kernel/time/sleep_timeout.c:100)
-> [ 1304.714042] rcu_gp_fqs_loop (kernel/rcu/tree.c:2024 (discriminator 15))
-> [ 1304.714061] rcu_gp_kthread (kernel/rcu/tree.c:2229 (discriminator 2))
-> [ 1304.714076] kthread (kernel/kthread.c:464)
-> [ 1304.714090] ret_from_fork (arch/arm64/kernel/entry.S:863)
-> [ 1304.714105] rcu: Stack dump where RCU GP kthread last ran:
-> [ 1304.714109] Sending NMI from CPU 4 to CPUs 3:
-> [ 1304.714119] NMI backtrace for cpu 3
-> [ 1304.714130] CPU: 3 UID: 0 PID: 205 Comm: systemd-udevd Not tainted
-> 6.14.0-rc2-next-20250210 #1
-> [ 1304.714143] Hardware name: ARM Juno development board (r2) (DT)
-> [ 1304.714148] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [ 1304.714158] pc : queued_spin_lock_slowpath
-> (kernel/locking/qspinlock.c:380 (discriminator 5))
-> [ 1304.714176] lr : _raw_spin_lock_bh (kernel/locking/spinlock.c:179)
-> [ 1304.714189] sp : ffff800085e6f310
-> [ 1304.714193] x29: ffff800085e6f310 x28: ffff000808761c00 x27: ffff00080295b500
-> [ 1304.714210] x26: ffff00081e724e00 x25: 0000000000000000 x24: 0000000000008080
-> [ 1304.714224] x23: 0000000000000000 x22: 0000000074000080 x21: 0000000000000078
-> [ 1304.714239] x20: ffff000802bb0a30 x19: ffff000802bb0a30 x18: 0000000000000000
-> [ 1304.714254] x17: 0000000000000000 x16: 0000000000000000 x15: 0000aaaabea75a70
-> [ 1304.714268] x14: 0000000000000000 x13: 2dcd92d500000000 x12: 40982a24d45a0569
-> [ 1304.714283] x11: 3cc1638a3642b30d x10: d5e7818600000000 x9 : ffff80008159decc
-> [ 1304.714298] x8 : ffff800085e6f278 x7 : 0000000000000000 x6 : 0000000000000201
-> [ 1304.714312] x5 : ffff8000829f9000 x4 : ffff8000829f95e0 x3 : 0000000000000001
-> [ 1304.714326] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000001
-> [ 1304.714339] Call trace:
-> [ 1304.714343] queued_spin_lock_slowpath
-> (kernel/locking/qspinlock.c:380 (discriminator 5)) (P)
-> [ 1304.714360] _raw_spin_lock_bh (kernel/locking/spinlock.c:179)
-> [ 1304.714374] lock_sock_nested (net/core/sock.c:3649 (discriminator 1))
-> [ 1304.714388] tcp_sock_set_cork (net/ipv4/tcp.c:3547 net/ipv4/tcp.c:3560)
-> [ 1304.714405] xs_tcp_send_request (net/sunrpc/xprtsock.c:1124)
-> [ 1304.714418] xprt_transmit (net/sunrpc/xprt.c:1578 net/sunrpc/xprt.c:1634)
-> [ 1304.714434] call_transmit (net/sunrpc/clnt.c:2283 net/sunrpc/clnt.c:2265)
-> [ 1304.714447] __rpc_execute
-> (include/asm-generic/bitops/generic-non-atomic.h:128
-> net/sunrpc/sched.c:954)
-> [ 1304.714463] rpc_execute (include/linux/sched/mm.h:339
-> (discriminator 1) include/linux/sched/mm.h:399 (discriminator 1)
-> net/sunrpc/sched.c:1026 (discriminator 1))
-> [ 1304.714476] rpc_run_task (net/sunrpc/clnt.c:1250)
-> [ 1304.714488] rpc_call_sync (net/sunrpc/clnt.c:1278 (discriminator 1))
-> [ 1304.714501] nfs3_rpc_wrapper (fs/nfs/nfs3proc.c:36)
-> [ 1304.714516] nfs3_proc_getattr (fs/nfs/nfs3proc.c:123)
-> [ 1304.714528] __nfs_revalidate_inode (fs/nfs/inode.c:1311 (discriminator 2))
-> [ 1304.714546] nfs_access_get_cached (fs/nfs/dir.c:3058 (discriminator
-> 1) fs/nfs/dir.c:3118 (discriminator 1))
-> [ 1304.714561] nfs_do_access (fs/nfs/dir.c:3246)
-> [ 1304.714574] nfs_permission (fs/nfs/dir.c:3360)
-> [ 1304.714588] inode_permission (fs/namei.c:588 fs/namei.c:562)
-> [ 1304.714606] link_path_walk.part.0.constprop.0 (fs/namei.c:1831
-> fs/namei.c:2422)
-> [ 1304.714624] path_lookupat (fs/namei.c:2607 fs/namei.c:2630)
-> [ 1304.714639] filename_lookup (fs/namei.c:2660)
-> [ 1304.714654] kern_path (fs/namei.c:2768)
-> [ 1304.714669] unix_find_other (net/unix/af_unix.c:1153 net/unix/af_unix.c:1182)
-> [ 1304.714681] unix_dgram_sendmsg (net/unix/af_unix.c:2038)
-> [ 1304.714692] ____sys_sendmsg (net/socket.c:718 (discriminator 1)
-> net/socket.c:733 (discriminator 1) net/socket.c:2573 (discriminator
-> 1))
-> [ 1304.714710] ___sys_sendmsg (net/socket.c:2627)
-> [ 1304.714725] __sys_sendmsg (net/socket.c:2659 (discriminator 1))
-> [ 1304.714740] __arm64_sys_sendmsg (net/socket.c:2662)
-> [ 1304.714755] invoke_syscall.constprop.0
-> (arch/arm64/include/asm/syscall.h:61 arch/arm64/kernel/syscall.c:54)
-> [ 1304.714772] do_el0_svc (arch/arm64/kernel/syscall.c:139
-> arch/arm64/kernel/syscall.c:151)
-> [ 1304.714787] el0_svc (arch/arm64/include/asm/irqflags.h:82
-> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
-> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:165 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:178 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:745 (discriminator 1))
-> [ 1304.714806] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:763)
-> [ 1304.714821] el0t_64_sync (arch/arm64/kernel/entry.S:600)
-> test for MADV_NORMAL PASSED
->
-> ## Source
-> * kernel version: 6.14.0-rc2-next-20250210
-> * git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> * git sha: df5d6180169ae06a2eac57e33b077ad6f6252440
-> * git describe: next-20250210
-> * project details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250210/
-> * architecture: arm64
-> * device: Juno-r2
-> * toolchain: gcc-13
-> * config : CONFIG_ARM64_64K_PAGES=y (gcc-13-lkftconfig-64k_page_size)
-> * build config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2spp0dMfaQHNeHr0jT9DgXiO1Px/config
-> * build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2spp0dMfaQHNeHr0jT9DgXiO1Px/
 
-Re posting links due format issue,
+--oui4r6js4wl7mw6b
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
+ subsystem status
+MIME-Version: 1.0
 
-## Boot log
-* Juno-r2 log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250210/testrun/27251102/suite/log-parser-test/test/warning-warning-cpu-pid-at-includelinuxrwsemh-madvise_unlock/log
-* Juno-r2 details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250210/testrun/27251102/suite/log-parser-test/test/warning-warning-cpu-pid-at-includelinuxrwsemh-madvise_unlock/
-* Juno-r2 history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250210/testrun/27251102/suite/log-parser-test/test/warning-warning-cpu-pid-at-includelinuxrwsemh-madvise_unlock/history/
-* Juno-r2 lava log 1:
-https://lkft.validation.linaro.org/scheduler/job/8117395#L43180
-* Juno-r2 lava log 2: https://lkft.validation.linaro.org/scheduler/job/8118169
-* Juno-r2 lava log 3: https://lkft.validation.linaro.org/scheduler/job/8118170
+Hello,
 
- >
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
+> The subsystem status is currently reported with --role(stats) by
+> adjusting the maintainer role for any status different from Maintained.
+> This has two downsides:
+>=20
+> - if a subsystem has only reviewers or mailing lists and no maintainers,
+>   the status is not reported (i.e. typically, Orphan subsystems have no
+>   maintainers)
+>=20
+> - the Supported status means that someone is paid for maintaining, but
+>   it is reported as "supporter" for all the maintainers, which can be
+>   incorrect. People have been also confused about what "supporter"
+>   means.
+>=20
+> This patch introduces a new --substatus option and functionality aimed
+> to report the subsystem status separately, without adjusting the
+> reported maintainer role. After the e-mails are output, the status of
+> subsystems will follow, for example:
+>=20
+> ...
+> linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
+> LIBRARY CODE status: Supported
+>=20
+> In order to allow replacing the role rewriting seamlessly, the new
+> option works as follows:
+>=20
+> - it is automatically enabled when --email and --role are enabled
+>   (the defaults include --email and --rolestats which implies --role)
+>=20
+> - usages with --norolestats e.g. for git's --cc-cmd will thus need no
+>   adjustments
+>=20
+> - the most common Maintained status is not reported at all, to reduce
+>   unnecessary noise
+>=20
+> - THE REST catch-all section (contains lkml) status is not reported
+>=20
+> - the existing --subsystem and --status options are unaffected so their
+>   users will need no adjustments
+>=20
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+
+This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
+breaks one of my scripts that I use to semi-automatically determine
+recipents for patch series.
+
+It works as follows:
+
+	$ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-i=
+ts-clocks-through-cl.patch
+	#!/bin/sh
+
+	addrecipent \
+	-t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWARE AND FLATTE=
+NED DEVICE TREE BINDINGS) \
+	-t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE=
+ AND FLATTENED DEVICE TREE BINDINGS) \
+	-t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE AND F=
+LATTENED DEVICE TREE BINDINGS) \
+	-t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer:ARM/Amlogic=
+ Meson SoC support) \
+	-t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Amlogic Meson =
+SoC support) \
+	-c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Amlogic Meson S=
+oC support) \
+	-c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" $(: reviewer=
+:ARM/Amlogic Meson SoC support) \
+	-t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND - SOC LAYER /=
+ DYNAMIC AUDIO POWER MANAGEM...) \
+	-t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SOC LAYER / DYN=
+AMIC AUDIO POWER MANAGEM...) \
+	-t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
+	-t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
+	-c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AND FLATTENED =
+DEVICE TREE BINDINGS) \
+	-c "linux-arm-kernel@lists.infradead.org" $(: moderated list:ARM/Amlogic M=
+eson SoC support) \
+	-c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlogic Meson SoC=
+ support) \
+	-c "linux-kernel@vger.kernel.org" $(: open list) \
+	-c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAYER / DYNAMIC=
+ AUDIO POWER MANAGEM...) \
+	audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-through-cl.p=
+atch
+
+the output is usually redirected to a file that I edit before running
+it. The additional line in the output of
+
+	scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-expo=
+rt-its-clocks-through-cl.patch
+
+with your change breaks that script.
+
+#regzbot introduced: c1565b6f7b53ea1ea3e757538832e12d7d13d949
+#regzbot title: get_maintainer's subsystem status output breaks custom scri=
+pt
+
+I can cope with it, but still wanted to let you know that people use
+get_maintainers for `git --cc-cmd`-like usages without --norolestats.
+
+Given that I use scripts/get_maintainer.pl from the tree I currently
+work at and sometimes that is based on next, sometimes on linus/master
+or -rc1 and sometimes even older trees (e.g. stable), the introduced
+`--no-substatus` option doesn't help me because when run from a tree
+without your change I get:
+
+	$ scripts/get_maintainer.pl --no-substatus audin-patch-v1/0001-ASoC-meson-=
+HACK-let-AIU-export-its-clocks-through-cl.patch
+	Unknown option: no-substatus
+	scripts/get_maintainer.pl: invalid argument - use --help if necessary
+
+so I cannot use that option easily until all the trees I care about get
+your change. :-\
+
+Best regards
+Uwe
+
+--oui4r6js4wl7mw6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmerJzIACgkQj4D7WH0S
+/k5YVQf7BAdWhLgXujonyzFFsaUOISFGzCkJyJvs50VgUIBiTkZ5JbdWlS1L7qmB
+N7/9b+VwK0Kl2lDY29kaVk7VmzfcragO919FOrNdHBXl3oWArj164euH0v4lNo1S
+8K3jL3QbFxcqzih2MlBzZh8kzwYhs6A8C9sfbh7XVsb1KmFddS5v3+CbUsZXYiUl
+dDDID96hhkyXN3Vbfray7mYCfHbRcdEUSTLEYhOFjNf0/opHNYVnqGA4zGJq01n1
+opI/4grFdZ+hHKQbFhT/e9cqRNg5UO71bE14kmGCJsJS/NKKTQjSdv4Y68Zv+taS
+IZRag81HuVa6dcm3OnFUf6Q4P5bA1A==
+=/Bv0
+-----END PGP SIGNATURE-----
+
+--oui4r6js4wl7mw6b--
