@@ -1,55 +1,55 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86531250BE2
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 15:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F1125332C
+	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 15:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287210; cv=none; b=lDDoXPk/0wBKG/BiVLzoG2jL7DUOHcR0EgSqSaf/a8iJeuLX1EfrSpdd70sq5rSHLiGYMx4wr35QLxe1X2qsDiiAeIkYD3XrkzS+PcTuiV+gbdbAe08ZXckpTR62rox/94xDWClNlsYLEXoG0fBCQu+i4PWAokNi+wHhvrjR6w4=
+	t=1739287342; cv=none; b=P7YQa5MpEQghqcKmHkZh/k6OdOf28piF2uWQSL92BSBlAOe3z2i2EYsH7kOjdskoGn7Wzx3myJHAGJrLHvgTj1U3WINgHQo3MdhSMmkbpoFiEz9GeAdl0V5jKPVPeaDEr5GI03f0/NLa6/fZIBEUi+lagdFJB4bcUzGR7ZDOTIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287210; c=relaxed/simple;
-	bh=P4/JUSQFJJgd2+ctyS23wFSUH0XddSHllH1RmQo/+AE=;
+	s=arc-20240116; t=1739287342; c=relaxed/simple;
+	bh=GE1ArqccH4ggT/QH/gEhglvAE2yVFqHuvuk6REkFiNg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BbdsffECV2KlQE3V0RkvnRjetGF8R7gXiT/FwkBCNQFoIWObspQjxN+yatmCRpe4OQyKI+w3M4uo8L0zj0w0uyeF2g/Rb0ukxjgdPoxrqj36wYTV9IB5T+bEMSymd+PAbKGoKxF4H+cwu33XH7rajnqCspkYWfcaiYvgDWZ1G+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.170
+	 To:Cc:Content-Type; b=OHZ5vRW7riVXLx9F1hMOwK1SKBy8X7GuXnzodvjc3m8knKazD+aHZNAxsVa92Ctoef21XY5WmzfBK4FdPE1cFkmW/JqpC1SQJ0HQlVFkFCWUOhfCjx62pMnuHRkdn/e31FC66nQyfbinAIbBZ28E14k1CCqTdy1KeJSrwyxlq9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7be49f6b331so585573385a.1
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 07:20:08 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4bbbaa03b0aso750142137.3
+        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 07:22:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739287207; x=1739892007;
+        d=1e100.net; s=20230601; t=1739287338; x=1739892138;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HeI1h3X9YFsKZxmC1aBdZztDggHHYsmIO5rZzIxeESU=;
-        b=AjTxuUnJFIwwOIHVo16bsbaEl03v/G0sPCtmRRz0lkJ/rLAXN3zhjsMw50DnakEX2C
-         lD2ucL8JqxBunMWFITLB8wopG21Mv6ensU9T/zjvKtdKSXqYB8AU/M0JgJbZ9zLuPsa+
-         M/bKWLW8WnB7xHRmCWC6wwfIyMM+tMf7aCIydFvej7hUtDSKtsLEQjqa9iG0hxGY5OtV
-         ZMyeLAytcjnFxq6CMorrxieIFnuDyc0bX2BmZfNWUTssNAcGehwQtG8ut7yPWQ6fuxLO
-         Q4/8uD2c2bEfh2VkhGYaktyPBqwMx7o/3nxaekHcvObGeR6afA7eKkURFk/jVgH4Q0xM
-         jxyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzejCs+9/v4aDvutNCydFHYHDCsexsEnf3ipsM9ETYyIT4QAGJdhcCkUHcprIbh6zm/qYlhVaBNMKXUg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzGDxFEjrDxqNoKUJt8fyDG1MTEi2HuO1RtPKuxovQQAwwF0AqD
-	REgDwrgZgmwlMZnS2jbJGuynC9YHfDjYlCmaptjeR7MbUfCBQb2Ii/0Z9JDZIxo=
-X-Gm-Gg: ASbGncvgsXmP3uwwBlVn3LeBm6YKx4/8i3vSpJPOLCzpro2HFpr6RA41hADE5C6Zb5G
-	wo/Wbo4V21+GfiMes9IbHvM2leP1ImvEiaugQ4nydfwLfP/+qboOI5KGiAF+8CbyMadyBNROe8h
-	tNBlGF0ltsCfkSJ++uBgCoCx/S/tKbyEEQp231p/SvLOoMIJvFThQIs+9EwIBccqa6Jt2T47ass
-	6lG1T7fhvnqBMnV14ajapb5a3ux2+MEctJlkOH+XiUGyQZZ8EAVNGzljm8dNE08RtrRJukCn3+/
-	5U3YSPC0lm7SVkK3T2bmv8C+cuUCiXmTXZtEeKVIODR4fqmMQe6ClRqMKg==
-X-Google-Smtp-Source: AGHT+IFwSFtsH19QMI3ReNUXxiBU37puIAyyGRtMrKWMWY5ZJaMtWBFhHpXHsPGApDH0g9QXd9X9nw==
-X-Received: by 2002:a05:620a:470a:b0:7c0:6188:902b with SMTP id af79cd13be357-7c06f3af02amr23118285a.5.1739287206642;
-        Tue, 11 Feb 2025 07:20:06 -0800 (PST)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com. [209.85.160.180])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c06510dcf2sm189323185a.113.2025.02.11.07.20.05
+        bh=IDf/FBN18w/MSePGkCpc/DsFbol5PkzHDiDAzsZGsQM=;
+        b=bKI2CatI/y1MogiIdov9KPgw8gwVz06yNW6hykXpy6RT/2wjQ7UPtuVV4tsttafzYk
+         wdbL+YJNadErU4HTiYJ6IJ94+FsB5QIvqmZQd5FgI0RSSHuhoBMEUHgj8aDG7B8ByGlD
+         40ZK1UAPa66s9aHagixRV1yorZeEZt6IOgwaU5qiuyNODtJbMrjCG8RhC5JX0ZTKGGzo
+         o6VC1FaDlu8TaSk6rYTXDAJuNgJ6dM40kVJ5FPgNDKDIntLzZH7QgImStmAn6xrWcXPB
+         z/PCpaqTApMNHqUF9biIeympVxzYyQCWHWLzIdn/mUkTKgCPtySPR6laJuH5a/oxJA9b
+         Fxkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWh3Dy0Hxr9E1qQw8inmt7FhCx/LgXoiuKNhORfVQBnSGweFB3MJwFdlvIYOMdR6PXAowal9LAIwzYBeA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzqgvi5LhFQvT7MdMzPkdiSCHjlxMwLP/sWqaABozJTtHGyeuIV
+	Y5UkqMqd58TM8cv2qGRyTemM+1KGic3Xe3OkHVw7qf55WI4WAX9HgcQrj6+QOs4=
+X-Gm-Gg: ASbGncu66215hQrOFwuBXOVFwCfsrnsyvjauK/brl2d9ZLUUfQQ1eVRe3pV/G6Q08Pn
+	REdKD5LvVCF/Mwt55sBWfuk+XKrYu1NwnCcWt6dyqedfObgtcSkGWtTv+mWy17wFsj6B+VIVxr8
+	hpxS90qJQjSBDXr0Z7hfxt0D0JrbKCpAaNJtGY01oxC6a8pCkT45F6H7Q8G3aapwCVRR0GE4Y33
+	UcxidOay01q3zoQG93QFjSJAXGGQsROF8G12u+nwdmDjcTT9glIZhhQQ+HzjwTIwI8piDc2wdhM
+	58CCDU/v8APGq/BL5MC0iq+r0NQqRvXbdhCBUKqyuiznAZWka9ctDw==
+X-Google-Smtp-Source: AGHT+IGdoQNbn8oNr7+Vcjw9rBZBGL5sfVJE0laq4Z6oasn2OhT4YvZOMcGq4+97lY66At3N7UtGpQ==
+X-Received: by 2002:a05:6102:a54:b0:4bb:d394:46d8 with SMTP id ada2fe7eead31-4bbd39458femr4415037137.3.1739287337835;
+        Tue, 11 Feb 2025 07:22:17 -0800 (PST)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbba5eb62dsm1082740137.6.2025.02.11.07.22.16
         for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 07:20:05 -0800 (PST)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47196e33b43so18489561cf.1
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 07:20:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXpH8sXWYf0Xa+2fJlUkTepyWvEWVU0TuBg26X0oU1wgU1N9HNW5QxaDNu/uOLUS5HpDQGjMT/2r4lxdQ==@lists.linux.dev
-X-Received: by 2002:a05:622a:1347:b0:467:5eb6:5153 with SMTP id
- d75a77b69052e-471679efd97mr266573411cf.19.1739287205151; Tue, 11 Feb 2025
- 07:20:05 -0800 (PST)
+        Tue, 11 Feb 2025 07:22:16 -0800 (PST)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4bbefec943aso40858137.2
+        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 07:22:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVBrtVkndMRiBMrBxip68M5da5C2ktDnm/fhTGNJJ8OFwYXpqCXUuPkxo/myPyUovacLdMqXVxqZ43FgA==@lists.linux.dev
+X-Received: by 2002:a05:6102:418b:b0:4bb:5d61:1252 with SMTP id
+ ada2fe7eead31-4bb5d611970mr7175358137.23.1739287336539; Tue, 11 Feb 2025
+ 07:22:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,135 +58,136 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
  <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz> <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
- <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com> <6ff32b12-7113-41dc-80d3-e729cc15a5ce@suse.cz>
-In-Reply-To: <6ff32b12-7113-41dc-80d3-e729cc15a5ce@suse.cz>
+ <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com> <wy6yhp2ty2s5wq76u7toghuuztdzb5f7uphfqkgw4t7vu4eojd@sc26ynxekxki>
+In-Reply-To: <wy6yhp2ty2s5wq76u7toghuuztdzb5f7uphfqkgw4t7vu4eojd@sc26ynxekxki>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Feb 2025 16:19:53 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
-X-Gm-Features: AWEUYZn1xjyqB1EpoC6789OaNQPaQ4r64nAW_WDpvE8uFlaj5_lViZH23fSGHDY
-Message-ID: <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
+Date: Tue, 11 Feb 2025 16:22:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVXgK3DiUjjOC==mm0SD8Fgtd44T+s2giPjD+G_c1tXeA@mail.gmail.com>
+X-Gm-Features: AWEUYZmf4rySmvZVXNOk5ylfnfY73xg5CsSAPYmCgFP_oFg40q0rY3aRwfpC3dA
+Message-ID: <CAMuHMdVXgK3DiUjjOC==mm0SD8Fgtd44T+s2giPjD+G_c1tXeA@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
  subsystem status
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, workflows@vger.kernel.org, 
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, workflows@vger.kernel.org, 
 	"Theodore Ts'o" <tytso@mit.edu>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
 	Thorsten Leemhuis <linux@leemhuis.info>, Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
 	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Vlastimil,
+Hi Uwe,
 
-On Tue, 11 Feb 2025 at 15:58, Vlastimil Babka <vbabka@suse.cz> wrote:
-> On 2/11/25 11:48, Geert Uytterhoeven wrote:
+On Tue, 11 Feb 2025 at 16:09, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+> On Tue, Feb 11, 2025 at 11:48:13AM +0100, Geert Uytterhoeven wrote:
 > > On Tue, 11 Feb 2025 at 11:32, Uwe Kleine-K=C3=B6nig
 > > <u.kleine-koenig@baylibre.com> wrote:
-> >> On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
-> >> > The subsystem status is currently reported with --role(stats) by
-> >> > adjusting the maintainer role for any status different from Maintain=
-ed.
-> >> > This has two downsides:
-> >> >
-> >> > - if a subsystem has only reviewers or mailing lists and no maintain=
-ers,
-> >> >   the status is not reported (i.e. typically, Orphan subsystems have=
- no
-> >> >   maintainers)
-> >> >
-> >> > - the Supported status means that someone is paid for maintaining, b=
-ut
-> >> >   it is reported as "supporter" for all the maintainers, which can b=
-e
-> >> >   incorrect. People have been also confused about what "supporter"
-> >> >   means.
-> >> >
-> >> > This patch introduces a new --substatus option and functionality aim=
-ed
-> >> > to report the subsystem status separately, without adjusting the
-> >> > reported maintainer role. After the e-mails are output, the status o=
-f
-> >> > subsystems will follow, for example:
-> >> >
-> >> > ...
-> >> > linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
-> >> > LIBRARY CODE status: Supported
-> >> >
-> >> > In order to allow replacing the role rewriting seamlessly, the new
-> >> > option works as follows:
-> >> >
-> >> > - it is automatically enabled when --email and --role are enabled
-> >> >   (the defaults include --email and --rolestats which implies --role=
-)
-> >> >
-> >> > - usages with --norolestats e.g. for git's --cc-cmd will thus need n=
-o
-> >> >   adjustments
-> >> >
-> >> > - the most common Maintained status is not reported at all, to reduc=
-e
-> >> >   unnecessary noise
-> >> >
-> >> > - THE REST catch-all section (contains lkml) status is not reported
-> >> >
-> >> > - the existing --subsystem and --status options are unaffected so th=
-eir
-> >> >   users will need no adjustments
-> >> >
-> >> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> >>
-> >> This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
-> >> breaks one of my scripts that I use to semi-automatically determine
-> >> recipents for patch series.
-> >>
-> >> It works as follows:
-> >>
-> >>         $ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-=
-AIU-export-its-clocks-through-cl.patch
-> >>         #!/bin/sh
-> >>
-> >>         addrecipent \
-> >>         -t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWAR=
-E AND FLATTENED DEVICE TREE BINDINGS) \
-> >>         -t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:O=
-PEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
-> >>         -t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FI=
-RMWARE AND FLATTENED DEVICE TREE BINDINGS) \
-> >>         -t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer=
-:ARM/Amlogic Meson SoC support) \
-> >>         -t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Am=
+> > > On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
+> > > > The subsystem status is currently reported with --role(stats) by
+> > > > adjusting the maintainer role for any status different from Maintai=
+ned.
+> > > > This has two downsides:
+> > > >
+> > > > - if a subsystem has only reviewers or mailing lists and no maintai=
+ners,
+> > > >   the status is not reported (i.e. typically, Orphan subsystems hav=
+e no
+> > > >   maintainers)
+> > > >
+> > > > - the Supported status means that someone is paid for maintaining, =
+but
+> > > >   it is reported as "supporter" for all the maintainers, which can =
+be
+> > > >   incorrect. People have been also confused about what "supporter"
+> > > >   means.
+> > > >
+> > > > This patch introduces a new --substatus option and functionality ai=
+med
+> > > > to report the subsystem status separately, without adjusting the
+> > > > reported maintainer role. After the e-mails are output, the status =
+of
+> > > > subsystems will follow, for example:
+> > > >
+> > > > ...
+> > > > linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
+> > > > LIBRARY CODE status: Supported
+> > > >
+> > > > In order to allow replacing the role rewriting seamlessly, the new
+> > > > option works as follows:
+> > > >
+> > > > - it is automatically enabled when --email and --role are enabled
+> > > >   (the defaults include --email and --rolestats which implies --rol=
+e)
+> > > >
+> > > > - usages with --norolestats e.g. for git's --cc-cmd will thus need =
+no
+> > > >   adjustments
+> > > >
+> > > > - the most common Maintained status is not reported at all, to redu=
+ce
+> > > >   unnecessary noise
+> > > >
+> > > > - THE REST catch-all section (contains lkml) status is not reported
+> > > >
+> > > > - the existing --subsystem and --status options are unaffected so t=
+heir
+> > > >   users will need no adjustments
+> > > >
+> > > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > >
+> > > This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
+> > > breaks one of my scripts that I use to semi-automatically determine
+> > > recipents for patch series.
+> > >
+> > > It works as follows:
+> > >
+> > >         $ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let=
+-AIU-export-its-clocks-through-cl.patch
+> > >         #!/bin/sh
+> > >
+> > >         addrecipent \
+> > >         -t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWA=
+RE AND FLATTENED DEVICE TREE BINDINGS) \
+> > >         -t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:=
+OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
+> > >         -t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN F=
+IRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
+> > >         -t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintaine=
+r:ARM/Amlogic Meson SoC support) \
+> > >         -t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/A=
+mlogic Meson SoC support) \
+> > >         -c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Am=
 logic Meson SoC support) \
-> >>         -c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Aml=
-ogic Meson SoC support) \
-> >>         -c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" =
-$(: reviewer:ARM/Amlogic Meson SoC support) \
-> >>         -t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND -=
- SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
-> >>         -t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SOC=
- LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
-> >>         -t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
-> >>         -t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
-> >>         -c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AN=
-D FLATTENED DEVICE TREE BINDINGS) \
-> >>         -c "linux-arm-kernel@lists.infradead.org" $(: moderated list:A=
-RM/Amlogic Meson SoC support) \
-> >>         -c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlog=
-ic Meson SoC support) \
-> >>         -c "linux-kernel@vger.kernel.org" $(: open list) \
-> >>         -c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAY=
-ER / DYNAMIC AUDIO POWER MANAGEM...) \
-> >>         audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-=
-through-cl.patch
+> > >         -c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>"=
+ $(: reviewer:ARM/Amlogic Meson SoC support) \
+> > >         -t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND =
+- SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
+> > >         -t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SO=
+C LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
+> > >         -t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
+> > >         -t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
+> > >         -c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE A=
+ND FLATTENED DEVICE TREE BINDINGS) \
+> > >         -c "linux-arm-kernel@lists.infradead.org" $(: moderated list:=
+ARM/Amlogic Meson SoC support) \
+> > >         -c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlo=
+gic Meson SoC support) \
+> > >         -c "linux-kernel@vger.kernel.org" $(: open list) \
+> > >         -c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LA=
+YER / DYNAMIC AUDIO POWER MANAGEM...) \
+> > >         audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks=
+-through-cl.patch
 > >
 > > Hey, that looks familiar ;-)
 > >
-> >> the output is usually redirected to a file that I edit before running
-> >> it. The additional line in the output of
-> >>
-> >>         scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK-=
-let-AIU-export-its-clocks-through-cl.patch
-> >>
-> >> with your change breaks that script.
+> > > the output is usually redirected to a file that I edit before running
+> > > it. The additional line in the output of
+> > >
+> > >         scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK=
+-let-AIU-export-its-clocks-through-cl.patch
+> > >
+> > > with your change breaks that script.
 > >
 > > You forgot to list the additional output?
 > >
@@ -199,44 +200,56 @@ let-AIU-export-its-clocks-through-cl.patch
 > >     --cc "MELEXIS MLX90614 DRIVER status: Supported \
 > >     --cc "ARM/NUVOTON MA35 ARCHITECTURE status: Supported \
 > >     --cc "ARM/RISC-V/RENESAS ARCHITECTURE status: Supported \
-> >
-> > Iff this extra output is good to have, why not include it in the commen=
-t
-> > next to the existing entries with the email addresses, so it will be
-> > handled automatically by all scripting on top?
 >
-> I've tried to do that in v1 in the form of reporting e.g. as
-> John Doe <jd@example.com> (maintainer:SUBSYSTEM [supported])
+> Is that really your output? No closing ) in the first line and no
+> closing " in the 5 last?
+
+Yes it is....
+As I need to delete the lines anyway, invalid syntax is irrelevant ;-)
+
+> For me it's worse(?), I get:
 >
-> But it seemed noisy to repeat that on every line involving the subsystem.
-
-Yeah, it could be considered noisy... (more below)
-
-> When you say comment, what kind of separation for the comment would work
-> regardless of what's used for postprocessing?
-
-I don't mind much. Perhaps just a comma?
-
-> > Now, as both Uwe and I edit our generated scripts before running them,
-> > we can delete the unwanted lines, but it's more work...
-> > Thanks!
+>         $ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-AIU=
+-export-its-clocks-through-cl.patch
+>         #!/bin/sh
 >
-> I guess technically your scripts could detect first if --no-substatus is
-> supported by grepping --help or testing if passing the option results in =
-an
-> error? But yeah it's not ideal, looks like I've hit the limits of automag=
-ic
-> heuristics here.
-> Or we make it fully opt-in but then most non-scripting users will not lea=
-rn
-> the status at all because it won't occur to them to enable it...
+>         addrecipent \
+>         -t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWARE A=
+ND FLATTENED DEVICE TREE BINDINGS) \
+>         -t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:OPEN=
+ FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
+>         -t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FIRMW=
+ARE AND FLATTENED DEVICE TREE BINDINGS) \
+>         -t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer:AR=
+M/Amlogic Meson SoC support) \
+>         -t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Amlog=
+ic Meson SoC support) \
+>         -c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Amlogi=
+c Meson SoC support) \
+>         -c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" $(:=
+ reviewer:ARM/Amlogic Meson SoC support) \
+>         -t "Liam Girdwood <lgirdwood@gmail.com>" $(: maintainer:SOUND - S=
+OC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
+>         -t "Mark Brown <broonie@kernel.org>" $(: maintainer:SOUND - SOC L=
+AYER / DYNAMIC AUDIO POWER MANAGEM...) \
+>         -t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
+>         -t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
+>         -c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AND F=
+LATTENED DEVICE TREE BINDINGS) \
+>         -c "linux-arm-kernel@lists.infradead.org" $(: moderated list:ARM/=
+Amlogic Meson SoC support) \
+>         -c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlogic =
+Meson SoC support) \
+>         -c "linux-kernel@vger.kernel.org" $(: open list) \
+>         -c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAYER =
+/ DYNAMIC AUDIO POWER MANAGEM...) \
+>         Failed to parse "SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEME=
+NT (ASoC) status: Supported
+>         " at -e line 6, <> line 17.
 
-I still seem to miss the real story behind this patch (so perhaps
-that's why I would consider all of it noisy ;-). When I create a patch,
-what am I gonna do with this extra information?
-E.g. decide not to send the patch, because the driver is orphaned?
+Oops...
 
-Thanks!
+My version is also not perfect. I'm used to doing manual adjustments...
 
 Gr{oetje,eeting}s,
 
