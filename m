@@ -1,80 +1,80 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626B725333E
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 15:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69282580C8
+	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 16:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287371; cv=none; b=slmON2MsC91VJwP4y/kbNlEJTZevTOdO/BvUXLu0QdF6jgx3FCMrzX0XtYk1oEJOq6e4hkZh0UIZ1Mne76R8UUWpb6dfNZXhNeylqZv5IqQHjnxAoNAm61KRE6HdtECBCHR+0lmog2BOwUi2VyeaCg8QFMHIONkbIc3gjUx5NWY=
+	t=1739290176; cv=none; b=VYcrdLMvsMkImdJpijLUdSAtIDn2ZEdMJjH11tyYVMUSsF238rLZut5nqVGNni7D2SpB9geEgCgDj6kRIUHC6J6F6qbh/g0ez2lg+Hh2pNUR66leHZhAB2rnO1WAOk4NKfrc92cLCBId2Z52kgKuwcYqf11xdx/+SNH2hkoRiyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287371; c=relaxed/simple;
-	bh=3CNF3xNRfUyRu+M/1GcnWuSysIHi3jp2C4gsUX+rAQo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eVaetWOsQG5y8K1PkPEfBLx9ZkYfcofDmOZ+EN6Jp4RhSc9/nSDjEK35X3zarJ3zQwFszEC4fC/koNeK3Bn4zrUWMFCm82HHpqlDCYrJZSw7To4lL9AO60VYwTqdOwK8o7zHSjf1qE23dpyDJBNlCcmjm+alxPonPbjEUPekZ58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CGQoCIo7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3BDNW4jX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CGQoCIo7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3BDNW4jX; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1739290176; c=relaxed/simple;
+	bh=qQApPjpim+loQ4ajMtz3MpE/ppKjJkgfuOadEo25WrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RFORFpf35LbBrL8uPHYZea/X/p+oMm1NbRyaYTlWmDrDpINGrYNymK2AiGfSuTn6/Qs95Ypigp0AGJLEqzT7usx4aNYBm5YZY9dLD2qPvrBBc/HiyM8VeeWv3HKvLm2qz0V4WupSJeHFnJTK0SQm1lUsOFIAz77Lio3Akgm2mBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mPBO4lte; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0bMk4k/O; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mPBO4lte; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0bMk4k/O; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CGQoCIo7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3BDNW4jX";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CGQoCIo7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3BDNW4jX"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mPBO4lte";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0bMk4k/O";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mPBO4lte";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0bMk4k/O"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7633434E92;
-	Tue, 11 Feb 2025 11:05:31 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6B4A776B78;
+	Tue, 11 Feb 2025 15:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739271931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1739287849; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=a1i6HiwoBRawjCwK+/3RGg6JT6ZR37cdSroEOg1BbeU=;
-	b=CGQoCIo76NvEKDqJNqVmzIG9jyvt45uKuK+Qw7jE7cmQe94YYu1g3NCzt77Hw4B3YlSNCW
-	Ok1MMWTckSJ57PDCU+Yv0DZ/mlVoEWQ99YhmIyhGRr7UmguQMjY3x6DqIFGNYIoge9GPea
-	CvwZ4bmWBmLzqBZ4KgVcIKCerPnBdjI=
+	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
+	b=mPBO4lteNcruHEYyFiNZeG+yaUMWIHs0q1jrK4nTy+/QP+8V4ZhxUbp4FwpXQYEHPavDB8
+	Wim7SQv5lb1aN5ygBUU6HGkTOdlEwnphNf2vX+1wHMPn8bYhCauTIpXFydRutWs+jkmnv/
+	8NI4x6rStLCPG1P3ZGDgqvPevrXu7iw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739271931;
+	s=susede2_ed25519; t=1739287849;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=a1i6HiwoBRawjCwK+/3RGg6JT6ZR37cdSroEOg1BbeU=;
-	b=3BDNW4jXuYaOAO4FUxzlEt3zqE+lD4tpMcZPEzhiOlvNV0cdBEYypnjqfucEQbsixWmLlA
-	qvCzED0Wq6A1kaDA==
-Authentication-Results: smtp-out1.suse.de;
+	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
+	b=0bMk4k/OvxdV6FHkWm7Gy/vTxMJr3PwS4zfz4hg2OJyy3OOlo/3xAU3UglKruSmh0IZgM/
+	eywnk9vlYd/+fsBw==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739271931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1739287849; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=a1i6HiwoBRawjCwK+/3RGg6JT6ZR37cdSroEOg1BbeU=;
-	b=CGQoCIo76NvEKDqJNqVmzIG9jyvt45uKuK+Qw7jE7cmQe94YYu1g3NCzt77Hw4B3YlSNCW
-	Ok1MMWTckSJ57PDCU+Yv0DZ/mlVoEWQ99YhmIyhGRr7UmguQMjY3x6DqIFGNYIoge9GPea
-	CvwZ4bmWBmLzqBZ4KgVcIKCerPnBdjI=
+	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
+	b=mPBO4lteNcruHEYyFiNZeG+yaUMWIHs0q1jrK4nTy+/QP+8V4ZhxUbp4FwpXQYEHPavDB8
+	Wim7SQv5lb1aN5ygBUU6HGkTOdlEwnphNf2vX+1wHMPn8bYhCauTIpXFydRutWs+jkmnv/
+	8NI4x6rStLCPG1P3ZGDgqvPevrXu7iw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739271931;
+	s=susede2_ed25519; t=1739287849;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=a1i6HiwoBRawjCwK+/3RGg6JT6ZR37cdSroEOg1BbeU=;
-	b=3BDNW4jXuYaOAO4FUxzlEt3zqE+lD4tpMcZPEzhiOlvNV0cdBEYypnjqfucEQbsixWmLlA
-	qvCzED0Wq6A1kaDA==
+	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
+	b=0bMk4k/OvxdV6FHkWm7Gy/vTxMJr3PwS4zfz4hg2OJyy3OOlo/3xAU3UglKruSmh0IZgM/
+	eywnk9vlYd/+fsBw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5717C13715;
-	Tue, 11 Feb 2025 11:05:31 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F83913715;
+	Tue, 11 Feb 2025 15:30:49 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4Tf0FPsuq2f0BgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 11 Feb 2025 11:05:31 +0000
-Message-ID: <cd48e5d4-8925-44b1-9195-93b9c0a10d15@suse.cz>
-Date: Tue, 11 Feb 2025 12:05:31 +0100
+	id B801Dyltq2fEZAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 11 Feb 2025 15:30:49 +0000
+Message-ID: <68bb307a-26ad-46ac-a9de-bec9b808506a@suse.cz>
+Date: Tue, 11 Feb 2025 16:30:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -85,10 +85,9 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
  subsystem status
 Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>,
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>,
  workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
  Thorsten Leemhuis <linux@leemhuis.info>, Kees Cook <kees@kernel.org>,
@@ -98,6 +97,8 @@ References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
  <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
  <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com>
  <6ff32b12-7113-41dc-80d3-e729cc15a5ce@suse.cz>
+ <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
  KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
@@ -137,14 +138,14 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
  1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
  EP+ylKVEKb0Q2A==
-In-Reply-To: <6ff32b12-7113-41dc-80d3-e729cc15a5ce@suse.cz>
+In-Reply-To: <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Score: -4.30
 X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.995];
 	MIME_GOOD(-0.10)[text/plain];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[11];
@@ -159,136 +160,66 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,linaro.org:email,baylibre.com:email,perex.cz:email,suse.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-On 2/11/25 11:59, Vlastimil Babka wrote:
-> On 2/11/25 11:48, Geert Uytterhoeven wrote:
->> Hi Uwe,
->> 
->> On Tue, 11 Feb 2025 at 11:32, Uwe Kleine-König
->> <u.kleine-koenig@baylibre.com> wrote:
->>> On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
->>> > The subsystem status is currently reported with --role(stats) by
->>> > adjusting the maintainer role for any status different from Maintained.
->>> > This has two downsides:
->>> >
->>> > - if a subsystem has only reviewers or mailing lists and no maintainers,
->>> >   the status is not reported (i.e. typically, Orphan subsystems have no
->>> >   maintainers)
->>> >
->>> > - the Supported status means that someone is paid for maintaining, but
->>> >   it is reported as "supporter" for all the maintainers, which can be
->>> >   incorrect. People have been also confused about what "supporter"
->>> >   means.
->>> >
->>> > This patch introduces a new --substatus option and functionality aimed
->>> > to report the subsystem status separately, without adjusting the
->>> > reported maintainer role. After the e-mails are output, the status of
->>> > subsystems will follow, for example:
->>> >
->>> > ...
->>> > linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
->>> > LIBRARY CODE status: Supported
->>> >
->>> > In order to allow replacing the role rewriting seamlessly, the new
->>> > option works as follows:
->>> >
->>> > - it is automatically enabled when --email and --role are enabled
->>> >   (the defaults include --email and --rolestats which implies --role)
->>> >
->>> > - usages with --norolestats e.g. for git's --cc-cmd will thus need no
->>> >   adjustments
->>> >
->>> > - the most common Maintained status is not reported at all, to reduce
->>> >   unnecessary noise
->>> >
->>> > - THE REST catch-all section (contains lkml) status is not reported
->>> >
->>> > - the existing --subsystem and --status options are unaffected so their
->>> >   users will need no adjustments
->>> >
->>> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->>>
->>> This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
->>> breaks one of my scripts that I use to semi-automatically determine
->>> recipents for patch series.
->>>
->>> It works as follows:
->>>
->>>         $ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-through-cl.patch
->>>         #!/bin/sh
->>>
->>>         addrecipent \
->>>         -t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
->>>         -t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
->>>         -t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
->>>         -t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer:ARM/Amlogic Meson SoC support) \
->>>         -t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Amlogic Meson SoC support) \
->>>         -c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Amlogic Meson SoC support) \
->>>         -c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" $(: reviewer:ARM/Amlogic Meson SoC support) \
->>>         -t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
->>>         -t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
->>>         -t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
->>>         -t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
->>>         -c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS) \
->>>         -c "linux-arm-kernel@lists.infradead.org" $(: moderated list:ARM/Amlogic Meson SoC support) \
->>>         -c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlogic Meson SoC support) \
->>>         -c "linux-kernel@vger.kernel.org" $(: open list) \
->>>         -c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...) \
->>>         audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-through-cl.patch
->> 
->> Hey, that looks familiar ;-)
->> 
->>> the output is usually redirected to a file that I edit before running
->>> it. The additional line in the output of
->>>
->>>         scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-through-cl.patch
->>>
->>> with your change breaks that script.
->> 
->> You forgot to list the additional output?
->> 
->> I gave it a try with my script, and with one of my own patches.
->> Example additional output is:
->> 
->>      --cc "ARM/Microchip" $(: AT91] SoC support status: Supported \
->>     --cc "QAT DRIVER status: Supported \
->>     --cc "ARM/ASPEED MACHINE SUPPORT status: Supported \
->>     --cc "MELEXIS MLX90614 DRIVER status: Supported \
->>     --cc "ARM/NUVOTON MA35 ARCHITECTURE status: Supported \
->>     --cc "ARM/RISC-V/RENESAS ARCHITECTURE status: Supported \
->> 
->> Iff this extra output is good to have, why not include it in the comment
->> next to the existing entries with the email addresses, so it will be
->> handled automatically by all scripting on top?
+On 2/11/25 16:19, Geert Uytterhoeven wrote:
+> Hi Vlastimil,
 > 
-> I've tried to do that in v1 in the form of reporting e.g. as
-> John Doe <jd@example.com> (maintainer:SUBSYSTEM [supported])
+> On Tue, 11 Feb 2025 at 15:58, Vlastimil Babka <vbabka@suse.cz> wrote:
+>> On 2/11/25 11:48, Geert Uytterhoeven wrote:
+>> I've tried to do that in v1 in the form of reporting e.g. as
+>> John Doe <jd@example.com> (maintainer:SUBSYSTEM [supported])
+>>
+>> But it seemed noisy to repeat that on every line involving the subsystem.
 > 
-> But it seemed noisy to repeat that on every line involving the subsystem.
+> Yeah, it could be considered noisy... (more below)
 > 
-> When you say comment, what kind of separation for the comment would work
-> regardless of what's used for postprocessing?
+>> When you say comment, what kind of separation for the comment would work
+>> regardless of what's used for postprocessing?
 > 
->> Now, as both Uwe and I edit our generated scripts before running them,
->> we can delete the unwanted lines, but it's more work...
->> Thanks!
-> 
-> I guess technically your scripts could detect first if --no-substatus is
-> supported by grepping --help or testing if passing the option results in an
-> error? But yeah it's not ideal, looks like I've hit the limits of automagic
-> heuristics here.
+> I don't mind much. Perhaps just a comma?
 
-Hm maybe I could add "-t STDOUT" to the heuristics?
+Hm comma where exactly? Sorry I might not get it, could you provide a full
+example? Thanks.
 
-> Or we make it fully opt-in but then most non-scripting users will not learn
-> the status at all because it won't occur to them to enable it...
+>> > Now, as both Uwe and I edit our generated scripts before running them,
+>> > we can delete the unwanted lines, but it's more work...
+>> > Thanks!
+>>
+>> I guess technically your scripts could detect first if --no-substatus is
+>> supported by grepping --help or testing if passing the option results in an
+>> error? But yeah it's not ideal, looks like I've hit the limits of automagic
+>> heuristics here.
+>> Or we make it fully opt-in but then most non-scripting users will not learn
+>> the status at all because it won't occur to them to enable it...
 > 
->> Gr{oetje,eeting}s,
->> 
->>                         Geert
->> 
+> I still seem to miss the real story behind this patch (so perhaps
+> that's why I would consider all of it noisy ;-). When I create a patch,
+
+The cover letter tells the story. It comes back to the way the script
+reports maintainers as "supporter"s (or other roles according to the status,
+however some status means there is most likely no maintainer). Joe objected
+to that status reporting would be simply removed in [1]. I also think it's
+useful information for the submitters, so I try to provide it differently.
+
+> what am I gonna do with this extra information?
+> E.g. decide not to send the patch, because the driver is orphaned?
+
+Well for example you can know that you might not get a timely reply, or
+might need to step up as a maintainer. Or you're trying to add a feature and
+the driver is "odd fixes". I think we do document the status in MAINTAINERS
+for a reason, and one could expect the tool to provide it and not require
+you to go look into MAINTAINERS yourself.
+
+[1]
+https://lore.kernel.org/all/30776fe75061951777da8fa6618ae89bea7a8ce4.camel@perches.com/
+
+> Thanks!
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 > 
 
