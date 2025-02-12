@@ -1,89 +1,153 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A3720DD4E
-	for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 14:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4F82066C5
+	for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 15:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739372121; cv=none; b=d0SyiUT52VCOKR+Tk5rYm6aePuuprrBLiaJby7+NWoph0hui9O1rOMuWZWT744AsrpOtvrUa0GnccnpTj9PVe2+cCmZNscJULf6SZDMfmQHGZY02B/87aJjz4gddJdRN7Hck4fKZEf14C7EGxd/scPlXJOiBAfZT3nY6XtlHZis=
+	t=1739372534; cv=none; b=ekNs0+qHdqI7pJPMmk28MUG5iWY/V/KgDrwTzY745gDxNmuWW3Fy5Pvn0bIim7vI6+zpWxuSfYqB9f8lw1EjuUtfSlV1soato6ygqQoGCc/Gw2D6pfu7wytNI5QBoTph6J2HscMQYDS+MzyDQVXsAS5IK9/3rdZTLMN83/Yyviw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739372121; c=relaxed/simple;
-	bh=IbtkV7VYdQ+EOOTcesgmqmBfGe4HNr+O1bDE8ixf3H0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=jGjzd1SFOwhAYXFI9HEbpgAk8SayT6OtjsIoBTSm1lTHUWjxhcxW+ipgofAfNakm1mK+QLGPT4P5uXZo3T38aOHG4PG2sV3eGxpOQP0mjGj0KpPv4q7cL9KPFlamEXphDx2y3OEqQ8ZEMpEZ4D+Hb7L1ns6DQKUWLqRBORxAz4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fqtxt4vV; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739372534; c=relaxed/simple;
+	bh=5W/0kDH2iE8jdU0mcwhPKQVDesaBbPuYLkNnrZQXzoM=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=j+G1uHyanYTmYKAA0rcnoDAc99BbwKT5YN0Yc9fKWcUFOb3VrXv9tMNZ6SYlyaXzs+8yhVeTQIv0YXqfg0IMzC0EMGjxUp4BzwyzdUILCx6gUn9DHr0IFQpwlYhdytNG87lDoAB/TZj5ExF3kNbOOhaye10dmm5NsU58mwwrXdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=bS3GT3S8; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fqtxt4vV"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2a88c7fabdeso3943026fac.1
-        for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 06:55:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="bS3GT3S8"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e3978c00a5aso4994697276.1
+        for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 07:02:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739372119; x=1739976919; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MSNg6ZKNxkzJrjibxZqNXmnNpAozgQEy/8YtDWWeQ0Q=;
-        b=Fqtxt4vVIyG1eyQpwWRv7LvMguov1H2qkWquFKA/KGywEc5WWvufkC1oL2ZOGIz2la
-         RPmAu9YrVs+ObAATGW0r6LXAqBgJlbpceVHiEbIAad2CRjddxsl3kkTeV6MrmMZVvfap
-         FlrvaWJLs8httO9oTpksakyw2PdybMfUv4pz4KyIciPs7vaZtY3N4J5bTrolrahv9tk3
-         1VbTJS9qRVyZw/fKbtHT+Bom9QEIaqBhk9s4lnRqxnlZNvaDv+poHLEVgAwuXNwqsTIp
-         RQQUHWfNOnCBCCQs9lsHCW/25Lpb+L8VOQ8BU1GWc1RXP2EpYcGKtHLRZMamANo498yz
-         Sm+Q==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1739372531; x=1739977331; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ue60ZjyGWrVaLeaSu2xAx8yr+4Vq3hGcMgDBpVnlCyc=;
+        b=bS3GT3S8+TOKhkBrjkDe6H/rlpyGUgXwhWp1CWuP1ADlqU1FBCEQGHqfZPHJUvf2Xe
+         Qe6V1wKa8ePOPuQvSTBVbKoX6kdRrSfVPDH36DollkNh9VO749btWTowTrXFF63su9zm
+         zrYnqX0sSMVlEAoh38vwsJfj9zOlxxEFCKvp0Mvi0ypxUcY/8RRuAgMA0Dg1Rt5tGnKr
+         f7Cs+I2wUJ0W012rDU0poYCMcKW3YBOtgC7psjSHiv5eQBrothT9sWNq/zM3AKJkeuJT
+         Kmeogw6/trISe+16j7o4B/xqk44bT2yaivlZSRs9sXqwuLhGha3jF8FWb1kw4Bu1j73B
+         ZdMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739372119; x=1739976919;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MSNg6ZKNxkzJrjibxZqNXmnNpAozgQEy/8YtDWWeQ0Q=;
-        b=BTEzbg5bF3hgaPpPMuOdM95LtQvYsXKoRc0Q0dUYmeu3iKfdtFNw5Ta3QjcpNTG8yy
-         1kUy3+gcdKPYXZYh1vRRZiaHZOIu0IErqI99vMUO3+wlTET7Pp1v4aSCrCORRffhJSuM
-         6d2VqtbiHXHs1PfwsHWGGfN45GmO0T95zsUlzplSCZlosbW8FK4pcVut0VuUp4idYZFY
-         BqADAIuSpLBxmPIjhhh+7XalmJGgpiJkS+EcMt3Rv2MZBgNc6H3elw+Hlb51YDDn5uIs
-         QHf1Nt2r1ndzlqNlRoLWDe+Tl6niidf4s6V6crhFj8020HZTAO5NNPsq3PGnsiVaa5VC
-         nMTw==
-X-Gm-Message-State: AOJu0YybeA3MqtaiRsaTY0vaxxUXmab8VePcOu8Krac1qk/hWEZuuV/e
-	bZtUGTGhb7VbsXy1kDN962lcspevf6GguiPnLreGNA0qVtIOE752MV7F68qC2k7WLhSIbsphlwp
-	oQNQBTsV+uKKhE2EattSoZOBdkuk=
-X-Gm-Gg: ASbGnctTEAWFbUg3YUgRNHAm7vE4sq40W3OsA6x4QxbcwzDTlVQFYJMn0qa2r/3Ubh+
-	oLI5FTHVAhhAdlMcdUn6Kr0dTqa+JS0uo0py+bas1Ty20uOoCcgZ1Mi1o4sdzfetGAQ9i9FSbnw
-	RaLmltteKm6s+7TZ9sqaH4yiliPVy0kBQ=
-X-Google-Smtp-Source: AGHT+IEG3yKnzH2nfEOb3BpqpatWdPALoI0meFuH9P4QQ3DJpeuXmmEPPcSQ25B/BU8RcOhyRkLePQ6xnYDFaP2ol0U=
-X-Received: by 2002:a05:6870:3914:b0:2b3:8b27:c352 with SMTP id
- 586e51a60fabf-2b8d682ff06mr2378978fac.33.1739372118789; Wed, 12 Feb 2025
- 06:55:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739372531; x=1739977331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ue60ZjyGWrVaLeaSu2xAx8yr+4Vq3hGcMgDBpVnlCyc=;
+        b=qzEDRX0WOcpF0aamrzDVLGHeCcEUXn6F1K2RdnRh/rvpJuR+EDkhI0zqH2qCiXflbl
+         lJbGYWr2TnjquvabV6XrU1Kqzn0eG2rVTvLklUKKqUSaqLpWMrFhZO367SI59NIAn9if
+         Br6H1oOAy/Px+SOerJwbDwfx2VhfZQ0gTNNbWhxDQt0onFaVxpfseSq6d068BqNrlOXr
+         72R3Suo/Op7SD+y70UplCzMXf3NRVYmG6xn9BjusAACIftIf9CeuSApZvEG6FvIEa+P5
+         GN1HhDLzsmhnpvrn8RJ4LKaTXHbHnVi4yfY5X7PrCZUu5RYoHEDlv8JoOOCH1XMUVucs
+         gyGw==
+X-Gm-Message-State: AOJu0YzklOMzaj0BCFZQllZXkgZ25msg8NlmNJb5D7Qkm1Lz6UniVky6
+	SSemW9yL+3n3lowuy70iiJzP7GIamkBX51gzWdw/DIFTxE/e+7ayGRcGDNJeqYKH6woAI5D/Wu/
+	hfQAXOnuWY3Mq4TYOzcITOY5yu+nxat4XZQe9zg==
+X-Gm-Gg: ASbGnctXakVA7mt1R3fagvi3RFvu1u4IvzjeM82Nl9nWGEv2CsZTqb4evPclcDao2zv
+	nC29cpbDWUo/6ULvw9lFdAHMEH4of99X7FLQRQ6G0KjbS3mjDacrgwect5YHesWhYl49JddGg+T
+	zbbGig8Mlf7eZsUSt3UraBNrQCVnz8yw==
+X-Google-Smtp-Source: AGHT+IHhFhOXzJwSAIWweSYzvFoZYxNnzLTNmGFduMSuVGpvd0yGDCGB+seiAMWmOMBUE4ST4esRRCqwQ/celgFMX8A=
+X-Received: by 2002:a05:6902:1105:b0:e5b:32f5:e38b with SMTP id
+ 3f1490d57ef6-e5d9f11e33dmr3185611276.23.1739372531004; Wed, 12 Feb 2025
+ 07:02:11 -0800 (PST)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 12 Feb 2025 07:02:09 -0800
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 12 Feb 2025 07:02:09 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Avram Bublil <avram.bublil@gmail.com>
-Date: Wed, 12 Feb 2025 16:55:07 +0200
-X-Gm-Features: AWEUYZnJy2lzPNeOGF5BFFO2WMoYTOsevQ8QMq92WEyjMbO3WFupeJlHqyrOtBM
-Message-ID: <CABtvoZ1Y8u6KwoKf07X5_nJ-S-WrMVS_21tT2sezNV2u4AhLNw@mail.gmail.com>
-Subject: Regression: 6.12 no longer loads the snd_hda_intel driver for Cannon
- Lake PCH cAVS [8086:a348] (rev 10) - (Realtek ALC3234)
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
+from: KernelCI bot <bot@kernelci.org>
+Date: Wed, 12 Feb 2025 07:02:09 -0800
+X-Gm-Features: AWEUYZm15ZGhN4kwVNpit-crolY82HCWxHmb6fls6IBOcuU21xjTZqjJWHV2gUA
+Message-ID: <CACo-S-0yDKa4KA6Jy_hCGvygz0U9=0yr0aoT1K5avP5WtekmHQ@mail.gmail.com>
+Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIC4vaW5jbHVkZS9saW51eC90aA==?=
+	=?UTF-8?B?cmVhZF9pbmZvLmg6MjI1OjI4OiBlcnJvcjogdW5rbm93biB0eXBlIG5hbWUg4oCYdmEuLi4=?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The card works fine on 6.6.
-Here's the output of alsa-info.sh for 6.6 (where it works):
-http://alsa-project.org/db/?f=ac3a0849a332189eb61a640fe94b46de369a655c
+Hello,
 
-Here's the output for 6.12:
-http://alsa-project.org/db/?f=22995c74392ed86393fc2c180ab7ae010e6cbfbb
+New build issue found on next/master:
 
-Here's the output of $ lspci -k | grep -A 3 Audio
-00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
-    DeviceName: Onboard - Sound
-    Subsystem: Dell Device 0871
-    Kernel modules: snd_hda_intel, snd_soc_avs, snd_sof_pci_intel_cnl
+---
+ ./include/linux/thread_info.h:225:28: error: unknown type name
+=E2=80=98validate_usercopy_range=E2=80=99 in security/landlock/net.o
+(security/landlock/net.c) [logspec:kbuild,kbuild.compiler.error]
+---
 
-I have initially also added modinfo for snd_hda_intel, snd_soc_avs,
-and snd_sof_pci_intel_cnl - But my email was flagged as spam, so I
-won't do so now.
+- dashboard: https://dashboard.kernelci.org/issue/maestro:137e010e3d61dc46e=
+10f16fec9e6734266fa9c64
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  c674aa7c289e51659e40dda0f954886ef7f80042
 
-Installed sound related packages:
-sof-firmware 2024.09.2-1
-alsa-ucm-conf 1.2.13-2
 
-If there's a need for more information, please let me know.
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+                 from security/landlock/net.c:9:
+./include/linux/thread_info.h:225:28: error: unknown type name
+=E2=80=98validate_usercopy_range=E2=80=99
+  225 |                            validate_usercopy_range);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/thread_info.h: In function =E2=80=98check_object_size=E2=80=
+=99:
+./include/linux/thread_info.h:231:13: error: implicit declaration of
+function =E2=80=98static_branch_maybe=E2=80=99 [-Werror=3Dimplicit-function=
+-declaration]
+  231 |             static_branch_maybe(CONFIG_HARDENED_USERCOPY_DEFAULT_ON=
+,
+      |             ^~~~~~~~~~~~~~~~~~~
+  CC      crypto/michael_mic.o
+./include/linux/thread_info.h:232:34: error: =E2=80=98validate_usercopy_ran=
+ge=E2=80=99
+undeclared (first use in this function)
+  232 |                                 &validate_usercopy_range)) {
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/thread_info.h:232:34: note: each undeclared identifier
+is reported only once for each function it appears in
+  CC      arch/arm64/mm/pgd.o
+  CC      fs/proc/self.o
+  CC      mm/mmu_gather.o
+  CC      arch/arm64/mm/mem_encrypt.o
+  CC      crypto/authenc.o
+  CC      block/bfq-wf2q.o
+  CC      arch/arm64/mm/mmu.o
+  CC      fs/proc/thread_self.o
+cc1: all warnings being treated as errors
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+
+# Builds where the incident occurred:
+
+## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config on (arm64):
+- compiler: gcc-12
+- dashboard: https://dashboard.kernelci.org/build/maestro:67ac3516b51b43eae=
+dd7bcf6
+
+## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config on (arm64):
+- compiler: gcc-12
+- dashboard: https://dashboard.kernelci.org/build/maestro:67ac3519b51b43eae=
+dd7bcf9
+
+
+#kernelci issue maestro:137e010e3d61dc46e10f16fec9e6734266fa9c64
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
