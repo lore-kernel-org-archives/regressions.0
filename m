@@ -1,153 +1,132 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF5C21129C
-	for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 18:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ED41FF1B7;
+	Wed, 12 Feb 2025 19:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739386101; cv=none; b=frqlPYFHI9Y2UNaFO+RpuXCVahritcwLGXdToNQkNc9u2nsBd6m0hnW7gZIWBKqQH9fg1V9+qWwX8IyEO/l6iAmVbN1cHWSodbpflgOziXzm0J9wUG0Q2uCYfFZqoPvBpLsom/WuX09u2grHos2gneCgO3ZnEM+47JoH9Mtuxgw=
+	t=1739388924; cv=none; b=P733j6+u41+koWPj2ugnaG/vEM0BMq7YPwujvu368nHz1hafIZCcntgfz6BsoQGKjlPNtm2wfmONpMTzweCVTn5KonAafMVyvgYFjugDG7zWYD1Utb4S0lyHxDdX+RPzxX1DSYQgBNRXg3VJh4KhZ/lon6+QAoKJE3C4iL/sxG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739386101; c=relaxed/simple;
-	bh=Eqpyg4hmNu9ocUQzEcAGhdpaBhKdg5oflZSaKCbqwL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GsEK6N/LYl/SKaZhslMCBNHbxafUzAcxTicsIX5Ez896GJyWNyq4vr5MGpRXR/kb7yrAhV6IcJNC9xaT3+AHyl84O2dLuAMKyJsq5uxDcw79DSwEO/Vcju3+wJWf6ntlK4IDvrC5ZArpCjfRry/7sYzf2G4eok0slG+v209j694=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=arqO0lcH; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739388924; c=relaxed/simple;
+	bh=Ugf2g2Yhg5Aw7lvSOZInqiVQU41aKtxd+Iq+ubuXWEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kjUFGGXblMZfY13TFNavbuHeOUvodbfWUYscXOx8iNTLLbKL9K/ZetDHyVI7BUMSfwS6KLbwLu57XSUK95siotmqdkQRLd2u8Ph6gqLTfehvMycASzqw984msbUZjjTqaz39tV23+h7Yp8/Cod3/FnGUDxFfBAFOr/wCGvVwIIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI3m2wF4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arqO0lcH"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-471bef62e12so24361cf.0
-        for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 10:48:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739386099; x=1739990899; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZASkp6PCL8/WlHtTvN4bXlrF7OXxOuY1zeD3mdzMNtA=;
-        b=arqO0lcHDd1mku0BTDdPGmPO2d7V8XucI+lVGJwYBufOYVEVtHt16XErTwMBvhvGN5
-         W1vc6GThVu9f5Vv8Rk4Cj+jw8c4SH8eIkz8fZb8o2WcY4D8WVrO1o7S7QaMU2A8ukB5N
-         /Gm+BEy63ZYNEFJJHDPKi+VrfiX31P1UK1ELoZHFJcbYkr77qh6lgKUkV7kfjqlrGPks
-         GMzBIpaie6Py0BvYm2keOwTvsa9YEKDFyN5ZqcQPqfDoxBMirLBNdLzM5/B/0UwawfE5
-         WEsLyQ71N48hPXg3mMB8rwR7gkOoecx98QCbhNagIMwxCgCd/RmExqLuxl7JdDvs65AK
-         s6Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739386099; x=1739990899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZASkp6PCL8/WlHtTvN4bXlrF7OXxOuY1zeD3mdzMNtA=;
-        b=r9aM0iEfLScUI6IN/PEwaEyvVrPGqXFGKqEBFVOFjrq6HlqlIezoFtJqttInrxeDeO
-         4PAGnwhv20UsOjpSkKtrVdZ0Bk5BKRF9p4CXFy1CwGMZfOkVhDpQ2A3ICwCSJO9LjA4M
-         B6PuXwB14R1+JSE8cA6ICiIprp6IMUMq9t1v1e1R7+CwN0GsNnFElWPSq4JgbuWjFJga
-         GvnEUKvUDAVI92MJdMGYz9dPj0Qc3ML6LH5/5jdB6jl8KcBs8OcsWMudf+eGSyTnTGTZ
-         YKf2i5jYzp4ZkCT6ZsOxxlXMATqREVfEgv5vq/qojnUooBeFZx/+TH29PqzthziscW/W
-         NCJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfbXtWKmEaA0Hr2I4IIWBQlFdxABg2tx+eK12H0yoxkPK+7urFxHmrJbJbNwFxGi4X0j16IjTpmIYUbA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxUfebAoowhN5WagEZo11ZyTct1bDKFuIe046yIS+nG5w1PG6yI
-	KtM0lABR0gTXF/GjWvjO3OM/h5DkhuOvAhDuDE2+ukzd9VQjcf7T8mEjfe6YCwqHsrjn/XhFLYX
-	ieYOEf0r8XoaruDu2+F8apvrAcAc=
-X-Gm-Gg: ASbGncu2ShjkqujoO/gyfeHvuDhNqQRmJOFhtt7Fb89BG/w1RRCnCMM4dP2Bcgh/w8h
-	1TfwTXLsyfWVPxf7Bm5h5x1kAQj6U6QEpal9GOH97hf4PCiu0B1qtypI8/VMMeAhwKtKMLIzO3C
-	XLPttH/9ctTxU=
-X-Google-Smtp-Source: AGHT+IFlFkV7aYZs2utz/iZsBLLt0+a7zY/YwhAWQu45D2zt1uVzJM7iX/axNKQZ5Z6o1mUaT0iyZJqMYKvLu5Nm+Nc=
-X-Received: by 2002:ac8:5a0c:0:b0:461:646c:b8fc with SMTP id
- d75a77b69052e-471afe505d8mr65715981cf.23.1739386098867; Wed, 12 Feb 2025
- 10:48:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI3m2wF4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A419C4CEDF;
+	Wed, 12 Feb 2025 19:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739388923;
+	bh=Ugf2g2Yhg5Aw7lvSOZInqiVQU41aKtxd+Iq+ubuXWEg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uI3m2wF4Xy0uTW4CBkbjuWo3J7yN1REN3JcZj1mpdYXFEtL7T88sdAvRnb1/MVrU0
+	 HXdV7MmRBPS0YI+UXLj+AvaYht9/ohnRiXQU3tnh31cN9WYwW57S2uZmvTjg7rm4nw
+	 oekL0p384QdGbuQvSSCQ4s6AWgb+kU89zVwLeZbeYvUmavrBOZlotZjvR2VO6YQqbK
+	 jnZncsAC7MCaP/DmaCPaN/jfVVcmZLr2Ce+PLa8l2dk3LIQ9d3K2s21TZcme6sYMx0
+	 L0TcvYDJaO9zmPCvT39dPi7GgTfEVyAn7Q5nPyLTrcmfn28Vm+FuSEJlJBot2Lv4D7
+	 65O8+aKHg5kaw==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	linux-pci@vger.kernel.org
+Cc: =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>,
+	=?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jan Beulich <jbeulich@suse.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Deren Wu <Deren.Wu@mediatek.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Shayne Chen <Shayne.Chen@mediatek.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Leon Yen <Leon.Yen@mediatek.com>,
+	linux-mediatek@lists.infradead.org,
+	regressions@lists.linux.dev,
+	xen-devel@lists.xenproject.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
+Date: Wed, 12 Feb 2025 13:35:16 -0600
+Message-Id: <20250212193516.88741-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz> <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz> <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
- <Z6ct4bEdeZwmksxS@casper.infradead.org> <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-In-Reply-To: <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 12 Feb 2025 10:48:07 -0800
-X-Gm-Features: AWEUYZk-0djWTKrtRmi8VrGFoz0pLfNoKipNM8dCPw51QEUcZp_d7Q09JdxuGyQ
-Message-ID: <CAJnrk1YB5c+wO0U=7aOiWAMaMwQCKUL1-FuvuPMjnB_gnjD28w@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Josef Bacik <josef@toxicpanda.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Christian Heusel <christian@heusel.eu>, 
-	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 8, 2025 at 7:46=E2=80=AFAM Joanne Koong <joannelkoong@gmail.com=
-> wrote:
->
-> On Sat, Feb 8, 2025 at 2:11=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
-g> wrote:
-> >
-> > On Fri, Feb 07, 2025 at 04:22:56PM -0800, Joanne Koong wrote:
-> > > > Thanks, Josef. I guess we can at least try to confirm we're on the =
-right track.
-> > > > Can anyone affected see if this (only compile tested) patch fixes t=
-he issue?
-> > > > Created on top of 6.13.1.
-> > >
-> > > This fixes the crash for me on 6.14.0-rc1. I ran the repro using
-> > > Mantas's instructions for Obfuscate. I was able to trigger the crash
-> > > on a clean build and then with this patch, I'm not seeing the crash
-> > > anymore.
-> >
-> > Since this patch fixes the bug, we're looking for one call to folio_put=
-()
-> > too many.  Is it possibly in fuse_try_move_page()?  In particular, this
-> > one:
-> >
-> >         /* Drop ref for ap->pages[] array */
-> >         folio_put(oldfolio);
-> >
-> > I don't know fuse very well.  Maybe this isn't it.
->
-> Yeah, this looks it to me. We don't grab a folio reference for the
-> ap->pages[] array for readahead and it tracks with Mantas's
-> fuse_dev_splice_write() dmesg. this patch fixed the crash for me when
-> I tested it yesterday:
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 7d92a5479998..172cab8e2caf 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
-> *fm, struct fuse_args *args,
->                 fuse_invalidate_atime(inode);
->         }
->
-> -       for (i =3D 0; i < ap->num_folios; i++)
-> +       for (i =3D 0; i < ap->num_folios; i++) {
->                 folio_end_read(ap->folios[i], !err);
-> +               folio_put(ap->folios[i]);
-> +       }
->         if (ia->ff)
->                 fuse_file_put(ia->ff, false);
->
-> @@ -1049,6 +1051,7 @@ static void fuse_readahead(struct readahead_control=
- *rac)
->
->                 while (ap->num_folios < cur_pages) {
->                         folio =3D readahead_folio(rac);
-> +                       folio_get(folio);
->                         ap->folios[ap->num_folios] =3D folio;
->                         ap->descs[ap->num_folios].length =3D folio_size(f=
-olio);
->                         ap->num_folios++;
->
->
-> I reran it just now with a printk by that ref drop in
-> fuse_try_move_page() and I'm indeed seeing that path get hit.
->
-> Not sure why fstests didn't pick this up though since splice is
-> enabled by default in passthrough_hp, i'll look into this next week.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-This wasn't hit in fstests because passthrough_hp doesn't set
-SPLICE_F_MOVE. After adding that, I was able to trigger this crash by
-running generic/075. I'll send out a libfuse pr for this
+The Mediatek MT7922 WiFi device advertises FLR support, but it apparently
+does not work, and all subsequent config reads return ~0:
+
+  pci 0000:01:00.0: [14c3:0616] type 00 class 0x028000 PCIe Endpoint
+  pciback 0000:01:00.0: not ready 65535ms after FLR; giving up
+
+After an FLR, pci_dev_wait() waits for the device to become ready.  Prior
+to d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS"),
+it polls PCI_COMMAND until it is something other that PCI_POSSIBLE_ERROR
+(~0).  If it times out, pci_dev_wait() returns -ENOTTY and
+__pci_reset_function_locked() tries the next available reset method.
+Typically this is Secondary Bus Reset, which does work, so the MT7922 is
+eventually usable.
+
+After d591f6804e7e, if Configuration Request Retry Status Software
+Visibility (RRS SV) is enabled, pci_dev_wait() polls PCI_VENDOR_ID until it
+is something other than the special 0x0001 Vendor ID that indicates a
+completion with RRS status.
+
+When RRS SV is enabled, reads of PCI_VENDOR_ID should return either 0x0001,
+i.e., the config read was completed with RRS, or a valid Vendor ID.  On the
+MT7922, it seems that all config reads after FLR return ~0 indefinitely.
+When pci_dev_wait() reads PCI_VENDOR_ID and gets 0xffff, it assumes that's
+a valid Vendor ID and the device is now ready, so it returns with success.
+
+After pci_dev_wait() returns success, we restore config space and continue.
+Since the MT7922 is not actually ready after the FLR, the restore fails and
+the device is unusable.
+
+We considered changing pci_dev_wait() to continue polling if a
+PCI_VENDOR_ID read returns either 0x0001 or 0xffff.  This "works" as it did
+before d591f6804e7e, although we have to wait for the timeout and then fall
+back to SBR.  But it doesn't work for SR-IOV VFs, which *always* return
+0xffff as the Vendor ID.
+
+Mark Mediatek MT7922 WiFi devices to avoid the use of FLR completely.  This
+will cause fallback to another reset method, such as SBR.
+
+Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
+Link: https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-2582927149
+Link: https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/quirks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b84ff7bade82..82b21e34c545 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+  * AMD Matisse USB 3.0 Host Controller 0x149c
+  * Intel 82579LM Gigabit Ethernet Controller 0x1502
+  * Intel 82579V Gigabit Ethernet Controller 0x1503
+- *
++ * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
+  */
+ static void quirk_no_flr(struct pci_dev *dev)
+ {
+@@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
+ 
+ /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
+ static void quirk_no_flr_snet(struct pci_dev *dev)
+-- 
+2.34.1
+
