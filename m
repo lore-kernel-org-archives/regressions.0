@@ -1,300 +1,171 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8AF266F16
-	for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 21:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BAA1E47CA;
+	Wed, 12 Feb 2025 06:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739308906; cv=none; b=QJHCpi7B78LKm8OASFQ/XzES+v/P4GnahYgvkDCe7+bLa3ITbMdEWK6WpuLHQGj4o7K9nM1v/hy7yFik7/4mwnFRQakqKXDJlLpVrp9hhbHWZ0oM5DGCZm5CQAi+AjfEdsX/fHOggHZjnBSaYbo02i7vOnblwhDqp2wzLatu57M=
+	t=1739342759; cv=none; b=TdrhE5CuRuDq+H+6/thAUZd3rDZa3IgtAm1SqeEaf2+sLZJiDGgdw6eNtn4DXlOroxOeHPleTQ/3DYBMmzWUlsSzvzpJdzW87vDYQqn8L+Ui9hp1dq7dJ60KXfMaqD4ZC6WR7ODW3hfF/bRdjZRsMMh5XA0xqVrpujP0Yn7oV7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739308906; c=relaxed/simple;
-	bh=yah4m2+8MkEn7/6Orz97UvZ+6/UmNEr/IWyRGPDJMEE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lSu2xzneTPEC/VfrVfpEslMoLyIfQv9G4XZOne8vtqjYj5FDQq87Sf0797OYCMfGBvljC5a4sBtyxg1+Ihb4ToDA8zmKY1+0AO2SsiTAEZXPhXPntHr8EYUrHJaWsBi0AX3Y9v69KQweJV0uKPXnmXDuepNev3PHIXgxkGfv7MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUJ0JHU8; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739342759; c=relaxed/simple;
+	bh=ZQsMnwzTf17KEzJgScmk62+uoLSEHEedJ3pMoj7PFFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I7PzXEHKLA03dBzx8Qnbxn8UqT94ybh6228P7SozLzgK8QI9LXY/ABmOn1vI5pVxXfGtbP4B9y4EhvQZw5w8UbBMz7DescZ6owGErAFgdPpoa6+pA2waXJ04Pyjz1JnEsqvU4p8dJqWJ+ZP1oWOHS/lPBEHroL6oVcJVnrJAK/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WC0SlDMH; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUJ0JHU8"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46c8474d8f6so50009611cf.3
-        for <regressions@lists.linux.dev>; Tue, 11 Feb 2025 13:21:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739308903; x=1739913703; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fSbVqMiTkl0LXiSTIcddvXxCMvvitAPamcbDbPBQmiQ=;
-        b=aUJ0JHU8cjKh4bjam5iookOrqP0akVUhW9+Y4+p9vr3dfy1ZGkdSxym8jjSdteSVXx
-         Hx/5SKfKTj0g5lSfVxfHmQDOb5Oea6hU3E6GgDmFJce2ERu5pci9yLJg3kGLCv87VT56
-         kG+RXp8wD2r+eyz2n2n5gBu+ELobHlb44RGVKGtdMVe7FtDgV4Tk9/pcARuk9f/byBgf
-         H/PooUY9gbs7VH9t0gHCvIrR8NXOqG9ePAiPAqnCx4cdvBGLops8n73Kn4LpOlxixrh2
-         FDUL0slhK+JJREVCOf2n/sBE0eoihc5yhTfkI4usOBkebQZMT2biyaw1n6iVfejMvcJC
-         wp/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739308903; x=1739913703;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fSbVqMiTkl0LXiSTIcddvXxCMvvitAPamcbDbPBQmiQ=;
-        b=TdGWhDjdKD7jMvcYlwhYnBD21B0km1Cak/uBz75Nfk0LkiYgMtyKa5STeozUeRFMJs
-         jS5uazKFdeEEyRfCHxSkN6jydw6k/s8Yj1iJEAl4XUtWjYaAqiiq52QpoS948krm200n
-         IE3mjA2EkUm5SpKr/l7W3E86OdAqQOCKRTZNQgsiY5UNZCmSP4qpsuva2Y4Pp8/Q/pps
-         bz8z97KuK9OScj1sv9tAVKbhGQTGV47UF/iIDLhFPZBdRP/7ghr2ZqDuNHedN+GxP+vu
-         cNPGCgIobw0N5JEWaBBfxcvJC6eIITTZ9GPUzemv9+WxL+2/FlmvvawsYsFKcYM4sI0o
-         KA2A==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ehOZQWuaaAU4PjoqIeJYi7gKEEBNTNLL5v5UAAYzftEbh8+VonYM6c8XQzj1SKO8Q1cQbiKxBo0UlQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxOjysi1O36Qexd626Iuvd+Xl97AsNpOFYZ1VOzWE1RpSrMX7pb
-	6weI3OG+Np2tvIOFBJumQZLTAz+T/Knvg6o2UaSOGO0T8CvLrraWQyS17Xu9Y/fMafvBAg/cN5R
-	KCo0LEbClhd4rMImLfisl2IjvPro=
-X-Gm-Gg: ASbGncvnu96CdVmKkfST5ziPTrBqjI0wmNk47ViH1kXD0fdFDlx0Dn0KDdENoLZn4dL
-	RNKrdsxOqsRgWmgsin6ry6d0v16m7k51DqoxPuFw4Y7KrGXJ2bQOOc/V0mY+H5Ej/3NHfMTYy7A
-	==
-X-Google-Smtp-Source: AGHT+IFKtQ8UVZLdbtYyP9WyYfW9qhBvBgtzQYc9asKQ0u4aMfE1y2wI3lrrdXfr8aSY2alE3XEyecLsRiaNx7vXddo=
-X-Received: by 2002:ac8:7fd4:0:b0:467:7a27:f3bb with SMTP id
- d75a77b69052e-471b07141bamr5850091cf.49.1739308903079; Tue, 11 Feb 2025
- 13:21:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WC0SlDMH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=U9ZsS++Scdzt6/PZ8I0ydrljHMoErWwMzMWIoSKzTg4=; t=1739342757;
+	x=1739774757; b=WC0SlDMH3C64LjODizP53N7prNMC1iq4Qe9VROs05tuNMK482GqYmtV/wrdiM
+	/zNMlYZAyeMCMFTeg/f/iQ4Bh+kuplyFNLQmbvyMZThzcYyEZlYlXCAYrJNMGGJisgkGzWvetvTnG
+	0F/MjtC6CIreHnLP8l3F1oniMrZ4XMMv1EUHs9qMnuc/MyrSypuMcCVdRmMwUqQPqUQIx4CAi4zz+
+	vG1I4FD9Cw+/P3bnNCpQbN2ZGNKwOMPMpaaKD6t7rhC8vZT+rmZusTwNPDvIioKQwurrz3j3QvXlG
+	/Ka9nvpTjisz42OngfnMVvbhBR2tgdHj4o/1Uq3HEsjW+AKU0Q==;
+Received: from [185.238.219.16] (helo=[192.168.44.12]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1ti6VN-00FNTJ-1A;
+	Wed, 12 Feb 2025 07:45:53 +0100
+Message-ID: <2c26c5e4-9cf3-4020-b0be-637dc826b4e9@leemhuis.info>
+Date: Wed, 12 Feb 2025 07:45:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz> <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz> <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
- <Z6ct4bEdeZwmksxS@casper.infradead.org> <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
- <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz> <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
- <20250210191235.GA2256827@perftesting> <Z6pjSYyzFJHaQo73@casper.infradead.org>
- <8a99f6bf3f0b5cb909f11539fb3b0ef0d65b3a73.camel@kernel.org>
- <ecee2d1392fcb9b075687e7b59ec69057d3c1bb3.camel@kernel.org>
- <CAJnrk1ZkhNdCf_v4KHmsFoh3EcEaKY0Z8SVn2nJouVDxTZxv=A@mail.gmail.com> <85f1b4ca-cdc7-48d0-a985-4185eff1b49a@suse.cz>
-In-Reply-To: <85f1b4ca-cdc7-48d0-a985-4185eff1b49a@suse.cz>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Tue, 11 Feb 2025 13:21:31 -0800
-X-Gm-Features: AWEUYZkpMikWRVzu_vH7tBi2VNxxuVFAUWBL_42-xI-v2Um0L-YoYF3TFagCMm0
-Message-ID: <CAJnrk1ZFfb7p01nkN=+tTJFt925PEAQyB=zRcsUM7Ue+TV2pZA@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Christian Heusel <christian@heusel.eu>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] unicode: kunit: change tests filename and path
+To: Gabriel Krisman Bertazi <gabriel@krisman.be>,
+ Pedro Orlando <porlando@lkcamp.dev>, Kees Cook <keescook@chromium.org>,
+ Danilo Pereira <dpereira@lkcamp.dev>
+Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240928235825.96961-1-porlando@lkcamp.dev>
+ <20240928235825.96961-3-porlando@lkcamp.dev>
+ <87iku7u211.fsf@mailhost.krisman.be>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <87iku7u211.fsf@mailhost.krisman.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1739342757;4d3b9490;
+X-HE-SMSGID: 1ti6VN-00FNTJ-1A
 
-On Tue, Feb 11, 2025 at 1:01=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 2/11/25 20:23, Joanne Koong wrote:
-> > On Tue, Feb 11, 2025 at 6:01=E2=80=AFAM Jeff Layton <jlayton@kernel.org=
-> wrote:
-> >>
-> >> On Mon, 2025-02-10 at 17:38 -0500, Jeff Layton wrote:
-> >> > On Mon, 2025-02-10 at 20:36 +0000, Matthew Wilcox wrote:
-> >> > > On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
-> >> > > > From: Josef Bacik <josef@toxicpanda.com>
-> >> > > > Date: Mon, 10 Feb 2025 14:06:40 -0500
-> >> > > > Subject: [PATCH] fuse: drop extra put of folio when using pipe s=
-plice
-> >> > > >
-> >> > > > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I con=
-verted
-> >> > > > us to using the new folio readahead code, which drops the refere=
-nce on
-> >> > > > the folio once it is locked, using an inferred reference on the =
-folio.
-> >> > > > Previously we held a reference on the folio for the entire durat=
-ion of
-> >> > > > the readpages call.
-> >> > > >
-> >> > > > This is fine, however I failed to catch the case for splice pipe
-> >> > > > responses where we will remove the old folio and splice in the n=
-ew
-> >> > > > folio.  Here we assumed that there is a reference held on the fo=
-lio for
-> >> > > > ap->folios, which is no longer the case.
-> >> > > >
-> >> > > > To fix this, simply drop the extra put to keep us consistent wit=
-h the
-> >> > > > non-splice variation.  This will fix the UAF bug that was report=
-ed.
-> >> > > >
-> >> > > > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8=
-431-2b3dbfaa881e@heusel.eu/
-> >> > > > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> >> > > > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> >> > > > ---
-> >> > > >  fs/fuse/dev.c | 2 --
-> >> > > >  1 file changed, 2 deletions(-)
-> >> > > >
-> >> > > > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> >> > > > index 5b5f789b37eb..5bd6e2e184c0 100644
-> >> > > > --- a/fs/fuse/dev.c
-> >> > > > +++ b/fs/fuse/dev.c
-> >> > > > @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_co=
-py_state *cs, struct page **pagep)
-> >> > > >   }
-> >> > > >
-> >> > > >   folio_unlock(oldfolio);
-> >> > > > - /* Drop ref for ap->pages[] array */
-> >> > > > - folio_put(oldfolio);
-> >> > > >   cs->len =3D 0;
-> >> > >
-> >> > > But aren't we now leaking a reference to newfolio?  ie shouldn't
-> >> > > we also:
-> >> > >
-> >> > > -   folio_get(newfolio);
-> >> > >
-> >> > > a few lines earlier?
-> >> > >
-> >> >
-> >> >
-> >> > I think that ref was leaking without Josef's patch, but your propose=
-d
-> >> > fix seems correct to me. There is:
-> >> >
-> >> > - 1 reference stolen from the pipe_buffer
-> >> > - 1 reference taken for the pagecache in replace_page_cache_folio()
-> >> > - the folio_get(newfolio) just after that
-> >> >
-> >> > The pagecache ref doesn't count here, and we only need the reference
-> >> > that was stolen from the pipe_buffer to replace the one in pagep.
-> >>
-> >> Actually, no. I'm wrong here. A little after the folio_get(newfolio)
-> >> call, we do:
-> >>
-> >>         /*
-> >>          * Release while we have extra ref on stolen page.  Otherwise
-> >>          * anon_pipe_buf_release() might think the page can be reused.
-> >>          */
-> >>         pipe_buf_release(cs->pipe, buf);
-> >>
-> >> ...so that accounts for the extra reference. I think the newfolio
-> >> refcounting is correct as-is.
-> >
-> > I think we do need to remove the folio_get(newfolio); here or we are
-> > leaking the reference.
-> >
-> > new_folio =3D page_folio(buf->page) # ref is 1
-> > replace_page_cache_folio() # ref is 2
-> > folio_get() # ref is 3
-> > pipe_buf_release() # ref is 2
-> >
-> > One ref belongs to the page cache and will get dropped by that, but
-> > the other ref is unaccounted for (since the original patch removed
-> > "folio_put()" from fuse_readpages_end()).
-> >
-> > I still think acquiring an explicit reference on the folio before we
-> > add it to ap->folio and then dropping it when we're completely done
-> > with it in fuse_readpages_end() is the best solution, as that imo
-> > makes the refcounting / lifetimes the most explicit / clear. For
-> > example, in try_move_pages(), if we get rid of that "folio_get()"
-> > call, the page cache is the holder of the remaining reference on it,
-> > and we rely on the earlier "folio_clear_uptodate(newfolio);" line in
-> > try_move_pages() to guarantee that the newfolio isn't freed out from
-> > under us if memory gets tight and it's evicted from the page cache.
-> >
-> > imo, a patch like this makes the refcounting the most clear:
-> >
-> > From 923fa98b97cf6dfba3bb486833179c349d566d64 Mon Sep 17 00:00:00 2001
-> > From: Joanne Koong <joannelkoong@gmail.com>
-> > Date: Tue, 11 Feb 2025 10:59:40 -0800
-> > Subject: [PATCH] fuse: acquire explicit folio refcount for readahead
-> >
-> > In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), the logic
-> > was converted to using the new folio readahead code, which drops the
-> > reference on the folio once it is locked, using an inferred reference
-> > on the folio. Previously we held a reference on the folio for the
-> > entire duration of the readpages call.
-> >
-> > This is fine, however for the case for splice pipe responses where we
-> > will remove the old folio and splice in the new folio (see
-> > fuse_try_move_page()), we assume that there is a reference held on the
-> > folio for ap->folios, which is no longer the case.
-> >
-> > To fix this and make the refcounting explicit, acquire a refcount on th=
-e
-> > folio before we add it to ap->folios[] and drop it when we are done wit=
-h
-> > the folio in fuse_readpages_end(). This will fix the UAF bug that was
-> > reported.
-> >
-> > Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2b3=
-dbfaa881e@heusel.eu/
-> > Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
->
-> Can we add some tags?
->
-> Reported-by: Christian Heusel <christian@heusel.eu>
-> Closes: https://lore.kernel.org/all/2f681f48-00f5-4e09-8431-2b3dbfaa881e@=
-heusel.eu/
-> Closes: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-=
-/issues/110
-> Reported-by: Mantas Mikul=C4=97nas <grawity@gmail.com>
-> Closes: https://lore.kernel.org/all/34feb867-09e2-46e4-aa31-d9660a806d1a@=
-gmail.com/
-> Closes: https://bugzilla.opensuse.org/show_bug.cgi?id=3D1236660
-> Cc: <stable@vger.kernel.org>
->
+On 04.10.24 21:00, Gabriel Krisman Bertazi wrote:
+> Pedro Orlando <porlando@lkcamp.dev> writes:
+>> From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
+>>
+>> Change utf8 kunit test filename and path to follow the style
+>> convention on Documentation/dev-tools/kunit/style.rst
+>>
+>> Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
+>> Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
+>> Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
+>> Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
+>> Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
+>> ---
+>>  fs/unicode/Makefile                                | 2 +-
+>>  fs/unicode/{ => tests}/.kunitconfig                | 0
+>>  fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} | 0
+>>  3 files changed, 1 insertion(+), 1 deletion(-)
+>>  rename fs/unicode/{ => tests}/.kunitconfig (100%)
+>>  rename fs/unicode/{utf8-selftest.c => tests/utf8_kunit.c} (100%)
+>>
+>> diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
+>> index 37bbcbc628a1..d95be7fb9f6b 100644
+>> --- a/fs/unicode/Makefile
+>> +++ b/fs/unicode/Makefile
+>> @@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
+>>  obj-y			+= unicode.o
+>>  endif
+>>  obj-$(CONFIG_UNICODE)	+= utf8data.o
+>> -obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
+>> +obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += tests/utf8_kunit.o
+> 
+> This breaks compilation for me.
+> 
+> fs/unicode/tests/utf8_kunit.c:11:10: fatal error: utf8n.h: No such file or directory
+>    11 | #include "utf8n.h"
+>       |          ^~~~~~~~~
 
-Ok, I'll add these tags in and formally submit this patch to Miklos's tree.
+I encountered the same error when building -next using the Fedora
+rawhide config today. Given that this patch landed in -next today I
+suspect it might be due to this change, but I'm on the road and unable
+to verify that right now.
 
-> > Signed-off-by: Joanne Koong <joannelkoong@gmail.com>
-> > ---
-> >  fs/fuse/file.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > index 7d92a5479998..6fa535c73d93 100644
-> > --- a/fs/fuse/file.c
-> > +++ b/fs/fuse/file.c
-> > @@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
-> > *fm, struct fuse_args *args,
-> >                 fuse_invalidate_atime(inode);
-> >         }
-> >
-> > -       for (i =3D 0; i < ap->num_folios; i++)
-> > +       for (i =3D 0; i < ap->num_folios; i++) {
-> >                 folio_end_read(ap->folios[i], !err);
-> > +               folio_put(ap->folios[i]);
-> > +       }
-> >         if (ia->ff)
-> >                 fuse_file_put(ia->ff, false);
-> >
-> > @@ -1049,6 +1051,12 @@ static void fuse_readahead(struct readahead_cont=
-rol *rac)
-> >
-> >                 while (ap->num_folios < cur_pages) {
-> >                         folio =3D readahead_folio(rac);
-> > +                       /*
-> > +                        * Acquire an explicit reference on the folio i=
-n case
-> > +                        * it's replaced in the page cache in the splic=
-e case
-> > +                        * (see fuse_try_move_page()).
-> > +                        */
-> > +                       folio_get(folio);
->
-> It would be more efficient to use __readahead_folio() instead of doing a =
-folio_get()
-> to counter a folio_put() in readahead_folio(). An adjusted comment can ex=
-plain why
-> we use __readahead_folio().
+Log:
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/08642966-next-next-all/builder-live.log.gz
 
-imo, the explicit get makes the code the most readable, but I also
-don't feel strongly enough about it to insist. I'll make this change
-in the patch.
+Cioa, Thorsten
 
->
-> >                         ap->folios[ap->num_folios] =3D folio;
-> >                         ap->descs[ap->num_folios].length =3D folio_size=
-(folio);
-> >                         ap->num_folios++;
-> > --
-> > 2.43.5
-> >
-> >> --
-> >> Jeff Layton <jlayton@kernel.org>
->
+> After this patch that local header is now in the parent directory.
+> 
+> I'm building with:
+> 
+> CONFIG_UNICODE=m
+> CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST=m
+> 
+>>  unicode-y := utf8-norm.o utf8-core.o
+>>  
+>> diff --git a/fs/unicode/.kunitconfig b/fs/unicode/tests/.kunitconfig
+>> similarity index 100%
+>> rename from fs/unicode/.kunitconfig
+>> rename to fs/unicode/tests/.kunitconfig
+>> diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/tests/utf8_kunit.c
+>> similarity index 100%
+>> rename from fs/unicode/utf8-selftest.c
+>> rename to fs/unicode/tests/utf8_kunit.c
+> 
+
