@@ -1,128 +1,246 @@
-Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA10202F7E
-	for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 22:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985801FF7D8
+	for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 23:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739400186; cv=none; b=nBeTOvSSqOt5xb8OMdko+OWqRwieriHwjAoegQCqTqtCUiAGkHU/60e4p9s34JYbIu4X6cEqS0hbaAP7VGdvtbWNc4LfIl0g6O19F5ir2I5MpHicPAy3V9YVGt+HwSwW/zgmHZUzGV3gEuPhNfb+GCg2eKiZJDPLNnacFmtDOK8=
+	t=1739401335; cv=none; b=Ho9xu/YLNeHfOqY/QHaC8Xo1D8u9m794hPsxG2YB2DlEYx0EzGpeJmPE2BUYR14gNXju9uHv6IherBOBWyCtbcGT8g2yq/BbYzgpgUXkPmQ5d0uOElFRaHQoxtxK5wem5G1Rk4mHs+ewVYIzBQtTn05WWgPw36g1NResLqO0vPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739400186; c=relaxed/simple;
-	bh=sVpfejHVAgrScsj2m/Clnt/hk7cG3yg5PRzNkuTsI54=;
+	s=arc-20240116; t=1739401335; c=relaxed/simple;
+	bh=gYV5pNsaziPaRqczJjIyZmNtqifrQLWyFt7m14ynusQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jpf/bPI8oInetDjwMhMrKSe2tmB0LY3G3dFBbSGUwAiJ8OQzAhse1peNyefXsql3vQY8UYY/5ALq3hXLvJQ+puYGone2MGBe7Hs1v1qfH6PL8XK76NYT/+ECfJQxPCeC2nSRvphvu+/kMbeIlEStjonuyLOLw/ZgrEAD6B6OIRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZDaL0pff; arc=none smtp.client-ip=209.85.208.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4tW1BZC81I20mcyQWI6CwLc55cXuR8KSQFK3Hb4NqxG6KJbxhbfvDMjpRbGief6p/lbh3f3XwfLXEGw7u9hVbA7YtjSmvt4PblGCBd77gF2JCmrRdzZaawJ58+5DMNy17h1/z7da6RKiWNG89vqagAiE02cRWC3eoDu709QGio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Zp/7ORf3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YISDnGxA; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZDaL0pff"
-Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5de6e26d4e4so377711a12.1
-        for <regressions@lists.linux.dev>; Wed, 12 Feb 2025 14:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739400181; x=1740004981; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sVpfejHVAgrScsj2m/Clnt/hk7cG3yg5PRzNkuTsI54=;
-        b=ZDaL0pffC8czgtmcUjCdnha8oStQdBSXZZNA0ZNE+dzK11DeBJIpjuSllIguyhH749
-         EJWWGA9NyrinDUDCMAWz/OvG8saPpiKQrCPCecvef1pXYGDBMSlCPJb9R/VKNJNgjSan
-         unZD4Diy8V1SArf4Dk6s58E+h3sZwHwYGSCRIAA1DKDavMT7ZQwo6EmpiPOx8Qe2u6uB
-         ukqLvgToipuXkBwndYadozflI0bM83/W+HnC9nIvUy7BmIVc1c5b4OeKu09ugw8usO9u
-         rDd77lBvT8zYxE/MDy1RIL/4+UnWzCWUJNkUHe/vO/WPDYiqGZF3msBS4QJV2Zmn1xMI
-         VLhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739400181; x=1740004981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sVpfejHVAgrScsj2m/Clnt/hk7cG3yg5PRzNkuTsI54=;
-        b=U/UgEu+HHr4zrT5qJxCFNMYkxOrRSJWUuSg5lK9bk/NODK6Vjuu3BHIapOS3k9ihPn
-         8fZTDzemTSBC7EwSs7FXNVIhOVckpQ5LP1jb4f8E8hs+4F4XD/PkUH51Zepw5sAe5sBy
-         mqBBdNMf5mSc90fVgzHhZYYW9ah78pRNzRXZp33S+uccZ1NVz4wIRqqj2+qCziU5+ezB
-         Rg5h0++pvRY3IuTIbugWjmEP9bhhPP8NakQGVoH9KfUOk2MVd+nR/nHcYqchUYaAWYOQ
-         SnqKTaLSqkVLbEOi1jRDxI3uchlzHokxXvjbsQidNUS9MpJXbSUmcXhFjMWbp5ObX5mh
-         4P6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUoUghOXQ+GtWf3SfhelVb90Ge3GnPOQHqYFbwzS2EZWaHajdAYMjntq/pJuBDF0oMHfDsRO+Yui5Au5A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzVW65rx9Gx4MYa6fYPIcgujCZf9ZV8EURryrJ+kO/baya997/y
-	Nl632pAcDREJpVUZxdqPa2Qdk7FNzhM2vxKRUN8fzW6wYi1/hJWlv2mraD0hFZM=
-X-Gm-Gg: ASbGnctTk+jgD/JXsh/9zB9iYzvCWCeorU77A2e4g4NLZ4AeBSLkjm51G5mB6/ryp8R
-	syLOEtCOem3T9HhfzyqcDeqVSkjn/1KIWIsghzUw6qRiqL0rrl6AUl9o4ahLyzzRe3VRYaQmfNt
-	L7VbB7WXLkhtUdZL1/c1+MuVeyJcZO2NU69SYBLoN8YnvCrh1Lot15GoIGxmcdHkNdCtNQ5Im0s
-	+f7/GKrrvi57gdeuI8HmAkP5Nr8f3c4RGGs7MYnkz9qITGa8ooXyKQL0dMuuVp+j+SF/9p0jZi4
-	Gkb23Jow9HiJHvHTkCMa
-X-Google-Smtp-Source: AGHT+IHEKbocUnqnlR+Rtf0hLyFJogHnkyCAOnjAMiGKbIRjZZT7rtNV2MioCmUXnZMPgwRVv//7qg==
-X-Received: by 2002:a17:907:7b06:b0:aa6:7737:1991 with SMTP id a640c23a62f3a-ab7f334aa67mr497408166b.2.1739400180892;
-        Wed, 12 Feb 2025 14:43:00 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5339dda8sm6417966b.154.2025.02.12.14.42.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 14:42:59 -0800 (PST)
-Date: Wed, 12 Feb 2025 23:42:56 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Philip Yang <Philip.Yang@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Felix.Kuehling@amd.com, 
-	Alexander.Deucher@amd.com, christian.koenig@amd.com, regressions@lists.linux.dev, 
-	Dieter Faulbaum <mail@faulbaum.in-berlin.de>
-Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
-Message-ID: <zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
-References: <20240718210558.26340-1-Philip.Yang@amd.com>
- <20240718210558.26340-5-Philip.Yang@amd.com>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Zp/7ORf3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YISDnGxA"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 990201140145;
+	Wed, 12 Feb 2025 18:02:12 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Wed, 12 Feb 2025 18:02:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1739401332;
+	 x=1739487732; bh=mSLUyvLxPqNC6IhIvsE0Cg1/kRtqYX/vKSqEHTV46K4=; b=
+	Zp/7ORf31ua3T8ozk53VvAE29KuJJ5eZ3sSXp5kYEpoOvCSvRpd8nTMQCdZzR+37
+	1YcHqHYR9PgMLhtCWBjAXwb7xsBZjle55mSGMfn+ZvUkxEMyI6vrvS99RNjjHExn
+	skZzWBqFo9OKn1PFQ3vnPeMkKqXOF3I1U9NMEUDp/nhn3bojYAvtO1opTa1aCVMh
+	Nn4/lhKK2WttYgaUbZPIl4luNOEy32hbzh7TmgSe8Pdt4XxSxPQLPLn/aQ7lzoWL
+	aRbzFt2TA9DmCiSmPJznG5VZIndqUGPpNkrkhDVFi9zrgLHDBKM+3moKSMH1yC0c
+	EJZPG3joj63hJQUUT8f/0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739401332; x=1739487732; bh=mSLUyvLxPqNC6IhIvsE0Cg1/kRtqYX/vKSq
+	EHTV46K4=; b=YISDnGxA6WgUsrDzv1DAWej34JZ2R4swhetv/bQc+CR+M+hsonW
+	2Mw04/1FvzkkZRL0gMavpoO11ADWKV6Gg2x1LcqseW3PeCp/yP1+HW7PUUfzQwna
+	JKe2DpYJfl6cwKVnblcAq1aCN4SG6RHBn4NmWSGrBTSUU0NTCg+NB8aYIginR5vT
+	IoKQQn18e4pv4zlxdGckoJBNpelzEOxx6ivW5WUfkZj6yvHgHoXvUJSSN+wZW6Um
+	lVfixNqsZskRyn9UlzVlMh3QyMf58yximQKhXORxYxAq+Nu+dPyKhr3+H64W1kFw
+	VQ3Gmahof5DDdXLwg1BxoEmXKH89xL5ehhg==
+X-ME-Sender: <xms:cyitZ6wS1hpg0C1Npkn878Wf3m-fqJlboVy7Uw6ilwLZ6-Ogk1l3mA>
+    <xme:cyitZ2SXcmjmITPa0Ymzq3OOLo39-1BwphaXDAUIXeQDjvLUGgcDHK8Rqy0SwHkGY
+    taHLrUECFkPWA>
+X-ME-Received: <xmr:cyitZ8WlXqy_muD-XnlTi65J6j-BCVjj4aMRfAT6AIMWqioGBSZFvOCBZuqU4iczG27zm0vTxfwwWosQY-QkBqut5onqRG7nmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegheduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredttdej
+    necuhfhrohhmpeforghrvghkucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoe
+    hmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucgg
+    tffrrghtthgvrhhnpedvieegfefgieejuedutefhffehjeegjeevuedtgeduteeujeetve
+    evudevieffkeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhr
+    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrg
+    hrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgt
+    phhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephhgvlhhgrggrsh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehjghhrohhsshesshhushgvrdgtohhmpdhrtg
+    hpthhtoheprhhoghgvrhdrphgruhestghithhrihigrdgtohhmpdhrtghpthhtohepsgho
+    rhhishdrohhsthhrohhvshhkhiesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepnhgsug
+    esnhgsugdrnhgrmhgvpdhrtghpthhtoheplhhorhgvnhiioheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheprhihuggvrhdrlhgvvgesmhgvughirghtvghkrdgtohhmpdhrtghpth
+    htohepjhgsvghulhhitghhsehsuhhsvgdrtghomh
+X-ME-Proxy: <xmx:cyitZwj_ulnQQWj3jqX3PgiaV3jPPywaT3HTNdN_usKHkYWLzwOAdw>
+    <xmx:cyitZ8CKY30ytdi5u-GqB1eYGB12mdKwr9xTbQ5HmozN3831jugz0A>
+    <xmx:cyitZxIw8bv7d9umQh_YBnCxTh99Q_K9YuNVTr4CD1oThJniT1CngQ>
+    <xmx:cyitZzA1FxaRpfG3lQak1LP_aux0L17ko49CMLlz9p0em-a9P7alKg>
+    <xmx:dCitZzDY7Je-Lz3fKhkwosJBe71lFQdr60-SS_ul3VTP4YVlfKZUw3uh>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Feb 2025 18:02:08 -0500 (EST)
+Date: Thu, 13 Feb 2025 00:02:06 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, Jan Beulich <jbeulich@suse.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Deren Wu <Deren.Wu@mediatek.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Shayne Chen <Shayne.Chen@mediatek.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Leon Yen <Leon.Yen@mediatek.com>,
+	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
+Message-ID: <Z60obmDgwk0VZ75A@mail-itl>
+References: <20250212193516.88741-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vogrexjxudlhcvkm"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0tz+zSavbvKwuCEI"
 Content-Disposition: inline
-In-Reply-To: <20240718210558.26340-5-Philip.Yang@amd.com>
+In-Reply-To: <20250212193516.88741-1-helgaas@kernel.org>
 
 
---vogrexjxudlhcvkm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--0tz+zSavbvKwuCEI
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
-MIME-Version: 1.0
+Date: Thu, 13 Feb 2025 00:02:06 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>, Jan Beulich <jbeulich@suse.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Deren Wu <Deren.Wu@mediatek.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Shayne Chen <Shayne.Chen@mediatek.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Leon Yen <Leon.Yen@mediatek.com>,
+	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
 
-#regzbot introduced: 68e599db7a549f010a329515f3508d8a8c3467a4
-#regzbot monitor: https://bugs.debian.org/1093124
-
-Hello,
-
-On Thu, Jul 18, 2024 at 05:05:53PM -0400, Philip Yang wrote:
-> Find user queue rptr, ring buf, eop buffer and cwsr area BOs, and
-> check BOs are mapped on the GPU with correct size and take the BO
-> reference.
+On Wed, Feb 12, 2025 at 01:35:16PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 >=20
-> Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
+> The Mediatek MT7922 WiFi device advertises FLR support, but it apparently
+> does not work, and all subsequent config reads return ~0:
+>=20
+>   pci 0000:01:00.0: [14c3:0616] type 00 class 0x028000 PCIe Endpoint
+>   pciback 0000:01:00.0: not ready 65535ms after FLR; giving up
+>=20
+> After an FLR, pci_dev_wait() waits for the device to become ready.  Prior
+> to d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS"),
+> it polls PCI_COMMAND until it is something other that PCI_POSSIBLE_ERROR
+> (~0).  If it times out, pci_dev_wait() returns -ENOTTY and
+> __pci_reset_function_locked() tries the next available reset method.
+> Typically this is Secondary Bus Reset, which does work, so the MT7922 is
+> eventually usable.
+>=20
+> After d591f6804e7e, if Configuration Request Retry Status Software
+> Visibility (RRS SV) is enabled, pci_dev_wait() polls PCI_VENDOR_ID until =
+it
+> is something other than the special 0x0001 Vendor ID that indicates a
+> completion with RRS status.
+>=20
+> When RRS SV is enabled, reads of PCI_VENDOR_ID should return either 0x000=
+1,
+> i.e., the config read was completed with RRS, or a valid Vendor ID.  On t=
+he
+> MT7922, it seems that all config reads after FLR return ~0 indefinitely.
+> When pci_dev_wait() reads PCI_VENDOR_ID and gets 0xffff, it assumes that's
+> a valid Vendor ID and the device is now ready, so it returns with success.
+>=20
+> After pci_dev_wait() returns success, we restore config space and continu=
+e.
+> Since the MT7922 is not actually ready after the FLR, the restore fails a=
+nd
+> the device is unusable.
+>=20
+> We considered changing pci_dev_wait() to continue polling if a
+> PCI_VENDOR_ID read returns either 0x0001 or 0xffff.  This "works" as it d=
+id
+> before d591f6804e7e, although we have to wait for the timeout and then fa=
+ll
+> back to SBR.  But it doesn't work for SR-IOV VFs, which *always* return
+> 0xffff as the Vendor ID.
+>=20
+> Mark Mediatek MT7922 WiFi devices to avoid the use of FLR completely.  Th=
+is
+> will cause fallback to another reset method, such as SBR.
+>=20
+> Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration R=
+RS")
+> Link: https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-25=
+82927149
+> Link: https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-This change made it into v6.12-rc1 as 68e599db7a54 ("drm/amdkfd:
-Validate user queue buffers"). A Debian user (Dieter Faulbaum, on Cc)
-reported that this change introduced a regression using a gfx803 device
-resulting in a HSA exception when e.g. darktable is used. I didn't even
-try to understand the problem, but maybe one of you have an idea about
-the issue?!
+It works, thanks!
 
-See more details in the Debian bug at https://bugs.debian.org/1093124
+Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
 
-Best regards
-Uwe
+> ---
+>  drivers/pci/quirks.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b84ff7bade82..82b21e34c545 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,=
+ quirk_intel_qat_vf_cap);
+>   * AMD Matisse USB 3.0 Host Controller 0x149c
+>   * Intel 82579LM Gigabit Ethernet Controller 0x1502
+>   * Intel 82579V Gigabit Ethernet Controller 0x1503
+> - *
+> + * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
+>   */
+>  static void quirk_no_flr(struct pci_dev *dev)
+>  {
+> @@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, =
+quirk_no_flr);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
+> =20
+>  /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
+>  static void quirk_no_flr_snet(struct pci_dev *dev)
+> --=20
+> 2.34.1
+>=20
 
---vogrexjxudlhcvkm
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--0tz+zSavbvKwuCEI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmetI+0ACgkQj4D7WH0S
-/k7M9gf/SEogOZOC8jKLeLY8lsbtucwWMIx5UgloDwPf1RnhR+eCh1xjqKNhwt7+
-Waidj24QuKlzZovTx3oTmsAWeijaq9SHyOJX2o9hd1TdXuhcOHZvrarLFn1ZhYOs
-yflyCYl5jgb7vuby9TDAvBB7tjRcLt6PLkKJew9rAp9aQvVq/L3DFNmdh1y8R9US
-TCfJGIGwGNaBpeXUM4VjiwIXpLQ04Xg8mSTFmNN5Zn61Wiz6Vm/vKG4iosvep/ll
-XIS9mkk/Jk7ilzAfEN70w3ALVRYpDYItXH2u9rB9mTa/zQJQupar1AulICSVoneJ
-suBobOj6sV693GbY2/EBerRqU+JZ8g==
-=May1
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmetKG4ACgkQ24/THMrX
+1yxrrQf8DcaaeLNDT4iNQ62TsecJBfBfwazR8kITzW+Ljwe2R5+WlZlSB58A/yN3
+MAO8oyedNHISFcJ2YiqrGW/kFPGf3ns7PFfohV6DBYyNTjoj1UNywkWZ0zxXuaxH
+YnNLoNJeOZEVW86+MOgJZ67MaQqGbuuv2juS7SPVwteezRykssZLvepfPIonJiNt
+vK4WylRTvPH+Kkkf5Ys744gDdSd4virRagaIxrytlbF3BV6n1o5UTuuaYwRfJ/kj
+J+jAHvmFBHD2zEa1qCodVG/2GS1BuRD9TZ/dGHLUGH+vTikCUttyplbXpuhwgAoR
+Lb6nsNLNMm4iXqwgyfTw306hP01rVQ==
+=EIdg
 -----END PGP SIGNATURE-----
 
---vogrexjxudlhcvkm--
+--0tz+zSavbvKwuCEI--
