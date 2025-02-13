@@ -1,122 +1,94 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from einhorn-mail-out.in-berlin.de (einhorn.in-berlin.de [192.109.42.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6D21EF08E
-	for <regressions@lists.linux.dev>; Thu, 13 Feb 2025 08:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2AB2066D6
+	for <regressions@lists.linux.dev>; Thu, 13 Feb 2025 10:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.109.42.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739436208; cv=none; b=nEUHA8J2GQUXVURjwggnlNvuFATDXjlqrYprRLrfNfXTICq0+TACtfgLV4vqBw3kE8vbD/wk2yGb8QGHmXzclPWx/Fcw4de5Sqj3eLiZnsZOcIrcLAT7etLuzqQpjN11JhmiVifMyutGXHypdN41fkvoRU82yai+aTH6aRrtI6c=
+	t=1739441018; cv=none; b=UT5dnw8pEb3haQHDTBkFSVg9WKzRTgf3+UrTe4wXYZCZ2zbmoJr3mICeoOjpqvXBrAymgh2CuBOtXJYybECCv70Hu9AOdYSDH4uzTMKDQxAHNAwXYJqs8vKQR6L1C9ws0ASa/iMA4BsJ6oK8v/nouhb+YjCGqfaV9ofYWa7QoZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739436208; c=relaxed/simple;
-	bh=E7GuVlbsAtqSiVuG5Xfjh7yj9/bwGZqjpH5YRkLKt9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYgq5fWbgOTgj/+i3wQjgd4ra7ARdWVFgSwmtN9EsO/OW5oSeqHBvAatgpklZEURTdoFoFenxy3JxkBV0wNyhSBVtYBG3SZgDOEhv61UARku/ZhK4IhFKfDRmWgMb3KggMug8AN7U1xBtxr3UYGD99lqGSUa/Wc8tAm08HGpGMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Lp1kYGXN; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Lp1kYGXN"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5dea50ee572so810342a12.1
-        for <regressions@lists.linux.dev>; Thu, 13 Feb 2025 00:43:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739436203; x=1740041003; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E7GuVlbsAtqSiVuG5Xfjh7yj9/bwGZqjpH5YRkLKt9M=;
-        b=Lp1kYGXN+RpAUI/ZgBKPm5vYNzPzbVgNZFhGCRNOyO1I4WwZyp7EmwiOgtPQ8W5iJo
-         BTGtROcaimHIZj98un39/itnL7bejhS6DPnHBv8yRdZc50oY1VnL1psCC8qZ7WgT828x
-         xRqScG7PdsclBpoe7zDvFra3KkiDnk5NfH5ogJavqoYhq7cSJxgMIj0psc1nGYjUwzAd
-         AAmhn6EFhpX66VgsPbhMh7E5PgJYEz18Z5LJJREJBPCr9KMUnhHMfh8FbzBXqfagO/Kh
-         HhdN7C+mqnAQ8P/alUhQbw4a1v0TozFbavx+JgCKIkRLEjrla9X+3XJkZ/qQmcSCFkf4
-         NfZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739436203; x=1740041003;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E7GuVlbsAtqSiVuG5Xfjh7yj9/bwGZqjpH5YRkLKt9M=;
-        b=YGjAllcIyH7BiHznxmIrcA1Ak0Ns6wsdNdnxzNRepprHBuNxRFNVDNb+L9HFK+GYCQ
-         gh2a5UerHjXczuxVv7ZKDpV/a7MS2eR9ePshVgTvuuhf/5XpNpd6xcEy3KL8yAERz+27
-         9V25lYUjHmz91ZdN9HYooEx+/77NSiAELYDbjL+pvaaV7jkc+hniJ4k50vgs2TepjSQb
-         NYD1qTqDlf5Uhc8SH/k69DrSnvJQnyuvr8a3bAog+9mzzkv6a5ypTy8y5atI+sa6SNYn
-         ZLGzkFTot1kPo69lunODfTlrjGL+TfMQqaou/fXz3a/IECDuHbQ5HANnicujlY/nAzZL
-         6FAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV38XQnYkxA7YnjoWomXHEELGIZybhKvnZUmT9TidTnUFXtlEOjR9c8D+CmOBTj5xj+bImzn2cd5U9CTw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwWCUnO6T76BhTTn3dsifo/AZDhA908/J3ZEF16g8ctlUqFFXl6
-	7W+eczQYFaxa7bxCqaJ39dmfgD51ZZiT4Xwh5POhEAyVcc3mrTpTrrcJsRiAKW4=
-X-Gm-Gg: ASbGnctL3FyRL3ZiMFWkK0Nn6xZXbGD44Ckb0LewvgNrwl7ZGwopt3iVNZMnTsq1A8B
-	5qcNJJITQUBi/TDskrxHJc9Qb1ImC1sf6cGMaeBZyynhwRzizaLIC9NjWTDp8uJFilgq3FWasCm
-	YD2WsCnblQj1btS+u9gdWZtta7iBB8NvHy8D5RoB/4kxS1ppJbkhgviHJ+BJOlZDM3TzkhGMkt/
-	4c9bfpzU68THEBDPzaenWV3FiBTlYmMJg3MwoO87vrd7VufaAl9VnsbYW9azc1c6JYEwDyMHFfg
-	wHG0n/eBh80A6kUf45dT
-X-Google-Smtp-Source: AGHT+IFC4ljA8wwltB0xasz6EULC7geM5Zzr5NP5AJCPgvbCO/ID+phFeBvn+sF9xJWIxqJ2VVxENQ==
-X-Received: by 2002:a17:907:94c5:b0:aac:619:e914 with SMTP id a640c23a62f3a-ab7f33b480amr740579066b.16.1739436202934;
-        Thu, 13 Feb 2025 00:43:22 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba569dd835sm54108966b.57.2025.02.13.00.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 00:43:22 -0800 (PST)
-Date: Thu, 13 Feb 2025 09:43:19 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1739441018; c=relaxed/simple;
+	bh=3mmrcT8fzgw7TlxULAaBafEfw9AzLcjRzeJ53FOyfdQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PnePSi2aiVjcDeWFlql64+iGhNz6dPbtJiaylyCRciBXB4CqbKx+QVM8GvUgYlxvOmYXGQv+VtRPPCRqVtm1bgtU4Tn32SELFEswPA2JAtivbwISOrNTFdG6xOVU4fSR4oSe/cREAXff2fmzryUwYzOHjYrDx7AXtm5l/cPpOio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de; spf=pass smtp.mailfrom=faulbaum.in-berlin.de; arc=none smtp.client-ip=192.109.42.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=faulbaum.in-berlin.de
+X-Envelope-From: dieter@faulbaum.in-berlin.de
+Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id 51D9utSe368111
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 13 Feb 2025 10:56:55 +0100
+Received: from frangula (frangula.xpertex.internal [172.16.3.241])
+	by frangula.xpertex.internal (Postfix) with ESMTPSA id B91E613D;
+	Thu, 13 Feb 2025 10:56:54 +0100 (CET)
+From: Dieter Faulbaum <dieter@faulbaum.in-berlin.de>
 To: Philip Yang <yangp@amd.com>
-Cc: Philip Yang <Philip.Yang@amd.com>, amd-gfx@lists.freedesktop.org, 
-	Felix.Kuehling@amd.com, Alexander.Deucher@amd.com, christian.koenig@amd.com, 
-	regressions@lists.linux.dev, Dieter Faulbaum <mail@faulbaum.in-berlin.de>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+        Philip Yang
+ <Philip.Yang@amd.com>, amd-gfx@lists.freedesktop.org,
+        Felix.Kuehling@amd.com, Alexander.Deucher@amd.com,
+        christian.koenig@amd.com, regressions@lists.linux.dev
 Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
-Message-ID: <qyjwmvbvhb2jcxwu5ubf4asghcovkfc2rfnrhdbbxa6dos5q23@k6b5ftwcefgs>
+In-Reply-To: <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com> (Philip Yang's
+	message of "Wed, 12 Feb 2025 18:02:15 -0500")
 References: <20240718210558.26340-1-Philip.Yang@amd.com>
- <20240718210558.26340-5-Philip.Yang@amd.com>
- <zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
- <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com>
+	<20240718210558.26340-5-Philip.Yang@amd.com>
+	<zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
+	<315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com>
+Date: Thu, 13 Feb 2025 10:56:54 +0100
+Message-ID: <rie7c5u5frt.fsf@faulbaum.in-berlin.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="76qq4sekzudox6xn"
-Content-Disposition: inline
-In-Reply-To: <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
 
---76qq4sekzudox6xn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
-MIME-Version: 1.0
+Hello Philip,
 
-On Wed, Feb 12, 2025 at 06:02:15PM -0500, Philip Yang wrote:
-> [html-content]
+Philip Yang <yangp@amd.com> writes:
 
-Are you aware that your mail is hard for some people (e.g. those like me
-who read their mail in a terminal, but also consider people who have to
-rely on braille readers) to read and also isn't properly archived on
-lore.kernel.org[1]?
+> On 2025-02-12 17:42, Uwe Kleine-K=C3=B6nig wrote:
+>
+>  #regzbot introduced: 68e599db7a549f010a329515f3508d8a8c3467a4
+> #regzbot monitor: https://bugs.debian.org/1093124
+>
+> Hello,
+>
+> On Thu, Jul 18, 2024 at 05:05:53PM -0400, Philip Yang wrote:
+>
+>  Find user queue rptr, ring buf, eop buffer and cwsr area BOs,=20
+>  and
+> check BOs are mapped on the GPU with correct size and take the=20
+> BO
+> reference.
+>
+> Signed-off-by: Philip Yang <Philip.Yang@amd.com>
+> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
+>
+>
+> This change made it into v6.12-rc1 as 68e599db7a54 ("drm/amdkfd:
+> Validate user queue buffers"). A Debian user (Dieter Faulbaum,=20
+> on Cc)
+> reported that this change introduced a regression using a gfx803=20
+> device
+> resulting in a HSA exception when e.g. darktable is used. I=20
+> didn't even
+> try to understand the problem, but maybe one of you have an idea=20
+> about
+> the issue?!
+>
+> Try this patch
+>
+> https://lore.kernel.org/all/20250130000412.29812-1-Philip.Yang@amd.com/T/
+Thank you, this patch helps!
+Tested with kernel version 6.12.0+
 
-Would be great if you could tune the settings of your thunderbird
-profile to send text replies. The in-kernel documentation[2] might help
-here.
+And (for me) the Debian bug report could be closed.
 
-Best regards
-Uwe
-
-[1] https://lore.kernel.org/all/315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com/
-[2] https://www.kernel.org/doc/html/v4.11/process/email-clients.html#thunderbird-gui
-
---76qq4sekzudox6xn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmetsKQACgkQj4D7WH0S
-/k6Rsgf7BXpuAXhdwSjIKCfK4LG/paS+Dc554ox30FWJASPPEW3Z6nYd+onK5aRm
-fjfL2BYUyFQ838cxeUV6RuRDHUp8pi04o7ljfUchJbxLOxNp2RO2klKgN4JtebBP
-qW5bTzZpi+Y6rV6yyieEm4CuMwR5L1o+lMxVPf/mh3mUX9aEI8XYX02ewDu7pQNb
-921o9tmJnTznQ5r65bEazwPf06jKj/73KKGYUhKXOAyw7COTxnH6MDvDglsjEabh
-XKt4ChTLA0PnFhnHecvgX9TyV8gzrqoWIZ+4LBE6zaInVw7MrkTUSApD6F9koAJZ
-PjqHqcwSUYNcMDYra01MKTzOfHOcfQ==
-=2y3A
------END PGP SIGNATURE-----
-
---76qq4sekzudox6xn--
+Thanks to all for your help!
+Dieter
