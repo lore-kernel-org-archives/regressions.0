@@ -1,122 +1,105 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520BA224AF8
-	for <regressions@lists.linux.dev>; Fri, 14 Feb 2025 09:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4F0263C65
+	for <regressions@lists.linux.dev>; Fri, 14 Feb 2025 12:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523647; cv=none; b=ZsUNjJLq0sfw6FoRFWo1mgBXm7luOeLjPuHIrqmVJFXJdSVZX7xnGRy70zS5Ld5THhecPyglSkK3egv90sX0nH6BSOS92R9jYADoAHvxVuXzpm4PhRQaj7yRr1bcjnwEdPJYa9f6hQ9OmCnv15y8TH9XTubB7rda8TIBIOZObvg=
+	t=1739536115; cv=none; b=kSGcMyoH0yBr5AQDU/9gAlDpw/2f5V1OjlACTaGTb//BGq7HQhyIbwXqtUtudETncbUmuRGwAOSOONMrCiZS3lwlMdw+Jp/VY8VBpLVCam0PAifprh8wXSn3unSKylTfPkPw5nDTDpAxeNJi+8A1l7b+QvQNDz40nYfZnZ88UpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523647; c=relaxed/simple;
-	bh=7lX+xYMFJh9I+bPXe+Txvhf9q+36wzQ9yi/jo6PJCcc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=i8Wq3IxvRdyQekz76VY9Xk4V1kFD+mRUH9TaQvWOnhEvBQZBaEkVlku+A6yQm4s8kozr9ZrboJmq/3FHuKK+7ZEq/3WkwLNFVvFJSCbvWsPub0CAdYirRhfZhaQw/vi8RL6Gq53HdRWkq/iam7xl/4ThR9HQpWJzRZZK4NVzGqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8+jBmjt; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739536115; c=relaxed/simple;
+	bh=fRjc2nDr9iho6s/jktZVJtcoUCpu4hN+vZJ7QYt1dPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bo8oTRtv6iJLOjRpvMmZJHSlfgpKo7Ty1MSmDAbGbTMt9dSz8Me+bx9eA7XDYL5LX/lA+QSluBdRDYZwP4yP2Bt9vvi0J1ymk/B6QueRLh6m1bRNH+TBJ4n5BFGAbG7QJrC8pZMc+DDJuOgxqR9m5mF6XmwhyQW2dyo6TI0fHqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OSU7iI3+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8+jBmjt"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so12791425e9.0
-        for <regressions@lists.linux.dev>; Fri, 14 Feb 2025 01:00:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739523642; x=1740128442; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BCeQRqKC2mbRi4qoCT2t+rHnwR2WSeqQ1KRGbRtrTlk=;
-        b=D8+jBmjtL/AEZ9R64EDoUWQ9cezrPEALosfz9+jTl+/bsIslgiXGlgmaR6Uhmdlgoo
-         6lbmEi1IEjJ5GCkfeLoSSxdwhYr0nlXz6ArhGUVg660Mee/Mr2ua59N/i/2BR71/Bt4v
-         AQ0qcorvFEqGywapVv/sdzoqWaxROTGsr5JiWvC7jqjuvzF6xC1qOulwvDsxJ8ZVzeyi
-         sShz3rn+N8mrvTWLfZgnJogxXgzQUhJ5wWVFQygjYtIlagEdjcEcCiWfTRfjumXPp3GQ
-         IwtOX9xRn1DEnJ2/geEUQiYfWKw6ye9GB+xn9OximNKk1H3kY5i0rPxOuE7I2xBFYGIo
-         oNjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739523642; x=1740128442;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BCeQRqKC2mbRi4qoCT2t+rHnwR2WSeqQ1KRGbRtrTlk=;
-        b=okWodKpIkNYDkJ7qhCA+5KVaA3pnyjuTefQgH41sZmll6GUg4UNVdjI61mrD43MpR9
-         qWcAwDATewVU6abeiIPKqEciRqqzJCfg+BB2M6PpXfS86xH+Uow47fwXLWBh69r7utg0
-         ERk8RqypIpvKcfTi+6+Gg1c/OoYwa7SW7AbLXIDC0AWux8DedYPH7vUXrb3YxSBahPdi
-         /O2nmCE4MH4pop2ZyN+eySzHWyjh8fxema5YK63Dh6RkYVNMVK7/wnkbWzKKG7nk0K4z
-         S4j/osHhdgyU5eepelYGWVs1i/KK8HWl07Jjbb2Ogufr1oVCgDAMnMe/IjmkVDDeflDZ
-         L6QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnWAZSeqYMErdKTx7Y4rj5EpjYlmdn98PgtaUYewf84ma+w/pvNvAqyAmA/3Gl48oncRXMqQnBRYztWQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxB+2vdgdckLosCy3gzdtTTanziHv2TgVRcpCZb0vfnLYORVA+4
-	kKOFpercpYfhsEeQspP3Tp0y/qpNiJFZwEbU31illGT7nB/GN3YtneWoqXFqLUmG4KM5qqxofoh
-	GRRMI8xSdhVuhJieru5LDIjMLkAw=
-X-Gm-Gg: ASbGnctOJn+GcqFxTJ4RLHUV5X09kM0JnH6ECXNrCSJeLxk3HBSXktnPHx6YP9d1LDN
-	A0iHmWsoZlDpAgIWGyXYAvWe88hiSNxm+oq56k4+pL/wvxLk6bovKGSB6N6T32tQY8TViPp3Fyt
-	g=
-X-Google-Smtp-Source: AGHT+IF15SfeQj3HA1ZMD+2sa81H/Bp7K68HgV09burIDohLpGXFpzE9CUzH85s9o55mFKj7h/Av1qPuDFotyK/ZIoA=
-X-Received: by 2002:a05:600c:4e4f:b0:439:6332:275d with SMTP id
- 5b1f17b1804b1-43963322a53mr64091465e9.2.1739523642375; Fri, 14 Feb 2025
- 01:00:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OSU7iI3+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739536114; x=1771072114;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fRjc2nDr9iho6s/jktZVJtcoUCpu4hN+vZJ7QYt1dPs=;
+  b=OSU7iI3+Vl+tIVDYr478Q6xDEbXuKAg0xDsZ03F7Wo8ODFFprQ8pK8Of
+   v/gktMGs8vOq/cDm3IKNJcVWk9xc7+7KXMO5LictyDUeJVFZQ7PCVnuuL
+   JEMnJn10incKucI83EHQTdeb6ncm7/zZZNgyM0AlIq7yPHKRYaIdjWdkl
+   vkXYZ1S5TPpYmzivHX6y060M5YK8ysnS3S8AX+F7SpNeRsQBLaSy9nrCq
+   ZjCdRTjGyu6wJVZqGcGSamQ5yUV7MEQ75NpjH01cOuLhMyx85nHK7h76i
+   20eEe+EahE4Dv54/82cYbpGTLF4LuB/kBUFDwu6pG/b76RddhjQFByGgf
+   g==;
+X-CSE-ConnectionGUID: aiC8zXmFR76DmKLWL3f8Bg==
+X-CSE-MsgGUID: TCBEIaofTRGZ4xe5ecraYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40426125"
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="40426125"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 04:28:33 -0800
+X-CSE-ConnectionGUID: o1jYiYWASk2gp5QgoekvHA==
+X-CSE-MsgGUID: vsF/i9AKQY++Chde4rj/aA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118650552"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa005.jf.intel.com with ESMTP; 14 Feb 2025 04:28:32 -0800
+Message-ID: <f2563e57-1982-4a64-a655-236dd4fff208@linux.intel.com>
+Date: Fri, 14 Feb 2025 14:29:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Qiang Zhang <dtzq01@gmail.com>
-Date: Fri, 14 Feb 2025 17:00:30 +0800
-X-Gm-Features: AWEUYZnMyRVuMUo18B9Q4Cpr5cORWRavjMOpn-JsG2wYZUOafE0PZqTGJKToTB0
-Message-ID: <CAPx+-5uvFxkhkz4=j_Xuwkezjn9U6kzKTD5jz4tZ9msSJ0fOJA@mail.gmail.com>
-Subject: [RESEND]tc-flower not worked when configured dst_port and src_port
- range in one rule.
-To: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, stable@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: xhci port capability storage change broke
+ fastboot android bootloader utility
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Forest <forestix@nom.one>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net>
+ <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com>
+ <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
+ <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
+ <4kb3ojp4t59rm79ui8kj3t8irsp6shlinq@sonic.net>
+ <8a5bef2e-7cf9-4f5c-8281-c8043a090feb@linux.intel.com>
+ <2tq7pj5g33d76j2uddbv5k8iiuakchso16@sonic.net>
+ <ee229b33-2082-4e03-8f2b-df5b4a86a77d@linux.intel.com>
+ <Z65U9rZrZUjofo02@eldamar.lan>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <Z65U9rZrZUjofo02@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, all.
+On 13.2.2025 22.24, Salvatore Bonaccorso wrote:
+> Hi Mathias,
+> 
+> On Wed, Jan 29, 2025 at 01:01:58PM +0200, Mathias Nyman wrote:
+>> On 24.1.2025 21.44, Forest wrote:
+>>> On Mon, 13 Jan 2025 17:05:09 +0200, Mathias Nyman wrote:
+>>>
+>>>> I'd recommend a patch that permanently adds USB_QUIRK_NO_LPM for this device.
+>>>> Let me know if you want to submit it yourself, otherwise I can do it.
+>>>
+>>> It looks like I can't contribute a patch after all, due to an issue with my
+>>> Signed-off-by signature.
+>>>
+>>> So, can you take care of the quirk patch for this device?
+>>>
+>>> Thank you.
+>>
+>> Sure, I'll send it after rc1 is out next week
+> 
+> Not something superurgent, but wanted to ask is that still on your
+> radaar? I stumpled over it while looking at the current open bugs
+> reported in Debian, reminding me of https://bugs.debian.org/1091517
 
-recently met an issue: tc-flower not worked when configured dst_port
-and src_port range in one rule.
+Yes, patch was here:
+https://lore.kernel.org/linux-usb/20250206151836.51742-1-mathias.nyman@linux.intel.com/
 
-detailed like this:
-$ tc qdisc add dev ens38 ingress
-$ tc filter add dev ens38 ingress protocol ip flower ip_proto udp \
-  dst_port 5000 src_port 2000-3000 action drop
+Greg applied it to his tree today:
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=159daf1258227f44b26b5d38f4aa8f37b8cca663
 
-I try to find the root cause in kernel source code:
-1. FLOW_DISSECTOR_KEY_PORTS and FLOW_DISSECTOR_KEY_PORTS_RANGE flag of
-mask->dissector were set
-in fl_classify from flow_dissector.c.
-2. then skb_flow_dissect -> __skb_flow_dissect -> __skb_flow_dissect_ports.
-3. FLOW_DISSECTOR_KEY_PORTS handled and FLOW_DISSECTOR_KEY_PORTS_RANGE
-not handled
-in __skb_flow_dissect_ports, so tp_range.tp.src was 0 here expected
-the actual skb source port.
-
-By the way, __skb_flow_bpf_to_target function may has the same issue.
-
-Please help confirm and fix it, thank you.
-
-source code of __skb_flow_dissect_ports in flow_dissector.c as below:
-
-static void
-__skb_flow_dissect_ports(const struct sk_buff *skb,
-struct flow_dissector *flow_dissector,
-void *target_container, const void *data,
-int nhoff, u8 ip_proto, int hlen)
-{
-enum flow_dissector_key_id dissector_ports = FLOW_DISSECTOR_KEY_MAX;
-struct flow_dissector_key_ports *key_ports;
-
-if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS))
-dissector_ports = FLOW_DISSECTOR_KEY_PORTS;
-else if (dissector_uses_key(flow_dissector,
-   FLOW_DISSECTOR_KEY_PORTS_RANGE))
-dissector_ports = FLOW_DISSECTOR_KEY_PORTS_RANGE;
-
-if (dissector_ports == FLOW_DISSECTOR_KEY_MAX)
-return;
-
-key_ports = skb_flow_dissector_target(flow_dissector,
-     dissector_ports,
-     target_container);
-key_ports->ports = __skb_flow_get_ports(skb, nhoff, ip_proto,
-data, hlen);
-}
-
-Best regards.
+Thanks
+Mathias
