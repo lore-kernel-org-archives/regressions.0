@@ -1,114 +1,122 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CBD2222DE
-	for <regressions@lists.linux.dev>; Thu, 13 Feb 2025 20:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520BA224AF8
+	for <regressions@lists.linux.dev>; Fri, 14 Feb 2025 09:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739478268; cv=none; b=BVPosXyNi8UfZufPnXvxDn5HQhrE4QUnB60OeNtfhOFfR0XUXDIysgOTXK7QlQTabB9JSQdtKUfFTv7k2ZbUkaXiP2aApGieyWfkw/k6N+P4hO4OouHANgqd8YZG5wwYt7gaJfYrcmWq4kseL+sda1s0Hk3fFdUgxOK7oxfozJo=
+	t=1739523647; cv=none; b=ZsUNjJLq0sfw6FoRFWo1mgBXm7luOeLjPuHIrqmVJFXJdSVZX7xnGRy70zS5Ld5THhecPyglSkK3egv90sX0nH6BSOS92R9jYADoAHvxVuXzpm4PhRQaj7yRr1bcjnwEdPJYa9f6hQ9OmCnv15y8TH9XTubB7rda8TIBIOZObvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739478268; c=relaxed/simple;
-	bh=lRoN299yI/fhws0lmPKx7+Fl34Rlx/oBOztj9Ak103A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKStWoMr0wwgo33/TypvfkJ7VYft+mrnhan97GrPMh45/764j1TMPQxsIsBiuZqLZSM9E0YOC1XWTXvgMI3SnqLeKICv+Pwm2RXms/KjxryQN5TTX6z0jvMaX3Ykbm1NbkLCR8+2/UVa1ymCwH2z6a9tGtL53jfZI8PanUC2IME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7oTGXyz; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1739523647; c=relaxed/simple;
+	bh=7lX+xYMFJh9I+bPXe+Txvhf9q+36wzQ9yi/jo6PJCcc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=i8Wq3IxvRdyQekz76VY9Xk4V1kFD+mRUH9TaQvWOnhEvBQZBaEkVlku+A6yQm4s8kozr9ZrboJmq/3FHuKK+7ZEq/3WkwLNFVvFJSCbvWsPub0CAdYirRhfZhaQw/vi8RL6Gq53HdRWkq/iam7xl/4ThR9HQpWJzRZZK4NVzGqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8+jBmjt; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7oTGXyz"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43948021a45so13891695e9.1
-        for <regressions@lists.linux.dev>; Thu, 13 Feb 2025 12:24:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8+jBmjt"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so12791425e9.0
+        for <regressions@lists.linux.dev>; Fri, 14 Feb 2025 01:00:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739478265; x=1740083065; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N1p2D48k2Z+ZfCl15svcbQqI9e1in0l2JmLLcSGv3Uw=;
-        b=O7oTGXyzAa/ckZPVp/KI9q6VAApMdq6Jx+uwGDqpYr9fbu9+HdTuneVBwvN3JWGT1Y
-         agnzn1vDhSuokoNBFK8RAdE/XKikM69fD2w5nQsZ1HkUHna4WcL4NG9irQn+RiRb5J3M
-         XunWotZ9oxitaAIfYbO/NEYJRSLrj2JvlEMa7KWHr0xBZngdO2Fa/3EX/v+p6rZelpL2
-         X/xqxjBgq2vAus9mvp5hoA5EK0BWK7RAI4S7eV4EuilNaMgYJtSxaGPeoH74T7q8DyEa
-         aGBBCzAtRMnHioKfSSSR5qa9b2T77yc2WIMxMhKBlump94EU+fhGh7a3ojG/c6kgtq4A
-         b0wQ==
+        d=gmail.com; s=20230601; t=1739523642; x=1740128442; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BCeQRqKC2mbRi4qoCT2t+rHnwR2WSeqQ1KRGbRtrTlk=;
+        b=D8+jBmjtL/AEZ9R64EDoUWQ9cezrPEALosfz9+jTl+/bsIslgiXGlgmaR6Uhmdlgoo
+         6lbmEi1IEjJ5GCkfeLoSSxdwhYr0nlXz6ArhGUVg660Mee/Mr2ua59N/i/2BR71/Bt4v
+         AQ0qcorvFEqGywapVv/sdzoqWaxROTGsr5JiWvC7jqjuvzF6xC1qOulwvDsxJ8ZVzeyi
+         sShz3rn+N8mrvTWLfZgnJogxXgzQUhJ5wWVFQygjYtIlagEdjcEcCiWfTRfjumXPp3GQ
+         IwtOX9xRn1DEnJ2/geEUQiYfWKw6ye9GB+xn9OximNKk1H3kY5i0rPxOuE7I2xBFYGIo
+         oNjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739478265; x=1740083065;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N1p2D48k2Z+ZfCl15svcbQqI9e1in0l2JmLLcSGv3Uw=;
-        b=oeEddMZCe3HH0B0k3wN3xew2QhDKg+jS07TZ+DeAqvbA7dajaSR2i5jNF+yui1z0YM
-         e+OKHVpGe6dbb0VnMQNPQD+7z0c1l4bADIhadoP6W7ilPSuRhg6oKN5Kf5WIcDn4sH+n
-         W0fMeOWwTWyZmWMUi7vksxSnv+aZqtOAUzMFRJjlwtKXfN4+RyziXKisKcXfXIHI9mDm
-         KYQzUXv5ZA261ncgJ5xxBGgg2xolZmsxIEl3zP6m/sLuL+mZoQH3rBHXEX8d7LZhcWec
-         T6RfKe7zqpSrvkWCBZTBFUHo67CoGFoUK9b0rY+haY1FjJopcLb9gdLgSrdzLWIOli1n
-         WwOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKbm8YAW3cF9LKlIz7e4ZbP7MNg19W1Ybcm58bdHPH/DRoawLm8zaXkOyhm5ksSkoPLBunDEr0E/6kjw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwFEnzzaD++cK8Wm43TjN8/esnAO3Lig3XbY+Mox6sHnw1VP+w9
-	qC+JoYyvJqU3u0mC/78GACo4Rwr3riSllMLaPfOBshuLNaxVxP8b
-X-Gm-Gg: ASbGncs2guM/iicW4le+x9JCmJxCA8v0QsxT3c1NQHZd/wneRQf8xbPkUPsSqQF/cRC
-	TYe+oQ76WdLVrPJAcrNJRRabAtCqYCUdoXjE8qmvT1wC2tY9JsAXFRvA2gZqqYtMnsed7ZPRGdM
-	cpSD9Lcp5Ws7OtcInithqXXVJ/7KckrWsFGdrTTjINav+HaZTJyNdeDc8rIuUI9b9N/USPWRVn9
-	dxIDuHk+ZC3VwjKn+OOeatp6svtIQGjdD9Mv0kRrCQxbhDCblz9CU8u/o3X3I8FwTDYdXYRVaXf
-	WbuVNPD9phkA5r7osmhODbwlhtg8QFYew6JLG949c5w9HwwX
-X-Google-Smtp-Source: AGHT+IFqzGgXpVIXDzJc4C6VHeZK7VT63QgiIWVuvvjrGLY3MMZmxxatDJO1KlqdLNV06ScaVx7+YQ==
-X-Received: by 2002:a5d:5885:0:b0:38f:23ed:2c7 with SMTP id ffacd0b85a97d-38f23ed03d1mr6353757f8f.14.1739478265010;
-        Thu, 13 Feb 2025 12:24:25 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25913eb6sm2778994f8f.51.2025.02.13.12.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 12:24:24 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 8AC40BE2EE7; Thu, 13 Feb 2025 21:24:22 +0100 (CET)
-Date: Thu, 13 Feb 2025 21:24:22 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Forest <forestix@nom.one>, linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [REGRESSION] usb: xhci port capability storage change broke
- fastboot android bootloader utility
-Message-ID: <Z65U9rZrZUjofo02@eldamar.lan>
-References: <hk8umj9lv4l4qguftdq1luqtdrpa1gks5l@sonic.net>
- <2c35ff52-78aa-4fa1-a61c-f53d1af4284d@linux.intel.com>
- <0l5mnj5hcmh2ev7818b3m0m7pokk73jfur@sonic.net>
- <3bd0e058-1aeb-4fc9-8b76-f0475eebbfe4@linux.intel.com>
- <4kb3ojp4t59rm79ui8kj3t8irsp6shlinq@sonic.net>
- <8a5bef2e-7cf9-4f5c-8281-c8043a090feb@linux.intel.com>
- <2tq7pj5g33d76j2uddbv5k8iiuakchso16@sonic.net>
- <ee229b33-2082-4e03-8f2b-df5b4a86a77d@linux.intel.com>
+        d=1e100.net; s=20230601; t=1739523642; x=1740128442;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BCeQRqKC2mbRi4qoCT2t+rHnwR2WSeqQ1KRGbRtrTlk=;
+        b=okWodKpIkNYDkJ7qhCA+5KVaA3pnyjuTefQgH41sZmll6GUg4UNVdjI61mrD43MpR9
+         qWcAwDATewVU6abeiIPKqEciRqqzJCfg+BB2M6PpXfS86xH+Uow47fwXLWBh69r7utg0
+         ERk8RqypIpvKcfTi+6+Gg1c/OoYwa7SW7AbLXIDC0AWux8DedYPH7vUXrb3YxSBahPdi
+         /O2nmCE4MH4pop2ZyN+eySzHWyjh8fxema5YK63Dh6RkYVNMVK7/wnkbWzKKG7nk0K4z
+         S4j/osHhdgyU5eepelYGWVs1i/KK8HWl07Jjbb2Ogufr1oVCgDAMnMe/IjmkVDDeflDZ
+         L6QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnWAZSeqYMErdKTx7Y4rj5EpjYlmdn98PgtaUYewf84ma+w/pvNvAqyAmA/3Gl48oncRXMqQnBRYztWQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxB+2vdgdckLosCy3gzdtTTanziHv2TgVRcpCZb0vfnLYORVA+4
+	kKOFpercpYfhsEeQspP3Tp0y/qpNiJFZwEbU31illGT7nB/GN3YtneWoqXFqLUmG4KM5qqxofoh
+	GRRMI8xSdhVuhJieru5LDIjMLkAw=
+X-Gm-Gg: ASbGnctOJn+GcqFxTJ4RLHUV5X09kM0JnH6ECXNrCSJeLxk3HBSXktnPHx6YP9d1LDN
+	A0iHmWsoZlDpAgIWGyXYAvWe88hiSNxm+oq56k4+pL/wvxLk6bovKGSB6N6T32tQY8TViPp3Fyt
+	g=
+X-Google-Smtp-Source: AGHT+IF15SfeQj3HA1ZMD+2sa81H/Bp7K68HgV09burIDohLpGXFpzE9CUzH85s9o55mFKj7h/Av1qPuDFotyK/ZIoA=
+X-Received: by 2002:a05:600c:4e4f:b0:439:6332:275d with SMTP id
+ 5b1f17b1804b1-43963322a53mr64091465e9.2.1739523642375; Fri, 14 Feb 2025
+ 01:00:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee229b33-2082-4e03-8f2b-df5b4a86a77d@linux.intel.com>
+From: Qiang Zhang <dtzq01@gmail.com>
+Date: Fri, 14 Feb 2025 17:00:30 +0800
+X-Gm-Features: AWEUYZnMyRVuMUo18B9Q4Cpr5cORWRavjMOpn-JsG2wYZUOafE0PZqTGJKToTB0
+Message-ID: <CAPx+-5uvFxkhkz4=j_Xuwkezjn9U6kzKTD5jz4tZ9msSJ0fOJA@mail.gmail.com>
+Subject: [RESEND]tc-flower not worked when configured dst_port and src_port
+ range in one rule.
+To: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, stable@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mathias,
+Hi, all.
 
-On Wed, Jan 29, 2025 at 01:01:58PM +0200, Mathias Nyman wrote:
-> On 24.1.2025 21.44, Forest wrote:
-> > On Mon, 13 Jan 2025 17:05:09 +0200, Mathias Nyman wrote:
-> > 
-> > > I'd recommend a patch that permanently adds USB_QUIRK_NO_LPM for this device.
-> > > Let me know if you want to submit it yourself, otherwise I can do it.
-> > 
-> > It looks like I can't contribute a patch after all, due to an issue with my
-> > Signed-off-by signature.
-> > 
-> > So, can you take care of the quirk patch for this device?
-> > 
-> > Thank you.
-> 
-> Sure, I'll send it after rc1 is out next week
+recently met an issue: tc-flower not worked when configured dst_port
+and src_port range in one rule.
 
-Not something superurgent, but wanted to ask is that still on your
-radaar? I stumpled over it while looking at the current open bugs
-reported in Debian, reminding me of https://bugs.debian.org/1091517
+detailed like this:
+$ tc qdisc add dev ens38 ingress
+$ tc filter add dev ens38 ingress protocol ip flower ip_proto udp \
+  dst_port 5000 src_port 2000-3000 action drop
 
-Thanks for your work!
+I try to find the root cause in kernel source code:
+1. FLOW_DISSECTOR_KEY_PORTS and FLOW_DISSECTOR_KEY_PORTS_RANGE flag of
+mask->dissector were set
+in fl_classify from flow_dissector.c.
+2. then skb_flow_dissect -> __skb_flow_dissect -> __skb_flow_dissect_ports.
+3. FLOW_DISSECTOR_KEY_PORTS handled and FLOW_DISSECTOR_KEY_PORTS_RANGE
+not handled
+in __skb_flow_dissect_ports, so tp_range.tp.src was 0 here expected
+the actual skb source port.
 
-Regards,
-Salvatore
+By the way, __skb_flow_bpf_to_target function may has the same issue.
+
+Please help confirm and fix it, thank you.
+
+source code of __skb_flow_dissect_ports in flow_dissector.c as below:
+
+static void
+__skb_flow_dissect_ports(const struct sk_buff *skb,
+struct flow_dissector *flow_dissector,
+void *target_container, const void *data,
+int nhoff, u8 ip_proto, int hlen)
+{
+enum flow_dissector_key_id dissector_ports = FLOW_DISSECTOR_KEY_MAX;
+struct flow_dissector_key_ports *key_ports;
+
+if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS))
+dissector_ports = FLOW_DISSECTOR_KEY_PORTS;
+else if (dissector_uses_key(flow_dissector,
+   FLOW_DISSECTOR_KEY_PORTS_RANGE))
+dissector_ports = FLOW_DISSECTOR_KEY_PORTS_RANGE;
+
+if (dissector_ports == FLOW_DISSECTOR_KEY_MAX)
+return;
+
+key_ports = skb_flow_dissector_target(flow_dissector,
+     dissector_ports,
+     target_container);
+key_ports->ports = __skb_flow_get_ports(skb, nhoff, ip_proto,
+data, hlen);
+}
+
+Best regards.
