@@ -1,49 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25DE1F416F;
-	Tue, 18 Feb 2025 08:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126BB286283
+	for <regressions@lists.linux.dev>; Tue, 18 Feb 2025 20:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739866379; cv=none; b=h/I21xCxUU6+yP5W6MsTZxjTIhYal2uWH2ZZiSu62cGrx+4vATuyaeSgKe1/+AJLvwXJGc8NB7/hbvjHz43pMqPyX9IR4mPkc9YBX/wB/KFYWMl1Z+Io2fkm4Cmkk4PWABMjQydnZQqNT6GKwaMRQZ/X8BiE2fbSjNcRjd6guIM=
+	t=1739911838; cv=none; b=tuy0tpCt0Y/Anhmk2Gp32ALuBpMFwvv0A1Zd0Ue1Jub891msoWC2XqkIJws/nUEp92nKy5RhXbqoBCqHqDGLt7RFTej+SkZVXyELSnv4ggJntBnp6fw9EATxC+wf6E4SUpv6OCqRbMknBNlZLThZ9lKDdVPmGzMLpxD4lPVuzbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739866379; c=relaxed/simple;
-	bh=ggao69BJ7QulySpMPhPRL+SP6DF/SDa/yCwuhnHl3Pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXl129S5BrSTIOEfkg9+2dRgzV8nkGwgNDB9+ZTHN5oWJeiEuZANmhohThVjkyjeuK3lHUSJhYShdmlOFE9xKtTP8QjD2Lu4f9dY5NaIRlgLT1cWtAtBByVNDJW5xgttFVJ+XYqC1ZF2pObBUWYmSbAcl8wGMoPbmFoF92FDLno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ud21u46c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739911838; c=relaxed/simple;
+	bh=PpiQTlTOOZyXjOnfhxl0EHn+GiaHyGsMFZnUED6Xgcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NUVlAs12rKV/BFEw0W2f+PjsH0cloNESErDvJfmjNwL3TKZzDTR4uXz1svgewbUg7kCgj5fcHoUjSPjV+r9PqM7X6tUAXNE8Xc+DdjYM3ho41MNumh7fkoNX6s0MhypVmZo73DyNYiDJAvTvCY+J/yhOPzNNG6vXZzGG8v2Ti1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=monogon.tech; spf=pass smtp.mailfrom=monogon.tech; dkim=pass (2048-bit key) header.d=monogon-tech.20230601.gappssmtp.com header.i=@monogon-tech.20230601.gappssmtp.com header.b=w+6XKQBV; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=monogon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monogon.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ud21u46c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113FEC4CEE2;
-	Tue, 18 Feb 2025 08:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739866378;
-	bh=ggao69BJ7QulySpMPhPRL+SP6DF/SDa/yCwuhnHl3Pw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ud21u46cASGdrYlztaouPzqmiVMRLEiV37W8TR59mCNU79exmuUc3hKWeYY0X6lTu
-	 GaaU/2RZwLf2HXf5G5dqNdTe1diCUp+BMpesSkXH75kkKpVh1bW1buWge0LjdmuIs+
-	 i4NVOyMZ5QjDKz/TY6mTOa7ZxDgBPgoxOYZwGbxc=
-Date: Tue, 18 Feb 2025 09:12:55 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Lorenz Brun <lorenz@monogon.tech>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [REGRESSION] xfs kernel panic
-Message-ID: <2025021837-payment-ritalin-909d@gregkh>
-References: <CAJMi0nTHX0inFxme=xnJf23c8=w0bAf7LfiT=YNpmU-zVnUR+Q@mail.gmail.com>
- <CAJMi0nTbyi6VGTmmZ43wYWwJWur0XPtuswZ_5UaXB+S6Z=Mo6A@mail.gmail.com>
- <20250217172957.GB21808@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=monogon-tech.20230601.gappssmtp.com header.i=@monogon-tech.20230601.gappssmtp.com header.b="w+6XKQBV"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-867129fdb0aso3779646241.1
+        for <regressions@lists.linux.dev>; Tue, 18 Feb 2025 12:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monogon-tech.20230601.gappssmtp.com; s=20230601; t=1739911835; x=1740516635; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ofYDHxj1ziYDYXkrBzg3wkNuykm4qVuLZJ1pxIE9UxY=;
+        b=w+6XKQBVwUXsT4m4pDFQ2m5ce4UlU1GBwGJp+mLsNHZ7Z0qUXI+9bBVLeDeJkW2T9K
+         ZG0LGPLjSap0haobU8DiLUYTSelL5upiz6LwDa6TAtZWf53G1KHFTNnsw4iAzKLpE3nz
+         QqcyJHPOk/wIFKj+XF78b0jFWoS75CW51aN8gNfZK+jHzbDhvp58yOl59KhMX9YZOTlT
+         /PlAPstVJM/EtiVV7kltsWqIUIX6ovPctJppuARAZ+eHUwhWNbmNORRurlKYSsB89g64
+         GmKNdo3CMuOEf90mlZySGXVJg3eFUroghsWw1YK+cykYjK54A2epSvywFp+gxY2eCDw0
+         AV7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739911835; x=1740516635;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ofYDHxj1ziYDYXkrBzg3wkNuykm4qVuLZJ1pxIE9UxY=;
+        b=qFOAem0MgKkDD1ua7mdI8rgBbKVMn5PKwBiyDcvb7PGeY8Suwk8ihCGTn3BvjkTywW
+         4rvq1LME47pY2Mn2fJjCiIfmANW7bQCSW108xc5s9XDs9I4WSdd6x8VILUDHf54PFw39
+         lwyPPuIX4pILEki0Sxth2AkcPlfAWwGpC+0i2uXXZmfy6YqCpd6fTYBVxysKsiShM7Xd
+         hLlEX49HYQ26e/MuHi3pAMmNpVI431CGCYP2pDIbrgbNN7NKN0fHe7DVeaFl3ycD9lVZ
+         XHbkLW4MfmtOHodAwrmCL+KhGj2lrK0ZCg3cxsqB6TkbKyWVhx9Hd0G55s7gFUbh0pQd
+         zz1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2tYSx/tTfwZCKlKbSDg+PnuMAYf9Pq7AW+B7GBKcElgzrG3vLHlkPwJfJWTUd7Q9dz/2SdzTCh0Je2g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyljm3jGvQhSl2CsiPrJaTCSm+SarXA1srZmxjYKCap81y+CXqW
+	h6h2yVX0v2Jd6P/2MJzcyViwQfjlC6ETkZdiKe9ExOAbCOZaeYDhQOsChvEYe4GMkvxs1iIuaDG
+	eFEgmvqm5dRdjQTNYxYSDJFvDzoyPOIxZ5W4YyA==
+X-Gm-Gg: ASbGncvaNTc/T3cCzH/n/c5YXUxouwOX9kIvglWnv2OeEERFgqKuDLEhIwbxZq9GqA3
+	2tKQ5+ZZ7ZTdEgBhs8jDp48gZZBKE76NQ1b2hcrKA6w46QzUhQhCPO57JXhTqJcDifLpAat3Mij
+	McC0fLQJlYOS68aZJxWUsrhCh7
+X-Google-Smtp-Source: AGHT+IHlb4IHEqQNpxwkO8FcQivnJ2dQg/jVmJf/Nwp7U8mK4w4rGOC/fOQ+qGybr1+upwQ78iRxHho/GtLj5P3hjZw=
+X-Received: by 2002:a05:6102:cca:b0:4bb:d062:452 with SMTP id
+ ada2fe7eead31-4bd3fc6c813mr9738263137.3.1739911834844; Tue, 18 Feb 2025
+ 12:50:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAJMi0nTHX0inFxme=xnJf23c8=w0bAf7LfiT=YNpmU-zVnUR+Q@mail.gmail.com>
+ <CAJMi0nTbyi6VGTmmZ43wYWwJWur0XPtuswZ_5UaXB+S6Z=Mo6A@mail.gmail.com> <20250217172957.GB21808@frogsfrogsfrogs>
 In-Reply-To: <20250217172957.GB21808@frogsfrogsfrogs>
+From: Lorenz Brun <lorenz@monogon.tech>
+Date: Tue, 18 Feb 2025 21:50:24 +0100
+X-Gm-Features: AWEUYZm5giUiD9ukjAqvt09Gva85GVPggxV3eM_6kCSxlpA4Pg9vV2yYFq5snTU
+Message-ID: <CAJMi0nRtfzLASwT0MTJY1vxdyS+KCHezA-Hc9ugCrPJ-6uZL9w@mail.gmail.com>
+Subject: Re: [REGRESSION] xfs kernel panic
+To: "Darrick J. Wong" <djwong@kernel.org>, gregkh@linuxfoundation.org
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 17, 2025 at 09:29:57AM -0800, Darrick J. Wong wrote:
+Thanks everyone, with that patch (now included in 6.12.15) the bug is fixed.
+
+I'm also curious how that commit ended up in stable without the
+already-pushed bug fix? It even has the right "Fixes" tag. Not blaming
+anyone, nothing bad happened, this all got caught in tests as it
+should but how does the process work?
+
+Regards,
+Lorenz
+
+Am Mo., 17. Feb. 2025 um 18:29 Uhr schrieb Darrick J. Wong <djwong@kernel.org>:
+>
 > On Mon, Feb 17, 2025 at 05:27:33PM +0100, Lorenz Brun wrote:
 > > Am Mo., 17. Feb. 2025 um 16:00 Uhr schrieb Lorenz Brun <lorenz@monogon.tech>:
 > > >
@@ -127,19 +166,20 @@ On Mon, Feb 17, 2025 at 09:29:57AM -0800, Darrick J. Wong wrote:
 > > >
 > > > Regards,
 > > > Lorenz
-> > 
+> >
 > > Hi everyone,
-> > 
+> >
 > > I root-caused this to 5808d420 ("xfs: attach dquot buffer to dquot log
 > > item buffer"), but needs reverting of the 3 follow-up commits
 > > (d331fc15, ee6984a2 and 84307caf) as well as they depend on the broken
 > > one. With that 6.12.14 passes our test suite again. Reproduction
 > > should be rather easy by just creating a fresh filesystem, mounting
 > > with "prjquota" and performing I/O.
-> 
+>
 > Known bug, will patch soon.
-
-Great, thanks, I'll go push out a new 6.12 release with this fix in it
-now.
-
-greg k-h
+>
+> --D
+>
+> > Regards,
+> > Lorenz
+> >
