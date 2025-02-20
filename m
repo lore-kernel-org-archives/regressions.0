@@ -1,206 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFE6286290;
-	Tue, 18 Feb 2025 21:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FF31DF75D
+	for <regressions@lists.linux.dev>; Thu, 20 Feb 2025 15:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739913456; cv=none; b=lvl9Ony3LlW6tQ+LBJibSD6Vcx1X2JtUkXfqD4HJs2re/43ZVX3QrLtfwd6JSNP/eqVwGWzIGP7ewyvKzifDGo3NJl4/26ZJYl249NwDbk1Zud1+8dCIVv+bmzf7EkXp4nLlZeLI84bIqSc0Q7iSQutl38eXZe82uDM8Qmz9f88=
+	t=1740066530; cv=none; b=Y6yb0u3IPoSyR+i0ionaxS2xg8yHcKPSaSGVXmid2LzVHh7LawjmyRY/kom2NphWwPv2xvTWvsnN6g5k7yEpszXXF4ogLVIeMgalL2psGRpHLNTJ6Aep/EouuKqAQtxBo2LSBCc1LvyBESUmW4FhBN8yaN32vaf4fKSj/9+VGzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739913456; c=relaxed/simple;
-	bh=HkIWvkYGE/V7XciTvQmYheI9uh784b/5Zjsju9HRg/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tOWF6GkKJitwh5VGMvnL7DbSPoXPVdcV+Ay9QBKCYflkddLJrxOt0LfSTBN52x0xIPCFXHzmKTfv+4NtPO2cIOlstvsi+TTtl1gqezf27re3Fp6piqIR0NBRBvtUV6lf9rdkq1BH9P8WELLEHyUrXcox6Vo4CsCyQkxdjvKmHps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/zf/iuP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740066530; c=relaxed/simple;
+	bh=53tauEdjLcf73B3pwYhNERVmOlwbsXNx9Ee8gIApv6k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Bh/G6HwX06iTBTbtxPrXWLYS7Gs0QzaRhpMTQ2t1l4sF9r612ukbMIa6GzW+f1CMJp/S6s+FRqJpxGb47EWdQvJsG6cagTm1hcg800b9c2sn5XoQbCJ4OOIKz6/TtCCUa3r03caOJpaOik21bjVH4K1N+EatJ67qEMvfZ/hrGfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HoFHJGDP; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/zf/iuP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF7DC4CEE2;
-	Tue, 18 Feb 2025 21:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739913456;
-	bh=HkIWvkYGE/V7XciTvQmYheI9uh784b/5Zjsju9HRg/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j/zf/iuPU+aRpmzu/aRBGUXdbZz6i5F02BeohWtg0ZZpAc7EulVSLjWdea7RVcval
-	 S/kx02bX1k1ZXF27VIhFZbIq0hRrkC5TrdDctkHFBaQGe3IxubjQdzONy2/eoO6Qhi
-	 o6ZgqcYMBdl/51g44pLUhy41A6ucKrTQENXUZF34S8nlnfZgJrUEfr01KjK8EFhIAC
-	 fpO8gg1mcy9YDwDkM126cvyQmkZ8rwRkmYdpPy03HZrHUCQP8kQSK+Gt+AfjnwwNqt
-	 hysfopJ0E2rkowaVR0Lu3iaZ9FqxWmI0kgHRRNQcmpHktRMJ94H0VGJLA890bG2TPU
-	 IKI59XzkYpiTg==
-Date: Tue, 18 Feb 2025 13:17:35 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Lorenz Brun <lorenz@monogon.tech>
-Cc: gregkh@linuxfoundation.org, stable@vger.kernel.org,
-	regressions@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [REGRESSION] xfs kernel panic
-Message-ID: <20250218211735.GR3028674@frogsfrogsfrogs>
-References: <CAJMi0nTHX0inFxme=xnJf23c8=w0bAf7LfiT=YNpmU-zVnUR+Q@mail.gmail.com>
- <CAJMi0nTbyi6VGTmmZ43wYWwJWur0XPtuswZ_5UaXB+S6Z=Mo6A@mail.gmail.com>
- <20250217172957.GB21808@frogsfrogsfrogs>
- <CAJMi0nRtfzLASwT0MTJY1vxdyS+KCHezA-Hc9ugCrPJ-6uZL9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HoFHJGDP"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-521b5bd2268so662674e0c.0
+        for <regressions@lists.linux.dev>; Thu, 20 Feb 2025 07:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740066527; x=1740671327; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0kNTVauSGc2zR4k8+pxUQLsX9rwcagptJ7nZmG2jxGM=;
+        b=HoFHJGDP63brjnt5ak56hmyB5XTgserEOAX1yPRiyOBQ686IBEm+SF5RCpBiyohDxt
+         hlkmzO8K0zSGbUtJB3sXiYgpgEJNnUWAaqtxmzlyyppnvE1UjWa3no7uPDZyxGc6gZ2K
+         bbxoVACjdt9Hi/k4StbWTKtXlcaNAOM6bkSiNYDpn4yaLvHE6zFweJE14o+PsWh6wl+G
+         xqN35AA0wtjjfDKLV1kxxOZ8k3ElmeCtvPpu45PxfWL/FAQHFD+FXcP/XnF5gbTHICRc
+         /RScCwlwz/hnMUm9wbgrOoKFcf2xikZh67XFmlcBJpGzUlQaMyHqCl/+OKck725R92ma
+         QsJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740066527; x=1740671327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0kNTVauSGc2zR4k8+pxUQLsX9rwcagptJ7nZmG2jxGM=;
+        b=ck+cHAcXdFffUy1dovbs1rKAJUtS6+fJ1G23zUILqbh1bZFFXOosykEHA9yJxArcNu
+         DlwpIHZNQMiEqSYMu5t2U8aNelsPBk1+HbCRuTYmhB8CE8Nm3eZdGAPyatqeneXM4hCc
+         pNG2MPLfa/sNGp5y1zgHvJYoicQu40miUfCmL43cS1WjrkVdXgQm5EFpepJQe3Cl/zQV
+         n1xS403/AaCxmYkzWZcFzaYBuPQSEorobdB8YKbDvVuOHeSlry1HoyCCLy3AGVtjrxOI
+         aq48P2LzclcZFPjPQt+TYxX1LsN9QZb/OlO/VvNd3ueVr5JPN76ptPKjOKxNbq8mgKqc
+         Ufug==
+X-Forwarded-Encrypted: i=1; AJvYcCWs4fjL2KEu+4zmlC9/Z9ZHo930+/XcJrkUWT3pEiN1hzTuFh042lpqDF4UJioE8c1KnJVr1hE2Gh3nCw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTmJWPKtUEt/GwxN3H/1oVs1eFBJfr640qwJFfQN2H7f9W0SO+
+	Ed5s9IpIGYoIX/XrDlVZ2ReRqkaJK4RXoHuf0FCFiERp7xfGlGg9v7gA2RwH7YJFPQ6GR9qAxCf
+	O9D3XXtUMEjyR0jCYXyCKGL13Kv4Ijs+Btq3UCg==
+X-Gm-Gg: ASbGncsImu6mZ0yMn3fMdEqLNSbfj1TvMMGyiUi0b0ZBJSAFjh6HnMlPJbRLA+g2SYG
+	Vp+s+oTFSuX13orj/U5HVfyG94kzSHWnD2N4jkCIS2xSHS1mgZqUQEARFFoPkBPOqlyTuQb2Bcv
+	EJLZcV6Z4lwVT0nfaH91sEaHRkxo06rA==
+X-Google-Smtp-Source: AGHT+IEwmpxxEaiubcw0N4JOEqOJ14erBSMQ4JqoNyqcu3j1CWEwZqfNHODEoFMofSgcUK31Tr+rctyek8WT3I++Xz0=
+X-Received: by 2002:a05:6122:1991:b0:520:5185:1c71 with SMTP id
+ 71dfb90a1353d-521c460d26amr5277317e0c.7.1740066527244; Thu, 20 Feb 2025
+ 07:48:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJMi0nRtfzLASwT0MTJY1vxdyS+KCHezA-Hc9ugCrPJ-6uZL9w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 20 Feb 2025 21:18:35 +0530
+X-Gm-Features: AWEUYZmPJR3wb3fOQX3VXObLIUoSshhT_zRLLhyqkLdecchUxWtM1bp2XulyYps
+Message-ID: <CA+G9fYvpx2Hb5eNvTomTpwy0Ent8fX0QHt3eHEVBygy75k9mxA@mail.gmail.com>
+Subject: next-20250219: arm, arm64 kernel panic handle_fasteoi_irq
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>, 
+	linux-block <linux-block@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	virtualization@lists.linux.dev
+Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 09:50:24PM +0100, Lorenz Brun wrote:
-> Thanks everyone, with that patch (now included in 6.12.15) the bug is fixed.
-> 
-> I'm also curious how that commit ended up in stable without the
-> already-pushed bug fix? It even has the right "Fixes" tag. Not blaming
-> anyone, nothing bad happened, this all got caught in tests as it
-> should but how does the process work?
+Regression on qemu-arm64 boot failed due to kernel panic with the
+following boot errors.
 
-Normally I start by writing a bug fix in my dev tree that targets the
-latest Linus tree, a stable Cc, and a Fixes: tag pointing to the broken
-commit.  For really trivial fixes the patch goes in LTS after it lands
-in Linus' tree.
+Boot regression: arm, arm64 kernel panic handle_fasteoi_irq
 
-This one was more complex -- the xfs quota logging code would try to
-read a dquot buffer when pushing the log.  Log pushes can happen during
-reclaim context, which presents deadlock opportunities.  IOWs I had to
-redesign how logging mechanism worked and let it soak for a bit.
+Started noticing from next-20250219.
+Good: next-20250218
+Bad: next-20250219
 
-In the end, there were a cluster of fixes that weren't trivially
-backportable to 6.12.  When that patchset passed fstests I portd them to
-my 6.12 LTS branch with a placeholder "commit XXX upstream" tag.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Later I sent a pull request to the upstream xfs maintainer (cem) to pull
-things in from my dev branch.  When he did, I changed the XXX to the
-commit id in his for-next branch because in the majority of cases that's
-what gets pushed to Linus.
 
-In this case cem noticed the same build failure and rebased his branch
-to fix the bad #define, thus changing the commit id.  I forgot to update
-the "commit YYY upstream" line in my LTS branch and pushed it to Greg.
+Boot log:
+---------
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x000f0510]
+[    0.000000] Linux version 6.14.0-rc3-next-20250219
+(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 13.3.0-12) 13.3.0,
+GNU ld (GNU Binutils for Debian) 2.43.90.20250127) #1 SMP PREEMPT
+@1739943628
+[    0.000000] KASLR enabled
+[    0.000000] random: crng init done
+[    0.000000] Machine model: linux,dummy-virt
+<trim>
+<6>[    3.812053] loop: module loaded
+<6>[    3.814219] virtio_blk virtio0: 2/0/0 default/read/poll queues
+<5>[    3.831704] virtio_blk virtio0: [vda] 5345376 512-byte logical
+blocks (2.74 GB/2.55 GiB)
+<1>[    3.852043] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
+<1>[    3.852124] Mem abort info:
+<1>[    3.852141]   ESR =3D 0x000000008600002b
+<1>[    3.852200]   EC =3D 0x21: IABT (current EL), IL =3D 32 bits
+<1>[    3.852229]   SET =3D 0, FnV =3D 0
+<1>[    3.852249]   EA =3D 0, S1PTW =3D 0
+<1>[    3.852273]   FSC =3D 0x2b: level -1 translation fault
+<1>[    3.852335] [0000000000000000] user address but active_mm is swapper
+<0>[    3.852610] Internal error: Oops: 000000008600002b [#1] PREEMPT SMP
+<4>[    3.857169] Modules linked in:
+<4>[    3.858810] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.14.0-rc3-next-20250219 #1
+<4>[    3.859808] Hardware name: linux,dummy-virt (DT)
+<4>[    3.860409] pstate: 824028c9 (Nzcv daIF +PAN -UAO +TCO -DIT
+-SSBS BTYPE=3D-c)
+<4>[    3.861239] pc : 0x0
+<4>[ 3.862440] lr : cond_unmask_eoi_irq (kernel/irq/chip.c:676)
+<4>[    3.863382] sp : ffff80008000bf70
+<4>[    3.863709] x29: ffff80008000bf70 x28: ffff73e3c02e0000 x27:
+0000000000001000
+<4>[    3.864549] x26: ffff73e3c0544000 x25: 0000000000000040 x24:
+ffff80008002b458
+<4>[    3.865425] x23: 0000000061400009 x22: ffff73e3c098ce30 x21:
+ffff73e3c098d4ac
+<4>[    3.866218] x20: ffff73e3c098d430 x19: ffff73e3c098d400 x18:
+00000000ffffffff
+<4>[    3.867099] x17: ffffdbf12bdaf000 x16: ffff800080008000 x15:
+ffff800081000000
+<4>[    3.867863] x14: 0000000000000040 x13: 0000000000000000 x12:
+ffffffcf4f041ec0
+<4>[    3.868612] x11: 0000000000000040 x10: ffff73e3c001d230 x9 :
+ffff97f2d115aeb0
+<4>[    3.869259] x8 : ffffffffffffffc0 x7 : 6395bf3371f0dbee x6 :
+ffff73e3ff4d9ba0
+<4>[    3.870107] x5 : 0000000000000000 x4 : 0000000000000026 x3 :
+0000000000000000
+<4>[    3.870812] x2 : ffff73e3c098d400 x1 : 0000000000000000 x0 :
+ffff73e3c098d430
+<4>[    3.871938] Call trace:
+<4>[    3.872496]  0x0 (P)
+<4>[ 3.873023] handle_fasteoi_irq (kernel/irq/chip.c:727)
+<4>[ 3.873647] handle_irq_desc (kernel/irq/irqdesc.c:715)
+<4>[ 3.874062] generic_handle_domain_irq (kernel/irq/irqdesc.c:771)
+<4>[ 3.874521] gic_handle_irq (drivers/irqchip/irq-gic.c:344 (discriminator=
+ 1))
+<4>[ 3.875043] call_on_irq_stack (arch/arm64/kernel/entry.S:897)
+<4>[ 3.875400] do_interrupt_handler (arch/arm64/kernel/entry-common.c:310)
+<4>[ 3.875906] el1_interrupt (arch/arm64/kernel/entry-common.c:561
+arch/arm64/kernel/entry-common.c:575)
+<4>[ 3.876244] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:581)
+<4>[ 3.876690] el1h_64_irq (arch/arm64/kernel/entry.S:596)
+<4>[ 3.877270] __blk_flush_plug (block/blk-core.c:1225) (P)
+<4>[ 3.877637] __submit_bio (block/blk-core.c:1241 (discriminator 1)
+block/blk-core.c:1237 (discriminator 1) block/blk-core.c:642
+(discriminator 1))
+<4>[ 3.878180] submit_bio_noacct_nocheck (include/linux/bio.h:576
+block/blk-core.c:716 block/blk-core.c:744)
+<4>[ 3.878712] submit_bio_noacct (block/blk-core.c:875)
+<4>[ 3.879175] submit_bio (block/blk-core.c:910)
+<4>[ 3.879442] submit_bh_wbc (fs/buffer.c:2809)
+<4>[ 3.880010] block_read_full_folio (fs/buffer.c:2442 (discriminator 1))
+<4>[ 3.880454] blkdev_read_folio (block/fops.c:468)
+<4>[ 3.880914] filemap_read_folio (mm/filemap.c:2399)
+<4>[ 3.881400] do_read_cache_folio (mm/filemap.c:3969)
+<4>[ 3.881933] read_cache_folio (mm/filemap.c:4003)
+<4>[ 3.882325] read_part_sector (block/partitions/core.c:723 (discriminator=
+ 1))
+<4>[ 3.882730] read_lba (block/partitions/efi.c:248)
+<4>[ 3.883009] efi_partition (block/partitions/efi.c:177
+(discriminator 1) block/partitions/efi.c:604 (discriminator 1)
+block/partitions/efi.c:720 (discriminator 1))
+<4>[ 3.883384] bdev_disk_changed (block/partitions/core.c:142
+block/partitions/core.c:589 block/partitions/core.c:693)
+<4>[ 3.884038] blkdev_get_whole (block/bdev.c:706)
+<4>[ 3.884467] bdev_open (block/bdev.c:915)
+<4>[ 3.884736] bdev_file_open_by_dev (block/bdev.c:1018 block/bdev.c:992)
+<4>[ 3.885367] disk_scan_partitions (block/genhd.c:376 (discriminator 1))
+<4>[ 3.885988] add_disk_fwnode (block/genhd.c:526)
+<4>[ 3.886377] device_add_disk (block/genhd.c:587)
+<4>[ 3.886707] virtblk_probe (drivers/block/virtio_blk.c:1535)
+<4>[ 3.887022] virtio_dev_probe (drivers/virtio/virtio.c:341)
+<4>[ 3.887438] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658)
+<4>[ 3.888073] __driver_probe_device (drivers/base/dd.c:800)
+<4>[ 3.888474] driver_probe_device (drivers/base/dd.c:830)
+<4>[ 3.888908] __driver_attach (drivers/base/dd.c:1217)
+<4>[ 3.889499] bus_for_each_dev (drivers/base/bus.c:370)
+<4>[ 3.889936] driver_attach (drivers/base/dd.c:1235)
+<4>[ 3.890312] bus_add_driver (drivers/base/bus.c:678)
+<4>[ 3.890708] driver_register (drivers/base/driver.c:249)
+<4>[ 3.891060] __register_virtio_driver (drivers/virtio/virtio.c:416)
+<4>[ 3.891547] virtio_blk_init (drivers/block/virtio_blk.c:1695)
+<4>[ 3.891971] do_one_initcall (init/main.c:1257)
+<4>[ 3.892273] kernel_init_freeable (init/main.c:1318 (discriminator
+1) init/main.c:1335 (discriminator 1) init/main.c:1354 (discriminator
+1) init/main.c:1567 (discriminator 1))
+<4>[ 3.892596] kernel_init (init/main.c:1461)
+<4>[ 3.892888] ret_from_fork (arch/arm64/kernel/entry.S:863)
+<0>[ 3.894314] Code: io_uring LICENSES Makefile security io_uring
+LICENSES Makefile security io_uring LICENSES Makefile security
+io_uring LICENSES Makefile security (????????)
+All code
+=3D=3D=3D=3D=3D=3D=3D=3D
 
-Normally everything runs through a homebrew checkpatch script that
-contains the expected pile of regular expressions and other crap taped
-together to try to ensure some semblance of data quality amongst the
-freeform pointers to commits and humans in the commit message.  XFS
-people don't use scripts/checkpatch.pl because most of us agree that it
-whines about too many things that none of us actually care about; and
-doesn't check many of the attribution and review things that we really
-do care about.
+Code starting with the faulting instruction
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+<4>[    3.895583] ---[ end trace 0000000000000000 ]---
+<0>[    3.897170] Kernel panic - not syncing: Oops: Fatal exception in inte=
+rrupt
+<2>[    3.898084] SMP: stopping secondary CPUs
+<0>[    3.900403] Kernel Offset: 0x17f251000000 from 0xffff800080000000
+<0>[    3.901020] PHYS_OFFSET: 0xfff08c1d40000000
+<0>[    3.901448] CPU features: 0x000,000000d0,60bef2f8,cb7e7f3f
+<0>[    3.902230] Memory Limit: none
+<0>[    3.902988] ---[ end Kernel panic - not syncing: Oops: Fatal
+exception in interrupt ]---
 
-Unfortunately I hadn't ever gotten around to updating that script to
-walk the "commit YYY upstream" pointer to check that YYY was a real
-commit in linux.git.  That would have caught this and any other for-next
-edits.  It's fixed now.
+## Source
+* Kernel version: 6.14.0-rc3-next-20250219
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
+.git
+* Git sha: 8936cec5cb6e27649b86fabf383d7ce4113bba49
+* Git describe: next-20250219
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250219/
 
-Annoyingly it seems that there are no tools to automate the checking of
-off-repo commit ids so I wrote my own.  Maybe it's time to throw my
-checkpatch at the list to try to stop this "each maintainer writes their
-own scripts" insanity.  Wish me luck.
+## Build
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next=
+-20250219/testrun/27353387/suite/log-parser-test/test/panic-multiline-kerne=
+l-panic-not-syncing-oops-fatal-exception-in-interrupt-af3884c4b4033494570cf=
+11ed10a8af71223ab1cfcf7a208e5376192d5e4085c/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250219/te=
+strun/27353544/suite/log-parser-test/test/panic-multiline-kernel-panic-not-=
+syncing-oops-fatal-exception-in-interrupt-af3884c4b4033494570cf11ed10a8af71=
+223ab1cfcf7a208e5376192d5e4085c/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250219/te=
+strun/27354020/suite/log-parser-test/tests/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2tFMKFT6i1JOAPACynnh=
+wzW2duf/config
+* Architecures: arm64
+* Toolchain version: gcc-13
 
---D
 
-> Regards,
-> Lorenz
-> 
-> Am Mo., 17. Feb. 2025 um 18:29 Uhr schrieb Darrick J. Wong <djwong@kernel.org>:
-> >
-> > On Mon, Feb 17, 2025 at 05:27:33PM +0100, Lorenz Brun wrote:
-> > > Am Mo., 17. Feb. 2025 um 16:00 Uhr schrieb Lorenz Brun <lorenz@monogon.tech>:
-> > > >
-> > > > Hi everyone,
-> > > >
-> > > > Linux 6.12.14 (released today) contains a regression for XFS, causing
-> > > > a kernel panic after just a few seconds of working with a
-> > > > freshly-created (xfsprogs 6.9) XFS filesystem. I have not yet bisected
-> > > > this because I wanted to get this report out ASAP but I'm going to do
-> > > > that now. There are multiple associated stack traces, but all of them
-> > > > have xfs_buf_offset as the faulting function.
-> > > >
-> > > > Example backtrace:
-> > > > [   31.745932] BUG: kernel NULL pointer dereference, address: 0000000000000098
-> > > > [   31.746590] #PF: supervisor read access in kernel mode
-> > > > [   31.747072] #PF: error_code(0x0000) - not-present page
-> > > > [   31.747537] PGD 5bee067 P4D 5bee067 PUD 5bef067 PMD 0
-> > > > [   31.748016] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > > > [   31.748459] CPU: 0 UID: 0 PID: 116 Comm: xfsaild/vda4 Not tainted
-> > > > 6.12.14-metropolis #1 9b2470be3d7713b818a3236e4a2804dd9cbef735
-> > > > [   31.749490] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> > > > BIOS 0.0.0 02/06/2015
-> > > > [   31.750340] RIP: 0010:xfs_buf_offset+0x9/0x50
-> > > > [   31.750823] Code: 08 5b e9 8a 2c c4 00 66 2e 0f 1f 84 00 00 00 00
-> > > > 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f
-> > > > 44 00 00 <48> 8b 87 98 00 00 00 48 85 c0 75 2e 48 8b 87 00 01 00 00 48
-> > > > 89 f2
-> > > > [   31.752775] RSP: 0018:ffffbf50c07abdb8 EFLAGS: 00010246
-> > > > [   31.753343] RAX: 0000000000000002 RBX: ffff9c0985817d58 RCX: 0000000000000016
-> > > > [   31.754103] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > > > [   31.754734] RBP: 0000000000000000 R08: ffff9c09fb704000 R09: 00000000e0be9fc4
-> > > > [   31.755396] R10: 0000000000000000 R11: ffff9c0985827df8 R12: ffff9c09fb57ff58
-> > > > [   31.756078] R13: ffff9c0985817eb0 R14: ffff9c09fb704000 R15: ffff9c0985817f00
-> > > > [   31.756764] FS:  0000000000000000(0000) GS:ffff9c09fc000000(0000)
-> > > > knlGS:0000000000000000
-> > > > [   31.757529] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [   31.758041] CR2: 0000000000000098 CR3: 0000000005b70000 CR4: 0000000000350ef0
-> > > > [   31.758696] Call Trace:
-> > > > [   31.758940]  <TASK>
-> > > > [   31.759172]  ? __die+0x56/0x97
-> > > > [   31.759473]  ? page_fault_oops+0x15c/0x2d0
-> > > > [   31.759853]  ? exc_page_fault+0x4c5/0x790
-> > > > [   31.760237]  ? asm_exc_page_fault+0x26/0x30
-> > > > [   31.760637]  ? xfs_buf_offset+0x9/0x50
-> > > > [   31.761002]  ? srso_return_thunk+0x5/0x5f
-> > > > [   31.761409]  xfs_qm_dqflush+0xd0/0x350
-> > > > [   31.761799]  xfs_qm_dquot_logitem_push+0xe9/0x140
-> > > > [   31.762253]  xfsaild+0x347/0xa10
-> > > > [   31.762567]  ? srso_return_thunk+0x5/0x5f
-> > > > [   31.762952]  ? srso_return_thunk+0x5/0x5f
-> > > > [   31.763325]  ? __pfx_xfsaild+0x10/0x10
-> > > > [   31.763665]  kthread+0xd2/0x100
-> > > > [   31.763985]  ? __pfx_kthread+0x10/0x10
-> > > > [   31.764342]  ret_from_fork+0x34/0x50
-> > > > [   31.764675]  ? __pfx_kthread+0x10/0x10
-> > > > [   31.765029]  ret_from_fork_asm+0x1a/0x30
-> > > > [   31.765408]  </TASK>
-> > > > [   31.765618] Modules linked in: kvm_amd
-> > > > [   31.765978] CR2: 0000000000000098
-> > > > [   31.766297] ---[ end trace 0000000000000000 ]---
-> > > > [   32.371004] RIP: 0010:xfs_buf_offset+0x9/0x50
-> > > > [   32.371453] Code: 08 5b e9 8a 2c c4 00 66 2e 0f 1f 84 00 00 00 00
-> > > > 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f
-> > > > 44 00 00 <48> 8b 87 98 00 00 00 48 85 c0 75 2e 48 8b 87 00 01 00 00 48
-> > > > 89 f2
-> > > > [   32.373133] RSP: 0018:ffffbf50c07abdb8 EFLAGS: 00010246
-> > > > [   32.373611] RAX: 0000000000000002 RBX: ffff9c0985817d58 RCX: 0000000000000016
-> > > > [   32.374275] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > > > [   32.374921] RBP: 0000000000000000 R08: ffff9c09fb704000 R09: 00000000e0be9fc4
-> > > > [   32.375720] R10: 0000000000000000 R11: ffff9c0985827df8 R12: ffff9c09fb57ff58
-> > > > [   32.376376] R13: ffff9c0985817eb0 R14: ffff9c09fb704000 R15: ffff9c0985817f00
-> > > > [   32.377027] FS:  0000000000000000(0000) GS:ffff9c09fc000000(0000)
-> > > > knlGS:0000000000000000
-> > > > [   32.377761] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [   32.378292] CR2: 0000000000000098 CR3: 0000000005b70000 CR4: 0000000000350ef0
-> > > > [   32.378940] Kernel panic - not syncing: Fatal exception
-> > > > [   32.379492] Kernel Offset: 0x2a600000 from 0xffffffff81000000
-> > > > (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> > > >
-> > > > #regzbot introduced: v6.12.13..v6.12.14
-> > > >
-> > > > Regards,
-> > > > Lorenz
-> > >
-> > > Hi everyone,
-> > >
-> > > I root-caused this to 5808d420 ("xfs: attach dquot buffer to dquot log
-> > > item buffer"), but needs reverting of the 3 follow-up commits
-> > > (d331fc15, ee6984a2 and 84307caf) as well as they depend on the broken
-> > > one. With that 6.12.14 passes our test suite again. Reproduction
-> > > should be rather easy by just creating a fresh filesystem, mounting
-> > > with "prjquota" and performing I/O.
-> >
-> > Known bug, will patch soon.
-> >
-> > --D
-> >
-> > > Regards,
-> > > Lorenz
-> > >
+--
+Linaro LKFT
+https://lkft.linaro.org
