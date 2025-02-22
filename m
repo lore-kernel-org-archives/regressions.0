@@ -1,89 +1,83 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from greenhill.hpalace.com (greenhill.hpalace.com [192.155.80.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999A5199934
-	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 15:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218671632DD
+	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 21:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.155.80.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740237271; cv=none; b=BaNCOHsQawZeGqQ5eV+w7am6faguVvdoYyKJ8Ws8wHzHjFmOsbdt36+pV1oe1uwU7V/rUuJ6gEmwTvG2W6nCZ9JN+lxh76CXcygzWckm+ithGW9au+JPYwWxtDan1TaWl7CTcuFrO14N/abZHCM5chdFmFWRbROBu/NS87G3oto=
+	t=1740258827; cv=none; b=Z5VOubBsVF23iM7UYwC+ioRhXRAcgk7LOUVB7An62UXbZRm9V5sDzJCvpd5wbsLHVM4kIXLIi2iOnIT467Nj2+8yK4S/CntXaz+wVcDRrBhnz51Q7pZQdlqH3Pt2WNxgLQDGwRiOm33MOmuCsspOomYbH0nt83wT4KCR6Re9Sz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740237271; c=relaxed/simple;
-	bh=gb4Sl+NAFfnDd3eu0lMM0znOWH1iZWbVNbCdUr6/vmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rhtNAZn5WHFJYGYU26bLg368uNAUji22oCM+fX2ScHd7yJKHiRePIUcPFwqSbpMxHkuXVda9I3nnP+Rt/ZDNAJi2ChDwFaEfJTcQ7HCb/AlomFpG64Z+0cyscA+ghpwsqgeOw7C/z3y1TJ6kYVFgO1UAo+jWSIBEthDYbfj0IDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrQ6f1Ww; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740258827; c=relaxed/simple;
+	bh=o/x1hdw9Aw2nr0C9JEL0Jjs2LvEUh9Qcolc273fdpRI=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=p5igNrIcovJd4s9yBa2rDYWmUFlyriSeXc9hSU3EvU6g/5LDMWXhn74au3sXzC1LFIe+FIjuV1f4IoVt/AAIZSecVkJ/sA+Z23q9SkoTvyDltLJyoKv67zOMUDaxSEGkEKBAm3kNgzY9HsaqiyaACPqDgvgxWnQ1oBbNUhDupic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org; spf=pass smtp.mailfrom=finder.org; dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b=qDpxXn63; arc=none smtp.client-ip=192.155.80.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finder.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrQ6f1Ww"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54529583c39so472183e87.1
-        for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 07:14:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740237268; x=1740842068; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gb4Sl+NAFfnDd3eu0lMM0znOWH1iZWbVNbCdUr6/vmE=;
-        b=KrQ6f1Wwqde+409g8XlN0KWMVapuuTgHsPvjICEJjap0KeDmAtmOEQC+eCc+MzDx7l
-         71GAExez23Dltd1kxD2fDoaIfp1HucRx7x6jtYaZhwZ4Wx4Owq3gWXf9o0WDWydj5L8m
-         mne4y7CeSse2kvCu3EDuaXpXH/i17TmxH+mPVbNqug4Z0LFMqWY6kUATqnwn0piWlepH
-         VrBn2sh/3+p/fWKqDGPwWDK6dMf9g6/BTMvrF7mOyRraowS7c+DkAp3DHS12onwxJiRT
-         p96zUDTGLw/zuAT1MrfKUP6zcTTPg6xhhlie64Zi6KsbwDXK0oisxOwLco76bh9JbTYd
-         UPMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740237268; x=1740842068;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gb4Sl+NAFfnDd3eu0lMM0znOWH1iZWbVNbCdUr6/vmE=;
-        b=HD4Ijfd1Xxiq94PKokWh4EyaOAjPAxUyFu8+DtYMwWFBWspu5CPxz884jMESF99E/P
-         /3NDf5TXR270tHdsnEQ6hVFSOmwhuWu6vuQIo/mm3IwzgM0a9HY7dNY3Rjaf/rPUhHkX
-         /slaTzENf5lTTnc5i4tsqG5Sw4t5VrMJ8axzRNO/f3sXZkA1qRW9azxLVaci4i71zMKT
-         CfiXzVxRTW/BzRlXk9ePe6SG1lVxap5rkzfMUQ7WGJMc08iCm68ex9Na1HxE8wiVwAoB
-         SwI7d/DeYcwMbwuynLbzYc94pQidHJECKNSfkkHU+g0XJy9el0Y8dA8kgC5hcyxJ0E2z
-         lr8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVqhrtAT9NYP+Kr02+sGxZJim0FXREu96y9g6KOe0/bAfDykd8bkR//8WaXwiRr03YunwhvzYmhjet//A==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy2GFh7Smi32sSmkKTeIJ1H2kjv5xYr1omdKYzU1IhY5P+vvQ3r
-	p+xPy2BIEpUM2q+bSsbdvA8ljrjKFpUwIFi2J3C8FmDQIHOZYEg0tjGU8A8CZWjWwsfmQZdVQJ/
-	E5SDdOc1pyQTUrIqNR3fELVWu0ao=
-X-Gm-Gg: ASbGncvUl6bqFkepDfPlsnPKyUvliMGLeYAsK4Iyr0NpDI+zfZZ8bPB2fLy2PMGADYL
-	5X6P5WINysd3mulnWR5ptqRfXhDy72u5U1lZX5Iq4IhSu7ZWzTMNmzKh5DfMq8qQvc24pjarlAL
-	m3gs0c98U=
-X-Google-Smtp-Source: AGHT+IH8Tym24vcrnRxEuyslXSwW3y9ZazTyaHZg3gYD5Yy0qwHtZLgjrL5WHKrpGR42kgpwlimOtJGd7bnoDbYEgQ8=
-X-Received: by 2002:a05:6512:e99:b0:545:2fae:cffe with SMTP id
- 2adb3069b0e04-54838f5a573mr936010e87.10.1740237267476; Sat, 22 Feb 2025
- 07:14:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b="qDpxXn63"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=finder.org; s=2018;
+	t=1740258470; bh=o/x1hdw9Aw2nr0C9JEL0Jjs2LvEUh9Qcolc273fdpRI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qDpxXn633joOKC7+I1+WrBmclkSJNJW2m9HDYu8NfPQoHsEzTG30f0cDXZEfWCcOP
+	 9YVuUbhnoMisR76s/WG9sgv650ctiCMZx/zIV2ncsteTMd7/QQIL3Z0E0gKCWFxNv9
+	 dZbtHRKo55Hb/YNG9DWKXJ4qMe5gGJj7KjGCkEEaVrikPub7krsIz9NdoqQi2giNEv
+	 NxBY3tQM3ghlOIuxvyVxcqSmiuNCT2tPVjKRSiiEwc1a2woWxEEcGh7HIhNfQdfg2m
+	 EwDWKi1SjQ5tkmJtaGAP59BZAnYfjRvZ7PeGkp159sCz+EVeUykEKXNzWGUCAC51GF
+	 EahrsjSRMNXTQ==
+Received: from mail.finder.org (unknown [192.155.80.58])
+	by greenhill.hpalace.com (Postfix) with ESMTPSA id AA819129F;
+	Sat, 22 Feb 2025 21:07:50 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ef950304-0e98-4c91-8fa1-d236cbb782b8@disroot.org> <CANiq72=WyQdQfoOeb_mK=J_5GtiWBenqzA+mOr=8mN8OTWPB-g@mail.gmail.com>
-In-Reply-To: <CANiq72=WyQdQfoOeb_mK=J_5GtiWBenqzA+mOr=8mN8OTWPB-g@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 22 Feb 2025 16:14:12 +0100
-X-Gm-Features: AWEUYZkDVyQ7F4Gp9ybyNiW1F1rAJPNqvAp0Zrl2cJ0pS2ctF7P1QLlwfAuRl3I
-Message-ID: <CANiq72=gJCauuTv3_+vvHU2r=nFpKCdL5tsjS+mj7Ttqra5oLA@mail.gmail.com>
-Subject: Re: FTBFS: Rust firmware abstractions in current stable (6.13.4) on
- arm64 with rustc 1.85.0
-To: NoisyCoil <noisycoil@disroot.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Sat, 22 Feb 2025 13:07:50 -0800
+From: Jared Finder <jared@finder.org>
+To: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
+Cc: hanno@hboeck.de, kees@kernel.org, gnoack@google.com,
+ gregkh@linuxfoundation.org, jannh@google.com, jirislaby@kernel.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
+ CAP_SYS_ADMIN
+In-Reply-To: <20250221.0a947528d8f3@gnoack.org>
+References: <202501100850.5E4D0A5@keescook>
+ <cd83bd96b0b536dd96965329e282122c@finder.org>
+ <20250221.0a947528d8f3@gnoack.org>
+Message-ID: <491f3df9de6593df8e70dbe77614b026@finder.org>
+X-Sender: jared@finder.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 22, 2025 at 1:20=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Thanks for the report! Yeah, I noticed in my builds too but didn't get
-> to it yet (there are also a couple Clippy warnings in the QR code too,
-> in case you see them).
->
-> Cc'ing Danilo in case he wants to send the fix, otherwise I will.
+On 2025-02-20 16:10, Günther Noack wrote:
+> 
+> Jared, can you please confirm whether Emacs works now with this patch
+> in the kernel?
+> 
+> I am asking this because I realized that the patch had a bug.  We are
+> erring in the "secure" direction, but not all TIOCL_SELMOUSEREPORT
+> invocations work without CAP_SYS_ADMIN.
 
-s/fix/backport -- actually, sorry, I just sent it.
+I confirmed that Emacs worked fine with 6.14-rc1.  My understanding is 
+that the Emacs process relies only on TIOCL_SELPOINTER which it needs to 
+do to draw the mouse pointer after Emacs' redisplay.  It's fine for 
+TIOCL_SELMOUSEREPORT to not work in an unpriviliged Emacs.
 
-Cheers,
-Miguel
+> If this specific selection mode is not needed by Emacs, I think *the
+> best thing would be to keep it guarded by CAP_SYS_ADMIN, after all*.
+
+This sounds good to me.
+
+Reading over a documentation proposal for TIOCL_SELMOUSEREPORT 
+(https://lkml.org/lkml/2020/7/6/249), I can not imagine how a userspace 
+program that was not acting as the mouse daemon could successfully use 
+SELMOUSEREPORT as the mouse daemon will be fighting with it.  Any 
+legitimate setting of mouse state (for example, setting the mouse x/y 
+coordinate) would need to be done with the mouse daemon in the loop, in 
+which case the mouse daemon might as well send the message itself.
+
+   -- MJF
