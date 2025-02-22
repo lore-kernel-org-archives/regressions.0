@@ -1,83 +1,136 @@
-Received: from greenhill.hpalace.com (greenhill.hpalace.com [192.155.80.58])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218671632DD
-	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 21:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.155.80.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B181EA7D4
+	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 21:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740258827; cv=none; b=Z5VOubBsVF23iM7UYwC+ioRhXRAcgk7LOUVB7An62UXbZRm9V5sDzJCvpd5wbsLHVM4kIXLIi2iOnIT467Nj2+8yK4S/CntXaz+wVcDRrBhnz51Q7pZQdlqH3Pt2WNxgLQDGwRiOm33MOmuCsspOomYbH0nt83wT4KCR6Re9Sz8=
+	t=1740259366; cv=none; b=tvX7mn6NxTpjJISancR+iuyrV2dh6fpu8DtlTWlmCqpNdbxOf/2F+c8PPbSo+P7+TqvlQjCNRxPQl7osO/Z6sNbw96Y5o1lqcJkQ12QwCc2C3WMe/e/t0+4aOL9zstfO7/Jxd74fICZA3np6rMxgCLk4XNdKrufF9SwDibdlQNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740258827; c=relaxed/simple;
-	bh=o/x1hdw9Aw2nr0C9JEL0Jjs2LvEUh9Qcolc273fdpRI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=p5igNrIcovJd4s9yBa2rDYWmUFlyriSeXc9hSU3EvU6g/5LDMWXhn74au3sXzC1LFIe+FIjuV1f4IoVt/AAIZSecVkJ/sA+Z23q9SkoTvyDltLJyoKv67zOMUDaxSEGkEKBAm3kNgzY9HsaqiyaACPqDgvgxWnQ1oBbNUhDupic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org; spf=pass smtp.mailfrom=finder.org; dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b=qDpxXn63; arc=none smtp.client-ip=192.155.80.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=finder.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finder.org
+	s=arc-20240116; t=1740259366; c=relaxed/simple;
+	bh=MVndxyD0kf/5RvQbIRkl5SOWhB/ClBFu5loU6sCRPiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dWu7iUTB3fJuqT5Wl0qwigzpWmry7CL/RPupyRzJR/1mqnAGa/4r8sQ5CH9f72HIsUO/BvP5NbzEfPrYVIz2TUykAPn/31UFvRRdV3eTDyjqZmY340kDoD1RIp7na5EGxUdtXc05QVbqsuEYvICkRUnaZRE3jIJ+x2K1hL7ij8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=LqCmz8Zx; arc=none smtp.client-ip=217.72.192.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finder.org header.i=@finder.org header.b="qDpxXn63"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=finder.org; s=2018;
-	t=1740258470; bh=o/x1hdw9Aw2nr0C9JEL0Jjs2LvEUh9Qcolc273fdpRI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qDpxXn633joOKC7+I1+WrBmclkSJNJW2m9HDYu8NfPQoHsEzTG30f0cDXZEfWCcOP
-	 9YVuUbhnoMisR76s/WG9sgv650ctiCMZx/zIV2ncsteTMd7/QQIL3Z0E0gKCWFxNv9
-	 dZbtHRKo55Hb/YNG9DWKXJ4qMe5gGJj7KjGCkEEaVrikPub7krsIz9NdoqQi2giNEv
-	 NxBY3tQM3ghlOIuxvyVxcqSmiuNCT2tPVjKRSiiEwc1a2woWxEEcGh7HIhNfQdfg2m
-	 EwDWKi1SjQ5tkmJtaGAP59BZAnYfjRvZ7PeGkp159sCz+EVeUykEKXNzWGUCAC51GF
-	 EahrsjSRMNXTQ==
-Received: from mail.finder.org (unknown [192.155.80.58])
-	by greenhill.hpalace.com (Postfix) with ESMTPSA id AA819129F;
-	Sat, 22 Feb 2025 21:07:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="LqCmz8Zx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1740259355; x=1740864155; i=christian@heusel.eu;
+	bh=fUNKVKNN1H1WJwbh8to7Zf6G0zFRMAx0ceGiI+DiZ+8=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=LqCmz8Zx2k6nCjhHpIqy1KLTuV9yovpvTKgnDCJhqVBYNUAAX9bCJ4yG67pS0Zep
+	 rjRZ4lOLnvZh0ZbvAfL3mKB2TsW0fAVRHh7i+C2Is+kQ7k0gdfGJiOWSXnZuC9ov+
+	 PKL+l/m50czCcoStUBUSpY30R7V+/PoKYOmYR7bbyE0o8y6qkVVRTPGRo9MxD3V1c
+	 yLLvRg9LhPHF3mP4QRQ7uoAz9QldFG97Or9/PnxISMf0r+2FgPs9rfgf1nz2tkggJ
+	 h0/g5wsgMydSgZI/0kwXwiTsyUI6uaYld/AxtmG2jje54IWtf5ipWSnPMI3iAWHI8
+	 ahqlnclylG5DcPsE/Q==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue108
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1N17cq-1tIusz2Q6U-010i1m; Sat, 22
+ Feb 2025 22:22:35 +0100
+Date: Sat, 22 Feb 2025 22:22:34 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Sean Rhodes <sean@starlabs.systems>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: quintafeira@tutanota.com, Arnd Bergmann <arnd@arndb.de>, 
+	Desnes Nunes <desnesn@redhat.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
+ failures
+Message-ID: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Sat, 22 Feb 2025 13:07:50 -0800
-From: Jared Finder <jared@finder.org>
-To: =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack3000@gmail.com>
-Cc: hanno@hboeck.de, kees@kernel.org, gnoack@google.com,
- gregkh@linuxfoundation.org, jannh@google.com, jirislaby@kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
- CAP_SYS_ADMIN
-In-Reply-To: <20250221.0a947528d8f3@gnoack.org>
-References: <202501100850.5E4D0A5@keescook>
- <cd83bd96b0b536dd96965329e282122c@finder.org>
- <20250221.0a947528d8f3@gnoack.org>
-Message-ID: <491f3df9de6593df8e70dbe77614b026@finder.org>
-X-Sender: jared@finder.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sqmpxjdcfyvwzhzk"
+Content-Disposition: inline
+X-Provags-ID: V03:K1:e6aXLlSmuX/qM2CQlhVxfLbdOfhdo4lca7XhdfD+htBrLakwy9W
+ /S1vdjXVmEQ0MRwiPaVDFhrTAKLDyxj3vrkOuoIg/uliwr0h5cxSZ3qvQD10+vE0JNQQcxv
+ 1Q0Zk6vx3SbVgmvvZTsmWkTyUTPDQEXM88E60BOFYoZCW+Bq/12e3EJAe3Btdk91xkAas10
+ PlRn3cFUl2TsX6P9JRhgw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:e20n591MmYo=;zv74+gyWTkI6vY1GjCaHQVpMQMJ
+ gZ1DNwC8CQzgUlH62avoaoA8E6icHNZZgOq23CSyvgHPl53tUt3BYRu0I6ynJOQLAJaajBdd/
+ eBgUfNHxJ5SQDCU10IX3LhNp5hKnDrBM3L35MeiNvINx6zfMuLWwOh9RxBYZNtYO3y/B/O1fe
+ LKQX7ytlWx77EPsH9mJYRkn2ScPqE2Gs7nvTZHcHoB5z8ThjaPY3IspJi3QGOyR/G3RbFXumQ
+ I6mGl5bQ3MEGGtIu2JPxlNYfW1ykpL1NwLANEsqRxmxDRqFJfcdYeOhaRkPWjrDOYEIwsVuNB
+ LMwMH9oXUiIuTvQnKDBAIfYsFwNw5bEnUMl73yT5kLVl2Gj1ccKK3WKCWTQyE4Y/DhW+mB4Ng
+ oTHhVFwvA1oJOJFtClsn3UBGwZ/jPGMC+LF9u6ep1/VR/Ay4t50FeJ3Cr25aDsEkEH/H3X68S
+ qyRMfzq/jLRdxTx5rN0xMe2DRiqdLiK+pTUMvDpzulofm+3bqnJUF+KVc5/48n4tbj+GxhmYc
+ rRGnT+t9LIXPz801Xp1R3l2pxpjjiBFeKLoj3zDSy+M+6MQYFbWyl8EVHy/NiLbvF3Ss6eJyc
+ U8GoE+LqnwuYJ4UQE/yRtiWsk5sqTkPHIQHU1xIP6mBBk8RBROI8TxLj6SvGNS6JP8/c54xj7
+ 2LNhfiAF7nfn0q66b2ibCzWHpukhMzFB/3OGxnkunDmHQVYKl2WsQ2l06kzx6j9Nl/DLuZpxm
+ cVltxOdtSW1D7vpA0wcGubikQXPSk8HnvoWJhyf0g3iklAlpyNjDz9JbP8+dEY/SahzbfLNPa
+ NoFZLMcZCoWCn6uh/s/NwrIPB/KLB7UbgykxTyN9zKp1m8FvHhwpa91Tb5cc1/h+3xWFyTDv7
+ wsQx+MNNb3ULD5sHqGK3Qu9J/1icuJCbiFdtppD43CeBUJO/ycc1ghGe5euf6gfg4NKcoD4I2
+ uMc7tw/Scl81MoxVpvmvhCmsBJxXXcEuCjtUOIRKkSThxgJh6Nu2ZkQCVXTfYkXfY6shChl8M
+ BCKb+6OuHgxVcRskB/zhdnJ50rrxfD3B+7PA8GQCViMdci9tdR/RBdBs+CPl/Nr2Rba3zWHUR
+ yWyuxHqvW0dZAfMyXmq5t+hP1e9cFPlSo07eYBG3lz/khv6bqo1Ncj1fnSK+TIZItasevmVvV
+ viW+HJ6MkVzZw1qAG/UwUmlVbJEfAhcQ8vuTQEitKh6dhZy9nPIrcpwXpcKdM8VNMoRL1Ijw8
+ h7XARX/x0QJup+wO7oqlT1lSiVcquRg4LKkTOs6PaDFuW/jjfEaoAnUayK5Cni8JV5kKaWhjo
+ UAHoAK/DhX65R6Bgv9EvI16+MjuAxny6OTBK8CUFQd3Ei+gCnWYIE6By8wSm/D1QOTBais2o7
+ K2SBnzEIudZN44tw==
 
-On 2025-02-20 16:10, Günther Noack wrote:
-> 
-> Jared, can you please confirm whether Emacs works now with this patch
-> in the kernel?
-> 
-> I am asking this because I realized that the patch had a bug.  We are
-> erring in the "secure" direction, but not all TIOCL_SELMOUSEREPORT
-> invocations work without CAP_SYS_ADMIN.
 
-I confirmed that Emacs worked fine with 6.14-rc1.  My understanding is 
-that the Emacs process relies only on TIOCL_SELPOINTER which it needs to 
-do to draw the mouse pointer after Emacs' redisplay.  It's fine for 
-TIOCL_SELMOUSEREPORT to not work in an unpriviliged Emacs.
+--sqmpxjdcfyvwzhzk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
+ failures
+MIME-Version: 1.0
 
-> If this specific selection mode is not needed by Emacs, I think *the
-> best thing would be to keep it guarded by CAP_SYS_ADMIN, after all*.
+Hello everyone,
 
-This sounds good to me.
+on the Arch Linux Forums[1] multiple users reported issues with their SD
+cards not being recognized during boot or that they needed to re-plug
+them in order for them to be recognized.
 
-Reading over a documentation proposal for TIOCL_SELMOUSEREPORT 
-(https://lkml.org/lkml/2020/7/6/249), I can not imagine how a userspace 
-program that was not acting as the mouse daemon could successfully use 
-SELMOUSEREPORT as the mouse daemon will be fighting with it.  Any 
-legitimate setting of mouse state (for example, setting the mouse x/y 
-coordinate) would need to be done with the mouse daemon in the loop, in 
-which case the mouse daemon might as well send the message itself.
+One user tracked this down to the following commit:
 
-   -- MJF
+    235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt based detection")
+
+They have also created a report on the kernel bugzilla[1], therefore I
+cc'ed them to this thread. We found that reverting the above commit on
+top of v6.14-rc3 fixes the issue.
+
+Cheers,
+Christian
+
+[0]: https://bbs.archlinux.org/viewtopic.php?id=303321
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=219781
+
+---
+
+#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=303321
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=219781
+#regzbot introduced: 235b630eda07
+#regzbot title: card_reader/rtsx_usb: Detection of SD cards broken
+
+--sqmpxjdcfyvwzhzk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAme6QBoACgkQwEfU8yi1
+JYWokhAAmj+O2o2YK7VBEY52ItcHAocRrZmRczFHhRx8eB4IjmpSHLnqFSbkhS6Z
+EbOqOSDkrw62uSEeM4x9ZLKHgS1kK3/wcC6iYu6KJbMfpjUK1r8jww6rASx14Jrh
+r2RuySPGiswYkERzsw2o5X+Ilx53Y/MqYlVEel4v5bW151o5/0HYBo4aRIwv+AYQ
+d2AOmWFLEbmRqgdWDXn2jjoE0xGvXYPdJ+PaXL+jFj2OpSu+P/9jTW73tpE7dBkC
+EZKY9l9l9sOnfd69eu1GnYyGCRWltdalcEcNtLxVbyBq8td01jm4srOXoj8gOYyX
+BSpVuypa02euG9onBd8KVGIvHJrBBd4vN3gAEgDOZDQBtjHYjPxjgllOnUcLhxQG
+/8AZaDXZWoQ2qxQBBuq+17vKrLcBSw85WbEFTT1z/fXyT7SpuyZTZQ5qW4Z+ShN3
+uDslBds0QfOiJ887dAYy7gm0rKxloydyMxhTDZhIXyaY081U3DuVF4doZElYvOCW
+cckpb9enJEoR3SNcQM7n+raV1k0HxEdOBCawUx7zFm0TZ73JgIc8TzvmtQCoJtHO
+qMQroKZ7zAGNDCM6DcteRWwvN5qS/j3Z02Xmvl+asV0qC28p35YDOi8WO+/9JNWS
+BL2luyqliu32Ov4u4kI9/FlYX/+Es8lL42RGkR9xEoiMWPsqlys=
+=CI6X
+-----END PGP SIGNATURE-----
+
+--sqmpxjdcfyvwzhzk--
