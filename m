@@ -1,28 +1,38 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559B41D5CCD
-	for <regressions@lists.linux.dev>; Fri, 21 Feb 2025 21:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B87C19D8AC
+	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 12:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740171733; cv=none; b=Rhr09B4x50gNjyH+qksIg7mfOHRIJFUZhiwhisnw7wuwAkOk224620z6sZs3CvxmbXmGABLTb9AfBLcyBgAPsyU7Ev1wxK5KFG2H6NwYFxOJeIMYbGZsVJpEMJhVcCpPVaWJbQlbUyUl3ewQGfwnLemyEZy36TQDkaaTuNPUc7o=
+	t=1740226186; cv=none; b=YGHP4Rz8msEEeFAXdGwkjb62382iPhqpOQkZq7WB0xTBTv0ShihgadLoGGAney9Qibu2cWvohRjzlcOGiRy6J0jRffYhc+QvXlHvu+RY4Pb6ijix/Kd3f3JRVEZNDSHmF70ipTqdytVDY5CjR66KmHPZ/7wxTHa8WB6S9OMtitw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740171733; c=relaxed/simple;
-	bh=60QCP9a1fc0i2qunXLPEKvoXFDdpZeQTtyvz1y+2kIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=txp+G4x6maAjxRTwGdslE17JHIMdHQvz5alGNR14gMbUM3lz+N6SjqAZ8xFRVOJRzs5N7W4hbDL2z5H38FIoq9sB+OVG/dCF57UwrLfuOzlcpADbJSNHs8MMQ+HmcI+zAse7Inn6yzCofoara5dqiFzby8qPuNm/v2uF2R9U5vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af2a2.dynamic.kabel-deutschland.de [95.90.242.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 839C261E64783;
-	Fri, 21 Feb 2025 22:02:04 +0100 (CET)
-Message-ID: <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
-Date: Fri, 21 Feb 2025 22:02:03 +0100
+	s=arc-20240116; t=1740226186; c=relaxed/simple;
+	bh=hNzbpZUaacYbwAfzJgcJiA0cKgHDn8Zk5gmPryinfII=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=YuGKZVHtS1qH7yopmSqK0IUQ192xnJT5xhjkgVTe4/K6uav7Nep7mZ7QSG2mWQK+lbta+L4WFm0bvW87SJv36cEBlAl1i4wEHjD+lQyk4JZz+qdORJyN3YNSsiEZom1WwJTUTcVV+lu2UjJK37JR1IJ7zxMIaV0uWDVHHFGWdrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=FxPsKjHD; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="FxPsKjHD"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 67FBE25EAA;
+	Sat, 22 Feb 2025 13:09:35 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id mClZSRCY7MoH; Sat, 22 Feb 2025 13:09:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1740226171; bh=hNzbpZUaacYbwAfzJgcJiA0cKgHDn8Zk5gmPryinfII=;
+	h=Date:From:Subject:To:Cc;
+	b=FxPsKjHDrwF3QYzKWci48q8djTQNoAldfP6SdhzR37oHoH6bNeW7axNi8xj9GJC/Y
+	 Ir2cYyLN8kZmXsVmlrGu8LhjAX6Zm3qX6/UDL/QC4cGYDmHmMjhaJ3WCdZOSuK6HIG
+	 amcvCZuTWuYaJQqNAsg95OHboX9/zop6RWimyvDKkrZXOIR4Lp4NDhJunnDZWfWsMb
+	 Q5GuULuYmARTLeabp36qUhsxL8rgrt52yLM+pjhMDHJq8/O/6bdfJgQgRG/TQGPEZt
+	 +Idsv3BznNSKVq5wy7kGtsiT2aE3j9bXH5zwYAQiU/mO1khx+SMZNp5ubthwLcaDXQ
+	 sBqXheDcoigKg==
+Message-ID: <ef950304-0e98-4c91-8fa1-d236cbb782b8@disroot.org>
+Date: Sat, 22 Feb 2025 13:09:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,72 +40,92 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+From: NoisyCoil <noisycoil@disroot.org>
+Subject: FTBFS: Rust firmware abstractions in current stable (6.13.4) on arm64
+ with rustc 1.85.0
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, ojeda@kernel.org, alex.gaynor@gmail.com,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
 Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Dear Bartosz,
+Hi!
 
-
-Thank you for your quick reply.
-
-Am 21.02.25 um 21:53 schrieb Bartosz Golaszewski:
-> On Fri, Feb 21, 2025 at 9:40 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
-
->> On the Intel Kaby Lake Dell XPS 13 9360, Linux 6.14-rc3+ with your
->> commit 9d846b1aebbe (gpiolib: check the return value of
->> gpio_chip::get_direction()) prints 52 new warnings:
->>
->>       $ dmesg
->>       […]
->>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
->>       […]
->>       [    5.148927] pci 0000:00:1d.0: PCI bridge to [bus 3c]
->>       [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
->>       [50 times the same]
->>       [    5.151639] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
->>       [    5.151768] ACPI: PCI: Interrupt link LNKA configured for IRQ 11
->>       […]
->>       $ lspci -nn -k -s 1d.0
->>       00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #9 [8086:9d18] (rev f1)
->>          Subsystem: Dell Device [1028:075b]
->>          Kernel driver in use: pcieport
->>
->> Judging from the commit messages, this is expected. But what should a
->> user seeing this do now?
->>
->> Also, it probably should not be applied to the stable series, as people
->> might monitor warnings and new warnings in stable series might be
->> unexpected.
+The Rust firmware abstractions FTBFS on arm64 and current stable 
+(6.13.4) when compiled with rustc 1.85.0:
 
 
->> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9d846b1aebbe488f245f1aa463802ff9c34cc078
+```
+   RUSTC L rust/kernel.o
+error[E0308]: mismatched types
+   --> rust/kernel/firmware.rs:20:14
+    |
+20 |         Self(bindings::request_firmware)
+    |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, found 
+fn item
+    |         |
+    |         arguments to this function are incorrect
+    |
+    = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+                  found fn item `unsafe extern "C" fn(_, *const u8, _) 
+-> _ {request_firmware}`
+note: tuple struct defined here
+   --> rust/kernel/firmware.rs:14:8
+    |
+14 | struct FwFunc(
+    |        ^^^^^^
 
-> What GPIO driver is it using? It's likely that it's not using the
-> provider API correctly and this change uncovered it, I'd like to take
-> a look at it and fix it.
+error[E0308]: mismatched types
+   --> rust/kernel/firmware.rs:24:14
+    |
+24 |         Self(bindings::firmware_request_nowarn)
+    |         ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn 
+pointer, found fn item
+    |         |
+    |         arguments to this function are incorrect
+    |
+    = note: expected fn pointer `unsafe extern "C" fn(_, *const i8, _) -> _`
+                  found fn item `unsafe extern "C" fn(_, *const u8, _) 
+-> _ {firmware_request_nowarn}`
+note: tuple struct defined here
+   --> rust/kernel/firmware.rs:14:8
+    |
+14 | struct FwFunc(
+    |        ^^^^^^
 
-How do I find out? The commands below do not return anything.
+error[E0308]: mismatched types
+   --> rust/kernel/firmware.rs:64:45
+    |
+64 |         let ret = unsafe { func.0(pfw as _, name.as_char_ptr(), 
+dev.as_raw()) };
+    |                            ------           ^^^^^^^^^^^^^^^^^^ 
+expected `*const i8`, found `*const u8`
+    |                            |
+    |                            arguments to this function are incorrect
+    |
+    = note: expected raw pointer `*const i8`
+               found raw pointer `*const u8`
 
-     $ lsmod | grep gpio
-     $ lspci -nn | grep -i gpio
-     $ sudo dmesg | grep gpio
-     [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: 
-get_direction failed: -22
-     [Just these lines match.]
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+```
 
 
-Kind regards,
+This is because rustc 1.85 (now stable) switched core::ffi::c_char from 
+i8 to u8 on arm64 and other platforms [1], and because current stable 
+still uses rustc's core's instead of the custom ffi integer types like 
+6.14 will. Looking for other i8's in *.rs files tells me only the QR 
+code panic screen should be affected in addition to the firmware 
+abstractions, and that was already reported in [2].
 
-Paul
+A simple fix would be to switch i8 to u8 in `struct FwFunc`, but that 
+breaks rustc <= 1.84 so I guess a more robust solution is needed.
+
+Cheers!
+
+
+[1] https://github.com/rust-lang/rust/pull/132975
+[2] 
+https://lore.kernel.org/all/20250120124531.2581448-1-linkmauve@linkmauve.fr/
