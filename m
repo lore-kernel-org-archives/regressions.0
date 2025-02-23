@@ -1,136 +1,148 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B181EA7D4
-	for <regressions@lists.linux.dev>; Sat, 22 Feb 2025 21:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACDA1FC7CE
+	for <regressions@lists.linux.dev>; Sun, 23 Feb 2025 08:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740259366; cv=none; b=tvX7mn6NxTpjJISancR+iuyrV2dh6fpu8DtlTWlmCqpNdbxOf/2F+c8PPbSo+P7+TqvlQjCNRxPQl7osO/Z6sNbw96Y5o1lqcJkQ12QwCc2C3WMe/e/t0+4aOL9zstfO7/Jxd74fICZA3np6rMxgCLk4XNdKrufF9SwDibdlQNE=
+	t=1740300795; cv=none; b=aqjc+X5br07CIZ71fzduYoc8jxANcKMkvlkadYTcDRfQC/bIlH6uCCI54KidIOmCeYRQyo/Cl9/ZBrdRI5B2zeKlU5MQhS/SqpDVnNEF6+UPcVP3yQsAw8hdkARZM7GsFUmgq+YLoMp91XFezE841w+XPxvyUJSG/sZwur+eNHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740259366; c=relaxed/simple;
-	bh=MVndxyD0kf/5RvQbIRkl5SOWhB/ClBFu5loU6sCRPiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dWu7iUTB3fJuqT5Wl0qwigzpWmry7CL/RPupyRzJR/1mqnAGa/4r8sQ5CH9f72HIsUO/BvP5NbzEfPrYVIz2TUykAPn/31UFvRRdV3eTDyjqZmY340kDoD1RIp7na5EGxUdtXc05QVbqsuEYvICkRUnaZRE3jIJ+x2K1hL7ij8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=LqCmz8Zx; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1740300795; c=relaxed/simple;
+	bh=kXabbZuH8nmvuZUugWPRsrzpUzlR5tkZghkl9EnKBLQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=gPTcjFItXRzjY3/GQ3a3wLeH/xA/M7KO0kdLUB9sOVYIv3FYD92NTAgl9iFbWnkmDSH9/OUdmnRtRzVf6T0+E/OuvE3o/xDhgKWJGrbKTR8mGUWgg3rv15x32CUeQg9tYEkb6OoZKjUucwDTdQImvM+/VYq5BbS5001ne6bcVJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tK2mXp5W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6FKQwyRr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tK2mXp5W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6FKQwyRr; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="LqCmz8Zx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1740259355; x=1740864155; i=christian@heusel.eu;
-	bh=fUNKVKNN1H1WJwbh8to7Zf6G0zFRMAx0ceGiI+DiZ+8=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=LqCmz8Zx2k6nCjhHpIqy1KLTuV9yovpvTKgnDCJhqVBYNUAAX9bCJ4yG67pS0Zep
-	 rjRZ4lOLnvZh0ZbvAfL3mKB2TsW0fAVRHh7i+C2Is+kQ7k0gdfGJiOWSXnZuC9ov+
-	 PKL+l/m50czCcoStUBUSpY30R7V+/PoKYOmYR7bbyE0o8y6qkVVRTPGRo9MxD3V1c
-	 yLLvRg9LhPHF3mP4QRQ7uoAz9QldFG97Or9/PnxISMf0r+2FgPs9rfgf1nz2tkggJ
-	 h0/g5wsgMydSgZI/0kwXwiTsyUI6uaYld/AxtmG2jje54IWtf5ipWSnPMI3iAWHI8
-	 ahqlnclylG5DcPsE/Q==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue108
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1N17cq-1tIusz2Q6U-010i1m; Sat, 22
- Feb 2025 22:22:35 +0100
-Date: Sat, 22 Feb 2025 22:22:34 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Sean Rhodes <sean@starlabs.systems>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: quintafeira@tutanota.com, Arnd Bergmann <arnd@arndb.de>, 
-	Desnes Nunes <desnesn@redhat.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-Message-ID: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tK2mXp5W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6FKQwyRr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tK2mXp5W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6FKQwyRr"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 92F0C1F383;
+	Sun, 23 Feb 2025 08:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740300791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=Z2Aurb0tFrAght4VDTSh5xS+Dxx12mfI5R7RQ6P2LuM=;
+	b=tK2mXp5WQhS8hglQ8zv/5LoaER1lb8K5+GoCMyWq4au1BsMY8fmlFjSP+5JeK5dG58fpXU
+	GByXpHPSuKMr4YRnSq6uuEZXgSSXvNqtwMgl53yO8Musllgav6buhaM31pE0TSTLYvJP7Q
+	XrkOIEVmTHqDDLMRY3v1TAyAoN575NY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740300791;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=Z2Aurb0tFrAght4VDTSh5xS+Dxx12mfI5R7RQ6P2LuM=;
+	b=6FKQwyRrHfhAENwuKYDKWYzpRwJcloUwGZNVaRRiwDQQLzNLaT70+uOe1rPfaAe1rT1yZ6
+	PD2cyVxYeb8K06Cg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740300791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=Z2Aurb0tFrAght4VDTSh5xS+Dxx12mfI5R7RQ6P2LuM=;
+	b=tK2mXp5WQhS8hglQ8zv/5LoaER1lb8K5+GoCMyWq4au1BsMY8fmlFjSP+5JeK5dG58fpXU
+	GByXpHPSuKMr4YRnSq6uuEZXgSSXvNqtwMgl53yO8Musllgav6buhaM31pE0TSTLYvJP7Q
+	XrkOIEVmTHqDDLMRY3v1TAyAoN575NY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740300791;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=Z2Aurb0tFrAght4VDTSh5xS+Dxx12mfI5R7RQ6P2LuM=;
+	b=6FKQwyRrHfhAENwuKYDKWYzpRwJcloUwGZNVaRRiwDQQLzNLaT70+uOe1rPfaAe1rT1yZ6
+	PD2cyVxYeb8K06Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 25C5F13A39;
+	Sun, 23 Feb 2025 08:53:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DZS8BffhumfUewAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 23 Feb 2025 08:53:11 +0000
+Date: Sun, 23 Feb 2025 09:53:10 +0100
+Message-ID: <874j0lvy89.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: regressions@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org,
+    stable@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [REGRESSION] Chrome and VSCode breakage with the commit b9b588f22a0c
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sqmpxjdcfyvwzhzk"
-Content-Disposition: inline
-X-Provags-ID: V03:K1:e6aXLlSmuX/qM2CQlhVxfLbdOfhdo4lca7XhdfD+htBrLakwy9W
- /S1vdjXVmEQ0MRwiPaVDFhrTAKLDyxj3vrkOuoIg/uliwr0h5cxSZ3qvQD10+vE0JNQQcxv
- 1Q0Zk6vx3SbVgmvvZTsmWkTyUTPDQEXM88E60BOFYoZCW+Bq/12e3EJAe3Btdk91xkAas10
- PlRn3cFUl2TsX6P9JRhgw==
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:url,suse.de:mid]
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:e20n591MmYo=;zv74+gyWTkI6vY1GjCaHQVpMQMJ
- gZ1DNwC8CQzgUlH62avoaoA8E6icHNZZgOq23CSyvgHPl53tUt3BYRu0I6ynJOQLAJaajBdd/
- eBgUfNHxJ5SQDCU10IX3LhNp5hKnDrBM3L35MeiNvINx6zfMuLWwOh9RxBYZNtYO3y/B/O1fe
- LKQX7ytlWx77EPsH9mJYRkn2ScPqE2Gs7nvTZHcHoB5z8ThjaPY3IspJi3QGOyR/G3RbFXumQ
- I6mGl5bQ3MEGGtIu2JPxlNYfW1ykpL1NwLANEsqRxmxDRqFJfcdYeOhaRkPWjrDOYEIwsVuNB
- LMwMH9oXUiIuTvQnKDBAIfYsFwNw5bEnUMl73yT5kLVl2Gj1ccKK3WKCWTQyE4Y/DhW+mB4Ng
- oTHhVFwvA1oJOJFtClsn3UBGwZ/jPGMC+LF9u6ep1/VR/Ay4t50FeJ3Cr25aDsEkEH/H3X68S
- qyRMfzq/jLRdxTx5rN0xMe2DRiqdLiK+pTUMvDpzulofm+3bqnJUF+KVc5/48n4tbj+GxhmYc
- rRGnT+t9LIXPz801Xp1R3l2pxpjjiBFeKLoj3zDSy+M+6MQYFbWyl8EVHy/NiLbvF3Ss6eJyc
- U8GoE+LqnwuYJ4UQE/yRtiWsk5sqTkPHIQHU1xIP6mBBk8RBROI8TxLj6SvGNS6JP8/c54xj7
- 2LNhfiAF7nfn0q66b2ibCzWHpukhMzFB/3OGxnkunDmHQVYKl2WsQ2l06kzx6j9Nl/DLuZpxm
- cVltxOdtSW1D7vpA0wcGubikQXPSk8HnvoWJhyf0g3iklAlpyNjDz9JbP8+dEY/SahzbfLNPa
- NoFZLMcZCoWCn6uh/s/NwrIPB/KLB7UbgykxTyN9zKp1m8FvHhwpa91Tb5cc1/h+3xWFyTDv7
- wsQx+MNNb3ULD5sHqGK3Qu9J/1icuJCbiFdtppD43CeBUJO/ycc1ghGe5euf6gfg4NKcoD4I2
- uMc7tw/Scl81MoxVpvmvhCmsBJxXXcEuCjtUOIRKkSThxgJh6Nu2ZkQCVXTfYkXfY6shChl8M
- BCKb+6OuHgxVcRskB/zhdnJ50rrxfD3B+7PA8GQCViMdci9tdR/RBdBs+CPl/Nr2Rba3zWHUR
- yWyuxHqvW0dZAfMyXmq5t+hP1e9cFPlSo07eYBG3lz/khv6bqo1Ncj1fnSK+TIZItasevmVvV
- viW+HJ6MkVzZw1qAG/UwUmlVbJEfAhcQ8vuTQEitKh6dhZy9nPIrcpwXpcKdM8VNMoRL1Ijw8
- h7XARX/x0QJup+wO7oqlT1lSiVcquRg4LKkTOs6PaDFuW/jjfEaoAnUayK5Cni8JV5kKaWhjo
- UAHoAK/DhX65R6Bgv9EvI16+MjuAxny6OTBK8CUFQd3Ei+gCnWYIE6By8wSm/D1QOTBais2o7
- K2SBnzEIudZN44tw==
+X-Spam-Level: 
+
+[ resent due to a wrong address for regression reporting, sorry! ]
+
+Hi,
+
+we received a bug report showing the regression on 6.13.1 kernel
+against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+  https://bugzilla.suse.com/show_bug.cgi?id=1236943
+
+Quoting from there:
+"""
+I use the latest TW on Gnome with a 4K display and 150%
+scaling. Everything has been working fine, but recently both Chrome
+and VSCode (installed from official non-openSUSE channels) stopped
+working with Scaling.
+....
+I am using VSCode with:
+`--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+"""
+
+Surprisingly, the bisection pointed to the backport of the commit
+b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+to iterate simple_offset directories").
+
+Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+fix the issue.  Also, the reporter verified that the latest 6.14-rc
+release is still affected, too.
+
+For now I have no concrete idea how the patch could break the behavior
+of a graphical application like the above.  Let us know if you need
+something for debugging.  (Or at easiest, join to the bugzilla entry
+and ask there; or open another bug report at whatever you like.)
+
+BTW, I'll be traveling tomorrow, so my reply will be delayed.
 
 
---sqmpxjdcfyvwzhzk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-MIME-Version: 1.0
+thanks,
 
-Hello everyone,
+Takashi
 
-on the Arch Linux Forums[1] multiple users reported issues with their SD
-cards not being recognized during boot or that they needed to re-plug
-them in order for them to be recognized.
-
-One user tracked this down to the following commit:
-
-    235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt based detection")
-
-They have also created a report on the kernel bugzilla[1], therefore I
-cc'ed them to this thread. We found that reverting the above commit on
-top of v6.14-rc3 fixes the issue.
-
-Cheers,
-Christian
-
-[0]: https://bbs.archlinux.org/viewtopic.php?id=303321
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=219781
-
----
-
-#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=303321
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=219781
-#regzbot introduced: 235b630eda07
-#regzbot title: card_reader/rtsx_usb: Detection of SD cards broken
-
---sqmpxjdcfyvwzhzk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAme6QBoACgkQwEfU8yi1
-JYWokhAAmj+O2o2YK7VBEY52ItcHAocRrZmRczFHhRx8eB4IjmpSHLnqFSbkhS6Z
-EbOqOSDkrw62uSEeM4x9ZLKHgS1kK3/wcC6iYu6KJbMfpjUK1r8jww6rASx14Jrh
-r2RuySPGiswYkERzsw2o5X+Ilx53Y/MqYlVEel4v5bW151o5/0HYBo4aRIwv+AYQ
-d2AOmWFLEbmRqgdWDXn2jjoE0xGvXYPdJ+PaXL+jFj2OpSu+P/9jTW73tpE7dBkC
-EZKY9l9l9sOnfd69eu1GnYyGCRWltdalcEcNtLxVbyBq8td01jm4srOXoj8gOYyX
-BSpVuypa02euG9onBd8KVGIvHJrBBd4vN3gAEgDOZDQBtjHYjPxjgllOnUcLhxQG
-/8AZaDXZWoQ2qxQBBuq+17vKrLcBSw85WbEFTT1z/fXyT7SpuyZTZQ5qW4Z+ShN3
-uDslBds0QfOiJ887dAYy7gm0rKxloydyMxhTDZhIXyaY081U3DuVF4doZElYvOCW
-cckpb9enJEoR3SNcQM7n+raV1k0HxEdOBCawUx7zFm0TZ73JgIc8TzvmtQCoJtHO
-qMQroKZ7zAGNDCM6DcteRWwvN5qS/j3Z02Xmvl+asV0qC28p35YDOi8WO+/9JNWS
-BL2luyqliu32Ov4u4kI9/FlYX/+Es8lL42RGkR9xEoiMWPsqlys=
-=CI6X
------END PGP SIGNATURE-----
-
---sqmpxjdcfyvwzhzk--
+#regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+#regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
