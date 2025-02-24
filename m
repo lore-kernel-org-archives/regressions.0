@@ -1,79 +1,66 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2013639FD9
-	for <regressions@lists.linux.dev>; Sun, 23 Feb 2025 22:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A01238DE9;
+	Mon, 24 Feb 2025 07:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740348263; cv=none; b=UWxx6GYGvlCw0iIxGlr6UrdDZombwo7V8uQGuxGicNl0BcLh1rp0m+mHzp8PoCCBW/74Kj/KBMbiQwRTi+Lr8bnDIEDD9+8oRV+L/gUxR68N8LpYxCnVc3Zuj5p3WzaoJxi4SKoAKnofxTsZZ/pzkjD+OyR0lyE2WhyuMY0Nbh0=
+	t=1740380872; cv=none; b=LruCIMM/7RHLWNCcIpSYMyxfOQ2zzT5s7XrFaoRKyns9CTy7mpOjrApAlXS5T0t1usE1AWCLem+X6rpvJoMXzXOgDt8ZNIiHjEFNCLqqpCw4NuxvZTtX4EVyR1K8Ka+2KlaPiOouzDC8CZwnct+10N++9bpR6XPvKvmCAIfdiz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740348263; c=relaxed/simple;
-	bh=p9IxLekkjWvLHDuZZHTCsKA8qGYl9JXM6hV77OoFUgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyGLSeoHWljxA3y2xNSMD7FD7EJ426TxL33RxTHqHT2AuxbOlHKmVhKjpDToYp4s/ppjs0xkbccTDVnrJ820AUmVh0T2EM/leywHRfdn99gkX2BcLWUVhrEr2NscCtkpmtzAJMG9rg2XsItQRqzNU0aSoTW4mxgRZMJhm9MwHJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af2a7.dynamic.kabel-deutschland.de [95.90.242.167])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4ED9661E64788;
-	Sun, 23 Feb 2025 23:04:06 +0100 (CET)
-Message-ID: <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
-Date: Sun, 23 Feb 2025 23:04:05 +0100
+	s=arc-20240116; t=1740380872; c=relaxed/simple;
+	bh=l/KXpYBP9o/pd7S757V9Gogf2OWf5kFV8ikH/H87ia8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ab/QvabqFFUkpG+lRX9C+YAX9Z7WivnsVTCKYrJacI0J1SVFzbrxpNoLGlFF8J9PCVREqjtP4bs6VpFamXSRwaS6dz992lCv5KRYbN7H7M39/M2gup3C/kRX4l2zGSQtglQXgwWNwvogpqfqiLZhMAlfVl/zcpbdczZL4UZav4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rWnZ9qRA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rWnZ9qRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D830C4CED6;
+	Mon, 24 Feb 2025 07:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740380871;
+	bh=l/KXpYBP9o/pd7S757V9Gogf2OWf5kFV8ikH/H87ia8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rWnZ9qRA4eFiqW4nr34aMGgratoBeTwfHMrd7tw+IeRIYftHexSgM3gmy5cIz4d7T
+	 Oz4JlvH1AfsHDr2GIEexmvQy0LYbb2ScBW2N98TYHNI2m0Km351z8Q/sJJ8BEcCZ+C
+	 fdT7rXiAItN3VZQYP+yv1WkZQu2QiO/JW36Ni4cU=
+Date: Mon, 24 Feb 2025 08:07:48 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Sean Rhodes <sean@starlabs.systems>, quintafeira@tutanota.com,
+	Arnd Bergmann <arnd@arndb.de>, Desnes Nunes <desnesn@redhat.com>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
+ failures
+Message-ID: <2025022429-powdery-possibly-e4e5@gregkh>
+References: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
 
-Dear Bortosz,
+On Sat, Feb 22, 2025 at 10:22:34PM +0100, Christian Heusel wrote:
+> Hello everyone,
+> 
+> on the Arch Linux Forums[1] multiple users reported issues with their SD
+> cards not being recognized during boot or that they needed to re-plug
+> them in order for them to be recognized.
+> 
+> One user tracked this down to the following commit:
+> 
+>     235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt based detection")
+> 
+> They have also created a report on the kernel bugzilla[1], therefore I
+> cc'ed them to this thread. We found that reverting the above commit on
+> top of v6.14-rc3 fixes the issue.
 
+Thanks for the report.  Do you want to send a revert for this, or do you
+need us to create it?
 
-Am 23.02.25 um 21:54 schrieb Bartosz Golaszewski:
-> On Fri, Feb 21, 2025 at 10:02 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->>
->>> What GPIO driver is it using? It's likely that it's not using the
->>> provider API correctly and this change uncovered it, I'd like to take
->>> a look at it and fix it.
->>
->> How do I find out? The commands below do not return anything.
->>
->>       $ lsmod | grep gpio
->>       $ lspci -nn | grep -i gpio
->>       $ sudo dmesg | grep gpio
->>       [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
->>       [Just these lines match.]
+thanks,
 
-> If you have libgpiod-tools installed, you can post the output of
-> gpiodetect here.
-
-     $ sudo gpiodetect
-     gpiochip0 [INT344B:00] (152 lines)
-
-(In Debian the package name is *gpiod*.)
-
-
-Kind regards,
-
-Paul
+greg k-h
