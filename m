@@ -1,89 +1,81 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DB3268FC6
-	for <regressions@lists.linux.dev>; Tue, 25 Feb 2025 12:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3F19EED7;
+	Tue, 25 Feb 2025 17:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740487110; cv=none; b=tWIM74zW9b1NT5I+MPt9Dxym2ZjzmpnOIV+Q79NKGSPvchSZOSerYE+bX8UVA+ZDpvIn7y6RA38yixJJ1OzQ/eoiUYVWM8Sw8+JD2+GJsDHlWZPmITcqkTW40wiFc6B6mOPzX4g+IO3cetmYYtkQa8hjZpLDpqXIYvve/wsZ8ug=
+	t=1740506364; cv=none; b=U1WDZNmbdU1PISSqOdCYo/+nEDr9bs5s6Tc+A6UIEGzz++KiksJjh+m8plSRFGGeqBBNc0GCvj8+6V5GdSap0H/S7EmFDyM+Et0CX0Vupp+7OuCY1dky5rcwNYQzip1y16ioX2wgUm3ZAvtWTZIyNTODQmxGictbLp88GGhrvy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740487110; c=relaxed/simple;
-	bh=EpWE3gjVBJ5xUE4k7WndhezmqHaz9BrJsMPrqvdpJ3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W+EVcOJUtzJoeA+C8AcbDWE0HM8DuJsRXa8mntZxiZZrdVs/aEB4rubF7/EB3MrDaWmcrJYoHAQkFMY5aPMVFvEmvn8Ix1vadwAs1dQ6QbEQhmnB0lfQFHnxDt3Z1NIZIotrbpPdWh31kPSs+b6UwNzcY2tOLVzpLW2DW8gHugM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XCtHT+EO; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740506364; c=relaxed/simple;
+	bh=Bc9bNYPj8tmaG3ScZCQNJLwNiDFq9wrrnUMkVEcbyBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QHwgc+B4KEshR+XTlyzRIWJhthXrzTNh9HImDZpLWxQHFEsV87kB7WGqym6cE2MYqgMOAfKW1izCucqfh9gmeZk+XnRPKnnCvmC2p93G4hxa1mjcjkGDetTZWilmG8kGELZQPtvPh4nxV815Qg2L7YQry9ItBZRSRLXrz/uiPqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTqETPDh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XCtHT+EO"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6f4b266d333so40170047b3.2
-        for <regressions@lists.linux.dev>; Tue, 25 Feb 2025 04:38:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740487108; x=1741091908; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EpWE3gjVBJ5xUE4k7WndhezmqHaz9BrJsMPrqvdpJ3M=;
-        b=XCtHT+EOI1zio3sOKeglDsl6VidWWUP3Ci96lPuIgg2kCMFSKu1qwK2f9wAf7SwKxR
-         NtgguU4Pc4UOr0uu4P12dvLgQN9l93l96VEXBVTd0pr7EskBW2bsEQZeQD+Ao1zcFYd4
-         rEs2/29KA1EgFKT1YR+qN8paZY/Y6vT5b08Cl/I6EP+AS+8/2LoZmQA9hDag1IzmjycK
-         gi5lGY+CU+7QXeI1LP/HQrCiwgNN4tULGWfY2hg5wG7WYNucXeUvzPOP7E12J03d1Q+i
-         TzrouktPyAVQK8JoAOC7vGjaibKUaIlS4j8/4jyeiz3LdMNo9VDheRquwAUvgdB1uAdN
-         xVGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740487108; x=1741091908;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EpWE3gjVBJ5xUE4k7WndhezmqHaz9BrJsMPrqvdpJ3M=;
-        b=egqebILoK3xuIj79Cwx+8RZyuFyOw+ISujyd3amoixLP0WMFWTx9unwhKv8G8VZ1jQ
-         o3q/4GseDJVXOCW8G5xt/ea2w5J1wsFCilTj65NNEUAwJ8YpNBvzM60Ju3r3ief2z3db
-         uqWFSUKchBm3o7UvuX5O+PhdsInlRjcDIGS7NUujnZRUbfOpEInDkW66yWRTb37IJAs8
-         13D7HGy3ZuSlvGp8Mk776JByUJQsApicirCugpjrHk0s2uhgdnVOOU9I83a0Zqb3v4y4
-         MQNVutDbc+HZrj/l8Y+J4Sg4e6Kmt3yqAaCCIZoxmU3/pNdRfq/ZjmTkLUJscgkUJL/i
-         0XFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWE40GAYD4bDNLGfnowQFMM7+HSxrt99aiKQPvwPehuVfHbQ1VNXZ18EoQ7URtMBDQuOkpyWY+QTzvvbA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyj0xiL4DmaCaAFgT67Ck2Q58FST8b4jLE+yb0PX1AtmtDf9lMi
-	E412hGyBp8Fz0ahmsLRijHa/72IkEvJOmsz3tNSvM6/E57CZBQQI0izzJm9mn3pqGVTz7cu8vF1
-	jmIU1RJNNqVwQrugSnyUOW5l3HYX1cpiUfpKFFQ==
-X-Gm-Gg: ASbGncvAD9rsu3MstZXtTsiTEIDwV/81KB/xN7AoocJIsleMazQccqYSD7WrJyKPWQo
-	T3/dzpwNq5vCWSRbBiT7a1ITaJwRi4QoNN7n1YySL+jKsTkQjEQHnGuBkfN2dPcz5W9gYleE1ik
-	8Uz1HzB8WYl1dC2D/yBZWOqLAl7JC/cx02d2NCXCM=
-X-Google-Smtp-Source: AGHT+IFyDNIAPgd41Z9hN8WY7F9O5edD1E2SsUN53aJDVwGNWFZanw4Cp0tNkMynd41Y2r08hXuQygXqpmPDqz1VtwY=
-X-Received: by 2002:a05:690c:3812:b0:6ef:6a71:aa55 with SMTP id
- 00721157ae682-6fbcc40591fmr149119927b3.0.1740487107791; Tue, 25 Feb 2025
- 04:38:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTqETPDh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC32C4CEE2;
+	Tue, 25 Feb 2025 17:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740506363;
+	bh=Bc9bNYPj8tmaG3ScZCQNJLwNiDFq9wrrnUMkVEcbyBA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HTqETPDh780yct8+L4Jr9YB0BctNv2+9RaZJ1m6+daz+h7ikUGJq9j093GA8952MX
+	 X5krnLjgfOE3VpTBXNAXXUu54EncW5ne5cm+1Dy3BchNW8pjjZUv9EoZ+ZalqpUfXU
+	 VQL6JSGBxOyJFLP0RYy8HlyzT83y9jvEQNJ8zNpcOSx+sssTGNkdtnCd9ytjxlKqf0
+	 uineQFgV3CDt+inex/zq3rNz/Qr5DZ3smd0hRsYXVKxCPJUuN01vx3a5dQkxYqJZpU
+	 LQRZxA3TzeWkKNAtt1On/qrzolgSotaAgfn5fi31AuVX6rhw31UgtKKkC9DL4lShza
+	 /DNJb+6pS7qWQ==
+Date: Tue, 25 Feb 2025 11:59:21 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>, Precific <precification@posteo.de>,
+	Athul Krishna <athul.krishna.kr@protonmail.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
+ graphics artifacts after 6.12 kernel upgrade]
+Message-ID: <20250225175921.GA511617@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACo-S-3CDuZpEeJBbP9_f21aRb4B8Vdj784f3J0NPPs+hu0mfA@mail.gmail.com>
- <016580ec-2b16-4ac5-a724-5e26419538fa@sirena.org.uk>
-In-Reply-To: <016580ec-2b16-4ac5-a724-5e26419538fa@sirena.org.uk>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Tue, 25 Feb 2025 13:38:16 +0100
-X-Gm-Features: AWEUYZlURBTUMr0ps6EeRxIAB_Iy4Z3r1peJUlH2NjFzT2HqZwh75HnLeZ-B5JY
-Message-ID: <CACMJSetpE0CrNkYN92R1=MFqb_QAxX27PPFAetKAqr-_m3YN=g@mail.gmail.com>
-Subject: Re: [REGRESSION] next/master: (boot) WARNING at drivers/gpio/gpiolib.c:349
- gpiochip_get_direction+0xc8/...
-To: Mark Brown <broonie@kernel.org>
-Cc: kernelci-results@groups.io, bot@kernelci.org, 
-	Linus Walleij <linus.walleij@linaro.org>, regressions@lists.linux.dev, gus@collabora.com, 
-	laura.nao@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250102113832.4d5c101a.alex.williamson@redhat.com>
 
-On Tue, 25 Feb 2025 at 13:28, Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Feb 25, 2025 at 01:55:08AM -0800, KernelCI bot wrote:
->
-> > New boot regression found on next/master:
->
-> Looks like more platforms which need fixups for the return value of
-> get_direction():
->
+On Thu, Jan 02, 2025 at 11:38:32AM -0700, Alex Williamson wrote:
+> On Thu, 2 Jan 2025 10:04:02 -0700
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+> > On Thu, 2 Jan 2025 11:39:23 -0500
+> > Peter Xu <peterx@redhat.com> wrote:
+> > > OTOH, a pure question here is whether we should check pfn+pgoff instead of
+> > > pgoff alone.  I have no idea how firmware would allocate BAR resources,
+> > > especially on start address alignments.  I assume that needs to be somehow
+> > > relevant to the max size of the bar, probably the start address should
+> > > always be aligned to that max bar size?  If so, there should have no
+> > > functional difference checking either pfn+pgoff or pgoff.  It could be a
+> > > matter of readability in that case, saying that the limitation is about pfn
+> > > (of pgtable) rather than directly relevant to the offset of the bar.  
+> > 
+> > Yes, I'm working on the proper patch now that we have a root cause and
+> > I'm changing this to test alignment of pfn+pgoff.  The PCI BARs
+> > themselves are required to have natural alignment, but the vma mapping
+> > the BAR could be at an offset from the base of the BAR, which is
+> > accounted for in our local vma_to_pfn() function.  So I agree that
+> > pfn+pgoff is the more complete fix, which I'll post soon, and hope that
+> > Precific can re-verify the fix.  Thanks,
+> 
+> The proposed fix is now posted here:
+> 
+> https://lore.kernel.org/all/20250102183416.1841878-1-alex.williamson@redhat.com
+> 
+> Please reply there with Tested-by and Reviewed-by as available.  Thanks,
 
-Yeah, I just proposed to revert it for gpiochip_add_data():
-https://lore.kernel.org/all/20250225-retval-fixes-v1-1-078c4c98517a@linaro.org/
+#regzbot fix: 09dfc8a5f2ce ("vfio/pci: Fallback huge faults for unaligned pfn")
 
-Bartosz
+09dfc8a5f2ce appeared in v6.13-rc7.
