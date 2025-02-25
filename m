@@ -1,81 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3F19EED7;
-	Tue, 25 Feb 2025 17:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A35719E7ED
+	for <regressions@lists.linux.dev>; Tue, 25 Feb 2025 20:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506364; cv=none; b=U1WDZNmbdU1PISSqOdCYo/+nEDr9bs5s6Tc+A6UIEGzz++KiksJjh+m8plSRFGGeqBBNc0GCvj8+6V5GdSap0H/S7EmFDyM+Et0CX0Vupp+7OuCY1dky5rcwNYQzip1y16ioX2wgUm3ZAvtWTZIyNTODQmxGictbLp88GGhrvy8=
+	t=1740516239; cv=none; b=PbKD+jnV4EWNXTwRAPQXhqWRbNlFcmpBkteutkoSfEYUVT6dVn9PsT5TMXlez2aAQtaoY0yI2ME2HA3xm55ayiIMQumnJW6zLdqlhL7GMWISj7lgxNX12lo6ekdxrbpHtQQGehwJZLUx83G/oai1CHkY2PHvA6YqRSZBTFmD2PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506364; c=relaxed/simple;
-	bh=Bc9bNYPj8tmaG3ScZCQNJLwNiDFq9wrrnUMkVEcbyBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QHwgc+B4KEshR+XTlyzRIWJhthXrzTNh9HImDZpLWxQHFEsV87kB7WGqym6cE2MYqgMOAfKW1izCucqfh9gmeZk+XnRPKnnCvmC2p93G4hxa1mjcjkGDetTZWilmG8kGELZQPtvPh4nxV815Qg2L7YQry9ItBZRSRLXrz/uiPqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTqETPDh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTqETPDh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC32C4CEE2;
-	Tue, 25 Feb 2025 17:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740506363;
-	bh=Bc9bNYPj8tmaG3ScZCQNJLwNiDFq9wrrnUMkVEcbyBA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HTqETPDh780yct8+L4Jr9YB0BctNv2+9RaZJ1m6+daz+h7ikUGJq9j093GA8952MX
-	 X5krnLjgfOE3VpTBXNAXXUu54EncW5ne5cm+1Dy3BchNW8pjjZUv9EoZ+ZalqpUfXU
-	 VQL6JSGBxOyJFLP0RYy8HlyzT83y9jvEQNJ8zNpcOSx+sssTGNkdtnCd9ytjxlKqf0
-	 uineQFgV3CDt+inex/zq3rNz/Qr5DZ3smd0hRsYXVKxCPJUuN01vx3a5dQkxYqJZpU
-	 LQRZxA3TzeWkKNAtt1On/qrzolgSotaAgfn5fi31AuVX6rhw31UgtKKkC9DL4lShza
-	 /DNJb+6pS7qWQ==
-Date: Tue, 25 Feb 2025 11:59:21 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Peter Xu <peterx@redhat.com>, Precific <precification@posteo.de>,
-	Athul Krishna <athul.krishna.kr@protonmail.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219619] New: vfio-pci: screen
- graphics artifacts after 6.12 kernel upgrade]
-Message-ID: <20250225175921.GA511617@bhelgaas>
+	s=arc-20240116; t=1740516239; c=relaxed/simple;
+	bh=Yv+Z9Y+3B4jBCJ4/yx5U464umiGC38OjXZxWPi4QusE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=F8TYgtc3Q8HH8uADhwV69XBB1xA8PGTpC/9SoZUx0B5wGoslvO49Qt1zF75DnAhsbYNjccfLxyWhJX6KwdHATlPq+UUWmJe18egAIDteYMTiyRlEoQjBt8LoyTnPFrl1UFEFQNWZaBKxUWmBfuTMI14s8pWaJ/RSTfvMxIAGSiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af513.dynamic.kabel-deutschland.de [95.90.245.19])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D9D4061E646F9;
+	Tue, 25 Feb 2025 21:43:47 +0100 (CET)
+Message-ID: <d1661817-1036-420a-9f76-a7124e6550a7@molgen.mpg.de>
+Date: Tue, 25 Feb 2025 21:43:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250102113832.4d5c101a.alex.williamson@redhat.com>
+User-Agent: Mozilla Thunderbird
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 02, 2025 at 11:38:32AM -0700, Alex Williamson wrote:
-> On Thu, 2 Jan 2025 10:04:02 -0700
-> Alex Williamson <alex.williamson@redhat.com> wrote:
-> 
-> > On Thu, 2 Jan 2025 11:39:23 -0500
-> > Peter Xu <peterx@redhat.com> wrote:
-> > > OTOH, a pure question here is whether we should check pfn+pgoff instead of
-> > > pgoff alone.  I have no idea how firmware would allocate BAR resources,
-> > > especially on start address alignments.  I assume that needs to be somehow
-> > > relevant to the max size of the bar, probably the start address should
-> > > always be aligned to that max bar size?  If so, there should have no
-> > > functional difference checking either pfn+pgoff or pgoff.  It could be a
-> > > matter of readability in that case, saying that the limitation is about pfn
-> > > (of pgtable) rather than directly relevant to the offset of the bar.  
-> > 
-> > Yes, I'm working on the proper patch now that we have a root cause and
-> > I'm changing this to test alignment of pfn+pgoff.  The PCI BARs
-> > themselves are required to have natural alignment, but the vma mapping
-> > the BAR could be at an offset from the base of the BAR, which is
-> > accounted for in our local vma_to_pfn() function.  So I agree that
-> > pfn+pgoff is the more complete fix, which I'll post soon, and hope that
-> > Precific can re-verify the fix.  Thanks,
-> 
-> The proposed fix is now posted here:
-> 
-> https://lore.kernel.org/all/20250102183416.1841878-1-alex.williamson@redhat.com
-> 
-> Please reply there with Tested-by and Reviewed-by as available.  Thanks,
+Dear Bartosz,
 
-#regzbot fix: 09dfc8a5f2ce ("vfio/pci: Fallback huge faults for unaligned pfn")
 
-09dfc8a5f2ce appeared in v6.13-rc7.
+Thank you for your support.
+
+Am 24.02.25 um 09:51 schrieb brgl@bgdev.pl:
+> On Sun, 23 Feb 2025 23:04:05 +0100, Paul Menzel <pmenzel@molgen.mpg.de> said:
+
+>> Am 23.02.25 um 21:54 schrieb Bartosz Golaszewski:
+>>> On Fri, Feb 21, 2025 at 10:02 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>>>>
+>>>>> What GPIO driver is it using? It's likely that it's not using the
+>>>>> provider API correctly and this change uncovered it, I'd like to take
+>>>>> a look at it and fix it.
+>>>>
+>>>> How do I find out? The commands below do not return anything.
+>>>>
+>>>>        $ lsmod | grep gpio
+>>>>        $ lspci -nn | grep -i gpio
+>>>>        $ sudo dmesg | grep gpio
+>>>>        [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
+>>>>        [Just these lines match.]
+>>
+>>> If you have libgpiod-tools installed, you can post the output of
+>>> gpiodetect here.
+>>
+>>       $ sudo gpiodetect
+>>       gpiochip0 [INT344B:00] (152 lines)
+> 
+> So it's pinctrl-intel, specifically this function in
+> drivers/pinctrl/intel/pinctrl-intel.c:
+> 
+> static int intel_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+> {
+> 	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
+> 	void __iomem *reg;
+> 	u32 padcfg0;
+> 	int pin;
+> 
+> 	pin = intel_gpio_to_pin(pctrl, offset, NULL, NULL);
+> 	if (pin < 0)
+> 		return -EINVAL;
+> 
+> 	reg = intel_get_padcfg(pctrl, pin, PADCFG0);
+> 	if (!reg)
+> 		return -EINVAL;
+> 
+> 	scoped_guard(raw_spinlock_irqsave, &pctrl->lock)
+> 		padcfg0 = readl(reg);
+> 
+> 	if (padcfg0 & PADCFG0_PMODE_MASK)
+> 		return -EINVAL;
+> 
+> 	if (__intel_gpio_get_direction(padcfg0) & PAD_CONNECT_OUTPUT)
+> 		return GPIO_LINE_DIRECTION_OUT;
+> 
+> 	return GPIO_LINE_DIRECTION_IN;
+> }
+> 
+> Can you add some logs and see which -EINVAL is returned here specifically?
+
+Sure. I used the diff below, and added `dyndbg="file pinctrl-intel.c 
++p"` added to `/boot/grub/grub.cfg`.
+
+```
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c 
+b/drivers/pinctrl/intel/pinctrl-intel.c
+index 527e4b87ae52..f0922d9e64ee 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1067,18 +1067,24 @@ static int intel_gpio_get_direction(struct 
+gpio_chip *chip, unsigned int offset)
+         int pin;
+
+         pin = intel_gpio_to_pin(pctrl, offset, NULL, NULL);
+-       if (pin < 0)
++       if (pin < 0) {
++               dev_dbg(pctrl->dev, "pin < 0");
+                 return -EINVAL;
++       }
+
+         reg = intel_get_padcfg(pctrl, pin, PADCFG0);
+-       if (!reg)
++       if (!reg) {
++               dev_dbg(pctrl->dev, "not reg");
+                 return -EINVAL;
++       }
+
+         scoped_guard(raw_spinlock_irqsave, &pctrl->lock)
+                 padcfg0 = readl(reg);
+
+-       if (padcfg0 & PADCFG0_PMODE_MASK)
++       if (padcfg0 & PADCFG0_PMODE_MASK) {
++               dev_dbg(pctrl->dev, "padcfg0 = %x", padcfg0);
+                 return -EINVAL;
++       }
+
+         if (__intel_gpio_get_direction(padcfg0) & PAD_CONNECT_OUTPUT)
+                 return GPIO_LINE_DIRECTION_OUT;
+```
+
+These are the logs:
+
+```
+[    0.198584] sunrisepoint-pinctrl INT344B:00: Community0 features: 
+0x000000
+[    0.198613] sunrisepoint-pinctrl INT344B:00: Community1 features: 
+0x00000c
+[    0.198629] sunrisepoint-pinctrl INT344B:00: Community2 features: 
+0x000000
+[    0.198687] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198688] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198693] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198694] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198699] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198700] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198704] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198705] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198709] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198710] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198715] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198715] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198720] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198721] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198730] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198731] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198735] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198736] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198741] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198741] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198746] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198747] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198756] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198757] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198766] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198767] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198812] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198812] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198817] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198818] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198822] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198823] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198837] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198838] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198843] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198843] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198848] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198849] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198853] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198854] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198863] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198864] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198874] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
+[    0.198875] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198879] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198880] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198884] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
+[    0.198885] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198938] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198939] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198944] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198945] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198950] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198951] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198972] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198973] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198978] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.198979] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.198989] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.198990] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199006] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199007] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199011] sunrisepoint-pinctrl INT344B:00: padcfg0 = 84000700
+[    0.199012] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199028] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199029] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199034] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199035] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199040] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199041] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199045] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199046] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199211] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199211] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199217] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199217] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199239] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
+[    0.199240] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199255] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199256] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199261] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199262] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199267] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199268] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199273] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
+[    0.199274] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199278] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199279] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199284] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199285] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199301] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000502
+[    0.199302] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199307] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199308] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199312] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199313] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199318] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199319] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199324] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
+[    0.199325] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199382] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000600
+[    0.199383] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+[    0.199387] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000600
+[    0.199388] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
+failed: -22
+```
+
+With
+
+     #define PADCFG0_PMODE_MASK              GENMASK(13, 10)
+
+indeed one bit is always set in this range.
+
+> In any case: Linus: what should be our policy here? There are some pinctrl
+> drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+> think this is an error. Returning errors should be reserved for read failures
+> and so on. Are you fine with changing the logic here to explicitly default to
+> INPUT as until recently all errors would be interpreted as such anyway?
+
+
+Kind regards,
+
+Paul
