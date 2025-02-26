@@ -1,122 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F86191F6A
-	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 14:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599622170B;
+	Wed, 26 Feb 2025 14:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579733; cv=none; b=IvJSWaKWYKuP9kz1rP/HHkx+AXy6wj0rgjQgnghSVIaJw/SDcA2o+N2Ar1Pvf/uvGuQAsgmZp2i8UEGjxTnOgOtuWYiKXk3Ry1MqR7P8WTGKhhIvecoeU7T48C/9OiGnhD68yTeEovIRchDK5w/BQPySeW8UHdj59J9zVoAZOq8=
+	t=1740580073; cv=none; b=RatO5sVk+Tyi3tljJrKi12Qh602ubQ9RhQmXR9PkWXwHAIL+UJqcjNkHCri9j6Z9U4SI7jFimD71JDr6KldhSHvZb/vvWEQIGovFBfgcVnOyalQJGedHTYiZRyxoiJVx2Lf+Imf8Q8gRUC1rYLjb/5hCwRVwwgNO/bzW9PrSBz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740579733; c=relaxed/simple;
-	bh=8/W/lJJ/gLSuYwCP2oFJ++JHvBoSQIUyBFBXlUK8rGI=;
+	s=arc-20240116; t=1740580073; c=relaxed/simple;
+	bh=URbrqijczCz9YHLmftvryXYUcHZaC1Q8rW1h0dJ02CI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWCiUobAHOP8U5I2aYgSoAN/Qf3/0zyzuPeVjt26avf6t2poXlbIzxUR4rTlDmb87aCuHrQbcFRc8oevYH2XPinmkDaUIPN+EmgVvWPCTeBlGUf0Lp5s0RtoY0ry/7BI3/HOhl3oD6To57ZHkkQclGEZ15j91nu64RschEZOWZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iaBdazfQ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UrXVEaCsUz0FiwBYC8s1gidRBI5c9pgZFseTHDZz8NcRGJf6BA6MMRQEp6zp90WIVK7Uw6Xhd3PN+33ZbFgLpImpZkjXXnckEK5R8BiTdQ7qo/mRdmksgVvxJOaTE488QyO0RCZwYJ5rxDmD2IlkeRZCS96KI7IgET+guqz3AbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pnlSJqAb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iaBdazfQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740579731; x=1772115731;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=8/W/lJJ/gLSuYwCP2oFJ++JHvBoSQIUyBFBXlUK8rGI=;
-  b=iaBdazfQrVP3L0fogk7hGhYJpanw9wdVGeK2kjRt1ZiSk0xJPDPF0Mvn
-   RYnseuibjhxyG7a+F+7DQNQFtqamNHiZBIb+ygVBcwdSQ3LfFMVl0cqi3
-   TITvknXzr8u2XureumnTO0/qxycsUPWbS61CyDjt33hKKZ0JPQg8vzOZ4
-   KE23ZaCbQ3Qm0TVl+TWovHR3AWAxT/MCekQ2lXgBobN+F15rC3uv88SRc
-   bF8J3w49QQnEFucd5qJmOfDWGJ4+ZiVmi0WtRECIp8k3b/ICOFdiE8dWi
-   vlHAMzG9bdj1OwKNbvurhn/aYk4aGCjvhcwQCGejTYJcTAACGgE2ti9Cb
-   A==;
-X-CSE-ConnectionGUID: oIk0BXIkTU2LANgjB9ndXw==
-X-CSE-MsgGUID: n7E0HE5pThiHUsjUCTHksA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41270270"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="41270270"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 06:22:11 -0800
-X-CSE-ConnectionGUID: FwMG1d/BRkOOt7lXFVI5bA==
-X-CSE-MsgGUID: M7D6XjDwTQCun3VwDLRArg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120822893"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 06:22:09 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnIIY-0000000FLUD-2Ze9;
-	Wed, 26 Feb 2025 16:22:06 +0200
-Date: Wed, 26 Feb 2025 16:22:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-	Paul Menzel <pmenzel@molgen.mpg.de>, linux-gpio@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-Message-ID: <Z78jjr8LMa165CZP@smile.fi.intel.com>
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
- <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
- <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
- <Z78bUPN7kdSnbIjW@black.fi.intel.com>
- <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pnlSJqAb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11993C4CED6;
+	Wed, 26 Feb 2025 14:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740580073;
+	bh=URbrqijczCz9YHLmftvryXYUcHZaC1Q8rW1h0dJ02CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pnlSJqAb9TG22fWNHv9q/yx3p/zGg1pkLIfYrJQEfG0XJ1uuV7yWxbqRmforSct4n
+	 dyk7HeNoa5uNgZlWuxE6CiO3DlBxUnDWoa8wZemWlMRuwkEBIND0d76jvFh+xvrauW
+	 c4ZFfGx9+EqDDEMqxpAEZYGWJL61qGRWcy9r4ODU=
+Date: Wed, 26 Feb 2025 15:26:44 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+Message-ID: <2025022657-credit-undrilled-81f1@gregkh>
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+ <87jz9d5cdp.wl-tiwai@suse.de>
+ <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+ <87h64g4wr1.wl-tiwai@suse.de>
+ <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
 
-On Wed, Feb 26, 2025 at 03:14:24PM +0100, Bartosz Golaszewski wrote:
-> On Wed, 26 Feb 2025 at 14:47, Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Feb 26, 2025 at 03:37:47PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
-> > > > On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
-> > > >
-> > > > > In any case: Linus: what should be our policy here? There are some pinctrl
-> > > > > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
-> > > > > think this is an error. Returning errors should be reserved for read failures
-> > > > > and so on. Are you fine with changing the logic here to explicitly default to
-> > > > > INPUT as until recently all errors would be interpreted as such anyway?
-> > > >
-> > > > Oh hm I guess. There was no defined semantic until now anyway. Maybe
-> > > > Andy has something to say about it though, it's very much his pin controller.
-> > >
-> > > Driver is doing correct things. If you want to be pedantic, we need to return
-> > > all possible pin states (which are currently absent from GPIO get_direction()
-> > > perspective) and even though it's not possible to tell from the pin muxer
-> > > p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
-> > > different, but pin muxer might only guesstimate the state of the particular
-> > > function is and I do not think guesstimation is a right approach.
-> > >
-> > > We may use the specific error code, though. and document that semantics.
-> >
-> > Brief looking at the error descriptions and the practical use the best (and
-> > unique enough) choice may be EBADSLT.
+On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
+> On 2/26/25 9:16 AM, Takashi Iwai wrote:
+> > On Wed, 26 Feb 2025 15:11:04 +0100,
+> > Chuck Lever wrote:
+> >>
+> >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> >>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> >>> Chuck Lever wrote:
+> >>>>
+> >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> we received a bug report showing the regression on 6.13.1 kernel
+> >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>
+> >>>>> Quoting from there:
+> >>>>> """
+> >>>>> I use the latest TW on Gnome with a 4K display and 150%
+> >>>>> scaling. Everything has been working fine, but recently both Chrome
+> >>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> >>>>> working with Scaling.
+> >>>>> ....
+> >>>>> I am using VSCode with:
+> >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> >>>>> """
+> >>>>>
+> >>>>> Surprisingly, the bisection pointed to the backport of the commit
+> >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> >>>>> to iterate simple_offset directories").
+> >>>>>
+> >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> >>>>> release is still affected, too.
+> >>>>>
+> >>>>> For now I have no concrete idea how the patch could break the behavior
+> >>>>> of a graphical application like the above.  Let us know if you need
+> >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> >>>>> and ask there; or open another bug report at whatever you like.)
+> >>>>>
+> >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> >>>>>
+> >>>>>
+> >>>>> thanks,
+> >>>>>
+> >>>>> Takashi
+> >>>>>
+> >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>
+> >>>> We received a similar report a few days ago, and are likewise puzzled at
+> >>>> the commit result. Please report this issue to the Chrome development
+> >>>> team and have them come up with a simple reproducer that I can try in my
+> >>>> own lab. I'm sure they can quickly get to the bottom of the application
+> >>>> stack to identify the misbehaving interaction between OS and app.
+> >>>
+> >>> Do you know where to report to?
+> >>
+> >> You'll need to drive this, since you currently have a working
+> >> reproducer.
+> > 
+> > No, I don't have, I'm merely a messenger.
 > 
-> In any case, I proposed to revert to the previous behavior in
-> gpiochip_add_data() in my follow-up series so the issue should soon go
-> away.
+> Whoever was the original reporter has the ability to reproduce this and
+> answer any questions the Chrome team might have. Please have them drive
+> this. I'm already two steps removed, so it doesn't make sense for me to
+> report a problem for which I have no standing.
 
-Yes, I noted. The above is a material to discuss. We can make that semantics
-documented and strict and then one may filter out those errors if/when
-required.
+Ugh, no.  The bug was explictly bisected to the offending commit.  We
+should just revert that commit for now and it can come back in the
+future if the root-cause is found.
 
--- 
-With Best Regards,
-Andy Shevchenko
+As the revert seems to be simple, and builds here for me, I guess I'll
+have to send it in. {sigh}
+
+Takashi, thanks for the report and the bisection, much appreciated.
+
+greg k-h
 
 
