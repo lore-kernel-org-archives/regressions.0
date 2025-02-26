@@ -1,131 +1,102 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DCE2AE9A
-	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 09:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEB8189BAC
+	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 13:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740562495; cv=none; b=MKs2bBEezJU0Jy6bDu+8Ogdkw8AnR0W1lTo8XQO77pUBSV9DilGACrzqULYs9yiYuadQCO2EcvFqI5Od75B11OKfpqYvfrZPk5cKVYftpIfdmOqav4e+h8bHyo1u5UzPG9IjlTiiY1+tebeh5e83Y4tvE18TSJQqkZZe+6C2Hik=
+	t=1740577072; cv=none; b=d95t1cVLdMDYOgf07b07eYO6GUqqrHoRIqPrniN7RFAKYTkMmKwgXsdDo6lMWgthuxDDq6bFhxJrC6WS0Z++BPw8m5xvU2Et6WUV9wMnTUaCyIGOivt5WY1DM+9vbXznlGSc8sueBpnx5o9nVm8aAPCCcBA6W9pDDWD4Uy3DOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740562495; c=relaxed/simple;
-	bh=/3MY3IqUKv9uCLbshKR6GoUCK3Pi6WOoNCnyiLFHIw8=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=Z0FyqubgxHzEMS5XNXm0z//Lgnp92wATnu8Ix3fv4TyuCicvLDHKiZsJMulXXGmst/u8U/cOGwWjrzdhCaaR6DTy2jTkPsG/iPQDT+P62k35I+OcbIcFqsPh6QBv3UEkD4xPJ1PeqjJi81flh9jQxHDnWTGhRSzFDTA8NWqRG3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=FCq21rHc; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1740577072; c=relaxed/simple;
+	bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iq+x3Wh6u2yb28Umw9HWibwAFiNBzkyMTvMApfDsXkmDGKpmKpQ5qXT0vLgvdxG/bqf6VJ5/BiLNwGtaqLUdSpg46z2FQ5eDptkUiLEotxtLEeMpNMR2684BvnSe6jmfRSI/9ey6I7H8to4dF3+RjBfjPo3ePHrLCGQ5r0/caGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3HOIt5R; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="FCq21rHc"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fcf0617523so28303947b3.3
-        for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 01:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1740562492; x=1741167292; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QkNov1NO7p31Q7s5icaLo0Yfjwu6p2gGVyjcXe6U9PY=;
-        b=FCq21rHcodKBwv/oT0blIDhQpGFzKErA4uYDQpIJpajwKYcLpFIGe3OaBwN6K/rR5e
-         ncRIy+Imi14TfyaSS+mTOY3ghG8WyUkBwPoio7ZVakR9hPVFFnc3fEJye1nh208QdUNw
-         U0H3VkWT7ekTw5jLpq+2d/+HBnBoajo7GH3bZyF+RkTsz5K+77MW0xmiTx63QDS+/wIs
-         xFBMPA64o6QhvN0HmiEaCJHkyci34aXcVGFV6y9SuPLO+JMAcPwhUpyYcJGLmAJdzgXy
-         GLRjG1wESHHdWTU4cJXr9ffFW/mUDlDp7XfqDy9LP6VbOe75MLWgiwmu8fri6654sERH
-         kGvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740562492; x=1741167292;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QkNov1NO7p31Q7s5icaLo0Yfjwu6p2gGVyjcXe6U9PY=;
-        b=lmpFOshHMAsGgseOHCvrqfcbTn62J0TAHOFlHXqIRuT3qMUFD+FLp16NQbQixTvcUA
-         R45GJio+s8WeTqrXRf9gTxrfPblKwvy5492BrRyOnKw9mcbjWCir8HWpwY5tyqdlUhG/
-         +G3kWiXJX3rVQUYZc1BVHweF93PU+UkS8VFET0l8UzXkIRzzoTz2lCoBoxQDR8tRSzwQ
-         ndok2+Ac0n9TzVG6uEVjxFA98EHkB+fOVRujij87ZnShuBQyTVG7HFsMbzJfwXPAdXZ5
-         Ilb/Hdh9mRV/P0ZjCAYLa+94XgcRnvwXqV5ZPSoD7FPZEx2LlB7YpgRh53W+JJ3FD2wk
-         pL1g==
-X-Gm-Message-State: AOJu0YwB8DHjY1VLl5cXtPDKHWcFX76xQrrt05FlsnfbzniPVAOfsTz3
-	aNtq3YMa9eyBHTElkgo7g+Pj/zOsbfldlKUFizsmtwwj+Ad3WEe2/Ryp3kCvJ+n5diSSgDdf7/I
-	ARkeODoFdwVPSXA4iStYAtl5Ys5M5rrnXRJfCng==
-X-Gm-Gg: ASbGncuc7ILgBdTEAYBxoWFlBS+Uxix4ShTSnGCInzvPU97AX2VsD6ZV82DzjwEXLK1
-	U2RfT1NYqnczf4ist3XWbsEqBeFWKLpc1SVEcqB1MTloc+lEkSVJJWVtuxzuD/0SqQQI26v3ms3
-	EzcyC06PRNEOwp0PR7Eckp0ODIwyedLSka6XEws8xG
-X-Google-Smtp-Source: AGHT+IGDl4UN308udeJTcJqWyRvra4LejQEjEKXTweFMInNxdwCfwYvG0fQd7uXMOmlqTPh3FEnIhBv6DSFK/Us+3Ao=
-X-Received: by 2002:a05:690c:3807:b0:6f7:ae31:fdf with SMTP id
- 00721157ae682-6fd109ecae8mr61115067b3.12.1740562492365; Wed, 26 Feb 2025
- 01:34:52 -0800 (PST)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 26 Feb 2025 01:34:51 -0800
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 26 Feb 2025 01:34:51 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3HOIt5R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740577071; x=1772113071;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
+  b=K3HOIt5RZrR7peYJP6soUi12hpykDgW356qIcWqNrsm7xvLMivQ3clsG
+   phWPb5Bl5++MZwN/FdAcJkJ+BeJZNjgrQZRRnPmSO157Iq40atwTHIpFD
+   PEJD1LaXXN5L2yQIYcUyJ8Wcydw0TdZJcRbrR2cYfIcB8bBUFK4fLeZ49
+   Sj101DbpPREG52ySgUKkHuOhDtB9MqynwIYoF3xhO0+gL481XfUm/f0BN
+   OvIB1Mza5oI853x0eiw1j4W4rHYjhRYYaGcwdeV6N+cnmlZfRIJfTVa1G
+   w7SRs8UCZSL3WPc/1P1nQDyl2D9UZlhOfVrOqjM51a1jB4zUHaTkoZVNl
+   Q==;
+X-CSE-ConnectionGUID: MF+oehPQTv6wexrX8I+4Fw==
+X-CSE-MsgGUID: twxJD4G8R3GJcGVA37AJXg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="52811470"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="52811470"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:37:51 -0800
+X-CSE-ConnectionGUID: eQSqF4AvSzmI9Z1mI7/vVQ==
+X-CSE-MsgGUID: 4th0tnM9TamQqQ7t3N9YMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="116488206"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 26 Feb 2025 05:37:49 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 425DF2FB; Wed, 26 Feb 2025 15:37:47 +0200 (EET)
+Date: Wed, 26 Feb 2025 15:37:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: brgl@bgdev.pl, Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+Message-ID: <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Wed, 26 Feb 2025 01:34:51 -0800
-X-Gm-Features: AQ5f1JrOPXUWqTkCJ6LRB67TBpmcgVWRLoK94WkbLdE-39cT04t1FOLkXSO1gAs
-Message-ID: <CACo-S-0dFTtSNf+0CVgARwtW3qMkY1RwUyZWgcWPppKKkGUfLA@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) variable 'uflags' is used
- uninitialized whenever 'if' condition is...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
+> On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
+> 
+> > In any case: Linus: what should be our policy here? There are some pinctrl
+> > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+> > think this is an error. Returning errors should be reserved for read failures
+> > and so on. Are you fine with changing the logic here to explicitly default to
+> > INPUT as until recently all errors would be interpreted as such anyway?
+> 
+> Oh hm I guess. There was no defined semantic until now anyway. Maybe
+> Andy has something to say about it though, it's very much his pin controller.
 
-New build issue found on next/master:
+Driver is doing correct things. If you want to be pedantic, we need to return
+all possible pin states (which are currently absent from GPIO get_direction()
+perspective) and even though it's not possible to tell from the pin muxer
+p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
+different, but pin muxer might only guesstimate the state of the particular
+function is and I do not think guesstimation is a right approach.
 
----
- variable 'uflags' is used uninitialized whenever 'if' condition is
-false [-Werror,-Wsometimes-uninitialized] in fs/namespace.o
-(fs/namespace.c) [logspec:kbuild,kbuild.compiler.error]
----
+We may use the specific error code, though. and document that semantics.
 
-- dashboard: https://d.kernelci.org/issue/maestro:1781983bb469ab82952e8157bf2698e16cf6c037
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
-
-
-Log excerpt:
-=====================================================
-fs/namespace.c:4622:6: error: variable 'uflags' is used uninitialized
-whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
- 4622 |         if (flags & MOVE_MOUNT_F_EMPTY_PATH)    uflags = AT_EMPTY_PATH;
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/namespace.c:4623:48: note: uninitialized use occurs here
- 4623 |         from_name = getname_maybe_null(from_pathname, uflags);
-      |                                                       ^~~~~~
-fs/namespace.c:4622:2: note: remove the 'if' if its condition is always true
- 4622 |         if (flags & MOVE_MOUNT_F_EMPTY_PATH)    uflags = AT_EMPTY_PATH;
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/namespace.c:4602:29: note: initialize the variable 'uflags' to
-silence this warning
- 4602 |         unsigned int lflags, uflags;
-      |                                    ^
-      |                                     = 0
-  CC      kernel/bpf/arraymap.o
-1 error generated.
-
-=====================================================
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-# Builds where the incident occurred:
-
-## x86_64_defconfig on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67bea9d9a694a9a6d835d1b9
-
-## x86_64_defconfig+kselftest+x86-board on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67bea9e0a694a9a6d835d1cd
-
-
-#kernelci issue maestro:1781983bb469ab82952e8157bf2698e16cf6c037
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
