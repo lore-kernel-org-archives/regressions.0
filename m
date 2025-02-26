@@ -1,136 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4722745E;
-	Wed, 26 Feb 2025 21:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ED525E82D
+	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 22:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740606006; cv=none; b=aWZ8z7fJk0eq2Lfowog7YhOICQ/M2QuN166A+D4Iubk3AV4G5rP4PxH39iGogHJkvYJ22WpqHbTlj25BUkxbltASitZVLm97fDrARulaJRKJnVUbdKOex7Rog3AKzBbkkR9Ap3fjCVXSjTOACgKar/yQ+6rWKhxgYGhj3qtXw1c=
+	t=1740610673; cv=none; b=KkGiadaVgZzp8oT4KyK0/DU+/OctCm6f5ebshZ8JJ74ybmR3J2OfGrUzEBxQ4GHUNbtIH6wkMIIx+SbXYno7dhwWY2Zo6Xpr2V236omUDGYUNBzd49fRaLu5Q9OnJB2NFF03a5F5SO0NWiGvL3PrXu6jyTFb0efuRQmeXAornW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740606006; c=relaxed/simple;
-	bh=B5Pl0F39NNjaJkCDzCw6Eg5v+4wqR8cVZY9hkGYMii0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nTMctj16qiSyctIwlJwOA4ZWg99xwzpqg3j2qvkdCLf1O6inHO3XifWW9ebT71O1gXrwDNvSvozVacwRi8Abvskr8c1tH3mhuN/3fdlytymeRsMo4uxCvTatCD3weXP+BCZumMSu1RVNghYxiiRLLvwV1oH9MzjDU5NGf+fShiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXlaftwN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740610673; c=relaxed/simple;
+	bh=uAoX5elrHn2Yn0oC9ZZpKM2JWaqoMJBoXRL/yNmjZwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eVVUE6H47JSyLt3PFylaHM4o6qpYBIwiECUCcg3QoCBbZ+rpmLz9dHYEPGzJ1kvCmX8ROoWyp74QH/1sWGfKDD8lL4TM9vwhGMdf6fvvofauOlpzg4R24u7eySbj0q6Zq5yDlOaA5PvlUlZohqHIYEIw5VkXQzfn5Lh24xhvgqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDq3uyhC; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXlaftwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B28BCC4CED6;
-	Wed, 26 Feb 2025 21:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740606004;
-	bh=B5Pl0F39NNjaJkCDzCw6Eg5v+4wqR8cVZY9hkGYMii0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JXlaftwNhTvsbSJFi2WuyxKTGJ5z/6LPZOgY88fQ2guL2Ron8SNUAVXUqoWZ88sS1
-	 ua0oSDiMc+KZMys6juRTsdjmrTfh7Phdr92ixazCPgCvWe5sFYqoLq4IO3+JD+Mwja
-	 FWjIFZzJg4N8rVTUPRY6MQDFvKt1tfOanlUW+wsVM3NFDbqIUWpvK/HMUv5KDLLINF
-	 nI/O8dTREtghtWLxz7u+zb9s7QtmcaUl6AScLdss84Uj0tBdodQAhiw/CAD3BG4c+/
-	 cnekK6JX5y59jWXSbZmEHCRAS24H/rJ1ddG3lJ+wF0vNGgz5stFFsEicVHPTrupiXm
-	 OeKkxit2vkDYg==
-Date: Wed, 26 Feb 2025 21:40:03 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
- b9b588f22a0c
-Message-ID: <20250226214003.GE3949421@google.com>
-References: <874j0lvy89.wl-tiwai@suse.de>
- <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
- <87jz9d5cdp.wl-tiwai@suse.de>
- <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
- <20250226204229.GC3949421@google.com>
- <4e1b220d-1737-468d-af0b-6050f8cdaf8b@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDq3uyhC"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-855b77783e9so10335639f.3
+        for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 14:57:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740610671; x=1741215471; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uAoX5elrHn2Yn0oC9ZZpKM2JWaqoMJBoXRL/yNmjZwc=;
+        b=iDq3uyhCiII6AJSTmOxfqEF3DIn8GXZPSNuxXE35SPASyVT8Pr2IkyBtcPMh7HyVhd
+         gfKqKXw5IsmLPEa1WYT7JJzeWth3RZRSbMEkfyO8BZ9AQ6DfDfOu9Jd7YQzNnmVXa4f4
+         Lq5OKx5YlsOBafePs4AIDHhN9B+XUKjr6YGbeENp0nRtzp5SNk/LGjmozK7WA6f/Jvj6
+         /Ku6gWFy62y7iP0cDcqFZDSEChv+V0w+oWQvJ2nkiRgup19MjWwg1g/3Ym+WZ5nxCgLb
+         YHurnPrPp8OBYCEw3DjL4qv/8vdcXM038Q+gLlA1cmaRg8da5qee7l1hqtRIIEmjZtnF
+         PCwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740610671; x=1741215471;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uAoX5elrHn2Yn0oC9ZZpKM2JWaqoMJBoXRL/yNmjZwc=;
+        b=aXd3BNqXQjPaJBcqK5a/y+buUNCDufrJdqASDFPNh144bvVVWYA2+16Zz350EgkrtP
+         l9HR8uagmOrqbiTa+3EqOu8rhmK1+uZhVh0AYTqBwQ2o2vJ//Yw6JKuwtc3XM9kgGOwZ
+         MryLX1xNtp0HQzRC9foAuE+yxxNA9bn3g5KggJ5sxhNBoWxEYnkG97uR8BrvgKXXvspv
+         y6YUhILRK7EopQbk9zChhQO0gO8F8khHjmonIG9Sz4VC/4ozjYp1pTA2mDb7oFjCRC0p
+         5Th2c8M1xCCPJ4RD5kulvS5P4CO5zr7vCWQ9QrLXPOPpSXJKY6SC2ttmSlBQpsbtb4aK
+         0PxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmndbdwoqi/c/GDcsGeaYiTwxwt0gHDsgLEPt8n0iKJixfYqGamJyPV6Z/GR3eUHBcnFTcIcDZpHk3dQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz04/rCzeELH1jbdTU+53OLxT+Lbk+HJjyElbwWf6wM/eqjYtUF
+	go3MhXWeUrNxwW4rOgzEBlsPUqUwHnjkzOlZBrUIKdcmOfqgTVXgrcb5l6qyHjInY8G6VBm6bQG
+	3RAG/7Cv9qEK0HrM5eU3Zg7UozMWeOZDM
+X-Gm-Gg: ASbGncsZhgUDXYLYjtJsy4xyrsjMUvReYjZNHSDbEXQvEqV8q4mW1QntZ9gUcGGFQd6
+	0J2hQdilL85rl9G+4urs1bC4pwZsLX0ULe7xOp7BJAz03olIWD0QoBCSQtPKmMAxZQbqTdxB3Z0
+	L5/W8=
+X-Google-Smtp-Source: AGHT+IHhI54PJwJM0GoUBX9sVGIWPBRJiNQNO3wmQx9px7UP2uJJd3uGpfx7FMUkqB+zLq674BG+POFOOqZVQZ+UqK4=
+X-Received: by 2002:a05:6602:2cc9:b0:858:7057:2203 with SMTP id
+ ca18e2360f4ac-858705722fcmr185814339f.4.1740610670754; Wed, 26 Feb 2025
+ 14:57:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e1b220d-1737-468d-af0b-6050f8cdaf8b@oracle.com>
+References: <20220621104617.8817-1-tzimmermann@suse.de> <CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com>
+ <d2562174-eebe-4462-9a9a-03936b3bcf89@leemhuis.info> <b4d28b98-a85c-4095-9c1b-8ebdfa13861c@suse.de>
+ <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
+ <da4288a6-96cc-4095-bd73-d66b68e9ed01@suse.de> <CAEXMXLQw1yqUGbWcrKZdOuGvA4eZMG0utiyQ2PVRvTeuFedGbA@mail.gmail.com>
+ <9c902ac0-a94d-4465-98ff-840132e482b1@suse.de> <CAEXMXLSLau0sEy8WSZ3=ofK97xP8aPcDQEnT=JFkkt7K=Rzivw@mail.gmail.com>
+ <900b873f-6eba-4dba-b155-dc5f7594becf@suse.de> <CAEXMXLTT5m0Po_wz0ywRHFetV6e080AJwy8f99Zb9R_afzafRw@mail.gmail.com>
+ <844f1fa4-6f47-4386-878f-739d2819605e@suse.de>
+In-Reply-To: <844f1fa4-6f47-4386-878f-739d2819605e@suse.de>
+From: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>
+Date: Wed, 26 Feb 2025 22:57:38 +0000
+X-Gm-Features: AQ5f1Jpobisr-w9TMwMuIrlUF7jBzuaRQR1sUN7eX0a5b9SfNPQBMIHwVGEKmfc
+Message-ID: <CAEXMXLQyOY=dXcYoSc9=LVVWb1BjXLd3_Lo3LRNor_STT+H+WQ@mail.gmail.com>
+Subject: Re: drm/fbdev-dma: regression
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, dri-devel@lists.freedesktop.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux Framebuffer <linux-fbdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 04:01:18PM -0500, Chuck Lever wrote:
-> On 2/26/25 3:42 PM, Eric Biggers wrote:
-> > On Wed, Feb 26, 2025 at 09:11:04AM -0500, Chuck Lever wrote:
-> >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
-> >>> On Sun, 23 Feb 2025 16:18:41 +0100,
-> >>> Chuck Lever wrote:
-> >>>>
-> >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
-> >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
-> >>>>>
-> >>>>> Hi,
-> >>>>>
-> >>>>> we received a bug report showing the regression on 6.13.1 kernel
-> >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
-> >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
-> >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
-> >>>>>
-> >>>>> Quoting from there:
-> >>>>> """
-> >>>>> I use the latest TW on Gnome with a 4K display and 150%
-> >>>>> scaling. Everything has been working fine, but recently both Chrome
-> >>>>> and VSCode (installed from official non-openSUSE channels) stopped
-> >>>>> working with Scaling.
-> >>>>> ....
-> >>>>> I am using VSCode with:
-> >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
-> >>>>> """
-> >>>>>
-> >>>>> Surprisingly, the bisection pointed to the backport of the commit
-> >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
-> >>>>> to iterate simple_offset directories").
-> >>>>>
-> >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
-> >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
-> >>>>> release is still affected, too.
-> >>>>>
-> >>>>> For now I have no concrete idea how the patch could break the behavior
-> >>>>> of a graphical application like the above.  Let us know if you need
-> >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
-> >>>>> and ask there; or open another bug report at whatever you like.)
-> >>>>>
-> >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
-> >>>>>
-> >>>>>
-> >>>>> thanks,
-> >>>>>
-> >>>>> Takashi
-> >>>>>
-> >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
-> >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
-> >>>>
-> >>>> We received a similar report a few days ago, and are likewise puzzled at
-> >>>> the commit result. Please report this issue to the Chrome development
-> >>>> team and have them come up with a simple reproducer that I can try in my
-> >>>> own lab. I'm sure they can quickly get to the bottom of the application
-> >>>> stack to identify the misbehaving interaction between OS and app.
-> >>>
-> >>> Do you know where to report to?
-> >>
-> >> You'll need to drive this, since you currently have a working
-> >> reproducer. You can report the issue here:
-> >>
-> >> https://support.google.com/chrome/answer/95315?hl=en&co=GENIE.Platform%3DDesktop
-> >>
-> >>
-> > 
-> > FYI this was already reported on the Chrome issue tracker 2 weeks ago:
-> > https://issuetracker.google.com/issues/396434686
-> 
-> That appears to be as a response to the first report to us. Thanks for
-> finding this.
-> 
-> I notice that this report indicates the problem is with a developer
-> build of Chrome, not a GA build.
-> 
-> If /dev/dri is a tmpfs file system, then it would indeed be affected by
-> b9b588f22a0c. No indication yet of how.
+Dear Thomas,
 
-Just to confirm, the commit did change the directory iteration order, right?
-The theory at https://issuetracker.google.com/issues/396434686#comment4 seems
-promising.  Just the exact code hasn't been identified yet.
+Could you check if the patch got lost in review?
 
-- Eric
+I can confirm that mainline is still broken since this 2024/May regression.
+
+Thanks,
+Nuno
+
+On Wed, Dec 11, 2024 at 9:07=E2=80=AFAM Thomas Zimmermann <tzimmermann@suse=
+.de> wrote:
+>
+> Hi
+>
+>
+> Am 09.12.24 um 14:56 schrieb Nuno Gon=C3=A7alves:
+> > On Mon, Dec 9, 2024 at 1:43=E2=80=AFPM Thomas Zimmermann <tzimmermann@s=
+use.de> wrote:
+> >> Thanks you so much for testing. I'll prepare a real patch. Can I add
+> >> your Reported-by and Tested-by tags?
+> > Reported-by: Nuno Gon=C3=A7alves <nunojpg@gmail.com>
+> > Tested-by: Nuno Gon=C3=A7alves <nunojpg@gmail.com>
+>
+> Thanks a lot. I've sent out the patch for review. Apologies if this took
+> a bit longer than expected.
+>
+> Best regards
+> Thomas
+>
+> >
+> > Thanks,
+> > Nuno
+>
+> --
+> --
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Frankenstrasse 146, 90461 Nuernberg, Germany
+> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> HRB 36809 (AG Nuernberg)
+>
