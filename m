@@ -1,54 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599622170B;
-	Wed, 26 Feb 2025 14:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B95D22154D
+	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 14:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580073; cv=none; b=RatO5sVk+Tyi3tljJrKi12Qh602ubQ9RhQmXR9PkWXwHAIL+UJqcjNkHCri9j6Z9U4SI7jFimD71JDr6KldhSHvZb/vvWEQIGovFBfgcVnOyalQJGedHTYiZRyxoiJVx2Lf+Imf8Q8gRUC1rYLjb/5hCwRVwwgNO/bzW9PrSBz8=
+	t=1740580564; cv=none; b=SQ0W8KkhhE1Bm9dOi71zgA7b2fTuX80wwnZESXzJ3MCsYb8kZpSuSLnQO9Ejg7f4ftJnpS5yKC44j29Y/xaWJ1zP5Jg+y47ZHDRyhI+OVAvEAYWHeosvdVPQewTNLX3/jebwcIPbQdjGIZLwTrVniY99RLC38+bBXIFNy1IXhm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580073; c=relaxed/simple;
-	bh=URbrqijczCz9YHLmftvryXYUcHZaC1Q8rW1h0dJ02CI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrXVEaCsUz0FiwBYC8s1gidRBI5c9pgZFseTHDZz8NcRGJf6BA6MMRQEp6zp90WIVK7Uw6Xhd3PN+33ZbFgLpImpZkjXXnckEK5R8BiTdQ7qo/mRdmksgVvxJOaTE488QyO0RCZwYJ5rxDmD2IlkeRZCS96KI7IgET+guqz3AbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pnlSJqAb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740580564; c=relaxed/simple;
+	bh=G/ve45/onfpAnZ3RV1JGsK3x9yIrXwNuU5Lk2KU+J0I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DgESX6hBHnF+PwK7yxe4BSvn2eHt3qn5L7xPkxm+cCCvFlrANy6iOFNXiTaS0rIJSw1hFzhrg+OvK8BmdUBofNBGBeIk9b1oRtSmu6WXm3Oq5CJh7i3tLV7A4BVXaHuVjtitlKXEHVUFe5ZwKYI1wQCp3v93pDaNxE0KwDtaCkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q0atVV/M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVRi0DoC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q0atVV/M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVRi0DoC; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pnlSJqAb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11993C4CED6;
-	Wed, 26 Feb 2025 14:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740580073;
-	bh=URbrqijczCz9YHLmftvryXYUcHZaC1Q8rW1h0dJ02CI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pnlSJqAb9TG22fWNHv9q/yx3p/zGg1pkLIfYrJQEfG0XJ1uuV7yWxbqRmforSct4n
-	 dyk7HeNoa5uNgZlWuxE6CiO3DlBxUnDWoa8wZemWlMRuwkEBIND0d76jvFh+xvrauW
-	 c4ZFfGx9+EqDDEMqxpAEZYGWJL61qGRWcy9r4ODU=
-Date: Wed, 26 Feb 2025 15:26:44 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q0atVV/M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVRi0DoC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q0atVV/M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVRi0DoC"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 403E321114;
+	Wed, 26 Feb 2025 14:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=Q0atVV/MiLpk65gHZtcnmm17Cw6+1XYgeb3OIjaImyV7kTUJB68fMnxBSgh7NXa4GLYGW6
+	xqcLJ661ZTl99TMSDTYFyah0eiScr6fK8BwOvTyL/HevXnA3Z+yn1nduOuSCFEzxxNpXiq
+	6Qc2F9s09yCuILkPsnQVr4Rb3tY6KRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=ZVRi0DoCeBq3f8n9uu9uFDoPsxCpj0NzrOSKbTSTPeU19SfRmDEu0btOpyohSxpjSceX1n
+	Tdw6lKgRKTvLqCBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=Q0atVV/MiLpk65gHZtcnmm17Cw6+1XYgeb3OIjaImyV7kTUJB68fMnxBSgh7NXa4GLYGW6
+	xqcLJ661ZTl99TMSDTYFyah0eiScr6fK8BwOvTyL/HevXnA3Z+yn1nduOuSCFEzxxNpXiq
+	6Qc2F9s09yCuILkPsnQVr4Rb3tY6KRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=ZVRi0DoCeBq3f8n9uu9uFDoPsxCpj0NzrOSKbTSTPeU19SfRmDEu0btOpyohSxpjSceX1n
+	Tdw6lKgRKTvLqCBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8F1B1377F;
+	Wed, 26 Feb 2025 14:35:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BI1XOMkmv2dNRwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 26 Feb 2025 14:35:53 +0000
+Date: Wed, 26 Feb 2025 15:35:49 +0100
+Message-ID: <87eczk4vui.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+Cc: Takashi Iwai <tiwai@suse.de>,
+	regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	stable@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
- b9b588f22a0c
-Message-ID: <2025022657-credit-undrilled-81f1@gregkh>
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit b9b588f22a0c
+In-Reply-To: <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
 References: <874j0lvy89.wl-tiwai@suse.de>
- <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
- <87jz9d5cdp.wl-tiwai@suse.de>
- <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
- <87h64g4wr1.wl-tiwai@suse.de>
- <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+	<dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+	<87jz9d5cdp.wl-tiwai@suse.de>
+	<263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+	<87h64g4wr1.wl-tiwai@suse.de>
+	<7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
+On Wed, 26 Feb 2025 15:20:20 +0100,
+Chuck Lever wrote:
+> 
 > On 2/26/25 9:16 AM, Takashi Iwai wrote:
 > > On Wed, 26 Feb 2025 15:11:04 +0100,
 > > Chuck Lever wrote:
@@ -119,15 +190,14 @@ On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
 > this. I'm already two steps removed, so it doesn't make sense for me to
 > report a problem for which I have no standing.
 
-Ugh, no.  The bug was explictly bisected to the offending commit.  We
-should just revert that commit for now and it can come back in the
-future if the root-cause is found.
-
-As the revert seems to be simple, and builds here for me, I guess I'll
-have to send it in. {sigh}
-
-Takashi, thanks for the report and the bisection, much appreciated.
-
-greg k-h
+Yeah, I'm going to ask the original reporter, but this is still not
+perfect at all; namely, you'll be missed in the loop.  e.g. who can
+answer to the questions from Chrome team about the breakage commit?
+That's why I asked you posting it previously.  If it has to be done by
+the original reporter, at least, may your name / mail be put as the
+contact for the kernel stuff in the report?
 
 
+thanks,
+
+Takashi
