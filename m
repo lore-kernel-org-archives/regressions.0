@@ -1,174 +1,214 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A350270028
-	for <regressions@lists.linux.dev>; Wed, 26 Feb 2025 23:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D95226520
+	for <regressions@lists.linux.dev>; Thu, 27 Feb 2025 09:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740613597; cv=none; b=rWIZ58tE3YrMlcn+Vg7ViYzMea3mZzWt52EQoaLSx6Z8cVJlFbOjnbjXNJAIIc/CcBXbL4Jaf6+0qdL872jY+4FT0XGopzIHR2OPgCVoa0YQvNqlgwyWUelUVVzWnSCO6EGgL7Ryn5lBJPvY13WSqK9R8mT/rhTchlU15jirEmA=
+	t=1740646901; cv=none; b=q6bwTQuPlbEkU46nMC8LJmj+lrgCCHgH0juHgQYUiTyRo3gOwSu+ozJo+ilIVPc+CZBDsT/yz7BYICX0VQ/+hmtQw95oLOasxf7lu1kKZRwkagH5DvB3ERrZxEAOU7pt6hGCKuyd7PdOa0Qqf11eASAQh6cbd/HVWMg0Ccj1wqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740613597; c=relaxed/simple;
-	bh=xmIq/W+6KTZJx0jkgAcBnkZ10aGBzJKf2J/843j1erk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HBjMXGBjzoPPVnemweY/x0kSA0FbQu2RFxzmNMZY9cCReKkM0R+mUEhYc8mDZ/SfstBsiJ4aV+l33Vu2pMwAaqKe/B9KI4L5MzyGoqFUdnMyzWfW31yP/Yg7htxj8MNS63wSHYC3o6NibkxBYwADhuNuZnmJaDWdYXNI6j9P0ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=BP41/Xs6; arc=none smtp.client-ip=212.227.126.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1740646901; c=relaxed/simple;
+	bh=2UHmA5NmbtGuZWzqU3YCusQHf6qU4KNq9ycwbPXIzYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E7r2XeNy8s98jkeVF1Im51XnMG0UnCyzqyp4xAp/Zxt7CVO2sKu1/jWZqyC+UZmBVpP67+VOJluVo9Ou+/+J7djIjrpEiJtZpo5bj+k/sFNNKw3EmCrCiWku1J/oJQKiF/PrRoyVI3+b9bzV7aXhHZ+mXf236D6B03pA+WoXL4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bc+JZOuz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MNWT+R7E; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jfL7SxB6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K7vjKmly; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="BP41/Xs6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1740613577; x=1741218377; i=christian@heusel.eu;
-	bh=ctqQsUfu4Pqg3mtV+bUnrVknuC4ZOOdHjvbmVoAs19w=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BP41/Xs6dVBij8JWWS18tzHgPZoQJRbnJBU4p8XsgtLl/3LUWwLMirC/pmtLkAyj
-	 F2fhLz5oku7lzbyeenmQKRdqHAiqH4gn41cRRfeQL/EHYAjnct8dWbK0clyl3XlC1
-	 Wd2OjAHRRspH72q46AmTRCJG1Iw3V59HrF5vK5GqvJOZMLTY3QiJ5hZv9BqHdYqa+
-	 31Aot+nO1tUzSySeaGEHlbEUacvFyCNbIfp7mi0ZBS+O2UYVVKm4i6muBT9Wc++Nl
-	 UBK6pjvmFSqc+mi8FrsQXDBN5b2cf0RE6t6xAzGRKrxDVrJUrY1py0XLSXm4TqA2w
-	 Klop4FM8JEAEhn/oXQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue012
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MPK73-1tx9KX4B5R-00XkME; Thu, 27
- Feb 2025 00:46:17 +0100
-Date: Thu, 27 Feb 2025 00:46:16 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Sean Rhodes <sean@starlabs.systems>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	quintafeira@tutanota.com, Arnd Bergmann <arnd@arndb.de>, Desnes Nunes <desnesn@redhat.com>, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-Message-ID: <b80dc39c-cfa5-4064-906b-4cbc2ae8fad3@heusel.eu>
-References: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
- <2025022429-powdery-possibly-e4e5@gregkh>
- <CABtds-2TDWCHqOa+Di2Yh074RukUrjEhKGC82DWZ_7ysK-NCrA@mail.gmail.com>
- <50e67317-62bb-46aa-a539-54bf6dbb245a@heusel.eu>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bc+JZOuz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MNWT+R7E";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jfL7SxB6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K7vjKmly"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3D1D11F38A;
+	Thu, 27 Feb 2025 09:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740646897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U0jnjOlTwNM/eDNzI+261ff3PbKfT8p5rqqRp8agbl8=;
+	b=bc+JZOuz2nlAjeivEm4wZjvsykbU+CBWp2pNRj4+aLtO2afdsZVUFWVj/7cK8iyGg4FiSy
+	8i0Gn/j/8TKGgxK9qVQBTOiwoeu8iXYI7pGcJ/t0WdflqoDvbcIdUBYawQifdpzqTaNZCN
+	QteAiSGzp2ID7h5R821cOgHkPIH7uRE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740646897;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U0jnjOlTwNM/eDNzI+261ff3PbKfT8p5rqqRp8agbl8=;
+	b=MNWT+R7EV2022VyFbYq1czP9EYqh8ybfk+y+HsS5OSlvFjl5OP4fhbjxJiK4XUE9JTL7JU
+	6y7XT+CdVa21c9Cg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740646896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U0jnjOlTwNM/eDNzI+261ff3PbKfT8p5rqqRp8agbl8=;
+	b=jfL7SxB6hGbWoberPj/X6pwfLIMvdBHggdyl1fFC3S39q3LjiDKAXp7AwLp4yG6UT3GCFb
+	N2+Lj+Yyt5MNauCr5mCJNqerieU9TwpCwfEQSkYNEdPd1CjaOtrpV6m4K8FTS5n7NBXZuN
+	DBZItNcosqYQ/1mh9yKDjkYW3zYICIM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740646896;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U0jnjOlTwNM/eDNzI+261ff3PbKfT8p5rqqRp8agbl8=;
+	b=K7vjKmly4VGwM7RSe36byfn+r+QN0vxYwzO5bIyKcIZAMqCnI8QvjVfJUXxO1oG/kutcbX
+	2LELLhqYemzaKFBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F50A13888;
+	Thu, 27 Feb 2025 09:01:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id llZ0AvApwGccCwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 27 Feb 2025 09:01:36 +0000
+Message-ID: <5d13fad0-c5d2-4816-b71a-fceeb03589c3@suse.de>
+Date: Thu, 27 Feb 2025 10:01:35 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t3fekkihnptrywhs"
-Content-Disposition: inline
-In-Reply-To: <50e67317-62bb-46aa-a539-54bf6dbb245a@heusel.eu>
-X-Provags-ID: V03:K1:uPSfHjWljAB02VWFSZFx9t8NKq9J7nWMyM8Ak69djMLuqRtTYqz
- UzABhDOFif3MsGVpkKwL/M1WRpFaKo8EnTjma3AhzBQzCyRtYuZImpGNe6IWYrrTCwzj+hZ
- PdUwKIO9AgdTeIdnpo2jzAkWmw5Ov1nBnR+YgkASpII/VIF48knzTErjEv+yj9oN9WFQUFa
- D1lBBbM6yL52rjiP/qBTA==
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/fbdev-dma: regression
+To: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux Framebuffer <linux-fbdev@vger.kernel.org>
+References: <20220621104617.8817-1-tzimmermann@suse.de>
+ <CAEXMXLR55DziAMbv_+2hmLeH-jP96pmit6nhs6siB22cpQFr9w@mail.gmail.com>
+ <d2562174-eebe-4462-9a9a-03936b3bcf89@leemhuis.info>
+ <b4d28b98-a85c-4095-9c1b-8ebdfa13861c@suse.de>
+ <CAEXMXLQEJPVPyqLpH6C7R6iqhhKBpdNS9QeESbEdcmxB70goSA@mail.gmail.com>
+ <da4288a6-96cc-4095-bd73-d66b68e9ed01@suse.de>
+ <CAEXMXLQw1yqUGbWcrKZdOuGvA4eZMG0utiyQ2PVRvTeuFedGbA@mail.gmail.com>
+ <9c902ac0-a94d-4465-98ff-840132e482b1@suse.de>
+ <CAEXMXLSLau0sEy8WSZ3=ofK97xP8aPcDQEnT=JFkkt7K=Rzivw@mail.gmail.com>
+ <900b873f-6eba-4dba-b155-dc5f7594becf@suse.de>
+ <CAEXMXLTT5m0Po_wz0ywRHFetV6e080AJwy8f99Zb9R_afzafRw@mail.gmail.com>
+ <844f1fa4-6f47-4386-878f-739d2819605e@suse.de>
+ <CAEXMXLQyOY=dXcYoSc9=LVVWb1BjXLd3_Lo3LRNor_STT+H+WQ@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAEXMXLQyOY=dXcYoSc9=LVVWb1BjXLd3_Lo3LRNor_STT+H+WQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -4.26
+X-Spamd-Result: default: False [-4.26 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.16)[-0.819];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:tIfZPVB8hoc=;9QPFQv+81lDnTTuxwuwkvka1h4l
- oQMzY+6/FBUUF1JXdH3WFoRuQv7MNTZMWaaa1lbcOHfp38huSaeSx0C766zYEeOWzmjdhljQd
- GaqQmfbOCS2BESLJVsenYIGsoKqeJaTijCth4vORPdIhNM8sHRPn6zZRHfIQNmS7aQF41DVpO
- JCdAU1WvI1wmTyny6kFe4MhucXe8Cms8ZYgCYaxcBxS0rYkV/cb/UbdHtkV6csX7P6i+8d4HA
- 68MydEQMm4NeNmPL+1WZXSgYYrVbb/d86I9KUY5rBSAJ8HjsPZ1sSKoJxTfKBQ5jUO071hsii
- i27fT4tvvypMdnnssR8txQSlx9s4ICesRZn/eosi2Vv7xGtLMEqV0Lh5zN2tGJRmQCcOd1WVV
- O6BTcJ/gXn213/eb7I/mZPTNEQiVauf0+IsjNhR2/wtOA6OUkfpxDhK7EeYIdeORKBq7AZHTN
- vQiH99D3ae8nyZ+cLrmEiqXt/WKC9KohyHPgedjCsAjpYzm7rQsU6VInqVdDPHcqIIqrG/8ur
- wrdxZ4IgfcQEfzvbIRkZa/xg+K6REcyb3j7Gpv+erysUMIaCdoxKWl/Kno1GVFzIIOoBFLrBS
- HpVV2XK5ZK3VGoA0sGZN88FGUUNLKA9MbhzX61wItwIDCPOAkWttVtYy0cMcuVpaEpZHF3yuG
- SvdcWeeD52aUJFAi6H1ElxbszR439m4NXAM7usb2QlKgXXWr5QBHx4HX+8uzsYpQ4vfDrWh3c
- ua9fnvMZvdG9XY8XCIt8sllvhEywQxl01Bk9YmP1KPanEql9w/NPBBFdbKr7WfzXk4VgqrXRy
- VTwCn/tszj5g/XkT+O2AlderoCXIOknl0lnwk9jDrviA7lMkZoKlFWRXBANxMz8o2rcdti3LU
- C5SExF0bw/ZFWCGlELWqMvHdJ9BM7kWASU835HqsFQKe97WwACGmnM2rGtTTyY4z5RccqbmUJ
- qMB2yhVq140/zoYx3nOp4Hb/msVyzZuEaP6vUO3iLj7ixMxFgf7qYRAlAxrq1ZHbuKYbNIRMv
- 9N2jajGtyi6+rR2k8WCguO2DC3c7aSjFP7BPux3wWjxPauo6cg37L5s79eEcyNQ6WoUXHjcZx
- 9hJI160sCxJ6ws+ldaqzSImFa7UBC/J81P9NEWzyMqBPKz/5cRhrsnt0teNs3Kaq05+FP1A/F
- PrtK3v150HwcNczbick0xuKEFiuPrk2HBb2w6CFdOFQw7mKqKTW/qL54gsciYnNHKcEQaC/MA
- i+m6QPqJBA3qETnhLLlkMfTUva//7M1B5iMk9oH4cLJ3IBAal9lHa5UAaYiCp7vmZ13jcx2E7
- BLRq5nw+BewlviXizKzymWJH6rpFhJU1lpJTcAb5dDF8S3I76pjrADeLgrQcDMhG7KsW4UI5t
- ZkcafnmIr3DiatvA==
+X-Spam-Level: 
 
+Hi
 
---t3fekkihnptrywhs
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-MIME-Version: 1.0
+Am 26.02.25 um 23:57 schrieb Nuno Gonçalves:
+> Dear Thomas,
+>
+> Could you check if the patch got lost in review?
+>
+> I can confirm that mainline is still broken since this 2024/May regression.
 
-Hey Sean,
+You're right. The patch got reviewed and then I forgot to merge it. It's 
+now on its way into the upstream kernel. Thanks for the note. Apologies 
+for the delay.
 
-On 25/02/24 10:27AM, Christian Heusel wrote:
-> On 25/02/24 09:09AM, Sean Rhodes wrote:
-> > Give me a day, two tops please; ideally we can just push a patch to fix=
- the
-> > trivial issue and keep the major fix :)
->=20
-> Sure this is fine by me, I guess you can just hold off applying the
-> revert patch that I have sent after gregs comment.
->=20
-> If you need any testers for new patches or debug patches I'll happily
-> build them and send them to the reporters on the Forum.
+Best regards
+Thomas
 
-Did you already have a chance to look into this or should we go with a
-revert for the time being? Just asking because you wanted to come up
-with something quickly :)
+>
+> Thanks,
+> Nuno
+>
+> On Wed, Dec 11, 2024 at 9:07 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Hi
+>>
+>>
+>> Am 09.12.24 um 14:56 schrieb Nuno Gonçalves:
+>>> On Mon, Dec 9, 2024 at 1:43 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>>> Thanks you so much for testing. I'll prepare a real patch. Can I add
+>>>> your Reported-by and Tested-by tags?
+>>> Reported-by: Nuno Gonçalves <nunojpg@gmail.com>
+>>> Tested-by: Nuno Gonçalves <nunojpg@gmail.com>
+>> Thanks a lot. I've sent out the patch for review. Apologies if this took
+>> a bit longer than expected.
+>>
+>> Best regards
+>> Thomas
+>>
+>>> Thanks,
+>>> Nuno
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+>>
 
-Cheers,
-Chris
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
->=20
-> >=20
-> > On Mon, 24 Feb 2025 at 07:07, Greg Kroah-Hartman <gregkh@linuxfoundatio=
-n.org>
-> > wrote:
-> >=20
-> > > On Sat, Feb 22, 2025 at 10:22:34PM +0100, Christian Heusel wrote:
-> > > > Hello everyone,
-> > > >
-> > > > on the Arch Linux Forums[1] multiple users reported issues with the=
-ir SD
-> > > > cards not being recognized during boot or that they needed to re-pl=
-ug
-> > > > them in order for them to be recognized.
-> > > >
-> > > > One user tracked this down to the following commit:
-> > > >
-> > > >     235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt =
-based
-> > > detection")
-> > > >
-> > > > They have also created a report on the kernel bugzilla[1], therefor=
-e I
-> > > > cc'ed them to this thread. We found that reverting the above commit=
- on
-> > > > top of v6.14-rc3 fixes the issue.
-> > >
-> > > Thanks for the report.  Do you want to send a revert for this, or do =
-you
-> > > need us to create it?
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> > >
-
-
-
---t3fekkihnptrywhs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAme/p8gACgkQwEfU8yi1
-JYVnIxAAqLpoG+XE60RF+L5eoOT/wMj8bv+R72pnVogrISgDYGIdkpFKjvWZrhlK
-if7IpyofhELQPYU5GojKKOZl6zwEzOl0JdTYllly1AGj+f/HsjXHsUdB2rkWaeeS
-ZyVLz3d3S1s9s/ajgAwmiv050ySbHLgwJZ7hgo6kk5iSbNqVRWnHmYX4UovlJlcy
-AgiQo0beS/o1ESmipiqMFx1GPMSqGOS8vdszgicH8nKWSf+YESun46p8DXCVHmhN
-NDwIdhaPWFOiBrLqsQpcIdqwTMJ5khCumD0oUPudflUb0lormId4wMHdNnnH8Gxm
-8i0g0avJv6fUiMa1QHRc7V50ap0rWa/LEDyTxDLBDKW4UlvO6phtZA2q0JA/B/iX
-lsy8OC9Aa/eGneDNdQJ3vqRtJWBGGioikzpp7GjHZD9Cnz/nvLi7dHlgvnpWCje0
-UUqHxvRaQO+Q3eSh2tNIh+BW2rVOCCePz3Se9dBAwkA76tThLbIhfHy02U2Vl3jA
-Wk3oH4Sd386KI0YnH2S77YfDrL5d0s8mfv41X3JUHer8SXCj6TTL7ZwPofIE0Hya
-U2xhd9+k1y4zyGJAh9jSGSDPIQQrr+w6He5gaqwJ4xzrcfCix9ZRbRw9JQ7wX3Ow
-U0ojC/bK+3BNFngmDkluuEjqdks4lpLoj23toxPTkEdNCBNpNTQ=
-=tFe8
------END PGP SIGNATURE-----
-
---t3fekkihnptrywhs--
