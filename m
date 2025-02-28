@@ -1,110 +1,140 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14F5170A11
-	for <regressions@lists.linux.dev>; Fri, 28 Feb 2025 17:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD11DED69;
+	Fri, 28 Feb 2025 22:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740764686; cv=none; b=ca8I+JglY7m7N5XQZpnLHQKCAkjPe7LSP3obHZdSHshZduM6TSVHZH3FOd1a4l2CFGxnD3JqJlSfbLROhGMxgAWbiGXXRBXuSjjZs6C46RZFzm9/cQcpvITIXJ49V8pZ1Cv++xxwCL58+4C8RgWAV56G6Cfyb1Z+Kd0aEo5ml9g=
+	t=1740780281; cv=none; b=JvQCm1YKSbodrhZhBWMJl+2QDtjuGb7rCpBi4kHSoxtawH5MYHS6WYuAbQlFEbg/Wkx3v8RBdph5ztrqqb1t+b75SDooUjhHik45Lre1/U/h/P4iVvhP2S5DSrA8/hRqxvt/brF4onyJ7UVXoFkuV3eARpoSBi/JVjyB5Xk6P9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740764686; c=relaxed/simple;
-	bh=ZRCj/8TAJAuJJJ0i17Nh93VZ/UIjIMRuizn2fdB09cA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ATvvpWcPNEBUrc4l0Xeuj/eh5x2S7IDbotXWyOjGAecXzS//1k4nexlt9CcJee850NrXjn0/22QrAtTERmqeQlbHLS47yQO+SbifK0Tg4APwyL3kPR+wlpH8lrkc4X2CGR0NlcXwxLzY21PKTt3NR3ScGehmxa5ngBG9DX7fADg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=fk9sbzBJ; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1740780281; c=relaxed/simple;
+	bh=MUQDoNVnstDnVvNKgrw8EpXiQXdM6PLiArpkYlRqEQc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gwJaQbEPz6Y4t2eWAEJFdRFym88I4aJzDgI1KZ5AkfkHlIns/LIZTqqI6ZLxrGS7ZPPDiwPDD9/efU+CzZFv1ZAL+MPj2h5V9JKrU8b5B1E0MkytflYTuHsNuciBHdvxOPeygNcfKow/17lMxxYmWppbfT74iWzTL+QeAnJJniI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UjkH4cOW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="fk9sbzBJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1740764682; x=1741023882;
-	bh=ZRCj/8TAJAuJJJ0i17Nh93VZ/UIjIMRuizn2fdB09cA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=fk9sbzBJMBVZrv7z3GCpRvHpsWTvPCNjq+XIfPVndaeg1kWMHvmDQL3CYq+tX3i0q
-	 T9tHtYfm1uvQqnoHlWSPR5XNRIIgppZI+KXKCblrafxV+OmOSGTT1Ufo/pWAtwj1VT
-	 I7S6DnOkDMieOkOxQTMGa0sFEp05wlJqyg1PWl/N5MX2SRPPFMP36zvlMauBKWKQc0
-	 15yXL3S/xqbl1bR++2sc8rhrqKkaRdi0h0JI7Jp2bJst58tF8Z/bZsUwNM1/Pkv8Qx
-	 MfsW4p+rDi8F/jhkO13BcMiabRZsjTkQuYw2VtI+G7Rw/4B9fR8WIJmUU5clFIfD/b
-	 RJNf6S4oJQnDg==
-Date: Fri, 28 Feb 2025 17:44:38 +0000
-To: Peter Seiderer <ps.report@gmx.net>
-From: fossben@pm.me
-Cc: Christian Heusel <christian@heusel.eu>, Ming Yen Hsieh <mingyen.hsieh@mediatek.com>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, linux-mediatek@lists.infradead.org, linux-wireless@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925 wifi throughput halved with 6.13.2
-Message-ID: <JZIl1iVcv9U3s8KnXJqR-ZKFBUzbVvbqR3NN0LO4as5_yXxPPS4yIfzGK22Z6rNZOyOysBzWPZGQgL-8eychueJtr7TvC3A0I-s3CVHHDUo=@pm.me>
-In-Reply-To: <20250228161420.11ac4696@gmx.net>
-References: <b994a256-ee2f-4831-ad61-288ae7bc864b@heusel.eu> <20250228161420.11ac4696@gmx.net>
-Feedback-ID: 134317997:user:proton
-X-Pm-Message-ID: a944d88e39b523d475fe769a680d961766ce4442
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UjkH4cOW"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51SKVQ4t013251;
+	Fri, 28 Feb 2025 22:04:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	IWhfMrvpOJB0f+bCrEQzkQMytTCPf8D+9gtOL19wckY=; b=UjkH4cOWzU2ZRekg
+	qmJC2+jj40zJg6wsXewkrIGcH0C/fRAVP8ey+qKiqU/P0BoCRVwKY0296mICiN4F
+	+iIBGQTp9zkL03bw1mBECwt31XxJXLdRA1HQkQZ7EQOHvK4Lhn9kBeeCeuXEZZPb
+	BBS7Z4YrJPsc2plgR9ge3ij0BmSGqshdeY8xljVciKjByHuRUJ1xuFbi+4RvX7XJ
+	CJrPvxmPug/F9otcz+vrWzwYqpdVWepBYS58lRtlilfX7eFglek8350BoZlgwcZg
+	70kHVmffrwSEidhKMRy/2eRlvWqOdEX+GomtQ/NUDjV8Xns0Btt3w2a40KEmnGBO
+	DcJF6w==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453m8ng53q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 22:04:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51SM4JFr001656
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 22:04:19 GMT
+Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Feb
+ 2025 14:04:19 -0800
+Message-ID: <8bfa88b3-484e-4933-bc59-9dc12e37e691@quicinc.com>
+Date: Fri, 28 Feb 2025 15:04:18 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
+ modules
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: Nicolas Schier <n.schier@avm.de>, Masahiro Yamada <masahiroy@kernel.org>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kees Cook
+	<kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+        Ben Hutchings
+	<ben@decadent.org.uk>, <regressions@lists.linux.dev>
+References: <20240727074526.1771247-1-masahiroy@kernel.org>
+ <20240727074526.1771247-4-masahiroy@kernel.org>
+ <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
+ <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
+ <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
+ <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb>
+ <80cf4e9a-5d49-4bc3-8160-1b23c31d4d36@quicinc.com>
+ <2025022020-armband-clock-69af@gregkh>
+ <13fac9ee-cad9-466b-9216-8c0516600b03@quicinc.com>
+ <2025022057-reclusive-overreach-ac89@gregkh>
+Content-Language: en-US
+From: Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <2025022057-reclusive-overreach-ac89@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: P-AYYjMP0kf1tSQwQK5iwcQT9IgwroBt
+X-Proofpoint-GUID: P-AYYjMP0kf1tSQwQK5iwcQT9IgwroBt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-28_06,2025-02-28_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ spamscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502280160
 
-Hello all!
+On 2/20/2025 10:43 AM, Greg KH wrote:
+> On Thu, Feb 20, 2025 at 10:24:32AM -0700, Jeffrey Hugo wrote:
+>> On 2/20/2025 9:49 AM, Greg KH wrote:
+>>> What do you need/want to parse the .config file in the first place?  Why
+>>> not rely on the generated .h files instead as those can be parsed the
+>>> same way as before, right?
+>>
+>> Two usecases -
+>>
+>> First when secure boot is enabled, DKMS looks for CONFIG_MODULE_SIG_HASH to
+>> figure out signing the modules so that they can be loaded.  Removing .config
+>> causes an error in DKMS and the module signing process will fail.  The
+>> resulting modules (already compiled successfully) will fail to load.
+>> Whatever the user needed those modules for will no longer work.
+> 
+> Shouldn't the "normal" kbuild process properly sign the module if it
+> needs to be signed?  Or are you trying to do this "by hand"?
+> 
+>> If the user is on Ubuntu, and has built a kernel 6.12 or later, they need to
+>> build upstream DKMS and use it as none of the Canonical provided DKMS builds
+>> have the fix.  This feels like a situation that would make the user afraid
+>> to upgrade their kernel (to your point above).
+>>
+>> This feels very much like an "at runtime" issue, assuming external modules
+>> are supported.  I may be wrong here.
+> 
+> external modules can be broken at any moment in time, you know that.
+> There's never a guarantee for that at all.
+> 
+>> Second, our usecase is that we look at the .config to tell if a particular
+>> driver is included in the kernel build (config =y or =m). This driver
+>> provides diagnostic information which is useful to our product, but not
+>> required for operation.  It does not have headers that are exposed to the
+>> rest of the kernel, so checking the generated .h files does not work.  If
+>> the driver is not built, we provide a backported version that is then built
+>> out of tree.
+> 
+> You can check the same .h files for those config options, no need to
+> manually parse a .config file.  What's wrong with including
+> include/generated/autoconf.h properly?  That's what the build system
+> uses, right?
 
-Christian provided me with a linux-mainline-6.14rc4-1-x86_64 package to tes=
-t with today and I am still experiencing the issue, so I am assuming that r=
-evert did not happen yet.
+I can't check .h files that don't exist.
 
-To give some additional context for the performance regression, I have an A=
-T&T 500/500 fiber line. As of this morning on kernel 6.13.1, I get 550 down=
- / 470 up over Wifi 6 on speedtest.net. Testing immediately afterwards with=
- Christian's mainline package, I got a result of 170 down / 75 up, which is=
- similar to the results that I got for all the other bisection kernels Chri=
-stian gave me to test.
+However, I think your viewpoint is coming through pretty clear - we'll 
+fix up what we can in our control, and I guess anything else gets 
+dropped on the floor.  Seems like I have a conclusion.
 
-Thanks!
-Ben
-
-
-On Friday, February 28th, 2025 at 9:14 AM, Peter Seiderer <ps.report@gmx.ne=
-t> wrote:
-
->=20
->=20
-> Hello Christian,
->=20
-> On Fri, 28 Feb 2025 11:19:52 +0100, Christian Heusel christian@heusel.eu =
-wrote:
->=20
-> > Hello everyone,
-> >=20
-> > on the Arch Linux Bugtracker1 Benjamin (also added in CC) reported
-> > that his MT7925 wifi card has halved it's throughput when updating from
-> > the v6.13.1 to the v6.13.2 stable kernel. The problem is still present
-> > in the 6.13.5 stable kernel.
-> >=20
-> > We have bisected this issue together and found the backporting of the
-> > following commit responsible for this issue:
-> >=20
-> > 4cf9f08632c0 ("wifi: mt76: mt7925: Update mt7925_mcu_uni_[tx,rx]_ba for=
- MLO")
->=20
->=20
-> Seems there is already a suggested revert of the mentioned commit, see
->=20
-> [PATCH v4 1/6] Revert "wifi: mt76: mt7925: Update mt7925_mcu_uni_[tx,rx]_=
-ba for MLO"
-> https://lore.kernel.org/linux-wireless/20250226025647.102904-1-sean.wang@=
-kernel.org/#r
->=20
-> Regards,
-> Peter
->=20
-> > We unfortunately didn't have a chance to test the mainline releases as
-> > the reporter uses the (out of tree) nvidia modules that were not
-> > compatible with mainline release at the time of testing. We will soon
-> > test against Mainline aswell.
-> >=20
-> > I have attached dmesg outputs of a good and a bad boot aswell as his
-> > other hardware specs and will be available to debug this further.
-> >=20
-> > Cheers,
-> > Christian
+-Jeff
