@@ -1,140 +1,138 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BD11DED69;
-	Fri, 28 Feb 2025 22:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C7528E7;
+	Sat,  1 Mar 2025 05:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740780281; cv=none; b=JvQCm1YKSbodrhZhBWMJl+2QDtjuGb7rCpBi4kHSoxtawH5MYHS6WYuAbQlFEbg/Wkx3v8RBdph5ztrqqb1t+b75SDooUjhHik45Lre1/U/h/P4iVvhP2S5DSrA8/hRqxvt/brF4onyJ7UVXoFkuV3eARpoSBi/JVjyB5Xk6P9k=
+	t=1740807137; cv=none; b=VFmpIwJo5I2qr3QBFsgcT+/6w5m71lTMwWtVujoN+g7sbx6ZSaVLq2OtJH+juMbNh1lVjy8DIOo9wplQ7hGbDnMfNAwPmXKdDXblR7If8B2fIZ2WcV65jV6I6lVZk4ccQJ+78ydek8wu+fUyBFdLYj8lV7Njl5ctY4rkISfOyJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740780281; c=relaxed/simple;
-	bh=MUQDoNVnstDnVvNKgrw8EpXiQXdM6PLiArpkYlRqEQc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gwJaQbEPz6Y4t2eWAEJFdRFym88I4aJzDgI1KZ5AkfkHlIns/LIZTqqI6ZLxrGS7ZPPDiwPDD9/efU+CzZFv1ZAL+MPj2h5V9JKrU8b5B1E0MkytflYTuHsNuciBHdvxOPeygNcfKow/17lMxxYmWppbfT74iWzTL+QeAnJJniI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UjkH4cOW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740807137; c=relaxed/simple;
+	bh=hPXdQ/hFIPpJkdJk70/Oo9SCb0ot1PV7JSm65Zo7Cqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oPHAcNfrtgbXkhsLaOh4GXH3stFpev8fSUoqvLwgSSm+qP5Rd0jYMmN+GjZhmZQaVTIUJn9iM7yfW5buXKYsuMeqLBkkVuAnjiYnjnKQc9Y54yrVl12ePmzwZ9yHfMfpFjauiMLYI0qz49/hVE1wcJ5XbZuMTVuct9bIuP0vkcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yZynGDlY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UjkH4cOW"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51SKVQ4t013251;
-	Fri, 28 Feb 2025 22:04:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IWhfMrvpOJB0f+bCrEQzkQMytTCPf8D+9gtOL19wckY=; b=UjkH4cOWzU2ZRekg
-	qmJC2+jj40zJg6wsXewkrIGcH0C/fRAVP8ey+qKiqU/P0BoCRVwKY0296mICiN4F
-	+iIBGQTp9zkL03bw1mBECwt31XxJXLdRA1HQkQZ7EQOHvK4Lhn9kBeeCeuXEZZPb
-	BBS7Z4YrJPsc2plgR9ge3ij0BmSGqshdeY8xljVciKjByHuRUJ1xuFbi+4RvX7XJ
-	CJrPvxmPug/F9otcz+vrWzwYqpdVWepBYS58lRtlilfX7eFglek8350BoZlgwcZg
-	70kHVmffrwSEidhKMRy/2eRlvWqOdEX+GomtQ/NUDjV8Xns0Btt3w2a40KEmnGBO
-	DcJF6w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453m8ng53q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 22:04:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51SM4JFr001656
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 22:04:19 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Feb
- 2025 14:04:19 -0800
-Message-ID: <8bfa88b3-484e-4933-bc59-9dc12e37e691@quicinc.com>
-Date: Fri, 28 Feb 2025 15:04:18 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yZynGDlY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322F8C4CEDD;
+	Sat,  1 Mar 2025 05:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740807136;
+	bh=hPXdQ/hFIPpJkdJk70/Oo9SCb0ot1PV7JSm65Zo7Cqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yZynGDlYwSbyoqFxsYZl1iByokf6rG0lkNQ74A4dx6zWUHiE8rkNPKdaqpLCM49Bn
+	 Uzrt/PWQSzWLM/oTxXcz3PcYxelzJVyoeGwpXCciRubcatryZJoBOlZTenvMi71GVA
+	 2W0TdbFnLPo/0syo4YdyI4XV80EkIo0CIlMPU25o=
+Date: Fri, 28 Feb 2025 20:19:47 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Harshvardhan Jha <harshvardhan.j.jha@oracle.com>
+Cc: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	xen-devel@lists.xenproject.org, iommu@lists.linux.dev,
+	Radoslav =?iso-8859-1?Q?Bod=F3?= <radoslav.bodo@igalileo.cz>,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [6.1.y] Regression from b1e6e80a1b42 ("xen/swiotlb: add
+ alignment check for dma buffers") when booting with Xen and mpt3sas_cm0
+ _scsih_probe failures
+Message-ID: <2025022853-undivided-scribing-70dd@gregkh>
+References: <Z6d-l2nCO1mB4_wx@eldamar.lan>
+ <fd650c88-9888-46bc-a448-9c1ddcf2b066@oracle.com>
+ <Z6ukbNnyQVdw4kh0@eldamar.lan>
+ <716f186d-924a-4f2c-828a-2080729abfe9@oracle.com>
+ <6d7ed6bf-f8ad-438a-a368-724055b4f04c@suse.com>
+ <2025021548-amiss-duffel-9dcf@gregkh>
+ <74e74dde-0703-4709-96b8-e1615d40f19c@suse.com>
+ <2025021533-grime-luminous-d598@gregkh>
+ <e01c39ad-6f5e-449a-b24a-db3b7984030e@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
- modules
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: Nicolas Schier <n.schier@avm.de>, Masahiro Yamada <masahiroy@kernel.org>,
-        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kees Cook
-	<kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
-        Ben Hutchings
-	<ben@decadent.org.uk>, <regressions@lists.linux.dev>
-References: <20240727074526.1771247-1-masahiroy@kernel.org>
- <20240727074526.1771247-4-masahiroy@kernel.org>
- <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
- <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
- <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
- <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb>
- <80cf4e9a-5d49-4bc3-8160-1b23c31d4d36@quicinc.com>
- <2025022020-armband-clock-69af@gregkh>
- <13fac9ee-cad9-466b-9216-8c0516600b03@quicinc.com>
- <2025022057-reclusive-overreach-ac89@gregkh>
-Content-Language: en-US
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <2025022057-reclusive-overreach-ac89@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: P-AYYjMP0kf1tSQwQK5iwcQT9IgwroBt
-X-Proofpoint-GUID: P-AYYjMP0kf1tSQwQK5iwcQT9IgwroBt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-28_06,2025-02-28_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- spamscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502280160
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e01c39ad-6f5e-449a-b24a-db3b7984030e@oracle.com>
 
-On 2/20/2025 10:43 AM, Greg KH wrote:
-> On Thu, Feb 20, 2025 at 10:24:32AM -0700, Jeffrey Hugo wrote:
->> On 2/20/2025 9:49 AM, Greg KH wrote:
->>> What do you need/want to parse the .config file in the first place?  Why
->>> not rely on the generated .h files instead as those can be parsed the
->>> same way as before, right?
->>
->> Two usecases -
->>
->> First when secure boot is enabled, DKMS looks for CONFIG_MODULE_SIG_HASH to
->> figure out signing the modules so that they can be loaded.  Removing .config
->> causes an error in DKMS and the module signing process will fail.  The
->> resulting modules (already compiled successfully) will fail to load.
->> Whatever the user needed those modules for will no longer work.
+On Fri, Feb 28, 2025 at 01:50:12PM +0530, Harshvardhan Jha wrote:
 > 
-> Shouldn't the "normal" kbuild process properly sign the module if it
-> needs to be signed?  Or are you trying to do this "by hand"?
+> On 15/02/25 8:25 PM, Greg KH wrote:
+> > On Sat, Feb 15, 2025 at 02:39:46PM +0100, Jürgen Groß wrote:
+> >> On 15.02.25 13:34, Greg KH wrote:
+> >>> On Sat, Feb 15, 2025 at 12:47:57PM +0100, Jürgen Groß wrote:
+> >>>> On 12.02.25 16:12, Harshit Mogalapalli wrote:
+> >>>>> Hi Salvatore,
+> >>>>>
+> >>>>> On 12/02/25 00:56, Salvatore Bonaccorso wrote:
+> >>>>>> Hi Harshit,
+> >>>>>>
+> >>>>>> On Sun, Feb 09, 2025 at 01:45:38AM +0530, Harshit Mogalapalli wrote:
+> >>>>>>> Hi Salvatore,
+> >>>>>>>
+> >>>>>>> On 08/02/25 21:26, Salvatore Bonaccorso wrote:
+> >>>>>>>> Hi Juergen, hi all,
+> >>>>>>>>
+> >>>>>>>> Radoslav Bodó reported in Debian an issue after updating our kernel
+> >>>>>>>> from 6.1.112 to 6.1.115. His report in full is at:
+> >>>>>>>>
+> >>>>>>>> https://bugs.debian.org/1088159
+> >>>>>>>>
+> >>>>>>> Note:
+> >>>>>>> We have seen this on 5.4.y kernel: More details here:
+> >>>>>>> https://lore.kernel.org/all/9dd91f6e-1c66-4961-994e-dbda87d69dad@oracle.com/
+> >>>>>> Thanks for the pointer, so looking at that thread I suspect the three
+> >>>>>> referenced bugs in Debian are in the end all releated. We have one as
+> >>>>>> well relating to the megasas_sas driver, this one for the mpt3sas
+> >>>>>> driver and one for the i40e driver).
+> >>>>>>
+> >>>>>> AFAICS, there is not yet a patch which has landed upstream which I can
+> >>>>>> redirect to a affected user to test?
+> >>>>>>
+> >>>>> Konrad pointed me at this thread: https://lore.kernel.org/
+> >>>>> all/20250211120432.29493-1-jgross@suse.com/
+> >>>>>
+> >>>>> This has some fixes, but not landed upstream yet.
+> >>>> Patches are upstream now. In case you still experience any problems, please
+> >>>> speak up.
+> >>> What specific commits should be backported here?
+> >> Those are:
+> >>
+> >> e93ec87286bd1fd30b7389e7a387cfb259f297e3
+> >> 85fcb57c983f423180ba6ec5d0034242da05cc54
+> > Ugh, neither of them were marked for stable inclusion, why not?  Anyway,
+> > I'll go queue them up after this round of kernels is released hopefully
+> > tomorrow, but next time, please follow the stable kernel rules if you
+> > know you want a patch included in a tree.
 > 
->> If the user is on Ubuntu, and has built a kernel 6.12 or later, they need to
->> build upstream DKMS and use it as none of the Canonical provided DKMS builds
->> have the fix.  This feels like a situation that would make the user afraid
->> to upgrade their kernel (to your point above).
->>
->> This feels very much like an "at runtime" issue, assuming external modules
->> are supported.  I may be wrong here.
 > 
-> external modules can be broken at any moment in time, you know that.
-> There's never a guarantee for that at all.
+> Hi,
 > 
->> Second, our usecase is that we look at the .config to tell if a particular
->> driver is included in the kernel build (config =y or =m). This driver
->> provides diagnostic information which is useful to our product, but not
->> required for operation.  It does not have headers that are exposed to the
->> rest of the kernel, so checking the generated .h files does not work.  If
->> the driver is not built, we provide a backported version that is then built
->> out of tree.
-> 
-> You can check the same .h files for those config options, no need to
-> manually parse a .config file.  What's wrong with including
-> include/generated/autoconf.h properly?  That's what the build system
-> uses, right?
+> I see these patches in 6.12 now and upon manually checking these patches
+> cleanly apply till 6.6 kernel so I guess they will be eventually back
+> ported till there?
 
-I can't check .h files that don't exist.
+They are already in the following released kernels:
+	6.1.129 6.6.79 6.12.16 6.13.4 6.14-rc3
 
-However, I think your viewpoint is coming through pretty clear - we'll 
-fix up what we can in our control, and I guess anything else gets 
-dropped on the floor.  Seems like I have a conclusion.
+and the first one is in the stable queues for 5.15, 5.10, and 5.4.  The
+second one is not because as you mention:
 
--Jeff
+> 6.1 and older kernels have conflicts while cherry
+> picking these commits which makes it harder to verify them as the test
+> machine I have runs on a much older kernel(5.4) unfortunately. If it
+> could be at least be brought back till 5.15, testing this would become
+> much easier.
+
+The commit does not apply cleanly there.  If you need/want it there,
+please provide a working and tested backport.
+
+thanks,
+
+greg k-h
