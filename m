@@ -1,92 +1,150 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1429717BEB6
-	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 10:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82BA201116
+	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 12:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084409; cv=none; b=q4QpfOt6hnUy9AV6D+mtMGPPnrVMjH10Rtoj/rI3fmxRHgfwBY/9D8EGLiJUzh/vETR3DosaY+6cDGDC92pf6whi03WRSUkRJ8NvgweAXim5fwzoEZn6Du4e6DfEWYBEd92KCmEQgq5haFkJzEahSRA8HqPGq2usT9CVc8+VGEw=
+	t=1741090722; cv=none; b=iV7D0bBvPsdewKHwXI0es4UeUoYekGg6F0WQbuCJ8PzQhbXf8B0zslXGgkTGvRd29uY+x+lpX+oqn01IxH1FflONckPMJuAwbXp/UM/9rGExZq9qZK/3XRtFqxCNdqDKrwJY0tQfK0XEnsIrmmsKCP+4PMF/gD0PvTzdZzvgUB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084409; c=relaxed/simple;
-	bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
-	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=EHcE7l6lxG8ZjAnwtPrNH1F2Cth9CaAqFWTMD5uPAipK7jO1gDwCzPtwbOBg4NhAYHN9Z304N3CFJOZx/8JBu9cam4jk0RDCy1t6AJMGEPWyK2c4/PIwouZJKFoTqR+ONTOtEkNTZeT2crtBxn9XX55+44AAHkNACQ+4GDYwu0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de; spf=pass smtp.mailfrom=swine.de; dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b=nZyzlSSg; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swine.de
+	s=arc-20240116; t=1741090722; c=relaxed/simple;
+	bh=0+DpDBYvMc8sap6iXy8ndJ9VsXtXuusqkkunNPu6lUI=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=hJbZxuIvugKPOcV0O7YLu7GlZlc9ErqAu74gwqJB2/+nEOwMFEx9Jc7JzdmT14OrwB1+0ftiP9IB2FD1uOjxbdSpqfJpng9qeO6L0DCrNEoXjke1qcI9H9Zt1yD7hDdTJc5SPZIgDCR6jyxtWWQCrOaWOXD6W1RTVOUuSC7/9m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=eU+8b/Do; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b="nZyzlSSg"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3910f525165so1415494f8f.1
-        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 02:33:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="eU+8b/Do"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e5dcc411189so4697590276.0
+        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 04:18:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=swine.de; s=google; t=1741084406; x=1741689206; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
-        b=nZyzlSSgNSZR2ckDx2YGCKGumWQEHhgnPYF2nI/qkkOKULOo+BqJQfdlERkrZKPmJc
-         NMS+Eexu09qgiG8zAhanZB4LlXrXuaWPSmRsUfkGVpA2WiyC+sZGn54wAQp+1FgxTz33
-         tQ94ZQQ9Y21FjdjfYZf5xTS3Z+nac8N/9gvvYW4RJP2jKQ4HM/OhBVsYWL9KZWfkOS9p
-         C0ciUyYRMpzKHCQt54yFt8JErMxXHeT5FNMU0pti1VxglZtiRYAqNrCuvfuwpuIa6qr4
-         xpEkKmSws5OFu9NrEpenAxoXHRk7bo4hz38vH+RZld4o5A/PKnQjftptedN63Bs5u7kX
-         9lIA==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1741090718; x=1741695518; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eqbfwsT3WaVIwYhQ+yYYV0nO7X+bKVCdrl3j5eACzxY=;
+        b=eU+8b/DoxsKhvhRql6KmK8nDUxVzkTcd7v6E1bPL+arofJoULrFE3f+7NbtN6eTizr
+         W2hmEpVRu5hM1PyFHxTdy6QO920xNTG7kdcXo8kImTnRuFjLf9TsYXA8ig98ZNxAXe80
+         W7ZpAYonHUBqHPaTSV3xLED7OQL5K0Omur/3N5rinCkGaXX8M1EXKVHUDdULYTj+ANll
+         7+ZgP0j3ssyCw++ITAz7nXRT9f74dHugBsc9r/hw7+RS4Op1qAbjAwZLsGqjpR8Vr8ZS
+         0g6FO2tx0y9zQrMXDw0qfpX8ySNEgdmiU7pLhR41Yxs5pbjgm3dT3/PibWkLgPkiWoEh
+         wJGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741084406; x=1741689206;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
-        b=IFuvrEzFiezSTpJC9YiVkqLxbqnBUIbrHu55OL3WwWqUHPC+W65eLxsEG65kE5zkDY
-         MT55r2ZSWnL4GzoNPXr/Nhx2mxdh29/EmokFBAidxrh7N+Exh2fcfQpZNcoNz5cSNB5q
-         wqYG6vt0ipGFDDHR3/pCLOGVGekPETFZrF2JVphdiUqJNmSFVAVNHusoUJXhH6zoSvmI
-         kWAP060EBlCu60Legrb0iVuvFdGb6RCykHiav+wpCN2q4SDku8ydNo+ZpjLFCVj2XUvc
-         h+jNgUGxai8iukEntI/jPOj5HkqAjkaz87TN+EfM4Y2PErvzJKOgYTGhRKqErXDEb4s/
-         93hA==
-X-Gm-Message-State: AOJu0YwqjmP+rYGttqMKnG6VX0XrWlrbwRgZ1ORGKQ2dG0K7K8c+J3KY
-	EYyy2yyoE6tEvx9kEuVB8/Q8GfYccNuz4vu14Xn6tftjjYUwPHp2IdoyTFPatfw=
-X-Gm-Gg: ASbGncsikBQDRXpr6YnC+YywwcO9RdQmTAwY5Tl7Ewz6cTkzQmu/6enBoMG3jbpAaSH
-	M9xbcpZFYR40DxoB552X0GNK97YMvSKP8ir8BDFj/lxs8qSVVYOYEKQZ3nP50rCX442Yd9f7cOp
-	pzaC235BxIMbcg6T4XJOb15MZ6Ujnr5A7X+hi5YT0eJxe10ra07F1M70jgFvrAgrrCCPoACX6x9
-	BDJfu41MBR4OGTdTwYZ2c/bG2xCZM/FM1aNK83md2AdQnAtPJBC2SHvZXAjNk8Yx+pkJ7WeTIHZ
-	tHUb3LGJ0kyj4dzyUYA906JO6y2Knyw3bOr/OGAkq63HWB1Xg1JE7OCgiFsWOjQoAigFLHr364M
-	U35MI4wNJeaY1QU+CSM+NoojvL0EBUg==
-X-Google-Smtp-Source: AGHT+IGVMZo6vZ+6m+6BM/f63VhKf7ZZ84g2yeayp4xyDuWaoA5bfrmXVVwime6pCBYd6DiG2wMFmw==
-X-Received: by 2002:a05:6000:2a1:b0:391:ae6:1312 with SMTP id ffacd0b85a97d-3910ae613e9mr6437829f8f.45.1741084405983;
-        Tue, 04 Mar 2025 02:33:25 -0800 (PST)
-Received: from ?IPV6:2a02:6b67:d118:f400:3597:9f03:622b:da8b? ([2a02:6b67:d118:f400:3597:9f03:622b:da8b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4847e62sm17441453f8f.67.2025.03.04.02.33.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 02:33:25 -0800 (PST)
-Message-ID: <f32da38f-d313-48ed-9ca6-7da210b08f8b@swine.de>
-Date: Tue, 4 Mar 2025 10:33:24 +0000
+        d=1e100.net; s=20230601; t=1741090718; x=1741695518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eqbfwsT3WaVIwYhQ+yYYV0nO7X+bKVCdrl3j5eACzxY=;
+        b=r0YyrQdHu5S0lErU28sUyZGRxiIcyeR1dmteQ9NJCvA8dHQ3b55GSWyo4SqwOGDbV7
+         GuBFlWsym2QDgYJCy41N12dO6kh9JOohlSFFOFPuRX4TfaAAWoQowldTLWzp9fpaxz7o
+         YKmbW8PIEVIiOOntRh2GOwWvbQ7EmSKJja+RddCtyi8gDZC8oYF0YAH4QCpibP78EIU7
+         0/iwKRHDaQt9gpUYOudMMlajk8CK+1AkJRheev63/biMQ71rxY1nvLKolMVqfEGCOpXD
+         dDXQ2JqlpPspC4mZiMFeOyecCjfGqjc+vBmnA6i0IRACGnTBV8/6I94w3LLscNy6BTYY
+         F45A==
+X-Gm-Message-State: AOJu0YxUksjBu+eTFrQZxIIe/ZH9sJRAio8PWQJCWGEP1+qCCB0UVLom
+	jk1Pjtcv95HeMcnBuNOgHYzo6F4SmeiqSX9f6CNkH9Q5kNYUFeYKUa3K2Fz86tWsAxWWqqTHNUj
+	u1LuW09umhaxRnICNrVqCXf9Rb5TfPRVVxOnAzL7F6KrOv7Zgwd0=
+X-Gm-Gg: ASbGncsTa4T2+FASLkaKjkKwssHOleZrIQK3CQ3tiJaObB3syutDMVscijgNV2PYtxD
+	Z1R/5KUwNOjfKLz/DaAmUO/ZX+xtqWh5XCjiXDkSsdEwWdvtEYS/cTJwXak9F6U/OLbTcwpKUSA
+	U3ZtvdgmyCX28wdjB2rQhmXKMt3NpR7GulEwNMrmOVWHw276BbCViPV5Jr8wc=
+X-Google-Smtp-Source: AGHT+IGLcDj5XZvq8JY7wAktboxKTVuwbkPkOrVzId0tOL1AdbfgyBj2iXTjMo9soRAGIO8yN53sjZ8mBBCXfNbk7FQ=
+X-Received: by 2002:a05:6902:120c:b0:e5d:cb26:cdaf with SMTP id
+ 3f1490d57ef6-e60b2f2e4acmr19285976276.42.1741090718390; Tue, 04 Mar 2025
+ 04:18:38 -0800 (PST)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 4 Mar 2025 04:18:37 -0800
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 4 Mar 2025 04:18:37 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: stable@vger.kernel.org
-From: Christian Simon <simon@swine.de>
-Cc: regressions@lists.linux.dev, jolsa@kernel.org
-Subject: [6.1.y][6.6.y] uprobes: Fix race in uprobe_free_utask
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 4 Mar 2025 04:18:37 -0800
+X-Gm-Features: AQ5f1Jo7QFtSwlthSgp64VZ0ii6hK0Ea-hB69r-zXLuqqosUTrHJmiIol0fRGC4
+Message-ID: <CACo-S-0OAsx_z2jDkmOnv0MoY4T9sqPSafxxnaR6EZfH+sH9_A@mail.gmail.com>
+Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGltcGxpY2l0IGRlY2xhcmF0aQ==?=
+	=?UTF-8?B?b24gb2YgZnVuY3Rpb24g4oCYaW5fbWVtX2hvdHBsdWfigJkgWy1XZXJyb3I9aW1wbGljaS4uLg==?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear stable team,
+Hello,
 
-I noticed that cfa7f3d2c526 ("perf,x86: avoid missing caller address in stack traces captured in uprobe"), got backported into 6.1.113 and 6.6.55, but it contains a race condition which Jiri Olsa has fixed in mainline b583ef82b671 ("uprobes: Fix race in uprobe_free_utask"). I think this should be backported into those stable branches.
+New build issue found on next/master:
 
-#regzbot title: uprobes: Fix race in uprobe_free_utask
-#regzbot introduced: cfa7f3d2c526
-#regzbot link: https://lore.kernel.org/all/20250109141440.2692173-1-jolsa@kernel.org/
+---
+ implicit declaration of function =E2=80=98in_mem_hotplug=E2=80=99
+[-Werror=3Dimplicit-function-declaration] in mm/page_alloc.o
+(mm/page_alloc.c) [logspec:kbuild,kbuild.compiler.error]
+---
 
-Link: https://lore.kernel.org/all/20250109141440.2692173-1-jolsa@kernel.org/
-
-Note: Sorry if I am using the wrong process/form/format, I tried to follow "Option 2" from the stable-kernel-rules.html.
-
-Best regards,
-Christian
-
+- dashboard: https://d.kernelci.org/issue/maestro:19379b1d6a35d0cd1771f622b=
+9d997f0eb8e6864
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  20d5c66e1810e6e8805ec0d01373afb2dba9f51a
 
 
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+mm/page_alloc.c:424:17: error: implicit declaration of function
+=E2=80=98in_mem_hotplug=E2=80=99 [-Werror=3Dimplicit-function-declaration]
+  424 |                 in_mem_hotplug() ||
+      |                 ^~~~~~~~~~~~~~
+./include/asm-generic/bug.h:111:32: note: in definition of macro =E2=80=98W=
+ARN_ON_ONCE=E2=80=99
+  111 |         int __ret_warn_on =3D !!(condition);                      \
+      |                                ^~~~~~~~~
+mm/page_alloc.c:423:9: note: in expansion of macro =E2=80=98lockdep_assert_=
+once=E2=80=99
+  423 |         lockdep_assert_once(system_state =3D=3D SYSTEM_BOOTING ||
+      |         ^~~~~~~~~~~~~~~~~~~
+  CC      io_uring/poll.o
+  CC      io_uring/eventfd.o
+  AR      fs/configfs/built-in.a
+  CC      fs/ext4/balloc.o
+  CC      block/blk-ioc.o
+  CC      arch/x86/kernel/cpu/proc.o
+  AR      kernel/rcu/built-in.a
+  CC      kernel/dma/mapping.o
+  CC      kernel/dma/direct.o
+  CC      fs/netfs/direct_read.o
+  CC      arch/x86/kernel/cpu/feat_ctl.o
+  CC      block/blk-map.o
+  CC      arch/x86/kernel/cpu/intel.o
+  CC      io_uring/uring_cmd.o
+  CC      kernel/dma/ops_helpers.o
+  CC      fs/netfs/direct_write.o
+  CC      fs/ext4/bitmap.o
+  CC      arch/x86/kernel/cpu/tsx.o
+  CC      block/blk-merge.o
+cc1: all warnings being treated as errors
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+
+# Builds where the incident occurred:
+
+## defconfig+kcidebug+x86-board on (i386):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:67c6d625678f180aea2ba974
+
+
+#kernelci issue maestro:19379b1d6a35d0cd1771f622b9d997f0eb8e6864
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
