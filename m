@@ -1,59 +1,58 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82BA201116
-	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 12:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFB71FFC69
+	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 12:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741090722; cv=none; b=iV7D0bBvPsdewKHwXI0es4UeUoYekGg6F0WQbuCJ8PzQhbXf8B0zslXGgkTGvRd29uY+x+lpX+oqn01IxH1FflONckPMJuAwbXp/UM/9rGExZq9qZK/3XRtFqxCNdqDKrwJY0tQfK0XEnsIrmmsKCP+4PMF/gD0PvTzdZzvgUB4=
+	t=1741090778; cv=none; b=gAXlOTbouZK+gydXu9w9xvYWeBL7BfEvRLC6UHa23XFWM1+WFgXlIGEZUP+CugkZmuVqMZNZczamcfJ0i2+GGHCsO1AVO5IBS0PSBhesoOVNa9b+rPV9/J6AK+lEmjK6MCLz2T0791/FoLsDbU75k52Z7iqWx9MSt7vThqDcSjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741090722; c=relaxed/simple;
-	bh=0+DpDBYvMc8sap6iXy8ndJ9VsXtXuusqkkunNPu6lUI=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=hJbZxuIvugKPOcV0O7YLu7GlZlc9ErqAu74gwqJB2/+nEOwMFEx9Jc7JzdmT14OrwB1+0ftiP9IB2FD1uOjxbdSpqfJpng9qeO6L0DCrNEoXjke1qcI9H9Zt1yD7hDdTJc5SPZIgDCR6jyxtWWQCrOaWOXD6W1RTVOUuSC7/9m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=eU+8b/Do; arc=none smtp.client-ip=209.85.219.174
+	s=arc-20240116; t=1741090778; c=relaxed/simple;
+	bh=Me7RUF9jNqR49PkTZIT3moS2Agi2d4qrptxk/c4WvYY=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=qJJ/LfiPnWng4qTloPMdh7mmpdtG/kzp++hO4GMQ+DHDN5DpnG5DLwhKvG0GrAG+RE3jxKz89rtiAHPgOx+EdUUOiMvhd1dXc/fqSdWmuQ+Pl1jjJRH+X0WSgQhtNfgC3WX1VqwDkri9WISJuwkDAQavXMgSqBKGhR7mJBcjFh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=ra93goQp; arc=none smtp.client-ip=209.85.219.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="eU+8b/Do"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e5dcc411189so4697590276.0
-        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 04:18:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="ra93goQp"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e60b81c29c5so2826434276.1
+        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 04:19:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1741090718; x=1741695518; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eqbfwsT3WaVIwYhQ+yYYV0nO7X+bKVCdrl3j5eACzxY=;
-        b=eU+8b/DoxsKhvhRql6KmK8nDUxVzkTcd7v6E1bPL+arofJoULrFE3f+7NbtN6eTizr
-         W2hmEpVRu5hM1PyFHxTdy6QO920xNTG7kdcXo8kImTnRuFjLf9TsYXA8ig98ZNxAXe80
-         W7ZpAYonHUBqHPaTSV3xLED7OQL5K0Omur/3N5rinCkGaXX8M1EXKVHUDdULYTj+ANll
-         7+ZgP0j3ssyCw++ITAz7nXRT9f74dHugBsc9r/hw7+RS4Op1qAbjAwZLsGqjpR8Vr8ZS
-         0g6FO2tx0y9zQrMXDw0qfpX8ySNEgdmiU7pLhR41Yxs5pbjgm3dT3/PibWkLgPkiWoEh
-         wJGQ==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1741090776; x=1741695576; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EIkLlhVZ89l4NhIoe9CRlYEgoQsPwPSkdoFjmdqdIVI=;
+        b=ra93goQp28G2DXQgDJeYDO1wyHA9KVd6zXuFUDgh8WmQKut7+mX1iWjootvG7pzYYp
+         ude9TadbNohqGa9QfPe+yI85IInW6tFLhuN+Z9t4MD8F5skzy8MrX/Twu51qmJjZSjTY
+         XheCXF8zjZEGjJj12pIPyfXRgV1EN12OaYRd4nil1vqnj3/BeM9JR8bsCRrEbTJf0rGy
+         LEIHcTFXl/k8DBzxt2Iyno7OUvkm/U+KNbY2WHkZJoGEYQB9Li+BqFUypzlh5YvqngZY
+         e9ixYtbb40dzmSDhWVTR60XFw5LLz7Tgt5003lSjbaWcid4ZN1JUpTr81EZN353+YNmX
+         CZhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741090718; x=1741695518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eqbfwsT3WaVIwYhQ+yYYV0nO7X+bKVCdrl3j5eACzxY=;
-        b=r0YyrQdHu5S0lErU28sUyZGRxiIcyeR1dmteQ9NJCvA8dHQ3b55GSWyo4SqwOGDbV7
-         GuBFlWsym2QDgYJCy41N12dO6kh9JOohlSFFOFPuRX4TfaAAWoQowldTLWzp9fpaxz7o
-         YKmbW8PIEVIiOOntRh2GOwWvbQ7EmSKJja+RddCtyi8gDZC8oYF0YAH4QCpibP78EIU7
-         0/iwKRHDaQt9gpUYOudMMlajk8CK+1AkJRheev63/biMQ71rxY1nvLKolMVqfEGCOpXD
-         dDXQ2JqlpPspC4mZiMFeOyecCjfGqjc+vBmnA6i0IRACGnTBV8/6I94w3LLscNy6BTYY
-         F45A==
-X-Gm-Message-State: AOJu0YxUksjBu+eTFrQZxIIe/ZH9sJRAio8PWQJCWGEP1+qCCB0UVLom
-	jk1Pjtcv95HeMcnBuNOgHYzo6F4SmeiqSX9f6CNkH9Q5kNYUFeYKUa3K2Fz86tWsAxWWqqTHNUj
-	u1LuW09umhaxRnICNrVqCXf9Rb5TfPRVVxOnAzL7F6KrOv7Zgwd0=
-X-Gm-Gg: ASbGncsTa4T2+FASLkaKjkKwssHOleZrIQK3CQ3tiJaObB3syutDMVscijgNV2PYtxD
-	Z1R/5KUwNOjfKLz/DaAmUO/ZX+xtqWh5XCjiXDkSsdEwWdvtEYS/cTJwXak9F6U/OLbTcwpKUSA
-	U3ZtvdgmyCX28wdjB2rQhmXKMt3NpR7GulEwNMrmOVWHw276BbCViPV5Jr8wc=
-X-Google-Smtp-Source: AGHT+IGLcDj5XZvq8JY7wAktboxKTVuwbkPkOrVzId0tOL1AdbfgyBj2iXTjMo9soRAGIO8yN53sjZ8mBBCXfNbk7FQ=
-X-Received: by 2002:a05:6902:120c:b0:e5d:cb26:cdaf with SMTP id
- 3f1490d57ef6-e60b2f2e4acmr19285976276.42.1741090718390; Tue, 04 Mar 2025
- 04:18:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741090776; x=1741695576;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EIkLlhVZ89l4NhIoe9CRlYEgoQsPwPSkdoFjmdqdIVI=;
+        b=RBnxeBTb9XDUBAnWM6Hq9Tr8vPrtCMe0EE6w1hKdbmHCPKBkLvH5RMTwwo70fLX2fd
+         1W8lD1qgtQhTF+6soo6XffFxt22E3LSAR6fZRaiAGOdPnEbWURe0KKrC2hjh3bVi54Tb
+         A8Ajw6XmdvdHczW76ONHAqvfxTIDO8608iQMJpjTWOPKuSH4F/4eamxDhQ/lNCWzr1kK
+         tZashgZmV9DqTPv+Kw42YZL2yXq1Si32+2M9pkIMm6qUolo/e5s3PL/FSM5yqPvTJepy
+         e3pl9+FRbS0lgTMr3KbNDlIj2nRIgnkoF7Y1OTY0K+xcBZGoOZxo7jp8PXJA5zLBtAKa
+         DdCw==
+X-Gm-Message-State: AOJu0Yy/xvKJFEVl3d+L6IOgj8Xa/sYyNLETC94vSiWnpdK5yTydVDnt
+	8esWUDxuZXsMy3fCiXI8jAN3jHY+bAEiEBbcKPMOw0ahDHmyrX1QLuf1Uo/EMffsGztydmWY3Sg
+	M6/GgDX5pqRo/Rp5iEV9sFzxcO1PovkawGnv1aw==
+X-Gm-Gg: ASbGnctVI/GSW+b83v0hfkBwF3EvqcnkukJMm66WAn/I6zk0njag9hkrk0nb56QPGX5
+	gMp7VWZRY5oxb324GwdnqW8oc0Lfm6YwaDJU+8lWEk4tp6T6xpbOz/C74MGDMpSfrgdipSsCsjj
+	wpGkdYx/MW9gyVBOocjn6NXnc3mXi9zTQPlU6v/jF2GdTx1i4V+lFRMvMttzs=
+X-Google-Smtp-Source: AGHT+IEalhlmWiT+l9+99tlye+rB/RhhCgGC3eYVpYE2GPre9dlqSgQ4NlqPhUcuRUnegnZin7bBTG95xPAnfNYxYDY=
+X-Received: by 2002:a05:6902:2a46:b0:e58:cb:70f0 with SMTP id
+ 3f1490d57ef6-e610c34f00cmr3397564276.6.1741090776194; Tue, 04 Mar 2025
+ 04:19:36 -0800 (PST)
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 4 Mar 2025 04:18:37 -0800
+ HTTPREST; Tue, 4 Mar 2025 04:19:35 -0800
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 4 Mar 2025 04:18:37 -0800
+ HTTPREST; Tue, 4 Mar 2025 04:19:35 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,83 +61,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 from: KernelCI bot <bot@kernelci.org>
 Reply-To: kernelci@lists.linux.dev
-Date: Tue, 4 Mar 2025 04:18:37 -0800
-X-Gm-Features: AQ5f1Jo7QFtSwlthSgp64VZ0ii6hK0Ea-hB69r-zXLuqqosUTrHJmiIol0fRGC4
-Message-ID: <CACo-S-0OAsx_z2jDkmOnv0MoY4T9sqPSafxxnaR6EZfH+sH9_A@mail.gmail.com>
-Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGltcGxpY2l0IGRlY2xhcmF0aQ==?=
-	=?UTF-8?B?b24gb2YgZnVuY3Rpb24g4oCYaW5fbWVtX2hvdHBsdWfigJkgWy1XZXJyb3I9aW1wbGljaS4uLg==?=
+Date: Tue, 4 Mar 2025 04:19:35 -0800
+X-Gm-Features: AQ5f1JoNHlYHF2FvaNmZMYpuQh306k1WdvdIbg9Pcw3b-yJ92eyQax8zQDVU7O0
+Message-ID: <CACo-S-0YG-i=gUJ9377ue6s3Gfx=iNGdgWbGHaTu9RiSsmfh1w@mail.gmail.com>
+Subject: [REGRESSION] next/master: (build) "chacha_crypt_generic"
+ [crypto/chacha_generic.ko] undefined! "poly...
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
 New build issue found on next/master:
 
 ---
- implicit declaration of function =E2=80=98in_mem_hotplug=E2=80=99
-[-Werror=3Dimplicit-function-declaration] in mm/page_alloc.o
-(mm/page_alloc.c) [logspec:kbuild,kbuild.compiler.error]
+ "chacha_crypt_generic" [crypto/chacha_generic.ko] undefined!
+"poly1305_final_generic" [crypto/poly1305_generic.ko] undefined!
+"poly1305_core_blocks" [crypto/poly1305_generic.ko] undefined!
+"poly1305_core_setkey" [crypto/poly1305_generic.ko] undefined! in
+Module.symvers (scripts/Makefile.modpost:147)
+[logspec:kbuild,kbuild.modpost]
 ---
 
-- dashboard: https://d.kernelci.org/issue/maestro:19379b1d6a35d0cd1771f622b=
-9d997f0eb8e6864
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
+- dashboard: https://d.kernelci.org/issue/maestro:9653e7551029033f176546e63613ae2c0fda7b47
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  20d5c66e1810e6e8805ec0d01373afb2dba9f51a
 
 
 Log excerpt:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-mm/page_alloc.c:424:17: error: implicit declaration of function
-=E2=80=98in_mem_hotplug=E2=80=99 [-Werror=3Dimplicit-function-declaration]
-  424 |                 in_mem_hotplug() ||
-      |                 ^~~~~~~~~~~~~~
-./include/asm-generic/bug.h:111:32: note: in definition of macro =E2=80=98W=
-ARN_ON_ONCE=E2=80=99
-  111 |         int __ret_warn_on =3D !!(condition);                      \
-      |                                ^~~~~~~~~
-mm/page_alloc.c:423:9: note: in expansion of macro =E2=80=98lockdep_assert_=
-once=E2=80=99
-  423 |         lockdep_assert_once(system_state =3D=3D SYSTEM_BOOTING ||
-      |         ^~~~~~~~~~~~~~~~~~~
-  CC      io_uring/poll.o
-  CC      io_uring/eventfd.o
-  AR      fs/configfs/built-in.a
-  CC      fs/ext4/balloc.o
-  CC      block/blk-ioc.o
-  CC      arch/x86/kernel/cpu/proc.o
-  AR      kernel/rcu/built-in.a
-  CC      kernel/dma/mapping.o
-  CC      kernel/dma/direct.o
-  CC      fs/netfs/direct_read.o
-  CC      arch/x86/kernel/cpu/feat_ctl.o
-  CC      block/blk-map.o
-  CC      arch/x86/kernel/cpu/intel.o
-  CC      io_uring/uring_cmd.o
-  CC      kernel/dma/ops_helpers.o
-  CC      fs/netfs/direct_write.o
-  CC      fs/ext4/bitmap.o
-  CC      arch/x86/kernel/cpu/tsx.o
-  CC      block/blk-merge.o
-cc1: all warnings being treated as errors
+=====================================================
+ERROR: modpost: "chacha_crypt_generic" [crypto/chacha_generic.ko] undefined!
+ERROR: modpost: "poly1305_final_generic" [crypto/poly1305_generic.ko] undefined!
+ERROR: modpost: "poly1305_core_blocks" [crypto/poly1305_generic.ko] undefined!
+ERROR: modpost: "poly1305_core_setkey" [crypto/poly1305_generic.ko] undefined!
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+=====================================================
 
 
 # Builds where the incident occurred:
 
-## defconfig+kcidebug+x86-board on (i386):
+## multi_v7_defconfig+kselftest on (arm):
 - compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:67c6d625678f180aea2ba974
+- dashboard: https://d.kernelci.org/build/maestro:67c6d5be678f180aea2ba709
 
 
-#kernelci issue maestro:19379b1d6a35d0cd1771f622b9d997f0eb8e6864
+#kernelci issue maestro:9653e7551029033f176546e63613ae2c0fda7b47
 
 Reported-by: kernelci.org bot <bot@kernelci.org>
 
