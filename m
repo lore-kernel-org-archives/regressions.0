@@ -1,64 +1,63 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE43C201113
-	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 09:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1429717BEB6
+	for <regressions@lists.linux.dev>; Tue,  4 Mar 2025 10:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080353; cv=none; b=IKE1d5en84GIzOidzikreUq1cDEH/wIruIWu3jQEnrotvCOEcd/drkQ+4nV3RdZ/9HTtDJXQFRAIbLw2k3RmwddwLuusEhsT/sbEYGFXHCCwItpdtLOi+/QI7bKpdnSraUzlcBHQMmWchkTLzw9eDfy+p8yierBjcfnLb9jbLtY=
+	t=1741084409; cv=none; b=q4QpfOt6hnUy9AV6D+mtMGPPnrVMjH10Rtoj/rI3fmxRHgfwBY/9D8EGLiJUzh/vETR3DosaY+6cDGDC92pf6whi03WRSUkRJ8NvgweAXim5fwzoEZn6Du4e6DfEWYBEd92KCmEQgq5haFkJzEahSRA8HqPGq2usT9CVc8+VGEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080353; c=relaxed/simple;
-	bh=K+SQViid9o31kFh8OoxSQbOwClMeSmHumg1VsUJnA6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lmBMNm3ZX//XpmSuueYPAIveQKEHENwSZw6Th80E/yRCLyLASxcm4CM9MmIjgsa3lzVIiOnOwpxgjqb0vViCeI+c8r+Mzz11RgGmIA5MXTJAspzxcoTX/rDcAQs/gips/dtbXwpmDalpQgJ4UdgURLd3iRTnfHIBWBfHJdIb5fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRaOVQ6C; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741084409; c=relaxed/simple;
+	bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
+	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=EHcE7l6lxG8ZjAnwtPrNH1F2Cth9CaAqFWTMD5uPAipK7jO1gDwCzPtwbOBg4NhAYHN9Z304N3CFJOZx/8JBu9cam4jk0RDCy1t6AJMGEPWyK2c4/PIwouZJKFoTqR+ONTOtEkNTZeT2crtBxn9XX55+44AAHkNACQ+4GDYwu0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de; spf=pass smtp.mailfrom=swine.de; dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b=nZyzlSSg; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swine.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRaOVQ6C"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf57138cfaso527052966b.1
-        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 01:25:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b="nZyzlSSg"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3910f525165so1415494f8f.1
+        for <regressions@lists.linux.dev>; Tue, 04 Mar 2025 02:33:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741080350; x=1741685150; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=g8GE73LY9Z4Z3HemCZ+fq1lPTvBfzGIabC8glDTc8WA=;
-        b=RRaOVQ6C4ALhOZ5F//inoSp9S6la7Lq02LpTBi2yCdXpyRq4lwGcE4F+ShFNEnpHHn
-         cR3IV2Ak8juRwAjVlAyfcpJuVlGCB9O3KXDEj6OYr068afbO7m7T4dKZhZvtG9V2yVLX
-         tARxWGmCFUK5l3Hei68szvDc3coqIA6mCPdaGFD6LnOcYk7ItJDgjM3B+Am69qbV3gNl
-         1qP7f5AbYJaXBDZVVxVygI8/eAOKwxi4WOdyfWDAAJefuFy7kTcIog2cJ6mTlQ9yw5PK
-         h58BJOian56n+KJGp14pudRSpQTe2u6yqHgZXR8xjUFrFw6tf5rcMdAx/tKFIXNDaygT
-         IeOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741080350; x=1741685150;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=swine.de; s=google; t=1741084406; x=1741689206; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:cc:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g8GE73LY9Z4Z3HemCZ+fq1lPTvBfzGIabC8glDTc8WA=;
-        b=oBNxxxRsDJ1Rnwpvu9/yvStAMKAt/Djn45Jj3U3zcmTdA98zweeLAVAJE+rq5dubRx
-         jxQ+Z4ZLNjmfcySbMMF+4G1MwPBtiGKUWuv+KhMtD+4BBXKmAsdqhBkBBLi6fFK2H/4e
-         yBO8C+UX8e/fhuYh0/ZCM/YnaaOF1gW2GlYB4aE0UOLp5gP4laSluf8jrWDraDZZg+UD
-         CLR4zuuuw5v34dNooZnEO1vCirxB7p1JVxcO5gZgXeZd0QoMzD2j1de1pW23206N4bjY
-         LSFnbI+vnRmjuiHQP0fWxxPTxBDe1JTLVpF+A847SOY4CvZ+hFvZ3TXj7ibPOx28Ad44
-         Peqw==
-X-Gm-Message-State: AOJu0YxKF0dNWB3uZMP00nX8/l+T7xTSa+b2nRZMwTAbMsEHb24fceMO
-	eWLtx6gzHN3UqADHYPnc/VyfvBpgIsmvYLjrKwDJ1cTsxB9d9bRj
-X-Gm-Gg: ASbGncsxLPljc4RqsQdgOKHKWo2foX4QBuPt/3s1F4VzSvE4k9zCfUqDhIZRyVLEXCK
-	bl/uuXTvfsQVT5+V7bsC41DTiRDGzK8vW7Qp2NsicIFDmKMQnCRfBZL262aSlqwEpo7medEGR4w
-	LYPggMzzkMxEIoESc7O7RU5YfyhszddajAdc5PniajRT0CSXQOOPqXeif1Kp2nJNX3nByp8p4Sp
-	iLOCMm5yqg9CAtPtGaKcsgVmquigCH9Sh/cNENjLYmbivXPOnBE3ZYKNAy4u1eTX6r+ryvUcZYc
-	/ZmyYBpRD9jD2ktPV8J8vtxgZ26RIab0xO0Ea35DMSOveRoZvNOAUFoLxHyN366m9vhV
-X-Google-Smtp-Source: AGHT+IEsmtPrv65pCPgegepdd9Pv3+Ppsl3Ik1ZiPqpg3ZOvBDnELIB5rlsk5zGC/U1rIJtz9GIVfw==
-X-Received: by 2002:a17:907:3f22:b0:ac0:e1dd:bc3 with SMTP id a640c23a62f3a-ac0e1dd102fmr658837566b.33.1741080349840;
-        Tue, 04 Mar 2025 01:25:49 -0800 (PST)
-Received: from [147.251.42.106] (fosforos.fi.muni.cz. [147.251.42.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf55e88748sm560998666b.54.2025.03.04.01.25.49
+        bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
+        b=nZyzlSSgNSZR2ckDx2YGCKGumWQEHhgnPYF2nI/qkkOKULOo+BqJQfdlERkrZKPmJc
+         NMS+Eexu09qgiG8zAhanZB4LlXrXuaWPSmRsUfkGVpA2WiyC+sZGn54wAQp+1FgxTz33
+         tQ94ZQQ9Y21FjdjfYZf5xTS3Z+nac8N/9gvvYW4RJP2jKQ4HM/OhBVsYWL9KZWfkOS9p
+         C0ciUyYRMpzKHCQt54yFt8JErMxXHeT5FNMU0pti1VxglZtiRYAqNrCuvfuwpuIa6qr4
+         xpEkKmSws5OFu9NrEpenAxoXHRk7bo4hz38vH+RZld4o5A/PKnQjftptedN63Bs5u7kX
+         9lIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741084406; x=1741689206;
+        h=content-transfer-encoding:subject:cc:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XYQO0aGcai5r/Etb8m+HZhlol7Bo0XWaJF+1VWhGLJM=;
+        b=IFuvrEzFiezSTpJC9YiVkqLxbqnBUIbrHu55OL3WwWqUHPC+W65eLxsEG65kE5zkDY
+         MT55r2ZSWnL4GzoNPXr/Nhx2mxdh29/EmokFBAidxrh7N+Exh2fcfQpZNcoNz5cSNB5q
+         wqYG6vt0ipGFDDHR3/pCLOGVGekPETFZrF2JVphdiUqJNmSFVAVNHusoUJXhH6zoSvmI
+         kWAP060EBlCu60Legrb0iVuvFdGb6RCykHiav+wpCN2q4SDku8ydNo+ZpjLFCVj2XUvc
+         h+jNgUGxai8iukEntI/jPOj5HkqAjkaz87TN+EfM4Y2PErvzJKOgYTGhRKqErXDEb4s/
+         93hA==
+X-Gm-Message-State: AOJu0YwqjmP+rYGttqMKnG6VX0XrWlrbwRgZ1ORGKQ2dG0K7K8c+J3KY
+	EYyy2yyoE6tEvx9kEuVB8/Q8GfYccNuz4vu14Xn6tftjjYUwPHp2IdoyTFPatfw=
+X-Gm-Gg: ASbGncsikBQDRXpr6YnC+YywwcO9RdQmTAwY5Tl7Ewz6cTkzQmu/6enBoMG3jbpAaSH
+	M9xbcpZFYR40DxoB552X0GNK97YMvSKP8ir8BDFj/lxs8qSVVYOYEKQZ3nP50rCX442Yd9f7cOp
+	pzaC235BxIMbcg6T4XJOb15MZ6Ujnr5A7X+hi5YT0eJxe10ra07F1M70jgFvrAgrrCCPoACX6x9
+	BDJfu41MBR4OGTdTwYZ2c/bG2xCZM/FM1aNK83md2AdQnAtPJBC2SHvZXAjNk8Yx+pkJ7WeTIHZ
+	tHUb3LGJ0kyj4dzyUYA906JO6y2Knyw3bOr/OGAkq63HWB1Xg1JE7OCgiFsWOjQoAigFLHr364M
+	U35MI4wNJeaY1QU+CSM+NoojvL0EBUg==
+X-Google-Smtp-Source: AGHT+IGVMZo6vZ+6m+6BM/f63VhKf7ZZ84g2yeayp4xyDuWaoA5bfrmXVVwime6pCBYd6DiG2wMFmw==
+X-Received: by 2002:a05:6000:2a1:b0:391:ae6:1312 with SMTP id ffacd0b85a97d-3910ae613e9mr6437829f8f.45.1741084405983;
+        Tue, 04 Mar 2025 02:33:25 -0800 (PST)
+Received: from ?IPV6:2a02:6b67:d118:f400:3597:9f03:622b:da8b? ([2a02:6b67:d118:f400:3597:9f03:622b:da8b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4847e62sm17441453f8f.67.2025.03.04.02.33.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 01:25:49 -0800 (PST)
-Message-ID: <d84313c6-3dd1-446d-910d-e7f9f2e7d53c@gmail.com>
-Date: Tue, 4 Mar 2025 10:25:49 +0100
+        Tue, 04 Mar 2025 02:33:25 -0800 (PST)
+Message-ID: <f32da38f-d313-48ed-9ca6-7da210b08f8b@swine.de>
+Date: Tue, 4 Mar 2025 10:33:24 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -66,91 +65,28 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: cleanup and fix batch completion adding conditions
-To: Jens Axboe <axboe@kernel.dk>
-Cc: regressions@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
- linux-block@vger.kernel.org
-References: <20575f0a-656e-4bb3-9d82-dec6c7e3a35c@kernel.dk>
- <71bbd596-a3a0-4e37-baae-19f02c6997be@redhat.com>
- <459b9c3b-0d5e-4797-86f7-4237406608ff@kernel.dk>
- <535ff54b-5c49-42f0-af5f-020169b5da79@redhat.com>
-Content-Language: en-US
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- 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
-In-Reply-To: <535ff54b-5c49-42f0-af5f-020169b5da79@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-GB
+To: stable@vger.kernel.org
+From: Christian Simon <simon@swine.de>
+Cc: regressions@lists.linux.dev, jolsa@kernel.org
+Subject: [6.1.y][6.6.y] uprobes: Fix race in uprobe_free_utask
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/28/25 3:32 PM, Ondrej Kozina wrote:
-> On 28/02/2025 15:08, Jens Axboe wrote:
->> On 2/28/25 4:59 AM, Ondrej Kozina wrote:
->>> Hi Jens,
->>>
->>> this patch introduced regression to locked SED OPAL2 devices. The locked region no longer returns -EIO upon IO. On read the caller receives block of zeroes, on write it does not report any error either. In both cases, previous to this patch, the caller would get IO error (expected) with locked device.
->>>
->>> It was discovered by cryptsetup testsuite specifically https://gitlab.com/cryptsetup/cryptsetup/-/blob/main/tests/compat-test-opal
->>>
->>> I've attached a simple patch that changes the ioerror condition and it fixed the problem with SED OPAL2 devices for me.
->>>
->>> #regzbot introduced: 1f47ed294a2bd577d5ae43e6e28e1c9a3be4a833
->>
->> Oops thanks - does someone want to send a "real" patch with commit message
->> etc, or do you just want me to queue something up?
->>
-> 
-> To be honest, my patch was just a quick hack and I'm not sure if it is
-> the correct one in general. But I will test (and report) a fix when it
-> lands here.
+Dear stable team,
 
-Hi Jens,
+I noticed that cfa7f3d2c526 ("perf,x86: avoid missing caller address in stack traces captured in uprobe"), got backported into 6.1.113 and 6.6.55, but it contains a race condition which Jiri Olsa has fixed in mainline b583ef82b671 ("uprobes: Fix race in uprobe_free_utask"). I think this should be backported into those stable branches.
 
-do you have some fix for this issue anywhere?
+#regzbot title: uprobes: Fix race in uprobe_free_utask
+#regzbot introduced: cfa7f3d2c526
+#regzbot link: https://lore.kernel.org/all/20250109141440.2692173-1-jolsa@kernel.org/
 
-We can easily test the patch (at least for Opal) as our CI is currently
-completely red because of this issue :)
-  
-Thanks,
-Milan
+Link: https://lore.kernel.org/all/20250109141440.2692173-1-jolsa@kernel.org/
+
+Note: Sorry if I am using the wrong process/form/format, I tried to follow "Option 2" from the stable-kernel-rules.html.
+
+Best regards,
+Christian
+
+
 
