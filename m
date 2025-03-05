@@ -1,167 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2967984D02
-	for <regressions@lists.linux.dev>; Wed,  5 Mar 2025 14:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6CE45C18
+	for <regressions@lists.linux.dev>; Wed,  5 Mar 2025 16:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186473; cv=none; b=ZYe1uVdfjMJAeMsYM3iwNyCDy2E536TZ19cZeaEpJVztLsXXzQJeboAz5KntDhaHf7XTN3AJvCzzuAJiOgePu+x7s8yYTKJUdYyLVN+LJT6WsyfdxNI5OOBt9SNNq/a2QkJjqLL/aAre+xdSQIYqAeWU8pJvNoaEc+hwLap1fAE=
+	t=1741192400; cv=none; b=ndzZYwycz/fYevwzqE/PmEWQYZk5h6e2Ngdkq69R2Qm1nlpjJSse/9vdtespeTaODMmrfqAR9ri5lf+l92nds3unimF3i8N3vkNWdoNutlmYIUmbsWYbOOIhUAW0GdEKzH7PGh11YIy0pUci7n7tRPE1BXhLaM8d2h7S+PMU+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186473; c=relaxed/simple;
-	bh=p4UtG3lt8etjyR4QSuHV4b+bVzVCE8Zwt/muQtfpYVU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WoamLydlwlLZhf8UNU279TDZjVHkHimTvQ3Tae6lJCxrjpDBWFhYnOXrHk8XN0EitTTcmYfZqGqCgmledMb29b41HvUjSg8GVSXnQvww/WnEEhCaTc65j2Ymppu83CRf8GIma2U/44Me2FdMNoD4dZaVkgitmPGz6+1kwpNH5QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WwpMvFLE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741192400; c=relaxed/simple;
+	bh=0kwY9FUG53nPfgHq+lB9nZ9aS4CCvz8fHFIvv5R3HGM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LKXIa8spqUnYXsW8MFm6CGubRUzCMxIQ3y+2hxKTgV2xmLHkhPPYXeGkmDjtbdqmk+GT8sWi2BHIoWr/zsYkox7g+hXE7bayuXRLJ8wvsIoRQAsyBowciW4EFSSuX9psrcUyyLVJPYyzU/HCXZbN1BikE7/sLEYSKrkwOD3h+Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7kaGvh2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WwpMvFLE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741186471;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cox8z8lPi8h9WF637SHJRl9fGGbJ29Arrtfjq01tB+8=;
-	b=WwpMvFLEgxpr+qo1ZHhwRO5quzF9xKU9bwqT53zPcvn+gWNifaUxIL/O7DnBBxKoz9DT0S
-	mspK0/QNXlZxZkY+la9cnrFeNiJSvKd0okNQTPLyvFA74sOJ4kuoYKjZeVH4pp1ETNnQ0W
-	aufls2kS0QJYbbAOanhKk6juHXGY9oY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-t8vj5eJfMHiuuDyjCCfHhw-1; Wed, 05 Mar 2025 09:54:25 -0500
-X-MC-Unique: t8vj5eJfMHiuuDyjCCfHhw-1
-X-Mimecast-MFC-AGG-ID: t8vj5eJfMHiuuDyjCCfHhw_1741186464
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-390e271517fso4026710f8f.1
-        for <regressions@lists.linux.dev>; Wed, 05 Mar 2025 06:54:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7kaGvh2"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso1023409266b.1
+        for <regressions@lists.linux.dev>; Wed, 05 Mar 2025 08:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741192397; x=1741797197; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JK4O2zf61Cn8wpdWW5Btx9mD0jmIMmD6EG+2ZAdy0IY=;
+        b=R7kaGvh2CMlEGYYNFn24DVtkXf4kpHQMdUAbhpiGt4kzn7N66nOP6SMScPWM44gsc7
+         M7EGSxD6ZypUrFIJb7W03UIIGXdzUP42/Q1N/G66kAtrB+ZuKQmKFRojTwOciCxmtd2d
+         LXhNqMUN6xucxMjZh5F9eG1wn3i/tAN/rlfCP4r0/7CDPH1LfurTKkp0dkR+4gCYKIQD
+         8hKTbdqC7n7Xlfzc0dmL0tb82dVJSXubSb2YzJlg/DeQaEvMWBtE7CleF/4L0AnRCNfc
+         1Z0JusjUQwUjzpT223LU/P0XyRbbVJuLPIMvO3uqWTJEDKxqEORYO0WziwLW8hhG4PR2
+         vgSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741186459; x=1741791259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cox8z8lPi8h9WF637SHJRl9fGGbJ29Arrtfjq01tB+8=;
-        b=aSMZkt/umhh/6yP+AqyA9gWmf177W+H7DmrjqGJXixkOduBxr1hRxIOxa5WY8v/Cw3
-         eHFut6pWnwxRD9MToNjg55clk4ITlIfGJsercxQc46G7dCpqV3QG+C0bhSy1tU1rH8yn
-         gG+ewbj9AvRQykBP6R8G00bh5BYF6wdGOoPI1MPyEs+o32djgqrN1JEm2IGDUt5ThNaT
-         cbFw8fXrMcQW4utg63civloLDZWIP364xMBA+0YXd8DANkRhimDAhZ0mwXkfPvTWQVtM
-         zvySst/mcN709V/qchkEPDTIyGDQj6mUbR5ocK3pQRiWkNX/KKMy8sYCjBV8zqFwvMia
-         UJUg==
-X-Forwarded-Encrypted: i=1; AJvYcCX92TiUXreoFqODp2lWKe5uWZ80GFRFCWJLr9ftkVsStLaj9qE8SHVBfkWzTLJXStvLOziz4rJEHyMTUQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxzqFTX1Io8l8UkJF9n+FgO5VQaGCRW/l0vY4IhUzbGz7o9LANw
-	509/j3emJcBqQ/0sbibXLpAdIdUxmAvWH1KKUYOOX1mVgxJodZ34tIckBriXSfQOauYypgMJHNi
-	exuPVJWH4ix3/bT0SPIh+7a/INZM7sPLDYMvhqW2GUGj+sFyI6ex0ydvoz6jk0U/sECFPxCo4Ic
-	foOdL4Bzkh8UCKsA2wka+YNWS4rzZ68qBxtmo=
-X-Gm-Gg: ASbGncvvCXSrQiBUVhdVlDvoGIQOET+n/9YZYy3xEkM1hxgm5By3n7o57hVxE17xDuo
-	BkIiOtOSvygWUQAsPhTLvyaABFAW4ExE9Q06L4fxUisjajpxlvXXP/l4JpRD00B15zVQ3miAm
-X-Received: by 2002:a05:6000:136f:b0:390:e1c5:fe2 with SMTP id ffacd0b85a97d-3911f7bac6bmr2620731f8f.38.1741186458846;
-        Wed, 05 Mar 2025 06:54:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE4PvVuGKTxjn5+5ksdqhrhoFlLx86CRmMyFCnvhKsn1bSfHEsAqd2/zQT4R+Gyx1q0iDsSyD24ytNHcUzKCCU=
-X-Received: by 2002:a05:6000:136f:b0:390:e1c5:fe2 with SMTP id
- ffacd0b85a97d-3911f7bac6bmr2620699f8f.38.1741186458470; Wed, 05 Mar 2025
- 06:54:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741192397; x=1741797197;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JK4O2zf61Cn8wpdWW5Btx9mD0jmIMmD6EG+2ZAdy0IY=;
+        b=W6UL73GC6QHHbdGnqF6Apxxy1xogATeArIPGpMBvU1a3RNj4NjMJgxO7Bj5/y8bT7z
+         gl10X3Vnbyrrc4npIHeMQk+TVQ1n+6uK6g+ArOou2imcwAJTVU5JRylSgnYj7hTRJtqc
+         GIUifZNKpoP/bPgJ4KLQzXcIsUv9Yb61oa0eTyC8NcM939Oa1MHMFkyem/NuTnMTqI6k
+         ea5cHOqSYYGu839WFQ74vWEkuZFK5JkbOmNHy2cBZaJncd71q1LR+qXNj2eb/5lbWBWi
+         6dPvrhaF50sVa0BHkb36kvFzZG+eIfk4ZbgmABTHqxAOn5pqoofH2QP8tAnTUH7UOLnx
+         szOA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ifG5OT+dfZQgFVkpKEyUsnp1iiWQEc04IiZXe9UaxcUWYJdN9f404B3IBxxDWXaEsU4F0UY9ySUP1Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwVVQPUVpvgCPr+2IvHtZm96oLYDe05pQIl6fWhlApvPl6zx5dA
+	9z1kYA90/C7V+uaAwwbofKXjSbsjQG9JBRow9raP+GcR5/26Qqvb/R7U/Sn/YfhdRIacoXCdfVo
+	TK7qaK9wUrykUl9mOnlZDTowH8rE=
+X-Gm-Gg: ASbGncuMHPF6GzQ3hnRgmH6XGMb0xgTlObUDa0Mg2sL6SdDHXFwkeN4u9rTwwwPewNW
+	0iMu5x92cB55mgXo4WTz58DuFXVb1QZLf1YOdZRJNs6SRV/jiVwqG/lhXJYDxjplVryNML/0kp7
+	uMJPosuhXA5vrVuVNXArkgEIXR
+X-Google-Smtp-Source: AGHT+IHSHs2TnczkyuMBUdfcfAqotKfdhX9hyFyaHZ1GF4bnrCI3S8DVGv8T1MW99UUFRzlGXjXZR9k54XKDo435ao0=
+X-Received: by 2002:a17:906:dc8f:b0:abf:4bde:51b9 with SMTP id
+ a640c23a62f3a-ac20dd078b9mr357854266b.35.1741192396600; Wed, 05 Mar 2025
+ 08:33:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250112095527.434998-4-pbonzini@redhat.com> <DDEA8D1B-0A0F-4CF3-9A73-7762FFEFD166@xenosoft.de>
- <2025030516-scoured-ethanol-6540@gregkh>
-In-Reply-To: <2025030516-scoured-ethanol-6540@gregkh>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 5 Mar 2025 15:54:06 +0100
-X-Gm-Features: AQ5f1Jq9Q6hjcyw1JQehTB9dj5tz1yQanFW326sta5ahk4Wq43oLtxt1PyaZ6q4
-Message-ID: <CABgObfb5U9zwTQBPkPB=mKu-vMrRspPCm4wfxoQpB+SyAnb5WQ@mail.gmail.com>
-Subject: Re: [Kernel 6.12.17] [PowerPC e5500] KVM HV compilation error
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, seanjc@google.com, linuxppc-dev@lists.ozlabs.org, 
-	regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>, 
-	mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au, 
-	Darren Stevens <darren@stevens-zone.net>, Sasha Levin <sashal@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: pSYzBTzaBP4EGPqpMm5ROh3EbjTm0KBB5T671ik-ZlE_1741186464
-X-Mimecast-Originator: redhat.com
+From: =?UTF-8?Q?Se=C3=AFfane_Idouchach?= <seifane53@gmail.com>
+Date: Thu, 6 Mar 2025 00:32:59 +0800
+X-Gm-Features: AQ5f1JozTIGBqPbsdq4tnmrTjBsGE02f-EjWfm9qmjROqDAlMIVVEXpdJMzEuzM
+Message-ID: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+Subject: [REGRESSION] Long boot times due to USB enumeration
+To: dirk.behme@de.bosch.com
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 5, 2025 at 3:19=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
-> On Wed, Mar 05, 2025 at 03:14:13PM +0100, Christian Zigotzky wrote:
-> > Hi All,
-> >
-> > The stable long-term kernel 6.12.17 cannot compile with KVM HV support =
-for e5500 PowerPC machines anymore.
-> >
-> > Bug report: https://github.com/chzigotzky/kernels/issues/6
-> >
-> > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/=
-x5000_defconfig
-> >
-> > Error messages:
-> >
-> > arch/powerpc/kvm/e500_mmu_host.c: In function 'kvmppc_e500_shadow_map':
-> > arch/powerpc/kvm/e500_mmu_host.c:447:9: error: implicit declaration of =
-function '__kvm_faultin_pfn' [-Werror=3Dimplicit-function-declaration]
-> >    pfn =3D __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
-> >          ^~~~~~~~~~~~~~~~~
-> >   CC      kernel/notifier.o
-> > arch/powerpc/kvm/e500_mmu_host.c:500:2: error: implicit declaration of =
-function 'kvm_release_faultin_page'; did you mean 'kvm_read_guest_page'? [-=
-Werror=3Dimplicit-function-declaration]
-> >   kvm_release_faultin_page(kvm, page, !!ret, writable);
-> >
-> > After that, I compiled it without KVM HV support.
-> >
-> > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/=
-e5500_defconfig
-> >
-> > Please check the error messages.
->
-> Odd, what commit caused this problem?
+Dear all,
 
-48fe216d7db6b651972c1c1d8e3180cd699971b0
+I am reporting what I believe to be regression due to
+c0a40097f0bc81deafc15f9195d1fb54595cd6d0.
 
-> Any hint as to what commit is missing to fix it?
+After this change I am experiencing long boot times on a setup that
+has what seems like a bad usb.
+The progress of the boot gets halted while retrying (and ultimately
+failing) to enumerate the USB device and is only allowed to continue
+after giving up enumerating the USB device.
+On Arch Linux this manifests itself by a message from SystemD having a
+wait job on journald. Journald starts just after the enumeration fails
+with "unable to enumerate USB device".
+This results in longer boot times on average 1 minute longer than
+usual (usually around 10s).
+No stable kernel before this change exhibits the issue all stable
+kernels after this change exhibit the issue.
 
-A big-ass 90 patch series. __kvm_faultin_pfn and
-kvm_release_faultin_page were introduced in 6.13, as part of a big
-revamp of how KVM does page faults on all architectures.
+See the related USB messages attached below (these messages are
+continuous and have not been snipped) :
 
-Just revert all this crap and apply the version that I've just sent
-(https://lore.kernel.org/stable/20250305144938.212918-1-pbonzini@redhat.com=
-/):
+[...]
+[    9.640854] usb 1-9: device descriptor read/64, error -110
+[   25.147505] usb 1-9: device descriptor read/64, error -110
+[   25.650779] usb 1-9: new high-speed USB device number 5 using xhci_hcd
+[   30.907482] usb 1-9: device descriptor read/64, error -110
+[   46.480900] usb 1-9: device descriptor read/64, error -110
+[   46.589883] usb usb1-port9: attempt power cycle
+[   46.990815] usb 1-9: new high-speed USB device number 6 using xhci_hcd
+[   51.791571] usb 1-9: Device not responding to setup address.
+[   56.801594] usb 1-9: Device not responding to setup address.
+[   57.010803] usb 1-9: device not accepting address 6, error -71
+[   57.137485] usb 1-9: new high-speed USB device number 7 using xhci_hcd
+[   61.937624] usb 1-9: Device not responding to setup address.
+[   66.947485] usb 1-9: Device not responding to setup address.
+[   67.154086] usb 1-9: device not accepting address 7, error -71
+[   67.156426] usb usb1-port9: unable to enumerate USB device
+[...]
 
-commit 48fe216d7db6b651972c1c1d8e3180cd699971b0
-    KVM: e500: always restore irqs
+This issue does not manifest in 44a45be57f85.
+I am available to test any patches to address this on my system since
+I understand this could be quite hard to replicate on any system.
+I am available to provide more information if I am able or with
+guidance to help troubleshoot the issue further.
 
-commit 833f69be62ac366b5c23b4a6434389e470dd5c7f
-    KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
-    Message-ID: <20241010182427.1434605-55-seanjc@google.com>
-    Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
+Wishing you all a good day.
 
-commit f2623aec7fdc2675667042c85f87502c9139c098
-    KVM: PPC: e500: Mark "struct page" pfn accessed before dropping mmu_loc=
-k
-    Message-ID: <20241010182427.1434605-54-seanjc@google.com>
-    Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
-
-commit dec857329fb9a66a5bce4f9db14c97ef64725a32
-    KVM: PPC: e500: Mark "struct page" dirty in kvmppc_e500_shadow_map()
-    Message-ID: <20241010182427.1434605-53-seanjc@google.com>
-    Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
-
-And this, ladies and gentlemen, is why I always include the apparently
-silly Message-ID trailer. Don't you just love how someone, whether
-script or human, cherry picked patches 53-55 without even wondering
-what was in the 52 before. I'm not sure if it'd be worse for it to be
-a human or a script... because if it's a script, surely the same level
-of sophistication could have been put into figuring out whether the
-thing even COMPILES.
-
-Sasha, this wins the prize for most ridiculous automatic backport
-ever. Please stop playing maintainer if you can't be bothered to read
-the commit messages for random stuff that you apply.
-
-Paolo
-
+#regzbot introduced: c0a40097f0bc81deafc15f9195d1fb54595cd6d0
