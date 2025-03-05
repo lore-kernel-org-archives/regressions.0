@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E821F76B5
-	for <regressions@lists.linux.dev>; Wed,  5 Mar 2025 23:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31B920766A
+	for <regressions@lists.linux.dev>; Wed,  5 Mar 2025 23:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741218140; cv=none; b=nwwa5AxzwBp+XYE6LCJcpoVdgSDV52vfKrGotpbzlMaEZo63It6aSjz3ucbsDcXnOjipJqax29F3otpe8FBjr02TLQNGPrnPO5CIG5pYcw/DKXsTaniyVFerI1GVVF1olUNZu78y4JAQqh4HUty6/Cwwh1VU16bQkL0+Yaa+R/I=
+	t=1741218664; cv=none; b=O4wSkExW/UUkK3VRiSPSLJfkboloGc9hMalw80D/YIKOLKmcEg3ShTnnb2Uo9P7HFDt15HicXRcTzSF/MFrgLTazY9LwxV4uimyh01j6OCkKiFeDSaF+tVQ1t5J1ZS7ceRtt2dHqKrOYs8JdzpEr4u/OaMbHRzuEa/pT+VpUXDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741218140; c=relaxed/simple;
-	bh=gHBiQTwQLmIhSXn9apA53QiF78YO3bY0hmrA3pxSyxM=;
+	s=arc-20240116; t=1741218664; c=relaxed/simple;
+	bh=SYUX04ysxCZTKNusLZGK6y1AFswIbgZ2Al4YEUcQ5B4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=madlQQcjxF5a2bqYWiKpZpC8IuDzvOcdXZSaUbdnjL8GOfdqGKJVjxKbqD6HJnWXUxvtU8P1o7oI9lDgslIDE+o4ldSxNySshUT7+T3XurQcHsRSK21NO6pg2aEn4L4EQYqCEvY2gsenTJ/WjfCeJaxylfs3ks3S2D7/dicnyM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2u2jxdq; arc=none smtp.client-ip=198.175.65.14
+	 In-Reply-To:Content-Type; b=jmxhoLo9EC4dbKGpcyf08of698mQKvGIH3IPzAOvPp9OrkJE6LmTPaQNKjJ2XQ0PIYsWfvgt6LMGrHoL5+bi+q3Un/tm05XnE5Xw4EAmJRl4THvlzVSrr5Iz588FU3CWe9yWqIAaoLk7Iys+7O3uKq2bXuQ36w0UWZwu48wOPY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CvDlPJvz; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2u2jxdq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CvDlPJvz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741218139; x=1772754139;
+  t=1741218663; x=1772754663;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=gHBiQTwQLmIhSXn9apA53QiF78YO3bY0hmrA3pxSyxM=;
-  b=Y2u2jxdqL+DSGM+0iP4wnasNwFQAC4fPqdYtaotwcyqE9U0kiNa1sV7O
-   A7JTHgdVBl7vaRkF6Lt3MpiaRwJRUua389fl+ZtNoZn1wkV4dTAsN/fuI
-   W+VZscSfdA2Be4n8park+UPNAH/RY4Su4fhLYrSHwCr/Awm7i8dTgT1Xi
-   7ISpJlxR81YsQd4Brjbn7nWHknoGRKLtPgRrWUSR8I+tSMJrfuaTR/7eC
-   cQZQYZRQ0TdrHN9m5OT4BXfkkyD6QL66q/Gdmtq54Y3HoGlmrXv+JRzec
-   vatt9femBM7B7e9FS1P1dI3V7ql+DeXnPEGf2HsYl1KKSI1xunTPb1Nst
+  bh=SYUX04ysxCZTKNusLZGK6y1AFswIbgZ2Al4YEUcQ5B4=;
+  b=CvDlPJvzbM5WL1TUiOk2fAaoBnb7P4AwgXjGV4isvmmCtaZztZ57fMIM
+   85vSpk2VW8WXGgBPXt3nLzRLGZRcMAVvh0h790SZHSzBumvYrJOm4ehTq
+   swJTOqWI4hQYE01GabnCOzwW5wwHbiPOtwUMrfQyWUVnVkPc+pS8Aoofk
+   DI5x1Ss577v2SvbqNCjm30Ypt9B6tCk0qd0GH+3PT7CPeZRKY+ORZrrzv
+   vxdIN9Bvl31U18dgdT+4/dUcccEX865qasDuCiDmTZOCtqSF4ToqdzHcy
+   q4FrumkL1X5ztR/wvws6lpWpX5sTdF+xAGKxjMcGqPPXTbDwO2lIUChAe
    A==;
-X-CSE-ConnectionGUID: vEd8YXi9QVCzhTKmbLSqTA==
-X-CSE-MsgGUID: t71yzvS7RpqFpjnGJvB0kw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45979249"
+X-CSE-ConnectionGUID: HQI4QrOzRhiVT5CpfLdpZA==
+X-CSE-MsgGUID: schfpZR1S7Wq6Ut+vZUquQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45860971"
 X-IronPort-AV: E=Sophos;i="6.14,224,1736841600"; 
-   d="scan'208";a="45979249"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 15:42:18 -0800
-X-CSE-ConnectionGUID: kw83umn4TL6DgRwjrq52wQ==
-X-CSE-MsgGUID: x2WseLZaTKqMXbgmSOVTfA==
+   d="scan'208";a="45860971"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 15:51:02 -0800
+X-CSE-ConnectionGUID: BaPI34EJRnWpX/koFyvBtQ==
+X-CSE-MsgGUID: Qes0inn+So6p1MvmsTqVtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="124041827"
+   d="scan'208";a="118755008"
 Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.109.196]) ([10.125.109.196])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 15:42:17 -0800
-Message-ID: <7a212431-5320-464b-a357-507fa6511586@intel.com>
-Date: Wed, 5 Mar 2025 15:42:38 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 15:51:02 -0800
+Message-ID: <e5f56fd2-b2e2-48c1-bb3d-e00b61807893@intel.com>
+Date: Wed, 5 Mar 2025 15:51:22 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,6 +63,7 @@ Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
  christian@heusel.eu, Paolo Bonzini <pbonzini@redhat.com>,
  Sean Christopherson <seanjc@google.com>
 References: <CAMEKE0Hd3S0-25afhWQhNNitbc7njp0ftO+Y3QmgS6CyFQh4ww@mail.gmail.com>
+ <7a212431-5320-464b-a357-507fa6511586@intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -108,71 +109,14 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <CAMEKE0Hd3S0-25afhWQhNNitbc7njp0ftO+Y3QmgS6CyFQh4ww@mail.gmail.com>
+In-Reply-To: <7a212431-5320-464b-a357-507fa6511586@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 3/5/25 15:30, Miguel Ruiz wrote:
-> Hello everyone,
-> 
-> I have encountered a regression in the kernel where certain applications
-> under Windows 11 in libvirt completely crash. I've reported this on the
-> arch linux forums <https://bbs.archlinux.org/viewtopic.php?pid=2229827>
-> and we've narrowed down the cause as this diff <https://lore.kernel.org/
-> all/20240808062937.1149-3-ravi.bangoria@amd.com/> enabling bus lock
-> support. Huge thanks to Christian Heusel <mailto:christian@heusel.eu>
-> who went through the painstaking process to bisect and build various
-> kernel images for me to test.
-> 
-> I'd like to list my desktop PC specifications for some context:
-> 
->   * Motherboard - Asrock B650m Pro RS
->   * Processor - AMD Ryzen 7 9800x3d
->   * Graphics Card - Nvidia Geforce RTX 3060 12GB
->   * Memory - Silicon Power Zenith 64GB DDR5-6000 CL30
->   * Storage - 
->       o Western Digital SN580 1TB nvme SSD (Arch Linux is here)
->       o Crucial MX300 750GB sata SSD
->       o Seagate BarraCuda ST8000DM004 8TB sata HD
-> 
-> My Windows 11 qcow image is on the nvme and I'm passing through the
-> other 2 sata drives. I've pinned and isolated 7 cores from the host to
-> use on the VM. My RTX 3060 is also passed through into the VM (thus
-> isolated from being used on the host via the vfio-pci.ids flag). I share
-> the mice & keyboard via evdev.
-> 
-> The issue does not manifest itself across all applications. E.G. Firefox
-> & the Epic Games client are unaffected, but the Steam client immediately
-> exits (crashes?) as soon as you attempt to download, update, or
-> uninstall a game. Certain games such as Yooka Laylee also refuse to
-> launch properly & exit immediately as well. On kernel versions prior to
-> this, no such issue occurs and all applications work normally as
-> expected. Furthermore, when booting the host system with the kernel
-> argument: "split_lock_detect=off", on modern kernel versions, the issue
-> goes away providing more evidence that the commit mentioned above is the
-> cause. This issue is also consistent across a standard Windows 10 VM
-> with no GPU passthrough or other special customization.
-> 
-> Please let me know if there is more information I can provide. I'll be
-> happy to help with any logs/reports or any other debug info and test any
-> potential fixes. If the fix is found, please make sure to credit
-> Christian Heusel <mailto:christian@heusel.eu> like so!
-> 
-> Bisected-by: Christian Heusel <christian@heusel.eu
-> <mailto:christian@heusel.eu>>
+On 3/5/25 15:42, Dave Hansen wrote:
+> I'm also cc'ing the KVM folks. I don't actually know how the #GP from
+> the split lock detection will manifest to KVM guests. I'm kinda
+> surprised it crashes the guest app and doesn't do anything more noisy.
 
-I'm leaving all the context in because the HTML from the original will
-make sure it won't make it to the lists.
-
-I'm also cc'ing the KVM folks. I don't actually know how the #GP from
-the split lock detection will manifest to KVM guests. I'm kinda
-surprised it crashes the guest app and doesn't do anything more noisy.
-
-Is there anything in the Linux logs (dmesg) of interest?
-
-We've had a few other reports of split lock detection triggering in
-Linux applications. But, we've either just tuned down the aggressiveness
-of the detection or told people to turn it off. We haven't treated split
-lock detection activation as a regression up to this point, just a
-feature working as intended.
+I've got my wires crossed somewhere. It's not a #GP, it's an #AC.
 
