@@ -1,80 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCAFD299;
-	Thu,  6 Mar 2025 15:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2751624C8;
+	Thu,  6 Mar 2025 15:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741274373; cv=none; b=KtysLQt/581yRQid8z5nXupwlYmfW6iFIq0X7FZt2zovlSM/uVf2CyjUOIl3itgKAXKoVvO5jwxhaAQ08cSwBIfDBsvMALD69hHWitiwkPaJmq3t0GSaWO8BDY/aK1Yc1c+99tjilwu3ysj6XB8NmHyosDZKqTi24GKKfcXvbME=
+	t=1741274641; cv=none; b=WXa8U20ACluYfKFaN4WCkFxXPoJJxOSTngCCSSneXTEvBOp/GiO8ixQH43N6/5PiMrLlsFA3IiYVsEGUHE0kAtwtIjioQzIAW53iYS3tdihWA74khU0VUWGawqYJYwEBlwIYVpBOW2gGIT/bZ47SEj6OWoea50+G/iWIk/PjZcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741274373; c=relaxed/simple;
-	bh=6QlmcIc2nD2jRS+7DaISjQLzs92eHSdVRUCSyvfiE+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0MSpedLGUJiijmsdhFZcWcFbw0CbgyvzrS2GnGuboxPQmuYPuYU367fTk/1lm0kuGws48H1x/ZkhhsXNRksbiWaMl+rlbgwZoqoQZOi1P+w0D+uG4SZGLkoYkIh331hbFeiiJrBkNjr+iU26LmJ3B2+ms8hOwPtCpFWnAXzq6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xtn10E7B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741274641; c=relaxed/simple;
+	bh=Uk1fRlzfrKUr1hsqSoVEwFBVJOng5D4kp6ohifYc4Nw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Z93Nl2WJKOatqSY9bhVW5KEUeOg6trtRkV5067X0D4cW1XuGmeoZ7vifhBixu0R5FQqIZTCh/NBLQq23mwLZjRzJT9WjRh8Z7AjNfT/an30sXwjwG3WU10Rjfawsuc0VGKbv2wHM1/cQpTVMMLpf0OD56E2ftcpy6/e8gmqJCh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=c8TTC9Lm; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xtn10E7B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BF6C4CEE0;
-	Thu,  6 Mar 2025 15:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741274372;
-	bh=6QlmcIc2nD2jRS+7DaISjQLzs92eHSdVRUCSyvfiE+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xtn10E7B3Flk/KudFeKjl5xJub3tkThiQhBBxKdUOSnCB1UmePvTjdYFkemRVZIM8
-	 ySuyZtAVgG9Zz0GOkAp4MmDSiV4aFU9UHuTc+JpLC3TYAji3//6onGDYIpurzp8Y4B
-	 yqf5Hj3L8ZfB+QhavnpGYjzyFSXFZCQnIIBhlbtek++GJ2G4sdc/0+ceT/va9rzUjT
-	 dG90gSCKd9gYC/tJOZQI+uLolQ0BWS33zgG0mrrxmwbr/5uCrLCTM95z3qWcQVUAbn
-	 u7B3eMXmpXAUlIS7w+hptHfOa2vXJn2lSq8/S1IfCNsfApCykhjxS2MiUx41NGDBd8
-	 Rzlsj9B4ydgQA==
-Date: Thu, 6 Mar 2025 08:19:29 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-	linux-nvme@lists.infradead.org,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: 6.13/regression/bisected - new nvme timeout errors
-Message-ID: <Z8m9AbD3tjNpBt6p@kbusch-mbp>
-References: <CABXGCsMcxu3pCF8jYPeqF_jN34saBwc8Fci+c-Dg2Lh7rqvuFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="c8TTC9Lm"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 526FNh8s3982059
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 6 Mar 2025 07:23:44 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 526FNh8s3982059
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741274624;
+	bh=2IHv/esmEmWpVCyNnE6/Yq36oVJO6qO/dtwHmKhqDic=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=c8TTC9LmKzFisTPwTmqcCMRvxg+sYg4ShosaF7Fm4yxSY6y3fPMt4CXvBs6Ly9bmc
+	 WTTgZ9ppW1gwyJ/PSCcf+pz/CtstiPdCS/9zCnbxNPKABaA69if6ZQDuE3XXcURR5c
+	 Q1DPQj54W/o5v5ADrbI1i4gqS1CCsBd/yseJKTWUv47vdVhaGjnSe+GpXIXyK2qiVd
+	 b+7kH9ZOyJ7Uknx5XJ1dxwaqRJ+RaX3WskTS3aZFjcPE8PVhVzAntKldQuZgtKDySv
+	 f63uAHEpKqz87ogR5aFnM9C5rslPB372IndZZ+M1RZPK1VFlgBGf38rHm2HSb53+fj
+	 /mGTkGXTrWNdg==
+Date: Thu, 06 Mar 2025 07:23:41 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+CC: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>, stable@vger.kernel.org,
+        regressions@lists.linux.dev
+Subject: =?US-ASCII?Q?Re=3A_Regression_for_PXE_boot_from_patch_=22Remo?=
+ =?US-ASCII?Q?ve_the_=27bugger_off=27_message=22_in_stable_6=2E6=2E18?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
+References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de> <CAMj1kXH-CDaQ0UFuwHWC2ERRmvo7tS+jcZcue00yReyAi5sVXg@mail.gmail.com> <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com> <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
+Message-ID: <87AE5E2B-4BD4-468E-ABD5-6E717FE925EE@zytor.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABXGCsMcxu3pCF8jYPeqF_jN34saBwc8Fci+c-Dg2Lh7rqvuFQ@mail.gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 15, 2025 at 02:58:04AM +0500, Mikhail Gavrilov wrote:
-> Hi,
-> During 6.13 development cycle I spotted strange new nvme errors in the
-> log which I never seen before.
-> 
-> [87774.010474] nvme nvme1: I/O tag 0 (3000) opcode 0x1 (I/O Cmd) QID 1 timeout, aborting req_op:WRITE(1) size:131072
+On March 6, 2025 6:44:11 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
+>On Thu, 6 Mar 2025 at 15:39, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+>>
+>> On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wro=
+te:
+>> >(cc Peter)
+>> >
+>> >On Tue, 4 Mar 2025 at 15:49, Ulrich Gemkow
+>> ><ulrich=2Egemkow@ikr=2Euni-stuttgart=2Ede> wrote:
+>> >>
+>> >> Hello,
+>> >>
+>> >> starting with stable kernel 6=2E6=2E18 we have problems with PXE boo=
+ting=2E
+>> >> A bisect shows that the following patch is guilty:
+>> >>
+>> >>   From 768171d7ebbce005210e1cf8456f043304805c15 Mon Sep 17 00:00:00 =
+2001
+>> >>   From: Ard Biesheuvel <ardb@kernel=2Eorg>
+>> >>   Date: Tue, 12 Sep 2023 09:00:55 +0000
+>> >>   Subject: x86/boot: Remove the 'bugger off' message
+>> >>
+>> >>   Signed-off-by: Ard Biesheuvel <ardb@kernel=2Eorg>
+>> >>   Signed-off-by: Ingo Molnar <mingo@kernel=2Eorg>
+>> >>   Acked-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+>> >>   Link: https://lore=2Ekernel=2Eorg/r/20230912090051=2E4014114-21-ar=
+db@google=2Ecom
+>> >>
+>> >> With this patch applied PXE starts, requests the kernel and the init=
+rd=2E
+>> >> Without showing anything on the console, the boot process stops=2E
+>> >> It seems, that the kernel crashes very early=2E
+>> >>
+>> >> With stable kernel 6=2E6=2E17 PXE boot works without problems=2E
+>> >>
+>> >> Reverting this single patch (which is part of a larger set of
+>> >> patches) solved the problem for us, PXE boot is working again=2E
+>> >>
+>> >> We use the packages syslinux-efi and syslinux-common from Debian 12=
+=2E
+>> >> The used boot files are /efi64/syslinux=2Eefi and /ldlinux=2Ee64=2E
+>> >>
+>> >
+>> >I managed to track this down to a bug in syslinux, fixed by the hunk
+>> >below=2E The problem is that syslinux violates the x86 boot protocol,
+>> >which stipulates that the setup header (starting at 0x1f1 bytes into
+>> >the bzImage) must be copied into a zeroed boot_params structure, but
+>> >it also copies the preceding bytes, which could be any value, as they
+>> >overlap with the PE/COFF header or other header data=2E This produces =
+a
+>> >command line pointer with garbage in the top 32 bits, resulting in an
+>> >early crash=2E
+>> >
+>> >In your case, you might be able to work around this by removing the
+>> >padding value (=3D0xffffffff) from arch/x86/boot/setup=2Eld, given tha=
+t
+>> >you are building with CONFIG_EFI_STUB disabled=2E However, this still
+>> >requires fixing on the syslinux side=2E
+>> >
+>> >
+>> >
+>> >[syslinux base commit 05ac953c23f90b2328d393f7eecde96e41aed067]
+>> >
+>> >--- a/efi/main=2Ec
+>> >+++ b/efi/main=2Ec
+>> >@@ -1139,10 +1139,14 @@
+>> >        bp =3D (struct boot_params *)(UINTN)addr;
+>> >
+>> >        memset((void *)bp, 0x0, BOOT_PARAM_BLKSIZE);
+>> >-       /* Copy the first two sectors to boot_params */
+>> >-       memcpy((char *)bp, kernel_buf, 2 * 512);
+>> >        hdr =3D (struct linux_header *)bp;
+>> >
+>> >+        /* Copy the setup header to boot_params */
+>> >+        memcpy(&hdr->setup_sects,
+>> >+              &((struct linux_header *)kernel_buf)->setup_sects,
+>> >+              sizeof(struct linux_header) -
+>> >+              offsetof(struct linux_header, setup_sects));
+>> >+
+>> >        setup_sz =3D (hdr->setup_sects + 1) * 512;
+>> >        if (hdr->version >=3D 0x20a) {
+>> >                pref_address =3D hdr->pref_address;
+>> >--- a/com32/include/syslinux/linux=2Eh
+>> >+++ b/com32/include/syslinux/linux=2Eh
+>> >@@ -116,6 +116,7 @@ struct linux_header {
+>> >     uint64_t pref_address;
+>> >     uint32_t init_size;
+>> >     uint32_t handover_offset;
+>> >+    uint32_t kernel_info_offset;
+>> > } __packed;
+>> >
+>> > struct screen_info {
+>>
+>> Interesting=2E Embarrassing, first of all :) but also interesting, beca=
+use this is exactly why we have the "sentinel" field at 0x1f0 to catch *thi=
+s specific error* and work around it=2E
+>
+>We're crashing way earlier than the sentinel check - the bogus command
+>line pointer is dereferenced via
+>
+>startup_64()
+>  configure_5level_paging()
+>    cmdline_find_option_bool()
+>
+>whereas sanitize_bootparams() is only called much later, from extract_ker=
+nel()=2E
 
-...
-
-> I still haven't found a stable way to reproduce this.
-> But I'm pretty sure that if this error don't appearing within two
-> days, then we can assume that the kernel isn't affected by the
-> problem.
-> So I made bisection with above assumption and found this commit:
-> 
-> beadf0088501d9dcf2454b05d90d5d31ea3ba55f is the first bad commit
-> commit beadf0088501d9dcf2454b05d90d5d31ea3ba55f
-> Author: Christoph Hellwig <hch@lst.de>
-> Date:   Wed Nov 13 16:20:41 2024 +0100
-> 
->     nvme-pci: reverse request order in nvme_queue_rqs
-
-The patch here uses the order recieved to dispatch commands in
-consequetive submission queue entries, which is supposed to be the
-desired behavior for any device. I did some testing on mailine, and it
-sure looks like the order the driver does this is optimal, so I'm not
-sure what's going on with your observation.
-
-Do you have a scheduler enabled on your device?
-
-How are you generating IO? Is it a pattern I should be able to replicate
-with 'fio'?
+That is a bug in the kernel then=2E The whole point of the sentinel check =
+is that it needs to be done before any of the fields touched by the sentine=
+l check are accessed=2E
