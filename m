@@ -1,131 +1,100 @@
-Received: from mailsrv.ikr.uni-stuttgart.de (mailsrv.ikr.uni-stuttgart.de [129.69.170.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579AAB667
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 10:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.69.170.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035CC1A76BC;
+	Thu,  6 Mar 2025 10:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741255646; cv=none; b=MEHnYgMH8YGzAXMyFibd5m/4BzUciL+3IhKdMhf+B7ATtEC6OJDz3oPc8KChiMfqP3dp0XYTo7lgkFDau+10DXxSEylDNfAisyMR8trr+ldyOjij1RK0oUDkJbLlkGYwzE2KZ1wpIocqlbS5bdNcH0C86P0blDa5PrmVqXYsE3I=
+	t=1741257434; cv=none; b=MwJP2GIchI86LB5hnLjPPVWb8FsRQPb3+0HJ2EewaceXQ4Gpa58jl1bQMtEi35zTkcvQln6iOpZyrB6xlvjLUgpTlzAJI8+FzHyX54EFC1ZsNL6m07nnUfNkwZo9Ay4C1TrgJChtQrgf8UqHodxp6dJQjVbmJToijkOKgUpcrwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741255646; c=relaxed/simple;
-	bh=0PJImwDxowScFpAr5sxFHkDazd+GIR7gQTpREkQKAHw=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:MIME-Version:
-	 Content-Type:Message-Id; b=qQJq3ZvN5zG0ZyLmIqr5sqDtFwuFT8vtv+kGYREOJ55VSbGF3QQ6O3qnoFCdYCo3jaEuw6WURL3whn4t5ZMaEWcXFQ/3RKMwCBfaEKzFoobkSNE11Nabh1pHJcGOcJfRwBnxpCnTRLBfudvt+dxLhBbsFfye9ZfjBymG6+AC2QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ikr.uni-stuttgart.de; spf=pass smtp.mailfrom=ikr.uni-stuttgart.de; arc=none smtp.client-ip=129.69.170.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ikr.uni-stuttgart.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ikr.uni-stuttgart.de
-Received: from netsrv1.ikr.uni-stuttgart.de (netsrv1 [10.21.12.12])
-	by mailsrv.ikr.uni-stuttgart.de (Postfix) with ESMTP id 1BAE51B39D3E;
-	Thu,  6 Mar 2025 11:07:15 +0100 (CET)
-Received: from ikr.uni-stuttgart.de (pc021 [10.21.21.21])
-	by netsrv1.ikr.uni-stuttgart.de (Postfix) with SMTP id 093B81B39D3C;
-	Thu,  6 Mar 2025 11:07:13 +0100 (CET)
-Received: by ikr.uni-stuttgart.de (sSMTP sendmail emulation); Thu, 06 Mar 2025 11:07:12 +0100
-From: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>
-Organization: University of Stuttgart (Germany), IKR
-To: Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: Regression for PXE boot from patch "Remove the 'bugger off' message" in stable 6.6.18
-Date: Thu, 6 Mar 2025 11:07:12 +0100
-User-Agent: KMail/1.9.10
-Cc: stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de> <CAMj1kXE7bzBV+Gzt4iuAfDpFzW=b0j0ncH9xxCGZkiexvfH3zQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXE7bzBV+Gzt4iuAfDpFzW=b0j0ncH9xxCGZkiexvfH3zQ@mail.gmail.com>
-X-KMail-QuotePrefix: > 
+	s=arc-20240116; t=1741257434; c=relaxed/simple;
+	bh=IO7c0ocWghm1HF2Y6BtOJGBD54V3rraIIlXJos9nIRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xjdan7UaqOYa3VZY7ABEM2VlWgAA0KIFI2qjLjpPGbDNh82iI6xG08BpLQPrN7vzQDTDC3AS6NjFLxkcC0ufYNPh53gwK5H9R+emi7V0s7LidPvsOQvdzJpQoFlrRWToCcsgbhe5OuCCeBGcTVtirM1TgBzXJ5SqcBJFLT4FSnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kD1epc8Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kD1epc8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99F0C4CEE0;
+	Thu,  6 Mar 2025 10:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741257433;
+	bh=IO7c0ocWghm1HF2Y6BtOJGBD54V3rraIIlXJos9nIRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kD1epc8ZVdG4tJyWNHlY0ILFCECnUn/YrBiOFK7OXdUasu/4ggapdRwdrsI5fDlrs
+	 kF1Emj8ZmB0Xx0c8s8J8ITH0yzbcpO+Nj7qpEIpkFSvw0pyPYJgqcGb/Rnuh0/L/M6
+	 vO2QBR8MXndMNqKDghPh32Zb2Ox6PdR8ozJaTJMXmIVnMwGFZ8Y36K+9xWVQj99YIu
+	 eSTPZGPul0RSbBCf9UMQl1g5a/q2qOAWJ5PEnStSxh25GoKhy4+sjUFfOGcEabE444
+	 galG1B7wDGmdJYutFvVLBP+8jdzHuK9RT7UJY9aYSgx/W8BwT18JiuxxDJ+uFmA9z+
+	 YWAL8qGqpu7ig==
+Date: Thu, 6 Mar 2025 11:37:08 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Eric <eric.4.debian@grabatoulnz.fr>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jian-Hong Pan <jhp@endlessos.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	Dieter Mummenschanz <dmummenschanz@web.de>
+Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
+ board type") on reboot (but not cold boot)
+Message-ID: <Z8l61Kxss0bdvAQt@ryzen>
+References: <Z8SBZMBjvVXA7OAK@eldamar.lan>
+ <Z8SyVnXZ4IPZtgGN@ryzen>
+ <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
+ <Z8VLZERz0FpvpchM@x1-carbon>
+ <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: Multipart/Mixed;
-  boundary="Boundary-00=_QPXyn022XafPQL2"
-Message-Id: <202503061107.12978.ulrich.gemkow@ikr.uni-stuttgart.de>
-
---Boundary-00=_QPXyn022XafPQL2
-Content-Type: text/plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
 
-On Thursday 06 March 2025, Ard Biesheuvel wrote:
-> On Tue, 4 Mar 2025 at 15:49, Ulrich Gemkow
-> <ulrich.gemkow@ikr.uni-stuttgart.de> wrote:
-> >
-> > Hello,
-> >
-> > starting with stable kernel 6.6.18 we have problems with PXE booting.
-> > A bisect shows that the following patch is guilty:
-> >
-> >   From 768171d7ebbce005210e1cf8456f043304805c15 Mon Sep 17 00:00:00 2001
-> >   From: Ard Biesheuvel <ardb@kernel.org>
-> >   Date: Tue, 12 Sep 2023 09:00:55 +0000
-> >   Subject: x86/boot: Remove the 'bugger off' message
-> >
-> >   Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >   Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> >   Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> >   Link: https://lore.kernel.org/r/20230912090051.4014114-21-ardb@google.com
-> >
-> > With this patch applied PXE starts, requests the kernel and the initrd.
-> > Without showing anything on the console, the boot process stops.
-> > It seems, that the kernel crashes very early.
-> >
-> > With stable kernel 6.6.17 PXE boot works without problems.
-> >
-> > Reverting this single patch (which is part of a larger set of
-> > patches) solved the problem for us, PXE boot is working again.
-> >
-> > We use the packages syslinux-efi and syslinux-common from Debian 12.
-> > The used boot files are /efi64/syslinux.efi and /ldlinux.e64.
-> >
-> > Our config-File (for 6.6.80) is attached.
-> >
-> > Regarding the patch description, we really do not boot with a floppy :-)
-> >
-> > Any help would be greatly appreciated, I have a bit of a bad feeling
-> > about simply reverting a patch at such a deep level in the kernel.
-> >
+On Mon, Mar 03, 2025 at 03:58:30PM +0100, Eric wrote:
+> Hi Niklas
 > 
-> Hello Ulrich,
+> Le 03/03/2025 à 07:25, Niklas Cassel a écrit :
+> > So far, this just sounds like a bug where UEFI cannot detect your SSD.
+> Bit it is detected during cold boot, though.
+> > UEFI problems should be reported to your BIOS vendor.
+> I'll try to see what can be done, however I am not sure how responsive they
+> will be for this board...
+> > 
+> > It would be interesting to see if _Linux_ can detect your SSD, after a
+> > reboot, without UEFI involvement.
+> > 
+> > If you kexec into the same kernel as you are currently running:
+> > https://manpages.debian.org/testing/kexec-tools/kexec.8.en.html
+> > 
+> > Do you see your SSD in the kexec'd kernel?
 > 
-> Thanks for the report, and apologies for the breakage.
-> 
-> I will look into this today - hopefully it is something that can be
-> resolved swiftly.
-> 
-> Can you share your syslinux config too, please?
-> 
+> Sorry, I've tried that using several methods (systemctl kexec / kexec --load
+> + kexec -e / kexec --load + shutdown --reboot now) and it failed each time.
+> I *don't* think it is related to this bug, however, because each time the
+> process got stuck just after displaying "kexec_core: Starting new kernel".
 
-Hello Ard,
+I just tired (as root):
+# kexec -l /boot/vmlinuz-6.13.5-200.fc41.x86_64 --initrd=/boot/initramfs-6.13.5-200.fc41.x86_64.img --reuse-cmd
+# kexec -e
 
-Thank you! The config file is attached. Please feel free to
-ask for more info.
+and FWIW, kexec worked fine.
 
-Best regards
+Did you specify an initrd ? did you specify --reuse-cmd ?
 
-Ulrich
+If not, please try it.
 
--- 
-|-----------------------------------------------------------------------
-| Ulrich Gemkow
-| University of Stuttgart
-| Institute of Communication Networks and Computer Engineering (IKR)
-|-----------------------------------------------------------------------
 
---Boundary-00=_QPXyn022XafPQL2
-Content-Type: text/plain;
-  charset="iso-8859-15";
-  name="Local.cfg"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="Local.cfg"
+It would be interesting to see if Linux can detect your SATA drive after
+a kexec. If it can't, then we need to report the issue to your drive
+vendor (Samsung).
 
-DEFAULT lnc
 
-LABEL lnc
-  KERNEL image/bzImage-Local
-  INITRD lnc-ramdisc-simple.gz
-  APPEND rw root=/dev/ram0 ip=::::::on quiet ignore_rlimit_data
-
---Boundary-00=_QPXyn022XafPQL2--
+Kind regards,
+Niklas
