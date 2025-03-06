@@ -1,102 +1,111 @@
-Received: from mailsrv.ikr.uni-stuttgart.de (mailsrv.ikr.uni-stuttgart.de [129.69.170.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB152144BC
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 16:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.69.170.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E275214A61
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 17:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741279822; cv=none; b=Kitf4VIE/bxnoyHCpebUpBTaVxo970MNXYr7KVivJ4xCc0Na7cu01ADDKl7oyEhisw6dVJ1NYq70bbpdmF3CORXVxTUMwOqXanfgjoS+T6n/zWv7MNL3mJSQqoxZKFZgnW6PH568uxbjmsviCc+mScV8PcLvUgGW4lc+Nk3i0sY=
+	t=1741280843; cv=none; b=l7D5cxvsoGu5dCbHPa3Az2CzpDzCiCuHTK+DWfD09RNpATriQWASXSPQm3teO0eoKghNTMPbDtafmAH9EpNVm0NUr86MemKYxBx74/lP11wBD59Fuk4Ae10ETqdRXho64Zgr81h7VhT97mLgGiD8W7SOLyLD2I/kUta0Eydvt3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741279822; c=relaxed/simple;
-	bh=WIQvrMmpPfH84Uw5cREnaT5FAQ+McOHpdBp0AicpnbE=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:MIME-Version:
-	 Content-Type:Content-Disposition:Message-Id; b=p904E3KoADBFnoS4b/5rhHoIuc6YRiH+1HRLYgHDnMysnF4tR9Gakb8DYSGkYBlZBCrfZMBUmI+blGChZXwlnPEwVWcSVlTxSenNkBjrwgOCClL0OG5qazP25ocxY17wOvp+swv4XPbuYXIgAgKp6QvdUlvFclJzfYCI8X+jtME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ikr.uni-stuttgart.de; spf=pass smtp.mailfrom=ikr.uni-stuttgart.de; arc=none smtp.client-ip=129.69.170.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ikr.uni-stuttgart.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ikr.uni-stuttgart.de
-Received: from netsrv1.ikr.uni-stuttgart.de (netsrv1 [10.21.12.12])
-	by mailsrv.ikr.uni-stuttgart.de (Postfix) with ESMTP id 47BA21B3ED65;
-	Thu,  6 Mar 2025 17:50:18 +0100 (CET)
-Received: from ikr.uni-stuttgart.de (pc021 [10.21.21.21])
-	by netsrv1.ikr.uni-stuttgart.de (Postfix) with SMTP id 32C781B3ED64;
-	Thu,  6 Mar 2025 17:50:16 +0100 (CET)
-Received: by ikr.uni-stuttgart.de (sSMTP sendmail emulation); Thu, 06 Mar 2025 17:50:16 +0100
-From: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>
-Organization: University of Stuttgart (Germany), IKR
-To: Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: Regression for PXE boot from patch "Remove the 'bugger off' message" in stable 6.6.18
-Date: Thu, 6 Mar 2025 17:50:16 +0100
-User-Agent: KMail/1.9.10
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
- stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de> <87AE5E2B-4BD4-468E-ABD5-6E717FE925EE@zytor.com> <CAMj1kXFuC2_J9wUuJ-GnRRSBN6C2YbahxJ9PD9X26TX+smhBgA@mail.gmail.com>
-In-Reply-To: <CAMj1kXFuC2_J9wUuJ-GnRRSBN6C2YbahxJ9PD9X26TX+smhBgA@mail.gmail.com>
-X-KMail-QuotePrefix: > 
+	s=arc-20240116; t=1741280843; c=relaxed/simple;
+	bh=dnNOlL8mvPcZAA/vHd86pBB8fPux64AxqXnGaXwTBdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BfrT/xmZKZOFOyyQwS1sE/9ZahBfMvJw6rdMnkkavGDuA9RPwUIBiGqQ1wSgUdfg5LhOAehidDi1ygwCSbO7qNzZvdZZVtKj/s//PRi6fJgMpMhr7P0G3Hb9MWm3g5w2yscSQCR0G6IStRr+pgMrN5XM1cN4hzMVfzInxtZamBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF5U4w4r; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF5U4w4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96BEC4CEE4
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741280842;
+	bh=dnNOlL8mvPcZAA/vHd86pBB8fPux64AxqXnGaXwTBdA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LF5U4w4rOuGiEXt8aznMpfBgKfkqGIPgazaPrN/c7p2KbTUUpvMhxTM+0kztecGrr
+	 q6XP0d1KFQL8gHXRBydc4amWU14Bfx0rqf/YvJa13G7Hfcv7DXOvOkGvWBY3RMJvsV
+	 2TJryQ0j9qYLqeLRdxU4IVf3O/6vTHjxYHgGgi24IyGy/v2fGiEjHPf7O4s87Rj0up
+	 xSi2lPhgefOXEUPYE55vF5H4WxfL9P3ZubVctXT2QiSa8sSOdFknjIIxFHnqFTyluE
+	 iVpo8oko7zBRE+MFNSqn6mOwYFaY8LMPFplWoFfD1TeqKyHKIpklfQiLDTsSY9PwnY
+	 Ftqj2YfAmkAHw==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30762598511so10505891fa.0
+        for <regressions@lists.linux.dev>; Thu, 06 Mar 2025 09:07:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVIIjDm+JDBcAdh5rHtPor35ZsfaOZYKA2xCv2KN79GscxfYaIOgjjhZVSrLHlQbjup39FQeTmhfJsHrQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbhyBwbkIzJ5Yv/WfEw80Qm0PjLfykf8c+t9iC+oa0EteHqxjl
+	tdrICZ4HpY9W5j9VNf05zBVEzUD4SexysmWlNT5VcS8owB0SR9WLs2uQPtzHnjNc+TOlq5JITiS
+	lYLRU2Op+e0HJqbOvaq68HRbHCo8=
+X-Google-Smtp-Source: AGHT+IE0Bzi3sAhf8iQFVGo/I+4OXDTB7k8CB8TyUHH8xO365g+r9EQUsuVIv+ycxeZ5wuL8R5wpmq5Cka8R0a623ZU=
+X-Received: by 2002:a2e:a7ca:0:b0:30b:af47:6477 with SMTP id
+ 38308e7fff4ca-30bd7ae0c66mr35425381fa.25.1741280841045; Thu, 06 Mar 2025
+ 09:07:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202503061750.16147.ulrich.gemkow@ikr.uni-stuttgart.de>
+References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de>
+ <87AE5E2B-4BD4-468E-ABD5-6E717FE925EE@zytor.com> <CAMj1kXFuC2_J9wUuJ-GnRRSBN6C2YbahxJ9PD9X26TX+smhBgA@mail.gmail.com>
+ <202503061750.16147.ulrich.gemkow@ikr.uni-stuttgart.de>
+In-Reply-To: <202503061750.16147.ulrich.gemkow@ikr.uni-stuttgart.de>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Mar 2025 18:07:09 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFV+reviujfEEZSW5HDJjbOyuVSccoVWLf73hqBLxf4mA@mail.gmail.com>
+X-Gm-Features: AQ5f1JrixDu6pR8Et_tu-m-1q0JL56YqzSuiwVqC5KWtNJcQHuIrjIdxS2NpSjU
+Message-ID: <CAMj1kXFV+reviujfEEZSW5HDJjbOyuVSccoVWLf73hqBLxf4mA@mail.gmail.com>
+Subject: Re: Regression for PXE boot from patch "Remove the 'bugger off'
+ message" in stable 6.6.18
+To: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thursday 06 March 2025, Ard Biesheuvel wrote:
-> On Thu, 6 Mar 2025 at 16:23, H. Peter Anvin <hpa@zytor.com> wrote:
+On Thu, 6 Mar 2025 at 17:50, Ulrich Gemkow
+<ulrich.gemkow@ikr.uni-stuttgart.de> wrote:
+>
+> On Thursday 06 March 2025, Ard Biesheuvel wrote:
+> > On Thu, 6 Mar 2025 at 16:23, H. Peter Anvin <hpa@zytor.com> wrote:
+> > >
+> > > On March 6, 2025 6:44:11 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >On Thu, 6 Mar 2025 at 15:39, H. Peter Anvin <hpa@zytor.com> wrote:
+> > > >>
+> > > >> On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >> >(cc Peter)
+> > > >> >
+> > > >> >
+> > > >> >I managed to track this down to a bug in syslinux, fixed by the hunk
+> > > >> >below. The problem is that syslinux violates the x86 boot protocol,
+> > > >> >which stipulates that the setup header (starting at 0x1f1 bytes into
+> > > >> >the bzImage) must be copied into a zeroed boot_params structure, but
+> > > >> >it also copies the preceding bytes, which could be any value, as they
+> > > >> >overlap with the PE/COFF header or other header data. This produces a
+> > > >> >command line pointer with garbage in the top 32 bits, resulting in an
+> > > >> >early crash.
+> > > >> >
+> > ...
+> > > >>
+> > > >> Interesting. Embarrassing, first of all :) but also interesting, because this is exactly why we have the "sentinel" field at 0x1f0 to catch *this specific error* and work around it.
+> > > >
+> > > >We're crashing way earlier than the sentinel check - the bogus command
+> > > >line pointer is dereferenced via
+> > > >
+> > > >startup_64()
+> > > >  configure_5level_paging()
+> > > >    cmdline_find_option_bool()
+> > > >
+> > > >whereas sanitize_bootparams() is only called much later, from extract_kernel().
+> > >
+> > > That is a bug in the kernel then. The whole point of the sentinel check is that it needs to be done before any of the fields touched by the sentinel check are accessed.
 > >
-> > On March 6, 2025 6:44:11 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >On Thu, 6 Mar 2025 at 15:39, H. Peter Anvin <hpa@zytor.com> wrote:
-> > >>
-> > >> On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >> >(cc Peter)
-> > >> >
-> > >> >
-> > >> >I managed to track this down to a bug in syslinux, fixed by the hunk
-> > >> >below. The problem is that syslinux violates the x86 boot protocol,
-> > >> >which stipulates that the setup header (starting at 0x1f1 bytes into
-> > >> >the bzImage) must be copied into a zeroed boot_params structure, but
-> > >> >it also copies the preceding bytes, which could be any value, as they
-> > >> >overlap with the PE/COFF header or other header data. This produces a
-> > >> >command line pointer with garbage in the top 32 bits, resulting in an
-> > >> >early crash.
-> > >> >
-> ...
-> > >>
-> > >> Interesting. Embarrassing, first of all :) but also interesting, because this is exactly why we have the "sentinel" field at 0x1f0 to catch *this specific error* and work around it.
-> > >
-> > >We're crashing way earlier than the sentinel check - the bogus command
-> > >line pointer is dereferenced via
-> > >
-> > >startup_64()
-> > >  configure_5level_paging()
-> > >    cmdline_find_option_bool()
-> > >
-> > >whereas sanitize_bootparams() is only called much later, from extract_kernel().
+> > Indeed - I have just sent out a fix for this.
 > >
-> > That is a bug in the kernel then. The whole point of the sentinel check is that it needs to be done before any of the fields touched by the sentinel check are accessed.
-> 
-> Indeed - I have just sent out a fix for this.
-> 
+>
+> Hello Ard,
+>
+> thanks for the patch! It does not apply cleanly to 6.6.80 (the includes
+> are different) so I applied it manually and it helps - the systems boots.
+>
+> Please allow the remark regarding the patch description that in
+> our kernel CONFIG_X86_5LEVEL is not set. The patch helps anyway :-)
+>
+> Thanks again and best regards
+>
 
-Hello Ard,
-
-thanks for the patch! It does not apply cleanly to 6.6.80 (the includes
-are different) so I applied it manually and it helps - the systems boots.
-
-Please allow the remark regarding the patch description that in
-our kernel CONFIG_X86_5LEVEL is not set. The patch helps anyway :-)
-
-Thanks again and best regards
-
-Ulrich
-
--- 
-|-----------------------------------------------------------------------
-| Ulrich Gemkow
-| University of Stuttgart
-| Institute of Communication Networks and Computer Engineering (IKR)
-|-----------------------------------------------------------------------
+Thanks for testing. I will take this as a Tested-by.
