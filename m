@@ -1,280 +1,166 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F65720B1E4
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 12:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C821E487
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 13:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741264048; cv=none; b=noOQ4W3x/ZJdEZmWRREnFOCipcfd65Qi/wxRHST/Ie2cyaxA2qMfv9ODfrjkH9aoaT9xo61+nJiEkVPRh0NV7mKIQ8JLLyRMlPfiyqOefSMff29i7TRmxmalq2zD8FxbirJHlXfJLdO77X0QIbF9duU51+o01uWgCrIvV69QjzQ=
+	t=1741268310; cv=none; b=McP+S1BIhpQB6PqDU95zv7pPtO3M5JrMFpn6lLgaZMfRQey1dZFlQs2bd00FPR0qA35TlA2Bx6zSBawVgtm7wjqlwscN8btGT7/QsPkXtdZ5P5aQzhZ9ylx6DXzBo+Z8QUAqn03MIouj7TOPWZlHBWAnfaRfBVy6IT/RALW5JeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741264048; c=relaxed/simple;
-	bh=V5sCas/re5KB1WJDZeREcuolKMHYLbnme+XnEyGYqtM=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=EeoMOUwO/OeZ3B48JIvGeVVyM9ATKu8mCxaFq5motaLDZIkM1pxgnWOcaxy1wFDHLzUeHQlpR3J6XaGU6yt+EGBkTx60vuz3m5sRHQrKggQPG/rGIj6qBchk5PbpjQfoSZXWVLUky0cnjVibWqWu5qVyICNeuR7f/jLzAcOh0Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr; spf=pass smtp.mailfrom=grabatoulnz.fr; dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b=XXtd3COn; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grabatoulnz.fr
+	s=arc-20240116; t=1741268310; c=relaxed/simple;
+	bh=AkyjFd0Wa3rnyt69pk1A/DpTh1F/3OUgZVLHKgJatbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+RNH499W+VQtw2/pt1rc0agnXbN/1cg09/LzoIX9awgBV9HES0PcMtfW06gZjDQD4Va+pDaTMn5Y2vuqs+vemt2OCnpIJVfZE0UZAK6wgKiNMc9KOZ1yNq1CBF9lxKeFkPk5vzNFH9+MIeWwPzh0R/c9ovKdSfcOnyYZ7xWVB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de; spf=pass smtp.mailfrom=swine.de; dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b=lezBO79N; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=swine.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swine.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b="XXtd3COn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 79173433C9;
-	Thu,  6 Mar 2025 12:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grabatoulnz.fr;
-	s=gm1; t=1741264043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+AsgIvVpL2Pm/oq/32bmIaTO0rCvavU6LbqB7AuIneM=;
-	b=XXtd3COneTenwwBY8WzDo+UO+4I3EZz3qgt1rpZrfCsIOoduqCWGLuNMMwVlAp9RSTcT11
-	zLhoILXxe2ivBJn741F3tLtdg6W5RA6YaEgKHPaYTCZgiX+DbL3nnbWk14dg0yqGYTFwMI
-	QuqtwULEvZTEnHyC/uj+6154DEil2arSYa4X7+ecrCPItDovJiFilRcAGC/JJZPImY2OTB
-	EOPmTfieYbSYX4Y2D7mmcCGaHS29QKTcQ7k+BLd3vcdinbYpOLRpIlusWntYUiGgURoYmi
-	qhsGI+HcwWvxYsQnNxet/lwSuLpbL52HBhIvaeBtxCHZtWSPJLZ0/zbYosA+rA==
-Content-Type: multipart/mixed; boundary="------------DhKS6kFF4k5xkk27sIyHql4b"
-Message-ID: <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
-Date: Thu, 6 Mar 2025 13:27:17 +0100
+	dkim=pass (2048-bit key) header.d=swine.de header.i=@swine.de header.b="lezBO79N"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39130ee05b0so71297f8f.3
+        for <regressions@lists.linux.dev>; Thu, 06 Mar 2025 05:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=swine.de; s=google; t=1741268307; x=1741873107; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QkwkoKX7190ti5RXhzP8t6ZA5NeYywDJtwchoyuQTmI=;
+        b=lezBO79NFJqOucI2mYGkjAvyrJltzJYmI1ks+fXVvKkQDc9OV8m1CEntyOQwhR63FU
+         0wTOPw6xNDAJ8jfdTSmKpdMQWzlG9FdiVsGXQVl+b+KO3uqsGwebBx4VjSkOONYdkyRs
+         ePSLoVed7ODhRoSOFSxcVY6KXRq2oWyQ5MuEASHlLyGNTDbESiK7+5H83DenygJD6Yab
+         UTj+n1OupIe1wktgHE48I01ujxq+eyMkBgYyvKOx31hrD0EIQaJl86Qqvn/4pao3z+dr
+         5UP/SD5DoGKyZCqr4XtYrVEn1IXFKB5tNlpA1nPBanxujtUOtp6DRt+soMXOEGn2kML/
+         O/wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741268307; x=1741873107;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkwkoKX7190ti5RXhzP8t6ZA5NeYywDJtwchoyuQTmI=;
+        b=xLXZJRfm+00vebZPTAbtcVeBURrdemxdDOmhxgwo5M2qkxDDLObHC8QwH48EYNljdi
+         DvpA33pss8hpXSu6WZ2US+PosYrI/HoeW4AKXkISGNskqR3ER6XBlyH6lCEi3SDj4jZw
+         HrFMO+eJ56BzzhQ+K0BSDcCUxV9h4F5EE/1e9iGa4lahs7tZQi0SVLlncQD5daUGUXmB
+         4Q3Wfgo52xl32qMTO68JOQbNaTvBLx/Linc0z4guH9gSCfoOUzzh5E5yDwb0+EEvBMpo
+         VSBA9Lfz1YjWyZ1kN/gY61JiqabhyZdgf/3GdiqJVq9TCLnKMw/e4P8/PpKApfuneap3
+         C5ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXmgzlFz3Kk/Tnyagi7j4GtgwESZe845p5X2UROTPQ0q1L/i+S/yXWf+4xiwsHlMaDhWkqP8zF2NGnKPQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzjrpc37OyM7q305/tIYOzZUPYxMx9SqTxFWtQDP9exnKvRwTBb
+	kEP7EcQd9cAZeW8dJKh7IDVfiydn7Oo0XbWlYka6wWPsqxpbudY+ggNslnWKT8t2/m3l1mGFmHl
+	gKZDiXQ==
+X-Gm-Gg: ASbGncvaVpGwWQfuWAmDXQVHzVbcWadV3G4cgHA15o5aYMV9JelAqCIMLS03hGXZ6j0
+	DgJnt4TIq2gBXblbRHVkrxRuFvasdJrdzzyAtxNVQRBs/z9VFeZrdGHehrWh2SjAq1tCpK8NYiD
+	TT0Cm8xUkYPR/PbLduVUKYoMrDG+gCUgHU80SNPPsxX98HzlEcHKO6fArbBNzdwRotW5MbxEJaZ
+	KQu06mauTNwIIXRY4clra6pFQk4V2deYfRb0aRVW6ri/YEzl3msdy5Gj2+OYmjK88AqlVz1oMEl
+	ZJJNqjZXuLC8IlwCUtKTb2mwZ+aBrildlGi0JAkAIQaCNE9mEjX+5QT/CzsovEJWlxow
+X-Google-Smtp-Source: AGHT+IHRDT+UAaQw7oFEmzS+GWI1qFFPciKHABU9S0C7Q6REV7AakAMtPtN2rr+7AySWXlX37u+nUQ==
+X-Received: by 2002:a05:6000:154d:b0:390:fe4b:70b9 with SMTP id ffacd0b85a97d-3911f72fc6cmr6896614f8f.21.1741268306938;
+        Thu, 06 Mar 2025 05:38:26 -0800 (PST)
+Received: from christian-m2.local ([2a02:6b67:d118:f400:558a:d339:d765:49fa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb7ae4sm2038715f8f.5.2025.03.06.05.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 05:38:26 -0800 (PST)
+Date: Thu, 6 Mar 2025 13:38:25 +0000
+From: Christian Simon <simon@swine.de>
+To: gregkh@linuxfoundation.org
+Cc: jolsa@kernel.org, regressions@lists.linux.dev, simon@swine.de, 
+	stable@vger.kernel.org
+Subject: [PATCH 6.12.y] uprobes: Fix race in uprobe_free_utask
+Message-ID: <u27rnbdpxnayssubw557qxf2rrf6p22cmwkg43skziesvpj7bq@ig5nmblcelrr>
+References: <2025030550-last-fit-9d20@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Christoph Hellwig <hch@infradead.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-ide@vger.kernel.org,
- Dieter Mummenschanz <dmummenschanz@web.de>
-References: <Z8SBZMBjvVXA7OAK@eldamar.lan> <Z8SyVnXZ4IPZtgGN@ryzen>
- <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
- <Z8VLZERz0FpvpchM@x1-carbon>
- <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
- <Z8l61Kxss0bdvAQt@ryzen> <Z8l7paeRL9szo0C0@ryzen>
-Content-Language: en-US
-From: Eric <eric.4.debian@grabatoulnz.fr>
-In-Reply-To: <Z8l7paeRL9szo0C0@ryzen>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdejjeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtkfffgggfuffvvehfhfgjsehmtderredtvdejnecuhfhrohhmpefgrhhitgcuoegvrhhitgdrgedruggvsghirghnsehgrhgrsggrthhouhhlnhiirdhfrheqnecuggftrfgrthhtvghrnhepuefflefgudfgudfhheejfedvgfdtffetffeiveegjeekgeehffffgffhfeffudeunecukfhppedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegrudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegruddphhgvlhhopeglkffrggeimedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegrudgnpdhmrghilhhfrhhomhepvghrihgtrdegrdguvggsihgrnhesghhrrggsrghtohhulhhniidrfhhrpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegtrghsshgvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptggrrhhnihhlseguvggsihgrnhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmo
- hhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughlvghmohgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhhphesvghnughlvghsshhoshdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghv
-X-GND-Sasl: eric.degenetais@grabatoulnz.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025030550-last-fit-9d20@gregkh>
 
-This is a multi-part message in MIME format.
---------------DhKS6kFF4k5xkk27sIyHql4b
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+commit b583ef82b671c9a752fbe3e95bd4c1c51eab764d upstream.
 
-Le 06/03/2025 à 11:40, Niklas Cassel a écrit :
-> On Thu, Mar 06, 2025 at 11:37:08AM +0100, Niklas Cassel wrote:
->> On Mon, Mar 03, 2025 at 03:58:30PM +0100, Eric wrote:
->>> Hi Niklas
->>>
->>> Le 03/03/2025 à 07:25, Niklas Cassel a écrit :
->>>> Do you see your SSD in the kexec'd kernel?
->>> Sorry, I've tried that using several methods (systemctl kexec / kexec --load
->>> + kexec -e / kexec --load + shutdown --reboot now) and it failed each time.
->>> I *don't* think it is related to this bug, however, because each time the
->>> process got stuck just after displaying "kexec_core: Starting new kernel".
->> I just tired (as root):
->> # kexec -l /boot/vmlinuz-6.13.5-200.fc41.x86_64 --initrd=/boot/initramfs-6.13.5-200.fc41.x86_64.img --reuse-cmd
->> # kexec -e
->>
->> and FWIW, kexec worked fine.
->>
->> Did you specify an initrd ? did you specify --reuse-cmd ?
+Christian Simon verified the regression exists in v6.12.17 as per method
+below and backported the mainline fix to the older version of
+uprobe_free_utask. After that change I can no longer reproduce
+the race with this method within 1h, while before it would show the
+panic under a minute.
 
-At one time, I did yes. I can't figure out what's wrong, but working 
-from the assumption that another way of working around the UEFI's 
-failure to wake the disk might yield the same information that you're 
-looking for,
+Max Makarov reported kernel panic [1] in perf user callchain code.
 
-I installed the same system on a USB stick, on which I also installed 
-grub, so that the reboot is made independent of weather the UEFI sees 
-the SSD disk or not. I'll attach dmesg extracts (grep on ata or ahci) to 
-this mail.
+The reason for that is the race between uprobe_free_utask and bpf
+profiler code doing the perf user stack unwind and is triggered
+within uprobe_free_utask function:
+  - after current->utask is freed and
+  - before current->utask is set to NULL
 
-One is the dmesg after coldbooting from the USB stick, the other is 
-rebooting on the USB stick. First of all, the visible result : the SSD 
-is not detected by linux at reboot (but is when coldbooting).
+ general protection fault, probably for non-canonical address 0x9e759c37ee555c76: 0000 [#1] SMP PTI
+ RIP: 0010:is_uprobe_at_func_entry+0x28/0x80
+ ...
+  ? die_addr+0x36/0x90
+  ? exc_general_protection+0x217/0x420
+  ? asm_exc_general_protection+0x26/0x30
+  ? is_uprobe_at_func_entry+0x28/0x80
+  perf_callchain_user+0x20a/0x360
+  get_perf_callchain+0x147/0x1d0
+  bpf_get_stackid+0x60/0x90
+  bpf_prog_9aac297fb833e2f5_do_perf_event+0x434/0x53b
+  ? __smp_call_single_queue+0xad/0x120
+  bpf_overflow_handler+0x75/0x110
+  ...
+  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+ RIP: 0010:__kmem_cache_free+0x1cb/0x350
+ ...
+  ? uprobe_free_utask+0x62/0x80
+  ? acct_collect+0x4c/0x220
+  uprobe_free_utask+0x62/0x80
+  mm_release+0x12/0xb0
+  do_exit+0x26b/0xaa0
+  __x64_sys_exit+0x1b/0x20
+  do_syscall_64+0x5a/0x80
 
-Here is what changes :
+It can be easily reproduced by running following commands in
+separate terminals:
 
-eric@gwaihir:~$ diff 
-/media/eric/trixieUSB/home/eric/dmesg-ahci-ata-coldboot.untimed.txt 
-/media/eric/trixieUSB/home/eric/dmesg-ahci-ata-reboot.untimed.txt
+  # while :; do bpftrace -e 'uprobe:/bin/ls:_start  { printf("hit\n"); }' -c ls; done
+  # bpftrace -e 'profile:hz:100000 { @[ustack()] = count(); }'
 
-4c4
-<  ahci 0000:00:11.0: 4/4 ports implemented (port mask 0x3c)
+Fixing this by making sure current->utask pointer is set to NULL
+before we start to release the utask object.
+
+[1] https://github.com/grafana/pyroscope/issues/3673
+
+Fixes: cfa7f3d2c526 ("perf,x86: avoid missing caller address in stack traces captured in uprobe")
+Reported-by: Max Makarov <maxpain@linux.com>
+(cherry picked from commit b583ef82b671c9a752fbe3e95bd4c1c51eab764d)
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/r/20250109141440.2692173-1-jolsa@kernel.org
+[Christian Simon: Rebased for 6.12.y, due to mainline change https://lore.kernel.org/all/20240929144239.GA9475@redhat.com/]
+Signed-off-by: Christian Simon <simon@swine.de>
 ---
- >  ahci 0000:00:11.0: 3/3 ports implemented (port mask 0x38)
-14c14
-<  ata3: SATA max UDMA/133 abar m1024@0xfeb0b000 port 0xfeb0b200 irq 19 
-lpm-pol 3
----
- >  ata3: DUMMY
-27,28d26
-<  ata3: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-<  ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
-29a28
- >  ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
-31,34d29
-<  ata3.00: Model 'Samsung SSD 870 QVO 2TB', rev 'SVQ02B6Q', applying 
-quirks: noncqtrim zeroaftertrim noncqonati
-<  ata3.00: supports DRM functions and may not be fully accessible
-<  ata3.00: ATA-11: Samsung SSD 870 QVO 2TB, SVQ02B6Q, max UDMA/133
-<  ata3.00: 3907029168 sectors, multi 1: LBA48 NCQ (not used)
-37a33
- >  ata5.00: configured for UDMA/100
-40d35
-<  ata5.00: configured for UDMA/100
-43,46d37
-<  ata3.00: Features: Trust Dev-Sleep
-<  ata3.00: supports DRM functions and may not be fully accessible
-<  ata3.00: configured for UDMA/133
-<  scsi 2:0:0:0: Direct-Access     ATA      Samsung SSD 870 2B6Q PQ: 0 
-ANSI: 5
-50,51d40
-<  ata3.00: Enabling discard_zeroes_data
-<  ata3.00: Enabling discard_zeroes_data
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I hope this is useful for diagnosing the problem.
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4b52cb2ae6d6..fcb777ba17df 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1770,6 +1770,7 @@ void uprobe_free_utask(struct task_struct *t)
+ 	if (!utask)
+ 		return;
+ 
++	t->utask = NULL;
+ 	if (utask->active_uprobe)
+ 		put_uprobe(utask->active_uprobe);
+ 
+@@ -1779,7 +1780,6 @@ void uprobe_free_utask(struct task_struct *t)
+ 
+ 	xol_free_insn_slot(t);
+ 	kfree(utask);
+-	t->utask = NULL;
+ }
+ 
+ /*
+-- 
+2.47.1
 
-> Sorry, typo:
->
-> s/--reuse-cmd/--reuse-cmdline/
->
->
-> Kind regards,
-> Niklas
-
-Kind regards,
-
-Eric
-
---------------DhKS6kFF4k5xkk27sIyHql4b
-Content-Type: text/plain; charset=UTF-8; name="dmesg-ahci-ata-reboot.txt"
-Content-Disposition: attachment; filename="dmesg-ahci-ata-reboot.txt"
-Content-Transfer-Encoding: base64
-
-c3VkbyBkbWVzZyB8IGdyZXAgLWlFICIoIGF0YXxhaGNpKSIKWyAgICAxLjg4NDI2M10gYWhj
-aSAwMDAwOjAwOjExLjA6IHZlcnNpb24gMy4wClsgICAgMS44ODQ0MDFdIGFoY2kgMDAwMDow
-MDoxMS4wOiBBSENJIHZlcnMgMDAwMS4wMjAwLCAzMiBjb21tYW5kIHNsb3RzLCA2IEdicHMs
-IFNBVEEgbW9kZQpbICAgIDEuODg0NDA0XSBhaGNpIDAwMDA6MDA6MTEuMDogMy8zIHBvcnRz
-IGltcGxlbWVudGVkIChwb3J0IG1hc2sgMHgzOCkKWyAgICAxLjg4NDQwN10gYWhjaSAwMDAw
-OjAwOjExLjA6IGZsYWdzOiA2NGJpdCBuY3Egc250ZiBpbGNrIHBtIGxlZCBjbG8gcG1wIHBp
-byBzbHVtIHBhcnQgClsgICAgMS44OTAzNzJdIHNjc2kgaG9zdDA6IGFoY2kKWyAgICAxLjg5
-MTU4N10gc2NzaSBob3N0MTogYWhjaQpbICAgIDEuODkxNzUxXSBzY3NpIGhvc3QyOiBhaGNp
-ClsgICAgMS44OTE5MjRdIHNjc2kgaG9zdDM6IGFoY2kKWyAgICAxLjg5MjA3OV0gc2NzaSBo
-b3N0NDogYWhjaQpbICAgIDEuODkyMjM0XSBzY3NpIGhvc3Q1OiBhaGNpClsgICAgMS44OTIy
-OThdIGF0YTE6IERVTU1ZClsgICAgMS44OTIzMDBdIGF0YTI6IERVTU1ZClsgICAgMS44OTIz
-MDBdIGF0YTM6IERVTU1ZClsgICAgMS44OTIzMDJdIGF0YTQ6IFNBVEEgbWF4IFVETUEvMTMz
-IGFiYXIgbTEwMjRAMHhmZWIwYjAwMCBwb3J0IDB4ZmViMGIyODAgaXJxIDE5IGxwbS1wb2wg
-MwpbICAgIDEuODkyMzA1XSBhdGE1OiBTQVRBIG1heCBVRE1BLzEzMyBhYmFyIG0xMDI0QDB4
-ZmViMGIwMDAgcG9ydCAweGZlYjBiMzAwIGlycSAxOSBscG0tcG9sIDMKWyAgICAxLjg5MjMw
-N10gYXRhNjogU0FUQSBtYXggVURNQS8xMzMgYWJhciBtMTAyNEAweGZlYjBiMDAwIHBvcnQg
-MHhmZWIwYjM4MCBpcnEgMTkgbHBtLXBvbCAzClsgICAgMS44OTI0ODddIGFoY2kgMDAwMDow
-NDowMC4wOiBTU1MgZmxhZyBzZXQsIHBhcmFsbGVsIGJ1cyBzY2FuIGRpc2FibGVkClsgICAg
-MS44OTI1MDhdIGFoY2kgMDAwMDowNDowMC4wOiBBSENJIHZlcnMgMDAwMS4wMjAwLCAzMiBj
-b21tYW5kIHNsb3RzLCA2IEdicHMsIFNBVEEgbW9kZQpbICAgIDEuODkyNTExXSBhaGNpIDAw
-MDA6MDQ6MDAuMDogMi8yIHBvcnRzIGltcGxlbWVudGVkIChwb3J0IG1hc2sgMHgzKQpbICAg
-IDEuODkyNTEzXSBhaGNpIDAwMDA6MDQ6MDAuMDogZmxhZ3M6IDY0Yml0IG5jcSBzbnRmIHN0
-YWcgbGVkIGNsbyBwbXAgcGlvIHNsdW0gcGFydCBjY2Mgc3hzIApbICAgIDEuODkyOTI3XSBz
-Y3NpIGhvc3Q2OiBhaGNpClsgICAgMS44OTMwNzNdIHNjc2kgaG9zdDc6IGFoY2kKWyAgICAx
-Ljg5MzE0NF0gYXRhNzogU0FUQSBtYXggVURNQS8xMzMgYWJhciBtNTEyQDB4ZmU4MDAwMDAg
-cG9ydCAweGZlODAwMTAwIGlycSA0MyBscG0tcG9sIDAKWyAgICAxLjg5MzE0OF0gYXRhODog
-U0FUQSBtYXggVURNQS8xMzMgYWJhciBtNTEyQDB4ZmU4MDAwMDAgcG9ydCAweGZlODAwMTgw
-IGlycSA0MyBscG0tcG9sIDAKWyAgICAyLjIwMzU4Nl0gYXRhNzogU0FUQSBsaW5rIGRvd24g
-KFNTdGF0dXMgMCBTQ29udHJvbCAzMDApClsgICAgMi4zNTk5ODBdIGF0YTQ6IFNBVEEgbGlu
-ayB1cCAxLjUgR2JwcyAoU1N0YXR1cyAxMTMgU0NvbnRyb2wgMzAwKQpbICAgIDIuMzYwMDE0
-XSBhdGE2OiBTQVRBIGxpbmsgdXAgMy4wIEdicHMgKFNTdGF0dXMgMTIzIFNDb250cm9sIDMw
-MCkKWyAgICAyLjM2MDA0N10gYXRhNTogU0FUQSBsaW5rIHVwIDEuNSBHYnBzIChTU3RhdHVz
-IDExMyBTQ29udHJvbCAzMDApClsgICAgMi4zNjA1OTJdIGF0YTQuMDA6IEFUQS03OiBNQVhU
-T1IgU1RNMzI1MDMxMEFTLCAzLkFBQywgbWF4IFVETUEvMTMzClsgICAgMi4zNjA1OTddIGF0
-YTQuMDA6IDQ4ODM5NzE2OCBzZWN0b3JzLCBtdWx0aSAxNjogTEJBNDggTkNRIChkZXB0aCAz
-MikKWyAgICAyLjM2MDYxMl0gYXRhNS4wMDogQVRBUEk6IEFTVVMgICAgQkMtMTJEMkhULCAx
-LjAwLCBtYXggVURNQS8xMDAKWyAgICAyLjM2MTE1OV0gYXRhNS4wMDogY29uZmlndXJlZCBm
-b3IgVURNQS8xMDAKWyAgICAyLjM2MTE3OV0gYXRhNi4wMDogQVRBLTg6IFNUMzEwMDA1MjhB
-UywgQ0MzOCwgbWF4IFVETUEvMTMzClsgICAgMi4zNjExODRdIGF0YTYuMDA6IDE5NTM1MjUx
-Njggc2VjdG9ycywgbXVsdGkgMTY6IExCQTQ4IE5DUSAoZGVwdGggMzIpClsgICAgMi4zNjEz
-MTddIGF0YTQuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTMzClsgICAgMi4zNjI1OTldIGF0
-YTYuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTMzClsgICAgMi4zNzQ4MDddIHNjc2kgMzow
-OjA6MDogRGlyZWN0LUFjY2VzcyAgICAgQVRBICAgICAgTUFYVE9SIFNUTTMyNTAzMSBDICAg
-IFBROiAwIEFOU0k6IDUKWyAgICAyLjQyNDUwMV0gc2NzaSA1OjA6MDowOiBEaXJlY3QtQWNj
-ZXNzICAgICBBVEEgICAgICBTVDMxMDAwNTI4QVMgICAgIENDMzggUFE6IDAgQU5TSTogNQpb
-ICAgIDIuNzM1ODYwXSBhdGE4OiBTQVRBIGxpbmsgZG93biAoU1N0YXR1cyAwIFNDb250cm9s
-IDMwMCkK
---------------DhKS6kFF4k5xkk27sIyHql4b
-Content-Type: text/plain; charset=UTF-8; name="dmesg-ahci-ata-coldboot.txt"
-Content-Disposition: attachment; filename="dmesg-ahci-ata-coldboot.txt"
-Content-Transfer-Encoding: base64
-
-c3VkbyBkbWVzZyB8IGdyZXAgLWlFICIoIGF0YXxhaGNpKSIKWyAgICAxLjczOTE4NV0gYWhj
-aSAwMDAwOjAwOjExLjA6IHZlcnNpb24gMy4wClsgICAgMS43MzkzMTNdIGFoY2kgMDAwMDow
-MDoxMS4wOiBBSENJIHZlcnMgMDAwMS4wMjAwLCAzMiBjb21tYW5kIHNsb3RzLCA2IEdicHMs
-IFNBVEEgbW9kZQpbICAgIDEuNzM5MzE2XSBhaGNpIDAwMDA6MDA6MTEuMDogNC80IHBvcnRz
-IGltcGxlbWVudGVkIChwb3J0IG1hc2sgMHgzYykKWyAgICAxLjczOTMxOF0gYWhjaSAwMDAw
-OjAwOjExLjA6IGZsYWdzOiA2NGJpdCBuY3Egc250ZiBpbGNrIHBtIGxlZCBjbG8gcG1wIHBp
-byBzbHVtIHBhcnQgClsgICAgMS43NDA3NDZdIHNjc2kgaG9zdDA6IGFoY2kKWyAgICAxLjc0
-MDk4N10gc2NzaSBob3N0MTogYWhjaQpbICAgIDEuNzQxMTM3XSBzY3NpIGhvc3QyOiBhaGNp
-ClsgICAgMS43NDEyODhdIHNjc2kgaG9zdDM6IGFoY2kKWyAgICAxLjc0MTQzNV0gc2NzaSBo
-b3N0NDogYWhjaQpbICAgIDEuNzQxNTgyXSBzY3NpIGhvc3Q1OiBhaGNpClsgICAgMS43NDE2
-MzVdIGF0YTE6IERVTU1ZClsgICAgMS43NDE2MzddIGF0YTI6IERVTU1ZClsgICAgMS43NDE2
-MzldIGF0YTM6IFNBVEEgbWF4IFVETUEvMTMzIGFiYXIgbTEwMjRAMHhmZWIwYjAwMCBwb3J0
-IDB4ZmViMGIyMDAgaXJxIDE5IGxwbS1wb2wgMwpbICAgIDEuNzQxNjQxXSBhdGE0OiBTQVRB
-IG1heCBVRE1BLzEzMyBhYmFyIG0xMDI0QDB4ZmViMGIwMDAgcG9ydCAweGZlYjBiMjgwIGly
-cSAxOSBscG0tcG9sIDMKWyAgICAxLjc0MTY0NF0gYXRhNTogU0FUQSBtYXggVURNQS8xMzMg
-YWJhciBtMTAyNEAweGZlYjBiMDAwIHBvcnQgMHhmZWIwYjMwMCBpcnEgMTkgbHBtLXBvbCAz
-ClsgICAgMS43NDE2NDZdIGF0YTY6IFNBVEEgbWF4IFVETUEvMTMzIGFiYXIgbTEwMjRAMHhm
-ZWIwYjAwMCBwb3J0IDB4ZmViMGIzODAgaXJxIDE5IGxwbS1wb2wgMwpbICAgIDEuNzQxODQ1
-XSBhaGNpIDAwMDA6MDQ6MDAuMDogU1NTIGZsYWcgc2V0LCBwYXJhbGxlbCBidXMgc2NhbiBk
-aXNhYmxlZApbICAgIDEuNzQxODY3XSBhaGNpIDAwMDA6MDQ6MDAuMDogQUhDSSB2ZXJzIDAw
-MDEuMDIwMCwgMzIgY29tbWFuZCBzbG90cywgNiBHYnBzLCBTQVRBIG1vZGUKWyAgICAxLjc0
-MTg2OV0gYWhjaSAwMDAwOjA0OjAwLjA6IDIvMiBwb3J0cyBpbXBsZW1lbnRlZCAocG9ydCBt
-YXNrIDB4MykKWyAgICAxLjc0MTg3MV0gYWhjaSAwMDAwOjA0OjAwLjA6IGZsYWdzOiA2NGJp
-dCBuY3Egc250ZiBzdGFnIGxlZCBjbG8gcG1wIHBpbyBzbHVtIHBhcnQgY2NjIHN4cyAKWyAg
-ICAxLjc0MjE5MV0gc2NzaSBob3N0NjogYWhjaQpbICAgIDEuNzQyNDIwXSBzY3NpIGhvc3Q3
-OiBhaGNpClsgICAgMS43NDI0ODhdIGF0YTc6IFNBVEEgbWF4IFVETUEvMTMzIGFiYXIgbTUx
-MkAweGZlODAwMDAwIHBvcnQgMHhmZTgwMDEwMCBpcnEgNDMgbHBtLXBvbCAwClsgICAgMS43
-NDI0OTJdIGF0YTg6IFNBVEEgbWF4IFVETUEvMTMzIGFiYXIgbTUxMkAweGZlODAwMDAwIHBv
-cnQgMHhmZTgwMDE4MCBpcnEgNDMgbHBtLXBvbCAwClsgICAgMi4wNTE4MjJdIGF0YTc6IFNB
-VEEgbGluayBkb3duIChTU3RhdHVzIDAgU0NvbnRyb2wgMzAwKQpbICAgIDIuMjA4MTM4XSBh
-dGEzOiBTQVRBIGxpbmsgdXAgNi4wIEdicHMgKFNTdGF0dXMgMTMzIFNDb250cm9sIDMwMCkK
-WyAgICAyLjIwODE3Ml0gYXRhNjogU0FUQSBsaW5rIHVwIDMuMCBHYnBzIChTU3RhdHVzIDEy
-MyBTQ29udHJvbCAzMDApClsgICAgMi4yMDgxOTddIGF0YTQ6IFNBVEEgbGluayB1cCAxLjUg
-R2JwcyAoU1N0YXR1cyAxMTMgU0NvbnRyb2wgMzAwKQpbICAgIDIuMjA4MjI5XSBhdGE1OiBT
-QVRBIGxpbmsgdXAgMS41IEdicHMgKFNTdGF0dXMgMTEzIFNDb250cm9sIDMwMCkKWyAgICAy
-LjIwODM1MV0gYXRhMy4wMDogTW9kZWwgJ1NhbXN1bmcgU1NEIDg3MCBRVk8gMlRCJywgcmV2
-ICdTVlEwMkI2UScsIGFwcGx5aW5nIHF1aXJrczogbm9uY3F0cmltIHplcm9hZnRlcnRyaW0g
-bm9uY3FvbmF0aQpbICAgIDIuMjA4MzkyXSBhdGEzLjAwOiBzdXBwb3J0cyBEUk0gZnVuY3Rp
-b25zIGFuZCBtYXkgbm90IGJlIGZ1bGx5IGFjY2Vzc2libGUKWyAgICAyLjIwODM5NF0gYXRh
-My4wMDogQVRBLTExOiBTYW1zdW5nIFNTRCA4NzAgUVZPIDJUQiwgU1ZRMDJCNlEsIG1heCBV
-RE1BLzEzMwpbICAgIDIuMjA4Mzk2XSBhdGEzLjAwOiAzOTA3MDI5MTY4IHNlY3RvcnMsIG11
-bHRpIDE6IExCQTQ4IE5DUSAobm90IHVzZWQpClsgICAgMi4yMDg3NTFdIGF0YTQuMDA6IEFU
-QS03OiBNQVhUT1IgU1RNMzI1MDMxMEFTLCAzLkFBQywgbWF4IFVETUEvMTMzClsgICAgMi4y
-MDg3NTVdIGF0YTQuMDA6IDQ4ODM5NzE2OCBzZWN0b3JzLCBtdWx0aSAxNjogTEJBNDggTkNR
-IChkZXB0aCAzMikKWyAgICAyLjIwODgyMF0gYXRhNS4wMDogQVRBUEk6IEFTVVMgICAgQkMt
-MTJEMkhULCAxLjAwLCBtYXggVURNQS8xMDAKWyAgICAyLjIwOTI5MF0gYXRhNi4wMDogQVRB
-LTg6IFNUMzEwMDA1MjhBUywgQ0MzOCwgbWF4IFVETUEvMTMzClsgICAgMi4yMDkyOTRdIGF0
-YTYuMDA6IDE5NTM1MjUxNjggc2VjdG9ycywgbXVsdGkgMTY6IExCQTQ4IE5DUSAoZGVwdGgg
-MzIpClsgICAgMi4yMDkzODhdIGF0YTUuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTAwClsg
-ICAgMi4yMDk0NjddIGF0YTQuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTMzClsgICAgMi4y
-MTA1NzJdIGF0YTYuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTMzClsgICAgMi4yMTI4NzFd
-IGF0YTMuMDA6IEZlYXR1cmVzOiBUcnVzdCBEZXYtU2xlZXAKWyAgICAyLjIxMzE4M10gYXRh
-My4wMDogc3VwcG9ydHMgRFJNIGZ1bmN0aW9ucyBhbmQgbWF5IG5vdCBiZSBmdWxseSBhY2Nl
-c3NpYmxlClsgICAgMi4yMTgyMzFdIGF0YTMuMDA6IGNvbmZpZ3VyZWQgZm9yIFVETUEvMTMz
-ClsgICAgMi4yMjg1OTJdIHNjc2kgMjowOjA6MDogRGlyZWN0LUFjY2VzcyAgICAgQVRBICAg
-ICAgU2Ftc3VuZyBTU0QgODcwICAyQjZRIFBROiAwIEFOU0k6IDUKWyAgICAyLjIyODk2MV0g
-c2NzaSAzOjA6MDowOiBEaXJlY3QtQWNjZXNzICAgICBBVEEgICAgICBNQVhUT1IgU1RNMzI1
-MDMxIEMgICAgUFE6IDAgQU5TSTogNQpbICAgIDIuMjg4NjgxXSBzY3NpIDU6MDowOjA6IERp
-cmVjdC1BY2Nlc3MgICAgIEFUQSAgICAgIFNUMzEwMDA1MjhBUyAgICAgQ0MzOCBQUTogMCBB
-TlNJOiA1ClsgICAgMi41OTk3MTddIGF0YTg6IFNBVEEgbGluayBkb3duIChTU3RhdHVzIDAg
-U0NvbnRyb2wgMzAwKQpbICAgIDIuNjA4MzgzXSBhdGEzLjAwOiBFbmFibGluZyBkaXNjYXJk
-X3plcm9lc19kYXRhClsgICAgMi42MDkyMTFdIGF0YTMuMDA6IEVuYWJsaW5nIGRpc2NhcmRf
-emVyb2VzX2RhdGEK
-
---------------DhKS6kFF4k5xkk27sIyHql4b--
