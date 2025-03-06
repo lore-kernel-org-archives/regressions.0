@@ -1,89 +1,349 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E636AA7
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 00:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E46C1D8E01
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 07:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741219857; cv=none; b=LlUPXIOb+LIrOsfEHKiIirIwNk/mcJaNMhPCUWUPvYlOdwmnQYFmddmrCQOl8B09jHgEdlYnAlznm4NCqRnKCxTtVIUGJrCpb7wF8X/5gVOUjnjIL49mHProPssQXJwwOfEtXYg0gpl1uWOAB6/aRBwWfroupx2PWf/oIVjcXbk=
+	t=1741247011; cv=none; b=jQ5ygLXkX+G2gB6kBaZrwkMmc39ig2YxSNuuZ0cFdpfp7uTf92yIaHXsCijyO8R9FOwdaS739Zk7DiuDT8+g7vKhHJkaxNcr8wR6GuQ/bxJxV1RuM5Xn6PqHFgWvWMsPPmiMgaP1be+wgvRY3Q0pAC8i1B5f0X7JsUitGt4qQH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741219857; c=relaxed/simple;
-	bh=BMP2Cu6ueAsVg5DJpgRqTk8AwwWjlXRp7w4LMew/LV8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bKoTMNXrhLonpWTeC0gtcJ8B3nMw50KPcmOkjGHGVaYREZFG9ooc3DedUZQgjs0W8TKENip1laB1wnzs0KmjESUTEU4MSI4Tx9uNp+o1SA7dKPUmrdNrqjHpWcyoXH1X1aMAVsxZ/WT3Va9g9yzXdW/SMl/D5wshUu9z2N6qhD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLSKp0SB; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1741247011; c=relaxed/simple;
+	bh=Pi5NlVNm/rltwm6mYcylZqOiE1Fe/3aCEI2yFGKYAWM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=W9XXMCiMjxCqWKdJ1QEJ/CJ3X41ZeVMMpjXgtiTxe3qgCAuX3uIxVqcE8IkJvnrVAjQeE6vUooSEiZG7odA0hDl2rc+qfvAm9bzbJb9pBUI0PV5wxD9opijq8fadbGCJBxLX3mBoNKQoBv7Lfrw1N4aoHb/jKHH52jm3Pjued2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iN44nXmr; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLSKp0SB"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff53a4754aso351560a91.2
-        for <regressions@lists.linux.dev>; Wed, 05 Mar 2025 16:10:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iN44nXmr"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-51eb1a6ca1bso145490e0c.1
+        for <regressions@lists.linux.dev>; Wed, 05 Mar 2025 23:43:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741219856; x=1741824656; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gkAf3bS5L3Hu0wBjNyDNUVwPUQfV/Y/RYDcUi88Gr00=;
-        b=oLSKp0SBuqjKG/df5LzUF++YrmPU06MQC0YfKlpPaLrequKhrLO/QqRVEZQXs6iVwO
-         KgJ+BK09F8t5D2Zu7joRnytyyTpdazf2ToICjW+5scIAXnpUTB9X6LdcaCpLL0qebTP8
-         4kvv+IVp+rD7Eb85KX/iYp8bbZ7uZS3QEb0dHSqr3iu6AcOJv/BfO5xa71kvuf88mp8M
-         NBnEZG88925obs3IH9cByVsDtebpDszZQUxhVLPriZouWGGnuMUE+OYd5EaUc8qWY8Dz
-         mb028dhNaXu2Im8qIJD5MC/5v8/d1jJbTVvn1y4PL1+ayRB9iN76KYwmN+70dbrpjRLr
-         qW/A==
+        d=linaro.org; s=google; t=1741247008; x=1741851808; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f8Dvz/7sO8hMEWomCti/xqwSI3nDVRwoSfwLBCt5iKs=;
+        b=iN44nXmrMIi1vpb0DNBBa4aqiPg2ZxC1hSQTx2F0raQ2E980NEiCCM4x6VSZB2SP6b
+         b+0UmU0ZR308TTQm/zZGzCPezCsjI2eU1jJqwQigkveYycdmiZRwHsqw7xylYlXNG0aN
+         ZtSMEi/5Ybu5624bBGwHHNbBd9rCNCoyM3b6uXAIQngL2vwXDcEPLBHfbd12OkmfDMop
+         OA8UqIr6WLsCWfAlPnFj9UvcHkr6Pki0XS7WyvPBRAz9Nnm2KDgjVjE9TUxqQJ9TpdTa
+         4oUqUTH2F6sfl7tRh+L8YLbOLU/fgbGCc/akU3m7qw3A+Ka9BMrlP3ZyAXm2zfmMbVSL
+         ZnYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741219856; x=1741824656;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gkAf3bS5L3Hu0wBjNyDNUVwPUQfV/Y/RYDcUi88Gr00=;
-        b=XWFcs21zcTjwxeMVqffFUOdOgGYisJ3OjSjkcmYZV9YLd09Dg8TECeOAgKS/SsuvUz
-         CMyTThkWLU0OO/6v88FXNsRNjBU9TIfLHMiiVtCDpJ+pmGFKmJGeojI0hrMh3YqwmIcF
-         v6zJ/vl5Tc5BxXnhYMKAvcEaahMK+u2BUimVq0bM21Mku7I5jvxQcXnGPxrn+AbcoAQ4
-         PNKmLqHWyZEXMWR2SfTL4MLBlRqlzyhNLDJ32OfSB6ErOHFRtxZLh+6hziU6k51O8UWB
-         hpJbytQ1FxuExjWoQbmytEJ+7Y47OZ0cOIbqQHAxcRm25lmH/nxPu94jYFSvW6vTTu4D
-         D6iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVquf+oRNMRhbvH/rX3hqgksnp1NUcQhjFjSX6gV2h6nfcuHlweeg/piH2mfsFaIL/gduIr6BLtwSz8Kw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwTHaqsVw4c+b2tFS1JKxZ9xMPjUPUZq+lvT68nXIfIYwZtkzUO
-	UGy60VKaOS9LxQzKhiBBZA3tnx7WYI+P5tEigcGYUmaNBNM9k/9jjLVktxy20xzrq2q2+oZorrl
-	GLQ==
-X-Google-Smtp-Source: AGHT+IH6mtvWi524iNsh5MnZ9uVRt0uAQkqtI0o5+FBM2OSWGK6g8TOWH1A2818hUQq2ucNbEVa/38GArX4=
-X-Received: from pjbqo11.prod.google.com ([2002:a17:90b:3dcb:b0:2fa:1b0c:4150])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2712:b0:2f2:a664:df1a
- with SMTP id 98e67ed59e1d1-2ff4978fd9cmr8922776a91.2.1741219855851; Wed, 05
- Mar 2025 16:10:55 -0800 (PST)
-Date: Wed, 5 Mar 2025 16:10:54 -0800
-In-Reply-To: <e5f56fd2-b2e2-48c1-bb3d-e00b61807893@intel.com>
+        d=1e100.net; s=20230601; t=1741247008; x=1741851808;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f8Dvz/7sO8hMEWomCti/xqwSI3nDVRwoSfwLBCt5iKs=;
+        b=bIIkv1wozmivABB49vylBHS4hRBNHyg09QidP7xckroD8WZtUpPf6y7I22BDjPRaWu
+         LeXfLZNQul7wXz197KsYe/V+twBKopltCdcDoCHW5RXpTb/KeQC6hS4pQpcId3VzC6Gt
+         BXejBTiFl/JXjvzGTPRyNOqRuUMYNiZ1j9w5U22Opnu0lhpuoFDC5AIyzvh29MchO8ja
+         VX7t8IHPEmHcGbRkCi+C78+1I+WyGN784TMy55xVGtrYPly6zfUZYMLRV1DBN/pWJFcb
+         +HgxM0v3ESqqQD+xUG0orzcJ56PbME/N7QTDRhaqKMn3rzIJeQh4IrJg+/biBhrhmW3g
+         jbTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxdnfaKJH/B0QMZ/I3MQgztGGpD0Dl0wpgbkj/FASNcGB1z64PH76WyKfY7neQsxv30XnecFOkmFrnjQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxxzzb57FOzWVfDQ1J7FkzfY92r09AhEd0aRJjqvf1o9nHHyh+w
+	fuKxwwOI8fDHCDTjuy78O33ikaf/zLPa0yxwOcu9doqwboja0iTeAozqVitVgZtgeub3iNREJRR
+	D9Q4cTA7iRe6O7V/Co9SH3l3mehjADlKZZFsNtg==
+X-Gm-Gg: ASbGnctQ/dlGjhxQkq3tAOs3jR9imqb0nKV4/EKZ0iVoqpFQHtbdPvW4ChIOf4fC7Co
+	ZFp1/6b5MCjWuO3qYiHm5hI/HtBnYMJZqyT9A93oBsfTyPq7wrtlHA3jTfWjEJNkWL+UfvbYhXf
+	8XRdCF4HlalH/vwnV0DBoi7hnpFXbhAIfyUjfF6KtGo0g3Yg221pOii0cmJrI=
+X-Google-Smtp-Source: AGHT+IFCeuFwk9j8vSJUY4VHl93BKrc/RzqL6Bv4GsNnLvaSOuMd4a+uHqaFLvjJ1SRrJcOoTcInKFZtooGmILaXwuQ=
+X-Received: by 2002:a05:6102:ccc:b0:4c1:706f:92a1 with SMTP id
+ ada2fe7eead31-4c2e276618bmr3018833137.5.1741247008163; Wed, 05 Mar 2025
+ 23:43:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <CAMEKE0Hd3S0-25afhWQhNNitbc7njp0ftO+Y3QmgS6CyFQh4ww@mail.gmail.com>
- <7a212431-5320-464b-a357-507fa6511586@intel.com> <e5f56fd2-b2e2-48c1-bb3d-e00b61807893@intel.com>
-Message-ID: <Z8joDnLe-A3zdwu6@google.com>
-Subject: Re: [REGRESSION][BISECTED] Some applications under Windows 11 libvirt
- VM crash since commit 408eb7417a92c5354c7be34f7425b305dfe30ad9
-From: Sean Christopherson <seanjc@google.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Miguel Ruiz <miguelies.ruiz@gmail.com>, ravi.bangoria@amd.com, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, xin@zytor.com, 
-	tony.luck@intel.com, pawan.kumar.gupta@linux.intel.com, 
-	andriy.shevchenko@linux.intel.com, jgross@suse.com, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	christian@heusel.eu, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 6 Mar 2025 13:13:17 +0530
+X-Gm-Features: AQ5f1Jq0IuOElt6LkapirWtEVl2Mi3VZsosq658XD0TPtmeB7_YSwPygLW3yIlU
+Message-ID: <CA+G9fYvp_oAxeDFj88Tk2rfEZ7jtYKAKSwfYS66=57Db9TBdyA@mail.gmail.com>
+Subject: riscv: WARNING: kernel/trace/fgraph.c:755 ftrace_return_to_handler
+To: linux-riscv <linux-riscv@lists.infradead.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, alex@ghiti.fr, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 05, 2025, Dave Hansen wrote:
-> On 3/5/25 15:42, Dave Hansen wrote:
-> > I'm also cc'ing the KVM folks. I don't actually know how the #GP from
-> > the split lock detection will manifest to KVM guests. I'm kinda
-> > surprised it crashes the guest app and doesn't do anything more noisy.
-> 
-> I've got my wires crossed somewhere. It's not a #GP, it's an #AC.
+On riscv while running LTP tracing ftrace_stress_test.sh the
+Bad frame pointer, kernel warning and kernel panic noticed.
 
-Heh, nope.  Third time's the charm.  It's a #DB.
+## Devices Affected:
+The following DUTs / qemus experience these failures:
+  -  qemu-riscv
 
-I've got the fixes queued in kvm-x86 (and tagged for stable@), I'll make sure
-they get to Linus' tree this week.
+Regression Analysis:
+ - New regression? No (these failures have been observed for months/years).
+ - Reproducibility? Yes, the failures occur consistently more than 80%
 
-https://lore.kernel.org/all/20250227222411.3490595-1-seanjc@google.com
+Test regression: ftrace_stress_test.sh Bad frame pointer kernel panic
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Test log:
+command: ftrace_stress_test.sh 90
+<12>[   49.329931] /usr/local/bin/kirk[266]: starting test
+ftrace-stress-test (ftrace_stress_test.sh 90)
+ftrace-stress-test 1 TINFO: Ftrace Stress Test Begin
+ftrace-stress-test 1 TINFO: Test targets:  trace_pipe current_tracer
+ftrace_enabled function_profile_enabled set_event set_ftrace_pid
+stack_max_size stack_trace trace trace_clock trace_options trace_stat
+tracing_enabled tracing_max_latency tracing_on
+function_profile_enabled buffer_size_kb tracing_cpumask
+set_ftrace_filter
+ftrace-stress-test 1 TINFO: tracing_enabled is not supported. Skip it.
+ftrace-stress-test 1 TINFO: Start pid0=301
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_trace_pipe.sh
+ftrace-stress-test 1 TINFO: Start pid1=302
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_current_tracer.sh
+ftrace-stress-test 1 TINFO: Start pid2=303
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_ftrace_enabled.sh
+trap: SIGUSR1: bad trap
+ftrace-stress-test 1 TINFO: Start pid3=306
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_function_profile_enabled.sh
+ftrace-stress-test 1 TINFO: Start pid4=307
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_set_event.sh
+ftrace-stress-test 1 TINFO: Start pid5=309
+/opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_pid.sh
+<4>[   51.266264] ------------[ cut here ]------------
+<4>[   51.266294] ------------[ cut here ]------------
+<4>[   51.268785] Bad frame pointer: expected ff200000005f2d10,
+received ffffffff815e3a18
+<4>[   51.268785]   from func __might_sleep return to ffffffff8004c380
+<4>[   51.267055] Bad frame pointer: expected ff20000000662ed0,
+received ffffffff80081bce
+<4>[   51.267055]   from func cpus_read_lock return to ffffffff8021bfda
+<4>[ 51.273594] WARNING: CPU: 0 PID: 306 at kernel/trace/fgraph.c:755
+ftrace_return_to_handler (kernel/trace/fgraph.c:755 (discriminator 1)
+kernel/trace/fgraph.c:820 (discriminator 1) kernel/trace/fgraph.c:874
+(discriminator 1))
+<4>[ 51.273624] WARNING: CPU: 1 PID: 309 at kernel/trace/fgraph.c:755
+ftrace_return_to_handler (kernel/trace/fgraph.c:755 (discriminator 1)
+kernel/trace/fgraph.c:820 (discriminator 1) kernel/trace/fgraph.c:874
+(discriminator 1))
+<4>[   51.273856] Modules linked in:
+<4>[   51.273888] Modules linked in: drm drm_panel_orientation_quirks configfs
+<4>[   51.274071]  drm
+<4>[   51.274234]  backlight ip_tables
+<4>[   51.274236]  drm_panel_orientation_quirks configfs
+<4>[   51.274285]  x_tables
+<4>[   51.274306]  backlight
+<4>[   51.274328]
+<4>[   51.274331]  ip_tables
+<4>[   51.274351]  x_tables
+<4>[   51.274758] CPU: 1 UID: 0 PID: 309 Comm: sh Not tainted
+6.14.0-rc5-next-20250305 #1
+<4>[   51.274817] CPU: 0 UID: 0 PID: 306 Comm: sh Not tainted
+6.14.0-rc5-next-20250305 #1
+<4>[   51.274954] Hardware name: riscv-virtio,qemu (DT)
+<4>[   51.275009] Hardware name: riscv-virtio,qemu (DT)
+<4>[ 51.275231] epc : ftrace_return_to_handler
+(kernel/trace/fgraph.c:755 (discriminator 1) kernel/trace/fgraph.c:820
+(discriminator 1) kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.275224] epc : ftrace_return_to_handler
+(kernel/trace/fgraph.c:755 (discriminator 1) kernel/trace/fgraph.c:820
+(discriminator 1) kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.275291] ra : ftrace_return_to_handler
+(kernel/trace/fgraph.c:755 (discriminator 1) kernel/trace/fgraph.c:820
+(discriminator 1) kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.275304] ra : ftrace_return_to_handler
+(kernel/trace/fgraph.c:755 (discriminator 1) kernel/trace/fgraph.c:820
+(discriminator 1) kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[   51.275374] epc : ffffffff8016e9ee ra : ffffffff8016e9ee sp :
+ff200000005f2c30
+<4>[   51.275393] epc : ffffffff8016e9ee ra : ffffffff8016e9ee sp :
+ff20000000662de0
+<4>[   51.275418]  gp : ffffffff81c70828 tp : ff60000080a45700 t0 :
+ffffffff800b84c2
+<4>[   51.275422]  gp : ffffffff81c70828 tp : ff60000082b0ab80 t0 :
+ffffffff800b84c2
+<4>[   51.275460]  t1 : 0000000000000000 t2 : 20636e7566206d6f s0 :
+ff200000005f2cb0
+<4>[   51.275474]  t1 : 0000000000000000 t2 : 20636e7566206d6f s0 :
+ff20000000662e60
+<4>[   51.275504]  s1 : 00000000000001dd a0 : 000000000000007c a1 :
+0000000000000001
+<4>[   51.275518]  s1 : 00000000000001dd a0 : 000000000000007d a1 :
+0000000000000001
+<4>[   51.275545]  a2 : 0000000000000000 a3 : 0000000000000000 a4 :
+0000000000000000
+<4>[   51.275547]  a2 : 00000000000000e8 a3 : 0000000000000008 a4 :
+0000000000000000
+<4>[   51.275587]  a5 : 0000000000000000 a6 : 000000000000003f a7 :
+0000000000000010
+<4>[   51.275615]  a5 : 0000000000000000 a6 : 0000000000000030 a7 :
+0000000000000010
+<4>[   51.275654]  s2 : ff60000086e43ee8 s3 : ffffffff815e3a18 s4 :
+ffffffff815e6728
+<4>[   51.275684]  s2 : ff60000086e46ee8 s3 : ffffffff80081bce s4 :
+ffffffff815e6728
+<4>[   51.275700]  s5 : 0000000000000000 s6 : 0000000000000000 s7 :
+ffffffff81c70160
+<4>[   51.275715]  s5 : 0000000000000000 s6 : 0000000000000000 s7 :
+ffffffff81c70160
+<4>[   51.275743]  s8 : 00005555822950b0 s9 : ffffffffffffc000 s10:
+ffffffff80d5100a
+<4>[   51.275758]  s8 : 0000000000000003 s9 : ffffffffffffc000 s10:
+ffffffff80d5100a
+<4>[   51.275786]  s11: ff200000005f3aa0 t3 : 0000000000000000 t4 :
+0000000000ff0100
+<4>[   51.275786]  s11: ff20000000663d60 t3 : 0000000000000000 t4 :
+0000000000ff0100
+<4>[   51.275826]  t5 : ffffffff81c87c38 t6 : ffffffff81c87c34
+<4>[   51.275842]  t5 : ffffffff81c87c38 t6 : ff20000000662be8
+<4>[   51.275867] status: 0000000200000100 badaddr: ffffffff8016e9ee
+cause: 0000000000000003
+<4>[   51.275868] status: 0000000200000100 badaddr: ffffffff8016e9ee
+cause: 0000000000000003
+<4>[ 51.275996] ftrace_return_to_handler (kernel/trace/fgraph.c:755
+(discriminator 1) kernel/trace/fgraph.c:820 (discriminator 1)
+kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.276009] ftrace_return_to_handler (kernel/trace/fgraph.c:755
+(discriminator 1) kernel/trace/fgraph.c:820 (discriminator 1)
+kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.276157] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.276164] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.276348] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276357] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276408] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276454] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.276500] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276545] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.276571] ---[ end trace 0000000000000000 ]---
+<4>[ 51.276590] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276645] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276689] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.276733] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276779] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276824] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276869] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.276914] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.276959] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277004] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277049] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277094] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277139] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.277181] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277222] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277238] ------------[ cut here ]------------
+<4>[ 51.277268] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277274] WARNING: CPU: 0 PID: 306 at kernel/trace/fgraph.c:824
+ftrace_return_to_handler (kernel/trace/fgraph.c:824 (discriminator 1)
+kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.277314] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277331] Modules linked in: drm drm_panel_orientation_quirks
+<4>[ 51.277362] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[   51.277395]  configfs backlight
+<4>[ 51.277409] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277437]  ip_tables x_tables
+<4>[ 51.277455] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277472]
+<4>[ 51.277505] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277550] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277595] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.277659] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277705] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277751] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277770] CPU: 0 UID: 0 PID: 306 Comm: sh Tainted: G        W
+        6.14.0-rc5-next-20250305 #1
+<4>[ 51.277795] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277840] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.277885] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.277895] Tainted: [W]=WARN
+<4>[   51.277923] Hardware name: riscv-virtio,qemu (DT)
+<4>[ 51.277932] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277947] epc : ftrace_return_to_handler
+(kernel/trace/fgraph.c:824 (discriminator 1) kernel/trace/fgraph.c:874
+(discriminator 1))
+<4>[ 51.277977] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.277993] ra : ftrace_return_to_handler
+(kernel/trace/fgraph.c:824 (discriminator 1) kernel/trace/fgraph.c:874
+(discriminator 1))
+<4>[ 51.278024] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278037] epc : ffffffff8016e862 ra : ffffffff8016e862 sp :
+ff200000005f2c30
+<4>[   51.278063]  gp : ffffffff81c70828 tp : ff60000080a45700 t0 :
+ffffffff8004c3fe
+<4>[ 51.278070] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[   51.278090]  t1 : 0000000000000000 t2 : 20636e7566206d6f s0 :
+ff200000005f2cb0
+<4>[   51.278118]  s1 : 00000000000001dd a0 : ffffffff81cb4998 a1 :
+0000000000000031
+<4>[ 51.278116] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278144]  a2 : 0000000000000000 a3 : 0000000000000000 a4 :
+0000000000000000
+<4>[   51.278170]  a5 : 0000000000000000 a6 : 0000000000000030 a7 :
+0000000000000010
+<4>[ 51.278162] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278196]  s2 : ff60000086e43e10 s3 : ffffffff815e3a18 s4 :
+ffffffff815e6728
+<4>[ 51.278209] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278222]  s5 : 0000000000000000 s6 : 0000000000000000 s7 :
+ffffffff81c70160
+<4>[   51.278248]  s8 : 00005555822950b0 s9 : ffffffffffffc000 s10:
+ffffffff80d5100a
+<4>[ 51.278256] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278274]  s11: ff200000005f3aa0 t3 : 0000000000000000 t4 :
+0000000000ff0100
+<4>[   51.278301]  t5 : ffffffff81c87c38 t6 : ffffffff81c87c34
+<4>[ 51.278305] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[   51.278325] status: 0000000200000100 badaddr: ffffffff8016e862
+cause: 0000000000000003
+<4>[ 51.278351] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278354] ftrace_return_to_handler (kernel/trace/fgraph.c:824
+(discriminator 1) kernel/trace/fgraph.c:874 (discriminator 1))
+<4>[ 51.278397] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278402] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.278444] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278450] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278492] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[   51.278503] ---[ end trace 0000000000000000 ]---
+<4>[ 51.278537] return_to_handler (arch/riscv/kernel/mcount.S:78)
+<4>[ 51.278584] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278642] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<4>[ 51.278686] return_to_handler (arch/riscv/kernel/mcount.S:75)
+<0>[   51.278907] Kernel panic - not syncing: include/linux/percpu-rwsem.h
+<4>[   51.350558] CPU: 0 UID: 0 PID: 306 Comm: sh Tainted: G        W
+        6.14.0-rc5-next-20250305 #1
+<4>[   51.351855] Tainted: [W]=WARN
+<4>[   51.352213] Hardware name: riscv-virtio,qemu (DT)
+<4>[   51.353333] Call Trace:
+<4>[ 51.353947] dump_backtrace (arch/riscv/kernel/stacktrace.c:133)
+<4>[ 51.354543] show_stack (arch/riscv/kernel/stacktrace.c:139)
+<4>[ 51.355094] dump_stack_lvl (lib/dump_stack.c:122)
+<4>[ 51.356791] dump_stack (lib/dump_stack.c:130)
+<4>[ 51.358139] panic (kernel/panic.c:258 kernel/panic.c:375)
+<4>[ 51.359243] return_to_handler (??:?)
+<2>[   51.360158] SMP: stopping secondary CPUs
+<4>[   53.526474] SMP: failed to stop secondary CPUs 0-1
+<0>[   53.528165] ---[ end Kernel panic - not syncing:
+include/linux/percpu-rwsem.h ]---
+
+## Source
+* Kernel version: 6.14.0-rc5-next-20250305
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 7ec162622e66a4ff886f8f28712ea1b13069e1aa
+* Git describe: 6.14.0-rc5-next-20250305
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250305/
+* Architectures: riscv
+
+## Test data
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250305/testrun/27501921/suite/log-parser-test/test/exception-cut-here/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250305/testrun/27501921/suite/log-parser-test/test/panic-multiline-kernel-panic-not-syncing-includelinuxpercpu-rwsemh/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250305/testrun/27501921/suite/log-parser-test/test/exception-cut-here/details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ttVEZncyQq7CkHBSKLG3bD6Ajk/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ttVEZncyQq7CkHBSKLG3bD6Ajk/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
