@@ -1,144 +1,153 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711A1DF71;
-	Thu,  6 Mar 2025 14:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2C4170A23
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 14:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741271960; cv=none; b=JB0lwF3qNswwSsIV8pXWORRqryFwlTAWWSuWGMlJW6eJExnOJuz6KXNGlI7NnK0BtkSKXqsOpHDNCWfEyv6tNbOjIy3MNAKcMRxOhinYwW28TcMJ3JFIykh9Uh0mRqI3wTkp73f08oZ0GEEbf93SQ4xilSSqyXxMKGnrkT9b9TA=
+	t=1741272265; cv=none; b=erApNcIuKbog1HFaFNbgKhkxjnC8HbGDSb9aL2TppSf43r62D4kL6EF3Hvmshsx44wbFnFHL1XnUr+5RS35TsTVjbicuG3+EbsMjQyETe94ByEjaTUU0TtccFZh+oLI916tmfGlEcoX/MhMQm7E07qZkZ74tla64QwpV4lY+tdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741271960; c=relaxed/simple;
-	bh=I3Rdo9Tv28/kEBJt/wJqtqa8Cn7oNKIw8YLpsVR+l5Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=YRVHMDB6zmdGQPvqpskRtd3i/dWwz6fLFA7pYjgG3uoXk5ALdQvI9rOl+fFN/MRrk0tyGrKV/lCFvBPJthwKaxNJEaUrT5zk8c0cyqhlBApLdw2T4LfyKaHfFQWevIE1Y3vvYbo3aHFu1ic3UCJ15djKFVs/XJxCTYk9dXL5NqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=PQuN3o4Z; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741272265; c=relaxed/simple;
+	bh=xlmpOlIgd3SxqSEMgUrM81PV78wbSOH1EFVox32lnPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QU3FmCX8z58m/GYWiQDJgeva01IrR2InONlOOfwUNhnZYJWihLEssuobpzKYNKKThwv1uYmfLIzwt5LfvpKrHkUyeuE5B5gRkFKqavbBXjsB0qqEiqGww7jO7hQK/qBr2s7WdPWQrZ/M0r0XRP8/g+piSB5hGrV9PZ8YAylG3r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO7ux63/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PQuN3o4Z"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 526Ed1lc3967114
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 6 Mar 2025 06:39:01 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 526Ed1lc3967114
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741271942;
-	bh=dkXVBGPY63hZMCagXcTMmvllJsm+GP6pR+jupmxbpNM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=PQuN3o4Zp2D/sAjCbf7GoU5PafOnVPHLsRfh1IOHeiEwZgHLgGHUehm5w0Apn2QCi
-	 CcY72l6Bv4tIVQ2AuEZ7GP1TnixhVk2+WobaNwOCS9zZG8PFwRpPTAVspzOo5BNHLI
-	 t1WQl5ovT7u2duCWitMr4WZ4KRZ5+TjKGfbLsoyoEeQE56r4Bxq/DtALq0r536r3sT
-	 mNYkw+Vlkr36nUWOeeQQZzuP4/hSSdsM0RydrGz5jg3riQGYpvhd24qD9tMDfmmILy
-	 GRaaxL1ejRa8YDg4CA9i6ADRsXUQ/+3iKUWMTCXfUk7nMZGnVa5o+05upKCB1DsADS
-	 An7G7KmUutP5Q==
-Date: Thu, 06 Mar 2025 06:38:58 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ard Biesheuvel <ardb@kernel.org>,
-        Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>
-CC: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_Regression_for_PXE_boot_from_patch_=22Remo?=
- =?US-ASCII?Q?ve_the_=27bugger_off=27_message=22_in_stable_6=2E6=2E18?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXH-CDaQ0UFuwHWC2ERRmvo7tS+jcZcue00yReyAi5sVXg@mail.gmail.com>
-References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de> <CAMj1kXH-CDaQ0UFuwHWC2ERRmvo7tS+jcZcue00yReyAi5sVXg@mail.gmail.com>
-Message-ID: <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO7ux63/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3A9C4AF09
+	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 14:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741272265;
+	bh=xlmpOlIgd3SxqSEMgUrM81PV78wbSOH1EFVox32lnPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FO7ux63/b5lMZmMfSRJL8Eca1ynaDor2hjyIudNzcT9lXKMHNa8XrD+1WlkchJ8xQ
+	 VUXHu7Yx3xwd1nXPbtpw4zH/UvSmU7Q4Vl+eZKcyxCpR3W+4ubsri+D9QV9UhkcTdw
+	 0uAxkUPNkhWHkuDqp2KWcB79ikzbblTK+0POXDLxHYNplHkC8kdljRlDhBHG6kscmR
+	 zAkFr1kVokocCFd9oYKLBNzkrWb6296e5WQYkovZa/zjQiVZhwI8+mLSSL/n58RVph
+	 7fpRHUcy9pHpR2W2Mr/ZP6syTleGa0CMbnJpi+KyooE6gsszhA8d28ni1JPKZ7Lqp+
+	 wYOUR58PV4gww==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5498fd0bce9so15206e87.3
+        for <regressions@lists.linux.dev>; Thu, 06 Mar 2025 06:44:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUKqN7MTiXm6defBTS+t+MNd0RmIwd+/xcIOB9GyPJhuLLGRCzb1u3pDfji0JQspyKMtgsA9yKhb5SOjA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywt18+2uwPHkNesPz57u9XsAAJG67ABT+/NyeIcoJrhmpF1tQwR
+	5aepK5UWe5trnbeqAJayC78k7nmFZXbm/6xAynSjS5xXhczyCDTDifVYtejUzvLm6MYuxzkzqjN
+	e17S9QYcPEm4YsHdataHGr5p1fdc=
+X-Google-Smtp-Source: AGHT+IGjETK7J1YrhmHQKe+CuJXnJcwH55rAducjFYIS5jk0izp7FcKFqeXDvsHo3erBw052Yb+DmXw+J718l1pgz1Q=
+X-Received: by 2002:a05:6512:220e:b0:549:4e78:9ed5 with SMTP id
+ 2adb3069b0e04-5497d38072amr3073741e87.45.1741272263521; Thu, 06 Mar 2025
+ 06:44:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de>
+ <CAMj1kXH-CDaQ0UFuwHWC2ERRmvo7tS+jcZcue00yReyAi5sVXg@mail.gmail.com> <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com>
+In-Reply-To: <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Mar 2025 15:44:11 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq9U7f90urMo0XcPl7Hrufvxw5r9sdfmrpJxs6eD734ZJAE8_OhFQtdjeA
+Message-ID: <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
+Subject: Re: Regression for PXE boot from patch "Remove the 'bugger off'
+ message" in stable 6.6.18
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
->(cc Peter)
+On Thu, 6 Mar 2025 at 15:39, H. Peter Anvin <hpa@zytor.com> wrote:
 >
->On Tue, 4 Mar 2025 at 15:49, Ulrich Gemkow
-><ulrich=2Egemkow@ikr=2Euni-stuttgart=2Ede> wrote:
->>
->> Hello,
->>
->> starting with stable kernel 6=2E6=2E18 we have problems with PXE bootin=
-g=2E
->> A bisect shows that the following patch is guilty:
->>
->>   From 768171d7ebbce005210e1cf8456f043304805c15 Mon Sep 17 00:00:00 200=
-1
->>   From: Ard Biesheuvel <ardb@kernel=2Eorg>
->>   Date: Tue, 12 Sep 2023 09:00:55 +0000
->>   Subject: x86/boot: Remove the 'bugger off' message
->>
->>   Signed-off-by: Ard Biesheuvel <ardb@kernel=2Eorg>
->>   Signed-off-by: Ingo Molnar <mingo@kernel=2Eorg>
->>   Acked-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
->>   Link: https://lore=2Ekernel=2Eorg/r/20230912090051=2E4014114-21-ardb@=
-google=2Ecom
->>
->> With this patch applied PXE starts, requests the kernel and the initrd=
-=2E
->> Without showing anything on the console, the boot process stops=2E
->> It seems, that the kernel crashes very early=2E
->>
->> With stable kernel 6=2E6=2E17 PXE boot works without problems=2E
->>
->> Reverting this single patch (which is part of a larger set of
->> patches) solved the problem for us, PXE boot is working again=2E
->>
->> We use the packages syslinux-efi and syslinux-common from Debian 12=2E
->> The used boot files are /efi64/syslinux=2Eefi and /ldlinux=2Ee64=2E
->>
+> On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >(cc Peter)
+> >
+> >On Tue, 4 Mar 2025 at 15:49, Ulrich Gemkow
+> ><ulrich.gemkow@ikr.uni-stuttgart.de> wrote:
+> >>
+> >> Hello,
+> >>
+> >> starting with stable kernel 6.6.18 we have problems with PXE booting.
+> >> A bisect shows that the following patch is guilty:
+> >>
+> >>   From 768171d7ebbce005210e1cf8456f043304805c15 Mon Sep 17 00:00:00 2001
+> >>   From: Ard Biesheuvel <ardb@kernel.org>
+> >>   Date: Tue, 12 Sep 2023 09:00:55 +0000
+> >>   Subject: x86/boot: Remove the 'bugger off' message
+> >>
+> >>   Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >>   Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> >>   Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> >>   Link: https://lore.kernel.org/r/20230912090051.4014114-21-ardb@google.com
+> >>
+> >> With this patch applied PXE starts, requests the kernel and the initrd.
+> >> Without showing anything on the console, the boot process stops.
+> >> It seems, that the kernel crashes very early.
+> >>
+> >> With stable kernel 6.6.17 PXE boot works without problems.
+> >>
+> >> Reverting this single patch (which is part of a larger set of
+> >> patches) solved the problem for us, PXE boot is working again.
+> >>
+> >> We use the packages syslinux-efi and syslinux-common from Debian 12.
+> >> The used boot files are /efi64/syslinux.efi and /ldlinux.e64.
+> >>
+> >
+> >I managed to track this down to a bug in syslinux, fixed by the hunk
+> >below. The problem is that syslinux violates the x86 boot protocol,
+> >which stipulates that the setup header (starting at 0x1f1 bytes into
+> >the bzImage) must be copied into a zeroed boot_params structure, but
+> >it also copies the preceding bytes, which could be any value, as they
+> >overlap with the PE/COFF header or other header data. This produces a
+> >command line pointer with garbage in the top 32 bits, resulting in an
+> >early crash.
+> >
+> >In your case, you might be able to work around this by removing the
+> >padding value (=0xffffffff) from arch/x86/boot/setup.ld, given that
+> >you are building with CONFIG_EFI_STUB disabled. However, this still
+> >requires fixing on the syslinux side.
+> >
+> >
+> >
+> >[syslinux base commit 05ac953c23f90b2328d393f7eecde96e41aed067]
+> >
+> >--- a/efi/main.c
+> >+++ b/efi/main.c
+> >@@ -1139,10 +1139,14 @@
+> >        bp = (struct boot_params *)(UINTN)addr;
+> >
+> >        memset((void *)bp, 0x0, BOOT_PARAM_BLKSIZE);
+> >-       /* Copy the first two sectors to boot_params */
+> >-       memcpy((char *)bp, kernel_buf, 2 * 512);
+> >        hdr = (struct linux_header *)bp;
+> >
+> >+        /* Copy the setup header to boot_params */
+> >+        memcpy(&hdr->setup_sects,
+> >+              &((struct linux_header *)kernel_buf)->setup_sects,
+> >+              sizeof(struct linux_header) -
+> >+              offsetof(struct linux_header, setup_sects));
+> >+
+> >        setup_sz = (hdr->setup_sects + 1) * 512;
+> >        if (hdr->version >= 0x20a) {
+> >                pref_address = hdr->pref_address;
+> >--- a/com32/include/syslinux/linux.h
+> >+++ b/com32/include/syslinux/linux.h
+> >@@ -116,6 +116,7 @@ struct linux_header {
+> >     uint64_t pref_address;
+> >     uint32_t init_size;
+> >     uint32_t handover_offset;
+> >+    uint32_t kernel_info_offset;
+> > } __packed;
+> >
+> > struct screen_info {
 >
->I managed to track this down to a bug in syslinux, fixed by the hunk
->below=2E The problem is that syslinux violates the x86 boot protocol,
->which stipulates that the setup header (starting at 0x1f1 bytes into
->the bzImage) must be copied into a zeroed boot_params structure, but
->it also copies the preceding bytes, which could be any value, as they
->overlap with the PE/COFF header or other header data=2E This produces a
->command line pointer with garbage in the top 32 bits, resulting in an
->early crash=2E
->
->In your case, you might be able to work around this by removing the
->padding value (=3D0xffffffff) from arch/x86/boot/setup=2Eld, given that
->you are building with CONFIG_EFI_STUB disabled=2E However, this still
->requires fixing on the syslinux side=2E
->
->
->
->[syslinux base commit 05ac953c23f90b2328d393f7eecde96e41aed067]
->
->--- a/efi/main=2Ec
->+++ b/efi/main=2Ec
->@@ -1139,10 +1139,14 @@
->        bp =3D (struct boot_params *)(UINTN)addr;
->
->        memset((void *)bp, 0x0, BOOT_PARAM_BLKSIZE);
->-       /* Copy the first two sectors to boot_params */
->-       memcpy((char *)bp, kernel_buf, 2 * 512);
->        hdr =3D (struct linux_header *)bp;
->
->+        /* Copy the setup header to boot_params */
->+        memcpy(&hdr->setup_sects,
->+              &((struct linux_header *)kernel_buf)->setup_sects,
->+              sizeof(struct linux_header) -
->+              offsetof(struct linux_header, setup_sects));
->+
->        setup_sz =3D (hdr->setup_sects + 1) * 512;
->        if (hdr->version >=3D 0x20a) {
->                pref_address =3D hdr->pref_address;
->--- a/com32/include/syslinux/linux=2Eh
->+++ b/com32/include/syslinux/linux=2Eh
->@@ -116,6 +116,7 @@ struct linux_header {
->     uint64_t pref_address;
->     uint32_t init_size;
->     uint32_t handover_offset;
->+    uint32_t kernel_info_offset;
-> } __packed;
->
-> struct screen_info {
+> Interesting. Embarrassing, first of all :) but also interesting, because this is exactly why we have the "sentinel" field at 0x1f0 to catch *this specific error* and work around it.
 
-Interesting=2E Embarrassing, first of all :) but also interesting, because=
- this is exactly why we have the "sentinel" field at 0x1f0 to catch *this s=
-pecific error* and work around it=2E
+We're crashing way earlier than the sentinel check - the bogus command
+line pointer is dereferenced via
+
+startup_64()
+  configure_5level_paging()
+    cmdline_find_option_bool()
+
+whereas sanitize_bootparams() is only called much later, from extract_kernel().
