@@ -1,153 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2C4170A23
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 14:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCAFD299;
+	Thu,  6 Mar 2025 15:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741272265; cv=none; b=erApNcIuKbog1HFaFNbgKhkxjnC8HbGDSb9aL2TppSf43r62D4kL6EF3Hvmshsx44wbFnFHL1XnUr+5RS35TsTVjbicuG3+EbsMjQyETe94ByEjaTUU0TtccFZh+oLI916tmfGlEcoX/MhMQm7E07qZkZ74tla64QwpV4lY+tdY=
+	t=1741274373; cv=none; b=KtysLQt/581yRQid8z5nXupwlYmfW6iFIq0X7FZt2zovlSM/uVf2CyjUOIl3itgKAXKoVvO5jwxhaAQ08cSwBIfDBsvMALD69hHWitiwkPaJmq3t0GSaWO8BDY/aK1Yc1c+99tjilwu3ysj6XB8NmHyosDZKqTi24GKKfcXvbME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741272265; c=relaxed/simple;
-	bh=xlmpOlIgd3SxqSEMgUrM81PV78wbSOH1EFVox32lnPU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QU3FmCX8z58m/GYWiQDJgeva01IrR2InONlOOfwUNhnZYJWihLEssuobpzKYNKKThwv1uYmfLIzwt5LfvpKrHkUyeuE5B5gRkFKqavbBXjsB0qqEiqGww7jO7hQK/qBr2s7WdPWQrZ/M0r0XRP8/g+piSB5hGrV9PZ8YAylG3r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO7ux63/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741274373; c=relaxed/simple;
+	bh=6QlmcIc2nD2jRS+7DaISjQLzs92eHSdVRUCSyvfiE+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0MSpedLGUJiijmsdhFZcWcFbw0CbgyvzrS2GnGuboxPQmuYPuYU367fTk/1lm0kuGws48H1x/ZkhhsXNRksbiWaMl+rlbgwZoqoQZOi1P+w0D+uG4SZGLkoYkIh331hbFeiiJrBkNjr+iU26LmJ3B2+ms8hOwPtCpFWnAXzq6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xtn10E7B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO7ux63/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3A9C4AF09
-	for <regressions@lists.linux.dev>; Thu,  6 Mar 2025 14:44:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xtn10E7B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BF6C4CEE0;
+	Thu,  6 Mar 2025 15:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741272265;
-	bh=xlmpOlIgd3SxqSEMgUrM81PV78wbSOH1EFVox32lnPU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FO7ux63/b5lMZmMfSRJL8Eca1ynaDor2hjyIudNzcT9lXKMHNa8XrD+1WlkchJ8xQ
-	 VUXHu7Yx3xwd1nXPbtpw4zH/UvSmU7Q4Vl+eZKcyxCpR3W+4ubsri+D9QV9UhkcTdw
-	 0uAxkUPNkhWHkuDqp2KWcB79ikzbblTK+0POXDLxHYNplHkC8kdljRlDhBHG6kscmR
-	 zAkFr1kVokocCFd9oYKLBNzkrWb6296e5WQYkovZa/zjQiVZhwI8+mLSSL/n58RVph
-	 7fpRHUcy9pHpR2W2Mr/ZP6syTleGa0CMbnJpi+KyooE6gsszhA8d28ni1JPKZ7Lqp+
-	 wYOUR58PV4gww==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5498fd0bce9so15206e87.3
-        for <regressions@lists.linux.dev>; Thu, 06 Mar 2025 06:44:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUKqN7MTiXm6defBTS+t+MNd0RmIwd+/xcIOB9GyPJhuLLGRCzb1u3pDfji0JQspyKMtgsA9yKhb5SOjA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywt18+2uwPHkNesPz57u9XsAAJG67ABT+/NyeIcoJrhmpF1tQwR
-	5aepK5UWe5trnbeqAJayC78k7nmFZXbm/6xAynSjS5xXhczyCDTDifVYtejUzvLm6MYuxzkzqjN
-	e17S9QYcPEm4YsHdataHGr5p1fdc=
-X-Google-Smtp-Source: AGHT+IGjETK7J1YrhmHQKe+CuJXnJcwH55rAducjFYIS5jk0izp7FcKFqeXDvsHo3erBw052Yb+DmXw+J718l1pgz1Q=
-X-Received: by 2002:a05:6512:220e:b0:549:4e78:9ed5 with SMTP id
- 2adb3069b0e04-5497d38072amr3073741e87.45.1741272263521; Thu, 06 Mar 2025
- 06:44:23 -0800 (PST)
+	s=k20201202; t=1741274372;
+	bh=6QlmcIc2nD2jRS+7DaISjQLzs92eHSdVRUCSyvfiE+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xtn10E7B3Flk/KudFeKjl5xJub3tkThiQhBBxKdUOSnCB1UmePvTjdYFkemRVZIM8
+	 ySuyZtAVgG9Zz0GOkAp4MmDSiV4aFU9UHuTc+JpLC3TYAji3//6onGDYIpurzp8Y4B
+	 yqf5Hj3L8ZfB+QhavnpGYjzyFSXFZCQnIIBhlbtek++GJ2G4sdc/0+ceT/va9rzUjT
+	 dG90gSCKd9gYC/tJOZQI+uLolQ0BWS33zgG0mrrxmwbr/5uCrLCTM95z3qWcQVUAbn
+	 u7B3eMXmpXAUlIS7w+hptHfOa2vXJn2lSq8/S1IfCNsfApCykhjxS2MiUx41NGDBd8
+	 Rzlsj9B4ydgQA==
+Date: Thu, 6 Mar 2025 08:19:29 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+	linux-nvme@lists.infradead.org,
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: 6.13/regression/bisected - new nvme timeout errors
+Message-ID: <Z8m9AbD3tjNpBt6p@kbusch-mbp>
+References: <CABXGCsMcxu3pCF8jYPeqF_jN34saBwc8Fci+c-Dg2Lh7rqvuFQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202503041549.35913.ulrich.gemkow@ikr.uni-stuttgart.de>
- <CAMj1kXH-CDaQ0UFuwHWC2ERRmvo7tS+jcZcue00yReyAi5sVXg@mail.gmail.com> <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com>
-In-Reply-To: <F13ADA98-60CE-4B1A-B12F-2D1340AF44E3@zytor.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 6 Mar 2025 15:44:11 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jq9U7f90urMo0XcPl7Hrufvxw5r9sdfmrpJxs6eD734ZJAE8_OhFQtdjeA
-Message-ID: <CAMj1kXE2APmDBoTWnDJBmEcU0-B6kKFARCpmN4kYrufy-TMwHA@mail.gmail.com>
-Subject: Re: Regression for PXE boot from patch "Remove the 'bugger off'
- message" in stable 6.6.18
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ulrich Gemkow <ulrich.gemkow@ikr.uni-stuttgart.de>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXGCsMcxu3pCF8jYPeqF_jN34saBwc8Fci+c-Dg2Lh7rqvuFQ@mail.gmail.com>
 
-On Thu, 6 Mar 2025 at 15:39, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> On March 6, 2025 6:36:04 AM PST, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >(cc Peter)
-> >
-> >On Tue, 4 Mar 2025 at 15:49, Ulrich Gemkow
-> ><ulrich.gemkow@ikr.uni-stuttgart.de> wrote:
-> >>
-> >> Hello,
-> >>
-> >> starting with stable kernel 6.6.18 we have problems with PXE booting.
-> >> A bisect shows that the following patch is guilty:
-> >>
-> >>   From 768171d7ebbce005210e1cf8456f043304805c15 Mon Sep 17 00:00:00 2001
-> >>   From: Ard Biesheuvel <ardb@kernel.org>
-> >>   Date: Tue, 12 Sep 2023 09:00:55 +0000
-> >>   Subject: x86/boot: Remove the 'bugger off' message
-> >>
-> >>   Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >>   Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> >>   Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> >>   Link: https://lore.kernel.org/r/20230912090051.4014114-21-ardb@google.com
-> >>
-> >> With this patch applied PXE starts, requests the kernel and the initrd.
-> >> Without showing anything on the console, the boot process stops.
-> >> It seems, that the kernel crashes very early.
-> >>
-> >> With stable kernel 6.6.17 PXE boot works without problems.
-> >>
-> >> Reverting this single patch (which is part of a larger set of
-> >> patches) solved the problem for us, PXE boot is working again.
-> >>
-> >> We use the packages syslinux-efi and syslinux-common from Debian 12.
-> >> The used boot files are /efi64/syslinux.efi and /ldlinux.e64.
-> >>
-> >
-> >I managed to track this down to a bug in syslinux, fixed by the hunk
-> >below. The problem is that syslinux violates the x86 boot protocol,
-> >which stipulates that the setup header (starting at 0x1f1 bytes into
-> >the bzImage) must be copied into a zeroed boot_params structure, but
-> >it also copies the preceding bytes, which could be any value, as they
-> >overlap with the PE/COFF header or other header data. This produces a
-> >command line pointer with garbage in the top 32 bits, resulting in an
-> >early crash.
-> >
-> >In your case, you might be able to work around this by removing the
-> >padding value (=0xffffffff) from arch/x86/boot/setup.ld, given that
-> >you are building with CONFIG_EFI_STUB disabled. However, this still
-> >requires fixing on the syslinux side.
-> >
-> >
-> >
-> >[syslinux base commit 05ac953c23f90b2328d393f7eecde96e41aed067]
-> >
-> >--- a/efi/main.c
-> >+++ b/efi/main.c
-> >@@ -1139,10 +1139,14 @@
-> >        bp = (struct boot_params *)(UINTN)addr;
-> >
-> >        memset((void *)bp, 0x0, BOOT_PARAM_BLKSIZE);
-> >-       /* Copy the first two sectors to boot_params */
-> >-       memcpy((char *)bp, kernel_buf, 2 * 512);
-> >        hdr = (struct linux_header *)bp;
-> >
-> >+        /* Copy the setup header to boot_params */
-> >+        memcpy(&hdr->setup_sects,
-> >+              &((struct linux_header *)kernel_buf)->setup_sects,
-> >+              sizeof(struct linux_header) -
-> >+              offsetof(struct linux_header, setup_sects));
-> >+
-> >        setup_sz = (hdr->setup_sects + 1) * 512;
-> >        if (hdr->version >= 0x20a) {
-> >                pref_address = hdr->pref_address;
-> >--- a/com32/include/syslinux/linux.h
-> >+++ b/com32/include/syslinux/linux.h
-> >@@ -116,6 +116,7 @@ struct linux_header {
-> >     uint64_t pref_address;
-> >     uint32_t init_size;
-> >     uint32_t handover_offset;
-> >+    uint32_t kernel_info_offset;
-> > } __packed;
-> >
-> > struct screen_info {
->
-> Interesting. Embarrassing, first of all :) but also interesting, because this is exactly why we have the "sentinel" field at 0x1f0 to catch *this specific error* and work around it.
+On Wed, Jan 15, 2025 at 02:58:04AM +0500, Mikhail Gavrilov wrote:
+> Hi,
+> During 6.13 development cycle I spotted strange new nvme errors in the
+> log which I never seen before.
+> 
+> [87774.010474] nvme nvme1: I/O tag 0 (3000) opcode 0x1 (I/O Cmd) QID 1 timeout, aborting req_op:WRITE(1) size:131072
 
-We're crashing way earlier than the sentinel check - the bogus command
-line pointer is dereferenced via
+...
 
-startup_64()
-  configure_5level_paging()
-    cmdline_find_option_bool()
+> I still haven't found a stable way to reproduce this.
+> But I'm pretty sure that if this error don't appearing within two
+> days, then we can assume that the kernel isn't affected by the
+> problem.
+> So I made bisection with above assumption and found this commit:
+> 
+> beadf0088501d9dcf2454b05d90d5d31ea3ba55f is the first bad commit
+> commit beadf0088501d9dcf2454b05d90d5d31ea3ba55f
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Wed Nov 13 16:20:41 2024 +0100
+> 
+>     nvme-pci: reverse request order in nvme_queue_rqs
 
-whereas sanitize_bootparams() is only called much later, from extract_kernel().
+The patch here uses the order recieved to dispatch commands in
+consequetive submission queue entries, which is supposed to be the
+desired behavior for any device. I did some testing on mailine, and it
+sure looks like the order the driver does this is optimal, so I'm not
+sure what's going on with your observation.
+
+Do you have a scheduler enabled on your device?
+
+How are you generating IO? Is it a pattern I should be able to replicate
+with 'fio'?
