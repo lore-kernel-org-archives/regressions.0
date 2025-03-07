@@ -1,195 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762DE1E1DEE;
-	Fri,  7 Mar 2025 09:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9CB219A72
+	for <regressions@lists.linux.dev>; Fri,  7 Mar 2025 12:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741341213; cv=none; b=lIqIDHIshaV3vDg23krDyzuple2K7YRSIHzRLY6LWq0LuC1PSmyFt53GQSEa/WLG+6fsm+NBIAwsEfWywI16QUagtDp8Ofq70tJ/19bTvbo+qNKjFWJb3kwyVCFVpEMgIt4aff3/nJt5I2is8iM65yK5AfNUl/SkfwPaj6eoLMY=
+	t=1741352305; cv=none; b=C5AM/Weu28uyURjb14L440o40WtbqmHzJHJNf25SW9TUYaP0gOJ+vZ87LGx4nAZMS2BmaXNK+VnlbM189pwtS3K+1A70uC0W9vRL4IE44uI/RNf1tHp8+3wtScnQpW/cBrOFwvi6g6H1/2L6tnBp3T+Qm06nhndh7D5TjKxg7cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741341213; c=relaxed/simple;
-	bh=R7va4ZOYcRU/Jgig4WSUdBULAgDeoE6ZzyA21S1NKac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gnDolZk6LfBqbg7pOjgITSnqKAkQb3Z+wqMHWSQJ1LUDeYuzSbbwE0TKUEQPrKbX7oB/rz9tnNXVsoHvDPQgtPRxcrrxYNOkjqfVXA4/Oxd7iReXJnlZVUKOitZGfdXEpc1zUJP1AdFWT21L1Q7IJ5V87+f4sHkO8MWztlhu56M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SamWFfD6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741352305; c=relaxed/simple;
+	bh=m/auXCDofkYE2fnxWAv+1WSX5E3g2xIMSNEOGatdYws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bGaxQ46IqaoM2DbfKH3RsJm4y5/ahU1x35GZG6K3mLQ/0u1KAR9mwU83sSjU65Ja9BucMY/f7fU1rUV3mn+f6n7X+AgCv91j2CoprFcpDr6cE0p+vfqTpSPvIx2t9Bx8gIueCOD8TtE8wqjUV6MqL/6wnC+SQXtLzUM8Jhv48D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7R6kfce; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SamWFfD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1F1C4CED1;
-	Fri,  7 Mar 2025 09:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741341212;
-	bh=R7va4ZOYcRU/Jgig4WSUdBULAgDeoE6ZzyA21S1NKac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SamWFfD6ZSeTD2JrNTRYVn/oCXt8vIvryW6ivWniA+DzkcQN5gj46XEa+n/O4Hy5f
-	 7La3Jt6JQ+8FJqW5KOL52hS8lgykILsnt0kqNRhdQW8+tGutD5rvoOUiW9WS57D/9+
-	 zS/pZ7UrqOtct6/dLaw0MbAEQqdZkGppupBezyILafPR8Vj5F0C/ruWgctbCxZ6sPs
-	 mpFQASiyWjUQxQ5KW1pLkzTd8jLBwUwrqzY9lyQewxp/+cvu0Kqf9gurAwdgTfYr4g
-	 aAl23fczurFkIvxpIIiNzXgclra7Il5nZTrePWixdi2enMnvE9CXQwgm0zCtzmszxO
-	 f5rxyl/YnGHiQ==
-Date: Fri, 7 Mar 2025 10:53:27 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Eric <eric.4.debian@grabatoulnz.fr>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jian-Hong Pan <jhp@endlessos.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	Dieter Mummenschanz <dmummenschanz@web.de>
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-Message-ID: <Z8rCF39n5GjTwfjP@ryzen>
-References: <Z8SBZMBjvVXA7OAK@eldamar.lan>
- <Z8SyVnXZ4IPZtgGN@ryzen>
- <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
- <Z8VLZERz0FpvpchM@x1-carbon>
- <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
- <Z8l61Kxss0bdvAQt@ryzen>
- <Z8l7paeRL9szo0C0@ryzen>
- <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7R6kfce"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e4ad1d67bdso2832701a12.2
+        for <regressions@lists.linux.dev>; Fri, 07 Mar 2025 04:58:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741352302; x=1741957102; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/auXCDofkYE2fnxWAv+1WSX5E3g2xIMSNEOGatdYws=;
+        b=W7R6kfceTz3Nh3q6U4c4kQEyB4d4K3AEobDXqew1BtXBXcnl8DnQqNCGOOoDXBjj+s
+         TfNGu1Wcw0k9ChXIrwIQLGrq8XMFew/TsATqf0/22IrgwZg43tVRQOp14roiH0/YF/uT
+         LwrXPsglzTnvmtnNMwryv4Rpw8X9Hwi9v3l6AZu5iL/OpB+D9bcAiT+AOi86MPmW+OLP
+         nKIGEpw7q40nn59tIjwP+15dy17YaNKWP7gDQ3EEG1JRtDLD0nVzB9Wsv5cwiz+YPylM
+         WUUpih1x9fYiEr5hnx/NoD49MpMJaxHJULNvR7s8EDTJ/EjZ8WS8TddgHpvQQvsno94K
+         rBrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741352302; x=1741957102;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m/auXCDofkYE2fnxWAv+1WSX5E3g2xIMSNEOGatdYws=;
+        b=RonnOVpI7ldc78b8yX8LBKEIA8j2+Okz8QGqjXYw2aefMvjeuSXqD3HhuZHXBSYrSo
+         0OCzxr10/d/C6SrNMog/jMxTiNk5NBCeQQrse6ntXde4Lr9vgVdMLeEmHuUF2tBToPzJ
+         +TXvxpHhCzmUPcIp8hKzDZUcdXG8ZnieJ3Dar5qp4D99iQ4Z4ktFKYYB/WD/y1R7Xtc2
+         TwjLJHYu0iFPQcZXJwDzFLv1mXNtZPxHXt129Q8jTNK2Ad5JNW+tqQo9L4wc6Ov0BETV
+         SHtoN89APCHO7E9Tt8t8p14b9CS1XmZwEJGD6b2N05GhnKajXs4JRv/CTcbxYrVSMFTP
+         hOeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqt28smilACGab0KK3F9qxJ3CWnythiWW3ZrY/nCFXpjzi58POAb3HxtKKFdohik4AbXSMPs6zu2vNCg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxr/5wgnfvHHe9lgNGygvdfyYNnS0zramXIgjj+fHeoAzNnE+yt
+	J1aP8n6kGP3JCk7oefiEu5uvss6sWXOlN8Y0VvTrhRV7iWlHp3/M80B6ESBzP7ZVPGpTMm+Seoa
+	DBXLV3ntrwo4zU4hnHlkXixqR9Pk=
+X-Gm-Gg: ASbGnct8c6RgEyW4wu8hO1oNnI5sB5nDE+uzlNNCvjkC3MkiXo9kWvN9JkAx8MaLw9F
+	SO2LHMumXmk1tz3Ecik/HqTky6zrZbFR37BVm+EwOczTuGVizWklxuWm6suRGwN7DyqvRj3lIVS
+	Ss+sdK3yrpJj0IugGht6Yh5oy9
+X-Google-Smtp-Source: AGHT+IE8oyHIzhSNVi8QTlcKV5tKJD/5qayWxJTZy96ZNvPJRPDzcivpMxNekZW4IxHB1lECfsHmXcvntjNB3+y5r4U=
+X-Received: by 2002:a17:907:7e81:b0:abf:4708:8644 with SMTP id
+ a640c23a62f3a-ac252fa0d03mr311432266b.43.1741352301547; Fri, 07 Mar 2025
+ 04:58:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
+References: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+ <2025030559-radiated-reviver-eebb@gregkh> <CAMpRfLMQ=rWBpYCaco5X4Sh1ecHuiqa91TwsBo6m2MA_UMKM+g@mail.gmail.com>
+In-Reply-To: <CAMpRfLMQ=rWBpYCaco5X4Sh1ecHuiqa91TwsBo6m2MA_UMKM+g@mail.gmail.com>
+From: =?UTF-8?Q?Se=C3=AFfane_Idouchach?= <seifane53@gmail.com>
+Date: Fri, 7 Mar 2025 20:58:04 +0800
+X-Gm-Features: AQ5f1JpoCfaxtq2-EaR_wPAspVpLWiZcfCV5Kt_4iQsyOusnJqgKaeK-i9--rX8
+Message-ID: <CAMpRfLMakzeazr91DBVyZQnin7y6L9RB+sPFb59U1QZvY3+KBQ@mail.gmail.com>
+Subject: Re: [REGRESSION] Long boot times due to USB enumeration
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dirk.behme@de.bosch.com, rafael@kernel.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Eric,
+Dear all,
 
-On Thu, Mar 06, 2025 at 01:27:17PM +0100, Eric wrote:
-> 
-> I installed the same system on a USB stick, on which I also installed grub,
-> so that the reboot is made independent of weather the UEFI sees the SSD disk
-> or not. I'll attach dmesg extracts (grep on ata or ahci) to this mail.
+I continued bisecting and while applying Dan's fix (15fffc6a5624) along the way.
+While the patch solves the problem for some commits it seems I am
+hitting another commit that exhibits the error again
+(25f51b76f90f10f9bf2fbc05fc51cf685da7ccad).
 
-Exellent idea!
+I tested on top of v6.14-rc5 (7eb172143d5508) which has the issue,
+applying the fix and reverting the bad commit (25f51b76f90f10) fixes
+it.
+Both the applying fix and the revert are needed to resolve the issue.
 
-
-> 
-> One is the dmesg after coldbooting from the USB stick, the other is
-> rebooting on the USB stick. First of all, the visible result : the SSD is
-> not detected by linux at reboot (but is when coldbooting).
-> 
-> Here is what changes :
-> 
-> eric@gwaihir:~$ diff
-> /media/eric/trixieUSB/home/eric/dmesg-ahci-ata-coldboot.untimed.txt
-> /media/eric/trixieUSB/home/eric/dmesg-ahci-ata-reboot.untimed.txt
-> 
-> 4c4
-> <  ahci 0000:00:11.0: 4/4 ports implemented (port mask 0x3c)
-> ---
-> >  ahci 0000:00:11.0: 3/3 ports implemented (port mask 0x38)
-> 14c14
-> <  ata3: SATA max UDMA/133 abar m1024@0xfeb0b000 port 0xfeb0b200 irq 19
-> lpm-pol 3
-> ---
-> >  ata3: DUMMY
-> 27,28d26
-> <  ata3: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> <  ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
-> 29a28
-> >  ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
-> 31,34d29
-> <  ata3.00: Model 'Samsung SSD 870 QVO 2TB', rev 'SVQ02B6Q', applying
-> quirks: noncqtrim zeroaftertrim noncqonati
-> <  ata3.00: supports DRM functions and may not be fully accessible
-> <  ata3.00: ATA-11: Samsung SSD 870 QVO 2TB, SVQ02B6Q, max UDMA/133
-> <  ata3.00: 3907029168 sectors, multi 1: LBA48 NCQ (not used)
-> 37a33
-> >  ata5.00: configured for UDMA/100
-> 40d35
-> <  ata5.00: configured for UDMA/100
-> 43,46d37
-> <  ata3.00: Features: Trust Dev-Sleep
-> <  ata3.00: supports DRM functions and may not be fully accessible
-> <  ata3.00: configured for UDMA/133
-> <  scsi 2:0:0:0: Direct-Access     ATA      Samsung SSD 870 2B6Q PQ: 0 ANSI:
-> 5
-> 50,51d40
-> <  ata3.00: Enabling discard_zeroes_data
-> <  ata3.00: Enabling discard_zeroes_data
-> 
-> I hope this is useful for diagnosing the problem.
-
-It is indeed!
-
-Wow.
-
-The problem does not appear to be with the SSD firmware.
-
-The problem appears to be that your AHCI controller reports different
-values in the PI (Ports Implemented) register.
-
-This is supposed to be a read-only register :)
-
-At cold boot the print is:
-4/4 ports implemented (port mask 0x3c)
-meaning ports 1,2 are not implemented (DUMMY ports).
-
-At reboot the print is:
-3/3 ports implemented (port mask 0x38)
-meaning ports 1,2,3 are not implemented (DUMMY ports).
-
-So, the problem is that your AHCI controller appears to report different
-values in the PI register.
-
-Most likely, if the AHCI controller reported the same register values the
-second boot, libata would be able to scan and detect the drive correctly.
-
-What AHCI controller is this?
-
-$ sudo lspci -nns 0000:00:11.0
-
-
-Which kernel version are you using?
-
-Please test with v6.14-rc5 as there was a bug in v6.14-rc4 where
-mask_port_map would get incorrecly set. (Although, this bug should only
-affect device tree based platforms. Most often when using UEFI, you do
-not use device tree.)
-
-
-I do see that your AHCI controller is < AHCI 1.3, so we do take this path:
-https://github.com/torvalds/linux/blob/v6.14-rc5/drivers/ata/libahci.c#L571-L578
-
-Could you please provide a full dmesg?
-
-
-Also, it would be helpful if you could print every time we read/write the
-PI register. (Don't ask me why libata writes a read-only register...
-we were not always the maintainers for this driver...)
-
-
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index e7ace4b10f15..dd837834245b 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -533,6 +533,7 @@ void ahci_save_initial_config(struct device *dev, struct ahci_host_priv *hpriv)
- 
- 	/* Override the HBA ports mapping if the platform needs it */
- 	port_map = readl(mmio + HOST_PORTS_IMPL);
-+	dev_err(dev, "%s:%d PI: read: %#lx\n", __func__, __LINE__, port_map);
- 	if (hpriv->saved_port_map && port_map != hpriv->saved_port_map) {
- 		dev_info(dev, "forcing port_map 0x%lx -> 0x%x\n",
- 			port_map, hpriv->saved_port_map);
-@@ -629,6 +630,7 @@ static void ahci_restore_initial_config(struct ata_host *host)
- 	if (hpriv->saved_cap2)
- 		writel(hpriv->saved_cap2, mmio + HOST_CAP2);
- 	writel(hpriv->saved_port_map, mmio + HOST_PORTS_IMPL);
-+	dev_err(host->dev, "%s:%d PI: wrote: %#x\n", __func__, __LINE__, hpriv->saved_port_map);
- 	(void) readl(mmio + HOST_PORTS_IMPL);	/* flush */
- 
- 	for_each_set_bit(i, &port_map, AHCI_MAX_PORTS) {
-
-
-
-
-Kind regards,
-Niklas
+Let me know your thoughts on this.
