@@ -1,110 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F403222E3EA;
-	Mon, 10 Mar 2025 15:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ED21D79BE;
+	Mon, 10 Mar 2025 16:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741622378; cv=none; b=fSxW7sqq2Qt5DaZu80Bv/aHtD5NOa0Aq6Go3nxlTu8hA85mTRF/chdPQ2Go+BIYrmOGT12bqyHzPN6r4hCgt+jC4qm5IfGvKUOPbuFVVF5GwARAHoUf+vjffQ1k/zvm5yFRV5yxAjsGxixc+zIDbLLVFsUIi8FofaOSk69kOYdw=
+	t=1741623899; cv=none; b=FkZMFqE0HhPg4isjSHaDF+ZFSP9GoeApS8npyTqMErLLCBpjj7TQFNbIujmmL0kq5VjXtfbQzBY+0JLmxjW7Awfi1GGfWC4v6lSbgipFT7pYMQ56Kqypoa7sKSocjEHtrWicgdfojZwHDks3e7qVl/4cE2Kw86+C9+diBy6tB3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741622378; c=relaxed/simple;
-	bh=EBdiWtBZsjV9l+VD6FfbfKEnQna0Mj2l44kwBSBVKVw=;
+	s=arc-20240116; t=1741623899; c=relaxed/simple;
+	bh=8AeJKXf7KBo0Et5UVJ9a3z/GKSyc6SeP17c6nUihQ0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrlNSBfozMTrnhXTdgL2ISBLiZCBOmunzcjyU4WCvCDFcMO1dYeJbBu5mvnaVmVIqCmvuQKPh/ZEHPoZxOBrifjGH1JZm3eMmtjHjezV+fRGyzxTLPwA83kiKJuVIykXTRcmlOGkGTyHvcLDpC3t4hC4gKkj3XMvirIi3FW2Apg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YOUgLza4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=er6BCsP3awHCo4uT6VIMRQ1CE1089lKknWG2xpNhhElCmqkI3oVrpeIFG6MnBpWSquL3rvIcqwZQbKDriS0anNSI54rLuiKdWXT5+/rmOvL+vVGjlQHuNmpif8jOFAFnjdaT7u2eUZ1/II+xNSsmCOj49SxUpM5Kzfvrc6FtPhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=luj2N4m5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YOUgLza4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A90DC4CEE5;
-	Mon, 10 Mar 2025 15:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741622377;
-	bh=EBdiWtBZsjV9l+VD6FfbfKEnQna0Mj2l44kwBSBVKVw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="luj2N4m5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEFBC4CEE5;
+	Mon, 10 Mar 2025 16:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741623898;
+	bh=8AeJKXf7KBo0Et5UVJ9a3z/GKSyc6SeP17c6nUihQ0w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YOUgLza46P+/1QH9sbANY82RHUhPdqOJu4QkvdUBxKxUlNlmfMRRQCzEeAYrgvzAm
-	 I9BYaiDUn0P4flP+/zRB9yWcUmo2wYk2M+XbkcHJzfcHIx5Nfef82dLJ3Km1iGpppm
-	 qpSvQAlP78Vpl7w4GTjhKHQoqq+A8/8Qx2dIvDaA=
-Date: Mon, 10 Mar 2025 16:59:30 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>,
-	mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>
-Subject: Re: [Kernel 6.12.17] [PowerPC e5500] KVM HV compilation error
-Message-ID: <2025031024-dreamt-engulf-087b@gregkh>
-References: <20250112095527.434998-4-pbonzini@redhat.com>
- <DDEA8D1B-0A0F-4CF3-9A73-7762FFEFD166@xenosoft.de>
- <2025030516-scoured-ethanol-6540@gregkh>
- <Z8hlXzQZwVEH11fB@google.com>
+	b=luj2N4m5kv14o7Yc2i/DxNa04kIC73dVLVdrjuO1dq0Idwa6PZ0GbB5Xvunkaz2Iv
+	 Vn6sSCN++sH9UiX6hRwFOPqcOUlSG3qt4kTfz9JzHrsINkdBpCANzE4YS6CHPZiGD2
+	 ruMrJu/GTla4DpIHm3FjS6/WHvxEy9JtmqBH4uD3PtUBwSSwnY5N1R5T7oXPqNHyFn
+	 vjrPPjznzrrsmOiSAST96Bs+T2P0+K1udNGpjzL4FSSlwZl4Iqe5dJVDQ4Bi5hiB26
+	 GuehJwjDXGNcA/2XENy8zI1PWuJksYdPbQx5ieem8Hdlax7V3DTb+TE3WULliAJReJ
+	 4Wb0OzhoGlEfQ==
+Date: Mon, 10 Mar 2025 17:24:53 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Eric <eric.4.debian@grabatoulnz.fr>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jian-Hong Pan <jhp@endlessos.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	Dieter Mummenschanz <dmummenschanz@web.de>
+Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
+ board type") on reboot (but not cold boot)
+Message-ID: <Z88SVcH28cEEingS@ryzen>
+References: <Z8SBZMBjvVXA7OAK@eldamar.lan>
+ <Z8SyVnXZ4IPZtgGN@ryzen>
+ <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
+ <Z8VLZERz0FpvpchM@x1-carbon>
+ <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
+ <Z8l61Kxss0bdvAQt@ryzen>
+ <Z8l7paeRL9szo0C0@ryzen>
+ <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
+ <Z8rCF39n5GjTwfjP@ryzen>
+ <6d33dbf2-d514-4a45-aa50-861c5f06f747@grabatoulnz.fr>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z8hlXzQZwVEH11fB@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d33dbf2-d514-4a45-aa50-861c5f06f747@grabatoulnz.fr>
 
-On Wed, Mar 05, 2025 at 06:53:19AM -0800, Sean Christopherson wrote:
-> On Wed, Mar 05, 2025, Greg KH wrote:
-> > On Wed, Mar 05, 2025 at 03:14:13PM +0100, Christian Zigotzky wrote:
-> > > Hi All,
-> > > 
-> > > The stable long-term kernel 6.12.17 cannot compile with KVM HV support for e5500 PowerPC machines anymore.
-> > > 
-> > > Bug report: https://github.com/chzigotzky/kernels/issues/6
-> > > 
-> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/x5000_defconfig
-> > > 
-> > > Error messages:
-> > > 
-> > > arch/powerpc/kvm/e500_mmu_host.c: In function 'kvmppc_e500_shadow_map':
-> > > arch/powerpc/kvm/e500_mmu_host.c:447:9: error: implicit declaration of function '__kvm_faultin_pfn' [-Werror=implicit-function-declaration]
-> > >    pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
-> > >          ^~~~~~~~~~~~~~~~~
-> > >   CC      kernel/notifier.o
-> > > arch/powerpc/kvm/e500_mmu_host.c:500:2: error: implicit declaration of function 'kvm_release_faultin_page'; did you mean 'kvm_read_guest_page'? [-Werror=implicit-function-declaration]
-> > >   kvm_release_faultin_page(kvm, page, !!ret, writable);
-> > > 
-> > > After that, I compiled it without KVM HV support.
-> > > 
-> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/e5500_defconfig
-> > > 
-> > > Please check the error messages.
-> > 
-> > Odd, what commit caused this problem?  Any hint as to what commit is
-> > missing to fix it?
-> 
-> 833f69be62ac.  It most definitely should be reverted.  The "dependency" for commit
-> 87ecfdbc699c ("KVM: e500: always restore irqs") is a superficial code conflict.
-> 
-> Oof.  The same buggy patch was queue/proposed for all stable trees from 5.4 onward,
-> but it look like it only landed in 6.1, 6.6, and 6.12.  I'll send reverts.
-> 
-> commit 833f69be62ac366b5c23b4a6434389e470dd5c7f
-> Author:     Sean Christopherson <seanjc@google.com>
-> AuthorDate: Thu Oct 10 11:23:56 2024 -0700
-> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CommitDate: Mon Feb 17 10:04:56 2025 +0100
-> 
->     KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
->     
->     [ Upstream commit 419cfb983ca93e75e905794521afefcfa07988bb ]
->     
->     Convert PPC e500 to use __kvm_faultin_pfn()+kvm_release_faultin_page(),
->     and continue the inexorable march towards the demise of
->     kvm_pfn_to_refcounted_page().
->     
->     Signed-off-by: Sean Christopherson <seanjc@google.com>
->     Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->     Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->     Message-ID: <20241010182427.1434605-55-seanjc@google.com>
->     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Sat, Mar 08, 2025 at 11:05:36AM +0100, Eric wrote:
+> > $ sudo lspci -nns 0000:00:11.0
+> 00:11.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD/ATI]
+> SB7x0/SB8x0/SB9x0 SATA Controller [AHCI mode] [1002:4391] (rev 40)
 
-All now reverted, sorry about that.
+Ok, so some old ATI controller that seems to have a bunch of
+workarounds.
 
-greg k-h
+Mario, do you know anything about this AHCI controller?
+
+
+"""
+3.1.4 Offset 0Ch: PI – Ports Implemented
+
+This register indicates which ports are exposed by the HBA.
+It is loaded by the BIOS. It indicates which ports that the HBA supports are
+available for software to use. For example, on an HBA that supports 6 ports
+as indicated in CAP.NP, only ports 1 and 3 could be available, with ports
+0, 2, 4, and 5 being unavailable.
+
+Software must not read or write to registers within unavailable ports.
+
+The intent of this register is to allow system vendors to build platforms
+that support less than the full number of ports implemented on the HBA
+silicon.
+"""
+
+
+It seems quite clear that it is a BIOS bug.
+It is understandable that HBA vendors reuse the same silicon, but I would
+expect BIOS to always write the same value to the PI register.
+
+
+
+Kind regards,
+Niklas
