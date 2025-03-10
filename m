@@ -1,98 +1,130 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B31227567;
-	Mon, 10 Mar 2025 12:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0267D22A4C3;
+	Mon, 10 Mar 2025 15:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741610480; cv=none; b=Ge9csmoau3yqiu1vPPpCgMxcL5vnx5vGgK4VUU5JxAKLLnZKCunXRHfczKusXDTi1LqNRBF0N/aGmNGPbLUIMUJElEGoGWxcT7182EETyN4qCDYyMYdlXqaR45SVPf6Sy3X0Cj+p3zVEGbzW0cdp0xDiSu+f+UOs2L3aAUPtjC8=
+	t=1741620153; cv=none; b=L/FYvmc73zMyKJRxWl/wbeqbhybaXidD2SdqzRJlEkSRjECL2u3DeWp3oTlPgpVoSvFuV9+nuaEZVw7vaXBMr2s4cqzL2w43aIUtR1FNNyGiBWSujxJ5/5ZSeKM5wiJyulEXNCim2wE2QMXHjV1hzCY5G9wk5tFjQJJEGDAIckc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741610480; c=relaxed/simple;
-	bh=7y+Ce3En3FYPPydb2HFzABw4vaWNGqVitA3xGTZeeEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fGCttC/iAWnu0WcQ6jOz6UXw2TFDAHVuYiDyVpaFMdRKZRJ9dzUPsb+oj9Phg/fOZ9J31oRj+mdB/L4CKMlMWe7lixGnPKxKEJqPu7pqqIYoedAmRq6lXLyqNDpALGfMjzQyqdq7tGZ0RiuTgYydQtD7LnVGhaAt8+TUvXzICcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=nzFN2P0q; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1741620153; c=relaxed/simple;
+	bh=Cv8m8jD7+RmPJkCj57aD0CpR1gxtDVWyCmNb4E+uGhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aepfbliWNJdA2VNw8Nb++cPhavgrFYWDMxWjckn/TtqPuaMtmQVDK+NDGnSpI0T+/vW4I6oywQA160SMOXJa27rz0XyOevoZjs/fGNQQ0a5clW9w/PJ3ar5pb/tFDNhALgbKj/+tjuLy45bYEZwwZ3vMrZYV5guJHU/iQy1QOQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FHpWcWc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="nzFN2P0q"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 87D63600302B;
-	Mon, 10 Mar 2025 12:34:41 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id WKBhROGT4aPH; Mon, 10 Mar 2025 12:34:38 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 5C2506000230;
-	Mon, 10 Mar 2025 12:34:38 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1741610078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm9bV3SCT7LdcvOrvp1YJMQOgiJT5opS8tBpLu2IzIw=;
-	b=nzFN2P0qNrK3M1M7HF/Fw6LYlMHSE5FIdkCtc5prG+gsIvEO9b9ZJAFuO4ItDYXiGOlW8D
-	C4yUwhxMJkt13OZx9r6JOXE4lY+K8M6ndjpO8x1UBNVkC+ZZHvgAyLS2yBQe+Ipc+19KVy
-	OMGsGXWRyldKgtfTQd8aLim7EQQqiB8=
-Received: from [IPV6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde] (unknown [IPv6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 89AC73600D1;
-	Mon, 10 Mar 2025 12:34:37 +0000 (WET)
-Message-ID: <19478509-5007-4a20-9512-b965126b7026@tecnico.ulisboa.pt>
-Date: Mon, 10 Mar 2025 12:34:35 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FHpWcWc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2056DC4CEE5;
+	Mon, 10 Mar 2025 15:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741620152;
+	bh=Cv8m8jD7+RmPJkCj57aD0CpR1gxtDVWyCmNb4E+uGhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0FHpWcWc7Qca61uQIH2Govy451NTIDVUxX2ga1F597qu9+ST0RzvlJXxvR0B48iFj
+	 ofDf9PKmqRIuNmNpOjue02Gp0jrJ7v6bu+qrUShfMnC+4g3aTQAt3WRjNG3Apc6tpV
+	 8mTflCuUbscJQpbTB2nbZKty+F5JMvp5PEU3hadk=
+Date: Mon, 10 Mar 2025 16:22:29 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Christian Zigotzky <chzigotzky@xenosoft.de>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	seanjc@google.com, linuxppc-dev@lists.ozlabs.org,
+	regressions@lists.linux.dev, Trevor Dickinson <rtd2@xtra.co.nz>,
+	mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au,
+	Darren Stevens <darren@stevens-zone.net>,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [Kernel 6.12.17] [PowerPC e5500] KVM HV compilation error
+Message-ID: <2025031053-define-calamity-8115@gregkh>
+References: <20250112095527.434998-4-pbonzini@redhat.com>
+ <DDEA8D1B-0A0F-4CF3-9A73-7762FFEFD166@xenosoft.de>
+ <2025030516-scoured-ethanol-6540@gregkh>
+ <CABgObfb5U9zwTQBPkPB=mKu-vMrRspPCm4wfxoQpB+SyAnb5WQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rc] gpu: host1x: Do not assume that a NULL domain means no
- DMA IOMMU
-To: Jason Gunthorpe <jgg@nvidia.com>, David Airlie <airlied@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- Mikko Perttunen <mperttunen@nvidia.com>, Simona Vetter <simona@ffwll.ch>,
- Thierry Reding <thierry.reding@gmail.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <jroedel@suse.de>,
- Jerry Snitselaar <jsnitsel@redhat.com>, patches@lists.linux.dev,
- regressions@lists.linux.dev
-References: <0-v1-10dcc8ce3869+3a7-host1x_identity_jgg@nvidia.com>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <0-v1-10dcc8ce3869+3a7-host1x_identity_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgObfb5U9zwTQBPkPB=mKu-vMrRspPCm4wfxoQpB+SyAnb5WQ@mail.gmail.com>
 
-
-Hello again,
-
-On 2/4/25 7:18 PM, Jason Gunthorpe wrote:
-> Previously with tegra-smmu, even with CONFIG_IOMMU_DMA, the default domain
-> could have been left as NULL. The NULL domain is specially recognized by
-> host1x_iommu_attach() as meaning it is not the DMA domain and
-> should be replaced with the special shared domain.
+On Wed, Mar 05, 2025 at 03:54:06PM +0100, Paolo Bonzini wrote:
+> On Wed, Mar 5, 2025 at 3:19 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Wed, Mar 05, 2025 at 03:14:13PM +0100, Christian Zigotzky wrote:
+> > > Hi All,
+> > >
+> > > The stable long-term kernel 6.12.17 cannot compile with KVM HV support for e5500 PowerPC machines anymore.
+> > >
+> > > Bug report: https://github.com/chzigotzky/kernels/issues/6
+> > >
+> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/x5000_defconfig
+> > >
+> > > Error messages:
+> > >
+> > > arch/powerpc/kvm/e500_mmu_host.c: In function 'kvmppc_e500_shadow_map':
+> > > arch/powerpc/kvm/e500_mmu_host.c:447:9: error: implicit declaration of function '__kvm_faultin_pfn' [-Werror=implicit-function-declaration]
+> > >    pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
+> > >          ^~~~~~~~~~~~~~~~~
+> > >   CC      kernel/notifier.o
+> > > arch/powerpc/kvm/e500_mmu_host.c:500:2: error: implicit declaration of function 'kvm_release_faultin_page'; did you mean 'kvm_read_guest_page'? [-Werror=implicit-function-declaration]
+> > >   kvm_release_faultin_page(kvm, page, !!ret, writable);
+> > >
+> > > After that, I compiled it without KVM HV support.
+> > >
+> > > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/e5500_defconfig
+> > >
+> > > Please check the error messages.
+> >
+> > Odd, what commit caused this problem?
 > 
-> This happened prior to the below commit because tegra-smmu was using the
-> NULL domain to mean IDENTITY.
+> 48fe216d7db6b651972c1c1d8e3180cd699971b0
 > 
-> Now that the domain is properly labled the test in DRM doesn't see NULL.
-> Check for IDENTITY as well to enable the special domains.
+> > Any hint as to what commit is missing to fix it?
 > 
-> This is the same issue and basic fix as seen in
-> commit fae6e669cdc5 ("drm/tegra: Do not assume that a NULL domain means no
-> DMA IOMMU").
+> A big-ass 90 patch series. __kvm_faultin_pfn and
+> kvm_release_faultin_page were introduced in 6.13, as part of a big
+> revamp of how KVM does page faults on all architectures.
 > 
-> Fixes: c8cc2655cc6c ("iommu/tegra-smmu: Implement an IDENTITY domain")
-> Reported-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> Closes: https://lore.kernel.org/all/c6a6f114-3acd-4d56-a13b-b88978e927dc@tecnico.ulisboa.pt/
-> Tested-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Just revert all this crap and apply the version that I've just sent
+> (https://lore.kernel.org/stable/20250305144938.212918-1-pbonzini@redhat.com/):
+> 
+> commit 48fe216d7db6b651972c1c1d8e3180cd699971b0
+>     KVM: e500: always restore irqs
+> 
+> commit 833f69be62ac366b5c23b4a6434389e470dd5c7f
+>     KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
+>     Message-ID: <20241010182427.1434605-55-seanjc@google.com>
+>     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
+> 
+> commit f2623aec7fdc2675667042c85f87502c9139c098
+>     KVM: PPC: e500: Mark "struct page" pfn accessed before dropping mmu_lock
+>     Message-ID: <20241010182427.1434605-54-seanjc@google.com>
+>     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
+> 
+> commit dec857329fb9a66a5bce4f9db14c97ef64725a32
+>     KVM: PPC: e500: Mark "struct page" dirty in kvmppc_e500_shadow_map()
+>     Message-ID: <20241010182427.1434605-53-seanjc@google.com>
+>     Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
+> 
+> And this, ladies and gentlemen, is why I always include the apparently
+> silly Message-ID trailer. Don't you just love how someone, whether
+> script or human, cherry picked patches 53-55 without even wondering
+> what was in the 52 before. I'm not sure if it'd be worse for it to be
+> a human or a script... because if it's a script, surely the same level
+> of sophistication could have been put into figuring out whether the
+> thing even COMPILES.
+> 
+> Sasha, this wins the prize for most ridiculous automatic backport
+> ever. Please stop playing maintainer if you can't be bothered to read
+> the commit messages for random stuff that you apply.
 
-Any news on this patch or any other solutions for this regression? It's
-not great if this falls through the cracks, especially when there is a
-solution for the problem.
+Sasha, I thought we weren't taking any kvm patches that were not
+explicitly tagged for stable?  The filter list says that...
 
-Thanks,
-Diogo
+Anyway, let me go revert these, thanks for the report.
+
+thanks,
+
+greg k-h
