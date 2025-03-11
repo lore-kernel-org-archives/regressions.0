@@ -1,219 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6661DDA09
-	for <regressions@lists.linux.dev>; Mon, 10 Mar 2025 20:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741637541; cv=none; b=OwSy3wclKKv7GZMEuuyE9B6hJtvzrgecCPZrvtpVMcGOb6yPZM5q/n3t2XuYaLFxFR5SJJPVjX2Y/OmqTS37e/1hDMDmIPe66y2/focIFjq8oP4DaDrSsrW7WAlAAi1++prE+s7thUPUCOsnZwbPtUMx71OgGrU3o0/rELp02sk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741637541; c=relaxed/simple;
-	bh=aT31OkYa28ZGJUgufGsDa18gtUSc47VEdx7Wy+FoF9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mjeUl55cWOQtiQNs4w2u1QxRlSTBouQOAu49mpo+/tttVokEDzzlfv4SL2ySkndc/DWC+acHvzOrIKcKBKw5g12hmN+Vqo6fkQlw8xtZCD0Kq+Xjm/Ayx10UoCMUGPPUHcP2Z523cWHa+A/lGHhzNVmLRYpb5E5JJizgdNCfZ1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vyt92PPe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468401E7C38
+	for <regressions@lists.linux.dev>; Tue, 11 Mar 2025 03:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.141.245
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741662187; cv=fail; b=uvDmKFxe3hEvmKS/bgC8cv0iYLeS7/9A+dCJcbS48WcHKhiK8b/4vD4CH1nB6Pn8GUoi+DgI93xCSOVUXhCrdgw04MKVQYBxZe6B54gh4PcCB+hgXrRl/8Cg4iX4vf3qfB6FcsHoUUgViDPvdgzdu47SELiwd5ohXixnA+rTZdA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741662187; c=relaxed/simple;
+	bh=2YG11svB1+rJzSyw3a/EITmnRWiJlpYS65VSHyNq2NY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=N3SwLm3ttlXwXIYgAeMaoS0Spof4QBtYB0y9Gw66BlzDxPwcQYFdY42zsr61tyvKCWThjWh0uMSZQw8eciw8Q7keZttjqR7+4wEwofT8ULri/cC2IdsizOV7UmJ9C7kvtDhArCSARCM8hO8VeY30PiXBZTa1ZkxAt5X/0EkkmOk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=Dl6cKhsE; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=qcWvaF2a; arc=fail smtp.client-ip=68.232.141.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vyt92PPe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741637538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NUMBZ32KdQqPLcAUPyQXRUOYVm+5mOZjgmd0uYlCLNg=;
-	b=Vyt92PPekvgh6NbeHUF0p4GOsF2gl9KwRLr4RCMrL755U4BnDtZXulhZFiOpPTz7CcKjBI
-	T0mtAeTsKEX8CDEEi559HLvOFQJcSI/noe/P7tHOE7qKz3AzHdoAfnoZAMDpdrmbhiCT8o
-	s/gKYTq9lkVd2+y0srWMDmCNlRKSENQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-rZlL8u2UPuSCTzXiGdtDTg-1; Mon, 10 Mar 2025 16:12:17 -0400
-X-MC-Unique: rZlL8u2UPuSCTzXiGdtDTg-1
-X-Mimecast-MFC-AGG-ID: rZlL8u2UPuSCTzXiGdtDTg_1741637536
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e623fe6aa2so2483566a12.2
-        for <regressions@lists.linux.dev>; Mon, 10 Mar 2025 13:12:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741637535; x=1742242335;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NUMBZ32KdQqPLcAUPyQXRUOYVm+5mOZjgmd0uYlCLNg=;
-        b=c5JXMTyN0kgksGz5xj7UAswt5JEaNO/7iY9imm3mw08hXhEtOAI/Of9BncXZygn04+
-         xZR5yDQi5NH+63r+6jyMvnqKl8pQNROiJjvjL2LNctDIPqtDeun6ToyVH4UrD1ZtlZ3m
-         IXrR78eSN6cy0ThrBA0Fr6zYLIaj/zNLyxem85T37QhkNTy6MXCjykeQeqCgT//BNsc2
-         Usalwxjfbqh6+6h9qgkynADIN8ZsuRWksAC9i1xaLHwBXLUghYoFbVWQffxzVonGYgZU
-         4H+uEW7+2Tya2/d0nh2gSiczt0y9dVu4S2wpcTpuHYC7+MWzkKIMhVwdr74H08YmQ0NV
-         McdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlSPyTAd9zq0iabXTAM7vN3vsaHHkOQk6htq1435VPH4IpQvGQD7jyjhR5XBwZghp6cSdIzKXaEnGAfA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywm4IkQelwdrIBjo4jQPkx3iKy0HGVBWgqrd/Uc9P8pLdbs2Ue4
-	cm8wjNZgzsiEZ9bWg5vWbUykSao+Q49SQFrhc92rSHEr73Ux3Ladcts8AFc6MeeQ2BnwRjiVcsx
-	aLHRWcPgOVWS8Ns7RsISxd8Fn4RxhkAfBLFzcKlYPqTa/mA3hEJe5HhAXrZaV
-X-Gm-Gg: ASbGncv5bTH27XA6BrsyJmo7IizMGxLF3PpC+UCQT5tPykZNkIFhVdWrk2oy4XX4QaU
-	mg7YzvNVpvCz+fVzrg4FefDZExf+lqGmkczW7OxupXW/YFmvvixeY+NsZZolxfiNYSY+V05puk7
-	FZg42vXFFdh5uVAy7pYIUrAw3vq9/sqmbivsY7WAUvmBeMGtvOcvK3jRi+uYObq7/odKzqkupvO
-	T1/g0D9QdJJVe9IbBcPdyA8JuoY/1JVWEaMZRyxFV+ZNIlQkCFR3AoKlikcguFZjyasWtDUDfIz
-	QHpxBxfI0xZQPluxxV9JSHSmxDCPSIjF8/EclR8wlU8B2rZn9SrdmafTBxKfbFZ8lEAlGs1qUn+
-	bjUwRl6hPAaxPW3hWkHioqH6g82u2nCPVSemJ7GVNEKrloDx7KQHjJv7FN1pre9pMNg==
-X-Received: by 2002:a17:906:6a29:b0:abf:40ac:4395 with SMTP id a640c23a62f3a-ac252bb26b7mr1959102866b.31.1741637535506;
-        Mon, 10 Mar 2025 13:12:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGj3e3Mpx+zqBeN7/u1TmdQVFF3PHupm3Ka2E7nCKCXHNoHeAEGzCJB1T6ZzVuiOMh2f7bfEQ==
-X-Received: by 2002:a17:906:6a29:b0:abf:40ac:4395 with SMTP id a640c23a62f3a-ac252bb26b7mr1959099966b.31.1741637535022;
-        Mon, 10 Mar 2025 13:12:15 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac25af3cea9sm630700966b.111.2025.03.10.13.12.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Mar 2025 13:12:14 -0700 (PDT)
-Message-ID: <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
-Date: Mon, 10 Mar 2025 21:12:13 +0100
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Dl6cKhsE";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="qcWvaF2a"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1741662186; x=1773198186;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=2YG11svB1+rJzSyw3a/EITmnRWiJlpYS65VSHyNq2NY=;
+  b=Dl6cKhsEO011XuFOxS2WnxCgrGlTz2znp2yy/OaXO1C3AUWzNl44VgwN
+   u0Lg2bKpyLVEX4MURpBbtiSSN/P8Ulf7aTz5s+Y3uS5DxzckAwOP7HIhD
+   wwl/cekhBD0cuzgPQpXH6gidzV3OIZArUe9vaIam0nY8A3d/UP68H13me
+   aZCBkP1wHflyrljddj1/PSEgbFqSdmx+jX9oO3ZMlUZ+tExPnugxJnk/7
+   zIntoTf8N+zr6RqxHOoYeKQRaB4WD8wRuvmIk3c3HorXcnR/+VYgzKa6x
+   JPZjTXhX+wYir71RsyjapNHqZccXmaDKvDESzsIME/pQQgSKUGXNFMMaR
+   g==;
+X-CSE-ConnectionGUID: zfUNLOWQQqWBn8UEOWXo6w==
+X-CSE-MsgGUID: 9Av7otCCRfyPuNgI3zoG5A==
+X-IronPort-AV: E=Sophos;i="6.14,237,1736784000"; 
+   d="scan'208";a="46838595"
+Received: from mail-northcentralusazlp17012053.outbound.protection.outlook.com (HELO CH5PR02CU005.outbound.protection.outlook.com) ([40.93.20.53])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Mar 2025 11:03:04 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FeeMGjgtds3n1G4+zWuXEA2K3OGpJx6hoYcbBjt71RThmKyW2YH30FrZEs+QEQ0GdEvchrHcK8TzIZtpPfE+U0HqSPpGgvom/Vih/b6IQH/AeWkh1zOHxgU1EBbQbHJaGHk6A8fyMWpDPpZfCkzSnDZeCozKzlYUdWZCpSV2Kx96LnC5eS2GAq68lTPVQg9nYYkbomWR/7gKS4lIDFV/EKQOz80SW7lY034zqQAfkkuegjRFIhmhBQog/DP/LFG4QpEwQjxZWYK1JzUImeq/cCo+gAWomRPvBs1doBk4ogM8ofAIFJ3wOOhpb1qFEz43XKDRvTKtuowhNp4rIdX8nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2YG11svB1+rJzSyw3a/EITmnRWiJlpYS65VSHyNq2NY=;
+ b=Cs94W/TuEU3qyfdkP7/eW5FWyYCZfGQdE3AoS+DQKZzKMCS8z+eJHjxOxat6HnsDA30wszG+LhbGpVioya05FQr/DaZIlb8TS/kM3MdZFmKoHvz6EMyZRHreijFK1oYKED9RZ9WyxB3RDrs/ciLBNauMsMn8JA2/JcBH7xbA+iEeQVbmo25HioLQ2lCR/jJrEkjI3Mgh3Eh1z5u49TvURUXuCKtMKj/XVHM1dJpHYgdquBBZoocER93kLcuhHkQn21/YbE8JPSglDiG3v00aXBT2JsgORVgzqvf2lBKGbovQK2Ou0okfYCbinl1rJdOhZuMKt/Hl1ED60lACtAxp+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2YG11svB1+rJzSyw3a/EITmnRWiJlpYS65VSHyNq2NY=;
+ b=qcWvaF2anToCCcfezPXI35EqVC2WpylWDsHtRaQNbS96YmGLH8sBBxImAO9j7LI5knKNQ0s9BBOQxDGEPhMrMaLNKG4nm/FeWiEJcwYmetGHuI/qnSpr+ZxiRGWfN9p4C7IWRsIeHKtKXoE23YQTatgEpEN9sNw0tPpJ52IFZ3c=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ SJ0PR04MB8470.namprd04.prod.outlook.com (2603:10b6:a03:4d7::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
+ 2025 03:03:02 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::b27f:cdfa:851:e89a]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::b27f:cdfa:851:e89a%7]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
+ 03:03:02 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Milan Broz <gmazyland@gmail.com>
+CC: Jens Axboe <axboe@kernel.dk>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, Ondrej Kozina <okozina@redhat.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, Alan Adamson
+	<alan.adamson@oracle.com>
+Subject: Re: [PATCH] block: cleanup and fix batch completion adding conditions
+Thread-Topic: [PATCH] block: cleanup and fix batch completion adding
+ conditions
+Thread-Index: AQHbkjIZxXMtnOmsDUuYlfs8n/vnWg==
+Date: Tue, 11 Mar 2025 03:03:02 +0000
+Message-ID: <3irisb67klhv2xu3w5digf2tavrbnn2umthcgkbgrpfs3effnd@f3btiynduuox>
+References: <20575f0a-656e-4bb3-9d82-dec6c7e3a35c@kernel.dk>
+ <71bbd596-a3a0-4e37-baae-19f02c6997be@redhat.com>
+ <459b9c3b-0d5e-4797-86f7-4237406608ff@kernel.dk>
+ <535ff54b-5c49-42f0-af5f-020169b5da79@redhat.com>
+ <d84313c6-3dd1-446d-910d-e7f9f2e7d53c@gmail.com>
+In-Reply-To: <d84313c6-3dd1-446d-910d-e7f9f2e7d53c@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|SJ0PR04MB8470:EE_
+x-ms-office365-filtering-correlation-id: 59d6db24-8582-4526-84e6-08dd60493cf4
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Q7GSynpudNWj1pWtjpNsZ1+/dZmYI2PIeOasUpngLuGS526Pd0ycktLTi5n6?=
+ =?us-ascii?Q?6Cw8BtGRZu7Dy+lhhiz3nQ7KgOF54AEF+NC0/suGqpSL3BQ0Phe3IBWBowoi?=
+ =?us-ascii?Q?d15iUgJ/HNYW63R9TGdqbabHxB+Y19wJTGTrkSULYvcpw18bInDHOgSHYZ6A?=
+ =?us-ascii?Q?/WSLuWHpPv8tczQy4wp9S2U8PPrhXDXgJrzrd0YplS6xKc+Iykyurz6R0uHl?=
+ =?us-ascii?Q?GYLsK7wP+hSVdq3qGdKzC8KLngKxMJof0DNm4NNm/OytPFgQjxfgTiIYrNtP?=
+ =?us-ascii?Q?qy+3+lDxPCu8EOLphVt24hnQ1/XTgvNEg6+pS5Tyk9reO53kYWHZBq7qhmld?=
+ =?us-ascii?Q?7WO1lztqBF0xMpPqePKwdQMtkiXgRsPAAlg1qBznaUzGjK2KCZdbyTt2yIAx?=
+ =?us-ascii?Q?QBBIAAdXR3AdLu7SzDI0T0zauNbQVVFGRqqcK09+wUH8C4+a8o08avakH06m?=
+ =?us-ascii?Q?5/WCCBD8ilNdmEc3c8HMycE3c3B2UWttz0e/hinomyb0Etof6+XhGm46kWS+?=
+ =?us-ascii?Q?kiK6ppOgEJv4eywpwr56tdJzTrf6c1hCNcODk2FgUN/UPnELfMthbFk56s1M?=
+ =?us-ascii?Q?/kfwp8dZNGnscN3qFGPC2yt5Ucnpl+6uyt7hMxkShf/rPr14prQpa/tIXgQJ?=
+ =?us-ascii?Q?IvRu9Wi/kMdNrzlEaCfzcwvzPLrNAV/bP2viPwrbCQIj1xARJRI7cFjzDiCX?=
+ =?us-ascii?Q?ou8a5asCJK0nL/Qa+9k43EVtCKeUIfrDvWOcqJVdv9+7ajyJ31PJeqGr/CXB?=
+ =?us-ascii?Q?EpA/x58n7V8vhTNmi8+hNRhQprnDp8yi+zgwiz6R70oEnpCzABeEg0mqyuec?=
+ =?us-ascii?Q?jFC0k81Ra1kzEvMlwPrDSoqf+qNNFH/T+p+XaWxcFXAkqguIBBD+l+cb8tJC?=
+ =?us-ascii?Q?RCbBlFtdvG3E+7NQcCCd68yxh4FtXmMbYRx+BQkAkJ0ym/OOfORg/i/W5N83?=
+ =?us-ascii?Q?0NJIjBw+CdexkjEACaUxoOdr1nq2JBOjrfSuFtThP1JAO9iXwLHw0eW8QhzL?=
+ =?us-ascii?Q?WkmC+4gC9nekpcmR5GmE5Zq3/s0OqYL6qO72IlyerQJsGAdGcLLouNsIKxgA?=
+ =?us-ascii?Q?ghXdNwH8tplXBm3wDwlG2EpHYsWpWu4M4qj7KiQsTV7MjVl5Qe6eeZZ9pJaV?=
+ =?us-ascii?Q?JRbOQgL8MX5ftgTutOFAUfKaiauLHj3EhKgZqtNdk+mz9y4/njrfw/Hut5zS?=
+ =?us-ascii?Q?cDcVf+41t1WCHcj7ROVr6FkaCPRg9B+L/nbYQn1LJ+z7PL3muAqbVv8CL5xA?=
+ =?us-ascii?Q?na3MCOclXlJaayxbNJbhC4rSCOinrNPnL0HQGkns3ihFturXKODGC2Iv0Y3U?=
+ =?us-ascii?Q?B4qaitHm/UJvROsl9gaiRdVqmTI42fKVTuFhX1oB1cRjvZ1AWMek7Er2WaG9?=
+ =?us-ascii?Q?yEj0C9kslm9lkGkPLU5+ycqGHsmmb/YZ7RElhSxcSl16hyf3oxUQoXd3OPDe?=
+ =?us-ascii?Q?LxGFZJK86ag9kVUSp9vKxI3YbM2QN0rc?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?G5+zAQJgjY/YGTxeQHW4qYctowdP2+dsl/OhaJESr6MOfUiqDHaruSr5eVX+?=
+ =?us-ascii?Q?N6KoGg1IsrCb9zr1AoKDMHifHfM5vYlrD/FS2lmRlA04vVgp27FzT163I9wW?=
+ =?us-ascii?Q?M+CgidTtAuqkUrOuoGIcEaNsB6dskGs1GdW6mRYjd3B14EBnxkvS53M6/5ae?=
+ =?us-ascii?Q?ma+ipMAlBh2StwvWPm94G15Tnd5PNEytA0pchuTOSpZ02IPdeaaL6uI1gYMx?=
+ =?us-ascii?Q?EirNM4Icx7CUG41cZmboaX0Lb+96Zanvh0LbCr2sjSQyaGlWBEnpFU1rbPPn?=
+ =?us-ascii?Q?mXwne1IV4tUZmZH/x5wwTh5oY7lTz+HF8poUWaMhJSzJWPsqoq9jKBMGpEIl?=
+ =?us-ascii?Q?pg9GmAq9mNj0n9mTGrNk/QgLA4y/jSdoRiRI/TvI8lUX1MfFewOsY0nmrlc5?=
+ =?us-ascii?Q?uGCXr1uAGKPneDwrfBoYQ9VBAcro0dpb4fBygt1J6/tYjyyG7D6B7KM+qVWH?=
+ =?us-ascii?Q?0HkMsJBkWASSbpVaQGBhYbWW2zfi7cRtbRxyUOyw94g7ZAMYxGrcOn9RtReW?=
+ =?us-ascii?Q?nphzUzB5Vxml5/hJGt+YRKeeOZZoupBHmtcVLv+uhJUzu3XtHlAAHZPJxDyj?=
+ =?us-ascii?Q?QVncgAfxaQ157Ft1rz2fV1fP5QGbrNX4f2SZqDtA+ek+65H50y/yQdiNG5nt?=
+ =?us-ascii?Q?9tV4HOCLpfD9T8Tn+GOU8n0JTHogUgOsch15KwtukRTlYlcl6SXGipjuFgJh?=
+ =?us-ascii?Q?w6c+x1NCu7E/jXO85pIQfpyiKH8mBEPVxi7dpScGpwcOqOIsvHw3r29oBDVz?=
+ =?us-ascii?Q?SmCpFRd99vCFMCNL3a1wXAsX2XQgsRxLtC6fITPCMtTKzd6wX0moXxRaLZyw?=
+ =?us-ascii?Q?IqSENAr5exs5q1O52jBZ7dGG2G/APVJdxnUZnETvVkSQTwNkpbHfJa1Mv1G8?=
+ =?us-ascii?Q?CR7HTM2i1MwVsju6+j4cPVKR3fF0Ly1uIXBkG20/oofCEWCIQ2tm7RPP2znm?=
+ =?us-ascii?Q?CFf53kd6OXDP9jftgjKkqpCUhygaWzvlxjm29F2HobiJq/sS+pyIXYod2VoR?=
+ =?us-ascii?Q?VLGd9L+VWgyQwju5K4Hda/AKDJsw2b4HirkhvFLe9YKbWArnfybU+J8jJj9s?=
+ =?us-ascii?Q?dQSP1f9ciOJJij1VShobYtz/VCeP31+R0We57nX0U144eGfg4p3z7e3dtkMm?=
+ =?us-ascii?Q?Wsowy+mpBz/pDnnqTxHo5P7ltxkzlmJateuedTfamE8VhUmXEHvJqyEmamNp?=
+ =?us-ascii?Q?SrAusJMuO/TKFazsNrXa1OLkbKj3gIzsQ/+kDTObXp5Plk09eUkPE/U1UKuy?=
+ =?us-ascii?Q?uAacsZEa+5q+FTXoQGd9Iiv3R8Y8y41LgcPeP5NKIb5Bh8LBZNW++85WYl0h?=
+ =?us-ascii?Q?2l7tZY2knNHx9/tFnLoR3AcQGeMCFSQJZcK5KVPtF/A6tU3r/Ni1cdQQxTtJ?=
+ =?us-ascii?Q?CpeiuNFBzLgtoc1ljAAyWGMNTUcfkHWxWDnTlyJlomVtbPX8OSGanpC9sUSE?=
+ =?us-ascii?Q?tZaAyUIZCwE+BKbcS5+vHVV3U0lraPJLhs77LHjqEhBmpYAkMBgM33R2kPI3?=
+ =?us-ascii?Q?qG3mOMUKuMv915V5VNNSVbUVuv3GIAwXoHxjsE+PvNvILsWvFuUZQtT6vILd?=
+ =?us-ascii?Q?4jUTYUUcaEnKopV/qNwshOCeSVgcsGcIu9xKrszjRF6iIUouinOCd8Tgk00Q?=
+ =?us-ascii?Q?O9H2jaregAQMGeskceCnWo4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D3EC15BB00E9C34F92FBE93776D7488A@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Eric <eric.4.debian@grabatoulnz.fr>,
- Salvatore Bonaccorso <carnil@debian.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Christoph Hellwig <hch@infradead.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-ide@vger.kernel.org,
- Dieter Mummenschanz <dmummenschanz@web.de>
-References: <Z8SBZMBjvVXA7OAK@eldamar.lan> <Z8SyVnXZ4IPZtgGN@ryzen>
- <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
- <Z8VLZERz0FpvpchM@x1-carbon>
- <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
- <Z8l61Kxss0bdvAQt@ryzen> <Z8l7paeRL9szo0C0@ryzen>
- <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
- <Z8rCF39n5GjTwfjP@ryzen> <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com>
- <Z88rtGH39C-S8phk@ryzen>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Z88rtGH39C-S8phk@ryzen>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 618cu2JfGU3j0p8uPwFdsHkxdxM046x96EWOoWihtM0_1741637536
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	93dL7sqUl1xmu9DYE7C5/Xas861UIsxFzANYD8xvLFzj4fryY35fW/IuFZyu9ErD30ULEdNYwCxv6Rq2qkj7agaiea5ygQxS6CUIOxzNKx40qHBrDcjsayvrtWbVVDrPcXUiR6SYgRxdlr1k6xM/SAGNx6k+hHENRdQZY9faedx3RzVhWCh4AUUs9VxAbKLpw1l0YmQ2YywE9HzvkwgTZQoqkr29nVOs5iVdAJ9v8UhX1uGloLAGgd0AFMvPTo/PaXku+ziYs0N9KnmEMU9o5f79Vd5jg/9M6z3rUAgkaYuRLN7C8XPTz+if8UPVCJwcULNM7tL/c6uTgY/6ExOULX2aMd3Jx/Ryxlshy8fmS9IH6LiA7hMQFHmg331d8bYjVmTz9KTZYm/nZIisAuGzIWyrWXJDq57xgM4d+fr0q1sJCsHiYxI7g7z+NzvWWclHYA8880CjFnVPs7gS1F6QPX/hQ61pFCW0J0NvrQfgZiyMfPTVyi4kyNS7G/RUe14MPdIHSWRqWNtuOd6KcJH3lYftcFXJhaumjMq4nc8dD740+nKaGYUJsIBNcw4CWSRguUGMkQUwJVDCF/61mVeU4+SOQ/eb5gECX7cKEDrEnzDeaeDNdRQh8Xb4dqIiPMOV
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59d6db24-8582-4526-84e6-08dd60493cf4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2025 03:03:02.7493
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4K5DHcQp7uozrj4btCjFrd5nkBroiPIBwTWHCJGCt8+CAjWSMYRdihvdKKR7LL1NWGa5gajXKtlMlkleISIN4sAtExVtJjwILX8cQFNgfEE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR04MB8470
 
-Hi Niklas,
+On Mar 04, 2025 / 10:25, Milan Broz wrote:
+> On 2/28/25 3:32 PM, Ondrej Kozina wrote:
+> > On 28/02/2025 15:08, Jens Axboe wrote:
+> > > On 2/28/25 4:59 AM, Ondrej Kozina wrote:
+> > > > Hi Jens,
+> > > >=20
+> > > > this patch introduced regression to locked SED OPAL2 devices. The l=
+ocked region no longer returns -EIO upon IO. On read the caller receives bl=
+ock of zeroes, on write it does not report any error either. In both cases,=
+ previous to this patch, the caller would get IO error (expected) with lock=
+ed device.
+> > > >=20
+> > > > It was discovered by cryptsetup testsuite specifically https://gitl=
+ab.com/cryptsetup/cryptsetup/-/blob/main/tests/compat-test-opal
+> > > >=20
+> > > > I've attached a simple patch that changes the ioerror condition and=
+ it fixed the problem with SED OPAL2 devices for me.
+> > > >=20
+> > > > #regzbot introduced: 1f47ed294a2bd577d5ae43e6e28e1c9a3be4a833
+> > >=20
+> > > Oops thanks - does someone want to send a "real" patch with commit me=
+ssage
+> > > etc, or do you just want me to queue something up?
+> > >=20
+> >=20
+> > To be honest, my patch was just a quick hack and I'm not sure if it is
+> > the correct one in general. But I will test (and report) a fix when it
+> > lands here.
+>=20
+> Hi Jens,
+>=20
+> do you have some fix for this issue anywhere?
+>=20
+> We can easily test the patch (at least for Opal) as our CI is currently
+> completely red because of this issue :)
+> Thanks,
+> Milan
+>=20
 
-On 10-Mar-25 7:13 PM, Niklas Cassel wrote:
-> Hello Hans,
-> 
-> On Mon, Mar 10, 2025 at 10:34:13AM +0100, Hans de Goede wrote:
->>
->> I think that the port-mask register is only read-only from an OS pov,
->> the BIOS/UEFI/firmware can likely set it to e.g. exclude ports which are
->> not enabled on the motherboard (e.g. an M2 slot which can do both pci-e + 
->> ata and is used in pci-e mode, so the sata port on that slot should be
->> ignored).
->>
->> What we seem to be hitting here is a bug where the UEFI can not detect
->> the SATA SSD after reboot if it ALPM was used by the OS before reboot and
->> the UEFI's SATA driver responds to the not detecting by clearing the bit
->> in the port-mask register.
->>
->> The UEFI not detecting the disk after reboot when ALPM was in use also
->> matches with not being able to boot from the disk after reboot.
-> 
-> If we look at dmesg:
-> ahci 0000:00:11.0: AHCI vers 0001.0200, 32 command slots, 6 Gbps, SATA mode
-> ahci 0000:00:11.0: 3/3 ports implemented (port mask 0x38)
-> ahci 0000:00:11.0: flags: 64bit ncq sntf ilck pm led clo pmp pio slum part 
-> 
-> We can see that the controller supports slumber, partial,
-> and aggressive link power management ("pm").
-> 
-> 
-> A COMRESET is supposed to take the device out of partial or slumber.
-> 
-> Now, we do not know if the BIOS code sends a COMRESET, but it definitely
-> should.
-> 
-> Anyway, it is stated in AHCI 1.3.1 "10.1 Software Initialization of HBA",
-> 
-> "To aid system software during runtime, the BIOS shall ensure that the
-> following registers are initialized to values that are reflective of the
-> capabilities supported by the platform."
-> 
-> "-PI (ports implemented)"
-> 
-> 
->>
->> I think what would be worth a try would be to disable ALPM on reboot
->> from a driver shutdown hook. IIRC the ALPM level can be changed at runtime
->> from a sysfs file, so we should be able to do the same at shutdown ?
->>
->> Its been a while since I last touched the AHCI code, so I hope someone else
->> can write a proof of concept patch with the shutdown handler disabling ALPM
->> on reboot ?
-> 
-> I mean, that would be a quirk, and if such a quirk is created, it should
-> only be applied for buggy BIOS versions.
-> 
-> (Since BIOS is supposed to initialize the PI register properly.)
-> 
-> If
-> ahci.mobile_lpm_policy=1
-> or
-> ahci.mobile_lpm_policy=2
-> works around your buggy BIOS, then I suggest you keep that
-> until your BIOS vendor manages to release a new BIOS version.
+I created fix candidate patches to address the blktests nvme/039 failure [1=
+].
+This may work for the failures Ondrej and Milan observe too, hopefully.
 
-I agree with you that this is a BIOS bug of the motherboard in question
-and/or a bad interaction between the ATI SATA controller and Samsung SSD
-870* models. Note that given the age of the motherboard there are likely
-not going to be any BIOS updates fixing this though.
+Jens, Alan, could you take a look in the patches and see if they make sense=
+?
 
-Certainly ahci.mobile_lpm_policy=x can be used to workaround this, but
-going by my experience from being involved in resolving:
-https://bugzilla.kernel.org/show_bug.cgi?id=201693
-which took a long time to resolve and has many comments (1).
-
-I'm afraid that we are going to see more users hit this. This seems
-to be another case of samsung sata SSDs and ATI SATA chipsets not
-liking each other but this time the problem is triggered by LPM rather
-then by NCQ and we likely did not hit this the last time we were
-seeing a lot of users reporting issues on this combo because so far
-LPM has defaulted to off in these cases.
-
-Note that in commit 7a8526a5cd51 which fixes the bug linked above,
-we already disable all NCQ use for "Samsung SSD 870*" models when
-used together with SATA controllers with a PCI vendor-id of ATI
-because of various severe issues when it is enabled.
-
-I strongly believe that to avoid further regressions from commit
-7627a0edef54 ("ata: ahci: Drop low power policy board type") on
-ATI SATA controller + Samsung SSD combinations we should probably
-extend the special handling of ATI SATA chipsets to also disable LPM.
-
-IOW add a new ATA_QUIRK_NO_LPM_ON_ATI flag which mirrors how
-the current ATA_QUIRK_NO_NCQ_ON_ATI works but then for LPM
-and set that for "Samsung SSD 870*".
-
-I can prepare a patch for this if that sounds like an acceptable
-solution to you.
-
-Regards,
-
-Hans
-
-
-1) I don't know if you know, but I'm the author of the initial addition
-of the "low power policy board type" list, because back then we
-needed ALPM to reach high PC-states (e.g. PC10) on Broadwell and newer
-Intel SoCs, while at the same time there were reports that ALPM was
-causing. I also added quite a few of the initial NOLPM __ata_dev_quirks[]
-entries.
-
-
-
-
+[1] https://lkml.kernel.org/linux-block/20250311024144.1762333-1-shinichiro=
+.kawasaki@wdc.com/=
