@@ -1,110 +1,153 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906AE1C695
-	for <regressions@lists.linux.dev>; Tue, 11 Mar 2025 13:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07348254B0D;
+	Tue, 11 Mar 2025 14:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741700817; cv=none; b=GkPXUCla/QxlPaFKO5XqdyujMDFNl8GfoYRGXdQLcXZLc16XOGJcvcqU57WBxNyzoZ0ErlC+3jjgW5hNFakEKLnryFyNc/vXery2IRs8YqTjVcryEwXeYK9jl+C2A9B3zYWpVEsdHHvf6Bhh22Qkhhl3pAb2MtAKbluzUFGKRqY=
+	t=1741702479; cv=none; b=FPhDz7LLThh+dyZpjjHqhew7NyJLdFIbIG6RFQckwktyqysW2VuNtYFuGZiMa6Fy7aw1XuTxT+XbGEMMLMlFh58G+Jqiq9qwHc655WvkjY91NnWFoiotnsbcbXniBkbMHtlPlLLKB1Gu1mlKSwvDjijTvP30TM1cPvD6VTrq8fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741700817; c=relaxed/simple;
-	bh=sNcb4W2iFbHp7ej9qSKnunThejbqLLvEsoiVW0qFB+8=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=elLAzyDVzF7drZ7ezN7Y0DTsQ/xdCp1Y2el6xWULu37R7P6iDARsgpZ3PE3oBX8/NsgYqgq3T9ySgzgZadSy/foGWpXsbJEivh1IOu6+dKueueZ/UYOYWdceAp5yL/fDOmMG0OgBwXupRAPawI/xk2w7hvKnljHYlrEOz/xo4oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=k6GOlp7a; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1741702479; c=relaxed/simple;
+	bh=yeuRqhNPxhQWRMw+OTMnVBLhf+GKJ3O5IeEzkxZ0+Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m74fw51nMBjkQP0BQWFzzIZe+wd+U7wCrsr3qKka9F8/C0N8EeG3JalcI9IxYjVeszqY92lAvy9LLNIO5sLVAcrYTcTu4tQv5svJ6ZQzmcFGL29bnKsSAis6gov8jmQoqw7GVeufKK2OvH7V/Oro2Z8ncjO6ijAJ5UgD4TYuN3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hG0oXFG6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="k6GOlp7a"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6febbd3b75cso44184417b3.0
-        for <regressions@lists.linux.dev>; Tue, 11 Mar 2025 06:46:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1741700814; x=1742305614; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lFvM6OxTFpIkKcYFFg8jpkPe3FpsXS4ZyRowpuPVS5U=;
-        b=k6GOlp7a+ssP6obibeVcLGSRifb8HteMdmkW8FGOa51cVroxU66yymzkXRsV+LMo46
-         uPNfZSixLMTl77YEYIzVzWKiEWGjExkXALiuXO7oQcqrj2TolWbkE3V9yIoZPNTUgPH9
-         fPwFdR2fDjH7A3Ujkj1/ozPTDb+TMcHnF2layxJXZ9afAlw8rrSSVVhzGTZC8NgbATJs
-         PsJxI602+6oN6TCL756boqBqvCCjlUdS+omaq5bKFFc/9pfdsKrpc4sHBRv5uQQObT5S
-         x03PmXJX2cd4hLWisQkrs+vavbruDjDpN02bvjEzGfjbYyoYs+CBU0YhBimjEvnkdJke
-         y/8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741700814; x=1742305614;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFvM6OxTFpIkKcYFFg8jpkPe3FpsXS4ZyRowpuPVS5U=;
-        b=VctKDTBLk8vMltdlICFI1RuKJbZstIwb7dDOUk1JkuaidaSl4wZ/JvuIUs4Oh2Ua1J
-         6GvvFMGEA4+mlOOw/35Y2VugiBNdlmY1iJmLdmXLCxvnPZUWsBXfK0xbiu2O2kpGaViH
-         oPTIEFdctOx89Y+Kse2qBDyNcSascKO8TTMRq7Vem1noooY9lCs4zANNskqWMa6ZIbj5
-         WIKu46AxUz/CgSTar4CGnnNvHK/NI76pbJI6WKpMSDF6LTDaxpW5jR1YuLBROv7zBZb+
-         hDXvSlbSVvcTNUVc7Duo6IhPJA6ZVxb2cD5VRoDQWCXfZPL9D3OEf623WSWWolPYdIZ1
-         Vu/w==
-X-Gm-Message-State: AOJu0YzdjbM0Pyrfy7HjQ9vOkLz0oi5/+P3HBIDcp58STrRoB2sNAyqH
-	o/rPTDFQgB2zqRWAe0pqQ3EYtUPXO24sNCdPD1ArGfzwZNgSbYjL0J66OgyXauwVlnMjUpYrW8s
-	CiaV4PNCXdAYOnXzCop/Ww28BtDl36J/U+b+p0A==
-X-Gm-Gg: ASbGncvzQHVykCOMOEAAo1mVfVHEsK/8qdndYOjmpp49W7fMu7u3rtDl9HvuJ+f7jMV
-	pxDPRALvR+5hy235bAoTjVptKQgn5+Wg09+N5nTtqFCqx+Hap4qfgkJVJ6cNu5N2q2c4zpUsYRh
-	p6fehk7Qo4mZM96JPyljCdkQgbPBlzsBijPi4Nwk0BayqDUNa8i+MqkIlAEno=
-X-Google-Smtp-Source: AGHT+IGaLIwj5rkuaiAwHNlv5+IrEzxM5/nlwWpOUrwsemFKd02StB4INMYtUT/Vbmm2KZ+KCWsxeaMYR2ZbnTMSSuw=
-X-Received: by 2002:a05:690c:30e:b0:6f9:8436:3d2a with SMTP id
- 00721157ae682-6febf3f7f61mr254465937b3.32.1741700814475; Tue, 11 Mar 2025
- 06:46:54 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 11 Mar 2025 13:46:52 +0000
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 11 Mar 2025 13:46:52 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hG0oXFG6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C50BC4CEE9;
+	Tue, 11 Mar 2025 14:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741702478;
+	bh=yeuRqhNPxhQWRMw+OTMnVBLhf+GKJ3O5IeEzkxZ0+Xg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hG0oXFG6SC8sDIeE5/XxN1PPtT4J5WkqDYCfDK2Fxpycjk3PWYAn6NOXRQrl0qz+E
+	 UgYNxORvvwIhTnNyrBAo3uvi6V//t5SILKN6JvE4mwH/0/KdpvsGRu+g60DRIqrq8X
+	 mJTnJAMsDmgr49FDdgiYiHBmtNp7YPR8dJUU2VW6TggIRk8OA3HPawnqZMEtHTvN49
+	 5ueTMQEt4Dxn+5kVp5mlvGhGvSASFvrDzpjdVsGwEneAQnOT0kiHBJbn8wwAQ85JsK
+	 gzuyHrc4R9Th4qG2eOEvdnnD+cLhWLJ12l7Sd2fAeNADMII4X6hCWqe+/E6o7KMESz
+	 d7yqvzyNNSP3w==
+Date: Tue, 11 Mar 2025 15:14:32 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Eric <eric.4.debian@grabatoulnz.fr>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jian-Hong Pan <jhp@endlessos.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	Dieter Mummenschanz <dmummenschanz@web.de>
+Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
+ board type") on reboot (but not cold boot)
+Message-ID: <Z9BFSM059Wj2cYX5@ryzen>
+References: <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
+ <Z8VLZERz0FpvpchM@x1-carbon>
+ <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
+ <Z8l61Kxss0bdvAQt@ryzen>
+ <Z8l7paeRL9szo0C0@ryzen>
+ <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
+ <Z8rCF39n5GjTwfjP@ryzen>
+ <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com>
+ <Z88rtGH39C-S8phk@ryzen>
+ <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 11 Mar 2025 13:46:52 +0000
-X-Gm-Features: AQ5f1JrWoH0C0SEA4RcEpY3C9JVE8OZKCHBXlKRgew50EC79S_211elGxaM0wrg
-Message-ID: <CACo-S-0Pk_QZotN2f7hAJEo71Ma0MurbZ_zkkmS3V455ePcLUg@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) in drivers/watchdog/aspeed_wdt
- (drivers/watchdog/aspeed_wdt.c) [lo...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
 
-Hello,
+Hello Hans, Eric,
 
-New build issue found on next/master:
+On Mon, Mar 10, 2025 at 09:12:13PM +0100, Hans de Goede wrote:
+> 
+> I agree with you that this is a BIOS bug of the motherboard in question
+> and/or a bad interaction between the ATI SATA controller and Samsung SSD
+> 870* models. Note that given the age of the motherboard there are likely
+> not going to be any BIOS updates fixing this though.
 
----
- in drivers/watchdog/aspeed_wdt (drivers/watchdog/aspeed_wdt.c)
-[logspec:kbuild,kbuild.compiler]
----
+Looking at the number of quirks for some of the ATI SB7x0/SB8x0/SB9x0 SATA
+controllers, they really look like something special (not in a good way):
+https://github.com/torvalds/linux/blob/v6.14-rc6/drivers/ata/ahci.c#L236-L244
 
-- dashboard: https://d.kernelci.org/issue/maestro:aa83336568734d443df81bf8e155243a8ccbb304
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  eea255893718268e1ab852fb52f70c613d109b99
+-Ignore SError internal
+-No MSI
+-Max 255 sectors
+-Broken 64-bit DMA
+-Retry SRST (software reset)
 
-
-Log excerpt:
-=====================================================
-/tmp/kci/linux/drivers/watchdog/aspeed_wdt.c:257: undefined reference
-to `__aeabi_uldivmod'
-
-=====================================================
+And that is even without the weird "disable NCQ but only for Samsung SSD
+8xx drives" quirk when using these ATI controllers.
 
 
-# Builds where the incident occurred:
+What does bother me is that we don't know if it is this specific mobo/BIOS:
+     Manufacturer: ASUSTeK COMPUTER INC.
+     Product Name: M5A99X EVO R2.0
+     Version: Rev 1.xx
 
-## multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y on (arm):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:67d02892c5336ecbf36c6ece
+     M5A99X EVO R2.0 BIOS 2501
+     Version 2501
+     3.06 MB
+     2014/05/14
 
 
-#kernelci issue maestro:aa83336568734d443df81bf8e155243a8ccbb304
+that should have a NOLPM quirk, like we do for specific BIOSes:
+https://github.com/torvalds/linux/blob/v6.14-rc6/drivers/ata/ahci.c#L1402-L1439
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
+Or if it this ATI SATA controller that is always broken when it comes
+to LPM, regardless of the drive, or if it is only Samsung drives.
 
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
+Considering the dmesg comparing cold boot, the Maxtor drive and the
+ASUS ATAPI device seems to be recognized correctly.
 
-Made with love by the KernelCI team - https://kernelci.org
+Eric, could you please run:
+$ sudo hdparm -I /dev/sdX | grep "interface power management"
+
+on both your Samsung and Maxtor drive?
+(A star to the left of feature means that the feature is enabled)
+
+
+
+One guess... perhaps it could be Device Initiated PM that is broken with
+these controllers? (Even though the controller does claim to support it.)
+
+Eric, could you please try this patch:
+
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index f813dbdc2346..ca690fde8842 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -244,7 +244,7 @@ static const struct ata_port_info ahci_port_info[] = {
+ 	},
+ 	[board_ahci_sb700] = {	/* for SB700 and SB800 */
+ 		AHCI_HFLAGS	(AHCI_HFLAG_IGN_SERR_INTERNAL),
+-		.flags		= AHCI_FLAG_COMMON,
++		.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_DIPM,
+ 		.pio_mask	= ATA_PIO4,
+ 		.udma_mask	= ATA_UDMA6,
+ 		.port_ops	= &ahci_pmp_retry_srst_ops,
+
+
+
+Normally, I do think that we need more reports, to see if it is just
+this specific BIOS, or all the ATI SB7x0/SB8x0/SB9x0 SATA controllers
+that are broken...
+
+...but, considering how many quirks these ATI controllers have already...
+
+...and the fact that the one (Dieter) who reported that his Samsung SSD 870
+QVO could enter deeper sleep states just fine was running an Intel AHCI
+controller (with the same FW version as Eric), I would be open to a patch
+that sets ATA_FLAG_NO_LPM for all these ATI controllers.
+
+Or a ATA_QUIRK_NO_LPM_ON_ATI, like you suggested, if we are certain that it
+is only Samsung drives that don't work with these ATI SATA controllers.
+
+
+Kind regards,
+Niklas
