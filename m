@@ -1,72 +1,75 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11B23497B
-	for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 09:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F9023C8C3
+	for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 10:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741771958; cv=none; b=uVQOumJdmyFoWMjbI34M5NYCPYssk0noOQ4/MU8A6TjCaeNhiiJfIXnojY5pVaKr641MGZBXL259/22l4MmyozmPxiX1IsCV+X8FrJBol0TsJFgxyhtGYuW88DkVk4Nf/55kC6aBsEhmTc50oxu/HRt1RGR8jONunUDWU3popt8=
+	t=1741774187; cv=none; b=foIF+UBWL46tSbpKEOgA5bs3GZR38oIYaAyfYzOTLCA+0u6bpcVV2dH1zVrN7wBgVgQYUnOVfYmc6usY4BG2+MRRjcKHG8wNLEIFhAH3Oob39FI4ElnY8jOhm6h3lLcaLL8LYy0zKAjvl4ZGAWm2ee6X4ynYcCK/1DK7z4OGafE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741771958; c=relaxed/simple;
-	bh=AJFYsselPuXjJibCrn6MCM+n/v4qg9jDCsprzufOyx8=;
+	s=arc-20240116; t=1741774187; c=relaxed/simple;
+	bh=yeBvl9NQXB6/tc/9Z2/OzmuKYdFcsirwgsfjsOKJD7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fDFSZod7WPgDb0m1b6yNXlRb3hetd9dy270tJsPuqMNXi7ex45QEx1gZx126koJFkLfVqqxEijbdNNDKJ/l/cYnsk8dLTrPQ46i0djqK/UzqBpIm3em4lqOjc4QKGXNlje/6fLR7rnDS9aZ7fQaqOI3/30MFZXgf5oDbW977t0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DID4sjIz; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=ASst3MRuLgGEmGmWGJJD7UQ4KurY6eOay19xte+3J9LnI1SypzY32CP5ubEF8SYAldOyVphRfUAJITNztcYorNx6Bn8Bb5+TZLg2W59dGqaOpzNeNxhM6qxWjOYh8GCUFYJ0RxN/ZQvc7xUmv3MBeMZAoUM6XLmAS0T/o7R7quo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhohR/se; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DID4sjIz"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22409077c06so34266345ad.1
-        for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 02:32:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhohR/se"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fec3176ef3so9679078a91.1
+        for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 03:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741771957; x=1742376757; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1741774185; x=1742378985; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6cfHPSAjnz563cQ/IjEM8qX7blxJggGwTnmch5E4glo=;
-        b=DID4sjIzWNuyJgwqfJT48i65v1sh3jLTtTevcweQMRmclCLjCRgrM791stZLCFraMs
-         Fo4gSrqaxShF+dQCS45TP7KSc1zRlOpszxZVFJMoeJZ1PwXYmlthE5c9A355+8NP+qob
-         7TrJOkVyH0G+CQSxGnQjZ1XwYhe+AIhVd3Y7Zg2050MAlcMyo2VDJz1M2fxz/KtavA9b
-         pcP/14R7+1rH8IahDDqRTEksPOoKwWwoGbr0d3VgeZjersvoE9yQp7m3T2EZNU7N4eFb
-         Kt3X9NG1Tj7JP0Kcq8oYWl65uYNyqcbF4900Mg2vQAifFJ7pWA+ZZWmfdYfJovqETLJ1
-         ihhA==
+        bh=SUkmPYNjy0UdU5Zc+KUzHJuQSSwR0lKvxdX/nX9inOM=;
+        b=nhohR/seykuOcJ/PH/TodY24E+9eXDWCj3eYBRsNpKiKM/DsGyxUmox4cIPoMd1Z6c
+         tsOSKNJR0LixynhCWJtCLJ18p0GSTjXDNZZpYWWj04TZ3vhRqT6tDKdeMhCp9Kuvz0yF
+         pTd6UB+bf5Lc+xn/YmPPUAw3Gk5WCM+lo+D8t60tRH4ME8TVNP769exWm+EF29b0ZXNI
+         X3r5V4ase35m2vwmYuNA+z66cZ3ArxxTWsRmNYhga+Tp0vU23MB1/wYJTMJs8IFx30Vy
+         4iS3+0DdWIESfmhoZvvJN/6RNobp5jnu80TpkVPTGObS6o72Rqu7nNqKoHc9A6Y1nKOP
+         jsTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741771957; x=1742376757;
+        d=1e100.net; s=20230601; t=1741774185; x=1742378985;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6cfHPSAjnz563cQ/IjEM8qX7blxJggGwTnmch5E4glo=;
-        b=KsVTij+JlaPbRKPYXqXVLz6nSO8eoLMi88PFvvjchWqiWkANpQ5I7pz4msxcIfqhbT
-         6FLqWZXSH64z3/G0a3gcwAIDHf4H2zvC/pf6/DESasmQ/+t7de/KFLS7X8nNiEyLpJnY
-         Q5LVwceC621s7+FCs0B6JhuztcwxYvpzETqJSqaLtA6wTlFRXCil32dv1JOihb+zupA9
-         QXOidqfuem0WiKqKZ4gBOOuWE+qnX803loZVP/w1gnhZgi+ozbId7eU8TIu+1wltR/bV
-         Jslta97Dq24fLV+a8MyzzhnnOV5Xy6yd0VAM01cYtiOR6gux61+GE1L8WMFw/6EUC5pf
-         JXHA==
-X-Gm-Message-State: AOJu0YwyKa/kDm2VesIlrm7kmtlb1fhS0HihQYmEHdVsB+7bLt4BA9t4
-	Tl1+9gPPBFUcAtOZWfcldWfR2LFHJBYZX1D+ttcO6Yg29nG624hV
-X-Gm-Gg: ASbGncs0RrJmPmvB9Cb8TELsosiMwj3pOMJJPPplSWH3M/Pfy7fHjVJUX6/ftPYE68o
-	XNlumT4x11klZrkKDWkxJmIw1EW6cEpNS7+DV95Fml5Jk6CF8oAx/RCPLwsYvFD7jmtf0Rt7Yk4
-	xAhWrJi7q1wzIWgJRQ8+nJMnP2PTILXk1s1ZYTJuLrs980tayWpYNv6xCdQXNXfQQKHHd+BIPUt
-	1PDU+jaQCAFt/rKD92s8GTcdccQF1SwYzB+pBaYCI9p6MeVhv7cy9/QaK8O9HRryar4Z96DyfnL
-	qL6BN9uaomR9+ZoKenI1Zqtr+5pcPyB1jJG7mv+pgkoc64rxsh0PdFlVSWlpAJ/r4miIo/8aiZb
-	S6E5UVbO1fgyEyXIfK4MY2eC4rAo9WQ==
-X-Google-Smtp-Source: AGHT+IEdWqxtRSKZJaNBT3VK9xNg2FCjGk+NjprQF7hahePcPlMzKgKclRgwuixtKQWrPYtVizKMbg==
-X-Received: by 2002:a05:6a21:515:b0:1f5:86f2:ba57 with SMTP id adf61e73a8af0-1f586f2bc04mr14463183637.30.1741771956625;
-        Wed, 12 Mar 2025 02:32:36 -0700 (PDT)
+        bh=SUkmPYNjy0UdU5Zc+KUzHJuQSSwR0lKvxdX/nX9inOM=;
+        b=hvqp3IGEgonaIWbM5k9gacWDde2zMpMw2izZywsxfsUsWsjVcQoibWFjuSAQkdj6VM
+         zFuW6ZUlX4MConbDzA+U26bDtoZ3V107sGw3mH9WlqTNVeUD9AB1W91w0EDTe4UOpg+G
+         D4BRK/FxX7HCZNYV09oSsPX/pdGv/iv6snZPNleI4uoMTK4i+cSP20GPwSUKyWAmaP0a
+         L8VIC3f7oHgXkxMnSuYXGhMBlYXAoOrdfqLa9EERrjT254RnwzAmIq/FYEKNJnHWPwzy
+         qvhBAKtEJGc/Eto21xaPdtrruhlWyJehSUPvmGw2PBUyQWWSmn5/okKhEOdqN41x4xyW
+         D6hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGXo3PlI82FuY1/rqBPQNn8E/zqGjohNtlX/yYKLs4/5W1CLQPF7g0qxLoWln+zwlXY1GNAtHvWvsVCQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIOTLQjEvFVwhvvtQvYAeTN6fWRFHoRnuD/NuFFYFx0FX+7hdb
+	BGKrSOVbph74zSoOzEdUvCp56sA4CY2zqDornrgVtQm/OJIxTdiE
+X-Gm-Gg: ASbGncv3C1A+1Iseekn3mM5YDTDyKNN3Wo95m7rShcIsq+wuYNO+YLdAnx+cSWUkZNX
+	uLsS481iZ3gpyJ84Kv16HuiDCgcSM0a2LcOSvyQ1p3juQrMBHbWOOmLkmSzdL4whGqvJq2mqOX5
+	xzTrfR5g3fVXrg8VHGpPc97FvLM9ltii63LiyfXbLdAhl7dkQr+5rd5OBmV7wW1R6lr37OSHIwO
+	xSW9OufVPaRj2Kce+Amg1fPCNvUtxP//c+laCIiggqZcM5M7au/Pak9FROtuBRbq+YDQ2/jVLGJ
+	CoTTfndskUSRdmpTmDrePAXBTTRnd9cZbNqt/cz357IGmVUXFOt3DF8iYsP7EYIO19xn5bbGdoG
+	AL/SFywhi9q/l7iWY
+X-Google-Smtp-Source: AGHT+IG5W7avSkqFsM0U4VrqHLdYim2Wlk3cNiyBJN+U721KvUWNp1+CxCtYAdKtRAYZKbtMVRGUAQ==
+X-Received: by 2002:a17:90b:17d0:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-2ff7ce7abc1mr31550232a91.13.1741774185017;
+        Wed, 12 Mar 2025 03:09:45 -0700 (PDT)
 Received: from suda-ws01.. (p1201013-ipoe.ipoe.ocn.ne.jp. [122.26.46.12])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af286bb9f26sm10522886a12.25.2025.03.12.02.32.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e99dfsm112380335ad.91.2025.03.12.03.09.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 02:32:36 -0700 (PDT)
+        Wed, 12 Mar 2025 03:09:44 -0700 (PDT)
 From: Akihiro Suda <suda.gitsendemail@gmail.com>
 X-Google-Original-From: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
-To: x86@kernel.org
-Cc: regressions@lists.linux.dev,
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	suda.kyoto@gmail.com,
+	regressions@lists.linux.dev,
 	aruna.ramakrishna@oracle.com,
 	tglx@linutronix.de,
 	Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
-Subject: [PATCH] x86: disable PKU when running on Apple Virtualization
-Date: Wed, 12 Mar 2025 18:32:23 +0900
-Message-ID: <20250312093223.3362-1-akihiro.suda.cz@hco.ntt.co.jp>
+Subject: [PATCH v2] x86: disable PKU when running on Apple Virtualization
+Date: Wed, 12 Mar 2025 19:09:26 +0900
+Message-ID: <20250312100926.34954-1-akihiro.suda.cz@hco.ntt.co.jp>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
 References: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
@@ -109,11 +112,13 @@ Link: https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38rfrF7rRHh
 Link: https://github.com/lima-vm/lima/issues/3334
 Signed-off-by: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
 ---
+v2: check oem_table_id rather than oem_id for better robustness
+---
  arch/x86/kernel/cpu/common.c | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
 diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7cce91b19fb2..6a701ec2b42e 100644
+index 7cce91b19fb2..8d78d34cd434 100644
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
 @@ -26,6 +26,7 @@
@@ -138,7 +143,7 @@ index 7cce91b19fb2..6a701ec2b42e 100644
 +	 * However, this would be still not enough because DMI is missing when vmlinuz
 +	 * is directly loaded into VM.
 +	 */
-+	if (!memcmp(acpi_gbl_FADT.header.oem_id, "APPLE", 5)) {
++	if (!memcmp(acpi_gbl_FADT.header.oem_table_id, "Apple Vz", 8)) {
 +		pr_info("pku: disabled on Apple Virtualization platform (Intel) due to a bug\n");
 +		pku_disabled = true;
 +	}
