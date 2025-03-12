@@ -1,72 +1,72 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0667D217719
-	for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 09:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11B23497B
+	for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 09:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741771873; cv=none; b=Lc8VbUBuPbXWeNqcFUsiATS/ecMZe1NPdyIUVvTX5Pj7s6eUnQvvZyLP93OuwXNS2zCUxFSaRTGAOat4zUVf3XUq2cnBXhw0qhTG5bbS4ABa8Xou719W/eerTxEo4Bqj68+DJ+WSSHm1UBrkdnSdl77Mz8naH1cHMlvQQ0SUWCI=
+	t=1741771958; cv=none; b=uVQOumJdmyFoWMjbI34M5NYCPYssk0noOQ4/MU8A6TjCaeNhiiJfIXnojY5pVaKr641MGZBXL259/22l4MmyozmPxiX1IsCV+X8FrJBol0TsJFgxyhtGYuW88DkVk4Nf/55kC6aBsEhmTc50oxu/HRt1RGR8jONunUDWU3popt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741771873; c=relaxed/simple;
+	s=arc-20240116; t=1741771958; c=relaxed/simple;
 	bh=AJFYsselPuXjJibCrn6MCM+n/v4qg9jDCsprzufOyx8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FoioEzb3iQxdUVuGQIea9qIXsEpB5MeFf+1i+iUlkmpuCklF4JXbo44QV+DNirJVvG16INW7Zc/GPcWWi6HYEY+tssdBUdU6u1AX95cxI04CbZMmWHC5miGQJeUj0qHbP1P9Zny4Pj4kCmhR1d+iR06msmL9uG1dxofGlFwFvBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rgp5U1a1; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=fDFSZod7WPgDb0m1b6yNXlRb3hetd9dy270tJsPuqMNXi7ex45QEx1gZx126koJFkLfVqqxEijbdNNDKJ/l/cYnsk8dLTrPQ46i0djqK/UzqBpIm3em4lqOjc4QKGXNlje/6fLR7rnDS9aZ7fQaqOI3/30MFZXgf5oDbW977t0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DID4sjIz; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rgp5U1a1"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22401f4d35aso115261235ad.2
-        for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 02:31:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DID4sjIz"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22409077c06so34266345ad.1
+        for <regressions@lists.linux.dev>; Wed, 12 Mar 2025 02:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741771871; x=1742376671; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1741771957; x=1742376757; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
         bh=6cfHPSAjnz563cQ/IjEM8qX7blxJggGwTnmch5E4glo=;
-        b=Rgp5U1a1Cu4vXMbk5l+US5ZpEdU3tsNnwpQrW1gmVZpaEUbPWp35vrYINLMylbtyff
-         cX6gIVlyPR7/+hRQDz4tVBFnWKjd3o5sGzCvxvbTlKwy/YhfBr+QNHrwdJeIVhVWpi12
-         fO8PXcXp/BPGraE+4hKMn6iv1LzM8sB92VwBt6+LLRW5WpUOFreXR/JETon8PqwHE6Gu
-         3dmKVYhAgR1ujEaTGpP67IsWRt5BSfMZr+4+vWEyZCMlc5tQAAkejr88pCbEd8oFIqdo
-         J/XFD3XqzFRSDCIQ7zpXKxKpKNRDc8Xew8mtKdEnJKpN9Xo6dx9I9t/y3IcabeeBpIke
-         ZlMA==
+        b=DID4sjIzWNuyJgwqfJT48i65v1sh3jLTtTevcweQMRmclCLjCRgrM791stZLCFraMs
+         Fo4gSrqaxShF+dQCS45TP7KSc1zRlOpszxZVFJMoeJZ1PwXYmlthE5c9A355+8NP+qob
+         7TrJOkVyH0G+CQSxGnQjZ1XwYhe+AIhVd3Y7Zg2050MAlcMyo2VDJz1M2fxz/KtavA9b
+         pcP/14R7+1rH8IahDDqRTEksPOoKwWwoGbr0d3VgeZjersvoE9yQp7m3T2EZNU7N4eFb
+         Kt3X9NG1Tj7JP0Kcq8oYWl65uYNyqcbF4900Mg2vQAifFJ7pWA+ZZWmfdYfJovqETLJ1
+         ihhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741771871; x=1742376671;
+        d=1e100.net; s=20230601; t=1741771957; x=1742376757;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=6cfHPSAjnz563cQ/IjEM8qX7blxJggGwTnmch5E4glo=;
-        b=VkVJIEsNHeeUY/GK0odvnGECvEyQ1SNi7eNb/lGBAY8ZzUSx/3qWE1zROZYtM7rzua
-         rGBTA3XaNr7Kjde6iZulHP6xSrfJLjWbLvy41WVAzO8+YFNlPnTpxyiP9PMtgFQNdjg6
-         sEZXLzAC67LjdHIhRJ557VzzIrvoZr47lVO0eIdb+CVtw1gpcEGUBymPjgcg2nl+8Waa
-         t0hU07TM0sNqBHbezHTLknDZ3z7l7L2iUcpGIo3w1DsYo+InK9UnF0jzPFZxNip0YoGz
-         ucRCN3WDtLBi1kT0jf7/2iIlQO9agNMm71thcH05EvkAoBqBHZ70I4/IJcf+aLYCvuaz
-         wY7A==
-X-Gm-Message-State: AOJu0YyXK4CwkTpYEpVoNF2nicw8RETHr6a79SshPtTnDHmsHHAz71Jf
-	qaXH35YDDzn+B+JPCxpkrlCkxTUd8hz32M9lRv7BV9ptddnXp+lf
-X-Gm-Gg: ASbGnctMLEmX+F0J1Xq/g7CEQn+ZQakHxSjjO09OFK03W5C9amdCZ+1Lsi8f0PKwEKs
-	oBGzUBzpy6AL70D7MYbZ1+E8kGN7QCFX5BNpzCmEzA9AM7szbPXyI4XbXc6u+kTHXneGAfQXdso
-	66HV+hEZFiqSRj6dOi/NzYjaTSQR/ipwI+lANccLs4+hFJj/vhWTqKkiU2xhfHJK/pZDQ9kJSQB
-	MwufF0zmjE//6DvT16BIcX00YQGlvn6PnFB0AkIVvWGbMW8dUy2f3oTM0dMGM8BCedRiIDc33hW
-	7v6NcUyYbYFz8gL5JtFt1WOs+DcU53lO4VGkRwUTg4pH3LcfIPzMjfQqFY8uqHbbRV+WXkT/2NE
-	Wzz3T7d8T8pyV0gl3zukOIbSv32z5oA==
-X-Google-Smtp-Source: AGHT+IFdwOgvz1/F+51Q44vWmdTDiogqs7ZXg+6WrD2f7crlFUbM2VoU1rMoKZ/WGX3+R43Wz4m2kA==
-X-Received: by 2002:a05:6a00:1911:b0:736:3be3:3d77 with SMTP id d2e1a72fcca58-736eb87c200mr9370899b3a.16.1741771871047;
-        Wed, 12 Mar 2025 02:31:11 -0700 (PDT)
+        b=KsVTij+JlaPbRKPYXqXVLz6nSO8eoLMi88PFvvjchWqiWkANpQ5I7pz4msxcIfqhbT
+         6FLqWZXSH64z3/G0a3gcwAIDHf4H2zvC/pf6/DESasmQ/+t7de/KFLS7X8nNiEyLpJnY
+         Q5LVwceC621s7+FCs0B6JhuztcwxYvpzETqJSqaLtA6wTlFRXCil32dv1JOihb+zupA9
+         QXOidqfuem0WiKqKZ4gBOOuWE+qnX803loZVP/w1gnhZgi+ozbId7eU8TIu+1wltR/bV
+         Jslta97Dq24fLV+a8MyzzhnnOV5Xy6yd0VAM01cYtiOR6gux61+GE1L8WMFw/6EUC5pf
+         JXHA==
+X-Gm-Message-State: AOJu0YwyKa/kDm2VesIlrm7kmtlb1fhS0HihQYmEHdVsB+7bLt4BA9t4
+	Tl1+9gPPBFUcAtOZWfcldWfR2LFHJBYZX1D+ttcO6Yg29nG624hV
+X-Gm-Gg: ASbGncs0RrJmPmvB9Cb8TELsosiMwj3pOMJJPPplSWH3M/Pfy7fHjVJUX6/ftPYE68o
+	XNlumT4x11klZrkKDWkxJmIw1EW6cEpNS7+DV95Fml5Jk6CF8oAx/RCPLwsYvFD7jmtf0Rt7Yk4
+	xAhWrJi7q1wzIWgJRQ8+nJMnP2PTILXk1s1ZYTJuLrs980tayWpYNv6xCdQXNXfQQKHHd+BIPUt
+	1PDU+jaQCAFt/rKD92s8GTcdccQF1SwYzB+pBaYCI9p6MeVhv7cy9/QaK8O9HRryar4Z96DyfnL
+	qL6BN9uaomR9+ZoKenI1Zqtr+5pcPyB1jJG7mv+pgkoc64rxsh0PdFlVSWlpAJ/r4miIo/8aiZb
+	S6E5UVbO1fgyEyXIfK4MY2eC4rAo9WQ==
+X-Google-Smtp-Source: AGHT+IEdWqxtRSKZJaNBT3VK9xNg2FCjGk+NjprQF7hahePcPlMzKgKclRgwuixtKQWrPYtVizKMbg==
+X-Received: by 2002:a05:6a21:515:b0:1f5:86f2:ba57 with SMTP id adf61e73a8af0-1f586f2bc04mr14463183637.30.1741771956625;
+        Wed, 12 Mar 2025 02:32:36 -0700 (PDT)
 Received: from suda-ws01.. (p1201013-ipoe.ipoe.ocn.ne.jp. [122.26.46.12])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736af66b00bsm9877956b3a.167.2025.03.12.02.31.09
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af286bb9f26sm10522886a12.25.2025.03.12.02.32.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 02:31:10 -0700 (PDT)
+        Wed, 12 Mar 2025 02:32:36 -0700 (PDT)
 From: Akihiro Suda <suda.gitsendemail@gmail.com>
 X-Google-Original-From: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
 To: x86@kernel.org
 Cc: regressions@lists.linux.dev,
 	aruna.ramakrishna@oracle.com,
-	glx@linutronix.de,
+	tglx@linutronix.de,
 	Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
 Subject: [PATCH] x86: disable PKU when running on Apple Virtualization
-Date: Wed, 12 Mar 2025 18:31:02 +0900
-Message-ID: <20250312093103.3334-1-akihiro.suda.cz@hco.ntt.co.jp>
+Date: Wed, 12 Mar 2025 18:32:23 +0900
+Message-ID: <20250312093223.3362-1-akihiro.suda.cz@hco.ntt.co.jp>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
 References: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
