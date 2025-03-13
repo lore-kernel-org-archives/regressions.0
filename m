@@ -1,57 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2809063B9;
-	Thu, 13 Mar 2025 15:28:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF4B267F71;
+	Thu, 13 Mar 2025 17:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879726; cv=none; b=B6h0R2I8xmT09SGQjJYMdIq3Mz1cNScD+Dx73YpekeWGFnMfN13DoGKd9nHfTUx9QwGlB0EYAvAoIjFziFowNRApIzlU7QO4Z25iyq80qzoi5mPyRwwDH+5qeT3YksGvNl74kUwVrEJeON6I3+dNIitjTUOs6cWqclNBIZ/C7F8=
+	t=1741885343; cv=none; b=WJRgwK5X35jnfV8cMpD5SL40b9JUj+iNsWW+7JmJbS5YejSoMbdlcVhuHVSDPaAECmLxiSWso9BgQomzPDQnnYvQrJRoFHQocSAsgFSKefGlCTOEeO+pIbVyN67Ludf5bqRimZL3ju9c6XmHylKVh7UwRfbd2qLf9zyHwZW0yJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879726; c=relaxed/simple;
-	bh=lIR/mv+/T4+eBiXevpWk0XOQ03DNNvzlfMdH31gNmlM=;
+	s=arc-20240116; t=1741885343; c=relaxed/simple;
+	bh=Pq4GiX3lvKXfmijltB3bBZ70E7uKdot26ObyVre3x2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tL877RvwjuG4/t+4XXPo0F9GqEFnXgodDUInauYwk3jYifW4ehp8des+e8J2NB4+LSU9M5SxyFzmQCMhI2VPaselhnoA3H1zdjYdmic3+PGU6IHtk02+H4LDXzdQfYzH4yGEjnLfyeNcwzwU8iUbtNLvDP+6U8ep/u2jdbCNVvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ykaaz8Ev; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tu2UpX1RspZ7y5k3s4PNcLA9pY/mPvoTYOQh8g1RdmL4vNiMOa30y+z5dZTeKP6Knub2CLHi/TmR0Kqv4WaqjK8WhsXK1TKieW5qzjpEzknW0waSzwDRgqBSfacTpiT+pD6AsyjomSuLVQFWp9WWWctDqLBRF3KPQLOlUpjMkYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AI68vsZT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ykaaz8Ev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA68AC4CEDD;
-	Thu, 13 Mar 2025 15:28:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AI68vsZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E92C4CEDD;
+	Thu, 13 Mar 2025 17:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741879724;
-	bh=lIR/mv+/T4+eBiXevpWk0XOQ03DNNvzlfMdH31gNmlM=;
+	s=k20201202; t=1741885341;
+	bh=Pq4GiX3lvKXfmijltB3bBZ70E7uKdot26ObyVre3x2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ykaaz8EvwLRjauOJ+9BWqbCFqAkEq/lowFZEgJ8fdld3+mMuGiXUq6vbHShELnjyt
-	 FUvY1RZhb/t4w8oi2rgaUXBitPJruildi5uyHmGDuZ+FKy9GYU3AJVPxU1MXVTKNgy
-	 UZWBVfUGiBHTqUtwhc+gYm9QyMpfvBjAWhPw51QM2QXySvKkKDqqCBoFxjA60ud7bj
-	 7PUSLMOgUpzwSQPI+jVfDh5ypOjp0d2bVs0wiOTf05UpN3t4Z2ORbhxXxKLtA/PmYE
-	 uDi+kRyRhU9+oAKSLxcnvDbfRFWc8fNMMGfWJC/fH5sUk9oDqDGZdZLYi0sNNNHXX5
-	 QlX1ysmilFdKQ==
-Date: Thu, 13 Mar 2025 16:28:39 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Eric <eric.4.debian@grabatoulnz.fr>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jian-Hong Pan <jhp@endlessos.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	Dieter Mummenschanz <dmummenschanz@web.de>
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-Message-ID: <Z9L5p6hTp6MATJ80@ryzen>
-References: <Z8l7paeRL9szo0C0@ryzen>
- <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
- <Z8rCF39n5GjTwfjP@ryzen>
- <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com>
- <Z88rtGH39C-S8phk@ryzen>
- <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
- <Z9BFSM059Wj2cYX5@ryzen>
- <9ac6e1ab-f2af-4bff-9d50-24df68ca1bb9@redhat.com>
- <Z9LUH2IkwoMElSDg@ryzen>
- <d5470665-4fee-432a-9cb7-fff9813b3e97@redhat.com>
+	b=AI68vsZT5xSdlZ2dB/0dmjA4jkPMbXzB3rSJFyeto3MaM5yEmxIlC4CQV4xn5jJfi
+	 fbLncQghJDiotcfbn9H82dfNnFoSCj40DFMo1YHBhPDRaSArkLGGiAG/gLB/UX0d6w
+	 VWZnyJ2X2OtJS/LDspDGQl3TMIRWcNxt0ZrK/OhWpDyxqi8ncvnwcul4TMNfKU9AkA
+	 D46IeUKC0+10clFHz7lfTnPO+CKmqDFGbUMIgR3TE3amuZBoDQN/GxX5fTpB+JQElx
+	 336a/L6cOKrCNqeGM5SXfkElnEfmMuOnnnrT9fHinvhrKABaPvNaM/mzRdWb20hpA4
+	 Mf8xd/upTzyIA==
+Date: Thu, 13 Mar 2025 18:02:16 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Akihiro Suda <suda.gitsendemail@gmail.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, suda.kyoto@gmail.com,
+	regressions@lists.linux.dev, aruna.ramakrishna@oracle.com,
+	tglx@linutronix.de, Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+Subject: Re: [PATCH v2] x86: disable PKU when running on Apple Virtualization
+Message-ID: <Z9MPmA-myNZxcc-E@gmail.com>
+References: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
+ <20250312100926.34954-1-akihiro.suda.cz@hco.ntt.co.jp>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -60,44 +44,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d5470665-4fee-432a-9cb7-fff9813b3e97@redhat.com>
+In-Reply-To: <20250312100926.34954-1-akihiro.suda.cz@hco.ntt.co.jp>
 
-Hello Hans,
 
-On Thu, Mar 13, 2025 at 04:13:24PM +0100, Hans de Goede wrote:
-> > 
-> > Considering that DIPM seems to work fine on the Maxtor drive, I guess your
-> > initial suggestion of a Samsung only quirk which only disables LPM on ATI
-> > is the best way?
+* Akihiro Suda <suda.gitsendemail@gmail.com> wrote:
+
+> OSPKE seems broken on Apple Virtualization.
 > 
-> I have no objections against going that route, except that I guess this
-> should then be something like ATA_QUIRK_NO_DIPM_ON_ATI to not loose the
-> other LPM modes / savings? AFAIK/IIRC there still is quite some powersaving
-> to be had without DIPM.
+>   WARNING: CPU: 0 PID: 1 at arch/x86/kernel/fpu/xstate.c:1003 get_xsave_addr_user+0x28/0x40
+>   (...)
+>   Call Trace:
+>    <TASK>
+>    ? get_xsave_addr_user+0x28/0x40
+>    ? __warn.cold+0x8e/0xea
+>    ? get_xsave_addr_user+0x28/0x40
+>    ? report_bug+0xff/0x140
+>    ? handle_bug+0x3b/0x70
+>    ? exc_invalid_op+0x17/0x70
+>    ? asm_exc_invalid_op+0x1a/0x20
+>    ? get_xsave_addr_user+0x28/0x40
+>    copy_fpstate_to_sigframe+0x1be/0x380
+>    ? __put_user_8+0x11/0x20
+>    get_sigframe+0xf1/0x280
+>    x64_setup_rt_frame+0x67/0x2c0
+>    arch_do_signal_or_restart+0x1b3/0x240
+>    syscall_exit_to_user_mode+0xb0/0x130
+>    do_syscall_64+0xab/0x1a0
+>    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Tested on macOS 13.5.1 running on MacBook Pro 2020 with
+> Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz.
+> 
+> Fixes: 70044df250d0 ("x86/pkeys: Update PKRU to enable all pkeys before XSAVE")
+> Link: https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38rfrF7rRHh-gFKqeS0gxY6Q@mail.gmail.com/T/#u
+> Link: https://github.com/lima-vm/lima/issues/3334
+> Signed-off-by: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+> ---
+> v2: check oem_table_id rather than oem_id for better robustness
 
-I was thinking like your original suggestion, i.e. setting:
-ATA_QUIRK_NO_LPM_ON_ATI
+So this is rather weird, but I've applied the quirk as it upgrades 
+broken guest side code into a boot time warning.
 
-for all the Samsung devices that currently have:
-ATA_QUIRK_NO_NCQ_ON_ATI
+> +	/*
+> +	 * OSPKE seems broken on Apple Virtualization.
+> +	 * https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38rfrF7rRHh-gFKqeS0gxY6Q@mail.gmail.com/T/#u
+> +	 *
+> +	 * TODO: conditionally enable pku depending on the DMI BIOS version when Apple
+> +	 * fixes the issue.
+> +	 *
+> +	 * However, this would be still not enough because DMI is missing when vmlinuz
+> +	 * is directly loaded into VM.
+> +	 */
+> +	if (!memcmp(acpi_gbl_FADT.header.oem_table_id, "Apple Vz", 8)) {
+> +		pr_info("pku: disabled on Apple Virtualization platform (Intel) due to a bug\n");
+> +		pku_disabled = true;
+> +	}
 
-Considering that this Samsung device only supports DIPM
-(and not HIPM), I'm guessing the same is true for the other
-Samsung devices as well.
+Note that I updated the comments here (the git log gives enough 
+information), plus enclosed this into #ifdef CONFIG_ACPI, as 
+acpi_gbl_FADT is not available on !CONFIG_ACPI builds.
 
-So we might as well just do:
-ATA_QUIRK_NO_LPM_ON_ATI
+Thanks,
 
-to disable both HIPM and DIPM
-(since only DIPM would have been enabled without this quirk anyway).
-
-
-> Yes the most severe problems do seem to come from that specific mix,
-> although the long list of other ATI controller quirks also shows those
-> controllers are somewhat finicky.
-
-Definitely!
-
-
-Kind regards,
-Niklas
+	Ingo
