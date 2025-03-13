@@ -1,185 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44171BC5C;
-	Thu, 13 Mar 2025 10:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19764266185
+	for <regressions@lists.linux.dev>; Thu, 13 Mar 2025 11:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741860368; cv=none; b=VR+0PN6e9bEih0/fkvWiWM9DTg0bvTqKRPaAcqATHonMycX6vRvQ+K9sVZVlLmJJWNHk3v1UaJtCV8tPmX+vB7+imjLIgDpyH28eZ7BbaJO20s6RUpB836PLLU7H8o8IbCgyKRbI7KNzy6o2fe5SADrJN4oYXgMMmOpj9kxCwMA=
+	t=1741865226; cv=none; b=IAq8Cq85mL5m1Ku+PHUWI0gpW/YZ3dmsOYd3h+wdRHjvjYRDjSBpkNztd+b04Mn490SQck6XD0L5yykPTkJD66TtH1uZN6Y/SoZwxPBF9TuZoFTnm0Z8/gJHxPPkdxtgyUeveJptPR3W/l1EOUrtT2q+0WN6c0ubyQmPlPlMSaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741860368; c=relaxed/simple;
-	bh=cC0nh/U9veYZT9aicdNSer8j88qvzcp8ofb4Mx18/8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nLEBg7GxuLa7jixtWkDekmEv6YFELGOnBj5MU4Xmu7u2Hd0Xcs8QbG9nMabpcMsVU6R8qbixDhTLumCFM38MldnfnYchzcwkigtkgMFxzYcZAdI97Q9S7K0ASmIWLutzOd1nnFbdOJ6RhHHOfnDyggxa89Gt/pgR6wdSpbho+Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SW4ZITRU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741865226; c=relaxed/simple;
+	bh=5KkHRavtVrz4D/cgSwlufb6nlC7lIrDj2eS7bmyzXm8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=A118H4mSsEdgYBk4NcrsOyabTI2twlHOYNVqk03f1yUIMpVknC+jgr5cuyetIkqCerlVBI54dJLq19CP0a/C+erAct/nN0BW2imAQAmOTVhTGiNDQ5dWq5K1n9g99sgJp+lM9nIcxzYngTqSEmlu2ThBDcS1a4sayAe2OPo9RYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hNNXPj4z; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SW4ZITRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3BFCC4CEDD;
-	Thu, 13 Mar 2025 10:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741860368;
-	bh=cC0nh/U9veYZT9aicdNSer8j88qvzcp8ofb4Mx18/8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SW4ZITRUMo5fN6mTcnPrOknpTpQsJ9W/X1qSnD9cPIkmcc8IloImMrJU0BTHqa4gT
-	 TAtGP8pNyRTsj2TE5vNtexwTQTXf42UcD9TJz6k6aF9lZ+hLMqFXaJOEhQB7t3J27J
-	 stjC4biow/9JaH7sSxrWckxL9ghbWVjykrH3DN14=
-Date: Thu, 13 Mar 2025 11:06:04 +0100
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Chris Lu =?utf-8?B?KOmZuOeomuazkyk=?= <Chris.Lu@mediatek.com>
-Cc: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-	"pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
-	"ben@rs485.network" <ben@rs485.network>,
-	Hao Qin =?utf-8?B?KOenpua1qSk=?= <Hao.Qin@mediatek.com>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-	"tiwai@suse.de" <tiwai@suse.de>,
-	"luiz.von.dentz@intel.com" <luiz.von.dentz@intel.com>,
-	"marcel@holtmann.org" <marcel@holtmann.org>,
-	"geraldogabriel@gmail.com" <geraldogabriel@gmail.com>,
-	"g@b4.vu" <g@b4.vu>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Sean Wang <Sean.Wang@mediatek.com>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Fix for MediaTek reset affecting Focusrite audio
- interfaces
-Message-ID: <2025031352-octopus-quadrant-f7ca@gregkh>
-References: <Z8ybO7DfeP3Ag9wz@m.b4.vu>
- <Z89YcqoED633dr_M@geday>
- <CABBYNZJCko6radLuW=M=jTzqUEr2rUoKc_TUBVWP9wFSgkKb6Q@mail.gmail.com>
- <d81e863b00b3153c1de1c782205713fa99a79308.camel@rs485.network>
- <e6e8d3fd-772b-4877-a4a6-9b3968a4c187@molgen.mpg.de>
- <a47e628e200d5200bec8cb7f59e72bcff298632f.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hNNXPj4z"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-868ddc4c6b6so398187241.2
+        for <regressions@lists.linux.dev>; Thu, 13 Mar 2025 04:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741865223; x=1742470023; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wWGG3GirMf7Q7AzAMUMuKD2Sm+Rnbuw0dp6+WVrkwpo=;
+        b=hNNXPj4z82fHp+iutaHqvvuKCZ/141XXPYwUDqhoHIlOlK99MUyh/h5J7O9KVHu/dk
+         SzmWWktMaHqo+90UTssxu3G3TzAiGs2KHxGQEUS9NDGIbcFqNa4ml0IUCVFsPh2ZpAgG
+         xXm0U81DPONlUJddJeZe9OxpHRGc1dikNkTRxJoV8aKNkPUmLeQR73XqWr1Aao+93yWw
+         CVx3xdY//4HDq+tBmKIOZXcD+yPEeBK8g2+5EyA2mJ0qeqKGWOJi8GapMyYDhVeQecdj
+         RGXzpOFLgdjIJ635V3IdVR7bLq6l7zdPJIly9j6c3xNEqAJunGfsT+QI9oCm+mdcm1sW
+         yq8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741865223; x=1742470023;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wWGG3GirMf7Q7AzAMUMuKD2Sm+Rnbuw0dp6+WVrkwpo=;
+        b=pZ7p3v70SPhX17EyFczHQHNHqNC5Dj66+NVJKnwOZ5GSWqaFWrGfXVcNtM1cgUw8g+
+         CazxwaBqGiceY9mud04oYN5aWZ/qoBdCNBPjXzeZqLF0/Iq5B1XSJOk5gmoxkqAWFV+J
+         IzulkH5KDWCvU+8rBAYZce7TmQMy36rY4ws/YslqI4yawh8/iUD6zxAAQrY4fXOO4oCs
+         qndP7LSoPzbzP9pUORFw4momun8YOzBCbeaB0aBEciTi6YTXQeC9sN2ggq6/yHmJwNxg
+         r76rKhlgbfv/4ywDjVoTeauiMiVtchlDkQ56KIYEHLgP+2KHVAPJ76GxN/f5HfUJswWJ
+         o1dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5u+bZUACCOyCnEL+onkPSph9+lPcNTPRZ9Yq6XdhWMJyH8N7sVXPxwwCRJCw1BKWFZdEcr2slCEahkA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwjmuTQ9aq6t5ZdLPoTFKBisxlcGJ3SPTDJjxp/yUa2pjY8ofzo
+	TbIpS8YMWjGWwngunqHUxK41TTXzUAKbkQRU+twcdbcZay9/0eRRTu8W9LHNAuYZqwwqcOZv3Y0
+	4SBJ4mPdJI8oSX1uAx4QWRxlOMm6JwDjAZiT50w==
+X-Gm-Gg: ASbGncsA3smbMEL/++iuATTLJSooM1+3QzvDl+ihWNbegNCX/4NviR/lDSJzgThsEXj
+	RovI2YII4TekLmSLC1WTHtyNg8MoWQ2YuGx9GGblKgM9cCdqGGG8oshaJlBls1b9yUQkLPskcXX
+	/yYVLXgIbC6VsFv99tx4osDYARUPuCz+i+3TemppagWyoeMBSRMj8irBqYdf9q5RMGaqKQEQ==
+X-Google-Smtp-Source: AGHT+IH/JPcWt5Xfj4ccnFGkBFiRQvlD1alNwUQz3CuuafX8TmjDEqCWeQZlnu7pjvW0EvNurwT6DVEc5njmnl3vKkk=
+X-Received: by 2002:a05:6102:5714:b0:4c3:6a7e:c9f3 with SMTP id
+ ada2fe7eead31-4c36a7ecb4cmr6321255137.3.1741865222848; Thu, 13 Mar 2025
+ 04:27:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a47e628e200d5200bec8cb7f59e72bcff298632f.camel@mediatek.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 13 Mar 2025 16:56:51 +0530
+X-Gm-Features: AQ5f1JrTxlfHZ98mI11XsznbwpxAEgYThkjDHa5QPNW8NjGdl3x9hxDBV8zbXxQ
+Message-ID: <CA+G9fYugh0pBb_XwqnDM344JqCookWZe6EWQf1sLS7Oy-SdL5g@mail.gmail.com>
+Subject: arm64: Kernel crash at devm_kmalloc include/linux/device.h: drivers/base/devres.c
+To: iommu@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 13, 2025 at 09:05:16AM +0000, Chris Lu (陸稚泓) wrote:
-> Hi Luiz,
-> 
-> Sorry for the late response.
-> 
-> On Thu, 2025-03-13 at 09:08 +0100, Paul Menzel wrote:
-> > 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> > 
-> > 
-> > [Cc: +regressions, commit ccfc8948d7e4 was added in v6.11-rc1]
-> > 
-> > Am 13.03.25 um 02:43 schrieb Benedikt Ziemons:
-> > > On Tue, 2025-03-11 at 21:53 -0400, Luiz Augusto von Dentz wrote:
-> > 
-> > > > On Mon, Mar 10, 2025 at 5:24 PM Geraldo Nascimento wrote:
-> > > > > 
-> > > > > On Sun, Mar 09, 2025 at 06:02:11AM +1030, Geoffrey D. Bennett
-> > > > > wrote:
-> > > > > > This series (choose 1 of the 2 patches) addresses an issue
-> > > > > > where the
-> > > > > > MT7922 Bluetooth controller reset added in commit
-> > > > > > ccfc8948d7e4
-> > > > > > ("Bluetooth: btusb: mediatek: reset the controller before
-> > > > > > downloading
-> > > > > > the fw") is causing Focusrite USB audio devices to fail to
-> > > > > > initialise
-> > > > > > when connected during boot on kernels 6.11 and newer.
-> > > > > > 
-> > > > > > Reported by three users here:
-> > > > > > https://urldefense.com/v3/__https://github.com/geoffreybennett/linux-fcp/issues/24__;!!CTRNKA9wMg0ARbw!hovfaKcQBzFKUu7X62SNU_berXiuXtSb2ndXGjAyf9WCptdz3D8jnprUqYc6b2fQE_3zrt88nGpKtJcYUCCcdA$
-> > > > > > 
-> > > > > > Two users confirmed they have an MT7922.
-> > > > > > 
-> > > > > > I'm providing two possible solutions as I note there was a
-> > > > > > similar
-> > > > > > change made in commit a7208610761a ("Bluetooth: btmtk: Remove
-> > > > > > resetting mt7921 before downloading the fw"), so I'm not sure
-> > > > > > if the
-> > > > > > reset should be reverted for the MT7925 as well as the
-> > > > > > MT7922.
-> > > > > > 
-> > > > > > Option 1: Revert the problematic reset behaviour entirely
-> > > > > > (MT7922 +
-> > > > > > MT7925)
-> > > > > > 
-> > > > > > Option 2: Remove the reset only for the MT7922
-> > > > > > 
-> > > > > > Geoffrey D. Bennett (2):
-> > > > > > 
-> > > > > >    [PATCH 1/2] Revert "Bluetooth: btusb: mediatek: reset the
-> > > > > > controller
-> > > > > >      before downloading the fw"
-> > > > > > 
-> > > > > >    [PATCH 2/2] Bluetooth: btmtk: Remove resetting mt7922
-> > > > > > before
-> > > > > >      downloading the fw
-> > > > > > 
-> > > > > > --
-> > > > > > 2.45.0
-> > > > > > 
-> > > > > > 
-> > > > > 
-> > > > > Hi Geoffrey,
-> > > > > 
-> > > > > I understand there's no apparent nexus of causality here.
-> > > > > 
-> > > > > However if three different users suddenly reported the same
-> > > > > problem
-> > > > > and the fix fixes it, we should take the report seriously and
-> > > > > back
-> > > > > down on the problematic commit until we figure for sure what
-> > > > > the heck
-> > > > > is going on.
-> > > > > 
-> > > > > My bet is this is bona fide bug in the USB subsystem, but
-> > > > > either I'm
-> > > > > not looking hard enough or I'm looking into the wrong places,
-> > > > > because
-> > > > > there's no way I can see in which way USB bluetooth driver from
-> > > > > MediaTek could cause clock detection to fail.
-> > > > > 
-> > > > > No point in pressing this harder, but yeah, take the reports
-> > > > > more than
-> > > > > seriously, because if we don't understand in which way our own
-> > > > > (Linux)
-> > > > > code could be causing this, at least we should take cautionary
-> > > > > measures.
-> > > > > 
-> > > > > In that sense, putting Takashi Iwai and Greg KH to Cc: in a
-> > > > > modest but
-> > > > > sincere belief that this issue is more than real, even though
-> > > > > it looks
-> > > > > like anticipated April 1st. Takashi can help with his expertise
-> > > > > in
-> > > > > clock detection and Greg could help pinpoint if this is indeed
-> > > > > madness
-> > > > > in the USB subsystem.
-> > > > > 
-> > > > > Hope you and them don't mind the escalation :)
-> > > > 
-> > > > Do you guys have any idea what could be possibly going on here?
-> > > > There
-> > > > really seems something is not right if one driver affects the
-> > > > other,
-> > > > especially if the devices are not actually related in any way.
-> > 
-> 
-> I've discussed internally with Sean and Hao from MediaTek who submit
-> the changes to Kernel. The original intention was to ensure
-> controller's status is clean before Bluetooth driver doing firmware
-> binary download when booting. However, it seems that the changes cause
-> unexpected USB device enumeration problem at this timing with specific
-> USB devices.
-> 
-> To avoid such problem, we also agree that reverting those changes would
-> be a better choice. Thanks a lot.
+Regression on arm64 FVP and rock-pi-4-b while booting the Linux next-20250312
+and next-20250313. the following crash noticed with KVM Kconfigs.
 
-Great, can someone please submit the reverts?
+First seen on next-20250312.
+Good: next-20250311
+Bad: 6.14.0-rc6-next-20250312 and 6.14.0-rc6-next-20250313
 
-thanks,
+Boot regression: arm64 devm_kmalloc rk_iommu_of_xlate kernel panic
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-greg k-h
+## Boot log
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 6.14.0-rc6-next-20250313
+(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 13.3.0-12) 13.3.0,
+GNU ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT @1741850074
+[    0.000000] KASLR disabled due to lack of seed
+[    0.000000] Machine model: Radxa ROCK Pi 4B
+<trim>
+[    1.028830] SuperH (H)SCI(F) driver initialized
+[    1.030168] STM32 USART driver initialized
+[    1.052086] Unable to handle kernel NULL pointer dereference at
+virtual address 00000000000002a0
+[    1.052877] Mem abort info:
+[    1.053137]   ESR = 0x0000000096000004
+[    1.053481]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.053960]   SET = 0, FnV = 0
+[    1.054241]   EA = 0, S1PTW = 0
+[    1.054530]   FSC = 0x04: level 0 translation fault
+[    1.054971] Data abort info:
+[    1.055236]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    1.055760]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.056216]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.056693] [00000000000002a0] user address but active_mm is swapper
+[    1.057264] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[    1.057821] Modules linked in:
+[    1.058105] CPU: 4 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.14.0-rc6-next-20250313 #1
+[    1.058823] Hardware name: Radxa ROCK Pi 4B (DT)
+[    1.059236] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    1.059854] pc : devm_kmalloc (include/linux/device.h:805
+drivers/base/devres.c:853)
+[    1.060225] lr : rk_iommu_of_xlate (drivers/iommu/rockchip-iommu.c:1152)
+[    1.060614] sp : ffff80008306b7c0
+[    1.060913] x29: ffff80008306b7c0 x28: ffff8000825a9068 x27: ffff80008225ce00
+[    1.061560] x26: 0000000000000001 x25: ffff80008225e188 x24: ffff000000eafa80
+[    1.062206] x23: 0000000000000000 x22: ffff800081af6a98 x21: 0000000000000000
+[    1.062850] x20: 0000000000000010 x19: 0000000000000000 x18: 00000000ffffffff
+[    1.063493] x17: ffff0000019abc00 x16: ffff000001985400 x15: ffff80008306b820
+[    1.064136] x14: ffff000002736a1c x13: ffff00000273627c x12: 0101010101010101
+[    1.064780] x11: 7f7f7f7f7f7f7f7f x10: 000000000016f8a0 x9 : ffff800080b65870
+[    1.065424] x8 : ffff80008306b718 x7 : 0000000000000000 x6 : 0000000000000001
+[    1.066066] x5 : ffff800082890000 x4 : ffff8000828905f0 x3 : 0000000000000000
+[    1.066708] x2 : 0000000000000dc0 x1 : 0000000000000010 x0 : 0000000000000090
+[    1.067351] Call trace:
+[    1.067576] devm_kmalloc (include/linux/device.h:805
+drivers/base/devres.c:853) (P)
+[    1.067937] rk_iommu_of_xlate (drivers/iommu/rockchip-iommu.c:1152)
+[    1.068295] of_iommu_xlate (drivers/iommu/of_iommu.c:39)
+[    1.068629] of_iommu_configure (drivers/iommu/of_iommu.c:71
+drivers/iommu/of_iommu.c:98 drivers/iommu/of_iommu.c:149)
+[    1.069008] of_dma_configure_id (drivers/of/device.c:161)
+[    1.069392] platform_dma_configure (drivers/base/platform.c:1455)
+[    1.069796] __iommu_probe_device (drivers/iommu/iommu.c:430
+drivers/iommu/iommu.c:569)
+[    1.070194] probe_iommu_group (drivers/iommu/iommu.c:1722)
+[    1.070553] bus_for_each_dev (drivers/base/bus.c:370)
+[    1.070906] iommu_device_register (drivers/iommu/iommu.c:1875
+drivers/iommu/iommu.c:276)
+[    1.071304] rk_iommu_probe (drivers/iommu/rockchip-iommu.c:1263)
+[    1.071652] platform_probe (drivers/base/platform.c:1404)
+[    1.071986] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658)
+[    1.072316] __driver_probe_device (drivers/base/dd.c:800)
+[    1.072716] driver_probe_device (drivers/base/dd.c:830)
+[    1.073100] __driver_attach (drivers/base/dd.c:1217)
+[    1.073453] bus_for_each_dev (drivers/base/bus.c:370)
+[    1.073805] driver_attach (drivers/base/dd.c:1235)
+[    1.074135] bus_add_driver (drivers/base/bus.c:678)
+[    1.074488] driver_register (drivers/base/driver.c:249)
+[    1.074836] __platform_driver_register (drivers/base/platform.c:868)
+[    1.075261] rk_iommu_driver_init (drivers/iommu/rockchip-iommu.c:1380)
+[    1.075644] do_one_initcall (init/main.c:1257)
+[    1.075996] kernel_init_freeable (init/main.c:1318 (discriminator
+1) init/main.c:1335 (discriminator 1) init/main.c:1354 (discriminator
+1) init/main.c:1567 (discriminator 1))
+[    1.076393] kernel_init (init/main.c:1461)
+[    1.076720] ret_from_fork (arch/arm64/kernel/entry.S:863)
+[ 1.077053] Code: aa0003f5 b1020020 a90153f3 aa0103f4 (b942a2b7)
+All code
+========
+   0: aa0003f5 mov x21, x0
+   4: b1020020 adds x0, x1, #0x80
+   8: a90153f3 stp x19, x20, [sp, #16]
+   c: aa0103f4 mov x20, x1
+  10:* b942a2b7 ldr w23, [x21, #672] <-- trapping instruction
+
+Code starting with the faulting instruction
+===========================================
+   0: b942a2b7 ldr w23, [x21, #672]
+[    1.077594] ---[ end trace 0000000000000000 ]---
+[    1.078059] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x0000000b
+[    1.078736] SMP: stopping secondary CPUs
+[    1.079099] Kernel Offset: disabled
+[    1.079412] CPU features: 0x0400,00041058,01000400,8200421b
+[    1.079909] Memory Limit: none
+[    1.080188] ---[ end Kernel panic - not syncing: Attempted to kill
+init! exitcode=0x0000000b ]---
+
+## Source
+* Kernel version:  6.14.0-rc6-next-20250313
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 613af589b566093ce7388bf3202fca70d742c166
+* Git describe:  6.14.0-rc6-next-20250313
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250305/
+* Architectures: arm64
+* Compilers: gcc-13
+
+## Test data
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250313/testrun/27611306/suite/boot/test/gcc-13-lkftconfig/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250313/testrun/27611826/suite/boot/test/gcc-13-lkftconfig/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250313/testrun/27611306/suite/boot/test/gcc-13-lkftconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uFgT27J8KGNrdNXzKgUzhFI3YX/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2uFgT27J8KGNrdNXzKgUzhFI3YX/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
