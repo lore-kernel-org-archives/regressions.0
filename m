@@ -1,97 +1,101 @@
-Received: from einhorn-mail-out.in-berlin.de (einhorn.in-berlin.de [192.109.42.8])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D182AF1D
-	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 11:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.109.42.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F0A8635A
+	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 11:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741950896; cv=none; b=apXRA1eKAjEoBRfw5Tso6f8d49zlqJokNCkjqvVS32OsozlTSFWW6xKOitWlSunx5tPW+9EMkFdZxIFpbVcYMXpb7l6fPzT6beUzbSykk6JY3RnTKaEA5USZLDCTEwRwG2o6gOSJEzate6024bgBtXS/TCW+BNuErNSAIufv+HE=
+	t=1741953292; cv=none; b=MloQ6kYOuqmq/HB5CPizsWEcTHGc0956bhGn+RbL1kQLlHAqihY2ESCJy6AAEKm5jTzM8rW7MLPF1vjJArHaWgiCFYol9DJQapvQeNs0whR9nzBFdzLa12RwChea1Gq2GmmxFoDkExrZ38387FE9F63S+iCq/dKLeEezRLVc9OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741950896; c=relaxed/simple;
-	bh=/f4PnMZuIbTeCIvUrh+FW4xcbXH2QVeHlJAQTt9k/1I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T7RzA9gStlwpsyDmfUw8nCk34glQhIyx5Uswq7Yb2eibSJOY+vl94V56Q81cNnHnz63n1rX01qTZhon+LJDQCtM9g6n29MtgDKauyjts/7rs6CY82ufao80ytHWsot2aCBYQHl1JkVusZkJ+9DsziWj/lUODjFTV850u7on2vA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de; spf=pass smtp.mailfrom=faulbaum.in-berlin.de; arc=none smtp.client-ip=192.109.42.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=faulbaum.in-berlin.de
-X-Envelope-From: dieter@faulbaum.in-berlin.de
-Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id 52EB6JRJ803794
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 12:06:19 +0100
-Received: from frangula (frangula.xpertex.internal [172.16.3.241])
-	by frangula.xpertex.internal (Postfix) with ESMTPSA id CAC5213C;
-	Fri, 14 Mar 2025 12:06:18 +0100 (CET)
-From: Dieter Faulbaum <dieter@faulbaum.in-berlin.de>
-To: Philip Yang <yangp@amd.com>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-        Philip Yang
- <Philip.Yang@amd.com>, amd-gfx@lists.freedesktop.org,
-        Felix.Kuehling@amd.com, Alexander.Deucher@amd.com,
-        christian.koenig@amd.com, regressions@lists.linux.dev
-Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
-In-Reply-To: <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com> (Philip Yang's
-	message of "Wed, 12 Feb 2025 18:02:15 -0500")
-References: <20240718210558.26340-1-Philip.Yang@amd.com>
-	<20240718210558.26340-5-Philip.Yang@amd.com>
-	<zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
-	<315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com>
-Date: Fri, 14 Mar 2025 12:06:18 +0100
-Message-ID: <rie1puzeus5.fsf@faulbaum.in-berlin.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1741953292; c=relaxed/simple;
+	bh=ujXCNmb3soiv158J2dofpbfmDTJEFnQWHbM9oC1cpcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ertBuoTKVD1viqjN3q0uLR0yx2bBQKqX4HCwgIrMw2Us20Yeg/iIrCKHAPu/NV9wp3175ee9WsqqU+TmR5QxPddfa0PBQOa1YTRe4gcTvhu00RJTvdPUHch1sPF2AZEUnal4ICdmtP663vJkPteZgg9aqbNQVkxhu7UcDBccPLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1345161E64856;
+	Fri, 14 Mar 2025 12:54:23 +0100 (CET)
+Message-ID: <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
+Date: Fri, 14 Mar 2025 12:54:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-pci@vger.kernel.org, regressions@lists.linux.dev
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+ <Z78ZK8Sh0cOhMEsH@black.fi.intel.com> <Z78bUPN7kdSnbIjW@black.fi.intel.com>
+ <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
+ <Z78jjr8LMa165CZP@smile.fi.intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <Z78jjr8LMa165CZP@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Dear Andy, dear Bartosz,
 
 
-Hello Philip,
+Am 26.02.25 um 15:22 schrieb Andy Shevchenko:
+> On Wed, Feb 26, 2025 at 03:14:24PM +0100, Bartosz Golaszewski wrote:
+>> On Wed, 26 Feb 2025 at 14:47, Andy Shevchenko wrote:
+>>> On Wed, Feb 26, 2025 at 03:37:47PM +0200, Andy Shevchenko wrote:
+>>>> On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
+>>>>> On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
+>>>>>
+>>>>>> In any case: Linus: what should be our policy here? There are some pinctrl
+>>>>>> drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+>>>>>> think this is an error. Returning errors should be reserved for read failures
+>>>>>> and so on. Are you fine with changing the logic here to explicitly default to
+>>>>>> INPUT as until recently all errors would be interpreted as such anyway?
+>>>>>
+>>>>> Oh hm I guess. There was no defined semantic until now anyway. Maybe
+>>>>> Andy has something to say about it though, it's very much his pin controller.
+>>>>
+>>>> Driver is doing correct things. If you want to be pedantic, we need to return
+>>>> all possible pin states (which are currently absent from GPIO get_direction()
+>>>> perspective) and even though it's not possible to tell from the pin muxer
+>>>> p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
+>>>> different, but pin muxer might only guesstimate the state of the particular
+>>>> function is and I do not think guesstimation is a right approach.
+>>>>
+>>>> We may use the specific error code, though. and document that semantics.
+>>>
+>>> Brief looking at the error descriptions and the practical use the best (and
+>>> unique enough) choice may be EBADSLT.
+>>
+>> In any case, I proposed to revert to the previous behavior in
+>> gpiochip_add_data() in my follow-up series so the issue should soon go
+>> away.
+> 
+> Yes, I noted. The above is a material to discuss. We can make that semantics
+> documented and strict and then one may filter out those errors if/when
+> required.
 
-Philip Yang <yangp@amd.com> writes:
-
-> On 2025-02-12 17:42, Uwe Kleine-K=C3=B6nig wrote:
->
->  #regzbot introduced: 68e599db7a549f010a329515f3508d8a8c3467a4
-> #regzbot monitor: https://bugs.debian.org/1093124
->
-> Hello,
->
-> On Thu, Jul 18, 2024 at 05:05:53PM -0400, Philip Yang wrote:
->
->  Find user queue rptr, ring buf, eop buffer and cwsr area BOs,=20
->  and
-> check BOs are mapped on the GPU with correct size and take the=20
-> BO
-> reference.
->
-> Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
->
->
-> This change made it into v6.12-rc1 as 68e599db7a54 ("drm/amdkfd:
-> Validate user queue buffers"). A Debian user (Dieter Faulbaum,=20
-> on Cc)
-> reported that this change introduced a regression using a gfx803=20
-> device
-> resulting in a HSA exception when e.g. darktable is used. I=20
-> didn't even
-> try to understand the problem, but maybe one of you have an idea=20
-> about
-> the issue?!
->
-> Try this patch
->
-> https://lore.kernel.org/all/20250130000412.29812-1-Philip.Yang@amd.com/T/
-
-It seems for me, that your patch isn't applied in the mainline=20
-kernel.
-What do you think, will it once happen?-)
-Is it falling through cracks?
+I am still seeing this with 6.14.0-rc6-00022-gb7f94fcf5546. Do you know, 
+if the reverts are going to be in the final 6.14 release?
 
 
+Kind regards,
 
-With regards
-Dieter
+Paul
