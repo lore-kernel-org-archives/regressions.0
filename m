@@ -1,87 +1,139 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36BE1FCFE3
-	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 12:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA7E1FF605
+	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 13:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741955177; cv=none; b=FRavWI0+HBnNZI8lgzIXyUS+BMlNgxPeA95u280YGPOzGPXG98FIAwylweJxSezGGWuTQQ8oIXjXFJlYCj1o66yuLsvkDfzpSoMTPuwXHOQT8B0DAkXtrn4qYHlTEESq5lad99o59SNonO2ija+x9tVzGIhtSMWWxKAQHD9//nk=
+	t=1741957935; cv=none; b=n8lM9HHyaLVljnk34t5rNJl4nSqG71etDnKSfo/waSJs+kZyiAbxlxy+NWGDzIicraHH/8X1Gmu6MBF5XGzxktTzGS83mIPcSlhHH+yH0VVGbQ2UKxKlXuaeI5ORxq7vazyyBiarxLzMBTtW/WVMP5Q01QlXyPCM06ogpLe8hPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741955177; c=relaxed/simple;
-	bh=CTOADkKaiXL14ofE1ctHaZx6+5tXRWKRi8L0z3hb+x8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kBCL2On04ncILM0+XXGnYdE3uT8JlypikqQAH3XWNXRC9qDy6NbrxroAkj1ewVDv1ouN3dTFFgJbUX/7iL2PIu7YbX1vc7qXuMwLCeUHogwGvd92O54JFuueksioiqaCWbV+fhMfdHvjKzdVVKBCfK66y02NdWbJ8saDZV3lWhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 87A6F61E647AE;
-	Fri, 14 Mar 2025 13:25:52 +0100 (CET)
-Message-ID: <cb12d8d3-229c-4ef9-b585-778772b34ac7@molgen.mpg.de>
-Date: Fri, 14 Mar 2025 13:25:52 +0100
+	s=arc-20240116; t=1741957935; c=relaxed/simple;
+	bh=igWsFZqIoBBrRjWxo9HQX6XTBffLUEnusGMY9Vx19IQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SdTz5odgOb2abx9HWn19yqYweInsT7jGr3YfwcVJmpwQsQkOND4IL9OzzLT16zs7h6wuSCq54nEq3FjhRCj4eScO/1cGYHp8hRMcH/uZpq5fDtgU1J6/ia1wbEm3FRLU8C7hKSumMSq4KIGwyFjYhV/yl3+6Jf6Jot6LYiL2ca4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cu6X/65i; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu6X/65i"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240b4de10eso5746635ad.1
+        for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 06:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741957933; x=1742562733; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=us71VI8rB0Legg4D3O1G/8ku8Dl+rOdqgBnf5AamEhA=;
+        b=Cu6X/65itSvgKfyzDVKWRENClArE/IlGV6OmvvjziQ97RxEruM2IpRqqlUEGlCP/DO
+         5ubKjKmw7J9lPohS1HfSczlJQO33LJgWBo1bBE5/Z1netSB8obBL8z6wGID/NQ+78RQ0
+         V2gpswPpaM63RA+U813yWX1aZXYbdUVzLeIcRqLjSQobdelf4a3Jz7vB8JauhyonklWy
+         /HU8v/HHIRGE/e1k5WOWFRVThpuARQo6qUmZ+mcJhPZ7XsGBJNUbYvD26hPnwEWhl+5s
+         Pj6wNMechInX0i3Y8uai303AsrrBVsEx/iS8Dcw4GuEkkycFafW/bIc0VizswAP5mRsA
+         qF5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741957933; x=1742562733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=us71VI8rB0Legg4D3O1G/8ku8Dl+rOdqgBnf5AamEhA=;
+        b=oRrnZ6GHQvMFPaL2b7qJiTR3GcCmhtGT3tzeRbl76t7R79YeuH4hGnQ65Zo67OYGh/
+         XGmDdb39ITuE8lleQHNj8PP4OTImkqf+VxSTwns+2myoRrJmm97QWT76S13gDNm2tSlx
+         khPoItUCXtn1Jdp97DNzNqWSQNaQkS3Mz+rE2kIreU4KfD5/vugcIZPWn6pYlNHXC/xA
+         mxfk9TWYbLPIc56lqOLxVHpkvUCLAtedxrTAS2PagGE4Pdgxf8qS+VEwPIHfGph9nKQI
+         jF1fPjqimY2lnlFDefuX+1ROaOt6QO8CAF4AV6r0564ICGQOjihE099cvsg9z4X8rVcH
+         HDhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmuBabmI2wcXEBf3SjnVJ1UswH9TKKFjuVysoQkxMXKKrTApnqvNKvuAodyeNCFpQgs8PnY/wsWNP8jw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwnzbD0TR0joi/1UZsq1M0NPQGIFmwt2IXLbSLHavPcB/0beDdT
+	jK3CITOLx7b8K++3YlG93BnlhJjVe4hNRF2CEkuKP5WeB7lkPhQ7TvYAo29WkyO7VSzSAYVb+qD
+	9ruOaJpB89I3rmCjik1q6Xmf+knk=
+X-Gm-Gg: ASbGnctxFGLrC1wGyfmWo29C9t5TSmibOHYmqVp8E17m+oKmYj3APaO5AOWoKANSu6t
+	Xt5RwcjxYSp+TLcdhHhqGs9WoZtArhkfm+/RFh5Z+LOhgDEB1Ra4lp46jh9hI8lc72by5v8Qbtl
+	KKLKihDx83GNTuHg9FEmbHH1qwPw==
+X-Google-Smtp-Source: AGHT+IGn7iFBbjLVbF5uD1Bl+O+ELfJWqW5/gdbzYIvLmDPZkKiCZ0MqhutzzC6HNNXL1d+rOgfnTivubYL5pcSU8LQ=
+X-Received: by 2002:a17:902:cec3:b0:215:435d:b41a with SMTP id
+ d9443c01a7336-225e0a1d656mr12644975ad.1.1741957932906; Fri, 14 Mar 2025
+ 06:12:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
- <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
- <Z78ZK8Sh0cOhMEsH@black.fi.intel.com> <Z78bUPN7kdSnbIjW@black.fi.intel.com>
- <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
- <Z78jjr8LMa165CZP@smile.fi.intel.com>
- <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
- <CAMRc=Mez_3F0NifXLb18_XNH+-Q7D47HVOrYNt37EWsO9z0zgg@mail.gmail.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAMRc=Mez_3F0NifXLb18_XNH+-Q7D47HVOrYNt37EWsO9z0zgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240718210558.26340-1-Philip.Yang@amd.com> <20240718210558.26340-5-Philip.Yang@amd.com>
+ <zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
+ <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com> <rie1puzeus5.fsf@faulbaum.in-berlin.de>
+In-Reply-To: <rie1puzeus5.fsf@faulbaum.in-berlin.de>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 14 Mar 2025 09:12:01 -0400
+X-Gm-Features: AQ5f1JpvRZFPmApVishFeHO_TGlueDyNSqN_p6gXt_cZSBDpsiMuq0wh-u93KBI
+Message-ID: <CADnq5_OE75bJvDwZvGo2BhFCm4TzuarQkv9ypGf80O2M9inXYA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
+To: Dieter Faulbaum <dieter@faulbaum.in-berlin.de>
+Cc: Philip Yang <yangp@amd.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Philip Yang <Philip.Yang@amd.com>, amd-gfx@lists.freedesktop.org, Felix.Kuehling@amd.com, 
+	Alexander.Deucher@amd.com, christian.koenig@amd.com, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Bartosz,
+On Fri, Mar 14, 2025 at 8:55=E2=80=AFAM Dieter Faulbaum
+<dieter@faulbaum.in-berlin.de> wrote:
+>
+>
+> Hello Philip,
+>
+> Philip Yang <yangp@amd.com> writes:
+>
+> > On 2025-02-12 17:42, Uwe Kleine-K=C3=B6nig wrote:
+> >
+> >  #regzbot introduced: 68e599db7a549f010a329515f3508d8a8c3467a4
+> > #regzbot monitor: https://bugs.debian.org/1093124
+> >
+> > Hello,
+> >
+> > On Thu, Jul 18, 2024 at 05:05:53PM -0400, Philip Yang wrote:
+> >
+> >  Find user queue rptr, ring buf, eop buffer and cwsr area BOs,
+> >  and
+> > check BOs are mapped on the GPU with correct size and take the
+> > BO
+> > reference.
+> >
+> > Signed-off-by: Philip Yang <Philip.Yang@amd.com>
+> > Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
+> >
+> >
+> > This change made it into v6.12-rc1 as 68e599db7a54 ("drm/amdkfd:
+> > Validate user queue buffers"). A Debian user (Dieter Faulbaum,
+> > on Cc)
+> > reported that this change introduced a regression using a gfx803
+> > device
+> > resulting in a HSA exception when e.g. darktable is used. I
+> > didn't even
+> > try to understand the problem, but maybe one of you have an idea
+> > about
+> > the issue?!
+> >
+> > Try this patch
+> >
+> > https://lore.kernel.org/all/20250130000412.29812-1-Philip.Yang@amd.com/=
+T/
+>
+> It seems for me, that your patch isn't applied in the mainline
+> kernel.
+> What do you think, will it once happen?-)
+> Is it falling through cracks?
 
+It's in drm-next:
+https://gitlab.freedesktop.org/drm/kernel/-/commit/e7a477735f1771b9a9346a5f=
+bd09d7ff0641723a
 
-Am 14.03.25 um 13:19 schrieb Bartosz Golaszewski:
-> On Fri, Mar 14, 2025 at 12:54 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->>>>>
->>>>> Brief looking at the error descriptions and the practical use the best (and
->>>>> unique enough) choice may be EBADSLT.
->>>>
->>>> In any case, I proposed to revert to the previous behavior in
->>>> gpiochip_add_data() in my follow-up series so the issue should soon go
->>>> away.
->>>
->>> Yes, I noted. The above is a material to discuss. We can make that semantics
->>> documented and strict and then one may filter out those errors if/when
->>> required.
->>
->> I am still seeing this with 6.14.0-rc6-00022-gb7f94fcf5546. Do you know,
->> if the reverts are going to be in the final 6.14 release?
-> 
-> linux-next should probably be a better point of reference. I'm about
-> to send out my PR to Linus so it'll be in 6.14-rc7 alright.
+I'll cherry-pick it for stable next week.
 
-Awesome. Thank you!
+Alex
 
-
-Kind regards,
-
-Paul
+>
+>
+>
+> With regards
+> Dieter
