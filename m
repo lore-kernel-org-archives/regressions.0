@@ -1,111 +1,97 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from einhorn-mail-out.in-berlin.de (einhorn.in-berlin.de [192.109.42.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8151F4175
-	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 10:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D182AF1D
+	for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 11:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.109.42.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741949274; cv=none; b=WJzAEZnDFsYoxzkx1H4l2JuLFqeE1mCdcKPR6FX7gnNNR9KlLSB/bIGmv15ghhH0lWpNuhly1RWsFrXUTpyaqV+U6Ue9REW/CvsJXNXffL74FS3QrkrUYOC60XmUrdorwZT3OqoD8Gxla/h4TrkGarKhClozYGIbmhaJILt4UAk=
+	t=1741950896; cv=none; b=apXRA1eKAjEoBRfw5Tso6f8d49zlqJokNCkjqvVS32OsozlTSFWW6xKOitWlSunx5tPW+9EMkFdZxIFpbVcYMXpb7l6fPzT6beUzbSykk6JY3RnTKaEA5USZLDCTEwRwG2o6gOSJEzate6024bgBtXS/TCW+BNuErNSAIufv+HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741949274; c=relaxed/simple;
-	bh=V5UZcSrB+DBbkt7kNI7CUlvdnpS0ihjryCg/aFs3+EY=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=NIYtdRJE4q+mYqpP09t3nYXQCwMI9wsGHoduA/qMzbiHldxAxVOF31mlEEqqa3fEfz+b8GVKeOnreX0BbxxvLQDCArcrjPxbNs2u5yCEQwd1Bfvrv87uFuR24pku5taGtiZUyHsgL+9hCwiO9sxhermO5bRlEMMgrFp8fOCgdS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=NaqK7ixf; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="NaqK7ixf"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5dc299dee9so1833014276.3
-        for <regressions@lists.linux.dev>; Fri, 14 Mar 2025 03:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1741949271; x=1742554071; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xs2DRVt7s6D92kMzVMBPJGcistIAIFgvHwmfY9dBcVc=;
-        b=NaqK7ixf1d7XzrSk2JGodSTHlc+ubmmcOXziQiujV50vY5kZPCFDqVQCIuovh0nN88
-         3wOhvM1mQgbx7EDV5aMnFyZa+743E3syGjyjNvYhWjiMduiG6o5Czn70WnuMM2wJa3bG
-         f0U0TFBB+/jtA5nGXineUODY0K1+t0U/xxKNSzakJ/+dKbyC/okFg7ZkqGiN5CwAoj5e
-         jZe5L57GoaED48UzCjG0qQTGWkd1W8VCrK6F6A3P4XVmFATfX+xvrJe9ZsIkzEk6kgKr
-         qtQB0IzwDVi080qyyEEYpkvE5e8liYt75cfqMJQorfLo+xs8GqNBGEhommf9doSV1VW+
-         y0EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741949271; x=1742554071;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xs2DRVt7s6D92kMzVMBPJGcistIAIFgvHwmfY9dBcVc=;
-        b=XCVvkgnuPB057KtCkfbNmD81vhQrvFHQ/ZjDpndKv3qU9+ZL5FVj+M+pdTRa5ba0qm
-         IdPvd45XTTzSyQ/Z7WrseNCZ25HRB5sZYKh4Rv0WisAm/APYHh6f6zJ1BKpFEisGaWhK
-         mGIyBCuTQRUtmdEzMpccTHIfIDl/OS7ei5Hvd1Gu+BGAdTwoEgu639JBt8C5v58ldAcH
-         XDh3Pc1nsVjpTokIrb6UqWM548azMB7XXvUNa0q/wzOlR2IdIaInD353rAbEExwMZhWn
-         8Ht72CHchzMFSUClBeI5cEIjTP5BP56gzSX7rMY4lD7dymzv+/XYc3LYV48a/ctLSVBS
-         +XbA==
-X-Gm-Message-State: AOJu0YyGq2DpUm7sXefLjxTH5wBdItwF3P6AY4gujLm5V3c2P3N2WMKw
-	jq1cQd0v8IbDOw4bGNTZzGMOZLV1/FBbHppuAaPCJx94hcz0qphDc7kEDYCMgt+6ku2ec71bLW8
-	76OKV1IF/PPE0I4dVO3QS7R620SbKKBYsuN2z2w==
-X-Gm-Gg: ASbGncsU1a6iUggxs6kYdQ5bOOeWkYdkxzEX915Nj9WhistXEYo42tb3vr5G7ori0yX
-	G+CX28Qdc6Hz1uTRioRniqHW0ggsbe5v9jLhxro8X4PCPpMhF5HpCtcOsd+aW+ApeTJEdKxUefL
-	NWCL+DBksiy9aE00zyPogG57uGPt5tGEoOQHB3sjwSDLL84/O8o00t1+a8egM=
-X-Google-Smtp-Source: AGHT+IH/8gpAJFhj6QqPfeBoSbSvkB2UQERfb6r9g+mtExICBa6PnItjOug0Oj9jQCLN4ZF6tqWc39jsJFyCyti+6GA=
-X-Received: by 2002:a05:690c:6e01:b0:6fb:b524:48bc with SMTP id
- 00721157ae682-6ff460fa039mr23097167b3.35.1741949271016; Fri, 14 Mar 2025
- 03:47:51 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 14 Mar 2025 03:47:50 -0700
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 14 Mar 2025 03:47:50 -0700
+	s=arc-20240116; t=1741950896; c=relaxed/simple;
+	bh=/f4PnMZuIbTeCIvUrh+FW4xcbXH2QVeHlJAQTt9k/1I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T7RzA9gStlwpsyDmfUw8nCk34glQhIyx5Uswq7Yb2eibSJOY+vl94V56Q81cNnHnz63n1rX01qTZhon+LJDQCtM9g6n29MtgDKauyjts/7rs6CY82ufao80ytHWsot2aCBYQHl1JkVusZkJ+9DsziWj/lUODjFTV850u7on2vA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de; spf=pass smtp.mailfrom=faulbaum.in-berlin.de; arc=none smtp.client-ip=192.109.42.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=faulbaum.in-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=faulbaum.in-berlin.de
+X-Envelope-From: dieter@faulbaum.in-berlin.de
+Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id 52EB6JRJ803794
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 12:06:19 +0100
+Received: from frangula (frangula.xpertex.internal [172.16.3.241])
+	by frangula.xpertex.internal (Postfix) with ESMTPSA id CAC5213C;
+	Fri, 14 Mar 2025 12:06:18 +0100 (CET)
+From: Dieter Faulbaum <dieter@faulbaum.in-berlin.de>
+To: Philip Yang <yangp@amd.com>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+        Philip Yang
+ <Philip.Yang@amd.com>, amd-gfx@lists.freedesktop.org,
+        Felix.Kuehling@amd.com, Alexander.Deucher@amd.com,
+        christian.koenig@amd.com, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 4/9] drm/amdkfd: Validate user queue buffers
+In-Reply-To: <315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com> (Philip Yang's
+	message of "Wed, 12 Feb 2025 18:02:15 -0500")
+References: <20240718210558.26340-1-Philip.Yang@amd.com>
+	<20240718210558.26340-5-Philip.Yang@amd.com>
+	<zpzehsckjz2bee6w5bsnfpmkvtlxf6jywijz7iroausghoh43i@nxr644rwjsb3>
+	<315e27ab-f1d1-a681-a32f-1fc28cd81193@amd.com>
+Date: Fri, 14 Mar 2025 12:06:18 +0100
+Message-ID: <rie1puzeus5.fsf@faulbaum.in-berlin.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 14 Mar 2025 03:47:50 -0700
-X-Gm-Features: AQ5f1JpQnr3Qg5ekx6Jtad8Dc5g9EagAsisB9kd77mXHC77le5f5QYSUN67nqDs
-Message-ID: <CACo-S-290Qin9QAYk=Rxtu9TUzWeZ16UnQ-yZy5eycnJ=kCLyQ@mail.gmail.com>
-Subject: [REGRESSION] mainline/master: (build) "__aeabi_uldivmod"
- [fs/bcachefs/bcachefs.ko] undefined! in Module....
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com, 
-	shreeya.patel@collabora.com, broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-New build issue found on mainline/master:
-
----
- "__aeabi_uldivmod" [fs/bcachefs/bcachefs.ko] undefined! in
-Module.symvers (scripts/Makefile.modpost:147)
-[logspec:kbuild,kbuild.modpost]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:f5a0a8e5271e2e77823d140f77a3a7e290b4a2fb
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  e3a854b577cb05ceb77c0eba54bfef98a03278fa
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
 
-Log excerpt:
-=====================================================
-ERROR: modpost: "__aeabi_uldivmod" [fs/bcachefs/bcachefs.ko] undefined!
+Hello Philip,
 
-=====================================================
+Philip Yang <yangp@amd.com> writes:
+
+> On 2025-02-12 17:42, Uwe Kleine-K=C3=B6nig wrote:
+>
+>  #regzbot introduced: 68e599db7a549f010a329515f3508d8a8c3467a4
+> #regzbot monitor: https://bugs.debian.org/1093124
+>
+> Hello,
+>
+> On Thu, Jul 18, 2024 at 05:05:53PM -0400, Philip Yang wrote:
+>
+>  Find user queue rptr, ring buf, eop buffer and cwsr area BOs,=20
+>  and
+> check BOs are mapped on the GPU with correct size and take the=20
+> BO
+> reference.
+>
+> Signed-off-by: Philip Yang <Philip.Yang@amd.com>
+> Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
+>
+>
+> This change made it into v6.12-rc1 as 68e599db7a54 ("drm/amdkfd:
+> Validate user queue buffers"). A Debian user (Dieter Faulbaum,=20
+> on Cc)
+> reported that this change introduced a regression using a gfx803=20
+> device
+> resulting in a HSA exception when e.g. darktable is used. I=20
+> didn't even
+> try to understand the problem, but maybe one of you have an idea=20
+> about
+> the issue?!
+>
+> Try this patch
+>
+> https://lore.kernel.org/all/20250130000412.29812-1-Philip.Yang@amd.com/T/
+
+It seems for me, that your patch isn't applied in the mainline=20
+kernel.
+What do you think, will it once happen?-)
+Is it falling through cracks?
 
 
-# Builds where the incident occurred:
 
-## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67d392abf378f0c5986c9568
-
-
-#kernelci issue maestro:f5a0a8e5271e2e77823d140f77a3a7e290b4a2fb
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+With regards
+Dieter
