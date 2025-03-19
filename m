@@ -1,151 +1,170 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C6E1E8323;
-	Wed, 19 Mar 2025 18:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0553020B812
+	for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 18:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407851; cv=none; b=KoXAIhjxf4m0ujZLV12oEZ3pcPL7apQ9FTm/ieu3PGEjpAUsRTpoDhWHmMxDnFokXe6uH3CSFOvvEEJ7TerRTx8wsMKsOobIbd5dMXSSNdrlTtk6LTpLsdotwf0jYi82zSh/NjoDxcfjfZbJPeztvF5r2aJKNRaqK1qdaaQN6Dk=
+	t=1742410488; cv=none; b=LsbbaGU9qtvpmZZs0Elg4nbh6COAcfWcZpKoRCZ87LnrHpi6lgQVCYRAVQRqWNr0GVbV4HY9+aG1++1oDyqDqWlNU2jER5Min/6zApeIkvvqKquuJ2dC3tfqx1qHpkgiwQTbH8VYSfDpqy1GmsJxFnQPBx7T7r/rwnDflfFtPOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407851; c=relaxed/simple;
-	bh=NRDBPEHgXUupa2eHopjm+NVMZxrKrUuYtULMiQNFxdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FeEQ1qRKn1McVLRz7tWTL0Vc5No7xOZJA8X5lt0S2T9Xhs6PWeS3w/jA2q/ZTIYwDukJjEhcKhrMnwPYUfSG7NoRIWGYs0TzwDbVlxoCRQWjZ9fbYmFA+xISkqCex++nmOZKscDtLekOUj28YDuz+h0RQ0pMX+9KMmAJoxly5Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=by4Ngmdq; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1742410488; c=relaxed/simple;
+	bh=B0FCJ7Zkbt/So+72cIaSgUymVXf4MBJ+iTga2GM4ZQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KceW1dHoFVM2oN3gbAWdr8veZ6mXv+PS0vXeBXuiZd0chGEAeBn2s/Z99M1CEGPzAzRmU25Q5S+XvuJsWNJAj8bngxCArvBwfmlyqqv5PqL6P37qg1cMoPmiUu/xxliDDMoRWWNJ8LFCkyimUkgyT4RaUyjF+gOJw9CsNGlusts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WxdAtBKq; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="by4Ngmdq"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so33018585e9.1;
-        Wed, 19 Mar 2025 11:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxdAtBKq"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7430e27b2so1918666b.3
+        for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 11:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742407846; x=1743012646; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRDBPEHgXUupa2eHopjm+NVMZxrKrUuYtULMiQNFxdw=;
-        b=by4NgmdqYY0WagEdCD5/BKFKqu3NB73BGTzbA1Yi+W9R2tcNtLffH3Sl1/9pCUsv08
-         HD9mBhy+Gza/4NHpQCN1fJP7+pTeR3edLpz1Ia6pWmhfus9CyZy2hnHWvZhJvboOBozl
-         UJP+H3Fjqi8Thur45JDlI9mvx+3SzHJntIDV7gUpramqMMBhWLGq++TuJB9UFp71DLAp
-         aWstCzwn3A/9wpu2RUeMi+R+9SH4ZNik44BWINBlw0X0fxNxzwrRLqK+DqV36x1oT+wH
-         8q2z7D1pS5L5kNdZJhSY162MXEfXxHXB9DSF++x5iIQtqwq58JkiKMZ31qWfsk/vDp2v
-         ZSXQ==
+        d=gmail.com; s=20230601; t=1742410485; x=1743015285; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=h7SA5z+d1gmTrKxq6Z/NWTwhJ4KshIax6c/w3v0Ejqg=;
+        b=WxdAtBKq4f2QWHvvQMXYf2xl/GtasR430FSXPAtc8yzCELdA4wWz4yCI/E/xKk5FBf
+         uzpQr19Fic6NvJH2Y2Epbaz3d6c8mcukX4yWUCcBtUbtAROWuWy5tmvU2L3Wq8DFwR+a
+         agJIDrWuwXdD4ilQtPRNAer0iesuziYX8IJExrYseoVEcm+EFb3iVEBIwwJlnjKeFiHC
+         fCdkhEgSFIP5uf2kLFUO6VD3/W9Uc+EwnYT33HWZ1yYWxwyJBrw8viql9Vkak4zcQj8h
+         AnQ6WheXkPBesPu5UohRuPRjxceC8GXJ+sECCByzBI9DmnBH9ZP+TKKdsboTEFzmkNfY
+         mNsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742407846; x=1743012646;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1742410485; x=1743015285;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NRDBPEHgXUupa2eHopjm+NVMZxrKrUuYtULMiQNFxdw=;
-        b=QlEoEjiPacJijQJv7QEN0A5BxTRqVE9t001K1LTdKfbjtLqG4W2HdFGMdFV3NlbPzf
-         Mkt+KOnVQpouaph962+7yR2FUtD3UzrAHia1DkG4EbgdphWNom1LXtW63Iu1NB9tEh+N
-         hzy9erUVPqMg518wdaT/NU/xXbQ+SA/4rYyrOmj7s0ZDYdxgIjKU2MxXx+oNpvcxgGbF
-         djDYc0fdxLd4raFR6NhnIf3d+1IoWYelpfLy33AUEDANdyhWyQ/3zzBsgbGQm9jjoSGN
-         WPGrI2upzGE0PSa8PSyRehQ3ZP+9jEkTd8U7hjd/w/KJzdMddI/zFCNAFaZ5e5qRe7Bk
-         2hvg==
-X-Forwarded-Encrypted: i=1; AJvYcCU59oBzagu89l4W4drRgacIvV22/WWtncvT9ziqfWRL5iBmmc1khFORMu2rBtDsEloJ4ELUVp2mFWOQ10k=@lists.linux.dev, AJvYcCVnM/GSDKNecRhe91p+3ySGlX1cLZu9xSIeTfM9f1Kv6KqK8IblXIa+45pzFGk7AtSO3Noa9eyV@lists.linux.dev
-X-Gm-Message-State: AOJu0YxUQRvDspZFuFVA8ehP5v5/qnn8Ba7RIdl9H7EwXBSCXrrU05er
-	Wmp8Ir26wZkhRwqQsBSN/Wqmn730hWAolG6iXxRUBHUfDAkeaQ7q
-X-Gm-Gg: ASbGncvrfF4TP2JnV/QNqPodry4TbVk39IVNUY/0UECj3CxowYrYJJGgpszi2KU+Al7
-	0/MorR3SYxPcvl/F5/FU9FO/8NoJ5LiDW6jjgtzGEoTWIDNyHVMeByxVR9WGNValzkewOUoRonA
-	aB4TI10i+lbBiN/PplszzusQKkvi4ycjIAb1hbTZB+D8Z+WT6z4b9FgmPa4keLaR0wZY7Wup4x2
-	xleGQAh7Tx2u1gNDrzAIAc84z7jcjDoB+oSDJ4oQDKBHM6OiiJoCu2eW1W/mjbN23hg40r9FWlR
-	x2i/6Ya5E/orb9Dzj1JyB+Uv4qqeeobLTpZQVWmRsrP/BEpDnOs7Vs7yytYUTc6GhwAhTJ2pnTx
-	GOfxjcq173/jDBT8GBVs1nC/2fbfy5eE=
-X-Google-Smtp-Source: AGHT+IHYFWZdONoLhtaU63p45Xf9+bWz8YoVzEW+0yAcNTLY2gKQG7/aemrHzQVaMzVWmdFrLB4q/A==
-X-Received: by 2002:a05:600c:348e:b0:43c:f16a:641e with SMTP id 5b1f17b1804b1-43d43781690mr33983605e9.6.1742407846139;
-        Wed, 19 Mar 2025 11:10:46 -0700 (PDT)
-Received: from orome (p200300e41f3a9f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3a:9f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8881187sm21267993f8f.41.2025.03.19.11.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 11:10:45 -0700 (PDT)
-Date: Wed, 19 Mar 2025 19:10:43 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, David Airlie <airlied@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Simona Vetter <simona@ffwll.ch>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <jroedel@suse.de>, 
-	Jerry Snitselaar <jsnitsel@redhat.com>, patches@lists.linux.dev, regressions@lists.linux.dev
-Subject: Re: [PATCH rc] gpu: host1x: Do not assume that a NULL domain means
- no DMA IOMMU
-Message-ID: <vn6lqxfqvi6tbxomrvn6ct3ezvegx3y2q4sdwpjkvbehzzs3gl@ctek3pks5y3e>
-References: <0-v1-10dcc8ce3869+3a7-host1x_identity_jgg@nvidia.com>
- <19478509-5007-4a20-9512-b965126b7026@tecnico.ulisboa.pt>
+        bh=h7SA5z+d1gmTrKxq6Z/NWTwhJ4KshIax6c/w3v0Ejqg=;
+        b=xF0N5d5wQY8oMoHXteVaF1EMNywX16QQLPkT+rK6JPxUwmJkkSWlggOriNB/JIPCFX
+         nEq/4Hjc8xG7b2V117MmThChC5MBZJ1L5mjOsbx29HCOBIeE29mYscjwXPX6RebLcFPI
+         l752RI/bkUIT8G6VvtsjV2JmLeNHol1u/VmV4sD0uarFe6sYnkM7r0X6DXmtzP46sw/b
+         ZTlJLii2RsomEAQIQrvxTB1gsnJiovKsNW9cep4zlvAfAna7O5bYk702c9UDTZ4WAPdr
+         79dCk+3s7Yme3tYRQ/4yZ/BErE3NmJvSOSQ3BGTWyfeIIntyGjCqNJMdU5aFwyNoddf2
+         Nigg==
+X-Gm-Message-State: AOJu0Yx5Oi1zur3yBnoMjyASxlfSwYF+k1pDH4UpZmXr2eWsSxJqLWi6
+	UEFo5NMTbBuTY5JsTnxbq8J0V0zJMfr1zaV9mqvcCm7Pq6YbV8zB
+X-Gm-Gg: ASbGnctdgMA2DwvDC1mH4tXJaKPn0WtEs/tlrDQjal4je97jvXxVXP75XR2Ukt8jAJo
+	eWTVvNTmMKsdi47pXK+gBYIx4S4WVoBd7djgm0s1aCmVaoajwCO7pZRjn1X/l8adlc1m6pRdmGp
+	rKpMBggumr1Yn38S0G/QHxkf4hRi/CHWvZg+rjfTD9UzOdDtafIgrrzZJkl+LxoMySWJR1SoOxK
+	phDOokKhAKWqzkG6NrIrLUk0G8+uljXTCvgsoeEoJ96T3aqcQp0PhGG99aYqM+sNMtMz1NkXwgr
+	Oqeh1WfOGOOPyP+XXrFToHFpbg8m4lJCZms3MUKCCq1CPzIPIZfdF/IwfehuAaruzytCzQ==
+X-Google-Smtp-Source: AGHT+IGkkf7oue+S7jXWJ4oNOyt7eHKO0uFR9zbkxHH3o3VlrtXlY+vhJdacujHSWn0whUtBjGjxTg==
+X-Received: by 2002:a17:907:d1f:b0:ac2:9d15:2ec0 with SMTP id a640c23a62f3a-ac3b7dd75d7mr473548666b.27.1742410484988;
+        Wed, 19 Mar 2025 11:54:44 -0700 (PDT)
+Received: from [192.168.2.22] (85-70-151-113.rcd.o2.cz. [85.70.151.113])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147e9ab1sm1059914266b.52.2025.03.19.11.54.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 11:54:44 -0700 (PDT)
+Message-ID: <38b3eb9b-6448-4684-9f47-f4b64e5415cd@gmail.com>
+Date: Wed, 19 Mar 2025 19:54:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3vs3sblqwnplgzuh"
-Content-Disposition: inline
-In-Reply-To: <19478509-5007-4a20-9512-b965126b7026@tecnico.ulisboa.pt>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: cleanup and fix batch completion adding conditions
+To: Jens Axboe <axboe@kernel.dk>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Ondrej Kozina <okozina@redhat.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ Alan Adamson <alan.adamson@oracle.com>, stable@vger.kernel.org
+References: <20575f0a-656e-4bb3-9d82-dec6c7e3a35c@kernel.dk>
+ <71bbd596-a3a0-4e37-baae-19f02c6997be@redhat.com>
+ <459b9c3b-0d5e-4797-86f7-4237406608ff@kernel.dk>
+ <535ff54b-5c49-42f0-af5f-020169b5da79@redhat.com>
+ <d84313c6-3dd1-446d-910d-e7f9f2e7d53c@gmail.com>
+ <3irisb67klhv2xu3w5digf2tavrbnn2umthcgkbgrpfs3effnd@f3btiynduuox>
+ <cdc19799-fc72-4581-a942-adf411b19a94@gmail.com>
+ <625382fc-8503-4e19-b571-6245fb4d1317@kernel.dk>
+Content-Language: en-US
+From: Milan Broz <gmazyland@gmail.com>
+Autocrypt: addr=gmazyland@gmail.com; keydata=
+ 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
+In-Reply-To: <625382fc-8503-4e19-b571-6245fb4d1317@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 3/11/25 4:00 PM, Jens Axboe wrote:
+> On 3/11/25 8:59 AM, Milan Broz wrote:
+>> On 3/11/25 4:03 AM, Shinichiro Kawasaki wrote:
+>>>
+>>> I created fix candidate patches to address the blktests nvme/039 failure [1].
+>>> This may work for the failures Ondrej and Milan observe too, hopefully.
+>>
+>> Hi,
+>>
+>> I quickly tried to run the test with todays' mainline git and mentioned two patches:
+>>    https://lkml.kernel.org/linux-block/20250311024144.1762333-2-shinichiro.kawasaki@wdc.com/
+>>    https://lkml.kernel.org/linux-block/20250311024144.1762333-3-shinichiro.kawasaki@wdc.com/
+>> and it looks like our SED Opal tests are fixed, no errors or warnings, thanks!
+>>
+>>> Jens, Alan, could you take a look in the patches and see if they make sense?
+>>
+>> Please, fix it before the 6.14 final, this could cause serious data corruption, at least
+>> on systems using SED Opal drives.
+> 
+> Fix is already queued up.
 
---3vs3sblqwnplgzuh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH rc] gpu: host1x: Do not assume that a NULL domain means
- no DMA IOMMU
-MIME-Version: 1.0
+Hi Jens,
 
-On Mon, Mar 10, 2025 at 12:34:35PM +0000, Diogo Ivo wrote:
->=20
-> Hello again,
->=20
-> On 2/4/25 7:18 PM, Jason Gunthorpe wrote:
-> > Previously with tegra-smmu, even with CONFIG_IOMMU_DMA, the default dom=
-ain
-> > could have been left as NULL. The NULL domain is specially recognized by
-> > host1x_iommu_attach() as meaning it is not the DMA domain and
-> > should be replaced with the special shared domain.
-> >=20
-> > This happened prior to the below commit because tegra-smmu was using the
-> > NULL domain to mean IDENTITY.
-> >=20
-> > Now that the domain is properly labled the test in DRM doesn't see NULL.
-> > Check for IDENTITY as well to enable the special domains.
-> >=20
-> > This is the same issue and basic fix as seen in
-> > commit fae6e669cdc5 ("drm/tegra: Do not assume that a NULL domain means=
- no
-> > DMA IOMMU").
-> >=20
-> > Fixes: c8cc2655cc6c ("iommu/tegra-smmu: Implement an IDENTITY domain")
-> > Reported-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> > Closes: https://lore.kernel.org/all/c6a6f114-3acd-4d56-a13b-b88978e927d=
-c@tecnico.ulisboa.pt/
-> > Tested-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
->=20
-> Any news on this patch or any other solutions for this regression? It's
-> not great if this falls through the cracks, especially when there is a
-> solution for the problem.
+it seems the bug was "successfully" backported to stable 6.13.4+ and I do not see any fix
+in the stable queue yet.
 
-Looks like I had marked this as applied by mistake. Thanks for the
-reminder, it's applied now.
+We were hit by it today, as all locked ranges for Opal devices now returning empty data
+instead of failing read.
 
-Thierry
+Please could you check what need to be backported to 6.13 stable?
 
---3vs3sblqwnplgzuh
-Content-Type: application/pgp-signature; name="signature.asc"
+IMO these patches should be backported:
+   https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e5c2bcc0cd47321d78bb4e865d7857304139f95d
+   https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9bce6b5f8987678b9c6c1fe433af6b5fe41feadc
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Milan
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfbCKMACgkQ3SOs138+
-s6Gc0A//TrzbaprQO4xc8Hgq6tcEIg3KdqfdbBdYgELgL6bY+60NkY0cm5wcsUaG
-he5y3ZfuZLUBjV2rlhJAuyOdpScrjekO0lB12wmnTKypOsp/ugFDTgDnrdgIgQU9
-Brs4DDAVu9AB/pjN8jHnQ0wOYpR5yXW69ZKGZuu+FAlscC8hVQ2SoyAUP9WDBcw5
-cy2E5pZuVs7ti6MhF4MaL1hkFz4QjPnlupAxwBEMslsf/6vzJeTwVwAB9wq6aoj7
-43NFJ2U7VLPMBQA0DfdPMI50gJGeAkKfBWuQMIXwRsH2XUT93uzXrJr0qKDWROUA
-/s8z6kuKi1jnUZ+gbUUZauQyHFF9OT8sJAND9Tx2bnDUncfmj7ZSrP4MU0F6uYJV
-PU13U30Dm76w6IV0X+zNfDUyRUoapVBAbpFRtlKX8yn+mGrZy5vMJdGiu+AUZJBS
-hbuEAg5qW+DDcwwJsrjMpOTfIPAEWJ6Kxm2t5Qr/Jtd1WpiCmQD6pDrxud24yEBt
-DQ897YMsOP7DT5UJG8B7IXFL95OTyDYTXcSFK8D802Il1tBfjh1jZnoteva8VhHd
-wI0bHAyWDdND+KrX8WbtLeDzCc97vw9yJ4RfI7ZI9G2waRmQBdpWXTv1K8lt5gDy
-03jmd6jX8CfULyXueikrm5+Br92M9afX66J+ubSq1o2QPn9R+UU=
-=aAbR
------END PGP SIGNATURE-----
-
---3vs3sblqwnplgzuh--
