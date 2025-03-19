@@ -1,64 +1,63 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0553020B812
-	for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 18:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6C520E704
+	for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 19:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742410488; cv=none; b=LsbbaGU9qtvpmZZs0Elg4nbh6COAcfWcZpKoRCZ87LnrHpi6lgQVCYRAVQRqWNr0GVbV4HY9+aG1++1oDyqDqWlNU2jER5Min/6zApeIkvvqKquuJ2dC3tfqx1qHpkgiwQTbH8VYSfDpqy1GmsJxFnQPBx7T7r/rwnDflfFtPOU=
+	t=1742413138; cv=none; b=mtd/lWKQogZInWUj4rj1aiOnrmEIZcf+YxkRtxwn5TyHowrO+lk0LfPisc+Ah4LYN90DKR9TF5ujTWME/H0JpAQ8UOibMLcxki7I3dmeAB7VVbYlV/2EWB5z7AF2FcZ4esz68IBgzm8HD8lSgEnei73i0R9EMgmZP6xpT+iASGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742410488; c=relaxed/simple;
-	bh=B0FCJ7Zkbt/So+72cIaSgUymVXf4MBJ+iTga2GM4ZQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KceW1dHoFVM2oN3gbAWdr8veZ6mXv+PS0vXeBXuiZd0chGEAeBn2s/Z99M1CEGPzAzRmU25Q5S+XvuJsWNJAj8bngxCArvBwfmlyqqv5PqL6P37qg1cMoPmiUu/xxliDDMoRWWNJ8LFCkyimUkgyT4RaUyjF+gOJw9CsNGlusts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WxdAtBKq; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1742413138; c=relaxed/simple;
+	bh=1y3R7b0DmD48U1jUhf7ZVBbYaQ7UOT8lO8Rx6BwuKDI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=j+FNyGHf/gNEZPNxYfdAkMo+vuMBic18qEjoTKe+R9lqyHeiUKMxPJckZiCINckqCX9w91O5CzhErRhSQXADr3v3WC+39VRMPg2dWJlD6ZMGiPvJD1Mvw+0rLwFuRNKm/Kr95NKlo/0CpiekmK1ru4hevRKQ8HPfsatdRPFbWeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2yXVeV8; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxdAtBKq"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab7430e27b2so1918666b.3
-        for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 11:54:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2yXVeV8"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43690d4605dso115705e9.0
+        for <regressions@lists.linux.dev>; Wed, 19 Mar 2025 12:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742410485; x=1743015285; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=h7SA5z+d1gmTrKxq6Z/NWTwhJ4KshIax6c/w3v0Ejqg=;
-        b=WxdAtBKq4f2QWHvvQMXYf2xl/GtasR430FSXPAtc8yzCELdA4wWz4yCI/E/xKk5FBf
-         uzpQr19Fic6NvJH2Y2Epbaz3d6c8mcukX4yWUCcBtUbtAROWuWy5tmvU2L3Wq8DFwR+a
-         agJIDrWuwXdD4ilQtPRNAer0iesuziYX8IJExrYseoVEcm+EFb3iVEBIwwJlnjKeFiHC
-         fCdkhEgSFIP5uf2kLFUO6VD3/W9Uc+EwnYT33HWZ1yYWxwyJBrw8viql9Vkak4zcQj8h
-         AnQ6WheXkPBesPu5UohRuPRjxceC8GXJ+sECCByzBI9DmnBH9ZP+TKKdsboTEFzmkNfY
-         mNsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742410485; x=1743015285;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742413135; x=1743017935; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h7SA5z+d1gmTrKxq6Z/NWTwhJ4KshIax6c/w3v0Ejqg=;
-        b=xF0N5d5wQY8oMoHXteVaF1EMNywX16QQLPkT+rK6JPxUwmJkkSWlggOriNB/JIPCFX
-         nEq/4Hjc8xG7b2V117MmThChC5MBZJ1L5mjOsbx29HCOBIeE29mYscjwXPX6RebLcFPI
-         l752RI/bkUIT8G6VvtsjV2JmLeNHol1u/VmV4sD0uarFe6sYnkM7r0X6DXmtzP46sw/b
-         ZTlJLii2RsomEAQIQrvxTB1gsnJiovKsNW9cep4zlvAfAna7O5bYk702c9UDTZ4WAPdr
-         79dCk+3s7Yme3tYRQ/4yZ/BErE3NmJvSOSQ3BGTWyfeIIntyGjCqNJMdU5aFwyNoddf2
-         Nigg==
-X-Gm-Message-State: AOJu0Yx5Oi1zur3yBnoMjyASxlfSwYF+k1pDH4UpZmXr2eWsSxJqLWi6
-	UEFo5NMTbBuTY5JsTnxbq8J0V0zJMfr1zaV9mqvcCm7Pq6YbV8zB
-X-Gm-Gg: ASbGnctdgMA2DwvDC1mH4tXJaKPn0WtEs/tlrDQjal4je97jvXxVXP75XR2Ukt8jAJo
-	eWTVvNTmMKsdi47pXK+gBYIx4S4WVoBd7djgm0s1aCmVaoajwCO7pZRjn1X/l8adlc1m6pRdmGp
-	rKpMBggumr1Yn38S0G/QHxkf4hRi/CHWvZg+rjfTD9UzOdDtafIgrrzZJkl+LxoMySWJR1SoOxK
-	phDOokKhAKWqzkG6NrIrLUk0G8+uljXTCvgsoeEoJ96T3aqcQp0PhGG99aYqM+sNMtMz1NkXwgr
-	Oqeh1WfOGOOPyP+XXrFToHFpbg8m4lJCZms3MUKCCq1CPzIPIZfdF/IwfehuAaruzytCzQ==
-X-Google-Smtp-Source: AGHT+IGkkf7oue+S7jXWJ4oNOyt7eHKO0uFR9zbkxHH3o3VlrtXlY+vhJdacujHSWn0whUtBjGjxTg==
-X-Received: by 2002:a17:907:d1f:b0:ac2:9d15:2ec0 with SMTP id a640c23a62f3a-ac3b7dd75d7mr473548666b.27.1742410484988;
-        Wed, 19 Mar 2025 11:54:44 -0700 (PDT)
-Received: from [192.168.2.22] (85-70-151-113.rcd.o2.cz. [85.70.151.113])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147e9ab1sm1059914266b.52.2025.03.19.11.54.44
+        bh=EqMsXA2Pn/x09AFHqyaJaU4cTDRogMIdyWPLzphrlQQ=;
+        b=j2yXVeV8KG7qqkBk7rHTGrkcBWkSO8gxqrNrs3G/UKnnBnklrtsQtchcBVP1bKm56Y
+         ntZYctLx3oBEECTw2Y6D/PepFthVINqAIjGNyrTV3LqyeXNY/o5ALNiZ6N+yJvdeITd7
+         x8QJBH20vVxo6/GxJdjxlSYIEOrhk3ZydanVuP7Sc1yAZYPTYPD1GIKQ2R+PNc9hsSVK
+         DJOLuMO/9IsoEB5bbBmRlBHyRk6m/JuTykTjwgHBCVMuIjV30rM+QKqE3yssECe7UcH/
+         juDj/YbfjSsWqT5VbPMNy1S9iYJ1VHs+c44NRCLhHnDQ1QKGYGuy8BgNHxfd6ncTDWE6
+         wbkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742413135; x=1743017935;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EqMsXA2Pn/x09AFHqyaJaU4cTDRogMIdyWPLzphrlQQ=;
+        b=pXm5YsBR6BSWQT9eM4kPY/CrB6q4Jn1X8AlSPxAO/alI5eCDS7FKdQLxkRMnf+dN7N
+         TZl8LkQ6Krgpmi+qskUVyanepgTIUTsuCRB/x25+yucjqZB6tuGY2IpEb+H4NawZfik8
+         LJ/BqyW3InlubCs781sT6qcPA65GJm9EGdZGjPvYIrLBuzwP3Fu/hqGljDq14uXOJabz
+         oNGUmVVUsRbumOlinYuQxhlx04rRVQNoCyMFP4pzQMCbPOvkN4ib3DtO/6k3A/XoyKlO
+         awdfmjBeGOzdV5lhcQyrb31ptMQoo9yYcqKxJPZJpjrOgJmXWdF6+q1xBP0+Ykj4/CVC
+         P+Vw==
+X-Gm-Message-State: AOJu0YygxUGgZMBkdz+oPplabUGukr/dGSAiIxConlWEs4DftvBzLH0O
+	sUWZOQYVOS+Qley1rKCNdMR6bAuEE1nvlA/ld5nHVED5U52iU7u3ngs+Pw==
+X-Gm-Gg: ASbGnctWqDB+ahkMwJm1ZbBTvHUG7jzPIKJCELo8cV9eAb6er3iKBxQbeX3knMuWXAi
+	60VTNUDjhaa8bUdELB6WSulLBld9mh/TsESoRtf+CWb4x9KuD3k7t+CUulO694wZmxjBx85eV3e
+	K14G1LZILIYjvX/JYh8Aw6V1WE6YZpbn2AFfVfeVTnDW5goKP5pzwuYq6tedYW4UBlCOn2zKdPZ
+	XzzXli/upv3bExKMHjBTmSNH7XIywMqUerIjdV+alQ7tMIqILhyBYDeNOBZSyq/YzGgDh7E7TOp
+	mv+lg/RSRtGiGZRzgOqmYV7PKbJ7hN1fRmUtJt2EoSyI+63J4hZfRX4TV1oGA9V2aW1qCRR9ZRv
+	ecGKqMO0ABIbx6XayItzE/r6FitoP5PPmPlstmQ==
+X-Google-Smtp-Source: AGHT+IFjNhON3VzKjJ/yRrIkI3EbjS7s8oGQsthAMacFWVLycgU9m3c/H7UFW0Bx1krt2a6Y93udgw==
+X-Received: by 2002:a5d:6dac:0:b0:391:4189:d28d with SMTP id ffacd0b85a97d-39973af6867mr3680202f8f.34.1742413134541;
+        Wed, 19 Mar 2025 12:38:54 -0700 (PDT)
+Received: from [192.168.10.160] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f47c60sm26877435e9.13.2025.03.19.12.38.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 11:54:44 -0700 (PDT)
-Message-ID: <38b3eb9b-6448-4684-9f47-f4b64e5415cd@gmail.com>
-Date: Wed, 19 Mar 2025 19:54:43 +0100
+        Wed, 19 Mar 2025 12:38:53 -0700 (PDT)
+Message-ID: <415e7c31-1e8d-499b-911e-33569c29ebe0@gmail.com>
+Date: Wed, 19 Mar 2025 20:38:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -66,105 +65,39 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: cleanup and fix batch completion adding conditions
-To: Jens Axboe <axboe@kernel.dk>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Ondrej Kozina <okozina@redhat.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- Alan Adamson <alan.adamson@oracle.com>, stable@vger.kernel.org
-References: <20575f0a-656e-4bb3-9d82-dec6c7e3a35c@kernel.dk>
- <71bbd596-a3a0-4e37-baae-19f02c6997be@redhat.com>
- <459b9c3b-0d5e-4797-86f7-4237406608ff@kernel.dk>
- <535ff54b-5c49-42f0-af5f-020169b5da79@redhat.com>
- <d84313c6-3dd1-446d-910d-e7f9f2e7d53c@gmail.com>
- <3irisb67klhv2xu3w5digf2tavrbnn2umthcgkbgrpfs3effnd@f3btiynduuox>
- <cdc19799-fc72-4581-a942-adf411b19a94@gmail.com>
- <625382fc-8503-4e19-b571-6245fb4d1317@kernel.dk>
-Content-Language: en-US
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- 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
-In-Reply-To: <625382fc-8503-4e19-b571-6245fb4d1317@kernel.dk>
+Content-Language: it, en-US-large
+To: stable@vger.kernel.org
+Cc: Linux Regressions <regressions@lists.linux.dev>
+From: Sergio Callegari <sergio.callegari@gmail.com>
+Subject: Regression: mt7921e unable to change power state from d3cold to d0 -
+ 6.12.x broken, past LTS 6.6.x works
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 3/11/25 4:00 PM, Jens Axboe wrote:
-> On 3/11/25 8:59 AM, Milan Broz wrote:
->> On 3/11/25 4:03 AM, Shinichiro Kawasaki wrote:
->>>
->>> I created fix candidate patches to address the blktests nvme/039 failure [1].
->>> This may work for the failures Ondrej and Milan observe too, hopefully.
->>
->> Hi,
->>
->> I quickly tried to run the test with todays' mainline git and mentioned two patches:
->>    https://lkml.kernel.org/linux-block/20250311024144.1762333-2-shinichiro.kawasaki@wdc.com/
->>    https://lkml.kernel.org/linux-block/20250311024144.1762333-3-shinichiro.kawasaki@wdc.com/
->> and it looks like our SED Opal tests are fixed, no errors or warnings, thanks!
->>
->>> Jens, Alan, could you take a look in the patches and see if they make sense?
->>
->> Please, fix it before the 6.14 final, this could cause serious data corruption, at least
->> on systems using SED Opal drives.
-> 
-> Fix is already queued up.
+There is a nasty regression wrt mt7921e in the last LTS series (6.12). 
+If your computer crashes or fails to get out of hibernation, then at the 
+next boot the mt7921e wifi does not work, with dmesg reporting that it 
+is unable to change power state from d3cold to d0.
 
-Hi Jens,
+The issue is nasty, because rebooting won't help.
 
-it seems the bug was "successfully" backported to stable 6.13.4+ and I do not see any fix
-in the stable queue yet.
+The only solution that I have found to the issue is booting a 6.6 
+kernel. With that the wife gets alive again. If, at this point, you boot 
+into 6.12, everything seems to be fine again, until a boot fails and 
+from that moment on you are without wifi.
 
-We were hit by it today, as all locked ranges for Opal devices now returning empty data
-instead of failing read.
+Working around the issue is not very discoverable. On my machine not 
+even a hardware reset (40s of power off button pressed) helped alone, 
+without going through the 6.6 kernel boot.
 
-Please could you check what need to be backported to 6.13 stable?
+I think the regression was introduced with 6.12 and I remember having no 
+issues with previous kernels, but cannot be 100% sure.
 
-IMO these patches should be backported:
-   https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e5c2bcc0cd47321d78bb4e865d7857304139f95d
-   https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9bce6b5f8987678b9c6c1fe433af6b5fe41feadc
+Similarly, I do not know if the bug is with the wifi card driver itself 
+or with something related to PM or PCIe.
 
-Thanks,
-Milan
+The machine on which I am experiencing the issue is an Asus ROG 14 
+laptop (2022 edition), with AMD CPU and GPU.
 
+Thanks for the attention,
+Sergio
