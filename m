@@ -1,164 +1,184 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6E91C5D7E
-	for <regressions@lists.linux.dev>; Thu, 20 Mar 2025 10:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1AF224247
+	for <regressions@lists.linux.dev>; Thu, 20 Mar 2025 14:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742465436; cv=none; b=PMkxVLep9eqbJVjdaanUQJbl3Ut3qu5qaPqRpX//PRNKI+SMMQPmbzvmRMOm3F8ox8+430LRaTnG9RmPc3LchMiOY2JHyFNX496Z5LaIpA6arx8g85GfwP3TqtlwkMlwoHNBaBTfeuW508IdbEAFfSzv63d7DpfmYylc3ySwZnA=
+	t=1742480514; cv=none; b=UT1nYK1kuZbpAIaKMdzAxZdX7ttCP6iYSYsUlb/+r2C2GlbUq/tNDxP22ndy5kuoaG7XDa2671S77tCY5vpDyNMcYhBg29GA5zI/agp6eDefoQml0IgwL+CzPJdi8/ke0eU2Np5Esc9Zz7n0cQu2P0nruWtNomxokk+ijqhiA8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742465436; c=relaxed/simple;
-	bh=9i4rid+B0a9M1As4dYtLsRM2QicGrXaJS0sxCKnzXNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7Zib2vL039JiPIQdZo9Ym09bWfUGN0c120LdHR+uymBeF/3iCeA/EZbqsxDPwBfPjzWrgakTlLgWycTak5e+dzvf/IP0mh8sL+XponS0lMCY9E2K4F9f1GMWpPeRjaU8z00n8YcNzdkTYYR3FU2On1UbnW+XdhPhm42FpVhP6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=z9NVHiNN; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1742480514; c=relaxed/simple;
+	bh=HWKsylmiW+BtMJkGcvcEyJY9de3c+e5FoR9mNHAPy0U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oebNduOCBmOSCKf4gutC2n0eo0fLihBgvTuux/mffuf6W4/AD5gttMsgxfY761Z2W5fSVGWCzfWUZwFhTabX0TE9W1P+UTOhhfAbqXRVQT+a0QoqLZYeWepq8tx9ZrV1LpRXeEC/w/1i5gyms0tOvAXZcViPeexqW0BrpLUMBBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXlVs/7y; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="z9NVHiNN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1742465426; x=1743070226; i=christian@heusel.eu;
-	bh=O259WitRMnPNf9M/mfci2FGhbtrEcN/0vuq9437Gs1s=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=z9NVHiNNvl56hXy3du3DZBfk0pMh9tOrzWw6g59le2nWp1MpPcNxR4m8bVdK1guS
-	 +DvGWuqNTeUzdrewQQuYobTszB/lDsXiU+d/wcW96t9pvYn+ZmWc1P4RdvJXgnZSb
-	 67AXV7OaXSGRdep0RYdMN/DioBknOwuoi2j4A/hDYZHMgcwj8arq+NAw/IQJ9k9/z
-	 cPtT3OwJtSP+sRNpqP4McrHnFqkJ8y5vJALP3AQ22jBqG3DZ+/V0ebO+E6WsXa9CW
-	 /tAxmquufoEDVbakR88ldCS60KFwEzhoAtAPeRM7zNzOOMwRMi5GcBppUV3Qovg7X
-	 8nqtYg6u9fZC1zHjWg==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MGhi0-1tz2XF401K-0060yv; Thu, 20
- Mar 2025 11:05:04 +0100
-Date: Thu, 20 Mar 2025 11:05:03 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Sergio Callegari <sergio.callegari@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: Regression: mt7921e unable to change power state from d3cold to
- d0 - 6.12.x broken, past LTS 6.6.x works
-Message-ID: <38658f1a-216b-470d-99a2-13d66f075c77@heusel.eu>
-References: <415e7c31-1e8d-499b-911e-33569c29ebe0@gmail.com>
- <2025031923-rocklike-unbitten-9e90@gregkh>
- <5e260035-1f1b-4444-b3b8-1b5757e5ed08@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXlVs/7y"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22409077c06so21099105ad.1
+        for <regressions@lists.linux.dev>; Thu, 20 Mar 2025 07:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742480512; x=1743085312; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zuntvFFwYkgUpcM/9nWOVbv7/IiYbYMm3ul7xyRax3Y=;
+        b=BXlVs/7yoNQ/AW9lELw5YG6+/8RQVhIiZkFuvAYJYVtJOzaGWIYOvlWQpNC3NUyT1s
+         5a3dc6KUl7X0cp02OMNtdzC0WOts0PlTJueUvSgPTZAUZevRkuq1QD4Izc5k6wI47wp2
+         SttLYvLam26OatxhwVGfq5mEwVnjuPG0qY31ZNFdaETC6A08IzIn7uG6JrUg9vSJS7sp
+         Y/pXVpsZYEY+ZqHZMpqWFbggdAn5FT2wtxqKgOQKQVFLtklzeHZziqIeVuIp2dra5Xqp
+         rswSR87gis0HLdpYoB6P6ACguxmP4coB5gXCu15CIzPxpYp9SMNDySnpTM8Qd/I41CtF
+         zr5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742480512; x=1743085312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zuntvFFwYkgUpcM/9nWOVbv7/IiYbYMm3ul7xyRax3Y=;
+        b=IDFx+UmEYuos2HA9JK0rmPVwc/rJyl1CW6R2giMXqsEmUYpIO1jwxVQSxHLQd3XtVL
+         MNo0KNcW/xTcfYmp6ga7H8CHsn81ZIbtuH9rlzKhWHWsPhVVxpdeFR3C+phtMFw/9pGC
+         8P6m9uH8pJ203tGbGqdnCT8iQN1t/ZsJH9xycoCqyDuSywGEFYTCOWwbcoiMNBFB/VIZ
+         K8mzEJvzHajaGPulM8obF04HYIKAmcknN4V6nTisgBnKskw26jpYT04m7Y7+88sEsmcb
+         S8+NNAiTEuIohaildeD3xpGK8wyT0NjPIoKJEkmL3RAE95wUVyz7D5+8wVBR8g9Sibir
+         jEIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUubSOCQjrBDiKFblM/a5BLyu7vGILrBGh3azZpaHRHP6D6zv2m0KoO6HXLSbfnF/OIzddbw4NIwNSn+A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2lSv167Xz+uG47ySzbb5DLczcWZkVvOFbYue3pqIPsbhiRXV4
+	PInQQ0j35Pw2DxgW9zviUKS2P3Ty3deEN1AcZLwHGwcFjRjCZgjSBK5PyovKzxF+hmeYBWZBwT9
+	+4+fHX70Va13JNwJ8OYDHki37aAo=
+X-Gm-Gg: ASbGnct0QGIc31ViX8kMLyxcYJmCTvlp5MRr3QdTyEGxkbPqA6TX24gvB/Efrcl0Hpj
+	KjmAndL1c0/V9pMx62lxNdqMpekz60mWHz/jb99fKEHE0Li6Am0wEpPTe/i5wC1G67XUFjso1Ee
+	6OjWu15Ermj7319drLaBJxHHGD
+X-Google-Smtp-Source: AGHT+IEmYnUjCOXTNebABlXp5ns/0/fK6wHTVWN79SrrFblEXcoUnIgnSXUvB8rlNMcc/HVHPlN1hjo8fPoqtb++oe0=
+X-Received: by 2002:a17:902:f711:b0:223:28a8:6101 with SMTP id
+ d9443c01a7336-2265ee1ce6amr66594665ad.29.1742480511710; Thu, 20 Mar 2025
+ 07:21:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uxkrpkjabcczwb7k"
-Content-Disposition: inline
-In-Reply-To: <5e260035-1f1b-4444-b3b8-1b5757e5ed08@gmail.com>
-X-Provags-ID: V03:K1:gOaDmC79hKQhWdK0xwi3mecG6DIwVzHNHUKXV/828rbHLlLDhwk
- 2C9O3l/3vA7hScsrZKQV/QOD6IAYwZ6s/8KFCPd81QL0lS84+k7tpTRkl2WMyTZV0m5t2Do
- SxW2oZy8MqT9BzCMSLtaXojK20sXtQxOoylS19TOGqSwuOwiBvVjtmp2LNKTwblrk+v/QUN
- cta7XB/kJYNA682mKC2Ng==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AZwipQarY9o=;kXMwyNnskN8p8nLO6fshtNvLaTG
- l/Hq6dwv4z7MnXvKgL8a5E/tq5BdYCTZcacnpMdAjzZo0nr+bi0SepO3jgGg4vV5o62UcfOYw
- Dlk2piU/VWrTgGt7uHQlsGz+i07rjfpWifkZ9lCrQhuZpY/c+9gFsoqKVyjLuV2MCKBUbuZaT
- uucxlapnPnyRGfwVtAzEZTm5SCJ2TGlR3dTLsy5zE0O5oUkX151p2mGUn9pwRqrrL7TcaJpHl
- rnLKOyKZGivFII15LRgxVwTsTRPhewC+CTVAlnNHjeIE1LwTODuc+w1hYmh+RxwkXxgqBcsgI
- VCEA6cTxQYGe3fUXLdqUNADbpexReUVVzOAePRDYB78V1dy764yIfn1tSre2uPtuDz2Q6VAIK
- YvRNZ7/AirtM9roHhv26ZfF5zQBrBV3lpa+ReeMeDVLfwjDEuzrV7bzsx6QE2D/0x4xBbDm5E
- 7w9YHu9ipwdKwRv8O90mmPFStyUwmxMrOWjE75EKCKuJVm1C87crh5nOv41YSog/Xv4REraH7
- MiGZVrmtVxO5DRSnGpQrrujWnOTAMNen62E1OGurNbMtMshclECZMhRYgNnrtC8xcqZaymZhy
- nwOUIe7HH3omcyX4q/cBwPKdxOhrl20hfC7YH3GsSEml+Jp6JSgiFbRdfbq7AlfRjLLlmuDtU
- K1XSNfDl44ucZkECA7BrEFyfWMj+/JMvzUFPuw4JNNTPWb8sVF2jJwCIK0xXAm4jaw4EH3hXD
- YHgxP3H9mPInq3dAmhqqHVU2rqS++OIFs6IQY9z76qVc2A7RmyaL5+XGiFF/KT8vELBQgf1EB
- tNrARH3qryME9sft1ulULXVkHeYqBS5p/40zdaHYvWyCTTiVv/DxgdjTL74LmfaGwBN3KBLVc
- n/3i29LLVwRae1FroKMrmQIhgWT/M5cyjOH+Sm728F+Rm8s/WefugJRcDmw8uxHpknttrr8SD
- K8hFmY8ukXBGwiwm3VKr7dIyGNIWRm0sAPqiVz6+xaqEkZqQ0LpbpkULTJaR3sW+sX24A+O0x
- 1OHgreiemxVhADWEAQ0E3Nqf7yoaQWAHRMdYZMAY8FEgrUcdRix/T8M893Xra+clLsYrJAyR2
- Sm4LXEhlj3KJrpKQ8q/LOFbPt6zoyRlYMNckeqsjOuvYxtRrysG97f2f7loOpRtTLqHMGMOr1
- 3aAdwf1EPGc1qDpMygn4m30g8NT/kG6CIpz8VrndpuPWH/AKgCnTDpPz2CLuSXBbtIfxqxiXm
- CL/mNPKHZRfExQHGaQYJ+a2MnLwhGr8AvLP8Z6GDdUGY5oV7TabjkdH04a9CsKpyO/VpgfPP8
- DzR2SbfLzTliAGe+2SyfBV47GVD4G65JLmQpcw7yzkg41muuiIDXOLyPjyc+ZUoB+77IdS3vx
- OjneHYjoR2jYe6WLfVhOKuplCZ6zav2lu/o/E=
-
-
---uxkrpkjabcczwb7k
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <CAG8fp8S92hXFxMKQtMBkGqk1sWGu7pdHYDowsYbmurt0BGjfww@mail.gmail.com>
+ <20250314084818.2826-1-akihiro.suda.cz@hco.ntt.co.jp> <Z9s5lam2QzWCOOKi@gmail.com>
+In-Reply-To: <Z9s5lam2QzWCOOKi@gmail.com>
+From: Akihiro Suda <suda.kyoto@gmail.com>
+Date: Thu, 20 Mar 2025 23:21:40 +0900
+X-Gm-Features: AQ5f1JoCemEwjjJ1t8QAlfRbPd3hmNLLAzSmBA2xrOQAsbuzCMbLQ9EipLAQ1bc
+Message-ID: <CAG8fp8RgxFz2pwv3BXJ=dMWxoLSKjBL8PN0N8kWqkDOCB2_ivg@mail.gmail.com>
+Subject: Re: [PATCH] x86/pkeys: Disable PKU when XFEATURE_PKRU is missing
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Akihiro Suda <suda.gitsendemail@gmail.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev, 
+	aruna.ramakrishna@oracle.com, tglx@linutronix.de, 
+	Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: Regression: mt7921e unable to change power state from d3cold to
- d0 - 6.12.x broken, past LTS 6.6.x works
-MIME-Version: 1.0
 
-Hey Sergio,
+Thanks Ingo, but we may have to reconsider whether cpu_has_xfeatures
+works in this place
+https://lore.kernel.org/all/1b8745e0-ae80-4add-b015-affdaa69b369@intel.com/
 
-On 25/03/20 08:49AM, Sergio Callegari wrote:
-> Might be able to test on the distro built kernels that basically trace the
-> releases and stable point releases. This should start helping bracketing =
-the
-> problem a bit better as a starter. But it is going to take a lot of time,
-> since the issue happens when the machine fails to get out of hibernation,
-> that is not always, and obvioulsy I need to try avoiding this situation as
-> much as possible.
+The current code might be accidentally disabling PKU on other
+PKU-compatible environments?
 
-Which linux distro are you using? If you're on Arch Linux I can provide
-you with prebuilt images for the bisection :)
-
->=20
-> Incidentally, the machine seems to hibernate-resume just fine. It is when=
- I
-> suspend-then-hibernate that I get the failures.
->=20
-> Before contacting the network driver authors, I just wanted to query whet=
-her
-> the issue is likely in it or in the power-management or pcie subsystems.
->=20
+2025=E5=B9=B43=E6=9C=8820=E6=97=A5(=E6=9C=A8) 6:39 Ingo Molnar <mingo@kerne=
+l.org>:
+>
+>
+> * Akihiro Suda <suda.gitsendemail@gmail.com> wrote:
+>
+> > Even when X86_FEATURE_PKU and X86_FEATURE_OSPKE are available,
+> > XFEATURE_PKRU can be missing.
+> > In such a case, pkeys has to be disabled to avoid hanging up.
+> >
+> >   WARNING: CPU: 0 PID: 1 at arch/x86/kernel/fpu/xstate.c:1003 get_xsave=
+_addr_user+0x28/0x40
+> >   (...)
+> >   Call Trace:
+> >    <TASK>
+> >    ? get_xsave_addr_user+0x28/0x40
+> >    ? __warn.cold+0x8e/0xea
+> >    ? get_xsave_addr_user+0x28/0x40
+> >    ? report_bug+0xff/0x140
+> >    ? handle_bug+0x3b/0x70
+> >    ? exc_invalid_op+0x17/0x70
+> >    ? asm_exc_invalid_op+0x1a/0x20
+> >    ? get_xsave_addr_user+0x28/0x40
+> >    copy_fpstate_to_sigframe+0x1be/0x380
+> >    ? __put_user_8+0x11/0x20
+> >    get_sigframe+0xf1/0x280
+> >    x64_setup_rt_frame+0x67/0x2c0
+> >    arch_do_signal_or_restart+0x1b3/0x240
+> >    syscall_exit_to_user_mode+0xb0/0x130
+> >    do_syscall_64+0xab/0x1a0
+> >    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > This fix is known to be needed on Apple Virtualization.
+> > Tested with macOS 13.5.2 running on MacBook Pro 2020 with
+> > Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz.
+> >
+> > Fixes: 70044df250d0 ("x86/pkeys: Update PKRU to enable all pkeys before=
+ XSAVE")
+> > Link: https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38=
+rfrF7rRHh-gFKqeS0gxY6Q@mail.gmail.com/T/#u
+> > Link: https://github.com/lima-vm/lima/issues/3334
+> >
+> > Signed-off-by: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
+> > ---
+> >  arch/x86/kernel/cpu/common.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.=
+c
+> > index e9464fe411ac..4c2c268af214 100644
+> > --- a/arch/x86/kernel/cpu/common.c
+> > +++ b/arch/x86/kernel/cpu/common.c
+> > @@ -517,7 +517,8 @@ static bool pku_disabled;
+> >  static __always_inline void setup_pku(struct cpuinfo_x86 *c)
+> >  {
+> >       if (c =3D=3D &boot_cpu_data) {
+> > -             if (pku_disabled || !cpu_feature_enabled(X86_FEATURE_PKU)=
+)
+> > +             if (pku_disabled || !cpu_feature_enabled(X86_FEATURE_PKU)=
+ ||
+> > +                 !cpu_has_xfeatures(XFEATURE_PKRU, NULL))
+> >                       return;
+>
+> Note that silent quirks are counterproductive, as they don't give VM
+> vendors any incentives to fix their VM for such bugs.
+>
+> So I changed your quirk to be:
+>
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -519,6 +519,17 @@ static __always_inline void setup_pku(struct cpuinfo=
+_x86 *c)
+>         if (c =3D=3D &boot_cpu_data) {
+>                 if (pku_disabled || !cpu_feature_enabled(X86_FEATURE_PKU)=
+)
+>                         return;
+> +               if (!cpu_has_xfeatures(XFEATURE_PKRU, NULL)) {
+> +                       /*
+> +                        * Missing XFEATURE_PKRU is not really a valid CP=
+U
+> +                        * configuration at this point, but apparently
+> +                        * Apple Virtualization is affected by this,
+> +                        * so return with a FW warning instead of crashin=
+g
+> +                        * the bootup:
+> +                        */
+> +                       WARN_ONCE(1, FW_BUG "Invalid XFEATURE_PKRU config=
+uration.\n");
+> +                       return;
+> +               }
+>                 /*
+>                  * Setting CR4.PKE will cause the X86_FEATURE_OSPKE cpuid
+>                  * bit to be set.  Enforce it.
+>
+> This is noisy in the syslog, but it's a WARN_ONCE() and it doesn't
+> crash the bootup.
+>
 > Thanks,
-> Sergio
-
-Cheers,
-Chris
-
->=20
-> On 20/03/2025 00:54, Greg KH wrote:
-> > On Wed, Mar 19, 2025 at 08:38:52PM +0100, Sergio Callegari wrote:
-> > > There is a nasty regression wrt mt7921e in the last LTS series (6.12)=
-=2E If
-> > > your computer crashes or fails to get out of hibernation, then at the=
- next
-> > > boot the mt7921e wifi does not work, with dmesg reporting that it is =
-unable
-> > > to change power state from d3cold to d0.
-> > >=20
-> > > The issue is nasty, because rebooting won't help.
-> >=20
-> > Can you do a 'git bisect' to track down the issue?  Also, maybe letting
-> > the network driver authors know about this would be good.
-> >=20
-> > thanks,
-> >=20
-> > greg k-h
->=20
->=20
-
---uxkrpkjabcczwb7k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfb6E8ACgkQwEfU8yi1
-JYXsRhAAtiyY1Lg+xIe2aUbc6YNJoo+YiB+IMbohEVRcluzqaGiGhSWPvRv2JB6k
-emHerCCLLSUd+uDuU0yE380AqquXKsb0jikzxkR2BNluCdmF0Q6zxS6PoLUqqh2g
-oxp7XwOaJ5VEksLivM9tc/O0s4Tn+V4wfW790P3P0HwPi4lPGFXegrxxE5dykSzF
-kPGgUYCE1hmI4nLDQ86jax0CprqfE5THkuiwONfrcQLfSY3Su8sb9Ez4nWFznt8M
-cqiL3qBmOCVTGZ68LiRvbRPZ/7jVxNfeE2/fYeq5uxEs0u7eO83mbOv3nenTB6Ac
-qH6Vta6mhy0Tp4K7qVfjx7o4nSzX7/GukoVjy4yIcJl0Wp1EqCjP1Y4skadOtKX7
-/hopjQCHZbkWWQAi5ncuw0fZHrykqkhb45ZW6sdtn7wro7scYKyqkmJV9QyFj/s7
-O1qAIRNd4IAdmtQN0XRTmD3h1vULKzbx7MfkthyPYTynpp4aipXWvewJLEboqkdR
-hkU0YyLzlfXcFTNy2EvVJ2DNYYyenYoHLAANvr188od2qeO5L4il9a2eJskuzwlw
-fxof4tkjkOj0c8aRGTHLGgF9ZgaFkFrG+uzkoGOWt1fAERIsWwznpIfo4ZJCJB+W
-Kqz63UdS7cRPGV6d5mVL6bamGu4a/9VRVtQUI0RKr5hvbSKctec=
-=bzAH
------END PGP SIGNATURE-----
-
---uxkrpkjabcczwb7k--
+>
+>         Ingo
