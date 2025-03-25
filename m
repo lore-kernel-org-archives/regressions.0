@@ -1,227 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AD22517B9
-	for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 07:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785CD13AA2E
+	for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 10:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888286; cv=none; b=TaZ5ApUKMic7rLUcZ+TwOgmXFyjOchyJ5TK5CxsK1RZ4EwaO46od/1Xp7A0FAtcQTij4iRMDlwXOd9P4A6aMsL5kCQcujYHbFTaNRCQ+U1JYILhFnj7lSYNiK1O0nEXjWpns34sdSllB+IeQU9v1FTS7AfbzTBIuqh7MKr+VwAs=
+	t=1742900348; cv=none; b=DNLpG3HhB6Nkdzo39d+/Oev01xZ3acN+8ykNR8cDVmCm+CVn95WuU3Jh1v9/QFrEm2nHBE7+SeaVbTALTV1Mqi+p40kUdPqZjOPunR+xP9ue9+g4kLuH5xaiy/ScU+dPjB3RR5Lku730bhXa/1xSSeO0oK+A6x+XnvNVg4paqoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888286; c=relaxed/simple;
-	bh=cA/rKW5GtyQ1bvoG37/sZRFSGtJ72OefmBegC5mtbGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ENlcbryjmw1NGo6ka9DGocycxDG9jXtHqhwxSo5ci4MNLEySNLovaOM7Yws8zdP04mO27tjpG/1ohyJtQ/GyNP9qhJt0cM5epSoYh2p2SJ7+kS8VgQWZZwDgn4e1kwye35QlBXQMHV2FxuKS+6xAguZGGRXRQ2iBPVQR960+vQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lZp1wMYM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742900348; c=relaxed/simple;
+	bh=s+gw0EhuF2+JAPAKnD6AJRgNI3V6xfEl9ikM7X1eus8=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=TrcFqTD1w3tVAL9n73qc0s/4+w1i392gZxpQ7WXcJpP5py8yibcd4xEeZgvUsPA7/KkBh+qP1fAD5MD9vUrhXitULv7lPxNSkKPeOREaUEGO7bvoQiqv8kMTtlA1Seg8TG+vGNeDbxjZPG0lLTTtWbrQ9BTj7DI+xUfHyz35B8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=BUGA+7Yb; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lZp1wMYM"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P5vVpH022513;
-	Tue, 25 Mar 2025 07:37:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OMow6D8ixjOPzePi5u4aOLZ4okP7AbJZA1FrFIgLn3E=; b=lZp1wMYMdwr/CfJP
-	272cJFxeKYDsosa2Yp7lAmte/hlZFWyjO+WEoRii/eLBm2Ibets556znOfiYI+MD
-	E53+TD3JwlwcQ79ijBJEzV4xcKyWdy8maUNiFfF7vgX/miEQG6BvwGuZFg/3oK4Q
-	3JQ7vpI6q74KSmJF+z9TJyskfIKmkDLC4HvbMt3ufOSaghvUN1uQwAJMNk4KrTzN
-	g1k85qeqUVQDECOu9Rc/bQV3NP68rt6xwrMz9tUXDi+A0fLcXV+rWePUCmeHQ2dx
-	yqvZhtKMVRFLTzQCa5l6nyeHCJuW45R7c5QDnigAhpwB1jyot4DVCb6sZhvaaaS9
-	xzP3+w==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmt06un2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 07:37:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52P7bg0e024222
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 07:37:42 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Mar
- 2025 00:37:35 -0700
-Message-ID: <7b08c860-e5f1-4665-8e5e-2a6a3e26a2fa@quicinc.com>
-Date: Tue, 25 Mar 2025 13:07:32 +0530
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="BUGA+7Yb"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ff2adbba3fso39963677b3.2
+        for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 03:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1742900345; x=1743505145; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qoqlivxnEmW58kKpXtRzQWKOoHR2WrghMasX7yrP+yc=;
+        b=BUGA+7YbPSAevmMTw5oeuOjeaspOhi/Zesgb7bYE0W0LAruDgF3kdLwaaljOwgdBRF
+         LGETRKXOIejBLHnrTRjAWyH2Whc16kKzg39qkI2fhVPP6mVJYxIE41nmmENkT51n1hPr
+         3jNiR1vPMwmczkuBoFhwyzVwgIntFsS27GgTGM3fBKCfrViArvmtuXgsCC1mDf1eP5rf
+         hhfLL4jy21tqKeCWj8Y0mjmm6jaTaKBRofwP7dxP7iyHujygut1o3Z7kDwUsyUqb/ag1
+         gFWJhv++3ugmeL1KK4JY8DgZY9IU4ZTyAQBoLcMdXCsaRrO0tweIPO/03f/I67YWUDxK
+         TGkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742900345; x=1743505145;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qoqlivxnEmW58kKpXtRzQWKOoHR2WrghMasX7yrP+yc=;
+        b=A03gxDt6M3KQA7/PMr8jHy1qxIeb/R4paGdfPyQ2/OowPEwTTywc/JstfGZuhDrHzs
+         Qk3Ib/U1+PLnzZ/gd0XBaVSsTUA1/LeKmYDBshAaqdD8Gt4s7hrN+gLvopKYUrw88rLc
+         qJooS8x1+qBxGky8gq5i3jLuKq44pO8+Rtk+LU1e1yJCi+5RM/CgWNAyjvnIwCkEMqhU
+         K/bnmYKfwqILPFhuqc+DaKM3Imz0ftkOxvfgKxmRn2DIDUmHKLb026C/+pcKQQn3/CBS
+         tdqKDoJRcdmt9DKl4sg5CppJ2KKFFs5CGZmMIEc8E+PWZZ4hUmgBuD5nMiSwhgQabY0h
+         +icA==
+X-Gm-Message-State: AOJu0YwVYiN6apIJoDkmcsfNf89Of1QmxU2khXYfYQFz3pRA3GVO5DoT
+	cMAMQfgreK4ojJ1T1RsAXzctnUb0U2O3BVJUW4bc13N7UjQ9eiNC9UMKl3VxTUaJ7YNGaDvHbT4
+	OLiIAyxIjJxqluQb44Z+QwSrtsdnYDYMMCBdcMg==
+X-Gm-Gg: ASbGncto331h1fvQJVE4Qh7VdEPqQjVhhcvgXQ2QykazkFtbmloS6IkLHIWaidJN9MD
+	IUurqKrBqhSTySjL3xjEC8s4btdTWkJtolXKjjiZiX/74dXGQIRvn7SiiUPH2iHn/xEfDxqnwcJ
+	+mDRXXLpX7NPakeOTE+ZUY4M4v
+X-Google-Smtp-Source: AGHT+IGfe1+5IZ+mPHvDqqafrr9Ya230tk12gPxlrX40cPQBR5QUEx+w5VIkjHuk4we0WiYRTtetp+MRsOh1n5Vr1U8=
+X-Received: by 2002:a05:690c:4510:b0:6ef:5013:bfd9 with SMTP id
+ 00721157ae682-700bac4ace8mr229157127b3.10.1742900345051; Tue, 25 Mar 2025
+ 03:59:05 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 25 Mar 2025 06:59:03 -0400
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 25 Mar 2025 06:59:03 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-ufs: Add PHY Configuration support
- for sm8750
-To: <neil.armstrong@linaro.org>, Melody Olvera <quic_molvera@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Satya Durga Srinivasu Prabhala
-	<quic_satyap@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>,
-        "Linux
- regressions mailing list" <regressions@lists.linux.dev>
-References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
- <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
- <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
- <430ed11c-0490-45be-897b-27cad9682371@quicinc.com>
- <731f1ad1-8979-49a1-b168-56e24b94f4fb@linaro.org>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <731f1ad1-8979-49a1-b168-56e24b94f4fb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PMrtWukH1iiwMdKyachegeb5fb3oeXVh
-X-Proofpoint-ORIG-GUID: PMrtWukH1iiwMdKyachegeb5fb3oeXVh
-X-Authority-Analysis: v=2.4 cv=aqGyCTZV c=1 sm=1 tr=0 ts=67e25d47 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=qC_FGOx9AAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=nFbOSJeC2IPyvr0jA-0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fsdK_YakeE02zTmptMdW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_03,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 adultscore=0
- spamscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250052
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 25 Mar 2025 06:59:03 -0400
+X-Gm-Features: AQ5f1Jr6eQ9u9nC6LTjjzifshxeySm5ScOXZGjFIuU2H5zkCg5gGaP7IRG96hXw
+Message-ID: <CACo-S-3XaqDNx4mZG1fyjO8Hre=TFSjr3VET9QdhxtH1L8Cm6Q@mail.gmail.com>
+Subject: [REGRESSION] next/master: (build) undefined reference to
+ `btf_get_func_param' in kernel/trace/trace_...
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ undefined reference to `btf_get_func_param' in
+kernel/trace/trace_output (kernel/trace/trace_output.c)
+[logspec:kbuild,kbuild.compiler.linker_error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:8eccb2c3d8def056c6112c94af6a3189cc4f9ba8
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  eb4bc4b07f66f01618d9cb1aa4eaef59b1188415
 
 
+Log excerpt:
+=====================================================
+aarch64-linux-gnu-ld: /tmp/kci/linux/kernel/trace/trace_output.c:716:
+undefined reference to `btf_get_func_param'
 
-On 3/25/2025 1:04 PM, neil.armstrong@linaro.org wrote:
-> Hi,
-> 
-> On 25/03/2025 04:12, Nitin Rawat wrote:
->>
->>
->> On 3/24/2025 11:40 PM, Neil Armstrong wrote:
->>> Hi,
->>>
->>> On 10/03/2025 22:12, Melody Olvera wrote:
->>>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>
->>>> Add SM8750 specific register layout and table configs. The serdes
->>>> TX RX register offset has changed for SM8750 and hence keep UFS
->>>> specific serdes offsets in a dedicated header file.
->>>>
->>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
->>>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
->>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>> ---
->>>>   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
->>>>   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
->>>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 +++++++++ 
->>>> ++ +++++++++-
->>>>   3 files changed, 246 insertions(+), 8 deletions(-)
->>>>
->>>
->>> <snip>
->>>
->>> This change breaks UFS on the SM8550-HDK:
->>>
->>> [    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization 
->>> timed-out
->>> [    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
->>> [    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller failed
->>> ...
->>
->> Hi Neil,
->>
->> Thanks for testing and reporting.
->> I did tested this patch on SM8750 MTP, SM8750 QRD, SM8650 MTP, SM8550 
->> MTP and SM8850 QRD all of these have rate B and hence no issue.
->>
->> Unfortunately only SM8550 HDK platform which UFS4.0 and RateA couldn't 
->> get tested. As we know SM8550 with gear 5 only support rate A.
->>
->> I was applying rate B setting without checking for mode type. Since
->> SM8550 is only platform which support only rate A with UFS4.0 . Hence
->> this could be the issue.
->>
->> Meanwhile can you help test at your end with below change and let me 
->> if it resolves for you. I will also try at my end to test as well.
->>
->> =============================================================================
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
->> qualcomm/phy-qcom-qmp-ufs.c
->> index 45b3b792696e..b33e2e2b5014 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> @@ -1754,7 +1754,8 @@ static void qmp_ufs_init_registers(struct 
->> qmp_ufs *qmp, const struct qmp_phy_cfg
->>                  qmp_ufs_init_all(qmp, &cfg->tbls_hs_overlay[i]);
->>          }
->>
->> -       qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->> +       if (qmp->mode == PHY_MODE_UFS_HS_B)
->> +               qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>   }
->>
->> =================================================================================
-> 
-> With this change the UFS works again.
+=====================================================
 
-Thanks Neil for quick revert. I'll raise the official change.
 
-Regards,
-nitin
+# Builds where the incident occurred:
 
-> 
-> Thanks,
-> Neil
-> 
->>
->>
->> Thanks,
->> Nitin
->>
->>>
->>> GIT bisect points to:
->>> b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
->>> Author: Nitin Rawat <quic_nitirawa@quicinc.com>
->>> Date:   Mon Mar 10 14:12:30 2025 -0700
->>>
->>>      phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
->>>
->>> bisect log:
->>> git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
->>> git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
->>> git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
->>> git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
->>> git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
->>> git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
->>> git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
->>> git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
->>> git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
->>> git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
->>> git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
->>> git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
->>> git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
->>> git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
->>> git bisect bad b02cc9a176793b207e959701af1ec26222093b05
->>>
->>> CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba- 
->>> tester/-/jobs/229880#L1281
->>>
->>> #regzbot introduced: b02cc9a17679
->>>
->>> Neil
->>
-> 
+## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:67e284be67593f2aa0313e07
 
+## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:67e284c167593f2aa0313e0a
+
+
+#kernelci issue maestro:8eccb2c3d8def056c6112c94af6a3189cc4f9ba8
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
