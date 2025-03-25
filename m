@@ -1,117 +1,234 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785CD13AA2E
-	for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 10:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF3D2561C6
+	for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 11:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900348; cv=none; b=DNLpG3HhB6Nkdzo39d+/Oev01xZ3acN+8ykNR8cDVmCm+CVn95WuU3Jh1v9/QFrEm2nHBE7+SeaVbTALTV1Mqi+p40kUdPqZjOPunR+xP9ue9+g4kLuH5xaiy/ScU+dPjB3RR5Lku730bhXa/1xSSeO0oK+A6x+XnvNVg4paqoE=
+	t=1742902895; cv=none; b=Fh0xbKpoOtF4vFHDUKZfs5TBw20UAomKgDISSFAgDkBst6RaHS1h/OzgU14iE988NtiTpJjQQoml8AdMb8zLTY2u2ZzZuypH5ypFtvtuQ3NJhCJNvnRA5NUPxGj8mTHNp/ZZLjb3j1B7kUsIu1LnnqP2LZ5JJ24/7e6LjA/1G+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900348; c=relaxed/simple;
-	bh=s+gw0EhuF2+JAPAKnD6AJRgNI3V6xfEl9ikM7X1eus8=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=TrcFqTD1w3tVAL9n73qc0s/4+w1i392gZxpQ7WXcJpP5py8yibcd4xEeZgvUsPA7/KkBh+qP1fAD5MD9vUrhXitULv7lPxNSkKPeOREaUEGO7bvoQiqv8kMTtlA1Seg8TG+vGNeDbxjZPG0lLTTtWbrQ9BTj7DI+xUfHyz35B8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=BUGA+7Yb; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1742902895; c=relaxed/simple;
+	bh=/4MN9pL13QS8WSvmrDAkH9tjZnUJYGKfLLZEMOGkYI4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qJeZotMoK0uI4DGnc24iKUTiido4M821ueCzgcEEpK7OdbSwIzfSrgGXWMGROU9TEICeFnG7qfPFzUXDBOm/DYB3ZA60prcoZNZuykyk7cMKUWs2Xxvxv+oW4+1u+CDF0++RI7dT1wOB4fNx0KYmGRErVQOdk/UD/8Di3WYkx+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Np7y4XUA; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="BUGA+7Yb"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ff2adbba3fso39963677b3.2
-        for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 03:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Np7y4XUA"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-523dc190f95so2871692e0c.1
+        for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 04:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1742900345; x=1743505145; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qoqlivxnEmW58kKpXtRzQWKOoHR2WrghMasX7yrP+yc=;
-        b=BUGA+7YbPSAevmMTw5oeuOjeaspOhi/Zesgb7bYE0W0LAruDgF3kdLwaaljOwgdBRF
-         LGETRKXOIejBLHnrTRjAWyH2Whc16kKzg39qkI2fhVPP6mVJYxIE41nmmENkT51n1hPr
-         3jNiR1vPMwmczkuBoFhwyzVwgIntFsS27GgTGM3fBKCfrViArvmtuXgsCC1mDf1eP5rf
-         hhfLL4jy21tqKeCWj8Y0mjmm6jaTaKBRofwP7dxP7iyHujygut1o3Z7kDwUsyUqb/ag1
-         gFWJhv++3ugmeL1KK4JY8DgZY9IU4ZTyAQBoLcMdXCsaRrO0tweIPO/03f/I67YWUDxK
-         TGkg==
+        d=linaro.org; s=google; t=1742902892; x=1743507692; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=Np7y4XUAt96UfZHE9pdY3tD4zo4nn5M6/NCo2kIQYFP9gRcJ2TMJFmtjDfIJP35vdF
+         o9rhEJRF0cBOfXgyjy/NkQRlw4kP5ndroYRosD0v0tj90PyF1WcDxjZp0tRTDGsPfqeL
+         Jb0LbR6JOuI2qexuwWO8qZ8l3YLYPlepoX0Oudz4WjLoRZs6CRfmi+8nTV9oaoYhQhnO
+         0RyS36HHgq55OXFj3oxA969jzeeifb6tXa+oBpZPixbVW0H/liSFFYVigi3UaitR3RTM
+         pUCTuGh2xnu/AJ09Cky08r4qRVbF1WHVNSRk4yh4eN76qWbdGcyb0pGROY5sWkeztJQv
+         F9CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742900345; x=1743505145;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qoqlivxnEmW58kKpXtRzQWKOoHR2WrghMasX7yrP+yc=;
-        b=A03gxDt6M3KQA7/PMr8jHy1qxIeb/R4paGdfPyQ2/OowPEwTTywc/JstfGZuhDrHzs
-         Qk3Ib/U1+PLnzZ/gd0XBaVSsTUA1/LeKmYDBshAaqdD8Gt4s7hrN+gLvopKYUrw88rLc
-         qJooS8x1+qBxGky8gq5i3jLuKq44pO8+Rtk+LU1e1yJCi+5RM/CgWNAyjvnIwCkEMqhU
-         K/bnmYKfwqILPFhuqc+DaKM3Imz0ftkOxvfgKxmRn2DIDUmHKLb026C/+pcKQQn3/CBS
-         tdqKDoJRcdmt9DKl4sg5CppJ2KKFFs5CGZmMIEc8E+PWZZ4hUmgBuD5nMiSwhgQabY0h
-         +icA==
-X-Gm-Message-State: AOJu0YwVYiN6apIJoDkmcsfNf89Of1QmxU2khXYfYQFz3pRA3GVO5DoT
-	cMAMQfgreK4ojJ1T1RsAXzctnUb0U2O3BVJUW4bc13N7UjQ9eiNC9UMKl3VxTUaJ7YNGaDvHbT4
-	OLiIAyxIjJxqluQb44Z+QwSrtsdnYDYMMCBdcMg==
-X-Gm-Gg: ASbGncto331h1fvQJVE4Qh7VdEPqQjVhhcvgXQ2QykazkFtbmloS6IkLHIWaidJN9MD
-	IUurqKrBqhSTySjL3xjEC8s4btdTWkJtolXKjjiZiX/74dXGQIRvn7SiiUPH2iHn/xEfDxqnwcJ
-	+mDRXXLpX7NPakeOTE+ZUY4M4v
-X-Google-Smtp-Source: AGHT+IGfe1+5IZ+mPHvDqqafrr9Ya230tk12gPxlrX40cPQBR5QUEx+w5VIkjHuk4we0WiYRTtetp+MRsOh1n5Vr1U8=
-X-Received: by 2002:a05:690c:4510:b0:6ef:5013:bfd9 with SMTP id
- 00721157ae682-700bac4ace8mr229157127b3.10.1742900345051; Tue, 25 Mar 2025
- 03:59:05 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 25 Mar 2025 06:59:03 -0400
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 25 Mar 2025 06:59:03 -0400
+        d=1e100.net; s=20230601; t=1742902892; x=1743507692;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=w+OW7lfftUGfTCy8cfXX8Cv1hojqOindN1izBJWX7zWZYelsyrlFomWsApteevGsy/
+         QRXeE53zrbO+A04lXAZFhKjJsL07FKzT2+wLjDyzwQZCP2KLMprw9hmUW1gDk2FPtlTY
+         Z+MA6HZuL14xKSO4xZRQl9iXul9dhYt2xnuhlWfYHh+XmhHioagd1w75FVeMcT6R2acF
+         APbAcgSxzIba4NtRPu/ZbfH5v0cj4cjdRIUAgTH1vubaJa4j0KWo6o5HM2Lt2HMegfNl
+         mVP+5J1p/cDvLpfOn+r/KDARjf8Um71GekfzDwlbtbQpkAAwL2bAPoct/VX4ZQb+VdQ9
+         65gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/L+f8aE2NvEGiOJDpITCSpI/LVUgyCRnU5QYf9KM29n9Xa55FzWdRnfsgbQ+w0xr7ydUgQxL66spKFg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzpheqA2y3SDFdw8qs/d+nQgDDcwD9zm0Sv9XZ0EwAOmaMKeYbC
+	WqF6xfxL9ToSUAc2S7cHHxBLak7pUWd94nGYlY70MhRck5y5xwPsXNTKXJKsgntGfHUe/Nwsowk
+	4fPtQLAiNm2kfAyAIURRuO4E/9tnoP37ipnuqOw==
+X-Gm-Gg: ASbGncvWnWhxF/q1tpGeI2JHI2BW3rEgTIVQA06KD3+PG0/WD2DbWM7UjKXjjq2YA+t
+	VV6rWXrcZ+azccAYwwPSxAcMW2sUSex/62c+b0mNbPT2A15qWRhry3bhvsZVcT9lUpFF7pmjsgo
+	R6Qc8cTQE8qTUvIHwjk68hQJcybSWKLo3O86i0bMSxbj1jREAPP6ddZ7BNKbM=
+X-Google-Smtp-Source: AGHT+IErnLB8k2eURQkQuvonw7hDaTgDK/6MY679H/xblBZRcECFv8MSDYwthPn/gDiugNBls/DTd74DC7XLhdBeVrs=
+X-Received: by 2002:a05:6122:2783:b0:51b:a11f:cbdb with SMTP id
+ 71dfb90a1353d-525a833b0cfmr11322920e0c.4.1742902892035; Tue, 25 Mar 2025
+ 04:41:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 25 Mar 2025 06:59:03 -0400
-X-Gm-Features: AQ5f1Jr6eQ9u9nC6LTjjzifshxeySm5ScOXZGjFIuU2H5zkCg5gGaP7IRG96hXw
-Message-ID: <CACo-S-3XaqDNx4mZG1fyjO8Hre=TFSjr3VET9QdhxtH1L8Cm6Q@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) undefined reference to
- `btf_get_func_param' in kernel/trace/trace_...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 25 Mar 2025 17:11:20 +0530
+X-Gm-Features: AQ5f1Jp4MnK8M9WIj6QfiQc4fPhqZDUJiPB_52yu7nH9UEpCQdOPXm-gf5TLGEQ
+Message-ID: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
+Subject: next-20250324: x86_64: BUG: kernel NULL pointer dereference __pci_enable_msi_range
+To: PCI <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, shivamurthy.shastri@linutronix.de, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Regressions on x86_64 boot failed with Linux next-20250324 tag kernel
+6.14.0-rc7-next-20250324
 
-New build issue found on next/master:
+First seen on the next-20250324
+ Good: next-20250321
+ Bad:  next-20250324 ..next-20250325
 
----
- undefined reference to `btf_get_func_param' in
-kernel/trace/trace_output (kernel/trace/trace_output.c)
-[logspec:kbuild,kbuild.compiler.linker_error]
----
+Regressions found on x86_84:
+ - boot
 
-- dashboard: https://d.kernelci.org/i/maestro:8eccb2c3d8def056c6112c94af6a3189cc4f9ba8
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  eb4bc4b07f66f01618d9cb1aa4eaef59b1188415
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
+
+Boot regression: x86 boot fail kernel panic __pci_enable_msi_range
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Boot log
+<1>[    1.525485] BUG: kernel NULL pointer dereference, address:
+0000000000000002
+<1>[    1.525573] #PF: supervisor read access in kernel mode
+<1>[    1.525573] #PF: error_code(0x0000) - not-present page
+<6>[    1.525573] PGD 0 P4D 0
+<4>[    1.525573] Oops: Oops: 0000 [#1] SMP PTI
+<4>[    1.525573] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.14.0-rc7-next-20250324 #1 PREEMPT(voluntary)
+<4>[    1.525573] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<4>[    1.525573] Call Trace:
+<4>[    1.525573]  <TASK>
+<4>[    1.525573]  ? __die_body+0xb4/0xc0
+<4>[    1.525573]  ? __die+0x2e/0x40
+<4>[    1.525573]  ? page_fault_oops+0x3ae/0x410
+<4>[    1.525573]  ? kernelmode_fixup_or_oops+0x54/0x70
+<4>[    1.525573]  ? __bad_area_nosemaphore+0x52/0x240
+<4>[    1.525573]  ? bad_area_nosemaphore+0x16/0x20
+<4>[    1.525573]  ? do_user_addr_fault+0x738/0x7a0
+<4>[    1.525573]  ? irqentry_enter+0x2d/0x50
+<4>[    1.525573]  ? exc_page_fault+0x4d/0x120
+<4>[    1.525573]  ? exc_page_fault+0x70/0x120
+<4>[    1.525573]  ? asm_exc_page_fault+0x2b/0x30
+<4>[    1.525573]  ? __pfx_pci_conf1_read+0x10/0x10
+<4>[    1.525573]  ? pci_conf1_read+0xd3/0xf0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  ? __pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  pci_alloc_irq_vectors_affinity+0xbf/0x140
+<4>[    1.525573]  pci_alloc_irq_vectors+0x15/0x20
+<4>[    1.525573]  ahci_init_irq+0x90/0xc0
+<4>[    1.525573]  ahci_init_one+0x82c/0xd10
+<4>[    1.525573]  pci_device_probe+0x198/0x230
+<4>[    1.525573]  really_probe+0x146/0x450
+<4>[    1.525573]  __driver_probe_device+0x7a/0xf0
+<4>[    1.525573]  driver_probe_device+0x24/0x190
+<4>[    1.525573]  __driver_attach+0x104/0x250
+<4>[    1.525573]  ? __pfx___driver_attach+0x10/0x10
+<4>[    1.525573]  bus_for_each_dev+0x10e/0x160
+<4>[    1.525573]  driver_attach+0x22/0x30
+<4>[    1.525573]  bus_add_driver+0x175/0x2c0
+<4>[    1.525573]  driver_register+0x65/0xf0
+<4>[    1.525573]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+<4>[    1.525573]  __pci_register_driver+0x68/0x70
+<4>[    1.525573]  ahci_pci_driver_init+0x22/0x30
+<4>[    1.525573]  do_one_initcall+0x121/0x330
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_preempt_on+0x12/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? preempt_count_sub+0x63/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_hardirqs_on+0x29/0xa0
+<4>[    1.525573]  ? irqentry_exit+0x57/0x60
+<4>[    1.525573]  ? sysvec_apic_timer_interrupt+0x52/0x90
+<4>[    1.525573]  ? next_arg+0xcd/0x150
+<4>[    1.525573]  ? next_arg+0x138/0x150
+<4>[    1.525573]  ? parse_args+0x16e/0x440
+<4>[    1.525573]  do_initcall_level+0x80/0xf0
+<4>[    1.525573]  do_initcalls+0x48/0x80
+<4>[    1.525573]  do_basic_setup+0x1d/0x30
+<4>[    1.525573]  kernel_init_freeable+0x10c/0x180
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  kernel_init+0x1e/0x130
+<4>[    1.525573]  ret_from_fork+0x45/0x50
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  ret_from_fork_asm+0x1a/0x30
+<4>[    1.525573]  </TASK>
+<4>[    1.525573] Modules linked in:
+<4>[    1.525573] CR2: 0000000000000002
+<4>[    1.525573] ---[ end trace 0000000000000000 ]---
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<6>[    1.525573] note: swapper/0[1] exited with irqs disabled
+<0>[    1.553459] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+<0>[    1.553844] Kernel Offset: 0x1c000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[    1.553844] ---[ end Kernel panic - not syncing: Attempted to
+kill init! exitcode=0x00000009 ]---
 
 
-Log excerpt:
-=====================================================
-aarch64-linux-gnu-ld: /tmp/kci/linux/kernel/trace/trace_output.c:716:
-undefined reference to `btf_get_func_param'
+## Source
+* Kernel version: 6.14.0-rc7-next-20250324
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 882a18c2c14fc79adb30fe57a9758283aa20efaa
+* Git describe: next-20250324
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/
 
-=====================================================
+## Test
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735936/suite/boot/test/clang-20-lkftconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/config
 
-
-# Builds where the incident occurred:
-
-## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y
-on (arm64):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:67e284be67593f2aa0313e07
-
-## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y
-on (arm64):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:67e284c167593f2aa0313e0a
-
-
-#kernelci issue maestro:8eccb2c3d8def056c6112c94af6a3189cc4f9ba8
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
 
 --
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Linaro LKFT
+https://lkft.linaro.org
