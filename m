@@ -1,67 +1,48 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37592620C1
-	for <regressions@lists.linux.dev>; Mon, 24 Mar 2025 18:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E80019AD86
+	for <regressions@lists.linux.dev>; Tue, 25 Mar 2025 03:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742839823; cv=none; b=K3jePrR1F3/RCDn3gVkj7HPsbI6HNC8m4KJ/0AGoMMRgbBH4+8/25VUQDTmL36n5f+yvj+MgKamYIp1Hjb+lHw9ciAbzXcb8GDcHZjvzSvxg3P/xrjPqdqMn63stPgsea7L9gD/k6oYXzp9PmthepDF2jfuIwh9deOlUe8WbOmA=
+	t=1742872396; cv=none; b=GcPr6FROqJRpY0Ln+dTOOL4xTADlLoq7mW9J0eoZcBMgZQnVZO/hKHZJJKNqiNqq6QcS+P2ZVFvoZsbMoZX9pQbXseWn5s1UhpWnyQfuF9MnzTXvAwOQh4rTspGvGLhmHCv38zLOgdR4pHZT2lDnZZMsu/8oqjXOjquNNUiz7Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742839823; c=relaxed/simple;
-	bh=TPQAGOfcHLRcPE0gq+D5qlh1MYUZEcj4Jf7qEr2aN2o=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cmNm3wbyJvoNXO7OKpPiH7Okc6NU9kKg1DJ12XL2HEE3fwq6AWJoVSihmDTG/CH96C9QPDYGq+Wv14ZYq9opC8epNcrFvnZjK/4JgyOfV/+jp4tcLloI9hepQCChPble2mxvWkHXBs/+guSxCy7SzS3V77XOrP3zQic1yG/6SWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ij4RxNlI; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742872396; c=relaxed/simple;
+	bh=E5E+SasWAzmDnR3MDJcTIVlbgU8JQ/HWkUH11MrnKDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cLOOc9BSGFwW9GB0qNol3TVcPYoIUR/+6xmTnPPCsVI5iQuDPeGdt2Bn+l9pa3W/UGkcZ+PPNajkBpcdeWW5IZR+owbFZQQfjjd+ICFzVaczgQAaw5FJ4uSmCkXcv3wuzu1245ypDLSSqZaOActtLj2eZAudHwmIFGYiTrchwTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MC4e9bUx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ij4RxNlI"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso4112805f8f.0
-        for <regressions@lists.linux.dev>; Mon, 24 Mar 2025 11:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742839819; x=1743444619; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G6RnDtWvNpOaIVSBxV8j/X1kbaynp04OetAChdyC+3o=;
-        b=ij4RxNlIktfhH49p6kAS+zEcqdFo/2qEo2bUg0/hiEiHA2sOBfqtHOuK0+AsdKcLXy
-         N7/NAsiETSrCB11jz9n+rfU36zaCe5ahopi4fTLC3L7VejZ7Sg/k5MNmRGEP+mxdivdD
-         9lZ+gR4h+BWOTriiPLdX9BrE565FNCwkUC9pxKbbvjKbiRiyxkndpP0j/2RjJ45j/oY9
-         cOeyqgDrUlrqRNcU1Xs2Dql63N3kHE6rrX2cXvV3eYj5gy+Oj/LlHRzlLeCDEozqwSug
-         agQ8Rbo4YzOaHOKFkXC/IYqJc4jw6kP3QHe5wMGKR1ti9nyLUsThIEuhiLf5lrQRrPoJ
-         YU5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742839819; x=1743444619;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=G6RnDtWvNpOaIVSBxV8j/X1kbaynp04OetAChdyC+3o=;
-        b=TwIKaWbqi1Kf9AvRuqkdFF4YjHzOtU1SZP2VVDR3QvB61mjEHyfm+uvw9YrEdKUNKX
-         Mw8veuzq34VYeM7ZHMl9IwHwFShxLW0mbgZ8irJGJ6w3JmPdn36iZU9wempovnPA0vPj
-         I9NTecojddwhRDj+1KrDlGsinreFd54NtRDZMK6Ok5hvU1emtC8Qr1DlD0HTuH+lbJau
-         Kjiz8DFI2t3CWdqdiPpsnxW59rhN2/NKWdbR1mca1A82hpCs4NK35g1PyvaOUhcWwn20
-         QJd72svOcxJQHtfCvCH38v+LuPUL1cPouQwh/yJohkqvfxrMqIX6Uj+9ABpuITkeOiFq
-         HnJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVl7k6FVP6DxtGm87p+T14Fux02LKjRvMLZoJTrijGkjSYC6S7GxVG63/Mz1IbXYvmP3QsfiDWJ8oK90w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyaxkAK1QjdCLqhsWnReZ9QDEoEEkT07Q5Gvx7WPuUVTAVfk+V0
-	8/K4x6N5WaH/WoXp5A/DJdQFT70G1wQfYDJGkqDKf5043IbeEduip4batwuEpuw=
-X-Gm-Gg: ASbGncuHm7zZBzBFEv4JUjOk7LjKyKZYHS6zF/lAzLYz3gpxatItH1/jVVGUL2RsjjI
-	U2Oc+mG3fwKMHyvu5iuyFjZ/sLoIvh5vCwhBXDdg0FDyXbvKgiKi3uwfKY+TDYV5eaJRzyg3Cek
-	gVFJE/Ka4DUghhdgjE3bN/qhL9O5qTQYhL8FAv08gKK3t+qgym8eD3C57MnQHOC174jGOrbMnWS
-	9YpYBlsVLWJfPz1PQ/77Gk+dj/R+G3Ng1zvTwQ0liMU+ugKKd0GUdeutHx41/xSSTGtpO/no683
-	S20X7Sai4jNABYUFLFzouFwDo2mblPiOvFggIoTnx/T4mp98E+eCV4GcZAecQnv06M3TVWk3qvD
-	IucBxtwe/TiD1qk0Y
-X-Google-Smtp-Source: AGHT+IFQXi6L+IpcN6afMH9c+hEtu1ugnJ/0f83qfJWd2Asbiidts4UoDfjyd3+t8WNtutogARq+Cg==
-X-Received: by 2002:a05:6000:21c2:b0:399:6d53:68d9 with SMTP id ffacd0b85a97d-3997f939949mr8863871f8f.38.1742839819049;
-        Mon, 24 Mar 2025 11:10:19 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:a356:8d0:d4d:bb5f? ([2a01:e0a:3d9:2080:a356:8d0:d4d:bb5f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b3ff7sm11435193f8f.48.2025.03.24.11.10.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Mar 2025 11:10:18 -0700 (PDT)
-Message-ID: <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
-Date: Mon, 24 Mar 2025 19:10:17 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MC4e9bUx"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OIlWkq025925;
+	Tue, 25 Mar 2025 03:12:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rQ7cgtzuqO4DhE1RlYh2UYPnVaMrrglIVihyRrbs1zA=; b=MC4e9bUxUv+eNk8l
+	bcxILeTNQ81165jcKPnncsZ6FhWnU9g2hsomTd622n1/h6L7c5jKjggwCDctqWBL
+	ct5H8vM9UTjM9kFI4IXJIGsZq0RR+cHDrtzVMR8QiNSXypdkooZzZR0I5jD+QnTE
+	tUO5SYhiU1Sa8jsdnMbUNj+a5qR1Wd/0zo+MQAUG3thYP6/swpn1qN/HRryaVvoS
+	Mmbv8HIisu2jYCo3pLhUISfV41w4JAY/BLh3Pgzzx9VjBiH6h8pN89xF9jsdONAG
+	n1geKYSUyhuN8tVC3FvzbZ68wG0aKziuMZjMC12bDQWVq37jw7o6pVW67D6POTBm
+	kqt8WQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hjjnphqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Mar 2025 03:12:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52P3Cquu016163
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Mar 2025 03:12:52 GMT
+Received: from [10.216.37.30] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Mar
+ 2025 20:12:45 -0700
+Message-ID: <430ed11c-0490-45be-897b-27cad9682371@quicinc.com>
+Date: Tue, 25 Mar 2025 08:42:42 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -69,113 +50,155 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
 Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-ufs: Add PHY Configuration support
  for sm8750
-To: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
- Bart Van Assche <bvanassche@acm.org>, Bjorn Andersson
- <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
- Trilok Soni <quic_tsoni@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
- Manish Pandey <quic_mapa@quicinc.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
+To: <neil.armstrong@linaro.org>, Melody Olvera <quic_molvera@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>,
+        "Linux
+ regressions mailing list" <regressions@lists.linux.dev>
 References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
  <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=fNc53Yae c=1 sm=1 tr=0 ts=67e21f35 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=qC_FGOx9AAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
+ a=vcR0Wi4gQSUtL0Q4ZNYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fsdK_YakeE02zTmptMdW:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: RKjLOZTbSq54X9vtTLN_7PzxMYE2-NJY
+X-Proofpoint-GUID: RKjLOZTbSq54X9vtTLN_7PzxMYE2-NJY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-25_01,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ adultscore=0 spamscore=0 bulkscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503250021
 
-Hi,
 
-On 10/03/2025 22:12, Melody Olvera wrote:
-> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+
+On 3/24/2025 11:40 PM, Neil Armstrong wrote:
+> Hi,
 > 
-> Add SM8750 specific register layout and table configs. The serdes
-> TX RX register offset has changed for SM8750 and hence keep UFS
-> specific serdes offsets in a dedicated header file.
+> On 10/03/2025 22:12, Melody Olvera wrote:
+>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>
+>> Add SM8750 specific register layout and table configs. The serdes
+>> TX RX register offset has changed for SM8750 and hence keep UFS
+>> specific serdes offsets in a dedicated header file.
+>>
+>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
+>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
+>>   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
+>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 +++++++++++ 
+>> +++++++++-
+>>   3 files changed, 246 insertions(+), 8 deletions(-)
+>>
 > 
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
-> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
->   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
->   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 ++++++++++++++++++++-
->   3 files changed, 246 insertions(+), 8 deletions(-)
+> <snip>
 > 
+> This change breaks UFS on the SM8550-HDK:
+> 
+> [    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization timed-out
+> [    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
+> [    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller failed
+> ...
 
-<snip>
+Hi Neil,
 
-This change breaks UFS on the SM8550-HDK:
+Thanks for testing and reporting.
+I did tested this patch on SM8750 MTP, SM8750 QRD, SM8650 MTP, SM8550 
+MTP and SM8850 QRD all of these have rate B and hence no issue.
 
-[    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization timed-out
-[    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
-[    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller failed
-...
+Unfortunately only SM8550 HDK platform which UFS4.0 and RateA couldn't 
+get tested. As we know SM8550 with gear 5 only support rate A.
 
-GIT bisect points to:
-b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
-Author: Nitin Rawat <quic_nitirawa@quicinc.com>
-Date:   Mon Mar 10 14:12:30 2025 -0700
+I was applying rate B setting without checking for mode type. Since
+SM8550 is only platform which support only rate A with UFS4.0 . Hence
+this could be the issue.
 
-     phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
+Meanwhile can you help test at your end with below change and let me if 
+it resolves for you. I will also try at my end to test as well.
 
-bisect log:
-git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
-git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
-git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
-git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
-git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
-git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
-git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
-git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
-git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
-git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
-git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
-git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
-git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
-git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
-git bisect bad b02cc9a176793b207e959701af1ec26222093b05
+=============================================================================
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c 
+b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+index 45b3b792696e..b33e2e2b5014 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+@@ -1754,7 +1754,8 @@ static void qmp_ufs_init_registers(struct qmp_ufs 
+*qmp, const struct qmp_phy_cfg
+                 qmp_ufs_init_all(qmp, &cfg->tbls_hs_overlay[i]);
+         }
 
-CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba-tester/-/jobs/229880#L1281
+-       qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
++       if (qmp->mode == PHY_MODE_UFS_HS_B)
++               qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+  }
 
-#regzbot introduced: b02cc9a17679
+=================================================================================
 
-Neil
+
+Thanks,
+Nitin
+
+> 
+> GIT bisect points to:
+> b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
+> Author: Nitin Rawat <quic_nitirawa@quicinc.com>
+> Date:   Mon Mar 10 14:12:30 2025 -0700
+> 
+>      phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
+> 
+> bisect log:
+> git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
+> git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
+> git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
+> git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
+> git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
+> git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
+> git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
+> git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
+> git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
+> git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
+> git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
+> git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
+> git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
+> git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
+> git bisect bad b02cc9a176793b207e959701af1ec26222093b05
+> 
+> CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba- 
+> tester/-/jobs/229880#L1281
+> 
+> #regzbot introduced: b02cc9a17679
+> 
+> Neil
+
