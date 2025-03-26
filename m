@@ -1,72 +1,138 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5878413D531;
-	Tue, 25 Mar 2025 21:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB3335C7
+	for <regressions@lists.linux.dev>; Wed, 26 Mar 2025 06:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742936563; cv=none; b=WLVNI5NGqzZfsdqNEykCYE6GdoPwCeu4b3gRGBcYyGa1Au2w67Zo4Gg0zGsdEfuCYfHsxH3nGk5frIJXL8c5D/JyIqmNhMmZziLXQe3XQe0NSMpzcpWSmIM9EcbFDxOD5N6uYKfpL3xoUZXPGGSmP1L73Iy+U6KERBEgsk/TD2c=
+	t=1742971811; cv=none; b=LCPvMVWhgoVPvgenIfkvFKGSMwKW30Yt5wxKbEs2nVnu4TwAyB1mV5Ac1BkPgFnOPv/SfCNteB47BO0mAMroDVKCLigAJqN9zWIluNL9wlGciDsDMQfoCXkmeYT1Qi4xndEyYrPSJV+Tdgf/8AH2ASJOQw89xcgRcEYbxD8pUbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742936563; c=relaxed/simple;
-	bh=Fgr1wy7naKHZZ8CbRUiRNWUNfhs4P9coPflLQ33fEJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IlM45Y6Ha81l9O2H7USNlO+u0gyxW3WRgoaoB+2b2bdHCFQPOxdr/GpSwEfIhHfHeG1/seN7oli115e08kPcCLSPIj57yxrAE/KJycQ/6Efoj2tR1iNGWHEcJ/W7BV4gKzISWTXpzSpKrRymAblN2pu4bjnpcnmPPFYTCkwnE7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=K49ym7Ia; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1742971811; c=relaxed/simple;
+	bh=vvIMKN60Orf2V99yJ3fawF7I4H1WzJtvNXtSgz1Y/YM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D6pGTfuZqV82n/LzkFkccOW+pe4Vznoa87WchnSFffvdgcM9EX54bXdVZwiNP3zfNzzYHbBQIDOErQWkHHCGnnMQwugtQpMRqYc0cxoomPQA84SKRBQcd2V3KpmVg/7nNgCI3K9N62aiKEdUmT4lyZANV5sE9YfauMe+w+Rz8nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lPgdg4vw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=18plpg2A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lPgdg4vw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=18plpg2A; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="K49ym7Ia"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Juys6g7S7/Vmvszi1JHSXEku5SuN5AmPrSu1+judTM0=; b=K49ym7IaAHGF+H1cqHKkQ+MySI
-	xH8hBxW8heALD1/fCrLu8DBLvoLu/v2N4OKGeX1UGG6+/3AhUypxlO+G0SAQbpt0YWBYz1pwyLfOh
-	GabLHEpY1VmfmuB9POMevRe7GdQjc+Gchpm74u6PovoZ5R7QR1kinTpHZzV1hSUuUZfkGDx6EW/eg
-	XhURA5I0Mru/lBqjzv63U43BpVc35LvX2OheZ2YhgOxpuwxfGqwZBlbfb/Lv3oPAyN+0SlahQDDwq
-	vsx2U5h+OBrlH3a8uvuyflgN/b3VUJ4yuIuha+7ezlGtWLYcxZQFeUhpDwYPG5nRnzO0SOOlTJoUd
-	AhimLlBg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1txBPv-0044SN-Uk; Tue, 25 Mar 2025 21:02:37 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 12F5FBE2EE7; Tue, 25 Mar 2025 22:02:35 +0100 (CET)
-Date: Tue, 25 Mar 2025 22:02:35 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: 1100928@bugs.debian.org,
-	"C.D. MacEachern" <craig.daniel.maceachern@gmail.com>
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lPgdg4vw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="18plpg2A";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lPgdg4vw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="18plpg2A"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6772A1F391;
+	Wed, 26 Mar 2025 06:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742971807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
+	b=lPgdg4vwbea8sbAMt3UUk4fxCdrVceLjyLVfvAMyCFWGotZnOqnzl2eOW/jxy4lklUMnbJ
+	ZyWwjk+IzLpj1vsgUKjBOfQHLyvxtoER1If/nBTHqTLsfdA2ZgLD0Gruon6Bn9qACTPsdG
+	nEQvhPFAS7XFKd0IOY0E+3UvcbEv1Lg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742971807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
+	b=18plpg2AEalPvbDg0RtDh1aV4c8Rfp1EDW6Co8TN7K/8724QazTMKQvbXooh4bWQudm/i8
+	7KKifdLwjrXuibDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lPgdg4vw;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=18plpg2A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742971807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
+	b=lPgdg4vwbea8sbAMt3UUk4fxCdrVceLjyLVfvAMyCFWGotZnOqnzl2eOW/jxy4lklUMnbJ
+	ZyWwjk+IzLpj1vsgUKjBOfQHLyvxtoER1If/nBTHqTLsfdA2ZgLD0Gruon6Bn9qACTPsdG
+	nEQvhPFAS7XFKd0IOY0E+3UvcbEv1Lg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742971807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
+	b=18plpg2AEalPvbDg0RtDh1aV4c8Rfp1EDW6Co8TN7K/8724QazTMKQvbXooh4bWQudm/i8
+	7KKifdLwjrXuibDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A08C13927;
+	Wed, 26 Mar 2025 06:50:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id bE6hCJ+j42fPMwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 26 Mar 2025 06:50:07 +0000
+Date: Wed, 26 Mar 2025 07:50:06 +0100
+Message-ID: <87iknwb80x.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: 1100928@bugs.debian.org,
+	"C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	regressions@lists.linux.dev
-Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
- VivoBook_ASUSLaptop TP401MARB_J401MA)
-Message-ID: <Z-MZ6yu6oPDw9lkL@eldamar.lan>
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
+In-Reply-To: <Z-MMsp3XJyNHOlma@eldamar.lan>
 References: <174248253267.1718.4037292692790831697.reportbug@x>
- <174248253267.1718.4037292692790831697.reportbug@x>
- <Z95s5T6OXFPjRnKf@eldamar.lan>
- <174248253267.1718.4037292692790831697.reportbug@x>
- <Z-MMsp3XJyNHOlma@eldamar.lan>
+	<Z95s5T6OXFPjRnKf@eldamar.lan>
+	<Z-MMsp3XJyNHOlma@eldamar.lan>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="tHN/tPwNKfLebtX9"
-Content-Disposition: inline
-In-Reply-To: <Z-MMsp3XJyNHOlma@eldamar.lan>
-X-Debian-User: carnil
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 6772A1F391
+X-Spam-Score: -2.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[bugs.debian.org,gmail.com,suse.de,vger.kernel.org,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-
---tHN/tPwNKfLebtX9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Mar 25, 2025 at 09:06:10PM +0100, Salvatore Bonaccorso wrote:
+On Tue, 25 Mar 2025 21:06:10 +0100,
+Salvatore Bonaccorso wrote:
+> 
 > Hi Craig, all
 > 
 > On Sat, Mar 22, 2025 at 08:55:17AM +0100, Salvatore Bonaccorso wrote:
@@ -118,69 +184,14 @@ On Tue, Mar 25, 2025 at 09:06:10PM +0100, Salvatore Bonaccorso wrote:
 > to build a kernel using the `test-patches` helper script to test with.
 > 
 > Is that enough help so we can confirm the breaking commit?
+> 
+> Kuan-Wei Chiu, Takashi Iwai any input on our issue?
 
-And now really with the patch attached.
-
-Regards,
-Salvatore
-
---tHN/tPwNKfLebtX9
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-Revert-ALSA-hda-Fix-headset-detection-failure-due-to.patch"
-
-From 99eeccf9207811eb07986f441020b61beffa759b Mon Sep 17 00:00:00 2001
-From: Salvatore Bonaccorso <carnil@debian.org>
-Date: Tue, 25 Mar 2025 21:02:57 +0100
-Subject: [PATCH] Revert "ALSA: hda: Fix headset detection failure due to
- unstable sort"
-
-This reverts commit 3b4309546b48fc167aa615a2d881a09c0a97971f.
----
- sound/pci/hda/hda_auto_parser.c | 8 +-------
- sound/pci/hda/hda_auto_parser.h | 1 -
- 2 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/sound/pci/hda/hda_auto_parser.c b/sound/pci/hda/hda_auto_parser.c
-index 58b2e25c448e..7c6b1fe8dfcc 100644
---- a/sound/pci/hda/hda_auto_parser.c
-+++ b/sound/pci/hda/hda_auto_parser.c
-@@ -80,11 +80,7 @@ static int compare_input_type(const void *ap, const void *bp)
- 
- 	/* In case one has boost and the other one has not,
- 	   pick the one with boost first. */
--	if (a->has_boost_on_pin != b->has_boost_on_pin)
--		return (int)(b->has_boost_on_pin - a->has_boost_on_pin);
--
--	/* Keep the original order */
--	return a->order - b->order;
-+	return (int)(b->has_boost_on_pin - a->has_boost_on_pin);
- }
- 
- /* Reorder the surround channels
-@@ -404,8 +400,6 @@ int snd_hda_parse_pin_defcfg(struct hda_codec *codec,
- 	reorder_outputs(cfg->speaker_outs, cfg->speaker_pins);
- 
- 	/* sort inputs in the order of AUTO_PIN_* type */
--	for (i = 0; i < cfg->num_inputs; i++)
--		cfg->inputs[i].order = i;
- 	sort(cfg->inputs, cfg->num_inputs, sizeof(cfg->inputs[0]),
- 	     compare_input_type, NULL);
- 
-diff --git a/sound/pci/hda/hda_auto_parser.h b/sound/pci/hda/hda_auto_parser.h
-index 8bb8202cf284..df63d66af1ab 100644
---- a/sound/pci/hda/hda_auto_parser.h
-+++ b/sound/pci/hda/hda_auto_parser.h
-@@ -35,7 +35,6 @@ struct auto_pin_cfg_item {
- 	unsigned int is_headset_mic:1;
- 	unsigned int is_headphone_mic:1; /* Mic-only in headphone jack */
- 	unsigned int has_boost_on_pin:1;
--	int order;
- };
- 
- struct auto_pin_cfg;
--- 
-2.49.0
+Please give alsa-info.sh outputs from both working and non-working
+kernels.  Run the script with --no-upload option and attach the
+outputs.
 
 
---tHN/tPwNKfLebtX9--
+thanks,
+
+Takashi
