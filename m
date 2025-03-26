@@ -1,197 +1,118 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB3335C7
-	for <regressions@lists.linux.dev>; Wed, 26 Mar 2025 06:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6361F4174
+	for <regressions@lists.linux.dev>; Wed, 26 Mar 2025 14:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742971811; cv=none; b=LCPvMVWhgoVPvgenIfkvFKGSMwKW30Yt5wxKbEs2nVnu4TwAyB1mV5Ac1BkPgFnOPv/SfCNteB47BO0mAMroDVKCLigAJqN9zWIluNL9wlGciDsDMQfoCXkmeYT1Qi4xndEyYrPSJV+Tdgf/8AH2ASJOQw89xcgRcEYbxD8pUbk=
+	t=1743000894; cv=none; b=brYLdzq7JCEWwVUhVm7OdE82LJzCoB+EUKvI1Dh8SM8uK3v+JWHvTtjWX1RjUtXVh97ztepDwP8/uQErn6gjCRoJYM1eeyL7T6SsCs/u4lxlwOXLMkvBbjnFupmh9zzVcsNdyZFJTVfiecjmwNNJfISZAyi6HeZIspIiNRdTiyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742971811; c=relaxed/simple;
-	bh=vvIMKN60Orf2V99yJ3fawF7I4H1WzJtvNXtSgz1Y/YM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D6pGTfuZqV82n/LzkFkccOW+pe4Vznoa87WchnSFffvdgcM9EX54bXdVZwiNP3zfNzzYHbBQIDOErQWkHHCGnnMQwugtQpMRqYc0cxoomPQA84SKRBQcd2V3KpmVg/7nNgCI3K9N62aiKEdUmT4lyZANV5sE9YfauMe+w+Rz8nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lPgdg4vw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=18plpg2A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lPgdg4vw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=18plpg2A; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743000894; c=relaxed/simple;
+	bh=02X6yN4SswI/9hcxh3NzYkNAPF+BwgR9jvGHnZrFNrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fuLWrusHOND8Sv3jXzOi0f4GSs1n3XYgHEvLWsHygXUVvvs11oqVU6D7c+xy9WBraMA87OXxOptl4IbgNK9Yic08f1Se7a2zgyecYSjn2jl5PTxjGLL7DLVngS22fsnsaPbDrIOc/GZiksnp41HfD0hp9ogWoxJ/6/YNezCflls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XVrT1yjv; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lPgdg4vw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="18plpg2A";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lPgdg4vw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="18plpg2A"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6772A1F391;
-	Wed, 26 Mar 2025 06:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742971807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
-	b=lPgdg4vwbea8sbAMt3UUk4fxCdrVceLjyLVfvAMyCFWGotZnOqnzl2eOW/jxy4lklUMnbJ
-	ZyWwjk+IzLpj1vsgUKjBOfQHLyvxtoER1If/nBTHqTLsfdA2ZgLD0Gruon6Bn9qACTPsdG
-	nEQvhPFAS7XFKd0IOY0E+3UvcbEv1Lg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742971807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
-	b=18plpg2AEalPvbDg0RtDh1aV4c8Rfp1EDW6Co8TN7K/8724QazTMKQvbXooh4bWQudm/i8
-	7KKifdLwjrXuibDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lPgdg4vw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=18plpg2A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742971807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
-	b=lPgdg4vwbea8sbAMt3UUk4fxCdrVceLjyLVfvAMyCFWGotZnOqnzl2eOW/jxy4lklUMnbJ
-	ZyWwjk+IzLpj1vsgUKjBOfQHLyvxtoER1If/nBTHqTLsfdA2ZgLD0Gruon6Bn9qACTPsdG
-	nEQvhPFAS7XFKd0IOY0E+3UvcbEv1Lg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742971807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=laj/EhJ7jWdcyYdTlvjhEoV/kv6Zg6+tir35KJD6ti0=;
-	b=18plpg2AEalPvbDg0RtDh1aV4c8Rfp1EDW6Co8TN7K/8724QazTMKQvbXooh4bWQudm/i8
-	7KKifdLwjrXuibDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A08C13927;
-	Wed, 26 Mar 2025 06:50:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bE6hCJ+j42fPMwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 26 Mar 2025 06:50:07 +0000
-Date: Wed, 26 Mar 2025 07:50:06 +0100
-Message-ID: <87iknwb80x.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: 1100928@bugs.debian.org,
-	"C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
-In-Reply-To: <Z-MMsp3XJyNHOlma@eldamar.lan>
-References: <174248253267.1718.4037292692790831697.reportbug@x>
-	<Z95s5T6OXFPjRnKf@eldamar.lan>
-	<Z-MMsp3XJyNHOlma@eldamar.lan>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVrT1yjv"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ff1e375a47so61646437b3.1
+        for <regressions@lists.linux.dev>; Wed, 26 Mar 2025 07:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743000892; x=1743605692; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=02X6yN4SswI/9hcxh3NzYkNAPF+BwgR9jvGHnZrFNrU=;
+        b=XVrT1yjvPXXFXcKWzpnwn0HcFR8aqwqRiQkLI5/GkSnMsS2AqwpvC2406RCDYpRL/J
+         UjSI4ep2lW0ejAcCWa8Jtp8ZKLVYDeWKaIPFeyVziT6iwsOaJZsFSRNib5iQJFOyNoPQ
+         hZENUcovSamHkX21JQ5VbZTN0E2ITRS5U2E87yhXFWVRJfbA02ZWlhXl2vTxq9yw0ZPd
+         p4jBrnB+9el79AwnoMS9lolb3WflR9k7UKBl+8+bfDE5B0NX0zb9+CgcCi7kVZCei4D7
+         cFPjUahH7HIaso/a9A2ULLLxx0DPdL1MZjuqMyj0mIi1AwHPwyynWxEMKdj5NsV2NlVl
+         xIXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743000892; x=1743605692;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=02X6yN4SswI/9hcxh3NzYkNAPF+BwgR9jvGHnZrFNrU=;
+        b=tee5SliXwaEK32EVtrYCE/rSkVMeEtln+ZDsXJz0nWWzGXkWyotfteOKgpNMKZMSCB
+         nrTiCET281yLrHCmmEEhRS6CW50dTT7HoE1H3imYkP8TnjsWFbC9ljofeFlilXH24tt1
+         5YnDUSaBmOK+elIpxXWXy8UqTG97Q3ZeArPGAZxtEEKAy3H1rK1ZWYlObj7D9Guwo7IP
+         7SutJzKO8Zk+pmq0V4J4STgOX4NAtMT6C6LR2S1lwOyIFqHHf/4cXkWWlI6yI5TMf+7a
+         ds6wsvpGOipYkE3mWfm05wDBOhFVrU0VHBdhv4L99a3phybYwBUgSst2R5Rf4sNLujV6
+         2MLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj3pdW7E6I3BSvcwnURv+u+sYV+eJdyAEJbOsRf3c3R4uPIKWOG9kvVxneOMKSw1OkAd2mM8qan2X3ZA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyx+DuHdYNoVtE3nP26cAbf5JIYvgqhBOHIC6sPmjkLE3OZe9yk
+	TYZODDMz+Nds7A5MlFm/Lb9qfe3ZLUs4DO4Zzi7xtzPcjKKBwgai4+Zf35yNaMX2vTz7f9qBDN+
+	OhYbSboa+i+HvEuNiq10aI2wWLS0=
+X-Gm-Gg: ASbGncsJUmb34vxIrr+IEnZTsQVTbjzZCzWlprQvXiJNy4K5RF229QbKdWtjJbSqrdP
+	q6X6jekB9ICJIyCqpinGKJ3jRvLnh6QcNf/7DTf+lIL3ohPUX/+RKcPaPp3R0kCC7rYXZPL8O/4
+	7Nl1qm1NJblhq7WKdckCASR28Q+DnENeTJVZ9AXRqTOui+WRWZo6ViLhLMvf8=
+X-Google-Smtp-Source: AGHT+IFi5q4gE0Mg2Cb0WVtsLpHpLob8VAUW3HFAyPXEifnXwd2HKTT3Mf9IvJOzq4flnb9WeXAC8wM77OVOywt8Mpc=
+X-Received: by 2002:a05:690c:c09:b0:6f9:9e80:46bf with SMTP id
+ 00721157ae682-700bacfc23amr274557107b3.29.1743000891785; Wed, 26 Mar 2025
+ 07:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 6772A1F391
-X-Spam-Score: -2.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[bugs.debian.org,gmail.com,suse.de,vger.kernel.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+References: <CAP-bSRbMbZe9LCE15SCbYNTGZjE_xiAm29qzO_WNVjHsJ6oyyg@mail.gmail.com>
+ <9ada34661b93fa5dfe3b0c66816a62c1a27f22a3.camel@intel.com>
+ <CAP-bSRZm4CyxY1VdtWvZRcfLMwc3njd3OTSd446Q5dcSfjJY=Q@mail.gmail.com>
+ <CAP-bSRbon4O=DCLHvOZHm452Svc3-gsZ133Jn7-TFt8f_Y1CFA@mail.gmail.com> <36b0f88ff0f17e0246037d5f834ac545afa69cf0.camel@intel.com>
+In-Reply-To: <36b0f88ff0f17e0246037d5f834ac545afa69cf0.camel@intel.com>
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Wed, 26 Mar 2025 14:54:40 +0000
+X-Gm-Features: AQ5f1JrFGcJKO_go_hszrWqOvwd4pr-9LVI_gBcazdsIwCJkluHfBXi78KEDGlM
+Message-ID: <CAP-bSRb_f1A=_+A9x8J75socYsKFKDtysZ-m0+6Ks7NdSjQ0-Q@mail.gmail.com>
+Subject: Re: [REGRESSION] iwlwifi resume error, bisected
+To: "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "kvalo@kernel.org" <kvalo@kernel.org>, 
+	"Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>, 
+	"Berg, Johannes" <johannes.berg@intel.com>, 
+	"benjamin@sipsolutions.net" <benjamin@sipsolutions.net>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025 21:06:10 +0100,
-Salvatore Bonaccorso wrote:
-> 
-> Hi Craig, all
-> 
-> On Sat, Mar 22, 2025 at 08:55:17AM +0100, Salvatore Bonaccorso wrote:
-> > Control: tags -1 + moreinfo upstream
-> > 
-> > Hi
-> > 
-> > On Thu, Mar 20, 2025 at 10:55:32AM -0400, C.D. MacEachern wrote:
-> > > Package: src:linux
-> > > Version: 6.1.129-1
-> > > Severity: important
-> > > X-Debbugs-Cc: craig.daniel.maceachern@gmail.com
-> > > 
-> > > Dear Maintainer,
-> > > 
-> > > After update to kernel image 6.1.0-32 on Debian bookworm my builtin microphone
-> > > would no longer record
-> > > anything - no levels detected and I checked for muted channels with tools like
-> > > pavucontrol and alsamixer.
-> > > 
-> > > I found that my microphone was using the `snd_hda_intel` driver in the kernel,
-> > > so tried rebooting and choosing
-> > > the 6.1.0-31 kernel instead to rule out hardware issue. Previous kernel works
-> > > as expected, mic records and playback
-> > > is fine, so some update related to this driver, or the driver itself was
-> > > updated and no longer works correctly with
-> > > the builtin microphone.
-> > 
-> > Thanks for reproting the issue (leaving boot log context, hw used,
-> > below for context).
-> > 
-> > I think this might be introduced with 3b4309546b48 ("ALSA: hda: Fix
-> > headset detection failure due to unstable sort") wich landed as well
-> > in 6.1.129.
-> > 
-> > If you revert that commit on top of 6.1.129, does that fixes your
-> > issue? Would you be able to test this?
-> > 
-> > #regzbot introduced: v6.1.128..v6.1.129
-> > #regzbot link: https://bugs.debian.org/1100928
-> > 
-> > The solution might be similar to c6557ccf8094 ("ALSA: hda/realtek: Fix
-> > microphone regression on ASUS N705UD") from 6.14-rc5 (which got
-> > backported to 6.13.6, 6.12.18, 6.6.81 but not yet 6.1.y).
-> 
-> In case you need help in trying a kernel build with the revet applied,
-> I'm attaching the revert patch. With that you can follow
-> https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#id-1.6.6.4
-> to build a kernel using the `test-patches` helper script to test with.
-> 
-> Is that enough help so we can confirm the breaking commit?
-> 
-> Kuan-Wei Chiu, Takashi Iwai any input on our issue?
+On Tue, 10 Sept 2024 at 11:26, Grumbach, Emmanuel
+<emmanuel.grumbach@intel.com> wrote:
+>
+> On Tue, 2024-09-10 at 10:23 +0100, Chris Bainbridge wrote:
+> > On Sat, 7 Sept 2024 at 22:21, Chris Bainbridge
+> > <chris.bainbridge@gmail.com> wrote:
+> > >
+> > > It's possible that the
+> > > HP BIOS turns off the wifi when suspended on battery power
+> >
+> > This is not the case. Suspending while on battery power and then
+> > resuming (still on battery power) works without error.
+> >
+> > If the laptop is docked, and powered via both the dock USB-C *and* a
+> > mains PSU on the separate PSU connector, then suspended, then either
+> > the dock or the PSU are disconnected, then the error happens on
+> > resume, even though the laptop is continuously mains powered via the
+> > other power supply. It appears there's something about a powered
+> > dock/PSU unplug event while suspended that causes the error, as
+> > opposed to just being suspended while running on battery.
+>
+> Ok.. so that's really pointing in the direction of the BIOS or the system's firmware. Sure we made a
+> change in the driver that is now sensitive to that problem so it pops up.
+> Since wifi is available for you after resume, I think it's better not to fix that for the coming
+> release which is almost out. I'll funnel the fix patch I sent through the regular channel but you'll
+> see errors even with that patch.
 
-Please give alsa-info.sh outputs from both working and non-working
-kernels.  Run the script with --no-upload option and attach the
-outputs.
+Was this ever fixed? I see there was some kind of fix that was picked
+up by regzbot but it looks like it was for a different issue caused by
+the same original commit. I'm now on a different laptop, and hitting
+the "Timeout waiting for hardware access (CSR_GP_CNTRL 0x08040008) ...
+iwl_mvm_check_rt_status failed, device is gone during suspend" error
+on every suspend/resume cycle (even if laptop remains plugged in while
+suspended). I see it's also been reported elsewhere too, e.g.
+https://www.reddit.com/r/debian/comments/1g7yook/iwlwifi_crashes_after_resume_from_s3_sleep_on/
 
-
-thanks,
-
-Takashi
+I know the wifi is still functional after the error, but spamming the
+kernel log with a stack trace and register dump seems excessive given
+that the BIOS turning off power to the wifi when suspended seems
+reasonably common.
