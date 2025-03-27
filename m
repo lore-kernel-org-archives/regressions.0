@@ -1,219 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DF117A2F1
-	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7A3A55
+	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 19:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073356; cv=none; b=kZyB+KJRfMXbq3Yy9hdiTbJ8u9zkXDZvYiA6xix4Hc0k7s3sMWZ0tMk4Ze3diSOdgXg1nL3yz8eZbsCLsnTio2fERRxhdHjTDXNs69asGcM8cEYxM8XP/nrs0+gWVQ/cuTu3OoRPPZ/IS7RoTGWr1RLt/vOcq7aS2InBK7rGMIw=
+	t=1743103190; cv=none; b=OOTQEwu47uwO5yKTr1DNDoMxY8lMFR+lJqxD7Fit+BSX7LQ9kVAT1LeCyLNbmONbcuOIW1vZts5aPra0s/kik9CsdYSNw7pJmoSgv3QBF70auX4rgDyL+kMKKzXbdftUX2wVpc3ziVsyVkwQnYHDRbPiNVCD/H+68Id45GrgVUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073356; c=relaxed/simple;
-	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qTSaciUFzqbATZ/SL5cZhanPXvmIi510pzu5+kxc20/yWSqqO/aHtzUJYAlv1raPnZa37wmNg1B/ZqlvwUO+YzxwZKxhAh9/9FGKfVd5w6ByEaftd+I/5xsRGIF+R27OJsllLXNVgOxD+OtnbJZWzoLh6PVl/l4xaWu3Sa5llfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxwZiJAn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743103190; c=relaxed/simple;
+	bh=xSJC7NE5dhe+djfu8MQAVula0O7UgKrN7fIsghtAq08=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dPf90RmgHXXlNyFnTqi+8ifOkiDGEwK1CHsjnvwX+MY9m6Xe8HIdjgqi+ZRwQ6bjjoCkQeK2oK0zqujOU1UDvvE9xC2tq+DRtZbalua4mlDf8CzWU0Br5D0pjjV6Yh9EUgQGOA0xErsGBzYyD5fHr/Mk6kXsgHNhI7RfVBUAZdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9xbwbtv; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxwZiJAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53013C4CEEE
-	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743073356;
-	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZxwZiJAndOQzuhMcOTxzCVMUjBOiVwIHGk99CbSalXhzvGrJuH2RZDG0DxXhazyMx
-	 cRimSXk6TGJrLWxLqm3lopy/8erGiflrxxsvrAlv9HTBe5p/UY1FClc1HPGzIffBSf
-	 cPt7h90iOSumRCuB6RVCyVpqQu/XCSBaeT1y5ZDU2flDaFb8bxwipqwYc69hNWC5wK
-	 T5LKCYXM3tBp/TWA5E76gTTcldPPB8NT/mpK/5ZgQ6IikUVhc5yDaVw6MBr2fqj6kj
-	 YekOfDn2R9ADtqUpadiCl60XOXVNqyATL5/SOlMkwCZVur056RSmueUjUEyy10i1ml
-	 DQ6a7GGRjT2aw==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3fe83c8cbdbso207497b6e.3
-        for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 04:02:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrtZMCjCBdBEywFO/OLTHTHWdUoLO1XWtfaxDs19y8iqsHxPlhwqXTzAtSnDk/bukLhsklmVWWMgj61g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzmcyDexPr3yPNq0yh6ZmX2luUsTPUwXy0Vi9/4u9ZQLJzubFj2
-	8kzBqFOMJlCmDOgrfCsESljvvjx1dtAKwSY6eBXw+thtZQPZnezgybVAL1ZMABMMnfSIVa49vLK
-	3n7G3mkCb65yVTyV7oHdj7u9e9PE=
-X-Google-Smtp-Source: AGHT+IHe8auTSWvnicaZa+CBt1EQ35ftbxVUkmn26GHSu5ft6JmVevRgocMBJwcwwlMJ8HrY4FOwUzBfnAIOpQw1jRA=
-X-Received: by 2002:a05:6870:2012:b0:29f:97af:a1a0 with SMTP id
- 586e51a60fabf-2c8481b2dfamr1388442fac.24.1743073355458; Thu, 27 Mar 2025
- 04:02:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9xbwbtv"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so734724f8f.0
+        for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 12:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743103187; x=1743707987; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fC+ON84pbmaEiijG4EesLfUkCJCg1TONLIcdty6Zbo4=;
+        b=C9xbwbtvcLZfMfq+lmvjbNAWlkNT1YKCQZ5xqhaobHHXoQrOC7hd2P3ZpGvrnK7A/k
+         EVbQka5N+AsYRFdPlrzE4jLpSW9If3cSaljqKyU0z80AXHkUAmeKbPetKiJnErhR4F5K
+         Aw5nyv9aURyv3X+Q5Y86B9xOEzZ7UzW5dvdEG9+QrUr9uF+k6RErjyZyrGa0Z8N5WCof
+         KBajArHXXXya+zyVmMqleLxNaXH9U6f9YAEd/r6v15O/t/JTth2KnAVE5cbdQpOtIzkc
+         v2RHauhcP5OSSek+SeRYGwnZSCwaaK7JqKnnE6eoYuA93dWbWkfqhTk83haDHYeGjVV7
+         LNQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743103187; x=1743707987;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fC+ON84pbmaEiijG4EesLfUkCJCg1TONLIcdty6Zbo4=;
+        b=FKODCZqBVbfpX6V+sqwC22IqliWZxm0CqHr6uXSGujdpDxtjuBe6399qTGLwDgzFeq
+         HQ/dXGZCY3QLRA8hZ7wKOQMU0J2LYf1TSNZqPqHe2bzvY8+J8q6jN2F1K71JJw4J/YhH
+         HTukwHO3xHgE/DgdSxuoOSWBd9ocCXIixSWkRZimS84qOi4nWoM5gZ/yjJtL92uZpEb7
+         oh9BJ5pLBf2P1wgqIRE+KCD8VnNWcqMHkxmGT+ck8dLIOO47CqY2DfvFtVhUd0KG8zAY
+         0OYu5DaEs3d/INGNLPZfyyOqiu9MkvRVUjG7IlB/UM2c4HrNQYa0t1rGYkmmX+ptL1pR
+         ouzg==
+X-Gm-Message-State: AOJu0YzX30/mdLloqTIkm4TNJMv2XNhkGewhbzlURxmPFYftSv9TxIxV
+	Uke5cQZfBNDL5uZ4UcYbqoyjBmoLKB9IPLRwAR9iKE6Nwx0pjDzNO+w43g==
+X-Gm-Gg: ASbGnctbNRd8+GazqsBX6XQwYvkVNYoKFCYK6Ba1Tt0XEXLWGJB9VEWaeXWtd728Bc1
+	yrPmsHjCc1s0ki/a2FXoQiHK9LLm0SJlQOLixpcC6YKduKcgOZ+Ya/NJU9/xK08mETqduYyHBbS
+	mnkGY0HbAZQU+0YCTynWxpy75zKHcYwpiydz/rmAjTlvgRZx5Yn9FXO/AkPy6FY8VrAbc2v3TJB
+	eE24Knjt9/gch5BtHsM/+ZMqsyYrm9x940PfW8FMTTk/6Wes+1FseXYPvNWeufe6UJ44XGC8SeT
+	TKU05tbW+Xz8SfQ509VzLon+GIA8b/zPfAHYgIh94cTChgfUOuUIv6CP
+X-Google-Smtp-Source: AGHT+IE0YRzKoKJ+nJ2DEvPcKdz5HHbn0+yhV4zVfv6QF/QhHtCOpi/6zyve8Nl5vW6kdk+bXY89ZA==
+X-Received: by 2002:a5d:5847:0:b0:391:3915:cfea with SMTP id ffacd0b85a97d-39ad176bb18mr5654108f8f.38.1743103186742;
+        Thu, 27 Mar 2025 12:19:46 -0700 (PDT)
+Received: from debian.local ([2a0a:ef40:4d4:f101:e41a:977a:f788:910f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b65b985sm366139f8f.12.2025.03.27.12.19.46
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 12:19:46 -0700 (PDT)
+Date: Thu, 27 Mar 2025 19:19:44 +0000
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: regressions@lists.linux.dev
+Subject: [sashal@kernel.org: Re: [GIT pull] irq/urgent for v6.15-rc1]
+Message-ID: <Z-Wk0DUiGO8mkF6h@debian.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Z-ShAR59cTow0KcR@mail-itl> <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
-In-Reply-To: <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Mar 2025 12:02:24 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrRebIXAiv4lIfOtz-NN0gA4kEIc0Bg2UKWbFdxXV2wbKoCesQt-GE76b0
-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
-Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen PV
- dom0 - regression in 6.13
-To: Jan Beulich <jbeulich@suse.com>, 
-	=?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, xen-devel <xen-devel@lists.xenproject.org>, 
-	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev, 
-	Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: multipart/mixed; boundary="0000000000002b914c063150e400"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---0000000000002b914c063150e400
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+#regzbot introduced: c3164d2e0d18
+#regzbot fix: 3ece3e8e5976
+#regzbot title: Intermittent boot failure
 
-On Thu, Mar 27, 2025 at 11:14=E2=80=AFAM Jan Beulich <jbeulich@suse.com> wr=
-ote:
->
-> On 27.03.2025 01:51, Marek Marczykowski-G=C3=B3recki wrote:
-> > Hi,
-> >
-> > I've got a report[1] that 6.13.6 crashes as listed below. It worked fin=
-e in
-> > 6.12.11. We've tried few simple things to narrow the problem down, but
-> > without much success.
-> >
-> > This is running in Xen 4.17.5, PV dom0, which probably is relevant here=
-.
-> > This is running on AMD Ryzen 9 7950X3D, with ASRock X670E Taichi
-> > motherboard.
-> > There are few more details in the original report (link below).
-> >
-> > The kernel package (including its config saved into /boot) is here:
-> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-6.13.=
-6-1.qubes.fc37.x86_64.rpm
-> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-modul=
-es-6.13.6-1.qubes.fc37.x86_64.rpm
-> >
-> > The crash message:
-> > [    9.367048] BUG: kernel NULL pointer dereference, address: 000000000=
-0000070
-> > [    9.368251] #PF: supervisor read access in kernel mode
-> > [    9.369273] #PF: error_code(0x0000) - not-present page
-> > [    9.370346] PGD 0 P4D 0
-> > [    9.371222] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > [    9.372114] CPU: 0 UID: 0 PID: 128 Comm: kworker/0:2 Not tainted 6.1=
-3.6-1.qubes.fc37.x86_64 #1
-> > [    9.373184] Hardware name: ASRock X670E Taichi/X670E Taichi, BIOS 3.=
-20 02/21/2025
-> > [    9.374183] Workqueue: kacpi_notify acpi_os_execute_deferred
-> > [    9.375124] RIP: e030:cpufreq_update_limits+0x10/0x30
-> > [    9.375840] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
- 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
- <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> > [    9.377009] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> > [    9.377667] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
-05d635fa8
-> > [    9.378415] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
-000000000
-> > [    9.379127] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
-080808080
-> > [    9.379887] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
-004e8aa00
-> > [    9.380669] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
-0059baf00
-> > [    9.381514] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
-lGS:0000000000000000
-> > [    9.382345] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    9.383045] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
-000050660
-> > [    9.383786] Call Trace:
-> > [    9.384335]  <TASK>
-> > [    9.384886]  ? __die+0x23/0x70
-> > [    9.385456]  ? page_fault_oops+0x95/0x190
-> > [    9.386036]  ? exc_page_fault+0x76/0x190
-> > [    9.386636]  ? asm_exc_page_fault+0x26/0x30
-> > [    9.387215]  ? cpufreq_update_limits+0x10/0x30
-> > [    9.387805]  acpi_processor_notify.part.0+0x79/0x150
-> > [    9.388402]  acpi_ev_notify_dispatch+0x4b/0x80
-> > [    9.389013]  acpi_os_execute_deferred+0x1a/0x30
-> > [    9.389610]  process_one_work+0x186/0x3b0
-> > [    9.390205]  worker_thread+0x251/0x360
-> > [    9.390765]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [    9.391376]  ? __pfx_worker_thread+0x10/0x10
-> > [    9.391957]  kthread+0xd2/0x100
-> > [    9.392493]  ? __pfx_kthread+0x10/0x10
-> > [    9.393043]  ret_from_fork+0x34/0x50
-> > [    9.393575]  ? __pfx_kthread+0x10/0x10
-> > [    9.394090]  ret_from_fork_asm+0x1a/0x30
-> > [    9.394621]  </TASK>
-> > [    9.395106] Modules linked in: gpio_generic amd_3d_vcache acpi_pad(-=
-) loop fuse xenfs dm_thin_pool dm_persistent_data dm_bio_prison amdgpu amdx=
-cp i2c_algo_bit drm_ttm_helper ttm crct10dif_pclmul drm_exec crc32_pclmul g=
-pu_sched
-> > crc32c_intel drm_suballoc_helper polyval_clmulni drm_panel_backlight_qu=
-irks polyval_generic drm_buddy ghash_clmulni_intel sha512_ssse3 drm_display=
-_helper sha256_ssse3 sha1_ssse3 xhci_pci cec nvme sp5100_tco xhci_hcd nvme_=
-core nvme_auth
-> > video wmi xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gn=
-talloc xen_gntdev xen_evtchn scsi_dh_rdac scsi_dh_emc scsi_dh_alua uinput d=
-m_multipath
-> > [    9.398698] CR2: 0000000000000070
-> > [    9.399266] ---[ end trace 0000000000000000 ]---
-> > [    9.399880] RIP: e030:cpufreq_update_limits+0x10/0x30
-> > [    9.400528] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
- 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
- <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> > [    9.401673] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> > [    9.402316] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
-05d635fa8
-> > [    9.403060] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
-000000000
-> > [    9.403819] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
-080808080
-> > [    9.404581] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
-004e8aa00
-> > [    9.405332] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
-0059baf00
-> > [    9.406063] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
-lGS:0000000000000000
-> > [    9.406830] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    9.407561] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
-000050660
-> > [    9.408318] Kernel panic - not syncing: Fatal exception
-> > [    9.409022] Kernel Offset: disabled
-> > (XEN) Hardware Dom0 crashed: 'noreboot' set - not rebooting.
-> >
-> > Looking at the call trace, it's likely related to ACPI, and Xen too, so
-> > I'm adding relevant lists too.
-> >
-> > Any ideas?
-> >
-> > #regzbot introduced: v6.12.11..v6.13.6
->
-> That code looks to have been introduced for 6.9, so I wonder if so far yo=
-u merely
-> were lucky not to have observed any "highest perf changed" notification. =
-See
-> 9c4a13a08a9b ("ACPI: cpufreq: Add highest perf change notification"), whi=
-ch imo
-> merely adds a 2nd path to a pre-existing problem: cpufreq_update_limits()=
- assumes
-> that cpufreq_driver is non-NULL, and only checks cpufreq_driver->update_l=
-imits.
-> But of course the assumption there may be legitimate, and it's logic else=
-where
-> which is or has become flawed.
+----- Forwarded message from Sasha Levin <sashal@kernel.org> -----
 
-cpufreq_update_limits() needs to ensure that the driver is there.
+Date: Wed, 26 Mar 2025 21:07:47 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [GIT pull] irq/urgent for v6.15-rc1
 
-The attached patch should address this issue, Marek please verify.
+On Wed, Mar 26, 2025 at 08:08:16PM +0100, Thomas Gleixner wrote:
+> Thomas Gleixner (1):
+>      PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends
 
---0000000000002b914c063150e400
-Content-Type: text/x-patch; charset="US-ASCII"; name="cpufreq-update-limits-fix.patch"
-Content-Disposition: attachment; filename="cpufreq-update-limits-fix.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m8r8tx2z0>
-X-Attachment-Id: f_m8r8tx2z0
+Hi Thomas,
 
-LS0tCiBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jIHwgICAgOCArKysrKysrKwogMSBmaWxlIGNo
-YW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKLS0tIGEvZHJpdmVycy9jcHVmcmVxL2NwdWZyZXEuYwor
-KysgYi9kcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCkBAIC0yNzgxLDEwICsyNzgxLDE4IEBACiAg
-Ki8KIHZvaWQgY3B1ZnJlcV91cGRhdGVfbGltaXRzKHVuc2lnbmVkIGludCBjcHUpCiB7CisJc3Ry
-dWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3k7CisKKwlwb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQo
-Y3B1KTsKKwlpZiAoIXBvbGljeSkKKwkJcmV0dXJuOworCiAJaWYgKGNwdWZyZXFfZHJpdmVyLT51
-cGRhdGVfbGltaXRzKQogCQljcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0cyhjcHUpOwogCWVs
-c2UKIAkJY3B1ZnJlcV91cGRhdGVfcG9saWN5KGNwdSk7CisKKwljcHVmcmVxX2NwdV9wdXQocG9s
-aWN5KTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGNwdWZyZXFfdXBkYXRlX2xpbWl0cyk7CiAK
---0000000000002b914c063150e400--
+I haven't bisected this, but I suspect that this commit is causing
+boot-time panics that are observed on LKFT. Note the line numbers are
+off by a bit.
+
+Full logs of the run are available at:
+https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.13-rc7-16083-gc13edfd29c29/testrun/27775255/suite/log-parser-test/test/bug-bug-kernel-null-pointer-dereference-address/details/
+
+<1>[    1.540630] BUG: kernel NULL pointer dereference, address: 0000000000000002
+<1>[    1.540630] #PF: supervisor read access in kernel mode
+<1>[    1.540630] #PF: error_code(0x0000) - not-present page
+<6>[    1.540630] PGD 0 P4D 0
+<4>[    1.540630] Oops: Oops: 0000 [#1] SMP PTI
+<4>[    1.540630] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0 #1 PREEMPT(voluntary)
+<4>[    1.540630] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[ 1.540630] RIP: 0010:__pci_enable_msi_range (drivers/pci/msi/msi.c:300 drivers/pci/msi/msi.c:342 drivers/pci/msi/msi.c:412 drivers/pci/msi/msi.c:463)
+<4>[ 1.540630] Code: ff ff ff e8 4e 18 fe ff f6 83 9f 06 00 00 10 0f b7 85 66 ff ff ff 74 0c 0d 00 01 00 00 66 89 85 66 ff ff ff 8b 8d 60 ff ff ff <41> f6 47 02 40 74 0c 25 ff fe 00 00 66 89 85 66 ff ff ff 89 8d 6c
+All code
+========
+   0:	ff                   	(bad)
+   1:	ff                   	(bad)
+   2:	ff                   	(bad)
+   3:	e8 4e 18 fe ff       	call   0xfffffffffffe1856
+   8:	f6 83 9f 06 00 00 10 	testb  $0x10,0x69f(%rbx)
+   f:	0f b7 85 66 ff ff ff 	movzwl -0x9a(%rbp),%eax
+  16:	74 0c                	je     0x24
+  18:	0d 00 01 00 00       	or     $0x100,%eax
+  1d:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  24:	8b 8d 60 ff ff ff    	mov    -0xa0(%rbp),%ecx
+  2a:*	41 f6 47 02 40       	testb  $0x40,0x2(%r15)		<-- trapping instruction
+  2f:	74 0c                	je     0x3d
+  31:	25 ff fe 00 00       	and    $0xfeff,%eax
+  36:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  3d:	89                   	.byte 0x89
+  3e:	8d                   	.byte 0x8d
+  3f:	6c                   	insb   (%dx),%es:(%rdi)
+
+Code starting with the faulting instruction
+===========================================
+   0:	41 f6 47 02 40       	testb  $0x40,0x2(%r15)
+   5:	74 0c                	je     0x13
+   7:	25 ff fe 00 00       	and    $0xfeff,%eax
+   c:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  13:	89                   	.byte 0x89
+  14:	8d                   	.byte 0x8d
+  15:	6c                   	insb   (%dx),%es:(%rdi)
+<4>[    1.540630] RSP: 0000:ffffa0df00013748 EFLAGS: 00010246
+<4>[    1.540630] RAX: 0000000000000080 RBX: ffff932e00981000 RCX: 0000000000000001
+<4>[    1.540630] RDX: 0000000000000000 RSI: 0000000000000286 RDI: ffffffff85e6e74c
+<4>[    1.540630] RBP: ffffa0df00013820 R08: 0000000000000002 R09: ffffa0df00013714
+<4>[    1.540630] R10: 0000000000000001 R11: ffffffff84ef46c0 R12: ffff932e009810c0
+<4>[    1.540630] R13: 0000000000000001 R14: ffff932e00981000 R15: 0000000000000000
+<4>[    1.540630] FS:  0000000000000000(0000) GS:ffff932ef5f71000(0000) knlGS:0000000000000000
+<4>[    1.540630] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.540630] CR2: 0000000000000002 CR3: 0000000020a2e000 CR4: 00000000000006f0
+<4>[    1.540630] Call Trace:
+<4>[    1.540630]  <TASK>
+<4>[ 1.540630] pci_alloc_irq_vectors_affinity (drivers/pci/msi/api.c:?)
+<4>[ 1.540630] pci_alloc_irq_vectors (drivers/pci/msi/api.c:235)
+<4>[ 1.540630] ahci_init_irq (drivers/ata/ahci.c:1720)
+<4>[ 1.540630] ahci_init_one (drivers/ata/ahci.c:2004)
+<4>[ 1.540630] pci_device_probe (drivers/pci/pci-driver.c:325 drivers/pci/pci-driver.c:392 drivers/pci/pci-driver.c:417 drivers/pci/pci-driver.c:451)
+<4>[ 1.540630] really_probe (drivers/base/dd.c:?)
+<4>[ 1.540630] __driver_probe_device (drivers/base/dd.c:?)
+<4>[ 1.540630] driver_probe_device (drivers/base/dd.c:830)
+<4>[ 1.540630] __driver_attach (drivers/base/dd.c:1217)
+<4>[ 1.540630] bus_for_each_dev (drivers/base/bus.c:369)
+<4>[ 1.540630] driver_attach (drivers/base/dd.c:1234)
+<4>[ 1.540630] bus_add_driver (drivers/base/bus.c:678)
+<4>[ 1.540630] driver_register (drivers/base/driver.c:250)
+<4>[ 1.540630] __pci_register_driver (drivers/pci/pci-driver.c:1448)
+<4>[ 1.540630] ahci_pci_driver_init (drivers/ata/ahci.c:2090)
+<4>[ 1.540630] do_one_initcall (init/main.c:1257)
+<4>[ 1.540630] do_initcall_level (init/main.c:1318)
+<4>[ 1.540630] do_initcalls (init/main.c:1332)
+<4>[ 1.540630] do_basic_setup (init/main.c:1355)
+<4>[ 1.540630] kernel_init_freeable (init/main.c:1571)
+<4>[ 1.540630] kernel_init (init/main.c:1459)
+<4>[ 1.540630] ret_from_fork (arch/x86/kernel/process.c:159)
+<4>[ 1.540630] ret_from_fork_asm (arch/x86/entry/entry_64.S:258)
+<4>[    1.540630]  </TASK>
+<4>[    1.540630] Modules linked in:
+<4>[    1.540630] CR2: 0000000000000002
+<4>[    1.540630] ---[ end trace 0000000000000000 ]---
+<4>[ 1.540630] RIP: 0010:__pci_enable_msi_range (drivers/pci/msi/msi.c:300 drivers/pci/msi/msi.c:342 drivers/pci/msi/msi.c:412 drivers/pci/msi/msi.c:463)
+<4>[ 1.540630] Code: ff ff ff e8 4e 18 fe ff f6 83 9f 06 00 00 10 0f b7 85 66 ff ff ff 74 0c 0d 00 01 00 00 66 89 85 66 ff ff ff 8b 8d 60 ff ff ff <41> f6 47 02 40 74 0c 25 ff fe 00 00 66 89 85 66 ff ff ff 89 8d 6c
+All code
+========
+   0:	ff                   	(bad)
+   1:	ff                   	(bad)
+   2:	ff                   	(bad)
+   3:	e8 4e 18 fe ff       	call   0xfffffffffffe1856
+   8:	f6 83 9f 06 00 00 10 	testb  $0x10,0x69f(%rbx)
+   f:	0f b7 85 66 ff ff ff 	movzwl -0x9a(%rbp),%eax
+  16:	74 0c                	je     0x24
+  18:	0d 00 01 00 00       	or     $0x100,%eax
+  1d:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  24:	8b 8d 60 ff ff ff    	mov    -0xa0(%rbp),%ecx
+  2a:*	41 f6 47 02 40       	testb  $0x40,0x2(%r15)		<-- trapping instruction
+  2f:	74 0c                	je     0x3d
+  31:	25 ff fe 00 00       	and    $0xfeff,%eax
+  36:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  3d:	89                   	.byte 0x89
+  3e:	8d                   	.byte 0x8d
+  3f:	6c                   	insb   (%dx),%es:(%rdi)
+
+Code starting with the faulting instruction
+===========================================
+   0:	41 f6 47 02 40       	testb  $0x40,0x2(%r15)
+   5:	74 0c                	je     0x13
+   7:	25 ff fe 00 00       	and    $0xfeff,%eax
+   c:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
+  13:	89                   	.byte 0x89
+  14:	8d                   	.byte 0x8d
+  15:	6c                   	insb   (%dx),%es:(%rdi)
+<4>[    1.540630] RSP: 0000:ffffa0df00013748 EFLAGS: 00010246
+<4>[    1.540630] RAX: 0000000000000080 RBX: ffff932e00981000 RCX: 0000000000000001
+<4>[    1.540630] RDX: 0000000000000000 RSI: 0000000000000286 RDI: ffffffff85e6e74c
+<4>[    1.540630] RBP: ffffa0df00013820 R08: 0000000000000002 R09: ffffa0df00013714
+<4>[    1.540630] R10: 0000000000000001 R11: ffffffff84ef46c0 R12: ffff932e009810c0
+<4>[    1.540630] R13: 0000000000000001 R14: ffff932e00981000 R15: 0000000000000000
+<4>[    1.540630] FS:  0000000000000000(0000) GS:ffff932ef5f71000(0000) knlGS:0000000000000000
+<4>[    1.540630] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.540630] CR2: 0000000000000002 CR3: 0000000020a2e000 CR4: 00000000000006f0
+<6>[    1.540630] note: swapper/0[1] exited with irqs disabled
+<0>[    1.574039] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+<0>[    1.574664] Kernel Offset: 0x2c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[    1.574664] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+
+
+-- 
+Thanks,
+Sasha
+
+----- End forwarded message -----
