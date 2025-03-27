@@ -1,120 +1,219 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244F1210F44
-	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 11:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DF117A2F1
+	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073227; cv=none; b=fVtcmJAsU3hgIFcjxNNktel7Y1uHem/U98M0akT4vbTN/KeGW7fWDP8YgDe698FAf9aXt8n/Iscx4lQsFHEylpy2vO3QTQhafO+gnyHSL9qzodfA2G2Nz0gPY0xTiQSkMQdwyrVJtJk770XBR653XthTB/wEBiUy17QIC+YsLk0=
+	t=1743073356; cv=none; b=kZyB+KJRfMXbq3Yy9hdiTbJ8u9zkXDZvYiA6xix4Hc0k7s3sMWZ0tMk4Ze3diSOdgXg1nL3yz8eZbsCLsnTio2fERRxhdHjTDXNs69asGcM8cEYxM8XP/nrs0+gWVQ/cuTu3OoRPPZ/IS7RoTGWr1RLt/vOcq7aS2InBK7rGMIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073227; c=relaxed/simple;
-	bh=PYINQnKycbXh8ZEgV82L19kwunYBNxMMAcYZj3hrdYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2WriZKN8T5HRj0dDH+2DG6esU2wcnwSMZxk5CSgZGjR4U072AOEKyeyYXiuOQx5hn+Lsx+4mqBZCNiMoxxkhGq7dQ1VpqQF1o4YTYrY0yrJek4zxi6VanwbYyRTpWdJ9AO7ZFppOTay2IJNv3uieo+MywGCWmpx8Gd+ub9XvDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=pPUxpPGh; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1743073356; c=relaxed/simple;
+	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTSaciUFzqbATZ/SL5cZhanPXvmIi510pzu5+kxc20/yWSqqO/aHtzUJYAlv1raPnZa37wmNg1B/ZqlvwUO+YzxwZKxhAh9/9FGKfVd5w6ByEaftd+I/5xsRGIF+R27OJsllLXNVgOxD+OtnbJZWzoLh6PVl/l4xaWu3Sa5llfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxwZiJAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="pPUxpPGh"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2254e0b4b79so22184865ad.2
-        for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 04:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743073225; x=1743678025; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=a+3oYLEdjTqzY7ue0pi7WI8oniaxoWaW2vaMHk//k+o=;
-        b=pPUxpPGhrdPMuXXYlDHYXPzkYf77PursfTNg5Uosq/JqQjoXHFj6T17ergBs4SwlNj
-         ZR+cpeRQ3jhA6cCIn4B02QjkrHDMnklpWo4ypi++XrNQqJPJZO3JhSu9mcVfGZ3nU+tT
-         EWbloiAtdbMX0z+erXfICnLUbG/3eQZdCkupM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743073225; x=1743678025;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a+3oYLEdjTqzY7ue0pi7WI8oniaxoWaW2vaMHk//k+o=;
-        b=arrGPn8aeQ48uZsI9SgVsB/ztlG6dn5KMrFWBErAwNEhjSSF9D/io0PvK66yB206sM
-         QcO9K7S6Q2rtSLDkj7BuhLFDtxr9HCfBb+KihUyq80nv2EwDcvoc0iDEp6Y5WAXHmIAe
-         SnmjbPT1tmZB/R8n8sTBvy2hatAVwncIgX8f/qSppQTUyx72jXterFck330463OjEKBL
-         DAdh+tJ0fT/eEzr7t7wF4oJXXemAlSQ1NjCwnJXKhchTMQ9ZfFFrqo3jSZ8g7qkVn9qF
-         T/icyeHch+UwISHJU2i2sKOSttsWtFc5Lp3r8Du51vKBY45nlzugsDUHziLf/bVQ65hD
-         R/LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1QK/mIEzdaopL99GEdQvzLA3wmHRvNmsA5EGSs52OuO/mRa3lT4sfdTVS25GlWa6Z3rPRekcf0O/Pow==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzyO6sWezzv27ARr/Ke/Ddq8/qP7h5ob09I1FH3KJ11iNy9eyLW
-	Rt4mpsq8OSyy2zeCE2EiVDj8Fei5dwvy2zZUkKAIvOsFFxsPXmwrtVq1co2c/UM=
-X-Gm-Gg: ASbGnctCzV9fka1uWndQJKyaJAv+amj7U//uHJPkMwvAcl5P7WOXtUPxpqKeXdvZF7r
-	UA7QWxO9JMefNcyM9ihOm6qnYq89aV7TRxS4QfOWVYXE8VPYRl/GZCKexauGcKOINtgI/ebgxFa
-	HZpJjy+uPUrJYDLYMuD9TavNdHcNoT6dlTpFrq3ldVSmkapADMK36nPGBJbtjvciOQ6G2QCo5A0
-	fNM/M0M9FgPZdBVKeAiN/Zhy7J4IN6OaVhyfgcOGJ0Lm1uqHNmML9CLCihR2mf/S+hbpfXdY6Jh
-	l3jAuR5SX3nppavBHmb1Cr7Bqrq8TQTa/wvPZq0ZP/ozAaxZ7w==
-X-Google-Smtp-Source: AGHT+IH1gxZZic6MFjUwMzJgoZ8YGYTQsOie+7V5EQMxQWaNdI6WA0iGm3+Xf9x6MiyTN7yeoRlPiQ==
-X-Received: by 2002:a05:6a00:1743:b0:736:73ad:365b with SMTP id d2e1a72fcca58-73960e468b0mr3936030b3a.14.1743073225242;
-        Thu, 27 Mar 2025 04:00:25 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390600a5f6sm13932175b3a.82.2025.03.27.04.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 04:00:24 -0700 (PDT)
-Date: Thu, 27 Mar 2025 12:00:20 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	PCI <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	shivamurthy.shastri@linutronix.de,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: next-20250324: x86_64: BUG: kernel NULL pointer dereference
- __pci_enable_msi_range
-Message-ID: <Z-UvxG4EIeO5zOgU@macbook.local>
-References: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
- <b6df035d-74b5-4113-84c3-1a0a18a61e78@stanley.mountain>
- <Z-LDdPeTsnBi8gAU@macbook.local>
- <CA+G9fYumyaftJ9FaK+74g5iw-v9RV4qDT-SLg1XGk8G7ub2EXA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxwZiJAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53013C4CEEE
+	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743073356;
+	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZxwZiJAndOQzuhMcOTxzCVMUjBOiVwIHGk99CbSalXhzvGrJuH2RZDG0DxXhazyMx
+	 cRimSXk6TGJrLWxLqm3lopy/8erGiflrxxsvrAlv9HTBe5p/UY1FClc1HPGzIffBSf
+	 cPt7h90iOSumRCuB6RVCyVpqQu/XCSBaeT1y5ZDU2flDaFb8bxwipqwYc69hNWC5wK
+	 T5LKCYXM3tBp/TWA5E76gTTcldPPB8NT/mpK/5ZgQ6IikUVhc5yDaVw6MBr2fqj6kj
+	 YekOfDn2R9ADtqUpadiCl60XOXVNqyATL5/SOlMkwCZVur056RSmueUjUEyy10i1ml
+	 DQ6a7GGRjT2aw==
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3fe83c8cbdbso207497b6e.3
+        for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 04:02:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrtZMCjCBdBEywFO/OLTHTHWdUoLO1XWtfaxDs19y8iqsHxPlhwqXTzAtSnDk/bukLhsklmVWWMgj61g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzmcyDexPr3yPNq0yh6ZmX2luUsTPUwXy0Vi9/4u9ZQLJzubFj2
+	8kzBqFOMJlCmDOgrfCsESljvvjx1dtAKwSY6eBXw+thtZQPZnezgybVAL1ZMABMMnfSIVa49vLK
+	3n7G3mkCb65yVTyV7oHdj7u9e9PE=
+X-Google-Smtp-Source: AGHT+IHe8auTSWvnicaZa+CBt1EQ35ftbxVUkmn26GHSu5ft6JmVevRgocMBJwcwwlMJ8HrY4FOwUzBfnAIOpQw1jRA=
+X-Received: by 2002:a05:6870:2012:b0:29f:97af:a1a0 with SMTP id
+ 586e51a60fabf-2c8481b2dfamr1388442fac.24.1743073355458; Thu, 27 Mar 2025
+ 04:02:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYumyaftJ9FaK+74g5iw-v9RV4qDT-SLg1XGk8G7ub2EXA@mail.gmail.com>
+References: <Z-ShAR59cTow0KcR@mail-itl> <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
+In-Reply-To: <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 12:02:24 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrRebIXAiv4lIfOtz-NN0gA4kEIc0Bg2UKWbFdxXV2wbKoCesQt-GE76b0
+Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen PV
+ dom0 - regression in 6.13
+To: Jan Beulich <jbeulich@suse.com>, 
+	=?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, xen-devel <xen-devel@lists.xenproject.org>, 
+	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev, 
+	Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: multipart/mixed; boundary="0000000000002b914c063150e400"
 
-On Thu, Mar 27, 2025 at 02:10:21PM +0530, Naresh Kamboju wrote:
-> On Tue, 25 Mar 2025 at 20:23, Roger Pau Monné <roger.pau@citrix.com> wrote:
+--0000000000002b914c063150e400
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 27, 2025 at 11:14=E2=80=AFAM Jan Beulich <jbeulich@suse.com> wr=
+ote:
+>
+> On 27.03.2025 01:51, Marek Marczykowski-G=C3=B3recki wrote:
+> > Hi,
 > >
-> > On Tue, Mar 25, 2025 at 04:56:33PM +0300, Dan Carpenter wrote:
-> > > If I had to guess, I'd say that it was related to Fixes: d9f2164238d8
-> > > ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag").  I
-> > > suspect d->host_data can be NULL.  I could be wrong, but let's add Roger
-> > > to the CC list just in case.
+> > I've got a report[1] that 6.13.6 crashes as listed below. It worked fin=
+e in
+> > 6.12.11. We've tried few simple things to narrow the problem down, but
+> > without much success.
 > >
-> > Indeed, sorry.  There's a patch from Thomas to switch to using
-> > pci_msi_domain_supports() for fetching the flag, as there's no
-> > guarantee all call contexts will have an associated msi_domain_info:
-> 
-> Thanks Roger for the clarification.
-> LKFT started noticing this issue on the Linus Torvalds master branch from
-> March 26, 2025 at git describe: v6.14-1979-g61af143fbea4
-> 
-> Anders bisected and confirmed that,
->   # first bad commit:
->      [c3164d2e0d181027da8fc94f8179d8607c3d440f]
->      PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag
-> 
+> > This is running in Xen 4.17.5, PV dom0, which probably is relevant here=
+.
+> > This is running on AMD Ryzen 9 7950X3D, with ASRock X670E Taichi
+> > motherboard.
+> > There are few more details in the original report (link below).
+> >
+> > The kernel package (including its config saved into /boot) is here:
+> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-6.13.=
+6-1.qubes.fc37.x86_64.rpm
+> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-modul=
+es-6.13.6-1.qubes.fc37.x86_64.rpm
+> >
+> > The crash message:
+> > [    9.367048] BUG: kernel NULL pointer dereference, address: 000000000=
+0000070
+> > [    9.368251] #PF: supervisor read access in kernel mode
+> > [    9.369273] #PF: error_code(0x0000) - not-present page
+> > [    9.370346] PGD 0 P4D 0
+> > [    9.371222] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+> > [    9.372114] CPU: 0 UID: 0 PID: 128 Comm: kworker/0:2 Not tainted 6.1=
+3.6-1.qubes.fc37.x86_64 #1
+> > [    9.373184] Hardware name: ASRock X670E Taichi/X670E Taichi, BIOS 3.=
+20 02/21/2025
+> > [    9.374183] Workqueue: kacpi_notify acpi_os_execute_deferred
+> > [    9.375124] RIP: e030:cpufreq_update_limits+0x10/0x30
+> > [    9.375840] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
+ <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
+> > [    9.377009] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
+> > [    9.377667] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
+05d635fa8
+> > [    9.378415] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
+000000000
+> > [    9.379127] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
+080808080
+> > [    9.379887] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
+004e8aa00
+> > [    9.380669] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
+0059baf00
+> > [    9.381514] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
+lGS:0000000000000000
+> > [    9.382345] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    9.383045] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
+000050660
+> > [    9.383786] Call Trace:
+> > [    9.384335]  <TASK>
+> > [    9.384886]  ? __die+0x23/0x70
+> > [    9.385456]  ? page_fault_oops+0x95/0x190
+> > [    9.386036]  ? exc_page_fault+0x76/0x190
+> > [    9.386636]  ? asm_exc_page_fault+0x26/0x30
+> > [    9.387215]  ? cpufreq_update_limits+0x10/0x30
+> > [    9.387805]  acpi_processor_notify.part.0+0x79/0x150
+> > [    9.388402]  acpi_ev_notify_dispatch+0x4b/0x80
+> > [    9.389013]  acpi_os_execute_deferred+0x1a/0x30
+> > [    9.389610]  process_one_work+0x186/0x3b0
+> > [    9.390205]  worker_thread+0x251/0x360
+> > [    9.390765]  ? srso_alias_return_thunk+0x5/0xfbef5
+> > [    9.391376]  ? __pfx_worker_thread+0x10/0x10
+> > [    9.391957]  kthread+0xd2/0x100
+> > [    9.392493]  ? __pfx_kthread+0x10/0x10
+> > [    9.393043]  ret_from_fork+0x34/0x50
+> > [    9.393575]  ? __pfx_kthread+0x10/0x10
+> > [    9.394090]  ret_from_fork_asm+0x1a/0x30
+> > [    9.394621]  </TASK>
+> > [    9.395106] Modules linked in: gpio_generic amd_3d_vcache acpi_pad(-=
+) loop fuse xenfs dm_thin_pool dm_persistent_data dm_bio_prison amdgpu amdx=
+cp i2c_algo_bit drm_ttm_helper ttm crct10dif_pclmul drm_exec crc32_pclmul g=
+pu_sched
+> > crc32c_intel drm_suballoc_helper polyval_clmulni drm_panel_backlight_qu=
+irks polyval_generic drm_buddy ghash_clmulni_intel sha512_ssse3 drm_display=
+_helper sha256_ssse3 sha1_ssse3 xhci_pci cec nvme sp5100_tco xhci_hcd nvme_=
+core nvme_auth
+> > video wmi xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gn=
+talloc xen_gntdev xen_evtchn scsi_dh_rdac scsi_dh_emc scsi_dh_alua uinput d=
+m_multipath
+> > [    9.398698] CR2: 0000000000000070
+> > [    9.399266] ---[ end trace 0000000000000000 ]---
+> > [    9.399880] RIP: e030:cpufreq_update_limits+0x10/0x30
+> > [    9.400528] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
+ <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
+> > [    9.401673] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
+> > [    9.402316] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
+05d635fa8
+> > [    9.403060] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
+000000000
+> > [    9.403819] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
+080808080
+> > [    9.404581] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
+004e8aa00
+> > [    9.405332] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
+0059baf00
+> > [    9.406063] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
+lGS:0000000000000000
+> > [    9.406830] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    9.407561] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
+000050660
+> > [    9.408318] Kernel panic - not syncing: Fatal exception
+> > [    9.409022] Kernel Offset: disabled
+> > (XEN) Hardware Dom0 crashed: 'noreboot' set - not rebooting.
+> >
+> > Looking at the call trace, it's likely related to ACPI, and Xen too, so
+> > I'm adding relevant lists too.
+> >
+> > Any ideas?
+> >
+> > #regzbot introduced: v6.12.11..v6.13.6
+>
+> That code looks to have been introduced for 6.9, so I wonder if so far yo=
+u merely
+> were lucky not to have observed any "highest perf changed" notification. =
+See
+> 9c4a13a08a9b ("ACPI: cpufreq: Add highest perf change notification"), whi=
+ch imo
+> merely adds a 2nd path to a pre-existing problem: cpufreq_update_limits()=
+ assumes
+> that cpufreq_driver is non-NULL, and only checks cpufreq_driver->update_l=
+imits.
+> But of course the assumption there may be legitimate, and it's logic else=
+where
+> which is or has become flawed.
 
-Hello,
+cpufreq_update_limits() needs to ensure that the driver is there.
 
-The fix has already been committed to Linux master, commit hash
-3ece3e8e5976c49c3f887e5923f998eabd54ff40.
+The attached patch should address this issue, Marek please verify.
 
-Regards, Roger.
+--0000000000002b914c063150e400
+Content-Type: text/x-patch; charset="US-ASCII"; name="cpufreq-update-limits-fix.patch"
+Content-Disposition: attachment; filename="cpufreq-update-limits-fix.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m8r8tx2z0>
+X-Attachment-Id: f_m8r8tx2z0
+
+LS0tCiBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jIHwgICAgOCArKysrKysrKwogMSBmaWxlIGNo
+YW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKLS0tIGEvZHJpdmVycy9jcHVmcmVxL2NwdWZyZXEuYwor
+KysgYi9kcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCkBAIC0yNzgxLDEwICsyNzgxLDE4IEBACiAg
+Ki8KIHZvaWQgY3B1ZnJlcV91cGRhdGVfbGltaXRzKHVuc2lnbmVkIGludCBjcHUpCiB7CisJc3Ry
+dWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3k7CisKKwlwb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQo
+Y3B1KTsKKwlpZiAoIXBvbGljeSkKKwkJcmV0dXJuOworCiAJaWYgKGNwdWZyZXFfZHJpdmVyLT51
+cGRhdGVfbGltaXRzKQogCQljcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0cyhjcHUpOwogCWVs
+c2UKIAkJY3B1ZnJlcV91cGRhdGVfcG9saWN5KGNwdSk7CisKKwljcHVmcmVxX2NwdV9wdXQocG9s
+aWN5KTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGNwdWZyZXFfdXBkYXRlX2xpbWl0cyk7CiAK
+--0000000000002b914c063150e400--
