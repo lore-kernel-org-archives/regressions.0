@@ -1,146 +1,157 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+Received: from m.b4.vu (m.b4.vu [203.16.231.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AEB1B6D08
-	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 22:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCED1B6D08
+	for <regressions@lists.linux.dev>; Thu, 27 Mar 2025 22:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.16.231.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743112982; cv=none; b=KPoSy1tlH78cYKLV7s92HJO+Sm8MGKRNAakN6KvpEdjzp5mTlzHEJPEwnjEpfdc8OsbLdSgWRdbfnfBfyCPGsasu8L94zE8vR1ue5rNQV3WASFEFvFf4fYuV5wmjpSKnNwCjq/w3McOgGPM+QIuEgy7qC4uIwU0sOvmd1SCybDo=
+	t=1743113695; cv=none; b=jZjm9O+neiUSsyyufknuSCinckd8C9cnNiJkK1g5EbAHgex2dotZNN1Wd6i6ZaFRbSQytU++I4GMQHMXlNEvkHy98SwG0NxGdMZjkOI3lB8TjgLPPTfrnkbWXp0JRYZC8/NN/4WweNJxYd20Rkb37uhQvGHk1PolJwa8CW/TR3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743112982; c=relaxed/simple;
-	bh=8lsAjBox89CX18MNCS5cM07o3xZ4BteHev5PJjESD4I=;
+	s=arc-20240116; t=1743113695; c=relaxed/simple;
+	bh=gkT2TWhSQY2wtcVKWhByG9vHOSTaP155ks4mn7sQoyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XT5KWzy/1LJK69sBwHDsRp/AyC9oWCPv9AQJCQFRM2fx1isv7luAppjUEH7f87IyNsgN3AbwZwT6g6GExJSTYzBtfDyDmfDS+XLNpaqCbrEfd32kujPl+zEY8gxG0B0QSX2eBFlabOBGGZjcukURW/yfjScy/RKYmrUJryZdPcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=qsNR2WJX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N6f1yw83; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkatFkd4Sl96cXtK+hZ3l07wZLRR0NKa8L8dGnMM/1WjZcVFPcCJLoR2Mlegfq0glhwx+dAgyiq9iFzrUoeOc2lj7HrKOYi36KPCWUhrUaJPdcc6azzaj4GZdhXWRNtu6G/yHTZ6XPQc+eb6xji6545rav+kAwk8sxCn0SesKkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu; spf=pass smtp.mailfrom=b4.vu; dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b=nU6Ul9l0; arc=none smtp.client-ip=203.16.231.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=b4.vu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="qsNR2WJX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N6f1yw83"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 973351383828;
-	Thu, 27 Mar 2025 18:02:59 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 27 Mar 2025 18:02:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743112979;
-	 x=1743199379; bh=zf6tcG4o+mDyKdiFDoblfnPavaAiQxh5rvU4VR14S+8=; b=
-	qsNR2WJXh0ESyAevQdyM0s+kTsYJKnIQvdDm3r1+gxiDTpGnJ+5FQTQ/MgDH3NwJ
-	2hMHrzA4e0giqKUsGhBI0jwpIcFr5czvEs/F8QXJQ6Q8aTKM/ZelhgxT8bXqYo5x
-	Xl/5j0FVEakstUZ81rCPzZGfLNG72xxoSyVp55ZFBOVp443Mi2rOwGI536l++VVF
-	Llq/4HpgVx/77N/0ECiGVwJv++N9N1bvBHUt+LDMYTyTYg/HVw6wpKMVLn2ThkuX
-	G7LHXCft+8/OBAI+Z0pr2n0KqAv1Gam5cXVSVT0WjMKU3QZkemdww/RE7cJk2bPA
-	sdkZXdv6CYWoPaEspsPEZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743112979; x=1743199379; bh=zf6tcG4o+mDyKdiFDoblfnPavaAiQxh5rvU
-	4VR14S+8=; b=N6f1yw83MqtHv7p51hGZ4/SC9oMZL5ghc4xXWl/8/8u70ACDeqk
-	dNogg2QuxIKOIS6hmPk6uMIQWJD1/JWshj7CsubHhmHTPqzc6Jbl/+DlSYaWl3st
-	VqQ+hhyEbix1QoI3lQsS1mbVJcAEhFL1Gm/7SStAbcws498So/VsU7RNwDlalZol
-	X8XfMTi+8eu3UpoQSghWVpIPlewY3xIekZTRD49/XISNwCwGxlqW8LCdC5xo/m5O
-	HAxOrvQudpVsOiLNPHDhdJqMV3jVZrzGbqLxSJ3HM2jG2emubrrYvVPyqYY6yuXS
-	wK6zQOzMGscUDWrNDrtSV1qekKtdUD/w3OQ==
-X-ME-Sender: <xms:E8vlZ1z1CZECBG6_Mp88bOnx5cVJzJ7563QxTDbOEBT6m1Vg5bVMfA>
-    <xme:E8vlZ1Q8dPTy3XJ9psoljGwXy2NVVE9pGqXeydQ38V8IRZAzpKoS7j6YKriUamXzc
-    nkM62tbWETC0A>
-X-ME-Received: <xmr:E8vlZ_V_gfDRcqKSkoKoYjun8rxx3ZNQYmiEx2Mvfhzp70sF1PS9i3xXg91oD4s2u9F4chSXx9UvrPqXyDpXgLtN4QuCoC1lRg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieelheehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
-    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
-    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
-    ggftrfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettd
-    dvgeeuteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-    dpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgr
-    fhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggvuhhlihgthhesshhush
-    gvrdgtohhmpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepgigvnhdquggvvhgvlheslhhishhtshdrgigvnhhprhhojhgvtg
-    htrdhorhhgpdhrtghpthhtohepjhhgrhhoshhssehsuhhsvgdrtghomhdprhgtphhtthho
-    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    epvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:E8vlZ3gF2XCjuE75JMfKey6xrB1KDGRQwSB_Zz6rqhIbDMaKJZLc_w>
-    <xmx:E8vlZ3DoNF4kDwtCT45CbwA5LkLTnRd0bcWStq-gcl9gnbU4gog0Ag>
-    <xmx:E8vlZwI0go199P1aByq75PTaH84a6wHiOqFoC7FoGejgKNr_2rX-VQ>
-    <xmx:E8vlZ2CCn1vcZv2vExq2Hk9im0zGshq2jPezirMyu7rIzarY0KBqVQ>
-    <xmx:E8vlZzt0mvB-6kPl_WJA76SfockTXV1N1Ln2adtM3Q1OSqVbbDFu_rtq>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Mar 2025 18:02:57 -0400 (EDT)
-Date: Thu, 27 Mar 2025 23:02:55 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jan Beulich <jbeulich@suse.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen
- PV dom0 - regression in 6.13
-Message-ID: <Z-XLD9FVjqKPU3hO@mail-itl>
-References: <Z-ShAR59cTow0KcR@mail-itl>
- <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
- <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b="nU6Ul9l0"
+Received: by m.b4.vu (Postfix, from userid 1000)
+	id DEAD7667609C; Fri, 28 Mar 2025 08:44:49 +1030 (ACDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 m.b4.vu DEAD7667609C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=b4.vu; s=m1;
+	t=1743113689; bh=IHQ+yFIFcBzJGlVKVB+l/7/pXuJ8szx633NJGV6gumg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nU6Ul9l0J39x6GQcmG1H/4nMbSTesZU2JqpeSveQRQ4FWtxRPAde0YeVLbUThMi5S
+	 xuIYNWF/v6ssi+lZtdwD8PQvWrOqNX/W7IXI3bBxAKkOZclFhE/b8WyEDxmAUQZ/TP
+	 dDZCS5pY0MwPDE0YHhXaWn165OPP9G9GUa3Qhb73XUVDJeZXLQHxCSJYo3klhRI+hx
+	 K1EmMxaCyRddft8AZ111LaWYSJJO+ugiekQ3bf2Fn9bB9gYYmNc3EObK/hnPW34NZI
+	 MnwMG1PEAlNSyOF0ow8Df7ziJAyOv1eTZA/tWVfme61+jkoCrUviQpPVAsaOJF6Qyo
+	 MZcyFEDLyt5yA==
+Date: Fri, 28 Mar 2025 08:44:49 +1030
+From: "Geoffrey D. Bennett" <g@b4.vu>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	Hao Qin <hao.qin@mediatek.com>
+Cc: linux-bluetooth@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+	Chris Lu <chris.lu@mediatek.com>, linux-sound@vger.kernel.org,
+	Benedikt Ziemons <ben@rs485.network>, pmenzel@molgen.mpg.de,
+	tiwai@suse.de, geraldogabriel@gmail.com,
+	regressions@lists.linux.dev, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v2] Revert "Bluetooth: btusb: mediatek: reset the
+ controller before downloading the fw"
+Message-ID: <Z+XN2a3141NpZKcb@m.b4.vu>
+References: <Z+W6dmZFfC7SBhza@m.b4.vu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n/zi9pJWB1Be1f5W"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+In-Reply-To: <Z+W6dmZFfC7SBhza@m.b4.vu>
 
+Hi all,
 
---n/zi9pJWB1Be1f5W
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 27 Mar 2025 23:02:55 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jan Beulich <jbeulich@suse.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen
- PV dom0 - regression in 6.13
+Sorry, I see that an identical patch has already been applied to
+bluetooth-next
+https://lore.kernel.org/linux-bluetooth/20250315022730.11071-1-hao.qin@mediatek.com/
 
-On Thu, Mar 27, 2025 at 12:02:24PM +0100, Rafael J. Wysocki wrote:
-> cpufreq_update_limits() needs to ensure that the driver is there.
->=20
-> The attached patch should address this issue, Marek please verify.
+While I'm glad the issue is being addressed, my original patch
+https://lore.kernel.org/linux-bluetooth/Z8ybV04CVUfVAykH@m.b4.vu/
+contained useful context and tags that didn't make it into the final
+commit.
 
-Yes, it fixes the problem, thanks!
+For getting this fix into current kernel releases 6.12/6.13/6.14, I
+think the patch needs the "Cc: stable@vger.kernel.org" tag that was in
+my original submission but missing from Hao's. Since this is causing
+significant issues for users on kernels 6.11+ (audio interfaces
+failing to work), it's important this gets backported.
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
+Hao, is this something you can do? I think the instructions at
+https://www.kernel.org/doc/html/v6.14/process/stable-kernel-rules.html#option-3
+need to be followed, but I've not done this before.
 
---n/zi9pJWB1Be1f5W
-Content-Type: application/pgp-signature; name=signature.asc
+Thanks,
+Geoffrey.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmflyw8ACgkQ24/THMrX
-1yyKGAf/RTH6B+NEeQIKDnBlfNysIHdT/cbPalXVBjdTpKXKuIyi+gjpm4pFpLU0
-EVf8sCTXe2zXKAWmTJ+g1kwocHEAu94lm78QAn2Y1ZP98e7czfVy0zqpMfOVOfW4
-acaKrf6R30uzDAW6RNmFk4BwGS2wHhQ2qt+pn9Yz5OQd1mNaZFguHhqnPn6ceRnO
-zG2W8HJRoQjsqG5r/JQ/ouKhXVMU9HMq14OQLANb6Q+GOuWuZ3HmRL+ZtG7O9+H5
-AYbqeIoIH1XuNLkb69GdoJcyfV+LMKoagGYumGsfhR460h/O9LA8lpKher86U7ig
-XH40zoYMGASoWX7KueC+Bb7uKv4XkQ==
-=Zu1I
------END PGP SIGNATURE-----
-
---n/zi9pJWB1Be1f5W--
+On Fri, Mar 28, 2025 at 07:22:06AM +1030, Geoffrey D. Bennett wrote:
+> This reverts commit ccfc8948d7e4d93cab341a99774b24586717d89a.
+> 
+> The MediaTek Bluetooth controller reset that was added increases the
+> Bluetooth device setup time from ~200ms to ~20s and interferes with
+> other devices on the bus.
+> 
+> Three users (with Focusrite Scarlett 2nd Gen 6i6 and 3rd Gen Solo and
+> 4i4 audio interfaces) reported that since 6.11 (which added this
+> commit) their audio interface fails to initialise if connected during
+> boot. Two of the users confirmed they have an MT7922.
+> 
+> Errors like this are observed in dmesg for the audio interface:
+> 
+>   usb 3-4: parse_audio_format_rates_v2v3(): unable to find clock source (clock -110)
+>   usb 3-4: uac_clock_source_is_valid(): cannot get clock validity for id 41
+>   usb 3-4: clock source 41 is not valid, cannot use
+> 
+> The problem only occurs when both devices and kernel modules are
+> present and loaded during system boot, so it can be worked around by
+> connecting the audio interface after booting.
+> 
+> Fixes: ccfc8948d7e4 ("Bluetooth: btusb: mediatek: reset the controller before downloading the fw")
+> Closes: https://github.com/geoffreybennett/linux-fcp/issues/24
+> Bisected-by: Benedikt Ziemons <ben@rs485.network>
+> Tested-by: Benedikt Ziemons <ben@rs485.network>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Geoffrey D. Bennett <g@b4.vu>
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+> 
+> - Updated commit message with additional information.
+> - No change to this patch's diff.
+> - Dropped alternate patch that only reverted for 0x7922.
+> - Chris, Sean, Hao agreed to reverting the change:
+>   https://lore.kernel.org/linux-bluetooth/2025031352-octopus-quadrant-f7ca@gregkh/T/#m0b31a9a8e87b9499e1ec3370c08f03e43bfb54bf
+> 
+>  drivers/bluetooth/btmtk.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+> index 68846c5bd4f7..4390fd571dbd 100644
+> --- a/drivers/bluetooth/btmtk.c
+> +++ b/drivers/bluetooth/btmtk.c
+> @@ -1330,13 +1330,6 @@ int btmtk_usb_setup(struct hci_dev *hdev)
+>  		break;
+>  	case 0x7922:
+>  	case 0x7925:
+> -		/* Reset the device to ensure it's in the initial state before
+> -		 * downloading the firmware to ensure.
+> -		 */
+> -
+> -		if (!test_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags))
+> -			btmtk_usb_subsys_reset(hdev, dev_id);
+> -		fallthrough;
+>  	case 0x7961:
+>  		btmtk_fw_get_filename(fw_bin_name, sizeof(fw_bin_name), dev_id,
+>  				      fw_version, fw_flavor);
+> @@ -1345,12 +1338,9 @@ int btmtk_usb_setup(struct hci_dev *hdev)
+>  						btmtk_usb_hci_wmt_sync);
+>  		if (err < 0) {
+>  			bt_dev_err(hdev, "Failed to set up firmware (%d)", err);
+> -			clear_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
+>  			return err;
+>  		}
+> 
+> -		set_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
+> -
+>  		/* It's Device EndPoint Reset Option Register */
+>  		err = btmtk_usb_uhw_reg_write(hdev, MTK_EP_RST_OPT,
+>  					      MTK_EP_RST_IN_OUT_OPT);
+> --
+> 2.45.0
+> 
+> 
+> 
