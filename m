@@ -1,59 +1,58 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AB3188A0E
-	for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 08:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76059212FAD
+	for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 08:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152347; cv=none; b=kg+O2j74S8fI80XBDjWE9cCbhIMhTOjomx4C+vRJ2ZSkrMHogFAk2KYR+U23Z2BytlhiXh54HlvmZp/MfQaTro7XPFzAvDTEEh0dcodd5erBPOfOdbp9iaGp/75xzCl4FOJOhFrNNrLfNQ6p0jz3tVbghkJUJE13+1u/Z4zERqI=
+	t=1743152349; cv=none; b=f0kt4heXF2YtO1IOL4ZGJFUoPBgN9H5oE/bC2WZbxoTYsyF3DIuEffBbJ9yBfL+Smwx8QN355biGjOQOOIuu28Quxt0UUMXBOIAatCh/h7hX1zx4+PVzPG5dZYxYeaZpWC+9C2VBiV+vVqqXehcklGdb/PDz45rNgGAMgbnniMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152347; c=relaxed/simple;
-	bh=e7h5M4zZjjokYk2lu7+YFfhl77YDdecLXAeBc2fJ1i4=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=lh0Tm4x7X0LEwf70XhLUhOOrO0yzjcBK7gApKcp/QGNDFvAvdGBGxjRESev/PsntTJVQVi7RWXzcOUCT+TboQruZi2rrlJbPjTZ4GxdOn3JDe6LQKRNhkOjWYQav2qtsIZxsBkIJ1cN1ROrDU8BI9Y/gpQ1za2eV2io9dXPVqeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=KIiR3do/; arc=none smtp.client-ip=209.85.128.181
+	s=arc-20240116; t=1743152349; c=relaxed/simple;
+	bh=WQ8tto9OSYdqIg5JpT7hhZg14D9bOy+LWjTVh8ISZ+I=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q/3OBM41FKkB1TCEePY6GKR54y1O65UoaYl4WeDdSpctpP3EU6QSVMpWLDdHKSO6Bo3l1FUuuIeRIW8vOFQjOpauVbb/dHz8/yL2nRuPKoYQps7fVz93rpd3H92rUVmzUuev9S5+btZgnp8LX9KDXcn1/aGItCEj2h3NiMDSJ9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=cPAZ91rN; arc=none smtp.client-ip=209.85.128.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="KIiR3do/"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6ff37565232so17482517b3.3
-        for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 01:59:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="cPAZ91rN"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ff4faf858cso14514107b3.2
+        for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 01:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1743152344; x=1743757144; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0X5x7QP97GaZ+wW8i0ZoOU1My/1umgrP5eqkkPqURi8=;
-        b=KIiR3do/cbtMZsnACzkaIWNbNpci1YKjcLBtC1QNLZjVVBslmokPXatvRX07QDO4wb
-         phpO0yy7hwmgPsCsy9f+r+KFKtz9eXrH8VKKcp8zmDG1acUWbKogbnxe2a9HSTCSKZdd
-         cUaaky4yA68VE9F0qlR6zcTSjaVCxuZWq8B6z5HcRELHPl9Sqe7odVE3NiG0QTQYhfv5
-         oVl1FCVNNPnE0AWgr2cJmR2gFiK/igk95emZ+uN749onnSQbybNye6lAVWKz8NJl1pMc
-         +hZUcciSLDh7Fjw4cfYL3siezGJKR3UKxUoBNSNE6yH68em8WctFF+naMXGImM8t9OOi
-         targ==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1743152346; x=1743757146; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z/+mFxmAbCJZONlZ/t+V+OyqhwtzDZzTtZur4PG6mSo=;
+        b=cPAZ91rNdKc86dnJ+Pd0H8EV02SPhA8W6YUETX1tlGvt2hBw6i0LV1Dd+w0/TtXiGt
+         qdOV3hqldm5NfDdDtdDl5vEGCFNbiVvgk+gZDaW4MdRgmZHTK0PpCqKaVWArUGXyHUvG
+         K2RWlP1aSLk0DlTcYi+texgTwlms2kl/SLCZvk6Tjq6bjCi1q1Loj3TOIaCbJiuQdBir
+         ndq9f0h8Xjmcd64X7JJrHXJkhETxr4H3J492Cu7WbWKs6FlYe4VTR/YN51qusdz1GZkF
+         hu2NmfEGyD4sftZ9ku9ySiWxEk5aArhCi8Djvf1bHi4HTV9jedqoOkzCh+qKhFS0S701
+         j/Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743152344; x=1743757144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0X5x7QP97GaZ+wW8i0ZoOU1My/1umgrP5eqkkPqURi8=;
-        b=w4ZnWHDu0D9i2L2yoTo/+WrvV08/zVClKryDWEjVHbqgKBZgwtE2YZhzEhU8xV1e+O
-         Dtc0PYhgs3KXTz3Qy4ZXs7dpqtNOAQAW1nmzjVk89wCifc5b04MT4rXy/4Olt4jOl7XM
-         xneRmTpnRsZdxjfuHrjtRQQrdCJhJ1/lPHMArCxEJ2dDOewO7wBSh8ht1WBkE20lB/5U
-         0tS7gIWtfLAzYIN5AuDIN5GjC0aEjnpO0nvLP3CujJjEh04GmXHFMqzAcg9OAAdpkcVe
-         LPjrcVR+Lsw1Xmn+RU7ftPJax97ZtiDgBL2yqtEgNLCJHSy2o99Vlw604YFM8NwM7wZQ
-         8BeQ==
-X-Gm-Message-State: AOJu0Yw7cru4NCP3KprsTQ4EaTypH/ZzjGeUaQt2eTqypBuui4f4dVUh
-	xF5k/Y4feuPG+/rTuUIn7w+Yx4mPwa+rDr/iZR5K7S4DAG59guP2IJW9TD2pjXKiQtqzEQsp68K
-	++djxODLl92qoqtozgIQLCZ+X+8Fanu3BoHfJXw==
-X-Gm-Gg: ASbGncvlr8S4tctLee8I1YuOnJQ+J/+tlmfA2UQP3WwSqQ4jedksVRgSnIdYcpmgpf3
-	owN0zdWBp4s5vkCBsplWqAGHw3YwLQeua2SeIzSvP3pE69Dvm+P8XPCfLl251huVtmV5m9BmhkO
-	5rxLww4BBM2Py5LpdgaxpfaZDi
-X-Google-Smtp-Source: AGHT+IGmpiWrZOt8zhyo9v+bips4TE2abNwdubmY6ZzVqGoBWpovtyQN5yabIUBMnrgZfI8Qyqv421IWqrQ6Tg5D2Ws=
-X-Received: by 2002:a05:690c:3589:b0:6fd:33a5:59a with SMTP id
- 00721157ae682-70224fcf2f8mr90042037b3.18.1743152344486; Fri, 28 Mar 2025
- 01:59:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743152346; x=1743757146;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/+mFxmAbCJZONlZ/t+V+OyqhwtzDZzTtZur4PG6mSo=;
+        b=JBgMTq1/IlvuOqXFg0SfV+DNLhFcC4NrMk68diAqCEUbtHpFLv1oRauKxUgsAEajHy
+         VCJECFAPOcpXbHWlImrf5oN2fHNirjH6LM1UgSt6yVeU/wx1SNDwrzQIvBRGB5+NcU1V
+         R6QtPapbhk8KwZFowZkFKNxK0BmdgRiDfyiPstkwu/zIOplbu/HuRLnbRzWr5HrcZMY9
+         4E7nvaJmlQyTpL5YvlSmkmuN3j8lb7hAEqhQs1d8llvt5ofzwyMzETzaUi0lSOMAZcCX
+         X60d+pnm60Wu12hoR69f0GDkCH85pp74XUNR712LrxAc/IaV0sm+mb0p27H/Vx46qbwh
+         3NCg==
+X-Gm-Message-State: AOJu0YzQ1hvE0Kk0Z+TJTKPvh7MSEjnNE1GwGsDTZVgvsenZKf7IgABH
+	oEuJ53tJklo7LlsZQ8Aml7korye+ec8xIAAmlpVKRcqIiGQbae45WQ20XsumHoB0pesIF7YtE36
+	e1G1WIoq+KsCdPIUfMV/PdekMmnW64IpbW9iJgTMeFmEv+Va9
+X-Gm-Gg: ASbGncuKCmhwExTVdGqKu4l/xaNqGVhCK+DP9Xce2IU6E4Hm9wj9EoGilwX8DUJe11t
+	UkB016WHfEmY4f5ZYH0ofyDs1Sedmm4L+CXJJKVp0B1q6NQYvR3R/Pw7oXcmwDCxmO8IVhp0udG
+	SRjeJr/rV6jPuv5Hof1WDEAVDp
+X-Google-Smtp-Source: AGHT+IHF8y00IeRym2Ez6aM0WTopHqt8mEEVlxlWzAOuiqDCgYPAqt/7XlfLqyqPggfkRdOnE28jso9EXcelZFa+hIo=
+X-Received: by 2002:a05:690c:296:b0:6fd:4670:80c6 with SMTP id
+ 00721157ae682-702250d744emr91920367b3.37.1743152346123; Fri, 28 Mar 2025
+ 01:59:06 -0700 (PDT)
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 28 Mar 2025 04:59:03 -0400
+ HTTPREST; Fri, 28 Mar 2025 04:59:04 -0400
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 28 Mar 2025 04:59:03 -0400
+ HTTPREST; Fri, 28 Mar 2025 04:59:04 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,70 +61,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 from: KernelCI bot <bot@kernelci.org>
 Reply-To: kernelci@lists.linux.dev
-Date: Fri, 28 Mar 2025 04:59:03 -0400
-X-Gm-Features: AQ5f1Jotcje3x3DVA36AwlBF0UE8l5X2D-zt828I3ZwOozWF4c6Oxt4BZMbdV7A
-Message-ID: <CACo-S-1H=k5F30hq_sdyvjFTyu_0kkWrN75R2qz0f7Ljgtqd7A@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BREGRESSION=5D_next=2Fmaster=3A_=28build=29_=E2=80=98start=E2=80=99_redecl?=
-	=?UTF-8?Q?ared_as_different_kind_of_symbol_in_arch=2Friscv=2Fmm=2Ftl=2E=2E=2E?=
+Date: Fri, 28 Mar 2025 04:59:04 -0400
+X-Gm-Features: AQ5f1JqJI8JotjZifV_Q1MdmDn2VubnbFhULvlwc3DWy-M2Gxh-PC-JG313jFG4
+Message-ID: <CACo-S-0A0K6OQtu_TZs3YNnAvc9e=DXau_LGLX0hb0=RfZv50Q@mail.gmail.com>
+Subject: [REGRESSION] next/master: (build) redefinition of 'start' in
+ arch/riscv/mm/tlbflush.o (arch/riscv/mm...
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
 New build issue found on next/master:
 
 ---
- =E2=80=98start=E2=80=99 redeclared as different kind of symbol in
-arch/riscv/mm/tlbflush.o (arch/riscv/mm/tlbflush.c)
-[logspec:kbuild,kbuild.compiler.error]
+ redefinition of 'start' in arch/riscv/mm/tlbflush.o
+(arch/riscv/mm/tlbflush.c) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:9f0980b6a5fe11c4cb2602f25e07c=
-80c152b5690
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
+- dashboard: https://d.kernelci.org/i/maestro:e8a8df1a8dbe4233bc72966485e414a11bfedeaa
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  e21edb1638e82460f126a6e49bcdd958d452929c
 
 
 Log excerpt:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-arch/riscv/mm/tlbflush.c:195:23: error: =E2=80=98start=E2=80=99 redeclared =
-as
-different kind of symbol
-  195 |         unsigned long start =3D uaddr & PAGE_MASK;
-      |                       ^~~~~
-arch/riscv/mm/tlbflush.c:193:53: note: previous definition of =E2=80=98star=
-t=E2=80=99
-with type =E2=80=98long unsigned int=E2=80=99
+=====================================================
+arch/riscv/mm/tlbflush.c:195:16: error: redefinition of 'start'
+  195 |         unsigned long start = uaddr & PAGE_MASK;
+      |                       ^
+arch/riscv/mm/tlbflush.c:193:39: note: previous definition is here
   193 |                 struct mm_struct *mm, unsigned long start,
 unsigned long end)
-      |                                       ~~~~~~~~~~~~~~^~~~~
-arch/riscv/mm/tlbflush.c:195:31: error: =E2=80=98uaddr=E2=80=99 undeclared =
-(first use
-in this function)
-  195 |         unsigned long start =3D uaddr & PAGE_MASK;
-      |                               ^~~~~
-arch/riscv/mm/tlbflush.c:195:31: note: each undeclared identifier is
-reported only once for each function it appears in
-  CC      init/version.o
+      |                                                     ^
+arch/riscv/mm/tlbflush.c:195:24: error: use of undeclared identifier 'uaddr'
+  195 |         unsigned long start = uaddr & PAGE_MASK;
+      |                               ^
+2 errors generated.
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+=====================================================
 
 
 # Builds where the incident occurred:
 
-## defconfig on (riscv):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:67e6577667593f2aa03b757c
+## defconfig+allnoconfig on (riscv):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:67e6570a67593f2aa03b74fe
 
 
-#kernelci issue maestro:9f0980b6a5fe11c4cb2602f25e07c80c152b5690
+#kernelci issue maestro:e8a8df1a8dbe4233bc72966485e414a11bfedeaa
 
 Reported-by: kernelci.org bot <bot@kernelci.org>
 
