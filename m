@@ -1,119 +1,84 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76059212FAD
-	for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FB11EF371;
+	Fri, 28 Mar 2025 23:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743152349; cv=none; b=f0kt4heXF2YtO1IOL4ZGJFUoPBgN9H5oE/bC2WZbxoTYsyF3DIuEffBbJ9yBfL+Smwx8QN355biGjOQOOIuu28Quxt0UUMXBOIAatCh/h7hX1zx4+PVzPG5dZYxYeaZpWC+9C2VBiV+vVqqXehcklGdb/PDz45rNgGAMgbnniMM=
+	t=1743203813; cv=none; b=CUYfOyDekz4aZTCb8F1r108Owuy7kPRfagR2LCGvYyPdUtkGsErnSdL3kLbrbexslo0EnWl76d7306GlD0AxfK0tZvkqB8lIJjDnRLlTPZqThYLJCaTmwZV1fjNXrPhPTV4TlMSyswS00PK1KcDMOmPrjh6qgFAaWfRT9le6MI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743152349; c=relaxed/simple;
-	bh=WQ8tto9OSYdqIg5JpT7hhZg14D9bOy+LWjTVh8ISZ+I=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q/3OBM41FKkB1TCEePY6GKR54y1O65UoaYl4WeDdSpctpP3EU6QSVMpWLDdHKSO6Bo3l1FUuuIeRIW8vOFQjOpauVbb/dHz8/yL2nRuPKoYQps7fVz93rpd3H92rUVmzUuev9S5+btZgnp8LX9KDXcn1/aGItCEj2h3NiMDSJ9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=cPAZ91rN; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1743203813; c=relaxed/simple;
+	bh=rOeQ29iHUEe7VYVjwMsjoak+9UQWDwnBX9tidfIgRTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LQ10OYvqxl+WtyMkECR5ZyerSfDtm11uzEBFQmkmwqf0da9bUUrX3+SU2bWUKOGkybJNYManY37s3CAvGhAsCpCBn8uBg1WtpPJk2QY40v2fUq4HJ9CVQfiwkg8cGQZhL/Z0A28RQ/GG72WGptj+KYrZ1eoNPBVFpiUpLLJft5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=v+aJ51sc; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="cPAZ91rN"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ff4faf858cso14514107b3.2
-        for <regressions@lists.linux.dev>; Fri, 28 Mar 2025 01:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1743152346; x=1743757146; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z/+mFxmAbCJZONlZ/t+V+OyqhwtzDZzTtZur4PG6mSo=;
-        b=cPAZ91rNdKc86dnJ+Pd0H8EV02SPhA8W6YUETX1tlGvt2hBw6i0LV1Dd+w0/TtXiGt
-         qdOV3hqldm5NfDdDtdDl5vEGCFNbiVvgk+gZDaW4MdRgmZHTK0PpCqKaVWArUGXyHUvG
-         K2RWlP1aSLk0DlTcYi+texgTwlms2kl/SLCZvk6Tjq6bjCi1q1Loj3TOIaCbJiuQdBir
-         ndq9f0h8Xjmcd64X7JJrHXJkhETxr4H3J492Cu7WbWKs6FlYe4VTR/YN51qusdz1GZkF
-         hu2NmfEGyD4sftZ9ku9ySiWxEk5aArhCi8Djvf1bHi4HTV9jedqoOkzCh+qKhFS0S701
-         j/Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743152346; x=1743757146;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/+mFxmAbCJZONlZ/t+V+OyqhwtzDZzTtZur4PG6mSo=;
-        b=JBgMTq1/IlvuOqXFg0SfV+DNLhFcC4NrMk68diAqCEUbtHpFLv1oRauKxUgsAEajHy
-         VCJECFAPOcpXbHWlImrf5oN2fHNirjH6LM1UgSt6yVeU/wx1SNDwrzQIvBRGB5+NcU1V
-         R6QtPapbhk8KwZFowZkFKNxK0BmdgRiDfyiPstkwu/zIOplbu/HuRLnbRzWr5HrcZMY9
-         4E7nvaJmlQyTpL5YvlSmkmuN3j8lb7hAEqhQs1d8llvt5ofzwyMzETzaUi0lSOMAZcCX
-         X60d+pnm60Wu12hoR69f0GDkCH85pp74XUNR712LrxAc/IaV0sm+mb0p27H/Vx46qbwh
-         3NCg==
-X-Gm-Message-State: AOJu0YzQ1hvE0Kk0Z+TJTKPvh7MSEjnNE1GwGsDTZVgvsenZKf7IgABH
-	oEuJ53tJklo7LlsZQ8Aml7korye+ec8xIAAmlpVKRcqIiGQbae45WQ20XsumHoB0pesIF7YtE36
-	e1G1WIoq+KsCdPIUfMV/PdekMmnW64IpbW9iJgTMeFmEv+Va9
-X-Gm-Gg: ASbGncuKCmhwExTVdGqKu4l/xaNqGVhCK+DP9Xce2IU6E4Hm9wj9EoGilwX8DUJe11t
-	UkB016WHfEmY4f5ZYH0ofyDs1Sedmm4L+CXJJKVp0B1q6NQYvR3R/Pw7oXcmwDCxmO8IVhp0udG
-	SRjeJr/rV6jPuv5Hof1WDEAVDp
-X-Google-Smtp-Source: AGHT+IHF8y00IeRym2Ez6aM0WTopHqt8mEEVlxlWzAOuiqDCgYPAqt/7XlfLqyqPggfkRdOnE28jso9EXcelZFa+hIo=
-X-Received: by 2002:a05:690c:296:b0:6fd:4670:80c6 with SMTP id
- 00721157ae682-702250d744emr91920367b3.37.1743152346123; Fri, 28 Mar 2025
- 01:59:06 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 28 Mar 2025 04:59:04 -0400
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 28 Mar 2025 04:59:04 -0400
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="v+aJ51sc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rOeQ29iHUEe7VYVjwMsjoak+9UQWDwnBX9tidfIgRTM=; b=v+aJ51scLVAGjkxY/hRI5MobCJ
+	zXwHSQCI4Sntj6V7rlbf4y2+FGkRDzjbgu3f2TNLH5hS7Hx7RBjSNLI02Hi2GxkYbhw97dF4WrfCZ
+	yWWlRnICZse4E8JKDPvfpYP2hKZtIODtU2d28Q6LFwGpOXR09Gi8kOfsv8zwKOufTob+i+0c9ukku
+	2prom6fSYwZ+HcqoFkk7nSyzHO944a9iselJOyux39E3SHgFmJCQyox0veo0cJVgwMJ0rm6H/QGWv
+	UhTp5gJv5aMcnUVlN+zAXtMB1HBbO35UghZfu+kDjfO3qgcXxAWFbKbuT3/UM8FLTXz4AD67Y2MVk
+	Dh0myypA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1tyIwM-006gio-1i; Fri, 28 Mar 2025 23:16:42 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 009D8BE2EE7; Sat, 29 Mar 2025 00:16:40 +0100 (CET)
+Date: Sat, 29 Mar 2025 00:16:40 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org
+Cc: Takashi Iwai <tiwai@suse.de>, Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
+ VivoBook_ASUSLaptop TP401MARB_J401MA)
+Message-ID: <Z-ct2D6uIN1f6UbL@eldamar.lan>
+References: <174248253267.1718.4037292692790831697.reportbug@x>
+ <Z95s5T6OXFPjRnKf@eldamar.lan>
+ <Z-MMsp3XJyNHOlma@eldamar.lan>
+ <87iknwb80x.wl-tiwai@suse.de>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 28 Mar 2025 04:59:04 -0400
-X-Gm-Features: AQ5f1JqJI8JotjZifV_Q1MdmDn2VubnbFhULvlwc3DWy-M2Gxh-PC-JG313jFG4
-Message-ID: <CACo-S-0A0K6OQtu_TZs3YNnAvc9e=DXau_LGLX0hb0=RfZv50Q@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) redefinition of 'start' in
- arch/riscv/mm/tlbflush.o (arch/riscv/mm...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
+X-Debian-User: carnil
 
-Hello,
+Hi,
 
-New build issue found on next/master:
+On Thu, Mar 27, 2025 at 04:39:56PM -0400, C.D. MacEachern wrote:
+> Sorry I gave up trying to get kernel build to work and troubleshooting this
+> issue. I'll stick to working kernel version. Thanks for trying to help!
 
----
- redefinition of 'start' in arch/riscv/mm/tlbflush.o
-(arch/riscv/mm/tlbflush.c) [logspec:kbuild,kbuild.compiler.error]
----
+Okay sad to hear that, because we need your help to track and pinpoint
+the regression.
 
-- dashboard: https://d.kernelci.org/i/maestro:e8a8df1a8dbe4233bc72966485e414a11bfedeaa
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  e21edb1638e82460f126a6e49bcdd958d452929c
+There was a question from Takashi to provide information from
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1100928#29 and
+provide the alsa-info.sh from working and nonworking kernels.
 
+I think that would be the next step.
 
-Log excerpt:
-=====================================================
-arch/riscv/mm/tlbflush.c:195:16: error: redefinition of 'start'
-  195 |         unsigned long start = uaddr & PAGE_MASK;
-      |                       ^
-arch/riscv/mm/tlbflush.c:193:39: note: previous definition is here
-  193 |                 struct mm_struct *mm, unsigned long start,
-unsigned long end)
-      |                                                     ^
-arch/riscv/mm/tlbflush.c:195:24: error: use of undeclared identifier 'uaddr'
-  195 |         unsigned long start = uaddr & PAGE_MASK;
-      |                               ^
-2 errors generated.
+Get the script: https://git.alsa-project.org/?p=alsa-utils.git;a=blob;f=alsa-info/alsa-info.sh
 
-=====================================================
+And if Takashi finds it usefull to test a kernel with a reverted patch
+I might be able to provide you prebuild kernel images for amd64.
 
-
-# Builds where the incident occurred:
-
-## defconfig+allnoconfig on (riscv):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67e6570a67593f2aa03b74fe
-
-
-#kernelci issue maestro:e8a8df1a8dbe4233bc72966485e414a11bfedeaa
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Regards,
+Salvatore
