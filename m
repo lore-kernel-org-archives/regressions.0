@@ -1,179 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F8B676
-	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 01:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8641420DD
+	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 12:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743212663; cv=none; b=Vm3tS7A9wPAPLadP5bSfeRgABTvYfm1tRH3JHeFWsqjiJmRHgUP3sP2xjHI8ca5YePDsJKmvMI5KdCKudmo+ye2b791A8r5yMjMqVp4sCK4jhUrqvqVNZqrjMuvl5NkW2peixX0ZOPRU3ox0hvS4LsQMny8X8DjmeonkYrkZGv0=
+	t=1743249982; cv=none; b=lOtvIRmaEsEOk1TW1CmwzBbzTfoFa3FEOm8N19WaJAWhKqXXX0fqEfcD1IWz8s3436E83a++zxiPqFpvCYecbSbFYbObhBL3bwWsej2fMGv4nTs7mh+2X1z06vQWx3NPOU3LBLNreGPgHd8H7zyht0lCawq2XXILAW1M5Ku+Wyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743212663; c=relaxed/simple;
-	bh=DnV7vRN0lEH6EzXjMbUXtQUHI3fnnZRqw/5IC56SvFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dqc+B/NkKzOVunBiBeiqMguiFWH/7dICeufWQ3YMWL7jtJ9eHY5ebG5Y2nxoYSYwzOGazPwvbSyfIa0/ok48ykHVfwFNkqWDoPNTUdIZtsIVFXjQmBPZfxQg+cGFOaOKhWnEtFnCVDYkUyVPihrKo86N8HODD94XtgSrA8Zqr1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJ1EFMcl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743249982; c=relaxed/simple;
+	bh=0x8AujERAitT4iw+rpey9OJMS3R+SPsEHN9CfPxRSpo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=axp7dcCYaCp41oZbLKRh24DZmRrnBCT7oSdeeZupCjVm3rYSe7XuNgcG/rPTn3B3jzzH+zvMXQJ/OzkMDgeuzBSAArqcrV7QHnd1Ik/lGOydxzYMHRZTBHHorZR0WOIXqPTyrrmX95+ZMgAPRg+dkYE65Mr/aP7wvWg6YlVtIsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bI9z5a5A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HmRB2hZm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bI9z5a5A; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HmRB2hZm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJ1EFMcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743212661;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rrchpPNwlMYuDeEE/R/ZDKIqGUjMFbA0Mk/lyFLmNEU=;
-	b=JJ1EFMclhlW+wJvKHE91uZL0jG5NDwmLntrCphe6OslCsduZn2cGS5nTc9Ty5f//8o/rqU
-	j6/qvtdEwTsiD2jd2hjN3bchFYFjJx6VD+SSCnrCsT/Vc3vO5RoGtY6z5WaGCP98SYBRZ7
-	QjuXyQLlLOIHoSElNI8Wys4lTHPodsE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-427-UkCKEg-cOlK3QBJdhl5i_w-1; Fri,
- 28 Mar 2025 21:44:17 -0400
-X-MC-Unique: UkCKEg-cOlK3QBJdhl5i_w-1
-X-Mimecast-MFC-AGG-ID: UkCKEg-cOlK3QBJdhl5i_w_1743212656
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bI9z5a5A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HmRB2hZm";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bI9z5a5A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HmRB2hZm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1FE8F196D2CC;
-	Sat, 29 Mar 2025 01:44:15 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A927D180175A;
-	Sat, 29 Mar 2025 01:44:11 +0000 (UTC)
-Date: Sat, 29 Mar 2025 09:44:06 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C61C1F38E;
+	Sat, 29 Mar 2025 12:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743249978; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VfgVxxUCnjZW9dqCqO28s5X+RY7K9TOo5QVGQoi2ixM=;
+	b=bI9z5a5AFDO50EGF6rTqatH+1MDeu/gm56F4FgZdRleF9sdXbuhhs7YJ6ggDrw672/8Oj0
+	RqJ41Tol0lFPSqiNYujj/pQNYNmje5dbnmchuYJGNhffny45Mif+W0l3gAU1V/3o2mfX+c
+	091/+/6w0knrwWvywLBPXkZVVbYPK6k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743249978;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VfgVxxUCnjZW9dqCqO28s5X+RY7K9TOo5QVGQoi2ixM=;
+	b=HmRB2hZmSJd/tgW3l+COT1yH1d8LZhYvfRDm4yu2mjiIkwrH5g9e6EbeKilMdEn1im5335
+	6dXdBp/RYmVUUeAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bI9z5a5A;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HmRB2hZm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743249978; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VfgVxxUCnjZW9dqCqO28s5X+RY7K9TOo5QVGQoi2ixM=;
+	b=bI9z5a5AFDO50EGF6rTqatH+1MDeu/gm56F4FgZdRleF9sdXbuhhs7YJ6ggDrw672/8Oj0
+	RqJ41Tol0lFPSqiNYujj/pQNYNmje5dbnmchuYJGNhffny45Mif+W0l3gAU1V/3o2mfX+c
+	091/+/6w0knrwWvywLBPXkZVVbYPK6k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743249978;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VfgVxxUCnjZW9dqCqO28s5X+RY7K9TOo5QVGQoi2ixM=;
+	b=HmRB2hZmSJd/tgW3l+COT1yH1d8LZhYvfRDm4yu2mjiIkwrH5g9e6EbeKilMdEn1im5335
+	6dXdBp/RYmVUUeAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 34B7113A4B;
+	Sat, 29 Mar 2025 12:06:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id X3etCzri52ccOAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sat, 29 Mar 2025 12:06:18 +0000
+Date: Sat, 29 Mar 2025 13:06:17 +0100
+Message-ID: <87zfh43uti.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org,
+	Takashi Iwai <tiwai@suse.de>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
+In-Reply-To: <Z-ct2D6uIN1f6UbL@eldamar.lan>
+References: <174248253267.1718.4037292692790831697.reportbug@x>
+	<Z95s5T6OXFPjRnKf@eldamar.lan>
+	<Z-MMsp3XJyNHOlma@eldamar.lan>
+	<87iknwb80x.wl-tiwai@suse.de>
+	<CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
+	<Z-ct2D6uIN1f6UbL@eldamar.lan>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-c7V2hptt9U9UCl@desktop0a>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 6C61C1F38E
+X-Spam-Score: -2.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,bugs.debian.org,suse.de,vger.kernel.org,lists.linux.dev];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 03/29/25 at 01:14am, Roberto Ricci wrote:
-> On 2025-01-27 10:42 +0800, Dave Young wrote:
-> > On Mon, 27 Jan 2025 at 10:39, Dave Young <dyoung@redhat.com> wrote:
-> > > On 01/13/25 at 10:28pm, Roberto Ricci wrote:
-> > > > After rebooting the system via kexec, hibernating and rebooting the machine, this oops occurs:
-> > > >
-> > > [snip]
-> > > >
-> > > > I will send the kernel config and dmesg in replies to this email.
-> > > >
-> > >
-> > > I tried your config (removed some config driver related which is not useful), but it can not boot on my kvm guest.
-> > > Firstly I saw a panic in ftrace path,  then I rebuilt the kernel without ftrace, it panicked again but in kvm related code path.
-> > > Both are not related to kexec at all so I suspect your bug is not kexec specific.
-> > >
-> > > [snip]
-> > >
-> > > You can find the kernel config here (with the ftrace enabled):
-> > > https://people.redhat.com/~ruyang/snakeyear/panic-ftrace.config
-> > 
-> > BTW, if I disable KASAN then kernel can boot, anyway kexec +
-> > hibernation works fine with a few tests, no panics.
-> > 
-> > >
-> > > Thanks
-> > > Dave
+On Sat, 29 Mar 2025 00:16:40 +0100,
+Salvatore Bonaccorso wrote:
 > 
 > Hi,
 > 
-> sorry for the late reply. I tried your modified config, but I'm getting
-> the same oops I originally reported. No idea why the oops is not
-> happening for you.
-
-Not that oops is not happening in my side, I can't boot kernel built
-with you provided config on Fedora OS. 
-
+> On Thu, Mar 27, 2025 at 04:39:56PM -0400, C.D. MacEachern wrote:
+> > Sorry I gave up trying to get kernel build to work and troubleshooting this
+> > issue. I'll stick to working kernel version. Thanks for trying to help!
 > 
-> Anyway, I performed yet another bisection, this time with just plain
-> defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+> Okay sad to hear that, because we need your help to track and pinpoint
+> the regression.
 > 
-> Updated steps to reproduce:
-> 1. Boot kernel >= v6.8 in a virtual machine created with this command:
->    `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
-> 2. Load the same kernel with:
->    `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
-> 3. Reboot (or call `kexec -e` directly)
-> 4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
-> 5. Upon resuming, three things could happen, depending on luck:
-
-OK, this is a little complicated. wondering why you need to do the
-hibernation and reboot. Just for curiosity.
-
-> 5a. A kernel oops:
-> ```
-> [   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
-...snip... 
-> I will send config and dmesg in replies to this email.
+> There was a question from Takashi to provide information from
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1100928#29 and
+> provide the alsa-info.sh from working and nonworking kernels.
 > 
-> The bisection pointed to
-> b3ba234171cd kexec_file: load kernel at top of system RAM if required
+> I think that would be the next step.
 > 
-> #regzbot introduced: b3ba234171cd0d58df0a13c262210ff8b5fd2830
+> Get the script: https://git.alsa-project.org/?p=alsa-utils.git;a=blob;f=alsa-info/alsa-info.sh
 > 
-> Now that I think about it, this was the commit I found when I did the
-> very first bisection after I found the bug. But I could not get the same
-> result with subsequent bisections, so I didn't mention it in my original
-> report.
-> 
-> When reverting b3ba234171cd on top of v6.14, merge conflicts must be
-> solved, I hope I did it right:
+> And if Takashi finds it usefull to test a kernel with a reverted patch
+> I might be able to provide you prebuild kernel images for amd64.
 
-I doubt how this caused the failure. I have several questions, could you
-help answer:
+The fix patch would be a trivial oneliner, and even you can work
+around without patching via a module option, but I cannot say exactly
+unless I get the requested logs.
 
-1) Can this problem be stably reproduced with kexec_file_load?
 
-2) if answer to 1) is yes, can reverting b3ba234171cd fix it stably?
-
-3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
-this because kexec_load interface defaults to put kexec kernel on top of
-system RAM which is equivalent to applying commit b3ba234171cd.
-
-4) Can you add '-d' to 'kexec -l' to print more debugging message?
-
-5) Can normal kexec trigger the failure? I mean operating kexec w/o
-the hibernation/resumption. 
-
-> 
-> ```
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3eedb8c226ad..3014be212afd 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -614,10 +614,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
->                                            crashk_res.start, crashk_res.end,
->                                            kbuf, func);
->  #endif
-> -       if (kbuf->top_down)
-> -               return walk_system_ram_res_rev(0, ULONG_MAX, kbuf, func);
-> -       else
-> -               return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-> +       return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
->  }
-> 
->  /**
-> ```
-> 
-> Applying this diff solves the problem for v6.14.
-> 
-
+Takashi
