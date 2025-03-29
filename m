@@ -1,118 +1,149 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43D11BF58
-	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 18:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17CB1AAA1E
+	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 20:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743274747; cv=none; b=TdXQ6j70RD0luk9cNzrcqQsyQP5NM2jykaORMi4cdA3z31pfGIoXAayj35/y7Z0KUencf//sW8g2LOHyQVXNwJYTFr1U0VCiwvvjElgm2mNAV5RkkDfh0E/qkIqCW4iWv1/Ak38VMh0ptyGJFIuS7gCduiTqBdZR7rjLL+iB7m4=
+	t=1743280228; cv=none; b=E1oDzXOYQcg5xw5mdBkxLg/oRENA4GJs6sP3vfqC9VpTgDbPEo6Dvr3IwXQb7hPVgirP8cvMiBfkHW1vVel1Lxrzyr8DDY6oDL0SVQ3xNffXQOP+7DU9EwQ3EsG7LZlot/P9sscJ2bmUGBreljm19eo54mQ4yUu3YvjMwgQ7lck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743274747; c=relaxed/simple;
-	bh=ldbjPy3JEiU6jS65yyW9b4/6groro18QkvScwo5UDUQ=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=c0wrmhOD0DABrP1J/zNk0qNmyq7bSI5dya/5wybBAgA7BMJq3GtY5RvjSbCWbBqyrqZRJe5Ys4A9OccazfZCqy/NvHho8L7eXnNkEJlIe4MgPPL1yOADsJgS42nEM6ltgzOELYBsV6qAkvh1e3Zo82hFXz+AiuWiyCk9b8yqryk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=pgjYvtBq; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1743280228; c=relaxed/simple;
+	bh=QFJ5fUbf4xYjOfEHj/MKCPtSrPBKpbcRcgO3zN1Da/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t5cnMFMmYcY4H+dKDagEBj+j6oKUAUZtxuWb/wm7tVoYEFpg2P6abHbHjv+XXgppW3wLZpw7+uEL5Cbgw+rI4AIZDLNeTVyoYhCouXIOVf18QjD0XBF59RyqdDUTckcJT0dJ72oVVRGPxZQVNYttxjD6AQCKTA0H4wu650hlUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=aW4M8QS3; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="pgjYvtBq"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6fee50bfea5so28965317b3.1
-        for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 11:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1743274744; x=1743879544; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fPYp1tIDYUVmG1jKtZoKn7EM41zjGJk1MbWEUGYaSeM=;
-        b=pgjYvtBqZWXsVfK5rE4tjCLl/IQukTopnf5VZNHdBLshEH1wRPe90HmA8wMdB0TJk8
-         eZ124BCpvwFbKcsoBtcGn71NbbC3rI0UWWZgZV1Esttm/tpfEiLEBEzdv8BdlaWX5XxG
-         cOm8sGrWzi03xtx7EhwtCscEhEwtUFT0ZhgqbXSJu3/9qyQDZF0CA1Yneb5r3M1erg0A
-         9YeB73GFd3zzeqAIcCCIJDaKvvY+y7dn0en8X+FNfPJJsfuZsRpvBo/otS8Gg2Ja8RQo
-         rYyI5coiaamrN+HMOmOLOZgw3ZpGuTtaj2Fs9cjk5FfAQYVY93SfHKLVE+5Ix36CZ8WA
-         8VdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743274744; x=1743879544;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fPYp1tIDYUVmG1jKtZoKn7EM41zjGJk1MbWEUGYaSeM=;
-        b=uPAz38O0L53zywNzDEmmGSXBh7Wr+eCoKfLfEWfO8dBV33vvuetU5BvQElA1EoeOgX
-         r8C1DxYQhdEamrZw2xIZDYq26lMs2m31jhf7/uUMZRCO7IwVeVhkyiMCxTZy0c3QcmwY
-         RqNYeSsX5APJ3JEmsrB9BT2HPIn+oVlpFfdiWbfr0ii4jwYrreGPYK6riB+6EEOqOOLe
-         Lie2QSf5n6FNlXNYLLf2LErz9H/Ya6I9cL1viCs/PLCKKTQowrsnUct3ssmJpmdvyZ9G
-         gRDkPsct6LFazGcVuPjQPnjQtXwhuOwGptKVQlTGTROMH+6JmNgkByr9sARDvoTAI1jH
-         e9iQ==
-X-Gm-Message-State: AOJu0YwVZ8GyBhV9DFfgHfhhH/DG5WrELVt2XjgZrT2fCSMFSbSV3XY1
-	ClPyAZrNmKU/Y+oYKHv6pyQSjhX3A9xwqNT5RGUnyRSupw73C+qiRmoh3qPM7A7rz7grYzB3fZb
-	pewW9TGiTWT4g50RD1px+cw5trJK/aSIYCScJ9A==
-X-Gm-Gg: ASbGnctAaestVc57tN3OB2mu0EG3elRZRex+JQGPfCxlNUXuHSkfVHs9/iT2+5lbY4v
-	fZIAO8QxL9QccFB0RGJrUVSBaV97XPSEzGhSkeQNNOVpi0XLlHzK0ja1kJc0HyUojr3A9/xPaaO
-	NnaQfGEMPBrF06NTaRqfq9O5u2
-X-Google-Smtp-Source: AGHT+IHRCY1XWJjPuIwEFpA58HAvAlRlxy+p79idAIlplfAZnBAgC94nP8kCccgPufZ882Cqed2gU6c7lHRjN4LKdWM=
-X-Received: by 2002:a05:690c:d07:b0:6f9:a3c6:b2e4 with SMTP id
- 00721157ae682-70257340a31mr53752647b3.37.1743274744700; Sat, 29 Mar 2025
- 11:59:04 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 29 Mar 2025 14:59:03 -0400
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 29 Mar 2025 14:59:03 -0400
+	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="aW4M8QS3"
+Date: Sat, 29 Mar 2025 21:30:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1743280222;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qtGq3mNlYow8hi5/IZSZYU3QysB2Tb0jRTp1wsbBTts=;
+	b=aW4M8QS3b++thG7g7a2HoNC7FuNBkM9NxwhZFG7OEAcPIU3vSt1JEBcuQSUED39rbYCBWm
+	w0sNFCzjZ9TaQ3sy9FtZB1SUoGKzjVDVk4OeXIiEG+MycVufpSxUJkMfVV/qfNJjt2r9vk
+	RIknYmi7YS74pwtd4tOuX7a/HWZridkVyxahP63wTdb+qY5P7YajZoA1QOoZuIOYHdcrQE
+	EavM9q1MZFIfo9Dyq7KFIScP7P1Y6/Th14lOKuHkHQqrkswPgSZjZOuDEOi0HEEev2w5XC
+	KZ7cjfSTZLYjxMwwGuyHtSNA4Y65VD/GjIbQGNxs7f64hrPjxtqjazYtnkGbwA==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
+	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+	akpm@linux-foundation.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z-hYWc9LtBU1Yhtg@desktop0a>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+ <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+ <Z-c7V2hptt9U9UCl@desktop0a>
+ <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Sat, 29 Mar 2025 14:59:03 -0400
-X-Gm-Features: AQ5f1JqshpPHI2RUetUZN4KoLpAtStId52O1O-eQWRArheTMT4Vckcwdqk7cNC4
-Message-ID: <CACo-S-3OLobbxyggYZhetEE_bfdBwZkUsAGqEoZ1eUkoUQFALg@mail.gmail.com>
-Subject: [REGRESSION] mainline/master: (build) 'uuid/uuid.h' file not found in
- usr/include/cxl/features.hdrtest (...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com, 
-	shreeya.patel@collabora.com, broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On 2025-03-29 09:44 +0800, Baoquan He wrote:
+> On 03/29/25 at 01:14am, Roberto Ricci wrote:
+> [snip]
+> > Anyway, I performed yet another bisection, this time with just plain
+> > defconfig plus CONFIG_KEXEC_FILE=y, and I got different results.
+> > 
+> > Updated steps to reproduce:
+> > 1. Boot kernel >= v6.8 in a virtual machine created with this command:
+> >    `qemu-system-x86_64 -enable-kvm -smp 1 -m 4.0G -hda disk.qcow2`
+> > 2. Load the same kernel with:
+> >    `kexec --kexec-file-syscall -l /boot/vmlinuz-6.14.0 --initrd /boot/initramfs-6.14.0.img --reuse-cmdline`
+> > 3. Reboot (or call `kexec -e` directly)
+> > 4. Hibernate and reboot: `printf reboot >/sys/power/disk && printf disk >/sys/power/state`
+> > 5. Upon resuming, three things could happen, depending on luck:
+> 
+> OK, this is a little complicated. wondering why you need to do the
+> hibernation and reboot. Just for curiosity.
 
-New build issue found on mainline/master:
+The reason I do hibernation and reboot instead of hibernation and then
+manually boot again is just convenience during tests. The issue occurs
+with manual reboot too.
+The reason I want kexec + hibernation to work is to fix a hibernation
+issue on a system using ZFSBootMenu, a bootloader based on Linux which
+uses kexec to boot the final OS. Other software using the same
+mechanism include Petitboot and LinuxBoot. They might be affected as
+well but I didn't try.
 
----
- 'uuid/uuid.h' file not found in usr/include/cxl/features.hdrtest
-(usr/include/cxl/features.h) [logspec:kbuild,kbuild.compiler.fatal
-error]
----
+> > 5a. A kernel oops:
+> > ```
+> > [   42.574201] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> ...snip... 
+> > I will send config and dmesg in replies to this email.
+> > 
+> > The bisection pointed to
+> > b3ba234171cd kexec_file: load kernel at top of system RAM if required
+> [snip]
+> 
+> I doubt how this caused the failure. I have several questions, could you
+> help answer:
+> 
+> 1) Can this problem be stably reproduced with kexec_file_load?
 
-- dashboard: https://d.kernelci.org/i/maestro:6b8da43ff8bc6bf9d93cc9cf86c3c5b5c5ab20a2
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  092e335082f22880207384ad736729c67d784665
+Every kernel build I tested which contains that commit is affected.
+However a given build will not always lead to the same of the three
+possible outcomes I described. E.g. first you get a oops (case 5a),
+then you repeat the same steps with the same kernel image and the
+system may get stuck at a black screen instead (case 5b).
+But it never fully works.
 
+> 2) if answer to 1) is yes, can reverting b3ba234171cd fix it stably?
 
-Log excerpt:
-=====================================================
-./usr/include/cxl/features.h:11:10: fatal error: 'uuid/uuid.h' file not found
-   11 | #include <uuid/uuid.h>
-      |          ^~~~~~~~~~~~~
-1 error generated.
+Yes. None of cases 5{a,b,c} I previously described occur. Seems to work
+fine.
 
-=====================================================
+> 3) If answer to 1) and 2) is yes, does kexec_load works for you? Asking
+> this because kexec_load interface defaults to put kexec kernel on top of
+> system RAM which is equivalent to applying commit b3ba234171cd.
 
+No, it doesn't. While hibernation alone works, kexec + hibernation
+results in the system just rebooting without resuming the hibernation
+image, but no crash or other weird behaviour occurs.
+Initially I decided to focus on kexec_file_load in order to narrow
+things down, but that was before noticing that the bug could manifest
+itself in different forms.
+It is possible, indeed, that both syscalls are affected by the same
+problem, which is not caused by commit b3ba234171cd.
+I tried to test kexec_load with some older kernels, but I got build
+errors, so I tested longterm releases where such errors have been fixed.
+With v4.9.337, kexec (via kexec_load) + hibernation works.
+With v5.4.291 it doesn't.
+I'm not sure how bisection could be done in this case.
 
-# Builds where the incident occurred:
+> 4) Can you add '-d' to 'kexec -l' to print more debugging message?
 
-## defconfig+allmodconfig on (arm64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67e83b7667593f2aa03e5956
+When using kexec_file_load, just these two lines get printed:
 
-## x86_64_defconfig+allmodconfig on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:67e83b9067593f2aa03e5977
+```
+Try gzip decompression.
+Try LZMA decompression.
+```
 
+When using kexec_load on kernel v5.4.291 (which doesn't work):
+[the output is in a reply to this email]
 
-#kernelci issue maestro:6b8da43ff8bc6bf9d93cc9cf86c3c5b5c5ab20a2
+When using kexec_load on kernel v4.9.337 (which works):
+Identical to above, except for the exact hex value of some addresses.
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
+> 5) Can normal kexec trigger the failure? I mean operating kexec w/o
+> the hibernation/resumption. 
 
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+No, kexec without hibernation seems to work fine, regardless of kernel
+version and kexec syscall used.
