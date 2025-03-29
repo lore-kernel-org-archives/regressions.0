@@ -1,257 +1,118 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24B72AE99
-	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 14:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743260309; cv=fail; b=KpuIgqsptCyB8JztNXU2rXB6aeogDG+WUjIMfqDvSHNmJsLjtmLD6WJ2darwR6dBL6v0ROOpDFIFGMXHk8AgBfcV9Qb8N5M6rbiNROcHa4vrhGEk/HUBPb9gOGuLmaA2vdjXg2rK7D+rIg6JI+W4WgR7yC9ESp66gJ2gV2jxL78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743260309; c=relaxed/simple;
-	bh=vxxchNlXMseGzuO2lkY4ZHgfGUm7mnXF3Ym5ms4I54w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BucGasdeg00smiX7sgTp2JOAA8OvnaLUAfETFJOkvoOEXw0qEo9RX1PCX0gePZv0jx/4vLuMVjfJXlNT3b6oO5ICUt8S6Yjjq8+EpaI2TNvybB1j649fg58LgqpwFBjI7rntxUtcqa53sXRd4zr3CRB1jAVTylEtPvS1n2cuF+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SNBe9vX0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EbMl3HT9; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43D11BF58
+	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 18:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743274747; cv=none; b=TdXQ6j70RD0luk9cNzrcqQsyQP5NM2jykaORMi4cdA3z31pfGIoXAayj35/y7Z0KUencf//sW8g2LOHyQVXNwJYTFr1U0VCiwvvjElgm2mNAV5RkkDfh0E/qkIqCW4iWv1/Ak38VMh0ptyGJFIuS7gCduiTqBdZR7rjLL+iB7m4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743274747; c=relaxed/simple;
+	bh=ldbjPy3JEiU6jS65yyW9b4/6groro18QkvScwo5UDUQ=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=c0wrmhOD0DABrP1J/zNk0qNmyq7bSI5dya/5wybBAgA7BMJq3GtY5RvjSbCWbBqyrqZRJe5Ys4A9OccazfZCqy/NvHho8L7eXnNkEJlIe4MgPPL1yOADsJgS42nEM6ltgzOELYBsV6qAkvh1e3Zo82hFXz+AiuWiyCk9b8yqryk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=pgjYvtBq; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SNBe9vX0";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EbMl3HT9"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52TCIVwK006881;
-	Sat, 29 Mar 2025 14:58:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=bToraf6jOv+U2eEyNfuT1UiNO86osNYiYOPFWlK2LL0=; b=
-	SNBe9vX0MLin+P94YjX42KJ35APivIswE6/5pmgYL3JUAtvijnEilRNvLdFKDU25
-	GIycm+BWI2ABryjQtDa2uPChOV5IoGMHZ74SynYp/WsL2+UnvR9pR18dkaeENw8u
-	MD69V+Y5oaMU2u8yR23Zp8rZRC8M5hZu/t2H0SJzhOKEkQzjjWyJCgebooyFNNce
-	I6aTDJ3lXXYn5RLwGWKLtvZMF1JG+bDUjTd14VymI1xsvW3HnKWEpfc/J0861ijO
-	jiB+HE9RFO/UiPkIdRpxSR394UYLdvE7uSjHZ4TZB9jJP9yTS2AL/owk4AaI+z3j
-	DxbQgrjiuk27rwFf3bJVJA==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p8wc8ht6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 29 Mar 2025 14:58:25 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52TDjSBx006576;
-	Sat, 29 Mar 2025 14:58:24 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2042.outbound.protection.outlook.com [104.47.70.42])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45p7a65hrh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 29 Mar 2025 14:58:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=toCxNvHZfMFYgTOpOt4QUa7ohvF6cy0OEK74KmZnCVYltZ4QSFaToFL+eTDByV4iSIuJEOeCf3OazoN2w5+dy+Ru302rNZPOazczqp/JVzeDY5+fTN+T7TFZbpNV30FrlqHJTLJGWWDDL0OHzQ29NxveNYbjbhn7EdOHJqAeSDA03eDGJ/OqgYBQcI4ul14afQRM7xZRQkE5ksLDGl88/aGuzuOWyiOR1Gvq4cLqXSMYW+ZTrmNTUKiDt+pmzKcY5TMV0Fy/fGYhwmNN8sR3C8vOZocB8q6ScNn1o2VdU1bF4n7W+E1ZZ6TsRiJTrPzafFekBd4hbcir3MkQ65t6/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bToraf6jOv+U2eEyNfuT1UiNO86osNYiYOPFWlK2LL0=;
- b=WJjGkCrcMCyZXy16DJuwMXglMVqV1lVKtBO/aGPOxE1oy23WZbQb9/jBsOWwO8upznfixLY2ofz7cx62J+LyV7uybs/KuuuF/cCnxpH2H1L92cDR62vqw8HLezkj+bD7SUYphQfW+dsIA4/ISZnjEyC5Xq8nzpVG5bX6iEWgT33ts2kA+NlGpjJrRG3CbNoHhgUI2FGfq6+rPcfO4zub5qemrHGkQ/pk3uUhcfZ/+DttSKn+RXm4luKoCuDCcT8Sx853WQRDnhJhXrbYDEtZ1bi99U5tR9eg6eoSIg2kVI4CvObiAMZi1P/gQGrVJem0wmjiX7Cuwj/lrfM4nlL5UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="pgjYvtBq"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6fee50bfea5so28965317b3.1
+        for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 11:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bToraf6jOv+U2eEyNfuT1UiNO86osNYiYOPFWlK2LL0=;
- b=EbMl3HT9D4E7zMpLURhj+6yXK8Qvzvf3lGenz4AvxF7Mow3ShV8GZVLswfpke6Cksg01e8Kc3C5ABZKrumEt7EAOVZI8rzUaPnxkqQafRFjZ/WDnVeRyPz6qCgg0XEETr09dFTrqYQVJ7jNpo4l6j6gdcfyGLXd1ehZ6OVOpWXo=
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by CH0PR10MB7535.namprd10.prod.outlook.com (2603:10b6:610:187::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.27; Sat, 29 Mar
- 2025 14:57:58 +0000
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::39b2:9b47:123b:fc63%5]) with mapi id 15.20.8583.030; Sat, 29 Mar 2025
- 14:57:58 +0000
-Message-ID: <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
-Date: Sat, 29 Mar 2025 10:57:59 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
- b9b588f22a0c
-To: Takashi Iwai <tiwai@suse.de>
-Cc: linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-        regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <874j0lvy89.wl-tiwai@suse.de> <87wmc83uaf.wl-tiwai@suse.de>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <87wmc83uaf.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR17CA0010.namprd17.prod.outlook.com
- (2603:10b6:610:53::20) To DS7PR10MB5134.namprd10.prod.outlook.com
- (2603:10b6:5:3a1::23)
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1743274744; x=1743879544; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fPYp1tIDYUVmG1jKtZoKn7EM41zjGJk1MbWEUGYaSeM=;
+        b=pgjYvtBqZWXsVfK5rE4tjCLl/IQukTopnf5VZNHdBLshEH1wRPe90HmA8wMdB0TJk8
+         eZ124BCpvwFbKcsoBtcGn71NbbC3rI0UWWZgZV1Esttm/tpfEiLEBEzdv8BdlaWX5XxG
+         cOm8sGrWzi03xtx7EhwtCscEhEwtUFT0ZhgqbXSJu3/9qyQDZF0CA1Yneb5r3M1erg0A
+         9YeB73GFd3zzeqAIcCCIJDaKvvY+y7dn0en8X+FNfPJJsfuZsRpvBo/otS8Gg2Ja8RQo
+         rYyI5coiaamrN+HMOmOLOZgw3ZpGuTtaj2Fs9cjk5FfAQYVY93SfHKLVE+5Ix36CZ8WA
+         8VdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743274744; x=1743879544;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPYp1tIDYUVmG1jKtZoKn7EM41zjGJk1MbWEUGYaSeM=;
+        b=uPAz38O0L53zywNzDEmmGSXBh7Wr+eCoKfLfEWfO8dBV33vvuetU5BvQElA1EoeOgX
+         r8C1DxYQhdEamrZw2xIZDYq26lMs2m31jhf7/uUMZRCO7IwVeVhkyiMCxTZy0c3QcmwY
+         RqNYeSsX5APJ3JEmsrB9BT2HPIn+oVlpFfdiWbfr0ii4jwYrreGPYK6riB+6EEOqOOLe
+         Lie2QSf5n6FNlXNYLLf2LErz9H/Ya6I9cL1viCs/PLCKKTQowrsnUct3ssmJpmdvyZ9G
+         gRDkPsct6LFazGcVuPjQPnjQtXwhuOwGptKVQlTGTROMH+6JmNgkByr9sARDvoTAI1jH
+         e9iQ==
+X-Gm-Message-State: AOJu0YwVZ8GyBhV9DFfgHfhhH/DG5WrELVt2XjgZrT2fCSMFSbSV3XY1
+	ClPyAZrNmKU/Y+oYKHv6pyQSjhX3A9xwqNT5RGUnyRSupw73C+qiRmoh3qPM7A7rz7grYzB3fZb
+	pewW9TGiTWT4g50RD1px+cw5trJK/aSIYCScJ9A==
+X-Gm-Gg: ASbGnctAaestVc57tN3OB2mu0EG3elRZRex+JQGPfCxlNUXuHSkfVHs9/iT2+5lbY4v
+	fZIAO8QxL9QccFB0RGJrUVSBaV97XPSEzGhSkeQNNOVpi0XLlHzK0ja1kJc0HyUojr3A9/xPaaO
+	NnaQfGEMPBrF06NTaRqfq9O5u2
+X-Google-Smtp-Source: AGHT+IHRCY1XWJjPuIwEFpA58HAvAlRlxy+p79idAIlplfAZnBAgC94nP8kCccgPufZ882Cqed2gU6c7lHRjN4LKdWM=
+X-Received: by 2002:a05:690c:d07:b0:6f9:a3c6:b2e4 with SMTP id
+ 00721157ae682-70257340a31mr53752647b3.37.1743274744700; Sat, 29 Mar 2025
+ 11:59:04 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 29 Mar 2025 14:59:03 -0400
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 29 Mar 2025 14:59:03 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|CH0PR10MB7535:EE_
-X-MS-Office365-Filtering-Correlation-Id: b17bee7a-750b-442e-ca91-08dd6ed217d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eGd0cXl2YzlnSk5GTzVtNVRzbWt3dUxGK3FoM01UMHRkMU9BMWM0S1BkbmZC?=
- =?utf-8?B?NTU3di9zQUF3Snc2Z1piQmJ6dU8zMThIVGVEKzVINkF1c2VwOG8rSmZVWkMw?=
- =?utf-8?B?OXUzZC9YL0sxYU5iQitJWXZqem51MTJjYUdtVmNOT2hGeW8wTU5FMjErT2dm?=
- =?utf-8?B?OUpXM3NaTGhja3FaZXpsQTM5QmEyODFjVnpPUEY2VEdTOVVRNkxkeUtyL2pp?=
- =?utf-8?B?Y2VDbFJMci9oU3lTa3hHUldUUm9VR1JSSmF1YnREU08rYzlxVUo3SHRsRkdP?=
- =?utf-8?B?L1M2c2ZkRnpSLzBQQm5SbU92NTlrVVF3TzAxbVBOYXJSYmNsSkMwMktLd1NR?=
- =?utf-8?B?UzJSWkE2cEFBOFZ1clZLSVlXcDdsMDZhOGgraVA3dWU2c2pCam94N2dMRTdD?=
- =?utf-8?B?dE1yRy9idVlOYmJOYVNqQXRSVGJpeEtPcWVvZThWMWlwbHBnU3B1NXp2aXlS?=
- =?utf-8?B?Qk8ybFp3SzdCR3ptbXpXK3FQdGdWZUk0ZjZCOHpkR25LVkI1bko5MjNaSno3?=
- =?utf-8?B?Tmw5bGtpR3ZWYVgwblpEdkR5Vzd3MEZLNE5HSktPTFVvb3RnWHdWRWhWYjRt?=
- =?utf-8?B?Q3UrTE1pbitTYnVMdzBxa1ExMHd6NnU3bjZsSVBQTEVvbFA1cVNLTW5XcWxL?=
- =?utf-8?B?YVdFN3hic010dUhaL1cxeGlZRlRNS0hvSUVUZVJQY0JMTWhLTUxvNHQ2Qnk0?=
- =?utf-8?B?Qyt0Yk55ODBJdHZkaFV0TlpXUTRwKytKU2hyQU1DeWxWc0tReWsvSHc0TE1h?=
- =?utf-8?B?ZGczK1lGRCs0eXQrVGQ4cXl6Q2tLeVk0QndMaEYwK3MvblNFM2xuYVpoNXRo?=
- =?utf-8?B?dTFGNXVERmxkZlI0eHZpWE9wcy9hTEVpY0VCQUhjNlZ5K1dmSmJDWjFKWkl3?=
- =?utf-8?B?bnVlcEJhVno1cVhtVlMvMkNpeXJVVXlaNmszY05obXdaVkgydk5LbW4wdmpK?=
- =?utf-8?B?NkRKS0NTT1pjR0RlY0RyOWZUTndLVXhzU3g5Z3hBbUlXQkxqKzVFQ0dXWVZa?=
- =?utf-8?B?dTBOalROazFVZC8vUi9kTXBQVWZheGtxT2FVOGpuNFFtT0ZveTVzSkd2ZDI5?=
- =?utf-8?B?VXFQa0RNdEg3OGRoazhvdFFENG9lWUFBNmx1Z1pKR09jcVBkOWJUelA2Z2Ix?=
- =?utf-8?B?ei9tbHMvQWtGN0l4QVVPUC8yMHl5SitRemRzNnowNThXZXZkNE5PcC9yZFVJ?=
- =?utf-8?B?NWtzd2ZuUmpjMGFxbnhZVkpZUzUzSy85R1hkVXdXS3FCcG43U2dONkdQNThi?=
- =?utf-8?B?M05PWTRSeFc5eHNmdUZVT1RvVk4ySVFSQVZ6S3JicUh0RXZlSFMwWkY2YTJk?=
- =?utf-8?B?RmtBUjJYOHNScm5MckVIN0NUZmVjSnE0eHhKbnF5bnorU2gzd1Vxa1hqWnZ2?=
- =?utf-8?B?N2lhWnhVNnEzZHNTcUJWdXZjRFVlMHcxWmhqS1hab2NzMWZHNVlJZ1N5NldO?=
- =?utf-8?B?eklTaXFrdFJSYkxDVkZLNHZ3TDdOdVppcTBhOGIvMERhZS9iaTBiaVpVdEcv?=
- =?utf-8?B?VFBTTVNmeitINzBNNFU5MzQ3RlFNRFkwSWxlZG9wVXpoa3QrbWhveWM4dEVz?=
- =?utf-8?B?cjFNVHU5Ykk3NDBzSTlLcHNQV0lnRUxaZ1FzSm9hN2t1NHhtQVc3cER1WDdz?=
- =?utf-8?B?SzdoWTFrVzE0dUxTRm5EMVVic1IxY0xEbU5LNjE0bkxaOGFZeXRNN2ljMjd5?=
- =?utf-8?B?NTdKNitQc3NnVzEzYmFzTTkwejkrTnc3ZEYrRDFkNlFuZEFQSXU1VHhQRDRV?=
- =?utf-8?B?QXZPUEgzdytKZVZHYW1keVYyRTBXTGR1OHhiL2NZMk9STS83OG9vVEhTU2h2?=
- =?utf-8?B?L0diTkdNTk1vTU84KzlLUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?amtXaHdwb3hTSTF2NUx2eVZDUGw5QkRhMnFEV1RoNmk2bVMrWFRhZjhZa3JV?=
- =?utf-8?B?b2MrVEpid0ZuYndDZWlsNjNPWHBWaHpnc2JacGpicFYvL1FrajJlOGp2S2do?=
- =?utf-8?B?azRWRk5POGlUV1JXdDBhc2RUOTRxODZiZDFjdi94T2liZTFvWTVQTzVTcDBu?=
- =?utf-8?B?bmwrOVQ1c2lBZEZiY3ZSMndZWkdXeGxHYTVueHJmY29zc0NUTW5TekkwbDN1?=
- =?utf-8?B?MDJuL0thWDk2SVdKRUdWQU1IdGViWXhzL0V2QkZrbGl0d3o0dG1INC9sUnZ3?=
- =?utf-8?B?REJobi9sSXJhSXB0MDRDOHNuQ0RZOXc1M0plVmtRZSszcWxEQmhOaDdNRXZx?=
- =?utf-8?B?bmc2SS9pMURnOUhyZXNVaS8vMVA5VEhNRFU1ZCtyekF0TzgrY09CWVlVRlFn?=
- =?utf-8?B?bEhWWnZ5SUdyQUtoK0NCOWtjZlVUcUtjejVZLytsd0gwSUtZOTVFK2FpYVZR?=
- =?utf-8?B?a1JnSTRybEpoMHdWK292N0plNE4zQUpQUUNzTmJyaWt0NG9RT2lOUnNxblFs?=
- =?utf-8?B?UGk0Y3g5Nm9CRVZmL3U2TVNWdERta0F6djVvRVVhRm5wQTNodVVEcmh2ekY2?=
- =?utf-8?B?MlpSRkRXUFVhY25nSlliTXQzNEk3VGRkTXB5b2xhdFVRMUcrSVNKNGwzUTlL?=
- =?utf-8?B?eE1OY1NQRktOSW5POC9McVM0SHd3WDZhbkU5UmZWVXVmc2YwTHljSEMvZGt0?=
- =?utf-8?B?eFVpZWIyYmZwSEl2N2luVWs1ejRLcEl3RElJRkxOYXZyN1ErdFJUTWtLUjU2?=
- =?utf-8?B?OThXSk9rM1FlRTdIUzdVRkJWdGlKbHY4aUhZVUJnamluWFZ2TjVTSmxGdVJj?=
- =?utf-8?B?cnppa2NURHVlelpRS1VZSDlQUjBTQ2xQa1RkTVYrTjFiS05EcmU0Uk9HL2F1?=
- =?utf-8?B?OEV4YjhTektmWWZZN1htUmI3S2pvOW5EZWRwVWdTQmtFSEs4NHVJVWsxU1E4?=
- =?utf-8?B?dzljVFZJOFgvQUtGUHpKUngwNkFDK201bGg3OFJFckwzZUR0U1VndlRLREhs?=
- =?utf-8?B?T1FDUytjbGQrS25wUittNHF4b1BHWS9VdU9zU3lUZVoxSmVUdTVJVS9ZQlJo?=
- =?utf-8?B?S0lnQWtjTllZWlNsRjN6a21kZDJUMVBkQTBUcVovWFI3R0xlWnZsdTF5dHZk?=
- =?utf-8?B?RmlPbE9HUHJmTGtTMUp4QVZ5K1VoaGtRWUV0VVpUaGUzY3lpanV5TW5LSlVX?=
- =?utf-8?B?cnQ2NkdodERsMlJDZmszQ0x5dHd3RnEvOTQ0RElXckVTWGxCTGRBMXIrZlh4?=
- =?utf-8?B?Z1FXVFAwQVMyNVpoeFp4TXNVcStJL1FKL1IzWEMrNTFWNXdTNlptSGlRaCtx?=
- =?utf-8?B?TEY0QUc0ZFB4UUFzM0t2aFlEa1RRd2FiQmYweHNMMWxBL2x0RURzcnl4eGQ1?=
- =?utf-8?B?bW9QSGsxbGJra0sxLzBSMlBLMlIxd00rUndOcUdLNC8vdHJnM0hERk1FWWE1?=
- =?utf-8?B?UGplcitHUmtobGVGVmUzZTNjbGtBNS9JVTBucisvNDJPZ0IxN25sQUh6ZVlU?=
- =?utf-8?B?cW00aXRLWlI3WHMyLzJMSnhPc29hL09pMS8xREhINEljaDU2YWsvbTJSWUs4?=
- =?utf-8?B?N0l6K2V1VXZoMWtkWnZhMWtPNmMxRlRVbUNCcDFxc0lMZEd6Smd2YlBPdWZn?=
- =?utf-8?B?RXNMM3d1ZHlVMVlSRys4RlhJcUVBVGZVZ2tWSDRXdFVSZnBZOVhkcXpMb2J0?=
- =?utf-8?B?dU5rTS9ocWt4bDdhaktNRVNUajFjU1Z4SzlCWHZXUHZteW9GcHduS3NqWlNO?=
- =?utf-8?B?eTRnRkU3NEVTdjlPUWc0b2hhcG9TUzQvL29nQkZ4QjlCZDZGN1NFeDVqckEy?=
- =?utf-8?B?NUErTjlVamdpNGNpZUg4WU5sNFJCWnhONHFObWg1QUp2MFZ4SjlybndXRTVB?=
- =?utf-8?B?a3pvKy9hZ2ZTenF3ZjB6U1BtRTY0SEhIYVF2UGo4U3BNZWhtVWpSS2RzMk9O?=
- =?utf-8?B?bDJWYm5wU3ZVSWtkbDBjTXh2ZUJhUUQ5NTFOUllKNlB1NVFMZ3ByUnlJRVpp?=
- =?utf-8?B?WGtKWWpMeFM2T3RpZFUxV1FvblczbjZwZXRBSm5GR1QrQVZyM0hXL0MvRG1C?=
- =?utf-8?B?dEZJTDAwWmpJMFZ5UzdtWGpLbld4VWVDQkx6WUp3SXp6dzcwd3BSWmlvZng4?=
- =?utf-8?Q?sjSDqXZSNNaiJmpnTEJRdfq5a?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1t84P6+oUdQKLivRrwNdHdMTLU5xTV1N8O5BKRM4JQjwnXN8tbQfAVjjGWrDI10VStgQ4vW1TEll7F+cOJS8D+w271pSqYIIldafE8JnYfl3uocMgboEskxSLnK3H92V0c9Gse7glXyMHzsZtFmxoQfDW+U2KuQAnrbRYPuYULKi4giRcq1fZwtfPqYxrV/CALOlvgOqOj3DlwTAOiZNjjxQDjZZCKUv/AQgIjXqqlR8B7L5a9oF8RaZF1AjjvH3i4mGTK9bLYuk2akSLonujrNTrZ4hMJTks2K6rP3dX6EIspwtquEyTSgHQLYAZ+Amy10d71N6YBWD50DDpJdlYlbFe05FVQHg1lQBcn/e5j+FhKp3atQRG/G7YVQXyO8FeMioOsQkK7diUaTA6TjiPbq+ZDeSAubkUT7Wu3c0H2SqG6dJP19uMv/5XmlN/YnzkpHzDwIORX/bhwrO2jIBc/b+P3q8Dkkso/agZK7zDQ2JGG9s2CQ72lKavLZh+H0jtBuM/FCLpUGx7DShsYibciEECCbkha4dqz91Zye3cNAl3oTrd7+0/t8JDo8ScQnj0K6TlsBV42GvzlOAN8/3IciIsMvig53zpVtVF0fVOZc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b17bee7a-750b-442e-ca91-08dd6ed217d6
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2025 14:57:58.0107
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RtF6qxAiaderLR7WhigOzrNJY306CZlr9uDes6AZnrcTMHvg0LD1slNVRm/FERsEmKjThLIEYm+YPNf5RIEGzA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7535
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 phishscore=0 spamscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503290108
-X-Proofpoint-GUID: guJuWOdCMUxWwsm0ffobQsA7OOvKM7Ti
-X-Proofpoint-ORIG-GUID: guJuWOdCMUxWwsm0ffobQsA7OOvKM7Ti
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Sat, 29 Mar 2025 14:59:03 -0400
+X-Gm-Features: AQ5f1JqshpPHI2RUetUZN4KoLpAtStId52O1O-eQWRArheTMT4Vckcwdqk7cNC4
+Message-ID: <CACo-S-3OLobbxyggYZhetEE_bfdBwZkUsAGqEoZ1eUkoUQFALg@mail.gmail.com>
+Subject: [REGRESSION] mainline/master: (build) 'uuid/uuid.h' file not found in
+ usr/include/cxl/features.hdrtest (...
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com, 
+	shreeya.patel@collabora.com, broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/29/25 8:17 AM, Takashi Iwai wrote:
-> On Sun, 23 Feb 2025 09:53:10 +0100,
-> Takashi Iwai wrote:
->>
->> [ resent due to a wrong address for regression reporting, sorry! ]
->>
->> Hi,
->>
->> we received a bug report showing the regression on 6.13.1 kernel
->> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
->> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
->>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
->>
->> Quoting from there:
->> """
->> I use the latest TW on Gnome with a 4K display and 150%
->> scaling. Everything has been working fine, but recently both Chrome
->> and VSCode (installed from official non-openSUSE channels) stopped
->> working with Scaling.
->> ....
->> I am using VSCode with:
->> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
->> """
->>
->> Surprisingly, the bisection pointed to the backport of the commit
->> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
->> to iterate simple_offset directories").
->>
->> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
->> fix the issue.  Also, the reporter verified that the latest 6.14-rc
->> release is still affected, too.
->>
->> For now I have no concrete idea how the patch could break the behavior
->> of a graphical application like the above.  Let us know if you need
->> something for debugging.  (Or at easiest, join to the bugzilla entry
->> and ask there; or open another bug report at whatever you like.)
->>
->> BTW, I'll be traveling tomorrow, so my reply will be delayed.
->>
->>
->> thanks,
->>
->> Takashi
->>
->> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
->> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
-> 
-> After all, this seems to be a bug in Chrome and its variant, which was
-> surfaced by the kernel commit above: as the commit changes the
-> directory enumeration, it also changed the list order returned from
-> libdrm drmGetDevices2(), and it screwed up the application that worked
-> casually beforehand.  That said, the bug itself has been already
-> present.  The Chrome upstream tracker:
->   https://issuetracker.google.com/issues/396434686
-> 
-> #regzbot invalid: problem has always existed on Chrome and related code
-> 
-> 
-> Takashi
+Hello,
 
-Thank you very much for your report and for chasing this to conclusion.
+New build issue found on mainline/master:
+
+---
+ 'uuid/uuid.h' file not found in usr/include/cxl/features.hdrtest
+(usr/include/cxl/features.h) [logspec:kbuild,kbuild.compiler.fatal
+error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:6b8da43ff8bc6bf9d93cc9cf86c3c5b5c5ab20a2
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  092e335082f22880207384ad736729c67d784665
 
 
--- 
-Chuck Lever
+Log excerpt:
+=====================================================
+./usr/include/cxl/features.h:11:10: fatal error: 'uuid/uuid.h' file not found
+   11 | #include <uuid/uuid.h>
+      |          ^~~~~~~~~~~~~
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allmodconfig on (arm64):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:67e83b7667593f2aa03e5956
+
+## x86_64_defconfig+allmodconfig on (x86_64):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:67e83b9067593f2aa03e5977
+
+
+#kernelci issue maestro:6b8da43ff8bc6bf9d93cc9cf86c3c5b5c5ab20a2
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
