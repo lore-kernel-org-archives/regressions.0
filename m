@@ -1,65 +1,65 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EBE1D6DDA
-	for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 16:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29361DD9AD
+	for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 17:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743352548; cv=none; b=TAs54+KAZ0otY9suQkRXk8hYFc6xxTeZ9QbUGoLsryj9f8ApSKv0wcjjYgL5lIdnpx5sZaItelwbhwB6HEIhJvFREtI57khEQQ0vDGvjllmFcxC8R+sC/RYek3bXZErrC2UiXieHpEsv44R9QxgJ6QYn7NLQjATqAhxOxug7dJs=
+	t=1743354282; cv=none; b=Gv6EMxGXJdi9k1kcx+mbAdG3i76fJRpyqD25s7yUFI07ci+s6WlaLtWZVEM4UlclbWSzw7vRB/BwtaDV6x5vXhm/G87oa3WnZzGTmFMHzsWEvHlIP0toxbjN7yF3ztrSI1VCQCvpKRRPmHeQfQZ+0DblFw1Urz44ei0GgR3BrJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743352548; c=relaxed/simple;
-	bh=S4RODy1Q/hZZxDPN61Kt7DmGQaqQa/2RGDWfOBPMSdU=;
+	s=arc-20240116; t=1743354282; c=relaxed/simple;
+	bh=BAKEzZA40sOcQ7n1AVHKwLRUlfebLm+j0ppIiCYiXFo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s5cUgzcRvNcnlcy6f1PA8TNrWyISZOBXSayTGeEMx91LhtkEqJ6ehlbK6uqbokEUMljWQ2ddArU+HbRQamao7vpAJMtXy7zbCjlKWCGKoXqztqBhIwgUsKW/Sp3LwCACoZbvDd6uuso4ASJ+C27b0EzsO2vzoWw7KliNSGAs/WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hi3Cowwl; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:Content-Type; b=kdPpEuz0Mog3JWQY/odw0Uc3efL8mQhjJ4yRSwM1FMnZAd43Kb9jY6np3QEzGYQMCLPTcGM+3DrzFIk4+tGbr77PPpsyre4xm/LNTQJ0bY5lQFhEwvfu9ypPyJjyKnbOuSKUzu5INZDEV3RzQHcLKsOL6MRgUGdRcv6B9tsGJn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyei/oLX; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi3Cowwl"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so19639685e9.1
-        for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 09:35:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyei/oLX"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso36140445e9.1
+        for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 10:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743352544; x=1743957344; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1743354279; x=1743959079; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uuOuqty0i2CYwtRK3Rp+qfQDE4owvRyeSN1m7kjYXkQ=;
-        b=Hi3Cowwlvfq8/Jexjjz5UyE/AkaCxKP0k+hoc5l/jEiZ7zQ2dYdlr+pm5ipcsH7yvZ
-         71gQoJf/vpOm2lPwi0cjzplwj1oRzSN2Of47gnXf15iXb8dKHJBbyJs6y7WZm7wp1Duw
-         TMH1b0se64via+bTz1F1zTCOVzBc6vbbls8iBBbNeNe36TZ0pE9A+YrNFro7rtsdihwC
-         EcL3oAeQN75jZURPFBz8ztJWxsJ8Evr8JKcd85pu80ffLaivOIacqnn6IiD3QLce4a+8
-         /UobkbvkWGvRHtSehOMdUgYbVjWLJJqLmLNJNS7Yhs0ryUnt6wrksytZXyr7q/RSaoTb
-         rlAQ==
+        bh=2t8U1apyWfkYadxNh+ZCNH1xZAalJJ/Z/eiVcfGrYbI=;
+        b=fyei/oLXDG5bSu+jaQ+SCLhSV1I0nXB/1BoHBWLdz81yGHgSsojJ+ELl7x+hDcMiAV
+         UuPjYj7Pgkp2QiN3B/7nejgU0WoAlzadEf7NaAlszwhBQXyICyDuxynl5/y1e1zpfL24
+         9wta8Mja5vl4u4El0dWP6s9XfRZ47RCMdMWE1M2MGQBFueNEuO/PjKF8+dlfisdK57Ho
+         yrzllO1CBcangFcNpqIrto7EIxNaUexth3vRO0ytY75bKg6WMpjuSxFByemcYjPuIwc4
+         oSdU18UXoc43SvjbOMd1dnt+WvyNtQ+sJtCyjShsJzKxEwavaM16js1yYk9kvCLoO1p7
+         b8qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743352544; x=1743957344;
+        d=1e100.net; s=20230601; t=1743354279; x=1743959079;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuOuqty0i2CYwtRK3Rp+qfQDE4owvRyeSN1m7kjYXkQ=;
-        b=UZrj3Uy2zTSvYwBPujzxzF/PSw6IKzB/TpExsyUecRd2OhY/dawVRcWHRoThtEjcSX
-         pQIAwiFV9toIdDm/Wy8KetpFOBlTSSS1MPtRYYe3/7Ik6wJ8B1jLulOj8zWKlcnqVqKq
-         9Nhefow8i4aYH3hCmdhdu98XSQhmn1cn8gUiqIibmedBeQhN2Uc5uGqsByCwQNLN0e5u
-         GkkxHi+5YWkIMjrU81Gt16bjEKtxsEtmq1BVT5aClzds4/D/poMeH7603xf6/2QMYs4h
-         8bVKqT8W3wbuhRgiZGPV4cr003Yrse7e3qk1R9pSsP2Hclk/ZXW6g9XTONKj9Z3HALAs
-         1raA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2B6yL/74vIhzJ1b7GLcGrOABiIkNnPKthayuvu6tN34Ba1069LXXy3EFwDgLf+YL2cBpgQAhM6ZYtJg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxon11NH9hPVngjnOcSMxrioIak50T9vpqftBWQqk2s4b3ZaWgc
-	R9/VI4Nj5eC3380ZQ7F+KwOGd6+vI6dPCVGQa4qzKW9TyDMKOfcT
-X-Gm-Gg: ASbGncvUhNBVHD4ly8HwKyJG149v+k9020gq5Ip822EFCowoi34bacTWU9ZXMbE8UfA
-	SSb2ZvswMwJcXTTbwkfeBz29+ivT3eq9XOnIzZABI3SjRFxIYDplZ3OJh34h0/2eNiFO6wsWPPH
-	slaLZFZE8Ta6AQGS0i+S0eKCPc5r+iedu/7VfiNIdIxqUc/HDq7X++FCeqmt/7cBQDltfagrxt+
-	dVqBIE8Lx4OzZ+U0EwNJ1rfaUNUM5dj0pWGm7Ki6Re4+YgftDfyIh1TxDMtZdNDix/g/JOGS3vN
-	ilkZz53rWRx7/x/W8sA86l8TEdpF4y6mj7LD2/KIgz3T86LzztL5Fecg6dsHK+vu+T1ui/Yua+F
-	fecoz/hxbn6Vb3fgTISH046JRPKw=
-X-Google-Smtp-Source: AGHT+IHoyEbJ5/v1QJFBuWxBOsgt/kiZQGVTRtOGc8h5L9u1NHxhfrrZbHC8fyaTQD6E9ugMTRFeLg==
-X-Received: by 2002:a05:6000:2b03:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39c121188demr3552253f8f.36.1743352544412;
-        Sun, 30 Mar 2025 09:35:44 -0700 (PDT)
+        bh=2t8U1apyWfkYadxNh+ZCNH1xZAalJJ/Z/eiVcfGrYbI=;
+        b=g1JMDCBh/XQ+d8AQ268NbsDYzWUTQQzITUwFuPFUSfsGKPauMLpwCrZ/qjtj/QFdYM
+         2n+DXGCtlKnNz84OrSefw5rpppX6ddy3ielgbuR1eMeNsT8Uk98UV3xwJ2PNKAfT36Ob
+         7X/V4vYhmJih1Oou0waQC7JJgTcANuN7lt5Hhz+Sg1qhFV3lHiqW0Auk9BjWa5Ko7Rc2
+         KokT8Sv8Qgmey5AOyzgNE6hl/gtx5WDuDWzeBiFefWUWg8fB7t8GzBL0sUyT5uXbTv26
+         ECtBK4NSoGzv/JELiBXLzKq+j8kE7Pm+yXQKEVFBvREcIPNp/KyizQQT89UIIe8zB0uH
+         Uraw==
+X-Forwarded-Encrypted: i=1; AJvYcCURGIJvEEaFsbM/aNFksJzIO9AP8mwIV1LE0fWu/995/nSK3oF9dZiPKhXkTcEHutkgCEgqKy7H1we+BA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxkOGOGgStbHAKgNJy31LU6Ja28KdusjVpV9GCS75zF6Tjcl5A1
+	BMFCDRgRX+I+OSKcBXaCtq2LNKCmnQM3L0Gw7n8YaRA4+0XPh1GR
+X-Gm-Gg: ASbGnctahSz3Nmm/nOA9orXjGIxbnmyYOrUELzvRmDdL1ngZc0jC4C51OrURY3x2c+/
+	8mVW76vYCubbeiDMwJTL9CjeIdSzz/ht65VuSWfF5TZq1QNnR5g+KObj36EEqQLYamBpFMpGd83
+	8R7ub44skUIVmEioLe8GHS0W/7bd6SYBQV51GgXSjM5811c/zsRetWXAXsiSogUdYeotPofcmj3
+	P+V6LXInkfWD5DS/LmcweU57GI4UQq7k85sZmzDQA7373DsIVD1OgrXWqRa8xVECIFrABJVgXGm
+	1cQRjldkT61bw7oLytDzl0vg3WW6unhcS0jVlr4k4rTFGRzyDT04D37Euil4xfLsSe6WzHoYSTT
+	DrsLJzPxFZCjKIVNCMjmrvEf+5S0=
+X-Google-Smtp-Source: AGHT+IGWRHzVCWEmkKNQbY3li1FH4smSEgKYfZNlQnBS52KWB4DBmN6gENIyoIOkvQziVGmRka0Rjg==
+X-Received: by 2002:a05:600c:34d3:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-43db8526487mr69463315e9.30.1743354278683;
+        Sun, 30 Mar 2025 10:04:38 -0700 (PDT)
 Received: from [192.168.10.195] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6627bfsm8820607f8f.25.2025.03.30.09.35.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d830f59d0sm138759595e9.28.2025.03.30.10.04.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 09:35:43 -0700 (PDT)
-Message-ID: <efde5e18-672f-484f-90c3-d23d673daa18@gmail.com>
-Date: Sun, 30 Mar 2025 18:35:43 +0200
+        Sun, 30 Mar 2025 10:04:38 -0700 (PDT)
+Message-ID: <4537905b-a1bb-4597-ad25-17f95ecd3b1d@gmail.com>
+Date: Sun, 30 Mar 2025 19:04:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -69,93 +69,64 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Regression: mt7921e unable to change power state from d3cold to
  d0 - 6.12.x broken, past LTS 6.6.x works
-To: Christian Heusel <christian@heusel.eu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, Linux Regressions <regressions@lists.linux.dev>
 References: <415e7c31-1e8d-499b-911e-33569c29ebe0@gmail.com>
  <2025031923-rocklike-unbitten-9e90@gregkh>
- <5e260035-1f1b-4444-b3b8-1b5757e5ed08@gmail.com>
- <38658f1a-216b-470d-99a2-13d66f075c77@heusel.eu>
 Content-Language: en-US, it-IT
 From: Sergio Callegari <sergio.callegari@gmail.com>
-In-Reply-To: <38658f1a-216b-470d-99a2-13d66f075c77@heusel.eu>
+In-Reply-To: <2025031923-rocklike-unbitten-9e90@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Christian,
+Hi,
 
-Thanks for your nice offer, details below:
-
-On 20/03/2025 11:05, Christian Heusel wrote:
-> Hey Sergio,
+On 20/03/2025 00:54, Greg KH wrote:
+> On Wed, Mar 19, 2025 at 08:38:52PM +0100, Sergio Callegari wrote:
+>> There is a nasty regression wrt mt7921e in the last LTS series (6.12). If
+>> your computer crashes or fails to get out of hibernation, then at the next
+>> boot the mt7921e wifi does not work, with dmesg reporting that it is unable
+>> to change power state from d3cold to d0.
+>>
+>> The issue is nasty, because rebooting won't help.
 > 
-> On 25/03/20 08:49AM, Sergio Callegari wrote:
->> Might be able to test on the distro built kernels that basically trace the
->> releases and stable point releases. This should start helping bracketing the
->> problem a bit better as a starter. But it is going to take a lot of time,
->> since the issue happens when the machine fails to get out of hibernation,
->> that is not always, and obvioulsy I need to try avoiding this situation as
->> much as possible.
-> 
-> Which linux distro are you using? If you're on Arch Linux I can provide
-> you with prebuilt images for the bisection :)
+> Can you do a 'git bisect' to track down the issue?  Also, maybe letting
+> the network driver authors know about this would be good.
 
-I am on manjaro, where the kernel follows slightly different naming 
-conventions, but the arch kernels should be OK. So thank you very much 
-for the nice offer. The thing is possibly a bit premature, in that I 
-would like to identify first what is the kernel RC or point release 
-where the issue started to appear, because I have these kernels 
-available for my distro which makes things easier. Unfortunately, I am 
-still in the dark even wrt this.
+Bisecting is extra painful, because the issue seems to systematically 
+happen only when freezing on restore from hibernation, which in turn 
+seems to happen only when I get in hibernation through the 
+suspend-then-hibernate path. Because this is my main machine, I need to 
+desperately try to avoid these freezes/crashes, since I am afraid of 
+data loss (I have already broken a filesystem once this way, and I don't 
+want to repeat the experience).
 
-The issue is nasty, because it only happens when you crash on restore 
-from hibernation, which is something that I am desperately trying to 
-avoid because this is my work machine and I really don't want to risk 
-data loss.
+However, in the meantime I have found confirmation for the issue. See:
 
-The big problem with this bug is that you remain with the impression 
-that your hardware is bricked. On the web I read that booting windows 
-immediately gives you back the wifi device on pcie, but I really cannot 
-say, as I have no windows to try. What I can say is that the 6.6 LTS 
-kernel also lets you recover the WIFI, while 6.12 LTS does not.
+- https://bbs.archlinux.org/viewtopic.php?id=301985
+- https://forum.manjaro.org/t/wi-fi-mt7921e-stopped-working/175867
 
-As a stopgap, would be great to know if there is anything that can be 
-done while on 6.12 to fully reset the pcie (or the pcie device, I still 
-don't know what is the culprit), so you don't need to boot an older kernel.
+I would not totally trust the second link where it says that 6.12.4 was OK.
 
-Thanks again,
+The general wisdom seems to be that with recent kernels you need to 
+disable ASPM for mt7921e. Now I wonder if 6.6 was maybe not activating 
+aspm for that device...
+
+There is also:
+
+- https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2059744
+
+ From which I get that the problem was already present in 6.8 and that, 
+removing the mt7921e kernel module before shutdown and suspend may work 
+around the issue.
+
 Sergio
 
+
+
+
 > 
->>
->> Incidentally, the machine seems to hibernate-resume just fine. It is when I
->> suspend-then-hibernate that I get the failures.
->>
->> Before contacting the network driver authors, I just wanted to query whether
->> the issue is likely in it or in the power-management or pcie subsystems.
->>
->> Thanks,
->> Sergio
+> thanks,
 > 
-> Cheers,
-> Chris
-> 
->>
->> On 20/03/2025 00:54, Greg KH wrote:
->>> On Wed, Mar 19, 2025 at 08:38:52PM +0100, Sergio Callegari wrote:
->>>> There is a nasty regression wrt mt7921e in the last LTS series (6.12). If
->>>> your computer crashes or fails to get out of hibernation, then at the next
->>>> boot the mt7921e wifi does not work, with dmesg reporting that it is unable
->>>> to change power state from d3cold to d0.
->>>>
->>>> The issue is nasty, because rebooting won't help.
->>>
->>> Can you do a 'git bisect' to track down the issue?  Also, maybe letting
->>> the network driver authors know about this would be good.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->>
+> greg k-h
 
