@@ -1,545 +1,252 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A6513C9B3
-	for <regressions@lists.linux.dev>; Sat, 29 Mar 2025 20:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743280443; cv=none; b=UZGiHbU+cLMxyMdsmt0bC39sUlbj+/i65z/pQEgUGv8sUtpshA2p9ksZJsBtT9OSPL2yUM/oBNyFbc78ZbK4x/lO3duxuVioXABjyobrxnvT54vm25ZDe5q4ZarxdKGBkzP1+i8Xp3SapSriWORFqGc3F4Fj3JAMMcNYLKnCEW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743280443; c=relaxed/simple;
-	bh=dw23VKl6KA6wjms9Dgn41Joz33bEr1iBNkuwfirG12w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QVKTbt71gQjP7+Ll3w/8rCS2pnFrJD6xsh2Db5L1tWneMoqewo+bwqn8teNzQD2dIdyUojGJryY87+TLP6dnyn74Xkoy+b8eZ0YtWLlS4uzsdP7kfn/CNFUEMne83mqs0UD9sTJOvCeRnUcwitWbEoeaozyAvnsggt1ZY+ZmV/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=jPM8odLE; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A1E2AE69
+	for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 04:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743307972; cv=fail; b=UGCtcGJPwX9u7K1MkA3hc8NlKV1iaZ/WgqY5wYFDf4x3W7bmWbqTPejXQ+I4xOHgjnxxhkZ5tfbe3Pim1gtxLfmmChpKQky3BUioJWd5vyTNMTRs/oGaQfzOtSj2RqRlttfX1GhvWRsTFAgasj5nDsf/Q/RYi9LoHtKbHJnJHhE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743307972; c=relaxed/simple;
+	bh=xL2vD1NO4NxWVkiC6Y+iqcBii+wZzBdjDn74KcJ/rYU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fp1Mg+oBRRoFCEEyIyevhU2hX5qmDgT9SkdouHxe+OODv3VZtspkA2OWvwh/TRoLkBPIoiniy6MN8fwByhIGVTcYUzyQ8ajWNrO875FOdYPQ1N8zWc4jyZ5wysungiQT8d0yIcqGVnkPEWZ72SBHl7WERsz+UmvHUqbN8htDMIw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gNEfNnNu; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="jPM8odLE"
-Date: Sat, 29 Mar 2025 21:33:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743280439;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=waBDOum2KFYHQU4HEAqFQURKA6hlBTFPqh8uVcV7csc=;
-	b=jPM8odLElJ1MnfPr9cFkWVAx0FEgTCgSyrAvn3Ufb9O+14uUsLjJwveePDyJbOBQ0fnsZs
-	DhDhP3+8bwCbHBMrsQ/aa84yAuXEX3mpfiYs52pDZvC+cl7U4r5ADpSNOqKiDnEgssbvHD
-	cBmeXGBKrHM1wQJKMciiVIhD/7J8LfVq6opMoig5cRBFYHfuCvO20YxkiM4M3AokHezRAc
-	swI6fDuIDJacNwimx9+4+fZo1OUtIIrOcbN3tPm9lIUZD30DAhnK/+p34LR3Wr/qqpmsVB
-	L2xJBgFJapyE4PQsyVF4Fiv5Ha/D4LnY1ZlkYq9AF34vMqR4HVBfNsPFirbJLg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z-hZNKszFmFJc0A5@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
- <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
- <Z-hYWc9LtBU1Yhtg@desktop0a>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gNEfNnNu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743307970; x=1774843970;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xL2vD1NO4NxWVkiC6Y+iqcBii+wZzBdjDn74KcJ/rYU=;
+  b=gNEfNnNu3xpQyaJeljM12t6Yr2vFbvXO4QopuX/2HwbYffJU/0R3ehz4
+   2uQzdsPNbwMyFU2/pzscB3flMJrcsa+UMu7sRYK97Ll1o8fxTj03zU//L
+   b/4aJmJqQWz6sFXrWROSIJWKrbT7bpp8WjL/GOnimg2LNIvBUmlfWdN6W
+   QkphnB2SS1EgbSGncz6voMC/hM2Nxp7lhJF9NmbPDFtpAtTVWbPG3mXzZ
+   5NbTDRiPgozl/iYG8EhmFa2p8b+4F9lDuE4WRglve5qO2MJRD9e5W7wpC
+   9/CYhR7oDhVarIUmUBdJAoB0ca6nl0z+s2RzPYUY90y+BJgyISODX0wAG
+   A==;
+X-CSE-ConnectionGUID: 07T0x11yQFufneHbAVR3RA==
+X-CSE-MsgGUID: DXWTG+mhThSeMoSz20nK3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11388"; a="56004353"
+X-IronPort-AV: E=Sophos;i="6.14,287,1736841600"; 
+   d="scan'208";a="56004353"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 21:12:50 -0700
+X-CSE-ConnectionGUID: dEoosLgPTPuSYDYY6vuNSg==
+X-CSE-MsgGUID: s7vnNAkBSParDogCnWPaWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,287,1736841600"; 
+   d="scan'208";a="125612541"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2025 21:12:48 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sat, 29 Mar 2025 21:12:47 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sat, 29 Mar 2025 21:12:47 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.42) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sat, 29 Mar 2025 21:12:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Jg1rbUqLz4qKBjHgit3mlJMJnlFqRHedXIlZ3K+1vlx5HNT7v+run7k/q4NXxX/DPX/I5Dy7hbXeT+RL7BaQBzrbgYgzz+1p6v2Sosjcb/SRavRsGQmvTcwpUeS/lcjAzw0clYUBn0P6ORPP2AjrbsPQnBcw1Ux8S2+pwmg2tUvEIeqGux4J6wGv0z477Dk8mTx78ftGIX4aap9uhSl1mTBVWGRQN1toMLyH4wfam/LfcOIwIWmEPn1azLiQ/rBemfGyrPwugr9cwOBHYbE1HsZaFWJN9zdLwcBfm0B1jFupH6USTiseyWDj8X7CE69HwR/TB22aN8K9ObeBzcqzbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xL2vD1NO4NxWVkiC6Y+iqcBii+wZzBdjDn74KcJ/rYU=;
+ b=OdQV4hHaNG2p87xq6D6g+/QGSYORBtJk0cjSMJCq+IlmEzfM1AjCnCAFB2aZ9/nA5YXNOj6g4DILgNBnIVBeLoGUZzb1aTbuQqasPTGVvklRVFjydZ8DdpaD6Q6K/rT0Fpurzz8NB/CTBuIr4zx/ChbxQkpwpAuPlvP2/BLhErVU4qMS1dAzfekRR+k3yhYaPJ381N54Qyznjx3M7tIpbo9/vFLmNgTuy5M4WHzrRxSiYp7nDosAB828VBMSdjPLtEZT/sSwD7rPS8UjaWU5gzoQCw2Zp6X1UQQX70ynpV79/U05cfjslN5QmZ8Y7GGwnqKfnCru4uHLxR50NjzSZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW5PR11MB5810.namprd11.prod.outlook.com (2603:10b6:303:192::22)
+ by MN2PR11MB4584.namprd11.prod.outlook.com (2603:10b6:208:264::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Sun, 30 Mar
+ 2025 04:12:44 +0000
+Received: from MW5PR11MB5810.namprd11.prod.outlook.com
+ ([fe80::3a48:8c93:a074:a69b]) by MW5PR11MB5810.namprd11.prod.outlook.com
+ ([fe80::3a48:8c93:a074:a69b%5]) with mapi id 15.20.8534.043; Sun, 30 Mar 2025
+ 04:12:44 +0000
+From: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
+To: Chris Bainbridge <chris.bainbridge@gmail.com>, "Grumbach, Emmanuel"
+	<emmanuel.grumbach@intel.com>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"kvalo@kernel.org" <kvalo@kernel.org>, "Berg, Johannes"
+	<johannes.berg@intel.com>, "benjamin@sipsolutions.net"
+	<benjamin@sipsolutions.net>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: RE: [REGRESSION] iwlwifi: probe with driver iwlwifi failed with error
+ -22
+Thread-Topic: [REGRESSION] iwlwifi: probe with driver iwlwifi failed with
+ error -22
+Thread-Index: AQHbn3mA8QotXLrVl0qHByV5uQ6cqrOLFJVw
+Date: Sun, 30 Mar 2025 04:12:44 +0000
+Message-ID: <MW5PR11MB5810B066CB7824714FF25D0CA3A22@MW5PR11MB5810.namprd11.prod.outlook.com>
+References: <Z-XvFvGigpY7JYFn@debian.local>
+In-Reply-To: <Z-XvFvGigpY7JYFn@debian.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR11MB5810:EE_|MN2PR11MB4584:EE_
+x-ms-office365-filtering-correlation-id: abf08a1c-2353-442b-73f7-08dd6f411f0e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?THZFNmtrVFRXN3JoSTB5dDJBa0JhWklob3UvdXVmN29GV1h1RXZLK0UrNTlO?=
+ =?utf-8?B?K2dLdVArdjlZSFVtdFpnRE9uNjV4VmlTbGtydVB4d1EwTzZFZ3FnaXRHbHJV?=
+ =?utf-8?B?MFoycCtLS0tUTS9FM3Y0SUtkMFVSMnlnbkpUVmRxRFNxWGFHNCticllKWDNJ?=
+ =?utf-8?B?ckR2bEZ6YWkvK2pwK3FiNmsvQnJuVFlJanFwY0oydHowK1M0TytrNUd3b25Y?=
+ =?utf-8?B?VkNpa3BBenQ4bTFkT1krZ3ZMaXVSS2NDRnN3c1FtRU1semZIRHVJamxnUGd3?=
+ =?utf-8?B?c2laOXdjaWZpZGxnVGRpT2ZxOG5pZG5QSVgyTjJkZDNob2oxeHFTSlhmNjZG?=
+ =?utf-8?B?SlJsTW1PemRKbHJNQys4NmcyTVIyelpUWkVlbTB1WU9DK0sxNzRkVUhkcnpK?=
+ =?utf-8?B?anNFQmV3dENHUXNKd2syaHJsaDVkODkybmljOG4vSktUZVVzUnp2bWxpeFVH?=
+ =?utf-8?B?S3dCUk1tVUFyL3N1Yjl5QnlQVi9jYlFnWXdRc1ZOS1FwL3daUGZBQTIrYk5O?=
+ =?utf-8?B?VXV4ZHpQZ2NKdkJDY2FqUm5MOUxobCttSmc1Q1dpU0srb1BXOUlxNnNPbTMr?=
+ =?utf-8?B?ald5L3pzTmhLSW0zTm5yQkZLYUVWcG5TUHU0OUxWM3l6MmJjSHZqSjl1TUVk?=
+ =?utf-8?B?dGg4U0dySkNpUHYxVGFVb0FOQWRkeFVzcVIwUDVCZWpNdDRVVWNvVDg0dGw0?=
+ =?utf-8?B?KzVET295LytSVzRYRzV5WmV3bkp4L2VPZ1IzUlNTQlBjeUdYM2lOam5nV2Vh?=
+ =?utf-8?B?ZTc0Qjh1dFdiWmdENzBpVFhFajJMOUJXVzVMcjd2Q0MrTzZFYWdKUnNGYmxw?=
+ =?utf-8?B?TTRtZHFDbGNZaGdSUm5QVkxtMTNyUmdLWVZSU2xweXhoY0JwR1RMQ3d1dVNG?=
+ =?utf-8?B?ODJlRGRPa05aeWNGRGNxdGVXOUVQc2lwbEsvWVBjYXpiYzdaZ1U0ZnJzSGtN?=
+ =?utf-8?B?dytINGhNdS93ajlTYlF6Z1RGNVNFWGJlcWlnbTZnYzhmZXMrN3Vyb29sS2dt?=
+ =?utf-8?B?elN3RVpmd3dZTEhjaGlMRkJWVi9JK2ZNQm1xSG1UeFdYVFFHazNVbzJZSzNp?=
+ =?utf-8?B?bVFYN2NOOFl4ZVBJVy81VGIrOEwxMjNUc3hyb0RsaHJza0xnQlI3YjR1SlM0?=
+ =?utf-8?B?ZjBVcWcvZnhLbWRYUnZNMnZBNW9lOVIxT1pGaWFzaGM5V2lSZGNzajI2dEN6?=
+ =?utf-8?B?VS9YbDhUL1NJUnFLbnFxanpLbUhBa1BNUHUwS0pMOUF6SG5HVnJRTXJKVlpq?=
+ =?utf-8?B?NzIwTklCUEJlU0hmKzBCdjVqQ2ZRYlBFVjZTdUlHekh4QUczTlU5a3l5Z0NQ?=
+ =?utf-8?B?RDZ1SjR4RXRxOHNmSmZHM2hPYno3UGZxcVAvQms2RzRBenpNVXV4YnZZNU1X?=
+ =?utf-8?B?MVRCZlFHR1YyYnl5TEovWHZ0UVUxZTFRcE1WN3F4MkR2eEFtK2cza2NhUUN6?=
+ =?utf-8?B?MmU0eTZFTE9FSWp6ZEs4Rlp3b3FtRjFmVGdyaXBFWFJzdlAzOEpkc0p3RVN6?=
+ =?utf-8?B?aS9sQmxxb1lZQ2d4WHhUUkFzUmhtVHQ5Sjc4UjhjZ2hrK0Y5TjZjaEg3V3VV?=
+ =?utf-8?B?WndGU2Y1aFVlMTBSQmlTb2NSUUk0eXYwcUFTRW4zMlJrRFdTRUl0MytjYnd4?=
+ =?utf-8?B?MDlPNk52VFZXTU8rL1Jzcms4WmF2cVN5N1ZldkhnbDNFZW1wUTdKTjNoU0RQ?=
+ =?utf-8?B?djZBN1lzbGtweGR0cklmcUdOanY1WGRJQjk3blZHcFJBTXZtRjIxZFFjdHIr?=
+ =?utf-8?B?MURtbGRZbnZHcnVjWno0MGszVkxwNDJaMXh1b0IyM256cmluSTFHZHZxR09N?=
+ =?utf-8?B?WnJXdTRWZnJSaG1tSy9Oa1BEOEh5dGNHejB3NGc5NTB1RWlCSFFSMVRZSXNL?=
+ =?utf-8?B?eUtzMHlyS21OREJ5SzFyUEI1U2s5Y0xFYUVQdSticTBTenRHU0JRRENvVzZy?=
+ =?utf-8?Q?k1DBwC/mT3I=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5810.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WW1EN1hMVFU1NWxJSEhzbmkxYWpoczVMMWFvby9XZVRyeFdkK2ZFTzdqL1Ft?=
+ =?utf-8?B?N2tselhGM2FwVTlpWEtNTjhvV2xLakxFdzBZYUV2VWk0VXI3enFJdTNqbDRU?=
+ =?utf-8?B?VXVpbTRySG5NNDVmTGs1cTNWVGNlaFZ0RFdHOTJINy9DdXc0Z2o5cko4Vmlx?=
+ =?utf-8?B?Mkh5Yzd4Q0pjOFJsM004REVOTkFsQ210aFljMW95KzRSdkVYbEVoUTVtUUhN?=
+ =?utf-8?B?aklNdTFEK0lUaUYwZkZJdWg2TlhNT3BXcXRYTUdZWmNlQVNBTnlqL3RnTEJr?=
+ =?utf-8?B?YlIzc2Uzc0FSUS94VEV1ZGgwWGRUaFdxTkYvUDhtYW9zWDRJYXVoZE82WVl3?=
+ =?utf-8?B?dFBNWXljL1dPZ1c0emJFNzBMMG1rN2lsM09QMWxZZ053Z3BRWWZJeGVIdEFz?=
+ =?utf-8?B?RkxTYUsweTRxcW5pSk5tTEg4Y1d3YXNpMVRqSWc2Skx2cURLY25XK0FIZDVx?=
+ =?utf-8?B?NzlaWG0zR3pGMldGNkVWQUFjaktpOWFrUytKRFIzMVBTL2NqUllwODRMajVq?=
+ =?utf-8?B?VnQ4TEZ2K3BlOUNDM3dJNkpOZjl1Mm1ieSs2c1JkNEdWRTgydkhySTh3aFJj?=
+ =?utf-8?B?K2toOEpQc0Zxc29QaTZud0QvSUs3TUlxbGJXb1BkRUpCT0c0b0tHYTgvUzQy?=
+ =?utf-8?B?Njl5K2VoQmJTK0RQMkp0UmdtZnFzWHdicSs4dDBGZEZQNHYxcjhuZkxkU0lY?=
+ =?utf-8?B?Yjg5UjdVdEdoNm1XcVZDZEdEclZsZjROSzBmRnlUemhiZEpKMWpjVy9PMEww?=
+ =?utf-8?B?L0l5bWc2UTY1bFBDNmsrQ2xvaldrV2FxQ1pBZ2k4TGUwWkRnMW5idGRlbHhx?=
+ =?utf-8?B?a1JtemU0OFJaazVKb3RlWmJMVG5POWpySnpwRHgyQmpiRk5ZOS9xaWxqL2R1?=
+ =?utf-8?B?SkJ4Mzc1VGtHd1ZIYkVyT0c4YzdjN3JINDYraE9hN3hYSENZbDBSNE54dnlv?=
+ =?utf-8?B?NWVkd0hmYnpDOWdJN1J0aExHamJXOFFtNHZUbWMxb1UrZ1I3YlcyNnhvNEdt?=
+ =?utf-8?B?K2x1VUFlcXNHaEIvcXFZRDh4L2RVUnloNjRaanBrc1dIRWNjTVhNZ28zbDEx?=
+ =?utf-8?B?c3ZZNjNBWlRNL05HcUh0Q2lKOU1LcmFBdEFES2F0bGZTTk1hS25WZk5uUFJr?=
+ =?utf-8?B?SGphY0JRMnZDK0plK1JXMUZQMm16a1g0S3IxM3g3QzBLUEVmTG9FRHN2RUVa?=
+ =?utf-8?B?UkxJdnIvNWV4RCtiQlgxNGZBUGFZcWhBdVBDVnM3OGNNOHlwMlpOZk4wUWVh?=
+ =?utf-8?B?ODhldHAzK01ZL2xBcUFyK3JQYWpBbGVjOEhHRWpFcWs2TjVsdHJMQ0lCNTB3?=
+ =?utf-8?B?UTRxVzZZY0xGcWE3UVA2QUw0bTZaMmJOcEZNaFhBemxLMENudHVFMURsTTEw?=
+ =?utf-8?B?YkY5eGt0cmRuWnZFQTJ0Z0VUMTB5bnBEZmlOQlZWb09YZ2liMW9ZdXJrWEVj?=
+ =?utf-8?B?dkkxVVh2d3JFWlUzNVREMDRmY1B3K1F5UTB2dGRQTnZSQzlPTUhUSitZalBZ?=
+ =?utf-8?B?cXZmODlhZ0M2SlgvVXVXblNDYm9UOHFLRlVPVGl5UHBtTkVSM0ZUWVBkVDhp?=
+ =?utf-8?B?SWdhSEoxR2pNMXE5bnVRci9vNnNUZTZZcG41QTMvdjU0QStaaTR5anVMcUVy?=
+ =?utf-8?B?emx4bGllWUwrOWNLRjFwOXRKRGJESi9kQlVjdFZleERwYjdSOGR3Q2oyeWRN?=
+ =?utf-8?B?aGg2b2FFancxOU83bUFNR2lvS2RaZ0wrbG5peVQyWWRycXZ0OEVNTTQvU1BV?=
+ =?utf-8?B?b3RCWWRTL3VFSHhhb3dNWXFKRVJ3Nm5PcnNpazhsdFg5MU5ZZ1Z1dDNOSHF4?=
+ =?utf-8?B?YklzNDJ1VEd4d3N5MjZYaEp4ZE91K1BkQVpWV1hjenc2U1I0TmlLL0lpTlNh?=
+ =?utf-8?B?VUpBL3psRGl3anQrVTg0S3FnU2ErMXN6b1RtaTdiVDFsNmNNYUlrSGFaU2ta?=
+ =?utf-8?B?SHlUTVZrRkJQOTdVdUs3dkNZWTlPRUdyNHRhTFdDK2xWbHpIRjQ2ZnJ0TVpU?=
+ =?utf-8?B?cXZGMFlzRURJTUNpS0FkZ2ZaTUR0T2pnbWhhVzliU3NPUWU2NWtheXNOWGxl?=
+ =?utf-8?B?aVM4T0xGc2xPTnJXVEE1amU3NVlidmJEYklUaWdjRFpFNU50NExhbzFTejJm?=
+ =?utf-8?B?MFEwUFJUalZQTlJEVk9WejVDVzlQYlY3cXA0RFVMUkdaU3k0WFVxbm0rU0R1?=
+ =?utf-8?Q?/YsTKF9OLJYgbi2aewhAToc=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-hYWc9LtBU1Yhtg@desktop0a>
-X-Migadu-Flow: FLOW_OUT
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5810.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abf08a1c-2353-442b-73f7-08dd6f411f0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2025 04:12:44.0656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SqFCwEkzzlumVN0O49JXFcVFm+Z0OLK1FIV7agIG2mHwBMNydjjp2P7enhfIZVA3wbiKt2jF0DchJrmhHCW6dTQ0O4K4EtSVFsJEwXAVnkDJno5S6nfVUW9ba4R+jhlk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4584
+X-OriginatorOrg: intel.com
 
-Try gzip decompression.
-Try LZMA decompression.
-kernel: 0x7f5df32b5010 kernel_size: 0x8a9540
-MEMORY RANGES
-0000000000000400-000000000009fbff (0)
-000000000009fc00-000000000009ffff (1)
-00000000000f0000-00000000000fffff (1)
-0000000000100000-00000000bffdffff (0)
-00000000bffe0000-00000000bfffffff (1)
-00000000feffc000-00000000feffffff (1)
-00000000fffc0000-00000000ffffffff (1)
-0000000100000000-000000013fffffff (0)
-sym: sha256_starts info: 12 other: 00 shndx: 2 value: 1110 size: 48
-sym: sha256_starts value: 13fff8140 addr: 13fff7032
-R_X86_64_64
-sym: sha256_update info: 12 other: 00 shndx: 2 value: 3c70 size: 19
-sym: sha256_update value: 13fffaca0 addr: 13fff7043
-R_X86_64_64
-sym: sha256_regions info: 11 other: 00 shndx: 9 value: 40 size: 100
-sym: sha256_regions value: 13fffc040 addr: 13fff704e
-R_X86_64_64
-sym: sha256_regions info: 11 other: 00 shndx: 9 value: 40 size: 100
-sym: sha256_regions value: 13fffc140 addr: 13fff7078
-R_X86_64_64
-sym: sha256_digest info: 11 other: 00 shndx: 9 value: 20 size: 20
-sym: sha256_digest value: 13fffc020 addr: 13fff7087
-R_X86_64_64
-sym: sha256_finish info: 12 other: 00 shndx: 2 value: 3c90 size: 15c
-sym: sha256_finish value: 13fffacc0 addr: 13fff7099
-R_X86_64_64
-sym:     memcmp info: 12 other: 00 shndx: 2 value: 596 size: 21
-sym: memcmp value: 13fff75c6 addr: 13fff70b0
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf30 addr: 13fff70c4
-R_X86_64_64
-sym:     printf info: 12 other: 00 shndx: 2 value: 4b7 size: a0
-sym: printf value: 13fff74e7 addr: 13fff70d2
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf60 addr: 13fff70dc
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf50 addr: 13fff70ea
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf66 addr: 13fff710a
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf68 addr: 13fff711f
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf78 addr: 13fff715c
-R_X86_64_64
-sym:     printf info: 12 other: 00 shndx: 2 value: 4b7 size: a0
-sym: printf value: 13fff74e7 addr: 13fff7168
-R_X86_64_64
-sym: setup_arch info: 12 other: 00 shndx: 2 value: 762 size: 56
-sym: setup_arch value: 13fff7792 addr: 13fff7175
-R_X86_64_64
-sym: skip_checks info: 11 other: 00 shndx: 9 value: 0 size: 4
-sym: skip_checks value: 13fffc000 addr: 13fff7181
-R_X86_64_64
-sym: verify_sha256_digest info: 12 other: 00 shndx: 2 value: 0 size: 12a
-sym: verify_sha256_digest value: 13fff7030 addr: 13fff7190
-R_X86_64_64
-sym: post_verification_setup_arch info: 12 other: 00 shndx: 2 value: 7f0 size: 58
-sym: post_verification_setup_arch value: 13fff7820 addr: 13fff71a2
-R_X86_64_64
-sym:    putchar info: 12 other: 00 shndx: 2 value: d8e size: 119
-sym: putchar value: 13fff7dbe addr: 13fff71b5
-R_X86_64_64
-sym:    putchar info: 12 other: 00 shndx: 2 value: d8e size: 119
-sym: putchar value: 13fff7dbe addr: 13fff71f5
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf8a addr: 13fff7300
-R_X86_64_64
-sym:   vsprintf info: 12 other: 00 shndx: 2 value: 17d size: 2a4
-sym: vsprintf value: 13fff71ad addr: 13fff74cd
-R_X86_64_64
-sym:   vsprintf info: 12 other: 00 shndx: 2 value: 17d size: 2a4
-sym: vsprintf value: 13fff71ad addr: 13fff756d
-R_X86_64_64
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75ec addr: 13fff75fd
-R_X86_64_PC32
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75ec addr: 13fff7612
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc15c addr: 13fff762d
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc13c addr: 13fff7634
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae44 addr: 13fff763a
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc1ac addr: 13fff7640
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae1c addr: 13fff7646
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeb1 addr: 13fff7679
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaec0 addr: 13fff7680
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaecb addr: 13fff7687
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaed6 addr: 13fff768e
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee1 addr: 13fff7695
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeec addr: 13fff769c
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaef7 addr: 13fff76a3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee6 addr: 13fff76aa
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc271 addr: 13fff76b1
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaedc addr: 13fff76c3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf0c addr: 13fff76d9
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae4c addr: 13fff76ec
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae54 addr: 13fff76f3
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae5c addr: 13fff76fa
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae64 addr: 13fff7701
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae6c addr: 13fff7708
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae74 addr: 13fff770f
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae7c addr: 13fff7716
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae84 addr: 13fff771d
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae8c addr: 13fff7724
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae94 addr: 13fff772b
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffae9c addr: 13fff7732
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaea4 addr: 13fff7739
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeac addr: 13fff7740
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaeb4 addr: 13fff7747
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaebc addr: 13fff774e
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaec4 addr: 13fff7755
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaecc addr: 13fff775b
-R_X86_64_PC32
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf0c addr: 13fff7763
-R_X86_64_PC32
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe004 addr: 13fff777d
-R_X86_64_PC32
-sym:       .bss info: 03 other: 00 shndx: b value: 0 size: 0
-sym: .bss value: 13ffffffc addr: 13fff7784
-R_X86_64_PC32
-sym:  purgatory info: 12 other: 00 shndx: 2 value: 12a size: 53
-sym: purgatory value: 13fff7156 addr: 13fff7789
-R_X86_64_PLT32
-sym:    entry64 info: 10 other: 00 shndx: 2 value: 690 size: 0
-sym: entry64 value: 13fff76bc addr: 13fff778e
-R_X86_64_PLT32
-sym:  reset_vga info: 11 other: 00 shndx: 9 value: 2012 size: 1
-sym: reset_vga value: 13fffe012 addr: 13fff7794
-R_X86_64_64
-sym: x86_reset_vga info: 12 other: 00 shndx: 2 value: ea7 size: 232
-sym: x86_reset_vga value: 13fff7ed7 addr: 13fff77a3
-R_X86_64_64
-sym: legacy_pic info: 11 other: 00 shndx: 9 value: 2011 size: 1
-sym: legacy_pic value: 13fffe011 addr: 13fff77b0
-R_X86_64_64
-sym: x86_setup_legacy_pic info: 12 other: 00 shndx: 2 value: 10d9 size: 35
-sym: x86_setup_legacy_pic value: 13fff8109 addr: 13fff77bf
-R_X86_64_64
-sym: legacy_pic info: 11 other: 00 shndx: 9 value: 2011 size: 1
-sym: legacy_pic value: 13fffe011 addr: 13fff77ce
-R_X86_64_64
-sym: x86_setup_legacy_pic info: 12 other: 00 shndx: 2 value: 10d9 size: 35
-sym: x86_setup_legacy_pic value: 13fff8109 addr: 13fff77dd
-R_X86_64_64
-sym: cmdline_end info: 11 other: 00 shndx: 9 value: 2000 size: 8
-sym: cmdline_end value: 13fffe000 addr: 13fff77ea
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff77fc
-R_X86_64_64
-sym: .rodata.str1.1 info: 03 other: 00 shndx: 6 value: 0 size: 0
-sym: .rodata.str1.1 value: 13fffaf9b addr: 13fff780b
-R_X86_64_64
-sym:    sprintf info: 12 other: 00 shndx: 2 value: 421 size: 96
-sym: sprintf value: 13fff7451 addr: 13fff7815
-R_X86_64_64
-sym: panic_kernel info: 11 other: 00 shndx: 9 value: 2010 size: 1
-sym: panic_kernel value: 13fffe010 addr: 13fff7822
-R_X86_64_64
-sym: crashdump_backup_memory info: 12 other: 00 shndx: 2 value: cb3 size: 3e
-sym: crashdump_backup_memory value: 13fff7ce3 addr: 13fff7831
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff783e
-R_X86_64_64
-sym: x86_setup_jump_back_entry info: 12 other: 00 shndx: 2 value: 7b8 size: 38
-sym: x86_setup_jump_back_entry value: 13fff77e8 addr: 13fff784e
-R_X86_64_64
-sym: jump_back_entry info: 11 other: 00 shndx: 9 value: 2008 size: 8
-sym: jump_back_entry value: 13fffe008 addr: 13fff785d
-R_X86_64_64
-sym: x86_setup_jump_back_entry info: 12 other: 00 shndx: 2 value: 7b8 size: 38
-sym: x86_setup_jump_back_entry value: 13fff77e8 addr: 13fff786d
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe047 addr: 13fff7897
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe04f addr: 13fff789d
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe075 addr: 13fff78bd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe07f addr: 13fff78c3
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe089 addr: 13fff78c9
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe093 addr: 13fff78cf
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe076 addr: 13fff78d6
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe08d addr: 13fff78dd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe06d addr: 13fff79a7
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe075 addr: 13fff79ad
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe09b addr: 13fff79cd
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0a5 addr: 13fff79d3
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0af addr: 13fff79d9
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0b9 addr: 13fff79df
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0e2 addr: 13fff7a22
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe12b addr: 13fff7a65
-R_X86_64_PC32
-sym: backup_src_size info: 11 other: 00 shndx: 9 value: 2070 size: 8
-sym: backup_src_size value: 13fffe070 addr: 13fff7ce5
-R_X86_64_64
-sym: backup_start info: 11 other: 00 shndx: 9 value: 2080 size: 8
-sym: backup_start value: 13fffe080 addr: 13fff7cf7
-R_X86_64_64
-sym: backup_src_start info: 11 other: 00 shndx: 9 value: 2078 size: 8
-sym: backup_src_start value: 13fffe078 addr: 13fff7d09
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fff7d16
-R_X86_64_64
-sym: serial_base info: 11 other: 00 shndx: 9 value: 2090 size: 2
-sym: serial_base value: 13fffe090 addr: 13fff7d23
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe088 addr: 13fff7d33
-R_X86_64_64
-sym: serial_baud info: 11 other: 00 shndx: 9 value: 208c size: 4
-sym: serial_baud value: 13fffe08c addr: 13fff7d6a
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe088 addr: 13fff7d98
-R_X86_64_64
-sym: console_vga info: 11 other: 00 shndx: 9 value: 2093 size: 1
-sym: console_vga value: 13fffe093 addr: 13fff7dc0
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe098 addr: 13fff7dd6
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe098 addr: 13fff7e38
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e4e
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e66
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe094 addr: 13fff7e96
-R_X86_64_64
-sym: console_serial info: 11 other: 00 shndx: 9 value: 2092 size: 1
-sym: console_serial value: 13fffe092 addr: 13fff7ea8
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7d21 addr: 13fff7ebc
-R_X86_64_64
-sym: sha256_process info: 12 other: 00 shndx: 2 value: 1160 size: 29f2
-sym: sha256_process value: 13fff8190 addr: 13fffabe1
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fffac4c
-R_X86_64_64
-sym: sha256_process info: 12 other: 00 shndx: 2 value: 1160 size: 29f2
-sym: sha256_process value: 13fff8190 addr: 13fffac5e
-R_X86_64_64
-sym:     memcpy info: 12 other: 00 shndx: 2 value: 57e size: 18
-sym: memcpy value: 13fff75ae addr: 13fffac8c
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffaca7
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffad08
-R_X86_64_64
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffe0a0 addr: 13fffad17
-R_X86_64_64
-sym:    entry16 info: 10 other: 00 shndx: 2 value: 850 size: 0
-sym: entry16 value: 13fff7880 addr: 13fffae48
-R_X86_64_64
-sym:    entry32 info: 10 other: 00 shndx: 2 value: 5c0 size: 0
-sym: entry32 value: 13fff75f0 addr: 13fffaed0
-R_X86_64_64
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaee0 addr: 13fffaee2
-R_X86_64_64
-sym:    .rodata info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .rodata value: 13fffaf10 addr: 13fffaf12
-R_X86_64_64
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7030 addr: 13fffafd8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff715a addr: 13fffb01c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff71ad addr: 13fffb050
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7451 addr: 13fffb09c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff74e7 addr: 13fffb0b8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7587 addr: 13fffb0f0
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff759a addr: 13fffb104
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff75ae addr: 13fffb118
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff75c6 addr: 13fffb12c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7792 addr: 13fffb158
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff77e8 addr: 13fffb178
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7820 addr: 13fffb18c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7ce3 addr: 13fffb1c8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7d21 addr: 13fffb1f8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7dbe addr: 13fffb20c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff7ed7 addr: 13fffb240
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8109 addr: 13fffb270
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8140 addr: 13fffb2a0
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fff8190 addr: 13fffb2b4
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffab90 addr: 13fffb2f8
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffaca0 addr: 13fffb35c
-R_X86_64_PC32
-sym:      .text info: 03 other: 00 shndx: 2 value: 0 size: 0
-sym: .text value: 13fffacc0 addr: 13fffb370
-R_X86_64_PC32
-sym:      .data info: 03 other: 00 shndx: 9 value: 0 size: 0
-sym: .data value: 13fffc140 addr: 13fffc142
-R_X86_64_64
-Loaded purgatory at addr 0x13fff7000
-Loaded real_mode_data and command line at 0x13fff2000
-kernel init_size 0x1feb000
-Loaded 64bit kernel at 0x13e000000
-Loaded initrd at 0x13d855000 size 0x7aae28
-E820 memmap:
-0000000000000400-000000000009fbff (1)
-000000000009fc00-000000000009ffff (2)
-00000000000f0000-00000000000fffff (2)
-0000000000100000-00000000bffdffff (1)
-00000000bffe0000-00000000bfffffff (2)
-00000000feffc000-00000000feffffff (2)
-00000000fffc0000-00000000ffffffff (2)
-0000000100000000-000000013fffffff (1)
-/sys/firmware/edd does not exist.
-kexec_load: entry = 0x13fff7760 flags = 0x3e0000
-nr_segments = 5
-segment[0].buf   = 0x5610eaa51ab0
-segment[0].bufsz = 0x30
-segment[0].mem   = 0x100000
-segment[0].memsz = 0x1000
-segment[1].buf   = 0x7f5df2b0a010
-segment[1].bufsz = 0x7aae28
-segment[1].mem   = 0x13d855000
-segment[1].memsz = 0x7ab000
-segment[2].buf   = 0x7f5df32b9210
-segment[2].bufsz = 0x8a5340
-segment[2].mem   = 0x13e000000
-segment[2].memsz = 0x1feb000
-segment[3].buf   = 0x5610eaa4c730
-segment[3].bufsz = 0x4291
-segment[3].mem   = 0x13fff2000
-segment[3].memsz = 0x5000
-segment[4].buf   = 0x5610eaa45640
-segment[4].bufsz = 0x70e0
-segment[4].mem   = 0x13fff7000
-segment[4].memsz = 0x9000
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXMgQmFpbmJyaWRn
+ZSA8Y2hyaXMuYmFpbmJyaWRnZUBnbWFpbC5jb20+DQo+IFNlbnQ6IEZyaWRheSwgMjggTWFyY2gg
+MjAyNSAzOjM3DQo+IFRvOiBHcnVtYmFjaCwgRW1tYW51ZWwgPGVtbWFudWVsLmdydW1iYWNoQGlu
+dGVsLmNvbT4NCj4gQ2M6IGxpbnV4LXdpcmVsZXNzQHZnZXIua2VybmVsLm9yZzsga3ZhbG9Aa2Vy
+bmVsLm9yZzsgS29yZW5ibGl0LCBNaXJpYW0gUmFjaGVsDQo+IDxtaXJpYW0ucmFjaGVsLmtvcmVu
+YmxpdEBpbnRlbC5jb20+OyBCZXJnLCBKb2hhbm5lcw0KPiA8am9oYW5uZXMuYmVyZ0BpbnRlbC5j
+b20+OyBiZW5qYW1pbkBzaXBzb2x1dGlvbnMubmV0Ow0KPiByZWdyZXNzaW9uc0BsaXN0cy5saW51
+eC5kZXYNCj4gU3ViamVjdDogW1JFR1JFU1NJT05dIGl3bHdpZmk6IHByb2JlIHdpdGggZHJpdmVy
+IGl3bHdpZmkgZmFpbGVkIHdpdGggZXJyb3IgLTIyDQo+IA0KPiBIaSwNCj4gDQo+IExhcHRvcDog
+TGVub3ZvIExlZ2lvbiA3IDE2QUNIZzYuDQo+IFdpZmk6IEtpbGxlcihSKSBXaS1GaSA2IEFYMTY1
+MHggMTYwTUh6IFdpcmVsZXNzIE5ldHdvcmsgQWRhcHRlciAoMjAwTkdXKQ0KPiAwNDowMC4wIE5l
+dHdvcmsgY29udHJvbGxlciBbMDI4MF06IEludGVsIENvcnBvcmF0aW9uIFdpLUZpIDYgQVgyMDAg
+WzgwODY6MjcyM10NCj4gKHJldiAxYSkNCj4gDQo+IFdpZmkgc3RvcHBlZCB3b3JraW5nIGluIHJl
+Y2VudCBrZXJuZWwgYnVpbGRzOg0KPiANCj4gWyAgIDIwLjkwNzgyNF0gSW50ZWwoUikgV2lyZWxl
+c3MgV2lGaSBkcml2ZXIgZm9yIExpbnV4DQo+IFsgICAyMC45MDc5NTVdIGl3bHdpZmkgMDAwMDow
+NDowMC4wOiBlbmFibGluZyBkZXZpY2UgKDAwMDAgLT4gMDAwMikNCj4gWyAgIDIwLjkxMjAyNF0g
+ZWUxMDA0IDItMDA1MDogNTEyIGJ5dGUgRUUxMDA0LWNvbXBsaWFudCBTUEQgRUVQUk9NLCByZWFk
+LQ0KPiBvbmx5DQo+IFsgICAyMC45MTM2NjZdIE5FVDogUmVnaXN0ZXJlZCBQRl9CTFVFVE9PVEgg
+cHJvdG9jb2wgZmFtaWx5DQo+IFsgICAyMC45MTM2NzBdIEJsdWV0b290aDogSENJIGRldmljZSBh
+bmQgY29ubmVjdGlvbiBtYW5hZ2VyIGluaXRpYWxpemVkDQo+IFsgICAyMC45MTM4MDZdIEJsdWV0
+b290aDogSENJIHNvY2tldCBsYXllciBpbml0aWFsaXplZA0KPiBbICAgMjAuOTEzODEwXSBCbHVl
+dG9vdGg6IEwyQ0FQIHNvY2tldCBsYXllciBpbml0aWFsaXplZA0KPiBbICAgMjAuOTEzODI4XSBC
+bHVldG9vdGg6IFNDTyBzb2NrZXQgbGF5ZXIgaW5pdGlhbGl6ZWQNCj4gWyAgIDIwLjkxNzQ1NV0g
+aXdsd2lmaSAwMDAwOjA0OjAwLjA6IERldGVjdGVkIGNyZi1pZCAweDM2MTcsIGNudi1pZCAweDEw
+MDUzMA0KPiB3ZnBtIGlkIDB4ODAwMDAwMDANCj4gWyAgIDIwLjkxNzY3NF0gaXdsd2lmaSAwMDAw
+OjA0OjAwLjA6IFBDSSBkZXYgMjcyMy8xNjU0LCByZXY9MHgzNDAsDQo+IHJmaWQ9MHgxMGExMDAN
+Cj4gWyAgIDIwLjkxNzY3OV0gaXdsd2lmaTogTm8gY29uZmlnIGZvdW5kIGZvciBQQ0kgZGV2IDI3
+MjMvMTY1NCwgcmV2PTB4MzQwLA0KPiByZmlkPTB4MTBhMTAwDQo+IFsgICAyMC45MjAxMjZdIGl3
+bHdpZmkgMDAwMDowNDowMC4wOiBwcm9iZSB3aXRoIGRyaXZlciBpd2x3aWZpIGZhaWxlZCB3aXRo
+IGVycm9yIC0yMg0KPiANCj4gQmlzZWN0IGxlZCB0bzoNCj4gDQo+IGNvbW1pdCA3NWEzMzEzZjUy
+YjdlMDhlN2U3Mzc0NmY2OWE2OGMyYjdjMjhiYjJiIChIRUFEKQ0KPiBBdXRob3I6IEVtbWFudWVs
+IEdydW1iYWNoIDxlbW1hbnVlbC5ncnVtYmFjaEBpbnRlbC5jb20+DQo+IERhdGU6ICAgV2VkIEZl
+YiA1IDE0OjU1OjQyIDIwMjUgKzAyMDANCj4gDQo+ICAgICB3aWZpOiBpd2x3aWZpOiBtYWtlIG5v
+XzE2MCBtb3JlIGdlbmVyaWMNCj4gDQo+ICAgICBXZSdsbCBoYXZlIGRldmljZXMgdGhhdCBhcmUg
+RUhUIGNhcGFibGUgYnV0IGRvbid0IHN1cHBvcnQgMzIwIE1IeiBhbmQNCj4gICAgIHRob3NlIGRl
+dmljZXMgbG9vayBsaWtlIHRoZSAzMjAgTUh6IGNhcGFibGUgZGV2aWNlcywgYnV0IGhhdmUgZGlz
+dGluY3QNCj4gICAgIHN1YnN5c3RlbSBJRC4NCj4gICAgIFdlIGFscmVhZHkgaGFkIHRoZSBzYW1l
+IHR5cGUgb2YgZGlmZmVyZW50aWF0aW9uIGZvciBIRSBkZXZpY2VzIHRoYXQNCj4gICAgIHN1cHBv
+cnQgMTYwIE1IeiBvciBub3QuDQo+ICAgICBFbmhhbmNlIHRoYXQgbWVjaGFuaXNtIGFuZCBub3cg
+dGhlIF9JV0xfREVWX0lORk8gbWFjcm8gZ2V0cyBhbg0KPiAgICAgaW5kaWNhdGlvbiB3aGV0aGVy
+IHRoZSBiYW5kd2lkdGggc2hvdWxkIGJlIGxpbWl0ZWQgZm9yIHRoYXQgc3BlY2lmaWMNCj4gICAg
+IGRldmljZS4NCj4gICAgIFRoZSBzdWJzeXN0ZW0gSUQgZ2l2ZXMgYSBiaW5hcnkgYW5zd2VyIGFi
+b3V0IHRoZSBiYW5kd2lkdGggbGltaXRhdGlvbg0KPiAgICAgYW5kIGl3bF9wY2lfZmluZF9kZXZf
+aW5mbygpIGNvbXBhcmVzIHRoaXMgdG8gdGhlIGxpc3Qgb2YgX0lXTF9ERVZfSU5GTw0KPiAgICAg
+ZW50cmllcy4NCj4gDQo+ICAgICBTaWduZWQtb2ZmLWJ5OiBFbW1hbnVlbCBHcnVtYmFjaCA8ZW1t
+YW51ZWwuZ3J1bWJhY2hAaW50ZWwuY29tPg0KPiAgICAgUmV2aWV3ZWQtYnk6IEpvaGFubmVzIEJl
+cmcgPGpvaGFubmVzLmJlcmdAaW50ZWwuY29tPg0KPiAgICAgU2lnbmVkLW9mZi1ieTogTWlyaSBL
+b3JlbmJsaXQgPG1pcmlhbS5yYWNoZWwua29yZW5ibGl0QGludGVsLmNvbT4NCj4gICAgIExpbms6
+DQo+IGh0dHBzOi8vcGF0Y2gubXNnaWQubGluay8yMDI1MDIwNTE0NTM0Ny4xYmE0MDZjNTM4YTUu
+STZlMjQxMjNmNjBhNzY0YWVkZg0KPiBlYWFhYzg3NjhjMjZlMTM2YzMyMGNmQGNoYW5nZWlkDQo+
+ICAgICBTaWduZWQtb2ZmLWJ5OiBKb2hhbm5lcyBCZXJnIDxqb2hhbm5lcy5iZXJnQGludGVsLmNv
+bT4NCj4gDQo+ICNyZWd6Ym90IGludHJvZHVjZWQ6IDc1YTMzMTNmNTJiN2UwOGU3ZTczNzQ2ZjY5
+YTY4YzJiN2MyOGJiMmINCg0KSGkgQ2hyaXMsIHRoYW5rcyBmb3IgdGhlIHJlcG9ydC4NCldlIGhh
+dmUgYSBmaXggZm9yIHRoYXQgd2hpY2ggd2lsbCBiZSBzZW50IHNvb24uDQoNClRoYW5rcywNCk1p
+cmkNCg==
