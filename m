@@ -1,100 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3929EF9CB
-	for <regressions@lists.linux.dev>; Mon, 31 Mar 2025 03:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA493C30
+	for <regressions@lists.linux.dev>; Mon, 31 Mar 2025 04:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743391352; cv=none; b=p2tNnkelBRt1GmwEUqO9tCFOeLWsNEN1W5C+F1gJUulpu3AfgkaM/0jM7jXq4XgxIOYgf9UaFVEHQlXqp9xIWB1ZNEPtg9YnYH+FzpVwDHPjFYfKNgvO4xH2BNQPTlwSSbEJXr/3uhIUQpbGuBVkPHQx/gP/TXoM/qfHs0JbRIU=
+	t=1743393832; cv=none; b=ssZM0E2Adh3usiDmcn8cqQ7e3WTLcF51VgftTj2UUJgElrmANnEvxYOvej3RuqxZJa1mk9XIrTqq0umAZoKWbhZB+aeiP7oayyqSDDcqJ2A4oEjBLKErd1AiXKyg+XIBsGkd4qA7NYadXUVdUonALb1zhH8W97fWQBXYgizHaKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743391352; c=relaxed/simple;
-	bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oO2GWZXXxN0GIRwxY9xuuXFHgQQtTQoLlSBE1HCv2iQzCA0tpgzUdfHXcnmdq94TGJGocN3wGEHEWuuWhXJ/x1Y5o1t52/ZocQherzfjFaVsdVQ5gJOZgdCVXwClq+LpC78sPOJaz0RqNjltkaip/cGDy5t8llhRcu4bbxHUdH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JEwFdcXb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743393832; c=relaxed/simple;
+	bh=Ovriw1fRv9VQH8DhEJ92/4OemBiWmNygkfONdXwMWo8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oqgwbO7Dw8Pkh+uQmPO77xD15vijVzjEemJU7EdxfLX0YAQb18dKaMbAOUPjKdJTkJJQUT+4GVOcQO0QxwMB+BRiL6GqW6kSxgfnHG4qUjg+ilCB4xdKIoA2YbSJ3t8w/5fcyE1uIq8eTjYT9BrfVDhbIB62V6A/Ab8cSmngTqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bosEQDJD; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JEwFdcXb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743391350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
-	b=JEwFdcXb4BArWGTfnD66tLS2NLniPug8c+GfVlIKCyX0Pyal/Ej5qMxiy246hnHuwrifTc
-	5NSJBFshaxssi3LlV4mGg66NuA3LDzdmgFAVioTdEaD04rCeXW+TG8mrevPovsJx/Cj5/7
-	xVqQnvPjQNfNmQiOZX2kOH9hFrrnPLI=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-570-_UUi8tbOOgCFl5eqTEI3ng-1; Sun, 30 Mar 2025 23:22:28 -0400
-X-MC-Unique: _UUi8tbOOgCFl5eqTEI3ng-1
-X-Mimecast-MFC-AGG-ID: _UUi8tbOOgCFl5eqTEI3ng_1743391348
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44dc8a9b4so40311385ab.3
-        for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 20:22:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bosEQDJD"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86d36e41070so1762576241.3
+        for <regressions@lists.linux.dev>; Sun, 30 Mar 2025 21:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743393829; x=1743998629; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9Eoi5ctOlZBCBuG5n3/dJiXOfEGeAUQNLilO/2EXgbE=;
+        b=bosEQDJDK7Jey20xaAawjcrAD2Qv5M12Yf5THNzHF/nz2sGKbnyZhF9S7TqBAULtGM
+         gfH/KFM9onqCDqr1otruALYXM/WfZlNI5sCzXlMrdBTlGl0wK2eoXWyW/LFn+hPyUQpy
+         1dUlHKfXzPDuHQMiJjB0+eFLv9MJL7ed7zsK9kkJM8/2vLY/3dDaeCFWPUuoCksrIGVy
+         MOOlHAqrkHI+gROVkDQbTsKISDPyphD1Y4GmyFQMMk0ylbM8WpCU0KZ21sMbAoNvcqFk
+         7tMNtrreLa9IeLNeAmKAOxMsfY+/+Kwk9HlycqcgM8N0Md6dfgZedB1IjfId8eSdJH7w
+         D/TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743391348; x=1743996148;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DJYht588chhOshnh/oM01PQlP9cicgLlbkkCnh6ie10=;
-        b=mwImicD0/g3RNdBz5+IB1OedQBud3Z4ShZbJg77T61DeaQqTqjVKv45ofQ6S5LD2W+
-         VuCawlfAxofFC45AkcnUvit8MRDaTya0TBfXl//G8pCPJkn3xykV2DWmgT35RjQSIASN
-         WFJANBziUZ/+0zyTqsULmARg2NEB1YfZHQ4K38pHv4QCBxQR3DYmsDHL2g6zkDfTSp8k
-         3SET2vwFdhswFhJrqGHPGG/TaysjyTcY7CFWbNPsv56Ia5lGty2i+X5n6EqKHyxJX7uL
-         /cMY1o8h5a5xcF2woqflZobPzW1B9+qmzfLXOsz3zFu4nczhyaC6/JS0BqreGT2rgIy2
-         3IGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBalB+youaNrxaNcvFFiYsmGUJdL59Kptj68O0yHwx5szLtM9QEAptg6GD1XPZfottQhaJxrUw7rQmOw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzg51oFTFE1XEXNc/lHB+UZHTFNAMQBT06ui78UCCITdedgAdvl
-	3FC/rUYye5cHFHcC81J9ZYqkaAVZsE+5FRLZBkIV32xq36nXHZ49v28TtsHl7s0JRNdkomI9yl6
-	M3dD0G2Y+sGgO9utOWvp6Ce65g3JI8LiunVqOiBIwPW3qEQ3TUdN78blsUMHoL+VcwkPRZ+OgQ6
-	27G734jlqHaXs5mb9yUXjdNKrZoipGadVmCts=
-X-Gm-Gg: ASbGncueaV5Iq13KpjhWGz3h7pNsI2keVeSwe6G3aDxtSyrdnLxSRUb5QVGxop22XUh
-	bGeFkdiDZPwGi5tIB6PmlRl2yt0S4wgB7uUl+kbJFwu8rX89T3/c8GvXCl0n7C8BUsY2VHHA8Ug
-	==
-X-Received: by 2002:a05:6e02:17ce:b0:3a7:820c:180a with SMTP id e9e14a558f8ab-3d5e0a093b2mr79161065ab.19.1743391347969;
-        Sun, 30 Mar 2025 20:22:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzaH25Vzm7n70KpLV36fle/W5sj7NSSdA8hJmo754X2wtwvaPhuyZSC58LigxxsFYAU0bQlbQf86JZovKBAVI=
-X-Received: by 2002:a05:6e02:17ce:b0:3a7:820c:180a with SMTP id
- e9e14a558f8ab-3d5e0a093b2mr79160885ab.19.1743391347656; Sun, 30 Mar 2025
- 20:22:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743393829; x=1743998629;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Eoi5ctOlZBCBuG5n3/dJiXOfEGeAUQNLilO/2EXgbE=;
+        b=urNnu/vPT/vbJ3VxgVXpIg9ajyt2ZhrMGFbVagOei2oTZBeOUgP814dALz1mzW4jdH
+         OHfY6VtmPsnnXt8FZ8wQaP33zwmL4Lsp6+/LGC0f17vIFjzcPV+KUhvJcdavMu+ywVo2
+         Oe8+HUTqONGL9WPnrVi7IZs5SUyT0E8T0dGkYp2pqdhaZv23bmsnaP6qOxOQBZZc81tv
+         oMxCIN5N1zen4cBP10EyZKYsQUm2h+/7W6M9rDu4KAybBtI35iY4Q4cunAB8DsL9m14X
+         7f3NjS4Drul9Ie4s5VyxgooTZWqgsT2y97CQfvbYiG6jG0UPLEZ/5BkDyB+xn+iSqFUm
+         Csqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWFr4MAP9AARM6QbeF6cjIZEikExZFQ677bpNGJ4OBUC3jgHMT59IOUyYB5je6jJ33dxnR3U95L0RGkg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhvJit+hCiBkdxf1Tx/hSefk4pjsrhwx3ZrJgPoGh1aXR3fGtM
+	5tZNfOL8mML/hIw04TX2qG6iilQ6tkpwPsIDoGMrNR67ZG6vg1GLyV5M2zgLUhwoF4eF4oRCKBb
+	tlcrM5SANbCDCt5mMzR4FaY3NzrP/GIOWijZaIQ==
+X-Gm-Gg: ASbGncv1gkFEnrJAXSgMVf0UxSYzBSfKJAlbdT6IxbqXcMBdYwCTws0GHhSyj3x62C3
+	1mjnRw6Idtk2431Jc+zlx+RrcZBjtqie3spOdjkLP523oZm6PCF3QoY58kIZDHqlL2oQk+ig7cx
+	4jJrubAaUQPVGv7/lYcGziMW6HhOrxkvxwvdXnZJPclf4j4iqcCqbRCaRQpA==
+X-Google-Smtp-Source: AGHT+IE+omrjH7GYgvhNd+blM0ysANeUmxf3FkJnco8pyeAxxM7AfoCsUeEAKslkGCMtq8noDXdfL+o2qkrwgip+9BE=
+X-Received: by 2002:a05:6102:3e8a:b0:4c1:90ee:ab2 with SMTP id
+ ada2fe7eead31-4c6d38cb31emr4067233137.14.1743393829232; Sun, 30 Mar 2025
+ 21:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <Z4WFjBVHpndct7br@desktop0a> <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a> <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv> <Z-hYWc9LtBU1Yhtg@desktop0a>
-In-Reply-To: <Z-hYWc9LtBU1Yhtg@desktop0a>
-From: Dave Young <dyoung@redhat.com>
-Date: Mon, 31 Mar 2025 11:22:50 +0800
-X-Gm-Features: AQ5f1Jq_A3xmC-EmSPquFgYtTSaWdlNOr-d-et357PEEYRDXHWaZEck-6AeRlpk
-Message-ID: <CALu+AoTrPZS7ukuLsCTCwKNKVd8=PUN8nXwh9BdicyV-==-W=g@mail.gmail.com>
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from hibernation
-To: Roberto Ricci <io@r-ricci.it>
-Cc: Baoquan He <bhe@redhat.com>, ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz, 
-	ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org, 
-	akpm@linux-foundation.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jYqiUaErsXJ3YiNc9kH-5QSktfBKjowHTreZaPDbGLU_1743391348
-X-Mimecast-Originator: redhat.com
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 31 Mar 2025 09:33:37 +0530
+X-Gm-Features: AQ5f1Jry1FfmI-B89oqlgm9LhT3dGEDfFcdu18qH63QTqu9-bEzvTnC6C9KspFU
+Message-ID: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+Subject: arm64: juno-r2: SSD detect failed on mainline and next
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-> With v4.9.337, kexec (via kexec_load) + hibernation works.
-> With v5.4.291 it doesn't.
-> I'm not sure how bisection could be done in this case.
->
+Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
+Linux next and Linux mainline.
 
-Not confident, but maybe you can try latest mainline kernel see if the
-below commit helps:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a2498e5c453b3d8d054d77751487cd593332f8c2
+First seen on the v6.14-7245-g5c2a430e8599
+ Good: v6.14
+ Bad: v6.14-7422-gacb4f33713b9
 
-I noticed the e820 export is different for v4.9.337 and v5.4.291
+* Juno-r2,
+ - detect-ssd
+ - mkfs.ext4-ssd
 
-Thanks
-Dave
+Regression Analysis:
+ - New regression? yes
+ - Reproducibility? Yes
 
+Test regression: arm64 Juno-r2 SSD detect failed
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Anders bisected this to,
+# first bad commit:
+  [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
+  iommu: Get DT/ACPI parsing into the proper probe path
+
+## Test log
+  mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
+  mke2fs 1.47.2 (1-Jan-2025)
+  The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
+does not exist and no size was specified.
+
+## Source
+* Kernel version: 6.14.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* Git sha: acb4f33713b9f6cadb6143f211714c343465411c
+* Git describe: v6.14-7422-gacb4f33713b9
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-7422-gacb4f33713b9/
+
+## Test
+* Test log: https://lkft.validation.linaro.org/scheduler/job/8188382#L1538
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14/testrun/27742015/suite/ltp-cve/test/cve-2017-2671/history/
+* Test details:
+https://lkft.validation.linaro.org/scheduler/job/8188382/definition
+* Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
