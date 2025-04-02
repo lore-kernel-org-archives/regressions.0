@@ -1,173 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8070E23237F
-	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 07:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13860233D72
+	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 08:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743579574; cv=none; b=bWVhiKPCDHhlzlpczTL+dqD7wdG/pMI1xbVZNaeL/YzWj/qLzaX9EOWBNpahg42qnbLFpO1WXx8E2VkF3OP68Yn9wYMY4C3LbmOg08UxjVAHOMriSbe8DY5y0xGP+YaykHVaj8SQ/H95haf9Z54qdiB1id/mPQA7G3Jnn/hX2lQ=
+	t=1743583508; cv=none; b=aJhvn8j5tNmSrPyOdUrEtp4wQ5PeV5pRFIwMF4UZVO/OP9EcbpnlwW8KVYDtdXzw90r0S5HXiK0r1ozMPlqulFIfktuWVXWHYtgcxZhYY4ilcQaa1hio9DF1pTdb6BP8G8gxzcwtEUeTypV6+1oj3L+ahHoEV1G1BSD/IV/HgdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743579574; c=relaxed/simple;
-	bh=CPmuAubAKAqNFmAUSCePXbfiA8X6WhDF/f8+BrdG5hM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GzexboTcflZqlsnuTQ4kTv5iGrx5zPzWdZoAvfRr230XKtEVAaTB6pv40eQG3w7sgc2DigS+fe5tKDsH8wAQXcTIR+zAAUnEAmrml4BPwxB4KAiN6CqH9uri3ULJc7a1VGqG55t2hayQdTwigQnvlh9mKV0TzMiW4lil+HFFcmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wGNrQos6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FkWdlKrg; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wGNrQos6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FkWdlKrg; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743583508; c=relaxed/simple;
+	bh=MYXtt+F82yFU/HF8RGrdrV4yjQ+SYvY33Hbn9q1VIBk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tSVERksbkiv+TQNi0nuvG8jdNjXpdHrzgNOcbc9retOJwuCSaSN5rhnQhbu4g7D/t0nHdOZtn+GdaITVvcXHjnXR0bX+Bntbffy8b4cjgS15yRok62ZlLdWyVr6yoJrin2mgb5UxG6kG3cSskL7nExRMX4qbod27GgdJFAEykC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wR4QjxTz; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wGNrQos6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FkWdlKrg";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wGNrQos6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FkWdlKrg"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9FDAF211A5;
-	Wed,  2 Apr 2025 07:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743579570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFcncWnUnVxmCYjsLpZJBme4w2fDFnyZsu/k4sDc8RY=;
-	b=wGNrQos6VKI2nGEFqICQn5MorSzGlQck57BTnHkT87ARMLdcncNywHXfbZ9hVhirB/Ygec
-	4BCcoORUuUCln7PMHqOjLWlXZULTHXT1ld93I2v1F0Tpeh6/p7dlOw6chAAbsGj+iXB1Me
-	o5BJCKdiKxZ2I2+lDm7Ef8s41Zbk9h8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743579570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFcncWnUnVxmCYjsLpZJBme4w2fDFnyZsu/k4sDc8RY=;
-	b=FkWdlKrgmTzd7gOmc2K4L5PfkEat+FyO1drpo3n4eJQahnqcf+bNnHcm7JVOcO1oGR2Dfa
-	EH996nydPu394vAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743579570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFcncWnUnVxmCYjsLpZJBme4w2fDFnyZsu/k4sDc8RY=;
-	b=wGNrQos6VKI2nGEFqICQn5MorSzGlQck57BTnHkT87ARMLdcncNywHXfbZ9hVhirB/Ygec
-	4BCcoORUuUCln7PMHqOjLWlXZULTHXT1ld93I2v1F0Tpeh6/p7dlOw6chAAbsGj+iXB1Me
-	o5BJCKdiKxZ2I2+lDm7Ef8s41Zbk9h8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743579570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFcncWnUnVxmCYjsLpZJBme4w2fDFnyZsu/k4sDc8RY=;
-	b=FkWdlKrgmTzd7gOmc2K4L5PfkEat+FyO1drpo3n4eJQahnqcf+bNnHcm7JVOcO1oGR2Dfa
-	EH996nydPu394vAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 631B013A4B;
-	Wed,  2 Apr 2025 07:39:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0s24FrLp7GcrIAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 02 Apr 2025 07:39:30 +0000
-Date: Wed, 02 Apr 2025 09:39:29 +0200
-Message-ID: <878qojypu6.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	1100928@bugs.debian.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
-In-Reply-To: <CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
-References: <174248253267.1718.4037292692790831697.reportbug@x>
-	<Z95s5T6OXFPjRnKf@eldamar.lan>
-	<Z-MMsp3XJyNHOlma@eldamar.lan>
-	<87iknwb80x.wl-tiwai@suse.de>
-	<CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
-	<Z-ct2D6uIN1f6UbL@eldamar.lan>
-	<87zfh43uti.wl-tiwai@suse.de>
-	<CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wR4QjxTz"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so2662408241.1
+        for <regressions@lists.linux.dev>; Wed, 02 Apr 2025 01:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743583506; x=1744188306; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
+        b=wR4QjxTzcMVw9+QAvfwjM9yk41SaoASXXN5JXRHSBpYQnfccFML5s5McGleAvu1KZ7
+         vQuY5PdRtIwbW4/Z+gh8/p3dZvvYoD7NeYzuBFW+XGgGE+Py0BIOde3LETXCEAYl2kh5
+         /+atH70mjvlw5RffFLQScbhY5rlpP3ro4eTY5/9PxiaLEaykQFdxWKCQipTjdcrnWodv
+         xIpBkT+CH9esYJ8HXUrHc0Hx2DCCPHbyUOM848gJCkY4XvGSsCLBtB1K1FVAWyZM74FL
+         gGvla3vYGn0paLlAvt8Nnlw5nVpm+km9emL4pJDqy9dPxDSnD2GYf4AQk5P8Yzd+/sdg
+         gGVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743583506; x=1744188306;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hgDb3fVVBUB/IfzwnOD3L78L7lK+HAMvWH+VtOqC03g=;
+        b=EUSWT7L+EKsbnJaSCSMgQF51KwVyEcio30ferJ67ouT1AfdBgp4aN7Z8MIC4c/ILRW
+         H5bLP4ugu5dkqGMnkwwtdme/I2qf7quZiybNrRlBB51+tj+E544D56ySgoLc+2l79MQE
+         WJjrxn8DeHA+DLzkTaeibxsuaI71w6t5REXPNmNwQIoKyk/AbXeze9ZY+eBPMcD95Yaj
+         bTmhShqjj8IWmQhz9W1ciW2tUJ/HrSPUAFvv2dZt3Ihm8qLKrQauAcjfGWE6V2nLf3sl
+         I3UTkQBJh1k0vpN0bIjQSJzuuu2ytvyGAaOE6+Ob+69HCv62MSAnXJ7zlgGO8hrPT3QR
+         oAHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/7XurWj0Nqp19LnCbx4FWO7u31bODnt7Qod3JFU5kQ/T/O9/QMZlDj4VvqiTYimzzlehn3hJqveh6zA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxgSn++7iT9j87p2HLx+Q4lhVZeKa3jmbUYoWMUK5QG8SwWwKNd
+	QieK0aWXlUs8uhXlzIeWVt9XbFz8G8dcCGbCEye7kyfLwQ59J1QcJnwOnbelwJCWvh2F+Z7ku0s
+	CN5VEfkENZjRoKYG5G5XPNSOZOQjGK6lunKcRXw==
+X-Gm-Gg: ASbGncsxD/ZYk/rhEOLA3XCs5swPGqWQARusqWQEFg/Rn/SQXvADf1Hfhj9nk5Nw+fy
+	UQ2gSC9fUTJoKlBVFPUSZ8I+6yLVsNw/ggWnosV8QpvmyxCTYdOuwax2hWV/a+VDxxIx8Rdpysk
+	Cc4WYJHMRnyHuIAQssqWt81XvjUlxg5G8ip0Jcf9Kg1hUaTmX7HLJccBokLUs=
+X-Google-Smtp-Source: AGHT+IE8fq6fgnNiBlF4pjBGjNOCQgZFHKYt+jyYnPaGvFt9HHKIIGxzApITzblIW2SBZ/TFBbSfqRsVUBxL6jzuEN0=
+X-Received: by 2002:a05:6102:c12:b0:4c3:9b0:9e6b with SMTP id
+ ada2fe7eead31-4c6d384b3d2mr10951298137.10.1743583505840; Wed, 02 Apr 2025
+ 01:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,debian.org,bugs.debian.org,gmail.com,vger.kernel.org,lists.linux.dev];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -1.80
-X-Spam-Flag: NO
+MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 2 Apr 2025 14:14:53 +0530
+X-Gm-Features: AQ5f1JosHeaxk-JjURpm99TBi1ldYeuLUsjGtGWwli-pgYAQe5pPal7OZ5w-kuQ
+Message-ID: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
+Subject: qemu-i386 boot failed on mainline master - no console output
+To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Vinod Koul <vkoul@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 01 Apr 2025 20:21:49 +0200,
-C.D. MacEachern wrote:
-> 
-> 
-> Logs attached.
+Regressions on qemu-i386 devices boot tests failed with defconfig on
+the mainline master no console output.
 
-Thanks.  Below is the fix patch.
-You can get the same effect by passing model=1043:1271 to
-snd-hda-intel module, too, e.g. boot with
-  snd_hda_intel.model=1043:1271
-boot option.
+First seen on the char-misc-6.15-rc1 merge 25601e85441d ("Merge tag
+'char-misc-6.15-rc1' of...)
+ Good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag
+'rust-fixes-6.15-merge'
+ Bad:  [91e5bfe317d8f8471fbaa3e70cf66cae1314a516] Merge tag 'dmaengine-6.15-rc1'
 
+* qemu-i386
+ - boot
 
-Takashi
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
--- 8< --
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] ALSA: hda/realtek: Fix built-in mic on another ASUS VivoBook model
+Test regression: qemu-i386 boot failed on mainline master
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-There is another VivoBook model which built-in mic got broken recently
-by the fix of the pin sort.  Apply the correct quirk
-ALC256_FIXUP_ASUS_MIC_NO_PRESENCE to this model for addressing the
-regression, too.
+Anders bisected this to,
+  # first bad commit:
+    [eb0ece16027f8223d5dc9aaf90124f70577bd22a]
+    Merge tag 'mm-stable-2025-03-30-16-52' of
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
 
-Fixes: 3b4309546b48 ("ALSA: hda: Fix headset detection failure due to unstable sort")
-Closes: https://lore.kernel.org/Z95s5T6OXFPjRnKf@eldamar.lan
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+## Test log
+<No console output.>
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index eec3ea1a7e08..79004bc8107b 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10889,6 +10889,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x1c43, "ASUS UX8406MA", ALC245_FIXUP_CS35L41_SPI_2),
- 	SND_PCI_QUIRK(0x1043, 0x1c62, "ASUS GU603", ALC289_FIXUP_ASUS_GA401),
- 	SND_PCI_QUIRK(0x1043, 0x1c63, "ASUS GU605M", ALC285_FIXUP_ASUS_GU605_SPI_SPEAKER2_TO_DAC1),
-+	SND_PCI_QUIRK(0x1043, 0x1c80, "ASUS VivoBook TP401", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1c92, "ASUS ROG Strix G15", ALC285_FIXUP_ASUS_G533Z_PINS),
- 	SND_PCI_QUIRK(0x1043, 0x1c9f, "ASUS G614JU/JV/JI", ALC285_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1caf, "ASUS G634JY/JZ/JI/JG", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
--- 
-2.49.0
+## Source
+* Kernel version: 6.14.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+* Git describe: v6.14-12245-g91e5bfe317d8
 
+## Test
+* Test log: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/anders/tests/2vAGjk1bqJ8kqDGEyo2jXerYOcR/logs?format=txt
+* Build link: https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/anders/builds/2vAGjX8EjBsjTTOgIxZswnitDbF/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
