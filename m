@@ -1,90 +1,142 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA9E23909E
-	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 12:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABAF2376F5
+	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 12:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595252; cv=none; b=mKF2RBITSWN3je9tUXg8OmKLAuyWPlx2pNWnoMSzibCMBRfgf2TWV37hr5PV6rGxP11YTTnDhYmfp6lO9WL9dS66mmC3A7f7JlXZWMzfb+nq9wzij9Vz8uUaZwrHVTa4yNWLyhfJzXa9TPNXfcNHTzTCS8QELaApTLnnx3khoNI=
+	t=1743596351; cv=none; b=IRuOmM71BsUrB5nX5ieAkx5/sWi+KAzNeTYMhlku8LfPEkgtEhr1IOMc18E5yFFvppxymWLDKDZvvyezRsFoD3jD68W14KUodQTdUaZ0HYPIeMrGHctjo0QMBuUcaMSoB4xzZRCAbGOZyGiitDGlaBrr4XgWadcllII1XRGr1Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595252; c=relaxed/simple;
-	bh=K4CFr5Q5Gzdci0CwXG+m8c0146foXbafb6sR+10Pf+U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CZyrHvFJJZxA54+b3yv7dVFcHmzbpMHbFssHowOsHnbcHxUmmuMp5GBr+DqkdEeRcQ1hup2JQgCC2XBtxfzMJhc6QxDu6smaGHt63SWjZV9hUIydNI8GJE3A76hGeJ45TJLNc90qd5nP9ZW940DG3o5IdDPWhl1SVbXre+Ov2KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.19] (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000080D7C.0000000067ED26F0.00082F7D; Wed, 02 Apr 2025 14:00:48 +0200
-Message-ID: <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-From: Gergo Koteles <soyer@irl.hu>
-To: Dmitry Baryshkov <lumag@kernel.org>
-Cc: regressions@lists.linux.dev, dri-devel@lists.freedesktop.org,
-  linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-  Hans de Goede <hdegoede@redhat.com>,
-  Alex Deucher <alexander.deucher@amd.com>,
-  Mario Limonciello <mario.limonciello@amd.com>,
-  Alex Hung <alex.hung@amd.com>,
-  Harry Wentland <harry.wentland@amd.com>
-Date: Wed, 02 Apr 2025 14:00:47 +0200
-In-Reply-To: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1743596351; c=relaxed/simple;
+	bh=+YugTiA5uSlijtvOniAz233xfd9rjfYPP9SWxiLilz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajZ+8bFugfP5a00raBPzI3ljqkg/w2236/woLwoP2YnGQ4Jpc6b4mUXhej9BJgtOnPGPL/09GexXljU8TQgYyyGQUsk4rz9FloWgCBNdYLhluxIqPQcJf1Ab+S6a3uEFDVnRI+n9TecjRgW3x8zrCf/E3TYNyq3np8v5lkuiIJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4C4HdGt+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t1CXcxl7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4C4HdGt+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t1CXcxl7"
+Date: Wed, 2 Apr 2025 14:19:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743596346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QPwuNcBCkbZ5awEPfs4/za9zsV6NBdgUfdxmq9Ar2zg=;
+	b=4C4HdGt+Eda2qns01kTkRT+qPk6Wn4tZQ5k8O1Gx7H6kUOU1PXVZWAQFtMS0r4AiH92Qy2
+	T19YMwiz9JFLLSHv54Dn9RITOldT/MtOzK49CNMWAuxNeEC+2Y6jm0UKbVEosmPzAfc5jj
+	9ZmhrVVrsxgekRU0tgRzk1+hD6Ij87xwwZ7agsbOUR5Gj8FET9ayzNQGwloZQFkrw1war7
+	RXDjG/MLKkGblGXOcKEt15IW1odXI5QbD6QWTMGTgmopNAe9NZ59ehpG3ncR54fm//ECjU
+	qSSL0ofXcq5UCmBbiP/BNaPIX9ZMUzNeOBxIdcNETXuRaJGbkcuNUw631Z8kYQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743596346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QPwuNcBCkbZ5awEPfs4/za9zsV6NBdgUfdxmq9Ar2zg=;
+	b=t1CXcxl7E7i5zDKv6ErJjLdNnAghpNhssI165DwRwHvZe5uvKbvjZ19neMAQXjnMrzKBSO
+	g9EkcgUMbGsLe6BA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Mike Rapoport <rppt@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-11-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313135003.836600-11-rppt@kernel.org>
 
-to: Dmitry's new address
-cc: regressions
+(drop all the non-x86 and non-mm recipients)
 
-On Wed, 2025-04-02 at 12:40 +0200, Gergo Koteles wrote:
-> Hi,
->=20
-> While playing with
-> https://lore.kernel.org/all/61c3df83ab73aba0bc7a941a443cd7faf4cf7fb0.1743=
-195250.git.soyer@irl.hu/
->=20
-> I found a regression that prevented some EDID DTDs from being selected
-> in some specific cases.
->=20
-> This is the first bad commit:
-> b255ce4 ("drm/amdgpu: don't change mode in
-> amdgpu_dm_connector_mode_valid()")
->=20
-> I think the problem is that decide_crtc_timing_for_drm_display_mode()
-> function tries to copy the crtc information from the preferred mode,
-> but that's not filled yet if the first one is the preferred one and
-> it's not the one with the maximum refresh rate.
->=20
-> amdgpu_dm_connector_mode_valid()
-> create_validate_stream_for_sink()
-> create_stream_for_sink()
-> decide_crtc_timing_for_drm_display_mode(&mode, preferred_mode, scale)
->=20
-> It works if I call
-> drm_mode_set_crtcinfo((struct drm_display_mode *)mode, 0) before=20
-> create_validate_stream_for_sink()
-> in amdgpu_dm_connector_mode_valid()
->=20
-> or=20
->=20
-> if I comment out the decide_crtc_timing_for_drm_display_mode() in
-> create_stream_for_sink()
->=20
-> but a better fix than these can be imagined :)
->=20
-> more information:
-> https://gitlab.freedesktop.org/drm/amd/-/issues/4085
->=20
-> Regards,
-> Gergo
->=20
+Hi,
 
+On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> high_memory defines upper bound on the directly mapped memory.
+> This bound is defined by the beginning of ZONE_HIGHMEM when a system has
+> high memory and by the end of memory otherwise.
+> 
+> All this is known to generic memory management initialization code that
+> can set high_memory while initializing core mm structures.
+> 
+> Add a generic calculation of high_memory to free_area_init() and remove
+> per-architecture calculation except for the architectures that set and
+> use high_memory earlier than that.
+
+This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
+breaks booting i386 on QEMU for me (and others [0]).
+The boot just hangs without output.
+
+It's easily reproducible with kunit:
+./tools/testing/kunit/kunit.py run --arch i386
+
+See below for the specific problematic hunk.
+
+[0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
+
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/alpha/mm/init.c         |  1 -
+>  arch/arc/mm/init.c           |  2 --
+>  arch/arm64/mm/init.c         |  2 --
+>  arch/csky/mm/init.c          |  1 -
+>  arch/hexagon/mm/init.c       |  6 ------
+>  arch/loongarch/kernel/numa.c |  1 -
+>  arch/loongarch/mm/init.c     |  2 --
+>  arch/microblaze/mm/init.c    |  2 --
+>  arch/mips/mm/init.c          |  2 --
+>  arch/nios2/mm/init.c         |  6 ------
+>  arch/openrisc/mm/init.c      |  2 --
+>  arch/parisc/mm/init.c        |  1 -
+>  arch/riscv/mm/init.c         |  1 -
+>  arch/s390/mm/init.c          |  2 --
+>  arch/sh/mm/init.c            |  7 -------
+>  arch/sparc/mm/init_32.c      |  1 -
+>  arch/sparc/mm/init_64.c      |  2 --
+>  arch/um/kernel/um_arch.c     |  1 -
+>  arch/x86/kernel/setup.c      |  2 --
+>  arch/x86/mm/init_32.c        |  3 ---
+>  arch/x86/mm/numa_32.c        |  3 ---
+>  arch/xtensa/mm/init.c        |  2 --
+>  mm/memory.c                  |  8 --------
+>  mm/mm_init.c                 | 30 ++++++++++++++++++++++++++++++
+>  mm/nommu.c                   |  2 --
+>  25 files changed, 30 insertions(+), 62 deletions(-)
+
+<snip>
+
+> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> index 6d2f8cb9451e..801b659ead0c 100644
+> --- a/arch/x86/mm/init_32.c
+> +++ b/arch/x86/mm/init_32.c
+> @@ -643,9 +643,6 @@ void __init initmem_init(void)
+>  		highstart_pfn = max_low_pfn;
+>  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
+>  		pages_to_mb(highend_pfn - highstart_pfn));
+> -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
+> -#else
+> -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
+>  #endif
+
+Reverting this hunk fixes the issue for me.
+
+>  
+>  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
