@@ -1,134 +1,125 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE631EFF82
-	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 12:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2989F1E7C02
+	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 13:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743598175; cv=none; b=gi/HB+LFdaKFt6A/vBrXRY7e4OOYr0WNLugxZkYqhOX6dyl2lx2sDid+wupSCnEitj3kX39TPpPQ/tuK8U7tTZ1pGow7eGQFSr2lzFRlkUwInnEvFwnvjiXbO1OjY6ErYlQDARE7yNP4URJEmQ/AM82bjEKryvmF5CyMhdtzmfg=
+	t=1743599276; cv=none; b=PtyDee/3K973NCnpqO2H551Cu0OxUSNkf2lwYgrnfBFFILZsFkJJL1f+u6Sud8+OZWpamLTm0pdyAoX1xUufRi0vNOtgjJ/tJvHhTagIHF7TtYFw6tuydaswAjNsgcHZMkb5Yyb+Y5x5aDXZvRxDyVQvs66NjI5stcIibCo1rfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743598175; c=relaxed/simple;
-	bh=iy8gPSknBpYANxR3oDbou+tV9uyY16PAcTCT3p0TVTQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SVk+zediXD1eByOAxUAqhc+ak9E6kKuy5QG2fTonJ3e0znSL6Q8H3jfumMRuIgFfHH3cE6EuC1wjsxGuilr7CTRrgDLH3cVqbWRZWLPddMPygoX0QyuFx2goJtTmGjiEi8oygL5mH0L8UfMAgm+dmb6Q5AkqjIfcxWMrjJnjHLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jgBgNtpr; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743599276; c=relaxed/simple;
+	bh=mfOHJodd9Ix+904JZn6Bb6pxHxbK7pb4BM8dh/9iDp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYRFDt5b6e8CpH8nsixe639wgSYS5Ji2B3Qe1qTEDWINuP8pL18wdRRBWOBzlYCKhXMqj7rQcUoNN1/GfkSr32H7uXerGNvpRzDe2dMgJM6ffgdW1dNdo7DsAAnGTYF/knNJupefl+e2+UQO+rSgUg8Vf+Qqdp/u2eti0x1khJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qJ+t6SGu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NiG1u7Az; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgBgNtpr"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86b9b1def28so6113876241.3
-        for <regressions@lists.linux.dev>; Wed, 02 Apr 2025 05:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743598172; x=1744202972; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y+3sJL5+WsmkUHEYm1BzR/GyrjVHVNtLDIyVC85cNdI=;
-        b=jgBgNtpr323qAty5eIoA6dwbvarRiiIPY2MDol319x7UScNC6lN0qyZjbPJRD2Pb/y
-         LQ/DFIgZdfhapthEYkxRCzrUARYb+UyBu3KCE5fF5yjqYFD250JeZpLBzEQ4PxbgWkNW
-         g4J679PNC+f6d8KAsybdefEBbdMR3UHNZCjlTyjWWCmHcda4FsVY3WXom/RSRVoMlUe6
-         ohqfWswm5F47SRX10I2J5iRovWDuGOKNXZypaOBGlAs4H6ohx0HUYWEdmIWMY4mpknwZ
-         V2V0Ph2uyxU5/dtefv2+oOLGCtLosD8xVuKKFCeggPEsusma4a81k7hypLs5uL2Lja5L
-         UIYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743598172; x=1744202972;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y+3sJL5+WsmkUHEYm1BzR/GyrjVHVNtLDIyVC85cNdI=;
-        b=u9GivDrlfGQwIyU4nuFsF35I8ihaaPPQnboS0AnsNjf8PklaVDb1vRiuYavAaW/7Vc
-         1Fsf7dBe1ewS0n1RYwDAVgvqvM/c1515zYdHaoPVn4yaVQmWi0NeUXVKO7MLH0g0N7P2
-         LSrTiWSvM9vBB6T6rlmTXoZe+bOGGdHWpredMEpstyWV0ft+XTcKCmRUL9sASWjABwbU
-         dI19bibh10C6Efgu9C3+jTGdBTHv+U6sOjysJrzyvyHTd+k/+vWCjmQzf4hV1fkAXZCd
-         JXGurPukt6//dGqVRvMun2jA851gNSvGKT9CqyUuNusS2ICq1BQQEyONjr6oTcROddSQ
-         7Xfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFH4qUWFsMjOXKS1EnbTGzFHdlMXnXmwMuCEybPzMGjyxmC0p95chG6fjkUT0H2DNFCv3cJU1dz7emiw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yze/5/d8zl7uLAOPm7l6kdkVQJB6Izyfek+QVzAg75pNc6Qz9jt
-	oamFeIfE81vAtBETUoDyN23inP3BXgbyr8en0j3NF/Lt1sCagsCC2bJmVV4PVwfzsA2bVaurEL2
-	oEXc3a8t70kQYmqir7duxj7/1tF552siG+XFwzA==
-X-Gm-Gg: ASbGncsy0DnaOsQIoVUk+baCsfOHu+ZjOcw90RMoOt8uqtduhUUBVnpM096F8uIHThb
-	aIglprUH3vhiADU1aBqvFAclHWRtWU4tbmANp8bqXdVhWYNG/bmpFLFLnR4urXeC8q6usxOPyhx
-	FDz+7lIZW2pAw4XdzfNkLQ0I9bk6M+qTeCJIX4lS8MWrO1SUMkqoI9jZWLSCA=
-X-Google-Smtp-Source: AGHT+IEZPV71xCZFRaiMP7CnHUqII0vri11WJXA0JOvFvWq6jg//KmbiEFno6N5n8nVLL7zZFwNgKtdEbJvUoV78150=
-X-Received: by 2002:a05:6102:f8f:b0:4c1:9bdb:6188 with SMTP id
- ada2fe7eead31-4c839e38348mr1583448137.13.1743598172341; Wed, 02 Apr 2025
- 05:49:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJ+t6SGu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NiG1u7Az"
+Date: Wed, 2 Apr 2025 15:07:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743599271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1X5wKZymmcKMOD5wz7WhMq48v9AtCOzb7Bp+Wejqjt8=;
+	b=qJ+t6SGuwcs0fcyTCbz3+CsuGvBvpcjRYcRy/lpyBhR+xNgkf0K9rJPWuH0Ai+vKzYoypW
+	hqrNELPyFAyCERAgiBi7wAA54c3Chm8qfwjjDzhdUPZRvvAMPqKEo4uSn+n+whHb0reT8i
+	wbUReQVouPVIqlxZ6r8BTrHhifDE2WHyP3Wy9EL8f/yEnnGI5zIKUPIBCYSUrVyAaQXsra
+	KeQDShbcfQn2CDTOO5A+IHd7IX+XVzqSQsZnteNmyMY4FkI9MYmdiIlJnoGRg+W2QYUy8p
+	UZSllggqcCZAQ0lxGVyI18oFzgzoD5Sxv/zkJj3Z1jCPpaYXFavROx6jN2z7yA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743599271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1X5wKZymmcKMOD5wz7WhMq48v9AtCOzb7Bp+Wejqjt8=;
+	b=NiG1u7AzlJl1SUEGEOjj7BJBgsegHE66/nZ7RMmUJd1+EAbdhFi4oSlsDCHU/zRo4c/EEd
+	L5aOdKtWP/pNZrAA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
+	"David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-11-rppt@kernel.org>
+ <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
+ <Z-0xrWyff9-9bJRf@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 2 Apr 2025 18:19:19 +0530
-X-Gm-Features: AQ5f1JrYBDqdwedr2g0EeIuRXqX4Zi5GT7DMBhpK7McR8fimUhQCIrzEPDNgmhA
-Message-ID: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
-Subject: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
- dragonboard-410c dragonboard-845c no console output
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-0xrWyff9-9bJRf@kernel.org>
 
-Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
-the lto-thing, hardening and lto-full config boot failed with toolchain
-clang-nightly on the mainline master branch with no console output.
+On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
+> On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
+> > (drop all the non-x86 and non-mm recipients)
+> > 
+> > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
+> > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > > 
+> > > high_memory defines upper bound on the directly mapped memory.
+> > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
+> > > high memory and by the end of memory otherwise.
+> > > 
+> > > All this is known to generic memory management initialization code that
+> > > can set high_memory while initializing core mm structures.
+> > > 
+> > > Add a generic calculation of high_memory to free_area_init() and remove
+> > > per-architecture calculation except for the architectures that set and
+> > > use high_memory earlier than that.
+> > 
+> > This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
+> > breaks booting i386 on QEMU for me (and others [0]).
+> > The boot just hangs without output.
+> > 
+> > It's easily reproducible with kunit:
+> > ./tools/testing/kunit/kunit.py run --arch i386
+> > 
+> > See below for the specific problematic hunk.
+> > 
+> > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
+> > 
+> > 
+> > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> > > index 6d2f8cb9451e..801b659ead0c 100644
+> > > --- a/arch/x86/mm/init_32.c
+> > > +++ b/arch/x86/mm/init_32.c
+> > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
+> > >  		highstart_pfn = max_low_pfn;
+> > >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
+> > >  		pages_to_mb(highend_pfn - highstart_pfn));
+> > > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
+> > > -#else
+> > > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
+> > >  #endif
+> > 
+> > Reverting this hunk fixes the issue for me.
+>  
+> This is already done by d893aca973c3 ("x86/mm: restore early initialization
+> of high_memory for 32-bits").
 
-First seen on the v6.14-12245-g91e5bfe317d8
- Good: v6.14-11270-g08733088b566
- Bad: v6.14-12245-g91e5bfe317d8
+Thanks. Of course I only noticed this shortly after sending my mail.
+But this usecase is indeed broken on mainline.
+Some further bisecting lead to the mm merge commit being broken, while both its
+parents work. That lead the bisection astray.
+eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
 
-Regressions found on rk3399-rock-pi-4b:
-  - boot/clang-nightly-lkftconfig-kselftest
-  - boot/clang-nightly-lkftconfig-lto-thing
-  - boot/clang-nightly-lkftconfig-hardening
-  - boot/clang-nightly-lkftconfig-lto-full
+As unlikely as it sounds, it's reproducible. I'll investigate a bit.
 
-Regressions found on dragonboard-410c:
-  - boot/clang-nightly-lkftconfig-lto-thing
-  - boot/clang-nightly-lkftconfig-lto-full
-  - boot/clang-nightly-lkftconfig-hardening
-
-Regressions found on dragonboard-845c:
-  - boot/clang-nightly-lkftconfig-hardening
-  - boot/clang-nightly-lkftconfig-lto-thing
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
-no console output
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Boot log
-Starting kernel
-...
-<No console output>
-
-
-## Source
-* Kernel version: 6.14.0
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-* Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-* Git describe: v6.14-12245-g91e5bfe317d8
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/
-* Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboard-845c)
-* Toolchains: clang-nightly (Debian clang version 21.0.0 )
-* Kconfigs: lto-thing, hardening, lto-full
-
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/testrun/27859063/suite/boot/test/clang-nightly-lkftconfig-lto-thing/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9EdkI9AGWWvuT5OzYdgSgXEeH/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2v9EdkI9AGWWvuT5OzYdgSgXEeH/config
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> > >  	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
