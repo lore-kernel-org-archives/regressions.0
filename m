@@ -1,166 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A42AEE9
-	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 16:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8AB35949
+	for <regressions@lists.linux.dev>; Wed,  2 Apr 2025 17:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611469; cv=none; b=g4MUdaAVHeikbqdVfckldXk3dHbUqUHX7l53CRo79DF+u/LzkmGfCG5GN0xkdFNXsoPV9BKssCPMgm+XeRNVdDHS3FxXhnslaJwq5B5BPA+6mTgqfndNDcDKDusMAfMlC62I6weKJ2MnOXBhvAp0b4XquuBdO/nHUgZXJBRCK5M=
+	t=1743613466; cv=none; b=umdYT2i1hXqUcvZH5OIewpMJVOqlGmXsnBG4lmsbrveLhwmY6tJcplImrQHPdilcWbgy9XhBcgQUFTaiFRslOkM/eBGfg4vcuLMjyjhUP2HCqqUew5uPsrlAehiFLhLfEQF6JxGXgnjU6KEZpW4IvxbLUgB3RQ5PJz32h1S8bVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611469; c=relaxed/simple;
-	bh=HIy0hHKXAPReYxd7y9ffbIswkaLgKDknXWgNX8/gO7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pPqV89fMdiAbFqLJb7RnmcQe0L81kjLHFlyg1YnMjFA6cKg8EOuaE6LxGpKLtc+st4V4jrA+7UUoPnFemyN8fWbIyYDPscH7MjfuLRI0GzxnWtTov8eYxSRWtdfUi+P9JfMlXlK+VrzS4FN55jIq/9Ifvcrg0EzFzrxNeL87uEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aPXkPsRI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n1+9FCz0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aPXkPsRI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n1+9FCz0"
-Date: Wed, 2 Apr 2025 18:31:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743611465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xd1KphlzMCu4Z6pJqyX+aES04YRk8Sgi26znrqcmoIg=;
-	b=aPXkPsRIIO+gk78hNS3UHwVMimopyiRa1u6YCD+0iGOR+lmT6lbaVwOH99yWvYa+WfQxLF
-	R51hhQM1N/mhrjLz/aLU294Ce1HMRoGVWJKB5LOhsUdIG99UC9WDsVeWAIut8jOTx9xmSN
-	B/i45j3A8a5oIiufsZmj0blDls862jXMfTo+QTqmTCW46OyN7r7mqq59x0oy47iXZ6ca+Y
-	oi6Qyr74IKAKJRGksrokIKJF9UD/s2DTABua+W1VDFbT2QfV+Y3kk3DMx8Z8XdesvqZnbY
-	4NNnBO9/MVZEK17byNSQ8r6etoNTI0sBKV8HP/1OnYvuoWhWWDF35lq6mzFCCg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743611465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xd1KphlzMCu4Z6pJqyX+aES04YRk8Sgi26znrqcmoIg=;
-	b=n1+9FCz093xgYuvsHQefw2o4N3FjHh4l9TGgA+vPheErSpZmihg0SZ5/I3Og9Dp0GRR6ox
-	+qrb7WjeznoHtOAQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	"David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-mm@kvack.org, x86@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-11-rppt@kernel.org>
- <20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
- <Z-0xrWyff9-9bJRf@kernel.org>
- <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
+	s=arc-20240116; t=1743613466; c=relaxed/simple;
+	bh=Gc7Ragp9iuXOBeoHG5WqCjVo9Y/rcXtltf26po39z+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=LSOARbiaHbf2QZp3WZ8UczXaIZNr/MjOpvzfRmsP8Yzb2qddlej1SFepo2KQNqCxdYpJ+jYev9wQjPts5Z9D91wHJmVj4lncOrLrpiEKT1nuB/tAgIcl9h0Ly6x9F4Tn4wIfhduQQMFYY7f1tliAfb0q2ctmySbGdAfG1flXGGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b692a2.dsl.pool.telekom.hu [::ffff:81.182.146.162])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000080D7C.0000000067ED6E16.0008406E; Wed, 02 Apr 2025 19:04:21 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Harry Wentland <harry.wentland@amd.com>,
+  Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+  Alex Hung <alex.hung@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Tom Chung <chiahsuan.chung@amd.com>,
+  Sunil Khatri <sunil.khatri@amd.com>,
+  Aurabindo Pillai <aurabindo.pillai@amd.com>,
+  Hersen Wu <hersenxs.wu@amd.com>, Melissa Wen <mwen@igalia.com>,
+  Maxime Ripard <mripard@kernel.org>,
+  Dmitry Baryshkov <lumag@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,
+  Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+  linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+  Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH] drm/amd/display: do not copy invalid CRTC timing info
+Date: Wed,  2 Apr 2025 19:03:31 +0200
+Message-ID: <24439c13a014e1cd200785db6f3dcf08f4773eb3.1743612701.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-On Wed, Apr 02, 2025 at 03:07:51PM +0200, Thomas Weißschuh wrote:
-> On Wed, Apr 02, 2025 at 03:46:37PM +0300, Mike Rapoport wrote:
-> > On Wed, Apr 02, 2025 at 02:19:01PM +0200, Thomas Weißschuh wrote:
-> > > (drop all the non-x86 and non-mm recipients)
-> > > 
-> > > On Thu, Mar 13, 2025 at 03:50:00PM +0200, Mike Rapoport wrote:
-> > > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > > > 
-> > > > high_memory defines upper bound on the directly mapped memory.
-> > > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
-> > > > high memory and by the end of memory otherwise.
-> > > > 
-> > > > All this is known to generic memory management initialization code that
-> > > > can set high_memory while initializing core mm structures.
-> > > > 
-> > > > Add a generic calculation of high_memory to free_area_init() and remove
-> > > > per-architecture calculation except for the architectures that set and
-> > > > use high_memory earlier than that.
-> > > 
-> > > This change (in mainline as commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
-> > > breaks booting i386 on QEMU for me (and others [0]).
-> > > The boot just hangs without output.
-> > > 
-> > > It's easily reproducible with kunit:
-> > > ./tools/testing/kunit/kunit.py run --arch i386
-> > > 
-> > > See below for the specific problematic hunk.
-> > > 
-> > > [0] https://lore.kernel.org/lkml/CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com/
-> > > 
-> > > 
-> > > > diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> > > > index 6d2f8cb9451e..801b659ead0c 100644
-> > > > --- a/arch/x86/mm/init_32.c
-> > > > +++ b/arch/x86/mm/init_32.c
-> > > > @@ -643,9 +643,6 @@ void __init initmem_init(void)
-> > > >  		highstart_pfn = max_low_pfn;
-> > > >  	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
-> > > >  		pages_to_mb(highend_pfn - highstart_pfn));
-> > > > -	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
-> > > > -#else
-> > > > -	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
-> > > >  #endif
-> > > 
-> > > Reverting this hunk fixes the issue for me.
-> >  
-> > This is already done by d893aca973c3 ("x86/mm: restore early initialization
-> > of high_memory for 32-bits").
-> 
-> Thanks. Of course I only noticed this shortly after sending my mail.
-> But this usecase is indeed broken on mainline.
-> Some further bisecting lead to the mm merge commit being broken, while both its
-> parents work. That lead the bisection astray.
-> eb0ece16027f ("Merge tag 'mm-stable-2025-03-30-16-52' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
-> 
-> As unlikely as it sounds, it's reproducible. I'll investigate a bit.
+Since b255ce4388e0, it is possible that the CRTC timing
+information for the preferred mode has not yet been
+calculated while amdgpu_dm_connector_mode_valid() is running.
 
-The issue is fixed with the following diff:
+In this case use the CRTC timing information of the actual mode.
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 284154445409..8cd95f60015d 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2165,7 +2165,8 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
-                                 phys_addr_t end)
+Fixes: b255ce4388e0 ("drm/amdgpu: don't change mode in amdgpu_dm_connector_mode_valid()")
+Closes: https://lore.kernel.org/all/ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu/
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index bae83a129b5f..0eb25cdcb52f 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6500,12 +6500,12 @@ decide_crtc_timing_for_drm_display_mode(struct drm_display_mode *drm_mode,
+ 					const struct drm_display_mode *native_mode,
+ 					bool scale_enabled)
  {
-        unsigned long start_pfn = PFN_UP(start);
--       unsigned long end_pfn = PFN_DOWN(end);
-+       unsigned long end_pfn = min_t(unsigned long,
-+                                     PFN_DOWN(end), max_low_pfn);
+-	if (scale_enabled) {
+-		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+-	} else if (native_mode->clock == drm_mode->clock &&
+-			native_mode->htotal == drm_mode->htotal &&
+-			native_mode->vtotal == drm_mode->vtotal) {
+-		copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
++	if (scale_enabled || (
++	    native_mode->clock == drm_mode->clock &&
++	    native_mode->htotal == drm_mode->htotal &&
++	    native_mode->vtotal == drm_mode->vtotal)) {
++		if (native_mode->crtc_clock)
++			copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+ 	} else {
+ 		/* no scaling nor amdgpu inserted, no need to patch */
+ 	}
+-- 
+2.49.0
 
-        if (start_pfn >= end_pfn)
-                return 0;
-
-
-Background:
-
-This reverts part of commit 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing")
-which is the direct child of the partially reverted 
-commit e120d1bc12da ("arch, mm: set high_memory in free_area_init()").
-The assumptions the former commit became invalid with the partial revert the latter.
-
-This bug only triggers when CONFIG_HIGHMEM=n. When mm was branched from mainline
-the i386 configuration generated by kunit ended up with CONFIG_HIGHMEM=y.
-With some recent changes in mainline the kunit configuration switched to
-CONFIG_HIGHMEM=n, triggering this specific reproducer only when mm got merged
-into mainline again.
-
-New kunit reproducer:
-./tools/testing/kunit/kunit.py run --arch i386 example --timeout 10 --kconfig_add CONFIG_HIGHMEM=n
-
-Does this sound reasonable?  If so I'll send a patch tomorrow.
-
-@Naresh, could you test this, too?
-
-
-Thomas
