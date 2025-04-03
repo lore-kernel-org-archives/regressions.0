@@ -1,135 +1,195 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5602459DB
-	for <regressions@lists.linux.dev>; Thu,  3 Apr 2025 10:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA1024E002
+	for <regressions@lists.linux.dev>; Thu,  3 Apr 2025 10:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675660; cv=none; b=bBbxgBiabD0YmQELdTJovFYnjvUPVoOtFOAPwydUBKU5M5JkiH4pLdbM8F5BuX5+i6Pblf7qt9JCNclS78pD59412tmgT6edmAbUtiYmrjqPDtV7lYOoknlUNyCbKBncLDq0I1es15n5zRE06TeWSzf23hzAQTUgwTikaVG7dBU=
+	t=1743677279; cv=none; b=jDi4DFYxw/cFXCXsIEZyhdv08qqnu/7qiO3ft5x9+bfQGH8E7FWs+M3NKkS03T77VhKrTZ7AMZ8iULsXC2gCrvvMIB9gVPnP9ElLtuFNa86P1sRGagZ5J48C3vv99SefgbZjOKAVGxmtESjjgsyGchWRm7u0JiL2ok0oeAqsYgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675660; c=relaxed/simple;
-	bh=GezOMWTmbvUlmddSRUJtzgQ2URqpf4G0KrSTl9O1bbM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IoWog1QLLLfQ/LkWxm+yeFbQUzvm5TrCatpIj9zKLa5S2VqV1KHONv5wcjNGgrbHDr8yyh82oo3KBjkh1x+ROlJAQ7BF6nrScw11A+9jF/5jhy8pB9E6wycaVc14GxAQOzsIfv3UaFKBd7oSD6b8vV2c1BDRQ6mBvJJ309gYyH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ly/lY+m5; arc=none smtp.client-ip=209.85.221.176
+	s=arc-20240116; t=1743677279; c=relaxed/simple;
+	bh=1rSp8GUjQPXhDnQXL+D/PZL/CS3hVuRflE6/UX7tu6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Slf8RmUbU05tFZWAAioegqereiwgfXzNpSFpmM3eu7onzWMj5B6Y2pmsUeEkmWezT34gKOk3f99L6f4Odcp0FBooGdaZZChnPC0JFfB7WZUo+uznz3aB6HG9MYyuWMFcEqL/JqSg0RKHUVBfdx5PizjJusjbuwepyEGbicBnO9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X4zSvslq; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ly/lY+m5"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-523edc385caso355421e0c.3
-        for <regressions@lists.linux.dev>; Thu, 03 Apr 2025 03:20:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4zSvslq"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-525b44b7720so380959e0c.0
+        for <regressions@lists.linux.dev>; Thu, 03 Apr 2025 03:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743675657; x=1744280457; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EFfDTMKsLOvbQi0ro5INzOuYGDYKTLhDyjOF8V3RES8=;
-        b=ly/lY+m5RhfoTYZPKmI0lWEpYaLWL5LHCEpw7RFyNwJjd25D8fUfpZmrU3GOvKj0Y7
-         aBT8IPfG2aVKMCry4M8qj7n8musvTnnF6r+TPLNyIW2dDAmvTejqjhzAfvGn043kjsFe
-         3njt2MpXrbiIGFXrcPtUEAt2YBD4wVL2ejWVaintz4cGBCPFkUts9eX6veNqRqzpmlk5
-         1Y+qsShRjNJaGciEfFDTC752eIyfe+Y9vJ9Ca07lW6UdkBnw25zE3Ip9D6eMl9paHl77
-         bhE3RO6cZutUy9KI+DkzFI5+fJWlJX2yfq/BYemePO8wSOmilId8xq6go8VltNNHMz7M
-         QY8A==
+        d=linaro.org; s=google; t=1743677275; x=1744282075; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
+        b=X4zSvslqIcP05LRM9jVYL3sLMK9aLV11iJVpsUNekb6icn/+YO0ijzxsAaL83NpjNj
+         TgJxNIvoV1yTl7IyZcMj0wCus/51TR3aypGq9DWlvh+ACDPjDMxnpO4wdyWwzGxb+BmV
+         fy0Kek7PlCuinakDiFJCStsH8HulTJ1oFiGgI2EiSNGWGY290/ezlkVOdCpdNn3hqeGG
+         +ATcpgdFjsh2TKDOc6T3iw/6894lCA16qLVkrwHBC0p/+kFVZsyl7JkPDmkDTYcGaMRE
+         aabcVg8nJVOnYcx83A4xFlnvV+YwBufHT6X6hbSsOqow9O0SKnyuojiunyvzQCRW3dWk
+         xbiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743675657; x=1744280457;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EFfDTMKsLOvbQi0ro5INzOuYGDYKTLhDyjOF8V3RES8=;
-        b=SjHyd6AzA9O+xdYrW1tvHW8Tuz3yte662WW4jhZUnqrrfQ1uVDa3jl9tgCmZJPrQkX
-         1mqdXekQ+dEf1xKEiZdPH3LjCvooou6WHlWO8/+vcsKAf71W/vnm4/xseH9il3Mmlkgd
-         VHf0H74LH0a/4XCc9RL/kwHWiLOMNhFZydh/nvSplYTcMfpe3gQoDQp/hlG3tev2EjDJ
-         Pzpz3zc4uaxdrHXQPYgQT322ybkouuejbOQ/SYd1HyfMtRqb/1a9iZ/lTIGTJ7wqr9iv
-         y8fQEu8XTMd+0WSR7Y3ed58Ofkr+CnIIAufYb+FzBuSnU1iUw5BB3m7wzmj3cXcHp6Kd
-         dFsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZEzkvz2PwzczLJfF2XgS9sL/m/xZCb8Z5AJypUPKPy7/Bzdqh4WrgEYOGpDj++h9k0N2IbxKbWuB2PQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzbvMYSIy2PUyIGrAxi4oXSV/YoiDNaEV3/yI9fenOB7zxy3i0o
-	ZWUpCz2xcSwreUV0emrXnXDDBROEdUVcUT4D403z1IG2SFlUHZUwYYKH9kXkNSpTS5TdkvGm0qD
-	4+LHS1tgmjgIpSEmJAwKm+pI2IS+TJbEVXHUYJw==
-X-Gm-Gg: ASbGncssMSGqymWQm0QtMrpVEZOF0z/QpHjdJco8t8Dd2cOaXDrG4X+kROmpih36BW8
-	vUhOlKZwZvzT05SUMQLvza9546m6AWt7sVL1apc6rMM2yTPqyWR/W34y1vCLxae/98Nzan7JyWS
-	BOOHLjIH1rxKqKzcsR9mAKk4qUgDvxwFyHZPgHKNEYusXZIRNwTS9icw//DA==
-X-Google-Smtp-Source: AGHT+IHjKBz8LLfkDN1C5xR8N2aNArNqGWfvvXVddkpcmhmRSktPMSHP6GCF1+dehAbnJ6v37EnE6gWHZbLivdA/PoU=
-X-Received: by 2002:a05:6122:1785:b0:520:3987:ce0b with SMTP id
- 71dfb90a1353d-52758c9eb35mr1160475e0c.2.1743675657436; Thu, 03 Apr 2025
- 03:20:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743677275; x=1744282075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
+        b=hFEe12oS0OVgp1hp/Prty4hAtsTyvtjc3kIzZ4VYW3yZRtEe1JAfGQP8epbAhroeoR
+         iwCVZzXp20n5XyZlsfG+Cz+5du2icCyex9kdJVqWQsEeFdsxvDkhU1NSVqArwjX+3IMB
+         MOMGN28OGZ/eFgnzVtO8EUr15ygLyoikeFz2P9bBptpBBeSbwU8lIeqTY4XZnWdgnGEQ
+         iAQ3PeudpoU5//3PVYg+jP5ZdJjtANo5HVSm5dO9a1aSDf2E+VZEONYPgWzRmLUAzBcz
+         sOLvzMtnGRNuA2iEm7g6ifKZZ0BZcJF/Euo3Me0TcEcImbE3FNi96LJ748Isr0b3IR45
+         GWcw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2kt6CwTElIlYD/xfHL+IHI3OaobeJQAyuYS+5yS0jtWGSQTfme3VuQxmM0ynuSKTWzgZ6bbYvg+yc1w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwdORERKdgaoMUXrIbeNa3yNVcIrkH7G+Bo+UI1ynQKNTOyxrPl
+	M/HHkmXng6o/56b4ndqYURKfogC0hhbilBQxviQmiWIznDsSVKVxeeT5XyTrYQrSxOK6XKEC9gG
+	FDL2aIxU6jq0pE5kkaGM9f9PK5gXZ7eXGNLf4PA==
+X-Gm-Gg: ASbGncvbUk1pcRq6VGiRB0x1bWMKQWXBS7YxfMnrAkNXBGZhxbUrmg4Gzqjvr03KDcm
+	nyixNVrxn7gB55MgR66YTHeXIkdNnuBd59Dr4tUSRViAFyibh44O4SDlHZhmnnQS3xpGCuFsrGA
+	f3EGv0tvc9sM/pX2/iqWsK/wBU/YFsA26c05Km1Rs1F726u6FDsLBGAUv+27iFnjpxubky
+X-Google-Smtp-Source: AGHT+IEAZl1Bq3/zu9vvbPR6m3Radye8loELaRqXD0AyDpOs+9n2p6f39NGtMiUIYfBcaZxZCiTPFXD5UyQrWFVswQo=
+X-Received: by 2002:a05:6102:3e06:b0:4c1:abaa:ad93 with SMTP id
+ ada2fe7eead31-4c8477c5c58mr1268689137.14.1743677275308; Thu, 03 Apr 2025
+ 03:47:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+ <20250403011849.GA3138383@ax162>
+In-Reply-To: <20250403011849.GA3138383@ax162>
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Apr 2025 15:50:46 +0530
-X-Gm-Features: ATxdqUFcLm8EJq5bKx8BVwRxzBv71uPhfhvOEYclA0j-Xltycxe1onkZpRNwYYM
-Message-ID: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
-Subject: next-20250403: x86_64 mwait.h:30:15: error: invalid operand for instruction
-To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>
+Date: Thu, 3 Apr 2025 16:17:44 +0530
+X-Gm-Features: ATxdqUE4AkC2FOF6OY9aZNJrmty8hh4LW8Nc1vXRFFYdK231FvWNsG3UDqbvQK4
+Message-ID: <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regressions on x86_64 builds tinyconfig, allnoconfig failed with toolchains
-clang-20 and gcc-13 on the Linux next starting from next-20250403.
+On Thu, 3 Apr 2025 at 06:48, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Naresh,
+>
+> On Wed, Apr 02, 2025 at 06:19:19PM +0530, Naresh Kamboju wrote:
+> > Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
+> > the lto-thing, hardening and lto-full config boot failed with toolchain
+> > clang-nightly on the mainline master branch with no console output.
+> >
+> > First seen on the v6.14-12245-g91e5bfe317d8
+> >  Good: v6.14-11270-g08733088b566
+> >  Bad: v6.14-12245-g91e5bfe317d8
+> >
+> > Regressions found on rk3399-rock-pi-4b:
+> >   - boot/clang-nightly-lkftconfig-kselftest
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >   - boot/clang-nightly-lkftconfig-lto-full
+> >
+> > Regressions found on dragonboard-410c:
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >   - boot/clang-nightly-lkftconfig-lto-full
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >
+> > Regressions found on dragonboard-845c:
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >
+> > Regression Analysis:
+> >  - New regression? Yes
+> >  - Reproducibility? Yes
+> >
+> > Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
+> > no console output
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > ## Boot log
+> > Starting kernel
+> > ...
+> > <No console output>
+> >
+> >
+> > ## Source
+> > * Kernel version: 6.14.0
+> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git
+> > * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+> > * Git describe: v6.14-12245-g91e5bfe317d8
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12=
+245-g91e5bfe317d8/
+> > * Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboar=
+d-845c)
+> > * Toolchains: clang-nightly (Debian clang version 21.0.0 )
+>
+> The version string for the toolchain seems to be slightly truncated but
+> from the configuration it is:
+>
+>   Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250=
+330225508.1357)
+>
+> which can be parsed with our parse-debian-clang.py [1] to get more
+> information:
+>
+>   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
+0250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)'
+>   clang checkout date: 2025-03-30 10:54 UTC (3 days, 14:17:24.134272 ago)
+>   clang revision: 3b3d1a5c2614
+>   clang revision link: https://github.com/llvm/llvm-project/commit/3b3d1a=
+5c2614
+>
+> Our CI is using a slightly newer version:
+>
+>   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
+0250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)'
+>   clang checkout date: 2025-04-01 11:25 UTC (1 day, 13:49:39.394836 ago)
+>   clang revision: 290d7b82cb5d
+>   clang revision link: https://github.com/llvm/llvm-project/commit/290d7b=
+82cb5d
+>
+> Can you see if it is reproducible with that revision?
 
-First seen on the next-20250403
- Good: next-20250402
- Bad:  next-20250403
+I=E2=80=99ve re-run the tests to validate the boot behavior on the Rock Pi =
+4 board
+with different Clang nightly versions and the latest mainline kernel.
 
-Regressions found on x86_64:
-  - build/gcc-13-tinyconfig
-  - build/gcc-13-allnoconfig
-  - build/clang-20-tinyconfig
-  - build/clang-20-allnoconfig
+The combination using clang-nightly:20250319 successfully booted the
+Rock Pi 4 board.
+However, the combination using clang-nightly:20250401 failed to boot
+the same board.
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+"name": "clang",
+"version": "21.0.0",
+"version_full": "Debian clang version 21.0.0
+(++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
 
-Boot regression: x86_64 mwait.h:30:15: error: invalid operand for instruction
+Reference:
+ - https://lkft.validation.linaro.org/scheduler/job/8196258
+ - https://lkft.validation.linaro.org/scheduler/job/8196275
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-In file included from arch/x86/kernel/process.c:36:
-arch/x86/include/asm/mwait.h:30:15: error: invalid operand for instruction
-   30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c"
-(ecx), "d" (edx));
-      |                      ^
-<inline asm>:1:16: note: instantiated into assembly here
-    1 |         monitor %rax, %ecx, %edx
-      |                       ^~~~~
-In file included from arch/x86/kernel/process.c:36:
-arch/x86/include/asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
-   95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
-      |                      ^
-<inline asm>:1:7: note: instantiated into assembly here
-    1 |         sti; mwait %eax, %ecx
-      |              ^
-2 errors generated.
+- Naresh
 
 
-## Source
-* Kernel version: 6.14.0
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: f0a16f5363325cc8d9382471cdc7b654c53254c9
-* Git describe: next-20250403
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/
-* Architectures: x86_64
-* Toolchains: clang-20, gcc-13
-* Kconfigs: tinyconfig, allnoconfig, lkftconfig
 
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> For what it's
+> worth, both of the arm64 boxes I have can boot a ThinLTO kernel compiled
+> with a version of LLVM @ 749535ba2808e133682074f712ac6829335f8875, so it
+> could be something that was broken for a little bit but Debian happened
+> to sync before the fix was committed.
+>
+> [1]: https://github.com/ClangBuiltLinux/continuous-integration2/blob/fe48=
+44afc1be91d469fc162c8a179f23fafb9384/scripts/parse-debian-clang.py
+>
+> Cheers,
+> Nathan
