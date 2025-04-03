@@ -1,89 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1648D1F584E;
-	Wed,  2 Apr 2025 22:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092449450;
+	Thu,  3 Apr 2025 01:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743632382; cv=none; b=avp8hMd7utYX3bBV9+6U0bJqSUlCRaBYXSbh4259GX6TMJaNdAJYkBAnR/jhu+Y6HZmwqzsq93x/HEcd4YWxTcTwMQg4sZMifSBj1vKn29EFPVnSOWQYlv38SfXpB7c9Ew/MFev3DKgHEkDpbfPkCcaXuJn4SK2l2V0A+eY1OiQ=
+	t=1743643136; cv=none; b=WMqOGAhipysDblHf13fbvtU9sHNtcLV2mRru2RBOXK7eFQ4BrXjsABh4XtNW9iSJKnj7yS7ewjVlYA45RIPY82c3dmuhuzF074K8Pi3fXhWmHYAqIqy41y+RXkcrKXi7BNOPgR+A4+ksGUil8RdjShAHGoUy0DV+yTUVz3JYLi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743632382; c=relaxed/simple;
-	bh=wPsvqq2TSbIuz1MPM2VtyP0iPPL9yl5M+hWPehgLpqo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jtyMZEPP/CazFlrh3XR27JkozDcZVwcxr0WnYuRQd4p1JbRufipzaa3QL4oLcwiwHt26YqQ4fX5jhgHwmzvlxG9xi/3J7VbRaPZVkDi/jdK+Hd7yalIky5nVA6G+Y9LV9fEPtxCPsFjghHs2G3ba2eJW+Tt8hh3pT/kTXeCytQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MN0rwul8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743643136; c=relaxed/simple;
+	bh=+wbkhxA7fgD+jDjAsUlqMd94lyd4waCkfNu2fzgAVx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4fCGseuUmrIhcbp2fWypH6CRdGhoyNLb3bAKmxupTv42cXgObnNzOdOht1hom0D0J4WUPjPFuQwpvNRyi1t1F4pGDvc8hQZAfhUyEIAaOpnl0/5HwO/1U1hN4993WLfLtDHH4mrjjw0RA0aiTK5dV6Q5dumwNibLbhbtFYQj3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQZYXtlS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MN0rwul8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6891C4CEDD;
-	Wed,  2 Apr 2025 22:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1743632381;
-	bh=wPsvqq2TSbIuz1MPM2VtyP0iPPL9yl5M+hWPehgLpqo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MN0rwul88GP900T3ka3+dXtLjh8IwNNA9RT3nEWRa8o9B1lbXW5PF6oFB+Y5PaxEc
-	 cB0Ulv+iObS+6Y0OHvTHokSUx5zRS+Q/fbfSYkfG8SYFhRUS4XDMPm6+JWt6JQ+0u+
-	 YcPFQ7Oql9WH35j4upaWbTtXV/UQjFcsL9gY5LxQ=
-Date: Wed, 2 Apr 2025 15:19:40 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, "David S. Miller"
- <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, Naresh
- Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, Linux
- Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
-Message-Id: <20250402151940.145c3bf65387b10735fe5c4f@linux-foundation.org>
-In-Reply-To: <Z-2br1vk8lf9V40T@kernel.org>
-References: <20250313135003.836600-1-rppt@kernel.org>
-	<20250313135003.836600-11-rppt@kernel.org>
-	<20250402140521-bf9b3743-094e-4097-a189-10cdf1db9255@linutronix.de>
-	<Z-0xrWyff9-9bJRf@kernel.org>
-	<20250402145330-3ff21a6b-fb03-4bc8-8178-51a535582c6f@linutronix.de>
-	<20250402181842-f25872a1-00f7-4a8f-ae6d-3927899ee3a6@linutronix.de>
-	<Z-2br1vk8lf9V40T@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQZYXtlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DE0C4CEDD;
+	Thu,  3 Apr 2025 01:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743643134;
+	bh=+wbkhxA7fgD+jDjAsUlqMd94lyd4waCkfNu2fzgAVx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GQZYXtlS1kTONy4KCRgddTQItMECmZ40kJOUa9mZxQD3DJoX6fnX57B7zBNBglio1
+	 f2+8n2S/bZY2oIFq4Gd6nfsjqp46LwIpmT5HGCZV0qBfMuXHtC62jkFiibVkZoxL++
+	 FiLNfg2aU/q2S3AL4WRCjRdrR/eV1qg8QIpjwTE5Jtw/tE79aTvHkKqxrSjtRAF7Co
+	 n1Q1uWRp8Qr3livcCEB9vxE1AWrjGSTHkItxWr3oDj1i6gFY/yrl5hDp1whcEV04Vq
+	 UT9sccF/J1Gdih52OAy6PM1mu1PFNzh6t8GW4SeS0LDE6V4xHyYDPzILW2M+sd4F9K
+	 omLDifo9MEbKw==
+Date: Wed, 2 Apr 2025 18:18:49 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+Message-ID: <20250403011849.GA3138383@ax162>
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
 
-On Wed, 2 Apr 2025 23:18:55 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+Hi Naresh,
 
-> The proper fix is
+On Wed, Apr 02, 2025 at 06:19:19PM +0530, Naresh Kamboju wrote:
+> Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
+> the lto-thing, hardening and lto-full config boot failed with toolchain
+> clang-nightly on the mainline master branch with no console output.
 > 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 64ae678cd1d1..d7ff8dfe5f88 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2166,6 +2166,9 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
->  	unsigned long start_pfn = PFN_UP(start);
->  	unsigned long end_pfn = PFN_DOWN(end);
->  
-> +	if (!IS_ENABLED(CONFIG_HIGHMEM) && end_pfn > max_low_pfn)
-> +		end_pfn = max_low_pfn;
-> +
->  	if (start_pfn >= end_pfn)
->  		return 0;
+> First seen on the v6.14-12245-g91e5bfe317d8
+>  Good: v6.14-11270-g08733088b566
+>  Bad: v6.14-12245-g91e5bfe317d8
 > 
-> I've sent it along with the fix for x86 [1] (commit 7790c9c9265e
-> ("memblock: don't release high memory to page allocator when HIGHMEM is
-> off") in mm-unstable), but for some reason it didn't make it to the Linus
-> tree :/
+> Regressions found on rk3399-rock-pi-4b:
+>   - boot/clang-nightly-lkftconfig-kselftest
+>   - boot/clang-nightly-lkftconfig-lto-thing
+>   - boot/clang-nightly-lkftconfig-hardening
+>   - boot/clang-nightly-lkftconfig-lto-full
 > 
-> @Andrew, are you going to send it to Linus or you prefer if I take it via
-> memblock tree? 
+> Regressions found on dragonboard-410c:
+>   - boot/clang-nightly-lkftconfig-lto-thing
+>   - boot/clang-nightly-lkftconfig-lto-full
+>   - boot/clang-nightly-lkftconfig-hardening
 > 
-> [1] https://lore.kernel.org/all/20250325114928.1791109-3-rppt@kernel.org/
+> Regressions found on dragonboard-845c:
+>   - boot/clang-nightly-lkftconfig-hardening
+>   - boot/clang-nightly-lkftconfig-lto-thing
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
+> no console output
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Boot log
+> Starting kernel
+> ...
+> <No console output>
+> 
+> 
+> ## Source
+> * Kernel version: 6.14.0
+> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+> * Git describe: v6.14-12245-g91e5bfe317d8
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12245-g91e5bfe317d8/
+> * Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboard-845c)
+> * Toolchains: clang-nightly (Debian clang version 21.0.0 )
 
-That fix is now in mm-stable for a second round of merge window
-material.  I'll send that off to Linus later today.
+The version string for the toolchain seems to be slightly truncated but
+from the configuration it is:
 
+  Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)
+
+which can be parsed with our parse-debian-clang.py [1] to get more
+information:
+
+  $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)'
+  clang checkout date: 2025-03-30 10:54 UTC (3 days, 14:17:24.134272 ago)
+  clang revision: 3b3d1a5c2614
+  clang revision link: https://github.com/llvm/llvm-project/commit/3b3d1a5c2614
+
+Our CI is using a slightly newer version:
+
+  $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)'
+  clang checkout date: 2025-04-01 11:25 UTC (1 day, 13:49:39.394836 ago)
+  clang revision: 290d7b82cb5d
+  clang revision link: https://github.com/llvm/llvm-project/commit/290d7b82cb5d
+
+Can you see if it is reproducible with that revision? For what it's
+worth, both of the arm64 boxes I have can boot a ThinLTO kernel compiled
+with a version of LLVM @ 749535ba2808e133682074f712ac6829335f8875, so it
+could be something that was broken for a little bit but Debian happened
+to sync before the fix was committed.
+
+[1]: https://github.com/ClangBuiltLinux/continuous-integration2/blob/fe4844afc1be91d469fc162c8a179f23fafb9384/scripts/parse-debian-clang.py
+
+Cheers,
+Nathan
