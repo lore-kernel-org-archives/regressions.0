@@ -1,144 +1,144 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D5516CD33
-	for <regressions@lists.linux.dev>; Fri,  4 Apr 2025 05:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9BF18C933
+	for <regressions@lists.linux.dev>; Fri,  4 Apr 2025 06:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743745813; cv=none; b=kGvLJMtMvA9IBN/TSp+wEvnT39OM/28yLxqX6UjgeGsRGBib8twMTSwbqySmm1k8bNYroatubaN2747j6u2IpUqaFOw22mfj157BeJ0I9GiiIaD9iQhf5sA1I4TzhfamVUVnkM8Ea05IcRy3vbhZ6jGJrmgAaqtH4MSVJHD744A=
+	t=1743749671; cv=none; b=mewJTFZiXjWkTCw4z+DnJwG2xEW4TztvpvQqoLCkYjFJZ7I0VGpF4seW6kDhfJJAodXA/8Rt6EOtOfOzsDRq2F120o+tURzOdjSSu9k9tyDE7uMjqvUdfB16keLjiiVicON/ea4Rr2/YR/a//KBJLU+6HnOrqGXSynMEH21IS8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743745813; c=relaxed/simple;
-	bh=E0lTe+FJPV0F1VKQxQbHoHGJojoKObYVSGdv5v9cqxw=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=cNVykfCPg+1b3RQs6bUA5m9823TYsjfKetNiBXJOryGLGVFpTRpS+vH8GZsR2pvSh0CdI5DOch5y7N5ClyjH9c2o2DAqfyl+h4Ko+0d1xC7pb2zHSeUey6oCuTOIXOW2Yg/wScy8p4P17ToDlGQpueE6wpBM6GLglTzpFvq5rQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=HkWrS4lG; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743749671; c=relaxed/simple;
+	bh=xMVbyCHwFmTSFiUsRdRz+WZwDQtMV90raRl5K2ATkn4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Elq6iSclyZjW6kS4Llwb0EBIT4EeO09Kgnrxi9sQr3jNij6P7aud/40ikMugde1DHMUKjWN8VYZVMgJkYz6eqm5f/q57zgMkTNxpWUAiu8nAH6B/S+SRG8rRHGMOgfaaDCJkdxsYF1l9GOvrhFeWrFb2sS0DIrmBFOTy/AfqY+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R+sVOgX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiPflYXO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R+sVOgX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiPflYXO; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="HkWrS4lG"
-Content-Type: multipart/mixed; boundary="------------08L6YdHquZUpv03HEHpbPDhB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743745810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R+sVOgX2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiPflYXO";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R+sVOgX2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiPflYXO"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 776F21F385;
+	Fri,  4 Apr 2025 06:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743749667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+ytiwc9QXzR9VaVB1US+GOGp83Z98Cx/zqNhgfzVo6k=;
-	b=HkWrS4lG4mKe4eli15RrfKo6WsOqx2JmVjBov6gUuHXf8P0/0dCu5wzDoMpKWSdaJkQJqP
-	TQApk0DgsMM5F5ZTl6tEN0lxx9g/Z4TYTPawLFlDNv5KNidgOR9CTNzr7hI9+wsj/38vi0
-	/aQj0iYD4KKdP6VoR7xsZJk12F4sWv90H+HmA3WLohwOBqoJfsQwzPJXJiJTbY1A79Ifuw
-	OA0+unqYbrODdbLBy1o7cwk+nUwvctiBsAXi6sV+4FXaKyJVyw1olTBsYWakIY5EAT9Q3Q
-	6BSjTAGnOKXd51gCSFMzKCXgoLeuYrTZ3ZNSQ9V19vtJlS0LpK4skaU4gY4j/w==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Message-ID: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Date: Fri, 4 Apr 2025 12:50:03 +0700
+	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
+	b=R+sVOgX2wSShUY9LXz9aWI/Wqne/3ONx7rtOFNwMb9ZMRmrew4uRqcQ/Ac/MloEfFipKQa
+	D3m43CJRtLSIRH7EU41IhOkklzhZ/phJw0IB004GfYSwIbPstij5nHqNk5IGgV/4QHuEeU
+	EpnUEHXuSyorxROqyMMzB1s3xfHDXYE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743749667;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
+	b=iiPflYXOMs2KGEo3RF+MDH+yN8IDqmuCetnVonOqLpwW/5ma0nS8sLCwkN6Q9UbPFRtwFX
+	dGeCYquBnLY4VUDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743749667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
+	b=R+sVOgX2wSShUY9LXz9aWI/Wqne/3ONx7rtOFNwMb9ZMRmrew4uRqcQ/Ac/MloEfFipKQa
+	D3m43CJRtLSIRH7EU41IhOkklzhZ/phJw0IB004GfYSwIbPstij5nHqNk5IGgV/4QHuEeU
+	EpnUEHXuSyorxROqyMMzB1s3xfHDXYE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743749667;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
+	b=iiPflYXOMs2KGEo3RF+MDH+yN8IDqmuCetnVonOqLpwW/5ma0nS8sLCwkN6Q9UbPFRtwFX
+	dGeCYquBnLY4VUDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C2F113691;
+	Fri,  4 Apr 2025 06:54:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uC0ADSOC72f2WgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 04 Apr 2025 06:54:27 +0000
+Date: Fri, 04 Apr 2025 08:54:26 +0200
+Message-ID: <87mscw4dst.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	1100928@bugs.debian.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
+In-Reply-To: <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+References: <174248253267.1718.4037292692790831697.reportbug@x>
+	<Z95s5T6OXFPjRnKf@eldamar.lan>
+	<Z-MMsp3XJyNHOlma@eldamar.lan>
+	<87iknwb80x.wl-tiwai@suse.de>
+	<CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
+	<Z-ct2D6uIN1f6UbL@eldamar.lan>
+	<87zfh43uti.wl-tiwai@suse.de>
+	<CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
+	<878qojypu6.wl-tiwai@suse.de>
+	<CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-From: msizanoen <msizanoen@qtmlabs.xyz>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
- <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
-Content-Language: en-US
-In-Reply-To: <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
-X-Spamd-Bar: +
-X-Spam-Level: *
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,debian.org,bugs.debian.org,gmail.com,vger.kernel.org,lists.linux.dev];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-This is a multi-part message in MIME format.
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On Thu, 03 Apr 2025 21:05:09 +0200,
+C.D. MacEachern wrote:
+> 
+> 
+> I've added 'snd_hda_intel.model=1043:1271' to the end of
+> GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub then ran 'sudo update-grub'
+> and rebooted, choose the non-working kernel, and the audio input still did not
+> work. Any other ideas?
 
-Here's an updated version of the patch that better handles pathological 
-e820 tables.
+Please try the patch.  If it still doesn't work, please give
+alsa-info.sh output again.
 
-On 4/4/25 11:56, msizanoen wrote:
-> Also, can you reproduce this issue with a target kernel (the kernel 
-> being kexec-ed) that has one of the patches attached (select the 
-> correct one according to your kernel version) applied, with either 
-> kexec_load or kexec_file_load?
->
-> On 4/4/25 09:54, msizanoen wrote:
->> Can you send the dmesg logs for this case (6.13 + mentioned patch 
->> series backported as target kernel, using kexec_load)?
->>
->> On 4/4/25 05:00, Roberto Ricci wrote:
->>> On 2025-04-01 19:59 +0700, msizanoen wrote:
->>>> [snip]
->>>> It seems like `e820__register_nosave_regions` is erroneously 
->>>> marking some
->>>> kernel memory as nosave in the presence of sub-page e820 regions. 
->>>> In theory
->>>> backporting
->>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
->>>> should
->>>> be sufficient to avoid this but a fix for the actual root cause is
->>>> preferred.
->>> When using kexec_file_load, this patch series fixes the issue not only
->>> in theory but also in practice.
->>> But the issue with kexec_load (see
->>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
->>> ), which might be related, is not fixed.
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/x-patch; charset=UTF-8; name="for-6.14-and-earlier-v2.diff"
-Content-Disposition: attachment; filename="for-6.14-and-earlier-v2.diff"
-Content-Transfer-Encoding: base64
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDQ4OTNkMzBjZTQzOC4uNWQ5NjNkZjYzYjdhIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1NCwyMiArNzU0LDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
-dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
-X1RZUEVfUkFNICYmIGVudHJ5LT50eXBlICE9IEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOKQot
-CQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOwor
-CQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0JCQlicmVhazsKKwkJ
-aWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lv
-bihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIpKTsKKworCQlsYXN0
-X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKworCXJlZ2lzdGVyX25v
-c2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7CiB9CiAKICNpZmRl
-ZiBDT05GSUdfQUNQSQo=
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/x-patch; charset=UTF-8; name="for-master-v2.diff"
-Content-Disposition: attachment; filename="for-master-v2.diff"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDU3MTIwZjA3NDljYy4uNjU2ZWQ3YWJkMjhkIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1MywyMiArNzUzLDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
-dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
-X1RZUEVfUkFNKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFk
-ZHIpLCBwZm4pOworCQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0J
-CQlicmVhazsKKwkJaWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJf
-bm9zYXZlX3JlZ2lvbihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIp
-KTsKKworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKwor
-CXJlZ2lzdGVyX25vc2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7
-CiB9CiAKICNpZmRlZiBDT05GSUdfQUNQSQo=
-
---------------08L6YdHquZUpv03HEHpbPDhB--
+Takashi
