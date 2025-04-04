@@ -1,37 +1,37 @@
 Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9C517597
-	for <regressions@lists.linux.dev>; Fri,  4 Apr 2025 02:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161CC2AF0A
+	for <regressions@lists.linux.dev>; Fri,  4 Apr 2025 04:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735276; cv=none; b=DmTJJUj0DwNPiNS6CEqyZ/t9mhdRC+vRuOBGqCHo2fvAGXcwKuFo3FxFqSmTxKYoSu3/8BFq9mGNrlTHaBgE6X9+rK5IA5fzaDeT3G571gq7DEdc2q41o46/Z4rS3UWcpMRDMBD9PQC9ThObmxstf662eYtOfog15KszAv8oF9E=
+	t=1743742594; cv=none; b=q72QG0jyLVkUuAv9+3VeZyRPbcL4aad/Yf9OLcJWFv8G1DmsLs8ZQ/3gw8xBVtbMP5crondAEEsBDCY9rcQukQZqW/Y6lpRll/XQSMqfkV+B1UItnvdCJQIF16jO1ChMKIqpp/lEgU/FSGeC23HgsIhR7RfgGZICG9Q+DcikdA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743735276; c=relaxed/simple;
-	bh=o2Qp7noUEdgvbjneRbum3By4oKTUc48b2NdBMWJD2gQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TEtwU50K7Vnz/0r7cDvTGwNhSPMNguQmIt6mjv0d721tkZ58H9+CgszuEi5LYuJW6o/8rj39mzVD7D2d0G8itNFZgghAOuyIlAskGE9L91FNKp3kmyS+Jdr6wXjGhWprwbCXSnspspyZYbsudGS64yevfVm6K8HnTIgl1dVW+RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=YU3bBWRA; arc=none smtp.client-ip=107.172.1.117
+	s=arc-20240116; t=1743742594; c=relaxed/simple;
+	bh=nwhDu68aWdWRGWKSFWI4REESRhrTBgR1bfnknaQzRfc=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
+	 References:In-Reply-To; b=sz81CTeO3MCHXfibxp6DRjLTee6qOUve8i/MB+h9kAzyNEKTG/fMhbN30qp7Rtbk3vZ8kItPeGPx0vni/90oE/mWwaJJGA2yJLXhp88K8cgpe/3BHVgQv0NKrRYpM1nxgDrkcsbfsADAX3Yhbp9gSkNcmFUceXu1klL4ts9OKBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=EvttBZce; arc=none smtp.client-ip=107.172.1.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="YU3bBWRA"
-Message-ID: <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="EvttBZce"
+Content-Type: multipart/mixed; boundary="------------QNl5qfMEuxRVraWYtdKPb7kl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743735263;
+	t=1743742589;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vqgQZ33wcq/hpv8n+1Ly9smcoDQEdPOPf9R8b9HYxu4=;
-	b=YU3bBWRAz9g85BvWK1a7ViAWfYuYZn9JzeI14o9bsJF8Z0lDQ42Qfwd1o9TbrktO7M28C8
-	6zVnmzA5A183utZkTS1dyP9rcvRhVjSo4bDTT3+spyroG2PgnXwdfVGlCjCp1VrPVCNfn6
-	iKrgIB1hD35/HMnEZr8Xvi3q2IsDQeHZ2WfU0UldEqzGK+F8WN3A0g65EEOUJ5+7PhFPVP
-	TdrxVVOk+cJDCuF+YqhZHlyQWAmCH9Ehh8lTA7OTr5/1Llv7R0v1phLKbGGbtiLpZvNlAv
-	WHqcFRl33vxRUaEJ6AR5qzSs3zOW7rInO21s/J6pLGfal9OeJdagSDG0QDgVVw==
+	bh=vau1mPOVxvBKN2mqH71v2LRxp6uq3iTaCAxzKJIn02I=;
+	b=EvttBZcejpCKd38V1E4icwkGSfefBiF9OpE8mKuYddA8vEIxPuNrv2n4/uelEym54+yJtI
+	sWEdYXo9743t6WTxlZjCz+F05LIa89q3kpLVxCtHkJQKwxUEs9s5Jd2jbje6G+mqUznBWW
+	zw+gNKcRHsxLCaESAB2q3YSsyYwK+a7vxidWEXX1a2L7KXgqjsptfS9laevme9Z6nGS5Ft
+	oempeWsiUZSVHpr7rHdfXpGpKdQSBcN9PWgUvmA8IybtVXK25xINb5sb3o6TAMwzq9pMU0
+	cE5alLNMfYnXgzazSEWGG38Hn0UbUBLxW06KasCnSdjA0s45W9gfvGXkys+HCg==
 Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
 	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Date: Fri, 4 Apr 2025 09:54:16 +0700
+Message-ID: <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+Date: Fri, 4 Apr 2025 11:56:21 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,6 +40,7 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
  hibernation
+From: msizanoen <msizanoen@qtmlabs.xyz>
 To: Roberto Ricci <io@r-ricci.it>
 Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
  ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
@@ -48,27 +49,91 @@ Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
 References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
  <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
  <Z-8E-LLs1dFWfn6J@desktop0a>
+ <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
 Content-Language: en-US
-From: msizanoen <msizanoen@qtmlabs.xyz>
-In-Reply-To: <Z-8E-LLs1dFWfn6J@desktop0a>
+In-Reply-To: <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+X-Spamd-Bar: +
+X-Spam-Level: *
+
+This is a multi-part message in MIME format.
+--------------QNl5qfMEuxRVraWYtdKPb7kl
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
 
-Can you send the dmesg logs for this case (6.13 + mentioned patch series 
-backported as target kernel, using kexec_load)?
+Also, can you reproduce this issue with a target kernel (the kernel 
+being kexec-ed) that has one of the patches attached (select the correct 
+one according to your kernel version) applied, with either kexec_load or 
+kexec_file_load?
 
-On 4/4/25 05:00, Roberto Ricci wrote:
-> On 2025-04-01 19:59 +0700, msizanoen wrote:
->> [snip]
->> It seems like `e820__register_nosave_regions` is erroneously marking some
->> kernel memory as nosave in the presence of sub-page e820 regions. In theory
->> backporting
->> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ should
->> be sufficient to avoid this but a fix for the actual root cause is
->> preferred.
-> When using kexec_file_load, this patch series fixes the issue not only
-> in theory but also in practice.
-> But the issue with kexec_load (see
-> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
-> ), which might be related, is not fixed.
+On 4/4/25 09:54, msizanoen wrote:
+> Can you send the dmesg logs for this case (6.13 + mentioned patch 
+> series backported as target kernel, using kexec_load)?
+>
+> On 4/4/25 05:00, Roberto Ricci wrote:
+>> On 2025-04-01 19:59 +0700, msizanoen wrote:
+>>> [snip]
+>>> It seems like `e820__register_nosave_regions` is erroneously marking 
+>>> some
+>>> kernel memory as nosave in the presence of sub-page e820 regions. In 
+>>> theory
+>>> backporting
+>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
+>>> should
+>>> be sufficient to avoid this but a fix for the actual root cause is
+>>> preferred.
+>> When using kexec_file_load, this patch series fixes the issue not only
+>> in theory but also in practice.
+>> But the issue with kexec_load (see
+>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+>> ), which might be related, is not fixed.
+--------------QNl5qfMEuxRVraWYtdKPb7kl
+Content-Type: text/x-patch; charset=UTF-8; name="for-6.14-and-earlier.diff"
+Content-Disposition: attachment; filename="for-6.14-and-earlier.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
+ZTgyMC5jCmluZGV4IDgyYjk2ZWQ5ODkwYS4uZWY2ZTYzOWU0M2ZhIDEwMDY0NAotLS0gYS9h
+cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
+LTc1NCwyMCArNzU0LDIwIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
+bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
+ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
+bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
+IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
+cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
+CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
+Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOworCQlpZiAobGFzdF9hZGRyIDwgZW50
+cnktPmFkZHIpCisJCQlyZWdpc3Rlcl9ub3NhdmVfcmVnaW9uKFBGTl9VUChsYXN0X2FkZHIp
+LCBQRk5fRE9XTihlbnRyeS0+YWRkcikpOwogCi0JCXBmbiA9IFBGTl9ET1dOKGVudHJ5LT5h
+ZGRyICsgZW50cnktPnNpemUpOworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5
+LT5zaXplOwogCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIwX1RZUEVfUkFNICYmIGVudHJ5
+LT50eXBlICE9IEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOKQotCQkJcmVnaXN0ZXJfbm9zYXZl
+X3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOworCQkJcmVnaXN0ZXJfbm9zYXZl
+X3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBQRk5fRE9XTihsYXN0X2FkZHIpKTsKIAot
+CQlpZiAocGZuID49IGxpbWl0X3BmbikKKwkJaWYgKFBGTl9ET1dOKGxhc3RfYWRkcikgPj0g
+bGltaXRfcGZuKQogCQkJYnJlYWs7CiAJfQogfQo=
+--------------QNl5qfMEuxRVraWYtdKPb7kl
+Content-Type: text/x-patch; charset=UTF-8; name="for-master.diff"
+Content-Disposition: attachment; filename="for-master.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
+ZTgyMC5jCmluZGV4IDU3MTIwZjA3NDljYy4uYzMyZWY3ZjUyMDVmIDEwMDY0NAotLS0gYS9h
+cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
+LTc1MywyMCArNzUzLDIwIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
+bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
+ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
+bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
+IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
+cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
+CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
+Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOworCQlpZiAobGFzdF9hZGRyIDwgZW50
+cnktPmFkZHIpCisJCQlyZWdpc3Rlcl9ub3NhdmVfcmVnaW9uKFBGTl9VUChsYXN0X2FkZHIp
+LCBQRk5fRE9XTihlbnRyeS0+YWRkcikpOwogCi0JCXBmbiA9IFBGTl9ET1dOKGVudHJ5LT5h
+ZGRyICsgZW50cnktPnNpemUpOworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5
+LT5zaXplOwogCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIwX1RZUEVfUkFNKQotCQkJcmVn
+aXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOworCQkJcmVn
+aXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBQRk5fRE9XTihsYXN0
+X2FkZHIpKTsKIAotCQlpZiAocGZuID49IGxpbWl0X3BmbikKKwkJaWYgKFBGTl9ET1dOKGxh
+c3RfYWRkcikgPj0gbGltaXRfcGZuKQogCQkJYnJlYWs7CiAJfQogfQo=
+
+--------------QNl5qfMEuxRVraWYtdKPb7kl--
