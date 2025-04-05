@@ -1,79 +1,120 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEDD1392;
-	Sat,  5 Apr 2025 06:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9712F2A
+	for <regressions@lists.linux.dev>; Sat,  5 Apr 2025 06:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743834487; cv=none; b=ikuNDWYciatbSYrtuUU9XLmUoVZfaMK4Z+XPwoH5tv+PeRrDHCKJo/1DF/P4UyS3eGZ3yJimNFCqWY3biEDcG/I2HXFrudks8hWRnmG7utgJqS2jfXHPJk/4sq6r42221+OTpILULPLwyB8rREwtbWT+SZ9N3Sk4RGcObUJu/6o=
+	t=1743834745; cv=none; b=oATxl+zVDAxb7zGUOQvnipKnSQimgQXfAtm+JMBu0HCyJmDHB6DbR83rCs4eudtosBO3kvhOyxEzP2CDavFRIkHr3M2pgBNjNbeqmu6p7uZKJCvPyDo6pfYbX18nYGdzfRJszHCcpoyaqLoTK6pyHXfxjUq62p1A2DBH1XPpw3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743834487; c=relaxed/simple;
-	bh=omm0Ls/6vklF36yaMha6lrBPyckd6jHpcmMD0zuB/J0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YazrOg6qAsD7xOrLRjE++XU+EVxW1PVpgvcZBHRy9tg3aP8YaiAHVUKx8SnGeCwn7lOHNlPRsvV9Rr6JsW24RP02mSRRJ+gWKm7gJgB8CSaCl3np/TaKm0UqFi8LzIO9pKqgJXaXbJlJXCw064aRF4LORlsMttvZjV8i0ExZmg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=m2kCyu4r; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="m2kCyu4r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=omm0Ls/6vklF36yaMha6lrBPyckd6jHpcmMD0zuB/J0=; b=m2kCyu4rPZbg3lR6pU9jM4LtDd
-	VH1u0h3OFczpRKmmGtEwAB8z9X3xeLUgWUsTf6m90TMXX8oWbEOUTIeLg7DDTSvN0w6p3UXAR3FXP
-	LrHRITLwZ1ljVtgxOYeNOtQcq0bp5TDry4vU+UvgKtTRm2OAy/4JYQmUOLntrQD2efjJnfYMk7Sue
-	ui7ORZmnnqOyfRXDYB/ByOf2w9XohxFxijwbp9o5NAvtRFCPCPOp3cd6KUtt14TzcVDS8hGfZwxcg
-	wLw7h8P4cNR0pN2uebZshElyrTOc7yF+b2e6x2YP3dZcx6uvoVcmgS+tH4kSM4w0DmBpQo7W45+sd
-	XV1Wrdmg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1u0x0b-00Crg4-P9; Sat, 05 Apr 2025 06:28:01 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id D21E9BE2DE0; Sat, 05 Apr 2025 08:28:00 +0200 (CEST)
-Date: Sat, 5 Apr 2025 08:28:00 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
-	1100928@bugs.debian.org
-Cc: Takashi Iwai <tiwai@suse.de>, Kuan-Wei Chiu <visitorckw@gmail.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
- VivoBook_ASUSLaptop TP401MARB_J401MA)
-Message-ID: <Z_DNcG7wp4iPh5NH@eldamar.lan>
-References: <Z-ct2D6uIN1f6UbL@eldamar.lan>
- <87zfh43uti.wl-tiwai@suse.de>
- <CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
- <878qojypu6.wl-tiwai@suse.de>
- <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
- <174248253267.1718.4037292692790831697.reportbug@x>
- <87mscw4dst.wl-tiwai@suse.de>
- <Z_AxsuGoaVK9P3L4@eldamar.lan>
- <174248253267.1718.4037292692790831697.reportbug@x>
- <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
+	s=arc-20240116; t=1743834745; c=relaxed/simple;
+	bh=/UX/+gU5gcBfofYLfDSyYlk6u8EMDywu98SbUhaKyUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hLKPYnJGeSwVxaOQG5GJ5LGZEpdhz7y5QSG2USAytWuy7r+EdQ4L2/UXFaW5rshj8BUpD2hlnGIioSnB2QkQEP0METEicko0A63qRlKdFUyBVZPs/u5gzJ/D0jxpaLVewf/yoSJWVIoEyYKlA79kIxeYAX4VZAirP2Js/9zku78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af06b.dynamic.kabel-deutschland.de [95.90.240.107])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id CB5C061E6479B;
+	Sat, 05 Apr 2025 08:32:13 +0200 (CEST)
+Message-ID: <16e0466d-1f16-4e9a-9799-4c01bd2bb005@molgen.mpg.de>
+Date: Sat, 5 Apr 2025 08:32:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
-X-Debian-User: carnil
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+To: Chuck Lever <chuck.lever@oracle.com>, Takashi Iwai <tiwai@suse.de>
+Cc: linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Christian Brauner <brauner@kernel.org>
+References: <874j0lvy89.wl-tiwai@suse.de> <87wmc83uaf.wl-tiwai@suse.de>
+ <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Graig,
+Dear Chuck, dear Takashi, dear Christian,
 
-On Fri, Apr 04, 2025 at 08:19:52PM -0400, C.D. MacEachern wrote:
-> Which of the files from there am I downloading and trying to install?
 
-it is the
-linux-image-6.1.0-0.a.test-amd64-unsigned_6.1.129-1a~test_amd64.deb
-package for just the patched kernel image package.
+I just came across this issue.
 
-Thanks for trying it out.
+Am 29.03.25 um 15:57 schrieb Chuck Lever:
+> On 3/29/25 8:17 AM, Takashi Iwai wrote:
+>> On Sun, 23 Feb 2025 09:53:10 +0100, Takashi Iwai wrote:
 
-Regards,
-Salvatore
+>>> we received a bug report showing the regression on 6.13.1 kernel
+>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+>>>    https://bugzilla.suse.com/show_bug.cgi?id=1236943
+>>>
+>>> Quoting from there:
+>>> """
+>>> I use the latest TW on Gnome with a 4K display and 150%
+>>> scaling. Everything has been working fine, but recently both Chrome
+>>> and VSCode (installed from official non-openSUSE channels) stopped
+>>> working with Scaling.
+>>> ....
+>>> I am using VSCode with:
+>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+>>> """
+>>>
+>>> Surprisingly, the bisection pointed to the backport of the commit
+>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+>>> to iterate simple_offset directories").
+>>>
+>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+>>> release is still affected, too.
+>>>
+>>> For now I have no concrete idea how the patch could break the behavior
+>>> of a graphical application like the above.  Let us know if you need
+>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+>>> and ask there; or open another bug report at whatever you like.)
+>>>
+>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+
+>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+>>
+>> After all, this seems to be a bug in Chrome and its variant, which was
+>> surfaced by the kernel commit above: as the commit changes the
+>> directory enumeration, it also changed the list order returned from
+>> libdrm drmGetDevices2(), and it screwed up the application that worked
+>> casually beforehand.  That said, the bug itself has been already
+>> present.  The Chrome upstream tracker:
+>>    https://issuetracker.google.com/issues/396434686
+>>
+>> #regzbot invalid: problem has always existed on Chrome and related code
+
+> Thank you very much for your report and for chasing this to conclusion.
+Doesn’t marking this an invalid contradict Linux’ no regression policy 
+to never break user space, so users can always update the Linux kernel? 
+Shouldn’t this commit still be reverted, and another way be found 
+keeping the old ordering?
+
+Greg, Sasha, in stable/linux-6.13.y the two commits below would need to 
+be reverted:
+
+180c7e44a18bbd7db89dfd7e7b58d920c44db0ca
+d9da7a68a24518e93686d7ae48937187a80944ea
+
+For stable/linux-6.12.y:
+
+176d0333aae43bd0b6d116b1ff4b91e9a15f88ef
+639b40424d17d9eb1d826d047ab871fe37897e76
+
+
+Kind regards,
+
+Paul
