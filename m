@@ -1,69 +1,83 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF62413B2BB
-	for <regressions@lists.linux.dev>; Fri,  4 Apr 2025 23:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AA0625;
+	Sat,  5 Apr 2025 00:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743809852; cv=none; b=S/nr8FyEgV27S2a0ufwxe//OktehVxqX0TlZMls3YIKtfsGSGLXU5kEsFGQFIn/i690JLxvzx8FU65ecSLmp1YkFgU1BlrVNOFu0GS7t82PkcK07F9LN1bGxDJP5UKfMStPXLqhHgvd8HQgmN/kBcDoDFM5CTCk3q7aKLDgLN14=
+	t=1743812894; cv=none; b=XQXyz9Q2NxSEO994IjECWlnkfKwdZwFLRFWSUiJwBQFHDsiGQyWOAivR5pl4DnUsgPtVqRIdNVeKYn3VjzyrQb/oDh7v1uqp/ZueMfFHV+1Ctm/TfhlEx3cx4VNlLYLFKLDdsA6/uj1wZZSPQIEVUTg2KCqU1eH4vJvxaSKqNvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743809852; c=relaxed/simple;
-	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=;
+	s=arc-20240116; t=1743812894; c=relaxed/simple;
+	bh=52hIKm/EcVzVGzamHJCHAV9kvjOFBdWT2MrAaflINn8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlcRbmx7dv3d/uoY5H0JjpFahAqva4vAT5hpG14gl6biWgT4zsHDhag7RM2L4foIn++NkjUET4V6ZWcMW4KadXBLw0f+NGDyXP2ixA0nMJx1MpHkzKpox8pVaq2DL68hy53WBrKiZ3Mhd20BpUv737tDhAwj7ex+E7pqAq85SxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=uNXGvnNd; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=cd0UCW3iGTP6HP0N8VmgBMJgfxm5JZCKVAKTs7+70bsg9CwUJiwE+w//PA0JKomoGN0iMrBolJYSzGyULCAD85k+JgGrb2W9Rn17H7U3we81vqLnY8ctWtNkW2dktCev40ZR/VE71zLgxeka4s/lb6IrjiaISixP0HlhIqgaAc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mx/9IGX0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="uNXGvnNd"
-Date: Sat, 5 Apr 2025 01:37:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
-	t=1743809837;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=;
-	b=uNXGvnNdzQlXu9Jvln8BKbLoHI2I6EhtvGmXw39XHygcZbI1Ph6xc8LOngN7VwUnmel0iK
-	198ALO/ZF31C4Cw2P6/mehcV3hvLRmeXxWyoiYVn952yt1IcKpqTi7oO2FEZjeV22nEjRB
-	8rsAbQvNzfdC48WScsCSgjKqAa0FfC0qDkldZTFvyBqKoCVVuNaunnck/GW28gwgr4sHGL
-	L3OcEDfyd07EY1cQxRKSNXSFwHupvyuojSVyDGuvxBevPjBuwvddjBr6bW+T1sxktlLIz+
-	VxvkkfCiFGEoC7wBBMf8uV6kJ3/cakERzlPY7xemL+/OCfmE45dXCpDMy7DJGg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roberto Ricci <io@r-ricci.it>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
-	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
-	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
-	akpm@linux-foundation.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, msizanoen@qtmlabs.xyz,
-	rafael.j.wysocki@intel.com, yu.c.chen@intel.com
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-Message-ID: <Z_BtK43rKhxw28l4@desktop0a>
-References: <Z4WFjBVHpndct7br@desktop0a>
- <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
- <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
- <Z-c7V2hptt9U9UCl@desktop0a>
- <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
- <Z-hYWc9LtBU1Yhtg@desktop0a>
- <Z_Bry0JcB1jqPztR@desktop0a>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mx/9IGX0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32630C4CEDD;
+	Sat,  5 Apr 2025 00:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743812893;
+	bh=52hIKm/EcVzVGzamHJCHAV9kvjOFBdWT2MrAaflINn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mx/9IGX0EyzAZ8DYWIGiIPqsEb3ZehO/Qex5lKxqbdyjPov96p61yngnyEByTZj4l
+	 GCKmmlzVwjTpJmjJX3UGbOEAwab1rKTdlQ42D3Be6IZQ6+HVErKO3dufk/2mQgvxvm
+	 p4nllFE2uHZWkKibUvmY9b/m2z1NAQuqJcGRQ1dsCE76FSmY+wHPUYKPYzFgAkjKgh
+	 zrskcVjTd3PtkCNNCaHQ6/bzXin0OqEHo50xi92jwVT7h1620UsurYsZoCG1YAKX5H
+	 hVR8ZShg7+dv4VqagRZC5bzbR/liHOHab6ysOMKv3XFeu1rv0+AzelpwlgJBzt2W0D
+	 u2U5pk9fETtAQ==
+Date: Fri, 4 Apr 2025 17:27:57 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+Message-ID: <20250405002757.GA836042@ax162>
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+ <20250403011849.GA3138383@ax162>
+ <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z_Bry0JcB1jqPztR@desktop0a>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
 
-On 2025-04-05 01:31 +0200, Roberto Ricci wrote:
-> I've bisected this other bug with kexec_load. I found commit
-> 62a03defeabd PM / hibernate: Verify the consistent of e820 memory map by md5 digest
-> Reverting it on v6.14 fixes kexec_load, but not kexec_file_load.
-> Also applying the patch suggested by msizanoen fixes kexec_file_load, too:
-> https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
+On Thu, Apr 03, 2025 at 04:17:44PM +0530, Naresh Kamboju wrote:
+> I’ve re-run the tests to validate the boot behavior on the Rock Pi 4 board
+> with different Clang nightly versions and the latest mainline kernel.
+> 
+> The combination using clang-nightly:20250319 successfully booted the
+> Rock Pi 4 board.
+> However, the combination using clang-nightly:20250401 failed to boot
+> the same board.
+> 
+> "name": "clang",
+> "version": "21.0.0",
+> "version_full": "Debian clang version 21.0.0
+> (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
+> 
+> Reference:
+>  - https://lkft.validation.linaro.org/scheduler/job/8196258
+>  - https://lkft.validation.linaro.org/scheduler/job/8196275
 
-I mean, doing both things fixes both bugs. The second thing fixes
-kexec_file_load only.
+Thank you for verifying. Do you test with clang-20 and if so, are tests
+at that same revision passing? I want to make sure this is an LLVM
+regression before trying to get into figuring out how to bisect with
+your setup. Another way to do that is to see if clang-nightly boots are
+failing on the stable branches, which would point to Linux not being at
+fault.
+
+Cheers,
+Nathan
