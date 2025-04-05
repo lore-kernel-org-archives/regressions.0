@@ -1,94 +1,79 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2ED225D7
-	for <regressions@lists.linux.dev>; Sat,  5 Apr 2025 05:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEDD1392;
+	Sat,  5 Apr 2025 06:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743830132; cv=none; b=moW0jCMXTOHozp8ZIn+ZH7ExcwZYthqIBXWtGm4rUPHjWGHs2MN56Qz1cQD5vF5Ua7ulxRdEG4hAxSD8HntVNwb6nJHPO3lMv2SSk/+pRR/j372tMy3MvY/MHO9CVoWnppKNmCAL4EImxrEumUm3MNtna+ZqLkYaHsbFDkZ9vjw=
+	t=1743834487; cv=none; b=ikuNDWYciatbSYrtuUU9XLmUoVZfaMK4Z+XPwoH5tv+PeRrDHCKJo/1DF/P4UyS3eGZ3yJimNFCqWY3biEDcG/I2HXFrudks8hWRnmG7utgJqS2jfXHPJk/4sq6r42221+OTpILULPLwyB8rREwtbWT+SZ9N3Sk4RGcObUJu/6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743830132; c=relaxed/simple;
-	bh=i2DeLSvosoDmthVPnFC9xDx3X9coPCSU4D2OwPh+kNA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PTHGV923e3uY+zqitljMG0OeY5s3aJzybuYMgA+E/1T0ptbMKDlfDhDqTwR7lVv8srLTGRDygpY3vVQZXApeACaA6rL9+oU4/0GNooPr8ANhbgculnTH0eFQ9X+PEzE6j4N0s/TSzYH4y8jkI8NKRD2pwvfsV8ZLggGUn8hYH5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=WC/Jj2uS; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743834487; c=relaxed/simple;
+	bh=omm0Ls/6vklF36yaMha6lrBPyckd6jHpcmMD0zuB/J0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YazrOg6qAsD7xOrLRjE++XU+EVxW1PVpgvcZBHRy9tg3aP8YaiAHVUKx8SnGeCwn7lOHNlPRsvV9Rr6JsW24RP02mSRRJ+gWKm7gJgB8CSaCl3np/TaKm0UqFi8LzIO9pKqgJXaXbJlJXCw064aRF4LORlsMttvZjV8i0ExZmg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=m2kCyu4r; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="WC/Jj2uS"
-Message-ID: <b09aab52-8fba-49c4-8dc7-9d5cca0f5b98@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743830128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=;
-	b=WC/Jj2uSSBgrctke8lvLcxJfUYYOWf5ktSNDeGd2JRF9/8K3BMadYBjX7si/0FkQpYEozs
-	TAT2hjGjSnQ99oP5s6oaIgNx0KhAMZ4PDoj+CoOczq6IQEdwBATSwrBt2GpxFDiMGYHfhE
-	eJW4rsq1R+xMMJaBoMo8Ro2uA9MHL7GidG3yZmW6mgZsydLvf3tQQEsr04495XHTC0B3I1
-	DLz5b8IEvjFYDnNrATl4uR546D6zy792Ub3hVgqXgs3BXqdqSfDAEb7woCbjelDFX6AcdZ
-	qFbWJROMbvUQle+DkdGsHLZLh5yYvKxLSjn9vIsSWkQR4d9mmQO3Qf4wCoj41Q==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Date: Sat, 5 Apr 2025 12:15:20 +0700
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="m2kCyu4r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=omm0Ls/6vklF36yaMha6lrBPyckd6jHpcmMD0zuB/J0=; b=m2kCyu4rPZbg3lR6pU9jM4LtDd
+	VH1u0h3OFczpRKmmGtEwAB8z9X3xeLUgWUsTf6m90TMXX8oWbEOUTIeLg7DDTSvN0w6p3UXAR3FXP
+	LrHRITLwZ1ljVtgxOYeNOtQcq0bp5TDry4vU+UvgKtTRm2OAy/4JYQmUOLntrQD2efjJnfYMk7Sue
+	ui7ORZmnnqOyfRXDYB/ByOf2w9XohxFxijwbp9o5NAvtRFCPCPOp3cd6KUtt14TzcVDS8hGfZwxcg
+	wLw7h8P4cNR0pN2uebZshElyrTOc7yF+b2e6x2YP3dZcx6uvoVcmgS+tH4kSM4w0DmBpQo7W45+sd
+	XV1Wrdmg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1u0x0b-00Crg4-P9; Sat, 05 Apr 2025 06:28:01 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id D21E9BE2DE0; Sat, 05 Apr 2025 08:28:00 +0200 (CEST)
+Date: Sat, 5 Apr 2025 08:28:00 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org
+Cc: Takashi Iwai <tiwai@suse.de>, Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
+ VivoBook_ASUSLaptop TP401MARB_J401MA)
+Message-ID: <Z_DNcG7wp4iPh5NH@eldamar.lan>
+References: <Z-ct2D6uIN1f6UbL@eldamar.lan>
+ <87zfh43uti.wl-tiwai@suse.de>
+ <CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
+ <878qojypu6.wl-tiwai@suse.de>
+ <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <87mscw4dst.wl-tiwai@suse.de>
+ <Z_AxsuGoaVK9P3L4@eldamar.lan>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-From: msizanoen <msizanoen@qtmlabs.xyz>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
- <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
- <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Content-Language: en-US
-In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
+X-Debian-User: carnil
 
-Submitted for review: 
-https://lore.kernel.org/stable/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
+Hi Graig,
 
-On 4/4/25 12:50, msizanoen wrote:
-> Here's an updated version of the patch that better handles 
-> pathological e820 tables.
->
-> On 4/4/25 11:56, msizanoen wrote:
->> Also, can you reproduce this issue with a target kernel (the kernel 
->> being kexec-ed) that has one of the patches attached (select the 
->> correct one according to your kernel version) applied, with either 
->> kexec_load or kexec_file_load?
->>
->> On 4/4/25 09:54, msizanoen wrote:
->>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
->>> series backported as target kernel, using kexec_load)?
->>>
->>> On 4/4/25 05:00, Roberto Ricci wrote:
->>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
->>>>> [snip]
->>>>> It seems like `e820__register_nosave_regions` is erroneously 
->>>>> marking some
->>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
->>>>> In theory
->>>>> backporting
->>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
->>>>> should
->>>>> be sufficient to avoid this but a fix for the actual root cause is
->>>>> preferred.
->>>> When using kexec_file_load, this patch series fixes the issue not only
->>>> in theory but also in practice.
->>>> But the issue with kexec_load (see
->>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
->>>> ), which might be related, is not fixed.
+On Fri, Apr 04, 2025 at 08:19:52PM -0400, C.D. MacEachern wrote:
+> Which of the files from there am I downloading and trying to install?
+
+it is the
+linux-image-6.1.0-0.a.test-amd64-unsigned_6.1.129-1a~test_amd64.deb
+package for just the patched kernel image package.
+
+Thanks for trying it out.
+
+Regards,
+Salvatore
