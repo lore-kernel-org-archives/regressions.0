@@ -1,83 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AA0625;
-	Sat,  5 Apr 2025 00:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2ED225D7
+	for <regressions@lists.linux.dev>; Sat,  5 Apr 2025 05:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743812894; cv=none; b=XQXyz9Q2NxSEO994IjECWlnkfKwdZwFLRFWSUiJwBQFHDsiGQyWOAivR5pl4DnUsgPtVqRIdNVeKYn3VjzyrQb/oDh7v1uqp/ZueMfFHV+1Ctm/TfhlEx3cx4VNlLYLFKLDdsA6/uj1wZZSPQIEVUTg2KCqU1eH4vJvxaSKqNvc=
+	t=1743830132; cv=none; b=moW0jCMXTOHozp8ZIn+ZH7ExcwZYthqIBXWtGm4rUPHjWGHs2MN56Qz1cQD5vF5Ua7ulxRdEG4hAxSD8HntVNwb6nJHPO3lMv2SSk/+pRR/j372tMy3MvY/MHO9CVoWnppKNmCAL4EImxrEumUm3MNtna+ZqLkYaHsbFDkZ9vjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743812894; c=relaxed/simple;
-	bh=52hIKm/EcVzVGzamHJCHAV9kvjOFBdWT2MrAaflINn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cd0UCW3iGTP6HP0N8VmgBMJgfxm5JZCKVAKTs7+70bsg9CwUJiwE+w//PA0JKomoGN0iMrBolJYSzGyULCAD85k+JgGrb2W9Rn17H7U3we81vqLnY8ctWtNkW2dktCev40ZR/VE71zLgxeka4s/lb6IrjiaISixP0HlhIqgaAc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mx/9IGX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743830132; c=relaxed/simple;
+	bh=i2DeLSvosoDmthVPnFC9xDx3X9coPCSU4D2OwPh+kNA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PTHGV923e3uY+zqitljMG0OeY5s3aJzybuYMgA+E/1T0ptbMKDlfDhDqTwR7lVv8srLTGRDygpY3vVQZXApeACaA6rL9+oU4/0GNooPr8ANhbgculnTH0eFQ9X+PEzE6j4N0s/TSzYH4y8jkI8NKRD2pwvfsV8ZLggGUn8hYH5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=WC/Jj2uS; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mx/9IGX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32630C4CEDD;
-	Sat,  5 Apr 2025 00:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743812893;
-	bh=52hIKm/EcVzVGzamHJCHAV9kvjOFBdWT2MrAaflINn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mx/9IGX0EyzAZ8DYWIGiIPqsEb3ZehO/Qex5lKxqbdyjPov96p61yngnyEByTZj4l
-	 GCKmmlzVwjTpJmjJX3UGbOEAwab1rKTdlQ42D3Be6IZQ6+HVErKO3dufk/2mQgvxvm
-	 p4nllFE2uHZWkKibUvmY9b/m2z1NAQuqJcGRQ1dsCE76FSmY+wHPUYKPYzFgAkjKgh
-	 zrskcVjTd3PtkCNNCaHQ6/bzXin0OqEHo50xi92jwVT7h1620UsurYsZoCG1YAKX5H
-	 hVR8ZShg7+dv4VqagRZC5bzbR/liHOHab6ysOMKv3XFeu1rv0+AzelpwlgJBzt2W0D
-	 u2U5pk9fETtAQ==
-Date: Fri, 4 Apr 2025 17:27:57 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
- dragonboard-410c dragonboard-845c no console output
-Message-ID: <20250405002757.GA836042@ax162>
-References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
- <20250403011849.GA3138383@ax162>
- <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="WC/Jj2uS"
+Message-ID: <b09aab52-8fba-49c4-8dc7-9d5cca0f5b98@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743830128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=;
+	b=WC/Jj2uSSBgrctke8lvLcxJfUYYOWf5ktSNDeGd2JRF9/8K3BMadYBjX7si/0FkQpYEozs
+	TAT2hjGjSnQ99oP5s6oaIgNx0KhAMZ4PDoj+CoOczq6IQEdwBATSwrBt2GpxFDiMGYHfhE
+	eJW4rsq1R+xMMJaBoMo8Ro2uA9MHL7GidG3yZmW6mgZsydLvf3tQQEsr04495XHTC0B3I1
+	DLz5b8IEvjFYDnNrATl4uR546D6zy792Ub3hVgqXgs3BXqdqSfDAEb7woCbjelDFX6AcdZ
+	qFbWJROMbvUQle+DkdGsHLZLh5yYvKxLSjn9vIsSWkQR4d9mmQO3Qf4wCoj41Q==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
+Date: Sat, 5 Apr 2025 12:15:20 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+From: msizanoen <msizanoen@qtmlabs.xyz>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+ ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+ akpm@linux-foundation.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
+ <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
+ <Z-8E-LLs1dFWfn6J@desktop0a>
+ <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+ <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+ <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Language: en-US
+In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: /
 
-On Thu, Apr 03, 2025 at 04:17:44PM +0530, Naresh Kamboju wrote:
-> I’ve re-run the tests to validate the boot behavior on the Rock Pi 4 board
-> with different Clang nightly versions and the latest mainline kernel.
-> 
-> The combination using clang-nightly:20250319 successfully booted the
-> Rock Pi 4 board.
-> However, the combination using clang-nightly:20250401 failed to boot
-> the same board.
-> 
-> "name": "clang",
-> "version": "21.0.0",
-> "version_full": "Debian clang version 21.0.0
-> (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
-> 
-> Reference:
->  - https://lkft.validation.linaro.org/scheduler/job/8196258
->  - https://lkft.validation.linaro.org/scheduler/job/8196275
+Submitted for review: 
+https://lore.kernel.org/stable/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
 
-Thank you for verifying. Do you test with clang-20 and if so, are tests
-at that same revision passing? I want to make sure this is an LLVM
-regression before trying to get into figuring out how to bisect with
-your setup. Another way to do that is to see if clang-nightly boots are
-failing on the stable branches, which would point to Linux not being at
-fault.
-
-Cheers,
-Nathan
+On 4/4/25 12:50, msizanoen wrote:
+> Here's an updated version of the patch that better handles 
+> pathological e820 tables.
+>
+> On 4/4/25 11:56, msizanoen wrote:
+>> Also, can you reproduce this issue with a target kernel (the kernel 
+>> being kexec-ed) that has one of the patches attached (select the 
+>> correct one according to your kernel version) applied, with either 
+>> kexec_load or kexec_file_load?
+>>
+>> On 4/4/25 09:54, msizanoen wrote:
+>>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
+>>> series backported as target kernel, using kexec_load)?
+>>>
+>>> On 4/4/25 05:00, Roberto Ricci wrote:
+>>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
+>>>>> [snip]
+>>>>> It seems like `e820__register_nosave_regions` is erroneously 
+>>>>> marking some
+>>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
+>>>>> In theory
+>>>>> backporting
+>>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
+>>>>> should
+>>>>> be sufficient to avoid this but a fix for the actual root cause is
+>>>>> preferred.
+>>>> When using kexec_file_load, this patch series fixes the issue not only
+>>>> in theory but also in practice.
+>>>> But the issue with kexec_load (see
+>>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+>>>> ), which might be related, is not fixed.
