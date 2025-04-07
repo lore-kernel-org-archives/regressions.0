@@ -1,177 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A71334CF5;
-	Mon,  7 Apr 2025 11:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A4A3597A
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 11:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744023679; cv=none; b=Ae9PM6jCmD+bMN4GztJK8l19GTvRg2zVToZemyptiCh6T4felys54/c+r4wQTIB17mGu9ePE53ZWsph22swGdPLLwklvSKm9ShKBqX692iEYnDPrJMlvPSyqdtdi+alucPbGtwd1sknWid4XcfAYqDKNzN1E9kUD5J5vYXvv7dU=
+	t=1744026369; cv=none; b=i6ERIOE8NnmnNN5pNBaQ8MYdfxup7a8pPKOx1Y1qrNPFYHb8sPoOPgvC8rCr2F9bw0d2N88Hp0Av9z7Xfi4eJe4UQP16cOdxodppWGIyFx0cRPzSF40iGk+DpIpu4KCeUP8RVjeMqwd14nzm6+S55Oot6P11CLluCZPu3fzMUyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744023679; c=relaxed/simple;
-	bh=V7ona84w4jSuNFXXibo8D2BeRebQZTbFHfPOFhk3dc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1prTg0Gwo21CUIwAkT5t12x+VmbzSPMuLk2e7PnOM7rMvE3+Zwo/Z4OxlVU7ksph+Ock84/RhLogpdyOTXvtR4RvnGVzstSKYgUi1kKPIBjJw9owR1PMxPCNuSVgDe9dq6ToES593rPlPnRDA9lMhDd+WR/LasDf0KFfTLV8Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOwKMHFx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744026369; c=relaxed/simple;
+	bh=A8kTu4vOxFAwnxbMPk7okErIzXN4OhpFsl+LBPki/7k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mSISLIKUhTGf8JCDzm9R3utJdf3GO0jCDAOdX7kv2mQlnz0KvJT/jlAVV+6FsUrd/Iu8ozHabHBwcEn9O47S9Q98v2/KBuje8d3ORHHt3mswWQD+DNR/qEAh0JaoDPPxjrWoN/5+iDkkqykQ0ZKlbTyEwG0oapAMlJ0EWWVP+6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zo02hwxe; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOwKMHFx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FA9C4CEDD;
-	Mon,  7 Apr 2025 11:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744023678;
-	bh=V7ona84w4jSuNFXXibo8D2BeRebQZTbFHfPOFhk3dc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qOwKMHFxVKuAwBdIguoFqgkI1kcfx3gSWZljnkiDHwa3njNxkfvhVWttdkZtXkrE+
-	 eOYIyoUF5zTYRHdAJwPsn4yVSbyCssBE4wCX61Ub0OcdoMDFvOITdGakVm8+y1dTew
-	 VhLnOaFtabVcbrUnbK99xIRtOCkDQCSOyvBRISP5vAzoowO21U+Z0IrsD3v7r6N291
-	 Ocellf1RmlnfzoyhO37Fwi2PLX+AcogNDXAMd+RfHH75sULbkliaZIW9UUL6l7Zo3O
-	 ZqAQBHewJ40z6b6nZKiS555sK9LNkZG8IX5RJnzq5MKqNg/A68v0EyiHeSiNlWYO8/
-	 YeVic5cvvbLFw==
-Date: Mon, 7 Apr 2025 13:01:14 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Takashi Iwai <tiwai@suse.de>, 
-	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
- b9b588f22a0c
-Message-ID: <20250407-irrwitzig-seilschaft-9eaa7d0b1f09@brauner>
-References: <874j0lvy89.wl-tiwai@suse.de>
- <87wmc83uaf.wl-tiwai@suse.de>
- <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
- <16e0466d-1f16-4e9a-9799-4c01bd2bb005@molgen.mpg.de>
- <2025040551-catatonic-reflex-2ebf@gregkh>
- <417f41b3-b343-46ca-9efe-fa815e85bdd3@molgen.mpg.de>
- <57eec58a-6aae-4958-996d-2785da985f04@oracle.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zo02hwxe"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86b9d1f729eso1900113241.3
+        for <regressions@lists.linux.dev>; Mon, 07 Apr 2025 04:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744026366; x=1744631166; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l179qXw5nBePyI4JZkgntWVpX80YAW06xOczRVR02ZM=;
+        b=Zo02hwxeo9cIXP0SCWqnRLF9zh+egH1+cNL7zknUN6SSv72zSDV6xn0/YdipS6GS35
+         3FrcZtjQjDDH8gELxiBy481q7NAJt5rQ3YzUUr+opnhYgHg6EoSigJE0CHptIMu5tIUf
+         GS4Iqx8u1fwlCzN0cPVxREcm+MuX7BXmJpvsm/WQMWgGyMSVzJDRn7unLwAIs93NktCi
+         SMHgiv295gNbn9tfVnF/hixovu636UNaD8ZV5TVwX3Y9hqalPrMY78jsvRfIOOW0s/BW
+         YZnUCJOr+naycY7z22f5zH3jAiGAqBJFuX5ySZgwhju31a7oLIefks5hwqfIAKCKkJPp
+         P3Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744026366; x=1744631166;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l179qXw5nBePyI4JZkgntWVpX80YAW06xOczRVR02ZM=;
+        b=IWgI0WNksF42mcBVmf0deK2TLVpWm/vSOdo+LMtWa0NCfKrTU3JK/2/Xkqvn12dBEX
+         fQqI93zFRqLHsUX9qnOm5cGuM2l/1XyrAmIIdCs6CzgOAe3DNdhlqjW58CKFjemVTu/h
+         ql+YM4XoiXyYmqvMsgM1PpCUaDxQnZeZiPU6CsYBX0X2NgLoc6OCXykk6DzQZwoBKu/6
+         5FAjppejBRcowy3UHAvnoBS+4ooT9nu7rTGyiE8iATnLsIR2zoNAJ7Zo44MwWLk2ETne
+         zLW7ouUwhdjW4+JwKaLR1DNU8fISvDbPDpD+DnFppQs7vf+0xfs/4sKY48pUYC2g6mbX
+         WPCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWKDpPxknazZfVLE+PdLSYRlGEny+I5aeQzt1mihufx4OxhLC0L8g2o4S3O1rHHzUWAeDnAkdFD7cTf/g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyS0bhjRYTjX53uNvZuSwlPWg9xsmcsML4anIJSaiUc1XWddGGy
+	EjYgDekE52QSZZsVb6GsNLDiqJYqkYtj+6cu9dfjjbswZAR686Xyh+aQGKHcIRbwyuy5GUCYPH0
+	K5zauS3iJTZeRbAnL7XHNl5thHfOMRjsZQuqOGg==
+X-Gm-Gg: ASbGncuBfIbtNLWOzoWrCZ//EfDvfub8AelqvDo240uDiBqSWk53IFVR12jJ4lpsvIs
+	jaD3OuS3hRfqfNYklRHbOkDwVT3AI4Sp2+HEp9iTpaqMzuUjw5CmOxDqq91AA6uXHAFMTMB0y1r
+	ra6cDSeXtnaIuGM/QU/RwuDDe7PGZm4LEUbOJbwCwjRSLt8jVC6TAy94jQRaw=
+X-Google-Smtp-Source: AGHT+IE9MxO7qQqlLmViUipY97IXRe0HOeQE88hqfb3Q8OgiFR34X0CHQfKfsgfdHN0p4DcAQoZhNv1HOhhMCdAhmoM=
+X-Received: by 2002:a05:6102:292b:b0:4bb:e8c5:b149 with SMTP id
+ ada2fe7eead31-4c85539e126mr8042397137.7.1744026366667; Mon, 07 Apr 2025
+ 04:46:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57eec58a-6aae-4958-996d-2785da985f04@oracle.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 7 Apr 2025 17:15:55 +0530
+X-Gm-Features: ATxdqUHUzOVzZWX9xHaaGdI7CQeUYcGWMEQ1NQQGH41E_gk9k9xrAq8CaQ9neOQ
+Message-ID: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
+Subject: next-20250407: qemu_x86_64 clang-20, clang-nightly no console log but
+ gcc-13 boot pass
+To: open list <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
+Cc: Nathan Chancellor <nathan@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Apr 05, 2025 at 12:25:00PM -0400, Chuck Lever wrote:
-> On 4/5/25 3:43 AM, Paul Menzel wrote:
-> > Dear Greg,
-> > 
-> > 
-> > Thank you for replying on a Saturday.
-> > 
-> > Am 05.04.25 um 09:29 schrieb Greg KH:
-> >> On Sat, Apr 05, 2025 at 08:32:13AM +0200, Paul Menzel wrote:
-> > 
-> >>> Am 29.03.25 um 15:57 schrieb Chuck Lever:
-> >>>> On 3/29/25 8:17 AM, Takashi Iwai wrote:
-> >>>>> On Sun, 23 Feb 2025 09:53:10 +0100, Takashi Iwai wrote:
-> >>>
-> >>>>>> we received a bug report showing the regression on 6.13.1 kernel
-> >>>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped
-> >>>>>> working
-> >>>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
-> >>>>>>     https://bugzilla.suse.com/show_bug.cgi?id=1236943
-> >>>>>>
-> >>>>>> Quoting from there:
-> >>>>>> """
-> >>>>>> I use the latest TW on Gnome with a 4K display and 150%
-> >>>>>> scaling. Everything has been working fine, but recently both Chrome
-> >>>>>> and VSCode (installed from official non-openSUSE channels) stopped
-> >>>>>> working with Scaling.
-> >>>>>> ....
-> >>>>>> I am using VSCode with:
-> >>>>>> `--enable-features=UseOzonePlatform --enable-
-> >>>>>> features=WaylandWindowDecorations --ozone-platform-hint=auto` and
-> >>>>>> for Chrome, I select `Preferred Ozone platform` == `Wayland`.
-> >>>>>> """
-> >>>>>>
-> >>>>>> Surprisingly, the bisection pointed to the backport of the commit
-> >>>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
-> >>>>>> to iterate simple_offset directories").
-> >>>>>>
-> >>>>>> Indeed, the revert of this patch on the latest 6.13.4 was
-> >>>>>> confirmed to
-> >>>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
-> >>>>>> release is still affected, too.
-> >>>>>>
-> >>>>>> For now I have no concrete idea how the patch could break the
-> >>>>>> behavior
-> >>>>>> of a graphical application like the above.  Let us know if you need
-> >>>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
-> >>>>>> and ask there; or open another bug report at whatever you like.)
-> >>>>>>
-> >>>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
-> >>>
-> >>>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
-> >>>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
-> >>>>>
-> >>>>> After all, this seems to be a bug in Chrome and its variant, which was
-> >>>>> surfaced by the kernel commit above: as the commit changes the
-> >>>>> directory enumeration, it also changed the list order returned from
-> >>>>> libdrm drmGetDevices2(), and it screwed up the application that worked
-> >>>>> casually beforehand.  That said, the bug itself has been already
-> >>>>> present.  The Chrome upstream tracker:
-> >>>>>     https://issuetracker.google.com/issues/396434686
-> >>>>>
-> >>>>> #regzbot invalid: problem has always existed on Chrome and related
-> >>>>> code
-> >>>
-> >>>> Thank you very much for your report and for chasing this to conclusion.
-> >>> Doesn’t marking this an invalid contradict Linux’ no regression
-> >>> policy to
-> >>> never break user space, so users can always update the Linux kernel?
-> >>> Shouldn’t this commit still be reverted, and another way be found
-> >>> keeping
-> >>> the old ordering?
-> >>>
-> >>> Greg, Sasha, in stable/linux-6.13.y the two commits below would need
-> >>> to be
-> >>> reverted:
-> >>>
-> >>> 180c7e44a18bbd7db89dfd7e7b58d920c44db0ca
-> >>> d9da7a68a24518e93686d7ae48937187a80944ea
-> >>>
-> >>> For stable/linux-6.12.y:
-> >>>
-> >>> 176d0333aae43bd0b6d116b1ff4b91e9a15f88ef
-> >>> 639b40424d17d9eb1d826d047ab871fe37897e76
-> >>
-> >> Unless the changes are also reverted in Linus's tree, we'll be keeping
-> >> these in.  Please work with the maintainers to resolve this in mainline
-> >> and we will be glad to mirror that in the stable trees as well.
-> > 
-> > Commit b9b588f22a0c (libfs: Use d_children list to iterate simple_offset
-> > directories) does not have a Fixes: tag or Cc: stable@vger.kernel.org. I
-> > do not understand, why it was applied to the stable series at all [1],
-> > and cannot be reverted when it breaks userspace?
-> I NACK'd the upstream revert because I expected an RCA before 6.14
-> final (that didn't happen), and the Chrome issue was the only reported
-> problem and it was specific to a particular hardware configuration and
-> the /latest developer release/ of Chrome. Neither v6.14.0 nor a Chrome
-> developer release are going to be put in front of users who do not
-> expect to encounter issues.
+Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
+Linux next-20250407 and no console output.
 
-Exactly.
+The gcc-13 builds boot pass on qemu-x86_64.
 
-> 
-> Note that the libfs series addresses several issues. Commit b9b588f22a0c
-> itself addresses CVE-2024-46701 [1] (in v6.6). I did not add a "Cc:
-> stable" for commit b9b588f22a0c because it cannot be cherry picked to
-> apply to v6.6, it has to be manually adjusted to apply.
-> 
-> The final RCA reported in [2] shows that there is nothing incorrect
-> about b9b588f22a0c.
-> 
-> In addition, the next Chrome release will carry a fix for the clearly
-> incorrect library behavior -- applications cannot depend on the order
-> of directory entry iteration, because that can change arbitrarily, and
-> not just because of file system implementation quirks. You will note
-> that even after sorting the directory entries, the library still had
-> problems discovering the accelerated graphics device.
-> 
-> Reverting now might follow the letter of the rule about "no regressions"
-> but IMHO moving forward from here seems to me to be the more
-> constructive approach.
+First seen on the next-20250407.
+Bad: next-20250407
+Good:next-20250404
 
-I agree.
+* qemu-x86_64, boot
+ - boot/clang-20-lkftconfig
+ - boot/clang-20-lkftconfig-compat
+ - boot/clang-nightly-lkftconfig
+
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
+
+Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Boot log
+<no console output>
+
+Clang-20 versions:
+  "name": "clang",
+  "version": "20.1.2",
+  "version_full": "Debian clang version 20.1.2
+(++20250330123306+5ba194972878-1~exp1~20250330003423.94)"
+
+Clang-nightly versions:
+  "name": "clang",
+  "version": "21.0.0",
+  "version_full": "Debian clang version 21.0.0
+(++20250402105505+c57b9c233a87-1~exp1~20250402225526.1363)"
+
+qemu-system-x86:
+   installed at version: 9.2.2+ds-1+b2
+
+## Source
+* Kernel version: 6.15.0-rc1-next-20250407
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+* Git describe: 6.15.0-rc1-next-20250407
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/
+
+## Test
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/log
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/details/
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/history/
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930138/suite/boot/test/clang-nightly-lkftconfig/history/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNpFdnHoEolEu77VmTYD8bmuBd/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNpFdnHoEolEu77VmTYD8bmuBd/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
