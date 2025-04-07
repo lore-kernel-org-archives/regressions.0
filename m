@@ -1,111 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD2A20FA8F;
-	Mon,  7 Apr 2025 17:47:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E909C254B09;
+	Mon,  7 Apr 2025 18:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744048062; cv=none; b=N7YOplXjeG5dho+fGEPDt71qWuCt5AUnYy7XatJq8i/ANX0PE9m3DZdvu9HRvL8qgVAY3bHHxs3++exlQo/KaIZuDVJKOw6r70CJ2ZuBKe77kZ1FEjDGt9Cmw1K4J3YunEkCtHvydalu6eIaDDTZUffZu0zz6PsmkAwxjoErEzE=
+	t=1744051050; cv=none; b=N+h0wpOa9pmm8cEv7/tcyqBaptWx6JpXSypCnRDSKLiA1uga7GFKH1HSXOX9cGyUwjcoIVVDJXDOytSrPawTy3DeinNMoHtrRQI8j3hcnteGQftLoEzRlhbH7e3IAujqoPTrX2rVhIbvwXEcrs9ErtQ1u0j+rZemi/Zf5UkaUc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744048062; c=relaxed/simple;
-	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D02Ogeh/jzwub94S+5GVVK83ip3h130uJN+CVZnSuIon/fFy7KaaNDAsKx22IAruzzzfQ6Gj8ru1P0T1MLvHRBzdSEGodF46yCGiSo4RBEmVk9027AS8kDT02DZlLLyCHfm8O31ISbSWoLDaVQZ6Ji86sq7C2Xkyp6orSxUKfYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR5yGXWA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051050; c=relaxed/simple;
+	bh=FGbSI/28Hz9KQ9YaHunwslOCD0Bk1Rfmixa+KYW1cyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mRUR6EGGs2QYAi+w922fwvRWtvryLMgDLVh+udh2dd+6yfny2v5i4KzBrWRI7FZgQzLfmOfvJjedCaToN3g8OQfcSk/yPHVvVdzQX/ZaqgRrAaJP3VbqSgV+j3gum/zWdSUEQOii2XtbRa+WSCdFc6ADuoekHzgiDVcCoYAwlBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O44ibCw+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR5yGXWA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC93C4CEDD;
-	Mon,  7 Apr 2025 17:47:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O44ibCw+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0F8C4CEDD;
+	Mon,  7 Apr 2025 18:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744048062;
-	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TR5yGXWAMDPR4Zf8/5QuBIhPyonpjHH8ZXYaqFPJEoRCZDMXVUzK+qOOp/kOuS0ou
-	 G+VRvM6rIiom5ygtQDI3uafnbnbXMTdzT30PJidg2AfHJmADqI5Q9BM5x5IOwBFYF0
-	 otvFwv8NKhHT9+9GUJqvtj/SrvKVn9ZMYxa8GrF/qjhdeDJ4TeQfic7wdtmLzTwMAI
-	 wZ3Kr76mUTwsUhxRHUeYSoLUm3xnPwSwICDQmlJB0Vrf87fnuM2aub+uXf/jj/8TME
-	 xuNr+Toh44plbtcmBGQS1H2Ko2y/nfiP955FIEAfcLcIa9VmhujO/iKl+/2gAZWwgo
-	 t4yiAI45WX4+g==
-Date: Mon, 7 Apr 2025 19:47:36 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	lkft-triage@lists.linaro.org, Nathan Chancellor <nathan@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>, dwmw@amazon.co.uk,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: next-20250407: qemu_x86_64 clang-20, clang-nightly no console
- log but gcc-13 boot pass
-Message-ID: <Z_QPuPmtrFOnhjeP@gmail.com>
-References: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
- <CA+G9fYtNcnAEVs70eH2yP5UxRBsfrN2B1nKNcggGQ7FNMAJMmg@mail.gmail.com>
- <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
+	s=k20201202; t=1744051049;
+	bh=FGbSI/28Hz9KQ9YaHunwslOCD0Bk1Rfmixa+KYW1cyc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=O44ibCw+UBbtuFD9jYF8aBawVsYVga9zL9EdhjmfOJC/QFZgAnXZEf2822hlUWw+h
+	 eAaJkPBiU3KntFUG3h2ouJmq/zJA121+As53Va766IvbfYn4Wwi1mxHuemEBi17zzl
+	 Iqzm0Fh8G8dGmLt5zklBjbMI8TKv84b3ncZkvnwBD1cec+CdM3ML2DBAyZZxGssHKP
+	 8VnqZM0nOmeXEqhvKbuA6xyIRh4s4BTnhM2A9kJs/inebcaBKn6VRriKU4WzHzawPH
+	 LYfzWlUFGRkzEy5aqgYXGXaYn3Vko3+ltqq+Jfc0P39cOlomTfFJMAoeoYBF9cFDDx
+	 IyvI8+iDqccOg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Christian Schrrefl <chrisi.schrefl@gmail.com>
+Cc: naresh.kamboju@linaro.org,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Rudraksha Gupta <guptarud@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	anders.roxell@linaro.org,
+	arnd@arndb.de,
+	dan.carpenter@linaro.org,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev,
+	rust-for-linux@vger.kernel.org,
+	torvalds@linux-foundation.org
+Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
+Date: Mon,  7 Apr 2025 20:37:16 +0200
+Message-ID: <20250407183716.796891-1-ojeda@kernel.org>
+In-Reply-To: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
+References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+On Mon, 07 Apr 2025 22:58:02 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> Regressions on arm build with config rustgcc-lkftconfig-kselftest on the
+> Linux mainline and next failed with CONFIG_RUST=y enabled.
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+> Bad: next-20250327
+> Good: next-20250326
 
-> On Mon, 7 Apr 2025 at 18:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Mon, 7 Apr 2025 at 17:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
-> > > Linux next-20250407 and no console output.
-> > >
-> > > The gcc-13 builds boot pass on qemu-x86_64.
-> > >
-> > > First seen on the next-20250407.
-> > > Bad: next-20250407
-> > > Good:next-20250404
-> > >
-> > > * qemu-x86_64, boot
-> > >  - boot/clang-20-lkftconfig
-> > >  - boot/clang-20-lkftconfig-compat
-> > >  - boot/clang-nightly-lkftconfig
-> > >
-> > > Regression Analysis:
-> > > - New regression? Yes
-> > > - Reproducibility? Yes
-> > >
-> > > Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Anders bisected this and found,
-> > # first bad commit:
-> >    [cc34e658c6db493c1524077e95b42d478de58f2b]
-> >    x86/boot: Move the early GDT/IDT setup code into startup/
-> >
-> > Lore report link,
-> >  - https://lore.kernel.org/all/CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com/
-> >
-> 
-> Thanks for the report. I'll look into this.
+> Unable to generate bindings: clang diagnosed error: error: unknown
+> argument: '-mno-fdpic'
 
-I've zapped cc34e658c6db from tip:x86/boot for the time being.
+I assume this is the arm support, i.e. commit ccb8ce526807 ("ARM: 9441/1:
+rust: Enable Rust support for ARMv7").
 
-I have the same request as for the other patches applies, please split 
-it up into ~3 patches for better bisectability and ease of review:
+Clang does not seem to support `-mno-fdpic`, thus you probably need to add it to
+`bindgen_skip_c_flags` in `rust/Makefile` so that it gets skipped when the C
+compiler is GCC.
 
- - first the mechanic movement of code, with very few changes (if the 
-   result builds & boots),
+If you do so, please double-check if the flag could potentially alter the ABI in
+a way that `bindgen` would generate the wrong bindings.
 
- - then drop the RIP_REL_REF() uses in the second patch,
+I hope that helps!
 
- - and drop __head annotations in the third patch.
-
-Thanks,
-
-	Ingo
+Cheers,
+Miguel
