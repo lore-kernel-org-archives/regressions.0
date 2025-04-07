@@ -1,132 +1,251 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A4A3597A
-	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 11:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEE022A7EA
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 12:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026369; cv=none; b=i6ERIOE8NnmnNN5pNBaQ8MYdfxup7a8pPKOx1Y1qrNPFYHb8sPoOPgvC8rCr2F9bw0d2N88Hp0Av9z7Xfi4eJe4UQP16cOdxodppWGIyFx0cRPzSF40iGk+DpIpu4KCeUP8RVjeMqwd14nzm6+S55Oot6P11CLluCZPu3fzMUyw=
+	t=1744028136; cv=none; b=m/yG9BSb251lGRexnY6dbpfzwgPk1qcQ1cX0Qbnd6/AOW1s6SW0jHmINfE06rW215QkvTHu+hMi0aJk5FZ/6P2QD8xMLPF54lAhxtr0n6Lb9cVlBXkhMQg5rj01uzXGi8c8fTogfC1p0iRmJm9gJZ2gNx2nrClIgJUQph6ErWT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026369; c=relaxed/simple;
-	bh=A8kTu4vOxFAwnxbMPk7okErIzXN4OhpFsl+LBPki/7k=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mSISLIKUhTGf8JCDzm9R3utJdf3GO0jCDAOdX7kv2mQlnz0KvJT/jlAVV+6FsUrd/Iu8ozHabHBwcEn9O47S9Q98v2/KBuje8d3ORHHt3mswWQD+DNR/qEAh0JaoDPPxjrWoN/5+iDkkqykQ0ZKlbTyEwG0oapAMlJ0EWWVP+6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zo02hwxe; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744028136; c=relaxed/simple;
+	bh=evSEeTaud9wvWh76rfmaHktnwaq3LVmy+wiThtOpVD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dJfiqZOSe+z3Prb7j0tYcCwY4F9JSuYNoDuP8CyCuro7P09NwaJMzAouo5rXmRsQkTmalIgWj6RmbMy7rxECZ23g9Y58gK16/wdqXA2uwm2ZdI3KD7JLb1M33vSsKe45EbtgT3orikWt78XAaFUVQ7BmEKWgsqDQIX+5YqITcdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OaJDKY/R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zo02hwxe"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86b9d1f729eso1900113241.3
-        for <regressions@lists.linux.dev>; Mon, 07 Apr 2025 04:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744026366; x=1744631166; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=l179qXw5nBePyI4JZkgntWVpX80YAW06xOczRVR02ZM=;
-        b=Zo02hwxeo9cIXP0SCWqnRLF9zh+egH1+cNL7zknUN6SSv72zSDV6xn0/YdipS6GS35
-         3FrcZtjQjDDH8gELxiBy481q7NAJt5rQ3YzUUr+opnhYgHg6EoSigJE0CHptIMu5tIUf
-         GS4Iqx8u1fwlCzN0cPVxREcm+MuX7BXmJpvsm/WQMWgGyMSVzJDRn7unLwAIs93NktCi
-         SMHgiv295gNbn9tfVnF/hixovu636UNaD8ZV5TVwX3Y9hqalPrMY78jsvRfIOOW0s/BW
-         YZnUCJOr+naycY7z22f5zH3jAiGAqBJFuX5ySZgwhju31a7oLIefks5hwqfIAKCKkJPp
-         P3Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744026366; x=1744631166;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l179qXw5nBePyI4JZkgntWVpX80YAW06xOczRVR02ZM=;
-        b=IWgI0WNksF42mcBVmf0deK2TLVpWm/vSOdo+LMtWa0NCfKrTU3JK/2/Xkqvn12dBEX
-         fQqI93zFRqLHsUX9qnOm5cGuM2l/1XyrAmIIdCs6CzgOAe3DNdhlqjW58CKFjemVTu/h
-         ql+YM4XoiXyYmqvMsgM1PpCUaDxQnZeZiPU6CsYBX0X2NgLoc6OCXykk6DzQZwoBKu/6
-         5FAjppejBRcowy3UHAvnoBS+4ooT9nu7rTGyiE8iATnLsIR2zoNAJ7Zo44MwWLk2ETne
-         zLW7ouUwhdjW4+JwKaLR1DNU8fISvDbPDpD+DnFppQs7vf+0xfs/4sKY48pUYC2g6mbX
-         WPCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKDpPxknazZfVLE+PdLSYRlGEny+I5aeQzt1mihufx4OxhLC0L8g2o4S3O1rHHzUWAeDnAkdFD7cTf/g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyS0bhjRYTjX53uNvZuSwlPWg9xsmcsML4anIJSaiUc1XWddGGy
-	EjYgDekE52QSZZsVb6GsNLDiqJYqkYtj+6cu9dfjjbswZAR686Xyh+aQGKHcIRbwyuy5GUCYPH0
-	K5zauS3iJTZeRbAnL7XHNl5thHfOMRjsZQuqOGg==
-X-Gm-Gg: ASbGncuBfIbtNLWOzoWrCZ//EfDvfub8AelqvDo240uDiBqSWk53IFVR12jJ4lpsvIs
-	jaD3OuS3hRfqfNYklRHbOkDwVT3AI4Sp2+HEp9iTpaqMzuUjw5CmOxDqq91AA6uXHAFMTMB0y1r
-	ra6cDSeXtnaIuGM/QU/RwuDDe7PGZm4LEUbOJbwCwjRSLt8jVC6TAy94jQRaw=
-X-Google-Smtp-Source: AGHT+IE9MxO7qQqlLmViUipY97IXRe0HOeQE88hqfb3Q8OgiFR34X0CHQfKfsgfdHN0p4DcAQoZhNv1HOhhMCdAhmoM=
-X-Received: by 2002:a05:6102:292b:b0:4bb:e8c5:b149 with SMTP id
- ada2fe7eead31-4c85539e126mr8042397137.7.1744026366667; Mon, 07 Apr 2025
- 04:46:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OaJDKY/R"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378doqU017417;
+	Mon, 7 Apr 2025 12:15:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lpKXWdbZ6uDIt0ao6qPO3cTRr0H9W284LRqjSX/AeZ8=; b=OaJDKY/RLDzcQL0p
+	8FfQUF4idUJD+fa1rIkq22jFHszLuGd1MxtfZFbfHAnnG3MNd9Ix1UecjjP+xNgA
+	HrEk82CIIEg341gEBc+F/Lx/FX2GlYnzer1CxcyLeD/Qu2lLy23PutjNMEm+UOT2
+	8U497EJkHVREywRPNMrRALVllTMhrnMA9jXSU7uQAXsYLWe/UnIbY/Q+jU/4V9t0
+	LTPfKpbpKXf1jXeNZT6gXyYSCDcyuP4YXGD2ZN2f305rIW+JbadRXidjA6larizf
+	OPN+BnSSABdyHeKDO3P0qQuJ0iOm80HvqzOJjlGEP610F6m1NJpn0EidU9OhQq05
+	BkMgoA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3c4gf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 12:15:11 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537CFASi026799
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 7 Apr 2025 12:15:10 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
+ 05:15:04 -0700
+Message-ID: <d92c40bd-80e4-4001-beec-d25684217718@quicinc.com>
+Date: Mon, 7 Apr 2025 17:45:00 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 7 Apr 2025 17:15:55 +0530
-X-Gm-Features: ATxdqUHUzOVzZWX9xHaaGdI7CQeUYcGWMEQ1NQQGH41E_gk9k9xrAq8CaQ9neOQ
-Message-ID: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
-Subject: next-20250407: qemu_x86_64 clang-20, clang-nightly no console log but
- gcc-13 boot pass
-To: open list <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
-Cc: Nathan Chancellor <nathan@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-ufs: Add PHY Configuration support
+ for sm8750
+To: <neil.armstrong@linaro.org>, Melody Olvera <quic_molvera@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>,
+        "Linux
+ regressions mailing list" <regressions@lists.linux.dev>
+References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
+ <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
+ <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
+ <430ed11c-0490-45be-897b-27cad9682371@quicinc.com>
+ <731f1ad1-8979-49a1-b168-56e24b94f4fb@linaro.org>
+ <7b08c860-e5f1-4665-8e5e-2a6a3e26a2fa@quicinc.com>
+ <58471b67-98ab-4452-8508-d6276d47695e@linaro.org>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <58471b67-98ab-4452-8508-d6276d47695e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: pD71VMtoaa71k-ZBT0D462_dEvIZrDD7
+X-Proofpoint-ORIG-GUID: pD71VMtoaa71k-ZBT0D462_dEvIZrDD7
+X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f3c1cf cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=qC_FGOx9AAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=dZRP316qtkZ-GG2u8pwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fsdK_YakeE02zTmptMdW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504070086
 
-Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
-Linux next-20250407 and no console output.
 
-The gcc-13 builds boot pass on qemu-x86_64.
 
-First seen on the next-20250407.
-Bad: next-20250407
-Good:next-20250404
+On 4/7/2025 12:52 PM, neil.armstrong@linaro.org wrote:
+> Hi,
+> 
+> On 25/03/2025 08:37, Nitin Rawat wrote:
+>>
+>>
+>> On 3/25/2025 1:04 PM, neil.armstrong@linaro.org wrote:
+>>> Hi,
+>>>
+>>> On 25/03/2025 04:12, Nitin Rawat wrote:
+>>>>
+>>>>
+>>>> On 3/24/2025 11:40 PM, Neil Armstrong wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 10/03/2025 22:12, Melody Olvera wrote:
+>>>>>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>>>>>
+>>>>>> Add SM8750 specific register layout and table configs. The serdes
+>>>>>> TX RX register offset has changed for SM8750 and hence keep UFS
+>>>>>> specific serdes offsets in a dedicated header file.
+>>>>>>
+>>>>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>>>>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
+>>>>>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+>>>>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>>>>> ---
+>>>>>>   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
+>>>>>>   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
+>>>>>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 +++++++ 
+>>>>>> ++ ++ +++++++++-
+>>>>>>   3 files changed, 246 insertions(+), 8 deletions(-)
+>>>>>>
+>>>>>
+>>>>> <snip>
+>>>>>
+>>>>> This change breaks UFS on the SM8550-HDK:
+>>>>>
+>>>>> [    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization 
+>>>>> timed-out
+>>>>> [    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
+>>>>> [    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller 
+>>>>> failed
+>>>>> ...
+>>>>
+>>>> Hi Neil,
+>>>>
+>>>> Thanks for testing and reporting.
+>>>> I did tested this patch on SM8750 MTP, SM8750 QRD, SM8650 MTP, 
+>>>> SM8550 MTP and SM8850 QRD all of these have rate B and hence no issue.
+>>>>
+>>>> Unfortunately only SM8550 HDK platform which UFS4.0 and RateA 
+>>>> couldn't get tested. As we know SM8550 with gear 5 only support rate A.
+>>>>
+>>>> I was applying rate B setting without checking for mode type. Since
+>>>> SM8550 is only platform which support only rate A with UFS4.0 . Hence
+>>>> this could be the issue.
+>>>>
+>>>> Meanwhile can you help test at your end with below change and let me 
+>>>> if it resolves for you. I will also try at my end to test as well.
+>>>>
+>>>> =============================================================================
+>>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
+>>>> qualcomm/phy-qcom-qmp-ufs.c
+>>>> index 45b3b792696e..b33e2e2b5014 100644
+>>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>>>> @@ -1754,7 +1754,8 @@ static void qmp_ufs_init_registers(struct 
+>>>> qmp_ufs *qmp, const struct qmp_phy_cfg
+>>>>                  qmp_ufs_init_all(qmp, &cfg->tbls_hs_overlay[i]);
+>>>>          }
+>>>>
+>>>> -       qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+>>>> +       if (qmp->mode == PHY_MODE_UFS_HS_B)
+>>>> +               qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+>>>>   }
+>>>>
+>>>> =================================================================================
+>>>
+>>> With this change the UFS works again.
+>>
+>> Thanks Neil for quick revert. I'll raise the official change.
+> 
+> Any news of a fix here ?
 
-* qemu-x86_64, boot
- - boot/clang-20-lkftconfig
- - boot/clang-20-lkftconfig-compat
- - boot/clang-nightly-lkftconfig
+Hi Neil,
+Sorry for delay. I just posted the patch.
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+Thanks,
+Nitin
 
-Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Thanks,
+> Neil
+> 
+>>
+>> Regards,
+>> nitin
+>>
+>>>
+>>> Thanks,
+>>> Neil
+>>>
+>>>>
+>>>>
+>>>> Thanks,
+>>>> Nitin
+>>>>
+>>>>>
+>>>>> GIT bisect points to:
+>>>>> b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
+>>>>> Author: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>>>> Date:   Mon Mar 10 14:12:30 2025 -0700
+>>>>>
+>>>>>      phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
+>>>>>
+>>>>> bisect log:
+>>>>> git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
+>>>>> git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
+>>>>> git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
+>>>>> git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
+>>>>> git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
+>>>>> git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
+>>>>> git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
+>>>>> git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
+>>>>> git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
+>>>>> git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
+>>>>> git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
+>>>>> git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
+>>>>> git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
+>>>>> git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
+>>>>> git bisect bad b02cc9a176793b207e959701af1ec26222093b05
+>>>>>
+>>>>> CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba- 
+>>>>> tester/-/jobs/229880#L1281
+>>>>>
+>>>>> #regzbot introduced: b02cc9a17679
+>>>>>
+>>>>> Neil
+>>>>
+>>>
+>>
+> 
 
-## Boot log
-<no console output>
-
-Clang-20 versions:
-  "name": "clang",
-  "version": "20.1.2",
-  "version_full": "Debian clang version 20.1.2
-(++20250330123306+5ba194972878-1~exp1~20250330003423.94)"
-
-Clang-nightly versions:
-  "name": "clang",
-  "version": "21.0.0",
-  "version_full": "Debian clang version 21.0.0
-(++20250402105505+c57b9c233a87-1~exp1~20250402225526.1363)"
-
-qemu-system-x86:
-   installed at version: 9.2.2+ds-1+b2
-
-## Source
-* Kernel version: 6.15.0-rc1-next-20250407
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-* Git describe: 6.15.0-rc1-next-20250407
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/
-
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/log
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/details/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930289/suite/boot/test/clang-20-lkftconfig/history/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27930138/suite/boot/test/clang-nightly-lkftconfig/history/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNpFdnHoEolEu77VmTYD8bmuBd/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNpFdnHoEolEu77VmTYD8bmuBd/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
