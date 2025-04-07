@@ -1,108 +1,226 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88A5CA6B
-	for <regressions@lists.linux.dev>; Sun,  6 Apr 2025 20:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743970171; cv=none; b=MDv3VfSUFCQhLWcqBWm07F9MqYrwfQaF28hVOrIyO4VTnaaDmtfty8eewMGXK/48ioTVLd5qm3P/MxHKvZsWTr0/r21gLKSWPjZWSdc8mZxnOabF0mS9VNKWNjzfohktn8iVEjp8LEfp+B08/J0KrmkAZGA+3yTwpEPqXdmH77s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743970171; c=relaxed/simple;
-	bh=FeX9Da7j7xjjvgV7fOfFrT0DEp5+G/2D7CRTyTiC65c=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Z2JNy5TGFZpydC81aN50taKe01xztYB5DZZK/w/0M1bijRuKEePlsAl2xM3qIyCd77TB1s6+hUu7oCNlwr3RBNiOLPuQJvmT76t7147sfoDiTyk1i61KOIUrBaK0axckIboNYh/yCQF9OZj/fwCASplmt2y5JkijCZma8q+qFl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+yDswIv; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D87221DAB
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 06:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744007766; cv=fail; b=kW9PErVkpuEpev/ZJBPNdNBEnOBHOoXQ7migZ/F7xS0THOjWWl9xi3qf8+bie/kN7Zn6H4cGq0/YM3rhNlO/D/DsgmkZam5B+z0taGLBD+EpSaakeJop2zctmXaKNLsG83QJXTkeGScRXv9coCJe9l9H1bSvACT/+rQo+dcHAv8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744007766; c=relaxed/simple;
+	bh=CxnfXg87LtES7IGPShyCGXRhymnQDs8YwGeYKhwNccA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=m/UU+VwRzEngD9Nvm2BQF0ePnUWwnle+TCjkQeYYJ4gJKeDSoIL0FoEUOm3MiKsnhzy1fYS98KKL4DZSOqv5JwmYF1vnPe/CvymzEIwJmnTmkdKTO5xAkQtJ2zX7vyL7yMKlFL8RYTM2LgTXIJcyucP0t6yx28wDCbBcB2c2PO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3jAmZzXu; arc=fail smtp.client-ip=40.107.243.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+yDswIv"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54af20849bbso897424e87.0
-        for <regressions@lists.linux.dev>; Sun, 06 Apr 2025 13:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743970167; x=1744574967; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PoAocNUJiNbZNsfCBlVtbpA5Lz/4VCpy0zktz4e81Uk=;
-        b=k+yDswIvrP+wcZlGslOu9yCKkVweVqf2a3ggkivhK0WX7tIvM47u5A0At+YAx/DpRu
-         PttslxMolCLkjkTfDHIgaiF5ovsyQ68lMWy5EXqv4sgB+zRblXZUw5pgrvLJqQFtrH+S
-         LFXVbL1lE3Fm0VFT4nc3dVHNpHfUhzjfZW9U/E082HbOZeyFjGE5gcurp71AAbhfFzS/
-         bQOt5V9R9E0IMHspsgw0pfGuIq1hzAcE82Mnbxrvb3mR+lMrvEsiHyqbhkuw2tk5IKc4
-         UklBtHtuFY0mKnKvv01+0ihH7GB3j0QbqG8hEg2e89Yxm7pkcDepIglH0BKpmz28BTON
-         VIkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743970167; x=1744574967;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PoAocNUJiNbZNsfCBlVtbpA5Lz/4VCpy0zktz4e81Uk=;
-        b=jQCeIL76+tBOoDtltBuVWJSKBp5stV8NtblKYIqFvW+Tu0GKtSUr6Mk+dydrdV6ify
-         LIn6aeDRQZzkEIB33T6Z3U5wd+UJqOPAvLBU4ZmNXCtUpM2tueCZpk9sY1T3bI6qNlew
-         XwM1uv+1AlWkIi6oYSidlYWCqHFkZndQ7cc7HfoCb58BUzs1ho6iOjLhMOSph5ak0Zqf
-         jXHYst5dW337oI/q+SAPEufIb+b3ECxzlTO45jcsBsFwTheh3287bJineOLufXg+ja3I
-         wPsPzORxzcOHTWnF/xfb6A28dz/FsD0OzN0GlHZmCVyJriwfK8xHYFNN46psyhpxo+UI
-         jLOw==
-X-Gm-Message-State: AOJu0YwfnfshiDHutpSNsgDQQNfLhYBQspwK2jOINmVnAjQjejA+u/DB
-	U+Y2UKa74Fmn8tWNN2G/tK5BnbgkQv6yoE8JuFJZsMAATy1cPxBkXhe3HJqXMNc=
-X-Gm-Gg: ASbGncs4leB/sUcGLXivhho5iCrDjIidDlURtZVSzilBWCtcS9K0CGiTAtV6U8M13aw
-	d/ehUnUcSC0d9t8I4xzRLbSmzlqXDnhM1IK4FgAw6MwwwXWntEgg/o6jeekjNHx52idnsuC+Lg+
-	mGhymhwfnyPAXiEzr/6I6Dbfehjyjz/A5AgVLE0u+onNtI1RnAVJYJMsANH+I6GabSx3j9VwTZE
-	4zuzv6KIUHBXR7SJBjNN0+KKlx2B136U+W0UBcXGxjP2E9eD1Er6fcTgbkt8ZhJ+QYjaEY/UjWf
-	PTQbZSuq7mdUbyK32tObOsuDGoKWIogMjL3G/HcIPRLf8DzoEw==
-X-Google-Smtp-Source: AGHT+IGbiaprxVPMc6giMDKzqasfvQ47smUiuakBXi75pphPh+C1fPhpghbH5tKbjiwVS31VxDljjw==
-X-Received: by 2002:a05:6512:4003:b0:545:2b24:c714 with SMTP id 2adb3069b0e04-54c22779e5cmr2704867e87.18.1743970166953;
-        Sun, 06 Apr 2025 13:09:26 -0700 (PDT)
-Received: from [192.168.0.101] ([217.172.18.206])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e636395sm1039843e87.126.2025.04.06.13.09.26
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 13:09:26 -0700 (PDT)
-Message-ID: <5b193b75-40b1-4342-a16a-ae9fc62f245a@gmail.com>
-Date: Sun, 6 Apr 2025 23:09:26 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3jAmZzXu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lM2lpW4JtdZqEfkGaXumKZiTSwriLkE76aBEhHluF4A6GNAbhE88ZTZPr3CWobPnuHS/XvMfQWPHT6KjzcI5Qqhv8dSvuYqzRSNx+gpqi93ZKw+Nfr8aT3wwvnGCkJH/NaHcZMlqiHI6Ixw35oSto6iIO5zTiO7UGELIeGmpLWumnxcUMM21Zgs/ceh/fPbqNBGw0UWlW5SERUdFakXSceEN/M0zJrO2pVDA4sX/5QoGlewdu07DCPK7/1P8NwlxeMHCezQvzDE14YdWodgRTGodYo4kJxAWwkqtVJbSa7INTJn47zn9DnGRxBLS9d0zf6zrMTJdFNcStZ730kbGHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1sSX9nBOmplvVDMYVof3YUbxlLmHdUdoWE11fSALXwk=;
+ b=wNM8kCZ4NsAbL08EXWAV56bSuy6FnlwrXIjVZAS9GO8h+ub+YVmEn5G6xLEFHu1nB6JpizP23/eo6JxacFV4cHr57VlkQCFQUVC5B4wg8PJLu84Dz1i2qQPmWSpHi7zXWWQNjsNP101WoQMO/hauOGdhdcvogF5Yp58RldpwoMyj3ttfinkEX8eVsh3WLrb+9SFmdHLWB5urxwnBkOGI1dODeoolIEZOamz7rHAjasMSseItiMTh7wKUMPnDgbmEqixJ7CMq6iK5RK3LZDw+ghIdskbyHmDTKo54UI4ZdyRC/RvmWDI/omuqNTTOWvx4rUrVj6SWKZwLjBWbBJrlGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1sSX9nBOmplvVDMYVof3YUbxlLmHdUdoWE11fSALXwk=;
+ b=3jAmZzXuwBCzlPA9/1+InV7BYe9CTQcu3JH/gp3uVyXsEw8FkSleTB6sQekxwStmSNvYfBLswy2RyxevZPHGJaf2HHPgyzcZ+OiUKqC8fxVCbhC+IhC5UPa3knGRNR23sZn3WOvhxcwdlS0eMGkX21iW+lqT8Y7Ob8Ae59j08+k=
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by SA1PR12MB7038.namprd12.prod.outlook.com (2603:10b6:806:24d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
+ 2025 06:36:01 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%3]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
+ 06:36:01 +0000
+From: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>
+To: Christian Heusel <christian@heusel.eu>, "Limonciello, Mario"
+	<Mario.Limonciello@amd.com>, Patil Rajesh <Patil.Reddy@amd.com>,
+	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, "linux@frame.work"
+	<linux@frame.work>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: RE: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+Thread-Topic: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+Thread-Index: AQHbpZay7zR81Bhb00SU6pRyxcmz4LOXwezg
+Date: Mon, 7 Apr 2025 06:36:01 +0000
+Message-ID:
+ <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
+References: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
+In-Reply-To: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ActionId=74559179-d48e-4f27-bdba-4ef7e7ba8976;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=0;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=true;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
+ Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2025-04-07T06:35:10Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Tag=10,
+ 0, 1, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR12MB5176:EE_|SA1PR12MB7038:EE_
+x-ms-office365-filtering-correlation-id: 619c4843-8447-4a06-eace-08dd759e76b6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?MttFLwGVFS9FREwP8aAWby3Z2r45x3NyLkh+JiGrcom2nWNkhpvD85ViPk?=
+ =?iso-8859-1?Q?0z10SDX8ejqOTEq6Mu0c7tx404IuwY2HIqv16zHLBVOciC+WZwV0EwBfjs?=
+ =?iso-8859-1?Q?YaBKV/fxPmQCvQATMIkweQ76YbUeau8QhRFDpV2EbUjO2TMey6246Xm+PS?=
+ =?iso-8859-1?Q?zeO0ycAsIdjyrr3rn2n3bdERoUWs8F5X99oW6YqGysdO0uHze7K8fcqcrp?=
+ =?iso-8859-1?Q?hzGi/uGzFbPDxLJqRXs5VphmO0YR/ZxvTVl6F3Wlu7kELtmw8Kd3518RZy?=
+ =?iso-8859-1?Q?pA5WLHtq6sPHLqq5ZwI86Lzhefsnra1mgjL0+DdTrjEJMGZxBo+4JSQLEv?=
+ =?iso-8859-1?Q?QI2nkAHGP3yezDk33adOC+5ybUhWzMXnNOU0WpTWOJwKAxPPZmpiKvZFq5?=
+ =?iso-8859-1?Q?lZTabzp0K2ZSiKuj/nSACfaiLgyOG8BQE90t71viyxEzQDvw6KB95QLt2b?=
+ =?iso-8859-1?Q?V0mkvzrU1UQk6/5LU2J8u8n248+39zy1SO0WyUzYyHN65mIyAM4NdioH9r?=
+ =?iso-8859-1?Q?mm/D/x8iPyvZmmA5cZ/KVhgSjmmsX239jwgr2Yhr240kxiLT1+pAFxKr5n?=
+ =?iso-8859-1?Q?DEoO7dyGtUGoX3PfAmUZeS8VJvqi+KMH8g56NHdQ+qGJNnrTlCHtLF7Zsy?=
+ =?iso-8859-1?Q?z7dFnNQ/6kkhVWqWA6KLSLX1x2QhncPgp/HOZeK6cxNOiagvmudymWFKLn?=
+ =?iso-8859-1?Q?0tgFHOHOuT/On7YsTd7+rLE1W9/lF3G0jAtUbVus+OSD/J6tq2E57LE3Tw?=
+ =?iso-8859-1?Q?7s8nxlWOVpkENlDpS+MdQ1lEQ2tBUWAILCjRKrl0TEKbdJU8z0Q29yI749?=
+ =?iso-8859-1?Q?7qGbTp/WJXV/ognHmjAvHSj1NVib5AmeBcKhsspLhdB1ZDwwF+7PwMrJBf?=
+ =?iso-8859-1?Q?KKammJroRhTFtfb6JVP2pYuMZD7aBTMDzbOjTre1tz/MSLilQgUI2xzDgR?=
+ =?iso-8859-1?Q?70mR3WEPbKnEcpfuIuxXcvgLJFni5ohzOcydo4ag3c49m6Gb+KP0k5OvcB?=
+ =?iso-8859-1?Q?zRaDFYAIrquAU7vVJ0fIj8PDUszt065XNJwsbVbAt0LK4CGoR0bwkoyjZf?=
+ =?iso-8859-1?Q?BYONiAw4YuuwVqQrGaCZSBGE1MgEHh18UFq9znVHqfEixiczs/POB9iT2N?=
+ =?iso-8859-1?Q?stSyaOR4221AransJaIxviiOkAQHB6EoD2kPrPiv8273mKgXk5xgBp/6/w?=
+ =?iso-8859-1?Q?DZKeP1LohMgtVvvnVKi3rdjD62FtyGJQspwC/dmXdrcJxrNQy2uoX4T2Pg?=
+ =?iso-8859-1?Q?wSqiinMqsxSSngT+VaY7JPFBpmY5bLjSGWEfDCrNEGI15/f2LdftQTYczu?=
+ =?iso-8859-1?Q?2SE6T+O+9AtiRyZygPrrlAYqycKu0hwp8ay4O1CP1KOggOj4YbGrth+RzO?=
+ =?iso-8859-1?Q?sZdwo75OVq6H64A/9jGLmvvzr4VOnXpCuQ+861UdvvXtbWCz5DeKxC/fQG?=
+ =?iso-8859-1?Q?kucOJQzTCqcHE7U0s8QNzpPnX3BMaTJDPLmxoeWbwEQpXfrQvfpw2XWr39?=
+ =?iso-8859-1?Q?MpxWu5ae8TgXgskvvEFBP/wBlF8hrLSlOvt1ILeQP/uQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?NLEME2sn7xF1AxJ5xjXD7fquLRhZbbxmcd6BH+uHBBiKB9ttET+71ZCoX1?=
+ =?iso-8859-1?Q?FmJ9XhcC8EfnFqxaX0MSqeCc3ssapXxVgZecjq+eHqK7ogZjgjW5eN4Y8M?=
+ =?iso-8859-1?Q?cc/QT1YSSOaHvAcqEUFyns1PbZQtC1b0WWd7Hax6fciMLdzHiHDPN9mNMn?=
+ =?iso-8859-1?Q?mRIFVQcUpOROJ6hKQkdHJ8pMFKgWcvjuzJrj8ZND7E57EO4NQCTkzoZkuS?=
+ =?iso-8859-1?Q?dB9x4vHmodPZ6kpFCvuRTQX5OWECAleGzLTmMm4mmzFQIPy4Qyi3trjkYH?=
+ =?iso-8859-1?Q?DB4sUwkk8iVuf3/TmHxZouJRLuPwJzGUWr4YjoZVdmZThHEWIDfk0dXvj+?=
+ =?iso-8859-1?Q?OCxarKnMyqr+LTUspmLf1qE07Xf12bEAOuD9R/j8ZrkErOyVBSYS94cWV3?=
+ =?iso-8859-1?Q?GjcdGkz+kvhxitW5OH15IA/k9ZPQ/dNPhRh0GnBeXLUS8n3oDwVCHca+UU?=
+ =?iso-8859-1?Q?3PqBw3DCxm3FnJbtpDxFZmkV2Tm4bEf4olBp6Yqj3yNJYLMQhGqQ3m0Ffp?=
+ =?iso-8859-1?Q?huoP2E6h2HFAztQCMLNWz4HG8cK2XIPJJi8s0khSc7tgo2d/Xt2AAE23m6?=
+ =?iso-8859-1?Q?rciyt2RhQqQ2ZsuKB+aC4lrpo93Mmsr/a1PS3/KgJb5AMKNUl4ViFd0TYa?=
+ =?iso-8859-1?Q?ToejsuQpEymSunCPG10d1dSvMC5fvXZ/NDO56ebU/vL543g0ApMv4JrxTQ?=
+ =?iso-8859-1?Q?i5YfaX6YCCbaWsHKBv4wv2vHzCbeC1CccaPBI82FI7GPUByYXlSBgRFHvL?=
+ =?iso-8859-1?Q?sxvl6nlaQD8Osgetex7oODS9h3aAXl17/j02zxHEzVhYLRBCoKTXkn3a2v?=
+ =?iso-8859-1?Q?HxVX2PBOoEJtwLrwvF2uDehtSN6J3ym3J0i/CIh93xQDEjRxaI9s4IcIXe?=
+ =?iso-8859-1?Q?KotWYCkaiGw/pKxQHoYnCouRdECtzohElaOL4t0QLj+PDwQnHCttDG+nGm?=
+ =?iso-8859-1?Q?JaNQvhjAmUVq2bDRGhHnhoT+MQ31O1UP768NyN8w6t46JwhSoDHMjNxdrB?=
+ =?iso-8859-1?Q?QDb2/vAgiX5GSgUbuFnbIhXoXUN1WyZxjvtWEJWDBxFJkaXoI63XPh5L63?=
+ =?iso-8859-1?Q?wmNviVc+Mip9rfLOawuIu9tPvlSuSOec+ScWivx7NHx580qD6qpG3ENC33?=
+ =?iso-8859-1?Q?ajly1YO88jCNnpxob2FdelVe2e8r4Isz+bvigfPOEjikuilul9ubjmn+kP?=
+ =?iso-8859-1?Q?ZQCN5xmkCiWWiqnHy/9F4NbyFULzy6UXbEG6H1KoTld/1CX7xnt/4/0oDe?=
+ =?iso-8859-1?Q?Pp3h4sXzj+CwY1m7vz+fgZQyJMLPFfDtIjvY3U259mikfHHVYd9iXqtP5u?=
+ =?iso-8859-1?Q?aHmGyOOTUSou7bsVnohdie42sd1WaZS5yx9YNx+u1zsDJvigp+E6934ri7?=
+ =?iso-8859-1?Q?xxFEprMVknCOBScC1+wR3V3QCOePq3CoD5CcuKh8z8zFF29t1FKFhN0Q0R?=
+ =?iso-8859-1?Q?rqkoYpCB7VjlgHKBNGCjo817NM6Xjwfx9crYxfP/AZk06UbQU62k76b3aP?=
+ =?iso-8859-1?Q?5vfgQMeS6WBcTPo9E7b5PhESWtN/Q4ZwH5xPP8592FZx89/ntj4dSxm4hk?=
+ =?iso-8859-1?Q?F9Nw23tIEjltdAhSZLObIU3cZ66UENXTMV2xhyZGTq+NBQVelsn/Mp5ZWW?=
+ =?iso-8859-1?Q?bOR15k+GpQRy0=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: regressions@lists.linux.dev
-From: =?UTF-8?B?0KHQtdGA0LPQtdC5?= <afmerlord@gmail.com>
-Subject: [REGRESSION] Intermittent video signal on IPMI on Supermicro
- X9DRi-LN4+/X9DR3-LN4+ motherboard after kernel upgrade to Linux 6.13.4
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 619c4843-8447-4a06-eace-08dd759e76b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 06:36:01.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: POHlftX7PlaHmaS2QVRk12v6V8q0vFFMu9dhvr7EJDJ01ss94ciT14aK2xHDZ/6NcGc59L48KG/nmPdkbOXECA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7038
 
-Good afternoon, everyone. I have a server with Supermicro 
-X9DRi-LN4+/X9DR3-LN4+ motherboard with Arch Linux installed. After 
-upgrading the kernel to Linux 6.13.4 after booting the system when 
-connecting to IPMI KVM I have constant video stream disconnects that 
-resemble a blinking monitor. I'm pretty sure it's because of the kernel 
-upgrade, since I only upgraded it. I ran git bisect and found the 
-problematic commit.
+[Public]
 
-|# bad: [def122b64e37daa39774d4afa433ad42b8a5eaf3] drm/nouveau/nvif: 
-remove client version git bisect bad 
-def122b64e37daa39774d4afa433ad42b8a5eaf3 # good: 
-[754c9129b9494b2b058add1d1a627fb3c9466a03] drm/mgag200: Use hexadecimal 
-register indeces git bisect good 
-754c9129b9494b2b058add1d1a627fb3c9466a03 # bad: 
-[aa48c30f096bc10a583c2294d87713f2802986c2] dt-bindings: display: panel: 
-Document Densitron DMT028VGHMCMI-1D TFT on ILI9806E DSI TCON git bisect 
-bad aa48c30f096bc10a583c2294d87713f2802986c2 # bad: 
-[7e33fc2ff6754b5ff39b11297f713cd0841d9962] drm/panic: Add missing static 
-inline to drm_panic_is_enabled() git bisect bad 
-7e33fc2ff6754b5ff39b11297f713cd0841d9962 # bad: 
-[02fa62d41c8abff945bae5bfc3ddcf4721496aca] drm/stm: ltdc: reset plane 
-transparency after plane disable git bisect bad 
-02fa62d41c8abff945bae5bfc3ddcf4721496aca # bad: 
-[d6460bd52c27fde97d6a73e3d9c7a8d747fbaa3e] drm/mgag200: Add dedicated 
-variables for blanking fields git bisect bad 
-d6460bd52c27fde97d6a73e3d9c7a8d747fbaa3e # good: 
-[e8f834b559621d634a939381caf99a024e272211] drm/mgag200: Use adjusted 
-mode values for CRTCs git bisect good 
-e8f834b559621d634a939381caf99a024e272211 # first bad commit: 
-[d6460bd52c27fde97d6a73e3d9c7a8d747fbaa3e] drm/mgag200: Add dedicated 
-variables for blanking fields [afmer@Furina-PC linux-torvalds]$ |
+Hi,
 
+The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from the "/li=
+b/firmware/amdtee" folder, which is causing the issue. This is because ther=
+e have been some last-minute modifications to the TA firmware, and as a res=
+ult, the firmware has not yet been updated. I will inform you once the upda=
+ted TA firmware is available, so you can provide your feedback at that time=
+.
 
+Thanks,
+Shyam
+
+-----Original Message-----
+From: Christian Heusel <christian@heusel.eu>
+Sent: Saturday, April 5, 2025 00:50
+To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Limonciello, Mario <Mario=
+.Limonciello@amd.com>; Patil Rajesh <Patil.Reddy@amd.com>; Ilpo J=E4rvinen =
+<ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>; linux@frame.work; platform-driver-=
+x86@vger.kernel.org; linux-kernel@vger.kernel.org; regressions@lists.linux.=
+dev
+Subject: [REGRESSION][BISECTED] Firmware load error for TEE on Framework De=
+sktop
+
+Hello everyone,
+
+I have recently noticed an issue on the Framework Desktop where the followi=
+ng error pops up in dmesg after upgrading to any version beyond
+v6.14:
+
+[   12.136102] tee tee0: Direct firmware load for /amdtee/f29bb3d9-bd66-544=
+1-afb88acc2b2b60d6.bin failed with error -2
+[   12.141252] input: HD-Audio Generic HDMI/DP,pcm=3D8 as /devices/pci0000:=
+00/0000:00:08.1/0000:c1:00.1/sound/card0/input8
+[   12.141601] failed to load firmware /amdtee/f29bb3d9-bd66-5441-afb88acc2=
+b2b60d6.bin
+[   12.141843] input: HD-Audio Generic HDMI/DP,pcm=3D9 as /devices/pci0000:=
+00/0000:00:08.1/0000:c1:00.1/sound/card0/input9
+[   12.142005] failed to copy TA binary
+[   12.185200] Failed to open TEE session err:0x0, rc:-12
+[   12.185202] amd-pmf AMDI0105:00: Failed to open TA session (-12)
+
+I have subsequently bisected the issue within the mainline kernel tree to t=
+he following commit:
+
+    376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibilit=
+y with new PMF-TA")
+
+The error is still present in the latest mainline release 6.14 and sadly te=
+sting a revert is not trivially possible due to conflicts.
+
+I also noticed that there is a commit with a fixes tag for the one we have =
+bisected to, but it's included in the same release and therefore does not s=
+eem to fix the issue at hand:
+
+    5b1122fc4995 ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_=
+pc()")
+
+I have attached a dmesg output from a good boot and one from the 6.14 where=
+ the failure occurs. I'm happy to test any debug patches or provide more in=
+formation if needed.
+
+Greeting,
+Chris
+
+---
+
+#regzbot introduced: 376a8c2a1443
+#regzbot title: x86/amd/pmf: Error on firmware load for TEE
