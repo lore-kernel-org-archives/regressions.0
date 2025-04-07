@@ -1,251 +1,218 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2045.outbound.protection.outlook.com [40.107.220.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEE022A7EA
-	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 12:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744028136; cv=none; b=m/yG9BSb251lGRexnY6dbpfzwgPk1qcQ1cX0Qbnd6/AOW1s6SW0jHmINfE06rW215QkvTHu+hMi0aJk5FZ/6P2QD8xMLPF54lAhxtr0n6Lb9cVlBXkhMQg5rj01uzXGi8c8fTogfC1p0iRmJm9gJZ2gNx2nrClIgJUQph6ErWT4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744028136; c=relaxed/simple;
-	bh=evSEeTaud9wvWh76rfmaHktnwaq3LVmy+wiThtOpVD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dJfiqZOSe+z3Prb7j0tYcCwY4F9JSuYNoDuP8CyCuro7P09NwaJMzAouo5rXmRsQkTmalIgWj6RmbMy7rxECZ23g9Y58gK16/wdqXA2uwm2ZdI3KD7JLb1M33vSsKe45EbtgT3orikWt78XAaFUVQ7BmEKWgsqDQIX+5YqITcdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OaJDKY/R; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659FB221F29
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 13:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744032057; cv=fail; b=EBdrSOnhLgaCMloaA5F5gsEXbtLBQzZnjIvpjNxMRSHaRlfaWb+flGCSJAOdtX5AL+AgpvwayNiv9JyYIiS4l0paA/1E12bjOgKDZeYlEnXz/fe2YB5tnQ4Ja3fuCIVrrWaafF2UdjpIZOKcIWM/DuSc5iDVhLCFDe6JbxVcPXk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744032057; c=relaxed/simple;
+	bh=9saPgsFApkJwDobmerjZ4baG0UWuXogQQpNP1qhirWE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jnV9ShTsDrRhttiYiiw9LhbckkiJgqN4jI7zKpBUqhbVT+3lEC2XHsXARZPmMvP2eW8M/sbH7e7eFn3J2JpK/NiXyxTQJsx0vdhT83yZJcT17U9NRMWIA/US/lUYHwCSAYgmWeZqdX6n8jD84V+Ti3CyN0Oo7P6ClSSOgG/YFYU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oyAcm8bd; arc=fail smtp.client-ip=40.107.220.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OaJDKY/R"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378doqU017417;
-	Mon, 7 Apr 2025 12:15:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lpKXWdbZ6uDIt0ao6qPO3cTRr0H9W284LRqjSX/AeZ8=; b=OaJDKY/RLDzcQL0p
-	8FfQUF4idUJD+fa1rIkq22jFHszLuGd1MxtfZFbfHAnnG3MNd9Ix1UecjjP+xNgA
-	HrEk82CIIEg341gEBc+F/Lx/FX2GlYnzer1CxcyLeD/Qu2lLy23PutjNMEm+UOT2
-	8U497EJkHVREywRPNMrRALVllTMhrnMA9jXSU7uQAXsYLWe/UnIbY/Q+jU/4V9t0
-	LTPfKpbpKXf1jXeNZT6gXyYSCDcyuP4YXGD2ZN2f305rIW+JbadRXidjA6larizf
-	OPN+BnSSABdyHeKDO3P0qQuJ0iOm80HvqzOJjlGEP610F6m1NJpn0EidU9OhQq05
-	BkMgoA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3c4gf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 12:15:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537CFASi026799
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 7 Apr 2025 12:15:10 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
- 05:15:04 -0700
-Message-ID: <d92c40bd-80e4-4001-beec-d25684217718@quicinc.com>
-Date: Mon, 7 Apr 2025 17:45:00 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oyAcm8bd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=erhoSBzvxbOzqdbGfYIQjLRYEurHetVXfVJ+nGxvFqs4KU5SGbtpwJGPwXgj65Wh1/cvM7NgdmhH28auD/n1GhcWzYHqap5jE8Tud0pLK02DBPttn0aOY2TYeU8CsowTDTNcIkR9DV7ZxLFpfACcQRYhnLdivugH70n4a78cLkzOx10Dn1LYWX0XC3EHS8JbbLSYawqCzFJwdsHbwDdJLbAUm1W7fOhgVsFAAG8lHdfDgc+T26+f5a4uGocH27UEJeTf2Qtp5mvJSbC50a4zJkJVOZs7rtl22v7bkQvTE7CILV28sRxrI+w/baNIuWgfBmgrWfBAjcOgB198QLHJwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BV/exWGnZopebOnSLHxMJ7NX0MTUeABNpB5ZdGYKhlA=;
+ b=QHNME6t+eynMrO9JG7V6eWxDTOh9Ar8dD6a4S61u5hlGgUAVCzLns20KK1mB5EHIELOUkZZoFw1hKiebHnsbyd5DWRGVH3ZfMSEX23vvWpUm02iium8R/5/9DSw2TDphXld7WkVP1IZGl7eJbL1C+kTLjDVjTDN+8DwiiuH++Z0CbbNZ0rhuSmsVFd0eDx5Twciv/d++KIVboqGxOu9nB7+HhZMv3XeqhqBE4ubabW5lMToMC6J3snj3vPULbvXBi4U+iMvlqPMGwY57/6rxX5eFN7fkjWR/611FpFvCRgy94N+WxMo7Hlw7LpxqlOZu3m7Ju1OU0mquNzMMTEWfKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BV/exWGnZopebOnSLHxMJ7NX0MTUeABNpB5ZdGYKhlA=;
+ b=oyAcm8bd/IRkNJsUvUK3xVYgNJiHlVVqNnv1nDCTuXjjBaVe6eN6+RJZF+p0wOoUg4H/8kx97j4ULyoYxYMoQb/IUOP1VKhkMeg1b33YSwUbgK2r+skD68TFTFc2pTphDCpWON34Fqn3be5dWCNaPAYSCdHy8dAPohaGPwy5Sgs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN0PR12MB5785.namprd12.prod.outlook.com (2603:10b6:208:374::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.46; Mon, 7 Apr
+ 2025 13:20:49 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8606.033; Mon, 7 Apr 2025
+ 13:20:49 +0000
+Message-ID: <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
+Date: Mon, 7 Apr 2025 08:20:47 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+To: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+ Christian Heusel <christian@heusel.eu>, Patil Rajesh <Patil.Reddy@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, "linux@frame.work"
+ <linux@frame.work>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
+ <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:806:20::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-ufs: Add PHY Configuration support
- for sm8750
-To: <neil.armstrong@linaro.org>, Melody Olvera <quic_molvera@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Satya Durga Srinivasu Prabhala
-	<quic_satyap@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>,
-        "Linux
- regressions mailing list" <regressions@lists.linux.dev>
-References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
- <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
- <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
- <430ed11c-0490-45be-897b-27cad9682371@quicinc.com>
- <731f1ad1-8979-49a1-b168-56e24b94f4fb@linaro.org>
- <7b08c860-e5f1-4665-8e5e-2a6a3e26a2fa@quicinc.com>
- <58471b67-98ab-4452-8508-d6276d47695e@linaro.org>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <58471b67-98ab-4452-8508-d6276d47695e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pD71VMtoaa71k-ZBT0D462_dEvIZrDD7
-X-Proofpoint-ORIG-GUID: pD71VMtoaa71k-ZBT0D462_dEvIZrDD7
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f3c1cf cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=qC_FGOx9AAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=dZRP316qtkZ-GG2u8pwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=fsdK_YakeE02zTmptMdW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070086
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB5785:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08d6def4-c634-4ff5-0273-08dd75d70359
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QmU5bTRSZHY4SzNCTng4MVVBREZnMXVLR2xPVTJrQlZtMUIrQ0pWVHJhOVUw?=
+ =?utf-8?B?SHpTOHR6YnJnZEQxVWhWZXVUbkZvRTMyL0NHNXZ0d2hwMm5ERzRWaEdqaVpv?=
+ =?utf-8?B?MVBqaWJrY1l2elRCdTFGMkU2VTcrME9JZG12L2RmRmxVbEpUcFFtVUsvUlls?=
+ =?utf-8?B?bVRRQzdoN3JhLzB0d0xhdXRyQVFSbXRkbEtJd01jTDNwMFk1WWxrdGtTcVAw?=
+ =?utf-8?B?R0l6NHUxaXBpRTRwaW5SYm9BRU12ZStTK1YvM0JiREdRZ3BJYjNISTF2Ylpr?=
+ =?utf-8?B?bXpjYXZrYUJwN3pLcERBZ2pXY3RleGUrZWdUQWtiTWY2ZVl0L3NtYUNVaDJq?=
+ =?utf-8?B?YWoxRzVUYVA2VkdhcTQ0ek9UYkFlaGkvZmFLc3k0QVR6dmhkVmxodU9QdjVE?=
+ =?utf-8?B?SWZJRkFkQzZCWTkvdEs0eUdZN3RzN1FPMGR5OGk5dU9uUUpyNjFlaXAzK2xm?=
+ =?utf-8?B?bDFwRjNwWGg1bW5CZVBWK3UrZkFnM3JPM1A4UkZlR2VScC9aSzdiQ1pzSjdn?=
+ =?utf-8?B?QWppZzdYU3Z5RlVLdjZJaGsraTFtMDJUQ2htZlNqWVJDQzd5TFVYSWFCZUtS?=
+ =?utf-8?B?bDNYMHNVV1FuYW1tdUZOSGk1VjMvTDFqQmVrcmwveklDbEJmYWgydGlzU0Jy?=
+ =?utf-8?B?TWhOUFIrRW4vK1JwSVBKaVdSUWtvZ0ZNZFlyV0tBUUgzSmErTHRqeHRKdnhG?=
+ =?utf-8?B?c20rbjhod1VqS0g0UGh6MzVEZkQwZmZNd1Q5QTRqT3NBVlAzMXRzc004NTB4?=
+ =?utf-8?B?K1FpVE9ITVdQNUdsQ24wYW1hS3l3Zzc5M0w3bC82SXJBMzlWUEQ5Tmk5WnhQ?=
+ =?utf-8?B?TTdBcGhpaWppcnExQWozQWZxNm9aRnI3aWVHazlzMWg3M0hhMzRIYWRNNzV0?=
+ =?utf-8?B?SlRVWXlKejMzSWE0MTIzbnVtbWlIWnVzeUdQZXQyV3h0Q1kvbDVlSjlveno0?=
+ =?utf-8?B?dllhZjI2aU44cUJzU1RxUEZKWkJMclA0eFpsMFdESFpuQ0xvNWZtYmZuVXpJ?=
+ =?utf-8?B?QlJ5VGNWaEVQTllndmV1V0F1SW5oSlY5TXBTSWcvVVZUUTdRZWlza0cyQWZz?=
+ =?utf-8?B?SXI4S2xSVThkL3MxV2w2WjNtd2kzR2dOdVNiM0FldVJFbW40dnZTSjdNcGxE?=
+ =?utf-8?B?eUxIZ3drV0hTTTE2dFF5eHN3aklUTG9mMkRMd2s4dXduOGlTK21BTEtiZmQ5?=
+ =?utf-8?B?RzVvTnkrMXEwK3dqRGtNVDZjWDVhUnBFamsySVh2OTZPdnhvZTlGeDVlVW0y?=
+ =?utf-8?B?NGd0VTl1Y0Vlczh2cWdHRXhxQzZZQi82ZkNFR2w1ekREMmdKWEZnSXNYQ2hX?=
+ =?utf-8?B?VFRyNTNFeGlTakprM3ZzM25vYjU3YXEzMStpNVpmMU05Mkc3Z1RDYjkyUTRl?=
+ =?utf-8?B?RXdQOWN1VTRFcnpXMXo0RnhHVjNybituQ0ZMVndOTU5yV0lQTHV2UlIwbGE4?=
+ =?utf-8?B?d1dtamlKZkJ4RFYyRmhMNXJqK0hCZlhPeXZSQk42NGpuaGE0cmRZU2I5eUkw?=
+ =?utf-8?B?N1BjTEFxbkVhbFJOUnRqZXJnYjNMenU2M2Z4Y3V1U1pqeGt5NnBwK3VLQzZm?=
+ =?utf-8?B?eitLVFRlcGRxV0w1S1pxT252TFdsaEF1K2cvbTFBMndPdmF4REpYT015bnY0?=
+ =?utf-8?B?V1V1eXByVk9jWGljdTZZL0txK3BXYXNsQTErR0d4cjFIaGM3SmZRZUc0R3B5?=
+ =?utf-8?B?dlV2OXhFY1NUUmR5OUdMTTFmaU0vQnBqZXpIckE1Uk1ITFpaVGZsclc1MEhN?=
+ =?utf-8?B?N1UrL1d5VUxxaXNSNWg2WFFTQlZJYmFvczZBRnFlcmhuL0orVkVMbHhYU2po?=
+ =?utf-8?B?T0pYSHRJWUlOcWJTdWh1MzZPc2dWakNVc3dpSEpKU2ZmKy9nNUFHMzlvZ2h0?=
+ =?utf-8?Q?FEtu5YmDCf2kl?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R2NnWGV0S1ZSOVlrUUFITHRBZ2psQ3pZS0R4anlqSDE0OXdxQnlWOGUwSHh6?=
+ =?utf-8?B?U056RHl6NzF6dGNZTmdIcE9LeWRzZkQ5dXN6TTNiUDhaS3lFZlcrUUJVZmFy?=
+ =?utf-8?B?bkdKbHQ4TkNCK2hFbTNlN1FYOGlCdFZabEV5MDNiZzNuSHZxbzRRYTBET1ls?=
+ =?utf-8?B?NlF1VW1yM05yVDN3dHBCczdFQys5LzFLS3RqbDlrZ0xvelY4UklEWTUxOE41?=
+ =?utf-8?B?WitJNk0vUUN3Q295bEhQUkxHSkk3Y2NjTVUydDFkN1Fob2MxRVdMYmpTSzVv?=
+ =?utf-8?B?NU8zM0dOOGRKcW02ejF6Y3N1cFRoOWp2OUw5SmNLQ3RVcmM0alo2S2pyZ04y?=
+ =?utf-8?B?T09hc255eG5hMkFuVjFKKzNzbGtXa053eHJzUUduenBKcFlMaHhiMktIQW5u?=
+ =?utf-8?B?QUxlZDJDN0g3RHB1RHRKNGt6NEpSNWFkeWxLVUpiVDBwOFB3c0RVcHRBRnpT?=
+ =?utf-8?B?Si8xNXZpSkVCWXdYQWxJSDV1MFA0WjlJd3ZwdFQvQUZpQVM3c3dzT0VzYnh1?=
+ =?utf-8?B?dnQwWUZpRkFWL0JoUnEwby9iTUx1ZXVvb0FiUyt4NUpqRitUK3pYaGRqV2li?=
+ =?utf-8?B?MGJXWGlkY0ltZHArb0FqVU1vYzkxSkpGZFlqcVY1TkJiVmJYRC82ZDdFWnFy?=
+ =?utf-8?B?K0VBblhyN0dBVU9iVFN3Mkp5blRhZk5ZaVNTZFdHZHRPMkRtYk5SdkMzNW9o?=
+ =?utf-8?B?eklFallKTnVmRk1FQm00aVdaK2thTlJldW40cllCUG50dndrSGNIWS82Tm9P?=
+ =?utf-8?B?cXhITlB0dERXRXd3QzRHT2lVSWpiSERac2l0SzhBVlA1ZW43bk12N08rKzV2?=
+ =?utf-8?B?bGNoUmxrT1RoRlMxV1BObWQ3SkVGK0dNR0pxN29tUCtHUUFXMkdnam5rY0dP?=
+ =?utf-8?B?enJPczd3UVk3L216NGhBRFA5QmtsUC96OFpseHh3UUF3RERJQjZPQkFGSDBZ?=
+ =?utf-8?B?Wm9VempZZlVKQzJKdDV2MUtDSWM5WjVVdzhXcGhTdjJXdHhDOFhoL0I1aklp?=
+ =?utf-8?B?dlFHRE0zZkYzaG1XL0hrOTlLTFZXdURFZ3hhVFhNdk5DeTJaZHZ4K2YvaTgy?=
+ =?utf-8?B?bEtOQnBwKzArZU9PNFR6OGZtMFpYaTJVZWJoU0JrUkc2U2trZVdIeEt6aEI0?=
+ =?utf-8?B?d25DeVdnQkI0MSs3cXhHSmlvZktHVk9GYUxYdUR1YjJPQnNiMDZCWVNRcmtS?=
+ =?utf-8?B?dXJaZXYxc2t6WVhuYVZWQy80ZU00MzUrOVI3d3ZpNS81amFwR1VHcWdxL1Qv?=
+ =?utf-8?B?THZQcTU1dWtZTUwyYURHZmszODljb05idW5UWVlKYWpieU05TTNnNktIci9M?=
+ =?utf-8?B?WittWnhlbjFPWDE1VTU4QldkcFpiYlpnWVRwT3BoV1hoTHhveXhHcVEvNGpr?=
+ =?utf-8?B?VFdDR3hnYllPR1NGK1pobUh5cjFrTFVkejBQRDFkUUFBeHNlazJzM3FTaXlu?=
+ =?utf-8?B?dkx1bG4yallkY1JJSldRVldwQmhyMmp2NkIrVmV6Y0lzVVVlOXJrKzZoUHVz?=
+ =?utf-8?B?Y25TT2d4aXgxcXZSM3hNb052d205cFEwT0NleWlML2xuNWgxWWRVZEttL2JP?=
+ =?utf-8?B?WjZTU1gxZEdTWWI2UVV2K1F5OU9tTkdaeVFzcVBSSDBad1B0R3dBODl5Ymph?=
+ =?utf-8?B?TzdidmMwZlVmQmplejljQlZSMk1NeVNETGRSOWU5SFBHUmhXZlJiWXNNdEJl?=
+ =?utf-8?B?MDJXN1hON1BudXFFZTJIbnNJcEhYKzAwa0lmNGFLTlJNR1lKYTdZdzFtN3Nt?=
+ =?utf-8?B?WjV0d3hmSEdqcmxvbGpIWC80Ny85d2VKd0NwYUZLTlZPS2k3bUo5RTIycmxY?=
+ =?utf-8?B?bTNRU0NlYkEzK0dwLzh0clZtQUdVSkdnN0tXVzVUK205RDNXSXZ4Z2tQVTlF?=
+ =?utf-8?B?a1FvR29NSU9tak1aL0tHeFRsZTNGWkIyN0lJOXlYdVVuQzVaYmVNY1BoalJP?=
+ =?utf-8?B?NlVrbnRwV1Nvc0kzdlZKeXlJVHRESkV1cm9rVDAxT0FqNlhLUVlUQlRtK2Mw?=
+ =?utf-8?B?OWF0WUJwK2x6SEIwUWxXVFdseFlwMnhndER4ZktwYTcvNzQrVFgrdHhVcWZq?=
+ =?utf-8?B?RUhOdnNqaitnMTZPTG9EaHdVbkgydjFQN1BZTzRQdUY3RHpVZXQrZjdENWtD?=
+ =?utf-8?Q?urulTLh0T6OedhN5whzVv8Eei?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08d6def4-c634-4ff5-0273-08dd75d70359
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:20:49.3239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gk6kQExPk33Ql/iyFFmfW3c8QvhU01VudER7MDzqyqIlrR+cPGuYnn7SVG+TS7rU3o3SGFgjSqbFfTaDIjAFjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5785
 
-
-
-On 4/7/2025 12:52 PM, neil.armstrong@linaro.org wrote:
+On 4/7/2025 1:36 AM, S-k, Shyam-sundar wrote:
+> [Public]
+> 
 > Hi,
 > 
-> On 25/03/2025 08:37, Nitin Rawat wrote:
->>
->>
->> On 3/25/2025 1:04 PM, neil.armstrong@linaro.org wrote:
->>> Hi,
->>>
->>> On 25/03/2025 04:12, Nitin Rawat wrote:
->>>>
->>>>
->>>> On 3/24/2025 11:40 PM, Neil Armstrong wrote:
->>>>> Hi,
->>>>>
->>>>> On 10/03/2025 22:12, Melody Olvera wrote:
->>>>>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>>>
->>>>>> Add SM8750 specific register layout and table configs. The serdes
->>>>>> TX RX register offset has changed for SM8750 and hence keep UFS
->>>>>> specific serdes offsets in a dedicated header file.
->>>>>>
->>>>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
->>>>>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
->>>>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>>> ---
->>>>>>   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
->>>>>>   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
->>>>>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 +++++++ 
->>>>>> ++ ++ +++++++++-
->>>>>>   3 files changed, 246 insertions(+), 8 deletions(-)
->>>>>>
->>>>>
->>>>> <snip>
->>>>>
->>>>> This change breaks UFS on the SM8550-HDK:
->>>>>
->>>>> [    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization 
->>>>> timed-out
->>>>> [    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
->>>>> [    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller 
->>>>> failed
->>>>> ...
->>>>
->>>> Hi Neil,
->>>>
->>>> Thanks for testing and reporting.
->>>> I did tested this patch on SM8750 MTP, SM8750 QRD, SM8650 MTP, 
->>>> SM8550 MTP and SM8850 QRD all of these have rate B and hence no issue.
->>>>
->>>> Unfortunately only SM8550 HDK platform which UFS4.0 and RateA 
->>>> couldn't get tested. As we know SM8550 with gear 5 only support rate A.
->>>>
->>>> I was applying rate B setting without checking for mode type. Since
->>>> SM8550 is only platform which support only rate A with UFS4.0 . Hence
->>>> this could be the issue.
->>>>
->>>> Meanwhile can you help test at your end with below change and let me 
->>>> if it resolves for you. I will also try at my end to test as well.
->>>>
->>>> =============================================================================
->>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
->>>> qualcomm/phy-qcom-qmp-ufs.c
->>>> index 45b3b792696e..b33e2e2b5014 100644
->>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>> @@ -1754,7 +1754,8 @@ static void qmp_ufs_init_registers(struct 
->>>> qmp_ufs *qmp, const struct qmp_phy_cfg
->>>>                  qmp_ufs_init_all(qmp, &cfg->tbls_hs_overlay[i]);
->>>>          }
->>>>
->>>> -       qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>>> +       if (qmp->mode == PHY_MODE_UFS_HS_B)
->>>> +               qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>>>   }
->>>>
->>>> =================================================================================
->>>
->>> With this change the UFS works again.
->>
->> Thanks Neil for quick revert. I'll raise the official change.
-> 
-> Any news of a fix here ?
-
-Hi Neil,
-Sorry for delay. I just posted the patch.
-
-Thanks,
-Nitin
-
+> The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from the "/lib/firmware/amdtee" folder, which is causing the issue. This is because there have been some last-minute modifications to the TA firmware, and as a result, the firmware has not yet been updated. I will inform you once the updated TA firmware is available, so you can provide your feedback at that time.
 > 
 > Thanks,
-> Neil
+> Shyam
 > 
->>
->> Regards,
->> nitin
->>
->>>
->>> Thanks,
->>> Neil
->>>
->>>>
->>>>
->>>> Thanks,
->>>> Nitin
->>>>
->>>>>
->>>>> GIT bisect points to:
->>>>> b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
->>>>> Author: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>> Date:   Mon Mar 10 14:12:30 2025 -0700
->>>>>
->>>>>      phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
->>>>>
->>>>> bisect log:
->>>>> git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
->>>>> git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
->>>>> git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
->>>>> git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
->>>>> git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
->>>>> git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
->>>>> git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
->>>>> git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
->>>>> git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
->>>>> git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
->>>>> git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
->>>>> git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
->>>>> git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
->>>>> git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
->>>>> git bisect bad b02cc9a176793b207e959701af1ec26222093b05
->>>>>
->>>>> CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba- 
->>>>> tester/-/jobs/229880#L1281
->>>>>
->>>>> #regzbot introduced: b02cc9a17679
->>>>>
->>>>> Neil
->>>>
->>>
->>
+
+FWIW - this below error is noisy but should be totally harmless on the 
+Framework desktop as well.  AFAIK - BIOS on FW desktop doesn't contain 
+any PMF policies in the first place.
+
+> -----Original Message-----
+> From: Christian Heusel <christian@heusel.eu>
+> Sent: Saturday, April 5, 2025 00:50
+> To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Limonciello, Mario <Mario.Limonciello@amd.com>; Patil Rajesh <Patil.Reddy@amd.com>; Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>; linux@frame.work; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; regressions@lists.linux.dev
+> Subject: [REGRESSION][BISECTED] Firmware load error for TEE on Framework Desktop
 > 
+> Hello everyone,
+> 
+> I have recently noticed an issue on the Framework Desktop where the following error pops up in dmesg after upgrading to any version beyond
+> v6.14:
+> 
+> [   12.136102] tee tee0: Direct firmware load for /amdtee/f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin failed with error -2
+> [   12.141252] input: HD-Audio Generic HDMI/DP,pcm=8 as /devices/pci0000:00/0000:00:08.1/0000:c1:00.1/sound/card0/input8
+> [   12.141601] failed to load firmware /amdtee/f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin
+> [   12.141843] input: HD-Audio Generic HDMI/DP,pcm=9 as /devices/pci0000:00/0000:00:08.1/0000:c1:00.1/sound/card0/input9
+> [   12.142005] failed to copy TA binary
+> [   12.185200] Failed to open TEE session err:0x0, rc:-12
+> [   12.185202] amd-pmf AMDI0105:00: Failed to open TA session (-12)
+> 
+> I have subsequently bisected the issue within the mainline kernel tree to the following commit:
+> 
+>      376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA")
+> 
+> The error is still present in the latest mainline release 6.14 and sadly testing a revert is not trivially possible due to conflicts.
+> 
+> I also noticed that there is a commit with a fixes tag for the one we have bisected to, but it's included in the same release and therefore does not seem to fix the issue at hand:
+> 
+>      5b1122fc4995 ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
+> 
+> I have attached a dmesg output from a good boot and one from the 6.14 where the failure occurs. I'm happy to test any debug patches or provide more information if needed.
+> 
+> Greeting,
+> Chris
+> 
+> ---
+> 
+> #regzbot introduced: 376a8c2a1443
+> #regzbot title: x86/amd/pmf: Error on firmware load for TEE
 
