@@ -1,218 +1,144 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2045.outbound.protection.outlook.com [40.107.220.45])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659FB221F29
-	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 13:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032057; cv=fail; b=EBdrSOnhLgaCMloaA5F5gsEXbtLBQzZnjIvpjNxMRSHaRlfaWb+flGCSJAOdtX5AL+AgpvwayNiv9JyYIiS4l0paA/1E12bjOgKDZeYlEnXz/fe2YB5tnQ4Ja3fuCIVrrWaafF2UdjpIZOKcIWM/DuSc5iDVhLCFDe6JbxVcPXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032057; c=relaxed/simple;
-	bh=9saPgsFApkJwDobmerjZ4baG0UWuXogQQpNP1qhirWE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jnV9ShTsDrRhttiYiiw9LhbckkiJgqN4jI7zKpBUqhbVT+3lEC2XHsXARZPmMvP2eW8M/sbH7e7eFn3J2JpK/NiXyxTQJsx0vdhT83yZJcT17U9NRMWIA/US/lUYHwCSAYgmWeZqdX6n8jD84V+Ti3CyN0Oo7P6ClSSOgG/YFYU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oyAcm8bd; arc=fail smtp.client-ip=40.107.220.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E3018787F
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 13:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744033402; cv=none; b=HXmhqmbxCHHRjdkTEUqVGlr9FI6PIxUuV/ZgguEQ918ZdUfRfz8KXFLwfeF13MqzliL4PZcSFQCdJIu4Nx242uAF8mYBwEZKluuy9YiJmPbPZzfFvNO1otY1Db2TXmeu7kgQ3+tni6x0LLdngmPNNFLK8DnsRDltO4b+eO6Q3Ic=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744033402; c=relaxed/simple;
+	bh=jrzILLsCIxZUTLE3MafGV/FTTLWLet8Gdk95AnmhE+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CsRBrups4BMu4dfER+mvgYSn4vtUhLgoTDW2TSSGqySaQsn3MnBuYjZKv66t3Hw1RktXnagN1cuj2GU1DdFDtYLpWBAxeXwRNX9eNpQThwL9Z2gxrqdbebVDgsU4pPtoNTiEzAaDWIYkdLaqElpwpwEEI4sElHQ/ipirUxuF958=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=OOLfnVJE; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oyAcm8bd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=erhoSBzvxbOzqdbGfYIQjLRYEurHetVXfVJ+nGxvFqs4KU5SGbtpwJGPwXgj65Wh1/cvM7NgdmhH28auD/n1GhcWzYHqap5jE8Tud0pLK02DBPttn0aOY2TYeU8CsowTDTNcIkR9DV7ZxLFpfACcQRYhnLdivugH70n4a78cLkzOx10Dn1LYWX0XC3EHS8JbbLSYawqCzFJwdsHbwDdJLbAUm1W7fOhgVsFAAG8lHdfDgc+T26+f5a4uGocH27UEJeTf2Qtp5mvJSbC50a4zJkJVOZs7rtl22v7bkQvTE7CILV28sRxrI+w/baNIuWgfBmgrWfBAjcOgB198QLHJwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BV/exWGnZopebOnSLHxMJ7NX0MTUeABNpB5ZdGYKhlA=;
- b=QHNME6t+eynMrO9JG7V6eWxDTOh9Ar8dD6a4S61u5hlGgUAVCzLns20KK1mB5EHIELOUkZZoFw1hKiebHnsbyd5DWRGVH3ZfMSEX23vvWpUm02iium8R/5/9DSw2TDphXld7WkVP1IZGl7eJbL1C+kTLjDVjTDN+8DwiiuH++Z0CbbNZ0rhuSmsVFd0eDx5Twciv/d++KIVboqGxOu9nB7+HhZMv3XeqhqBE4ubabW5lMToMC6J3snj3vPULbvXBi4U+iMvlqPMGwY57/6rxX5eFN7fkjWR/611FpFvCRgy94N+WxMo7Hlw7LpxqlOZu3m7Ju1OU0mquNzMMTEWfKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BV/exWGnZopebOnSLHxMJ7NX0MTUeABNpB5ZdGYKhlA=;
- b=oyAcm8bd/IRkNJsUvUK3xVYgNJiHlVVqNnv1nDCTuXjjBaVe6eN6+RJZF+p0wOoUg4H/8kx97j4ULyoYxYMoQb/IUOP1VKhkMeg1b33YSwUbgK2r+skD68TFTFc2pTphDCpWON34Fqn3be5dWCNaPAYSCdHy8dAPohaGPwy5Sgs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MN0PR12MB5785.namprd12.prod.outlook.com (2603:10b6:208:374::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.46; Mon, 7 Apr
- 2025 13:20:49 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8606.033; Mon, 7 Apr 2025
- 13:20:49 +0000
-Message-ID: <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
-Date: Mon, 7 Apr 2025 08:20:47 -0500
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="OOLfnVJE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1744033388; x=1744638188; i=christian@heusel.eu;
+	bh=nxVX+/XG3otJuF4Layjw9CHGn3CFOF+qkjVmgD6saaE=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=OOLfnVJECo/p7+m5OhqZgTNtR1kA97QDNfTkZe5a4IuE8E6aGws3SnEP/JPEQHi1
+	 vv/v3a0bKvTddAEo/iG3gRukP2eP+jNnPTGTUx7r/CNPW8qQC6XgRK2x9kOOkVGH2
+	 oejqtLvDxjL0D87HMal4qqnwTZmm44cxxmcEx0qqlJD5Xx9FW4BgN4N0o59K1sggu
+	 Xs2n2EMatsjRNxl6qGJPvWDA5bTAGIVkmNTLwOYTRXQ1KOUlUbMQXk5NozvX49oEK
+	 GQpBpaEBgs0aRu0caXrd6Eiic7AwuaGte3FuQ+01uNIleZXlwPz8X0URCkaFVDpti
+	 4AaVMsNSx4zKW3hVXA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([147.142.179.140]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MLA6k-1tjZ783ITC-00VwJa; Mon, 07 Apr 2025 15:43:08 +0200
+Date: Mon, 7 Apr 2025 15:43:07 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>, 
+	Patil Rajesh <Patil.Reddy@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, "linux@frame.work" <linux@frame.work>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
  Desktop
-To: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
- Christian Heusel <christian@heusel.eu>, Patil Rajesh <Patil.Reddy@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, "linux@frame.work"
- <linux@frame.work>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Message-ID: <d77dc639-dd7c-4a48-ae0a-26829d6fcdca@heusel.eu>
 References: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
  <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR03CA0017.namprd03.prod.outlook.com
- (2603:10b6:806:20::22) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB5785:EE_
-X-MS-Office365-Filtering-Correlation-Id: 08d6def4-c634-4ff5-0273-08dd75d70359
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QmU5bTRSZHY4SzNCTng4MVVBREZnMXVLR2xPVTJrQlZtMUIrQ0pWVHJhOVUw?=
- =?utf-8?B?SHpTOHR6YnJnZEQxVWhWZXVUbkZvRTMyL0NHNXZ0d2hwMm5ERzRWaEdqaVpv?=
- =?utf-8?B?MVBqaWJrY1l2elRCdTFGMkU2VTcrME9JZG12L2RmRmxVbEpUcFFtVUsvUlls?=
- =?utf-8?B?bVRRQzdoN3JhLzB0d0xhdXRyQVFSbXRkbEtJd01jTDNwMFk1WWxrdGtTcVAw?=
- =?utf-8?B?R0l6NHUxaXBpRTRwaW5SYm9BRU12ZStTK1YvM0JiREdRZ3BJYjNISTF2Ylpr?=
- =?utf-8?B?bXpjYXZrYUJwN3pLcERBZ2pXY3RleGUrZWdUQWtiTWY2ZVl0L3NtYUNVaDJq?=
- =?utf-8?B?YWoxRzVUYVA2VkdhcTQ0ek9UYkFlaGkvZmFLc3k0QVR6dmhkVmxodU9QdjVE?=
- =?utf-8?B?SWZJRkFkQzZCWTkvdEs0eUdZN3RzN1FPMGR5OGk5dU9uUUpyNjFlaXAzK2xm?=
- =?utf-8?B?bDFwRjNwWGg1bW5CZVBWK3UrZkFnM3JPM1A4UkZlR2VScC9aSzdiQ1pzSjdn?=
- =?utf-8?B?QWppZzdYU3Z5RlVLdjZJaGsraTFtMDJUQ2htZlNqWVJDQzd5TFVYSWFCZUtS?=
- =?utf-8?B?bDNYMHNVV1FuYW1tdUZOSGk1VjMvTDFqQmVrcmwveklDbEJmYWgydGlzU0Jy?=
- =?utf-8?B?TWhOUFIrRW4vK1JwSVBKaVdSUWtvZ0ZNZFlyV0tBUUgzSmErTHRqeHRKdnhG?=
- =?utf-8?B?c20rbjhod1VqS0g0UGh6MzVEZkQwZmZNd1Q5QTRqT3NBVlAzMXRzc004NTB4?=
- =?utf-8?B?K1FpVE9ITVdQNUdsQ24wYW1hS3l3Zzc5M0w3bC82SXJBMzlWUEQ5Tmk5WnhQ?=
- =?utf-8?B?TTdBcGhpaWppcnExQWozQWZxNm9aRnI3aWVHazlzMWg3M0hhMzRIYWRNNzV0?=
- =?utf-8?B?SlRVWXlKejMzSWE0MTIzbnVtbWlIWnVzeUdQZXQyV3h0Q1kvbDVlSjlveno0?=
- =?utf-8?B?dllhZjI2aU44cUJzU1RxUEZKWkJMclA0eFpsMFdESFpuQ0xvNWZtYmZuVXpJ?=
- =?utf-8?B?QlJ5VGNWaEVQTllndmV1V0F1SW5oSlY5TXBTSWcvVVZUUTdRZWlza0cyQWZz?=
- =?utf-8?B?SXI4S2xSVThkL3MxV2w2WjNtd2kzR2dOdVNiM0FldVJFbW40dnZTSjdNcGxE?=
- =?utf-8?B?eUxIZ3drV0hTTTE2dFF5eHN3aklUTG9mMkRMd2s4dXduOGlTK21BTEtiZmQ5?=
- =?utf-8?B?RzVvTnkrMXEwK3dqRGtNVDZjWDVhUnBFamsySVh2OTZPdnhvZTlGeDVlVW0y?=
- =?utf-8?B?NGd0VTl1Y0Vlczh2cWdHRXhxQzZZQi82ZkNFR2w1ekREMmdKWEZnSXNYQ2hX?=
- =?utf-8?B?VFRyNTNFeGlTakprM3ZzM25vYjU3YXEzMStpNVpmMU05Mkc3Z1RDYjkyUTRl?=
- =?utf-8?B?RXdQOWN1VTRFcnpXMXo0RnhHVjNybituQ0ZMVndOTU5yV0lQTHV2UlIwbGE4?=
- =?utf-8?B?d1dtamlKZkJ4RFYyRmhMNXJqK0hCZlhPeXZSQk42NGpuaGE0cmRZU2I5eUkw?=
- =?utf-8?B?N1BjTEFxbkVhbFJOUnRqZXJnYjNMenU2M2Z4Y3V1U1pqeGt5NnBwK3VLQzZm?=
- =?utf-8?B?eitLVFRlcGRxV0w1S1pxT252TFdsaEF1K2cvbTFBMndPdmF4REpYT015bnY0?=
- =?utf-8?B?V1V1eXByVk9jWGljdTZZL0txK3BXYXNsQTErR0d4cjFIaGM3SmZRZUc0R3B5?=
- =?utf-8?B?dlV2OXhFY1NUUmR5OUdMTTFmaU0vQnBqZXpIckE1Uk1ITFpaVGZsclc1MEhN?=
- =?utf-8?B?N1UrL1d5VUxxaXNSNWg2WFFTQlZJYmFvczZBRnFlcmhuL0orVkVMbHhYU2po?=
- =?utf-8?B?T0pYSHRJWUlOcWJTdWh1MzZPc2dWakNVc3dpSEpKU2ZmKy9nNUFHMzlvZ2h0?=
- =?utf-8?Q?FEtu5YmDCf2kl?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R2NnWGV0S1ZSOVlrUUFITHRBZ2psQ3pZS0R4anlqSDE0OXdxQnlWOGUwSHh6?=
- =?utf-8?B?U056RHl6NzF6dGNZTmdIcE9LeWRzZkQ5dXN6TTNiUDhaS3lFZlcrUUJVZmFy?=
- =?utf-8?B?bkdKbHQ4TkNCK2hFbTNlN1FYOGlCdFZabEV5MDNiZzNuSHZxbzRRYTBET1ls?=
- =?utf-8?B?NlF1VW1yM05yVDN3dHBCczdFQys5LzFLS3RqbDlrZ0xvelY4UklEWTUxOE41?=
- =?utf-8?B?WitJNk0vUUN3Q295bEhQUkxHSkk3Y2NjTVUydDFkN1Fob2MxRVdMYmpTSzVv?=
- =?utf-8?B?NU8zM0dOOGRKcW02ejF6Y3N1cFRoOWp2OUw5SmNLQ3RVcmM0alo2S2pyZ04y?=
- =?utf-8?B?T09hc255eG5hMkFuVjFKKzNzbGtXa053eHJzUUduenBKcFlMaHhiMktIQW5u?=
- =?utf-8?B?QUxlZDJDN0g3RHB1RHRKNGt6NEpSNWFkeWxLVUpiVDBwOFB3c0RVcHRBRnpT?=
- =?utf-8?B?Si8xNXZpSkVCWXdYQWxJSDV1MFA0WjlJd3ZwdFQvQUZpQVM3c3dzT0VzYnh1?=
- =?utf-8?B?dnQwWUZpRkFWL0JoUnEwby9iTUx1ZXVvb0FiUyt4NUpqRitUK3pYaGRqV2li?=
- =?utf-8?B?MGJXWGlkY0ltZHArb0FqVU1vYzkxSkpGZFlqcVY1TkJiVmJYRC82ZDdFWnFy?=
- =?utf-8?B?K0VBblhyN0dBVU9iVFN3Mkp5blRhZk5ZaVNTZFdHZHRPMkRtYk5SdkMzNW9o?=
- =?utf-8?B?eklFallKTnVmRk1FQm00aVdaK2thTlJldW40cllCUG50dndrSGNIWS82Tm9P?=
- =?utf-8?B?cXhITlB0dERXRXd3QzRHT2lVSWpiSERac2l0SzhBVlA1ZW43bk12N08rKzV2?=
- =?utf-8?B?bGNoUmxrT1RoRlMxV1BObWQ3SkVGK0dNR0pxN29tUCtHUUFXMkdnam5rY0dP?=
- =?utf-8?B?enJPczd3UVk3L216NGhBRFA5QmtsUC96OFpseHh3UUF3RERJQjZPQkFGSDBZ?=
- =?utf-8?B?Wm9VempZZlVKQzJKdDV2MUtDSWM5WjVVdzhXcGhTdjJXdHhDOFhoL0I1aklp?=
- =?utf-8?B?dlFHRE0zZkYzaG1XL0hrOTlLTFZXdURFZ3hhVFhNdk5DeTJaZHZ4K2YvaTgy?=
- =?utf-8?B?bEtOQnBwKzArZU9PNFR6OGZtMFpYaTJVZWJoU0JrUkc2U2trZVdIeEt6aEI0?=
- =?utf-8?B?d25DeVdnQkI0MSs3cXhHSmlvZktHVk9GYUxYdUR1YjJPQnNiMDZCWVNRcmtS?=
- =?utf-8?B?dXJaZXYxc2t6WVhuYVZWQy80ZU00MzUrOVI3d3ZpNS81amFwR1VHcWdxL1Qv?=
- =?utf-8?B?THZQcTU1dWtZTUwyYURHZmszODljb05idW5UWVlKYWpieU05TTNnNktIci9M?=
- =?utf-8?B?WittWnhlbjFPWDE1VTU4QldkcFpiYlpnWVRwT3BoV1hoTHhveXhHcVEvNGpr?=
- =?utf-8?B?VFdDR3hnYllPR1NGK1pobUh5cjFrTFVkejBQRDFkUUFBeHNlazJzM3FTaXlu?=
- =?utf-8?B?dkx1bG4yallkY1JJSldRVldwQmhyMmp2NkIrVmV6Y0lzVVVlOXJrKzZoUHVz?=
- =?utf-8?B?Y25TT2d4aXgxcXZSM3hNb052d205cFEwT0NleWlML2xuNWgxWWRVZEttL2JP?=
- =?utf-8?B?WjZTU1gxZEdTWWI2UVV2K1F5OU9tTkdaeVFzcVBSSDBad1B0R3dBODl5Ymph?=
- =?utf-8?B?TzdidmMwZlVmQmplejljQlZSMk1NeVNETGRSOWU5SFBHUmhXZlJiWXNNdEJl?=
- =?utf-8?B?MDJXN1hON1BudXFFZTJIbnNJcEhYKzAwa0lmNGFLTlJNR1lKYTdZdzFtN3Nt?=
- =?utf-8?B?WjV0d3hmSEdqcmxvbGpIWC80Ny85d2VKd0NwYUZLTlZPS2k3bUo5RTIycmxY?=
- =?utf-8?B?bTNRU0NlYkEzK0dwLzh0clZtQUdVSkdnN0tXVzVUK205RDNXSXZ4Z2tQVTlF?=
- =?utf-8?B?a1FvR29NSU9tak1aL0tHeFRsZTNGWkIyN0lJOXlYdVVuQzVaYmVNY1BoalJP?=
- =?utf-8?B?NlVrbnRwV1Nvc0kzdlZKeXlJVHRESkV1cm9rVDAxT0FqNlhLUVlUQlRtK2Mw?=
- =?utf-8?B?OWF0WUJwK2x6SEIwUWxXVFdseFlwMnhndER4ZktwYTcvNzQrVFgrdHhVcWZq?=
- =?utf-8?B?RUhOdnNqaitnMTZPTG9EaHdVbkgydjFQN1BZTzRQdUY3RHpVZXQrZjdENWtD?=
- =?utf-8?Q?urulTLh0T6OedhN5whzVv8Eei?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08d6def4-c634-4ff5-0273-08dd75d70359
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:20:49.3239
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Gk6kQExPk33Ql/iyFFmfW3c8QvhU01VudER7MDzqyqIlrR+cPGuYnn7SVG+TS7rU3o3SGFgjSqbFfTaDIjAFjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5785
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4jdafsn3zhukglgv"
+Content-Disposition: inline
+In-Reply-To: <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
+X-Provags-ID: V03:K1:STRrzaZkDUer/XXZd+uC/hyiVVowrvzju+RynrANkb59pbujCSC
+ CxUnBgGA/r9L0V/hehkVeOJ72O3uBzpkC+ppLrGpMuLy1JpcsGPs25gGMWf53gWk2f5Cou8
+ qr0Tq+ABbrmet0fudZAqDsbjqiPJCxUwIkzSc7Q3U7ahsmar4mKNVRW6jxOrPxHfrAPedy+
+ YkmsvPV6LIEqSahQQhRbA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZVuUV60D3Rg=;yqnubyWrjx2j2LJVhr8jw702Gg9
+ +qH6p6Y4EoIBNx2eLFjWd4i31DYA75jq7AV0zod3HhH3AQMXBiIwkncppW/NRiN6ZPzdRrzFA
+ NLgoljokpVIdNBfdfdW5tpJI91OYoV+ZaLpR2wIwteMLauf4hqJOSs762BAAlLgABe0d4TDrN
+ gS7Y2MBrjqNjRfs8tA2K3dt/eJBeV4Mma3gdQlx8Mlu5IlHwynqQeChcyml3E7hYEBa6vfjFO
+ ubaX1mNfSQSaEXZ1Hk+DVxRGaDxRdDAcXkKDSCJ5/TMtNkEX8DbqZIdZup/bG0r43ShDh5u/W
+ HbTpqK9/EtVX/gfAs4bBA0/81kMGAkRiVdu9UGDkdx21/YmRw0pARWj1qaKGi6rXeHf7/khtt
+ /EkhVC76POF7/Sw32N38oXdYvCvmYVCPcJbsS7bd/gBUm5X65Yt54ZwWmbr91cIZIOa9HXKJp
+ ojYipTFxdI74gqIOh9S/HhHqnwgPnCT2u0IL7oDR5h66u5nLs9wjH3kD1A7Ws5gT7RYMafzpV
+ 0KmOiBvZNYwgQQrVZEhFUxZiQ4EslMsjwc4pawpoSZdaH4eY/+3FvUqPhBBeBiI6tDZ0GDE8c
+ Xa4w06FLlXCQQZciHTPiHCLhB72jekkGN7EoDWNlPSPQtfOkymx8QezTdAVuNEfueBzQLdAFN
+ zqfgxelFMdpkv4/sO9Mh7o682DaYEuoOrN3z3iGCRVoQ8ufCO7Ps2ZWm9uLzsk9ivpQ1DfS66
+ AmwcZa9auEmeTMph5hTsENS0LXcVaNkTmCvxhZ0Tnr/DGhEWmUppJZZxTQGLTHz1g+WLdbPMq
+ uU4Yfbf/Q8oKynEuWBBHUuh4QOLrtrZEX2bAlChn32Rs1KF5k389G1yHTCgIBpUwFsdw77lhE
+ XxFj3m3MRV0tLOWh5N+l8UVEQGLx2Ad+p8lUr5nErFq1loS62w1RTRiZHaT7K0kWGYSx+MaPC
+ fTbNVcMp5arr0W8met+jGh22a6oyXsl9NANkhhdYSQmyatJGHeYQwt0lfxJIEPwaLnH/Gg4zw
+ hNIfEyKFy/LQUu07Q+vRBKegesKFQ1TW38pTf7SsS5q1XokEZv+UxvI3LxR5Mo3hEWSg7VGUK
+ cATTk4kujQtunRstkAmZX6VPCe4OBo7PcWxDmquFZ1az1GOxaRKt4GNKa6YkrZu9vqMGyGQtV
+ Y21tIzNAHSWWRE+w8nQgIJIfKL+ehd3wPLfvRnwPppcKGUBIFjhQldjAz8sZFcMN/XFB3sytL
+ sFJCd7NFpjrmSkNRl2V671urWdp3o+tgjRYJD/NSh4Qd6JTPzs/bCypWiYGLC0UAKPliZZtQw
+ Tr0jpEZXJp+KwJ+MSmpKhmtra9mEvyUjctGJ/V2kUTXgLUFUDZOoiIRTXx3ixfDwXVJuCKB+b
+ Tsaguz96j+33K0ulnmJT/xCfEZiWUED1IXRAeK+7uSvfsjQ9Ohj7ktNPQ6
 
-On 4/7/2025 1:36 AM, S-k, Shyam-sundar wrote:
-> [Public]
-> 
-> Hi,
-> 
-> The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from the "/lib/firmware/amdtee" folder, which is causing the issue. This is because there have been some last-minute modifications to the TA firmware, and as a result, the firmware has not yet been updated. I will inform you once the updated TA firmware is available, so you can provide your feedback at that time.
-> 
-> Thanks,
-> Shyam
-> 
 
-FWIW - this below error is noisy but should be totally harmless on the 
-Framework desktop as well.  AFAIK - BIOS on FW desktop doesn't contain 
-any PMF policies in the first place.
+--4jdafsn3zhukglgv
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+MIME-Version: 1.0
 
-> -----Original Message-----
-> From: Christian Heusel <christian@heusel.eu>
-> Sent: Saturday, April 5, 2025 00:50
-> To: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; Limonciello, Mario <Mario.Limonciello@amd.com>; Patil Rajesh <Patil.Reddy@amd.com>; Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>; linux@frame.work; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; regressions@lists.linux.dev
-> Subject: [REGRESSION][BISECTED] Firmware load error for TEE on Framework Desktop
-> 
-> Hello everyone,
-> 
-> I have recently noticed an issue on the Framework Desktop where the following error pops up in dmesg after upgrading to any version beyond
-> v6.14:
-> 
-> [   12.136102] tee tee0: Direct firmware load for /amdtee/f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin failed with error -2
-> [   12.141252] input: HD-Audio Generic HDMI/DP,pcm=8 as /devices/pci0000:00/0000:00:08.1/0000:c1:00.1/sound/card0/input8
-> [   12.141601] failed to load firmware /amdtee/f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin
-> [   12.141843] input: HD-Audio Generic HDMI/DP,pcm=9 as /devices/pci0000:00/0000:00:08.1/0000:c1:00.1/sound/card0/input9
-> [   12.142005] failed to copy TA binary
-> [   12.185200] Failed to open TEE session err:0x0, rc:-12
-> [   12.185202] amd-pmf AMDI0105:00: Failed to open TA session (-12)
-> 
-> I have subsequently bisected the issue within the mainline kernel tree to the following commit:
-> 
->      376a8c2a1443 ("platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA")
-> 
-> The error is still present in the latest mainline release 6.14 and sadly testing a revert is not trivially possible due to conflicts.
-> 
-> I also noticed that there is a commit with a fixes tag for the one we have bisected to, but it's included in the same release and therefore does not seem to fix the issue at hand:
-> 
->      5b1122fc4995 ("platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()")
-> 
-> I have attached a dmesg output from a good boot and one from the 6.14 where the failure occurs. I'm happy to test any debug patches or provide more information if needed.
-> 
-> Greeting,
-> Chris
-> 
-> ---
-> 
-> #regzbot introduced: 376a8c2a1443
-> #regzbot title: x86/amd/pmf: Error on firmware load for TEE
+On 25/04/07 08:20AM, Mario Limonciello wrote:
+> On 4/7/2025 1:36 AM, S-k, Shyam-sundar wrote:
+> > Hi,
 
+Hey Mario, hey Shyam,
+
+> > The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from
+> > the "/lib/firmware/amdtee" folder, which is causing the issue. This
+> > is because there have been some last-minute modifications to the TA
+> > firmware, and as a result, the firmware has not yet been updated. I
+> > will inform you once the updated TA firmware is available, so you
+> > can provide your feedback at that time.
+> >=20
+> > Thanks,
+> > Shyam
+> >=20
+>=20
+> FWIW - this below error is noisy but should be totally harmless on the
+> Framework desktop as well.  AFAIK - BIOS on FW desktop doesn't contain
+> any PMF policies in the first place.
+
+thanks for your answers, that's good to know! I guess we don't need an
+urgent fix on the kernel side (or revert) then, let's just wait for the
+firmware to land.
+
+Cheers,
+Chris
+
+--4jdafsn3zhukglgv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfz1msACgkQwEfU8yi1
+JYUmUA//c0ZaIlMqe/O+9XE2Ba1mvalQvUt6pAiGCphmMDpbnsy/bjYxdaiGjwC0
+4d0jKuRii9fCQj8R4ZP1PftgltGO7sx7ny+YTl6vQf6iWxErRzEb841mTlURta9k
+5MkIFjemha/WXH09YkdZ2AmmF4AUpiE6A4ZeANhEKTjYTFYkoe9lt43qs6RTJ9w0
+Z/uRQ1cKwWEK5HrOOghyIGBCQ+XNmOJ0knPHbJPyKkz+Ah5Vi/a4R40rnx4UM8aU
+BVgIRwiQibvzCOPaH3PnZNPxjyKh6sYuM21b3/6m5XMwD46vrOYFebxAt0H/2V+R
+bfr80u8dIcBX6/HGlEvXYtBMUH+Dx6dzkxF08WMW4Q9bmU/1R7bEu5+3z9AsFuLP
+Job1grXwk4ovK3I49u9uGueGapQfqRTjsz3qxJq7M12k0Hocu4gHJllyOgT4X1yP
+/AU7m5qMcjt8pdk6pSdpdKw3PsQ2SEtZb+cWgrmcNJH5Xj7FuFdQBPKjJsd4yF3k
+Aw+Q7Lxa9C748YFe9ILRnwS2RTFlL30KHZQMZ8LBSryd0b+torcxxjXlgTmNs3pM
+iqgrN0YkZ6cRI2U8D6eYf7co3Enrimwsz7wcklJCb5N+PR23Wp8BmD/h0cxATqfs
+3d+NLetyyNeaO+bnVSQRKbO8uIQlevSJtf5Cd/LL9Zo3iKzVtDA=
+=ZEen
+-----END PGP SIGNATURE-----
+
+--4jdafsn3zhukglgv--
