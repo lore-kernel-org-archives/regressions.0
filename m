@@ -1,130 +1,111 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA32220A5C3
-	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 17:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD2A20FA8F;
+	Mon,  7 Apr 2025 17:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046896; cv=none; b=dLvy6w4dAOAsC1IAWhFMRnSgHiHeNHKRmcsGrcmQbqH3w+AnGl1X5QJCa8QOKWuKs85qIshWefQLCjxYIv6NsPGPYwYycjeWroQEYblFRxgSJFslLWNODpFtZKMbIXf/zzyri7KRD7zqcHkLRWBjMZn2i5zCbsLYTue4pN49Vho=
+	t=1744048062; cv=none; b=N7YOplXjeG5dho+fGEPDt71qWuCt5AUnYy7XatJq8i/ANX0PE9m3DZdvu9HRvL8qgVAY3bHHxs3++exlQo/KaIZuDVJKOw6r70CJ2ZuBKe77kZ1FEjDGt9Cmw1K4J3YunEkCtHvydalu6eIaDDTZUffZu0zz6PsmkAwxjoErEzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046896; c=relaxed/simple;
-	bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pnfjcs9/qk3IPdm2jmm+QHRLR3k5I0T0k19eh7G32lui3nc+zW2NxLOEzT6mqpCD670McZaaV67EebL6I6XduNZQQfqxcGdtTxF+qmLHlPfHWDF3rmal4hpnzP2Si2PKI1hpLDoqZOhQmPWFfEP3KO8+TDiu2G+sMWb2G5Ykhn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ABzrAxGl; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744048062; c=relaxed/simple;
+	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D02Ogeh/jzwub94S+5GVVK83ip3h130uJN+CVZnSuIon/fFy7KaaNDAsKx22IAruzzzfQ6Gj8ru1P0T1MLvHRBzdSEGodF46yCGiSo4RBEmVk9027AS8kDT02DZlLLyCHfm8O31ISbSWoLDaVQZ6Ji86sq7C2Xkyp6orSxUKfYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR5yGXWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ABzrAxGl"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-525da75d902so2013452e0c.3
-        for <regressions@lists.linux.dev>; Mon, 07 Apr 2025 10:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744046894; x=1744651694; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-        b=ABzrAxGlmv+cEZUwGAUErem7fNQJlRgNqG9Da0qrvoZ50ZzXvpKsBFYyf7pX13QLs8
-         JcJrIBMc2ojZBAJm6gL2rqoatnZnHz/u1p43WUsJ8weW5QmRbZVJrXtoQu4eqYzydfRP
-         pR/K4QbXqnxL5zO4SF5EIUt6RkfpJ/cD9QHfdpNVYNOkX5vEpxE6YKZrP2l3EbkI21Cf
-         4oCV5xGJEfOvyYr4Vk4mdMGRQIrlCRWNsUuSAvYO0twWB9JLYck5S0Jo//liIoPmdZRL
-         eq8T91kEP5ICOB60ZtY6sjpKtC4XvlytGuh1ntazLbT2FL1O9Z+5onzGS3Ab4Q2Pp8aI
-         OPWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744046894; x=1744651694;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-        b=KL/789YRad8TX/ffr6mc9KtAQaX7K5e3lWy0I6mTHGWvkG71bG+ahOQDo4f8eLqX1K
-         O2qyEMzCbjoPSlPWF0s2GIXATGkYMhIceO8uzB0kXoU4aSMcq7NRQCklmVhubbEDLjWI
-         lCjFnkLdErlUGok7GhqkHcFZqZpX5nvIW1O/fX0LFWi+wwFU1uu5BipNN0YQoP/1wwe0
-         m+JG+8i/rWYx0eRlWri7Dby8DDqgHOCDwMrmsqTU2jgP1o2EiX7tVQ3qtlmNNZH2i0Ha
-         k92fwwRQr7watWw4LWiC7ZO6V8UO15s2icK9Jvh1MaSYqwqzXa9fBHLVSGRqqSzmvNIF
-         vqOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPeV3H3E/+CO7+ENgJ3ZFU/+ERAhQEjaIOAXjFPD0cGqgclMeFTR/K/959LZTEFwuEqYgssh9J/M0QXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywg9XWMYxalWvE1XGTWQnoG6MfGu8fa7h/eiGmRMVw+/FiQVP6q
-	7V5Wxf4Qgb4Z/ugoI3DZiLmaVfChYMEhsQdPJjiZvp52+kuXT7K+3bpYTQiRIVacSmL0mRBMmzh
-	v3F4tQwG3nrhTD5q1zdElg2LeWm1yBfzfRQ4qDQ==
-X-Gm-Gg: ASbGncvDSjF32YQYS0tIoPTzzTRh6QCPQCFRDbw2pkwig0TdpWsB9l7rlo0vkPd+y8f
-	4iiA0O0fxN60JUh+UBBOrj4lDDsxD1b7XSDf2dIe61KB785wuT2VSyNJgMJXNAjyHA6gG2q4Psv
-	oN+hUcKyhhBKQmNhIbvqmz4HAIuFm4XTj6FEcDkSZMLSiEf6rwm9Dxtouyeto=
-X-Google-Smtp-Source: AGHT+IEVmMkitaw4QXdhkgwEdPJbukthI9jSNdopAjIIvfIiiFbgx7Oz2lGA20nc3VtA0Aj3qI6veAxd6wO3GXeed4k=
-X-Received: by 2002:a05:6122:3122:b0:526:1ddc:1896 with SMTP id
- 71dfb90a1353d-52772cd6318mr5308951e0c.0.1744046893651; Mon, 07 Apr 2025
- 10:28:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR5yGXWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC93C4CEDD;
+	Mon,  7 Apr 2025 17:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744048062;
+	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TR5yGXWAMDPR4Zf8/5QuBIhPyonpjHH8ZXYaqFPJEoRCZDMXVUzK+qOOp/kOuS0ou
+	 G+VRvM6rIiom5ygtQDI3uafnbnbXMTdzT30PJidg2AfHJmADqI5Q9BM5x5IOwBFYF0
+	 otvFwv8NKhHT9+9GUJqvtj/SrvKVn9ZMYxa8GrF/qjhdeDJ4TeQfic7wdtmLzTwMAI
+	 wZ3Kr76mUTwsUhxRHUeYSoLUm3xnPwSwICDQmlJB0Vrf87fnuM2aub+uXf/jj/8TME
+	 xuNr+Toh44plbtcmBGQS1H2Ko2y/nfiP955FIEAfcLcIa9VmhujO/iKl+/2gAZWwgo
+	 t4yiAI45WX4+g==
+Date: Mon, 7 Apr 2025 19:47:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	lkft-triage@lists.linaro.org, Nathan Chancellor <nathan@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>, dwmw@amazon.co.uk,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: next-20250407: qemu_x86_64 clang-20, clang-nightly no console
+ log but gcc-13 boot pass
+Message-ID: <Z_QPuPmtrFOnhjeP@gmail.com>
+References: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
+ <CA+G9fYtNcnAEVs70eH2yP5UxRBsfrN2B1nKNcggGQ7FNMAJMmg@mail.gmail.com>
+ <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 7 Apr 2025 22:58:02 +0530
-X-Gm-Features: ATxdqUG0lZPw-xmkzQsqNG-x55VknO4sMa7eENem1IFu3dmqQUBmDzTB3tDNgw4
-Message-ID: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
-Subject: Build: arm rustgcc unknown argument '-mno-fdpic'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, laura.nao@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-
-Regressions on arm build with config rustgcc-lkftconfig-kselftest on the
-Linux mainline and next failed with CONFIG_RUST=y enabled.
-
-First seen on the v6.14-13039-ge8b471285262 (April 3, 2025)
-Bad: v6.15-rc1
-Good: v6.14-12966-ga2cc6ff5ec8f ( April 3, 2025 )
-
-Bad: next-20250327
-Good: next-20250326
-
-* arm, build
- - rustgcc-lkftconfig-kselftest
-
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
-
-Build regression: arm rustgcc unknown argument '-mno-fdpic'
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-Unable to generate bindings: clang diagnosed error: error: unknown
-argument: '-mno-fdpic'
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
 
 
-## Source
-* Kernel version: v6.15-rc1
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-* Git sha: 0af2f6be1b4281385b618cb86ad946eded089ac8
-* Git describe: v6.15-rc1
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/
-* compiler: gcc version (Debian 14.2.0-19) 14.2.0
-* Toolchain: rustgcc
-* build config: rustgcc-lkftconfig-kselftest
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/log
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/history/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNMCPjd4rTR3hQdnzAuHzLE1NR/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNMCPjd4rTR3hQdnzAuHzLE1NR/config
-* Test history on next:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27929685/suite/build/test/rustgcc-lkftconfig-kselftest/history/
+> On Mon, 7 Apr 2025 at 18:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Mon, 7 Apr 2025 at 17:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
+> > > Linux next-20250407 and no console output.
+> > >
+> > > The gcc-13 builds boot pass on qemu-x86_64.
+> > >
+> > > First seen on the next-20250407.
+> > > Bad: next-20250407
+> > > Good:next-20250404
+> > >
+> > > * qemu-x86_64, boot
+> > >  - boot/clang-20-lkftconfig
+> > >  - boot/clang-20-lkftconfig-compat
+> > >  - boot/clang-nightly-lkftconfig
+> > >
+> > > Regression Analysis:
+> > > - New regression? Yes
+> > > - Reproducibility? Yes
+> > >
+> > > Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Anders bisected this and found,
+> > # first bad commit:
+> >    [cc34e658c6db493c1524077e95b42d478de58f2b]
+> >    x86/boot: Move the early GDT/IDT setup code into startup/
+> >
+> > Lore report link,
+> >  - https://lore.kernel.org/all/CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com/
+> >
+> 
+> Thanks for the report. I'll look into this.
 
-## Steps to reproduce
- - tuxmake --runtime podman --target-arch arm --toolchain rustgcc
---kconfig defconfig --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/systemd.config
---kconfig-add CONFIG_ARM_LPAE=y --kconfig-add CONFIG_GCC_PLUGINS=n
---kconfig-add tools/testing/selftests/rust/config TARGETS=rust dtbs
-dtbs-legacy headers kernel kselftest modules
+I've zapped cc34e658c6db from tip:x86/boot for the time being.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+I have the same request as for the other patches applies, please split 
+it up into ~3 patches for better bisectability and ease of review:
+
+ - first the mechanic movement of code, with very few changes (if the 
+   result builds & boots),
+
+ - then drop the RIP_REL_REF() uses in the second patch,
+
+ - and drop __head annotations in the third patch.
+
+Thanks,
+
+	Ingo
