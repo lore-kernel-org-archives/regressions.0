@@ -1,188 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85831CAA64;
-	Mon,  7 Apr 2025 14:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214131FF1A8
+	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 14:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035328; cv=none; b=LpRuwgdsKQlJ6/9fFvylRJkvI/cqqVpxAovtVHqMvlHhAfAbwJRwrL6++gqd192EZFF7QQu+mEs/tJQdJTGQYbKrkvL2uoqUwTaoS9Y4z+1Mx6HZaM4142hKTL4MVDwMWZz0H83yCnYhNaXkaKS9rUDXbOEzOup8OV6NQS2XWBw=
+	t=1744036460; cv=none; b=eDVt0kEXNBETm6QmQ1imd3L2kJkYE8Lvvid4GkHI7ok31TxAL8wT5rWLzcCNrOx48RPRQfLOQfFRrO3SWMVwMtDW8cz937DjrAU8+IFKP3O7LXRq3c4HA6ZEFAL2nyKkYJnQnJNHx/rPzbDxI0Nbs4Qpxqz+cDw3WIzAF6Pclb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035328; c=relaxed/simple;
-	bh=h7tZEGSxemwigHFhyUa/B9x+zMVaRAshCmUPXzxcECY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U53Ugrf+6GE6+EVigYONjAyiye0HAW2K2/F4ZNVH/ipNr9qdum2N+mL6Tn6Yaj35Ei4wwFKc4/rfE5IbGtiQ0jY3AVLDRTG7+rNxApalwXM1wmZvlG5GdGuR8jP48es4WJNdOOygF7Eb/nYTRcW+Xo1OmDzeG9x01/2dSuRv5U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZELgm49; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744036460; c=relaxed/simple;
+	bh=10hQjwiVl9auh+4TsVLGd2jmvqVvAN1BWWQoRX/5x6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GiUwR6uYdgfs7IyrH6U9sGlpDAyC9H4PpBkqyzYdQ/gQlK+yQjbsxjoY8inrrIhDBcTkHUNKdNpioiiDchZFhHDt6VKRXQ4yUpIBSXSsTCamXpv5ExPSaqDwAIgRFSd359Q9mS8ijCsvhrx56Odlh2ye046lt4y+B7t9MsG5a/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lTXW9d9x; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZELgm49"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E59EAC4CEE7;
-	Mon,  7 Apr 2025 14:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744035328;
-	bh=h7tZEGSxemwigHFhyUa/B9x+zMVaRAshCmUPXzxcECY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pZELgm49eXVhKxLNk+B3kfRXF9wQPL71zTGe6jrNF5Xe5IYi+lFR8P6vQzBADDSBb
-	 qtbO7E3buBLowbmncXPkzj7P7Rk8Ig3RnoWDL4ZFYm6aPHjDYahwET5lkbGgHM+8cC
-	 Pb890PGZ/oklAS8en2NVjouHL0r0H15iyBGM0TLrLR80+p2w1H8a4wGMHj4GAi7CFF
-	 tB3ns56NIcg5B/owwEVAFj8OuYFn148JVkMrZLePOOFwdpPat07A/rT2GXP3dZB5zM
-	 lM/oPGaYRRpPfs4yNvSWjfzXXX1KfRajiSwoU2+FNJWj+p4x1CTaINw313vmpo69Bd
-	 cbj7YL4sAv24w==
-Date: Mon, 7 Apr 2025 16:15:24 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	lennart@poettering.net
-Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
- systemd-nspawn on my system
-Message-ID: <20250407-unmodern-abkam-ce0395573fc2@brauner>
-References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTXW9d9x"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c77a5747e0so2447579fac.2
+        for <regressions@lists.linux.dev>; Mon, 07 Apr 2025 07:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744036457; x=1744641257; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HTopRkudXEUzQeJOvfu4l8bVu6j+srbmnKpDNdQn7Dg=;
+        b=lTXW9d9x6jCaLuC0CDA+psCKS57runkmQMvOVXGWjVRgXnCvKv1ZQCnTG8sQkPTO0O
+         4vzYehebXwcXSv587SeoiB5xJ7x0eKeiV1FO57JyB72cVlcJpLG5HFGzmAWotPInSFM+
+         ouj7JEXM5nMQmsqCkYnbVsIGR/kl37D+euxxtWdmL+I542wsde1ymAfg3HlEJ/44q9vb
+         An5QDeSvuUEZk+VO2fL4aPp1VU9S9R/1ppenLO9r25028V010Mk1tWgLoZWmbmXCcMoA
+         0zac6Pd6EdJd2LcaxZ0qOw05Rl/8dG9Fd8aic4dnTZMStDXZBBIFMkB95vUtL8NuYR7G
+         o2Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744036457; x=1744641257;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HTopRkudXEUzQeJOvfu4l8bVu6j+srbmnKpDNdQn7Dg=;
+        b=R42CmFHvMDzToVprwWHM4x7btQY/37TfYseK2cQ853u3kr/8nLyFDQZ9+CCqMWwaoU
+         L2cVyCLv3rT3eA5Qf3dmm8avDbI4dYHKlqHD5bFsEnmHzRmRHKR8gfASmy5orf2Bu57W
+         mYCrVK2KYKrt/kHPkZhtJLukE1WlEYDdB5+7XC5kUYnHHq6Fb7RzQSNwrD4khLEMdLdm
+         qkjErQ7mZdAHvN3V258EHk9HIOvCQpC0LyccVzWwkdwFxvJ5IjGuJzsUtkTG0imIxm6n
+         XnMZJ2ypReR4L2+w3ZIGtD9jVcNkAh/NNu1C4JMLfdsuXRaDeooPneP3lgHV2B5eRcFn
+         iuUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWR8ddhd2eAnrXJlpijiRniFXQcjJOMldeMCMlf+gmAfiRZXjf9dh2JsDwStXYupGSw4EJJcQ1dn1rDRA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxhhKQ5SLf7GgQqu0vCKG13r6VoFmIJ88Vvd9H2Xrm3+Y0hwtmc
+	5Z2T5ji5FDfYHFdzpMhHzBM+eap3BJdfvfuCGZlCvpHKk2aVR/LCwLsoYoPBBMNq+OuYiY3yPhe
+	Qe9xogHuXzOd6pIequ2SLQ4yIx8E=
+X-Gm-Gg: ASbGncsXvWG+01j4i/btug34KkrN6FcjWJ/nQS1IetxTcuSuoW/SIJb/S/ZIW6fJb6y
+	tPYhL2HwkBsubv1Og+H2kxLiXGKZYBYHoH643COAmhXIdhwRnRIJn36BIBojGr3KDrbtvxcw5wi
+	0G3e/LYBB97pv3EW5deqdvOQg9tGpw9j5aXCh3Qes=
+X-Google-Smtp-Source: AGHT+IHoSUeAPlBLGV9BvARB2DD4S5ZyaQrQObowA6idaD/1jh0KU0IzXBy11xH1xWIDoU/m5TY9IPIpNq/IxwsCPT0=
+X-Received: by 2002:a05:6871:22cb:b0:2b8:306f:c5b5 with SMTP id
+ 586e51a60fabf-2cd32e21919mr5284274fac.7.1744036456603; Mon, 07 Apr 2025
+ 07:34:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
+References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
+ <20250407-unmodern-abkam-ce0395573fc2@brauner>
+In-Reply-To: <20250407-unmodern-abkam-ce0395573fc2@brauner>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Mon, 7 Apr 2025 19:34:04 +0500
+X-Gm-Features: ATxdqUHwaNprJBZd_SsiuQ3oNZG7V6WOmgD8MjTowTBc0TIjBrydrP4HByYiD4Q
+Message-ID: <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
+Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
+ systemd-nspawn on my system
+To: Christian Brauner <brauner@kernel.org>
+Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, lennart@poettering.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 12:14:01PM +0500, Mikhail Gavrilov wrote:
-> Hi,
-> I use Fedora. On Fedora systemd-nspawn is used for creating a clean
-> build environment for packaging.
-> I noted that on fresh kernels I can't build packages any more because
-> the command "mock -r fedora-rawhide-i386 --rebuild" is stuck.
-> I started debugging and found that systemd-nspawn was hanging.
-> Sending SysRq for  displaying list of blocked (D state) tasks gave me
-> this trace:
-> [  743.382717] sysrq: Show Blocked State
-> [  743.383154] task:systemd-nspawn  state:D stack:27120 pid:4609
-> tgid:4609  ppid:4435   task_flags:0x400140 flags:0x00000002
-> [  743.383164] Call Trace:
-> [  743.383167]  <TASK>
-> [  743.383171]  __schedule+0x895/0x1bf0
-> [  743.383178]  ? __pfx___schedule+0x10/0x10
-> [  743.383182]  ? __pfx_do_raw_spin_trylock+0x10/0x10
-> [  743.383187]  ? __raw_spin_unlock_irqrestore+0x5d/0x80
-> [  743.383191]  ? rcu_is_watching+0x12/0xc0
-> [  743.383195]  ? schedule+0x1d5/0x260
-> [  743.383199]  schedule+0xd4/0x260
-> [  743.383202]  fuse_get_req+0x92d/0x1060 [fuse]
-> [  743.383218]  ? rcu_is_watching+0x12/0xc0
-> [  743.383222]  ? __pfx_fuse_get_req+0x10/0x10 [fuse]
-> [  743.383233]  ? rcu_is_watching+0x12/0xc0
-> [  743.383236]  ? __pfx_autoremove_wake_function+0x10/0x10
-> [  743.383240]  ? rcu_is_watching+0x12/0xc0
-> [  743.383243]  ? is_bpf_text_address+0x64/0x100
-> [  743.383247]  ? __pfx_stack_trace_consume_entry+0x10/0x10
-> [  743.383252]  __fuse_simple_request+0x8f/0xab0 [fuse]
-> [  743.383263]  ? kernel_text_address+0x145/0x160
-> [  743.383268]  ? __kernel_text_address+0x12/0x40
-> [  743.383272]  fuse_getxattr+0x2cd/0x3e0 [fuse]
-> [  743.383287]  ? __pfx_fuse_getxattr+0x10/0x10 [fuse]
-> [  743.383299]  ? rcu_is_watching+0x12/0xc0
-> [  743.383304]  ? rcu_is_watching+0x12/0xc0
-> [  743.383307]  ? is_bpf_text_address+0x64/0x100
-> [  743.383310]  ? lock_release+0xb7/0xf0
-> [  743.383314]  ? is_bpf_text_address+0x6e/0x100
-> [  743.383318]  ? kernel_text_address+0x145/0x160
-> [  743.383323]  fuse_xattr_get+0x64/0x90 [fuse]
-> [  743.383333]  __vfs_getxattr+0xf0/0x150
-> [  743.383338]  ? __pfx___vfs_getxattr+0x10/0x10
-> [  743.383344]  get_vfs_caps_from_disk+0x138/0x450
-> [  743.383349]  ? __pfx_get_vfs_caps_from_disk+0x10/0x10
-> [  743.383353]  ? rcu_is_watching+0x12/0xc0
-> [  743.383356]  ? handle_path+0x27c/0x6b0
-> [  743.383360]  ? lock_release+0xb7/0xf0
-> [  743.383363]  ? handle_path+0x281/0x6b0
-> [  743.383368]  audit_copy_inode+0x339/0x4f0
-> [  743.383372]  ? __pfx_audit_copy_inode+0x10/0x10
-> [  743.383376]  ? path_lookupat+0x16a/0x670
-> [  743.383381]  filename_lookup+0x391/0x550
-> [  743.383386]  ? __pfx_filename_lookup+0x10/0x10
-> [  743.383394]  ? audit_alloc_name+0x398/0x490
-> [  743.383398]  ? __audit_getname+0x10b/0x160
-> [  743.383402]  ? getname_flags.part.0+0x1a5/0x510
-> [  743.383406]  user_path_at+0x9e/0xe0
-> [  743.383411]  __x64_sys_mount_setattr+0x247/0x340
-> [  743.383415]  ? __pfx___x64_sys_mount_setattr+0x10/0x10
-> [  743.383418]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
-> [  743.383422]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
-> [  743.383426]  ? ktime_get_coarse_real_ts64+0x41/0xd0
-> [  743.383431]  do_syscall_64+0x97/0x190
-> [  743.383437]  ? rcu_is_watching+0x12/0xc0
-> [  743.383440]  ? rcu_read_unlock+0x17/0x60
-> [  743.383444]  ? lock_release+0xb7/0xf0
-> [  743.383448]  ? handle_mm_fault+0x4e5/0xa60
-> [  743.383451]  ? exc_page_fault+0x7e/0x110
-> [  743.383456]  ? rcu_is_watching+0x12/0xc0
-> [  743.383458]  ? exc_page_fault+0x7e/0x110
-> [  743.383462]  ? do_user_addr_fault+0x8cb/0xe70
-> [  743.383466]  ? irqentry_exit_to_user_mode+0xa2/0x290
-> [  743.383469]  ? rcu_is_watching+0x12/0xc0
-> [  743.383472]  ? irqentry_exit_to_user_mode+0xa2/0x290
-> [  743.383475]  ? trace_hardirqs_on_prepare+0xdf/0x120
-> [  743.383480]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [  743.383483] RIP: 0033:0x7fac4ff0419e
-> [  743.383499] RSP: 002b:00007ffc843092f8 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000001ba
-> [  743.383504] RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007fac4ff0419e
-> [  743.383507] RDX: 0000000000009000 RSI: 00007fac503472a8 RDI: 000000000000000b
-> [  743.383509] RBP: 00007ffc843093a0 R08: 0000000000000020 R09: 00007fac4fff6ac0
-> [  743.383512] R10: 00007ffc84309340 R11: 0000000000000246 R12: 0000000000000009
-> [  743.383514] R13: 000056069822b629 R14: 000056069822b635 R15: 0000000000000007
-> [  743.383519]  </TASK>
-> 
-> > sudo /usr/bin/systemd-nspawn -q --ephemeral -D /var/lib/mock/fedora-rawhide-x86_64/root
-> [sudo] password for mikhail:
-> ^CShort read while reading whether to enable FUSE.
-> mikhail@primary-ws ~ [1]>
-> 
-> And started bisecting the issue and the first bad commit is
-> 474f7825d5335798742b92f067e1d22365013107.
-> 
-> Author: Christian Brauner <brauner@kernel.org>
-> Date:   Tue Jan 28 11:33:40 2025 +0100
-> 
->     fs: add copy_mount_setattr() helper
-> 
->     Split out copy_mount_setattr() from mount_setattr() so we can use it in
->     later patches.
-> 
->     Link: https://lore.kernel.org/r/20250128-work-mnt_idmap-update-v2-v1-2-c25feb0d2eb3@kernel.org
->     Reviewed-by: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
->     Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> Unfortunately I can't test the revert of this commit because of conflicts.
-> 
-> > git revert -n 474f7825d5335798742b92f067e1d22365013107
-> Auto-merging fs/namespace.c
-> CONFLICT (content): Merge conflict in fs/namespace.c
-> error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
-> hint: after resolving the conflicts, mark the corrected paths
-> hint: with 'git add <paths>' or 'git rm <paths>'
-> hint: Disable this message with "git config set advice.mergeConflict false"
-> 
-> My machine spec: https://linux-hardware.org/?probe=619658e7cf
-> And I attached below my build config and full kernel log.
-> 
-> Christian, can you look please?
+On Mon, Apr 7, 2025 at 7:15=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> I'm a bit confused by your git bisect log and the dmesg output you're
+> showing. The dmesg output suggests you did actually test on:
+>
+> [    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 1=
+4.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEM=
+PT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
+>
+> But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+> according to:
+>
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.1=
+5' of git://git.kernel.
+> git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+>
+> Which is way before -rc1. Where you testing on actual v6.15-rc1 released
+> yesterday or were you testing on
+> 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
+> actual v6.15-rc1 as I suspect this is caused by faulty locking in
+> clone_private_mount() which I fixed.
 
-I'm a bit confused by your git bisect log and the dmesg output you're
-showing. The dmesg output suggests you did actually test on:
+I don't want to upset you.
+But I checked bisect between 1a9239bb4253 and b3ee1e460951 commits,
+but the final test was made at 6.15-rc1 (0af2f6be1b42) before posting
+the bug report here.
+It's clear from the attached full log that systemd-nspawn hangs and
+continues to hang, and the issue is not fixed at 6.15-rc1
+(0af2f6be1b42).
 
-[    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEMPT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
+--=20
+Best Regards,
+Mike Gavrilov.
 
-But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-according to:
+On Mon, Apr 7, 2025 at 7:15=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> On Mon, Apr 07, 2025 at 12:14:01PM +0500, Mikhail Gavrilov wrote:
+> > Hi,
+> > I use Fedora. On Fedora systemd-nspawn is used for creating a clean
+> > build environment for packaging.
+> > I noted that on fresh kernels I can't build packages any more because
+> > the command "mock -r fedora-rawhide-i386 --rebuild" is stuck.
+> > I started debugging and found that systemd-nspawn was hanging.
+> > Sending SysRq for  displaying list of blocked (D state) tasks gave me
+> > this trace:
+> > [  743.382717] sysrq: Show Blocked State
+> > [  743.383154] task:systemd-nspawn  state:D stack:27120 pid:4609
+> > tgid:4609  ppid:4435   task_flags:0x400140 flags:0x00000002
+> > [  743.383164] Call Trace:
+> > [  743.383167]  <TASK>
+> > [  743.383171]  __schedule+0x895/0x1bf0
+> > [  743.383178]  ? __pfx___schedule+0x10/0x10
+> > [  743.383182]  ? __pfx_do_raw_spin_trylock+0x10/0x10
+> > [  743.383187]  ? __raw_spin_unlock_irqrestore+0x5d/0x80
+> > [  743.383191]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383195]  ? schedule+0x1d5/0x260
+> > [  743.383199]  schedule+0xd4/0x260
+> > [  743.383202]  fuse_get_req+0x92d/0x1060 [fuse]
+> > [  743.383218]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383222]  ? __pfx_fuse_get_req+0x10/0x10 [fuse]
+> > [  743.383233]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383236]  ? __pfx_autoremove_wake_function+0x10/0x10
+> > [  743.383240]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383243]  ? is_bpf_text_address+0x64/0x100
+> > [  743.383247]  ? __pfx_stack_trace_consume_entry+0x10/0x10
+> > [  743.383252]  __fuse_simple_request+0x8f/0xab0 [fuse]
+> > [  743.383263]  ? kernel_text_address+0x145/0x160
+> > [  743.383268]  ? __kernel_text_address+0x12/0x40
+> > [  743.383272]  fuse_getxattr+0x2cd/0x3e0 [fuse]
+> > [  743.383287]  ? __pfx_fuse_getxattr+0x10/0x10 [fuse]
+> > [  743.383299]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383304]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383307]  ? is_bpf_text_address+0x64/0x100
+> > [  743.383310]  ? lock_release+0xb7/0xf0
+> > [  743.383314]  ? is_bpf_text_address+0x6e/0x100
+> > [  743.383318]  ? kernel_text_address+0x145/0x160
+> > [  743.383323]  fuse_xattr_get+0x64/0x90 [fuse]
+> > [  743.383333]  __vfs_getxattr+0xf0/0x150
+> > [  743.383338]  ? __pfx___vfs_getxattr+0x10/0x10
+> > [  743.383344]  get_vfs_caps_from_disk+0x138/0x450
+> > [  743.383349]  ? __pfx_get_vfs_caps_from_disk+0x10/0x10
+> > [  743.383353]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383356]  ? handle_path+0x27c/0x6b0
+> > [  743.383360]  ? lock_release+0xb7/0xf0
+> > [  743.383363]  ? handle_path+0x281/0x6b0
+> > [  743.383368]  audit_copy_inode+0x339/0x4f0
+> > [  743.383372]  ? __pfx_audit_copy_inode+0x10/0x10
+> > [  743.383376]  ? path_lookupat+0x16a/0x670
+> > [  743.383381]  filename_lookup+0x391/0x550
+> > [  743.383386]  ? __pfx_filename_lookup+0x10/0x10
+> > [  743.383394]  ? audit_alloc_name+0x398/0x490
+> > [  743.383398]  ? __audit_getname+0x10b/0x160
+> > [  743.383402]  ? getname_flags.part.0+0x1a5/0x510
+> > [  743.383406]  user_path_at+0x9e/0xe0
+> > [  743.383411]  __x64_sys_mount_setattr+0x247/0x340
+> > [  743.383415]  ? __pfx___x64_sys_mount_setattr+0x10/0x10
+> > [  743.383418]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
+> > [  743.383422]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
+> > [  743.383426]  ? ktime_get_coarse_real_ts64+0x41/0xd0
+> > [  743.383431]  do_syscall_64+0x97/0x190
+> > [  743.383437]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383440]  ? rcu_read_unlock+0x17/0x60
+> > [  743.383444]  ? lock_release+0xb7/0xf0
+> > [  743.383448]  ? handle_mm_fault+0x4e5/0xa60
+> > [  743.383451]  ? exc_page_fault+0x7e/0x110
+> > [  743.383456]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383458]  ? exc_page_fault+0x7e/0x110
+> > [  743.383462]  ? do_user_addr_fault+0x8cb/0xe70
+> > [  743.383466]  ? irqentry_exit_to_user_mode+0xa2/0x290
+> > [  743.383469]  ? rcu_is_watching+0x12/0xc0
+> > [  743.383472]  ? irqentry_exit_to_user_mode+0xa2/0x290
+> > [  743.383475]  ? trace_hardirqs_on_prepare+0xdf/0x120
+> > [  743.383480]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > [  743.383483] RIP: 0033:0x7fac4ff0419e
+> > [  743.383499] RSP: 002b:00007ffc843092f8 EFLAGS: 00000246 ORIG_RAX:
+> > 00000000000001ba
+> > [  743.383504] RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007fa=
+c4ff0419e
+> > [  743.383507] RDX: 0000000000009000 RSI: 00007fac503472a8 RDI: 0000000=
+00000000b
+> > [  743.383509] RBP: 00007ffc843093a0 R08: 0000000000000020 R09: 00007fa=
+c4fff6ac0
+> > [  743.383512] R10: 00007ffc84309340 R11: 0000000000000246 R12: 0000000=
+000000009
+> > [  743.383514] R13: 000056069822b629 R14: 000056069822b635 R15: 0000000=
+000000007
+> > [  743.383519]  </TASK>
+> >
+> > > sudo /usr/bin/systemd-nspawn -q --ephemeral -D /var/lib/mock/fedora-r=
+awhide-x86_64/root
+> > [sudo] password for mikhail:
+> > ^CShort read while reading whether to enable FUSE.
+> > mikhail@primary-ws ~ [1]>
+> >
+> > And started bisecting the issue and the first bad commit is
+> > 474f7825d5335798742b92f067e1d22365013107.
+> >
+> > Author: Christian Brauner <brauner@kernel.org>
+> > Date:   Tue Jan 28 11:33:40 2025 +0100
+> >
+> >     fs: add copy_mount_setattr() helper
+> >
+> >     Split out copy_mount_setattr() from mount_setattr() so we can use i=
+t in
+> >     later patches.
+> >
+> >     Link: https://lore.kernel.org/r/20250128-work-mnt_idmap-update-v2-v=
+1-2-c25feb0d2eb3@kernel.org
+> >     Reviewed-by: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+> >     Signed-off-by: Christian Brauner <brauner@kernel.org>
+> >
+> > Unfortunately I can't test the revert of this commit because of conflic=
+ts.
+> >
+> > > git revert -n 474f7825d5335798742b92f067e1d22365013107
+> > Auto-merging fs/namespace.c
+> > CONFLICT (content): Merge conflict in fs/namespace.c
+> > error: could not revert 474f7825d533... fs: add copy_mount_setattr() he=
+lper
+> > hint: after resolving the conflicts, mark the corrected paths
+> > hint: with 'git add <paths>' or 'git rm <paths>'
+> > hint: Disable this message with "git config set advice.mergeConflict fa=
+lse"
+> >
+> > My machine spec: https://linux-hardware.org/?probe=3D619658e7cf
+> > And I attached below my build config and full kernel log.
+> >
+> > Christian, can you look please?
+>
+> I'm a bit confused by your git bisect log and the dmesg output you're
+> showing. The dmesg output suggests you did actually test on:
+>
+> [    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 1=
+4.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEM=
+PT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
+>
+> But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+> according to:
+>
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.1=
+5' of git://git.kernel.
+> git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+>
+> Which is way before -rc1. Where you testing on actual v6.15-rc1 released
+> yesterday or were you testing on
+> 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
+> actual v6.15-rc1 as I suspect this is caused by faulty locking in
+> clone_private_mount() which I fixed.
 
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.
-git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
 
-Which is way before -rc1. Where you testing on actual v6.15-rc1 released
-yesterday or were you testing on
-1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
-actual v6.15-rc1 as I suspect this is caused by faulty locking in
-clone_private_mount() which I fixed.
+
+--=20
+Best Regards,
+Mike Gavrilov.
