@@ -1,253 +1,177 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EAE22F386
-	for <regressions@lists.linux.dev>; Mon,  7 Apr 2025 07:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A71334CF5;
+	Mon,  7 Apr 2025 11:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010566; cv=none; b=F+Mo/eRpgQy8Mlr2z2+kg4r8S6/64Zb6x9/7B3vorr6MWPtM/R1l1SSSZmJocT3ocWlu/JNsKBAxzaLVsbAup/R1SLzwdvoxEkfB852M6jleHrPzIXqowWH+NEO3FebEbG+4C7wVMFyHyONFULOlmDUtMUe2x9+PtIZ/KWLyL9k=
+	t=1744023679; cv=none; b=Ae9PM6jCmD+bMN4GztJK8l19GTvRg2zVToZemyptiCh6T4felys54/c+r4wQTIB17mGu9ePE53ZWsph22swGdPLLwklvSKm9ShKBqX692iEYnDPrJMlvPSyqdtdi+alucPbGtwd1sknWid4XcfAYqDKNzN1E9kUD5J5vYXvv7dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010566; c=relaxed/simple;
-	bh=73YjE4Mhwi0WBQCbMudtvvzxBf2NPJrusHjOYzLngE4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YXh8U5PFbPkdhMpXeK0sSkWIiuaDofmvE0BidNGvrDZK6ImKnMWv/zo5rQUkJQ1xN7R9cq1lY5oWzbtu/8FTWN30EsJlWYto6Fkl1ahj77lf1FDGroMVxYPkjXg4SpqWAdZZL1bzWF5MsDkWRD3ll4Jt2MvHL9iOw/L1rlMTetk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pt2HDUuC; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744023679; c=relaxed/simple;
+	bh=V7ona84w4jSuNFXXibo8D2BeRebQZTbFHfPOFhk3dc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1prTg0Gwo21CUIwAkT5t12x+VmbzSPMuLk2e7PnOM7rMvE3+Zwo/Z4OxlVU7ksph+Ock84/RhLogpdyOTXvtR4RvnGVzstSKYgUi1kKPIBjJw9owR1PMxPCNuSVgDe9dq6ToES593rPlPnRDA9lMhDd+WR/LasDf0KFfTLV8Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOwKMHFx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pt2HDUuC"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso25349945e9.3
-        for <regressions@lists.linux.dev>; Mon, 07 Apr 2025 00:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744010562; x=1744615362; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JuGZUnSASk10lNE/9ifp4v0eahsXlHOvwT8MRApN0Og=;
-        b=pt2HDUuCHxM/FEEJ1KjqzHKSeIp5c2xiqzmdc3c+srWnR16/F9nbb6umrZ4t3/1wGF
-         9BFy56HqnkGlQVvIrfmgGzusUjq+DPeQOX0z60L4qFdf0/H4uSwpqxRDWKcHGPo86OaV
-         jaibH6am4KDjIY16Qlvzn3bAM+40SQfljLpIA1ntVcrjD3qAKfm9Uarwv0P5bgQFZNG7
-         89Yrbj/X6JZR5POGjn6DxtrYfCL5lLb9ZdJ3JsYqFs5Eoc4X6YxaDAyxpk2yqItzpjG+
-         1TjhkFcDlspucf+vpwHUg6vLY0Es8j/i6ES4RDecJpEJkAtE4IFVMkaenZrSZQ9t9xgH
-         d71A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744010562; x=1744615362;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JuGZUnSASk10lNE/9ifp4v0eahsXlHOvwT8MRApN0Og=;
-        b=Qrdb1WUcqoHVUoCDg92h7ueqhjYBSxsXdR93COSsfKOnWchGJoqu9yPDuunG/Jn5ww
-         zhGQkzHrWnkpDpblG0WF8gDzdul6ZV7pChFF0Wlik0ACQNy9uoCFyjI5bu1Jwbbn1UdH
-         DUQ42kSZOD2XJitdmtmgF54nlkbwBeYg5KMzDFieUGbWchdmOTtKWskZ7aklMGXypvVE
-         cDW72F+iWif8pprJPmjENRxDCiBjYk6tcXRBFrxCmuQt3tnuPaSMReGOGECERQxFo174
-         Gt7H1mLLJFnxxHVMLm0gZDbV0E6VnJHrw1sNkFanV2n2zDJ5q2ZjjvKbh74s7ol4jDwb
-         NnBg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/wzIFjD/hYEpIz9SnAuoOUmTcGDZCBBxGfjHU9AJwn6Gu1ux6babZ63MCbLTtVCp6X75YKgU/97Ultw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8JWS+K+8wcjhhbgku4TjuGhq7B0wG7i//ivy5sO0DlMEymqjt
-	p5mqgcQDyU4634NCotapCwEfRZ7Vq+XeIi0/G+Td/ZBnpGyx5t3Mou4hEt9s7Cs=
-X-Gm-Gg: ASbGncshHRaUDBwULKY3/gUoDFh8aJAxpHvx24I+k+DU5CUstBTh22mKf8gv30Tajim
-	Hqxw0xMo7sxhL1w0Z007GbsJRu/YbX8Vgp94eZ0ovQpVcv/82GBmDIEeJexcQLQcf+B+1QXOY3c
-	tWFNiAJ2x8SOy8g+HmjZguMKMRT5sCR9wAxT97jc6ZXPKmEgSzR1nFMxV5nd6f74OvdMy2sEIzb
-	9bXyiOaR/F2vpN94a2yNY0nAtyXl8YAm626XVhRy+rbOuPJUnuAa9SRr+2Bpz8hK54CPNtu3ddt
-	Fn/c8ADDX14QGN87WnSLD+19v5+BauRt1wi01NGkM8+W1rfsma8Tyc7joFu2tj79zLNuUmSjxwl
-	YcpcjEMAsk7WEm6hhTfr4zw==
-X-Google-Smtp-Source: AGHT+IGpA9PaiK6p4H62d6eljIWg3SGWCwAKEJi8YPHrwmXIK87FySy7IShnB6R6GLTtXuuKMtPpxA==
-X-Received: by 2002:a05:600c:35c8:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-43ecf86b406mr99142655e9.14.1744010561890;
-        Mon, 07 Apr 2025 00:22:41 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:f2a4:b974:cba3:a605? ([2a01:e0a:3d9:2080:f2a4:b974:cba3:a605])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea9a346e3sm109314875e9.1.2025.04.07.00.22.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 00:22:41 -0700 (PDT)
-Message-ID: <58471b67-98ab-4452-8508-d6276d47695e@linaro.org>
-Date: Mon, 7 Apr 2025 09:22:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOwKMHFx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FA9C4CEDD;
+	Mon,  7 Apr 2025 11:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744023678;
+	bh=V7ona84w4jSuNFXXibo8D2BeRebQZTbFHfPOFhk3dc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qOwKMHFxVKuAwBdIguoFqgkI1kcfx3gSWZljnkiDHwa3njNxkfvhVWttdkZtXkrE+
+	 eOYIyoUF5zTYRHdAJwPsn4yVSbyCssBE4wCX61Ub0OcdoMDFvOITdGakVm8+y1dTew
+	 VhLnOaFtabVcbrUnbK99xIRtOCkDQCSOyvBRISP5vAzoowO21U+Z0IrsD3v7r6N291
+	 Ocellf1RmlnfzoyhO37Fwi2PLX+AcogNDXAMd+RfHH75sULbkliaZIW9UUL6l7Zo3O
+	 ZqAQBHewJ40z6b6nZKiS555sK9LNkZG8IX5RJnzq5MKqNg/A68v0EyiHeSiNlWYO8/
+	 YeVic5cvvbLFw==
+Date: Mon, 7 Apr 2025 13:01:14 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Takashi Iwai <tiwai@suse.de>, 
+	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+Message-ID: <20250407-irrwitzig-seilschaft-9eaa7d0b1f09@brauner>
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <87wmc83uaf.wl-tiwai@suse.de>
+ <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
+ <16e0466d-1f16-4e9a-9799-4c01bd2bb005@molgen.mpg.de>
+ <2025040551-catatonic-reflex-2ebf@gregkh>
+ <417f41b3-b343-46ca-9efe-fa815e85bdd3@molgen.mpg.de>
+ <57eec58a-6aae-4958-996d-2785da985f04@oracle.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 2/6] phy: qcom-qmp-ufs: Add PHY Configuration support
- for sm8750
-To: Nitin Rawat <quic_nitirawa@quicinc.com>,
- Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
- Bart Van Assche <bvanassche@acm.org>, Bjorn Andersson
- <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
- Trilok Soni <quic_tsoni@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, Manish Pandey <quic_mapa@quicinc.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20250310-sm8750_ufs_master-v2-0-0dfdd6823161@quicinc.com>
- <20250310-sm8750_ufs_master-v2-2-0dfdd6823161@quicinc.com>
- <1526d8a4-9606-4fb3-bb86-79bd8eb8a789@linaro.org>
- <430ed11c-0490-45be-897b-27cad9682371@quicinc.com>
- <731f1ad1-8979-49a1-b168-56e24b94f4fb@linaro.org>
- <7b08c860-e5f1-4665-8e5e-2a6a3e26a2fa@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <7b08c860-e5f1-4665-8e5e-2a6a3e26a2fa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <57eec58a-6aae-4958-996d-2785da985f04@oracle.com>
 
-Hi,
+On Sat, Apr 05, 2025 at 12:25:00PM -0400, Chuck Lever wrote:
+> On 4/5/25 3:43 AM, Paul Menzel wrote:
+> > Dear Greg,
+> > 
+> > 
+> > Thank you for replying on a Saturday.
+> > 
+> > Am 05.04.25 um 09:29 schrieb Greg KH:
+> >> On Sat, Apr 05, 2025 at 08:32:13AM +0200, Paul Menzel wrote:
+> > 
+> >>> Am 29.03.25 um 15:57 schrieb Chuck Lever:
+> >>>> On 3/29/25 8:17 AM, Takashi Iwai wrote:
+> >>>>> On Sun, 23 Feb 2025 09:53:10 +0100, Takashi Iwai wrote:
+> >>>
+> >>>>>> we received a bug report showing the regression on 6.13.1 kernel
+> >>>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped
+> >>>>>> working
+> >>>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> >>>>>>     https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>>
+> >>>>>> Quoting from there:
+> >>>>>> """
+> >>>>>> I use the latest TW on Gnome with a 4K display and 150%
+> >>>>>> scaling. Everything has been working fine, but recently both Chrome
+> >>>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> >>>>>> working with Scaling.
+> >>>>>> ....
+> >>>>>> I am using VSCode with:
+> >>>>>> `--enable-features=UseOzonePlatform --enable-
+> >>>>>> features=WaylandWindowDecorations --ozone-platform-hint=auto` and
+> >>>>>> for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> >>>>>> """
+> >>>>>>
+> >>>>>> Surprisingly, the bisection pointed to the backport of the commit
+> >>>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> >>>>>> to iterate simple_offset directories").
+> >>>>>>
+> >>>>>> Indeed, the revert of this patch on the latest 6.13.4 was
+> >>>>>> confirmed to
+> >>>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> >>>>>> release is still affected, too.
+> >>>>>>
+> >>>>>> For now I have no concrete idea how the patch could break the
+> >>>>>> behavior
+> >>>>>> of a graphical application like the above.  Let us know if you need
+> >>>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> >>>>>> and ask there; or open another bug report at whatever you like.)
+> >>>>>>
+> >>>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> >>>
+> >>>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> >>>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>
+> >>>>> After all, this seems to be a bug in Chrome and its variant, which was
+> >>>>> surfaced by the kernel commit above: as the commit changes the
+> >>>>> directory enumeration, it also changed the list order returned from
+> >>>>> libdrm drmGetDevices2(), and it screwed up the application that worked
+> >>>>> casually beforehand.  That said, the bug itself has been already
+> >>>>> present.  The Chrome upstream tracker:
+> >>>>>     https://issuetracker.google.com/issues/396434686
+> >>>>>
+> >>>>> #regzbot invalid: problem has always existed on Chrome and related
+> >>>>> code
+> >>>
+> >>>> Thank you very much for your report and for chasing this to conclusion.
+> >>> Doesn’t marking this an invalid contradict Linux’ no regression
+> >>> policy to
+> >>> never break user space, so users can always update the Linux kernel?
+> >>> Shouldn’t this commit still be reverted, and another way be found
+> >>> keeping
+> >>> the old ordering?
+> >>>
+> >>> Greg, Sasha, in stable/linux-6.13.y the two commits below would need
+> >>> to be
+> >>> reverted:
+> >>>
+> >>> 180c7e44a18bbd7db89dfd7e7b58d920c44db0ca
+> >>> d9da7a68a24518e93686d7ae48937187a80944ea
+> >>>
+> >>> For stable/linux-6.12.y:
+> >>>
+> >>> 176d0333aae43bd0b6d116b1ff4b91e9a15f88ef
+> >>> 639b40424d17d9eb1d826d047ab871fe37897e76
+> >>
+> >> Unless the changes are also reverted in Linus's tree, we'll be keeping
+> >> these in.  Please work with the maintainers to resolve this in mainline
+> >> and we will be glad to mirror that in the stable trees as well.
+> > 
+> > Commit b9b588f22a0c (libfs: Use d_children list to iterate simple_offset
+> > directories) does not have a Fixes: tag or Cc: stable@vger.kernel.org. I
+> > do not understand, why it was applied to the stable series at all [1],
+> > and cannot be reverted when it breaks userspace?
+> I NACK'd the upstream revert because I expected an RCA before 6.14
+> final (that didn't happen), and the Chrome issue was the only reported
+> problem and it was specific to a particular hardware configuration and
+> the /latest developer release/ of Chrome. Neither v6.14.0 nor a Chrome
+> developer release are going to be put in front of users who do not
+> expect to encounter issues.
 
-On 25/03/2025 08:37, Nitin Rawat wrote:
-> 
-> 
-> On 3/25/2025 1:04 PM, neil.armstrong@linaro.org wrote:
->> Hi,
->>
->> On 25/03/2025 04:12, Nitin Rawat wrote:
->>>
->>>
->>> On 3/24/2025 11:40 PM, Neil Armstrong wrote:
->>>> Hi,
->>>>
->>>> On 10/03/2025 22:12, Melody Olvera wrote:
->>>>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>>
->>>>> Add SM8750 specific register layout and table configs. The serdes
->>>>> TX RX register offset has changed for SM8750 and hence keep UFS
->>>>> specific serdes offsets in a dedicated header file.
->>>>>
->>>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
->>>>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
->>>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>> ---
->>>>>   drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v6.h |   7 +
->>>>>   .../qualcomm/phy-qcom-qmp-qserdes-txrx-ufs-v7.h    |  67 ++++++++
->>>>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c            | 180 +++++++++ ++ +++++++++-
->>>>>   3 files changed, 246 insertions(+), 8 deletions(-)
->>>>>
->>>>
->>>> <snip>
->>>>
->>>> This change breaks UFS on the SM8550-HDK:
->>>>
->>>> [    7.418161] qcom-qmp-ufs-phy 1d80000.phy: phy initialization timed-out
->>>> [    7.427021] phy phy-1d80000.phy.0: phy poweron failed --> -110
->>>> [    7.493514] ufshcd-qcom 1d84000.ufshc: Enabling the controller failed
->>>> ...
->>>
->>> Hi Neil,
->>>
->>> Thanks for testing and reporting.
->>> I did tested this patch on SM8750 MTP, SM8750 QRD, SM8650 MTP, SM8550 MTP and SM8850 QRD all of these have rate B and hence no issue.
->>>
->>> Unfortunately only SM8550 HDK platform which UFS4.0 and RateA couldn't get tested. As we know SM8550 with gear 5 only support rate A.
->>>
->>> I was applying rate B setting without checking for mode type. Since
->>> SM8550 is only platform which support only rate A with UFS4.0 . Hence
->>> this could be the issue.
->>>
->>> Meanwhile can you help test at your end with below change and let me if it resolves for you. I will also try at my end to test as well.
->>>
->>> =============================================================================
->>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ qualcomm/phy-qcom-qmp-ufs.c
->>> index 45b3b792696e..b33e2e2b5014 100644
->>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>> @@ -1754,7 +1754,8 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
->>>                  qmp_ufs_init_all(qmp, &cfg->tbls_hs_overlay[i]);
->>>          }
->>>
->>> -       qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>> +       if (qmp->mode == PHY_MODE_UFS_HS_B)
->>> +               qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->>>   }
->>>
->>> =================================================================================
->>
->> With this change the UFS works again.
-> 
-> Thanks Neil for quick revert. I'll raise the official change.
-
-Any news of a fix here ?
-
-Thanks,
-Neil
+Exactly.
 
 > 
-> Regards,
-> nitin
+> Note that the libfs series addresses several issues. Commit b9b588f22a0c
+> itself addresses CVE-2024-46701 [1] (in v6.6). I did not add a "Cc:
+> stable" for commit b9b588f22a0c because it cannot be cherry picked to
+> apply to v6.6, it has to be manually adjusted to apply.
 > 
->>
->> Thanks,
->> Neil
->>
->>>
->>>
->>> Thanks,
->>> Nitin
->>>
->>>>
->>>> GIT bisect points to:
->>>> b02cc9a176793b207e959701af1ec26222093b05 is the first bad commit
->>>> Author: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>> Date:   Mon Mar 10 14:12:30 2025 -0700
->>>>
->>>>      phy: qcom-qmp-ufs: Add PHY Configuration support for sm8750
->>>>
->>>> bisect log:
->>>> git bisect start 'ff7f9b199e3f' 'v6.14-rc1'
->>>> git bisect good 36c18c562846300d4e59f1a65008800b787f4fe4
->>>> git bisect good 85cf0293c3a75726e7bc54d3efdc5dc783debc07
->>>> git bisect good b2cd73e18cec75f917d14b9188f82a2fdef64ebe
->>>> git bisect bad b247639d33ad16ea76797268fd0eef08d8027dfd
->>>> git bisect good 9b3f2dfdad1cc0ab90a0fa371c8cbee08b2446e3
->>>> git bisect bad 8dc30c3e4cf8c4e370cf08bd09eb87b0deccd3de
->>>> git bisect bad 100aeb03a437f30300894091627e4406605ee3cb
->>>> git bisect bad b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
->>>> git bisect good 8f831f272b4c89aa13b45bd010c2c18ad97a3f1b
->>>> git bisect good e45cc62c23428eefbae18a9b4d88d10749741bdd
->>>> git bisect bad ebf198f17b5ac967db6256f4083bbcbdcc2a3100
->>>> git bisect good 12185bc38f7667b1d895b2165a8a47335a4cf31b
->>>> git bisect bad e46e59b77a9e6f322ef1ad08a8874211f389cf47
->>>> git bisect bad b02cc9a176793b207e959701af1ec26222093b05
->>>>
->>>> CI run: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba- tester/-/jobs/229880#L1281
->>>>
->>>> #regzbot introduced: b02cc9a17679
->>>>
->>>> Neil
->>>
->>
+> The final RCA reported in [2] shows that there is nothing incorrect
+> about b9b588f22a0c.
 > 
+> In addition, the next Chrome release will carry a fix for the clearly
+> incorrect library behavior -- applications cannot depend on the order
+> of directory entry iteration, because that can change arbitrarily, and
+> not just because of file system implementation quirks. You will note
+> that even after sorting the directory entries, the library still had
+> problems discovering the accelerated graphics device.
+> 
+> Reverting now might follow the letter of the rule about "no regressions"
+> but IMHO moving forward from here seems to me to be the more
+> constructive approach.
 
+I agree.
