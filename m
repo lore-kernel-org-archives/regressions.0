@@ -1,128 +1,104 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A55D264A9E
-	for <regressions@lists.linux.dev>; Tue,  8 Apr 2025 09:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E60264FAE
+	for <regressions@lists.linux.dev>; Tue,  8 Apr 2025 09:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104453; cv=none; b=DQdhTxWfIObmBPqeSO6UGnL0Z64Keo1KTvmLzdTQobkklzMok/Lsw1UaCA5bwHY95buJX4hK9xgBhot44nO4TuAomQvdlGXarNpS4rdULzsfaxzn4jPKSst82pZkiC9mMB2wMkOewu4qiG3o73fZ8eR1l3crPhj+6XsoYkhif2g=
+	t=1744104890; cv=none; b=JoCs254Vl2npqgxHEQBxar8L4iRxWhTHfNiD9+hlizEQSReeOyy91PNIGMbzkdlY4G1MF8x+X/RdjqhZiN2QTkJWZTxYy2XMHoNaMUal01etH+MCQScCEcWspFQdXmy+qx+UDgCpUYuzd+B1EtYM/Z1IWIh7NjvDrUXh/FQZEEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104453; c=relaxed/simple;
-	bh=aMbRfljk3VL783Mt6idyLGub6ZrKA5QxLM0kTwp3sf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i+QUpUxtTWMQuaWyfXLJ72hWgi4QFnNeK6v61FEQf4R4r7ujeCoMzSLVJxsQSEf4ceN1e6NyNjAaPrAmxfI4mObVz6d+znDksIos1+LCrXAHpMeMk0M+Fml5VLrB8RMEHEbsIJctMo4yqpceezUeWI98oB55Ih1gPtP5KRyUYWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AD33E61E647BB;
-	Tue, 08 Apr 2025 11:26:48 +0200 (CEST)
-Message-ID: <a8e7171b-d859-4611-9681-e4c614f29d64@molgen.mpg.de>
-Date: Tue, 8 Apr 2025 11:26:47 +0200
+	s=arc-20240116; t=1744104890; c=relaxed/simple;
+	bh=PtTeReiTLp+RqAL/cLFtmFLCbjN4w5rpWp84zoyWVVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SBiy5kufmFb3e+WcMTht0PRjOQwvUoh6tOjuFjFY6sHBnwcz0HAiyp/oxDfmfVFggpn7ztzWIIXAyoL741bWLzz1sLO7xjwGAkWvR8PayCsFDmi8NLIyVH/p0WNpAHLVPAGLQQhQfGpX3phfGDZOsANI+WwSfNlIE6hamV0JdZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhqG9R/b; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhqG9R/b"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bd5f25ea6so1257476a34.1
+        for <regressions@lists.linux.dev>; Tue, 08 Apr 2025 02:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744104888; x=1744709688; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g7Bg64jM6tSWnXjFr3goi8956rwlNjPV/077kclDS9I=;
+        b=mhqG9R/btDccCg7mb8yqvYytXVX7I5PrFStys6GCaOPPRx1egYacG8AmsAwRZ6hvzr
+         JL9kuGkOSrCPSITQj4dyFFq0Z2iWKesJRVnPMlNPsLHZ4guqwyB0K2Hcx/7e293Hj3+5
+         xQh8UM4uZBUsw/pFNko4VB9+MbPaj96MdmhpyjZdpvYl9snHr6OEmreib5qiatqXAIzF
+         XwIeSq+8z7DKGVxhf/7csxFyeV5zACHzuZJZrBEu51xlaIKCFRhs24c00cuIQ+MsHSN3
+         B9QR+HbjXNIf9UijUtqoe5lOkVhV/rvEzWh7+mzIl9r7kXATuNa3pk0ZQb0D+sbImJL4
+         17qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744104888; x=1744709688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g7Bg64jM6tSWnXjFr3goi8956rwlNjPV/077kclDS9I=;
+        b=L/YGAPktC+uJKzx2pLMRvP7acy4Ipxk4Nwdgix1OxDe4pzfzlg26T6MegpwC6FRSSW
+         YQ97atAm+lupC01osXcnRs8XXCnJBl+hSmM5DyGiIza51hzFXMXl7RaEWnwarNAAWlH6
+         aMK6sfzRH9veWCl2oQKyXwHvAnV8BF+mBWnYMO9zMoO7ebYG1mDYkZaLmvaYOKbZk63T
+         gF52qEIh8lZUcjLNWpDS8ZmL025K84oVBAX/v8EQjblUXs85LdYnQ/E9pQXyHOlDXkQX
+         HoEOoiR8zwumcXburZfO5ooHNSWMzF5eeTkt7iM7qyRHrCELQwZLVwlvG1o+WiVx0odp
+         E3pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWD3ejES5X9sN+GHTG7rso2ahbsrpA/c2M3fkeVSZrMby99LnnNOkA3btwzVtd16YFwPJ9uEGMuK5jvXg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMrrP35TcAoH9EZIAtwggyJtm45XVsbttf0+LLeW0bbAUAejjk
+	KvQwbHlV4ANuo64pLPtbjldYgBXBbBauCP+HGOQO9hW3411KgO5DExnGke21mn8pX9aCy6bLEN4
+	FxFNcA3HJqRk5Sljl4g7X76cRCr4=
+X-Gm-Gg: ASbGncteJ4Ll/4irEtLa4CMFnMT0u/IZcI0ArzBLSAcs5n7fWQfMoq31kMm4S1b6iHT
+	EPOHeNnAyEbc85jElrogn3pDBu2t1Fko/kJkz9FjRoy0u609QjFfqbuMTzlkLoM0IQ4Lmsp/C69
+	s123B82d5AQXT9bvokkiyjAbQJhVex
+X-Google-Smtp-Source: AGHT+IF0RL92qSZNzUfU40xIFIvrvGm2xvag6WpHMC5o7D5ttqQSxe1/GUnQ2Gjqq953tDRmDPDtxGBEWbXMsdqtCLE=
+X-Received: by 2002:a05:6830:6c10:b0:72b:a3f3:deb6 with SMTP id
+ 46e09a7af769-72e3665915emr9937036a34.4.1744104887890; Tue, 08 Apr 2025
+ 02:34:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Amitkumar Karwar <amitkumar.karwar@nxp.com>,
- Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
- Tero Kristo <kristo@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-serial@vger.kernel.org, regressions@lists.linux.dev
-References: <20250408083512.GA26035@francesco-nb>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250408083512.GA26035@francesco-nb>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
+ <20250407-unmodern-abkam-ce0395573fc2@brauner> <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
+ <20250408-regal-kommt-724350b8a186@brauner> <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
+ <20250408-vorher-karnickel-330646f410bd@brauner>
+In-Reply-To: <20250408-vorher-karnickel-330646f410bd@brauner>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Tue, 8 Apr 2025 14:34:37 +0500
+X-Gm-Features: ATxdqUE9g2rEeeo1yAbwscarMFto7S559Ky8HZPkBzoWbN-Fw3wbmzlUemspT4o
+Message-ID: <CABXGCsO56m1e6EO82JNxT6-DGt6isp-9Wf1fk4Pk10ju=-zmVA@mail.gmail.com>
+Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
+ systemd-nspawn on my system
+To: Christian Brauner <brauner@kernel.org>
+Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, lennart@poettering.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[Cc: +regressions@]
+On Tue, Apr 8, 2025 at 2:18=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+> I'm confused why that's an issue:
+>
+> > git reset --hard 474f7825d5335798742b92f067e1d22365013107
+> HEAD is now at 474f7825d533 fs: add copy_mount_setattr() helper
+>
+> > git revert --no-edit 474f7825d5335798742b92f067e1d22365013107
+> [work.bisect e5673958d85c] Revert "fs: add copy_mount_setattr() helper"
+>  Date: Tue Apr 8 11:14:31 2025 +0200
+>  1 file changed, 33 insertions(+), 40 deletions(-)
 
-#regzbot introduced: v6.14..v6.15-rc1
+> git reset --hard v6.15-rc1
+HEAD is now at 0af2f6be1b42 Linux 6.15-rc1
+> git revert -n 474f7825d5335798742b92f067e1d22365013107
+Auto-merging fs/namespace.c
+CONFLICT (content): Merge conflict in fs/namespace.c
+error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
+hint: after resolving the conflicts, mark the corrected paths
+hint: with 'git add <paths>' or 'git rm <paths>'
+hint: Disable this message with "git config set advice.mergeConflict false"
 
-
-Dear Francesco,
-
-
-Thank you for your report.
-
-Am 08.04.25 um 10:35 schrieb Francesco Dolcini:
-
-> I do have the following kernel warning with 6.15-rc1, on a TI AM62
-> platform (arm64), single CPU core, using btnxpuart driver, any idea?
-> PREEMPT_RT is enabled, if it matters.
-> 
-> Either the issue is not systematic, or multi cores SoCs are not affected
-> (no error on the exact same image on a dual nor on quad core TI AM62).
-> 
-> 
-> [   23.139080] Voluntary context switch within RCU read-side critical section!
-> [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
-> [   23.139172] Modules linked in: uas onboard_usb_dev optee_rng dwc3 evdev btnxpuart spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils optee spi_cadence_quadspi tee gpio_keys usb_conn_gpio display_connector roles dwc3_am62 mwifiex_sdio k3_j72xx_bandgap mwifiex rtc_ti_k3 cfg80211 tidss sa2ul sha512_generic snd_soc_davinci_mcasp authenc drm_display_helper snd_soc_ti_udma crypto_null snd_soc_ti_edma sha1_generic snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx snd_soc_wm8904 ti_ads1015 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c tps65219_pwrbutton crc_ccitt tpm_tis_core tpm rng_core tc358768 m_can_platform pwm_tiehrpwm m_can spi_omap2_mcspi can_dev bluetooth ecdh_generic ecc rfkill libaes loop fuse ipv6 autofs4
-> [   23.139459] CPU: 0 UID: 0 PID: 61 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT_RT
-> [   23.139471] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
-> [   23.139478] Workqueue: hci0 hci_power_off [bluetooth]
-> [   23.139615] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   23.139625] pc : rcu_note_context_switch+0x3c4/0x430
-> [   23.139647] lr : rcu_note_context_switch+0x3c4/0x430
-> [   23.139658] sp : ffff8000819fb740
-> [   23.139661] x29: ffff8000819fb740 x28: 0000000000000000 x27: ffff0000079d2010
-> [   23.139673] x26: ffff0000011e7810 x25: ffff000001c2c200 x24: 0000000000000000
-> [   23.139688] x23: 0000000000000000 x22: ffff000001c2c200 x21: ffff000001c2c200
-> [   23.139700] x20: ffff800081083ec0 x19: ffff00001da9fec0 x18: fffffffffffe7e78
-> [   23.139712] x17: ffff7fff9ca1c000 x16: ffff800080000000 x15: ffff00001da9f8c0
-> [   23.139726] x14: fffffffffffc7e77 x13: 216e6f6974636573 x12: 206c616369746972
-> [   23.139738] x11: 6320656469732d64 x10: 6165722055435220 x9 : 206e696874697720
-> [   23.139750] x8 : ffff80008113f040 x7 : ffff8000819fb4e0 x6 : 000000000000000c
-> [   23.139761] x5 : ffff00001da95888 x4 : 0000000000000000 x3 : 0000000000000027
-> [   23.139775] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000001c2c200
-> [   23.139788] Call trace:
-> [   23.139793]  rcu_note_context_switch+0x3c4/0x430 (P)
-> [   23.139813]  __schedule+0xa0/0x7dc
-> [   23.139830]  schedule+0x34/0x11c
-> [   23.139841]  schedule_timeout+0x8c/0x110
-> [   23.139861]  wait_for_completion_timeout+0x78/0x14c
-> [   23.139873]  ti_sci_set_device_state+0x120/0x1fc
-> [   23.139886]  ti_sci_cmd_get_device_exclusive+0x18/0x30
-> [   23.139899]  ti_sci_pd_power_on+0x28/0x54
-> [   23.139916]  _genpd_power_on+0x98/0x188
-> [   23.139927]  genpd_power_on+0xa8/0x168
-> [   23.139940]  genpd_runtime_resume+0xc0/0x298
-> [   23.139957]  __rpm_callback+0x48/0x1a4
-> [   23.139974]  rpm_callback+0x74/0x80
-> [   23.139987]  rpm_resume+0x3b0/0x698
-> [   23.140000]  __pm_runtime_resume+0x48/0x88
-> [   23.140012]  omap8250_set_mctrl+0x2c/0xbc
-> [   23.140030]  serial8250_set_mctrl+0x20/0x40
-> [   23.140046]  uart_update_mctrl+0x80/0x110
-> [   23.140062]  uart_dtr_rts+0x104/0x118
-> [   23.140079]  tty_port_shutdown+0xd4/0xe0
-> [   23.140092]  tty_port_close+0x3c/0xb8
-> [   23.140103]  uart_close+0x34/0x98
-> [   23.140116]  ttyport_close+0x50/0xa0
-> [   23.140137]  serdev_device_close+0x40/0x5c
-> [   23.140150]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
-> [   23.140175]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
-> [   23.140243]  hci_dev_do_close+0x2c/0x70 [bluetooth]
-> [   23.140309]  hci_power_off+0x20/0x64 [bluetooth]
-> [   23.140379]  process_one_work+0x148/0x284
-> [   23.140403]  worker_thread+0x2c8/0x3dc
-> [   23.140414]  kthread+0x12c/0x208
-> [   23.140426]  ret_from_fork+0x10/0x20
-
-As I understood, that it’s a regression, and you can reproduce it, would 
-it be possible, that you bisected the issue?
-
-
-Kind regards,
-
-Paul
+--=20
+Best Regards,
+Mike Gavrilov.
