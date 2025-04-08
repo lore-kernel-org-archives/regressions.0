@@ -1,51 +1,47 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8119B265CCC
-	for <regressions@lists.linux.dev>; Tue,  8 Apr 2025 09:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBCF2676C6;
+	Tue,  8 Apr 2025 10:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104939; cv=none; b=XF447oFQ0f+UNPz8y2XzvaTMWruoAA/VEi2FOLuQR0tqbZOIfVNaKIsGpKLt4dEa0zC0k8zYB7C9IH0Kry/ffRPJDiWRit9aTZohkP0pc8zwVu7cPFqrDxy3VE0pgpfF5mOjdlnuTNJKBb6wywQyzw8kRk9Qrw0Tq9XZCGruuYI=
+	t=1744107722; cv=none; b=EQPMVnQxSJL+Q7G/KFtujLhwFpW/UvxAnsFrK1KUy13/57E9avTSztPReCHMP9T/+8wRr013FYdZreSsjYSv3BNC4oReagoSsdbi7++eLNEB1htwy6v+uUld2K95n6Q1VgyAzcjXFvYPKyz8i4bnWFgaFrzBdF9aiUUyZk2pR6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104939; c=relaxed/simple;
-	bh=EJSHMKpGhViqTfouoTjG+vkCRWxUv1idSyLcCyeRa1Q=;
+	s=arc-20240116; t=1744107722; c=relaxed/simple;
+	bh=YKtABz1DIsJcJgmLq39k67cRVyl9T/CdI7GB2YjsD44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FowtkyRXLclY4D5BWZUHH8gEapeI9B+ojKAZz9fq83QD/WuJUmNNaKaNZO3LYPR6vAUVMPRYXC41xE3G40WrL2wfIGP9kQwYjfVsoSBFA5KfRFWIppJPKh2tz3tKmT2WdcsblUQrJWi9eGz8Zqk0GHOgXQl+ONAg6cnLD1nzADo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=kRPeka47; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=JVrLV186NbNeyHAM5eHKEXFsfLwSMo+2J4N6VzaQW2d3Za9JcEY+Pbzf5n1TfnC3IGiZmNIyNGUIljlJy99SUf0hHYQSZFOdO2MNPaf/A4yDwPfZWSA0n1iSTGYNyYMVmFjalY3bT/sK/thMM7pBCtCspnlDtk2bjkXZrBg2F7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HreGcEL6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="kRPeka47"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 7B98F1F9BC;
-	Tue,  8 Apr 2025 11:35:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744104935;
-	bh=epFMM6E3b5n0AAjQqhCMwFutqLu+axl/bDlyBr62jpM=;
-	h=Received:From:To:Subject;
-	b=kRPeka47FL9mUb/LiDd/KpngGvLjxHugS25K7j24KcMayZUKVJPhJdJic4fXTaRVi
-	 fPOKGwxQ9qqLyl/6RhA+Mkw+mSUUotd/VLHTPRETb8/UwuMohmuRXW2/8U1bs6f4VH
-	 Oi86j2bfeCOn5i5AOeFvnjiAxLLKcY1NZFy8sbaYmOVOVxEuQogIE6orN3NX/x1J8h
-	 YqBnKXKQ9DHpF+MV9LJeyRylGN9US8ePAGtJBC4+Ph1R1G+T1m6qPROnW/SZtOPqNl
-	 HOkkaWNeoZ7K7vLm7xW/IvqQLofWQOA+ODX83FJvJAcIHsqOYm8yU5rO7K+M2NBmFz
-	 tJS0d65nIZHLw==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 328987F8D5; Tue,  8 Apr 2025 11:35:35 +0200 (CEST)
-Date: Tue, 8 Apr 2025 11:35:35 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Amitkumar Karwar <amitkumar.karwar@nxp.com>,
-	Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-serial@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-Message-ID: <Z_Tt58Ar9TAUy4gB@gaggiata.pivistrello.it>
-References: <20250408083512.GA26035@francesco-nb>
- <a8e7171b-d859-4611-9681-e4c614f29d64@molgen.mpg.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HreGcEL6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B1BC4CEE5;
+	Tue,  8 Apr 2025 10:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744107722;
+	bh=YKtABz1DIsJcJgmLq39k67cRVyl9T/CdI7GB2YjsD44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HreGcEL6PDKoCk4edSWlmqENtbWYb6kRUmMUuC7IbFZkHAxv35enDmM5NoJajchV3
+	 pyZ+jkf7N21KkQnbuyDYc6CQfz7PTmaDQHyrDFxPPA4MOgB61HzghayGaqVt8dHIJa
+	 3ube/42GryeYzCbVCmKXkcxdffUFVBFe1nbMDdg7JxecrS0SXw4uRGn3srWuftZkZ2
+	 QIXLZUTAGXA3QL2/msv3HE5tnKakPgZ/+IFUZis9KZsmwST+3bMwpKJQ2wdkOOslqb
+	 vlaa3gntV/oCU2g5NNGcmTE8GzrZ6IGUnNH4v5o243G6+pHYCKJ9s2hK6nnj8OFq1N
+	 UW+ecScLrlrwA==
+Date: Tue, 8 Apr 2025 12:21:58 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
+	lennart@poettering.net
+Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
+ systemd-nspawn on my system
+Message-ID: <20250408-deprimierend-bewandern-6c2878453555@brauner>
+References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
+ <20250407-unmodern-abkam-ce0395573fc2@brauner>
+ <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
+ <20250408-regal-kommt-724350b8a186@brauner>
+ <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
+ <20250408-vorher-karnickel-330646f410bd@brauner>
+ <CABXGCsO56m1e6EO82JNxT6-DGt6isp-9Wf1fk4Pk10ju=-zmVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -55,38 +51,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a8e7171b-d859-4611-9681-e4c614f29d64@molgen.mpg.de>
+In-Reply-To: <CABXGCsO56m1e6EO82JNxT6-DGt6isp-9Wf1fk4Pk10ju=-zmVA@mail.gmail.com>
 
-Hello,
-
-On Tue, Apr 08, 2025 at 11:26:47AM +0200, Paul Menzel wrote:
-> [Cc: +regressions@]
+On Tue, Apr 08, 2025 at 02:34:37PM +0500, Mikhail Gavrilov wrote:
+> On Tue, Apr 8, 2025 at 2:18 PM Christian Brauner <brauner@kernel.org> wrote:
+> > I'm confused why that's an issue:
+> >
+> > > git reset --hard 474f7825d5335798742b92f067e1d22365013107
+> > HEAD is now at 474f7825d533 fs: add copy_mount_setattr() helper
+> >
+> > > git revert --no-edit 474f7825d5335798742b92f067e1d22365013107
+> > [work.bisect e5673958d85c] Revert "fs: add copy_mount_setattr() helper"
+> >  Date: Tue Apr 8 11:14:31 2025 +0200
+> >  1 file changed, 33 insertions(+), 40 deletions(-)
 > 
-> #regzbot introduced: v6.14..v6.15-rc1
-> 
-> 
-> Thank you for your report.
-> 
-> Am 08.04.25 um 10:35 schrieb Francesco Dolcini:
-> 
-> > I do have the following kernel warning with 6.15-rc1, on a TI AM62
-> > platform (arm64), single CPU core, using btnxpuart driver, any idea?
-> > PREEMPT_RT is enabled, if it matters.
-> > 
-> > Either the issue is not systematic, or multi cores SoCs are not affected
-> > (no error on the exact same image on a dual nor on quad core TI AM62).
-> > 
-> > 
-> > [   23.139080] Voluntary context switch within RCU read-side critical section!
-> > [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
+> > git reset --hard v6.15-rc1
+> HEAD is now at 0af2f6be1b42 Linux 6.15-rc1
+> > git revert -n 474f7825d5335798742b92f067e1d22365013107
+> Auto-merging fs/namespace.c
+> CONFLICT (content): Merge conflict in fs/namespace.c
+> error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
+> hint: after resolving the conflicts, mark the corrected paths
+> hint: with 'git add <paths>' or 'git rm <paths>'
+> hint: Disable this message with "git config set advice.mergeConflict false"
 
-...
+Resolved it for you:
 
-> As I understood, that it’s a regression, and you can reproduce it, would it
-> be possible, that you bisected the issue?
-
-I am not sure if this is a regression. It's possible that the issue is not new,
-and it is just non systematic. For sure it was reproduced by our CI on v6.15-rc1.
-
-Francesco
-
+https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.bisect
