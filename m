@@ -1,339 +1,125 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A8D26A0C8
-	for <regressions@lists.linux.dev>; Wed,  9 Apr 2025 15:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5761C5F23
+	for <regressions@lists.linux.dev>; Wed,  9 Apr 2025 17:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214193; cv=none; b=SmlqDr9QCI5SnsfoBIzrB0Py2oCBy52FUaB8JQYm6ddMaUYxryoYoE92r9jcVkqecJ7RHkgTAK0l5/goImErbbRo45Y9bGeRTm6ez9Ai3BoBI3RhlUt1MoGC0TveTjVHEJ7sL805H7jP04chVt9L20o3xkXpGuagBurmbPiBr1k=
+	t=1744218877; cv=none; b=MoUQeeV0t9JOtOSH8v1TaN/nc9p/YvGYuimfiMS1vIS7Ksj/8L8NaqGZhjBJAdRLq0RhJdAqhYwa8UG+oPHoD2T1nB0iUD5Us/d7DrfWKVy2xQ9pBaqwfcAP7/h+U/mFGlp+hnjwduO+UdGeHT3wMKiD3UX4ViXmq7el9XCAALw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214193; c=relaxed/simple;
-	bh=hob3GHAx1ipfX0P23W8hQp6pUWXUFZ926AVVxlqLlk0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ry4eTVzeFMKmUblr/cKKPVRfqjwFjV1g5wE4zP9t2LhRnrFekD7Tto6mMxCRvSRUIs5RzH/bp0zyizBmIrQrNya8MHxicppoEyBEVDzG25XPeYzEcb50bn3wznJvyaCtild7z13yOoNGHWLPD6eaFYAs5B5IDS/g0Lxcz/zYp1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hTuWFyUV; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744218877; c=relaxed/simple;
+	bh=2yCH11+QS6uXp6BOH0cT74jcB7dPGpLEP/wtuGCkuZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWdQRNwY7/9d9PgfMDnKnKMLIGIVQ3+yfvdMfH/h0NumZC/nUlAe3rqjMR4Ta/0QOH5NbEGPp6OcBC11oZST3qy0RgswXJOuVMpVYZs1XGcZT2UUMJdXk3QpNosht1+lQeiDpt1CCjbT3tAmD5TjKQTAiVO77W9jDPkyU99eb08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSJfhD6j; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hTuWFyUV"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-523f670ca99so3163887e0c.1
-        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 08:56:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSJfhD6j"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aca99fc253bso235455866b.0
+        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 10:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744214190; x=1744818990; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8AOUBaKz4k65EfvFtHnS9r16WBFkIa0uC8s/4pmp31M=;
-        b=hTuWFyUVy4WhXo7oja5Qu7XJJNgWoRBRSFxshHEl7rBRx85fYw1YtCpTv4OPUH/cCp
-         hD9gpepH30kZmP+px5YfX1gCpXQ/wGrhnF3/K8uVm4puE2SYMSBbcB6ZTf6ORliJs64C
-         MIwq8WBh/p8URwifjmM+++O7aA7MR0SIgcxL+3AiE/Ee11Z5Yh8nQmwwbL4gWirBG6w3
-         Ke6q1A+o4Tre+GMtvNQmkVDkRbjgONrnmHLESEAxiodxFCDsSkoRHJNhWujId6eRqs0n
-         JpCxue+wl1wBkfDxme4xMewd/hP5ZbOcJ985Q8+GXQaFrS3oi2BT5N7dz63ypVgplBRF
-         Cmdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744214190; x=1744818990;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1744218873; x=1744823673; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8AOUBaKz4k65EfvFtHnS9r16WBFkIa0uC8s/4pmp31M=;
-        b=E6ejqOC76mU+LfuggHsFCFkU1nnyh3ThFSbK9QN6ue43speyWTVyWo/kYzWzLEce0P
-         W0YhijshZ0IEDxBufKkKs9XGYtq2+TG+n0cnlmpTQwS0ltV2zijoDkLLXxaDjhtzt0+S
-         kP++b1amBYtGVFRgAOwd3pvk2u9r8l8Ui5F6cTsOs9u6i5blF0keQLQU/tCdgW76/br8
-         M/CxjqOMevKNLJY6kbKufJ7JGJp+NRdY17Cc0QtmULJjXd/7kr4Pj0wkdIkcUZJaX1gO
-         l9/111q/O6/I4wCouk+I1JAFExQmcr0xTk2r2RvJVySUP5a9fEzCzJWtEbKUD+OppZMM
-         CYLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlG9dcv+/VRT6VdbCPY7QkRUwAex/FYUd1O58PnHa6LyATPsGneUQ8jsH+ogfzCPLB5ejoLg6GsL4HDw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzjMWiHqeFZyjF1pgnZj4P2jkfVUOWgz2+6EjrQOYer6KadsGJ5
-	Ki5DEYPhVyDIxgBVQNF1AFNcxuPKKVZP8S4z2Clue8JsAH0fYzN2nY9Yxms6HyR44mK68F6PUPY
-	T6p5O+ygxMhbR4CR+jmodHECXbvfzJe9uhozYoTk2QtbbvIfeqXg=
-X-Gm-Gg: ASbGnctrOYfouDmYIzOVxjUkLN7wfxISwfMlkYokOtNbQm3tM62KcyAYzE4zidDr5kt
-	rImCq0lPNRBorhtJt7gWAweTmeFr4yIxORpi8+4MhOt/yRcmDprJ8jakRr23Z1ohu64JQFAlS1d
-	W5BLOw3m9CXitVH0XKuD1ruhnp6auCQZqI95uzm0BHQsjxocOtOD2DfYjZgZ7X1iZOOw==
-X-Google-Smtp-Source: AGHT+IHAYOkRnjj4GyTCCh1iY/ZOItnunEtUpgqT8hpMTBxn0on/ShchAm+CXwhiK3vw5FX6fk0YxzKhFmWiXa4EPd0=
-X-Received: by 2002:a05:6122:3291:b0:520:3e1c:500f with SMTP id
- 71dfb90a1353d-527a923823fmr2577969e0c.8.1744214190187; Wed, 09 Apr 2025
- 08:56:30 -0700 (PDT)
+        bh=q4jn7E2mOey7c52PMiFK2mN0C3Pf6nDc9jBX5P7DR0w=;
+        b=OSJfhD6jOe25YgNKT5HnLTuiTxKEnVYCbuYucUJlc5ETMCi6uwz8HYr4QCHYjTjUFh
+         bIK+MAwNa/29CPjYCxPyzze/yxPjzTDDze8pe2s10HtSCjVCBFRvoYErgO9cjNLF/hLy
+         7xvTjXw05fexmMrL/WCsLytzSpB5zk14s+V0zQzlnM5O4hNfCQFnlB/h79gyUEBPAhZH
+         MvP2meZV31cjdHlFOcogneHQEXeOLgaNuDrdJh4AMDDMRCY0YlXDgk/fdZx0q/qzv2u1
+         g0X3Y4RQWK4hVe3e7shGS1JLbeSPa4PXxVgrj5sazETqDeQWKFtVGx08r22EZwOCocin
+         s9WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218873; x=1744823673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q4jn7E2mOey7c52PMiFK2mN0C3Pf6nDc9jBX5P7DR0w=;
+        b=UIZyfW/CYASNNL7IUcuK6CDj2259glRepajgNJ0BN4YvsttFrWGLAnVCzfFZABrrgF
+         jLUsiINYvFTmflSTh7Jibe3VO8CIdt73fzWh+EJnJI/IiTpm9TaODO/9zrDtN1McUpQm
+         TCx1/hYKdvUybiL+y9NQw9BzF2A2MYZxo3zfN3YptSeScCCTkOm8zWL1Z0csHUdzX+Zl
+         JOXW68ZZpGyBQiBJqviXrPZS92TIMSr1i5izWEJPBd5ygXB8gSt4xaI2A1JKyWhC9vtk
+         Q58kxMRznZSAOYu+UDWMYHv5fxcdgI+lk+ZLXrAcSrs5n1REEPdx2Oq8SHIcqtgIfeED
+         4dlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWESHug/L/eEYSy8KHwcMZo+SGH0dsbslH70sIHQjctP7HFVQJtqjYjWm9PCE0japCn5hrfmM7T49FXSg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw9/GMLlnqaDrK8DNm9iYYjIHHiVUrXczrF0rWzIgXO7DqtW50t
+	ln6sPoE8p4cQwM4Xy6507BlEAy/hDlpB1faYZe5uPA5ACNtjOMwz
+X-Gm-Gg: ASbGncv5uJf6cN8vhAc9O5E79atAak/a7dZAxoR6PkAPD+7RNmlA26tHbh07+8OxBgt
+	tNaLpfo/krPQ1apGDC+k7mmQUKSX7uClaJLrPn+XiNYo1UWk+mtKTRpnLG6/hrJZEJgBKCxvENb
+	Z53OtqtT+6WepDTmh749ZeELQEeDbXvFjcPo5i9LqZMhS3NPJK/OeH3j9j0h4dx0VATfuYc17u9
+	wxdAM+TGLPp+fiHx1InG7aRxMO1+/+pSu4gJ4lm54Cs7L6yeU0xuMQ51rltlYC51pwEy6hzGhK9
+	1lwcKZ/MRIPZhzmILPmslRFlHcZMABpt/dKaKTn+VFSkBK//4Dc0LQr/Q0ETjF+vV7HIzzba+g=
+	=
+X-Google-Smtp-Source: AGHT+IFVIwUn9gnSu5wpLhhWkHk63r3TT3qIYaq3NQxQez4llYrua2mut70dsHOl+ApdX+lUsRLs0g==
+X-Received: by 2002:a17:907:97d4:b0:ac3:121e:f2cb with SMTP id a640c23a62f3a-aca9d5dd4femr299108766b.1.1744218872489;
+        Wed, 09 Apr 2025 10:14:32 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce732dsm124991466b.171.2025.04.09.10.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:14:31 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 00A30BE2DE0; Wed, 09 Apr 2025 19:14:30 +0200 (CEST)
+Date: Wed, 9 Apr 2025 19:14:30 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org, Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
+ VivoBook_ASUSLaptop TP401MARB_J401MA)
+Message-ID: <Z_aq9kkdswrGZRUQ@eldamar.lan>
+References: <878qojypu6.wl-tiwai@suse.de>
+ <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+ <87mscw4dst.wl-tiwai@suse.de>
+ <Z_AxsuGoaVK9P3L4@eldamar.lan>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
+ <Z_DNcG7wp4iPh5NH@eldamar.lan>
+ <CAJ8x=4hmi0Afneepe15Ef-kzVZO+uyw5Row+Cooob_QR=DpwQg@mail.gmail.com>
+ <Z_E9LbOiYN5dPpSb@eldamar.lan>
+ <87zfgu1klk.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
- <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
-In-Reply-To: <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 9 Apr 2025 21:26:18 +0530
-X-Gm-Features: ATxdqUGUsxvoW2AC8LyCA3f5WgQxLUMC2Q7RV8pjSCJR4XLdNVjwMGpmUyBY9Fo
-Message-ID: <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
-Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfgu1klk.wl-tiwai@suse.de>
 
-On Wed, 2 Apr 2025 at 21:04, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 31/03/2025 5:03 am, Naresh Kamboju wrote:
-> > Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
-> > Linux next and Linux mainline.
-> >
-> > First seen on the v6.14-7245-g5c2a430e8599
-> >   Good: v6.14
-> >   Bad: v6.14-7422-gacb4f33713b9
->
-> Sorry, I can't seem to reproduce this on my end, both today's mainline
-> and acb4f33713b9 with my config, and even acb4f33713b9 with the linked
-> LKFT config, all work OK on my Juno r2 (using a SATA SSD and PCIe
-> networking). The only thing which stands out in your log is that PCI
-> seems to give up probing and assigning resources beyond the switch
-> downstream ports (so SATA and ethernet are never discovered), whereas on
-> mine it does[2]. However that all happens before the first IOMMU
-> instance probes (which conveniently is the PCIe one), so it's hard to
-> imagine how that could have an effect anyway...
->
-> The only obvious difference is that I'm using EDK2 rather than U-Boot,
-> so that's done all the PCIe configuration once already, but it doesn't
-> seem like that's significant - looking back at a random older log[1],
-> the on-board endpoints were still being picked up right after
-> reconfiguring the switch, well before the IOMMU comes into the picture.
->
+Hi,
 
-Since it is a still issue on mainline and next,
+On Sat, Apr 05, 2025 at 09:20:23PM +0200, Takashi Iwai wrote:
+> On Sat, 05 Apr 2025 16:24:45 +0200,
+> Salvatore Bonaccorso wrote:
+> > 
+> > Control: tags -1 - moreinfo
+> > 
+> > On Sat, Apr 05, 2025 at 09:08:38AM -0400, C.D. MacEachern wrote:
+> > > Thanks, running it now, microphone levels working fine now! Testing
+> > > recording and playback, working perfectly.
+> > 
+> > Many thanks for testing the patch and confirming the fix.
+> > 
+> > Takashi, assume you will monitor that 8983dc1b66c0 ("ALSA:
+> > hda/realtek: Fix built-in mic on another ASUS VivoBook model") get
+> > backported to all the relevant stable series? TTBOM, it won't apply
+> > cleanly to 6.1.y so Greg or Sasha might not get it down to 6.1.y
+> > witout explicit backport request?
+> 
+> As it has Fixes tag, it'll be backported usually to stable branches,
+> yes.  If it's missing, just ping stable ML.
 
-Bisected and reverted patch ^ causing kernel warnings at boot time
-but finding the SSD drive,
+Yes right, and in meanwhile it has made the way to 6.12.y, 6.13.y and
+6.14.y. I just fear it won't go as well down to 6.1.y automatically as
+the change does not apply "cleanly" so might need to make a hint :)
 
-  [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
-  iommu: Get DT/ACPI parsing into the proper probe path
+Thanks a lot for your work, I will apply ahead the 6.1.y inclusion the
+fix as well in Debian to address https://bugs.debian.org/1100928 .
 
-pcieport 0000:00:00.0: late IOMMU probe at driver bind, something fishy here!
-WARNING: at drivers/iommu/iommu.c:559 __iommu_probe_device
-
-I see boot warnings [1]
-I am happy to test debug patches if you have any.
-
-[1] https://lkft.validation.linaro.org/scheduler/job/8212667#L1291
-
-- Naresh
-
-> Thanks,
-> Robin.
->
->
-> [1] https://lkft.validation.linaro.org/scheduler/job/8143082#L1283
-> [2]:
->
-> [    1.741362] pci-host-generic 40000000.pcie: host bridge
-> /pcie@40000000 ranges:
-> [    1.748682] pci-host-generic 40000000.pcie:       IO
-> 0x005f800000..0x005fffffff -> 0x0000000000
-> [    1.757465] pci-host-generic 40000000.pcie:      MEM
-> 0x0050000000..0x0057ffffff -> 0x0050000000
-> [    1.766224] pci-host-generic 40000000.pcie:      MEM
-> 0x4000000000..0x40ffffffff -> 0x4000000000
-> [    1.775019] pci-host-generic 40000000.pcie:   IB MEM
-> 0x0080000000..0x00ffffffff -> 0x0080000000
-> [    1.783781] pci-host-generic 40000000.pcie:   IB MEM
-> 0x0800000000..0x09ffffffff -> 0x0800000000
-> [    1.792615] pci-host-generic 40000000.pcie: ECAM at [mem
-> 0x40000000-0x4fffffff] for [bus 00-ff]
-> [    1.801559] pci-host-generic 40000000.pcie: PCI host bridge to bus
-> 0000:00
-> [    1.808485] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    1.814022] pci_bus 0000:00: root bus resource [io  0x0000-0x7fffff]
-> [    1.820408] pci_bus 0000:00: root bus resource [mem
-> 0x50000000-0x57ffffff]
-> [    1.827314] pci_bus 0000:00: root bus resource [mem
-> 0x4000000000-0x40ffffffff pref]
-> [    1.835050] pci 0000:00:00.0: [1556:1100] type 01 class 0x060400 PCIe
-> Root Port
-> [    1.842444] pci 0000:00:00.0: BAR 0 [mem 0x4000000000-0x4000003fff
-> 64bit pref]
-> [    1.849717] pci 0000:00:00.0: PCI bridge to [bus 01-08]
-> [    1.854990] pci 0000:00:00.0:   bridge window [io  0x0000-0x1fff]
-> [    1.861125] pci 0000:00:00.0:   bridge window [mem 0x50000000-0x501fffff]
-> [    1.868099] pci 0000:00:00.0: supports D1 D2
-> [    1.872393] pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> [    1.881014] pci 0000:01:00.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Upstream Port
-> [    1.889407] pci 0000:01:00.0: PCI bridge to [bus 02-08]
-> [    1.894675] pci 0000:01:00.0:   bridge window [io  0x0000-0x1fff]
-> [    1.900812] pci 0000:01:00.0:   bridge window [mem 0x50000000-0x501fffff]
-> [    1.907690] pci 0000:01:00.0: enabling Extended Tags
-> [    1.912876] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
-> [    1.924459] pci 0000:02:01.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    1.933037] pci 0000:02:01.0: PCI bridge to [bus 03]
-> [    1.938045] pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
-> [    1.944179] pci 0000:02:01.0:   bridge window [mem 0x50100000-0x501fffff]
-> [    1.951060] pci 0000:02:01.0: enabling Extended Tags
-> [    1.956298] pci 0000:02:01.0: PME# supported from D0 D3hot D3cold
-> [    1.963053] pci 0000:02:02.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    1.971621] pci 0000:02:02.0: PCI bridge to [bus 04]
-> [    1.976698] pci 0000:02:02.0: enabling Extended Tags
-> [    1.981924] pci 0000:02:02.0: PME# supported from D0 D3hot D3cold
-> [    1.988682] pci 0000:02:03.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    1.997272] pci 0000:02:03.0: PCI bridge to [bus 05]
-> [    2.002352] pci 0000:02:03.0: enabling Extended Tags
-> [    2.007578] pci 0000:02:03.0: PME# supported from D0 D3hot D3cold
-> [    2.014713] pci 0000:02:0c.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    2.023303] pci 0000:02:0c.0: PCI bridge to [bus 06]
-> [    2.028396] pci 0000:02:0c.0: enabling Extended Tags
-> [    2.033643] pci 0000:02:0c.0: PME# supported from D0 D3hot D3cold
-> [    2.040569] pci 0000:02:10.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    2.049131] pci 0000:02:10.0: PCI bridge to [bus 07]
-> [    2.054220] pci 0000:02:10.0: enabling Extended Tags
-> [    2.059439] pci 0000:02:10.0: PME# supported from D0 D3hot D3cold
-> [    2.066798] pci 0000:02:1f.0: [111d:8090] type 01 class 0x060400 PCIe
-> Switch Downstream Port
-> [    2.075368] pci 0000:02:1f.0: PCI bridge to [bus 08]
-> [    2.080377] pci 0000:02:1f.0:   bridge window [io  0x0000-0x0fff]
-> [    2.086507] pci 0000:02:1f.0:   bridge window [mem 0x50000000-0x500fffff]
-> [    2.093397] pci 0000:02:1f.0: enabling Extended Tags
-> [    2.098625] pci 0000:02:1f.0: PME# supported from D0 D3hot D3cold
-> [    2.105519] pci 0000:03:00.0: [1095:3132] type 00 class 0x018000 PCIe
-> Legacy Endpoint
-> [    2.113532] pci 0000:03:00.0: BAR 0 [mem 0x50104000-0x5010407f 64bit]
-> [    2.120020] pci 0000:03:00.0: BAR 2 [mem 0x50100000-0x50103fff 64bit]
-> [    2.126520] pci 0000:03:00.0: BAR 4 [io  0x1000-0x107f]
-> [    2.131794] pci 0000:03:00.0: ROM [mem 0xfff80000-0xffffffff pref]
-> [    2.138189] pci 0000:03:00.0: supports D1 D2
-> [    2.142965] pci 0000:03:00.0: disabling ASPM on pre-1.1 PCIe device.
-> You can enable it with 'pcie_aspm=force'
-> [    2.154011] pci 0000:08:00.0: [11ab:4380] type 00 class 0x020000 PCIe
-> Legacy Endpoint
-> [    2.162015] pci 0000:08:00.0: BAR 0 [mem 0x50000000-0x50003fff 64bit]
-> [    2.168492] pci 0000:08:00.0: BAR 2 [io  0x0000-0x00ff]
-> [    2.173941] pci 0000:08:00.0: supports D1 D2
-> [    2.178260] pci 0000:08:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> [    2.185740] pci 0000:00:00.0: bridge window [mem
-> 0x50000000-0x501fffff]: assigned
-> [    2.193266] pci 0000:00:00.0: BAR 0 [mem 0x4000000000-0x4000003fff
-> 64bit pref]: assigned
-> [    2.201411] pci 0000:00:00.0: bridge window [io  0x1000-0x2fff]: assigned
-> [    2.208235] pci 0000:01:00.0: bridge window [mem
-> 0x50000000-0x501fffff]: assigned
-> [    2.215754] pci 0000:01:00.0: bridge window [io  0x1000-0x2fff]: assigned
-> [    2.222580] pci 0000:02:01.0: bridge window [mem
-> 0x50000000-0x500fffff]: assigned
-> [    2.230120] pci 0000:02:1f.0: bridge window [mem
-> 0x50100000-0x501fffff]: assigned
-> [    2.237648] pci 0000:02:01.0: bridge window [io  0x1000-0x1fff]: assigned
-> [    2.244470] pci 0000:02:1f.0: bridge window [io  0x2000-0x2fff]: assigned
-> [    2.251313] pci 0000:03:00.0: ROM [mem 0x50000000-0x5007ffff pref]:
-> assigned
-> [    2.258399] pci 0000:03:00.0: BAR 2 [mem 0x50080000-0x50083fff
-> 64bit]: assigned
-> [    2.265769] pci 0000:03:00.0: BAR 0 [mem 0x50084000-0x5008407f
-> 64bit]: assigned
-> [    2.273141] pci 0000:03:00.0: BAR 4 [io  0x1000-0x107f]: assigned
-> [    2.279286] pci 0000:02:01.0: PCI bridge to [bus 03]
-> [    2.284289] pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
-> [    2.290425] pci 0000:02:01.0:   bridge window [mem 0x50000000-0x500fffff]
-> [    2.297275] pci 0000:02:02.0: PCI bridge to [bus 04]
-> [    2.302302] pci 0000:02:03.0: PCI bridge to [bus 05]
-> [    2.307327] pci 0000:02:0c.0: PCI bridge to [bus 06]
-> [    2.312353] pci 0000:02:10.0: PCI bridge to [bus 07]
-> [    2.317382] pci 0000:08:00.0: BAR 0 [mem 0x50100000-0x50103fff
-> 64bit]: assigned
-> [    2.324751] pci 0000:08:00.0: BAR 2 [io  0x2000-0x20ff]: assigned
-> [    2.330881] pci 0000:02:1f.0: PCI bridge to [bus 08]
-> [    2.335895] pci 0000:02:1f.0:   bridge window [io  0x2000-0x2fff]
-> [    2.342030] pci 0000:02:1f.0:   bridge window [mem 0x50100000-0x501fffff]
-> [    2.348874] pci 0000:01:00.0: PCI bridge to [bus 02-08]
-> [    2.354129] pci 0000:01:00.0:   bridge window [io  0x1000-0x2fff]
-> [    2.360270] pci 0000:01:00.0:   bridge window [mem 0x50000000-0x501fffff]
-> [    2.367113] pci 0000:00:00.0: PCI bridge to [bus 01-08]
-> [    2.372366] pci 0000:00:00.0:   bridge window [io  0x1000-0x2fff]
-> [    2.378494] pci 0000:00:00.0:   bridge window [mem 0x50000000-0x501fffff]
-> [    2.385325] pci_bus 0000:00: resource 4 [io  0x0000-0x7fffff]
-> [    2.391101] pci_bus 0000:00: resource 5 [mem 0x50000000-0x57ffffff]
-> [    2.397398] pci_bus 0000:00: resource 6 [mem
-> 0x4000000000-0x40ffffffff pref]
-> [    2.404478] pci_bus 0000:01: resource 0 [io  0x1000-0x2fff]
-> [    2.410078] pci_bus 0000:01: resource 1 [mem 0x50000000-0x501fffff]
-> [    2.416374] pci_bus 0000:02: resource 0 [io  0x1000-0x2fff]
-> [    2.421980] pci_bus 0000:02: resource 1 [mem 0x50000000-0x501fffff]
-> [    2.428277] pci_bus 0000:03: resource 0 [io  0x1000-0x1fff]
-> [    2.433877] pci_bus 0000:03: resource 1 [mem 0x50000000-0x500fffff]
-> [    2.440195] pci_bus 0000:08: resource 0 [io  0x2000-0x2fff]
-> [    2.445799] pci_bus 0000:08: resource 1 [mem 0x50100000-0x501fffff]
-> [    2.519972] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-> [    2.532646] msm_serial: driver initialized
-> [    2.537422] SuperH (H)SCI(F) driver initialized
-> [    2.542220] STM32 USART driver initialized
-> [    2.551250] arm-smmu 2b500000.iommu: probing hardware configuration...
-> [    2.557832] arm-smmu 2b500000.iommu: SMMUv1 with:
-> [    2.562564] arm-smmu 2b500000.iommu:         stage 2 translation
-> [    2.568006] arm-smmu 2b500000.iommu:         coherent table walk
-> [    2.573449] arm-smmu 2b500000.iommu:         stream matching with 32
-> register groups
-> [    2.580643] arm-smmu 2b500000.iommu:         4 context banks (4 stage-2 only)
-> [    2.587205] arm-smmu 2b500000.iommu:         Supported page sizes: 0x60211000
-> [    2.593778] arm-smmu 2b500000.iommu:         Stage-2: 40-bit IPA -> 40-bit PA
-> [    2.600471] arm-smmu 2b500000.iommu:         preserved 0 boot mappings
-> [    2.607710] pci 0000:00:00.0: Adding to iommu group 0
-> [    2.613204] pci 0000:01:00.0: Adding to iommu group 0
-> [    2.618588] pci 0000:02:01.0: Adding to iommu group 0
-> [    2.623975] pci 0000:02:02.0: Adding to iommu group 0
-> [    2.629373] pci 0000:02:03.0: Adding to iommu group 0
-> [    2.634742] pci 0000:02:0c.0: Adding to iommu group 0
-> [    2.640127] pci 0000:02:10.0: Adding to iommu group 0
-> [    2.645531] pci 0000:02:1f.0: Adding to iommu group 0
-> [    2.650952] pci 0000:03:00.0: Adding to iommu group 0
-> [    2.656349] pci 0000:08:00.0: Adding to iommu group 0
->
->
-> >
-> > * Juno-r2,
-> >   - detect-ssd
-> >   - mkfs.ext4-ssd
-> >
-> > Regression Analysis:
-> >   - New regression? yes
-> >   - Reproducibility? Yes
-> >
-> > Test regression: arm64 Juno-r2 SSD detect failed
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Anders bisected this to,
-> > # first bad commit:
-> >    [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
-> >    iommu: Get DT/ACPI parsing into the proper probe path
-> >
-> > ## Test log
-> >    mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
-> >    mke2fs 1.47.2 (1-Jan-2025)
-> >    The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
-> > does not exist and no size was specified.
-> >
-> > ## Source
-> > * Kernel version: 6.14.0
-> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > * Git sha: acb4f33713b9f6cadb6143f211714c343465411c
-> > * Git describe: v6.14-7422-gacb4f33713b9
-> > * Project details:
-> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-7422-gacb4f33713b9/
-> >
-> > ## Test
-> > * Test log: https://lkft.validation.linaro.org/scheduler/job/8188382#L1538
-> > * Test history:
-> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14/testrun/27742015/suite/ltp-cve/test/cve-2017-2671/history/
-> > * Test details:
-> > https://lkft.validation.linaro.org/scheduler/job/8188382/definition
-> > * Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/
-> > * Kernel config:
-> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/config
-> >
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
+Regards,
+Salvatore
