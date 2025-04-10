@@ -1,204 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E9A1DFE00
-	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 19:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910A42989B3
+	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 19:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312576; cv=none; b=qWrCd3EyRGZI8TvG8CGkSoC4juUpdiH1QYkjVZ8wisqhB/tjzNoGkAsbO6vc7QmeIe7qQDphDHL0FMHT/DpGE9sGHmfIFCG2eT2qN6de5kW6AGTmGMD2H6E9PAyqSEmop06V9BXFTNj6vMNsNpBrldC6FeLgC3eparCKEj5CIlk=
+	t=1744312771; cv=none; b=ZZBQNxX30yol3VvWRx3eOSXbY00828ZpuP/h8cYyQ7Fl8YphQZ4HZmzQWWlR/WxAkM+/14KcEUI7k4UbscCW9yi99Q+FJc9reQ5B/brqlbKo5C3TpU/bmfmUesrEd93qi6tTtYAzoldNTjcEYX7ixepPKoRuBm9L4IJS0azOA2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312576; c=relaxed/simple;
-	bh=eXB0gLYXMhzpCiJzyoTjnpTxga6WGoXYi9P2stnOHRM=;
+	s=arc-20240116; t=1744312771; c=relaxed/simple;
+	bh=qLecS17V4Ykj9ANOTFkIIdgMiJiHoAwH0/7Ik0aQQjs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nGXU4GHF+JYeSOyxPnFss64a2aDUEmvhoTZv1BWl0yRh55hv2+XKEvaP4TSA4i1/TN0ZkD8kzflc5ezPI1taWvUEyKtzQTNPBPM2DamZYdp8rbXg1ZBMNlqpssl2Pu3FzyY4C8SPXtfAPIJ2Raeoytk03Iww6RkzQ8b1g8Kb4Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcKCuong; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=f2S37WOMD8pUMN9VT1iQ5MGtKRQ83mp8UhTmTIGEVJajSlPTPIyvhud6HZqUsKi4gouplK9KGrtRc8T87JTHQYi1xOrWK1Ad4ICuCWPHMWXpN/Oy6hT8SiJ3wDmz4chb8HAmRCfCN6JE0pQVBoqwb4SWNEuAZqDlkgAKHMyU92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l2JCP/Ks; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcKCuong"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364C6C4CEEF
-	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 19:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744312576;
-	bh=eXB0gLYXMhzpCiJzyoTjnpTxga6WGoXYi9P2stnOHRM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mcKCuongpHbNiI8syLFB9uMZiSar+ZdqKrxtoTrx4ook4nqmhNVvJYHhLXqwHn256
-	 /6gapHfTqjiYAF1kNNNcOQtGtcsySfQYghBSNbtDeeD8EzjAi98jX0ynHoh8avm982
-	 MnLYzkyPyAqmY7OSWJwG8tcadmL1FyeNx4qVh5C2iptEDHktubEl5i+X/9CG6cnu8c
-	 eAwGs2tkn5plVXy1ExhxYivpfZ/DnfRMu0gcnY0EkfmvpUHKZ5eS97kuXnd3vLpThy
-	 TXrwXSjjMifzM9ocmCyP8v0tFeGhwDdEHF/5Vywej37tlE2DsKyDJOPZQS9+HRckYE
-	 PPlbV/1cOdYOQ==
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72a0a9cb29fso738037a34.0
-        for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 12:16:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUF8D2xbtjY5aWGYxPkj/nhEAmCYfL0456M2OXfYd/q8YltHQ62jxNBfCSLE4vQpTPquTsAMeJFYN7fOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+8rltKIbWNnIQvmXBzEnNjksX46QuW4S9F5eL5cVHXL4m4hLA
-	UHJtKpgso8BNxNxpnkDYzEvLfdax4NndEkxbDyqWb4nKE8k3wnB7RjRnfjiGwMGDvfvNCBHhsmS
-	L+EWR9hk0tLTY2KVlY2gfzisPbsE=
-X-Google-Smtp-Source: AGHT+IFUGe4N+sckYuOfB96euN95iBjAjrgVAHROSXlPfyXbt8wqWK2y3y6miD1mX2A3h2eX04f3VagKPlGBaG3tlUE=
-X-Received: by 2002:a05:6830:6713:b0:72b:9bb3:67cd with SMTP id
- 46e09a7af769-72e863da72emr94412a34.12.1744312575370; Thu, 10 Apr 2025
- 12:16:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2JCP/Ks"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso468135241.2
+        for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 12:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744312768; x=1744917568; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uJ44KL1v8cclERlkY/9+gHNrRoHqolMrfYg+/+KMHGY=;
+        b=l2JCP/KsrG1lMljALz1zBWTxZygG8n1cWy33iGEBiEy0wYynBUy2IBWMxaGAncWb2z
+         QZc2sMSTEAHRb9N8m5HHyrKK6sIDma2ypPITEvon1MRmZMAxsE2g3o7zfRtL+ekVycsM
+         ZFU9t4XlbaQQarV6NL0uE67paywKCyrl+Aayg32PpQ6iMdmfmhDawftuGOy6kNrDwnfM
+         Gk6ro3+tIbmvz7XhZEzMRHnLqMNGQfIbXrsRjdWVi2DHJ2ZfPJXwnKmHvN6CNeHxpBDH
+         fGDvDug+QXZyFWmB1lXVenhjbYSoJPUf2dhEc3pktQLg8qoaUyiMvrTIAopR+GcwSvwK
+         cwog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744312768; x=1744917568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uJ44KL1v8cclERlkY/9+gHNrRoHqolMrfYg+/+KMHGY=;
+        b=vnDMRr/yLJSOiDnwuUR6kLGLsGAB68j9nD6JITPjO2B4XlIw9YkIU7jU10dZYDnt68
+         XHrhEwIkZIGHaXHwQDP7TXO7L1UN8SuoU0tXCZAxU2MW5iBNqKTuG8x1KJ3YTwGuvWUx
+         hhed48OmXotUyyMDSM749TmQaHrih/LtFrhhqlxhsfgLq8DTDDQXL2ru0HK8n3n1VQlN
+         RyCqWulrFIsX+8O9aVEvMSViUppdax3xi6zVV6IhHmFWRNbXa30zr2sI/UR8DxU41RyX
+         vCpA0vZxrMlTzCe2DhQUPTkVhGo5I/tbrKlqOp4Rm4OHUj5uEO+1CSt64aoQACzZlg7h
+         uebg==
+X-Forwarded-Encrypted: i=1; AJvYcCXl7NqlRwKnqm4vARmuJ/HcxDMmoEfAK04Q+XKqqAM1u6524r04b/E/cL8vYEMfkFwW4MVt1rpL9NG65Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YySy9nC7z+TnLkMiqtZqEjCrZcs2AfBQtHmTRkveVpisx3YpM3f
+	5wV3DBt3p7TrvZAZVNibyVbslpx1mO0vlL5GfkXO88FqtqwL1EBj3PCjh/jNTvr/i5vqFjRy5sh
+	LHHZh/O9scQVNObG7jUukBA6oDjxz71lWtTzlQA==
+X-Gm-Gg: ASbGncviFC+t2PR94tYTubT8+kx9sgc3tV08qjKJJsZMOdBGoqRv1gOcGe43eJMPd5T
+	0IJDoH/zhTTHjBQ/KwhV6ll00z4p2yNn+Lv8FuUlPPoOViRzt2Tybih72J3yzPBOL4CG51M3WeE
+	IaauL1LoZ1vCQgX+pFQGIT4HsE1biwxAa3w+9+ZnBBjj0oeT2KnL3zEp4J
+X-Google-Smtp-Source: AGHT+IHU6YSwa0MLo8eCVOlFo/lHCz4iATY4ROkZpkiR5Y6ykoDC8YdvHIZgJD1qNNAUnzcTLOICHJeYH9sIlGNd8og=
+X-Received: by 2002:a05:6102:5718:b0:4c1:76a4:aee4 with SMTP id
+ ada2fe7eead31-4c9d35d5f51mr4752389137.19.1744312768378; Thu, 10 Apr 2025
+ 12:19:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241212015734.41241-1-sultan@kerneltoast.com>
- <20241212015734.41241-2-sultan@kerneltoast.com> <Z_Tlc6Qs-tYpxWYb@linaro.org>
-In-Reply-To: <Z_Tlc6Qs-tYpxWYb@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 10 Apr 2025 21:16:03 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hR_ekOYE_bJz=U66G2puVYBubMNd+BBQoZJZ8sxg4SxQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFpp7ZGLllfNdShA6ZAPjqNccThuQ5ynRrZX5_AdnNDXYKm7UihM-H0OmQ
-Message-ID: <CAJZ5v0hR_ekOYE_bJz=U66G2puVYBubMNd+BBQoZJZ8sxg4SxQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused by need_freq_update
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Sultan Alsawaf <sultan@kerneltoast.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Johan Hovold <johan@kernel.org>
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+ <20250403011849.GA3138383@ax162> <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+ <20250405002757.GA836042@ax162>
+In-Reply-To: <20250405002757.GA836042@ax162>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 11 Apr 2025 00:49:17 +0530
+X-Gm-Features: ATxdqUGxZ781SEBtkgK3P-Nu9oNJpMn3ybOmTk6SMAJm8t2wE9n95hV6rO8wxr8
+Message-ID: <CA+G9fYv=jUunRgUs=ROptP4p5DNxUuUHxYsnWaxUUXbiwdszsA@mail.gmail.com>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, 5 Apr 2025 at 05:58, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Thu, Apr 03, 2025 at 04:17:44PM +0530, Naresh Kamboju wrote:
+> > I=E2=80=99ve re-run the tests to validate the boot behavior on the Rock=
+ Pi 4 board
+> > with different Clang nightly versions and the latest mainline kernel.
+> >
+> > The combination using clang-nightly:20250319 successfully booted the
+> > Rock Pi 4 board.
+> > However, the combination using clang-nightly:20250401 failed to boot
+> > the same board.
+> >
+> > "name": "clang",
+> > "version": "21.0.0",
+> > "version_full": "Debian clang version 21.0.0
+> > (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
+> >
+> > Reference:
+> >  - https://lkft.validation.linaro.org/scheduler/job/8196258
+> >  - https://lkft.validation.linaro.org/scheduler/job/8196275
+>
+> Thank you for verifying. Do you test with clang-20 and if so, are tests
+> at that same revision passing? I want to make sure this is an LLVM
+> regression before trying to get into figuring out how to bisect with
+> your setup. Another way to do that is to see if clang-nightly boots are
+> failing on the stable branches, which would point to Linux not being at
+> fault.
 
-Sorry for kind of a retroactive response.
+clang-nightly boot failed with stable-rc 6.12, 6.13 and 6.14 and
+mainline and next on following devices and virtual platforms.
+- dragonboard-410c
+- dragonboard-845c
+- rk3399-rock-pi-4b
+- Juno-r2
+- e850-96
+- FVP (Fast Models Fixed Virtual Platforms)
 
-On Tue, Apr 8, 2025 at 10:59=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> Hi,
->
-> On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
-> > From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
-> >
-> > A redundant frequency update is only truly needed when there is a polic=
-y
-> > limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMITS.
-> >
-> > In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS receive=
- a
-> > frequency update _all the time_, not just for a policy limits change,
-> > because need_freq_update is never cleared.
-> >
-> > Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update also le=
-ads
-> > to a redundant frequency update, regardless of whether or not the drive=
-r
-> > specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequency is=
- the
-> > same as the current one.
-> >
-> > Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LIMITS
-> > when there's a policy limits change, and clearing need_freq_update when=
- a
-> > requisite redundant update occurs.
-> >
-> > This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS tes=
-t
-> > and instead setting need_freq_update to false in sugov_update_next_freq=
-().
-> >
-> > Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
-> > ---
-> >  kernel/sched/cpufreq_schedutil.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_sc=
-hedutil.c
-> > index 28c77904ea74..e51d5ce730be 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov_pol=
-icy *sg_policy, u64 time)
-> >
-> >       if (unlikely(sg_policy->limits_changed)) {
-> >               sg_policy->limits_changed =3D false;
-> > -             sg_policy->need_freq_update =3D true;
-> > +             sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> >               return true;
-> >       }
-> >
-> > @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_polic=
-y *sg_policy, u64 time,
-> >                                  unsigned int next_freq)
-> >  {
-> >       if (sg_policy->need_freq_update)
-> > -             sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> > +             sg_policy->need_freq_update =3D false;
-> >       else if (sg_policy->next_freq =3D=3D next_freq)
-> >               return false;
-> >
->
-> This patch breaks cpufreq throttling (e.g. for thermal cooling) for
-> cpufreq drivers that:
->
->  - Have policy->fast_switch_enabled/fast_switch_possible set, but
->  - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
->
-> There are several examples for this in the tree (search for
-> "fast_switch_possible"). Of all those drivers, only intel-pstate and
-> amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
->
-> I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
-> laptop:
->
->  1. I added some low temperature trip points in the device tree,
->     together with passive cpufreq cooling.
->  2. I run a CPU stress test on all CPUs and monitor the temperatures
->     and CPU frequencies.
->
-> When using "performance" governor instead of "schedutil", the CPU
-> frequencies are being throttled as expected, as soon as the temperature
-> trip points are reached.
->
-> When using "schedutil", the CPU frequencies stay at maximum as long as
-> the stress test is running. No throttling happens, so the device heats
-> up far beyond the defined temperature trip points. Throttling is applied
-> only after stopping the stress test, since this forces schedutil to
-> re-evaluate the CPU frequency.
->
-> Reverting this commit fixes the problem.
->
-> Looking at the code, I think the problem is that:
->  - sg_policy->limits_changed does not result in
->    sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
->    anymore, and
->  - Without sg->policy->need_freq_update, get_next_freq() skips calling
->    cpufreq_driver_resolve_freq(), which would normally apply the policy
->    min/max constraints.
->
-> Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
-> that set policy->fast_switch_possible?
+Boot Test links,
+- https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.=
+12.23-2-g8e0839d16957/testrun/28076019/suite/boot/test/clang-nightly-lkftco=
+nfig-kselftest/history/
+- https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.=
+12.23-2-g8e0839d16957/testrun/28076006/suite/boot/test/clang-nightly-lkftco=
+nfig-lto-thing/history/
+-  https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6=
+.12.23-2-g8e0839d16957/testrun/28076009/suite/boot/test/clang-nightly-lkftc=
+onfig-hardening/history/
 
-I think that it is generally needed for ->fast_switch() because the
-new limits don't take effect without running ->fast_switch().
 
-But if that is the case, the behavior can just be made conditional on
-policy->fast_switch_enabled.
+Lore link,
+ - https://lore.kernel.org/all/CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=3D+1br+Q=
+ur1DPWV4A@mail.gmail.com/
 
-> If I'm reading the documentation
-> comment correctly, that flag is just supposed to enable notifications if
-> the policy min/max changes, but the resolved target frequency is still
-> the same.
-
-If the policy min/max change and the resolved target frequency is
-beyond the new limits. it needs to be changed.
-
-The flag effectively says "Call my ->fast_switch() if the policy
-limits have changed regardless of whether or not there is another
-reason to call it."
-
-> This is not the case here, the target frequency needs to be
-> throttled, but schedutil isn't applying the new limits.
 >
-> Any suggestions how to fix this? I'm happy to test patches with my setup.
-
-Replace cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS) in
-sugov_should_update_freq() with sg_policy->policy->fast_switch_enabled
-and (if this works), CPUFREQ_NEED_UPDATE_LIMITS can be deleted.
+> Cheers,
+> Nathan
