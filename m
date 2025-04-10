@@ -1,53 +1,52 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1B41494DB
-	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 01:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691670800
+	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 01:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744249798; cv=none; b=c9JC0uhFMle4mH+boRUN2zD98r/GY2HosRFufT+2u0yjRudb26YdoYTA3ZQludom6JtGsN5ev6532vQBoFbv9Pm+5OmN6KUftAzryFdO6yzotbWHDGkg7nw+FibZxn/7sTdivv4923qBZ5g7IEMg3doUTmWNm4vLvb9uRqg7exQ=
+	t=1744249947; cv=none; b=MdKl0q8mBIqrCAgMfFh78dsrx77hHQtyOv7rCueifiI5eWdyrR85nCL9C5pXuM8pSbePFS5zCJAyBlzvEC1mZinQpwIZbJd0+cdvl0K5/6Noehoq5Rkno+jbfqN3ReQMPinxYvapakNzn+J/00r5KLPs4ZAOkAVsYsYKsvIh59M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744249798; c=relaxed/simple;
-	bh=TRieDUtur6tqD7TIt0P1Qte9Dz0Gk6EhBPkKkaNJCY8=;
+	s=arc-20240116; t=1744249947; c=relaxed/simple;
+	bh=vKLzshF1zBPzzTMXiGt8BdyQZzHIDPA5ufOZaf1gACk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUr06jejQ+g7dGhPrZNGgBhNujyW9htiVxUvlF/yOLV62OOIhR1GyBKDpE7qGKgh4CLpoWk8Dwc6HNtf6daWrA7uzQd3QeH/0krGdBQnkZW2G4nLogGKYZXmLAH9Pqp0Nx0vbL0jz6OlAH9Bpq/2RvYdJRUPB5eV0nlafktcM0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+UeXDDGEc+z0P5ux1r096SPnTNvtZkxSHEQ2+Gb0hXUotE0yJQ/85DEMIZW/E23pnyKMjUroVtjJ1g9ILKZTlilY6RGMrGhzeLuMzBirk/+M9E7REIJI3PpRUjCJt/1+t1whtAAm/5iF015idXvHS2fc51tw5hSUkI03J30zrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2241053582dso3667775ad.1
-        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 18:49:56 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22548a28d0cso3911355ad.3
+        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 18:52:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744249796; x=1744854596;
+        d=1e100.net; s=20230601; t=1744249944; x=1744854744;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f7dWhYptZ9ctxRSNQwcxIzgQIhmZf3lcZn2X/1Zf550=;
-        b=d96/z/+YM+o2oWdstoT2z+J/X9UhXCAZzYT1oCGmptxYd+00PDVftHMZf5VkyYcvg2
-         dZ1EpiO2J4vl7WCx3q+Q6Ret47WTzR4PInfYP5tdBsjKPn6Vr4TO7UyDaDV+JEvn56Jv
-         9U27WvjuwebZHlRRbgQWXF4m1VJJ8jt4RDrDZx0vapzJZF+7r5QOd3dMVD0cgOzHYZP1
-         336gUfs6mPHr64zivsOVyMIzYtWtiKY536+Jh8eYf1tc+gRCqddSl3oNbBMt7rsx9La9
-         8AS/lOVgg50CAcWTXPthA6I0XVTSujBisjPqENEMEQwUSXXJ9FlOIldNmZLxuSxlW3kX
-         xHhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvJNohFhc2uq1I1CGdYKovyKb+mg1WJt2YSJ6gd97Ybw2CS184ZnAnLvWPEMv5kAZINNrI624m1iUbVA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxeiG7130K+G7BAQr37DMvGl7Bf9tvmeoQGfrkzxU2OE9RGGUNg
-	usJnLQCl/s/p+ZrOqdmSO5YrhJQ0xY/XFW7b0owMKCXU2At8yMm4
-X-Gm-Gg: ASbGncsZ5zrb5d+z1MKscxpy9tuovg124KASKx3jNWcUpY9i8l8DWHRUjpfB+LpOh9Z
-	3NEg1irTBYPHZpELw5e5H1PwZ7rfw4/yWfzhhVehJviDvCzaGyhZcQ+SahIvmHLfMaByu0Mwj/g
-	oV3HtJf7ipGBMxYm/MgF3+2oVroLIM5AoDWi2JyTNh4YuAZzupqEdsVMWIYTbDtVNELo8JYa7RM
-	bfrEG4EQC2JPlDwjC43Q6CuLUXqCBptANK9sEUG6ls/AM5fcIILqLDJJa0Zov5JCqHCysx+BSZs
-	abgYcpqTpLSLjGt/l+s18eepqSVH6iy4ANA5B05nN5ImoJuJkNr9E+u8rs8OUTKTj/wHfg==
-X-Google-Smtp-Source: AGHT+IGFOB2CKqiyD7Ajpyrvetj6hIb+Umrmi2qGvVFlK+1gaeRNXIHddC2nryxnGzRUIBjpb1oAAw==
-X-Received: by 2002:a17:902:d48c:b0:21f:564:80a4 with SMTP id d9443c01a7336-22b42c43a84mr12676685ad.33.1744249795671;
-        Wed, 09 Apr 2025 18:49:55 -0700 (PDT)
+        bh=jaJxqLk3V06ArQnoQFKz5rLPJR/azvazadpvaNzDZW8=;
+        b=RmGhQxtdtMvLl4hP4tlVUlXiRJgRQcUzRlBzMNQ4M4JTQkq5x3lm0ifw//PXc2/Ya2
+         Yw9+6TRy2VOvtIBZ+ab5YDLTC0PbyyNR6PPORV/gf0fK8vHmCVczNVL/LJuDVczudBh2
+         A36ZjUXweJDI4JD1BJ+15dK/YzJWjTMzBlYlLoLUbdIclft6FbQ5SJSDAb0kU7DU2N5r
+         yZG9pFS/2JKSHPps7joa2qcpSYvK5nxsOg7GekjyJkMPUG2mvZI2leQZBo2xb9PF2V7f
+         NuMroAGZyy5l8l0ySIiowC2gV+mMobwHYJN+C3r114puN7ulXqGiULR3Zx/fe4OcNG0j
+         qVlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYnWwjlS7SNCuxk9tSQ1i8rf/Ehj43cyOpbTrA2/ymd2+5SlMOA4pMnDYxiLVSkvggSfsi0JN2HjbcMw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxZrDmffabTAfTv5eucbLCCEMfD4cm5gaqpZ2NGy+PFch8IrQwa
+	0BQrint/K2hF5jJJk6TBIQe5vvFp3g07us6QrRZPEZ2L7yEN7TC9
+X-Gm-Gg: ASbGncsw8E2G3GXS8T2RZ9n1x4RAE4B5qJxRv3BmZ39i9fhuaEcxjv62O9O8hy28OEJ
+	KFfvCkOWahoGPMugsw3FGFGT8yoHfZHTUxRFoh5ZFmhJl8yr52tCzSDxZ5u+MlGtHSUiSh+U53e
+	lXH1y2fpZjU7ONQZDUsXvJZW7Ct9UaAOZoTOnYPBT4gJ7QIrpYQt6RPjLvmNagmsD/N3O3NfJ5H
+	E+HvWkLxjGI4P9dASzyGMuyL0JpYDA5jl6FMEsuCdWbXTMPUYNpHTrJycwb2QX6fdqfmpLPntpX
+	TBYGrF2p/ZgeKsAk+TtcEVrHavIqM3P8MxiJF3E7yQTpSAwNFJO6s5DdNKM=
+X-Google-Smtp-Source: AGHT+IH5DMA8QYKm1WbSD1sLTN8mlWGKoMcvZflMV5qQELvdqIA+8gtpJaS3iupJUAV6K+BCGVRtRg==
+X-Received: by 2002:a17:902:f64d:b0:21f:164d:93fe with SMTP id d9443c01a7336-22be04199b5mr8933505ad.53.1744249944613;
+        Wed, 09 Apr 2025 18:52:24 -0700 (PDT)
 Received: from sultan-box.localdomain ([142.147.89.201])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cc6sm19118255ad.122.2025.04.09.18.49.53
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10dc40sm2679257a91.9.2025.04.09.18.52.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 18:49:55 -0700 (PDT)
-Date: Wed, 9 Apr 2025 18:49:51 -0700
+        Wed, 09 Apr 2025 18:52:24 -0700 (PDT)
+Date: Wed, 9 Apr 2025 18:52:20 -0700
 From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Viresh Kumar <viresh.kumar@linaro.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -61,14 +60,12 @@ Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
 	Johan Hovold <johan@kernel.org>
 Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
  by need_freq_update
-Message-ID: <Z_cjv0EJ45NShYOp@sultan-box.localdomain>
+Message-ID: <Z_ckVIK5zAeHHyVb@sultan-box.localdomain>
 References: <20241212015734.41241-1-sultan@kerneltoast.com>
  <20241212015734.41241-2-sultan@kerneltoast.com>
  <Z_Tlc6Qs-tYpxWYb@linaro.org>
  <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
  <Z_VTRspvmOUfrawh@linaro.org>
- <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
- <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -77,50 +74,162 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
+In-Reply-To: <Z_VTRspvmOUfrawh@linaro.org>
 
-On Wed, Apr 09, 2025 at 07:48:05PM +0800, Xuewen Yan wrote:
-> Or can we modify it as follows?
+On Tue, Apr 08, 2025 at 06:48:06PM +0200, Stephan Gerhold wrote:
+> Hi Sultan,
 > 
-> -->8--
+> On Tue, Apr 08, 2025 at 08:22:20AM -0700, Sultan Alsawaf wrote:
+> > On Tue, Apr 08, 2025 at 10:59:31AM +0200, Stephan Gerhold wrote:
+> > > On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
+> > > > From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
+> > > > 
+> > > > A redundant frequency update is only truly needed when there is a policy
+> > > > limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMITS.
+> > > > 
+> > > > In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS receive a
+> > > > frequency update _all the time_, not just for a policy limits change,
+> > > > because need_freq_update is never cleared.
+> > > > 
+> > > > Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update also leads
+> > > > to a redundant frequency update, regardless of whether or not the driver
+> > > > specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequency is the
+> > > > same as the current one.
+> > > > 
+> > > > Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LIMITS
+> > > > when there's a policy limits change, and clearing need_freq_update when a
+> > > > requisite redundant update occurs.
+> > > > 
+> > > > This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS test
+> > > > and instead setting need_freq_update to false in sugov_update_next_freq().
+> > > > 
+> > > > Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
+> > > > ---
+> > > >  kernel/sched/cpufreq_schedutil.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > > index 28c77904ea74..e51d5ce730be 100644
+> > > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+> > > >  
+> > > >  	if (unlikely(sg_policy->limits_changed)) {
+> > > >  		sg_policy->limits_changed = false;
+> > > > -		sg_policy->need_freq_update = true;
+> > > > +		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> > > >  		return true;
+> > > >  	}
+> > > >  
+> > > > @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
+> > > >  				   unsigned int next_freq)
+> > > >  {
+> > > >  	if (sg_policy->need_freq_update)
+> > > > -		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> > > > +		sg_policy->need_freq_update = false;
+> > > >  	else if (sg_policy->next_freq == next_freq)
+> > > >  		return false;
+> > > >  
+> > > 
+> > > This patch breaks cpufreq throttling (e.g. for thermal cooling) for
+> > > cpufreq drivers that:
+> > > 
+> > >  - Have policy->fast_switch_enabled/fast_switch_possible set, but
+> > >  - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
+> > > 
+> > > There are several examples for this in the tree (search for
+> > > "fast_switch_possible"). Of all those drivers, only intel-pstate and
+> > > amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
+> > > 
+> > > I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
+> > > laptop:
+> > > 
+> > >  1. I added some low temperature trip points in the device tree,
+> > >     together with passive cpufreq cooling.
+> > >  2. I run a CPU stress test on all CPUs and monitor the temperatures
+> > >     and CPU frequencies.
+> > > 
+> > > When using "performance" governor instead of "schedutil", the CPU
+> > > frequencies are being throttled as expected, as soon as the temperature
+> > > trip points are reached.
+> > > 
+> > > When using "schedutil", the CPU frequencies stay at maximum as long as
+> > > the stress test is running. No throttling happens, so the device heats
+> > > up far beyond the defined temperature trip points. Throttling is applied
+> > > only after stopping the stress test, since this forces schedutil to
+> > > re-evaluate the CPU frequency.
+> > > 
+> > > Reverting this commit fixes the problem.
+> > > 
+> > > Looking at the code, I think the problem is that:
+> > >  - sg_policy->limits_changed does not result in
+> > >    sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
+> > >    anymore, and
+> > >  - Without sg->policy->need_freq_update, get_next_freq() skips calling
+> > >    cpufreq_driver_resolve_freq(), which would normally apply the policy
+> > >    min/max constraints.
+> > > 
+> > > Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
+> > > that set policy->fast_switch_possible? If I'm reading the documentation
+> > > comment correctly, that flag is just supposed to enable notifications if
+> > > the policy min/max changes, but the resolved target frequency is still
+> > > the same. This is not the case here, the target frequency needs to be
+> > > throttled, but schedutil isn't applying the new limits.
+> > > 
+> > > Any suggestions how to fix this? I'm happy to test patches with my
+> > > setup.
+> > 
+> > Thank you for reporting this. As I see it, sg_policy->need_freq_update is
+> > working correctly now; however, sg_policy->limits_changed relied on the broken
+> > behavior of sg_policy->need_freq_update and therefore sg_policy->limits_changed
+> > needs to be fixed.
 > 
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 1a19d69b91ed..0e8d3b92ffe7 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct
-> sugov_policy *sg_policy, u64 time)
+> Thanks for the quick reply and the patch!
 > 
->         if (unlikely(sg_policy->limits_changed)) {
->                 sg_policy->limits_changed = false;
-> -               sg_policy->need_freq_update =
-> cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> +               sg_policy->need_freq_update = true;
->                 return true;
->         }
+> > 
+> > Can you try this patch:
+> > 
+> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 1a19d69b91ed3..f37b999854d52 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+> >  		return false;
+> >  
+> >  	if (unlikely(sg_policy->limits_changed)) {
+> > -		sg_policy->limits_changed = false;
+> >  		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> >  		return true;
+> >  	}
+> > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+> >  	freq = get_capacity_ref_freq(policy);
+> >  	freq = map_util_freq(util, freq, max);
+> >  
+> > -	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
+> > +	if (freq == sg_policy->cached_raw_freq && !sg_policy->limits_changed &&
+> > +	    !sg_policy->need_freq_update)
+> >  		return sg_policy->next_freq;
+> >  
+> > +	sg_policy->limits_changed = false;
+> >  	sg_policy->cached_raw_freq = freq;
+> >  	return cpufreq_driver_resolve_freq(policy, freq);
+> >  }
+> > 
 > 
-> @@ -95,11 +95,15 @@ static bool sugov_should_update_freq(struct
-> sugov_policy *sg_policy, u64 time)
->  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
->                                    unsigned int next_freq)
->  {
-> -       if (sg_policy->need_freq_update)
-> +       if (sg_policy->need_freq_update) {
->                 sg_policy->need_freq_update = false;
-> -       else if (sg_policy->next_freq == next_freq)
-> -               return false;
-> +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
-> +                       goto change;
-> +       }
-> 
-> +       if (sg_policy->next_freq == next_freq)
-> +               return false;
-> +change:
->         sg_policy->next_freq = next_freq;
->         sg_policy->last_freq_update_time = time;
+> This is working correctly for me, CPU frequency is being throttled again
+> when the temperature trip points are reached.
 
-If CPUFREQ_NEED_UPDATE_LIMITS isn't specified, then there's no need to request a
-frequency switch from the driver when the current frequency is exactly the same
-as the next frequency.
+Great to hear, thanks for testing that so quickly!
 
+> If you send this, feel free to add:
+> 
+> Tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+
+I'll do Reported-and-tested-by if you don't mind. :-)
+
+> 
+> Thanks!
+> Stephan
+
+Thanks,
 Sultan
