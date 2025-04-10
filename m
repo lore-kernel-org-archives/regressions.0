@@ -1,183 +1,138 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D755CDF1
-	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 02:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C336A33B
+	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 02:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744252258; cv=none; b=VjhvnsbR01DJFg0rghcOHYSqEAjx9tTwZPw28yzwAagpLSX6kkzsoHDXO3BX56BUYFABHdjCg9VvzWdZqop/M88wLCzC8pXgqHGyu7FNJyyjZdiGXjJSQ2cYsj4SFOfICd4aYE9yhIRdE1KtocN0wgL55S1MiSSlyNWswxVFRL0=
+	t=1744252425; cv=none; b=j8dTlSHN8hb3twGTGcZBj9mFEct396AcrGTiUQwUOdcqzY3rXPREqpcPJTbXXu9Z+Bb2LZtD4eqdj3JLBq5HOAQRc3w5X7fLmjDJ5bE4nifr6ULtIUnEqb/3sjoQi1gc3PGkss5fVGlznrkMFezMiq81r6WSC3OHENygInWwTjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744252258; c=relaxed/simple;
-	bh=Sb01m70QVvzYf1OKQKlLLPEOLSL11UilQ80M/hCHXPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Knds+tTd/RTFVFKPQ1NVQRQvbLHj/s3mDSSy68X+uwi+v5lH71DT4qU3zLdgewcNNU43m5Nl8x7LoTJVqB3qwtFj0O1P9Z5Bj2RhudSCnr8figAN0jl6HuGtGC9aU8XExnytific+u+qMwN3LEaNY9UNOEShHr5v+HX00CrUc2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIyNtBJc; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744252425; c=relaxed/simple;
+	bh=VZ8k/enWyBcu8alYtN9L7N0dxunZbZpvMLdnichYWg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kyLW7R4Z+5J7rvV65uHNeyFbSv2/qCaMVhRffEGuln6pNH2x7w74fYn0hoNi6AaOJTBZaZ9O9V2fO/cEV10bAjz2ghLV3EgmCDQ0aMHsY83Ox/dpYzYkaL4Ic7V7sD3AoTz77ePQTVsgIbNUwdpd099TVsPS0N3wkY3TumZ0c+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIyNtBJc"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476f4e9cf92so1762011cf.3
-        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 19:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744252256; x=1744857056; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MZpZ0RxdQu0KsJTftzIw3BlvounQbNro5YfvvV+zxxs=;
-        b=mIyNtBJcTioHAi2VPfMLnUz2zIcGilnwVxu9J0XQBPxUaAIJzdif2Ph+bnWHrh1eMm
-         qLgVAnLsDan9fgcAkDoHClQwFt4LiePn2xAkSienxp9Y8A3sXoC/LsoKCJu2/gUSmWdA
-         DlECzfWAuaFj1qkIVQFjxEd8F54jZEPd8FYBLKZr3KXFpOs4bechltEKab2s7fCxAWab
-         4acoaXZ9hPnvtOM/GRWl+azgiGEpMfLUhJbalFq5AZqzkgtgjC1RzjnwKV9pbxUKtlX3
-         ToNSJCtB5QQdOHC4bj13uGl24/vMW+3qvJ3L7dyxn6+fYsJ9LUud5hMlnfeSh8yz1ruE
-         qjvg==
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225df540edcso15083565ad.0
+        for <regressions@lists.linux.dev>; Wed, 09 Apr 2025 19:33:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744252256; x=1744857056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MZpZ0RxdQu0KsJTftzIw3BlvounQbNro5YfvvV+zxxs=;
-        b=iTSY6Cj0SdrZb1VGvpEwJEzu7/SuO4IK0XBgIbT8OrKNczrcVMmigPp6T0yImVo2Vc
-         Mdo+EV+J+3vZZPKcnI/OUcCApl4k6l/KSrRtf034uQiiewW1zVgXfwwFVCnUMWHXN/ex
-         Ko95Oy5EuMod+hQw3LPOH7NOjFyQxGySQD80WA9tVxX5dbgc2XPF9f8ZYdSAcKRDTsRU
-         yB/y531tprjsVlLGKM5mpI2+UutiwUMrY2y+4lc9kwSzn9owtSGxfHvDZoCfg14VNVVd
-         uIzxPbvOjtQ7nMZDWM5igQqufN1cUtPmkNCmQ5AsC0bp9R5/T5jL6ceer76hsJDh+bj7
-         sgzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfMjaOCg2+RWlOiU2SEnCJQ9lCSclm3yvMrof8+Fj8axJm7oaYZJb4TPMMC5FIkxQUDEnHh2Wfo9J6Rw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/+adL7cMLtGlEGTbeuG6YJ1rzdyvFweanNt1PY1Hp9WhJqzwi
-	sbu56GQWW1rzNoANKO9XeXJz9m9QZDOz1oM4eL5kPrHmKrEtqN7HWbUKYE0XrYs00zrMxDff6lQ
-	IUQVG2pyre30vI8YTd8VXRXM/f2Q=
-X-Gm-Gg: ASbGncsaahx0CaznAPg6Qo8rw5gosLgQJKz+YSNieqHF8p0Jz7Z/QGlbbnhPdC09T8L
-	VHvKVB/Urj+UoaOGEsMvHgK+s74v+6BDZ0QNLrU3hyQB4wM7JnfI89SNeh0wh1Mv3wSDE3lai62
-	1uL9GntxhVPHWmQirIInbd6Gs=
-X-Google-Smtp-Source: AGHT+IHUr7nWNpiEV/6XlH+uwtqAJdlvL6R7rj02t7hAXM9X/dD+mB60uGgZ5b7Mg9qLXWSvyMj9rOBkEFSddAul1T4=
-X-Received: by 2002:a05:622a:2d2:b0:476:7d74:dd10 with SMTP id
- d75a77b69052e-4796e2f04b2mr9171451cf.19.1744252256279; Wed, 09 Apr 2025
- 19:30:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744252423; x=1744857223;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q/IllHKM0oPJ3pBiL3ZERbu3XrJNSX388MQELDIUdTk=;
+        b=a6VfV9T876nOR9+yoMwXy6nUXNYzqXNIofGz0CdaJSYc2G5F1k5vJwQqag1/b5z51P
+         0OANTOf4iiEOo2fILYBFX5OI2AbCSA/ninV/wvFyaDRhz64DzDBd5FmkD5w12gZoZpXX
+         8NoFc2kxFj4031vnEjrW6CkytMy4Kr3BC3L9/lkmHDhPa/pZqDPu7ffytCO1GXGznCuI
+         +T56nlmN1CfN/YG3zkPrHfcwdr6UvAjDCKYU0SrZfKaCebqs3HfMpjteMOxQUHzFcRYU
+         IWzNBMzy6yfz6o026u8DkAD0xyXAWp4pzl2rvZKpnc+OSbC91tnnA+M3JjOTgJRVaxYe
+         kMNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDFXeCzkTMCkX1Non4gd7QfWKEy7NR0R18K6zj3j6BjOpt/pbHMtimqWx/9LxNuioJ3aNZfoZg8qgKKQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyvEg+JWBlKW5T/a0xac30cyzMGq0TD9+8lTvdSfnCmT4TwVNvx
+	IqHhCTmw1VVc27se+x7e8RmO6SvrntgvFZp3eXEBT8q13g73Pk7x
+X-Gm-Gg: ASbGncsi6t7AhXi1Bw4GE4Ihb7rcAnDZphQ8X+D0Mxzi70ba5gSRRuWYNSNiqpOXsOk
+	12MqR+pvOB4T75JC858fuot9p85bXQZGW70Py1Gq3qkgI92m6zezMwR1AW/B+09WDqVn6o0+WTG
+	rR4D5fwm0kmwoQP+7lyKluURStMd+UHBGUx007LY/Bb4eQeTmsxPiBrpAN0O0BTYRjzszwRoLXM
+	GIFd9nbAY8d6RFFDpk6YFVPAdK8BR4RlmYeFHirVDnA2tiUxobC3susWg3oEqdDweGUbWTGKA1B
+	JmSBSWPknkELCDt/suBGfdty55YLw+Buyh6Pch6LT+OvgBga2yX5TGrYnyI=
+X-Google-Smtp-Source: AGHT+IHmohfIX1pwBTdRS96rbF1fkkhDJo9mRFoUMxjxNoxly1b+XtVF34/7CT0NB4AOEMebJW0Ngg==
+X-Received: by 2002:a17:902:ef02:b0:215:58be:3349 with SMTP id d9443c01a7336-22b8fd48490mr17868225ad.14.1744252423220;
+        Wed, 09 Apr 2025 19:33:43 -0700 (PDT)
+Received: from sultan-box.localdomain ([142.147.89.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62973sm19640775ad.24.2025.04.09.19.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 19:33:42 -0700 (PDT)
+Date: Wed, 9 Apr 2025 19:33:39 -0700
+From: Sultan Alsawaf <sultan@kerneltoast.com>
+To: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
+ by need_freq_update
+Message-ID: <Z_cuA3lcewKhj4Rz@sultan-box.localdomain>
+References: <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
+ <Z_VTRspvmOUfrawh@linaro.org>
+ <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
+ <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
+ <Z_cjv0EJ45NShYOp@sultan-box.localdomain>
+ <CAB8ipk8WOh5_XvRYJrPi6b6wf8G4=zjoFRWpXk3viv3gkHCn1g@mail.gmail.com>
+ <Z_coNmh-CabcfIWD@sultan-box.localdomain>
+ <CAB8ipk8AAFFtV3OA4S=g9X9AXsC4Ntr911DLLRkhgQtvMvXAvg@mail.gmail.com>
+ <Z_cracmQRfB8hF06@sultan-box.localdomain>
+ <CAB8ipk9FdC2X78B4sAnne5=ZS=ZrhZdUKYREEZZk7RQLH8LAwA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241212015734.41241-2-sultan@kerneltoast.com>
- <Z_Tlc6Qs-tYpxWYb@linaro.org> <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
- <Z_VTRspvmOUfrawh@linaro.org> <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
- <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
- <Z_cjv0EJ45NShYOp@sultan-box.localdomain> <CAB8ipk8WOh5_XvRYJrPi6b6wf8G4=zjoFRWpXk3viv3gkHCn1g@mail.gmail.com>
- <Z_coNmh-CabcfIWD@sultan-box.localdomain> <CAB8ipk8AAFFtV3OA4S=g9X9AXsC4Ntr911DLLRkhgQtvMvXAvg@mail.gmail.com>
- <Z_cracmQRfB8hF06@sultan-box.localdomain>
-In-Reply-To: <Z_cracmQRfB8hF06@sultan-box.localdomain>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Thu, 10 Apr 2025 10:30:45 +0800
-X-Gm-Features: ATxdqUHuTBLEzKjqC6nkY7dr2Z1PrNT0S5pjEPgHFxGaQU8APrRFNlRZOyQwk0Y
-Message-ID: <CAB8ipk9FdC2X78B4sAnne5=ZS=ZrhZdUKYREEZZk7RQLH8LAwA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused by need_freq_update
-To: Sultan Alsawaf <sultan@kerneltoast.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB8ipk9FdC2X78B4sAnne5=ZS=ZrhZdUKYREEZZk7RQLH8LAwA@mail.gmail.com>
 
-On Thu, Apr 10, 2025 at 10:22=E2=80=AFAM Sultan Alsawaf <sultan@kerneltoast=
-.com> wrote:
->
-> On Thu, Apr 10, 2025 at 10:13:04AM +0800, Xuewen Yan wrote:
-> > On Thu, Apr 10, 2025 at 10:09=E2=80=AFAM Sultan Alsawaf <sultan@kernelt=
-oast.com> wrote:
-> > >
-> > > On Thu, Apr 10, 2025 at 10:06:41AM +0800, Xuewen Yan wrote:
-> > > > On Thu, Apr 10, 2025 at 9:49=E2=80=AFAM Sultan Alsawaf <sultan@kern=
-eltoast.com> wrote:
-> > > > >
-> > > > > On Wed, Apr 09, 2025 at 07:48:05PM +0800, Xuewen Yan wrote:
-> > > > > > Or can we modify it as follows?
-> > > > > >
-> > > > > > -->8--
-> > > > > >
-> > > > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cp=
-ufreq_schedutil.c
-> > > > > > index 1a19d69b91ed..0e8d3b92ffe7 100644
-> > > > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct
-> > > > > > sugov_policy *sg_policy, u64 time)
-> > > > > >
-> > > > > >         if (unlikely(sg_policy->limits_changed)) {
-> > > > > >                 sg_policy->limits_changed =3D false;
-> > > > > > -               sg_policy->need_freq_update =3D
-> > > > > > cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > > > > +               sg_policy->need_freq_update =3D true;
-> > > > > >                 return true;
-> > > > > >         }
-> > > > > >
-> > > > > > @@ -95,11 +95,15 @@ static bool sugov_should_update_freq(struct
-> > > > > > sugov_policy *sg_policy, u64 time)
-> > > > > >  static bool sugov_update_next_freq(struct sugov_policy *sg_pol=
-icy, u64 time,
-> > > > > >                                    unsigned int next_freq)
-> > > > > >  {
-> > > > > > -       if (sg_policy->need_freq_update)
-> > > > > > +       if (sg_policy->need_freq_update) {
-> > > > > >                 sg_policy->need_freq_update =3D false;
-> > > > > > -       else if (sg_policy->next_freq =3D=3D next_freq)
-> > > > > > -               return false;
-> > > > > > +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDA=
-TE_LIMITS))
-> > > > > > +                       goto change;
-> > > > > > +       }
-> > > > > >
-> > > > > > +       if (sg_policy->next_freq =3D=3D next_freq)
-> > > > > > +               return false;
-
-I have deleted the else.
-
-> > > > > > +change:
-> > > > > >         sg_policy->next_freq =3D next_freq;
-> > > > > >         sg_policy->last_freq_update_time =3D time;
-> > > > >
-> > > > > If CPUFREQ_NEED_UPDATE_LIMITS isn't specified, then there's no ne=
-ed to request a
-> > > > > frequency switch from the driver when the current frequency is ex=
-actly the same
-> > > > > as the next frequency.
-> > > >
-> > > > Yes, the following check would return false:
-> > > >
-> > > >  +       if (sg_policy->next_freq =3D=3D next_freq)
-> > > >  +               return false;
-> > >
-> > > But what does that change fix? In fact, that change causes a limits u=
-pdate to
-> > > trigger a frequency switch request to the driver even when the new fr=
-equency is
-> > > the same as the current one.
+On Thu, Apr 10, 2025 at 10:30:45AM +0800, Xuewen Yan wrote:
+> On Thu, Apr 10, 2025 at 10:22 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
 > >
-> > We set the sg_policy->need_freq_update =3D false instead of
-> > sg_policy->need_freq_update =3D
-> > cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS),
-> > to fix the original issue, and then add the
-> > +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMIT=
-S))
-> > +                       goto change;
-> >
-> > to allow cpufreq to update when CPUFREQ_NEED_UPDATE_LIMITS is set.
->
-> Please take a closer look at this snippet in sugov_update_next_freq():
->
->         if (sg_policy->need_freq_update)
->                 sg_policy->need_freq_update =3D false;
->         else if (sg_policy->next_freq =3D=3D next_freq)
->                 return false;
->
-> The 2nd if-statement is an else-if. Therefore, when need_freq_update is t=
-rue, it
-> is set to false *and* skips the (sg_policy->next_freq =3D=3D next_freq) c=
-heck.
->
-> Sultan
+> > On Thu, Apr 10, 2025 at 10:13:04AM +0800, Xuewen Yan wrote:
+> > > On Thu, Apr 10, 2025 at 10:09 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> > > >
+> > > > On Thu, Apr 10, 2025 at 10:06:41AM +0800, Xuewen Yan wrote:
+> > > > > On Thu, Apr 10, 2025 at 9:49 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> > > > > >
+> > > > > > On Wed, Apr 09, 2025 at 07:48:05PM +0800, Xuewen Yan wrote:
+> > > > > > > Or can we modify it as follows?
+> > > > > > >
+> > > > > > > -->8--
+> > > > > > >
+> > > > > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > > > > > > index 1a19d69b91ed..0e8d3b92ffe7 100644
+> > > > > > > --- a/kernel/sched/cpufreq_schedutil.c
+> > > > > > > +++ b/kernel/sched/cpufreq_schedutil.c
+> > > > > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct
+> > > > > > > sugov_policy *sg_policy, u64 time)
+> > > > > > >
+> > > > > > >         if (unlikely(sg_policy->limits_changed)) {
+> > > > > > >                 sg_policy->limits_changed = false;
+> > > > > > > -               sg_policy->need_freq_update =
+> > > > > > > cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> > > > > > > +               sg_policy->need_freq_update = true;
+> > > > > > >                 return true;
+> > > > > > >         }
+> > > > > > >
+> > > > > > > @@ -95,11 +95,15 @@ static bool sugov_should_update_freq(struct
+> > > > > > > sugov_policy *sg_policy, u64 time)
+> > > > > > >  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
+> > > > > > >                                    unsigned int next_freq)
+> > > > > > >  {
+> > > > > > > -       if (sg_policy->need_freq_update)
+> > > > > > > +       if (sg_policy->need_freq_update) {
+> > > > > > >                 sg_policy->need_freq_update = false;
+> > > > > > > -       else if (sg_policy->next_freq == next_freq)
+> > > > > > > -               return false;
+> > > > > > > +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
+> > > > > > > +                       goto change;
+> > > > > > > +       }
+> > > > > > >
+> > > > > > > +       if (sg_policy->next_freq == next_freq)
+> > > > > > > +               return false;
+> 
+> I have deleted the else.
+
+Yes, but your change causes a regression by recreating part of the problem
+solved in 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates caused by
+need_freq_update").
+
+Sultan
