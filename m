@@ -1,275 +1,142 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9713B213E65
-	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 16:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F03268C7A;
+	Fri, 11 Apr 2025 19:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388616; cv=none; b=EcVGnh80FaguA6u0GJ1CdS/jxBrbgbdFnDsBts4BYvN2GEkfd6fFnPRD8C5Rbanlf9tsahwyytgUb0OMzfTOlVnnwRs9OGqSR3Z6ERTlhBJcTJaMiyRvKmAjAIRiFpErZJBKQcxvUEHP5E8QPKBXJuG2V9DnkZzzzTqjY5g9ORU=
+	t=1744398712; cv=none; b=YYjAh5jva4voHZVaYQ9xnQpkDJMvySbI6Yb/2CMyUid3JeZANiNh8jaYzNh3XR7qu2YamkocgSKCOxkqsi3ozyDyq3rvSil3GloO2UpX6MeTcVz9H2FpHxFMgBJq3wU26KlPslK8gyo61lBcOW8b0GJhrhJFIgGBYlSSl9ovAUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388616; c=relaxed/simple;
-	bh=vCMcEgHUigUOX4/6itupqbvmSxHNfPGr6uYveuFsH9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aS1TUXNlDgWwpCDB1d5erliXGkbaLBWL7L1HGlvw0PVzYgTMAgvogDPqe3Cy7cDnz77jJ8/ftF2/dGGXb7BqB9uV8dfjubHt7gcPo3PUOnKn1qc62hyYMemcEazXQtiETcm8FGdx4d5qSznSuwofq2X440s1ew2NIlYFzHBJTWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7GdMZ1/; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7GdMZ1/"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225477548e1so22985865ad.0
-        for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 09:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744388614; x=1744993414; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
-        b=j7GdMZ1/SnSqujdjvV3oBJaGgFEQrYwF3RrYkvFlKz1Db1M8J0rvZIR6B/tLas4vwB
-         K6ejHmhraRR/BeX/9lKvCBJ2X9XmrgJjMzMGHjA6XQ2+msqcF27MY4Ht9Wi94SL/UoZy
-         edZo62zh7GWYp2DEbbaDgomsEZo0n0F6w0tKnSdsnhIUtQGqa/JmiC2BH6aQ40ILRZ8J
-         DnIz8dvVHJ+rQfTcBQ8MAO6qX7tZCbYpkreAxeJ9SOlX44ZeOxspkZFbR2OxML2CCBI2
-         FP99EhKOprv4p51QXZa7zI0tW6g6WQ7vy5+f9+MUD8VgI5FAGSyHVPyvXrxFZHnr0kuu
-         3xjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744388614; x=1744993414;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
-        b=FYK4FYGcgLxeTlIS8MUW88SIYoJYBpsfYnp0sMGU2BhVbRWgjBGp8UrTVhb5ck9evY
-         T9VN6M4w0JtPcY9GeCW7WyZkt5LrFl+hAwMwpbwvVr9PROTf4yFqjiAByyMiHB4OJXoU
-         bg3kM46JdBb8Mci/CnIoNlGPp/0hFaD7DJ3OP5Vfoy6C5hxSbMX64gyLFMJ/27WTu7FQ
-         CkJXP8anb7XbUli6ajX7Z9AHTNthgDftb0V2DAkqqVxvk2aOm627s+nfb2zbQUZYaIbv
-         dcw7absvL1vACElZ9LV+N85+J3vPZ182wZ73GKu5fjq+hrY9NQS0k3qDOlxVWeO1gvF2
-         yi+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXCUrq2lzrbZxRqHcJtI2I87y6iUAaRzuA1vSb2oLvmXFLt6rI2np+tId4Xy33rW+5VQgggLmz7kHlPMQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzirDY3NBu1uAdtul4QvVnOq9HvqOHwwnTnd2+rTEo5pP09wNt2
-	tEJ7GgWE7To3Sk78K4zC/UoVsfMm6iNeGlRCxq2xr4WWaG1ErjX5
-X-Gm-Gg: ASbGnct/6MIL8OlkPvC9oxDZLmcXaH2gpklaw1kasOygNxPQOmKzldDdAzX8r6TEim8
-	rs6YFz1IKV4Q2HgWhmRiK9x2k6pTNpqeANNi8016UPOZWvmKpD15RfHhzdT9//K2aDURTzAOGco
-	xZGRKWO7O96GZEOdN//DerT5mtNB0hW4lMBpQTbTL0fnEI2vJUHmunsInfZSliruVDIYGW0+fKv
-	+7l73Cuate61s79u9oE6jcCGX65uemoGkPG1ifybPeohz4H/gU6feyMkm6Mqf4+aJXEkSqkLaTK
-	Oa2kadohFY93Bj56pT2k2w95fAzUq50FyYRLRHfNK1z6vitOwQ==
-X-Google-Smtp-Source: AGHT+IFCfUV6384bNBCr+vSp/DTf6SVjkwz2rSVIWqsuCTiK8sT2R3/nhh6FK0ZbTjida+uNgTjQKg==
-X-Received: by 2002:a17:90b:2647:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-30823646ae2mr5751053a91.18.1744388613682;
-        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5814830a91.1.2025.04.11.09.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
-Date: Fri, 11 Apr 2025 13:23:28 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
- Cortex-M4 is running and it was started by U-Boot bootaux
-Message-ID: <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
-References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
- <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
- <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1744398712; c=relaxed/simple;
+	bh=BO1ibUlep/whjAnhTU7bWrZmrU4wsai7V2ZchfCcIUE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=oYrlo7dbBvzbjoR6CskGftKOPxQBvZodZBFAVPGZQREIz5ntqwKzPrOhvCrhbqRAJrrrbobh/nHoEQwpmdWyUtkIanyxRYtavxyHLqbEQNvrCHRLwdxxPa/PeBthPxMnVZenOrsKt8h3y72f4J3lHNiIrhKHatFsQxIHRksqNgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BCF6106F;
+	Fri, 11 Apr 2025 12:11:49 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5DB3F59E;
+	Fri, 11 Apr 2025 12:11:48 -0700 (PDT)
+Message-ID: <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
+Date: Fri, 11 Apr 2025 20:11:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
+From: Robin Murphy <robin.murphy@arm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+ <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
+ <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
+ <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
+Content-Language: en-GB
+In-Reply-To: <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Peng,
-
-On Fri, Apr 11, 2025 at 01:23:32PM +0000, Peng Fan wrote:
-> Hi,
+On 10/04/2025 4:36 pm, Robin Murphy wrote:
+> On 09/04/2025 4:56 pm, Naresh Kamboju wrote:
+>> On Wed, 2 Apr 2025 at 21:04, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>>> On 31/03/2025 5:03 am, Naresh Kamboju wrote:
+>>>> Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
+>>>> Linux next and Linux mainline.
+>>>>
+>>>> First seen on the v6.14-7245-g5c2a430e8599
+>>>>    Good: v6.14
+>>>>    Bad: v6.14-7422-gacb4f33713b9
+>>>
+>>> Sorry, I can't seem to reproduce this on my end, both today's mainline
+>>> and acb4f33713b9 with my config, and even acb4f33713b9 with the linked
+>>> LKFT config, all work OK on my Juno r2 (using a SATA SSD and PCIe
+>>> networking). The only thing which stands out in your log is that PCI
+>>> seems to give up probing and assigning resources beyond the switch
+>>> downstream ports (so SATA and ethernet are never discovered), whereas on
+>>> mine it does[2]. However that all happens before the first IOMMU
+>>> instance probes (which conveniently is the PCIe one), so it's hard to
+>>> imagine how that could have an effect anyway...
+>>>
+>>> The only obvious difference is that I'm using EDK2 rather than U-Boot,
+>>> so that's done all the PCIe configuration once already, but it doesn't
+>>> seem like that's significant - looking back at a random older log[1],
+>>> the on-board endpoints were still being picked up right after
+>>> reconfiguring the switch, well before the IOMMU comes into the picture.
+>>>
+>>
+>> Since it is a still issue on mainline and next,
+>>
+>> Bisected and reverted patch ^ causing kernel warnings at boot time
+>> but finding the SSD drive,
+>>
+>>    [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
+>>    iommu: Get DT/ACPI parsing into the proper probe path
+>>
+>> pcieport 0000:00:00.0: late IOMMU probe at driver bind, something 
+>> fishy here!
+>> WARNING: at drivers/iommu/iommu.c:559 __iommu_probe_device
+>>
+>> I see boot warnings [1]
+>> I am happy to test debug patches if you have any.
 > 
-> Sorry for late.
-> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
-> > when Cortex-M4 is running and it was started by U-Boot bootaux
-> > 
-> > On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
-> > > #regzbot introduced: 4f6c983261
-> > >
-> > > Hi Peng and all,
-> > >
-> > > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
-> > according
-> > > to HW state") introduced a regression where the Kernel reboots
-> > > unexpectedly (without any warnings, crashes or errors) when the
-> > > Cortex-M4 was loaded and running by U-Boot, using the bootaux
-> > command:
-> > >
-> > > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin # bootaux
-> > > ${loadaddr} 0 # boot
-> > >
-> > > This is a simple hello world binary that prints a message into the
-> > > M40.UART0 pin (demo from NXP MCUXpresso).
+> Seeing the warning after reverting the commit which introduced the 
+> warning mostly just means the conflict resolution in the revert wasn't 
+> right (there were some subsequent fixups...)
 > 
-> Which release is this image from?
+> Anyway, I have now managed to get my Juno booting with the same antique 
+> version of U-Boot and finally reproduce the issue. It seems to be 
+> somehow connected to bus->dma_configure() being called in the 
+> device_add() notifier (even though the rest of the IOMMU setup doesn't 
+> run at that point since the driver hasn't registered yet), but how and 
+> why that prevents the buses behind the switch downstream ports being 
+> probed, and why *that* only happens when the switch isn't already 
+> configured, remains a mystery so far. I'm still digging...
 
-This is MCUXpresso SDK 2.9.0.
+OK, I found it, but I'm still not sure what exactly to make of it - it's 
+the pci_request_acs() in of_iommu_configure(), now being called early 
+enough to actually have an effect. Booting with EDK2 already using PCI 
+prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl` 
+with 6.15-rc1:
 
-> 
-> > >
-> > > Before this commit, everything worked as expected, Linux boots fine
-> > > and the HMP core keeps running and printing messages to the UART.
-> > > After the commit, the kernel reboots at the beggining of the boot
-> > > process. The only relevant message is printed by U-Boot after reset:
-> > >
-> > > "Reset cause: SCFW fault reset"
-> > >
-> > > This commit was bisectabled, the same device tree, u-boot version,
-> > and
-> > > SCFW versions were used. Reverting this commit fixes the issues.
-> > >
-> > > For testing purposes, I created the following patch which also fixes
-> > > the
-> > > issue:
-> > >
-> > > diff --git a/drivers/pmdomain/imx/scu-pd.c
-> > > b/drivers/pmdomain/imx/scu-pd.c index
-> > 38f3cdd21042..0477b3fb4991
-> > > 100644
-> > > --- a/drivers/pmdomain/imx/scu-pd.c
-> > > +++ b/drivers/pmdomain/imx/scu-pd.c
-> > > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
-> > *dev, int idx,
-> > >                 return NULL;
-> > >         }
-> > >
-> > > +       if (strstr("cm40", sc_pd->name) != NULL)
-> > > +               is_off = true;
-> > > +
-> > >         ret = pm_genpd_init(&sc_pd->pd, NULL, is_off);
-> > >         if (ret) {
-> > >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
-> > >
-> > >
-> > > Test Environment:
-> > > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
-> > > - U-Boot Version: 2024.04
-> > > - U-Boot Build info:
-> > > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
-> > 4622115c, ATF 7c64d4e
-> > >
-> > > The issue is not present on: v6.5
-> > >
-> > > The real root cause is still unclear to me. Anybody has any ideas? I
-> > > am happy to share more details if needed.
-> 
-> Have you tried pd_ignore_unused? 
-> 
-> I think it is linux power down M4 which M4 is running, then SCFW
-> reports error. So please give a try pd_ignore_unused.
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
+		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
+EgressCtrl- DirectTrans-
 
-For debugging purposes, I tried it and it works, kernel boots fine with
-M4 running and pd_ignore_unused parameter.
+whereas with the 6.14 behaviour they are all '-'. I don't have a working 
+root filesystem with the U-Boot setup, but if I boot it with 
+"pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge 
+windows and discover the ethernet/SATA endpoints again. I can spend some 
+time getting NFS working next week, but if you're able to get lspci 
+output off a machine in the "broken" state easily that would be handy to 
+compare.
 
-> 
-> If this is the case, may I know do you have m4 nodes in dts and
-> with power domain included?
+So at this point it would seem to be something about how Linux 
+configures ACS when doing it from scratch. What I don't really know is 
+where to go from there. I do know Juno's possibly a bit odd in that the 
+switch supports ACS, but both the root port and endpoints either side of 
+it don't. Could this be tickling some subtle bug in the PCI layer, and 
+what is EDK2 doing that makes it not happen?
 
-This is the device tree overlay I am testing:
-
-/dts-v1/;
-/plugin/;
-
-#include <dt-bindings/clock/imx8mm-clock.h>
-#include <dt-bindings/firmware/imx/rsrc.h>
-
-/ {
-	compatible = "toradex,colibri-imx8x";
-};
-
-&{/} {
-	imx8x-cm4 {
-		compatible = "fsl,imx8qxp-cm4";
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu5 0 1
-			  &lsio_mu5 1 1
-			  &lsio_mu5 3 1>;
-		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
-				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-				<&pd IMX_SC_R_M4_0_MU_1A>;
-		fsl,entry-address = <0x34fe0000>;
-		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
-	};
-
-	reserved-memory {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
-
-		vdev0vring0: memory@90000000 {
-			reg = <0 0x90000000 0 0x8000>;
-			no-map;
-		};
-
-		vdev0vring1: memory@90008000 {
-			reg = <0 0x90008000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring0: memory@90010000 {
-			reg = <0 0x90010000 0 0x8000>;
-			no-map;
-		};
-
-		vdev1vring1: memory@90018000 {
-			reg = <0 0x90018000 0 0x8000>;
-			no-map;
-		};
-
-		rsc_table: memory@900ff000 {
-			reg = <0 0x900ff000 0 0x1000>;
-			no-map;
-		};
-
-		vdevbuffer: memory@90400000 {
-			compatible = "shared-dma-pool";
-			reg = <0 0x90400000 0 0x100000>;
-			no-map;
-		};
-	};
-};
-
-&lsio_mu5 {
-	status = "okay";
-};
-
-This was basically copied from
-arch/arm64/boot/dts/freescale/imx8qxp-mek.dts. Do you see anything
-wrong? Should I also add the "clocks" property to imx8x-cm4 node?
-
-> 
-> Anyway, I will give a try on i.MX8QM EVK.
-
-Great, thanks.
-
-> 
-> > 
-> > Hello everyone, as this introduced a regression, should I send a revert
-> > for 4f6c983261? 
-> 
-> Please wait a while, I think we need find root cause.
-> 
-> Thanks,
-> Peng.
-> 
-> Or any ideas that might help fix this issue?
-> > 
-> > >
-> > > Cheers,
-> > > Hiago.
-> > 
-> > Cheers,
-> > Hiago.
-
-Cheers,
-Hiago.
+Thanks,
+Robin.
