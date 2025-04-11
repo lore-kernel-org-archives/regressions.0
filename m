@@ -1,137 +1,171 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910A42989B3
-	for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 19:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67CD1362
+	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 10:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744312771; cv=none; b=ZZBQNxX30yol3VvWRx3eOSXbY00828ZpuP/h8cYyQ7Fl8YphQZ4HZmzQWWlR/WxAkM+/14KcEUI7k4UbscCW9yi99Q+FJc9reQ5B/brqlbKo5C3TpU/bmfmUesrEd93qi6tTtYAzoldNTjcEYX7ixepPKoRuBm9L4IJS0azOA2o=
+	t=1744365693; cv=none; b=rEDeCWFo7/DUE4pB9tRCHZ5PE+XjmoihtFeuCLNTrImIcn24ApLeg/+AEvvJRzd6Rf+zofdbL4/1XSVB6R4JUDI+yiAKXp/dWsPG00D7pzl8KkTYd9yo8sNGpqL9GITFD7f5kb4yckNawM4h/OzqgPlVllzGGfMxbcqmlHXfGrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744312771; c=relaxed/simple;
-	bh=qLecS17V4Ykj9ANOTFkIIdgMiJiHoAwH0/7Ik0aQQjs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f2S37WOMD8pUMN9VT1iQ5MGtKRQ83mp8UhTmTIGEVJajSlPTPIyvhud6HZqUsKi4gouplK9KGrtRc8T87JTHQYi1xOrWK1Ad4ICuCWPHMWXpN/Oy6hT8SiJ3wDmz4chb8HAmRCfCN6JE0pQVBoqwb4SWNEuAZqDlkgAKHMyU92A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l2JCP/Ks; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744365693; c=relaxed/simple;
+	bh=jew8lPNx8/TdaYvHZnoT0xFkBj7XSdDZqLsPxRDVv8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To; b=utVU7GthVCgPg/nGfOCoe+4ae8ap3wESnBv03mzpDXI9XQWYwyOUHhOhXRh7OtNnmQt5p5JJAzqigKWNReDeO7MURVZmNbhYT9IIy60Ac2BpHzgNdqWASyq8RS2eU1oJonxFQe1VTgXC1blGLM8QkqxPFdz5v7k80U1jkYmW6v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=DkesvRPb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AFKm5rGx; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2JCP/Ks"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso468135241.2
-        for <regressions@lists.linux.dev>; Thu, 10 Apr 2025 12:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744312768; x=1744917568; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJ44KL1v8cclERlkY/9+gHNrRoHqolMrfYg+/+KMHGY=;
-        b=l2JCP/KsrG1lMljALz1zBWTxZygG8n1cWy33iGEBiEy0wYynBUy2IBWMxaGAncWb2z
-         QZc2sMSTEAHRb9N8m5HHyrKK6sIDma2ypPITEvon1MRmZMAxsE2g3o7zfRtL+ekVycsM
-         ZFU9t4XlbaQQarV6NL0uE67paywKCyrl+Aayg32PpQ6iMdmfmhDawftuGOy6kNrDwnfM
-         Gk6ro3+tIbmvz7XhZEzMRHnLqMNGQfIbXrsRjdWVi2DHJ2ZfPJXwnKmHvN6CNeHxpBDH
-         fGDvDug+QXZyFWmB1lXVenhjbYSoJPUf2dhEc3pktQLg8qoaUyiMvrTIAopR+GcwSvwK
-         cwog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744312768; x=1744917568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uJ44KL1v8cclERlkY/9+gHNrRoHqolMrfYg+/+KMHGY=;
-        b=vnDMRr/yLJSOiDnwuUR6kLGLsGAB68j9nD6JITPjO2B4XlIw9YkIU7jU10dZYDnt68
-         XHrhEwIkZIGHaXHwQDP7TXO7L1UN8SuoU0tXCZAxU2MW5iBNqKTuG8x1KJ3YTwGuvWUx
-         hhed48OmXotUyyMDSM749TmQaHrih/LtFrhhqlxhsfgLq8DTDDQXL2ru0HK8n3n1VQlN
-         RyCqWulrFIsX+8O9aVEvMSViUppdax3xi6zVV6IhHmFWRNbXa30zr2sI/UR8DxU41RyX
-         vCpA0vZxrMlTzCe2DhQUPTkVhGo5I/tbrKlqOp4Rm4OHUj5uEO+1CSt64aoQACzZlg7h
-         uebg==
-X-Forwarded-Encrypted: i=1; AJvYcCXl7NqlRwKnqm4vARmuJ/HcxDMmoEfAK04Q+XKqqAM1u6524r04b/E/cL8vYEMfkFwW4MVt1rpL9NG65Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YySy9nC7z+TnLkMiqtZqEjCrZcs2AfBQtHmTRkveVpisx3YpM3f
-	5wV3DBt3p7TrvZAZVNibyVbslpx1mO0vlL5GfkXO88FqtqwL1EBj3PCjh/jNTvr/i5vqFjRy5sh
-	LHHZh/O9scQVNObG7jUukBA6oDjxz71lWtTzlQA==
-X-Gm-Gg: ASbGncviFC+t2PR94tYTubT8+kx9sgc3tV08qjKJJsZMOdBGoqRv1gOcGe43eJMPd5T
-	0IJDoH/zhTTHjBQ/KwhV6ll00z4p2yNn+Lv8FuUlPPoOViRzt2Tybih72J3yzPBOL4CG51M3WeE
-	IaauL1LoZ1vCQgX+pFQGIT4HsE1biwxAa3w+9+ZnBBjj0oeT2KnL3zEp4J
-X-Google-Smtp-Source: AGHT+IHU6YSwa0MLo8eCVOlFo/lHCz4iATY4ROkZpkiR5Y6ykoDC8YdvHIZgJD1qNNAUnzcTLOICHJeYH9sIlGNd8og=
-X-Received: by 2002:a05:6102:5718:b0:4c1:76a4:aee4 with SMTP id
- ada2fe7eead31-4c9d35d5f51mr4752389137.19.1744312768378; Thu, 10 Apr 2025
- 12:19:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="DkesvRPb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AFKm5rGx"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.phl.internal (Postfix) with ESMTP id BF8911380226;
+	Fri, 11 Apr 2025 06:01:28 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Fri, 11 Apr 2025 06:01:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744365688; x=1744452088; bh=z5cs1W8tVA
+	bJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=DkesvRPbaObCmJtnsaeuQhyWuE
+	jBT+v0SPalOYX2jilqnBC88s9Kpn3iKmJ0z3Ig7eYDIYd1PmwDW8ldGxpT3o+qeU
+	gZICnCYqz0pBx9EV1Q7Ya1h0tqVhUCf2kHf75wALwToRTJpflOgAQHTfLvIf89AY
+	RKKuPQ3Q6mIVJoKMM7NAk1AWF2LpRlf53Bg0PbRZcp0fS4iDhNpLEisur+bBxWSQ
+	qKXZGy6szUcI+TO5NQlQKjUOGDz7HThAz837SzRDnBFSpl72AMg8r+oIZKcoBZjp
+	ZtmNyM+NfJnQvFhm7LfN1Qm5v0DjpD6atDcaQ/DNMNtFz/0Jo7iltkwDpJJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744365688; x=
+	1744452088; bh=z5cs1W8tVAbJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=A
+	FKm5rGx2BLCYEndgJ7mw3IN+L37G97Xeyaci4YKzEJ6xen2Y6XaE57Ucczz1kRnU
+	1L82wq/s8jPk4vsMp6G2p8X4rLrHGFAphiiB4Y3hs0g0CmVlc31BeUxkHUZU8dRf
+	WGILwzfEVGNCou7acgL+VcOgkwQmJL8DPTn7dw4wog123nihpwYJm2U5vIXvLS1/
+	zYGlcHfY9qxX1oXufcEVGpzkO/Gp2QPubG06TZFraW14ADQBNhTFMM3W0LpqVfN8
+	mkqg1QCQGOaG3Y47ljRt30aWD6OUEyYsb6S7vp8AzO7UgdOnoNqbPbup6nb8stYx
+	oWCMHGXW5LzQ635kHpI5Q==
+X-ME-Sender: <xms:eOj4Z18WohOqzZh-qJlmkzeCbSsRkR8now3uvVLiJJiUCE7KntVeFQ>
+    <xme:eOj4Z5v8pkWUzauwqvKEZMar3D6uq_IUrubosCzJknM-vQMjHEJUM0HLy1ccc8X-E
+    ni4SIsyRSa0OQ>
+X-ME-Received: <xmr:eOj4ZzAoUe-SJf3YXEDsTikSMVm2w2BYN9d9l7VW-KtuoeMIiZ43A-FmMEjwEmZBzJGAnWHaishA_BRniFUk_LNw3UECHcHTfg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtgfgjgesthekredttddt
+    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
+    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
+    ggftrfgrthhtvghrnhephefgteevgfefgeetteefueeuvefhfeektdelhfeuffeuleefhf
+    dvgeffkefgieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+    dpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
+    ohihvghrsehirhhlrdhhuhdprhgtphhtthhopegusggrrhihshhhkhhovhesghhmrghilh
+    drtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
+    epughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
+    pdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhope
+    grlhgvgigrnhguvghrrdguvghutghhvghrsegrmhgurdgtohhm
+X-ME-Proxy: <xmx:eOj4Z5eozMALmK2q7WTH3Y7NW2p5xx8GWN8pEMuDFLJ0mi2F1s7-AQ>
+    <xmx:eOj4Z6M2E5C1Nn_VE7HWQ6o8uJmm9wXtXpaRTTwA_4eNQUMH7eOrBw>
+    <xmx:eOj4Z7lRb9TdtFPHrQO6x-e0jhSIgjFA_uFcvgcYaS_cA_PWhH_7Zw>
+    <xmx:eOj4Z0uT-62w59kPKHqk3P3hXEjVInJ-nq6VqMNpiEPHU0iV2RAm8w>
+    <xmx:eOj4Zz3ztczLsdEPlh51aY9pvfDh_6eqGCOVKW2rVT7VRP6SMyDLSRaI>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 11 Apr 2025 06:01:26 -0400 (EDT)
+Date: Fri, 11 Apr 2025 12:01:24 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+Message-ID: <Z_jodBrNFdEpJRKA@mail-itl>
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+ <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
+ <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+ <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
- <20250403011849.GA3138383@ax162> <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
- <20250405002757.GA836042@ax162>
-In-Reply-To: <20250405002757.GA836042@ax162>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 11 Apr 2025 00:49:17 +0530
-X-Gm-Features: ATxdqUGxZ781SEBtkgK3P-Nu9oNJpMn3ybOmTk6SMAJm8t2wE9n95hV6rO8wxr8
-Message-ID: <CA+G9fYv=jUunRgUs=ROptP4p5DNxUuUHxYsnWaxUUXbiwdszsA@mail.gmail.com>
-Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
- dragonboard-410c dragonboard-845c no console output
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; x-action=pgp-signed
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
 
-On Sat, 5 Apr 2025 at 05:58, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> On Thu, Apr 03, 2025 at 04:17:44PM +0530, Naresh Kamboju wrote:
-> > I=E2=80=99ve re-run the tests to validate the boot behavior on the Rock=
- Pi 4 board
-> > with different Clang nightly versions and the latest mainline kernel.
-> >
-> > The combination using clang-nightly:20250319 successfully booted the
-> > Rock Pi 4 board.
-> > However, the combination using clang-nightly:20250401 failed to boot
-> > the same board.
-> >
-> > "name": "clang",
-> > "version": "21.0.0",
-> > "version_full": "Debian clang version 21.0.0
-> > (++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
-> >
-> > Reference:
-> >  - https://lkft.validation.linaro.org/scheduler/job/8196258
-> >  - https://lkft.validation.linaro.org/scheduler/job/8196275
->
-> Thank you for verifying. Do you test with clang-20 and if so, are tests
-> at that same revision passing? I want to make sure this is an LLVM
-> regression before trying to get into figuring out how to bisect with
-> your setup. Another way to do that is to see if clang-nightly boots are
-> failing on the stable branches, which would point to Linux not being at
-> fault.
-
-clang-nightly boot failed with stable-rc 6.12, 6.13 and 6.14 and
-mainline and next on following devices and virtual platforms.
-- dragonboard-410c
-- dragonboard-845c
-- rk3399-rock-pi-4b
-- Juno-r2
-- e850-96
-- FVP (Fast Models Fixed Virtual Platforms)
-
-Boot Test links,
-- https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.=
-12.23-2-g8e0839d16957/testrun/28076019/suite/boot/test/clang-nightly-lkftco=
-nfig-kselftest/history/
-- https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.=
-12.23-2-g8e0839d16957/testrun/28076006/suite/boot/test/clang-nightly-lkftco=
-nfig-lto-thing/history/
--  https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6=
-.12.23-2-g8e0839d16957/testrun/28076009/suite/boot/test/clang-nightly-lkftc=
-onfig-hardening/history/
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
 
-Lore link,
- - https://lore.kernel.org/all/CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=3D+1br+Q=
-ur1DPWV4A@mail.gmail.com/
+Hi,
 
->
-> Cheers,
-> Nathan
+On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
+> Hi Dmitry,
+> 
+> But the code would start to become quite untraceable.
+> duplicate mode in amdgpu_dm_connector_mode_valid()
+> call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> duplicate mode in create_stream_for_sink()
+> overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> if crtc_clock == 0 call drm_mode_set_crtcinfo() again in
+> create_stream_for_sink() 
+
+FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
+Ryzen 5 4500U). And the patch quoted below fixes it for me too.
+
+> 
+> saved_mode is never used after this, so I can't add the condition here
+>         if (recalculate_timing)
+>                 drm_mode_set_crtcinfo(&saved_mode, 0);
+> 
+> This commit is related, I think:
+> 1101185 ("drm/amd/display: fix the ability to use lower resolution
+> modes on eDP")
+> 
+> Regards,
+> Gergo
+> 
+> ---
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index bae83a129b5f..83c8c81d4015 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
+> *connector,
+>         if (recalculate_timing)
+>                 drm_mode_set_crtcinfo(&saved_mode, 0);
+>  
+> +       if (mode.crtc_clock == 0)
+> +               drm_mode_set_crtcinfo(&mode, 0);
+> +
+>         /*
+>          * If scaling is enabled and refresh rate didn't change
+>          * we copy the vic and polarities of the old timings
+> --
+
+- -- 
+Best Regards,
+Marek Marczykowski-Górecki
+Invisible Things Lab
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmf46HQACgkQ24/THMrX
+1ywBfAf/SX79WOL0Rv1cL2F/YeEUbr6b/FxZ6W+xsFCi38UxcN0PKCGalQ76jT5r
+LAyy1zPedAAdGu+JdQ8abrVfPbSXnzLUcUZNN75kGHixS1c/TqfP4L9ymZ6Z5rAB
+BUt579EkdDZlm2dZ0mxwHcdoArv7fK05Fb+l3Vd645w5MK0fmwWPesCeBaEiwG2S
+ZiuSOWcJBL0yPPzvRaVPD5FCgjjjEhQ2fZZinqhwVy1LNA6OBXQrVvNhOazFVjKq
+rQV1YLG4gCBu6TD6NaETrPMevmZmovuo7o4/6Y5vJQexhQv3eaaxE5dh/0AaWovJ
+FqW2VrxvWXz6HgOokPpfispYzpMgEQ==
+=+SPC
+-----END PGP SIGNATURE-----
