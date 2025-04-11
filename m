@@ -1,171 +1,147 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67CD1362
-	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 10:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF0F2367A4
+	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 12:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744365693; cv=none; b=rEDeCWFo7/DUE4pB9tRCHZ5PE+XjmoihtFeuCLNTrImIcn24ApLeg/+AEvvJRzd6Rf+zofdbL4/1XSVB6R4JUDI+yiAKXp/dWsPG00D7pzl8KkTYd9yo8sNGpqL9GITFD7f5kb4yckNawM4h/OzqgPlVllzGGfMxbcqmlHXfGrw=
+	t=1744375832; cv=none; b=c5lt+ALIarADXT5Z5VqXu+taHc0kh25peBFDbbbtKcOC2qrTn/iks/26HqAPy5DIriL8k+0txS+auClMn1P8fdgjSEwv3arpk+5g3f1HaQKrn/g3WxdmdzfEZTEz1pxmf1pMJ5wlGa7Fy8oQeZ8eghsv4Xpax8XoAyIbVFxa8Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744365693; c=relaxed/simple;
-	bh=jew8lPNx8/TdaYvHZnoT0xFkBj7XSdDZqLsPxRDVv8U=;
+	s=arc-20240116; t=1744375832; c=relaxed/simple;
+	bh=krUFr3VNZumQLFuazMnfIo6rVrd52OPbijqeDOl/TLs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To; b=utVU7GthVCgPg/nGfOCoe+4ae8ap3wESnBv03mzpDXI9XQWYwyOUHhOhXRh7OtNnmQt5p5JJAzqigKWNReDeO7MURVZmNbhYT9IIy60Ac2BpHzgNdqWASyq8RS2eU1oJonxFQe1VTgXC1blGLM8QkqxPFdz5v7k80U1jkYmW6v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=DkesvRPb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AFKm5rGx; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqMawMugXsoaWjZRdK9DnlnTprGiCHRLlOs/TXEXwG/WlIv6R8ClD257MdPhRnWOeg/1U7dgRSaeAmpO1soyaeV7tUUCBDKwX7hlGX4YhyPgnq96WMfkgI2OAa+5UfmWXUdmLESEQoatNk35eVTTuXNOSlJ07Tc9KgS121p3lRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=limSZ3GK; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="DkesvRPb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AFKm5rGx"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id BF8911380226;
-	Fri, 11 Apr 2025 06:01:28 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Fri, 11 Apr 2025 06:01:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1744365688; x=1744452088; bh=z5cs1W8tVA
-	bJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=DkesvRPbaObCmJtnsaeuQhyWuE
-	jBT+v0SPalOYX2jilqnBC88s9Kpn3iKmJ0z3Ig7eYDIYd1PmwDW8ldGxpT3o+qeU
-	gZICnCYqz0pBx9EV1Q7Ya1h0tqVhUCf2kHf75wALwToRTJpflOgAQHTfLvIf89AY
-	RKKuPQ3Q6mIVJoKMM7NAk1AWF2LpRlf53Bg0PbRZcp0fS4iDhNpLEisur+bBxWSQ
-	qKXZGy6szUcI+TO5NQlQKjUOGDz7HThAz837SzRDnBFSpl72AMg8r+oIZKcoBZjp
-	ZtmNyM+NfJnQvFhm7LfN1Qm5v0DjpD6atDcaQ/DNMNtFz/0Jo7iltkwDpJJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744365688; x=
-	1744452088; bh=z5cs1W8tVAbJ3ZA2qMajWH2YzqXLYeH4TnXCQKM1qc8=; b=A
-	FKm5rGx2BLCYEndgJ7mw3IN+L37G97Xeyaci4YKzEJ6xen2Y6XaE57Ucczz1kRnU
-	1L82wq/s8jPk4vsMp6G2p8X4rLrHGFAphiiB4Y3hs0g0CmVlc31BeUxkHUZU8dRf
-	WGILwzfEVGNCou7acgL+VcOgkwQmJL8DPTn7dw4wog123nihpwYJm2U5vIXvLS1/
-	zYGlcHfY9qxX1oXufcEVGpzkO/Gp2QPubG06TZFraW14ADQBNhTFMM3W0LpqVfN8
-	mkqg1QCQGOaG3Y47ljRt30aWD6OUEyYsb6S7vp8AzO7UgdOnoNqbPbup6nb8stYx
-	oWCMHGXW5LzQ635kHpI5Q==
-X-ME-Sender: <xms:eOj4Z18WohOqzZh-qJlmkzeCbSsRkR8now3uvVLiJJiUCE7KntVeFQ>
-    <xme:eOj4Z5v8pkWUzauwqvKEZMar3D6uq_IUrubosCzJknM-vQMjHEJUM0HLy1ccc8X-E
-    ni4SIsyRSa0OQ>
-X-ME-Received: <xmr:eOj4ZzAoUe-SJf3YXEDsTikSMVm2w2BYN9d9l7VW-KtuoeMIiZ43A-FmMEjwEmZBzJGAnWHaishA_BRniFUk_LNw3UECHcHTfg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvudduhedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtgfgjgesthekredttddt
-    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
-    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
-    ggftrfgrthhtvghrnhephefgteevgfefgeetteefueeuvefhfeektdelhfeuffeuleefhf
-    dvgeffkefgieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-    dpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
-    ohihvghrsehirhhlrdhhuhdprhgtphhtthhopegusggrrhihshhhkhhovhesghhmrghilh
-    drtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    epughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
-    pdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhope
-    grlhgvgigrnhguvghrrdguvghutghhvghrsegrmhgurdgtohhm
-X-ME-Proxy: <xmx:eOj4Z5eozMALmK2q7WTH3Y7NW2p5xx8GWN8pEMuDFLJ0mi2F1s7-AQ>
-    <xmx:eOj4Z6M2E5C1Nn_VE7HWQ6o8uJmm9wXtXpaRTTwA_4eNQUMH7eOrBw>
-    <xmx:eOj4Z7lRb9TdtFPHrQO6x-e0jhSIgjFA_uFcvgcYaS_cA_PWhH_7Zw>
-    <xmx:eOj4Z0uT-62w59kPKHqk3P3hXEjVInJ-nq6VqMNpiEPHU0iV2RAm8w>
-    <xmx:eOj4Zz3ztczLsdEPlh51aY9pvfDh_6eqGCOVKW2rVT7VRP6SMyDLSRaI>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 11 Apr 2025 06:01:26 -0400 (EDT)
-Date: Fri, 11 Apr 2025 12:01:24 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-Message-ID: <Z_jodBrNFdEpJRKA@mail-itl>
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
- <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
- <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
- <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="limSZ3GK"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-73712952e1cso1829140b3a.1
+        for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 05:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744375830; x=1744980630; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mXx2FL46B7WkOgjg7fh0W46JD/pfi8vbcwWhjWRwOFo=;
+        b=limSZ3GKNPOcONrIpdgdaIppmJaWNN/BYceDydma0GWZ7gTTH6e7XB4SmL5uH8Rg1d
+         dKnDN6iqfHxK+5AWqFnviMXsd+ShQHsJfkrYeC19zChz4iRUFqzLj0x+D0hMhkmwVXZi
+         pdbHD5vVhuT58qfTs1HOYZoBQqRy1Ojx6MwvAU6xMoagQd7+0+UjyHRdula7fvy39T4m
+         EXlLXXz8RcLRfbFlV2LZRDYF+BfFhMNdO9mIB/Tl8t9czZxz9lAlf/fa4oFaCNvshGmW
+         JfZzOlCTsTof9PGOyOF459NTO4/M0ut+p1CVO7hsJMHy0QLuSotMclSwKwcxgcaWCS+8
+         2zsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744375830; x=1744980630;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mXx2FL46B7WkOgjg7fh0W46JD/pfi8vbcwWhjWRwOFo=;
+        b=BnbKoGWJEvHXj7R3KPUd281y9iYV9mNP2erZYRSTbP0zU+gDwYH4BCdQBv2vImamKd
+         zZG2MTQ4sJkjrB96UvMtkXxdO9VdFGruVFK231uNSB40ODjQmYblNZQ7kNv/Inl3wjz+
+         13x512s9sbWgvzsRVzm1BddUSRjH6dq9vCEG0xeFfeuQhP2GTbhXFqbQ2kE5rtvB0LfX
+         OhT2krOUzxIcwtFuxpXJfJQh6r49lMNd2+MxE/W+m2WWFeQojRh2gKl+soiXeDuoZxtG
+         LHX/FptJhfwapzJxvdiMAXEwHovdQVHxN30XqVFE52yaFmYsulZee1cn/P4Wu33SU09O
+         r9dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYeZeZmsCjwA/IQo6crYBTuPwihOT9u31e6q62bHfyE67yMs7PjqLGZZqf/5yuEE+LYD356oeBtOgXmA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMhViUNPksCNg1kdWvvnq36esLOJh5/4Gl9Qurla0Y/RGEDRwL
+	nGrFvb84Q4A5t2f5qUC+p/jMON5ewCRFAc1QwQ2Iznohky7xUs9u
+X-Gm-Gg: ASbGncutYBRwqZgRqxPd6s/vPC4SXvXW1A+rCjwy5PxgSgXpYTbLrfR0MRFZfRIr956
+	Ua+tRsLFSFVRaVmxOboymHagAEgrDjkeqmBtmHPTIv0se2asbbgO/FQKRWMOc0RxFyi5gQqi+86
+	wxepgiyrOe5RqpkIO0tv23ixIjVtDQbV/tqW5yrSGK0lUZaSBAkXIRjm/jSjbS5Y087vF+I4669
+	2FsZtYwQCYvRHwLu+FgOE+//4VKhlnzMlQGVqn9tGvQZ3GsSOzEV4aGxUeXtT1C3ZH3fWhr0Va1
+	5cm3bl3G6Cy1x2E+gsDX00xsjGRyl5jCcBDffLA=
+X-Google-Smtp-Source: AGHT+IHDBvV0qQ07NHfk55qvtex+sgwOy6tRhqXVO4CM20TuwI5QvWlbhrJx+JWvNB7ZbVYZ7Pqf4Q==
+X-Received: by 2002:a05:6a00:4644:b0:736:5753:12fd with SMTP id d2e1a72fcca58-73bd1194273mr3931962b3a.4.1744375830033;
+        Fri, 11 Apr 2025 05:50:30 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230dd71sm1374107b3a.128.2025.04.11.05.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 05:50:29 -0700 (PDT)
+Date: Fri, 11 Apr 2025 09:50:24 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: linux-pm@vger.kernel.org
+Cc: Peng Fan <peng.fan@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
+ Cortex-M4 is running and it was started by U-Boot bootaux
+Message-ID: <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
+References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; x-action=pgp-signed
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
-
-
-Hi,
-
-On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> Hi Dmitry,
+On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
+> #regzbot introduced: 4f6c983261
 > 
-> But the code would start to become quite untraceable.
-> duplicate mode in amdgpu_dm_connector_mode_valid()
-> call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> duplicate mode in create_stream_for_sink()
-> overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> if crtc_clock == 0 call drm_mode_set_crtcinfo() again in
-> create_stream_for_sink() 
-
-FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-Ryzen 5 4500U). And the patch quoted below fixes it for me too.
-
+> Hi Peng and all,
 > 
-> saved_mode is never used after this, so I can't add the condition here
->         if (recalculate_timing)
->                 drm_mode_set_crtcinfo(&saved_mode, 0);
+> Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off according to
+> HW state") introduced a regression where the Kernel reboots unexpectedly
+> (without any warnings, crashes or errors) when the Cortex-M4 was loaded
+> and running by U-Boot, using the bootaux command:
 > 
-> This commit is related, I think:
-> 1101185 ("drm/amd/display: fix the ability to use lower resolution
-> modes on eDP")
+> # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin
+> # bootaux ${loadaddr} 0
+> # boot
 > 
-> Regards,
-> Gergo
+> This is a simple hello world binary that prints a message into the
+> M40.UART0 pin (demo from NXP MCUXpresso).
 > 
-> ---
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index bae83a129b5f..83c8c81d4015 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -6984,6 +6984,9 @@ create_stream_for_sink(struct drm_connector
-> *connector,
->         if (recalculate_timing)
->                 drm_mode_set_crtcinfo(&saved_mode, 0);
->  
-> +       if (mode.crtc_clock == 0)
-> +               drm_mode_set_crtcinfo(&mode, 0);
+> Before this commit, everything worked as expected, Linux boots fine and
+> the HMP core keeps running and printing messages to the UART. After the
+> commit, the kernel reboots at the beggining of the boot process. The
+> only relevant message is printed by U-Boot after reset:
+> 
+> "Reset cause: SCFW fault reset"
+> 
+> This commit was bisectabled, the same device tree, u-boot version, and
+> SCFW versions were used. Reverting this commit fixes the issues.
+> 
+> For testing purposes, I created the following patch which also fixes the
+> issue:
+> 
+> diff --git a/drivers/pmdomain/imx/scu-pd.c b/drivers/pmdomain/imx/scu-pd.c
+> index 38f3cdd21042..0477b3fb4991 100644
+> --- a/drivers/pmdomain/imx/scu-pd.c
+> +++ b/drivers/pmdomain/imx/scu-pd.c
+> @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device *dev, int idx,
+>                 return NULL;
+>         }
+> 
+> +       if (strstr("cm40", sc_pd->name) != NULL)
+> +               is_off = true;
 > +
->         /*
->          * If scaling is enabled and refresh rate didn't change
->          * we copy the vic and polarities of the old timings
-> --
+>         ret = pm_genpd_init(&sc_pd->pd, NULL, is_off);
+>         if (ret) {
+>                 dev_warn(dev, "failed to init pd %s rsrc id %d",
+> 
+> 
+> Test Environment:
+> - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
+> - U-Boot Version: 2024.04
+> - U-Boot Build info:
+> 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE 4622115c, ATF 7c64d4e
+> 
+> The issue is not present on: v6.5
+> 
+> The real root cause is still unclear to me. Anybody has any ideas? I am
+> happy to share more details if needed.
 
-- -- 
-Best Regards,
-Marek Marczykowski-Górecki
-Invisible Things Lab
------BEGIN PGP SIGNATURE-----
+Hello everyone, as this introduced a regression, should I send a revert
+for 4f6c983261? Or any ideas that might help fix this issue?
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmf46HQACgkQ24/THMrX
-1ywBfAf/SX79WOL0Rv1cL2F/YeEUbr6b/FxZ6W+xsFCi38UxcN0PKCGalQ76jT5r
-LAyy1zPedAAdGu+JdQ8abrVfPbSXnzLUcUZNN75kGHixS1c/TqfP4L9ymZ6Z5rAB
-BUt579EkdDZlm2dZ0mxwHcdoArv7fK05Fb+l3Vd645w5MK0fmwWPesCeBaEiwG2S
-ZiuSOWcJBL0yPPzvRaVPD5FCgjjjEhQ2fZZinqhwVy1LNA6OBXQrVvNhOazFVjKq
-rQV1YLG4gCBu6TD6NaETrPMevmZmovuo7o4/6Y5vJQexhQv3eaaxE5dh/0AaWovJ
-FqW2VrxvWXz6HgOokPpfispYzpMgEQ==
-=+SPC
------END PGP SIGNATURE-----
+> 
+> Cheers,
+> Hiago.
+
+Cheers,
+Hiago.
