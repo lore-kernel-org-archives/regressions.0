@@ -1,249 +1,186 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2072.outbound.protection.outlook.com [40.107.21.72])
+Received: from smtp-outgoing-1703.laposte.net (smtp-outgoing-1703.laposte.net [160.92.124.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5BC136988
-	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 13:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377820; cv=fail; b=niFTMgHjM8D6R/9Tf/GXyHu/aEOK4V6gc2tVVhIQlTry4gMn9pbj8m5JJxKwn8dAqiASfPzcY5ihoQITgxgN1t3TOLkcvlo/w52UoO2BjGRG/ypbC6vV4WbwKzfan4xlUOM8HpD9VQa6sO30GpWVYvxeFdqa9JknlOyiW+C5XRU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377820; c=relaxed/simple;
-	bh=8VMs933QJ+9asxhwWGwlkqp5ctY246DrYmulCxU2DiE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=oV1CKcQWMcd0WbREc+11IsM00UD9yh/uCyeWShg43pfqj8mQxAJuV/QvuCTnNB1FFDz6FpePUq2qW3rW5HN+pEhMtIq8YhWdmv9s8Xhui3bY5L4hh9pAcZIi4TEp1WfbDQGw95qv9yd+dm5iIQ3+VP6T1y2WPIrOpGIacq8XigU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=J7iadoiE; arc=fail smtp.client-ip=40.107.21.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2599C16DECB
+	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 13:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.92.124.101
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744377912; cv=none; b=iO8yZESgNYqv3j37q+2H0MBwSZl3LCrMf2FxuJ17NSBtKs0T/SZ7sACa6bDEWF/2YKbq4ftU+Q8m48f2jyv/Xl6BvWD5bbmphcvSLkGcUY9JSf5oLXRTBKsQgH9Q0ZqNSf4jZ0+NG7msAlVuIWaAfBjFi822MgF6+DVuv5KfukU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744377912; c=relaxed/simple;
+	bh=wG01QiF2ojhksDG+5k9gZlEaIwN1hZWXbIfTbVEB1hk=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=uU6GcEra0jiU0jTQc+XxuVgl3e7UFnRWYp/0b1AL8CeanfjvmL3rYqFDDofXfVutZ2JXH+y9chCXO9R8IsqivaGRlM1LqOox11ZlaHYN5RE/4br1c/G/wqdrYaezwwmstgMoHPcpHMuSpDbgK5ms+dEAnbntJrnhpoxmHy1e6Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=laposte.net; spf=pass smtp.mailfrom=laposte.net; dkim=pass (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b=RHHPEh+D; arc=none smtp.client-ip=160.92.124.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=laposte.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=laposte.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="J7iadoiE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vaXbEfdO3+RPr8UT+pQGEM9de1/BEdVaIjyo9ZTREntGDEWgP7TkpZeJXkcNeuPB18ibanklPH6IWQf+KU9HQ1mqnEVk2LYrvDcB0Ak1n7agKPn5Xez/O0jxTNqAGkg0fCMgSWn5DAdiCmuDqGB6c5Cs7sFVWL6mREjUFFW+4r6GnoU7orVkDa9IB2LU+u4zD4yLwr+ndk0Ye02MtNrht6z2kv2npzbif2YynaivJQDenPALdsESkmMix/Eh7vIpqSFAqDLQ7iD08HFKjU7V0AegcB4j1PLkSSuO9nl2TWIKbbRcGiKPj0GqkCt2yhirzGjvLtQ57lM60/s2k35Frg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z7ifqa6N+2VsPbK0TdvsdwoEvR7+fGFe43iGVaC3mdc=;
- b=iH/Z7pGUdp4h6poTvQ0T89xCpew+UcEnOac5FAIoYx+kiSsdwQxyI6ZK5i/jIPfFLWBt/xmDsJS12FX2I3VOsbaHYxh6/85/99qIL2C+e2DMUPsDxvvTrC63Fhx3aInggLAU9kAxxTl9aIf+thPhWErtPQgLPI+kwynjtHs5H/4rH6Ego7UevIQFyZ6Ar4OFFBMS6Qov6iaLSmte8Dfl+CFRWu7apoLBVqVoefZuKHOuWgpu9CD/lTRBkHiiXQusdr+wg2saCQmL+6L2njfYZcEQ9AIWaTMJ5yp2pM8Os4JvDT7f9tqoKxA9StNwj5IpIoh1RbxdDSETIbZLq64Wuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z7ifqa6N+2VsPbK0TdvsdwoEvR7+fGFe43iGVaC3mdc=;
- b=J7iadoiEsLs3KXyGUMhb2Y++cEg7UqcAQpIAHQJc4xDt4f/iMpnnWC21WAr61y6m1CFDcyFgqOhxFvkraC57ZwMs6CbsW4frl1DazFDwfONEeftXAOvisxG7GK8KICwrsr/wmxp7ypJIXQfqPFSyMy9AO6vJotUQzDaSag2rIBkH3I+6Gpooe1TvhAFBmD9Ht/yFcazDXWdy04SNaCihxl1alUNguY1L8Jllb3EiMGIjyGVlBqm7N9mtWa6BAr8udXFYqgbrqqSfum6Bcm3ddNb30IQnH1JAmYVmaoYGgm+UI7EBd+OgmllfQdPJJJrFnx5cGPr8zsv01sYzzigfiQ==
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DB8PR04MB6811.eurprd04.prod.outlook.com (2603:10a6:10:fa::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Fri, 11 Apr
- 2025 13:23:35 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.025; Fri, 11 Apr 2025
- 13:23:32 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Hiago De Franco <hiagofranco@gmail.com>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>
-CC: Ulf Hansson <ulf.hansson@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, Hiago De Franco <hiago.franco@toradex.com>
-Subject: RE: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when Cortex-M4
- is running and it was started by U-Boot bootaux
-Thread-Topic: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
- Cortex-M4 is running and it was started by U-Boot bootaux
-Thread-Index: AQHbpWxIyVwHrK1A2UqE7zPASmzQ0LOedbwAgAAHyXA=
-Date: Fri, 11 Apr 2025 13:23:32 +0000
-Message-ID:
- <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
- <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
-In-Reply-To: <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|DB8PR04MB6811:EE_
-x-ms-office365-filtering-correlation-id: c75b544f-b651-4a50-06ed-08dd78fc0e41
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?kGXjnapULFRiTBCrdwigZI1HWIupZrY++PUBn+a/WjWRdSJfzKOQ5xTse0fc?=
- =?us-ascii?Q?1hT9gRC0ldy3MhTbav463+cgCvBvWW63kDzmVuG+ERmHiLgs7NMMWjKB7Zl7?=
- =?us-ascii?Q?+jAcOse7lXQ7ZsBZzowxaYKb/cLv+MaFd1WO+0CLa9uJYbZfaGMcDVNFxnWC?=
- =?us-ascii?Q?dIYFUH7+Xv/eX3VFAzuzK3kpsVzLJvFkliLsAzgzlcJwHXh1xmIm9vI+WqQG?=
- =?us-ascii?Q?chcL7g28LBCxcVmevqvvz+k+uAWNIWqm4vPJvYN1UJnD0Ka3eJWy9Lj/leZo?=
- =?us-ascii?Q?pEM89yfnZpDvwIAFoxjGv765ER0lrbLS8Z8gAYs3StPL5RNEWRaYS0cUMqFl?=
- =?us-ascii?Q?h7EHgH9o4UriQG7SpgxMXFguBIq4Z0+EXC/fDvdYzB0WEkXY3qnHoCup/isp?=
- =?us-ascii?Q?Cf7HBneRgEdgMJjtygLYj/c7IGUapsXgD+ptcu3q1rgQjN2q4uC5/wGBQmdj?=
- =?us-ascii?Q?aEXmkILI2BwYLVR0qNlYZYEyy+aXU57dDvx6ZJoBAFArYni3SpC0JTo3VFlN?=
- =?us-ascii?Q?HxAE5+ziZs0WK6xfLqCiOdeS1TjpCfBC1SrTM5qNmMo25xqdaKzg+RlmLwRY?=
- =?us-ascii?Q?K/BnyvG0kpf9TJPbVeeVyT5z1rOA6zECVx/NUuGSVPB7WDxZbGKZe27h2ZO3?=
- =?us-ascii?Q?dSbUKc7JE9SfQlfpKEl7aaURGoLMOoaQmysDrFMCaNmgYJfu0HwOUXnVOzsS?=
- =?us-ascii?Q?OYpGn+hCnUaMx3b0bdlEajnmCplIPuRLVQFl/kRTWKtUuo7+N1g2chIFTsGg?=
- =?us-ascii?Q?1bWcaQAdg8YgVRAXFiLXnvXNNdu7xc6ISddxtwRXw6eI5a4u9R5mP/wD8c+y?=
- =?us-ascii?Q?PEsVDVcAihP0b159HaOLLcgARGlVOYqWLTOSOqq/4QJqDF/oK60ksKr1FcJU?=
- =?us-ascii?Q?KJy9iyReZQ3v43eBTIbqvdFkAD9Qiza/yVlh/UMI2zTXOTfrpDytAnjEnKJu?=
- =?us-ascii?Q?GrQvO3Sjkf0W7bVHqtQQstwDjXC1vXvV4ntFhT9fHOZfKZl5PhvzEkLaW7q/?=
- =?us-ascii?Q?2Q74Fxj9NjmxMmSx+LxSeJDirmqgqr8OqUsh562DBcQyVWHMTpcJjutra8z/?=
- =?us-ascii?Q?nXUv7Ux9z/c/zGIjs9Z555PKTUP14MjagT1+zdlqOi95ibYvQsXlV3HSfzZ7?=
- =?us-ascii?Q?0T51trXogBJrvnNnGZhNsb2ERt7N5vBAuql22hq3g8XYWbbFqmJFKN6MA8YR?=
- =?us-ascii?Q?jemH64DTkIbUszKldOG1pn6sKL0CKxx9WLay8DfdWetPtNnByNXvub0nWcP4?=
- =?us-ascii?Q?THCrGsEYA6Dn3rbDeZDrkJtXtuZrCx6tAyMqnt7LbD/FOgz+9TlJCBDgedKs?=
- =?us-ascii?Q?rRrJDO416/hbAkQovnKbn0z+ebpDwm1a6+Hfui/HgqHj2TmzIrIDQ4t1PCiy?=
- =?us-ascii?Q?Owg6OZlBPSskohQA2la2q/pQ5trNPrJgLFStGDRIRA8qBDGtBAjCN+Rq4Tr0?=
- =?us-ascii?Q?0au/fIeEB91ZQcEiPh47LnFvOXFlvW18UmMFOsF8+Pn5tNgoNCJ0zQ=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ORhBxP5OFDlryCHVIZF4GjZftOelB9A01HrtoQL5QvPer/Z7rdqSTY5+rlHz?=
- =?us-ascii?Q?idh7EK23/YX3R2n/pfd6ddgcNmhzLwQEcNxZ0Vnw0fxwmSz+eJNg1OoGlJ9C?=
- =?us-ascii?Q?cnqcO9RNM4b2NByCIMMSOi6eyTFGbBFdhG29lXRgldErYJ5uWP+9+6Wa/c6Y?=
- =?us-ascii?Q?Ux1rTMFUrVYreYz/zuEpi6Epq+bUVagwQMuzs228Fs5ZDkKNmQu8VwuBOn3Q?=
- =?us-ascii?Q?PRnvmol3S0vNFv3nxg8M1O/Dt0sMqBPsxaWiUfZNqXSGT/Hz9/0lbPZWheif?=
- =?us-ascii?Q?J41fpE7nienpv0SFebArjn7sVtAhEFx9vHXeAgaMMghgXlXndjFlJTQcmiGr?=
- =?us-ascii?Q?DJK+XzSNAMAmh6NWv4q23FDsWwIm5HL+0SS3NjyI293nGMab8l1Gm7L/8394?=
- =?us-ascii?Q?oqcD9UqWBjxNvuJ1+orbLGQ/JBW/jZ2RxQFLZAa4K6g+V5EVVi9PWpyx+Qk8?=
- =?us-ascii?Q?gneMaYQR8YNpZTmZT8s3pcQw3NRsoe3zeCstJbtJlxN1QlqBoXNVQtNnOUIH?=
- =?us-ascii?Q?UT+jn746gGQvA6YQxkQ29/I8JiMsF6S87W5uChIEGv65f63UByVveSmk7g3l?=
- =?us-ascii?Q?l7u2O4LivMFOOZ45kHlGMLjKVyziKbHnwbTBYjqsXOUiZqExA6b9dh59KcVC?=
- =?us-ascii?Q?xr0HoyXeLekfuPI9Ek5vv9Lem+EpKgplO4fmhKXCtLp5qqH2yRC4tU7AkCd3?=
- =?us-ascii?Q?GPe5fYywneDd6rCR89uvt0La56F4Xiu4+DOPXu/Ar32HLa8yQkrJ/7rVJdkf?=
- =?us-ascii?Q?vlgk+gwALGYiEUeSkO4q1Jxy/X2DdFDGPkHCo45WqrRdFiXHtGShvKYVYwFG?=
- =?us-ascii?Q?R8MXtIAnSvGeYNfGnai6puvS0keCO2pTTPu4ijyXdA/9pbOq821xLdpKhBq6?=
- =?us-ascii?Q?k6FWnRQU+2mf05WCJ5OKgLYsEOoD7GXgIoktAMX+63PkWzVql1YwGUmbT2dW?=
- =?us-ascii?Q?2RaaHw3cPXSxIkWDP/wROj0ppneim67DP1cBZF7pPie/PKY5aKT95V1NlOmh?=
- =?us-ascii?Q?m43tm6C9s9tzjNjhdU+tVTxvUZR9oMT5GdCJ9cjcFVRVxQE+kKXpTdkra9FT?=
- =?us-ascii?Q?9SKKnLkOSngsoTDji2siMcvH194LnAvHnIrokxPnLBP4nYyJIBSsW8oKBw7S?=
- =?us-ascii?Q?bffzsyl8x43TNkNS4rgQcDakGrirOQ5GbukMij9XtmsSL4CwyBeZLBg7X3Kv?=
- =?us-ascii?Q?r/ehWiq5InTk5GQiSI7g6grTo8JzSSLEvWJ6tDylFwxqiYKX5yqnTMWUvzY4?=
- =?us-ascii?Q?+HFdPoIIQ2Bw0KIrJFRu6SOdcFAKtdI4MCrtpJ+b6CqsiL6q+sQy3zgOuI9M?=
- =?us-ascii?Q?CNbsN1DfXoJLQOKN7OLPiX1a2eyjKN1I/KvPP1FSKnsjkQf5MY6Rjxfeia0b?=
- =?us-ascii?Q?nMGjROM+RnSCyp/DcN/d9Ja6ynzW3X0Lvv/KdV80Ji38XCNm0sjNPJBVJ6nY?=
- =?us-ascii?Q?do/UtO68wxRiYn95I9p0sjgk38Ch57eLGxPE4w/Lh62HBfeUnP+JaHEL63Sg?=
- =?us-ascii?Q?Jb9tbcyPuxv3xVzF9EdOw3cb2eaqDEZk0uII6lb+rj7dZqSI1/q3DAtsYXHn?=
- =?us-ascii?Q?ZD12DuObfZhWgfYws14=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	dkim=pass (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="RHHPEh+D"
+X-mail-filterd: {"version":"1.9.1","queueID":"4ZYrq96m22zjWvv","contextId":
+ "375f7af2-4447-43d2-a6bd-49a0be243ea8"}
+Received: from outgoing-mail.laposte.net (localhost.localdomain [127.0.0.1])
+	by mlpnf0116.laposte.net (SMTP Server) with ESMTP id 4ZYrq96m22zjWvv;
+	Fri, 11 Apr 2025 11:24:21 +0200 (CEST)
+X-mail-filterd: {"version":"1.9.1","queueID":"4ZYrq92VblzjWvt","contextId":
+ "05ff3ae9-243e-43d6-a727-b8e026122837"}
+X-lpn-mailing: LEGIT
+X-lpn-spamrating: 40
+X-lpn-spamlevel: not-spam
+Received: from [192.168.1.8] (91-169-167-190.subs.proxad.net [91.169.167.190])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mlpnf0116.laposte.net (SMTP Server) with ESMTPSA id 4ZYrq92VblzjWvt;
+	Fri, 11 Apr 2025 11:24:21 +0200 (CEST)
+Message-ID: <f23b88ef59b3967429c3993bf5715577f8c30407.camel@laposte.net>
+Subject: [REGRESSION][BISECTED] mt7925e fails to reconnect after suspend on
+ 6.14.x
+From: Patrick Nicolas <patricknicolas@laposte.net>
+To: allan.wang@mediatek.com
+Cc: regressions@lists.linux.dev, hao.zhang@mediatek.com,
+ Leon.Yen@mediatek.com, 	nbd@nbd.name
+Date: Fri, 11 Apr 2025 11:24:20 +0200
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c75b544f-b651-4a50-06ed-08dd78fc0e41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2025 13:23:32.2090
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qOrFtEwNzGeIY4kmLq5VNo7af2nocDGa7r0ey7S5NG29vI/004O/e0iETpYOW3hMxQg8e76OKGkBBJ3A2lwRfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6811
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=laposte.net; s=lpn-wlmd; t=1744377906; bh=wG01QiF2ojhksDG+5k9gZlEaIwN1hZWXbIfTbVEB1hk=; h=Message-ID:Subject:From:To:Cc:Date:Content-Type:Content-Transfer-Encoding:MIME-Version; b=RHHPEh+DXoWrVw+Rakpik2pA84D9tzGtZFUpJFslb1RMXhTpUTVmad2UqZyrETWid5njtA4teKwe16zn+TPmmEjxqpmn9WhPzts7Q58pdE/oMLRTRujQ8uys7mApqwf0DYBi2qTnFMfFqkb9KRpKUsA6UIAky3mVQW5uj9HIMuBnxvJjHYQ5w5FxghX5nU4896BQ2vr0Q+1xFuR8D01U1VVP9MXZ1bEFwKPZvjIPoh4bLC5sLvkyD4WIiQQepgprsvP+zaIbSQxnF4c+PkgLoMf/GNv8qtdv93C8Bcz5dmLkROV1E/N031EWEfg8OW4nEZ8Zsv04DU7C2Ck/EFb4jA==;
 
-Hi,
+Starting with 6d18b668301e0a7d924a6c821b84516bc08bdafe
+wifi: mt76: introduce mt792x_config_mac_addr_list routine
 
-Sorry for late.
-> Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
-> when Cortex-M4 is running and it was started by U-Boot bootaux
->=20
-> On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
-> > #regzbot introduced: 4f6c983261
-> >
-> > Hi Peng and all,
-> >
-> > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
-> according
-> > to HW state") introduced a regression where the Kernel reboots
-> > unexpectedly (without any warnings, crashes or errors) when the
-> > Cortex-M4 was loaded and running by U-Boot, using the bootaux
-> command:
-> >
-> > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin # bootaux
-> > ${loadaddr} 0 # boot
-> >
-> > This is a simple hello world binary that prints a message into the
-> > M40.UART0 pin (demo from NXP MCUXpresso).
+When resuming from suspend, WiFi fails to connect to my 5GHz network using
+NetworkManager/iwd
 
-Which release is this image from?
+journalctl logs after suspend:
+avril 11 10:51:20 Rutherford systemd-logind[667]: Operation 'suspend' finis=
+hed.
+avril 11 10:51:20 Rutherford systemd[1]: Stopped target Suspend.
+avril 11 10:51:20 Rutherford systemd-resolved[411]: Closing all remaining T=
+CP
+connections.
+avril 11 10:51:20 Rutherford systemd-resolved[411]: Resetting learnt featur=
+e
+levels on all servers.
+avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1292]
+manager: sleep: wake requested (sleeping: yes  enabled: yes)
+avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1293]
+device (/net/connman/iwd/0): state change: unmanaged -> unavailable (reason
+'managed', sys-iface-state: 'external')
+avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1294]
+device (wlan0): state change: unmanaged -> unavailable (reason 'managed', s=
+ys-
+iface-state: 'external')
+avril 11 10:51:20 Rutherford dino[1695]: stream_connect.vala:76: Could not
+establish XMPP session with meumeu.org:5222: Failed connecting to
+meumeu.org:5222 (starttls): Erreur de r=C3=A9solution de =C2=AB=C2=A0meumeu=
+.org=C2=A0=C2=BB=C2=A0: Nom ou
+service inconnu
+avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
+thread' high priority scheduled:
+GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
+"org.freedesktop.RealtimeKit1" does not exist
+avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
+thread' high priority scheduled:
+GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
+"org.freedesktop.RealtimeKit1" does not exist
+avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
+thread' high priority scheduled:
+GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
+"org.freedesktop.RealtimeKit1" does not exist
+avril 11 10:51:20 Rutherford kernel: mt7925e 0000:c2:00.0: HW/SW Version:
+0x8a108a10, Build Time: 20250305132908a
+avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
+thread' high priority scheduled:
+GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
+"org.freedesktop.RealtimeKit1" does not exist
+avril 11 10:51:20 Rutherford kernel: mt7925e 0000:c2:00.0: WM Firmware Vers=
+ion:
+____000000, Build Time: 20250305133013
+avril 11 10:51:21 Rutherford iwd[727]: event: state, old: disconnected, new=
+:
+autoconnect_quick
+avril 11 10:51:21 Rutherford NetworkManager[684]: <info>  [1744361481.3051]
+manager: NetworkManager state is now DISCONNECTED
+avril 11 10:51:21 Rutherford NetworkManager[684]: <info>  [1744361481.3053]
+device (/net/connman/iwd/0): state change: unavailable -> disconnected (rea=
+son
+'none', sys-iface-state: 'managed')
+avril 11 10:51:21 Rutherford kernel: mt7925e 0000:c2:00.0: HW/SW Version:
+0x8a108a10, Build Time: 20250305132908a
+avril 11 10:51:21 Rutherford kernel: mt7925e 0000:c2:00.0: WM Firmware Vers=
+ion:
+____000000, Build Time: 20250305133013
+avril 11 10:51:22 Rutherford gdm-password][2951]: gkr-pam: keyring is unloc=
+ked
+avril 11 10:51:22 Rutherford kernel: wlan0: Driver requested disconnection =
+from
+AP 00:00:00:00:00:00
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.4495]
+device (wlan0): new IWD device state is disconnected
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.4497]
+device (wlan0): state change: unavailable -> disconnected (reason 'supplica=
+nt-
+available', sys-iface-state: 'managed')
+avril 11 10:51:22 Rutherford iwd[727]: event: connect-info, ssid: Principia
+5GHz, bss: 22:66:cf:d5:e9:60, signal: -33, load: 2/255
+avril 11 10:51:22 Rutherford iwd[727]: event: state, old: autoconnect_quick=
+,
+new: connecting (auto)
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7131]
+device (wlan0): new IWD device state is connecting
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7136]
+device (wlan0): Activation: starting connection 'Principia 5GHz' (d6f62917-=
+8664-
+46f3-8666-41a824846afc)
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7137]
+device (wlan0): state change: disconnected -> prepare (reason 'none', sys-i=
+face-
+state: 'managed')
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7138]
+manager: NetworkManager state is now CONNECTING
+avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7139]
+device (wlan0): state change: prepare -> config (reason 'none', sys-iface-s=
+tate:
+'managed')
+avril 11 10:51:22 Rutherford kernel: wlan0: authenticate with 22:66:cf:d5:e=
+9:60
+(local address=3Da8:e2:91:52:53:3e)
+avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
+(try
+1/3)
+avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
+(try
+2/3)
+avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
+(try
+3/3)
+avril 11 10:51:23 Rutherford kernel: wlan0: authentication with
+22:66:cf:d5:e9:60 timed out
 
-> >
-> > Before this commit, everything worked as expected, Linux boots fine
-> > and the HMP core keeps running and printing messages to the UART.
-> > After the commit, the kernel reboots at the beggining of the boot
-> > process. The only relevant message is printed by U-Boot after reset:
-> >
-> > "Reset cause: SCFW fault reset"
-> >
-> > This commit was bisectabled, the same device tree, u-boot version,
-> and
-> > SCFW versions were used. Reverting this commit fixes the issues.
-> >
-> > For testing purposes, I created the following patch which also fixes
-> > the
-> > issue:
-> >
-> > diff --git a/drivers/pmdomain/imx/scu-pd.c
-> > b/drivers/pmdomain/imx/scu-pd.c index
-> 38f3cdd21042..0477b3fb4991
-> > 100644
-> > --- a/drivers/pmdomain/imx/scu-pd.c
-> > +++ b/drivers/pmdomain/imx/scu-pd.c
-> > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
-> *dev, int idx,
-> >                 return NULL;
-> >         }
-> >
-> > +       if (strstr("cm40", sc_pd->name) !=3D NULL)
-> > +               is_off =3D true;
-> > +
-> >         ret =3D pm_genpd_init(&sc_pd->pd, NULL, is_off);
-> >         if (ret) {
-> >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
-> >
-> >
-> > Test Environment:
-> > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
-> > - U-Boot Version: 2024.04
-> > - U-Boot Build info:
-> > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
-> 4622115c, ATF 7c64d4e
-> >
-> > The issue is not present on: v6.5
-> >
-> > The real root cause is still unclear to me. Anybody has any ideas? I
-> > am happy to share more details if needed.
 
-Have you tried pd_ignore_unused?=20
+lspci -v -d 14c3:7925
+c2:00.0 Network controller: MEDIATEK Corp. Device 7925
+	Subsystem: AzureWave Device 6370
+	Flags: bus master, fast devsel, latency 0, IRQ 151, IOMMU group 17
+	Memory at dc800000 (64-bit, non-prefetchable) [size=3D2M]
+	Memory at dca00000 (64-bit, non-prefetchable) [size=3D32K]
+	Capabilities: [80] Express Endpoint, IntMsgNum 0
+	Capabilities: [e0] MSI: Enable+ Count=3D1/32 Maskable+ 64bit+
+	Capabilities: [f8] Power Management version 3
+	Capabilities: [100] Vendor Specific Information: ID=3D1556 Rev=3D1 Len=3D0=
+08
+<?>
+	Capabilities: [108] Latency Tolerance Reporting
+	Capabilities: [110] L1 PM Substates
+	Capabilities: [200] Advanced Error Reporting
+	Kernel driver in use: mt7925e
+	Kernel modules: mt7925e
 
-I think it is linux power down M4 which M4 is running, then SCFW
-reports error. So please give a try pd_ignore_unused.
 
-If this is the case, may I know do you have m4 nodes in dts and
-with power domain included?
+Reverting the commit on top of 6.14.2 fixes the issue.
 
-Anyway, I will give a try on i.MX8QM EVK.
-
->=20
-> Hello everyone, as this introduced a regression, should I send a revert
-> for 4f6c983261?=20
-
-Please wait a while, I think we need find root cause.
-
-Thanks,
-Peng.
-
-Or any ideas that might help fix this issue?
->=20
-> >
-> > Cheers,
-> > Hiago.
->=20
-> Cheers,
-> Hiago.
