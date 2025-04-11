@@ -1,186 +1,275 @@
-Received: from smtp-outgoing-1703.laposte.net (smtp-outgoing-1703.laposte.net [160.92.124.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2599C16DECB
-	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 13:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.92.124.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9713B213E65
+	for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 16:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377912; cv=none; b=iO8yZESgNYqv3j37q+2H0MBwSZl3LCrMf2FxuJ17NSBtKs0T/SZ7sACa6bDEWF/2YKbq4ftU+Q8m48f2jyv/Xl6BvWD5bbmphcvSLkGcUY9JSf5oLXRTBKsQgH9Q0ZqNSf4jZ0+NG7msAlVuIWaAfBjFi822MgF6+DVuv5KfukU=
+	t=1744388616; cv=none; b=EcVGnh80FaguA6u0GJ1CdS/jxBrbgbdFnDsBts4BYvN2GEkfd6fFnPRD8C5Rbanlf9tsahwyytgUb0OMzfTOlVnnwRs9OGqSR3Z6ERTlhBJcTJaMiyRvKmAjAIRiFpErZJBKQcxvUEHP5E8QPKBXJuG2V9DnkZzzzTqjY5g9ORU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377912; c=relaxed/simple;
-	bh=wG01QiF2ojhksDG+5k9gZlEaIwN1hZWXbIfTbVEB1hk=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=uU6GcEra0jiU0jTQc+XxuVgl3e7UFnRWYp/0b1AL8CeanfjvmL3rYqFDDofXfVutZ2JXH+y9chCXO9R8IsqivaGRlM1LqOox11ZlaHYN5RE/4br1c/G/wqdrYaezwwmstgMoHPcpHMuSpDbgK5ms+dEAnbntJrnhpoxmHy1e6Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=laposte.net; spf=pass smtp.mailfrom=laposte.net; dkim=pass (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b=RHHPEh+D; arc=none smtp.client-ip=160.92.124.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=laposte.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=laposte.net
+	s=arc-20240116; t=1744388616; c=relaxed/simple;
+	bh=vCMcEgHUigUOX4/6itupqbvmSxHNfPGr6uYveuFsH9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aS1TUXNlDgWwpCDB1d5erliXGkbaLBWL7L1HGlvw0PVzYgTMAgvogDPqe3Cy7cDnz77jJ8/ftF2/dGGXb7BqB9uV8dfjubHt7gcPo3PUOnKn1qc62hyYMemcEazXQtiETcm8FGdx4d5qSznSuwofq2X440s1ew2NIlYFzHBJTWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7GdMZ1/; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=laposte.net header.i=@laposte.net header.b="RHHPEh+D"
-X-mail-filterd: {"version":"1.9.1","queueID":"4ZYrq96m22zjWvv","contextId":
- "375f7af2-4447-43d2-a6bd-49a0be243ea8"}
-Received: from outgoing-mail.laposte.net (localhost.localdomain [127.0.0.1])
-	by mlpnf0116.laposte.net (SMTP Server) with ESMTP id 4ZYrq96m22zjWvv;
-	Fri, 11 Apr 2025 11:24:21 +0200 (CEST)
-X-mail-filterd: {"version":"1.9.1","queueID":"4ZYrq92VblzjWvt","contextId":
- "05ff3ae9-243e-43d6-a727-b8e026122837"}
-X-lpn-mailing: LEGIT
-X-lpn-spamrating: 40
-X-lpn-spamlevel: not-spam
-Received: from [192.168.1.8] (91-169-167-190.subs.proxad.net [91.169.167.190])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mlpnf0116.laposte.net (SMTP Server) with ESMTPSA id 4ZYrq92VblzjWvt;
-	Fri, 11 Apr 2025 11:24:21 +0200 (CEST)
-Message-ID: <f23b88ef59b3967429c3993bf5715577f8c30407.camel@laposte.net>
-Subject: [REGRESSION][BISECTED] mt7925e fails to reconnect after suspend on
- 6.14.x
-From: Patrick Nicolas <patricknicolas@laposte.net>
-To: allan.wang@mediatek.com
-Cc: regressions@lists.linux.dev, hao.zhang@mediatek.com,
- Leon.Yen@mediatek.com, 	nbd@nbd.name
-Date: Fri, 11 Apr 2025 11:24:20 +0200
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7GdMZ1/"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225477548e1so22985865ad.0
+        for <regressions@lists.linux.dev>; Fri, 11 Apr 2025 09:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744388614; x=1744993414; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
+        b=j7GdMZ1/SnSqujdjvV3oBJaGgFEQrYwF3RrYkvFlKz1Db1M8J0rvZIR6B/tLas4vwB
+         K6ejHmhraRR/BeX/9lKvCBJ2X9XmrgJjMzMGHjA6XQ2+msqcF27MY4Ht9Wi94SL/UoZy
+         edZo62zh7GWYp2DEbbaDgomsEZo0n0F6w0tKnSdsnhIUtQGqa/JmiC2BH6aQ40ILRZ8J
+         DnIz8dvVHJ+rQfTcBQ8MAO6qX7tZCbYpkreAxeJ9SOlX44ZeOxspkZFbR2OxML2CCBI2
+         FP99EhKOprv4p51QXZa7zI0tW6g6WQ7vy5+f9+MUD8VgI5FAGSyHVPyvXrxFZHnr0kuu
+         3xjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744388614; x=1744993414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T5FckoYafwVaXPWK2PUB+GpDyPBlHFtc4ZPOsKk2Ipg=;
+        b=FYK4FYGcgLxeTlIS8MUW88SIYoJYBpsfYnp0sMGU2BhVbRWgjBGp8UrTVhb5ck9evY
+         T9VN6M4w0JtPcY9GeCW7WyZkt5LrFl+hAwMwpbwvVr9PROTf4yFqjiAByyMiHB4OJXoU
+         bg3kM46JdBb8Mci/CnIoNlGPp/0hFaD7DJ3OP5Vfoy6C5hxSbMX64gyLFMJ/27WTu7FQ
+         CkJXP8anb7XbUli6ajX7Z9AHTNthgDftb0V2DAkqqVxvk2aOm627s+nfb2zbQUZYaIbv
+         dcw7absvL1vACElZ9LV+N85+J3vPZ182wZ73GKu5fjq+hrY9NQS0k3qDOlxVWeO1gvF2
+         yi+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXCUrq2lzrbZxRqHcJtI2I87y6iUAaRzuA1vSb2oLvmXFLt6rI2np+tId4Xy33rW+5VQgggLmz7kHlPMQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzirDY3NBu1uAdtul4QvVnOq9HvqOHwwnTnd2+rTEo5pP09wNt2
+	tEJ7GgWE7To3Sk78K4zC/UoVsfMm6iNeGlRCxq2xr4WWaG1ErjX5
+X-Gm-Gg: ASbGnct/6MIL8OlkPvC9oxDZLmcXaH2gpklaw1kasOygNxPQOmKzldDdAzX8r6TEim8
+	rs6YFz1IKV4Q2HgWhmRiK9x2k6pTNpqeANNi8016UPOZWvmKpD15RfHhzdT9//K2aDURTzAOGco
+	xZGRKWO7O96GZEOdN//DerT5mtNB0hW4lMBpQTbTL0fnEI2vJUHmunsInfZSliruVDIYGW0+fKv
+	+7l73Cuate61s79u9oE6jcCGX65uemoGkPG1ifybPeohz4H/gU6feyMkm6Mqf4+aJXEkSqkLaTK
+	Oa2kadohFY93Bj56pT2k2w95fAzUq50FyYRLRHfNK1z6vitOwQ==
+X-Google-Smtp-Source: AGHT+IFCfUV6384bNBCr+vSp/DTf6SVjkwz2rSVIWqsuCTiK8sT2R3/nhh6FK0ZbTjida+uNgTjQKg==
+X-Received: by 2002:a17:90b:2647:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-30823646ae2mr5751053a91.18.1744388613682;
+        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c3:a964:9277:4e8:b712:66e2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a14bsm5814830a91.1.2025.04.11.09.23.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 09:23:33 -0700 (PDT)
+Date: Fri, 11 Apr 2025 13:23:28 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
+ Cortex-M4 is running and it was started by U-Boot bootaux
+Message-ID: <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
+References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
+ <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
+ <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=laposte.net; s=lpn-wlmd; t=1744377906; bh=wG01QiF2ojhksDG+5k9gZlEaIwN1hZWXbIfTbVEB1hk=; h=Message-ID:Subject:From:To:Cc:Date:Content-Type:Content-Transfer-Encoding:MIME-Version; b=RHHPEh+DXoWrVw+Rakpik2pA84D9tzGtZFUpJFslb1RMXhTpUTVmad2UqZyrETWid5njtA4teKwe16zn+TPmmEjxqpmn9WhPzts7Q58pdE/oMLRTRujQ8uys7mApqwf0DYBi2qTnFMfFqkb9KRpKUsA6UIAky3mVQW5uj9HIMuBnxvJjHYQ5w5FxghX5nU4896BQ2vr0Q+1xFuR8D01U1VVP9MXZ1bEFwKPZvjIPoh4bLC5sLvkyD4WIiQQepgprsvP+zaIbSQxnF4c+PkgLoMf/GNv8qtdv93C8Bcz5dmLkROV1E/N031EWEfg8OW4nEZ8Zsv04DU7C2Ck/EFb4jA==;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-Starting with 6d18b668301e0a7d924a6c821b84516bc08bdafe
-wifi: mt76: introduce mt792x_config_mac_addr_list routine
+Hi Peng,
 
-When resuming from suspend, WiFi fails to connect to my 5GHz network using
-NetworkManager/iwd
+On Fri, Apr 11, 2025 at 01:23:32PM +0000, Peng Fan wrote:
+> Hi,
+> 
+> Sorry for late.
+> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
+> > when Cortex-M4 is running and it was started by U-Boot bootaux
+> > 
+> > On Fri, Apr 04, 2025 at 11:17:13AM -0300, Hiago De Franco wrote:
+> > > #regzbot introduced: 4f6c983261
+> > >
+> > > Hi Peng and all,
+> > >
+> > > Commit 4f6c9832613b ("genpd: imx: scu-pd: initialize is_off
+> > according
+> > > to HW state") introduced a regression where the Kernel reboots
+> > > unexpectedly (without any warnings, crashes or errors) when the
+> > > Cortex-M4 was loaded and running by U-Boot, using the bootaux
+> > command:
+> > >
+> > > # load mmc 0:2 ${loadaddr} /home/root/hello_world.bin # bootaux
+> > > ${loadaddr} 0 # boot
+> > >
+> > > This is a simple hello world binary that prints a message into the
+> > > M40.UART0 pin (demo from NXP MCUXpresso).
+> 
+> Which release is this image from?
 
-journalctl logs after suspend:
-avril 11 10:51:20 Rutherford systemd-logind[667]: Operation 'suspend' finis=
-hed.
-avril 11 10:51:20 Rutherford systemd[1]: Stopped target Suspend.
-avril 11 10:51:20 Rutherford systemd-resolved[411]: Closing all remaining T=
-CP
-connections.
-avril 11 10:51:20 Rutherford systemd-resolved[411]: Resetting learnt featur=
-e
-levels on all servers.
-avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1292]
-manager: sleep: wake requested (sleeping: yes  enabled: yes)
-avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1293]
-device (/net/connman/iwd/0): state change: unmanaged -> unavailable (reason
-'managed', sys-iface-state: 'external')
-avril 11 10:51:20 Rutherford NetworkManager[684]: <info>  [1744361480.1294]
-device (wlan0): state change: unmanaged -> unavailable (reason 'managed', s=
-ys-
-iface-state: 'external')
-avril 11 10:51:20 Rutherford dino[1695]: stream_connect.vala:76: Could not
-establish XMPP session with meumeu.org:5222: Failed connecting to
-meumeu.org:5222 (starttls): Erreur de r=C3=A9solution de =C2=AB=C2=A0meumeu=
-.org=C2=A0=C2=BB=C2=A0: Nom ou
-service inconnu
-avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
-thread' high priority scheduled:
-GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
-"org.freedesktop.RealtimeKit1" does not exist
-avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
-thread' high priority scheduled:
-GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
-"org.freedesktop.RealtimeKit1" does not exist
-avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
-thread' high priority scheduled:
-GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
-"org.freedesktop.RealtimeKit1" does not exist
-avril 11 10:51:20 Rutherford kernel: mt7925e 0000:c2:00.0: HW/SW Version:
-0x8a108a10, Build Time: 20250305132908a
-avril 11 10:51:20 Rutherford gnome-shell[1531]: Failed to make thread 'KMS
-thread' high priority scheduled:
-GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name
-"org.freedesktop.RealtimeKit1" does not exist
-avril 11 10:51:20 Rutherford kernel: mt7925e 0000:c2:00.0: WM Firmware Vers=
-ion:
-____000000, Build Time: 20250305133013
-avril 11 10:51:21 Rutherford iwd[727]: event: state, old: disconnected, new=
-:
-autoconnect_quick
-avril 11 10:51:21 Rutherford NetworkManager[684]: <info>  [1744361481.3051]
-manager: NetworkManager state is now DISCONNECTED
-avril 11 10:51:21 Rutherford NetworkManager[684]: <info>  [1744361481.3053]
-device (/net/connman/iwd/0): state change: unavailable -> disconnected (rea=
-son
-'none', sys-iface-state: 'managed')
-avril 11 10:51:21 Rutherford kernel: mt7925e 0000:c2:00.0: HW/SW Version:
-0x8a108a10, Build Time: 20250305132908a
-avril 11 10:51:21 Rutherford kernel: mt7925e 0000:c2:00.0: WM Firmware Vers=
-ion:
-____000000, Build Time: 20250305133013
-avril 11 10:51:22 Rutherford gdm-password][2951]: gkr-pam: keyring is unloc=
-ked
-avril 11 10:51:22 Rutherford kernel: wlan0: Driver requested disconnection =
-from
-AP 00:00:00:00:00:00
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.4495]
-device (wlan0): new IWD device state is disconnected
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.4497]
-device (wlan0): state change: unavailable -> disconnected (reason 'supplica=
-nt-
-available', sys-iface-state: 'managed')
-avril 11 10:51:22 Rutherford iwd[727]: event: connect-info, ssid: Principia
-5GHz, bss: 22:66:cf:d5:e9:60, signal: -33, load: 2/255
-avril 11 10:51:22 Rutherford iwd[727]: event: state, old: autoconnect_quick=
-,
-new: connecting (auto)
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7131]
-device (wlan0): new IWD device state is connecting
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7136]
-device (wlan0): Activation: starting connection 'Principia 5GHz' (d6f62917-=
-8664-
-46f3-8666-41a824846afc)
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7137]
-device (wlan0): state change: disconnected -> prepare (reason 'none', sys-i=
-face-
-state: 'managed')
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7138]
-manager: NetworkManager state is now CONNECTING
-avril 11 10:51:22 Rutherford NetworkManager[684]: <info>  [1744361482.7139]
-device (wlan0): state change: prepare -> config (reason 'none', sys-iface-s=
-tate:
-'managed')
-avril 11 10:51:22 Rutherford kernel: wlan0: authenticate with 22:66:cf:d5:e=
-9:60
-(local address=3Da8:e2:91:52:53:3e)
-avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
-(try
-1/3)
-avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
-(try
-2/3)
-avril 11 10:51:23 Rutherford kernel: wlan0: send auth to 22:66:cf:d5:e9:60 =
-(try
-3/3)
-avril 11 10:51:23 Rutherford kernel: wlan0: authentication with
-22:66:cf:d5:e9:60 timed out
+This is MCUXpresso SDK 2.9.0.
 
+> 
+> > >
+> > > Before this commit, everything worked as expected, Linux boots fine
+> > > and the HMP core keeps running and printing messages to the UART.
+> > > After the commit, the kernel reboots at the beggining of the boot
+> > > process. The only relevant message is printed by U-Boot after reset:
+> > >
+> > > "Reset cause: SCFW fault reset"
+> > >
+> > > This commit was bisectabled, the same device tree, u-boot version,
+> > and
+> > > SCFW versions were used. Reverting this commit fixes the issues.
+> > >
+> > > For testing purposes, I created the following patch which also fixes
+> > > the
+> > > issue:
+> > >
+> > > diff --git a/drivers/pmdomain/imx/scu-pd.c
+> > > b/drivers/pmdomain/imx/scu-pd.c index
+> > 38f3cdd21042..0477b3fb4991
+> > > 100644
+> > > --- a/drivers/pmdomain/imx/scu-pd.c
+> > > +++ b/drivers/pmdomain/imx/scu-pd.c
+> > > @@ -539,6 +539,9 @@ imx_scu_add_pm_domain(struct device
+> > *dev, int idx,
+> > >                 return NULL;
+> > >         }
+> > >
+> > > +       if (strstr("cm40", sc_pd->name) != NULL)
+> > > +               is_off = true;
+> > > +
+> > >         ret = pm_genpd_init(&sc_pd->pd, NULL, is_off);
+> > >         if (ret) {
+> > >                 dev_warn(dev, "failed to init pd %s rsrc id %d",
+> > >
+> > >
+> > > Test Environment:
+> > > - Hardware: Colibri iMX8DX 1GB with Colbiri Evaluation Board.
+> > > - U-Boot Version: 2024.04
+> > > - U-Boot Build info:
+> > > 	SCFW 83624b99, SECO-FW c9de51c0, IMX-MKIMAGE
+> > 4622115c, ATF 7c64d4e
+> > >
+> > > The issue is not present on: v6.5
+> > >
+> > > The real root cause is still unclear to me. Anybody has any ideas? I
+> > > am happy to share more details if needed.
+> 
+> Have you tried pd_ignore_unused? 
+> 
+> I think it is linux power down M4 which M4 is running, then SCFW
+> reports error. So please give a try pd_ignore_unused.
 
-lspci -v -d 14c3:7925
-c2:00.0 Network controller: MEDIATEK Corp. Device 7925
-	Subsystem: AzureWave Device 6370
-	Flags: bus master, fast devsel, latency 0, IRQ 151, IOMMU group 17
-	Memory at dc800000 (64-bit, non-prefetchable) [size=3D2M]
-	Memory at dca00000 (64-bit, non-prefetchable) [size=3D32K]
-	Capabilities: [80] Express Endpoint, IntMsgNum 0
-	Capabilities: [e0] MSI: Enable+ Count=3D1/32 Maskable+ 64bit+
-	Capabilities: [f8] Power Management version 3
-	Capabilities: [100] Vendor Specific Information: ID=3D1556 Rev=3D1 Len=3D0=
-08
-<?>
-	Capabilities: [108] Latency Tolerance Reporting
-	Capabilities: [110] L1 PM Substates
-	Capabilities: [200] Advanced Error Reporting
-	Kernel driver in use: mt7925e
-	Kernel modules: mt7925e
+For debugging purposes, I tried it and it works, kernel boots fine with
+M4 running and pd_ignore_unused parameter.
 
+> 
+> If this is the case, may I know do you have m4 nodes in dts and
+> with power domain included?
 
-Reverting the commit on top of 6.14.2 fixes the issue.
+This is the device tree overlay I am testing:
 
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/clock/imx8mm-clock.h>
+#include <dt-bindings/firmware/imx/rsrc.h>
+
+/ {
+	compatible = "toradex,colibri-imx8x";
+};
+
+&{/} {
+	imx8x-cm4 {
+		compatible = "fsl,imx8qxp-cm4";
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu5 0 1
+			  &lsio_mu5 1 1
+			  &lsio_mu5 3 1>;
+		memory-region = <&vdevbuffer>, <&vdev0vring0>, <&vdev0vring1>,
+				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+		fsl,entry-address = <0x34fe0000>;
+		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		vdev0vring0: memory@90000000 {
+			reg = <0 0x90000000 0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring1: memory@90008000 {
+			reg = <0 0x90008000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring0: memory@90010000 {
+			reg = <0 0x90010000 0 0x8000>;
+			no-map;
+		};
+
+		vdev1vring1: memory@90018000 {
+			reg = <0 0x90018000 0 0x8000>;
+			no-map;
+		};
+
+		rsc_table: memory@900ff000 {
+			reg = <0 0x900ff000 0 0x1000>;
+			no-map;
+		};
+
+		vdevbuffer: memory@90400000 {
+			compatible = "shared-dma-pool";
+			reg = <0 0x90400000 0 0x100000>;
+			no-map;
+		};
+	};
+};
+
+&lsio_mu5 {
+	status = "okay";
+};
+
+This was basically copied from
+arch/arm64/boot/dts/freescale/imx8qxp-mek.dts. Do you see anything
+wrong? Should I also add the "clocks" property to imx8x-cm4 node?
+
+> 
+> Anyway, I will give a try on i.MX8QM EVK.
+
+Great, thanks.
+
+> 
+> > 
+> > Hello everyone, as this introduced a regression, should I send a revert
+> > for 4f6c983261? 
+> 
+> Please wait a while, I think we need find root cause.
+> 
+> Thanks,
+> Peng.
+> 
+> Or any ideas that might help fix this issue?
+> > 
+> > >
+> > > Cheers,
+> > > Hiago.
+> > 
+> > Cheers,
+> > Hiago.
+
+Cheers,
+Hiago.
