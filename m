@@ -1,142 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F03268C7A;
-	Fri, 11 Apr 2025 19:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC262367C9;
+	Sat, 12 Apr 2025 01:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744398712; cv=none; b=YYjAh5jva4voHZVaYQ9xnQpkDJMvySbI6Yb/2CMyUid3JeZANiNh8jaYzNh3XR7qu2YamkocgSKCOxkqsi3ozyDyq3rvSil3GloO2UpX6MeTcVz9H2FpHxFMgBJq3wU26KlPslK8gyo61lBcOW8b0GJhrhJFIgGBYlSSl9ovAUY=
+	t=1744422325; cv=none; b=cnudnZBBVs/yHxzw0dSb9onFX8rpjXG4TlAZOvrmVEHmGpPinn2K7+9oqKlCs4BrhH+/z/lhceB/5u9Vl6IoqtsF83B0HoXCBCy2HgBnz8JQqln4Yyh+iViaiDbj3atHHnLE4PeUSAp1CwOmA7o1mDgsE8MJQkb1a0gLhoxobA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744398712; c=relaxed/simple;
-	bh=BO1ibUlep/whjAnhTU7bWrZmrU4wsai7V2ZchfCcIUE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oYrlo7dbBvzbjoR6CskGftKOPxQBvZodZBFAVPGZQREIz5ntqwKzPrOhvCrhbqRAJrrrbobh/nHoEQwpmdWyUtkIanyxRYtavxyHLqbEQNvrCHRLwdxxPa/PeBthPxMnVZenOrsKt8h3y72f4J3lHNiIrhKHatFsQxIHRksqNgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BCF6106F;
-	Fri, 11 Apr 2025 12:11:49 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5DB3F59E;
-	Fri, 11 Apr 2025 12:11:48 -0700 (PDT)
-Message-ID: <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
-Date: Fri, 11 Apr 2025 20:11:46 +0100
+	s=arc-20240116; t=1744422325; c=relaxed/simple;
+	bh=InI5YIvfIbmAEiSsiYv9SXaP67nBUB72BNS5xoI3aAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jI1rEGDh7tC7uxSoVjT+nfgWOZP/voZF+oglokE8NMAy1Ak5wnlYvl2I5z9NbUZ9QiE97KMgg1vLDd7ZccV+TmLVdGIrLtAu7NQYMiDxHEcevHmHuukpMbr0bmETMv7x1gIIsI3y3hDW/+qkaA+OFjOGzvywsh9O+Oj1LJ7ND4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aH+8Ve3a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aH+8Ve3a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E420EC4CEE2;
+	Sat, 12 Apr 2025 01:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744422324;
+	bh=InI5YIvfIbmAEiSsiYv9SXaP67nBUB72BNS5xoI3aAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aH+8Ve3afihmbx2mG3X6H3vD1yYcxfvJMEbeZy3r6GNURDIawp3cGTwMPoLAOMuTg
+	 1YT/qJ5wBUGByYhU3Oq2i6i5mv0T5+dKl5WLcOUJWHirosE4yxpJNi7r1Pc+4SGUOs
+	 EtX3OnwWfkzlPA2IexZvxSPgrp5xmiZWOOK+fsPFraHP/TsHwfHkgqla/XXpBSeDHh
+	 d96HwnBB//WT0ut72I5mXESz76FZmw/PayPGVWaCoGWz3Vm9xUalZisllvVixG6bNX
+	 RMh5o5t1sbvg+WgE4+sSWcjgz4KMPFFj80RDBd8BL9+uUbjju+zyz/c0e5VpKb4fRJ
+	 3uUQJsWi7bNSg==
+Date: Fri, 11 Apr 2025 20:45:19 -0500
+From: Nathan Chancellor <nathan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+Message-ID: <20250412014519.GA1905363@ax162>
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+ <20250403011849.GA3138383@ax162>
+ <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+ <20250405002757.GA836042@ax162>
+ <CA+G9fYv=jUunRgUs=ROptP4p5DNxUuUHxYsnWaxUUXbiwdszsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
-From: Robin Murphy <robin.murphy@arm.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Anders Roxell <anders.roxell@linaro.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
- <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
- <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
- <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
-Content-Language: en-GB
-In-Reply-To: <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYv=jUunRgUs=ROptP4p5DNxUuUHxYsnWaxUUXbiwdszsA@mail.gmail.com>
 
-On 10/04/2025 4:36 pm, Robin Murphy wrote:
-> On 09/04/2025 4:56 pm, Naresh Kamboju wrote:
->> On Wed, 2 Apr 2025 at 21:04, Robin Murphy <robin.murphy@arm.com> wrote:
->>>
->>> On 31/03/2025 5:03 am, Naresh Kamboju wrote:
->>>> Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
->>>> Linux next and Linux mainline.
->>>>
->>>> First seen on the v6.14-7245-g5c2a430e8599
->>>>    Good: v6.14
->>>>    Bad: v6.14-7422-gacb4f33713b9
->>>
->>> Sorry, I can't seem to reproduce this on my end, both today's mainline
->>> and acb4f33713b9 with my config, and even acb4f33713b9 with the linked
->>> LKFT config, all work OK on my Juno r2 (using a SATA SSD and PCIe
->>> networking). The only thing which stands out in your log is that PCI
->>> seems to give up probing and assigning resources beyond the switch
->>> downstream ports (so SATA and ethernet are never discovered), whereas on
->>> mine it does[2]. However that all happens before the first IOMMU
->>> instance probes (which conveniently is the PCIe one), so it's hard to
->>> imagine how that could have an effect anyway...
->>>
->>> The only obvious difference is that I'm using EDK2 rather than U-Boot,
->>> so that's done all the PCIe configuration once already, but it doesn't
->>> seem like that's significant - looking back at a random older log[1],
->>> the on-board endpoints were still being picked up right after
->>> reconfiguring the switch, well before the IOMMU comes into the picture.
->>>
->>
->> Since it is a still issue on mainline and next,
->>
->> Bisected and reverted patch ^ causing kernel warnings at boot time
->> but finding the SSD drive,
->>
->>    [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
->>    iommu: Get DT/ACPI parsing into the proper probe path
->>
->> pcieport 0000:00:00.0: late IOMMU probe at driver bind, something 
->> fishy here!
->> WARNING: at drivers/iommu/iommu.c:559 __iommu_probe_device
->>
->> I see boot warnings [1]
->> I am happy to test debug patches if you have any.
+Hi Naresh,
+
+On Fri, Apr 11, 2025 at 12:49:17AM +0530, Naresh Kamboju wrote:
+> clang-nightly boot failed with stable-rc 6.12, 6.13 and 6.14 and
+> mainline and next on following devices and virtual platforms.
+> - dragonboard-410c
+> - dragonboard-845c
+> - rk3399-rock-pi-4b
+> - Juno-r2
+> - e850-96
+> - FVP (Fast Models Fixed Virtual Platforms)
 > 
-> Seeing the warning after reverting the commit which introduced the 
-> warning mostly just means the conflict resolution in the revert wasn't 
-> right (there were some subsequent fixups...)
-> 
-> Anyway, I have now managed to get my Juno booting with the same antique 
-> version of U-Boot and finally reproduce the issue. It seems to be 
-> somehow connected to bus->dma_configure() being called in the 
-> device_add() notifier (even though the rest of the IOMMU setup doesn't 
-> run at that point since the driver hasn't registered yet), but how and 
-> why that prevents the buses behind the switch downstream ports being 
-> probed, and why *that* only happens when the switch isn't already 
-> configured, remains a mystery so far. I'm still digging...
+> Boot Test links,
+> - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.23-2-g8e0839d16957/testrun/28076019/suite/boot/test/clang-nightly-lkftconfig-kselftest/history/
+> - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.23-2-g8e0839d16957/testrun/28076006/suite/boot/test/clang-nightly-lkftconfig-lto-thing/history/
+> -  https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.23-2-g8e0839d16957/testrun/28076009/suite/boot/test/clang-nightly-lkftconfig-hardening/history/
 
-OK, I found it, but I'm still not sure what exactly to make of it - it's 
-the pci_request_acs() in of_iommu_configure(), now being called early 
-enough to actually have an effect. Booting with EDK2 already using PCI 
-prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl` 
-with 6.15-rc1:
+Thanks again for confirming. As this is reproducible with the FVP, I was
+able to cobble together how to boot it locally with tuxrun and your
+configuration (which felt rather convoluted to get from the website
+above) and use that to bisect LLVM:
 
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ 
-EgressCtrl- DirectTrans-
+https://github.com/ClangBuiltLinux/linux/issues/2082
 
-whereas with the 6.14 behaviour they are all '-'. I don't have a working 
-root filesystem with the U-Boot setup, but if I boot it with 
-"pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge 
-windows and discover the ethernet/SATA endpoints again. I can spend some 
-time getting NFS working next week, but if you're able to get lspci 
-output off a machine in the "broken" state easily that would be handy to 
-compare.
+I will continue to look into this next week.
 
-So at this point it would seem to be something about how Linux 
-configures ACS when doing it from scratch. What I don't really know is 
-where to go from there. I do know Juno's possibly a bit odd in that the 
-switch supports ACS, but both the root port and endpoints either side of 
-it don't. Could this be tickling some subtle bug in the PCI layer, and 
-what is EDK2 doing that makes it not happen?
-
-Thanks,
-Robin.
+Cheers,
+Nathan
