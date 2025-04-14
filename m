@@ -1,228 +1,185 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F802980BA
-	for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 11:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290C62673A3
+	for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 12:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744631092; cv=none; b=Fjh5keM6rOS71QLV230u4ssyS0/Qqs+unItXM3S9Ow4Bd5i7JnIjuiz8+rGbTjuOpDl5VOn8L4+1z3BXLUbqHeV/KpKBHOQX/EGWHunlfJLrnLl+MBrYET2Uywb9evBLDVIKVmD/yVgzR91ZSg4Y4OumGSIP77GS3oNqFpQZOMY=
+	t=1744633112; cv=none; b=C7BZ8QylR4YGkzUHHtaiHOFA7x0YxGlCCrfZBD0u73L4cqVePXBPa6VOR9gAqs9bFe+P9bfd1PTjYtjK/mqJKh8kwhmTWYaAog9j+7XneSY3wVv0AoWj2l8mH6jXRdnyaEm/p5MOuGAWGpimU1C9FvcH2UiVKocQ9mXuZwssWqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744631092; c=relaxed/simple;
-	bh=eNSaHlvEIP2M+Wl70rGcLoYlRcf6km68wl9xNSOkjlk=;
-	h=Content-Type:Message-ID:Date:MIME-Version:To:CC:From:Subject; b=tBu3+uGZPSI3fYL0/RxSxMTrZPXtAP3R0+Lx86EZsJ+pXjBzqov9CwfYyGJqYhV27r6bke7vFbcaNRpWYcOwt5BOb+o1iZVgN48Zd3b3jI4h8rCA24/XAW/L5ZP3oqVUUg9SmgkstwoJ75KqTsuXEqC0qLKZGOw46QBaX6laOb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zbljs1pCdz2CdYG;
-	Mon, 14 Apr 2025 19:41:21 +0800 (CST)
-Received: from kwepemg100004.china.huawei.com (unknown [7.202.181.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id A611C1800B2;
-	Mon, 14 Apr 2025 19:44:46 +0800 (CST)
-Received: from [10.67.111.137] (10.67.111.137) by
- kwepemg100004.china.huawei.com (7.202.181.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 14 Apr 2025 19:44:46 +0800
-Content-Type: multipart/mixed;
-	boundary="------------z6kcUXTqDTHc4C349fgCGwX0"
-Message-ID: <42fa27ef-1807-4fd0-aaf0-1a1ceb1db10e@huawei.com>
-Date: Mon, 14 Apr 2025 19:44:45 +0800
+	s=arc-20240116; t=1744633112; c=relaxed/simple;
+	bh=pYk64UtoAE7XqkvZol/ce4ZhgHriO5Lb+BUk8PKbeXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JHIWip9PUfKB26N5qHUsIZ2hIpGaAcvCp6TePqzQ4ox0/DCqcP8M8v35+6wL+9KnjDMmKNLBhkCyjtpdykREdMqq87c3UB+TbbiEiVr7cHRMUYnApq6lZ5MJvA+R9lmPQLBzxkXc44+n1JfxlRJ3TiHVk2De/Bs5kNqZFvJ4YU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=neFzF5pu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=h1deeLkR; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="neFzF5pu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h1deeLkR"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 07F9111400A4;
+	Mon, 14 Apr 2025 08:18:30 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Mon, 14 Apr 2025 08:18:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1744633109; x=1744719509; bh=14
+	vOFFZCQHiLV/92bFmMrgdRuS1SSchqrTzaRecxFAQ=; b=neFzF5pudr2K9mQAQt
+	USaEElu4vbl3JvJqoKGBCmDb3rwHFLOuiEJNmwkZ7jBU9teCxaMN+PLiACdWQBa8
+	OF7N38G0zN6Yc5TK0KRywa03hgCbQ+TXomUg+uN6HilLIwlMW+o9bLnJ/Z2BecxZ
+	WtmlRUi/RrofYLZLEnchuh7qKISOu5YoAO6z4luJNl3+v3aHthMMMV17on141duH
+	K5VPDc6b2gqZ9KaQEBYfAzZe5txNrRODL8mCNau85VKdDCPTsVczRInLqnsMiICf
+	VLSomEzB6esqYk+IDVUriIJvMfaZhlpTFaxJ1DsdVVTN3e9in2gfd90Bp9LRoHx4
+	Y9OQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744633109; x=
+	1744719509; bh=14vOFFZCQHiLV/92bFmMrgdRuS1SSchqrTzaRecxFAQ=; b=h
+	1deeLkRjeZScMtORyUD8FJLqe9c+7LHPc5RBz2Jooq3hI66tpNs0SMvk70erzg3u
+	RFqqLnAjRXrUKxZLir7v6ax1RgrTG2sE7DQSMtLO9mKzwlOWjmCEsfupmFO+wN9d
+	q7H6JXnBHTb/XM0nHod5H7mcvskQMXTWw0j93NN/qiu/QMgmSFCDaN2J5TI5N8R/
+	goHI+Ul7xQJcVz9i55k+gXkE7gNG/BvQ+Anx/JNwc+Sx017U3uf/quevx81c0W7n
+	UatAo/PStrzKjVP8I8PbI2qgXXgu4nZlNXDmLpp8tSJSmQmVPyQvOvwJg/WP9lH4
+	5We0N5pdYePgcmK7rVt2A==
+X-ME-Sender: <xms:Ff38Z_y_8f72HC71bHOQoZbVnxtMSi799Eo1kVxjPcG36gZiQO4V4Q>
+    <xme:Ff38Z3RCsYvLaW2xeXtkaaBtGbYbqg-cV3DlJf6oVuTixBYzG4R_cyviymaYzjwSN
+    ihRV0atBF4sgw>
+X-ME-Received: <xmr:Ff38Z5XbfY6sPl4uTnWJdsDsYZ12rTsG0d8cr5RE2XmwhFk8rNatQz4kzpB6YGVxTnSGFZA5B0tfAlAS3GsS_hIuWmnMZ7v0sQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddtheefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtugesghdtreertddtjeen
+    ucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomh
+    grrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggft
+    rfgrthhtvghrnhepudfggfeileeuueektdfhffelvdfhjeeffeehueeikefhleduleejje
+    elgeejudffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnh
+    gspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhithgr
+    lhihrdhlihhfshhhihhtshesihhnthgvlhdrtghomhdprhgtphhtthhopehjvghsshgvrd
+    gsrhgrnhguvggsuhhrghesihhnthgvlhdrtghomhdprhgtphhtthhopegrnhhthhhonhih
+    rdhlrdhnghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehinhhtvghlqdifihhrvgguqdhl
+    rghnsehlihhsthhsrdhoshhuohhslhdrohhrghdprhgtphhtthhopehrvghgrhgvshhsih
+    honhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepshhtrggslhgvsehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrshhhrghlsehkvghrnhgvlh
+    drohhrgh
+X-ME-Proxy: <xmx:Ff38Z5jIHafS9XZE4m0c-MYjzKxy7LWWkH8yZ9Q7DZrnrm5W-eQozQ>
+    <xmx:Ff38ZxC9SuIEBzUbVaU5FAl8EupDR3K4sD2fv0uvtoFE__eDKXB41w>
+    <xmx:Ff38ZyJ8VSseiCAAFq9VCGZQqS4e-0bCdOXMX5NC_Z_ROHrpLU3_tQ>
+    <xmx:Ff38ZwD44Z5OhXxTyJmdCW44X4xa2Z9MSdcA-57bFR8PIe_FZNDxHw>
+    <xmx:Ff38Z43yEnkn1sB6jgMoLYqZgmhG3keNee6NssA2ruwcXT905VrQZR3J>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Apr 2025 08:18:27 -0400 (EDT)
+Date: Mon, 14 Apr 2025 14:18:25 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [REGRESSION] e1000e heavy packet loss on Meteor Lake - 6.14.2
+Message-ID: <Z_z9EjcKtwHCQcZR@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: <stable@vger.kernel.org>
-CC: <regressions@lists.linux.dev>
-From: "liaochen (A)" <liaochen4@huawei.com>
-Subject: BUG: perf hardware breakpoint pc value mismatch
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg100004.china.huawei.com (7.202.181.21)
-
---------------z6kcUXTqDTHc4C349fgCGwX0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5JPjsqyE+gD2u5U8"
+Content-Disposition: inline
 
 
-Hi all,
+--5JPjsqyE+gD2u5U8
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Apr 2025 14:18:25 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [REGRESSION] e1000e heavy packet loss on Meteor Lake - 6.14.2
 
-We found the following issue with Linux v6.12-rc7 on KunPeng920 
-platform. A very low frequency problem of pc value mismatch occurs when 
-using perf hardware breakpoints to trigger a signal handler and 
-comparing pc from u_context with its desired value.
+Hi,
 
-Attached please find the reproducer for this issue. It applies perf 
-events to set a hardware breakpoint to an address while binding a signal 
-to the perf event fd. When stepping into the breakpoint address, the 
-signal handler compares pc value copied from signal ucontext with the 
-real breakpoint address and see if there is a mismatch.
+After updating to 6.14.2, the ethernet adapter is almost unusable, I get
+over 30% packet loss.
+Bisect says it's this commit:
 
-While looking into the flow of execution:
-// normal flow of exe:
-            a.out-19844   [038] d...  8763.348609: 
-hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 0
-// breakpoint exception:
-            a.out-19844   [038] d...  8763.348611: do_debug_exception: 
-ec: 0, pc: 400c6c, pstate: 20001000
-            a.out-19844   [038] d...  8763.348611: breakpoint_handler: 
-perf bp read: 400c6c
-// send signal:
-            a.out-19844   [038] d.h.  8763.348613: send_sigio_to_task 
-<-send_sigio
-            a.out-19844   [038] d.h.  8763.348614: <stack trace>
-  => send_sigio_to_task
-  => send_sigio
-  => kill_fasync_rcu
-  => kill_fasync
-  => perf_event_wakeup
-  => perf_pending_event
-  => irq_work_single
-  => irq_work_run_list
-  => irq_work_run
-  => do_handle_IPI
-  => ipi_handler
-  => handle_percpu_devid_fasteoi_ipi
-  => __handle_domain_irq
-  => gic_handle_irq
-  => el0_irq_naked
-            a.out-19844   [038] d.h.  8763.348614: send_sigio_to_task: 
-step in with signum 38
-            a.out-19844   [038] d.h.  8763.348615: send_sigio_to_task: 
-will do_send_sig_info 38
-// kernel signal handling:
-            a.out-19844   [038] ....  8763.348616: do_notify_resume: 
-thread_flags 2097665, _TIF_SIGPENDING 1, _TIF_NOTIFY_SIGNAL40
-            a.out-19844   [038] ....  8763.348617: setup_sigframe: 
-restore sig: 400c6c
-// single step exception:
-            a.out-19844   [038] d...  8763.348619: do_debug_exception: 
-ec: 1, pc: 400988, pstate: 20001000
-            a.out-19844   [038] d...  8763.348621: 
-hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 1
+    commit 85f6414167da39e0da30bf370f1ecda5a58c6f7b
+    Author: Vitaly Lifshits <vitaly.lifshits@intel.com>
+    Date:   Thu Mar 13 16:05:56 2025 +0200
 
-// abnormal flow of exe:
-            a.out-19844   [084] d...  8763.782103: 
-hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 0
-// breakpoint exception:
-            a.out-19844   [084] d...  8763.782104: do_debug_exception: 
-ec: 0, pc: 400c6c, pstate: 20001000
-// single step exception:
-            a.out-19844   [084] d...  8763.782105: breakpoint_handler: 
-perf bp read: 400c6c
-            a.out-19844   [084] d...  8763.782107: do_debug_exception: 
-ec: 1, pc: 400c70, pstate: 20001000
-// send signal:
-            a.out-19844   [084] d.h.  8763.782108: send_sigio_to_task 
-<-send_sigio
-            a.out-19844   [084] d.h.  8763.782109: <stack trace>
-  => send_sigio_to_task
-  => send_sigio
-  => kill_fasync_rcu
-  => kill_fasync
-  => perf_event_wakeup
-  => perf_pending_event
-  => irq_work_single
-  => irq_work_run_list
-  => irq_work_run
-  => do_handle_IPI
-  => ipi_handler
-  => handle_percpu_devid_fasteoi_ipi
-  => __handle_domain_irq
-  => gic_handle_irq
-  => el0_irq_naked
-            a.out-19844   [084] d.h.  8763.782110: send_sigio_to_task: 
-step in with signum 38
-            a.out-19844   [084] d.h.  8763.782110: send_sigio_to_task: 
-will do_send_sig_info 38
-// kernel signal handling:
-            a.out-19844   [084] ....  8763.782111: do_notify_resume: 
-thread_flags 513, _TIF_SIGPENDING 1, _TIF_NOTIFY_SIGNAL40
-            a.out-19844   [084] ....  8763.782113: setup_sigframe: 
-restore sig: 400c70
-            a.out-19844   [084] d...  8763.782115: 
-hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 1
+        e1000e: change k1 configuration on MTP and later platforms
+       =20
+        [ Upstream commit efaaf344bc2917cbfa5997633bc18a05d3aed27f ]
+       =20
+        Starting from Meteor Lake, the Kumeran interface between the integr=
+ated
+        MAC and the I219 PHY works at a different frequency. This causes sp=
+oradic
+        MDI errors when accessing the PHY, and in rare circumstances could =
+lead
+        to packet corruption.
+       =20
+        To overcome this, introduce minor changes to the Kumeran idle
+        state (K1) parameters during device initialization. Hardware reset
+        reverts this configuration, therefore it needs to be applied in a f=
+ew
+        places.
+       =20
+        Fixes: cc23f4f0b6b9 ("e1000e: Add support for Meteor Lake")
+        Signed-off-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+        Tested-by: Avigail Dahan <avigailx.dahan@intel.com>
+        Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+        Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Kernel sends this signal to task through pushing a perf_pending_event 
-(which sends the signal) in irq_work_queue then triggering an IPI to let 
-kernel handle this pended task.
-seems that when mismatch occurs, the IPI does not preempt the breakpoint 
-exception it should preempt, causing no pending signals to be handled. 
-In this way, there is no pending signals in do_notify_resume and kernel 
-will not set up signal frame with correct pc value.
+     drivers/net/ethernet/intel/e1000e/defines.h |  3 ++
+     drivers/net/ethernet/intel/e1000e/ich8lan.c | 80 +++++++++++++++++++++=
+++++++--
+     drivers/net/ethernet/intel/e1000e/ich8lan.h |  4 ++
+     3 files changed, 82 insertions(+), 5 deletions(-)
 
-Thanks,
-Chen
---------------z6kcUXTqDTHc4C349fgCGwX0
-Content-Type: text/plain; charset="UTF-8"; name="reproducer.cpp"
-Content-Disposition: attachment; filename="reproducer.cpp"
-Content-Transfer-Encoding: base64
+My system is Novacustom V540TU laptop with Intel Core Ultra 5 125H. And
+the e1000e driver is running in a Xen HVM (with PCI passthrough).
+Interestingly, I have also another one with Intel Core Ultra 7 155H
+where the issue does not happen. I don't see what is different about
+network adapter there, they look identical on lspci (but there are
+differences about other devices)...
 
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHN0cmlu
-Zy5oPgojaW5jbHVkZSA8dW5pc3RkLmg+CiNpbmNsdWRlIDxzaWduYWwuaD4KI2luY2x1ZGUg
-PHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxsaW51eC9wZXJmX2V2ZW50Lmg+CiNpbmNsdWRl
-IDxzdGRpbnQuaD4KI2luY2x1ZGUgPHVjb250ZXh0Lmg+CiNpbmNsdWRlIDxsaW51eC9od19i
-cmVha3BvaW50Lmg+CiNpbmNsdWRlIDxzeXMvaW9jdGwuaD4KI2luY2x1ZGUgPHN5cy9mY250
-bC5oPgojaW5jbHVkZSA8c3lzL21tYW4uaD4KI2luY2x1ZGUgPGVycm5vLmg+CiNpbmNsdWRl
-IDx0aHJlYWQ+Cgp1c2luZyBuYW1lc3BhY2Ugc3RkOwoKc3RhdGljIHZvaWQgKmJyZWFrcG9p
-bnRfYWRkciA9IE5VTEw7Cgp2b2lkIHNpZ25hbF9oYW5kbGVyKGludCBzaWdudW0sIHNpZ2lu
-Zm9fdCAqaW5mbywgdm9pZCAqY29udGV4dCkgewogICAgaW9jdGwoaW5mby0+c2lfZmQsIFBF
-UkZfRVZFTlRfSU9DX0RJU0FCTEUsIDApOwogICAgY2xvc2UoaW5mby0+c2lfZmQpOwogICAg
-dWNvbnRleHRfdCAqdWNvbnRleHQgPSAodWNvbnRleHRfdCAqKWNvbnRleHQ7CiAgICB1aW50
-cHRyX3QgcGMgPSAodWludHB0cl90KXVjb250ZXh0LT51Y19tY29udGV4dC5wYzsKCiAgICBp
-ZiAocGMgIT0gKHVpbnRwdHJfdClicmVha3BvaW50X2FkZHIpCiAgICAgICAgcHJpbnRmKCJX
-YXJuaW5nOiBQQyAoMHglbHgpIGRvZXMgbm90IG1hdGNoIGJyZWFrcG9pbnQgYWRkcmVzcyAo
-MHglbHgpIHNpZ251bTogJWRcbiIsIHBjLCAodWludHB0cl90KWJyZWFrcG9pbnRfYWRkciwg
-c2lnbnVtKTsKfQoKc3RhdGljIGludCBzZXRfaHdfYnJlYWtwb2ludCh2b2lkICphZGRyKSB7
-CiAgICBzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyIHBlOwogICAgaW50IGZkOwoKICAgIG1lbXNl
-dCgmcGUsIDAsIHNpemVvZihzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyKSk7CiAgICBwZS50eXBl
-ID0gUEVSRl9UWVBFX0JSRUFLUE9JTlQ7CiAgICBwZS5zaXplID0gc2l6ZW9mKHN0cnVjdCBw
-ZXJmX2V2ZW50X2F0dHIpOwogICAgcGUuY29uZmlnID0gMDsKICAgIHBlLmJwX3R5cGUgPSBI
-V19CUkVBS1BPSU5UX1g7CiAgICBwZS5icF9hZGRyID0gKHVpbnRwdHJfdClhZGRyOwogICAg
-cGUuYnBfbGVuID0gNDsKICAgIHBlLnNhbXBsZV9wZXJpb2QgPSAxOwogICAgcGUuZGlzYWJs
-ZWQgPSAxOwogICAgcGUuZXhjbHVkZV9rZXJuZWwgPSAxOwoKICAgIC8vIHBlcmZfZXZlbnRf
-b3BlbiBzeXNjYWxsCiAgICBmZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29wZW4sICZw
-ZSwgc3lzY2FsbChTWVNfZ2V0dGlkKSwgLTEsIC0xLCAwKTsKICAgIGlmIChmZCA8IDApIHsK
-ICAgICAgICBwZXJyb3IoInBlcmZfZXZlbnRfb3BlbiIpOwogICAgICAgIHJldHVybiAtMTsK
-ICAgIH0KCiAgICBzdHJ1Y3QgZl9vd25lcl9leCBvd25lcjsKICAgIG93bmVyLnR5cGUgPSBG
-X09XTkVSX1RJRDsKICAgIG93bmVyLnBpZCA9IHN5c2NhbGwoU1lTX2dldHRpZCk7CgogICAg
-aWYgKGZjbnRsKGZkLCBGX1NFVE9XTl9FWCwgJm93bmVyKSA9PSAtMSkKICAgIHsKICAgICAg
-ICBwZXJyb3IoIkZfU0VUU0lHIik7CiAgICAgICAgZXhpdChFWElUX0ZBSUxVUkUpOwogICAg
-fQoKICAgIGlmIChmY250bChmZCwgRl9TRVRTSUcsIFNJR1JUTUlOKzQpID09IC0xKSB7CiAg
-ICAgICAgcGVycm9yKCJGX1NFVFNJRyIpOwogICAgICAgIGNsb3NlKGZkKTsKICAgICAgICBl
-eGl0KEVYSVRfRkFJTFVSRSk7CiAgICB9CgogICAgaW50IGZsYWdzID0gZmNudGwoZmQsIEZf
-R0VURkwsIDApOwogICAgaWYgKGZsYWdzID09IC0xKSB7CiAgICAgICAgcGVycm9yKCJGX0dF
-VEZMIik7CiAgICAgICAgY2xvc2UoZmQpOwogICAgICAgIGV4aXQoRVhJVF9GQUlMVVJFKTsK
-ICAgIH0KCiAgICBpZiAoZmNudGwoZmQsIEZfU0VURkwsIGZsYWdzIHwgT19BU1lOQykgPT0g
-LTEpIHsKICAgICAgICBwZXJyb3IoIkZfU0VURkwiKTsKICAgICAgICBjbG9zZShmZCk7CiAg
-ICAgICAgZXhpdChFWElUX0ZBSUxVUkUpOwogICAgfQoKICAgIC8vIGVuYWJsZSBicmVha3Bv
-aW50CiAgICBpZiAoaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1JFU0VULCAwKSA8IDApIHsK
-ICAgICAgICBwZXJyb3IoIlBFUkZfRVZFTlRfSU9DX1JFU0VUIik7CiAgICAgICAgY2xvc2Uo
-ZmQpOwogICAgICAgIHJldHVybiAtMTsKICAgIH0KCiAgICBpZiAoaW9jdGwoZmQsIFBFUkZf
-RVZFTlRfSU9DX0VOQUJMRSwgMCkgPCAwKSB7CiAgICAgICAgcGVycm9yKCJQRVJGX0VWRU5U
-X0lPQ19FTkFCTEUiKTsKICAgICAgICBjbG9zZShmZCk7CiAgICAgICAgcmV0dXJuIC0xOwog
-ICAgfQoKICAgIHJldHVybiBmZDsKfQoKLy8gZnVuY3Rpb24gd2hlcmUgYnJlYWtwb2ludHMg
-Z2V0IHNldAp2b2lkIHRhcmdldF9mdW5jdGlvbigpIHsKICAgIGludCBpID0gMDsKICAgIGkr
-KzsKfQoKaW50IG1haW4oKSB7CiAgICBpbnQgYnJlYWtwb2ludF9mZDsKCiAgICAvLyBzZXQg
-YnJlYWtwb2ludAogICAgYnJlYWtwb2ludF9hZGRyID0gKHZvaWQgKil0YXJnZXRfZnVuY3Rp
-b247CiAgICBwcmludGYoIkJyZWFrcG9pbnQgYWRkcmVzczogJXAsIHRhcmdldF9mdW5jdGlv
-biBhZGRyZXNzOiAlcFxuIiwgYnJlYWtwb2ludF9hZGRyLCB0YXJnZXRfZnVuY3Rpb24pOwoK
-ICAgIC8vIHNldCBzaWcgaGFuZGxlcgogICAgc3RydWN0IHNpZ2FjdGlvbiBzYTsKICAgIG1l
-bXNldCgmc2EsIDAsIHNpemVvZihzdHJ1Y3Qgc2lnYWN0aW9uKSk7CiAgICBzYS5zYV9zaWdh
-Y3Rpb24gPSBzaWduYWxfaGFuZGxlcjsKICAgIHNhLnNhX2ZsYWdzID0gU0FfU0lHSU5GTyB8
-IFNBX1JFU1RBUlQ7CiAgICBzaWdmaWxsc2V0KCZzYS5zYV9tYXNrKTsKICAgIGlmIChzaWdh
-Y3Rpb24oU0lHUlRNSU4rNCwgJnNhLCBOVUxMKSA9PSAtMSkgewogICAgICAgIHBlcnJvcigi
-c2lnYWN0aW9uIik7CiAgICAgICAgY2xvc2UoYnJlYWtwb2ludF9mZCk7CiAgICAgICAgcmV0
-dXJuIEVYSVRfRkFJTFVSRTsKICAgIH0KCiAgICAvLyB0ZXN0IGJyZWFrcG9pbnQKICAgIHBy
-aW50ZigiQ2FsbGluZyB0YXJnZXQgZnVuY3Rpb24uLi5cbiIpOwogICAgd2hpbGUgKDEpIHsg
-ICAgCglicmVha3BvaW50X2ZkID0gc2V0X2h3X2JyZWFrcG9pbnQoYnJlYWtwb2ludF9hZGRy
-KTsKICAgICAgICBpZiAoYnJlYWtwb2ludF9mZCA8IDApIHsKICAgICAgICAgICAgZnByaW50
-ZihzdGRlcnIsICJGYWlsZWQgdG8gc2V0IGhhcmR3YXJlIGJyZWFrcG9pbnRcbiIpOwogICAg
-ICAgICAgICByZXR1cm4gMTsKICAgICAgICB9CiAgICAgICAgICAgIHRhcmdldF9mdW5jdGlv
-bigpOwoJLy8gZGlzYWJsZSBicmVha3BvaW50CiAgICAJaW9jdGwoYnJlYWtwb2ludF9mZCwg
-UEVSRl9FVkVOVF9JT0NfRElTQUJMRSwgMCk7CiAgICAJY2xvc2UoYnJlYWtwb2ludF9mZCk7
-CiAgICB9CgogICAgcmV0dXJuIDA7Cn0KCg==
+I see the commit above was already backported to other stable branches
+too...
 
---------------z6kcUXTqDTHc4C349fgCGwX0--
+#regzbot introduced: 85f6414167da39e0da30bf370f1ecda5a58c6f7b
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--5JPjsqyE+gD2u5U8
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmf8/REACgkQ24/THMrX
+1yypfAf+N7oPT/p3gMa3SFQmHBMe2BJBSC+RhLh+KBD8CpszZRO4TGw6f5u6ss0f
+wRDbgw5f2w2SGumk/BABv0ghWH//T+PwC2IoEjjjUtUYzXM6BENGTPqk+XArMnlB
+S5MPYyFcIaraR12oVMm+gUpHnO0OH/eNN6eXh1CUr8sxZ+wvRkDOZQccEfSBiAE5
+yC3GGmAyAK+XcQDdVZsQe1h7d6nOuZGNLVe3yLdUcESZlUetRH6HLVuE+yM3O+IA
+A/kW5vVHO07FhNwdNsgh9n/XdUmt2t1B7yvg7GRT+EHXP+mTco/UeYYq/HkGodEt
+uIX8rA3eaDdORKHQU8tqIf2Lekbcyg==
+=3xGN
+-----END PGP SIGNATURE-----
+
+--5JPjsqyE+gD2u5U8--
