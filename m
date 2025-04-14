@@ -1,65 +1,32 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A4225DAE8
-	for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 09:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F802980BA
+	for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 11:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744621749; cv=none; b=cFKCSapmmd7cv0TFAnbxX46Y8CvQ7FoOC/DtPEd/z9l3E/NWgVRXpeEhPntNTOi3RcayInos1wdeRt2gXzduMl1QsjFCcahB9mEHf11JhgiBX8o2CmlYpneUY1J40VHP/7b/e+DkrygrhEGAVC9p9C8mdbxLXwNbuaplO7WCSQE=
+	t=1744631092; cv=none; b=Fjh5keM6rOS71QLV230u4ssyS0/Qqs+unItXM3S9Ow4Bd5i7JnIjuiz8+rGbTjuOpDl5VOn8L4+1z3BXLUbqHeV/KpKBHOQX/EGWHunlfJLrnLl+MBrYET2Uywb9evBLDVIKVmD/yVgzR91ZSg4Y4OumGSIP77GS3oNqFpQZOMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744621749; c=relaxed/simple;
-	bh=+ae7PEkBWVnD/XgndULpX0wq3u56Hkq7Lh8T4H7CnMw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=C6vFu5/gASXMiTxBaVVqegIUr5d5plGKJTkOTcIBCfs2MdX61+Auherb1lo/noJu+0oaj7/zDVFphDX1Bn4FYFpRcVlJcw1hlFN7jQC0/MoUQNZnsfjzeZ6EAJ1OWcMKqF9O+wCAcf50DQeQpEPlNIu0ijBa7FFzFCodspYh2dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WgHV1ERB; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgHV1ERB"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so6536798a12.0
-        for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 02:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744621746; x=1745226546; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ln9rD8BOUkqsdcSku7nsN2RysHqQx1gKf4wgBYpxgJo=;
-        b=WgHV1ERB+QGNkPngRg7vUpBeZxvfaxXF7GIQj+XATzhvQdA2STPsSTmLV1+T8q5b2/
-         d5UAATrOEmwfueIXBj7jF29TbXMYDxz1+kEQdcMY1APzrIgF4gwcIix2lYnjR9iyYddP
-         Y/p1ieyo+QiNQOuwnNVNQd1dN1vnm3S3bwSQDM9BubA/edBDRIVf0LdxLsclkyjX53Gc
-         x+BEgcepj2A81RFWvAHAR6uSFzyYpGF68K58gVL8+sUwRmIQ7+gfBfuF+qOdbyXZyPCG
-         gmHnzp1sb2ZYH1cXMxV+NRKSgYnbp0Cz9bI1JutQ5hIDAaZSzEzr4wm/7r0fe17tyRfx
-         d/mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744621746; x=1745226546;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ln9rD8BOUkqsdcSku7nsN2RysHqQx1gKf4wgBYpxgJo=;
-        b=e+BHkSDjgADihIy9c4mnBKUaPh1YJoVcl6yDVuYyeHhRxeFVhGZ3gX5eOagA/4JfM1
-         nls0KXBBtowK4RDkTvEDHBVnE2AqZ6ad9C4It9nZ0c54JtYrsGQYfrPu/FZM8TS1hCKH
-         P5dlOTmGk0+DJaGxSrO87PVIssMY/5pb9g/7lg2vZ/srBV/mS0ou7ZLEzkEu/IZr56qW
-         bwO5JJE+1jpPqbLEIXhWIQh4PlzFFYU79jWcR3RhQPWTIm/Os0aIebw3EI+7H8qu3ZeX
-         v15Fue0eF/EHZjqY6q7D8VbJvwT6YkU6x7MELYsIXIZ2mh8q4lleJRvB8CdOcAzbObHH
-         uFPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5tmzxAXYM5P2Yo+W5FJVTKWdugRgtomc2xnhIna2l4tk68/bKqH0aEVY5XXV4ZwoNqoKg5Da2Lv4RHA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw9097dritAWHS9bLRUJ4v6EqUyv7vq36pt0+1HrokwsycrHaJo
-	DMLFJ2Unxn8RV+HL3ngQwHEC5ByYV+FCpfWwyJ67zX0omUe1QygZ
-X-Gm-Gg: ASbGncsZ/mDOgbYcjOZiSA58VGU9b7Gya617L30/uj+yYjgSfs9JlXHEiAFTAD5/VXW
-	MB1K5PE7jMDXrG5124lLdLB9n+nQwonnSJmNIMUpddH6CQl09fsjc8oI1RFdE5PRoCGeVfaxB/t
-	DkiccDGlG2p0jjd2M8bZQFlprth11sXxWWnVHRu7OK8Y4o/vPyn5jq23hrKQxVXJUbejmaJEWZy
-	+C93sJfTjOu7Y2MzvxDCRIGM1Bl+AgYb1qCcET5hYn6AelQifIncSnMKbu9yEhG5+B2F2pSM+0R
-	CJy4oNysnQqfyEp19MKtJTBNZD9K4faMfJemfbq9uK+P+N7w6ZKl0nfFax5a9iXY29C6M+GU/kN
-	ByFl4fhrZAw==
-X-Google-Smtp-Source: AGHT+IEbHNROGx3S1lNvZJDO7eQBzvciyzW8bEHw5f3aZlJfOkGE9b7WpF07oD50zzLrUC2dqkc18w==
-X-Received: by 2002:a05:6402:2399:b0:5f3:7f49:a397 with SMTP id 4fb4d7f45d1cf-5f37f49f631mr5972654a12.26.1744621745650;
-        Mon, 14 Apr 2025 02:09:05 -0700 (PDT)
-Received: from [137.204.143.152] (arces143152.arces.unibo.it. [137.204.143.152])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f06c5desm4620406a12.48.2025.04.14.02.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Apr 2025 02:09:05 -0700 (PDT)
-Message-ID: <ba8ac396-4531-464c-86ce-90345896e176@gmail.com>
-Date: Mon, 14 Apr 2025 11:09:04 +0200
+	s=arc-20240116; t=1744631092; c=relaxed/simple;
+	bh=eNSaHlvEIP2M+Wl70rGcLoYlRcf6km68wl9xNSOkjlk=;
+	h=Content-Type:Message-ID:Date:MIME-Version:To:CC:From:Subject; b=tBu3+uGZPSI3fYL0/RxSxMTrZPXtAP3R0+Lx86EZsJ+pXjBzqov9CwfYyGJqYhV27r6bke7vFbcaNRpWYcOwt5BOb+o1iZVgN48Zd3b3jI4h8rCA24/XAW/L5ZP3oqVUUg9SmgkstwoJ75KqTsuXEqC0qLKZGOw46QBaX6laOb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zbljs1pCdz2CdYG;
+	Mon, 14 Apr 2025 19:41:21 +0800 (CST)
+Received: from kwepemg100004.china.huawei.com (unknown [7.202.181.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id A611C1800B2;
+	Mon, 14 Apr 2025 19:44:46 +0800 (CST)
+Received: from [10.67.111.137] (10.67.111.137) by
+ kwepemg100004.china.huawei.com (7.202.181.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 14 Apr 2025 19:44:46 +0800
+Content-Type: multipart/mixed;
+	boundary="------------z6kcUXTqDTHc4C349fgCGwX0"
+Message-ID: <42fa27ef-1807-4fd0-aaf0-1a1ceb1db10e@huawei.com>
+Date: Mon, 14 Apr 2025 19:44:45 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,132 +34,195 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: mt7921e unable to change power state from d3cold to
- d0 - 6.12.x broken, past LTS 6.6.x works
-From: Sergio Callegari <sergio.callegari@gmail.com>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>
-References: <415e7c31-1e8d-499b-911e-33569c29ebe0@gmail.com>
- <2025031923-rocklike-unbitten-9e90@gregkh>
- <5e260035-1f1b-4444-b3b8-1b5757e5ed08@gmail.com>
- <38658f1a-216b-470d-99a2-13d66f075c77@heusel.eu>
- <efde5e18-672f-484f-90c3-d23d673daa18@gmail.com>
-Content-Language: it, en-US-large
-In-Reply-To: <efde5e18-672f-484f-90c3-d23d673daa18@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+To: <stable@vger.kernel.org>
+CC: <regressions@lists.linux.dev>
+From: "liaochen (A)" <liaochen4@huawei.com>
+Subject: BUG: perf hardware breakpoint pc value mismatch
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg100004.china.huawei.com (7.202.181.21)
 
-Happened again, so I could make a test:
+--------------z6kcUXTqDTHc4C349fgCGwX0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Kernel 6.9.12 does not have the issue. When the system comes up on 
-kernel 6.12 and no wifi, no ability to change the power state, booting 
-6.9.12 fixes the issue.
 
-As the issue is fixed, the dmesg is interesting.
+Hi all,
 
-I have a long series of
+We found the following issue with Linux v6.12-rc7 on KunPeng920 
+platform. A very low frequency problem of pc value mismatch occurs when 
+using perf hardware breakpoints to trigger a signal handler and 
+comparing pc from u_context with its desired value.
 
-mt7921e 0000:05:00.0: not ready <some time> after FLR; waiting
+Attached please find the reproducer for this issue. It applies perf 
+events to set a hardware breakpoint to an address while binding a signal 
+to the perf event fd. When stepping into the breakpoint address, the 
+signal handler compares pc value copied from signal ucontext with the 
+real breakpoint address and see if there is a mismatch.
 
-where <some time> is a time in ms that is progressively doubled, until:
+While looking into the flow of execution:
+// normal flow of exe:
+            a.out-19844   [038] d...  8763.348609: 
+hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 0
+// breakpoint exception:
+            a.out-19844   [038] d...  8763.348611: do_debug_exception: 
+ec: 0, pc: 400c6c, pstate: 20001000
+            a.out-19844   [038] d...  8763.348611: breakpoint_handler: 
+perf bp read: 400c6c
+// send signal:
+            a.out-19844   [038] d.h.  8763.348613: send_sigio_to_task 
+<-send_sigio
+            a.out-19844   [038] d.h.  8763.348614: <stack trace>
+  => send_sigio_to_task
+  => send_sigio
+  => kill_fasync_rcu
+  => kill_fasync
+  => perf_event_wakeup
+  => perf_pending_event
+  => irq_work_single
+  => irq_work_run_list
+  => irq_work_run
+  => do_handle_IPI
+  => ipi_handler
+  => handle_percpu_devid_fasteoi_ipi
+  => __handle_domain_irq
+  => gic_handle_irq
+  => el0_irq_naked
+            a.out-19844   [038] d.h.  8763.348614: send_sigio_to_task: 
+step in with signum 38
+            a.out-19844   [038] d.h.  8763.348615: send_sigio_to_task: 
+will do_send_sig_info 38
+// kernel signal handling:
+            a.out-19844   [038] ....  8763.348616: do_notify_resume: 
+thread_flags 2097665, _TIF_SIGPENDING 1, _TIF_NOTIFY_SIGNAL40
+            a.out-19844   [038] ....  8763.348617: setup_sigframe: 
+restore sig: 400c6c
+// single step exception:
+            a.out-19844   [038] d...  8763.348619: do_debug_exception: 
+ec: 1, pc: 400988, pstate: 20001000
+            a.out-19844   [038] d...  8763.348621: 
+hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 1
 
-[   57.726146] mt7921e 0000:05:00.0: not ready 32767ms after FLR; waiting
-[   91.812263] mt7921e 0000:05:00.0: not ready 65535ms after FLR; giving up
-[   91.955247] mt7921e 0000:05:00.0: enabling device (0000 -> 0002)
+// abnormal flow of exe:
+            a.out-19844   [084] d...  8763.782103: 
+hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 0
+// breakpoint exception:
+            a.out-19844   [084] d...  8763.782104: do_debug_exception: 
+ec: 0, pc: 400c6c, pstate: 20001000
+// single step exception:
+            a.out-19844   [084] d...  8763.782105: breakpoint_handler: 
+perf bp read: 400c6c
+            a.out-19844   [084] d...  8763.782107: do_debug_exception: 
+ec: 1, pc: 400c70, pstate: 20001000
+// send signal:
+            a.out-19844   [084] d.h.  8763.782108: send_sigio_to_task 
+<-send_sigio
+            a.out-19844   [084] d.h.  8763.782109: <stack trace>
+  => send_sigio_to_task
+  => send_sigio
+  => kill_fasync_rcu
+  => kill_fasync
+  => perf_event_wakeup
+  => perf_pending_event
+  => irq_work_single
+  => irq_work_run_list
+  => irq_work_run
+  => do_handle_IPI
+  => ipi_handler
+  => handle_percpu_devid_fasteoi_ipi
+  => __handle_domain_irq
+  => gic_handle_irq
+  => el0_irq_naked
+            a.out-19844   [084] d.h.  8763.782110: send_sigio_to_task: 
+step in with signum 38
+            a.out-19844   [084] d.h.  8763.782110: send_sigio_to_task: 
+will do_send_sig_info 38
+// kernel signal handling:
+            a.out-19844   [084] ....  8763.782111: do_notify_resume: 
+thread_flags 513, _TIF_SIGPENDING 1, _TIF_NOTIFY_SIGNAL40
+            a.out-19844   [084] ....  8763.782113: setup_sigframe: 
+restore sig: 400c70
+            a.out-19844   [084] d...  8763.782115: 
+hw_breakpoint_control: perf user addr: 400c6c, bp addr: 400c6c, ops: 1
 
-Next time it happens, I'll try to see what happens with one or more 
-kernels between 6.9.12 and 6.12.
+Kernel sends this signal to task through pushing a perf_pending_event 
+(which sends the signal) in irq_work_queue then triggering an IPI to let 
+kernel handle this pended task.
+seems that when mismatch occurs, the IPI does not preempt the breakpoint 
+exception it should preempt, causing no pending signals to be handled. 
+In this way, there is no pending signals in do_notify_resume and kernel 
+will not set up signal frame with correct pc value.
 
 Thanks,
-Sergio
+Chen
+--------------z6kcUXTqDTHc4C349fgCGwX0
+Content-Type: text/plain; charset="UTF-8"; name="reproducer.cpp"
+Content-Disposition: attachment; filename="reproducer.cpp"
+Content-Transfer-Encoding: base64
 
-On 30/03/2025 18:35, Sergio Callegari wrote:
-> Hi Christian,
-> 
-> Thanks for your nice offer, details below:
-> 
-> On 20/03/2025 11:05, Christian Heusel wrote:
->> Hey Sergio,
->>
->> On 25/03/20 08:49AM, Sergio Callegari wrote:
->>> Might be able to test on the distro built kernels that basically 
->>> trace the
->>> releases and stable point releases. This should start helping 
->>> bracketing the
->>> problem a bit better as a starter. But it is going to take a lot of 
->>> time,
->>> since the issue happens when the machine fails to get out of 
->>> hibernation,
->>> that is not always, and obvioulsy I need to try avoiding this 
->>> situation as
->>> much as possible.
->>
->> Which linux distro are you using? If you're on Arch Linux I can provide
->> you with prebuilt images for the bisection :)
-> 
-> I am on manjaro, where the kernel follows slightly different naming 
-> conventions, but the arch kernels should be OK. So thank you very much 
-> for the nice offer. The thing is possibly a bit premature, in that I 
-> would like to identify first what is the kernel RC or point release 
-> where the issue started to appear, because I have these kernels 
-> available for my distro which makes things easier. Unfortunately, I am 
-> still in the dark even wrt this.
-> 
-> The issue is nasty, because it only happens when you crash on restore 
-> from hibernation, which is something that I am desperately trying to 
-> avoid because this is my work machine and I really don't want to risk 
-> data loss.
-> 
-> The big problem with this bug is that you remain with the impression 
-> that your hardware is bricked. On the web I read that booting windows 
-> immediately gives you back the wifi device on pcie, but I really cannot 
-> say, as I have no windows to try. What I can say is that the 6.6 LTS 
-> kernel also lets you recover the WIFI, while 6.12 LTS does not.
-> 
-> As a stopgap, would be great to know if there is anything that can be 
-> done while on 6.12 to fully reset the pcie (or the pcie device, I still 
-> don't know what is the culprit), so you don't need to boot an older kernel.
-> 
-> Thanks again,
-> Sergio
-> 
->>
->>>
->>> Incidentally, the machine seems to hibernate-resume just fine. It is 
->>> when I
->>> suspend-then-hibernate that I get the failures.
->>>
->>> Before contacting the network driver authors, I just wanted to query 
->>> whether
->>> the issue is likely in it or in the power-management or pcie subsystems.
->>>
->>> Thanks,
->>> Sergio
->>
->> Cheers,
->> Chris
->>
->>>
->>> On 20/03/2025 00:54, Greg KH wrote:
->>>> On Wed, Mar 19, 2025 at 08:38:52PM +0100, Sergio Callegari wrote:
->>>>> There is a nasty regression wrt mt7921e in the last LTS series 
->>>>> (6.12). If
->>>>> your computer crashes or fails to get out of hibernation, then at 
->>>>> the next
->>>>> boot the mt7921e wifi does not work, with dmesg reporting that it 
->>>>> is unable
->>>>> to change power state from d3cold to d0.
->>>>>
->>>>> The issue is nasty, because rebooting won't help.
->>>>
->>>> Can you do a 'git bisect' to track down the issue?  Also, maybe letting
->>>> the network driver authors know about this would be good.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>>
->>>
-> 
+I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHN0cmlu
+Zy5oPgojaW5jbHVkZSA8dW5pc3RkLmg+CiNpbmNsdWRlIDxzaWduYWwuaD4KI2luY2x1ZGUg
+PHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxsaW51eC9wZXJmX2V2ZW50Lmg+CiNpbmNsdWRl
+IDxzdGRpbnQuaD4KI2luY2x1ZGUgPHVjb250ZXh0Lmg+CiNpbmNsdWRlIDxsaW51eC9od19i
+cmVha3BvaW50Lmg+CiNpbmNsdWRlIDxzeXMvaW9jdGwuaD4KI2luY2x1ZGUgPHN5cy9mY250
+bC5oPgojaW5jbHVkZSA8c3lzL21tYW4uaD4KI2luY2x1ZGUgPGVycm5vLmg+CiNpbmNsdWRl
+IDx0aHJlYWQ+Cgp1c2luZyBuYW1lc3BhY2Ugc3RkOwoKc3RhdGljIHZvaWQgKmJyZWFrcG9p
+bnRfYWRkciA9IE5VTEw7Cgp2b2lkIHNpZ25hbF9oYW5kbGVyKGludCBzaWdudW0sIHNpZ2lu
+Zm9fdCAqaW5mbywgdm9pZCAqY29udGV4dCkgewogICAgaW9jdGwoaW5mby0+c2lfZmQsIFBF
+UkZfRVZFTlRfSU9DX0RJU0FCTEUsIDApOwogICAgY2xvc2UoaW5mby0+c2lfZmQpOwogICAg
+dWNvbnRleHRfdCAqdWNvbnRleHQgPSAodWNvbnRleHRfdCAqKWNvbnRleHQ7CiAgICB1aW50
+cHRyX3QgcGMgPSAodWludHB0cl90KXVjb250ZXh0LT51Y19tY29udGV4dC5wYzsKCiAgICBp
+ZiAocGMgIT0gKHVpbnRwdHJfdClicmVha3BvaW50X2FkZHIpCiAgICAgICAgcHJpbnRmKCJX
+YXJuaW5nOiBQQyAoMHglbHgpIGRvZXMgbm90IG1hdGNoIGJyZWFrcG9pbnQgYWRkcmVzcyAo
+MHglbHgpIHNpZ251bTogJWRcbiIsIHBjLCAodWludHB0cl90KWJyZWFrcG9pbnRfYWRkciwg
+c2lnbnVtKTsKfQoKc3RhdGljIGludCBzZXRfaHdfYnJlYWtwb2ludCh2b2lkICphZGRyKSB7
+CiAgICBzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyIHBlOwogICAgaW50IGZkOwoKICAgIG1lbXNl
+dCgmcGUsIDAsIHNpemVvZihzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyKSk7CiAgICBwZS50eXBl
+ID0gUEVSRl9UWVBFX0JSRUFLUE9JTlQ7CiAgICBwZS5zaXplID0gc2l6ZW9mKHN0cnVjdCBw
+ZXJmX2V2ZW50X2F0dHIpOwogICAgcGUuY29uZmlnID0gMDsKICAgIHBlLmJwX3R5cGUgPSBI
+V19CUkVBS1BPSU5UX1g7CiAgICBwZS5icF9hZGRyID0gKHVpbnRwdHJfdClhZGRyOwogICAg
+cGUuYnBfbGVuID0gNDsKICAgIHBlLnNhbXBsZV9wZXJpb2QgPSAxOwogICAgcGUuZGlzYWJs
+ZWQgPSAxOwogICAgcGUuZXhjbHVkZV9rZXJuZWwgPSAxOwoKICAgIC8vIHBlcmZfZXZlbnRf
+b3BlbiBzeXNjYWxsCiAgICBmZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29wZW4sICZw
+ZSwgc3lzY2FsbChTWVNfZ2V0dGlkKSwgLTEsIC0xLCAwKTsKICAgIGlmIChmZCA8IDApIHsK
+ICAgICAgICBwZXJyb3IoInBlcmZfZXZlbnRfb3BlbiIpOwogICAgICAgIHJldHVybiAtMTsK
+ICAgIH0KCiAgICBzdHJ1Y3QgZl9vd25lcl9leCBvd25lcjsKICAgIG93bmVyLnR5cGUgPSBG
+X09XTkVSX1RJRDsKICAgIG93bmVyLnBpZCA9IHN5c2NhbGwoU1lTX2dldHRpZCk7CgogICAg
+aWYgKGZjbnRsKGZkLCBGX1NFVE9XTl9FWCwgJm93bmVyKSA9PSAtMSkKICAgIHsKICAgICAg
+ICBwZXJyb3IoIkZfU0VUU0lHIik7CiAgICAgICAgZXhpdChFWElUX0ZBSUxVUkUpOwogICAg
+fQoKICAgIGlmIChmY250bChmZCwgRl9TRVRTSUcsIFNJR1JUTUlOKzQpID09IC0xKSB7CiAg
+ICAgICAgcGVycm9yKCJGX1NFVFNJRyIpOwogICAgICAgIGNsb3NlKGZkKTsKICAgICAgICBl
+eGl0KEVYSVRfRkFJTFVSRSk7CiAgICB9CgogICAgaW50IGZsYWdzID0gZmNudGwoZmQsIEZf
+R0VURkwsIDApOwogICAgaWYgKGZsYWdzID09IC0xKSB7CiAgICAgICAgcGVycm9yKCJGX0dF
+VEZMIik7CiAgICAgICAgY2xvc2UoZmQpOwogICAgICAgIGV4aXQoRVhJVF9GQUlMVVJFKTsK
+ICAgIH0KCiAgICBpZiAoZmNudGwoZmQsIEZfU0VURkwsIGZsYWdzIHwgT19BU1lOQykgPT0g
+LTEpIHsKICAgICAgICBwZXJyb3IoIkZfU0VURkwiKTsKICAgICAgICBjbG9zZShmZCk7CiAg
+ICAgICAgZXhpdChFWElUX0ZBSUxVUkUpOwogICAgfQoKICAgIC8vIGVuYWJsZSBicmVha3Bv
+aW50CiAgICBpZiAoaW9jdGwoZmQsIFBFUkZfRVZFTlRfSU9DX1JFU0VULCAwKSA8IDApIHsK
+ICAgICAgICBwZXJyb3IoIlBFUkZfRVZFTlRfSU9DX1JFU0VUIik7CiAgICAgICAgY2xvc2Uo
+ZmQpOwogICAgICAgIHJldHVybiAtMTsKICAgIH0KCiAgICBpZiAoaW9jdGwoZmQsIFBFUkZf
+RVZFTlRfSU9DX0VOQUJMRSwgMCkgPCAwKSB7CiAgICAgICAgcGVycm9yKCJQRVJGX0VWRU5U
+X0lPQ19FTkFCTEUiKTsKICAgICAgICBjbG9zZShmZCk7CiAgICAgICAgcmV0dXJuIC0xOwog
+ICAgfQoKICAgIHJldHVybiBmZDsKfQoKLy8gZnVuY3Rpb24gd2hlcmUgYnJlYWtwb2ludHMg
+Z2V0IHNldAp2b2lkIHRhcmdldF9mdW5jdGlvbigpIHsKICAgIGludCBpID0gMDsKICAgIGkr
+KzsKfQoKaW50IG1haW4oKSB7CiAgICBpbnQgYnJlYWtwb2ludF9mZDsKCiAgICAvLyBzZXQg
+YnJlYWtwb2ludAogICAgYnJlYWtwb2ludF9hZGRyID0gKHZvaWQgKil0YXJnZXRfZnVuY3Rp
+b247CiAgICBwcmludGYoIkJyZWFrcG9pbnQgYWRkcmVzczogJXAsIHRhcmdldF9mdW5jdGlv
+biBhZGRyZXNzOiAlcFxuIiwgYnJlYWtwb2ludF9hZGRyLCB0YXJnZXRfZnVuY3Rpb24pOwoK
+ICAgIC8vIHNldCBzaWcgaGFuZGxlcgogICAgc3RydWN0IHNpZ2FjdGlvbiBzYTsKICAgIG1l
+bXNldCgmc2EsIDAsIHNpemVvZihzdHJ1Y3Qgc2lnYWN0aW9uKSk7CiAgICBzYS5zYV9zaWdh
+Y3Rpb24gPSBzaWduYWxfaGFuZGxlcjsKICAgIHNhLnNhX2ZsYWdzID0gU0FfU0lHSU5GTyB8
+IFNBX1JFU1RBUlQ7CiAgICBzaWdmaWxsc2V0KCZzYS5zYV9tYXNrKTsKICAgIGlmIChzaWdh
+Y3Rpb24oU0lHUlRNSU4rNCwgJnNhLCBOVUxMKSA9PSAtMSkgewogICAgICAgIHBlcnJvcigi
+c2lnYWN0aW9uIik7CiAgICAgICAgY2xvc2UoYnJlYWtwb2ludF9mZCk7CiAgICAgICAgcmV0
+dXJuIEVYSVRfRkFJTFVSRTsKICAgIH0KCiAgICAvLyB0ZXN0IGJyZWFrcG9pbnQKICAgIHBy
+aW50ZigiQ2FsbGluZyB0YXJnZXQgZnVuY3Rpb24uLi5cbiIpOwogICAgd2hpbGUgKDEpIHsg
+ICAgCglicmVha3BvaW50X2ZkID0gc2V0X2h3X2JyZWFrcG9pbnQoYnJlYWtwb2ludF9hZGRy
+KTsKICAgICAgICBpZiAoYnJlYWtwb2ludF9mZCA8IDApIHsKICAgICAgICAgICAgZnByaW50
+ZihzdGRlcnIsICJGYWlsZWQgdG8gc2V0IGhhcmR3YXJlIGJyZWFrcG9pbnRcbiIpOwogICAg
+ICAgICAgICByZXR1cm4gMTsKICAgICAgICB9CiAgICAgICAgICAgIHRhcmdldF9mdW5jdGlv
+bigpOwoJLy8gZGlzYWJsZSBicmVha3BvaW50CiAgICAJaW9jdGwoYnJlYWtwb2ludF9mZCwg
+UEVSRl9FVkVOVF9JT0NfRElTQUJMRSwgMCk7CiAgICAJY2xvc2UoYnJlYWtwb2ludF9mZCk7
+CiAgICB9CgogICAgcmV0dXJuIDA7Cn0KCg==
 
+--------------z6kcUXTqDTHc4C349fgCGwX0--
