@@ -1,84 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9353288CA3;
-	Mon, 14 Apr 2025 16:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7B51A315C
+	for <regressions@lists.linux.dev>; Mon, 14 Apr 2025 17:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744647501; cv=none; b=CQ1cTdhYeRkPRT0zX2AAj2bRTNRcWOcACgUbNq53XWnqr//03djnEfGZZ4Q5UrkHGQ/zJ1B7PqE2whl9oQhC1wQh4KCfzy6RXknZXVC3AiEAP89cfn4dAIttn5jE2p8zszlAAsyb15KUGt9x9ToafomdHUlqadV0HOvvI13Z+pU=
+	t=1744650978; cv=none; b=g8ivKxTbetKJquXWGtFeiD8V0AWJSYX4yYJo2mQ9asaEyRatmNc0cYZZxLm3dDREEUSq0iYmOM9f8ORJXEOuuO1pscZknzKDV3YIvzHbFKagUax2+kZwcWNaxNnH56M8EI4OOe5HOZYl7+5xoT7KaaCngsmL8ScRW25ZIBmR+fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744647501; c=relaxed/simple;
-	bh=8VX3HCV2FtYHKbjmNiMwOuVyLdzJo4RYGuFeI3jbRgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxzl39XBBeKapHAj+4H+syCWr7V16us1hLcME2kPcR7ui4H2U/Qs68lieUuYN3sKt17TQ9dKqQW+/16n8ojANZH/exNS206UbsVC0fucQyfBjsZe+Ao7ZMlySocurpLPLOIxIRVZmbnmGatd2OLuaQpB9f0FGK48l9nT58GoeYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMXOeUoa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMXOeUoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63651C4CEE2;
-	Mon, 14 Apr 2025 16:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744647501;
-	bh=8VX3HCV2FtYHKbjmNiMwOuVyLdzJo4RYGuFeI3jbRgM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZMXOeUoakjExN34Vb8t2Y/bYfvz4LzOvBFoGZTbAvms59fjrXvnR70kcyZpTnLioZ
-	 lbQvvDR/xfYLitn3vJTbC6G/l9wlLiT3N2+T+x2rg26PZO6Q7sWlQ/UhCjxBLOYaOr
-	 vITHhgpi446zPMzTc7zpFfQh3kRUd12RLiTPDnS0EaXFAtQTU0a/wEwpEm/2Eygx5B
-	 hYcB+vyh2EImGrysIkkCy0DLLP0vUa4PZdE0KOsp2fDVNmPvyKmctV7DSKn5x2v4av
-	 yCCTmxXwyDrg41seZJRXw42g/AG/2pt1UCSwCIeA8CEvZntFpXGzL+Lq+AT6UsDdOl
-	 xKm0Da1eznxlw==
-Date: Mon, 14 Apr 2025 09:18:16 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: clang-built-linux <llvm@lists.linux.dev>, lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: x86_64 clang-20 clang-nightly config lto-full failed - ld.lld:
- error: linking module flags 'Code Model': IDs have conflicting values: 'i32
- 1' from vmlinux.a(gdt_idt.o at 1321040), and 'i32 2' from ld-temp.o
-Message-ID: <20250414161816.GA33918@ax162>
-References: <CA+G9fYvnun+bhYgtt425LWxzOmj+8Jf3ruKeYxQSx-F6U7aisg@mail.gmail.com>
+	s=arc-20240116; t=1744650978; c=relaxed/simple;
+	bh=OJcs/XVthOpv6Q27QIk83Dxn+e3WU8k80K16H2ugiB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kMujvxhLkD9JQcjQbiDbketGXGBZEDFL4wz6OfAtxcJ5RUJBhHX9yd1POAPnlvmV8xYb78ONlgnZUNRsEOxkyBkYrkgPXsh8lo1MrF+Ax3aU8o1clzBA4irkVwdLPgN7rIDzSITv6Ql5AZ6gbSXP4+6l0vBlJ3G39Taa/KAXv/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D72EF61E647A7;
+	Mon, 14 Apr 2025 19:15:51 +0200 (CEST)
+Message-ID: <559a9953-cd51-42ce-b2a5-83bd185cf008@molgen.mpg.de>
+Date: Mon, 14 Apr 2025 19:15:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvnun+bhYgtt425LWxzOmj+8Jf3ruKeYxQSx-F6U7aisg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] Increased memory usage on NUMA nodes with ICE
+ driver after upgrade to 6.13.y (regression in commit 492a044508ad)
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemyslaw Kitszel <przemyslaw.kitszel@intel.com>
+Cc: jdamato@fastly.com, intel-wired-lan@lists.osuosl.org,
+ netdev@vger.kernel.org, Igor Raits <igor@gooddata.com>,
+ Daniel Secik <daniel.secik@gooddata.com>,
+ Zdenek Pesek <zdenek.pesek@gooddata.com>, regressions@lists.linux.dev
+References: <CAK8fFZ4hY6GUJNENz3wY9jaYLZXGfpr7dnZxzGMYoE44caRbgw@mail.gmail.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAK8fFZ4hY6GUJNENz3wY9jaYLZXGfpr7dnZxzGMYoE44caRbgw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Naresh,
+#regzbot ^introduced: 492a044508ad13a490a24c66f311339bf891cb5f
 
-On Mon, Apr 14, 2025 at 09:37:51PM +0530, Naresh Kamboju wrote:
-> Regressions on x86_64 config LTO_CLANG_FULL with korg-clang-20 and
-> clang-nightly on the
-> Linux next-20250407 and found again on next-20250414 tag
+Am 14.04.25 um 18:29 schrieb Jaroslav Pulchart:
+> Hello,
 > 
-> First seen on the next-20250407.
-> Bad: next-20250407 and next-20250414
-> Good:next-20250404
+> While investigating increased memory usage after upgrading our
+> host/hypervisor servers from Linux kernel 6.12.y to 6.13.y, I observed
+> a regression in available memory per NUMA node. Our servers allocate
+> 60GB of each NUMA node’s 64GB of RAM to HugePages for VMs, leaving 4GB
+> for the host OS.
 > 
-> * x86_64, Build
->  - Build/korg-clang-20-lkftconfig-lto-full
->  - Build/clang-nightly-lkftconfig-lto-full
+> After the upgrade, we noticed approximately 500MB less free RAM on
+> NUMA nodes 0 and 2 compared to 6.12.y, even with no VMs running (just
+> the host OS after reboot). These nodes host Intel 810-XXV NICs. Here's
+> a snapshot of the NUMA stats on vanilla 6.13.y:
 > 
-> Regression Analysis:
-> - New regression? Yes
-> - Reproducibility? Yes
+>       NUMA nodes:  0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15
+>       HPFreeGiB:   60    60    60    60    60    60    60    60    60    60   60    60    60    60    60    60
+>       MemTotal:    64989 65470 65470 65470 65470 65470 65470 65453 65470 65470 65470 65470 65470 65470 65470 65462
+>       MemFree:     2793  3559  3150  3438  3616  3722  3520  3547  3547  3536  3506  3452  3440  3489  3607  3729
 > 
-> Build regression: x86_64 clang-20 clang-nightly config lto-full failed
+> We traced the issue to commit 492a044508ad13a490a24c66f311339bf891cb5f
+> "ice: Add support for persistent NAPI config".
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> We limit the number of channels on the NICs to match local NUMA cores
+> or less if unused interface (from ridiculous 96 default), for example:
+>     ethtool -L em1 combined 6       # active port; from 96
+>     ethtool -L p3p2 combined 2      # unused port; from 96
 > 
-> ## Build log
-> ld.lld: error: linking module flags 'Code Model': IDs have conflicting
-> values: 'i32 1'
->     from vmlinux.a(gdt_idt.o at 1321040), and 'i32 2' from ld-temp.o
-
-Thanks for the report, I will be sending a patch to fix this today.
-
-Cheers,
-Nathan
+> This typically aligns memory use with local CPUs and keeps NUMA-local
+> memory usage within expected limits. However, starting with kernel
+> 6.13.y and this commit, the high memory usage by the ICE driver
+> persists regardless of reduced channel configuration.
+> 
+> Reverting the commit restores expected memory availability on nodes 0
+> and 2. Below are stats from 6.13.y with the commit reverted:
+>      NUMA nodes:  0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15
+>      HPFreeGiB:   60    60    60    60    60    60    60    60    60    60   60    60    60    60    60    60
+>      MemTotal:    64989 65470 65470 65470 65470 65470 65470 65453 65470 65470 65470 65470 65470 65470 65470 65462
+>      MemFree:     3208  3765  3668  3507  3811  3727  3812  3546  3676  3596 ...
+> 
+> This brings nodes 0 and 2 back to ~3.5GB free RAM, similar to kernel
+> 6.12.y, and avoids swap pressure and memory exhaustion when running
+> services and VMs.
+> 
+> I also do not see any practical benefit in persisting the channel
+> memory allocation. After a fresh server reboot, channels are not
+> explicitly configured, and the system will not automatically resize
+> them back to a higher count unless manually set again. Therefore,
+> retaining the previous memory footprint appears unnecessary and
+> potentially harmful in memory-constrained environments
+> 
+> Best regards,
+> Jaroslav Pulchart
