@@ -1,211 +1,239 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E7024B26
-	for <regressions@lists.linux.dev>; Fri, 18 Apr 2025 03:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744945471; cv=none; b=SBxNJUdI13DYKKztnqwpkfRPRzwwIHIbha5WSu7hAO6kBQc/UMxqari8E8SwUIy2aOaQc4N6zYFDRpuQ0ryoGEApJBBVw7WaVHTApEjJtxV4DbsdGD8KyWp00/IePouEDz9/6+ckbV/GLUaE8Q9ldP13O/TdUCPp6a6GTKYi8sc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744945471; c=relaxed/simple;
-	bh=eRukUZMe8g68G7MrdAupVSKVP0KA4yLwHp07VM3k6OU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NsxEoEQCY0/yhDF6jGw2ygNpp5t8bi7UK6n98L1spQv3aqCTm06twWuFPYjIhpaOFiIuQNr6KVFIrFiY8i2mNA4XVseAxLJe0di/bnLth8vidyewlel6xG1FTqHUHAHx92foxupQZ6nHPGQtjZx/cdxxigMw/hUW/KFaCVHET9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=DPcZ735f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TXINkV89; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FDF268698
+	for <regressions@lists.linux.dev>; Fri, 18 Apr 2025 06:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744958406; cv=fail; b=JBwAOvCQK6FidEDaLTtMjp+3W8fDchUNI0S6WpEs6+/efXkX9dP1emLqwr5kxi2qsl6hHDn/KtUGpgjuLjY+v4vUN2ghLS/8iZnQMyE/k8A/gG9UoRe4u5olDqa7nUggUH5K4A8fpQNHvcvpLzrk/kHvu2DSm7wIdlGbv6pT+FA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744958406; c=relaxed/simple;
+	bh=U3R4YrcSDiHTEzwQtgdCycP+K0d5yIeX2SaWfVE+Co4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ubtnH06t1YH8bZMDS52dF1u365NguK1JXR2oIB1JHkoFO9J8H7cOLrsZC99f+iJlTFaoxmgIniD07vuTryLLuJpCXpLDO8fJoAZR7ykgJ4GC57sPrDhjfaRdE3+rquqdi4M6ZfAFQCLolTHvzxIk+JTfj6RSbXu66c5w4fIx9Vk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VGqIyXFF; arc=fail smtp.client-ip=40.107.94.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="DPcZ735f";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TXINkV89"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A5BF81140135;
-	Thu, 17 Apr 2025 23:04:27 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-01.internal (MEProxy); Thu, 17 Apr 2025 23:04:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1744945467; x=1745031867; bh=YSblgLG2ncNrSgO9fePQMpL+vbff589c
-	OtDlv186mZs=; b=DPcZ735fauqwDn4l6FV9Ja/iowDVxmWlu7/KbFPJ9oOsxGS6
-	DTsmFsKziwWTgE1PjHaoPGtjOSrGwyrf4SAE2sK5IQkYkGBuzL/S9RIUWvPq3EVM
-	ICLgYk0wfYxdUd5Cpu5MbZAKhmpvzuMFDYrSHrCkqhxTWkhWqmyEh3un3uHV3RZG
-	nLd2RhZGuDvoFPd/1Jgce60FRwYXIqs7I1mezb+4shVDAZqtzawv6H3ZADLIm1Iz
-	LAvBFWX1Mj0ER54eaPAtFM9HqChAaHEr6mdiakws4fb1o9O4MEWsfhTJdq7NHo02
-	RTF0yxd34QGMDpw/w7m1WJgcIICDmjnHkZ3okw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744945467; x=
-	1745031867; bh=YSblgLG2ncNrSgO9fePQMpL+vbff589cOtDlv186mZs=; b=T
-	XINkV89MvjpG6W6WenXFc4v3Lv5lMy+ow3aLtItofJPRNZFWug26KMuDzp7ijxDi
-	+FhUZESzn199+0yi/auAZEXfA5yIv6Bs5GAsUc1oKVwPiRYvwN3yUgWiNOdKY6uv
-	ZuUgt+c13utxPRde3Ne85Epla12vHIrUugSNtdtQudQm8B12a9wysGtHOaQkFKBO
-	8INjZU6xxNAp/gVYiSfTFsLXuzCyWdHdyCOnjU5eN8HHUwjUPnrDw19I1v6lFlmJ
-	OOF2XYFtuIaRX10G5hWvRG28LBc2bQAdQhPLb+LNTNlr8gTzMVgqK5ULjd0Qvr55
-	TrTzqZqcRubjuhWX/rZKQ==
-X-ME-Sender: <xms:OsEBaMHgkMsL5kkyuQejq0yDb5750G6cstFtjJDOueLE3YKMiXP4Cg>
-    <xme:OsEBaFU0f65B1HjcW8QOGL7kS3vZoPtQPYvsexp_VpXmv6t-hZxfIKXx1ANrxk1Au
-    nVV0GuIvzt3Cj1z3S8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedutdduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedfofgrthhhvgifucfotgeurhhiuggvfdcuoehmrghtthesthhrrg
-    hvvghrshgvrdgtohhmrdgruheqnecuggftrfgrthhtvghrnhepvdeitdeufeffheeltddu
-    tddtuddugfdtveffffekvdffvdfhgfejuedtgeeluddtnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrthhtsehtrhgrvhgvrhhsvgdrtgho
-    mhdrrghupdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheprhhmkhdokhgvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthht
-    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehhkhgrlhhlfi
-    gvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhg
-    lhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthht
-    oheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepihhorghnrgdrtghiohhrnh
-    gvihesnhigphdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:OsEBaGL-6YA5A877Id9It6jAdE2cYDj-3aXBikfdpp7CVOgNqeK4GA>
-    <xmx:OsEBaOHHaOFk61-2FvcbgmUBPwB4h4ceMSesgpQ8Rm796SokgX0u7w>
-    <xmx:OsEBaCUF4boRmsPnLjSWzZNeDMMUgB6KuBoUFGH26nGT2yu88l3C8g>
-    <xmx:OsEBaBMLcRE5WyaZPfUtU4LMlN15AdAQcvKilRdi6QrmqM02YOkFvw>
-    <xmx:O8EBaK7l5K9RrTRzpxV4gr0zcUt8CHIhwwz6GoTyC7r1VuRNzj7czOZ6>
-Feedback-ID: i426947f3:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5BDCB78006B; Thu, 17 Apr 2025 23:04:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VGqIyXFF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vnnBxPmKy/w/HwqWLOMXKPyPBt5/aty3/vaNk3GH2ooU5ixnBsvWl+usSehNm/qPJJDAfID2uQS64hXAA+T1vA+Ky2FyazH249m7ghoQcoILMmRqKb5IFMyaieJyHCJWGeQMQdFB5ojHJKwhl7Rq0XxtdTuHnLN3BmTGLomcPqO9K2F8m7D3zIJPokYmyFRjYnEuNAReNn8NmELyL+cnqY0124gDSp9//LwJdWrJWXjwIvyf0l0DktHn4jE6pu8M7DuQnaef4p+f4yN4spVkNuVW111ad39FNSgphug3F2HwoEO6ltA+kGFt0PCXrmIya+DOJGOFxmhNxA7lzRmsaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rgC2sEPHg/0A+WZEIVr+5JM5+l8jSPHzEQS6g2KJcHk=;
+ b=aaDV9kJeE2siKEqzjjOLdRWwa1zjiz9uqDQv6foXX0qggGwAChXeTbxZUDcreJzvp2CYKgpZxIKs76k7gN46Kt5wBvSQiOtj8rfxdOiFelTBCj2L/6yKo/QIp4GPPiF2H+VPIZpeWDanvO1n1AuNciQlF0reVKge8s81t9YjdGBndaimhGvJ0CyXxRiQbTAlffCKp3ehDEkh8rNzYrDB7rIqaHBjuRzCpK1MGbwC4DSiqCpIAnQNs53imeBp5XXgVMgxbuMSYzCxtlkNwZLoYV/RB7Dv5Dnec3nIHT2TgA5zXuMV0fah40jJr5hf2CxWfeNb5YCKBU83RNAGVWM+6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=ateme.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rgC2sEPHg/0A+WZEIVr+5JM5+l8jSPHzEQS6g2KJcHk=;
+ b=VGqIyXFFu6UDMkZ3JvZ4R59P4Mez+YQWwezZdMtWuFNvkhH1eU9DK47auNMw2ekkoLAIHPYoGu/CIvdy/ecJWSrUjbZG0806vOQmGrxSwh1TOCXK2dSqws5NDFG/ESWmfUq8A6Xj7qYXCMYTlGr1obCkFVEmbujoBFDUNBCUXJo=
+Received: from BN9PR03CA0360.namprd03.prod.outlook.com (2603:10b6:408:f6::35)
+ by IA1PR12MB7493.namprd12.prod.outlook.com (2603:10b6:208:41b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.26; Fri, 18 Apr
+ 2025 06:39:59 +0000
+Received: from BN2PEPF000044A3.namprd02.prod.outlook.com
+ (2603:10b6:408:f6:cafe::bd) by BN9PR03CA0360.outlook.office365.com
+ (2603:10b6:408:f6::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Fri,
+ 18 Apr 2025 06:39:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A3.mail.protection.outlook.com (10.167.243.154) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Fri, 18 Apr 2025 06:39:58 +0000
+Received: from [10.85.36.22] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 18 Apr
+ 2025 01:39:55 -0500
+Message-ID: <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
+Date: Fri, 18 Apr 2025 12:09:53 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 18 Apr 2025 13:02:19 +1000
-From: "Mathew McBride" <matt@traverse.com.au>
-To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc: "Ioana Ciornei" <ioana.ciornei@nxp.com>,
- "David S. Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, netdev@vger.kernel.org,
- "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit" <hkallweit1@gmail.com>,
- regressions@lists.linux.dev
-Message-Id: <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
-In-Reply-To: <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
-References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
- <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
-Subject: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: IPC drop down on AMD epyc 7702P
+To: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"mingo@kernel.org" <mingo@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A3:EE_|IA1PR12MB7493:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7a175e0-2ebe-4177-badb-08dd7e43d6c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bFlOamhEdUxrYm9pRnJJSDFSb1B3RUZjVFlaajU4SlAySnF6aXJxRVJKWGVv?=
+ =?utf-8?B?YjFyc2xEdDU2ZGRQc3FSSHMySU0wYnJZcDdvcFlDY3ZPQkI0OXJWaDNCNVNH?=
+ =?utf-8?B?SnhSbjJwSklqTCtrYzFSZnlnVlBtbGllckxDWTk2UzRxYUZudWlBbGYxK1Bw?=
+ =?utf-8?B?VXlBcWRydDdJSm5HdFFjR21lSEhydVg1anlxY0h1U01VNW9OS0I2OXRlcGFn?=
+ =?utf-8?B?emY4K3A0RnhCamV1a0RCbFQ0K2xDbGNKRHo3c0kxcDdGT3paY0w4cHRVVVNB?=
+ =?utf-8?B?MEhoeXZRQ1Y4Y1dYQ1E4cWtpWnpIeUZHZmVKdC82Q2ZyUkkwY2JUd3p6MHpE?=
+ =?utf-8?B?Z2w3c3dIN0llOG1XcEZrSldsTTJXNlU3Z3J1OEorSkw0dGpZRVAwMDlhOW53?=
+ =?utf-8?B?T0llSlBhWDZweGQvSk1MWnR0N3BQWTkyMFV6YVZrU3ljdm0rT2ZjaGhtWjJH?=
+ =?utf-8?B?TS9Tc28rNFQwLzVGeXVvUXk4V1IrdEkvcDJpY3hyamtFT2NQNUF4bDFMZDVP?=
+ =?utf-8?B?NjVicSs0L3ZTYlJlNTFoNVluTU0vM3Q0RkV6SFpUUHJrNUVEOW5IYkxxdGJB?=
+ =?utf-8?B?YWl4bDYzc0JQazBWYUhNbHUxSm95K0pLMUdoN294anlrM00zQTZOTnZGNHls?=
+ =?utf-8?B?ZVJ2V0FyaDVhaDluV0ZjOEpiWEFWVGxoUDM3d1F4eTRQcVl6MDNZWERDeG4v?=
+ =?utf-8?B?K3RueHRkMHBhV1hYdUtCdkxrcDE0REsxLzY3VmYxOC9tVnRUei8vOSttcS9y?=
+ =?utf-8?B?U0tkY0U5eFlFK012a0hJQmR3VVVaRkE3VTM1V1Z1b1VIRjh3MTQ5YWtFTVFF?=
+ =?utf-8?B?dllNU3dFcEsxMXMwejdtRzlZdlRxQ1NPcFlFSUlBaFZIMUdrZThmcjBjZGg1?=
+ =?utf-8?B?bUJuQWc3RHVrcU54UnNjK0w3VTMxRVRZcGlrUlUxV1Vwdm9TS1owVEQxK0RF?=
+ =?utf-8?B?WG0ydnYxUTVkd3BQbnV1VzgwaGMzWkFyM011TjFWVGhrQXl5MkFNak10NVh4?=
+ =?utf-8?B?UUNkUHZFMlV3d3dsNElRTTd0T2UrVGxnb1ovbXB6UzFOSGxVZ3BNY2lCMklH?=
+ =?utf-8?B?TFJudTNtbGY5Zm42eGlENnE4YmlickFWbVdEaWhidXVheU01a1lYNXh3TEdl?=
+ =?utf-8?B?N3duS0Z2aTdZaGtqUG5oTkZTNTk2cmtIeXh3NnB6Vm82U09FNGc0ZDRWZFQ2?=
+ =?utf-8?B?ZGpGMG5jbyswTGtabFJxOXU0OEJDa2oyK3RWc3plb3lVYkRuRWJicDNIcnd1?=
+ =?utf-8?B?YzJmUml1YnQ4RGtuZWV0RHFTZzdJeTEyc3NySnI4S0xHc3NKWjFQMTBuczVk?=
+ =?utf-8?B?cDhHbVBkL0RiUUxFM0ltaWZubStCdGRJb1lpTWlEOUlVWGRVR1FMcFdKTCtx?=
+ =?utf-8?B?Z01UOVpIY2dPOVAreS9vTjFrazA0dlErbm9ZYUlLUmd3WGYwTndIbXF4RUoy?=
+ =?utf-8?B?TW9wei94dHdDU1JnZ0ZwcmZuMUVVTGxuaEttSnp6NENkRkRqMk1ZMmlEeVVV?=
+ =?utf-8?B?MDdRalp1TkZsQjZVNXdQZUNCd0FqNy9MYW0rTnZtSjAxbFNuTHkzTkdmTG5u?=
+ =?utf-8?B?UzdCcllTSUJxYk01WjJyV0lnZEpnakVYK2ozamFldUVWdUZobHYxbFBlUTE2?=
+ =?utf-8?B?d3lYRWh1eUZXTXIzbXBrMkg1RnR4dUlTd0MxWXJ4NkNPNCtCVEQ5Nk5uVlUw?=
+ =?utf-8?B?MENERzZqczdSY2Y2UCtRZ3BWaGEzdy9LQWtyRjNxSkpzQnZFQnkwY09hOU1S?=
+ =?utf-8?B?dkNkRGt2Z284dXQ0WHFKbHVpc0Y4YUZENzBXZVlPNGZINFdDbnZDU2QrTHZx?=
+ =?utf-8?B?OUhKSlNQaHA1elM2VU1RZ1VNYXFzOXI2QzhxZndBalB6L1VuclNJM0JNOXRj?=
+ =?utf-8?B?WlBLODZ2R3RRWFYvc1pOQUs2b3c5QUpxeW81K0k4VkZYcmJ5RjJ2WWRRb0Ro?=
+ =?utf-8?B?cmRzUDhsbXRuOFlXZFA5cWc4OWdEVDZqUkRBY0ZnekxQK1N3VStmTTJBTzFQ?=
+ =?utf-8?B?SU1qSG5HN0Vsak1NZ0NuaWF5bzNaMTQybTRtdDdFdEU5bEVqM05wN0U0N0FR?=
+ =?utf-8?B?NzhuOHdudXNZSXNXS0RmRUttNmpnbXRRZ2R3QT09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 06:39:58.6982
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7a175e0-2ebe-4177-badb-08dd7e43d6c1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A3.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7493
 
-#regzbot introduced: 6561f0e547be221f411fda5eddfcc5bd8bb058a5
+Hello Jean,
 
-Hi Russell,
-
-On Thu, Dec 5, 2024, at 8:42 PM, Russell King (Oracle) wrote:
-> Report the PCS in-band capabilities to phylink for the Lynx PCS.
+On 4/18/2025 2:38 AM, Jean-Baptiste Roquefere wrote:
+> ﻿
 > 
+> Hi,
+> We (Ateme, a video encoding company) may have found an unwanted behavior in the scheduler since 5.10 (commit 16b0a7a1a0af), then 5.16 (commit c5b0a7eefc70), then 5.19 (commit not found yet), then maybe some other commits from 5.19 to 6.12, with a consequence of IPC decrease. Problem still appears on lasts 6.12, 6.13 and 6.14
 
-The implementation of in-band capabilities has broken SFP+ (10GBase-R) mode on my LS1088 board.
-The other ports in the system (QSGMII) work fine.
+Looking at the commit logs, it looks like these commits do solve other
+problems around load balancing and might not be trivial to revert
+without evaluating the damages.
 
-$ dmesg | grep -E (eth8|dpmac2-sfp)
-sfp dpmac2-sfp: module FS               SFPP-AO02        rev B1   sn F1940200586-2    dc 200615
-fsl_dpaa2_eth dpni.1 eth8: autoneg setting not compatible with PCS
-$ sudo ip link set eth8 up
-fsl_dpaa2_eth dpni.1 eth8: configuring for inband/10gbase-r link mode 
-< no link up occurs>
-
-Reverting this exact commit resolves the issue, and the SFP comes up as normal:
-
-fsl_dpaa2_eth dpni.1 eth8: configuring for inband/10gbase-r link mode
-fsl_dpaa2_eth dpni.1 eth8: Link is Up - 10Gbps/Full - flow control off
-
-The changes that were merged into net-next recently ("net: phylink: fix PCS without autoneg") did not resolve this problem.
-
-Obviously, I don't think this particular patch is responsible (but it's what the bisect arrives at). Do you have any suggestions on where to insert some tracing/debug?
-
-Transceiver information:
-        Identifier                                : 0x03 (SFP)
-        Extended identifier                       : 0x04 (GBIC/SFP defined by 2-wire interface ID)
-        Connector                                 : 0x21 (Copper pigtail)
-        Transceiver codes                         : 0x00 0x00 0x00 0x00 0x00 0x08 0x00 0x00 0x00
-        Transceiver type                          : Active Cable
-        Encoding                                  : 0x00 (unspecified)
-        BR, Nominal                               : 10300MBd
-        Rate identifier                           : 0x00 (unspecified)
-        Length (SMF,km)                           : 0km
-        Length (SMF)                              : 0m
-        Length (50um)                             : 0m
-        Length (62.5um)                           : 0m
-        Length (Copper)                           : 3m
-        Length (OM3)                              : 0m
-        Active Cu cmplnce.                        : 0x0c (unknown) [SFF-8472 rev10.4 only]
-        Vendor name                               : FS
-        Vendor OUI                                : 00:17:6a
-        Vendor PN                                 : SFPP-AO02
-        Vendor rev                                : B1
-        Option values                             : 0x00 0x12
-        Option                                    : RX_LOS implemented
-        Option                                    : TX_DISABLE implemented
-        BR margin, max                            : 0%
-        BR margin, min                            : 0%
-        Vendor SN                                 : F1940200586-2
-        Date code                                 : 200615
-
-Passive cables are also affected:
-        Transceiver codes                         : 0x00 0x00 0x00 0x00 0x00 0x04 0x00 0x00 0x00
-        Transceiver type                          : Passive Cable
-
-Best Regards,
-Matt
-
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk <mailto:rmk%2Bkernel@armlinux.org.uk>>
-> ---
-> drivers/net/pcs/pcs-lynx.c | 22 ++++++++++++++++++++++
-> 1 file changed, 22 insertions(+)
 > 
-> diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
-> index b79aedad855b..767a8c0714ac 100644
-> --- a/drivers/net/pcs/pcs-lynx.c
-> +++ b/drivers/net/pcs/pcs-lynx.c
-> @@ -35,6 +35,27 @@ enum sgmii_speed {
-> #define phylink_pcs_to_lynx(pl_pcs) container_of((pl_pcs), struct lynx_pcs, pcs)
-> #define lynx_to_phylink_pcs(lynx) (&(lynx)->pcs)
->  
-> +static unsigned int lynx_pcs_inband_caps(struct phylink_pcs *pcs,
-> + phy_interface_t interface)
-> +{
-> + switch (interface) {
-> + case PHY_INTERFACE_MODE_1000BASEX:
-> + case PHY_INTERFACE_MODE_SGMII:
-> + case PHY_INTERFACE_MODE_QSGMII:
-> + return LINK_INBAND_DISABLE | LINK_INBAND_ENABLE;
-> +
-> + case PHY_INTERFACE_MODE_10GBASER:
-> + case PHY_INTERFACE_MODE_2500BASEX:
-> + return LINK_INBAND_DISABLE;
-> +
-> + case PHY_INTERFACE_MODE_USXGMII:
-> + return LINK_INBAND_ENABLE;
-> +
-> + default:
-> + return 0;
-> + }
-> +}
-> +
-> static void lynx_pcs_get_state_usxgmii(struct mdio_device *pcs,
->        struct phylink_link_state *state)
-> {
-> @@ -306,6 +327,7 @@ static void lynx_pcs_link_up(struct phylink_pcs *pcs, unsigned int neg_mode,
-> }
->  
-> static const struct phylink_pcs_ops lynx_pcs_phylink_ops = {
-> + .pcs_inband_caps = lynx_pcs_inband_caps,
-> .pcs_get_state = lynx_pcs_get_state,
-> .pcs_config = lynx_pcs_config,
-> .pcs_an_restart = lynx_pcs_an_restart,
-> -- 
-> 2.30.2
+> We have reverted both 16b0a7a1a0af and c5b0a7eefc70 commits that reduce our performances (see fair.patch attached, applicable on 6.12.17). Performances increase but still doesnt reach our reference on 5.4.152.
+> 
+> Instead of trying to find every single commits from 5.18 to 6.12 that could decrease our performance, I chosed to bench 5.4.152 versus 6.12.17 with and without fair.patch.
+> 
+> The problem appeared clear : a lot of CPU migrations go out of CCX, then L3 miss, then IPC decrease.
+> 
+> Context of our bench: video decoder which work at a regulated speed, 1 process, 21 main threads, everyone of them creates 10 threads, 8 of them have a fine granularity, meaning they go to sleep quite often, giving the scheduler a lot of opportunities to act).
+> Hardware is an AMD Epyc 7702P, 128 cores, grouped by shared LLC 4 cores +4 hyperthreaded cores. NUMA topology is set by the BIOS to 1 node per socket.
+> Every pthread are created with default attributes.
+> I use AMDuProf (-C -A system -a -m ipc,l1,l2,l3,memory) for CPU Utilization (%), CPU effective freq, IPC, L2 access (pti), L2 miss (pti), L3 miss (absolute) and Mem (GB/s, and perf (stat -d -d -d -a) for Context switches, CPU migrations and Real time (s).
 > 
 > 
+> We noted that upgrade 5.4.152 to 6.12.17 without any special preempt configuration :
+> Two fold increase in CPU migration
+> 30% memory bandwidth increase
+> 20% L3 cache misses increase
+> 10% IPC decrease
+> 
+> With the attached fair.patch applied to 6.12.17 (reminder : this patch reverts one commit appeared in 5.10 and another in 5.16) we managed to reduce CPU migrations and increase IPC but not as much as we had on 5.4.152. Our goal is to keep kernel "clean" without any patch (we don't want to apply and maintain fair.patch) then for the rest of my email we will consider stock kernel 6.12.17.
+> 
+> I've reduced the "sub threads count" to stays below 128 threads. Then still 21 main threads and instead of 10 worker per main thread I set 5 workers (4 of them with fine granularity) giving 105 pthreads -> everything goes fine in 6.12.17, no extra CPU migration, no extra memory bandwidth...
+
+The processor you are running on, the AME EPYC 7702P based on the Zen2
+architecture contains 4 cores / 8 threads per CCX (LLC domain) which is
+perhaps why reducing the thread count to below this limit is helping
+your workload.
+
+What we suspect is that when running the workload, the threads that
+regularly sleep trigger a newidle balancing which causes them to move
+to another CCX leading to higher number of L3 misses.
+
+To confirm this, would it be possible to run the workload with the
+not-yet-upstream perf sched stats [1] tool and share the result from
+perf sched stats diff for the data from v6.12.17 and v6.12.17 + patch
+to rule out any other second order effect.
+
+[1] https://lore.kernel.org/all/20250311120230.61774-1-swapnil.sapkal@amd.com/
+
+> 
+> But as soon as we increase worker threads count (10 instead of 5) the problem appears.
+> 
+> We know our decoder may have too many threads but that's out of our scope, it has been designed like that some years ago and moving from "lot of small threads to few of big thread" is for now not possible.
+> 
+> We have a work around : we group threads using pthread affinities. Every main thread (and by inheritance of affinities every worker threads) on a single CCX so we reduce the L3 miss for them, then decrease memory bandwidth, then finally increasing IPC.
+> 
+> With that solution, we go above our original performances, for both kernels, and they perform at the same level. However, it is impractical to productize as such.
+> 
+> I've tried many kernel build configurations (CONFIG_PREMPT_*, CONFIG_SCHEDULER_*, tuning offair.c:sysctl_sched_migration_cost) on 6.12.17, 6.12.21 (longterm), 6.13.9 (mainline), and 6.14.0 Nothing changes.
+> 
+> Q: Is there anyway to tune the kernel so we can get our performance back without using the pthread affinities work around ?
+
+Assuming you control these deployments, would it possible to run
+the workload on a kernel running with "relax_domain_level=2" kernel
+cmdline that restricts newidle balance to only within the CCX. As a
+side effect, it also limits  task wakeups to the same LLC domain but
+I would still like to know if this makes a difference to the
+workload you are running.
+
+Note: This is a system-wide knob and will affect all workloads
+running on the system and is better used for debug purposes.
+
+-- 
+Thanks and Regards,
+Prateek
+
+> 
+> Feel free to ask an archive containing binaries and payload.
+> 
+> I first posted onhttps://bugzilla.kernel.org/show_bug.cgi?id=220000 but one told me the best way to get answers where these mailing lists
+> 
+> Regards,
+> 
+> 
+> Jean-Baptiste Roquefere, Ateme
+> 
+> 
+> 
+>   Attached bench.tar.gz :
+>   * bench/fair.patch
+>   * bench/bench.ods with 2 sheets :
+>      - regulated : decoder speed is regulated to keep real time constant
+>      - no regul : decoder speed is not regulated and uses from 1 to 76 main threads with 10 worker per main thread
+> * bench/regulated.csv :bench.ods:regulated exported in csv format
+> * bench/not-regulated :bench.ods:no regul exported in csv format
+> 
+
+
