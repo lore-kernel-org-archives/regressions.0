@@ -1,225 +1,211 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BEE2A1D7
-	for <regressions@lists.linux.dev>; Fri, 18 Apr 2025 00:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744937075; cv=fail; b=YqKPTnPYf0rQILKQK4xufHKThWJqQHc6dIdeLAMlQYlFQhsm9a24BEw6AQ5FlKNAJ5QlazHIN7im60epcfozksFSivqwlYyxUQ6AUYax64t+SG5f3mro2pOl+QdLgsk18OTzwQ8f4cz4NuoE5ssRcnRO2YkbbYYn2EFzhaWiX9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744937075; c=relaxed/simple;
-	bh=jnz7ahzEEwghuMaZeeYWWj1KcCN8XSd8ezX1XoFuehY=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q22aVF1RlhLb+5q7LB7jC/nivQdopTCDSmyEFztC1/9sbjaFaxSKKXZtPY/iNEGbia8QPJQ13AMXZRzZjL63Rcfp1jGbNgyFJGzKNvV7x5ShxfWAkLFRLAJecb6Nbjr5PRFzglxMioO+ofEAfXxrOM+F9xze/59j30pMkD7o2oE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WaScAnM5; arc=fail smtp.client-ip=40.107.236.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E7024B26
+	for <regressions@lists.linux.dev>; Fri, 18 Apr 2025 03:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744945471; cv=none; b=SBxNJUdI13DYKKztnqwpkfRPRzwwIHIbha5WSu7hAO6kBQc/UMxqari8E8SwUIy2aOaQc4N6zYFDRpuQ0ryoGEApJBBVw7WaVHTApEjJtxV4DbsdGD8KyWp00/IePouEDz9/6+ckbV/GLUaE8Q9ldP13O/TdUCPp6a6GTKYi8sc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744945471; c=relaxed/simple;
+	bh=eRukUZMe8g68G7MrdAupVSKVP0KA4yLwHp07VM3k6OU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NsxEoEQCY0/yhDF6jGw2ygNpp5t8bi7UK6n98L1spQv3aqCTm06twWuFPYjIhpaOFiIuQNr6KVFIrFiY8i2mNA4XVseAxLJe0di/bnLth8vidyewlel6xG1FTqHUHAHx92foxupQZ6nHPGQtjZx/cdxxigMw/hUW/KFaCVHET9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=DPcZ735f; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TXINkV89; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WaScAnM5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XPkx65oULViMU0EAvLWNQ0CdSXNKhzjBpls2W4qtmUQapp2wCHEtYd8Q6sKO/BRS/MLh1KTnPdJPA9t0kfqbuyTDFhZY/9XqZVZ+CtQwtxpq2J86U55eZR7VFM3ZiTYRN6gcIL44rehtWk3ynTD66El6+l76DpczLigX2pTE/7+JqPvR1hM1yUbYqe3tzQtxF4xafWYg2vsVBbM4MSOtNPg7UcDjoc8HbOOsxZGz5CicsJkCc87mdL68T/eCP4qJq5L/JCCSwITG0ry2AgXP5h22/gQpMl3i8SGox1VxkzKbimBdgjcPBUq8e0HjQRqkWb0UWV7uwvzq1rd7OLu7RA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zj7SA8XTfyliCMtLnN7oHHCsLb2xUOfnYdZUGceuJjE=;
- b=xGGTTRna/oW7p/mYfVo2ikT1P1qXyS3Ek2rng+gp71UpNPcK6YDlNEGe3rc2gZ2Lav0Y/pImYunuMsEBv/IjZ5TnB8gQQ7rTcKQFLM0Xkk/4lBzayHo9i8OqwEStEVfaJhLHiypUovbdPPk8ULLeZWHarA990Sg6pd2rrOh2Xz3jGP2PuM48tXBdEilr43wGgEMPX9wOrRlN7fULuANUNut7Yi7hKWRcIQUMcdTlEZHjBGA4gHAn+s4gV/mJM2wV2TGN8mySz/3OWDj32Q9pRBNNewIVggDURjlR7M4TvluAEEDSaM2QZF7RA0O03kOb4+T2mrb/53qJTKUYc0gt9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zj7SA8XTfyliCMtLnN7oHHCsLb2xUOfnYdZUGceuJjE=;
- b=WaScAnM5Lp809VfsUErHsStuS10k2kxSvuOyRUy6Z/ykK4hXrI11ha/4PXsB11dysDH/iRkkYxZqMUaxczQZTAoei6EV4QHPg/mp6mBFiRc0FCpN6+XYTzsLVihHmn8wFE6mQe03y4iLyldtADGa5X+fiXneoZUZk+IJ0l61Z1c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
- by IA0PR12MB8694.namprd12.prod.outlook.com (2603:10b6:208:488::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
- 2025 00:44:30 +0000
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
- 00:44:30 +0000
-Message-ID: <9205d9b5-498d-4089-84f5-2d561bee48c1@amd.com>
-Date: Thu, 17 Apr 2025 18:44:25 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amd/display: do not copy invalid CRTC timing info
-From: Alex Hung <alex.hung@amd.com>
-To: Gergo Koteles <soyer@irl.hu>, Harry Wentland <harry.wentland@amd.com>,
- Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Tom Chung <chiahsuan.chung@amd.com>, Sunil Khatri <sunil.khatri@amd.com>,
- Aurabindo Pillai <aurabindo.pillai@amd.com>, Hersen Wu
- <hersenxs.wu@amd.com>, Melissa Wen <mwen@igalia.com>,
- Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <24439c13a014e1cd200785db6f3dcf08f4773eb3.1743612701.git.soyer@irl.hu>
- <11d589f0-3671-417f-8911-7bfb3be88802@amd.com>
-Content-Language: en-US
-In-Reply-To: <11d589f0-3671-417f-8911-7bfb3be88802@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQZPR01CA0131.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:87::19) To DM4PR12MB8476.namprd12.prod.outlook.com
- (2603:10b6:8:17e::15)
+	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="DPcZ735f";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TXINkV89"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A5BF81140135;
+	Thu, 17 Apr 2025 23:04:27 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-01.internal (MEProxy); Thu, 17 Apr 2025 23:04:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1744945467; x=1745031867; bh=YSblgLG2ncNrSgO9fePQMpL+vbff589c
+	OtDlv186mZs=; b=DPcZ735fauqwDn4l6FV9Ja/iowDVxmWlu7/KbFPJ9oOsxGS6
+	DTsmFsKziwWTgE1PjHaoPGtjOSrGwyrf4SAE2sK5IQkYkGBuzL/S9RIUWvPq3EVM
+	ICLgYk0wfYxdUd5Cpu5MbZAKhmpvzuMFDYrSHrCkqhxTWkhWqmyEh3un3uHV3RZG
+	nLd2RhZGuDvoFPd/1Jgce60FRwYXIqs7I1mezb+4shVDAZqtzawv6H3ZADLIm1Iz
+	LAvBFWX1Mj0ER54eaPAtFM9HqChAaHEr6mdiakws4fb1o9O4MEWsfhTJdq7NHo02
+	RTF0yxd34QGMDpw/w7m1WJgcIICDmjnHkZ3okw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744945467; x=
+	1745031867; bh=YSblgLG2ncNrSgO9fePQMpL+vbff589cOtDlv186mZs=; b=T
+	XINkV89MvjpG6W6WenXFc4v3Lv5lMy+ow3aLtItofJPRNZFWug26KMuDzp7ijxDi
+	+FhUZESzn199+0yi/auAZEXfA5yIv6Bs5GAsUc1oKVwPiRYvwN3yUgWiNOdKY6uv
+	ZuUgt+c13utxPRde3Ne85Epla12vHIrUugSNtdtQudQm8B12a9wysGtHOaQkFKBO
+	8INjZU6xxNAp/gVYiSfTFsLXuzCyWdHdyCOnjU5eN8HHUwjUPnrDw19I1v6lFlmJ
+	OOF2XYFtuIaRX10G5hWvRG28LBc2bQAdQhPLb+LNTNlr8gTzMVgqK5ULjd0Qvr55
+	TrTzqZqcRubjuhWX/rZKQ==
+X-ME-Sender: <xms:OsEBaMHgkMsL5kkyuQejq0yDb5750G6cstFtjJDOueLE3YKMiXP4Cg>
+    <xme:OsEBaFU0f65B1HjcW8QOGL7kS3vZoPtQPYvsexp_VpXmv6t-hZxfIKXx1ANrxk1Au
+    nVV0GuIvzt3Cj1z3S8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedutdduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfofgrthhhvgifucfotgeurhhiuggvfdcuoehmrghtthesthhrrg
+    hvvghrshgvrdgtohhmrdgruheqnecuggftrfgrthhtvghrnhepvdeitdeufeffheeltddu
+    tddtuddugfdtveffffekvdffvdfhgfejuedtgeeluddtnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrthhtsehtrhgrvhgvrhhsvgdrtgho
+    mhdrrghupdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htoheprhhmkhdokhgvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthht
+    ohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehhkhgrlhhlfi
+    gvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhg
+    lhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthht
+    oheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepihhorghnrgdrtghiohhrnh
+    gvihesnhigphdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:OsEBaGL-6YA5A877Id9It6jAdE2cYDj-3aXBikfdpp7CVOgNqeK4GA>
+    <xmx:OsEBaOHHaOFk61-2FvcbgmUBPwB4h4ceMSesgpQ8Rm796SokgX0u7w>
+    <xmx:OsEBaCUF4boRmsPnLjSWzZNeDMMUgB6KuBoUFGH26nGT2yu88l3C8g>
+    <xmx:OsEBaBMLcRE5WyaZPfUtU4LMlN15AdAQcvKilRdi6QrmqM02YOkFvw>
+    <xmx:O8EBaK7l5K9RrTRzpxV4gr0zcUt8CHIhwwz6GoTyC7r1VuRNzj7czOZ6>
+Feedback-ID: i426947f3:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5BDCB78006B; Thu, 17 Apr 2025 23:04:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|IA0PR12MB8694:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f9f2ad7-3d33-4bd6-28ba-08dd7e122dfe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MHRYL3lWMXBvUGRmRHBrT2FjTms0eVE3eU5rTWZhYWFERzF6T1J4cHFjWmFp?=
- =?utf-8?B?NmFjWjRJanNIandON3ZFSTl2dGxzd2FCZzhrSS9rQVVsdHJvTCtNdkN4Nlo1?=
- =?utf-8?B?azBMYTMwdUhPdTdSbmR4c3RBMXhzQ2VySnhyZHNRWjZIZElsbE93blhkNk05?=
- =?utf-8?B?RTF2VTEyeEpxaXRSSjdUVjJocFZ4UUk4NWVwdGo5N1krR29FZ21YQ3ltc0hL?=
- =?utf-8?B?QmRlSUVLeHRzREx0QnBiMHdCeTdsOUpWb2FuNkJiQ0ZLNnpHM0paUXRtUzlq?=
- =?utf-8?B?aFdhTzFyTnk3a2RSN2hmQWg4enJjd3pSbjFTalN4T1pJNkVRbG9RbkxscDJp?=
- =?utf-8?B?dzc3bFdHcWdKNkpiRFU0ZE5BcVFkZE1xdm1tY0NPck5KT1RlZUF4eGxsUStk?=
- =?utf-8?B?L0N6RmFpSy85L3NrYUZhL1NBQ0h6d1JQRHFPbWdiVSt2U3phNkE3VjBkUkN6?=
- =?utf-8?B?SWxhelh6RjNYMTJkZStXVndSbC9oSCs5clZwWThvVkFDQ0ppZE9oWG9EZEp3?=
- =?utf-8?B?K3l2b3IxaXFiUTNBaW0yR0x3REhtMTRmbE8vUFdoTnRja29zVWp6dDdqZ09z?=
- =?utf-8?B?cDM4VWNadThRK0cwVGQ1RjNYWE0yclZxKzZ0Y2p6U3BIWThFVXVYWmtBMUJR?=
- =?utf-8?B?TWxGdDM4STB0ZEFlVlFNY1BYakIzbjlpMjJwZ3RKdUdHZUo0WkZIdWdRRzh2?=
- =?utf-8?B?R1ErUjZ1MFhiSC9VSytjZlZvQlhlNVp1NUlQYnRiL0dRR1NFZVNET3JQNk1O?=
- =?utf-8?B?c24vOUxEaCs3ZW9iVnY1cForSW1GN1NCY1IzSGJHaVMrQyt4TlFIQVlMOUZQ?=
- =?utf-8?B?YkZaMmdxL0Q4UFhqZ2dlUU9qd3BZaWxoQXVkWS9HSGR1VzNqVFA3NkJvZHBx?=
- =?utf-8?B?UllJdDJ4dlovSW5kTENNV2s3aWJyUGxyUkcvSE4yVnlwSzJ1MkJVcUxHK3lr?=
- =?utf-8?B?WkxQV01yT3kyakxGMFdyUzRZMlpQOUloOE1QUHROSkFFN1E5azlobzhFRWFs?=
- =?utf-8?B?Y0ZhQ3ZLdXZVdkZGckR4Si9aV2dJVFQ1bGpBVTZLdGg2ZTdLZll6aWI2NWhH?=
- =?utf-8?B?a0ZhM1RIdVRjNXo3WTBJMnhkMDRLc3BONUNIbk9QK2RVRHplTzd0cjlGcm9v?=
- =?utf-8?B?ZnBYaElOdWJiKytaU3dtcng3S0w4bEZrVTJialdHa2YrVmh1VEx1Wkc2Qjdk?=
- =?utf-8?B?ZVJPZ2tRVXd3S25naG1vSTVhc1NwQ2xCQ3FKbVJRNFplcHF6N0hNQzRGWXBB?=
- =?utf-8?B?SUZXS0NxbmM4eEY0ZnRmcDdtdDlSKy9wSnRIQjdxZ2p5VmVkQll3WTB2d0RJ?=
- =?utf-8?B?ZW45NUZ5RU55SXJsZFhkOUptVXR5UEtWcGUzdHEvOGswa0psaHFrbkhGN0d5?=
- =?utf-8?B?b3hLeGo3NjZJUC93VFpGWkhnMmE5RHVtMExObXNiNUxWUDF5TWJyZjVJbjVH?=
- =?utf-8?B?ODk4NFRCaG8yRUVVcS9TMlFNS2hQWTZQNTRoTlhmSGYwYndEaFRjUU9LOSs2?=
- =?utf-8?B?RUFuZDByQ0p5VjhqN3ZnRXg4RFRGWGhKYzBFeXNqc1FQVExjaGh3NnZOazNk?=
- =?utf-8?B?eW1QV3lKRzRjaytaQnRKUStSTG5uZFd4NnhLL2dPYXh5cUpNeXA3VHN5UjFx?=
- =?utf-8?B?MHE4ZEpvTXd2KzdzR2Z4S2JEMkpsbUVwQWZBQWJ4dm5Ld3N1TW5tZjF0bGJH?=
- =?utf-8?B?bVJPWDdVMFhNK0ZRS213Um9oN09LV2NXeWI4Njd1OE91L2djakpveElkWlhz?=
- =?utf-8?B?dE1EeUJ6K0V2NU1MNlVxYUNHUkZvMGlTcE1vZU45WXQ0U2owNllDUHdoODEy?=
- =?utf-8?B?WnhycEtMWE12bTZEcVJ6Vm1TSjN6SHB0ZVRNbEtLVU04OHJOTGo5WXhqUXVj?=
- =?utf-8?B?VFZXSnZhdDd0L2sxT0VwTWpGamdDS2pPNlBWSkpvZzRTa2c9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NU1uNUZCY29MVWVwVVhzZ01WbzkrTTlibEgrVWQyOUs2bzV6ZE0xbFdrTFQr?=
- =?utf-8?B?UXo3MS9UdEZ3WC92YnpmMnlMdlZhZlMyajUyL0NHR0lNM0E0SmlaQlVQWENT?=
- =?utf-8?B?ZVpqQURwOWxYQW5YL3l6VllkNmxpVEgySlIwS21HNnRqYSs4eUxwc3dVUnEz?=
- =?utf-8?B?MDBlKzFSOURmR3VaSFdsOWRxU3ArOHB2dmc1T3NYU1JzRExyNUJLMDR0OGhM?=
- =?utf-8?B?UlpNTHVsNjlzQXpUTkFGWm52V1NjK3gyenc2bFQvS2VEWDNYR29zNlJFOTEr?=
- =?utf-8?B?ZGQydXBLclo3cCt3L0ZBQnRmdnFSRDNaVktTYXdmdTdrY1pUZmMzK3dxSExz?=
- =?utf-8?B?enhza2I2UC9BRkRyVEJNMmJWb3Z1N0JDcmZkVlVScE5ZNXJRUHpNM0JxdFo0?=
- =?utf-8?B?K1NYTHlEdkdtd25WejV1TUp0WUF1NUc2MHpCcmFGS29EL21Cd216MUgzK3A2?=
- =?utf-8?B?TEdHM1k2RUIwMFNYL29qWGRUZkx0T0FBZmRpall4RCtsWnBvMWhQWXp1ZW5F?=
- =?utf-8?B?cnE2WnpJM0pVZmJCbDN2cUd2VDdyS2QwVndpdkd2MzhoNkFiUlVQNGk2SE5r?=
- =?utf-8?B?eGFaYnp1OUo3TWhOWkFNekljay9tMS9UWDA5Mnl2VWFtVGRxc0IwNzJEOElq?=
- =?utf-8?B?QWFJM2t0VlBQZ2QyY3FoQzV2a3NPazJPQzlXZlhXeldnVkpSRU5sOWx5VEtJ?=
- =?utf-8?B?WXhvMXh4QXNtdmlpT0RoUUNBTnRjZi94aWQ1Z3RTaElzTUZTTUhHM1ZUZmg2?=
- =?utf-8?B?RTJYdlJOY2V1azJzTVRCbCtaLzVUQUtyL2JOU3ZTdzgwajJKYXpqSjhiUE9N?=
- =?utf-8?B?dVVkeGtPek9iSWYrS3N5L1FsRFVCMWptOVA1UVdHcnNtY3ZkQ3V2M2hsdzhh?=
- =?utf-8?B?cDhRRUNtZFNsUDBURnpoRUZ0dlZvbkQ4WXdHTHdrSnpGbGg2eVRBQ3o0NENh?=
- =?utf-8?B?enFOMUxheXhOSVpuZHNTSVR4Zm1kcmR4WnpDZGZvekxTbnU2UE10dkcyWWhi?=
- =?utf-8?B?ZHBjeE1rSnlFREpjT3hVaGZjaXNHYXN4ZWw1UHR5Ri9hMWRsM3BnWE94V1Vt?=
- =?utf-8?B?RVdhejBkaHc4R0FhSGVJMGQ0UXgxbGo0M2pLcHdseXlaYjJ0d3ZYVUt4eFBq?=
- =?utf-8?B?UXFCUmVpcDN1RFEyVFBNSE5pdWZLaUNzRWxiSnppdnFHMmh3dWtJTWJPRTl1?=
- =?utf-8?B?TTV2MDdBdHZuaDVUd1dDbXZvZ0lQK2U1RzFmaDNRTmdkNXZwZkhMSk9ZQ2ph?=
- =?utf-8?B?NHFTWXl1QzhoVk5ucWY2Ynk4QlVCUWxGSEdHU2YrQTFVVmNEb2hJRThVbW50?=
- =?utf-8?B?bnhuaENvSndTZkNTY2NHK1lpRHdGbkxTTVpqNU5vVFV3WTFNSnRzYzZRemlu?=
- =?utf-8?B?YTFkM3Z1bHk2Sm5rbEtDclJpdzVoSGNGOEpTZzZZUlRmYyswZlQ3V3RSOW82?=
- =?utf-8?B?eGtSeWVvVzBmVVFmL2Q0NUZqNjAzUUFKMXNmNGc0QUFTRHBBdk1EWitvTWx0?=
- =?utf-8?B?MDhDZEFsdDhTRjRLYTc3c05FaW5lTDh4SWw4UkQ4WjM0SE1zQlA4c3dITm9o?=
- =?utf-8?B?ekcyTlRzcmgvbVdxN2FzbTc5b3JqYTJ5b0prdEFPSjkrVVRCL21GQldFQlJj?=
- =?utf-8?B?Ykc1UmNtNlFIaXRaSzBMNThwRTZGV2UrRGU4S1BaYnNvR1JDWkRZQ2E1WkNv?=
- =?utf-8?B?THlyb05yV21pWjZvRVRGcC9qb2tGU1ZMdWtpOC9acWJ6bnpPWVV3OUpnQW1O?=
- =?utf-8?B?Tk1jblFaalNNa25hclF3NkRWckJac1ZiTDFGakVpSmtYRDl2YWpqM09jME5N?=
- =?utf-8?B?cURDY1hZYnk5ZzFPY0RLRnMyVTZneWhzVTkrNVBzRkwyeGl6R0NGMjJsRXZR?=
- =?utf-8?B?YXNYM21YOEMzRlFNZ3FmTjlwYUQ2bWpPMUNYN0ZGZ1pQc2NaSHFldWNGeTdK?=
- =?utf-8?B?TjlRK2pvb0dLZmhEaGhWM3EwWjI2ZlN5anpoYnJ0TkI2ZWRaTUtROW1ZMVhm?=
- =?utf-8?B?YUtSQ0NRT0ZqczJaRzRKU3pQVTcyalUxcnppWnBIUlg0TXlUYXlMa3pvN3Rr?=
- =?utf-8?B?YlA5Vy9nc0lKRENna0JnUW5FR0ZNUGtoUEdYbko0akc5cC9WR0djZi9UK1VI?=
- =?utf-8?Q?SAJRpqt9hFNlsMnMTvgrjDZ6x?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9f2ad7-3d33-4bd6-28ba-08dd7e122dfe
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 00:44:30.4735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Cqmka8TuNNUA5oOVA7/NwiyvhZGQA4FuZWC1zxij3ev8lNeFLNK79b2r4YXJDRPFrH6lssplCh8k3KWENGj+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8694
+Date: Fri, 18 Apr 2025 13:02:19 +1000
+From: "Mathew McBride" <matt@traverse.com.au>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: "Ioana Ciornei" <ioana.ciornei@nxp.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, netdev@vger.kernel.org,
+ "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit" <hkallweit1@gmail.com>,
+ regressions@lists.linux.dev
+Message-Id: <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
+In-Reply-To: <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
+ <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+Subject: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-No issues from promotion tests.
+#regzbot introduced: 6561f0e547be221f411fda5eddfcc5bd8bb058a5
 
-Reviewed-by: Alex Hung <alex.hung@amd.com>
+Hi Russell,
 
-On 4/8/25 10:55, Alex Hung wrote:
-> Hi Gergo,
-> 
-> Thanks for the patch. I am sending this patch for testing and I will 
-> update test result next week.
-> 
-> 
-> On 4/2/25 11:03, Gergo Koteles wrote:
->> Since b255ce4388e0, it is possible that the CRTC timing
->> information for the preferred mode has not yet been
->> calculated while amdgpu_dm_connector_mode_valid() is running.
->>
->> In this case use the CRTC timing information of the actual mode.
->>
->> Fixes: b255ce4388e0 ("drm/amdgpu: don't change mode in 
->> amdgpu_dm_connector_mode_valid()")
->> Closes: https://lore.kernel.org/all/ 
->> ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu/
->> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
->> Signed-off-by: Gergo Koteles <soyer@irl.hu>
->> ---
->>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++++------
->>   1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/ 
->> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> index bae83a129b5f..0eb25cdcb52f 100644
->> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> @@ -6500,12 +6500,12 @@ decide_crtc_timing_for_drm_display_mode(struct 
->> drm_display_mode *drm_mode,
->>                       const struct drm_display_mode *native_mode,
->>                       bool scale_enabled)
->>   {
->> -    if (scale_enabled) {
->> -        copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
->> -    } else if (native_mode->clock == drm_mode->clock &&
->> -            native_mode->htotal == drm_mode->htotal &&
->> -            native_mode->vtotal == drm_mode->vtotal) {
->> -        copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
->> +    if (scale_enabled || (
->> +        native_mode->clock == drm_mode->clock &&
->> +        native_mode->htotal == drm_mode->htotal &&
->> +        native_mode->vtotal == drm_mode->vtotal)) {
->> +        if (native_mode->crtc_clock)
->> +            copy_crtc_timing_for_drm_display_mode(native_mode, 
->> drm_mode);
->>       } else {
->>           /* no scaling nor amdgpu inserted, no need to patch */
->>       }
+On Thu, Dec 5, 2024, at 8:42 PM, Russell King (Oracle) wrote:
+> Report the PCS in-band capabilities to phylink for the Lynx PCS.
 > 
 
+The implementation of in-band capabilities has broken SFP+ (10GBase-R) mode on my LS1088 board.
+The other ports in the system (QSGMII) work fine.
+
+$ dmesg | grep -E (eth8|dpmac2-sfp)
+sfp dpmac2-sfp: module FS               SFPP-AO02        rev B1   sn F1940200586-2    dc 200615
+fsl_dpaa2_eth dpni.1 eth8: autoneg setting not compatible with PCS
+$ sudo ip link set eth8 up
+fsl_dpaa2_eth dpni.1 eth8: configuring for inband/10gbase-r link mode 
+< no link up occurs>
+
+Reverting this exact commit resolves the issue, and the SFP comes up as normal:
+
+fsl_dpaa2_eth dpni.1 eth8: configuring for inband/10gbase-r link mode
+fsl_dpaa2_eth dpni.1 eth8: Link is Up - 10Gbps/Full - flow control off
+
+The changes that were merged into net-next recently ("net: phylink: fix PCS without autoneg") did not resolve this problem.
+
+Obviously, I don't think this particular patch is responsible (but it's what the bisect arrives at). Do you have any suggestions on where to insert some tracing/debug?
+
+Transceiver information:
+        Identifier                                : 0x03 (SFP)
+        Extended identifier                       : 0x04 (GBIC/SFP defined by 2-wire interface ID)
+        Connector                                 : 0x21 (Copper pigtail)
+        Transceiver codes                         : 0x00 0x00 0x00 0x00 0x00 0x08 0x00 0x00 0x00
+        Transceiver type                          : Active Cable
+        Encoding                                  : 0x00 (unspecified)
+        BR, Nominal                               : 10300MBd
+        Rate identifier                           : 0x00 (unspecified)
+        Length (SMF,km)                           : 0km
+        Length (SMF)                              : 0m
+        Length (50um)                             : 0m
+        Length (62.5um)                           : 0m
+        Length (Copper)                           : 3m
+        Length (OM3)                              : 0m
+        Active Cu cmplnce.                        : 0x0c (unknown) [SFF-8472 rev10.4 only]
+        Vendor name                               : FS
+        Vendor OUI                                : 00:17:6a
+        Vendor PN                                 : SFPP-AO02
+        Vendor rev                                : B1
+        Option values                             : 0x00 0x12
+        Option                                    : RX_LOS implemented
+        Option                                    : TX_DISABLE implemented
+        BR margin, max                            : 0%
+        BR margin, min                            : 0%
+        Vendor SN                                 : F1940200586-2
+        Date code                                 : 200615
+
+Passive cables are also affected:
+        Transceiver codes                         : 0x00 0x00 0x00 0x00 0x00 0x04 0x00 0x00 0x00
+        Transceiver type                          : Passive Cable
+
+Best Regards,
+Matt
+
+> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk <mailto:rmk%2Bkernel@armlinux.org.uk>>
+> ---
+> drivers/net/pcs/pcs-lynx.c | 22 ++++++++++++++++++++++
+> 1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+> index b79aedad855b..767a8c0714ac 100644
+> --- a/drivers/net/pcs/pcs-lynx.c
+> +++ b/drivers/net/pcs/pcs-lynx.c
+> @@ -35,6 +35,27 @@ enum sgmii_speed {
+> #define phylink_pcs_to_lynx(pl_pcs) container_of((pl_pcs), struct lynx_pcs, pcs)
+> #define lynx_to_phylink_pcs(lynx) (&(lynx)->pcs)
+>  
+> +static unsigned int lynx_pcs_inband_caps(struct phylink_pcs *pcs,
+> + phy_interface_t interface)
+> +{
+> + switch (interface) {
+> + case PHY_INTERFACE_MODE_1000BASEX:
+> + case PHY_INTERFACE_MODE_SGMII:
+> + case PHY_INTERFACE_MODE_QSGMII:
+> + return LINK_INBAND_DISABLE | LINK_INBAND_ENABLE;
+> +
+> + case PHY_INTERFACE_MODE_10GBASER:
+> + case PHY_INTERFACE_MODE_2500BASEX:
+> + return LINK_INBAND_DISABLE;
+> +
+> + case PHY_INTERFACE_MODE_USXGMII:
+> + return LINK_INBAND_ENABLE;
+> +
+> + default:
+> + return 0;
+> + }
+> +}
+> +
+> static void lynx_pcs_get_state_usxgmii(struct mdio_device *pcs,
+>        struct phylink_link_state *state)
+> {
+> @@ -306,6 +327,7 @@ static void lynx_pcs_link_up(struct phylink_pcs *pcs, unsigned int neg_mode,
+> }
+>  
+> static const struct phylink_pcs_ops lynx_pcs_phylink_ops = {
+> + .pcs_inband_caps = lynx_pcs_inband_caps,
+> .pcs_get_state = lynx_pcs_get_state,
+> .pcs_config = lynx_pcs_config,
+> .pcs_an_restart = lynx_pcs_an_restart,
+> -- 
+> 2.30.2
+> 
+> 
