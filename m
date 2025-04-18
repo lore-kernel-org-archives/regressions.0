@@ -1,312 +1,225 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEE4210184
-	for <regressions@lists.linux.dev>; Thu, 17 Apr 2025 21:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744925883; cv=none; b=cDdXbGLujymOtL+bIv3PtjA9vEAfTxj/NnMNuw3uTIiZjpC0dLqEuXjEaI032jj7jOrmgYAhdqhy3I30lnyJ9KfR/Gwa6Kq7GH66A3OM3eOlD4fjkDlaQ8FVzstTNOzzjyfkJVda7vYqdI5OXJdXZQO2x8EJV8KjQjoodbXhc/Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744925883; c=relaxed/simple;
-	bh=tzlWZV54nvq7k7qCOy227nFZY6CEG+Oz6sPBDx4C3Bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=srHkhxJYtz3QvVFs5lTEk5n+kTH8DNB42OKpIlfvuALrchBoY7PZOJ6yNG8MFs/jq5NYxBonodwuF+BZq66XTR2zZY0a9O7UBe4myKS1SDSQFAK3qBz+KILyubfFU2WljCjmCiyYE44bq+7q4UJkwqDoCAdLGZRj+KFTzPMB8hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F7OO1mJL; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BEE2A1D7
+	for <regressions@lists.linux.dev>; Fri, 18 Apr 2025 00:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744937075; cv=fail; b=YqKPTnPYf0rQILKQK4xufHKThWJqQHc6dIdeLAMlQYlFQhsm9a24BEw6AQ5FlKNAJ5QlazHIN7im60epcfozksFSivqwlYyxUQ6AUYax64t+SG5f3mro2pOl+QdLgsk18OTzwQ8f4cz4NuoE5ssRcnRO2YkbbYYn2EFzhaWiX9U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744937075; c=relaxed/simple;
+	bh=jnz7ahzEEwghuMaZeeYWWj1KcCN8XSd8ezX1XoFuehY=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Q22aVF1RlhLb+5q7LB7jC/nivQdopTCDSmyEFztC1/9sbjaFaxSKKXZtPY/iNEGbia8QPJQ13AMXZRzZjL63Rcfp1jGbNgyFJGzKNvV7x5ShxfWAkLFRLAJecb6Nbjr5PRFzglxMioO+ofEAfXxrOM+F9xze/59j30pMkD7o2oE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WaScAnM5; arc=fail smtp.client-ip=40.107.236.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7OO1mJL"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1029823a12.2
-        for <regressions@lists.linux.dev>; Thu, 17 Apr 2025 14:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744925880; x=1745530680; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vBj2/kJjZAc0LTczWIyJjP2mbls9GBj8W8skvT1H2Do=;
-        b=F7OO1mJL9wZ66RGR/XasqHg4YpN4sedqLuuO6Mlr27gpMDyFrgJ6l5EKYHzw+E/Phq
-         w0CTGP49bWwX2GUvHKw/Trr0NcWhrX68WfYjSwqCl2IIz3PaTOl91h8kgzjQiRa8HLes
-         h1eQwSDVn7Zkls4H0isF0Hc/5LQ5brrIKaUbYtCSvw5TVfApTuOFOqcmzZU3klDp+ZUO
-         e9xhDofsNA2vhSLG7k5W47tAcwwJODDRBBYzquSUh9uwVPBpMIeb3Ja4CxF0ePhawN6F
-         4HAxWYkT2YlcbdtiiJLXvK5/lpj7n+Zj8chIBpEdP21+38XxoGggzqdVjt/6NohTvnQh
-         au4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744925880; x=1745530680;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vBj2/kJjZAc0LTczWIyJjP2mbls9GBj8W8skvT1H2Do=;
-        b=O4KEeRE/1MAPl/tN1/ptT6rC1jWOsKrAEEA9OH1l44pr7gel6pO40TIyFLnM4UMkkI
-         LUyW/CwqpFjyn8ft8/RDrg2xQTOvC3r30km3/FhWyifKoN0X1Tup9iWGX+SsBtaecbUg
-         QJTmPcMz6p5uOaHr6djaRu4AYVCs0zEBPouv9Ua9HNPwWUhT6WgoswmXLfixMQs31vpF
-         Oo1GWRaZKH6GK8EQpn20gCdEkAtykUBtmlRtYKODXcpvi2/bEKv/26A6yCD0ocPYUK53
-         bFjrrqRdtrsmyi7BWc0eY+PGw7GFKu/R0R7Fi3GEt8rCuyVxiaJHVs8ku3dRRP+LBIVj
-         yvuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYfr8a9QFjHAT1TkvUj54OrFicgaREKa4f2m3l2bvFgZhlhXujMh+szEFbHQCvpNWTG3wTq9D2Pjr5gw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwsgiuU9OVV031RsDHMkRTM5U1suXLUnUBv+7oHTn8VYG0TXgMs
-	8ruGFvqdh6tFQjqvMSpdbciZu6/6uWOT0qyEa4CD2JCqe1dsjDye
-X-Gm-Gg: ASbGncsEK5z0i3nPx8qyefTs+K6/j7zWFHiaiFBPYmGShDvRxVGd09Rdc9eX8vMmvqm
-	8x1M3SS2N3czQf6vw7x0uUY+cAixBy5hvzaEPhhUAa5h6jxVORhpG0WQJH3DQYh2jEdD/BhcBX/
-	w3GO0I2V31CZN+j86vKBLu+hTG6VeJgB0cdVLqybGayaVzXkO4kBdSW6xWuZ65ViIEaFY87FC+W
-	6LziQ1VKM4XR8n7dyElNKTEDMCmWfifgk6rgZL9i+1Ua3UIGH93rOgOXC2V/GkIlwz7jfxr+cLF
-	ArPLMN0qCq7JlHb/GBDkc1//CSpmAGk6Tyfm8MNi
-X-Google-Smtp-Source: AGHT+IEj4cKNj6pZzHTBWAFPlLteT9Jrfl++FjZLlHoITXPgnwrKfG3J44foQntdOLt/7QC3M9XG2g==
-X-Received: by 2002:a17:903:3c6b:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22c535b45b5mr8403775ad.24.1744925880317;
-        Thu, 17 Apr 2025 14:38:00 -0700 (PDT)
-Received: from hiago-nb ([2804:1b3:a7c3:a964:24cf:3c01:baa2:fe97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087bb53b4esm189024a91.17.2025.04.17.14.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 14:37:59 -0700 (PDT)
-Date: Thu, 17 Apr 2025 18:37:55 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
- Cortex-M4 is running and it was started by U-Boot bootaux
-Message-ID: <20250417213755.zqimyf7sqsypydpz@hiago-nb>
-References: <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
- <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
- <PAXPR04MB8459ED33238AA790252E730988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250414224452.gk4ccniqtumfbjth@hiago-nb>
- <PAXPR04MB84591C4D560C0D3D64F927FC88B22@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250415184009.2fvtn7tbe6uzwiyg@hiago-nb>
- <PAXPR04MB84596E1E47CDE57ADCE9B40F88BD2@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250416215744.6c57a3oqgt6zkeew@hiago-nb>
- <PAXPR04MB8459C8C64D90F1224C1C189088BC2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WaScAnM5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XPkx65oULViMU0EAvLWNQ0CdSXNKhzjBpls2W4qtmUQapp2wCHEtYd8Q6sKO/BRS/MLh1KTnPdJPA9t0kfqbuyTDFhZY/9XqZVZ+CtQwtxpq2J86U55eZR7VFM3ZiTYRN6gcIL44rehtWk3ynTD66El6+l76DpczLigX2pTE/7+JqPvR1hM1yUbYqe3tzQtxF4xafWYg2vsVBbM4MSOtNPg7UcDjoc8HbOOsxZGz5CicsJkCc87mdL68T/eCP4qJq5L/JCCSwITG0ry2AgXP5h22/gQpMl3i8SGox1VxkzKbimBdgjcPBUq8e0HjQRqkWb0UWV7uwvzq1rd7OLu7RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Zj7SA8XTfyliCMtLnN7oHHCsLb2xUOfnYdZUGceuJjE=;
+ b=xGGTTRna/oW7p/mYfVo2ikT1P1qXyS3Ek2rng+gp71UpNPcK6YDlNEGe3rc2gZ2Lav0Y/pImYunuMsEBv/IjZ5TnB8gQQ7rTcKQFLM0Xkk/4lBzayHo9i8OqwEStEVfaJhLHiypUovbdPPk8ULLeZWHarA990Sg6pd2rrOh2Xz3jGP2PuM48tXBdEilr43wGgEMPX9wOrRlN7fULuANUNut7Yi7hKWRcIQUMcdTlEZHjBGA4gHAn+s4gV/mJM2wV2TGN8mySz/3OWDj32Q9pRBNNewIVggDURjlR7M4TvluAEEDSaM2QZF7RA0O03kOb4+T2mrb/53qJTKUYc0gt9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zj7SA8XTfyliCMtLnN7oHHCsLb2xUOfnYdZUGceuJjE=;
+ b=WaScAnM5Lp809VfsUErHsStuS10k2kxSvuOyRUy6Z/ykK4hXrI11ha/4PXsB11dysDH/iRkkYxZqMUaxczQZTAoei6EV4QHPg/mp6mBFiRc0FCpN6+XYTzsLVihHmn8wFE6mQe03y4iLyldtADGa5X+fiXneoZUZk+IJ0l61Z1c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
+ by IA0PR12MB8694.namprd12.prod.outlook.com (2603:10b6:208:488::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 18 Apr
+ 2025 00:44:30 +0000
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8655.022; Fri, 18 Apr 2025
+ 00:44:30 +0000
+Message-ID: <9205d9b5-498d-4089-84f5-2d561bee48c1@amd.com>
+Date: Thu, 17 Apr 2025 18:44:25 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amd/display: do not copy invalid CRTC timing info
+From: Alex Hung <alex.hung@amd.com>
+To: Gergo Koteles <soyer@irl.hu>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Tom Chung <chiahsuan.chung@amd.com>, Sunil Khatri <sunil.khatri@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>, Hersen Wu
+ <hersenxs.wu@amd.com>, Melissa Wen <mwen@igalia.com>,
+ Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <24439c13a014e1cd200785db6f3dcf08f4773eb3.1743612701.git.soyer@irl.hu>
+ <11d589f0-3671-417f-8911-7bfb3be88802@amd.com>
+Content-Language: en-US
+In-Reply-To: <11d589f0-3671-417f-8911-7bfb3be88802@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQZPR01CA0131.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:87::19) To DM4PR12MB8476.namprd12.prod.outlook.com
+ (2603:10b6:8:17e::15)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB8459C8C64D90F1224C1C189088BC2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|IA0PR12MB8694:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f9f2ad7-3d33-4bd6-28ba-08dd7e122dfe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MHRYL3lWMXBvUGRmRHBrT2FjTms0eVE3eU5rTWZhYWFERzF6T1J4cHFjWmFp?=
+ =?utf-8?B?NmFjWjRJanNIandON3ZFSTl2dGxzd2FCZzhrSS9rQVVsdHJvTCtNdkN4Nlo1?=
+ =?utf-8?B?azBMYTMwdUhPdTdSbmR4c3RBMXhzQ2VySnhyZHNRWjZIZElsbE93blhkNk05?=
+ =?utf-8?B?RTF2VTEyeEpxaXRSSjdUVjJocFZ4UUk4NWVwdGo5N1krR29FZ21YQ3ltc0hL?=
+ =?utf-8?B?QmRlSUVLeHRzREx0QnBiMHdCeTdsOUpWb2FuNkJiQ0ZLNnpHM0paUXRtUzlq?=
+ =?utf-8?B?aFdhTzFyTnk3a2RSN2hmQWg4enJjd3pSbjFTalN4T1pJNkVRbG9RbkxscDJp?=
+ =?utf-8?B?dzc3bFdHcWdKNkpiRFU0ZE5BcVFkZE1xdm1tY0NPck5KT1RlZUF4eGxsUStk?=
+ =?utf-8?B?L0N6RmFpSy85L3NrYUZhL1NBQ0h6d1JQRHFPbWdiVSt2U3phNkE3VjBkUkN6?=
+ =?utf-8?B?SWxhelh6RjNYMTJkZStXVndSbC9oSCs5clZwWThvVkFDQ0ppZE9oWG9EZEp3?=
+ =?utf-8?B?K3l2b3IxaXFiUTNBaW0yR0x3REhtMTRmbE8vUFdoTnRja29zVWp6dDdqZ09z?=
+ =?utf-8?B?cDM4VWNadThRK0cwVGQ1RjNYWE0yclZxKzZ0Y2p6U3BIWThFVXVYWmtBMUJR?=
+ =?utf-8?B?TWxGdDM4STB0ZEFlVlFNY1BYakIzbjlpMjJwZ3RKdUdHZUo0WkZIdWdRRzh2?=
+ =?utf-8?B?R1ErUjZ1MFhiSC9VSytjZlZvQlhlNVp1NUlQYnRiL0dRR1NFZVNET3JQNk1O?=
+ =?utf-8?B?c24vOUxEaCs3ZW9iVnY1cForSW1GN1NCY1IzSGJHaVMrQyt4TlFIQVlMOUZQ?=
+ =?utf-8?B?YkZaMmdxL0Q4UFhqZ2dlUU9qd3BZaWxoQXVkWS9HSGR1VzNqVFA3NkJvZHBx?=
+ =?utf-8?B?UllJdDJ4dlovSW5kTENNV2s3aWJyUGxyUkcvSE4yVnlwSzJ1MkJVcUxHK3lr?=
+ =?utf-8?B?WkxQV01yT3kyakxGMFdyUzRZMlpQOUloOE1QUHROSkFFN1E5azlobzhFRWFs?=
+ =?utf-8?B?Y0ZhQ3ZLdXZVdkZGckR4Si9aV2dJVFQ1bGpBVTZLdGg2ZTdLZll6aWI2NWhH?=
+ =?utf-8?B?a0ZhM1RIdVRjNXo3WTBJMnhkMDRLc3BONUNIbk9QK2RVRHplTzd0cjlGcm9v?=
+ =?utf-8?B?ZnBYaElOdWJiKytaU3dtcng3S0w4bEZrVTJialdHa2YrVmh1VEx1Wkc2Qjdk?=
+ =?utf-8?B?ZVJPZ2tRVXd3S25naG1vSTVhc1NwQ2xCQ3FKbVJRNFplcHF6N0hNQzRGWXBB?=
+ =?utf-8?B?SUZXS0NxbmM4eEY0ZnRmcDdtdDlSKy9wSnRIQjdxZ2p5VmVkQll3WTB2d0RJ?=
+ =?utf-8?B?ZW45NUZ5RU55SXJsZFhkOUptVXR5UEtWcGUzdHEvOGswa0psaHFrbkhGN0d5?=
+ =?utf-8?B?b3hLeGo3NjZJUC93VFpGWkhnMmE5RHVtMExObXNiNUxWUDF5TWJyZjVJbjVH?=
+ =?utf-8?B?ODk4NFRCaG8yRUVVcS9TMlFNS2hQWTZQNTRoTlhmSGYwYndEaFRjUU9LOSs2?=
+ =?utf-8?B?RUFuZDByQ0p5VjhqN3ZnRXg4RFRGWGhKYzBFeXNqc1FQVExjaGh3NnZOazNk?=
+ =?utf-8?B?eW1QV3lKRzRjaytaQnRKUStSTG5uZFd4NnhLL2dPYXh5cUpNeXA3VHN5UjFx?=
+ =?utf-8?B?MHE4ZEpvTXd2KzdzR2Z4S2JEMkpsbUVwQWZBQWJ4dm5Ld3N1TW5tZjF0bGJH?=
+ =?utf-8?B?bVJPWDdVMFhNK0ZRS213Um9oN09LV2NXeWI4Njd1OE91L2djakpveElkWlhz?=
+ =?utf-8?B?dE1EeUJ6K0V2NU1MNlVxYUNHUkZvMGlTcE1vZU45WXQ0U2owNllDUHdoODEy?=
+ =?utf-8?B?WnhycEtMWE12bTZEcVJ6Vm1TSjN6SHB0ZVRNbEtLVU04OHJOTGo5WXhqUXVj?=
+ =?utf-8?B?VFZXSnZhdDd0L2sxT0VwTWpGamdDS2pPNlBWSkpvZzRTa2c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NU1uNUZCY29MVWVwVVhzZ01WbzkrTTlibEgrVWQyOUs2bzV6ZE0xbFdrTFQr?=
+ =?utf-8?B?UXo3MS9UdEZ3WC92YnpmMnlMdlZhZlMyajUyL0NHR0lNM0E0SmlaQlVQWENT?=
+ =?utf-8?B?ZVpqQURwOWxYQW5YL3l6VllkNmxpVEgySlIwS21HNnRqYSs4eUxwc3dVUnEz?=
+ =?utf-8?B?MDBlKzFSOURmR3VaSFdsOWRxU3ArOHB2dmc1T3NYU1JzRExyNUJLMDR0OGhM?=
+ =?utf-8?B?UlpNTHVsNjlzQXpUTkFGWm52V1NjK3gyenc2bFQvS2VEWDNYR29zNlJFOTEr?=
+ =?utf-8?B?ZGQydXBLclo3cCt3L0ZBQnRmdnFSRDNaVktTYXdmdTdrY1pUZmMzK3dxSExz?=
+ =?utf-8?B?enhza2I2UC9BRkRyVEJNMmJWb3Z1N0JDcmZkVlVScE5ZNXJRUHpNM0JxdFo0?=
+ =?utf-8?B?K1NYTHlEdkdtd25WejV1TUp0WUF1NUc2MHpCcmFGS29EL21Cd216MUgzK3A2?=
+ =?utf-8?B?TEdHM1k2RUIwMFNYL29qWGRUZkx0T0FBZmRpall4RCtsWnBvMWhQWXp1ZW5F?=
+ =?utf-8?B?cnE2WnpJM0pVZmJCbDN2cUd2VDdyS2QwVndpdkd2MzhoNkFiUlVQNGk2SE5r?=
+ =?utf-8?B?eGFaYnp1OUo3TWhOWkFNekljay9tMS9UWDA5Mnl2VWFtVGRxc0IwNzJEOElq?=
+ =?utf-8?B?QWFJM2t0VlBQZ2QyY3FoQzV2a3NPazJPQzlXZlhXeldnVkpSRU5sOWx5VEtJ?=
+ =?utf-8?B?WXhvMXh4QXNtdmlpT0RoUUNBTnRjZi94aWQ1Z3RTaElzTUZTTUhHM1ZUZmg2?=
+ =?utf-8?B?RTJYdlJOY2V1azJzTVRCbCtaLzVUQUtyL2JOU3ZTdzgwajJKYXpqSjhiUE9N?=
+ =?utf-8?B?dVVkeGtPek9iSWYrS3N5L1FsRFVCMWptOVA1UVdHcnNtY3ZkQ3V2M2hsdzhh?=
+ =?utf-8?B?cDhRRUNtZFNsUDBURnpoRUZ0dlZvbkQ4WXdHTHdrSnpGbGg2eVRBQ3o0NENh?=
+ =?utf-8?B?enFOMUxheXhOSVpuZHNTSVR4Zm1kcmR4WnpDZGZvekxTbnU2UE10dkcyWWhi?=
+ =?utf-8?B?ZHBjeE1rSnlFREpjT3hVaGZjaXNHYXN4ZWw1UHR5Ri9hMWRsM3BnWE94V1Vt?=
+ =?utf-8?B?RVdhejBkaHc4R0FhSGVJMGQ0UXgxbGo0M2pLcHdseXlaYjJ0d3ZYVUt4eFBq?=
+ =?utf-8?B?UXFCUmVpcDN1RFEyVFBNSE5pdWZLaUNzRWxiSnppdnFHMmh3dWtJTWJPRTl1?=
+ =?utf-8?B?TTV2MDdBdHZuaDVUd1dDbXZvZ0lQK2U1RzFmaDNRTmdkNXZwZkhMSk9ZQ2ph?=
+ =?utf-8?B?NHFTWXl1QzhoVk5ucWY2Ynk4QlVCUWxGSEdHU2YrQTFVVmNEb2hJRThVbW50?=
+ =?utf-8?B?bnhuaENvSndTZkNTY2NHK1lpRHdGbkxTTVpqNU5vVFV3WTFNSnRzYzZRemlu?=
+ =?utf-8?B?YTFkM3Z1bHk2Sm5rbEtDclJpdzVoSGNGOEpTZzZZUlRmYyswZlQ3V3RSOW82?=
+ =?utf-8?B?eGtSeWVvVzBmVVFmL2Q0NUZqNjAzUUFKMXNmNGc0QUFTRHBBdk1EWitvTWx0?=
+ =?utf-8?B?MDhDZEFsdDhTRjRLYTc3c05FaW5lTDh4SWw4UkQ4WjM0SE1zQlA4c3dITm9o?=
+ =?utf-8?B?ekcyTlRzcmgvbVdxN2FzbTc5b3JqYTJ5b0prdEFPSjkrVVRCL21GQldFQlJj?=
+ =?utf-8?B?Ykc1UmNtNlFIaXRaSzBMNThwRTZGV2UrRGU4S1BaYnNvR1JDWkRZQ2E1WkNv?=
+ =?utf-8?B?THlyb05yV21pWjZvRVRGcC9qb2tGU1ZMdWtpOC9acWJ6bnpPWVV3OUpnQW1O?=
+ =?utf-8?B?Tk1jblFaalNNa25hclF3NkRWckJac1ZiTDFGakVpSmtYRDl2YWpqM09jME5N?=
+ =?utf-8?B?cURDY1hZYnk5ZzFPY0RLRnMyVTZneWhzVTkrNVBzRkwyeGl6R0NGMjJsRXZR?=
+ =?utf-8?B?YXNYM21YOEMzRlFNZ3FmTjlwYUQ2bWpPMUNYN0ZGZ1pQc2NaSHFldWNGeTdK?=
+ =?utf-8?B?TjlRK2pvb0dLZmhEaGhWM3EwWjI2ZlN5anpoYnJ0TkI2ZWRaTUtROW1ZMVhm?=
+ =?utf-8?B?YUtSQ0NRT0ZqczJaRzRKU3pQVTcyalUxcnppWnBIUlg0TXlUYXlMa3pvN3Rr?=
+ =?utf-8?B?YlA5Vy9nc0lKRENna0JnUW5FR0ZNUGtoUEdYbko0akc5cC9WR0djZi9UK1VI?=
+ =?utf-8?Q?SAJRpqt9hFNlsMnMTvgrjDZ6x?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9f2ad7-3d33-4bd6-28ba-08dd7e122dfe
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2025 00:44:30.4735
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Cqmka8TuNNUA5oOVA7/NwiyvhZGQA4FuZWC1zxij3ev8lNeFLNK79b2r4YXJDRPFrH6lssplCh8k3KWENGj+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8694
 
-Hi Peng,
+No issues from promotion tests.
 
-On Thu, Apr 17, 2025 at 02:46:46AM +0000, Peng Fan wrote:
-> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
-> > when Cortex-M4 is running and it was started by U-Boot bootaux
-> >
-> > Hi Peng,
-> >
-> > On Wed, Apr 16, 2025 at 08:19:27AM +0000, Peng Fan wrote:
-> > > > Got it, I was able to make it work with the downstream pingpong
-> > > > driver and the MCUXpresso demo. I can launch the firmware using
-> > the
-> > > > remoteproc and exchange data between the two cores.
-> > > >
-> > > > There is something I noticed, when I start the pingpong demo with
-> > U-
-> > > > Boot, it does not work. I run the pingpong modprobe on Linux but
-> > the
-> > > > name service is never annouced. It only works if I start with the
-> > > > remoteproc on Linux, not U-Boot. Is this because of Linux not being
-> > > > able to control the M4?
-> > >
-> > > No. In you case, you could start using remoteproc, that means Linux
-> > > could control M4.
-> > >
-> > > >
-> > > > If I start the binary using U-Boot, the "state" always report as
-> > "offline"
-> > > > by the remoteproc driver.
-> > >
-> > > In drivers/remoteproc/imx_rproc.c,  imx_rproc_detect_mode case
-> > > IMX_RPROC_SCU_API is used for detect mode of M4 for i.MX8Q/X
-> > platform.
-> > > Please give a look where it returns.
-> > >
-> > > For U-Boot start m4, linux should remote state: "attached"
-> >
-> > Ok, in this case looks its does not work. I start the firmware with U-
-> > Boot and state is always "offline". Inside the IMX_RPROC_SCU_API case,
-> > the function returns at this point:
-> >
-> > 		...
-> > 		/*
-> > 		 * If Mcore resource is not owned by Acore partition, It
-> > is kicked by ROM,
-> > 		 * and Linux could only do IPC with Mcore and
-> > nothing else.
-> > 		 */
-> > 		if (imx_sc_rm_is_resource_owned(priv->ipc_handle,
-> > priv->rsrc_id)) {
-> > 			if (of_property_read_u32(dev->of_node,
-> > "fsl,entry-address", &priv->entry))
-> > 				return -EINVAL;
-> >
-> > 			return imx_rproc_attach_pd(priv); // <--
-> > Returns here
-> > 		...
-> >
-> > And this function, imx_rproc_attach_pd, returns 0 at the end:
-> >
-> > 	...
-> > 	return 0; // <-- Returns here at the end
->
->         ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
->         return ret < 0 ? ret : 0;
->
-> It should return with ret as 0.
-> Because you mentioned you added two entries.
-> 		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-> 				<&pd IMX_SC_R_M4_0_MU_1A>;
->
-> https://lore.kernel.org/all/20250411162328.y2kchvdb4v4xi2lj@hiago-nb/
->
->
-> >
-> > detach_pd:
-> > 	while (--i >= 0) {
-> > 	...
->
-> It should not runs into detach_pd, where it fails?
->
-> >
-> > So looks like in this case the partition is *not* owned by the A core, it
-> > is still being owned by the Mcore and I can not attach.
->
-> No. It is owned, because imx_sc_rm_is_resource_owned returns
-> true from what you said above.
->
-> >
-> > For debugging purposes, I did the following patch, inverting the logic:
-> >
-> > diff --git a/drivers/remoteproc/imx_rproc.c
-> > b/drivers/remoteproc/imx_rproc.c index 592a34cfa75e..2fcc9086e916
-> > 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -1072,7 +1072,7 @@ static int imx_rproc_detect_mode(struct
-> > imx_rproc *priv)
-> >                  * If Mcore resource is not owned by Acore partition, It is
-> > kicked by ROM,
-> >                  * and Linux could only do IPC with Mcore and nothing else.
-> >                  */
-> > -               if (imx_sc_rm_is_resource_owned(priv->ipc_handle, priv-
-> > >rsrc_id)) {
-> > +               if (!imx_sc_rm_is_resource_owned(priv->ipc_handle,
-> > + priv->rsrc_id)) {
-> >                         if (of_property_read_u32(dev->of_node, "fsl,entry-
-> > address", &priv->entry))
-> >                                 return -EINVAL;
->
-> Please no.
->
-> >
-> > And now the remoteproc driver attaches to the MCore succesfully,
-> > which is exactly what I want. However less than one second later the
-> > kernel reboot with the "SCFW fault reset" again.
->
-> The resources used by M4 are unexpectedly shutdown by Linux,
-> as I understand.
->
-> Please check imx_rproc_attach_pd, it should return success
-> with dev_pm_domain_attach_list return 0.
+Reviewed-by: Alex Hung <alex.hung@amd.com>
 
-I was able to debug this issue further. The issue is not with the power
-domains and the clock, these were solved by using the correct device
-tree and by using the optional clk api:
+On 4/8/25 10:55, Alex Hung wrote:
+> Hi Gergo,
+> 
+> Thanks for the patch. I am sending this patch for testing and I will 
+> update test result next week.
+> 
+> 
+> On 4/2/25 11:03, Gergo Koteles wrote:
+>> Since b255ce4388e0, it is possible that the CRTC timing
+>> information for the preferred mode has not yet been
+>> calculated while amdgpu_dm_connector_mode_valid() is running.
+>>
+>> In this case use the CRTC timing information of the actual mode.
+>>
+>> Fixes: b255ce4388e0 ("drm/amdgpu: don't change mode in 
+>> amdgpu_dm_connector_mode_valid()")
+>> Closes: https://lore.kernel.org/all/ 
+>> ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu/
+>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4085
+>> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+>> ---
+>>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++++------
+>>   1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/ 
+>> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> index bae83a129b5f..0eb25cdcb52f 100644
+>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> @@ -6500,12 +6500,12 @@ decide_crtc_timing_for_drm_display_mode(struct 
+>> drm_display_mode *drm_mode,
+>>                       const struct drm_display_mode *native_mode,
+>>                       bool scale_enabled)
+>>   {
+>> -    if (scale_enabled) {
+>> -        copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+>> -    } else if (native_mode->clock == drm_mode->clock &&
+>> -            native_mode->htotal == drm_mode->htotal &&
+>> -            native_mode->vtotal == drm_mode->vtotal) {
+>> -        copy_crtc_timing_for_drm_display_mode(native_mode, drm_mode);
+>> +    if (scale_enabled || (
+>> +        native_mode->clock == drm_mode->clock &&
+>> +        native_mode->htotal == drm_mode->htotal &&
+>> +        native_mode->vtotal == drm_mode->vtotal)) {
+>> +        if (native_mode->crtc_clock)
+>> +            copy_crtc_timing_for_drm_display_mode(native_mode, 
+>> drm_mode);
+>>       } else {
+>>           /* no scaling nor amdgpu inserted, no need to patch */
+>>       }
+> 
 
-@@ -1033,7 +1034,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-        if (dcfg->method == IMX_RPROC_NONE)
-                return 0;
-
--       priv->clk = devm_clk_get(dev, NULL);
-+       priv->clk = devm_clk_get_optional(dev, NULL);
-        if (IS_ERR(priv->clk)) {
-                dev_err(dev, "Failed to get clock\n");
-                return PTR_ERR(priv->clk);
-
-And the device tree node:
-
-	imx8x-cm4 {
-		compatible = "fsl,imx8qxp-cm4";
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu5 0 1
-			  &lsio_mu5 1 1
-			  &lsio_mu5 3 1>;
-		memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
-				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-				<&pd IMX_SC_R_M4_0_MU_1A>;
-		fsl,entry-address = <0x34fe0000>;
-		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
-	};
-
-The issue is: the .attach callback is never called when then code was
-started by U-Boot bootaux. It should be called inside rproc_validate()
-function from remoteproc_core.c. However, the rproc->state when we reach
-this function is RPROC_OFFLINE, which causes the state to be always
-(obviously) offline.
-
-In imx_rproc.c driver, imx_rproc_detect_mode() returns at
-
-		/*
-		 * If Mcore resource is not owned by Acore partition, It is kicked by ROM,
-		 * and Linux could only do IPC with Mcore and nothing else.
-		 */
-		if (imx_sc_rm_is_resource_owned(priv->ipc_handle, priv->rsrc_id)) {
-			if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
-				return -EINVAL;
-
-			return imx_rproc_attach_pd(priv);
-		}
-
-imx_sc_rm_is_resource_owned() returns 1, as M4 is owned by Linux, and
-imx_rproc_attach_pd() returns 0, as both power domains are set. This
-happens _before_ "priv->rproc->state = RPROC_DETACHED" is set one line
-below, which causes the state to be always offline and the .attach
-callback not called. For debugging, this patch solves this issue:
-
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 74299af1d7f1..b5af44a5d542 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -949,6 +949,7 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
-                        if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
-                                return -EINVAL;
-
-+                       priv->rproc->state = RPROC_DETACHED;
-                        return imx_rproc_attach_pd(priv);
-                }
-
-With that, the running M4 is attached succesfully:
-
-root@colibri-imx8x-07308754:~# dmesg | grep remote
-[    0.481561] remoteproc remoteproc0: imx-rproc is available
-[    0.481656] remoteproc remoteproc0: attaching to imx-rproc
-[    0.481743] remoteproc remoteproc0: remote processor imx-rproc is now attached
-
-But as you know, this is not the correct solution, because this will
-also attach when the M4 is _not_ running, since it will be owned by
-Linux without any code running, which I think is wrong... I think this
-"if" statement is not fully correct, there must be a way to attach to
-the running M4. Any ideas or suggestions to fix this part?
-
->
-> Regards,
-> Peng
->
-> >
-> > Do you know what could be the issue in this case? Maybe the
-> > partitions are not yet correct?
-> >
-> > >
-> > > Regards,
-> > > Peng.
-> >
-> > Cheers,
-> > Hiago.
-
-Cheers,
-Hiago.
