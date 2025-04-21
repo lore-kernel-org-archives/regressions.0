@@ -1,186 +1,188 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140C6264A9E
-	for <regressions@lists.linux.dev>; Mon, 21 Apr 2025 13:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5801EB193
+	for <regressions@lists.linux.dev>; Mon, 21 Apr 2025 19:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745242099; cv=none; b=G4qYppFdTsKhAY30corqFKUgIT4esONsDmWMH24SbyLmQj7cTmuLJwAKSA3D945M+C1zseQYTuUY7Fg2Qk1b9Mktt989ch86U+jDGgW6JstS6aNNSb5cohTYuR78mOF/778BkYIr+MW0uu4ue0w9vukvMJGE4o1HDADi91fTZVs=
+	t=1745262372; cv=none; b=J6+FsT43XxVt66pfO8WP9WulDCEdO2ENtsFli5sKd09kfFdzvQD8R7Im4EQadVBKUr1+2UcCAJez3m9w1Su8WbI4Ox9knBcuQsh9Ak/xcBY/7iBYZ7VwowREInprKxp4zUUowQFYETQWh2bBwkO7R63FOmBXRRRJ2VajjCGYqkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745242099; c=relaxed/simple;
-	bh=UW4KfkqVjMFvjVYxl8fSH0s9vr14x9srzxS09ro5CHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OYWK6FyUyzufAwcE2/Ju84YF4bf8P1TH7UhzSKGj6lP7tkqf5Kc0OGQBH3qgRcymW0Gd9Fq7NwRl6lEDYg79D9QCcMQT5vwZdMn7ACn8/UN5uU7kUXzN/z3qIxlvLuQHyLzQKELtbV0nFuTCEBq0ShDMj7AmMK2YlohgmN6cejE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=BBCtm0r2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IsHkOrr1; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1745262372; c=relaxed/simple;
+	bh=vTKRaKFRv9kn3SC+rgDREeTrII8g8FovnKvl8R6ktrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aopoJGlAARv7b63vOFs5yqLPnHJ/c4rscrGDvLhIrGoROzV8PnLIuxW/JCjTh26dNQB80k2cZrcs9xKnnmcNiMCTNx6MHhhekdDthHrgDlroNuCFCVvDm0m+L6WmDGEScLbEprlSZlIQ6YTXJw6eieRQUEFs1j6qPwL3QXmEWdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=kER7spcG; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="BBCtm0r2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IsHkOrr1"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 2EF6913801E1;
-	Mon, 21 Apr 2025 09:28:17 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 21 Apr 2025 09:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745242097;
-	 x=1745328497; bh=0qVkw3Shy50bKVumUVEOY0hrPGUdQGC9Px7ESgUdwPI=; b=
-	BBCtm0r21NtdT/wx7sN6S5nvF196m6MHLg778hwYFYxru1XxmE9GRjwCR32vfYRQ
-	rsBT6hwdRFwrDZILrlmO0o8/fLc1j1A+FG4rWW8mQBSrICcTmBUxbJpWa7Wh0zDf
-	DCmbESiUWqvJHXBPryXEEU+GXKjX2obVEsjTU2xoAaK4yrl3RHus+Y86Lbcpdp63
-	1A46dnrM5RZAn+tWN3g0EWNvzpQy2d155f44gr2NVP7h/lxsIcpdF6BJvaAgXDHR
-	oclUqTX5C+Mxwrh6zk4m1GHrlPbkmaTa94yUyLr1LQU1zaJwUR5t/FQ1OZBVLnv1
-	60HBXlgyIc7rraxGpEuTug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1745242097; x=1745328497; bh=0qVkw3Shy50bKVumUVEOY0hrPGUdQGC9Px7
-	ESgUdwPI=; b=IsHkOrr1D9U44QgLYMugomS5SZH2D/6JiOmoUSK7JAslfQ3I9Fs
-	cbfBjJjADNpu/ec/96xTVHwCtZ62/EUAiiM9aLA9vG/i3B3KVT/X6t9aD1TnfmSe
-	EfxGqd+Q4dhXXbkNbpULorYiqNLrC2vdd2TX8K5acxE67hQKPsnkpvHMNff9P8IV
-	iszTUGWzUjwlnhz5AaWZU9wwkqXk7o6u2XHpjdCtjrbrbR0pb3hp8pEdnBuBOcCG
-	kyuocuHiLTX8yKsQhecLyVwVoUnr8w9v58wljoFmrvCRY0ZWdVJwVvaHQQgH4cSj
-	YrnPLPLOgunEOLT5hl10AaT9mCYe0CeIXWg==
-X-ME-Sender: <xms:8EcGaA0nCNkqsGCB3-A5JGrfK6zazK-dAkfTWJIRLWAu3jjK-P40xA>
-    <xme:8EcGaLFqgEksz8DbdJkEi6aA3FY2cJnhB7OJKqWYLpFKyo7MjhnrVbrkKCwVLHWnH
-    TmIG_Wa6lZeEQ>
-X-ME-Received: <xmr:8EcGaI7LFHxmY0cOnK-PUxsH7CZreptB7y_63gMfTC_VJoeNji9d2sUTKi7a3W2Ro1t9lMiUn2fOTRTfGQWm3ui5SNlrCe0Ljg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedtleejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
-    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
-    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
-    ggftrfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettd
-    dvgeeuteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhi
-    thgrlhihrdhlihhfshhhihhtshesihhnthgvlhdrtghomhdprhgtphhtthhopehjvghssh
-    gvrdgsrhgrnhguvggsuhhrghesihhnthgvlhdrtghomhdprhgtphhtthhopegrnhhthhho
-    nhihrdhlrdhnghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghtuggvvh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehinhhtvghlqdifihhrvggu
-    qdhlrghnsehlihhsthhsrdhoshhuohhslhdrohhrghdprhgtphhtthhopehrvghgrhgvsh
-    hsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepshhtrggslhgv
-    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrshhhrghlsehkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:8EcGaJ2rh5PwY3x0_lr2Ab43gObWDK2UoFCwret-rkg08bf2I00Ksw>
-    <xmx:8EcGaDHk8ks_ttZLUUMRGZarUIM1Fxox91PpBtZbUqb0m3_0ey5KOQ>
-    <xmx:8EcGaC_LgeuqN_3HAJFOhwcf8x9DXFombyislo9_SfGgpb-tTGyFBQ>
-    <xmx:8EcGaIlOwWa2FZYzEMxrYp0Z65b3x0Q0CLRI7jffDIZpQzAXIMmtZQ>
-    <xmx:8UcGaM4lhdbQpb3Ng1Ox1ioxy2jfwtF3pm7lAz8N1PTTqoYOTWc-qptw>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 21 Apr 2025 09:28:15 -0400 (EDT)
-Date: Mon, 21 Apr 2025 15:28:13 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
-Message-ID: <aAZH7fpaGf7hvX6T@mail-itl>
-References: <Z_z9EjcKtwHCQcZR@mail-itl>
- <b1f5e997-033c-33ed-5e3b-6fe2632bf718@intel.com>
- <Z_0GYR8jR-5NWZ9K@mail-itl>
- <50da66d0-fe66-0563-4d34-7bd2e25695a4@intel.com>
- <b5d72f51-3cd0-aeca-60af-41a20ad59cd5@intel.com>
- <Z_-l2q9ZhszFxiqA@mail-itl>
- <d37a7c9e-7b3f-afc2-b010-e9785f39a785@intel.com>
- <aAZF0JUKCF0UvfF6@mail-itl>
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="kER7spcG"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id AEEC8120872;
+	Mon, 21 Apr 2025 20:06:01 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745262361;
+	bh=vTKRaKFRv9kn3SC+rgDREeTrII8g8FovnKvl8R6ktrI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=kER7spcG8m1/KVwt7QtEORa89/IQs8He89mAmuggsVNgfbYTiGrGrFUm5Kf+aXDD1
+	 yIDlyMWEcjSn1P2Z2/l0Qo3J2yfpWx2An9gyplWX1UBpt9dZYt9MXmquNYHYagdz2T
+	 9ECiMMLPXw970VTiITkgmltKHjlshoM39nKBw0vZxM62cHh4OT4FTxQo1krPZds+BY
+	 g0lCe2WOttRKl3+F10oLJdCRlmFNVr3p9/kNCjohIoum2WwGsyXZSeDiDNE+eb7xYV
+	 aAunimqsXz2zlGLobDK0ZMO3ZH69wfUVed6/CQu0LEA4Cm6K91aTr6r44of3kHxAzN
+	 N/tiLL0XO6Qlg==
+Date: Mon, 21 Apr 2025 20:06:01 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
+ Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
+ <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
+ <toke@redhat.com>, stable@vger.kernel.org
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+In-Reply-To: <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="905i3CbqCZm+HHvF"
-Content-Disposition: inline
-In-Reply-To: <aAZF0JUKCF0UvfF6@mail-itl>
-
-
---905i3CbqCZm+HHvF
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Apr 2025 15:28:13 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
 
-On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
-> On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vitaly wrote:
+On Mon, 21 Apr 2025 13:10:00 +0100
+"Alan J. Wylie" <alan@wylie.me.uk> wrote:
+
+> On Mon, 21 Apr 2025 13:50:52 +0200
+> Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
+
+> > If so, try either reverting the above or adding:
+> > "sch_htb: make htb_qlen_notify() idempotent" aka
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+commit/?id=3D5ba8b837b522d7051ef81bacf3d95383ff8edce5
 > >=20
-> >=20
-> > On 4/16/2025 3:43 PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits, Vitaly wrote:
-> > > > Can you please also share the output of ethtool -i? I would like to=
- know the
-> > > > NVM version that you have on your device.
-> > >=20
-> > > driver: e1000e
-> > > version: 6.14.1+
-> > > firmware-version: 1.1-4
-> > > expansion-rom-version:
-> > > bus-info: 0000:00:1f.6
-> > > supports-statistics: yes
-> > > supports-test: yes
-> > > supports-eeprom-access: yes
-> > > supports-register-dump: yes
-> > > supports-priv-flags: yes
-> > >=20
-> >=20
-> > Your firmware version is not the latest, can you check with the board
-> > manufacturer if there is a BIOS update to your system?
+> > which was successfully not added to 6.14.3, along with the rest of
+> > the series:
+> > https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmai=
+l.com/ =20
 >=20
-> I can check, but still, it's a regression in the Linux driver - old
-> kernel did work perfectly well on this hw. Maybe new driver tries to use
-> some feature that is missing (or broken) in the old firmware?
-
-A little bit of context: I'm maintaining the kernel package for a Qubes
-OS distribution. While I can try to update firmware on my test system, I
-have no influence on what hardware users will use this kernel, and
-which firmware version they will use (and whether all the vendors
-provide newer firmware at all). I cannot ship a kernel that is known
-to break network on some devices.
-
-> > Also, you mentioned that on another system this issue doesn't reproduce=
-, do
-> > they have the same firmware version?
+> "successfully not added"?
 >=20
-> The other one has also 1.1-4 firmware. And I re-checked, e1000e from
-> 6.14.2 works fine there.
+> $ git cherry-pick  5ba8b837b522d7051ef81bacf3d95383ff8edce5
+> [linux-6.14.y 2285c724bf7d] sch_htb: make htb_qlen_notify() idempotent
+>  Author: Cong Wang <xiyou.wangcong@gmail.com>
+>  Date: Thu Apr 3 14:10:23 2025 -0700
+>  1 file changed, 2 insertions(+)
+>=20
+> It will take a while (perhaps days?) before I can confirm success.
+
+I'm afraid that didn't help. Same panic.
+
+
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 139bfa067 P4D 139bfa067 PUD 133bf1067 PMD 0=20
+Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G           O       6.14.3-00=
+001-g2285c724bf7d #21
+Tainted: [O]=3DOOT_MODULE
+Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./970A-DS=
+3P, BIOS FD 02/26/2016
+RIP: 0010:rb_next+0x0/0x50
+Code: e8 d5 fa ff ff 5b 4c 89 e0 5d 41 5c 41 5d 41 5e e9 85 73 01 00 5b 5d =
+41 5c 41 5d 41 5e e9 38 76 01 00 0f 1f 84 00 00 00 00 00 <48> 3b 3f 48 89 f=
+8 74 38 48 8b 57 08 48 85 d2 74 11 48 89 d0 48 8b
+RSP: 0018:ffffc90000003e50 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8881052e9000 RCX: ffff8881052e9180
+RDX: ffff8881e5e4f400 RSI: ffff888190075ee8 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff8881052e92b0 R09: 00000000e49ea9dc
+R10: 000000000000278a R11: 001dcd6500000000 R12: ffff8881e5e4f400
+R13: ffff8881052e92b8 R14: 00000b92b6422fbf R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff88842ec00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000139952000 CR4: 00000000000406f0
+Call Trace:
+ <IRQ>
+ htb_dequeue+0x42f/0x610 [sch_htb]
+ __qdisc_run+0x253/0x480
+ ? timerqueue_del+0x2c/0x40
+ qdisc_run+0x15/0x30
+ net_tx_action+0x182/0x1b0
+ handle_softirqs+0x102/0x240
+ __irq_exit_rcu+0x3e/0xb0
+ sysvec_apic_timer_interrupt+0x5b/0x70
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x16/0x20
+RIP: 0010:cpuidle_enter_state+0x126/0x220
+Code: 18 4c 6f 00 85 c0 7e 0b 8b 73 04 83 cf ff e8 a1 22 e5 ff 31 ff e8 9a =
+2e 98 ff 45 84 ff 74 07 31 ff e8 0e 58 9d ff fb 45 85 ed <0f> 88 cc 00 00 0=
+0 49 63 c5 48 8b 3c 24 48 6b c8 68 48 6b d0 30 49
+RSP: 0018:ffffffff81e03e40 EFLAGS: 00000202
+RAX: ffff88842ec00000 RBX: ffff8881008e7400 RCX: 0000000000000000
+RDX: 00000b927d3d4a20 RSI: fffffffc3199eb61 RDI: 0000000000000000
+RBP: 0000000000000002 R08: 0000000000000002 R09: 00000b927aa897c0
+R10: 0000000000000006 R11: 0000000000000020 R12: ffffffff81f98280
+R13: 0000000000000002 R14: 00000b927d3d4a20 R15: 0000000000000000
+ cpuidle_enter+0x2a/0x40
+ do_idle+0x12d/0x1a0
+ cpu_startup_entry+0x29/0x30
+ rest_init+0xbc/0xc0
+ start_kernel+0x630/0x630
+ x86_64_start_reservations+0x25/0x30
+ x86_64_start_kernel+0x73/0x80
+ common_startup_64+0x12c/0x138
+ </TASK>
+Modules linked in: sch_htb cls_u32 sch_ingress sch_cake ifb act_mirred netc=
+onsole xt_hl xt_nat ts_bm xt_string xt_TARPIT(O) xt_CT xt_tcpudp xt_helper =
+nf_nat_ftp nf_conntrack_ftp ip6t_rt ip6table_nat xt_MASQUERADE iptable_nat =
+nf_nat xt_TCPMSS xt_LOG nf_log_syslog ip6t_REJECT nf_reject_ipv6 ipt_REJECT=
+ nf_reject_ipv4 ip6table_raw iptable_raw ip6table_mangle iptable_mangle xt_=
+multiport xt_state xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_def=
+rag_ipv4 ip6table_filter ip6_tables iptable_filter ip_tables x_tables pppoe=
+ tun pppox binfmt_misc ppp_generic slhc af_packet bridge stp llc ctr ccm dm=
+_crypt radeon drm_client_lib ath9k video wmi drm_exec ath9k_common drm_suba=
+lloc_helper ath9k_hw drm_ttm_helper syscopyarea ttm ath sysfillrect sysimgb=
+lt fb_sys_fops mac80211 pl2303 drm_display_helper snd_hda_codec_realtek usb=
+serial drm_kms_helper snd_hda_codec_generic snd_hda_codec_hdmi snd_hda_scod=
+ec_component snd_hda_intel agpgart snd_intel_dspcfg snd_hda_codec cfbfillre=
+ct cfbimgblt cfg80211 snd_hda_core fb_io_fops
+ cfbcopyarea i2c_algo_bit fb e1000 snd_pcm font cdc_acm snd_timer aesni_int=
+el libarc4 snd at24 acpi_cpufreq k10temp crypto_simd soundcore fam15h_power=
+ cryptd regmap_i2c evdev nfsd sch_fq_codel auth_rpcgss lockd grace sunrpc d=
+rm configfs drm_panel_orientation_quirks fuse backlight loop nfnetlink usbh=
+id xhci_pci ohci_pci xhci_hcd ohci_hcd ehci_pci ehci_hcd sha512_ssse3 sha25=
+6_ssse3 sha1_ssse3 usbcore sha1_generic gf128mul usb_common dm_mirror dm_re=
+gion_hash dm_log cpuid i2c_piix4 i2c_smbus i2c_dev i2c_core it87 hwmon_vid =
+msr dmi_sysfs autofs4
+CR2: 0000000000000000
+---[ end trace 0000000000000000 ]---
+RIP: 0010:rb_next+0x0/0x50
+Code: e8 d5 fa ff ff 5b 4c 89 e0 5d 41 5c 41 5d 41 5e e9 85 73 01 00 5b 5d =
+41 5c 41 5d 41 5e e9 38 76 01 00 0f 1f 84 00 00 00 00 00 <48> 3b 3f 48 89 f=
+8 74 38 48 8b 57 08 48 85 d2 74 11 48 89 d0 48 8b
+RSP: 0018:ffffc90000003e50 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8881052e9000 RCX: ffff8881052e9180
+RDX: ffff8881e5e4f400 RSI: ffff888190075ee8 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff8881052e92b0 R09: 00000000e49ea9dc
+R10: 000000000000278a R11: 001dcd6500000000 R12: ffff8881e5e4f400
+R13: ffff8881052e92b8 R14: 00000b92b6422fbf R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff88842ec00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000139952000 CR4: 00000000000406f0
+Kernel panic - not syncing: Fatal exception in interrupt
+Kernel Offset: disabled
+Rebooting in 3 seconds..
+
 
 --=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
 
---905i3CbqCZm+HHvF
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmgGR+0ACgkQ24/THMrX
-1yxQZQf/YKyAaZ6uRKoItVe64l4tTEHFhwtsfm1XnV8YQ7kifFzR2nqj01vPZccG
-GB5o+uI2XY/q927n+QlEemEM+bAt66etky1bC5noOxyZeLbQdUj32e7gG5pb5Gh5
-XaUSK4DVQEL3NLzsfV2DQlEDOHaGOWie4Ya/83ic5TyXxbEcqLWRznvA699akDf4
-z9XXTLmDfJrdu1qneGDb6p5tzsqkHHdODr3jAtDh/q6GDBEGlJ2wxYz138RJKfVG
-i3R+n9n5UwcfQNK4wUg1NX2678f1oT3aLqABYCCvQGN/iscU8C4msM+yZYlZffQd
-S80FnW5zu4unYc34FjocJnc1Yp7ovA==
-=VB7y
------END PGP SIGNATURE-----
-
---905i3CbqCZm+HHvF--
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
