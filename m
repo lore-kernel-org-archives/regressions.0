@@ -1,82 +1,98 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109538BEA
-	for <regressions@lists.linux.dev>; Mon, 21 Apr 2025 19:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20FD2F37
+	for <regressions@lists.linux.dev>; Mon, 21 Apr 2025 20:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745264870; cv=none; b=CUucNuigPeY41IRanuq5vdpd07owKpW338hLTGLOH/YHjLeWKOcSqR8S66Wj77CxSUYx9Vsl49tr3Wk82lpv3rBZ7iiyrlSo0SF3UYYGvjmmiTdDymiA2ArUx7h3P5YXSGKmKEFKQDFsBTJv7DranYGKlJnHjl9VGSEao2cw3EM=
+	t=1745266173; cv=none; b=bs08+45PX+Tx3rp3kUfb0UUmcqIawTdahGgc1QvoUJgKFG3b8Tid81uwoF2cZQYd+qOZ3Vp+psk7hUvJr6IivAAWbF6e285su+BbM+bTPB3tijC4wGkszYCPRBbkAlkSzUcCNrjpL0jEpHKydaQwCUGyCfXwlhPYdPgBWZhZeEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745264870; c=relaxed/simple;
-	bh=10zB3zWNYiSJJwL/V/fxIicMAY2mD0WAywQ+9NZAld8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=EGe+OlvWsAhiso+ApE28GT2tfMmgSSTGEZBAA1vniceamXfppJxA/BFz2q1K5j1b9slgJoHj/5PUm2s4kswjg8i7MLaiA+Qepj34gFNeWbiB/P3MnSs+M5EHH7z/IK1WZ9dfWqbYNsEDrfac1CqppOSI05cbPvN/j4NcT4htA8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id A88E31255FA;
-	Mon, 21 Apr 2025 21:47:44 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 41D7E601893B6;
-	Mon, 21 Apr 2025 21:47:44 +0200 (CEST)
+	s=arc-20240116; t=1745266173; c=relaxed/simple;
+	bh=b+VWpq3NDHwNAt8S/b7pLV0b9kapdPe8ei7JxdNhfaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dly2L6q4vKavdaj2JQKulqAYmcSI3djj5/3to27Jqx1s2JtIbiX41l7tE/Vvs+yIV+aIJ7xNUxU1wjla39wzsVznwvuS26QRciSo37R6Sh+XoEWrxausaIZQWjTC7seCpbgidF62uSGDSeLbGQKJ7Y6caZb5il3kTp51hzdINCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=MkXqf1vL; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="MkXqf1vL"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id 109A8120872;
+	Mon, 21 Apr 2025 21:09:28 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745266168;
+	bh=b+VWpq3NDHwNAt8S/b7pLV0b9kapdPe8ei7JxdNhfaI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=MkXqf1vLHKpcBOMj6MpdubBkR6uWNHWZ/SHP8expyNaK801KfQLFnnm+Bv/flwK6U
+	 fNomrj2N516Zd+m623mgNyxfc+w6J6GOUIJ+1HZ29PB0R4PVqm4SLXv7Tju+XyITHk
+	 I2qorgiZA6tj/QWjd41uI+PgBlvpFgCwjIz2cuDvhZQXHSa0JZls7R0v7dNWTNdUIb
+	 dnBy1a4GryRVyIhxecoHR1vIO872VTYajmE0iSmj11dhKBJfK3qRoWB0OPL9ProUm3
+	 XC3xZLIX1jWY+8DC1DXczJkWWY+np94fPJTEcuB/QmcRM+KR2g73U/8rv70L/d9fsu
+	 Iq4adLM4UAfDQ==
+Date: Mon, 21 Apr 2025 21:09:27 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
+ Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
+ <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
+ <toke@redhat.com>, stable@vger.kernel.org
 Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
  htb_dequeue
-To: "Alan J. Wylie" <alan@wylie.me.uk>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
- Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Octavian Purdila <tavip@google.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vu?=
- =?UTF-8?Q?sen?= <toke@redhat.com>, stable@vger.kernel.org
+Message-ID: <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+In-Reply-To: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
 References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-Date: Mon, 21 Apr 2025 21:47:44 +0200
+	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+	<20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+	<89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-21 21:06, Alan J. Wylie wrote:
-> On Mon, 21 Apr 2025 13:10:00 +0100
-> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
-> 
->> On Mon, 21 Apr 2025 13:50:52 +0200
->> Holger Hoffstätte <holger@applied-asynchrony.com> wrote:
-> 
->>> If so, try either reverting the above or adding:
->>> "sch_htb: make htb_qlen_notify() idempotent" aka
->>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5ba8b837b522d7051ef81bacf3d95383ff8edce5
->>>
->>> which was successfully not added to 6.14.3, along with the rest of
->>> the series:
->>> https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmail.com/
->>
->> "successfully not added"?
->>
->> $ git cherry-pick  5ba8b837b522d7051ef81bacf3d95383ff8edce5
->> [linux-6.14.y 2285c724bf7d] sch_htb: make htb_qlen_notify() idempotent
->>   Author: Cong Wang <xiyou.wangcong@gmail.com>
->>   Date: Thu Apr 3 14:10:23 2025 -0700
->>   1 file changed, 2 insertions(+)
->>
->> It will take a while (perhaps days?) before I can confirm success.
-> 
-> I'm afraid that didn't help. Same panic.
+On Mon, 21 Apr 2025 21:47:44 +0200
+Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
 
-Bummer :-(
+> > I'm afraid that didn't help. Same panic. =20
+>=20
+> Bummer :-(
+>=20
+> Might be something else missing then - so for now the only other thing
+> I'd suggest is to revert the removal of the qlen check in fq_codel.
 
-Might be something else missing then - so for now the only other thing
-I'd suggest is to revert the removal of the qlen check in fq_codel.
+Like this?
 
-Holger
+$ git diff  sch_fq_codel.c
+diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
+index 6c9029f71e88..4fdf317b82ec 100644
+--- a/net/sched/sch_fq_codel.c
++++ b/net/sched/sch_fq_codel.c
+@@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct Qdisc *s=
+ch)
+        qdisc_bstats_update(sch, skb);
+        flow->deficit -=3D qdisc_pkt_len(skb);
+=20
+-       if (q->cstats.drop_count) {
++       if (q->cstats.drop_count && sch->q.qlen) {
+                qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
+                                          q->cstats.drop_len);
+                q->cstats.drop_count =3D 0;
+$=20
+
+I'll be off to bed soon, but I'll leave it running overnight.
+
+I might be able to do a quick report in the morning, but I'll
+have to set off early to go digging down a cave all day tomorrow.
+
+--=20
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
+
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
