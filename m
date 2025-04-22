@@ -1,164 +1,127 @@
-Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22D7223DC3
-	for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 20:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0877B1FC0EA
+	for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 21:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354844; cv=none; b=U6pJJsR6VIp+3YhHYw4rGv+do11aDv56ncRUE1fT4ui3sElQ2FpT22UU3mw3fbLXVgRlhViQVaEEN7jmdqS7GBfOLoJ6kqHuG8kx6fS9yM+zAVG9C7xgYETQr9VWwrso7slc5JmsCToKNjCvVPfOG/gLpOZX1mBze1UbtE3bKn8=
+	t=1745358571; cv=none; b=jEa/tTqNJs8lxe0Z+x1+0V+ml1ks4WhaLhZlQ5SY07s5jsGYUKD7FuOPn2OlnnRZ/++qCfHjTcF3Pa2dY7b2Hm9VncDbcw+/kHuaRCD7+xZKwddZy85MgpsVCHRUHTBHUCGyhvibn5KAy2P7PAV4ij3+tHK9nmKTe5N0MeS+l1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354844; c=relaxed/simple;
-	bh=jI6WvZRTjseleXVwj2r4KXdhlz//nry7SMVNn90CJK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qw7m0XjizNBhj0zwE/yb8sQS/ls1IsIBHnBX4MI9iojQKSs8p/+U8U+2Pps7ZqvgW94gGE5+jiZnfzoFkYRd0EnwM5/ad5pzV2urCbnu56Mx6ijIESDDFsIvee6B7cAHy5zO+Uwy/YyFsvRmXt1jzzPIiyL1AeDsG4o1rbOi3HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=ULO8Hh2a; arc=none smtp.client-ip=82.68.155.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+	s=arc-20240116; t=1745358571; c=relaxed/simple;
+	bh=sG7YJMva/w4l3cfCNfOiczfRXXTwbAHBKnI5Bzj7KRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otJKMPVsGpXy6h2v9IRLfgWgeJC5TYqgWsMdbU1j1Ud+8xE/IoaLJXbaPqMrJg4VrxEmSPYdcm1zyNd1J6GO6OetYR822Gm900FRGk6SsOYIGGkfd1o7G/kKkkrL3e5u6FunzFiKlssuee+fa63CfufJSsQ4q3JmU4NCYSukRqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbEESW5i; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="ULO8Hh2a"
-Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
-	by wylie.me.uk (Postfix) with ESMTP id 78EA0120801;
-	Tue, 22 Apr 2025 21:47:17 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-	s=mydkim006; t=1745354837;
-	bh=jI6WvZRTjseleXVwj2r4KXdhlz//nry7SMVNn90CJK0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ULO8Hh2aQDgzFQqB3l5JjlzWKsXf9iEEpPxZF+9BrhHF3VZMQYmQvi1M/QFP59P1r
-	 WlPgp9XcNhxA5ko/bwOTIIVEyTcqnYonfBWxHFzhDh850931xi3LFslUI7ifcEgjmV
-	 NMZ0xROAlD89vjgG0b/83F5zNWVhSTv4C2q5CjWhQp+rbtpsocWF2KGgnUcZWLihIb
-	 rYjPNns24elRXWhe5NYGx51uC+rKR4R+hmmB0WBlovtMjXf1GqNK4Lf9H66aacgTAB
-	 kJzelemb24BywXoZava1XEdVYhTfOS7Ja36O/wDDPNb7DdV+7lBHWRDV2FUJY8WdI/
-	 LWt7W6xi/gO7g==
-Date: Tue, 22 Apr 2025 21:47:16 +0100
-From: "Alan J. Wylie" <alan@wylie.me.uk>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>,
- Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Jiri
- Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>, Toke
- =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
- stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbEESW5i"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30332dfc820so6914985a91.2
+        for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745358569; x=1745963369; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
+        b=VbEESW5iUGa2gCdK1+m/eDgqY0wiiKSQnTy4pQdtQba5Mgq5RwfHEFzkLZjKLQcTUW
+         jaTbivJeQDKHPet+8qZBhdMtpYc9JGq7rCZgNXhNxYZHO7rzjW43TxdbosC/u4n7rSEV
+         aKYYnST9w3W2b3mdgvpkIwGj+LTyU+AwuG8feFtyP02LYoOGb65SJRgcUgq9s93FCEUC
+         g+RVUGsfPr4iKtWQyOPO6MftjPwTIgHqDcLz5uJPKb/qvrUE2mFoNmkdZzXEWzHKQ1Y5
+         sTHHNarW2j30FLfv4juy0jX3xgIUUAdpecbFCi5vgK9CU5lbHlt+aKW/qxR4C+Q4rhc/
+         GfPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745358569; x=1745963369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
+        b=EYRzKox6z5ETB9vvyjiqia5ehnebzmGtSLAZ6SyX7Ja6i0/xqgHQqdC7rolLk4p2ZK
+         frvGwdSyCC36mn9A0UtjnSJkEbdPFH7aESntwb60oF0iX4crU8tjYTGDGkuiABFvwhlp
+         LQFzvGz5tQiqpL3FYUrjXUN2jaxRkmesZZ1u2s4YMYlk5GmXI6rqVvKKgSr9wvi0Oc7V
+         ilw2JkhkN58te6BdKh4bqq6cVHol8imWi4Wjqd5bmsTkHAQDYPpq4oxmczCPMwflfB0t
+         /2s6gmM5Ey6Rrepl4ylRPD3ED0wVEHUQY3+68vxL4b/rbn7cbHQ7px6iqrWWRIWBSID5
+         I0XA==
+X-Forwarded-Encrypted: i=1; AJvYcCXd15ZQMpeR2yu7CbhrLEtoWuzFnCcw7MGeLKyh6PIlHKwfU7LHCsx/cOi8s/QOKrhu+dIIv6V+32ubiw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzq/VTK4g92gnkZkR3voo1kkGGbZGMfnaDmNNZTUDfloETtcN4g
+	xcL501EdhDed5vCZ3tRXKd5OfiZgxf1YmNpOwzgWztqGpgkLdcRy
+X-Gm-Gg: ASbGncuXBuBVYeBQt7NW1ZgDiVbBLbyK/SGDiS+s73zJrFCa7KwbVwPQti70Op+QrUc
+	/V6S0amUkRmyNiou1eyi+5Le1wDba35XDqObv5GCrdrPenUDG+R3KcfGNhArM0D6vhz7RbDO3y4
+	c32u08L38u7nAohmXvZgENATyB4qa7ehnUY04hbMQLCAWZeL+GqixW1zNQWic5X/U5s2U4x6kzf
+	enpFH50S5WLJFd1UNctwoJTx0JXvO9aM1Z9nEZbbXfbOXYvnp3AcMDiTArUX1obmP2Fm/nfZZEP
+	ZdtuiVujMaNLco3xan75sMV8XKq2srsMB3pl0tofDpzd2ncuBsWwiHc=
+X-Google-Smtp-Source: AGHT+IEa5UJBk8pFAAEn17DT7zrqf9LgrhW1yVg3/4Nr/d7c82A8poo6UJuKjfvQ33n45llJ3lLYzw==
+X-Received: by 2002:a17:90a:f945:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-3087bb57aa9mr27886530a91.12.1745358569302;
+        Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4a46sm90649335ad.147.2025.04.22.14.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 14:49:28 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:49:27 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
 Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
  htb_dequeue
-Message-ID: <20250422214716.5e181523@frodo.int.wylie.me.uk>
-In-Reply-To: <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+Message-ID: <aAgO59L0ccXl6kUs@pop-os.localdomain>
 References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
-	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
-	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
-	<20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-	<89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-	<20250421210927.50d6a355@frodo.int.wylie.me.uk>
-	<20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
-	<4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
-	<aAf/K7F9TmCJIT+N@pop-os.localdomain>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
-X-Clacks-Overhead: GNU Terry Pratchett
+ <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+ <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+ <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+ <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+ <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+ <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+ <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422214716.5e181523@frodo.int.wylie.me.uk>
 
-On Tue, 22 Apr 2025 13:42:19 -0700
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
+Hi, Alan
 
-> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst=C3=A4tte wrote:
-> > (cc: Greg KH)
-> >=20
-> > On 2025-04-22 18:51, Alan J. Wylie wrote: =20
-> > > On Mon, 21 Apr 2025 21:09:27 +0100
-> > > "Alan J. Wylie" <alan@wylie.me.uk> wrote:
-> > >  =20
-> > > > On Mon, 21 Apr 2025 21:47:44 +0200
-> > > > Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
-> > > >  =20
-> > > > > > I'm afraid that didn't help. Same panic. =20
-> > > > >=20
-> > > > > Bummer :-(
-> > > > >=20
-> > > > > Might be something else missing then - so for now the only
-> > > > > other thing I'd suggest is to revert the removal of the qlen
-> > > > > check in fq_codel. =20
-> > > >=20
-> > > > Like this?
-> > > >=20
-> > > > $ git diff  sch_fq_codel.c
-> > > > diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-> > > > index 6c9029f71e88..4fdf317b82ec 100644
-> > > > --- a/net/sched/sch_fq_codel.c
-> > > > +++ b/net/sched/sch_fq_codel.c
-> > > > @@ -316,7 +316,7 @@ static struct sk_buff
-> > > > *fq_codel_dequeue(struct Qdisc *sch) qdisc_bstats_update(sch,
-> > > > skb); flow->deficit -=3D qdisc_pkt_len(skb);
-> > > > -       if (q->cstats.drop_count) {
-> > > > +       if (q->cstats.drop_count && sch->q.qlen) {
-> > > >                  qdisc_tree_reduce_backlog(sch,
-> > > > q->cstats.drop_count, q->cstats.drop_len);
-> > > >                  q->cstats.drop_count =3D 0;
-> > > > $
-> > > >  =20
-> > >=20
-> > > It's been about 21 hours and no crash yet. I had an excellent day
-> > > down a cave, so there's not been as much Internet traffic as
-> > > usual, but there's a good chance the above patch as at least
-> > > worked around, if not fixed the issue. =20
-> >=20
-> > Thought so .. \o/
-> >=20
-> > I guess now the question is what to do about it. IIUC the fix
-> > series [1] addressed some kind of UAF problem, but obviously was
-> > not applied correctly or is missing follow-ups. It's also a bit
-> > mysterious why adding the HTB patch didn't work.
-> >=20
-> > Maybe Cong Wang can advise what to do here? =20
->=20
-> I guess my patch caused some regression, I am still decoding the
-> crashes reported here.
->=20
-> Meanwhile, if you could provide a reliable (and ideally minimum)
-> reproducer, it would help me a lot to debug.
->=20
-> Thanks!
+Although I am still trying to understand the NULL pointer, which seems
+likely from:
 
-Sorry. No reproducer. The crashes seemed to be totally random.
+ 478                         if (p->inner.clprio[prio].ptr == cl->node + prio) {
+ 479                                 /* we are removing child which is pointed to from
+ 480                                  * parent feed - forget the pointer but remember
+ 481                                  * classid
+ 482                                  */
+ 483                                 p->inner.clprio[prio].last_ptr_id = cl->common.classid;
+ 484                                 p->inner.clprio[prio].ptr = NULL;
+ 485                         }
 
-I posted the script I use to set up tc in my initial report.
+Does the following patch work? I mean not just fixing the crash, but
+also not causing any other problem.
 
-FYI, here's the resulting config.
+Please give it a try.
 
-# tc qdisc show
-qdisc noqueue 0: dev lo root refcnt 2=20
-qdisc fq_codel 0: dev enp3s0 root refcnt 2 limit 10240p flows 1024 quantum =
-6014 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc fq_codel 0: dev enp4s0 root refcnt 2 limit 10240p flows 1024 quantum =
-1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc fq_codel 0: dev enp5s6f0 root refcnt 2 limit 10240p flows 1024 quantu=
-m 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc noqueue 0: dev wlp5s7 root refcnt 2=20
-qdisc noqueue 0: dev brdmz root refcnt 2=20
-qdisc noqueue 0: dev heipv6 root refcnt 2=20
-qdisc fq_codel 0: dev tun0 root refcnt 2 limit 10240p flows 1024 quantum 14=
-64 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc htb 1: dev ppp0 root refcnt 2 r2q 10 default 0x11 direct_packets_stat=
- 0 direct_qlen 3
-qdisc fq_codel 824c: dev ppp0 parent 1:11 limit 10240p flows 1024 quantum 3=
-00 target 5ms interval 100ms memory_limit 32Mb drop_batch 64=20
-qdisc ingress ffff: dev ppp0 parent ffff:fff1 ----------------=20
-qdisc fq_codel 0: dev tun1 root refcnt 2 limit 10240p flows 1024 quantum 15=
-00 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc htb 1: dev ppp0ifb0 root refcnt 2 r2q 20 default 0x11 direct_packets_=
-stat 0 direct_qlen 32
-qdisc fq_codel 824b: dev ppp0ifb0 parent 1:11 limit 10240p flows 1024 quant=
-um 300 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-#=20
+Thanks!
 
+---
 
-
---=20
-Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index 4b9a639b642e..0cdc778fddef 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -348,7 +348,8 @@ static void htb_add_to_wait_tree(struct htb_sched *q,
+  */
+ static inline void htb_next_rb_node(struct rb_node **n)
+ {
+-	*n = rb_next(*n);
++	if (*n)
++		*n = rb_next(*n);
+ }
+ 
+ /**
