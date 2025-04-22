@@ -1,175 +1,326 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dijkstra.felixrichter.tech (dijkstra.felixrichter.tech [37.120.184.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A8414C5B0
-	for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 17:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8141096F
+	for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 19:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.184.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745344460; cv=none; b=fYU2nuNyGFEKWPdYmqfjUvXt3xQ2LAtr0878orVGyGHARI36/zv288o3EP21LipzTSHypAHZm3W4PRhFAtAdqkkE0yT0Ccb897zgPbAIL5fuWnSBhBlYeyP39F6kUNUmz7EAyy/051495sOSv+xaxz/tTDSj2jauzlnmRVc/n9A=
+	t=1745351445; cv=none; b=al5bL0C8WBYu7e2jNHZk8xcorE0wJIOn8FZMgX7UsahbBhM3dzm15AqLU0KDD6k5g5dXXdImf+y6gIi4HgG4arl9z+iYZ03It6/W//tZ+56/7Bat5KU1INYb3tz+OTM+c8sV1EQzmmAZMqZ8ctqR9kB6XSrmWSZ0RhaS9jHjs1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745344460; c=relaxed/simple;
-	bh=sLldpzzdvvwv7PJBbM9VxqQ7TJcJ3hBY7P8Pi7kuoSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dgj2w3vyD/1v7JlOmS4P+N/OwB781kaZoAQDq2UudQSjqo7XKTe0/890PblJJk1UdwCEMHkme8ktDZj79Ts5Yx/UtA7kD5q7w4UO8H5H+P23SAcfbLGYE//EwuSdgLTLXgXDTrJ9eL+xXOClr3ugcSad+L+JBHPBcLKiYaZs1SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=TUhigKMz; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1745351445; c=relaxed/simple;
+	bh=7EoGmOa73jV2imMGP+gYwDLN4INVC59RBoZwFLNpFI0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:Cc:To:Content-Type; b=VrPaZVnqcqt5/Ta/4BgXvDLWftg3sSDLDmk6lCAp1X7EYYGE3yIvZQQooBuZ+85wkraXpImI0YbWzWeU2+RErrrvxBgJ7A8lrOTYCPY68btymsjvQ0sqjBTexkqLue6Rbg73OGpErVwDjOaj2aK7iznbxNoxN7KC6zSlvKSxGFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=felixrichter.tech; spf=pass smtp.mailfrom=felixrichter.tech; dkim=pass (1024-bit key) header.d=felixrichter.tech header.i=@felixrichter.tech header.b=PIjLYBsy; arc=none smtp.client-ip=37.120.184.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=felixrichter.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=felixrichter.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="TUhigKMz"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id B8D2C1F910;
-	Tue, 22 Apr 2025 19:54:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745344454;
-	bh=PkgELOsXXHcP6A6fIVqU8X1w8GCmR28cJ50CK+2ZOPw=; h=From:To:Subject;
-	b=TUhigKMzpq4lxbTvqBu567flmEypELZRJ42uUl3VWbuP864x0RFBR/QiDLjXxXkIg
-	 w7O2LJQ3CmbFpRs3tehhvwOxqdGzwUoLLZwIdCKWfW6/VmVlb2DmAyTNyk4vqlepzF
-	 eL2jOGZWK0/w/PP0Rv6IwrtOZgt3p9oqED7Q9b/q40pZ2jqprTIYbot89NokuYy+mV
-	 bnOgfHRcRrXaGG4ltJUT96VT+yc8gRpHzfgiOkgrrXuYqjrewPEi9gHa7I1dIrGBQ7
-	 54DsZp6qOgmUeAIlEJ4yRUM2oIT7YLRJn5Xvr/J0c5cq24saTyPDLhZvC4MbLqKUvA
-	 kHRWeRWsaP2Tw==
-Date: Tue, 22 Apr 2025 19:54:09 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Richard Weinberger <richard@nod.at>
-Cc: linux-mtd <linux-mtd@lists.infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Zhihao Cheng <chengzhihao1@huawei.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
-Message-ID: <20250422175409.GA877874@francesco-nb>
-References: <20250408082018.GA23886@francesco-nb>
+	dkim=pass (1024-bit key) header.d=felixrichter.tech header.i=@felixrichter.tech header.b="PIjLYBsy"
+Received: from [10.130.10.1] (unknown [10.130.10.1])
+	by dijkstra.felixrichter.tech (Postfix) with ESMTPSA id DA86B1A1CDD;
+	Tue, 22 Apr 2025 21:52:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=felixrichter.tech;
+	s=20210926; t=1745351552;
+	bh=7EoGmOa73jV2imMGP+gYwDLN4INVC59RBoZwFLNpFI0=;
+	h=Date:From:Subject:Cc:To;
+	b=PIjLYBsyBARO6geHMfbO+tpzMYaHmLzT7jOKHdo1Bhjzru1/I6OGuZGtf60dt+4EX
+	 Kru09HpPY0jViBhMaimNcV0i7iOB/FULR8mmMKW1izP8JcXJMvJfZFN1w8aUB3kFLp
+	 P64I5iASU5c3b8Sm/rWegsZqScnwDwF92zksnUjk=
+Message-ID: <0863bc3e-7364-4572-bb72-fc85657cbad7@felixrichter.tech>
+Date: Tue, 22 Apr 2025 21:44:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408082018.GA23886@francesco-nb>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Felix Richter <judge@felixrichter.tech>
+Subject: Regression: DDC I2C Display Freezing for internal displays
+Autocrypt: addr=judge@felixrichter.tech; keydata=
+ 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
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+To: Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------k30BOrCPEY0kLfFU3CLouMCH"
 
-+ Herbert, Zhihao
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------k30BOrCPEY0kLfFU3CLouMCH
+Content-Type: multipart/mixed; boundary="------------5ZPYL0NvNbcCkO9xZuMyCpiv";
+ protected-headers="v1"
+From: Felix Richter <judge@felixrichter.tech>
+To: Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Message-ID: <0863bc3e-7364-4572-bb72-fc85657cbad7@felixrichter.tech>
+Subject: Regression: DDC I2C Display Freezing for internal displays
 
-Hello all,
+--------------5ZPYL0NvNbcCkO9xZuMyCpiv
+Content-Type: multipart/mixed; boundary="------------Qlr0nN0Wc28Ve8mORR1XVWZO"
 
-On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
-> I do have the following regression on single core system using UBIFS,
-> dual core seems not affected, any idea?
-> 
-> [    1.003798] 8<--- cut here ---
-> [    1.003843] Unable to handle kernel paging request at virtual address d21af3b8 when read
-> [    1.003876] [d21af3b8] *pgd=00000000
-> [    1.003914] Internal error: Oops: 5 [#1] SMP ARM
-> [    1.023282] Modules linked in:
-> [    1.026371] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT
-> [    1.035110] Hardware name: Freescale i.MX7 Dual (Device Tree)
-> [    1.040881] PC is at scomp_acomp_comp_decomp+0x138/0x390
-> [    1.046243] LR is at scomp_acomp_decompress+0x10/0x48
-> [    1.051336] pc : [<c050aa90>]    lr : [<c050b07c>]    psr: 20000013
-> [    1.057634] sp : d0825a98  ip : 00000024  fp : c221d780
-> [    1.062886] r10: 00000576  r9 : d0825af0  r8 : c204e030
-> [    1.068137] r7 : cfdaf3b8  r6 : cfdaf3b8  r5 : c27b2540  r4 : cfd5b1e8
-> [    1.074694] r3 : 02400000  r2 : 00001000  r1 : d0b01000  r0 : 00000000
-> [    1.081251] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> [    1.088419] Control: 10c5387d  Table: 8000406a  DAC: 00000051
-> [    1.094189] Register r0 information: NULL pointer
-> [    1.098929] Register r1 information: 16-page vmalloc region starting at 0xd0b01000 allocated at crypto_scomp_init_tfm+0x8c/0x180
-> [    1.110556] Register r2 information: non-paged memory
-> [    1.115641] Register r3 information: non-paged memory
-> [    1.120726] Register r4 information: non-slab/vmalloc memory
-> [    1.126421] Register r5 information: slab kmalloc-192 start c27b2540 pointer offset 0 size 192
-> [    1.135112] Register r6 information: non-slab/vmalloc memory
-> [    1.140806] Register r7 information: non-slab/vmalloc memory
-> [    1.146500] Register r8 information: slab kmalloc-8k start c204e000 pointer offset 48 size 8192
-> [    1.155280] Register r9 information: 2-page vmalloc region starting at 0xd0824000 allocated at kernel_clone+0xa4/0x33c
-> [    1.166043] Register r10 information: non-paged memory
-> [    1.171219] Register r11 information: slab kmalloc-64 start c221d780 pointer offset 0 size 64
-> [    1.179827] Register r12 information: non-paged memory
-> [    1.185003] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> [    1.191043] Stack: (0xd0825a98 to 0xd0826000)
-> [    1.195431] 5a80:                                                       00000004 c07edfcc
-> [    1.203650] 5aa0: 00000000 00000000 00001000 c7d16f8f 04070598 c27b2540 c27b2540 c28b0000
-> [    1.211870] 5ac0: d0825c94 c0dc7064 d0825af0 c204e030 d0825c94 c050b07c c27b2540 00000576
-> [    1.220089] 5ae0: c28b0000 c04d40b8 00000000 c07ebbd0 00000000 00000000 d0825af8 d0825af8
-> [    1.228308] 5b00: 00000000 c7d16f8f c28b0000 c117b6d0 00000000 c204e030 cfdaf3b8 c43f7080
-> [    1.236527] 5b20: d0825b40 c04d47e0 d0825c94 c0dc7064 00000576 c2213cc0 0000f598 000005a6
-> [    1.244745] 5b40: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.252963] 5b60: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.261182] 5b80: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.269400] 5ba0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.277618] 5bc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.285837] 5be0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.294056] 5c00: c28b0000 c04c5e54 00000001 00000000 00000001 c289eb00 000009e4 20000000
-> [    1.302275] 5c20: 00000000 000002b0 0000f598 000005a6 c204e000 c7d16f8f cfd5fec0 00000000
-> [    1.310494] 5c40: 00000000 cfdaf3b8 00000000 00000000 c43f7080 c204e000 00001000 c04b58b4
-> [    1.318713] 5c60: 00000000 d0825c94 00000001 c7d16f8f d0825d50 c7d16f8f 00040cc0 00000016
-> [    1.326932] 5c80: c28b0000 00000000 00015600 c2068000 cfdaf3b8 00001000 000009e4 20000000
-> [    1.335151] 5ca0: 00000001 c7d16f8f 0eced000 cfdaf3b8 c28b0000 00000000 c27fc0c0 c43f7080
-> [    1.343370] 5cc0: 00000000 c43f7180 c27fc0c0 c04b60e4 00000000 ffffffff 00000000 c02a0430
-> [    1.351590] 5ce0: 00000cc0 00000001 ffffc005 00000001 d0825d50 00000000 c2068000 c7d16f8f
-> [    1.359809] 5d00: c43f7184 cfdaf3b8 00000000 c2068000 c27fc0c0 c43f7180 c2068000 c43f7180
-> [    1.368028] 5d20: c27fc0c0 c029e91c 00000000 c02ae4d8 00000000 00000000 c2068000 c43f7180
-> [    1.376247] 5d40: c27fc0c0 c7d16f8f d0825d50 d0825ef0 00000000 d0825e14 cfdaf3b8 c43f7180
-> [    1.384466] 5d60: c2068000 c43f7180 c27fc0c0 c02a0c5c 0eced000 00000000 00000001 00000000
-> [    1.392685] 5d80: c43f7190 00000000 00000100 c2068000 00000001 c2014800 c27fc0c0 c43f7180
-> [    1.400904] 5da0: c27fc120 00000000 00000000 00000000 00000000 00000000 000001ff c7d16f8f
-> [    1.409123] 5dc0: c2952fb8 00000000 d0825ed8 c43f7080 00000000 00000000 ffffffff ffffffff
-> [    1.417342] 5de0: d0825ef0 c02a10f4 00000000 d0825ed8 c289f000 beffffd4 00050003 c43f7080
-> [    1.425561] 5e00: cfdaf3dc c02d4c24 c43f7180 c27fc0c0 cfde4694 00000000 00000000 00000000
-> [    1.433779] 5e20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.441997] 5e40: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.450215] 5e60: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.458433] 5e80: 00000000 00000000 00000000 00000000 00000000 c7d16f8f 00000000 00000000
-> [    1.466653] 5ea0: c27fc0c0 d0825f48 00000100 00000000 00000000 00000006 c2864a58 c0329db8
-> [    1.474871] 5ec0: 00000100 00000001 00000000 00050001 c2864a58 00000100 00000003 00000000
-> [    1.483090] 5ee0: d0825ed0 00000100 00000001 00000000 c27fc0c0 00000000 00000000 00000000
-> [    1.491308] 5f00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 c7d16f8f
-> [    1.499527] 5f20: 00000000 c2864a00 00000000 00000001 c2068000 c11ed360 00000000 c0332988
-> [    1.507745] 5f40: 00000000 00000001 00000000 00000000 c2068000 c7d16f8f 00000000 c2864a00
-> [    1.515964] 5f60: c20e0000 c1108094 00000000 00000000 00000000 00000000 00000000 c0333de0
-> [    1.524183] 5f80: c11bd000 c0d8c568 00000000 00000000 00000000 c0101364 c11bd000 c0b40a68
-> [    1.532401] 5fa0: 00000000 c0b40b4c 00000000 c010014c 00000000 00000000 00000000 00000000
-> [    1.540620] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.548838] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> [    1.557050] Call trace:
-> [    1.557069]  scomp_acomp_comp_decomp from scomp_acomp_decompress+0x10/0x48
-> [    1.566549]  scomp_acomp_decompress from ubifs_decompress_req+0xa8/0x148
-> [    1.573313]  ubifs_decompress_req from ubifs_decompress_folio+0xdc/0x20c
-> [    1.580065]  ubifs_decompress_folio from do_readpage+0x1e0/0x4b0
-> [    1.586116]  do_readpage from ubifs_read_folio+0x4c/0x4d8
-> [    1.591557]  ubifs_read_folio from filemap_read_folio+0x30/0x1fc
-> [    1.597612]  filemap_read_folio from filemap_get_pages+0x534/0x8ac
-> [    1.603841]  filemap_get_pages from filemap_read+0x120/0x504
-> [    1.609546]  filemap_read from __kernel_read+0x164/0x2f4
-> [    1.614907]  __kernel_read from bprm_execve+0x194/0x3f4
-> [    1.620180]  bprm_execve from kernel_execve+0x114/0x19c
-> [    1.625450]  kernel_execve from try_to_run_init_process+0xc/0x38
-> [    1.631505]  try_to_run_init_process from kernel_init+0xe4/0x134
-> [    1.637565]  kernel_init from ret_from_fork+0x14/0x28
-> [    1.642663] Exception stack(0xd0825fb0 to 0xd0825ff8)
-> [    1.647747] 5fa0:                                     00000000 00000000 00000000 00000000
-> [    1.655966] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    1.664183] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [    1.670835] Code: e1a03623 e0833622 e026609c e003039c (e7963003)
-> [    1.676964] ---[ end trace 0000000000000000 ]---
-> [    1.681608] note: swapper/0[1] exited with irqs disabled
-> [    1.681787] random: crng init done
-> [    1.691090] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-> [    1.698805] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
-> 
+--------------Qlr0nN0Wc28Ve8mORR1XVWZO
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-The issue is still present on current master, I did bisect it, the
-regression is from commit 7e0969bae493 ("ubifs: Pass folios to acomp"),
-reverting it on top of current master solves the issue.
+SGksDQoNCml0IGhhcyBiZWVuIHF1aXRlIGF0IHdoaWxlIHNpbmNlIEkgZmlyc3Qgc3RhcnRl
+ZCBleHBlcmllbmNpbmcgdGhpcyANCnBhcnRpY3VsYXIgYnVnIEkgYW0gYWJvdXQgdG8gZGVz
+Y3JpYmUuIFN1ZmZpY2UgaXQgdG8gc2F5IGR1cmluZyBteSANCkVhc3RlciBob2xpZGF5IEkg
+ZmluYWxseSBoYWQgdGhlIHRpbWUgdG8gZGlnIGludG8gaXQuIEl0IGFsbCBzdGFydGVkIA0K
+d2l0aCBhbiB1cGRhdGUgb2YgbGludXggTFRTIGZyb20gNi42IHRvIDYuMTIuDQoNCkkgYW0g
+YSB1c2VyIG9mIHRoZSBzd2F5IHRpbGluZyB3aW5kb3cgbWFuYWdlciBhbmQgaGF2ZSB3cml0
+dGVuIGEgc21hbGwgDQp1dGlsaXR5IHRvIG1hbmFnZSBteSBkaXNwbGF5IGNvbmZpZ3VyYXRp
+b24gYWNyb3NzIGRpZmZlcmVudCBzZXR1cHMuIFdpdGggDQp0aGUgYWRkZWQgdHdpc3QgdGhh
+dCBJIHdyb3RlIHNvbWUgY29kZSB0byBkZXRlcm1pbmUgd2hpY2ggbW9uaXRvciBpbnB1dHMg
+DQppcyBjdXJyZW50bHkgaW4gdXNlIHVzaW5nIHRoZSBtb25pdG9yIGNvbW1hbmQgaW50ZXJm
+YWNlLiBBbnl3YXkgdGhlIA0KaW50ZXJlc3RpbmcgZGV0YWlsIGhlcmUgaXMgdGhhdCwgc3Rh
+cnRpbmcgd2l0aCBrZXJuZWwgNi4xMiBJIHN0YXJ0ZWQgDQpydW5uaW5nIGludG8gdGhlIGZv
+bGxvd2luZyBwcm9ibGVtLiBXaXRoIG15IGRpc3BsYXkgbWFuYWdlbWVudCBkYWVtb24gDQpy
+dW5uaW5nIGFuZCBhdHRhY2hpbmcgbXkgTGFwdG9wIHRvIGFuIGV4dGVybmFsIGRpc3BsYXkg
+bXkgaW50ZXJuYWwgDQpkaXNwbGF5IHdvdWxkIGp1c3QgZnJlZXplIHdpdGggbm8gd2F5IHRv
+IGJyaW5nIGl0IGJhY2sgYXBhcnQgZnJvbSBwb3dlciANCmN5Y2xpbmcgdGhlIGVudGlyZSBk
+ZXZpY2UuIFdoZW4gbXkgbWFuYWdlbWVudCBkYWVtb24gd2FzIG5vdCBydW5uaW5nIA0KdGhp
+cyB3b3VsZCBub3QgaGFwcGVuLCBJIHdvdWxkIHRoZW4gbmVlZCB0byBtYW51YWxseSBjb25m
+aWd1cmUgbXkgDQpkaXNwbGF5IHNldHVwLiBGdXJ0aGVyIGludmVzdGlnYXRpb24gaW50byB0
+aGUgd2hhdCBpcyB0cmlnZ2VyaW5nIHRoZSANCmRpc3BsYXkgZnJlZXplIGxlYWQgbWUgaW50
+byB0aGUgcGFydCBvZiB0aGUgY29kZSB3aGVyZSBJIGFtIGVudW1lcmF0aW5nIA0KYXR0YWNo
+ZWQgZGlzcGxheXMgYW5kIGFtIHRyeWluZyB0byBtYXRjaCBgaTJjYCBkZXZpY2VzIHRvIHRo
+ZWlyIA0KY29ycmVzcG9uZGluZyBkaXNwbGF5Lg0KDQpUbyBnZXQgbW9yZSBzcGVjaWZpYyB0
+aGUgcHJvY2VkdXJlIGlzIGFzIGZvbGxvd3MsIHVzaW5nIHVkZXYgZW51bWVyYXRlIA0KYWxs
+IGBpMmNgIGJ1c3NlcyBhbmQgZmlsdGVyIHRoZW0gYmFzZSBvbiBzb21lIGhldXJpc3RpY3Mg
+bGlrZSBkZXZpY2UgDQpuYW1lIGFuZCBkZXZpY2VzIHdpdGggcGFyZW50IGRldmljZXMgZHJt
+IC8gZ3JhcGhpY3MgZGV2aWNlLiBTYWRseSB0aGlzIA0KaXMgbm90IHF1aXRlIGVub3VnaCB0
+byBhbHJlYWR5IG1hdGNoIGFuIGBpMmNgIGNvbW1hbmQgaW50ZXJmYWNlIHRvIHRoZSANCmNv
+cnJlc3BvbmRpbmcgbW9uaXRvciwgaW4gbWFueSBjYXNlcyBpdCBpcyByZXF1aXJlZCB0byBt
+YW51YWxseSByZWFkIHRoZSANCkVESUQgaW5mb3JtYXRpb24gdmlhIHRoZSBpMmMgaW50ZXJm
+YWNlIGFuZCBjb21wYXJlIGl0IHRvIHRoZSBrbm93biANCmF0dGFjaGVkIGRpc3BsYXlzIHRv
+IGdldCB0aGUgbWF0Y2guIEFuZCB0aGlzIGlzIHdoZXJlIHRoZSB0cmlnZ2VyIGZvciANCnRo
+ZSBkaXNwbGF5IGZyZWV6ZSBpcyB0byBiZSBmb3VuZC4NCg0KSGVyZSBpcyB0aGUgb3V0cHV0
+IHdoZW4gc2Nhbm5pbmcgc3lzZnMgZm9yIG15IGludGVybmFsIGxhcHRvcCBkaXNwbGF5Og0K
+YGBgDQojIGxzIC1hbCANCi9zeXMvZGV2aWNlcy9wY2kwMDAwOjAwLzAwMDA6MDA6MDguMS8w
+MDAwOjA0OjAwLjAvZHJtL2NhcmQxL2NhcmQxLWVEUC0xDQp0b3RhbCAwDQpkcnd4ci14ci14
+wqAgNiByb290IHJvb3TCoMKgwqAgMCAyMi4gQXByIDE4OjA3IC4NCmRyd3hyLXhyLXggMTEg
+cm9vdCByb290wqDCoMKgIDAgMjIuIEFwciAxODowNyAuLg0KZHJ3eHIteHIteMKgIDMgcm9v
+dCByb290wqDCoMKgIDAgMjIuIEFwciAxODowNyBhbWRncHVfYmwxDQotci0tci0tci0twqAg
+MSByb290IHJvb3QgNDA5NiAyMi4gQXByIDE4OjA3IGNvbm5lY3Rvcl9pZA0KbHJ3eHJ3eHJ3
+eMKgIDEgcm9vdCByb290wqDCoMKgIDAgMjIuIEFwciAxODowNyBkZGMgLT4gLi4vLi4vLi4v
+aTJjLTMNCmxyd3hyd3hyd3jCoCAxIHJvb3Qgcm9vdMKgwqDCoCAwIDIyLiBBcHIgMTg6MDcg
+ZGV2aWNlIC0+IC4uLy4uL2NhcmQxDQotci0tci0tci0twqAgMSByb290IHJvb3QgNDA5NiAy
+Mi4gQXByIDE4OjA3IGRwbXMNCmRyd3hyLXhyLXjCoCAzIHJvb3Qgcm9vdMKgwqDCoCAwIDIy
+LiBBcHIgMTg6MDcgZHJtX2RwX2F1eDANCi1yLS1yLS1yLS3CoCAxIHJvb3Qgcm9vdMKgwqDC
+oCAwIDIyLiBBcHIgMTg6MDcgZWRpZA0KLXItLXItLXItLcKgIDEgcm9vdCByb290IDQwOTYg
+MjIuIEFwciAxODowNyBlbmFibGVkDQpkcnd4ci14ci14wqAgNCByb290IHJvb3TCoMKgwqAg
+MCAyMi4gQXByIDE4OjA3IGkyYy0xMQ0KLXItLXItLXItLcKgIDEgcm9vdCByb290IDQwOTYg
+MjIuIEFwciAxODowNyBtb2Rlcw0KZHJ3eHIteHIteMKgIDIgcm9vdCByb290wqDCoMKgIDAg
+MjIuIEFwciAxODowNyBwb3dlcg0KLXJ3LXItLXItLcKgIDEgcm9vdCByb290IDQwOTYgMjIu
+IEFwciAxODowNyBzdGF0dXMNCmxyd3hyd3hyd3jCoCAxIHJvb3Qgcm9vdMKgwqDCoCAwIDIy
+LiBBcHIgMTg6MDcgc3Vic3lzdGVtIC0+IA0KLi4vLi4vLi4vLi4vLi4vLi4vLi4vY2xhc3Mv
+ZHJtDQotcnctci0tci0twqAgMSByb290IHJvb3QgNDA5NiAyMi4gQXByIDE4OjA3IHVldmVu
+dA0KYGBgDQoNCkFzIGNhbiBiZSBzZWVuIHRoZXJlIGFyZSB0d28gaTJjIGRldmljZXMgcHJl
+c2VudCwgaTJjLTMgKGFzIGRkYyBzeW1saW5rKSANCmFuZCBpMmMtMTEuIE5vdyBmcm9tIHRo
+ZSBwZXJzcGVjdGl2ZSBvZiB1ZGV2IGkyYy0xMSBoYXMgdGhlIHBhcmVudCBzZXQgDQp0byBj
+YXJkMS1lRFAtMSB3aGlsZSBpMmMtMyBoYXMgdGhlIHBhcmVudCBzZXQgdG8gdGhlIGRybSBk
+ZXZpY2UgaXRzZWxmLiANCk1vcmUgaW1wb3J0YW50bHkgSSBjYW4gbm90IHJ1bGUgb3V0IGky
+Yy0zIGFzIGEgdmFsaWQgY29tbWFuZCBpbnRlcmZhY2UgDQpiZWNhdXNlIGluIHNvbWUgY2Fz
+ZXMgdmFsaWQgY29tbWFuZCBjaGFubmVscyBhcmUgbmV2ZXIgYXNzaWduZWQgdG8gdGhlIA0K
+Y29ycmVzcG9uZGluZyBkaXNwbGF5IG91dHB1dCBkaXJlY3RseSBidXQgb25seSBsaXZlIGRp
+cmVjdGx5IG9uIHRoZSBkcm0gDQpkZXZpY2UsIHRoaXMgaXMgZXNwZWNpYWxseSB0cnVlIHdo
+ZW4gbW9uaXRvcnMgYXJlIG5vdCBhdHRhY2hlZCBkaXJlY3RseSANCmJ1dCB2aWEgYSBkb2Nr
+aW5nIHN0YXRpb24uIFNvIEkgZG8gaGF2ZSB0byBsb29rIGF0IGVhY2ggaTJjIGRldmljZSBv
+biANCml0cyBvd24uIFRoZSBmcmVlemUgaXMgdHJpZ2dlZCBieSB0cnlpbmcgdG8gcmVhZCBl
+ZGlkIGZyb20gaTJjLTM6IFRoaXMgDQppcyB0aGUgY29kZSBzbmlwcGVkIEkgdXNlZCB0byB0
+cmlnZ2VyIHRoZSBidWc6IA0KaHR0cHM6Ly9naXRodWIuY29tL2p1NmdlL2xpYm1vbml0b3Iv
+YmxvYi85MThiMjU0M2VhZmI5NmFjYTI5ZjY2ZGViYzcwZmQxOGZhMjFlZTExL2V4YW1wbGVz
+L3ZpYS1pMmMtZGV2LnJzIA0KKGFkanVzdGVkIHRhcmdldCBpMmMgaW50ZXJmYWNlIGFjY29y
+ZGluZ2x5KS4gVG8gYmUgYWJzb2x1dGVseSBjbGVhciB0aGlzIA0KaXMgbm90IHRoZSBpMmMg
+ZGV2aWNlIHRoYXQgaXMgZXhwZWN0ZWQgdG8gd29yayBpbiBldmVyeSBjYXNlIG9mIHRyeWlu
+ZyANCnRoaXMgd2l0aCBrZXJuZWwgNi42IHRvIDYuMTIgSSBnZXQgdGhlIGZvbGxvd2luZyBl
+cnJvciBtZXNzYWdlOiANCkRkY0Vycm9yKENvbW11bmljYXRpb25FcnJvcihSZWNlaXZlRXJy
+b3IoRUlPOiBJL08gZXJyb3IpKSkuIFRoYXQgaXMgDQpleHBlY3RlZCBpbnRlcm5hbCBsYXB0
+b3AgZGlzcGxheXMgZG8gbm90IHN1cHBvcnQgdGhlIGNvbW1hbmQgaW50ZXJmYWNlIA0KaW4g
+bW9zdCBjYXNlcyBhbnl3YXkuIEJ1dCB3aGF0IEkgZG8gbm90IGV4cGVjdCB0byBoYXBwZW4g
+aXMgdGhhdCBteSANCkxhcHRvcCBzY3JlZW4gZnJlZXplcyEgQW5kIHNpbmNlIHRoaXMgZGlk
+IG5vdCBoYXBwZW4gd2l0aCBrZXJuZWwgNi42IGJ1dCANCnN0YXJ0ZWQgaGFwcGVuaW5nIHdp
+dGggNi4xMiB0aGlzIHNlZW1zIHRvIGJlIGEgc29mdHdhcmUgaXNzdWUgYW5kIHdpdGggDQp0
+aGF0IGEgcmVncmVzc2lvbiENCg0KTmV4dCBJIGJpc2VjdGVkIHRoZSBrZXJuZWwgZnJvbSA2
+LjYgdG8gNi4xMiB0byBkZXRlcm1pbmUgd2hlbiB0aGlzIA0KcmVncmVzc2lvbiB3YXMgaW50
+cm9kdWNlZC4gSSBhdHRhY2hlZCB0aGUgZnVsbCBiaXNlY3QgbG9nIHRvIHRoZSBlbWFpbCA7
+KQ0KDQpUaGUgb2ZmZW5kaW5nIGNvbW1pdCBzZWVtcyB0byBiZToNCg0KWzU4YTI2MWJmYzk2
+NzYzYTg1MWNiNDhiMjAzZWQ1N2RhMzdlMTU3YjhdIGRybS9hbWQvZGlzcGxheTogdXNlIGEg
+bW9yZSANCmxheCB2YmxhbmsgZW5hYmxlIHBvbGljeSBmb3Igb2xkZXIgQVNJQ3MNCg0KU2lu
+Y2UgdGhpcyBpcyBxdWl0ZSBhIHNtYWxsIGNvbW1pdCBJIHZhbGlkYXRlZCB0aGlzIGJ5IHJl
+dmVydGluZyB0aGUgDQpjaGFuZ2VzIG9uIGEgbmV3ZXIga2VybmVsIHZlcnNpb24gKHBhdGNo
+IGF0dGFjaGVkIGFzIHdlbGwpLiBUZXN0aW5nIA0KYWN0dWFsbHkgc2hvd3MgdGhhdCByZXZl
+cnRpbmcgdGhlIGNoYW5nZSByZXNvbHZlcyB0aGUgc2NyZWVuIGZyZWV6aW5nIA0KYmVoYXZp
+b3IgZm9yIG1lLg0KDQpOb3cgSSBhbSBub3QgZGVlcCBlbm91Z2ggaW50byBncmFwaGljcyBk
+cml2ZXJzIHRvIGNsYWltIHRoYXQganVzdCANCnJldmVydGluZyB0aGUgY29tbWl0IHNob3Vs
+ZCBiZSBjb25zaWRlcmVkIGEgdmFsaWQgZml4LiBKdXN0IHRoYXQgdGhlIA0KY2hhbmdlIGlz
+IGRlZmluaXRlbHkgcmVzcG9uc2libGUgZm9yIHRoZSBzY3JlZW4gZnJlZXppbmcgbm93IGFz
+IGFwcG9zZWQgDQp0byBiZWZvcmUuDQoNClNvIHdoYXQgc2hvdWxkIGJlIGRvbmUgaGVyZT8g
+SSBjYW4gdmFsaWRhdGUgYW55IG90aGVyIHN1Z2dlc3RlZCBmaXhlcyANCmFnYWluc3QgbXkg
+c2V0dXAgb3IgcHJvdmlkZSBtb3JlIGluZm9ybWF0aW9uIGlmIG5lZWQgYmUuDQoNCktpbmQg
+cmVnYXJkcywNCkZlbGl4IFJpY2h0ZXINCg0KI3JlZ3pib3QgaW50cm9kdWNlZDogdjYuNi4u
+djYuMTINCg==
+--------------Qlr0nN0Wc28Ve8mORR1XVWZO
+Content-Type: text/x-log; charset=UTF-8; name="bisect.log"
+Content-Disposition: attachment; filename="bisect.log"
+Content-Transfer-Encoding: base64
 
-How should we proceed?
+Z2l0IGJpc2VjdCBzdGFydAojIFN0YXR1czogd2FydGUgYXVmIGd1dGVuIHVuZCBzY2hsZWNo
+dGVuIENvbW1pdAojIGdvb2Q6IFtmZmMyNTMyNjNhMTM3NWE2NWZhNmM5ZjYyYTg5M2U5NzY3
+ZmJlYmZhXSBMaW51eCA2LjYKZ2l0IGJpc2VjdCBnb29kIGZmYzI1MzI2M2ExMzc1YTY1ZmE2
+YzlmNjJhODkzZTk3NjdmYmViZmEKIyBiYWQ6IFthZGMyMTg2NzZlZWYyNTU3NTQ2OTIzNDcw
+OWMyZDg3MTg1Y2EyMjNhXSBMaW51eCA2LjEyCmdpdCBiaXNlY3QgYmFkIGFkYzIxODY3NmVl
+ZjI1NTc1NDY5MjM0NzA5YzJkODcxODVjYTIyM2EKIyBnb29kOiBbN2VlMDQ5MDEyMTViM2Nh
+YjhmYTM1YWE1YmY0NjkyZDdhYTMxMmUzNl0gTWVyZ2UgdGFnICdkcm0tbmV4dC0yMDI0LTAz
+LTIyJyBvZiBodHRwczovL2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvZHJtL2tlcm5lbApnaXQg
+YmlzZWN0IGdvb2QgN2VlMDQ5MDEyMTViM2NhYjhmYTM1YWE1YmY0NjkyZDdhYTMxMmUzNgoj
+IGdvb2Q6IFsyODBlMzZmMGQ1Yjk5NzE3M2QwMTRjMDc0ODRjMDNhN2Y3NzUwNjY4XSBuc2Zz
+OiB1c2UgY2xlYW51cCBndWFyZApnaXQgYmlzZWN0IGdvb2QgMjgwZTM2ZjBkNWI5OTcxNzNk
+MDE0YzA3NDg0YzAzYTdmNzc1MDY2OAojIGdvb2Q6IFsyNmJiMGQzZjM4YTc2NGI3NDNhM2Fk
+NWM4YjZlNWI1MDQ0ZDdjZWI0XSBNZXJnZSB0YWcgJ2Zvci02LjEyL2Jsb2NrLTIwMjQwOTEz
+JyBvZiBnaXQ6Ly9naXQua2VybmVsLmRrL2xpbnV4CmdpdCBiaXNlY3QgZ29vZCAyNmJiMGQz
+ZjM4YTc2NGI3NDNhM2FkNWM4YjZlNWI1MDQ0ZDdjZWI0CiMgYmFkOiBbNDMxODQ0YjY1ZjRj
+MWI5ODhjY2Q4ODZmMmVkMjljMTM4ZjdiYjI2Ml0gc2NoZWRfZXh0OiBQcm92aWRlIGEgc3lz
+ZnMgZW5hYmxlX3NlcSBjb3VudGVyCmdpdCBiaXNlY3QgYmFkIDQzMTg0NGI2NWY0YzFiOTg4
+Y2NkODg2ZjJlZDI5YzEzOGY3YmIyNjIKIyBnb29kOiBbM2E3MTAxZTliMjdmZTk3MjQwYzJm
+ZDQzMGM3MWU2MTI2MjQ0N2RkMV0gTWVyZ2UgdGFnICdwb3dlcnBjLTYuMTItMScgb2YgZ2l0
+Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Bvd2VycGMvbGlu
+dXgKZ2l0IGJpc2VjdCBnb29kIDNhNzEwMWU5YjI3ZmU5NzI0MGMyZmQ0MzBjNzFlNjEyNjI0
+NDdkZDEKIyBiYWQ6IFthZTJjNmQ4YjNiODhjMTc2ZGZmOTIwMjg5NDFhNDAyM2YxYjRjYjkx
+XSBNZXJnZSB0YWcgJ2RybS14ZS1uZXh0LWZpeGVzLTIwMjQtMDktMTInIG9mIGh0dHBzOi8v
+Z2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0veGUva2VybmVsIGludG8gZHJtLW5leHQKZ2l0
+IGJpc2VjdCBiYWQgYWUyYzZkOGIzYjg4YzE3NmRmZjkyMDI4OTQxYTQwMjNmMWI0Y2I5MQoj
+IGdvb2Q6IFszNGJiN2I4MTNhYjM5ODEwNmY3MDBiMGE2YjIxODUwOWJiMGI5MDRjXSBkcm0v
+eGU6IFVzZSB4ZV9wbV9ydW50aW1lX2dldCBpbiB4ZV9ib19tb3ZlKCkgaWYgcmVjbGFpbS1z
+YWZlLgpnaXQgYmlzZWN0IGdvb2QgMzRiYjdiODEzYWIzOTgxMDZmNzAwYjBhNmIyMTg1MDli
+YjBiOTA0YwojIGdvb2Q6IFs5ODhiZmEwYmM2N2Q3MjIwZmY4ZDllMmJhM2E0MjU3MjdhYTk4
+YWYzXSBkcm0vYW1kL2Rpc3BsYXk6IE1ha2UgY29yZV9kY240X2c2X3RlbXBfcmVhZF9ibGFj
+a291dF90YWJsZSBzdGF0aWMKZ2l0IGJpc2VjdCBnb29kIDk4OGJmYTBiYzY3ZDcyMjBmZjhk
+OWUyYmEzYTQyNTcyN2FhOThhZjMKIyBiYWQ6IFsyYmIzZmM1MzZkNjkyZDQzY2Q1NTM5NmVj
+ZmY3M2M3NjkxZWVhZTg1XSBNZXJnZSBkcm0vZHJtLW5leHQgaW50byBkcm0taW50ZWwtbmV4
+dApnaXQgYmlzZWN0IGJhZCAyYmIzZmM1MzZkNjkyZDQzY2Q1NTM5NmVjZmY3M2M3NjkxZWVh
+ZTg1CiMgZ29vZDogWzQ0NjFlOWU1YzM3NGY4YzExZmVlOGU0YTBlMzI5MGIwNzJjZmQ1Mzhd
+IE1lcmdlIHY2LjExLXJjNSBpbnRvIGRybS1uZXh0CmdpdCBiaXNlY3QgZ29vZCA0NDYxZTll
+NWMzNzRmOGMxMWZlZThlNGEwZTMyOTBiMDcyY2ZkNTM4CiMgZ29vZDogWzIxYmIwNDE1MmEx
+OGFjMjMxNGVmNDE4NmI2ZGNkNDZmMWI4NDczNTRdIGRybS9pOTE1L2RzYjogQ29udmVydCBk
+ZXdha2Vfc2NhbmxpbmUgdG8gYSBodyBzY2FubGluZSBudW1iZXIgZWFybGllcgpnaXQgYmlz
+ZWN0IGdvb2QgMjFiYjA0MTUyYTE4YWMyMzE0ZWY0MTg2YjZkY2Q0NmYxYjg0NzM1NAojIGJh
+ZDogW2IyOTBhZjA1MDBmMDk1NzdhZDQwYjlmNzE2ZDU1MWZkNjVjZWZmMjVdIGRybS90ZWdy
+YTogaHViOiBVc2UgZm4gcGFyYW1ldGVyIGRpcmVjdGx5IHRvIGZpeCBDb2NjaW5lbGxlIHdh
+cm5pbmcKZ2l0IGJpc2VjdCBiYWQgYjI5MGFmMDUwMGYwOTU3N2FkNDBiOWY3MTZkNTUxZmQ2
+NWNlZmYyNQojIGJhZDogWzUxMzk0MTE5ZjY0MDQyMzg1OGEyZjA0MDc2ZDZmMWMzZTgzZmE3
+MTVdIGRybS9wYW5lbC1lZHA6IGFkZCBCT0UgTkUxNDBXVU0tTjZHIHBhbmVsIGVudHJ5Cmdp
+dCBiaXNlY3QgYmFkIDUxMzk0MTE5ZjY0MDQyMzg1OGEyZjA0MDc2ZDZmMWMzZTgzZmE3MTUK
+IyBnb29kOiBbZTQ1YjY3MTZkZTRiZjA2YjYyOGE5ZjM1NTlmN2ZjOGRkNWU5NGQ1OF0gZHJt
+L2FtZC9kaXNwbGF5OiB1c2UgYSBtb3JlIGxheCB2YmxhbmsgZW5hYmxlIHBvbGljeSBmb3Ig
+RENOMzUrCmdpdCBiaXNlY3QgZ29vZCBlNDViNjcxNmRlNGJmMDZiNjI4YTlmMzU1OWY3ZmM4
+ZGQ1ZTk0ZDU4CiMgYmFkOiBbZTc5NGI3YjliOTI5NzczNjVjNjkzNzYwYTI1OWY4ZWVmOTQw
+YzUzNl0gZHJtOiBvbWFwZHJtOiBBZGQgbWlzc2luZyBjaGVjayBmb3IgYWxsb2Nfb3JkZXJl
+ZF93b3JrcXVldWUKZ2l0IGJpc2VjdCBiYWQgZTc5NGI3YjliOTI5NzczNjVjNjkzNzYwYTI1
+OWY4ZWVmOTQwYzUzNgojIHNraXA6IFs2NzI5YzczMTAzYmQ3YTBlNjBiMGM5ODBiNTFiNTQz
+NDAxMGI0NTAyXSBkcm0vdHRtOiBmaXgga2VybmVsLWRvYyB0eXBvIGZvciBAdHJ5bG9ja19v
+bmx5CmdpdCBiaXNlY3Qgc2tpcCA2NzI5YzczMTAzYmQ3YTBlNjBiMGM5ODBiNTFiNTQzNDAx
+MGI0NTAyCiMgYmFkOiBbNThhMjYxYmZjOTY3NjNhODUxY2I0OGIyMDNlZDU3ZGEzN2UxNTdi
+OF0gZHJtL2FtZC9kaXNwbGF5OiB1c2UgYSBtb3JlIGxheCB2YmxhbmsgZW5hYmxlIHBvbGlj
+eSBmb3Igb2xkZXIgQVNJQ3MKZ2l0IGJpc2VjdCBiYWQgNThhMjYxYmZjOTY3NjNhODUxY2I0
+OGIyMDNlZDU3ZGEzN2UxNTdiOAojIGZpcnN0IGJhZCBjb21taXQ6IFs1OGEyNjFiZmM5Njc2
+M2E4NTFjYjQ4YjIwM2VkNTdkYTM3ZTE1N2I4XSBkcm0vYW1kL2Rpc3BsYXk6IHVzZSBhIG1v
+cmUgbGF4IHZibGFuayBlbmFibGUgcG9saWN5IGZvciBvbGRlciBBU0lDcwo=
+--------------Qlr0nN0Wc28Ve8mORR1XVWZO
+Content-Type: text/x-patch; charset=UTF-8; name="revert-regression.patch"
+Content-Disposition: attachment; filename="revert-regression.patch"
+Content-Transfer-Encoding: base64
 
-Unless someone is able to look into that I gonna send a revert patch,
-the regression is severe, the machine is not booting anymore.
+LS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG0u
+YworKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdwdV9k
+bS5jCkBAIC04NDg4LDEwICs4NDg4LDExIEBACiAKIAlpZiAoYWNydGNfc3RhdGUpIHsKIAkJ
+aWYgKGFtZGdwdV9pcF92ZXJzaW9uKGFkZXYsIERDRV9IV0lQLCAwKSA8Ci0JCSAgICBJUF9W
+RVJTSU9OKDMsIDUsIDApIHx8Ci0JCSAgICBhY3J0Y19zdGF0ZS0+c3RyZWFtLT5saW5rLT5w
+c3Jfc2V0dGluZ3MucHNyX3ZlcnNpb24gPAotCQkgICAgRENfUFNSX1ZFUlNJT05fVU5TVVBQ
+T1JURUQgfHwKLQkJICAgICEoYWRldi0+ZmxhZ3MgJiBBTURfSVNfQVBVKSkgeworCQkgICAg
+SVBfVkVSU0lPTigzLCA1LCAwKSkgeworCQkJZHJtX2NydGNfdmJsYW5rX29uKCZhY3J0Yy0+
+YmFzZSk7CisJCX0gZWxzZSBpZiAoYWNydGNfc3RhdGUtPnN0cmVhbS0+bGluay0+cHNyX3Nl
+dHRpbmdzLnBzcl92ZXJzaW9uIDwKKwkJICAgICAgICAgICBEQ19QU1JfVkVSU0lPTl9VTlNV
+UFBPUlRFRCB8fAorCQkgICAgICAgICAgICEoYWRldi0+ZmxhZ3MgJiBBTURfSVNfQVBVKSkg
+ewogCQkJdGltaW5nID0gJmFjcnRjX3N0YXRlLT5zdHJlYW0tPnRpbWluZzsKIAogCQkJLyog
+YXQgbGVhc3QgMiBmcmFtZXMgKi8KQEAgLTg1MDEsMTIgKzg1MDIsMTQgQEAKIAkJCQkJCSAg
+ICAgIHRpbWluZy0+cGl4X2Nsa18xMDBoeik7CiAKIAkJCWNvbmZpZy5vZmZkZWxheV9tcyA9
+IG9mZmRlbGF5ID86IDMwOworCQkJZHJtX2NydGNfdmJsYW5rX29uX2NvbmZpZygmYWNydGMt
+PmJhc2UsCisJCQkJCQkgICZjb25maWcpOwogCQl9IGVsc2UgewogCQkJY29uZmlnLmRpc2Fi
+bGVfaW1tZWRpYXRlID0gdHJ1ZTsKKwkJCWRybV9jcnRjX3ZibGFua19vbl9jb25maWcoJmFj
+cnRjLT5iYXNlLAorCQkJCQkJICAmY29uZmlnKTsKIAkJfQogCi0JCWRybV9jcnRjX3ZibGFu
+a19vbl9jb25maWcoJmFjcnRjLT5iYXNlLAotCQkJCQkgICZjb25maWcpOwogCX0gZWxzZSB7
+CiAJCWRybV9jcnRjX3ZibGFua19vZmYoJmFjcnRjLT5iYXNlKTsKIAl9Cg==
 
-Francesco
+--------------Qlr0nN0Wc28Ve8mORR1XVWZO--
 
+--------------5ZPYL0NvNbcCkO9xZuMyCpiv--
+
+--------------k30BOrCPEY0kLfFU3CLouMCH
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEmjKFzqGKXkXO39EKZRLDDdjgF7UFAmgH8Y4ACgkQZRLDDdjg
+F7UjPA//RuqxbJDzqQYKvS0sGPMPdcV3slAOXBLGXPW7VsNSr4/oCKGBc49BHFWx
+I0zXWJm1/UhgwDYFvPq8BXNIIcuDNYZ2pjwkG1d5zno4aPTMiMwWI8iOemczvRBz
+sdPK8yHEj1O0mZAnqSUGZGXwGR7spNI3UooAq5kGQcsK7dYAIK+sYOm2/x1cxeSP
+zJ4GYzsgaCrGU1lFXrauorTFDWKNzG8f90i/MWf2xTxYGmT+obqZ/HvYmMrSl4jk
+bEiTsv3TnXy7O2ZzvC1VKYb2VUguZL6SD5Zbd8fnbBazlLbl4ma1Mi14kAqmN7K7
+B4NHUaOHbCrb+lCkjwSfsQmLbkZquUGHUY8Hf8RfsYTeaFT4IbT2qQOAu1j34BiS
+Ifl+re3BbC0HD6W+bq83977aZXMr9IiL6ZbGFvBSEVi1PIT5l9juUGYRhzFTJuO7
+Q8A3f+WODphGVgoAANrIo8W+MEELV6Et9u41WqjAo78/Gt2K23kqAq3cUSw0eLtb
+n6FE+rru31C87jBU1zAutfLwI4zrxVexTHeQjfW/Lf2NQISCAhxfP5H4WdgpAdN3
+GrZT60a6A4V5FCD6y7ekXQJad7pc+O5i4+dHMo1JBKj7t3UV6POXlUj+ykGQP+OE
+5Z3n4KpiZGKGNypzu14QgnvptS13nWMgtLEh7NKSZ1s5sVEfN18=
+=0lZ4
+-----END PGP SIGNATURE-----
+
+--------------k30BOrCPEY0kLfFU3CLouMCH--
