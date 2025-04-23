@@ -1,89 +1,153 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCAF1F03D6
-	for <regressions@lists.linux.dev>; Wed, 23 Apr 2025 07:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527A51F3B82
+	for <regressions@lists.linux.dev>; Wed, 23 Apr 2025 09:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392521; cv=none; b=jK3i9/6J+dJKkHFxXtlXzLrUjmY1kyJXEAT0xu18Vr9f+YH4VkgWKY02ds03Fg2mO8/ujXxh6ZeRcLpD5N8tgg5pUOTUk78BUHDeLxjHXZyvKt7DdHJrHJOksEdEWM0mx4SS2AaVm5DplN3xpRls2s4tr2xHjZiTD3PhVY+T6ck=
+	t=1745398898; cv=none; b=r/sSjSdruG2ofWE7CLPKo4YNqFNHQ8GM2Q67gzVoLRb7s15XdCeOSk4q8xkEKRNJc2Vww0KTIQiOv9ZrW+BbZqvArbKRVcPRue6+dgz+LxNL2mQRZq2FgAwrgTQG8B/f+Ahgixg44d0Ge0glrSpq7BS58/KkvGYGrGMwUXSKSZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392521; c=relaxed/simple;
-	bh=7BeiM33tIFbOTRutD30UoZt7L8uwqjMGY6dC3PxiqfE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=GOLp+2FJz0yiqWrsuP09iGErvzC1CZl5pn6uaBo9nK0Hd2erJNTQgwc0+GVV5LZHhGtaLeYFZJmF1+HA//3dJ/BpGHB8MMvveCnv4xq/hH6Iv84cqxkfuGGzW5EA6u/MrDzkKo4XDKLnj1r8cYkDd1Pmd9RAJAyVV9v3Q8QXLfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id CDA28298562;
-	Wed, 23 Apr 2025 09:15:10 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id DZHaED16jdEb; Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 71C9B298566;
-	Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BBTVQAOqKOEG; Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 43B6C298562;
-	Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Date: Wed, 23 Apr 2025 09:15:08 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, 
-	chengzhihao1 <chengzhihao1@huawei.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	regressions <regressions@lists.linux.dev>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Message-ID: <1915007212.329812247.1745392508953.JavaMail.zimbra@nod.at>
-In-Reply-To: <20250423065432.GA4811@francesco-nb>
-References: <20250408082018.GA23886@francesco-nb> <20250422175409.GA877874@francesco-nb> <aAhAylotNK_zHl0C@gondor.apana.org.au> <20250423065432.GA4811@francesco-nb>
-Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+	s=arc-20240116; t=1745398898; c=relaxed/simple;
+	bh=BW7t9jNayRBf1ClggMJtd3Fp6+ccv9CeKKDviPbFIvQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RPYF8irZS46VTVmffgbmuKDLPDQZC4BxeiSNUQVIHUSH6Ha+s87JEak7aCT0C5wl8xyo0081oFyQZbo6v7+xvlPRpEoVMo1PaXz3UvYQ5OEJhU+vhONeBC9P0Zl4qKeZT07tebYbjSr5d1aEQ7kqTmgWLoi44ec0YIeH/3BlG9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=UbWrAVwp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=muouxeg3; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="UbWrAVwp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="muouxeg3"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2AE2625401C2;
+	Wed, 23 Apr 2025 05:01:35 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-01.internal (MEProxy); Wed, 23 Apr 2025 05:01:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1745398895; x=1745485295; bh=6rYiYxza8OupvFSqvlyUYjwG0PLM/T6t
+	h/eLY3q8+V0=; b=UbWrAVwp6+3tHv4dVYXzafE8OXvFGiofevVO30MPlN+ghajb
+	UIMmumAMqG6XYMmkp326WuVsmAQ2v7nu6quxehGti1mpISbfQLxtYbDxe53W8m1Z
+	BGWZ1oREOORbbxJ+TA79XiJrtAs3A3M1cjY03MsVOSKUyRoB6nVH6/irduX8JNiK
+	P0GN+DGPu4/UAJdH+babo/MUMjSTxMii2y4rrpg+qNYt3SgPK/8Okq+sUEadQw7U
+	mBSqf+VwTZUMS8LcDgT38bvC3tndp3LeYUdNpRa3Ax1m9bCnZIp2p+GVJLQ2adkq
+	DlfWUdZz8AJJIP60PqqF2GBDFd/lH54/XTGjlQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745398895; x=
+	1745485295; bh=6rYiYxza8OupvFSqvlyUYjwG0PLM/T6th/eLY3q8+V0=; b=m
+	uouxeg3DLwsR4JXP1l4P6eYN49rF84EzyanNxjGBC3vqxNTFdZyajKtFOJrr79rq
+	Cl/SaF8H+xCfd3JEIyvmtrHZYcOlDjFFVirjTbJlZIH9OCBSsSLnsOSXze9Sd5TS
+	b72F7ttKw1drAeN41SbY9ZkPKQTXYkrRQnamGr4/jZltyOQP/ztsRGVH+2w3Dmcm
+	xQgY2suxsvHezVei04wT8ZsOQtxjLSE8b5YsSEsZ5CqcB0rHAcajIyKl72xrEEth
+	14q21aIIkJmPo3dtAbhfA/lSo8zt/4JaurfqlcFnUjrn+fRfeYmSVf0uWOvMxvCR
+	dgwKfGbFgO6KSuQrUxMWA==
+X-ME-Sender: <xms:bqwIaOxf2wpgrNlQnv6Hwo9s0YAHXO_wTj2Z70zFgPKo3YExfKrP2Q>
+    <xme:bqwIaKT7GxWxlEnYkESW5y6N3KSBdWFf2epI6FBDW-9oX7DVUmb1Q1YKisfpSzIuK
+    AWhWv_diZUYtdTCkgU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeiudekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfofgrthhhvgifucfotgeurhhiuggvfdcuoehmrghtthesthhrrg
+    hvvghrshgvrdgtohhmrdgruheqnecuggftrfgrthhtvghrnheptdelgfeiudelgeevgedv
+    teegvdehtddvheeigeelgeegveetleetheffgfejgfeinecuffhomhgrihhnpehtrhgrvh
+    gvrhhsvgdrtghomhdrrghupdgrrhhmlhhinhhugidrohhrghdruhhknecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrthhtsehtrhgrvhgvrh
+    hsvgdrtghomhdrrghupdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtth
+    hopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohephhhkrghllhif
+    vghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhogh
+    hlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtth
+    hopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehiohgrnhgrrdgtihhorhhn
+    vghisehngihprdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:bqwIaAXVj0tt7LWwTsWq4a27SWmSbkFfECWyM6GvCqc4rFCLXwy5lg>
+    <xmx:bqwIaEidH2FGedOytoSeIiMuwROo8byXZ9Vxwtj8YxRG4PuBjUdNQA>
+    <xmx:bqwIaABsaGxInNEqMjJroFK4HQgwO-NOk6WntKmnRbZkBBYztLk9VQ>
+    <xmx:bqwIaFKYZApBaz_KYcFncWrNDytwnAFmRUexDH2tE4B0nXgfqHU6tQ>
+    <xmx:b6wIaLV-7LNNYaJKvPprmYFG7MqLrOgMg8ng-tEDnDcfHDuCbDb-XhI9>
+Feedback-ID: i426947f3:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 70ADA78006C; Wed, 23 Apr 2025 05:01:34 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF136 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Linux 6.15-rc1 regression, folio/ubifs Oops
-Thread-Index: aSEnPblkZA1AkRc1OuHeR6xBDkS3zw==
+X-ThreadId: T7d5bb7b82feda5d9
+Date: Wed, 23 Apr 2025 19:01:02 +1000
+From: "Mathew McBride" <matt@traverse.com.au>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: "Ioana Ciornei" <ioana.ciornei@nxp.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, netdev@vger.kernel.org,
+ "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit" <hkallweit1@gmail.com>,
+ regressions@lists.linux.dev
+Message-Id: <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
+In-Reply-To: <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
+References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
+ <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+ <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
+ <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
+Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Francesco Dolcini" <francesco@dolcini.it>
-> An: "Herbert Xu" <herbert@gondor.apana.org.au>
-> CC: "Francesco Dolcini" <francesco@dolcini.it>, "chengzhihao1" <chengzhih=
-ao1@huawei.com>, "richard" <richard@nod.at>,
-> "linux-mtd" <linux-mtd@lists.infradead.org>, "Matthew Wilcox" <willy@infr=
-adead.org>, "regressions"
-> <regressions@lists.linux.dev>, "linux-kernel" <linux-kernel@vger.kernel.o=
-rg>, "Linux Crypto Mailing List"
-> <linux-crypto@vger.kernel.org>
-> Gesendet: Mittwoch, 23. April 2025 08:54:46
-> Betreff: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
 
-> On Wed, Apr 23, 2025 at 09:22:18AM +0800, Herbert Xu wrote:
->> On Tue, Apr 22, 2025 at 07:54:09PM +0200, Francesco Dolcini wrote:
->> >=20
->> > On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
->> > > I do have the following regression on single core system using UBIFS=
-,
->> > > dual core seems not affected, any idea?
->>=20
->> Please try this patch which will go in today:
->>=20
->> https://patchwork.kernel.org/project/linux-crypto/patch/aAW8E9NrKWq1Xk2w=
-@gondor.apana.org.au/
->=20
-> Yes, I fixes the issue, thanks.
+On Wed, Apr 23, 2025, at 2:03 AM, Russell King (Oracle) wrote:
+> On Fri, Apr 18, 2025 at 01:02:19PM +1000, Mathew McBride wrote:
+> > #regzbot introduced: 6561f0e547be221f411fda5eddfcc5bd8bb058a5
+> > 
+> > Hi Russell,
+> > 
+> > On Thu, Dec 5, 2024, at 8:42 PM, Russell King (Oracle) wrote:
+> > > Report the PCS in-band capabilities to phylink for the Lynx PCS.
+> > > 
+> > 
+> > The implementation of in-band capabilities has broken SFP+ (10GBase-R) mode on my LS1088 board.
+> > The other ports in the system (QSGMII) work fine.
+> 
+> Thanks for the report.
 
-Thanks for testing this!
+Thanks Russell!
 
-Thanks,
-//richard
+The diff below does fix the problem, 10G SFP's now link up again.
+
+I should note that Alex Guzman was the one who originally reported the issue to me, he has also confirmed this diff resolves the issue.
+Link: https://forum.traverse.com.au/t/sfp-ports-stop-working-with-linux-6-14-in-arch-linux/1076/4
+
+> Please try the diff below:
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 1bdd5d8bb5b0..2147e2d3003a 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -3624,6 +3624,15 @@ static int phylink_sfp_config_optical(struct phylink *pl)
+> phylink_dbg(pl, "optical SFP: chosen %s interface\n",
+>     phy_modes(interface));
+>  
+> + /* GBASE-R interfaces with the exception of KR do not have autoneg at
+> + * the PCS. As the PCS is media facing, disable the Autoneg bit in the
+> + * advertisement.
+> + */
+> + if (interface == PHY_INTERFACE_MODE_5GBASER ||
+> +     interface == PHY_INTERFACE_MODE_10GBASER ||
+> +     interface == PHY_INTERFACE_MODE_25GBASER)
+> + __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
+> +
+> if (!phylink_validate_pcs_inband_autoneg(pl, interface,
+> config.advertising)) {
+> phylink_err(pl, "autoneg setting not compatible with PCS");
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
