@@ -1,83 +1,51 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0877B1FC0EA
-	for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 21:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AA61EA7FD;
+	Wed, 23 Apr 2025 01:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745358571; cv=none; b=jEa/tTqNJs8lxe0Z+x1+0V+ml1ks4WhaLhZlQ5SY07s5jsGYUKD7FuOPn2OlnnRZ/++qCfHjTcF3Pa2dY7b2Hm9VncDbcw+/kHuaRCD7+xZKwddZy85MgpsVCHRUHTBHUCGyhvibn5KAy2P7PAV4ij3+tHK9nmKTe5N0MeS+l1k=
+	t=1745371369; cv=none; b=TkEiwUIJkEanXpaLZ3H4mA875/NlLNOH38sjoxy36sTx0NrVorb2Xv5kQSMv2mW8j4Xq9ljGfc7q6eBdUIMPfIZPq91JzophPEocABRN+nbEWYMDBpvrPB+Ja7sK+QPo92+CbteQNE0sGLSaETsND/BZwqdF+FD6ztvNMojcI1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745358571; c=relaxed/simple;
-	bh=sG7YJMva/w4l3cfCNfOiczfRXXTwbAHBKnI5Bzj7KRE=;
+	s=arc-20240116; t=1745371369; c=relaxed/simple;
+	bh=3IU9xggvxaGyK7C8FsIJX/MreMYfHLvHVx3mahRv7VA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otJKMPVsGpXy6h2v9IRLfgWgeJC5TYqgWsMdbU1j1Ud+8xE/IoaLJXbaPqMrJg4VrxEmSPYdcm1zyNd1J6GO6OetYR822Gm900FRGk6SsOYIGGkfd1o7G/kKkkrL3e5u6FunzFiKlssuee+fa63CfufJSsQ4q3JmU4NCYSukRqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbEESW5i; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GELEn8mSzQcvyo1DXRsEwLkDAE7y/EAV33BJN8GFdU7ujthiMicbYNBxd32AHiUgOgbS1jx+VmRfYZID//OZ0jhre0zHR3rd7fKSr882EqhmEIQ9Y19LEF0q4C0nKtkGnjGR3UcktUR8YKyGgp0h7Z3NXBRZTqgNrA2ciAWPvAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jydTR+Nw; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbEESW5i"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30332dfc820so6914985a91.2
-        for <regressions@lists.linux.dev>; Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745358569; x=1745963369; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
-        b=VbEESW5iUGa2gCdK1+m/eDgqY0wiiKSQnTy4pQdtQba5Mgq5RwfHEFzkLZjKLQcTUW
-         jaTbivJeQDKHPet+8qZBhdMtpYc9JGq7rCZgNXhNxYZHO7rzjW43TxdbosC/u4n7rSEV
-         aKYYnST9w3W2b3mdgvpkIwGj+LTyU+AwuG8feFtyP02LYoOGb65SJRgcUgq9s93FCEUC
-         g+RVUGsfPr4iKtWQyOPO6MftjPwTIgHqDcLz5uJPKb/qvrUE2mFoNmkdZzXEWzHKQ1Y5
-         sTHHNarW2j30FLfv4juy0jX3xgIUUAdpecbFCi5vgK9CU5lbHlt+aKW/qxR4C+Q4rhc/
-         GfPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745358569; x=1745963369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
-        b=EYRzKox6z5ETB9vvyjiqia5ehnebzmGtSLAZ6SyX7Ja6i0/xqgHQqdC7rolLk4p2ZK
-         frvGwdSyCC36mn9A0UtjnSJkEbdPFH7aESntwb60oF0iX4crU8tjYTGDGkuiABFvwhlp
-         LQFzvGz5tQiqpL3FYUrjXUN2jaxRkmesZZ1u2s4YMYlk5GmXI6rqVvKKgSr9wvi0Oc7V
-         ilw2JkhkN58te6BdKh4bqq6cVHol8imWi4Wjqd5bmsTkHAQDYPpq4oxmczCPMwflfB0t
-         /2s6gmM5Ey6Rrepl4ylRPD3ED0wVEHUQY3+68vxL4b/rbn7cbHQ7px6iqrWWRIWBSID5
-         I0XA==
-X-Forwarded-Encrypted: i=1; AJvYcCXd15ZQMpeR2yu7CbhrLEtoWuzFnCcw7MGeLKyh6PIlHKwfU7LHCsx/cOi8s/QOKrhu+dIIv6V+32ubiw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzq/VTK4g92gnkZkR3voo1kkGGbZGMfnaDmNNZTUDfloETtcN4g
-	xcL501EdhDed5vCZ3tRXKd5OfiZgxf1YmNpOwzgWztqGpgkLdcRy
-X-Gm-Gg: ASbGncuXBuBVYeBQt7NW1ZgDiVbBLbyK/SGDiS+s73zJrFCa7KwbVwPQti70Op+QrUc
-	/V6S0amUkRmyNiou1eyi+5Le1wDba35XDqObv5GCrdrPenUDG+R3KcfGNhArM0D6vhz7RbDO3y4
-	c32u08L38u7nAohmXvZgENATyB4qa7ehnUY04hbMQLCAWZeL+GqixW1zNQWic5X/U5s2U4x6kzf
-	enpFH50S5WLJFd1UNctwoJTx0JXvO9aM1Z9nEZbbXfbOXYvnp3AcMDiTArUX1obmP2Fm/nfZZEP
-	ZdtuiVujMaNLco3xan75sMV8XKq2srsMB3pl0tofDpzd2ncuBsWwiHc=
-X-Google-Smtp-Source: AGHT+IEa5UJBk8pFAAEn17DT7zrqf9LgrhW1yVg3/4Nr/d7c82A8poo6UJuKjfvQ33n45llJ3lLYzw==
-X-Received: by 2002:a17:90a:f945:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-3087bb57aa9mr27886530a91.12.1745358569302;
-        Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4a46sm90649335ad.147.2025.04.22.14.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:49:28 -0700 (PDT)
-Date: Tue, 22 Apr 2025 14:49:27 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: "Alan J. Wylie" <alan@wylie.me.uk>
-Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
-	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <aAgO59L0ccXl6kUs@pop-os.localdomain>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
- <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
- <aAf/K7F9TmCJIT+N@pop-os.localdomain>
- <20250422214716.5e181523@frodo.int.wylie.me.uk>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jydTR+Nw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Bm5aY/6VVF0bgAOLgzDfud9C1Mj1JgBZ+ZlOE5CW70w=; b=jydTR+NwHdzKIURBEiuMVZboYi
+	DCzwWQLhKnGgUo5HZYkqzhQ0Qz4mqZljqyNFR4KZ748gcounLL9OJfWLO9LCXsHD72iXYufOYaV1P
+	sboHKZo/GUYfcCaZlUJxUiAOdrFgPiUh1R1kKLJmYiCA+eLkrq3n3sYoOrjjZ7el4b9E7204of4jf
+	8aNRskw8RyHMGk/okwwPl2V0fiSxWpTuNAZluzf5ubyATJh3JG0vjWfh9hGc/TaKN2/mMovlLb4Ij
+	NE6K3gIk1LKIRV7jAZ5frHwcgR6VaRMJuSYa4yTALGKsKpB352lgMQg24ePUV/T5rpGh+OJPfVWCO
+	7yVn584g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u7Ooc-000FHI-0h;
+	Wed, 23 Apr 2025 09:22:19 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 23 Apr 2025 09:22:18 +0800
+Date: Wed, 23 Apr 2025 09:22:18 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Zhihao Cheng <chengzhihao1@huawei.com>,
+	Richard Weinberger <richard@nod.at>,
+	linux-mtd <linux-mtd@lists.infradead.org>,
+	Matthew Wilcox <willy@infradead.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+Message-ID: <aAhAylotNK_zHl0C@gondor.apana.org.au>
+References: <20250408082018.GA23886@francesco-nb>
+ <20250422175409.GA877874@francesco-nb>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -86,42 +54,20 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422214716.5e181523@frodo.int.wylie.me.uk>
+In-Reply-To: <20250422175409.GA877874@francesco-nb>
 
-Hi, Alan
+On Tue, Apr 22, 2025 at 07:54:09PM +0200, Francesco Dolcini wrote:
+> 
+> On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
+> > I do have the following regression on single core system using UBIFS,
+> > dual core seems not affected, any idea?
 
-Although I am still trying to understand the NULL pointer, which seems
-likely from:
+Please try this patch which will go in today:
 
- 478                         if (p->inner.clprio[prio].ptr == cl->node + prio) {
- 479                                 /* we are removing child which is pointed to from
- 480                                  * parent feed - forget the pointer but remember
- 481                                  * classid
- 482                                  */
- 483                                 p->inner.clprio[prio].last_ptr_id = cl->common.classid;
- 484                                 p->inner.clprio[prio].ptr = NULL;
- 485                         }
+https://patchwork.kernel.org/project/linux-crypto/patch/aAW8E9NrKWq1Xk2w@gondor.apana.org.au/
 
-Does the following patch work? I mean not just fixing the crash, but
-also not causing any other problem.
-
-Please give it a try.
-
-Thanks!
-
----
-
-diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
-index 4b9a639b642e..0cdc778fddef 100644
---- a/net/sched/sch_htb.c
-+++ b/net/sched/sch_htb.c
-@@ -348,7 +348,8 @@ static void htb_add_to_wait_tree(struct htb_sched *q,
-  */
- static inline void htb_next_rb_node(struct rb_node **n)
- {
--	*n = rb_next(*n);
-+	if (*n)
-+		*n = rb_next(*n);
- }
- 
- /**
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
