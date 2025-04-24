@@ -1,101 +1,93 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B378628EB
-	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 17:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8DE2820D5;
+	Thu, 24 Apr 2025 17:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745514129; cv=none; b=BOg9zA2plSUrZY9LlIvYe4i0iD841cOZ+qYeFFmlekxHnOeTG0kLbrX/3gFXBB/CUf1u5BRSF83dAeLjXjADaKG75p9dqDx2du0QQyj2Apu+A6iG6RgVPzy9BsKZduSagdqD9rU+v+E5jG2wH9y92h857VeuRHa6kzz6mrj/5bQ=
+	t=1745517120; cv=none; b=CrqnRVlSl6FZsIgdchUnvHectAbjgFINHzceDl//SGD7Awc1x9xCc439pzX45qACcAc1mqUAbJ5r18ehVQ2DXWvt5V6wSUbbLGaHqF7P7MyuncmA0hSJ8fDw/f8Pu3V32Ijtr8aQkSA9hCJ/qwfOwMKnUjLmvXbSJv+tgNQ8JX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745514129; c=relaxed/simple;
-	bh=O5SYM23Cn+WkamdI56DnAUG/Sci0EsW29F0Z42ReZmw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XPzpnLTx82ckmulPH/VcPEsGHAVHTPe5imbEsQlqUMN9tDMHxygTzViXYs+/7c1K0GoUqA6qc7N/Y0v10seG9Tr8FS2MHxd9YXerqKny2cCbM4LGU+pUQk80PsH//yhCDZ2DlOGPQSkDWaXy3kW2biMMSYju8t1dWgSm78bDI4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IqyVR20y; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745517120; c=relaxed/simple;
+	bh=WLZVxO/n4jiBa7vp1gw95JRiuvUbJlbF0H7e58V8w28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qLEDz5/0UCu6nlNq1kDSwOt/SLZBkd33tah68flLojm6TJefdkVJj/heEWp9guH8jdrRZpC5N/qG1n2G/vjNbtmI8+GQr1NWi5K/LYcoVYlAIel3yrB5xBsgez3zdkkz/ZgpFtxiLlAK8raXDwJBEiOcS2SXG+/DFrHr2xz5RuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6adSVRZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqyVR20y"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de10eso2462545ad.1
-        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 10:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745514127; x=1746118927; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O5SYM23Cn+WkamdI56DnAUG/Sci0EsW29F0Z42ReZmw=;
-        b=IqyVR20yfO+iokuZAcB4Mw6a2rOR/Opz3iSR626yH9g5lmUC3CDWdco0ibJphDnfz1
-         acFKqqQE+BPSFXsUahtyKSmr3MOCHTPKIwNKRuD7nLfM3gZ+a07wYsEeW371AjIsJ3Qp
-         9D20PPWyigmM73RyPNZi0R45YTMlGi4TGWFMExUxgiOhlNkxrWEYH9fU5OCb8dy27N3W
-         uW2HO0vhwzREfI/54yiLAgji9Dgaz8YJRI+zZDiGEAtJ81G44LFDo4R9qmntJpgQDhqi
-         ZrRz39XiHnczN5OOCf7vfg+AKe0gvwb1FQnJoeWJ/UJiRFmMn73KcsDPKiIUeu50Mdme
-         74DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745514127; x=1746118927;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O5SYM23Cn+WkamdI56DnAUG/Sci0EsW29F0Z42ReZmw=;
-        b=DIP1wuEjIWHu1cYkhxbcYQp1T3OZP4ngLVa2zqSnI8KGYr6hte8f1NEtPlH9gaRW/5
-         l/iflwLpXPSAD54nvDQTlxPiA+zs2Arh0QFCHTMERCqspbl5XCM+bRSrDtoCEH0dRZcv
-         W3xlw7CXUigQ82jETG7CiwBNLgPfBhzkMoJq6zRTI/j00TDSyfvvWUYUFXRdEc/1UTUh
-         dP0F/M8ymz1ZoNpy6Tf7nkoaS4B761YesI4WDaSJ5shQtucmNDSzCre5xBD0HPB0585C
-         a+FBL9pS1CLCqpQr6n2vghD4GHIea+3PHjVPkIQP8tKJH9vAiu6HjeWt4NvH5/xA+X6w
-         md5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKAHlerl5Lv+rViZKWhGmYiPbRPWETuUFr09sh8/VJpRvfoWLREb2XAryvyuTqRzUU2SJUn3dXnMy6kw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyCv9oQkeiQfxytS/y57AryoLs251vq1N+4/JtTqRd73jx4JLHi
-	EoMc9c/V+3wFnpbgdZwnw13vn5PSX8XGhTu+IpNa412/pyBU0rPh38lLzTfdSTesDdyxnc0J35a
-	NoTdVQmctSNKRo3/VL8agEy8Uhek=
-X-Gm-Gg: ASbGnctCP2ieAOrIUDVRKQbjgjCwiGZkfiBN8pn/Z/fxOkgi9PA4doZIs39eIQaw8dW
-	kptW31rGg7ZBxD9SLsWnMms7EfSjRPILVwyzP5VUq6CQL9KQQWKfqtzVREmM6crBRAC1H7dc0SL
-	qnu4c+9RD7j7/sMh+z6QSUsA==
-X-Google-Smtp-Source: AGHT+IF3ZtuHsNs56LObEEPE7jjBcXkiaFFKRHI+tLFB6UFWdm0HdP5xd9Zsthx/pq9U8NQvWfTre7qfqozwBswyhxE=
-X-Received: by 2002:a17:902:d481:b0:223:49ce:67a2 with SMTP id
- d9443c01a7336-22db3d7af28mr15685205ad.9.1745514126756; Thu, 24 Apr 2025
- 10:02:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6adSVRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0248C4CEE3;
+	Thu, 24 Apr 2025 17:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745517119;
+	bh=WLZVxO/n4jiBa7vp1gw95JRiuvUbJlbF0H7e58V8w28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d6adSVRZrQ8nvw3NpL0SgRG7NT5apxX9SIvPsUt29V39lD1QhLBa8Sa+GHKOycqKf
+	 Sk9GaJnOSgOD+6F9tpoX/V7groycxVj51kb7sehimQicxMvu/3hhK3zbKHSAxrKmA/
+	 LbDnyP1qXhC5y0+/+2umSZjTZYjb/R9hUByWFd0W6VVVaVKc2I7oVpCfv6IimVFDs9
+	 LjfiCf0sRHIY28xieafNZeS296sCsbFIzop7SiaV/kTWChMWp1YARTnooVQ/2Hoxtl
+	 cziSHaE0GfmTTjRcsyyYsHsJtU2t+N0p40iwlHpCNPzkcTrGbsT6rQqtulq7G05Wia
+	 TETOOe0RSuGjQ==
+Date: Thu, 24 Apr 2025 18:51:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Prasad, Prasad" <venkataprasad.potturu@amd.com>
+Cc: "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+	Jacek Luczak <difrost.kernel@gmail.com>,
+	"Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] Resume from suspend broken in 6.15-rc due to ACP
+ changes.
+Message-ID: <70293c18-f17d-48e4-94b9-4e7f62cfa45e@sirena.org.uk>
+References: <CADDYkjR0JG_JTQeQMAvUJvtb9RxFH6_LzV2Fr_1cnqPTgV_Z8w@mail.gmail.com>
+ <99dce57f-8947-4c7a-abeb-2e27afdd0d65@sirena.org.uk>
+ <c0c9205d-d1e3-4952-a13e-6d23656880e3@amd.com>
+ <1b850037-8361-4c18-a32d-3ca50b69866e@amd.com>
+ <691c35de-f054-40a1-98bb-2b602e256011@amd.com>
+ <PH7PR12MB595192A0E69D3350F5544DB8E9852@PH7PR12MB5951.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
- <20250407183716.796891-1-ojeda@kernel.org> <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
- <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
- <aAKrq2InExQk7f_k@dell-precision-5540> <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
- <aAo_F_UP1Gd4jHlZ@dell-precision-5540>
-In-Reply-To: <aAo_F_UP1Gd4jHlZ@dell-precision-5540>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 24 Apr 2025 19:01:54 +0200
-X-Gm-Features: ATxdqUEts6lho2tNYy_qoenKS98bA8dTzs4eIhsUcBZzMfNVYnhaeESzWLd5fBg
-Message-ID: <CANiq72mPZ-ik8k+04BarAu26A1=rV_y7GYZHkFnCezW4jpXq+g@mail.gmail.com>
-Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
-To: Ben Wolsieffer <ben.wolsieffer@hefring.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Christian Schrrefl <chrisi.schrefl@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, 
-	Rudraksha Gupta <guptarud@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, arnd@arndb.de, 
-	dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org, 
-	torvalds@linux-foundation.org, Nick Clifton <nickc@redhat.com>, 
-	Richard Earnshaw <richard.earnshaw@arm.com>, Ramana Radhakrishnan <ramanara@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9qc0K4gUM1jblXPU"
+Content-Disposition: inline
+In-Reply-To: <PH7PR12MB595192A0E69D3350F5544DB8E9852@PH7PR12MB5951.namprd12.prod.outlook.com>
+X-Cookie: Star Trek Lives!
+
+
+--9qc0K4gUM1jblXPU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 3:39=E2=80=AFPM Ben Wolsieffer
-<ben.wolsieffer@hefring.com> wrote:
->
-> -mno-fdpic disables a GCC feature that we don't want for kernel builds.
-> clang does not support this feature, so it always behaves as though
-> -mno-fdpic is passed. Therefore, it should be fine to mix the two, at
-> least as far as FDPIC is concerned.
+On Thu, Apr 24, 2025 at 04:53:45PM +0000, Prasad, Prasad wrote:
+> On 4/24/2025 12:57 AM, Mario Limonciello wrote:
 
-Great, thanks a lot for confirming it should be all good, very much appreci=
-ated!
+> > Reverting a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90 seems to help the=20
+> > issue on S16 here.
 
-Naresh: would you like to send the diff as a formal patch since you
-already tested it etc.?
+> > Jacek - can you reproduce with that reverted?
 
-Cheers,
-Miguel
+> We will send a fix patch to resolve this issue.
+
+Excellent, thanks for jumping on this.  There was an AMD CC on the
+original report so I'd thought it'd have been seen.
+
+--9qc0K4gUM1jblXPU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgKejoACgkQJNaLcl1U
+h9CM+gf/X8VDQYvr7ew4jmCoux8dVWY7FTdG83h6xMoZsbupPP8BKez0NRWRIvlJ
+ymcTby5vZPUOciocQwkP2LRdn5jgicKS9igAPidOIILWxJmSLTEuqLvXR4Tf7Pq8
+R03DLEKQZyaNEBoh9wRFrcZtpfg06U1rqf8pQPFBy71HRrGvriqq2TFgUfg2pFit
+qI/qXgor9Okf/kMwUDQwRkI0aT1c/yXA+ZSFgacxnzgh+GR42rYFp8KxknslNe6B
+N6MqWiDMsqbxvVhmwnLn2KRo6adFn19C+v0xIgejt68NpTfYIaRZtcUTuCtPwyab
+8GhOq7kZgcDWYAe0TMqxKK89wXRjgg==
+=0WiB
+-----END PGP SIGNATURE-----
+
+--9qc0K4gUM1jblXPU--
