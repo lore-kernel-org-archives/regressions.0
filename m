@@ -1,157 +1,118 @@
-Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CB82701AA
-	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 12:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD027B4EA
+	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 13:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499218; cv=none; b=g+uNEaNuCJAUCM85UTbXNini+Z3P2q9N8GnDQLaTIAeWVNzD03rUkFDXZY1jSMSuIfOwsOBsciAx0tEFBUkJCp6qNNn1R0HypGFZFJ63zU4kwIIzGXbEGwYPvUQPxmx493RlTf35WhkCcwJiqQtwqSyp30NIFsRQogAhqNolBLE=
+	t=1745500347; cv=none; b=Yla7c/sMiaqE31Ge8zsca1CwgEIbue9jflux55SFclTvjuM/IXePFn7eqWnUyfIeLdkSD+nLRSMaPFquwJR5l2Up2i0YxYK7m0e0GaQMvCrjUVv7srk2PERHY7JDgJ1gwLjIEL2YsgAKxFr+7Ym5TugjGJSoUZA7wKO5Yfs3pG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499218; c=relaxed/simple;
-	bh=P86oE7d+/laopXXLm4l/4blWBmnOYmZlRzNXI5Cbk/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nEcrwJtigRc4CpqSJFyi6C5ydu81dxOMY7D34CZeALCOVbY5V30pC0kNhsVVli/JmNwAwz/yxist0zjT5lqM6lPbXjFtqeXoLwJmugHvDzzonWV6uhtP9keAxC0Ts8aizLBmA7lZaGKhwZMbOto9+LVmGMVjTkDD4ijrdsEtZn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=sgkcfejB; arc=none smtp.client-ip=82.68.155.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+	s=arc-20240116; t=1745500347; c=relaxed/simple;
+	bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rdPiRoXo8WbgyOoLB+mykFB33NFgPZdC/mQHO7USp2jGLXwFl31CEh93cvjsyDk5iwFMbQ/KftKrIFiiatb1G2P1H4OoRgKV8iyQDnpvyNQ57U45HFJuLGRvSVFZpvMe8qDydIbsm7gQPMvN478qMMVXXf62Vsac55od9DU66bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZQJd5uL; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="sgkcfejB"
-Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
-	by wylie.me.uk (Postfix) with ESMTP id D6145120897;
-	Thu, 24 Apr 2025 13:53:31 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-	s=mydkim006; t=1745499211;
-	bh=P86oE7d+/laopXXLm4l/4blWBmnOYmZlRzNXI5Cbk/4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=sgkcfejB+MzMEtjvZcAhWSxSOL+ajLWRHA4hn14nvgR1mNN1EoN6YWcRYRXibv7Pz
-	 cVu8aqIgBsE8zplzKI56Q43zb22vMEwjpUXsVbb/+UN1PZfHXlZvkv8lDzAXwXomwc
-	 7qLiJ05u47pWLFVx48PIq+4JtNijO7VWmAitAQkNfKLUlfJWkAlRIxHYdFZQXky0a2
-	 wTcfK3LdKIV+fTRHI8uXgQvAgLa1Gk//MkfPPrEczyQwTyRHfyPuv5rqhajb8tPvU7
-	 jao/H58KOS2ZrM4dxEdOagEZXy3MtvnKPtEHN0EzDqQlWpNFUsm/8wrF/QLm85veaA
-	 jpdqmfh6RBLRQ==
-Date: Thu, 24 Apr 2025 13:53:31 +0100
-From: "Alan J. Wylie" <alan@wylie.me.uk>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>,
- Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Jiri
- Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>, Toke
- =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
- stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <20250424135331.02511131@frodo.int.wylie.me.uk>
-In-Reply-To: <aAlAakEUu4XSEdXF@pop-os.localdomain>
-References: <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
- <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
- <aAf/K7F9TmCJIT+N@pop-os.localdomain>
- <20250422214716.5e181523@frodo.int.wylie.me.uk>
- <aAgO59L0ccXl6kUs@pop-os.localdomain>
- <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
- <aAlAakEUu4XSEdXF@pop-os.localdomain>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
-X-Clacks-Overhead: GNU Terry Pratchett
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZQJd5uL"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so138362a91.0
+        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 06:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745500345; x=1746105145; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
+        b=bZQJd5uLIHiqvdd60ZN6YbOJVPBc4lZCkCIogFI8kSJAjne4GIBhRr7uGCbsWr2oA7
+         2LbVXzFIYq5FRBZoSL9qfZbo8ereRGnOzepOGLQElUTj0QYLaod3BrNmFN7DDEmVc0wV
+         ZBknh0JBLc9Sd55gC9r6tJ4RwNt6T3N26jcDVyTwOgZocmBV/zz+6QohNa1BoodoAE/u
+         n58EIHxus5e4ouWjLBuORXrwO4dwhyRi8Yij+KPwbToEOQlzHV5jTRMI4hrJrAme+f+s
+         uVSOndc28wXPf4De2yCt+Vf+mKGrD1cB6EtJYFmhK6CIsb7WQWZK2T6hlBTGUTbeqAn8
+         4unQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745500345; x=1746105145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
+        b=iM/bUuALjHvqAwlAJHHgdchZ8D8emkicJwFKf3bPX5tRbL8JWqUYRBFWGHMYGfWTcN
+         LBb2m93ZZUWoT/Aw8pBTe2jKBw7qy9KxDPBoG9nos1reUlXT0rl3Bh8o0vTRYna+H4BS
+         OZ37xWne39kJbUYUv4oigSHIpghVdg62Xr8ekscbk0KSBgRZyO07cPnsl8kRJ5bYu7uh
+         YIQlvm9T+CQZ038/UBibs2+nIyplMeM5FkrdnMQplzo+3Q46bBNns73t5oXIFKE6Z4ie
+         cYR/xh6ojDfy8OIRJvlBgFQlRixZdn3UxsbY5QkvukhdLuz+M7iOeJcLPfm3+cqh/Cla
+         phIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ5LfUjaOqRBAXJ/Igc6jrDeOnojKl538xXM2FFDer/03rCN87KIm225O6z8gtGj5KMhyzugweaF9O3w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxiivAQcJbyFDKuZUmJDfeQ7yTXNfN8g4/KqqSfldzISFZkylK1
+	hl36jrx9EvUXGSwX8zHjSgHU4YbkF/geTihawp2Ud2v0pjHcMtc9fCXR8mLzS7Y668r1d7ehzJ5
+	P90g3+he2uFVyx78Aw+0T7zV82x4=
+X-Gm-Gg: ASbGnctPdYmrjiP77MLrRXlLAiXPiBCUaslQUI1zwg1ZjZEcleAKsc988hOj/r3aF+z
+	F7QVo0EQIis1bGASt+6utFYwISTAj8rg67A4DArjczKYdc5q+MXTMhFB//HzDswYmlhpD4cN7W1
+	xh7Wkb9ih5nA9x9nFvg/akhQ==
+X-Google-Smtp-Source: AGHT+IEFvo9XYRtQEvgfEvNW3YyXCDl9i/8QVWCKx/TXGNL9aOOZJwdPzKvHZ6KZW7h65cYldr4AhFdLlL3QAZqAS3M=
+X-Received: by 2002:a17:90b:3906:b0:2ff:5759:549a with SMTP id
+ 98e67ed59e1d1-309ed24cc88mr1706401a91.1.1745500345346; Thu, 24 Apr 2025
+ 06:12:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+ <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu> <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+ <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu> <Z_jodBrNFdEpJRKA@mail-itl>
+ <aAn6wsnJ-6mqK4vR@mail-itl>
+In-Reply-To: <aAn6wsnJ-6mqK4vR@mail-itl>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 24 Apr 2025 09:12:13 -0400
+X-Gm-Features: ATxdqUFwuh2Liv704M5KwrRa6klhoiIfTdC591MnFCPLJIk1C-iKiwHLYfgFHos
+Message-ID: <CADnq5_Ptzieevwysn1Qz5yxTOujMtEDW=Rbwqpvmd_3o2Gd--Q@mail.gmail.com>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Gergo Koteles <soyer@irl.hu>, Dmitry Baryshkov <dbaryshkov@gmail.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Alex Hung <alex.hung@amd.com>, Harry Wentland <harry.wentland@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst=C3=A4tte wrote:
+On Thu, Apr 24, 2025 at 4:49=E2=80=AFAM Marek Marczykowski-G=C3=B3recki
+<marmarek@invisiblethingslab.com> wrote:
+>
+> On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
+> > > Hi Dmitry,
+> > >
+> > > But the code would start to become quite untraceable.
+> > > duplicate mode in amdgpu_dm_connector_mode_valid()
+> > > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> > > duplicate mode in create_stream_for_sink()
+> > > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> > > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
+> > > create_stream_for_sink()
+> >
+> > FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
+> > Ryzen 5 4500U). And the patch quoted below fixes it for me too.
+>
+> I've re-tested it with 6.15-rc3 and the issue is still there. Is there
+> something I can do to help fixing it before final 6.15 is out?
 
-> Meanwhile, if you could provide a reliable (and ideally minimum)
-> reproducer, it would help me a lot to debug.
+I believe this should be fixed in this patch which is already in this
+week's -fixes PR:
+https://gitlab.freedesktop.org/agd5f/linux/-/commit/b316727a27d0dac1e6b7ae5=
+1204df4d0f241fcc2
 
-I've found a reproducer. Below is a stripped down version of the shell scri=
-pt
-that I posted in my initial report.
+Alex
 
-Running this in a 1 second loop is enough to cause the panic very quickly.
-
-It seems a bit of network traffic is needed, too.
-
-
-# while true; do ./tc.sh; sleep 1; done
-13:33:43 7196kbit 29296kbit
-13:33:44 7196kbit 29296kbit
-...
-13:35:38 7196kbit 29296kbit
-13:35:39 7196kbit 29296kbit
-[panic]
-
-# while true; do ./tc.sh; sleep 1; done
-13:44:31 7196kbit 29296kbit
-13:44:32 7196kbit 29296kbit
-...
-13:44:52 7196kbit 29296kbit
-13:44:53 7196kbit 29296kbit
-[panic]
-
-The same place as usual
- htb_dequeue+0x42f/0x610 [sch_htb]
-
---------8<--------8<--------8<--------8<--------8<--------8<--------8<-----=
----8<--------8<
-#!/usr/bin/bash
-
-set -o nounset
-set -o errexit
-
-export PATH=3D/usr/bin
-
-ext=3Dppp0
-ext_ingress=3Dppp0ifb0
-
-ext_up=3D7196kbit
-ext_down=3D29296kbit
-
-printf "%(%T)T $ext_up $ext_down\n"
-
-q=3D1486
-quantum=3D300
-
-modprobe act_mirred
-modprobe ifb
-modprobe sch_cake
-modprobe sch_fq_codel
-
-ethtool -K "$ext" tso off gso off gro off=20
-
-tc qdisc del dev "$ext" root		>& /dev/null || true
-tc qdisc del dev "$ext" ingress		>& /dev/null || true
-tc qdisc del dev "$ext_ingress" root	>& /dev/null || true
-tc qdisc del dev "$ext_ingress" ingress	>& /dev/null || true
-ip link del "$ext_ingress"  		>& /dev/null || true
-
-tc qdisc add dev "$ext" handle ffff: ingress
-
-ip link add name "$ext_ingress"  type ifb
-ip link set dev "$ext_ingress" up || true=20
-
-tc filter add dev "$ext" parent ffff: protocol all u32 match u32 0 0 action=
- mirred egress redirect dev "$ext_ingress"
-tc qdisc add dev "$ext_ingress" root handle 1: htb default 11 r2q 20
-tc class add dev "$ext_ingress" parent 1: classid 1:1 htb rate $ext_down=20
-tc class add dev "$ext_ingress" parent 1:1 classid 1:11 htb rate $ext_down =
-prio 0 quantum $q
-tc qdisc add dev "$ext_ingress" parent 1:11 fq_codel quantum $quantum ecn
-tc qdisc add dev "$ext" root handle 1: htb default 11
-tc class add dev "$ext" parent 1: classid 1:1 htb rate $ext_up
-tc class add dev "$ext" parent 1:1 classid 1:11 htb rate $ext_up prio 0 qua=
-ntum $q
-tc qdisc add dev "$ext" parent 1:11 fq_codel quantum $quantum noecn
---------8<--------8<--------8<--------8<--------8<--------8<--------8<-----=
----8<--------8<
-
---=20
-Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+>
+> --
+> Best Regards,
+> Marek Marczykowski-G=C3=B3recki
+> Invisible Things Lab
