@@ -1,118 +1,117 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD027B4EA
-	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 13:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E2E191F91
+	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500347; cv=none; b=Yla7c/sMiaqE31Ge8zsca1CwgEIbue9jflux55SFclTvjuM/IXePFn7eqWnUyfIeLdkSD+nLRSMaPFquwJR5l2Up2i0YxYK7m0e0GaQMvCrjUVv7srk2PERHY7JDgJ1gwLjIEL2YsgAKxFr+7Ym5TugjGJSoUZA7wKO5Yfs3pG0=
+	t=1745501981; cv=none; b=CKqNGzyA/nqNrPa6l3qdXILWVrSx8NPokqMlFCniIIYyK5U/Ba5mnHsUDKKVhQ443mQmVBVrIeLC+SrwiuteNO9mFs97dyLtAhtv9rrnhrukgxe5w3aZYiFUxU/QQhuNXjdTZ+QH/44uQMaUH7a8WnE5uPk6IdI1V2H0WMvWZ/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500347; c=relaxed/simple;
-	bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rdPiRoXo8WbgyOoLB+mykFB33NFgPZdC/mQHO7USp2jGLXwFl31CEh93cvjsyDk5iwFMbQ/KftKrIFiiatb1G2P1H4OoRgKV8iyQDnpvyNQ57U45HFJuLGRvSVFZpvMe8qDydIbsm7gQPMvN478qMMVXXf62Vsac55od9DU66bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZQJd5uL; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745501981; c=relaxed/simple;
+	bh=tup9ty6E85TqqyX4LCy5mGsqmAz3JKnWrm9yplFxREs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QsKF/P0n78fkFvslJTpaDdOcTf3dSnaOA/LPl6bJneg8/BSlANxty/zNGVx0pdaaUKlBCd0A2N9tWzS4dYuOLPP+jciP1C0ewU+wG677YfxVxFTDuTstGXKQTfP7gWnj2LfqlddWea9TkSdGEB7nZNNXzYHCjWME7gYJCs5Eq2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com; spf=none smtp.mailfrom=hefring.com; dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b=sLFqOc6Y; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hefring.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZQJd5uL"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so138362a91.0
-        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 06:12:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b="sLFqOc6Y"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c53b9d66fdso150511985a.3
+        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 06:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745500345; x=1746105145; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-        b=bZQJd5uLIHiqvdd60ZN6YbOJVPBc4lZCkCIogFI8kSJAjne4GIBhRr7uGCbsWr2oA7
-         2LbVXzFIYq5FRBZoSL9qfZbo8ereRGnOzepOGLQElUTj0QYLaod3BrNmFN7DDEmVc0wV
-         ZBknh0JBLc9Sd55gC9r6tJ4RwNt6T3N26jcDVyTwOgZocmBV/zz+6QohNa1BoodoAE/u
-         n58EIHxus5e4ouWjLBuORXrwO4dwhyRi8Yij+KPwbToEOQlzHV5jTRMI4hrJrAme+f+s
-         uVSOndc28wXPf4De2yCt+Vf+mKGrD1cB6EtJYFmhK6CIsb7WQWZK2T6hlBTGUTbeqAn8
-         4unQ==
+        d=hefring-com.20230601.gappssmtp.com; s=20230601; t=1745501978; x=1746106778; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YWMfkI1WRY3cYf9FnHsr+03ZRcmNsaavRSb0tETeg20=;
+        b=sLFqOc6YpDwG3mn2L81IpV5u1e1dTwa5by2H6K246c5CG65UOQYTJVNjcZGzKpkb+n
+         vDmUhJNNLDhBKbS+jJX2acVYdAVLt8r2i87uNViUlPAEQ65okIxdnSqtv+7xgvJHlHHw
+         2B/V2vjjMPYHNLzzppcC5DlE8Cwk4SF0EQ0NT20hZmXvS53MHvYjDNUBVu7V/XRN3NYk
+         nh5XcyJer9E3be/Q/DjdieSmLG/PlPHiN4V1gQ5GH2xME01hv1D8VveVhHHXIk0w3xdd
+         X5Wp2nCC2/NcNgY4ihdDMpKKGuR69NwPU7ZEiccHy2/pvCxgk9lgpWkn07VVVv4TOkB7
+         2w8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745500345; x=1746105145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-        b=iM/bUuALjHvqAwlAJHHgdchZ8D8emkicJwFKf3bPX5tRbL8JWqUYRBFWGHMYGfWTcN
-         LBb2m93ZZUWoT/Aw8pBTe2jKBw7qy9KxDPBoG9nos1reUlXT0rl3Bh8o0vTRYna+H4BS
-         OZ37xWne39kJbUYUv4oigSHIpghVdg62Xr8ekscbk0KSBgRZyO07cPnsl8kRJ5bYu7uh
-         YIQlvm9T+CQZ038/UBibs2+nIyplMeM5FkrdnMQplzo+3Q46bBNns73t5oXIFKE6Z4ie
-         cYR/xh6ojDfy8OIRJvlBgFQlRixZdn3UxsbY5QkvukhdLuz+M7iOeJcLPfm3+cqh/Cla
-         phIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ5LfUjaOqRBAXJ/Igc6jrDeOnojKl538xXM2FFDer/03rCN87KIm225O6z8gtGj5KMhyzugweaF9O3w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxiivAQcJbyFDKuZUmJDfeQ7yTXNfN8g4/KqqSfldzISFZkylK1
-	hl36jrx9EvUXGSwX8zHjSgHU4YbkF/geTihawp2Ud2v0pjHcMtc9fCXR8mLzS7Y668r1d7ehzJ5
-	P90g3+he2uFVyx78Aw+0T7zV82x4=
-X-Gm-Gg: ASbGnctPdYmrjiP77MLrRXlLAiXPiBCUaslQUI1zwg1ZjZEcleAKsc988hOj/r3aF+z
-	F7QVo0EQIis1bGASt+6utFYwISTAj8rg67A4DArjczKYdc5q+MXTMhFB//HzDswYmlhpD4cN7W1
-	xh7Wkb9ih5nA9x9nFvg/akhQ==
-X-Google-Smtp-Source: AGHT+IEFvo9XYRtQEvgfEvNW3YyXCDl9i/8QVWCKx/TXGNL9aOOZJwdPzKvHZ6KZW7h65cYldr4AhFdLlL3QAZqAS3M=
-X-Received: by 2002:a17:90b:3906:b0:2ff:5759:549a with SMTP id
- 98e67ed59e1d1-309ed24cc88mr1706401a91.1.1745500345346; Thu, 24 Apr 2025
- 06:12:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745501978; x=1746106778;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YWMfkI1WRY3cYf9FnHsr+03ZRcmNsaavRSb0tETeg20=;
+        b=MC9FPkDkGg6l73DwYMqMq3t3g7OiqV2bxMvR0HYzZLFRvtGXAQ2sRAOlF5SbSA3vVe
+         uhRuayzhT0z38gtZlehT51Pn5TX0kpm8k4P7y703Yg+ZxWr7bQhSOSQZR6ECvS7W31mb
+         UQpEuHRfYC8ZDrtgtzCWUJnm5p2iXkBusmpwStxXc8EoqXv40LttY2UOt2//S17wrx22
+         C7asoN6QfspqwvYjqBHLaOQ5FQMXu8BCOy/7h+/QLsjvDpqmRSZ6PLwxtclcPVJsXCJi
+         f3XYEvb+h5x5NxuAFh6/MBO8r6qnMBHzAvIcsQ7rQ8+zSr+kx5688XqnnP55V9NSAR5H
+         FPMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDLzUjC9KXblgJu/8vr1iZUJZU5SYuWy9M1WUoPNl592HLUOgbOEnIVOYyClNcd7DsrwVgUmpUuS1hww==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzGE2aRuNWj+l6H+ZwEoWhTHFoNyyEyUfwjo05Kz3QQJNHd0pO6
+	wDckPw0XbInDfFpCSegiNk7VuGnb5R54ABXtZVrfI5B16wA+9mEtdsBQE5z4ubk=
+X-Gm-Gg: ASbGnctolFlUqZn0bv9bhwJj6RsBj9u8TxwtnE27c6GfFQaRazzWSzSxf+aSadtU2NK
+	2XYXmQ/rRdi6ue9lsSbx5jCcwB5tgcjgU6W34gEqYj1Vo4QKY6+3Zi3v407ZjdEsfcWflmREmSh
+	h4cCqEUgPF/1TyyHZOyVyXvEUM9fMtxDl1UDveNAAkeSugvVMjGXyKghZRlKqRapHBpOGBE4y4g
+	NERnitowC7+XvqgyNJScKjlZjSSBe9nl6w+jUeKdc/6r8Utw8yUb+NwqfUnUc8XQjdlZAK3bmOO
+	dBEs8kJFwdOeCUG3G8dZBgKOreKpismB+e4B/MbKASmEWuwaAwILwg/S3w==
+X-Google-Smtp-Source: AGHT+IGBbcE518ngciGGF0+eLjyFAC+mlK6EuUeB14SDh6Nm7kNgxryaWfeo2bDtyypKwASpBUSZdQ==
+X-Received: by 2002:a05:620a:1a07:b0:7c5:4c6d:7fa9 with SMTP id af79cd13be357-7c956f4aadcmr432561485a.49.1745501978313;
+        Thu, 24 Apr 2025 06:39:38 -0700 (PDT)
+Received: from dell-precision-5540 ([50.212.55.90])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c9589cc670sm89847585a.0.2025.04.24.06.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 06:39:37 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:39:35 -0400
+From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Christian Schrrefl <chrisi.schrefl@gmail.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Rudraksha Gupta <guptarud@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+	anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org,
+	laura.nao@collabora.com, linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	rust-for-linux@vger.kernel.org, torvalds@linux-foundation.org,
+	Nick Clifton <nickc@redhat.com>,
+	Richard Earnshaw <richard.earnshaw@arm.com>,
+	Ramana Radhakrishnan <ramanara@nvidia.com>
+Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
+Message-ID: <aAo_F_UP1Gd4jHlZ@dell-precision-5540>
+References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
+ <20250407183716.796891-1-ojeda@kernel.org>
+ <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
+ <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
+ <aAKrq2InExQk7f_k@dell-precision-5540>
+ <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
- <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu> <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
- <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu> <Z_jodBrNFdEpJRKA@mail-itl>
- <aAn6wsnJ-6mqK4vR@mail-itl>
-In-Reply-To: <aAn6wsnJ-6mqK4vR@mail-itl>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 24 Apr 2025 09:12:13 -0400
-X-Gm-Features: ATxdqUFwuh2Liv704M5KwrRa6klhoiIfTdC591MnFCPLJIk1C-iKiwHLYfgFHos
-Message-ID: <CADnq5_Ptzieevwysn1Qz5yxTOujMtEDW=Rbwqpvmd_3o2Gd--Q@mail.gmail.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Gergo Koteles <soyer@irl.hu>, Dmitry Baryshkov <dbaryshkov@gmail.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Alex Hung <alex.hung@amd.com>, Harry Wentland <harry.wentland@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
 
-On Thu, Apr 24, 2025 at 4:49=E2=80=AFAM Marek Marczykowski-G=C3=B3recki
-<marmarek@invisiblethingslab.com> wrote:
->
-> On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> > > Hi Dmitry,
-> > >
-> > > But the code would start to become quite untraceable.
-> > > duplicate mode in amdgpu_dm_connector_mode_valid()
-> > > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> > > duplicate mode in create_stream_for_sink()
-> > > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> > > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
-> > > create_stream_for_sink()
-> >
-> > FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-> > Ryzen 5 4500U). And the patch quoted below fixes it for me too.
->
-> I've re-tested it with 6.15-rc3 and the issue is still there. Is there
-> something I can do to help fixing it before final 6.15 is out?
+On Sat, Apr 19, 2025 at 12:30:01AM +0200, Miguel Ojeda wrote:
+> Thanks a lot for the details!
+> 
+> To clarify, this is for GCC kernel builds: skipping the flag is done
+> for libclang under GCC builds (because `bindgen` always uses libclang,
+> and `bindgen` is used by Rust to understand C headers).
+> 
+> So GCC will get the flag for the C side of the kernel builds, but
+> libclang will not get the flag because Clang doesn't recognize it.
+> Thus, if Clang vs. GCC differ in how they compute the layout of some
+> type, then we would have an issue "mixing" them.
+> 
+> As you can imagine, GCC kernel builds with Rust enabled are a hack due
+> to that, and it would be ideal to get `bindgen` to somehow be able to
+> understand C headers as GCC does:
+> 
+>     https://github.com/rust-lang/rust-bindgen/issues/1949
 
-I believe this should be fixed in this patch which is already in this
-week's -fixes PR:
-https://gitlab.freedesktop.org/agd5f/linux/-/commit/b316727a27d0dac1e6b7ae5=
-1204df4d0f241fcc2
+-mno-fdpic disables a GCC feature that we don't want for kernel builds.
+clang does not support this feature, so it always behaves as though
+-mno-fdpic is passed. Therefore, it should be fine to mix the two, at
+least as far as FDPIC is concerned.
 
-Alex
+Ben
 
->
-> --
-> Best Regards,
-> Marek Marczykowski-G=C3=B3recki
-> Invisible Things Lab
