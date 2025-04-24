@@ -1,323 +1,256 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A094274FD8
-	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 15:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0E027B4F8
+	for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 16:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508927; cv=none; b=F2IsSjAD84Z/H1zxYthYSzVfDtgrGgKqPAPhEDUzpH5+LPLcIZ0BOq3vXHfRp+PCSvGE8LCg8MMKrMwPErbR+J7ZuA70MvvP+dVIOlFCjkOrzX/tBaO/lzsQZ0Ef6JuTc8GibTsout6TJgwAeNnA94W3ZHUyzTLmm2waaOSUWWc=
+	t=1745511707; cv=none; b=QTqUvN4c53haPt3DT0TvYYtSl47lJ8E77EGK6FIaBgRuSzahd62RtiMt7jORTp5NOZR7LNiW3dAxIXQsGLpVfpJ2kC18Y4SUhVXz4Bi7TcPG5LzsBlUp0xovHF8megbZcPG4Cu89mkXZOjclE6yCG3KIt2OMKsM6AVg1POhHVUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508927; c=relaxed/simple;
-	bh=uulvpoNlf0v9TkT+QqAhQUPMpAvCv5DHfTKEnGdy3Xk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oFnFay788TI1KIPRa3s+Ie8nRMZbxKAzYsDu9qa3dSI6ZkoNwzreJD5d0sjOD1g+egERnM7rEvH1UIRB7DlKURrSPjCBE6BuYCAOsVgEBNyD92YHkh7q9+2v6vpAgOQg0Z9ZHLkq3qCtKZlBZIB6aafxTVRBqvmC3PAP7qMX5q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hD59rwR0; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1745511707; c=relaxed/simple;
+	bh=N1LvDqlaHJwix0L58K+uG0murbc8Z9oJ6R1h7Z2kM1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzHEu1o35eEQaw8nVOdNnLbpb7EkJNlVK+s7gQnMiLbicigzgidalT4PfEZjPLIg1b8m3nK5R1jf9VTBOzoDgHiX6cb9Rxx777OGsXWl4r8eeSbkwBaSFlCI6Yx6HVlW5OPFo9kX/NEWbsWQ/iaL1MCiiRRiM8uwskOvz+zcO14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iqLV59mH; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hD59rwR0"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so6106165e9.2
-        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 08:35:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iqLV59mH"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3b12e8518so226112466b.0
+        for <regressions@lists.linux.dev>; Thu, 24 Apr 2025 09:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745508923; x=1746113723; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=90J0ZmCW6/hQg6wXxjTUSHJn5hh8V/UVJ5EmPQBXgjk=;
-        b=hD59rwR0R4yA16jd28fMMHlfYJuXsAyFvMVVpkfXdA7bY4I3jhk3pdHSXjqlBHIi8U
-         ckXDh6zTbnmRaPxPqzWjmfas9Hm6NARZgkLxdIjApD60Y9O8Fb8FN0Ix/qgve20SCI1+
-         I04y/9quv/d1cD4UBlTH3li2dv/liVNMHxmAD/Jl6DNIcPcWdGTGcYjTC7Fw7zMIBC8f
-         ABuuTIZaNp9KduTa00ULC3XGTT+jPYxpCH9tMDDj/+zSBaIyDZEExKzceDS9pr1L6r7e
-         ce1KqWyK/XcmbfM+EQh8WzL36JwzykrbKLBRBS0wUXdhT39n5nopqgPAZUDclWn/Qubv
-         dF4A==
+        d=linaro.org; s=google; t=1745511701; x=1746116501; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dhyruI8H4WvEtqRFSbUpsDUEBq04DUJcZn9mG7FKACg=;
+        b=iqLV59mHKg9TfoRaIlpCXTb4zx5O19w4QEyLAGY04DR+YIrAdOcEbBLEGh8rUC8uhB
+         ht9Qq1X2iO2gJFA4J8b9ozpC4d5obzBFogaLHOOD1TFkiOaa3r7ZUO6kAFFcUJLfGZYo
+         REWUYjoqCtlR0ZUR+24ChYR18M/9nWdfEs660Bwkvz/f6n3xLBhSMtVQ2Y4efzsXHXJr
+         IfNc6fJOnf412MqM4ioHpQRmYAWldeKo2IFPwEn/iIMpebbSnfBQL58iYqVej0JK8+2N
+         wKm6+Fa0N88w0QDwtvjhV4s8NPX/Xy5tEHaJbQpIkxIgJy7o5KPF61MW6usb0eB6nXg8
+         J0yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745508923; x=1746113723;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=90J0ZmCW6/hQg6wXxjTUSHJn5hh8V/UVJ5EmPQBXgjk=;
-        b=f+1ulv/Kk5msQK9YWcC/IHreVsvAPBB31Oq1/G5tNQrUQKIFC5f+/fvvwtblFa+Nb+
-         tRqXE59z0nTzNr6GK6YoIRqDP3kZtxgX9507r5VGGuAyHAvTzB0IOOcXpIC72GikGA//
-         gHmribeoLmAoH9Mn8imL/0rY6yikbICEyhj91xkHMsteQf9ZyfqitxT+6TJCf7NbhPvX
-         ezdmNYtWnUjHzNJOXSDHoj0vxb0Bq4rcAmFv2XbCPwGn9W+aqVX44EhBrWYkG5hIZDSn
-         uR10x+dBkEMAdwdSQ4WF6rWTQBEo3ZXbhd0uDurLbFEuvm3vRbqDbW1l1Uvj2efSskMb
-         6Cqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFI5wgpKr6aPUu8hNGZMfbPCtbpgZa4KeZ5Li6QE/eqNInG+3GmAviyVvZNEOFWiuBN23Lq+gHhGyY6Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwmegzYxSI9qW+gHZO1+XWegGkuovn/UTnhYdSsTTLOK5kz0UjL
-	kzhFp78us0LlwwjVxZBgUl7BDf9iIUBLMy2nXPuIOVrNn278JbE5E6rKAPkKU7M=
-X-Gm-Gg: ASbGncu8q8eW8fusBO9cqSu5iVwlOv6kiVuiKKru7H9Rbmol4Z14cSosb2mZUv677M8
-	E2Fsl1H5OsDlAfXC2zwGoD3PZxq4+W1dDlPRJL5COHX8N2JEfDv7LeD3m2nPAav/Men+v8H8Yoy
-	547xezFTfTMDn2U4VRl+GHEvoyJrZIHpPD7kdJAJQxIQezDgQViicVQEEJLbCoMO85C1QCmRT/s
-	bvSQAeM2IHVYG/mbRygbYNq7XJGSJBsNNjiGD6R9dnINrzYS4vneDYLpZXY0a1kLWZPdvnaybK7
-	g/SS4UIIKgcUlzXuTUjlHxhqek+h/XmX/rlN8wnrizDejzW16BjmEni75FUIgpTjrqzoujrj1cn
-	ZI/0xNsdNR0XjItqMtw==
-X-Google-Smtp-Source: AGHT+IGTwz+l2hU3W5oB/SMKYK5pobundB5Y5e3EUt8oWYelt7IXQZcpTS1d1RGvuuIScs225N7JYQ==
-X-Received: by 2002:a05:600c:4e14:b0:43c:fe15:41d4 with SMTP id 5b1f17b1804b1-4409bd324ffmr33081305e9.18.1745508923253;
-        Thu, 24 Apr 2025 08:35:23 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:a24a:bfda:f031:720d? ([2a01:e0a:3d9:2080:a24a:bfda:f031:720d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29b990sm27036615e9.4.2025.04.24.08.35.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 08:35:22 -0700 (PDT)
-Message-ID: <c7f2476a-943a-4d73-ad80-802c91e5f880@linaro.org>
-Date: Thu, 24 Apr 2025 17:35:22 +0200
+        d=1e100.net; s=20230601; t=1745511701; x=1746116501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dhyruI8H4WvEtqRFSbUpsDUEBq04DUJcZn9mG7FKACg=;
+        b=XWVHK1Wo3Q+Y7TZ+oQa/YcbGUFSQMtZXVKF2cDcHguuGfiQ7GSQpVKP20Bb7uw5R/4
+         VT1Jc0A2ovk9cn3NmPi2xETWSbrvGaAtW5v7NMPGeJKD6vW5D8JvCMIu2iT82KpH1HeC
+         3mSPeY4bO7ShUeGDDNFG84tZpf3xg9bFu96mgPunZV1eBFGOV7Epo1MdW9t7V22+VgQB
+         SRIvhrslIjj6/07Ced3iKg7Yn1+1iS6o/eUVhOOKdgTlyBp3poKOBaXlPqwv8iNUcMnj
+         tWUEN2s4T+9JE0N8IfPNN3SmCkxjPqdyMlAIpcFeNEPQPKcQt6VQDZT27gZppvzs2BVP
+         oW5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDfccvp1BYZ65U4WPw67h0PGrTBzwKlOAcqqGEQ3LHb8Zmi5E3Y/f+LMalY16w/7DZvqc5SB3DO9lCog==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyaf7hQdGYODvNtHmBz1ju2EO+g5vI1h4//CCG/AoLSeugoKALG
+	xEFsjlm3OH9bzeYMdAYhBduURXTKDvUdt3G3plwh/bYQFgbOENon5p+F0kO5Yug=
+X-Gm-Gg: ASbGncvx7OLZb4sjMwkJDVAtLtnf/nTFljCEhv5lw/rZt5dcG1GOOziaNtKKJuEZPXc
+	52jQUFLmbwiAoXeuuCJyd9cHwJ4wqAOc5nBmzoEeSberJYMIS+WPUbtY/IgVfgcFXqCWjqIVrbM
+	7lwLTdNLLBBCJwPrXv4qupQv9rkNdQztUxKDMCj40AygXDYAzKZSSjrUfJ7Cn+N4vYgIFPmyk0m
+	USp8qsXAHkCjx5nvbC88B8PONY0OkBGro3uYcb6+P1kKFu+EPgJH0zR8vkxTzAmIqXCgJL6sn7n
+	oZh5QPBaTJ+YLhBCN7SbwzZW/kwiGNI4J07gb9882/QvDmWVBg==
+X-Google-Smtp-Source: AGHT+IFBuPsFqWBVaxD0NkHLCf/0KgIji9RD8TCmgZElYimVI+psaaD+Mb0B6Zu0J/2A0rbOBZFv6w==
+X-Received: by 2002:a17:907:2ce4:b0:ac7:391b:e688 with SMTP id a640c23a62f3a-ace6b5daee9mr20560566b.58.1745511701167;
+        Thu, 24 Apr 2025 09:21:41 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:d677:e5de:3a6:836])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59c25b01sm127421666b.129.2025.04.24.09.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:21:40 -0700 (PDT)
+Date: Thu, 24 Apr 2025 18:21:36 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	Christian Loehle <christian.loehle@arm.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Sultan Alsawaf <sultan@kerneltoast.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>, regressions@lists.linux.dev,
+	Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and
+ policy->max
+Message-ID: <aAplED3IA_J0eZN0@linaro.org>
+References: <5907080.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v5 5/8] scsi: ufs: core: Enable multi-level gear scaling
-To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
- bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
- avri.altman@wdc.com, junwoo80.lee@samsung.com, martin.petersen@oracle.com,
- quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
- peter.wang@mediatek.com, quic_rampraka@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- Alim Akhtar <alim.akhtar@samsung.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Andrew Halaney <ahalaney@redhat.com>,
- open list <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
- <20250213080008.2984807-6-quic_ziqichen@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250213080008.2984807-6-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5907080.DvuYhMxLoT@rjwysocki.net>
 
-Hi,
+Hi Rafael,
 
-On 13/02/2025 09:00, Ziqi Chen wrote:
-> From: Can Guo <quic_cang@quicinc.com>
+On Wed, Apr 16, 2025 at 04:12:37PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> With OPP V2 enabled, devfreq can scale clocks amongst multiple frequency
-> plans. However, the gear speed is only toggled between min and max during
-> clock scaling. Enable multi-level gear scaling by mapping clock frequencies
-> to gear speeds, so that when devfreq scales clock frequencies we can put
-> the UFS link at the appropriate gear speeds accordingly.
+> Since cpufreq_driver_resolve_freq() can run in parallel with
+> cpufreq_set_policy() and there is no synchronization between them,
+> the former may access policy->min and policy->max while the latter
+> is updating them and it may see intermediate values of them due
+> to the way the update is carried out.  Also the compiler is free
+> to apply any optimizations it wants both to the stores in
+> cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+> which may result in additional inconsistencies.
 > 
-> Signed-off-by: Can Guo <quic_cang@quicinc.com>
-> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> To address this, use WRITE_ONCE() when updating policy->min and
+> policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+> them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+> in cpufreq_set_policy() to avoid storing intermediate values in
+> policy->min and policy->max with the help of the observation that
+> their new values are expected to be properly ordered upfront.
+> 
+> Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+> ordering of policy->min and policy->max, which may happen depending on
+> the ordering of operations when this function and cpufreq_set_policy()
+> run concurrently, into account by always honoring the max when it
+> turns out to be less than the min (in case it comes from thermal
+> throttling or similar).
+> 
+> Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+> Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
 > 
-> v1 -> v2:
-> Rename the lable "do_pmc" to "config_pwr_mode".
+> This replaces the last 3 patches in
+> 
+> https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
 > 
 > v2 -> v3:
-> Use assignment instead memcpy() in function ufshcd_scale_gear().
+>    * Fold 3 patches into one.
+>    * Drop an unrelated white space fixup change.
+>    * Fix a typo in a comment (Christian).
 > 
-> v3 -> v4:
-> Typo fixed for commit message.
+> v1 -> v2: Cosmetic changes
 > 
-> v4 -> v5:
-> Change the data type of "new_gear" from 'int' to 'u32'.
 > ---
->   drivers/ufs/core/ufshcd.c | 44 ++++++++++++++++++++++++++++++---------
->   1 file changed, 34 insertions(+), 10 deletions(-)
+>  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 8d295cc827cc..9908c0d6a1e1 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -1308,16 +1308,26 @@ static int ufshcd_wait_for_doorbell_clr(struct ufs_hba *hba,
->   /**
->    * ufshcd_scale_gear - scale up/down UFS gear
->    * @hba: per adapter instance
-> + * @target_gear: target gear to scale to
->    * @scale_up: True for scaling up gear and false for scaling down
->    *
->    * Return: 0 for success; -EBUSY if scaling can't happen at this time;
->    * non-zero for any other errors.
->    */
-> -static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
-> +static int ufshcd_scale_gear(struct ufs_hba *hba, u32 target_gear, bool scale_up)
->   {
->   	int ret = 0;
->   	struct ufs_pa_layer_attr new_pwr_info;
->   
-> +	if (target_gear) {
-> +		new_pwr_info = hba->pwr_info;
-> +		new_pwr_info.gear_tx = target_gear;
-> +		new_pwr_info.gear_rx = target_gear;
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -495,8 +495,6 @@
+>  {
+>  	unsigned int idx;
+>  
+> -	target_freq = clamp_val(target_freq, policy->min, policy->max);
+> -
+>  	if (!policy->freq_table)
+>  		return target_freq;
+>  
+> @@ -520,7 +518,22 @@
+>  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
+>  					 unsigned int target_freq)
+>  {
+> -	return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
+> +	unsigned int min = READ_ONCE(policy->min);
+> +	unsigned int max = READ_ONCE(policy->max);
 > +
-> +		goto config_pwr_mode;
-> +	}
+> +	/*
+> +	 * If this function runs in parallel with cpufreq_set_policy(), it may
+> +	 * read policy->min before the update and policy->max after the update
+> +	 * or the other way around, so there is no ordering guarantee.
+> +	 *
+> +	 * Resolve this by always honoring the max (in case it comes from
+> +	 * thermal throttling or similar).
+> +	 */
+> +	if (unlikely(min > max))
+> +		min = max;
 > +
-> +	/* Legacy gear scaling, in case vops_freq_to_gear_speed() is not implemented */
->   	if (scale_up) {
->   		memcpy(&new_pwr_info, &hba->clk_scaling.saved_pwr_info,
->   		       sizeof(struct ufs_pa_layer_attr));
-> @@ -1338,6 +1348,7 @@ static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
->   		}
->   	}
->   
-> +config_pwr_mode:
->   	/* check if the power mode needs to be changed or not? */
->   	ret = ufshcd_config_pwr_mode(hba, &new_pwr_info);
->   	if (ret)
-> @@ -1408,15 +1419,19 @@ static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool sc
->   static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
->   				bool scale_up)
->   {
-> +	u32 old_gear = hba->pwr_info.gear_rx;
-> +	u32 new_gear = 0;
->   	int ret = 0;
->   
-> +	new_gear = ufshcd_vops_freq_to_gear_speed(hba, freq);
-> +
->   	ret = ufshcd_clock_scaling_prepare(hba, 1 * USEC_PER_SEC);
->   	if (ret)
->   		return ret;
->   
->   	/* scale down the gear before scaling down clocks */
->   	if (!scale_up) {
-> -		ret = ufshcd_scale_gear(hba, false);
-> +		ret = ufshcd_scale_gear(hba, new_gear, false);
->   		if (ret)
->   			goto out_unprepare;
->   	}
-> @@ -1424,13 +1439,13 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
->   	ret = ufshcd_scale_clks(hba, freq, scale_up);
->   	if (ret) {
->   		if (!scale_up)
-> -			ufshcd_scale_gear(hba, true);
-> +			ufshcd_scale_gear(hba, old_gear, true);
->   		goto out_unprepare;
->   	}
->   
->   	/* scale up the gear after scaling up clocks */
->   	if (scale_up) {
-> -		ret = ufshcd_scale_gear(hba, true);
-> +		ret = ufshcd_scale_gear(hba, new_gear, true);
->   		if (ret) {
->   			ufshcd_scale_clks(hba, hba->devfreq->previous_freq,
->   					  false);
-> @@ -1723,6 +1738,8 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
->   		struct device_attribute *attr, const char *buf, size_t count)
->   {
->   	struct ufs_hba *hba = dev_get_drvdata(dev);
-> +	struct ufs_clk_info *clki;
-> +	unsigned long freq;
->   	u32 value;
->   	int err = 0;
->   
-> @@ -1746,14 +1763,21 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
->   
->   	if (value) {
->   		ufshcd_resume_clkscaling(hba);
-> -	} else {
-> -		ufshcd_suspend_clkscaling(hba);
-> -		err = ufshcd_devfreq_scale(hba, ULONG_MAX, true);
-> -		if (err)
-> -			dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
-> -					__func__, err);
-> +		goto out_rel;
->   	}
->   
-> +	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
-> +	freq = clki->max_freq;
-> +
-> +	ufshcd_suspend_clkscaling(hba);
-> +	err = ufshcd_devfreq_scale(hba, freq, true);
-> +	if (err)
-> +		dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
-> +				__func__, err);
-> +	else
-> +		hba->clk_scaling.target_freq = freq;
-> +
-> +out_rel:
->   	ufshcd_release(hba);
->   	ufshcd_rpm_put_sync(hba);
->   out:
+> +	return __resolve_freq(policy, clamp_val(target_freq, min, max),
+> +			      CPUFREQ_RELATION_LE);
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+>  
+> @@ -2338,6 +2351,7 @@
+>  	if (cpufreq_disabled())
+>  		return -ENODEV;
+>  
+> +	target_freq = clamp_val(target_freq, policy->min, policy->max);
+>  	target_freq = __resolve_freq(policy, target_freq, relation);
+>  
+>  	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+> @@ -2631,11 +2645,15 @@
+>  	 * Resolve policy min/max to available frequencies. It ensures
+>  	 * no frequency resolution will neither overshoot the requested maximum
+>  	 * nor undershoot the requested minimum.
+> +	 *
+> +	 * Avoid storing intermediate values in policy->max or policy->min and
+> +	 * compiler optimizations around them because they may be accessed
+> +	 * concurrently by cpufreq_driver_resolve_freq() during the update.
+>  	 */
+> -	policy->min = new_data.min;
+> -	policy->max = new_data.max;
+> -	policy->min = __resolve_freq(policy, policy->min, CPUFREQ_RELATION_L);
+> -	policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
+> +	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+> +	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
+> +	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
 
-This change causes UFS crash on the RB3gen2, after UFS successfully probe and scan:
+I've tested the cpufreq throttling again in 6.15-rc3 to check your fix
+for the schedutil CPUFREQ_NEED_UPDATE_LIMITS regression I reported [1].
+The CPU frequency is now being throttled correctly when reaching high
+temperatures. Thanks for fixing this!
 
-[    9.383728] ufshcd-qcom 1d84000.ufshc: pwr ctrl cmd 0x2 with mode 0x11 completion timeout
-[    9.393272] ufshcd-qcom 1d84000.ufshc: UFS Host state=1
-[    9.403126] msm_dpu ae01000.display-controller: [drm:adreno_request_fw [msm]] *ERROR* failed to load a660_sqe.fw
-[    9.408484] ufshcd-qcom 1d84000.ufshc: 0 outstanding reqs, tasks=0x0
-[    9.425577] ufshcd-qcom 1d84000.ufshc: saved_err=0x0, saved_uic_err=0x0
-[    9.432433] ufshcd-qcom 1d84000.ufshc: Device power mode=1, UIC link state=1
-[    9.439716] ufshcd-qcom 1d84000.ufshc: PM in progress=0, sys. suspended=0
-[    9.446742] ufshcd-qcom 1d84000.ufshc: Auto BKOPS=0, Host self-block=0
-[    9.453468] ufshcd-qcom 1d84000.ufshc: Clk gate=1
-...
-[   10.529259] ufshcd-qcom 1d84000.ufshc: ufshcd_change_power_mode: power mode change failed -110
-[   10.538102] ufshcd-qcom 1d84000.ufshc: ufshcd_scale_gear: failed err -110, old gear: (tx 1 rx 1), new gear: (tx 4 rx 4)
-[   10.542841] WARNING: CPU: 0 PID: 274 at drivers/ufs/core/ufshcd.c:5504 ufshcd_sl_intr+0x64c/0x6a4
-...
+Unfortunately, the opposite case has now regressed with this patch:
+After the CPU frequency has been throttled due to high temperature and
+the device cools down again, the CPU frequency is stuck at minimum until
+you reboot. policy->max will never restore to the maximum frequency.
 
-CI Run sample: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba-tester/-/jobs/233352#L1479
+I've confirmed that this causes unexpected slowness after temperature
+throttling on a Qualcomm X1E laptop, and Johan has confirmed that e.g.
+the ThinkPad X13s is also affected. I would expect that most devices
+using cpufreq cooling in the kernel are affected.
 
-Bisect run log:
-# bad: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
-# good: [38fec10eb60d687e30c8c6b5420d86e8149f7557] Linux 6.14
-git bisect start 'v6.15-rc1' 'v6.14'
-# bad: [fd71def6d9abc5ae362fb9995d46049b7b0ed391] Merge tag 'for-6.15-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-git bisect bad fd71def6d9abc5ae362fb9995d46049b7b0ed391
-# good: [fb1ceb29b27cda91af35851ebab01f298d82162e] Merge tag 'platform-drivers-x86-v6.15-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
-git bisect good fb1ceb29b27cda91af35851ebab01f298d82162e
-# good: [1952e19c02ae8ea0c663d30b19be14344b543068] Merge tag 'wireless-next-2025-03-20' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
-git bisect good 1952e19c02ae8ea0c663d30b19be14344b543068
-# bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-# good: [22093997ac9220d3c606313efbf4ce564962d095] Merge tag 'ata-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
-git bisect good 22093997ac9220d3c606313efbf4ce564962d095
-# bad: [336b4dae6dfecc9aa53a3a68c71b9c1c1d466388] Merge tag 'iommu-updates-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux
-git bisect bad 336b4dae6dfecc9aa53a3a68c71b9c1c1d466388
-# bad: [0711f1966a523d77d4c5f00776a7bd073d56251a] scsi: mpt3sas: Fix buffer overflow in mpt3sas_send_mctp_passthru_req()
-git bisect bad 0711f1966a523d77d4c5f00776a7bd073d56251a
-# good: [369552fd03f296261023872b8fc983d1fc55c8e9] Merge patch series "mpt3sas driver udpates"
-git bisect good 369552fd03f296261023872b8fc983d1fc55c8e9
-# bad: [42273e893157501ae119ea5459f3a7d2420c56d6] Merge patch series "scsi: scsi_debug: Add more tape support"
-git bisect bad 42273e893157501ae119ea5459f3a7d2420c56d6
-# bad: [7e72900272b61c11f2fd4020d4f186124d0d171b] Merge patch series "Support Multi-frequency scale for UFS"
-git bisect bad 7e72900272b61c11f2fd4020d4f186124d0d171b
-# good: [c02fe9e222d16bed8c270608c42f77bc62562ac3] scsi: ufs: qcom: Implement the freq_to_gear_speed() vop
-git bisect good c02fe9e222d16bed8c270608c42f77bc62562ac3
-# bad: [eff26ad4c34fc78303c14be749e10ca61c4d211f] scsi: ufs: core: Check if scaling up is required when disable clkscale
-git bisect bad eff26ad4c34fc78303c14be749e10ca61c4d211f
-# bad: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: ufs: core: Enable multi-level gear scaling
-git bisect bad 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
-# first bad commit: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: ufs: core: Enable multi-level gear scaling
+Looking at the code, I think the problem is that __resolve_freq() ->
+cpufreq_frequency_table_target() -> cpufreq_table_find_index*() and
+cpufreq_is_in_limits() are still using the old policy->min/max value.
+In this patch, you have only moved the clamp_val() usage directly in
+__resolve_freq().
 
-#regzbot introduced 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
+You can see this in the following debug log. I started a stress test
+that increases the device temperature until the CPU frequency was
+throttled to minimum. Then I stopped the stress test, the device cooled
+down, cpufreq_set_policy() was called with the new max frequency, but
+__resolve_freq() still returned the frequency clamped to the old maximum.
+
+  [  149.959693] cpufreq: handle_update for cpu 0 called
+  [  149.964782] cpufreq: updating policy for CPU 0
+  [  149.969411] cpufreq: setting new policy for CPU 0: 0 - 3206400 kHz
+  [  149.975842] cpufreq: new min and max freqs are 710400 - 3206400 kHz
+  [  149.982347] cpufreq: governor limits update
+  [  149.986715] cpufreq: cpufreq_governor_limits: for CPU 0
+  [...]
+  [  161.219209] cpufreq: handle_update for cpu 0 called
+  [  161.224291] cpufreq: updating policy for CPU 0
+  [  161.228927] cpufreq: setting new policy for CPU 0: 0 - 710400 kHz
+  [  161.235238] cpufreq: new min and max freqs are 710400 - 710400 kHz
+  [  161.241635] cpufreq: governor limits update
+  [  161.245989] cpufreq: cpufreq_governor_limits: for CPU 0
+  [  221.253253] cpufreq: handle_update for cpu 0 called
+  [  221.258322] cpufreq: updating policy for CPU 0
+  [  221.262946] cpufreq: setting new policy for CPU 0: 0 - 3417600 kHz
+  [  221.269418] cpufreq: new min and max freqs are 710400 - 710400 kHz
+                 ^ here the new maximum is not being applied
+  [  221.275839] cpufreq: governor limits update
+  [  221.280195] cpufreq: cpufreq_governor_limits: for CPU 0
+
+Any thoughts how to fix this properly?
+
+Please Cc me if you send a patch with the fix. The Reported-by: tag from
+me on the fix for the CPUFREQ_NEED_UPDATE_LIMITS problem didn't Cc me
+when sending for some reason, so I only learned about your fix when Greg
+sent out the stable backports yesterday. :-)
 
 Thanks,
-Neil
+Stephan
 
+[1]: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org/
+
+#regzbot introduced: 7491cdf46b5cbdf123fc84fbe0a07e9e3d7b7620
