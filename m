@@ -1,301 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9482623E235
-	for <regressions@lists.linux.dev>; Fri, 25 Apr 2025 11:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA5B28469B;
+	Fri, 25 Apr 2025 15:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579013; cv=none; b=T6U2XIwrSNFOMfYGRTzkwjlZw0d+C2WLjfIUOkHe4/Xp4IraQTlWy/K88gfdzs+I7dyQt81yiqOn00Tpe/EcU6HaHsexPodLrDEe6SXvhLH2ZFMvQlUOHXmWZuq/QH4uL76gOHVxlzmbHHmTk8pEE30eJsdulkUB6kljWpc+MsM=
+	t=1745594299; cv=none; b=Nqh7QggKN4QwY0QcwkjIISGSILGt+WjnbX7NMgO7yNjDzKzZvTHLtI5lV6TYWrpIJO2xBFeTeG4Vep1Syyuh6YIY64ut0J55gmBtoe3o8p0mYz9rXRg5otpJLEah01wi7QUKerE1fTpUnJMyjFy4Ou20452gbPhUSpq5rTP/MWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579013; c=relaxed/simple;
-	bh=53F6fAKEqiAEBwV0oYCLetHRtRnA9Hp2t7gbv8+IcH4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tIRS8MQgIDxHsIIqn7de7eboesKY3seoqoYud/mLGKnsQ84TQMQSiZIcRbo7os/lRqPQ06o41u1hEzk2VjjEMc5aAQ6L6t9UA52R3hvExgdDclPsmgA4SttHQdHm6PgYGjffvlufBabrfgEn5Rz1QH/MVRS/XVySxcX2VSb0AXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oByanJhM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oByanJhM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF76C4CEEC
-	for <regressions@lists.linux.dev>; Fri, 25 Apr 2025 11:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745579013;
-	bh=53F6fAKEqiAEBwV0oYCLetHRtRnA9Hp2t7gbv8+IcH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oByanJhMS/MqzXwI6xVMvTQ2gpY5dT1UdRqHhnPFMuYDWlrGfAXUvbsfsaXKYU6xY
-	 bx19V2vSLb8LWOWdPxeFO1Ba6po1geOvIfB7Nmf4tjTo3tJWz7dYqu8NvacqYbE9MP
-	 Z1DEBNZeIA/oMgCyx49fsXNCi3qrl0hDvJmRefs5/7ZtG09dShhevwtfb/o3Ai6BDh
-	 I6jAvb0JnjULZlouO/b0kbFKy3DQY1lozlZ7E4ho5aeu1gVSN22FN6zV8EPU8qx2Zp
-	 27BhWjjm7vlUn5ArlbLdm2IXkUfFGfXgbYgG1vRu3qV75dYfn8PAvT/uewf7wk4tkf
-	 TJ0J/+jwydiQA==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2cc57330163so1428340fac.2
-        for <regressions@lists.linux.dev>; Fri, 25 Apr 2025 04:03:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWmkBD0vof86SB5OHCibtURfkUrAfvty2Xdrcgqm5gdGWrmqURuNu5hsWGHn8ELgY8Jpm4Jn8kIthcGog==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxAGyw8X3pGAG3reR61b6wsAbTN7gE+rZcX1msL4/pk3hJovSdA
-	lKtuGKV8r7Nox3hujktwVc+dq5INnyLFJIhngMRsKqPE5MEWeCM/7RCRhSy/BCxmz8eugfooFbw
-	xuD+ZA7wX/akwwj0zFfEuYPtv+vw=
-X-Google-Smtp-Source: AGHT+IHrcrYjE1ggxwUYvjR9ha03ZKu+8Bsgk/bdz1CrmUYmRwOt7sEsQPl8gIa/4t3Ye5EJGa3Ye57mC87sUMoO4DE=
-X-Received: by 2002:a05:6871:5807:b0:29d:c85f:bc8c with SMTP id
- 586e51a60fabf-2d9a3575ca3mr954235fac.36.1745579012693; Fri, 25 Apr 2025
- 04:03:32 -0700 (PDT)
+	s=arc-20240116; t=1745594299; c=relaxed/simple;
+	bh=FvN9HXG5+5Rpjeqr/q4angzS0+2K431c0FIv3jfhMhs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T6wrJMJCFTMq/XteeXjGsGlZqKbcBNIyWhtbXcShTZ0dGgVO2B/OZcEk8lr6X2SdJEM+9WKP/D9QSpdDKwMuKhVcCEz4hrVusAtlXo12bBV6bOuYiKMw3fw31c79LNsULdoz79rcde+qs2/+FA+u55nLnmOo6DGkfJLoZaJ9QuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E685106F;
+	Fri, 25 Apr 2025 08:18:11 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48ED13F59E;
+	Fri, 25 Apr 2025 08:18:15 -0700 (PDT)
+Message-ID: <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
+Date: Fri, 25 Apr 2025 16:18:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <5907080.DvuYhMxLoT@rjwysocki.net> <aAplED3IA_J0eZN0@linaro.org>
- <CAJZ5v0i7-LuBX5VCwn_LhyT=RkmQMn6qv3duc+RViXxJBwk2LA@mail.gmail.com> <12665363.O9o76ZdvQC@rjwysocki.net>
-In-Reply-To: <12665363.O9o76ZdvQC@rjwysocki.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 25 Apr 2025 13:03:21 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0icLndnA=mQEDabMtxRn942PiRthV3u12PB4eorTCLjDg@mail.gmail.com>
-X-Gm-Features: ATxdqUGOyTC_-puYKqRGPCiWoUPzRa0Z1dchrr3piVjbjYhRop7C8qldP09Ntuk
-Message-ID: <CAJZ5v0icLndnA=mQEDabMtxRn942PiRthV3u12PB4eorTCLjDg@mail.gmail.com>
-Subject: Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and policy->max
-To: Stephan Gerhold <stephan.gerhold@linaro.org>, Linux PM <linux-pm@vger.kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Christian Loehle <christian.loehle@arm.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Sultan Alsawaf <sultan@kerneltoast.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>, regressions@lists.linux.dev, 
-	Johan Hovold <johan@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
+From: Robin Murphy <robin.murphy@arm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+ <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
+ <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
+ <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com>
+ <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
+Content-Language: en-GB
+In-Reply-To: <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 9:36=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
-t> wrote:
->
-> On Thursday, April 24, 2025 6:37:46 PM CEST Rafael J. Wysocki wrote:
-> > Hi,
-> >
-> > On Thu, Apr 24, 2025 at 6:21=E2=80=AFPM Stephan Gerhold
-> > <stephan.gerhold@linaro.org> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On Wed, Apr 16, 2025 at 04:12:37PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Since cpufreq_driver_resolve_freq() can run in parallel with
-> > > > cpufreq_set_policy() and there is no synchronization between them,
-> > > > the former may access policy->min and policy->max while the latter
-> > > > is updating them and it may see intermediate values of them due
-> > > > to the way the update is carried out.  Also the compiler is free
-> > > > to apply any optimizations it wants both to the stores in
-> > > > cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_fre=
-q()
-> > > > which may result in additional inconsistencies.
-> > > >
-> > > > To address this, use WRITE_ONCE() when updating policy->min and
-> > > > policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
-> > > > them in cpufreq_driver_resolve_freq().  Moreover, rearrange the upd=
-ate
-> > > > in cpufreq_set_policy() to avoid storing intermediate values in
-> > > > policy->min and policy->max with the help of the observation that
-> > > > their new values are expected to be properly ordered upfront.
-> > > >
-> > > > Also modify cpufreq_driver_resolve_freq() to take the possible reve=
-rse
-> > > > ordering of policy->min and policy->max, which may happen depending=
- on
-> > > > the ordering of operations when this function and cpufreq_set_polic=
-y()
-> > > > run concurrently, into account by always honoring the max when it
-> > > > turns out to be less than the min (in case it comes from thermal
-> > > > throttling or similar).
-> > > >
-> > > > Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirement=
-s")
-> > > > Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > This replaces the last 3 patches in
-> > > >
-> > > > https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
-> > > >
-> > > > v2 -> v3:
-> > > >    * Fold 3 patches into one.
-> > > >    * Drop an unrelated white space fixup change.
-> > > >    * Fix a typo in a comment (Christian).
-> > > >
-> > > > v1 -> v2: Cosmetic changes
-> > > >
-> > > > ---
-> > > >  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
-> > > >  1 file changed, 25 insertions(+), 7 deletions(-)
-> > > >
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -495,8 +495,6 @@
-> > > >  {
-> > > >       unsigned int idx;
-> > > >
-> > > > -     target_freq =3D clamp_val(target_freq, policy->min, policy->m=
-ax);
-> > > > -
-> > > >       if (!policy->freq_table)
-> > > >               return target_freq;
-> > > >
-> > > > @@ -520,7 +518,22 @@
-> > > >  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *po=
-licy,
-> > > >                                        unsigned int target_freq)
-> > > >  {
-> > > > -     return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_L=
-E);
-> > > > +     unsigned int min =3D READ_ONCE(policy->min);
-> > > > +     unsigned int max =3D READ_ONCE(policy->max);
-> > > > +
-> > > > +     /*
-> > > > +      * If this function runs in parallel with cpufreq_set_policy(=
-), it may
-> > > > +      * read policy->min before the update and policy->max after t=
-he update
-> > > > +      * or the other way around, so there is no ordering guarantee=
-.
-> > > > +      *
-> > > > +      * Resolve this by always honoring the max (in case it comes =
-from
-> > > > +      * thermal throttling or similar).
-> > > > +      */
-> > > > +     if (unlikely(min > max))
-> > > > +             min =3D max;
-> > > > +
-> > > > +     return __resolve_freq(policy, clamp_val(target_freq, min, max=
-),
-> > > > +                           CPUFREQ_RELATION_LE);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
-> > > >
-> > > > @@ -2338,6 +2351,7 @@
-> > > >       if (cpufreq_disabled())
-> > > >               return -ENODEV;
-> > > >
-> > > > +     target_freq =3D clamp_val(target_freq, policy->min, policy->m=
-ax);
-> > > >       target_freq =3D __resolve_freq(policy, target_freq, relation)=
-;
-> > > >
-> > > >       pr_debug("target for CPU %u: %u kHz, relation %u, requested %=
-u kHz\n",
-> > > > @@ -2631,11 +2645,15 @@
-> > > >        * Resolve policy min/max to available frequencies. It ensure=
-s
-> > > >        * no frequency resolution will neither overshoot the request=
-ed maximum
-> > > >        * nor undershoot the requested minimum.
-> > > > +      *
-> > > > +      * Avoid storing intermediate values in policy->max or policy=
-->min and
-> > > > +      * compiler optimizations around them because they may be acc=
-essed
-> > > > +      * concurrently by cpufreq_driver_resolve_freq() during the u=
-pdate.
-> > > >        */
-> > > > -     policy->min =3D new_data.min;
-> > > > -     policy->max =3D new_data.max;
-> > > > -     policy->min =3D __resolve_freq(policy, policy->min, CPUFREQ_R=
-ELATION_L);
-> > > > -     policy->max =3D __resolve_freq(policy, policy->max, CPUFREQ_R=
-ELATION_H);
-> > > > +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, =
-CPUFREQ_RELATION_H));
-> > > > +     new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ=
-_RELATION_L);
-> > > > +     WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->=
-max : new_data.min);
-> > >
-> > > I've tested the cpufreq throttling again in 6.15-rc3 to check your fi=
-x
-> > > for the schedutil CPUFREQ_NEED_UPDATE_LIMITS regression I reported [1=
-].
-> > > The CPU frequency is now being throttled correctly when reaching high
-> > > temperatures. Thanks for fixing this!
-> > >
-> > > Unfortunately, the opposite case has now regressed with this patch:
-> > > After the CPU frequency has been throttled due to high temperature an=
-d
-> > > the device cools down again, the CPU frequency is stuck at minimum un=
-til
-> > > you reboot. policy->max will never restore to the maximum frequency.
-> > >
-> > > I've confirmed that this causes unexpected slowness after temperature
-> > > throttling on a Qualcomm X1E laptop, and Johan has confirmed that e.g=
-.
-> > > the ThinkPad X13s is also affected. I would expect that most devices
-> > > using cpufreq cooling in the kernel are affected.
-> > >
-> > > Looking at the code, I think the problem is that __resolve_freq() ->
-> > > cpufreq_frequency_table_target() -> cpufreq_table_find_index*() and
-> > > cpufreq_is_in_limits() are still using the old policy->min/max value.
-> > > In this patch, you have only moved the clamp_val() usage directly in
-> > > __resolve_freq().
-> >
-> > You are right, that's the problem.
-> >
-> > The fix is basically straightforward, pass min and max to
-> > cpufreq_frequency_table_target() and propagate downward, but making
-> > that change may be somewhat error-prone.
-> >
-> > I'll try to cut a patch to test tomorrow.
->
-> Actually, I have it already, so please find appended.
->
-> Please give it a go as soon as you reasonably can.
->
-> Thanks!
->
-> ---
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Subject: [PATCH v1] cpufreq: Fix setting policy limits when frequency tab=
-les are used
->
-> Commit 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and
-> policy->max") overlooked the fact that policy->min and policy->max were
-> accessed directly in cpufreq_frequency_table_target() and in the
-> functions called by it and the changes made by that commit led to
-> problems with setting policy limits.
->
-> Address this by passing the target frequency limits to __resolve_freq()
-> and cpufreq_frequency_table_target() and propagating them to the
-> functions called by the latter.
->
-> Fixes: 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and p=
-olicy->max")
-> Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpufreq/cpufreq.c          |   22 ++++++----
->  drivers/cpufreq/cpufreq_ondemand.c |    3 -
->  drivers/cpufreq/freq_table.c       |    6 +-
->  include/linux/cpufreq.h            |   81 ++++++++++++++++++++++++------=
--------
->  4 files changed, 72 insertions(+), 40 deletions(-)
->
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -491,14 +491,18 @@
->  EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
->
->  static unsigned int __resolve_freq(struct cpufreq_policy *policy,
-> -               unsigned int target_freq, unsigned int relation)
-> +                                  unsigned int target_freq,
-> +                                  unsigned int min, unsigned int max,
-> +                                  unsigned int relation)
->  {
->         unsigned int idx;
->
->         if (!policy->freq_table)
->                 return target_freq;
->
-> -       idx =3D cpufreq_frequency_table_target(policy, target_freq, relat=
-ion);
-> +       target_freq =3D clamp_val(target_freq, min, max);
+On 11/04/2025 8:11 pm, Robin Murphy wrote:
+[...]
+> OK, I found it, but I'm still not sure what exactly to make of it - it's 
+> the pci_request_acs() in of_iommu_configure(), now being called early 
+> enough to actually have an effect. Booting with EDK2 already using PCI 
+> prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl` 
+> with 6.15-rc1:
+> 
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+>          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ 
+> UpstreamFwd+ EgressCtrl- DirectTrans-
+> 
+> whereas with the 6.14 behaviour they are all '-'. I don't have a working 
+> root filesystem with the U-Boot setup, but if I boot it with 
+> "pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge 
+> windows and discover the ethernet/SATA endpoints again. I can spend some 
+> time getting NFS working next week, but if you're able to get lspci 
+> output off a machine in the "broken" state easily that would be handy to 
+> compare.
+> 
+> So at this point it would seem to be something about how Linux 
+> configures ACS when doing it from scratch. What I don't really know is 
+> where to go from there. I do know Juno's possibly a bit odd in that the 
+> switch supports ACS, but both the root port and endpoints either side of 
+> it don't. Could this be tickling some subtle bug in the PCI layer, and 
+> what is EDK2 doing that makes it not happen?
 
-This needs to be done before the freq_table check above or drivers
-without freq tables will have a problem.
+Just following up on where I ran out of ideas. I poked at things a 
+little more, and from a process of elimination, the culprit appears to 
+be is that we enable ACS source validation on the downstream port while 
+its secondary bus is still 0, *then* we get to the "bridge configuration 
+invalid" bit and reconfigure the bus numbers, but after that, config 
+space accesses to the secondary bus still apparently fail to work as 
+expected.
 
-I'll send an update of this patch shortly.
+What's now beyond me is whether this is just an ACS quirk of this 
+particular switch, and/or whether there's something we could or should 
+be doing in the PCI layer.
 
-Thanks!
+All I can suggest a this point is that you could at least sidestep the 
+problem on the LKFT boards by updating them to a less-ancient version of 
+U-Boot which supports PCIe for Juno (looks like that landed in 2020.10), 
+which should then configure the switch at boot such that the bus 
+numbering doesn't need to change when Linux probes it - that appears to 
+be the only "magic" thing that EDK2 is doing.
+
+Thanks,
+Robin.
