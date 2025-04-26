@@ -1,113 +1,85 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A1F18C91F
-	for <regressions@lists.linux.dev>; Fri, 25 Apr 2025 16:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAA9204C0F;
+	Sat, 26 Apr 2025 02:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597314; cv=none; b=P5u2fPWV4kjsl4YcCzJQ6FAqChMZQHmb56M3d1kMKBznWrbrKD3VJ9HM2FbnXfqUqcJK4uArKpMQKf7ObMus2E9QKGtKZUhj/si2DWu9cmMLgxZs5hB9oxyqrDZwBTsrZr87G0YgJ6WjrN0z1x5YQ8YeE3tPschQtsuCPjvPAH4=
+	t=1745632800; cv=none; b=nW+iOrcbFshNsGAHk3xmgLQJSZiCdIP99NSjwymlszPm3i/uvWIo26LUgkZLi/mgre0SFI3hoX6tOtCjc/khq1AD1PhjbAlrjLIQ/nWdJHozNParnXdPS1P7qFDKJW5yXjSVdtq/PUoEEavgoUb/bPxKI+xiTRJIHdlyNSh3o/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745597314; c=relaxed/simple;
-	bh=L2GzxIA56nfM+cDgMgMMSOWe5dN+/yidKvdmYvhSKfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QU/DvNZJmGfkwMDG1mxQN753pNH0TWia6/ldFdgOwFoujIVf4eVZMKTpu0xbfB41mKACc89ZTPRQELdHUF0/ePIW8yYoQDdsyyMV4qDgP/Dk8oqVZwdJavVslLP9Yp42VNVdX3G7j7ryRJ8zd0QTI63YhH3oEmY8W6GB0paCPN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B1vY28YT; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745632800; c=relaxed/simple;
+	bh=RYL8C4Y5ne48VhiH6iHbk3yOFuT7Zq4jtWwMf4+QlcY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IgbT4ub1S4F805Bmq2rGk3B7AhzTwOVn/MjpCoylitTCcF981jMKDER119vFSK+6zLEvprvAiaGKfAnQjLCYS+T8hhT94vugkSBAZt5TRuy+1R6TWtFLn/LJ3ynfvpBS0yhrKvFtCK61eJMPcYTVYDY+5TPmEq12pxg3/Hch6yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxC8ce/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1vY28YT"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-227b828de00so26565585ad.1
-        for <regressions@lists.linux.dev>; Fri, 25 Apr 2025 09:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745597312; x=1746202112; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=i5pNyASVzOvo7de5opodmAAp0f24p09fWkyNMVBg/4c=;
-        b=B1vY28YTxUyKl336jL5zmuTmiyW6yRhnLCkCVU1m/lhSCjpWKSOb5aO+wt6b5r6qy6
-         piBXVWu5q8Z6oGq+yJ3Hhlff3dXL6qc5834wc2J9xGtil7t6IGU6BgjIgNBJ8vHtzX0q
-         c0abQJzjGMgHs0bOTO+W0Gaoyzehr3v1BiQBf39J302eznJ/xiLkwaprQlQZzDOaW0+L
-         89xb4G3d56i8BsWvfpuvpPtMGnRvCB4cxPIZbTr9wkOlIgdLWtd7D+TZYU9oiynkZffK
-         cgFp2zC/kzOsaYdxkcFWcgnkVawjbdxQlGgYeJxMtxxg3fiRO/N4OF33dkZmPjedG3ik
-         lR/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745597312; x=1746202112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i5pNyASVzOvo7de5opodmAAp0f24p09fWkyNMVBg/4c=;
-        b=WI7SF+TOcEE7XbW4u2UWkblvC6/q7hkIB/hRGqHQci+UtS/vcn58e+7CMwVLh813t/
-         xtIzAtggcr0/BkxcqkiLwVsd8/FaTWL59dgJsceR12E6h3EqrUIBpBowdp+UvB6KznU5
-         DP1pkOftzK7uh2W1LYPuI3Fq2epk2a+/sUklO+b73/BjSL3HoBgKib42/ElBI5aPpnTO
-         +0WyGafi2EsL0e0LD3C5exdSDTXmF/i8EF9oTxxCprhmvhqOgs00p6EWfIoIdpgrEjF3
-         WpS6zRtnaVAPswt85BicDGfI8EQFDans6ZBbbClQZIq0bOPAYr2WaIFCwkAQ6AYp7uYi
-         rESw==
-X-Forwarded-Encrypted: i=1; AJvYcCVD4Ps72L0JQrHqAgsQanEj444HrvBkRKvmfA262jWwpOTuv3jzZGEprYKYSPJNEVaPq5fQAQeVDL3PmQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxAbiXLQvDAlINjTGVNENRx9SbT/1u3MnpLuI2IKt3APEXxvLbR
-	IaJ/M9ndoWYj/Zegh1hmmvdJjlxrWyr03qNhH212U0waZNa+FNlN
-X-Gm-Gg: ASbGnct0dt85WxSIgg5QIzxlhgri8FUNKTqsJPL3woNp2BacFvy/LVNnI208pjVAfJQ
-	WQz5lAgc8cMBgSjlDo72BhYYQjAXlp5v2SnQwTydU1ST+rdlEOtxeRbTQxmFTk55Br5lwN+7jn+
-	uoCXjwFPrkfAFoGe6IvIFwIr/bnrZzZjzhF25y8dOInkibRicY5VLauLGLJzJQttGtF73gStMz5
-	XobSOEtIkq23Q7LQw+q1Fcf3R412Q7E7f7Or+UdDIUBhSyadyCWefDEKrGu8y1ORe2bY4hZl+Kr
-	zmaW7jK5oOAjDKeHaex/JF3hF0sIlDjVMdkz6qpyWHrWTDE=
-X-Google-Smtp-Source: AGHT+IEDnCojjqBFupUvzzEwiunkDr1ppd44q2OkPVWtrj2YUpLPC11441r/ohtaDxUPakVfJZSnow==
-X-Received: by 2002:a17:902:f683:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22dbf62c38emr46955105ad.40.1745597311720;
-        Fri, 25 Apr 2025 09:08:31 -0700 (PDT)
-Received: from localhost ([2601:647:6881:9060:e00f:8820:97a7:c371])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7b08sm34009365ad.114.2025.04.25.09.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:08:30 -0700 (PDT)
-Date: Fri, 25 Apr 2025 09:08:29 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: "Alan J. Wylie" <alan@wylie.me.uk>
-Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
-	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <aAuzfQe08tFJclNJ@pop-os.localdomain>
-References: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
- <aAf/K7F9TmCJIT+N@pop-os.localdomain>
- <20250422214716.5e181523@frodo.int.wylie.me.uk>
- <aAgO59L0ccXl6kUs@pop-os.localdomain>
- <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
- <aAlAakEUu4XSEdXF@pop-os.localdomain>
- <20250424135331.02511131@frodo.int.wylie.me.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxC8ce/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FF3C4CEEB;
+	Sat, 26 Apr 2025 02:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745632800;
+	bh=RYL8C4Y5ne48VhiH6iHbk3yOFuT7Zq4jtWwMf4+QlcY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cxC8ce/+qVwaAt6BiZsX4Kbj3dhAXHmXu+zd5AGQlmIwOcu3TfQfjoFC5ALv27noc
+	 wvVc/P654otdIG2OAIN+wHlLqfYasW5IeoNDQXlJWoKIQsu8VaEPVU4Rk5sB/hp2Wq
+	 zeLghLXAxPyxRXn0LHYxq2ey4TaY2C14UR8KWx9ykGkVZR4mz8iuX7ehph3cOPPCU/
+	 0T8glxLXFD+3KEmQW4mKwtDmbMUcvrfR3KpeomF361YAmn3WvupnIzqphGfYowB1Zp
+	 8A1a4IGVaEUJ8MEdJR7SJNvpDatSKrCLKIfYfqNa/6OY+Z5IIHJcKow5WJyHkswCUS
+	 hvsncrKEPXX2A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D56380CFDC;
+	Sat, 26 Apr 2025 02:00:40 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424135331.02511131@frodo.int.wylie.me.uk>
+Subject: Re: [PATCH] Revert "rndis_host: Flag RNDIS modems as WWAN devices"
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174563283875.3899759.2142163669811028144.git-patchwork-notify@kernel.org>
+Date: Sat, 26 Apr 2025 02:00:38 +0000
+References: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
+In-Reply-To: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
+To: Christian Heusel <christian@heusel.eu>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, lkundrak@v3.sk
 
-On Thu, Apr 24, 2025 at 01:53:31PM +0100, Alan J. Wylie wrote:
-> > On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffstätte wrote:
-> 
-> > Meanwhile, if you could provide a reliable (and ideally minimum)
-> > reproducer, it would help me a lot to debug.
-> 
-> I've found a reproducer. Below is a stripped down version of the shell script
-> that I posted in my initial report.
-> 
-> Running this in a 1 second loop is enough to cause the panic very quickly.
-> 
-> It seems a bit of network traffic is needed, too.
+Hello:
 
-Excellent! Now I can try it on my side instead of bothering you. :)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-I will check if applying all patches here could make crash and warning
-go away. And of course, I need to really understand why the crash still
-happened even after the qlen check adding to htb_qlen_notify(), which is
-unexpected to me.
+On Thu, 24 Apr 2025 16:00:28 +0200 you wrote:
+> This reverts commit 67d1a8956d2d62fe6b4c13ebabb57806098511d8. Since this
+> commit has been proven to be problematic for the setup of USB-tethered
+> ethernet connections and the related breakage is very noticeable for
+> users it should be reverted until a fixed version of the change can be
+> rolled out.
+> 
+> Closes: https://lore.kernel.org/all/e0df2d85-1296-4317-b717-bd757e3ab928@heusel.eu/
+> Link: https://chaos.social/@gromit/114377862699921553
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220002
+> Link: https://bugs.gentoo.org/953555
+> Link: https://bbs.archlinux.org/viewtopic.php?id=304892
+> Cc: stable@vger.kernel.org
+> Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+> Signed-off-by: Christian Heusel <christian@heusel.eu>
+> 
+> [...]
 
-Thanks a lot!
+Here is the summary with links:
+  - Revert "rndis_host: Flag RNDIS modems as WWAN devices"
+    https://git.kernel.org/netdev/net/c/765f253e2890
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
