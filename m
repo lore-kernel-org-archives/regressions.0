@@ -1,85 +1,468 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAA9204C0F;
-	Sat, 26 Apr 2025 02:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBFA25C716
+	for <regressions@lists.linux.dev>; Sat, 26 Apr 2025 19:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745632800; cv=none; b=nW+iOrcbFshNsGAHk3xmgLQJSZiCdIP99NSjwymlszPm3i/uvWIo26LUgkZLi/mgre0SFI3hoX6tOtCjc/khq1AD1PhjbAlrjLIQ/nWdJHozNParnXdPS1P7qFDKJW5yXjSVdtq/PUoEEavgoUb/bPxKI+xiTRJIHdlyNSh3o/M=
+	t=1745694023; cv=none; b=CakFiUto2Co9F6jXfJDk5E2UkN+/ChB1kXnl2dPn/EOlzDwFM6Vr3ofo0ea5JWfoWS6rCN9qUiwuPkgI0pR3QGcwb+s80WCJSvEsSbNwabnanetrSrBFe+1kyX5coM2/tmbQ/t0/o8e/AvMGPuRH0+cLdXp1EjW+bUfpGxPGTI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745632800; c=relaxed/simple;
-	bh=RYL8C4Y5ne48VhiH6iHbk3yOFuT7Zq4jtWwMf4+QlcY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=IgbT4ub1S4F805Bmq2rGk3B7AhzTwOVn/MjpCoylitTCcF981jMKDER119vFSK+6zLEvprvAiaGKfAnQjLCYS+T8hhT94vugkSBAZt5TRuy+1R6TWtFLn/LJ3ynfvpBS0yhrKvFtCK61eJMPcYTVYDY+5TPmEq12pxg3/Hch6yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxC8ce/+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745694023; c=relaxed/simple;
+	bh=oMvo2Q4QvQ6hGBRBFqvcR26R0gurT5fH4zEktGNCcxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rm4qpgLVoUnD2FYkd+RHTCvQTSnHY5hYgt41Lp3ZPIYDZfno6X1zM8H893z+noplzCjrka+XSULP2F6tqL8D/S8tt6nzM8rtyvrX1q9QiwaRO4qjFZalE8A9t01VuoPYUZGxNKq5aGP2Kqd+Gq5wLuzL2QGo62tlywKirWSJDMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3RySaAf; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxC8ce/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FF3C4CEEB;
-	Sat, 26 Apr 2025 02:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745632800;
-	bh=RYL8C4Y5ne48VhiH6iHbk3yOFuT7Zq4jtWwMf4+QlcY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cxC8ce/+qVwaAt6BiZsX4Kbj3dhAXHmXu+zd5AGQlmIwOcu3TfQfjoFC5ALv27noc
-	 wvVc/P654otdIG2OAIN+wHlLqfYasW5IeoNDQXlJWoKIQsu8VaEPVU4Rk5sB/hp2Wq
-	 zeLghLXAxPyxRXn0LHYxq2ey4TaY2C14UR8KWx9ykGkVZR4mz8iuX7ehph3cOPPCU/
-	 0T8glxLXFD+3KEmQW4mKwtDmbMUcvrfR3KpeomF361YAmn3WvupnIzqphGfYowB1Zp
-	 8A1a4IGVaEUJ8MEdJR7SJNvpDatSKrCLKIfYfqNa/6OY+Z5IIHJcKow5WJyHkswCUS
-	 hvsncrKEPXX2A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D56380CFDC;
-	Sat, 26 Apr 2025 02:00:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3RySaAf"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25520a289so529809366b.3
+        for <regressions@lists.linux.dev>; Sat, 26 Apr 2025 12:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745694019; x=1746298819; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4t0fZTCxirqCF5UUYYChpMmbNwtS0AnPcQA/kqjNxco=;
+        b=B3RySaAfW2tt8/Ra8J8Bt9OZkkMwH+zkwBCoYQ7dKdaQ4cX2D88C/a+jlszprt60MM
+         kBpBLAHF9m2bkoa3ELpbRRV4e1NRCFkzz/UflhAfj/r+xec/f4fggsnl0qjK8ZBuFx7s
+         TRrS/gLjj1BzcaCUJENRZUaJSX0alxwShxMbTcV+PSm96ev2q0q0Lz6RrMODr8p5WUzW
+         CAC7AEjzP9wlrmBNu8TPRSjPQZXS8IkdTqnxERalsDArtCk6BrIFFJfbWYmx9RT1l7hF
+         r4AHEWbqijhGs11Fz4z6n2sB6qvZlGMFt5GU/XAZJQ+xjVT4WHZpZGAZRoeYUvEp2Icy
+         RS8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745694019; x=1746298819;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4t0fZTCxirqCF5UUYYChpMmbNwtS0AnPcQA/kqjNxco=;
+        b=dkdSWka8tt6M7RLAeGg1r3q6cUT7zM8FcGEuFq8eF4EkqDCQ2oTPvnK84p3ZYdU3O8
+         HVxcbbxTBpVDpjyIa/bvn+HO4PNpqldj+MdPSzXqrpDEfFBujFqL5MgK57Gqjx1/vB+Y
+         ZUhKFZ7fmcHpR6ri0J/aLkI2sJjoL3yINaGFk8f2MVanpNygCnvmei6G+4zOzd9rZYgJ
+         6S4M25hBQlOikXe/1/nnHbKoCEu9SDfYxG4w23ig/9T2rW+woLY3bYDpE1r8kfzQjILu
+         CmbDDxk2W03Mg0ITpLjT/GboYo5antz7XabdSKyktj9Qe/CdKFcieVMF5mxDgz32KOkz
+         K2+g==
+X-Gm-Message-State: AOJu0YyQVPHbN6j7H45EQGg8RxVm82lh2NHb3Ab4qqE4ffEhXMWsSw4i
+	82WcNY3BYl6A4pdcWs1T5yeNa3io2x1SuRPrHFrrtP76LLeqOqE3
+X-Gm-Gg: ASbGnctFd+lPRMxKvBmBb9uFVqpQ9qhN5qPYZ6SVHWq/q2CDNsklxz5HvvO41CT4yOO
+	K5tukHptTXU7JmnCx9yzMCXHFQ+lFtBMwChM8iG/zOX4PzddnTUPzZQwqeezc7OY/1dpMaojysv
+	dLYsF8G1Ht1CaFCg0NRIJpQRpm/rq/Cl+yHfX/NkAJ5zJxo2Bc1uVSRzCZhi6SfiXvSo+di6kTj
+	X2UnJGEUoFN0xYQU5SdghzjsHxrNgqu/oApMo5riHpAfXehTPNqrsofeKNUecqXAmx89qmNcKEv
+	BRcJrSFKYEJMrB6wyRGvIGalcdK/A9HewdXRS4AtEbNwojYBv7b+xwqbnih2LnBKmX4N9DXV3yh
+	OiwxiwTL+2uYncJjsJdJCw42gMWU+IQ==
+X-Google-Smtp-Source: AGHT+IHfARFNZusnhabNQC7PrvKFbebtPFDOLZaVSRXgWq4D3d+eHLPF5gqIAWMivJuv+NoLTBtohQ==
+X-Received: by 2002:a17:907:96aa:b0:acb:6472:c444 with SMTP id a640c23a62f3a-ace7116617amr599328566b.32.1745694018207;
+        Sat, 26 Apr 2025 12:00:18 -0700 (PDT)
+Received: from [192.168.0.10] (ip-37-248-156-10.multi.internet.cyfrowypolsat.pl. [37.248.156.10])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf9a52sm330099766b.108.2025.04.26.12.00.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 12:00:17 -0700 (PDT)
+Message-ID: <4a47ed4a-c43a-4520-bc68-7c28cf7ee92c@gmail.com>
+Date: Sat, 26 Apr 2025 21:00:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Resume from suspend broken in 6.15-rc due to ACP
+ changes.
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Brown <broonie@kernel.org>, "Mukunda, Vijendar"
+ <Vijendar.Mukunda@amd.com>
+Cc: regressions@lists.linux.dev, linux-sound@vger.kernel.org,
+ venkataprasad.potturu@amd.com, LKML <linux-kernel@vger.kernel.org>
+References: <CADDYkjR0JG_JTQeQMAvUJvtb9RxFH6_LzV2Fr_1cnqPTgV_Z8w@mail.gmail.com>
+ <99dce57f-8947-4c7a-abeb-2e27afdd0d65@sirena.org.uk>
+ <c0c9205d-d1e3-4952-a13e-6d23656880e3@amd.com>
+ <1b850037-8361-4c18-a32d-3ca50b69866e@amd.com>
+ <691c35de-f054-40a1-98bb-2b602e256011@amd.com>
+Content-Language: en-US, pl
+From: =?UTF-8?Q?Jacek_=C5=81uczak?= <difrost.kernel@gmail.com>
+In-Reply-To: <691c35de-f054-40a1-98bb-2b602e256011@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Revert "rndis_host: Flag RNDIS modems as WWAN devices"
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174563283875.3899759.2142163669811028144.git-patchwork-notify@kernel.org>
-Date: Sat, 26 Apr 2025 02:00:38 +0000
-References: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
-In-Reply-To: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
-To: Christian Heusel <christian@heusel.eu>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-usb@vger.kernel.org,
- netdev@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, lkundrak@v3.sk
-
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 24 Apr 2025 16:00:28 +0200 you wrote:
-> This reverts commit 67d1a8956d2d62fe6b4c13ebabb57806098511d8. Since this
-> commit has been proven to be problematic for the setup of USB-tethered
-> ethernet connections and the related breakage is very noticeable for
-> users it should be reverted until a fixed version of the change can be
-> rolled out.
-> 
-> Closes: https://lore.kernel.org/all/e0df2d85-1296-4317-b717-bd757e3ab928@heusel.eu/
-> Link: https://chaos.social/@gromit/114377862699921553
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220002
-> Link: https://bugs.gentoo.org/953555
-> Link: https://bbs.archlinux.org/viewtopic.php?id=304892
-> Cc: stable@vger.kernel.org
-> Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-> Signed-off-by: Christian Heusel <christian@heusel.eu>
-> 
-> [...]
-
-Here is the summary with links:
-  - Revert "rndis_host: Flag RNDIS modems as WWAN devices"
-    https://git.kernel.org/netdev/net/c/765f253e2890
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
+On 4/23/25 9:27 PM, Mario Limonciello wrote:
+> On 4/23/2025 2:12 PM, Mario Limonciello wrote:
+>> On 4/23/2025 10:18 AM, Mario Limonciello wrote:
+>>> On 4/23/2025 10:06 AM, Mark Brown wrote:
+>>>> On Wed, Apr 16, 2025 at 01:20:33PM +0200, Jacek Luczak wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On my ASUS Vivobook S16 (and on similar ASUS HW - see [1]) on resume
+>>>>> from suspend system dies (no logs available) soon after GPU completes
+>>>>> resume - I can see the login screen, only power cycle left.
+>>>>
+>>>> Are there any updates on this from the AMD side?  As things stand my
+>>>> inclination is to revert the bulk of the changes to the driver from 
+>>>> the
+>>>> past merge window, I don't really know anything about this hardware
+>>>> specifically and "dies without logs" is obviously giving few hints.
+>>>> None of the skipped commits looks immediately suspect, there's 
+>>>> doubtless
+>>>> some unintended change in there.
+>>>
+>>> This is the first I'm hearing of it; I expect we can dig in and find 
+>>> a solution so we don't need to revert that whole series.
+>>>
+>>> Let me add Vijendar to check if this jumps out to him what went wrong.
+>>>
+>>> * Can we please see the full dmesg up to the failure?
+>>> * journalctl -k -b-1 can fetch everything from the last boot up 
+>>> until the freeze.
+>>> * Any crash in /var/lib/systemd/pstore by chance?
+>>>
+>>>>
+>>>> Adding Mario and leaving the context for his benefit.
+>>>
+>>> To double check - can you blacklist the ACP driver and 
+>>> suspend/resume and everything is OK?
+>>>
+>>> If possible can you please capture a report with https:// 
+>>> web.git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug- 
+>>> tools.git/ tree/amd_s2idle.py both in the case of ACP driver 
+>>> blacklisted and not blacklisted?  I would like to compare.
+>>>
+>>> Also; can you put all these artifacts I'm asking for into somewhere 
+>>> non ephemeral like a kernel bugzilla?  You can loop me and Vijendar 
+>>> into it.
+>>
+>> FYI - We managed to track an S16 down and can reproduce the issue.
+>> It's a NULL pointer deref happening on the resume path.
+>>
+>> <1>[   74.046372] BUG: kernel NULL pointer dereference, address: 
+>> 0000000000000010
+>> <1>[   74.046375] #PF: supervisor read access in kernel mode
+>> <1>[   74.046377] #PF: error_code(0x0000) - not-present page
+>> <6>[   74.046380] PGD 0 P4D 0
+>> <4>[   74.046384] Oops: Oops: 0000 [#1] SMP NOPTI
+>> <4>[   74.046389] CPU: 4 UID: 0 PID: 2563 Comm: rtcwake Not tainted 
+>> 6.15.0-061500rc3-generic #202504202138 PREEMPT(voluntary)
+>> Oops#1 Part4
+>> <4>[   74.046394] Hardware name: ASUSTeK COMPUTER INC. ASUS Vivobook 
+>> S 16 M5606KA_M5606KA/M5606KA, BIOS M5606KA.304 01/24/2025
+>> <4>[   74.046396] RIP: 0010:acp70_pcm_resume+0x4f/0xe0 [snd_acp70]
+>> <4>[   74.046405] Code: 48 89 45 d0 e8 c2 da 98 fc 49 8b 5d 50 49 39 
+>> de 75 18 eb 7b 48 89 da 4c 89 ee 4c 89 ff e8 29 cc f6 ff 48 8b 1b 4c 
+>> 39 f3 74 65 <4c> 8b 7b 10 4d 85 ff 74 ef 49 8b 97 c0 00 00 00 48 85 
+>> d2 74 e3 8b
+>> <4>[   74.046407] RSP: 0018:ffffd12644d13880 EFLAGS: 00010286
+>> <4>[   74.046410] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 
+>> 0000000000000000
+>> <4>[   74.046412] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 
+>> 0000000000000000
+>> <4>[   74.046413] RBP: ffffd12644d138b0 R08: 0000000000000000 R09: 
+>> 0000000000000000
+>> <4>[   74.046415] R10: 0000000000000000 R11: 0000000000000000 R12: 
+>> ffffffffbd774fd0
+>> <4>[   74.046416] R13: ffff8a9f13051e00 R14: ffff8a9f13051e50 R15: 
+>> 0000000000000010
+>> <4>[   74.046418] FS:  0000799af9db9740(0000) 
+>> GS:ffff8aa486e9d000(0000) knlGS:0000000000000000
+>> <4>[   74.046420] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> <4>[   74.046421] CR2: 0000000000000010 CR3: 000000016dfaa000 CR4: 
+>> 0000000000f50ef0
+>> <4>[   74.046423] PKRU: 55555554
+>> <4>[   74.046425] Call Trace:
+>> <4>[   74.046427]  <TASK>
+>> <4>[   74.046432]  ? __pfx_platform_pm_resume+0x10/0x10
+>> <4>[   74.046439]  platform_pm_resume+0x28/0x60
+>> <4>[   74.046443]  dpm_run_callback+0x63/0x160
+>> <4>[   74.046447]  device_resume+0x15c/0x260
+>> <4>[   74.046450]  dpm_resume+0x15d/0x230
+>> <4>[   74.046453]  dpm_resume_end+0x11/0x30
+>> <4>[   74.046456]  suspend_devices_and_enter+0x1ea/0x2c0
+>> <4>[   74.046460]  enter_state+0x223/0x560
+>> Oops#1 Part3
+>> <4>[   74.046463]  pm_suspend+0x4e/0x80
+>>
+>> We'll need some more time to dig into it, but I wanted to share the 
+>> trace in case it makes it jump out to anyone what's going on.
+>>
+>> Just looking at git blame from that function is this perhaps 
+>> 8fd0e127d8da856e34391399df40b33af2b307e0?
+>
+> Reverting a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90 seems to help the 
+> issue on S16 here.
+>
+> Jacek - can you reproduce with that reverted?
+
+I can confirm reverting a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90 on top 
+of 6.15-rc3 brings back the resume:
+
+[   58.550863] PM: suspend entry (s2idle)
+[   58.571094] Filesystems sync: 0.020 seconds
+[   58.695698] Freezing user space processes
+[   58.697106] Freezing user space processes completed (elapsed 0.001 
+seconds)
+[   58.697110] OOM killer disabled.
+[   58.697111] Freezing remaining freezable tasks
+[   58.698239] Freezing remaining freezable tasks completed (elapsed 
+0.001 seconds)
+[   58.698242] printk: Suspending console(s) (use no_console_suspend to 
+debug)
+[   59.312291] queueing ieee80211 work while going to suspend
+[   59.435066] ACPI: EC: interrupt blocked
+[   86.788898] ACPI: EC: interrupt unblocked
+[   86.954661] ACPI: button: The lid device is not compliant to SW_LID.
+[   86.960225] [drm] PCIE GART of 512M enabled (table at 
+0x0000008001900000).
+[   86.960302] amdgpu 0000:63:00.0: amdgpu: SMU is resuming...
+[   86.968534] amdgpu 0000:63:00.0: amdgpu: SMU is resumed successfully!
+[   87.000143] nvme nvme0: 16/0/0 default/read/poll queues
+[   87.336971] amdgpu 0000:63:00.0: amdgpu: ring gfx_0.0.0 uses VM inv 
+eng 0 on hub 0
+[   87.336978] amdgpu 0000:63:00.0: amdgpu: ring comp_1.0.0 uses VM inv 
+eng 1 on hub 0
+[   87.336979] amdgpu 0000:63:00.0: amdgpu: ring comp_1.1.0 uses VM inv 
+eng 4 on hub 0
+[   87.336980] amdgpu 0000:63:00.0: amdgpu: ring comp_1.2.0 uses VM inv 
+eng 6 on hub 0
+[   87.336981] amdgpu 0000:63:00.0: amdgpu: ring comp_1.3.0 uses VM inv 
+eng 7 on hub 0
+[   87.336982] amdgpu 0000:63:00.0: amdgpu: ring comp_1.0.1 uses VM inv 
+eng 8 on hub 0
+[   87.336982] amdgpu 0000:63:00.0: amdgpu: ring comp_1.1.1 uses VM inv 
+eng 9 on hub 0
+[   87.336983] amdgpu 0000:63:00.0: amdgpu: ring comp_1.2.1 uses VM inv 
+eng 10 on hub 0
+[   87.336984] amdgpu 0000:63:00.0: amdgpu: ring comp_1.3.1 uses VM inv 
+eng 11 on hub 0
+[   87.336985] amdgpu 0000:63:00.0: amdgpu: ring sdma0 uses VM inv eng 
+12 on hub 0
+[   87.336986] amdgpu 0000:63:00.0: amdgpu: ring vcn_unified_0 uses VM 
+inv eng 0 on hub 8
+[   87.336987] amdgpu 0000:63:00.0: amdgpu: ring jpeg_dec_0 uses VM inv 
+eng 1 on hub 8
+[   87.336988] amdgpu 0000:63:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM 
+inv eng 13 on hub 0
+[   87.336989] amdgpu 0000:63:00.0: amdgpu: ring vpe uses VM inv eng 4 
+on hub 8
+[   87.346719] [drm] ring gfx_32778.1.1 was added
+[   87.347302] [drm] ring compute_32778.2.2 was added
+[   87.347811] [drm] ring sdma_32778.3.3 was added
+[   87.347870] [drm] ring gfx_32778.1.1 ib test pass
+[   87.347907] [drm] ring compute_32778.2.2 ib test pass
+[   87.347980] [drm] ring sdma_32778.3.3 ib test pass
+[   87.353425] acp_mach acp-pdm-mach: 
+devm_snd_soc_register_card(acp-pdm-mach) failed: -517
+[   87.353543] OOM killer enabled.
+[   87.353545] Restarting tasks ... done.
+[   87.353954] random: crng reseeded on system resumption
+[   87.361409] PM: suspend exit
+
+Cheers,
+
+-Jacek
+
+>
+>>
+>>>
+>>>>
+>>>>> I've managed to bisect this as close as possible to following 
+>>>>> commits:
+>>>>> - [f8b4f3f525e82d78079a6ebbde68e4a0d79fd1c0] ASoC: amd: acp: Refactor
+>>>>> acp70 platform resource structure
+>>>>> - [c8b5f251f0e53edab220ac4edf444120815fed3c] ASoC: amd: acp: 
+>>>>> Remove white line
+>>>>> - [a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90] ASoC: amd: acp: Move
+>>>>> spin_lock and list initialization to acp-pci driver
+>>>>> - [e3933683b25e2cc94485da4909e3338e1a177b39] ASoC: amd: acp: Remove
+>>>>> redundant acp_dev_data structure
+>>>>> - [aaf7a668bb3814f084f9f6f673567f6aa316632f] ASoC: amd: acp: Add new
+>>>>> interrupt handle callbacks in acp_common_hw_ops
+>>>>>
+>>>>> Attached lspci and bisection log.
+>>>>>
+>>>>> Regards,
+>>>>> -jacek
+>>>>>
+>>>>> [1] https://bbs.archlinux.org/viewtopic.php?id=304816
+>>>>
+>>>>> git bisect start
+>>>>> # status: waiting for both good and bad commits
+>>>>> # good: [ed92bc5264c4357d4fca292c769ea9967cd3d3b6] ASoC: codecs: 
+>>>>> wm0010: Fix error handling path in wm0010_spi_probe()
+>>>>> git bisect good ed92bc5264c4357d4fca292c769ea9967cd3d3b6
+>>>>> # status: waiting for bad commit, 1 good commit known
+>>>>> # bad: [47c4f9b1722fd883c9745d7877cb212e41dd2715] Tidy up ASoC 
+>>>>> control get and put handlers
+>>>>> git bisect bad 47c4f9b1722fd883c9745d7877cb212e41dd2715
+>>>>> # good: [74da545ec6a8b41de96b4c350bb59dfe45c0d822] ASoC: codec: 
+>>>>> madera: use inclusive language for SND_SOC_DAIFMT_CBx_CFx
+>>>>> git bisect good 74da545ec6a8b41de96b4c350bb59dfe45c0d822
+>>>>> # bad: [a935b3f981809272d2649ad9c27a751685137846] ASoC: SOF: ipc4- 
+>>>>> topology: Allocate ref_params on stack
+>>>>> git bisect bad a935b3f981809272d2649ad9c27a751685137846
+>>>>> # good: [24056de9976dfc33801d2574c1672d91f840277a] ASoC: codecs: 
+>>>>> Update device_id tables for Realtek
+>>>>> git bisect good 24056de9976dfc33801d2574c1672d91f840277a
+>>>>> # good: [a1462fb8b5dd1018e3477a6861822d75c6a59449] ASoC: Intel: 
+>>>>> boards: updates for 6.15
+>>>>> git bisect good a1462fb8b5dd1018e3477a6861822d75c6a59449
+>>>>> # skip: [8a7e7a03e3c53cd9abbbf233899cc2e05b2c6ec0] ASoC: SOF: 
+>>>>> Intel: Add support for ACE3+ mic privacy
+>>>>> git bisect skip 8a7e7a03e3c53cd9abbbf233899cc2e05b2c6ec0
+>>>>> # skip: [aaf7a668bb3814f084f9f6f673567f6aa316632f] ASoC: amd: acp: 
+>>>>> Add new interrupt handle callbacks in acp_common_hw_ops
+>>>>> git bisect skip aaf7a668bb3814f084f9f6f673567f6aa316632f
+>>>>> # good: [c6141ba0110f98266106699aca071fed025c3d64] ASoC: Merge up 
+>>>>> fixes
+>>>>> git bisect good c6141ba0110f98266106699aca071fed025c3d64
+>>>>> # skip: [ad5a0970f86d82e39ebd06d45a1f7aa48a1316f8] ASoC: cs35l41: 
+>>>>> check the return value from spi_setup()
+>>>>> git bisect skip ad5a0970f86d82e39ebd06d45a1f7aa48a1316f8
+>>>>> # good: [269b844239149a9bbaba66518db99ebb06554a15] ASoC: dapm: Fix 
+>>>>> changes to DECLARE_ADAU17X1_DSP_MUX_CTRL
+>>>>> git bisect good 269b844239149a9bbaba66518db99ebb06554a15
+>>>>> # skip: [89be3c15a58b2ccf31e969223c8ac93ca8932d81] ASoC: qcom: 
+>>>>> sm8250: explicitly set format in sm8250_be_hw_params_fixup()
+>>>>> git bisect skip 89be3c15a58b2ccf31e969223c8ac93ca8932d81
+>>>>> # bad: [02e1cf7a352a3ba5f768849f2b4fcaaaa19f89e3] ASoC: amd: acp: 
+>>>>> Fix for enabling DMIC on acp platforms via _DSD entry
+>>>>> git bisect bad 02e1cf7a352a3ba5f768849f2b4fcaaaa19f89e3
+>>>>> # good: [7a2ff0510c51462c0a979f5006d375a2b23d46e9] ASoC: soc-pcm: 
+>>>>> reuse dpcm_state_string()
+>>>>> git bisect good 7a2ff0510c51462c0a979f5006d375a2b23d46e9
+>>>>> # good: [a8fed0bddf8fa239fc71dc5c035d2e078c597369] ASoC: dt- 
+>>>>> bindings: add regulator support to dmic codec
+>>>>> git bisect good a8fed0bddf8fa239fc71dc5c035d2e078c597369
+>>>>> # bad: [ee7ab0fd540877fceb3d51f87016e6531d86406f] ASoC: amd: acp: 
+>>>>> Refactor rembrant platform resource structure
+>>>>> git bisect bad ee7ab0fd540877fceb3d51f87016e6531d86406f
+>>>>> # good: [0d2d276f53ea3ba1686619cde503d9748f58a834] ASoC: SOF: 
+>>>>> Intel: lnl/ptl: Only set dsp_ops which differs from MTL
+>>>>> git bisect good 0d2d276f53ea3ba1686619cde503d9748f58a834
+>>>>> # good: [8aeb7d2c3fc315e629d252cd601598a5af74bbb0] ASoC: SOF: 
+>>>>> Intel: Create ptl.c as placeholder for Panther Lake features
+>>>>> git bisect good 8aeb7d2c3fc315e629d252cd601598a5af74bbb0
+>>>>> # skip: [ac5b4a24f16f2f56b5cc5092969930b867274edc] ASoC: Intel: 
+>>>>> soc- acpi-intel-ptl-match: Add cs42l43 support
+>>>>> git bisect skip ac5b4a24f16f2f56b5cc5092969930b867274edc
+>>>>> # skip: [8ae746fe51041484e52eba99bed15a444c7d4372] ASoC: amd: acp: 
+>>>>> Implement acp_common_hw_ops support for acp platforms
+>>>>> git bisect skip 8ae746fe51041484e52eba99bed15a444c7d4372
+>>>>> # good: [0978e8207b61ac6d51280e5d28ccfff75d653363] ASoC: SOF: 
+>>>>> Intel: hda-mlink: Add support for mic privacy in VS SHIM registers
+>>>>> git bisect good 0978e8207b61ac6d51280e5d28ccfff75d653363
+>>>>> # good: [4a43c3241ec3465a501825ecaf051e5a1d85a60b] ASoC: SOF: 
+>>>>> Intel: ptl: Add support for mic privacy
+>>>>> git bisect good 4a43c3241ec3465a501825ecaf051e5a1d85a60b
+>>>>> # skip: [1ec3f1dc215d4b3d3679ecdc4a549d4e82b3a609] ASoC: dmic: add 
+>>>>> regulator support
+>>>>> git bisect skip 1ec3f1dc215d4b3d3679ecdc4a549d4e82b3a609
+>>>>> # good: [e2cda461765692757cd5c3b1fc80bd260ffe1394] ASoC: amd: acp: 
+>>>>> Refactor dmic-codec platform device creation
+>>>>> git bisect good e2cda461765692757cd5c3b1fc80bd260ffe1394
+>>>>> # skip: [a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90] ASoC: amd: acp: 
+>>>>> Move spin_lock and list initialization to acp-pci driver
+>>>>> git bisect skip a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90
+>>>>> # bad: [f8b4f3f525e82d78079a6ebbde68e4a0d79fd1c0] ASoC: amd: acp: 
+>>>>> Refactor acp70 platform resource structure
+>>>>> git bisect bad f8b4f3f525e82d78079a6ebbde68e4a0d79fd1c0
+>>>>> # good: [6e60db74b69c29b528c8d10d86108f78f2995dcb] ASoC: amd: acp: 
+>>>>> Refactor acp machine select
+>>>>> git bisect good 6e60db74b69c29b528c8d10d86108f78f2995dcb
+>>>>> # skip: [e3933683b25e2cc94485da4909e3338e1a177b39] ASoC: amd: acp: 
+>>>>> Remove redundant acp_dev_data structure
+>>>>> git bisect skip e3933683b25e2cc94485da4909e3338e1a177b39
+>>>>> # skip: [c8b5f251f0e53edab220ac4edf444120815fed3c] ASoC: amd: acp: 
+>>>>> Remove white line
+>>>>> git bisect skip c8b5f251f0e53edab220ac4edf444120815fed3c
+>>>>> # only skipped commits left to test
+>>>>> # possible first bad commit: 
+>>>>> [f8b4f3f525e82d78079a6ebbde68e4a0d79fd1c0] ASoC: amd: acp: 
+>>>>> Refactor acp70 platform resource structure
+>>>>> # possible first bad commit: 
+>>>>> [c8b5f251f0e53edab220ac4edf444120815fed3c] ASoC: amd: acp: Remove 
+>>>>> white line
+>>>>> # possible first bad commit: 
+>>>>> [a95a1dbbd3d64adf392fed13c8eef4f72b4e5b90] ASoC: amd: acp: Move 
+>>>>> spin_lock and list initialization to acp-pci driver
+>>>>> # possible first bad commit: 
+>>>>> [e3933683b25e2cc94485da4909e3338e1a177b39] ASoC: amd: acp: Remove 
+>>>>> redundant acp_dev_data structure
+>>>>> # possible first bad commit: 
+>>>>> [aaf7a668bb3814f084f9f6f673567f6aa316632f] ASoC: amd: acp: Add new 
+>>>>> interrupt handle callbacks in acp_common_hw_ops
+>>>>
+>>>>> 00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Root Complex [1022:1507]
+>>>>> 00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/Strix Halo IOMMU [1022:1508]
+>>>>> 00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Dummy Host Bridge [1022:1509]
+>>>>> 00:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo PCIe USB4 Bridge [1022:150a]
+>>>>> 00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Dummy Host Bridge [1022:1509]
+>>>>> 00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo GPP Bridge [1022:150b]
+>>>>> 00:02.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo GPP Bridge [1022:150b]
+>>>>> 00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Dummy Host Bridge [1022:1509]
+>>>>> 00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Dummy Host Bridge [1022:1509]
+>>>>> 00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+>>>>> 00:08.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+>>>>> 00:08.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix/ Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+>>>>> 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus 
+>>>>> Controller [1022:790b] (rev 71)
+>>>>> 00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH 
+>>>>> LPC Bridge [1022:790e] (rev 51)
+>>>>> 00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 0 [1022:16f8]
+>>>>> 00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 1 [1022:16f9]
+>>>>> 00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 2 [1022:16fa]
+>>>>> 00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 3 [1022:16fb]
+>>>>> 00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 4 [1022:16fc]
+>>>>> 00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 5 [1022:16fd]
+>>>>> 00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 6 [1022:16fe]
+>>>>> 00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Strix Data Fabric; Function 7 [1022:16ff]
+>>>>> 61:00.0 Non-Volatile memory controller [0108]: Micron Technology 
+>>>>> Inc 2400 NVMe SSD (DRAM-less) [1344:5413] (rev 03)
+>>>>> 62:00.0 Network controller [0280]: MEDIATEK Corp. MT7922 802.11ax 
+>>>>> PCI Express Wireless Network Adapter [14c3:0616]
+>>>>> 63:00.0 Display controller [0380]: Advanced Micro Devices, Inc. 
+>>>>> [AMD/ ATI] Strix [Radeon 880M / 890M] [1002:150e] (rev c1)
+>>>>> 63:00.1 Audio device [0403]: Advanced Micro Devices, Inc. 
+>>>>> [AMD/ATI] Rembrandt Radeon High Definition Audio Controller 
+>>>>> [1002:1640]
+>>>>> 63:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. 
+>>>>> [AMD] Strix/Krackan/Strix Halo CCP/ASP [1022:17e0]
+>>>>> 63:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Device [1022:151e]
+>>>>> 63:00.5 Multimedia controller [0480]: Advanced Micro Devices, Inc. 
+>>>>> [AMD] ACP/ACP3X/ACP6x Audio Coprocessor [1022:15e2] (rev 70)
+>>>>> 63:00.6 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Family 17h/19h/1ah HD Audio Controller [1022:15e3]
+>>>>> 64:00.0 Non-Essential Instrumentation [1300]: Advanced Micro 
+>>>>> Devices, Inc. [AMD] Strix/Strix Halo PCIe Dummy Function [1022:150d]
+>>>>> 64:00.1 Signal processing controller [1180]: Advanced Micro 
+>>>>> Devices, Inc. [AMD] Strix/Krackan/Strix Halo Neural Processing 
+>>>>> Unit [1022:17f0] (rev 10)
+>>>>> 65:00.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Device [1022:151f]
+>>>>> 65:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Device [1022:151a]
+>>>>> 65:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Device [1022:151b]
+>>>>> 65:00.5 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] 
+>>>>> Device [1022:151c]
+>>>
+>>
+>
