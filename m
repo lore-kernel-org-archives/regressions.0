@@ -1,40 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043DC169397;
-	Mon, 28 Apr 2025 11:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EDC269AFB
+	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 12:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840719; cv=none; b=ENG6uvNnx5QVO9ZDBQPXMJ24axeLyEMVEBvn4JLYLc/EGIdO7vYdBbo+/vmofMDomA/vJcKySgOOWv0Att4f2Zu9XVE5Z9PzVSpZP4Dyoy07c7HyfniRLrMuUqYtwer58RwMZ2ec7VvMdKTCWDiQBfI4spl6l8APi55n90aMOLE=
+	t=1745843306; cv=none; b=tsFoDB5iIBIImuJ+4nRVfBtGq1AfJJnp+YOwlg5c1G5xThoNUhiCp17y8ZAYJyU0mwhJ+e47BP8yxgQAS5qzHSoJe2M104CaA7NoQAmUUjsge66B3snHdStltaRTar0TwTNffh2i9LKtFcTbM8FfPYJtzsMHI2aW6zNImb938Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840719; c=relaxed/simple;
-	bh=+B51OvI6DvV1U6tDzyeEqpELU8eFoE8StNGnU7w3dLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qu+06FzBXIloyrjI9wLCF9oWWZZoG32sJM8hyBFuS6FM4M3IZKFxhYO+dIk5YjehFudOSwMv2p246LWgX8fM70gqzWA2EtnM4qpKIoQowgc4qNo5Qxu7dLk6rPmU+EG93g+U9eFO4emHXpR23eNz+5JTlKz1zscVyrcO9E5Wziw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oTFPThzu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oTFPThzu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAFFC4CEE4;
-	Mon, 28 Apr 2025 11:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745840717;
-	bh=+B51OvI6DvV1U6tDzyeEqpELU8eFoE8StNGnU7w3dLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oTFPThzuIAoP3jk6wOcrBd3vnaktCvuTnRKgt81C1uqFaw9t8568vy2UEs0ZW0FTn
-	 8ljWIKvShgoAsj0ndGHPglxHxM6r8GmvdCPYAyos1g5ubmnEugaKnAfMCGesSw/I8Q
-	 e5DZiCgpEs7loFPZQ9W/lpdhvVAPPWywIcA/8cac=
-Date: Mon, 28 Apr 2025 13:45:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
-Cc: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
-	regressions@lists.linux.dev, Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	stable@vger.kernel.org
+	s=arc-20240116; t=1745843306; c=relaxed/simple;
+	bh=hYE/FFn1Zx/Bkgve92oN5dvvbZLRI9e7+gvkZnj8Ys4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VLShEjdcxWwN7+H3hRDMfMunWM+SFK1UJyTkc1ExFiaFTAYcO25JlFagj44SMEAKYTNDS9PZMY0IqzVh+d10Z+fZBPDkmjT4O3itFVdC18BmpeCyUXDdxXO8Mi25RfNCwVHLmzroRzIS/f970B5YL0/ciZcyRn6wzk9FJoG+QHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
+	by mail.itouring.de (Postfix) with ESMTPSA id E1214103765;
+	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 919566018BE80;
+	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
 Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
  htb_dequeue
-Message-ID: <2025042831-professor-crazy-ad07@gregkh>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
+ regressions@lists.linux.dev, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+ =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+ stable@vger.kernel.org
 References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
  <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
  <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
@@ -43,79 +37,100 @@ References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
  <20250421210927.50d6a355@frodo.int.wylie.me.uk>
  <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
  <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <2025042831-professor-crazy-ad07@gregkh>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <c8110ec8-a868-b531-a230-f4b645f5ac73@applied-asynchrony.com>
+Date: Mon, 28 Apr 2025 14:28:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <2025042831-professor-crazy-ad07@gregkh>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
 
-On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst‰tte wrote:
-> (cc: Greg KH)
+On 2025-04-28 13:45, Greg KH wrote:
+> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst√§tte wrote:
+>> (cc: Greg KH)
+>>
+>> On 2025-04-22 18:51, Alan J. Wylie wrote:
+>>> On Mon, 21 Apr 2025 21:09:27 +0100
+>>> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
+>>>
+>>>> On Mon, 21 Apr 2025 21:47:44 +0200
+>>>> Holger Hoffst√§tte <holger@applied-asynchrony.com> wrote:
+>>>>
+>>>>>> I'm afraid that didn't help. Same panic.
+>>>>>
+>>>>> Bummer :-(
+>>>>>
+>>>>> Might be something else missing then - so for now the only other
+>>>>> thing I'd suggest is to revert the removal of the qlen check in
+>>>>> fq_codel.
+>>>>
+>>>> Like this?
+>>>>
+>>>> $ git diff  sch_fq_codel.c
+>>>> diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
+>>>> index 6c9029f71e88..4fdf317b82ec 100644
+>>>> --- a/net/sched/sch_fq_codel.c
+>>>> +++ b/net/sched/sch_fq_codel.c
+>>>> @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
+>>>> Qdisc *sch) qdisc_bstats_update(sch, skb);
+>>>>           flow->deficit -= qdisc_pkt_len(skb);
+>>>> -       if (q->cstats.drop_count) {
+>>>> +       if (q->cstats.drop_count && sch->q.qlen) {
+>>>>                   qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
+>>>>                                             q->cstats.drop_len);
+>>>>                   q->cstats.drop_count = 0;
+>>>> $
+>>>>
+>>>
+>>> It's been about 21 hours and no crash yet. I had an excellent day down
+>>> a cave, so there's not been as much Internet traffic as usual, but
+>>> there's a good chance the above patch as at least worked around, if not
+>>> fixed the issue.
+>>
+>> Thought so .. \o/
+>>
+>> I guess now the question is what to do about it. IIUC the fix series [1]
+>> addressed some kind of UAF problem, but obviously was not applied
+>> correctly or is missing follow-ups. It's also a bit mysterious why
+>> adding the HTB patch didn't work.
+>>
+>> Maybe Cong Wang can advise what to do here?
+>>
+>> So unless someone else has any ideas: Greg, please revert:
+>>
+>> 6.14.y/a57fe60ef4cf96bfbb6b58397ec28bdb5a5c6b31
+>> ("codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()")
+>>
+>> and probably from 6.12 as well.
 > 
-> On 2025-04-22 18:51, Alan J. Wylie wrote:
-> > On Mon, 21 Apr 2025 21:09:27 +0100
-> > "Alan J. Wylie" <alan@wylie.me.uk> wrote:
-> > 
-> > > On Mon, 21 Apr 2025 21:47:44 +0200
-> > > Holger Hoffst‰tte <holger@applied-asynchrony.com> wrote:
-> > > 
-> > > > > I'm afraid that didn't help. Same panic.
-> > > > 
-> > > > Bummer :-(
-> > > > 
-> > > > Might be something else missing then - so for now the only other
-> > > > thing I'd suggest is to revert the removal of the qlen check in
-> > > > fq_codel.
-> > > 
-> > > Like this?
-> > > 
-> > > $ git diff  sch_fq_codel.c
-> > > diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-> > > index 6c9029f71e88..4fdf317b82ec 100644
-> > > --- a/net/sched/sch_fq_codel.c
-> > > +++ b/net/sched/sch_fq_codel.c
-> > > @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
-> > > Qdisc *sch) qdisc_bstats_update(sch, skb);
-> > >          flow->deficit -= qdisc_pkt_len(skb);
-> > > -       if (q->cstats.drop_count) {
-> > > +       if (q->cstats.drop_count && sch->q.qlen) {
-> > >                  qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
-> > >                                            q->cstats.drop_len);
-> > >                  q->cstats.drop_count = 0;
-> > > $
-> > > 
-> > 
-> > It's been about 21 hours and no crash yet. I had an excellent day down
-> > a cave, so there's not been as much Internet traffic as usual, but
-> > there's a good chance the above patch as at least worked around, if not
-> > fixed the issue.
-> 
-> Thought so .. \o/
-> 
-> I guess now the question is what to do about it. IIUC the fix series [1]
-> addressed some kind of UAF problem, but obviously was not applied
-> correctly or is missing follow-ups. It's also a bit mysterious why
-> adding the HTB patch didn't work.
-> 
-> Maybe Cong Wang can advise what to do here?
-> 
-> So unless someone else has any ideas: Greg, please revert:
-> 
-> 6.14.y/a57fe60ef4cf96bfbb6b58397ec28bdb5a5c6b31
-> ("codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()")
-> 
-> and probably from 6.12 as well.
+> Why only those 2 branches?  What about all others, and mainline?
 
-Why only those 2 branches?  What about all others, and mainline?
+All branches that received upstream 342debc12183 aka
+"codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()"
+should be reverted for now. I previously didn't check them all.
 
-Can someone send me a patch series that does the right thing here?
-After reading this thread I'm confused as to what is needed to be done.
+It was part of a series, and the rest of the series is missing (not
+picked by autosel). Luckily that does not matter because mainline
+is apparently also buggy, so applying the rest of the series
+would not help. This is currently still being debugged/worked on.
 
-thanks,
+Just reverting this one commit provably fixes the crash for people
+using -stable in e.g. gateway/router setups, with a htb->fq_codel chain.
+The crash does not affect people using fq_codel as root qdisc.
 
-greg k-h
+Reverting is not the greatest solution since it reintroduces a potential
+UAF, which has been there since fq_codel was first committed.
+IIUC this potential UAF can only be induced with admin privileges.
+
+I don't know how to explain this any better; all I did was try to
+help Alan. :-(
+
+-h
