@@ -1,136 +1,199 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EDC269AFB
-	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 12:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E1A26D4CB
+	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 16:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843306; cv=none; b=tsFoDB5iIBIImuJ+4nRVfBtGq1AfJJnp+YOwlg5c1G5xThoNUhiCp17y8ZAYJyU0mwhJ+e47BP8yxgQAS5qzHSoJe2M104CaA7NoQAmUUjsge66B3snHdStltaRTar0TwTNffh2i9LKtFcTbM8FfPYJtzsMHI2aW6zNImb938Kk=
+	t=1745857876; cv=none; b=IsQG2hmDwCYEb0R/jesMf5cfS4JzgkvqoUvHxrY8zSZf8I53GJYGpZcXN4PuRBhhysaWBooTX97gP1kBDCqCXa3bZnji4Fyb+LNjrzHsUeajtkPdrVWgCRJXeOD0VrHB3v2au3MbiPuDaBnzNNykRyFP8lsDmeXqYeRKSVCKI38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843306; c=relaxed/simple;
-	bh=hYE/FFn1Zx/Bkgve92oN5dvvbZLRI9e7+gvkZnj8Ys4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VLShEjdcxWwN7+H3hRDMfMunWM+SFK1UJyTkc1ExFiaFTAYcO25JlFagj44SMEAKYTNDS9PZMY0IqzVh+d10Z+fZBPDkmjT4O3itFVdC18BmpeCyUXDdxXO8Mi25RfNCwVHLmzroRzIS/f970B5YL0/ciZcyRn6wzk9FJoG+QHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id E1214103765;
-	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 919566018BE80;
-	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
- regressions@lists.linux.dev, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
- =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
- stable@vger.kernel.org
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
- <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
- <2025042831-professor-crazy-ad07@gregkh>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <c8110ec8-a868-b531-a230-f4b645f5ac73@applied-asynchrony.com>
-Date: Mon, 28 Apr 2025 14:28:14 +0200
+	s=arc-20240116; t=1745857876; c=relaxed/simple;
+	bh=XoHO3hXFTm90wQdVfiTx7lJNABIj/qSyodbgxEJXrwU=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HJxi/+sFLWTBsEeybY9Rlk/Cfv9/IaEWBD7ABvzzTLbs9b2t3Fev+4nc3wsphBq7Gxefb74B+06+Y7V5wn4xSlsPiYm8CQjJN6AF8nY4faCgA00ouccNo1t1A/R7OIy1k2NWzCVAaVNf3eAWAZSQJfdTDVN0llR1tkxDysVSJUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OL8FCc+s; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OL8FCc+s"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43e9ccaa1ebso5902805e9.1
+        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 09:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745857873; x=1746462673; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:disposition-notification-to
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7rpLoGS47sE5MLiLABPtEKiVLu5JTrAcQvnYc7S0qkE=;
+        b=OL8FCc+s8IkqcUCNW9Sums6V0ja+iMPkAooArmcoHPsybDPKOlzVz4tn1WFz2AL8V5
+         ddj60RiSYG8mQGkSBl/Th0h0ndeKX05AveHkBXAJ2mpGDiA0K8eM4J8lYZZAGHTMiRBX
+         p1HL8G5J6hyy9C0wqQy4JOlVFoiwOcaPPtOOjG7P/cIqTQyK/WD6E6dAO7HHsRt4Q8HJ
+         GReHhQjGR5IdXgKnfrCC9jN3UuYXhQ51DzUfzFcZEGkqovQTwAtkp0X4dbLNusFPSLW0
+         XsuAIgavTm+mb+RUyjA2aCSIl7kb26f1DC9/8+cEs99fqfjBkrCktjQ4k41SFyuUMmJp
+         nHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745857873; x=1746462673;
+        h=content-transfer-encoding:in-reply-to:disposition-notification-to
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7rpLoGS47sE5MLiLABPtEKiVLu5JTrAcQvnYc7S0qkE=;
+        b=tNSWikPYZEkUVj/nTtkssfYI8G9UDoFkNHtppLjkJmslQ+tnw61eVVdzdjMutlOjI+
+         7YcH+RUbsbm+M2OMuEokDy7MH7WLlndfvtHzxs1cpGhX2pbUBoWEhIprPm6yzFlmSmZV
+         xYwMn5g1SFpGdCSYQQmEMFi+CDfVJWFMox0EdrJvEiG3jxncU4Dlxlp3i2nFlgrscVrK
+         Vy7ypyH2I/AYta8MyGYX+/FeET/6HIG0k+anyollu+6B+njFmr/YL0LZeq+MsCXIv27B
+         UaKqDLy5oPLz5DoAJBUAnOyiGe/AGiwwkQ7LAH6J5IdxNzoHBZlDfTSBOio/c/vuezVI
+         SVaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWijcKJZiFv76VOM6+enABbPOWGTimR6h9QrRtABYbmYGa7F+5wevBctYUCLdby0TyZz3QCa11m8dxfA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxioOcUO7ohtGrcBh7vh8FRi6AdMxUUjnoO52XoxkybIhGg6/5y
+	fRM9FhdISdELzPtnC/sUlh2BYgHMpshOpYTAF/d8LDqSzQnkIzkZ
+X-Gm-Gg: ASbGncu6+SywHj3EikSds0R/M9cbu2+T4kWgsvLg+AvHCaaVnJm0QFQtduar8BWJh1P
+	jH3EunrSFR8ndlHLDcGnRqcSjc0E3ifNIOFo4PO6TRV0+sGPFfHiYQdOvVlYJ/9UGFJavy7GPFF
+	JRW+8W5sS0tU45ZXXSADp8VNK2QdtRIRWf+1mvmrxoWrH/CQW5KYEzr4pej6l6fO2rD5eyjzzhI
+	hdhrztc1IIOZTtNp39Jis8momHlp+NhOGd3XzEJg4ApMmnhzJ/HG3bnhz+TQRjrTK63W1SzmPQC
+	zCTBDXBEeLv7thsMxI/zOC9B0DNLDBnFekyVlMf7QFdBOzjjMDTilOqv6w==
+X-Google-Smtp-Source: AGHT+IHmjNe3scTe8qIdIgHxl5WlUB1dX8XR8Fa4lJ29b14HLel6DUXMTEQxxoDEsqw4QywjAo8agw==
+X-Received: by 2002:a05:600c:4685:b0:43b:cab3:1fd1 with SMTP id 5b1f17b1804b1-440a65bb7d5mr41472465e9.1.1745857872642;
+        Mon, 28 Apr 2025 09:31:12 -0700 (PDT)
+Received: from [192.168.36.152] ([82.66.27.2])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad112sm161000125e9.24.2025.04.28.09.31.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 09:31:12 -0700 (PDT)
+From: "=?UTF-8?Q?Jean-Fran=C3=A7ois_Ingelaere?=" <masterprenium@gmail.com>
+X-Google-Original-From: =?UTF-8?Q?Jean-Fran=C3=A7ois_Ingelaere?= <MasterPrenium@gmail.com>
+Message-ID: <bb95fe33-bc31-4aa3-a93d-3deadbcb4973@gmail.com>
+Date: Mon, 28 Apr 2025 18:31:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <2025042831-professor-crazy-ad07@gregkh>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: FW: Wireless speed regression issue with >6.12.12/6.13.x +
+ firmware update for mediatek MT7925
+To: =?UTF-8?B?TWluZ3llbiBIc2llaCAo6Kyd5piO6Ku6KQ==?=
+ <Mingyen.Hsieh@mediatek.com>, "stable@vger.kernel.org"
+ <stable@vger.kernel.org>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "kvalo@kernel.org" <kvalo@kernel.org>,
+ =?UTF-8?B?QWxsYW4gV2FuZyAo546L5a625YGJKQ==?= <Allan.Wang@mediatek.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CACr2tqu10_mXiXw-Q3VSqYBJhQU1s_m77_uhvjpe0j3H3jhbgA@mail.gmail.com>
+ <TYZPR03MB61644B8F34946A73E2C16E27F4DF2@TYZPR03MB6164.apcprd03.prod.outlook.com>
+ <5a07aea2090532682c8cd4df3ab1b9026f2e1cd5.camel@mediatek.com>
+ <04dca014-881c-46b4-a084-2001c62b466e@gmail.com>
+ <6cebf6265f5f981dd951851d0832633292a60a46.camel@mediatek.com>
+ <28ff58dc-72f3-4b71-817c-ccb4ff5f777d@gmail.com>
+ <bc09e1613e1dd31489d1d2290a67da987481f03d.camel@mediatek.com>
+Content-Language: fr-FR
+In-Reply-To: <bc09e1613e1dd31489d1d2290a67da987481f03d.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2025-04-28 13:45, Greg KH wrote:
-> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffstätte wrote:
->> (cc: Greg KH)
->>
->> On 2025-04-22 18:51, Alan J. Wylie wrote:
->>> On Mon, 21 Apr 2025 21:09:27 +0100
->>> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
->>>
->>>> On Mon, 21 Apr 2025 21:47:44 +0200
->>>> Holger Hoffstätte <holger@applied-asynchrony.com> wrote:
->>>>
->>>>>> I'm afraid that didn't help. Same panic.
->>>>>
->>>>> Bummer :-(
->>>>>
->>>>> Might be something else missing then - so for now the only other
->>>>> thing I'd suggest is to revert the removal of the qlen check in
->>>>> fq_codel.
->>>>
->>>> Like this?
->>>>
->>>> $ git diff  sch_fq_codel.c
->>>> diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
->>>> index 6c9029f71e88..4fdf317b82ec 100644
->>>> --- a/net/sched/sch_fq_codel.c
->>>> +++ b/net/sched/sch_fq_codel.c
->>>> @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
->>>> Qdisc *sch) qdisc_bstats_update(sch, skb);
->>>>           flow->deficit -= qdisc_pkt_len(skb);
->>>> -       if (q->cstats.drop_count) {
->>>> +       if (q->cstats.drop_count && sch->q.qlen) {
->>>>                   qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
->>>>                                             q->cstats.drop_len);
->>>>                   q->cstats.drop_count = 0;
->>>> $
->>>>
->>>
->>> It's been about 21 hours and no crash yet. I had an excellent day down
->>> a cave, so there's not been as much Internet traffic as usual, but
->>> there's a good chance the above patch as at least worked around, if not
->>> fixed the issue.
->>
->> Thought so .. \o/
->>
->> I guess now the question is what to do about it. IIUC the fix series [1]
->> addressed some kind of UAF problem, but obviously was not applied
->> correctly or is missing follow-ups. It's also a bit mysterious why
->> adding the HTB patch didn't work.
->>
->> Maybe Cong Wang can advise what to do here?
->>
->> So unless someone else has any ideas: Greg, please revert:
->>
->> 6.14.y/a57fe60ef4cf96bfbb6b58397ec28bdb5a5c6b31
->> ("codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()")
->>
->> and probably from 6.12 as well.
-> 
-> Why only those 2 branches?  What about all others, and mainline?
+Hello,
 
-All branches that received upstream 342debc12183 aka
-"codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()"
-should be reverted for now. I previously didn't check them all.
+The Cisco Catalyst C9120AXI (not Meraki), is running in Lightweight 
+mode, connected  to the Cisco Virtual Wireless Controller.
 
-It was part of a series, and the rest of the series is missing (not
-picked by autosel). Luckily that does not matter because mainline
-is apparently also buggy, so applying the rest of the series
-would not help. This is currently still being debugged/worked on.
+I was running tests in 5Ghz, WPA2 + 160Mhz Channel width, not 80 (+all  
+supported rates enabled, RRM+DCA enabled, 802.11h enabled, BSS enabled). 
+As tested previously 20Mhz channel width gives better performances than 
+160Mhz after regression.
 
-Just reverting this one commit provably fixes the crash for people
-using -stable in e.g. gateway/router setups, with a htb->fq_codel chain.
-The crash does not affect people using fq_codel as root qdisc.
+Following speed are observed with highest steams as I can (multi thread 
+iperf/nperf ect). Speed test isn't run in perfect conditions but it 
+doesn't really mind.
 
-Reverting is not the greatest solution since it reintroduces a potential
-UAF, which has been there since fq_codel was first committed.
-IIUC this potential UAF can only be induced with admin privileges.
+With 6.14.3 + latest firmware 20Mhz channel width (DL/UL) : 
+130mbps/160mbps (ch36)
+With 6.14.3 + latest firmware 40Mhz channel width : 230mbps/330mbps (36,40)
+With 6.14.3 + latest firmware 80Mhz channel width : 340mbps/6mbps 
+(36,40,44,48)
+With 6.14.3 + latest firmware 160Mhz channel width : 640mbps/7mbps 
+(36,40,44,48,52,56,60,64)
 
-I don't know how to explain this any better; all I did was try to
-help Alan. :-(
+As you can see, Upload speed is dropping with 80Mhz channel width. Can 
+you please try in your setup with 160Mhz ? As a check.
 
--h
+-> With 6.14.3 + latest firmware 160Mhz in 802.11AC (Cisco 2802E): 
+800mbps/380mbps (52,56,60,64,36,40,44,48)
+
+As a debug/comparison :
+
+With 6.14.3 + 202412 firmware 20Mhz channel width (DL/UL) : 
+130mbps/170mbps (ch36)
+With 6.14.3 + 202412 firmware 40Mhz channel width : 130mbps/280mbps (36,40)
+With 6.14.3 + 202412 firmware 80Mhz channel width : 390mbps/580mbps 
+(36,40,44,48)
+With 6.14.3 + 202412 firmware 160Mhz channel width : 630mbps/950mbps 
+(36,40,44,48,52,56,60,64)
+
+
+I don't have any other 802.11ax AP at the moment. Remember : no issue 
+with 802.11ac.
+
+Best regards,
+Jeff
+
+Le 28/04/2025 à 13:00, Mingyen Hsieh (謝明諺) a écrit :
+>
+> On Thu, 2025-04-24 at 13:20 +0200, Jean-François Ingelaere wrote:
+> > 
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> > 
+> > 
+> > Hello,
+> > 
+> > I hoped you had previous messages. Firmware is the released from my
+> > distro (Gentoo Linux) 20240410, but yes you're right, the firmware
+> > used
+> > in this case for mt76 is 20240305, sorry.
+> > 
+> > [74734.459451] Loading firmware:
+> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
+> > [74734.463449] mt7925e 0000:73:00.0: ASIC revision: 79250000
+> > [74734.539692] Loading firmware:
+> > mediatek/mt7925/WIFI_MT7925_PATCH_MCU_1_1_hdr.bin
+> > [74734.539760] mt7925e 0000:73:00.0: HW/SW Version: 0x8a108a10, Build
+> > Time: 20250305132908a
+> > 
+> > [74734.878892] Loading firmware:
+> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
+> > [74734.879069] mt7925e 0000:73:00.0: WM Firmware Version: ____000000,
+> > Build Time: 20250305133013
+> > [74734.974255] Loading firmware:
+> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
+> > 
+> > 
+> > The AP used is a Cisco C9120AXI-E.
+> > 
+> > 
+> > Best regards,
+> > 
+>
+> Hi,
+>
+> I had tested with this AP (5G HE80 & WPA2), and my setting is v6.14.3 +
+> latest firmware. It looked good for me.
+>
+> Could you give me your AP setting and could you test with another AP?
+>
+> Best Regards,
+> Yen.
+>
+>
+> *********** MEDIATEK Confidentiality Notice
+>   ***********
+> The information contained in this e-mail message (including any
+> attachments) may be confidential, proprietary, privileged, or
+> otherwise exempt from disclosure under applicable laws. It is
+> intended to be conveyed only to the designated recipient(s). Any
+> use, dissemination, distribution, printing, retaining or copying
+> of this e-mail (including its attachments) by unintended recipient(s)
+> is strictly prohibited and may be unlawful. If you are not an
+> intended recipient of this e-mail, or believe that you have received
+> this e-mail in error, please notify the sender immediately
+> (by replying to this e-mail), delete any and all copies of this
+> e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
