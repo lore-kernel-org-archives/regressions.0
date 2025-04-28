@@ -1,83 +1,83 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88E1A83F5
-	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 23:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C459C203716
+	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 23:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745883485; cv=none; b=Eph9k6mRBqAM9wH+z7cqR9+uiZfXXDDxQaWIo7JmYbeCGhey2t7NPhzlK8qDJKKhwJpmzOaJyrQ47WXVqt74cPmiRcz/2ipdqCL9UkgOQvyg8AUAcgpYpY+fN5/segFrIodJgkawEv/422Vjh5cOctTg+2oUbqgbm8tf5ExnOMg=
+	t=1745884780; cv=none; b=SxKUw26Xqkurr7bHA3iMxVQvjA2fDK5IZH2sVsv/Rj9v1jd/HTbVF4FmUmxWPzmDL3HGVPdX4OpbjazYwKI4zZDZ2TWGUYBoMdgPNE2Jgpb1CJpwXXEf138khd2iwcKOJg7gja5WOreM8GXAgmqWi0NDQN78FbasLOxPFX6Uedw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745883485; c=relaxed/simple;
-	bh=oQ3FbEePiwGWAsASS7Z4SAIJv7xHO9jREHRK/Aibiy0=;
+	s=arc-20240116; t=1745884780; c=relaxed/simple;
+	bh=dwjOYKhNu9ectViomXMruDUC3aGQX3Yq8FWUHkxR+GY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lf7FK5W22Xdx9RkTN72quGPU1yHvhFsqkC7MQLiGcL4IUQyrLEEPZVQv1ebmc/fP281bmiD0WRZiMKdr9tWP/NjiOeYg7oRI3wOMRTKeFMnVqGHJ/OgyiuTvuNj5TMoMb4Mdzu7mW+9+HrPobW6JenHmbEzRILsygY/Ccnl0LSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=giBpL3TZ; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVN3/D9iWQrT2mSMeXu60DujGrt6pbZPn/9zgf18v7hJrW11UlGW0KMRQO8UcWofQUChuVu3Rw4kA06sKaJKLrpVyWb1u8VKjrpxPN3k1Y3mxIdbxjzpmSD7ChraK0eQDGziwSW/6b4fAGiz2QLZ6xsLByTSFyy2Y+ZICh1tOw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lsUp80cg; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giBpL3TZ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22c33e5013aso64656535ad.0
-        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 16:38:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsUp80cg"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b03bc416962so3829801a12.0
+        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 16:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745883483; x=1746488283; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1745884778; x=1746489578; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLf00+i5WXU9IavHUl6p2C33/ZAJdIRYZ+FKsvR9muY=;
-        b=giBpL3TZsgIi91CxwNVb9m36Ye6PVPpe92aUY55kKYh4/kYxLlL1UCO7XdaoDueRnx
-         Db/qrWhpD+JPGXs7ccHRg+beRrZ5dM1cC8Ok0YRKuI5iqmGzR1djH1ZHgunQSzKqEX5A
-         UV8SVgkBzI7LyPoztPem1N/vjWRQTN6SbAMsY/hWoC48Qt6SAcu0llWUe4uJCDFd9d+u
-         U0wylA6x8PDPeyCGj6Hf1rj07nTFwIMM7R7/M3s/o9oUSZDBg/lHfIJjeXnM4Ffm5Nr3
-         RDHpYIWdUoyzY4uWR0p+y1l98JJ730q4CMq5zIBi3p2MQaL52eeZ0BJTl0aQ7xjgwgk9
-         H/lw==
+        bh=8RsuQSMGH+Nxq35AjsUShs6H+a1PazjIafsb4arH8+U=;
+        b=lsUp80cg2KlJKKgtz1c4mjPk0iQ9pUtgn/O3cBcCd0es2akJQRQL3aSEewpi5E2P5U
+         Q2zbReTaQTVcO4tTkYELacn1+UjAZOko8TiV9tXiimgtW1IayFE24qclTFzxa1oOlqNL
+         pn4E6YRwg0Is8mMFkk9TNbc2Ws1Q4c3KKWrLJbOx9ydovhjG8q14XJF4R7/4KbuScvAv
+         p0a9ZQBztOb+/cICTVdSj1fdxk2SWnl4+TZUw6MzX8Quu401gPCLnR3z7EHaBPaUHPp8
+         b2ZU5LI+fip36giZoR8h009SDQmOMOBvinPkh/fP/L7EAE4BkVuNFRsKUn4xnrs9X+lB
+         fdQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745883483; x=1746488283;
+        d=1e100.net; s=20230601; t=1745884778; x=1746489578;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dLf00+i5WXU9IavHUl6p2C33/ZAJdIRYZ+FKsvR9muY=;
-        b=RSil9Qqk6Yj5HXRtQCeCxKUZIVCG5PezwcgDRwZtskFb9ZGc3udrneLaHXqaEAp3TZ
-         mKX/asqn/gwjPVWWrbhsButy0gu2leMT61bDAn1Wg1N4cGJ9gKtzTMMLig5GfT4vrz6C
-         jf77tCm2u8WUf1mvngImWJ+tsJDc+fEmaX9xXI3eqTNH5rl0vVqy+VoIJ7NK1nT36L1B
-         4g2PYnnbbdU+z5zrHQsxFbh+fxmsLAQ/1DW9CAq/1WPAo1Q9iPwETxNlm4/n/u9Owh4r
-         Mjk4o0BqCqmSOYjlKfT4t5e/VoSqzSFHnFmPd+lnTz8YBFSwZm3M5A+93PkkEkJFfN+6
-         ZghA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyTLT6l3zxy6kgGMuLErK9CCwRIKxOytdi5d6iLCYiUtzkS90WzR+yQxob0LTN5VejnOaV+IaVu1/dQA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/WsKhse405qRQu+9D67Wcov2bndYWWQBG/k+qncHpqoAqp8a1
-	5Wl/wkfQmTov79lEWOGp/kF6LxKDsT4+E1WBOXcsd1qFUGrVeF/a
-X-Gm-Gg: ASbGncsugFY4n7KgOD60i1G23HmCdsKxkm3Lla926sGU/m+lZ6llI3nbAnfnIMiR2tZ
-	5ayKmEOM0ZWffr53Hz3ZEQDtsHIiLRwcoST+Si+LHoLMG0j41yfH1LKVI7epWAI6a1OfEReHE41
-	oNJAO4vPWUHYedxLL3QVZbRc5aJegk8PqATvpg9AMSYFSwM6ZXjVoNx/4vSszMckyg5i+RPUMq6
-	8FCHTvJN/c6O3M7yIk086HaqnbmXL75uimhxdmSOX/W311gWmM5m9gT2D/jWxCerreNCAZMYq4+
-	cTiot1hpkldAMDDrnm8jSav84A11ntzwcoKEkoVOds4Z
-X-Google-Smtp-Source: AGHT+IGkMQz3emXbltwBn1k0bQRrPQBRYhRx9PCGAj8+J4ESGupWLyylRHbo8KPGmReOdBEw7WzX+Q==
-X-Received: by 2002:a17:902:c453:b0:22d:e57a:2795 with SMTP id d9443c01a7336-22de57a2dc4mr22963185ad.47.1745883483560;
-        Mon, 28 Apr 2025 16:38:03 -0700 (PDT)
+        bh=8RsuQSMGH+Nxq35AjsUShs6H+a1PazjIafsb4arH8+U=;
+        b=GNPO+PXLFhlmJFmIZtS/DvyLInaxwREi0hIsA5EtHu84mVQL09v/v3rKTdoooTF65p
+         AJ+LEPM2g33kakpb7p8jPF42NAHusr5cgUX/Nkoc+u9UfNCm2VLbgEbVVpEFvgNYydZf
+         1o5Loxmdxs1CXLPacl+dcynX4bJsGLxU+stUBbKjHmJ41B7BWjWA2qtxygiduC5zWG8F
+         9UZtNXzK0rYQVIodggQiS+5yJj+Vv21ve8YhJ8M/axH93FOrTVUnNfXB3RQa96X0jbKe
+         Ldurg116o9TZyGNMMxSZlbrcFdeBjvU6pZ7GbyPiXcgK+CF/BnwbcOk0oUAzx3U8V+x2
+         omxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/AsBnJLAJcauMHHmvF/Ejh1Y3vB+Ruy8B9lfNYQVXCBie3mp4UeIvpGaYy5uoDR9xpcA+8KrNHZLNxg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxORAW1VWUHhDue12gtLouqWPqc5AVFAUGJYcD2c6w5RVfEktO7
+	iChLk8CWhruqpMXotB5ovzt6NnYheBtWN/TkcGXHk1QtnOP25S4o
+X-Gm-Gg: ASbGnctCHgEqnh/Icly7hclZf3p6MoB5AWYvZVkRFhk3fCMTi5F6U1vTmb0NRrYoNU8
+	/0M/4RBaEN05UDDgSp2OV2IRawVAw1NLSMIdaRLgOybX8FaIK3GK3iNGTFCJwCbnblKbggEkTLn
+	luflr2eFTF1s9m18Vw/RA6lyEtXNqyd4pYMMZc0J4ShDmgEw9VzCkZPeBVaSRK7L1CDp6OVfjBp
+	T8/qGXYO4SP/I1N2kX580Hn2BFNUpT/jMw294ISGx8Geo9JFDFEELUcR8oQcRSDfuQhRgZFXCr8
+	etTTIHyYF9fRvjyFXg1PLEL9aRJ+Q1S8DoFOseaDZmxj
+X-Google-Smtp-Source: AGHT+IF2GazQWo9ab/vr8knHLM0gAcqo0PbD6j5eNNWUNBV1632zIxlbixlsSjq85xTX99OmfyebVA==
+X-Received: by 2002:a17:90a:8a88:b0:30a:214e:befc with SMTP id 98e67ed59e1d1-30a214ebfe5mr1984804a91.27.1745884778074;
+        Mon, 28 Apr 2025 16:59:38 -0700 (PDT)
 Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76dd2sm90073895ad.26.2025.04.28.16.38.02
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef098157sm10779310a91.26.2025.04.28.16.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 16:38:02 -0700 (PDT)
-Date: Mon, 28 Apr 2025 16:38:02 -0700
+        Mon, 28 Apr 2025 16:59:37 -0700 (PDT)
+Date: Mon, 28 Apr 2025 16:59:36 -0700
 From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
 Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
-	"Alan J. Wylie" <alan@wylie.me.uk>,
 	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
 	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
 	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	stable@vger.kernel.org
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
 Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
  htb_dequeue
-Message-ID: <aBARWmQi6/reosTF@pop-os.localdomain>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
- <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
- <2025042831-professor-crazy-ad07@gregkh>
+Message-ID: <aBAWaAubkkTH9FAK@pop-os.localdomain>
+References: <20250422214716.5e181523@frodo.int.wylie.me.uk>
+ <aAgO59L0ccXl6kUs@pop-os.localdomain>
+ <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+ <aAlAakEUu4XSEdXF@pop-os.localdomain>
+ <20250424135331.02511131@frodo.int.wylie.me.uk>
+ <aA6BcLENWhE4pQCa@pop-os.localdomain>
+ <20250427204254.6ae5cd4a@frodo.int.wylie.me.uk>
+ <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
+ <aA/s3GBuDc5t1nY5@pop-os.localdomain>
+ <20250428223436.48529979@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -86,20 +86,27 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025042831-professor-crazy-ad07@gregkh>
+In-Reply-To: <20250428223436.48529979@frodo.int.wylie.me.uk>
 
-Hi Greg,
-
-On Mon, Apr 28, 2025 at 01:45:14PM +0200, Greg KH wrote:
+On Mon, Apr 28, 2025 at 10:34:36PM +0100, Alan J. Wylie wrote:
+> On Mon, 28 Apr 2025 14:02:20 -0700
+> Cong Wang <xiyou.wangcong@gmail.com> wrote:
 > 
-> Can someone send me a patch series that does the right thing here?
-> After reading this thread I'm confused as to what is needed to be done.
+> > I doubt it is related to iptables. I will try some TCP traffic on my
+> > side later, but I suspect this is related to the type of packets.
+> > 
+> > Meanwhile, since I still can't reproduce it here, do you mind applying
+> > both of my patches on top of -net and test again?
+> > 
+[...] 
 > 
+> With those patches applied, I've run 5 or 6 SpeedTests, no panics.
+> 
+> There's several WARNINGS in the log, though, about one per run.
 
-I just sent out a fix for the regression reported here, so after it gets
-merged, I will send you a list of commits (probably 2, since we don't
-backport selftests) that need to go for -stable.
-
-Sorry for the regression and confusion here.
+My bad, acctually I reproducced it with iperf (TCP traffic) using your
+reproducer. I saw the warning/crash within 10 seconds. With the fix I
+sent out, I didn't see any after ~10 mininutes, so it should be working 
+probably.
 
 Thanks!
