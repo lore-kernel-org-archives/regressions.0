@@ -1,199 +1,134 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E1A26D4CB
-	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 16:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E29C76C61
+	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 20:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857876; cv=none; b=IsQG2hmDwCYEb0R/jesMf5cfS4JzgkvqoUvHxrY8zSZf8I53GJYGpZcXN4PuRBhhysaWBooTX97gP1kBDCqCXa3bZnji4Fyb+LNjrzHsUeajtkPdrVWgCRJXeOD0VrHB3v2au3MbiPuDaBnzNNykRyFP8lsDmeXqYeRKSVCKI38=
+	t=1745872842; cv=none; b=Mq5qS5NQK2j4CK3hKTvQzr+pfSV1fufQvo8c5/ouetmsD7/1Rfcrma2IE+qEifeBpEhlEUwnX5E3Ms9+avnpK0jptqebsYKtaeFus77QfHQi7FXTSbdKIn4cqpYQJ+8bj/gh6X/xIftUXFEvFlDMv1mFKZ8/c/oe/PmcuGBFXPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857876; c=relaxed/simple;
-	bh=XoHO3hXFTm90wQdVfiTx7lJNABIj/qSyodbgxEJXrwU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HJxi/+sFLWTBsEeybY9Rlk/Cfv9/IaEWBD7ABvzzTLbs9b2t3Fev+4nc3wsphBq7Gxefb74B+06+Y7V5wn4xSlsPiYm8CQjJN6AF8nY4faCgA00ouccNo1t1A/R7OIy1k2NWzCVAaVNf3eAWAZSQJfdTDVN0llR1tkxDysVSJUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OL8FCc+s; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745872842; c=relaxed/simple;
+	bh=16e/YgzDjtZcsT5VW1ZKH/kbfB8Ev/B1D3q5d83zWeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mP4eOn/ngAf+8104YGASv6CE8J4sbDstXsEB3c6a9TSvlsQHAD3d7VItWPWZy9WYcHaF4/pzYvPitnO8jax13nySe4jEmGyFE8okf0gaoq1x/irYJ89gmufbiYwekP6A8CvRe2IcQJG3ld2lAepYbR9qJX9nnIs/P6C2lol7QVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L9SiBKcW; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OL8FCc+s"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43e9ccaa1ebso5902805e9.1
-        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 09:31:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9SiBKcW"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224341bbc1dso56813595ad.3
+        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 13:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745857873; x=1746462673; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:disposition-notification-to
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rpLoGS47sE5MLiLABPtEKiVLu5JTrAcQvnYc7S0qkE=;
-        b=OL8FCc+s8IkqcUCNW9Sums6V0ja+iMPkAooArmcoHPsybDPKOlzVz4tn1WFz2AL8V5
-         ddj60RiSYG8mQGkSBl/Th0h0ndeKX05AveHkBXAJ2mpGDiA0K8eM4J8lYZZAGHTMiRBX
-         p1HL8G5J6hyy9C0wqQy4JOlVFoiwOcaPPtOOjG7P/cIqTQyK/WD6E6dAO7HHsRt4Q8HJ
-         GReHhQjGR5IdXgKnfrCC9jN3UuYXhQ51DzUfzFcZEGkqovQTwAtkp0X4dbLNusFPSLW0
-         XsuAIgavTm+mb+RUyjA2aCSIl7kb26f1DC9/8+cEs99fqfjBkrCktjQ4k41SFyuUMmJp
-         nHaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745857873; x=1746462673;
-        h=content-transfer-encoding:in-reply-to:disposition-notification-to
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1745872839; x=1746477639; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7rpLoGS47sE5MLiLABPtEKiVLu5JTrAcQvnYc7S0qkE=;
-        b=tNSWikPYZEkUVj/nTtkssfYI8G9UDoFkNHtppLjkJmslQ+tnw61eVVdzdjMutlOjI+
-         7YcH+RUbsbm+M2OMuEokDy7MH7WLlndfvtHzxs1cpGhX2pbUBoWEhIprPm6yzFlmSmZV
-         xYwMn5g1SFpGdCSYQQmEMFi+CDfVJWFMox0EdrJvEiG3jxncU4Dlxlp3i2nFlgrscVrK
-         Vy7ypyH2I/AYta8MyGYX+/FeET/6HIG0k+anyollu+6B+njFmr/YL0LZeq+MsCXIv27B
-         UaKqDLy5oPLz5DoAJBUAnOyiGe/AGiwwkQ7LAH6J5IdxNzoHBZlDfTSBOio/c/vuezVI
-         SVaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWijcKJZiFv76VOM6+enABbPOWGTimR6h9QrRtABYbmYGa7F+5wevBctYUCLdby0TyZz3QCa11m8dxfA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxioOcUO7ohtGrcBh7vh8FRi6AdMxUUjnoO52XoxkybIhGg6/5y
-	fRM9FhdISdELzPtnC/sUlh2BYgHMpshOpYTAF/d8LDqSzQnkIzkZ
-X-Gm-Gg: ASbGncu6+SywHj3EikSds0R/M9cbu2+T4kWgsvLg+AvHCaaVnJm0QFQtduar8BWJh1P
-	jH3EunrSFR8ndlHLDcGnRqcSjc0E3ifNIOFo4PO6TRV0+sGPFfHiYQdOvVlYJ/9UGFJavy7GPFF
-	JRW+8W5sS0tU45ZXXSADp8VNK2QdtRIRWf+1mvmrxoWrH/CQW5KYEzr4pej6l6fO2rD5eyjzzhI
-	hdhrztc1IIOZTtNp39Jis8momHlp+NhOGd3XzEJg4ApMmnhzJ/HG3bnhz+TQRjrTK63W1SzmPQC
-	zCTBDXBEeLv7thsMxI/zOC9B0DNLDBnFekyVlMf7QFdBOzjjMDTilOqv6w==
-X-Google-Smtp-Source: AGHT+IHmjNe3scTe8qIdIgHxl5WlUB1dX8XR8Fa4lJ29b14HLel6DUXMTEQxxoDEsqw4QywjAo8agw==
-X-Received: by 2002:a05:600c:4685:b0:43b:cab3:1fd1 with SMTP id 5b1f17b1804b1-440a65bb7d5mr41472465e9.1.1745857872642;
-        Mon, 28 Apr 2025 09:31:12 -0700 (PDT)
-Received: from [192.168.36.152] ([82.66.27.2])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad112sm161000125e9.24.2025.04.28.09.31.11
+        bh=oeoT+z9Ix7KNe6MZWCzuaIP+N6t2Dwvzh7IKztB6k4g=;
+        b=L9SiBKcWZq2SvynDJM19W9W7jF9XXpdLYSM2X5HCa/T1apn0Cno5pAxRXz1aZ0olAM
+         +E/UGv/nHB2i1wO5usYoE/+F3RzbKPxDQsfCp9IyrlYW2nGKknlxF+oZjpggaMzSx1r2
+         dzP678QNa0vn9iCwSbx3kKnIrErYBwu2jj6fQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745872839; x=1746477639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oeoT+z9Ix7KNe6MZWCzuaIP+N6t2Dwvzh7IKztB6k4g=;
+        b=WLQN39jrVfHLpxPAM5QVsq2b/6OrXmIgOM04CbsviUD/tJ3+gvLoa4p6+npKwm0gA1
+         8fqSP0qUzFNOefuWaznPTmSn19WTUiwvyR+OHUgPO0PCCFrztXjmqtnNRDHUNVMEc1Bt
+         +8mCtiJybRcu5nENmiA8gQZFl3nszqOC7Y9or+KF1+eJnHgVHOY3mTTFIcwEY6ZukrU4
+         euYXzsOy41ZWa2EYxi5o53UPe5C42WJkukrIOsUizKHb9JtVH/dILrZ965dfjd+wVS1o
+         jZRrQa0t5IQlm69QqOKZG4sgJOWzaNfIXC602B70Shq1nDTXPVydOc7TPUoFww9tIGku
+         v85g==
+X-Forwarded-Encrypted: i=1; AJvYcCXF779Zj94+eEJvk2byfyCwoLFpivteG4p/Rqpv3ITxM4hlXunEgX5qmw4/EmxauEvw5PhS7kMGuCi1kg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw1bnArmxB/qFbONe5EwXPRTrCX8f+PMIqHiWsiMU9tFfKptk1r
+	U8M3J/QitAdDNzAqECsV04/YESGR04XpZ8Nby5KuGsDt//39z3v5HXS+WU8InHtCSAl6NzwbWPc
+	=
+X-Gm-Gg: ASbGnctAjLufKa57H1ptBWrTqvAZOa87w9cSFE86YWlBn8IhtC1q99BxYrNYpJ9SjnK
+	lFR+aKTh7hAIBhs5pCDKjPuhbucKuozmdEwBlcuI6N/CUyARGMp6gdyqpUQnB3gek+V37ywUXCH
+	8de8f//dTSHk2/F9hTCp1VHiNBr2ve3QrQlVK7cbNyAVzUEgqT/69eHCABabkalcYCI25iAR6Wi
+	yAS9f2ypqcmoQjJHEai7AtjN80sWnNemnmBemquKOabEJH+M3tTPSyC5VOwHTyaLk1aHjLkWnW1
+	lklQv3hYrCZt13TEtFflNZ1IXn2HVnl3oycY9EdhNE42ZQJeWODnyoWJcCNYcgqhsMT/jaRcnd0
+	7REzQ
+X-Google-Smtp-Source: AGHT+IH0IKtd1oy8Rkpv8wrdE8MFRb6+nUFioJ8ks1WJZAS70pSRv+D0q8/4iyBrofdWOnFWylSQmw==
+X-Received: by 2002:a17:902:e545:b0:224:1943:c65 with SMTP id d9443c01a7336-22de7015c0bmr5835635ad.14.1745872838773;
+        Mon, 28 Apr 2025 13:40:38 -0700 (PDT)
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com. [209.85.216.45])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7543sm87846285ad.133.2025.04.28.13.40.37
+        for <regressions@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 09:31:12 -0700 (PDT)
-From: "=?UTF-8?Q?Jean-Fran=C3=A7ois_Ingelaere?=" <masterprenium@gmail.com>
-X-Google-Original-From: =?UTF-8?Q?Jean-Fran=C3=A7ois_Ingelaere?= <MasterPrenium@gmail.com>
-Message-ID: <bb95fe33-bc31-4aa3-a93d-3deadbcb4973@gmail.com>
-Date: Mon, 28 Apr 2025 18:31:11 +0200
+        Mon, 28 Apr 2025 13:40:37 -0700 (PDT)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30a0c05e2c6so2216469a91.2
+        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 13:40:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWPAQ06F8Tr5w5LXMYOPdhGsnJM/AMGn9zrqOvg64JiprFMq0s/gAMQYrxenXwlg2dGgCDaJupZjrrREw==@lists.linux.dev
+X-Received: by 2002:a17:90a:e7cb:b0:2fe:861b:1ae3 with SMTP id
+ 98e67ed59e1d1-30a23dd605fmr290208a91.8.1745872836894; Mon, 28 Apr 2025
+ 13:40:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: FW: Wireless speed regression issue with >6.12.12/6.13.x +
- firmware update for mediatek MT7925
-To: =?UTF-8?B?TWluZ3llbiBIc2llaCAo6Kyd5piO6Ku6KQ==?=
- <Mingyen.Hsieh@mediatek.com>, "stable@vger.kernel.org"
- <stable@vger.kernel.org>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "kvalo@kernel.org" <kvalo@kernel.org>,
- =?UTF-8?B?QWxsYW4gV2FuZyAo546L5a625YGJKQ==?= <Allan.Wang@mediatek.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <CACr2tqu10_mXiXw-Q3VSqYBJhQU1s_m77_uhvjpe0j3H3jhbgA@mail.gmail.com>
- <TYZPR03MB61644B8F34946A73E2C16E27F4DF2@TYZPR03MB6164.apcprd03.prod.outlook.com>
- <5a07aea2090532682c8cd4df3ab1b9026f2e1cd5.camel@mediatek.com>
- <04dca014-881c-46b4-a084-2001c62b466e@gmail.com>
- <6cebf6265f5f981dd951851d0832633292a60a46.camel@mediatek.com>
- <28ff58dc-72f3-4b71-817c-ccb4ff5f777d@gmail.com>
- <bc09e1613e1dd31489d1d2290a67da987481f03d.camel@mediatek.com>
-Content-Language: fr-FR
-In-Reply-To: <bc09e1613e1dd31489d1d2290a67da987481f03d.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+In-Reply-To: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 28 Apr 2025 13:40:25 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+X-Gm-Features: ATxdqUHkn2To6s-FCGeuNkrJ5YMdp_B_e090JmhY2DphP9BmoEpxztHghXs9YcE
+Message-ID: <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-The Cisco Catalyst C9120AXI (not Meraki), is running in Lightweight 
-mode, connected  to the Cisco Virtual Wireless Controller.
-
-I was running tests in 5Ghz, WPA2 + 160Mhz Channel width, not 80 (+all  
-supported rates enabled, RRM+DCA enabled, 802.11h enabled, BSS enabled). 
-As tested previously 20Mhz channel width gives better performances than 
-160Mhz after regression.
-
-Following speed are observed with highest steams as I can (multi thread 
-iperf/nperf ect). Speed test isn't run in perfect conditions but it 
-doesn't really mind.
-
-With 6.14.3 + latest firmware 20Mhz channel width (DL/UL) : 
-130mbps/160mbps (ch36)
-With 6.14.3 + latest firmware 40Mhz channel width : 230mbps/330mbps (36,40)
-With 6.14.3 + latest firmware 80Mhz channel width : 340mbps/6mbps 
-(36,40,44,48)
-With 6.14.3 + latest firmware 160Mhz channel width : 640mbps/7mbps 
-(36,40,44,48,52,56,60,64)
-
-As you can see, Upload speed is dropping with 80Mhz channel width. Can 
-you please try in your setup with 160Mhz ? As a check.
-
--> With 6.14.3 + latest firmware 160Mhz in 802.11AC (Cisco 2802E): 
-800mbps/380mbps (52,56,60,64,36,40,44,48)
-
-As a debug/comparison :
-
-With 6.14.3 + 202412 firmware 20Mhz channel width (DL/UL) : 
-130mbps/170mbps (ch36)
-With 6.14.3 + 202412 firmware 40Mhz channel width : 130mbps/280mbps (36,40)
-With 6.14.3 + 202412 firmware 80Mhz channel width : 390mbps/580mbps 
-(36,40,44,48)
-With 6.14.3 + 202412 firmware 160Mhz channel width : 630mbps/950mbps 
-(36,40,44,48,52,56,60,64)
-
-
-I don't have any other 802.11ax AP at the moment. Remember : no issue 
-with 802.11ac.
-
-Best regards,
-Jeff
-
-Le 28/04/2025 à 13:00, Mingyen Hsieh (謝明諺) a écrit :
->
-> On Thu, 2025-04-24 at 13:20 +0200, Jean-François Ingelaere wrote:
-> > 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> > 
-> > 
-> > Hello,
-> > 
-> > I hoped you had previous messages. Firmware is the released from my
-> > distro (Gentoo Linux) 20240410, but yes you're right, the firmware
-> > used
-> > in this case for mt76 is 20240305, sorry.
-> > 
-> > [74734.459451] Loading firmware:
-> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
-> > [74734.463449] mt7925e 0000:73:00.0: ASIC revision: 79250000
-> > [74734.539692] Loading firmware:
-> > mediatek/mt7925/WIFI_MT7925_PATCH_MCU_1_1_hdr.bin
-> > [74734.539760] mt7925e 0000:73:00.0: HW/SW Version: 0x8a108a10, Build
-> > Time: 20250305132908a
-> > 
-> > [74734.878892] Loading firmware:
-> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
-> > [74734.879069] mt7925e 0000:73:00.0: WM Firmware Version: ____000000,
-> > Build Time: 20250305133013
-> > [74734.974255] Loading firmware:
-> > mediatek/mt7925/WIFI_RAM_CODE_MT7925_1_1.bin
-> > 
-> > 
-> > The AP used is a Cisco C9120AXI-E.
-> > 
-> > 
-> > Best regards,
-> > 
+On Sun, Apr 20, 2025 at 9:26=E2=80=AFPM Nick Bowler <nbowler@draconx.ca> wr=
+ote:
 >
 > Hi,
 >
-> I had tested with this AP (5G HE80 & WPA2), and my setting is v6.14.3 +
-> latest firmware. It looked good for me.
+> I recently noticed that on current kernels I lose video output from
+> my Blackbird's AST2500 BMC after a reboot, which makes it difficult to
+> boot the system again (the video output will come on only after Linux
+> is booted again).
 >
-> Could you give me your AP setting and could you test with another AP?
+> With Linux 6.6 and earlier, there is no problem rebooting, everything
+> is fine.
 >
-> Best Regards,
-> Yen.
+> I bisected to this commit:
 >
+>   ce3d99c8349584bc0fbe1e21918a3ea1155343aa is the first bad commit
+>   commit ce3d99c8349584bc0fbe1e21918a3ea1155343aa
+>   Author: Douglas Anderson <dianders@chromium.org>
+>   Date:   Fri Sep 1 16:39:53 2023 -0700
 >
-> *********** MEDIATEK Confidentiality Notice
->   ***********
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or
-> otherwise exempt from disclosure under applicable laws. It is
-> intended to be conveyed only to the designated recipient(s). Any
-> use, dissemination, distribution, printing, retaining or copying
-> of this e-mail (including its attachments) by unintended recipient(s)
-> is strictly prohibited and may be unlawful. If you are not an
-> intended recipient of this e-mail, or believe that you have received
-> this e-mail in error, please notify the sender immediately
-> (by replying to this e-mail), delete any and all copies of this
-> e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+>       drm: Call drm_atomic_helper_shutdown() at shutdown time for misc dr=
+ivers
+>
+> This commit does not revert cleanly on 6.14, but I can easily undo
+> the changes this commit made to the ast driver, and this is enough
+> to restore working behaviour.
+>
+> Let me know if you need any more info!
+
+Bleh. That's not good. If I had to guess there's some subtle bug /
+missing timing constraint that's being triggered here. A few things to
+try:
+
+1. Add a several second delay after the call to
+"drm_atomic_helper_shutdown()", like msleep(5000) or something like
+that. That's kind of a shot in the dark, but it's fairly common for
+panels to get upset if you turn them off and then turn them on again
+too quickly. This would be my blind guess of what is happening.
+
+2. Could you give more details about what panel you're using? Ideally
+it'd be great if you could say which device tree you're using too.
+
+3. Any chance you can gather the `dmesg` from a failing boot and
+provide it somehow? Are there any errors in the logs from the failing
+boot?
+
+-Doug
