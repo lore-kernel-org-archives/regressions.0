@@ -1,134 +1,149 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E29C76C61
-	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 20:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C89A1FDE02
+	for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 21:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745872842; cv=none; b=Mq5qS5NQK2j4CK3hKTvQzr+pfSV1fufQvo8c5/ouetmsD7/1Rfcrma2IE+qEifeBpEhlEUwnX5E3Ms9+avnpK0jptqebsYKtaeFus77QfHQi7FXTSbdKIn4cqpYQJ+8bj/gh6X/xIftUXFEvFlDMv1mFKZ8/c/oe/PmcuGBFXPQ=
+	t=1745874143; cv=none; b=f02RfVRIc7kaoB+RmcaEKCzIPXzsqbwop1KGQDBX+4miIOeDzES+vwb6cqMqNVn48VFkm50NxnsKGpLHV9NiV8P5GDslGifxq64N1RmGdq0mv/65wzLORg8CfgT1x14ZvZMyEMYKor93aaJ3OnKXTPyI1ytqgMHVM+opsvy0tMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745872842; c=relaxed/simple;
-	bh=16e/YgzDjtZcsT5VW1ZKH/kbfB8Ev/B1D3q5d83zWeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mP4eOn/ngAf+8104YGASv6CE8J4sbDstXsEB3c6a9TSvlsQHAD3d7VItWPWZy9WYcHaF4/pzYvPitnO8jax13nySe4jEmGyFE8okf0gaoq1x/irYJ89gmufbiYwekP6A8CvRe2IcQJG3ld2lAepYbR9qJX9nnIs/P6C2lol7QVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L9SiBKcW; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745874143; c=relaxed/simple;
+	bh=Itbp7clee2hvnWfOWGWjGxRJxSbIg8VzQq6yzzThnsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o+s70NYOzVLWUYkt6EcjAJaVVjptP3ZnWYCR5wrVKbuxFrpQ0EGmtYK7tr4OsJksB9NzbpRIRFvSsrlWdnHQ92KBXR191lnONGBLyE1/GX1Jl39O9HgeSVXl3BGQIpovthVmncVhLQ6BttvWy6Cxgbn+z0VM5nCzM8RhgILWEZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsoGbl5e; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9SiBKcW"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224341bbc1dso56813595ad.3
-        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 13:40:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsoGbl5e"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74019695377so1240791b3a.3
+        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 14:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745872839; x=1746477639; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oeoT+z9Ix7KNe6MZWCzuaIP+N6t2Dwvzh7IKztB6k4g=;
-        b=L9SiBKcWZq2SvynDJM19W9W7jF9XXpdLYSM2X5HCa/T1apn0Cno5pAxRXz1aZ0olAM
-         +E/UGv/nHB2i1wO5usYoE/+F3RzbKPxDQsfCp9IyrlYW2nGKknlxF+oZjpggaMzSx1r2
-         dzP678QNa0vn9iCwSbx3kKnIrErYBwu2jj6fQ=
+        d=gmail.com; s=20230601; t=1745874142; x=1746478942; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hXXB00A+dPp6J1rZLZ3Xtsxe/hEjJz2VYrs1MOq8CDM=;
+        b=IsoGbl5eaVipWgnCcT0qerhz+qv8tDsZ/NtN7ecOkugSNYiBOqGouaLaNH8afYUvba
+         qKEaQYGtmvFQH/ebLCKuzupor+5NVgMowXllXHuss4towDvnZdkH7M1tFdNzoELidupI
+         +TqX9UmsmnBr6RyL/KUQOEq5s+q8QfdRehQOCCR95+A5v/2LMKxWriYRFOy4Rg3Iir+l
+         RJLudQIUmpmAVurMtnzctnHAVm52ovGM42fsRkpbZDzqQBCJ7U8IGkq7ryOMGhN4oV2Y
+         fnc8gboMc9Qv0ReJ1aKaKM7CUiuwKgJx9IE/7jso+0icLROHvG0+xI0ztgqVRvZovycf
+         yqTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745872839; x=1746477639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oeoT+z9Ix7KNe6MZWCzuaIP+N6t2Dwvzh7IKztB6k4g=;
-        b=WLQN39jrVfHLpxPAM5QVsq2b/6OrXmIgOM04CbsviUD/tJ3+gvLoa4p6+npKwm0gA1
-         8fqSP0qUzFNOefuWaznPTmSn19WTUiwvyR+OHUgPO0PCCFrztXjmqtnNRDHUNVMEc1Bt
-         +8mCtiJybRcu5nENmiA8gQZFl3nszqOC7Y9or+KF1+eJnHgVHOY3mTTFIcwEY6ZukrU4
-         euYXzsOy41ZWa2EYxi5o53UPe5C42WJkukrIOsUizKHb9JtVH/dILrZ965dfjd+wVS1o
-         jZRrQa0t5IQlm69QqOKZG4sgJOWzaNfIXC602B70Shq1nDTXPVydOc7TPUoFww9tIGku
-         v85g==
-X-Forwarded-Encrypted: i=1; AJvYcCXF779Zj94+eEJvk2byfyCwoLFpivteG4p/Rqpv3ITxM4hlXunEgX5qmw4/EmxauEvw5PhS7kMGuCi1kg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1bnArmxB/qFbONe5EwXPRTrCX8f+PMIqHiWsiMU9tFfKptk1r
-	U8M3J/QitAdDNzAqECsV04/YESGR04XpZ8Nby5KuGsDt//39z3v5HXS+WU8InHtCSAl6NzwbWPc
-	=
-X-Gm-Gg: ASbGnctAjLufKa57H1ptBWrTqvAZOa87w9cSFE86YWlBn8IhtC1q99BxYrNYpJ9SjnK
-	lFR+aKTh7hAIBhs5pCDKjPuhbucKuozmdEwBlcuI6N/CUyARGMp6gdyqpUQnB3gek+V37ywUXCH
-	8de8f//dTSHk2/F9hTCp1VHiNBr2ve3QrQlVK7cbNyAVzUEgqT/69eHCABabkalcYCI25iAR6Wi
-	yAS9f2ypqcmoQjJHEai7AtjN80sWnNemnmBemquKOabEJH+M3tTPSyC5VOwHTyaLk1aHjLkWnW1
-	lklQv3hYrCZt13TEtFflNZ1IXn2HVnl3oycY9EdhNE42ZQJeWODnyoWJcCNYcgqhsMT/jaRcnd0
-	7REzQ
-X-Google-Smtp-Source: AGHT+IH0IKtd1oy8Rkpv8wrdE8MFRb6+nUFioJ8ks1WJZAS70pSRv+D0q8/4iyBrofdWOnFWylSQmw==
-X-Received: by 2002:a17:902:e545:b0:224:1943:c65 with SMTP id d9443c01a7336-22de7015c0bmr5835635ad.14.1745872838773;
-        Mon, 28 Apr 2025 13:40:38 -0700 (PDT)
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com. [209.85.216.45])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7543sm87846285ad.133.2025.04.28.13.40.37
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 13:40:37 -0700 (PDT)
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30a0c05e2c6so2216469a91.2
-        for <regressions@lists.linux.dev>; Mon, 28 Apr 2025 13:40:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWPAQ06F8Tr5w5LXMYOPdhGsnJM/AMGn9zrqOvg64JiprFMq0s/gAMQYrxenXwlg2dGgCDaJupZjrrREw==@lists.linux.dev
-X-Received: by 2002:a17:90a:e7cb:b0:2fe:861b:1ae3 with SMTP id
- 98e67ed59e1d1-30a23dd605fmr290208a91.8.1745872836894; Mon, 28 Apr 2025
- 13:40:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745874142; x=1746478942;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hXXB00A+dPp6J1rZLZ3Xtsxe/hEjJz2VYrs1MOq8CDM=;
+        b=ldDj30xK2ynR2CgwpdbXdX1xnbuFe8diGB5X1Xm7e/wXrYGj624pIGSxsz+DuE1QD8
+         KVI/18gAX25H/OOwda/dCIhadZrXyJulOg6v0PnrIXXGn0YLIPPo5ZDIm+pQtFOhtTMh
+         BPAyYArmZtKnoR0Tf4t51Zt53w6Lim7kfcjgMPelYMNG9fEwaYDv2Rewz3FSyihFTGGJ
+         Zc0B3OfIHf6iVVF+E1LS/2oXwEDfOeu/2JDtOphzSs941eavsHeZ3zUbHfSSmcJ8Xb6E
+         Pb0MOZnfYF0EwXYW7Hw1ceIOKvVG9CAP4UHMshNg1Xuz+qSw2Ce0Jv7sIXiC3baLfzdT
+         +0+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFZwTsapXNGYqW9e3v0sNz2OA/gNmvgSKaiw4UndnitWkWwG8H0wckjFe58ZYye1GaMZQVsduFXJ9zmA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywq+wMyBfv9hyI4xQyJJd65G0P9XgBKdiARfU/mVhVt5pxtF6JZ
+	FIiYmMsqkEZm0wIPl/pYYLH2eKmoqwRGs+oxoZ1qXjZ9lDeObisY
+X-Gm-Gg: ASbGncvUhQjyD5AOQQC93Uj0BqUdMPpHhTOXCFPhrsgu24ieApiqIju0utTFf5zbPha
+	x645o8oEoVq5cVBql7DZyPYOWQJpXipDlPLlQuWjG3kKHTmxfyC/WUM1WNk/RywJRA8k9PY/tbU
+	YeGYsxyPc1v5FonpeyPWafKl1arKfE7WRsTq7gfe5MGhMHQIfoY32pKa37NE/UXDE52We9C8qG3
+	DzFrMqL8rdL2j3PMDDzCmgIbFu20GtBA4xfn4wcUP5PZAt7P2m8HPCDlv33kitpldUt3+0Z8ks/
+	9glW3l+KmJAEvXVZadUodbtxREJhr0ZeoEdQrXTNB0Y3
+X-Google-Smtp-Source: AGHT+IGQzTQOkq544Fxw04oa9VgEQc7AcWpngUxeHCjtqSAJ/vTs9P8Z2id3ozh+5cNJhu5851lR7w==
+X-Received: by 2002:a05:6a20:7f87:b0:1f5:8072:d7f3 with SMTP id adf61e73a8af0-2093e724297mr1426828637.30.1745874141571;
+        Mon, 28 Apr 2025 14:02:21 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm8484928b3a.167.2025.04.28.14.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 14:02:21 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:02:20 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <aA/s3GBuDc5t1nY5@pop-os.localdomain>
+References: <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
+ <aAgO59L0ccXl6kUs@pop-os.localdomain>
+ <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+ <aAlAakEUu4XSEdXF@pop-os.localdomain>
+ <20250424135331.02511131@frodo.int.wylie.me.uk>
+ <aA6BcLENWhE4pQCa@pop-os.localdomain>
+ <20250427204254.6ae5cd4a@frodo.int.wylie.me.uk>
+ <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
-In-Reply-To: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 28 Apr 2025 13:40:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
-X-Gm-Features: ATxdqUHkn2To6s-FCGeuNkrJ5YMdp_B_e090JmhY2DphP9BmoEpxztHghXs9YcE
-Message-ID: <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
-Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
 
-Hi,
+On Sun, Apr 27, 2025 at 09:35:48PM +0100, Alan J. Wylie wrote:
+> On Sun, 27 Apr 2025 20:42:54 +0100
+> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
+> 
+> > That would be https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/ ?
+> > 
+> > I've just cloned that. I'll do a build and a test.
+> 
+> $ uname -r
+> 6.15.0-rc3-00109-gf73f05c6f711
+> 
+> It's crashed. Same place as usual. I tried again, same thing.
+> 
+>  htb_dequeue+0x42e/0x610 [sch_htb]
+> 
+> Rather than a ping flood, I was running a Speedtest. Both times it
+> crashed during the upload test, not the download.
+> 
+> https://www.speedtest.net/
+> 
+> Could running an iptables firewall perhaps have anything to do with it?
 
-On Sun, Apr 20, 2025 at 9:26=E2=80=AFPM Nick Bowler <nbowler@draconx.ca> wr=
-ote:
->
-> Hi,
->
-> I recently noticed that on current kernels I lose video output from
-> my Blackbird's AST2500 BMC after a reboot, which makes it difficult to
-> boot the system again (the video output will come on only after Linux
-> is booted again).
->
-> With Linux 6.6 and earlier, there is no problem rebooting, everything
-> is fine.
->
-> I bisected to this commit:
->
->   ce3d99c8349584bc0fbe1e21918a3ea1155343aa is the first bad commit
->   commit ce3d99c8349584bc0fbe1e21918a3ea1155343aa
->   Author: Douglas Anderson <dianders@chromium.org>
->   Date:   Fri Sep 1 16:39:53 2023 -0700
->
->       drm: Call drm_atomic_helper_shutdown() at shutdown time for misc dr=
-ivers
->
-> This commit does not revert cleanly on 6.14, but I can easily undo
-> the changes this commit made to the ast driver, and this is enough
-> to restore working behaviour.
->
-> Let me know if you need any more info!
+I doubt it is related to iptables. I will try some TCP traffic on my
+side later, but I suspect this is related to the type of packets.
 
-Bleh. That's not good. If I had to guess there's some subtle bug /
-missing timing constraint that's being triggered here. A few things to
-try:
+Meanwhile, since I still can't reproduce it here, do you mind applying
+both of my patches on top of -net and test again?
 
-1. Add a several second delay after the call to
-"drm_atomic_helper_shutdown()", like msleep(5000) or something like
-that. That's kind of a shot in the dark, but it's fairly common for
-panels to get upset if you turn them off and then turn them on again
-too quickly. This would be my blind guess of what is happening.
+For your convenience, below is the combined patch of the previous two
+patches, which can be applied on -net.
 
-2. Could you give more details about what panel you're using? Ideally
-it'd be great if you could say which device tree you're using too.
+Thanks!
 
-3. Any chance you can gather the `dmesg` from a failing boot and
-provide it somehow? Are there any errors in the logs from the failing
-boot?
+----->
 
--Doug
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index 4b9a639b642e..9d88fff120bc 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -348,7 +348,8 @@ static void htb_add_to_wait_tree(struct htb_sched *q,
+  */
+ static inline void htb_next_rb_node(struct rb_node **n)
+ {
+-	*n = rb_next(*n);
++	if (*n)
++		*n = rb_next(*n);
+ }
+ 
+ /**
+@@ -1487,7 +1488,8 @@ static void htb_qlen_notify(struct Qdisc *sch, unsigned long arg)
+ 
+ 	if (!cl->prio_activity)
+ 		return;
+-	htb_deactivate(qdisc_priv(sch), cl);
++	if (!cl->leaf.q->q.qlen)
++		htb_deactivate(qdisc_priv(sch), cl);
+ }
+ 
+ static inline int htb_parent_last_child(struct htb_class *cl)
