@@ -1,515 +1,184 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5CE2BF3D6
-	for <regressions@lists.linux.dev>; Tue, 29 Apr 2025 10:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC1E2C3749
+	for <regressions@lists.linux.dev>; Tue, 29 Apr 2025 12:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922250; cv=none; b=LKtZujMfTPYEZnnIdBRC1J0/qC0ogferVV696gsBG2l33cxb9es4IJ8mM5Fsgtjgze6vdFwjWPdr0e3XNiwkZu9jB7zOn10zIaCWBPTwi5eiXYvHJ7sbDpL1eVXNtpK/nEeoGHzyZ2YNsoFMDv2MIt++7IxByW4SRgNyhHr/Y98=
+	t=1745929373; cv=none; b=D2y0eQbx2sOhGAXn/lwItf1O5S8CcnWgRXmNW0++JTqgpphK+pWi/DhfbvMKkCgS2+btOkIyxk8FzwHpYf9KROTnfG7j1W+QNSB9k9MqrVw9GX4VksA9kAR4oEHCyANOoHDGwWkhYUh1XsVO29OvWQAZTt1BCq3n8ltJImNYUkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922250; c=relaxed/simple;
-	bh=NZR5dV4sy+ebI+euOp6dPBdjN5XKUa8vhQRBFZ8Kc9c=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:CC:
-	 References:From:In-Reply-To; b=L5PWHu3BNTn4Bg1qwa3CH496mzTODRJTW8JHp85y5TcTsmTE/HsL3vyz46LEqnZIfHumh/3jSlFObZossbvhV4LD1ndUVdY59gdlNNOVvrywMcYkkwUc4u7rS/6GSDeG9eZ0sKAKUc3BflD9zHO+D/yZR8BBcDBnwLQthVAhEqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c/NjQ793; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745929373; c=relaxed/simple;
+	bh=GrYJd51XKY4KnuFaHd8uMSBX4gV7fjjvH5Cr9rJSLow=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=W69Dy9JXX5smeSaRVuPahp6WURyB13E+4eDCG1iqkOLy0+HJauW1n/ARJa7Zorw5qk/kFLJPikHSTlvWj7I7w+uUpZrtxUdNODgcMzmJkQVA+K+wEqBgGiOAcey2XTBRkAbpTIeaJu++DPSQNneOjUM0Bh2//nfdutE22Byozzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iLT4dUEP; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c/NjQ793"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9x9JA023835;
-	Tue, 29 Apr 2025 10:23:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=mXOg1xWbxtu9u7IgzuQb2Q03
-	Xi+P+cRu5eWnOE/JVQ4=; b=c/NjQ793suNcyaQ7m2uMC8FWjtH/wAr6Xlv3TMV1
-	WAVvdbh2EQILNwDORyr97yCNV+vA6W1s2HWp6GybRnxUPIZjGG1ekXpCInxto3I1
-	N3SnDmOoStZxkuckUv5Mr4B/F+uiDg0kz/2CPlVEQnJMVGS/kbaF8//ab0IqlUaH
-	h9UNIEPvHZBWRsgQYsaiC9vZcfkVJrjqaVXOlo/BXHvikCCieI91w/8tAgZcjb0m
-	CBAw2byUG1xJvR1IRP6ZFCPQeOBczqSfVhMLgTo0iu7DbbdxliF4nOmg3pdgXz2D
-	bid4hf2oDuw35M3zkVoBjZQfDuoAR0XXKZkANRMLxdXpoQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqmce0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:23:50 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TANnQf020253
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:23:49 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 03:23:44 -0700
-Content-Type: multipart/mixed;
-	boundary="------------kG2QmTCLObxG1a8BJrn3M951"
-Message-ID: <9146e65f-7874-4fe3-8cb6-e7ed90a0ab9f@quicinc.com>
-Date: Tue, 29 Apr 2025 18:23:41 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iLT4dUEP"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so2400415241.1
+        for <regressions@lists.linux.dev>; Tue, 29 Apr 2025 05:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745929370; x=1746534170; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Yq2aL/yhY7ArURC3WHDxvEHJit+YPJDem4Cn7Zdfp+w=;
+        b=iLT4dUEPjK/AUNRTAN0cJH4hhLPZOV02AX77LtwHiy6S91z+QwdgQfxDHpDKsI4n+L
+         WAHOnlG3zwq6ni85IRii2SeX/lqM8dkRQ3V2SonNPq+D4jCfDnJH18+PhensEfcOwtc6
+         M9QERb0IHu+nJQhr2T8jSvHO64mUxaiwLGnFTX1u/fVTIQm6XlTz5HbSmN2tzlN7ZrXe
+         PGiXhY3d6hFOFWrvFS3nuXnXnr81gx853WFtHAbp2Za6g1iWX4g8OkCZZhhrpqmup2nr
+         6P28xAYVL3zvmQcPK+PyZ5PJxqNHJqKdPxyGH16ngugJBBQOvThpxuIbHffsBqrq/d0d
+         rHzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745929370; x=1746534170;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Yq2aL/yhY7ArURC3WHDxvEHJit+YPJDem4Cn7Zdfp+w=;
+        b=XDQohzUTXApHxniDqMZhUz9n6rQHmoyWgBVgFybdZ8z2G43QTbHYt8JTPx2Q4MXsEV
+         099bsK67SjLN2UlWrrqEVl3F5gMrgnhPALtMDfWlDrW/PbAgz11oBg6bIFyDgRQsgije
+         6CAdA4noTxvzNwIZKJLJDFagELbyG4KkaC9iJCIYFdYnf8jinx3xMsGAsnEZ00gi6d18
+         1m9zBYeLtjYqH6AX73k+PBx9Rp3TRag68T5F4y6qQ1M5qmB38HD22kowj1NFAsq0hD2l
+         h/2NtaeAUoUR62+oUIZah2y8I/ShxbK1Q60d6EdVNEWr1oKhpPDjcVNDYuIZ2ExgL061
+         Kn/A==
+X-Forwarded-Encrypted: i=1; AJvYcCW87N1ABbZda4hSyUgXk1icdP/+bPUQnJZg6KjvwwiBVusCRdKG6G7wABDntZR5Cmo6jOnOmowwVgiwUA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/KxxAdzUCPFDmJiD3uZKvAq0Fmh9GLpzlPsF9bWU1PPeitVNV
+	btudjZ+ahOKtxb4WCJa6sbCVk1SJUq7A/3sY/WYeu78ZDSgn0BOzXIwk9+2vdCXpC9qMbxmC65j
+	a0KKXhZ599TmFYYoGdzlXghgNYZJq4lmOCNXe0w==
+X-Gm-Gg: ASbGncsyZ70vHNsDvK14kK6gkHuXCAwJHbJnJr9y92RfrvGn/Rfd59uMt0nkRLGHhdC
+	IQvHHZw4MoFmgdm7ewkFv5VXJ0P1EL9u3NSv2gSeSOV1q1o6xJ+lM2KjaIqIHIep38KK9xLOf6z
+	EmX6Qi6EpyPC/x0rb8oJ5WgR6QgsSSLJG7gySOxSE1jvgjcU73/uxTiw==
+X-Google-Smtp-Source: AGHT+IG1foGJ84MD+zQ/lmC0lf25a4A1O8Mjh6gi/WRCCBweasP65i1aWgvEDMrml/CThD3jrUf5V076u9Sg/kAOKns=
+X-Received: by 2002:a05:6102:f10:b0:4c3:858:f07c with SMTP id
+ ada2fe7eead31-4da7fb1c567mr2062378137.14.1745929370205; Tue, 29 Apr 2025
+ 05:22:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/8] scsi: ufs: core: Enable multi-level gear scaling
-To: <neil.armstrong@linaro.org>, <quic_cang@quicinc.com>, <bvanassche@acm.org>,
-        <mani@kernel.org>, <beanhuo@micron.com>, <avri.altman@wdc.com>,
-        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>,
-        <quic_nguyenb@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <peter.wang@mediatek.com>, <quic_rampraka@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux regressions mailing list
-	<regressions@lists.linux.dev>
-References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
- <20250213080008.2984807-6-quic_ziqichen@quicinc.com>
- <c7f2476a-943a-4d73-ad80-802c91e5f880@linaro.org>
- <0155bd45-4c57-44d5-8b0c-852003aef5e0@quicinc.com>
- <191491fa-2c4c-4aa1-b0e8-7750532460a0@linaro.org>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <191491fa-2c4c-4aa1-b0e8-7750532460a0@linaro.org>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NyBTYWx0ZWRfX2O3qdzbukBvI bssAmXgk7Uq3EzKVjqNdl1QNPegy8MU6p3Uj/9LKOGC6JZ3bsRsRfYasxYHdvowM2e/dtT3eoRo H+rRxiH3XAS27dYPXQwxR39NJuF1N7fcxV38hBVdF05lh3vP/BR//uHS4o8V6d8u1Lv3XrTThCL
- rTRBQvVYs3Zgqeb7Er2iB20I331j9Y3E+f+vn5TMEaGysJjpVQE8TGScPcRi4c7iMXrpbrcMeT7 UyillEQyMPTvOPBCvujjx6VuFxhVKWb/49JFluDouAWT7fmtKq8T+qifjasqRmOfWVJAweUT8H1 AZWw/Blbavy0xaKX5z/IB4XnUFF5jyfMywj5QxwMeU2YJyRaHYh9JulcPFU88WHu1e2P/EZNRAA
- +ba8T3pcPlXQ6ZmP0uGPIEZXUFj+bn3D2onxCwbjThVvZs+tT6Fia6d3hgH4hm5UI5oV4zQA
-X-Proofpoint-GUID: y7Q3dz6rNwecqnWAptd106jX4ItR3WWL
-X-Proofpoint-ORIG-GUID: y7Q3dz6rNwecqnWAptd106jX4ItR3WWL
-X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=6810a8b6 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=qC_FGOx9AAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=PY6Zn8H8AAAA:8
- a=N54-gffFAAAA:8 a=TZ4Rt5cQY0nvedDFdRwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=ufAJUjbdAAAA:8 a=EfVj_tyzTYHbDP6jML8A:9 a=B2y7HmGcmWMA:10 a=fsdK_YakeE02zTmptMdW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22 a=ySS05r0LPNlNiX1MMvNp:22
- a=rB1ygNaI0PWiOa_UD5GD:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290077
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 29 Apr 2025 17:52:38 +0530
+X-Gm-Features: ATxdqUFc4BsNDxT2oaRuPsP-hPGeKeTHemw9R5--p6VRqU_UGw_8nm8jkn9vK6g
+Message-ID: <CA+G9fYut=1TFvFUvkRPizj97v-JGyg0kKW7aH9XjPbss_Rwg1g@mail.gmail.com>
+Subject: next-20250428: warning mm page_counter.c page_counter_cancel page_counter_cancel
+To: linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Cgroups <cgroups@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
---------------kG2QmTCLObxG1a8BJrn3M951
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Regression while booting the Linux next-20250428 the following kernel warnings
+on the arm, arm64 and x86_64.
 
-Hi Neil,
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-Thanks for report~
-I got one rb3gen2 device and be able to reproduce this issue today.
-I made a change to fix this corner case. It already been verifed from
-my side. Could also help double check attached patch whether can fix 
-this issue from your side?
+First seen on the next-20250428.
+Good: next-20250424
+Bad:  next-20250428
 
-Thanks,
-Ziqi
+Boot regression: warning mm page_counter.c page_counter_cancel
+page_counter_cancel
 
-On 4/25/2025 3:43 PM, neil.armstrong@linaro.org wrote:
-> Hi,
-> 
-> On 25/04/2025 09:29, Ziqi Chen wrote:
->> Hi Neil,
->>
->> We analyzed this issue today , I don't think it is related to this patch:
-> 
-> The bisect point to the patch where the issue appears, it may be another 
-> one of this patchset.
-> 
->>
->> [    9.383728] ufshcd-qcom 1d84000.ufshc: pwr ctrl cmd 0x2 with mode 
->> 0x11 completion timeout
->> ...
->> ...
->> ...
->> [    9.588545] host_regs: 00000090: 00000002 15710000 00000002 00000003
->>
->> The timeout error log shows the mode 0x11 is the correct argument3 
->> value of this pwr mode DME_SET cmd.
->>
->> int ufshcd_uic_change_pwr_mode(struct ufs_hba *hba, u8 mode)
->> {
->>      struct uic_command uic_cmd = {
->>          .command = UIC_CMD_DME_SET,
->>          .argument1 = UIC_ARG_MIB(PA_PWRMODE),
->>          .argument3 = mode,
->>      };
->> ...
->> ...
->>   dev_err(hba->dev,
->>          "uic cmd 0x%x with arg3 0x%x completion timeout\n",
->>           uic_cmd->command, uic_cmd->argument3);
->>
->>
->> This prints means that we gave correct argument3 here.
->>
->> But from the host register dump , we can see the argument3 written to 
->> register (address 0x***9C) is '0x00000003' which is a invalid value.
->>
->> And according to the UFSHCI JEDEC, the return value of 
->> ConfigResultCode regiser (address 0x***0x98) is 0x00000002 also told 
->> us the value written to argument3 register is a 
->> INVALID_MIB_ATTRIBUTE_VALUE, this is the reason causes this timeout 
->> issue.
->>
->> " 02h INVALID_MIB_ATTRIBUTE_VALUE "
->>
->> However, though we don't know the final root cause, we can know there 
->> is mistake occur during writing register. The argument3 value is 0x11, 
->> but after writing to register , the readback value from register is 
->> 0x3... Anyway , this patch didn't touch the path of register writing.
->>
->> Are you easy to reproduce this issue ? How many instances do you 
->> observed ? We never received similar report from our internal UFS test 
->> team and stabitily test team. If it is easy to reproduce , you can add 
->> readback prints at the place where after writing register to check it.
-> 
-> The issue is easy to reproduce, just boot the rb3gen2 with vanilla 
-> v6.15-rc1 and default defconfig.
-> 
->>
->> ufshcd_dispatch_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
->> {
->>      lockdep_assert_held(&hba->uic_cmd_mutex);
->>
->>      WARN_ON(hba->active_uic_cmd);
->>
->>      hba->active_uic_cmd = uic_cmd;
->>
->>      /* Write Args */
->>      ufshcd_writel(hba, uic_cmd->argument1, REG_UIC_COMMAND_ARG_1);
->>      ufshcd_writel(hba, uic_cmd->argument2, REG_UIC_COMMAND_ARG_2);
->>      ufshcd_writel(hba, uic_cmd->argument3, REG_UIC_COMMAND_ARG_3);
->>
->> -> you can add print here:
->>    pr_err ("READ BACK argument3 from register 0x%x: 0x%x",
->>        REG_UIC_COMMAND_ARG_3, ufshcd_readl(hba, REG_UIC_COMMAND_ARG_3);
-> 
-> I've run the kernel with:
-> =====================><=================================
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 0534390c2a35..232328ff6365 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -2494,6 +2494,14 @@ ufshcd_dispatch_uic_cmd(struct ufs_hba *hba, 
-> struct uic_command *uic_cmd)
->          ufshcd_writel(hba, uic_cmd->argument2, REG_UIC_COMMAND_ARG_2);
->          ufshcd_writel(hba, uic_cmd->argument3, REG_UIC_COMMAND_ARG_3);
-> 
-> +       {
-> +               uint32_t reg3 = ufshcd_readl(hba, REG_UIC_COMMAND_ARG_3);
-> +
-> +               if (reg3 != uic_cmd->argument3)
-> +                       pr_err("different READ BACK argument3 from 
-> register 0x% != 0x%x",
-> +                               uic_cmd->argument3, reg3);
-> +       }
-> +
->          ufshcd_add_uic_command_trace(hba, uic_cmd, UFS_CMD_SEND);
-> 
->          /* Write UIC Cmd */
-> =====================><=================================
-> 
-> And this print never appears.
-> 
-> But the log clearly shows the kernel tries to scale back from gear1 to 
-> gear4:
-> 
->  >> [   10.538102] ufshcd-qcom 1d84000.ufshc: ufshcd_scale_gear: failed 
-> err -110, old gear: (tx 1 rx 1), new gear: (tx 4 rx 4)
-> 
-> did you validate the gear scaling on the sc7280 with the mainline UFS & 
-> PHY drivers ?
-> 
-> Neil
-> 
->>
->>
->>
->> Best Regards,
->> Ziqi
->>
->> On 4/24/2025 11:35 PM, Neil Armstrong wrote:
->>> Hi,
->>>
->>> On 13/02/2025 09:00, Ziqi Chen wrote:
->>>> From: Can Guo <quic_cang@quicinc.com>
->>>>
->>>> With OPP V2 enabled, devfreq can scale clocks amongst multiple 
->>>> frequency
->>>> plans. However, the gear speed is only toggled between min and max 
->>>> during
->>>> clock scaling. Enable multi-level gear scaling by mapping clock 
->>>> frequencies
->>>> to gear speeds, so that when devfreq scales clock frequencies we can 
->>>> put
->>>> the UFS link at the appropriate gear speeds accordingly.
->>>>
->>>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->>>> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->>>> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->>>> Reviewed-by: Bean Huo <beanhuo@micron.com>
->>>> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
->>>> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>> ---
->>>>
->>>> v1 -> v2:
->>>> Rename the lable "do_pmc" to "config_pwr_mode".
->>>>
->>>> v2 -> v3:
->>>> Use assignment instead memcpy() in function ufshcd_scale_gear().
->>>>
->>>> v3 -> v4:
->>>> Typo fixed for commit message.
->>>>
->>>> v4 -> v5:
->>>> Change the data type of "new_gear" from 'int' to 'u32'.
->>>> ---
->>>>   drivers/ufs/core/ufshcd.c | 44 +++++++++++++++++++++++++++++ 
->>>> +---------
->>>>   1 file changed, 34 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
->>>> index 8d295cc827cc..9908c0d6a1e1 100644
->>>> --- a/drivers/ufs/core/ufshcd.c
->>>> +++ b/drivers/ufs/core/ufshcd.c
->>>> @@ -1308,16 +1308,26 @@ static int 
->>>> ufshcd_wait_for_doorbell_clr(struct ufs_hba *hba,
->>>>   /**
->>>>    * ufshcd_scale_gear - scale up/down UFS gear
->>>>    * @hba: per adapter instance
->>>> + * @target_gear: target gear to scale to
->>>>    * @scale_up: True for scaling up gear and false for scaling down
->>>>    *
->>>>    * Return: 0 for success; -EBUSY if scaling can't happen at this 
->>>> time;
->>>>    * non-zero for any other errors.
->>>>    */
->>>> -static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
->>>> +static int ufshcd_scale_gear(struct ufs_hba *hba, u32 target_gear, 
->>>> bool scale_up)
->>>>   {
->>>>       int ret = 0;
->>>>       struct ufs_pa_layer_attr new_pwr_info;
->>>> +    if (target_gear) {
->>>> +        new_pwr_info = hba->pwr_info;
->>>> +        new_pwr_info.gear_tx = target_gear;
->>>> +        new_pwr_info.gear_rx = target_gear;
->>>> +
->>>> +        goto config_pwr_mode;
->>>> +    }
->>>> +
->>>> +    /* Legacy gear scaling, in case vops_freq_to_gear_speed() is 
->>>> not implemented */
->>>>       if (scale_up) {
->>>>           memcpy(&new_pwr_info, &hba->clk_scaling.saved_pwr_info,
->>>>                  sizeof(struct ufs_pa_layer_attr));
->>>> @@ -1338,6 +1348,7 @@ static int ufshcd_scale_gear(struct ufs_hba 
->>>> *hba, bool scale_up)
->>>>           }
->>>>       }
->>>> +config_pwr_mode:
->>>>       /* check if the power mode needs to be changed or not? */
->>>>       ret = ufshcd_config_pwr_mode(hba, &new_pwr_info);
->>>>       if (ret)
->>>> @@ -1408,15 +1419,19 @@ static void 
->>>> ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool sc
->>>>   static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long 
->>>> freq,
->>>>                   bool scale_up)
->>>>   {
->>>> +    u32 old_gear = hba->pwr_info.gear_rx;
->>>> +    u32 new_gear = 0;
->>>>       int ret = 0;
->>>> +    new_gear = ufshcd_vops_freq_to_gear_speed(hba, freq);
->>>> +
->>>>       ret = ufshcd_clock_scaling_prepare(hba, 1 * USEC_PER_SEC);
->>>>       if (ret)
->>>>           return ret;
->>>>       /* scale down the gear before scaling down clocks */
->>>>       if (!scale_up) {
->>>> -        ret = ufshcd_scale_gear(hba, false);
->>>> +        ret = ufshcd_scale_gear(hba, new_gear, false);
->>>>           if (ret)
->>>>               goto out_unprepare;
->>>>       }
->>>> @@ -1424,13 +1439,13 @@ static int ufshcd_devfreq_scale(struct 
->>>> ufs_hba *hba, unsigned long freq,
->>>>       ret = ufshcd_scale_clks(hba, freq, scale_up);
->>>>       if (ret) {
->>>>           if (!scale_up)
->>>> -            ufshcd_scale_gear(hba, true);
->>>> +            ufshcd_scale_gear(hba, old_gear, true);
->>>>           goto out_unprepare;
->>>>       }
->>>>       /* scale up the gear after scaling up clocks */
->>>>       if (scale_up) {
->>>> -        ret = ufshcd_scale_gear(hba, true);
->>>> +        ret = ufshcd_scale_gear(hba, new_gear, true);
->>>>           if (ret) {
->>>>               ufshcd_scale_clks(hba, hba->devfreq->previous_freq,
->>>>                         false);
->>>> @@ -1723,6 +1738,8 @@ static ssize_t 
->>>> ufshcd_clkscale_enable_store(struct device *dev,
->>>>           struct device_attribute *attr, const char *buf, size_t count)
->>>>   {
->>>>       struct ufs_hba *hba = dev_get_drvdata(dev);
->>>> +    struct ufs_clk_info *clki;
->>>> +    unsigned long freq;
->>>>       u32 value;
->>>>       int err = 0;
->>>> @@ -1746,14 +1763,21 @@ static ssize_t 
->>>> ufshcd_clkscale_enable_store(struct device *dev,
->>>>       if (value) {
->>>>           ufshcd_resume_clkscaling(hba);
->>>> -    } else {
->>>> -        ufshcd_suspend_clkscaling(hba);
->>>> -        err = ufshcd_devfreq_scale(hba, ULONG_MAX, true);
->>>> -        if (err)
->>>> -            dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
->>>> -                    __func__, err);
->>>> +        goto out_rel;
->>>>       }
->>>> +    clki = list_first_entry(&hba->clk_list_head, struct 
->>>> ufs_clk_info, list);
->>>> +    freq = clki->max_freq;
->>>> +
->>>> +    ufshcd_suspend_clkscaling(hba);
->>>> +    err = ufshcd_devfreq_scale(hba, freq, true);
->>>> +    if (err)
->>>> +        dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
->>>> +                __func__, err);
->>>> +    else
->>>> +        hba->clk_scaling.target_freq = freq;
->>>> +
->>>> +out_rel:
->>>>       ufshcd_release(hba);
->>>>       ufshcd_rpm_put_sync(hba);
->>>>   out:
->>>
->>> This change causes UFS crash on the RB3gen2, after UFS successfully 
->>> probe and scan:
->>>
->>> [    9.383728] ufshcd-qcom 1d84000.ufshc: pwr ctrl cmd 0x2 with mode 
->>> 0x11 completion timeout
->>> [    9.393272] ufshcd-qcom 1d84000.ufshc: UFS Host state=1
->>> [    9.403126] msm_dpu ae01000.display-controller: 
->>> [drm:adreno_request_fw [msm]] *ERROR* failed to load a660_sqe.fw
->>> [    9.408484] ufshcd-qcom 1d84000.ufshc: 0 outstanding reqs, tasks=0x0
->>> [    9.425577] ufshcd-qcom 1d84000.ufshc: saved_err=0x0, 
->>> saved_uic_err=0x0
->>> [    9.432433] ufshcd-qcom 1d84000.ufshc: Device power mode=1, UIC 
->>> link state=1
->>> [    9.439716] ufshcd-qcom 1d84000.ufshc: PM in progress=0, sys. 
->>> suspended=0
->>> [    9.446742] ufshcd-qcom 1d84000.ufshc: Auto BKOPS=0, Host self- 
->>> block=0
->>> [    9.453468] ufshcd-qcom 1d84000.ufshc: Clk gate=1
->>> ...
->>> [   10.529259] ufshcd-qcom 1d84000.ufshc: ufshcd_change_power_mode: 
->>> power mode change failed -110
->>> [   10.538102] ufshcd-qcom 1d84000.ufshc: ufshcd_scale_gear: failed 
->>> err -110, old gear: (tx 1 rx 1), new gear: (tx 4 rx 4)
->>> [   10.542841] WARNING: CPU: 0 PID: 274 at drivers/ufs/core/ 
->>> ufshcd.c:5504 ufshcd_sl_intr+0x64c/0x6a4
->>> ...
->>>
->>> CI Run sample: https://git.codelinaro.org/linaro/qcomlt/ci/staging/ 
->>> cdba- tester/-/jobs/233352#L1479
->>>
->>> Bisect run log:
->>> # bad: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
->>> # good: [38fec10eb60d687e30c8c6b5420d86e8149f7557] Linux 6.14
->>> git bisect start 'v6.15-rc1' 'v6.14'
->>> # bad: [fd71def6d9abc5ae362fb9995d46049b7b0ed391] Merge tag 
->>> 'for-6.15- tag' of git://git.kernel.org/pub/scm/linux/kernel/git/ 
->>> kdave/linux
->>> git bisect bad fd71def6d9abc5ae362fb9995d46049b7b0ed391
->>> # good: [fb1ceb29b27cda91af35851ebab01f298d82162e] Merge tag 
->>> 'platform- drivers-x86-v6.15-1' of git://git.kernel.org/pub/scm/ 
->>> linux/kernel/git/ pdx86/platform-drivers-x86
->>> git bisect good fb1ceb29b27cda91af35851ebab01f298d82162e
->>> # good: [1952e19c02ae8ea0c663d30b19be14344b543068] Merge tag 
->>> 'wireless- next-2025-03-20' of https://git.kernel.org/pub/scm/linux/ 
->>> kernel/git/ wireless/wireless-next
->>> git bisect good 1952e19c02ae8ea0c663d30b19be14344b543068
->>> # bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net- 
->>> next-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/ 
->>> net-next
->>> git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
->>> # good: [22093997ac9220d3c606313efbf4ce564962d095] Merge tag 
->>> 'ata-6.15- rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/ 
->>> libata/linux
->>> git bisect good 22093997ac9220d3c606313efbf4ce564962d095
->>> # bad: [336b4dae6dfecc9aa53a3a68c71b9c1c1d466388] Merge tag 'iommu- 
->>> updates-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ 
->>> iommu/linux
->>> git bisect bad 336b4dae6dfecc9aa53a3a68c71b9c1c1d466388
->>> # bad: [0711f1966a523d77d4c5f00776a7bd073d56251a] scsi: mpt3sas: Fix 
->>> buffer overflow in mpt3sas_send_mctp_passthru_req()
->>> git bisect bad 0711f1966a523d77d4c5f00776a7bd073d56251a
->>> # good: [369552fd03f296261023872b8fc983d1fc55c8e9] Merge patch series 
->>> "mpt3sas driver udpates"
->>> git bisect good 369552fd03f296261023872b8fc983d1fc55c8e9
->>> # bad: [42273e893157501ae119ea5459f3a7d2420c56d6] Merge patch series 
->>> "scsi: scsi_debug: Add more tape support"
->>> git bisect bad 42273e893157501ae119ea5459f3a7d2420c56d6
->>> # bad: [7e72900272b61c11f2fd4020d4f186124d0d171b] Merge patch series 
->>> "Support Multi-frequency scale for UFS"
->>> git bisect bad 7e72900272b61c11f2fd4020d4f186124d0d171b
->>> # good: [c02fe9e222d16bed8c270608c42f77bc62562ac3] scsi: ufs: qcom: 
->>> Implement the freq_to_gear_speed() vop
->>> git bisect good c02fe9e222d16bed8c270608c42f77bc62562ac3
->>> # bad: [eff26ad4c34fc78303c14be749e10ca61c4d211f] scsi: ufs: core: 
->>> Check if scaling up is required when disable clkscale
->>> git bisect bad eff26ad4c34fc78303c14be749e10ca61c4d211f
->>> # bad: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: ufs: core: 
->>> Enable multi-level gear scaling
->>> git bisect bad 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
->>> # first bad commit: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: 
->>> ufs: core: Enable multi-level gear scaling
->>>
->>> #regzbot introduced 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
->>>
->>> Thanks,
->>> Neil
->>>
->>
-> 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
---------------kG2QmTCLObxG1a8BJrn3M951
-Content-Type: text/plain; charset="UTF-8";
-	name="0001-scsi-ufs-qcom-check-negotiatory-max-gear-before-retu.patch"
-Content-Disposition: attachment;
-	filename*0="0001-scsi-ufs-qcom-check-negotiatory-max-gear-before-retu.pa";
-	filename*1="tch"
-Content-Transfer-Encoding: base64
+## Boot error
+[   10.441535] ------------[ cut here ]------------
+[   10.446229] page_counter underflow: -188 nr_pages=252
+[   10.451349] WARNING: CPU: 6 PID: 1 at mm/page_counter.c:60
+page_counter_cancel (mm/page_counter.c:60 (discriminator 1))
+[   10.459534] Modules linked in: ip_tables x_tables venus_enc
+venus_dec videobuf2_dma_contig xhci_pci_renesas lontium_lt9611
+hci_uart mcp251xfd leds_qcom_lpg btqca can_dev qcom_spmi_adc5
+qcom_spmi_temp_alarm qcom_pbs snd_soc_sdm845 btbcm qcom_vadc_common
+led_class_multicolor snd_soc_rt5663 msm rtc_pm8xxx ath10k_snoc ocmem
+snd_soc_qcom_sdw venus_core snd_soc_qcom_common qcom_stats qcom_camss
+drm_exec qcom_pon videobuf2_dma_sg snd_soc_rl6231 gpu_sched
+drm_dp_aux_bus ath10k_core drm_display_helper ath phy_qcom_qmp_combo
+drm_client_lib slim_qcom_ngd_ctrl v4l2_mem2mem videobuf2_memops
+soundwire_bus reset_qcom_pdc mac80211 bluetooth slimbus coresight_stm
+aux_bridge qcom_q6v5_mss videobuf2_v4l2 camcc_sdm845 i2c_qcom_geni
+qrtr pwrseq_core qcom_rng videobuf2_common typec spi_geni_qcom
+phy_qcom_qmp_usb gpi qcom_q6v5_pas icc_osm_l3 stm_core
+phy_qcom_qmp_ufs qcom_pil_info ufs_qcom qcrypto cfg80211 pdr_interface
+qcom_q6v5 phy_qcom_qmp_pcie rfkill qcom_pdr_msg lmh qcom_sysmon
+qcom_common icc_bwmon qcom_glink_smem llcc_qcom qcom_wdt
+[   10.459765]  display_connector drm_kms_helper mdt_loader drm
+qmi_helpers backlight socinfo rmtfs_mem
+[   10.559700] CPU: 6 UID: 0 PID: 1 Comm: systemd Not tainted
+6.15.0-rc4-next-20250428 #1 PREEMPT
+[   10.568491] Hardware name: Thundercomm Dragonboard 845c (DT)
+[   10.574213] pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   10.581250] pc : page_counter_cancel (mm/page_counter.c:60 (discriminator 1))
+[   10.586857] lr : page_counter_cancel (mm/page_counter.c:60 (discriminator 1))
+[   10.586863] sp : ffff80008005bb70
+[   10.586866] x29: ffff80008005bb70 x28: 0000000000000001 x27: 0000000000000000
+[   10.586874] x26: 0000000000001020 x25: 0000000000000000 x24: 0000000000000000
+[   10.586881] x23: 0000000000000001 x22: ffff18d1ca7e0000 x21: ffff18d23d526c98
+[   10.621717] x20: 00000000000000fc x19: ffff18d1ca7e0100 x18: 0000000000000000
+[   10.629990] x17: 00000000ffffffff x16: ffffd654f92e26e8 x15: 0000000000001e00
+[   10.638261] x14: ffff18d1ca717e5f x13: 0000000000000003 x12: 0000000000000000
+[   10.646512] x11: 0000000000000003 x10: ffffd654fbb70060 x9 : ffffd654f934fb70
+[   10.654747] x8 : ffff80008005b8e8 x7 : ffffd654fbb18060 x6 : 00000000ffffefff
+[   10.662959] x5 : 0000000000000338 x4 : 0000000000000000 x3 : 0000000000000000
+[   10.671161] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff18d1c0340000
+[   10.679369] Call trace:
+[   10.682861] page_counter_cancel (mm/page_counter.c:60 (discriminator 1)) (P)
+[   10.688408] page_counter_uncharge (mm/page_counter.c:183 (discriminator 3))
+[   10.693761] drain_stock (mm/memcontrol.c:1872 (discriminator 2))
+[   10.698235] refill_stock (mm/memcontrol.c:1951)
+[   10.702916] obj_cgroup_uncharge_pages
+(include/linux/cgroup_refcnt.h:78 mm/memcontrol.c:2747)
+[   10.708692] refill_obj_stock (mm/memcontrol.c:3020)
+[   10.713761] __memcg_slab_free_hook (include/linux/rcupdate.h:839
+include/linux/percpu-refcount.h:330
+include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:772
+include/linux/memcontrol.h:769 mm/memcontrol.c:3175)
+[   10.719300] kmem_cache_free (mm/slub.c:4642 mm/slub.c:4744)
+[   10.724272] __fput (fs/file_table.c:479)
+[   10.728448] fput_close_sync (fs/file_table.c:571)
+[   10.733321] __arm64_sys_close (fs/open.c:1584 fs/open.c:1566 fs/open.c:1566)
+[   10.738281] invoke_syscall (arch/arm64/include/asm/current.h:19
+arch/arm64/kernel/syscall.c:54)
+[   10.743012] el0_svc_common.constprop.0
+(include/linux/thread_info.h:135 (discriminator 2)
+arch/arm64/kernel/syscall.c:140 (discriminator 2))
+[   10.748742] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+[   10.753056] el0_svc (arch/arm64/include/asm/irqflags.h:82
+(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+arch/arm64/kernel/entry-common.c:165 (discriminator 1)
+arch/arm64/kernel/entry-common.c:178 (discriminator 1)
+arch/arm64/kernel/entry-common.c:745 (discriminator 1))
+[   10.757199] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:763)
+[   10.762556] el0t_64_sync (arch/arm64/kernel/entry.S:600)
+[   10.767176] ---[ end trace 0000000000000000 ]---
 
-RnJvbSBiZTJmNDQ0YzVjYzMwY2NjZDQxMGMyNGViZjRiNWQzM2RjM2EyYjFkIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBaaXFpIENoZW4gPHF1aWNfemlxaWNoZW5AcXVpY2lu
-Yy5jb20+CkRhdGU6IFR1ZSwgMjkgQXByIDIwMjUgMTg6MDg6NDQgKzA4MDAKU3ViamVjdDog
-W1BBVENIXSBzY3NpOiB1ZnM6IHFjb206IGNoZWNrIG5lZ290aWF0b3J5IG1heCBnZWFyIGJl
-Zm9yZSByZXR1cm4KIGZyZXEgbWF0Y2hlZCBnZWFyCgpTaWduZWQtb2ZmLWJ5OiBaaXFpIENo
-ZW4gPHF1aWNfemlxaWNoZW5AcXVpY2luYy5jb20+Ci0tLQogZHJpdmVycy91ZnMvaG9zdC91
-ZnMtcWNvbS5jIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAx
-IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy91ZnMvaG9zdC91ZnMtcWNvbS5j
-IGIvZHJpdmVycy91ZnMvaG9zdC91ZnMtcWNvbS5jCmluZGV4IDFiMzc0NDlmYmZmYy4uODY0
-YmUxZTI1YzQ0IDEwMDY0NAotLS0gYS9kcml2ZXJzL3Vmcy9ob3N0L3Vmcy1xY29tLmMKKysr
-IGIvZHJpdmVycy91ZnMvaG9zdC91ZnMtcWNvbS5jCkBAIC0xOTAzLDkgKzE5MDMsMTEgQEAg
-c3RhdGljIHUzMiB1ZnNfcWNvbV9mcmVxX3RvX2dlYXJfc3BlZWQoc3RydWN0IHVmc19oYmEg
-KmhiYSwgdW5zaWduZWQgbG9uZyBmcmVxKQogCQlicmVhazsKIAlkZWZhdWx0OgogCQlkZXZf
-ZXJyKGhiYS0+ZGV2LCAiJXM6IFVuc3VwcG9ydGVkIGNsb2NrIGZyZXEgOiAlbHVcbiIsIF9f
-ZnVuY19fLCBmcmVxKTsKLQkJYnJlYWs7CisJCXJldHVybiBnZWFyOwogCX0KIAorCWdlYXIg
-PSBoYmEtPm1heF9wd3JfaW5mby5pc192YWxpZCA/IG1pbl90KHUzMiwgZ2VhciwgaGJhLT5t
-YXhfcHdyX2luZm8uaW5mby5nZWFyX3J4KSA6IGdlYXI7CisKIAlyZXR1cm4gZ2VhcjsKIH0K
-IAotLSAKMi4zNC4xCgo=
+## Source
+* Kernel version: next-20250428
+* Git tree:  https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 33035b665157558254b3c21c3f049fd728e72368
+* Git describe: next-20250428
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250428/
+* Architectures: arm arm64 x86_64
+* Toolchains: gcc-13
+* Kconfigs: lkftconfig
 
---------------kG2QmTCLObxG1a8BJrn3M951--
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250428/testrun/28248589/suite/log-parser-boot/test/exception-page_counter-underflow-nr_pages/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250428/testrun/28249370/suite/log-parser-boot/test/exception-page_counter-underflow-nr_pages/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250428/testrun/28248589/suite/log-parser-boot/test/exception-page_counter-underflow-nr_pages/details/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2wMJhkoqsfGMLyMeRk5Ud2YIB2D/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2wMJhkoqsfGMLyMeRk5Ud2YIB2D/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
