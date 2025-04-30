@@ -1,171 +1,100 @@
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503A9231A23
-	for <regressions@lists.linux.dev>; Wed, 30 Apr 2025 11:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B8B248F69;
+	Wed, 30 Apr 2025 13:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013132; cv=none; b=jtaDhxCacmTQRBG1SY9OoLpd0vUy9mU3S0tFgNgJij/ai5k+J3Rrtvl4Hr9SiEGegHJlNiz30hBJFxJr9t9PWHDDtkwykf+i9oRsRP4Sb9Vx2m6jEbxiaP5H2Pv6hJeDDYBC84C7QJafOnYFYvgOFnH3ChAenBleRinZS2GopXw=
+	t=1746019447; cv=none; b=JZyJ0zqZrag/ANXyYzO249JqKoc+tNARG1ZxkTpsANSXGgY3x2XensE6Kix2bBD97SyCSZKUYeQoztQNlN3NkyW2KAI+RNdUVufgHiUasnFnMqNSZ6DCfoyY5MEv+un2BolXpq9F1X9+LscRV0m8OonzngMAG45vNjUCBBQ0aqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013132; c=relaxed/simple;
-	bh=9AnckJCG6gd1plf0Q0XYwEs3W0fyuV9EhX+8WgPI8dY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JmOAn1Y8/zNo5MH27rja81ny/E4k6G7ElLRMGvVCuV92efkRZ9vT+U4l88X0MnRr53hLsOSK/goVcYWlYoXLFx5MHYlnB6SzJt6QI0fotOxHXxsARisD8OFCET6szHuwptqQPcHj3UkyXf8GGgMis2jsT1kFRtKI25CpidXuiCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=gmNk0Q7Z; arc=none smtp.client-ip=79.135.106.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746019447; c=relaxed/simple;
+	bh=4Nc6GDztxDnf1w4KqVdi+LzpveRRgp4sfrwZ+0SHHS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMuwAHbmFshrPzQtXdhAaD/1NgnpZypphzzL2YU2AxQB9jjxBUsI+KiYfZvL2/xCKGuXVVk8yDVDT/31yelZSILYUhk66UoaHOkcZqz5UTjyfnSytV2aMzUMFyS2gX72MJX4hisMrbzYpWGqtha/adtzRF1dhQBVOVLtFVpGzrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vjd0LIB0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="gmNk0Q7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746013120; x=1746272320;
-	bh=0EFiUKiTKgq2MElHwvfQI4NNLvqB0a2OzXcjGOEO/JI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=gmNk0Q7Z4Lxs8myur9amEAaLwgd9ZASNPABKiyNQQtR12y8ovsNrLHbYxVZNgVpS4
-	 Jo48d5IhlI1Ga3xjRAc7gWe33ZmQzcLY5f5xTDpdn/g0oIeEm3yxHbgcMrtv0bl+hU
-	 YJuD2LTjjtaXoUejq/Hw49BR2qEAKye2f3xlA7VroJi/eI4sfF+bqy9f0iA8TVaDNb
-	 pZkQA0KRhKyDs7WJrt6QFvBUcmh1rGT7SDrf6gXdM9lVkCtmmPWjkLU/nymdEyhOW5
-	 UUvYudnL4WtCcZKgAS8XntCAKW0Xpt/McLtMlZzgg1JFeIYLsRksdYM0vjxyKUjTmI
-	 gtFqwuh56Ru/A==
-Date: Wed, 30 Apr 2025 11:38:33 +0000
-To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
-From: fossben@pm.me
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
-Message-ID: <Rc4t9joagJOAMRwFdiBdsR7ohouSCoRfWEle0muAuVQPREi2e33ZAua7v2-KYJ918HB3BXifBKZ9tn0DZ16wih1ASQgRjH95uqlnBSA-hnM=@pm.me>
-In-Reply-To: <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-Feedback-ID: 134317997:user:proton
-X-Pm-Message-ID: 2e01ae79f045946943168e8916213d6d7fbf7a62
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vjd0LIB0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D40C4CEE9;
+	Wed, 30 Apr 2025 13:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746019446;
+	bh=4Nc6GDztxDnf1w4KqVdi+LzpveRRgp4sfrwZ+0SHHS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vjd0LIB0sgnkdhpcz4kpRBtnO+wtfuCiN5i4BEnIynkhHoW8goJk9P83j2stkksMJ
+	 g3zYhaQhOeihgkEd6GcpZOV0jW/TB9ubFWPBi4caCRtCQpzXA2ONW9/it5zJkamFH3
+	 phDIOZOi6HIXsOWDQa6wYWAAhd9z3A7+iUVgbNF7NDNyKOi/CQFWcjhg7TWDeuZeK3
+	 rqfxQpJIZYfRYLcGYKbYDhlSPjfgvG6+LyZVfNIWKSvpMhFUbzPdP9N8UYqq51IKaM
+	 ZT+rLuVYi2BZHHU2K19J5ywKPO9w7pZxLKtvTGTqplHPDevcjuqhSmtlp9fmxM4TPJ
+	 Ux5DDc86qPSJg==
+Date: Wed, 30 Apr 2025 15:24:03 +0200
+From: Daniel Gomez <da.gomez@kernel.org>
+To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org, 
+	hughd@google.com, willy@infradead.org, david@redhat.com, 
+	wangkefeng.wang@huawei.com, 21cnbao@gmail.com, ryan.roberts@arm.com, ioworker0@gmail.com, 
+	da.gomez@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
+	Eero Tamminen <eero.t.tamminen@intel.com>
+Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
+ support for tmpfs
+Message-ID: <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
+References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
+ <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
+ <aBEP-6iFhIC87zmb@intel.com>
+ <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+ <aBIHYqzar5J8uxGO@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBIHYqzar5J8uxGO@intel.com>
 
-Hi Yen,
+On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville Syrjälä wrote:
+> On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
+> > On 2025/4/30 01:44, Ville Syrjälä wrote:
+> > > On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+> > > Hi,
+> > > 
+> > > This causes a huge regression in Intel iGPU texturing performance.
+> > 
+> > Unfortunately, I don't have such platform to test it.
+> > 
+> > > 
+> > > I haven't had time to look at this in detail, but presumably the
+> > > problem is that we're no longer getting huge pages from our
+> > > private tmpfs mount (done in i915_gemfs_init()).
+> > 
+> > IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE 
+> > in the shmem_pwrite(),
+> 
+> pwrite is just one random way to write to objects, and probably
+> not something that's even used by current Mesa.
+> 
+> > which prevents tmpfs from allocating large 
+> > folios. As mentioned in the comments below, tmpfs like other file 
+> > systems that support large folios, will allow getting a highest order 
+> > hint based on the size of the write and fallocate paths, and then will 
+> > attempt each allowable huge order.
+> > 
+> > Therefore, I think the shmem_pwrite() function should be changed to 
+> > remove the limitation that the write size cannot exceed PAGE_SIZE.
 
-Here are the reproduction steps.
+To enable mTHP on tmpfs, the necessary knobs must first be enabled in sysfs
+as they are not enabled by default IIRC (only THP, PMD level). Ville, I
+see i915_gemfs the huge=within_size mount option is passed. Can you confirm
+if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also marked as
+'always' when the regression is found?
 
-I have two Arch Linux machines:
-    (A) one PC (hostname: arch-desktop) connected to the network via MT7925=
- wifi
-    (B) one NAS box (hostname: arch-nas) connected to the network via Intel=
- I225-V ethernet
+Even if these are enabled, the possible difference may be that before, i915 was
+using PMD pages (THP) always and now mTHP will be used, unless the file size is
+as big as the PMD page. I think the always mount option would also try to infer
+the size to actually give a proper order folio according to that size. Baolin,
+is that correct?
 
-Both machines are running 6.14.4 and have Avahi + nss-mdns enabled accordin=
-g to the Arch Wiki: https://wiki.archlinux.org/title/Avahi#Hostname_resolut=
-ion
-
-Both machines also have systemd-resolved configured in stub resolver mode b=
-ut with MulticastDNS=3Dno to avoid conflicting with Avahi. Bug is reproduci=
-ble without systemd-resolved as well, but I am listing it here for complete=
-ness.
-
-Steps:
-1. On arch-desktop, attempt to `ping arch-nas.local`.
-2. Ping will fail to go through with message: `ping: arch-nas.local: Name o=
-r service not known`
-3. Downgrade arch-desktop to 6.14.2 or below.
-4. `ping arch-nas.local` again.
-5. Ping should go through on IPv6 or IPv4. My network has IPv6 enabled so i=
-t usually uses an IPv6 local address.
-
-For the issue where the MT7925 wifi is unable to grab an IPv6 address, I be=
-lieve it occurs when there's no active DHCP lease. Usually happens in the m=
-orning when I turn on my PC. If I downgrade to 6.14.2, it will immediately =
-grab a lease. Switching back to 6.14.4 retains that address for a while unt=
-il I encounter it again next morning.
-
-Thanks for looking into this!
-Ben
-
-On Wednesday, April 30th, 2025 at 1:48 AM, Mingyen Hsieh <Mingyen.Hsieh@med=
-iatek.com> wrote:
-
-> On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
-> >=20
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >=20
-> >=20
-> > Hello all,
-> >=20
-> > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed that
-> > I could no longer ping *.local addresses provided by Avahi. In
-> > addition, I also noticed that I was not able to get a DHCP IPv6
-> > address from my router, no matter how many times I rebooted the
-> > router or reconnected with NetworkManager.
-> >=20
-> > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses immediately.
-> > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
-> > address will stay there for a while before disappearing later,
-> > possibly because the DHCP lease expired? I am not sure exactly when
-> > it stops working.
-> >=20
-> > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
-> > offending commit that causes mDNS to fail:
-> >=20
-> > commit 80007d3f92fd018d0a052a706400e976b36e3c87
-> > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
-> >=20
-> > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_=
-cmd
-> >=20
-> > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upst=
-ream.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO firm=
-ware.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling M=
-LO when the
-> > firmware supports it")
-> >=20
-> > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++--------=
----
-> > --------------------------------------------
-> > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
-> >=20
-> > I do not know if this same commit is also causing the IPv6 issues as
-> > testing that requires quite a bit of time to reproduce. What I do
-> > know with certainty as of this moment is that it definitely breaks in
-> > kernel 6.14.3.
-> >=20
-> > I've attached my hardware info as well as dmesg logs from the last
-> > working kernel from the bisect and 6.14.4 which exhibits the issue.
-> > Please let me know if there's any other info you need.
-> >=20
-> > Thanks!
-> > Benjamin Xiao
->=20
-> Hi,
->=20
-> Thanks for reporting this issue, we will aim into this.
->=20
-> Can you provide me with your testing steps?
->=20
-> Best Regards,
-> Yen.
->=20
-> ************* MEDIATEK Confidentiality Notice
->  ********************
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be
-> conveyed only to the designated recipient(s). Any use, dissemination,
-> distribution, printing, retaining or copying of this e-mail (including it=
-s
-> attachments) by unintended recipient(s) is strictly prohibited and may
-> be unlawful. If you are not an intended recipient of this e-mail, or beli=
-eve
->=20
-> that you have received this e-mail in error, please notify the sender
-> immediately (by replying to this e-mail), delete any and all copies of
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+And Ville, can you confirm if what i915 needs is to enable PMD-size allocations
+always?
