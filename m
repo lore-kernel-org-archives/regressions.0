@@ -1,171 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2051.outbound.protection.outlook.com [40.107.95.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08784201017
-	for <regressions@lists.linux.dev>; Wed, 30 Apr 2025 11:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012011; cv=none; b=ZEfEuQ8ywFxVIZYPe637k8f2LEDjeFf6tCjctk6epB62fYHjFVSlljnRrIDrYeoA8xlp0t4VBfP3o0oAlbPXKTpqkcqAvJLmDCXD7H5NyWnXGJdaBWeRca3ubzy6BSQP/xwEw8dPnurxe/1IsFvS03Xbuyx5TNkbYXphi4+UsKM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012011; c=relaxed/simple;
-	bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvctTqHIt54aPcxZQ3qaxNnNqOYNuwhYAXmHmYfC4koDBoaGOlb2X5JVeDsWODpyRmy5R31jwSBN0TMo0FnllKQAzaVZTsNuuvoEXVxVKismJ/wh/6RPj1Hi//mvksGpifvjSssSDkFKhrI6SZiF7EHayfolfdSW991qThjchfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QM+bkjbo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7A1259CA0
+	for <regressions@lists.linux.dev>; Wed, 30 Apr 2025 11:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746012605; cv=fail; b=UJ6vBxRgrMjKfkKJsedFkHNmhRrTuuc60fU9BN3CKFeTEAEFhzQIP3Vi7uqr7dN/9xUWWUfPdbDnCJ/jJyKw3IBI39N+ubrU+MGiYrFGbWqmS6JorqFkcnnb0PpGZY66q4Kan83rSWuk/hYXhrPjs0ZTCfcJgpuiznCXaowkH6Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746012605; c=relaxed/simple;
+	bh=xixQgAS7Gns+zVcB/KwV8qQ45hTU8EMCrfbUTA+OzxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=di+WiFQlF5rgm93PI96lVL94+U7+r12+KEtH3ODV4OmGLo8a4AduuOcYV+9k90DRgj9HQvzHpMnhtoz+Lf5hzhO2s1cRoExE3saVSVSdnDh5fO+OcXJlixpcoVb+xsQx9BpGlQ8xIsbQaTVy3jxRW/56goq2SjO8X3yvleAaiRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tsjpdR+T; arc=fail smtp.client-ip=40.107.95.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QM+bkjbo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746012010; x=1777548010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
-  b=QM+bkjboXU+AJ0yIUbN+qAXLx7gtncMLcn4ydmVcgSqGSe6a0yG22xJY
-   Le3bPEiK2cg17j28xhyseTsYoLQJ2k46Fl1VoIET/+LahMs/Ixcd0qqqE
-   fjpwCHrQJY4gXEcJdZ/LS5O2x+27tjyFtoUUDKsNiHLRkJNHiWUTWe4kD
-   z4IijLDVNsuYhts8qncwiCvdq8J6w4Tw5/GwgzozcmROq31HwzzhpkOPU
-   YtCHokpaD2/+7cz2+vC0IE/oA7Y4HRbdXz4YjR8cfjHeuDkd4AIIJ3New
-   Fs62ldBdJGDU2WGfz1kj4PQOCCRi97Sl5fWNBc8U4F9HcZtivpldLc+P/
-   g==;
-X-CSE-ConnectionGUID: HBI/yFOpTJGsXqxi7IIKxg==
-X-CSE-MsgGUID: nxNAmH+cTXePdHLzRYHbdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="58324930"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="58324930"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:20:09 -0700
-X-CSE-ConnectionGUID: B4W/LccOQpyqnhDeH4uUWA==
-X-CSE-MsgGUID: +WRh437uRJyCd4LKnyOlpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="139275736"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orviesa005.jf.intel.com with SMTP; 30 Apr 2025 04:20:04 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 30 Apr 2025 14:20:02 +0300
-Date: Wed, 30 Apr 2025 14:20:02 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
-	david@redhat.com, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
-	ryan.roberts@arm.com, ioworker0@gmail.com, da.gomez@samsung.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	Eero Tamminen <eero.t.tamminen@intel.com>
-Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
- support for tmpfs
-Message-ID: <aBIHYqzar5J8uxGO@intel.com>
-References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
- <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
- <aBEP-6iFhIC87zmb@intel.com>
- <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tsjpdR+T"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y6xyPKl1GTJQAtw5NTa5PVRQZKSihcKoKcZJx1c4a4ujIF0RzIGkIt2YaIbujnT1MqIzHbnlmFNme1udZ2MwTdUKhdNf/VLfGvNEO68JJndjRSqe1xWpj9QikHphSPymiE2TM1ldAWQlQbvhUCbQ/l81ZuJxH1bJF7GsdLXOHoX/vA2jvqB56Nc9YZCScHU3FzWMnTBvRBIE0naUMvEAbq51tIoChuHmRbEnaLsO28hgZMV7O+kn+31sCo0y49n7DNDf7lWh/e7jQSkGK0FGMSOHLmWW9QzkkcR/BpRF7dYkJLxoG9lINc0ICe45jw4w3a5MzW4uUO4dNHzss10SjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j+CSL9bsXLIVsOP9UUGlYX7l+YbpYRwv1MUfUwYdxoI=;
+ b=zDGZEleUvTyEjtQTlit80H+E4KDi1BIod5UHdaGTlY/zlWgL9P3BVFfoMywSk8/f+U3DnqR2AB5xrUOQoyT3SuMsrV4YhS9GX+LfZVrOQ3BIuDXSX6uS40ROdbrrO+Lpo4OI6sP0PyG2Y7XltclrPVxfojUnojBdUbDwIMPTpJl9yKGaFBn2+5hA/UYEvdBbn6qXvu5UPndt+IbpSaCagKhw8QEh8lxPtOoTyz18MR4Uq6XmRPq9IEKCeut5XEE1nEAmpAFVtxUs9O9xqK2MAJ7QtCBBK8aUjfjIlmnAnWjKhmQyRix1BMgyCO3XU1rWYwU807wgojh8eTMYCyehzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j+CSL9bsXLIVsOP9UUGlYX7l+YbpYRwv1MUfUwYdxoI=;
+ b=tsjpdR+TkE3skkEbdJGcaH0yzVzgms6dQugV1iXNi1LwAsqyqT67ogcRY/RyH5eFOkfhb65+n7+XmiSC1XilYPyTySmFqbRO7HKjYsgGnxNSd2I9+BauDaYrNVFn7KTswv8SW+zX6F4OB01/GhXheHBT+lxK+IhqjNTPW5f9/bw=
+Received: from SA1P222CA0178.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::26)
+ by LV8PR12MB9665.namprd12.prod.outlook.com (2603:10b6:408:297::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 11:29:59 +0000
+Received: from SN1PEPF0002BA51.namprd03.prod.outlook.com
+ (2603:10b6:806:3c4:cafe::26) by SA1P222CA0178.outlook.office365.com
+ (2603:10b6:806:3c4::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Wed,
+ 30 Apr 2025 11:29:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA51.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 11:29:58 +0000
+Received: from [10.85.37.104] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
+ 2025 06:29:53 -0500
+Message-ID: <020e7310-397c-4967-9635-8e197078f333@amd.com>
+Date: Wed, 30 Apr 2025 16:59:51 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
-X-Patchwork-Hint: comment
+User-Agent: Mozilla Thunderbird
+Subject: Re: IPC drop down on AMD epyc 7702P
+To: Libo Chen <libo.chen@oracle.com>, Jean-Baptiste Roquefere
+	<jb.roquefere@ateme.com>, Peter Zijlstra <peterz@infradead.org>,
+	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Borislav Petkov <bp@alien8.de>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Gautham R. Shenoy"
+	<gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, "Valentin
+ Schneider" <vschneid@redhat.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, Konrad Wilk <konrad.wilk@oracle.com>
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+ <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
+ <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
+ <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
+ <bc016aaa-fed0-4974-8f9d-5bf671920dc7@oracle.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <bc016aaa-fed0-4974-8f9d-5bf671920dc7@oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA51:EE_|LV8PR12MB9665:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbf796db-e2d6-46e1-15d3-08dd87da56de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cDJaOWhRaGlkQnNNUVdxM013Y0dRTU16R3RqUHFORHg0N3FPbUh1Y09JYTlM?=
+ =?utf-8?B?VTRkb3N4dGVyZWErSFQ2dml5WWtva0EyZWN4NUpsbWMzbkYwNi9xS2h2QW5T?=
+ =?utf-8?B?MTB6U1ZjeldrWjdaTFhWYWdySE00MVdPRXA2YUVtS3RoT2tBWWhVVDlENnVv?=
+ =?utf-8?B?d0NJSVFQYTJBV0x6S0ZmU3Irc0JzQmJNb1NnclhFaTdkdGs4dzZyQ1ZIbUVz?=
+ =?utf-8?B?NC9lcTJPcG81UlhIVERKU1lzdUhJclkvMnl2RVBZTTZQZnZ5L3B3NnZBbGJU?=
+ =?utf-8?B?aU9qY05SdDkzM2MvSzRzc2JTU3U4UXZBRDNvN05jdG9NbXUydGdwN1V4dHNX?=
+ =?utf-8?B?aWowSzFNNWZlVi90WllVTEJwbFBFclBCSzlENG9FSWJTSGRSa0h4MUZUS01a?=
+ =?utf-8?B?UHFKQnhkU2ZIb21TS3ZWK0dPT05Cc2VyWWpneXhHWXNkMnR0Z29Vckpuc3lC?=
+ =?utf-8?B?bXZHUmFaNCtMTllIQUY3RFlXN3hhV0lvc1lYVzhPUG5PdHphTEdaVGtsc2xE?=
+ =?utf-8?B?WTYzOGE1TVVsWFZyYVFuc0lZZ01PN09MeXNTYm9Ec0pMdEFlRXpUc2M3eHFl?=
+ =?utf-8?B?dUsxdHFaTWhsWk9QR3p2THV3eTl1SGRxd0tUQUhwSUEyMjBkQnRyUk9rckcv?=
+ =?utf-8?B?cmN5bkZNQ0t5RkJNeFlmUmxDZ1d3Q3dKTGdVKzJaTi9vS2YzVkFOWlkxQmNL?=
+ =?utf-8?B?TEo4Sm5OTW0yOGgwYU9qT25JbDE1Q0kreTN6bUh1R3JyNjNBRWdOTHN4b05X?=
+ =?utf-8?B?cEhnWHVocit2OU5MN0RFamk4MFkxNTl6RGp3R2FwVzFQMHovbE55N2c2OGlU?=
+ =?utf-8?B?MmdWYUg2VEs4MmExTzlsZVdqM1JZZStoY2E1cXJJdGVtQ2JFUVdXN1lONldz?=
+ =?utf-8?B?eVZTdWc0dC9zK25mK0drR0RkcURCcld2aXVRaW1CWXRCdEM1YnJlMU56S3cx?=
+ =?utf-8?B?aDJHQjlVTWt1RFRqS2szV0Ryb01UazB0c1FOWmtSR01ONHhiS1I2TFRKemlr?=
+ =?utf-8?B?Tlozb0pETmRaNytiQS9JbHJwT3c3OTJUcGdycmNTUkt0RHpIY1NZbC9nTmtH?=
+ =?utf-8?B?L2pLZWpBYUNMQXI1VmpmdmJQRGpEQlZhN0pLM1RLbkN1bHI5VVQydE1QNHEr?=
+ =?utf-8?B?cmVwZ1RwSnlBNTRYYnMrT3NYSWkyM2k3akE0Z3c0WFNBaUxXaUhBZXpQeG1H?=
+ =?utf-8?B?N2NxNFpMWHZ5ZHhNaUZodkI4clc1OXlSR2RYclRmdWYrV2RwYkpvU0dxY3Fp?=
+ =?utf-8?B?bXByZkxSQzcvN3phMkZaOTdsK1NTNFJjaDBIUWdxTU1TWGtqVlBHa0gvVmpG?=
+ =?utf-8?B?YXZraHpUYkZDeVVnRG1ZRGF4QXJadVVKK2JQOVZFbVlJa2ZEcjE1U0NBRWda?=
+ =?utf-8?B?c0lqdWF1ZFNDQS9lS2lucTQ4ZWo4QWVNNys0VzFGckV2RGt3WVFUSWdyRnRx?=
+ =?utf-8?B?RkJ3UjNWaFhXaGtLdlRmVTFHL1ZRcGU2c1VsbDJ2OEZBWnFmY1ZwZ1k3TUk4?=
+ =?utf-8?B?SEszQmdxc1g5b2MzUkR3cHNNdFIrRHNyUDZhUldKcjRnY0NVY1hrdE9DOHVD?=
+ =?utf-8?B?UXdvdVhza2VkUG5SbkZnaENnS1c1S2JTM3VERGI3T3EzdDRGRFVKQ0pPVDZQ?=
+ =?utf-8?B?dmRFbTNiMkdMYkxialhtQlgwSTJxOVZQc0F1aldiOEhTMTQzVE80TUd3Mld1?=
+ =?utf-8?B?c2Z6dEhUNXpkY09URWN6a2RkV011R0M5c2FnemEvN1RCNmpFYW44blBmMHJL?=
+ =?utf-8?B?Tmp3QXBZdEZJNlgvWEpjdDcrQmxnWkFkRmVQWC9jUjg5OWtUeWFJclFaVkpD?=
+ =?utf-8?B?MDNiNldOZlUyZ2pIMDZCUGZCZGlJTnArMkc4NzR1QnNXMnNWUmxNZC9OQ2Jx?=
+ =?utf-8?B?Z2M3SW5QQ3hmYWJvUGFFVythaVhZUUM0SVpibWNaeEtiL3lOY2xONmhRMTd4?=
+ =?utf-8?B?dXBLWGpWbUkzY0gyOWNxMGNNN21reVMzTDI4Zm5TeXZWQ0VPREV3N3lZKzVH?=
+ =?utf-8?B?OUVXRExmS2dmcEhmTnEzYmt5VzVpSTNzRTBhUGNQWndsY3JxbjMvcTEyRnQr?=
+ =?utf-8?Q?JDn+1d?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 11:29:58.5836
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbf796db-e2d6-46e1-15d3-08dd87da56de
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA51.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9665
 
-On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
-> Hi,
-> 
-> On 2025/4/30 01:44, Ville Syrjälä wrote:
-> > On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
-> >> Add large folio support for tmpfs write and fallocate paths matching the
-> >> same high order preference mechanism used in the iomap buffered IO path
-> >> as used in __filemap_get_folio().
-> >>
-> >> Add shmem_mapping_size_orders() to get a hint for the orders of the folio
-> >> based on the file size which takes care of the mapping requirements.
-> >>
-> >> Traditionally, tmpfs only supported PMD-sized large folios. However nowadays
-> >> with other file systems supporting any sized large folios, and extending
-> >> anonymous to support mTHP, we should not restrict tmpfs to allocating only
-> >> PMD-sized large folios, making it more special. Instead, we should allow
-> >> tmpfs can allocate any sized large folios.
-> >>
-> >> Considering that tmpfs already has the 'huge=' option to control the PMD-sized
-> >> large folios allocation, we can extend the 'huge=' option to allow any sized
-> >> large folios. The semantics of the 'huge=' mount option are:
-> >>
-> >> huge=never: no any sized large folios
-> >> huge=always: any sized large folios
-> >> huge=within_size: like 'always' but respect the i_size
-> >> huge=advise: like 'always' if requested with madvise()
-> >>
-> >> Note: for tmpfs mmap() faults, due to the lack of a write size hint, still
-> >> allocate the PMD-sized huge folios if huge=always/within_size/advise is set.
-> >>
-> >> Moreover, the 'deny' and 'force' testing options controlled by
-> >> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', still retain the same
-> >> semantics. The 'deny' can disable any sized large folios for tmpfs, while
-> >> the 'force' can enable PMD sized large folios for tmpfs.
-> >>
-> >> Co-developed-by: Daniel Gomez <da.gomez@samsung.com>
-> >> Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
-> >> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > 
-> > Hi,
-> > 
-> > This causes a huge regression in Intel iGPU texturing performance.
-> 
-> Unfortunately, I don't have such platform to test it.
-> 
-> > 
-> > I haven't had time to look at this in detail, but presumably the
-> > problem is that we're no longer getting huge pages from our
-> > private tmpfs mount (done in i915_gemfs_init()).
-> 
-> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE 
-> in the shmem_pwrite(),
+Hello Libo,
 
-pwrite is just one random way to write to objects, and probably
-not something that's even used by current Mesa.
+On 4/30/2025 4:11 PM, Libo Chen wrote:
+> 
+> 
+> On 4/30/25 02:13, K Prateek Nayak wrote:
+>> (+ more scheduler folks)
+>>
+>> tl;dr
+>>
+>> JB has a workload that hates aggressive migration on the 2nd Generation
+>> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
+>> C2C latency.
+>>
+>> Based on JB's observation so far, reverting commit 16b0a7a1a0af
+>> ("sched/fair: Ensure tasks spreading in LLC during LB") and commit
+>> c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
+>> condition") helps the workload. Both those commits allow aggressive
+>> migrations for work conservation except it also increased cache
+>> misses which slows the workload quite a bit.
+>>
+>> "relax_domain_level" helps but cannot be set at runtime and I couldn't
+>> think of any stable / debug interfaces that JB hasn't tried out
+>> already that can help this workload.
+>>
+>> There is a patch towards the end to set "relax_domain_level" at
+>> runtime but given cpusets got away with this when transitioning to
+>> cgroup-v2, I don't know what the sentiments are around its usage.
+>> Any input / feedback is greatly appreciated.
+>>
+> 
+> 
+> Hi Prateek,
+> 
+> Oh no, not "relax_domain_level" again, this can lead to load imbalance
+> in variety of ways. We were so glad this one went away with cgroupv2,
 
-> which prevents tmpfs from allocating large 
-> folios. As mentioned in the comments below, tmpfs like other file 
-> systems that support large folios, will allow getting a highest order 
-> hint based on the size of the write and fallocate paths, and then will 
-> attempt each allowable huge order.
+I agree it is not pretty. JB also tried strategic pinning and they
+did report that things are better overall but unfortunately, it is
+very hard to deploy across multiple architectures and would also
+require some redesign + testing from their application side.
+
+> it tends to be abused by users as an "easy" fix for some urgent perf
+> issues instead of addressing their root causes.
+
+Was there ever a report of similar issue where migrations for right
+reasons has led to performance degradation as a result of platform
+architecture? I doubt there is a straightforward way to solve this
+using the current interfaces - at least I haven't found one yet.
+
+Perhaps cache-aware scheduling is the way forward to solve these
+set of issues as Peter highlighted.
+
 > 
-> Therefore, I think the shmem_pwrite() function should be changed to 
-> remove the limitation that the write size cannot exceed PAGE_SIZE.
 > 
-> Something like the following code (untested):
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c 
-> b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> index ae3343c81a64..97eefb73c5d2 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> @@ -420,6 +420,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
->          struct address_space *mapping = obj->base.filp->f_mapping;
->          const struct address_space_operations *aops = mapping->a_ops;
->          char __user *user_data = u64_to_user_ptr(arg->data_ptr);
-> +       size_t chunk = mapping_max_folio_size(mapping);
->          u64 remain;
->          loff_t pos;
->          unsigned int pg;
-> @@ -463,10 +464,10 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
->                  void *data, *vaddr;
->                  int err;
->                  char __maybe_unused c;
-> +               size_t offset;
+> Thanks,
+> Libo
 > 
-> -               len = PAGE_SIZE - pg;
-> -               if (len > remain)
-> -                       len = remain;
-> +               offset = pos & (chunk - 1);
-> +               len = min(chunk - offset, remain);
-> 
->                  /* Prefault the user page to reduce potential recursion */
->                  err = __get_user(c, user_data);
 
 -- 
-Ville Syrjälä
-Intel
+Thanks and Regards,
+Prateek
+
