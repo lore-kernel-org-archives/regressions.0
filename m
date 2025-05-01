@@ -1,134 +1,183 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A182144CF
-	for <regressions@lists.linux.dev>; Thu,  1 May 2025 17:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563581F866A
+	for <regressions@lists.linux.dev>; Thu,  1 May 2025 17:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746120528; cv=none; b=TDyILeRfDhYwjwS9oeSsolCjChPEGpiGUxH/+VNtWunw4t1Hgx8PxOKvTeTg6ClDyZRzbyitlL5/SV0dAc9m7PT+E8GUwhgO5FSEc4tr+weVcUtDzMd+ErzwDR7jvSP9QZ0CC2TiXaOQuYmaJp6I+0u6YMM2zHYwTfDO/j5tZlU=
+	t=1746122341; cv=none; b=iqWdcjGYBaQTUyP9Tg1FZEBLThjCxzDLG7qVvdAQJfpqUmcol6w+e0j1YhwNb7Tq6jqZEnX0fLAK3yCuWW2zKJ8FFOlQFq3Ng0BbzomeNqzNZyH6IzNzdC0fFpKo+VsN5VDyLrvSYiF0/v1TCerD/HYlUjfqTrmNCYLN2n8tS4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746120528; c=relaxed/simple;
-	bh=ZKcuaFW2oPn0jqodDr0XtTaRO5hQX0tUhd25Cdcl2zI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=FWfVp7VcEXpwQzObm8LB2ipwvdOOtC193Efok5iy3aAibRwjYtg9dWjJKT1MxHavKkD81zFt7V7s+ZzrYUVeFykw6miELkuzWAvDWthA5X+9d6E6Zzie8vrBI7yRH+iv9w7FUHxqZIn/Vut+9qRIkVSh1TC0egXlmRc7HvVr8YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEmlEOkV; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746122341; c=relaxed/simple;
+	bh=O6FxVeJ6quxOLCb5kkNL3zltkHabRVogsNd4AY7OiyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIpExABiaeqU775ZAJgv7KFFOD52Pfi7lj5XsN2YZ1LLnHpb5YENgM/PfOrPgnEw1sjkSlLckIjfpgOflRYB+UFyXqJgI+qYaIKV3D6X8sLYlwqmujeRXrRvsXs9ama3VpdJeiokCa/WvcM9Vlunh8rly5dIzOxVZZKpcKvPxI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=Xd12O4yG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A95OZfQD; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEmlEOkV"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7370a2d1981so1142734b3a.2
-        for <regressions@lists.linux.dev>; Thu, 01 May 2025 10:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746120526; x=1746725326; darn=lists.linux.dev;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7gk0ol3/wv1Ndo/6VMxze6mTl31v+JnNdZPKIadRxVM=;
-        b=TEmlEOkV2QbfAUufJEcvTqbkDqo7aRyH+X7uyYqffOwriXznQS9jc1SPf9H1evSfEx
-         dMf7f8uDYKYwHrPeGsSDI7kyMeWHNt4yHVOziK1OsczEUhqXp3eKRSZ2pRGUBEVsvUyR
-         0O2lC7T4VDyGvW32Sq9Ey+XSU8YIsHArmW65xUBAyvWNvZiyfuYTqRnNYY0Lc6oSKl6z
-         BN+3qmKx6Suz0CVh0LOKVnzcRABGu9Khh+tnFb3WHxlGbD0XnsheX0KowGGOGTDknuJX
-         IP/mL7Zd6tMxq8ZPu+NwVw8gXZMuXVcqCG9Xkfb3py2pVfY92cu9vCPkY5cRHYsltKHu
-         jQPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746120526; x=1746725326;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7gk0ol3/wv1Ndo/6VMxze6mTl31v+JnNdZPKIadRxVM=;
-        b=a3PWx77W4NBxc6GmqAz1fLUg5LaQHwVVrhkz2Maq+jukdEq+6M8qXNkAlU6dinH3SM
-         wMAl4AB3PoN9DZ7NxX+bMwf66i0XGBs2n75lc3ZkeNHixMg9FG1M65nALnBEN1W4vxR4
-         m8D5IQnLW8m2OCGkJfLlykp/L7uNkWe1IoUJXaA+ryy8GjpQ9kJd7WDaIkObKQ7xyT3z
-         ezhyI7V374jhql3r6fCFbP9oOorpq4L7irP2VdLXFDU6cKwQbew+pS52YHMOFLUG4vqe
-         DHWIlDa7AOf/kEjxMPeenTzFxn4zXc0wB80gvJA7pAbPYw34NIC2xY8CiG99eut/OhI0
-         v3uA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsWbsBvMhVZdKEtYFSPkFH1gpwy8WIxyrQdqyfuROdkWZaO2Um99znMPPvJFNt+szPPaCfO1m3SEe5Mw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzVSurgmE0cUyVH4BzypHlhVM3qLnW2Wj1FrwNoFHLh4nZGhQVi
-	EVVHSljDlWIpefEcWgW06IbfLhq5+5gHwBx608gJ8uxqvcFGfeJX
-X-Gm-Gg: ASbGncvnSVLGqz2P+5g9wDlwO7PMrCzM4ID92kBcI4oThzt9yEgTyYIu+HzQ/4DebQr
-	QZxhguTwCNVt+dCfJ+2xMKulaYidD7NW16Fcx1XjgKKSVy2Yvbn5decioIo6YHducQ2YOrTS+EC
-	gj8JwudjLcEK3GIF1n7TS75SDQhuNv/RXTIc9+GRzEonvm7xXuhJhYwx6+FgJxwVYScpSrloYVS
-	JNAvRO+Vw315qMbBvVyyrpEwghoI9H2tmseGR3PG41ujfXTWb/mSoHj8ivqTHBZO1I/7sM3IgnY
-	wK9ndehZ0mO7h7edE56gk3Kh
-X-Google-Smtp-Source: AGHT+IEgg7uXTQ3WUEXhJXM8v3+QeUxJpI0i4LZui8mpkQ/mbC8oIZwbu+WgLDu6v+KCE7SlcmbSvw==
-X-Received: by 2002:a05:6a20:2d1f:b0:1f5:8d3b:e294 with SMTP id adf61e73a8af0-20ba70f1ee4mr5342966637.16.1746120525853;
-        Thu, 01 May 2025 10:28:45 -0700 (PDT)
-Received: from smtpclient.apple ([2402:d0c0:11:86::1])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1f9d4799e0sm1013074a12.14.2025.05.01.10.28.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 May 2025 10:28:44 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="Xd12O4yG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A95OZfQD"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 2B7391140229;
+	Thu,  1 May 2025 13:58:57 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 01 May 2025 13:58:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746122337;
+	 x=1746208737; bh=Lo8uFd/JrEURLSV5QwjaecQM+R2ekxdui+L5Hju4I84=; b=
+	Xd12O4yGNSftlXg84rjcejPSoCACpCG86pxuNamz0GzK5F706OXo4Fm53vjsQRp6
+	aK+E/2KnkvXdpn83UaEesbkt6wvIF/XFUfJjjYQcIT4zmvph7EnbRPsS7tyLeFE7
+	0exixJK5THHbxrG9dyk6hsJiBP+VlhAw6Rbw5c1mRSACU7zZiWgr9996471Pkb5Q
+	09gJMYe0r9jr6Di8UTm/9W3L0hPDKNS2vsIVFew0rPCtb5giLVSMMWu2pc4bhYN7
+	7nhJ7ESGW5I/PDfd1JBKxXDx56gJ710OYXs6pmN5xRAH69ls2nvvOAV+ES+DGt/o
+	aL/kAhsIstpzJLAF/AlohA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746122337; x=
+	1746208737; bh=Lo8uFd/JrEURLSV5QwjaecQM+R2ekxdui+L5Hju4I84=; b=A
+	95OZfQDa9ssGz/UuxLdJ1VFN/IjHIwjuuVGw6iq+Awp+NJOKsO5jWLISoShEsAH5
+	Tz4htJ2Ks8ojaRH64a0yE6L+dt39gyJdRrfKz/6/W7/8D3WrOYQeMhks3TjVpbpr
+	mUG92OzqfJef194DgKmiKl/WUu/8mMVLquTIlyzxmMtlttabl7DWlWT1TBGYTcZg
+	xAAeE/mDh2XK6/m5rj82xer6+Pri5ppFkoVY/490qKz45UIovQNvnhIbyjouLC02
+	I0QXrAGE7rhVsSBFFTryHCzts//al1+bX6X8d651Cpb07WvP3h/Vewq91Te6c1Ws
+	rD5v7CDlrj8u9vwax5eBw==
+X-ME-Sender: <xms:YLYTaFBHDE4PBC-xsfYKDGRu5qTftpEusJqRnoGfbxEhBb05Uh75Hw>
+    <xme:YLYTaDhZAqn5Z1eS7N_Fpf_T6eLkKzCEokkbdu17KvbQ55SrQfEwqKSsS1k1Hs_it
+    AZZm54KYNDbIsnUCi0>
+X-ME-Received: <xmr:YLYTaAmlKNmR7i8T0AtD179feUDPZun3zh5N_yAGT1yuTLjr-PLukIYr1t-ABT1UnwrBbwFrtP-apwCzF_3L_AVfTgtT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedtvdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvvefu
+    kfhfgggtugfgjgesthekredttddtjeenucfhrhhomheplfgrnhcujfgvnhgurhhikhcuhf
+    grrhhruceokhgvrhhnvghlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepfeev
+    leejueffgeetvdfgieefgeefudejffevjeduffevteffkeelleehteehtedtnecuffhomh
+    grihhnpehgihhthhhusgdrtghomhdplhhlvhhmrdhorhhgnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttg
+    dpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehm
+    mhhpghhouhhrihguvgesghhmrghilhdrtghomhdprhgtphhtthhopehkvghnthdrohhvvg
+    hrshhtrhgvvghtsehlihhnuhigrdguvghvpdhrtghpthhtohepthhhohhrshhtvghnrdgs
+    lhhumhesthhosghluhigrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrd
+    hsrghnughonhhishesghhmrghilhdrtghomhdprhgtphhtthhopehnrghthhgrnheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtg
+    hpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrvghgrhgvshhs
+    ihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqsg
+    gtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:YLYTaPzGwzHZ4MIYVeeQWNSpIvmYUbd-w6mb_3-S_dOaMrjIIMiT8A>
+    <xmx:YLYTaKTltUnhVs4aXSqrH19rgJo1E2N9sYqO35t8XWWcP6TJDfHJ4g>
+    <xmx:YLYTaCa72jqQ3I8-_DDBX4rn2GDOBc4rK0CuZjNiTbH05YG0xyXZsg>
+    <xmx:YLYTaLRk64A9poCGxmYZcjnbBNyNP5eS0vy0tHwBLh0gA4kEdua9Cw>
+    <xmx:YLYTaOnH1IjTmdDbpiWiHcADFO_CBDr_wHRhR1tndLXo7eyn0ef5gGsG>
+Feedback-ID: i01d149f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 May 2025 13:58:55 -0400 (EDT)
+Date: Thu, 1 May 2025 19:58:53 +0200
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: Alan Huang <mmpgouride@gmail.com>
+Cc: kent.overstreet@linux.dev, Thorsten Blum <thorsten.blum@toblux.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
+	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, ardb@kernel.org,
+	ojeda@kernel.org
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+Message-ID: <aBO2XVSisMXtU8nD@archlinux>
+References: <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux>
+ <20241021192557.GA2041610@thelio-3990X>
+ <ZxpIwkfg9_mHO3lq@archlinux>
+ <20241025011527.GA740745@thelio-3990X>
+ <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
+ <Zxu4yhmxohKEJVSg@archlinux>
+ <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
+ <aBOtxplvvpgHed7o@archlinux>
+ <D9967EB7-7F4D-4122-9470-DB14700FD906@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-From: Alan Huang <mmpgouride@gmail.com>
-In-Reply-To: <aBOtxplvvpgHed7o@archlinux>
-Date: Fri, 2 May 2025 01:28:28 +0800
-Cc: kent.overstreet@linux.dev,
- Thorsten Blum <thorsten.blum@toblux.com>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Bill Wendling <morbo@google.com>,
- Kees Cook <kees@kernel.org>,
- regressions@lists.linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- ardb@kernel.org,
- ojeda@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D9967EB7-7F4D-4122-9470-DB14700FD906@gmail.com>
-References: <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux> <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux> <20241021192557.GA2041610@thelio-3990X>
- <ZxpIwkfg9_mHO3lq@archlinux> <20241025011527.GA740745@thelio-3990X>
- <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
- <Zxu4yhmxohKEJVSg@archlinux> <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
- <aBOtxplvvpgHed7o@archlinux>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9967EB7-7F4D-4122-9470-DB14700FD906@gmail.com>
+
+On 02 01:28:28, Alan Huang wrote:
+> 
+> Thanks,
+> Alan
+> 
+> 
+> 
+> > On May 2, 2025, at 01:22, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> > 
+> >> 
+> >> I wonder if the __counted_by(x_name_len) in struct bch_xattr is needed, since there is also a value after x_name.
+> > 
+> > Wait a minute. Are you saying that the value with length x_val_len
+> > is behind the name (of length x_name_len) at the end of the struct.
+> > So essentially the flexible array member x_name has a length of
+> > x_name_len + x_val_len and contains both the name and value?
+> 
+> Yes.
+
+I assume you can't easily change the struct such that there exists a member
+that contains the result of x_val_len + x_name_len, correct?
+
+In that case the only available course of action at this time is to
+remove the __counted_by, because it is incorrect.
+
+In addition I would recommend changing the name of x_name to something
+like x_name_and_val or similar. It's very misleading to call it x_name
+when it also contains the value.
+
+> 
+> > 
+> > If that's the case:
+> > 
+> > 1. that's not at all clear from the struct definition
+> > 2. __counted_by(x_name_len) is not correct in that case
+> > 
+> 
+> Both clang and gcc say:
+> 
+>     • p->array has at least p->count number of elements available all the time. 
+> 
+> Note the at least here. Though I think the counted_by is misleading here.
+> 
+
+Here's how clang defines __bdos language extension [1]. Also note the
+attribute reference for __counted_by [2]. It assumes that the flexible array
+member contains exactly the amount of elements that are specified.
+
+I guess your quote from the gcc docs is misleading, as gcc's behavior
+is like clang's.
+
+The kernel uses the type & 2 == 0 case.
+
+So let's say you have a simple struct like so:
+
+struct foo{
+	int val_len;
+	char val[] __counted_by(val_len);
+}
+
+If val_len is 10 then foo->val[10] will be considered out of bounds.
+Even if you did a malloc for enough space.
+
+[1] https://github.com/llvm/llvm-project/blob/3b88805ca20018ae202afd3aea39f4fa856a8c64/clang/docs/LanguageExtensions.rst?plain=1#L5502-L5507
+[2] https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-or-null-sized-by-sized-by-or-null
 
 
-Thanks,
-Alan
-
-
-
-> On May 2, 2025, at 01:22, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
->=20
->>=20
->> I wonder if the __counted_by(x_name_len) in struct bch_xattr is =
-needed, since there is also a value after x_name.
->=20
-> Wait a minute. Are you saying that the value with length x_val_len
-> is behind the name (of length x_name_len) at the end of the struct.
-> So essentially the flexible array member x_name has a length of
-> x_name_len + x_val_len and contains both the name and value?
-
-Yes.
-
->=20
-> If that's the case:
->=20
-> 1. that's not at all clear from the struct definition
-> 2. __counted_by(x_name_len) is not correct in that case
->=20
-
-Both clang and gcc say:
-
-    =E2=80=A2 p->array has at least p->count number of elements =
-available all the time.=20
-
-Note the at least here. Though I think the counted_by is misleading =
-here.
-
->=20
-> Best Regards
-> Jan
+Best Regards
+Jan
 
