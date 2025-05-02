@@ -1,90 +1,44 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D841DE8A6
-	for <regressions@lists.linux.dev>; Fri,  2 May 2025 07:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF7A2BB13;
+	Fri,  2 May 2025 13:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746170330; cv=none; b=TCgV8NzKMsJkf7xAcCF4OkNkubO/2V+1RoufueQ9oEVa/hAThf8e/pp/tHnT6EOwRandgZNzBq/yGLUcbh8NIajVVBQkTP1JuEOq0O8xRsjt+bjPxVh0D4uAF+JHlly8NvreR2cMQh4aiSfR/nBIXA3NS/gEzTiansgCCVaaJtw=
+	t=1746191404; cv=none; b=fvub4SGiT997/odFeWSKkTgJ1GhhR9oyXkG9hVWQdRkTs08doTCL2YFnjcNBE4YY5CGS0t+4fFF2/A6rL6KpezRtayrlTjJSTes/tqDhBIoN08oO3dk/Ofb2wMCGg5Zbce0Vr0+rIqPhblEpYwcVhFo4BV3QRYzONryoRyyQGwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746170330; c=relaxed/simple;
-	bh=NIeowkEGbpanNrkPcWML6l4OVL9Lyc4Zb3yOLxJlazU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uRA0+5IW4ekZaGqhBcnSO0MWA2JSFG12+da9IDleTKZZK20uUnPT3hlyZt7bPBeu1oBVSHpymCb8QHvwMaaTKL3gJqAeSGnUnhVFcYYXk5jtuTkOo3MGV+fNVoRJboAe2ukqSxiJBkJ3CgB/XOjuJrrOr7GRsHVcYcNhUBnHW84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6036c/E; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746191404; c=relaxed/simple;
+	bh=kELBzKdw0K3iVq9hQpcya/QBSYuiSk6p2J8adsr5ebY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oj6NtfdLWIPwyrMNKGwU4kZ+5VL54/09aTD6h3y8TdWXuvySSfd3XRgVsxuZ7xkJTieuDDdbiWDQnDGdtjbUbCqAJ+rE1KM2vofL1dd27EcjQkOVSMvtJoPhtSwS1jO/C4RzopCyz24soY0/D2sJWF0+k7wgMsOLSosy7Q3SAIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQoZ5ISV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6036c/E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746170327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WvVwxa/l0Dpro0/sAgCe/uKQ25ooLoIul7E/bG/CZSA=;
-	b=A6036c/EL2tvNQSFHrzIZjII5ZdMyWpxOwmkIUHob9+4B1UmgpBjB0eyV5TMg5dcLQfRgY
-	kvBQrx5BNaRLNKEXHisGQeqP3YbRVz5uKp3gTFuTln/U8dYqFUUaay//K8EAhNjCxL4zFq
-	y477OeORKlrItx/FCsF7IsgLU5t3RdE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-1P1gF8LpO5OLn20YgiOxsA-1; Fri, 02 May 2025 03:18:44 -0400
-X-MC-Unique: 1P1gF8LpO5OLn20YgiOxsA-1
-X-Mimecast-MFC-AGG-ID: 1P1gF8LpO5OLn20YgiOxsA_1746170323
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39130f02631so447911f8f.2
-        for <regressions@lists.linux.dev>; Fri, 02 May 2025 00:18:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746170323; x=1746775123;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WvVwxa/l0Dpro0/sAgCe/uKQ25ooLoIul7E/bG/CZSA=;
-        b=PHHMLQ3aqPbNfiFp2/x9UvWSl0AkRWfjpUnuLg4PLSkOpcjjotr7oIMzWgnh2rXqyl
-         8OqVc6ztCYpVy1mry5v4qETZbhxA1BknB1Dtj041QJ29xCOYg69xbWPHhXJgKAG0cxNi
-         mWTEOuWBLJKcojnS7DL280PilVuZ14YEJE34C0wKGWXCi5iWa4PqmUJ95X5XtBzmKsLA
-         zAO+Wr3ET44Z3cnK+k9gYZGcQgvNWK59PZLNS/l4yZf1odjfPP68cQsFrmXnMeoxzygh
-         cBugSfdBnCoViSf30eB2U8rQdQ7MnyhblTwFDdDBjihvoJ2qVTdQUCWi+hd8wmR+DGd/
-         84nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyxflndue3gjxCHcjfLqQmPXEe2DSXV/f/3wuF5GPBm6IKVTd9+bnpsdBYWNBcCEOYISr+i7ZTqRYqrg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyn4daKeVfysOveOQjWXwIpBKsJPrfJqPe0BnQ6jTgJ+NsnHkqP
-	o/eNp36WjJbGqNrbgiwhK0999s+KzSbrpKgsRerJi2/aP+xqkxDA92JwfMjzi6pJEISln9HIGx1
-	pimzqw8KnKr0/BdevX5sCPZMRhr3MyrnEDsm8hdlErCQifLPzoRESYtc/dUdwv40dNYxd19o=
-X-Gm-Gg: ASbGncss8HtQ9COjawPN6CxYs4ozTUISrry+6ayiTVhdeBPUNU2jkOtLCt5ebSyvhde
-	XAanWxJOc62BJJIOEJZxjUi/4M/8cYZzsRO4uv8Y9Be8lUe/PGOsIPhwOh0jopnqpG1L/KQ1HcN
-	Z2U7Ezp1c4mC6cHaY+RIzVqYrAdUiP2JGnc4cFnVBJw01tyS2VL338SJ/bqXj4dObiCpMq4aIZD
-	ROczY1VWqhvqdvgcPsmUiTPE2hwqnhfTqiUg721aMY+/0AhVuJRb11yYv35h+/3RG/E7kcB+IK8
-	zg/WWS3WqiumGC84J75N0yS/B29gkD/MCGj7P7hl/jwDiTzRa2JepwIswkVhFNBleqa3o7yFQ3z
-	Ekrz4nzbVwePdDV1O6ls7fVOhGLvfQOhzJVwIAIo=
-X-Received: by 2002:a05:6000:420f:b0:3a0:7139:d178 with SMTP id ffacd0b85a97d-3a099aef9c0mr971158f8f.51.1746170323352;
-        Fri, 02 May 2025 00:18:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyRMNgoo6YPSxUQFUuMJW5ewbRCwkZNmCBDuHOusZvSz6tTMPNpdjOI6X6GDT8vuzy7+l7EA==
-X-Received: by 2002:a05:6000:420f:b0:3a0:7139:d178 with SMTP id ffacd0b85a97d-3a099aef9c0mr971132f8f.51.1746170322963;
-        Fri, 02 May 2025 00:18:42 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c713:d600:afc5:4312:176f:3fb0? (p200300cbc713d600afc54312176f3fb0.dip0.t-ipconnect.de. [2003:cb:c713:d600:afc5:4312:176f:3fb0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae338bsm1299223f8f.27.2025.05.02.00.18.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 00:18:42 -0700 (PDT)
-Message-ID: <72978e3a-ee67-47d4-b06d-e911bc5d57ff@redhat.com>
-Date: Fri, 2 May 2025 09:18:41 +0200
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQoZ5ISV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E6A0C4CEE4;
+	Fri,  2 May 2025 13:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746191404;
+	bh=kELBzKdw0K3iVq9hQpcya/QBSYuiSk6p2J8adsr5ebY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LQoZ5ISVeAs4AbTlVVfvO2T392qjC8q/xmycLZHfgbRVJYYgaOO4sK9udVkpmjTd/
+	 YRdP6dkDAyZ2jq8JgBo02uztmIVBd+oO50fDBYv3I8tu1g83MRFlFbX+aiDSbY2RW2
+	 VRjXe6h0hmsqaiJbs2zHHcfEOQ/iBBJf1KYnyHqO/TNjcEiiInFaVJxdWr7bDVINyl
+	 G4pEaPWmF68XlxVdo1zdrXnbQ2Iv/VAU047ncNyBOKZF2oD451TTzn2sZsXO41ErNP
+	 pXWYCp9yad/xhJyEel25GNXQykgdh70EWOMNgO1GHDSWaxBUvh7fUP72jgfFgVpXdz
+	 AlVly+PUwRyTw==
+Date: Fri, 2 May 2025 15:10:01 +0200
+From: Daniel Gomez <da.gomez@kernel.org>
+To: David Hildenbrand <david@redhat.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	akpm@linux-foundation.org, hughd@google.com, willy@infradead.org, 
+	wangkefeng.wang@huawei.com, 21cnbao@gmail.com, ryan.roberts@arm.com, ioworker0@gmail.com, 
+	da.gomez@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
+	Eero Tamminen <eero.t.tamminen@intel.com>
 Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
  support for tmpfs
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Daniel Gomez <da.gomez@kernel.org>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
- wangkefeng.wang@huawei.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
- ioworker0@gmail.com, da.gomez@samsung.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- intel-gfx@lists.freedesktop.org, Eero Tamminen <eero.t.tamminen@intel.com>
+Message-ID: <exl3dpqh7oqhdd3afo3gvainumqw6j4ebfifkyeqkqvf36yxlh@pcuhdqanuy32>
 References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
  <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
  <aBEP-6iFhIC87zmb@intel.com>
@@ -92,109 +46,91 @@ References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
  <aBIHYqzar5J8uxGO@intel.com>
  <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
  <57dc4929-268b-4f3f-a0f8-43d6ec85974f@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <57dc4929-268b-4f3f-a0f8-43d6ec85974f@linux.alibaba.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LXO2sO2SGuFJO-KrSAAGo6VVgWxgJ6jOuzffp7GA5FE_1746170323
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <72978e3a-ee67-47d4-b06d-e911bc5d57ff@redhat.com>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <72978e3a-ee67-47d4-b06d-e911bc5d57ff@redhat.com>
 
-On 02.05.25 03:02, Baolin Wang wrote:
+On Fri, May 02, 2025 at 09:18:41AM +0100, David Hildenbrand wrote:
+> On 02.05.25 03:02, Baolin Wang wrote:
+> > 
+> > 
+> > On 2025/4/30 21:24, Daniel Gomez wrote:
+> > > On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville Syrjälä wrote:
+> > > > On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
+> > > > > On 2025/4/30 01:44, Ville Syrjälä wrote:
+> > > > > > On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+> > > > > > Hi,
+> > > > > > 
+> > > > > > This causes a huge regression in Intel iGPU texturing performance.
+> > > > > 
+> > > > > Unfortunately, I don't have such platform to test it.
+> > > > > 
+> > > > > > 
+> > > > > > I haven't had time to look at this in detail, but presumably the
+> > > > > > problem is that we're no longer getting huge pages from our
+> > > > > > private tmpfs mount (done in i915_gemfs_init()).
+> > > > > 
+> > > > > IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE
+> > > > > in the shmem_pwrite(),
+> > > > 
+> > > > pwrite is just one random way to write to objects, and probably
+> > > > not something that's even used by current Mesa.
+> > > > 
+> > > > > which prevents tmpfs from allocating large
+> > > > > folios. As mentioned in the comments below, tmpfs like other file
+> > > > > systems that support large folios, will allow getting a highest order
+> > > > > hint based on the size of the write and fallocate paths, and then will
+> > > > > attempt each allowable huge order.
+> > > > > 
+> > > > > Therefore, I think the shmem_pwrite() function should be changed to
+> > > > > remove the limitation that the write size cannot exceed PAGE_SIZE.
+> > > 
+> > > To enable mTHP on tmpfs, the necessary knobs must first be enabled in sysfs
+> > > as they are not enabled by default IIRC (only THP, PMD level). Ville, I
+> > > see i915_gemfs the huge=within_size mount option is passed. Can you confirm
+> > > if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also marked as
+> > > 'always' when the regression is found?
+> > 
+> > The tmpfs mount will not be controlled by
+> > '/sys/kernel/mm/transparent_hugepage/hugepages-*Kb/enabled' (except for
+> > the debugging options 'deny' and 'force').
 > 
+> Right, IIRC as requested by Willy, it should behave like other FSes where
+> there is no control over the folio size to be used.
+
+Thanks for reminding me. I forgot we finally changed it.
+
+Could the performance drop be due to the driver no longer using PMD-level pages?
+
+I also recall a performance drop when using order-8 and order-9 folios in tmpfs
+with the initial per-block implementation. Baolin, did you experience anything
+similar in the final implementation?
+
+These were my numbers:
+
+| Block Size (bs) | Linux Kernel v6.9 (GiB/s) | tmpfs with Large Folios v6.9 (GiB/s) |
+| 4k   | 20.4 | 20.5 |
+| 8k   | 34.3 | 34.3 |
+| 16k  | 52.9 | 52.2 |
+| 32k  | 70.2 | 76.9 |
+| 64k  | 73.9 | 92.5 |
+| 128k | 76.7 | 101  |
+| 256k | 80.5 | 114  |
+| 512k | 80.3 | 132  |
+| 1M   | 78.5 | 75.2 |
+| 2M   | 65.7 | 47.1 |
+
 > 
-> On 2025/4/30 21:24, Daniel Gomez wrote:
->> On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville SyrjÃ¤lÃ¤ wrote:
->>> On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
->>>> On 2025/4/30 01:44, Ville SyrjÃ¤lÃ¤ wrote:
->>>>> On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
->>>>> Hi,
->>>>>
->>>>> This causes a huge regression in Intel iGPU texturing performance.
->>>>
->>>> Unfortunately, I don't have such platform to test it.
->>>>
->>>>>
->>>>> I haven't had time to look at this in detail, but presumably the
->>>>> problem is that we're no longer getting huge pages from our
->>>>> private tmpfs mount (done in i915_gemfs_init()).
->>>>
->>>> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE
->>>> in the shmem_pwrite(),
->>>
->>> pwrite is just one random way to write to objects, and probably
->>> not something that's even used by current Mesa.
->>>
->>>> which prevents tmpfs from allocating large
->>>> folios. As mentioned in the comments below, tmpfs like other file
->>>> systems that support large folios, will allow getting a highest order
->>>> hint based on the size of the write and fallocate paths, and then will
->>>> attempt each allowable huge order.
->>>>
->>>> Therefore, I think the shmem_pwrite() function should be changed to
->>>> remove the limitation that the write size cannot exceed PAGE_SIZE.
->>
->> To enable mTHP on tmpfs, the necessary knobs must first be enabled in sysfs
->> as they are not enabled by default IIRC (only THP, PMD level). Ville, I
->> see i915_gemfs the huge=within_size mount option is passed. Can you confirm
->> if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also marked as
->> 'always' when the regression is found?
+> -- 
+> Cheers,
 > 
-> The tmpfs mount will not be controlled by
-> '/sys/kernel/mm/transparent_hugepage/hugepages-*Kb/enabled' (except for
-> the debugging options 'deny' and 'force').
-
-Right, IIRC as requested by Willy, it should behave like other FSes 
-where there is no control over the folio size to be used.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> David / dhildenb
+> 
