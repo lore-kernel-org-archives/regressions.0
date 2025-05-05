@@ -1,66 +1,43 @@
-Received: from marcos.anarc.at (marcos.anarc.at [45.72.186.94])
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C816225D213
-	for <regressions@lists.linux.dev>; Mon,  5 May 2025 20:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.72.186.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8680283FF0
+	for <regressions@lists.linux.dev>; Mon,  5 May 2025 23:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478758; cv=none; b=f6aneU9QlS8pOglEi68xa6DOAAMpgBLl4KsJZpg0OZeZ61EEkyjjxQ7hJrxrA+7bEObkCxjtfDrnjUK5qRWq9EjeqZ/WH3CQnWgstl2qZ3FVkJEd7iY7vKkEZpzYTuWKaZJMm8BzEnF4h78HxZNMqlstdZoDsWvUo0mBiPP+jPQ=
+	t=1746486941; cv=none; b=YoQtFBteXuRa74gzuLyzHEh7Z3I8PetQ58yv5IR7ZAjqQuakB9Jvj02AEViCKP+HrS6vcDGH4WnI8cPpkTCuvMHk502vXxe0+K9b8D37zfkSsbj2wplA8w/yH6VpZ+u45/HKPLtEEczDs5IpmNdtMc+K6Rw/fFECwITAGEjLl0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478758; c=relaxed/simple;
-	bh=9nW6HtYmWyOs9REknxWLz+jZU6pQ/0GyddmKaiAE1FE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Y3ZtDabW1Cw3ZQ7E5OR3gMnIwczdTjwksm/MKU1tE6ou9jVFC+L+cJhvX0siiyI/Eq2kd79fPgiA5C0pWc5isBEx4YwFiR58c0C1pg171012iX3boUQtTj39BJHkwCXB/6vcymUWG7VkFAjwn6DRA2HAEPI7beXwA163TOV1dlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Z0CsbA+h; arc=none smtp.client-ip=45.72.186.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1746486941; c=relaxed/simple;
+	bh=EOUaIX463tgjPBxv4B9OqDGSjGGy6EDc+mdrrzeqcVk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OM8WaCiGhckJ1DL2C6r6T8RzuQAX66P2ik8RM+RJTb9ZSHDDowghR8BPz2OTOgefgfE0pZ0K4GfdEdShTcPtZPmN0FmcDIgYpvEba/yJdn5lp8Z7+Kjc4ggc6Z2Ak1geTF5YbWW7/VSKXeMJ7sB5RP7R21RxzVrwo8MNxKA8uak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=inP2q5/I; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Z0CsbA+h"
-DMARC-Filter: OpenDMARC Filter v1.4.2 marcos.anarc.at 88A4710E10E
-Authentication-Results: marcos.anarc.at; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: marcos.anarc.at; spf=none smtp.mailfrom=debian.org
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=debian.org;
-	s=marcos-debian.anarcat.user; t=1746478755;
-	bh=9nW6HtYmWyOs9REknxWLz+jZU6pQ/0GyddmKaiAE1FE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Z0CsbA+hHR/AcMAcGUtPMDNZTrbpgsR/8C50bYgqR30ehSh0glUiznfE7HUvuzgEP
-	 v3BXjIkrXS7pQb2s9dUArUniuzClCV3mc1XS9heCnmWZiG5raENdsceQcsB7a+yEAn
-	 NordgNwua9UP/bfZy5aAR2WCszH+qb2i5reJrek6Hx1lrYzFxYt46Q6aRB1y7ILC9M
-	 EL543j9of2UN3j21T21pxxNU3j3tL6nkeObDVLFw3ayASHU9BvdUqZVVaBXQfUwhXf
-	 8xcL7vIsoXgSE3+tIDFEji2rOeUSvU/NYH1NGJU1KNtLhkc9MJXKP0qFIHsQ4p9lW1
-	 7pogLs6kf80fg==
-Received: from angela.anarc.at (unknown [45.72.186.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256
-	 client-signature ED25519)
-	(Client CN "angela.anarc.at", Issuer "ca.anarc.at" (not verified))
-	by marcos.anarc.at (Postfix) with ESMTPS id 88A4710E10E;
-	Mon,  5 May 2025 16:59:15 -0400 (EDT)
-Received: by angela.anarc.at (Postfix, from userid 1000)
-	id 79408DFADB; Mon, 05 May 2025 16:59:15 -0400 (EDT)
-From: =?utf-8?Q?Antoine_Beaupr=C3=A9?= <anarcat@debian.org>
-To: Salvatore Bonaccorso <carnil@debian.org>, 1104460@bugs.debian.org
-Cc: Moritz =?utf-8?Q?M=C3=BChlenhoff?= <jmm@inutil.org>, Yu Kuai
- <yukuai3@huawei.com>, Melvin
- Vermeeren <vermeeren@vermwa.re>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Coly Li <colyli@kernel.org>, Sasha Levin
- <sashal@kernel.org>, stable <stable@vger.kernel.org>,
- regressions@lists.linux.dev
-Subject: Re: Bug#1104460: [regression 6.1.y] discard/TRIM through RAID10
- blocking (was: Re: Bug#1104460: linux-image-6.1.0-34-powerpc64le: Discard
- broken) with RAID10: BUG: kernel tried to execute user page (0) - exploit
- attempt?
-In-Reply-To: <aBkhNwVVs_KwgQ1a@eldamar.lan>
-Organization: Debian
-References: <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <aBJH6Nsh-7Zj55nN@eldamar.lan> <aBilQxLZ4MA4Tg8e@pisco.westfalen.local>
- <aBjEf5R7X9GaJg2T@eldamar.lan>
- <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <aBjhHUjtXRotZUVa@eldamar.lan>
- <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <875xiex56v.fsf@angela.anarc.at> <aBkhNwVVs_KwgQ1a@eldamar.lan>
-Date: Mon, 05 May 2025 16:59:15 -0400
-Message-ID: <87zffqvknw.fsf@angela.anarc.at>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="inP2q5/I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1746486934; x=1746746134;
+	bh=EOUaIX463tgjPBxv4B9OqDGSjGGy6EDc+mdrrzeqcVk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=inP2q5/IZbdge4dZR8JCN+QfmmGc5MaNsKgD/VvCUljmMVskrK+Tr3Xg81IwlRF4I
+	 +RRrm8w3TJ9o7lEGSP8dEiW4Hpnwefyjf0ZgKO+YCzHPfygsk6FlkY9OhWSbNER8ME
+	 buXd4nHx9GgfIYOAuA4GIjhnZiJ4UT/fHklvcvCPrfO2FEX3P8NmwAkKsR3cTYDRLC
+	 c+RcoaXRQIfupLhsVwqXVxQcM6Nnl+S0fRHAduMLuVCQ5PWrtEsx0+tIdEcxDhg3aV
+	 Kc6PZ5WFHnOYL/1eAOn7zWheea0PKge3u+hgHvxWmzrLAfSGZv//uB+mX0EAwXXLf1
+	 nppR1fH9HcH0g==
+Date: Mon, 05 May 2025 23:15:27 +0000
+To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
+From: fossben@pm.me
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "niks@kernel.org" <niks@kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
+Message-ID: <vCzHyPICbb61hk8jzrTcmvU7H9PJGenEtIAZaKQH9ofNUZPD4aOeD1i-oDl2G2CtieHoTnUWBWYy-uQhNwRo7sT5gj_uyFQs-zIkbCY-qZU=@pm.me>
+In-Reply-To: <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
+References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com> <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org> <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com> <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
+Feedback-ID: 134317997:user:proton
+X-Pm-Message-ID: 7194e1c1e36fd01c0ca03f07e9b7cdcc2ff7c191
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -70,86 +47,184 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-05 22:36:07, Salvatore Bonaccorso wrote:
-> Hi Antoine,
->
-> On Mon, May 05, 2025 at 02:50:32PM -0400, Antoine Beaupr=C3=A9 wrote:
->> On 2025-05-05 18:02:37, Salvatore Bonaccorso wrote:
->> > On Mon, May 05, 2025 at 04:00:31PM +0200, Salvatore Bonaccorso wrote:
->> >> Hi Moritz,
->> >>=20
->> >> On Mon, May 05, 2025 at 01:47:15PM +0200, Moritz M=C3=BChlenhoff wrot=
-e:
->> >> > Am Wed, Apr 30, 2025 at 05:55:20PM +0200 schrieb Salvatore Bonaccor=
-so:
->> >> > > Hi
->> >> > >=20
->> >> > > We got a regression report in Debian after the update from 6.1.13=
-3 to
->> >> > > 6.1.135. Melvin is reporting that discard/trimm trhough a RAID10 =
-array
->> >> > > stalls idefintively. The full report is inlined below and origina=
-tes
->> >> > > from https://bugs.debian.org/1104460 .
->> >> >=20
->> >> > JFTR, we ran into the same problem with a few Wikimedia servers run=
-ning
->> >> > 6.1.135 and RAID 10: The servers started to lock up once fstrim.ser=
-vice
->> >> > got started. Full oops messages are available at
->> >> > https://phabricator.wikimedia.org/P75746
->> >>=20
->> >> Thanks for this aditional datapoints. Assuming you wont be able to
->> >> thest the other stable series where the commit d05af90d6218
->> >> ("md/raid10: fix missing discard IO accounting") went in, might you at
->> >> least be able to test the 6.1.y branch with the commit reverted again
->> >> and manually trigger the issue?
->> >>=20
->> >> If needed I can provide a test Debian package of 6.1.135 (or 6.1.137)
->> >> with the patch reverted.=20
->> >
->> > So one additional data point as several Debian users were reporting
->> > back beeing affected: One user did upgrade to 6.12.25 (where the
->> > commit was backported as well) and is not able to reproduce the issue
->> > there.
->>=20
->> That would be me.
->>=20
->> I can reproduce the issue as outlined by Moritz above fairly reliably in
->> 6.1.135 (debian package 6.1.0-34-amd64). The reproducer is simple, on a
->> RAID-10 host:
->>=20
->>  1. reboot
->>  2. systemctl start fstrim.service
->>=20
->> We're tracking the issue internally in:
->>=20
->> https://gitlab.torproject.org/tpo/tpa/team/-/issues/42146
->>=20
->> I've managed to workaround the issue by upgrading to the Debian package
->> from testing/unstable (6.12.25), as Salvatore indicated above. There,
->> fstrim doesn't cause any crash and completes successfully. In stable, it
->> just hangs there forever. The kernel doesn't completely panic and the
->> machine is otherwise somewhat still functional: my existing SSH
->> connection keeps working, for example, but new ones fail. And an `apt
->> install` of another kernel hangs forever.
->
-> So likely at least in 6.1.y there are missing pre-requisites causing
-> the behaviour.
->
-> If you can test 6.1.135-1 with the commit
-> 4a05f7ae33716d996c5ce56478a36a3ede1d76f2 reverted then you can fetch
-> built packages at:
->
-> https://people.debian.org/~carnil/tmp/linux/1104460/
 
-I can confirm this kernel does not crash when running fstrim.service,
-which seems to confirm the bisect.
 
-A.
 
---=20
-Drowning people
-Sometimes die
-Fighting their rescuers.
-                        - Octavia Butler
+
+
+On Monday, May 5th, 2025 at 3:20 AM, fossben@pm.me <fossben@pm.me> wrote:
+
+>=20
+>=20
+> On Monday, May 5th, 2025 at 12:48 AM, Mingyen Hsieh Mingyen.Hsieh@mediate=
+k.com wrote:
+>=20
+> > On Sun, 2025-05-04 at 00:39 +0200, Niklas Schnelle wrote:
+> >=20
+> > > External email : Please do not click links or open attachments until
+> > > you have verified the sender or the content.
+> > >=20
+> > > On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=
+=8E=E8=AB=BA) wrote:
+> > >=20
+> > > > On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
+> > > >=20
+> > > > > External email : Please do not click links or open attachments
+> > > > > until
+> > > > > you have verified the sender or the content.
+> > > > >=20
+> > > > > Hello all,
+> > > > >=20
+> > > > > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed
+> > > > > that
+> > > > > I could no longer ping *.local addresses provided by Avahi. In
+> > > > > addition, I also noticed that I was not able to get a DHCP IPv6
+> > > > > address from my router, no matter how many times I rebooted the
+> > > > > router or reconnected with NetworkManager.
+> > > > >=20
+> > > > > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses
+> > > > > immediately.
+> > > > > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
+> > > > > address will stay there for a while before disappearing later,
+> > > > > possibly because the DHCP lease expired? I am not sure exactly
+> > > > > when
+> > > > > it stops working.
+> > > > >=20
+> > > > > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
+> > > > > offending commit that causes mDNS to fail:
+> > > > >=20
+> > > > > commit 80007d3f92fd018d0a052a706400e976b36e3c87
+> > > > > Author: Ming Yen Hsieh mingyen.hsieh@mediatek.com
+> > > > > Date: Tue Mar 4 16:08:50 2025 -0800
+> > > > >=20
+> > > > > wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_cmd
+> > > > >=20
+> > > > > commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upstream.
+> > > > >=20
+> > > > > Integrate *mlo_sta_cmd and *sta_cmd for the MLO firmware.
+> > > > >=20
+> > > > > Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling MLO when
+> > > > > the
+> > > > > firmware supports it")
+> > > > >=20
+> > > > > drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++-------
+> > > > > ----
+> > > > > --------------------------------------------
+> > > > > 1 file changed, 4 insertions(+), 55 deletions(-)
+> > > > >=20
+> > > > > I do not know if this same commit is also causing the IPv6 issues
+> > > > > as
+> > > > > testing that requires quite a bit of time to reproduce. What I do
+> > > > > know with certainty as of this moment is that it definitely
+> > > > > breaks in
+> > > > > kernel 6.14.3.
+> > > > >=20
+> > > > > I've attached my hardware info as well as dmesg logs from the
+> > > > > last
+> > > > > working kernel from the bisect and 6.14.4 which exhibits the
+> > > > > issue.
+> > > > > Please let me know if there's any other info you need.
+> > > > >=20
+> > > > > Thanks!
+> > > > > Benjamin Xiao
+> > > >=20
+> > > > Hi,
+> > > >=20
+> > > > Thanks for reporting this issue, we will aim into this.
+> > > >=20
+> > > > Can you provide me with your testing steps?
+> > > >=20
+> > > > Best Regards,
+> > > > Yen.
+> > >=20
+> > > Hi Yan,
+> > >=20
+> > > I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
+> > > mt7925e WiFI module. My setup is just a home router with native IPv6
+> > > both for my uplink and in the LAN. The problems with IPv6 can already
+> > > be seen just in the LAN for example by checking which IP was used for
+> > > SSH, in my setup it should always be IPv6 but falls back to IPv4 in
+> > > the
+> > > broken state.
+> > >=20
+> > > As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
+> > > mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4.
+> > > This
+> > > fully restores IPv6 for me. Also note I'm running this with the
+> > > mt7925
+> > > firmware version 20250425073330 from linux-firmware's master branch
+> > > as
+> > > I had some dropped connections with earlier firmware.
+> > >=20
+> > > So it definitely looks like that commit also broke IPv6 and not just
+> > > mDNS. Note that if if I use DHCPv6 instead of router advertisements,
+> > > on
+> > > the latest firmware, but without the revert, I get a global IPv6
+> > > address added to the interface but then native IPv6 addresses are
+> > > still
+> > > uncreachable. With the offending patch reverted my SSH session to an
+> > > IPv6 only host works fine and is stable. Also I'd be willing to test
+> > > a
+> > > proper fix as I rely on IPv6 heavily due to having to use CGNAT for
+> > > IPv4 but not for IPv6.
+> > >=20
+> > > Thanks,
+> > > Niklas
+> >=20
+> > Hi Benjamin & Niklas,
+> >=20
+> > Can you help to try this patch? I can get IPv6 address through this
+> > patch.
+> >=20
+> > If it can work at your environment as well, i will upstream it and add
+> > test tag with you.
+> >=20
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > index a42b584634ab..fd756f0d18f8 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > @@ -2183,14 +2183,14 @@ mt7925_mcu_sta_cmd(struct mt76_phy *phy,
+> > mt7925_mcu_sta_mld_tlv(skb, info->vif, info-
+> >=20
+> > > link_sta->sta);
+> > > mt7925_mcu_sta_eht_mld_tlv(skb, info->vif,
+> > > info->link_sta->sta);
+> > > }
+> > > -
+> > > - mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> > > link_sta);
+> > > }
+> >=20
+> > if (!info->enable) {
+> > mt7925_mcu_sta_remove_tlv(skb);
+> > mt76_connac_mcu_add_tlv(skb, STA_REC_MLD_OFF,
+> > sizeof(struct tlv));
+> > + } else {
+> > + mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> >=20
+> > > link_sta);
+> > > }
+> >=20
+> > return mt76_mcu_skb_send_msg(dev, skb, info->cmd, true);
+> >=20
+> > Thanks~
+> > Yen.
+>=20
+>=20
+> Hi Yen,
+>=20
+> I manually applied the changes on top of 6.14.5 and mDNS seems to work al=
+ong with IPv6! I will do more testing for the rest of the day to see if the=
+ issue is completely fixed but so far looks good at least for the 5 minutes=
+ I've been testing it.
+>=20
+> Thanks for the fix,
+> Ben
+
+I've now used 6.14.5 with the patch applied for most of the day and it's be=
+en working great! mDNS has been rock solid and so has IPv6.
+
+Would appreciate it if this fix got backported to the 6.14 series!
+
+Ben
