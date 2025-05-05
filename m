@@ -1,180 +1,101 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD9825DD01
-	for <regressions@lists.linux.dev>; Mon,  5 May 2025 15:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746458225; cv=fail; b=IXJvJXnkuLJrZs4xgapWLzXsrrX3rsjkl9K8eFHmdoJDs/A7AtCx+UlH9N+iKkoJTWLuYJ+JQXnFJ8QyQU6VQAp1VOTa5ET+H0b0PI5Cad0g8EGcMiPzatJpTc6MJGOdjrpNFFuiPPC4/xcJtW4vOh3dOmh7pU3UtG4N1qUwLVA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746458225; c=relaxed/simple;
-	bh=ssvYvf+y7qLbqQ+DfwNV9cEzm1ITJXh0yHHHqf9RmWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DyMEtAC5GBYgApP4q9kKwIJPsKh9tOrskNETBiYqB4Nl/TaTPdjZ0swGYDEgV598tpeUoHe3/Pa8gf/yO6UsxpAhDCiv3LGHlEIv/s0jEhk7AzNEUUQgfg+k9bPdPzl0z19len05PFxX2Revua9TT6fUit4SxVMOadg0/EYPx0c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lGZFnZ/u; arc=fail smtp.client-ip=40.107.223.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F5915AF6;
+	Mon,  5 May 2025 16:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746460977; cv=none; b=DqrSUSzsYBRnHP+Izpbq5OUFnU+xQVCY6m9fh8AvKG7C/OFZkOwmKSLFN/YGT0kaAH/e4+cRD1fhr5MIN9wgMedhrg3sWW0okPylSmveOZUzU6Mkiy4kgZZsv0Nl2CKtut/ksARrBP/CgGR+sNImX3/BHO5E44sHsI71GBJ09O0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746460977; c=relaxed/simple;
+	bh=SGQ85kR/Wu8LXeCpvn4jaojGos2dxjuusa3HPfu9zjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBeySHTonN8xoMe6XIe48DLayoEwG/Dpww4XFk4cMkVi1RDZxbshylGO6lT9ERtliOGi/FhyjoBJKqcdve8avwKKvqSWlIyI+aY00HFc6ZwgVs0HaR3mlXyawsnVRjnLqsXh2nbPZCxciXqmLfEWfJjBCrEYExxeDxhrux8JoxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=u+m3Xjz7; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lGZFnZ/u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mmOplgHY/CUJEVTPWW6Gd/nMEE2wfsgUiS0JYIDqTr82/5xh3/8DG8P6NzoINDlBneiHga+tZiJTwXzE3/8Yh/bfRHuMd4TsUWopndS1lh3G62VAgz/xq7HmtFXgX0dXxsX3aoAmfVPTkS8liUNeE8BDNUnmPMDHS+iA7XPpXcvrD8/OkBg3ElnsOO+1xGWH9FUnguP/TDiAaBZt8QBFECxrBaG1uq1QZGvt6HwM5gDoXYVflEehFRFAJOnb/Q14TqaIylPHSG/Kq/U7ZpwgGvYXY5PfhiMeSzTe0BtfOXYXPLI0ZUCgnWd+7I7Z0kmln8zcNy0ISjdruQ1gES5GyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RITeO3OU5xuXoSWtA8CFCZu4L85vJraE2AkrKVKaZIA=;
- b=OaYpFyU07YLhgs6cjLtr9vK5r+fcyDvcX2OUE1798dh3it2AUJRjyQJW355xGxOJfyYrYn+k8q5Yfv2H0xl5q8NYJMDfzCK8Rd61FiZCzfVrCN0MFtCuNRp8GnKhPBxmt1DX1o7MX6UEghVrEuu2WMlr1uN6PmsT8KW7fQ+0nW9y9uFwywR7VsPMf/fcEhgMUX0eb6x4K4skQXHFK4TneL7+LmQseFwlbk03wA4SX3fKTTxqEy5m4DiiXpfW14CQgn/LNfV+QISCl031qSufaXVY6yK2L7owFSA5cghN6zixi8z2Y4mYsq29/kuwBCdK4+mVRJB4dMK8URXkwwPFrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RITeO3OU5xuXoSWtA8CFCZu4L85vJraE2AkrKVKaZIA=;
- b=lGZFnZ/u1qSfp3cllqZko6ldg43FF5+rZSMtqx3Ef719zWBcZ3E6uYhqCaQ96sd16gtLsbMYY/J9u2Ig4T5/3FJDh0TLjbUZYtepQMF7/sf+6wRWXEeZ8qNVAq36lCR7EohR6Abfzk2RwZ0JqD4hRilXqhHLoJ72hs4wSSdy2T8=
-Received: from SJ0PR13CA0107.namprd13.prod.outlook.com (2603:10b6:a03:2c5::22)
- by DS0PR12MB8788.namprd12.prod.outlook.com (2603:10b6:8:14f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Mon, 5 May
- 2025 15:17:00 +0000
-Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
- (2603:10b6:a03:2c5:cafe::d1) by SJ0PR13CA0107.outlook.office365.com
- (2603:10b6:a03:2c5::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Mon,
- 5 May 2025 15:16:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 15:16:59 +0000
-Received: from [10.143.196.137] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
- 2025 10:16:53 -0500
-Message-ID: <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com>
-Date: Mon, 5 May 2025 20:46:51 +0530
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="u+m3Xjz7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=b0WW3d9I9jUVZTy7eDrM32r61wBGMgqX3tU0kL+chbA=; b=u+m3Xjz7BnOyt94vWcKjIobtow
+	nGhnBEmWj0tpRuyq3tcj7c7CFHTGJasYGSpmP2+WM1na5tPYzrdHNML7aUPEVwIQFgzuI2VWz2oMc
+	8AAkpBw/ABwZMYkYo6yTeVrQ/ydlvYgLMYcML8EgTBmhkn5GWO9x7XmC4PuXmch5mgMoGmaNDisrg
+	Dntp+tdDnQsRwmRsKu4vT7MlC0HPIZFJE5e/XeEduUr44jlSc1MV3hYkID4aOGxv7hI7kiEvz3KOW
+	kfsFzfbQ1F9D8blZ3EYDbLUpWyHUXNkanvzN5nL/ONfp+uU+zCTQOKiUiCE6PVGoC6McgOejeR4Rl
+	napsIZXQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1uByH8-003uHO-Ps; Mon, 05 May 2025 16:02:39 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id B71E6BE2DE0; Mon, 05 May 2025 18:02:37 +0200 (CEST)
+Date: Mon, 5 May 2025 18:02:37 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Moritz =?iso-8859-1?Q?M=FChlenhoff?= <jmm@inutil.org>,
+	Yu Kuai <yukuai3@huawei.com>
+Cc: Melvin Vermeeren <vermeeren@vermwa.re>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	1104460@bugs.debian.org, Coly Li <colyli@kernel.org>,
+	Sasha Levin <sashal@kernel.org>, stable <stable@vger.kernel.org>,
+	regressions@lists.linux.dev
+Subject: Re: [regression 6.1.y] discard/TRIM through RAID10 blocking (was:
+ Re: Bug#1104460: linux-image-6.1.0-34-powerpc64le: Discard broken) with
+ RAID10: BUG: kernel tried to execute user page (0) - exploit attempt?
+Message-ID: <aBjhHUjtXRotZUVa@eldamar.lan>
+References: <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
+ <aBJH6Nsh-7Zj55nN@eldamar.lan>
+ <aBilQxLZ4MA4Tg8e@pisco.westfalen.local>
+ <aBjEf5R7X9GaJg2T@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra
-	<peterz@infradead.org>, "mingo@kernel.org" <mingo@kernel.org>, Juri Lelli
-	<juri.lelli@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Valentin Schneider <vschneid@redhat.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
- <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
- <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
- <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|DS0PR12MB8788:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbce4191-9508-4995-ec9f-08dd8be7e1b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V05lSzhuaXFKWkpKVHgvTnhGUHV0YVhDYmV1STlZYy9aSFRYRkNxU3h6OFhq?=
- =?utf-8?B?Q1I0SEZRMWZNMXdmTnl5REVnM0JkQytQd1Z3WE1rYU1iMmQxV2EyUC9CTGFL?=
- =?utf-8?B?VnNBV1h5cVNNU3hMdGtRZG9SckxjbnYrd3BxSncraVVJWTE1a1p3UHR0OFg5?=
- =?utf-8?B?T0pPbWI5ckd2WmVGak1FbUtYZDl4N0hYYzV2VUpUbU9EQTZQY0x2Z1BQamp2?=
- =?utf-8?B?QlJmeGo0RXkxaVRIams0ekxhZEZNWGVaR25JYWJuajJKK3YvVlhaY3A2UWsv?=
- =?utf-8?B?eWtSKzZZRlRKZHN0RTNqV3JoWjJuRTl5THBTZmtmeFFBR0syK2dZcWZ2SjZu?=
- =?utf-8?B?V1Npb1BhaDlkb0xkaEpuek1MUUgxVWRqelFaSW5jT3cwR3RNa1FnQmxrMEts?=
- =?utf-8?B?YnpCcFhiL2ZxK2llSU9BalhLOTQvc3AyZG5xVFQ2Y1hNQnUvdWJvenZJUTJ2?=
- =?utf-8?B?djlQajVyUDVLTU9zS2h4Q1g3T3pudk8vZ3FzQVcrNmRmRlAvRWRPd0EySGFl?=
- =?utf-8?B?Z3pJN0hvUElWK1YyenkrVklXS1dOMHlHZmZab2t6T1VnaEV1Zit3cXc3R3U0?=
- =?utf-8?B?ZUF1WnQxSG9TNXdUWW0yT05qUmpMV2Q0UHZkSVlUMTh0U1E2VUJxWkJCYVZF?=
- =?utf-8?B?dnM5bXdqK0JnYTA2QW5qcUpqS08rYVZYaE1nNUZ1YlE1REZmcTk5c1hJdG9G?=
- =?utf-8?B?TkNzU1kyZGhmTWRWTVBDUXFrWjVpei9SYVRBaU9wT25mYW52KzVJTGQ5VjNI?=
- =?utf-8?B?WFFBR3UrMTRjcmt1OFE3Q2x1aWFjdHlObjZrY1JFTkx4QjFPRnhhc2xHYUIw?=
- =?utf-8?B?VWJ2T2poQ1JmSFBqdC9rNzBISWNCeENtNEprdG1lRmN5THZKOGs2cnNES3l1?=
- =?utf-8?B?MzJBVWo4bUpBdjVaRzhYRW5hWmNlUjZVeDZYUStvb0dzUWNkeWVOV1NlbnVh?=
- =?utf-8?B?L1c1a3ZtSFBCdmRGeCtKTU51amRLWllqZVhXRkNzeGI1dW9UelpPMGJzREdv?=
- =?utf-8?B?ZytkZkNEcm8ybTRoYzRnOFdRaGJxYVFkWW11M0U0VkE4S0dMSkFNdndvMlln?=
- =?utf-8?B?MSt5bDk4OUl5Tm5VUnVMMkFSelhqVlhOMnVDaGJrL05FcXd1anhJcnQydjFB?=
- =?utf-8?B?RFhwTEtRQ2ZTYWpjN21qS3lMOGNFSDNoMW9ldkFlSzhIQUlNUk9EdmJCTWhW?=
- =?utf-8?B?V042Y2RuWHNtOHZBRHpCKzk2cmV4RG1TMStRNFd4cVh1Y2JzZi9VVWt5S2lL?=
- =?utf-8?B?ekRGTktTNFBUNmxwTS9hVGpIZXhNM3ZVNVc3ajh5TlY2WFdtbm44UG1MczB5?=
- =?utf-8?B?ei9mZ2YvZkVpRTRpa09uR3RBbXBSS0Z1NWVvalZrMityT0hmR2pYeXYwUEZl?=
- =?utf-8?B?aXdXZXZmVUZxblNMclpid0FmdzhpL3lHc0VVekZxYUZ4bGc5bS9LeG1CelMv?=
- =?utf-8?B?QXZvMG5XUjdhMVFBZ1pLQi94ak1lSGE2N3RYT3dMVENiNkc1VGplSEovL1F1?=
- =?utf-8?B?WVhqc0FSSEhrZWJTczc1Y3FEZTVIUGdlRCtSeTdrZ2owRDcwS3VNYTk5ZG9L?=
- =?utf-8?B?YVozVnN3aFliY29VaW9zcmhLa3FSaXJ3R0RaZzFNYVcwb2h2ZkY0WTRwSGtG?=
- =?utf-8?B?WVFoTHNZK0pMZkd1dXBIWUlPTzZxcVVDaVh1NWFWV2gxNldWVWpzWHNDV0ZT?=
- =?utf-8?B?UmZ3RnhGcUZ3U2tZRmZINC9IaHdvNGxQT3JNYWlETjkwR0FWMHFKbldCdU81?=
- =?utf-8?B?OFhwc0thbEZNN0QzSzBybmFZUy9YNitqMTdiY0dCbWFneDI5aGpsUkFuWVM0?=
- =?utf-8?B?MDRHWWJ0cWk2aVltTy91aE1hR0pDYzJRc21xVXVrMWFzZXZOTm1WSnVpVFRD?=
- =?utf-8?B?anpTU3ljMDlnRVdFUmdkdWluKys4N2ZnVEwrVDJGL2krdG9TcmtKZ1RZVnBZ?=
- =?utf-8?B?VWRtay9tVlVMSTNaTEkxV3dKdXRjYkFHbVV4ZWpXMnJGWGlKZnRheEhGLy96?=
- =?utf-8?B?YndORTlpbXNWSnFQWDFEdGRoaHdJVEFScld5QzRxRkxHSzdTTTlwWnd4MXA0?=
- =?utf-8?Q?EfgUe3?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 15:16:59.5187
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbce4191-9508-4995-ec9f-08dd8be7e1b1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC2.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8788
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBjEf5R7X9GaJg2T@eldamar.lan>
+X-Debian-User: carnil
 
-Hello Vincent,
-
-On 5/5/2025 8:40 PM, Vincent Guittot wrote:
->>> commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
->>> during LB") eases the spread of task inside a LLC so It's not obvious
->>> for me how it would increase "a lot of CPU migrations go out of CCX,
->>> then L3 miss,". On the other hand, it will spread task in SMT and in
->>> LLC which can prevent running at highest freq on some system but I
->>> don't know if it's relevant for this SoC.
->>
->> I misspoke there. JB's workload seems to be sensitive even to core to
->> core migrations - "relax_domain_level=2" actually disabled newidle
->> balance above CLUSTER level which is a subset of MC on x86 and gets
+On Mon, May 05, 2025 at 04:00:31PM +0200, Salvatore Bonaccorso wrote:
+> Hi Moritz,
 > 
-> Did he try with relax_domain_level=3, i.e. prevent newilde idle
-> balance between LLC ? I don't see results showing that it's not enough
-> to prevent newly idle migration between LLC
+> On Mon, May 05, 2025 at 01:47:15PM +0200, Moritz Mühlenhoff wrote:
+> > Am Wed, Apr 30, 2025 at 05:55:20PM +0200 schrieb Salvatore Bonaccorso:
+> > > Hi
+> > > 
+> > > We got a regression report in Debian after the update from 6.1.133 to
+> > > 6.1.135. Melvin is reporting that discard/trimm trhough a RAID10 array
+> > > stalls idefintively. The full report is inlined below and originates
+> > > from https://bugs.debian.org/1104460 .
+> > 
+> > JFTR, we ran into the same problem with a few Wikimedia servers running
+> > 6.1.135 and RAID 10: The servers started to lock up once fstrim.service
+> > got started. Full oops messages are available at
+> > https://phabricator.wikimedia.org/P75746
+> 
+> Thanks for this aditional datapoints. Assuming you wont be able to
+> thest the other stable series where the commit d05af90d6218
+> ("md/raid10: fix missing discard IO accounting") went in, might you at
+> least be able to test the 6.1.y branch with the commit reverted again
+> and manually trigger the issue?
+> 
+> If needed I can provide a test Debian package of 6.1.135 (or 6.1.137)
+> with the patch reverted. 
 
-I don't think he did. JB if it isn't too much trouble, could you please
-try running with "relax_domain_level=3" in kernel cmdline and see if
-the performance is similar to "relax_domain_level=2".
+So one additional data point as several Debian users were reporting
+back beeing affected: One user did upgrade to 6.12.25 (where the
+commit was backported as well) and is not able to reproduce the issue
+there.
 
-I only realized it later that "relax_domain_level" works on topology
-levels before degeneration.
+This indicates we might miss some pre-requisites in the 6.1.y series?
 
--- 
-Thanks and Regards,
-Prateek
+user is trying now the 6.1.135 with patch reverted as well.
 
-
+Regards,
+Salvatore
