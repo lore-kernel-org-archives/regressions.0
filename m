@@ -1,220 +1,413 @@
-Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC8E1EE03C
-	for <regressions@lists.linux.dev>; Mon,  5 May 2025 08:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8C51FF61D
+	for <regressions@lists.linux.dev>; Mon,  5 May 2025 10:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433231; cv=none; b=kzUDRliwUra/nJZlmB0ONCsMVtYSbmgJ6IJQG/LUdGij+gR4pGt32U8oqmkRdQkZ4b2zRHnMm3n3qGlyjEAgt9U0qbUKBlcfXGmClfJ8LftjonLSW1Aoo/ZBAgPWdoKxyMlXBPdVzWXgJI5NVUWNWqbkP/mrEDdzQWLdYsyaROY=
+	t=1746440951; cv=none; b=koaP49A/F5WlzqWXXXbx7kyKVHqwEPLfwFLeiTW16/+oVrr6A6hDoyfv5H7r7OqXVn32sCNfzWq57FDmu6qLNOG7nQzjBXQWE4y3mJLkev1UxYZzFWOtiWx2ta9ed4X+GSMKQp7t+ZOq9zJSiKulUX7vbcKwkmPdIwQzuqaYv7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433231; c=relaxed/simple;
-	bh=2nld4hcGgo6X0z6GWVU9T2qu2SGGif3NrxrDhDm+P9w=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ejYRpcaM4WsGH4an9+AXeX5C8uppavO0iOxlf16UAEBrS8DoLu/C0XPcWuVJMOXioja1X77nIu4xYXfbZ5HWHEoPHfIULNajRb1NlKWQWNcO5EPv5Pq1mPwVtcOYwHlh9nI2V1dNP5LkPqUyhpdGRb/gb31vgh2uvbxZitKw5ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=pOHlkCF2; arc=none smtp.client-ip=109.224.244.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746440951; c=relaxed/simple;
+	bh=lVKJxfzyZlhxJPGHPbA6XTPBlMLKkyYZEHmX+IIRK0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oLwMOQmqe7id5V9Rw8UYY/peuodXSVkfAKv9c+MZzjSCVDg713voCVUl9Jo60U/CNbp8I1hcbKC2UszNM0ciTwHP2RcVNtvl0Gxi3JmTAaj9u/omgI+bJYPDV1vCIG0FVonS30FBw3IC5naZWNhn0qfK2PYNyvxZe/8PehcNY88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qJJa4iRB; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="pOHlkCF2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746433220; x=1746692420;
-	bh=PPmY1q+mDq92unxZt7p8cEaDwhs2YRbB62LoxxnlFpE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=pOHlkCF2T1ravadpuvayGDQeSZ/x50ch5YmOm3ewP8GVMn2aegoZ5eQ/WmTsEGd6o
-	 VtySB0xnk+5XpQqit9qXlw8yxfbgxpay7ezwsHcrv+hSL1chyzvZEuhbPhFJJDLQZ4
-	 CEGgn4Yy5Gu4KNvSN1IcI90m/lNT2VQh4+PS6YI+xZnTtI1NP1MkJMel6/tmNHOXlN
-	 daR1dNrHA0AZwjetkfqbrlD9EW3mFaS2b1WJlGCu+sqfGp9wafe31MR8s+Z7Htew3Z
-	 URtcBKqp+u9YK2/xY/tYAka7XJ/YyIwKbg0ib0xpAowPqcfUt2Yl/61QBmJkdgK63j
-	 NgzSGvQNVWEQQ==
-Date: Mon, 05 May 2025 08:20:16 +0000
-To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
-From: fossben@pm.me
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "niks@kernel.org" <niks@kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
-Message-ID: <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
-In-Reply-To: <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
-References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com> <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org> <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
-Feedback-ID: 134317997:user:proton
-X-Pm-Message-ID: fef2514a1a9fdd3fff94770a5f82dde0aa08ad69
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qJJa4iRB"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso7304059a12.3
+        for <regressions@lists.linux.dev>; Mon, 05 May 2025 03:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746440947; x=1747045747; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=h9NJPEPNcCHElqCsFKkOD/zhCMdaqJ93x2wt89oLANA=;
+        b=qJJa4iRB6wzhnjqfc/jPBoRA/yV/wGZ8kfTyvUbrM+vvJBAPbyxIdbeFQk9GsKbQGw
+         JuxmqCdCxXopDDLhjeeR3OAKdsyIMuc3rcVQfakwkSPjL4izKRJH3hcgUugMSHx7Jg29
+         sPi8F/bJA2bnWDWpx3qLPR5rNdHpHrRG+UURaZ79Irerr+w+nlFUalzQZt7CMS/FSxib
+         L0/7HxBYyrdKjcjQXSNc+oJjFnz7qwaZ79sSauGzECBbeF3VXkZZYkCslV1j6bNuFyJf
+         E4XlLE2PcyxlZ3wEBvdKVOPhCyFd3kNbETssDKE2rQNNv5oZKSjpAw4T5hf8G9pFIx9f
+         8AWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746440947; x=1747045747;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h9NJPEPNcCHElqCsFKkOD/zhCMdaqJ93x2wt89oLANA=;
+        b=wXykIJHZEWEzcIesrq7padIr5DAiBCsTghOu5pviDgE3BLcCGszbvO9ONoM8vPDTZC
+         3V7Pddn2YFZnImCPioDqOAH+VPfsvXEMmxIrzElBcgtHPDVgy96W0p+M15eqFQu3bTIz
+         CFERriaDE2PAaMihgb/MGNTL1JhlPAnj8jfD0K9nWNIZZwCdrgYyjeTI/U6qvm62kKHt
+         sG6nzz6BT6+4KVABkzEYlW+AuN1OUqfiXW9FVRMWXXgl3G4bO4gXZ0Znt5XdkxIBWr8l
+         Nl4qtPYLSk5QrS1H2IWHl70OPnvz7gRsSt2hlqr2TtncFtu1KofQSmKZYi4BeypCbkrN
+         RyCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEQ7olSvLmJpqwHKEV/WJ+o736m+C3kBiAViuAStJZib1eiProEYJkmQAkBiVk2mL8mWX4XPbQriGgMA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyIfMIyFXOMhDDvQSPqiPK7doMzEpJuIgxKaQ5ypUBlv+zSnXM9
+	F8J0ZblPSFmb20bGEBtVHc5pRPrZ+a4oCR+V/gth+gxtLiMtsysIFVVBFcAGwJH0zddInDyrw/F
+	0qCIaBrn9qJxPidaZXtNh05+mtKkEJpiSD9NDbA==
+X-Gm-Gg: ASbGnctnBhgJgBUTAOlFNcoUoq8dLqkvLiSDPDcp+MbH6kX9GX0STSQ/XF7SOu3nwjV
+	xJTOPtM5GcQRe08KliLFG1Bl3XeuezARVu8Hiwo36BKYnr/TvwlgUPDrnbzlUwXp4rNCX/Fk7mo
+	6wuNvd0hXrKLmqZLP6Say7V/G+XJv4NAyJKOjXUBDA0EOKi9vbrH0=
+X-Google-Smtp-Source: AGHT+IFGLdOA0wjrKNVNr+OgSY/m0KfnXY3uoRWhdic9itp5AdsIBqgTTOv/2WI6gBetK79o3lt6ttFowKiy6rytszo=
+X-Received: by 2002:a05:6402:1d4e:b0:5dc:7725:a0c7 with SMTP id
+ 4fb4d7f45d1cf-5fab056dde8mr5734455a12.3.1746440946940; Mon, 05 May 2025
+ 03:29:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+ <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
+ <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
+In-Reply-To: <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 5 May 2025 12:28:55 +0200
+X-Gm-Features: ATxdqUFW1mE6ZQzU1S1KsW8u-ZfkAndPfLeziZRRMlNmnLJodq2VykFlzWKjRZQ
+Message-ID: <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
+Subject: Re: IPC drop down on AMD epyc 7702P
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra <peterz@infradead.org>, 
+	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	Valentin Schneider <vschneid@redhat.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Monday, May 5th, 2025 at 12:48 AM, Mingyen Hsieh <Mingyen.Hsieh@mediatek=
-.com> wrote:
+On Wed, 30 Apr 2025 at 11:13, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+>
+> (+ more scheduler folks)
+>
+> tl;dr
+>
+> JB has a workload that hates aggressive migration on the 2nd Generation
+> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
+> C2C latency.
+>
+> Based on JB's observation so far, reverting commit 16b0a7a1a0af
+> ("sched/fair: Ensure tasks spreading in LLC during LB") and commit
+> c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
+> condition") helps the workload. Both those commits allow aggressive
+> migrations for work conservation except it also increased cache
+> misses which slows the workload quite a bit.
 
-> On Sun, 2025-05-04 at 00:39 +0200, Niklas Schnelle wrote:
-> >=20
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >=20
-> >=20
-> > On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=
-=E8=AB=BA) wrote:
-> > > On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me=C2=A0wrote:
-> > > >=20
-> > > > External email : Please do not click links or open attachments
-> > > > until
-> > > > you have verified the sender or the content.
-> > > >=20
-> > > >=20
-> > > > Hello all,
-> > > >=20
-> > > > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed
-> > > > that
-> > > > I could no longer ping *.local addresses provided by Avahi. In
-> > > > addition, I also noticed that I was not able to get a DHCP IPv6
-> > > > address from my router, no matter how many times I rebooted the
-> > > > router or reconnected with NetworkManager.
-> > > >=20
-> > > > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses
-> > > > immediately.
-> > > > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
-> > > > address will stay there for a while before disappearing later,
-> > > > possibly because the DHCP lease expired? I am not sure exactly
-> > > > when
-> > > > it stops working.
-> > > >=20
-> > > > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
-> > > > offending commit that causes mDNS to fail:
-> > > >=20
-> > > > commit 80007d3f92fd018d0a052a706400e976b36e3c87
-> > > > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> > > > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *=
-sta_cmd
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 =
-upstream.
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO =
-firmware.
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabli=
-ng MLO when
-> > > > the
-> > > > firmware supports it")
-> > > >=20
-> > > > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++----=
----
-> > > > ----
-> > > > --------------------------------------------
-> > > > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
-> > > >=20
-> > > > I do not know if this same commit is also causing the IPv6 issues
-> > > > as
-> > > > testing that requires quite a bit of time to reproduce. What I do
-> > > > know with certainty as of this moment is that it definitely
-> > > > breaks in
-> > > > kernel 6.14.3.
-> > > >=20
-> > > > I've attached my hardware info as well as dmesg logs from the
-> > > > last
-> > > > working kernel from the bisect and 6.14.4 which exhibits the
-> > > > issue.
-> > > > Please let me know if there's any other info you need.
-> > > >=20
-> > > > Thanks!
-> > > > Benjamin Xiao
-> > >=20
-> > > Hi,
-> > >=20
-> > > Thanks for reporting this issue, we will aim into this.
-> > >=20
-> > > Can you provide me with your testing steps?
-> > >=20
-> > > Best Regards,
-> > > Yen.
-> > >=20
-> >=20
-> > Hi Yan,
-> >=20
-> > I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
-> > mt7925e WiFI module. My setup is just a home router with native IPv6
-> > both for my uplink and in the LAN. The problems with IPv6 can already
-> > be seen just in the LAN for example by checking which IP was used for
-> > SSH, in my setup it should always be IPv6 but falls back to IPv4 in
-> > the
-> > broken state.
-> >=20
-> > As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
-> > mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4.
-> > This
-> > fully restores IPv6 for me. Also note I'm running this with the
-> > mt7925
-> > firmware version 20250425073330 from linux-firmware's master branch
-> > as
-> > I had some dropped connections with earlier firmware.
-> >=20
-> > So it definitely looks like that commit also broke IPv6 and not just
-> > mDNS. Note that if if I use DHCPv6 instead of router advertisements,
-> > on
-> > the latest firmware, but without the revert, I get a global IPv6
-> > address added to the interface but then native IPv6 addresses are
-> > still
-> > uncreachable. With the offending patch reverted my SSH session to an
-> > IPv6 only host works fine and is stable. Also I'd be willing to test
-> > a
-> > proper fix as I rely on IPv6 heavily due to having to use CGNAT for
-> > IPv4 but not for IPv6.
-> >=20
-> >=20
-> > Thanks,
-> > Niklas
->=20
-> Hi Benjamin & Niklas,
->=20
-> Can you help to try this patch? I can get IPv6 address through this
-> patch.
->=20
-> If it can work at your environment as well, i will upstream it and add
-> test tag with you.
->=20
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> index a42b584634ab..fd756f0d18f8 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> @@ -2183,14 +2183,14 @@ mt7925_mcu_sta_cmd(struct mt76_phy *phy,
->                         mt7925_mcu_sta_mld_tlv(skb, info->vif, info-
-> >link_sta->sta);
->                         mt7925_mcu_sta_eht_mld_tlv(skb, info->vif,
-> info->link_sta->sta);
->                 }
-> -
-> -               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
-> >link_sta);
->         }
->=20
->         if (!info->enable) {
->                 mt7925_mcu_sta_remove_tlv(skb);
->                 mt76_connac_mcu_add_tlv(skb, STA_REC_MLD_OFF,
->                                         sizeof(struct tlv));
-> +       } else {
-> +               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
-> >link_sta);
->         }
->=20
->         return mt76_mcu_skb_send_msg(dev, skb, info->cmd, true);
->=20
->=20
-> Thanks~
-> Yen.
+commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
+during LB") eases the spread of task inside a LLC so It's not obvious
+for me how it would increase "a lot of CPU migrations go out of CCX,
+then L3 miss,". On the other hand, it will spread task in SMT and in
+LLC which can prevent running at highest freq on some system but I
+don't know if it's relevant for this SoC.
 
-Hi Yen,
+commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
+condition") makes newly idle migration happen more often which can
+then do migrate tasks across LLC. But then It's more about why
+enabling newly idle load balance out of LLC if it is so costly.
 
-I manually applied the changes on top of 6.14.5 and mDNS seems to work alon=
-g with IPv6! I will do more testing for the rest of the day to see if the i=
-ssue is completely fixed but so far looks good at least for the 5 minutes I=
-'ve been testing it.
-
-Thanks for the fix,
-Ben
+>
+> "relax_domain_level" helps but cannot be set at runtime and I couldn't
+> think of any stable / debug interfaces that JB hasn't tried out
+> already that can help this workload.
+>
+> There is a patch towards the end to set "relax_domain_level" at
+> runtime but given cpusets got away with this when transitioning to
+> cgroup-v2, I don't know what the sentiments are around its usage.
+> Any input / feedback is greatly appreciated.
+>
+> On 4/28/2025 1:13 PM, Jean-Baptiste Roquefere wrote:
+> > Hello Prateek,
+> >
+> > thank's for your reponse.
+> >
+> >
+> >> Looking at the commit logs, it looks like these commits do solve other
+> >> problems around load balancing and might not be trivial to revert
+> >> without evaluating the damages.
+> >
+> > it's definitely not a productizable workaround !
+> >
+> >> The processor you are running on, the AME EPYC 7702P based on the Zen2
+> >> architecture contains 4 cores / 8 threads per CCX (LLC domain) which is
+> >> perhaps why reducing the thread count to below this limit is helping
+> >> your workload.
+> >>
+> >> What we suspect is that when running the workload, the threads that
+> >> regularly sleep trigger a newidle balancing which causes them to move
+> >> to another CCX leading to higher number of L3 misses.
+> >>
+> >> To confirm this, would it be possible to run the workload with the
+> >> not-yet-upstream perf sched stats [1] tool and share the result from
+> >> perf sched stats diff for the data from v6.12.17 and v6.12.17 + patch
+> >> to rule out any other second order effect.
+> >>
+> >> [1]
+> >> https://lore.kernel.org/all/20250311120230.61774-1-swapnil.sapkal@amd.com/
+> >
+> > I had to patch tools/perf/util/session.c : static int
+> > open_file_read(struct perf_data *data) due to "failed to open perf.data:
+> > File exists" (looked more like a compiler issue than a tool/perf issue)
+> >
+> > $ ./perf sched stats diff perf.data.6.12.17 perf.data.6.12.17patched >
+> > perf.diff (see perf.diff attached)
+>
+> Thank you for all the information Jean. I'll highlight the interesting
+> bits (at least the bits that stood out to me)
+>
+> (left is mainline, right is mainline with the two commits mentioned by
+>   JB reverted)
+>
+> total runtime by tasks on this processor (in jiffies)            : 123927676874,108531911002  |   -12.42% |
+> total waittime by tasks on this processor (in jiffies)           :  34729211241, 27076295778  |   -22.04% |  (    28.02%,     24.95% )
+> total timeslices run on this cpu                                 :       501606,      489799  |    -2.35% |
+>
+> Since "total runtime" is lower on the right, it means that the CPUs
+> were not as well utilized with the commits reverted however the
+> reduction in the "total waittime" suggests things are running faster
+> and on overage there are 0.28 waiting tasks on mainline compared to
+> 0.24 with the commits reverted.
+>
+> ---------------------------------------- <Category newidle - SMT> ----------------------------------------
+> load_balance() count on cpu newly idle                           :      331664,      31153  |   -90.61% |  $        0.15,        1.55 $
+> load_balance() failed to find busier group on cpu newly idle     :      300234,      28470  |   -90.52% |  $        0.16,        1.70 $
+> *load_balance() success count on cpu newly idle                  :       28386,       1544  |   -94.56% |
+> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.01  |     0.46% |
+> ---------------------------------------- <Category newidle - MC > ----------------------------------------
+> load_balance() count on cpu newly idle                           :      258017,      29345  |   -88.63% |  $        0.19,        1.65 $
+> load_balance() failed to find busier group on cpu newly idle     :      131096,      16081  |   -87.73% |  $        0.37,        3.01 $
+> *load_balance() success count on cpu newly idle                  :       23286,       2181  |   -90.63% |
+> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.03,       1.01  |    -1.23% |
+> ---------------------------------------- <Category newidle - PKG> ----------------------------------------
+> load_balance() count on cpu newly idle                           :      124013,      27086  |   -78.16% |  $        0.39,        1.78 $
+> load_balance() failed to find busier group on cpu newly idle     :       11812,       3063  |   -74.07% |  $        4.09,       15.78 $
+> *load_balance() success count on cpu newly idle                  :       13892,       4739  |   -65.89% |
+> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.07,       1.10  |     3.32% |
+> ----------------------------------------------------------------------------------------------------------
+>
+> Most migrations are from newidle balancing which seems to move task
+> across cores ( > 50% of time) and the LLC too (~8% of the times).
+>
+> >
+> >> Assuming you control these deployments, would it possible to run
+> >> the workload on a kernel running with "relax_domain_level=2" kernel
+> >> cmdline that restricts newidle balance to only within the CCX. As a
+> >> side effect, it also limits  task wakeups to the same LLC domain but
+> >> I would still like to know if this makes a difference to the
+> >> workload you are running.
+> > On vanilla 6.12.17 it gives the IPC we expected:
+>
+> Thank you JB for trying out this experiment. I'm not very sure what
+> the views are on "relax_domain_level" and I'm hoping the other
+> scheduler folks will chime in here - Is it a debug knob? Can it
+> be used in production?
+>
+> I know it had additional uses with cpuset in cgroup-v1 but was not
+> adopted in v2 - are there any nasty historic reasons for this?
+>
+> >
+> > +--------------------+--------------------------+-----------------------+
+> > |                    | relax_domain_level unset | relax_domain_level=2  |
+> > +--------------------+--------------------------+-----------------------+
+> > | Threads            |  210                     | 210                  |
+> > | Utilization (%)    |  65,86                   | 52,01                |
+> > | CPU effective freq |  1 622,93                |  1 294,12             |
+> > | IPC                |  1,14                    | 1,42                 |
+> > | L2 access (pti)    |  34,36                   | 38,18                |
+> > | L2 miss   (pti)    |  7,34                    | 7,78                 |
+> > | L3 miss   (abs)    |  39 711 971 741          |  33 929 609 924       |
+> > | Mem (GB/s)         |  70,68                   | 49,10                |
+> > | Context switches   |  109 281 524             |  107 896 729          |
+> > +--------------------+--------------------------+-----------------------+
+> >
+> > Kind regards,
+> >
+> > JB
+>
+> JB asked if there is any way to toggle "relax_domain_level" at runtime
+> on mainline and I couldn't find any easy way other than using cpusets
+> with cgroup-v1 which is probably harder to deploy at scale than the
+> pinning strategy that JB mentioned originally.
+>
+> I currently cannot think of any stable interface that exists currently
+> to allow sticky behavior and mitigate aggressive migration for work
+> conservation - JB did try almost everything available that he
+> summarized in his original report.
+>
+> Could something like below be a stop-gap band-aid to remedy such the
+> case of workloads that don't mind temporary imbalance in favor of
+> cache hotness?
+>
+> ---
+> From: K Prateek Nayak <kprateek.nayak@amd.com>
+> Subject: [RFC PATCH] sched/debug: Allow overriding "relax_domain_level" at runtime
+>
+> Jean-Baptiste noted that Ateme's workload experiences poor IPC on a 2nd
+> Generation EPYC system and narrowed down the major culprits to commit
+> 16b0a7a1a0af ("sched/fair: Ensure tasks spreading in LLC during LB") and
+> commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
+> condition") both of which enable more aggressive migrations in favor of
+> work conservation.
+>
+> The larger C2C latency on the platform coupled with a smaller L3 size of
+> 4C/8T makes downside of aggressive balance very prominent. Looking at
+> the perf sched stats report from JB [1], when the two commits are
+> reverted, despite the "total runtime" seeing a dip of 11% showing a
+> better load distribution on mainline, the "total waittime" dips by 22%
+> showing despite the imbalance, the workload runs faster and this
+> improvement can be co-related to the higher IPC and the reduced L3
+> misses in data shared by JB. Most of the migration during load
+> balancing can be attributed to newidle balance.
+>
+> JB confirmed that using "relax_domain_level=2" in kernel cmdline helps
+> this particular workload by restricting the scope of wakeups and
+> migrations during newidle balancing however "relax_domain_level" works
+> on topology levels before degeneration and setting the level before
+> inspecting the topology might not be trivial at boot time.
+>
+> Furthermore, a runtime knob that can help quickly narrow down any changes
+> in workload behavior to aggressive migrations during load balancing can
+> be helpful during debugs.
+>
+> Introduce "relax_domain_level" in sched debugfs and allow overriding the
+> knob at runtime.
+>
+>    # cat /sys/kernel/debug/sched/relax_domain_level
+>    -1
+>
+>    # echo Y > /sys/kernel/debug/sched/verbose
+>    # cat /sys/kernel/debug/sched/domains/cpu0/domain*/flags
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_CPUCAPACITY SD_SHARE_LLC SD_PREFER_SIBLING
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_LLC SD_PREFER_SIBLING
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SERIALIZE SD_OVERLAP SD_NUMA
+>
+> To restrict newidle balance to only within the LLC, "relax_domain_level"
+> can be set to level 3 (SMT, CLUSTER, *MC* , PKG, NUMA)
+>
+>    # echo 3 > /sys/kernel/debug/sched/relax_domain_level
+>    # cat /sys/kernel/debug/sched/domains/cpu0/domain*/flags
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_CPUCAPACITY SD_SHARE_LLC SD_PREFER_SIBLING
+>    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_LLC SD_PREFER_SIBLING
+>    SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING
+>    SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SERIALIZE SD_OVERLAP SD_NUMA
+>
+> "relax_domain_level" forgives short term imbalances. Longer term
+> imbalances will be eventually caught by the periodic load balancer and
+> the system will reach a state of balance, only slightly later.
+>
+> Link: https://lore.kernel.org/all/996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com/ [1]
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> ---
+>   include/linux/sched/topology.h |  6 ++--
+>   kernel/sched/debug.c           | 52 ++++++++++++++++++++++++++++++++++
+>   kernel/sched/topology.c        |  2 +-
+>   3 files changed, 57 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+> index 198bb5cc1774..5f59bdc1d5b1 100644
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -65,8 +65,10 @@ struct sched_domain_attr {
+>         int relax_domain_level;
+>   };
+>
+> -#define SD_ATTR_INIT   (struct sched_domain_attr) {    \
+> -       .relax_domain_level = -1,                       \
+> +extern int default_relax_domain_level;
+> +
+> +#define SD_ATTR_INIT   (struct sched_domain_attr) {            \
+> +       .relax_domain_level = default_relax_domain_level,       \
+>   }
+>
+>   extern int sched_domain_level_max;
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 557246880a7e..cc6944b35535 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -214,6 +214,57 @@ static const struct file_operations sched_scaling_fops = {
+>         .release        = single_release,
+>   };
+>
+> +DEFINE_MUTEX(relax_domain_mutex);
+> +
+> +static ssize_t sched_relax_domain_write(struct file *filp,
+> +                                       const char __user *ubuf,
+> +                                       size_t cnt, loff_t *ppos)
+> +{
+> +       int relax_domain_level;
+> +       char buf[16];
+> +
+> +       if (cnt > 15)
+> +               cnt = 15;
+> +
+> +       if (copy_from_user(&buf, ubuf, cnt))
+> +               return -EFAULT;
+> +       buf[cnt] = '\0';
+> +
+> +       if (kstrtoint(buf, 10, &relax_domain_level))
+> +               return -EINVAL;
+> +
+> +       if (relax_domain_level < -1 || relax_domain_level > sched_domain_level_max + 1)
+> +               return -EINVAL;
+> +
+> +       guard(mutex)(&relax_domain_mutex);
+> +
+> +       if (relax_domain_level != default_relax_domain_level) {
+> +               default_relax_domain_level = relax_domain_level;
+> +               rebuild_sched_domains();
+> +       }
+> +
+> +       *ppos += cnt;
+> +       return cnt;
+> +}
+> +static int sched_relax_domain_show(struct seq_file *m, void *v)
+> +{
+> +       seq_printf(m, "%d\n", default_relax_domain_level);
+> +       return 0;
+> +}
+> +
+> +static int sched_relax_domain_open(struct inode *inode, struct file *filp)
+> +{
+> +       return single_open(filp, sched_relax_domain_show, NULL);
+> +}
+> +
+> +static const struct file_operations sched_relax_domain_fops = {
+> +       .open           = sched_relax_domain_open,
+> +       .write          = sched_relax_domain_write,
+> +       .read           = seq_read,
+> +       .llseek         = seq_lseek,
+> +       .release        = single_release,
+> +};
+> +
+>   #endif /* SMP */
+>
+>   #ifdef CONFIG_PREEMPT_DYNAMIC
+> @@ -516,6 +567,7 @@ static __init int sched_init_debug(void)
+>         debugfs_create_file("tunable_scaling", 0644, debugfs_sched, NULL, &sched_scaling_fops);
+>         debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
+>         debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
+> +       debugfs_create_file("relax_domain_level", 0644, debugfs_sched, NULL, &sched_relax_domain_fops);
+>
+>         sched_domains_mutex_lock();
+>         update_sched_domain_debugfs();
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index a2a38e1b6f18..eb5c8a9cd904 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1513,7 +1513,7 @@ static void asym_cpu_capacity_scan(void)
+>    * Non-inlined to reduce accumulated stack pressure in build_sched_domains()
+>    */
+>
+> -static int default_relax_domain_level = -1;
+> +int default_relax_domain_level = -1;
+>   int sched_domain_level_max;
+>
+>   static int __init setup_relax_domain_level(char *str)
+> --
+>
+> Thanks and Regards,
+> Prateek
+>
