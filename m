@@ -1,154 +1,180 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB2925A2C6
-	for <regressions@lists.linux.dev>; Mon,  5 May 2025 15:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457864; cv=none; b=Vrg+w3GlL9zBqaWTmhN8uHkuFZO4FNJYwGT9hcsV505hUzkbIPFgEwcKFryYI6kGuIy2J9TaLrgYOAj1brj0rKN4RCJF8JujVtWjuepZnL4XcGT0+SS6f2XNmNQdNDFTnwAQPcL0Ga+TREKXon0NIyTy6rV5FLeTlA91DZRYSW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457864; c=relaxed/simple;
-	bh=pBSU+i+mpQmbCxqb+l45MEZnOucbUsIa1Ybw9DczQzk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kz5j8z6AwYCh2/OKxc0+YntqGpLo66rD58g3fu/SYlkCHp8Nh88GNAc17oS3nMLrJYfkCrdLlwWfn75ay1UNJMpBYCBlULHbKsbFevRgKY0YbvFi5Fm1iO8KqR2XhdNkFDnt/ngib57+XNEQVW+YmhZO0d75QU5Vy8v47N2Vf3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZnDO+rUB; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD9825DD01
+	for <regressions@lists.linux.dev>; Mon,  5 May 2025 15:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746458225; cv=fail; b=IXJvJXnkuLJrZs4xgapWLzXsrrX3rsjkl9K8eFHmdoJDs/A7AtCx+UlH9N+iKkoJTWLuYJ+JQXnFJ8QyQU6VQAp1VOTa5ET+H0b0PI5Cad0g8EGcMiPzatJpTc6MJGOdjrpNFFuiPPC4/xcJtW4vOh3dOmh7pU3UtG4N1qUwLVA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746458225; c=relaxed/simple;
+	bh=ssvYvf+y7qLbqQ+DfwNV9cEzm1ITJXh0yHHHqf9RmWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DyMEtAC5GBYgApP4q9kKwIJPsKh9tOrskNETBiYqB4Nl/TaTPdjZ0swGYDEgV598tpeUoHe3/Pa8gf/yO6UsxpAhDCiv3LGHlEIv/s0jEhk7AzNEUUQgfg+k9bPdPzl0z19len05PFxX2Revua9TT6fUit4SxVMOadg0/EYPx0c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lGZFnZ/u; arc=fail smtp.client-ip=40.107.223.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZnDO+rUB"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acbb48bad09so838806066b.0
-        for <regressions@lists.linux.dev>; Mon, 05 May 2025 08:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746457861; x=1747062661; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=i9wML/xLpYYqfIBMOeUqyFoxTmu2U5NAGM6uMVztntg=;
-        b=ZnDO+rUBrgKPRUypxugYTiYqEs71XVcGoLvjU5zeReCNM8d1ioziRjzb9qEGf21HfV
-         MTC54UoFUE7j5kG5FrJU4eBgSwxtFpsfolsJ58ilI9MMlQxL0PmxYguv0hPnR31K8eoG
-         AVXcBMeGQjuJeBPyzPDPMvRjDWQIeDIekC/fmZLcPPIzsYVc25QF/G2kcRc5kjY/FcBB
-         jJ0LCPhLB7YGA5Nr+ZdjzC89jImC9HagxiUmsTQvgI8XkoZo5n/bWGB6HnU+JnPetbIW
-         h5fyHp0vonDg0H4f9E5CUBpweywH30MdhbDjkIfZxaudOVYf8dV641WjD9SWeYsoWhyJ
-         HfJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746457861; x=1747062661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i9wML/xLpYYqfIBMOeUqyFoxTmu2U5NAGM6uMVztntg=;
-        b=MsDQxArnww1YOJMswNzdt0UjY5MAHtmv/uUq6Htm3vUrvvB32TPQZog/ErQq8zs/p3
-         9SnBnhdNARINMVXsvyZfrs/bH7ZDxeTfNRRnmPuS5rvgjN7SRi5Jc1cWJx8S+Iu2DqIF
-         tfOw33QE9F8/cgIEQGrO1aj0zNK6GISFOF08I8LjM+oATrgfOuM3S8sxhFxeN33KYeuy
-         M0aw7behnDCJb0+2p1kNUgHHkwW6yEut52IDLqiWsF0sS274GlZJ8zFz3mNRpv22KSOX
-         mVXFj9UN/BMClkh2up7Px/IBInu/DNadYWh9/Gt+btMhyNABrUYsUdI6ZbZwuMWp+djq
-         nRig==
-X-Forwarded-Encrypted: i=1; AJvYcCXXQSD7ynXoV53FAoH42769FS2BhjVrAUzvPkDxWpYeyNIqkAJu6B03iu58VbKLFBGmg7mT+KX8g2pSjA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyeAEytVlFtzAj8xKtna0O409/GxVa+dHCwC3ZTe9O5gYrqet5v
-	aMV6b+A/5xjw9Qa/iOFU0xFIOK3fUMyceIKxznFJNksmDhIskYRh741QhoNinFAP+lNkwoy8VLH
-	galySiFOQ01EKPOHu03d/yss+Qrwlz0i42MTkFw==
-X-Gm-Gg: ASbGncvTEBMxM0hMUAL87BhMSKxF8c1xRT+tSGAPfI+118kVlHlzOrY4NNxs2sLKa60
-	0cvCI5Xpte+/lAX0qhMhcM58t4xr/zDov4ZjKSRMpyDqrlQI6o16Pw5zMHlsTi/eMc9KrP7fQxr
-	Q2cELvdKK2XEMDpIlAK4mquOknvlts91u9gFZTwKDbmjRVDDZZnJU=
-X-Google-Smtp-Source: AGHT+IFWkNtGAga6J16A8HKiYJ4SY2/o0Msa04cQUJk7YPbvTNuKFTsMbSZxQChXOVr5+3LUR9RdojulzJSqTTqNRDc=
-X-Received: by 2002:a17:907:1c1d:b0:aca:d83b:611b with SMTP id
- a640c23a62f3a-ad1a4a8d3d5mr716977766b.43.1746457860528; Mon, 05 May 2025
- 08:11:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lGZFnZ/u"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mmOplgHY/CUJEVTPWW6Gd/nMEE2wfsgUiS0JYIDqTr82/5xh3/8DG8P6NzoINDlBneiHga+tZiJTwXzE3/8Yh/bfRHuMd4TsUWopndS1lh3G62VAgz/xq7HmtFXgX0dXxsX3aoAmfVPTkS8liUNeE8BDNUnmPMDHS+iA7XPpXcvrD8/OkBg3ElnsOO+1xGWH9FUnguP/TDiAaBZt8QBFECxrBaG1uq1QZGvt6HwM5gDoXYVflEehFRFAJOnb/Q14TqaIylPHSG/Kq/U7ZpwgGvYXY5PfhiMeSzTe0BtfOXYXPLI0ZUCgnWd+7I7Z0kmln8zcNy0ISjdruQ1gES5GyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RITeO3OU5xuXoSWtA8CFCZu4L85vJraE2AkrKVKaZIA=;
+ b=OaYpFyU07YLhgs6cjLtr9vK5r+fcyDvcX2OUE1798dh3it2AUJRjyQJW355xGxOJfyYrYn+k8q5Yfv2H0xl5q8NYJMDfzCK8Rd61FiZCzfVrCN0MFtCuNRp8GnKhPBxmt1DX1o7MX6UEghVrEuu2WMlr1uN6PmsT8KW7fQ+0nW9y9uFwywR7VsPMf/fcEhgMUX0eb6x4K4skQXHFK4TneL7+LmQseFwlbk03wA4SX3fKTTxqEy5m4DiiXpfW14CQgn/LNfV+QISCl031qSufaXVY6yK2L7owFSA5cghN6zixi8z2Y4mYsq29/kuwBCdK4+mVRJB4dMK8URXkwwPFrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RITeO3OU5xuXoSWtA8CFCZu4L85vJraE2AkrKVKaZIA=;
+ b=lGZFnZ/u1qSfp3cllqZko6ldg43FF5+rZSMtqx3Ef719zWBcZ3E6uYhqCaQ96sd16gtLsbMYY/J9u2Ig4T5/3FJDh0TLjbUZYtepQMF7/sf+6wRWXEeZ8qNVAq36lCR7EohR6Abfzk2RwZ0JqD4hRilXqhHLoJ72hs4wSSdy2T8=
+Received: from SJ0PR13CA0107.namprd13.prod.outlook.com (2603:10b6:a03:2c5::22)
+ by DS0PR12MB8788.namprd12.prod.outlook.com (2603:10b6:8:14f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Mon, 5 May
+ 2025 15:17:00 +0000
+Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c5:cafe::d1) by SJ0PR13CA0107.outlook.office365.com
+ (2603:10b6:a03:2c5::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Mon,
+ 5 May 2025 15:16:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 15:16:59 +0000
+Received: from [10.143.196.137] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
+ 2025 10:16:53 -0500
+Message-ID: <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com>
+Date: Mon, 5 May 2025 20:46:51 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com> <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
-In-Reply-To: <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 5 May 2025 17:10:47 +0200
-X-Gm-Features: ATxdqUEpRr0s0YMR4bSumWKWv0-Woy7WG2WhTlTCQARD72sKZ0DENvnoHm-LHds
-Message-ID: <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: IPC drop down on AMD epyc 7702P
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Valentin Schneider <vschneid@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To: Vincent Guittot <vincent.guittot@linaro.org>
+CC: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra
+	<peterz@infradead.org>, "mingo@kernel.org" <mingo@kernel.org>, Juri Lelli
+	<juri.lelli@redhat.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Gautham R.
+ Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Valentin Schneider <vschneid@redhat.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+ <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
+ <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
+ <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
+ <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
+ <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
+ <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|DS0PR12MB8788:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbce4191-9508-4995-ec9f-08dd8be7e1b1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V05lSzhuaXFKWkpKVHgvTnhGUHV0YVhDYmV1STlZYy9aSFRYRkNxU3h6OFhq?=
+ =?utf-8?B?Q1I0SEZRMWZNMXdmTnl5REVnM0JkQytQd1Z3WE1rYU1iMmQxV2EyUC9CTGFL?=
+ =?utf-8?B?VnNBV1h5cVNNU3hMdGtRZG9SckxjbnYrd3BxSncraVVJWTE1a1p3UHR0OFg5?=
+ =?utf-8?B?T0pPbWI5ckd2WmVGak1FbUtYZDl4N0hYYzV2VUpUbU9EQTZQY0x2Z1BQamp2?=
+ =?utf-8?B?QlJmeGo0RXkxaVRIams0ekxhZEZNWGVaR25JYWJuajJKK3YvVlhaY3A2UWsv?=
+ =?utf-8?B?eWtSKzZZRlRKZHN0RTNqV3JoWjJuRTl5THBTZmtmeFFBR0syK2dZcWZ2SjZu?=
+ =?utf-8?B?V1Npb1BhaDlkb0xkaEpuek1MUUgxVWRqelFaSW5jT3cwR3RNa1FnQmxrMEts?=
+ =?utf-8?B?YnpCcFhiL2ZxK2llSU9BalhLOTQvc3AyZG5xVFQ2Y1hNQnUvdWJvenZJUTJ2?=
+ =?utf-8?B?djlQajVyUDVLTU9zS2h4Q1g3T3pudk8vZ3FzQVcrNmRmRlAvRWRPd0EySGFl?=
+ =?utf-8?B?Z3pJN0hvUElWK1YyenkrVklXS1dOMHlHZmZab2t6T1VnaEV1Zit3cXc3R3U0?=
+ =?utf-8?B?ZUF1WnQxSG9TNXdUWW0yT05qUmpMV2Q0UHZkSVlUMTh0U1E2VUJxWkJCYVZF?=
+ =?utf-8?B?dnM5bXdqK0JnYTA2QW5qcUpqS08rYVZYaE1nNUZ1YlE1REZmcTk5c1hJdG9G?=
+ =?utf-8?B?TkNzU1kyZGhmTWRWTVBDUXFrWjVpei9SYVRBaU9wT25mYW52KzVJTGQ5VjNI?=
+ =?utf-8?B?WFFBR3UrMTRjcmt1OFE3Q2x1aWFjdHlObjZrY1JFTkx4QjFPRnhhc2xHYUIw?=
+ =?utf-8?B?VWJ2T2poQ1JmSFBqdC9rNzBISWNCeENtNEprdG1lRmN5THZKOGs2cnNES3l1?=
+ =?utf-8?B?MzJBVWo4bUpBdjVaRzhYRW5hWmNlUjZVeDZYUStvb0dzUWNkeWVOV1NlbnVh?=
+ =?utf-8?B?L1c1a3ZtSFBCdmRGeCtKTU51amRLWllqZVhXRkNzeGI1dW9UelpPMGJzREdv?=
+ =?utf-8?B?ZytkZkNEcm8ybTRoYzRnOFdRaGJxYVFkWW11M0U0VkE4S0dMSkFNdndvMlln?=
+ =?utf-8?B?MSt5bDk4OUl5Tm5VUnVMMkFSelhqVlhOMnVDaGJrL05FcXd1anhJcnQydjFB?=
+ =?utf-8?B?RFhwTEtRQ2ZTYWpjN21qS3lMOGNFSDNoMW9ldkFlSzhIQUlNUk9EdmJCTWhW?=
+ =?utf-8?B?V042Y2RuWHNtOHZBRHpCKzk2cmV4RG1TMStRNFd4cVh1Y2JzZi9VVWt5S2lL?=
+ =?utf-8?B?ekRGTktTNFBUNmxwTS9hVGpIZXhNM3ZVNVc3ajh5TlY2WFdtbm44UG1MczB5?=
+ =?utf-8?B?ei9mZ2YvZkVpRTRpa09uR3RBbXBSS0Z1NWVvalZrMityT0hmR2pYeXYwUEZl?=
+ =?utf-8?B?aXdXZXZmVUZxblNMclpid0FmdzhpL3lHc0VVekZxYUZ4bGc5bS9LeG1CelMv?=
+ =?utf-8?B?QXZvMG5XUjdhMVFBZ1pLQi94ak1lSGE2N3RYT3dMVENiNkc1VGplSEovL1F1?=
+ =?utf-8?B?WVhqc0FSSEhrZWJTczc1Y3FEZTVIUGdlRCtSeTdrZ2owRDcwS3VNYTk5ZG9L?=
+ =?utf-8?B?YVozVnN3aFliY29VaW9zcmhLa3FSaXJ3R0RaZzFNYVcwb2h2ZkY0WTRwSGtG?=
+ =?utf-8?B?WVFoTHNZK0pMZkd1dXBIWUlPTzZxcVVDaVh1NWFWV2gxNldWVWpzWHNDV0ZT?=
+ =?utf-8?B?UmZ3RnhGcUZ3U2tZRmZINC9IaHdvNGxQT3JNYWlETjkwR0FWMHFKbldCdU81?=
+ =?utf-8?B?OFhwc0thbEZNN0QzSzBybmFZUy9YNitqMTdiY0dCbWFneDI5aGpsUkFuWVM0?=
+ =?utf-8?B?MDRHWWJ0cWk2aVltTy91aE1hR0pDYzJRc21xVXVrMWFzZXZOTm1WSnVpVFRD?=
+ =?utf-8?B?anpTU3ljMDlnRVdFUmdkdWluKys4N2ZnVEwrVDJGL2krdG9TcmtKZ1RZVnBZ?=
+ =?utf-8?B?VWRtay9tVlVMSTNaTEkxV3dKdXRjYkFHbVV4ZWpXMnJGWGlKZnRheEhGLy96?=
+ =?utf-8?B?YndORTlpbXNWSnFQWDFEdGRoaHdJVEFScld5QzRxRkxHSzdTTTlwWnd4MXA0?=
+ =?utf-8?Q?EfgUe3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 15:16:59.5187
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbce4191-9508-4995-ec9f-08dd8be7e1b1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC2.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8788
 
-On Mon, 5 May 2025 at 14:29, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
->
-> Hello Vincent,
->
-> On 5/5/2025 3:58 PM, Vincent Guittot wrote:
-> > On Wed, 30 Apr 2025 at 11:13, K Prateek Nayak<kprateek.nayak@amd.com> wrote:
-> >> (+ more scheduler folks)
-> >>
-> >> tl;dr
-> >>
-> >> JB has a workload that hates aggressive migration on the 2nd Generation
-> >> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
-> >> C2C latency.
-> >>
-> >> Based on JB's observation so far, reverting commit 16b0a7a1a0af
-> >> ("sched/fair: Ensure tasks spreading in LLC during LB") and commit
-> >> c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-> >> condition") helps the workload. Both those commits allow aggressive
-> >> migrations for work conservation except it also increased cache
-> >> misses which slows the workload quite a bit.
-> > commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
-> > during LB") eases the spread of task inside a LLC so It's not obvious
-> > for me how it would increase "a lot of CPU migrations go out of CCX,
-> > then L3 miss,". On the other hand, it will spread task in SMT and in
-> > LLC which can prevent running at highest freq on some system but I
-> > don't know if it's relevant for this SoC.
->
-> I misspoke there. JB's workload seems to be sensitive even to core to
-> core migrations - "relax_domain_level=2" actually disabled newidle
-> balance above CLUSTER level which is a subset of MC on x86 and gets
+Hello Vincent,
 
-Did he try with relax_domain_level=3, i.e. prevent newilde idle
-balance between LLC ? I don't see results showing that it's not enough
-to prevent newly idle migration between LLC
+On 5/5/2025 8:40 PM, Vincent Guittot wrote:
+>>> commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
+>>> during LB") eases the spread of task inside a LLC so It's not obvious
+>>> for me how it would increase "a lot of CPU migrations go out of CCX,
+>>> then L3 miss,". On the other hand, it will spread task in SMT and in
+>>> LLC which can prevent running at highest freq on some system but I
+>>> don't know if it's relevant for this SoC.
+>>
+>> I misspoke there. JB's workload seems to be sensitive even to core to
+>> core migrations - "relax_domain_level=2" actually disabled newidle
+>> balance above CLUSTER level which is a subset of MC on x86 and gets
+> 
+> Did he try with relax_domain_level=3, i.e. prevent newilde idle
+> balance between LLC ? I don't see results showing that it's not enough
+> to prevent newly idle migration between LLC
 
-> degenerated into the SMT domain.
->
-> >
-> > commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-> > condition") makes newly idle migration happen more often which can
-> > then do migrate tasks across LLC. But then It's more about why
-> > enabling newly idle load balance out of LLC if it is so costly.
->
-> It seems to be very workload + possibly platform specific
-> characteristic where re-priming the cache is actually very costly.
-> I'm not sure if there are any other uarch factors at play here that
-> require repriming (branch prediction, prefetcher, etc.) after a task
-> migration to reach same IPC.
->
-> Essentially "relax_domain_level" gets the desired characteristic
-> where only the periodic balance will balance long-term imbalance
-> but as Libo mentioned the short term imbalances can build up
-> and using "relax_domain_level" might lead to other problems.
->
-> Short of pinning / more analysis of which part of migrations make
-> the workload unhappy, I couldn't think of a better way to
-> communicate this requirement.
->
-> >
-> >> "relax_domain_level" helps but cannot be set at runtime and I couldn't
-> >> think of any stable / debug interfaces that JB hasn't tried out
-> >> already that can help this workload.
-> >>
-> >> There is a patch towards the end to set "relax_domain_level" at
-> >> runtime but given cpusets got away with this when transitioning to
-> >> cgroup-v2, I don't know what the sentiments are around its usage.
-> >> Any input / feedback is greatly appreciated.
->
-> --
-> Thanks and Regards,
-> Prateek
->
+I don't think he did. JB if it isn't too much trouble, could you please
+try running with "relax_domain_level=3" in kernel cmdline and see if
+the performance is similar to "relax_domain_level=2".
+
+I only realized it later that "relax_domain_level" works on topology
+levels before degeneration.
+
+-- 
+Thanks and Regards,
+Prateek
+
+
