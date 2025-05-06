@@ -1,103 +1,248 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9214623D28F;
-	Tue,  6 May 2025 13:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0F128150D
+	for <regressions@lists.linux.dev>; Tue,  6 May 2025 14:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537553; cv=none; b=fMuraMF6XFT0ckt5/jf6UR1YVGQhesMKLydsNClPFr8ryScC1xUHyp8qZGLoCQL6FQk9N2ncBpn+YZLplbH31cmsLJ8toopS5LWGd3k5wxHSddRiLG6kB0nH1OS3LItlN85GO2z29hPe29CssudnKFUSF+6X5VU5jBjxrCgKhYQ=
+	t=1746542191; cv=none; b=p1StEEfgxYqboKGs2zNl3bWlxbQ+FjUzREGumb1eLy7aXaGMZ7arp7ELBKjCNYHzMsYX5J1tRt8SEH8ZN5kuX4mz8krXAkt51su5XYdrJ92QWCLXkZ499LL5jVCgNGpIWTvX3mHAcZJJROZ8bimBHJMlCQcnPqzgNWr+/lvoLaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537553; c=relaxed/simple;
-	bh=iUzddKqL0iIvG6UutN1G6gNVWdgxVSxIUnXyf4QycaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMo83O4OZdHIctTSuWZm6nKpNxVRXbwX5FVHMQ3H1UqOucrV74jYDjGs1pi43ViEAYVmb/kUJxJNCF3HX+hld9XGH7eyCGl7PGJSeCYsZtMkYOfvTYb2PGd6l9ag/SYJenKjg5X6q9XhHMsPYO9LKNRb/Q7jy7NEJxHXWOy9RMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=k/vn7zxc; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746542191; c=relaxed/simple;
+	bh=pLR8SzIXEvIb7U/GF5VXmYNQ43ylNgBaVEB/MFrcW0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e+x7x59nzUsJ3+jBwGL3GM9LFVYuD5TJqBaOygjjnd6iysYiXggSC2Pfb04gbXTrlVBTAaagZZIb01M8QT/7adv9+Aqx6q/WZyeH0Ljn2zDlFhBQy0rcz+tuiJR5ZRvA+JP8r8PvPq32w3TiGZPvtogguHai0gl+4qB3q8TTAWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bdC7ft8G; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="k/vn7zxc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=kHR2Y14bKRrsW5EJnr2zMkLPuETcVkgoZdQEZZ47vSE=; b=k/vn7zxcxor1/UJyd8b3ED6c6Z
-	2WbLB6yu4YlPVHMb11J69ZG3daWi7WPctkWSF00cnzAAfBy70+fuY2717t7ZLYomDVd682NtZrn6X
-	QwyenJE/BpAc35Mm/f1CaU0nzBp4BfB7Vx7EdudUL4fMl5Lp6YlRKly7I+U9hishlxdBgIY94qFOA
-	W9jGO6pC4QYjDqs/qC8JUAXw8XJWy145TviuaK8h91ecFu2SP3Cs1GgpdydJs1D4ShM2iMcE6CziW
-	2gbDDKBS7davfZrmTG0X0/6mDWJpaAlKWPaJg8qBchiIvS4OXnVbjJGRPFULvhiUDkrG7j0Xl2Mb+
-	EadVEoDg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCICO-003y4w-2N;
-	Tue, 06 May 2025 21:19:05 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 06 May 2025 21:19:04 +0800
-Date: Tue, 6 May 2025 21:19:04 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-Message-ID: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
-References: <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bdC7ft8G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746542188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IzH/tkJn6lVBdTS8VMGJ+rH7vzL7J2XnCGspuIlgQmc=;
+	b=bdC7ft8GyxvvBaSMjGmBJyHNWtqBPbf44+Hw1SJWQHQLMkSllAxKStvex0C3hq2H0XG4kp
+	GItjEiqfneXVvnD6rrsVxjNK6CCXrDJYNdHEjejP8gU6V6JKgeEoJtlK3d/uxofYNI2lED
+	XsJRlaDL4eHZCCnRgXmf+HR5wyN6LAs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-257-9itoQdQgOFqvB3NgL7x0Jw-1; Tue, 06 May 2025 10:36:27 -0400
+X-MC-Unique: 9itoQdQgOFqvB3NgL7x0Jw-1
+X-Mimecast-MFC-AGG-ID: 9itoQdQgOFqvB3NgL7x0Jw_1746542186
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43eed325461so31817845e9.3
+        for <regressions@lists.linux.dev>; Tue, 06 May 2025 07:36:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746542186; x=1747146986;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IzH/tkJn6lVBdTS8VMGJ+rH7vzL7J2XnCGspuIlgQmc=;
+        b=ZDJt+24mWVD0Ax3AifUyt95dmjpJK6DN3/mrtF3OiPEbSDb4fHGwyRsICI9lwnUzkA
+         WyBqUQHhAMue+r91TAoGtBciIL1TUCyX24ofpWFLfhn+3WnRA8NaOWLVtioETxFOX5ln
+         21UzWsLfhx6iYE1jM9dFXknmkCPIPUUzAfuxrRmI7YCwicubALI7ThxVygCfDni62H4w
+         MaD/bxPLU7TO2b9GWGGjQvDQLp1TwLZL7KWRO+NN3xsWOhgF7Cn0FfY7G8LQWiM0FBoe
+         qMYrTyiYQMiwJL0ZBKK3wEtMVOB1qxXS4cqseHbqlS+MYaErGwrv/jHcGZnPoh2JXFpk
+         ZUog==
+X-Forwarded-Encrypted: i=1; AJvYcCUEx8nGInBA03rirAfwN46jwQiUsLj+a8LHfxFlLfvPDbeVY4OGCh4QEM0QH3NT72rZbmwTWDAVWho0Kg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJ0DJqpNEf8GiXgzIu2eNXJcCiaY4vd3XKpLi5Zee1ulTKlbiL
+	F5Z4Jfzc9sKc8eQqXvMStkn6rY/ykb8EhH99erWDjrTeKxeJPvxgTEVm4/7ZcZSCSAfq5VovYQu
+	090ghhsM5hUh/W2HolmzglE/8NgW+t47uaQezK/BCfdtzFnkKy/kfIHULpcap
+X-Gm-Gg: ASbGncsl5ZoyjvIVV8PQ5eJ4con1Lyv8X6V6B6914Vj54SB/7+JMEX4XPLySjqav4eb
+	htzZFGDrDXAfuB0XfTY8pFp9tvuRT26qVNYQW1aYj1ZGEFSHOhHVneB+0ywfigpdNHysDGyKDls
+	n5+VYMAuTHkPo+Kiltu7ohqKjTYPLniJefsZzgtcV15vRaPtHMJJ3pm5sumCT4mAWBaPt+iau7z
+	rTBlATKbhZZWETVxBZij4pp8ptGlp5RZlC8+CsIJSquC7pm2vDzwXmmz4Ql7EbKbhAG5SiBprwC
+	36mygqMD+mlG8agw6cXI0/8OE94NQ9fOcuiQsMIQrkn2zyCz+9U=
+X-Received: by 2002:a05:600c:a409:b0:43b:cd0d:9466 with SMTP id 5b1f17b1804b1-441d0a909b9mr32408605e9.9.1746542186116;
+        Tue, 06 May 2025 07:36:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFELAacPpWBYwZLLNgreFFAeKxOJOPVs/9qbII4n9nSgPnrvi/TERouc+DLkXPGSqiv0SFhDw==
+X-Received: by 2002:a05:600c:a409:b0:43b:cd0d:9466 with SMTP id 5b1f17b1804b1-441d0a909b9mr32408275e9.9.1746542185689;
+        Tue, 06 May 2025 07:36:25 -0700 (PDT)
+Received: from ?IPV6:2a01:599:915:8911:b13f:d972:e237:7fe2? ([2a01:599:915:8911:b13f:d972:e237:7fe2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a285c2sm171119875e9.32.2025.05.06.07.36.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 07:36:25 -0700 (PDT)
+Message-ID: <f0187458-e576-4894-b728-5914d3d9ed36@redhat.com>
+Date: Tue, 6 May 2025 16:36:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
+ support for tmpfs
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Daniel Gomez <da.gomez@kernel.org>
+Cc: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ wangkefeng.wang@huawei.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ ioworker0@gmail.com, da.gomez@samsung.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ intel-gfx@lists.freedesktop.org, Eero Tamminen <eero.t.tamminen@intel.com>
+References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
+ <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
+ <aBEP-6iFhIC87zmb@intel.com>
+ <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+ <aBIHYqzar5J8uxGO@intel.com>
+ <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
+ <57dc4929-268b-4f3f-a0f8-43d6ec85974f@linux.alibaba.com>
+ <72978e3a-ee67-47d4-b06d-e911bc5d57ff@redhat.com>
+ <exl3dpqh7oqhdd3afo3gvainumqw6j4ebfifkyeqkqvf36yxlh@pcuhdqanuy32>
+ <a34c844d-b44f-411c-b5d7-8e38a50b0b05@redhat.com>
+ <e54e0b31-1b92-4110-b8ac-4737893fe197@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <e54e0b31-1b92-4110-b8ac-4737893fe197@linux.alibaba.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: JUG9lmka0isaXfkgjc-GyuQOVNi2RkQcsU1f0sMmEo8_1746542186
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 16, 2024 at 12:27:30PM +0800, Herbert Xu wrote:
-> On Tue, Oct 15, 2024 at 07:38:27PM +0200, Klaus Kudielka wrote:
-> >
-> > So, I applied the TDMA-disable patch, and I saw the same errors.
-> > Then, I applied the printk patch on top of that, and here is the result.
-> > 
-> > Not sure, whether this makes any sense...
+On 06.05.25 05:33, Baolin Wang wrote:
 > 
-> Interesting, I think this shows that the non-TDMA path doesn't
-> work at all :)
+> 
+> On 2025/5/2 23:31, David Hildenbrand wrote:
+>> On 02.05.25 15:10, Daniel Gomez wrote:
+>>> On Fri, May 02, 2025 at 09:18:41AM +0100, David Hildenbrand wrote:
+>>>> On 02.05.25 03:02, Baolin Wang wrote:
+>>>>>
+>>>>>
+>>>>> On 2025/4/30 21:24, Daniel Gomez wrote:
+>>>>>> On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville Syrjälä wrote:
+>>>>>>> On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
+>>>>>>>> On 2025/4/30 01:44, Ville Syrjälä wrote:
+>>>>>>>>> On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> This causes a huge regression in Intel iGPU texturing performance.
+>>>>>>>>
+>>>>>>>> Unfortunately, I don't have such platform to test it.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> I haven't had time to look at this in detail, but presumably the
+>>>>>>>>> problem is that we're no longer getting huge pages from our
+>>>>>>>>> private tmpfs mount (done in i915_gemfs_init()).
+>>>>>>>>
+>>>>>>>> IIUC, the i915 driver still limits the maximum write size to
+>>>>>>>> PAGE_SIZE
+>>>>>>>> in the shmem_pwrite(),
+>>>>>>>
+>>>>>>> pwrite is just one random way to write to objects, and probably
+>>>>>>> not something that's even used by current Mesa.
+>>>>>>>
+>>>>>>>> which prevents tmpfs from allocating large
+>>>>>>>> folios. As mentioned in the comments below, tmpfs like other file
+>>>>>>>> systems that support large folios, will allow getting a highest
+>>>>>>>> order
+>>>>>>>> hint based on the size of the write and fallocate paths, and then
+>>>>>>>> will
+>>>>>>>> attempt each allowable huge order.
+>>>>>>>>
+>>>>>>>> Therefore, I think the shmem_pwrite() function should be changed to
+>>>>>>>> remove the limitation that the write size cannot exceed PAGE_SIZE.
+>>>>>>
+>>>>>> To enable mTHP on tmpfs, the necessary knobs must first be enabled
+>>>>>> in sysfs
+>>>>>> as they are not enabled by default IIRC (only THP, PMD level).
+>>>>>> Ville, I
+>>>>>> see i915_gemfs the huge=within_size mount option is passed. Can you
+>>>>>> confirm
+>>>>>> if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also
+>>>>>> marked as
+>>>>>> 'always' when the regression is found?
+>>>>>
+>>>>> The tmpfs mount will not be controlled by
+>>>>> '/sys/kernel/mm/transparent_hugepage/hugepages-*Kb/enabled' (except for
+>>>>> the debugging options 'deny' and 'force').
+>>>>
+>>>> Right, IIRC as requested by Willy, it should behave like other FSes
+>>>> where
+>>>> there is no control over the folio size to be used.
+>>>
+>>> Thanks for reminding me. I forgot we finally changed it.
+>>>
+>>> Could the performance drop be due to the driver no longer using
+>>> PMD-level pages?
+>>
+>> I suspect that the faulting logic will now go to a smaller order first,
+>> indeed.
+>>
+>> ... trying to digest shmem_allowable_huge_orders() and
+>> shmem_huge_global_enabled(), having a hard time trying to isolate the
+>> tmpfs case: especially, if we run here into the vma vs. !vma case.
+>>
+>> Without a VMA, I think we should have "mpfs will allow getting a highest
+>> order hint based on and fallocate paths, then will try each allowable
+>> order".
+>>
+>> With a VMA (no access hint), "we still use PMD-sized order to locate
+>> huge pages due to lack of a write size hint."
+>>
+>> So if we get a fallocate()/write() that is, say, 1 MiB, we'd now
+>> allocate an 1 MiB folio instead of a 2 MiB one.
+> 
+> Right.
+> 
+> So I asked Ville how the shmem folios are allocated in the i915 driver,
+> and to see if we can make some improvements.
 
-So I'm looking at this driver again as part of my partial block
-work to eliminate partial block handling from drivers.
+Maybe preallocation (using fallocate) might be reasonable for their use 
+case: if they know they will consume all that memory either way. If it's 
+sparse, it's more problematic.
 
-I haven't figured out exactly what's wrong with tdma, although
-the chaining IRQ completion handling looks a bit fragile in that
-if something goes wrong it'll simply mark all queued requests as
-complete, corrupting any requests that have not yet been sent to
-the hardware.
-
-However, I think I know what's wrong with the non-DMA path.  I
-dug up the old mv_cesa driver and it's clear that it simply can't
-handle zero-length final updates like a lot of other hardware drivers.
-This matches with what you sent me where all the test vectors that
-failed was test 0 which is a zero-length update.
-
-There used to be a fallback path but during the move to tdma
-that appears to have been lost.
-
-So if you're still interested I can create some patches for you
-to test.
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Cheers,
+
+David / dhildenb
+
