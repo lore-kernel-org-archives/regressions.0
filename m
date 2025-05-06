@@ -1,189 +1,103 @@
-Received: from marcos.anarc.at (marcos.anarc.at [45.72.186.94])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BE616D9C2
-	for <regressions@lists.linux.dev>; Tue,  6 May 2025 13:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.72.186.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9214623D28F;
+	Tue,  6 May 2025 13:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537143; cv=none; b=fugyeZXPFLckNz5ld7pikjaUzA2Vw1HxKhqKdrVnt+e43n718/KEjHH3AC/sXX7JA0M96kyxvsIlQpOn4YCwo7B7tWj5ueR6JsPZT80T/D4/tP7mmzObltRS14/T5SmOfHyfKQcGbGmqT256bkfx3JDsL0N3rAIsIV/FChvYYWo=
+	t=1746537553; cv=none; b=fMuraMF6XFT0ckt5/jf6UR1YVGQhesMKLydsNClPFr8ryScC1xUHyp8qZGLoCQL6FQk9N2ncBpn+YZLplbH31cmsLJ8toopS5LWGd3k5wxHSddRiLG6kB0nH1OS3LItlN85GO2z29hPe29CssudnKFUSF+6X5VU5jBjxrCgKhYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537143; c=relaxed/simple;
-	bh=KB0ujOeI5Dlu5Z/fNP55MDKjcYhVw1A47KC5iBzwZMw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aiKSciZgQiM+nPrhpA9Tv5cCicR62vHF675X59pKbDoWKti64j+4fVPW4lH9JwCV9uLfGDLEL41YRJMqamRFLaboxwFzWwm2pBEQPEmCnP/x84hhBtDl0OcSQYeyfJSTMn1+5mPAkZllS/qAvC2g0HH+z3heak3o+864ByEXhko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=mF1iKxr1; arc=none smtp.client-ip=45.72.186.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1746537553; c=relaxed/simple;
+	bh=iUzddKqL0iIvG6UutN1G6gNVWdgxVSxIUnXyf4QycaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMo83O4OZdHIctTSuWZm6nKpNxVRXbwX5FVHMQ3H1UqOucrV74jYDjGs1pi43ViEAYVmb/kUJxJNCF3HX+hld9XGH7eyCGl7PGJSeCYsZtMkYOfvTYb2PGd6l9ag/SYJenKjg5X6q9XhHMsPYO9LKNRb/Q7jy7NEJxHXWOy9RMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=k/vn7zxc; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="mF1iKxr1"
-DMARC-Filter: OpenDMARC Filter v1.4.2 marcos.anarc.at A57E010E047
-Authentication-Results: marcos.anarc.at; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: marcos.anarc.at; spf=none smtp.mailfrom=debian.org
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=debian.org;
-	s=marcos-debian.anarcat.user; t=1746537139;
-	bh=KB0ujOeI5Dlu5Z/fNP55MDKjcYhVw1A47KC5iBzwZMw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=mF1iKxr1giKhpnsxgYwGt9K6mbN/d4ettEDvyCTYA29VCnmsDvP7mLBOpa5SHXm29
-	 h7sf8ikx37noSiZ/9a7vfh7HbCVBG/zpV7kidrj4ZU/yOr8vLme+XwgvoGab7uSOQT
-	 VIbhygTJMCO6i/qYAGSsbuZktUiNPHulSiYzhjn2Co+zDXw9oHdwQAGl40ad8fkfnS
-	 qQbMV+VsWq/bK10/CYg0Lm8amtTbEBnwwOTpv96b59SbaMACqTKD8fA2KuVKfN6rsV
-	 35zljzqmXBIksGe6RekOdTuDn8q7FpX52CdxQbd8SMWx5Jzqrcky9EahXT4pB0j0sl
-	 hRztdb5OKRzJA==
-Received: from angela.anarc.at (unknown [45.72.186.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256
-	 client-signature ED25519)
-	(Client CN "angela.anarc.at", Issuer "ca.anarc.at" (not verified))
-	by marcos.anarc.at (Postfix) with ESMTPS id A57E010E047;
-	Tue,  6 May 2025 09:12:19 -0400 (EDT)
-Received: by angela.anarc.at (Postfix, from userid 1000)
-	id 5A0B2E01ED; Tue, 06 May 2025 09:12:19 -0400 (EDT)
-From: =?utf-8?Q?Antoine_Beaupr=C3=A9?= <anarcat@debian.org>
-To: Salvatore Bonaccorso <carnil@debian.org>, Yu Kuai
- <yukuai1@huaweicloud.com>, 1104460@bugs.debian.org
-Cc: Moritz =?utf-8?Q?M=C3=BChlenhoff?= <jmm@inutil.org>, Melvin Vermeeren
- <vermeeren@vermwa.re>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Coly Li <colyli@kernel.org>, Sasha Levin <sashal@kernel.org>, stable
- <stable@vger.kernel.org>, regressions@lists.linux.dev, "yukuai (C)"
- <yukuai3@huawei.com>
-Subject: Re: Bug#1104460: [regression 6.1.y] discard/TRIM through RAID10
- blocking
-In-Reply-To: <aBmlgkHrbTYzwjj4@eldamar.lan>
-Organization: Debian
-References: <aBilQxLZ4MA4Tg8e@pisco.westfalen.local>
- <aBjEf5R7X9GaJg2T@eldamar.lan>
- <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <aBjhHUjtXRotZUVa@eldamar.lan>
- <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <875xiex56v.fsf@angela.anarc.at> <aBkhNwVVs_KwgQ1a@eldamar.lan>
- <87zffqvknw.fsf@angela.anarc.at>
- <174602441004.174814.6400502946223473449.reportbug@talos.vermwa.re>
- <4762cbe1-30a2-e5cd-52e1-f2de7714da1e@huaweicloud.com>
- <aBmlgkHrbTYzwjj4@eldamar.lan>
-Date: Tue, 06 May 2025 09:12:19 -0400
-Message-ID: <87wmatvq6k.fsf@angela.anarc.at>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="k/vn7zxc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kHR2Y14bKRrsW5EJnr2zMkLPuETcVkgoZdQEZZ47vSE=; b=k/vn7zxcxor1/UJyd8b3ED6c6Z
+	2WbLB6yu4YlPVHMb11J69ZG3daWi7WPctkWSF00cnzAAfBy70+fuY2717t7ZLYomDVd682NtZrn6X
+	QwyenJE/BpAc35Mm/f1CaU0nzBp4BfB7Vx7EdudUL4fMl5Lp6YlRKly7I+U9hishlxdBgIY94qFOA
+	W9jGO6pC4QYjDqs/qC8JUAXw8XJWy145TviuaK8h91ecFu2SP3Cs1GgpdydJs1D4ShM2iMcE6CziW
+	2gbDDKBS7davfZrmTG0X0/6mDWJpaAlKWPaJg8qBchiIvS4OXnVbjJGRPFULvhiUDkrG7j0Xl2Mb+
+	EadVEoDg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uCICO-003y4w-2N;
+	Tue, 06 May 2025 21:19:05 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 06 May 2025 21:19:04 +0800
+Date: Tue, 6 May 2025 21:19:04 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@free-electrons.com>
+Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
+ Turris Omnia
+Message-ID: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
+References: <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
+ <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
+ <ZwZAExmK52txvHE8@gondor.apana.org.au>
+ <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+ <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
+ <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+ <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+ <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+ <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+ <Zw9AsgqKHJfySScx@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zw9AsgqKHJfySScx@gondor.apana.org.au>
 
-On 2025-05-06 08:00:34, Salvatore Bonaccorso wrote:
-> Hi Yu,
->
-> Thanks for your followups.
->
-> On Tue, May 06, 2025 at 09:25:50AM +0800, Yu Kuai wrote:
->> Hi,
->>=20
->> =E5=9C=A8 2025/05/06 4:59, Antoine Beaupr=C3=A9 =E5=86=99=E9=81=93:
->> > On 2025-05-05 22:36:07, Salvatore Bonaccorso wrote:
->> > > Hi Antoine,
->> > >=20
->> > > On Mon, May 05, 2025 at 02:50:32PM -0400, Antoine Beaupr=C3=A9 wrote:
->> > > > On 2025-05-05 18:02:37, Salvatore Bonaccorso wrote:
->> > > > > On Mon, May 05, 2025 at 04:00:31PM +0200, Salvatore Bonaccorso w=
-rote:
->> > > > > > Hi Moritz,
->> > > > > >=20
->> > > > > > On Mon, May 05, 2025 at 01:47:15PM +0200, Moritz M=C3=BChlenho=
-ff wrote:
->> > > > > > > Am Wed, Apr 30, 2025 at 05:55:20PM +0200 schrieb Salvatore B=
-onaccorso:
->> > > > > > > > Hi
->> > > > > > > >=20
->> > > > > > > > We got a regression report in Debian after the update from=
- 6.1.133 to
->> > > > > > > > 6.1.135. Melvin is reporting that discard/trimm trhough a =
-RAID10 array
->> > > > > > > > stalls idefintively. The full report is inlined below and =
-originates
->> > > > > > > > from https://bugs.debian.org/1104460 .
->> > > > > > >=20
->> > > > > > > JFTR, we ran into the same problem with a few Wikimedia serv=
-ers running
->> > > > > > > 6.1.135 and RAID 10: The servers started to lock up once fst=
-rim.service
->> > > > > > > got started. Full oops messages are available at
->> > > > > > > https://phabricator.wikimedia.org/P75746
->> > > > > >=20
->> > > > > > Thanks for this aditional datapoints. Assuming you wont be abl=
-e to
->> > > > > > thest the other stable series where the commit d05af90d6218
->> > > > > > ("md/raid10: fix missing discard IO accounting") went in, migh=
-t you at
->> > > > > > least be able to test the 6.1.y branch with the commit reverte=
-d again
->> > > > > > and manually trigger the issue?
->> > > > > >=20
->> > > > > > If needed I can provide a test Debian package of 6.1.135 (or 6=
-.1.137)
->> > > > > > with the patch reverted.
->> > > > >=20
->> > > > > So one additional data point as several Debian users were report=
-ing
->> > > > > back beeing affected: One user did upgrade to 6.12.25 (where the
->> > > > > commit was backported as well) and is not able to reproduce the =
-issue
->> > > > > there.
->> > > >=20
->> > > > That would be me.
->> > > >=20
->> > > > I can reproduce the issue as outlined by Moritz above fairly relia=
-bly in
->> > > > 6.1.135 (debian package 6.1.0-34-amd64). The reproducer is simple,=
- on a
->> > > > RAID-10 host:
->> > > >=20
->> > > >   1. reboot
->> > > >   2. systemctl start fstrim.service
->> > > >=20
->> > > > We're tracking the issue internally in:
->> > > >=20
->> > > > https://gitlab.torproject.org/tpo/tpa/team/-/issues/42146
->> > > >=20
->> > > > I've managed to workaround the issue by upgrading to the Debian pa=
-ckage
->> > > > from testing/unstable (6.12.25), as Salvatore indicated above. The=
-re,
->> > > > fstrim doesn't cause any crash and completes successfully. In stab=
-le, it
->> > > > just hangs there forever. The kernel doesn't completely panic and =
-the
->> > > > machine is otherwise somewhat still functional: my existing SSH
->> > > > connection keeps working, for example, but new ones fail. And an `=
-apt
->> > > > install` of another kernel hangs forever.
->> > >=20
->> > > So likely at least in 6.1.y there are missing pre-requisites causing
->> > > the behaviour.
->> > >=20
->> > > If you can test 6.1.135-1 with the commit
->> > > 4a05f7ae33716d996c5ce56478a36a3ede1d76f2 reverted then you can fetch
->> > > built packages at:
->> > >=20
->> > > https://people.debian.org/~carnil/tmp/linux/1104460/
->>=20
->> Can you also test with 4a05f7ae33716d996c5ce56478a36a3ede1d76f2 not
->> reverted, and also cherry-pick c567c86b90d4715081adfe5eb812141a5b6b4883?
->
-> Thank you.
->
-> Antoine, Moritz,
-> https://people.debian.org/~carnil/tmp/linux/1104460-2/ contains a
-> build with 4a05f7ae33716d996c5ce56478a36a3ede1d76f2 *not* reverted and
-> with c567c86b90d4715081adfe5eb812141a5b6b4883 cherry-picked, can you
-> test this one as well?
+On Wed, Oct 16, 2024 at 12:27:30PM +0800, Herbert Xu wrote:
+> On Tue, Oct 15, 2024 at 07:38:27PM +0200, Klaus Kudielka wrote:
+> >
+> > So, I applied the TDMA-disable patch, and I saw the same errors.
+> > Then, I applied the printk patch on top of that, and here is the result.
+> > 
+> > Not sure, whether this makes any sense...
+> 
+> Interesting, I think this shows that the non-TDMA path doesn't
+> work at all :)
 
-I tested this one, and could succesfully run fstrim.service without
-problems.
+So I'm looking at this driver again as part of my partial block
+work to eliminate partial block handling from drivers.
 
-A.
+I haven't figured out exactly what's wrong with tdma, although
+the chaining IRQ completion handling looks a bit fragile in that
+if something goes wrong it'll simply mark all queued requests as
+complete, corrupting any requests that have not yet been sent to
+the hardware.
 
---=20
-L'ennui avec la grande famille humaine, c'est que tout le monde veut
-en =C3=AAtre le p=C3=A8re.
-                        - Mafalda
+However, I think I know what's wrong with the non-DMA path.  I
+dug up the old mv_cesa driver and it's clear that it simply can't
+handle zero-length final updates like a lot of other hardware drivers.
+This matches with what you sent me where all the test vectors that
+failed was test 0 which is a zero-length update.
+
+There used to be a fallback path but during the move to tdma
+that appears to have been lost.
+
+So if you're still interested I can create some patches for you
+to test.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
