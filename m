@@ -1,181 +1,237 @@
-Received: from ZR1P278CU001.outbound.protection.outlook.com (mail-switzerlandnorthazon11022114.outbound.protection.outlook.com [40.107.168.114])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2753822127E
-	for <regressions@lists.linux.dev>; Wed,  7 May 2025 07:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.168.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602321; cv=fail; b=B2iFEpoM7Jp8VasucI+FX8CQeE3NgpCyRMia5OUbi+f+F+2o327FWwaZnPEyh83ENlkxbWnZulwMqocqriny+gc5NvI2b6yIFsmzdx+EuJt/3QDSswqfVJu8AbtEp+w9L4EsV6j9L5vXAszCTv/hC7cbbBiIxnVd4vSrz8KR4bM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602321; c=relaxed/simple;
-	bh=H/Gf02lBQ3OTz/nCr+PLp3f0hUIVTeDoLvwwjpTKumU=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=tZETFq9YlX0gXkhBnfHbe5YBycPQ9q32ZikfBQrpb8CTuadhw7y/9e0b9urGVrthDmpzGhSDaa69KlszJQh74/lBvj95jUXP/QHpp1SDuNIw/wmE4ghDxxT2rTEOMfZMnay5JdVr7JR5W5QPy7VVmom4KFIGRwG34yf7lbikQ+c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bfh.ch; spf=pass smtp.mailfrom=bfh.ch; dkim=pass (1024-bit key) header.d=bernerfachhochschule.onmicrosoft.com header.i=@bernerfachhochschule.onmicrosoft.com header.b=SaVGr7yH; arc=fail smtp.client-ip=40.107.168.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bfh.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bfh.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEE672610;
+	Wed,  7 May 2025 08:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746607444; cv=none; b=Y43XFMyq3fGnbLlp1P4IJNpsVd/lxORq9hQt0S1/8k6KvB0ybrzWG+X5eEjHkyB6BJN8++PSME16G3azFo/3fpa7rPfHRiEabyavOJSrEsU1PgNzk03RLcg+zrnseGieSeNU4TSTTo++3IIpu65AUi9Cyx6slXjfDT8BaDEsvMo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746607444; c=relaxed/simple;
+	bh=u3Fb8+gokSMQzhf+2mR0lZJLnZv3ZY4xGY2UaMpzyVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIvuQ5ntDLZKeljdDbFM0tyR2YiXE9P5+2U13uBMSwEGK0l2TZPiroeSZL6gXTuMwI4Jg98Uslyw3vQ/m0R6v0H+icXG/UZiwAi1KNzsGAr7kSl0N3VfLgUapTKkKBOqlIG0cF+v3YvwJZgN7dmrdsFT1ZUZJ1HzkgO01HHQBIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ojHfJixQ; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bernerfachhochschule.onmicrosoft.com header.i=@bernerfachhochschule.onmicrosoft.com header.b="SaVGr7yH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GuxEtu6AlGJRSLgYbtFsOmtrsGYfEo6KpQzpOFzLBwp85bQMlqz684U29zXtSvwiF4++KOAR0i0L/YisIlYA7aSvilL+ccEEZmVhQqynoHMR9gsSuYJb6BiaEl4Nil0LoiB+leIHsDaPRbeDzO/jDol9psIsKmr6O5pRyso35U/XH1i0pMxwIWIcc1CP7NWEuI4Q7yUXfku4zoQxxMW3RngcJh9+qrTbJ5dBUpnkvaY/jzcjJKH5JaiTbApMFce+SoAWcv0heoDPisxFTYQcxkspDKY1Ua3VL0cjxxXFn94UG9QbsegsDDXdcGwQCz6KsgUgMJk85zWJM0ymQvgY9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H/Gf02lBQ3OTz/nCr+PLp3f0hUIVTeDoLvwwjpTKumU=;
- b=CRkrn+qcysa17MM+bbIgkd5RRlnvRtOTxuuuGcNTMUX+jgOJuMRdnPZof/y5YSZoo7AZxFc5RukhYHg/x2faX2tFgc/cDyytXyxCJ40emXOIPN6Jrfplot+OcZDIGbXPz298KV8ZAGBuTbHia3++9qAnUyMJu2ZuMNBlqNry62dg2byUXo6oa2LkMs3TF5C34Dk2brYK3SlxmDnJb0ePn5EwE2SwXslbujSLr7Q9MuqCkNVysn4KweaKX6WBgEW9601EQh+54d4+ZgJJhYWH6DM2tGGoCwUGq/WTm2fnM8jXmox2NS8/U6v6t0tu4JkEqxtkYFx2vXDKRXSMaA27EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bfh.ch; dmarc=pass action=none header.from=bfh.ch; dkim=pass
- header.d=bfh.ch; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=bernerfachhochschule.onmicrosoft.com;
- s=selector1-bernerfachhochschule-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/Gf02lBQ3OTz/nCr+PLp3f0hUIVTeDoLvwwjpTKumU=;
- b=SaVGr7yHM/1YrdlUrIzkHXYbll0s1PZK0fUWd4+AuBCFHKaCR+l15XPpD9qJwt317D4zilYUuRvaCFVJgRlIJO2rLOEWfQSivlTY5Ojy2L/CFxn/6ub/dtCL5pQaTRNlLKsFGfeOGelqpswGrd516yimMboGptmrzTENKYWOsyQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bfh.ch;
-Received: from ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:60::5) by
- ZR2P278MB1110.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:60::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.12; Wed, 7 May 2025 07:18:34 +0000
-Received: from ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM
- ([fe80::b47e:1592:3ea2:2d5a]) by ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM
- ([fe80::b47e:1592:3ea2:2d5a%4]) with mapi id 15.20.8699.022; Wed, 7 May 2025
- 07:18:34 +0000
-Message-ID: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
-Date: Wed, 7 May 2025 09:18:33 +0200
-User-Agent: Mozilla Thunderbird
-From: =?UTF-8?Q?Berkel_J=C3=B6rg?= <joerg.berkel@bfh.ch>
-Subject: [REGRESSION] applespi from 6.12 onwards
-To: linux-input@vger.kernel.org
-Content-Language: de-CH
-Cc: dmitry.torokhov@gmail.com, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: ZR0P278CA0058.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:21::9) To ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:60::5)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ojHfJixQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=WUKmBmR4aG6kGIrfVbpySDx42tAvNoBV6Fg6tQriHps=; b=ojHfJixQLHaHVmpsVsNMFE7Os7
+	LIntKZ6xdR89Sdd7977O+VMgBWU+SqadN1J/VRabJ6GFemLvyQE6EkrD+4CoNn655Wl4UX/SOSQLZ
+	ouj7XKAP4LmvWKUGlU/SxtTkCFHTEtTTWsGLprrelyn5OS/ok0VpVnuI4s1gW6s/t7wjj4AiEubzV
+	FNMFAj4Hkq0Y+DcKqF8E0UKgv8s9M8qiTFnQ2lW+ULRQQHEG/AtDQkyoJ53grdKOTx7UFc117AiqB
+	5L0USZ3jHVGJgFvWz8JsAM86ydLjxBKK5vhIKZQ17NoykBC8+1FiTuEMGzRUA/Vm27y3GGYbG8WzR
+	swoLyiYA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uCaNg-004CNi-1U;
+	Wed, 07 May 2025 16:43:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 07 May 2025 16:43:56 +0800
+Date: Wed, 7 May 2025 16:43:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aBsdTJUAcQgW4ink@gondor.apana.org.au>
+References: <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
+ <ZwZAExmK52txvHE8@gondor.apana.org.au>
+ <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
+ <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
+ <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+ <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
+ <Zw31JIEyh28vK9q7@gondor.apana.org.au>
+ <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
+ <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+ <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZR2P278MB1033:EE_|ZR2P278MB1110:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c1cdc0a-01c1-4bc4-d1ba-08dd8d376094
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|10070799003|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WHJCVFdES0VLWU11azQzZW0rdXVsRHpLR2M2RG9vRVRLUjJxNUc1ZktmbHBF?=
- =?utf-8?B?MHVaNExBQlY5dTBCTm41WWhubVJLV0JtT3ZBb2tyN0Z0eHB5K1F6aTRIc1ZT?=
- =?utf-8?B?TWxMV1hJS3JKMmg3YUVUOEt6SThNU0JzWmhSTnZvZW5HemhaQ3QxZEo0RnBC?=
- =?utf-8?B?c25JdHlKRnk0OEtTb2RqUnd0Wm5seXozc3M0MEdYc0FUaTNpS0ptTXVROFN2?=
- =?utf-8?B?MW1rVFNtTytPOENtWUFTdGZkVUczUzV1TmVlcFFKcnZuelB1RjM0UWFpVEhG?=
- =?utf-8?B?UWZOcFNjbThQOTEvZjZkdUVRWlFsZ0NTN1pUODJrYmVwYmRyNlBIbndyaERB?=
- =?utf-8?B?UGxrL3o4eUFCbVpxRlFSWFA1Qi95KzFxT1VRNlE2M2EwVkQ4cGpNMG96ZTRj?=
- =?utf-8?B?WUZpWHZPWHJBbTBDakRaNS9ZSXpHejV4UEF2Yno5VEhtbUJqanJwZllXUWpX?=
- =?utf-8?B?cHNXOEVMZVRiSitUSmlIL1JYVkJjQVBST3ExMzhsQVJSODhBTUF1NWJBSmNp?=
- =?utf-8?B?STVHeHEvNnd3a1Bkc01kLzl2YVNleFp3TVFkeVV2QUdDVXdRV1hnaUZyNmZM?=
- =?utf-8?B?S2N0NTNCNzRQRndNZ25FU0dVUXdPakJrbi9JalRmL3lxbVhJWHZDSUo2OTJF?=
- =?utf-8?B?c0VIeXJ4Zk9IWnJ4M1Q3a3ptZEpreDVlQ1NuenAzVitzbERyNEN0Z0dML21N?=
- =?utf-8?B?ZU0rbzJTL0VobTROeHgrRE4zbWM1V0R4TE1uamtpbGZNcURkR2VGSUxWTUZ5?=
- =?utf-8?B?RXpCNnhVSk01bnQ3Z25hMzNDZWZOR2l6MUZiaFhjd2duWkVOYW56RGFGekxB?=
- =?utf-8?B?akE1cDVZcnliYmhGMjE1TEg0REw5emNZVXlBMTYvOGdGaERsbTZmQ3p1V2kv?=
- =?utf-8?B?Y3VzektENEQ1U2ZwS0ZOZlhQRXk3MmI5WkJobitUVzM2MUVPaHNwMmZ1NWlh?=
- =?utf-8?B?MWswMW1JTjVHdGhURFpjOUFnc3B0S0dCQk9xKzBUcU1kUFJCYXViOEMrSU9S?=
- =?utf-8?B?eHBEMDRmdnVBSi85UE5oMXMrUHlpcGczYit6aGV2a0l1eWpXNVRRMUwrOXBS?=
- =?utf-8?B?bno1RkRLbFpRZm9zaVlwVER3andCS2poa2E3WkthYXhWYU1ja3N3R1h1UENz?=
- =?utf-8?B?OS9VZlpIdjRrT2dXMFRPZ0pGb05PVzc1dU1lbmJWWDRVRzc5dXQyd0IwZU1i?=
- =?utf-8?B?VER3SXNXTXFFeFF6a1M0cGxsSkRxU05XUGpZdGM1VHR0bENlRUZPMERXdVY0?=
- =?utf-8?B?VU9DT1BHUjZlTnpsUWpyT0dKWlpSOS9Wb0Nhb2hXOElVcXZlSlJ0MzdSOTk3?=
- =?utf-8?B?ejhQYStOVTdDT21ObVE1VXltZGFkbzBKNUgzcHgrWVJHN2orOTFrbDNBd0FM?=
- =?utf-8?B?RjNIYkdVRjFsNUg3cmprckZBMzdSeHBCdUlGcVBEZ2Q3Sit1dUVXb2JSMkxE?=
- =?utf-8?B?TEVvUWxsVmdzTHlxVnl6eGJaaHhNN1g0bFdKZk4yV1pTdHU5NEJtSXo3eEl6?=
- =?utf-8?B?Q2liclZqV0ZQOWZRQ3ZJeThvMWczSklzazZPTmxXZldwOTB3NTM1QnZtSUwx?=
- =?utf-8?B?RzBDc3hYclIrSXo4UU9CSTlGQldmNEd0b0F1VFdLVlBJYzRoV01tRDBISkNO?=
- =?utf-8?B?YTI1aEZFa1loRWFVVklacWYzalluUkI2NmVmNGo4OVA1MHA3b3htL1RENGNU?=
- =?utf-8?B?UytqeXA5RXViSldiTjVWUTJLWDZxbXVReUJ3RWZ6TlRaTjd5TFJ1b1c0ZWgz?=
- =?utf-8?B?UkZrbEp5RjFtUytvOWFlUXRrWWlkbVI1Rk8zRzNmVjNJQUpITkYyS1hqd3dR?=
- =?utf-8?B?Q3J3QVpjb3ZHbjBjTUZ5TnJWbVU3M0JkdzBHVUMvUmRkYUdvSGFreC94aldu?=
- =?utf-8?B?cUw1bG5UOFlXaEJqWkQxSGp2UVl6WTEyeVpkejNESWd1eGlSdjZwMXJCbXJL?=
- =?utf-8?Q?5yolbydff/Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T1JXS2NrV1d0S1FFT2hxTnZFb0NPbWhiMDYvd3V5VDRwL09EOWdaQWZyQ3h4?=
- =?utf-8?B?ZGtVSjZQbldoV0owR2QrWUt2V0cxeVE5cE5UV3hvWC9GcXhRMmtjNHlNdyt4?=
- =?utf-8?B?alg4cWR5RzU5Tzh2SVo3cnMyUUJKYjZsMUhFSjVJRWlxTzAxb2tqcEhUZWl6?=
- =?utf-8?B?SkJRWkNwSy9kbVRsdTE1Sm1RT05CYlhzV3dEZ05aWDBFdmx6TE9rSDdRNyta?=
- =?utf-8?B?QS9IaUtVZ3lqQ1ZrelQrL2M4SWZYZFhpL2RYZUtRRllZdUsxVHZSN1Nad1ll?=
- =?utf-8?B?WXFMbUpzV2lxeVVyMVgySGt1cjZrWmZXS3M1Y1R0TUNFKzc0RXdGTWlQRHlJ?=
- =?utf-8?B?a2FSS1EvbHlzcm0xRTd1NXZ1TExGa0liTjBYMW9JSG1CcC9FdjlDb3FTZnVH?=
- =?utf-8?B?MkFIampORUFLcmpsTG1CZGVLeVQ4UThTN1dqb3IrMFUzLzRFYUcrQWplZTZP?=
- =?utf-8?B?bkdmcW9pSGQ0QkVvN1ZFZHlObEhtTm1OS1JnMmNJdkYyMFpmeTV3OXcxNHdN?=
- =?utf-8?B?amlvS1lEMUxDMUZISnRGRXRhNGN3TDlLWSs1Wm5ueFZ5ek5hQklPSUVOK2pY?=
- =?utf-8?B?bVFFM1M2MWNEL0ZIazAwQ0I0YTh5MHVsd3V0czlQS3dZMHRQa3BUeitGbjJo?=
- =?utf-8?B?dE10cnRycml0dW9aWkIrTzF2SUJ4VVRlNTh4VU1LSXkxMTdvOTA5b29WNmp6?=
- =?utf-8?B?SjBzajY4OGV2WGt0V00xak1iMDZ4eHJUa0YwR0g5RGpOTXRqOTR2blFFNW14?=
- =?utf-8?B?cG1tQTRqMzhCdThGYnZrY1dFTm5MN2V4bG9PekFlU2hSQ09kU2xia2Y2YXlK?=
- =?utf-8?B?Y3ZydGF1NHJuTWZPYSs5Q1VHUDFaSElXcUVlT1MrZEJ0VENaQ0Z0di82T3Nt?=
- =?utf-8?B?cUFOeEhQK1RjS1VjOTA1KzI5Y3VHNkpxL2xKdlNvZm5jNkprdGg3ckJra0ZB?=
- =?utf-8?B?RXdKS3h0dGpwcUIrMHdvMTlCZ0lZYVJjM3IyQXJEbkxJZ1F6MFBnTkM2Q2R4?=
- =?utf-8?B?MEhSZjJ5MU1mQUU1RFNFV0F0NEtTVTFBcW5uRVpHSlp3UVF0V3lISStMek1p?=
- =?utf-8?B?ZUJid0cwT3ROVEZpYUtGR0kwampnRlJvWVBsd2NUc0crOUovRUNUUjNrYXpT?=
- =?utf-8?B?U3VEVzZFTkQ5YVFvb1VzSTZZbkN6RFpvVkd3aGF5YisyS1RyTFlyck92WVU0?=
- =?utf-8?B?UWZzZVB0Uys0T0U1a09JWHgxMmFqTVJ1TGN4eXpEVkNhOWxIWHpPSnh3UG1B?=
- =?utf-8?B?aU5YaEpYRUhSMUpBWVV2bkFodVBtcWMvYjVPQ3FuejE1Vnc0N2trOUZUejlx?=
- =?utf-8?B?Rk9sREliTDhiVnNZUXpKM1NOQ1h0cmI1RTB3QUJ0WlhPREFtMGExNTh1UnFp?=
- =?utf-8?B?MmcxVEtRcHI3ZGp5WDd0YTBrc1VtclcyMTVpTUtTMEVmTjl1TXBEa040N1hV?=
- =?utf-8?B?cTlaaGNLbGozNjArd2NJWXVNR0plSjVJc0FTN2NSVmFKVjFTMms5QlQxMGFT?=
- =?utf-8?B?aitrcUgyWXhaWlV6T1pPRHJNWGxobFBJNUpFMm1DU0FtVDBUZTZSdm5kZzlj?=
- =?utf-8?B?MkdyMGs4SjYvZnRPNVgxUmJwSGdLbjBVNEI0aTkzT0doQjdkOHhaalEzUWlx?=
- =?utf-8?B?MG5uR0dkR2xxRm1uN2YrTjJzNVU4cndPTWNvMTJ5ZWZWdDhLQzBxdVpPdklC?=
- =?utf-8?B?dVM5NUZWWkpwbWJiYXp5dHlXU3djeTRoZGowTGVXbGR4eHpSbE1YWTh1U011?=
- =?utf-8?B?VEpPdzBNVTh3cXVBaUM2OWRYZ2pUaGo5dzBtbWE2RHpiNzRtOElDdVluUzF4?=
- =?utf-8?B?VzlHRytMaWREQ08yd0VTdlZFRlIxS3R5ZGR1RjlBZlQ0czg0NDZPeFljb0lO?=
- =?utf-8?B?ekFZN1gwRllvQ3FYVk5BNHdiM2lva3FoZXFxTHdvTzlXMkhZbExocVJuSUJ1?=
- =?utf-8?B?R2RSTHl1QTRlRWZPOEh3VTdIVlo2eENHaXNSL2pZaXlmbTlaZjRmd2x4UW1T?=
- =?utf-8?B?dUpqL01iTnV6cmNvYUNKWGlBSW0xcjA3QU55TThnNE5WT0tzVFhBOU5zWFU4?=
- =?utf-8?B?VHdhU2g2T0xFc0hqVEk2VG9kdzNQZC9XNXJOZkUyNVNZSytKcVo2UDlXSFR3?=
- =?utf-8?B?Y0hWOWpjdWpybUF6Q0o2eDk2NHJFazhpUVlSZVRmazVLZExFQk9tcVdFYlpM?=
- =?utf-8?Q?3s2HW2/jxmF8hY1LvKM3dIw=3D?=
-X-OriginatorOrg: bfh.ch
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c1cdc0a-01c1-4bc4-d1ba-08dd8d376094
-X-MS-Exchange-CrossTenant-AuthSource: ZR2P278MB1033.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 07:18:34.1221
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d6a1cf8c-768e-4187-a738-b6e50c4deb4a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8L2ZoDocn/6AjJYC/F2Xh3Ne8gmXsSkhW66NYntBlUFx/74wwuY2S4rv8SnoYom6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR2P278MB1110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
 
-S2V5Ym9hcmQgYW5kIHRvdWNocGFkIHN0b3BwZWQgd29ya2luZyBvbiBzZXZlcmFsIEFwcGxlIE1h
-Y2Jvb2tzIGZyb20gdGhlIA0KeWVhciAyMDE3IHVzaW5nIGtlcm5lbCA2LjEyLnh4IC4gVW50aWwg
-bm93IEkgY291bGQgb25seSBmaW5kIHRoaXMgDQpkaXNjdXNzaW9uIGFmZmlybWluZyB0aGUgYnVn
-IG9uIERlYmlhbiBhbmQgRmVkb3JhOiANCmh0dHBzOi8vZ2l0aHViLmNvbS9EdW5lZGFuL21icC0y
-MDE2LWxpbnV4L2lzc3Vlcy8yMDINCg0KT24gc2lkdWN0aW9uIEkgYWxzbyB0cmllZCB0aGUgbW9y
-ZSByZWNlbnQga2VybmVscyA2LjE0LjUgYW5kIG1haW5saW5lIA0KNi4xNS1yYzQgKGZyb20gVWJ1
-bnR1KSBhbmQgdGhlIGlzc3VlIHBlcnNpc3RlZCB3aXRoIG15IHRlc3RkZXZpY2UgDQpNYWNCb29r
-UHJvMTQsMSAtLSBzZWUgdGhlIHJlbGV2YW50IG91dHB1dDoNCg0Ka2VybmVsOiBwbGF0Zm9ybSBw
-eGEyeHgtc3BpLjM6IEFkZGluZyB0byBpb21tdSBncm91cCAyMA0Ka2VybmVsOiBpbnB1dDogQXBw
-bGUgU1BJIEtleWJvYXJkIGFzIA0KL2RldmljZXMvcGNpMDAwMDowMC8wMDAwOjAwOjFlLjMvcHhh
-Mnh4LXNwaS4zL3NwaV9tYXN0ZXIvc3BpMi9zcGktQVBQMDAwRDowMC9pbnB1dC9pbnB1dDANCmtl
-cm5lbDogRE1BUjogRFJIRDogaGFuZGxpbmcgZmF1bHQgc3RhdHVzIHJlZyAzDQprZXJuZWw6IERN
-QVI6IFtETUEgUmVhZCBOT19QQVNJRF0gUmVxdWVzdCBkZXZpY2UgWzAwOjFlLjNdIGZhdWx0IGFk
-ZHIgDQoweGZmZmZhMDAwIFtmYXVsdCByZWFzb24gMHgwNl0gUFRFIFJlYWQgYWNjZXNzIGlzIG5v
-dCBzZXQNCmtlcm5lbDogRE1BUjogRFJIRDogaGFuZGxpbmcgZmF1bHQgc3RhdHVzIHJlZyAzDQpr
-ZXJuZWw6IERNQVI6IFtETUEgUmVhZCBOT19QQVNJRF0gUmVxdWVzdCBkZXZpY2UgWzAwOjFlLjNd
-IGZhdWx0IGFkZHIgDQoweGZmZmZhMDAwIFtmYXVsdCByZWFzb24gMHgwNl0gUFRFIFJlYWQgYWNj
-ZXNzIGlzIG5vdCBzZXQNCmtlcm5lbDogYXBwbGVzcGkgc3BpLUFQUDAwMEQ6MDA6IEVycm9yIHdy
-aXRpbmcgdG8gZGV2aWNlOiAwMSAwZSAwMCAwMA0Ka2VybmVsOiBETUFSOiBEUkhEOiBoYW5kbGlu
-ZyBmYXVsdCBzdGF0dXMgcmVnIDMNCmtlcm5lbDogRE1BUjogW0RNQSBSZWFkIE5PX1BBU0lEXSBS
-ZXF1ZXN0IGRldmljZSBbMDA6MWUuM10gZmF1bHQgYWRkciANCjB4ZmZmZmEwMDAgW2ZhdWx0IHJl
-YXNvbiAweDA2XSBQVEUgUmVhZCBhY2Nlc3MgaXMgbm90IHNldA0Ka2VybmVsOiBETUFSOiBEUkhE
-OiBoYW5kbGluZyBmYXVsdCBzdGF0dXMgcmVnIDMNCmtlcm5lbDogYXBwbGVzcGkgc3BpLUFQUDAw
-MEQ6MDA6IEVycm9yIHdyaXRpbmcgdG8gZGV2aWNlOiAwMSAwZSAwMCAwMA0KDQpNYW55IHRoYW5r
-cywNCg0KSsO2cmcgQmVya2VsDQo=
+On Tue, May 06, 2025 at 09:19:04PM +0800, Herbert Xu wrote:
+>
+> I haven't figured out exactly what's wrong with tdma, although
+> the chaining IRQ completion handling looks a bit fragile in that
+> if something goes wrong it'll simply mark all queued requests as
+> complete, corrupting any requests that have not yet been sent to
+> the hardware.
+
+I'm fairly confident that I've found the culprit.  Please try this
+patch and see if it makes tdma work again:
+
+---8<---
+This driver tries to chain requests together before submitting them
+to hardware in order to reduce completion interrupts.
+
+However, it even extends chains that have already been submitted
+to hardware.  This is dangerous because there is no way of knowing
+whether the hardware has already read the DMA memory in question
+or not.
+
+Fix this by splitting the chain list into two.  One for submitted
+requests and one for requests that have not yet been submitted.
+Only extend the latter.
+
+Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
+Fixes: 85030c5168f1 ("crypto: marvell - Add support for chaining crypto requests in TDMA mode")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ drivers/crypto/marvell/cesa/cesa.c |  2 +-
+ drivers/crypto/marvell/cesa/cesa.h |  9 +++--
+ drivers/crypto/marvell/cesa/tdma.c | 54 ++++++++++++++++++------------
+ 3 files changed, 40 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
+index fa08f10e6f3f..9c21f5d835d2 100644
+--- a/drivers/crypto/marvell/cesa/cesa.c
++++ b/drivers/crypto/marvell/cesa/cesa.c
+@@ -94,7 +94,7 @@ static int mv_cesa_std_process(struct mv_cesa_engine *engine, u32 status)
+ 
+ static int mv_cesa_int_process(struct mv_cesa_engine *engine, u32 status)
+ {
+-	if (engine->chain.first && engine->chain.last)
++	if (engine->chain_hw.first && engine->chain_hw.last)
+ 		return mv_cesa_tdma_process(engine, status);
+ 
+ 	return mv_cesa_std_process(engine, status);
+diff --git a/drivers/crypto/marvell/cesa/cesa.h b/drivers/crypto/marvell/cesa/cesa.h
+index d215a6bed6bc..50ca1039fdaa 100644
+--- a/drivers/crypto/marvell/cesa/cesa.h
++++ b/drivers/crypto/marvell/cesa/cesa.h
+@@ -440,8 +440,10 @@ struct mv_cesa_dev {
+  *			SRAM
+  * @queue:		fifo of the pending crypto requests
+  * @load:		engine load counter, useful for load balancing
+- * @chain:		list of the current tdma descriptors being processed
+- *			by this engine.
++ * @chain_hw:		list of the current tdma descriptors being processed
++ *			by the hardware.
++ * @chain_sw:		list of the current tdma descriptors that will be
++ *			submitted to the hardware.
+  * @complete_queue:	fifo of the processed requests by the engine
+  *
+  * Structure storing CESA engine information.
+@@ -463,7 +465,8 @@ struct mv_cesa_engine {
+ 	struct gen_pool *pool;
+ 	struct crypto_queue queue;
+ 	atomic_t load;
+-	struct mv_cesa_tdma_chain chain;
++	struct mv_cesa_tdma_chain chain_hw;
++	struct mv_cesa_tdma_chain chain_sw;
+ 	struct list_head complete_queue;
+ 	int irq;
+ };
+diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
+index 388a06e180d6..40fcc852adfa 100644
+--- a/drivers/crypto/marvell/cesa/tdma.c
++++ b/drivers/crypto/marvell/cesa/tdma.c
+@@ -38,6 +38,15 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
+ {
+ 	struct mv_cesa_engine *engine = dreq->engine;
+ 
++	spin_lock_bh(&engine->lock);
++	if (engine->chain_sw.first == dreq->chain.first) {
++		engine->chain_sw.first = NULL;
++		engine->chain_sw.last = NULL;
++	}
++	engine->chain_hw.first = dreq->chain.first;
++	engine->chain_hw.last = dreq->chain.last;
++	spin_unlock_bh(&engine->lock);
++
+ 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
+ 
+ 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
+@@ -96,25 +105,28 @@ void mv_cesa_dma_prepare(struct mv_cesa_req *dreq,
+ void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
+ 			struct mv_cesa_req *dreq)
+ {
+-	if (engine->chain.first == NULL && engine->chain.last == NULL) {
+-		engine->chain.first = dreq->chain.first;
+-		engine->chain.last  = dreq->chain.last;
++	struct mv_cesa_tdma_desc *last = engine->chain_sw.last;
++
++	/*
++	 * Break the DMA chain if the request being queued needs the IV
++	 * regs to be set before lauching the request.
++	 */
++	if (!last || dreq->chain.first->flags & CESA_TDMA_SET_STATE) {
++		engine->chain_sw.first = dreq->chain.first;
++		engine->chain_sw.last  = dreq->chain.last;
+ 	} else {
+-		struct mv_cesa_tdma_desc *last;
+-
+-		last = engine->chain.last;
+ 		last->next = dreq->chain.first;
+-		engine->chain.last = dreq->chain.last;
+-
+-		/*
+-		 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
+-		 * the last element of the current chain, or if the request
+-		 * being queued needs the IV regs to be set before lauching
+-		 * the request.
+-		 */
+-		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
+-		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
+-			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
++		last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
++		last = dreq->chain.last;
++		engine->chain_sw.last = last;
++	}
++	/*
++	 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
++	 * the last element of the current chain.
++	 */
++	if (last->flags & CESA_TDMA_BREAK_CHAIN) {
++		engine->chain_sw.first = NULL;
++		engine->chain_sw.last = NULL;
+ 	}
+ }
+ 
+@@ -127,7 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 
+ 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
+ 
+-	for (tdma = engine->chain.first; tdma; tdma = next) {
++	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
+ 		spin_lock_bh(&engine->lock);
+ 		next = tdma->next;
+ 		spin_unlock_bh(&engine->lock);
+@@ -149,12 +161,12 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 								 &backlog);
+ 
+ 			/* Re-chaining to the next request */
+-			engine->chain.first = tdma->next;
++			engine->chain_hw.first = tdma->next;
+ 			tdma->next = NULL;
+ 
+ 			/* If this is the last request, clear the chain */
+-			if (engine->chain.first == NULL)
+-				engine->chain.last  = NULL;
++			if (engine->chain_hw.first == NULL)
++				engine->chain_hw.last  = NULL;
+ 			spin_unlock_bh(&engine->lock);
+ 
+ 			ctx = crypto_tfm_ctx(req->tfm);
+-- 
+2.39.5
+
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
