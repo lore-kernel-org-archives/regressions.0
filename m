@@ -1,178 +1,181 @@
-Received: from m.b4.vu (m.b4.vu [203.16.231.148])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011036.outbound.protection.outlook.com [52.103.68.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657A2248BA
-	for <regressions@lists.linux.dev>; Thu,  8 May 2025 07:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.16.231.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746689831; cv=none; b=ZQOpErh2q4N7YloQ5SdMKSBJCk7OTyF84attItfdNGy4X5CUs/NBObkdZImniq33qgk2D8BkCewFEWJXvNzgC+JU2P30m2kTkHOnA05qkYJVh1aI9jBDvJybKPt89WRsLAX2j7C/6HqRvmV0g2OspZ1FDwJnD3JHAVDHbvd9UE0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746689831; c=relaxed/simple;
-	bh=PDN/gK0e9nksO/e0fMKNuCkmsVxa4j1m/bDsuxAY8dU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qW85tH8CnKsrIBwMSJgaGcKodOP/EMRlD1xIxzJkUDYH65VcmQX3sh0MsoUDOkuKqtcNO3H33fY/XCjoOpjAyg2IFKLUEAonW3sM4Ad673BBlt4Z6zawqoSeTOn8VF9RYeRkdUwEPxX3B303i0wgJCAxd99wB1s6kM8Z7yznNkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu; spf=pass smtp.mailfrom=b4.vu; dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b=Um7yZ+3/; arc=none smtp.client-ip=203.16.231.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=b4.vu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C73223A6;
+	Thu,  8 May 2025 11:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746702051; cv=fail; b=qtWZp0KZa86BdLNniHBlDwzLOESwWVm4wJdl0mnmucENS6TZk9PZxrFggS1G0fsf+u4oi9ebwiGYs7T4GXZ83dMdXzziMGZmGoNDcpP4iYaMug09bM6SWQBNxd48uImi7NhmZrkC1ywVG/0p8OukJcZcCRRwO7p/mUl82JgGNzQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746702051; c=relaxed/simple;
+	bh=TQhW59yApD95K7fjLoyzVuochq1QhVb6sPXTKwliZiE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WW2LGKWLH9ty0jmFjrGr8fP8HCO2qOLsPj03kGOlS3HNrVJU3y/O3C5SIzzUgSNnCNsIPlKtmFieDdK6gCkR2ETHADvSJHaIMcSYYdHhazW/jZdhs5pUydahuNo3aqxmwh9uQK78w0H6hduqcO/3uxxpIO7A3NH3+a1A7zFrtfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=dhjyRsdU; arc=fail smtp.client-ip=52.103.68.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b="Um7yZ+3/"
-Received: by m.b4.vu (Postfix, from userid 1000)
-	id E15EE6698FAF; Thu,  8 May 2025 17:00:44 +0930 (ACST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 m.b4.vu E15EE6698FAF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=b4.vu; s=m1;
-	t=1746689444; bh=6UXt1BLwGoaNZgKxHK1YJO3spw1jLrC52dMEz3YS0QI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Um7yZ+3/iqSsjao6eljDCKxaWAD+DncNagXdz3mFXGIxRezqt6Knlx0GrD3xHWfXP
-	 qxq6un9Z/s2RkIqLMR11NyVmddaS1QKCYLZKdz/Tr5PFIGf7rXuSFH/xhauV/BhCdo
-	 zwuZ8/uAd5P/K9NSfxGKkOUjh5cplYywUU7UOmBX29KU/SH8tzFBWhr98vSP2P9zw9
-	 5gdKanB0U5oNavB7LnwEbfp9X7DWHmW1xA3TdThKMO2bBijagCZ54pvxws8neVWaUz
-	 IKu2WmvL2PONMkvIGrMTQ8ZOGKST2wzya6qhZc8Y4R0a+S252X3zHZIO1y1x81EiaB
-	 bi2te+GomZUIA==
-Date: Thu, 8 May 2025 17:00:44 +0930
-From: "Geoffrey D. Bennett" <g@b4.vu>
-To: stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-	Hao Qin <hao.qin@mediatek.com>
-Cc: linux-bluetooth@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-	Chris Lu <chris.lu@mediatek.com>, linux-sound@vger.kernel.org,
-	Benedikt Ziemons <ben@rs485.network>, pmenzel@molgen.mpg.de,
-	tiwai@suse.de, geraldogabriel@gmail.com,
-	regressions@lists.linux.dev, gregkh@linuxfoundation.org
-Subject: [STABLE 6.12/6.14] Bluetooth MediaTek controller reset fixes
-Message-ID: <aBxdpIabalg073AU@m.b4.vu>
-References: <Z+W6dmZFfC7SBhza@m.b4.vu>
- <Z+XN2a3141NpZKcb@m.b4.vu>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="dhjyRsdU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FrPdoA11IbO6rjioum7y5GHIdIu32qGv787Po5L4KBtDKuh/fYcdaHlS13+jKvdnYC2O0MvQOVli0UL8rqQH8r2FdhA1kfzJMTE3OgenqP8huquDSRmf08GjBNr9g9zZENMssCyqT0sJrplUvmmX55fKCE5CLXJyCSg5V8LWdwWbCKaqBTc9mSurcP+mK+/3Y07uc7bPNbhGKjn0OQ8hLOXaF5NXOyYlCUWMKcQlIXkcCepaf1uRIqMt/ObvH+74ax0HIEui2ZtVgUVKKEVET5t0lIv9vXq7l/9f8rA1kDUtxcgQ1dERW5whZUvTT3h71jaSvr7d10SlI6RbJupFng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xXkhe38sOAbzCP5HSYyVhNSE6XVDj3d0MtWjlSUuycA=;
+ b=QRcKCDfo0RG/4HMWq+3FOktm4e7QORHIBj2JmmLHdYtLSFTGwPak/9hAipSPSWj5dEtiMwUATBQKexpRhu93Es9zV/nbym8cfouf5ogoQVL2WFyCey4Y9pGY6olzzoOdG9SRRuB2Ra6damd5m0dqHThNxLe8zEOOmh8xW2GnIpCIsB6W+4t3jEuD0wYc9Cmieco2uc+nGlMrZn3t8g9ftYhHFlI05hSD5B8uTz05vgeRNzqQTqQpJ1QIcOrJJ3azAuk7KgdG2rn6LcIKB1F11+6nizzcakXq7vadAEL/UyvMg/tnET8ED6F86LGdc6WjmivxU5tGhHTI6WBLLFbruA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xXkhe38sOAbzCP5HSYyVhNSE6XVDj3d0MtWjlSUuycA=;
+ b=dhjyRsdU+ay9QlvEfhUwa6+aa+kMbg3tbzki4RwmM7O6FkGka2ROwTyCGyASxn/dxJ3l0VJ10pvPzlr+PYJn7C1jmaaGxQfFjEcmu5A5n/DIBnD6Q6dXgIxHgqAldyC0jh/MgPdFlX3bmAm+NddbA1yrlXDXPLSM7cslY1mYKimJmPk0gNWumdgOpXYLC0YkC4GvgLbAkCmWFb6zmnHH2eZOdtiNjOQ8eKaJuSNDJkgm7TRMXuZZntxfPAZfh83pINPNXNRt9TdVhMYV99CEE+CcQNVqLt3ubJ7KrINVYGZ4rBLNOjcZi3QiDJ7kKBMI2K1X5TIvrnufGxKAiupRsg==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN2PPFCA907ABCA.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c04:1::1cf) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Thu, 8 May
+ 2025 11:00:41 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8699.030; Thu, 8 May 2025
+ 11:00:41 +0000
+Message-ID:
+ <PN3PR01MB95971BCD20A70A29058E27C9B88BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Thu, 8 May 2025 16:30:37 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] applespi from 6.12 onwards
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Baolu Lu <baolu.lu@linux.intel.com>
+Cc: =?UTF-8?Q?Berkel_J=C3=B6rg?= <joerg.berkel@bfh.ch>,
+ linux-input@vger.kernel.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-spi@vger.kernel.org, lukas@wunner.de,
+ David Woodhouse <dwmw2@infradead.org>, iommu@lists.linux.dev,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>
+References: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
+ <PN3PR01MB9597D8E327CC7910673849D3B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
+ <n73jgymwf62kfexrwrhpz45lrj5pc7e4x7m6otbvypctlowjdl@ztaox436vezk>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <n73jgymwf62kfexrwrhpz45lrj5pc7e4x7m6otbvypctlowjdl@ztaox436vezk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0040.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:277::10) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <f9ca3408-aacf-4f14-acfe-ad4744bece9d@live.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z+XN2a3141NpZKcb@m.b4.vu>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PPFCA907ABCA:EE_
+X-MS-Office365-Filtering-Correlation-Id: e28f6e5a-abbc-4aa2-1f54-08dd8e1f9284
+X-MS-Exchange-SLBlob-MailProps:
+	gMiuAN0LASIScjX/aS/OnauL17RJFM5JQZxjzVuW90hdDedmPSGotppVr1DVB/d0KL6c53Sino28Z2IU4jrsB7GXFevnbKvjLP3ILzNWKZwhnfGiax+DaFyNhKDOCUoPE5RX+VsvBFi7ApTzzzMfhTo05k/NYZBnIC7BUdvLUwtdNq+d7cv+86U0ckiiWUJfC9lBhIROgOq0qmBjivq70zdwcCDG408IK29tHmDOAv1P3B9j8Tgxr8tBsxsQ8QRnhJyoP5kCtFqaoEX+0OQNujeccQ90JB3Uta9UWJdS8fCHNhhHvoen1Q0dCrc4nllif8to9/uAQmszo092QWkHUvoZIKwKh0UUHT7SGkWQw+Q7Wimgf+RSni743D0kXcDy8e4CWClDJE5BjoQEywQBkyU8RkjCeYeQ9M0e4ifvkkRp5bVqHlfKx3KuZ9Nv2u2c5l6u+kUrOz2g8klgQFfhqrjAML+QZ/dQkzjBzlW3GkzOhMPpv3tpLWBdtBZ7g4YurBJTLq81B13NozSFkSqz/dcJCITJk4U2u/yPDZqM1PBj5sR+tXW0SveNTZ+EJrlE8Ja6oczqeKhmhcbU88kDg6uaqrfCiyLgH+a+tQSoiWeCw2f6qE2uME8f5i+Q3jsu2Jj4BAZ1so/tMx4QjHCpcxX4IwgbPtw5MVuMSv7hw9fvFojTqGvcEJvSb9hhX2Olzvp1kN3CdCCz0d8qfNRQGw==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|5072599009|12121999007|19110799006|41001999006|15080799009|7092599006|8060799009|461199028|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZXZuVVZDaVJsS3gxR1VEcnpIWTY5RDJ6NnB2VXl6ZTJRd01jSWluYmF1WDJ0?=
+ =?utf-8?B?SHlqZW5rbk9TNnlpY2xVQWVBQ2xoTTRqOVhUdExKci9EckVZZEtuVWkrc1Ry?=
+ =?utf-8?B?T3pDWGlWZTdtRG0xMmhHWTFlVzF5S0ZyRTVpUWFBZjhtVzNWZ0pLelhWb0hX?=
+ =?utf-8?B?L3dyOVBZU0JjWDZJU3NPNHVxZEYycThhMlFnU1N6UWpkS0VFYnZwclFiZStP?=
+ =?utf-8?B?elEzVWJkUGMzWi9ZeFJPczBRQnRuOFdFd05rbS9uTFI4MGxHYVJtU1lWZm9C?=
+ =?utf-8?B?VHlDZUo1WkdrWStsbEp4U1lyMG10MWtkR0pqR2JxN1JUUmxsSERNQ01QNXow?=
+ =?utf-8?B?UjhhZHpXanpCQWk5NVFzejJOVDI2bTE0WTRGcVZWZGJMUjdXNU01QThnSXFa?=
+ =?utf-8?B?dUtVbDczMGNxcU5qdUROYlMwemZaaTJmTG9wS0NRTDV0VU04d2FNT2cyU1pj?=
+ =?utf-8?B?dTREc3h0VWZjSGl0SjNwb3pzeDhMZ3Q2WE50UGVNSW9WOTdSbEkvbVFybUIx?=
+ =?utf-8?B?MTYxMnRYTmdmM0doL0I5ZEswRGJObk1UNTRJVDB5L29RV1NoRDR1MWo4RE5W?=
+ =?utf-8?B?OGM0Y3dLK21nVHYzY0taQXRvSGtlTkRKNTRZSTdLZ2J5bVJrRGtFVkI2NFZ6?=
+ =?utf-8?B?ZFNvUTFKRDhUdUhoRXh1VGVxVnRYaUcxWlVObDBLbnlTN3BOZTJlOGJUdVp0?=
+ =?utf-8?B?SEVWNGdneUpSemFuUmphcEw1NVBsWVF4ZzVyS3FLRlBhT1NqbzZwVjBHS0sy?=
+ =?utf-8?B?RldQNytOdFhQTS9ielo0TlJ0R1gwVCt0RXBwUDBvRTRhZkw1ejFIUUx5clNn?=
+ =?utf-8?B?Y01xTHRiOW1zaHlrNms5Tko1dWFXdkFWNEtOSnZBZk40TTVlRi9nUTQvMS8w?=
+ =?utf-8?B?cVcwTjFHaUZoS2hlNzlrbmRJbU5wZHpqeVBqM2Z0cXhuRHZyejlDOVhBQUdJ?=
+ =?utf-8?B?VlpLdHFhOFpRK1BTNUJWSTNyUGNGenh0ejQ4WTUvV2xlY3c5R3krSXIwc0g3?=
+ =?utf-8?B?NEhmck5hb05xdHpUaHJPU0xvbE4rdHlvVkJCK01GZkMzdXNnaUUyU3Brdzhx?=
+ =?utf-8?B?Nkp3VXVBSXBBR0VqMWJhRjZaeVdkVWJTT01wRk9JOGxsWFBrRHk3M20wTXBm?=
+ =?utf-8?B?NVB2eDRnOFlsQVh3am40OCtJRzVhRXNpNUJDTUR1YWJUbEJjektvbnVWVkFS?=
+ =?utf-8?B?enVQcUpORDhPNmNvWkNhbVBOQXI2a3Y5TytGdU80TlAwY3hsRzlaeStvWHdO?=
+ =?utf-8?B?WG1wTERPZ01TTnRwdVJlcnkzeGgxQ3RFWTEyZ2xrckd1eTViMHJRdGtmODhI?=
+ =?utf-8?B?ZEZsSDZmYXBzek9YcjJRTlg4bW85NEpqd1A0aVVxWnBmRUlhSkhLSkZpR004?=
+ =?utf-8?B?NmNhZzc0MWxkV3UwZTFSanJ0eU4yMWZ5NUtnRzlrNnRkZWNrUGwxcXpYR2VE?=
+ =?utf-8?B?Sk5MY1VyU1NQUHlka1BSR05wa0VLazA0VlFRczB2Wmg2VEVaMXdMTnVGZGdl?=
+ =?utf-8?B?bWo1R1A1VnNLMTBjeVdGTnJKcEZ4L0hibmtrb1d6RlNEUStZTkRVL3M5RVRW?=
+ =?utf-8?B?MlhtZi9qa01PS25McDUyOG1xTmF4ZnkzZkVBQUcyMW9wNWNVQUwvdEd2SWpr?=
+ =?utf-8?B?TEIydWRZdm9oa1NyNU5JVi9FWE04Y1E9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RS9uLytmeUI2cWh0aUwvY3c4cnlDUGtZazl0azQrTSs4STBMTzBnWUwva3VY?=
+ =?utf-8?B?QWgwR3RvS2ZpM3ZYS3FjOTdMZVo5emRZZkV4R0RUUkM3TlI2WCt0T0kyckNZ?=
+ =?utf-8?B?NDFVZy9ITUxJelR3UzFxNThFOUdqTUlCOWFIQmV6QVV3UURnQzB2Ymlza3Nj?=
+ =?utf-8?B?UEk5b0h2cnQ5ZGlvOSs2UitJZ0RpRHIxazV6U0c0WFlqRC9hTk9rL3NDZ2Zy?=
+ =?utf-8?B?TStLVEdaUUJXOG1ESE9NeE1HcUp5eHlSSmtHbCtIWjU4ZklLSnJrdXEvSUE5?=
+ =?utf-8?B?WjFRdFpkQjBhU1grQkFrR0pLeDI5dWtYR3BLVmNURjg3djBtS3ZUWndTaFpY?=
+ =?utf-8?B?Ym4zeVprMmtnUjNoOVZHUHhmeE55K0NBUlFLZk1DZkJEVFh5Y1ZRSVp3cmlB?=
+ =?utf-8?B?Z29wTFdYQVRIbUtFaTJvdTN6UW5LeWs0ZjJEUjdDQ2hveFNCZ2FTQkJVcEVx?=
+ =?utf-8?B?MHY4WUxDQUdMS0VVb3RXRk9DbXpyYTNNSjhlRCtaWlIyQmpXSEIwZzNacWd4?=
+ =?utf-8?B?b1I3ajNjVVZJRlNzTFZvWEVrbzVMZ3ozMXJudXZURXljVWM0UndlNkF4YS9j?=
+ =?utf-8?B?WktKS2R2eGVaUE92aU92ajFMd0VYcDU5Qm40ZTFXaWFWQll1a2lReThDMmkx?=
+ =?utf-8?B?U05CU1hzZ21Hd3RLUC95YkpZQ1dzK0o3YUphUFdqMDRJbE5xSGJMY2NrYWFt?=
+ =?utf-8?B?TlRSVDR3c0VUUzcreURuVVlyaHUrT1ozblE4S0gyNG0yVnlsRThObE11QU9u?=
+ =?utf-8?B?UlhYZ1lLclRaV2JBbHRDRHg0WVUxSWVDODdNbTUxK3RIdEFkOWQ1TXpQSGxq?=
+ =?utf-8?B?MFhxem94UnV1Q0VZMFFaM3B4Z0NVNUF2aEJIMVpyWkFWR3dpeWU5MVpOcWpD?=
+ =?utf-8?B?UkRQOFFkMTJ1ZWE2ekw5a01SVHBYOUVOSUcwRksvWTE4YWNvNndadnVpL1dH?=
+ =?utf-8?B?eWhsZW9SVXdieTFtTUdkdlpmSGt5cHZjb0tWVXY5VnRQcmNkR1hzeGlPR1p4?=
+ =?utf-8?B?Y3VUN1NLQXpGNkI0NEh1cElhY1AwamR0TTd3eUtqQ3J3L2NVcStMWGlzNytE?=
+ =?utf-8?B?ZXRMVEtVc1BCSVVKUEdNQVNsTGExQ3FXVUo1dTBYblRmNXBnQnNyYkNSYU1G?=
+ =?utf-8?B?RUdJN3U2K09KNllUemJXYlJLQ0RocVdlMzdidkxwb2xDQlBKNkxqNERoM21h?=
+ =?utf-8?B?U3pRMzVFQWppYlEyL1hxNitMNVQ2QWdBSi9SQUdVMXVRUjhtUW1tZmRBYzVH?=
+ =?utf-8?B?bDdUWmRCdGMwRlVpSitwM2pOWWV4VTVTbVhtT3RmQVRXSHBhZzZma1pEMjdB?=
+ =?utf-8?B?K1lCUno0YTNMTGhHaFZYRjBYeWozdE1ZNXY4MnUwWG1kK0p5ZDFwSXpJY1Vl?=
+ =?utf-8?B?SXJoSTZQWmdETDVBUEpEQXdiRlpqM0J4WmhJZUdaeFlVSXJ1NGJlNm9LZWhJ?=
+ =?utf-8?B?SzdTNjduN0ZhWkNTYlBZbEZ3bXN0dHB0ZUFBRHBkczlmKzZhWXJ5dncvbXJY?=
+ =?utf-8?B?NHR0c2pjT1NoaXNPVjZaZnVkRy95bjNWTWdnUll0alNLTWc4VlFqditnWGxE?=
+ =?utf-8?B?QjFGczFLVHF6d2pTc2wzUXpKU2h2YVhmQk9qNTRTVXhLYzJjOXY4UlRpSCtK?=
+ =?utf-8?B?OGxmUFhJeE5ST1gra05ZdWJZYmRoUko4d3BDK0ZmbFgzeGs5RG9HMmcvcE1u?=
+ =?utf-8?B?b3QvRTFhem9zWnJZZXJiQlZTcElRVk1VZjZyRlVZUU5kUW83UXo1b2N1VG9J?=
+ =?utf-8?Q?PNiJxuwVc3UKG8RjKfDDCPl4OLUjGgNxlj6A7xh?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: e28f6e5a-abbc-4aa2-1f54-08dd8e1f9284
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 11:00:41.1949
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PPFCA907ABCA
 
-Hi stable@vger.kernel.org,
-
-Could you please apply:
-
-1. Commit a7208610761ae ("Bluetooth: btmtk: Remove resetting mt7921
-before downloading the fw") to v6.12.x (it's already in
-v6.14).
-
-2. Commit 33634e2ab7c6 ("Bluetooth: btmtk: Remove the resetting step
-before downloading the fw") to v6.12.x and v6.14.x.
-
-These fixes address an issue with some audio interfaces failing to
-initialise during boot on kernels 6.11+. As noted in my original
-analysis below, the MediaTek Bluetooth controller reset increases the
-device setup time from ~200ms to ~20s and can interfere with other USB
-devices on the bus.
-
-Thanks,
-Geoffrey.
-
-On Fri, Mar 28, 2025 at 08:44:49AM +1030, Geoffrey D. Bennett wrote:
-> Hi all,
+>> It appears that all DMA faults are related to a fixed address,
+>> 0xffffa000. Is this address something special?
+>>
+>> Also what does below message mean from a SPI driver's perspective?
+>>
+>> "applespispi-APP000D:00: Error writing to device: 01 0e 00 00"
+>>
+>> I am asking this because the IOMMU fault messages are about DMA Reads
+>> (device raised memory read), while above message complains failing to
+>> write to device.
 > 
-> Sorry, I see that an identical patch has already been applied to
-> bluetooth-next
-> https://lore.kernel.org/linux-bluetooth/20250315022730.11071-1-hao.qin@mediatek.com/
+> When sending a command to the peripheral device applespi expects it to
+> acknowledge successful transfer with
 > 
-> While I'm glad the issue is being addressed, my original patch
-> https://lore.kernel.org/linux-bluetooth/Z8ybV04CVUfVAykH@m.b4.vu/
-> contained useful context and tags that didn't make it into the final
-> commit.
+> 	static u8 status_ok[] = { 0xac, 0x27, 0x68, 0xd5 };
 > 
-> For getting this fix into current kernel releases 6.12/6.13/6.14, I
-> think the patch needs the "Cc: stable@vger.kernel.org" tag that was in
-> my original submission but missing from Hao's. Since this is causing
-> significant issues for users on kernels 6.11+ (audio interfaces
-> failing to work), it's important this gets backported.
+> but we are getting "01 0e 00 00" instead.
 > 
-> Hao, is this something you can do? I think the instructions at
-> https://www.kernel.org/doc/html/v6.14/process/stable-kernel-rules.html#option-3
-> need to be followed, but I've not done this before.
+> See applespi_check_write_status() in drivers/input/Keyboard/applespi.c
 > 
-> Thanks,
-> Geoffrey.
+> Thanks.
 > 
-> On Fri, Mar 28, 2025 at 07:22:06AM +1030, Geoffrey D. Bennett wrote:
-> > This reverts commit ccfc8948d7e4d93cab341a99774b24586717d89a.
-> > 
-> > The MediaTek Bluetooth controller reset that was added increases the
-> > Bluetooth device setup time from ~200ms to ~20s and interferes with
-> > other devices on the bus.
-> > 
-> > Three users (with Focusrite Scarlett 2nd Gen 6i6 and 3rd Gen Solo and
-> > 4i4 audio interfaces) reported that since 6.11 (which added this
-> > commit) their audio interface fails to initialise if connected during
-> > boot. Two of the users confirmed they have an MT7922.
-> > 
-> > Errors like this are observed in dmesg for the audio interface:
-> > 
-> >   usb 3-4: parse_audio_format_rates_v2v3(): unable to find clock source (clock -110)
-> >   usb 3-4: uac_clock_source_is_valid(): cannot get clock validity for id 41
-> >   usb 3-4: clock source 41 is not valid, cannot use
-> > 
-> > The problem only occurs when both devices and kernel modules are
-> > present and loaded during system boot, so it can be worked around by
-> > connecting the audio interface after booting.
-> > 
-> > Fixes: ccfc8948d7e4 ("Bluetooth: btusb: mediatek: reset the controller before downloading the fw")
-> > Closes: https://github.com/geoffreybennett/linux-fcp/issues/24
-> > Bisected-by: Benedikt Ziemons <ben@rs485.network>
-> > Tested-by: Benedikt Ziemons <ben@rs485.network>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Geoffrey D. Bennett <g@b4.vu>
-> > ---
-> > Changelog:
-> > 
-> > v1 -> v2:
-> > 
-> > - Updated commit message with additional information.
-> > - No change to this patch's diff.
-> > - Dropped alternate patch that only reverted for 0x7922.
-> > - Chris, Sean, Hao agreed to reverting the change:
-> >   https://lore.kernel.org/linux-bluetooth/2025031352-octopus-quadrant-f7ca@gregkh/T/#m0b31a9a8e87b9499e1ec3370c08f03e43bfb54bf
-> > 
-> >  drivers/bluetooth/btmtk.c | 10 ----------
-> >  1 file changed, 10 deletions(-)
-> > 
-> > diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
-> > index 68846c5bd4f7..4390fd571dbd 100644
-> > --- a/drivers/bluetooth/btmtk.c
-> > +++ b/drivers/bluetooth/btmtk.c
-> > @@ -1330,13 +1330,6 @@ int btmtk_usb_setup(struct hci_dev *hdev)
-> >  		break;
-> >  	case 0x7922:
-> >  	case 0x7925:
-> > -		/* Reset the device to ensure it's in the initial state before
-> > -		 * downloading the firmware to ensure.
-> > -		 */
-> > -
-> > -		if (!test_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags))
-> > -			btmtk_usb_subsys_reset(hdev, dev_id);
-> > -		fallthrough;
-> >  	case 0x7961:
-> >  		btmtk_fw_get_filename(fw_bin_name, sizeof(fw_bin_name), dev_id,
-> >  				      fw_version, fw_flavor);
-> > @@ -1345,12 +1338,9 @@ int btmtk_usb_setup(struct hci_dev *hdev)
-> >  						btmtk_usb_hci_wmt_sync);
-> >  		if (err < 0) {
-> >  			bt_dev_err(hdev, "Failed to set up firmware (%d)", err);
-> > -			clear_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
-> >  			return err;
-> >  		}
-> > 
-> > -		set_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
-> > -
-> >  		/* It's Device EndPoint Reset Option Register */
-> >  		err = btmtk_usb_uhw_reg_write(hdev, MTK_EP_RST_OPT,
-> >  					      MTK_EP_RST_IN_OUT_OPT);
-> > --
-> > 2.45.0
-> > 
-> > 
-> > 
+
+Since its working with `iommu.passthrough=1`, probably disable iommu for this hardware (if possible)?
+
+Although there must be some other fix since it was working without passthrough before.
+
