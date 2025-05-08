@@ -1,63 +1,63 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00E7227EAB
-	for <regressions@lists.linux.dev>; Thu,  8 May 2025 12:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D40720C477
+	for <regressions@lists.linux.dev>; Thu,  8 May 2025 12:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746708572; cv=none; b=f5PEokyPp2LHUUP0EpnaEuU4EvJly5GYvZ4cGetIZ/PAb69emTg1sBGEhrXmpnBp8mEAqc1DyrHvrRPa4LJgcwyH22mVx4rXM36OruM0QDedfZlHX7A8MTegm2XJe05fa7/B/06tZ9wS+kQOzkPn27cryDyPxCRy6TFcpzz1j6U=
+	t=1746708829; cv=none; b=tAK4MmGDppnpf4yOBz4c4dHqGXaPaII4gCtfRw+1J65UnFFGD0jpXfuEH8rjzlKoQIvuhloPweYOYRNeBV68g6OvR1YW4B1Ht/Ok7cnktQbkIRbu2Rz6mP9iiU53c+8B6iLkXs2uljHS1Dc0qZ+nQnLXSdqSfVbhUSxpdxi8ZJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746708572; c=relaxed/simple;
-	bh=58sdXjoEMjFVCflGE7ncCGuTV1pF4ageHSg4rQYhGrc=;
+	s=arc-20240116; t=1746708829; c=relaxed/simple;
+	bh=rKvDdcEyFMuVbDxsaVe56Ux5vURLprceReNvMRSRIM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSNyITYz7CGCpJFS7KTu2r5YBJCca7f+ZRimiaYe6JCKIj1bxWUXJKUazxnHyAQ7Neo5pT6IH8haOYeW72h9r32PjITXPnhngGcJLAbdyhjL83EF4XZu9XvZYtnhpQS4Jn7TXayU7Nk/5cyngI4puWJj54aur+IhyRF+tLnJ51s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JInspk8v; arc=none smtp.client-ip=209.85.221.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfvNVVNH3lMknlwHFDOyYYhGlVhMOT1Km/RO2GncuVrMKs5ziXKNoJ8PJnGhRm7J8DSaVk0ulD5b4vrXi3E3RJ2bvR+0Akkde78OxRxpW9JnesMj9Qf5pjRkQ/VeLF8KNeKVjTrVcewOsPhnyad+DAQ7jSZ+9Jddmo1AfHOBEsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L73yx116; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JInspk8v"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a108684f90so293806f8f.1
-        for <regressions@lists.linux.dev>; Thu, 08 May 2025 05:49:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L73yx116"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0782d787so6417945e9.0
+        for <regressions@lists.linux.dev>; Thu, 08 May 2025 05:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746708569; x=1747313369; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1746708826; x=1747313626; darn=lists.linux.dev;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=g/Zo3idQAmdiJtBVtWzs8q7ppnKXkar6x4EUIEKDs8I=;
-        b=JInspk8v1yky3ODf6QbVyVWku9q308dPGJQC2zwKOjNFaSBHBWtkwzP/oLYK4tN6nH
-         eNMOFlj9ExepNyie8rvpyPuWiygQNUxN+Fo6WOffu/m8WvAXAoooVfU69CFTfLwgeCJs
-         BjYDe1JksEb+Pe2qsErCxmTotwFrU1Ux7tH0P9i2XslxqSh3CWQ+2f2uqhmQlnQ4CRrM
-         7YQTGlQrk5HoPXjhhwT81zNvwinTBF7HwVzVGC5dtrwY/ll8xOQjyzOqFsI9AVXuo04X
-         mHi3guUiwFezWBkMgD/5kW/cMeACrGg2ZIau+xWA8EpOO+T8cM7ZvqF9QsI731JiLRFl
-         dHXw==
+        bh=1l3iS/TKmQrqa4v6zV9bm1xcGBuMMVrt22SRtsapFPU=;
+        b=L73yx116fN48cymNQ7GAFsFvs0ha3iCez+Z4p1MQB2h2eevZnbTuSoc5tpSpS4IZka
+         ZuMNsCtsHUd5w9L6K/p0CVDhfPZKT1neDm9y4KlK/YjRDVkFRNnbS/Dvaao50Aj/EReJ
+         6PnX6W5xr6X9wqfuFKEW61DvCedpN5hsqo7BDagemC2NHMN30cb3ajuv59GwrlvARHTS
+         8Rc5Xk8Y/XibpuC/OhQo9d1YYdLr+jgsOSNOszaosT/Kl8lvz9w+axvIThIvPToIsbVO
+         +jynGZszkbiVTTBui5gcSjQNoApNVw4bGqm5OrUpxlL0ahRo6dB/wELu/nhDXrV4taqV
+         kwfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746708569; x=1747313369;
+        d=1e100.net; s=20230601; t=1746708826; x=1747313626;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g/Zo3idQAmdiJtBVtWzs8q7ppnKXkar6x4EUIEKDs8I=;
-        b=PwC5JdIVhpml7NcKvLuYLn+AB0WXVDUsKj5Oxec6qtvSNZj/C1pFPdDHBGbpOL6N3k
-         QhIrcgHNI2x4ca8z/HblTJpkPX0Y7piuY23m7j5e23+VmxKbRARVgm2+I4NId4etCJyz
-         fu7pa4QCnFM7TFHfpP7v3zr6e+QWn7ev0I9w0V9jqj9DfnM1IiYcwLZi0dirU97r5r2e
-         /Lsa0v1TePtgakGPv2yj4tChSVXSzm/5pYUf4bFd1u2vFCIz/fV3h6oABY+6TmrYC5q7
-         QSoIL3zoItVm/PU7sCDq72EyjqtYPAOo25kheV7ZYbsZ4wQbfvdZE9h+N0TBO3k2Hxln
-         VWhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXyy8oFh8IJeJQNw5/j4e7cyyAGoRhFpyGk1VUzYxPvt3uJsRdNORYwGyvlf8bLLcsp4RJvJMcJXvBjwQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw+FUMAzwhTJiNiEE3CO+KVzEtCh7pRxUU39wz9dycadjKttO0e
-	EZvIzrA0dPvm6bwPiHEnRD/SFBKlwtFgsGaEmEwrFN2qcFX/gvRk
-X-Gm-Gg: ASbGncvw0Q3qlSQ4CqmaiL4ZITm4TOO7w8OjhHk4paINH/z7KBZBOeXgn29Seng+EEc
-	AjKjVH4mJ7/ysY1RVU+zI8XJveF/ErPKV4oyB4VJ9jYncxU7J1dWkeXY4oP/28dfcKnzQcJipVM
-	jmAZb1Yba9Q02v7+eKch0cbpzV9XDPOd4nnMSC/lFI+typLloI8cDSIfPVb7hq3x62wCR44k0nw
-	yxmcWUh9gmFzo52AMG6be2GRet1pVGnUhKHJEBtME5z/YE2Qvpwrr/aaWTVnkY7BrmAoISv9z+s
-	2tS+maGlaridyHnn3lV1Gq+iqH6uJghQsxLCWMaAHQ==
-X-Google-Smtp-Source: AGHT+IE4V0eQOUc88VL5le6hnYa/WX1pFmGHFpO8rruXlZMME8banCaS9znDvFn5HounZoV3whgt2w==
-X-Received: by 2002:a05:6000:2207:b0:3a0:90c3:eb0f with SMTP id ffacd0b85a97d-3a0ba098e52mr1870423f8f.12.1746708568626;
-        Thu, 08 May 2025 05:49:28 -0700 (PDT)
+        bh=1l3iS/TKmQrqa4v6zV9bm1xcGBuMMVrt22SRtsapFPU=;
+        b=uQzGMbK04MAotcv8qijyotApCLO73TBXwKW4UKD+3ktIzN/7Z+r11GXrc07rMy6C9J
+         cqhPsslqOP62LopwAgovWnSq+n8twuI84PuIX6MYpQUH2m0R9YfVE93oGsS8o3A5KDC5
+         H2mSI3j5gEa45veVtwcJLNEouSGMjmI8u1mHjCb8F6PA8y/Vu1JdiOoqXw9tzTzWteXh
+         4b4fKa2650WI3TYE7lb9caBDsgdFulf/2ycOLXkqwQInEK7PAavJuPsrEDQNgvBJ3/Tp
+         1JnyCEf+C4+sQ/XhPzJbpf1EXMcmlGysLbKREuNKVI0LYJG2W7gBR62Fbn8KNbyfYeuI
+         ZqhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWc6aGL6FhQ3LkQ8mlvVsgJOzehsRIAzLKlVfYq3hf+bVGYRy619XQwa/4zpNGx/9QPr89PwS1Jf1DEVA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzHKrIF48cvTwqlWepAtuRt4zjG79hhUZImAfqIa27o6xvjTCRN
+	QOmkt1zz8WwsmBvEcfDhtNrikZqdo9Oo89qGYhy1ym4Apfw+R8aR
+X-Gm-Gg: ASbGncushH9n58DWa7ZtnoaXxbn7+/mzDm+NqGSgnA46783SqJgJ4Sw/hx75iXZellW
+	mRIoyaqtkEObXmG6tHTpD+qrjRnradYFE28HEsRXtBpPHWZJ1Rj4P0NBPsL5mq683RAP0suoFK5
+	XXikmRw7aPXLtUZSUBiN5AY7JlDpNOLwCw/xJogsDMbE3NIN/Ae47BRw/PqgZ1+X6IxWOCDuP3A
+	rWQHaM5H9RlqAJnwnfP3Ygoon+YPWKxxugm2QCf8Moq2lqS1Pf7vxkoTu9FyMpizf7q0Fg5C4qW
+	pE/886JtWuX0uHfCehuoOJiKi7pwfPTa+D0umT9pSSQ8JQZtan+X
+X-Google-Smtp-Source: AGHT+IG5cba62jUROOvRO+O5AK/nVNwnJkll+1lZntviPX9TwJtwpBBNe1ExNq1zIB+0bFYPdgQflA==
+X-Received: by 2002:a05:600c:1394:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-442d034bcffmr37384505e9.30.1746708826061;
+        Thu, 08 May 2025 05:53:46 -0700 (PDT)
 Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a0b9af4ba1sm2879628f8f.59.2025.05.08.05.49.27
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a099b0ffb1sm20154250f8f.73.2025.05.08.05.53.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 05:49:27 -0700 (PDT)
-Date: Thu, 8 May 2025 14:49:26 +0200
+        Thu, 08 May 2025 05:53:45 -0700 (PDT)
+Date: Thu, 8 May 2025 14:53:43 +0200
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
 To: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
@@ -66,10 +66,9 @@ Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
 	Boris Brezillon <bbrezillon@kernel.org>,
 	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
 	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v2 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aByoVvwNq2DMw1oi@Red>
-References: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
+Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
+Message-ID: <aBypVwhHHzmqqN5K@Red>
+References: <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
  <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
  <Zw31JIEyh28vK9q7@gondor.apana.org.au>
  <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
@@ -78,6 +77,7 @@ References: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
  <aBsdTJUAcQgW4ink@gondor.apana.org.au>
  <aBt5Mxq1MeefwXGJ@Red>
  <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -87,25 +87,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+In-Reply-To: <aBw_iC_4okpiKglQ@gondor.apana.org.au>
 
-Le Thu, May 08, 2025 at 01:15:55PM +0800, Herbert Xu a écrit :
-> On Wed, May 07, 2025 at 05:16:03PM +0200, Corentin Labbe wrote:
-> >
-> > I tested this patch and my armada-388-clearfog-pro panic with:
+Le Thu, May 08, 2025 at 01:22:16PM +0800, Herbert Xu a écrit :
+> v3 simplifies it a little bit:
+>  
+> ---8<---
+> This driver tries to chain requests together before submitting them
+> to hardware in order to reduce completion interrupts.
 > 
-> Thanks for testing! I didn't realise that you had one of these.
-
-I have started a bot which try to build/boot automaticly all patches touching hardware I own.
-And for the moment it handles only linux-sunxi and crypto patches.
-Happy it found something.
-
-> So just out of curiosity, does this driver actually pass the
-> self-tests before this patch with CRYPTO_MANAGER_EXTRA_TESTS?
+> However, it even extends chains that have already been submitted
+> to hardware.  This is dangerous because there is no way of knowing
+> whether the hardware has already read the DMA memory in question
+> or not.
 > 
-> Is your system SMP? How many CPUs?
+> Fix this by splitting the chain list into two.  One for submitted
+> requests and one for requests that have not yet been submitted.
+> Only extend the latter.
 > 
 
-It fails to pass selftest on 6.14.4.
-It has 2 CPU
+The board do not panic anymore, but have still selftest errors:
+See the full boot log at kernel.montjoie.ovh/477935.log
 
+Regards
