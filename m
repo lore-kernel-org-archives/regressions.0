@@ -1,59 +1,74 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EB121170D;
-	Thu,  8 May 2025 05:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F0D1EE03D;
+	Thu,  8 May 2025 06:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746681743; cv=none; b=UYBbP8akYmS4LxHB7Xuwy1XNucUAXE9u40BYP5E/MPPSn6JFSU98G/tBgrgnAHintI2V19oOl5ZWf168kErqxMU6GEaiVxaZWeHcafFtJxUubpf75ZLQvgs1RfzuQr02TdguAshfUs9//OlTsdSF5h03MDH7EfYVl0RvWkhl0k4=
+	t=1746685332; cv=none; b=hx2zPO2wI6CoiVJfHgEa9dAw9E+KifOxem7GvN+bSAybkSze171wB5D3hgfwt677sueDW93u26zXXGpAehMg9Wnvz16CY+TCHXEf+Y5i8ZPuzz1+eKIX+N+HH206wAYbo6DK2p3AfaNgSWBel+0PA2dYKmMPEiJE+N68BpQocZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746681743; c=relaxed/simple;
-	bh=VnfzAszDJs6C3MTGH96Wn5SIno/KO76bixpJGo+tSng=;
+	s=arc-20240116; t=1746685332; c=relaxed/simple;
+	bh=UTfT43DfYGsrBz0pan09byc5cJNTiyCIUxAyVV244CE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jV9f+LqfCAKhi2CNhF2TAjF4V0gHmW8lwLs6nEttzyWSre8vwKj6zh0MU/b6UOuEYmehDHPlFDOtm1mr7jAPAl5q0/HslVluexV28FENNgL9+SleJ3mY3xcWbbNFTlRvaqLU1BifeTygsbUeMIL+1lmjmQkIvs7ZeezsDim71PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=QFiI4sTG; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7nSblmb7t0mHwFmz1A4r621XZxS9ReP8grPFBl9plriajr5Wp74cjfwLRxhjTRyaeSWam0421TYYhrCIGpJNZxEKdjgZj3RXVOikXAXJJwpWv0N3fH8MyTrdDHvcSJN5fze5H1qXhmuqOwCXHWC7vhajqzHaEtR8vqOjlyNfpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZLjdB0m; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="QFiI4sTG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=B1YflQXHgKTBvxl3yJJUFyz/5qdf/sizpnYgftr2KE8=; b=QFiI4sTGDzPUQVbXBOij/eCwrt
-	wdylp2G1lSeJrOxS20JGXlOrBidZxszgwwn910003aRwJrCGcBwnfblZXOFKR5U8D6c9oU/EUuAwQ
-	833+brG7Nw4Rq0S9tko5+94OcS4Vbnzl5UCQE2tBGuHB3yrjwV3efQip5+7g+1sUa6j66YvBRO2CC
-	JvZzWNNbNav63T/cwa1uav6bnLroE8z9vVVtCcgjKyAuHsnWvjdUjVlNHWCeDT3cz4onzQ84hZ/po
-	A1mMWVUF7t9k4f8IXubLZU3UqSEabEFq31/Iufos6/vOnAP/QmomgJPhHFhk2Jq0WkopMZ0LmgYDG
-	q7ucxNvQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCti4-004Ri1-2m;
-	Thu, 08 May 2025 13:22:17 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 08 May 2025 13:22:16 +0800
-Date: Thu, 8 May 2025 13:22:16 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aBw_iC_4okpiKglQ@gondor.apana.org.au>
-References: <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZLjdB0m"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e5df32197so7488355ad.0;
+        Wed, 07 May 2025 23:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746685329; x=1747290129; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yGRiPozPCKlTceAlJbkKm3qZDESryv+qOsVno6iyAH0=;
+        b=MZLjdB0m7LK1R358F+6VQirrnVXB/ZV5YiKTA5182z5kvweo9JiUf9IgvO1Y5/cgeQ
+         W4W0P+Xpx4U9WJFFE2tr/9SGt0waKrEULow0pW/0wgNxFai5u+/GuJiprlzgTNkk/slv
+         GyJ1TyDFFI0+npPK/yqH0hK515Mls6Ji8VhYoM71yk9YWPYLXieVCcnCmnWpNSlYpf1+
+         QvZcdbQXlJ++GVWaUKz3q48tTwz+I1jtvAf3TM/mzPwceENwQWJSehQhTsP7ym2Yw6Gu
+         71F7Q142quSdw9hX6kMmP/Rky5RMxPePWC3p3VKT98QdNkNNyUa4UVSn87ANbFFa5CYr
+         RJYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746685329; x=1747290129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yGRiPozPCKlTceAlJbkKm3qZDESryv+qOsVno6iyAH0=;
+        b=aYdOaOFDgYmqKtsunj0fOxklcZpJZFWpeKxYP2BjUcE3cznxXRh/762VBAVPW4xPPE
+         dwN7s4ST/32bwgmVKNVFV5mKrSiSqUCwvbzrRpuk08FBoBWaBw7evkXmtaBkd9I2pZZA
+         gN93+QHBb4krAuC91211DLXpYGDUO4ve8CmY25xPD0RaPT6SzX6+udAhvco3T4qqrTN8
+         4oNHI8cqrCGzFgo2+PYy/WH1pm8XurhM8SyvorCBsKwmLvcI13Ybtux9aXNxn1jOLECd
+         AflMJdkMp4nWOBxYQEEuVSfSSqV0eTxFV/tPeSX98OKlRXA25QCnOM51NI/t55e/2HPc
+         gdDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURciK/Qz8y3ol8XSoNbWHvoJEj6RobazrNFTLzeje6ajrdmiAJKyqVT428+lt3uXzaZmxASw==@lists.linux.dev, AJvYcCWUujeBYupE7SAh6ngLo+Z0IhCtSTJBCACEdCvf8MTkd/uZXe5mX+wY5Vfp11/vSnpTxXFajGnJ3su1Wb8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzXxaSWxyXc/XjhedDymclshMUIZW6BC97GMzQ0kYC6gkfciEPi
+	IpJ82N08M1T9Te6/b+xp7UG8o5xTUtB0a/CKp+PDEgwDUImdnU82
+X-Gm-Gg: ASbGncuQV9P575uObgN7WkJLxNpP/Z8gJnEwXfSLNrXzGXOdvCegUfwCARt4nqhGlDf
+	95ucUSIzRCgG5QO6j5MlguwS6P/Tgvz4mO8W/nYqYrXbMiiH+ACVnPIrwWzrlyYeg0GGY8BsyJ2
+	GBShch+UE/LzQQbk76kDr7uAE8EzBq1AXmKNqakLDDFOqtJoGLMDILL9ev7lfBSzZ31Cll7Z0au
+	QC1tRjcdq4BD1Qf0hD/btJ0atXo1e597NvDnRpJNKSewj6o38xw7MkATq7h6yicXes/pcyd2bRB
+	TlPY3fMcVoDft5C3xgEf+fJKiTV+VcFxJoPYWzdPF/j0M4Ooptdd
+X-Google-Smtp-Source: AGHT+IEzMVc56iAT+a/tMSCcX9N+OfWHSiME3hDRqUVurDIzobwAS9xBHQ7vI2Z7UkKgma9R7jLLrg==
+X-Received: by 2002:a17:902:f789:b0:21f:2a2:3c8b with SMTP id d9443c01a7336-22e5ea643bamr92011055ad.11.1746685329124;
+        Wed, 07 May 2025 23:22:09 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:61af:8a13:a547:7dd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15229399sm104436315ad.187.2025.05.07.23.22.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 23:22:08 -0700 (PDT)
+Date: Wed, 7 May 2025 23:22:05 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Aditya Garg <gargaditya08@live.com>, 
+	Berkel =?utf-8?B?SsO2cmc=?= <joerg.berkel@bfh.ch>, linux-input@vger.kernel.org, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-spi@vger.kernel.org, lukas@wunner.de, 
+	David Woodhouse <dwmw2@infradead.org>, iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [REGRESSION] applespi from 6.12 onwards
+Message-ID: <n73jgymwf62kfexrwrhpz45lrj5pc7e4x7m6otbvypctlowjdl@ztaox436vezk>
+References: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
+ <PN3PR01MB9597D8E327CC7910673849D3B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,167 +77,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+In-Reply-To: <122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
 
-v3 simplifies it a little bit:
- 
----8<---
-This driver tries to chain requests together before submitting them
-to hardware in order to reduce completion interrupts.
+On Thu, May 08, 2025 at 10:15:31AM +0800, Baolu Lu wrote:
+> On 5/8/25 01:07, Aditya Garg wrote:
+> > Keyboard and touchpad stopped working on several Apple Macbooks from the year 2017 using kernel 6.12.xx . Until now I could only find this discussion affirming the bug on Debian and Fedora:https://github.com/Dunedan/mbp-2016-linux/issues/202
+> > 
+> > On siduction I also tried the more recent kernels 6.14.5 and mainline 6.15-rc4 (from Ubuntu) and the issue persisted with my testdevice MacBookPro14,1 -- see the relevant output:
+> > 
+> > kernel: platform pxa2xx-spi.3: Adding to iommu group 20
+> > kernel: input: Apple SPI Keyboard as /devices/pci0000:00/0000:00:1e.3/pxa2xx-spi.3/spi_master/spi2/spi-APP000D:00/
+> > input/input0
+> > kernel: DMAR: DRHD: handling fault status reg 3
+> > kernel: DMAR: [DMA Read NO_PASID] Request device [00:1e.3] fault addr 0xffffa000 [fault reason 0x06] PTE Read access is not set
+> > kernel: DMAR: DRHD: handling fault status reg 3
+> > kernel: DMAR: [DMA Read NO_PASID] Request device [00:1e.3] fault addr 0xffffa000 [fault reason 0x06] PTE Read access is not set
+> > kernel: applespispi-APP000D:00: Error writing to device: 01 0e 00 00
+> > kernel: DMAR: DRHD: handling fault status reg 3
+> > kernel: DMAR: [DMA Read NO_PASID] Request device [00:1e.3] fault addr 0xffffa000 [fault reason 0x06] PTE Read access is not set
+> > kernel: DMAR: DRHD: handling fault status reg 3
+> > kernel: applespispi-APP000D:00: Error writing to device: 01 0e 00 00
+> 
+> It appears that all DMA faults are related to a fixed address,
+> 0xffffa000. Is this address something special?
+> 
+> Also what does below message mean from a SPI driver's perspective?
+> 
+> "applespispi-APP000D:00: Error writing to device: 01 0e 00 00"
+> 
+> I am asking this because the IOMMU fault messages are about DMA Reads
+> (device raised memory read), while above message complains failing to
+> write to device.
 
-However, it even extends chains that have already been submitted
-to hardware.  This is dangerous because there is no way of knowing
-whether the hardware has already read the DMA memory in question
-or not.
+When sending a command to the peripheral device applespi expects it to
+acknowledge successful transfer with
 
-Fix this by splitting the chain list into two.  One for submitted
-requests and one for requests that have not yet been submitted.
-Only extend the latter.
+	static u8 status_ok[] = { 0xac, 0x27, 0x68, 0xd5 };
 
-Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
-Fixes: 85030c5168f1 ("crypto: marvell - Add support for chaining crypto requests in TDMA mode")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
----
- drivers/crypto/marvell/cesa/cesa.c |  2 +-
- drivers/crypto/marvell/cesa/cesa.h |  9 +++--
- drivers/crypto/marvell/cesa/tdma.c | 53 ++++++++++++++++++------------
- 3 files changed, 39 insertions(+), 25 deletions(-)
+but we are getting "01 0e 00 00" instead.
 
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index fa08f10e6f3f..9c21f5d835d2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -94,7 +94,7 @@ static int mv_cesa_std_process(struct mv_cesa_engine *engine, u32 status)
- 
- static int mv_cesa_int_process(struct mv_cesa_engine *engine, u32 status)
- {
--	if (engine->chain.first && engine->chain.last)
-+	if (engine->chain_hw.first && engine->chain_hw.last)
- 		return mv_cesa_tdma_process(engine, status);
- 
- 	return mv_cesa_std_process(engine, status);
-diff --git a/drivers/crypto/marvell/cesa/cesa.h b/drivers/crypto/marvell/cesa/cesa.h
-index d215a6bed6bc..50ca1039fdaa 100644
---- a/drivers/crypto/marvell/cesa/cesa.h
-+++ b/drivers/crypto/marvell/cesa/cesa.h
-@@ -440,8 +440,10 @@ struct mv_cesa_dev {
-  *			SRAM
-  * @queue:		fifo of the pending crypto requests
-  * @load:		engine load counter, useful for load balancing
-- * @chain:		list of the current tdma descriptors being processed
-- *			by this engine.
-+ * @chain_hw:		list of the current tdma descriptors being processed
-+ *			by the hardware.
-+ * @chain_sw:		list of the current tdma descriptors that will be
-+ *			submitted to the hardware.
-  * @complete_queue:	fifo of the processed requests by the engine
-  *
-  * Structure storing CESA engine information.
-@@ -463,7 +465,8 @@ struct mv_cesa_engine {
- 	struct gen_pool *pool;
- 	struct crypto_queue queue;
- 	atomic_t load;
--	struct mv_cesa_tdma_chain chain;
-+	struct mv_cesa_tdma_chain chain_hw;
-+	struct mv_cesa_tdma_chain chain_sw;
- 	struct list_head complete_queue;
- 	int irq;
- };
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 388a06e180d6..243305354420 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -38,6 +38,15 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- {
- 	struct mv_cesa_engine *engine = dreq->engine;
- 
-+	spin_lock_bh(&engine->lock);
-+	if (engine->chain_sw.first == dreq->chain.first) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
-+	}
-+	engine->chain_hw.first = dreq->chain.first;
-+	engine->chain_hw.last = dreq->chain.last;
-+	spin_unlock_bh(&engine->lock);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -96,25 +105,27 @@ void mv_cesa_dma_prepare(struct mv_cesa_req *dreq,
- void mv_cesa_tdma_chain(struct mv_cesa_engine *engine,
- 			struct mv_cesa_req *dreq)
- {
--	if (engine->chain.first == NULL && engine->chain.last == NULL) {
--		engine->chain.first = dreq->chain.first;
--		engine->chain.last  = dreq->chain.last;
--	} else {
--		struct mv_cesa_tdma_desc *last;
-+	struct mv_cesa_tdma_desc *last = engine->chain_sw.last;
- 
--		last = engine->chain.last;
-+	/*
-+	 * Break the DMA chain if the request being queued needs the IV
-+	 * regs to be set before lauching the request.
-+	 */
-+	if (!last || dreq->chain.first->flags & CESA_TDMA_SET_STATE)
-+		engine->chain_sw.first = dreq->chain.first;
-+	else {
- 		last->next = dreq->chain.first;
--		engine->chain.last = dreq->chain.last;
--
--		/*
--		 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
--		 * the last element of the current chain, or if the request
--		 * being queued needs the IV regs to be set before lauching
--		 * the request.
--		 */
--		if (!(last->flags & CESA_TDMA_BREAK_CHAIN) &&
--		    !(dreq->chain.first->flags & CESA_TDMA_SET_STATE))
--			last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+		last->next_dma = cpu_to_le32(dreq->chain.first->cur_dma);
-+	}
-+	last = dreq->chain.last;
-+	engine->chain_sw.last = last;
-+	/*
-+	 * Break the DMA chain if the CESA_TDMA_BREAK_CHAIN is set on
-+	 * the last element of the current chain.
-+	 */
-+	if (last->flags & CESA_TDMA_BREAK_CHAIN) {
-+		engine->chain_sw.first = NULL;
-+		engine->chain_sw.last = NULL;
- 	}
- }
- 
-@@ -127,7 +138,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
- 
--	for (tdma = engine->chain.first; tdma; tdma = next) {
-+	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
- 		next = tdma->next;
- 		spin_unlock_bh(&engine->lock);
-@@ -149,12 +160,12 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 								 &backlog);
- 
- 			/* Re-chaining to the next request */
--			engine->chain.first = tdma->next;
-+			engine->chain_hw.first = tdma->next;
- 			tdma->next = NULL;
- 
- 			/* If this is the last request, clear the chain */
--			if (engine->chain.first == NULL)
--				engine->chain.last  = NULL;
-+			if (engine->chain_hw.first == NULL)
-+				engine->chain_hw.last  = NULL;
- 			spin_unlock_bh(&engine->lock);
- 
- 			ctx = crypto_tfm_ctx(req->tfm);
--- 
-2.39.5
+See applespi_check_write_status() in drivers/input/Keyboard/applespi.c
+
+Thanks.
 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Dmitry
