@@ -1,103 +1,110 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582DC22CBE4
-	for <regressions@lists.linux.dev>; Thu,  8 May 2025 13:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C8921D5B6;
+	Thu,  8 May 2025 20:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746711795; cv=none; b=Yq8wMfn5yVabk7wfxlWkkHM3W3TV1VuyiDs8R096VrcXKuyztkBKammq5AbOhzGGLCC8lQMP9t6PtdICOXa0rNpUfD6kuL/M6cyAEV1847bgXzdzz12P4KV5hJsZmZ20oMcIGUHTnFvJB2aX/JJzRKUB6946BpkuDsYNmV8u6Q0=
+	t=1746737814; cv=none; b=S/LqkgJgJvd79d2zwYvXPLHwz9BU22eSllXpM+VC4FEeZbfxJ+Yu7vaTs8JqkgpBkTlWuITS1EH0iQ5lA9U5UfxUywlK1+f3IairCbaaDLvpua/53FF8RKGUr+yGtf6u2S8mf+R+0JMmiusowVOTiRIWpxFikI36A1uwozA7NsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746711795; c=relaxed/simple;
-	bh=aCE6iYiciFIdKSqWV0byF7RoB3J0cxLu0LwihXHKXtE=;
+	s=arc-20240116; t=1746737814; c=relaxed/simple;
+	bh=NFIYZyU4ZlPO9IXNvf8D4jJ65kxgXjTKLnvESLhF03c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tp2zPkaeoRul5D2xBGdJ6w2tJZSMBpbvJPTyj3qFU8l8icvmqsPffLouKsQPcICFlTX3d5lm06/c073K+1/e8KkPFC7yMXd+uzusiKhIY70TVE24fth1FHLKDNz7r+Lp+qh009Xqhrde9GobMze8Jp7vdDnQsi5C1zmkjEeIlXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I3COHPSD; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ifxtal4/m5MbMcvkYLOyZC08Myb7iCZan8yaoiD4XBzw2bjc3f/bXjUTxUPZst6auOIYL4ub3gKpqGwngDa1JT/cunz8ClDSQWrgKqTNz92X2cHHfSFb2J6Y6LIYrrp1qKnCThIF5FBKvgJURepLw+FnQAsntiVTcTKVzltHXMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JE89aymo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3COHPSD"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so10821165e9.3
-        for <regressions@lists.linux.dev>; Thu, 08 May 2025 06:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746711792; x=1747316592; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=b4tVbEi1qNi8E/gdy3VXy8wc9mnT2zzjATf4UbjgX20=;
-        b=I3COHPSDenyTfcQz6xdWcOiikaVCmzkcdhPJXobKSp0whhKWThIqxPRvdYwK6JRG7b
-         ztAU6DW5vLf6Ia+4cmlRnxcY+ea5/c90XquvmJ5t9TR0xX2dDMfDe93N6o/pKs1+M+wI
-         QhEEqnquf9MxT/9CHgENnbK9aN/OwVRnE6fNNLvDeQgOgb9XUwZR4z7QIoXO/T9cil+P
-         5UczugiUxPc4IVdQnDVCWX6CC7BzscBrBeoxRCKnPVUeDRaMm2i6omFhR6ZoP4li7uNP
-         5r4ZhXYWWqE3gwYnp4i7531WBSmBfKlUwe2LoTz5YZzu+nnChMGkdl/Hpg//WIq63haN
-         H78w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746711792; x=1747316592;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4tVbEi1qNi8E/gdy3VXy8wc9mnT2zzjATf4UbjgX20=;
-        b=ofZj2WQrkWJXm7UFqOfWMblamGq+9vXfd1BtkzgL68PX15PnG05tzSL5/1PlnNN6cF
-         u8sP0OjvY+fvpufkCPUy8YSX38+9YQsnMsYOw8nxIaE82QzpkUlOQX5GDf4LHD81z8j6
-         VTbO3YkIkv6Fq4CVHct/f5nX1uvn6VecRrElyiUzEvZcXCeXTNPmjc6ARDG6/lhKaF7a
-         CMnri3e9VLG5Xsma2jYmHC8QK/T+QeZL+Au5fxTdxNw9aG4d6LU3eJZCLUVFbYwb9b4S
-         wrM+cTHknrA2T6LrlR349pqnJT59p8teC+is6xWsS4u/HdTId4j0q+VuhuBqs1tMGFNd
-         mxZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlEoGln2j+0x+yKtJ9HWQXPmHUr4oQIzk6oTM5BlzomdycLwpPyuGbNSQWqiTmKYbyzwbc4DIFw/xa7A==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw2b7EC/arsZHWUlrGSe/t17pY0LW7SKl5Ik1uYzW8v+8Tzf95i
-	w5us8+o1UKfIn5050KoiZ+fdxOofRkQnSnuvpBDFlEYlRNMBH3/uvt2YHA==
-X-Gm-Gg: ASbGnctRHM5lhWoDL9hzvM7oPuCQb/31t5RWrP4PXVzoqTEg+Oz6xrfXC9vw8zm2Mmz
-	cSQwzPP9DBsVz/GKk02bIBYlTEOsvHXBnYvhVN6lzAW5MZ0Pbt0D8D3+s+FcdNn/6XpJAFACSZ8
-	NBs5ezBXkcvtQQCsSaAx5xjZNZRrP7eNmzksgYCBgqmT5Eo+2IBlMSr33yBNNoe2LgPx3XYm3Pr
-	wnmRSeVYEXuGuiB3XPCJ9FkuKFN268n2k46eMr/uZx6Fc6wE1XOQOqfc3ZzovwqMx3qSYXnZtxW
-	lKVyZCJGW0ruEjpq8PrnYWrc2ZSDPTfd4E5I3dSB/w==
-X-Google-Smtp-Source: AGHT+IHFMBcxHiIp52o0F6tt+d3OgA2roN5kK/YH6p9byXgvoy9nOMhe4gnHT98HwmtQZBwp+sWs1g==
-X-Received: by 2002:a05:600c:3b29:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-442d02ecb69mr33139155e9.12.1746711790720;
-        Thu, 08 May 2025 06:43:10 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442d14e0437sm29360495e9.36.2025.05.08.06.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 06:43:09 -0700 (PDT)
-Date: Thu, 8 May 2025 15:43:07 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aBy06xyzh5kKC48a@Red>
-References: <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
- <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JE89aymo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E47C4CEE7;
+	Thu,  8 May 2025 20:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746737813;
+	bh=NFIYZyU4ZlPO9IXNvf8D4jJ65kxgXjTKLnvESLhF03c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JE89aymo9TKHtwMSvprqGcsCA5HrnXMXJfsYd7TdOFEvd4U6zUiaF5jH/JYJ1JHAc
+	 ELFfBC4mndhFz7aQG9Ods6A/twTUWNgDqODb4L2/6PWvDv/CxZ9JXSrJqhWhFDDm73
+	 D0Zgi9VglaSEtkP2UfOtIcV6A5u4NaUvLVBO8F+RKOt79zEX0QNVjx7Up5F8xi/84D
+	 MumGob+/xu7Of9cRxx+MH2v5cUBTtYlDJlMTcYKot8ame3Q+iZLTLTDIqsHdNSpyhf
+	 h+o4zUSY3J3BWSnRYFonDD6M0dm3BsJgLgqlXqZnb4U8B2Vh35a/frXEHsjKrE5i+X
+	 HBF8z7ASebJaQ==
+Date: Thu, 8 May 2025 13:56:50 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Pasi Kallinen <paxed@alt.org>, 1104796@bugs.debian.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	Debian Bug Tracking System <submit@bugs.debian.org>
+Subject: Re: perf r5101c4 counter regression
+Message-ID: <aB0akj1BdBeY6YiI@google.com>
+References: <174654831962.2704.6099474499200154093.reportbug@deveel>
+ <aBpcvG2yBtrrTie-@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
+In-Reply-To: <aBpcvG2yBtrrTie-@eldamar.lan>
 
-Le Thu, May 08, 2025 at 09:10:13PM +0800, Herbert Xu a écrit :
-> On Thu, May 08, 2025 at 02:53:43PM +0200, Corentin Labbe wrote:
-> >
-> > The board do not panic anymore, but have still selftest errors:
-> > See the full boot log at kernel.montjoie.ovh/477935.log
-> 
-> Do you have a boot log without this patch to compare? You seem
-> to be getting skcipher failures as well as hash failures while
-> the original report only had hash failures.
-> 
+Hello,
 
-6.14.4 boot log at http://kernel.montjoie.ovh/477911.log
+On Tue, May 06, 2025 at 09:02:20PM +0200, Salvatore Bonaccorso wrote:
+> Hi,
+> 
+> Pasi Kallinen reported in Debian a regression with perf r5101c4
+> counter, initially it was found in
+> https://github.com/rr-debugger/rr/issues/3949 but said to be a kernel
+> problem.
+
+What's the '51' part?  I don't think it's defined.
+
+  $ grep . -r /sys/bus/event_source/devices/cpu/format/
+  /sys/bus/event_source/devices/cpu/format/event:config:0-7
+  /sys/bus/event_source/devices/cpu/format/pc:config:19
+  /sys/bus/event_source/devices/cpu/format/edge:config:18
+  /sys/bus/event_source/devices/cpu/format/offcore_rsp:config1:0-63
+  /sys/bus/event_source/devices/cpu/format/ldlat:config1:0-15
+  /sys/bus/event_source/devices/cpu/format/inv:config:23
+  /sys/bus/event_source/devices/cpu/format/umask:config:8-15
+  /sys/bus/event_source/devices/cpu/format/frontend:config1:0-23
+  /sys/bus/event_source/devices/cpu/format/cmask:config:24-31
+
+
+Nothing for bit 16, 20 and 22 on the 'config' field.
+
+Is it possible to fix rr to use a correct event encoding instead?
+
+Thanks,
+Namhyung
+
+> 
+> On Tue, May 06, 2025 at 07:18:39PM +0300, Pasi Kallinen wrote:
+> > Package: src:linux
+> > Version: 6.12.25-1
+> > Severity: normal
+> > X-Debbugs-Cc: debian-amd64@lists.debian.org, paxed@alt.org
+> > User: debian-amd64@lists.debian.org
+> > Usertags: amd64
+> > 
+> > Dear Maintainer,
+> > 
+> > perf stat -e r5101c4 true
+> > 
+> > reports "not supported".
+> > 
+> > The counters worked in kernel 6.11.10.
+> > 
+> > I first noticed this not working when updating to 6.12.22.
+> > Booting back to 6.11.10, the counters work correctly.
+> 
+> Does this ring a bell?
+> 
+> Would you be able to bisect the changes to identify where the
+> behaviour changed?
+> 
+> Regards,
+> Salvatore
