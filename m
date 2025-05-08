@@ -1,269 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from m.b4.vu (m.b4.vu [203.16.231.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DDC4AEE0
-	for <regressions@lists.linux.dev>; Thu,  8 May 2025 06:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685591; cv=fail; b=m0tmGggGa9y8BMPlbM2sq02OgFW9MqWUsS7R+QaYvNqmG2Qm25z0FLWvhjpJUCxvGo1xl6wsJ+AGZ7mnA3nPG0NGcg19kxa2f0SO+FGgxzAWJW1C88NLM9QY5OQMiUOoLl1hkcWgnGLzM5ca5E+S21kOtNaV/QMVsxkFLpcuEew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685591; c=relaxed/simple;
-	bh=4ZjBFUdE3fpYxVGCgU2QaFeWz4ramPnZaZdogjop9I0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:In-Reply-To:
-	 Content-Type:MIME-Version; b=BDqmr13OfV8+myzIDeA6ed4IXVtsGuweEAbPAZoL1xuS7l0EuTqCma7Aez9bP/Pfb9IeT4NcVoBAsaJIzHKGGT5/P2h/h1sbTyFvNfZmJxgoFHV1qxam4cx/2Ui91AOqIbJfooduXzCpxzOps0NDOtEeLA3DLEoj1ho3IUOp28k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X9cecayI; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657A2248BA
+	for <regressions@lists.linux.dev>; Thu,  8 May 2025 07:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.16.231.148
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746689831; cv=none; b=ZQOpErh2q4N7YloQ5SdMKSBJCk7OTyF84attItfdNGy4X5CUs/NBObkdZImniq33qgk2D8BkCewFEWJXvNzgC+JU2P30m2kTkHOnA05qkYJVh1aI9jBDvJybKPt89WRsLAX2j7C/6HqRvmV0g2OspZ1FDwJnD3JHAVDHbvd9UE0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746689831; c=relaxed/simple;
+	bh=PDN/gK0e9nksO/e0fMKNuCkmsVxa4j1m/bDsuxAY8dU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qW85tH8CnKsrIBwMSJgaGcKodOP/EMRlD1xIxzJkUDYH65VcmQX3sh0MsoUDOkuKqtcNO3H33fY/XCjoOpjAyg2IFKLUEAonW3sM4Ad673BBlt4Z6zawqoSeTOn8VF9RYeRkdUwEPxX3B303i0wgJCAxd99wB1s6kM8Z7yznNkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu; spf=pass smtp.mailfrom=b4.vu; dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b=Um7yZ+3/; arc=none smtp.client-ip=203.16.231.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=b4.vu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=b4.vu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X9cecayI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746685589; x=1778221589;
-  h=subject:to:cc:references:from:message-id:date:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4ZjBFUdE3fpYxVGCgU2QaFeWz4ramPnZaZdogjop9I0=;
-  b=X9cecayIl/fUBFEVWxZnBBtQXPLp+PJ7P4Mnw5aVreN9xkaAB8ozRfWi
-   hzELbGQL7J0QzjG11P3bbAHn9cnoXYapSgzha3HsoAvPtS7TcS7IbrY71
-   gA2zcaN+mxJID76c9C8w7ZjXVx7knG9uOZ3VjubDalNfkUg+LsvaWAXz1
-   0Bzau2xLSQ/UvGgmH+umH4ATATduVCNShIKEPh+QlwMcDNEyLwRn5MzTA
-   Au3P9vB71bQ3tKQzwDG27wa71E4dU/O9OdCeaJ3HU1LOaoVGCrW64gsTA
-   jpJsGQw/xiePKLHuTi5v7fQF0dJCPJgzeSrhijJZWRI4bKPFUXBU+I+Xi
-   A==;
-X-CSE-ConnectionGUID: 5edzKkAYR2q5dNRuV4n0rg==
-X-CSE-MsgGUID: POQZgQO2Ry+bpGdvgUhQfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48532825"
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="48532825"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:26:29 -0700
-X-CSE-ConnectionGUID: oOVNtRo8TcqRXXW/Yp5QxA==
-X-CSE-MsgGUID: B0vxoQVpRZ2oVq/hxqweHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="141153131"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:26:29 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 7 May 2025 23:26:28 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 23:26:28 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 7 May 2025 23:26:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zh5pk1NW2SZJrRXyA5VwEZYH96FiCrK/L+ZMQ2rnGKV5e4oA/u8VsrVJGTrnW2LfK2iELP/jfYGtHc7W7iIfts7QNsiUgpksgF5pqzLCEiNu9Gw7LL0x6Bn/uS6m/nOa34NB6gtyjLrLLcjVtsQMhqdeyGm50qbHemlXsYVo57HsOJzBFvVqqzrUjBj//LHsR939w0ccrvVIuHLIi7V113pTHaSBDeLlvT24AtsIZjfLeNJa5lczmeBHIWZOY2F7ZrrsSLQ3o7mH/DG/RP/QBm4+UHIDmhD3DdYQ8taLUY/31MtdBdCi4K/nTIsV1cksdD0j4q+fyUHfCqpQaFw95A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wmJDuv7pRJHKrFZ94xcl9qXb4YQFFU3VvjI7ue+id0U=;
- b=BLeUhhlYT2umjdaLCe1B+p4AN6jUmtqHdk68rD82wfsQdK7iktcqRXzhW3j7dnTK7NvHHA6Kap//h5OFztrVjlRY25qu6eoIz+DyuQwNo5Ssm9sIcTuV8iOlZwXK//aQ7ZV/N1jrzvTsF9CMtlMgJjw39VHrWuj9VRIhInUzBspMfU4+RWUqfbUjMMeR/0O/qOlnkusOmNzuyPGNXu7UPyuiZttD5OaKEXTjiU9oZlOvB0c4uiQq8oFKlIH0AgosP641Xi9aAulkidjOr/yS1Dnqi9UFZf/hk1LbXKEgj/rjlNnhkw5DcHsrcj1kNsmOABED6eud4F6ziq7FkLP2Bw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com (2603:10b6:510:144::6)
- by LV2PR11MB5974.namprd11.prod.outlook.com (2603:10b6:408:14c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.35; Thu, 8 May
- 2025 06:26:24 +0000
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861]) by PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861%6]) with mapi id 15.20.8699.019; Thu, 8 May 2025
- 06:26:24 +0000
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on Meteor
- Lake - 6.14.2
-To: =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
-	<marmarek@invisiblethingslab.com>
-CC: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
-References: <Z_z9EjcKtwHCQcZR@mail-itl>
- <b1f5e997-033c-33ed-5e3b-6fe2632bf718@intel.com> <Z_0GYR8jR-5NWZ9K@mail-itl>
- <50da66d0-fe66-0563-4d34-7bd2e25695a4@intel.com>
- <b5d72f51-3cd0-aeca-60af-41a20ad59cd5@intel.com> <Z_-l2q9ZhszFxiqA@mail-itl>
- <d37a7c9e-7b3f-afc2-b010-e9785f39a785@intel.com> <aAZF0JUKCF0UvfF6@mail-itl>
- <aAZH7fpaGf7hvX6T@mail-itl>
-From: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Message-ID: <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
-Date: Thu, 8 May 2025 09:26:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-In-Reply-To: <aAZH7fpaGf7hvX6T@mail-itl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TL0P290CA0002.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:5::10) To PH0PR11MB5949.namprd11.prod.outlook.com
- (2603:10b6:510:144::6)
+	dkim=pass (2048-bit key) header.d=b4.vu header.i=@b4.vu header.b="Um7yZ+3/"
+Received: by m.b4.vu (Postfix, from userid 1000)
+	id E15EE6698FAF; Thu,  8 May 2025 17:00:44 +0930 (ACST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 m.b4.vu E15EE6698FAF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=b4.vu; s=m1;
+	t=1746689444; bh=6UXt1BLwGoaNZgKxHK1YJO3spw1jLrC52dMEz3YS0QI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Um7yZ+3/iqSsjao6eljDCKxaWAD+DncNagXdz3mFXGIxRezqt6Knlx0GrD3xHWfXP
+	 qxq6un9Z/s2RkIqLMR11NyVmddaS1QKCYLZKdz/Tr5PFIGf7rXuSFH/xhauV/BhCdo
+	 zwuZ8/uAd5P/K9NSfxGKkOUjh5cplYywUU7UOmBX29KU/SH8tzFBWhr98vSP2P9zw9
+	 5gdKanB0U5oNavB7LnwEbfp9X7DWHmW1xA3TdThKMO2bBijagCZ54pvxws8neVWaUz
+	 IKu2WmvL2PONMkvIGrMTQ8ZOGKST2wzya6qhZc8Y4R0a+S252X3zHZIO1y1x81EiaB
+	 bi2te+GomZUIA==
+Date: Thu, 8 May 2025 17:00:44 +0930
+From: "Geoffrey D. Bennett" <g@b4.vu>
+To: stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	Hao Qin <hao.qin@mediatek.com>
+Cc: linux-bluetooth@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+	Chris Lu <chris.lu@mediatek.com>, linux-sound@vger.kernel.org,
+	Benedikt Ziemons <ben@rs485.network>, pmenzel@molgen.mpg.de,
+	tiwai@suse.de, geraldogabriel@gmail.com,
+	regressions@lists.linux.dev, gregkh@linuxfoundation.org
+Subject: [STABLE 6.12/6.14] Bluetooth MediaTek controller reset fixes
+Message-ID: <aBxdpIabalg073AU@m.b4.vu>
+References: <Z+W6dmZFfC7SBhza@m.b4.vu>
+ <Z+XN2a3141NpZKcb@m.b4.vu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5949:EE_|LV2PR11MB5974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4295fcd5-acee-48ed-01a1-08dd8df94137
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?UzhHWG5oVFVlcmVraUMwY3hqeVdqQjdyY1RzZFp0MWwybVg3SjFlUWFmVnll?=
- =?utf-8?B?K08vRVEzejhDUlNIVCtzU25MMVp5RWhORDU5cnpvUlZmZDlFc0tMa3VsU3ZB?=
- =?utf-8?B?UndiNUh3N0dOeTRNZWtwWHovTTdVZXUxUkVDTGsvTERTUnA1Y0ZIWDVzdmdj?=
- =?utf-8?B?czhRbGtNR0FUcnlBWHBKQVZ4aVU4MElQSXZucmJqdVRoVWhib0l6K01BUFZM?=
- =?utf-8?B?ZWRCMHhZZjE2djVDNHdFWGJHeGNwaWYvR1lTNU5nZnF5U0FtR3pIdWtxVVcw?=
- =?utf-8?B?WkgzSlhEeHMvcndDK01nWVJCSHdPSGk1UmsxdTkycmxiZ3dyL2w3MDVram5l?=
- =?utf-8?B?NzREaDAzREJKazk0Wk45RFEwaGNXaU0vVFRCZGhDZ2xSVzUyeURHUXRuSzE2?=
- =?utf-8?B?L245TkxFbzFJQnRaeDAzbEFjL2xNTjcxVi9DeXhJRmt2cEJGWDlvQmIrQ09U?=
- =?utf-8?B?UTBlbUZDeStoRWUzdHJEU2V6ODNWeTJVQVZFMm9IcVVTd0hPUm42NUZGSjVI?=
- =?utf-8?B?VjdqdmhjT3N4bkttNktNVldtL3orZEpVNi80bjRQMDNUYzE0QXpGMnZnODFo?=
- =?utf-8?B?QjE5VTM3TzczdGtYcGF0b05WNjlUWEZaUEhVUklhdEF4MUtjZ2ZnbllZYnFl?=
- =?utf-8?B?bzUzbWU5OVFvbVJVOEcvemhYQ0pKcTRZTStpN2lpdWZGclhYUHZsWUtsUWND?=
- =?utf-8?B?MVhiL1ZJdzhlYkFkS3RxLysyQUl1QVlKcHpmdnpXdUF4ay9pMW5pRGVLekEv?=
- =?utf-8?B?Yk9NTXRTdTJocHpEMkI4cWY1RGlGME42VndwNEtuT2ZBT1hQSWVGeWpSbmYy?=
- =?utf-8?B?U3NtMFovTFNuM1JnMUMzcm5NejdMNGVHWndCOTYvOUp2Sklra0QvS21OUVFJ?=
- =?utf-8?B?Y0tXUlp1SHMvS3ptVFAxazhwY0NBUDJpSEoxbXBvaUNCcGxkYmxtU3YvWC9L?=
- =?utf-8?B?YkFaYUQ1ekpCRndudTdEdFM1LzA4eEpvVzByelBpbXZuK0Q2SHpPSjBKQStt?=
- =?utf-8?B?eEtLc0l6M2lYM0lWaGFsRFpxWFI0RWNPWFYvSjlYMWdJcXN5MzBFL2dwYTNJ?=
- =?utf-8?B?RWFVWW5HK040VWE0Rzc3blBrUy91dWpodUVUMTl6Z25ZalhEMFlqY1A1SEQy?=
- =?utf-8?B?TTd0NTFxK1BLQ1VsK29CR0RaNUszY2JQbVdxL0FmZ0FjUWVsTWlyZlZrYWpX?=
- =?utf-8?B?WmJyVkFleHVvYVFXaWVlOGJBNEdUZ1RUeFpQRjM5U2VENi9pUExYQ3BCZ2ZM?=
- =?utf-8?B?NVBTdVhldWYvanAvWDNjMmtGbDhlMHphL2s2aFNkTzJpN0N6ZnJtbEpDZldw?=
- =?utf-8?B?eFJ4cDZLd3RSdkxTbHNyR1l0cDZUeU9UQTc3Wlp3emw2VURMQyswcm1kSWhP?=
- =?utf-8?B?SzlKMXFoOXRldEJ3VTZ1bjhBQmg5V3M2SCt1cktqa1B6V2NISU1WOUlNRW9S?=
- =?utf-8?B?c21qVWg4SGRpY1h4c1VQQThVQ3hLS1dlSGc5OTExeWxQcEFDNmlQbjN5SllH?=
- =?utf-8?B?dFA5WkNpUFE1c1pkczliNnBlSGhpb3p6bm5CekdrekQwa0dUOEJkOE5TVnRC?=
- =?utf-8?B?bHl6ci9xQTRrU0lIcWxnN3hXRlZlTCsxSUF3OU8xZVNEK3lSVjVOZlROYkMv?=
- =?utf-8?B?dHRRcHpicVVXc1lVbUFVcm82UHAwejJ6NTRRdVR0czQwcXUwMUdENE5oYmha?=
- =?utf-8?B?TklSMjcwNkxzRUszbG9EeFFYdVpWSkJMVHJYNmxJclFDY2Y0dE9JR3lVTlp0?=
- =?utf-8?B?ZVpKMUJ3T2trbEZ0dnVxcXJhTDI0TkQ0ejMzb1ZaWHRKQWhqTXRueHBPUXhw?=
- =?utf-8?B?Z0U1UnRhWW1vRWFVeW5GTHIxdjlLMWxmWU16bHhRYmZ5MmhIak41WC9HUlBw?=
- =?utf-8?B?d0h0dnQwUWdXL25pdW5pQXZOZkZSY0lRcVd5eHdNcUtndWFxeFZlZkxUWXVH?=
- =?utf-8?Q?dDa4s91sAA8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5949.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VnltZ1hHb3A4RzN2NEtZN3A5NUVyMkNwTHIwZjJPUytqKzBGWkxPbHk3WlRI?=
- =?utf-8?B?ZXo1ZzZJZERjajVzbDdiSGFJd3l6U3dSVXk1alRVWXVEbUQrdUh1VUZVNXJC?=
- =?utf-8?B?T3RSWUQ1UktYTmdDckZUbnNiSHVzK1JPZEVXNExLU1B3MFZGaXNjNHQ3RS81?=
- =?utf-8?B?dHBTQThYMVlrM2ViekpNZVc3c0k2aTVzWmVBUFV0TFhNdkFZUHNrSkR2aGJ2?=
- =?utf-8?B?aDhIY0dOTDdkZ1lXelRRSXFHYWs4VWdEVUtuUTFxRmp0aGE5bVRvOHJ3QmZ1?=
- =?utf-8?B?MHY1QzlDOVJmV2lsK1NpR3M0QzZVcEdNaEh6cUdrM0VLSWhLRmVWVmk2aEhj?=
- =?utf-8?B?eVJzRk1DUC83eml1U1FoOUhUVkNFOUJmUGhUWTZPZ1ZIeStJZmxCUFVYdEhF?=
- =?utf-8?B?T3Z3MDhNUFY2aWJRdGdMblF6aWJ0RG5hYzBtaUZJUmcyNTNSRUZycWR1aDZI?=
- =?utf-8?B?SVNrOERRQkFaT3NsZ2tNemV0Y2twQ1NLTG1NMTQwd0doRXVac05uTVBtL3hw?=
- =?utf-8?B?bS93WURWWVNUVnNncVBpc2l1Q2hpajBXN2I2aFBVOEZKYS8wbnRsNW5DNnY2?=
- =?utf-8?B?K2VnZzc0MC9FR2lReWJnL2hPQ0FRYXJuRFhUcjRrM21vUVJxdVJ6bjloWGdS?=
- =?utf-8?B?VlBSbXN0N3p4SlpENWVqZGNtQTlsVUVuc0R1Tm5BTmNIZVlFUUUwRUhnNGxo?=
- =?utf-8?B?b1N0SVVPd2ZTREc3QURuTkJ2MGpJditPMTV2b2d1VkhYQlFCNTZhODMwbHF4?=
- =?utf-8?B?eklNUkJDdWcyVWNDMVNDVnI0SlFnbDRLK3JReERvNmZ4akM3R1I2VlV2SUFS?=
- =?utf-8?B?RldZRzA5YXU2L1Bvd0VlM1dWQkE1Vzl3VlRQb3BtUGluanF5ZE5rdklKUS91?=
- =?utf-8?B?dzBZKzZEL0RMSElROXFibURBaFFlWlg0Zmgyb3JEZmcyZEp5bFNIZVo4YmNq?=
- =?utf-8?B?Mlo4TTFEQkE3dDRiaS92M3JqUUUyZlV0aWJaNS9tYkpyNkM4ZTJJQ1FOMWhy?=
- =?utf-8?B?YW8wazJxc2MyandKY2tObitRdjZtOFAxdzBIbldhZlJaWXIvUXBsREluNm9l?=
- =?utf-8?B?aG9OUDRjVEo0M3d0ajhZd0picEw0T0c4UlZ0RmtRUG9XTVMwM04yRHJZZUtt?=
- =?utf-8?B?MTFiaFl2YXI1U0c5eGVKTWF2dWhrY3VENk1rQ0F6NkJwRmtFTlhWaFVWZnY3?=
- =?utf-8?B?eE9GaE5sZVpnT0xwRmZVL28ySkRraTBsYnIxZHJGYW0vWk1CYzFtdzhqYW5a?=
- =?utf-8?B?cVZUZUdNOUc4dHVOV1B6Y2JhQnVVM1hJV1hYRFQzand3UFRlbUtRZHJXWEhE?=
- =?utf-8?B?N0hyQlNwa0pLaU5zVE1KK0RBaGh3cGVRWUMyYzk2WkFjcHlXTWhxdVVDbGRR?=
- =?utf-8?B?V3haYVJJT0dIbWVnY2pDSmkzdk1SVzVQQWlJYjFQb3YrdzRVVTNnTnpJYWlP?=
- =?utf-8?B?VnF2VmpmcGdDSGVGSWZubTBZSS9MakNPbC9aR0I5d2hPZDRxWXhvMHRtVzRG?=
- =?utf-8?B?WE5HSDZ4cXBmVmJxVEFQenZaSVhpSkhZakIzV004OXpqZlpFdU9sZ2xtQ0Zi?=
- =?utf-8?B?MzFiaWIyTzJReVRqaVN3K0FKVHIxK2V6SXlsdzlOZUhFNWtiOFM0Vm5WUmYx?=
- =?utf-8?B?YS9JWXJjT0VIc3dNVFQwampqOVNtZFRrTk9LcnMvcm5ranllTTNmMFA3MEJu?=
- =?utf-8?B?MDNFTTVUMFBzMGZlM1BDUUhFcGVYdUVIU0lmL0JONENwRGxPbWdJMHZoQXoz?=
- =?utf-8?B?RlBKUmcrVFpKQ1FWZ0Zsam9VQTRDNWQ0RXlVdWxvR0x4ODFhSXlwTFVHUzR4?=
- =?utf-8?B?enN2dGYrckw2emwvTGtIemNzZVJXbHJLQ3F4b2tmR2djdDhDZkk3d3BVdHBq?=
- =?utf-8?B?TFk1OUxKQzI2c3hZRlpCL1FTZGE5M1hmVTRGWUZldkExVTEzL3hoaVBoeEJ3?=
- =?utf-8?B?M0h6Vk1DZUVyai9qUVkrL1dTME9PSTJaVk1LelU2U3JqZVhFUmNlcDMvMmNR?=
- =?utf-8?B?VEFRQVAxbXB3UTJmWjczZXZ6cDZVWSsvRy9DamVlSFg2NjFvOW9ia24zVFkx?=
- =?utf-8?B?UnRNY0liZTRPN3NrdDBzUjY4b3BINVgwaGtOSnVqM2RKMk1leHRXNFkwRU0z?=
- =?utf-8?B?SDFHUUozU0l6Y0xVcHZPWktBVE5aREdnRXVZYk5tYnI4RWZuUWwzRG5vQU8v?=
- =?utf-8?B?Q3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4295fcd5-acee-48ed-01a1-08dd8df94137
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5949.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 06:26:24.0131
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZSeDH+Zf8SwcEA2BDEeklI4eUYpJQmoP1l9ouqE0+5kSErET6BuRT+ynS2U9ENtaCX13U17gtG4C7ON+tanahLZTo7BgHZUhB6roNXEnmeo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB5974
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+XN2a3141NpZKcb@m.b4.vu>
 
+Hi stable@vger.kernel.org,
 
+Could you please apply:
 
-On 4/21/2025 4:28 PM, Marek Marczykowski-Górecki wrote:
-> On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykowski-Górecki wrote:
->> On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vitaly wrote:
->>>
->>>
->>> On 4/16/2025 3:43 PM, Marek Marczykowski-Górecki wrote:
->>>> On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits, Vitaly wrote:
->>>>> Can you please also share the output of ethtool -i? I would like to know the
->>>>> NVM version that you have on your device.
->>>>
->>>> driver: e1000e
->>>> version: 6.14.1+
->>>> firmware-version: 1.1-4
->>>> expansion-rom-version:
->>>> bus-info: 0000:00:1f.6
->>>> supports-statistics: yes
->>>> supports-test: yes
->>>> supports-eeprom-access: yes
->>>> supports-register-dump: yes
->>>> supports-priv-flags: yes
->>>>
->>>
->>> Your firmware version is not the latest, can you check with the board
->>> manufacturer if there is a BIOS update to your system?
->>
->> I can check, but still, it's a regression in the Linux driver - old
->> kernel did work perfectly well on this hw. Maybe new driver tries to use
->> some feature that is missing (or broken) in the old firmware?
+1. Commit a7208610761ae ("Bluetooth: btmtk: Remove resetting mt7921
+before downloading the fw") to v6.12.x (it's already in
+v6.14).
+
+2. Commit 33634e2ab7c6 ("Bluetooth: btmtk: Remove the resetting step
+before downloading the fw") to v6.12.x and v6.14.x.
+
+These fixes address an issue with some audio interfaces failing to
+initialise during boot on kernels 6.11+. As noted in my original
+analysis below, the MediaTek Bluetooth controller reset increases the
+device setup time from ~200ms to ~20s and can interfere with other USB
+devices on the bus.
+
+Thanks,
+Geoffrey.
+
+On Fri, Mar 28, 2025 at 08:44:49AM +1030, Geoffrey D. Bennett wrote:
+> Hi all,
 > 
-> A little bit of context: I'm maintaining the kernel package for a Qubes
-> OS distribution. While I can try to update firmware on my test system, I
-> have no influence on what hardware users will use this kernel, and
-> which firmware version they will use (and whether all the vendors
-> provide newer firmware at all). I cannot ship a kernel that is known
-> to break network on some devices.
+> Sorry, I see that an identical patch has already been applied to
+> bluetooth-next
+> https://lore.kernel.org/linux-bluetooth/20250315022730.11071-1-hao.qin@mediatek.com/
 > 
->>> Also, you mentioned that on another system this issue doesn't reproduce, do
->>> they have the same firmware version?
->>
->> The other one has also 1.1-4 firmware. And I re-checked, e1000e from
->> 6.14.2 works fine there.
+> While I'm glad the issue is being addressed, my original patch
+> https://lore.kernel.org/linux-bluetooth/Z8ybV04CVUfVAykH@m.b4.vu/
+> contained useful context and tags that didn't make it into the final
+> commit.
 > 
-
-Dear Marek,
-
-Thank you for your detailed feedback and for providing the requested 
-information.
-
-We have conducted extensive testing of this patch across multiple 
-systems and have not observed any packet loss issues. Upon comparing the 
-mentioned setups, we noted that while the LAN controller is similar, the 
-CPU differs. We believe that the issue may be related to transitions in 
-the CPU's low power states.
-
-Consequently, we kindly request that you disable the CPU low power state 
-transitions in the S0 system state and verify if the issue persists. You 
-can disable this in the kernel parameters on the command line with 
-idle=poll. Please note that this command is intended for debugging 
-purposes only, as it may result in higher power consumption.
-
-Please inform us if disabling the CPU low power states resolves the 
-issue or if further investigation is required. As previously mentioned, 
-this patch is critical for the operation of Meteor Lake LAN devices, and 
-therefore, we are unable to revert it.
-
-Thank you for your cooperation.
+> For getting this fix into current kernel releases 6.12/6.13/6.14, I
+> think the patch needs the "Cc: stable@vger.kernel.org" tag that was in
+> my original submission but missing from Hao's. Since this is causing
+> significant issues for users on kernels 6.11+ (audio interfaces
+> failing to work), it's important this gets backported.
+> 
+> Hao, is this something you can do? I think the instructions at
+> https://www.kernel.org/doc/html/v6.14/process/stable-kernel-rules.html#option-3
+> need to be followed, but I've not done this before.
+> 
+> Thanks,
+> Geoffrey.
+> 
+> On Fri, Mar 28, 2025 at 07:22:06AM +1030, Geoffrey D. Bennett wrote:
+> > This reverts commit ccfc8948d7e4d93cab341a99774b24586717d89a.
+> > 
+> > The MediaTek Bluetooth controller reset that was added increases the
+> > Bluetooth device setup time from ~200ms to ~20s and interferes with
+> > other devices on the bus.
+> > 
+> > Three users (with Focusrite Scarlett 2nd Gen 6i6 and 3rd Gen Solo and
+> > 4i4 audio interfaces) reported that since 6.11 (which added this
+> > commit) their audio interface fails to initialise if connected during
+> > boot. Two of the users confirmed they have an MT7922.
+> > 
+> > Errors like this are observed in dmesg for the audio interface:
+> > 
+> >   usb 3-4: parse_audio_format_rates_v2v3(): unable to find clock source (clock -110)
+> >   usb 3-4: uac_clock_source_is_valid(): cannot get clock validity for id 41
+> >   usb 3-4: clock source 41 is not valid, cannot use
+> > 
+> > The problem only occurs when both devices and kernel modules are
+> > present and loaded during system boot, so it can be worked around by
+> > connecting the audio interface after booting.
+> > 
+> > Fixes: ccfc8948d7e4 ("Bluetooth: btusb: mediatek: reset the controller before downloading the fw")
+> > Closes: https://github.com/geoffreybennett/linux-fcp/issues/24
+> > Bisected-by: Benedikt Ziemons <ben@rs485.network>
+> > Tested-by: Benedikt Ziemons <ben@rs485.network>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Geoffrey D. Bennett <g@b4.vu>
+> > ---
+> > Changelog:
+> > 
+> > v1 -> v2:
+> > 
+> > - Updated commit message with additional information.
+> > - No change to this patch's diff.
+> > - Dropped alternate patch that only reverted for 0x7922.
+> > - Chris, Sean, Hao agreed to reverting the change:
+> >   https://lore.kernel.org/linux-bluetooth/2025031352-octopus-quadrant-f7ca@gregkh/T/#m0b31a9a8e87b9499e1ec3370c08f03e43bfb54bf
+> > 
+> >  drivers/bluetooth/btmtk.c | 10 ----------
+> >  1 file changed, 10 deletions(-)
+> > 
+> > diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+> > index 68846c5bd4f7..4390fd571dbd 100644
+> > --- a/drivers/bluetooth/btmtk.c
+> > +++ b/drivers/bluetooth/btmtk.c
+> > @@ -1330,13 +1330,6 @@ int btmtk_usb_setup(struct hci_dev *hdev)
+> >  		break;
+> >  	case 0x7922:
+> >  	case 0x7925:
+> > -		/* Reset the device to ensure it's in the initial state before
+> > -		 * downloading the firmware to ensure.
+> > -		 */
+> > -
+> > -		if (!test_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags))
+> > -			btmtk_usb_subsys_reset(hdev, dev_id);
+> > -		fallthrough;
+> >  	case 0x7961:
+> >  		btmtk_fw_get_filename(fw_bin_name, sizeof(fw_bin_name), dev_id,
+> >  				      fw_version, fw_flavor);
+> > @@ -1345,12 +1338,9 @@ int btmtk_usb_setup(struct hci_dev *hdev)
+> >  						btmtk_usb_hci_wmt_sync);
+> >  		if (err < 0) {
+> >  			bt_dev_err(hdev, "Failed to set up firmware (%d)", err);
+> > -			clear_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
+> >  			return err;
+> >  		}
+> > 
+> > -		set_bit(BTMTK_FIRMWARE_LOADED, &btmtk_data->flags);
+> > -
+> >  		/* It's Device EndPoint Reset Option Register */
+> >  		err = btmtk_usb_uhw_reg_write(hdev, MTK_EP_RST_OPT,
+> >  					      MTK_EP_RST_IN_OUT_OPT);
+> > --
+> > 2.45.0
+> > 
+> > 
+> > 
