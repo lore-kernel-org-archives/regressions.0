@@ -1,92 +1,89 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC2D7FBA2;
-	Sat, 10 May 2025 01:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C351A1459F6
+	for <regressions@lists.linux.dev>; Sat, 10 May 2025 03:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746841471; cv=none; b=eGOry2SSoNZXClNXChkxDEWAk8NrYLCcEYmc1YZTGLgepv23hSwc0jHy1HWPGYa7usC3cZyMAzHBLYzKB1HeyJ5WrbxMKI5PwcwpeHW8BdDZFI0o/1Zlh5d5AMvJCBFE1jwm8oW0kuAky23PXzsmMmG2hbayMGdeQy2KeAJY16I=
+	t=1746846327; cv=none; b=Tieh1PZYqo8Aq4QA4jZxiPvB8dJmaSQ/4smWjLi4M4KBvOVMzA5MUxiv0M3setrWa1Ypmc9dsIeji0h6a+teyqAomMyeIXWxbP6qeqHPX+dFnGqvHgxgF4igIpaClsOtXgb4FM+S+5BWoKMb1/2z7mE5PONuhH1BF5+wxSL8vjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746841471; c=relaxed/simple;
-	bh=M5tx+r1QbIUCT1y1uSrH7KPbcnmkzXkMSj/LeL8Zzv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rzwgGYipEOLvwVUkaZH66HsailnvC+cqM9HIWVSWikQ+Fgh/hwSqfia9FdWMAU5SXSD4P57bssFqoU071EgqaOvJ9s2UpSCn/d7Qe3e+5hoM3GBivLf23htdMhGp5YDAzVybLUvGTOf9mGTKt+qukxxxEymztlbuQjHMybWio24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=n8vm+53d; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746846327; c=relaxed/simple;
+	bh=0Y5jtXbkzPHbi+33JLX/GRAnmyxVtbBj1SF8BU/aAA0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCDTf6N7AXQUFsC18by2UJobblvi3XEFH8HCPMTIkcBTM2ZAMmE5ZSubqgeku/UYTi4r/Is6GcU55jivlRIQviozmDN4npZYej+IMCg0bQXO04LdPN4VI0GBX91mpxn2/pSEIn0Q5ShIloCv7JYg5xijbY2R90CUKMQUpiWBibc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=L9u12xnT; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="n8vm+53d"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=VL+chSAODTarjeBDTkcr1EDJvwQEwFverB/SmL/keUM=; b=n8vm+53d2GgZ1XjCJLUyDsVI7p
-	dUIsGDXnPKNmve+HPc3E8gWFv88Vk05qPGXsFx/uk27TMLOPoNiLW4fCz9QTSgjts1RQMB5YWl4ir
-	LQCVsvURz3hcTvALV/txB5dsALOc37RyunEm+01U8MBuXs/tS6rouVHuq1tXymc94+tn9Lpw302Es
-	hkmDhL5VMz+9Y2WgrhzZtf1ZnuiTKCK3huZtY3VBYfQqM7UqCYdABXICTdKAhrZ/NAR4OYj93DYP7
-	LgOilsu95cnuSS8CYT+1pzCOCyfYKDdo5jhjTsoS9oLCWdlfnTeNXZ9vYkZdohboMG7GGcmFvhgtZ
-	yjVk+5xQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDZGK-004zr6-2J;
-	Sat, 10 May 2025 09:44:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 10 May 2025 09:44:24 +0800
-Date: Sat, 10 May 2025 09:44:24 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [v3 PATCH] crypto: marvell/cesa - Do not chain submitted requests
-Message-ID: <aB6veEHqgrxBJs01@gondor.apana.org.au>
-References: <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <aBypVwhHHzmqqN5K@Red>
- <aBytNdRyd5Ywh1Pq@gondor.apana.org.au>
- <aBy06xyzh5kKC48a@Red>
- <aB10PqZNk0L-ly70@gondor.apana.org.au>
- <aB24nSeEJKtP1bO_@gondor.apana.org.au>
- <aB3ggeQDdaPblUxi@Red>
- <aB6oxlR6DINIvdLM@gondor.apana.org.au>
- <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="L9u12xnT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1746846326; x=1778382326;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0Y5jtXbkzPHbi+33JLX/GRAnmyxVtbBj1SF8BU/aAA0=;
+  b=L9u12xnT25QYNASFTXh159xICCHvNBI/FWuuO+WaYffwIW8m8h7KtII2
+   CwzjAQOsn5U7IGUYkIhS/57H4LKu67BT7C7U5dDR1ukgEMRmyWvuRYMOZ
+   jE51ANbdTtZzWfkt1GRu02toEHwjRU83fp/ruJsaYZnlhn+rTlD+0g0SO
+   NMiznEq5YjMLncPGQQXYVzArgf91EFBf//4UlbmlCimSLJFL2GLwQ0wT6
+   vd4LFFVUNieqGHIKYCe3KQ9oIQNXYDDzr/dCY3V+9VlOAM17yqDWhPFeS
+   fKSmSMHkXq4t4T9jtN+X8NgTxHIT6i4tbySsoBFBaVKfaCAQ7Ae01MAHJ
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,276,1739836800"; 
+   d="scan'208";a="296299169"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 03:05:23 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:40195]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.12.229:2525] with esmtp (Farcaster)
+ id bf756ada-ce60-45e5-bac3-f1e19ee65d09; Sat, 10 May 2025 03:05:21 +0000 (UTC)
+X-Farcaster-Flow-ID: bf756ada-ce60-45e5-bac3-f1e19ee65d09
+Received: from EX19D026EUB004.ant.amazon.com (10.252.61.64) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sat, 10 May 2025 03:05:20 +0000
+Received: from 3c06303d853a.ant.amazon.com (10.135.223.133) by
+ EX19D026EUB004.ant.amazon.com (10.252.61.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sat, 10 May 2025 03:05:18 +0000
+Date: Fri, 9 May 2025 20:05:13 -0700
+From: Andrew Paniakin <apanyaki@amazon.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+CC: Christian Heusel <christian@heusel.eu>, <pc@cjr.nz>,
+	<stfrench@microsoft.com>, <sashal@kernel.org>, <pc@manguebit.com>,
+	<stable@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+	<abuehaze@amazon.com>, <simbarb@amazon.com>, <benh@amazon.com>,
+	<gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION][BISECTED][STABLE] Commit 60e3318e3e900 in
+ stable/linux-6.1.y breaks cifs client failover to another server in DFS
+ namespace
+Message-ID: <aB7CaTP-jwYhDROJ@3c06303d853a.ant.amazon.com>
+References: <210b1da5-6b22-4dd9-a25f-8b24ba4723d4@heusel.eu>
+ <ZnyRlEUqgZ_m_pu-@3c06303d853a>
+ <a58625e7-8245-4963-b589-ad69621cb48a@heusel.eu>
+ <7c8d1ec1-7913-45ff-b7e2-ea58d2f04857@leemhuis.info>
+ <ZpHy4V6P-pawTG2f@3c06303d853a.ant.amazon.com>
+ <Zp7-gl5mMFCb4UWa@3c06303d853a.ant.amazon.com>
+ <fb4c481d-91ba-46b8-b11a-534597a2b467@leemhuis.info>
+ <ZxAm4rvmWp2MMt4b@3c06303d853a.ant.amazon.com>
+ <ZzD0cW4gbQnbI9Gm@3c06303d853a>
+ <Z9cZuBxOscqybcMy@3c06303d853a.ant.amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <aB6t9lfMCSuYVxwv@gondor.apana.org.au>
+In-Reply-To: <Z9cZuBxOscqybcMy@3c06303d853a.ant.amazon.com>
+X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
+ EX19D026EUB004.ant.amazon.com (10.252.61.64)
 
-On Sat, May 10, 2025 at 09:37:58AM +0800, Herbert Xu wrote:
->
-> In particular, when testmgr does an update+final, it will give a
-> non-NULL SG list to the final call.
+On 16/03/2025, Andrew Paniakin wrote:
+> My next step is to resend 7ad54b98fc1f1 ("cifs: use origin fullpath for
+> automounts") with required comments and send an update to this thread once it
+> merged.
 
-This ties in with all the test results so far because it appears
-that all the failed test vectors involve a final call.
+Backport with a fix was released in v6.1.135.
 
-> The buggy code in marvell/cesa will then read that non-NULL SG list
-> during the final call and overwrite the cached bytes with it.
-> However, I still can't see why that would make a difference because
-> it should contain the same data.
-
-I think I can see where it does make a difference.  The SG list
-is never mapped during the final call.  So the DMA address is going
-to be either crap or more likely the address from the previous
-update call where it was mapped.
-
-Now depending on how DMA mapping works on your platform, that may
-indeed be buggy during concurrent calls only.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+#regzbot fix: 7d8bb979f627 ("cifs: use origin fullpath for automounts")
