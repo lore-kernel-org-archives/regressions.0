@@ -1,157 +1,156 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6144B184;
-	Sun, 11 May 2025 03:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433242571CA;
+	Sun, 11 May 2025 13:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746933755; cv=none; b=o6BPb8nqn/uGl1/SPdr5gQkYp83eHpn18X4EW8BzEys1XtFgh+XaGn/+DrJui7uflFk80hDN5jrWwzzVm6jQAc7NIbLOo+ZiT3EUYRaN2Luxnyc6LqR6abcyWZA/f1m6RPT2jY/VfGbgFVnZLOXZbGkPUtL4PuldzNciHCMecIU=
+	t=1746970298; cv=none; b=AzQhSDY/lfpaLxh/f+fxNBiOhxZvczu6i91LZCTiBg3Bwa0XXHaJcUlgTNU9Q/hDgAdjUfWuFxSmg7HbXjBfe5ldVIR0Q/JNN5L3reG7FyUqYXjUzdQgY1Doli1UJUC4YszyEmX0Uiqm87rvBEaGKUvdEhVd3q5uRkO9GYAojwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746933755; c=relaxed/simple;
-	bh=YeoZRWRANmCUNbk4l2pyx/MrQB0OC5+emslCayfyyMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ocDvg0vZiDR3RdUX3BY8ENAhXzMMoRb4QaJbWBFeiJsKqE8RXE7nL7z+++b6gpW+LxJ1YlUMwZI6HMvuC4OjLeNtQK+2iw/ncwVqLSCe7v0Xn/+N7lPCHiObUhAZCHFpdr2w+f3ocMVDgbukqHVkEgoANjf+K47P36Du8jcV+c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=sloy2zEf; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746970298; c=relaxed/simple;
+	bh=v7V7RZABxDpzTCd01jnnzt/qeDr0mJMKGJhF94ABrK8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HrK1BhuMHHN5+P2+F8nxLTAB0UveFfbEqF3uV3zpFotgDcMPVGN0Vq/0f5lQNtUuyGp8ecdMiYKJnq73SRqkKwMQoQY3f8XaPha+2c4IvCX3tSZmiTn5i4XcjPW38/woiZq5oIHI1Rt5KrI5ZOoizrsvXdGSC3PCJchUQpDJD88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xorm9JR9; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="sloy2zEf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Y6MvY04rIvQC/jfLGWMBxjlXcQaD/D9jyPK+/bNE2uw=; b=sloy2zEf8jsRrBXH4m80u8EUSc
-	u63jtqcqATV9APkOptDJ77b9hnyjDFZun1D3AT8nry2hU3ZC5wZAYpXnQ8bdEdBJPY8+1qWd9o+qV
-	AfGAK75xCiYaa4qXejnEHfo3WnUtG268UUoZIGbDyscZjYOoq7T+aIeZ7F9KvwlN6dZY31H6ZMy+e
-	jbaV/SgZOsIoj4NOfXKjoem6FHQWWasHLh2uXpWTw9NAS935KgwjNCPmkcvGjPOuZ3F4fjQ9z3Rz8
-	WhEJ/YVvJP3bdTERqOBxO4iizx3dAOzv2SBqhaxI1+1wdkxJvlLO5P3gDIUSAxyWsgmiRkWT5z+gO
-	Qloq2c3Q==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uDxGk-005AGy-24;
-	Sun, 11 May 2025 11:22:27 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 11 May 2025 11:22:26 +0800
-Date: Sun, 11 May 2025 11:22:26 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
-References: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
- <aBsdTJUAcQgW4ink@gondor.apana.org.au>
- <aBt5Mxq1MeefwXGJ@Red>
- <aBw-C_krkNsIoPlT@gondor.apana.org.au>
- <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
- <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xorm9JR9"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30828fc17adso3400507a91.1;
+        Sun, 11 May 2025 06:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746970296; x=1747575096; darn=lists.linux.dev;
+        h=mime-version:user-agent:references:in-reply-to:subject:cc:to:from
+         :message-id:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1/e+QlwuOBaTQegQySoATY3jFu5uRVYu74q7ghqDm3w=;
+        b=Xorm9JR9Sf+ap4pTBJ5no7Iz2qcE4Au3LidYBkjmu/K7kkbtgUb75ltPWTr/SEFow4
+         kPNh32ioSpPy/KQWK4+zdlDbY/JIX3IfxV34KjlMcVXiYG4OR7AKjpqRgUN39luIu6rL
+         RmzjnY35U1MWHvJcQRv/dmpVGSD38MqbJrvouLW7OSvAdzU49sK+MbllhGXoKrllrBoX
+         w34WqUAUEPy1FGlGWurObUNzPCJWp6KMZyCbaM/rZ4S9bZiwYliZvAn0ROERP6s0eqN4
+         lr+Y7mWigAM6uyuNJ2ZP8AjPBXtXO+IhsQInRUFxTIHqdKLUg6PaT5i1PgC6EkAcP5a2
+         9cJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746970296; x=1747575096;
+        h=mime-version:user-agent:references:in-reply-to:subject:cc:to:from
+         :message-id:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1/e+QlwuOBaTQegQySoATY3jFu5uRVYu74q7ghqDm3w=;
+        b=u9vhJt5DEDrMumJm5cPVjGJanyzBThTd5GMt6W5E0s3jJxcmCzTWnmmrNxz0M2YEy6
+         T0XjgawUw0QCrhhOs/UunmkNeu2VWt0G7ciHm1i3akUCPpWyqW3trcXtkufR1eKe4+/4
+         kvOV3raav+BYmBkyvgVtK3bMoQjlvWb5IaBr/1B9rbN6pcLqUGupZgRFjMZvxi8mXk/V
+         5r0CSlMzkxVpi8HFRZCq6zxJ5i90fxgxVsrtKr8qYDHiGlLZ88nL6+5p6LahPMtlDRKj
+         mdiuGiprQ5rp/uL7ktimaUQ+/cj0UZVpb3PTYNQKbf72UxrnkAkBXQE18X16ub2rFx9S
+         UUQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXE7qn/5hoPOEb98WUsxPi72TMlRk9oe8uCegPTYIV5PjN+5sZ9NHNkVpk7O1pVYTAodaPuhVebRPhwlY=@lists.linux.dev, AJvYcCX+fGT8Ud+zbjo8gB2stoD7/rPsMCItR4BgkSALkhyHjOHdFLTttoTKWTv0v5lhiKVKzmLEJQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2AYAPlv0tkoqER0eILvkrlu7tCb/X10j+TDvCQkT9jVDuCWAC
+	3LD9QFZakKx8mH+mh+7xw6az/bboxusBc4gt/1k7J9LVg9kpuJQ3
+X-Gm-Gg: ASbGnctNO1AkxO1lggsfh5pXUWOVEgPZncczozkqLjOzhz9jKXdLGhj8pZzuv/oPf7s
+	SdTzUMHzb5mX7Jq2BmFTJrrOQojZxyGmsRMuqu5cPME+hsAWrB0iue/yEROS4zR1ETwVq747c8E
+	znvaLLOpV7EhSjZ9a0Ag3a48N6YAwLYzJA/2VY55xE9rTnI7pUVA+tjvP+ib0xBmOSKRH8rchy4
+	XbP1rQ3bjyvyyK6tV2/pmXFBMXX4j9wVowb8tZPNObpQM2cZe3AFPwO5cToKyu8QYiHYbJ+MFKg
+	SaaCuVbm6dZQlaGsdIogO0Q388gPQ9zqzQxcYBSLox/yFlXKAOSvyzO2rT/bqXExapl2AFfqcrW
+	68fe3UQ==
+X-Google-Smtp-Source: AGHT+IGPLu/UA8RferE1fhhUBg8P8fBAwEHMaR6Zwjv2pyeF/9jF35bRMmgJBhPOKiliyYy+r0TG1A==
+X-Received: by 2002:a17:90b:2ecb:b0:2fe:ac91:4667 with SMTP id 98e67ed59e1d1-30c3d65e82cmr15029864a91.29.1746970296420;
+        Sun, 11 May 2025 06:31:36 -0700 (PDT)
+Received: from localhost (58x12x133x161.ap58.ftth.ucom.ne.jp. [58.12.133.161])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e61056sm4834312a91.39.2025.05.11.06.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 May 2025 06:31:35 -0700 (PDT)
+Date: Sun, 11 May 2025 22:31:29 +0900
+Message-ID: <eke7wmanw9xq.wl-kobarity@gmail.com>
+From: kobarity <kobarity@gmail.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Berkel =?ISO-8859-1?Q?J=F6rg?= <joerg.berkel@bfh.ch>,	Robin Murphy
+ <robin.murphy@arm.com>,	Baolu Lu <baolu.lu@linux.intel.com>,
+	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,	"lukas@wunner.de"
+ <lukas@wunner.de>,	David Woodhouse <dwmw2@infradead.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,	Joerg Roedel
+ <joro@8bytes.org>,	Will Deacon <will@kernel.org>
+Subject: Re: [REGRESSION] applespi from 6.12 onwards
+In-Reply-To: <PN3PR01MB959708DEEA1567DD38447D5AB895A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
+	<PN3PR01MB9597D8E327CC7910673849D3B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	<122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
+	<f1b41874-1535-4457-9747-eee3d816091a@arm.com>
+	<PN3PR01MB959764E908600CD45169348CB88BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	<c0bbfcc8-1275-43de-be40-acb8f2653359@bfh.ch>
+	<PN3PR01MB959708DEEA1567DD38447D5AB895A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/31.0.50 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: multipart/mixed;
+ boundary="Multipart_Sun_May_11_22:31:29_2025-1"
 
-On Sat, May 10, 2025 at 05:07:22PM +0200, Klaus Kudielka wrote:
->
-> Here a result with the printk patch and the other two small fixes on top.
+--Multipart_Sun_May_11_22:31:29_2025-1
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.  So it's clearly not the chaining that's causing the
-corruption.  The requests seem to bouncing between the two engines,
-but it's not clear whether that's relevant.
 
-Please replace the previous printk patch with this that adds some
-info on the request being processed so I can see which request is
-which.
+Hi
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index 9c21f5d835d2..fd7f43575cb2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -127,6 +127,8 @@ static irqreturn_t mv_cesa_int(int irq, void *priv)
- 		if (!(status & mask))
- 			break;
+I'm also experiencing this problem on my MacBookPro14,3.
+
+Aditya Garg wrote:
+>=20
+> Hi J=F6rg
+>=20
+> Can you test the kernel here to see if this fixes your issue:
+>=20
+> https://github.com/t2linux/T2-Debian-and-Ubuntu-Kernel/actions/runs/14944=
+200356
+>=20
+> Alternatively you can try compiling your own kernel with this patch:
+>=20
+> https://lore.kernel.org/all/0-v1-c26553717e90+65f-iommu_vtd_ss_wo_jgg@nvi=
+dia.com/
+
+As far as I have tried, this patch did not solve the problem.
+
+By bisecting, I found that this problem was introduced by commit
+2031c469f816 ("iommu/vt-d: Add support for static identity domain").
+In fact, since this commit, it will panic at startup.  This panic was
+fixed by commit 6e02a277f1db ("iommu/vt-d: Fix incorrect
+pci_for_each_dma_alias() for non-PCI devices").  So I applied commit
+6e02a277f1db on commit 2031c469f816 and confirmed that the keyboard
+and touchpad is not working.
+
+I also found that I can workaround this problem by reverting only the
+intel_iommu_attach_device() change in commit 2031c469f816 as in the
+attached patch, but I'm not sure if this is a reasonable fix.
+
+
+--Multipart_Sun_May_11_22:31:29_2025-1
+Content-Type: application/octet-stream; type=patch; name="workaround.patch"
+Content-Disposition: attachment; filename="workaround.patch"
+Content-Transfer-Encoding: 7bit
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index cb0b993bebb4..14da33490fa1 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3484,9 +3484,11 @@ int paging_domain_compatible(struct iommu_domain *domain, struct device *dev)
+ static int intel_iommu_attach_device(struct iommu_domain *domain,
+ 				     struct device *dev)
+ {
++	struct device_domain_info *info = dev_iommu_priv_get(dev);
+ 	int ret;
  
-+		pr_err("mv_cesa_int: %d 0x%x 0x%x\n", engine->id, status, mask);
-+
- 		/*
- 		 * TODO: avoid clearing the FPGA_INT_STATUS if this not
- 		 * relevant on some platforms.
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 2200bc6a034f..be8471a8ab22 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -396,6 +396,8 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 	}
+-	device_block_translation(dev);
++	if (info->domain)
++		device_block_translation(dev);
  
- 	atomic_sub(ahashreq->nbytes, &engine->load);
-+
-+	pr_err("mv_cesa_ahash_complete: %d 0x%lx\n", engine->id, (unsigned long)ahashreq);
- }
- 
- static void mv_cesa_ahash_prepare(struct crypto_async_request *req,
-@@ -417,6 +419,8 @@ static void mv_cesa_ahash_req_cleanup(struct crypto_async_request *req)
- 	struct ahash_request *ahashreq = ahash_request_cast(req);
- 	struct mv_cesa_ahash_req *creq = ahash_request_ctx(ahashreq);
- 
-+	pr_err("mv_cesa_ahash_req_cleanup: %d 0x%lx\n", creq->base.engine->id, (unsigned long)ahashreq);
-+
- 	if (creq->last_req)
- 		mv_cesa_ahash_last_cleanup(ahashreq);
- 
-@@ -783,6 +787,7 @@ static int mv_cesa_ahash_queue_req(struct ahash_request *req)
- 	engine = mv_cesa_select_engine(req->nbytes);
- 	mv_cesa_ahash_prepare(&req->base, engine);
- 
-+	pr_err("mv_cesa_ahash_queue_req: %d 0x%lx %d %d\n", engine->id, (unsigned long)req, req->nbytes, creq->last_req);
- 	ret = mv_cesa_queue_req(&req->base, &creq->base);
- 
- 	if (mv_cesa_req_needs_cleanup(&req->base, ret))
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 9b5fd957dde2..59be742c5a1c 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -47,6 +47,8 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- 	engine->chain_hw.last = dreq->chain.last;
- 	spin_unlock_bh(&engine->lock);
- 
-+	pr_err("mv_cesa_dma_step: %d 0x%lx 0x%lx 0x%lx\n", engine->id, (unsigned long)dreq, (unsigned long)dreq->chain.first->cur_dma, (unsigned long)dreq->chain.last->cur_dma);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -137,6 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 	int res = 0;
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
-+	pr_err("mv_cesa_tdma_process: %d 0x%lx\n", engine->id, (unsigned long)tdma_cur);
- 
- 	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
-@@ -186,6 +189,8 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 			break;
- 	}
- 
-+	pr_err("mv_cesa_tdma_process: %d %d 0x%lx\n", engine->id, res, (unsigned long)req);
-+
- 	/*
- 	 * Save the last request in error to engine->req, so that the core
- 	 * knows which request was faulty
+ 	ret = paging_domain_compatible(domain, dev);
+ 	if (ret)
+
+--Multipart_Sun_May_11_22:31:29_2025-1--
