@@ -1,172 +1,109 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA04F1D63EE
-	for <regressions@lists.linux.dev>; Mon, 12 May 2025 15:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747062424; cv=none; b=s/9ripnJFDwNYh6EwgkInLbVIvmmLN9Dy3lzHh7JvqD5b7+vYCoC72W/zQVhPqCxSQU8GO8fyRK1m3RrSRhaca2qUJfoFHpUka5m9RIXvg2ZtdCFyz4LcriLNqt89n2vWeijojxPJHBMklog7o7NtrFlYNraUOBA4+LisgRfcyM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747062424; c=relaxed/simple;
-	bh=+o6yR/P2xYE8Li6Iox3E0PAeKRKfR5KLkStd/n5YwUs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IEyF5dju/jVSeaDhHHuyQMht2rlrs82s1NbncTbKqBZSNuCx0VZWNntoh9gw7eJOHmpYW9ZAposp5KC1dOtjn5CN5dH46487QoG/MaxKCSMcAXu1L0J/XbltMxfW19HNivoolLJ9KlhbNoiXHQVa4HwSGSGx/G0wTOYMLcuTKFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i7cyqOkh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WNkMv1T/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=i7cyqOkh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WNkMv1T/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEAD3FE7;
+	Mon, 12 May 2025 20:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747081825; cv=pass; b=ENY12OyLB0XmhagjU1EAJUCZMMRyxEy6hYl91Jeav0bDJ5z2E5XhMmsVcNbh/LghDUNK7DvJhH1kkNtXPEUxyKyFqkYeNN7mtg2qLBlH4mgCmjX0U8FWd4nEeVPK23p8NuiD2FLzb0vhoIecWy1sJIj8+OGK7Bw30h4lmNpJZ2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747081825; c=relaxed/simple;
+	bh=dVcW4spjNBdoQ8twfGcmvjbost0R99zAeDwoVzfneqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MPpfhz8+gfk6V7CeX5IKXDVLt4wEz7R/eU0kS9g1eH5Ehil3CHQoO6YJVeLLW0HtacpZrxZ6DTin7jcZHnj+AMKr0CVOps855L7TLbc0IBNHjZrl+dw48kI+3LBGtK+/WwIfo6VOSSdHEJTLsNQ27xI4wPztCw/k57aawvm9T/s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=i869kQLF; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=VlXzukrp; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i7cyqOkh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WNkMv1T/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="i7cyqOkh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WNkMv1T/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7835D1F790;
-	Mon, 12 May 2025 15:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747062420; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvTm2OOd5aLCAsrYpKV5YaeMP78ew2u5mUF8tbcsfYc=;
-	b=i7cyqOkhOKnqoVLN23e+UKeTk79Olz47K/c6bcYel5nmuAbM/sbnee1/cBQT/erXt023Ks
-	DG9OZ3uuelGqP/2Z6jsHTPug2wXeu4Vu92e1FEqIkOvWQ+agFetL4lCudBmhyvlow+0z0D
-	JBvpB9hI3HRUpUQYwxBFDAo1oTn7Wf4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747062420;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvTm2OOd5aLCAsrYpKV5YaeMP78ew2u5mUF8tbcsfYc=;
-	b=WNkMv1T/bnvLpXYMG1ZH0Y32vNRepkSYmqQ70EpE9Fvvf+wdOuWKiNTTeYUmGIzPRNzxyx
-	+k8jZ/t2CVkXYKCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=i7cyqOkh;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="WNkMv1T/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747062420; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvTm2OOd5aLCAsrYpKV5YaeMP78ew2u5mUF8tbcsfYc=;
-	b=i7cyqOkhOKnqoVLN23e+UKeTk79Olz47K/c6bcYel5nmuAbM/sbnee1/cBQT/erXt023Ks
-	DG9OZ3uuelGqP/2Z6jsHTPug2wXeu4Vu92e1FEqIkOvWQ+agFetL4lCudBmhyvlow+0z0D
-	JBvpB9hI3HRUpUQYwxBFDAo1oTn7Wf4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747062420;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BvTm2OOd5aLCAsrYpKV5YaeMP78ew2u5mUF8tbcsfYc=;
-	b=WNkMv1T/bnvLpXYMG1ZH0Y32vNRepkSYmqQ70EpE9Fvvf+wdOuWKiNTTeYUmGIzPRNzxyx
-	+k8jZ/t2CVkXYKCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3FF2A137D2;
-	Mon, 12 May 2025 15:07:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id o1lmDpQOImj9SQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 12 May 2025 15:07:00 +0000
-Date: Mon, 12 May 2025 17:06:59 +0200
-Message-ID: <87o6vxuauk.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "kailang@realtek.com" <kailang@realtek.com>
-Cc: Ruslan Nikolaev <nruslan_devel@yahoo.com>,
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"tiwai@suse.com" <tiwai@suse.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-	"sashal@kernel.org" <sashal@kernel.org>,
-	"perex@perex.cz" <perex@perex.cz>
-Subject: Re: Fwd: [Bug 220109] New: Audio disappears on HP 15-fc000 after warm boot again (ALC256 code path)
-In-Reply-To: <1064773772.509063.1747061777318@mail.yahoo.com>
-References: <1064773772.509063.1747061777318.ref@mail.yahoo.com>
-	<1064773772.509063.1747061777318@mail.yahoo.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="i869kQLF";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="VlXzukrp"
+ARC-Seal: i=1; a=rsa-sha256; t=1747081629; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=tARlmZoyuwgXiJ2bKrmPM5iavTSVlKTpXww+TMyIb5QQig9upe76/vGR/8LfWtYQ1K
+    vZJuhZjelIKE+WYzl8GO+6XRrzE0kPtZvjAkKDEoBGzdMFVUupusizSN0ea6YrbkXK0d
+    Q++piAtFMaaf/x7xOElkrjcXJIFJBp9CZdlV5zSfGE4XbVlMunBrCezJpgObUKc5DbIO
+    bPkncbSSEs6JsvJj8CQoUzsGpgipwfqUga9pAIF5gVoTPZzqhbMV/oQCE+0TPZRCYLov
+    EPayvF41G8/e45KuUnZAhUrsYoqovT69u+BW8e6HcZ4OWmbt1aCv8Cd4PvssQd0/zSvR
+    4hEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=lcBpbyfI2r5+LH/yMihvuOpaXWp/smIR1tKvuYwhFZSq/64g6a61ikbKF5nvyl8Dxz
+    AeyABbjJWorgMWlNP0tU1mfBaIGKzFrwNyhQ+SErpsSGNPUlfzsokPC8sp9IZQgBYY/F
+    zgEhGG+aCQj/kHfc7Kr96GmRSAqWPPUhj4WMN22juGqpbP45la5de/Ht04J+eYEJNTnr
+    Mm4hlx3d7FFCvv3xQBir9264zMcV1Lg9EfFU4a8SRYeucJ78nPKtZoANi2m6vML/4yLx
+    MM/WpfiQZ/GV4g5gsHEmOVSbZu6hOVWMnfoMeGdUqCIvc+pLM7UqkoLm0zkT5Qh+eGXH
+    vFPg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=i869kQLFtIoAtFkdzXT9SNX/PAK8AlAvg6UMDIYSS+ijuPO25FAnDaT7OflcuovSs4
+    8gNlxgqDy4ov4FTRd8zYynB1erwa/dArl6/Q17LxuucMgwSrg33HYm/D/OmmUMlW5uuX
+    R+CGN3pXVNAjzkHLYt2GT3/GtM0gkGc9/MZO4yrDnqYK8mhle7RrzHLTIGs/6GVvKA6J
+    ruO6tCr/qlQUBpWtXfgdoyFSQPTROFXqSmI1+GLd9wE5ueHqBvK6X5OtRWd9G9oKQnHG
+    MPeeTdL3FZ2JaMA84g6NTdqmsT57IlF044rN62KnWvyImq9sgGycgOfRCap2KZL6rfRV
+    HZtQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1747081629;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=E2vS+B7LB+AFC3F4dP3OSB23QlahSAk3A/y+OJVKLCw=;
+    b=VlXzukrpPaXIfwjqkZgo4O5jRiTbh8HkYhEGnXP40OHvbcrZfBX34LFFpzl/QzHvFd
+    IPNgRnwgy7twlaqBI3DQ==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3514CKR8d9R
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 12 May 2025 22:27:08 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <michael@fossekall.de>)
+	id 1uEZjv-0005UG-34;
+	Mon, 12 May 2025 22:27:07 +0200
+Date: Mon, 12 May 2025 22:27:06 +0200
+From: Michael <michael@fossekall.de>
+To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+Message-ID: <aCJZmm8rC0RwbcBX@a98shuttle.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 7835D1F790
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[yahoo.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[yahoo.com,lists.linux.dev,suse.com,alsa-project.org,kernel.org,perex.cz];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 
-On Mon, 12 May 2025 16:56:17 +0200,
-Ruslan Nikolaev wrote:
-> 
-> Hi,
-> 
-> Forwarding my regression bug report for HP 15-fc000 / ALC236 (ALC256 code path).
-> 
-> #regzbot introduced: v6.12.2
-> https://bugzilla.kernel.org/show_bug.cgi?id=220109
-> 
-> Sincerely,
-> Ruslan
-> 
-> Forwarded Message (see logs in the bug report above):
-> 
-> There was a similar bug in the past (Bug 217440), which was fixed for this laptop. (I believe the code path is for ALC256, see below.) The same issue is occurring again as of kernel v.6.12.2. The symptoms are very similar - initially audio works but after a warm reboot, the audio completely disappears until the computer is powered off (there is no audio output at all).
-> 
-> The issue is caused by a different change now. By bisecting different kernel versions, I found that reverting cc3d0b5dd989d3238d456f9fd385946379a9c13d in patch_realtek.c ( see https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/sound/pci/hda/patch_realtek.c?h=v6.12.2&id=4ed7f16070a8475c088ff423b2eb11ba15eb89b6 ) restores the sound and it works fine after the reboot.
+Hi,
 
-It's the commit cc3d0b5dd989d3238d456f9fd385946379a9c13d
-Author: Kailang Yang <kailang@realtek.com>
-Date:   Thu Nov 14 15:21:09 2024 +0800
+with v6.9 and later there is no output on the BananaPI HDMI connector.
 
-    ALSA: hda/realtek: Update ALC256 depop procedure
-    
-    Old procedure has a chance to meet Headphone no output.
-    
-    Fixes: 4a219ef8f370 ("ALSA: hda/realtek - Add ALC256 HP depop function")
-    Signed-off-by: Kailang Yang <kailang@realtek.com>
-    Link: https://lore.kernel.org/463c5f93715d4714967041a0a8cec28e@realtek.com
-    Signed-off-by: Takashi Iwai <tiwai@suse.de>
+I have bisected the issue to the following commit:
 
-and it modified alc256_init() sequence.
+   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
 
-Kailang, could you check this regression?
+With this patch, sun4i_hdmi_connector_clock_valid() is occasionally 
+called with clock=0, causing the function to return MODE_NOCLOCK.
+In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is 
+always!=0, maybe that gives someone a hint.
 
-
-And, Ruslan, it's the case without the headphone, right?
-Is the sound still lost when you connect the headphone and apply the
-same procedure?
-
-
-thanks,
-
-Takashi
+-- 
+Michael
