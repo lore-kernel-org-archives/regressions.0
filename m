@@ -1,135 +1,134 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E24A1DED6D
-	for <regressions@lists.linux.dev>; Tue, 13 May 2025 13:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B25F28FA90;
+	Tue, 13 May 2025 13:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142790; cv=none; b=DYVtCPDawO4hYo9no6svWNZCLb+P7wYJRdyOSOaP8w8LaHrsni7Sb/dRnSmKhn54f9REz5C/we/qwgfD4A26rdMYor7KDwAheFNit98SZWa8SCXFI5U71HZIK51hJ+7O94IqxBYHXRWsg8Yk2pfCXFgOKveT1bR55zCK6WaS0Qs=
+	t=1747143481; cv=none; b=tq4cBIxnyHB3MWZQGtm4sdUB5vhic5I5GaTyA+QznAggjOSdaOGhfqK8XpFyyENWhKpOMZr4bf0XuZY+wZQLZsIZI6EOH2lVSLlA4yc9fV0AsKK56U7tKwTi8cGebSjfoSh+czXvFQD0vK5TVChVY6XIxnt48D+rZgNZwKC1sLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142790; c=relaxed/simple;
-	bh=DlRA5C7gjOm56yHzbiMmIPmAtDQ26goKgMcNcb34uXk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bOCqZblS2pDSKnPDSoxjuG7kBsBQegc4HHaAQ4Y3tEoo9DsziKYNm8/MIYDxjjWbOxGzbo9jzCeqcLlz/IqmsvhW9xgy2FQ49OCFkUeqfpviG0TM7XqOBcf3VwiwHtAgq4iU06knm+wqrYaOeOWyzXZ2sL5SU+DYg63Z8Xsuu7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profusion.mobi; spf=pass smtp.mailfrom=profusion.mobi; dkim=pass (2048-bit key) header.d=profusion.mobi header.i=@profusion.mobi header.b=SdXFZnlr; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profusion.mobi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=profusion.mobi
+	s=arc-20240116; t=1747143481; c=relaxed/simple;
+	bh=8G5w6xfBLxSdUyuZjf/fIg87efI2wsjWS1VJBlCN4JI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbms4PKcjcljZUIOG8dde9D0VNI4ZT7GA41cokaZ+GGZ9nWs4LX9WJP2NFcuJcUsq9Wu+1fYD0BKrJ9vSkQRhn2wDVGy46y4vThQgWWqs+21ljFhu2oxx1Dg7ob/u6RyCgaEGGjBLoXWDNVbxQsmGZ5n72xIZT0i+bpyEByjZlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=Lw91JOC5; arc=none smtp.client-ip=217.72.192.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=profusion.mobi header.i=@profusion.mobi header.b="SdXFZnlr"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-326c9bbf029so3377111fa.1
-        for <regressions@lists.linux.dev>; Tue, 13 May 2025 06:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=profusion.mobi; s=google; t=1747142785; x=1747747585; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
-        b=SdXFZnlrsue9yT4mHusVHeaZeg/R5PGh9GWP3QnIggzW0BmRf3D+8hxOAwQuaCmSug
-         xZ6mfG12uHsG2tho4JwDTLqjdB0hN7PpjjO9Siyz2Mebuc6kZjKfqTlZkwPFKyumkeqO
-         aSYlVwwDBkXVWuDGhmnGWz9LCkASJ0txcwurx4tvnvnT/TGTIY3erJ6uoZaVHqcF7aSx
-         CZlq373EEM42xJZlTcQzmtjQ/64ESuIQxvNI0Sh0UOaeqx4ge7s1/W58bekkhlr9RuIY
-         9Q7USoOU1tgdNmwWL96Z9Zjmr8zIsigZrDJHhKg1MfMqn60GPXTwhMQNXyqvCpM8uUMP
-         7zXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142785; x=1747747585;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
-        b=Yt0KVPuIoB3XBWfJyW/IEFfweAniMs8oJ+EX1AY7EXTM1MOX6CvFbDLfwmCBoJ4hJr
-         IDfu63xW8C3T23Pn89t2zRKdOQP9R2Fl0NhbiPKHJpmf0WdRT9lgfUDj5ysLacvtPd9q
-         EvSEX0fTRO4TnZVN6sSwwKNRul8bUHBUqruyQMwDfqYompsHKW6qH/Ydq7qnM1u00AcV
-         9sJUyzSrzKsbEjDXr+22hDFX6HeYkVsmftQIFn6UCadopB/13UyliHuv0PvQT8EhMo9U
-         3Rz6jZSBeIgZ+xk/sjlDKtjlxTlVv9b3dg2jklhY6Kz59UQ3GgLbei49qRJNsAoFT1L4
-         U9OA==
-X-Gm-Message-State: AOJu0YwBV4icCpT7qASVKqTGdUB/GyFEzyzdvq+zw+wYwRDB/7aqcXpS
-	2IT1SCXN/8OG1tn/BUxyzvWH6bIF3wezhKBi60usdta3yy/ow+KoKBkQ3fbYe6xlWopHzZjd9ZI
-	DLnDOinoHg4bDVObM7vDFJ5RmiGsPHspAbyV7e3nuiCi4RuKf
-X-Gm-Gg: ASbGncvMpM3MOdgEcCocs87Z9xA0b8N3OJfJSpmWHAcTl3jSoPbX5BFiemsWWxoIfE2
-	y9euRxJOFGvKppjq82Qcw/d49XmliwZQYpBmtscySCsppBp6Vf7QhLT7tDsla+w3wHxiEEcAwKX
-	YJfOhdIvRccOkh95+J3+0A+bRef8oMb0BYP/4=
-X-Google-Smtp-Source: AGHT+IEf5RMiCkeG03jX1fAC+e9NXVnCtrvoNen8O+gEtmVu3TduaYAxNB5vZxGx9rsuo5UZnu9ES03fgXNVnPfGBS0=
-X-Received: by 2002:a05:651c:543:b0:31f:8659:dc16 with SMTP id
- 38308e7fff4ca-326c469228emr19926661fa.12.1747142785215; Tue, 13 May 2025
- 06:26:25 -0700 (PDT)
-Received: from 778980076690 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 13 May 2025 13:26:23 +0000
-Received: from 778980076690 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 13 May 2025 13:26:23 +0000
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="Lw91JOC5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1747143474; x=1747748274; i=christian@heusel.eu;
+	bh=ACb2/qTCKVj8FbXGKYkXf44fngtehSXsaEpRbHvpBws=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Lw91JOC5my6oSQT1qJQNmECo+VFkv36qqshg+sEDopx7hJR2G0/YCsGNJHv5xnaV
+	 2Yh5qOaKXdawfuNtn4z52rTeE6H3+G+Rexxc16L2S2cnQMJQ3/kGD5kkyJQIX9VJ6
+	 qJdJMLmWVeEjvzPwnahMuVg4kvS2HQAyIb9eJu7+0+I0xtW+Sl4Aoes08gYNhLSbq
+	 Aleh1utjIX7Gi6VVuY4ZnbIo5VBGk1Y0qOHfHYwbsnnQ47sW4PgD8OVYOoN41Nciv
+	 NOOtmvfbI90PMHzLQ3n0UDIf4CiZM0HaHeO9bp31p/9fj7y8xT9GZ7uzqrnBmjrLZ
+	 zSSO7tzNDuOXvKN+OA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([89.244.90.58]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MPGiR-1udnlX18Y9-00JCY8; Tue, 13 May 2025 15:37:54 +0200
+Date: Tue, 13 May 2025 15:37:52 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: kernelci@lists.linux.dev
+Cc: kernelci-results@groups.io, regressions@lists.linux.dev, 
+	marcelo.santos@profusion.mobi
+Subject: Re: [REGRESSION] next/master: (build) implicit truncation from 'int'
+ to bit-field changes value from -1 ...
+Message-ID: <37715c79-bac0-435d-822d-6956036cb454@heusel.eu>
+References: <CAMVAkEvhR+Z28zhxBvnQ64VmXYuP0ZvFg_14e2VuFPQDEpSa+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: marcelo.santos@profusion.mobi
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 13 May 2025 13:26:23 +0000
-X-Gm-Features: AX0GCFvd0cfJXAKn2hTK2apMKRsFyaH4pojw3Lte7o1kBvrii-Hpq8AzHjs_4i4
-Message-ID: <CAMVAkEvhR+Z28zhxBvnQ64VmXYuP0ZvFg_14e2VuFPQDEpSa+g@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) implicit truncation from 'int' to
- bit-field changes value from -1 ...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, marcelo.santos@profusion.mobi
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-New build issue found on next/master:
-
----
- implicit truncation from 'int' to bit-field changes value from -1 to
-15 [-Werror,-Wbitfield-constant-conversion] in
-drivers/net/wireless/intel/iwlwifi/pcie/drv.o
-(drivers/net/wireless/intel/iwlwifi/pcie/drv.c)
-[logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:ecc72e92f69bce29c117a8d1dd72c86119058492
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  aa94665adc28f3fdc3de2979ac1e98bae961d6ca
-
-
-Log excerpt:
-=====================================================
-drivers/net/wireless/intel/iwlwifi/pcie/drv.c:669:24: error: implicit
-truncation from 'int' to bit-field changes value from -1 to 15
-[-Werror,-Wbitfield-constant-conversion]
-  668 |         IWL_DEV_INFO(iwl6005_n_cfg, iwl6005_2agn_sff_name,
-      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  669 |                      DEVICE(0x0082), SUBDEV_MASKED(0xC000, 0xF000)),
-      |                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/wireless/intel/iwlwifi/pcie/drv.c:576:21: note: expanded
-from macro 'SUBDEV_MASKED'
-  576 |                         .subdevice_m_h = _HIGHEST_BIT(m)
-      |                                          ^
-drivers/net/wireless/intel/iwlwifi/pcie/drv.c:569:25: note: expanded
-from macro '_HIGHEST_BIT'
-  569 | #define _HIGHEST_BIT(n) (__builtin_ffs((n) + 1) - 2)
-      |                         ^
-drivers/net/wireless/intel/iwlwifi/pcie/drv.c:564:29: note: expanded
-from macro 'IWL_DEV_INFO'
-  564 |         _IWL_DEV_INFO(_cfg, _name, __VA_ARGS__)
-      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-drivers/net/wireless/intel/iwlwifi/pcie/drv.c:561:2: note: expanded
-from macro '_IWL_DEV_INFO'
-  561 |         __VA_ARGS__                             \
-      |         ^~~~~~~~~~~
-1 error generated.
-
-=====================================================
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nikpjjxuhoy7suvq"
+Content-Disposition: inline
+In-Reply-To: <CAMVAkEvhR+Z28zhxBvnQ64VmXYuP0ZvFg_14e2VuFPQDEpSa+g@mail.gmail.com>
+X-Provags-ID: V03:K1:pecKXz7YbqZqbKkyuV9Ooz0Q0gWvIcNnqSEg6abUgdFZr+6JrV4
+ VXBYZE3uo/xK2+DsWahFlUYFIcx9MRvd2DgyQocGwpCRmf7hIcusVwxz+x2ai97ikzHCltG
+ 4z9YunvoI6muDWTY0PoPngbbkPMgqBX25CaIpEzG2iOhNImtprhs3Zkp6tW9xQkMJXiU/sU
+ EvafV3uEtThkeLY7XAMNw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Mgcr/LjqJmI=;4181P7eG9RU2lCVvrXvPWKsG8t3
+ EPa3Y0DVoLiFK+rGcpUTIO5jvtwKdxdAinuB7cvXeIKsqwIZXIvVXEON7NVDUzkLBXe+bCtFB
+ XzCaQA5n2MAlpc9uBr1ZcCmFSwhJi1Dy134+702GUi2oaCHJPKums8CNqVR3+x3P1V/gKeYZk
+ aYZ8CQSShDDx6129YbJG3MyhWLLW80GHRPjP8Z0rmpaIpNLeJhbKME0K1sollBYOsUL9r9Nlj
+ 6K1T/JcJuRz/Fhs4Vq5+KG5g4aO6D8oUCS9RgaIARK230hpCSE1ktAWfInJNgrZo5ztBi3Ujb
+ TC1aWdXDd/IREgDQ/Zw+ctYWld+3U7mqydKMm+PChV7MzVnbbiRiN8iYAoMrhnXveh4RiMaDW
+ 7uO6hggSsgWZFWm5RU5NUj6LAVE5idxsntL0StiFA0UyovlwhADlBFSNXhSyLelcSIcGD2tGf
+ SIfUY3sj0/0kxIA5g49oN7mqHVxBwKsDJdZ5ZzbeFm57jhlF3mT0vmNITWWzGjQtSWQ2bvicl
+ UUE9Ea+A4zGYSg8fW3u8FXKzUzJnGtsNgxzwpUoXNDp7XyfNuMZzujWvIJz7MxlPgjpj1BY6g
+ Wq9pgdMpjfiCGwxrGf0KkMnkivYm9zSf4MMexTm4gKnzvzrPvw5zUcEoroGswFX/7xDfnUFGX
+ +Fs1GmBTUkwSDtg0QlopN5Jb/blZ830tQqmejH8pR3zViE9a+/S/H4pL67QLBPHvbJmcflt7m
+ ye7m7IdRwiHD5eNqFTgDWrDt4kdC+z/NXwaw3gxkRnxz4yVccCCf1ZjfbQJUsYCzrjNhq9Dnx
+ IZM8zJ1hSyw1lZlhzEIKFdKIUthXRhfUxyG+83MzEwz2OXjPp9MFNfZuvCKKKAbjetE9lu/UA
+ 1Blhg4O55xvc3GiCQu37nnCANeAjt3jL54ewOmEhSsLzcejGdonSsdKYvTwgw774/eCC8T29B
+ 2C550iuDfU+UmG5Fsn0lUYMZvZSHPK7s+jxJgHAy/bs0wN2Yo/PA7F5K27wBfSvOmbqrDbsLC
+ 6PwkALbrQdUmq4yxI9IaF3NI/cCeDtnz3v5K8W9gTHJRD96ssaX20fMkosvwa68TfxkK5FauH
+ 5lXvU14QkRZN4LIajBPbHcz7RkLIPDiALe8ZZ+XWHgL1d4BydwoJNWvkdhGdHMlzJuE8akXGf
+ XKAmJDxCV+tE17n2ruq4OmE0ltnHTqMZUjQF0s2SU8mgFbt+MsTlPgMhT45LzJKgCAvSAAmEF
+ O/87sceyXFxRCsRQvDGTeeQCnPJmMtdeLGqKKCfLGi0i282tAChTFzOkj40yC5b3lYcSwIPG1
+ w8bIxjcxNg7j8QYCpQGMFa5p+9OaYYcPc1KBNL4AetsXdUYCikUgcWGTMvcEc5PWi30VNT+fM
+ p6O5K3GtsgvLU05g/1QIagtzfeT748oT3hdYRDW9U0sLRypeOgLmQv4Jc3
 
 
-# Builds where the incident occurred:
+--nikpjjxuhoy7suvq
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] next/master: (build) implicit truncation from 'int'
+ to bit-field changes value from -1 ...
+MIME-Version: 1.0
 
-## x86_64_defconfig+kselftest+x86-board on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:68233591fef071f536b61289
+On 25/05/13 01:26PM, marcelo.santos@profusion.mobi wrote:
+> Hello,
 
+Hello =F0=9F=91=8B
 
-#kernelci issue maestro:ecc72e92f69bce29c117a8d1dd72c86119058492
+> New build issue found on next/master:
+>=20
+> ---
+>  implicit truncation from 'int' to bit-field changes value from -1 to
+> 15 [-Werror,-Wbitfield-constant-conversion] in
+> drivers/net/wireless/intel/iwlwifi/pcie/drv.o
+> (drivers/net/wireless/intel/iwlwifi/pcie/drv.c)
+> [logspec:kbuild,kbuild.compiler.error]
+> ---
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
+I'm a bit confused, this seems to be the same report as sent our by the
+KernelCI bot, who sent this out just a few minutes ago:
+https://lore.kernel.org/all/CACo-S-0GVFPOW60XRF89kE-hgoLLJku5BiiqLPt3yXztYM=
+pwxw@mail.gmail.com
 
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
+Cheers,
+Chris
 
-Made with love by the KernelCI team - https://kernelci.org
+--nikpjjxuhoy7suvq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmgjSzAACgkQwEfU8yi1
+JYXL5w//e0zc9OH+ZX3+Ghy3gyrMJ5nXM/6m6rJmXEhUwAtrpSUXon4mLmWeoBjP
+TMeB6CKP6Octf51jLaW/GkbaG12UOYNO0L6xQHl85HerLKe6kPikpPwjN1CMX7/Y
+oP/JzphiTdKGUCKt8HHP6srs7K5HMoVbQVY9nsgBxncQl6QEpCPUKXWtVXKRoPkI
+3uf6GOQVNCvyQnqRCyo43or0KzZOUzPH316eJQxKQ/ZyAPHnEu4RytHP/snPay+p
+Ziab9OEHIa4SBMiq8ajy2JbbRDIiEkk7ZCqVYien8sm8hCLY2qr/Wltar21mqReC
+pKePr97FSlCZvJi40NiRUV4JpmB6UmQ9FV8ZVxshIqIVyPo5vomQ/FgUsUUIHoyv
+DNgtLUZiebEQ/PNKQvSl3PoMxXbj3JZ00dQmEIZJ6RIVsEHxSvDXExVNYsVjdYYJ
+O39jDBwXgFM57Nm8I38dLfdllIoUQW8R2JUU4SIuqkolB69x14MvjnF5qy0czOIn
+CVj/XGMHOtAi9Q5Kd7xsIVMooLgIxqXvc2OVEqXgOKpMtqco2aqmcSmmo0D/FFrs
+EuDs9B8lAB1R1IBpFbNM7Xiq+yq11Pm/L4nWOx+CpoEAJldCI0shNcXickSHpmFq
+KhVU5WhQB5xlgWtJfxlfDzKTOIYnhDzHt/GjLTPS5CjLw79RNmo=
+=Fi8p
+-----END PGP SIGNATURE-----
+
+--nikpjjxuhoy7suvq--
