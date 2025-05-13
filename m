@@ -1,150 +1,135 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AC928D8EF;
-	Tue, 13 May 2025 12:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A75228DF0E
+	for <regressions@lists.linux.dev>; Tue, 13 May 2025 12:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138142; cv=none; b=alECWtMceMXnpp8B0CiUpRqLOkQTiTTADJrHcICuevMRr3dStbt59WI3GdtiWAqDNyFDYT4FmsweAky4k6KytjH8Dve1ea/Pu9ksQh8qNWcjF45uI/sDkt/fyDBK8j5L0PmVmP1wbHPc0gTvyMK0QjUIrHR/3SO7B/c6RwIIWdw=
+	t=1747141150; cv=none; b=UnbkoGK/fuKupni8D5TJ0Y096jzCwBWRc+wdV4JeGRvhCvqSxxVT+CqVrn3TlPMwYM7rcIaOYF2A+bGvXqCaGyQvUSdULezLcL2AY7jGDgF5md9nny1ExbhT/mYisZeC/PtyyM2pDtGmnqhBgbydxWnv73yvIj+k/HZsdADb7PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138142; c=relaxed/simple;
-	bh=2XUeh0Z5eCrhfaTA1VOhp1BRJwhiEmiLDGJ1gReitKc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pqoeIXaRiS2ObBFwWN5ntMc/vey9+lyfsjdmHZFVmT6D8AITpsijTSPoanG/I2aBgWlwA3ORaLsHTQaIslJhlrbutSR2ibwSGiN55lCUsfgFr4MEUXZTquQUbuVnDsLZvcQbhY+DZuu9md+Mwfw152w4g5AQGlIv221mJw2JXPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/wSBMs/; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747141150; c=relaxed/simple;
+	bh=DlRA5C7gjOm56yHzbiMmIPmAtDQ26goKgMcNcb34uXk=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=akMBqiIivoU3nVe9NWMJA7UJgYD6Dp3AQnD/J0OMfOnvhaJ7pr0tb/n1WgGNkfVvO8xnf7ikz/N1DP3l5Fy59K5OTrla1S12AL7qc9fZxZErzJrxnnastawopmiZSA4u+YG7Wl3qUVWc34jVzZO9Y7hAq2sDN104AZ1Z326rqUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=KBhtxgos; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/wSBMs/"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7415d28381dso4537661b3a.1;
-        Tue, 13 May 2025 05:09:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="KBhtxgos"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-708ac7dfc19so48933557b3.3
+        for <regressions@lists.linux.dev>; Tue, 13 May 2025 05:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747138140; x=1747742940; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C+fiwMr4DtCBa0BKgRSBqKM/6GNS1IOnhbc+D2U/YPs=;
-        b=O/wSBMs/kn1puNsw+0Z7qe9KUfbHrW+86R3siI1fXmiOTAbV+/Etgv1G6am4MWdTDe
-         OFndDxgnKbEVq1dixjJl+g3oect72sO0R4filTzHvNY3qLBCxMx7oLyvjBe27Zs8QznL
-         09py1196RJgNfC/hpJPEgZr5KRglFpBPoUabtyFVuc4F6VpKUvN93cx13q+5aHBd2Jhc
-         X1sEt1xjk7z0bp4rjC2J9KlZA3CHOsNYzsG6kIoecp/6I5pjsjcLNWtXkYBL4rHVTvE3
-         GWzZ+2ZK88uSWrJ57lx5fM7SUj1FGQ/OEhBrR10lFMpYlEIRBZunum4Q8+xJjIkixLvF
-         aXkg==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1747141146; x=1747745946; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
+        b=KBhtxgosuxiUU4B4IyqwtKmIuwd2G2NA7hIrKIXOnwk9LMXZq5iCmuzfhwvwM6mOXC
+         RzJ5le1AOWPBjkcWaEdo1+OhcMsLwLxmvXFeJ5CwCOubNRD+db4dJ28MIufR1kbv9Ta6
+         Sor6a3uhf5EBmyapZtkOBAiriyWgJNpJNt3OlzwaNiOk1ZKBlLZeL83dsWki0wYiC5Qs
+         5/PwEGGB3lEdL8NwYRJNCfDbsAfvpxS5qaMyv/gHvZAY0afprGU7AM2Zj6xkGMxRCR5G
+         +NzTftP8sbFLuhc5OepMu4cQcjI7gQ4fc2K2OEWYWkhU0Qb4/oDLDZES8e7uwblpP/NB
+         qKOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747138140; x=1747742940;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C+fiwMr4DtCBa0BKgRSBqKM/6GNS1IOnhbc+D2U/YPs=;
-        b=occobj9Q2r8oBeUG3n0Zk0+91iaMjflDg3FqGNOLtTUWAJQrBCMcpT4flOmtgpfvJn
-         cNrc1m8Yp7r/UhIZAgxlMue1aw/XrE5ZnLcTxzoInCPtykBWQghJtihQybUyf6SMn0fM
-         D8gWtmntIg01ThvSxXCd2P3uVCJ1uGnCRS2yEFxO35g690YKD6wWli8xGYs4e4x1CRy+
-         IBv/Hgc9V13Lh6tmVQaTSsfczwKwNUuWaaXuzuT7cOSgWPng4+khcrD0mc/+VOV9Xus3
-         fMuTHr1AehUlIMObqBcJi2Zb3BxE96TiLCS6Z20rsSo1/CZ2ZNuLLN/DPpD6WYbosTum
-         IhvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXXGuqm7mdNEcCklq6hj4nCf+jCq4WKnPlPA3oYeRvkrEfpg6ctWkHE5NQLAGltVuGMhBd009OUGjxAAM=@lists.linux.dev, AJvYcCXV7yyIIxuifwod/g25FHLjOEwz8vbKc3tyQ017/SwzPIAuh7sgLzM+wEMKwY8OdATHIGqz/w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YylzuNGPcAVhEcw4eVVxhHpJJM/lpAGGlc+RygPqOp1qAaGv5k5
-	f3QhpHuxmqgnbc/8nNXuVu81u01ySqFXBnPHIAvsS5IV8Islfnfg
-X-Gm-Gg: ASbGncvL8kQzCiaMbkkluFuJx6PQcHT0YSYs1tHKJrr297MA7vhkCukvo4K8fcu1x1z
-	3co6+phWxeQUGURJsvbfPJlKr5DivMymV84l8ORqHEpvjWVf8xclafUt0lf/loPLgRh6UUXYv/0
-	xN5EdEph7rdTGxdALPFsXmeR4fnI+FSIVe/3vZJo64UGe6FieMSafBFKyaTN4hBUpCxK/QeskBw
-	LtiwMVyRyj1ORDx9/yjUvCpnSckascWZJJPZa7jCrK7Ghw2eR0IPCOWj4hK5/NzvUHjgyrM1APx
-	T99VWauZI1s/Lrs79+5Y32YPskR38j3lpjGxaXFzOSCaCQ3jXhTDS0hshKfo7zatZZy68t0Qu93
-	wXFFZdA==
-X-Google-Smtp-Source: AGHT+IHJGLfjYB82MfeuCRiDY5iuey+WzblyJnDvkjQRynwrBn6xgBlO/6J7o/bSCimJvfFnIprkHA==
-X-Received: by 2002:a05:6a21:3416:b0:1f5:55b7:1bb4 with SMTP id adf61e73a8af0-215abb0b768mr24877844637.11.1747138139597;
-        Tue, 13 May 2025 05:08:59 -0700 (PDT)
-Received: from localhost (58x12x133x161.ap58.ftth.ucom.ne.jp. [58.12.133.161])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2349ec816esm7161049a12.22.2025.05.13.05.08.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 05:08:59 -0700 (PDT)
-Date: Tue, 13 May 2025 21:08:52 +0900
-Message-ID: <eke7tt5oww4r.wl-kobarity@gmail.com>
-From: kobarity <kobarity@gmail.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Aditya Garg <gargaditya08@live.com>,	Berkel =?ISO-8859-1?Q?J=F6rg?=
- <joerg.berkel@bfh.ch>,	Robin Murphy <robin.murphy@arm.com>,
-	"linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-	"dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,	"lukas@wunner.de"
- <lukas@wunner.de>,	David Woodhouse <dwmw2@infradead.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,	Joerg Roedel
- <joro@8bytes.org>,	Will Deacon <will@kernel.org>
-Subject: Re: [REGRESSION] applespi from 6.12 onwards
-In-Reply-To: <5d760ba9-031f-469b-96e0-a171b7142f88@linux.intel.com>
-References: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
-	<PN3PR01MB9597D8E327CC7910673849D3B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-	<122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
-	<f1b41874-1535-4457-9747-eee3d816091a@arm.com>
-	<PN3PR01MB959764E908600CD45169348CB88BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-	<c0bbfcc8-1275-43de-be40-acb8f2653359@bfh.ch>
-	<PN3PR01MB959708DEEA1567DD38447D5AB895A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-	<eke7wmanw9xq.wl-kobarity@gmail.com>
-	<089b2370-23e4-4a22-bf57-886e46247a1f@linux.intel.com>
-	<eke7v7q6vxai.wl-kobarity@gmail.com>
-	<5d760ba9-031f-469b-96e0-a171b7142f88@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/31.0.50 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+        d=1e100.net; s=20230601; t=1747141146; x=1747745946;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
+        b=L2nBo1vPcu7CeYMLGBv5ZpqMp6eEukZeszNbSb1u08sr3VpYCvbBYQ39z8qEu6cmIZ
+         L0RBENA9+SVmDgqTL1kz4zOG83h/IIBxw9rfzJqSQJLFuK8IagIbur0B5lFbw/SZTCke
+         94hDv6+SHYc1z/siaLcZJov1udzwuBOw31V4iCgHrg31mm8PQ6Q+WTsoqXyKDunywqC7
+         yLirJL79qKFOsfanJzSKCl8XGl7dke/K9PKLWUJABa/KfnNzFMB5tI96dQjjfPHzXBYH
+         IjTwxSH1KA/ypt3gaXsxZdhJJmm4t6+Z7k9wroEnbM4ELahLZc/PszuDvUY0tSw0aGXU
+         YJSA==
+X-Gm-Message-State: AOJu0YyAfGYo540d8ly5w90dpt5AAeL2H/gZDyyqGZ+xE758VX5LOW6W
+	vqT9S3fqtM9b71igOL7MGLmUmNj2WUNaaOrAErq4ZgoeZEpPknBI1FUFaZixApqCRiXxhkRht+p
+	DKPgINH1bdqKvJqc1TiU4IWWz7SRDdBSCDZrf7g==
+X-Gm-Gg: ASbGncsyW/YXJlQW4DPLg41n7Z2GLuJsugAiO5R1yevxg28ZIQ//xKkjZiL8ZI/9hvm
+	gF2kVNXnDfDJBbt68qKjjGR4S+fG30zeXjqcsJiOhprMKBZIIfWUDlK1yVlKu359TYIggjldp8+
+	hnrphxqJTPk5AQOPEFmP3iuEnDs76/LzRbIIrDVdVGxQ==
+X-Google-Smtp-Source: AGHT+IEQXRq1LMK5InzjweUb9pbaMp6znQ3r3ji0PnbZJbFowKhM3nxyPetxcu/d/hlsStwl4eDsrc4XOOw1PBTqwBs=
+X-Received: by 2002:a05:6902:15c1:b0:e7a:b37b:725e with SMTP id
+ 3f1490d57ef6-e7ab37b76f6mr12917994276.24.1747141146495; Tue, 13 May 2025
+ 05:59:06 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 May 2025 05:59:05 -0700
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 May 2025 05:59:05 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 13 May 2025 05:59:05 -0700
+X-Gm-Features: AX0GCFvyxc0vbZgvTMdq2-oJTi_onEMQw1FlZBe9vA05kerB6vu-a44Ck6LoOYQ
+Message-ID: <CACo-S-0GVFPOW60XRF89kE-hgoLLJku5BiiqLPt3yXztYMpwxw@mail.gmail.com>
+Subject: [REGRESSION] next/master: (build) implicit truncation from 'int' to
+ bit-field changes value from -1 ...
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 
-Baolu Lu wrote:
-> On 5/12/25 20:16, kobarity wrote:
-> > Baolu Lu wrote:
-> >> On 5/11/25 21:31, kobarity wrote:
-> >>>=20
-> >>> Hi
-> >>>=20
-> >>> I'm also experiencing this problem on my MacBookPro14,3.
-> >>>=20
-> >>> Aditya Garg wrote:
-> >>>>=20
-> >>>> Hi J=F6rg
-> >>>>=20
-> >>>> Can you test the kernel here to see if this fixes your issue:
-> >>>>=20
-> >>>> https://github.com/t2linux/T2-Debian-and-Ubuntu-Kernel/actions/runs/=
-14944200356
-> >>>>=20
-> >>>> Alternatively you can try compiling your own kernel with this patch:
-> >>>>=20
-> >>>> https://lore.kernel.org/all/0-v1-c26553717e90+65f-iommu_vtd_ss_wo_jg=
-g@nvidia.com/
-> >>>=20
-> >>> As far as I have tried, this patch did not solve the problem.
-> >>>=20
-> >>> By bisecting, I found that this problem was introduced by commit
-> >>> 2031c469f816 ("iommu/vt-d: Add support for static identity domain").
-> >>> In fact, since this commit, it will panic at startup.  This panic was
-> >>> fixed by commit 6e02a277f1db ("iommu/vt-d: Fix incorrect
-> >>> pci_for_each_dma_alias() for non-PCI devices").  So I applied commit
-> >>> 6e02a277f1db on commit 2031c469f816 and confirmed that the keyboard
-> >>> and touchpad is not working.
-> >>=20
-> >> Have you tried to apply commit 64f792981e35 ("iommu/vt-d: Remove device
-> >> comparison in context_setup_pass_through_cb")?
-> >=20
-> > Yes, I tried it on yesterday's master branch, including commit
-> > 64f792981e35.
-> >=20
-> > - Keyboard/Touchpad NOT working:
-> >    - No patches
-> >    - With patch in https://lore.kernel.org/all/0-v1-c26553717e90+65f-io=
-mmu_vtd_ss_wo_jgg@nvidia.com/
-> > - Keyboard/Touchpad working:
-> >    - With my workaround patch
->=20
-> Okay, thanks! Can you please try below change? I also attached a diff
-> file in the attachment for your convenience.
+Hello,
 
-Thanks!  The keyboard and touchpad now work with this patch.  I tested
-it with the same master branch as before (commit 3ce9925823c7).
+New build issue found on next/master:
+
+---
+ implicit truncation from 'int' to bit-field changes value from -1 to
+15 [-Werror,-Wbitfield-constant-conversion] in
+drivers/net/wireless/intel/iwlwifi/pcie/drv.o
+(drivers/net/wireless/intel/iwlwifi/pcie/drv.c)
+[logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:ecc72e92f69bce29c117a8d1dd72c86119058492
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  aa94665adc28f3fdc3de2979ac1e98bae961d6ca
+
+
+Log excerpt:
+=====================================================
+drivers/net/wireless/intel/iwlwifi/pcie/drv.c:669:24: error: implicit
+truncation from 'int' to bit-field changes value from -1 to 15
+[-Werror,-Wbitfield-constant-conversion]
+  668 |         IWL_DEV_INFO(iwl6005_n_cfg, iwl6005_2agn_sff_name,
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  669 |                      DEVICE(0x0082), SUBDEV_MASKED(0xC000, 0xF000)),
+      |                      ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/intel/iwlwifi/pcie/drv.c:576:21: note: expanded
+from macro 'SUBDEV_MASKED'
+  576 |                         .subdevice_m_h = _HIGHEST_BIT(m)
+      |                                          ^
+drivers/net/wireless/intel/iwlwifi/pcie/drv.c:569:25: note: expanded
+from macro '_HIGHEST_BIT'
+  569 | #define _HIGHEST_BIT(n) (__builtin_ffs((n) + 1) - 2)
+      |                         ^
+drivers/net/wireless/intel/iwlwifi/pcie/drv.c:564:29: note: expanded
+from macro 'IWL_DEV_INFO'
+  564 |         _IWL_DEV_INFO(_cfg, _name, __VA_ARGS__)
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+drivers/net/wireless/intel/iwlwifi/pcie/drv.c:561:2: note: expanded
+from macro '_IWL_DEV_INFO'
+  561 |         __VA_ARGS__                             \
+      |         ^~~~~~~~~~~
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:68233591fef071f536b61289
+
+
+#kernelci issue maestro:ecc72e92f69bce29c117a8d1dd72c86119058492
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
