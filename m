@@ -1,73 +1,73 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A75228DF0E
-	for <regressions@lists.linux.dev>; Tue, 13 May 2025 12:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E24A1DED6D
+	for <regressions@lists.linux.dev>; Tue, 13 May 2025 13:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141150; cv=none; b=UnbkoGK/fuKupni8D5TJ0Y096jzCwBWRc+wdV4JeGRvhCvqSxxVT+CqVrn3TlPMwYM7rcIaOYF2A+bGvXqCaGyQvUSdULezLcL2AY7jGDgF5md9nny1ExbhT/mYisZeC/PtyyM2pDtGmnqhBgbydxWnv73yvIj+k/HZsdADb7PQ=
+	t=1747142790; cv=none; b=DYVtCPDawO4hYo9no6svWNZCLb+P7wYJRdyOSOaP8w8LaHrsni7Sb/dRnSmKhn54f9REz5C/we/qwgfD4A26rdMYor7KDwAheFNit98SZWa8SCXFI5U71HZIK51hJ+7O94IqxBYHXRWsg8Yk2pfCXFgOKveT1bR55zCK6WaS0Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141150; c=relaxed/simple;
+	s=arc-20240116; t=1747142790; c=relaxed/simple;
 	bh=DlRA5C7gjOm56yHzbiMmIPmAtDQ26goKgMcNcb34uXk=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=akMBqiIivoU3nVe9NWMJA7UJgYD6Dp3AQnD/J0OMfOnvhaJ7pr0tb/n1WgGNkfVvO8xnf7ikz/N1DP3l5Fy59K5OTrla1S12AL7qc9fZxZErzJrxnnastawopmiZSA4u+YG7Wl3qUVWc34jVzZO9Y7hAq2sDN104AZ1Z326rqUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=KBhtxgos; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bOCqZblS2pDSKnPDSoxjuG7kBsBQegc4HHaAQ4Y3tEoo9DsziKYNm8/MIYDxjjWbOxGzbo9jzCeqcLlz/IqmsvhW9xgy2FQ49OCFkUeqfpviG0TM7XqOBcf3VwiwHtAgq4iU06knm+wqrYaOeOWyzXZ2sL5SU+DYg63Z8Xsuu7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profusion.mobi; spf=pass smtp.mailfrom=profusion.mobi; dkim=pass (2048-bit key) header.d=profusion.mobi header.i=@profusion.mobi header.b=SdXFZnlr; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=profusion.mobi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=profusion.mobi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="KBhtxgos"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-708ac7dfc19so48933557b3.3
-        for <regressions@lists.linux.dev>; Tue, 13 May 2025 05:59:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=profusion.mobi header.i=@profusion.mobi header.b="SdXFZnlr"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-326c9bbf029so3377111fa.1
+        for <regressions@lists.linux.dev>; Tue, 13 May 2025 06:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1747141146; x=1747745946; darn=lists.linux.dev;
+        d=profusion.mobi; s=google; t=1747142785; x=1747747585; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
          :subject:date:message-id:reply-to;
         bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
-        b=KBhtxgosuxiUU4B4IyqwtKmIuwd2G2NA7hIrKIXOnwk9LMXZq5iCmuzfhwvwM6mOXC
-         RzJ5le1AOWPBjkcWaEdo1+OhcMsLwLxmvXFeJ5CwCOubNRD+db4dJ28MIufR1kbv9Ta6
-         Sor6a3uhf5EBmyapZtkOBAiriyWgJNpJNt3OlzwaNiOk1ZKBlLZeL83dsWki0wYiC5Qs
-         5/PwEGGB3lEdL8NwYRJNCfDbsAfvpxS5qaMyv/gHvZAY0afprGU7AM2Zj6xkGMxRCR5G
-         +NzTftP8sbFLuhc5OepMu4cQcjI7gQ4fc2K2OEWYWkhU0Qb4/oDLDZES8e7uwblpP/NB
-         qKOQ==
+        b=SdXFZnlrsue9yT4mHusVHeaZeg/R5PGh9GWP3QnIggzW0BmRf3D+8hxOAwQuaCmSug
+         xZ6mfG12uHsG2tho4JwDTLqjdB0hN7PpjjO9Siyz2Mebuc6kZjKfqTlZkwPFKyumkeqO
+         aSYlVwwDBkXVWuDGhmnGWz9LCkASJ0txcwurx4tvnvnT/TGTIY3erJ6uoZaVHqcF7aSx
+         CZlq373EEM42xJZlTcQzmtjQ/64ESuIQxvNI0Sh0UOaeqx4ge7s1/W58bekkhlr9RuIY
+         9Q7USoOU1tgdNmwWL96Z9Zjmr8zIsigZrDJHhKg1MfMqn60GPXTwhMQNXyqvCpM8uUMP
+         7zXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141146; x=1747745946;
+        d=1e100.net; s=20230601; t=1747142785; x=1747747585;
         h=cc:to:subject:message-id:date:reply-to:from:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=roE8koJy2Zbfm1te10JDWRu81vDFSZexIZbV95ucPSc=;
-        b=L2nBo1vPcu7CeYMLGBv5ZpqMp6eEukZeszNbSb1u08sr3VpYCvbBYQ39z8qEu6cmIZ
-         L0RBENA9+SVmDgqTL1kz4zOG83h/IIBxw9rfzJqSQJLFuK8IagIbur0B5lFbw/SZTCke
-         94hDv6+SHYc1z/siaLcZJov1udzwuBOw31V4iCgHrg31mm8PQ6Q+WTsoqXyKDunywqC7
-         yLirJL79qKFOsfanJzSKCl8XGl7dke/K9PKLWUJABa/KfnNzFMB5tI96dQjjfPHzXBYH
-         IjTwxSH1KA/ypt3gaXsxZdhJJmm4t6+Z7k9wroEnbM4ELahLZc/PszuDvUY0tSw0aGXU
-         YJSA==
-X-Gm-Message-State: AOJu0YyAfGYo540d8ly5w90dpt5AAeL2H/gZDyyqGZ+xE758VX5LOW6W
-	vqT9S3fqtM9b71igOL7MGLmUmNj2WUNaaOrAErq4ZgoeZEpPknBI1FUFaZixApqCRiXxhkRht+p
-	DKPgINH1bdqKvJqc1TiU4IWWz7SRDdBSCDZrf7g==
-X-Gm-Gg: ASbGncsyW/YXJlQW4DPLg41n7Z2GLuJsugAiO5R1yevxg28ZIQ//xKkjZiL8ZI/9hvm
-	gF2kVNXnDfDJBbt68qKjjGR4S+fG30zeXjqcsJiOhprMKBZIIfWUDlK1yVlKu359TYIggjldp8+
-	hnrphxqJTPk5AQOPEFmP3iuEnDs76/LzRbIIrDVdVGxQ==
-X-Google-Smtp-Source: AGHT+IEQXRq1LMK5InzjweUb9pbaMp6znQ3r3ji0PnbZJbFowKhM3nxyPetxcu/d/hlsStwl4eDsrc4XOOw1PBTqwBs=
-X-Received: by 2002:a05:6902:15c1:b0:e7a:b37b:725e with SMTP id
- 3f1490d57ef6-e7ab37b76f6mr12917994276.24.1747141146495; Tue, 13 May 2025
- 05:59:06 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 13 May 2025 05:59:05 -0700
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 13 May 2025 05:59:05 -0700
+        b=Yt0KVPuIoB3XBWfJyW/IEFfweAniMs8oJ+EX1AY7EXTM1MOX6CvFbDLfwmCBoJ4hJr
+         IDfu63xW8C3T23Pn89t2zRKdOQP9R2Fl0NhbiPKHJpmf0WdRT9lgfUDj5ysLacvtPd9q
+         EvSEX0fTRO4TnZVN6sSwwKNRul8bUHBUqruyQMwDfqYompsHKW6qH/Ydq7qnM1u00AcV
+         9sJUyzSrzKsbEjDXr+22hDFX6HeYkVsmftQIFn6UCadopB/13UyliHuv0PvQT8EhMo9U
+         3Rz6jZSBeIgZ+xk/sjlDKtjlxTlVv9b3dg2jklhY6Kz59UQ3GgLbei49qRJNsAoFT1L4
+         U9OA==
+X-Gm-Message-State: AOJu0YwBV4icCpT7qASVKqTGdUB/GyFEzyzdvq+zw+wYwRDB/7aqcXpS
+	2IT1SCXN/8OG1tn/BUxyzvWH6bIF3wezhKBi60usdta3yy/ow+KoKBkQ3fbYe6xlWopHzZjd9ZI
+	DLnDOinoHg4bDVObM7vDFJ5RmiGsPHspAbyV7e3nuiCi4RuKf
+X-Gm-Gg: ASbGncvMpM3MOdgEcCocs87Z9xA0b8N3OJfJSpmWHAcTl3jSoPbX5BFiemsWWxoIfE2
+	y9euRxJOFGvKppjq82Qcw/d49XmliwZQYpBmtscySCsppBp6Vf7QhLT7tDsla+w3wHxiEEcAwKX
+	YJfOhdIvRccOkh95+J3+0A+bRef8oMb0BYP/4=
+X-Google-Smtp-Source: AGHT+IEf5RMiCkeG03jX1fAC+e9NXVnCtrvoNen8O+gEtmVu3TduaYAxNB5vZxGx9rsuo5UZnu9ES03fgXNVnPfGBS0=
+X-Received: by 2002:a05:651c:543:b0:31f:8659:dc16 with SMTP id
+ 38308e7fff4ca-326c469228emr19926661fa.12.1747142785215; Tue, 13 May 2025
+ 06:26:25 -0700 (PDT)
+Received: from 778980076690 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 May 2025 13:26:23 +0000
+Received: from 778980076690 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 May 2025 13:26:23 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
+From: marcelo.santos@profusion.mobi
 Reply-To: kernelci@lists.linux.dev
-Date: Tue, 13 May 2025 05:59:05 -0700
-X-Gm-Features: AX0GCFvyxc0vbZgvTMdq2-oJTi_onEMQw1FlZBe9vA05kerB6vu-a44Ck6LoOYQ
-Message-ID: <CACo-S-0GVFPOW60XRF89kE-hgoLLJku5BiiqLPt3yXztYMpwxw@mail.gmail.com>
+Date: Tue, 13 May 2025 13:26:23 +0000
+X-Gm-Features: AX0GCFvd0cfJXAKn2hTK2apMKRsFyaH4pojw3Lte7o1kBvrii-Hpq8AzHjs_4i4
+Message-ID: <CAMVAkEvhR+Z28zhxBvnQ64VmXYuP0ZvFg_14e2VuFPQDEpSa+g@mail.gmail.com>
 Subject: [REGRESSION] next/master: (build) implicit truncation from 'int' to
  bit-field changes value from -1 ...
 To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com
+Cc: regressions@lists.linux.dev, marcelo.santos@profusion.mobi
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
