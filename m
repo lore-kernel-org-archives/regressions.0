@@ -1,217 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic301-20.consmr.mail.gq1.yahoo.com (sonic301-20.consmr.mail.gq1.yahoo.com [98.137.64.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AAA18A959;
-	Tue, 13 May 2025 01:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7038BE8
+	for <regressions@lists.linux.dev>; Tue, 13 May 2025 05:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.64.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747100535; cv=none; b=O6673zspGMVzu7S83OD6bJRxd23Ggy9oxgCoKo8UlnrrdDYMpIL+2uWP/X7jFM9Pl+STWTKkGQGBFMY7lMeiy5SHQhg3clp5G96E1nSzJhpb4zsJjnQ+2MW7DAHDgCoqvrNS4B9cFBcX03N8kdHTAIQjapy2E0kL04WUd4mu07g=
+	t=1747112825; cv=none; b=ZVU/umScsy6Hd449EB7pV232ixOOzGp+QlEJeB3AT61TkI1dEKnVVWT4iyKkbSGfwECeI/zRl86s9zZjOHGhL37Y9AY08sXDrTMHpvzaHK81b7gTCuifxmQPMOOdkJQDyJdU8aD90pvz9KTL8mGyRA5wHgOb5SwwYig++lO2WcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747100535; c=relaxed/simple;
-	bh=tqfQS6oxsFjhPs/Z50e9x6aN2DzbxyZhm92wCnbhKDU=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=QT1Ft1pnij9+m5UmzRst0Eel5gJ5VBFUxFFdkSg73jR44TCBUXjWxdZxu4l1Hi5Nh1lqbksxrYT8Heuwb+WuhfolhQkbsqQor4uxvYOVwwbjyoSo2poQ6kyIcpebeMNKc/XtfkkzWJiD43uQa54Yo/27SLsTAxxMNMuNuXyKXxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Chy+YN34; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747112825; c=relaxed/simple;
+	bh=UTDc1wYpkWAfvifRTJF4VXiuszIW+r8dfq4jFbCbo4Q=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=HmpoWgIIxhodZEqacm4yz3pmEXcS4d8lOfuDuvcGZcKxsKSKnz1QZd+geYGvxzfA1zk2HkorHcEiXmRemBU1e1IWhFs8FLwgfubCRxE4UX2Q0Bh0zAihnRREzBzfl+5N4p/odk7YA2GHTcwaqCJP2uqlhfpeLhpXictiqIunsYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=lqjiGX3R; arc=none smtp.client-ip=98.137.64.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Chy+YN34"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747100533; x=1778636533;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=tqfQS6oxsFjhPs/Z50e9x6aN2DzbxyZhm92wCnbhKDU=;
-  b=Chy+YN34mY22ZozBYtd+UuJLKPU0k1atSJLJxHgE8OJYrSbYWNknitm5
-   k0TfKjYt+u41Mz/zSwY9mLVkeRgULYZnKU1GNIFoHoD6qFXKRY1WvD3Dp
-   rj6NhzSn3eLvElDobR72/6AfD4ZVwIcVlaeBOLroLmPklJ29LTpWXe1wZ
-   wLY+SBpwtqvhpkyOfxgV6NqMLM1MTvPRjIlnnbNnMVhWcHbzfXT+2wPgn
-   wSI/W0voq/szmnEtNneRVoMhwzhS2vRzHcoRKTVh+END9bNNAaUm0BKHT
-   LvAlCtatqTCpJwW1GbM3aQdrvSB/KYPV6mXSZqQwYWCnoBQaYWzH6h+r+
-   g==;
-X-CSE-ConnectionGUID: cL9NEaUpS82OS3hzSfmukA==
-X-CSE-MsgGUID: R+u7JKe4QJ+e6m1DJTQQ8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="66332204"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="66332204"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 18:42:13 -0700
-X-CSE-ConnectionGUID: gs+bo9UCRS6oUiHvHgEzow==
-X-CSE-MsgGUID: 98vXkWv8RyW7ZTZtktSHOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="142497925"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 18:42:10 -0700
-Content-Type: multipart/mixed; boundary="------------Pmc9TytVRXbvZn0nfSt18r6r"
-Message-ID: <5d760ba9-031f-469b-96e0-a171b7142f88@linux.intel.com>
-Date: Tue, 13 May 2025 09:37:33 +0800
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="lqjiGX3R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747112823; bh=UTDc1wYpkWAfvifRTJF4VXiuszIW+r8dfq4jFbCbo4Q=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=lqjiGX3RwNZFdyygazrvIB60gbmq+d4Q3as5bsxuC5OxAqpstRn+2qAo56W8cCXAgz2bda7L8A4NuWgwtKr8mu5V2s6GIZrNLqDFZdi+oBWhAe4bNECNo+xNGC83IkCJL1fTG8ffFGxmA5jAAVF1sbEeLcjAo4BUqRvGQTMf6LytHucpFnbP6uK1878xDZCHTiMqPZetRD8vzATDH+kZ43PEAudV0ZnpXHSRlG+aHyT1ehovhCAOf7HstY+nuef/WM6/pS6nnnFn/B22uR1mLKFNbd2/C+SuyhTQ43cdykowu55/20FWEZ0NnEvmbuKT0drnUqI9XFwhWgy7aLL03A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747112823; bh=mIDfRoR8RowTnmrk2DCtc2gp+rfEPZC4RPmGqMAZV13=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=RUpR8uY/4H6dYUb73B9oUmEIrGWbK//W6xu8uGqaIuPVLyo4uPpPECEEPL1yB8JefxGf8O54AIhiA4Ni4NVk0a5bsXDuwt2U62mOUlZHyvxK0SonpUyNZVvcXMYDoH+IQBWxGr3fU5Uy32fJj5BFY0v2srmB6ocFbEf0Xf4atqsrOMA8q0BrO7iouY7lqrMQhpdUDFVn+HDJhP2t6MYIiqj8W0p4kL2V3J/2BY8gecgVRFfjhl+mPpvwwOduZ/0lRfL8GP50EHNJYNEVYg1TFCxpGdIILIc0hSwrfJm3eLI+ybECFwFPXOEeZfR1JAwtV/dh2o0kwGnqAvLYT6HmVg==
+X-YMail-OSG: sgt22KUVM1mV_c3KD3Z9pM_fyklHybfS1nrMPuM_Epep_Sjthf4uwEg7QAAr.yQ
+ 7iSxxLanxR8doijrgyHsZnYEHkfMjJyfP1bkQ60c9km7rQXKbIHSo2ZCr6ABC2fa7upjeH2vtxRi
+ WDZmp.etBz_JCh_sdaQzAhpfVsUOb01wHH3iyN5xxgCsQH9J5oU7kx9i9qRGNf3eCB5F7OO3Y7FC
+ tJ.y5IBAna26cUsJRrftiE3Q51CllhMdFRzXPIF2uasswu4wna5v9jU7RekCAKMpzxKv7VeRGkVH
+ DHnmsSaURxBWQnFgDxcZFuBhISrvh1LiSZ9U3S4R7vUH0M0HL85tRe1YU4juDCT1f6q604sU96ZN
+ W2Xa.6MKrXQfkOzRsvxuS2o.kYcrjA92i25UkJdhUnByPm8qnVXAYpCZEcMYvUnR0JR0.VLKZcPZ
+ U47FNUF1NNA_3dy6Yezo1ULXKWyzD0ckpIAKzPAmLgJ_LNUzC0GIsOzYGC91_rnXHv3uYTZohZGB
+ XVttIsTIaISkHj4ynLwan4jiRpWnzEk8q1E7A8EIPfr884N1ZmlC4clcdtlBLx9f24LHRJUAPQhf
+ IwA9OAI6VafabtfxMIoKfSoN0.TifTeSKUqDwReCH_oQbbaROXu2_wx8Ybx96KG1KICCOT9n89XW
+ w4UkFsFRHHIQLlwi2fQfqvKVNwEfADmVrrGhj9hiA03o_A.rmc6fn0zV_hU7vOcRuQCJIQPBPdBb
+ B5rXDr6bshlnMuGJ47LEeWY8Z5f7VCaDXugnnc3FMPu4lzKU.DLUg0J8hC1cWeyGJa9YF_qjooMn
+ G3sT3j_H60rTV4c6k8oQHGSbFq0vdAYIVvJ4UWmx7I6Ej4Za8y3I_pqR3H1TFARCNPTD45ePnnMb
+ zMiWDyUNtjBP10ADj2kzvJ22n.t30Q9r0QGH1SkIQpllvLS0IulL35Tr1jHSU.L7IZudCmNvqSIO
+ vZaDAo_n.calG2IFv3.6cbAwDv73Ud1Q38DPMK7GgedlqQU8gOwbIjhQ8Vi5CeZHkENY0bpIUIKj
+ gg7sB7Np3YENaFNVKvzELAFbTDqNtj.iKb_LVNjfqfNXRMFMDFvRagzt8yiHzVHrdAOdRmNzStaG
+ Koz3liNWt9v5wMEzvGny_GlPBGU.jyW_IkXq1KqKFTo5lE6wrY7zKJVhv8FwYcGMvQocX857y9JU
+ 2i2p1vZJ_eCj1UHR2aKDSvgJt8NE8KFgnafwgP3TgZm.39ibwzLI3lTMrxNqu70HjOh13bjwKakr
+ YkvwKAhBIElRh5_exzh26Y2LAhB5Z_Bz2puQ.CImT0ToyJZWy5D3_TLzrNvHcHsrI94y6xA..zlI
+ j5.vPobQJYZ733.qhKMblLQGYJlHgKnbYWYBihbYxfgtH4EssCrJ6nWZOMGb_YoLMC.IVotY7hGu
+ lfEfH6US5XQImGslLkVEfRNdNhSxipdlT63O86lZL9WcfO_V0Os43czqhtJqDvMmjNkiuoji011u
+ _wxuD1_RMlS7iZTKehsxqZ3Cfdl.ROztzA7KM40AD73afX2x9GKw8JLI_PA9wHLfzxjAY2h1TSxr
+ ni1V3tFz6znmskaQIjvMIUV2qDAygOzKBjTwgrxoEo8oaORS8QPJzTCzSOTFqSssX53qLgmtuaGN
+ 7Mwqqzxqhw9KOiGKw72t6ZH9rOIuuevAcfKTGqp8yCmfMjzAdAjLO5d12mGhboG0s51fCAWpNIyW
+ JJ7laA1mFC52T7NrOmhsWtFQ02AJ1KCvHGoL8.w.5yf_3xI2qZjVKMVf_XD3dccL_PitVDuUBQAJ
+ 7f_WTbVf3rfKIfRbjya4rA49Fhtx3SBPzP45_WvItzwV8D_M8f_IHN.3cVKupSoq5DM0DgTniwjZ
+ hFmOjvWho358C_C3jqcUQJ8L1G7PU7yG0kG0a.kYzpi50C_8brsDLoPjjAodSQ3b2oypEDXTyPQl
+ eVsU.KFuilKutU0fzz0OdYxrwifuv1p7Rf0CjEepmEeanRx.jcHyrpD8Hor7zxd3yH0GnO31IBKS
+ soQaEgE46y1Ke2q6zAz.M8HaL0acQDfIgIpULvwQ.LJTQ4.6xyI4vm3EMlWaozR7vZ7MmoQQkduY
+ hLi7KMOdnRSdM2RUXgb1LLHYv6IgvVPDKlYKALuSaaT2jlPjn8EN04ZsrSCRtWnZ0mlScOICvh.A
+ m9Uwptd0U1YpYcp9tyZ9T5zGRkV5GVzngmsnQlL0oqSgA71AuPuUE_jYqivtIkjUk8.l89zoi8aZ
+ cfQsoP9dcHWpQ2Z0q5jTThuyh87R9O5cDOEk2mFsMLPUM0zCLjV_BQgq.bg--
+X-Sonic-MF: <nruslan_devel@yahoo.com>
+X-Sonic-ID: 6af3212a-1965-4ab4-8cb6-265fa604d21b
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Tue, 13 May 2025 05:07:03 +0000
+Date: Tue, 13 May 2025 04:36:40 +0000 (UTC)
+From: Ruslan Nikolaev <nruslan_devel@yahoo.com>
+To: "kailang@realtek.com" <kailang@realtek.com>, 
+	Takashi Iwai <tiwai@suse.de>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"tiwai@suse.com" <tiwai@suse.com>, 
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, 
+	"sashal@kernel.org" <sashal@kernel.org>, 
+	"perex@perex.cz" <perex@perex.cz>
+Message-ID: <946767975.787038.1747111000631@mail.yahoo.com>
+In-Reply-To: <87o6vxuauk.wl-tiwai@suse.de>
+References: <1064773772.509063.1747061777318.ref@mail.yahoo.com> <1064773772.509063.1747061777318@mail.yahoo.com> <87o6vxuauk.wl-tiwai@suse.de>
+Subject: Re: [Bug 220109] New: Audio disappears on HP 15-fc000 after warm
+ boot again (ALC256 code path)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] applespi from 6.12 onwards
-To: kobarity <kobarity@gmail.com>
-Cc: Aditya Garg <gargaditya08@live.com>, =?UTF-8?Q?Berkel_J=C3=B6rg?=
- <joerg.berkel@bfh.ch>, Robin Murphy <robin.murphy@arm.com>,
- "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
- "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
- "lukas@wunner.de" <lukas@wunner.de>, David Woodhouse <dwmw2@infradead.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-References: <4dada48a-c5dd-4c30-9c85-5b03b0aa01f0@bfh.ch>
- <PN3PR01MB9597D8E327CC7910673849D3B888A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <122a1f90-ddd9-4e74-96d1-57e21e580ae2@linux.intel.com>
- <f1b41874-1535-4457-9747-eee3d816091a@arm.com>
- <PN3PR01MB959764E908600CD45169348CB88BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <c0bbfcc8-1275-43de-be40-acb8f2653359@bfh.ch>
- <PN3PR01MB959708DEEA1567DD38447D5AB895A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <eke7wmanw9xq.wl-kobarity@gmail.com>
- <089b2370-23e4-4a22-bf57-886e46247a1f@linux.intel.com>
- <eke7v7q6vxai.wl-kobarity@gmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <eke7v7q6vxai.wl-kobarity@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.23772 YMailNovation
 
-This is a multi-part message in MIME format.
---------------Pmc9TytVRXbvZn0nfSt18r6r
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Takashi and Kailang,
 
-On 5/12/25 20:16, kobarity wrote:
-> Baolu Lu wrote:
->> On 5/11/25 21:31, kobarity wrote:
->>>
->>> Hi
->>>
->>> I'm also experiencing this problem on my MacBookPro14,3.
->>>
->>> Aditya Garg wrote:
->>>>
->>>> Hi Jörg
->>>>
->>>> Can you test the kernel here to see if this fixes your issue:
->>>>
->>>> https://github.com/t2linux/T2-Debian-and-Ubuntu-Kernel/actions/runs/14944200356
->>>>
->>>> Alternatively you can try compiling your own kernel with this patch:
->>>>
->>>> https://lore.kernel.org/all/0-v1-c26553717e90+65f-iommu_vtd_ss_wo_jgg@nvidia.com/
->>>
->>> As far as I have tried, this patch did not solve the problem.
->>>
->>> By bisecting, I found that this problem was introduced by commit
->>> 2031c469f816 ("iommu/vt-d: Add support for static identity domain").
->>> In fact, since this commit, it will panic at startup.  This panic was
->>> fixed by commit 6e02a277f1db ("iommu/vt-d: Fix incorrect
->>> pci_for_each_dma_alias() for non-PCI devices").  So I applied commit
->>> 6e02a277f1db on commit 2031c469f816 and confirmed that the keyboard
->>> and touchpad is not working.
->>
->> Have you tried to apply commit 64f792981e35 ("iommu/vt-d: Remove device
->> comparison in context_setup_pass_through_cb")?
-> 
-> Yes, I tried it on yesterday's master branch, including commit
-> 64f792981e35.
-> 
-> - Keyboard/Touchpad NOT working:
->    - No patches
->    - With patch in https://lore.kernel.org/all/0-v1-c26553717e90+65f-iommu_vtd_ss_wo_jgg@nvidia.com/
-> - Keyboard/Touchpad working:
->    - With my workaround patch
+I did a few additional experiments. Here is what I found:
 
-Okay, thanks! Can you please try below change? I also attached a diff
-file in the attachment for your convenience.
+1. If I connect headphones and ALWAYS keep them connected, then sound does =
+not disappear even after a warm reboot.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 49530d5d8c85..9a86ead8377d 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1832,6 +1832,8 @@ static int dmar_domain_attach_device(struct 
-dmar_domain *domain,
-         if (ret)
-                 goto out_block_translation;
+2. The moment I disconnect headphones and do a warm reboot, sound is not go=
+ing to come back. At that point, connecting or disconnecting headphones, re=
+booting is not going to change anything (i.e., recover the sound) until I f=
+ully power off the computer.
 
-+       info->domain_attached = true;
-+
-         return 0;
+3. After reverting the commit, the above problems disappear for speakers, a=
+nd no additional issues with headphones are observed.
 
-  out_block_translation:
-@@ -3206,6 +3208,10 @@ void device_block_translation(struct device *dev)
-         struct intel_iommu *iommu = info->iommu;
-         unsigned long flags;
+4. Whether I revert or do not revert the above-mentioned commit, the headph=
+ones are sometime flaky if I already have an application running that uses =
+sound. I have to close that application, disconnect and connect headphones =
+again. Otherwise, the speaker does not get disconnected.
+The headphones seem to be even more flaky when NOT reverting the above comm=
+it - unless I booted the system with the headphones connected, the speaker =
+will never get disconnected.
 
-+       /* Device in DMA blocking state. Noting to do. */
-+       if (!info->domain_attached)
-+               return;
-+
-         if (info->domain)
-                 cache_tag_unassign_domain(info->domain, dev, 
-IOMMU_NO_PASID);
+Sincerely,
+Ruslan
 
-@@ -4302,6 +4308,9 @@ static int identity_domain_attach_dev(struct 
-iommu_domain *domain, struct device
-         else
-                 ret = device_setup_pass_through(dev);
 
-+       if (!ret)
-+               info->domain_attached = true;
-+
-         return ret;
-  }
 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index cbfb8bb4c94a..3ddbcc603de2 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -774,6 +774,7 @@ struct device_domain_info {
-         u8 ats_supported:1;
-         u8 ats_enabled:1;
-         u8 dtlb_extra_inval:1;  /* Quirk for devices need extra flush */
-+       u8 domain_attached:1;   /* Device has domain attached */
-         u8 ats_qdep;
-         unsigned int iopf_refcount;
-         struct device *dev; /* it's NULL for PCIe-to-PCI bridge */
 
-Thanks,
-baolu
---------------Pmc9TytVRXbvZn0nfSt18r6r
-Content-Type: text/x-patch; charset=UTF-8; name="diff.patch"
-Content-Disposition: attachment; filename="diff.patch"
-Content-Transfer-Encoding: base64
 
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuYyBiL2RyaXZlcnMvaW9t
-bXUvaW50ZWwvaW9tbXUuYwppbmRleCA0OTUzMGQ1ZDhjODUuLjlhODZlYWQ4Mzc3ZCAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9pb21tdS9pbnRlbC9pb21tdS5jCisrKyBiL2RyaXZlcnMvaW9t
-bXUvaW50ZWwvaW9tbXUuYwpAQCAtMTgzMiw2ICsxODMyLDggQEAgc3RhdGljIGludCBkbWFy
-X2RvbWFpbl9hdHRhY2hfZGV2aWNlKHN0cnVjdCBkbWFyX2RvbWFpbiAqZG9tYWluLAogCWlm
-IChyZXQpCiAJCWdvdG8gb3V0X2Jsb2NrX3RyYW5zbGF0aW9uOwogCisJaW5mby0+ZG9tYWlu
-X2F0dGFjaGVkID0gdHJ1ZTsKKwogCXJldHVybiAwOwogCiBvdXRfYmxvY2tfdHJhbnNsYXRp
-b246CkBAIC0zMjA2LDYgKzMyMDgsMTAgQEAgdm9pZCBkZXZpY2VfYmxvY2tfdHJhbnNsYXRp
-b24oc3RydWN0IGRldmljZSAqZGV2KQogCXN0cnVjdCBpbnRlbF9pb21tdSAqaW9tbXUgPSBp
-bmZvLT5pb21tdTsKIAl1bnNpZ25lZCBsb25nIGZsYWdzOwogCisJLyogRGV2aWNlIGluIERN
-QSBibG9ja2luZyBzdGF0ZS4gTm90aW5nIHRvIGRvLiAqLworCWlmICghaW5mby0+ZG9tYWlu
-X2F0dGFjaGVkKQorCQlyZXR1cm47CisKIAlpZiAoaW5mby0+ZG9tYWluKQogCQljYWNoZV90
-YWdfdW5hc3NpZ25fZG9tYWluKGluZm8tPmRvbWFpbiwgZGV2LCBJT01NVV9OT19QQVNJRCk7
-CiAKQEAgLTQzMDIsNiArNDMwOCw5IEBAIHN0YXRpYyBpbnQgaWRlbnRpdHlfZG9tYWluX2F0
-dGFjaF9kZXYoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLCBzdHJ1Y3QgZGV2aWNlCiAJ
-ZWxzZQogCQlyZXQgPSBkZXZpY2Vfc2V0dXBfcGFzc190aHJvdWdoKGRldik7CiAKKwlpZiAo
-IXJldCkKKwkJaW5mby0+ZG9tYWluX2F0dGFjaGVkID0gdHJ1ZTsKKwogCXJldHVybiByZXQ7
-CiB9CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaCBiL2RyaXZl
-cnMvaW9tbXUvaW50ZWwvaW9tbXUuaAppbmRleCBjYmZiOGJiNGM5NGEuLjNkZGJjYzYwM2Rl
-MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9pb21tdS9pbnRlbC9pb21tdS5oCisrKyBiL2RyaXZl
-cnMvaW9tbXUvaW50ZWwvaW9tbXUuaApAQCAtNzc0LDYgKzc3NCw3IEBAIHN0cnVjdCBkZXZp
-Y2VfZG9tYWluX2luZm8gewogCXU4IGF0c19zdXBwb3J0ZWQ6MTsKIAl1OCBhdHNfZW5hYmxl
-ZDoxOwogCXU4IGR0bGJfZXh0cmFfaW52YWw6MTsJLyogUXVpcmsgZm9yIGRldmljZXMgbmVl
-ZCBleHRyYSBmbHVzaCAqLworCXU4IGRvbWFpbl9hdHRhY2hlZDoxOwkvKiBEZXZpY2UgaGFz
-IGRvbWFpbiBhdHRhY2hlZCAqLwogCXU4IGF0c19xZGVwOwogCXVuc2lnbmVkIGludCBpb3Bm
-X3JlZmNvdW50OwogCXN0cnVjdCBkZXZpY2UgKmRldjsgLyogaXQncyBOVUxMIGZvciBQQ0ll
-LXRvLVBDSSBicmlkZ2UgKi8K
 
---------------Pmc9TytVRXbvZn0nfSt18r6r--
+
+
+On Monday, May 12, 2025 at 11:07:02 AM EDT, Takashi Iwai <tiwai@suse.de> wr=
+ote:=20
+
+
+
+
+
+On Mon, 12 May 2025 16:56:17 +0200,
+
+Ruslan Nikolaev wrote:
+>=20
+> Hi,
+>=20
+> Forwarding my regression bug report for HP 15-fc000 / ALC236 (ALC256 code=
+ path).
+>=20
+> #regzbot introduced: v6.12.2
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D220109
+>=20
+> Sincerely,
+> Ruslan
+>=20
+> Forwarded Message (see logs in the bug report above):
+>=20
+> There was a similar bug in the past (Bug 217440), which was fixed for thi=
+s laptop. (I believe the code path is for ALC256, see below.) The same issu=
+e is occurring again as of kernel v.6.12.2. The symptoms are very similar -=
+ initially audio works but after a warm reboot, the audio completely disapp=
+ears until the computer is powered off (there is no audio output at all).
+>=20
+> The issue is caused by a different change now. By bisecting different ker=
+nel versions, I found that reverting cc3d0b5dd989d3238d456f9fd385946379a9c1=
+3d in patch_realtek.c ( see https://git.kernel.org/pub/scm/linux/kernel/git=
+/stable/linux.git/commit/sound/pci/hda/patch_realtek.c?h=3Dv6.12.2&id=3D4ed=
+7f16070a8475c088ff423b2eb11ba15eb89b6 ) restores the sound and it works fin=
+e after the reboot.
+
+
+It's the commit cc3d0b5dd989d3238d456f9fd385946379a9c13d
+Author: Kailang Yang <kailang@realtek.com>
+Date:=C2=A0 Thu Nov 14 15:21:09 2024 +0800
+
+=C2=A0 =C2=A0 ALSA: hda/realtek: Update ALC256 depop procedure
+=C2=A0 =C2=A0=20
+=C2=A0 =C2=A0 Old procedure has a chance to meet Headphone no output.
+=C2=A0 =C2=A0=20
+=C2=A0 =C2=A0 Fixes: 4a219ef8f370 ("ALSA: hda/realtek - Add ALC256 HP depop=
+ function")
+=C2=A0 =C2=A0 Signed-off-by: Kailang Yang <kailang@realtek.com>
+=C2=A0 =C2=A0 Link: https://lore.kernel.org/463c5f93715d4714967041a0a8cec28=
+e@realtek.com
+=C2=A0 =C2=A0 Signed-off-by: Takashi Iwai <tiwai@suse.de>
+
+and it modified alc256_init() sequence.
+
+Kailang, could you check this regression?
+
+
+And, Ruslan, it's the case without the headphone, right?
+Is the sound still lost when you connect the headphone and apply the
+same procedure?
+
+
+thanks,
+
+Takashi
