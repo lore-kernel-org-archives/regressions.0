@@ -1,90 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008D325B682;
-	Thu, 15 May 2025 18:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9448525D1F5;
+	Thu, 15 May 2025 18:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333294; cv=none; b=EITWMxO2g2A3FMur9f59l0BF4cbjkkZRyy6Tnm3nMZsSlifoHCoMiRULWH3PUwLvDooUE/kE9HdqLtJEdUNET9hb2gvfb1BdrUMW2F6mC1dyQNKjbdevTDNgRO6oAnrDnYvyfQz5pJcmdPNflO3s1thR7+gVi+AwUiTz0KrFh9g=
+	t=1747333461; cv=none; b=k5tF7PmBwiLorErD9rbCu5d5CccMKpDlKAgfscGsNjZ+q+vdRmBvVCM0AWqtLAoZU0eAOgL60lV/9eaOjpjxRq+ewMfuZ7msev1C/5hO28Q/CvDbfqclMS2dMClwjOnorjDxA5muoPG7+l90qacmkPkVRvus057TK6thfbzyvxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333294; c=relaxed/simple;
-	bh=FxFfDzDgOp986k0H7VfACOZfr9TqwD1Xt+WZdTe4qYg=;
+	s=arc-20240116; t=1747333461; c=relaxed/simple;
+	bh=cmyb4fslMdZMeqJjaLXvuCdgMLSOPj2eAW7zLDTyppQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHDToM1UCI/Z49nBtu/gIb1CoZxmGnKA2UhL+bd0apWCqPdapuWTJZWAnx/UpsBhulogc7bbgQ6RCHP+QFxIfTeUYxWc6juJ/BUCHU1IhFgiLl3TPC1ff0Xk1LM7wvQiElIJCB9HcwC6mytHB4tmh+FUgTERaOH4eowRsyFb7j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zcib9lV2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QHX4vv34ohxrd22hYuYe1jvNVpKjfY7k87a85jMgWlkSpmva3FLtbIHCPqLHEjQFsNMsyc+jTwRW86ABQGUSNUzYgU0OZbIwm5v9xbjuIYuPeUqKrDLFVcrRfIFvQHSQzpqic/ENpnXgdHgxX8B1btfWUOZkDMy7hvPWJCXFjJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neWj93rj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zcib9lV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD50DC4CEE7;
-	Thu, 15 May 2025 18:21:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neWj93rj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B14C19421;
+	Thu, 15 May 2025 18:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747333293;
-	bh=FxFfDzDgOp986k0H7VfACOZfr9TqwD1Xt+WZdTe4qYg=;
+	s=k20201202; t=1747333461;
+	bh=cmyb4fslMdZMeqJjaLXvuCdgMLSOPj2eAW7zLDTyppQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zcib9lV2xe8z2dUxIYZ3PyJ1POiKAPw5mjTzXsGPkgYQHy34aBinzuLp+gFDhX6BU
-	 jAW0xLKEIfoaMpPCz1Og7HDRVQDfvjsM2BTnmJAr6/b1N8BSw/wBX4HgCc4aWCPY/S
-	 b3FKX2Rlq73wPCqRWjJhcnM2WDZQLZ6VyHzgkdD5JpUDBUID+RQczdfQdHlMKQx/gu
-	 wYiHdZYBsxfZBFN/C3U8bFjvNxrOde+8orkgmfDB1+5Mtib6yA5RTQmJf0BMHviAeU
-	 lNIz/Y+d94d/0NrDXywYkAh4RHkcwN5LvDSnw+pyDZ+l4ZyJTYc8u+alQuAwfuFGbg
-	 elNOWNRYI3F5Q==
-Date: Thu, 15 May 2025 11:21:31 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <20250515182131.GC1411@quark>
-References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+	b=neWj93rjpazFcs+AlCYfjTtrA68QwMLPbqCAGKLV83Bw/9G5mYV5YGBG8kPiQvR5C
+	 aFWcZ6XPUcMrEPg2X9JdqcpVtlFnNDYbBWlCcWGkxStYHbhHq1I/otEkFgkY3AmctU
+	 85ZK90t0e8tjsxybIkI4t3GZ+OVaaVzhPh3OJXIaZtDSlc1C+BlEyQK75SJ9mC/Mkl
+	 lgrpMKpgThEPyZ6vixgMLEzrmfK2eFm/zKEwCjcdqmYE9+uMQnKqP+W05IihwVECmo
+	 TtVo1zvSB4eTuLdk8yXgGrC0ycL/ncy2YcAJHAchPB9GwAuTQ3iHcu3Uyh9IIgZ5Lf
+	 83L70jE8yVpWA==
+Date: Thu, 15 May 2025 11:24:16 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <202505151116.4FFA176B8@keescook>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
+ <202505150911.1254C695D@keescook>
+ <20250515171821.6je7a4uvmttcdiia@desk>
+ <202505151039.DAA202A@keescook>
+ <CAEf4Bzb4LZK5p08t1y-32wAFDGoRGKR1w1T_je6+a_EOE2uSYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzb4LZK5p08t1y-32wAFDGoRGKR1w1T_je6+a_EOE2uSYQ@mail.gmail.com>
 
-On Thu, May 15, 2025 at 07:53:03PM +0200, Klaus Kudielka wrote:
-> On Wed, 2025-05-14 at 13:14 +0800, Herbert Xu wrote:
-> > 
-> > Sorry, should've mentioned that this goes on top of the current
-> > cryptodev tree:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/log/
-> > 
+On Thu, May 15, 2025 at 10:53:10AM -0700, Andrii Nakryiko wrote:
+> On Thu, May 15, 2025 at 10:41 AM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Thu, May 15, 2025 at 10:18:21AM -0700, Pawan Gupta wrote:
+> > > On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
+> > > > On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
+> > > > > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> > > > > >There is an observable slowdown when running BPF selftests on 6.15-rc6
+> > > > > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
+> > > > > [...]
+> > > > > Where can I find the .config for the slow runs?
+> > > >
+> > > > Oops, I can read. :) Doing a build now...
+> > > >
+> > > > > And how do I run the test myself directly?
+> > > >
+> > > > I found:
+> > > > https://docs.kernel.org/bpf/bpf_devel_QA.html
+> > > >
+> > > > But it doesn't seem to cover a bunch of stuff (no way to prebuild the
+> > > > tests, no info on building the test modules).
+> > > >
+> > > > This seems to be needed:
+> > > >
+> > > > make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
+> > > >
+> > > > But then the booted kernel doesn't load it (missing signatures?)
+> > > >
+> > > > Anyway, I'll keep digging...
+> > >
+> > > After struggling with this for a while, I figured vmtest.sh is the easiest
+> > > way to test bpf:
+> > >
+> > > ./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
+> >
+> > I can't even build the test_progs. :(
+> >
+> > $ make test_progs
+> > ...
+> >   CLNG-BPF [test_progs] bpf_iter_tasks.bpf.o
+> > progs/bpf_iter_tasks.c:98:8: error: call to undeclared function 'bpf_copy_from_user_task_str'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+> >    98 |         ret = bpf_copy_from_user_task_str((char *)task_str1, sizeof(task_str1), ptr, task, 0
+> > );
+> >       |               ^
+> > 1 error generated.
+> >
 > 
-> Okay, so now I have two printk patches on top of the current cryptodev tree.
+> BPF selftests expect that there was a successful kernel build done
+> before that. So generally speaking:
 > 
-> I have enabled CRYPTO_SELFTESTS
-> 
-> - Three successful reboot / modprobe marvell-cesa. All self-tests passed.
-> - But the whole self-tests sequence now take approx. 2 minutes, instead of 15 seconds with plain v6.15-rc5
-> - And the journal gets huge. 24k lines. I am attaching a gzipped version, hope this works.
-> 
-> Best regards, Klaus
+> 0) cd <linux/repo/path>
+> 1) export O=/path/to/build
+> 2) cat tools/testing/selftests/bpf/config >> /path/to/build/.config
+> 3) make O=/path/to/build -j$(nproc) oldefconfig all
+> 4) cd tools/testing/selftests/bpf # everything is built within this
+> directory, we don't support KBUILD_PATH or O for BPF selftests build
+> artifacts
+> 5) make O=/path/to/build -j$(nproc)
 
-CRYPTO_SELFTESTS now enables the full set of crypto self-tests, which for the
-past 6 years have been needed to be run anyway to properly validate the drivers;
-just developers often forgot to enable them because they were under a separate
-kconfig option that had a confusing name.  So the longer test time is expected.
-It's unfortunate that it takes 2 minutes on the platform you're testing (on most
-platforms it's much faster), but presumably that is still okay since it's just a
-development option?  People shouldn't be expecting to run these tests in
-production kernels.  (But even if they are for some reason, the test time also
-remains configurable via kernel command-line options.)
+Linux ToT fails to build, -next fails to build. v6.14.6 fails build,
+each in different ways. :(
 
-- Eric
+> But tbh, if the above causes you problems, I don't think you need to
+> spend that much time trying to build BPF selftests, given you know
+> what the issue is and you are fixing it.
+
+Well, nothing I've proposed makes any sense as far as something that would
+double execution time, so I don't really know what the issue is yet. :P
+
+-- 
+Kees Cook
