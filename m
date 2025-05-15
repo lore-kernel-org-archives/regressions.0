@@ -1,99 +1,143 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3791F4281;
-	Wed, 14 May 2025 05:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149D929A9DC
+	for <regressions@lists.linux.dev>; Thu, 15 May 2025 13:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747199705; cv=none; b=V6GnFHFO/it3oflEws/x6N5WK3K0sjnERj/M+Iers39qSQkyPD+GJDtZsKjGE/Dz9GmGSTL9Qfb35qbuk9pWvEc68aavLVEpKStx1CyVeRADBNamALuTEESV/DsgnqzjXny0oxKVCcZFh2f1W9GLtuWSgBRc3oQ8W10rYhC9oAM=
+	t=1747314763; cv=none; b=dBhJZgYt1uOpbwV0oebRAB/cGELykGsMS6Ba5fFAPUS4EBvXE6S32MxoaMiExVMx5E2sz/g7CJMRVWzTRAu60DoXQQ0NBsTXws8AyXMVnY+3DpHeIM3jSPhcUEtOOkSZ74K6NfA2Ch+WB66Ogr0t7N0UpsCdt8yDCKHeVFP29J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747199705; c=relaxed/simple;
-	bh=hoge9D2mSjKOtaJKv/jYyK3UIA1n2r6xt550GXehXV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Op/MCgXbVz5ddBPGc8tDDlOlE3kvQhQUo4lUbM+W0qAFoy6Mvq2FEp5aUbMpEWTNMmrWMhDYqz7/AVyKU+76X9QI5aoclB9YPro3OWWSj5fW+y/nBX9dXOhhuveZBqKvXqRLSBrDJ/RCF9tuV76KC5buuJOowVccLAHN85sumOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=pJVxEwgY; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747314763; c=relaxed/simple;
+	bh=h3rS68HIKc08d7AKcI8nLqC7n+gNjlA+jVgKmtRSPnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tAP8MjflW4fgBH7D6XPFI4kanQkou3tKuP3LeMcz0q/wa8RMzHgUPz9VJ+Ieo/EydoClNilbZPP1mJDXAja+eJJN3kD7jfYO3p8y6kzGyd6Ufp0XoXnPRVzOmyzPEoj+ttmEK4nnJFzrVzttEU/mtpbfr6WAk+JQXHkcmOCgSwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RdO7aUnz; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="pJVxEwgY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=RXMQrcEfKqnWQN1+EdIIyggXXSvqo3Wi1fgUbQZ7v58=; b=pJVxEwgYcPOCg45zcY+i+eSo66
-	tkKkLD1ittwSssNPhXHvCQfMAZ1zejqWqr8866rCvQmuU1VE4t24qvxCtU5M5gyiV9Eg9bLdyJh3Z
-	d6cW7DB+Fl6uvH0kIwPPhCakyKf416JLFMN+3B15UH6RHqX1QlUEDj862PJYbpLQlsxGywaCk0Zrb
-	sKfrZfq0eTDRcQcpw1h6dommgcGhH/19JhcOtABSPN6sGDn2P2eKcyTt+1VCFccQzibW7pgP3uNrr
-	H+l4kuQ5j08Fu0vGbSrPr8rdvAMW3zJ6vIGFLA1K8NRG8oH+6LCiWHdA90lFVXE0fe7dXieBJD0FO
-	5eZUm7kg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uF4SH-005x4H-2J;
-	Wed, 14 May 2025 13:14:58 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 14 May 2025 13:14:57 +0800
-Date: Wed, 14 May 2025 13:14:57 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
-References: <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
- <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RdO7aUnz"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a0bdcd7357so749641f8f.1
+        for <regressions@lists.linux.dev>; Thu, 15 May 2025 06:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747314759; x=1747919559; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Sc7s4zPug7QCBZMgJvj3UJe25bWXU+WVGJNmLlNHLU=;
+        b=RdO7aUnz3qm3juGcY0aSfaNWW6fNk6rlnHDps1qfmn5xTDNDbS0GxFZLCzyIkMTuNR
+         WKW6x1XwH39BB00WanVSmq1o4efFlXY9r9N4KPHgQ/aSoNXsIy3Sajf1zpn739sEHfUK
+         eacHBbjrWRTBI00wE/e9u8Y9M6SpcHqHkgcI/C+ZnJzRmol0Q9fCQuROs9fFS1Gz90Ub
+         Hj3cvOWaDF5LQHiR8rM35ODUjKjS+IwfRIAPvc+DFFzOLE2Cpppqi3DVqiciB7UEDAt2
+         zdF9wBOtd9EfATzBoSq0bk7qeohsl5HsZskHcs5UE528zNouwHvu0TflDzgFQlgTC5Wq
+         7FJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747314759; x=1747919559;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Sc7s4zPug7QCBZMgJvj3UJe25bWXU+WVGJNmLlNHLU=;
+        b=bsLIXhwHqpFdU3duUqnR2QHlk7XJ+VUg8EAzb6TeAcH81mf0v2DP6Ms7pnsJVeHNMO
+         Uz5q26uUnX9q52dWodnte/JqO4t+bXhC9GA6dL9cDYpmyC28EWvJii3g/WjFKyeGGWnO
+         UEZ6UAFUtStylP9AzAvJemI7WSMsfvUnBshusVvarCvaojZnPLa+F5oy1ojtYq6R5pb/
+         WonLaAwLkGU2UUUwxnakakATl54Z3baVf8bzprAtav9xzWMRmarJGs12jpKZGWQXYP8x
+         d/qS1qNRP6b4ATV3fPZPVYUsQYUASVKMbDbdKtr+S/Rtn9Ez/hxYlC5nMW8E2DVtoOYe
+         Gzrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEGWjvcNqG4J/TjlU2Tbuyk7VU2E/O9b6jtydwbiICVsIuCbhzB/3adaR2eijC+8+h4BCvzqjhP6+tmQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyZUY2op8Zp3I76bhOExgzDhv0LJJEcKtu+DEnIK0ea9627PgEo
+	BGq1V9FxsXWLPzNlUN4+qsemRsb0sRNs3aN5RMFBDEJTgHIFcOw7MQGf0y/nMKU=
+X-Gm-Gg: ASbGncsv8zrRzDKcyf2NYU3jC5IbqU9NPBMru7gHnUK2e6agFhP17YjuxQKxEgW0Dfm
+	9aQq87hOMTYkFoij1XQNZjL4n/zb7owCdGEA0+MxucLfYP/isi9VITZ2qN00CV8exHM4EPyqUaA
+	wjxWSnalhgFZhvpHxVtwxtJh28yjCwsY5eePh0cbZ2m02Y4QRtEzmy8Kz9F7XsMVqvZfLNamDLA
+	U125+JKeIvm8cbpgi5eLgWn6JUK2keW/dKIjKdoDLsIEb0dc45ECiSahX6UUf7iEVAQlbWxqILs
+	rhIFCojHMR4L2YtPBjLcywabaFQk8uiegbsWqYyC6B4pYlBJ0YbfWxn30JPU46dGc5BhQz2pMXE
+	=
+X-Google-Smtp-Source: AGHT+IGU57xOouQYJOoHXSv7L1CzbOeG1YaSFTyHO9EqbI2SUzbIwPqP+E+vwOTbyIhTtUlFo0TsXw==
+X-Received: by 2002:a05:6000:2506:b0:3a0:8c45:d41b with SMTP id ffacd0b85a97d-3a3496a71b3mr6559388f8f.20.1747314759305;
+        Thu, 15 May 2025 06:12:39 -0700 (PDT)
+Received: from u94a (1-174-3-124.dynamic-ip.hinet.net. [1.174.3.124])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4df8299e6dbsm2404387137.14.2025.05.15.06.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 06:12:38 -0700 (PDT)
+Date: Thu, 15 May 2025 21:12:25 +0800
+From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+To: bpf@vger.kernel.org, linux-mm@kvack.org, Kees Cook <kees@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Ihor Solodrai <ihor.solodrai@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	regressions@lists.linux.dev, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Eduard Zingerman <eddyz87@gmail.com>
+Subject: [REGRESSION] bpf verifier slowdown due to vrealloc() change since
+ 6.15-rc6
+Message-ID: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
 
-On Wed, May 14, 2025 at 07:12:52AM +0200, Klaus Kudielka wrote:
->
-> drivers/crypto/marvell/cesa/hash.c: In function ‘mv_cesa_ahash_complete’:
-> drivers/crypto/marvell/cesa/hash.c:403:25: error: implicit declaration of function ‘HASH_FBREQ_ON_STACK’; did you mean ‘SHASH_DESC_ON_STACK’? [-Wimplicit-function-declaration]
->   403 |                         HASH_FBREQ_ON_STACK(fbreq, ahashreq);
->       |                         ^~~~~~~~~~~~~~~~~~~
->       |                         SHASH_DESC_ON_STACK
-> drivers/crypto/marvell/cesa/hash.c:403:45: error: ‘fbreq’ undeclared (first use in this function)
->   403 |                         HASH_FBREQ_ON_STACK(fbreq, ahashreq);
->       |                                             ^~~~~
-> drivers/crypto/marvell/cesa/hash.c:403:45: note: each undeclared identifier is reported only once for each function it appears in
-> drivers/crypto/marvell/cesa/hash.c:405:25: error: implicit declaration of function ‘crypto_ahash_import_core’; did you mean ‘crypto_ahash_import’? [-Wimplicit-function-declaration]
->   405 |                         crypto_ahash_import_core(fbreq, &state);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~
->       |                         crypto_ahash_import
->   CC [M]  drivers/crypto/marvell/cesa/tdma.o
-> drivers/crypto/marvell/cesa/hash.c:407:25: error: implicit declaration of function ‘crypto_ahash_export_core’; did you mean ‘crypto_ahash_export’? [-Wimplicit-function-declaration]
->   407 |                         crypto_ahash_export_core(fbreq, &state);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~
->       |                         crypto_ahash_export
-> make[9]: *** [scripts/Makefile.build:203: drivers/crypto/marvell/cesa/hash.o] Error 1
+Hi,
 
-Sorry, should've mentioned that this goes on top of the current
-cryptodev tree:
+There is an observable slowdown when running BPF selftests on 6.15-rc6
+kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
+Overall the BPF selftests now takes 2x time to run (from ~25m to ~50m),
+and for the verif_scale_loop3_fail it went from single digit seconds to
+6 minutes.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/log/
+Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
+support more granular vrealloc() sizing"[2]. To further zoom in the
+issue, I tried removing the only kvrealloc() call in kernel/bpf/ by
+reverting commit 96a30e469ca1 "bpf: use common instruction history
+across all states", so _krealloc()_ was used instead of kvrealloc(), and
+observe that there is _no_ slowdown[3]. While the bisect and the revert
+is done on 6.14.7-rc2, I think it should stll be pretty representitive.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+In short, the follow were tested:
+- 6.15-rc6 (has a0309faf1cb0) -> slowdown
+- 6.14.7-rc2 (has a0309faf1cb0) -> slowdown
+- 6.14.7-rc2 (has a0309faf1cb0, call to kvrealloc in
+  kernel/bpf/verifier.c replaced with krealloc) -> _no_ slowdown
+
+And the vrealloc() change is causing slowdown in kvrealloc() call within
+push_insn_history().
+
+  /* for any branch, call, exit record the history of jmps in the given state */
+  static int push_insn_history(struct bpf_verifier_env *env, struct bpf_verifier_state *cur,
+  			     int insn_flags, u64 linked_regs)
+  {
+  	struct bpf_insn_hist_entry *p;
+  	size_t alloc_size;
+  	...
+  	if (cur->insn_hist_end + 1 > env->insn_hist_cap) {
+  		alloc_size = size_mul(cur->insn_hist_end + 1, sizeof(*p));
+  		p = kvrealloc(env->insn_hist, alloc_size, GFP_USER);
+  		if (!p)
+  			return -ENOMEM;
+  		env->insn_hist = p;
+  		env->insn_hist_cap = alloc_size / sizeof(*p);
+  	}
+  
+  	p = &env->insn_hist[cur->insn_hist_end];
+  	p->idx = env->insn_idx;
+  	p->prev_idx = env->prev_insn_idx;
+  	p->flags = insn_flags;
+  	p->linked_regs = linked_regs;
+  
+  	cur->insn_hist_end++;
+  	env->cur_hist_ent = p;
+  
+  	return 0;
+  }
+
+BPF CI probably hasn't hit this yet because bpf-next have only got to
+6.15-rc4.
+
+Shung-Hsi
+
+#regzbot introduced: a0309faf1cb0622cac7c820150b7abf2024acff5
+
+1: https://github.com/shunghsiyu/libbpf/actions/runs/15038992168/job/42266125686
+2: https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
+3: https://github.com/shunghsiyu/libbpf/actions/runs/15043433548/job/42280277024
