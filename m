@@ -1,84 +1,89 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2591284B27
-	for <regressions@lists.linux.dev>; Thu, 15 May 2025 18:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0139E746E
+	for <regressions@lists.linux.dev>; Thu, 15 May 2025 18:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333875; cv=none; b=StNq4S9by0wjAlgadmHw0LA5TY7SMXNvqsuUS5rNWd0Blc57WElqDu8EZ1cZ17AZnH+sGs5V0YF/5GXeA3LQmHaAIuxs+c1EIpo3ZqVjLS3JI91mDw6dmEZ+u6jnIgSkYBQYXPNpp3wB67TSZV7ulbzzu2Fw/t1YSCUhuqeCmzg=
+	t=1747334744; cv=none; b=t0ahIhco7lkPmvhO8Lgboe/p7syOOq8jvvLunGjQbt0/wfR3AblGd7bmuWADsxBC+yYqpPyMqKMdM0iL+a2g0d3yNLVEAiJJgzmhsrZGWY7vfOJ26VBvmdXINq3LDmNE3W1zvxw5ZzxdWIESOy2HbUI4d5hFsIvCVOgzlWIskCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333875; c=relaxed/simple;
-	bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
+	s=arc-20240116; t=1747334744; c=relaxed/simple;
+	bh=9WLPjYbuxgmzbErUtY6qGPN4XcL2duXSQLLSfRAPlUw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Xl/Plvux5QTSviR14IPcrEzUkhvIygTntfS0TV/anrWs6E02/5LlJzMFB414d0QC3q/y0tjuW0cd+miuGvZJsj/oL3WJXmECw335pnSoqlj9jQHllc9AR8SNPMh8+zdGsee0rHSpT+fmHquBArytdfz1mtQ22Wa3cCPl3WJJ5YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TNDy2772; arc=none smtp.client-ip=209.85.215.176
+	 Content-Type:MIME-Version; b=dMg2rhec4tD80AYABGJ+e5Q8NEEt9XOMAk0QJ2BsB+q7bodU0iDb3+Pe4J2Y9EDbNGklHTUekqXROCpDmO3pwQqI8fD6Z9usLfVoMdqeyWYYHuxiey0KVuWXHIOUe+GDid1sAeaXUppsq3vuWb8DjW3JIIEwvvdNgYe87F63+yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X85obodZ; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNDy2772"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1fde81de05so825921a12.1
-        for <regressions@lists.linux.dev>; Thu, 15 May 2025 11:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X85obodZ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ede096d73so9216575e9.2
+        for <regressions@lists.linux.dev>; Thu, 15 May 2025 11:45:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747333873; x=1747938673; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1747334741; x=1747939541; darn=lists.linux.dev;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
-        b=TNDy2772/5BmUdEDo7m3z9EJGfd8/DU3cwou7vcW5dCHF1HaopeDKyt9EfsgSUNraD
-         Ax6VKPC+ulS+r6xe3O3faPymi0yMxmwaZVnPDMuOutKwE5OriBiDxx0hmBfkVYfhrDWn
-         ncaEmuA610PNcovgD+4khYnTchRwGaLpAanHB4AiywBd8MyHgwXQdzzRSgU4VV4owaJu
-         tc38jSDHf1wbmO4Wxbd4TYlBCJjycL7sqtWSCL90TsaolbWn2bJmzj9d9KfVVgI/WCTm
-         8LLmbqB7KCAT4HGSgY+I67EL69eglJDYyVTZqBmnqJbEQFCE4RMQi+PJt628nahjFW00
-         eBKQ==
+        bh=Zv2KEzheJ/MgPqhI9h8gaX+s/CUBTIKXLdES3z3s/l4=;
+        b=X85obodZU1i/FXqFI9RFjzFGfRAJih8DRmMPYy3lvxRFEo3wRqVVHRItBI8lpsRX7Z
+         v/xzdYeDvPUJQs+TgAyTiR6izmcXlaLrTX7h9NF61/9VUi+X4HiGwuf3Tvsv+pCnqEr+
+         jV/6Qj5xFJUak2IqZpqNoCSdVC3yumGB3crHtD+uKcivylm4bHiBlOxgX25iJaZNxJdW
+         KWHSSZYTnZBlG3TzOhdH/1Bzeb91sfyqSGPi/P5oKqNdTYfpTaPJMqjn1u6Btim+3I7q
+         2gUWeKBrViov+an9US0mUdv2jytHv2r4j2G2YvN+xhDdZM2ZWfjYPhfJlIM9HcASAm+5
+         J12Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333873; x=1747938673;
+        d=1e100.net; s=20230601; t=1747334741; x=1747939541;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
-        b=pVbxzq+yVb83NE7qvevGEFGl4mQGJyQLEuxmRBVandzm9Zk2wwPcP82YdumdLobDvf
-         9fzH6orodBPf/4OXDdao0rYH5nzZspaucjqqcYtjmhJJYdS1HkKdXbmNgidQYdaCBWyR
-         r2R8slGGUadTXNV7tpuMvKjsc8O7rdZzcbBw/NJ+YMDxU1iXU/eCAYNZt6h8ppvdZajB
-         f8wmX8vLlkBHCrz+AHb5H3hzqK8On8Tn8NGKWNu5tBrBk+yyzE+tEMz4jZcfkbxnzdmO
-         8A/IJHcZQilZqBQ6ds+0tbajLqEZyA0ZwdYt4B1PV85YdQODzrS7GtMRYQz0jBkVfytd
-         J4Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCXoFBPAoablgwtVqb+cBYGKyRevYk0MPHCzOCWvV7GZv1E1sM4yD3eXxRgVkjYYeXTq2/erMgP6pgwBfQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7sDZCPXohKxS45c/2NGHn4JYCLi7bsg5GdmQPEDwR2fYQ9ozJ
-	G2yADx3kLYF0vJLo1WwQra3b3YkDEOVe12uw2BxNonIJrZypM6JIAVpW
-X-Gm-Gg: ASbGncu25EKWp5VVrQsUxlDXJNllfv/3Nv/6Nxvi63+ZNWnYi3CfgZCFswryQh8RSln
-	HzMpoeZHk8Qrc0y+L939sYBwM4j7ESVfnqC5vh2Y5vJTZ3pnSvP8PGNfKpIMITgzfn9ZKz08pvw
-	8UfAvE9RAyCuJzCK95/rC1SUZXLn1YMpvKKZxZR0eLAMvD4Eh8NKBa/CliNdbg427VfRgbhaHH2
-	A5RwiXyikdtVm7Kdusb8MzrfhMJZqNDZAPXqqcpIL4Kt5z9xIA/aOFSEe5ea8idSap3R0QU2bjm
-	5XzOuCEkd6hENJxNWl2hrcur9958sYkMw5tt9545TIUq97yWyVHmtycM5A==
-X-Google-Smtp-Source: AGHT+IH6OY+7lX78qJzXX8XUmWkJnOnPaGJh9q4L+Bcz6Vd9CB0IOhsuPWAb1U3MJhxd+KmPtBkNvg==
-X-Received: by 2002:a17:902:ce87:b0:223:653e:eb09 with SMTP id d9443c01a7336-231d438a294mr6291995ad.7.1747333872812;
-        Thu, 15 May 2025 11:31:12 -0700 (PDT)
-Received: from [192.168.0.56] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e98018sm917875ad.155.2025.05.15.11.31.12
+        bh=Zv2KEzheJ/MgPqhI9h8gaX+s/CUBTIKXLdES3z3s/l4=;
+        b=BaGzQoTwXWwARXyoJGdOgGQb0shdYp+JYAZz8TQYXiwLReoHwNTLDA3H0Sgq41UOcn
+         X03bwun0crCwdcAuqI7jTTII6tB/wiyZaOjqMCzjW333UtXg3dEvfG0XUiUOYPTS6KYW
+         /0daMV8HaEPlsH31NCxYFDpTJAJwLn66fb9r7dhy7Pt3rqOpGaO6si0L8hgSusDbdpbA
+         7rHX9Dfjr+a4vun4GDovQaXr8Okd6nEbYP0fKVrJvYzwa7E9rJAssa38w6/QGipGLtV3
+         fN1Ctu5cL4d2j+DQxMJi2TLVunJzvPOhfEOpGvwh3diPzbAAk1vJ19DOuFFMaNeAl7hA
+         bwUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcVs8KnbabtTyfjHc4vwRSKa+pE8oIlrtG4nDTTtqPIVizrFyqWWk2pje3xYveIYE7xEHgVxZOxVF5ug==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwzVlbj/+q8VyhrdbfUt3w5PVNwO/PUiDnqvuNM9sFcG9LOnA3S
+	6T+iPmMq7QsSM8pAI1cN4UD6tpJCSXCvqvKClXpmtx+zZz3PaV5Y7mIx1Nu0u+24
+X-Gm-Gg: ASbGncsGgZHleEOXN7amcrX2F61q6P4MIw2nXm3zYW8WjMt8vL3aMUMBzyZjRGAhBcd
+	BZov+5nvafgTf7N0ImepU7XXLBT2vpzfGUAzVxK5UBLLOCvvwykDW2rrjxByhJpCWPxtuB32St9
+	0TvQlOTXh0lFbcsfDTc4lMwz2O/G/TYcS8VHSwY3g6XPP6U6Gm2qybvdTGAYXRFBs57qsZ60iO3
+	6XA8tVaTygtOO26fIsNlhhQiC4nrxnmngBOU8AsqIfb/NJWN8sZMGk813hMOBblGjbDKXP9iywd
+	tweZp3YbPp59B0u/bxxslO/riHXsP31hueXWNhzGzY7iR3XnhYAQDj97d5l+AXlLssuazuTGLNH
+	3NNQ0mAKtUWml/7zxomGRLQ==
+X-Google-Smtp-Source: AGHT+IGEjWzR/1RM405yibigh6lwHJWxY2UWukv1Rc4Eh4xTQ4c5CammOK7/eC3cazBKUYuuzn3TMw==
+X-Received: by 2002:a05:600c:c0d2:20b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-442fda2e7d3mr1968665e9.27.1747334740835;
+        Thu, 15 May 2025 11:45:40 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:9394:f453:aba3:b8c4? ([2a02:168:6806:0:9394:f453:aba3:b8c4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd59701dsm5147505e9.35.2025.05.15.11.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:31:12 -0700 (PDT)
-Message-ID: <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
-Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
- since 6.15-rc6
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Kees Cook <kees@kernel.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Cc: bpf@vger.kernel.org, linux-mm@kvack.org, Andrii Nakryiko
- <andrii@kernel.org>,  Ihor Solodrai <ihor.solodrai@linux.dev>, Andrew
- Morton <akpm@linux-foundation.org>, Michal Hocko	 <mhocko@suse.com>,
- Vlastimil Babka <vbabka@suse.cz>, Uladzislau Rezki	 <urezki@gmail.com>,
- linux-kernel@vger.kernel.org, 	linux-hardening@vger.kernel.org,
- regressions@lists.linux.dev, Greg Kroah-Hartman	
- <gregkh@linuxfoundation.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Date: Thu, 15 May 2025 11:31:09 -0700
-In-Reply-To: <202505150845.0F9E154@keescook>
-References: 
-	<20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
-	 <202505150845.0F9E154@keescook>
+        Thu, 15 May 2025 11:45:40 -0700 (PDT)
+Message-ID: <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Eric Biggers <ebiggers@kernel.org>, Herbert Xu
+ <herbert@gondor.apana.org.au>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
+ 	linux-kernel@vger.kernel.org, Linux Crypto Mailing List	
+ <linux-crypto@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+ EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>, Romain Perier
+ <romain.perier@gmail.com>
+Date: Thu, 15 May 2025 20:45:39 +0200
+In-Reply-To: <20250515182131.GC1411@quark>
+References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
+	 <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
+	 <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
+	 <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
+	 <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
+	 <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
+	 <aCMOyWVte4tw85_F@gondor.apana.org.au>
+	 <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
+	 <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
+	 <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+	 <20250515182131.GC1411@quark>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -86,16 +91,70 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Thu, 2025-05-15 at 08:47 -0700, Kees Cook wrote:
-> On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
-> > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
-> > support more granular vrealloc() sizing"[2]. To further zoom in the
+On Thu, 2025-05-15 at 11:21 -0700, Eric Biggers wrote:
 >=20
-> Can you try this patch? It's a clear bug fix, but if it doesn't improve
-> things, I have another idea to rearrange the memset.
+> CRYPTO_SELFTESTS now enables the full set of crypto self-tests, which for=
+ the
+> past 6 years have been needed to be run anyway to properly validate the d=
+rivers;
+> just developers often forgot to enable them because they were under a sep=
+arate
+> kconfig option that had a confusing name.=C2=A0 So the longer test time i=
+s expected.
+> It's unfortunate that it takes 2 minutes on the platform you're testing (=
+on most
+> platforms it's much faster), but presumably that is still okay since it's=
+ just a
+> development option?=C2=A0 People shouldn't be expecting to run these test=
+s in
+> production kernels.=C2=A0 (But even if they are for some reason, the test=
+ time also
+> remains configurable via kernel command-line options.)
+>=20
+> - Eric
 
-I tried this patch on top of the commit 82f2b0b97b36 ("Linux 6.15-rc6").
-W/o the patch I observe the slowdown, test times out after 120 seconds,
-with the patch test finishes in 3 seconds.
+Probably it was only the massive amount of printk's which slowed the system=
+ down.
 
-[...]
+With the plain cryptodev tree I now see:
+
+# modprobe marvell-cesa
+# dmesg | tail
+[    4.949108] mv88e6085 f1072004.mdio-mii:10 lan4: Link is Up - 1Gbps/Full=
+ - flow control rx/tx
+[    4.949199] br0: port 2(lan4) entered blocking state
+[    4.949210] br0: port 2(lan4) entered forwarding state
+[   46.915547] marvell-cesa f1090000.crypto: CESA device successfully regis=
+tered
+[   47.077931] alg: skcipher: skipping comparison tests for mv-cbc-des3-ede=
+ because cbc(des3_ede-generic) is unavailable
+[   47.096665] alg: skcipher: skipping comparison tests for mv-cbc-aes beca=
+use cbc(aes-generic) is unavailable
+[   47.103401] alg: skcipher: skipping comparison tests for mv-cbc-des beca=
+use cbc(des-generic) is unavailable
+[   47.121374] alg: skcipher: skipping comparison tests for mv-ecb-des beca=
+use ecb(des-generic) is unavailable
+[   47.133757] alg: skcipher: skipping comparison tests for mv-ecb-des3-ede=
+ because ecb(des3_ede-generic) is unavailable
+[   47.138474] alg: skcipher: skipping comparison tests for mv-ecb-aes beca=
+use ecb(aes-generic) is unavailable
+# grep test /proc/crypto=20
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+selftest     : passed
+
+...and the failing marvell-cesa self-tests seem to have magically disappear=
+ed.
+I now had five successful reboot / modprobe marvell-cesa in a row.
+
+Best regards, Klaus
