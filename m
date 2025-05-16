@@ -1,214 +1,329 @@
-Received: from PR0P264CU014.outbound.protection.outlook.com (mail-francecentralazon11022116.outbound.protection.outlook.com [40.107.161.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9B2A1AA
-	for <regressions@lists.linux.dev>; Fri, 16 May 2025 15:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.161.116
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747407961; cv=fail; b=ri8TjCzWwCX+ww/o5FOKb7p9nYQq8E4mwnN4kMb8+k8QCjldNiSKQxZPuxRKYetJT/EwtwxXiLltgbmY+VSA5krH+tG9KHPv578haDFeizzk13ON+D5bVSDzoyt73/sZy06vkH2t0FLNB8idJ1sHPGQj3ISLYuVesDcRxz5At0k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747407961; c=relaxed/simple;
-	bh=wAxFe1u3XmerqvnMfk8EYYyR8/DYeMPiKvr50ydaLrg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GohzNtI/dIESW5WnWELrWfTYJckZF3uZQnnItW/yoidY868OOrGqvr27Q84rJJ48pxDp5KyJqq3hsYqzmjIlpGBVZB3P8luoL6oIH7Gg5WD96j0xiI8S33RbEAZ3Fu0ADfwnp6WXWOuCcviv3aCySKDktbOXEbNpM77tmayY3c8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ateme.com; spf=pass smtp.mailfrom=ateme.com; dkim=pass (2048-bit key) header.d=ateme.com header.i=@ateme.com header.b=VacmV8VW; arc=fail smtp.client-ip=40.107.161.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ateme.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ateme.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8831B21D5BD
+	for <regressions@lists.linux.dev>; Fri, 16 May 2025 17:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747417017; cv=none; b=qWBb7pEbwgG8cxeSbqBG2GWImRQ5yY36p4gME1e9uw8rjIcbE6rZ8sa201lEhaxKGvgcy3XQD89utWIRua5FhUL2CqRcuhlxWa1pqBdVjbXsu04au3YbCBAzeItnvUCBEwTqA91/8fj47iRjhu8+541b14gi4UxnaucB19sM4UU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747417017; c=relaxed/simple;
+	bh=11KTuzLPta8PuFq5HMGHeyAAbypq6bhKZBp2eFuQvHk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lcCyt+yBCnOzas7If3woOvwDWSwzeMchJqNL7Go+pb+SuPfMjDpx2Wy5V7U9xc3PNG932W50pS1PppEtUFSx2qqf/A45jpup3qf1EHG4oBXQZROnxPy5BNr+ohHyae7KV0gB7CUnUwZu5PXSPJJcKrn1n8/ZXy4iWzhbsnL8pto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AurH4yTk; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ateme.com header.i=@ateme.com header.b="VacmV8VW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oxPbqXdKaMaQcypRrE0XeaJ+ka3mc65T+8xpj3u1euL4R2HaQ+ea+3eUaEvCCSUyw9vUk5c38QOsy64zx2qx0h059RuNFQmoe9VoDu9wh6KxL/MpwRsFouGV2RwXaQKiYyuPtrKMMFoC/laaPPKquEvaMRBkvD+kktHvJbeIwxt+vDaWM8zg3uNp4igzbfGYq/ypjYGrDRQKxIOlGdbppaeEmN5eogCN4P+XNkmwp6XP3Mn8ncVdbstcqUxCKhRUm12eLKX9D5zREQ0OECv2LQTWvsBQQ8NjKe9e/KfFe5AGyZ66TJoBB8Zyrte6W5N66wgAfnbTmLwg9Efb3ggEUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wAxFe1u3XmerqvnMfk8EYYyR8/DYeMPiKvr50ydaLrg=;
- b=Q/QfJ+QhKQOVVkatWOsPBmJjxrQNWvjD79TWFcZM62SrF8rR2m6QItN6nJDUU9DDVLtRB1wOWPV7i+3kYl+S5RoZ/6EwQ/UjQv+ihDC2dHsGWKxHQdKj6q86kyts1sBWjz3lkTZr/yTwj7xtA+BNxaoxaTg+2nGNKVJDoJjczxh+EcyHw+F1Tb0Fu24lZRhrwIbnyduXer9V1RYTrADlaH09SxIkK2Zd6LPBuGxym6YPrVtsLN8cpFBwE97jkh4FCpUsux0zwiTBenKxpPeI+g1CfUVWaC8TuHPmB3ORKNSK7Mk29H+k9wG+GEaqwwxF79ACPDMK31MffnSDqqqABQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ateme.com; dmarc=pass action=none header.from=ateme.com;
- dkim=pass header.d=ateme.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ateme.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wAxFe1u3XmerqvnMfk8EYYyR8/DYeMPiKvr50ydaLrg=;
- b=VacmV8VWBZ4IHGQEpznRDAKncLj/5Kk8Nr1iHnHlGwd4CE1n8C7kp17Eos07sLPNZS00L+92daEv4M9HIq++czAOUO+Bc//TigcFXmcymBH1Oc6oeEsVcSLRz3P8sUB9OlyHXQLZFsFrHT3eVqtuJT3bVPepN6TJMSRh4RTzcgtcWHc61PC90dqiu3w43sfk0sW34JPjZ7b5IKH3dU4s136yHcyDD0wH0HtQtGxhWM8PAUgfc8mnz9REVMIOtEyIS+uL6ne67/gO0vlSC3SUbzAqCINAxZejSJu+5GqTvdtd3iI2xgH0O6rIB8q0liC+sBViViaHE4g9dh7kGnXaww==
-Received: from MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:1c::18)
- by PR1P264MB1709.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1b2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Fri, 16 May
- 2025 15:05:56 +0000
-Received: from MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
- ([fe80::e250:72c7:9cca:c5ad]) by MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
- ([fe80::e250:72c7:9cca:c5ad%3]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 15:05:55 +0000
-From: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>
-CC: Peter Zijlstra <peterz@infradead.org>, "mingo@kernel.org"
-	<mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav
- Petkov <bp@alien8.de>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven
- Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil
- Sapkal <swapnil.sapkal@amd.com>, Valentin Schneider <vschneid@redhat.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: IPC drop down on AMD epyc 7702P
-Thread-Topic: IPC drop down on AMD epyc 7702P
-Thread-Index:
- AQHbr9zhl/8RWJ02Dk6pHFtpBzdc+LOo+aeAgA/I94CAAz3LAIAH8N6AgAAhnYCAAC0kgIAAAbKAgBFGlYA=
-Date: Fri, 16 May 2025 15:05:55 +0000
-Message-ID: <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
- <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
- <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
- <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
- <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com>
-In-Reply-To: <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ateme.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2587:EE_|PR1P264MB1709:EE_
-x-ms-office365-filtering-correlation-id: 1dcfff73-8493-4aa4-b653-08dd948b2897
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?WWxmTHp6SkJyWmwvaENwbmFpWmJVMmN2RWN5aHF6bGRLOW11U1pvdDI5cW5E?=
- =?utf-8?B?ZTRpejEyVHdwRG8rNmgxRHNpZWVkNCtYSEJsamF2NUR1V3pVaERveFFDTGVy?=
- =?utf-8?B?TGw1bTlKMWgzT25YS2E4VDZlUEtJaHVKUEhnQXo0V05jeVhqN3BwWHpTYnhN?=
- =?utf-8?B?YjVHRDdoU2VQekQ1SEducG9JNXpsbmNUU0pweDlGdDdRdDhLdXBLZndiMWtl?=
- =?utf-8?B?aE9ZZ0VieTMvbTBabWVhZ08xYmczMUpFdU1nN2EwTVJ0aXNuKy81VzRqaDlM?=
- =?utf-8?B?bWFFZWU5WnlBN1V1bHNUb1Y5ZWJ1ZnFvMnZVUFY1WGJUZCs3bXhOaFlRK3dH?=
- =?utf-8?B?cjVOR2dVT0RpU2s5VlVLQVo2RUlhYjdXWkJjcnFUUjd0VEFOcFllc2N3RTZI?=
- =?utf-8?B?aDAraEE2NXU2WkRiUHBtZTF4M0pGb2hqRDJaMTh4UWFzTHNMQzBTUlpWdEdS?=
- =?utf-8?B?VDZiT1dHQ2xQMnEwZGZEcmlVRmxxeHhvQitjR3czN0hvQmhrQkJmRW0vUGdo?=
- =?utf-8?B?UHowREV6SEE3SFJXbHE3T3VRRy9BMkxyNEhXa2ljbGlMa3I3TXZOQisvRm1Q?=
- =?utf-8?B?K1h6c3ZxTXpXWmdPTXQ3T2QvREtnR3lBb2FOeDdoWVFLVzJUTkZNcW5rZlRT?=
- =?utf-8?B?SjZVSlYzbktnRFhvK09iVFNFaUpMd2pYZGgyTWdTRDIvRytMa2cxTFhGNkp3?=
- =?utf-8?B?YlZHTTdlY0hNQkFsTGhKaGxoMjFTdW1sd3ZldGloWWc0NUNVdE9xV0luenBT?=
- =?utf-8?B?RDFsQ0RCNENCWGV1dWtPMFdpcmYyRTVLRW4yL0JEN1puYmZjR3lqbWFpRjA5?=
- =?utf-8?B?K3g0TEtBQ3VWaENZbmptVUJ5NUNvMXRrZWRoc1QvL2VFdnFGYnAwWVFCOWlB?=
- =?utf-8?B?NXZ5RE5FY3F3eTNaQUpkbnF1YnB4bXY1SENJRHpGSGl2NEl0SlRONisvU0VT?=
- =?utf-8?B?U1h6emRSZytDaG5UdlQzYnh4WlZyM0VFN2tRQjdPbmM1M2QxTlEvT1EwcU5B?=
- =?utf-8?B?REpsc3Nud0U5bnNSeFIwV3o2dVRWTUE5RGdyV2pRRG9WSVUwK0psZXAwSHph?=
- =?utf-8?B?dFpjOVhjNjdrVmFDeVMzNEZYUHBLUm9SeUp5NE1Bbk5ZNmkxR1lhZUZYaHNS?=
- =?utf-8?B?aHpGV1FiUTJWcHQyNWNJc1NOL0ZmV2EvdldTbWRmYUJmNzl2cThsOU5naWIv?=
- =?utf-8?B?RnAzNXV0SnJxdVc4UHhXKyt3YnV0anFReHFJM2d6SWh1MDg4YnlkZEdDRXBh?=
- =?utf-8?B?Z2MxUVVOQlRDR1dLWG13OWxmVkd2QVRNc2RtVElPZHh5RnVCOGhoL05xZXVp?=
- =?utf-8?B?cGxaYlVTajIxVHNDZkppU0YvMElEd25EV1VQTGVER2NmcmtjakFZcUxWLzFP?=
- =?utf-8?B?WkZ6UWNHNWdYbkswekxHS2pOMkhvRVA1NTlicjZWbTlxdmV3Q0VCakQwWDBS?=
- =?utf-8?B?QWJIenhydkp3WnczYy9yZVZmcm80NzMzTVZWYnBNTGozQjBySDQwYmY2V1V0?=
- =?utf-8?B?Z3dva0tISTNVUTVIdE5WZzlFSnFOeG1PYzJkdVc2aWlTSWljb2FvZlEzc1Rk?=
- =?utf-8?B?dStVbVZCT0cxb2pJVHQxb0thNzRSTVdxSk1yRXRGYzQ1dUNCVm9ES1J4ZVQ2?=
- =?utf-8?B?ZlZmOE9Nbjd6b1M2aUVPRkFkZUZoOE9icmlzWFJZSjFMeG9ZeWdYR3hJeVBU?=
- =?utf-8?B?NnpUeHJCYk5NVzJhRFJYSklqY2JBcjJXd25UR3RpQ3BvcnNNU1dEWGlYSnFK?=
- =?utf-8?B?Q3V0b3piZURYZkdqTXRacWZmWktoSWNwcy9paXBrOG9CeS9kZENHMGIxTkhC?=
- =?utf-8?B?bjlVYjdxcFJkaG1Na1FRVWN4Mm5pWDgvRE45Q2pRWS9YSi8rNm1ERmZ5eWZT?=
- =?utf-8?B?UEh2ZkJyVUhScDJaS2pjelZ4ZFVuQmd1WHNtSXVIY2dsbmdNNmMzWWpKcU52?=
- =?utf-8?B?NmZFRkhiZDN3Zi8yZEcxSTM0VjYwRHJ4ZjJhRTlPK1JWaEd1VHdLNDcvSGJM?=
- =?utf-8?B?aGlPVWxsRC9BPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(7416014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?MXdOM290NVY2T0cyYk82L3VJbFd3Tnk2Y204UE9SZENnRkdKV1BjY0tyRUhX?=
- =?utf-8?B?aXRyRHRFRVNWT2pFeWo3STJjazdwU0RvYmZ5LzdHalNhYU5PdC8waFJEOHdP?=
- =?utf-8?B?ZjRCSUhoa0hoS0RFSHBHRWhyb2NDbHhyYkszVVRodklsK29tWjl1TVF4MVVt?=
- =?utf-8?B?djBXZmh1c0grdGo5eUhZZ29lQVVsRDdEaUdUZW1ITGtXaTdxeWQ0NlFwSzBB?=
- =?utf-8?B?SFpwc1ZiRWhWdnNsanJoUExOd0dwa0dqWDZ0YmpuNUk2TlZYNEZZVVVSK1ZU?=
- =?utf-8?B?QWNVMDlmQ096WGxkKzBQeDFFQTY1b3NJWmNveWVkMEFTWFI2MlZPcWNmNndJ?=
- =?utf-8?B?K3Z0TjFmbDBsMFlWVlpMUzNqQ0Q3ZVdDK05nRVZGeS9JYU04VjFTd0pSNmVP?=
- =?utf-8?B?OFJrMndkNWtRSmZWaXlEUHQ3MkV1b0RyR0tIRUJKQVFWKzhGL1FXTGNZY3ZI?=
- =?utf-8?B?UW1pc0VCcXpXUmhQcDR6ZDhaSWcyVktWeDd2U0tCTDVtWWpTbFhNSC8wRHRI?=
- =?utf-8?B?bVRkTDg0NWNHQlh2amNmUXZqUHBMbGhuRXBrcjIwL0FpTEhWNXhVbTJIcmdr?=
- =?utf-8?B?TFQ4Q2lNMkNkVDdhK1pKcFZNajg2ZGVLcjZZdHVQNzhrV1JsQWkzNjMyYkc1?=
- =?utf-8?B?MGxIbEFJNGhQcWhRVDRUUlJxTDcyWGxXWmRONGY3Z1NuNGZkK09kNDhvZndk?=
- =?utf-8?B?TEpWMy9QQzB1MU5xY3lVb21aSGZLQkZnQ0h3SXh0UWhDTkFZWG9Rd2xSQ3Vw?=
- =?utf-8?B?SXJMTm9USHNEMlpNU2RpUUN1VDUwWEFpd3B4MERPUXI4Wnd2dFhyVkQyMW9j?=
- =?utf-8?B?cDQyUkI1RmNCaG10S3pOV25vWGpKR3NwalJSS2xQQUhocjc2YXRXSGJKR0ty?=
- =?utf-8?B?aFlkaVhVUy9WaHZJQzFtUXV6dzVaajByU1Z0S1Ywd2JhYS9TTkdaWWtNZXpX?=
- =?utf-8?B?dFpXOUdqRnZJS2NuN1NRckt0ODIrVzZuRE9YMnlNelh2RiszTnpWVHhHSHhv?=
- =?utf-8?B?UHJrUk1Rb2lUSjk1UmduYlFlOW1IMjJ4VExjUjNCNjFqYW1GZ1hjTXZXRm5w?=
- =?utf-8?B?YmdMc3lCQno2amxXaDNacDJ0aUZPc0lEeENLRyttSlNkb1pOQ1VYUENGQnNt?=
- =?utf-8?B?MC9vUnNjM3NJOHVrd25Kd2VrNllsaGxMZE1SMFBYVlpKaGlDQUg1TjFFbGhX?=
- =?utf-8?B?MFQ4bE82WnVWT2hhSlVSRXZtdlNZa1dFYVI0RVBaTHhDQUlvY2c2QWhtcVNv?=
- =?utf-8?B?SC9kS01PTXVYNG85YVh5NXg4OWxqL2FiS1JvYlFWRUFVYk03Q1FtSDYzeWpz?=
- =?utf-8?B?d3Y4K2I4TFlQQkljZFRlTlhBcnFmUDN2RjZhSVBsZFc4cFBDRVAvNDVIZDJ1?=
- =?utf-8?B?RmMzV0hMZStxelZCSFR5NnNHNGFqNmEyUlhpTXY3NjFSQUZXRXcwMzZEeE9N?=
- =?utf-8?B?WlJIa29iM2svYmUvU0xETGpFaUZwdXhwUis3dkdodDZpeFNjUzlILzNZOVhw?=
- =?utf-8?B?R21GekhZdGQxY0NWSkRGVXZZbGhReCtzUW9pUk9iOFZKZDhpQlova1hOUXZ2?=
- =?utf-8?B?VStxRmZMUzFnbG5vaVRPWGRiNCtaVnJXM1VZVjQ5ekR5TnZzOG1sd3hQekds?=
- =?utf-8?B?ZExsbU9CRjMxMVZJSDRqdVFudUxtRzg4Zkg1dittenY5YVVTTzBESFphU0lo?=
- =?utf-8?B?MmFpMEw2T04yc3dCc2FRbFFVdEdXUkQ2TTh3Yk1FSk5iY3ZWcFFuNDBWQzJH?=
- =?utf-8?B?aGpLSW9OaCt4ZkgrVDdud3FvVUUxUGpmazdHUW5tdkNTM3QyRngwVHdKelBF?=
- =?utf-8?B?MUoyeGxqVXFLTUd3QTNpUm5DdVNrSk51MmwxZit3UVMzOGc4Z0IxaWllam40?=
- =?utf-8?B?NVBERExVODQzdEtHcTc5alZLRVZnK2htcDdlMWRHSnRZSHA0OWF0YXQvWnAz?=
- =?utf-8?B?SGkraWMvZ2FlQm4xOG1YVElOd1VzV2F6RE0rdm5KMmRnQngrSTI1VjJFOWs2?=
- =?utf-8?B?Qy9tZzlhaVJQb2pPRVhBazBlSEtIWnNXS3JCdFdobno4WTJqTDAwQ2NLMUgv?=
- =?utf-8?B?MTgwaEl5bEtjeTVsLzJOSmF3dDJSKzl0S2ZlL3BsU3Fxb0s1L04xcjM0dSs2?=
- =?utf-8?B?ckZMcFEvL0x2N0ZMemJJVGRsWVlRV2VYMGQrN0MzS3lHRldyL0o5YnpMMWp0?=
- =?utf-8?Q?Wq8rtdFu7Tobl3M4aahGvHc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <102642E96E807F4CB4E4795822E030C0@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AurH4yTk"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so15151995e9.0
+        for <regressions@lists.linux.dev>; Fri, 16 May 2025 10:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747417014; x=1748021814; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f6QQjxjPgk5p/ILY4E/8DWRz+jrN/FDqH9hiUDq8BOE=;
+        b=AurH4yTknPyaK2HAgYfPMHhlwA3HTYg0qLCfQF8BNwAPh6mnfRnjjlRECkPmzzYLzc
+         zNGwDYofLEJNRn2XHhqVYRxZR/l/bn+ye/B75W3ChOSfd0vBGAKFVtxI+YvfDQZTTxaF
+         r20CCcGBUBS824q2Z9R9pQgie2A3rQgSKnNdFZ++BPtv7vLbGNhzPukg4BtAUcman0rb
+         ZUo0gd72hN+rCXT4ogKif4ShlKMaWA7nr/OcFExsA6Lv/sdUPuWu+9Baw38cZ2exjS/G
+         Z5Qh/yPKImnpBWuCFCORvAtCTL2I7RWQZjbkSSDn5EIFaFTm0sVtm72njkTYFioAAjQq
+         08kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747417014; x=1748021814;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f6QQjxjPgk5p/ILY4E/8DWRz+jrN/FDqH9hiUDq8BOE=;
+        b=BW9XBUN510cQGTJfiLDelAUyByNlbZkKlkqrLVmGvGCpau5pZvgbP+cpxzV8xgwf8l
+         K9RWVWhn1etZhVwP5Fj+BibEwdfKIRqQsGMnVn5lFB0ZrJHjfDtCOJJwaAtQ8REc3VCN
+         vAKIQDZy/tZjP+2pO0ncvnhD2xMZ8zYLMXu8NGnh7iPOps+MJXnEkwYn9lI6kXM38p1j
+         MwEaW4EZZ7l+AanvGz4+9+nWuHzY/TPmZ83S2zXWbdrL+H+CkMlK4LfopXuVWyA8uAIb
+         tnBqXoxDXmQq8elKSh90X3mSyO20qvytJ4+4xaSdZ3nVRbuR1SsFWEwxgX7nPAD3aIGm
+         womQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAuksyVqbqfxoaWyCUZnXz+LXGeU1V2wdaF8TWAo+j9gMd02N9PM2vApHWHGUXzpxKCsTAmgGH0TJmBQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz9LaZitMlc/SUNuU+mtgGOk6/+X3u+tV1SzzvYbrc98IGQhusA
+	tqsGocEP5XWNteWVTH6XQEwVmrGo2EfvzdDaRwTBIlCeku52Z1SvX+Zh
+X-Gm-Gg: ASbGnct3OErlHIk/Ct1Cd5t9PJZdg7GzvDJh4uU3GgCMNKNz/SBumbD8j495ag9U6RL
+	V6281hg9uiTgTuibiAqt5TCpDFJvfpQW6/55wiPIxOyOdiy6cMhndq5uywVXgflLh3GSVFuquTF
+	Q02kz1tc6/RV/LP1MhFKeEKxIJD/DJm88K/YqXZoa2j+YlH/LBZ9OxJLn6dfEIg5JRjzCsdZ0Yv
+	pqu5HauyvITAFt8OpVEG/OjWN+K8H69/4Qm14PuC97uQ2G6QDQ5JVSHXvY+7ygK0nQAuRQ0+Rwv
+	gf9yIfX5a1h2p7vaVLRqzkMTNBEutMUuE3L59hi/5GDdMjKSlHvUjktbqjOLSfDQ+hUQehZfpdc
+	ZQZhTgr8Xi/IFPhDA6qg=
+X-Google-Smtp-Source: AGHT+IFnqfp6SFZgUJPa88LnSIu45A0pT+iLF/neMjMZKyLAyAHtZGTZaRKNnyn+H6ZF2Onk3+NMNA==
+X-Received: by 2002:a05:600c:297:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-442f84d5776mr61793195e9.9.1747417013347;
+        Fri, 16 May 2025 10:36:53 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:4563:288:ad48:133a? ([2a02:168:6806:0:4563:288:ad48:133a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f33804d9sm113362765e9.12.2025.05.16.10.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 10:36:52 -0700 (PDT)
+Message-ID: <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
+ 	linux-kernel@vger.kernel.org, Linux Crypto Mailing List	
+ <linux-crypto@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+ EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>, Romain Perier
+ <romain.perier@gmail.com>
+Date: Fri, 16 May 2025 19:36:52 +0200
+In-Reply-To: <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
+References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
+	 <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
+	 <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
+	 <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
+	 <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
+	 <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
+	 <aCMOyWVte4tw85_F@gondor.apana.org.au>
+	 <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
+	 <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
+	 <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+	 <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: ateme.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2587.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1dcfff73-8493-4aa4-b653-08dd948b2897
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 15:05:55.8236
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 99ffcb0b-61fb-4a70-9dbf-700e3874ace9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uPu9H5ja8a5nFZ19Ieswbu7e4MFmFFiAwBzk6K57xYqOk52jQNMB7eF8NL6YkDCAHt43SD+IyRh9w9tJWrzNCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR1P264MB1709
 
-SGVsbG8gUHJhdGVlaywNCmxvbmcgdGltZSBubyBzZWUuLi4gSSd2ZSBiZWVuIHZlcnkgYnVzeSBs
-YXRlbHkuDQoNCkRpZCBoZSB0cnkgd2l0aCByZWxheF9kb21haW5fbGV2ZWw9MywgaS5lLiBwcmV2
-ZW50IG5ld2lsZGUgaWRsZQ0KDQoNCj4+IGJhbGFuY2UgYmV0d2VlbiBMTEMgPyBJIGRvbid0IHNl
-ZSByZXN1bHRzIHNob3dpbmcgdGhhdCBpdCdzIG5vdCBlbm91Z2gNCj4+IHRvIHByZXZlbnQgbmV3
-bHkgaWRsZSBtaWdyYXRpb24gYmV0d2VlbiBMTEMNCj4NCj4gSSBkb24ndCB0aGluayBoZSBkaWQu
-IEpCIGlmIGl0IGlzbid0IHRvbyBtdWNoIHRyb3VibGUsIGNvdWxkIHlvdSBwbGVhc2UNCj4gdHJ5
-IHJ1bm5pbmcgd2l0aCAicmVsYXhfZG9tYWluX2xldmVsPTMiIGluIGtlcm5lbCBjbWRsaW5lIGFu
-ZCBzZWUgaWYNCj4gdGhlIHBlcmZvcm1hbmNlIGlzIHNpbWlsYXIgdG8gInJlbGF4X2RvbWFpbl9s
-ZXZlbD0yIi4NCg0KSSBqdXN0IHRyaWVkIHJlbGF4X2RvbWFpbl9sZXZlbD0zIG9uIG15IHBheWxv
-YWQuIEFzIHlvdSBjYW4gc2VlIA0KcmVsYXhfZG9tYWluX2xldmVsPTMgcGVyZm9ybWFuY2VzIGFy
-ZSBtb3JlIG9yIGxlc3MgdGhlIHNhbWUNCg0KKy0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0t
-LS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0rDQp8IEtlcm5lbMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCB8IDYuMTIuMTcgcmVsYXggZG9tIDIgfCA2LjEyLjE3IHJlbGF4IGRvbSAz
-IHwNCistLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tKw0KfCBVdGlsaXphdGlvbiAoJSnCoMKgwqAgfCA1MiwwMcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfCA1MiwxNSB8DQp8IENQVSBlZmZlY3RpdmUgZnJlcSB8IDEgMjk0
-LDEywqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDEgMzA5LDg1IHwNCnwgSVBDwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHwgMSw0MsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
-IDEsNDAgfA0KfCBMMiBhY2Nlc3MgKHB0aSnCoMKgwqAgfCAzOCwxOMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgfCAzOCwwMyB8DQp8IEwyIG1pc3PCoMKgIChwdGkpwqDCoMKgIHwgNyw3OMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDcsOTAgfA0KfCBMMyBtaXNzwqDCoCAoYWJz
-KcKgwqDCoCB8IDMzIDkyOSA2MDkgOTI0LDAwwqDCoCB8IDMzIDcwNSA4OTkgNzk3LDAwIHwNCnwg
-TWVtIChHQi9zKcKgwqDCoMKgwqDCoMKgwqAgfCA0OSwxMMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfCA0OCw5MSB8DQp8IENvbnRleHQgc3dpdGNoZXPCoMKgIHwgMTA3IDg5NiA3MjksMDDC
-oMKgwqDCoMKgIHwgMTA2IDQ0MSA0NjMsMDAgfA0KfCBDUFUgbWlncmF0aW9uc8KgwqDCoMKgIHwg
-MTYgMDc1IDk0NywwMMKgwqDCoMKgwqDCoCB8IDE4IDEyOSA3MDAsMDAgfA0KfCBSZWFsIHRpbWUg
-KHMpwqDCoMKgwqDCoCB8IDE5MywzOcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTkzLDQx
-IHwNCistLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tKw0KDQpXZSBnb3QgdGhlIHBvaW50IHRoYXQgdHVuaW5nIHRoaXMgdmFyaWFi
-bGUgaXMgbm90IGEgZ29vZCBzb2x1dGlvbiwgYnV0IA0KZm9yIG5vdyBpdCdzIHRoZSBvbmx5IG9u
-ZSB3ZSBjYW4gYXBwbHkuDQoNCldpdGhvdXQgdGhpcyB0dW5pbmcgb3VyIHNvbHV0aW9uIGxvc2Vz
-IHJlYWwgdGltZSB2aWRlbyBwcm9jZXNzaW5nLiBXaXRoIA0KOiB3ZSBrZWVwIHJlYWwgdGltZSBv
-bi4NCg0KDQpUaGFua3MgZm9yIHlvdXIgaGVscCwgSSdsbCBzdGF5IGFsZXJ0IG9uIHRoaXMgdGhy
-ZWFkIGlmIHNvbWVkYXkgYSBiZXR0ZXIgDQpzb2x1dGlvbiBjYW4gZW1lcmdlLg0KDQoNClJlZ2Fy
-ZHMsDQoNCg0KamINCg0K
+On Fri, 2025-05-16 at 12:12 +0800, Herbert Xu wrote:
+>=20
+> Something doesn't look right.=C2=A0 There are zero ahash lines in your
+> dmesg.=C2=A0 IOW all the output was from skcipher tests alone.
+>=20
+> That could explain why ahash appears to be working.
+>=20
+> What does /proc/crypto show after boot-up? Do the cesa ahash
+> algorithms show up as tested in there?
+>=20
+> Cheers,
+
+Plain cryptodev tree, marvell-cesa as module.
+Directly after boot, only the builtin crc32c-generic shows up.
+After loading the module, the marvell-cesa ahash show up with "selftest : p=
+assed".
+But whether they REALLY were tested, I can't say.
+
+# cat /proc/crypto=20
+name         : crc32c
+driver       : crc32c-generic
+module       : kernel
+priority     : 100
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : shash
+blocksize    : 1
+digestsize   : 4
+
+# modprobe marvell-cesa
+# cat /proc/crypto=20
+name         : hmac(sha256)
+driver       : mv-hmac-sha256
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 32
+
+name         : hmac(sha1)
+driver       : mv-hmac-sha1
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 20
+
+name         : hmac(md5)
+driver       : mv-hmac-md5
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 16
+
+name         : sha256
+driver       : mv-sha256
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 32
+
+name         : sha1
+driver       : mv-sha1
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 20
+
+name         : md5
+driver       : mv-md5
+module       : marvell_cesa
+priority     : 0
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : ahash
+async        : yes
+blocksize    : 64
+digestsize   : 16
+
+name         : cbc(aes)
+driver       : mv-cbc-aes
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 16
+min keysize  : 16
+max keysize  : 32
+ivsize       : 16
+chunksize    : 16
+walksize     : 16
+statesize    : 0
+
+name         : ecb(aes)
+driver       : mv-ecb-aes
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 16
+min keysize  : 16
+max keysize  : 32
+ivsize       : 0
+chunksize    : 16
+walksize     : 16
+statesize    : 0
+
+name         : cbc(des3_ede)
+driver       : mv-cbc-des3-ede
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 8
+min keysize  : 24
+max keysize  : 24
+ivsize       : 8
+chunksize    : 8
+walksize     : 8
+statesize    : 0
+
+name         : ecb(des3_ede)
+driver       : mv-ecb-des3-ede
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 8
+min keysize  : 24
+max keysize  : 24
+ivsize       : 0
+chunksize    : 8
+walksize     : 8
+statesize    : 0
+
+name         : cbc(des)
+driver       : mv-cbc-des
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 8
+min keysize  : 8
+max keysize  : 8
+ivsize       : 8
+chunksize    : 8
+walksize     : 8
+statesize    : 0
+
+name         : ecb(des)
+driver       : mv-ecb-des
+module       : marvell_cesa
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 8
+min keysize  : 8
+max keysize  : 8
+ivsize       : 0
+chunksize    : 8
+walksize     : 8
+statesize    : 0
+
+name         : crc32c
+driver       : crc32c-generic
+module       : kernel
+priority     : 100
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : shash
+blocksize    : 1
+digestsize   : 4
+
+# dmesg | tail
+[    4.883366] mv88e6085 f1072004.mdio-mii:10 lan2: configuring for phy/gmi=
+i link mode
+[    4.884517] br0: port 3(lan4) entered blocking state
+[    4.884527] br0: port 3(lan4) entered forwarding state
+[   88.867746] marvell-cesa f1090000.crypto: CESA device successfully regis=
+tered
+[   89.034292] alg: skcipher: skipping comparison tests for mv-cbc-des beca=
+use cbc(des-generic) is unavailable
+[   89.045265] alg: skcipher: skipping comparison tests for mv-cbc-des3-ede=
+ because cbc(des3_ede-generic) is unavailable
+[   89.052456] alg: skcipher: skipping comparison tests for mv-cbc-aes beca=
+use cbc(aes-generic) is unavailable
+[   89.099763] alg: skcipher: skipping comparison tests for mv-ecb-aes beca=
+use ecb(aes-generic) is unavailable
+[   89.099819] alg: skcipher: skipping comparison tests for mv-ecb-des3-ede=
+ because ecb(des3_ede-generic) is unavailable
+[   89.099908] alg: skcipher: skipping comparison tests for mv-ecb-des beca=
+use ecb(des-generic) is unavailable
+
