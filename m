@@ -1,150 +1,120 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E891217716
-	for <regressions@lists.linux.dev>; Tue, 20 May 2025 22:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836A42512FD
+	for <regressions@lists.linux.dev>; Tue, 20 May 2025 23:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747781322; cv=none; b=KzOT7rtYE0R37Txq9Zrb4imAbrJjNmdW4+yM4G0h4+ST44xShDbswQIDCfEULa41gLnecQw9+JPQ5RCMf+YqCHoqJySLr56UyFtNmbBR/ickZLDHaGAfUuAKRK0LjlF9/gVeVhrpsx4N8ea8h2wvOJ+4U40Rmj86POKYQcJL9M0=
+	t=1747783297; cv=none; b=OfqUGuB16QNu5sS906RzRrnxgiLlmsXmhji/rVYP3zt3YFBehIzxylrqUkFOWz+QGc53O3OBxve59hPi0YbqlsmTs4fOFxdPLikU6lNTxpIaGXHKQiDYnGzuw+c+PZNBCm/oFgv5lGbdm/8uyzlW/EYTYfUiC5/HEUa0Mx1I1gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747781322; c=relaxed/simple;
-	bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qor3dWdCw22AtNa0Znc6PANxMk5D6hkmJJzdztkrqSfzPj8u3lmU5Xyvogo1gjsRcZt54GcgnQuKTrTuKX7WqoZ0cYZMVsOjvka9eC/DAu7gbDYhzoblG1vTRH/9MVUK/K/qVpFN7e3d46tlPzaNjVRzGMOj3Gy4ybNE6RYPsGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwbHTS/I; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1747783297; c=relaxed/simple;
+	bh=v+aw4A9SVyQbVRBn11MetQ5cCqPeUWCsuwuqMpbLSCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lo+/vEXhYoZh62tNnncn04cjkdRTUJBnjSwk2Wy96PRX0XSdQMoQCr5xu7lw77WKytCLEpwT6sR83knLDVW78DMxGHgYypxfTUbbYMk3VaFv2f0n1VB7zJAi1uyV/MymTH4TN5huc2MP8/g5lZHtYJISXAuydkmcPn1xLdFck+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nd48xK0Y; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwbHTS/I"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so6029241b3a.0
-        for <regressions@lists.linux.dev>; Tue, 20 May 2025 15:48:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nd48xK0Y"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30e57a373c9so6158464a91.2
+        for <regressions@lists.linux.dev>; Tue, 20 May 2025 16:21:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747781320; x=1748386120; darn=lists.linux.dev;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
-        b=jwbHTS/IhE/Eq4xY3MHCkvYXwD6pxOs4lHXkf9WJpHFvAuadxkgCzHib6eSH+xL81H
-         UTUBsmraEjQKAAfWTpKUiVu9iBxgAuOVE4mb3sCpyCvbcGNak3aLCipKpQIzLCYRSScq
-         ruV4YfZCSpWFs9eJEnec6Wz0osXnCRJRSHNUyTRybRbm7uncgS/A2nkIejw1QRqTyOAG
-         vDiPPHrTne6MA15FEuD/eBgFTi7MoY4AKxA7kL4Ycsb0trI0+vlVb1n0CZnvaU8Y50J4
-         fLQ3a946/nivk7tNwtmfcWSIlxzevdUKd1Ij4Mzri8diOhGHczPM//DwXACdi0PfB6T7
-         E+rQ==
+        d=gmail.com; s=20230601; t=1747783296; x=1748388096; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=13vGDqZ7RwWRyNFMS7/xqSwKGFwa26hb3FHB8oIIxCQ=;
+        b=nd48xK0Ypn/0WjwWna10D7ZrRI5IL+K7hrPClZOdcIAMNRu/hlDJYoWJDyantWtNff
+         AXE5tC/Lie3vE++Log51KfZ+uwKmP2xc4SoPE+q4K5w8C2LaCCcmE248x/45ORZ5nt8Q
+         rcmDwY0Syt56v55bwhm7N1blNYq93JnwBLWm35iSUt0PKbFm9yiqNM/hF+MVTln+tZ+M
+         eBFXcKH3MmDbzDrp7EsY+ouixrsAyHO3DHkqP6/0dXBbsfr1KPU7ZWITuZd2SWuFFZoO
+         lt3/MD1puLX1L5KMo6ll4ABWR0nAOgA0QsqPAHo45mjek4JoJrcZbZLFtYtBfToMYcoe
+         pYlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747781320; x=1748386120;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
-        b=j+DjBGuCcMDk+5bX1erCiD81IUimsEOsS2k3M00lUzUbTp3/m/HRbPWDfpd5GvUxsB
-         Inh7y9rm+yzyVGYldQVcVo4ZUfZMEd5KGjMA4ONdRsOpYuul3XP3sOLuytMFNjWo/gsh
-         1B37/EcM5sb7YQDzQ1EWTfjqkrK59Zv71WUqtOA/aKc9HeiNA+rD0JR8QxMfvmEMDJqw
-         Z8+Z8jkIazecuEnx5FuItbga39qOK1WKdiAgjK1zoUjigI5FL8OJVgeYojtJPWoahDXI
-         JhGdn06BPcPqE6ZSODe/Z1oQ/T+Vmo/JT5uYhpWzPA1EsH/+i1gdK9NL/PY5qKN50FD6
-         FnSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGx0v2XEXVBnqySD+8bz0XLPRbV3kPIDi4IDo/H5WIWtCQIfTNLLd7Y6ekUYkYLEKQ0JAmz3amG1RStw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzUslnUpLW0m1UUntVBsYN6xmJhDOUa+VxtGqm1nSoA4arv2dR2
-	xLTWZuTGGa8PS+ye5whkgS/PvDX4PIXopTlHVwuYQRQ2xBejkx4k7MX4
-X-Gm-Gg: ASbGncu51nP7jZ7bi8r+UFD7h2q/tY4D1EfvR6E5+3qYDBFYmLxM9zc2MWT6cVh1uDX
-	mt6fsvwWJIl2vKWyisIT+nf2xVAuHW8sYQmHpRf8TBXda0IuVMCT7NBfMAmWzax2aY0Azynf+7p
-	jfs4RuUFQNLTV/n6Qv7qjeo7xvu7bVQ++aQCORTeNqWGekKFGbWglrZCsrYDEk8psjtjdzHtxqq
-	GnjLc6FRMEcu69WALg1PrVPbThI0EEwhm+EP2/EPYuHKb8pVmXoBZZ/BT5GWbcwdE90MPUeNRy7
-	j0ou2OLE9ngEFc2hs46hDk+NILv5txX11brbSfVxXf+SsuF35oco
-X-Google-Smtp-Source: AGHT+IG2X0pomsnFUCQa19hCElWt5qNsJlHFQAhMvQ4eYIPhael32C2ELAIMHyvCUOkhzqa8EkvDjA==
-X-Received: by 2002:a05:6a21:3942:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2165f84b77fmr28235687637.16.1747781319816;
-        Tue, 20 May 2025 15:48:39 -0700 (PDT)
-Received: from [127.0.1.1] ([2601:644:8500:5dd0:565f:91c6:a34c:f6d2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c86asm8739999b3a.57.2025.05.20.15.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 15:48:39 -0700 (PDT)
-From: Rudraksha Gupta <guptarud@gmail.com>
-Date: Tue, 20 May 2025 15:48:37 -0700
-Subject: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
+        d=1e100.net; s=20230601; t=1747783296; x=1748388096;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=13vGDqZ7RwWRyNFMS7/xqSwKGFwa26hb3FHB8oIIxCQ=;
+        b=WRKcToaSj9vGI2Bm6oHI+h4PYkyczfHNEiUskS7hlzBTwF1t3rPtgjEhNdOVLPPG6a
+         lxTYMK71X6e69Sr/f4XsYPAQqn4lhVPRSi7UkgW+DbfE+ExPxboB9/eQ/rWYO1Qghzc6
+         GEiC6hDNlN4o2RD8tBq1clh5r/U/rOiYsO+9rrAYs6/yWsgWcwwRVpDHmz/VQODNgnjI
+         wNtMUwjw+FMbF88LlT7lESI+oY17hGZCw49XSCw22lbopVHFOpU8Snpk0N20PCZYMQ5e
+         d5+KN0Sps/5wSkRTpy/tn1m+hzY8Y32wcgZ6gRSxT9fD6fQQCvQQfLZUs6V0TQThWPng
+         4Nnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHriWQvEwpbn9SHy1JUKZ0wHgroLE8VvJPX/NMVyU/QuoGTBzUE/81Mrhrv1ITUofK/xqrJCW/8MDlGw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzCAxn4yV2Q7O0SjhjdiSczwCnjurafWJfddJDmXJkNlfI84Lhm
+	4KvnnHnnOJrWq1aUK0Rj4oAgHPWL+rdBAzLERJDPDjn/miAd6VwA+Ymb
+X-Gm-Gg: ASbGncutrphBK1gissPK8V84IH9E/Db5CetR3ozOVdX+m4iyc+/arVq0+1unpJ/QnrK
+	HkfPPGM6OLkDdV/7VCH5rguwPE2awLX8BOY0P+l0l3/IxPtSsEpko6niy45hBAoylcgdq+/zBi7
+	Nbp9pAiPqM8BC2irl1wLGOpNIRaFiq4kA4Kv8NPoKwHohiB+jNJLSkoGlzmBCvWLprnXUj+bapI
+	vWXb4GT39LRnoromDW9phck+nPG6aBszg4p6XR3hKCOMf0QFEXaC7UEuCcq4Fh4WdQ4IfNJHGIV
+	Nu9LEXtVFGrM+x5blmDhCsnosofuuSst5v+1X3CDFMsHEzmh+J/eXLxm6NGkoA5cCSOVZGnelCO
+	SvAEHgdIGisUoWnkOut0ESQ==
+X-Google-Smtp-Source: AGHT+IE3nMttAsLuj9+BdITBotd8XjY1uDiBh7WE/LVQB0nDLoooCJQzDkRie44E7ryKQmG8XimTkg==
+X-Received: by 2002:a17:902:ea0f:b0:22e:72fe:5f9c with SMTP id d9443c01a7336-231d454daabmr244744965ad.42.1747783295688;
+        Tue, 20 May 2025 16:21:35 -0700 (PDT)
+Received: from ?IPV6:2601:644:8500:5dd0:864b:f5ff:fe5c:59a5? ([2601:644:8500:5dd0:864b:f5ff:fe5c:59a5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed195csm81509475ad.212.2025.05.20.16.21.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 16:21:35 -0700 (PDT)
+Message-ID: <53dc3112-9e34-43c5-852d-aeafea882247@gmail.com>
+Date: Tue, 20 May 2025 16:21:33 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Christian Schrrefl <chrisi.schrefl@gmail.com>,
+ Russell King <rmk+kernel@armlinux.org.uk>, Alice Ryhl
+ <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+ anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org,
+ laura.nao@collabora.com, linux-kernel@vger.kernel.org,
+ lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+ rust-for-linux@vger.kernel.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+ torvalds@linux-foundation.org, Nick Clifton <nickc@redhat.com>,
+ Richard Earnshaw <richard.earnshaw@arm.com>,
+ Ramana Radhakrishnan <ramanara@nvidia.com>
+References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
+ <20250407183716.796891-1-ojeda@kernel.org>
+ <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
+ <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
+ <aAKrq2InExQk7f_k@dell-precision-5540>
+ <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
+ <aAo_F_UP1Gd4jHlZ@dell-precision-5540>
+ <CANiq72mPZ-ik8k+04BarAu26A1=rV_y7GYZHkFnCezW4jpXq+g@mail.gmail.com>
+Content-Language: en-US
+From: Rudraksha Gupta <guptarud@gmail.com>
+In-Reply-To: <CANiq72mPZ-ik8k+04BarAu26A1=rV_y7GYZHkFnCezW4jpXq+g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMQGLWgC/x2MQQqAIBAAvxJ7bsEsofpKdLBaaw9arBVB+Pek4
- wzMvBBJmCL0xQtCN0feQ4aqLGDebFgJeckMWmmjjFYoVzzRhx3dcvCMVjw6frBrlDXt5LqmriH
- Hh1DW/3gYU/oAqSl0WGgAAAA=
-X-Change-ID: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
-To: torvalds@linux-foundation.org
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Naresh Kamboju <naresh.kamboju@linaro.org>, 
- Christian Schrrefl <chrisi.schrefl@gmail.com>, 
- Russell King <rmk+kernel@armlinux.org.uk>, 
- Rudraksha Gupta <guptarud@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
- anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org, 
- laura.nao@collabora.com, lkft-triage@lists.linaro.org, 
- regressions@lists.linux.dev, Nick Clifton <nickc@redhat.com>, 
- Richard Earnshaw <richard.earnshaw@arm.com>, 
- Ramana Radhakrishnan <ramanara@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Linux Kernel Functional Testing <lkft@linaro.org>
-X-Mailer: b4 0.15-dev-8865a
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747781317; l=1766;
- i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
- bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
- b=dD0YMCC8TsOC7IFCio+JlJzS+fFX1g0IwQRGhA9s2diSjuMpAGIPX3Ee2hG9VahQMcIbrK2cl
- bN54N5hVbo7AGgCE/g84rx9JmJkY+x9eoHA3sVDBMeJ7VKlSVi2Ujca
-X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
- pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
-Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
-disables a GCC feature that we don't want for kernel builds, so let's
-skip it.
+> Naresh: would you like to send the diff as a formal patch since you
+> already tested it etc.?
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
+Hello Miguel and Naresh,
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+I went ahead and sent a patch to Linus directly since it seemed to me 
+that this was about to fall thru the cracks. I signed both you and 
+Naresh on it since it seemed like you both were happy with the small 
+patch. Apologies if that's not standard, please do correct me as I'm 
+still new to kernel development.
 
-Tested-by: Rudraksha Gupta <guptarud@gmail.com>
-Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
----
-Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
-disables a GCC feature that we don't want for kernel builds, so let's
-skip it.
+Btw Miguel, thanks for introducing Rust to Linux. I'm not too good at 
+kernel development or Rust, but hope to one day. The modern Zulip board 
+and documentation is very nice for newbies like me. Looking forward to 
+making my first Linux driver and Rust driver soon. :)
 
-It seems like this bug went through the cracks, so I went ahead and sent
-it. Hopefully nobody minds.
 
-Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
----
- rust/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/rust/Makefile b/rust/Makefile
-index 3aca903a7d08..f207ba0ed466 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
- 	-fzero-call-used-regs=% -fno-stack-clash-protection \
- 	-fno-inline-functions-called-once -fsanitize=bounds-strict \
- 	-fstrict-flex-arrays=% -fmin-function-alignment=% \
--	-fzero-init-padding-bits=% \
-+	-fzero-init-padding-bits=% -mno-fdpic \
- 	--param=% --param asan-%
- 
- # Derived from `scripts/Makefile.clang`.
+Rudraksha
 
----
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-change-id: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
-
-Best regards,
--- 
-Rudraksha Gupta <guptarud@gmail.com>
 
