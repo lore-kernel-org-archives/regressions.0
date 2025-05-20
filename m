@@ -1,146 +1,140 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A171FF5E3
-	for <regressions@lists.linux.dev>; Tue, 20 May 2025 16:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BBF1FFC54
+	for <regressions@lists.linux.dev>; Tue, 20 May 2025 17:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758173; cv=none; b=L6ffRF8L2iDItombjdFaCUMGO1BefytMYciEy6/PdStOUox0W0TSITgL7xdGggCkuueuNWvtvEqAVehgX+P0swuIFY9atIG9L9/zSNvmTlWyqHMgJD6qGe0EnNbs3msyQeUsnq6XXk0yUXjsTHSSPMnkzID3Lt2tRBaTWTnD8oI=
+	t=1747761172; cv=none; b=ow+61GkyGcECNqyuaGuJqV+WB9GGO8keV8D82VZguYOX5tbK3p9YBuZVBAJkiDd59U/oDOF7nVvk+JEWuYJI8NyvOGVmWMBdNyZ2XORxQWH4UciNkUjSXFLo/xJIGPH687D/SeaAgS91nSpTeqF9gLn1bhCSV6X1Aaw0QlFZg5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758173; c=relaxed/simple;
-	bh=OSFWaFcsN5NjFF+/2GsgSB2pvTMkxNpSCGwyaZXb+U0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sl9n/qwEhD3TQ5oj1AsOTxiULVVpB11mB0eukxhbthqpADAdt+DtezdErYloOmVlv3sGMoWD2v3sgF6r8TmQTOYZtdCkeAfCuCIbBo5sUlwqcObQPcUGdTRJaHE1c3VE0OV0ztRj1jG7SG1kZYrCKasdmz952b7jiIwOdCwN29g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EIWnxSm/; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747761172; c=relaxed/simple;
+	bh=9iR8IRTU+6tBVXCfEjrdYiIimKV+d4fsyZWvwGgz+DY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=pps8ygxOf6GacgPUXT7sjk9YRNEIdqCaE2dchTaJ/pX7EFFriF8s058Kkes70c98r0vaVyn5EKQleg8+xwGMnpPu2m8N9t6FjPOuLNXdxjsbn0fdmaeZUfHNCr7s+b9m7kDhXVavWC2JKI9iA5Hqg7Ar3w3kBH/FiVZ4urHvOAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=DRIHhyS1; arc=none smtp.client-ip=98.137.69.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIWnxSm/"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c47631b4cso4286742a34.1
-        for <regressions@lists.linux.dev>; Tue, 20 May 2025 09:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747758170; x=1748362970; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t0HWhoEGlvH4UanVLpaHgaFj5uaCvcRqQd2jUejSkZk=;
-        b=EIWnxSm/u5WlQ8V+zRcaKOMzMk4dFFcebD8wqlyCTIQoX/PeusIJ1DrSy7q+fe/M+V
-         eg7hrsteqomp0u4niwBeaaV8k2ZxCf89CSgsg2rjQV3sHNOFxuwX0/TTPlnBUnQIdmsE
-         s2D8Eujivc5XWpa3uJVd4r75Cw4Wll1T67Ugg+3jyP5Ium2VVjg03fLfZ+vjv/WRwNDt
-         SmVEek3fUt6+x0pLWbAgASv4Shmn18UgRN5BP8wHHp94/kiwuEe8FLkTW1Ms0l+inJUj
-         YlZyp7tCqtl2NsbTWoZtZ4oIxYCuR4KLIUuKb6yJjnWwZSxJFWpcDRjvkoIBuAP5c8rU
-         PP4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758170; x=1748362970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t0HWhoEGlvH4UanVLpaHgaFj5uaCvcRqQd2jUejSkZk=;
-        b=PBjI4OJyBoEEQtA/4HHhuBaybVqo2gr6QlHNey6nBy9ZE+56NjGjHfFmGhIDJSJFCb
-         UVu0UWQO4Ql+PkBHnoHpZX9fLCHs0al30oQzydcOpDzGlFl2rj383dvScFNCtRB17Fm0
-         efZmPJd+p3eBnSWZ02u29jQJCslWb+X77zvXrm6+vGY2Jm6grka3E9bVSCmzi9rrnk0W
-         X01UoWzQjjC4FUVIxFc958Jlg2aokeumarLYN1l2Sd6LZHJgiIKdkCrTvvhfbNv9I+Gm
-         rdb/y8RV9yHa/52KO4cR9TJ43YAeprQNEr2t2t4DcbSYvE8hj5aogiJL8XO6P2y2gi23
-         MRTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvhElzdFpXmIht28aonZ95avcZYdNIFhKsSiAhSlKxJsHiFKjxi8WTAzzarghU9OZwxf4DLNi6MeVd+Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxkeDgWtTANlYek0XTnzZ2P/f/erCSwqIHVa3JyoGpbSMSLYzms
-	7+A/KeAZtkFJ8vfoLnLwGpDZMk+Sj7+Z1YoedrLVFRqxsHjuPvmOa5K5cCFo5+lV+ij78tXBHCj
-	zliZK4Hi7nh12hvERdCMQpNz8RlzGlbw=
-X-Gm-Gg: ASbGnctJvxbc3FM9JNFkOtLDpYjpSQmKIidS4PMt/XsCYTStstsYJZIZ2N6102V6BWH
-	8LAgkn1RmuhFGwSUbdmi/kN24F4S3e2VN5fPQeitwC/TXO/GnJ9aNJ88rUCgFG+Tkh3bdPsWtRS
-	Wf8RR4fiRM9YI6MlltUBXLsRRIzitdvcBf2Yd0QU6h2R5u
-X-Google-Smtp-Source: AGHT+IEGazgYcFFYqSWpOSkIHhn1MURd+j+lfv1uzCtxT/F1GutSwFjiAZmJjWp90mPosd+z0UJD6Cc/+Hr809fy1vY=
-X-Received: by 2002:a05:6830:4189:b0:731:cac7:3634 with SMTP id
- 46e09a7af769-734f6ac4e55mr12071806a34.3.1747758170553; Tue, 20 May 2025
- 09:22:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="DRIHhyS1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747761170; bh=9iR8IRTU+6tBVXCfEjrdYiIimKV+d4fsyZWvwGgz+DY=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=DRIHhyS1OR8xnx/V6hbfJhouMPh8IXYDhvHNrQiq3KZ3ESN5Fy3IlFlUbC0Iy0pd+pAzGvCDRs0CU+xPtnk6tv90EZMpInO0ptnJLgPqojp16EeUrvo3lYZ9ugd7+s88HIlgziX+hpIaHRHtbFH0Hx1JGm8KOHCfr/5+78qGyw4qD4Rk8XIWguzRjghnVoAbdkZva10EoEBUnSGZYErzj3teRwlMTJisrCcB36XUjDNjcQs/uTF3qfshBkTNEsFYtad2jOo5+ojbAsuxF2+yA3YkpZ+SOl+2HlypjBbu6Ji2WDmlEHIX+H/k4U1kJSC9Jz8XMeQ+C/IG6MWEAUh+jw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747761170; bh=1kRFyAYEnBf4mOSgf4NKq2BzEJGE3kFfKKhoCHGhoJs=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=GMXt/gjoaGRbCn/hPc2PIDGlGpsdz1k0YNNE9XfDFjc0ycjOTA/4KRi4HiJBEqW5/vMa1vv81GCVcmm2bhMH29igKTuoa5V+hWSks1dg61MB0QATPUJdiWLCUj/8uxCMetJuPosdEH+2Y8t14cJeYKwRzJIlb4b5nX4NQV+xlhyQ2KOWdJ+FfVqH6upSW1u4W62UyswVwOZ5WQiifL00jfK927njCP71JMp82+Serj/APGv6wWqkF8uWJVe6lYc7kNjoLcFdsEdbzbyfkd6P3UxHZ8LxGXPApU8nqMcdqCa4wHkcRjLyroIxjFi4L1czVydhZxvZxAcqyeNv03E0Jw==
+X-YMail-OSG: ByX53hsVM1lPtJCy8zoa9TI0Gn5HdUlhOp6gX3nQL3XLKNNgvn6TyTXRgTPQgTh
+ GvJJv6MOLCv0p4dNS4ydfswEmdO47yn_Yl2pfaSMYVxeYVxCkvC7vLDRONqufVsS8SDNqMKNOZyv
+ 1qpZexw1UzG5YQF2Z1b9ZM0w1y6r7M6L3HKptKaJEbrpW3a3yki.k.Z66iIkAbBoAT0xMDavM4Eq
+ i_1LhVogpHyHi72FL3ICoRudytJRCxTbEuDThO_ABnGUFiW_12fbHtdakAQS1fx2HJRYq4JBCO4f
+ MKoZn.W0Mi3nIp2C9rL4PZeofAyjeKWFgBeMyqOagy76r3kZzfYO2iWWNLWSIRkVNw1j40mImibn
+ u32KTbqAYZANvwUPjyBLA_Ewqvwhqb5ZgnL1QZHEerEtvboyarsIQdPQVN7Xgx4YlqB3D5FFML88
+ ps_PcOXjRNWlaqTsFMsd__wWfaPDySSI39ztolIjEAmBDuLs6Pku_Ze0xElynA6nBvO7mDzxwU6y
+ pUfNVxUj9jJi7M2MrWD_sOfYBQgieiCCvRgc_8lQQ3NY8LSKfzWewloeA50WY765Svn8vWPaR3qF
+ qfqIgLb4o6EoH0C6bwmLsNB3a3DJAZEpzF7i7qCyterWnduU4cq__I9BHGvT50oa0mkgP9hmhM_U
+ J6ph07EoJ1h9tFUFH0XfEHJsyYaW9RKRZm_F8MOx_om0I9bSnYXYTSuaH2tMeuUyTnRtD3Opp0t6
+ gUEzkjWlToLcyxQQQbBvVP1bvZl.Ey0mGmsuZO3w3UMXDNMFulbVXSNeP2.QAHBy1I4fh5zUb5Nv
+ MrTqJBtkEVKExNI.jQd1mfr1Gd8dxXtcQISx00qBAvWWTHrS97JWLgwIwO5ad5QIgst91qolrarh
+ Xmj.WjUnIX2tT9NM1UgXbSL4CndBABlbwa1Tncof51ZVNi8nwpQxhQLuLUyibuv11OrioU_QuHAY
+ 1cbrl.dv0bIYJUCQ.AXB60jlK.2GgtPKXOpAr_RKmLTl8tTpBRuwdep0rsbr1rAH2d3jU2Y6nApD
+ WzzdurqqYK20_otgQZBvnIcxQZwJB6H5viH00bmmeszWuFHnJRBYVB_iQiCBkV9.KTtb.nQ6wQPC
+ NAD44bdxA4EH5jTf6VLsecF_RahXhEl6TksV8aBmvQRtbEe3zsZrwbWVVhx0zw8DPc.EPy53.1To
+ JtsccF4g7qkJ7OO9W_CClbELfqTR7zeoghkJUxcVMrJWW4fJYpN4r3XvFKm8uDI9vOq5GEsdClQm
+ lpVkDuVTnniA_4XSUrw44.9mEUxQfE5ljjfQIKELqNzgv7YIVHROnk7x962uZHc2x77kc7sK6LX6
+ 8bI7_RqyD6SRxiUP9qo8vUKdq.LYUg5Kn4t3RV5ln7N3YVmhQ8WXmlIOs93XI0PAz7rH_X8m3ZFX
+ Pg1JpK96SDlojxORix8dzzfuc8Y_ZcZT_FOvlawX4EFv_bwIR_2sG2mJ08kFvujjwyClzoMr3RFo
+ UXhM_8HeQo9Kv82w0uQZEYM38LgMJTIkUY0fgNLHq.69YZfun66DiEJo4Wlrs3e.7N3WMg0wIx81
+ Xkwicy_zV.MyRhhHLKjJ62Nyp_zwWwiLOw5zZu9JlK3Q8ngIRIiXRev7X9rQofXO.LetDbCs1GZP
+ 3TQP6x54Hzg7n4TDHworvyjHhiZyKi6H7jhDLCqF81W5dN9DVzLAZRiQ6xRlzulKlGX1w.YJxHRn
+ CoO5DpVL1V5fqPw5oQByWx2iyWWVTSQX1KQo6ivX6LvvBG64PWaOoztAek.6Uw41HLZN5USmsiMd
+ BV8OCq3.SQAIAoESWYBoeCy.9qkOe0G8soyavCi88Ww7px2Bq62Hrdhy4sLKVwsTqdWqojqEM._A
+ j8PGhYJGKYKEIw05mf.qBoufznPrIAhRU9L96UPAPSDFRjF_Lb1hYcU7O2MWfSdjly7e2co9_3Fg
+ bUKIo_K8OAnC_4Tw7nphtxlkEvd4SWqc0arEsrLsi4Jl6SFQlvV8VSpubX5GC6LSl7ushEIjTmV4
+ lXEmuBN8fx_YbEpZ.gGusPKdDwtRGETALStLvZrZZwZPF9FioTGyaCsoNQq0Vl2eOPcYkqv0IJSr
+ 7G0.ZXPGDGJ6viqXQgdTpzXEuUR6Rnz40kDK6w8dsowYiwP8Kr_ft0nxFfLTpAXgawBmC6QHYCpk
+ oNyGV2IrSYWd4s0p2sbsPrpAsmqu.Al2LGILpXB8UupfuOZ_1wPTiqDdEFjX3z6ulAIvOIc7KcLF
+ Jj_PycKXMM_MwAZos4eeTSMy_UhNT6GM4DTS.fFofRWsz7XedYSNGtS3YLwdQClhCZifTQtiC8jH
+ GYw--
+X-Sonic-MF: <nruslan_devel@yahoo.com>
+X-Sonic-ID: ea7e4a78-4c94-4d9a-909b-b96f67d8b373
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Tue, 20 May 2025 17:12:50 +0000
+Date: Tue, 20 May 2025 17:12:45 +0000 (UTC)
+From: Ruslan Nikolaev <nruslan_devel@yahoo.com>
+To: "kailang@realtek.com" <kailang@realtek.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"tiwai@suse.com" <tiwai@suse.com>, 
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, 
+	"sashal@kernel.org" <sashal@kernel.org>, 
+	"perex@perex.cz" <perex@perex.cz>
+Message-ID: <1337059899.270541.1747761165293@mail.yahoo.com>
+In-Reply-To: <362743264.827582.1747131928735@mail.yahoo.com>
+References: <bug-220109-229339@https.bugzilla.kernel.org/> <bug-220109-229339-9HzhKc5gL2@https.bugzilla.kernel.org/> <362743264.827582.1747131928735@mail.yahoo.com>
+Subject: Re: [Bug 220109] Audio disappears on HP 15-fc000 after warm boot
+ again (ALC256 code path)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsPLAs+rCktbM_ao3bP3VZuaLqXSMpXZt1m-B9nqf91EQw@mail.gmail.com>
- <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
-In-Reply-To: <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 20 May 2025 21:22:39 +0500
-X-Gm-Features: AX0GCFuSeV0_iIfi2B7CrPBZxdbghCyFZ-5JMvI3TU0_KAOUPfiuj1Zu21ABgBM
-Message-ID: <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
-Subject: Re: 6.15-rc6/regression/bisected - after commit f1c6be3999d2 error
- appeared: *ERROR* dc_dmub_srv_log_diagnostic_data: DMCUB error
-To: "Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>
-Cc: "Chung, ChiaHsuan (Tom)" <ChiaHsuan.Chung@amd.com>, "Wu, Ray" <Ray.Wu@amd.com>, 
-	"Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.23840 YMailNovation
 
-On Tue, May 20, 2025 at 8:06=E2=80=AFPM Pillai, Aurabindo
-<Aurabindo.Pillai@amd.com> wrote:
->
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
->
-> Hi Mike,
->
-> Could you more details about your setup, and how you were able to repro i=
-t ?
->
+Kailiang,
 
-Hi!
+Just want to follow up and ask if any other information is needed.
 
-Did the probe not include enough information?
-https://linux-hardware.org/?probe=3D4635c5fcb1
-
-Anyway, here's the output from inxi:
-
-> inxi -GSC -xx
-System:
-  Host: secondary-ws Kernel: 6.15.0-rc7-a5806cd506af-revert-f1c6be3999d2+
-    arch: x86_64 bits: 64 compiler: gcc v: 15.1.1
-  Desktop: GNOME v: 48.1 tk: GTK v: 3.24.49 wm: gnome-shell dm: GDM
-    Distro: Fedora Linux 43 (Workstation Edition Prerelease)
-CPU:
-  Info: 16-core model: AMD Ryzen 9 7950X bits: 64 type: MT MCP arch: Zen 4
-    rev: 2 cache: L1: 1024 KiB L2: 16 MiB L3: 64 MiB
-  Speed (MHz): avg: 5355 min/max: 425/5883 boost: enabled cores: 1: 5355
-    2: 5355 3: 5355 4: 5355 5: 5355 6: 5355 7: 5355 8: 5355 9: 5355 10: 535=
-5
-    11: 5355 12: 5355 13: 5355 14: 5355 15: 5355 16: 5355 17: 5355 18: 5355
-    19: 5355 20: 5355 21: 5355 22: 5355 23: 5355 24: 5355 25: 5355 26: 5355
-    27: 5355 28: 5355 29: 5355 30: 5355 31: 5355 32: 5355 bogomips: 287444
-  Flags: avx avx2 ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3 svm
-Graphics:
-  Device-1: Advanced Micro Devices [AMD/ATI] Navi 21 [Radeon RX 6800/6800 X=
-T
-    / 6900 XT] driver: amdgpu v: kernel arch: RDNA-2 pcie: speed: 16 GT/s
-    lanes: 16 ports: active: HDMI-A-1 empty: DP-1, DP-2, DP-3, Writeback-1
-    bus-ID: 03:00.0 chip-ID: 1002:73bf
-  Display: wayland server: X.org v: 1.21.1.16 with: Xwayland v: 24.1.6
-    compositor: gnome-shell driver: X: loaded: amdgpu
-    unloaded: fbdev,modesetting,radeon,vesa dri: radeonsi gpu: amdgpu
-    display-ID: 0
-  Monitor-1: HDMI-A-1 model: LG (GoldStar) TV SSCR2 res: 3840x2160 dpi: 61
-    diag: 1836mm (72.3")
-  API: OpenGL v: 4.6 vendor: amd mesa v: 25.2.0-devel glx-v: 1.4 es-v: 3.2
-    direct-render: yes renderer: AMD Radeon RX 6900 XT (radeonsi navi21 LLV=
-M
-    20.1.3 DRM 3.63 6.15.0-rc7-a5806cd506af-revert-f1c6be3999d2+)
-    device-ID: 1002:73bf display-ID: :0.0
-  API: Vulkan v: 1.4.313 surfaces: N/A device: 0 type: discrete-gpu
-    driver: mesa radv device-ID: 1002:73bf device: 1 type: cpu
-    driver: mesa llvmpipe device-ID: 10005:0000
-  API: EGL Message: EGL data requires eglinfo. Check --recommends.
-  Info: Tools: api: glxinfo,vulkaninfo x11: xdriinfo, xdpyinfo, xprop,
-    xrandr
-
-I'm using an LG OLED42C3 TV as a monitor.
-
-Let me know if you need any other details!
+Thanks,
+Ruslan
 
 
---
-Best Regards,
-Mike Gavrilov.
+On Tuesday, May 13, 2025 at 06:25:28 AM EDT, Ruslan Nikolaev <nruslan_devel=
+@yahoo.com> wrote:=20
+
+
+
+
+
+Kailiang,
+
+I added alsa-info outputs to=C2=A0https://bugzilla.kernel.org/show_bug.cgi?=
+id=3D220109 (see attachments for both the regression and reverted changes) =
+by following your instructions.
+Please let me know if there is any other information you need.
+
+
+Thanks,
+Ruslan
+
+
+
+On Tuesday, May 13, 2025 at 02:30:17 AM EDT, <bugzilla-daemon@kernel.org> w=
+rote:=20
+
+
+
+
+
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220109
+
+Kailiang Yang (kailang@realtek.com) changed:
+
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 What=C2=A0 =C2=A0 |Removed=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |Added
+---------------------------------------------------------------------------=
+-
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 CC|=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 |kailang@realtek.com
+
+--- Comment #3 from Kailiang Yang (kailang@realtek.com) ---
+
+Could you run alsa-info.sh to dump codec info?
+
+Please do =3D=3D> echo 1=C2=A0 > /sys/module/snd_hda_codec/parameters/dump_=
+coef
+
+before do alsa-info.sh.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are on the CC list for the bug.
+You reported the bug.
