@@ -1,95 +1,108 @@
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [46.4.70.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A51625C80A
-	for <regressions@lists.linux.dev>; Tue, 20 May 2025 06:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.70.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF8F1A2396
+	for <regressions@lists.linux.dev>; Tue, 20 May 2025 07:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722882; cv=none; b=i8iq4dAk6F/u1yD0P1VREbDUW5JV5EbgbVUi2AGf/4nCxa//mPYz0alSPTrrvzhr1ocWfHtjjCr4ko/jfMIZ7RHFpwn3rlYTjrxJN7ve9SwDSn6/b3E0ZD7UrU3gZh8tn3VBISSEWHFHimTvWQypC+6R8UqowCi2/gBCNuhZOkU=
+	t=1747725371; cv=none; b=WAZL6N3se2LtbkWAqwC/Ecuy3COkiLfC/7hcvdDygSpGvfOiwELpQ3EjP0C5hDh9tZM6bRTAaxU99yMV53DzLWtnWF1IKW77Uh4VKGBToOKXVsXHbhVuqVlj+ldY6mBfJchInkgqKIpNX2zVxzKuGGu6cyOm0tcug8G7SZfxkbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722882; c=relaxed/simple;
-	bh=2RUinEL1Eq5U6TvPMd7m9XAO3DZWMF0UfUS5bEdGUL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EdaUZi086XH559J71TNDGd9fGm7SYMv1mX13t2/yAU8/UbJ55Sy3wvosPWpqup4udckfTCWyyPl3ZXf9UI6rqkJ8JapKLJM2m1hDdqYzuifoeYeiqsjuiYA6fD2B1KWXx9mzNgPVWN7rxQuEinnrGAsrn1GnCVE1zzhqp3dJ3eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de; spf=pass smtp.mailfrom=eworm.de; arc=none smtp.client-ip=46.4.70.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eworm.de
-Received: from leda.eworm.net (unknown [194.36.25.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id CFC1C25AAFF;
-	Tue, 20 May 2025 08:34:38 +0200 (CEST)
-Authentication-Results: mx.mylinuxtime.de;
-	auth=pass smtp.auth=mail@eworm.de smtp.mailfrom=list@eworm.de
-Date: Tue, 20 May 2025 08:34:38 +0200
-From: Christian Hesse <list@eworm.de>
-To: Salvatore Bonaccorso <carnil@debian.org>
+	s=arc-20240116; t=1747725371; c=relaxed/simple;
+	bh=64nSeznQ/80kI+TqqvrHQheS4AVHuJSHiUdaas+H0vQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I96OM57U7npA2eqOFahsRaILiSCSHfnAQm5yFhqmGolauqSTN5jr7DCoCLb9Vv4IFagNXO9d3Ja0IYS9CST/nwzJiaLsTYsptu+5AyHlJBoQfRuoKyPYRPH3rXVNvmJgyoCWP/HGN1eQWUj8FJQbzrU2pCcj3a079weyZ1x8xmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAr9ztB8; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAr9ztB8"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6015f8d4b7dso6833720a12.1
+        for <regressions@lists.linux.dev>; Tue, 20 May 2025 00:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747725368; x=1748330168; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dDIRhWdKVMpUu59ujm96cXSr76HpSQ4ZrAeN1Auu11g=;
+        b=aAr9ztB87scOfWzf5mMvVJDM+HsreksNT+vVQIEElhXTWot1wedShzQ4tLFstJ7Pfx
+         2SuWwwwzuPI9nyn3H6n9QCZ3Ow/50Fa6IlpwfveBKLSuOaKCqBtOIsr/e0uC4wDzesuJ
+         fH8ZouLLWpUhgWAiP63Nz5DBK8eweRCwjEVZrA5bWlRehXk3IkcAXTkS9RsAkLG/rNTK
+         zsae+u83niAXE9IbCNMZ380XKaJJFCH+IkJsYXt1kHFDjxGoESY8fe7+qjUZyZS9yqUD
+         KVvnJcdB9MxepNv7VCLFivTyNdnW5xa6Vm7en/eUKQzmBSZMt/MCaRJq4fXaVATxDsKr
+         MRdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747725368; x=1748330168;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dDIRhWdKVMpUu59ujm96cXSr76HpSQ4ZrAeN1Auu11g=;
+        b=GNGfvFt6mw8jTEq7lWDrHhSFXtd52EDKODtH5vDDJWkqdlKjbPKl3NN1RdvTSjK8nV
+         ye+bPa2TQYZG8q3NYVTCPTm1zvTao4iKtQW58teiUBfug7dVBT3au/PAQrm55wtF/T1t
+         MWflMU22BbgaSni8svlkY7SWht3Imd0zuhfzluKRNCF3MwrV/NOkN/Fu6A2Z272L2Bxf
+         S27FASITYWG1kB+mPlGXPKtVdUqOCAbPoypCEOA4yOrPxvkz8vZOtaXoIVzF/pJSeN/d
+         AWhi0Z24em5xYBVcAsnltadYc9cZx9AEgvdnALoLO6//FRgfXZ5RSNm5Hb/loP+HkrBN
+         Ys9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUWrdHcSV/EAaXjqpPuFaZrvIwtD+pvdFWw+foorj5oKjycNUqZu78Ruvnl3RqjoprCCvA0TJnWSd1UDA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwKU5+2uJEgyOL2fVX44B380NtFCtceVhwrlszlgcX1WQqERCwq
+	A5rDoUmmmIHT7RE7mdoT9w3F5h1RsHSGvdgQob13CUMXljT51+EtZ4m9
+X-Gm-Gg: ASbGncuPOYjaqdrAVgshuGaaGRkE7y6CLiR1fvIRZJLHg+9yoQC36U8eZpb8X/74LUn
+	7p2i5dkQt9teU3SiCXm9g9wronvcGSJaD+JxVrBdFe7iede2nIjPuig4Cvab6zEw3kJP2fUSlhj
+	JkRHsP72Bhh5yfWIW75EWOo93P2pvvN8xMaiL9mrWxjQyDUzRz1Vk/mycHHFu1omPm3mCX4JWYa
+	5Ivn8MmUK5nEQ40CH14PAVUDFS7WFExW5zeCjUO28lPTju9kqd8C2xb4J70KiJGN8gziDbfuFXB
+	Dnuk6LDfno7fo/X5BGMtf93+SHfVOTjB4P2QTQAdT36ExX0T9p+AJe1+00p7szdXiy10jP5xMTc
+	ca1A5HHEi
+X-Google-Smtp-Source: AGHT+IHVOlAW6lgxwfSXJ2mOzRf4cxrSKL/D38SFAUPj/n/z1oZNclDU9+lGnv4dlctwse3NYQjUmA==
+X-Received: by 2002:a17:907:1b0f:b0:ad5:5293:f236 with SMTP id a640c23a62f3a-ad55293f282mr1046955066b.3.1747725368115;
+        Tue, 20 May 2025 00:16:08 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4c9e62sm685303466b.155.2025.05.20.00.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 00:16:06 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 7942BBE2DE0; Tue, 20 May 2025 09:16:05 +0200 (CEST)
+Date: Tue, 20 May 2025 09:16:05 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Christian Hesse <list@eworm.de>
 Cc: Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
- Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
- 1106070@bugs.debian.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	1106070@bugs.debian.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev
 Subject: Re: [6.12.y regression] loosetup: failed to set up loop device:
  Invalid argument after 184b147b9f7f ("loop: Add sanity check for
  read/write_iter")
-Message-ID: <20250520083438.295e415a@leda.eworm.net>
-In-Reply-To: <aCwZy6leWNvr7EMd@eldamar.lan>
+Message-ID: <aCwsNSEoxfs4DOvi@eldamar.lan>
 References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
-	<aCwZy6leWNvr7EMd@eldamar.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
-X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
-Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
+ <aCwZy6leWNvr7EMd@eldamar.lan>
+ <20250520083438.295e415a@leda.eworm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pHHCVVO63xn3l9rY3DXDkq1";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Spamd-Bar: /
-X-Spamd-Result: default: False [0.00 / 15.00]
-X-Rspamd-Server: mx
-X-Rspamd-Queue-Id: CFC1C25AAFF
-X-Stat-Signature: tto66ciskyy4jxzcwht5ucfkrgp8hxhr
-X-Rspamd-Action: no action
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520083438.295e415a@leda.eworm.net>
 
---Sig_/pHHCVVO63xn3l9rY3DXDkq1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+H Christian,
 
-Salvatore Bonaccorso <carnil@debian.org> on Tue, 2025/05/20 07:57:
-> In Debian Roland Clobus reported a regression with setting up loop
-> devices from a backing squashfs file lying on read-only mounted target
-> directory from a iso.
->=20
-> The original report is at:
-> https://bugs.debian.org/1106070
+On Tue, May 20, 2025 at 08:34:38AM +0200, Christian Hesse wrote:
+> Salvatore Bonaccorso <carnil@debian.org> on Tue, 2025/05/20 07:57:
+> > In Debian Roland Clobus reported a regression with setting up loop
+> > devices from a backing squashfs file lying on read-only mounted target
+> > directory from a iso.
+> > 
+> > The original report is at:
+> > https://bugs.debian.org/1106070
+> 
+> We are suffering the same for Arch Linux. Already reported here:
+> 
+> https://lore.kernel.org/all/20250519175640.2fcac001@leda.eworm.net/
 
-We are suffering the same for Arch Linux. Already reported here:
+Sorry missed that one! Ack, so let's continue in that thread (worth
+looping in the regressions list though?)
 
-https://lore.kernel.org/all/20250519175640.2fcac001@leda.eworm.net/
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Best regards             my address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*    Chris            cc -ox -xc - && ./x    */b/42*2-3)*42);}
-
---Sig_/pHHCVVO63xn3l9rY3DXDkq1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEXHmveYAHrRp+prOviUUh18yA9HYFAmgsIn4ACgkQiUUh18yA
-9HYgZAgA4bNSTczRx+NihDV8Xfx3/KM7eGuNVbcIFhiXgm6AnWmqrobyQQU3vygo
-79dKyAXYTmB7dxGDOkmMv5JiqJ3yzOUNx4gX6OlAoX9ZlLA7PUrqBcPvLyAhrhvd
-0VR5wSwLOsBo4ujSlR0wQNTc03UwtIRm+t6gdTrqAGBhe7yJNMYCutvwuqEe67wH
-pMszcc7rOHNM8h/2//xz6uyIK1whIO1DU4hsvbZiGMcayKZnNeClGB4JdCZDwaH6
-M6Dpv5aZ05JySqPg1eQvXA/QR6VWPNjoj/J9Ph2yAcx5gQ8bwS3quyhjETOajgad
-5ACdS83Ua+gZs3Iy8M1Pb0a+JxmsvA==
-=Hr/4
------END PGP SIGNATURE-----
-
---Sig_/pHHCVVO63xn3l9rY3DXDkq1--
+Regards,
+Salvatore
