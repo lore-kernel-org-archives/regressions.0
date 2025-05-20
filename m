@@ -1,140 +1,150 @@
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BBF1FFC54
-	for <regressions@lists.linux.dev>; Tue, 20 May 2025 17:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E891217716
+	for <regressions@lists.linux.dev>; Tue, 20 May 2025 22:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747761172; cv=none; b=ow+61GkyGcECNqyuaGuJqV+WB9GGO8keV8D82VZguYOX5tbK3p9YBuZVBAJkiDd59U/oDOF7nVvk+JEWuYJI8NyvOGVmWMBdNyZ2XORxQWH4UciNkUjSXFLo/xJIGPH687D/SeaAgS91nSpTeqF9gLn1bhCSV6X1Aaw0QlFZg5Y=
+	t=1747781322; cv=none; b=KzOT7rtYE0R37Txq9Zrb4imAbrJjNmdW4+yM4G0h4+ST44xShDbswQIDCfEULa41gLnecQw9+JPQ5RCMf+YqCHoqJySLr56UyFtNmbBR/ickZLDHaGAfUuAKRK0LjlF9/gVeVhrpsx4N8ea8h2wvOJ+4U40Rmj86POKYQcJL9M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747761172; c=relaxed/simple;
-	bh=9iR8IRTU+6tBVXCfEjrdYiIimKV+d4fsyZWvwGgz+DY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=pps8ygxOf6GacgPUXT7sjk9YRNEIdqCaE2dchTaJ/pX7EFFriF8s058Kkes70c98r0vaVyn5EKQleg8+xwGMnpPu2m8N9t6FjPOuLNXdxjsbn0fdmaeZUfHNCr7s+b9m7kDhXVavWC2JKI9iA5Hqg7Ar3w3kBH/FiVZ4urHvOAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=DRIHhyS1; arc=none smtp.client-ip=98.137.69.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747781322; c=relaxed/simple;
+	bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qor3dWdCw22AtNa0Znc6PANxMk5D6hkmJJzdztkrqSfzPj8u3lmU5Xyvogo1gjsRcZt54GcgnQuKTrTuKX7WqoZ0cYZMVsOjvka9eC/DAu7gbDYhzoblG1vTRH/9MVUK/K/qVpFN7e3d46tlPzaNjVRzGMOj3Gy4ybNE6RYPsGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwbHTS/I; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="DRIHhyS1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747761170; bh=9iR8IRTU+6tBVXCfEjrdYiIimKV+d4fsyZWvwGgz+DY=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=DRIHhyS1OR8xnx/V6hbfJhouMPh8IXYDhvHNrQiq3KZ3ESN5Fy3IlFlUbC0Iy0pd+pAzGvCDRs0CU+xPtnk6tv90EZMpInO0ptnJLgPqojp16EeUrvo3lYZ9ugd7+s88HIlgziX+hpIaHRHtbFH0Hx1JGm8KOHCfr/5+78qGyw4qD4Rk8XIWguzRjghnVoAbdkZva10EoEBUnSGZYErzj3teRwlMTJisrCcB36XUjDNjcQs/uTF3qfshBkTNEsFYtad2jOo5+ojbAsuxF2+yA3YkpZ+SOl+2HlypjBbu6Ji2WDmlEHIX+H/k4U1kJSC9Jz8XMeQ+C/IG6MWEAUh+jw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747761170; bh=1kRFyAYEnBf4mOSgf4NKq2BzEJGE3kFfKKhoCHGhoJs=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=GMXt/gjoaGRbCn/hPc2PIDGlGpsdz1k0YNNE9XfDFjc0ycjOTA/4KRi4HiJBEqW5/vMa1vv81GCVcmm2bhMH29igKTuoa5V+hWSks1dg61MB0QATPUJdiWLCUj/8uxCMetJuPosdEH+2Y8t14cJeYKwRzJIlb4b5nX4NQV+xlhyQ2KOWdJ+FfVqH6upSW1u4W62UyswVwOZ5WQiifL00jfK927njCP71JMp82+Serj/APGv6wWqkF8uWJVe6lYc7kNjoLcFdsEdbzbyfkd6P3UxHZ8LxGXPApU8nqMcdqCa4wHkcRjLyroIxjFi4L1czVydhZxvZxAcqyeNv03E0Jw==
-X-YMail-OSG: ByX53hsVM1lPtJCy8zoa9TI0Gn5HdUlhOp6gX3nQL3XLKNNgvn6TyTXRgTPQgTh
- GvJJv6MOLCv0p4dNS4ydfswEmdO47yn_Yl2pfaSMYVxeYVxCkvC7vLDRONqufVsS8SDNqMKNOZyv
- 1qpZexw1UzG5YQF2Z1b9ZM0w1y6r7M6L3HKptKaJEbrpW3a3yki.k.Z66iIkAbBoAT0xMDavM4Eq
- i_1LhVogpHyHi72FL3ICoRudytJRCxTbEuDThO_ABnGUFiW_12fbHtdakAQS1fx2HJRYq4JBCO4f
- MKoZn.W0Mi3nIp2C9rL4PZeofAyjeKWFgBeMyqOagy76r3kZzfYO2iWWNLWSIRkVNw1j40mImibn
- u32KTbqAYZANvwUPjyBLA_Ewqvwhqb5ZgnL1QZHEerEtvboyarsIQdPQVN7Xgx4YlqB3D5FFML88
- ps_PcOXjRNWlaqTsFMsd__wWfaPDySSI39ztolIjEAmBDuLs6Pku_Ze0xElynA6nBvO7mDzxwU6y
- pUfNVxUj9jJi7M2MrWD_sOfYBQgieiCCvRgc_8lQQ3NY8LSKfzWewloeA50WY765Svn8vWPaR3qF
- qfqIgLb4o6EoH0C6bwmLsNB3a3DJAZEpzF7i7qCyterWnduU4cq__I9BHGvT50oa0mkgP9hmhM_U
- J6ph07EoJ1h9tFUFH0XfEHJsyYaW9RKRZm_F8MOx_om0I9bSnYXYTSuaH2tMeuUyTnRtD3Opp0t6
- gUEzkjWlToLcyxQQQbBvVP1bvZl.Ey0mGmsuZO3w3UMXDNMFulbVXSNeP2.QAHBy1I4fh5zUb5Nv
- MrTqJBtkEVKExNI.jQd1mfr1Gd8dxXtcQISx00qBAvWWTHrS97JWLgwIwO5ad5QIgst91qolrarh
- Xmj.WjUnIX2tT9NM1UgXbSL4CndBABlbwa1Tncof51ZVNi8nwpQxhQLuLUyibuv11OrioU_QuHAY
- 1cbrl.dv0bIYJUCQ.AXB60jlK.2GgtPKXOpAr_RKmLTl8tTpBRuwdep0rsbr1rAH2d3jU2Y6nApD
- WzzdurqqYK20_otgQZBvnIcxQZwJB6H5viH00bmmeszWuFHnJRBYVB_iQiCBkV9.KTtb.nQ6wQPC
- NAD44bdxA4EH5jTf6VLsecF_RahXhEl6TksV8aBmvQRtbEe3zsZrwbWVVhx0zw8DPc.EPy53.1To
- JtsccF4g7qkJ7OO9W_CClbELfqTR7zeoghkJUxcVMrJWW4fJYpN4r3XvFKm8uDI9vOq5GEsdClQm
- lpVkDuVTnniA_4XSUrw44.9mEUxQfE5ljjfQIKELqNzgv7YIVHROnk7x962uZHc2x77kc7sK6LX6
- 8bI7_RqyD6SRxiUP9qo8vUKdq.LYUg5Kn4t3RV5ln7N3YVmhQ8WXmlIOs93XI0PAz7rH_X8m3ZFX
- Pg1JpK96SDlojxORix8dzzfuc8Y_ZcZT_FOvlawX4EFv_bwIR_2sG2mJ08kFvujjwyClzoMr3RFo
- UXhM_8HeQo9Kv82w0uQZEYM38LgMJTIkUY0fgNLHq.69YZfun66DiEJo4Wlrs3e.7N3WMg0wIx81
- Xkwicy_zV.MyRhhHLKjJ62Nyp_zwWwiLOw5zZu9JlK3Q8ngIRIiXRev7X9rQofXO.LetDbCs1GZP
- 3TQP6x54Hzg7n4TDHworvyjHhiZyKi6H7jhDLCqF81W5dN9DVzLAZRiQ6xRlzulKlGX1w.YJxHRn
- CoO5DpVL1V5fqPw5oQByWx2iyWWVTSQX1KQo6ivX6LvvBG64PWaOoztAek.6Uw41HLZN5USmsiMd
- BV8OCq3.SQAIAoESWYBoeCy.9qkOe0G8soyavCi88Ww7px2Bq62Hrdhy4sLKVwsTqdWqojqEM._A
- j8PGhYJGKYKEIw05mf.qBoufznPrIAhRU9L96UPAPSDFRjF_Lb1hYcU7O2MWfSdjly7e2co9_3Fg
- bUKIo_K8OAnC_4Tw7nphtxlkEvd4SWqc0arEsrLsi4Jl6SFQlvV8VSpubX5GC6LSl7ushEIjTmV4
- lXEmuBN8fx_YbEpZ.gGusPKdDwtRGETALStLvZrZZwZPF9FioTGyaCsoNQq0Vl2eOPcYkqv0IJSr
- 7G0.ZXPGDGJ6viqXQgdTpzXEuUR6Rnz40kDK6w8dsowYiwP8Kr_ft0nxFfLTpAXgawBmC6QHYCpk
- oNyGV2IrSYWd4s0p2sbsPrpAsmqu.Al2LGILpXB8UupfuOZ_1wPTiqDdEFjX3z6ulAIvOIc7KcLF
- Jj_PycKXMM_MwAZos4eeTSMy_UhNT6GM4DTS.fFofRWsz7XedYSNGtS3YLwdQClhCZifTQtiC8jH
- GYw--
-X-Sonic-MF: <nruslan_devel@yahoo.com>
-X-Sonic-ID: ea7e4a78-4c94-4d9a-909b-b96f67d8b373
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Tue, 20 May 2025 17:12:50 +0000
-Date: Tue, 20 May 2025 17:12:45 +0000 (UTC)
-From: Ruslan Nikolaev <nruslan_devel@yahoo.com>
-To: "kailang@realtek.com" <kailang@realtek.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"tiwai@suse.com" <tiwai@suse.com>, 
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, 
-	"sashal@kernel.org" <sashal@kernel.org>, 
-	"perex@perex.cz" <perex@perex.cz>
-Message-ID: <1337059899.270541.1747761165293@mail.yahoo.com>
-In-Reply-To: <362743264.827582.1747131928735@mail.yahoo.com>
-References: <bug-220109-229339@https.bugzilla.kernel.org/> <bug-220109-229339-9HzhKc5gL2@https.bugzilla.kernel.org/> <362743264.827582.1747131928735@mail.yahoo.com>
-Subject: Re: [Bug 220109] Audio disappears on HP 15-fc000 after warm boot
- again (ALC256 code path)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwbHTS/I"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so6029241b3a.0
+        for <regressions@lists.linux.dev>; Tue, 20 May 2025 15:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747781320; x=1748386120; darn=lists.linux.dev;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
+        b=jwbHTS/IhE/Eq4xY3MHCkvYXwD6pxOs4lHXkf9WJpHFvAuadxkgCzHib6eSH+xL81H
+         UTUBsmraEjQKAAfWTpKUiVu9iBxgAuOVE4mb3sCpyCvbcGNak3aLCipKpQIzLCYRSScq
+         ruV4YfZCSpWFs9eJEnec6Wz0osXnCRJRSHNUyTRybRbm7uncgS/A2nkIejw1QRqTyOAG
+         vDiPPHrTne6MA15FEuD/eBgFTi7MoY4AKxA7kL4Ycsb0trI0+vlVb1n0CZnvaU8Y50J4
+         fLQ3a946/nivk7tNwtmfcWSIlxzevdUKd1Ij4Mzri8diOhGHczPM//DwXACdi0PfB6T7
+         E+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747781320; x=1748386120;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gTck1yGqn34V0Z4W8SweTAUMX+2ktQbzGZD2RnyEFtg=;
+        b=j+DjBGuCcMDk+5bX1erCiD81IUimsEOsS2k3M00lUzUbTp3/m/HRbPWDfpd5GvUxsB
+         Inh7y9rm+yzyVGYldQVcVo4ZUfZMEd5KGjMA4ONdRsOpYuul3XP3sOLuytMFNjWo/gsh
+         1B37/EcM5sb7YQDzQ1EWTfjqkrK59Zv71WUqtOA/aKc9HeiNA+rD0JR8QxMfvmEMDJqw
+         Z8+Z8jkIazecuEnx5FuItbga39qOK1WKdiAgjK1zoUjigI5FL8OJVgeYojtJPWoahDXI
+         JhGdn06BPcPqE6ZSODe/Z1oQ/T+Vmo/JT5uYhpWzPA1EsH/+i1gdK9NL/PY5qKN50FD6
+         FnSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGx0v2XEXVBnqySD+8bz0XLPRbV3kPIDi4IDo/H5WIWtCQIfTNLLd7Y6ekUYkYLEKQ0JAmz3amG1RStw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzUslnUpLW0m1UUntVBsYN6xmJhDOUa+VxtGqm1nSoA4arv2dR2
+	xLTWZuTGGa8PS+ye5whkgS/PvDX4PIXopTlHVwuYQRQ2xBejkx4k7MX4
+X-Gm-Gg: ASbGncu51nP7jZ7bi8r+UFD7h2q/tY4D1EfvR6E5+3qYDBFYmLxM9zc2MWT6cVh1uDX
+	mt6fsvwWJIl2vKWyisIT+nf2xVAuHW8sYQmHpRf8TBXda0IuVMCT7NBfMAmWzax2aY0Azynf+7p
+	jfs4RuUFQNLTV/n6Qv7qjeo7xvu7bVQ++aQCORTeNqWGekKFGbWglrZCsrYDEk8psjtjdzHtxqq
+	GnjLc6FRMEcu69WALg1PrVPbThI0EEwhm+EP2/EPYuHKb8pVmXoBZZ/BT5GWbcwdE90MPUeNRy7
+	j0ou2OLE9ngEFc2hs46hDk+NILv5txX11brbSfVxXf+SsuF35oco
+X-Google-Smtp-Source: AGHT+IG2X0pomsnFUCQa19hCElWt5qNsJlHFQAhMvQ4eYIPhael32C2ELAIMHyvCUOkhzqa8EkvDjA==
+X-Received: by 2002:a05:6a21:3942:b0:1f5:8cf7:de4b with SMTP id adf61e73a8af0-2165f84b77fmr28235687637.16.1747781319816;
+        Tue, 20 May 2025 15:48:39 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:644:8500:5dd0:565f:91c6:a34c:f6d2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c86asm8739999b3a.57.2025.05.20.15.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 15:48:39 -0700 (PDT)
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Tue, 20 May 2025 15:48:37 -0700
+Subject: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.23840 YMailNovation
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMQGLWgC/x2MQQqAIBAAvxJ7bsEsofpKdLBaaw9arBVB+Pek4
+ wzMvBBJmCL0xQtCN0feQ4aqLGDebFgJeckMWmmjjFYoVzzRhx3dcvCMVjw6frBrlDXt5LqmriH
+ Hh1DW/3gYU/oAqSl0WGgAAAA=
+X-Change-ID: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
+To: torvalds@linux-foundation.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Naresh Kamboju <naresh.kamboju@linaro.org>, 
+ Christian Schrrefl <chrisi.schrefl@gmail.com>, 
+ Russell King <rmk+kernel@armlinux.org.uk>, 
+ Rudraksha Gupta <guptarud@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org, 
+ laura.nao@collabora.com, lkft-triage@lists.linaro.org, 
+ regressions@lists.linux.dev, Nick Clifton <nickc@redhat.com>, 
+ Richard Earnshaw <richard.earnshaw@arm.com>, 
+ Ramana Radhakrishnan <ramanara@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Linux Kernel Functional Testing <lkft@linaro.org>
+X-Mailer: b4 0.15-dev-8865a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747781317; l=1766;
+ i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
+ bh=/2Cb9WY6bPkayYtI4ghDmErFFoZgsljPtztUSgmA8/8=;
+ b=dD0YMCC8TsOC7IFCio+JlJzS+fFX1g0IwQRGhA9s2diSjuMpAGIPX3Ee2hG9VahQMcIbrK2cl
+ bN54N5hVbo7AGgCE/g84rx9JmJkY+x9eoHA3sVDBMeJ7VKlSVi2Ujca
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
-Kailiang,
+Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+disables a GCC feature that we don't want for kernel builds, so let's
+skip it.
 
-Just want to follow up and ask if any other information is needed.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
 
-Thanks,
-Ruslan
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-On Tuesday, May 13, 2025 at 06:25:28 AM EDT, Ruslan Nikolaev <nruslan_devel=
-@yahoo.com> wrote:=20
+Tested-by: Rudraksha Gupta <guptarud@gmail.com>
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+---
+Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+disables a GCC feature that we don't want for kernel builds, so let's
+skip it.
 
+It seems like this bug went through the cracks, so I went ahead and sent
+it. Hopefully nobody minds.
 
+Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com/
+---
+ rust/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..f207ba0ed466 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+ 	-fzero-call-used-regs=% -fno-stack-clash-protection \
+ 	-fno-inline-functions-called-once -fsanitize=bounds-strict \
+ 	-fstrict-flex-arrays=% -fmin-function-alignment=% \
+-	-fzero-init-padding-bits=% \
++	-fzero-init-padding-bits=% -mno-fdpic \
+ 	--param=% --param asan-%
+ 
+ # Derived from `scripts/Makefile.clang`.
 
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250520-rust-mno-fdpic-arm-fix-940a58bf9433
 
-Kailiang,
+Best regards,
+-- 
+Rudraksha Gupta <guptarud@gmail.com>
 
-I added alsa-info outputs to=C2=A0https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D220109 (see attachments for both the regression and reverted changes) =
-by following your instructions.
-Please let me know if there is any other information you need.
-
-
-Thanks,
-Ruslan
-
-
-
-On Tuesday, May 13, 2025 at 02:30:17 AM EDT, <bugzilla-daemon@kernel.org> w=
-rote:=20
-
-
-
-
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220109
-
-Kailiang Yang (kailang@realtek.com) changed:
-
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 What=C2=A0 =C2=A0 |Removed=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |Added
----------------------------------------------------------------------------=
--
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 CC|=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 |kailang@realtek.com
-
---- Comment #3 from Kailiang Yang (kailang@realtek.com) ---
-
-Could you run alsa-info.sh to dump codec info?
-
-Please do =3D=3D> echo 1=C2=A0 > /sys/module/snd_hda_codec/parameters/dump_=
-coef
-
-before do alsa-info.sh.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are on the CC list for the bug.
-You reported the bug.
