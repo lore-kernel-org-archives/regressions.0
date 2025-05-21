@@ -1,223 +1,148 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2029.outbound.protection.outlook.com [40.92.91.29])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88D31F1302
-	for <regressions@lists.linux.dev>; Wed, 21 May 2025 11:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825516; cv=fail; b=EJtZrw+XbRKVhd9/pUPrmnmR36uBsim9UZAsUhzLbtswla7j02ikACxKU1C3NlgAiI2gY877wY2YiD+HXjebfYmUzQ2K919m80Eru5h+M1PhO/Fgf9k1N0JDZxDeNd2V1je3v/EMI+PZ9EJpaq9/OMbfB9QoriFjmxQFnDunXLU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825516; c=relaxed/simple;
-	bh=NcUwAB9CxEJ1Hkn7TO/jkEd8hbJKtVaHW0C5tKG+O4g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VC0px2En1nojDvr3CuWYR5YnoDVKtZ0atQFgzjrv0WER/GpGYUKNnQs0bH+zB5IuWRC/5o6Vki/ObT6z97ojtxb+fQgkoO3L2WnDpplprsAcJIhHTdT8eyllIlwdu4HpEo0gP7AiTCqB50kRw0/dESep93T0/4Os1ItucF2okZs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=fFM5U2Cn; arc=fail smtp.client-ip=40.92.91.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9037125EF8B
+	for <regressions@lists.linux.dev>; Wed, 21 May 2025 11:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747827390; cv=none; b=VkPn0gOmq8o1Ub+WOBbLO2edFAVoHWBuPrVrVlePiELTYK2VKbc1n/sljxRqiWq6yxBK1EC2IsbFOsqLxLQ6cijTKh3IZKq1aVpuC2DBXjRsCrYZ28Va9o8iY4qTZd4HZirmNi8+VpZ2fcLTlUx/DlPgrs+nppWYCTBZkWdG4kY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747827390; c=relaxed/simple;
+	bh=xTbNpjfZN34GRRoRHO5aWamaazzkYztBSsMKGrn1dvE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HsM7+lc8bf5ctaRMHnoAfpJhxPCIu+9f93Ln9on41weafjvxpDEb/xHWa1MNX6X5A0sUg6uKkvw67ZgmqBQ4ls2Hv3QLqEEKTy8szYRbnW+LpKdrt1ocb3RQcds6JvfpL5LdsDscYzMRTtgQn1Y5uJPS3s3gmaSAL2tt64lc5s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vfTiLOfE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qm26I6T6; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="fFM5U2Cn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bViW+xFSA9TqXPeT8u92ExbQpwOrqQz992wFoJ1NMosdDdeb6M8KBKotH1Dl0BDJ7AIY+KhYIWSgxNmP3Nwdj7RrbWLB5ZPM1LI0uPQh5FFfBh0heMdNuvvxLsH1gmArs/kzh1ezSZI1RUsHuB2UEXJB+yn/KtPMb4RkIA9mxJ6ERt9z2ISz3ohRoW9Z0TUmvpcbQi+W/ss8X9YgH7m9El8J6ssZA8IH6fdA8mwFHmC2D1/7+nxFP6IrvJMXU0B857re5Svx6DchqFF7HqzGXUO9OWZ7ha+pgaH3yPv1Pd1wFkJJwrC/7BZda5FmokXJ5iPkp+ZVNDV2knWX9KVmww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tw85P9YwRjKNrgrf5Ru3nv73qbAnl/PSpEz2ojAEV5s=;
- b=V4d+JmYFh/Ubq3cX027/auuI50fXRkoOiWKQnmPeA3Z3IBdcReb6XOGFPKyLgZHJTOsjOJQyCV2IiEk2Q7Pdyvq62hsgfRQw+4A9ofhokfMW1nVcvaWJeoRD1sXKRXY/o2cWSqvb7Tvi8oxeVGcJCUkALU0iCp0YOgUS2OnvhktZcK4+YiaebZiPsxiRuYw/Md3qfIkZB3nqOusjY7DW54PYoeHWS8kObVd2sLZqh5XnsCSjDzOYMocNIU/69SO6BI/T7UK/EscQq7HIXLuk0rS7Cr4HYd6Ws0vJZ8Nct1bQ/2ADA4gMdvlRtIH3XLe7Rs/muV7cBPM1gdPIhz5/9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tw85P9YwRjKNrgrf5Ru3nv73qbAnl/PSpEz2ojAEV5s=;
- b=fFM5U2CnRw+5vP7XPiZhgNcrmy18VuWz0K+9sqS34z/8oOZFIEsiYmyMJE8jk7kiZv5C6eSgN/WHIVTRcQNyVQJkl618N34FQ0PKYvnaKAyp9QtRiElrjWv+YvoXLYmJolWbW9fmlk/k5+cxceoBOGBNecVvMZJ9fG72de9fkCJZy66QJFYmykFSsd+v0CV2+tIDVvpzVhLWLZRoikV18IjFekoaAT8xDjNVdXBuEauXH8Qvec6fE+b5AwuG0TmKzfuiwiH93S2sAzih2gbwmxwD+59UwwSl5sHYFTvpNm3vg2p/DuXmfHg2VUclHnK/Rv+7jHXZjgJrz85iWPRs1w==
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:175::17)
- by AS4P189MB1941.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:4b8::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
- 2025 11:05:11 +0000
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a]) by AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a%5]) with mapi id 15.20.8769.019; Wed, 21 May 2025
- 11:05:11 +0000
-Message-ID:
- <AM7P189MB1009A8754E90E4DE198DAC32E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Date: Wed, 21 May 2025 13:05:10 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: Panic with a lis2dw12 accelerometer
-To: Christian Heusel <christian@heusel.eu>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linus.walleij@linaro.org
-References: <AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
- <8d249485-61f6-4081-82e0-63ae280c98c1@heusel.eu>
- <3352738d-9c0e-4c23-aa9a-61e1d3d67a50@hotmail.com>
- <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
- <60a9ea8a-edb1-4426-ae0e-385f46888b3b@heusel.eu>
-Content-Language: en-US
-From: Maud Spierings <maud_spierings@hotmail.com>
-In-Reply-To: <60a9ea8a-edb1-4426-ae0e-385f46888b3b@heusel.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM8P191CA0009.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:21a::14) To AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:175::17)
-X-Microsoft-Original-Message-ID:
- <ff8a1abf-8238-44f5-9433-c3a1aea07746@hotmail.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vfTiLOfE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qm26I6T6"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6A04611400F9;
+	Wed, 21 May 2025 07:36:27 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 21 May 2025 07:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747827387;
+	 x=1747913787; bh=CIqSpvAb/w6MeH6RH67fY52ebgYd8rXK46WCijqn65A=; b=
+	vfTiLOfE4IW0yqfJigIDkPtieD+Z62J7ROahJoOV3fbseZ7jUkYbDtIuSCEPqkuG
+	+oCs6jwdHL3prGZtcjz7FFiArCeSVMo72jS6U4J/eki/TKQjL2nW2F1k1mEjX8uD
+	HdqmN50HIhgxXnuE8p33LQMSrE3iYfX4/6eIsFswHfFbxHMHRkMbvSBvEdjgM8+y
+	Qoh6ZOXnp8q5CWkDrHt6oWa+02Kgr8xNQSNCSjAcx5RBtvijBTVyOGICemU7ELiJ
+	KwyOnzIpzhvkIZcBvVKZND0dRaDNWb+nHTiwUvptE6bzjwda0wax2YqiOX8BSJAO
+	RnhG5VyMhhd7iD4Gsbcm4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747827387; x=
+	1747913787; bh=CIqSpvAb/w6MeH6RH67fY52ebgYd8rXK46WCijqn65A=; b=Q
+	m26I6T6LBBO7C6YjNTdTE4YnRrssA4bKvIObFFS9nEnwZvcOqLmGcS2Y7bs6dd+6
+	WRPR0AtmCfzFKMt3HHzpvHFYC88z7cTWKSvGDmXYnEGjxcw5w+M6j/lEjYAnzcRV
+	mxs4inr+tHc6TfuMmSk7yJe9wHU1LgWXjxd1Jkp4OGZVqUexmfp5QCVBEQNTCggD
+	axrlfpTnnqajL01h7xqhl6Ken+mj/Oe9j1f1xgtLLJQyMndVgUfFNeBFVWli0HQe
+	a4pB8RvYyjy0MibHNKI9QWEWOZ4BoeMt+mhENMhst/IrXwtay6WbLtzDlai4+23J
+	uhJqzcEqoyk7jks8bRN0w==
+X-ME-Sender: <xms:urotaFEuekNqLsitrn6lKiIId9aYo-rtbMyuwo359I2Tu9F_aCijHg>
+    <xme:urotaKWaRLl2lU9VtPgzqAoIu7au1wGwWHBNlTJYPhSdDA2k3DLL6holwe69tWkq0
+    wlIRpTRerWh_cqlLbE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvleekucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
+    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
+    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
+    nhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtlh
+    grsggsvgdrmhhonhhtjhhoihgvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhlrghu
+    shdrkhhuughivghlkhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhomhgrihhnrd
+    hpvghrihgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehhvghrsggvrhhtsehgohhn
+    ughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepsggsrhgviihilhhlohhnse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidrug
+    gvvhdprhgtphhtthhopegrrhhnrghuugdrvggsrghlrghrugesshhsihdrghhouhhvrdhf
+    rhdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:urotaHJuoiLvTugjsJt7qszTsX2Wvsj0CUYNtGCZ3I0Nz7YGYTujXg>
+    <xmx:urotaLHeXqAIrP7KXbC1evzP4RyxPwoH2hv2IhusQ0z1Cev3Gh7j_w>
+    <xmx:urotaLWb54lmDMOIFroeYrVI5uFAK3FWiINkdDX5c1tQF6LUOsGEVA>
+    <xmx:urotaGOGRM9oYGiC-x-rJtcMZ59LY1gFHGxny_8RyjkkQXav2IsYkg>
+    <xmx:u7otaNKUdx4VygAsSDKp3LfVXkd4eW1NGM8aXEvEKPVixVG9mFV8JztK>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C14631060061; Wed, 21 May 2025 07:36:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7P189MB1009:EE_|AS4P189MB1941:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18b074e7-5715-43d7-152e-08dd98575af4
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799009|15080799009|19110799006|6090799003|461199028|5072599009|4302099013|3412199025|440099028|12091999003|10035399007|1602099012;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZktEc1RYRUFXeFdwUGZ5SmxQQS91WURvSWRKVDRHRTY5M0NNVWcrT1pRRWFz?=
- =?utf-8?B?L0NrTzFwZjdhVVVGVEJIeGJ2OGlkb0dIVm9pTDkzUzhha1B6QlA4UkR5Z2wv?=
- =?utf-8?B?b1JuVThnSTBlOUZycUpaOU0wZGNUOFNxaVM1RjJDOWpJQlFJWS9rdmdQNDIy?=
- =?utf-8?B?M1NNNTFORzJaOHlUQzdKSVN6REk2eHg3Vm85RUU5ZU5hRGJGOEdjUnU0VkYz?=
- =?utf-8?B?OGFHZHhwQUZxdnh1Mm9Fb0JMOUczbzB4L2ttQ2VTSVVBQXpFM3lMVlJ6eFJN?=
- =?utf-8?B?OFV1T01ETzdzd0dVMnZjVEFaTXNvd1Z6Q1pPMnUzTUZRbTRuVzUwM1QwSmNv?=
- =?utf-8?B?Vkp3RDJ0ejV2WE9hUUJzSGFHTUxPNHZhcUlRZi96NHExYTh0VUk5UGo2SHF6?=
- =?utf-8?B?NlFPSys5NXVyL0pSd2RKK0hvQnBvU1FORUg3akFrMUM3cGJCUTdOY3kxdTNN?=
- =?utf-8?B?aGVmcytjNGozb0FWdWVPalQwREFtc05sVzdCTmh0blkvY0NJSG83dExSNjZT?=
- =?utf-8?B?ZzVFNzFiOW81MnNrTDhmMUFHQkFPdWpmSGxRczU3R3cxZFVUKzV3b2puVXhh?=
- =?utf-8?B?SkZqalN1Y2JrQUc0RnZOYjlqRDNZWFAyR1dFbVlaSUN5NWxtM0JoNUdEMFF0?=
- =?utf-8?B?eHNFYjU4V21MRG9qK3duMWlWNFJESUtUOFdyV005amVtVnNBd21qLzVSb0sw?=
- =?utf-8?B?UkRYbG1YeFlyVms4aTFPUW1zbHh6bFNMNFMzZkdHaDh1QTdRUi9HOTBaY2NI?=
- =?utf-8?B?UDBnYVdMUCtSb29qKzlhNUJ4b093L1NHOTdFckhLZG1Rems2SWx1anhQM3lu?=
- =?utf-8?B?UUxjYlFWcUlodUtncnZnRW1LOEdMaG8yRHBQdGxTRS9lRDRFbVQxL0FPM1Jv?=
- =?utf-8?B?VGRZQ2c5T25pMFI5YVZEOXFBSk9vK004cHlzMTBqNlI2TmIza2Q1cjBSVlYv?=
- =?utf-8?B?Ukprb1dhaTFrb2pkU1FxN0VZOTBVRzhRcGhQVHlhUnpvQkxCdmZEdWpjdHc4?=
- =?utf-8?B?ckZOS2xOU2hpT0VZV3hhd2phSzVaeENvYzZFT1hkTHJGcGVJUDBkbVJzc0xM?=
- =?utf-8?B?OFF4NG1oclR4R2RycDdnM3M2eEpBUnpWczMzM3RNRThGMllRWHBhdlJGRmlp?=
- =?utf-8?B?ZmNtSjVoZ01aRVR0Tk1mbWF0dVVZb0ZTZEVmdkRHaEZWMVpINXZlVW16Qm1n?=
- =?utf-8?B?ZDRjdW1pVElWS1drUXcydlQ1endLNHVPNXZ5YjVHK0Z2YWV4bjF4SHhQYnJr?=
- =?utf-8?B?M3BQQnFEMktoOHpYcjgydVZ2aFVTblNVNy9rQkppSmFRTXRHQ0Vtb3JjREMr?=
- =?utf-8?B?SGpJSTdDL1VqaHkxQURiaGU0dk5ZTE50SktZTEpoTkR2aGVSMU5NekozcUFs?=
- =?utf-8?B?Q0QxL05SSjYzdXZndXFYVVAwYjhyVjkrbm9HVXJRUjU0QS8reFhmc2RzcGZ2?=
- =?utf-8?B?QTY4cVZVRk1kTE11WHlaS1FaVnZMUllhY1huSWlGT1RwWWRYUUw0eUVlUG5K?=
- =?utf-8?B?QmNyQ25CaUpGNnhiSUlma1BHUWQ5cklkOE93VHgzald2c0duVjlTTy9NQndn?=
- =?utf-8?B?czM5L0hqWnk3Ymp6dEk5VXNtWG1LdzIxMnpydVN5SnYrZk44aHV3d0JBYm03?=
- =?utf-8?B?SkFibFg5OTl5SzVkNzVnWXBCSFdrL0p6SzFjNnlLdzJXMms1TDNqQnVBWmxF?=
- =?utf-8?Q?iR9KpUt9sqXRK75WxNod?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ei9GVUU3WVpIOXVTRnZHN2liU1Y5RTZnNStVVmtHVnhROTFJTDFDclp3WmFy?=
- =?utf-8?B?OXZwQ0RseERzSlhOSXhQalFRSTRGWmZPT2RRelQwbEt4MkFDeTk2MGxpV0RY?=
- =?utf-8?B?enpDM1V5ci9OTW9JK3U4Zk04Vk5wUjIvQ3gwcXZOQUovbVVYTTNtNDViczZz?=
- =?utf-8?B?SWNzVzJCNEFxT1dqbkVHOGtrUkN4TVdFL0EvWnNyd25uSmZ4ZXZXWnNQU3lh?=
- =?utf-8?B?dm9CSHVjOXBZaUNtNlJ2ZXNpU2hhYU1TSDR2Y3I5VkliNUQ0R0gvWTRoSEtr?=
- =?utf-8?B?elRvcTRBS1R5Z2NoUGhyaEZwV2JyS1R0NlFmcldZNjFqL2lwQWRyM0tHSDJ6?=
- =?utf-8?B?S1k4eTZkY3hjVnhEbmFwVmNGZzlNVlVvT2x3dEhHZVBDY3Q1OFNIR3NOVGla?=
- =?utf-8?B?MVh1TXZSRWhlUVY5REpUUWJvTzlXTW4xOFl2UC9oQk5uQ3c4emo4S1R0a0VD?=
- =?utf-8?B?MEpDUGdzdFFXVnV0d216SmN6RlpGTjVkM1RJWUx1Z3ZDSDRVdzFvOGEvYjFI?=
- =?utf-8?B?YWx0WHVZL2FCM1YyMHA3TC96eDd1SGRENGVHeDdHOVAvRkdhb2djbUV0MXZq?=
- =?utf-8?B?M3lOUUFsQU5NU0VwWHF6a2FaNTZoNmNPRUxGZWtmbjhzREg3K2VGWDliaGdt?=
- =?utf-8?B?M29pSVB5Rm1MOHl4bTlyVGVyS0lES3JaVkpPajk2TmhocVhiUHY5VDhhTXYv?=
- =?utf-8?B?eno5NnNnZ2lYT0F5bDFWWXd1bDJDUHdqam5SRERLVndHdEZKamloRkhia3hU?=
- =?utf-8?B?Z3YrSmJGYVZpNDQyK1VJM1A1ZzdwWGp3dmxHbUpmeHRJWUoyWCsrZGZsVzFD?=
- =?utf-8?B?UmlCZEpkbVNrUlN1aG1kV1p2cjlWQTJiOVZRUFNMb0FBYis3cHcyV2FYclQx?=
- =?utf-8?B?azFDYTV4YTJuRENkQyt0alFaRG5qNW5oUzVPaDFnVVJ3Wk8vSUVNSkpKS1lV?=
- =?utf-8?B?Uitzdm5CNGpsTnd3VnF5cUJZd0FZMlR1RmdXM0o5cEl1WiszOVVIMU5Sd0lo?=
- =?utf-8?B?SmdrWm9pLytrK3QwRUgvenc2cU9IM3djSng3Y2t4dTY2K2VDa0FWMzUxdnVr?=
- =?utf-8?B?ZkJydm5ZcXlMRHFIa1AzSnRXRjhTdlBiNnRZaW5iT0hGeXZpNmo4MjYrd0c5?=
- =?utf-8?B?eStoWnhqNk1lSHBGbFRmQ1N5YjRvOTVtMDl4UHJoN3NnZXFOVlRLQXZ6SDdC?=
- =?utf-8?B?VjBkSVlJUEJMM2VXdVZOdXpVR245c1MwVUxEMTk0bUFlOGZxNTU5eTFLMUhl?=
- =?utf-8?B?dURPT2xkZHdkbGpFK3pVZUpBN3V0SUpUSU5tSGk2VCt6V2Rwa3huNzc1eWEw?=
- =?utf-8?B?aW1vK0U4ZUhmU3REb3JnaFl6cEVKSTgrZ0xvS3JBWVBvNHdqTUZMZTlwZWRt?=
- =?utf-8?B?eWM5cURwUFJ3S0Y5cHlTZGZFTWhNOXhQYnBvTVVmaXVFSmlvYUR1VlRXQ1ls?=
- =?utf-8?B?TzF1aEYxZko4ZUc3dzB0YzNNeDRoYTE0Z2ZXY0JhbzdJNHRVVlVVdHZ3Q0o2?=
- =?utf-8?B?a0hoSjkweS9mK0VCa3VQaGFyRS9PZG9FNS9xdUVzd2ZrTVNpd0ZLN2RmRUx6?=
- =?utf-8?B?Q0pBNllXb0pXSzFkYVRqcGkxZVRtNDcxS01OaUw2bUV4WDIxSCtydTZkUFd2?=
- =?utf-8?B?VzNacUtsc3NnanhMUklGTm0xT2U1YmxlblVwUzRQUHRkNldiQXdsWXVwU0tU?=
- =?utf-8?B?TGhNbVhSMEEwdlVUMjJBWVZrNkpWTEh0T1FCRGFPaTBIak1DNElvTGsvU2FR?=
- =?utf-8?Q?wmjhK5wu5OhfpNn01haxvVV36uhblT5f+bZBtyP?=
-X-OriginatorOrg: sct-15-20-8534-20-msonline-outlook-2ef4d.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18b074e7-5715-43d7-152e-08dd98575af4
-X-MS-Exchange-CrossTenant-AuthSource: AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 11:05:11.6804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4P189MB1941
+X-ThreadId: Te525b7ee476102fc
+Date: Wed, 21 May 2025 13:36:06 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Herbert Xu" <herbert@gondor.apana.org.au>
+Cc: "Corentin Labbe" <clabbe.montjoie@gmail.com>,
+ "Klaus Kudielka" <klaus.kudielka@gmail.com>,
+ "Eric Biggers" <ebiggers@kernel.org>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+ "'bbrezillon@kernel.org'" <bbrezillon@kernel.org>,
+ "EBALARD Arnaud" <Arnaud.Ebalard@ssi.gouv.fr>,
+ "Romain Perier" <romain.perier@gmail.com>
+Message-Id: <1024b1b7-9d58-4db4-a71a-108f6df7b623@app.fastmail.com>
+In-Reply-To: <aC2p6xkMz4BtzPYH@gondor.apana.org.au>
+References: <20250515182131.GC1411@quark>
+ <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+ <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au> <aCcyXkeBvHQYvf2d@Red>
+ <aCczV6MF6xk5rRA3@gondor.apana.org.au> <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au> <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <23fe1dec-032a-41fb-8e60-3a1b6c098c4e@app.fastmail.com>
+ <aC2p6xkMz4BtzPYH@gondor.apana.org.au>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 5/21/25 12:08, Christian Heusel wrote:
-> On 25/05/21 12:03PM, Maud Spierings wrote:
->> On 5/21/25 11:48, Maud Spierings wrote:
->>> On 5/21/25 11:29, Christian Heusel wrote:
->>>> On 25/05/21 10:53AM, Maud Spierings wrote:
->>>>> I've just experienced an Issue that I think may be a regression.
->>>>>
->>>>> I'm enabling a device which incorporates a lis2dw12
->>>>> accelerometer, currently
->>>>> I am running 6.12 lts, so 6.12.29 as of typing this message.
->>>>
->>>> Could you check whether the latest mainline release (at the time this is
->>>> v6.15-rc7) is also affected? If that's not the case the bug might
->>>> already be fixed ^_^
->>>
->>> Unfortunately doesn't seem to be the case, still gets the panic. I also
->>> tried 6.12(.0), but that also has the panic, so it is definitely older
->>> than this lts.
->>>
->>>> Also as you said that this is a regression, what is the last revision
->>>> that the accelerometer worked with?
->>>
->>> Thats a difficult one to pin down, I'm moving from the nxp vendor kernel
->>> to mainline, the last working one that I know sure is 5.10.72 of that
->>> vendor kernel.
+On Wed, May 21, 2025, at 12:24, Herbert Xu wrote:
+> On Wed, May 21, 2025 at 11:58:49AM +0200, Arnd Bergmann wrote:
 >>
->> I did some more digging and the latest lts it seems to work with is 6.1.139,
->> 6.6.91 also crashes. So it seems to be a very old regression.
-> 
-> Could you check whether the issue also exists for 6.1 & 6.6 and bisect
-> the issue between those two? Knowing which commit caused the breakage is
-> the best way of getting a fix for the issue!
-> 
-> Also see https://docs.kernel.org/admin-guide/bug-bisect.html for that,
-> feel free to ask if you need help with it!
+>> I did not see the entire background of the discussion, but would
+>> point out that this is not supposed to work at all:
+>
+> We're trying to find out why this driver fails under concurrent
+> load.  It works perfectly if you do one request at a time, but
+> when you hit it with load coming from both CPUs, it ends up
+> corrupting the data.
 
-Thanks for the link, I had heard of it but never done it before. This is 
-the result:
+Ok. Which SoC exactly is this on? Armada XP or Armada 385?
 
-ed6962cc3e05ca77f526590f62587678149d5e58 is the first bad commit
-commit ed6962cc3e05ca77f526590f62587678149d5e58 (HEAD)
-Author: Douglas Anderson <dianders@chromium.org>
-Date:   Thu Mar 16 12:54:39 2023 -0700
+> My suscipicion right now is DMA corruption.  One common thread
+> seems to be that if you only use dma_map_sg it works, but if
+> dma_alloc_coherent memory is used then it is corrupted (this
+> isn't proven yet, it's just what the printk patch was showing).
 
-     regulator: Set PROBE_PREFER_ASYNCHRONOUS for drivers between 4.14 
-and 4.19
+I see. Just a few more ideas what it could be in case it's not
+what you suspect:
 
-     This follows on the change ("regulator: Set PROBE_PREFER_ASYNCHRONOUS
-     for drivers that existed in 4.14") but changes regulators didn't exist
-     in Linux 4.14 but did exist in Linux 4.19.
+- the SRAM gets mapped into kernel space using ioremap(), which
+  on Armada 375/38x uses MT_UNCACHED rather than MT_DEVICE as
+  a workaround for a possible deadlock on actual MMIO registers.
+  It's possible that the SRAM should be mapped using a different
+  map flag to ensure it's actually consistent. If a store is
+  posted to the SRAM, it may still be in flight at the time that
+  the DMA master looks at it.
 
-     NOTE: from a quick "git cherry-pick" it looks as if
-     "bd718x7-regulator.c" didn't actually exist in v4.19. In 4.19 it was
-     named "bd71837-regulator.c". See commit 2ece646c90c5 ("regulator:
-     bd718xx: rename bd71837 to 718xx")
+- I see a lot of chaining of DMA descriptors, but no dma_wmb()
+  or spinlock. A dma_wmb() or stronger (wmb, dma_mb, mb)
+  is probably required between writing to a coherent descriptor
+  and making it visible from another one. A spinlock is
+  of course needed if you have multiple CPUs adding data
+  into a shared linked list (I think this one is not shared
+  but haven't confirmed that).
 
-     Signed-off-by: Douglas Anderson <dianders@chromium.org>
-     Link: 
-https://lore.kernel.org/r/20230316125351.2.Iad1f25517bb46a6c7fca8d8c80ed4fc258a79ed9@changeid
-     Signed-off-by: Mark Brown <broonie@kernel.org>
-
-  drivers/regulator/88pg86x.c             | 1 +
-  drivers/regulator/bd718x7-regulator.c   | 1 +
-  drivers/regulator/qcom-rpmh-regulator.c | 1 +
-  drivers/regulator/sc2731-regulator.c    | 1 +
-  drivers/regulator/sy8106a-regulator.c   | 1 +
-  drivers/regulator/uniphier-regulator.c  | 1 +
-  6 files changed, 6 insertions(+)
-
-bd718x7 is the PMIC on this board, and one of its regulators is the 
-supply for the lis2dw12. However I feel this regulator driver is not the 
-actual problem, but the actual probing of regulators in that driver just 
-doesn't work well with the asynchronous probing.
+       Arnd
