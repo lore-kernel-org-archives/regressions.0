@@ -1,106 +1,241 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE5118BBB9
-	for <regressions@lists.linux.dev>; Wed, 21 May 2025 14:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBAD1E1DE8
+	for <regressions@lists.linux.dev>; Wed, 21 May 2025 16:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836442; cv=none; b=SpJC/QxcFAuVf9IcLZCM0ioL7rD7viYwWGZf2dUdxh8v/vEyTsqWBTfIG//Yly4fw/Q1J2h4nxlOlw8D/RwQmkU6N3mJX7mmVGN6th70LpM/LVV3oswbRdcgyLSSrGjTyxipd+mERwZ5LYhq+ZpozD0ZPw+JHLUdLEmdkSIAGHc=
+	t=1747845639; cv=none; b=Nj6+F6BJYQFM10UtBDZRD14Xr71+Ux0Kd3ZQtixzMSuIBSAayY1d/2MvJ4X1EbaDVCrTiuEIGwEJcL1jyg5q9ondtVbFOJJVjGY0Poadg7G/h6XGM9bCN139MECEJkJQi1NYstgpMcOzZkSbtSqc28Hs15tqa1adEypvxzvIx7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836442; c=relaxed/simple;
-	bh=wCs14DxQ5NqkyOeBSguPQlw1Wnbae96Ke81Jokz+gII=;
+	s=arc-20240116; t=1747845639; c=relaxed/simple;
+	bh=i+IU1QCJyrmxUj+2NG/biIrn6pnadTEnC90RSDK6E6c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pA5bp8Leu29y/HHlrqfT19DD8e+MmFRb4DUyIZJPgVyQgRw03HC4KyWa6R/ejBAiyvWglSW4SEDmOzsQ76uLfbeaNswbO5kN0mZa6snm2aBHTpwicBXtNasY5U6ILTI5TlIS97bwMSA8NlPl5QtN/jq1DOVDflGcn2JYK1nk2R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B89/wFdc; arc=none smtp.client-ip=209.85.216.41
+	 To:Cc:Content-Type; b=N21uAGY6TC5QKKsB8E8WSTmaWIIzdXKYfHR690h9uZtOgfbkGTHS2I7XkxRWaWQhyw9rswfa8Bm/yk544TY4izy3OIAT8rS9mSYVdyk7QsRWg+F4JQtEKWkI3W/FESRCuRTJiuUrJ/PfsOL6lp98RrLgTfhbyEHkclvm6uYize4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PfpkXcvH; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B89/wFdc"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30eccc61f96so757595a91.2
-        for <regressions@lists.linux.dev>; Wed, 21 May 2025 07:07:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfpkXcvH"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-730580b0de8so4817038a34.1
+        for <regressions@lists.linux.dev>; Wed, 21 May 2025 09:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747836439; x=1748441239; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1747845636; x=1748450436; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wCs14DxQ5NqkyOeBSguPQlw1Wnbae96Ke81Jokz+gII=;
-        b=B89/wFdcp/KNuEkaq9jhqLzMB4wuIFicN+NYmy90YALd7kqdTNDL9q67Ts4zG4K6n/
-         9kz7DTNzC0aEpjiEA/8l51h9LE6hOxP7zhmInyU7doG/P2G3VodH9ruhw4lO2lNyxWhX
-         Meq8acDgcmbx/jCBq+b4138J3AP9W54WD9ZnO80BgvcI8AdcKz5QR6wORmMspZMRFVbg
-         8CuhIGV5VZLLyV5Hk5c7oxZXnQmZc47VoMsmneGZ8VUXxTdnN0NRlUjrWHoXI8l8HSZl
-         h5eDAPXVqzyY6emMaBn7+4N061iUKXqC9BoVt0sSobETRHHHh/rwgAGeDeRqKMFjYhLA
-         ie3A==
+        bh=QbKXb/kp3YLXJYoIi/689hXGBZs3zu8VOmGvJyjvrIg=;
+        b=PfpkXcvHcJugCXk6Z4Y8DyM+hAl3S87G2E/ToE1U/FPZVpYs6Rj2U4FVRJQPudcCg5
+         Oj/2hbJU1RGf3IXP3gE3ZcAiXC4JFkMoEPcbLIwiq56loIhHynrhz7H88nxwd5sEoWgT
+         lMt5bf9mObmG70baSvSjYoEZNc/Tz1StMH/TpeH+77ahwSfQZk1vc+AmyYSfXTlmm8Px
+         3w3gnfKQ7q2ZIps6LxJOpgOddekqCgnwWIJjVe1RQ/OpL8qQEOlqUhgV/4S/KQ6XTC/P
+         zy3NluA+QSkpNEpiv0NYzVf9tSFgWxHyBtQa2AQH+A8ehkDJDnWT9Y1zscvA9Od3TIzN
+         Qyvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836439; x=1748441239;
+        d=1e100.net; s=20230601; t=1747845636; x=1748450436;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wCs14DxQ5NqkyOeBSguPQlw1Wnbae96Ke81Jokz+gII=;
-        b=YHA+K+IJKm1V/Y84wcGHep1smNnwy9m3fzMEnekFXAZW/dI3u7+/cLmB8AWQ7SJ+Bz
-         kkHYAjr32OLhHXk+hn2W0aQYyonb6FijSrjGVyzmYIkfil8/+ug23XA1eJRLOjjBQ+un
-         ddezkNQ+BQtqdIaAsV4ZNt+rQKrtb17IeHl4kd7SpmGh8Z2Wbr0XnULg6QUympJdRGzW
-         paolx4C8lrJ0VML+cqXYSpsQjtx37HhAxABI07hQ8+Fa5mSw0n6l9Q9I7mbif/Zvsl0h
-         mScZlt8CRcxCFOftP/GUlm78vRLAMoQWmc5ZQqbFxyeYX6IzvDX4Un48i87hEH4anZSW
-         0s6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXoC0/L7yBsxi6qMXP4AehS8u9fWUssrssEAYh9ns84dCwsgJNOedsGYf2IEIlngmZ0AlU9b7X8BEQ79g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz2iU4Ao12b0/+rxY2S7SWHzravJSHNKgfGjX8enBZipWGPy4yR
-	qxiQo4uprJ97YJEfoY8rDfbVH62+TIx+UMNxbnSDdupaBZz7Sx/92aslMXE3U02H5dAVTJDkqhq
-	BzthvP+l4uTolekTOP0EmPSzfvuXnUEs=
-X-Gm-Gg: ASbGnctUsA3Nnt9DQvn2LatKE+cJyYtT7dLyK4h0WnhCQZ/I2YfZ+ghAgKQbeXptG0K
-	092fqzKN0vZ4n/dstAipUCkCXPZs/wpjdDkaeAaZ2HGcIOE+UNXWNSTc6s7vNbLCEJStLMwRwaC
-	5CC3ULSQ/PlAQjYE+WNz2oGRpnC9I/yBeY
-X-Google-Smtp-Source: AGHT+IF6aBM/50Jwx88vE8L8XntLzVmxeGWByLSHx68fUNc0gFsjGteE5FCLep+weivc24FSmszHPWH/N29VR+FdsN4=
-X-Received: by 2002:a17:90b:1b04:b0:306:b6ae:4d7a with SMTP id
- 98e67ed59e1d1-30e7d5bdb2bmr12445110a91.3.1747836439087; Wed, 21 May 2025
- 07:07:19 -0700 (PDT)
+        bh=QbKXb/kp3YLXJYoIi/689hXGBZs3zu8VOmGvJyjvrIg=;
+        b=JrDSlxT2pdGJCf+9n3GQyuBbVFVo5sZ/9Jm2wiPEubvtHg9Jsv/WIBKslOcXBSsVUa
+         R4ROVUfEYB+TNDNZIFuPK8Du6zmooJhKPLc/yZD2OUzsX5kS53vUYY2259Hf3gQT8S5W
+         1yldK0tFq4+BQS9brKcrC24Luclq7Gj2MnzKsQhOND8H+Wc0doPwKizUmecbTdqbK12W
+         P5ziVgZzymwJGCXIkUu2AhTFZwkchLnykJfEbsmhZFl6v5CrmiWhmbd4TXXs8lIz3n8g
+         Yb8uN9N5eC/GRN7hAqoOoBjwfW5ARcTzk08e5M5qYylU7lr0l/BAM6i5DVZN7fXMS2ir
+         MpnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxVTOrDpgAxl7ijaA8wjjXlaAQ/e56uoKOWWUcfYD78N6kF8qc3JD0IACCVEX42EwNEsbv3FeMKvpOOg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxkp/1w1TFK8AUMnWren9OZ5QuCKDP/S5sNpNaMey6pA6of5nOr
+	aEP1GkyiPKDy6bgjuHLJ5GRw2vzbCwnz+LmZCzPCDyL7UO6kozuTHE4IzSsoz/r/RKH1Fs1tmb4
+	lphELtzmuRvFxzXI8g2RMUfmPzjcRMYA=
+X-Gm-Gg: ASbGncsYLj/5/HpePTXU8BxhEqvOU1nCwDi+00bWqovNrnI2CEuoZW8WKnyfm3xUUOr
+	/B/RIEgca+pTJqanbzySpINkjQiaWTfS8Vu1rdMZt1VP2v03L+5TDZrjI7jTjX4OJ7rugc/yjZE
+	L8Fe9+en8Vhxp7gPr16Q/1xMhL7jgrcTzsoA==
+X-Google-Smtp-Source: AGHT+IHRzqYtPxSRPnFk2+3DUAgyMi453aULIFTaFyWd4/OQ62pgXMsAQz4aLm5vDHuUiu6i/M949FaN1jbgvx+0LzI=
+X-Received: by 2002:a05:6871:2317:b0:2d5:f8f:56eb with SMTP id
+ 586e51a60fabf-2e3c274eff6mr12085787fac.2.1747845636323; Wed, 21 May 2025
+ 09:40:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
- <CANiq72nUFqM7mnpSGZF65n3Aak37KVVSa0d830o31EuZyh+OfA@mail.gmail.com> <d6515a2d-7986-4b53-a655-869d568d4081@gmail.com>
-In-Reply-To: <d6515a2d-7986-4b53-a655-869d568d4081@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 21 May 2025 16:07:07 +0200
-X-Gm-Features: AX0GCFtcjHzj-d0hFEXFvN-nr4E6i5NNd72l4twkSGnegqafCiAQwJElREpdn5I
-Message-ID: <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
-Subject: Re: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>, Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: torvalds@linux-foundation.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
+References: <CABXGCsPLAs+rCktbM_ao3bP3VZuaLqXSMpXZt1m-B9nqf91EQw@mail.gmail.com>
+ <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
+ <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
+In-Reply-To: <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 21 May 2025 21:40:24 +0500
+X-Gm-Features: AX0GCFtFYjMJi9YPXvSgdqYaH5RROiQZ_pBJ31Id_wrVLR1st4fss_KHTUWYW-0
+Message-ID: <CABXGCsMgEnrtHjJvPPmrXDFkmMkU5TN57bU_396PuF_D02oQSQ@mail.gmail.com>
+Subject: Re: 6.15-rc6/regression/bisected - after commit f1c6be3999d2 error
+ appeared: *ERROR* dc_dmub_srv_log_diagnostic_data: DMCUB error
+To: "Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>
+Cc: "Chung, ChiaHsuan (Tom)" <ChiaHsuan.Chung@amd.com>, "Wu, Ray" <Ray.Wu@amd.com>, 
+	"Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 3:57=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
+On Tue, May 20, 2025 at 9:22=E2=80=AFPM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
 >
-> This does, thanks! I'll drop this patch for now then and will assume
-> that Naresh will eventually send it. I was hoping to get this in by the
-> stable release that is set to happen during the weekend (doesn't excuse
-> my sloppiness though, sorry about that once again)
->
-> Anyways, thanks for being patient with me as I learn. :)
+> > Could you more details about your setup, and how you were able to repro=
+ it ?
+> >
 
-You're welcome! :)
+Hi,
+Were you able to reproduce the issue?
 
-Let's see if Naresh says something; otherwise, I think it is OK to
-send it under your SoB after a few days (acknowledging the diff from
-Naresh).
+I=E2=80=99ve prepared a step-by-step guide that may help:
+1. Set up a system with a Radeon 6900XT and an LG TV connected via HDMI.
+2. Install Fedora Rawhide.
+3. Build and install kernel 6.15-rc7 using my .config (attached in the
+first message).
+4. Boot into the custom-built kernel.
+5. Set the display resolution to 3840=C3=972160 @ 120=E2=80=AFHz.
+(This step is optional but may help trigger the issue faster.)
+6. Generate heavy system load. I use an infinite kernel rebuild loop:
+<fish shell>
+> for i in (seq 1 400000); make clean && make -j32 bzImage && make -j32 mod=
+ules; end
+</fish shell>
 
-Thanks!
+Expected behavior:
+System remains stable during heavy load.
 
-Cheers,
-Miguel
+Actual behavior:
+1. First, the kernel log is filled with repeated messages:
+amdgpu 0000:03:00.0: amdgpu: [drm] DP AUX transfer fail:4
+2. After a short while under load, more severe errors appear:
+amdgpu 0000:03:00.0: [drm] *ERROR* dc_dmub_srv_log_diagnostic_data:
+DMCUB error - collecting diagnostic data
+3. Finally, the system completely freezes with a hard lockup:
+watchdog: CPU28: Watchdog detected hard LOCKUP on cpu 28
+Modules linked in: uinput rfcomm snd_seq_dummy snd_hrtimer nft_queue
+nfnetlink_queue nf_conntrack_netbios_ns nf_conntrack_broadcast
+nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
+nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables qrtr bnep
+sunrpc binfmt_misc amd_atl intel_rapl_msr intel_rapl_common
+edac_mce_amd btusb snd_hda_codec_realtek btrtl mt7921e btintel
+mt7921_common snd_hda_codec_generic btbcm mt792x_lib btmtk
+snd_hda_scodec_component snd_hda_codec_hdmi snd_usb_audio
+mt76_connac_lib kvm_amd snd_hda_intel bluetooth mt76 snd_intel_dspcfg
+snd_usbmidi_lib snd_intel_sdw_acpi snd_hda_codec mc kvm spd5118
+mac80211 snd_ump snd_hda_core snd_rawmidi snd_hwdep vfat irqbypass fat
+snd_seq snd_seq_device wmi_bmof libarc4 rapl r8169 pcspkr snd_pcm
+cfg80211 i2c_piix4 snd_timer k10temp i2c_smbus realtek snd rfkill
+joydev soundcore gpio_amdpt gpio_generic loop nfnetlink zram
+lz4hc_compress lz4_compress amdgpu amdxcp
+ i2c_algo_bit drm_ttm_helper ttm drm_exec nvme polyval_clmulni
+gpu_sched polyval_generic ghash_clmulni_intel drm_suballoc_helper
+ucsi_ccg nvme_core sha512_ssse3 typec_ucsi drm_panel_backlight_quirks
+sha256_ssse3 drm_buddy nvme_keyring typec sha1_ssse3 sp5100_tco
+nvme_auth drm_display_helper cec video wmi fuse
+irq event stamp: 117172
+hardirqs last  enabled at (117171): [<ffffffff9e001566>]
+asm_common_interrupt+0x26/0x40
+hardirqs last disabled at (117172): [<ffffffffa1c00f97>]
+irqentry_enter+0x57/0x60
+softirqs last  enabled at (117144): [<ffffffff9e614919>]
+handle_softirqs+0x579/0x840
+softirqs last disabled at (117137): [<ffffffff9e614d16>]
+__irq_exit_rcu+0x126/0x240
+CPU: 28 UID: 1000 PID: 1737394 Comm: as Tainted: G        W    L
+------  ---  6.15.0-0.rc6.250515g088d13246a46.54.fc43.x86_64+debug #1
+PREEMPT(lazy)
+Tainted: [W]=3DWARN, [L]=3DSOFTLOCKUP
+Hardware name: ASRock B650I Lightning WiFi/B650I Lightning WiFi, BIOS
+3.08 09/18/2024
+RIP: 0010:delay_halt_mwaitx+0x20/0x50
+Code: 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 53 65
+48 8b 05 56 13 0d 04 31 d2 48 89 d1 48 05 00 00 ca a5 0f 01 fa <b8> ff
+ff ff ff b9 02 00 00 00 48 39 c6 48 0f 47 f0 b8 f0 00 00 00
+RSP: 0000:ffffc9003b68f820 EFLAGS: 00000087
+RAX: ffff888fda610000 RBX: 000000000000118c RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 000000000000118c RDI: 000023b4c02956f6
+RBP: 000023b4c02956f6 R08: ffffffffc14b01a9 R09: fffffbfff49570d4
+R10: 000000000000001c R11: 0000000000002000 R12: ffffed1040583d43
+R13: ffffed1040583d17 R14: 00000000000186a0 R15: ffff888202c1e800
+FS:  00007f1da07bcd00(0000) GS:ffff889034970000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1da0a43930 CR3: 00000003e594a000 CR4: 0000000000f50ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ delay_halt.part.0+0x33/0x60
+ dmub_srv_wait_for_idle+0x12f/0x1d0 [amdgpu]
+ dc_dmub_srv_cmd_run_list+0x99/0x2a0 [amdgpu]
+ dc_dmub_srv_drr_update_cmd+0x158/0x340 [amdgpu]
+ ? __lock_acquire+0x40f/0x1160
+ ? __pfx_dc_dmub_srv_drr_update_cmd+0x10/0x10 [amdgpu]
+ ? lock_acquire.part.0+0xc8/0x270
+ ? local_clock_noinstr+0xf/0x130
+ optc1_set_drr+0x18b/0xf20 [amdgpu]
+ ? rcu_is_watching+0x15/0xe0
+ set_drr_and_clear_adjust_pending+0xa6/0x180 [amdgpu]
+ ? __lock_acquire+0x40f/0x1160
+ dcn10_set_drr+0x224/0x390 [amdgpu]
+ ? __pfx_dcn10_set_drr+0x10/0x10 [amdgpu]
+ ? local_clock+0x15/0x30
+ ? __lock_release.isra.0+0x1cb/0x340
+ ? rcu_is_watching+0x15/0xe0
+ dc_stream_adjust_vmin_vmax+0x4d9/0xd60 [amdgpu]
+ ? __pfx_dc_stream_adjust_vmin_vmax+0x10/0x10 [amdgpu]
+ ? dm_crtc_high_irq+0x4c8/0xb70 [amdgpu]
+ ? __raw_spin_lock_irqsave+0x60/0x90
+ dm_crtc_high_irq+0x7b5/0xb70 [amdgpu]
+ ? amdgpu_dm_irq_handler+0xf3/0x2a0 [amdgpu]
+ amdgpu_dm_irq_handler+0x19a/0x2a0 [amdgpu]
+ amdgpu_irq_dispatch+0x286/0x670 [amdgpu]
+ ? find_held_lock+0x2b/0x80
+ ? __pfx_amdgpu_irq_dispatch+0x10/0x10 [amdgpu]
+ ? __pfx___drm_dev_dbg+0x10/0x10
+ ? do_raw_spin_unlock+0x59/0x230
+ ? __wake_up+0x44/0x60
+ amdgpu_ih_process+0x1c4/0x3a0 [amdgpu]
+ ? __pfx_amdgpu_irq_handler+0x10/0x10 [amdgpu]
+ amdgpu_irq_handler+0x27/0xb0 [amdgpu]
+ ? __pfx_amdgpu_irq_handler+0x10/0x10 [amdgpu]
+ __handle_irq_event_percpu+0x1b5/0x510
+ handle_irq_event+0xab/0x1c0
+ handle_edge_irq+0x213/0xb50
+ __common_interrupt+0xad/0x1d0
+ ? irq_enter_rcu+0x26/0x190
+ common_interrupt+0x5a/0xe0
+ asm_common_interrupt+0x26/0x40
+RIP: 0033:0x5639d9e740ee
+Code: 45 c8 85 d2 74 04 41 80 08 04 48 83 c4 58 4c 89 c8 5b 41 5c 41
+5d 41 5e 41 5f 5d c3 48 8b 57 10 44 8b 15 fd bd 08 00 4c 03 0a <45> 85
+d2 0f 84 33 ff ff ff 83 c8 04 4c 89 4f 20 88 07 4c 89 c8 c3
+RSP: 002b:00007ffce2334e38 EFLAGS: 00000202
+RAX: 0000000000000001 RBX: 00007f1d91572388 RCX: 0000000000000002
+RDX: 00007f1d90e9c750 RSI: 0000000000000000 RDI: 00007f1d912e5d20
+RBP: 00007ffce2334e40 R08: 00007f1d912e5d20 R09: 000000000000e119
+R10: 0000000000000001 R11: 0000000000000002 R12: 00007f1d9157f008
+R13: 0000000000000000 R14: 00005639d9e74f90 R15: 00007f1da06fe730
+ </TASK>
+INFO: NMI handler (perf_event_nmi_handler) took too long to run: 5.441 msec=
+s
+
+Environment:
+GPU: AMD Radeon 6900XT
+Display: LG TV via HDMI
+Kernel: 6.15-rc7, built from source using provided config
+Distro: Fedora Rawhide
+Motherboard: ASRock B650I Lightning WiFi
+BIOS: 3.08 (2024-09-18)
+
+Additional diagnostic info:
+Full kernel log ending with stack trace from delay_halt_mwaitx()
+Series of dc_dmub_srv_drr_update_cmd() and
+dc_stream_adjust_vmin_vmax() calls in call trace
+System enters unrecoverable lock state after ~few minutes of heavy compilat=
+ion
+
+--=20
+Best Regards,
+Mike Gavrilov.
