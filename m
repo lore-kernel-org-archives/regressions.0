@@ -1,113 +1,106 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2B112E5B;
-	Wed, 21 May 2025 05:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053BB237163
+	for <regressions@lists.linux.dev>; Wed, 21 May 2025 06:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747804011; cv=none; b=uw4BnfBfnd6PjeyWGgJcRnkInhrMcvRKYdRlIhxdxa74oJBLNmv6IT7PXmmtqPvS37QquFu45hlw6PmCSwxVsiVBm4U+XE2pYidRe3DakDnDGxmM7qQUty2DXFAYVQKWvCQE16QUK4yo9hV1tXs09s+NVDD0yAO8ZN2eVFN7p0o=
+	t=1747810157; cv=none; b=Dwy/UCe0H9Fp33jMO/HNmWavLn9Dv7o5GELJUhICmzlvT7M7KQ/WQV1WmxsQUMwgKVfbctwypmqAgFwIHJPPOp+bNVkVMzXNZT6JuC18KLzVQtwbNUIAdGrLQCL2e55UwzWZRWD0Cw+/8SKxLcTfcP+UwXOVYPiZvz4PY1GA+Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747804011; c=relaxed/simple;
-	bh=Fye+R7aSAVFkLVJB4LRWCnkoEi6brZy46TD7AWNohgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uY/KXfjKCHgwyJld/psWfWv9pYsfAtODEwHwzSHZjCoRMbxo2yAcTs7glY6m30wuLzNbAxo1os7H2g8peFbGS3dxpsX+O/FzeFCGWrbDQXiNA7GK4GFk+/w1FFOi0i938FOKjQmtjIl6kgRyKesodi19ct+cMrQ7VfmhnXskSRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Sy+2dtzf; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747810157; c=relaxed/simple;
+	bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cR0pmqJgbSlokO1u35t4t+Y3BCtuHVx3ufGNEfnbgk03qvg3mBxthE7WsYnLAEx7XXrkHxXtC3VdGcaus8Z/sKqZRsWBUf8GalFq8Nabppkis7zOamgrXoy6ofPwk5Nx+1+/V5qwGIq21K/r4DF8Bl7j9i/m4QXR2fEVwEtRtVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CstOCKRn; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Sy+2dtzf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WUCO060a2/IvAmEmgmEmyLHDKu9iFQRjj/u3vUBQG2Q=; b=Sy+2dtzf4/pcfepLyLVAb4lVTS
-	65paAERZGJY5JNnqsweV54o3BG7vcpD8T9eLYSl1JPFCQla2F3hdBhASxFLzCmb+xYZAdxKkP1VH2
-	yVnNd9O1hs0+rY7eHlwvsrUY6hWox0Cptukt8Qrg80mxFS3Lyz2afyRdy944CYDgDAE5b2eDAxaCD
-	vdsLTeQKCurJl/S0AmeQULtsGexmc8vUb2Ll+GX1Z+XcPdQ5K7A7mw1wJz6B8qIZwzBJuaZL/xFma
-	aS6F+iAWxfEVwtlwJxnEAa+wolO8+Sr/btxWghSnWCLaBTscew8WxVeU0d9jzf2uTGRvKnIStABFr
-	3WzahrZA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uHbf9-007iP5-2W;
-	Wed, 21 May 2025 13:06:44 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 21 May 2025 13:06:43 +0800
-Date: Wed, 21 May 2025 13:06:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
-References: <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <20250515182131.GC1411@quark>
- <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
- <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
- <aCcyXkeBvHQYvf2d@Red>
- <aCczV6MF6xk5rRA3@gondor.apana.org.au>
- <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CstOCKRn"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-232219cc6d0so2523695ad.0
+        for <regressions@lists.linux.dev>; Tue, 20 May 2025 23:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747810155; x=1748414955; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
+        b=CstOCKRnEntYV2Pq9NHRo7xQkW6cfzOMvJelCIRWdhoS6nKwOw9sdaWVdwZfokZ6lz
+         NhtrypgJlWAL1Hm3GMAO9VZWvdj+NzA7cqYQL3a4afr+v+OzcpqCHrneUsToZ4MV76Z0
+         H8sUy50HGM/04BhLZq2mb2Q+DK+/n2UDGCLbhNEYiYNX7BwjhqAhhyG40D5WP1ZoPgRU
+         wgouycsw1mjuuVHE3xPbUfAqHt01rhYTtDTbqi4FORmQe2rfzT3WMJnQmoieHtkE/fFZ
+         G1URGAIFmqJihMweFIHZzAvYs+CJ/U9pnXMbcva1eeFcbvHQkiqOp+VW85nvsC4PBSkN
+         KdQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747810155; x=1748414955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
+        b=GFue8ap//hRTSuCcFn0cFY+T28zBpkTVX43wgat+iVYzKYWDFKXEC3WJLByVbhrJao
+         zp1sGb0jSTsuLMApzzYgixVJS8FrlRHNUOkBHTk3xqE88B4AiMccELXxqcVJWBCG92Ct
+         5hfG3z2GkoD/LsK2wmQ/mPexnc4Dm5UuMYGE7k2LpUGbyWkRoRApbMK3eYfnoZY+8KLX
+         chVQozEBGgmjNbukmCkD00go562tRnP9fAHEepdlw25keYlKiXImYYzgNV/85orFoScR
+         f2fRCqizp1pzvE+f6ALTYEFFDGoTM0/k4Abb1pGmKyybQRL+6eOXWlAHHKTN2bP95ftX
+         ib2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2vggKdGE/H0AJ7uK/nElVZyEJFXIxAwvCf0coXxhrIAEd4OnGSqt/7fY1gmSzr/5IsMpmcD9tRjwJtw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzXfHyw7xOrPbtynjU8QafTNdcnYyjJZ368628B0+dMRrbvSgrS
+	lDJxH7GwU+ieE07Df9gkB7Jb3KXhgHILayg29YeFkvEUBiAJkvxMaqnm+sBTr+JefQrunpnew3j
+	EPXbwAmoj9eTVpCf7VzfEPNK0W8Vr4uk=
+X-Gm-Gg: ASbGnct7CSqrKExSIIRI7dBvwGoXLFV2D0fgad5YebvI5TJRp8NLuz5K4FJNMHrsYNL
+	0ecKTSA5gtaQQk8f2IQhiOS4Q5Zi4r/Kc+6dr7uHBajYHgDDm7a/D3wjeSoNrzA2X5FJHaO4Ra4
+	/RdLQQ4a9zJkmbdXCVH3gJfdxqcKm0yqaKgH7Mz+V2Ljg=
+X-Google-Smtp-Source: AGHT+IExmNmxiGkYVIFhd609smsGiWGOh8Tpu+Ows+3ubk7FR8CgblGAfBU0mW4P84FMoxwFG0XtVUhmE0uQ2j60ZMw=
+X-Received: by 2002:a17:902:7d86:b0:233:b829:691a with SMTP id
+ d9443c01a7336-233b82979b1mr7087165ad.12.1747810155231; Tue, 20 May 2025
+ 23:49:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
+ <20250407183716.796891-1-ojeda@kernel.org> <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
+ <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
+ <aAKrq2InExQk7f_k@dell-precision-5540> <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
+ <aAo_F_UP1Gd4jHlZ@dell-precision-5540> <CANiq72mPZ-ik8k+04BarAu26A1=rV_y7GYZHkFnCezW4jpXq+g@mail.gmail.com>
+ <53dc3112-9e34-43c5-852d-aeafea882247@gmail.com>
+In-Reply-To: <53dc3112-9e34-43c5-852d-aeafea882247@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 21 May 2025 08:49:01 +0200
+X-Gm-Features: AX0GCFs8alyZvoCaX-vEw4ZGLJj0dXRTRZ3S4mg4Ye5KYmwczTJfDAjcYR-KhaA
+Message-ID: <CANiq72n=pTHrXJysvJVV+xK9Y1O9owF=rxEnrMtMeN=gX4E=Sw@mail.gmail.com>
+Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Christian Schrrefl <chrisi.schrefl@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, 
+	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
+	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
+	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org, 
+	Ben Wolsieffer <ben.wolsieffer@hefring.com>, torvalds@linux-foundation.org, 
+	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
+	Ramana Radhakrishnan <ramanara@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 18, 2025 at 03:58:58PM +0800, Herbert Xu wrote:
+On Wed, May 21, 2025 at 1:21=E2=80=AFAM Rudraksha Gupta <guptarud@gmail.com=
+> wrote:
 >
-> Hah my debug patch was broken.  It didn't take into account the
-> partial block when recalculating the hash with the fallback.
-> 
-> However, this seems to suggest that my hunch was incorrect.  The
-> partial hash wasn't being corrupted and it's actually the final
-> calculation that was wrong.
-> 
-> This could be good news.  Because if it is a hardware bug causing
-> this, then the final calculation can be easily worked around by
-> turning the final hash into a partial update.
+> I went ahead and sent a patch to Linus directly since it seemed to me
+> that this was about to fall thru the cracks. I signed both you and
+> Naresh on it since it seemed like you both were happy with the small
+> patch. Apologies if that's not standard, please do correct me as I'm
+> still new to kernel development.
 
-Further investigation shows that it's not so simple.  While one
-hash (md5) was definitely a final hash, the sha ones aren't.
-Indeed the sha256 hash was definitely corrupted at the partial
-stage and correctly identified by my printk.
+Yeah, it is not standard, but no worries -- I will reply there.
 
-So we'll have to look elsewhere for a solution.
+> Btw Miguel, thanks for introducing Rust to Linux. I'm not too good at
+> kernel development or Rust, but hope to one day. The modern Zulip board
+> and documentation is very nice for newbies like me. Looking forward to
+> making my first Linux driver and Rust driver soon. :)
 
-One thing that may or may not be a coincidence is that all the
-failed tests involve a partial block of data somewhere along
-the line.  I might just be grasping at straws but perhaps the
-partial block is the key?
+Thanks for the kind words! :)
 
-Can you please try this patch to see if it makes a difference?
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..7a50b31d94b3 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -532,6 +532,7 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
- 		return ret;
- 
- 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
-+	wmb();
- 
- 	return mv_cesa_dma_add_data_transfer(chain,
- 					     CESA_SA_DATA_SRAM_OFFSET,
+Cheers,
+Miguel
