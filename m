@@ -1,184 +1,149 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2028.outbound.protection.outlook.com [40.92.89.28])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E1823496F
-	for <regressions@lists.linux.dev>; Wed, 21 May 2025 10:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.89.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821822; cv=fail; b=Pk/5wKaW0jEFwihUPDXmcKK37jb/Esx/khbIzPLxoKajBSeK4xrv8qW2t6ORq/5lKegnHdx3jgSgwobgrXFIIPmRVv03WfuRsEYnp7AGm2pA3Snyx3joT7hnev8dRGzHiwE6PQPfVosJD3crr8z9F6osa/5h8jq2pBxsfyJV2oE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821822; c=relaxed/simple;
-	bh=HRpA6u9Y2ugmuFgQHbiiTziFJ3bJvGnv5WZU11xdCfA=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZUqka5E2PiEu9TMzH613xicMqnf97DSg6sbvotnMXXHiR+CxJDDuxOtXPYFtuyGe9S1i2ZyB9pVM0BU5Wrg4QwwKnfx21cwYxQ4/+kQf7M08/vSEo2xtPV4bxXswpWDKV+Sr2Ci5585/RrALoYfzfz3jHqrsyr9bjkGJaQ8vgHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=YInxACf6; arc=fail smtp.client-ip=40.92.89.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8860723D285
+	for <regressions@lists.linux.dev>; Wed, 21 May 2025 10:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747822125; cv=none; b=ZchuyNaFZEQAc08HdX9c5VhWmjSgoQMT1ZOmqwg9ZAp9KQJcJpu4Kcri76VUJj4eSPz6JCypel5mDVMwiDPY7aumDC0bjJjFrKuDex5lo5AmZlNuKnpml7YlyvvTf65DhjsGA35DRIpjLx9nQT39CN9BYTPBRTJLLHtOs3NJmig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747822125; c=relaxed/simple;
+	bh=ZNGSUOdcii+cKMzGlqFP+c7iJmTif4FWJDsPrVxtNrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPRnjXF4SLBs4mUpwYohlO0nq2Ia8NS6Y2/t3L6C5EorRp4rU33NLFRy/KS9/MKlspWHB10I7r1zJlbRNOuIU2nyF9QKV4vIN0J2Jk7r096iDhkKqxSxgdGXENW6eJeaENTCyG/R+b2uSxkhuJGvZOBVZofJFJ2fl0ORJUiDjdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=2dU7QpD+; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="YInxACf6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aygXy/ZZm3kfLKOuSi15C9grVtz8a8csU9MOVeR4zkN3HbQkz+Y0JTviEF0vE9f7BJjS5eYqhjEye3PHNBJUZnkDwYw2FPehsoC+FzeNhuVp10TZG84rop6fc9LHfgr4Pl1n7REJpkjFr8XiFf6zAb6RlOqk89CCpp71B5yl0nkbfVTRY+NvxxjvbbeGuSrGSwhh9ap28527HkVH1fYk+EOcHpRBIwxfhHnOZVm2ldQL1sVNIKLC7ZgRt/NIYKn2dYOv5oqTqbOmvL2GMDKsTUymtOa/Ip5qN2Ps03sYLDEvBHPRFk5CgsjfTo+qbCrJolhOuwpa92lZ8GILAZzCSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CkjhPsA85y7BVOh8Xr5gK66Tv7ZQKy8RLKukzbeqHMQ=;
- b=xkTEe0vvEw8k1j4Kgi+PHWXx4OIltBq/8xyNeKMox6oiMOFrcQy3v813BMSt3ZgFbUid+tfDAff70GkywoEBG18KWKAwpv3tzhJyRCJq7JbxvNRME14wE7wxvsIQpnVeNYzAf9KbVs/VggXBTBGWPslj8PHwRG0OTkNPTack1Si7cH5hz8QxF/hxDwMVVBCkDCPOmM7umPZeg2dKJX3lrNLGE/o3I/u2RnP6nydA3rn0RHgtgOQX0ee41vSbDUWxSTa3sf4sLtG/fHFm8sfwcOc/i24oF9JF1c9hCh3pUjWhYqoFY8NTALoUBOEp2+8HUI/ryQ2jGdRDLIi+b9ccYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CkjhPsA85y7BVOh8Xr5gK66Tv7ZQKy8RLKukzbeqHMQ=;
- b=YInxACf6PKf83pBKOEe52f+hxsTSrQxra+jMQfBICtokhFroHnP92tK8dR/7Bdbuw3HnZVZZ1C0lyDbwoxwOaWG186X1CrEb1RziccMvU6qT3owPVkfA26vjGrdGb+n0dpiM/sfl7tSSgJyP00ORu0oDFQqzEO3zgazre1Es3cJES3aeWmuoReUvh+26EDH78MJKeOr/gCG0yF2vV3iZZ2j58p5EOLoP6WoYa8CvTaAkmYVr1Up4EZEKw3EjiMbrZQPXE4Lvhs8+1yFtpnURazQpBjqNReuFPCd292lpGo42epRno17MgUB2byZYon4ZpUx4gOoYtiniq1dh8112Ow==
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:175::17)
- by GVXP189MB2793.EURP189.PROD.OUTLOOK.COM (2603:10a6:150:1ff::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
- 2025 10:03:36 +0000
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a]) by AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a%5]) with mapi id 15.20.8769.019; Wed, 21 May 2025
- 10:03:36 +0000
-Message-ID:
- <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Date: Wed, 21 May 2025 12:03:35 +0200
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="2dU7QpD+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1747822112; x=1748426912; i=christian@heusel.eu;
+	bh=ZNGSUOdcii+cKMzGlqFP+c7iJmTif4FWJDsPrVxtNrg=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=2dU7QpD+lk+8uR0Ti1q/aD4V2Ob066WA6Xe+LUY+LEomKkiI1TaIKWJtDu5JYcTk
+	 oy3ccCuPsg1zN5FV5+pqCqjdgcB2tbU+ypQiiN4LGYxr9c+Ode9lA3G10svmrUf1e
+	 XvbBXuLQJE1H9064dxQsoLgyA25pNe2aknBax7ww5UrQ1a0s1KzOlqQvzSTdCaL3V
+	 SYHnehwmI1IsxckCDBfz11GVGGWvw1c2eISNZsybyj8CGq7z9qWh8CAwg3k0Ipgkv
+	 GInCu3es9ITUcnYZ/MuC9B7Qcw+Zud7VxygrgT/VZ6JffvAuD8iG6bz1gRLSo2SUl
+	 cROvZmcII1Qpy3E9pw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([89.244.90.42]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mbzhv-1unioB3UTf-00nMR1; Wed, 21 May 2025 12:08:32 +0200
+Date: Wed, 21 May 2025 12:08:32 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Maud Spierings <maud_spierings@hotmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	linus.walleij@linaro.org
 Subject: Re: Panic with a lis2dw12 accelerometer
-From: Maud Spierings <maud_spierings@hotmail.com>
-To: Christian Heusel <christian@heusel.eu>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linus.walleij@linaro.org
+Message-ID: <60a9ea8a-edb1-4426-ae0e-385f46888b3b@heusel.eu>
 References: <AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
  <8d249485-61f6-4081-82e0-63ae280c98c1@heusel.eu>
  <3352738d-9c0e-4c23-aa9a-61e1d3d67a50@hotmail.com>
-Content-Language: en-US
-In-Reply-To: <3352738d-9c0e-4c23-aa9a-61e1d3d67a50@hotmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P190CA0028.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d0::17) To AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:175::17)
-X-Microsoft-Original-Message-ID:
- <8ba135ca-27c1-42ca-8026-3b99986f20b5@hotmail.com>
+ <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7P189MB1009:EE_|GVXP189MB2793:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d1bc29c-3121-45c2-2db9-08dd984ec06f
-X-MS-Exchange-SLBlob-MailProps:
-	9qw5+ftluCChZnfVvosSLIOlRyTPeh57Et8hZK299aKcmltsi6M6HYHmVMFCP2R+jThgGVSTT9aCZ32XopnyTNL3R/mP0YG81qVg1T4uAvdCm0c2HWTe+HNssYH9v7L4/0Y/L5HCZChGufQEEOH/i7AhLRARu5yHAOK7VbM7kCiGhjgdyfOjdS522dm8B5Z8LI47H1tsmKfoWUNKWfn0jjqZW2kT/Mvqf2aWImNWkiri56SBtz8tCyzS0yKQ7wRjJJggLZ+kGTzxbCLT5sf3ejMI7AoBuweSsL4yZ2e8Vj30BJsuTnAVeZh16cAMCOeWKlvawJXjVhVW65ky4bTdQOdU49sX3VZH5PnRfWdsKKv8ydv0P1dzra33Ked2F7P08/3946icVk9JlkfqdGk7DsuMcI+X3/tZsq87OTfjEWUritVHa2WLlYyXtUYK1Lh0+GeQq+am5NsXFpuUY22iPqj9piJ7LDsWHekRh+2yeqT3VmhBtWCfO+HxPZrWZfwcXaUGVooDsmHtpBzAp60aGaIfmvlOLWCLNO3sbAnEYIkPhQqpRP9u2CmsO08I6XmIDhRISurmiuV4dHjSDFQELaDlCW0iPEirQ0qX2rbrSEfKvgZbzCRnjqmUza4i0gmjGcMNEW9cMhg/REx4ACzl6f57Ip6qSNbOmqDc3wiqoMg/C41T6sI3zuopeDv8gAczksh5EJ+HWD0=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|461199028|5072599009|19110799006|15080799009|8060799009|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T1hGdDhVK0FWU01sVHZLZGhZeW9lY0duRkhONXlEYWdrbk9xOTgvYVFIWWNq?=
- =?utf-8?B?ekNSUjhIQWU3V2UzS2trNy8xSEtPRFhramJvQWVzNlBuNElKOFBIYms0VzFl?=
- =?utf-8?B?aG9COVMrNE1jaDNCbTZaYzNzR1c3UDdubnB4K09od2tpOEpSa1Z0dmlQcHhP?=
- =?utf-8?B?UXJxakJGbCs4eUFuVlVpSDF6TWZEQ1FMZjZDR1N0ZmdoSjRmRnNiNTdxWDRs?=
- =?utf-8?B?V1BmRUxzbTcwUE90VW92K0xBdFpLcG1HMFlMNUdCZFhCYjFPSGFja05lbFEv?=
- =?utf-8?B?L3hDUFM5dGRKcU5yb3puQzhqSUZlNFV2ZlBvY3hlRXg0MGVnT0xLSmE3Z1dp?=
- =?utf-8?B?TUc2K1RzTzVBeEs1d0ZST1JuZEdROVZ3c1J4TFdUSEp2OHNOZGJhOWtLeFJI?=
- =?utf-8?B?NWRhNEFDTGpCajFmTkFNMG5mcndwRWhGZk5nZ2JReEVXcGhiR0FoWGxub0NC?=
- =?utf-8?B?S0V1UXV5Y1E3bnA5OFBPYUFZTUFTR0E0R3NPV3pIWkhhSndOZVJTVk1JZFR2?=
- =?utf-8?B?L3J1aVpMckN0NXFXQ3FJRXljL0o1VEduTjRzUmlSbmJoVjJuU0VmREI4bFA1?=
- =?utf-8?B?SjJwVjNyVmZOM2dPYXhubk1UeDArMWlUenJvc2dqMDFXQnZKUnJCY2VOS09z?=
- =?utf-8?B?L1k3Z1dWR21ObytZc1pUay9nSlA3a0NPMWFMaUZEY2Z4TUt3SUpzR2cxM0Yy?=
- =?utf-8?B?TFhydUhQRWd1L3pEY2ZxUGE1cFRpUHYyVVFmdkJGMmFnK2gyN1hYNndkalo2?=
- =?utf-8?B?QXgySDA0UzNXaXZaSnVHOGI1djJ2MDBRNDQzRXNFZUx5dVQ4T1Q1OFVpYTlM?=
- =?utf-8?B?QlVUcm1MUURTQUx5c3owbjc1MHdzTzBnYVNRWkI4RSt3M241ZkZwOHpvTXdB?=
- =?utf-8?B?M2htNHg4ZjB5eUF1MXNqYURoZVFtSERRemk5Zk1FRHlWa0hqV25FbnNrR2RW?=
- =?utf-8?B?RXJOUms4TkVtMmxvbmloTEU3L1ZlYXh1Zlc4dDM1emVlUEhVRkV5Ukk3Z1pq?=
- =?utf-8?B?N1JWRHZSaFRLSUQxYTRIenpmaHM4bEZkcm9FMVpZUEVFWkhCNnprWk1VMGtL?=
- =?utf-8?B?TnFsOW80aFFlLy9WelU5dEVxMHF5U2Z0cUlnenU0TGxsY1RvUTUzbURidldo?=
- =?utf-8?B?US9pTkZvOG5CTHl1emovNnBVUjlEcnRJNzBBT0dPanJjS0R2cExscTFIM05J?=
- =?utf-8?B?RnVyZS9nYTYrUVlIS3FNeXUwK0RYZHMrRHgvWU5XbVJoWXAxS1huMFdJd0hn?=
- =?utf-8?B?NEJGREtwbUxySEJUdDJubk5LdTZqWm5LV2VSY1BudjNVQkU2QStTREdTR1Iy?=
- =?utf-8?B?eUdtYzg4UHJ5NjlySmtTcTJnSFIwdWVuS0poK29Vc2ZvSVhiSmdxaW5naDhy?=
- =?utf-8?B?eXhPN2hyOU1UWUY1TFhzWThpRExFYitTRUg5M1dIMFdyRjhDaE1CS0FIZjRr?=
- =?utf-8?B?bS82NDAxU21URGNFWEt1akErczgvUzQrRXpISDZjVERyV1NFYW9rRWRxOVFP?=
- =?utf-8?Q?JldSTA=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d3RuSThEemxJTDdBRUZRTGlZQkt0NGw2QVc3cnNXLzVOREVEK0lmZFVRQy9I?=
- =?utf-8?B?bjhyMmNkTlRTZjNzN2pTWmQzYXJtRmNuWXFTZW9HYURZcHhqY1FkblBtWVIr?=
- =?utf-8?B?WEVqRXcrcW5PcWNScjVQdi9WNFJaZ1QrSzdkRlJjWkt3NEsyMTl6ZjNkSitm?=
- =?utf-8?B?RnN2LzBEZ1ZZRDRDNkFheTAya25yK3dldG5QOGwzTm11WlEzS0U2ZC91MW5O?=
- =?utf-8?B?RUM0eWxZRmd1YTBtNEtFRTN6cmEzUE5wUXVIanI1QnA0bldaUmhpQTlhcFFh?=
- =?utf-8?B?dHZJaEEvOXNCSlQ1SEVwRW1OK0JJZ2t4c1JzMUdoOUdiOEFsc2JHejFRc2kr?=
- =?utf-8?B?WW05SERyemRRQ1pFYTlCenFTOGVQcjd0M1h4cmhJcUNsYXFoY0NhOGZZbXFx?=
- =?utf-8?B?TUZVTUpQdkJMK2RkeUZyZi9iYjRNSHJKUlBOcTRyS2xsNHRCRFhwQ1dRWkZj?=
- =?utf-8?B?UUo5YzJpa0xXWmpOclViaSsrdExRSnR4ZFZVTlI1bTFFTkV3TE14T1g3RTdT?=
- =?utf-8?B?RUpHZHZGUStUZ0VDYytWL3hCeFZFbEY0M3lpaEp2YkorTEhBZGwxYWtBRUpv?=
- =?utf-8?B?VHFLQm5xc1BLb1FtYm5qS09heXFtNlhsNXBBQU0veGhKTzY3SmVNaXF6S1RR?=
- =?utf-8?B?TmRuQmN3R3Fkd0x4cjdTdGVMRkNpQTFXay8xV2lJMitNRGl4S2VSS0d3ZGRF?=
- =?utf-8?B?UHhHN2M4RXRNODZhNUcxalhXZm9zSTJRZWJQY2N6RzB3Q2lqQXk5Q0VQM0lj?=
- =?utf-8?B?eU5CSWpCNUZrRHdabDU1bis1TmVydnQ5Smh1d0Z4TERTTE55eDNrL2hrY2ND?=
- =?utf-8?B?R2kxZ055ZlRTOHlIS1JmRFFicGhoSzlMSzEraldENk9ZT0c4eFRPNTFBUHRS?=
- =?utf-8?B?OEduM1hZM2FhUnp4azdlSnFRWDVaYlBXUlgrdDM5cXhlY0hzY3NwbzhPSVNO?=
- =?utf-8?B?VUZUcDBOdzZLQTJvbGROTmtVSk1naEVmMkNjWlR2Y3dkZ1ozUU53eTFKbVRq?=
- =?utf-8?B?V05DbEI1c0o5bEdkVjRiTWZMMk0rb3BJWG1rVnJzM0lJK3BMYThOdDJtWHhG?=
- =?utf-8?B?d09RRnBIcG9GS2wvV1BCbkZyZ00zaytLdzdKL1dqOE9nR2w1TVo4TVdUejlZ?=
- =?utf-8?B?N1VKL1FpVjl6WTZqcHlrZHRGK0x5elFRcE43WEVtM0RXZzRvU3NpQ0I0anlE?=
- =?utf-8?B?VlUwUkh6MTA5eVVzTnBoc1ErNGhUc0dnUitnNlFCdkxvVkNsOTJlL3M0TmFW?=
- =?utf-8?B?ZUlkUS91WXFOUFVEb0kzQjF0ejJFNlI5Q2JLYnFjNjU2KzNKYjBYQ3FUMUg4?=
- =?utf-8?B?NGtSVWxxQW40N3pCdkpUdnVGaFNGdVM0SGlOKzlLRGdxU1g4ODVleW9SZFJ3?=
- =?utf-8?B?TnF4Vkp1UG9jcUR6QkF3K2IyaUhnQU5TZU5zSUtJaC9VbDlFYkhRZDBodXFa?=
- =?utf-8?B?MTcwZW1HRjRFR1pKdzJNeHNrc2toZ1RXbXpHNWdvUlA3RUdXUUlxd05sMW1x?=
- =?utf-8?B?alZPbWVGMEFrMGR3aDExZFFmYVlVMTdUcDJjSldEaXpkcEUwM0NmQjZWMDFy?=
- =?utf-8?B?bDIxclFzNFZBWWtsYVRSdS9HTGgyRE9iamxpUUw3WHNNSGRTSkR0dXBSeXVO?=
- =?utf-8?B?RGoyU050RzVrTHN4cHBBUXhTRm5Rdy9jaUZHOWU1TVdvUXZhZm10dlVTdVlG?=
- =?utf-8?B?UnJEUnRoL0Q4TDJVVGNvTmxmWVpXN3k1OEdxZzAwL1hpQjlpUjcxQ3lMOUV3?=
- =?utf-8?Q?V05qcnSyCVugSFQ2i2O/xHp0k+mv+RPETKj/9pu?=
-X-OriginatorOrg: sct-15-20-8534-20-msonline-outlook-2ef4d.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d1bc29c-3121-45c2-2db9-08dd984ec06f
-X-MS-Exchange-CrossTenant-AuthSource: AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 10:03:36.3566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXP189MB2793
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e2cmn7d5gfxkbkv6"
+Content-Disposition: inline
+In-Reply-To: <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+X-Provags-ID: V03:K1:kKV/kZ2L9JUJKSGg+6Wrs3pnVW/3Yi3r6H/kHpAsc0bN9Cgc03+
+ oys+nKw76VhMtQkrN5xR0+URcufQ0Znn6Bwc7amzAmyd912eiI0+SH+Jt5wPtx/uURKuYeD
+ X9Z/xkZJVJUpGQIK1oZI3nOceqat2YNLLm96rz1q6rf0oEVZOTZ6QyGlwM1gYcneirDaUgH
+ OVmm6Kmo98tBGtky7OWEQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DfMuGtnVmLs=;l6BibFYsHTIlLWSRnqah510w/Bx
+ xruhOLOf6AI4HsStNZR1bq22ov8HdbRNATaSxwy9mc2CP9SykY+8rYLNeIPKd05gOOTeEM++a
+ CpJeH6TmHR0FjBlxmNSrUMWiu/k4vMgl6k0CUYzAU//4npM5zREEbJkBKg4kQrX3Ebb5TTgYs
+ adPXsd/GmtJGWvToxsk4jpqcFhjNXAbw8HjRRjRYUj6IwI9MRrXOmtoQ3jrnRbvsecsTkMEty
+ 66lUDLu0w7/WN+t1tp5REN17S/8HSwHResr7MqK9Xpz3EjCIQ7VjzpkiPqqo5pFmRYIgWjDUW
+ F9oUq+d906Bz7xLsv32SkN4xj3OWRotCbq6kbF0U47HfcXwd+phl8q0zeOEDW9yEfuWd1VXMo
+ QoTZSGdM+6lf3N9nw6vAXVqhFGOyhZU1FOxC7b7Xnn0sJLcIa59hK7tSTTcduS0JyX7LI8Wo0
+ 6aq2JnPOrFbBF0EHf9w+EjqY36xseHXYo20Fz5/btnJDMehKkvA+bTFNTxb8AnvkcnDUJ6cnS
+ zHXdQnufWgeHyfxn2/A4CjycUfeZSMoPYC+UldqXDU1S6QNUgp4uYXrVDJMrMci/duL2J+gHu
+ 1EiiVpRUxqu2e1OOqPRGlVGvdF0sVMKjQgNZagcLH8jNmyz7ZI3bYy+rZGAQ/i1uCxTqfM/EI
+ W8LZdj/2Z+uIEB4prbgo9DTvr4GVRSHLX82UbnCA8bGO+NonE1t8AIpWKSSSPKKrNeCtwzeea
+ YpOwjw4VeG/mrv62/+R63ySw5MiDhiNqr/N+bPvPHqDs0+9F1EhVzxFmo+LE20vM1kNfG8ZHR
+ mBdKBBg8HdliMz6GjwNcOdJAZd5HGmFtCEruy6AZaw0BUqWdIqcKGtVOuuws3DM1V2gUkILMl
+ tErrh3yJO2DHCeGs36LvuDxZurHGT9BVCFdklmrIVevbJb+p1B7OpEqRK6PSMmQqt3lXww5/I
+ cROhVBAG4GLfN33INlmYjWAeEFaEqHVpzVPAmcVUP4HR0dKeLmtOzihF1KWHnVvJkT+fnkHEP
+ KWUkoccgGaI66bIF1F9TFHGk1jtmVinEmFzqyNGU/Mh2ZYblGloUxGNz2Nv0AKtkRrRzOmg45
+ NlPjmK3UDv0oJUlDKMnoSBIEpy8IKtD3ff5XhiqKH14ePXdIxo+XR7ELuog3DNnkm4+XDTn3K
+ 7EqNHxhH1qjhkEzN6p6lBgve0BjL85Wdx+iutUAjzpUrseUeYd9KC7lt7FTgxotyiaomXs75u
+ JC6VszMHguGaY96rEX19rmnkbWWMa8+cu7LSGWIF3mUWBh/l4LoXLsc1XpSETskfksuKCz2T4
+ 1bDiH46WvnmIFKDx/Xr1quMmzjFhh4b1FKz0l/8+Z0r3VWljJ8ckK4D4lcbYGXs2WXaOU89hW
+ aUAbwp4WsWv13RlFfvUtvX8djvN3OQXb1mND2qllNULhzIvwuT6T2DW1yM
 
-On 5/21/25 11:48, Maud Spierings wrote:
-> On 5/21/25 11:29, Christian Heusel wrote:
->> On 25/05/21 10:53AM, Maud Spierings wrote:
->>> I've just experienced an Issue that I think may be a regression.
->>>
->>> I'm enabling a device which incorporates a lis2dw12 accelerometer, 
->>> currently
->>> I am running 6.12 lts, so 6.12.29 as of typing this message.
->>
->> Could you check whether the latest mainline release (at the time this is
->> v6.15-rc7) is also affected? If that's not the case the bug might
->> already be fixed ^_^
-> 
-> Unfortunately doesn't seem to be the case, still gets the panic. I also 
-> tried 6.12(.0), but that also has the panic, so it is definitely older 
-> than this lts.
->
->> Also as you said that this is a regression, what is the last revision
->> that the accelerometer worked with?
-> 
-> Thats a difficult one to pin down, I'm moving from the nxp vendor kernel 
-> to mainline, the last working one that I know sure is 5.10.72 of that 
-> vendor kernel.
 
-I did some more digging and the latest lts it seems to work with is 
-6.1.139, 6.6.91 also crashes. So it seems to be a very old regression.
->>> This is where my ability to fix thing fizzles out and so here I am 
->>> asking
->>> for assistance.
->>>
->>> Kind regards,
->>> Maud
->>
->> Cheers,
->> Chris
-> 
+--e2cmn7d5gfxkbkv6
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: Panic with a lis2dw12 accelerometer
+MIME-Version: 1.0
 
+On 25/05/21 12:03PM, Maud Spierings wrote:
+> On 5/21/25 11:48, Maud Spierings wrote:
+> > On 5/21/25 11:29, Christian Heusel wrote:
+> > > On 25/05/21 10:53AM, Maud Spierings wrote:
+> > > > I've just experienced an Issue that I think may be a regression.
+> > > >=20
+> > > > I'm enabling a device which incorporates a lis2dw12
+> > > > accelerometer, currently
+> > > > I am running 6.12 lts, so 6.12.29 as of typing this message.
+> > >=20
+> > > Could you check whether the latest mainline release (at the time this=
+ is
+> > > v6.15-rc7) is also affected? If that's not the case the bug might
+> > > already be fixed ^_^
+> >=20
+> > Unfortunately doesn't seem to be the case, still gets the panic. I also
+> > tried 6.12(.0), but that also has the panic, so it is definitely older
+> > than this lts.
+> >=20
+> > > Also as you said that this is a regression, what is the last revision
+> > > that the accelerometer worked with?
+> >=20
+> > Thats a difficult one to pin down, I'm moving from the nxp vendor kernel
+> > to mainline, the last working one that I know sure is 5.10.72 of that
+> > vendor kernel.
+>=20
+> I did some more digging and the latest lts it seems to work with is 6.1.1=
+39,
+> 6.6.91 also crashes. So it seems to be a very old regression.
+
+Could you check whether the issue also exists for 6.1 & 6.6 and bisect
+the issue between those two? Knowing which commit caused the breakage is
+the best way of getting a fix for the issue!
+
+Also see https://docs.kernel.org/admin-guide/bug-bisect.html for that,
+feel free to ask if you need help with it!
+
+--e2cmn7d5gfxkbkv6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmgtpiAACgkQwEfU8yi1
+JYVN4Q/+Iu7REEHHAYr03kANWHoMO75OQSdByTLWR0Jd7qCqurhNj3uBJkcxsANd
+whpEJbISJvk/qATKzvXFv5rq3KjEFJy+369DD5N2Ou8/PkUh3brrZ5v1wXxqFCde
+xGmbtUNbHPyYO5ldI3MLsBnqWMM3kPTyiamRVGrxBsUUU0jZASSMpxGLoRLT/s3n
+QS0wJFgZehSb94gqgksKjtNsdXECUQtljBBORXizY+zE4JTNNCRitAeUAfnfSNsB
+See6q+pqEm3ouAvIe+4TE12hDxPpcZ4UgRFnUnQnyxbLN5ZSv3qxexLRnCGiVsIi
+ClEpD4PQ+nVfHE/+LTFc/2KM5x39/aKSzf6nIDVvWggiTy2sO5UWOXPIzstO6VXt
+ev8C7W4aSMgESrskF+T5ylzLQ/ESS3WRVyYKho1i9Cz7yXQjWynuSXpZuf3y/pTi
+fmn7HtQD2l9dooyh8Hs4znBQn2FZllMFtYXDUhG8/e/1g7veHoCA0mveGdXO8T5m
+/80jpmMXKeW0pX8wZFd4qoOYxLmKwiZZkdgiBCHNyVhEq/0uAil2lpRiBwC5XJBr
+/3sssUr5gE4jWDQSkL0DwpX+IXDMdOiz4WFj5NNidUVJPdTIYM5y+N9k5tVDXxzK
+B0SjStteN6UiRLSQyP8PIyecXDkC6VAKY8Fzw8J1b4hkn3iYXrw=
+=pP8S
+-----END PGP SIGNATURE-----
+
+--e2cmn7d5gfxkbkv6--
