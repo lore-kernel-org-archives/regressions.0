@@ -1,239 +1,140 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A46522094;
-	Thu, 22 May 2025 07:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0749242D77
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 08:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747899510; cv=none; b=AjRHsSX4htNKTDsyyn4seQzI4mlc0gkdQpMzrbEew6MUWCGzGu5SA1gvleq8X87lI5SaMu4bb+alWEztTRd5ix7SBf+aT7x8U6/EXVzi+m7lDBdbYQjCugy/pyV5kNSIoM3ZtDpVhXl/CstHfadwWjI9UTDwTMqa0NyXmJfcL+4=
+	t=1747902110; cv=none; b=CLGf+cpPkANuYSwSZU7Q1eXvtoIBl5aLO+lXSlz4OqrOx9Z7ihPbU9hRPQIA8iAPI9dkcMjS97kZ7lz1ByuUMPUrRdftZVHo2qtR5zBvGhsy8ck37/Jn+TiZJZpCCQkQXGheLG1O2hn3IvwKGR4nR8epghypUz1ssy8fO10e08U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747899510; c=relaxed/simple;
-	bh=8OhPGt/jydEbBY/zZDynjRZuDAOxGolGqhFzAXz+BAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KeBnvTdsydjNtspjGtMocMFGH/A3FB7rod5tDIPsh11SBUv/LDtSPYSt1GhoMIEM/t2+1yQylCubXeScIyGDglhE82rhEiARRfA5qHw7uD8a+Q59W6iXZP8nV2QJUDsMh2OlF+5MfuZGJlJjj7KIf+oDZhCKEMTvg6ClCLIe9BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Az96nyol; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747902110; c=relaxed/simple;
+	bh=VqOCPkWUr9CZnMaCodKIveASZIVnzNQmiel7M9LF6tI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EFReiXN/jdIr4065OzvB04ajzwQ9CV2HZZBz7AXvbwkSOr5I38CM9/H2rOPmBTHm7qHfqIZoBoQYYxVr/8L0LeUrm33+vHNewjfUW6NyWK+yfFAaLHXQa3uXPP1N8ilssZvLYrxSewLmHY12IQVSK0/2uyL3Zr2S42tiZkNQe7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aq8p8Ao9; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Az96nyol"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=4AslYNqCOhzeQ5TnT+S2AenfLhGHOz9s1B4iCroiOjM=; b=Az96nyoll3MrD/bS+CYf1P+rXv
-	8Ehfg1HzewOqOu7OZH5wmwJd5gd+E7uh9+PXJDm01hjvDqFUNmnFDgh2QPoX+Nq8VJaxEs1mTXFan
-	Zg/2ydw2Idj9GDLt/6xC4NuafzAyFJvkxwjGBQueiVe7SEWdqaYbwBH4IeMQiWI+ZZLOy3HUULcpt
-	xI5taZh2k9obh9MlsFMXFrHopRT/Ko5HEY2rUuFtD4sc0WnO7GLZ71xXUt0NVRe1B1s+Bx0nX3XcY
-	q0vHETBz2IfC73YXg8ot8RpIHS/9NQRjXKZJMgc9QbFLjSz929ao1IqUIImPDTITvY8WA0ZCY6esc
-	3y+6pesw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uI0VQ-0081PY-0T;
-	Thu, 22 May 2025 15:38:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 22 May 2025 15:38:20 +0800
-Date: Thu, 22 May 2025 15:38:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
- dma_map_single works
-Message-ID: <aC7UbAIDA46olNJL@gondor.apana.org.au>
-References: <aCcyXkeBvHQYvf2d@Red>
- <aCczV6MF6xk5rRA3@gondor.apana.org.au>
- <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
- <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
- <aC2aAvX07Aaho08d@gondor.apana.org.au>
- <aC2uvvzlR89iVFGW@Red>
- <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
- <aC3cF0-bWb-Jiz4i@Red>
- <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aq8p8Ao9"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32909637624so55159491fa.1
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 01:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747902106; x=1748506906; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TW+uhUhcGi/qFjEIYz1RUaPA9UVbNHNQ6EqB73r6lsU=;
+        b=aq8p8Ao93y6a9qMMTgGhFCeppzi2fPOPwnNXDq0SVtPagOc2gXEBw3JQYXjLGOCxP2
+         5hZcZinoO3eqaSjJ12QvPToXMM2xDuSUfbwBquSBOKAeZOSRDodLJae0Fy0W1qH/6yC9
+         yG16O7fOyLgLd7a9/znG52APXvmfSx4mM2ypzk5cXGyBcfTlQo7X/BTpYE653rgmSXzD
+         IBVgeBck2M+JEZXBZ6SvtDVwzMvM2hTq80af5L+B0ajlB85E7/FVLRybW2mIX06E90yJ
+         QtFw0TGWs1XLvA+7S3c9gV7a2pyZUd+365rv5vqqagKH7oa2A6mDjkwh/C16HDgCRFS7
+         lAWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747902106; x=1748506906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TW+uhUhcGi/qFjEIYz1RUaPA9UVbNHNQ6EqB73r6lsU=;
+        b=qU3x4WmADgDIWnTe7UFPqKd+pnzD/vT1cGmjdD7XKUhuek1FSqXL5l4Ax4OMLA38y0
+         MadfqupX8ypnvviWrwJN6XHTej7YVlJmDpX9mQxytT8CErgfcjV9Lodc4KJtG+ZHsTNZ
+         DBZxmWs9QniILNg1w8QHtoh6LYjA6Gz+KsqUrNyuki+B2kdHEsxNyfn5JGARq+BhhhAd
+         vX2Qg0+ScRkyTVam9KPcOn6Bp/E3Ao7nI4/s8Z+H59eRykutTiWac/pQpFDaPlH0YmGk
+         6vY5zOZ5FlpW6/BEWlPx9WZSlARL5R9uoMpsGuKWyz++rDBmvTt0DqDv0IZLD83BOGGA
+         Rg+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWd7TFVMi6dbGhX0HUkyeHvX5hCulJE1i/UYPxnKqSERyU39AlkDfmbQI7qJaDxzIQz8uwHYfNDIyHpVg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzC00IOQDX4slUN8e8ozdn5v8IbirmZcsw0bMzCd0TD2mg/IrAV
+	QD/OOQTnZeRwa37HWTKD52eB4TH5iJyXPcTPC6E+rOrpPo/4awOQjhfxDlGpWjxFYYmq3VzaNi7
+	FLonkuuk5m91hY6XK+UEpTG/30xP1DXLzx9LvI+drwQ==
+X-Gm-Gg: ASbGncsORIL890KpgAfjT2J9NXLpTNwvOeVW8zH6BJ+raI9BemEJ60bql3k1806q9qF
+	HV9nt6SClEja1TCIeHSVBMxsXpp8Ps5s6wOwJLwAMTIZBB3fRIGqOkrXbDxylJ85GLJdaMDEPTI
+	V9R1LLd/AfzwJ9srzENRtysEiM2DFxqBAG
+X-Google-Smtp-Source: AGHT+IFuVWqRIf+xf4DijNOl0IDx8Qgv/jtCzf68FUzLuSbdLNyij11XpLfpriSkG3Sjekzh/okS+B8fvY52d+Rfu1M=
+X-Received: by 2002:a05:651c:2214:b0:30c:518e:452 with SMTP id
+ 38308e7fff4ca-3280771e0c9mr84948681fa.13.1747902105732; Thu, 22 May 2025
+ 01:21:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+References: <AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+ <8d249485-61f6-4081-82e0-63ae280c98c1@heusel.eu> <3352738d-9c0e-4c23-aa9a-61e1d3d67a50@hotmail.com>
+ <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+ <60a9ea8a-edb1-4426-ae0e-385f46888b3b@heusel.eu> <AM7P189MB1009A8754E90E4DE198DAC32E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+ <AM7P189MB100943AF796568B45AB7099AE399A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+In-Reply-To: <AM7P189MB100943AF796568B45AB7099AE399A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 May 2025 10:21:34 +0200
+X-Gm-Features: AX0GCFts_N2nJIo0yBksSJy-pd69zxVe0kQhRD0A3krKVPkQ2gCk7ftDFl_F9N8
+Message-ID: <CACRpkdaG5NNbfPhBMgCRUXqy_j5f=KaT75r9iQMg1HAyrAipoQ@mail.gmail.com>
+Subject: Re: Panic with a lis2dw12 accelerometer
+To: Maud Spierings <maud_spierings@hotmail.com>
+Cc: Christian Heusel <christian@heusel.eu>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 11:01:36AM +0800, Herbert Xu wrote:
-> 
-> So here is the latest debugging patch with dma_map_single on top
-> of cryptodev.  Note that the partial hash mismatch code is buggy
-> but it doesn't matter because it still prints enough info for us
-> to interpret.
+On Thu, May 22, 2025 at 9:15=E2=80=AFAM Maud Spierings
+<maud_spierings@hotmail.com> wrote:
 
-Oops, I screwed up that patch.  Here is the corrected version.
+> I have found a fix but I don't know if it is correct to do. This deals
+> with the deferred probe correctly, no longer panics and registers the
+> device properly. This is the patch I have come up with:
+>
+> diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c
+> b/drivers/iio/common/st_sensors/st_sensors_core.c
+> index 1b4287991d00a..494206f8de5b0 100644
+> --- a/drivers/iio/common/st_sensors/st_sensors_core.c
+> +++ b/drivers/iio/common/st_sensors/st_sensors_core.c
+> @@ -231,7 +231,7 @@ int st_sensors_power_enable(struct iio_dev *indio_dev=
+)
+>                                               ARRAY_SIZE(regulator_names)=
+,
+>                                               regulator_names);
+>          if (err)
+> -               return dev_err_probe(&indio_dev->dev, err,
+> +               return dev_err_probe(parent, err,
+>                                       "unable to enable supplies\n");
+>
+>          return 0;
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..5c46cd267789 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -49,8 +49,7 @@ mv_cesa_ahash_req_iter_next_op(struct mv_cesa_ahash_dma_iter *iter)
- static inline int
- mv_cesa_ahash_dma_alloc_cache(struct mv_cesa_ahash_dma_req *req, gfp_t flags)
- {
--	req->cache = dma_pool_alloc(cesa_dev->dma->cache_pool, flags,
--				    &req->cache_dma);
-+	req->cache = kmalloc(CESA_MAX_HASH_BLOCK_SIZE, flags);
- 	if (!req->cache)
- 		return -ENOMEM;
- 
-@@ -63,8 +62,8 @@ mv_cesa_ahash_dma_free_cache(struct mv_cesa_ahash_dma_req *req)
- 	if (!req->cache)
- 		return;
- 
--	dma_pool_free(cesa_dev->dma->cache_pool, req->cache,
--		      req->cache_dma);
-+	dma_unmap_single(cesa_dev->dev, req->cache_dma, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
-+	kfree(req->cache);
- }
- 
- static int mv_cesa_ahash_dma_alloc_padding(struct mv_cesa_ahash_dma_req *req,
-@@ -533,6 +532,13 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
- 
- 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
- 
-+	ahashdreq->cache_dma = dma_map_single(cesa_dev->dev, ahashdreq->cache, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
-+	if (dma_mapping_error(cesa_dev->dev, ahashdreq->cache_dma)) {
-+		dev_err(cesa_dev->dev, "dma_map_single failed\n");
-+		kfree(ahashdreq->cache);
-+		return -ENOMEM;
-+	}
-+
- 	return mv_cesa_dma_add_data_transfer(chain,
- 					     CESA_SA_DATA_SRAM_OFFSET,
- 					     ahashdreq->cache_dma,
-diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
-index 9c21f5d835d2..fd7f43575cb2 100644
---- a/drivers/crypto/marvell/cesa/cesa.c
-+++ b/drivers/crypto/marvell/cesa/cesa.c
-@@ -127,6 +127,8 @@ static irqreturn_t mv_cesa_int(int irq, void *priv)
- 		if (!(status & mask))
- 			break;
- 
-+		pr_err("mv_cesa_int: %d 0x%x 0x%x\n", engine->id, status, mask);
-+
- 		/*
- 		 * TODO: avoid clearing the FPGA_INT_STATUS if this not
- 		 * relevant on some platforms.
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..ff0735aaed7d 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -397,6 +397,8 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 	}
- 
- 	atomic_sub(ahashreq->nbytes, &engine->load);
-+
-+	pr_err("mv_cesa_ahash_complete: %d 0x%lx\n", engine->id, (unsigned long)ahashreq);
- }
- 
- static void mv_cesa_ahash_prepare(struct crypto_async_request *req,
-@@ -418,6 +420,8 @@ static void mv_cesa_ahash_req_cleanup(struct crypto_async_request *req)
- 	struct ahash_request *ahashreq = ahash_request_cast(req);
- 	struct mv_cesa_ahash_req *creq = ahash_request_ctx(ahashreq);
- 
-+	pr_err("mv_cesa_ahash_req_cleanup: %d 0x%lx\n", creq->base.engine->id, (unsigned long)ahashreq);
-+
- 	if (creq->last_req)
- 		mv_cesa_ahash_last_cleanup(ahashreq);
- 
-@@ -796,6 +800,7 @@ static int mv_cesa_ahash_queue_req(struct ahash_request *req)
- 	engine = mv_cesa_select_engine(req->nbytes);
- 	mv_cesa_ahash_prepare(&req->base, engine);
- 
-+	pr_err("mv_cesa_ahash_queue_req: %d 0x%lx %d %d\n", engine->id, (unsigned long)req, req->nbytes, creq->last_req);
- 	ret = mv_cesa_queue_req(&req->base, &creq->base);
- 
- 	if (mv_cesa_req_needs_cleanup(&req->base, ret))
-diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
-index 243305354420..55860b480dd6 100644
---- a/drivers/crypto/marvell/cesa/tdma.c
-+++ b/drivers/crypto/marvell/cesa/tdma.c
-@@ -47,6 +47,8 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
- 	engine->chain_hw.last = dreq->chain.last;
- 	spin_unlock_bh(&engine->lock);
- 
-+	pr_err("mv_cesa_dma_step: %d 0x%lx 0x%lx 0x%lx\n", engine->id, (unsigned long)dreq, (unsigned long)dreq->chain.first->cur_dma, (unsigned long)dreq->chain.last->cur_dma);
-+
- 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
- 
- 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
-@@ -137,6 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 	int res = 0;
- 
- 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
-+	pr_err("mv_cesa_tdma_process: %d 0x%lx\n", engine->id, (unsigned long)tdma_cur);
- 
- 	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
- 		spin_lock_bh(&engine->lock);
-@@ -186,6 +189,8 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
- 			break;
- 	}
- 
-+	pr_err("mv_cesa_tdma_process: %d %d 0x%lx\n", engine->id, res, (unsigned long)req);
-+
- 	/*
- 	 * Save the last request in error to engine->req, so that the core
- 	 * knows which request was faulty
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..230501fe843b 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -374,6 +374,12 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 
- 		memcpy(ahashreq->result, data, digsize);
- 	} else {
-+		struct {
-+			u32 digest[8];
-+			u64 len;
-+		} state;
-+
-+		memcpy(state.digest, creq->state, digsize);
- 		for (i = 0; i < digsize / 4; i++)
- 			creq->state[i] = readl_relaxed(engine->regs +
- 						       CESA_IVDIG(i));
-@@ -393,6 +399,21 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
- 				for (i = 0; i < digsize / 4; i++)
- 					result[i] = cpu_to_be32(creq->state[i]);
- 			}
-+		} else {
-+			HASH_FBREQ_ON_STACK(fbreq, ahashreq);
-+
-+			crypto_ahash_import_core(fbreq, &state);
-+			crypto_ahash_update(fbreq);
-+			crypto_ahash_export_core(fbreq, &state);
-+			if (memcmp(state.digest, creq->state, digsize)) {
-+				pr_err("mv_cesa_ahash_complete partial hash mismatch\n");
-+				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
-+						16, 1,
-+						state.digest, digsize, false);
-+				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
-+						16, 1,
-+						creq->state, digsize, false);
-+			}
- 		}
- 	}
- 
+It's the right fix.
+
+If you look in drivers/iio/accel/st_accel_i2c.c clearly the driver enables
+the power before calling st_accel_common_probe() which is where
+devm_iio_device_register() is finally called and the IIO struct
+device get initialized.
+
+And that's not all: st_sensors_init_sensor is also called before the
+iio device is present, so this:
+
+        } else
+                dev_info(&indio_dev->dev, "Full-scale not possible\n");
+
+and this:
+
+                dev_info(&indio_dev->dev,
+                         "set interrupt line to open drain mode on pin %d\n=
+",
+                         sdata->drdy_int_pin);
+
+is also unacceptable.
+
+I hope there are not more...
+
+They also need to use indio_dev->dev.parent, or a local copy of
+that struct device *, so please fix them too in the same patch.
+
+I tried to chase down a Fixes: candidate but this misunderstanding
+goes way back and such prints were introduced several times.
+
+I would just tag on
+Cc: stable@vger.kernel.org
+and be done with it.
+
+Thanks for drilling into this!
+
+Yours,
+Linus Walleij
