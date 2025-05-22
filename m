@@ -1,147 +1,118 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E563828CF74
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 14:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD02928FFE6;
+	Thu, 22 May 2025 15:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925513; cv=none; b=GiEBqDHyESijrslr6CsoLmxgZD1roBSn+OlBOWlvJdoG68AfpPZLIehWwu5FehqZSrkjO3dq6BradM5agLTJLrVu1aJTXF0AqScVGPrdaFiS0O9Lu+q0RJJOnOX00qP/Ikc9CZXwqimFBLMAyx1j7V1dV1p/BrTbX4vzjOjkkNg=
+	t=1747926892; cv=none; b=rOHdpjltPw0YZZXDrpK8X+QPkm6lqLk0MjJ3kpoXpMxSIAzWG0e02VT39cWHjjxpwTrvrGUMQkb/V+HI7TqtiPtKwmW1s8GMz3Q+dUsi0QimCHEUiMT4O0NW4ObpJuWN+ZVMKFF6iaPnTrrjWD3x+5YifJZMQ8/JuqvkbRu+8QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925513; c=relaxed/simple;
-	bh=NEGa2Lvo0VHyrDn2dfZSXfnMD3VzC1tI27MkvHbZIKo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bCVdLwBPJWrrdr+aP0cokVcLkSIWaoo+O6FM1Ds/wBphed2sxfQCUJSQhVATkVu6Elbir+5b+d5Zx9uvXaE5izAzNxJfN6B3Wym8cbLKZ8RPoug/CLEQoGVz9QjgyKitv/3eU880xRaiP1nEyatdBKxNtiTwngM9NTD5l1MxG6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DUWyTKWJ; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747926892; c=relaxed/simple;
+	bh=WsxG8OORjCH2ppomC5jfk23UfoRK9sGqeuLdPN9mfNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZeAdtYAFi5SXgjQ9oo8OcdnpxlCqgdDc/lTp1JLTdCglAMs6UT7zyMrc2NxEc+MLQsHoJKJxIjpYonhB3OCfZZaJP5tEG3mq/NJYRSxIBuuf46441DxSjy4Ej6371sYwBD+zZtJE8hu3HZhbA0J2eXzAdr1RJ2Byc/bUZ6S3Mmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GO+MjqHx; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUWyTKWJ"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad574992fcaso841551966b.1
-        for <regressions@lists.linux.dev>; Thu, 22 May 2025 07:51:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO+MjqHx"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-231ecd4f2a5so53469725ad.0;
+        Thu, 22 May 2025 08:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747925510; x=1748530310; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
-        b=DUWyTKWJcy98CIduR+cfHH+NR6qun/rnjQbF+ABM80qu6o4fDkZ/tBmy79CzcC3zP0
-         X4QiGVb2zo2Kyx2jZB1Q8SIjrrX+hcnK0Jx4rgesyOd/WIC6JnwjRwJHkBLAHjjjxGup
-         rTBrgBLkPAMVaz4PwBtNGDGaZT8n4GsayZwY+ICCI9FHnrUa/eUvbxj86q1yYR4+yM1i
-         WVcK0aAW8OSPD0gjVIB6y/9lZKbmkEyWaJhWFCZXfxFcUq7uDw9NjUwnbmZJ1lASCoXO
-         zda4lQVKNsXEkUWaXd3DuMQVKWGglCLawPVDeoLRYdd8s5DYR4kQMwDZioKz8Zk8i/Q4
-         B3Cg==
+        d=gmail.com; s=20230601; t=1747926890; x=1748531690; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WsxG8OORjCH2ppomC5jfk23UfoRK9sGqeuLdPN9mfNg=;
+        b=GO+MjqHxq1k8zYnFuQ9Ji9r64+AbBU5sGQuPHWaKEaemvPp515pvlWAuEb/Ksdmdcs
+         hyfUe3eFCCtXS0J9GXFh6YwlN7qX33+B2G4r1egMhAbrhPpYeNqT72azM3/wOmhbE2a/
+         biCtGL8BXP1T+1qNUDteDN4Lr+JH1aBJIE7yJuhldaKE04dfz3u2Lj6nS0E0UNAPZP/3
+         /t4P+gJc88TG65BcPGgG7+2ol5uufgvVoMyA4oOsohnHuK58MRehsD9c5F/kb6C1Xkcu
+         iXfTJEgZ2GK5nRwQbgpHKISHg2xiyBq514RpLZQWfgekM/UE7flf6KDKpfuGeOe3pTls
+         DtIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747925510; x=1748530310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
-        b=sWeIPFpuqPQNCAceuQi1WJezo3NqxzTkD5NzVRXFKyUyy6nh6mSLnI3Mz7ARP1gNvt
-         LXphpnKiVWdukQLksoYA6Tp3Ro417QXwUW/b5/7Ja/AP+Qe+BfeAnoMyMtW1xTgvPZlh
-         L0mnUqUhRFlwaaJUncFn4U0UbtFqsORGqdh1WH/BqPPjd9AOkY2pdcXTprIyFb5r1v0X
-         ZX9tImgGYCep2eWjqQrQpkoUlzO6wzEQXZXxDhjAHW3VhYC7vARFz/VJWqrPCo0/Fnrl
-         QAY12OzbpY+NoQ1Kp45WjMzg04F6x5ZF9qe8mXRiUTJVpp0BNEjFxZhvVFBSF+4Qv+NB
-         9h+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoXVY6h2DMAC6/HWAfibdOZY1E5hs79fejLizOQgN/aAkGKWLEKrNnocqxnOfDfGRotI7fOJ2lx4YPhA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/GX+M3I64QELcaxqJfGqtyxcpgBdQW9TUOQycwZNh8276zNNc
-	QXoDFG5VbO4fZ6tLb7GDgweGN6gCyEygxrd4gQzQriXdr/ccUk32uhgQ+7iTKAz1x/IDmOsCwpB
-	Qo2Dqyy04nrO45DiWcfLWbW1MRFTwoB6PYB6YGAvGQA==
-X-Gm-Gg: ASbGncu1n0ma3wWnjNxTRjt3Sfkq0GzU7DVW2voW0XNafJ2zvOcZ4mn7mYK02+32Q5i
-	T5NjnQv2c99EHcRAymapC2SzEMrBiPKXrWn5c/M16Ehk3SmnBjVFgRnk2PyCfzmqFT+jP2xbga2
-	QUMcgj9GR03LuoD4+Rrp9bwEqWsSfhEA0/jaZy/EfYpN/j7jzDOtk0VZwhbuE=
-X-Google-Smtp-Source: AGHT+IEWWodIXY6RPzmgsLl29LtMjEztepnXSAqOidAoBrsS8Lw4awvNzuVYZIqKaYEoqKapvbrKCUHcq2jJyT9DmhA=
-X-Received: by 2002:a17:906:6a14:b0:ac3:bf36:80e2 with SMTP id
- a640c23a62f3a-ad52d4c2ed3mr2316934866b.20.1747925510014; Thu, 22 May 2025
- 07:51:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747926890; x=1748531690;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WsxG8OORjCH2ppomC5jfk23UfoRK9sGqeuLdPN9mfNg=;
+        b=arjHtGSktAv3xNa6p2nH9Wqx0RpfrJSpA3hz2dUIiHpTyw6YK4NLOJHVEkU4xiAa1B
+         UmzCyrdR3xh0q6ofit8KoWQg3vAmcuu2ZrwGbDd1FwphbQrPfmP2rOqTitWZ18OsSFnk
+         e8PaGpXxNnu5QPKYNtDnLdfoNpJDG8nWKGj/2mRBe1mpW8Br4PS/KtPxrQ5WbdSNkLJf
+         gR716cdx9j1GSw9qWUeZn2E+0OBPz4FNsfEQaNkBRnVOPvd5ql/gaYxr59bHsUgZQVIx
+         k9ZhD1RXLEQAsL1SNitRhqG5R31MQ0kIGYMg+BD5OYcaNvhOdt7HnE8Dr5M7iNWlsSgo
+         zJrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUchtun+pHIedCW9vWGwFT8FF6kFdoub7QyNo4pmesAnlQ4ZMUX0Tgq6KEcE9KICLUcMobb@lists.linux.dev, AJvYcCW5kTGyhdgutvwC6FT+UfQ1xBRzU/GYUiYoEf0B+jvJonMUL+46QkKmkqZf0/24tCh6A+NRQcEOGhc+FfM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzLFN3JyjDSodSCCPe+FWEUvSRlE8NQsKpGrdARbiu+TEO/TEXW
+	2oW4tVGw+O1B0E3RuX80p10TWK8Xr+8xnRZLQV9pLj/r6XRAtwyGIOVf
+X-Gm-Gg: ASbGncvEBi5Fsb00FpxZtCKMsw4/NEFQGB6Kob6Mejo03a+eYBrWjS9oaxi2eowyyKA
+	Pzor1YNdtfOMk4vTUjWYwKrEONiOjqkmPY2HcKe6A3Z3W6XTWjtUg0luSi95fWXgBp23H2pLQUH
+	qbsW4poUZKk8cTbx+unYVVGLsQSPTNluLoThCFLCw4xlYFspRId5UkXfPVWhA1IjMHBAuRovkeq
+	S5/m+f8ZeYTiueAVswc3F6jKgSEmhRA5QtZCZaZhy3hglAtcC+sEAyue7bc34OKi4iB9EjzCKFg
+	ShDQ6SC5EM10wOioyxRGnS4jnjXToZNnvb2rRck8F4PHFnh30vKu07ADVLeTk7i71Z84BUqw3JC
+	6XtSR0oVnr2YAJeDlzuEcaw==
+X-Google-Smtp-Source: AGHT+IFFHdCg2bYOMTipIdA9PaTTIsK/FEQRHO9l1ug8WETlJWK+AYJ1xQFp0K0ePyvYyX5dR5SrDw==
+X-Received: by 2002:a17:903:1a68:b0:22f:c568:e691 with SMTP id d9443c01a7336-231de3149ddmr360264745ad.21.1747926889909;
+        Thu, 22 May 2025 08:14:49 -0700 (PDT)
+Received: from ?IPV6:2601:644:8500:5dd0:864b:f5ff:fe5c:59a5? ([2601:644:8500:5dd0:864b:f5ff:fe5c:59a5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac93besm109295605ad.12.2025.05.22.08.14.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 08:14:49 -0700 (PDT)
+Message-ID: <95d28adf-1eae-4d33-9421-c0864933c242@gmail.com>
+Date: Thu, 22 May 2025 08:14:46 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com> <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com> <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
- <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com> <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
-In-Reply-To: <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 22 May 2025 16:51:34 +0200
-X-Gm-Features: AX0GCFvdXP-4idhTJtDESTwuQOtxpJxvvZ6RDqVKNRr-ZF6A0JkBHH_UMh9yOgw
-Message-ID: <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com>
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Valentin Schneider <vschneid@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, torvalds@linux-foundation.org,
+ Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Christian Schrrefl <chrisi.schrefl@gmail.com>,
+ Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>,
+ anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org,
+ laura.nao@collabora.com, lkft-triage@lists.linaro.org,
+ regressions@lists.linux.dev, Nick Clifton <nickc@redhat.com>,
+ Richard Earnshaw <richard.earnshaw@arm.com>,
+ Ramana Radhakrishnan <ramanara@nvidia.com>,
+ Linux Kernel Functional Testing <lkft@linaro.org>
+References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
+ <CANiq72mh1h8d-EWrZef=BPPtadZyHG0B+tg9GgA_RnWiETWMkA@mail.gmail.com>
+ <db93019f-0a57-4b1d-95a6-ed5a6ab9a989@gmail.com>
+ <CANiq72n3UzgG4BTcZXd9aJK_9+BwodRkbzewPtipi4-iCqdeqA@mail.gmail.com>
+Content-Language: en-US
+From: Rudraksha Gupta <guptarud@gmail.com>
+In-Reply-To: <CANiq72n3UzgG4BTcZXd9aJK_9+BwodRkbzewPtipi4-iCqdeqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Jean-Baptiste,
+> No worries, I will apply this one :)
+>
+> I will remove the tag, unless you want it there for some reason (e.g.
+> because you want to point out some extra testing that goes beyond what
+> would normally be done).
+>
+> Thanks!
 
-On Fri, 16 May 2025 at 17:05, Jean-Baptiste Roquefere
-<jb.roquefere@ateme.com> wrote:
->
-> Hello Prateek,
-> long time no see... I've been very busy lately.
->
-> Did he try with relax_domain_level=3, i.e. prevent newilde idle
->
->
-> >> balance between LLC ? I don't see results showing that it's not enough
-> >> to prevent newly idle migration between LLC
-> >
-> > I don't think he did. JB if it isn't too much trouble, could you please
-> > try running with "relax_domain_level=3" in kernel cmdline and see if
-> > the performance is similar to "relax_domain_level=2".
->
-> I just tried relax_domain_level=3 on my payload. As you can see
-> relax_domain_level=3 performances are more or less the same
+Removing the tag is fine by me :)
 
-As there is no difference between level2 and level3, I assume that the
-problem is not linked to a core to core migration but only the
-migration between LLC.
 
-As said previously, I don't see an obvious connection between commit
-16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC during LB")
-which mainly ensures a better usage of CPUs inside a LLC. Do you have
-cpufreq and freq scaling enabled ? The only link that I could think
-of, is that the spread of task inside a llc favors inter LLC newly
-idle load balance
+Rudraksha
 
 >
-> +--------------------+---------------------+---------------------+
-> | Kernel             | 6.12.17 relax dom 2 | 6.12.17 relax dom 3 |
-> +--------------------+---------------------+---------------------+
-> | Utilization (%)    | 52,01               | 52,15 |
-> | CPU effective freq | 1 294,12            | 1 309,85 |
-> | IPC                | 1,42                | 1,40 |
-> | L2 access (pti)    | 38,18               | 38,03 |
-> | L2 miss   (pti)    | 7,78                | 7,90 |
-> | L3 miss   (abs)    | 33 929 609 924,00   | 33 705 899 797,00 |
-> | Mem (GB/s)         | 49,10               | 48,91 |
-> | Context switches   | 107 896 729,00      | 106 441 463,00 |
-> | CPU migrations     | 16 075 947,00       | 18 129 700,00 |
-> | Real time (s)      | 193,39              | 193,41 |
-> +--------------------+---------------------+---------------------+
->
-> We got the point that tuning this variable is not a good solution, but
-> for now it's the only one we can apply.
->
-> Without this tuning our solution loses real time video processing. With
-> : we keep real time on.
->
->
-> Thanks for your help, I'll stay alert on this thread if someday a better
-> solution can emerge.
->
->
-> Regards,
->
->
-> jb
->
+> Cheers,
+> Miguel
