@@ -1,41 +1,41 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71F529A30F
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 16:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A8118C932
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 16:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747933084; cv=none; b=MKvAD16R2BWP01p+uedWltcC3F1tT3yIuxoUyObfocTP5QUtJdq/g0YmfCLHe10g82W1zsRBC4xNeZdWRJEBT0XzNgfIi6a8kulJp0bRMYLbk47yqLVlCYM4L6wt2B7vh2n+mWAF6P1vA7jRdTm2dNlWsv2GLfjbeCjRdY0Im/E=
+	t=1747933084; cv=none; b=QhZXROV8xZBXwxT8S5L686Ujy8tZVhaV3t2rzXm3o9lkbzPVJSAeCyyG4Zh4jlyiFUa8ajtJAgHgx7Yv+8Dor7hTtpJ1sZPZarSIc/xtzgu6PPGWD0S8GXJ0FdkRn5KYiiBLJk70k05jv9MKLDy3KQ+/yuSiDhixPmol4O4MKuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747933084; c=relaxed/simple;
-	bh=di6lnctZ68CbdemR33SuOnK3IAPWYGRSZBaWZU+U9qo=;
+	bh=846abecOQ13mXRh0jre/QSNiTp9mrU9ufxPQAYh/fsQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G+ZjRl2OGL8Zs91tMNcNyB4tMVBnjkF6ImfYVN42sepmVaqs3ijPyLiI+Xv4MRJbicyriqS2YDyHS0sjURCUodwxNJM+YZvdVwJfivhRAHl0wlebKWyG04GDzY9aool3KhT4i6/HhNn1yqcq1lemQajAuf1hxfxbpca6c76/7ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XCbJ4j7W; arc=none smtp.client-ip=91.218.175.177
+	 MIME-Version; b=lNi6QgDjz9Zs0RXye2rHq/QAmXmEBwQ+dIyRn/KRGn8AIE01E8Mpxri8AWnBP/uL3bUP7G1ikcZGPVhDRWbxJC//2RiosJFI+McmPzHQb1uhB7lgoC4eo/wr/lrCplLAbJjSSJbK2cz3iYWj8SmwrnjaslmgHjf1fm447pKxYMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BGc0USv4; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XCbJ4j7W"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BGc0USv4"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747933079;
+	t=1747933080;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zPijSL2WisLPW5DPkG2EvWUbi5fqv6ZMUHX/vaHGFuQ=;
-	b=XCbJ4j7WVNxBudet2hjX1T0NYBsAXVnSru2j4c0JOpPMszn4dWc2C/mtAHRssjcMb9usEK
-	p0EJhLHmeA7tijdK78h9wwqWn4o1bBcL8DqIxIC8kNNjNudVLK6Xw1d3XTvMHEaClR7tpf
-	zU6/iXrURMIqB7X16QHbL2PUHHlGmk4=
+	bh=9XDnciBDD11ORFcMxlE/J3Yy6/bDdQsNOtR+/bB+vG4=;
+	b=BGc0USv4qDb6+PGuo+JvZa3eOWuctKZduli1sYtpCVodx/3+i5oJ4G7y4GDbZjtt41npWU
+	g40dXjTN9MC9Ekg5v3OTVsKV1wfpOQEAe8Q7xR79yZz+7KRnNX3rzOV9IuXElI4toKJnEs
+	vaw7gF1QCdtuHkI5Wq5f7QnHKOM/XRE=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.or
 Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
 	lkft-triage@lists.linaro.org,
 	regressions@lists.linux.dev,
 	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 2/3] bcachefs: bch2_trans_log_str()
-Date: Thu, 22 May 2025 12:57:51 -0400
-Message-ID: <20250522165752.2908964-2-kent.overstreet@linux.dev>
+Subject: [PATCH 3/3] bcachefs: Reduce stack usage in data_update_index_update()
+Date: Thu, 22 May 2025 12:57:52 -0400
+Message-ID: <20250522165752.2908964-3-kent.overstreet@linux.dev>
 In-Reply-To: <20250522165752.2908964-1-kent.overstreet@linux.dev>
 References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
  <20250522165752.2908964-1-kent.overstreet@linux.dev>
@@ -48,75 +48,252 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The data update path doesn't need a printbuf for its log message - this
-will help reduce stack usage.
+Separate tracepoint message generation and other slowpath code into
+non-inline functions, and use bch2_trans_log_str() instead of using a
+printbuf for our journal message.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/btree_update.c | 26 ++++++++++++++++++--------
- fs/bcachefs/btree_update.h |  1 +
- 2 files changed, 19 insertions(+), 8 deletions(-)
+ fs/bcachefs/data_update.c | 154 +++++++++++++++++++++-----------------
+ 1 file changed, 87 insertions(+), 67 deletions(-)
 
-diff --git a/fs/bcachefs/btree_update.c b/fs/bcachefs/btree_update.c
-index afd05c3dfd03..8fe2834f9d57 100644
---- a/fs/bcachefs/btree_update.c
-+++ b/fs/bcachefs/btree_update.c
-@@ -829,25 +829,35 @@ int bch2_btree_bit_mod_buffered(struct btree_trans *trans, enum btree_id btree,
- 	return bch2_trans_update_buffered(trans, btree, &k);
+diff --git a/fs/bcachefs/data_update.c b/fs/bcachefs/data_update.c
+index ef648a6d9c52..c34e5b88ba9d 100644
+--- a/fs/bcachefs/data_update.c
++++ b/fs/bcachefs/data_update.c
+@@ -100,9 +100,10 @@ static bool bkey_nocow_lock(struct bch_fs *c, struct moving_context *ctxt, struc
+ 	return true;
  }
  
--int bch2_trans_log_msg(struct btree_trans *trans, struct printbuf *buf)
-+static int __bch2_trans_log_str(struct btree_trans *trans, const char *str, unsigned len)
+-static noinline void trace_io_move_finish2(struct data_update *u,
+-					       struct bkey_i *new,
+-					       struct bkey_i *insert)
++noinline_for_stack
++static void trace_io_move_finish2(struct data_update *u,
++				  struct bkey_i *new,
++				  struct bkey_i *insert)
  {
--	unsigned u64s = DIV_ROUND_UP(buf->pos, sizeof(u64));
+ 	struct bch_fs *c = u->op.c;
+ 	struct printbuf buf = PRINTBUF;
+@@ -124,6 +125,7 @@ static noinline void trace_io_move_finish2(struct data_update *u,
+ 	printbuf_exit(&buf);
+ }
+ 
++noinline_for_stack
+ static void trace_io_move_fail2(struct data_update *m,
+ 			 struct bkey_s_c new,
+ 			 struct bkey_s_c wrote,
+@@ -179,19 +181,84 @@ static void trace_io_move_fail2(struct data_update *m,
+ 	printbuf_exit(&buf);
+ }
+ 
++noinline_for_stack
++static void trace_data_update2(struct data_update *m,
++			       struct bkey_s_c old, struct bkey_s_c k,
++			       struct bkey_i *insert)
++{
++	struct bch_fs *c = m->op.c;
++	struct printbuf buf = PRINTBUF;
++
++	prt_str(&buf, "\nold: ");
++	bch2_bkey_val_to_text(&buf, c, old);
++	prt_str(&buf, "\nk:   ");
++	bch2_bkey_val_to_text(&buf, c, k);
++	prt_str(&buf, "\nnew: ");
++	bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
++
++	trace_data_update(c, buf.buf);
++	printbuf_exit(&buf);
++}
++
++noinline_for_stack
++static void trace_io_move_created_rebalance2(struct data_update *m,
++					     struct bkey_s_c old, struct bkey_s_c k,
++					     struct bkey_i *insert)
++{
++	struct bch_fs *c = m->op.c;
++	struct printbuf buf = PRINTBUF;
++
++	bch2_data_update_opts_to_text(&buf, c, &m->op.opts, &m->data_opts);
++
++	prt_str(&buf, "\nold: ");
++	bch2_bkey_val_to_text(&buf, c, old);
++	prt_str(&buf, "\nk:   ");
++	bch2_bkey_val_to_text(&buf, c, k);
++	prt_str(&buf, "\nnew: ");
++	bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
++
++	trace_io_move_created_rebalance(c, buf.buf);
++	printbuf_exit(&buf);
++
++	this_cpu_inc(c->counters[BCH_COUNTER_io_move_created_rebalance]);
++}
++
++noinline_for_stack
++static int data_update_invalid_bkey(struct data_update *m,
++				    struct bkey_s_c old, struct bkey_s_c k,
++				    struct bkey_i *insert)
++{
++	struct bch_fs *c = m->op.c;
++	struct printbuf buf = PRINTBUF;
++	bch2_log_msg_start(c, &buf);
++
++	prt_str(&buf, "about to insert invalid key in data update path");
++	prt_printf(&buf, "\nop.nonce: %u", m->op.nonce);
++	prt_str(&buf, "\nold: ");
++	bch2_bkey_val_to_text(&buf, c, old);
++	prt_str(&buf, "\nk:   ");
++	bch2_bkey_val_to_text(&buf, c, k);
++	prt_str(&buf, "\nnew: ");
++	bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
++
++	bch2_fs_emergency_read_only2(c, &buf);
++
++	bch2_print_str(c, KERN_ERR, buf.buf);
++	printbuf_exit(&buf);
++
++	return -BCH_ERR_invalid_bkey;
++}
++
+ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 					   struct bch_write_op *op)
+ {
+ 	struct bch_fs *c = op->c;
+ 	struct btree_iter iter;
+-	struct data_update *m =
+-		container_of(op, struct data_update, op);
+-	struct keylist *keys = &op->insert_keys;
+-	struct printbuf journal_msg = PRINTBUF;
++	struct data_update *m = container_of(op, struct data_update, op);
+ 	int ret = 0;
+ 
+ 	bch2_trans_iter_init(trans, &iter, m->btree_id,
+-			     bkey_start_pos(&bch2_keylist_front(keys)->k),
++			     bkey_start_pos(&bch2_keylist_front(&op->insert_keys)->k),
+ 			     BTREE_ITER_slots|BTREE_ITER_intent);
+ 
+ 	while (1) {
+@@ -216,11 +283,11 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 		if (ret)
+ 			goto err;
+ 
+-		new = bkey_i_to_extent(bch2_keylist_front(keys));
++		new = bkey_i_to_extent(bch2_keylist_front(&op->insert_keys));
+ 
+ 		if (!bch2_extents_match(k, old)) {
+ 			trace_io_move_fail2(m, k, bkey_i_to_s_c(&new->k_i),
+-						NULL, "no match:");
++					    NULL, "no match:");
+ 			goto nowork;
+ 		}
+ 
+@@ -239,7 +306,7 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 		if (ret)
+ 			goto err;
+ 
+-		bkey_copy(&new->k_i, bch2_keylist_front(keys));
++		bkey_copy(&new->k_i, bch2_keylist_front(&op->insert_keys));
+ 		bch2_cut_front(iter.pos, &new->k_i);
+ 
+ 		bch2_cut_front(iter.pos,	insert);
+@@ -353,31 +420,11 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 							.flags	= BCH_VALIDATE_commit,
+ 						 });
+ 		if (unlikely(invalid)) {
+-			struct printbuf buf = PRINTBUF;
+-			bch2_log_msg_start(c, &buf);
 -
--	int ret = buf->allocation_failure ? -BCH_ERR_ENOMEM_trans_log_msg : 0;
--	if (ret)
--		return ret;
-+	unsigned u64s = DIV_ROUND_UP(len, sizeof(u64));
+-			prt_str(&buf, "about to insert invalid key in data update path");
+-			prt_printf(&buf, "\nop.nonce: %u", m->op.nonce);
+-			prt_str(&buf, "\nold: ");
+-			bch2_bkey_val_to_text(&buf, c, old);
+-			prt_str(&buf, "\nk:   ");
+-			bch2_bkey_val_to_text(&buf, c, k);
+-			prt_str(&buf, "\nnew: ");
+-			bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
+-
+-			bch2_fs_emergency_read_only2(c, &buf);
+-
+-			bch2_print_str(c, KERN_ERR, buf.buf);
+-			printbuf_exit(&buf);
+-
+-			ret = -BCH_ERR_invalid_bkey;
++			ret = data_update_invalid_bkey(m, old, k, insert);
+ 			goto out;
+ 		}
  
- 	struct jset_entry *e = bch2_trans_jset_entry_alloc(trans, jset_u64s(u64s));
--	ret = PTR_ERR_OR_ZERO(e);
-+	int ret = PTR_ERR_OR_ZERO(e);
- 	if (ret)
- 		return ret;
+-		printbuf_reset(&journal_msg);
+-		prt_str(&journal_msg, bch2_data_update_type_strs[m->type]);
+-
+-		ret =   bch2_trans_log_msg(trans, &journal_msg) ?:
++		ret =   bch2_trans_log_str(trans, bch2_data_update_type_strs[m->type]) ?:
+ 			bch2_trans_log_bkey(trans, m->btree_id, 0, m->k.k) ?:
+ 			bch2_insert_snapshot_whiteouts(trans, m->btree_id,
+ 						k.k->p, bkey_start_pos(&insert->k)) ?:
+@@ -389,38 +436,12 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 		if (ret)
+ 			goto err;
  
- 	struct jset_entry_log *l = container_of(e, struct jset_entry_log, entry);
- 	journal_entry_init(e, BCH_JSET_ENTRY_log, 0, 1, u64s);
--	memcpy_and_pad(l->d, u64s * sizeof(u64), buf->buf, buf->pos, 0);
-+	memcpy_and_pad(l->d, u64s * sizeof(u64), str, len, 0);
- 	return 0;
- }
+-		if (trace_data_update_enabled()) {
+-			struct printbuf buf = PRINTBUF;
+-
+-			prt_str(&buf, "\nold: ");
+-			bch2_bkey_val_to_text(&buf, c, old);
+-			prt_str(&buf, "\nk:   ");
+-			bch2_bkey_val_to_text(&buf, c, k);
+-			prt_str(&buf, "\nnew: ");
+-			bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
+-
+-			trace_data_update(c, buf.buf);
+-			printbuf_exit(&buf);
+-		}
++		if (trace_data_update_enabled())
++			trace_data_update2(m, old, k, insert);
  
-+int bch2_trans_log_str(struct btree_trans *trans, const char *str)
-+{
-+	return __bch2_trans_log_str(trans, str, strlen(str));
-+}
-+
-+int bch2_trans_log_msg(struct btree_trans *trans, struct printbuf *buf)
-+{
-+	int ret = buf->allocation_failure ? -BCH_ERR_ENOMEM_trans_log_msg : 0;
-+	if (ret)
-+		return ret;
-+
-+	return __bch2_trans_log_str(trans, buf->buf, buf->pos);
-+}
-+
- int bch2_trans_log_bkey(struct btree_trans *trans, enum btree_id btree,
- 			unsigned level, struct bkey_i *k)
- {
-diff --git a/fs/bcachefs/btree_update.h b/fs/bcachefs/btree_update.h
-index a54dc7277177..f907eaa8b185 100644
---- a/fs/bcachefs/btree_update.h
-+++ b/fs/bcachefs/btree_update.h
-@@ -205,6 +205,7 @@ void bch2_trans_commit_hook(struct btree_trans *,
- 			    struct btree_trans_commit_hook *);
- int __bch2_trans_commit(struct btree_trans *, unsigned);
+ 		if (bch2_bkey_sectors_need_rebalance(c, bkey_i_to_s_c(insert)) * k.k->size >
+-		    bch2_bkey_sectors_need_rebalance(c, k) * insert->k.size) {
+-			struct printbuf buf = PRINTBUF;
+-
+-			bch2_data_update_opts_to_text(&buf, c, &m->op.opts, &m->data_opts);
+-
+-			prt_str(&buf, "\nold: ");
+-			bch2_bkey_val_to_text(&buf, c, old);
+-			prt_str(&buf, "\nk:   ");
+-			bch2_bkey_val_to_text(&buf, c, k);
+-			prt_str(&buf, "\nnew: ");
+-			bch2_bkey_val_to_text(&buf, c, bkey_i_to_s_c(insert));
+-
+-			trace_io_move_created_rebalance(c, buf.buf);
+-			printbuf_exit(&buf);
+-
+-			this_cpu_inc(c->counters[BCH_COUNTER_io_move_created_rebalance]);
+-		}
++		    bch2_bkey_sectors_need_rebalance(c, k) * insert->k.size)
++			trace_io_move_created_rebalance2(m, old, k, insert);
  
-+int bch2_trans_log_str(struct btree_trans *, const char *);
- int bch2_trans_log_msg(struct btree_trans *, struct printbuf *);
- int bch2_trans_log_bkey(struct btree_trans *, enum btree_id, unsigned, struct bkey_i *);
- 
+ 		ret =   bch2_trans_commit(trans, &op->res,
+ 				NULL,
+@@ -441,9 +462,9 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 		if (ret)
+ 			break;
+ next:
+-		while (bkey_ge(iter.pos, bch2_keylist_front(keys)->k.p)) {
+-			bch2_keylist_pop_front(keys);
+-			if (bch2_keylist_empty(keys))
++		while (bkey_ge(iter.pos, bch2_keylist_front(&op->insert_keys)->k.p)) {
++			bch2_keylist_pop_front(&op->insert_keys);
++			if (bch2_keylist_empty(&op->insert_keys))
+ 				goto out;
+ 		}
+ 		continue;
+@@ -461,7 +482,6 @@ static int __bch2_data_update_index_update(struct btree_trans *trans,
+ 		goto next;
+ 	}
+ out:
+-	printbuf_exit(&journal_msg);
+ 	bch2_trans_iter_exit(trans, &iter);
+ 	BUG_ON(bch2_err_matches(ret, BCH_ERR_transaction_restart));
+ 	return ret;
 -- 
 2.49.0
 
