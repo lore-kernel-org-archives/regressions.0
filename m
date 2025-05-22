@@ -1,139 +1,118 @@
-Received: from mail3.out.flockmail.com (mail3.out.flockmail.com [18.215.190.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277A1148FE6
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 18:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.215.190.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F47A1DF721
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 20:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939804; cv=none; b=U60GIV5ptBQMlrHu/fsSlffsSr6mf2xgVolg0Q0LNFJKCTFqRNU66vmXUaiR2whGTzyKc/gVO67UwzXePMpgebs9gfjAxyAcKPDUlxLKnD+1ok6DZpV8bWpAInv+U/foxdt13p6NazHZvPoqMcLD5iARMI1eKeKQqu9kOJyUMxA=
+	t=1747944483; cv=none; b=tvZXRZ2PqzHlCtyrdTGe0hu0MbAitXqADtbOdldeaPlNHeCIsDO4xmlB2U81hwahEWA0m6gMZzFtJjTKcZVHSCkJeJuoR8MYxFp+h/DcL7UFIAsVhaCLQRx0UrHZBFyX2vWplcOOgseRAgLWnbnXdsgNU/m5hICUQ0H5hX01FOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939804; c=relaxed/simple;
-	bh=Q0PYmNdAm+3Qf4fqBIwBC7PH0E4dHRftuI+OgdY3lXM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=IwJfmBxr+KoOuvO/6rajOqbRRjCRPPNKpPiLcclBkYIC36aF0izan9/04V7VVMxedwkOH3izqr3WUN1AnBC6soqwR2E9i9qSQ2f+LQIQwC4JKq4W6dg+1zxYr6kp9uB3oWDweAFr3PhdjffGeFt8yrdRoQyD9BWz9W/DKbx5ekM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=W8ucw8tM; arc=none smtp.client-ip=18.215.190.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1747944483; c=relaxed/simple;
+	bh=BUCLC3GDDDNi++xQJV2x9OdVC1R2H2qikmN94FNnCoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=to3w7+YjhdbkNQnxMyohsABVGGlMhu0bCA5+Q4bh8/D8M+B6Vu1chsn+0HZnumRQ7B/o+BL0W1FPtogc0JFFIiQjfxt8zJvfp7/pzUj9BI6EFMTgzR+8ADkZsCTA0VV+Rc1vu9P15hhhHNayo4BXMwxEahK/oPIbRBW1V17ENDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYP90FgJ; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="W8ucw8tM"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id D1F65E0015;
-	Thu, 22 May 2025 15:14:27 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=taO0LrTM+GjJ2q8d/yfaS+WGBoxT48m7W5053bW9Haw=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=message-id:subject:from:in-reply-to:cc:date:mime-version:references:to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1747926867; v=1;
-	b=W8ucw8tMezn3KIC4AFxXK1J6IzhuvZBneSaYRQmF7H49EF1xj6Vyjq/pTeUhLKtkG0KOOv/J
-	neFKoI1pJk5KbvpApEKtvNaBm/AqDNSXodeuZFiGCy9Hq0Zn6gRXAA+U+hRXpg5mMrt80j+TPJa
-	IIjy5ka6U6tuKVr75SFVsxSY=
-Received: from smtpclient.apple (n218103205009.netvigator.com [218.103.205.9])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id A39EAE006A;
-	Thu, 22 May 2025 15:14:24 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYP90FgJ"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so1706905e9.0
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 13:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747944480; x=1748549280; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=G5gpVCcMV1i9snPwFeqD1LIyAIQqJtgrDKNKGxDbPqo=;
+        b=QYP90FgJznXh500aQXX7vFxpHQLrcErMlwOE4w91d0abVPE1U8JJkPmrKGIU6zxUuc
+         Lt2irEvcNiqnm5lTmuWrOqVvHQqg8l9HTncSS1ywUOji4Zof88RpLhC0j0KfslNPpaJx
+         ek6sq0AGfL18g9JwDQmudvSz63ZhnfvYXw+Z5N4g9g9/WsdRPiRF49DlX6ZBa58J1bEO
+         tfJvkgznvDQrHffe9vrF6UPIACsrws83nb8RzJuZkdf1pSnu82ivHJjrUkFoIk49OGgi
+         Wj7o3TbLnrr07cCjymVJJtkmXxOQ0CtZDbhu0taGD+E8sn25Tz2jvzug8H8HVyqXpbxL
+         nFNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747944480; x=1748549280;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G5gpVCcMV1i9snPwFeqD1LIyAIQqJtgrDKNKGxDbPqo=;
+        b=Z6kDrbQ4IJpU8An7thRz2LDNKEi+Y5+Bv8ezfPf9RHi1W5H6FASTojUjsXl4WDwWTB
+         aeOPEVYlCRF/L3K8rFOhXIOR+/2BOFvEu+SBuBoRVXWSEbxdpOVQOmkFMmepWgDl448P
+         tkN9q/3goIYRfqwNQ4t8+geCsYoDWLTOn/UG717bM5XjngpEkAWfq+lOirCLWpP3C2Yj
+         1bUtMeLzmbvlXfzRJU4L3WRBRbGzEGl2xYtPvp3l3bjfUrHRvFgZz3ixUfr/ZVnE3qis
+         JPsvVvYhmrwzuMu4rC113U+ecxfNR91KVzph+D0NKmJ2jtynkODxqpfGFQnhV0TT7il6
+         fKVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcApePgGe7XuQSHax8Z7LBOv+HuHKBk632DU4tUthachv8TfbVi0n1jm8SaE1w8OcG/2dnJYMovYHk6g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0KmwR9oymOqJj5aVL2EWgQC0IHH8nBVZ2jujZCpnD06HfqoIw
+	aWvcFLU1MvI7r9nCXEIHewuO/Wrnc6HvLlOHHVZ6Yv45Z2kro96rkiBH
+X-Gm-Gg: ASbGnct/LdBedpX4bvjbmWAutx3Utaf/6wctS1d56kG4ZGFwrB97/t8OMxJXnhvCEvy
+	o0YFND7JfEDjInitIaqwjn2GLQjnP3TSNSJv3V5iZKAq9ChCd1m7DGim+YfOsSVNFxQVv8NAKus
+	gsBjpwvuwnmSH7OLhanInSDX8LFCnm7MpYmws4crjekduYW7IiQjLDmukR86WGY0zHC7b/rnsSk
+	VGTXl6PDVk0kOA2+jD80ROV5js7lTkoPs2oKSZeieXI554kxItKq5YKAhYPOUv5zV6seDE1A9TZ
+	nV1vXeqm005wyNYAhZkVRfhlOpXiUY/SrOZeq7hG3BhtQQNu/i0O
+X-Google-Smtp-Source: AGHT+IHiscUjYHw6hRgf6vQpphZCl8lZi4zCqb+M0K4BvM0wTOLA0OOWMHCxOMl33M+fLv2bdqFSaA==
+X-Received: by 2002:a05:600c:3d92:b0:43d:b33:679c with SMTP id 5b1f17b1804b1-44b529ff7damr8348965e9.14.1747944479294;
+        Thu, 22 May 2025 13:07:59 -0700 (PDT)
+Received: from Red ([2a01:cb1d:897:7800:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-447f78aea59sm120824755e9.25.2025.05.22.13.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 13:07:57 -0700 (PDT)
+Date: Thu, 22 May 2025 22:07:54 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
+ dma_map_single works
+Message-ID: <aC-EGr50MIVJqwVn@Red>
+References: <aCczV6MF6xk5rRA3@gondor.apana.org.au>
+ <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <aC2uvvzlR89iVFGW@Red>
+ <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
+ <aC3cF0-bWb-Jiz4i@Red>
+ <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+ <aC7UbAIDA46olNJL@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-Date: Thu, 22 May 2025 23:14:11 +0800
-Cc: open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- kent.overstreet@linux.dev,
- Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>,
- linux-bcachefs@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <36D1F736-7E76-47F6-9E26-0E8E8F4E9B44@coly.li>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1747926867682161361.26132.8009154321890797791@prod-use1-smtp-out1004.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=U8BoDfru c=1 sm=1 tr=0 ts=682f3f53
-	a=eJNHGpZBYRW47XJYT+WeIA==:117 a=eJNHGpZBYRW47XJYT+WeIA==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=Oh2cFVv5AAAA:8 a=KKAkSRfTAAAA:8
-	a=21D8NHQQAAAA:8 a=VwQbUJbxAAAA:8 a=uOdo12Paqm2KlJZ413YA:9
-	a=QEXdDO2ut3YA:10 a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22
-	a=aE7_2WBlPvBBVsBbSUWX:22
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aC7UbAIDA46olNJL@gondor.apana.org.au>
 
-Hi Naresh,
+Le Thu, May 22, 2025 at 03:38:20PM +0800, Herbert Xu a écrit :
+> On Thu, May 22, 2025 at 11:01:36AM +0800, Herbert Xu wrote:
+> > 
+> > So here is the latest debugging patch with dma_map_single on top
+> > of cryptodev.  Note that the partial hash mismatch code is buggy
+> > but it doesn't matter because it still prints enough info for us
+> > to interpret.
+> 
+> Oops, I screwed up that patch.  Here is the corrected version.
+> 
 
-Bcachefs has its own mailing list linux-bcachefs@vger.kernel.org =
-<mailto:linux-bcachefs@vger.kernel.org>, here I Cc this email to =
-bcachefs mailing list.
+Hello
 
-Thanks.
+Here is the result:
+http://kernel.montjoie.ovh/479404.log
 
-Coly Li
+I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
 
-> 2025=E5=B9=B45=E6=9C=8822=E6=97=A5 21:29=EF=BC=8CNaresh Kamboju =
-<naresh.kamboju@linaro.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Regressions on riscv allyesconfig build failed with gcc-13 on the =
-Linux next
-> tag next-20250516 and next-20250522.
->=20
-> First seen on the next-20250516
-> Good: next-20250515
-> Bad:  next-20250516
->=20
-> Regressions found on riscv:
-> - build/gcc-13-allyesconfig
->=20
-> Regression Analysis:
-> - New regression? Yes
-> - Reproducible? Yes
->=20
-> Build regression: riscv gcc-13 allyesconfig error the frame size of
-> 2064 bytes is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> ## Build log
-> fs/bcachefs/data_update.c: In function =
-'__bch2_data_update_index_update':
-> fs/bcachefs/data_update.c:464:1: error: the frame size of 2064 bytes
-> is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
->  464 | }
->      | ^
-> cc1: all warnings being treated as errors
->=20
->=20
-> ## Source
-> * Kernel version: 6.15.0-rc7
-> * Git tree: =
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.g=
-it
-> * Git sha: 460178e842c7a1e48a06df684c66eb5fd630bcf7
-> * Git describe: next-20250522
->=20
-> ## Build
-> * Build log: =
-https://qa-reports.linaro.org/api/testruns/28521854/log_file/
-> * Build history:
-> =
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250522/t=
-estrun/28521854/suite/build/test/gcc-13-allyesconfig/history/
-> * Build link: =
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRoAAw5dl69AvvHb8o=
-Z3pL1SFx/
-> * Kernel config:
-> =
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRoAAw5dl69AvvHb8o=
-Z3pL1SFx/config
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->=20
-
+Thanks
+Regards
