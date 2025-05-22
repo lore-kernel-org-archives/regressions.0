@@ -1,162 +1,147 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDF52770B
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 14:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E563828CF74
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 14:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922550; cv=none; b=k8/z/Xik3Xqy+BHxB8PI2OQ0fHCARBn1eAjEjvHn9TSvWpJ1FS6qsLs+chhBKKP0K5mu6PsrJAYx6zGdt2f7/wEYTJjuJgtIZqRSLuvV0Zhq//t5waukM4HOnYyewaeXPiOTWFeVdecFslwGm8TKSLr1+C/S8WljymOwkbm9v4Y=
+	t=1747925513; cv=none; b=GiEBqDHyESijrslr6CsoLmxgZD1roBSn+OlBOWlvJdoG68AfpPZLIehWwu5FehqZSrkjO3dq6BradM5agLTJLrVu1aJTXF0AqScVGPrdaFiS0O9Lu+q0RJJOnOX00qP/Ikc9CZXwqimFBLMAyx1j7V1dV1p/BrTbX4vzjOjkkNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922550; c=relaxed/simple;
-	bh=VKDEPzwby3mBDQ3BsLrh1Y11pUMU7WCO46ezVRwnuYI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=cIdtZniLsYsESY662xzX0QDzpGPKQrOgztYQ63TvGXt1gOd3CSysvNIt7YX/Af8Jx+ImlugOY5CTXlCcvSQ4bDM5BVdeXoDAdwoP31wt/iRev3qwuRBgT2xCWoeTp7ab0MJGHtWHkxm/8m8HNxcipG3qcdOQ/mjdbXvjnKtmUeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GbDFzeqM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SHVXjK92; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747925513; c=relaxed/simple;
+	bh=NEGa2Lvo0VHyrDn2dfZSXfnMD3VzC1tI27MkvHbZIKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bCVdLwBPJWrrdr+aP0cokVcLkSIWaoo+O6FM1Ds/wBphed2sxfQCUJSQhVATkVu6Elbir+5b+d5Zx9uvXaE5izAzNxJfN6B3Wym8cbLKZ8RPoug/CLEQoGVz9QjgyKitv/3eU880xRaiP1nEyatdBKxNtiTwngM9NTD5l1MxG6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DUWyTKWJ; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GbDFzeqM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SHVXjK92"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 90C9A1140161;
-	Thu, 22 May 2025 10:02:26 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Thu, 22 May 2025 10:02:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1747922546;
-	 x=1748008946; bh=LfW+1ywcWa9OhtIkbg/ys95rDhhPMEoOa3R2KQwbOuA=; b=
-	GbDFzeqM+YW0vnFa5HSFfMWEoD4LZrTUjeEP2fQ1+8y3h+UcDI2vPDWvl8/Gm2/A
-	5FONauhwL/y71YlOvo9rqMB120rZRH1NlXy3lrRoQuw3nvI+/2zCRy4i4KSzmG9G
-	W2HZ/pRk1FBKzUVdPxwLBpAS4rxeHGJInO+AHITHPswqnQNOJXux0cLYylH4lZpp
-	TnH6vODOWe+8enZ3cQvphei6pverOgeZBuFz2JOh7+6q7htWUirh3e8VtoitF/Rf
-	OO0i8O6sGzrptB7QeenvRU2z1yEIGPFK4NwKz/a7PhrQkHhkafTE3789S4YOaX/M
-	kj+aEAFyck6M47uCxRvx+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747922546; x=
-	1748008946; bh=LfW+1ywcWa9OhtIkbg/ys95rDhhPMEoOa3R2KQwbOuA=; b=S
-	HVXjK92PV+H7079UBzPU1fnix++TF+Dzl4KDq9YJ99FU7yMClNDsIFI+y+6DYDt4
-	zxkujlFmTa6TG0/iEL2GWf83cnOcQFkLaBqTeV4e4gJGjnyhJ+oxeXjEMAUMdiMG
-	tPVnp17lZ5Gym4y1EUhazMwwni3YRfWmhB0OaLsEZU+ivbvQRdW5LxzLr7GF4lr5
-	IVsZo3EEFeG0JtnMxvI7feFsjayTc1Dh4Nkj1r4DfyQopWTNyMcreS0rwJwx4iV+
-	+SSlKLVebiFzAFiG3QPns+nQA/bLP3TKf4SPi8CiRisCX7afOer97qXLeDxUrK3u
-	OATPyaKI8b3olkyBW2H3g==
-X-ME-Sender: <xms:cS4vaBVOYY3rEskCqDVh2akO2Ij8iYYyoFE0A71xPvRRUiXGh0TWpA>
-    <xme:cS4vaBk55xcyMDRK6wietN7pGJTQmBXis2-OkX8bjF1ndMmhqicjvcXf_llmel4JC
-    FQ_wPSD8rWTKWs-sPI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeiudehucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
-    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
-    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
-    nhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtsh
-    gsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepsghrrghu
-    nhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnuggvrhhsrdhrohigvghllh
-    eslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhi
-    nhgrrhhordhorhhgpdhrtghpthhtohepnhgrrhgvshhhrdhkrghmsghojhhusehlihhnrg
-    hrohdrohhrghdprhgtphhtthhopehlkhhfthdqthhrihgrghgvsehlihhsthhsrdhlihhn
-    rghrohdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlih
-    hnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:cS4vaNYdLDNra9fF1YVk2NtYD8SJ1t6bgUBTzEjtGVlNr56zMdRcTQ>
-    <xmx:cS4vaEVkwsZ8t8yX62g5nHG1WwBacxmRtaLacRIRxnKHw1Of5GhZYg>
-    <xmx:cS4vaLlzusj6YyeYGNDdDh9g2HLATjq8lUFZ9NUl6bydAGrGXHYaQg>
-    <xmx:cS4vaBcYzphX9IFTuy-UhheITIf5WIuJwYcMXppifPRl5mg-hidQ9g>
-    <xmx:ci4vaOMUgefLcA-xlUGszgK2RG30yfnFE5yyjnaKI8CkkIi_9E4VTbRh>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2B50D1060063; Thu, 22 May 2025 10:02:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUWyTKWJ"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad574992fcaso841551966b.1
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 07:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747925510; x=1748530310; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
+        b=DUWyTKWJcy98CIduR+cfHH+NR6qun/rnjQbF+ABM80qu6o4fDkZ/tBmy79CzcC3zP0
+         X4QiGVb2zo2Kyx2jZB1Q8SIjrrX+hcnK0Jx4rgesyOd/WIC6JnwjRwJHkBLAHjjjxGup
+         rTBrgBLkPAMVaz4PwBtNGDGaZT8n4GsayZwY+ICCI9FHnrUa/eUvbxj86q1yYR4+yM1i
+         WVcK0aAW8OSPD0gjVIB6y/9lZKbmkEyWaJhWFCZXfxFcUq7uDw9NjUwnbmZJ1lASCoXO
+         zda4lQVKNsXEkUWaXd3DuMQVKWGglCLawPVDeoLRYdd8s5DYR4kQMwDZioKz8Zk8i/Q4
+         B3Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747925510; x=1748530310;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
+        b=sWeIPFpuqPQNCAceuQi1WJezo3NqxzTkD5NzVRXFKyUyy6nh6mSLnI3Mz7ARP1gNvt
+         LXphpnKiVWdukQLksoYA6Tp3Ro417QXwUW/b5/7Ja/AP+Qe+BfeAnoMyMtW1xTgvPZlh
+         L0mnUqUhRFlwaaJUncFn4U0UbtFqsORGqdh1WH/BqPPjd9AOkY2pdcXTprIyFb5r1v0X
+         ZX9tImgGYCep2eWjqQrQpkoUlzO6wzEQXZXxDhjAHW3VhYC7vARFz/VJWqrPCo0/Fnrl
+         QAY12OzbpY+NoQ1Kp45WjMzg04F6x5ZF9qe8mXRiUTJVpp0BNEjFxZhvVFBSF+4Qv+NB
+         9h+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUoXVY6h2DMAC6/HWAfibdOZY1E5hs79fejLizOQgN/aAkGKWLEKrNnocqxnOfDfGRotI7fOJ2lx4YPhA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy/GX+M3I64QELcaxqJfGqtyxcpgBdQW9TUOQycwZNh8276zNNc
+	QXoDFG5VbO4fZ6tLb7GDgweGN6gCyEygxrd4gQzQriXdr/ccUk32uhgQ+7iTKAz1x/IDmOsCwpB
+	Qo2Dqyy04nrO45DiWcfLWbW1MRFTwoB6PYB6YGAvGQA==
+X-Gm-Gg: ASbGncu1n0ma3wWnjNxTRjt3Sfkq0GzU7DVW2voW0XNafJ2zvOcZ4mn7mYK02+32Q5i
+	T5NjnQv2c99EHcRAymapC2SzEMrBiPKXrWn5c/M16Ehk3SmnBjVFgRnk2PyCfzmqFT+jP2xbga2
+	QUMcgj9GR03LuoD4+Rrp9bwEqWsSfhEA0/jaZy/EfYpN/j7jzDOtk0VZwhbuE=
+X-Google-Smtp-Source: AGHT+IEWWodIXY6RPzmgsLl29LtMjEztepnXSAqOidAoBrsS8Lw4awvNzuVYZIqKaYEoqKapvbrKCUHcq2jJyT9DmhA=
+X-Received: by 2002:a17:906:6a14:b0:ac3:bf36:80e2 with SMTP id
+ a640c23a62f3a-ad52d4c2ed3mr2316934866b.20.1747925510014; Thu, 22 May 2025
+ 07:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: Tc6af0bd36d39ecf6
-Date: Thu, 22 May 2025 16:01:53 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- linux-fsdevel@vger.kernel.org, linux-mips@vger.kernel.org,
- "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>
-Message-Id: <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
-References: 
- <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
-Subject: Re: mips gcc-12 malta_defconfig 'SOCK_COREDUMP' undeclared (first use in this
- function); did you mean 'SOCK_RDM'?
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+ <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
+ <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com> <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
+ <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com> <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
+ <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com> <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
+In-Reply-To: <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 22 May 2025 16:51:34 +0200
+X-Gm-Features: AX0GCFvdXP-4idhTJtDESTwuQOtxpJxvvZ6RDqVKNRr-ZF6A0JkBHH_UMh9yOgw
+Message-ID: <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com>
+Subject: Re: IPC drop down on AMD epyc 7702P
+To: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
+	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
+	Valentin Schneider <vschneid@redhat.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 22, 2025, at 15:22, Naresh Kamboju wrote:
+Hi Jean-Baptiste,
 
-> ## Build log
-> net/unix/af_unix.c: In function 'unix_find_bsd':
-> net/unix/af_unix.c:1152:21: error: 'SOCK_COREDUMP' undeclared (first
-> use in this function); did you mean 'SOCK_RDM'?
->  1152 |         if (flags & SOCK_COREDUMP) {
+On Fri, 16 May 2025 at 17:05, Jean-Baptiste Roquefere
+<jb.roquefere@ateme.com> wrote:
+>
+> Hello Prateek,
+> long time no see... I've been very busy lately.
+>
+> Did he try with relax_domain_level=3, i.e. prevent newilde idle
+>
+>
+> >> balance between LLC ? I don't see results showing that it's not enough
+> >> to prevent newly idle migration between LLC
+> >
+> > I don't think he did. JB if it isn't too much trouble, could you please
+> > try running with "relax_domain_level=3" in kernel cmdline and see if
+> > the performance is similar to "relax_domain_level=2".
+>
+> I just tried relax_domain_level=3 on my payload. As you can see
+> relax_domain_level=3 performances are more or less the same
 
-SOCK_COREDUMP should be defined outside of ARCH_HAS_SOCKET_TYPES.
-How about reducing the scope of that check like this?
+As there is no difference between level2 and level3, I assume that the
+problem is not linked to a core to core migration but only the
+migration between LLC.
 
-      Arnd
+As said previously, I don't see an obvious connection between commit
+16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC during LB")
+which mainly ensures a better usage of CPUs inside a LLC. Do you have
+cpufreq and freq scaling enabled ? The only link that I could think
+of, is that the spread of task inside a llc favors inter LLC newly
+idle load balance
 
-diff --git a/arch/mips/include/asm/socket.h b/arch/mips/include/asm/socket.h
-index 4724a563c5bf..43a09f0dd3ff 100644
---- a/arch/mips/include/asm/socket.h
-+++ b/arch/mips/include/asm/socket.h
-@@ -36,15 +36,6 @@ enum sock_type {
- 	SOCK_PACKET	= 10,
- };
- 
--#define SOCK_MAX (SOCK_PACKET + 1)
--/* Mask which covers at least up to SOCK_MASK-1.  The
-- *  * remaining bits are used as flags. */
--#define SOCK_TYPE_MASK 0xf
--
--/* Flags for socket, socketpair, paccept */
--#define SOCK_CLOEXEC	O_CLOEXEC
--#define SOCK_NONBLOCK	O_NONBLOCK
--
- #define ARCH_HAS_SOCKET_TYPES 1
- 
- #endif /* _ASM_SOCKET_H */
-diff --git a/include/linux/net.h b/include/linux/net.h
-index 139c85d0f2ea..f60fff91e1df 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -70,6 +70,7 @@ enum sock_type {
- 	SOCK_DCCP	= 6,
- 	SOCK_PACKET	= 10,
- };
-+#endif /* ARCH_HAS_SOCKET_TYPES */
- 
- #define SOCK_MAX (SOCK_PACKET + 1)
- /* Mask which covers at least up to SOCK_MASK-1.  The
-@@ -83,8 +84,6 @@ enum sock_type {
- #endif
- #define SOCK_COREDUMP	O_NOCTTY
- 
--#endif /* ARCH_HAS_SOCKET_TYPES */
--
- /**
-  * enum sock_shutdown_cmd - Shutdown types
-  * @SHUT_RD: shutdown receptions
-
-
+>
+> +--------------------+---------------------+---------------------+
+> | Kernel             | 6.12.17 relax dom 2 | 6.12.17 relax dom 3 |
+> +--------------------+---------------------+---------------------+
+> | Utilization (%)    | 52,01               | 52,15 |
+> | CPU effective freq | 1 294,12            | 1 309,85 |
+> | IPC                | 1,42                | 1,40 |
+> | L2 access (pti)    | 38,18               | 38,03 |
+> | L2 miss   (pti)    | 7,78                | 7,90 |
+> | L3 miss   (abs)    | 33 929 609 924,00   | 33 705 899 797,00 |
+> | Mem (GB/s)         | 49,10               | 48,91 |
+> | Context switches   | 107 896 729,00      | 106 441 463,00 |
+> | CPU migrations     | 16 075 947,00       | 18 129 700,00 |
+> | Real time (s)      | 193,39              | 193,41 |
+> +--------------------+---------------------+---------------------+
+>
+> We got the point that tuning this variable is not a good solution, but
+> for now it's the only one we can apply.
+>
+> Without this tuning our solution loses real time video processing. With
+> : we keep real time on.
+>
+>
+> Thanks for your help, I'll stay alert on this thread if someday a better
+> solution can emerge.
+>
+>
+> Regards,
+>
+>
+> jb
+>
