@@ -1,140 +1,121 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0749242D77
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 08:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425D1B0412
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 08:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902110; cv=none; b=CLGf+cpPkANuYSwSZU7Q1eXvtoIBl5aLO+lXSlz4OqrOx9Z7ihPbU9hRPQIA8iAPI9dkcMjS97kZ7lz1ByuUMPUrRdftZVHo2qtR5zBvGhsy8ck37/Jn+TiZJZpCCQkQXGheLG1O2hn3IvwKGR4nR8epghypUz1ssy8fO10e08U=
+	t=1747902919; cv=none; b=RFKkhQvPIDJFXQ9BrhvAOg6zMzzHL6xfARKmf784sNRUlQQ6prHysce0fKMdx/UW2cKyDnj1kEAabR4I3CvEx1HKJS/G3JPTL8K3m9Uut8o5zZIthnJNmalJeBQxcA08ZGxSHwk2NxjPLrQXKrV/wu6cnpnZ7KoGd8C7ktM/nNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902110; c=relaxed/simple;
-	bh=VqOCPkWUr9CZnMaCodKIveASZIVnzNQmiel7M9LF6tI=;
+	s=arc-20240116; t=1747902919; c=relaxed/simple;
+	bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EFReiXN/jdIr4065OzvB04ajzwQ9CV2HZZBz7AXvbwkSOr5I38CM9/H2rOPmBTHm7qHfqIZoBoQYYxVr/8L0LeUrm33+vHNewjfUW6NyWK+yfFAaLHXQa3uXPP1N8ilssZvLYrxSewLmHY12IQVSK0/2uyL3Zr2S42tiZkNQe7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aq8p8Ao9; arc=none smtp.client-ip=209.85.208.182
+	 To:Cc:Content-Type; b=TkLNUYND/2r5xLghGFbFy45c2PJ0mDMRD5YVlfuerxf4yJHjtPlEQ6Z48/S8PlnfGR4mNjR0vEVxd3M2I2JuNwk3TTyeNEqwLEmvD1tWGcY4jJBnhqz6BQCOe86gcU6PaVpNq/SJ61OxumWuhBGYaP0PW1OH4FGrfQxvE/uQfoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQ57Wbui; arc=none smtp.client-ip=209.85.222.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aq8p8Ao9"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32909637624so55159491fa.1
-        for <regressions@lists.linux.dev>; Thu, 22 May 2025 01:21:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQ57Wbui"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87bfc9ff795so1394112241.2
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 01:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747902106; x=1748506906; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1747902914; x=1748507714; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TW+uhUhcGi/qFjEIYz1RUaPA9UVbNHNQ6EqB73r6lsU=;
-        b=aq8p8Ao93y6a9qMMTgGhFCeppzi2fPOPwnNXDq0SVtPagOc2gXEBw3JQYXjLGOCxP2
-         5hZcZinoO3eqaSjJ12QvPToXMM2xDuSUfbwBquSBOKAeZOSRDodLJae0Fy0W1qH/6yC9
-         yG16O7fOyLgLd7a9/znG52APXvmfSx4mM2ypzk5cXGyBcfTlQo7X/BTpYE653rgmSXzD
-         IBVgeBck2M+JEZXBZ6SvtDVwzMvM2hTq80af5L+B0ajlB85E7/FVLRybW2mIX06E90yJ
-         QtFw0TGWs1XLvA+7S3c9gV7a2pyZUd+365rv5vqqagKH7oa2A6mDjkwh/C16HDgCRFS7
-         lAWw==
+        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
+        b=cQ57Wbui/PYk2AzqNWw71WH9hDQJsqlTATlMQcGfce18r8VYDXOV0XnRFFWyYxpnNA
+         21iXLE9vWDlTy3+3LNjpyUafBAc/cduMPTvmQetosK/ao5ic+Pqr1sXGg7sjg7y2ygcP
+         B74V+La9RQnlGt4enIXG1TxyvnC5sRyWD2ypTfSfdsyjTbXgda67PEq6GI0xX0kqtns8
+         LS8Dz4ckrG0TLgMy3RsedFXx6MJp97IqFUz0B3olQvtaFL+9B1VOxCNc18FRnBb6iEBa
+         KBEJxEFLa9ndakHxiyIHxnHy6GiUw+gEvPh7vxG88Hrf/IBckbg8asJv8h1ZsTetkKQJ
+         q3vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747902106; x=1748506906;
+        d=1e100.net; s=20230601; t=1747902914; x=1748507714;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TW+uhUhcGi/qFjEIYz1RUaPA9UVbNHNQ6EqB73r6lsU=;
-        b=qU3x4WmADgDIWnTe7UFPqKd+pnzD/vT1cGmjdD7XKUhuek1FSqXL5l4Ax4OMLA38y0
-         MadfqupX8ypnvviWrwJN6XHTej7YVlJmDpX9mQxytT8CErgfcjV9Lodc4KJtG+ZHsTNZ
-         DBZxmWs9QniILNg1w8QHtoh6LYjA6Gz+KsqUrNyuki+B2kdHEsxNyfn5JGARq+BhhhAd
-         vX2Qg0+ScRkyTVam9KPcOn6Bp/E3Ao7nI4/s8Z+H59eRykutTiWac/pQpFDaPlH0YmGk
-         6vY5zOZ5FlpW6/BEWlPx9WZSlARL5R9uoMpsGuKWyz++rDBmvTt0DqDv0IZLD83BOGGA
-         Rg+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWd7TFVMi6dbGhX0HUkyeHvX5hCulJE1i/UYPxnKqSERyU39AlkDfmbQI7qJaDxzIQz8uwHYfNDIyHpVg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzC00IOQDX4slUN8e8ozdn5v8IbirmZcsw0bMzCd0TD2mg/IrAV
-	QD/OOQTnZeRwa37HWTKD52eB4TH5iJyXPcTPC6E+rOrpPo/4awOQjhfxDlGpWjxFYYmq3VzaNi7
-	FLonkuuk5m91hY6XK+UEpTG/30xP1DXLzx9LvI+drwQ==
-X-Gm-Gg: ASbGncsORIL890KpgAfjT2J9NXLpTNwvOeVW8zH6BJ+raI9BemEJ60bql3k1806q9qF
-	HV9nt6SClEja1TCIeHSVBMxsXpp8Ps5s6wOwJLwAMTIZBB3fRIGqOkrXbDxylJ85GLJdaMDEPTI
-	V9R1LLd/AfzwJ9srzENRtysEiM2DFxqBAG
-X-Google-Smtp-Source: AGHT+IFuVWqRIf+xf4DijNOl0IDx8Qgv/jtCzf68FUzLuSbdLNyij11XpLfpriSkG3Sjekzh/okS+B8fvY52d+Rfu1M=
-X-Received: by 2002:a05:651c:2214:b0:30c:518e:452 with SMTP id
- 38308e7fff4ca-3280771e0c9mr84948681fa.13.1747902105732; Thu, 22 May 2025
- 01:21:45 -0700 (PDT)
+        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
+        b=fg/sGrjcQIENbJpZWNDOTi1FS/kIv0G2lEX9jiWks6eLLEOj4AZDzZLQwIPft/v8lX
+         CZ0XoSVe4/A3pBwmUmeHYpPBVMCV7lDkFsYoNP1ltefEox98VzVV6Ten4YEvztnq2/f6
+         uH1+RQCU62JP7g/H5ju0VCSqOV1tQY8HTRUyygX+8/ilaBk17b5WTG51tSG+p8yMAIdG
+         sfQY7vm2QaS3ESSAREOqnUNzpSSGfrNNbR3Zkcedp6EzkNF4itDnHIYkBF33l/y5zZ6m
+         hs/Pdno779isCfv/GMgP7fn9u5LaiyB0oSLLlbOGuZFcPxUsv7K3FGXZKfBKeqm7s2QE
+         wK4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXfYbSP1sYgO+IRRL0CRBpX4edVuJxn6jipGKlssDzbLtNEH5kaQHPl5IP4+1SezuITY8inVv0gt2y5Kg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzuJ6r/+w0WDfLQ+KenaV6LaLFDT7YijmTTSmrim7XTSfJ1QFB3
+	rf1uD07wdg8YA5RWRouqyerJgZEvzRmnhSlDeM5qR7JRfRMrw7FhfH39pMfTZwq6SzTzbPbLVIP
+	SVd0mkt9nDXIsFms67IayPwHEUb3jXBN5EDsTwvcdqg==
+X-Gm-Gg: ASbGncvBeJgPV/hqSrvkIl281zoz5H0FT+/KszjGYNWbGHwiV4SHMCDjsoIf1Ju3YLB
+	+7eIzU+rFjLqPqpEJkT6c5c/Vhuht7f+/horSDmuaqVZZbIUQe2kNX7YA0vtfKkAA6VvTaz1QjT
+	g3wtzQ28wS5PJ01hVrK+D7zoy0vYt3YbHCVTgayB9ChWfC0hqZGkW/9wZ3pQ2g1lBTPw==
+X-Google-Smtp-Source: AGHT+IG1tufTo2laqv0iUxS628PFmp3liCtb2kVRmJ/1753thxyKZS6oUk0xxwo4pGk44af87cl//6xqqgtgt7qTqLs=
+X-Received: by 2002:a05:6102:809b:b0:4cb:5d6c:9944 with SMTP id
+ ada2fe7eead31-4dfa6ae1b10mr26679671137.3.1747902914500; Thu, 22 May 2025
+ 01:35:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
- <8d249485-61f6-4081-82e0-63ae280c98c1@heusel.eu> <3352738d-9c0e-4c23-aa9a-61e1d3d67a50@hotmail.com>
- <AM7P189MB10092C41B59EF58CBCB290A2E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
- <60a9ea8a-edb1-4426-ae0e-385f46888b3b@heusel.eu> <AM7P189MB1009A8754E90E4DE198DAC32E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
- <AM7P189MB100943AF796568B45AB7099AE399A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-In-Reply-To: <AM7P189MB100943AF796568B45AB7099AE399A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 May 2025 10:21:34 +0200
-X-Gm-Features: AX0GCFts_N2nJIo0yBksSJy-pd69zxVe0kQhRD0A3krKVPkQ2gCk7ftDFl_F9N8
-Message-ID: <CACRpkdaG5NNbfPhBMgCRUXqy_j5f=KaT75r9iQMg1HAyrAipoQ@mail.gmail.com>
-Subject: Re: Panic with a lis2dw12 accelerometer
-To: Maud Spierings <maud_spierings@hotmail.com>
-Cc: Christian Heusel <christian@heusel.eu>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
+References: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
+ <CANiq72nUFqM7mnpSGZF65n3Aak37KVVSa0d830o31EuZyh+OfA@mail.gmail.com>
+ <d6515a2d-7986-4b53-a655-869d568d4081@gmail.com> <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
+In-Reply-To: <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 22 May 2025 14:04:59 +0530
+X-Gm-Features: AX0GCFsZ82FAe40c9-JDdkvEhHBvY185zJfCoLa6DZcQDwCQ-JxPg6n64Vcx6kw
+Message-ID: <CA+G9fYtM-s0cgS39wX9Go_OAXxYa4nME6h8CbhyK_-QrRvQk5w@mail.gmail.com>
+Subject: Re: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Rudraksha Gupta <guptarud@gmail.com>, torvalds@linux-foundation.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Ben Wolsieffer <ben.wolsieffer@hefring.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
+	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
+	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
+	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
+	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 9:15=E2=80=AFAM Maud Spierings
-<maud_spierings@hotmail.com> wrote:
-
-> I have found a fix but I don't know if it is correct to do. This deals
-> with the deferred probe correctly, no longer panics and registers the
-> device properly. This is the patch I have come up with:
+On Wed, 21 May 2025 at 19:37, Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c
-> b/drivers/iio/common/st_sensors/st_sensors_core.c
-> index 1b4287991d00a..494206f8de5b0 100644
-> --- a/drivers/iio/common/st_sensors/st_sensors_core.c
-> +++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-> @@ -231,7 +231,7 @@ int st_sensors_power_enable(struct iio_dev *indio_dev=
-)
->                                               ARRAY_SIZE(regulator_names)=
-,
->                                               regulator_names);
->          if (err)
-> -               return dev_err_probe(&indio_dev->dev, err,
-> +               return dev_err_probe(parent, err,
->                                       "unable to enable supplies\n");
+> On Wed, May 21, 2025 at 3:57=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.c=
+om> wrote:
+> >
+> > This does, thanks! I'll drop this patch for now then and will assume
+> > that Naresh will eventually send it. I was hoping to get this in by the
+> > stable release that is set to happen during the weekend (doesn't excuse
+> > my sloppiness though, sorry about that once again)
+> >
+> > Anyways, thanks for being patient with me as I learn. :)
 >
->          return 0;
+> You're welcome! :)
+>
+> Let's see if Naresh says something; otherwise, I think it is OK to
+> send it under your SoB after a few days (acknowledging the diff from
+> Naresh).
 
-It's the right fix.
+[I was off and travelling]
 
-If you look in drivers/iio/accel/st_accel_i2c.c clearly the driver enables
-the power before calling st_accel_common_probe() which is where
-devm_iio_device_register() is finally called and the IIO struct
-device get initialized.
+Hi Miguel,
 
-And that's not all: st_sensors_init_sensor is also called before the
-iio device is present, so this:
+Please accept this patch from Rudraksha.
 
-        } else
-                dev_info(&indio_dev->dev, "Full-scale not possible\n");
+Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-and this:
+- Naresh
 
-                dev_info(&indio_dev->dev,
-                         "set interrupt line to open drain mode on pin %d\n=
-",
-                         sdata->drdy_int_pin);
-
-is also unacceptable.
-
-I hope there are not more...
-
-They also need to use indio_dev->dev.parent, or a local copy of
-that struct device *, so please fix them too in the same patch.
-
-I tried to chase down a Fixes: candidate but this misunderstanding
-goes way back and such prints were introduced several times.
-
-I would just tag on
-Cc: stable@vger.kernel.org
-and be done with it.
-
-Thanks for drilling into this!
-
-Yours,
-Linus Walleij
+>
+> Thanks!
+>
+> Cheers,
+> Miguel
