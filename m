@@ -1,58 +1,58 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425D1B0412
-	for <regressions@lists.linux.dev>; Thu, 22 May 2025 08:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6FF23507D
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 08:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902919; cv=none; b=RFKkhQvPIDJFXQ9BrhvAOg6zMzzHL6xfARKmf784sNRUlQQ6prHysce0fKMdx/UW2cKyDnj1kEAabR4I3CvEx1HKJS/G3JPTL8K3m9Uut8o5zZIthnJNmalJeBQxcA08ZGxSHwk2NxjPLrQXKrV/wu6cnpnZ7KoGd8C7ktM/nNY=
+	t=1747903580; cv=none; b=U9TcHjNRtL2yHMPRF7/VKqCoMN74wii7JREVOB1MHuCT4e0dXkcyXWthyj+EQ+krsFKRNNsJuZl+P2P4aYSZGkLfhfelPZ7J3Kk5zAOdIXHULAxQfliJCFUGWOAEO0km5MOY32JDPTRzNgnmbzphMrXAQlIjS2QeUbVAh3btvgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902919; c=relaxed/simple;
-	bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
+	s=arc-20240116; t=1747903580; c=relaxed/simple;
+	bh=bBxJ2jI2C//1oSmc8MnMiFtY8i7Qaz8dXwp/CgG/dTA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TkLNUYND/2r5xLghGFbFy45c2PJ0mDMRD5YVlfuerxf4yJHjtPlEQ6Z48/S8PlnfGR4mNjR0vEVxd3M2I2JuNwk3TTyeNEqwLEmvD1tWGcY4jJBnhqz6BQCOe86gcU6PaVpNq/SJ61OxumWuhBGYaP0PW1OH4FGrfQxvE/uQfoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQ57Wbui; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=OqHHnnlrScxJ60iH/4K+D9DmiynyBPvVJS/FhbpAsjRlAiu7ttUcFQVGgRs4EWsX21Oje2/qDFUNFWpJgk7/OSwEEsPvMqrvyHxmdRdsqBFVEMQYcFAT1R3xPhAYlHTiD0Yq1STJOapkWKjOp53ag1/HDlMrayP3MnEp0mLkdVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fvk+OqI0; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQ57Wbui"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87bfc9ff795so1394112241.2
-        for <regressions@lists.linux.dev>; Thu, 22 May 2025 01:35:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fvk+OqI0"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30e7ee5fe74so1244784a91.3
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 01:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747902914; x=1748507714; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1747903577; x=1748508377; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
-        b=cQ57Wbui/PYk2AzqNWw71WH9hDQJsqlTATlMQcGfce18r8VYDXOV0XnRFFWyYxpnNA
-         21iXLE9vWDlTy3+3LNjpyUafBAc/cduMPTvmQetosK/ao5ic+Pqr1sXGg7sjg7y2ygcP
-         B74V+La9RQnlGt4enIXG1TxyvnC5sRyWD2ypTfSfdsyjTbXgda67PEq6GI0xX0kqtns8
-         LS8Dz4ckrG0TLgMy3RsedFXx6MJp97IqFUz0B3olQvtaFL+9B1VOxCNc18FRnBb6iEBa
-         KBEJxEFLa9ndakHxiyIHxnHy6GiUw+gEvPh7vxG88Hrf/IBckbg8asJv8h1ZsTetkKQJ
-         q3vQ==
+        bh=bBxJ2jI2C//1oSmc8MnMiFtY8i7Qaz8dXwp/CgG/dTA=;
+        b=Fvk+OqI00Nmh116+CcPuRS4+GgxvDwIGziDEPhuDxMhLi9CP/WqSOkmZuOgDKKbO/H
+         jpnUCC3K4XtpKU4vo1whL38vTousw02AV+v3Rq4ryngsotqfFFDTMaKOPDw9XYNAhdK1
+         sScm9iNgZ8e+Wlae/U2hBTjj+we5ea0ygZHUFZja5Rp5h8b9Y6nLmanAwLQTm6975Tj6
+         J2RPNdh3Nsms8kjo2PlaOzweWfPVQmi94DnojZFyM1bkunl3ljj3As6R+RjMP6iAdouv
+         +A7IpWIm9BYRym7pXv5Qn+9K6vdSIxorezwjQkOZBl7VKueCC7p9Y/3IFHCOTOMPeMH6
+         jAqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747902914; x=1748507714;
+        d=1e100.net; s=20230601; t=1747903577; x=1748508377;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
-        b=fg/sGrjcQIENbJpZWNDOTi1FS/kIv0G2lEX9jiWks6eLLEOj4AZDzZLQwIPft/v8lX
-         CZ0XoSVe4/A3pBwmUmeHYpPBVMCV7lDkFsYoNP1ltefEox98VzVV6Ten4YEvztnq2/f6
-         uH1+RQCU62JP7g/H5ju0VCSqOV1tQY8HTRUyygX+8/ilaBk17b5WTG51tSG+p8yMAIdG
-         sfQY7vm2QaS3ESSAREOqnUNzpSSGfrNNbR3Zkcedp6EzkNF4itDnHIYkBF33l/y5zZ6m
-         hs/Pdno779isCfv/GMgP7fn9u5LaiyB0oSLLlbOGuZFcPxUsv7K3FGXZKfBKeqm7s2QE
-         wK4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXfYbSP1sYgO+IRRL0CRBpX4edVuJxn6jipGKlssDzbLtNEH5kaQHPl5IP4+1SezuITY8inVv0gt2y5Kg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzuJ6r/+w0WDfLQ+KenaV6LaLFDT7YijmTTSmrim7XTSfJ1QFB3
-	rf1uD07wdg8YA5RWRouqyerJgZEvzRmnhSlDeM5qR7JRfRMrw7FhfH39pMfTZwq6SzTzbPbLVIP
-	SVd0mkt9nDXIsFms67IayPwHEUb3jXBN5EDsTwvcdqg==
-X-Gm-Gg: ASbGncvBeJgPV/hqSrvkIl281zoz5H0FT+/KszjGYNWbGHwiV4SHMCDjsoIf1Ju3YLB
-	+7eIzU+rFjLqPqpEJkT6c5c/Vhuht7f+/horSDmuaqVZZbIUQe2kNX7YA0vtfKkAA6VvTaz1QjT
-	g3wtzQ28wS5PJ01hVrK+D7zoy0vYt3YbHCVTgayB9ChWfC0hqZGkW/9wZ3pQ2g1lBTPw==
-X-Google-Smtp-Source: AGHT+IG1tufTo2laqv0iUxS628PFmp3liCtb2kVRmJ/1753thxyKZS6oUk0xxwo4pGk44af87cl//6xqqgtgt7qTqLs=
-X-Received: by 2002:a05:6102:809b:b0:4cb:5d6c:9944 with SMTP id
- ada2fe7eead31-4dfa6ae1b10mr26679671137.3.1747902914500; Thu, 22 May 2025
- 01:35:14 -0700 (PDT)
+        bh=bBxJ2jI2C//1oSmc8MnMiFtY8i7Qaz8dXwp/CgG/dTA=;
+        b=VbVGTikuJ9AtBWPwycvCCHS6lAMNyULCE+X1tezPWyyiDsYdniZ9c/LOXcx4e0z+rM
+         rm6+ha4KF4vNwu8t6oeb+skTu8VB95zLs7CCcf+vf544tMBMQNC8HzqZ6NKCqUWkrnIw
+         1YlcSzKlHputiuq08GhRvq83Waq46oNLwLx5FOxpB1qtYCMTBUB3IzlRi9+olqOyLb6M
+         n37RVukcIidcDFMczeBD9g/tKiOhhy+oILjetd2gBtQxf2F0KUoMMeINv18/Khishnto
+         TC+xFtC8POIp6aZf+4XzlLGCV1uGrcBXQ2Xmf8YyE/iXTa5CUKnaJHs9FzOCfBZduwjM
+         sxqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzvHfgHeXIa2z3YSoau+WWIJC2rvrc664Oc3pcDXSXPXf3rfHGkOa0lMsptCB2VhEvEzb+4hmhqQWxMQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyIYkiHMFz+0VAFD9yS4dkNvwIAemGoyZGEHNOgE8pPba2OqO/b
+	dYS3ECUt+bUsRRiclCRWFjou/uRdmAJ2k2JzS4bTjgQF5KtXXyCOQpwwLGQdK364Uqv6W9L36vZ
+	BtNpMZ1rb3otCGcDiJ3Y9c9h/COTuh+k=
+X-Gm-Gg: ASbGncv65ot0UW6V26R281mNtmnCbol+hmY+BqWulP3ngIQRBZKkF+vkl4wZH3gA8IG
+	WVstxTnPYA+eB3FOwEUE/B4MMO+x7CEOvwxyPnUybgqtEPQpcbxyQu0vaVi4PMIZBH2E5pcfAMS
+	AV5hl9Z8nsSeNd27FBaW6/gnvsNtKoGfUdvbyMAYNPDEk=
+X-Google-Smtp-Source: AGHT+IFEUErAXQrqjBBPl5uNIbn+/slSrj+fuj4AS1Y2QFurbevf52b9yENWRIYvRaV5fLdSL2wU0HUdEbeZghGIoAU=
+X-Received: by 2002:a17:903:41d0:b0:224:1005:7281 with SMTP id
+ d9443c01a7336-231d43c3d88mr121249505ad.7.1747903576940; Thu, 22 May 2025
+ 01:46:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,13 +62,14 @@ MIME-Version: 1.0
 References: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
  <CANiq72nUFqM7mnpSGZF65n3Aak37KVVSa0d830o31EuZyh+OfA@mail.gmail.com>
  <d6515a2d-7986-4b53-a655-869d568d4081@gmail.com> <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
-In-Reply-To: <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 22 May 2025 14:04:59 +0530
-X-Gm-Features: AX0GCFsZ82FAe40c9-JDdkvEhHBvY185zJfCoLa6DZcQDwCQ-JxPg6n64Vcx6kw
-Message-ID: <CA+G9fYtM-s0cgS39wX9Go_OAXxYa4nME6h8CbhyK_-QrRvQk5w@mail.gmail.com>
+ <CA+G9fYtM-s0cgS39wX9Go_OAXxYa4nME6h8CbhyK_-QrRvQk5w@mail.gmail.com>
+In-Reply-To: <CA+G9fYtM-s0cgS39wX9Go_OAXxYa4nME6h8CbhyK_-QrRvQk5w@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 22 May 2025 10:46:04 +0200
+X-Gm-Features: AX0GCFvUWLoHcftNnHHcnXk02qKWEmZlVswhSl88DhaF-XC_13tHObndO2efYGw
+Message-ID: <CANiq72=bdckmehoqoEfpTespZPaTCVDsGSwkEd2fgd5kT70S4w@mail.gmail.com>
 Subject: Re: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc: Rudraksha Gupta <guptarud@gmail.com>, torvalds@linux-foundation.org, 
 	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Ben Wolsieffer <ben.wolsieffer@hefring.com>, Boqun Feng <boqun.feng@gmail.com>, 
@@ -85,37 +86,18 @@ Cc: Rudraksha Gupta <guptarud@gmail.com>, torvalds@linux-foundation.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 21 May 2025 at 19:37, Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Thu, May 22, 2025 at 10:35=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
 >
-> On Wed, May 21, 2025 at 3:57=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.c=
-om> wrote:
-> >
-> > This does, thanks! I'll drop this patch for now then and will assume
-> > that Naresh will eventually send it. I was hoping to get this in by the
-> > stable release that is set to happen during the weekend (doesn't excuse
-> > my sloppiness though, sorry about that once again)
-> >
-> > Anyways, thanks for being patient with me as I learn. :)
+> [I was off and travelling]
 >
-> You're welcome! :)
+> Hi Miguel,
 >
-> Let's see if Naresh says something; otherwise, I think it is OK to
-> send it under your SoB after a few days (acknowledging the diff from
-> Naresh).
-
-[I was off and travelling]
-
-Hi Miguel,
-
-Please accept this patch from Rudraksha.
-
-Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
-- Naresh
-
+> Please accept this patch from Rudraksha.
 >
-> Thanks!
->
-> Cheers,
-> Miguel
+> Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+Thanks Naresh! Will do.
+
+Cheers,
+Miguel
