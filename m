@@ -1,134 +1,137 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78B17D098;
-	Thu, 22 May 2025 12:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FE428C035
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 13:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918367; cv=none; b=uKv93zde5f0mKI6Y5I+wA2yN5LV1HtVMIMFabZSKVHOIrMdoreyKCRPVXzsvxgqH5na0Sfe3UzIDHO0GOlCG6okAlkoMU+c2XSXqvnSjoeVOkPYkRPCyUadf46rCOZZgJYc6MWGePf61VNE2gNzA0SAhiAY7tHa06UBTu/Fu+AQ=
+	t=1747919527; cv=none; b=eWdIeowZzsgsMOSqxezVNLSyVvfe7zcI0dhZP3bAWNBySMNfTlSu0ZM1TcTOu0AuqtEpZWHXRA35STkc6wmbJsYBqIxHO86WBBIsIJPuw/Pk+FfqXaNIHrFPy2uoQGCKqMEdh43KGf6WdjXj/b4qXoQ5t4d8Nkc3KUZBTb9Xwd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918367; c=relaxed/simple;
-	bh=tJv4QNjBKtokHjJxeh7G67BZfnogRDLdbuB/31QUnks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c3Y7CPg2cSs0Ii7nVOMhntLy86g/zPHyYCpQDPrGXDx46XZJ6aJD8zUnF9U6GvmxIFIp016Ye+z+H4IjkXTGAemyLDOrgyekX5lJjNlsiyFRNqNrXSGTLxqkFx0IgmGw70Zium/RmnNQK/5u3pfkHKOAuspPqgxr3QHLADIM0/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PX3YGIeG; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747919527; c=relaxed/simple;
+	bh=VwD68oPdZR7QMQCqJ6VWvr3muJ2LNlzFhJmXibbXOuE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Fl8OsUL7BwJiAiWY2IO2fokGBuctWhXbZ3ci4Deb4hSd5l8C76M7mbzoliDWexwBTPes+XBdrkBiVNIU3OGszWlYmQ/TnaST7uvEb+hMonvtBOFE+uRMV+bZ5Zm7futIsPEefncsF4NPDGG6zI68bu3ahk2mmIXS7X5iQYX2Pvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u85k8iFT; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX3YGIeG"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2700de85d0so551841a12.2;
-        Thu, 22 May 2025 05:52:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u85k8iFT"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5e39d1e0eso863770285a.1
+        for <regressions@lists.linux.dev>; Thu, 22 May 2025 06:12:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747918365; x=1748523165; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TJ1dqFNlHXFf99EeiB4N9E7VkmnO2BZbDxwhgOO2l9U=;
-        b=PX3YGIeGiy5J+oYjMbkmy6+5qHaFcABBXWnNUOhKaZfkBq6ctXxC3oqkBqBmTbcYpI
-         DhnXIjZrZpNVnWAx8slUe2jqbKa8a+bQ19iK6JBFT3/0vq/tggGpAV3OGszy95FZ8uLZ
-         dLkyGtXaZQwm9mSu274lA1qu+JLGxGwf/vPOVPSB9Z2p49zYZco4sVyVPV8aR2GBTnIn
-         dHIYPsfipHb6wt60BG0QOJQA8nNEDELXDzqR343v+YhqazwEj8RQ/npMiCdxN0H8gcrm
-         6XXzuzu+QTdfV4vD4IjT/fufLareQVZALzDYh8egLytpj/CZIVgiO1aMKgWeiK1wBmyL
-         2Png==
+        d=linaro.org; s=google; t=1747919525; x=1748524325; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vVd3U96Y4i9Vlcsd5gesH7KRFcK58OXYVflQsNrla/c=;
+        b=u85k8iFTuN+ffagB3fQxn91+Ko82yCjju3x6mz1xHTBa/4WhxA/KbVbOfdi2qLTWRG
+         Auxvgx2P6aMjD/MSwuBenRobs16y7ucpDTOHbMzG25/pb0308A79ZKBeDqXOxqy9hEq9
+         JDAn94D6UHbbAimSDkR1tZ4zUCzW2b4Z9SJyg3DZpnYtoGbvOD3floE7Va7u6pr5/F1a
+         NoSyqm06eOEax7Gzio3ZqdDw7J73h1xZFbwoG10+F4RRshzRRqZJGHKw1pis1Cw7UN78
+         D/RCyLnd+jDsq3o2b1ql4HQXBPAJj0mDYZy1pimu1cd4HiEJ0oslA5COPgce3YgxPHjY
+         3phQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747918365; x=1748523165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TJ1dqFNlHXFf99EeiB4N9E7VkmnO2BZbDxwhgOO2l9U=;
-        b=qN4G7QGPrvRLGJtT6di/MFLZTyoh5qW04UIkxM0m+LhrAt85j98zZbiKby2eiRzfkH
-         25R6UMcBVX0pg9GIJvxvCbJelRzLe32xoht6uUkvqWAYUooSRWerhgWylPLxJfPQiOHx
-         yyN6R7p4D4fXhdkaj7+QxKX/RM1a6pSRqP2+T9Bpb3jNL8OHP7AMMryUiakQA53VFH1u
-         /dn5zADxXD9a77PsMRMz1WpZY7w5cor4lAJBFQ5z1KIGaJIqHlBAZGXw/Wozfdip1lAR
-         zb8UrodRStX/7V5lfTGb897pmjp8r9xaQIiRsIlDKzZMTWC/84xqOV0VZhSDIPE7wb4o
-         gTZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU400IhNlKVzgTJK/3FgWmFpA+ReI3jufgJGYvpnEvqWZuMWzs+f0fZpqaQdgrH4Bj3EVpI6QC/I7cH/g8=@lists.linux.dev, AJvYcCUZWeXMTJfTkB6O0EQPLKgwg5GGBWo3hjr0AiSMMKMdROtAA3calSsr1W14H0R1OtyHl/Kp@lists.linux.dev
-X-Gm-Message-State: AOJu0YxvqQSYIDZrL7fNcetG18J2xwDY0LIBGm1gmwY+UylU1A8xu7yv
-	lS0HwoqttSGGl8xB4Qjk0e16FgpV2LHXtzcDFlaILWuxKGynuiJDXcyCSOvHdohcY24t+McbAkp
-	/NBi2w0/A/392p0j/dLGry47iduZfJMY=
-X-Gm-Gg: ASbGncukxpKKmG0yMzse99zvxYHsWN6sxNzlAMZuTtOUkDq4z/Aekszs+KUabw1yBOv
-	FaYBDl4z5QeSuyUyEBLzWvay6rScD6nYUt8wvDHMVt0u9m7V9Sey5i/Nrzae90if6yJZNzx4FW1
-	syBvHcIj2FoFbSDEX5tue9/4cwJZMCaZEo
-X-Google-Smtp-Source: AGHT+IGQab83uIDU/GDVEexZuM5wwTP4lC86/RT9iNGRKxL/kDU1nqV9xYvUEmkaYpYKc/nYSDo/XA0Hp3rhrP5TbQ4=
-X-Received: by 2002:a17:902:c951:b0:21f:356:758f with SMTP id
- d9443c01a7336-231d438823amr134924235ad.3.1747918364882; Thu, 22 May 2025
- 05:52:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747919525; x=1748524325;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vVd3U96Y4i9Vlcsd5gesH7KRFcK58OXYVflQsNrla/c=;
+        b=M60KmVrJliF/H/c+Oe15GHEpE8muBE3i+ldIlq43/G9tDcmbJYe+Y2wbfB1xDW/CIb
+         nTcJm4BhYKF88yoXgbY5OrTF3a2hS92gWNm4PfYkvZ/Pa/tazCNMllgVGZXdSeyzdWFq
+         p3B10ad/2J011TJLGFpJq/9EG9E1lfXJ8FO3i3H/E2NrOmoOylbl3mq4xktP9E368cMW
+         nV3GQmmkUoNSCQyuWwiwTuYdN1mF3KNE/ktEIEipRR+bZ8NkGxYMwC6PnMniYWowr+xQ
+         gTnobDvjcOsVpoUOEa6NfD06kCIer2gImm2R2sIV6/0wiU2mL0wEO4vc4VrEf3LRpPsr
+         iKMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVexEoC6+5hl0S226v0jFV6+eK7Z9gFWG6/YtDNnw+tK3t869VHncsvaNLS1mQJKmsJkmIwr42dD232cw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw5yaUeTTBr5BCIKN6vsfMWUgl611NQfCl3akmCsrEhe2+FDqiU
+	f39GTYOanwmSoRsPisOCUIofwZ5dD4X0NBtIAeYw564nR1eXjE4E/BGdRpNawS3ehlxTo7XE5Ik
+	GYiVTW6/rUYb9hdEaZEMoNRYgvPwFwTAC3AnvpdQZNQ==
+X-Gm-Gg: ASbGncv+nqdiq7pPqZR3wgsR6fcdGOgVb4PLMLrvvZmHHmgpCL2R2QPbHhZNo4AFKaT
+	Dqtrg5Wi62B0MXy+l0wTGwLHSBFfDhdXeq0bCXV9K70j2DEsBCbOZfFAhesNaBXcmp31BcE2KEO
+	UdUyoWbnqriOf+slMaCkD8SbmRiNFdV+qIcBGEL+CjhALkqvCGL+QUT3hOgXRTbj5V6g==
+X-Google-Smtp-Source: AGHT+IFer49uV/0MlFOwzViAxidhmUTCovTOCELPmnDhegazhsSbbMo1dxe+RgiFPEHTV1iqxE1ZvAzIrmUV7Y4BUPA=
+X-Received: by 2002:a05:620a:4405:b0:7ca:f3d0:e7c8 with SMTP id
+ af79cd13be357-7cd47fed6f9mr3472211685a.52.1747919524812; Thu, 22 May 2025
+ 06:12:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-In-Reply-To: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 22 May 2025 14:52:32 +0200
-X-Gm-Features: AX0GCFtFzPcuH3SiIlAcuYu5MJfjb9QDePgyNRa2KtJcWu-QNzrT_t3oGCGwMkk
-Message-ID: <CANiq72mh1h8d-EWrZef=BPPtadZyHG0B+tg9GgA_RnWiETWMkA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	torvalds@linux-foundation.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 22 May 2025 18:41:52 +0530
+X-Gm-Features: AX0GCFsHvByQyFYjjj2yI43kVVdpVcQ_KO3AH4tPajR5bk66xedIzcAuV4seOEA
+Message-ID: <CA+G9fYssasMnOE36xLH5m7ky4fKxbzN7kX5mEE7icnuu+0hGuQ@mail.gmail.com>
+Subject: arm64 gcc-8 defconfig call to '__field_overflow' declared with
+ attribute error value doesn't fit into mask
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-wireless@vger.kernel.org, 
+	Netdev <netdev@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Johannes Berg <johannes.berg@intel.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 2:02=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
->
-> Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
-> disables a GCC feature that we don't want for kernel builds, so let's
-> skip it as it doesn't apply to Clang.
->
->     UPD     include/generated/asm-offsets.h
->     CALL    scripts/checksyscalls.sh
->     RUSTC L rust/core.o
->     BINDGEN rust/bindings/bindings_generated.rs
->     BINDGEN rust/bindings/bindings_helpers_generated.rs
->     CC      rust/helpers/helpers.o
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:369: rust/bindings/bindings_helpers_gener=
-ated.rs] Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_helpers_generated.=
-rs'
->     make[2]: *** Waiting for unfinished jobs....
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:349: rust/bindings/bindings_generated.rs]=
- Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_generated.rs'
->     make[1]: *** [/home/pmos/build/src/linux-next-next-20250521/Makefile:=
-1285: prepare] Error 2
->     make: *** [Makefile:248: __sub-make] Error 2
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJX=
-Yu7wWK51w38QUQ@mail.gmail.com/
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Tested-by: Rudraksha Gupta <guptarud@gmail.com>
-> Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+Regressions on arm64 defconfig build failed with gcc-8 on the Linux next
+tag next-20250512 and next-20250522.
 
-Thanks for sending a v2! I was going to fix it myself, but this is
-even better :)
+First seen on the next-20250512
+ Good: next-20250509
+ Bad:  next-20250512
 
-By the way, submitting a patch typically requires / generally implies
-that you actually tested it, so your own Tested-by is usually not
-provided.
+Regressions found on arm64:
+ - build/gcc-8-defconfig
 
-Cheers,
-Miguel
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
+
+Build regression: arm64 gcc-8 defconfig call to '__field_overflow'
+declared with attribute error value doesn't fit into mask
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log
+-----
+In file included from arch/arm64/include/asm/sysreg.h:1107,
+                 from arch/arm64/include/asm/cputype.h:248,
+                 from arch/arm64/include/asm/cache.h:43,
+                 from include/vdso/cache.h:5,
+                 from include/linux/cache.h:6,
+                 from include/linux/time.h:5,
+                 from include/linux/skbuff.h:15,
+                 from include/linux/if_ether.h:19,
+                 from include/linux/ieee80211.h:19,
+                 from drivers/net/wireless/intel/iwlwifi/iwl-trans.h:10,
+                 from drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c:6:
+In function 'u32_encode_bits',
+    inlined from 'iwl_pcie_ctxt_info_init' at
+drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info.c:208:3:
+include/linux/bitfield.h:195:3: error: call to '__field_overflow'
+declared with attribute error: value doesn't fit into mask
+   __field_overflow();     \
+   ^~~~~~~~~~~~~~~~~~
+include/linux/bitfield.h:215:2: note: in expansion of macro '____MAKE_OP'
+  ____MAKE_OP(u##size,u##size,,)
+  ^~~~~~~~~~~
+include/linux/bitfield.h:218:1: note: in expansion of macro '__MAKE_OP'
+ __MAKE_OP(32)
+ ^~~~~~~~~
+
+## Source
+* Kernel version: 6.15.0-rc7
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 460178e842c7a1e48a06df684c66eb5fd630bcf7
+* Git describe: next-20250522
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/28517069/log_file/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250522/testrun/28517069/suite/build/test/gcc-8-defconfig/history/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRo9LbWebbQqL9EYIT8oB7qmNj/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xRo9LbWebbQqL9EYIT8oB7qmNj/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
