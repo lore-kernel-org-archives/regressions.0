@@ -1,104 +1,162 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCAC1EA80;
-	Thu, 22 May 2025 13:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDF52770B
+	for <regressions@lists.linux.dev>; Thu, 22 May 2025 14:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747921745; cv=none; b=C5ED5mZCUWZTpN+lhtcL39W2MzJkUmmKQ3uCfmiTho4KSiY81vGJ3rakNUhZeBwjZA1YG3j80N6wdYBCbPttQFcZeXPyfvsebYIkJE27cZ9jOOH3WUuOGBHDJv2VzKo/uunVDERQYyJfdaS0T4Umj4TYxpwvubRav0LYbltAJdM=
+	t=1747922550; cv=none; b=k8/z/Xik3Xqy+BHxB8PI2OQ0fHCARBn1eAjEjvHn9TSvWpJ1FS6qsLs+chhBKKP0K5mu6PsrJAYx6zGdt2f7/wEYTJjuJgtIZqRSLuvV0Zhq//t5waukM4HOnYyewaeXPiOTWFeVdecFslwGm8TKSLr1+C/S8WljymOwkbm9v4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747921745; c=relaxed/simple;
-	bh=seTFlfjq6NSrzxnC63mhUew9n0vw2LOFO1OLNic6qCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IBTs7x9Ysa7cMv2aWeq7W45UeeNnCas9j20ysRR0Q+/blfNamEYP/J1Ax74iDrbJXGLzTGpFaLMtB+kcV8iXOAWczD/HLzfqdhw3vqPCsGj3hAI7w2Y6aOWPgl+n16/r+IqzywtwQ51Cn7yTqAeEMqMlDHGS234sy61jwC+SAqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CklrqvYm; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747922550; c=relaxed/simple;
+	bh=VKDEPzwby3mBDQ3BsLrh1Y11pUMU7WCO46ezVRwnuYI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=cIdtZniLsYsESY662xzX0QDzpGPKQrOgztYQ63TvGXt1gOd3CSysvNIt7YX/Af8Jx+ImlugOY5CTXlCcvSQ4bDM5BVdeXoDAdwoP31wt/iRev3qwuRBgT2xCWoeTp7ab0MJGHtWHkxm/8m8HNxcipG3qcdOQ/mjdbXvjnKtmUeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GbDFzeqM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SHVXjK92; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CklrqvYm"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af5499ca131so800898a12.3;
-        Thu, 22 May 2025 06:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747921744; x=1748526544; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=seTFlfjq6NSrzxnC63mhUew9n0vw2LOFO1OLNic6qCI=;
-        b=CklrqvYmkrBNxj/UW3WEqhTv/sYkVZCxlR7ZfFSMd8na1O7MTXhWOFFqWvxzaBewNx
-         5Ho9QtVRrXq265DcEjJ5THQkmpZNlNYBx81vc/CUBg45peBxY5ak/AGDCndgPLWbY4AU
-         z7ybZc9UQookQ9d7wpZn08vcS9x+bq2+aaGoQK0kEP+RjJ/Qy0FYgyl5vliQSTaxoTiS
-         X/yTAubI6rxDnIphRHozyyXvSjFoJIwO/jmCw5fWp0H457jAB3EKhM9lgqeh+3vlvZzE
-         QLTPy8Dr6cY8YgAukOL2RANiFqnKhW8C6mR1sQ1BTNBQDRZ0tA9NioUGwnYzIPDZvgRh
-         zxgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747921744; x=1748526544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=seTFlfjq6NSrzxnC63mhUew9n0vw2LOFO1OLNic6qCI=;
-        b=b3ya0CrvKbIhDGQp9kmIjyKgg3JZYzwzndRDnrTCxgEO1x3cWsAYZffrh22R30TsNh
-         JTWZbsmWuMmZ0w5PLWDTR6KV/e74niXSYdqNwQnV4vLupRJEWXBK0N/IY9q1NIQ4j1UP
-         BiCRIUI2Up+WcQ/kQI2FnBydmmXpESDjlJzgS0eiixXBH3DBN/VCF0n5cH8d2N6ejiZa
-         dlkdM7h16UOdRtR9fs5UztXOB/0jhKKx38C7roUMiIubDl7qLF8OulLaBwRfY4r+R72t
-         xFhOWzNkFo9MWBGQmzvQuuspQsLJ6E012LyQbggXIVC1kRpWSyyuw+vHVz78ay7mViaZ
-         5R+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWD73pxuYyIoWWieIh1uK0wBzxpNKle/943DAhFJTxFyP3NPMe7zi0C/iXngyv5vShEKU7wOGEZe92M9cg=@lists.linux.dev, AJvYcCXVxch5UNIzAjjU4WDjtWBZEvBrwL6zaTtuqiFxiXtSeMwGBM0GCl95JxOh2MCvFKdczim0@lists.linux.dev
-X-Gm-Message-State: AOJu0YwlewWxY1ES+dZajEXrIQ6owt1/WvHl6jTl0tNCpE4z6Hx4NJX6
-	DNoYLmEZPQCfcMJJMnnJS0PLCDkElZC7eKv2/8JRp7OQYU3ndEQ2LUyIYvyFPFdeNdNCG6reuEQ
-	cTnvClyQq+baielGtBycNyhqqiDztYVCfQHt0TzjWeg==
-X-Gm-Gg: ASbGnctNGg2AuywscvKE+AxKUp6Z19SutMBqrYK938zkUjXsSWX3dHfTkW2u73DxnZA
-	2Yko/5t3QGsx6qanc6+wltNMvySEoSD8Rrr42eGP/Wyspc9FqibFm3yJ7cnEn9OiRwIvGOlUc3S
-	bOa0pBC+o/SVExp7C8gJRbxCWFjQ8modMJ
-X-Google-Smtp-Source: AGHT+IHmxBM4ElYPl0Cgle+X1a1N9BYizs0g64Q+6AGqDWvHtYhE0YZ6Ro+0RmtEXcsihYLu9rT/e9fiJZd+nt7gyiY=
-X-Received: by 2002:a17:902:ea0a:b0:224:c46:d164 with SMTP id
- d9443c01a7336-231d43891f9mr119531835ad.2.1747921743759; Thu, 22 May 2025
- 06:49:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GbDFzeqM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SHVXjK92"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 90C9A1140161;
+	Thu, 22 May 2025 10:02:26 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Thu, 22 May 2025 10:02:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747922546;
+	 x=1748008946; bh=LfW+1ywcWa9OhtIkbg/ys95rDhhPMEoOa3R2KQwbOuA=; b=
+	GbDFzeqM+YW0vnFa5HSFfMWEoD4LZrTUjeEP2fQ1+8y3h+UcDI2vPDWvl8/Gm2/A
+	5FONauhwL/y71YlOvo9rqMB120rZRH1NlXy3lrRoQuw3nvI+/2zCRy4i4KSzmG9G
+	W2HZ/pRk1FBKzUVdPxwLBpAS4rxeHGJInO+AHITHPswqnQNOJXux0cLYylH4lZpp
+	TnH6vODOWe+8enZ3cQvphei6pverOgeZBuFz2JOh7+6q7htWUirh3e8VtoitF/Rf
+	OO0i8O6sGzrptB7QeenvRU2z1yEIGPFK4NwKz/a7PhrQkHhkafTE3789S4YOaX/M
+	kj+aEAFyck6M47uCxRvx+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747922546; x=
+	1748008946; bh=LfW+1ywcWa9OhtIkbg/ys95rDhhPMEoOa3R2KQwbOuA=; b=S
+	HVXjK92PV+H7079UBzPU1fnix++TF+Dzl4KDq9YJ99FU7yMClNDsIFI+y+6DYDt4
+	zxkujlFmTa6TG0/iEL2GWf83cnOcQFkLaBqTeV4e4gJGjnyhJ+oxeXjEMAUMdiMG
+	tPVnp17lZ5Gym4y1EUhazMwwni3YRfWmhB0OaLsEZU+ivbvQRdW5LxzLr7GF4lr5
+	IVsZo3EEFeG0JtnMxvI7feFsjayTc1Dh4Nkj1r4DfyQopWTNyMcreS0rwJwx4iV+
+	+SSlKLVebiFzAFiG3QPns+nQA/bLP3TKf4SPi8CiRisCX7afOer97qXLeDxUrK3u
+	OATPyaKI8b3olkyBW2H3g==
+X-ME-Sender: <xms:cS4vaBVOYY3rEskCqDVh2akO2Ij8iYYyoFE0A71xPvRRUiXGh0TWpA>
+    <xme:cS4vaBk55xcyMDRK6wietN7pGJTQmBXis2-OkX8bjF1ndMmhqicjvcXf_llmel4JC
+    FQ_wPSD8rWTKWs-sPI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeiudehucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
+    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
+    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
+    nhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtsh
+    gsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepsghrrghu
+    nhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnuggvrhhsrdhrohigvghllh
+    eslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhi
+    nhgrrhhordhorhhgpdhrtghpthhtohepnhgrrhgvshhhrdhkrghmsghojhhusehlihhnrg
+    hrohdrohhrghdprhgtphhtthhopehlkhhfthdqthhrihgrghgvsehlihhsthhsrdhlihhn
+    rghrohdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlih
+    hnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:cS4vaNYdLDNra9fF1YVk2NtYD8SJ1t6bgUBTzEjtGVlNr56zMdRcTQ>
+    <xmx:cS4vaEVkwsZ8t8yX62g5nHG1WwBacxmRtaLacRIRxnKHw1Of5GhZYg>
+    <xmx:cS4vaLlzusj6YyeYGNDdDh9g2HLATjq8lUFZ9NUl6bydAGrGXHYaQg>
+    <xmx:cS4vaBcYzphX9IFTuy-UhheITIf5WIuJwYcMXppifPRl5mg-hidQ9g>
+    <xmx:ci4vaOMUgefLcA-xlUGszgK2RG30yfnFE5yyjnaKI8CkkIi_9E4VTbRh>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2B50D1060063; Thu, 22 May 2025 10:02:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
- <CANiq72mh1h8d-EWrZef=BPPtadZyHG0B+tg9GgA_RnWiETWMkA@mail.gmail.com> <db93019f-0a57-4b1d-95a6-ed5a6ab9a989@gmail.com>
-In-Reply-To: <db93019f-0a57-4b1d-95a6-ed5a6ab9a989@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 22 May 2025 15:48:50 +0200
-X-Gm-Features: AX0GCFu-gY2Uaiye5G1giuS4p4mScik6sBBHkTTkGYR5OKRXRPGKMWWtMoHevFE
-Message-ID: <CANiq72n3UzgG4BTcZXd9aJK_9+BwodRkbzewPtipi4-iCqdeqA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	torvalds@linux-foundation.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Tc6af0bd36d39ecf6
+Date: Thu, 22 May 2025 16:01:53 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ linux-fsdevel@vger.kernel.org, linux-mips@vger.kernel.org,
+ "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>
+Message-Id: <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
+References: 
+ <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
+Subject: Re: mips gcc-12 malta_defconfig 'SOCK_COREDUMP' undeclared (first use in this
+ function); did you mean 'SOCK_RDM'?
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 3:27=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
->
-> Thanks! :D Happy to send in a v3 if needed
+On Thu, May 22, 2025, at 15:22, Naresh Kamboju wrote:
 
-No worries, I will apply this one :)
+> ## Build log
+> net/unix/af_unix.c: In function 'unix_find_bsd':
+> net/unix/af_unix.c:1152:21: error: 'SOCK_COREDUMP' undeclared (first
+> use in this function); did you mean 'SOCK_RDM'?
+>  1152 |         if (flags & SOCK_COREDUMP) {
 
-I will remove the tag, unless you want it there for some reason (e.g.
-because you want to point out some extra testing that goes beyond what
-would normally be done).
+SOCK_COREDUMP should be defined outside of ARCH_HAS_SOCKET_TYPES.
+How about reducing the scope of that check like this?
 
-Thanks!
+      Arnd
 
-Cheers,
-Miguel
+diff --git a/arch/mips/include/asm/socket.h b/arch/mips/include/asm/socket.h
+index 4724a563c5bf..43a09f0dd3ff 100644
+--- a/arch/mips/include/asm/socket.h
++++ b/arch/mips/include/asm/socket.h
+@@ -36,15 +36,6 @@ enum sock_type {
+ 	SOCK_PACKET	= 10,
+ };
+ 
+-#define SOCK_MAX (SOCK_PACKET + 1)
+-/* Mask which covers at least up to SOCK_MASK-1.  The
+- *  * remaining bits are used as flags. */
+-#define SOCK_TYPE_MASK 0xf
+-
+-/* Flags for socket, socketpair, paccept */
+-#define SOCK_CLOEXEC	O_CLOEXEC
+-#define SOCK_NONBLOCK	O_NONBLOCK
+-
+ #define ARCH_HAS_SOCKET_TYPES 1
+ 
+ #endif /* _ASM_SOCKET_H */
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 139c85d0f2ea..f60fff91e1df 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -70,6 +70,7 @@ enum sock_type {
+ 	SOCK_DCCP	= 6,
+ 	SOCK_PACKET	= 10,
+ };
++#endif /* ARCH_HAS_SOCKET_TYPES */
+ 
+ #define SOCK_MAX (SOCK_PACKET + 1)
+ /* Mask which covers at least up to SOCK_MASK-1.  The
+@@ -83,8 +84,6 @@ enum sock_type {
+ #endif
+ #define SOCK_COREDUMP	O_NOCTTY
+ 
+-#endif /* ARCH_HAS_SOCKET_TYPES */
+-
+ /**
+  * enum sock_shutdown_cmd - Shutdown types
+  * @SHUT_RD: shutdown receptions
+
+
