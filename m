@@ -1,163 +1,141 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D9268FF6;
-	Thu, 22 May 2025 22:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F2F2236EB;
+	Fri, 23 May 2025 09:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747952028; cv=none; b=uCJrPq198njdSNr90spp3Topavr+WBgj0drARfxA7WiIFcwc42u9iTqgU8ld3Hxk244uHP8bzJj1gk5veIqN+ddn9JmSOOmyVCsyCwsZ8T62mk9Gn8woDfeQtgnN3s5F7ACZUwvgobt/BvhtaD8T0S7lCrEYJbW+RSWAdtktbGY=
+	t=1747990994; cv=none; b=TIutPAXPNJgpJqVEUUD9BmvxkMTYbWoRPkVOeyMKsS9vH+FIPWzzUHFJBvIgjCG1vcjmUvhCiZYKbCoRNmgj0a2QOoKMdYrPCxrPTddehuDrn+40k6ET2JrdyrX8Q8VJRRyWywt5EUs4k4H073FYoDua/dYr/AnNJiHjeCEsUAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747952028; c=relaxed/simple;
-	bh=5dENeOLtnJGFObbzdDXN0f5y5BtraJcblhTQRAod3S8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuW06mELLhPVFcyjxN9m1hizufhBPdkfcGbUyOomk8+jTapJq7qiR1eSuEFmaNBhsJ+FBkuy/wjlc/gZHsP9ZBt4a0zgBqnPfTxIbGlUCif594TyttqMhsL6EfZxqqANIunza3p/KY6auwcV7ayuxgpOs9jS84bm/EjJ//bfAMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ha6OqUoJ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747990994; c=relaxed/simple;
+	bh=fgNdYJ6Icfxm1rufblmWWRmhDfarblHEjveCv2W+a0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JNwcLI2HgF70lJc+5+6fXKea7fzEm76QBR70B/dvyngMu4P9ZEDJoUdOzVDYcUl18TS/GA++NHuLiqSymYCQiF+CvHiFgpi7bZlpjvZ4ue8fGU7zegYoKRd7++U7eqRcrzwSq9rhlmhdyZNAsvMyDQxeb36M0ehK17kP7DaoYik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBBddXGL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ha6OqUoJ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23179999d4aso7850555ad.1;
-        Thu, 22 May 2025 15:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747952026; x=1748556826; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMhz1MVSg+20hErSHEivJDb3RiqjMCis/42ObFUBGKI=;
-        b=Ha6OqUoJ84F3JymirMZuYEm2B3Rcl7rBLzUoJ320RufYycolOSutpnHoH0q9LcZQ8l
-         i4alcV1QUO6WgFOmccT/XoaRqaQJuJrlmSzgpP+laxbZps6vBNT+bNuTK8ZyiHATxlWC
-         zBSDOdBYeqXNohv6ymfUy3BZeoyTwKHygW58gk/tyLRT0fzGLOV+C/vY5/v2ezUhN6DF
-         dXXBqwqYDW999TZD7nGMr4+6lBnX546UDBi/S2wd5HOexD3gMbdzGeDHUUnU+hGNC4Fs
-         XAq6V7J8jFqr34ifqKpLo6TJbMp9bSRGytItjhhSmvDqE5P7YMDSV1iM1W85+2TP5lK+
-         ocbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747952026; x=1748556826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AMhz1MVSg+20hErSHEivJDb3RiqjMCis/42ObFUBGKI=;
-        b=bENB7D1omDXFL0P+duG92fqJzXtWMQ1PlBzuj7d0zJzArobvLI5scx7ogb3RsqUTAM
-         rcS7KkBNwXotDTMjbKK9AH+w+8sepZ47+dQIA8a8IEmlY5cBLs8tNESGH2C6tVRLBhvk
-         XYjfawv3QVMmPI9G7HslpO+eAkQVpb/x7mnVis8VnMEx1F1X9fTlEv5DgK5giMG5Yn7C
-         kVO6GlJP3AdUIfenVS6z3Nc35zuEV/+DVnNKfnTv+IrctDwg196AYWic32jyh9FYP15P
-         dLRIT0sEbKHfH6FSddCYjixkjxtAXeuE2kpe6fu79GiSy+n8keTa7c/PDH68yN6YS+VU
-         ZExw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfnQkOx3oQqr2kNtfe49qvQmGaOdVs35w7J0uSL9jlZl0FPMJeijw0r9x5v/DsiN9csNsw@lists.linux.dev, AJvYcCWQ2OLBENnqg7RS1bd8xciyjbPxNSBpe+V2BHfUC8jcBD9gDaGQUBRofvlCdDOHH6vjyKs9joghxfc8hQE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwEWlujTi4hZSs6sBTQrcXsJsKCSyKQaUB7pAesf6DSBT0Fy8BG
-	G7xObXiJKfgbSnHT9EmTaNbi2CrsP1Z3D5gCH5D9kDEfE5P8tVo1QpJIC5UuRInCVhyRGO+f/hh
-	i/dMyLhWvCXtR70VrAP41Duv++tut1BE=
-X-Gm-Gg: ASbGnctkgx7MG5HPx5+on4gbj+D6qcLHMRl1F+MQweNpmb1Do1XgJxfGRTncgqRgVA4
-	/PPbZeFguEg5p4ThD19yh6YSkJ4a3kqeX93d9rHX3FAaGKP0ELjLXuG1VYkP5VAaDZFbQFDxlgs
-	2R0Lq+qNok+EG0TWPpJzcNA7L7zrljBTHAHdkG8J74fUM=
-X-Google-Smtp-Source: AGHT+IFTyjvX9iO5arSB+Hrj2K8L6YOfX+CN4mhTlBRVV8gnFAIiCtQe8lkHwIlvRc1U3Eaocj5eWFvoqT3N1A2+8ZQ=
-X-Received: by 2002:a17:902:d4cd:b0:231:c9bb:6105 with SMTP id
- d9443c01a7336-231d334d214mr141617365ad.0.1747952025723; Thu, 22 May 2025
- 15:13:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBBddXGL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9612CC4CEE9;
+	Fri, 23 May 2025 09:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747990994;
+	bh=fgNdYJ6Icfxm1rufblmWWRmhDfarblHEjveCv2W+a0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GBBddXGLSkGmKOnmELz/5WhFuBXe0qFz98yo/sL3VR/jY3YKPUjJLiPs4J60cICJS
+	 15W+zbxLlX5Xt7IcrIDVw8DwIDDA1S8Q+Sx8bHTjMjyDxBZFEuIJrm0WuOUXJAjEsF
+	 TKloFbxJANvIEF/VpNrVLyi1kxeAkz9y3eMV9ShtcRejhK8aMDdRXWQNFBfttDizjK
+	 +PX3HGhgczz9V18sAFnaKjhxAArqDTEo0K+1i/Lo74i8Ibv85mGJHLqx9XC/VPbX+E
+	 HDcD6ltsNrpYqSoE3Cgf1484Q5Zl4vvIu6WIF+8g/8BTcuUwQ/2RBXLMKGa0LxqZzf
+	 taReSpOAAriBg==
+Date: Fri, 23 May 2025 11:03:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	linux-fsdevel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: mips gcc-12 malta_defconfig 'SOCK_COREDUMP' undeclared (first
+ use in this function); did you mean 'SOCK_RDM'?
+Message-ID: <20250523-genannt-anwalt-7c1f3c6bc4e1@brauner>
+References: <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
+ <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-In-Reply-To: <20250522-rust-mno-fdpic-arm-fix-v2-1-a6f691d9c198@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 May 2025 00:13:32 +0200
-X-Gm-Features: AX0GCFtr6WgCm1ku7z1BrqoxOWC4SJPyclrOJsw4oTJrTJaoW2ki_s3m3SE0AGg
-Message-ID: <CANiq72kHh9e-gB-b1udjJn07=ampsy+4dkTFgEeQ3VNUUw_7+A@mail.gmail.com>
-Subject: Re: [PATCH v2] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	torvalds@linux-foundation.org, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="zlqp6i2j7vfr5zzm"
+Content-Disposition: inline
+In-Reply-To: <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
 
-On Thu, May 22, 2025 at 2:02=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
->
-> Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
-> disables a GCC feature that we don't want for kernel builds, so let's
-> skip it as it doesn't apply to Clang.
->
->     UPD     include/generated/asm-offsets.h
->     CALL    scripts/checksyscalls.sh
->     RUSTC L rust/core.o
->     BINDGEN rust/bindings/bindings_generated.rs
->     BINDGEN rust/bindings/bindings_helpers_generated.rs
->     CC      rust/helpers/helpers.o
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:369: rust/bindings/bindings_helpers_gener=
-ated.rs] Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_helpers_generated.=
-rs'
->     make[2]: *** Waiting for unfinished jobs....
->     Unable to generate bindings: clang diagnosed error: error: unknown ar=
-gument: '-mno-fdpic'
->     make[2]: *** [rust/Makefile:349: rust/bindings/bindings_generated.rs]=
- Error 1
->     make[2]: *** Deleting file 'rust/bindings/bindings_generated.rs'
->     make[1]: *** [/home/pmos/build/src/linux-next-next-20250521/Makefile:=
-1285: prepare] Error 2
->     make: *** [Makefile:248: __sub-make] Error 2
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJX=
-Yu7wWK51w38QUQ@mail.gmail.com/
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Tested-by: Rudraksha Gupta <guptarud@gmail.com>
-> Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 
-Applied to `rust-next` -- thanks everyone!
+--zlqp6i2j7vfr5zzm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-    [ Naresh provided the draft diff [1].
+On Thu, May 22, 2025 at 04:01:53PM +0200, Arnd Bergmann wrote:
+> On Thu, May 22, 2025, at 15:22, Naresh Kamboju wrote:
+> 
+> > ## Build log
+> > net/unix/af_unix.c: In function 'unix_find_bsd':
+> > net/unix/af_unix.c:1152:21: error: 'SOCK_COREDUMP' undeclared (first
+> > use in this function); did you mean 'SOCK_RDM'?
+> >  1152 |         if (flags & SOCK_COREDUMP) {
+> 
+> SOCK_COREDUMP should be defined outside of ARCH_HAS_SOCKET_TYPES.
+> How about reducing the scope of that check like this?
+> 
+>       Arnd
 
-      Ben explained [2]:
+I applied the appended patch.
 
-        FDPIC is only relevant with no-MMU targets, and then only for users=
-pace.
-        When configured for the arm-*-uclinuxfdpiceabi target, GCC enables =
-FDPIC
-        by default to facilitate compiling userspace programs. FDPIC is nev=
-er
-        used for the kernel, and we pass -mno-fdpic when building the kerne=
-l to
-        override the default and make sure FDPIC is disabled.
+--zlqp6i2j7vfr5zzm
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment;
+	filename="0001-mips-net-ensure-that-SOCK_COREDUMP-is-defined.patch"
 
-      and [3]:
+From 4e83ae6ec87dddac070ba349d3b839589b1bb957 Mon Sep 17 00:00:00 2001
+From: Christian Brauner <brauner@kernel.org>
+Date: Fri, 23 May 2025 10:47:06 +0200
+Subject: [PATCH] mips, net: ensure that SOCK_COREDUMP is defined
 
-        -mno-fdpic disables a GCC feature that we don't want for kernel bui=
-lds.
-        clang does not support this feature, so it always behaves as though
-        -mno-fdpic is passed. Therefore, it should be fine to mix the two, =
-at
-        least as far as FDPIC is concerned.
+For historical reasons mips has to override the socket enum values but
+the defines are all the same. So simply move the ARCH_HAS_SOCKET_TYPES
+scope.
 
-      [1] https://lore.kernel.org/rust-for-linux/CA+G9fYt4otQK4pHv8pJBW9e28=
-yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com/
-      [2] https://lore.kernel.org/rust-for-linux/aAKrq2InExQk7f_k@dell-prec=
-ision-5540/
-      [3] https://lore.kernel.org/rust-for-linux/aAo_F_UP1Gd4jHlZ@dell-prec=
-ision-5540/
+Fixes: a9194f88782a ("coredump: add coredump socket")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ arch/mips/include/asm/socket.h | 9 ---------
+ include/linux/net.h            | 3 +--
+ 2 files changed, 1 insertion(+), 11 deletions(-)
 
-        - Miguel ]
+diff --git a/arch/mips/include/asm/socket.h b/arch/mips/include/asm/socket.h
+index 4724a563c5bf..43a09f0dd3ff 100644
+--- a/arch/mips/include/asm/socket.h
++++ b/arch/mips/include/asm/socket.h
+@@ -36,15 +36,6 @@ enum sock_type {
+ 	SOCK_PACKET	= 10,
+ };
+ 
+-#define SOCK_MAX (SOCK_PACKET + 1)
+-/* Mask which covers at least up to SOCK_MASK-1.  The
+- *  * remaining bits are used as flags. */
+-#define SOCK_TYPE_MASK 0xf
+-
+-/* Flags for socket, socketpair, paccept */
+-#define SOCK_CLOEXEC	O_CLOEXEC
+-#define SOCK_NONBLOCK	O_NONBLOCK
+-
+ #define ARCH_HAS_SOCKET_TYPES 1
+ 
+ #endif /* _ASM_SOCKET_H */
+diff --git a/include/linux/net.h b/include/linux/net.h
+index 139c85d0f2ea..f60fff91e1df 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -70,6 +70,7 @@ enum sock_type {
+ 	SOCK_DCCP	= 6,
+ 	SOCK_PACKET	= 10,
+ };
++#endif /* ARCH_HAS_SOCKET_TYPES */
+ 
+ #define SOCK_MAX (SOCK_PACKET + 1)
+ /* Mask which covers at least up to SOCK_MASK-1.  The
+@@ -83,8 +84,6 @@ enum sock_type {
+ #endif
+ #define SOCK_COREDUMP	O_NOCTTY
+ 
+-#endif /* ARCH_HAS_SOCKET_TYPES */
+-
+ /**
+  * enum sock_shutdown_cmd - Shutdown types
+  * @SHUT_RD: shutdown receptions
+-- 
+2.47.2
 
-    [ Reworded title. - Miguel ]
 
-Cheers,
-Miguel
+--zlqp6i2j7vfr5zzm--
