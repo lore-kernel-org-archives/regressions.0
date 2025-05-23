@@ -1,141 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F2F2236EB;
-	Fri, 23 May 2025 09:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C736D227BA4
+	for <regressions@lists.linux.dev>; Fri, 23 May 2025 09:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747990994; cv=none; b=TIutPAXPNJgpJqVEUUD9BmvxkMTYbWoRPkVOeyMKsS9vH+FIPWzzUHFJBvIgjCG1vcjmUvhCiZYKbCoRNmgj0a2QOoKMdYrPCxrPTddehuDrn+40k6ET2JrdyrX8Q8VJRRyWywt5EUs4k4H073FYoDua/dYr/AnNJiHjeCEsUAk=
+	t=1747994348; cv=none; b=VKcgAc1xgL0G7R09V8QK6sO9CCSRWysPGDdcFzoifKxrAGnDDHDBxJrvHYbyM/XDxw4pLB2upGf+xiHCaZxyU/rPhKfRisimGqw3SiJd96qLb8FYXhP+og/luzgMHXW7lFs6EdWSeHPu3oDedIEz7yZMy7HrKtaGNnbWxFcy/EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747990994; c=relaxed/simple;
-	bh=fgNdYJ6Icfxm1rufblmWWRmhDfarblHEjveCv2W+a0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JNwcLI2HgF70lJc+5+6fXKea7fzEm76QBR70B/dvyngMu4P9ZEDJoUdOzVDYcUl18TS/GA++NHuLiqSymYCQiF+CvHiFgpi7bZlpjvZ4ue8fGU7zegYoKRd7++U7eqRcrzwSq9rhlmhdyZNAsvMyDQxeb36M0ehK17kP7DaoYik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBBddXGL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747994348; c=relaxed/simple;
+	bh=6k5sARl4egvQjB2tDiWx3blzghCZ/GspQdjLGvMSf7Q=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=iPe+pZwA98M6ltlNFVnAas8WrH7YfM+oUH7M14bc48X9Ckf7UgzipNeeor6nGw7OScT5DabjIIQnRMBSiFsL3NvLf34t9bgkHdcoRF6KIgA3KrfZq33Cx+S4ZTsqz7MPbzvUCEh50HjmEVyrC29bQ1xrYmGOA12XpzfdZ4+gAoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=wZsQuRuX; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBBddXGL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9612CC4CEE9;
-	Fri, 23 May 2025 09:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747990994;
-	bh=fgNdYJ6Icfxm1rufblmWWRmhDfarblHEjveCv2W+a0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GBBddXGLSkGmKOnmELz/5WhFuBXe0qFz98yo/sL3VR/jY3YKPUjJLiPs4J60cICJS
-	 15W+zbxLlX5Xt7IcrIDVw8DwIDDA1S8Q+Sx8bHTjMjyDxBZFEuIJrm0WuOUXJAjEsF
-	 TKloFbxJANvIEF/VpNrVLyi1kxeAkz9y3eMV9ShtcRejhK8aMDdRXWQNFBfttDizjK
-	 +PX3HGhgczz9V18sAFnaKjhxAArqDTEo0K+1i/Lo74i8Ibv85mGJHLqx9XC/VPbX+E
-	 HDcD6ltsNrpYqSoE3Cgf1484Q5Zl4vvIu6WIF+8g/8BTcuUwQ/2RBXLMKGa0LxqZzf
-	 taReSpOAAriBg==
-Date: Fri, 23 May 2025 11:03:08 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	linux-fsdevel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: mips gcc-12 malta_defconfig 'SOCK_COREDUMP' undeclared (first
- use in this function); did you mean 'SOCK_RDM'?
-Message-ID: <20250523-genannt-anwalt-7c1f3c6bc4e1@brauner>
-References: <CA+G9fYsZPSJ55FQ9Le9rLQMVHaHyE5kU66xqiPnz6mmfhvPfbQ@mail.gmail.com>
- <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="wZsQuRuX"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e7d64106f22so2180640276.1
+        for <regressions@lists.linux.dev>; Fri, 23 May 2025 02:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1747994344; x=1748599144; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOTT5nIGs/DAYCQr79O2D7rhlDUI6zUndiZEx00HOGo=;
+        b=wZsQuRuXRjvq9+Ujc1/vI3gCkNZsbOCf6dE27AhKvBOXQ7s7YQoeoKubhlCU31GIy2
+         F9WxwR7PQj9PPuTlco9+kNONEdUqcKkdwWeP4Hb3/Qk2S/U5REpMMQepwpkVf7pfh0qk
+         5cV1e3hinVsaBVj1E90tGDC6qiqvSnzibDq4HiS3mAIVOINA16ylh1yWuecNqlAcPxRC
+         U+EtEG6yH3LwXoXlTzKlQxI6039oc+j6QPH4sTZ9ZJpuYqOpHOERhoSZTJ2FNODpVcXR
+         +CwdAFe+ZFiQbnXK5TJWfutSE5LSyC4aXujYA9sc2Cnt+rR1HEUrSpM4BXjTM2CZmjX2
+         mIsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747994344; x=1748599144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GOTT5nIGs/DAYCQr79O2D7rhlDUI6zUndiZEx00HOGo=;
+        b=bW97ChUaVVTQb1CNdsQTkP1CMCygf7BmKKlTCLLoRORBShchP3oTbp3ay0Ns7EKvc5
+         /CjCD/mQaDGrVvVvXLebDcs4WA8AqOMXME26RIuZqdrAV4nIVV1Mr5U4GPRSiHBEumTC
+         Zb5Bsb1lHvC9msWiKyiO9y+AfOWyGDhI1yzBBYvhSKkb8hM+mYUrLV91RWYiyGXbpp4o
+         ngbuuCeixAkRDgJj00fd4Q1M6T+yAlRlNvDi4zVX5gZx4CI/IhsiXC3RE5JkkXBzLImj
+         bE5RJkxe2Q5RhYNW+phX+SrTa+vUd3x7/9dNWrk5vdxpyWN9Q6lYpzYmVEYnhXo0pPDH
+         GfOQ==
+X-Gm-Message-State: AOJu0Yx1iRC0S1Xj0UheBEFRxFEDYNN2iyxfkMkFUdHKwUVKehPDwpci
+	y6pXLmKMIcDzZkIkZY+X+nu6zlnX2QNMohbAIIzgsV4Jm6dPYNwHLPVhObD5PUnukj9eAFra9Pf
+	ozhJ+IzVzsx+PXaKVdTKdUjEp/9hTXDCZdYeq/CCciQ==
+X-Gm-Gg: ASbGncv5HTOsZN2Rfkwa56DX7kLdcFtlU3skMnFJwpZcN+Lw3WmvycROrrxAq9cEeCS
+	XQ6WYFZu29tLW9qURM23YdL7tQzOrM3ld89+mV65BZcRKW0iC01J7lDLtBrjYb8zaBxI51Bg87e
+	x8dw4oyyGTRBiKiQi9BdKVbyCY8phMnzs=
+X-Google-Smtp-Source: AGHT+IERNywlOqsHb76ESwwDhic5zl7OM6pA2LNxMcdRkZpKWbnd4VVWvvs3aOURWYY1L3F6GKj5CxrcgvYNSS61EUY=
+X-Received: by 2002:a05:6902:2b13:b0:e7d:5bcb:ff56 with SMTP id
+ 3f1490d57ef6-e7d5bcc003amr12419064276.36.1747994344684; Fri, 23 May 2025
+ 02:59:04 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 23 May 2025 05:59:03 -0400
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 23 May 2025 05:59:03 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="zlqp6i2j7vfr5zzm"
-Content-Disposition: inline
-In-Reply-To: <70d46cd3-80f4-4f5e-b0fc-fa2a6f284404@app.fastmail.com>
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Fri, 23 May 2025 05:59:03 -0400
+X-Gm-Features: AX0GCFvh9HZekbOR2cYNZu4etliQQCix7gndUiTG9DLsThUusscz0GlaOg_ARjQ
+Message-ID: <CACo-S-1w-6Qudd1KrffaNNFe+NRpfeSdqyCe=3hKx5i97GbntQ@mail.gmail.com>
+Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIOKAmG9uYm9hcmRfZGV2XzU3NA==?=
+	=?UTF-8?B?NF9pMmNfd3JpdGVfYnl0ZeKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVdlcnJvcj11bi4uLg==?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
---zlqp6i2j7vfr5zzm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+New build issue found on next/master:
 
-On Thu, May 22, 2025 at 04:01:53PM +0200, Arnd Bergmann wrote:
-> On Thu, May 22, 2025, at 15:22, Naresh Kamboju wrote:
-> 
-> > ## Build log
-> > net/unix/af_unix.c: In function 'unix_find_bsd':
-> > net/unix/af_unix.c:1152:21: error: 'SOCK_COREDUMP' undeclared (first
-> > use in this function); did you mean 'SOCK_RDM'?
-> >  1152 |         if (flags & SOCK_COREDUMP) {
-> 
-> SOCK_COREDUMP should be defined outside of ARCH_HAS_SOCKET_TYPES.
-> How about reducing the scope of that check like this?
-> 
->       Arnd
-
-I applied the appended patch.
-
---zlqp6i2j7vfr5zzm
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment;
-	filename="0001-mips-net-ensure-that-SOCK_COREDUMP-is-defined.patch"
-
-From 4e83ae6ec87dddac070ba349d3b839589b1bb957 Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Fri, 23 May 2025 10:47:06 +0200
-Subject: [PATCH] mips, net: ensure that SOCK_COREDUMP is defined
-
-For historical reasons mips has to override the socket enum values but
-the defines are all the same. So simply move the ARCH_HAS_SOCKET_TYPES
-scope.
-
-Fixes: a9194f88782a ("coredump: add coredump socket")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- arch/mips/include/asm/socket.h | 9 ---------
- include/linux/net.h            | 3 +--
- 2 files changed, 1 insertion(+), 11 deletions(-)
+ =E2=80=98onboard_dev_5744_i2c_write_byte=E2=80=99 defined but not used
+[-Werror=3Dunused-function] in drivers/usb/misc/onboard_usb_dev.o
+(drivers/usb/misc/onboard_usb_dev.c)
+[logspec:kbuild,kbuild.compiler.error]
+---
 
-diff --git a/arch/mips/include/asm/socket.h b/arch/mips/include/asm/socket.h
-index 4724a563c5bf..43a09f0dd3ff 100644
---- a/arch/mips/include/asm/socket.h
-+++ b/arch/mips/include/asm/socket.h
-@@ -36,15 +36,6 @@ enum sock_type {
- 	SOCK_PACKET	= 10,
- };
- 
--#define SOCK_MAX (SOCK_PACKET + 1)
--/* Mask which covers at least up to SOCK_MASK-1.  The
-- *  * remaining bits are used as flags. */
--#define SOCK_TYPE_MASK 0xf
--
--/* Flags for socket, socketpair, paccept */
--#define SOCK_CLOEXEC	O_CLOEXEC
--#define SOCK_NONBLOCK	O_NONBLOCK
--
- #define ARCH_HAS_SOCKET_TYPES 1
- 
- #endif /* _ASM_SOCKET_H */
-diff --git a/include/linux/net.h b/include/linux/net.h
-index 139c85d0f2ea..f60fff91e1df 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -70,6 +70,7 @@ enum sock_type {
- 	SOCK_DCCP	= 6,
- 	SOCK_PACKET	= 10,
- };
-+#endif /* ARCH_HAS_SOCKET_TYPES */
- 
- #define SOCK_MAX (SOCK_PACKET + 1)
- /* Mask which covers at least up to SOCK_MASK-1.  The
-@@ -83,8 +84,6 @@ enum sock_type {
- #endif
- #define SOCK_COREDUMP	O_NOCTTY
- 
--#endif /* ARCH_HAS_SOCKET_TYPES */
--
- /**
-  * enum sock_shutdown_cmd - Shutdown types
-  * @SHUT_RD: shutdown receptions
--- 
-2.47.2
+- dashboard: https://d.kernelci.org/i/maestro:a7d500f8bc2bacd741b9ca5388289=
+875fcea3bb8
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  176e917e010cb7dcc605f11d2bc33f304292482b
 
 
---zlqp6i2j7vfr5zzm--
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+drivers/usb/misc/onboard_usb_dev.c:358:12: error:
+=E2=80=98onboard_dev_5744_i2c_write_byte=E2=80=99 defined but not used
+[-Werror=3Dunused-function]
+  358 | static int onboard_dev_5744_i2c_write_byte(struct i2c_client
+*client, u16 addr, u8 data)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/usb/misc/onboard_usb_dev.c:313:12: error:
+=E2=80=98onboard_dev_5744_i2c_read_byte=E2=80=99 defined but not used
+[-Werror=3Dunused-function]
+  313 | static int onboard_dev_5744_i2c_read_byte(struct i2c_client
+*client, u16 addr, u8 *data)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  AR      drivers/gpu/drm/panfrost/built-in.a
+  AR      drivers/gpu/drm/xlnx/built-in.a
+  AR      drivers/gpu/drm/gud/built-in.a
+  AR      drivers/gpu/drm/sitronix/built-in.a
+  AR      drivers/gpu/drm/solomon/built-in.a
+  CC      drivers/gpu/drm/drm_atomic.o
+cc1: all warnings being treated as errors
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+
+# Builds where the incident occurred:
+
+## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+a=
+rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68303248fb37369f44a3fd8f
+
+## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config+lab-setup+a=
+rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:6830324cfb37369f44a3fd92
+
+
+#kernelci issue maestro:a7d500f8bc2bacd741b9ca5388289875fcea3bb8
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
