@@ -1,136 +1,126 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DABE1876
-	for <regressions@lists.linux.dev>; Mon, 26 May 2025 07:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C651F3D58
+	for <regressions@lists.linux.dev>; Mon, 26 May 2025 09:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246000; cv=none; b=VsnGnl4p03h1ekgYDdBOccoIGp32U9bMByDAHrQED9hOLxhg6O3+ngT4+nFig9iVtnVxdPcBpk3L9kqKV0l04IwbsmHgtZQIB5rQx3zyMPWywQxqppOKDFexKQAFRtrqaw08siRebJL1XVr9g5HWrHF8IT2sYbBYSmmq9lM+4ak=
+	t=1748253547; cv=none; b=NZvhJpc1xllHUSZUBwZl96+h3V/wYyEhKHkHpt37Y6bFpYd3+2qrm62Xl6CBiqElGTsAyRViW2Pu192xEywKy1JzRB+z9eXjwdoT+3FK45c6BaVj+7pvEbIO5gzFqumMm4rn2LdGt3cGGwcqAvPxL3u5MsUzryFffWIp3tC48UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246000; c=relaxed/simple;
-	bh=8zGG98q9qUYZNS1ImPKzK++WJb03mJOL5AJYgz2KFCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JetWg5VAndjZY53iFtB9cpykTqBMp9GC5E//8ODk21x2ykWJjkOIk62QMQAJtluYHSJjw/0MWnNhV0BTsQLGavjxkY++lStAOlfq6JWSuyaE7du0baD3d9t14Q2QIutKLTXy4dl6l6EyBeVUQSE9tmaNfTgy7tZMmmk19GotSRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U91C1WFn; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748253547; c=relaxed/simple;
+	bh=ZZ/CN1r4rWAqXttKLcXuv5t0jn+s5tjiKYxppOvqz0o=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=CQc0H7ZDmuhGMX06FGdOpcywMwpwRot0PKM5QeuSsEnbJGrzs3OxSAR6fx/rpXUhUlhGjOAFBfo2Kljhryy4Zna5Ur3khEFF76YzvecF1/O/g42cMf91xAlYR8Q282WKY+oTpCEiwrbEr1ibMzwIsoKMtvR9L0a8PX0WOBbpBis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=OVWQvgOs; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U91C1WFn"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so373585566b.1
-        for <regressions@lists.linux.dev>; Mon, 26 May 2025 00:53:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="OVWQvgOs"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7b3410e122so1497256276.2
+        for <regressions@lists.linux.dev>; Mon, 26 May 2025 02:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748245997; x=1748850797; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AXjdGFDhJ6dNVjl5AY3P4sCfMdaDyI2qz17SglDOYM0=;
-        b=U91C1WFnqA01yaQCiyB1RSRF7MHWKpXgeaIjygHDcojMkqLQDA5gJkXDXk7NNEZGk5
-         tGHdcQ4Oq7rbJCZjz0zKRxP/i9ah6UOR4QjtxtO0nXFF28s0qlHfwZ5ekusSkkyouysI
-         dlPjCJO5z+FeDintBjPHycncVAZWPbniIv59LzLgMD5PHfmkaT8hzt7w1OhdtR7cS1eP
-         HfBEEe709x6fWOd1ysCM3tVAnaZLm9LKSrNDhTCPZegM7IDBPx/Ta7rBZ8Ug3JA2QPa1
-         X5NPSkNJPCJh1L/U5fEFJXoiYTs5h5gRv4Ca1FWG0JTeeHMfZ0Sfd/ZzkSa2YDNEK9Rq
-         JKCw==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1748253545; x=1748858345; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5bAscapsNbBNCEyNcI/o/geJmdjtYZcfwIFLzTWKZcI=;
+        b=OVWQvgOs4kSZmnijCRtg9AZoXLl0Qgl7+I+IOp7hoSS0qJuLBfyocZoh7ck0NCQsUm
+         b2D59E3t09b1Zp49B+ptm6joutc0iJFASU+S+AA7n85qrKc6Z/QdxFv26rdJoaZGNeQy
+         iJ3QiRbtzTHvoyjEF7zV/CF3F1zX92dhI3/rAewhHP3Hf5RNnvAyCUXlcf3PgfC91h2b
+         b84xbV3VXQlfmhqtZrPErehqmwqmWob6VyodPIN5+68RSx8tSQuvLphhjX45uVloCAYR
+         cdxTswXe8UWmJsuEYsuCaLJbCQYInmUIibQMqtEQWgLOVhocyKn/mT+tJPKYcCNdrEKW
+         NJ7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748245997; x=1748850797;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AXjdGFDhJ6dNVjl5AY3P4sCfMdaDyI2qz17SglDOYM0=;
-        b=JULkzTTbTW0XpeVke3PQzj8KDR0GL1ue6oRRRajwZKgr/rVmv3MV7/1xAD+MGAQB+u
-         5gfdVNcKG082Jc6b2E5/5ew0Rw470VcKIg/gz9w8YMLmIkjeKKPlAvFU3TZa5D7IWumY
-         k3h2P6LhkKptUbcYmfjAWZS/Uw/jAK69MDsGtrrBJlFNy2CiYg5i6EjIVle76heaAQtJ
-         W0gjwcyXf8nW1ufu/fRyw1/3ByATb4qulAiBsO4FREMVe0NLBdjwOJM3z6mDBlZ4AkxP
-         OUNivQZRlU9WcTAfKksCA9eqzjPq0mLR2G9ETsbI/lFffLoESPd8xF3POhPnseq80h05
-         CX3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVYvS5d30rjFI85h4ydlQEZrwTbl80IIK+aPQhWYVyjDoSc2z5J6DLpo4IevjEONPIQGTMa6n5kYfr7Ow==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwD9WZJgGQ8OoKNrlA5CI9WUxPUHDa8hAvOoPRXqgVU278wQC3c
-	xvCJON2Br93oP4tr7l/84m+a55JdAbzIzP4PA6EQXQdeLAVXHyLbthmH0vQv5gsRHMtPDgkUrLW
-	yPfpl7Ac1XsjdLbZLQYNVjoEx3ISi8AIuHswdDjY/vQ==
-X-Gm-Gg: ASbGncuGW83N/ECY51zX3YIGxgXgeTweaUFVeT5mqu7WJHxAyhPX+jgE0/QfEdHb1qW
-	voRiEq7HpDCki97m5ob/rWy2ZzO7l5H+6oBNRZVOZ9qeDnXloz8tafzUVUexF/WitrF+dAIEZHW
-	6YyVLHuRBn0LE+PtAw3GMuVa9jwlAloLrRjIjtHxEAYq4CE6Gl9komFci5xE+3PZOmKAG1NdGG
-X-Google-Smtp-Source: AGHT+IEHR623wBlrfv2bAwYHebBHB/uVZnyri8NclAhYoOaAPShxgc2ECJIYwH4Jo6EBzAfQkeCfgUHu9q3L/BOSO8s=
-X-Received: by 2002:a17:907:9803:b0:ad4:8ec1:8fc9 with SMTP id
- a640c23a62f3a-ad85b20aca2mr724880666b.42.1748245996928; Mon, 26 May 2025
- 00:53:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748253545; x=1748858345;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bAscapsNbBNCEyNcI/o/geJmdjtYZcfwIFLzTWKZcI=;
+        b=NlShIchRsTmkkDx0h2nPZZaGbFpPw8Pv2CtZuov86PqiCCubvbwozjAiv9aLpXK7xY
+         7CO1w8aNBd8uluH535zNXNxOGRk9y4wSJKcAftOR4kfb436TLzczERq7HfwBLelgm1lW
+         j/5B8SDDFj240na7VtyiR8tcMEnBYD5whhT43A4aZ+9ULpCRt6eA6ZLAY1AtGEx3n9Ks
+         6XyjAIyptFN9Sz6XSOytaJ0//GaRNNsaMoYy1CUISMk0XnSlS7Bkp7Rvz8E8cSHU3NwL
+         AAwrR9KmTd6f8pQaCICCu6M6mFrKicdTCZ0si/v8RrfauL04EQ6yl/dmK7JRcTilKlbO
+         VAbw==
+X-Gm-Message-State: AOJu0Yzfgb8yu7Q+csNglCVIVuyR1RzI/ZUCXTrCaudo0gpQ83qgUgkD
+	v3J/t0IhazD4cmOP/1kysBHyqhjFFGjUXw6B/jVhCS64003wcmKz4Z5RDa5LxcU4UoVkaN7gtk7
+	76eb5W4EEmk1j7mCAy+qhgJie4LNIuYkD3WwkX73FIg==
+X-Gm-Gg: ASbGncsHZLzzD3C8rhL6calrEHPncBRjUqyYa6FZoRF6B/ObtqwOw8T4iEk8XfhrO+6
+	iLdy1kkp5Vzh21e+hC+aUkLiy6jDUjk57PYadEG4vT42eEpuhGE4Ty6nQXi9qwJJFZehl5a3oE4
+	BIOjmu3mBU7szIXvbIxKraT+cqOffpOfG9TM+9ZoReVQ==
+X-Google-Smtp-Source: AGHT+IEMjPBNr4q4e27dnoT3RGsiVPzuztek0nqMGU5Et5iFG0oUJ2rP+NGouepqm0xXekK3Rg0A5Nm5YqgJ+VC89+8=
+X-Received: by 2002:a05:6902:2206:b0:e7d:585e:8d2e with SMTP id
+ 3f1490d57ef6-e7d919e6771mr9152597276.29.1748253545002; Mon, 26 May 2025
+ 02:59:05 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 26 May 2025 05:59:03 -0400
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 26 May 2025 05:59:03 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com> <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com> <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
- <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com> <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
- <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com> <fea6da1d-85d6-459d-9ac3-661d5909420b@ateme.com>
-In-Reply-To: <fea6da1d-85d6-459d-9ac3-661d5909420b@ateme.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 26 May 2025 09:53:05 +0200
-X-Gm-Features: AX0GCFuROGCSyLoX-AVhsYdFkI6e9UYLuZkd2WamYF2gufcPj-7lR5ZaPUa4N-s
-Message-ID: <CAKfTPtAPPG2Xa1P9r+NQZv_VkYRic+e-qxG1ODJodPUqdry7BQ@mail.gmail.com>
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Valentin Schneider <vschneid@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Mon, 26 May 2025 05:59:03 -0400
+X-Gm-Features: AX0GCFthZfks8QA8KnfGHvfP_2Y2hwfXyqhTrnXPwSVcO8ZIKUa3W4g8T0SOUxQ
+Message-ID: <CACo-S-3U1=Q61L1TGb-KtG=cu2LNkWJC-9rBT_aNQNJQ8j=trw@mail.gmail.com>
+Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIOKAmFNPQ0tfQ09SRURVTVA=?=
+	=?UTF-8?B?4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKTsgZGlkIHlvdSBtLi4u?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 May 2025 at 14:24, Jean-Baptiste Roquefere
-<jb.roquefere@ateme.com> wrote:
->
-> Hello Vincent,
->
-> > As said previously, I don't see an obvious connection between commit
-> > 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC during LB")
-> > which mainly ensures a better usage of CPUs inside a LLC. Do you have
-> > cpufreq and freq scaling enabled ? The only link that I could think
-> > of, is that the spread of task inside a llc favors inter LLC newly
-> > idle load balance
-> # lsmod | grep cpufreq
-> cpufreq_userspace      16384  0
-> cpufreq_conservative    16384  0
-> cpufreq_powersave      16384  0
->
->
-> but I'm not sure cpufreq is well loaded :
->
-> # cpupower frequency-info
-> analyzing CPU 0:
->    no or unknown cpufreq driver is active on this CPU
->    CPUs which run at the same hardware frequency: Not Available
->    CPUs which need to have their frequency coordinated by software: Not
-> Available
->    maximum transition latency:  Cannot determine or is not supported.
-> Not Available
->    available cpufreq governors: Not Available
->    Unable to determine current policy
->    current CPU frequency: Unable to call hardware
->    current CPU frequency:  Unable to call to kernel
->    boost state support:
->      Supported: yes
->      Active: yes
->      Boost States: 0
->      Total States: 3
->      Pstate-P0:  2000MHz
->      Pstate-P1:  1800MHz
->      Pstate-P2:  1500MHz
->
-> And I cant find cpufreq/ under /sys/devices/system/cpu/cpu*/
+Hello,
 
-Looks like you don't have cpufreq driver so we can forget a perf drop
-because of a lower avg freq
-Thanks
+New build issue found on next/master:
 
->
->
-> Thanks for your help,
->
-> jb
->
+---
+ =E2=80=98SOCK_COREDUMP=E2=80=99 undeclared (first use in this function); d=
+id you mean
+=E2=80=98SOCK_RDM=E2=80=99? in net/unix/af_unix.o (net/unix/af_unix.c)
+[logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:1ec0ababeee988e6d6392eedfbe6a=
+035ed2dfd6d
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  3be1a7a31fbda82f3604b6c31e4f390110de1b46
+
+
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+net/unix/af_unix.c:1158:21: error: =E2=80=98SOCK_COREDUMP=E2=80=99 undeclar=
+ed (first
+use in this function); did you mean =E2=80=98SOCK_RDM=E2=80=99?
+ 1158 |         if (flags & SOCK_COREDUMP) {
+      |                     ^~~~~~~~~~~~~
+      |                     SOCK_RDM
+net/unix/af_unix.c:1158:21: note: each undeclared identifier is
+reported only once for each function it appears in
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+
+# Builds where the incident occurred:
+
+## 32r2el_defconfig on (mips):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68342eeefb37369f44a86dc3
+
+
+#kernelci issue maestro:1ec0ababeee988e6d6392eedfbe6a035ed2dfd6d
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
