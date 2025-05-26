@@ -1,126 +1,112 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C651F3D58
-	for <regressions@lists.linux.dev>; Mon, 26 May 2025 09:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253547; cv=none; b=NZvhJpc1xllHUSZUBwZl96+h3V/wYyEhKHkHpt37Y6bFpYd3+2qrm62Xl6CBiqElGTsAyRViW2Pu192xEywKy1JzRB+z9eXjwdoT+3FK45c6BaVj+7pvEbIO5gzFqumMm4rn2LdGt3cGGwcqAvPxL3u5MsUzryFffWIp3tC48UQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253547; c=relaxed/simple;
-	bh=ZZ/CN1r4rWAqXttKLcXuv5t0jn+s5tjiKYxppOvqz0o=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=CQc0H7ZDmuhGMX06FGdOpcywMwpwRot0PKM5QeuSsEnbJGrzs3OxSAR6fx/rpXUhUlhGjOAFBfo2Kljhryy4Zna5Ur3khEFF76YzvecF1/O/g42cMf91xAlYR8Q282WKY+oTpCEiwrbEr1ibMzwIsoKMtvR9L0a8PX0WOBbpBis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=OVWQvgOs; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4503595E;
+	Mon, 26 May 2025 17:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748278965; cv=pass; b=J0M7mNXJiwVRLLGhX8ENlQOXA6a/8Qt2cGBFFSTDb/go8sMldXwEYtULkD1PPBkeM8StsEJJAYEVp5IMjGAxCANqCO1KQGJF0ZQqrysJFw/iG3ZgmAC/y9acYwh65A/DsQnSZeXtZiezS2Snp503RrpjERBAQBPBJSN2DHMRZpo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748278965; c=relaxed/simple;
+	bh=AReNlDCDvkdxzgDCwtiXPsWg+c+DXFxkE3ktxNi2+a4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TT1yCQF59m1gQ4cbOK+GHOUfBluip5QVop7FagSdjHf0fsKy3kw59iufco6lJmSAqhxKYa0rrR3NW3PSPvSoyGUvdBq9gHICwWYf2QR6L2l8OOM/CoVKV9YVucQIZyekx6i+Eodqa6kpnt80fVogjEU296c7Iasfj0lJFKlDF3c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=NmKL7wLG; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=GBRC65P7; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="OVWQvgOs"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7b3410e122so1497256276.2
-        for <regressions@lists.linux.dev>; Mon, 26 May 2025 02:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1748253545; x=1748858345; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5bAscapsNbBNCEyNcI/o/geJmdjtYZcfwIFLzTWKZcI=;
-        b=OVWQvgOs4kSZmnijCRtg9AZoXLl0Qgl7+I+IOp7hoSS0qJuLBfyocZoh7ck0NCQsUm
-         b2D59E3t09b1Zp49B+ptm6joutc0iJFASU+S+AA7n85qrKc6Z/QdxFv26rdJoaZGNeQy
-         iJ3QiRbtzTHvoyjEF7zV/CF3F1zX92dhI3/rAewhHP3Hf5RNnvAyCUXlcf3PgfC91h2b
-         b84xbV3VXQlfmhqtZrPErehqmwqmWob6VyodPIN5+68RSx8tSQuvLphhjX45uVloCAYR
-         cdxTswXe8UWmJsuEYsuCaLJbCQYInmUIibQMqtEQWgLOVhocyKn/mT+tJPKYcCNdrEKW
-         NJ7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748253545; x=1748858345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bAscapsNbBNCEyNcI/o/geJmdjtYZcfwIFLzTWKZcI=;
-        b=NlShIchRsTmkkDx0h2nPZZaGbFpPw8Pv2CtZuov86PqiCCubvbwozjAiv9aLpXK7xY
-         7CO1w8aNBd8uluH535zNXNxOGRk9y4wSJKcAftOR4kfb436TLzczERq7HfwBLelgm1lW
-         j/5B8SDDFj240na7VtyiR8tcMEnBYD5whhT43A4aZ+9ULpCRt6eA6ZLAY1AtGEx3n9Ks
-         6XyjAIyptFN9Sz6XSOytaJ0//GaRNNsaMoYy1CUISMk0XnSlS7Bkp7Rvz8E8cSHU3NwL
-         AAwrR9KmTd6f8pQaCICCu6M6mFrKicdTCZ0si/v8RrfauL04EQ6yl/dmK7JRcTilKlbO
-         VAbw==
-X-Gm-Message-State: AOJu0Yzfgb8yu7Q+csNglCVIVuyR1RzI/ZUCXTrCaudo0gpQ83qgUgkD
-	v3J/t0IhazD4cmOP/1kysBHyqhjFFGjUXw6B/jVhCS64003wcmKz4Z5RDa5LxcU4UoVkaN7gtk7
-	76eb5W4EEmk1j7mCAy+qhgJie4LNIuYkD3WwkX73FIg==
-X-Gm-Gg: ASbGncsHZLzzD3C8rhL6calrEHPncBRjUqyYa6FZoRF6B/ObtqwOw8T4iEk8XfhrO+6
-	iLdy1kkp5Vzh21e+hC+aUkLiy6jDUjk57PYadEG4vT42eEpuhGE4Ty6nQXi9qwJJFZehl5a3oE4
-	BIOjmu3mBU7szIXvbIxKraT+cqOffpOfG9TM+9ZoReVQ==
-X-Google-Smtp-Source: AGHT+IEMjPBNr4q4e27dnoT3RGsiVPzuztek0nqMGU5Et5iFG0oUJ2rP+NGouepqm0xXekK3Rg0A5Nm5YqgJ+VC89+8=
-X-Received: by 2002:a05:6902:2206:b0:e7d:585e:8d2e with SMTP id
- 3f1490d57ef6-e7d919e6771mr9152597276.29.1748253545002; Mon, 26 May 2025
- 02:59:05 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 26 May 2025 05:59:03 -0400
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 26 May 2025 05:59:03 -0400
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="NmKL7wLG";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="GBRC65P7"
+ARC-Seal: i=1; a=rsa-sha256; t=1748278598; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=i7AcLzz45flSV8SSZmZhvXwGgwbDoaHEs7uIFRTZue5U7aVa4QdjLD7zNTOGxmhfwg
+    gmBvwAJjp6JoLI8dHJ8Pi7KGWSYOOFFe0LpySIaReDxGoRYU194TuOx2JX/vAOPnaJ7R
+    /Z/OMA2Bfu4pDwOy3i6UXM2XGfWA169ZX+mqfFGAHP7LOGe9Lg1mel/WTsiJhwjF8g7C
+    Mo0Gihryn8av4+8kbNO3gElJQYKwsxcmuWjic1skFDsD2B51d8ktcEFiF0jRY+bf2Odk
+    FeD8c6Hl2EDq9elcA2B3gUzRSkYiQsGDVE5ZUoIZ6XgZZUT4p6ZYJ+Afddv5Z4jpOtmd
+    cMlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748278598;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
+    b=X+BrlcPZdYrxCBUfjGWCIXg0epVbk6dTLloW47KedVLOY0X4y3RmaHwH8RGaM54TgM
+    gNKl9Sdjwez7x15ZMjgl9yDhgVVA4ZZ3oCWz7hutH+Brvc7ovfR4pR3AQPV/j4itJVBq
+    TudP1aAU7hRN3fEHCg/r/RkGpReI1MBQghJEAxJrL6oLTkBjJDFBkNBMMSPIXjQVJVsj
+    FTTigrU+lpc05KpDi2hzVfbRAjRVQoJIAarxX026SGDkyXIelDh0bbqyxLEVMVL4BXCD
+    0QQBZTKGxs/x6ZEJSOSU4AHXxH7HT0nIxY34POHm0O84qt1g2PkqPBKYSzQ2DrbsVNMN
+    45iA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748278598;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
+    b=NmKL7wLGsztWlXp2jeEPXJPwGnXXt3hWCoew4C0Gsvn4WPlEgMJbng7u51FwAOOxta
+    BwWAAcOb3KSwoZJLMtM3vdWmy4tfhF17Ekxgg0TLQSYqPB3eZFsw8YtURqdXb/qztD8J
+    SWc7+EikE9U+Bl+9I2LFcG/SKCHzUwcX5QVTAB0MKHLmnqnKwTUMtjxv5VPWEZQuM2bS
+    QsUkckZGVgXN3URkS0xwQLQaJkoljr78Jfj65bV0lxJl4DE3asDbyi/N6Qx92uXxDITW
+    NVjtj+ngsbxNW3XG7gbltmYPpDZHu5lqCxQ4GNIm1do+b+W3eTDdiLLzcGsv3rAbhCs3
+    k49A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748278598;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
+    b=GBRC65P7hVOrFVkuy6GQ6ePZePBDujRGvGAspMk7n78OkCQpc4tlZWFnBtOLkP7FTB
+    1VcTXatBNDy7sihriyDg==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3514QGubYuV
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 26 May 2025 18:56:37 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.32] helo=a98shuttle.de)
+	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <michael@fossekall.de>)
+	id 1uJb7s-0002DX-1y;
+	Mon, 26 May 2025 18:56:36 +0200
+Date: Mon, 26 May 2025 18:56:35 +0200
+From: Michael Klein <michael@fossekall.de>
+To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+Message-ID: <aDSdQwwMYQHYX5Rn@a98shuttle.de>
+References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 26 May 2025 05:59:03 -0400
-X-Gm-Features: AX0GCFthZfks8QA8KnfGHvfP_2Y2hwfXyqhTrnXPwSVcO8ZIKUa3W4g8T0SOUxQ
-Message-ID: <CACo-S-3U1=Q61L1TGb-KtG=cu2LNkWJC-9rBT_aNQNJQ8j=trw@mail.gmail.com>
-Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIOKAmFNPQ0tfQ09SRURVTVA=?=
-	=?UTF-8?B?4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKTsgZGlkIHlvdSBtLi4u?=
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aCJZmm8rC0RwbcBX@a98shuttle.de>
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Mon, May 12, 2025 at 10:27:07PM +0200, Michael wrote:
+>with v6.9 and later there is no output on the BananaPI HDMI connector.
+>
+>I have bisected the issue to the following commit:
+>
+>  358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
+>
+>With this patch, sun4i_hdmi_connector_clock_valid() is occasionally 
+>called with clock=0, causing the function to return MODE_NOCLOCK.
+>In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is 
+>always!=0, maybe that gives someone a hint.
 
-New build issue found on next/master:
-
----
- =E2=80=98SOCK_COREDUMP=E2=80=99 undeclared (first use in this function); d=
-id you mean
-=E2=80=98SOCK_RDM=E2=80=99? in net/unix/af_unix.o (net/unix/af_unix.c)
-[logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:1ec0ababeee988e6d6392eedfbe6a=
-035ed2dfd6d
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
-- commit HEAD:  3be1a7a31fbda82f3604b6c31e4f390110de1b46
-
-
-Log excerpt:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-net/unix/af_unix.c:1158:21: error: =E2=80=98SOCK_COREDUMP=E2=80=99 undeclar=
-ed (first
-use in this function); did you mean =E2=80=98SOCK_RDM=E2=80=99?
- 1158 |         if (flags & SOCK_COREDUMP) {
-      |                     ^~~~~~~~~~~~~
-      |                     SOCK_RDM
-net/unix/af_unix.c:1158:21: note: each undeclared identifier is
-reported only once for each function it appears in
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-
-
-# Builds where the incident occurred:
-
-## 32r2el_defconfig on (mips):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:68342eeefb37369f44a86dc3
-
-
-#kernelci issue maestro:1ec0ababeee988e6d6392eedfbe6a035ed2dfd6d
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+#regzbot introduced: 358e76fd613a
