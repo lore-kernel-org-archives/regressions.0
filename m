@@ -1,175 +1,288 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8298376;
-	Mon, 26 May 2025 21:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748293992; cv=pass; b=UqbglaBeUHmivjJpTEfDkNOraaieFoAEtk5GH0dEIR23rimCpEuBnRZKA+yzBb/Xu5Q8NHLz9yFYestDCuO6sxdYSpy4SzGQMZBtfOvHgdS8VhUabP8hQigvTFy4/rABwuqRUrAiWo3oyDzMtUFHNiVDc+DZW3dTTO280FGJBrU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748293992; c=relaxed/simple;
-	bh=5kG/q9PVvle8mmD+HvY+yY22kbs17cbhqjTvD5A5A8I=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA78748D;
+	Wed, 28 May 2025 09:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748426307; cv=none; b=gA9kpFkCO+jY198RaQ9xdoRPYlwuwA3ZnWNUBJdrUJom5VF1DCwMpTX4QPnzs7mrYOYXxuhxeSjnbcB+CppQ/llcchiHgkYUICJovNLmam6YBsiwZNWtzIH9gie2dqc7sV1W+PvDlKhhBnIKhKHjdNP3EOVF/igx0jgn203NF5I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748426307; c=relaxed/simple;
+	bh=NRGd1298YR6eHTCIZ4sKS4iKFIP8ajc1FwHkQHVUEcI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+KLtF9TFddhoMJMwvyqhdPhMs8CpVxYVyN6JKDUY90CXXFwUEEJfVTvv6j4CmTkVd0HaeJ/j6jHV/Nk+UPGDlHhNXVHZ/jZZBalt91HVJdmNVi6FJ01b+xjiVQYKgBPE9EoXOb/zOF/GEuk5GQ/kCWOH2QdgAQcRRYK0TzSFc0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=JFM4E4uW; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=avm+Govr; arc=pass smtp.client-ip=85.215.255.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRuX2JUcOd6Nl1Y9A8/3KjcUxj9kbSycEXoXF75UfDdsSjfY9Ls2E+JdLxqmoh3J1oYD8P8H2uzIWS/BKket4qqokhY427etf7vvVfSYPrYDL21lgcbuSdg/QEEUpgja1AYcQxeT4U7IpyT3bvuexwTaKBXV2Dy9/mFXixPVjzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JFt6cr3U; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="JFM4E4uW";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="avm+Govr"
-ARC-Seal: i=1; a=rsa-sha256; t=1748293984; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=SBnCxxSXiIiddnKsNUoos8EzazWtIvC4bKbWPUepcnmdhmXdHyJi8hPakBcnU7kHLV
-    1FH5Z83svo2oEQFRPYmvgJI37fZjG2rwiJhy7HsneKGaOgZuYb3fpp4fzv6Ix79ZCyv5
-    5I2AVD8CGGlmj3N1cqi9jz2qnzK9izi7HjDKtDa3Vqjf5uD+LinpXpvg8RIiP4XhMxYE
-    s6uH2RutFF9AlHkJB2CGpynPnTNUN3479IG47Vfhj+WuKF6leMwJxXcolQ8LICmPPHWi
-    1yOIRzD853qP4Gr5NfJKKKPM8hb65JCdhTwdW/CM1Y+Ehmvy5KBKoWl8VI14x1mo2TqY
-    tUmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748293984;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=AVwR3RqXfhEXlhoGhmwUftz4FLAY7joifHIAsoI1opk=;
-    b=OvFyu0tIjcvYj39AWAaPt7ni0JoeD6LVrR7n650YRZzHcdXAZCSXmod9hGXMHs/mmq
-    jIe1OFQAEDuFeDJRoLAD+m1093+HWk/mYBEjJbUxkkG2osuNFgYTH0QVAXedz1tikvdc
-    PwNVQIQSLaWW5HWAID7+0XwpLB4g6PYIVC3r/ZFsANctmHz89HIMjvdIIP3jf4qpo44V
-    YxJdqXYBkI+sINKQ7vTFr+bdkBIqWdzBD/awRVrg6iI0p28vEyQvO411OKNxH/DwxaV5
-    3v2aonPLcLUu21m/zZTuMOC/vwOcZ8DQYjrp2EWhVRTgwWLh2cBpRGKzgsmIuHKfIFXD
-    TGow==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748293984;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=AVwR3RqXfhEXlhoGhmwUftz4FLAY7joifHIAsoI1opk=;
-    b=JFM4E4uWQrv7IX07x09XDxvaleGSg846j1gzsnGypyamNDo0kP8UKj9pHKHgHS80G2
-    wFEaccJ6FLcGXlYnoT0gSshqnBWB2GBcTSrg598ktHY/O7mVfp0l9y36RGTU16m4qviK
-    7zvqx20kzI0G9brqLkMt2kn/TW9NPps/sR8ig786i/brSpbrRdDelRBSgkV6iZEhz9AE
-    Bsi5qgRZztzaogMEu4sSnUnV5ixy2DY3dED28gZIm1eRj10N6umG5McmY8sCD916Tc8A
-    fWPKzm+Whivq9kQmjl94VChlLILuGoHSj4VC9bwnpHgSONZ2yzZJOiXKA7GJZPm8L/5s
-    W0nw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748293984;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=AVwR3RqXfhEXlhoGhmwUftz4FLAY7joifHIAsoI1opk=;
-    b=avm+GovrShQDZ5jb9fbwW3Txdkh+3LcP/cFmWcO5Jq1kKqSnyvhDQH/VtyYZvzOHsG
-    PvVYJwo4CElmkKKajlAQ==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b3514QLD3ZDy
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 26 May 2025 23:13:03 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.32] helo=a98shuttle.de)
-	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <michael@fossekall.de>)
-	id 1uJf83-0001y1-0A;
-	Mon, 26 May 2025 23:13:03 +0200
-Date: Mon, 26 May 2025 23:13:01 +0200
-From: Michael <michael@fossekall.de>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
- BananaPI M1 on 6.9
-Message-ID: <aDTZXagQ28OdNtLh@a98shuttle.de>
-References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
- <20250526-refined-dog-of-blizzard-b48f11@houat>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JFt6cr3U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=1xRm8xDdj9ygUcINq3+7tEJK7XUVkovysG+3uSP4mK0=; b=JFt6cr3UZnexdU5Br0jFmmk949
+	XhyX/5vqmpk8anwlGiS7pymGWJXajA8GSPgjqhyF4r1bZpN1/OJ53PW/0fLE2gthja7QMm4O3Med+
+	vDvX/Hrp5YT63Qzc6JexQeCfq2VlmKmHub9tcdi7ujzqBFvBGYqQDCm6WwTMqbBi9VUpRerm14/ZG
+	ShMYUX/359/JWzzW1iZMyMBmevjnvhUHJxxuKHdyaelhCCin3owVgF9nKNJ1MfT4Z9haO4MzzoELB
+	GQ6LTExaHirxE3KkHHB2hRyX3cuSu3X393aXQN+RYEcztxfK0qnkD9fzMdDzj27b6oQTuR1e66cRS
+	j8KQVTLQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uKDY5-009PDi-1w;
+	Wed, 28 May 2025 17:58:14 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 28 May 2025 17:58:13 +0800
+Date: Wed, 28 May 2025 17:58:13 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
+ dma_map_single works
+Message-ID: <aDbeNYbwhmG6fzUh@gondor.apana.org.au>
+References: <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <aC2uvvzlR89iVFGW@Red>
+ <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
+ <aC3cF0-bWb-Jiz4i@Red>
+ <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+ <aC7UbAIDA46olNJL@gondor.apana.org.au>
+ <aC-EGr50MIVJqwVn@Red>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526-refined-dog-of-blizzard-b48f11@houat>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <aC-EGr50MIVJqwVn@Red>
 
-Hi,
-
-On Mon, May 26, 2025 at 07:30:35PM +0200, Maxime Ripard wrote:
->On Mon, May 12, 2025 at 10:27:06PM +0200, Michael wrote:
->> with v6.9 and later there is no output on the BananaPI HDMI connector.
->>
->> I have bisected the issue to the following commit:
->>
->>   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
->>
->> With this patch, sun4i_hdmi_connector_clock_valid() is occasionally called
->> with clock=0, causing the function to return MODE_NOCLOCK.
->> In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is
->> always!=0, maybe that gives someone a hint.
+On Thu, May 22, 2025 at 10:07:54PM +0200, Corentin Labbe wrote:
 >
->This doesn't make sense to me, if only because the two callers of
->tmds_char_rate_valid (hdmi_compute_clock and
->drm_hdmi_connector_mode_valid) have, right before calling it, checks to
->make sure the clock rate isn't 0, and would return MODE_ERROR or EINVAL
->in such a case.
->
->https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_hdmi_state_helper.c#L234
->https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_hdmi_state_helper.c#L553
+> Here is the result:
+> http://kernel.montjoie.ovh/479404.log
+> 
+> I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
 
-Before 6.14, sun4i_hdmi_connector_clock_valid() was also called from 
-sun4i_hdmi_connector_atomic_check()...
+Please try this patch on top of the current mainline tree.
 
->Do you have some logs (with dri.devel=0xff)? Does it happen with 6.15 as
->well?
+I've force-enabled the software finalisation code and switched it
+over to kmalloc + dma_map_single.
 
-It does not happen with 6.15, as it was fixed in 6.14 with 84e541b1e58e 
-("drm/sun4i: use drm_atomic_helper_connector_hdmi_check()").
-
-For completeness:
-
-358e76fd613a:
-
-[    1.091807] sun4i-drm display-engine: [drm:drm_atomic_check_only] checking (ptrval)
-[    1.091850] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CRTC:47:crtc-0] mode changed
-[    1.091876] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CRTC:47:crtc-0] enable changed
-[    1.091898] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CRTC:47:crtc-0] active changed
-[    1.091927] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] Updating routing for [CONNECTOR:66:HDMI-A-1]
-[    1.091953] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:66:HDMI-A-1] using [ENCODER:65:TMDS-65] on [CRTC:47:crtc-0]
-[    1.092019] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:66:HDMI-A-1] driver check failed
-[    1.092042] sun4i-drm display-engine: [drm:drm_atomic_check_only] atomic driver check for (ptrval) failed: -22
-[    1.092070] sun4i-drm display-engine: [drm:drm_atomic_state_default_clear] Clearing atomic state (ptrval)
-
-358e76fd613a^ :
-
-[   14.402623] sun4i-drm display-engine: [drm] 	crtc=crtc-0
-[   14.402630] sun4i-drm display-engine: [drm] 	self_refresh_aware=0
-[   14.402638] sun4i-drm display-engine: [drm] 	max_requested_bpc=0
-[   14.402647] sun4i-drm display-engine: [drm] 	colorspace=Default
-[   14.402657] sun4i-drm display-engine: [drm:drm_atomic_check_only] checking 31bd6e91
-[   14.402714] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] Updating routing for [CONNECTOR:66:HDMI-A-1]
-[   14.402741] sun4i-drm display-engine: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:66:HDMI-A-1] keeps [ENCODER:65:TMDS-65], now on [CRTC:47:crtc-0]
-[   14.402767] sun4i-drm display-engine: [drm:drm_atomic_add_encoder_bridges] Adding all bridges for [encoder:65:TMDS-65] to 31bd6e91
-[   14.402792] sun4i-drm display-engine: [drm:drm_atomic_add_encoder_bridges] Adding all bridges for [encoder:65:TMDS-65] to 31bd6e91
-[   14.402826] [drm:sun4i_backend_atomic_check] Starting checking our planes
-[   14.402846] [drm:sun4i_backend_atomic_check] Input size 1024x600, output size 1024x600
-[   14.402862] [drm:sun4i_backend_atomic_check] Input size 1024x600, output size 1024x600
-[   14.402877] [drm:sun4i_backend_atomic_check] Plane FB format is XR24 little-endian (0x34325258)
-[   14.402894] [drm:sun4i_backend_atomic_check] Plane zpos is 0
-[   14.402906] [drm:sun4i_backend_atomic_check] State valid with 1 planes, 0 alpha, 0 video, 0 YUV
-[   14.402922] [drm:sun4i_backend_atomic_check] Starting checking our planes
-
-Sorry for the noise :)
-
->
->Maxime
-
-Michael
-
-#regzbot fix: 84e541b1e58e
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..e5b1d6a9add5 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -49,8 +49,7 @@ mv_cesa_ahash_req_iter_next_op(struct mv_cesa_ahash_dma_iter *iter)
+ static inline int
+ mv_cesa_ahash_dma_alloc_cache(struct mv_cesa_ahash_dma_req *req, gfp_t flags)
+ {
+-	req->cache = dma_pool_alloc(cesa_dev->dma->cache_pool, flags,
+-				    &req->cache_dma);
++	req->cache = kmalloc(CESA_MAX_HASH_BLOCK_SIZE, flags);
+ 	if (!req->cache)
+ 		return -ENOMEM;
+ 
+@@ -63,18 +62,14 @@ mv_cesa_ahash_dma_free_cache(struct mv_cesa_ahash_dma_req *req)
+ 	if (!req->cache)
+ 		return;
+ 
+-	dma_pool_free(cesa_dev->dma->cache_pool, req->cache,
+-		      req->cache_dma);
++	dma_unmap_single(cesa_dev->dev, req->cache_dma, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
++	kfree(req->cache);
+ }
+ 
+ static int mv_cesa_ahash_dma_alloc_padding(struct mv_cesa_ahash_dma_req *req,
+ 					   gfp_t flags)
+ {
+-	if (req->padding)
+-		return 0;
+-
+-	req->padding = dma_pool_alloc(cesa_dev->dma->padding_pool, flags,
+-				      &req->padding_dma);
++	req->padding = kmalloc(72, flags);
+ 	if (!req->padding)
+ 		return -ENOMEM;
+ 
+@@ -86,9 +81,8 @@ static void mv_cesa_ahash_dma_free_padding(struct mv_cesa_ahash_dma_req *req)
+ 	if (!req->padding)
+ 		return;
+ 
+-	dma_pool_free(cesa_dev->dma->padding_pool, req->padding,
+-		      req->padding_dma);
+-	req->padding = NULL;
++	dma_unmap_single(cesa_dev->dev, req->padding_dma, 72, DMA_TO_DEVICE);
++	kfree(req->padding);
+ }
+ 
+ static inline void mv_cesa_ahash_dma_last_cleanup(struct ahash_request *req)
+@@ -533,6 +527,13 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
+ 
+ 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
+ 
++	ahashdreq->cache_dma = dma_map_single(cesa_dev->dev, ahashdreq->cache, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
++	if (dma_mapping_error(cesa_dev->dev, ahashdreq->cache_dma)) {
++		dev_err(cesa_dev->dev, "dma_map_single failed\n");
++		kfree(ahashdreq->cache);
++		return -ENOMEM;
++	}
++
+ 	return mv_cesa_dma_add_data_transfer(chain,
+ 					     CESA_SA_DATA_SRAM_OFFSET,
+ 					     ahashdreq->cache_dma,
+@@ -556,7 +557,7 @@ mv_cesa_ahash_dma_last_req(struct mv_cesa_tdma_chain *chain,
+ 	 * If the transfer is smaller than our maximum length, and we have
+ 	 * some data outstanding, we can ask the engine to finish the hash.
+ 	 */
+-	if (creq->len <= CESA_SA_DESC_MAC_SRC_TOTAL_LEN_MAX && frag_len) {
++	if (0 && creq->len <= CESA_SA_DESC_MAC_SRC_TOTAL_LEN_MAX && frag_len) {
+ 		op = mv_cesa_dma_add_frag(chain, &creq->op_tmpl, frag_len,
+ 					  flags);
+ 		if (IS_ERR(op))
+@@ -588,6 +589,13 @@ mv_cesa_ahash_dma_last_req(struct mv_cesa_tdma_chain *chain,
+ 
+ 	trailerlen = mv_cesa_ahash_pad_req(creq, ahashdreq->padding);
+ 
++	ahashdreq->padding_dma = dma_map_single(cesa_dev->dev, ahashdreq->padding, 72, DMA_TO_DEVICE);
++	if (dma_mapping_error(cesa_dev->dev, ahashdreq->padding_dma)) {
++		dev_err(cesa_dev->dev, "dma_map_single failed\n");
++		kfree(ahashdreq->padding);
++		return ERR_PTR(-ENOMEM);
++	}
++
+ 	len = min(CESA_SA_SRAM_PAYLOAD_SIZE - frag_len, trailerlen);
+ 	if (len) {
+ 		ret = mv_cesa_dma_add_data_transfer(chain,
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..230501fe843b 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -374,6 +374,12 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 
+ 		memcpy(ahashreq->result, data, digsize);
+ 	} else {
++		struct {
++			u32 digest[8];
++			u64 len;
++		} state;
++
++		memcpy(state.digest, creq->state, digsize);
+ 		for (i = 0; i < digsize / 4; i++)
+ 			creq->state[i] = readl_relaxed(engine->regs +
+ 						       CESA_IVDIG(i));
+@@ -393,6 +399,21 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 				for (i = 0; i < digsize / 4; i++)
+ 					result[i] = cpu_to_be32(creq->state[i]);
+ 			}
++		} else {
++			HASH_FBREQ_ON_STACK(fbreq, ahashreq);
++
++			crypto_ahash_import_core(fbreq, &state);
++			crypto_ahash_update(fbreq);
++			crypto_ahash_export_core(fbreq, &state);
++			if (memcmp(state.digest, creq->state, digsize)) {
++				pr_err("mv_cesa_ahash_complete partial hash mismatch\n");
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						state.digest, digsize, false);
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						creq->state, digsize, false);
++			}
+ 		}
+ 	}
+ 
+diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
+index 9c21f5d835d2..fd7f43575cb2 100644
+--- a/drivers/crypto/marvell/cesa/cesa.c
++++ b/drivers/crypto/marvell/cesa/cesa.c
+@@ -127,6 +127,8 @@ static irqreturn_t mv_cesa_int(int irq, void *priv)
+ 		if (!(status & mask))
+ 			break;
+ 
++		pr_err("mv_cesa_int: %d 0x%x 0x%x\n", engine->id, status, mask);
++
+ 		/*
+ 		 * TODO: avoid clearing the FPGA_INT_STATUS if this not
+ 		 * relevant on some platforms.
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..ff0735aaed7d 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -397,6 +397,8 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 	}
+ 
+ 	atomic_sub(ahashreq->nbytes, &engine->load);
++
++	pr_err("mv_cesa_ahash_complete: %d 0x%lx\n", engine->id, (unsigned long)ahashreq);
+ }
+ 
+ static void mv_cesa_ahash_prepare(struct crypto_async_request *req,
+@@ -418,6 +420,8 @@ static void mv_cesa_ahash_req_cleanup(struct crypto_async_request *req)
+ 	struct ahash_request *ahashreq = ahash_request_cast(req);
+ 	struct mv_cesa_ahash_req *creq = ahash_request_ctx(ahashreq);
+ 
++	pr_err("mv_cesa_ahash_req_cleanup: %d 0x%lx\n", creq->base.engine->id, (unsigned long)ahashreq);
++
+ 	if (creq->last_req)
+ 		mv_cesa_ahash_last_cleanup(ahashreq);
+ 
+@@ -796,6 +800,7 @@ static int mv_cesa_ahash_queue_req(struct ahash_request *req)
+ 	engine = mv_cesa_select_engine(req->nbytes);
+ 	mv_cesa_ahash_prepare(&req->base, engine);
+ 
++	pr_err("mv_cesa_ahash_queue_req: %d 0x%lx %d %d\n", engine->id, (unsigned long)req, req->nbytes, creq->last_req);
+ 	ret = mv_cesa_queue_req(&req->base, &creq->base);
+ 
+ 	if (mv_cesa_req_needs_cleanup(&req->base, ret))
+diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
+index 243305354420..55860b480dd6 100644
+--- a/drivers/crypto/marvell/cesa/tdma.c
++++ b/drivers/crypto/marvell/cesa/tdma.c
+@@ -47,6 +47,8 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
+ 	engine->chain_hw.last = dreq->chain.last;
+ 	spin_unlock_bh(&engine->lock);
+ 
++	pr_err("mv_cesa_dma_step: %d 0x%lx 0x%lx 0x%lx\n", engine->id, (unsigned long)dreq, (unsigned long)dreq->chain.first->cur_dma, (unsigned long)dreq->chain.last->cur_dma);
++
+ 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
+ 
+ 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
+@@ -137,6 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 	int res = 0;
+ 
+ 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
++	pr_err("mv_cesa_tdma_process: %d 0x%lx\n", engine->id, (unsigned long)tdma_cur);
+ 
+ 	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
+ 		spin_lock_bh(&engine->lock);
+@@ -186,6 +189,8 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 			break;
+ 	}
+ 
++	pr_err("mv_cesa_tdma_process: %d %d 0x%lx\n", engine->id, res, (unsigned long)req);
++
+ 	/*
+ 	 * Save the last request in error to engine->req, so that the core
+ 	 * knows which request was faulty
