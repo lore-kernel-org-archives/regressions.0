@@ -1,165 +1,311 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A18422B5BC
-	for <regressions@lists.linux.dev>; Thu, 29 May 2025 15:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994E210F1
+	for <regressions@lists.linux.dev>; Fri, 30 May 2025 06:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748532150; cv=none; b=hPOsJYnw0qs3dRslS6lsP0g/ly8gcBYLxqQfTbRMU8Qaakq4ja6DUZnqFxWGSmR7oqgjp3cvtkdeWEqM5C8dSlq562lPUaMm90bhvMlmMHRdGN5BctrpkLnNMObysN0EXlXVrSEeRUlhDfFoVlQMG9mRYsELXWI15TZvpOCfXCM=
+	t=1748586225; cv=none; b=Irfvz1K+PtOH2gIA2dB6AiABJia8EOirb8Y2noCENihUd1Rn9iDVfQQHHPZzOSHeTQlfPFGCo52jVShDXPtzk0XhDwE5buv7FWfWXHX9b+Jmu7xyxiic8yvjgFmRoll8TuumgYctrVPK5qJIzPI35jemN+wxTS7p0UA7N+tiEoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748532150; c=relaxed/simple;
-	bh=SadFqsuZhoGwR6YAWkirrQuAxEda7XZWIKw1aFQcYak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=erqonE2tgN4DR3dJ3JCE5qmiTfTnDnBYwEcTRg+XyAGalLWiW0FdlmdH9aPUTLZLxlmskAlPTFjsDzTsyTmDe8cBvEd7WyTv8bO02sUCBHSbXuKXlrCRsZEn7IRboMt+KbHRxML6O6fNcEL2Ma29UmUKznEWE3NKaPQJCjn6c3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UF+SWu1I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748586225; c=relaxed/simple;
+	bh=Xb7mdOJmMCoE0+k4jfyHItFF+9//Z8CaPB7GH4gmWt0=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=sDbZvPrdfRFLLRJUxuPHy8TxsADaIPd4G0rqzmVGZpxrdtIWv1loEhd3SU2sQyi0taKVo2X35ccXguDJeugYcDz6du9IhqYUtgV+ltT7Hvz9Dbeq+qlz8xGe9fbhJRq7FjTPuaTM+2k5meplkxLyLFzBpUKRAF38gkUWy5+NS4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5lRwYrp; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UF+SWu1I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741F6C4CEEE
-	for <regressions@lists.linux.dev>; Thu, 29 May 2025 15:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748532150;
-	bh=SadFqsuZhoGwR6YAWkirrQuAxEda7XZWIKw1aFQcYak=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UF+SWu1IAT6fOkpT7v77kYvVPrVpEUcpYw8okqjHX866lsjcv83rjGo3QMP8Lmi2f
-	 YLGTAnN47oENpJNhRCKexvvB32noKfWh5uumpq9FCNC2Qy8W0FR8ZYLhMvI7Doa4fp
-	 vp/KFoR13uLazNlpWm//OF8adMba5gTcueCnI6mcb0H1oXEfFR9sn6z3tpz83Zbp83
-	 /TK3S3rastwbcoutJlqX/iCyJJhF6q+K+qFS9R+NuH5pqAGqlyOfb5CkBoTauGtXSZ
-	 +iwVthHWxR5IHVzT8/dkyNL6iBVwikvTms8ZoRHGgZJoo66tqZz6j0xiSCtOROzf/l
-	 jMw6GcMe6VFjA==
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so665482b6e.3
-        for <regressions@lists.linux.dev>; Thu, 29 May 2025 08:22:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXZJAgpPeHOPwXZN38+XZX/A7gej8Itqh7Vo02z3/EK5uUlKoLnnDOweA+ImOF1E+sl4j+bqWXpfHpKBA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwzPz/GlERNJj6Wy51Mes53Tw6OXiOeO/XySuseSxllxp6Tz+vt
-	hILSeGLCDYTNiSPHExWCNEqeh/je5JLNk68CYBPKqJnRlcJFErA8unNnoFvjK6dvv94yEl7Z/Y6
-	lORl81E1g0zexnUss2aVc0WraKmJPXRU=
-X-Google-Smtp-Source: AGHT+IEQz59ce5knxZS6Wfn79ML3SNb0NpVwpYS0CMfEWiRuspMtan8xdT7zcgrMvfRJiOCQ2oiscfwlf9JhBGqWyNo=
-X-Received: by 2002:a05:6808:3c46:b0:406:6871:22e8 with SMTP id
- 5614622812f47-406707a072amr1474609b6e.17.1748532149735; Thu, 29 May 2025
- 08:22:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5lRwYrp"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-742af84818cso1101934b3a.1
+        for <regressions@lists.linux.dev>; Thu, 29 May 2025 23:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748586223; x=1749191023; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XU1ATbyx3zqhkNtOJwdB4Idf67/DTZuYgGH9y5w9ob0=;
+        b=G5lRwYrpD7a0TbXvw5Ct+eGaUs+Lwzu+aAeeyOqgczVVaZzyXJUW+Sgzp7f54h/X3J
+         PgYA0HT6Oa8XOC05zU4laPK6YD1Bqtlpyw56aJf40iMGthP7ypNny1y4wIptwdPuDi9U
+         MLeTioa9Ah0MzCqDf33pNf0HLtFoxlrzqWsEhZPHiuoZhSiI5hx+yNj8kAxVVtj/rnwo
+         8ESXOcxax5CUGVgK+0UcNK8UhYLJV/ArKTBeTOZtxtwqgof1MkyV1RTy3Hym4sZP8lFu
+         F0MF0umsGa32ySnp6MxbALxIuuV1CxFKAPcz7K+5xkgQ1Cr74ToVZwpOt1QfPiUHDdS5
+         iPHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748586223; x=1749191023;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XU1ATbyx3zqhkNtOJwdB4Idf67/DTZuYgGH9y5w9ob0=;
+        b=UcL5YFU8F0dZmgavTK80BT/pO477OKFFFKlSnRTK+kWwYdr77Pu6LBvU6r6j750H4S
+         zdN4KM4fdin9TXqU3p5Wej6hJWqHZqBjIJTr81/KdKFKXJwz1pFniAweYfSP5rxKnyTF
+         gMVejEFY9345kaRgKXAsd69ggWyAQIFovuCoeRBHpHI0Z7fcpnJSg/nZNL5FDrqJnH0I
+         jg0O7wiaxyKgRfLLJ5bvPACzCnvNqLYxe69hbr6ce/hK3Qm9J/nn3SIJ7dSQG1A8QbJ6
+         l5dA8A8pTmGJfCOG3rT9ZqAFPwuJCIVYd9QhcwGcYku9Z8zlWDvrXRi9k9EYS3INpPhG
+         xhSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPThjNDGrQ9QJQFsKzAbnm9SZp7WQAgl2LyFaQ2qhRmyq0P9o1BgLQ0ByVvsuYLZ4APq4jJYR/+r60Lw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwI8a6cpx3ao/AWWFaV7v2DP6LmvTGhrMeJ96OCfKeGUU7TK/Sb
+	bV9jgnHZnkSJuqJa//7ttRhog7ACKany/NeTrcvNITwBD4Q+nQ4Uncga
+X-Gm-Gg: ASbGncsVCHtxDO2Txlb/mNcK+KYiqHokLQcvDjoafvSiey3QLSnCAVip9UHlZR5s52T
+	TvA7hlT7I3WNhQ2OUSfD5Vs9uSGUC2SJoHUCPKM+OrCerQs1QDu+y5ueTs+CB/ZZxzpzoGZ3STL
+	Lxg0vr/5tQ114zCCLhinW+ZyTrTgNmpUbCddOBTSNnmM7UTzxcmPbwJd7JcaQorD1BCOF93uhBw
+	WqX6rWO50QyQZvC1GfT3Aqa6vyzB7fNkS1J9wIYfhiqH73OZQ/MRe1bA7NZvGQZMS49LLkli7rV
+	olphiqdKuYbFakcNac04dDiqb8jsjTVoPWAIkHsBsOGrczlz9YrqsFTFBoB4DUw+JPpQE48LTbU
+	2prOtv6iECD2J3AJ6gpyAdrHvMMgwZ4kOqJJ5ggaa
+X-Google-Smtp-Source: AGHT+IGgZFZ2UAuM/Zo0NxdX1vCwI/rMCNH7OIrnsoOOrDtg1WcaON3WqkyWyPXqylK6ZrTXxUpkiQ==
+X-Received: by 2002:a05:6a00:3c85:b0:73d:fefb:325 with SMTP id d2e1a72fcca58-747bd954c2bmr2878868b3a.5.1748586222598;
+        Thu, 29 May 2025 23:23:42 -0700 (PDT)
+Received: from [192.168.68.61] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affcf4c5sm2318757b3a.124.2025.05.29.23.23.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 23:23:42 -0700 (PDT)
+Message-ID: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
+Date: Thu, 29 May 2025 23:23:41 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsOCGWeZgzsXwSSOFqNxetsJhRbvqHCSG1iuQ7jMuFdo8g@mail.gmail.com>
- <vkrdaqakxid6b4cmeknygxxstx2zerzuarryzwl66unce7jwe3@hbrlelzs4p7v>
-In-Reply-To: <vkrdaqakxid6b4cmeknygxxstx2zerzuarryzwl66unce7jwe3@hbrlelzs4p7v>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 29 May 2025 17:22:18 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iKQx+6U1LiRNpOQ05UCStda_rVBM+zo3Q74tozYYah+Q@mail.gmail.com>
-X-Gm-Features: AX0GCFt_kWiOgA0l0dwOgmGt8zkz_2KniogLoyKtzNGX32bogpII4v-EEQKSf1o
-Message-ID: <CAJZ5v0iKQx+6U1LiRNpOQ05UCStda_rVBM+zo3Q74tozYYah+Q@mail.gmail.com>
-Subject: Re: 6.16-rc0/regression/bisected - commit ebf27765421c introduced a
- new warning KASAN: global-out-of-bounds in acpi_ut_safe_strncpy+0x1b
-To: Ahmed Salem <x0rw3ll@gmail.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, rafael.j.wysocki@intel.com, 
-	linux-acpi@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+From: Rudraksha Gupta <guptarud@gmail.com>
+Subject: REGRESSION: armv7 build mismatched types
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 29, 2025 at 5:15=E2=80=AFPM Ahmed Salem <x0rw3ll@gmail.com> wro=
-te:
->
-> Hi Mike,
->
-> On 25/05/29 07:17PM, Mikhail Gavrilov wrote:
-> > Hi,
-> >
-> > Yesterday, after booting fresh kernel feacb1774bd5,
-> > I spotted a new error message in the kernel log with the following stac=
-k trace:
-> >
-> > [    3.032828] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [    3.032832] BUG: KASAN: global-out-of-bounds in
-> > acpi_ut_safe_strncpy+0x1b/0x60
-> > [    3.032839] Read of size 16 at addr ffffffffa9d32760 by task swapper=
-/0/1
-> >
-> > [    3.032846] CPU: 16 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-> > 6.15.0-feacb1774bd5+ #2 PREEMPT(lazy)
-> > [    3.032849] Hardware name: ASUS System Product Name/ROG STRIX
-> > B650E-I GAMING WIFI, BIOS 3222 03/05/2025
-> [snip]
-> > git blame says the first bad commit is ebf27765421c:
->
-> That is correct. This was a very shortsighted and uninformed commit on
-> my part, and we had this very same discussion on upstream ACPICA. Kernel
-> test robot also reported the same issue earlier[1].
->
-> The issue was that I mistakenly switched to `memcpy` in the
-> `acpi_ut_safe_strncpy` function in drivers/acpi/acpica/utnonansi.c, which
-> would have caused the buffer to be terminated one byte shorter than it
-> should really be. It's been rectified since, and should be pulled back
-> into mainline once it's cleared. I do apologize for the massive
-> inconvenience!
->
-> Rafael, is there a possibility this upstream commit[2] gets pulled into
-> mainline before the next cycle?
->
-> Link:
-> https://lore.kernel.org/oe-lkp/202505081033.50e45ff4-lkp@intel.com/ [1]
-> Link:
-> https://github.com/acpica/acpica/pull/1024/commits/b90d0d65ec97ff8279ad82=
-6f4102e0d31c5f662a
-> [2]
+Logs: https://gitlab.postmarketos.org/LogicalErzor/pmaports/-/jobs/1368490
 
-Sure.  Thanks for the pointer.
+Archive: 
+https://web.archive.org/web/20250530060232/https://gitlab.postmarketos.org/LogicalErzor/pmaports/-/jobs/1368490/raw
 
-> >
-> > commit ebf27765421c9238b7835d32a95e4a7fb8db26a4
-> > Author: Ahmed Salem <x0rw3ll@gmail.com>
-> > Date:   Fri Apr 25 21:32:12 2025 +0200
-> >
-> >     ACPICA: Replace strncpy() with memcpy()
-> >
-> >     ACPICA commit 83019b471e1902151e67c588014ba2d09fa099a3
-> >
-> >     strncpy() is deprecated for NUL-terminated destination buffers[1].
-> >
-> >     Use memcpy() for length-bounded destinations.
-> >
-> >     Link: https://github.com/KSPP/linux/issues/90 [1]
-> >     Link: https://github.com/acpica/acpica/commit/83019b47
-> >     Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
-> >     Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >     Link: https://patch.msgid.link/1910878.atdPhlSkOF@rjwysocki.net
-> [snip]
-> >  drivers/acpi/acpica/utnonansi.c | 2 +-
-> >
-> > And yes, I can confirm this catch.
-> > The kernel with ebf27765421c reverted no longer triggers this error mes=
-sage.
-> >
-> > > sh /usr/src/kernels/6.16.0-0.rc0.250528gfeacb1774bd5.5.fc43.x86_64+de=
-bug/scripts/faddr2line /lib/debug/lib/modules/6.16.0-0.rc0.250528gfeacb1774=
-bd5.5.fc43.x86_64+debug/vmlinux acpi_ut_safe_strncpy+0x1b
-> > acpi_ut_safe_strncpy+0x1b/0x60:
-> > acpi_ut_safe_strncpy at drivers/acpi/acpica/utnonansi.c:172
-> >
-> > Ahmed, Let me know if you need further logs or help reproducing.
->
-> Thank you so much! No further action's needed on your part, and I
-> appreciate your effort, sincerely!
->
-> --
-> Best regards,
-> Ahmed Salem
-> >
-> > Full hardware specs are here:
-> > https://linux-hardware.org/?probe=3D1244406425
-> >
-> > I=E2=80=99m also attaching build config, full bisect logs, and kernel l=
-ogs
-> > from each bisect step in archives.
-> >
-> > --
-> > Best Regards,
-> > Mike Gavrilov.
->
->
->
+
+Snip:
+
+||
+
+|EXPORTS rust/exports_core_generated.h|
+|
+||
+RUSTC L rust/compiler_builtins.o
+||
+RUSTC L rust/ffi.o
+||
+RUSTC L rust/build_error.o
+||
+RUSTC L rust/pin_init.o
+||
+RUSTC L rust/bindings.o
+||
+RUSTC L rust/uapi.o
+||
+EXPORTS rust/exports_bindings_generated.h
+||
+RUSTC L rust/kernel.o
+||
+error[E0308]: mismatched types
+||
+--> rust/kernel/lib.rs:234:45
+||
+|
+||
+234 | $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+||
+| ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*const 
+drm_device`, found `*mut Opaque<drm_device>`
+||
+| | |
+||
+| | expected all arguments to be this `*const drm_device` type because 
+they need to match the type of this parameter
+||
+| arguments to this function are incorrect
+||
+|
+||
+::: rust/kernel/drm/device.rs:140:18
+||
+|
+||
+140 | unsafe { crate::container_of!(ptr, Self, dev) }.cast_mut()
+||
+| ------------------------------------ in this macro invocation
+||
+|
+||
+= note: expected raw pointer `*const drm_device`
+||
+found raw pointer `*mut Opaque<drm_device>`
+||
+note: function defined here
+||
+--> rust/kernel/lib.rs:241:8
+||
+|
+||
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+||
+| ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*const 
+drm_device` type of parameter #1
+||
+| | |
+||
+| | parameter #2 needs to match the `*const drm_device` type of this 
+parameter
+||
+| parameter #1 and parameter #2 both reference this parameter `T`
+||
+= note: this error originates in the macro `crate::container_of` (in 
+Nightly builds, run with -Z macro-backtrace for more info)
+||
+error[E0308]: mismatched types
+||
+--> rust/kernel/lib.rs:234:45
+||
+|
+||
+234 | $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+||
+| ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut 
+drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+||
+| | |
+||
+| | expected all arguments to be this `*mut drm_gem_object` type because 
+they need to match the type of this parameter
+||
+| arguments to this function are incorrect
+||
+|
+||
+::: rust/kernel/drm/gem/mod.rs:130:20
+||
+|
+||
+130 | unsafe { &*crate::container_of!(self_ptr, Object<T>, obj) }
+||
+| ---------------------------------------------- in this macro invocation
+||
+|
+||
+= note: expected raw pointer `*mut drm_gem_object`
+||
+found raw pointer `*mut Opaque<drm_gem_object>`
+||
+note: function defined here
+||
+--> rust/kernel/lib.rs:241:8
+||
+|
+||
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+||
+| ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*mut 
+drm_gem_object` type of parameter #1
+||
+| | |
+||
+| | parameter #2 needs to match the `*mut drm_gem_object` type of this 
+parameter
+||
+| parameter #1 and parameter #2 both reference this parameter `T`
+||
+= note: this error originates in the macro `crate::container_of` (in 
+Nightly builds, run with -Z macro-backtrace for more info)
+||
+error[E0308]: mismatched types
+||
+--> rust/kernel/lib.rs:234:45
+||
+|
+||
+234 | $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+||
+| ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut 
+drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+||
+| | |
+||
+| | expected all arguments to be this `*mut drm_gem_object` type because 
+they need to match the type of this parameter
+||
+| arguments to this function are incorrect
+||
+|
+||
+::: rust/kernel/drm/gem/mod.rs:273:29
+||
+|
+||
+273 | let this = unsafe { crate::container_of!(obj, Self, obj) };
+||
+| ------------------------------------ in this macro invocation
+||
+|
+||
+= note: expected raw pointer `*mut drm_gem_object`
+||
+found raw pointer `*mut Opaque<drm_gem_object>`
+||
+note: function defined here
+||
+--> rust/kernel/lib.rs:241:8
+||
+|
+||
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+||
+| ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*mut 
+drm_gem_object` type of parameter #1
+||
+| | |
+||
+| | parameter #2 needs to match the `*mut drm_gem_object` type of this 
+parameter
+||
+| parameter #1 and parameter #2 both reference this parameter `T`
+||
+= note: this error originates in the macro `crate::container_of` (in 
+Nightly builds, run with -Z macro-backtrace for more info)
+||
+error: aborting due to 3 previous errors
+||
+For more information about this error, try `rustc --explain E0308`.
+||
+make[2]: *** [rust/Makefile:538: rust/kernel.o] Error 1
+||
+make[1]: *** 
+[/home/pmos/build/src/linux-next-next-20250530/Makefile:1285: prepare] 
+Error 2
+||make: *** [Makefile:248: __sub-make] Error 2|
+
+
+Bad: next-20250530
+
+Good: next-20250528
+
+
+Likely introduced with: 
+https://lore.kernel.org/all/CANiq72mFiCrzawVUVOU2giJtBVsRdAO3sGtDsZptPuFvmid3EQ@mail.gmail.com/
+
+
+Repo: 
+https://gitlab.postmarketos.org/LogicalErzor/pmaports/-/tree/rust/device/testing/linux-next
+
+How it's built (Alpine-like build system):
+
+- https://archive.ph/vxEmk
+
+Config fragments (in addition to qcom_defconfig):
+
+- https://archive.ph/q4hfc
+
+- https://archive.ph/RKgFf
+
