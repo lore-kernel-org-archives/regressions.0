@@ -1,91 +1,87 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18CE3FE4
-	for <regressions@lists.linux.dev>; Wed,  4 Jun 2025 10:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E72828E5F8
+	for <regressions@lists.linux.dev>; Wed,  4 Jun 2025 11:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749033997; cv=none; b=g1Kslfa2T8f/f1H3s0sWRC6qzQmECvGSP37nFV0TpMF/UoBV/ZDeRlBT+ZIY51Tq2OHj5nFdSutakMmskccW9VUb3dxIHmSUyu0nOrp05pxpG7HA5sZ6sHtv4RFsXXjtkaEft4MEzc3jfFxV/zOTE3jKZXinz3kJwoMwZ3Z5Dwo=
+	t=1749034812; cv=none; b=mrZ25TLkjlPBmcuhDKs77RJSkoRYA1XfIhHdiACDtSX3Zb6uLe5481qS+j4Ox6UUZm3sDerediooGsWgu98ZpRbxb+Cvo54eyWiEIslBl4BbMLu93+QgFhbhs9ezAk0DTD5uk6PKTZKKALXGDCbPV2JWnX4zyVCyv0S2/ipFyWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749033997; c=relaxed/simple;
-	bh=Epv5mheAzkoXZsYIyltaMAeCUL6h42koA1fBsB2ZV/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AvM8Mg1mHsAM3q/HgwIWd60d67VQo04lXhB32ZuREMh2w2YXlvo4ypW10IpiWB8sTeTFLbt9p8dqNOca0IjV4Y80zBqW458X82FsMAt6zxXuLPGrMeDcAjAWnCBCfGaEZpzM1YRmG8NUUa6pHud4juTmQC1lavnkn6tJuwbQlvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDQLPMtt; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1749034812; c=relaxed/simple;
+	bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
+	h=From:Content-Type:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=anSyolsIVfXow+E49868S2ZT/chg0/Wb5UFjh2F55blx37dePxBKL5m/VAEwgD9BVmEIhOOx6V1+ZjmdLneCLOQeVUjQn9C0lDdpKLzyqS55qYjJD7u2PcEajH5mSXaxyNX4UGhCc1srGGRXzJTwGnMPNu93zfaA5+vV2ZtNHhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hc7crfSb; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDQLPMtt"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-312efc384fcso204080a91.3
-        for <regressions@lists.linux.dev>; Wed, 04 Jun 2025 03:46:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hc7crfSb"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f0ad74483fso64001536d6.1
+        for <regressions@lists.linux.dev>; Wed, 04 Jun 2025 04:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749033995; x=1749638795; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KZkMdZcPLkgpesLYoSGyu8by6g0yo2x1DeouPMHzhTM=;
-        b=NDQLPMttyYPjV0SPtxcjaxwPyUEhkQ4FQBCpJ8bYxFwWgTgsdWJmB66s/gXM32n4sF
-         K5Fq1m8xWtQPy9PPA+WVCnWdCyzKN9YK9MkidCwG5axp1WMWpGmzWcVr5FZbACyUyjHh
-         lONtwLe5GLMzoJtOw0Wu4p23SsKt1VIBvl8Q0NYBTkyatFkzPWKEcAy1AgikuZ3/1vva
-         ZAar0Azt4FKyao0kcyjdWJdMcGRJXO5uPbobnDIiZAI7xPfF5217W9JLewjet3Fs5tJV
-         5RuUB9lPS7vfmQx7Wsy4uYjCEcWjjJl0uMfwaWVnS+T0NMi/XbZ6ZQAfSIWGPWfoxzww
-         1g1g==
+        d=gmail.com; s=20230601; t=1749034809; x=1749639609; darn=lists.linux.dev;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
+        b=Hc7crfSbprt6q1vMefMgM2In4lsJK2T3dvhBAOvsfQo8v8VDgrIOd1fQQH0xkebdVc
+         0hoPow6pXQKtMw8s8LJJoU57E3M81tAriZRRz1zcOqP4Pko7prekeBTg+Q0Bs/dS0VW+
+         tpHthRyZ1wnHbvJN6c0oh0vxgX2gqelDvwVdRl2hqs1d4MRvvADat0x1jGpUG5nihqgO
+         0hq10et6obAzyzcbWzXOS5qV/bvGQGupX0iigBKfsr0Zbr0S1Yx17oHXuaDy9nUAKCx9
+         ljQot/UjFuronZFJ96ScJbXBnIJQsiKMI8oMn7Kor2eOVsLc2Pit6Sc9eRmdI2wyO+6N
+         k3ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749033995; x=1749638795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749034809; x=1749639609;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KZkMdZcPLkgpesLYoSGyu8by6g0yo2x1DeouPMHzhTM=;
-        b=UxsiJR22dmq8MhHu2fKJ1wrA0DPvgTcOZsOuR7r/m7M/gveEBmcOD8b+Jxn8ybpxKs
-         oOY3Cd/Rq6D1piuFC0ggFBRZ8KQxgASUXCPtrLPQHeGIBZTKiEU8H/sgsLgSjG2xqOsK
-         Vc0pysCACk2Bp+TzeWimJNmlw5gf5diHXKI92cvAOldzTbRmaPHx0FU75s0N3bdRGYv6
-         LKwA1+ikC0ktnTUQO+3N02XuGwH4O1qqv/+2vlAN3dKmQfM8PhyvrtgkXtAtbDMwANHV
-         3Xjd2gH4Raa8+zGsvTGQzzfrjHfn+Jh0apDaCMMrGc1jp3xSg8geGIPE2IbUDLKI2gn1
-         WB2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUHCxurIVa+re5suwU0+5OuDLyUpOcEBvtavrfq/06zVeowTXEUC9hId7hFwDa5sqYGCceUG9FC0uJUuA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzKGWhxBcpyVNfV9bPOf8O2DZgehgZnboWBEGq3ruorIAOJyFZI
-	M0u7NpV8iv0XXzRVAEiPaK0h5gj39vm6vdbZCHC5g9xAv6AWE4tNcY9edUJMKHNx3r7Ckd/bCdK
-	Gm3s4E0NoRBCTVKXz0KmiSISu16jcjUA=
-X-Gm-Gg: ASbGncvN0ZSksF0yIJ72cLH2jl+gvaA35w5TIri1CBnt57TS4y2ATMhCvwCkqFonRZj
-	wbyPsunWyb3SBAC4kU8UhM/iudzrGpSJxRkMcA5JL65ZdazDEUyHdsy/JqspUwremjq/pkTqlDB
-	DH0HWKfHErX3YgjNcqR222/OEf8dameG89
-X-Google-Smtp-Source: AGHT+IGNTKbmWxJj58p+j9OqUbP+KdcPfi3ogpgUnwFvWYVS0MsDXgTq9fUjK9ub9rEssL91xGAhBa49+UKQcxA0aMM=
-X-Received: by 2002:a17:90b:4f8d:b0:311:488:f506 with SMTP id
- 98e67ed59e1d1-3130cd6d852mr1421896a91.6.1749033995206; Wed, 04 Jun 2025
- 03:46:35 -0700 (PDT)
+        bh=Schw2RsYLQNpi+xEERdg/mqlrK2JYXvaTEsebGb49Qo=;
+        b=AmpiwZnIQUNeX+BQiV9Wv+BXRf02MYzffxHSdJ7vQeGlLgInTGHpmynHu9IqHgnO5I
+         09Wus6BQetd6iv9n8ZQ13pIFrKRQBK0KrB3fIlf8M8KDhm4l0H/QvjrOpAmMsVVp3GNZ
+         O4Pp+UL98ESuIlr93DEVEskXapHBZ5z7sj+1gG6rAECTC39SXdWGPAlyq+8dsT8pb0x3
+         S7GJhrCK5kLYAnPM8s2uD9HpUNsRE7hoqxQVKXx8DKHRf98vdquFZRzfm4lxIfLysJX5
+         pTnG6b3OaGImW64VLoWwRoAt5FWcWVlVzofjbcxl0/SdAmtJsJVu8LQb2mFspbgVbqbV
+         rmHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWI7LPKbmM7nNVur9Aw+AiBVl+Nr+Vfx7ND+4bLC91kkxhHAlWCbRVw8cUG3arPSWxF55z4I0xGfLMm3g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyGMPU8uCAQWGM+kIMzyqOjZ9A8JbGPTDsO/T0Og1gf4EW758z8
+	zqDaeniRQY6SPrA0pgTNRP4wB5eY9k/5T6mjse3Gpf9zVJf9sAGm1F8e
+X-Gm-Gg: ASbGncvAnr4GEI2SfSRaquX0a1kkcUs/MSwz7s+oDfMPWKyQAvR6nRez9bSQZGpktug
+	/RbW11GloLXwSGeM4vQ/K0mLqtZVDSuDryJnArfhArVh+w88zG/0L+Xupk2MWNmPvUXmvgH3hQo
+	KMfjRsDCRnGezdu2LgypyHnjGWiTbtYIRdw/qaP5GI9pQAvIjTB/WkSdMpcHgvFIXQjki2oS+Td
+	B+sOJFu8/hFSNN+U8va7bNVU9iBTWvK6KTD76hFJFHpGIeR9dEicT82F22nlHSiDGo1VrMBoF7k
+	/F2cQcQsaoYe3jGCrCnr+W2SHfhca7u8rz6dRbadpId0QvjKujcOd1vfxAikujcIUAnDsLMnn8y
+	COrgR9zjZ542O2yCxrT2TTxZrDcDaQSq6A4wMpL3fxQ==
+X-Google-Smtp-Source: AGHT+IEqSF8mjarZ/kRpcwxU9I19cNQnsgHots4Mmgea27/PfoN1l+IsQDKOfP8c8Ri0J7J4W7BS0g==
+X-Received: by 2002:ad4:5ce2:0:b0:6fa:bb44:fddf with SMTP id 6a1803df08f44-6faf6e87e98mr35729696d6.16.1749034808945;
+        Wed, 04 Jun 2025 04:00:08 -0700 (PDT)
+Received: from smtpclient.apple (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fafb6899dasm3364456d6.21.2025.06.04.04.00.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Jun 2025 04:00:08 -0700 (PDT)
+From: Rudraksha Gupta <guptarud@gmail.com>
+X-Google-Original-From: Rudraksha Gupta <GuptaRud@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
- <CANiq72mFL4dn+0JppLLfxyKnM+xYwKeduFw2j07hUfxWVVHdUw@mail.gmail.com>
- <f5d5b84c-0850-4df9-bad7-61fff12c4248@leemhuis.info> <CANiq72=+qUNJu5j+uoveMrTbngwA89+ScwjUPd9OyVGqps54aw@mail.gmail.com>
- <20250604073118.4205f303@canb.auug.org.au>
-In-Reply-To: <20250604073118.4205f303@canb.auug.org.au>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 4 Jun 2025 12:46:22 +0200
-X-Gm-Features: AX0GCFt_aMFHy55zt8zB_FnAa4ypToTjhayKmPmGVsXSI4Wl9tvd7Ee8ChK3pqU
-Message-ID: <CANiq72kghKg7FU=W_yO_q9VuCf=smiyzvrcU8oOFG2FFFsOQiA@mail.gmail.com>
+Mime-Version: 1.0 (1.0)
 Subject: Re: REGRESSION: armv7 build mismatched types
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Rudraksha Gupta <guptarud@gmail.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 4 Jun 2025 03:59:56 -0700
+Message-Id: <C830877D-1EC4-4F94-947B-8B5CD7E09546@gmail.com>
+References: <CANiq72kghKg7FU=W_yO_q9VuCf=smiyzvrcU8oOFG2FFFsOQiA@mail.gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Thorsten Leemhuis <linux@leemhuis.info>, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+In-Reply-To: <CANiq72kghKg7FU=W_yO_q9VuCf=smiyzvrcU8oOFG2FFFsOQiA@mail.gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: iPhone Mail (20H360)
 
-On Tue, Jun 3, 2025 at 11:32=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Damn!  I knew I would forget.  Sorry about that, it will be applied
-> today.
+Perfect! Works for me now, thanks :)
 
-Looks good to me today, thanks!
-
-Rudraksha/Thorsten: the error should be gone from your builds now.
-
-Cheers,
-Miguel
+Thanks,
+Rudraksha
