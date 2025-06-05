@@ -1,191 +1,154 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7F5282EE
-	for <regressions@lists.linux.dev>; Thu,  5 Jun 2025 01:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E4D2153C7
+	for <regressions@lists.linux.dev>; Thu,  5 Jun 2025 12:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749088137; cv=none; b=MeY+ZKSX5OipYH019pIJ/Lbr/kSaPWXyFjvq+GhflYHzA+1OHU280BJNYpwzLElXkRPgNgfGp210bq8wDVzeX2q8eYjw9iptqgm9G0XIc5czqTlTGk8YY807i40ZLtw+LEBmrbpUcvCAHbS7NkPdl2bSBG8fMFmlXPW9kaDzqpE=
+	t=1749128062; cv=none; b=kLEKOh4VhGJclF16tfNjAAZaNLv+vX+vnCAouiz+9l41egRJsaz1JBc9ZSklkRb846sZQWpjFafcEyDWgo6JeQssZfXcTM+rOgwyLQ4D74BX3PPSS21SFTOuuEfUchFIMtz11d/isWIfqVgptNUv9Xb7VzMSSjdsySmAl46U8G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749088137; c=relaxed/simple;
-	bh=P1aMTBsnJVSY/v90gEBryK00v+FDJaZ8jiV/JtTDAGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nLuau5YobCtN4Q/UzTq/ibF5tdNTCVno7Ky4CNs0+XCbGHAFPd7bl6PGk+ZQPuX3DW8i3mTv+qiLNoG2PXWUvVl/u1s0GhmF2h/BaPUMOmODt6zDXK0Fj2zLDMZPeKiQhg7Gr6R8ZzpqdZYTzIieaX5WzlyXscfQ03YImkH8gmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FBrLaPJM; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749128062; c=relaxed/simple;
+	bh=QX0gMKK2fb9bk8Iy/QzzFbeOOw2rVcgJRZUiONaQk80=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mwdEUO29JH1OMNomTjuh/I06/yIuTN2R2QeiaTYK9VLtP3kkgxA1WbetN+xZ6oO2QzINGrUnMdXtE5CJYea1dmkzwoarlSPEE4rdcBzjeM82/kKVFM2TgpUBKAz/nIbvXMtgqAyJBzGdQjoy/TXifCP/Zvvs9Mn3HbxmvRzvoeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uO8WluP4; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBrLaPJM"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso567273b3a.3
-        for <regressions@lists.linux.dev>; Wed, 04 Jun 2025 18:48:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uO8WluP4"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52b2290e28eso280554e0c.3
+        for <regressions@lists.linux.dev>; Thu, 05 Jun 2025 05:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749088135; x=1749692935; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=by+7BIPkkw8WZPU+Sg0JjlCtfySnrdWiSJR+X3EkEx0=;
-        b=FBrLaPJMz8+s2rXISJhTQCWgTAQghH9DgksXXoTzftQHNYQRliRMkTdt2Qek4eWNhQ
-         9arWi0KTJuMuATtjHQnB2siQNlHc6IEZar16PoRujt2ONTbD7/C3emZjasZcND06vsa0
-         BWN1Leoa1U2Y9jmOcNJBJ1veag7CGEYdRWxiRFevNIM5I8spJ1QFi9h7oSsu43a+UcHR
-         ARDS0QkDQ46k3yWz0k0pcEQP8c8iz9jLz8TvFnYkot9VsgYEMpqrYzukBIABWAesfX80
-         kOI688qrJayOJhzJLpJLeYxEwBBosyE5IxOuGS1H9+MY7Rb9VsvOx2jvR0as40oRqfFn
-         /S+Q==
+        d=linaro.org; s=google; t=1749128059; x=1749732859; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
+        b=uO8WluP4y/yZ2fzggxllBfQmNjmqU2ZCBTzU+iJfgLFRL4VYvmBbyZjGgv0xJgCuZy
+         KpYRYHjuXQZcexiYvedhHQJeeCVWSvgPTysqfdFqBV38jOu+aLoXhkLqH1coteLPX3oI
+         qJSFXHVjOA1n9Ku/ArxZUet4s0tKM27M/ru8bSMBY7fIWdg8ivHr55ifZJMrTjFnkI2M
+         vx6kyQ8bpbj0k3yANUTqpkYV9rqL1n+UBwD4ZF3UW1ym7cdqNQrdGVywNKv+6M1bbEPF
+         R5+cjnTvPnKHRRBFz2F1s1rewlhWOC8pTRo/8rgSkcBG0RW+DXGnUZLQhS0vUvH2ny4+
+         mbpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749088135; x=1749692935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=by+7BIPkkw8WZPU+Sg0JjlCtfySnrdWiSJR+X3EkEx0=;
-        b=rx7G+p+jdb68XG6VTiSfqWoCNO29okg8PDLljcr91yGtR4WqDAMITWNQZXufnNprXU
-         +Vv9eoPn6uOmgq36/h664PPvxzUMwq6kwoxUEYM2dtpRIdZRM1CG0ScnQOJfZi4mY74Q
-         G6/p1uyIszbK9DGOPe7fByTsJ97JpYdVfK7wIL9jJXievcOduhdvig+x99uyu7+pNymZ
-         MHaCQrWrjcqJHppWOL6VEci1kzI/PXpBgkd2Ad1sUPnGdeREKeYnbC2c6CwTC1JMANFq
-         PkGOgllzAbWiW5MI5QbTixBoovpy8xemyTm/+Wk0KPSOiqAGgJfEHX30XRNSM+PEB3YN
-         13cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqcCsWIEVaeAdXL59lARR02k79lqqVogbVF0YFVOPfKsAbBszNYdxLYOBsltWRAO4hiJMpYLy2/ar/2g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZKhiKn2PXRV68ozciuj+vbKxzUwyv6Hdvi/gES/rVPuhvrGAs
-	/O4S3MgGLbnQy4mOeSdQJ13oh/qUo5fvUEntewP40k6WbdnUkKFLdFZT
-X-Gm-Gg: ASbGncuOTkuEUwy8LFkVB2IJz4Ie+KhD7dsVtJs4d1+khJtCf7Mz5cBK022NTe7vGdq
-	xi33z4njm6wTxe3LJrXkYtcMdzK9lqNO/deqebCdhT3QVZ8tdZtHyA82nAtLrM4eQDMCdgLqWJA
-	8W+LBEX/vzUP7tbTtYb2XjUpgmKbAzdooNWXLEDBsbuH0aVB3no/6pgA5a6EcziM2DkuTc1hn7L
-	DbiMt64547OlXJq8kbEfGmfY0ZEO/FYBlMPkH06aT4bIBYE/hMQbdCxEBeZarzJSlsMymAzpohx
-	xZay3ag+h1sI5i0gAdMV0yvovQa3iOPJRMfYt1eilUgkT+GZcgt2zffTw+p9aikpWIlyTTqIKW+
-	j1Pvn83I=
-X-Google-Smtp-Source: AGHT+IHV8YHr0uXpF/OHEsa+kL8AF1LWep7wKAP7SEElccAGzTR4C5CaMZdh2g0nGrxO21JkO9tM4w==
-X-Received: by 2002:a05:6a00:813:b0:73c:c11:b42e with SMTP id d2e1a72fcca58-7480b4216b7mr6876405b3a.20.1749088134902;
-        Wed, 04 Jun 2025 18:48:54 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafd60sm12220612b3a.97.2025.06.04.18.48.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 18:48:53 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id B13AD4209E8C; Thu, 05 Jun 2025 08:48:50 +0700 (WIB)
-Date: Thu, 5 Jun 2025 08:48:50 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Alex Davis <alex47794@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Wireless <linux-wireless@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Subject: Re: Latest kernel firmware update breaks intel wifi card.
-Message-ID: <aED3gmw0xqm_lMRQ@archie.me>
-References: <CADiockAtCnLdN1rWTRuMeyuQisAWRyosG_K64AQSdVr-k7CLug@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1749128059; x=1749732859;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
+        b=Z0pKYKgWRoihh7ZUJ4P5sTQQZ4m4UIoAdrU/D7Nnt9cfpxYEb0MwAACKGGGj3cHpCV
+         zWsZzBd1CnZjBO8e9gQ912/1P9eJEBYJorPtrOnX070HwHsUyMvPSO06YLMbtGgsoW1Y
+         EWv6+2raQ27rNR42AQze7oTBZbhv9Wu/5sHEr3qZR+9ycSKTwZ8t6EcMpyiT1b691MKP
+         m+G1BNol0JL12fksNtGfxmcu28+tA6I2n1J/5I+Ns11SKOaZ+k5ERGoEYhckBlk4J2ZW
+         W3j3GJTaOxHME+gLmlKgQVksUuHzC2saHaY1he38RuJzeoSRxfcr6d+NM6Xd5vTZKiVR
+         OKpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnh4vShDY/QDeiJJdgclEYeET6a77NP8OhacbbhDqH12v4gjkL1S+0Y9a2yR5goE1Rhe1Nn8Czf+REhg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNX8lwAVWnPzobUBF705k+i8Kn1+oiBz9rjpDRkPgglsbKDErb
+	M1BWkEAFS6zSunOMMGy3nxAvKY0bxxU5VtTFvnSxQTH6g3F6udPqD1zXOMN9Q/K8LBcaA9uzWG8
+	xdqhsFKxT4HSfcZNpypt8x0gghnVm8QpN9Xjbaac+mT3l33z8uHVQxySImQ==
+X-Gm-Gg: ASbGncvhT1c4eM2sK8YP7Wx33/TFZWllb5DIh9DoRlU07X8tEHkeTWUJvKdx7cPBb2/
+	KhfnDXCucfGKnpbn1uezCbK73zkyTHTp5z4lQZMEhxV+9pLmAMeRzIXnDfwRIMdGrDAFvvN71Vx
+	x56fcT2CLSCDMKJod80dC9vYsN17ANDUoh9UhLLl1y2ePB3WrWy3XkXwVdEtrMqXwwXA==
+X-Google-Smtp-Source: AGHT+IFScV6XSj0OM4gUEtQIR1BY62vpL3tVsGuFOiFWLyyMM6Aw09PHdk/Hbo6hoDuG4Pgt4Rm7Fg3yADaVtlnEHgw=
+X-Received: by 2002:a05:6122:311a:b0:52d:bbab:2055 with SMTP id
+ 71dfb90a1353d-530c895d2eemr4796732e0c.10.1749128059355; Thu, 05 Jun 2025
+ 05:54:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KVPUsnhqMaipHaNp"
-Content-Disposition: inline
-In-Reply-To: <CADiockAtCnLdN1rWTRuMeyuQisAWRyosG_K64AQSdVr-k7CLug@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 5 Jun 2025 18:24:08 +0530
+X-Gm-Features: AX0GCFvf2AhSfNDvaokQSmWFSQ1v0Gpj8_ag9kF1ImYBbbkf0sVxFmSuh0yaUoQ
+Message-ID: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
+Subject: next-20250604: qemu-riscv64 ltp tracing warning kernel trace trace.c ignore_event
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+Regression while running LTP tracing on the Linux next-20250604 and
+next-20250605
+the following kernel warnings found on the qemu-riscv64.
 
---KVPUsnhqMaipHaNp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regressions found on qemu-riscv64
+ - LTP tracing
 
-[also Cc: iwlwifi folks]
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-On Wed, Jun 04, 2025 at 05:20:31PM -0400, Alex Davis wrote:
-> I have the following card:
-> 2f:00.0 Network controller: Intel Corporation Wi-Fi 7(802.11be)
-> AX1775*/AX1790*/BE20*/BE401/BE1750* 2x2 (rev 1a)
->     Subsystem: Intel Corporation BE200 320MHz [Gale Peak]
->     Flags: bus master, fast devsel, latency 0, IRQ 19, IOMMU group 16
->     Memory at aa800000 (64-bit, non-prefetchable) [size=3D16K]
->     Capabilities: [40] Power Management version 3
->     Capabilities: [50] MSI: Enable- Count=3D1/1 Maskable- 64bit+
->     Capabilities: [70] Express Endpoint, IntMsgNum 0
->     Capabilities: [b0] MSI-X: Enable+ Count=3D32 Masked-
->     Capabilities: [100] Advanced Error Reporting
->     Capabilities: [148] Secondary PCI Express
->     Capabilities: [158] Physical Layer 16.0 GT/s <?>
->     Capabilities: [17c] Lane Margining at the Receiver
->     Capabilities: [188] Latency Tolerance Reporting
->     Capabilities: [190] L1 PM Substates
->     Capabilities: [1a0] Vendor Specific Information: ID=3D0002 Rev=3D4 Le=
-n=3D100 <?>
->     Capabilities: [2a0] Data Link Feature <?>
->     Capabilities: [2ac] Precision Time Measurement
->     Capabilities: [2b8] Vendor Specific Information: ID=3D0003 Rev=3D1 Le=
-n=3D054 <?>
->     Capabilities: [500] Vendor Specific Information: ID=3D0023 Rev=3D1 Le=
-n=3D010 <?>
->     Kernel driver in use: iwlwifi
->=20
-> With the current firmware, I get the following error in dmesg:
-> iwlwifi 0000:2f:00.0: Detected crf-id 0x2001910, cnv-id 0x2001910 wfpm
-> id 0x80000000
-> iwlwifi 0000:2f:00.0: PCI dev 272b/00f4, rev=3D0x472, rfid=3D0x112200
-> iwlwifi 0000:2f:00.0: Detected Intel(R) Wi-Fi 7 BE200 320MHz
-> iwlwifi 0000:2f:00.0: Direct firmware load for
-> iwlwifi-gl-c0-fm-c0-93.ucode failed with error -2
-> iwlwifi 0000:2f:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 0.182.4.1
-> iwlwifi 0000:2f:00.0: loaded firmware version 92.67ce4588.0
-> gl-c0-fm-c0-92.ucode op_mode iwlmvm
-> iwlwifi 0000:2f:00.0: Detected RF FM, rfid=3D0x112200
-> iwlwifi 0000:2f:00.0: loaded PNVM version 71864399
-> iwlwifi 0000:2f:00.0: Microcode SW error detected. Restarting 0x0.
-> iwlwifi 0000:2f:00.0: Start IWL Error Log Dump:
-> iwlwifi 0000:2f:00.0: Transport status: 0x0000004A, valid: 6
-> iwlwifi 0000:2f:00.0: Loaded firmware version: 92.67ce4588.0
-> gl-c0-fm-c0-92.ucode
-> iwlwifi 0000:2f:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL
-> iwlwifi 0000:2f:00.0: 0x000002F0 | trm_hw_status0
-> iwlwifi 0000:2f:00.0: 0x00000000 | trm_hw_status1
-> iwlwifi 0000:2f:00.0: 0x002C43D6 | branchlink2
-> iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink1
-> iwlwifi 0000:2f:00.0: 0x002B89BE | interruptlink2
-> iwlwifi 0000:2f:00.0: 0x00015ADA | data1
-> iwlwifi 0000:2f:00.0: 0x00000010 | data2
-> iwlwifi 0000:2f:00.0: 0x00000000 | data3
-> iwlwifi 0000:2f:00.0: 0x00000000 | beacon time
-> iwlwifi 0000:2f:00.0: 0x0001A67A | tsf low
-> iwlwifi 0000:2f:00.0: 0x00000000 | tsf hi
-> iwlwifi 0000:2f:00.0: 0x00000000 | time gp1
-> iwlwifi 0000:2f:00.0: 0x00046F7B | time gp2
-> iwlwifi 0000:2f:00.0: 0x00000001 | uCode revision type
-> iwlwifi 0000:2f:00.0: 0x0000005C | uCode version major
-> iwlwifi 0000:2f:00.0: 0x67CE4588 | uCode version minor
-> iwlwifi 0000:2f:00.0: 0x00000472 | hw version
-> iwlwifi 0000:2f:00.0: 0x58C80002 | board version
-> iwlwifi 0000:2f:00.0: 0x800CFD1B | hcmd
-> iwlwifi 0000:2f:00.0: 0x00020000 | isr0
-> iwlwifi 0000:2f:00.0: 0x20000000 | isr1
-> iwlwifi 0000:2f:00.0: 0x48F00002 | isr2
-> iwlwifi 0000:2f:00.0: 0x00C0001C | isr3
-> iwlwifi 0000:2f:00.0: 0x02000000 | isr4
-> iwlwifi 0000:2f:00.0: 0x00000000 | last cmd Id
-> iwlwifi 0000:2f:00.0: 0x00015ADA | wait_event
-> iwlwifi 0000:2f:00.0: 0x10000004 | l2p_control
-> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_duration
-> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_mhvalid
-> iwlwifi 0000:2f:00.0: 0x00000000 | l2p_addr_match
-> iwlwifi 0000:2f:00.0: 0x0000000B | lmpm_pmg_sel
-> iwlwifi 0000:2f:00.0: 0x00000000 | timestamp
-> iwlwifi 0000:2f:00.0: 0x00000024 | flow_handler
->=20
-> When I use the file iwlwifi-gl-c0-fm-c0.pnvm from the previous
-> version, it works. I'm running kernel 6.12.30 in Slackware current
+First seen on the next-20250604
+Good: next-20250603
+Bad:  next-20250604
 
-What firmware versions?
+Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
+ignore_event
 
-Confused...
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
---=20
-An old man doll... just what I always wanted! - Clara
+## Test error
 
---KVPUsnhqMaipHaNp
-Content-Type: application/pgp-signature; name=signature.asc
+------------[ cut here ]------------
+[   28.134981] event 'ma_read' has unsafe pointer field 'fn'
+[   28.135550] WARNING: CPU: 1 PID: 302 at kernel/trace/trace.c:3823
+ignore_event+0x1de/0x1fa
+[   28.135609] Modules linked in: drm drm_panel_orientation_quirks
+backlight configfs ip_tables x_tables
+[   28.135937] CPU: 1 UID: 0 PID: 302 Comm: cat Not tainted
+6.15.0-next-20250604 #1 NONE
+[   28.135973] Hardware name: riscv-virtio,qemu (DT)
+[   28.136072] epc : ignore_event+0x1de/0x1fa
+[   28.136115]  ra : ignore_event+0x1de/0x1fa
+[   28.136147] epc : ffffffff80151ca4 ra : ffffffff80151ca4 sp :
+ff200000006ebbe0
+[   28.136164]  gp : ffffffff81c61428 tp : ff60000084efd100 t0 :
+ff200000006eb9b8
+[   28.136181]  t1 : ffffffffffffe000 t2 : 205b2d2d2d2d2d2d s0 :
+ff200000006ebc50
+[   28.136197]  s1 : ff60000080066150 a0 : 000000000000002d a1 :
+ff6000008103e730
+[   28.136213]  a2 : ff600000fffcd980 a3 : ffffffff80104e22 a4 :
+0000000000000000
+[   28.136229]  a5 : 0000000000000000 a6 : 000000000000003a a7 :
+0000000000000a00
+[   28.136245]  s2 : ffffffff81801608 s3 : ff60000087cd8078 s4 :
+ffffffff81bebe70
+[   28.136262]  s5 : ff60000087cda090 s6 : ff60000087cda054 s7 :
+ff60000087f9ea40
+[   28.136278]  s8 : ffffffff81200000 s9 : ffffffff81800000 s10:
+ffffffff81bfa290
+[   28.136294]  s11: ff60000087cdc000 t3 : ffffffff81c615d8 t4 :
+ffffffff8001f8e0
+[   28.136321]  t5 : ffffffff8014156c t6 : ff200000006eb9b8
+[   28.136337] status: 0000000200000120 badaddr: ffffffff80151ca4
+cause: 0000000000000003
+[   28.136395] [<ffffffff80151ca4>] ignore_event+0x1de/0x1fa
+[   28.136456] [<ffffffff80157548>] trace_event_printf+0x46/0x88
+[   28.136471] [<ffffffff80d2d54c>] trace_raw_output_ma_read+0x5e/0x7a
+[   28.136489] [<ffffffff801530f6>] print_trace_line+0x1c2/0x438
+[   28.136506] [<ffffffff80153948>] tracing_read_pipe+0x1a2/0x2ee
+[   28.136522] [<ffffffff802f3eb8>] vfs_read+0xb0/0x294
+[   28.136538] [<ffffffff802f48ac>] ksys_read+0x78/0xde
+[   28.136554] [<ffffffff802f4934>] __riscv_sys_read+0x22/0x2c
+[   28.136569] [<ffffffff80d49cd8>] do_trap_ecall_u+0x1ba/0x392
+[   28.136584] [<ffffffff80d56b6e>] handle_exception+0x146/0x152
+[   28.136654] ---[ end trace 0000000000000000 ]---
 
------BEGIN PGP SIGNATURE-----
+## Source
+* Kernel version: 6.15.0-next-20250605 and 6.15.0-next-20250604
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+* Toolchain: gcc-13
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaED3fgAKCRD2uYlJVVFO
-o7fOAP4gYZ8wbhKTkxmGANJUXc5ckfnpKCTwF31wEnUcPN/ewgEA0o0GPsWmnMdJ
-0sI7xax5GaA3vFJrSPh99/4N++27iQI=
-=QU/g
------END PGP SIGNATURE-----
+## Build
+* Test log: https://qa-reports.linaro.org/api/testruns/28662756/log_file/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/config
 
---KVPUsnhqMaipHaNp--
+--
+Linaro LKFT
+https://lkft.linaro.org
