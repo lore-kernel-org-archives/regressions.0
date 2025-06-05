@@ -1,154 +1,84 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E4D2153C7
-	for <regressions@lists.linux.dev>; Thu,  5 Jun 2025 12:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA2A22A4EB;
+	Thu,  5 Jun 2025 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128062; cv=none; b=kLEKOh4VhGJclF16tfNjAAZaNLv+vX+vnCAouiz+9l41egRJsaz1JBc9ZSklkRb846sZQWpjFafcEyDWgo6JeQssZfXcTM+rOgwyLQ4D74BX3PPSS21SFTOuuEfUchFIMtz11d/isWIfqVgptNUv9Xb7VzMSSjdsySmAl46U8G4=
+	t=1749129680; cv=none; b=fTIsNI7LcQAphL4V1sXY1lUrf22p1frS72qCqfaxKmkExidhHClo2Hy25MKDjJPSy9UZGUekBRMvny3YZKLmvzd2eD1w+2x6VpB8K9FjToZWJK91Zbv838UM0O2far+O7FTGaL2ubEGfVkMLwJ9Nb/L3H2gRUuqOXG0vn1izmPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128062; c=relaxed/simple;
-	bh=QX0gMKK2fb9bk8Iy/QzzFbeOOw2rVcgJRZUiONaQk80=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mwdEUO29JH1OMNomTjuh/I06/yIuTN2R2QeiaTYK9VLtP3kkgxA1WbetN+xZ6oO2QzINGrUnMdXtE5CJYea1dmkzwoarlSPEE4rdcBzjeM82/kKVFM2TgpUBKAz/nIbvXMtgqAyJBzGdQjoy/TXifCP/Zvvs9Mn3HbxmvRzvoeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uO8WluP4; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uO8WluP4"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52b2290e28eso280554e0c.3
-        for <regressions@lists.linux.dev>; Thu, 05 Jun 2025 05:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749128059; x=1749732859; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
-        b=uO8WluP4y/yZ2fzggxllBfQmNjmqU2ZCBTzU+iJfgLFRL4VYvmBbyZjGgv0xJgCuZy
-         KpYRYHjuXQZcexiYvedhHQJeeCVWSvgPTysqfdFqBV38jOu+aLoXhkLqH1coteLPX3oI
-         qJSFXHVjOA1n9Ku/ArxZUet4s0tKM27M/ru8bSMBY7fIWdg8ivHr55ifZJMrTjFnkI2M
-         vx6kyQ8bpbj0k3yANUTqpkYV9rqL1n+UBwD4ZF3UW1ym7cdqNQrdGVywNKv+6M1bbEPF
-         R5+cjnTvPnKHRRBFz2F1s1rewlhWOC8pTRo/8rgSkcBG0RW+DXGnUZLQhS0vUvH2ny4+
-         mbpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749128059; x=1749732859;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
-        b=Z0pKYKgWRoihh7ZUJ4P5sTQQZ4m4UIoAdrU/D7Nnt9cfpxYEb0MwAACKGGGj3cHpCV
-         zWsZzBd1CnZjBO8e9gQ912/1P9eJEBYJorPtrOnX070HwHsUyMvPSO06YLMbtGgsoW1Y
-         EWv6+2raQ27rNR42AQze7oTBZbhv9Wu/5sHEr3qZR+9ycSKTwZ8t6EcMpyiT1b691MKP
-         m+G1BNol0JL12fksNtGfxmcu28+tA6I2n1J/5I+Ns11SKOaZ+k5ERGoEYhckBlk4J2ZW
-         W3j3GJTaOxHME+gLmlKgQVksUuHzC2saHaY1he38RuJzeoSRxfcr6d+NM6Xd5vTZKiVR
-         OKpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnh4vShDY/QDeiJJdgclEYeET6a77NP8OhacbbhDqH12v4gjkL1S+0Y9a2yR5goE1Rhe1Nn8Czf+REhg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzNX8lwAVWnPzobUBF705k+i8Kn1+oiBz9rjpDRkPgglsbKDErb
-	M1BWkEAFS6zSunOMMGy3nxAvKY0bxxU5VtTFvnSxQTH6g3F6udPqD1zXOMN9Q/K8LBcaA9uzWG8
-	xdqhsFKxT4HSfcZNpypt8x0gghnVm8QpN9Xjbaac+mT3l33z8uHVQxySImQ==
-X-Gm-Gg: ASbGncvhT1c4eM2sK8YP7Wx33/TFZWllb5DIh9DoRlU07X8tEHkeTWUJvKdx7cPBb2/
-	KhfnDXCucfGKnpbn1uezCbK73zkyTHTp5z4lQZMEhxV+9pLmAMeRzIXnDfwRIMdGrDAFvvN71Vx
-	x56fcT2CLSCDMKJod80dC9vYsN17ANDUoh9UhLLl1y2ePB3WrWy3XkXwVdEtrMqXwwXA==
-X-Google-Smtp-Source: AGHT+IFScV6XSj0OM4gUEtQIR1BY62vpL3tVsGuFOiFWLyyMM6Aw09PHdk/Hbo6hoDuG4Pgt4Rm7Fg3yADaVtlnEHgw=
-X-Received: by 2002:a05:6122:311a:b0:52d:bbab:2055 with SMTP id
- 71dfb90a1353d-530c895d2eemr4796732e0c.10.1749128059355; Thu, 05 Jun 2025
- 05:54:19 -0700 (PDT)
+	s=arc-20240116; t=1749129680; c=relaxed/simple;
+	bh=vx3AyTyMbsSiqF5B30zA1JnwgZnh2tHc2KRb85USan0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U5VCkocj7Yg7WZgiCvFHX/GELaC/TNgNn44c7UFo0a4sidysimYPe4alNDEcQldrKYa6nNXiIPgD+Eylx7h1eKS5yTg4ptwiCHEKzbsNNF83j8VvyPAhgK80/rLobeNJSP2oUOr+Ho/CntGsk0QBwYWYwyLlCaI6O2xZRLV/aiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E323C4CEE7;
+	Thu,  5 Jun 2025 13:21:18 +0000 (UTC)
+Date: Thu, 5 Jun 2025 09:21:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Linux
+ Regressions <regressions@lists.linux.dev>, Stephen Rothwell
+ <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: next-20250604: qemu-riscv64 ltp tracing warning kernel trace
+ trace.c ignore_event
+Message-ID: <20250605092117.37a245dd@batman.local.home>
+In-Reply-To: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
+References: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 5 Jun 2025 18:24:08 +0530
-X-Gm-Features: AX0GCFvf2AhSfNDvaokQSmWFSQ1v0Gpj8_ag9kF1ImYBbbkf0sVxFmSuh0yaUoQ
-Message-ID: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
-Subject: next-20250604: qemu-riscv64 ltp tracing warning kernel trace trace.c ignore_event
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Regression while running LTP tracing on the Linux next-20250604 and
-next-20250605
-the following kernel warnings found on the qemu-riscv64.
+On Thu, 5 Jun 2025 18:24:08 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-Regressions found on qemu-riscv64
- - LTP tracing
+> Regression while running LTP tracing on the Linux next-20250604 and
+> next-20250605
+> the following kernel warnings found on the qemu-riscv64.
+> 
+> Regressions found on qemu-riscv64
+>  - LTP tracing
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> First seen on the next-20250604
+> Good: next-20250603
+> Bad:  next-20250604
+> 
+> Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+Does riscv64 place __func__ in rodata? If not, this may consider the
+string unsafe to use in an event. 
 
-First seen on the next-20250604
-Good: next-20250603
-Bad:  next-20250604
+> ignore_event
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Test error
+> 
+> ------------[ cut here ]------------
+> [   28.134981] event 'ma_read' has unsafe pointer field 'fn'
 
-Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
-ignore_event
+In lib/maple_tree.c we have:
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+        trace_ma_read(__func__, &mas);
 
-## Test error
+Where it records the address of "__func__" into the ring buffer 'fn' field.
 
-------------[ cut here ]------------
-[   28.134981] event 'ma_read' has unsafe pointer field 'fn'
-[   28.135550] WARNING: CPU: 1 PID: 302 at kernel/trace/trace.c:3823
-ignore_event+0x1de/0x1fa
-[   28.135609] Modules linked in: drm drm_panel_orientation_quirks
-backlight configfs ip_tables x_tables
-[   28.135937] CPU: 1 UID: 0 PID: 302 Comm: cat Not tainted
-6.15.0-next-20250604 #1 NONE
-[   28.135973] Hardware name: riscv-virtio,qemu (DT)
-[   28.136072] epc : ignore_event+0x1de/0x1fa
-[   28.136115]  ra : ignore_event+0x1de/0x1fa
-[   28.136147] epc : ffffffff80151ca4 ra : ffffffff80151ca4 sp :
-ff200000006ebbe0
-[   28.136164]  gp : ffffffff81c61428 tp : ff60000084efd100 t0 :
-ff200000006eb9b8
-[   28.136181]  t1 : ffffffffffffe000 t2 : 205b2d2d2d2d2d2d s0 :
-ff200000006ebc50
-[   28.136197]  s1 : ff60000080066150 a0 : 000000000000002d a1 :
-ff6000008103e730
-[   28.136213]  a2 : ff600000fffcd980 a3 : ffffffff80104e22 a4 :
-0000000000000000
-[   28.136229]  a5 : 0000000000000000 a6 : 000000000000003a a7 :
-0000000000000a00
-[   28.136245]  s2 : ffffffff81801608 s3 : ff60000087cd8078 s4 :
-ffffffff81bebe70
-[   28.136262]  s5 : ff60000087cda090 s6 : ff60000087cda054 s7 :
-ff60000087f9ea40
-[   28.136278]  s8 : ffffffff81200000 s9 : ffffffff81800000 s10:
-ffffffff81bfa290
-[   28.136294]  s11: ff60000087cdc000 t3 : ffffffff81c615d8 t4 :
-ffffffff8001f8e0
-[   28.136321]  t5 : ffffffff8014156c t6 : ff200000006eb9b8
-[   28.136337] status: 0000000200000120 badaddr: ffffffff80151ca4
-cause: 0000000000000003
-[   28.136395] [<ffffffff80151ca4>] ignore_event+0x1de/0x1fa
-[   28.136456] [<ffffffff80157548>] trace_event_printf+0x46/0x88
-[   28.136471] [<ffffffff80d2d54c>] trace_raw_output_ma_read+0x5e/0x7a
-[   28.136489] [<ffffffff801530f6>] print_trace_line+0x1c2/0x438
-[   28.136506] [<ffffffff80153948>] tracing_read_pipe+0x1a2/0x2ee
-[   28.136522] [<ffffffff802f3eb8>] vfs_read+0xb0/0x294
-[   28.136538] [<ffffffff802f48ac>] ksys_read+0x78/0xde
-[   28.136554] [<ffffffff802f4934>] __riscv_sys_read+0x22/0x2c
-[   28.136569] [<ffffffff80d49cd8>] do_trap_ecall_u+0x1ba/0x392
-[   28.136584] [<ffffffff80d56b6e>] handle_exception+0x146/0x152
-[   28.136654] ---[ end trace 0000000000000000 ]---
+At a much later time (when the ring buffer is read), that pointer is
+dereferenced. As rodata doesn't change for the life of the kernel, it
+is safe to dereference. But if riscv doesn't place __func__ into
+rodata, this will be considered unsafe to use.
 
-## Source
-* Kernel version: 6.15.0-next-20250605 and 6.15.0-next-20250604
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-* Toolchain: gcc-13
-
-## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/28662756/log_file/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- Steve
