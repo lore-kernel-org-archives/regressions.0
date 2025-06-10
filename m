@@ -1,289 +1,197 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F01725DB0B
-	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 04:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544F14685
+	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 07:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749529355; cv=none; b=eluc+7BNSQUrkg3OzQv3SsyurbSqgDAnY0RXr/3mpqguhFiolxHRFrW9aNjgp7jUN7BdIldmHesqQoFHSdO3ivPjbUot7jWJJzDwa+xX+Y2+65Z4Dio7BujLNRMI7V2gZYXABOOpJvfI+EnKt/TArzMCAlse9jawFbRb3WRZq3E=
+	t=1749539913; cv=none; b=fY4oQqPmhmQ5HzGiqMH4sXqn53yc+WWM+m3C2CAd6Ys+401eGiuYvJ2WoZ/3LHq3ZrAzbJW5PsTlc9T6sVbM9NWluq8TamTwQe3q6Tp8MFm3QnEdvSRtM+kpGyH6NKz8eBDDTp2wM3dgrdENPqJLnZHtkrfUjXAU49G0iX776So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749529355; c=relaxed/simple;
-	bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTRYUkOmmG475MRnEb2WkmCtbKz/PC9IbuLfS+KeKi0i1OwszjlpiINnaOqNzsrLBFYiMjV7FFZajW5iueWBSeyGOlu/0AlNX7ULYpoHzFif9M2WRo5E26SnvwCwuXyYR2YT//jNyanhWuYwj42U9Mpvwe16t73yaMWRQDQmcqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bKkVZZrK; arc=none smtp.client-ip=209.85.218.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749539913; c=relaxed/simple;
+	bh=KHQLDsJ4E+kG/B+xHajjkoc/MZlUo7hjn+WFDIwXVtw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Aq0bs2XNlc2w1/jKZv4TfFfOjzDl9ofVAOwNjGJRYJc6l3H9wd+wZXbuxxO4TKv+Cg1/PtDvqvsIXDYx7ySQk5ZnNlV9bYcgeWZCTxKmXXFOKuAG2HZSIfZAwohrdPDd76VsY8We7SuSBfqjvuFEWWcwfBKqK+cdRZLdckqFafc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EnR0dLrC; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bKkVZZrK"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-ade326e366dso516335766b.3
-        for <regressions@lists.linux.dev>; Mon, 09 Jun 2025 21:22:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EnR0dLrC"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e58d270436so1797156137.3
+        for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 00:18:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749529350; x=1750134150; darn=lists.linux.dev;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+        d=linaro.org; s=google; t=1749539910; x=1750144710; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
-        b=bKkVZZrKVbQ4m62I3qF9Ur6nt2OS4GGIQRnHtjrmYOeNimgCx0AhkBkF++8WpNrxse
-         3JFbyyhWMI+KxEEEvZ15ypOSXAjaw7PZMjWlp0vLisRh+02oeENJ5N2oidkj5nVYg9Ki
-         oAxQR7mkfjlMOl5+TKeJqfo9tSN/XKPYQ2x9rtfqfhD+00svAuRXPpai58hDpxofG7/9
-         RM6Yw3YYpbbjCe3j6QxWyES5p3Ik44g3e2EfO4gGmiajsDvKPydvrafKmFxdsHSSuCOO
-         UADdnU3+jvSsS4HOu1dn5blim07HsTEkcV+J5lHvyHZCchCHBCR8nFzhTN6SRta+qJd5
-         IbeQ==
+        bh=SkHumX+B+y86i8MSC5SJDKQ6nFwDO3pplzjQCYTDa/A=;
+        b=EnR0dLrC86qn3TRjGy39VVhEgr1iMmt0AlO4XiqLt0PS4NP+/3PsYCUTW8qyCjCdsb
+         nPdt85YxvQXHHh5k5ZXO20RDUaPZBrkPTLBSXFPepidl9rvwlmhfclIEZ0Kafso2WaHR
+         oYffXJivVcP+W4AxMLQEizvbtL9QsRtsSb/OaDobVCQdxGT0F8Oean4O9QlsF06wKlZT
+         J0afM6acq6+AWtn1vwwr4TTEd/xKHiZLT9533g5+LaN5gJAaCkvB9fgS4vetZt9N7XVm
+         qXG7vRFL6xZgFm8erC9DEECAgRoUSkcgU0xMdkwkVPmpEstvSgoC9i24mL2JLH1CVZee
+         Hx5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749529350; x=1750134150;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1749539910; x=1750144710;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
-        b=cFTHfQZWwInzWY3BNiBuVDY+dJCXC4wV9LzK3xosGc4u45ZtshuByN3MsJ7WnHk/Dg
-         Z9kKzSe4qSnYw3yPeYUNwkyp8hU0MTvSFYzMOADMlijU8ip+Jju4QFiv2p8ig/gr8zuU
-         QBDCc/NSE1TdZi4WneJN2we56OmsA8s5zugHixD5aeAo1MKVc5C5QsLVCzxp6puYdEVP
-         KU2ryaRdveqCAM6ts48oz+6gW5+3y1PsuGRyexXq5flV0TromL0N9owVuxwqNWwmEyv3
-         UV9YdMMWCRcoWXgJneCoWZSCgSnpBBoURLsOYKpn7W+rXnWW5+k3byoOHbzXPxHoJvt7
-         o4yw==
-X-Gm-Message-State: AOJu0YwPNyROumtvaZVrwKtvIcVfu4lIcsDW36EzniovK9iLoG6F96Z0
-	EgAHPunu/pIpsgC5AstIpOokEyZFTvaRPwLGsr710EWjCbwcKw+ZsHdEHe6s/xUCSFw=
-X-Gm-Gg: ASbGncsPMiXlwsJpJiQGHbk/cx01bXN4UFTwaoXmbnASdIKxRk/zOvnPjLXb0kvqRXy
-	qwluqbX94WPcEqUUKmcp8Q5l9uGiLL9Kh5FVMCBkakOJxOUU7TKWSyorb3lCBPfxYzzbNevrSyO
-	r55lxQkLaq8z8WA2sj10mkqmZohI+LNCDOocWGiiLR/e3Mbp450ezPzhXxN75Oqwki8vTKbXYdA
-	8eKAtpUywTQNSITUzJxKb/53atna7QJskRzdN2E6MwsL+7arkM5yqdex9oZeirQV40FFJO7qRcO
-	6ZIeNjcAkpd+b+6ZuW9uRVYY0bc/+B6t8Qup4ay4fznKhUpOJFCZt34Mk4tWbMsJaGeUtii3n6q
-	7MHiGjhAYsn55V6icGG85KBG77eJvxJyy6KYTFhrIaWweG4/P1SwyeU8M/xZLtw/2Ok8Xjafim3
-	V4kfwtHd8ETtY=
-X-Google-Smtp-Source: AGHT+IEWCebQ2XimYzy+I8VvIYOjz0xMZTBHp3Lj8BEv5gPVoXnMnc69oeCEBeVl7rEE6+nNHgKQdg==
-X-Received: by 2002:a17:907:3f24:b0:ad8:a41a:3cc5 with SMTP id a640c23a62f3a-ade1a9170e1mr1401238066b.6.1749529349503;
-        Mon, 09 Jun 2025 21:22:29 -0700 (PDT)
-Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc39c3fsm653224566b.140.2025.06.09.21.22.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 21:22:29 -0700 (PDT)
-Message-ID: <8ad4304d-43bc-4584-bc69-822eb0661e7b@suse.com>
-Date: Tue, 10 Jun 2025 06:22:28 +0200
+        bh=SkHumX+B+y86i8MSC5SJDKQ6nFwDO3pplzjQCYTDa/A=;
+        b=nitWxA/sAeOJxE0gdYgDP52TsacAyAP1RN+I8ZMOEesziOxRXsNrjVdVaZCrKWNabY
+         OAifblHbtx7tgr9/YsFTqqP25X3jUkODRku3t5nBEEdMLRrBA6gXqtnle7QD4dMRjmgu
+         +PcwbMgTYhojEdDrzRhbcbfE1UJbkCISWLl3uuE6Dj7wtcG7fwoDxAjGnWkHz3lKIu2l
+         eaX8jd9nz4pL59bzcVI5AHQIDajtJSkFSPA82CIdfDs3ABPd4uVhFjSpIcp7lCpTo0NB
+         6Isz43jt29D00TH4+hsuSzejP38gJomTt7rZYXt7dLa1kULJmkY6ggexHGjt4EVE2reJ
+         gcuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNT2moXMf4ZKdc5sJZm2yT9Ur4+HAn8OIDeaU8g66MxduLipRllp8Np/o2/XeJssBnuEpPc5V+/qqMIw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzT88aWfu8eEiswIrBmG+hs054C095veBi1m2giJ00ac43axnqT
+	5yBhpE5Ud5me2U6P1d+klGWdwPreRz419RX77+mkeri6wzzd5kK/Ahc7rqzRylCQhxheHi0q/Gs
+	yUWUH28CP6liF6A/SrttiZzyzTJ+9Gr12FV2ublVKRg==
+X-Gm-Gg: ASbGncsveTTxD6RRIMVKJb2/K+hPT7D7mvwOwVZ5+cutTuxeuvjpNdGAiUpz/NvhAUk
+	FSoQ0q/T8O3/hgGbq5jkP3uMPTm3R8ctJedkY7KUIRHR00ucBmsBVcDvnDgggLJOPcwBZScgAfC
+	aTvMn9cScEP3YLoFFC6sxAsf+ws3x0ilwN1RpbnJnchyIOabvfzSjLoSqKDs1xaVkiwhFQTBwQV
+	oVW
+X-Google-Smtp-Source: AGHT+IEWeK8X5+m8ElJSK5z3+ETpZn+gitvlG/z+JagvODDs6mTjgbOyPmSCoIASAzlc/+Rww7q/dUQ/dbl/qwPi6yI=
+X-Received: by 2002:a05:6102:4403:b0:4e2:a5b9:df1d with SMTP id
+ ada2fe7eead31-4e7729acf70mr12705549137.8.1749539910181; Tue, 10 Jun 2025
+ 00:18:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
- entry.S
-To: Chuck Zmudzinski <brchuckz@netscape.net>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40.ref@netscape.net>
- <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0EbFx1IS9ivErK0O9PjmY4R5"
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 10 Jun 2025 12:48:18 +0530
+X-Gm-Features: AX0GCFs5HGZPW_5vlnOtlFErN9wZOl5LWlGniaDfW8i9KS2B_HI6AE7jX17fEGo
+Message-ID: <CA+G9fYsYVuEpL5KnYdq4ciRmpnUMQqkNQHmy7y5XvUm48kjxyA@mail.gmail.com>
+Subject: Juno-r2 WARNING kernel time clockevents.c cev_delta2ns clockevents_config.part
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0EbFx1IS9ivErK0O9PjmY4R5
-Content-Type: multipart/mixed; boundary="------------OQLtB7JT21dg2AQFGuQitRgX";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Chuck Zmudzinski <brchuckz@netscape.net>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <8ad4304d-43bc-4584-bc69-822eb0661e7b@suse.com>
-Subject: Re: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
- entry.S
-References: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40.ref@netscape.net>
- <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
-In-Reply-To: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
+Regression while booting Juno-r2 with the Linux next-20250606
+the following kernel warnings found.
 
---------------OQLtB7JT21dg2AQFGuQitRgX
-Content-Type: multipart/mixed; boundary="------------EOhNGRxKFthsm1FP655sH8HF"
+This boot warning was reproduced with juno-r2.dtb and juno-r2-scmi.dtb.
 
---------------EOhNGRxKFthsm1FP655sH8HF
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Regressions found on Juno-r2
+- boot warning
 
-T24gMTAuMDYuMjUgMDA6NDMsIENodWNrIFptdWR6aW5za2kgd3JvdGU6DQo+IEhpLA0KPiAN
-Cj4gSSBhbSBzZWVpbmcgdGhlIGZvbGxvd2luZyByZWdyZXNzaW9uIGJldHdlZW4gTGludXgg
-Ni4xNC44IGFuZCA2LjE1LjEuDQo+IA0KPiBLZXJuZWwgdmVyc2lvbiA2LjE0LjggYm9vdHMg
-ZmluZSBidXQgdmVyc2lvbiA2LjE1LjEgY3Jhc2hlcyBhbmQNCj4gcmVib290cyBvbiBYZW4u
-IEkgZG9uJ3Qga25vdyBpZiA2LjE0Ljkgb3IgNi4xNC4xMCBpcyBhZmZlY3RlZCwgb3INCj4g
-aWYgNi4xNSBvciB0aGUgNi4xNSByZWxlYXNlIGNhbmRpZGF0ZXMgYXJlIGFmZmVjdGVkIGJl
-Y2F1c2UgSSBkaWQNCj4gbm90IHRlc3QgdGhlbS4NCj4gDQo+IEFsc28sIExpbnV4IDYuMTUu
-MSBib290cyBmaW5lIG9uIGJhcmUgbWV0YWwgd2l0aG91dCBYZW4uDQo+IA0KPiBIYXJkd2Fy
-ZTogSW50ZWwgaTUtMTQ1MDAgUmFwdG9yIExha2UgQ1BVLCBhbmQgQVNSb2NrIEI3NjBNIFBH
-IG1vdGhlcmJvYXJkIGFuZCAzMiBHQiBSQU0uDQo+IA0KPiBYZW4gdmVyc2lvbjogNC4xOS4y
-IChtb2NrYnVpbGRAZHluYXZpcnQuY29tKSAoZ2NjIChHQ0MpIDEzLjMuMSAyMDI0MDYxMSAo
-UmVkIEhhdCAxMy4zLjEtMikpIGRlYnVnPW4gU3VuIEFwciAxMyAxNToyNDoyOSBQRFQgMjAy
-NQ0KPiANCj4gWGVuIENvbW1hbmQgbGluZTogcGxhY2Vob2xkZXIgZG9tMF9tZW09MkcsbWF4
-OjJHIGNvbnJpbmdfc2l6ZT0zMmsgY29tMT05NjAwLDhuMSwweDQwYzAsMTYsMTowLjAgY29u
-c29sZT1jb20xDQo+IA0KPiBMaW51eCB2ZXJzaW9uIDYuMTUuMS0xLmVsOS5lbHJlcG8ueDg2
-XzY0IChtb2NrYnVpbGRANWI3YTVkYWIzYjcxNDI5ODk4YjRmODQ3NGZhYjhmYTApIChnY2Mg
-KEdDQykgMTEuNS4wIDIwMjQwNzE5IChSZWQgSGF0IDExLjUuMC01KSwgR05VIGxkIHZlcnNp
-b24gMi4zNS4yLTYzLmVsOSkgIzEgU01QIFBSRUVNUFRfRFlOQU1JQyBXZWQgSnVuICA0IDE2
-OjQyOjU4IEVEVCAyMDI1DQo+IA0KPiBMaW51eCBLZXJuZWwgQ29tbWFuZCBsaW5lOiBwbGFj
-ZWhvbGRlciByb290PS9kZXYvbWFwcGVyL3N5c3RlbXMtcm9vdGFsbWEgcm8gY3Jhc2hrZXJu
-ZWw9MUctNEc6MTkyTSw0Ry02NEc6MjU2TSw2NEctOjUxMk0gcmVzdW1lPVVVSUQ9MmRkYzJl
-M2ItOGY3Yi00OThiLWE0ZTgtYmI0ZDMzYTFlNWE3IGNvbnNvbGU9aHZjMA0KPiANCj4gVGhl
-IExpbnV4IDYuMTUuMSBkb20wIGtlcm5lbCBjYXVzZXMgWGVuIHRvIGNyYXNoIGFuZCByZWJv
-b3QsIGhlcmUgYXJlDQo+IHRoZSBsYXN0IG1lc3NhZ2VzIG9uIHRoZSBzZXJpYWwgY29uc29s
-ZSAoaW5jbHVkZXMgbWVzc2FnZXMgZnJvbSBib3RoDQo+IGRvbTAgYW5kIFhlbikgYmVmb3Jl
-IGNyYXNoOg0KPiANCj4gWyAgICAwLjMwMTU3M10gU3BlY3VsYXRpdmUgU3RvcmUgQnlwYXNz
-OiBNaXRpZ2F0aW9uOiBTcGVjdWxhdGl2ZSBTdG9yZSBCeXBhc3MgZGlzYWJsZWQgdmlhIHBy
-Y3RsDQo+IA0KPiBbICAgIDAuMzAxNTc3XSBSZWdpc3RlciBGaWxlIERhdGEgU2FtcGxpbmc6
-IFZ1bG5lcmFibGU6IE5vIG1pY3JvY29kZQ0KPiANCj4gWyAgICAwLjMwMTU4MV0gSVRTOiBN
-aXRpZ2F0aW9uOiBBbGlnbmVkIGJyYW5jaC9yZXR1cm4gdGh1bmtzDQo+IA0KPiBbICAgIDAu
-MzAxNTk0XSB4ODYvZnB1OiBTdXBwb3J0aW5nIFhTQVZFIGZlYXR1cmUgMHgwMDE6ICd4ODcg
-ZmxvYXRpbmcgcG9pbnQgcmVnaXN0ZXJzJw0KPiANCj4gWyAgICAwLjMwMTU5OF0geDg2L2Zw
-dTogU3VwcG9ydGluZyBYU0FWRSBmZWF0dXJlIDB4MDAyOiAnU1NFIHJlZ2lzdGVycycNCj4g
-DQo+IFsgICAgMC4zMDE2MDJdIHg4Ni9mcHU6IFN1cHBvcnRpbmcgWFNBVkUgZmVhdHVyZSAw
-eDAwNDogJ0FWWCByZWdpc3RlcnMnDQo+IA0KPiBbICAgIDAuMzAxNjA1XSB4ODYvZnB1OiB4
-c3RhdGVfb2Zmc2V0WzJdOiAgNTc2LCB4c3RhdGVfc2l6ZXNbMl06ICAyNTYNCj4gDQo+IFsg
-ICAgMC4zMDE2MDldIHg4Ni9mcHU6IEVuYWJsZWQgeHN0YXRlIGZlYXR1cmVzIDB4NywgY29u
-dGV4dCBzaXplIGlzIDgzMiBieXRlcywgdXNpbmcgJ2NvbXBhY3RlZCcgZm9ybWF0Lg0KPiAN
-Cj4gKFhFTikgUGFnZXRhYmxlIHdhbGsgZnJvbSBmZmZmYzkwMDNmZmZmZmY4Og0KPiAoWEVO
-KSAgTDRbMHgxOTJdID0gMDAwMDAwMDg1NWJlZTA2NyAwMDAwMDAwMDAwMDYwZTU2DQo+IChY
-RU4pICBMM1sweDAwMF0gPSAwMDAwMDAwODU1YmVkMDY3IDAwMDAwMDAwMDAwNjBlNTUNCj4g
-KFhFTikgIEwyWzB4MWZmXSA9IDAwMDAwMDA4NTViZjAwNjcgMDAwMDAwMDAwMDA2MGU1OA0K
-PiAoWEVOKSAgTDFbMHgxZmZdID0gODAxMDAwMDg1NWJmMjAyNSAwMDAwMDAwMDAwMDYwZTVh
-DQo+IChYRU4pIGRvbWFpbl9jcmFzaF9zeW5jIGNhbGxlZCBmcm9tIGVudHJ5LlM6IGZhdWx0
-IGF0IGZmZmY4MmQwNDAzNmU1YjAgeDg2XzY0L2VudHJ5LlMjZG9tYWluX2NyYXNoX3BhZ2Vf
-ZmF1bHRfNng4KzAvMHg0DQo+IChYRU4pIERvbWFpbiAwICh2Y3B1IzApIGNyYXNoZWQgb24g
-Y3B1IzExOg0KPiAoWEVOKSAtLS0tWyBYZW4tNC4xOS4yICB4ODZfNjQgIGRlYnVnPW4gIE5v
-dCB0YWludGVkIF0tLS0tDQo+IChYRU4pIENQVTogICAgMTENCj4gKFhFTikgUklQOiAgICBl
-MDMzOls8ZmZmZmZmZmY4MTAwMTRmZT5dDQo+IChYRU4pIFJGTEFHUzogMDAwMDAwMDAwMDAx
-MDIwNiAgIEVNOiAxICAgQ09OVEVYVDogcHYgZ3Vlc3QgKGQwdjApDQo+IChYRU4pIHJheDog
-ZmZmZmZmZmY4MWZiMTJkMCAgIHJieDogMDAwMDAwMDAwMDAwMDI5YSAgIHJjeDogMDAwMDAw
-MDAwMDAwMDAwYw0KPiAoWEVOKSByZHg6IDAwMDAwMDAwMDAwMDAyOWEgICByc2k6IGZmZmZm
-ZmZmODEwMDBiOTkgICByZGk6IGZmZmZjOTAwNDAwMDAwZjANCj4gKFhFTikgcmJwOiAwMDAw
-MDAwMDAwMDAwMTRkICAgcnNwOiBmZmZmYzkwMDQwMDAwMDAwICAgcjg6ICAwMDAwMDAwMDAw
-MDAwZjljDQo+IChYRU4pIHI5OiAgMDAwMDAwMDAwMDAwMDAwMCAgIHIxMDogMDAwMDAwMDAw
-MDAwMDAwMCAgIHIxMTogMDAwMDAwMDAwMDAwMDAwMA0KPiAoWEVOKSByMTI6IDAwMDAwMDAw
-MDAwMDAwMGMgICByMTM6IGZmZmZmZmZmODI3NzE1MzAgICByMTQ6IGZmZmZmZmZmODI3NzI0
-Y2MNCj4gKFhFTikgcjE1OiBmZmZmYzkwMDQwMDAwMGYwICAgY3IwOiAwMDAwMDAwMDgwMDUw
-MDMzICAgY3I0OiAwMDAwMDAwMDAwYjUyNmUwDQo+IChYRU4pIGNyMzogMDAwMDAwMDg2YWUy
-NDAwMCAgIGNyMjogZmZmZmM5MDAzZmZmZmZmOA0KPiAoWEVOKSBmc2I6IDAwMDAwMDAwMDAw
-MDAwMDAgICBnc2I6IGZmZmY4ODgxOWFjNTUwMDAgICBnc3M6IDAwMDAwMDAwMDAwMDAwMDAN
-Cj4gKFhFTikgZHM6IDAwMDAgICBlczogMDAwMCAgIGZzOiAwMDAwICAgZ3M6IDAwMDAgICBz
-czogZTAyYiAgIGNzOiBlMDMzDQo+IChYRU4pIEd1ZXN0IHN0YWNrIHRyYWNlIGZyb20gcnNw
-PWZmZmZjOTAwNDAwMDAwMDA6DQo+IChYRU4pICAgU3RhY2sgZW1wdHkuDQo+IChYRU4pIEhh
-cmR3YXJlIERvbTAgY3Jhc2hlZDogcmVib290aW5nIG1hY2hpbmUgaW4gNSBzZWNvbmRzLg0K
-PiAoWEVOKSBSZXNldHRpbmcgd2l0aCBBQ1BJIE1FTU9SWSBvciBJL08gUkVTRVRfUkVHLg0K
-PiANCj4gSSBzZWFyY2hlZCBtYWlsaW5nIGxpc3RzIGJ1dCBjb3VsZCBub3QgZmluZCBhIHJl
-cG9ydCBzaW1pbGFyIHRvIHdoYXQgSSBhbQ0KPiBzZWVpbmcgaGVyZS4NCj4gDQo+IEkgZG9u
-J3Qga25vdyB3aGF0IHRvIHRyeSBleGNlcHQgdG8gZ2l0IGJpc2VjdCwgYnV0IEkgaGF2ZSBu
-b3QgZG9uZSB0aGF0IHlldC4NCg0KVGhpcyBpcyBhIGtub3duIGlzc3VlLg0KDQpBIHBhdGNo
-IHNlcmllcyB0byBmaXggdGhhdCBoYXMgYmVlbiBwb3N0ZWQ6DQoNCmh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2xrbWwvMjAyNTA2MDMxMTE0NDYuMjYwOTM4MS0xLXJwcHRAa2VybmVsLm9y
-Zy8NCg0KDQpKdWVyZ2VuDQo=
---------------EOhNGRxKFthsm1FP655sH8HF
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+First seen on the next-20250606
+Good: next-20250512
+Bad:  next-20250606
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+The suspected patch that found between tags is,
 
---------------EOhNGRxKFthsm1FP655sH8HF--
+# git show next-20250512..next-20250513 --
+arch/arm64/boot/dts/arm/juno-base.dtsi
+commit 1fa3ed04ac55134063e3cd465b41aeb26715e52a
+Author: Sudeep Holla <sudeep.holla@arm.com>
+Date:   Mon May 12 11:11:32 2025 +0100
 
---------------OQLtB7JT21dg2AQFGuQitRgX--
+    arm64: dts: arm: Drop the clock-frequency property from timer nodes
 
---------------0EbFx1IS9ivErK0O9PjmY4R5
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+    Drop the clock-frequency property from the timer nodes, since it must be
+    configured by the boot/secure firmware.
 
------BEGIN PGP SIGNATURE-----
+    Cc: Liviu Dudau <liviu.dudau@arm.com>
+    Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Message-Id: <20250512101132.1743920-1-sudeep.holla@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmhHswQFAwAAAAAACgkQsN6d1ii/Ey9l
-Zgf9FX20+U9R5uBooiAQ+iucn8O0Z/vkwLGCbGuN6gH1x+GA3c4zVtjUe0ZVj6TpS25HUQdeoV9t
-hR48V3ZTLGSrYE7+Dagad3LKcmF9usB60iq+Sn3fUbM5AHWGvDNdrB/SjeyxxArXg+APAQjDc+KY
-xlQduAQX5fTlakRYcULYttoWzeVYafabDNPsNdsFLzqEcISA6xfvOyIQ+8UHCTNmdOIXhYxrzB44
-Yvm6TN42tTQo+FmKsIT2u340Yl8w5rtJL5CYV5cno6NnBMDS1OVa5k5wmwA++DB1jkuDo/BLV1kp
-RoAbCL5PpTqbSlImCEdyAp28kAGJ5n8dBOBlHevUzw==
-=5Yjt
------END PGP SIGNATURE-----
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
+b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 055764d0b9e5..9ccb80821bdb 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -10,7 +10,6 @@ / {
+        memtimer: timer@2a810000 {
+                compatible = "arm,armv7-timer-mem";
+                reg = <0x0 0x2a810000 0x0 0x10000>;
+-               clock-frequency = <50000000>;
+                #address-cells = <1>;
+                #size-cells = <1>;
+                ranges = <0 0x0 0x2a820000 0x20000>;
 
---------------0EbFx1IS9ivErK0O9PjmY4R5--
+
+Boot regression: Juno-r2 WARNING kernel time clockevents.c
+cev_delta2ns clockevents_config.part
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Boot warning
+[    0.000000] timer_sp804: timer clock not found: -517
+[    0.000000] timer_sp804: arm,sp804 clock not found: -2
+[    0.000000] Failed to initialize
+'/bus@8000000/motherboard-bus@8000000/iofpga-bus@300000000/timer@110000':
+-22
+[    0.000000] timer_sp804: timer clock not found: -517
+[    0.000000] timer_sp804: arm,sp804 clock not found: -2
+[    0.000000] Failed to initialize
+'/bus@8000000/motherboard-bus@8000000/iofpga-bus@300000000/timer@120000':
+-22
+[    0.000000] arch_timer: frequency not available
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:38
+cev_delta2ns (kernel/time/clockevents.c:38 (discriminator 1))
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
+6.15.0-next-20250605 #1 PREEMPT
+[    0.000000] Hardware name: ARM Juno development board (r2) (DT)
+[    0.000000] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    0.000000] pc : cev_delta2ns (kernel/time/clockevents.c:38
+(discriminator 1))
+[    0.000000] lr : clockevents_config.part.0 (kernel/time/clockevents.c:499)
+[    0.000000] sp : ffff800082923cd0
+[    0.000000] x29: ffff800082923cd0 x28: 0000000000000400 x27: ffff800081650000
+[    0.000000] x26: ffff80008292fcc0 x25: ffff800082425888 x24: ffff8000829343c0
+[    0.000000] x23: ffff800083210000 x22: 000000000000000b x21: ffff8000823cf178
+[    0.000000] x20: ffff800082433880 x19: ffff00080021e240 x18: 0000000000000000
+[    0.000000] x17: ffff00080021a400 x16: ffff00080021a200 x15: 0000000000000100
+[    0.000000] x14: fffffdffe0008a00 x13: ffff800080000000 x12: 0000000000000000
+[    0.000000] x11: 0000000000000068 x10: 0000000000000100 x9 : ffff8000801b50f8
+[    0.000000] x8 : 000000001dcd6500 x7 : 000000003b9aca00 x6 : 0000000000000020
+[    0.000000] x5 : 0000000000000020 x4 : 0000000000000000 x3 : 0000000f00000000
+[    0.000000] x2 : 0000000000000000 x1 : ffff00080021e240 x0 : 000000000000000f
+[    0.000000] Call trace:
+[    0.000000] cev_delta2ns (kernel/time/clockevents.c:38 (discriminator 1)) (P)
+[    0.000000] clockevents_config_and_register (kernel/time/clockevents.c:519)
+[    0.000000] arch_timer_mem_frame_register
+(drivers/clocksource/arm_arch_timer.c:1319
+drivers/clocksource/arm_arch_timer.c:1580)
+[    0.000000] arch_timer_mem_of_init
+(drivers/clocksource/arm_arch_timer.c:1653)
+[    0.000000] timer_probe (drivers/clocksource/timer-probe.c:31)
+[    0.000000] time_init (arch/arm64/kernel/time.c:62)
+[    0.000000] start_kernel (init/main.c:1014)
+[    0.000000] __primary_switched (arch/arm64/kernel/head.S:247)
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] arch_timer: cp15 and mmio timer(s) running at 50.00MHz
+(phys/phys).
+
+## Source
+* Kernel version: 6.15.0-next-20250513 to 6.15.0-next-20250606
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+* Toolchain: gcc-13
+
+## Boot details
+* Boot lava log: https://lkft.validation.linaro.org/scheduler/job/8309469#L622
+* Boot log: https://qa-reports.linaro.org/api/testruns/28679128/log_file/
+* Boot warning:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250605/log-parser-boot/exception-warning-cpu-pid-at-kerneltimeclockevents-cev_delta2ns/
+* Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4wgEvmeoVH3Vr528M4YN2OBXY/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4wgEvmeoVH3Vr528M4YN2OBXY/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
