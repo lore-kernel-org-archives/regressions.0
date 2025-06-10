@@ -1,125 +1,147 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95C28C024
-	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 10:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234F18024;
+	Tue, 10 Jun 2025 11:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551145; cv=none; b=BDgGMqMEAtD/fJRAtPem8nULO53i77+MiUWfo7aDXI4WLncjQ5a1toT0VVowM/BbXXSfwh3yA61linPWhsP80Hu16yfvESlXl/OFWR3B9jkdFlmg+wF9mkCWaErZcOaC/6LlPffNobrZF7reBmjLLGHGTeHf7RBUnSuPGfqHXkc=
+	t=1749554525; cv=none; b=g+T13fvzjMlmprU1pVfyLkIHII/gHhlME6AgP3sSzaukgkzXDfrQMduBeAS3hA98iIomm+EMgFuMck1eEj5EFcN/hltYdo0/6i/czsUcNsCJnHq8ZGjyeuhXDqCUqN0UNDP/nPC4GJN5GnNfZlTgrwMKDi+/RXw2cWXEYVWs+Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551145; c=relaxed/simple;
-	bh=oHV889pk9/dbexLINzXMTXrUu3qmaDgybAAQrKHQt4s=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=g6mphfiXsJr1ce2aNsdYfdxYC/4Txkb3jesQnZhV5ghjNgddE6Cqm6ZoiI214RyMLXAAS8HfPzKLQeWBG0ppVP9ENOpRna03+bsAu2cChOQgHTrMuOQY/bhpMq7iHCpAN8TqPvFboV5oarucVXLd16mz1oaZBcfk7UoB+HMlFlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vgo3Uwkb; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749554525; c=relaxed/simple;
+	bh=9byxGKEEMaXHQ1QNqCiqviKPJ5SkmeEQ5Xvt7vT34to=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=miQzDuAqiDnEhu1Gi4mATvyt9ZfSLaraGa/czUUABdzNdiZzK0VxdsdILInayyuyxNaczPTFE3hGRZOtI7Ks2HLRLjHlXpTlCLjJptvtdYLIm4jGTvx0+D/oDhA/Echpu/aOQBXLnCnR8Mr1NYT179cJz3q5cNoxc5i8CN8HYLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=CvnoKiZ3; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vgo3Uwkb"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5290be1aedcso4166373e0c.1
-        for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 03:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749551143; x=1750155943; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/KbPqIjq6A0gP5OwcTzAJtKToDqxED7lTQn+3ShWhu4=;
-        b=Vgo3UwkbZOoitV7ckRGP0arb2dTfNyBkP3TrmP4a3N7xC9ty88w2987SNweQSTweWO
-         WCzD+jdVOMdLqyZEYvJp4+U32mE8TBNSShaHas3r79c9R8Q/OYePx8hZzlucvX7Bt76F
-         EJ8D6RdWh8c1S8rCQUm0WICKQIuAEH0AXjDYgfBsS3Fyksu2Kh1UZiKfl2dBSZqvxjgh
-         8FDAbjIya4f541jD0kJzvaXBaNYh/EJRc2H4iS8AtdTNuiTKHm+q3wof8UyteQPVc/yY
-         Ha3NKr9ChloRKZcC7vUq2pZUrcF7EwPSAmLSZaBhC5wNKYSyJNeQYTN7rJWbW4rF+qTS
-         A7Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749551143; x=1750155943;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/KbPqIjq6A0gP5OwcTzAJtKToDqxED7lTQn+3ShWhu4=;
-        b=EqPZOLCshBSZTcSJQFKR6umQyM9eBI8swFYkOU3VuKbZp/7OjCzynxjDkFvNYDqr8S
-         5PtdtB90OLRO1ufCLnPf/bPGTxLkuJr/m/YP1KMRi6E1TPB4sl96+QDJ7FZoDKxDwXtm
-         EdrcuwuiBJuwsFknUb3ouVmV3XPtX94ZmFWkCoe/AtOZ4ffXEP7p6hfm3xVfpfMH3vZL
-         fi72VW8u5Lckv3urEq/B+ITdK+Aym3JENx5Lc4PmLK3iYXeN81jtqzmyBC4aLsaJ8IKN
-         Td2xm3pmUqrIxxfVq4ndgLDYX85xfgknml7xcvWgR1WzVcJTQ2azUZkxjvPgwPBbAHqO
-         3XTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDvwjXXME6y4p4a3kryX94yLuQ/2wOYRGq0IMs1bL7X0E5UKZOqnwvEIpHKKNQMzEUlH3MZcChHHno2Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzN9Q5KZFToUBaY+TAI27q8EiCZk6YY9OdZE6wkZ438GnpuihhH
-	iBmNfdiVoYgzqfA9+pBwIUNZ6hq3GoZyzrEq5l+aaqQAhduAAmCoGx4aiJdizMxzSM27Rjpr4pg
-	ROcQMZltIjSqwjTT89Vav41WFlMJ8aNk7EMNmLWOilg==
-X-Gm-Gg: ASbGncvjdUGCoJ5TnkTShwv8sxjZfgyjf9vpzRJeW277JhvurmcJNFkBDeRyPjQL0sE
-	AzrrfJZo5OU3WJgZFr3wYW6o5xPbVi07s596X2qgr2RL68zVQ1zxEyi+MLejdyBIdKesksrB2WN
-	NqQ4Q1GiuyxXcxi6h2dV3DyS5+s9PhvfO7V42ydZ1UeVoRoQEQughovo393V6rKmzm2WYLox+2h
-	YgRjJspWNRnQM8=
-X-Google-Smtp-Source: AGHT+IHshLTe8OuH7+ip/8ueWp0i74zRNPn5hHiiSdvdI8UuOJ6eD1FAplWjvLZQZJWIGjYXeSMeV/zYAYuInU3pbBs=
-X-Received: by 2002:a05:6122:640c:10b0:530:2c65:5bb8 with SMTP id
- 71dfb90a1353d-531131187b5mr1514506e0c.1.1749551142776; Tue, 10 Jun 2025
- 03:25:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="CvnoKiZ3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=bj/8ZlhYi+PUXtlyuznaF1lt7ECGXw2FzjbqurTjZWA=; b=CvnoKiZ3nraCZlyqWpMIcSDXGd
+	zDzkj6GV/yiCfjfwIwbYdSsjp/+ha7T6H28erflnAiTV5R9MO0/hVaUyW5x8JpEOJ8M+DkIa/fRIO
+	uumexB2u0CCrv9Udo48bza3OuDrT5HU6WoxJrnwJALtqD+i75uXoyxxNVZSgpkdf19p2IaZF1RkKP
+	OSUh7Lj6DJ/xLdPYeH3grvrF6QXtpdMwDaCC1CjGGlmAvhk/W/aS5+Lwg2Zc+6wTwXmub+s5NpwFm
+	POlb06b3zFZ2iAyXG8JkiW7t/eHWiVZKVBsQsFpK98ixIZ8DvOwyvl5/NRcvT9aTbvw23UBbhpHLJ
+	erTJoyIw==;
+Received: from i53875b1c.versanet.de ([83.135.91.28] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uOx3F-0000kG-UP; Tue, 10 Jun 2025 13:21:57 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Rob Herring <robh@kernel.org>
+Subject:
+ Re: next-20250610: arm64 No rule to make target rockchip
+ rk3399-rockpro64-screen.dtso
+Date: Tue, 10 Jun 2025 13:21:57 +0200
+Message-ID: <15979303.uLZWGnKmhe@diego>
+In-Reply-To:
+ <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
+References:
+ <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 10 Jun 2025 15:55:31 +0530
-X-Gm-Features: AX0GCFuPO70Fr5H2aOlLeOzXniiVZlpD36FORRmiAmu3qpXvFghQfZN4JyKcc9A
-Message-ID: <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
-Subject: next-20250610: arm64 No rule to make target rockchip rk3399-rockpro64-screen.dtso
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Regression while building arm64 with the Linux next-20250610
-the following dtb build errors noticed.
+Hi Naresh,
 
-Regressions found on arm64 builds
-- dtb build error
+Am Dienstag, 10. Juni 2025, 12:25:31 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Naresh Kamboju:
+> Regression while building arm64 with the Linux next-20250610
+> the following dtb build errors noticed.
+>=20
+> Regressions found on arm64 builds
+> - dtb build error
+>=20
+> Regression Analysis:
+> - New regression? Yes
+> - Reproducibility? Yes
+>=20
+> First seen on the next-20250610
+> Good: next-20250606
+> Bad:  next-20250610
+>=20
+> Anders bisected this to,
+> # first bad commit:
+>   [49760b9f60528393cca3ea35c4d0719f84215a48]
+>   arm64: dts: rockchip: add overlay for RockPro64 screen
+>=20
+> Build regression: arm64 No rule to make target rockchip
+> rk3399-rockpro64-screen.dtso
+>=20
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>=20
+> ## Build error
+> *** No rule to make target
+> 'arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso', needed by
+> '__dtbs_install'.
+>=20
+> ## Source
+> * Kernel version: 6.16.0-rc1
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next=
+/linux-next.git
+> * Git sha:  b27cc623e01be9de1580eaa913508b237a7a9673
+> * git describe: next-20250610
+> * Toolchains: gcc-8, gcc-13, clang-20
+> * Config: defconfig
+> * Architecture: arm64
+>=20
+> ## Build details
+> * Build warning:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzj=
+El7VszYE9/build.log
+> * Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ=
+4IOQa1XxMqDgmzjEl7VszYE9/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzj=
+El7VszYE9/config
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+thanks a lot for this notification.
 
-First seen on the next-20250610
-Good: next-20250606
-Bad:  next-20250610
+I'm surprised that overlay build at all when I built it yesterday.
+But yeah, the dtbs_install target really broke with that change.
 
-Anders bisected this to,
-# first bad commit:
-  [49760b9f60528393cca3ea35c4d0719f84215a48]
-  arm64: dts: rockchip: add overlay for RockPro64 screen
+I've amended the commit now [0], to change dtso to dtbo and ran the
+dtbs_install target sucessfully with that change.
 
-Build regression: arm64 No rule to make target rockchip
-rk3399-rockpro64-screen.dtso
+So on the next linux-next creation, this should hopefully be gone.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-## Build error
-*** No rule to make target
-'arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso', needed by
-'__dtbs_install'.
+Heiko
 
-## Source
-* Kernel version: 6.16.0-rc1
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha:  b27cc623e01be9de1580eaa913508b237a7a9673
-* git describe: next-20250610
-* Toolchains: gcc-8, gcc-13, clang-20
-* Config: defconfig
-* Architecture: arm64
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
+t/commit/?h=3Dv6.17-armsoc/dts64&id=3De14491aaa6ff598bbe9d462e44c01ac65754f=
+445
 
-## Build details
-* Build warning:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/build.log
-* Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/config
 
-## Steps to reproduce
- - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
---kconfig defconfig
 
---
-Linaro LKFT
-https://lkft.linaro.org
+>=20
+> ## Steps to reproduce
+>  - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> --kconfig defconfig
+>=20
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+>=20
+
+
+
+
