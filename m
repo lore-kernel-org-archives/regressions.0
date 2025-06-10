@@ -1,56 +1,56 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544F14685
-	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 07:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95C28C024
+	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 10:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749539913; cv=none; b=fY4oQqPmhmQ5HzGiqMH4sXqn53yc+WWM+m3C2CAd6Ys+401eGiuYvJ2WoZ/3LHq3ZrAzbJW5PsTlc9T6sVbM9NWluq8TamTwQe3q6Tp8MFm3QnEdvSRtM+kpGyH6NKz8eBDDTp2wM3dgrdENPqJLnZHtkrfUjXAU49G0iX776So=
+	t=1749551145; cv=none; b=BDgGMqMEAtD/fJRAtPem8nULO53i77+MiUWfo7aDXI4WLncjQ5a1toT0VVowM/BbXXSfwh3yA61linPWhsP80Hu16yfvESlXl/OFWR3B9jkdFlmg+wF9mkCWaErZcOaC/6LlPffNobrZF7reBmjLLGHGTeHf7RBUnSuPGfqHXkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749539913; c=relaxed/simple;
-	bh=KHQLDsJ4E+kG/B+xHajjkoc/MZlUo7hjn+WFDIwXVtw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Aq0bs2XNlc2w1/jKZv4TfFfOjzDl9ofVAOwNjGJRYJc6l3H9wd+wZXbuxxO4TKv+Cg1/PtDvqvsIXDYx7ySQk5ZnNlV9bYcgeWZCTxKmXXFOKuAG2HZSIfZAwohrdPDd76VsY8We7SuSBfqjvuFEWWcwfBKqK+cdRZLdckqFafc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EnR0dLrC; arc=none smtp.client-ip=209.85.217.53
+	s=arc-20240116; t=1749551145; c=relaxed/simple;
+	bh=oHV889pk9/dbexLINzXMTXrUu3qmaDgybAAQrKHQt4s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=g6mphfiXsJr1ce2aNsdYfdxYC/4Txkb3jesQnZhV5ghjNgddE6Cqm6ZoiI214RyMLXAAS8HfPzKLQeWBG0ppVP9ENOpRna03+bsAu2cChOQgHTrMuOQY/bhpMq7iHCpAN8TqPvFboV5oarucVXLd16mz1oaZBcfk7UoB+HMlFlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vgo3Uwkb; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EnR0dLrC"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e58d270436so1797156137.3
-        for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 00:18:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vgo3Uwkb"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5290be1aedcso4166373e0c.1
+        for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 03:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749539910; x=1750144710; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1749551143; x=1750155943; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=SkHumX+B+y86i8MSC5SJDKQ6nFwDO3pplzjQCYTDa/A=;
-        b=EnR0dLrC86qn3TRjGy39VVhEgr1iMmt0AlO4XiqLt0PS4NP+/3PsYCUTW8qyCjCdsb
-         nPdt85YxvQXHHh5k5ZXO20RDUaPZBrkPTLBSXFPepidl9rvwlmhfclIEZ0Kafso2WaHR
-         oYffXJivVcP+W4AxMLQEizvbtL9QsRtsSb/OaDobVCQdxGT0F8Oean4O9QlsF06wKlZT
-         J0afM6acq6+AWtn1vwwr4TTEd/xKHiZLT9533g5+LaN5gJAaCkvB9fgS4vetZt9N7XVm
-         qXG7vRFL6xZgFm8erC9DEECAgRoUSkcgU0xMdkwkVPmpEstvSgoC9i24mL2JLH1CVZee
-         Hx5A==
+        bh=/KbPqIjq6A0gP5OwcTzAJtKToDqxED7lTQn+3ShWhu4=;
+        b=Vgo3UwkbZOoitV7ckRGP0arb2dTfNyBkP3TrmP4a3N7xC9ty88w2987SNweQSTweWO
+         WCzD+jdVOMdLqyZEYvJp4+U32mE8TBNSShaHas3r79c9R8Q/OYePx8hZzlucvX7Bt76F
+         EJ8D6RdWh8c1S8rCQUm0WICKQIuAEH0AXjDYgfBsS3Fyksu2Kh1UZiKfl2dBSZqvxjgh
+         8FDAbjIya4f541jD0kJzvaXBaNYh/EJRc2H4iS8AtdTNuiTKHm+q3wof8UyteQPVc/yY
+         Ha3NKr9ChloRKZcC7vUq2pZUrcF7EwPSAmLSZaBhC5wNKYSyJNeQYTN7rJWbW4rF+qTS
+         A7Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749539910; x=1750144710;
+        d=1e100.net; s=20230601; t=1749551143; x=1750155943;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SkHumX+B+y86i8MSC5SJDKQ6nFwDO3pplzjQCYTDa/A=;
-        b=nitWxA/sAeOJxE0gdYgDP52TsacAyAP1RN+I8ZMOEesziOxRXsNrjVdVaZCrKWNabY
-         OAifblHbtx7tgr9/YsFTqqP25X3jUkODRku3t5nBEEdMLRrBA6gXqtnle7QD4dMRjmgu
-         +PcwbMgTYhojEdDrzRhbcbfE1UJbkCISWLl3uuE6Dj7wtcG7fwoDxAjGnWkHz3lKIu2l
-         eaX8jd9nz4pL59bzcVI5AHQIDajtJSkFSPA82CIdfDs3ABPd4uVhFjSpIcp7lCpTo0NB
-         6Isz43jt29D00TH4+hsuSzejP38gJomTt7rZYXt7dLa1kULJmkY6ggexHGjt4EVE2reJ
-         gcuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNT2moXMf4ZKdc5sJZm2yT9Ur4+HAn8OIDeaU8g66MxduLipRllp8Np/o2/XeJssBnuEpPc5V+/qqMIw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzT88aWfu8eEiswIrBmG+hs054C095veBi1m2giJ00ac43axnqT
-	5yBhpE5Ud5me2U6P1d+klGWdwPreRz419RX77+mkeri6wzzd5kK/Ahc7rqzRylCQhxheHi0q/Gs
-	yUWUH28CP6liF6A/SrttiZzyzTJ+9Gr12FV2ublVKRg==
-X-Gm-Gg: ASbGncsveTTxD6RRIMVKJb2/K+hPT7D7mvwOwVZ5+cutTuxeuvjpNdGAiUpz/NvhAUk
-	FSoQ0q/T8O3/hgGbq5jkP3uMPTm3R8ctJedkY7KUIRHR00ucBmsBVcDvnDgggLJOPcwBZScgAfC
-	aTvMn9cScEP3YLoFFC6sxAsf+ws3x0ilwN1RpbnJnchyIOabvfzSjLoSqKDs1xaVkiwhFQTBwQV
-	oVW
-X-Google-Smtp-Source: AGHT+IEWeK8X5+m8ElJSK5z3+ETpZn+gitvlG/z+JagvODDs6mTjgbOyPmSCoIASAzlc/+Rww7q/dUQ/dbl/qwPi6yI=
-X-Received: by 2002:a05:6102:4403:b0:4e2:a5b9:df1d with SMTP id
- ada2fe7eead31-4e7729acf70mr12705549137.8.1749539910181; Tue, 10 Jun 2025
- 00:18:30 -0700 (PDT)
+        bh=/KbPqIjq6A0gP5OwcTzAJtKToDqxED7lTQn+3ShWhu4=;
+        b=EqPZOLCshBSZTcSJQFKR6umQyM9eBI8swFYkOU3VuKbZp/7OjCzynxjDkFvNYDqr8S
+         5PtdtB90OLRO1ufCLnPf/bPGTxLkuJr/m/YP1KMRi6E1TPB4sl96+QDJ7FZoDKxDwXtm
+         EdrcuwuiBJuwsFknUb3ouVmV3XPtX94ZmFWkCoe/AtOZ4ffXEP7p6hfm3xVfpfMH3vZL
+         fi72VW8u5Lckv3urEq/B+ITdK+Aym3JENx5Lc4PmLK3iYXeN81jtqzmyBC4aLsaJ8IKN
+         Td2xm3pmUqrIxxfVq4ndgLDYX85xfgknml7xcvWgR1WzVcJTQ2azUZkxjvPgwPBbAHqO
+         3XTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDvwjXXME6y4p4a3kryX94yLuQ/2wOYRGq0IMs1bL7X0E5UKZOqnwvEIpHKKNQMzEUlH3MZcChHHno2Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzN9Q5KZFToUBaY+TAI27q8EiCZk6YY9OdZE6wkZ438GnpuihhH
+	iBmNfdiVoYgzqfA9+pBwIUNZ6hq3GoZyzrEq5l+aaqQAhduAAmCoGx4aiJdizMxzSM27Rjpr4pg
+	ROcQMZltIjSqwjTT89Vav41WFlMJ8aNk7EMNmLWOilg==
+X-Gm-Gg: ASbGncvjdUGCoJ5TnkTShwv8sxjZfgyjf9vpzRJeW277JhvurmcJNFkBDeRyPjQL0sE
+	AzrrfJZo5OU3WJgZFr3wYW6o5xPbVi07s596X2qgr2RL68zVQ1zxEyi+MLejdyBIdKesksrB2WN
+	NqQ4Q1GiuyxXcxi6h2dV3DyS5+s9PhvfO7V42ydZ1UeVoRoQEQughovo393V6rKmzm2WYLox+2h
+	YgRjJspWNRnQM8=
+X-Google-Smtp-Source: AGHT+IHshLTe8OuH7+ip/8ueWp0i74zRNPn5hHiiSdvdI8UuOJ6eD1FAplWjvLZQZJWIGjYXeSMeV/zYAYuInU3pbBs=
+X-Received: by 2002:a05:6122:640c:10b0:530:2c65:5bb8 with SMTP id
+ 71dfb90a1353d-531131187b5mr1514506e0c.1.1749551142776; Tue, 10 Jun 2025
+ 03:25:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,139 +58,67 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 10 Jun 2025 12:48:18 +0530
-X-Gm-Features: AX0GCFs5HGZPW_5vlnOtlFErN9wZOl5LWlGniaDfW8i9KS2B_HI6AE7jX17fEGo
-Message-ID: <CA+G9fYsYVuEpL5KnYdq4ciRmpnUMQqkNQHmy7y5XvUm48kjxyA@mail.gmail.com>
-Subject: Juno-r2 WARNING kernel time clockevents.c cev_delta2ns clockevents_config.part
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Date: Tue, 10 Jun 2025 15:55:31 +0530
+X-Gm-Features: AX0GCFuPO70Fr5H2aOlLeOzXniiVZlpD36FORRmiAmu3qpXvFghQfZN4JyKcc9A
+Message-ID: <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
+Subject: next-20250610: arm64 No rule to make target rockchip rk3399-rockpro64-screen.dtso
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Regression while booting Juno-r2 with the Linux next-20250606
-the following kernel warnings found.
+Regression while building arm64 with the Linux next-20250610
+the following dtb build errors noticed.
 
-This boot warning was reproduced with juno-r2.dtb and juno-r2-scmi.dtb.
-
-Regressions found on Juno-r2
-- boot warning
+Regressions found on arm64 builds
+- dtb build error
 
 Regression Analysis:
 - New regression? Yes
 - Reproducibility? Yes
 
-First seen on the next-20250606
-Good: next-20250512
-Bad:  next-20250606
+First seen on the next-20250610
+Good: next-20250606
+Bad:  next-20250610
 
-The suspected patch that found between tags is,
+Anders bisected this to,
+# first bad commit:
+  [49760b9f60528393cca3ea35c4d0719f84215a48]
+  arm64: dts: rockchip: add overlay for RockPro64 screen
 
-# git show next-20250512..next-20250513 --
-arch/arm64/boot/dts/arm/juno-base.dtsi
-commit 1fa3ed04ac55134063e3cd465b41aeb26715e52a
-Author: Sudeep Holla <sudeep.holla@arm.com>
-Date:   Mon May 12 11:11:32 2025 +0100
-
-    arm64: dts: arm: Drop the clock-frequency property from timer nodes
-
-    Drop the clock-frequency property from the timer nodes, since it must be
-    configured by the boot/secure firmware.
-
-    Cc: Liviu Dudau <liviu.dudau@arm.com>
-    Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Message-Id: <20250512101132.1743920-1-sudeep.holla@arm.com>
-    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
-b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 055764d0b9e5..9ccb80821bdb 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -10,7 +10,6 @@ / {
-        memtimer: timer@2a810000 {
-                compatible = "arm,armv7-timer-mem";
-                reg = <0x0 0x2a810000 0x0 0x10000>;
--               clock-frequency = <50000000>;
-                #address-cells = <1>;
-                #size-cells = <1>;
-                ranges = <0 0x0 0x2a820000 0x20000>;
-
-
-Boot regression: Juno-r2 WARNING kernel time clockevents.c
-cev_delta2ns clockevents_config.part
+Build regression: arm64 No rule to make target rockchip
+rk3399-rockpro64-screen.dtso
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-## Boot warning
-[    0.000000] timer_sp804: timer clock not found: -517
-[    0.000000] timer_sp804: arm,sp804 clock not found: -2
-[    0.000000] Failed to initialize
-'/bus@8000000/motherboard-bus@8000000/iofpga-bus@300000000/timer@110000':
--22
-[    0.000000] timer_sp804: timer clock not found: -517
-[    0.000000] timer_sp804: arm,sp804 clock not found: -2
-[    0.000000] Failed to initialize
-'/bus@8000000/motherboard-bus@8000000/iofpga-bus@300000000/timer@120000':
--22
-[    0.000000] arch_timer: frequency not available
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:38
-cev_delta2ns (kernel/time/clockevents.c:38 (discriminator 1))
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-6.15.0-next-20250605 #1 PREEMPT
-[    0.000000] Hardware name: ARM Juno development board (r2) (DT)
-[    0.000000] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.000000] pc : cev_delta2ns (kernel/time/clockevents.c:38
-(discriminator 1))
-[    0.000000] lr : clockevents_config.part.0 (kernel/time/clockevents.c:499)
-[    0.000000] sp : ffff800082923cd0
-[    0.000000] x29: ffff800082923cd0 x28: 0000000000000400 x27: ffff800081650000
-[    0.000000] x26: ffff80008292fcc0 x25: ffff800082425888 x24: ffff8000829343c0
-[    0.000000] x23: ffff800083210000 x22: 000000000000000b x21: ffff8000823cf178
-[    0.000000] x20: ffff800082433880 x19: ffff00080021e240 x18: 0000000000000000
-[    0.000000] x17: ffff00080021a400 x16: ffff00080021a200 x15: 0000000000000100
-[    0.000000] x14: fffffdffe0008a00 x13: ffff800080000000 x12: 0000000000000000
-[    0.000000] x11: 0000000000000068 x10: 0000000000000100 x9 : ffff8000801b50f8
-[    0.000000] x8 : 000000001dcd6500 x7 : 000000003b9aca00 x6 : 0000000000000020
-[    0.000000] x5 : 0000000000000020 x4 : 0000000000000000 x3 : 0000000f00000000
-[    0.000000] x2 : 0000000000000000 x1 : ffff00080021e240 x0 : 000000000000000f
-[    0.000000] Call trace:
-[    0.000000] cev_delta2ns (kernel/time/clockevents.c:38 (discriminator 1)) (P)
-[    0.000000] clockevents_config_and_register (kernel/time/clockevents.c:519)
-[    0.000000] arch_timer_mem_frame_register
-(drivers/clocksource/arm_arch_timer.c:1319
-drivers/clocksource/arm_arch_timer.c:1580)
-[    0.000000] arch_timer_mem_of_init
-(drivers/clocksource/arm_arch_timer.c:1653)
-[    0.000000] timer_probe (drivers/clocksource/timer-probe.c:31)
-[    0.000000] time_init (arch/arm64/kernel/time.c:62)
-[    0.000000] start_kernel (init/main.c:1014)
-[    0.000000] __primary_switched (arch/arm64/kernel/head.S:247)
-[    0.000000] ---[ end trace 0000000000000000 ]---
-[    0.000000] arch_timer: cp15 and mmio timer(s) running at 50.00MHz
-(phys/phys).
+## Build error
+*** No rule to make target
+'arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso', needed by
+'__dtbs_install'.
 
 ## Source
-* Kernel version: 6.15.0-next-20250513 to 6.15.0-next-20250606
+* Kernel version: 6.16.0-rc1
 * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-* Toolchain: gcc-13
+* Git sha:  b27cc623e01be9de1580eaa913508b237a7a9673
+* git describe: next-20250610
+* Toolchains: gcc-8, gcc-13, clang-20
+* Config: defconfig
+* Architecture: arm64
 
-## Boot details
-* Boot lava log: https://lkft.validation.linaro.org/scheduler/job/8309469#L622
-* Boot log: https://qa-reports.linaro.org/api/testruns/28679128/log_file/
-* Boot warning:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250605/log-parser-boot/exception-warning-cpu-pid-at-kerneltimeclockevents-cev_delta2ns/
-* Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4wgEvmeoVH3Vr528M4YN2OBXY/
+## Build details
+* Build warning:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/build.log
+* Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/
 * Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4wgEvmeoVH3Vr528M4YN2OBXY/config
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgmzjEl7VszYE9/config
+
+## Steps to reproduce
+ - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig defconfig
 
 --
 Linaro LKFT
