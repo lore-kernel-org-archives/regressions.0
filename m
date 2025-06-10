@@ -1,61 +1,65 @@
-Received: from sonic310-22.consmr.mail.gq1.yahoo.com (sonic310-22.consmr.mail.gq1.yahoo.com [98.137.69.148])
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869A022D9F8
-	for <regressions@lists.linux.dev>; Mon,  9 Jun 2025 23:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F01725DB0B
+	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 04:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749512061; cv=none; b=GB9BFjct24oKE+Uf2YCB6a9iON0NGvR7EQzS245vG9OGMDjRIoAMuIUBAxXF85ulrqA3ebFZXZLa2d2x88zQtUlKwYJxOScUkqlKK00/l7/CxkU1+izZonT80uJtUcyx3DNWd9fkFDOkxWCgFwMDN+ysMH0WWqtzne1nHdAfyjg=
+	t=1749529355; cv=none; b=eluc+7BNSQUrkg3OzQv3SsyurbSqgDAnY0RXr/3mpqguhFiolxHRFrW9aNjgp7jUN7BdIldmHesqQoFHSdO3ivPjbUot7jWJJzDwa+xX+Y2+65Z4Dio7BujLNRMI7V2gZYXABOOpJvfI+EnKt/TArzMCAlse9jawFbRb3WRZq3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749512061; c=relaxed/simple;
-	bh=ZSO5dFEmZwT9eJd45kXcphshRMcVD0i3+U2JgEwKB1E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type:
-	 References; b=nhKY9gRtfHGG3QwPiLGFJc8d2bYcrcnxHKVNoy2POvBp3BeGnKAv/cCOgTBPGxYWlwNsLvHWIikuAjPDbC7YMeNKokXkCSB42WmbesPvgwdxhqtYEJXR6YDc3ygbFcVUK6t5wOeKEdG6l7ZnPvfKF6YQ+uZhLd4m4MT1qBbAvEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netscape.net; spf=pass smtp.mailfrom=netscape.net; dkim=pass (2048-bit key) header.d=netscape.net header.i=@netscape.net header.b=PKainD5L; arc=none smtp.client-ip=98.137.69.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netscape.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netscape.net
+	s=arc-20240116; t=1749529355; c=relaxed/simple;
+	bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bTRYUkOmmG475MRnEb2WkmCtbKz/PC9IbuLfS+KeKi0i1OwszjlpiINnaOqNzsrLBFYiMjV7FFZajW5iueWBSeyGOlu/0AlNX7ULYpoHzFif9M2WRo5E26SnvwCwuXyYR2YT//jNyanhWuYwj42U9Mpvwe16t73yaMWRQDQmcqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bKkVZZrK; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netscape.net header.i=@netscape.net header.b="PKainD5L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1749512059; bh=7Bw3jXhW+wkA/wUNZMtibMU2KmDX3Hvp9ZvGY8+23r8=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=PKainD5LEN/zb6VOrpqzMRszyhPXLtEzOwabQpkRzy4Aaje7oGDfUbkT+T9arV/juObh4XZbyIuw5/IAiFEOk+2H2TvEDQcjicmxxMIS9DdNN8QpsDO+2LTywedfOe0JSKaGiDNIIg8hfdHOIOyQziiZ08coLYcSoMnCi9/Z9Nbk2LSROh9xy6oDOLqsAPuHUcNg3AWCws8JgZm0ofqzSNTXOillZ6UBh4vVfbGTttx/EuZvdH0TiMptpqAWa+1VBUPLbVtE45XZ7edwz8qjXVn2o6ahGcdoVW2U1iE4FpgqTaRrKOgWq93NBXw7LvS2JtC3Yk9GkZLZz1RPfOvSLg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749512059; bh=jE4lVuuOD3VFJAV7C9JWAoYDG/lhCD++bTnPUl6CsHe=; h=X-Sonic-MF:Date:To:From:Subject:From:Subject; b=onRYsRp2r+nTfUBrDaDQfTMOXgYPrvKf5wYlCp0ncKMmusQmDW1FcCkSVuje2qT+RMzXCGDqOxDKQbRYMuLP//ilbKeiTFmETjy8/+D7aZlHfZPjFxGQw/s29Ofs1sGq0enB7OXCuhKvchNIIaAOX8TUQHYbefAbWxWW+pr8YQ9F7nBZPtHTohsCK1lf/D1cUOTOn4fcW2ZFx4n+ZwaQvPIZ4cfxd40nHpP4g8DwYm7jZQb5Nm1SEFFeRADJb4pEab7VE/EOTPw3tEXxQzYnxZTdDCn/tmNl4XZneHK2KbquhV9pxcvLu9t5n1dgswLFp558afgcxJlVt/eJwNhs4Q==
-X-YMail-OSG: mjaEBDUVM1mziT1Wc_IHByQDroBWuuSdqxLiyffktXS2f60l5XiDlzQmO4Jjiqj
- ZF8VdF4G6jsvrZLhzbeToJsDbucH8ZLaV0oaptyCGenBCdr5hghGIIw6lYaGXAzOTvvYRjnNmfxk
- FEMFARgLGh_0d.a8gmqVplelCWaF9EPn5ztqivpRojwxfSrLFs.xxXr4aoPU7YxUbepR1nKblICj
- FwWeXS3bofHTg7iibwG4ihaMcDwaVhHdQ.GqIpztBW2obqChBiDZVr9fueSCuamOqZGTykwuFNvu
- .8oXPig.jkcLO5oZODMdqE26TCXLpWwiWhGS3bEUqO9BX5NneWUIIPCaATgmZJUJCH_4oshvJtUD
- u1PI1agO904f_ZyxOX709s11gMj4upYrHQaCh78jrBPS7lpjVPvqSes5V25bNvYB5IJa29.6BRNh
- _XQtzc670TgoDdkF63nvnrmRfTFmH0xhBMbJioubHf84OXMDWmweRL8d4KgaRPGD_eWvO7HgEgsz
- 6LXVnHYSmHNPwnW3rS8DygBbtkdPSHA9.4QX21yG6NFKbGOmDOLXfcUkSvO01Yo8NMniRz1GvleX
- J59LYgR3bwSn1PuFcevahQmEK5DA0IzpULg5I7ooD23e2pp1V7mggDlweDorpij1kvaCiR87IBNt
- ql6TVMoMxDli_RbKdGdWjbtS554NAlCrCsrEqyfI6CDreNW3dhQpcXGy7ac.2NWNa9CW0NajpKCB
- q4uJj86ODy47CIyli2bp38wr2AkgAxVnrmSmXfPEXq1gk_WarsaZ2wYz.FXHgoeum4Cal5ha.bOP
- Z6lZ0H4b_OaxhvLZoz1Z0iSLeH.XDvQNL7UwQZPAct2XLY3X4Yw1nz47kF1kqBlrvssijrkLty4j
- J9KTGPbA8kBMqmjpRojyjYP7hRM8rSA8YsGG48Bp9Aq21i4VKVKJX3hc1YsG4hLAssvgv9yqdoWy
- FdInki_jHETdTk_v_SfR10Wh_y1ErwY0QxQcwZM.mjXKTTdDo.5KGbBRCS9YKmoQ1dCcMSmRX11M
- 6Dq.qLmHXO60r7PeQi0bbGBwFYgnpgDquIDUadEm6GXNqp3iuPOZKYlXrPHHgb5J_Pkb9zVXAAju
- tfVmVSDOFs750Fpy2fwb7.QjBCK5vGX0QWegpyUc_aAxkd4csxwtcVBbKVjenr4wJBlKmKiQushF
- SpcIw77gyfInhyEDz8aqxygyTtD3G1qmrb.59G3p81g1maejkDHA9U3puHqos8BSQj7vXH4s9jdS
- WFgiwSmeHaIFHr4nzda4DGD6KrDazLvh3t8ybS6VqmEyhDAzYdugy2kLVhDk5b.EttQx6I0mY9qE
- 9JVuT42QnG1VovAYmKtywa3jQaas9.C.DJw9cCUbAnhPGzdUVWAp_U78MslHNUyKIv0hmwZwVe6h
- f5Nwz69P9w193cvlqCjl2jWeuCShpIDKlLxgOAbDFxD3RcO_FTWnfMQkWyssixzeNh0TlT_cLHON
- 84_QQ_GmlCT35GUbjS0vobb4neQpLUz7074XPMgZ.YFIalOYeXB2UjqvpAVLa7GMjWnd3CPGMBI8
- fe9fkMc3uhPnRaHUYq1GLJ1WTMO._oGdw3IjEuro4aflxBaa9Ecp7vPouZ4oAhmONRToEL0DUuJO
- E0pwr1OMbouqhT8.6vD4V_tEJdrTN6Z8swMXomJ9A37qoAr7t1eJ00GmTcj.nRJXQLloTMD3Y1FM
- byJlFyu9ml6VgOofu0ZmBHep6hK96H91XgKSRx1tyqhX0gIfQ2qbaDC5UN2a3E6HDzXg_8C_osdb
- BJRZy7ONjfqMBik2NU4bH5Go9gNYjtJiG8zYMfRGpwGU0564NyZWixkPYL.UtiXm480ST0BmS.aS
- S8ZjMpgf7r5gbiZgJ5wkSviGDSHiHTmlzWbATN_e7sAzRGh7Yw6XQqj7dwcWxHa5EwV2qHaic4DY
- Ac_8sywHkWW18dYNdpcuPIK7wfwc1ZXSeYSePIoVHCt4WFRQ6ftvquk_655G7wmAQdS296kEGjjO
- FNO_dEfnLeQiVT27HYXgz0c1J0CjwsxBXdRg8oNCpx7N73XUYhFghndZR3znIULKyaKsNXpnGGCI
- XMLmlJIsAubhZ0TI1BNXot1mTsE_pu8Y5uf8ASf_2vMVYkZub2K.Nrboa.PZRn9E6ZCzz0JY6wru
- XKC71sbfDjcY8o8ewpwvQkCs_ju638IRhC.4k2JRvI6EHwKYuVejGxFIpkqHmq0EMrW3KVmBV__U
- _l2GGc9dwTA--
-X-Sonic-MF: <brchuckz@netscape.net>
-X-Sonic-ID: 4b775504-7aeb-456f-8c31-c4ffb8f0136c
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.gq1.yahoo.com with HTTP; Mon, 9 Jun 2025 23:34:19 +0000
-Received: by hermes--production-ne1-9495dc4d7-jhk9q (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 2aa59b495c54eb04322430ca52fe5ded;
-          Mon, 09 Jun 2025 22:43:43 +0000 (UTC)
-Message-ID: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
-Date: Mon, 9 Jun 2025 18:43:41 -0400
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bKkVZZrK"
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-ade326e366dso516335766b.3
+        for <regressions@lists.linux.dev>; Mon, 09 Jun 2025 21:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749529350; x=1750134150; darn=lists.linux.dev;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
+        b=bKkVZZrKVbQ4m62I3qF9Ur6nt2OS4GGIQRnHtjrmYOeNimgCx0AhkBkF++8WpNrxse
+         3JFbyyhWMI+KxEEEvZ15ypOSXAjaw7PZMjWlp0vLisRh+02oeENJ5N2oidkj5nVYg9Ki
+         oAxQR7mkfjlMOl5+TKeJqfo9tSN/XKPYQ2x9rtfqfhD+00svAuRXPpai58hDpxofG7/9
+         RM6Yw3YYpbbjCe3j6QxWyES5p3Ik44g3e2EfO4gGmiajsDvKPydvrafKmFxdsHSSuCOO
+         UADdnU3+jvSsS4HOu1dn5blim07HsTEkcV+J5lHvyHZCchCHBCR8nFzhTN6SRta+qJd5
+         IbeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749529350; x=1750134150;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vtE6FqbXKVpkJpTRc7uA49IoSQWoz/UlJhOgGFdmCX0=;
+        b=cFTHfQZWwInzWY3BNiBuVDY+dJCXC4wV9LzK3xosGc4u45ZtshuByN3MsJ7WnHk/Dg
+         Z9kKzSe4qSnYw3yPeYUNwkyp8hU0MTvSFYzMOADMlijU8ip+Jju4QFiv2p8ig/gr8zuU
+         QBDCc/NSE1TdZi4WneJN2we56OmsA8s5zugHixD5aeAo1MKVc5C5QsLVCzxp6puYdEVP
+         KU2ryaRdveqCAM6ts48oz+6gW5+3y1PsuGRyexXq5flV0TromL0N9owVuxwqNWwmEyv3
+         UV9YdMMWCRcoWXgJneCoWZSCgSnpBBoURLsOYKpn7W+rXnWW5+k3byoOHbzXPxHoJvt7
+         o4yw==
+X-Gm-Message-State: AOJu0YwPNyROumtvaZVrwKtvIcVfu4lIcsDW36EzniovK9iLoG6F96Z0
+	EgAHPunu/pIpsgC5AstIpOokEyZFTvaRPwLGsr710EWjCbwcKw+ZsHdEHe6s/xUCSFw=
+X-Gm-Gg: ASbGncsPMiXlwsJpJiQGHbk/cx01bXN4UFTwaoXmbnASdIKxRk/zOvnPjLXb0kvqRXy
+	qwluqbX94WPcEqUUKmcp8Q5l9uGiLL9Kh5FVMCBkakOJxOUU7TKWSyorb3lCBPfxYzzbNevrSyO
+	r55lxQkLaq8z8WA2sj10mkqmZohI+LNCDOocWGiiLR/e3Mbp450ezPzhXxN75Oqwki8vTKbXYdA
+	8eKAtpUywTQNSITUzJxKb/53atna7QJskRzdN2E6MwsL+7arkM5yqdex9oZeirQV40FFJO7qRcO
+	6ZIeNjcAkpd+b+6ZuW9uRVYY0bc/+B6t8Qup4ay4fznKhUpOJFCZt34Mk4tWbMsJaGeUtii3n6q
+	7MHiGjhAYsn55V6icGG85KBG77eJvxJyy6KYTFhrIaWweG4/P1SwyeU8M/xZLtw/2Ok8Xjafim3
+	V4kfwtHd8ETtY=
+X-Google-Smtp-Source: AGHT+IEWCebQ2XimYzy+I8VvIYOjz0xMZTBHp3Lj8BEv5gPVoXnMnc69oeCEBeVl7rEE6+nNHgKQdg==
+X-Received: by 2002:a17:907:3f24:b0:ad8:a41a:3cc5 with SMTP id a640c23a62f3a-ade1a9170e1mr1401238066b.6.1749529349503;
+        Mon, 09 Jun 2025 21:22:29 -0700 (PDT)
+Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc39c3fsm653224566b.140.2025.06.09.21.22.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 21:22:29 -0700 (PDT)
+Message-ID: <8ad4304d-43bc-4584-bc69-822eb0661e7b@suse.com>
+Date: Tue, 10 Jun 2025 06:22:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,87 +67,223 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
- Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
-From: Chuck Zmudzinski <brchuckz@netscape.net>
-Subject: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
+Subject: Re: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
  entry.S
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Chuck Zmudzinski <brchuckz@netscape.net>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>
 References: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40.ref@netscape.net>
-X-Mailer: WebService/1.1.23956 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+ <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------0EbFx1IS9ivErK0O9PjmY4R5"
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------0EbFx1IS9ivErK0O9PjmY4R5
+Content-Type: multipart/mixed; boundary="------------OQLtB7JT21dg2AQFGuQitRgX";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Chuck Zmudzinski <brchuckz@netscape.net>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <8ad4304d-43bc-4584-bc69-822eb0661e7b@suse.com>
+Subject: Re: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
+ entry.S
+References: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40.ref@netscape.net>
+ <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
+In-Reply-To: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
 
-I am seeing the following regression between Linux 6.14.8 and 6.15.1.
+--------------OQLtB7JT21dg2AQFGuQitRgX
+Content-Type: multipart/mixed; boundary="------------EOhNGRxKFthsm1FP655sH8HF"
 
-Kernel version 6.14.8 boots fine but version 6.15.1 crashes and
-reboots on Xen. I don't know if 6.14.9 or 6.14.10 is affected, or
-if 6.15 or the 6.15 release candidates are affected because I did
-not test them.
+--------------EOhNGRxKFthsm1FP655sH8HF
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Also, Linux 6.15.1 boots fine on bare metal without Xen.
+T24gMTAuMDYuMjUgMDA6NDMsIENodWNrIFptdWR6aW5za2kgd3JvdGU6DQo+IEhpLA0KPiAN
+Cj4gSSBhbSBzZWVpbmcgdGhlIGZvbGxvd2luZyByZWdyZXNzaW9uIGJldHdlZW4gTGludXgg
+Ni4xNC44IGFuZCA2LjE1LjEuDQo+IA0KPiBLZXJuZWwgdmVyc2lvbiA2LjE0LjggYm9vdHMg
+ZmluZSBidXQgdmVyc2lvbiA2LjE1LjEgY3Jhc2hlcyBhbmQNCj4gcmVib290cyBvbiBYZW4u
+IEkgZG9uJ3Qga25vdyBpZiA2LjE0Ljkgb3IgNi4xNC4xMCBpcyBhZmZlY3RlZCwgb3INCj4g
+aWYgNi4xNSBvciB0aGUgNi4xNSByZWxlYXNlIGNhbmRpZGF0ZXMgYXJlIGFmZmVjdGVkIGJl
+Y2F1c2UgSSBkaWQNCj4gbm90IHRlc3QgdGhlbS4NCj4gDQo+IEFsc28sIExpbnV4IDYuMTUu
+MSBib290cyBmaW5lIG9uIGJhcmUgbWV0YWwgd2l0aG91dCBYZW4uDQo+IA0KPiBIYXJkd2Fy
+ZTogSW50ZWwgaTUtMTQ1MDAgUmFwdG9yIExha2UgQ1BVLCBhbmQgQVNSb2NrIEI3NjBNIFBH
+IG1vdGhlcmJvYXJkIGFuZCAzMiBHQiBSQU0uDQo+IA0KPiBYZW4gdmVyc2lvbjogNC4xOS4y
+IChtb2NrYnVpbGRAZHluYXZpcnQuY29tKSAoZ2NjIChHQ0MpIDEzLjMuMSAyMDI0MDYxMSAo
+UmVkIEhhdCAxMy4zLjEtMikpIGRlYnVnPW4gU3VuIEFwciAxMyAxNToyNDoyOSBQRFQgMjAy
+NQ0KPiANCj4gWGVuIENvbW1hbmQgbGluZTogcGxhY2Vob2xkZXIgZG9tMF9tZW09MkcsbWF4
+OjJHIGNvbnJpbmdfc2l6ZT0zMmsgY29tMT05NjAwLDhuMSwweDQwYzAsMTYsMTowLjAgY29u
+c29sZT1jb20xDQo+IA0KPiBMaW51eCB2ZXJzaW9uIDYuMTUuMS0xLmVsOS5lbHJlcG8ueDg2
+XzY0IChtb2NrYnVpbGRANWI3YTVkYWIzYjcxNDI5ODk4YjRmODQ3NGZhYjhmYTApIChnY2Mg
+KEdDQykgMTEuNS4wIDIwMjQwNzE5IChSZWQgSGF0IDExLjUuMC01KSwgR05VIGxkIHZlcnNp
+b24gMi4zNS4yLTYzLmVsOSkgIzEgU01QIFBSRUVNUFRfRFlOQU1JQyBXZWQgSnVuICA0IDE2
+OjQyOjU4IEVEVCAyMDI1DQo+IA0KPiBMaW51eCBLZXJuZWwgQ29tbWFuZCBsaW5lOiBwbGFj
+ZWhvbGRlciByb290PS9kZXYvbWFwcGVyL3N5c3RlbXMtcm9vdGFsbWEgcm8gY3Jhc2hrZXJu
+ZWw9MUctNEc6MTkyTSw0Ry02NEc6MjU2TSw2NEctOjUxMk0gcmVzdW1lPVVVSUQ9MmRkYzJl
+M2ItOGY3Yi00OThiLWE0ZTgtYmI0ZDMzYTFlNWE3IGNvbnNvbGU9aHZjMA0KPiANCj4gVGhl
+IExpbnV4IDYuMTUuMSBkb20wIGtlcm5lbCBjYXVzZXMgWGVuIHRvIGNyYXNoIGFuZCByZWJv
+b3QsIGhlcmUgYXJlDQo+IHRoZSBsYXN0IG1lc3NhZ2VzIG9uIHRoZSBzZXJpYWwgY29uc29s
+ZSAoaW5jbHVkZXMgbWVzc2FnZXMgZnJvbSBib3RoDQo+IGRvbTAgYW5kIFhlbikgYmVmb3Jl
+IGNyYXNoOg0KPiANCj4gWyAgICAwLjMwMTU3M10gU3BlY3VsYXRpdmUgU3RvcmUgQnlwYXNz
+OiBNaXRpZ2F0aW9uOiBTcGVjdWxhdGl2ZSBTdG9yZSBCeXBhc3MgZGlzYWJsZWQgdmlhIHBy
+Y3RsDQo+IA0KPiBbICAgIDAuMzAxNTc3XSBSZWdpc3RlciBGaWxlIERhdGEgU2FtcGxpbmc6
+IFZ1bG5lcmFibGU6IE5vIG1pY3JvY29kZQ0KPiANCj4gWyAgICAwLjMwMTU4MV0gSVRTOiBN
+aXRpZ2F0aW9uOiBBbGlnbmVkIGJyYW5jaC9yZXR1cm4gdGh1bmtzDQo+IA0KPiBbICAgIDAu
+MzAxNTk0XSB4ODYvZnB1OiBTdXBwb3J0aW5nIFhTQVZFIGZlYXR1cmUgMHgwMDE6ICd4ODcg
+ZmxvYXRpbmcgcG9pbnQgcmVnaXN0ZXJzJw0KPiANCj4gWyAgICAwLjMwMTU5OF0geDg2L2Zw
+dTogU3VwcG9ydGluZyBYU0FWRSBmZWF0dXJlIDB4MDAyOiAnU1NFIHJlZ2lzdGVycycNCj4g
+DQo+IFsgICAgMC4zMDE2MDJdIHg4Ni9mcHU6IFN1cHBvcnRpbmcgWFNBVkUgZmVhdHVyZSAw
+eDAwNDogJ0FWWCByZWdpc3RlcnMnDQo+IA0KPiBbICAgIDAuMzAxNjA1XSB4ODYvZnB1OiB4
+c3RhdGVfb2Zmc2V0WzJdOiAgNTc2LCB4c3RhdGVfc2l6ZXNbMl06ICAyNTYNCj4gDQo+IFsg
+ICAgMC4zMDE2MDldIHg4Ni9mcHU6IEVuYWJsZWQgeHN0YXRlIGZlYXR1cmVzIDB4NywgY29u
+dGV4dCBzaXplIGlzIDgzMiBieXRlcywgdXNpbmcgJ2NvbXBhY3RlZCcgZm9ybWF0Lg0KPiAN
+Cj4gKFhFTikgUGFnZXRhYmxlIHdhbGsgZnJvbSBmZmZmYzkwMDNmZmZmZmY4Og0KPiAoWEVO
+KSAgTDRbMHgxOTJdID0gMDAwMDAwMDg1NWJlZTA2NyAwMDAwMDAwMDAwMDYwZTU2DQo+IChY
+RU4pICBMM1sweDAwMF0gPSAwMDAwMDAwODU1YmVkMDY3IDAwMDAwMDAwMDAwNjBlNTUNCj4g
+KFhFTikgIEwyWzB4MWZmXSA9IDAwMDAwMDA4NTViZjAwNjcgMDAwMDAwMDAwMDA2MGU1OA0K
+PiAoWEVOKSAgTDFbMHgxZmZdID0gODAxMDAwMDg1NWJmMjAyNSAwMDAwMDAwMDAwMDYwZTVh
+DQo+IChYRU4pIGRvbWFpbl9jcmFzaF9zeW5jIGNhbGxlZCBmcm9tIGVudHJ5LlM6IGZhdWx0
+IGF0IGZmZmY4MmQwNDAzNmU1YjAgeDg2XzY0L2VudHJ5LlMjZG9tYWluX2NyYXNoX3BhZ2Vf
+ZmF1bHRfNng4KzAvMHg0DQo+IChYRU4pIERvbWFpbiAwICh2Y3B1IzApIGNyYXNoZWQgb24g
+Y3B1IzExOg0KPiAoWEVOKSAtLS0tWyBYZW4tNC4xOS4yICB4ODZfNjQgIGRlYnVnPW4gIE5v
+dCB0YWludGVkIF0tLS0tDQo+IChYRU4pIENQVTogICAgMTENCj4gKFhFTikgUklQOiAgICBl
+MDMzOls8ZmZmZmZmZmY4MTAwMTRmZT5dDQo+IChYRU4pIFJGTEFHUzogMDAwMDAwMDAwMDAx
+MDIwNiAgIEVNOiAxICAgQ09OVEVYVDogcHYgZ3Vlc3QgKGQwdjApDQo+IChYRU4pIHJheDog
+ZmZmZmZmZmY4MWZiMTJkMCAgIHJieDogMDAwMDAwMDAwMDAwMDI5YSAgIHJjeDogMDAwMDAw
+MDAwMDAwMDAwYw0KPiAoWEVOKSByZHg6IDAwMDAwMDAwMDAwMDAyOWEgICByc2k6IGZmZmZm
+ZmZmODEwMDBiOTkgICByZGk6IGZmZmZjOTAwNDAwMDAwZjANCj4gKFhFTikgcmJwOiAwMDAw
+MDAwMDAwMDAwMTRkICAgcnNwOiBmZmZmYzkwMDQwMDAwMDAwICAgcjg6ICAwMDAwMDAwMDAw
+MDAwZjljDQo+IChYRU4pIHI5OiAgMDAwMDAwMDAwMDAwMDAwMCAgIHIxMDogMDAwMDAwMDAw
+MDAwMDAwMCAgIHIxMTogMDAwMDAwMDAwMDAwMDAwMA0KPiAoWEVOKSByMTI6IDAwMDAwMDAw
+MDAwMDAwMGMgICByMTM6IGZmZmZmZmZmODI3NzE1MzAgICByMTQ6IGZmZmZmZmZmODI3NzI0
+Y2MNCj4gKFhFTikgcjE1OiBmZmZmYzkwMDQwMDAwMGYwICAgY3IwOiAwMDAwMDAwMDgwMDUw
+MDMzICAgY3I0OiAwMDAwMDAwMDAwYjUyNmUwDQo+IChYRU4pIGNyMzogMDAwMDAwMDg2YWUy
+NDAwMCAgIGNyMjogZmZmZmM5MDAzZmZmZmZmOA0KPiAoWEVOKSBmc2I6IDAwMDAwMDAwMDAw
+MDAwMDAgICBnc2I6IGZmZmY4ODgxOWFjNTUwMDAgICBnc3M6IDAwMDAwMDAwMDAwMDAwMDAN
+Cj4gKFhFTikgZHM6IDAwMDAgICBlczogMDAwMCAgIGZzOiAwMDAwICAgZ3M6IDAwMDAgICBz
+czogZTAyYiAgIGNzOiBlMDMzDQo+IChYRU4pIEd1ZXN0IHN0YWNrIHRyYWNlIGZyb20gcnNw
+PWZmZmZjOTAwNDAwMDAwMDA6DQo+IChYRU4pICAgU3RhY2sgZW1wdHkuDQo+IChYRU4pIEhh
+cmR3YXJlIERvbTAgY3Jhc2hlZDogcmVib290aW5nIG1hY2hpbmUgaW4gNSBzZWNvbmRzLg0K
+PiAoWEVOKSBSZXNldHRpbmcgd2l0aCBBQ1BJIE1FTU9SWSBvciBJL08gUkVTRVRfUkVHLg0K
+PiANCj4gSSBzZWFyY2hlZCBtYWlsaW5nIGxpc3RzIGJ1dCBjb3VsZCBub3QgZmluZCBhIHJl
+cG9ydCBzaW1pbGFyIHRvIHdoYXQgSSBhbQ0KPiBzZWVpbmcgaGVyZS4NCj4gDQo+IEkgZG9u
+J3Qga25vdyB3aGF0IHRvIHRyeSBleGNlcHQgdG8gZ2l0IGJpc2VjdCwgYnV0IEkgaGF2ZSBu
+b3QgZG9uZSB0aGF0IHlldC4NCg0KVGhpcyBpcyBhIGtub3duIGlzc3VlLg0KDQpBIHBhdGNo
+IHNlcmllcyB0byBmaXggdGhhdCBoYXMgYmVlbiBwb3N0ZWQ6DQoNCmh0dHBzOi8vbG9yZS5r
+ZXJuZWwub3JnL2xrbWwvMjAyNTA2MDMxMTE0NDYuMjYwOTM4MS0xLXJwcHRAa2VybmVsLm9y
+Zy8NCg0KDQpKdWVyZ2VuDQo=
+--------------EOhNGRxKFthsm1FP655sH8HF
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Hardware: Intel i5-14500 Raptor Lake CPU, and ASRock B760M PG motherboard and 32 GB RAM.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Xen version: 4.19.2 (mockbuild@dynavirt.com) (gcc (GCC) 13.3.1 20240611 (Red Hat 13.3.1-2)) debug=n Sun Apr 13 15:24:29 PDT 2025
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Xen Command line: placeholder dom0_mem=2G,max:2G conring_size=32k com1=9600,8n1,0x40c0,16,1:0.0 console=com1
+--------------EOhNGRxKFthsm1FP655sH8HF--
 
-Linux version 6.15.1-1.el9.elrepo.x86_64 (mockbuild@5b7a5dab3b71429898b4f8474fab8fa0) (gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5), GNU ld version 2.35.2-63.el9) #1 SMP PREEMPT_DYNAMIC Wed Jun  4 16:42:58 EDT 2025
+--------------OQLtB7JT21dg2AQFGuQitRgX--
 
-Linux Kernel Command line: placeholder root=/dev/mapper/systems-rootalma ro crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=2ddc2e3b-8f7b-498b-a4e8-bb4d33a1e5a7 console=hvc0
+--------------0EbFx1IS9ivErK0O9PjmY4R5
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-The Linux 6.15.1 dom0 kernel causes Xen to crash and reboot, here are
-the last messages on the serial console (includes messages from both
-dom0 and Xen) before crash:
+-----BEGIN PGP SIGNATURE-----
 
-[    0.301573] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmhHswQFAwAAAAAACgkQsN6d1ii/Ey9l
+Zgf9FX20+U9R5uBooiAQ+iucn8O0Z/vkwLGCbGuN6gH1x+GA3c4zVtjUe0ZVj6TpS25HUQdeoV9t
+hR48V3ZTLGSrYE7+Dagad3LKcmF9usB60iq+Sn3fUbM5AHWGvDNdrB/SjeyxxArXg+APAQjDc+KY
+xlQduAQX5fTlakRYcULYttoWzeVYafabDNPsNdsFLzqEcISA6xfvOyIQ+8UHCTNmdOIXhYxrzB44
+Yvm6TN42tTQo+FmKsIT2u340Yl8w5rtJL5CYV5cno6NnBMDS1OVa5k5wmwA++DB1jkuDo/BLV1kp
+RoAbCL5PpTqbSlImCEdyAp28kAGJ5n8dBOBlHevUzw==
+=5Yjt
+-----END PGP SIGNATURE-----
 
-[    0.301577] Register File Data Sampling: Vulnerable: No microcode
-
-[    0.301581] ITS: Mitigation: Aligned branch/return thunks
-
-[    0.301594] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-
-[    0.301598] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-
-[    0.301602] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-
-[    0.301605] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-
-[    0.301609] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
-
-(XEN) Pagetable walk from ffffc9003ffffff8:
-(XEN)  L4[0x192] = 0000000855bee067 0000000000060e56
-(XEN)  L3[0x000] = 0000000855bed067 0000000000060e55
-(XEN)  L2[0x1ff] = 0000000855bf0067 0000000000060e58
-(XEN)  L1[0x1ff] = 8010000855bf2025 0000000000060e5a
-(XEN) domain_crash_sync called from entry.S: fault at ffff82d04036e5b0 x86_64/entry.S#domain_crash_page_fault_6x8+0/0x4
-(XEN) Domain 0 (vcpu#0) crashed on cpu#11:
-(XEN) ----[ Xen-4.19.2  x86_64  debug=n  Not tainted ]----
-(XEN) CPU:    11
-(XEN) RIP:    e033:[<ffffffff810014fe>]
-(XEN) RFLAGS: 0000000000010206   EM: 1   CONTEXT: pv guest (d0v0)
-(XEN) rax: ffffffff81fb12d0   rbx: 000000000000029a   rcx: 000000000000000c
-(XEN) rdx: 000000000000029a   rsi: ffffffff81000b99   rdi: ffffc900400000f0
-(XEN) rbp: 000000000000014d   rsp: ffffc90040000000   r8:  0000000000000f9c
-(XEN) r9:  0000000000000000   r10: 0000000000000000   r11: 0000000000000000
-(XEN) r12: 000000000000000c   r13: ffffffff82771530   r14: ffffffff827724cc
-(XEN) r15: ffffc900400000f0   cr0: 0000000080050033   cr4: 0000000000b526e0
-(XEN) cr3: 000000086ae24000   cr2: ffffc9003ffffff8
-(XEN) fsb: 0000000000000000   gsb: ffff88819ac55000   gss: 0000000000000000
-(XEN) ds: 0000   es: 0000   fs: 0000   gs: 0000   ss: e02b   cs: e033
-(XEN) Guest stack trace from rsp=ffffc90040000000:
-(XEN)   Stack empty.
-(XEN) Hardware Dom0 crashed: rebooting machine in 5 seconds.
-(XEN) Resetting with ACPI MEMORY or I/O RESET_REG.
-
-I searched mailing lists but could not find a report similar to what I am
-seeing here.
-
-I don't know what to try except to git bisect, but I have not done that yet.
-
-Chuck Zmudzinski
+--------------0EbFx1IS9ivErK0O9PjmY4R5--
