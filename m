@@ -1,115 +1,159 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D66C17E
-	for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 23:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F907227E89
+	for <regressions@lists.linux.dev>; Wed, 11 Jun 2025 08:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749599948; cv=none; b=gylEdlQp+gqWa+XFjENnEJhj+fGoSxGfIzG1IZhcsHn0rP1Efnabtli6Z7r/OSRxlm/d0MtFxqeXCh3enk8edZnVpJncyP5JGij/MNcJf+uCCPZMx+DchGpvnkhy7m4LH1rAjMvwzpAuLKvN12u1P4DkKDS31QuwVEtZsdsrBvQ=
+	t=1749632241; cv=none; b=uomieK9E/rJCud1XNUoCEi+Kf7NDFMq0nAzSNf2ieyW3PzGqiodNVSg4Yjqx3bjWixYRvJot1jGiH73QQR7CG5a4NGeYWI7/OcbFijQvVLNpD/tW2z1wkH70d0ADC1rhgL+i1n5s4MyNaexDmvlrWVO5Tr8xmqu4z/sO+vwSt/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749599948; c=relaxed/simple;
-	bh=z5WyjtQvpOVnWid1zD3GWAqwMxt9Ntt7L8mM93Ga3CA=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZbZ/DKtHqjshzX2EQC6Cq0AuS43rD/OpALvjznQEEBIwnSuPPaIYCZRPRS3xJXeKC/eAFs/hq97aFSX9WkzR97ILCYtYN2Vk++UfznXtagGByo7rvkBMhmowCpptzSmhQqsXtpi+hyzRbV+yYmp9sl3rX5+NyRxDkLFmoUi1h4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=le1DZVjt; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1749632241; c=relaxed/simple;
+	bh=BOiBGegJRIsJAwhdaPg0kbdMQr6Mw/a7D38ClN94RqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=clRkzV3vhJ5N0uiiAu50VtQtYa8eMSG6s9mxZmbS9/XebR5CwdfUAxjSaso9GfD8xK7IsoMnll8aJ1xILIqKQAyz/R9O/+Rhnp2YQ+LUPxOLg9cjfwVkQDYRCql+/f2xWnROlbwLn1lbjjVl4uEfiAAnR4/jC8ITwk0FUffAowM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NNLhn4E1; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="le1DZVjt"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70e3e0415a7so4254927b3.0
-        for <regressions@lists.linux.dev>; Tue, 10 Jun 2025 16:59:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NNLhn4E1"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-525b44b7720so2107255e0c.0
+        for <regressions@lists.linux.dev>; Wed, 11 Jun 2025 01:57:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1749599945; x=1750204745; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=olgWeMj7EndQ8OWo1QPDEey8Yr/ckL1+BPV3lAYM4Yw=;
-        b=le1DZVjtCfQsjmoQrJDpVpG97k6arpQTGPUD08oI4RjfHZPzpAuuXTEPlg0qgQA85X
-         rc2jbcqQgsXk7sbgN9/ATOug8NhGfWTcGHxb8NGEFPAPxR7ouiRVdL+hmpIQbA2QpFfL
-         25CPQ/3bZnEwh/elF0mjyKY/0Y2N+rFYtLCUoPMM7X5BUibH3lJCGo7pksd9SDriSFRH
-         uLgZjUDGl0wM2V4hyvgESGF3McbFw51G5G3pDdJHVj0nz8rT0tCiMhIHF0/KmhpZTa2l
-         O+PEkCoDA5tDi+vzzJ2v+NRbZDIJ/qbIZwkZ4TVkYYNwOXI+vLKj3HtR8J/nRYbq3ii9
-         XReg==
+        d=linaro.org; s=google; t=1749632238; x=1750237038; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DV9t5sYiI13RU+dfHyim24Ym/TfwiK76Thbl9i9KKag=;
+        b=NNLhn4E1fnuNDb4Gv81gB7NQsQkLh87duBYQ7duO+IoKOyzVaWI4tljRpLB+s405nn
+         j7as60hu1IqLTcIW/nyGtRFl4D7fUptj7jow0fPDvRKobFd2TJBts3FPLjAooPq6eXgM
+         1pITVGTBviLGwUkx/wN1EYVq1piadRVA3dHrcWCQf7lYaqysH/HkDsU9w9zSe/yBFl3j
+         rOtPGyq84LxOzYbMnd57uQYVycvW7uIRUt9gsE8RYVyz1P7WB4gdX0r2IGx1iNgPp9h9
+         hRv50FiihqSDdx3uBQ8bNXGx161VW0BrLoSzYKoGKEOn1EMV/el+tmL/aWwQOd1gDUP4
+         5xhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749599945; x=1750204745;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=olgWeMj7EndQ8OWo1QPDEey8Yr/ckL1+BPV3lAYM4Yw=;
-        b=oLBQ/6i511NTG/1r/eas6on8eDFMQxf5WgxWeOZ7SA/f4++nu+pdOc/zIwnLEntoLh
-         5iO0IZ6Gzg3gBOhN6cRzK6q2pA5Ak+OAG5irE8zphSHid++rbkdrEyOervfoDORc6Iuf
-         XvUDb5Vj5CoyHShaUXjXCqyk1odeDclPWvII1LnBP+hYcp8EVzwzcskVPmUmpFzwU+xY
-         xfNAoDAuyqfAkszINGF9cEMAN9GGG2KndvAv+PiymTOZF9TiYiNqYPlvFUTIgQt446Ad
-         ypS/s5i8BkVcGqnQowxcG+SaqWMiEIbdNNIkeEqTvl/CRiynNgSqVbFEZU9XM4CPSsBU
-         KOPA==
-X-Gm-Message-State: AOJu0YxSX7b1w5D63QKyOpVavcTQsQqgvyKMksIMmf4RX5jwTMny26FT
-	73WjUH/JIHxOb7Tu9ZViOfOfeHYLoOU5OMBKh0SC3ODIex0n2ozrgP1zuDYi4Zpg1nPdB5le+ri
-	B4PQ/xBxI94nL1L0Z+4ZwpI4EnlIPn9SOpKpaTIoMog==
-X-Gm-Gg: ASbGncseVqkU8R10DbB+/4zYNOduqjhW6kr7ZbUB6TkWWJ9iO+LrVLE9A/LBncM8Nem
-	6oEteauqmee0IHy7/wIMCsEjQRaT1L8B6MiwRaX4jre+IWCGU2nTFLaZ5UrIxccao048qces3EX
-	qPj1cEV56MKxBqdcwRlnVlFrzwwAXbCEk4Jxd+3NvWxg==
-X-Google-Smtp-Source: AGHT+IFC+ZF6xHBVgNkZAR1tmfwmZ8T4SDvI7HVrr9DyI/hIw7XgRgPG+fBNLIDnKL9UMyEEQfht82vmqycVNzKq400=
-X-Received: by 2002:a05:690c:b05:b0:70e:345:d58a with SMTP id
- 00721157ae682-711409e119emr21589087b3.2.1749599944402; Tue, 10 Jun 2025
- 16:59:04 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 10 Jun 2025 16:59:03 -0700
+        d=1e100.net; s=20230601; t=1749632238; x=1750237038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DV9t5sYiI13RU+dfHyim24Ym/TfwiK76Thbl9i9KKag=;
+        b=o15LlZLSVo+GeBHuTbObqgbxnw5bYUD1nFEThOlU4WzoqTnq10oZrZ2dNSaZtuCX0+
+         c3vFNiL5pp605TiNcpG9Be38aAHQvC/zQk95ZYenDMglngP+bxpFjqOZNdVFNJr0mfQo
+         5LngH1X1URvbqWThgFCbVRa+gfRRIV48pvjkxVfvsfezWNNtitR+EV6DFlc9d88IiSpu
+         3R4gQ5EMlnUECM0ZwSi6lhpa6uYx11Nb3vbpwFvTtowFoFc6eUdmLsJQTTdbWBYTNzah
+         F4F47C/OhdtytF/j1UiKZLbqKODqoNMKHyHR9W2rfhWXaUEEBWPWv+axwYj3lr4YpDCd
+         8vzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbeVRSXJJX0g1PGzBhdOX3DnUuDO4ZHR5Q+s12lTkUQtTeflEeGaCIBXvKJUhZZNWDXnrTR4kRJ0sHUg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwlxGwQYDxYfD4aWh1EgpLX6BXeN/FBkBhSI6oIu0BLqHEDZHyG
+	FQVxlvuPj3kuWcY1PrqNHdT2BuCNdOhReDqlZpkgeNKVOzY+GZ27bf7bZaT/DcfRheyxJV+FcJ8
+	qviqd1oIqPgJna63xefpo9yms2eP2qBETUoqq6n9tcg==
+X-Gm-Gg: ASbGncvoFDV2SpXx/CWtLRniGLd5JDSly1fyxugdRDOdo7BMZVhX80vPRGhpepH8UgC
+	P59YJg0e2etm1J6KwY8wg3eyhE8lhqra3+EOBKBL+f8vlMZhAxHZ7UCn3obR+VZtZ6C3FEJgosp
+	kc0yW9RvNWLeTGE7C/ziLE38wBGYhYD73CT8N14yNHfp3QX1luvVtDONFqvlEk+UPJtJt9gTT8r
+	OTz
+X-Google-Smtp-Source: AGHT+IFQXF+sKGFKqYzvIWVQbzE1S3LEQpj/qr+Mjs6PmUNCe9qyp66456X1HYoQ3EeWcUwMf1iYDwClQBMee+auP2M=
+X-Received: by 2002:a05:6102:2b8b:b0:4e5:a2bf:4fd6 with SMTP id
+ ada2fe7eead31-4e7bba95fc7mr1734093137.8.1749632238461; Wed, 11 Jun 2025
+ 01:57:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 10 Jun 2025 16:59:03 -0700
-X-Gm-Features: AX0GCFvzRopJjRwTwgwu3nVdZnYsgb5AJJ4AdTQxNioBXYtLlVQ8iXlpBCvPEd4
-Message-ID: <CACo-S-09221BBL3rdgNAr10oj_wo17eimVfs_Ry7SNQg03JcQw@mail.gmail.com>
-Subject: [REGRESSION] mainline/master: (build) stack frame size (2336) exceeds
- limit (2048) in 'curve25519_generi...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com, 
-	shreeya.patel@collabora.com, broonie@kernel.org
+References: <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
+ <15979303.uLZWGnKmhe@diego> <CADYN=9L+Gao0w_CThNd96-yYbZDMZnwY7RvagCOdzUC4rKc-Ug@mail.gmail.com>
+In-Reply-To: <CADYN=9L+Gao0w_CThNd96-yYbZDMZnwY7RvagCOdzUC4rKc-Ug@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 11 Jun 2025 14:27:06 +0530
+X-Gm-Features: AX0GCFuVYEyn4auVNPUyj-VnDVcIp7H9e0QdsmhpYhaxmLWCVhksJEW8y_9TvVE
+Message-ID: <CA+G9fYvk7kBqDqPSxndxG2CxxVxhNrf4Easp-aYrR=UeTS1=eQ@mail.gmail.com>
+Subject: Re: next-20250610: arm64 No rule to make target rockchip rk3399-rockpro64-screen.dtso
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, 10 Jun 2025 at 17:07, Anders Roxell <anders.roxell@linaro.org> wrot=
+e:
+>
+> On Tue, 10 Jun 2025 at 13:22, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+> >
+> > Hi Naresh,
+>
+> Hi Heiko,
+>
+> >
+> > Am Dienstag, 10. Juni 2025, 12:25:31 Mitteleurop=C3=A4ische Sommerzeit =
+schrieb Naresh Kamboju:
+> > > Regression while building arm64 with the Linux next-20250610
+>
+> [...]
+>
+> > > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqD=
+gmzjEl7VszYE9/build.log
+> > > * Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds=
+/2yJ4IOQa1XxMqDgmzjEl7VszYE9/
+> > > * Kernel config:
+> > > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqD=
+gmzjEl7VszYE9/config
+> >
+> > thanks a lot for this notification.
+> >
+> > I'm surprised that overlay build at all when I built it yesterday.
+> > But yeah, the dtbs_install target really broke with that change.
+> >
+> > I've amended the commit now [0]
+>
+> Thank you for the quick fix.
+> I applied your patch and built it, it worked fine for me.
+>
+> I built it like this:
+> tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> --kconfig defconfig dtbs
+>
+> Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-New build issue found on mainline/master:
+Thank you for providing the fix patch.
+I confirm that the reported build regression is no longer present in
+today=E2=80=99s Linux next-20250611 tag.
 
----
- stack frame size (2336) exceeds limit (2048) in 'curve25519_generic'
-[-Werror,-Wframe-larger-than] in lib/crypto/curve25519-hacl64.o
-(lib/crypto/curve25519-hacl64.c)
-[logspec:kbuild,kbuild.compiler.error]
----
+- Naresh
 
-- dashboard: https://d.kernelci.org/i/maestro:5256d3cef2bb7857d77cf7592fbc192694c82574
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  aef17cb3d3c43854002956f24c24ec8e1a0e3546
-
-
-Log excerpt:
-=====================================================
-lib/crypto/curve25519-hacl64.c:757:6: error: stack frame size (2336)
-exceeds limit (2048) in 'curve25519_generic'
-[-Werror,-Wframe-larger-than]
-  757 | void curve25519_generic(u8 mypublic[CURVE25519_KEY_SIZE],
-      |      ^
-1 error generated.
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+allmodconfig on (arm64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:6848a760dba9af5ad6290429
-
-
-#kernelci issue maestro:5256d3cef2bb7857d77cf7592fbc192694c82574
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+>
+>
+> Cheers,
+> Anders
+>
+> >, to change dtso to dtbo and ran the
+> > dtbs_install target sucessfully with that change.
+> >
+> > So on the next linux-next creation, this should hopefully be gone.
+> >
+> >
+> > Heiko
+> >
+> > [0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchi=
+p.git/commit/?h=3Dv6.17-armsoc/dts64&id=3De14491aaa6ff598bbe9d462e44c01ac65=
+754f445
+> >
+> >
+> >
+> > >
+> > > ## Steps to reproduce
+> > >  - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> > > --kconfig defconfig
+> > >
+> > > --
+> > > Linaro LKFT
+> > > https://lkft.linaro.org
+> > >
+> >
+> >
+> >
+> >
