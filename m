@@ -1,282 +1,213 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2064.outbound.protection.outlook.com [40.107.220.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C8728982A;
-	Mon, 16 Jun 2025 19:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750101305; cv=none; b=eAijkdkzt7x4IAblknOx6343ponK5BU46I+dI4MUAIujKHEzecJzSZ7/CxWQwjmCi+zWl5YuTAxapaPLvcPzBypg9VhSHVPfSnaHFBGCKosk7Ra4/Ue5k5jNbJbHEtXbXK87vt0DqNlgM5ZTzvjNnt72fJIs/YwJEBJU2iyRiLs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750101305; c=relaxed/simple;
-	bh=axNIAB/C6jkDTgjQBx60qehyaTss7JGdiBObM6fIxF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A6uTKJO1lZTRYS7gcougbNkdsjMUg07+RhSuzjRvIsO+7P0WkCoB3LYzfNZlr6ftLxuBx004u2l24hiA4pHZtkC8MY7bUCZ4peEwFGUQ3wo4R1DQdvqxLXMGz5buErTr75xVco/nAC2lqlIutshC2QDQq3pqjP+R1iJ8uMiln/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=gNrdsj1v; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F601E2602
+	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 19:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750102949; cv=fail; b=lC/qEIwOWVyOaduAjswwG22HiBcVJNP/F/s/UQJfj8vr1xhLZv9PzXi1Wuvhzk0Dxl2eMH0EayumNNy/aWzvLr/MgW8ip4I0U19UCfyKo2iMYxDXSyBzxf00SOhTzJW3xDUOU6AVkLqO7MgtUKLt8JsorUShec0y96a6UDGoSKI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750102949; c=relaxed/simple;
+	bh=0UEiDCcZ7SZZ1vyEZvPjY7ezFnOwaE8o8W00I1xAPso=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hSfZ/Vf1G+xF3fLzoAiNVucD07Qlzxiug1mUhxR7GQ1qC7cN7zN2l+oo/JAUeqoTGPHVBhGKOFa6dQv3wsQIjZiRHuR21DKxm7HzlyVH3wz2UaGnaoOSIBLhZ3sWpsxF5Tv9S0OORTv7MYJ3gdYZ424uZ8xN70iQ+ZVU51WRDy0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JT50t8yY; arc=fail smtp.client-ip=40.107.220.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="gNrdsj1v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1750101284; x=1750706084; i=christian@heusel.eu;
-	bh=vWAwD/gglL+XzNx4ZE+OLzKqaXpxiSmNcafe/8jSO5U=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=gNrdsj1vM18SOEOCvLVlS3cz20jmaMxun/l5cKoBNHXSYcAngdlf+Md1ShFACh28
-	 DSE7x3HnqeXgP1WxgnkLHWSWowHLLUonjxZOUcSB6rF80OsScPnaboSM4dAknpYQl
-	 3nCGmB3yTadGLHFDmPkF4lxE1jEW9iqlO+AIwLxejdVZv4GuzQTzjXBcYNN6AVqSG
-	 gIUEuqfNY0uHapkDXLIZP9KeYzR1cq9rsK2L0fR9BYYxjN/BK2LfodstCFQVlOy1T
-	 gwgmhe6FTrCo5v63jqXkuMDfK1V1k2CGW2LAa0BuDp57z98A6Fit7/heFyvOXPRUB
-	 ljxkH+xWhW13PRt4Gw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.187.66.155]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N8G6I-1unIRg0e9Y-00rsbO; Mon, 16 Jun 2025 21:14:44 +0200
-Date: Mon, 16 Jun 2025 21:14:39 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: clang-built-linux <llvm@lists.linux.dev>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>, 
-	Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, jackmanb@google.com
-Subject: Re: clang: selftests/mm gup_longterm error while loading shared
- libraries liburing.so.2 cannot open shared object file No such file or
- directory
-Message-ID: <7c101fe5-7c73-4916-a832-d656511eeab8@heusel.eu>
-References: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JT50t8yY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eBY7f34JBVOG9cAW4eviROXT+fUk46pNnupZyEobrRLe/SAZo4m7tix3DaU1O1Xfx/J6ivm9Hd2tsJtR34rhTJqayO+AbtCaK50/y4+Fqw9Fq81wRY9h4xxp7s7qGeWfzWXLWmnuUEtXnNFBv8SLDE/gUymUyEYd3QmR4+lJfohpen9iM5EcW6EN98JKhy7ClXYftTbXbGK2bzbXhpwCckvLtKd0RdLrFkE/IGDZdNWErA35ui48SGK9tTfY4AEiWgswqiVwg1nGxxV7h3lj3TnCPA/lEN4DmpFfInATPvYlIPIH6ZIrz6c9xl3Rf7k59MF6yzntJ+zzdLdoC8Pn0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lGBkF7xcb8K5NDjM28plqkfjmFG+bfPhPRWoql95XZM=;
+ b=cbcG5Z91avRro3iQzcXQJKXY+DtPgEZE9qpArAdXQrTGu2civAL2DbI0SrLfsESe0JWg8MvEUvhleD23nfc3GQRhetTG4hNA2pYzr9Afc5ZH+rUXyS7xIC+QCRvAdXQCl+IVugZDq9aqetRZ4nQTkHlVYa1MPE8Fs9TYa9wdGqgzFGwOP/ggeJgLLmNwI4KrV7KmqSuvfxFtNyfXulCbyBhVFPAgMIOjiMb3dtMVBhPWW49kttuUnGTQfxzKUCI9aR575QEP978CnQ0ZwCOpgA/XG4zAH9aZ0Y2bmZwgwGgSR6JZ6eruC+IREYSKUBRPG6K2ea1nEqpCPGb2AXiz9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lGBkF7xcb8K5NDjM28plqkfjmFG+bfPhPRWoql95XZM=;
+ b=JT50t8yYOATjP4RHF0qQIK+99SbfEtjYeJ6AZbgkjmUNIcz78XPZ7eKHGZNm+3ppXW92G3Zth6chGjiw/XNvobf2G5u2BQMyLKIA4SpGcf39l+Cu+5Awqo8p5fCT95BZ7p+fKPi0qWfQCh6FE7CDcefAUCOI3WBtT4k8s+SV38U=
+Received: from LV3PR12MB9265.namprd12.prod.outlook.com (2603:10b6:408:215::14)
+ by CH3PR12MB8402.namprd12.prod.outlook.com (2603:10b6:610:132::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Mon, 16 Jun
+ 2025 19:42:23 +0000
+Received: from LV3PR12MB9265.namprd12.prod.outlook.com
+ ([fe80::cf78:fbc:4475:b427]) by LV3PR12MB9265.namprd12.prod.outlook.com
+ ([fe80::cf78:fbc:4475:b427%3]) with mapi id 15.20.8835.027; Mon, 16 Jun 2025
+ 19:42:23 +0000
+From: "Kaplan, David" <David.Kaplan@amd.com>
+To: "jedrzej.jagielski@intel.com" <jedrzej.jagielski@intel.com>
+CC: "anthony.l.nguyen@intel.com" <anthony.l.nguyen@intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
+	"horms@kernel.org" <horms@kernel.org>, Jedrzej Jagielski
+	<jedrzej.jagielski@intel.com>, Mateusz Polchlopek
+	<mateusz.polchlopek@intel.com>, Bharath R <bharath.r@intel.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: [REGRESSION] ixgbe broken after devlink support patch
+Thread-Topic: [REGRESSION] ixgbe broken after devlink support patch
+Thread-Index: Adve9gZxdo+gRUk1T32Pw8JoiNgJPA==
+Date: Mon, 16 Jun 2025 19:42:23 +0000
+Message-ID:
+ <LV3PR12MB92658474624CCF60220157199470A@LV3PR12MB9265.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-16T19:33:39.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV3PR12MB9265:EE_|CH3PR12MB8402:EE_
+x-ms-office365-filtering-correlation-id: aa8aba91-b049-4d4a-65fb-08ddad0dea35
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?kvreuoBmN8P6vWqhxbpijWlqoA/UrMeYP+Pysa4Jndhc8ldxyeAVpbU/Cgf7?=
+ =?us-ascii?Q?B8gtelkN+JDVWJ3D5od7ZHYkqrKy5xE5yACbDqVScikvqsAioKq0L/WJ82eT?=
+ =?us-ascii?Q?aPEUVbrXX1OFIk+K9pWvOIEjSd3qMuWMEhv/e0IFbOKyVmlYEiGMQ6g7R3rD?=
+ =?us-ascii?Q?gemT7fTQ6mr7zDooXCgIQ/an5fHjs2QramJ4RaRvdx5VmKh3vPac8mkYHDWV?=
+ =?us-ascii?Q?z7Ndjwcw24BXWKudl37KjQnW1ie/ogHTj589P17QqWY1s9F6fM00MfXguxPI?=
+ =?us-ascii?Q?lLHceMiEfT5m/Pp8OjMswNawsPcPbL+ZA8iS/WU0IHG2IwWSzLc7sxrC/FIe?=
+ =?us-ascii?Q?0cQYSJvTMJu173hsNndrNZPjXyga+iCf3Ul0EOp7xWzzuqDv1FI962EPU5go?=
+ =?us-ascii?Q?bglDvUcMQvY6I8Vd/RUfdt2sqWYmQsq9+Z6OpqDeLHgGStteIHdRStia6Udt?=
+ =?us-ascii?Q?zQfOYU202rmxQIabOSLHumgnXarX1NbVHNB0rIJ8t2/dCw53NgmrhwkYL6JX?=
+ =?us-ascii?Q?li6kD2yRKLY/yID4rrwFOsSio9qoe8Ok+QtLvpi+M8FCGJNJUHIzcTe5F0pz?=
+ =?us-ascii?Q?pNh06x0DWURYPt42+5awTktI7+HoFtblt1MOEKe2PKeiTKuqjy8JW6HJ0SbW?=
+ =?us-ascii?Q?IgrQbzfEquT3Yi7o49I7rwUgRdU2FGf6967VAZVchf0qXBnr16S/YBH7/lTi?=
+ =?us-ascii?Q?rMtuYeCG7krDOU67brcL0d7m1iFxAwi3lgjHzDv5DHQ8buyDniQp3wXJeeed?=
+ =?us-ascii?Q?Lh1oYVQ7yODfuoHJiFI0lluWHOlrrYFcSsY/xbFPBJKHcxAcmq4JPZnZFygI?=
+ =?us-ascii?Q?PVX8+kj6Ngs7eG5KwZgDysx50XgnVT+TmqJ3UKhbY5tYza1bFxOPiQK3C1PA?=
+ =?us-ascii?Q?dfeuPHgcc23q4VSQC/7HnNIZnY7A5M6gy0I6lqLwkCsRTfxh1jlu/bS3M5dC?=
+ =?us-ascii?Q?Roh53xPQ84yEKsOqdyf+cdodAEV/agbhdnK1K+dyQQy+vozLx9BQJle67gOn?=
+ =?us-ascii?Q?D5qGqbhkBQSDeDVJeZum8xrQ4kiYpGd3DrheVt4lozLu0/DFXOnf50bTJbgv?=
+ =?us-ascii?Q?b9EoihtWbgMDDjwBF1VHTHtteNWvt1Akn88Fbs7V5TAYehGAgOWeDIJikr0h?=
+ =?us-ascii?Q?TPu7noYg50bUWUkhrmic+dqLDU1JEdnB3au7d7IngzdRLmj5A37G8xCAsUM8?=
+ =?us-ascii?Q?m5vha9a+kfC097uTGUenkY22FwxaNFa2cIinnBlCe4sdqBdKp0KxneQZrjwx?=
+ =?us-ascii?Q?uPJMDLVS3n5YkftV5aAfTJTHwT6t5XS+Qi0G7LapXvYQHp0EUtE+EYQlvklc?=
+ =?us-ascii?Q?+o6bqeaDrKc4llZYuw0eUeE+hiOVqq7nzNwVtfEnNj6uaEeEjM3zJVjgIi48?=
+ =?us-ascii?Q?5+ukr3Sxgz98umeyUFLqnylKvrCyKcgAHcMxAW7MRmJ/N6k2vrq2kALXlZoZ?=
+ =?us-ascii?Q?6TqFDGoCnzCzuN6o1JxBuq2gislsUFLM03v9ye3Gut/YeK02LJcSN+6SVYlv?=
+ =?us-ascii?Q?U3rVy/sHeAbrt34=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9265.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?UF5mQE2QpAFv//JZzIgtwCxEolPaAZVXcYxtf6ADJoSWJAM4cFpYR8xybkKP?=
+ =?us-ascii?Q?2/Kw5QAsdM8yYBnMmgBHD4yj+JrgO0r2ERtigjqqNHa2wk6uTfUV122s+xzM?=
+ =?us-ascii?Q?m62gDC2VZWsjDbwtr/A5sca3nqH0ICys7+6/pAsjjhR7kBzjy+Xw+RPJ58SQ?=
+ =?us-ascii?Q?PEV2xzxhzsPWlivdq5wU4wRsubcGLOdtXvyAyYkUMLBT8HVP9VuUIgWG/PUX?=
+ =?us-ascii?Q?CtfoFtf19ysYlW53L+ATKbadFkHbbtpydCB4z8Y4Vrkwv7jg/p3XfwPaRklb?=
+ =?us-ascii?Q?TZA3GdQxw9nW58B3GXU9WkqMuB/G5t+fQWyOw2tO1gJJnrOIzKa2Ivkueh+1?=
+ =?us-ascii?Q?WQIXCtwkUdEUIQHsgef+vorFvDRne7fRXGVVB84QmMwbGfxdfB/1esZXjDaA?=
+ =?us-ascii?Q?M+4aVRsruYQHYkLlGmRUVxVEe/+8jOAHVhTY+ai7VvKp6rcvfLFwEaR7tm/A?=
+ =?us-ascii?Q?RcpPW5YxF0NLS5uiezdhTvvW4G3GktzTFrY9C+qY4tfk+jrXXI/vKH/h7QxX?=
+ =?us-ascii?Q?9m1dXfY0WUQSCtoAMenT2CSZ2SSjqCLzHK5FqW6PaU4/NY8r524ST8VJqJiz?=
+ =?us-ascii?Q?WlGkuaKu4YyvYIlG3IrjptzjOZqnNj7dFhgK5mLoh6n36dPecOrlv9cZcSLF?=
+ =?us-ascii?Q?xHyb90YzExaPk/P1dJRo3OQcM3eExWUibF56YuZ7T9WM4mKW5VJwEQstXGlF?=
+ =?us-ascii?Q?kbM7B7QxehS0uTQq4J/p0sNCGqMPyDZowCjgBK86TGflGL/o40eFvJRxZ8C/?=
+ =?us-ascii?Q?dXnRkRuyDGdqaz54F1olgdZKuNjintlegawzbBeeebbxnL2vTunwU+wiiz2h?=
+ =?us-ascii?Q?qzYWjqgNX+1MlLcJjiRgL8ob6pjJQKRM1llW0esEbEPRM61aS3vERAeUonvq?=
+ =?us-ascii?Q?b6vd20Q0fVewKEYwjdXla4x77k4FKW9zXszmUKPWk7Qr2hpuyJnc5A1YPcHL?=
+ =?us-ascii?Q?tGUFswm5oPIireqNs2ln+YaUuD+PPpzXGCs4QeFhudA3dldFQp3YK5CO952F?=
+ =?us-ascii?Q?X1XMmq7udn6b2Fq9o9j2B+guJ00SYNCs1bfRTgtZMmwSoRCwS3dOJipIARyw?=
+ =?us-ascii?Q?m2aq/ivitdYzdGe05h4G3bTSKveVhj75wXQEyvgtTCb+V8M1MDxI4IXbmGZY?=
+ =?us-ascii?Q?nvV6j+cSiqLdmtsgjFG3vKiZlPU1ipuLgt77d05gygLvjnWtDceE51ritrJt?=
+ =?us-ascii?Q?7WqssWYoaxtwIP1RrNCW62VjZgQt2ULD5zDs5QC4DVo4focRFV1iTTdAwuEa?=
+ =?us-ascii?Q?Zpyg6BHCmXvdYUF0+F+/JDllIR6pvpwnwASopU2IyCzVQv8j8FwwQnde4d8p?=
+ =?us-ascii?Q?bLB/MrhBw4AqxL9En0yfnPSqQH3uDZTL1n9bBqz4sl+KBYnZrFVBwQ3VecIW?=
+ =?us-ascii?Q?d6DjqYpYD+hKagVQvaOK3osSIURyRLtOqNcj0YagCmgdAxcF7QsGVrcgL3K1?=
+ =?us-ascii?Q?zWQ8ehLF8rECaLYVXz6qa+swGCyxyMUaC4yBz/cgkoBsdep8iZ9mAGmi1gOa?=
+ =?us-ascii?Q?Sm55GG+7jvATC90C5/skc+Y1q19Sh834fLbPQMhciNliID5BJBkfzAipX82L?=
+ =?us-ascii?Q?f2qoaIKI4Z2C+ilikaw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2ifj2fqs4sl63qpb"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
-X-Provags-ID: V03:K1:pjn8XBlqfHHtOY72HbeSefm8Rf/7BdJhV7MoRC2aUUryDa1n66a
- ABaLBzLk0y3//12UpZsoLd2/LKAlG9KBi9+UfpGW1NB1E/3kYYr1okeWMICCXaPk10z25wk
- GmSIrqflP0XnNLS4DmSUQg3QxPN8t3E7zLo0OnvqUzvhV+I+6SkuGhs8lYECSwJnbPpzeab
- 45uKoJ8iPPQWFWScrd/Zg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:K3OpIx9iQzg=;Wt9aUNFJByL1PO+6K8hGauObDSu
- rawIjoGy//IPmIuxFC7Z0fXV0YD2o18eScC3xPTWdVqdnmYc/OxhfKMqGwhAOiQmpjcbKC14R
- AN76/448WPemSx8kBsdnNpkhL5H9t8tELEbTObEHIWpQp3QTTmyva6Z8qMM6nfNWkqcTKTVWr
- ZNtMeHjSjHjhRmEVg1NRjR1qUqajPVJ6JgK3EMP4N9OYwbdIF61BbzRVLp0dYFXudVGu4NnRs
- 6McJu9YbYjt9p9fnEoo1CLZdJAO7uYSPCbyO5n/F9RaWFw/i2hZeGLSaNTr9rTJXC2tHrFv0y
- xfdR2jrX90UCOTD0eQHpFVy1ww1DkQechPXSBnylfsamnDfagjxR/2HqpinCPZ+zQx2rOMGpb
- FuZLQG6X1jh45LKgA3O7/z3KMQ2aO5GkHloK0LglLLgRDiEP3YB7UydnS6KsRMYK99+xzlqRP
- y7ZPscyPP2KEcBl78g9a06VmAxi88Q+r6ZDqGGsa3H0hFIISg9XIJ0wDEnIv04FrdygOWBTcY
- pgfyDZ5YC1Yr0l9cC0Fuo6FNusGOhzlsZLSYV3pNOC2DTzdA2G4bb0GAgzyL+BF8eGNDwcymk
- 1QKCt1mZGdTN/LNR9lVFw93wc+QOrvPMWxVuRiLj4xsz+NZWJMcN1jrnYxeDBs7zQvKvgFHRa
- tLfqbnzN6eoJYzXb+QGOoy6OWKg0/STC2N9bIT8IY/iFFP3lNdUACaCzOI8KAgmi/Wt4EFSpZ
- /5Ur0+KW1CwxxkY/p2SEJyGIXTewshBoCY+wg+4/t5979eKb79YvAnvm6bbutqnQ+fI9Pj50+
- anRHkxUYZEFiWY6PUOBFnxJVA9GfT51+9sVzTYrUXqBf91YXzP/ekl3AsAAty3fZQ4pkPKZ+y
- 4cGD08ZgSupbzjY4A6LIc1sWl156FBCVBqEZi5GlcKZqfmAn4ZNjdEZEKHmtZHDMLsvs/e/Iy
- 2O++bbEY5eulLxDfo/tP60S5lk2hIdxChaEcdGPuF/7ZfOVreFGHqbCuvJXRkAxIC9eXV4X9s
- lHVFMP98HaG4xeRzqZ8ozsMGULNSwHGPqCwZ0VgF81CDg0MWklm0w18Lwkd/TqJP3b50ow7ZJ
- GUJaN3F0ayF9I2zU4k0IDiNT+PWJ49aMzSz82TnyZmlI5TmmVUEQpm3ordNRoUTMA9H1lFji1
- laxfB6cCgxqwGgEWayXfSWTJUmwndm/BV/8PHSqmZmuy4cT096LTwuGVzEE4W5RiqMDlyL4JL
- IRe/5368ThqCfpde3bWEOTNYlAOMknpHM6CPaowbMzMVfFBX4a/S9KwdqJy1sSlj2Dcb2KYGY
- MEgSzxCR8n84j9cSpSF6G4tgU+/XOfEbVeD3DSGeM9VQ22eV6oJvrwCDNfmIi2gyYMLgyhxxC
- VKNc+horAbr6Aj5pCpkfUXZaw3l8KagsrBCRkTUpWpO2wk2c7Zg5blFlZo
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9265.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa8aba91-b049-4d4a-65fb-08ddad0dea35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2025 19:42:23.1776
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3xpqoX5F4X55K4aCvT7VXPcaN9gzsZDfXQFNW6koqFhnSY+Q4lxTTApI8Q96s1u4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8402
 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
---2ifj2fqs4sl63qpb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: clang: selftests/mm gup_longterm error while loading shared
- libraries liburing.so.2 cannot open shared object file No such file or
- directory
-MIME-Version: 1.0
+Hi,
 
-On 25/06/16 11:02PM, Naresh Kamboju wrote:
-> The following test regressions noticed while running selftests/mm gup_lon=
-gterm
-> test cases on Dragonboard-845c, Dragonboard-410c, rock-pi-4, qemu-arm64 a=
-nd
-> qemu-x86_64 this build have required selftest/mm/configs included and too=
-lchain
-> is clang nightly.
->=20
-> Regressions found on Dragonboard-845c, Dragonboard-410c, rock-pi-4,
-> qemu-arm64 and qemu-x86_64
->   -  selftests mm gup_longterm fails
->=20
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
->=20
-> Test regression: selftests mm gup_longterm error while loading shared
-> libraries liburing.so.2 cannot open shared object file No such file or
-> directory
-> Test regression: selftests mm cow error while loading shared libraries
-> liburing.so.2 cannot open shared object file No such file or directory
+My "Ethernet controller: Intel Corporation Ethernet Controller 10G X550T (r=
+ev 01)" device stopped working on recent kernel builds (fails to show up in=
+ 'ifconfig' or to get an IP address).  I bisected the failure down to the f=
+ollowing commit:
 
-These do not really look like kernel regressions, rather like a bug in
-the userspace testing tool =F0=9F=A4=94 Could it be that the tests were not
-rebuilt for the new liburing or that the dependency is not installed in
-the test environment?
+commit a0285236ab93fdfdd1008afaa04561d142d6c276 (HEAD, refs/bisect/bad)
+Author: Jedrzej Jagielski <jedrzej.jagielski@intel.com>
+Date:   Thu Apr 10 14:59:56 2025 +0200
 
-> Test regression: selftests mm mlock-random-test exit=3D139
-> Test regression: selftests mm pagemap_ioctl exit=3D1
-> Test regression: selftests mm guard_regions file hole_punch
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
->=20
-> ## Test log
-> Linux version 6.15.0-next-20250606 (tuxmake@tuxmake) (Debian clang
-> version 21.0.0 (++20250602112323+c5a56f74fef7-1~exp1~20250602112342.1487),
-> Debian LLD 21.0.0) #1 SMP PREEMPT @1749190532
->=20
-> running ./gup_longterm
-> ----------------------
-> ./gup_longterm: error while loading shared libraries: liburing.so.2:
-> cannot open shared object file: No such file or directory
-> [FAIL]
->  not ok 14 gup_longterm # exit=3D127
->=20
-> ./cow: error while loading shared libraries: liburing.so.2: cannot
-> open shared object file: No such file or directory
-> [FAIL]
-> not ok 50 cow # exit=3D127
->=20
-> running ./mlock-random-test
-> ---------------------------
-> TAP version 13
-> 1..2
-> [  311.408456] traps: mlock-random-te[21661] general protection fault
-> ip:7f63210dbf0f sp:7ffdff6fca28 error:0 in
-> libc.so.6[adf0f,7f6321056000+165000]
-> [FAIL]
-> not ok 23 mlock-random-test # exit=3D139
->=20
-> running ./pagemap_ioctl
->=20
-> ...
-> ok 53 Huge page testing: only two middle pages dirty
-> ok 54 # SKIP Hugetlb shmem testing: all new pages must not be written (di=
-rty)
-> ok 55 # SKIP Hugetlb shmem testing: all pages must be written (dirty)
-> ok 56 # SKIP Hugetlb shmem testing: all pages dirty other than first
-> and the last one
-> ok 57 # SKIP Hugetlb shmem testing: PM_SCAN_WP_MATCHING | PM_SCAN_CHECK_W=
-PASYNC
-> ok 58 # SKIP Hugetlb shmem testing: only middle page dirty
-> ok 59 # SKIP Hugetlb shmem testing: only two middle pages dirty
-> ok 60 # SKIP Hugetlb mem testing: all new pages must not be written (dirt=
-y)
-> ok 61 # SKIP Hugetlb mem testing: all pages must be written (dirty)
-> ok 62 # SKIP Hugetlb mem testing: all pages dirty other than first and
-> the last one
-> ok 63 # SKIP Hugetlb mem testing: PM_SCAN_WP_MATCHING |
-> PM_SCAN_CHECK_WPASYNC[  241.731600] run_vmtests.sh (456): drop_caches:
-> 3
-> ok 64 # SKIP Hugetlb mem testing: only middle page dirty
-> ok 65 # SKIP Hugetlb mem testing: only two middle pages dirty
-> Bail out! uffd-test creation failed 12 Cannot allocate memory
-> 12 skipped test(s) detected. Consider enabling relevant config options
-> to improve coverage.
-> Planned tests !=3D run tests (115 !=3D 65)
-> Totals: pass:53 fail:0 xfail:0 xpass:0 skip:12 error:0
-> [FAIL]
-> # not ok 48 pagemap_ioctl # exit=3D1
->=20
-> running ./guard-regions
-> ...
-> RUN           guard_regions.file.hole_punch ...
-> guard-regions.c:1905:hole_punch:Expected madvise(&ptr[3 * page_size],
-> 4 * page_size, MADV_REMOVE) (-1) =3D=3D 0 (0)
-> hole_punch: Test terminated by assertion
->          FAIL  guard_regions.file.hole_punch
-> not ok 80 guard_regions.file.hole_punch
->=20
->=20
-> ## Source
-> * Kernel version: 6.16.0-rc2
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next=
-/linux-next.git
-> * Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
-> * Git describe: next-20250616
-> * Project details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
-> * Architectures: arm64, x86_64
-> * Test environments: Dragonboard-845c, Dragonboard-410c,  rock-pi-4,
-> qemu-arm64, qemu-x86_64 and x86
-> * Toolchains: clang nightly
-> * Kconfigs: selftest/mm/config+defconfig+
->=20
-> ## Test
-> * Test log: https://qa-reports.linaro.org/api/testruns/28766026/log_file/
-> * Test log 2: https://qa-reports.linaro.org/api/testruns/28743077/log_fil=
-e/
-> * Build details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250616/kself=
-test-mm/mm_run_vmtests_sh_gup_longterm/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0=
-viPHafKAe0u89drIv5fcwu2/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0viPHafKAe0u89d=
-rIv5fcwu2/config
->=20
->=20
-> ## Steps to reproduce
->   - tuxrun \
->    --runtime podman \
->    --device qemu-x86_64 \
->    --boot-args rw  \
->    --kernel https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wm=
-Vl0eHb9koWyQYC7myXjpX/bzImage
-> \
->    --rootfs https://storage.tuxboot.com/debian/20250605/trixie/amd64/root=
-fs.ext4.xz
-> \
->    --modules https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0w=
-mVl0eHb9koWyQYC7myXjpX/modules.tar.xz
-> /usr/ \
->    --parameters MODULES_PATH=3D/usr/ \
->    --parameters
-> SQUAD_URL=3Dhttps://qa-reports.linaro.org//api/submit/lkft/linux-next-mas=
-ter/next-20250616/env/
-> \
->    --parameters SKIPFILE=3Dskipfile-lkft.yaml \
->    --parameters
-> KSELFTEST=3Dhttps://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wm=
-Vl0eHb9koWyQYC7myXjpX/kselftest.tar.xz
-> \
->    --image docker.io/linaro/tuxrun-dispatcher:v1.2.2 \
->    --tests kselftest-mm \
->    --timeouts boot=3D15
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->=20
+    ixgbe: add initial devlink support
 
---2ifj2fqs4sl63qpb
-Content-Type: application/pgp-signature; name="signature.asc"
+    Add an initial support for devlink interface to ixgbe driver.
 
------BEGIN PGP SIGNATURE-----
+    Similarly to i40e driver the implementation doesn't enable
+    devlink to manage device-wide configuration. Devlink instance
+    is created for each physical function of PCIe device.
 
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhQbR4ACgkQwEfU8yi1
-JYXNhBAA4J8IfYyoS8afSaTdCPF1zLiPorF6mZuTwefTndUd//Zm6nOhBHsU4KsV
-YQDbZUMUV0IGXSZ0leI7mb4TVVg+y1Xn4p35uNKfykilbUpuXZz/y4toLJMuFG73
-abD+pXJQK9bGnZOeTocm45uwbeUnAq4VcwPaI2vAmaIXZkde1ca4G9gXonk077au
-rko4E9+W2gCHNKoNqsVrJ5BRTGrxAKkWKYMiO1TuIhodrNmLikk+vmyR68hVY4bl
-TcYp1BDhioojMtP/4KwgXY1e1jbUvGDdG/rrRiPYEWNiVNx33LsTu/o0Hj8SbxgA
-cFPJM5UiSPY0Yy9jVGgoTjcIU4Il1PsH4kscqvneaXpKEkGk/SP0l57xUmc87+S8
-MtA5IC72mwxVbOgtPEqBcbpT6Q7HvFlTVEZSwfFcJk6wW7cbMJjKFCEPm1lR1sqK
-Pcii1RpfY8iSAeXcDu7t0PjAR1/W+2SzfrVdXrgteaFR+MJDPjPxyocEjrS+59jT
-FIwOBTg836WK1382cwXplao891izLPG4A3oLZhPUNKucadmRHlODJlSvOnZGxOFJ
-+Xlkh01E2yHt/wUTmYG04gDEuA9GU9Ile50LBsntFQpH2wbYVtPM7GS3VBOyRhvE
-iXtUBSHyWH3bH5nmkc7mgmd5iVlQGWmPRYgzPYv+XDddgyiz0fo=
-=w13D
------END PGP SIGNATURE-----
+    Create separate directory for devlink related ixgbe files
+    and use naming scheme similar to the one used in the ice driver.
 
---2ifj2fqs4sl63qpb--
+    Add a stub for Documentation, to be extended by further patches.
+
+    Change struct ixgbe_adapter allocation to be done by devlink (Przemek),
+    as suggested by Jiri.
+
+    Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+    Co-developed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+    Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+    Tested-by: Bharath R <bharath.r@intel.com>
+    Signed-off-by: Jedrzej Jagielski <jedrzej.jagielski@intel.com>
+    Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+
+Normally, the device is given a name like enp194s0f0 and connects to the wi=
+red network.  Starting with this patch, it fails to do so.  I'm not familia=
+r with how to debug this particular device, so please let me know what othe=
+r information would be of assistance.
+
+lspci -vv information (on a working build):
+
+c2:00.0 Ethernet controller: Intel Corporation Ethernet Controller 10G X550=
+T (rev 01)
+        Subsystem: ASRock Incorporation Ethernet Controller 10G X550T
+        Physical Slot: 0-1
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-=
+ Stepping- SERR- FastB2B- DisINTx+
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <T=
+Abort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 77
+        IOMMU group: 12
+        Region 0: Memory at 18020800000 (64-bit, prefetchable) [size=3D4M]
+        Region 4: Memory at 18020c04000 (64-bit, prefetchable) [size=3D16K]
+        Expansion ROM at b6000000 [disabled] [size=3D512K]
+        Capabilities: <access denied>
+        Kernel driver in use: ixgbe
+        Kernel modules: ixgbe
+
+Thanks --David Kaplan
+
