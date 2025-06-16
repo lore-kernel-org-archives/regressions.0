@@ -1,207 +1,282 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A7E2868B3
-	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 17:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C8728982A;
+	Mon, 16 Jun 2025 19:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750095165; cv=none; b=RaA79KD3/dG0VXUbFRNceDl+wDIohLSR4n86ex60VMVjYFJhgRMgSOaWaUMCKQ+HDq9w385jcm56kwbl5jfT73sZ38nmFcU7IizRD6eT8+hf/SJBSUuYmOlpehf/sEvVicH3GlDF0LlW87H6Q4oLOXdsmw2LwCcEghvGhj26o/M=
+	t=1750101305; cv=none; b=eAijkdkzt7x4IAblknOx6343ponK5BU46I+dI4MUAIujKHEzecJzSZ7/CxWQwjmCi+zWl5YuTAxapaPLvcPzBypg9VhSHVPfSnaHFBGCKosk7Ra4/Ue5k5jNbJbHEtXbXK87vt0DqNlgM5ZTzvjNnt72fJIs/YwJEBJU2iyRiLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750095165; c=relaxed/simple;
-	bh=Q7Ges5P1PVYHwy+iNtt6pxwf3UmEQp/AJtPeqBac0pA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bxK7256QW7MQO0+Nr94p7sXKmLmOGrWd9ok81Euo6m/dAHsCuylBDgGnbpnGakifj0xM40ThqZHOTnRfkBKaDQwvkzWi8uOpescONJUT0DQugWT2U/GY+YvwP/FOH0Ipilbsm4HzNCzjfvyXNKI8NQK+Y04gtkobhpfqFLqDqBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fLuj/LXc; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750101305; c=relaxed/simple;
+	bh=axNIAB/C6jkDTgjQBx60qehyaTss7JGdiBObM6fIxF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A6uTKJO1lZTRYS7gcougbNkdsjMUg07+RhSuzjRvIsO+7P0WkCoB3LYzfNZlr6ftLxuBx004u2l24hiA4pHZtkC8MY7bUCZ4peEwFGUQ3wo4R1DQdvqxLXMGz5buErTr75xVco/nAC2lqlIutshC2QDQq3pqjP+R1iJ8uMiln/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=gNrdsj1v; arc=none smtp.client-ip=217.72.192.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLuj/LXc"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-53167fb5690so309811e0c.3
-        for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 10:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750095162; x=1750699962; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ynk8wNhlj9yzC6y9Kpo/JK+rurY2Maqm6+QVk7hFPII=;
-        b=fLuj/LXcTwnTZdEWM+0LEonq6ABQc38x6f+pTqP5bd8cD6o2qThYME2iROwClzEmwW
-         opRYSq/5q5QVmbfOQi2r0lWAL+4TSyqkuGJAQOkJ1uuJD+BZ1b7uR/FoFkQLiVfQuC5/
-         Mh9qRCU8JYfmm4E+ZfBJO88qcm5vqVAi9mhgOxVMzh7g//cniGshbFGhsdUXXC27Qrkb
-         XWZZw339X3wSNJHyVLlZsxW3GXr7Tj9it7sWbVsJUqgpiibJVBLvr+p68f52bcJ5mOgF
-         zTtA9c1a5YCrUTqQ+PgxWb97ibbJRfIYDzSNQzzJy+tuLRUnUq+FCk80qYVYpWnJ1d96
-         JGEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750095162; x=1750699962;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ynk8wNhlj9yzC6y9Kpo/JK+rurY2Maqm6+QVk7hFPII=;
-        b=Q4I+DyogmcX4oAE5XKpDO82QgKwoRorQ5/4wUM2hKFpLowh5bPowM07gKhRgmNla4U
-         eZ+R1HsoPSMvCl/LDvZU0WzClE7g6ASbJRb7KxJYKfFre9OHpJjXRaZkRfN0SIBHuGkk
-         o/bKVM9cOtz9zqTHHGW7QZhmh2eY0nDAwQK4+o/sNFdCrrJrDdoFA4cde9Y4sEMilW4W
-         GclIQNAc0X8KX3GquVCUPzNLfDLPtJ/4OKxVGkKsjzEXJtfqbU6Um3ONj1CPgC3FhWWK
-         uRakHdBob87g3nzTesyyc4UXVEstjGzFPHJfSc60XaD7D0HGXqjzLhGv94swGGaxq3yv
-         K6Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVri8AZVqn0oQ3ilcbq97eAOdp3mrDKcjbXV5kLtO+b9bO9n/L/MdR8oRoLLho/h6e8qFgMllgRfrzDXQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNzA/U1B0YxiBoxfUIVQgtj/O6dc5CLBbYpiAbho1LIHmjabKJ
-	FXyKZnK9vnZ7WG8opwrhAkAb+NAGeeTe8oa8reKZHPbBB++Pzs/N9TE843emmNoSYCyjSUHiNO7
-	efpGbHdPD1H/GNnRuGBXvQlx2INuqkNnkTdk94qbFhA==
-X-Gm-Gg: ASbGncvW8MVKsybNUOuvOaC0D7W6ixsgzUJFE7xw31/Pp/OiYJaxCEz3fXOoPSBXFVP
-	EJJIvPHgGrPCO5/ITQoj7OlGnfmCkHJ+sYoO5GmhRdt45EOcGTXnFPUKKKHt4NhrXkb0EHlMQQF
-	MLY9oebW5AeEI3hAGSn9I3Lx+95QT9fHuU1rB60lQ3JaMiCmH4851PH3DEjijY+IFX8QQNHbZ3a
-	Q9Q
-X-Google-Smtp-Source: AGHT+IHtQaJV3ItFaoD7sYxOhigOsQpCwUUKXe1/pzTGG14U4Q2oyXyV0Gt4uPDyhvzpx97Ct8N1h2Gb1D7zC0JZ1x8=
-X-Received: by 2002:a05:6122:30a8:b0:531:2d3b:44d3 with SMTP id
- 71dfb90a1353d-53148f33d17mr6217406e0c.0.1750095162234; Mon, 16 Jun 2025
- 10:32:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="gNrdsj1v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1750101284; x=1750706084; i=christian@heusel.eu;
+	bh=vWAwD/gglL+XzNx4ZE+OLzKqaXpxiSmNcafe/8jSO5U=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=gNrdsj1vM18SOEOCvLVlS3cz20jmaMxun/l5cKoBNHXSYcAngdlf+Md1ShFACh28
+	 DSE7x3HnqeXgP1WxgnkLHWSWowHLLUonjxZOUcSB6rF80OsScPnaboSM4dAknpYQl
+	 3nCGmB3yTadGLHFDmPkF4lxE1jEW9iqlO+AIwLxejdVZv4GuzQTzjXBcYNN6AVqSG
+	 gIUEuqfNY0uHapkDXLIZP9KeYzR1cq9rsK2L0fR9BYYxjN/BK2LfodstCFQVlOy1T
+	 gwgmhe6FTrCo5v63jqXkuMDfK1V1k2CGW2LAa0BuDp57z98A6Fit7/heFyvOXPRUB
+	 ljxkH+xWhW13PRt4Gw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([80.187.66.155]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N8G6I-1unIRg0e9Y-00rsbO; Mon, 16 Jun 2025 21:14:44 +0200
+Date: Mon, 16 Jun 2025 21:14:39 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: clang-built-linux <llvm@lists.linux.dev>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>, 
+	Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, jackmanb@google.com
+Subject: Re: clang: selftests/mm gup_longterm error while loading shared
+ libraries liburing.so.2 cannot open shared object file No such file or
+ directory
+Message-ID: <7c101fe5-7c73-4916-a832-d656511eeab8@heusel.eu>
+References: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 16 Jun 2025 23:02:28 +0530
-X-Gm-Features: AX0GCFvvQJbkAKVmZhMTmTp-xwc52yagBdapT86oaeKvv4z6vLbcUy5yZzQCsI4
-Message-ID: <CA+G9fYsqRYU31QyuXUxbcFT7586wyhSM_DFcdWeFJH=vwPcWJg@mail.gmail.com>
-Subject: clang: selftests mm pkey_sighandler_tests.c warning duplicate
- 'inline' declaration specifier [-Wduplicate-decl-specifier]
-To: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	open list <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, lorenzo.stoakes@oracle.com, 
-	Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>, Keith Lucas <keith.lucas@oracle.com>, 
-	aruna.ramakrishna@oracle.com, kevin.brodsky@arm.com, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-
-The following build warnings were noticed while building selftests/mm
-with clang nightly toolchain for arm64 and x86_64 architectures.
-
-Regressions found on arm64 and x86_64
-  -  Build/clang-nightly-lkftconfig-kselftest
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: selftests mm pkey_sighandler_tests.c warning
-duplicate 'inline' declaration specifier [-Wduplicate-decl-specifier]
-
-Build regression: selftests mm mremap_test.c warning pointer
-comparison always evaluates to false [-Wtautological-compare]
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-make[4]: Entering directory '/builds/linux/tools/testing/selftests/mm'
-/bin/sh ./check_config.sh clang --target=aarch64-linux-gnu
--fintegrated-as -Werror=unknown-warning-option
--Werror=ignored-optimization-argument -Werror=option-ignored
--Werror=unused-command-line-argument --target=aarch64-linux-gnu
--fintegrated-as
-  CC       cow
-  CC       compaction_test
-  CC       gup_longterm
-  CC       gup_test
-  CC       hmm-tests
-  CC       hugetlb-madvise
-  CC       hugetlb-read-hwpoison
-  CC       hugetlb-soft-offline
-  CC       hugepage-mmap
-  CC       hugepage-mremap
-  CC       hugepage-shm
-  CC       hugepage-vmemmap
-  CC       khugepaged
-  CC       madv_populate
-  CC       map_fixed_noreplace
-  CC       map_hugetlb
-  CC       map_populate
-  CC       memfd_secret
-  CC       migration
-  CC       mkdirty
-  CC       mlock-random-test
-  CC       mlock2-tests
-  CC       mrelease_test
-  CC       mremap_dontunmap
-  CC       mremap_test
-mremap_test.c:425:31: warning: pointer comparison always evaluates to
-false [-Wtautological-compare]
-  425 |                 if (addr + c.dest_alignment < addr) {
-      |                                             ^
-1 warning generated.
-  CC       mseal_test
-  CC       on-fault-limit
-  CC       pagemap_ioctl
-  CC       pfnmap
-  CC       thuge-gen
-  CC       transhuge-stress
-  CC       uffd-stress
-  CC       uffd-unit-tests
-  CC       uffd-wp-mremap
-  CC       split_huge_page_test
-  CC       ksm_tests
-  CC       ksm_functional_tests
-  CC       mdwe_test
-  CC       hugetlb_fault_after_madv
-  CC       hugetlb_madv_vs_map
-  CC       hugetlb_dio
-  CC       droppable
-  CC       guard-regions
-  CC       merge
-  CC       protection_keys
-  CC       pkey_sighandler_tests
-pkey_sighandler_tests.c:44:15: warning: duplicate 'inline' declaration
-specifier [-Wduplicate-decl-specifier]
-   44 | static inline __always_inline
-      |               ^
-/usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/include/sys/cdefs.h:424:26:
-note: expanded from macro '__always_inline'
-  424 | # define __always_inline __inline __attribute__ ((__always_inline__))
-      |                          ^
-1 warning generated.
-  CC       va_high_addr_switch
-  CC       virtual_address_range
-  CC       write_to_hugetlbfs
-
-Warning: missing Module.symvers, please have the kernel built first.
-page_frag test will be skipped.
-
-make[4]: Leaving directory '/builds/linux/tools/testing/selftests/mm'
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2ifj2fqs4sl63qpb"
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
+X-Provags-ID: V03:K1:pjn8XBlqfHHtOY72HbeSefm8Rf/7BdJhV7MoRC2aUUryDa1n66a
+ ABaLBzLk0y3//12UpZsoLd2/LKAlG9KBi9+UfpGW1NB1E/3kYYr1okeWMICCXaPk10z25wk
+ GmSIrqflP0XnNLS4DmSUQg3QxPN8t3E7zLo0OnvqUzvhV+I+6SkuGhs8lYECSwJnbPpzeab
+ 45uKoJ8iPPQWFWScrd/Zg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:K3OpIx9iQzg=;Wt9aUNFJByL1PO+6K8hGauObDSu
+ rawIjoGy//IPmIuxFC7Z0fXV0YD2o18eScC3xPTWdVqdnmYc/OxhfKMqGwhAOiQmpjcbKC14R
+ AN76/448WPemSx8kBsdnNpkhL5H9t8tELEbTObEHIWpQp3QTTmyva6Z8qMM6nfNWkqcTKTVWr
+ ZNtMeHjSjHjhRmEVg1NRjR1qUqajPVJ6JgK3EMP4N9OYwbdIF61BbzRVLp0dYFXudVGu4NnRs
+ 6McJu9YbYjt9p9fnEoo1CLZdJAO7uYSPCbyO5n/F9RaWFw/i2hZeGLSaNTr9rTJXC2tHrFv0y
+ xfdR2jrX90UCOTD0eQHpFVy1ww1DkQechPXSBnylfsamnDfagjxR/2HqpinCPZ+zQx2rOMGpb
+ FuZLQG6X1jh45LKgA3O7/z3KMQ2aO5GkHloK0LglLLgRDiEP3YB7UydnS6KsRMYK99+xzlqRP
+ y7ZPscyPP2KEcBl78g9a06VmAxi88Q+r6ZDqGGsa3H0hFIISg9XIJ0wDEnIv04FrdygOWBTcY
+ pgfyDZ5YC1Yr0l9cC0Fuo6FNusGOhzlsZLSYV3pNOC2DTzdA2G4bb0GAgzyL+BF8eGNDwcymk
+ 1QKCt1mZGdTN/LNR9lVFw93wc+QOrvPMWxVuRiLj4xsz+NZWJMcN1jrnYxeDBs7zQvKvgFHRa
+ tLfqbnzN6eoJYzXb+QGOoy6OWKg0/STC2N9bIT8IY/iFFP3lNdUACaCzOI8KAgmi/Wt4EFSpZ
+ /5Ur0+KW1CwxxkY/p2SEJyGIXTewshBoCY+wg+4/t5979eKb79YvAnvm6bbutqnQ+fI9Pj50+
+ anRHkxUYZEFiWY6PUOBFnxJVA9GfT51+9sVzTYrUXqBf91YXzP/ekl3AsAAty3fZQ4pkPKZ+y
+ 4cGD08ZgSupbzjY4A6LIc1sWl156FBCVBqEZi5GlcKZqfmAn4ZNjdEZEKHmtZHDMLsvs/e/Iy
+ 2O++bbEY5eulLxDfo/tP60S5lk2hIdxChaEcdGPuF/7ZfOVreFGHqbCuvJXRkAxIC9eXV4X9s
+ lHVFMP98HaG4xeRzqZ8ozsMGULNSwHGPqCwZ0VgF81CDg0MWklm0w18Lwkd/TqJP3b50ow7ZJ
+ GUJaN3F0ayF9I2zU4k0IDiNT+PWJ49aMzSz82TnyZmlI5TmmVUEQpm3ordNRoUTMA9H1lFji1
+ laxfB6cCgxqwGgEWayXfSWTJUmwndm/BV/8PHSqmZmuy4cT096LTwuGVzEE4W5RiqMDlyL4JL
+ IRe/5368ThqCfpde3bWEOTNYlAOMknpHM6CPaowbMzMVfFBX4a/S9KwdqJy1sSlj2Dcb2KYGY
+ MEgSzxCR8n84j9cSpSF6G4tgU+/XOfEbVeD3DSGeM9VQ22eV6oJvrwCDNfmIi2gyYMLgyhxxC
+ VKNc+horAbr6Aj5pCpkfUXZaw3l8KagsrBCRkTUpWpO2wk2c7Zg5blFlZo
 
 
-## Source
-* Kernel version: 6.16.0-rc2
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
-* Git describe: next-20250616
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
-* Architectures: arm64, x86_64
-* Toolchains: clang nightly
-* Kconfigs: selftest/mm/config+defconfig+
+--2ifj2fqs4sl63qpb
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: clang: selftests/mm gup_longterm error while loading shared
+ libraries liburing.so.2 cannot open shared object file No such file or
+ directory
+MIME-Version: 1.0
 
-## Build arm64
-* Build log: https://qa-reports.linaro.org/api/testruns/28765515/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250616/log-parser-build-clang/clang-compiler-pkey_sighandler_tests_c-warning-duplicate-inline-declaration-specifier/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0viPHafKAe0u89drIv5fcwu2/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0viPHafKAe0u89drIv5fcwu2/config
+On 25/06/16 11:02PM, Naresh Kamboju wrote:
+> The following test regressions noticed while running selftests/mm gup_lon=
+gterm
+> test cases on Dragonboard-845c, Dragonboard-410c, rock-pi-4, qemu-arm64 a=
+nd
+> qemu-x86_64 this build have required selftest/mm/configs included and too=
+lchain
+> is clang nightly.
+>=20
+> Regressions found on Dragonboard-845c, Dragonboard-410c, rock-pi-4,
+> qemu-arm64 and qemu-x86_64
+>   -  selftests mm gup_longterm fails
+>=20
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+>=20
+> Test regression: selftests mm gup_longterm error while loading shared
+> libraries liburing.so.2 cannot open shared object file No such file or
+> directory
+> Test regression: selftests mm cow error while loading shared libraries
+> liburing.so.2 cannot open shared object file No such file or directory
 
+These do not really look like kernel regressions, rather like a bug in
+the userspace testing tool =F0=9F=A4=94 Could it be that the tests were not
+rebuilt for the new liburing or that the dependency is not installed in
+the test environment?
 
-## Steps to reproduce on arm64
- - tuxmake --runtime podman --target-arch arm64 --toolchain clang-20  \
-   --kconfig defconfig  \
-   --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/netdev.config
-\
-   --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/systemd.config
-\
-   --kconfig-add CONFIG_SYN_COOKIES=y   \
-   --kconfig-add CONFIG_SCHEDSTATS=y LLVM=1 LLVM_IAS=1 debugkernel
-dtbs dtbs-legacy headers kernel kselftest modules
+> Test regression: selftests mm mlock-random-test exit=3D139
+> Test regression: selftests mm pagemap_ioctl exit=3D1
+> Test regression: selftests mm guard_regions file hole_punch
+>=20
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>=20
+>=20
+> ## Test log
+> Linux version 6.15.0-next-20250606 (tuxmake@tuxmake) (Debian clang
+> version 21.0.0 (++20250602112323+c5a56f74fef7-1~exp1~20250602112342.1487),
+> Debian LLD 21.0.0) #1 SMP PREEMPT @1749190532
+>=20
+> running ./gup_longterm
+> ----------------------
+> ./gup_longterm: error while loading shared libraries: liburing.so.2:
+> cannot open shared object file: No such file or directory
+> [FAIL]
+>  not ok 14 gup_longterm # exit=3D127
+>=20
+> ./cow: error while loading shared libraries: liburing.so.2: cannot
+> open shared object file: No such file or directory
+> [FAIL]
+> not ok 50 cow # exit=3D127
+>=20
+> running ./mlock-random-test
+> ---------------------------
+> TAP version 13
+> 1..2
+> [  311.408456] traps: mlock-random-te[21661] general protection fault
+> ip:7f63210dbf0f sp:7ffdff6fca28 error:0 in
+> libc.so.6[adf0f,7f6321056000+165000]
+> [FAIL]
+> not ok 23 mlock-random-test # exit=3D139
+>=20
+> running ./pagemap_ioctl
+>=20
+> ...
+> ok 53 Huge page testing: only two middle pages dirty
+> ok 54 # SKIP Hugetlb shmem testing: all new pages must not be written (di=
+rty)
+> ok 55 # SKIP Hugetlb shmem testing: all pages must be written (dirty)
+> ok 56 # SKIP Hugetlb shmem testing: all pages dirty other than first
+> and the last one
+> ok 57 # SKIP Hugetlb shmem testing: PM_SCAN_WP_MATCHING | PM_SCAN_CHECK_W=
+PASYNC
+> ok 58 # SKIP Hugetlb shmem testing: only middle page dirty
+> ok 59 # SKIP Hugetlb shmem testing: only two middle pages dirty
+> ok 60 # SKIP Hugetlb mem testing: all new pages must not be written (dirt=
+y)
+> ok 61 # SKIP Hugetlb mem testing: all pages must be written (dirty)
+> ok 62 # SKIP Hugetlb mem testing: all pages dirty other than first and
+> the last one
+> ok 63 # SKIP Hugetlb mem testing: PM_SCAN_WP_MATCHING |
+> PM_SCAN_CHECK_WPASYNC[  241.731600] run_vmtests.sh (456): drop_caches:
+> 3
+> ok 64 # SKIP Hugetlb mem testing: only middle page dirty
+> ok 65 # SKIP Hugetlb mem testing: only two middle pages dirty
+> Bail out! uffd-test creation failed 12 Cannot allocate memory
+> 12 skipped test(s) detected. Consider enabling relevant config options
+> to improve coverage.
+> Planned tests !=3D run tests (115 !=3D 65)
+> Totals: pass:53 fail:0 xfail:0 xpass:0 skip:12 error:0
+> [FAIL]
+> # not ok 48 pagemap_ioctl # exit=3D1
+>=20
+> running ./guard-regions
+> ...
+> RUN           guard_regions.file.hole_punch ...
+> guard-regions.c:1905:hole_punch:Expected madvise(&ptr[3 * page_size],
+> 4 * page_size, MADV_REMOVE) (-1) =3D=3D 0 (0)
+> hole_punch: Test terminated by assertion
+>          FAIL  guard_regions.file.hole_punch
+> not ok 80 guard_regions.file.hole_punch
+>=20
+>=20
+> ## Source
+> * Kernel version: 6.16.0-rc2
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next=
+/linux-next.git
+> * Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
+> * Git describe: next-20250616
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
+> * Architectures: arm64, x86_64
+> * Test environments: Dragonboard-845c, Dragonboard-410c,  rock-pi-4,
+> qemu-arm64, qemu-x86_64 and x86
+> * Toolchains: clang nightly
+> * Kconfigs: selftest/mm/config+defconfig+
+>=20
+> ## Test
+> * Test log: https://qa-reports.linaro.org/api/testruns/28766026/log_file/
+> * Test log 2: https://qa-reports.linaro.org/api/testruns/28743077/log_fil=
+e/
+> * Build details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20250616/kself=
+test-mm/mm_run_vmtests_sh_gup_longterm/
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0=
+viPHafKAe0u89drIv5fcwu2/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0viPHafKAe0u89d=
+rIv5fcwu2/config
+>=20
+>=20
+> ## Steps to reproduce
+>   - tuxrun \
+>    --runtime podman \
+>    --device qemu-x86_64 \
+>    --boot-args rw  \
+>    --kernel https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wm=
+Vl0eHb9koWyQYC7myXjpX/bzImage
+> \
+>    --rootfs https://storage.tuxboot.com/debian/20250605/trixie/amd64/root=
+fs.ext4.xz
+> \
+>    --modules https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0w=
+mVl0eHb9koWyQYC7myXjpX/modules.tar.xz
+> /usr/ \
+>    --parameters MODULES_PATH=3D/usr/ \
+>    --parameters
+> SQUAD_URL=3Dhttps://qa-reports.linaro.org//api/submit/lkft/linux-next-mas=
+ter/next-20250616/env/
+> \
+>    --parameters SKIPFILE=3Dskipfile-lkft.yaml \
+>    --parameters
+> KSELFTEST=3Dhttps://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wm=
+Vl0eHb9koWyQYC7myXjpX/kselftest.tar.xz
+> \
+>    --image docker.io/linaro/tuxrun-dispatcher:v1.2.2 \
+>    --tests kselftest-mm \
+>    --timeouts boot=3D15
+>=20
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+>=20
 
---
-Linaro LKFT
-https://lkft.linaro.org
+--2ifj2fqs4sl63qpb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhQbR4ACgkQwEfU8yi1
+JYXNhBAA4J8IfYyoS8afSaTdCPF1zLiPorF6mZuTwefTndUd//Zm6nOhBHsU4KsV
+YQDbZUMUV0IGXSZ0leI7mb4TVVg+y1Xn4p35uNKfykilbUpuXZz/y4toLJMuFG73
+abD+pXJQK9bGnZOeTocm45uwbeUnAq4VcwPaI2vAmaIXZkde1ca4G9gXonk077au
+rko4E9+W2gCHNKoNqsVrJ5BRTGrxAKkWKYMiO1TuIhodrNmLikk+vmyR68hVY4bl
+TcYp1BDhioojMtP/4KwgXY1e1jbUvGDdG/rrRiPYEWNiVNx33LsTu/o0Hj8SbxgA
+cFPJM5UiSPY0Yy9jVGgoTjcIU4Il1PsH4kscqvneaXpKEkGk/SP0l57xUmc87+S8
+MtA5IC72mwxVbOgtPEqBcbpT6Q7HvFlTVEZSwfFcJk6wW7cbMJjKFCEPm1lR1sqK
+Pcii1RpfY8iSAeXcDu7t0PjAR1/W+2SzfrVdXrgteaFR+MJDPjPxyocEjrS+59jT
+FIwOBTg836WK1382cwXplao891izLPG4A3oLZhPUNKucadmRHlODJlSvOnZGxOFJ
++Xlkh01E2yHt/wUTmYG04gDEuA9GU9Ile50LBsntFQpH2wbYVtPM7GS3VBOyRhvE
+iXtUBSHyWH3bH5nmkc7mgmd5iVlQGWmPRYgzPYv+XDddgyiz0fo=
+=w13D
+-----END PGP SIGNATURE-----
+
+--2ifj2fqs4sl63qpb--
