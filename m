@@ -1,177 +1,153 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122C82BF01D
-	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 13:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8195F2877EB
+	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 13:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750080615; cv=none; b=RXdFrdxjIBMn3JzXEO2Q8omd7aA5TbI0chYfciLT9wrR/x5g896GWh2om2A235jW1yS0FqOIzAuAZDDZcK5DgRAL+K8Y42oSQXAsasbPZpcvThcmmVq2lP3j191M8ESv8Ko/jlfXd7JVd6/nx4gIRhAuthOl4LsuIXjnPYTfPhI=
+	t=1750080984; cv=none; b=obBb1nLmLwJOC0HdJfB929rKXTCZtRLyE0aFGYmctTEEpxC7uGMJbFnsZx9L2mWKEBSPI3fckeeAJ1+MRjx12jwUHFj+qx678jwAedVKU5/sQKwdLmHe+tPCL4a2RWRTSz1187FYwoJgGkEivmDNppCh4yZH9kypeRBV3WoOanE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750080615; c=relaxed/simple;
-	bh=59qFySa7X+/ac5Ydc1pV7JddQfv8+DTKdIh521qRg7s=;
+	s=arc-20240116; t=1750080984; c=relaxed/simple;
+	bh=/+idoE/lxLeCl2JtJe6gPh2aQ6s2yMmO2sp39/Hq4LQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9A/vHOmq9MHX6SMLD5IFsFjgArYcr668PtL2AtduLxAZIY9PlkZph3xeB+rl1PTJlw/0j0dBLhHGEVYQ/N6w7GdQBiFfudUmxld7CgQiKoyh2BMuMBiu8gTZpryWdYq9uLxxxWmwX6rxyNAbNUDQove9NCatbC8jx/0OMN6n5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsGet4Ze; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=X6KHiwTEL+evxr4ZZUNILAaJTz0dKKWmbIv2RSH/XEFlGF730RvlurINdep4t20Y3TaEiOOuBfklHvkQ6RtQ7ZppCc2cphPnj4Dm8O3yBKvcvzcQduWOT0pbe6/wpQZSgrW9U9Ss3SAUcWT8KA9QsKsilAoDRph36U5YICxwMa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RMpL7216; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsGet4Ze"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2c43cbce41so681748a12.2
-        for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 06:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMpL7216"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e7f4adaedaso767236137.3
+        for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 06:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750080613; x=1750685413; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B+QmnhYc0vGa92UC7MvCez/Zyxtl9c45qHEYK1lXUtU=;
-        b=BsGet4ZerJSqjyMtLhAbNnZm9kkVNCHMm+fc/Ypd1FMYS66bcIdLWsrzdXzjiOq0HW
-         CeV3OjxP0IugILjL9aUwJWjpZiKGSOlDTWl5f8dSsVtc0YS1yvwylkM78Lep5lWbjCgP
-         cplg9el99PSycpdaYU5pYJ/AVzeVU6E14tSanqFUnGJ02eGmLhw0/65blFfMWjet7Zao
-         6fFYk7hGJfjkVq3HG7+IEQQ+sqDDlCcQZLd0fF/dFwu4eG2u7YA0r/6VS6As4jAf8hwr
-         Yzn/MzaIOulain869NjwpRG8Gm6Uq+bX1Luhbh59PCSW8R1ShViONzlHv9m+AsvSohtR
-         AExg==
+        d=linaro.org; s=google; t=1750080981; x=1750685781; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VAKYpzBXefjsewghnaRDPZDlVtldMHNII6S2fBTACcE=;
+        b=RMpL7216llJEtUNxckRS826xGJD+SMOx/pV6/nJvTUlY7r3sBvCy/x9eHxNd4eLoiu
+         gSDttfsYEmVgQoRX3d0ZeRhb7OJklzDv4Rpp45dzE1O4mu2XRB1WXBHWcPaPKoLaXHRO
+         BQyd3u4JFqPT/LkKDmgf9tIgJu/BoWkAVlaQDKfrg9uTCYjDmcrEc4w1A5VWrYhQQojf
+         Jhaksx8KI8MsZMOiocNBaWr48DrucgnfjS6oRY+E46/KJRgwB622AsNZFrDfYdID9M3X
+         hdRbItvkW8E2/xOrQAq9KCNQjSmoCgkTtuXI7aYYjJbkSBuN17IejQSYHbm3FhbeJLNo
+         VSnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750080613; x=1750685413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B+QmnhYc0vGa92UC7MvCez/Zyxtl9c45qHEYK1lXUtU=;
-        b=oV/Dbjsf17sbW3Rl8jh68B/FTULH15NHRDK/wiEigqIZu79tvEx8757+VIwl1sclE6
-         LCxGGhWGYZd7sX13zHBSO1vL2npEDBuTCXsuk+sbRLPJwYyz3UpH1lTzlsFACXdzNF2y
-         Pi3RSJpqR+Ox6ErnVD4KVxmDnBCPeLvejDOf9liGp55JhcczQCJM2LH+VbJdwAYuP1jm
-         +C0u8L7Jjtr31pafaIHqucsdCtDR//KpGgAQXv+Aq5VvxxYW13LD+kVsRGbuorSWS7o7
-         CidPSzuphhqh8dNqCZJ6dqSLaAHkStB+REs96BJLxxnhV2hmLHh8xlHHTfvLeq2ni8Aj
-         4vbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHMWhaDM/GoFE6eylbgdBrwhvdkAvImjkppaLgbvR4U5zPL4mNh10FsECtu0yi9y9G1a7Ah0eQdu2awg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzaziM6N8+AbrxuGDnaKgxqnQh1hcoNni2uMYCAziyyprnxMum0
-	IN0lfTlHLl05xgl7gD/CKWKF7A+doVU7lqGRTH8xxeLmKGChjkQNTTTaTi0a+UdUDAjfbJfPbpg
-	hfe4YKjhGGP+wr9VyDffYmSS4XyPaElo=
-X-Gm-Gg: ASbGncuqNXFOzumlE0cuUH7LL6DCzmEyl/jxf31kldgV0QpYTldI1tb6vxFGq5R7++m
-	1hdLZpC/aeXtRyXkDr9hmul4jt0fLXmNtzHEh6gq+549U0otC7uF87Gah1GK7AMbvqxHgwqgXh/
-	BuXslnZZO9DRa1/+YOmazHhLlFV5Uz/m9JRrj9IPCD3Qh7
-X-Google-Smtp-Source: AGHT+IGh7h6yA8zvALC5hiiGFj0J/FBflTGa0Uz6Pkt1gyHm0RW4BdoiBIlQbL9w6OGrh/35fpnh4uTxfdlAObUNoZM=
-X-Received: by 2002:a17:90b:1ccc:b0:311:c939:c842 with SMTP id
- 98e67ed59e1d1-313f1de6397mr5102153a91.7.1750080613063; Mon, 16 Jun 2025
- 06:30:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750080981; x=1750685781;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VAKYpzBXefjsewghnaRDPZDlVtldMHNII6S2fBTACcE=;
+        b=ikz88ZlC0BKi+WYD7C8MqeG2BHSuL5cnHpQqqMK3v3Z2V80SUpJO9Oh16JIgTsf1L6
+         J989om+z2HuDzFsnS2ve5DlkFHap/r8wexgHiJB+u7QcxKeTeyRk5xtq506MJgJ8t2rn
+         25EmHoqhYaIqeubd6juEZW7dodsPiHW5W66iNFXNP4dPc7Ix7oK6yI5EALRDup9Arnbt
+         J8ohUVNmYiTcptxgMe+pRs6tSm1+Es4h3WCLu5wrYz1UC/BkgjodxEp8DmbRaFOjTwkq
+         4weyLMcrdYeLsbF3siU9rT6V7TyXtVVvjRKiwpgOkG10kS5COA84SKvYwHi3JLHFrZBi
+         hOHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVORvJ2GjyXrtolUxXYAHZuV6ATiw7V1fAnEcb6VDwGpHYd5QLKKrTmoCrRnAVZc7ZPFz6XASvir9kECg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyr98wLK+bMfv1HG/I1h02OOCWC/3EhAj4ohnOe9qoJR/IxUzmS
+	tn30281BHa1PGcAUFxZ/RS32lo+1Ka+U+s/qBFQ5FCQ8NhSvNsxlSuAkRa37uFfGuBdh8kFwTl7
+	X1KyXUzrNZOqVgRJbacKfC6PSQta0q4neY+UOKpS20w==
+X-Gm-Gg: ASbGncs9cbU/GSuSgGGmEUVcsUnRtwYjf1GGFV1HEGwje1o7+X/lPbzkhZfkvaSnKuI
+	tBUw2FMGv/zpKchJKQpGwQq4WjOaxYGUSFUR+FVnNVJ9fHU31YwL02fCTIOvgLqrqKUWvW+4Q/S
+	ZosmsXTf1tSICnvOB3b7llEh7HaikEbfR9faDEpdwelKDnnwiznWssLh4OXbTUFEIAIV9tQhNof
+	6Wv
+X-Google-Smtp-Source: AGHT+IFjLddFL80fWZC8vtshfMJbUrfVgeQJ3XiDOZyHT7t6Zgm568hBaOqMVNU/MkIqnSqDCwMMu8ds8ugaE3rTBR8=
+X-Received: by 2002:a05:6102:26c2:b0:4c5:1c2e:79f5 with SMTP id
+ ada2fe7eead31-4e7f61c6ecfmr4938693137.16.1750080981324; Mon, 16 Jun 2025
+ 06:36:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <c415d9e0b08bcba068b01700225bf560@disroot.org> <CADnq5_PX1dYF2Jd3q7ghaBjpPhNLq9EmFJtN1w6YOSfVo++7sA@mail.gmail.com>
- <69b5ebaa719355994a383fa026dc3fba@disroot.org>
-In-Reply-To: <69b5ebaa719355994a383fa026dc3fba@disroot.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 16 Jun 2025 09:29:59 -0400
-X-Gm-Features: AX0GCFthNM7567uej1TQBWHUevhiCE9wm4x56veEnyNPJYkkpKzt0iW-4Hg9ffs
-Message-ID: <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
-Subject: Re: Unplayable framerates in game but specific kernel versions work,
- maybe amdgpu problem
-To: machion@disroot.org
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com, 
-	christian.koenig@amd.com
+References: <CA+G9fYuDOnN6TrcVYcMZT5UPNc34mOHQZsfyFvpq+Ndhz8p48w@mail.gmail.com>
+In-Reply-To: <CA+G9fYuDOnN6TrcVYcMZT5UPNc34mOHQZsfyFvpq+Ndhz8p48w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 16 Jun 2025 19:06:10 +0530
+X-Gm-Features: AX0GCFv0xdxpPep8RlLL46Klw14koqqEINGKyWY-3_14LVoll_HdAqjvhj2iHm0
+Message-ID: <CA+G9fYuu5r34=bndUYWNxe_yLgBaPGXmK9WP3WTtoXMs_2LX-Q@mail.gmail.com>
+Subject: Re: next-20250616: S390 gcc-8 allnoconfig mm mempool.c In function remove_element
+To: open list <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 3:38=E2=80=AFPM <machion@disroot.org> wrote:
+On Mon, 16 Jun 2025 at 17:36, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 >
-> Hi,
-> sorry for the delay.
-> Besides less time, I had to make myself familiar with bisecting and
-> again kernel compiling. Last time I compiled the kernel myself was
-> around 2010 I think.
+> Regression while building S390 with the Linux next-20250616
+> with gcc-8 the following kernel warnings found.
 >
-> Anyway it seems I found the bad commit. The result after bisecting 10
-> commits is:
+> Regressions found on S390
+>  -  build/gcc-8-lkftconfig-allnoconfig
+>  -  build/gcc-8-lkftconfig-hardening
 >
-> a53d959fe660341788cb8dbc3ac3330d90a09ecf is the first bad commit
-> commit a53d959fe660341788cb8dbc3ac3330d90a09ecf
-> Author: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Date:   Thu Mar 20 14:46:18 2025 +0100
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
 >
->      drm/amdgpu: immediately use GTT for new allocations
+> First seen on the next-20250616
+> Good: next-20250613
+> Bad:  next-20250616
 >
->      commit a755906fb2b8370c43e91ba437ae1b3e228e8b02 upstream.
+> Build regression: S390 gcc-8 allnoconfig mm mempool.c In function remove_element
 >
->      Only use GTT as a fallback if we already have a backing store. This
->      prevents evictions when an application constantly allocates and
-> frees new
->      memory.
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 >
->      Partially fixes
->      https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2833985.
->
->      Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->      Fixes: 216c1282dde3 ("drm/amdgpu: use GTT only as fallback for
-> VRAM|GTT")
->      Acked-by: Alex Deucher <alexander.deucher@amd.com>
->      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->      Cc: stable@vger.kernel.org
->      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
->   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> ## Build errors
+> mm/mempool.c: In function 'remove_element':
+> include/linux/compiler_types.h:497:20: warning: asm operand 0 probably
+> doesn't match constraints
+>  #define asm_inline asm __inline
+>                     ^~~
+> arch/s390/include/asm/bug.h:12:2: note: in expansion of macro 'asm_inline'
+>   asm_inline volatile(     \
+>   ^~~~~~~~~~
+> arch/s390/include/asm/bug.h:43:2: note: in expansion of macro '__EMIT_BUG'
+>   __EMIT_BUG("", 0);    \
+>   ^~~~~~~~~~
+> include/asm-generic/bug.h:77:57: note: in expansion of macro 'BUG'
+>  #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
+>                                                          ^~~
+> mm/mempool.c:149:2: note: in expansion of macro 'BUG_ON'
+>   BUG_ON(pool->curr_nr < 0);
+>   ^~~~~~
+> include/linux/compiler_types.h:497:20: error: impossible constraint in 'asm'
+>  #define asm_inline asm __inline
+>                     ^~~
 
-Unfortunately reverting that commit will reintroduce a similar
-performance issue for lots of other uses.  See:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2827990
-for a description of the fundemental problem.
+Anders bisect this build regressions and found,
 
-Alex
+ # first bad commit:
+    [45c79ca947c936085c94b716be92eaf9a1bdc8bb]
+    bugs/s390: Use 'cond_str' in __EMIT_BUG()
 
+
+> ## Source
+> * Kernel version: 6.16.0-rc2
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
+> * Git describe: next-20250616
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
+> * Architectures: S390
+> * Toolchains: gcc-8
+> * Kconfigs: allnoconfig
 >
-> Marion
+> ## Build S390
+> * Build log: https://qa-reports.linaro.org/api/testruns/28763376/log_file/
+> * Build details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20250616/build/gcc-8-allnoconfig/
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wQbvgatYAbcvC2OTZls5D91/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wQbvgatYAbcvC2OTZls5D91/config
 >
+> ## Steps to reproduce on S390
+>  - tuxmake --runtime podman --target-arch s390 --toolchain gcc-8
+> --kconfig allnoconfig
 >
-> Am 2025-05-08 15:18, schrieb Alex Deucher:
-> > On Thu, May 8, 2025 at 9:13=E2=80=AFAM <machion@disroot.org> wrote:
-> >>
-> >> Hello kernel/driver developers,
-> >>
-> >> I hope, with my information it's possible to find a bug/problem in the
-> >> kernel. Otherwise I am sorry, that I disturbed you.
-> >> I only use LTS kernels, but I can narrow it down to a hand full of
-> >> them,
-> >> where it works.
-> >>
-> >> The PC: Manjaro Stable/Cinnamon/X11/AMD Ryzen 5 2600/Radeon HD
-> >> 7790/8GB
-> >> RAM
-> >> I already asked the Manjaro community, but with no luck.
-> >>
-> >> The game: Hellpoint (GOG Linux latest version, Unity3D-Engine v2021),
-> >> uses vulkan
-> >>
-> >> ---
-> >>
-> >> I came a long road of kernels. I had many versions of 5.4, 5.10, 5.15,
-> >> 6.1 and 6.6 and and the game was always unplayable, because the frames
-> >> where around 1fps (performance of PC is not the problem).
-> >> I asked the mesa and cinnamon team for help in the past, but also with
-> >> no luck.
-> >> It never worked, till on 2025-03-29 when I installed 6.12.19 for the
-> >> first time and it worked!
-> >>
-> >> But it only worked with 6.12.19, 6.12.20 and 6.12.21
-> >> When I updated to 6.12.25, it was back to unplayable.
-> >
-> > Can you bisect to see what fixed it in 6.12.19 or what broke it in
-> > 6.12.25?  For example if it was working in 6.12.21 and not working in
-> > 6.12.25, you can bisect between 6.12.21 and .25.
-> >
-> > Alex
-> >
-> >>
-> >> For testing I installed 6.14.4 with the same result. It doesn't work.
-> >>
-> >> I also compared file /proc/config.gz of both kernels (6.12.21 <>
-> >> 6.14.4), but can't seem to see drastic changes to the graphical part.
-> >>
-> >> I presume it has something to do with amdgpu.
-> >>
-> >> If you need more information, I would be happy to help.
-> >>
-> >> Kind regards,
-> >> Marion
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+
+- Naresh
