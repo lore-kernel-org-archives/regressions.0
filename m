@@ -1,138 +1,199 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB722E4251
-	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 12:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2B52E426F;
+	Mon, 16 Jun 2025 12:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075604; cv=none; b=tJ9izdEZvOlauoquiLFEmIKqOS0dRKiL5usk8Q76OWrq/UyZhh3KeS3CM+LMVoUa+BDbIe/cc4qFW47E0d5LOIPrtF12MwqoOI5oqujQXS3bCGt6EDPtKYpxzRYzUXEHdj8RBtB6a7+9vYMlva7SWRTEKeAecmikbhCu6BYrAZE=
+	t=1750076128; cv=none; b=UPVuIFI9CPdAHgl6wVv9IVkZGbzpTHHYsrWkdpmL4d22bBdA/QQ6IVGuYYdD3PcfiKxO6XtwyWJbC+j5HaiEtIqjYsrPrQcenLSGCO6ZDLsgweIZlzk5mqEDSjnGGuTgWbjntjxo6vGJNo59NhbFireKrRpcar2A9GtFzF2c2Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075604; c=relaxed/simple;
-	bh=IbZZvF1YeIlcvUq/+fdnzFkqnxbyQDarbgl2bwQ6gi0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Rcnx9Tgg25XEZtcFkbMnixLTYKkG9dA72dpTH9KUhVEMpv6XWob/bfL5PnRS6NnQiGUHZsFoDVpWO7idbREocEPUhJKq5BP3gyulwgAL01YXsmdhB22eWCge22GRFh4ZZ8MrFvThp11Hl5H0bocSNeP/TaBIQ5Pasou537GFhJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IhVxNh4b; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750076128; c=relaxed/simple;
+	bh=f2KGMeFwQsSAT8oxGQsWFauxCTtaTcqmi4sViT9XyLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSFuGGNUy1iFcIKcV5oSCOmy1KXyRRXxc8NKmp5OciYZKiAxko74NWBBExZ5QPCopx2oJTSX/6teGWeAH1cX1E1jy6vdThx0yGNkiSykwAzMEGJfEqga1mQ92/1XU60UzxI29q+eEtuQFe0XVLBYGDVUqykxsExoYeKoWwwN8uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmE5wL6i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IhVxNh4b"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fad4e6d949so22047006d6.0
-        for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 05:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750075601; x=1750680401; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TpU5wAMG3sQlhcsZQZqrmEByJp0SllVR0AKHGW2r9qE=;
-        b=IhVxNh4bE/zMG0KUR0HY6tdrl2pf3kxyuY0FGI0h5AKnFaW9wQTMr8Tc1cXKU5phWQ
-         Eo08Vseth3Vdv3eNAQU7Th7HLYp61s9x2H2ScczPtcMAuGDV+akZhE6syQY1Eg+B138b
-         bLLZKUOw4iA2h/IDksrL2z/ZN73AQo1KXa1gjH8mNpOdGeJi8N+9VrxWkqCJLzL/PqeX
-         0htTNC+0IyJBjTbTi9737G9dFv/bqKtFDtnmoddAOgO05EZnE4ViJHITeTatpuJpezdQ
-         xZeUJk+HvyxAQ+2PyM4FLj6JCb7sZk6PjMTgdm2WaJn1MZdIrNeHu5qYrzH5EFCR7hhg
-         KyXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750075601; x=1750680401;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TpU5wAMG3sQlhcsZQZqrmEByJp0SllVR0AKHGW2r9qE=;
-        b=k89gWF1Fp621PhIEGc9ResAFuFy85o0EfSFBSV5zmTZUYQDTzibhYntQiqvLjerSMF
-         2rFp0VrPXoA6W0If6G8Nd2KWVXDQWyykqYSz9Fr+R4R9b68z6sJyesx82sVUojOBHAtr
-         TJZa4wbn4GIZd+XcegEIxXZ6XETrTu+x2XHLVuPUNU1a04z7O87KUNxKyQ4WO6+j/1Mm
-         KAr5Njty5l1KzpyUXxI40KR6xxKhW0VN/3Hf2KM+wKcz9hcTvZh/1EUkPgwvC1R0tFON
-         FemaePqNjF/VnDzgrjxBa4juw19Auf6/oegMC7Nx49UAsCrjghG84S1a8fi5rW50QQMK
-         Nr8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUwWLqXtYCYO7bk/MDLeFLpV32bBaicmpSeKCHKhMrxrcmM4u33A6gLTo+9Q9nsdp/kJs0b2H38bCdkjQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxkp2T94PTFiVvoJBvUHQKqtP69IAGKXprvydky0iqMN5TBcVAg
-	45GwZw9ZzsE8Z7fmE76V8G8UvYslnIrTl7UeTngQ1bQBf/5edSI56MH6jzQRbAQku5m8Ag1P1YC
-	Ja9A918i9wDOVX2tAhq05pp0b+KpiNY7XOA85uafysQ==
-X-Gm-Gg: ASbGncufgGNPigLv4BLtlGa6/DUtBiTt56/qMn/FRDJf35rAzw/S3vJPxESajHvnfLW
-	v5mDQQTsndJuUBCjkt3mfHUuDGqZP3YeH0rqqIESNqBHZtgdULWA+ZI8a7fCkBlDSpD3jkJA8FI
-	B2bRlbum3OCqt25eTx4j+YHVimoy3/Ypc25+NKMRLHXkL3J6XW7k8hpIBA7FbBRx66wmj/WkTIL
-	w5s
-X-Google-Smtp-Source: AGHT+IFeUKnKrR3PiU9rxHEIRNQyrCJR8n4GoHXj1LshKjqrOlDxmNum5ASc/NWBGVeJbSNt1PqkzC0aodOI1wfeH5o=
-X-Received: by 2002:a05:6214:500c:b0:6fa:c6ad:1618 with SMTP id
- 6a1803df08f44-6fb4776e76cmr143231416d6.27.1750075601411; Mon, 16 Jun 2025
- 05:06:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmE5wL6i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAA4C4CEEA;
+	Mon, 16 Jun 2025 12:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750076128;
+	bh=f2KGMeFwQsSAT8oxGQsWFauxCTtaTcqmi4sViT9XyLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FmE5wL6igUSom2Gtojgifa76hjNOzCtcPsnUAe7W81afvCzwqSTZ6tdNCwt54ws2d
+	 jqv58ruqtUagSgl7OGxoBj4KAiA/7QZtko8o+I5DS1Wu5Eo4emoezHI7C7741wA40l
+	 JUNtUCI/H5fmG1iRC8Cah1rwXOHqz1LxnupneXPgPkXkpq1iffaZEzKfrmttf9Wn0m
+	 BqGMTfRH+95qiEDT4/ISepUasmU8oi0MEx8MYCx4LQpV0mUXbHO+rGIb8oAC2xFeji
+	 lgz/APvdm/lwLzcTupayaVRAXbjNUJQXPAGww3h7qAoRtY6CfMIra51aAuePlSyxIS
+	 Liheb324QnxWw==
+Date: Mon, 16 Jun 2025 14:15:23 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Christian Theune <ct@flyingcircus.io>
+Cc: stable@vger.kernel.org, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
+Message-ID: <hoszywa5az7z4yxubonbhs2p2ysnut3s7jjnkd7ckz4sgdyqw2@ifuor5qnl7yu>
+References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
+ <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
+ <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
+ <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
+ <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
+ <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
+ <M0QJfqa7-6M2vnPhyeyy36xCOmCEL83O7lj-ky1DXTqQXa677-oE8C_nAsBCBglBp_6k7vLeN4a2nJ6R3JuQxw==@protonmail.internalid>
+ <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 16 Jun 2025 17:36:29 +0530
-X-Gm-Features: AX0GCFs0r1nB19T1N_2PPwY-kXlE37v4o6Iuua4hbniHaojK4KFbc8YBvkBv6Uc
-Message-ID: <CA+G9fYuDOnN6TrcVYcMZT5UPNc34mOHQZsfyFvpq+Ndhz8p48w@mail.gmail.com>
-Subject: next-20250616: S390 gcc-8 allnoconfig mm mempool.c In function remove_element
-To: open list <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
 
-Regression while building S390 with the Linux next-20250616
-with gcc-8 the following kernel warnings found.
+On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune wrote:
+> 
+> > On 16. Jun 2025, at 11:47, Carlos Maiolino <cem@kernel.org> wrote:
+> >
+> > On Mon, Jun 16, 2025 at 10:59:34AM +0200, Christian Theune wrote:
+> >>
+> >>
+> >>> On 16. Jun 2025, at 10:50, Carlos Maiolino <cem@kernel.org> wrote:
+> >>>
+> >>> On Thu, Jun 12, 2025 at 03:37:10PM +0200, Christian Theune wrote:
+> >>>> Hi,
+> >>>>
+> >>>> in the last week, after updating to 6.6.92, we’ve encountered a number of VMs reporting temporarily hung tasks blocking the whole system for a few minutes. They unblock by themselves and have similar tracebacks.
+> >>>>
+> >>>> The IO PSIs show 100% pressure for that time, but the underlying devices are still processing read and write IO (well within their capacity). I’ve eliminated the underlying storage (Ceph) as the source of problems as I couldn’t find any latency outliers or significant queuing during that time.
+> >>>>
+> >>>> I’ve seen somewhat similar reports on 6.6.88 and 6.6.77, but those might have been different outliers.
+> >>>>
+> >>>> I’m attaching 3 logs - my intuition and the data so far leads me to consider this might be a kernel bug. I haven’t found a way to reproduce this, yet.
+> >>>
+> >>> From a first glance, these machines are struggling because IO contention as you
+> >>> mentioned, more often than not they seem to be stalling waiting for log space to
+> >>> be freed, so any operation in the FS gets throttled while the journal isn't
+> >>> written back. If you have a small enough journal it will need to issue IO often
+> >>> enough to cause IO contention. So, I'd point it to a slow storage or small
+> >>> enough log area (or both).
+> >>
+> >> Yeah, my current analysis didn’t show any storage performance issues. I’ll revisit this once more to make sure I’m not missing anything. We’ve previously had issues in this area that turned out to be kernel bugs. We didn’t change anything regarding journal sizes and only a recent kernel upgrade seemed to be relevant.
+> >
+> > You mentioned you saw PSI showing a huge pressure ration, during the time, which
+> > might be generated by the journal writeback and giving it's a SYNC write, IOs
+> > will stall if your storage can't write it fast enough. IIRC, most of the threads
+> > from the logs you shared were waiting for log space to be able to continue,
+> > which causes the log to flush things to disk and of course increase IO usage.
+> > If your storage can't handle these IO bursts, then you'll get the stalls you're
+> > seeing.
+> > I am not discarding a possibility you are hitting a bug here, but it so far
+> > seems your storage is not being able to service IOs fast enough to avoid such IO
+> > stalls, or something else throttling IOs, XFS seems just the victim.
+> 
+> Yeah, it’s annoying, I know. To paraphrase "any sufficiently advanced bug is indistinguishable from slow storage”. ;)
+> 
+> As promised, I’ll dive deeper into the storage performance analysis, all telemetry so far was completely innocuous, but it’s a complex layering of SSDs → Ceph → Qemu … Usually if we have performance issues then the metrics reflect this quite obviously and will affect many machines at the same time. As this has always just affected one single VM at a time but spread over time my gut feeling is a bit more on the side of “it might be maybe a bug”. As those things tend to be hard/nasty to diagnose I wanted to raise the flag early on to see whether other’s might be having an “aha” moment if they’re experiencing something similar.
+> 
+> I’ll get back to you in 2-3 days with results from the storage analysis.
+> 
+> > Can you share the xfs_info of one of these filesystems? I'm curious about the FS
+> > geometry.
+> 
+> Sure:
+> 
+> # xfs_info /
+> meta-data=/dev/disk/by-label/root isize=512    agcount=21, agsize=655040 blks
+>          =                       sectsz=512   attr=2, projid32bit=1
+>          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+>          =                       reflink=1    bigtime=1 inobtcount=1 nrext64=0
+>          =                       exchange=0
+> data     =                       bsize=4096   blocks=13106171, imaxpct=25
+>          =                       sunit=0      swidth=0 blks
+> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
+> log      =internal log           bsize=4096   blocks=16384, version=2
+>          =                       sectsz=512   sunit=0 blks, lazy-count=1
+> realtime =none                   extsz=4096   blocks=0, rtextents=0
 
-Regressions found on S390
- -  build/gcc-8-lkftconfig-allnoconfig
- -  build/gcc-8-lkftconfig-hardening
+This seems to have been extended a few times, but nothing out-of-reality. Looks
+fine, but, is this one of the filesystems where you are facing the problem? I'm
+surprised this is the root FS, do you have that much IO into the rootFS?
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+> 
+> # xfs_info /tmp/
+> meta-data=/dev/vdb1              isize=512    agcount=8, agsize=229376 blks
+>          =                       sectsz=512   attr=2, projid32bit=1
+>          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+>          =                       reflink=0    bigtime=0 inobtcount=0 nrext64=0
+>          =                       exchange=0
+> data     =                       bsize=4096   blocks=1833979, imaxpct=25
+>          =                       sunit=1024   swidth=1024 blks
+> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
+> log      =internal log           bsize=4096   blocks=2560, version=2
+>          =                       sectsz=512   sunit=8 blks, lazy-count=1
+> realtime =none                   extsz=4096   blocks=0, rtextents=0
 
-First seen on the next-20250616
-Good: next-20250613
-Bad:  next-20250616
+This is worrisome. Your journal size is 10MiB, this can easily keep stalling IO
+waiting for log space to be freed, depending on the nature of the machine this
+can be easily triggered. I'm curious though how you made this FS, because 2560
+is below the minimal log size that xfsprogs allows since (/me goes look
+into git log) 2022, xfsprogs 5.15.
 
-Build regression: S390 gcc-8 allnoconfig mm mempool.c In function remove_element
+FWIW, one of the reasons the minimum journal log size has been increased is the
+latency/stalls that happens when waiting for free log space, which is exactly
+the symptom you've been seeing.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I'd suggest you to check the xfsprogs commit below if you want more details,
+but if this is one of the filesystems where you see the stalls, this might very
+well be the cause:
 
-## Build errors
-mm/mempool.c: In function 'remove_element':
-include/linux/compiler_types.h:497:20: warning: asm operand 0 probably
-doesn't match constraints
- #define asm_inline asm __inline
-                    ^~~
-arch/s390/include/asm/bug.h:12:2: note: in expansion of macro 'asm_inline'
-  asm_inline volatile(     \
-  ^~~~~~~~~~
-arch/s390/include/asm/bug.h:43:2: note: in expansion of macro '__EMIT_BUG'
-  __EMIT_BUG("", 0);    \
-  ^~~~~~~~~~
-include/asm-generic/bug.h:77:57: note: in expansion of macro 'BUG'
- #define BUG_ON(condition) do { if (unlikely(condition)) BUG(); } while (0)
-                                                         ^~~
-mm/mempool.c:149:2: note: in expansion of macro 'BUG_ON'
-  BUG_ON(pool->curr_nr < 0);
-  ^~~~~~
-include/linux/compiler_types.h:497:20: error: impossible constraint in 'asm'
- #define asm_inline asm __inline
-                    ^~~
+commit cdfa467edd2d1863de067680b0a3ec4458e5ff4a
+Author: Eric Sandeen <sandeen@redhat.com>
+Date:   Wed Apr 6 16:50:31 2022 -0400
 
-## Source
-* Kernel version: 6.16.0-rc2
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 050f8ad7b58d9079455af171ac279c4b9b828c11
-* Git describe: next-20250616
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250616/
-* Architectures: S390
-* Toolchains: gcc-8
-* Kconfigs: allnoconfig
+    mkfs: increase the minimum log size to 64MB when possible
 
-## Build S390
-* Build log: https://qa-reports.linaro.org/api/testruns/28763376/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250616/build/gcc-8-allnoconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wQbvgatYAbcvC2OTZls5D91/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2ya0wQbvgatYAbcvC2OTZls5D91/config
-
-## Steps to reproduce on S390
- - tuxmake --runtime podman --target-arch s390 --toolchain gcc-8
---kconfig allnoconfig
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> 
+> 
+> >
+> >>
+> >>> There has been a few improvements though during Linux 6.9 on the log performance,
+> >>> but I can't tell if you have any of those improvements around.
+> >>> I'd suggest you trying to run a newer upstream kernel, otherwise you'll get very
+> >>> limited support from the upstream community. If you can't, I'd suggest you
+> >>> reporting this issue to your vendor, so they can track what you are/are not
+> >>> using in your current kernel.
+> >>
+> >> Yeah, we’ve started upgrading selected/affected projects to 6.12, to see whether this improves things.
+> >
+> > Good enough.
+> >
+> >>
+> >>> FWIW, I'm not sure if NixOS uses linux-stable kernels or not. If that's the
+> >>> case, running a newer kernel suggestion is still valid.
+> >>
+> >> We’re running the NixOS mainline versions which are very vanilla. There are very very 4 small patches that only fix up things around building and binary paths for helpers to call to adapt them to the nix environment.
+> >
+> > I see. There were some improvements in the newer versions, so if you can rule
+> > out any possibly fixed bug is worth it.
+> >
+> >
+> >>
+> >> Christian
+> >>
+> >>
+> >> --
+> >> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
+> >> Flying Circus Internet Operations GmbH · https://flyingcircus.io
+> >> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
+> >> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
+> 
+> 
+> --
+> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
+> Flying Circus Internet Operations GmbH · https://flyingcircus.io
+> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
+> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
+> 
+> 
