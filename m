@@ -1,199 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2B52E426F;
-	Mon, 16 Jun 2025 12:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122C82BF01D
+	for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 13:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750076128; cv=none; b=UPVuIFI9CPdAHgl6wVv9IVkZGbzpTHHYsrWkdpmL4d22bBdA/QQ6IVGuYYdD3PcfiKxO6XtwyWJbC+j5HaiEtIqjYsrPrQcenLSGCO6ZDLsgweIZlzk5mqEDSjnGGuTgWbjntjxo6vGJNo59NhbFireKrRpcar2A9GtFzF2c2Y0=
+	t=1750080615; cv=none; b=RXdFrdxjIBMn3JzXEO2Q8omd7aA5TbI0chYfciLT9wrR/x5g896GWh2om2A235jW1yS0FqOIzAuAZDDZcK5DgRAL+K8Y42oSQXAsasbPZpcvThcmmVq2lP3j191M8ESv8Ko/jlfXd7JVd6/nx4gIRhAuthOl4LsuIXjnPYTfPhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750076128; c=relaxed/simple;
-	bh=f2KGMeFwQsSAT8oxGQsWFauxCTtaTcqmi4sViT9XyLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSFuGGNUy1iFcIKcV5oSCOmy1KXyRRXxc8NKmp5OciYZKiAxko74NWBBExZ5QPCopx2oJTSX/6teGWeAH1cX1E1jy6vdThx0yGNkiSykwAzMEGJfEqga1mQ92/1XU60UzxI29q+eEtuQFe0XVLBYGDVUqykxsExoYeKoWwwN8uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmE5wL6i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750080615; c=relaxed/simple;
+	bh=59qFySa7X+/ac5Ydc1pV7JddQfv8+DTKdIh521qRg7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9A/vHOmq9MHX6SMLD5IFsFjgArYcr668PtL2AtduLxAZIY9PlkZph3xeB+rl1PTJlw/0j0dBLhHGEVYQ/N6w7GdQBiFfudUmxld7CgQiKoyh2BMuMBiu8gTZpryWdYq9uLxxxWmwX6rxyNAbNUDQove9NCatbC8jx/0OMN6n5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsGet4Ze; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmE5wL6i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAA4C4CEEA;
-	Mon, 16 Jun 2025 12:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750076128;
-	bh=f2KGMeFwQsSAT8oxGQsWFauxCTtaTcqmi4sViT9XyLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FmE5wL6igUSom2Gtojgifa76hjNOzCtcPsnUAe7W81afvCzwqSTZ6tdNCwt54ws2d
-	 jqv58ruqtUagSgl7OGxoBj4KAiA/7QZtko8o+I5DS1Wu5Eo4emoezHI7C7741wA40l
-	 JUNtUCI/H5fmG1iRC8Cah1rwXOHqz1LxnupneXPgPkXkpq1iffaZEzKfrmttf9Wn0m
-	 BqGMTfRH+95qiEDT4/ISepUasmU8oi0MEx8MYCx4LQpV0mUXbHO+rGIb8oAC2xFeji
-	 lgz/APvdm/lwLzcTupayaVRAXbjNUJQXPAGww3h7qAoRtY6CfMIra51aAuePlSyxIS
-	 Liheb324QnxWw==
-Date: Mon, 16 Jun 2025 14:15:23 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: stable@vger.kernel.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
-Message-ID: <hoszywa5az7z4yxubonbhs2p2ysnut3s7jjnkd7ckz4sgdyqw2@ifuor5qnl7yu>
-References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
- <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
- <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
- <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
- <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
- <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
- <M0QJfqa7-6M2vnPhyeyy36xCOmCEL83O7lj-ky1DXTqQXa677-oE8C_nAsBCBglBp_6k7vLeN4a2nJ6R3JuQxw==@protonmail.internalid>
- <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsGet4Ze"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2c43cbce41so681748a12.2
+        for <regressions@lists.linux.dev>; Mon, 16 Jun 2025 06:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750080613; x=1750685413; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B+QmnhYc0vGa92UC7MvCez/Zyxtl9c45qHEYK1lXUtU=;
+        b=BsGet4ZerJSqjyMtLhAbNnZm9kkVNCHMm+fc/Ypd1FMYS66bcIdLWsrzdXzjiOq0HW
+         CeV3OjxP0IugILjL9aUwJWjpZiKGSOlDTWl5f8dSsVtc0YS1yvwylkM78Lep5lWbjCgP
+         cplg9el99PSycpdaYU5pYJ/AVzeVU6E14tSanqFUnGJ02eGmLhw0/65blFfMWjet7Zao
+         6fFYk7hGJfjkVq3HG7+IEQQ+sqDDlCcQZLd0fF/dFwu4eG2u7YA0r/6VS6As4jAf8hwr
+         Yzn/MzaIOulain869NjwpRG8Gm6Uq+bX1Luhbh59PCSW8R1ShViONzlHv9m+AsvSohtR
+         AExg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750080613; x=1750685413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B+QmnhYc0vGa92UC7MvCez/Zyxtl9c45qHEYK1lXUtU=;
+        b=oV/Dbjsf17sbW3Rl8jh68B/FTULH15NHRDK/wiEigqIZu79tvEx8757+VIwl1sclE6
+         LCxGGhWGYZd7sX13zHBSO1vL2npEDBuTCXsuk+sbRLPJwYyz3UpH1lTzlsFACXdzNF2y
+         Pi3RSJpqR+Ox6ErnVD4KVxmDnBCPeLvejDOf9liGp55JhcczQCJM2LH+VbJdwAYuP1jm
+         +C0u8L7Jjtr31pafaIHqucsdCtDR//KpGgAQXv+Aq5VvxxYW13LD+kVsRGbuorSWS7o7
+         CidPSzuphhqh8dNqCZJ6dqSLaAHkStB+REs96BJLxxnhV2hmLHh8xlHHTfvLeq2ni8Aj
+         4vbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHMWhaDM/GoFE6eylbgdBrwhvdkAvImjkppaLgbvR4U5zPL4mNh10FsECtu0yi9y9G1a7Ah0eQdu2awg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzaziM6N8+AbrxuGDnaKgxqnQh1hcoNni2uMYCAziyyprnxMum0
+	IN0lfTlHLl05xgl7gD/CKWKF7A+doVU7lqGRTH8xxeLmKGChjkQNTTTaTi0a+UdUDAjfbJfPbpg
+	hfe4YKjhGGP+wr9VyDffYmSS4XyPaElo=
+X-Gm-Gg: ASbGncuqNXFOzumlE0cuUH7LL6DCzmEyl/jxf31kldgV0QpYTldI1tb6vxFGq5R7++m
+	1hdLZpC/aeXtRyXkDr9hmul4jt0fLXmNtzHEh6gq+549U0otC7uF87Gah1GK7AMbvqxHgwqgXh/
+	BuXslnZZO9DRa1/+YOmazHhLlFV5Uz/m9JRrj9IPCD3Qh7
+X-Google-Smtp-Source: AGHT+IGh7h6yA8zvALC5hiiGFj0J/FBflTGa0Uz6Pkt1gyHm0RW4BdoiBIlQbL9w6OGrh/35fpnh4uTxfdlAObUNoZM=
+X-Received: by 2002:a17:90b:1ccc:b0:311:c939:c842 with SMTP id
+ 98e67ed59e1d1-313f1de6397mr5102153a91.7.1750080613063; Mon, 16 Jun 2025
+ 06:30:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
+References: <c415d9e0b08bcba068b01700225bf560@disroot.org> <CADnq5_PX1dYF2Jd3q7ghaBjpPhNLq9EmFJtN1w6YOSfVo++7sA@mail.gmail.com>
+ <69b5ebaa719355994a383fa026dc3fba@disroot.org>
+In-Reply-To: <69b5ebaa719355994a383fa026dc3fba@disroot.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 16 Jun 2025 09:29:59 -0400
+X-Gm-Features: AX0GCFthNM7567uej1TQBWHUevhiCE9wm4x56veEnyNPJYkkpKzt0iW-4Hg9ffs
+Message-ID: <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
+Subject: Re: Unplayable framerates in game but specific kernel versions work,
+ maybe amdgpu problem
+To: machion@disroot.org
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com, 
+	christian.koenig@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune wrote:
-> 
-> > On 16. Jun 2025, at 11:47, Carlos Maiolino <cem@kernel.org> wrote:
+On Fri, Jun 13, 2025 at 3:38=E2=80=AFPM <machion@disroot.org> wrote:
+>
+> Hi,
+> sorry for the delay.
+> Besides less time, I had to make myself familiar with bisecting and
+> again kernel compiling. Last time I compiled the kernel myself was
+> around 2010 I think.
+>
+> Anyway it seems I found the bad commit. The result after bisecting 10
+> commits is:
+>
+> a53d959fe660341788cb8dbc3ac3330d90a09ecf is the first bad commit
+> commit a53d959fe660341788cb8dbc3ac3330d90a09ecf
+> Author: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Date:   Thu Mar 20 14:46:18 2025 +0100
+>
+>      drm/amdgpu: immediately use GTT for new allocations
+>
+>      commit a755906fb2b8370c43e91ba437ae1b3e228e8b02 upstream.
+>
+>      Only use GTT as a fallback if we already have a backing store. This
+>      prevents evictions when an application constantly allocates and
+> frees new
+>      memory.
+>
+>      Partially fixes
+>      https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2833985.
+>
+>      Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>      Fixes: 216c1282dde3 ("drm/amdgpu: use GTT only as fallback for
+> VRAM|GTT")
+>      Acked-by: Alex Deucher <alexander.deucher@amd.com>
+>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>      Cc: stable@vger.kernel.org
+>      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+
+Unfortunately reverting that commit will reintroduce a similar
+performance issue for lots of other uses.  See:
+https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2827990
+for a description of the fundemental problem.
+
+Alex
+
+>
+> Marion
+>
+>
+> Am 2025-05-08 15:18, schrieb Alex Deucher:
+> > On Thu, May 8, 2025 at 9:13=E2=80=AFAM <machion@disroot.org> wrote:
+> >>
+> >> Hello kernel/driver developers,
+> >>
+> >> I hope, with my information it's possible to find a bug/problem in the
+> >> kernel. Otherwise I am sorry, that I disturbed you.
+> >> I only use LTS kernels, but I can narrow it down to a hand full of
+> >> them,
+> >> where it works.
+> >>
+> >> The PC: Manjaro Stable/Cinnamon/X11/AMD Ryzen 5 2600/Radeon HD
+> >> 7790/8GB
+> >> RAM
+> >> I already asked the Manjaro community, but with no luck.
+> >>
+> >> The game: Hellpoint (GOG Linux latest version, Unity3D-Engine v2021),
+> >> uses vulkan
+> >>
+> >> ---
+> >>
+> >> I came a long road of kernels. I had many versions of 5.4, 5.10, 5.15,
+> >> 6.1 and 6.6 and and the game was always unplayable, because the frames
+> >> where around 1fps (performance of PC is not the problem).
+> >> I asked the mesa and cinnamon team for help in the past, but also with
+> >> no luck.
+> >> It never worked, till on 2025-03-29 when I installed 6.12.19 for the
+> >> first time and it worked!
+> >>
+> >> But it only worked with 6.12.19, 6.12.20 and 6.12.21
+> >> When I updated to 6.12.25, it was back to unplayable.
 > >
-> > On Mon, Jun 16, 2025 at 10:59:34AM +0200, Christian Theune wrote:
-> >>
-> >>
-> >>> On 16. Jun 2025, at 10:50, Carlos Maiolino <cem@kernel.org> wrote:
-> >>>
-> >>> On Thu, Jun 12, 2025 at 03:37:10PM +0200, Christian Theune wrote:
-> >>>> Hi,
-> >>>>
-> >>>> in the last week, after updating to 6.6.92, we’ve encountered a number of VMs reporting temporarily hung tasks blocking the whole system for a few minutes. They unblock by themselves and have similar tracebacks.
-> >>>>
-> >>>> The IO PSIs show 100% pressure for that time, but the underlying devices are still processing read and write IO (well within their capacity). I’ve eliminated the underlying storage (Ceph) as the source of problems as I couldn’t find any latency outliers or significant queuing during that time.
-> >>>>
-> >>>> I’ve seen somewhat similar reports on 6.6.88 and 6.6.77, but those might have been different outliers.
-> >>>>
-> >>>> I’m attaching 3 logs - my intuition and the data so far leads me to consider this might be a kernel bug. I haven’t found a way to reproduce this, yet.
-> >>>
-> >>> From a first glance, these machines are struggling because IO contention as you
-> >>> mentioned, more often than not they seem to be stalling waiting for log space to
-> >>> be freed, so any operation in the FS gets throttled while the journal isn't
-> >>> written back. If you have a small enough journal it will need to issue IO often
-> >>> enough to cause IO contention. So, I'd point it to a slow storage or small
-> >>> enough log area (or both).
-> >>
-> >> Yeah, my current analysis didn’t show any storage performance issues. I’ll revisit this once more to make sure I’m not missing anything. We’ve previously had issues in this area that turned out to be kernel bugs. We didn’t change anything regarding journal sizes and only a recent kernel upgrade seemed to be relevant.
+> > Can you bisect to see what fixed it in 6.12.19 or what broke it in
+> > 6.12.25?  For example if it was working in 6.12.21 and not working in
+> > 6.12.25, you can bisect between 6.12.21 and .25.
 > >
-> > You mentioned you saw PSI showing a huge pressure ration, during the time, which
-> > might be generated by the journal writeback and giving it's a SYNC write, IOs
-> > will stall if your storage can't write it fast enough. IIRC, most of the threads
-> > from the logs you shared were waiting for log space to be able to continue,
-> > which causes the log to flush things to disk and of course increase IO usage.
-> > If your storage can't handle these IO bursts, then you'll get the stalls you're
-> > seeing.
-> > I am not discarding a possibility you are hitting a bug here, but it so far
-> > seems your storage is not being able to service IOs fast enough to avoid such IO
-> > stalls, or something else throttling IOs, XFS seems just the victim.
-> 
-> Yeah, it’s annoying, I know. To paraphrase "any sufficiently advanced bug is indistinguishable from slow storage”. ;)
-> 
-> As promised, I’ll dive deeper into the storage performance analysis, all telemetry so far was completely innocuous, but it’s a complex layering of SSDs → Ceph → Qemu … Usually if we have performance issues then the metrics reflect this quite obviously and will affect many machines at the same time. As this has always just affected one single VM at a time but spread over time my gut feeling is a bit more on the side of “it might be maybe a bug”. As those things tend to be hard/nasty to diagnose I wanted to raise the flag early on to see whether other’s might be having an “aha” moment if they’re experiencing something similar.
-> 
-> I’ll get back to you in 2-3 days with results from the storage analysis.
-> 
-> > Can you share the xfs_info of one of these filesystems? I'm curious about the FS
-> > geometry.
-> 
-> Sure:
-> 
-> # xfs_info /
-> meta-data=/dev/disk/by-label/root isize=512    agcount=21, agsize=655040 blks
->          =                       sectsz=512   attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=1    bigtime=1 inobtcount=1 nrext64=0
->          =                       exchange=0
-> data     =                       bsize=4096   blocks=13106171, imaxpct=25
->          =                       sunit=0      swidth=0 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
-> log      =internal log           bsize=4096   blocks=16384, version=2
->          =                       sectsz=512   sunit=0 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
-
-This seems to have been extended a few times, but nothing out-of-reality. Looks
-fine, but, is this one of the filesystems where you are facing the problem? I'm
-surprised this is the root FS, do you have that much IO into the rootFS?
-
-> 
-> # xfs_info /tmp/
-> meta-data=/dev/vdb1              isize=512    agcount=8, agsize=229376 blks
->          =                       sectsz=512   attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=0    bigtime=0 inobtcount=0 nrext64=0
->          =                       exchange=0
-> data     =                       bsize=4096   blocks=1833979, imaxpct=25
->          =                       sunit=1024   swidth=1024 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
-> log      =internal log           bsize=4096   blocks=2560, version=2
->          =                       sectsz=512   sunit=8 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
-
-This is worrisome. Your journal size is 10MiB, this can easily keep stalling IO
-waiting for log space to be freed, depending on the nature of the machine this
-can be easily triggered. I'm curious though how you made this FS, because 2560
-is below the minimal log size that xfsprogs allows since (/me goes look
-into git log) 2022, xfsprogs 5.15.
-
-FWIW, one of the reasons the minimum journal log size has been increased is the
-latency/stalls that happens when waiting for free log space, which is exactly
-the symptom you've been seeing.
-
-I'd suggest you to check the xfsprogs commit below if you want more details,
-but if this is one of the filesystems where you see the stalls, this might very
-well be the cause:
-
-commit cdfa467edd2d1863de067680b0a3ec4458e5ff4a
-Author: Eric Sandeen <sandeen@redhat.com>
-Date:   Wed Apr 6 16:50:31 2022 -0400
-
-    mkfs: increase the minimum log size to 64MB when possible
-
-> 
-> 
+> > Alex
 > >
 > >>
-> >>> There has been a few improvements though during Linux 6.9 on the log performance,
-> >>> but I can't tell if you have any of those improvements around.
-> >>> I'd suggest you trying to run a newer upstream kernel, otherwise you'll get very
-> >>> limited support from the upstream community. If you can't, I'd suggest you
-> >>> reporting this issue to your vendor, so they can track what you are/are not
-> >>> using in your current kernel.
+> >> For testing I installed 6.14.4 with the same result. It doesn't work.
 > >>
-> >> Yeah, we’ve started upgrading selected/affected projects to 6.12, to see whether this improves things.
-> >
-> > Good enough.
-> >
+> >> I also compared file /proc/config.gz of both kernels (6.12.21 <>
+> >> 6.14.4), but can't seem to see drastic changes to the graphical part.
 > >>
-> >>> FWIW, I'm not sure if NixOS uses linux-stable kernels or not. If that's the
-> >>> case, running a newer kernel suggestion is still valid.
+> >> I presume it has something to do with amdgpu.
 > >>
-> >> We’re running the NixOS mainline versions which are very vanilla. There are very very 4 small patches that only fix up things around building and binary paths for helpers to call to adapt them to the nix environment.
-> >
-> > I see. There were some improvements in the newer versions, so if you can rule
-> > out any possibly fixed bug is worth it.
-> >
-> >
+> >> If you need more information, I would be happy to help.
 > >>
-> >> Christian
-> >>
-> >>
-> >> --
-> >> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
-> >> Flying Circus Internet Operations GmbH · https://flyingcircus.io
-> >> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
-> >> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
-> 
-> 
-> --
-> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
-> Flying Circus Internet Operations GmbH · https://flyingcircus.io
-> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
-> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
-> 
-> 
+> >> Kind regards,
+> >> Marion
