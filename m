@@ -1,173 +1,148 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014AB28F508
-	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 09:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370942C08B5
+	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 09:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153329; cv=none; b=ZRDR/sP9y89vU1BbqSHF7oTwCYEE0CS6IzI6hHbcqQdk+iqwDIMO0gfFbWhwDZDD0eYdIqiYyBCURbCWQVML+O/WpB/iL4vH3y0uT3hlWo8rpax5/Jg9WAfkjcDbxDKFVh64m7H+STdGFJ/cAX+koBbLtSBra+CQe9VI3rM55aQ=
+	t=1750153737; cv=none; b=kuIxSifI4vlm+DZW4ylpZYssU/dQlmgdu0Zt2a2x7jykDWiqsvBM+0gjvNtnpDmFxfUi2CKg5H+9GWx5v4OVOeNMDe7cm7dsKjoGweRhfDdliXBvxbEiae8zuHZuOtc0gII5dTRx5aDCAJ7i7CzbX+6rBCV12QYiX5mj9kI0WCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153329; c=relaxed/simple;
-	bh=kEVr5LRDJXI5+NMKIDFQUd9VmCGFm55tC/Y7nPANTt8=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=iczUkThfBKGfmclwv6g+oB09MJX/vO3gqMxYrRdE2pIEGe3VE/anPdAKRGNSPkVeviz/+QS7jnt4vsD8MTZwoJQKUoCDtICscIu8LxJ8UnQHKqYyqfoiXgp4PrAW7Lno21lUz7J+FEajAo0sKkH/uZPbigOpJOl69kuP896PS+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BBArIcmN; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750153737; c=relaxed/simple;
+	bh=yU8B2S0rvUJRYS4eDEpg/4azZ5qYIqxzpKab9dnBZz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ff6F3S89dDKPbLAS4zwCneN6Exf+RJTWYKUCTOZUWUJWHl5+jbqZSbes6zO1gNaivRI7bgPH16PBQIu5rUk0on2nekORkyIYTk3uUguewzJogjaoKv1NcvPp0neOW2Nic2nkhGnalId+Ke6nTJelDwSGHm96RlLcWtgQii5/qq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HboJ9PAC; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BBArIcmN"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7B0E425F98;
-	Tue, 17 Jun 2025 11:42:04 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id DLfz8DzFOpKU; Tue, 17 Jun 2025 11:42:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750153323; bh=kEVr5LRDJXI5+NMKIDFQUd9VmCGFm55tC/Y7nPANTt8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=BBArIcmNxHIoKXxCgCBxozEjIHCMN0lxBNp8rZFkzi4cfUkTmHUYZA+btASY+rxE0
-	 Zk42MC5u/x40Y32dkU6MEq9405EV1UR2DhNI8mtSCelB1EOtsnKjYkm+qNFPmtjFup
-	 Xnb5iAjftrdy6AcGBVVFQaBW0EP1mU4N9lYhMgc7iOxlUrgDgbvXY2D1MUOe5jtyfo
-	 2L7b475uhTOlyAtprlcIMMw06ieRPzrRUOxzGS+MqMwcs3KmWSW4fyv+GhBaLcMd1e
-	 JOaJEZDqCoT9jxAsG2/W76gPiEMQZcfwYF6W+0HLBSMiUJSVT084pZYKoMKAD6hHlg
-	 aqi5zH64yEj4Q==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HboJ9PAC"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-87f2170921dso835330241.0
+        for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 02:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750153734; x=1750758534; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JJabXLtW1m0bIrhc/aru55FQgKQQl5SUoAdpl7Ryqe0=;
+        b=HboJ9PAC0LcpA3IqXFI8kPjVXB463fE/WgCn6xOjqjMtrxDDB8bJfWDwmwPr3wa4K/
+         9kTSZFNpgWLdvK0jJrKguqhcD7sgZ9ckKRpwP+kWqnxY2g+EwUXQvZ/0pF4WWaAYBzRD
+         JM4syc2UzVYYT4OYlnyEABo1lCWiA/J+ADd4OOyIg5nepYjc6soNWJywrRXu7iBuKrxh
+         VeuaAlBQCVuD2hfmvSk37VbGZpWPAJBddxcUTeZkUk3XOigNwycC8Q8dfZGjVEuiVNUx
+         G8ajuPTdzKzydFtCm021bD1GUX0zlQOhmuUPlxwW22JRLuXfARJ1tBCWhvFF+otnLESo
+         FZtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750153734; x=1750758534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JJabXLtW1m0bIrhc/aru55FQgKQQl5SUoAdpl7Ryqe0=;
+        b=bAq8Dp4BslbgMqVi5jvozwwJk2Bu+pf4DZofIS+b8mwIyojp52o4QqYR26jhaa5dNe
+         dI2yxmQCMCs3M2cvCVgrU0Gd1+WH7JluaUEYL6lr8BZsqg+wwzxP5A6J3Wh+MCFL9v+G
+         j69Hink0nO+Yeuvig6MaJOeQij7VaQsSP+8RTAPvg7kudCN1XBWlwl7eknhHEkRWEALb
+         0nVys5SQLKMHkLthVD4JnaYOC5QlS2GpEAPrTGTamhDISp8+eiCVOlDTWYAbmJ6J+oVn
+         sByPfnWW+ORxQxlUhObN1Wz9iwVStk40DeD9NQZvAnbjBTVMP7IqdAwwGc/FuAGHjOA7
+         KVLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR6DQ9L3p8itCnWdcvjlfGi0ewQpjNmrZYZIVsSHlo/ruws0EpjdEJVkPDcBImzGwdzduULnqQNyR4Cg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzJnoOvWn9stSRcHZqSplkOXmbKqGIu6RFqSEBZWBL4yEJWMQWx
+	Lgn2ef/AwrKcgua+42uKLAVSCSpTA30cl0IOaR6yv1DuO3MGB/oFx7eg5tqX2oUq1nH09CR2IbT
+	UeBKvQWuST8+m1oKa50HjSNkTr8JsidimPd56J52P0Q==
+X-Gm-Gg: ASbGncszmY0VViYk1GuTczHlI6EjMnkKw9h8i6Tx/D7teJbKB0ySk44SorjE1IQzA2k
+	HJ1eNAVQhpm4LhtAL9mCIsO/6MmIwk/d8Egs2hu+7Vqeg3BYHKwJFByaKTreZyemWF0nc6NrWsI
+	brGmhSP+NbADP1P5MC13wyugXnVgCcBAXB5FZnubBOuwBbW1FZ9240JuxyTDeutjhnZkovlJFM8
+	UODpTold1y/1oM=
+X-Google-Smtp-Source: AGHT+IFqlwLfs3w5t0Kke4vusAJ0LDpMDoRdBhRndcFHTCxIPX6kVlBZ7kOElI3G6E8LB5BuhyWmQMy9mQlLjgSj4NQ=
+X-Received: by 2002:a05:6102:4b88:b0:4e7:db33:5725 with SMTP id
+ ada2fe7eead31-4e7f632331bmr9323586137.3.1750153734104; Tue, 17 Jun 2025
+ 02:48:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 17 Jun 2025 11:42:03 +0200
-From: machion@disroot.org
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com,
- christian.koenig@amd.com
-Subject: Re: Unplayable framerates in game but specific kernel versions work,
- maybe amdgpu problem
-In-Reply-To: <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
-References: <c415d9e0b08bcba068b01700225bf560@disroot.org>
- <CADnq5_PX1dYF2Jd3q7ghaBjpPhNLq9EmFJtN1w6YOSfVo++7sA@mail.gmail.com>
- <69b5ebaa719355994a383fa026dc3fba@disroot.org>
- <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
-Message-ID: <fadf714ecdc2e3bd5bed0c3ee69177a1@disroot.org>
-X-Sender: machion@disroot.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
+ <7c101fe5-7c73-4916-a832-d656511eeab8@heusel.eu> <ec18001d-7123-4d13-aea7-a28594cd137b@redhat.com>
+In-Reply-To: <ec18001d-7123-4d13-aea7-a28594cd137b@redhat.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 17 Jun 2025 15:18:42 +0530
+X-Gm-Features: AX0GCFuBeLu3_hPbiCBoM4g8VWlAFlv6r7WSlxB2DJ9al6JMin7gQdwU7P-bZ5E
+Message-ID: <CA+G9fYvoYSpyxpBAcAje6X7707+y9cc84mUrWMvdLtZc3Np1eQ@mail.gmail.com>
+Subject: Re: clang: selftests/mm gup_longterm error while loading shared
+ libraries liburing.so.2 cannot open shared object file No such file or directory
+To: David Hildenbrand <david@redhat.com>
+Cc: Christian Heusel <christian@heusel.eu>, clang-built-linux <llvm@lists.linux.dev>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>, 
+	Zi Yan <ziy@nvidia.com>, lorenzo.stoakes@oracle.com, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, jackmanb@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I feared that.
+On Tue, 17 Jun 2025 at 01:58, David Hildenbrand <david@redhat.com> wrote:
+>
+> On 16.06.25 21:14, Christian Heusel wrote:
+> > On 25/06/16 11:02PM, Naresh Kamboju wrote:
+> >> The following test regressions noticed while running selftests/mm gup_=
+longterm
+> >> test cases on Dragonboard-845c, Dragonboard-410c, rock-pi-4, qemu-arm6=
+4 and
+> >> qemu-x86_64 this build have required selftest/mm/configs included and =
+toolchain
+> >> is clang nightly.
+> >>
+> >> Regressions found on Dragonboard-845c, Dragonboard-410c, rock-pi-4,
+> >> qemu-arm64 and qemu-x86_64
+> >>    -  selftests mm gup_longterm fails
+> >>
+> >> Regression Analysis:
+> >>   - New regression? Yes
+> >>   - Reproducibility? Yes
+> >>
+> >> Test regression: selftests mm gup_longterm error while loading shared
+> >> libraries liburing.so.2 cannot open shared object file No such file or
+> >> directory
+>  >> Test regression: selftests mm cow error while loading shared
+> libraries>> liburing.so.2 cannot open shared object file No such file or
+> directory
+> >
+> > These do not really look like kernel regressions, rather like a bug in
+> > the userspace testing tool =F0=9F=A4=94 Could it be that the tests were=
+ not
+> > rebuilt for the new liburing or that the dependency is not installed in
+> > the test environment?
+>
+> It looks like the tests were build with liburing around, and then ran
+> without liburing around.
+>
+> Note that the file for example has:
+>
+> #ifdef LOCAL_CONFIG_HAVE_LIBURING
+> #include <liburing.h>
+> #endif /* LOCAL_CONFIG_HAVE_LIBURING */
+>
+> You should be running into similar issues with cow.c, which uses the
+> exact same approach for detecting+linking liburing.
+>
+> So seems like something is off in your testing environment?
 
-It seems a crazy problem, when many people are affected and in opposite 
-ways.
-This ReBAR/UEFI thing is also new to me, but I don't have this on my 
-system either (using BIOS/MBR).
+The kselftest built with cross toolchain((gcc-13 and clang) vs (arm64 / x86=
+_64))
+and tar / zipped and exported to NFS and mounted by DUT the
+device under test by using overlayfs.
 
-I hope, it can be fixed for all scenarios.
+The tar / zipped file has all installed binaries and script files to run te=
+sts.
 
-Marion
+However, The missing debian package onto the userspace has been installed
+ + liburing-dev today. This will fix the reported problem.
 
-Am 2025-06-16 15:29, schrieb Alex Deucher:
-> On Fri, Jun 13, 2025 at 3:38 PM <machion@disroot.org> wrote:
->> 
->> Hi,
->> sorry for the delay.
->> Besides less time, I had to make myself familiar with bisecting and
->> again kernel compiling. Last time I compiled the kernel myself was
->> around 2010 I think.
->> 
->> Anyway it seems I found the bad commit. The result after bisecting 10
->> commits is:
->> 
->> a53d959fe660341788cb8dbc3ac3330d90a09ecf is the first bad commit
->> commit a53d959fe660341788cb8dbc3ac3330d90a09ecf
->> Author: Christian König <christian.koenig@amd.com>
->> Date:   Thu Mar 20 14:46:18 2025 +0100
->> 
->>      drm/amdgpu: immediately use GTT for new allocations
->> 
->>      commit a755906fb2b8370c43e91ba437ae1b3e228e8b02 upstream.
->> 
->>      Only use GTT as a fallback if we already have a backing store. 
->> This
->>      prevents evictions when an application constantly allocates and
->> frees new
->>      memory.
->> 
->>      Partially fixes
->>      
->> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2833985.
->> 
->>      Signed-off-by: Christian König <christian.koenig@amd.com>
->>      Fixes: 216c1282dde3 ("drm/amdgpu: use GTT only as fallback for
->> VRAM|GTT")
->>      Acked-by: Alex Deucher <alexander.deucher@amd.com>
->>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>      Cc: stable@vger.kernel.org
->>      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> 
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Unfortunately reverting that commit will reintroduce a similar
-> performance issue for lots of other uses.  See:
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2827990
-> for a description of the fundemental problem.
-> 
-> Alex
-> 
->> 
->> Marion
->> 
->> 
->> Am 2025-05-08 15:18, schrieb Alex Deucher:
->> > On Thu, May 8, 2025 at 9:13 AM <machion@disroot.org> wrote:
->> >>
->> >> Hello kernel/driver developers,
->> >>
->> >> I hope, with my information it's possible to find a bug/problem in the
->> >> kernel. Otherwise I am sorry, that I disturbed you.
->> >> I only use LTS kernels, but I can narrow it down to a hand full of
->> >> them,
->> >> where it works.
->> >>
->> >> The PC: Manjaro Stable/Cinnamon/X11/AMD Ryzen 5 2600/Radeon HD
->> >> 7790/8GB
->> >> RAM
->> >> I already asked the Manjaro community, but with no luck.
->> >>
->> >> The game: Hellpoint (GOG Linux latest version, Unity3D-Engine v2021),
->> >> uses vulkan
->> >>
->> >> ---
->> >>
->> >> I came a long road of kernels. I had many versions of 5.4, 5.10, 5.15,
->> >> 6.1 and 6.6 and and the game was always unplayable, because the frames
->> >> where around 1fps (performance of PC is not the problem).
->> >> I asked the mesa and cinnamon team for help in the past, but also with
->> >> no luck.
->> >> It never worked, till on 2025-03-29 when I installed 6.12.19 for the
->> >> first time and it worked!
->> >>
->> >> But it only worked with 6.12.19, 6.12.20 and 6.12.21
->> >> When I updated to 6.12.25, it was back to unplayable.
->> >
->> > Can you bisect to see what fixed it in 6.12.19 or what broke it in
->> > 6.12.25?  For example if it was working in 6.12.21 and not working in
->> > 6.12.25, you can bisect between 6.12.21 and .25.
->> >
->> > Alex
->> >
->> >>
->> >> For testing I installed 6.14.4 with the same result. It doesn't work.
->> >>
->> >> I also compared file /proc/config.gz of both kernels (6.12.21 <>
->> >> 6.14.4), but can't seem to see drastic changes to the graphical part.
->> >>
->> >> I presume it has something to do with amdgpu.
->> >>
->> >> If you need more information, I would be happy to help.
->> >>
->> >> Kind regards,
->> >> Marion
+- Naresh
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
