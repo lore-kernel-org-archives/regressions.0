@@ -1,92 +1,123 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3A28399;
-	Tue, 17 Jun 2025 05:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511A815539A
+	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 05:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750138605; cv=none; b=EkccutisdwLrtxQxiv50h+HgZeAy8yEGtsPu41feARw7cthL7lTvBYZ+8e4RrPQ0SNv3VPloqtYzH/OjtWJz61bKg/uq5jlMHkvcU4r5NOr5o0hvjaxL9FWeKaBCGmZkVcGh8MMtfWoEFZdA5C/rb3DB///hQiy3WhmqeaP9ejs=
+	t=1750139112; cv=none; b=P6pLzcfaEjLblsJ3KNmF83WHzQd/PIuyuZAUexVKyJMaKHgAPmf2Wf0hkgRF7a0IR7XG9ue7y5L0EwyOudrsSWfFkzz5bSj5zuAX/ozQMV+qteiVNK1fU0h6BoZgtck/dWhy12J7WwYc5tw+nyQtwPKdk7ZE89b16ih1xyG11Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750138605; c=relaxed/simple;
-	bh=jbP9uGjsDMznmBpJruQX9jR+BpwYKtH06lHDqNl37Ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDnxqCR9vltQBVPBW4SdhNxT47G/wMC8AENYMWQFpHR4ciniMpa8D82wYyJMyD/qYSv/S7EB5WEeH1B5ntaTyvhJS+U5eoMYgWXPL4Qis+1XJsN5uOfR+vp2YV92KRvSJ3T4LlGlh+HtnhybdLPi/YcgUktrMOhruztIjEPtn4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=X1d4KBud; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1750139112; c=relaxed/simple;
+	bh=1WHzlCNxEImWUDje4Ej56WMZmcdG8ijinP9bszSGkac=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=EPZw4CdMqZzNbM0WuCSrDP/VBP1oHF0gDxGULvrX9h6tDAcU6YYND7pYL9Rvt6HZFq3tNvPfaFj8g0OZjF9AmoTqtxzeEFWG5MVqPg0kbVYkvq5PwF7zhVYTtYNry2HbjIrnD2d95gFugFZ7CvG4Dkzv8QnUAYzVCIyECXNRXv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=qXxQv4po; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="X1d4KBud"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=fYuxPv6o911HB4LCZgDj4D5PgU252TUBup/qW5CJp1o=; b=X1d4KBud3m/P/cmFBCichdGAsS
-	Z4agd+LbHf/jktjYPjr0UZ12PlmvJTHMmqvYk7u51VmGLMinXgXwBJ+kUi0d0Bd/hl/bQJxa9CMak
-	obu5dv9cx9b0qHzYYQj50NZgyM70T8oGAKpvIztivAE3V5xQIJ54OZwlbQhhlub/2UBWAARvdN5bo
-	bEZcZhcxUDLmYaiUnbDRqDY0UJOcuI0IuHWEbwPXg7aaI6CGkzK+FULoAh7vNqvMnoLnQojtWaaj3
-	eOYJHFZXLPO40htgO86vJIfHcwSoO3MLf4SJZFE3TRxgcaEG+THAzuqze1HlKOkKDMuauNA1EmoNo
-	FJLXeUxg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uROkl-000aIV-0S;
-	Tue, 17 Jun 2025 13:36:39 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 17 Jun 2025 13:36:38 +0800
-Date: Tue, 17 Jun 2025 13:36:38 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aFD-5i8RrA4tHJ6Y@gondor.apana.org.au>
-References: <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
- <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
- <043472e83b086681ff3a6d0130bfa01ceeff5fa8.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="qXxQv4po"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1750139104;
+	bh=lrkO0Eu7jwec7H3gk2TW5b+gWEMO/yUB0J1TGVptgM0=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=qXxQv4poTYiMenSeyZ9gadw0198Z7sdZgm91imfcP7ZkMGX83uHg0+pEEkAKcoBXU
+	 FcG/BdiuVN2+wbDMtDrgM6Mk1iDBFO5RbQMldBh6qfBTloPLAUO7hsVMu0v/+zQMSF
+	 xZF+kl8JZsO6jzRG46pYow8unWtT6MNBkewWGwDI=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <043472e83b086681ff3a6d0130bfa01ceeff5fa8.camel@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <hoszywa5az7z4yxubonbhs2p2ysnut3s7jjnkd7ckz4sgdyqw2@ifuor5qnl7yu>
+Date: Tue, 17 Jun 2025 07:44:54 +0200
+Cc: stable@vger.kernel.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ regressions@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B380AC75-6B14-4EC9-A398-61A2D33033A7@flyingcircus.io>
+References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
+ <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
+ <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
+ <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
+ <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
+ <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
+ <M0QJfqa7-6M2vnPhyeyy36xCOmCEL83O7lj-ky1DXTqQXa677-oE8C_nAsBCBglBp_6k7vLeN4a2nJ6R3JuQxw==@protonmail.internalid>
+ <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
+ <hoszywa5az7z4yxubonbhs2p2ysnut3s7jjnkd7ckz4sgdyqw2@ifuor5qnl7yu>
+To: Carlos Maiolino <cem@kernel.org>
 
-On Tue, Jun 17, 2025 at 07:32:28AM +0200, Klaus Kudielka wrote:
-> Hello,
-> 
-> Plain v6.16-rc1 with marvell-cesa as module and CRYPTO_SELFTESTS enabled.
-> Identical behaviour as reported previously with the cryptodev tree (see below).
-> 
-> According to /proc/crypto, all marvell-cesa selftests (including ahash) appear to pass reliably again.
-> 
-> If we can trust the information in /proc/crypto, I would suggest to revert commit
-> e845d2399a00f866f287e0cefbd4fc7d8ef0d2f7 ("crypto: marvell/cesa - Disable hash algorithms")
 
-Corentin is still able to reproduce failures reliably.  While
-I have a patch that seems to reduce the failure rate for him it
-is not yet a complete fix.  There is also no full explanation of
-why my patch even works to the extent that it does (the DMA memory
-is supposed to be cache-coherent but perhaps it isn't).
 
-So I think it is still premature at this point.  There is also a
-known problem with the hmac code where it fails to deal with zero-length
-updates correctly.
+> On 16. Jun 2025, at 14:15, Carlos Maiolino <cem@kernel.org> wrote:
+>=20
+> On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune wrote:
+>=20
+>>=20
+>> # xfs_info /tmp/
+>> meta-data=3D/dev/vdb1              isize=3D512    agcount=3D8, =
+agsize=3D229376 blks
+>>         =3D                       sectsz=3D512   attr=3D2, =
+projid32bit=3D1
+>>         =3D                       crc=3D1        finobt=3D1, =
+sparse=3D1, rmapbt=3D0
+>>         =3D                       reflink=3D0    bigtime=3D0 =
+inobtcount=3D0 nrext64=3D0
+>>         =3D                       exchange=3D0
+>> data     =3D                       bsize=3D4096   blocks=3D1833979, =
+imaxpct=3D25
+>>         =3D                       sunit=3D1024   swidth=3D1024 blks
+>> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, =
+ftype=3D1, parent=3D0
+>> log      =3Dinternal log           bsize=3D4096   blocks=3D2560, =
+version=3D2
+>>         =3D                       sectsz=3D512   sunit=3D8 blks, =
+lazy-count=3D1
+>> realtime =3Dnone                   extsz=3D4096   blocks=3D0, =
+rtextents=3D0
+>=20
+> This is worrisome. Your journal size is 10MiB, this can easily keep =
+stalling IO
+> waiting for log space to be freed, depending on the nature of the =
+machine this
+> can be easily triggered. I'm curious though how you made this FS, =
+because 2560
+> is below the minimal log size that xfsprogs allows since (/me goes =
+look
+> into git log) 2022, xfsprogs 5.15.
+>=20
+> FWIW, one of the reasons the minimum journal log size has been =
+increased is the
+> latency/stalls that happens when waiting for free log space, which is =
+exactly
+> the symptom you've been seeing.
+>=20
+> I'd suggest you to check the xfsprogs commit below if you want more =
+details,
+> but if this is one of the filesystems where you see the stalls, this =
+might very
+> well be the cause:
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Interesting catch! I=E2=80=99ll double check this against our fleet and =
+the affected machines and will dive into the traffic patterns of the =
+specific underlying devices.
+
+This filesystem is used for /tmp and is getting created fresh after a =
+=E2=80=9Ccold boot=E2=80=9D from our hypervisor. It could be that a =
+number of VMs have only seen warm reboots for a couple of years but get =
+kernel upgrades with warm reboots quite regularly. We=E2=80=99re in the =
+process of changing the /tmp filesystem creation to happen fresh during =
+initrd so that the VM internal xfsprogs will more closely match the =
+guest kernel.
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
