@@ -1,148 +1,193 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370942C08B5
-	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 09:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C779928FFD0
+	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 10:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153737; cv=none; b=kuIxSifI4vlm+DZW4ylpZYssU/dQlmgdu0Zt2a2x7jykDWiqsvBM+0gjvNtnpDmFxfUi2CKg5H+9GWx5v4OVOeNMDe7cm7dsKjoGweRhfDdliXBvxbEiae8zuHZuOtc0gII5dTRx5aDCAJ7i7CzbX+6rBCV12QYiX5mj9kI0WCE=
+	t=1750155655; cv=none; b=RzFtYjr0ZLBI2PEIMs4YMmcvMAk9d/xjKER/D2AixbeFd/dcTdi8qO2dTy0/x1mCbO2m1F+uWl0pqCdcV6PBA7rqeVH/C+wqVjQeuRaz/1r+Ex93skJUuyZiVL7L5HqNGG71LuK+/g4rLR6ofemgrytQWyIQycNcY3BFEhS3fNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153737; c=relaxed/simple;
-	bh=yU8B2S0rvUJRYS4eDEpg/4azZ5qYIqxzpKab9dnBZz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ff6F3S89dDKPbLAS4zwCneN6Exf+RJTWYKUCTOZUWUJWHl5+jbqZSbes6zO1gNaivRI7bgPH16PBQIu5rUk0on2nekORkyIYTk3uUguewzJogjaoKv1NcvPp0neOW2Nic2nkhGnalId+Ke6nTJelDwSGHm96RlLcWtgQii5/qq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HboJ9PAC; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750155655; c=relaxed/simple;
+	bh=l7pANxE6LlWJZaBuB+f/YFijKcmcnXNlJid6eycwsdw=;
+	h=Message-ID:Date:MIME-Version:Cc:From:Subject:To:Content-Type; b=rk+/Mu62HUjUljYbLFDzV2y0WejUtZGIlTppfzOfpVw2W5HFfWCjTaGOdzDrAbjqzwXLm9RCV0vaSmWmR+3/0Lf0kauPNofj2jg6vT3oDAFHpn10z/K33f2Fo3nzoKmwA+71vAASqz1tzmAYOUSyG+YOM2LrQpK6QrpBBEtvPBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2k9Nr2D; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HboJ9PAC"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-87f2170921dso835330241.0
-        for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 02:48:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2k9Nr2D"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so8393284a12.2
+        for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 03:20:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750153734; x=1750758534; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JJabXLtW1m0bIrhc/aru55FQgKQQl5SUoAdpl7Ryqe0=;
-        b=HboJ9PAC0LcpA3IqXFI8kPjVXB463fE/WgCn6xOjqjMtrxDDB8bJfWDwmwPr3wa4K/
-         9kTSZFNpgWLdvK0jJrKguqhcD7sgZ9ckKRpwP+kWqnxY2g+EwUXQvZ/0pF4WWaAYBzRD
-         JM4syc2UzVYYT4OYlnyEABo1lCWiA/J+ADd4OOyIg5nepYjc6soNWJywrRXu7iBuKrxh
-         VeuaAlBQCVuD2hfmvSk37VbGZpWPAJBddxcUTeZkUk3XOigNwycC8Q8dfZGjVEuiVNUx
-         G8ajuPTdzKzydFtCm021bD1GUX0zlQOhmuUPlxwW22JRLuXfARJ1tBCWhvFF+otnLESo
-         FZtQ==
+        d=gmail.com; s=20230601; t=1750155651; x=1750760451; darn=lists.linux.dev;
+        h=to:autocrypt:subject:from:cc:content-language:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l7pANxE6LlWJZaBuB+f/YFijKcmcnXNlJid6eycwsdw=;
+        b=Z2k9Nr2DK7ZECtMvZYP3REU8v0/su60wTof4aBpFzirba/tMVn3vaucb9JlQPsoPcB
+         IPIadkpTkP1hZFq0zvud6wttQfi/IAQ8VkdFtvyiVIWdemuzmsxPGXgjPBDPLy4o/gQD
+         QjfW2an+YBzGCrqq/k1+xGAvlhJeIHHJFiY1sRrtXfKxIxxuwk83kHLFPlTMSgbntCzF
+         03A5G6ixpCHlnz+3uDirD+KD012ozqKw1UGE6McHP9OBzTJVKsv4+RR63RlqMlKxpJBZ
+         RJ05IidKSpfCOP7lb8TN3jhJb4HIj8O61Zd6+6XYt3DlDR+1cve6xLCow3dpLUePoYQt
+         2tIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153734; x=1750758534;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JJabXLtW1m0bIrhc/aru55FQgKQQl5SUoAdpl7Ryqe0=;
-        b=bAq8Dp4BslbgMqVi5jvozwwJk2Bu+pf4DZofIS+b8mwIyojp52o4QqYR26jhaa5dNe
-         dI2yxmQCMCs3M2cvCVgrU0Gd1+WH7JluaUEYL6lr8BZsqg+wwzxP5A6J3Wh+MCFL9v+G
-         j69Hink0nO+Yeuvig6MaJOeQij7VaQsSP+8RTAPvg7kudCN1XBWlwl7eknhHEkRWEALb
-         0nVys5SQLKMHkLthVD4JnaYOC5QlS2GpEAPrTGTamhDISp8+eiCVOlDTWYAbmJ6J+oVn
-         sByPfnWW+ORxQxlUhObN1Wz9iwVStk40DeD9NQZvAnbjBTVMP7IqdAwwGc/FuAGHjOA7
-         KVLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVR6DQ9L3p8itCnWdcvjlfGi0ewQpjNmrZYZIVsSHlo/ruws0EpjdEJVkPDcBImzGwdzduULnqQNyR4Cg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJnoOvWn9stSRcHZqSplkOXmbKqGIu6RFqSEBZWBL4yEJWMQWx
-	Lgn2ef/AwrKcgua+42uKLAVSCSpTA30cl0IOaR6yv1DuO3MGB/oFx7eg5tqX2oUq1nH09CR2IbT
-	UeBKvQWuST8+m1oKa50HjSNkTr8JsidimPd56J52P0Q==
-X-Gm-Gg: ASbGncszmY0VViYk1GuTczHlI6EjMnkKw9h8i6Tx/D7teJbKB0ySk44SorjE1IQzA2k
-	HJ1eNAVQhpm4LhtAL9mCIsO/6MmIwk/d8Egs2hu+7Vqeg3BYHKwJFByaKTreZyemWF0nc6NrWsI
-	brGmhSP+NbADP1P5MC13wyugXnVgCcBAXB5FZnubBOuwBbW1FZ9240JuxyTDeutjhnZkovlJFM8
-	UODpTold1y/1oM=
-X-Google-Smtp-Source: AGHT+IFqlwLfs3w5t0Kke4vusAJ0LDpMDoRdBhRndcFHTCxIPX6kVlBZ7kOElI3G6E8LB5BuhyWmQMy9mQlLjgSj4NQ=
-X-Received: by 2002:a05:6102:4b88:b0:4e7:db33:5725 with SMTP id
- ada2fe7eead31-4e7f632331bmr9323586137.3.1750153734104; Tue, 17 Jun 2025
- 02:48:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750155651; x=1750760451;
+        h=to:autocrypt:subject:from:cc:content-language:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l7pANxE6LlWJZaBuB+f/YFijKcmcnXNlJid6eycwsdw=;
+        b=ilyfCByZUJMddpIAanpEe8nEZj22dpVZnzQRJYlox0QyUL2sfgiIPYBmZ1Nt4cA/Jn
+         7G1ExBrIgHRJenRdq5UPL5GXKpsO7XwgXmlBHZpybp570mYTd7TazLtPAD4CkBJbfTR5
+         NWyGj3Dm0xMi2ts54KqW8KBjGyjhd7ZW1r3nf6o6omE+3h5HyFBCnmB7G8XlUqYo3A7a
+         GOTgr+iy8l8OGe0Bnc66L6lfV001l/klQZz2ZiP7pp5R3OUlV7L/u90hUB0R/5Bncjae
+         5KTdrFcGYuzt7JBnuvmjfYO5H3BWAQgxhmSoqRw38q4m8TB39bym/VUJuTF4amR+tZW/
+         YszQ==
+X-Gm-Message-State: AOJu0YxS3ZzwJpQcQzmjfAPbFSL1rnNftkj+DRRSae+7sDejoOZGDM0A
+	VZ5PI+/7Ge/mr7s8Tlx6wQA5FTuFCITLtmb8QHdzs7hKI1URJvirJv2o
+X-Gm-Gg: ASbGncufxa5jHoDlx72YuBI3lfVzCAFiT2XesVdpkMMzgu/KHO3nFc96RgeQwFzK0oZ
+	3vr5p49uG0pBKqJHKTHT8PGJJVcKZ2hzoe5S1vlSvBtNr9DkLvGqQ4UZpQIupCOwQUE7gml4R30
+	mDZVNY3/MjvmeQ43QKy2KAiwYEBT2xSce7fbiU2EvF9FtQkpX5HRDlzYIb9wjqyrgqVpwSSYHdK
+	Hu+e20/5gLEP4PZlRfJr6dVzAmx/3ppzhCVqH/1AApvebshEB6CVZSsOWSefeuxihtKQk0t7Bnr
+	mp9iUhcGGbf5jdcCLeOicxmRRMR6rTnz/xd88Wf+EFanX1KzwfSk0aONErZomOtKV33xhBZN9nR
+	b7PGMTVL61KjOmpsLn6fTmG9/jJcsE5ww38NV60QbUgKz
+X-Google-Smtp-Source: AGHT+IF5Div275DdVcYXw4eL4u8BbQ2uaKPyNT/RQD6hY71nr028vCI7aTDPq7CiVCKtgtNgWIv7mg==
+X-Received: by 2002:a17:907:d78a:b0:adb:3509:b459 with SMTP id a640c23a62f3a-adfad329678mr1393821066b.19.1750155650517;
+        Tue, 17 Jun 2025 03:20:50 -0700 (PDT)
+Received: from [192.168.75.93] (217-122-252-220.cable.dynamic.v4.ziggo.nl. [217.122.252.220])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-adec8929371sm844397166b.117.2025.06.17.03.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 03:20:49 -0700 (PDT)
+Message-ID: <8d7c7958-9558-4c8a-a81a-e9310f2d8852@gmail.com>
+Date: Tue, 17 Jun 2025 12:20:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYssELHcYKwgGNBMLrfeKZa9swGdLrH7gxqzd4P0kaOiZg@mail.gmail.com>
- <7c101fe5-7c73-4916-a832-d656511eeab8@heusel.eu> <ec18001d-7123-4d13-aea7-a28594cd137b@redhat.com>
-In-Reply-To: <ec18001d-7123-4d13-aea7-a28594cd137b@redhat.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 17 Jun 2025 15:18:42 +0530
-X-Gm-Features: AX0GCFuBeLu3_hPbiCBoM4g8VWlAFlv6r7WSlxB2DJ9al6JMin7gQdwU7P-bZ5E
-Message-ID: <CA+G9fYvoYSpyxpBAcAje6X7707+y9cc84mUrWMvdLtZc3Np1eQ@mail.gmail.com>
-Subject: Re: clang: selftests/mm gup_longterm error while loading shared
- libraries liburing.so.2 cannot open shared object file No such file or directory
-To: David Hildenbrand <david@redhat.com>
-Cc: Christian Heusel <christian@heusel.eu>, clang-built-linux <llvm@lists.linux.dev>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Shuah Khan <shuah@kernel.org>, 
-	Zi Yan <ziy@nvidia.com>, lorenzo.stoakes@oracle.com, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, jackmanb@google.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: nl-NL, en-US
+Cc: regressions@lists.linux.dev, Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+ Suraj Kandpal <suraj.kandpal@intel.com>, Jani Nikula
+ <jani.nikula@intel.com>, Khaled Almahallawy <khaled.almahallawy@intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org
+From: Vas Novikov <vasya.novikov@gmail.com>
+Subject: [REGRESSION][BISECTED] intel iGPU with HDMI PLL stopped working at
+ 1080p@120Hz 1efd5384
+Autocrypt: addr=vasya.novikov@gmail.com; keydata=
+ xjMEYrX2ChYJKwYBBAHaRw8BAQdAf/bzdTDerOW5j+qrayMzPOCKthCx8KYKZo20cty68aPN
+ KFZhc2lsaSBOb3Zpa292IDx2YXN5YS5ub3Zpa292QGdtYWlsLmNvbT7CjwQTFggANxYhBLKE
+ QxE9sGxECbI4ubmfrsbg1d9tBQJitfYKBQkJZgGAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQ
+ uZ+uxuDV321klwEAm5+HyBecp+ofMZ6Ors+OvrETLFQU2B9wCd/d/i2NjJABAIssTvgdxlqF
+ I6GjehRMPURi6W1uFMPzzp9gM1yeYXEGzjgEYrX2ChIKKwYBBAGXVQEFAQEHQODm5qV0UQrP
+ hcJkaZVbhtVmb90gN6rIuN0Q/xTmhqJ4AwEIB8J+BBgWCAAmFiEEsoRDET2wbEQJsji5uZ+u
+ xuDV320FAmK19goFCQlmAYACGwwACgkQuZ+uxuDV322trQEA1Yj4GvOlEPfyuhMfX8P0Ah/8
+ QXCqgdMQH7PaNgIFFokA/1DgWcc1XGFNRHpOGrJNnF4Ese1hWjYoqo2iBlURPQwP
+To: stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------dtb1s0ai873eTd9PpSOnx5UG"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------dtb1s0ai873eTd9PpSOnx5UG
+Content-Type: multipart/mixed; boundary="------------Uc0vBnG4YG2ZGkz04pGupL9t";
+ protected-headers="v1"
+From: Vas Novikov <vasya.novikov@gmail.com>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+ Suraj Kandpal <suraj.kandpal@intel.com>, Jani Nikula
+ <jani.nikula@intel.com>, Khaled Almahallawy <khaled.almahallawy@intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org
+Message-ID: <8d7c7958-9558-4c8a-a81a-e9310f2d8852@gmail.com>
+Subject: [REGRESSION][BISECTED] intel iGPU with HDMI PLL stopped working at
+ 1080p@120Hz 1efd5384
+
+--------------Uc0vBnG4YG2ZGkz04pGupL9t
+Content-Type: multipart/mixed; boundary="------------RS0LcFpFyMC1IIVh4SODTdRL"
+
+--------------RS0LcFpFyMC1IIVh4SODTdRL
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+SGkgZGVhciBMS01MIGFuZCBjb21tdW5pdHksIHRoaXMgaXMgbXkgZmlyc3QgcG9zdCBoZXJl
+LCBzbyBJJ2QgDQphcHByZWNpYXRlIGFueSBndWlkYW5jZSBvciByZWRpcmVjdGlvbiBpZiBp
+dCdzIGR1ZS4NCg0KU3RhcnRpbmcgZnJvbSBjb21taXQgDQpodHRwczovL2dpdC5rZXJuZWwu
+b3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0
+Lz9pZD0xZWZkNTM4NDI3N2ViNzFmY2UyMDkyMjU3OTA2MWNkM2FjZGIwN2NmLA0KSERNSSBo
+YW5kbGluZyBmb3IgY2VydGFpbiByZWZyZXNoIHJhdGVzIG9uIG15IGludGVsIGlHUFUgaXMg
+YnJva2VuLg0KDQpUaGUgZXJyb3IgaXMgc3RpbGwgcHJlc2VudCBpbiA2LjE2cmMxLg0KDQpT
+cGVjaWZpY2FsbHksIHRoaXMgaXMgdGhlIGNvbW1hbmQgdGhhdCBkaXNhbWJpZ3VhdGVzIHRo
+ZSBuZXdlciBicm9rZW4gDQprZXJuZWxzOg0KDQogICAgICAgICB4cmFuZHIgLS1vdXRwdXQg
+SERNSS0xIC0tYXV0byAtLXNjYWxlIDF4MSAtLW1vZGUgMTkyMHgxMDgwIA0KLS1yYXRlIDEy
+MCAtLXBvcyAweDAgLS1vdXRwdXQgZURQLTEgLS1vZmYNCg0KVGhlIGltcG9ydGFudCBwYXJ0
+cyBhcmUgMTkyMHgxMDgwIGFuZCAxMjBIei4gV2hlbiBydW4gb24gY29tbWl0cyBwcmlvciAN
+CnRvIHRoZSBiaXNlY3RlZCBhYm92ZSwgaXQgYmVoYXZlcyBhcyBleHBlY3RlZCwgZGVsaXZl
+cmluZyAxOTIweDEwODAgQCANCjEyMEh6LiBXaGVuIHJ1biBvbiBrZXJuZWwgYnVpbGRzIHdp
+dGggdGhlIGFib3ZlIGNvbW1pdCBpbmNsdWRlZCAodGhhdCANCmNvbW1pdCBvciBsYXRlciks
+IHRoZSBtb25pdG9yIGdvZXMgY29tcGxldGVseSBibGFuay4gQWZ0ZXIgYWJvdXQgMzAgDQpz
+ZWNvbmRzLCBpdCBzaHV0cyBkb3duIGVudGlyZWx5ICh3aGljaCBJIGFzc3VtZSBtZWFucyB0
+aGF0IGZyb20gdGhlIA0KbW9uaXRvcidzIHBlcnNwZWN0aXZlLCBIRE1JIGdvdCAiZGlzY29u
+bmVjdGVkIikuDQoNCk9uIHRoaXMgbGluayB5b3UgY2FuIHNlZSBteSBvcmlnaW5hbCByZXBv
+cnQgaW4gdGhlIEFyY2hMaW51eCBjb21tdW5pdHksIA0Kd2hlcmUgQ2hyaXN0aWFuIEhldXNl
+bCAoQGdyb21pdCkga2luZGx5IGd1aWRlZCBtZSB0aHJvdWdoIHRoZSBiaXNlY3Rpb24gDQpw
+cm9jZXNzIGFuZCBidWlsdCB0aGUgYmlzZWN0aW9uIGltYWdlcyBmb3IgbWUgdG8gdHJ5OiAN
+Cmh0dHBzOi8vZ2l0bGFiLmFyY2hsaW51eC5vcmcvYXJjaGxpbnV4L3BhY2thZ2luZy9wYWNr
+YWdlcy9saW51eC8tL2lzc3Vlcy8xNDUjbm90ZV8yNzc0ODIgDQogIFRoaXMgbGluayBhbHNv
+IGNvbnRhaW5zIHRoZSBiaXNlY3Rpb24gaGlzdG9yeS4NCg0KQWRkaXRpb25hbCBpbmZvOg0K
+DQoqIFRoZSBtb25pdG9yIGFuZCB0aGUgbm90ZWJvb2sgYXJlIGNvbm5lY3RlZCB2aWEgYW4g
+SERNSSBjYWJsZSwgdGhlIA0KbW9uaXRvciBpdHNlbGYgaXMgYSA0a0AxMjBIeiBtb25pdG9y
+Lg0KDQoqIEFjY29yZGluZyB0byBgbHNtb2QgfCBncmVwIC1FICIoaTkxNXxYZSkiYCwgSSdt
+IHVzaW5nIHRoZSBpOTE1IGtlcm5lbCANCmRyaXZlciBmb3IgdGhlIEdQVS4NCg0KKiBUaGUg
+R1BVIGlzIGFuIGlHUFUgZnJvbSBpbnRlbCwgc3BlY2lmaWNhbGx5IGBJbnRlbCBDb3JlIFVs
+dHJhIDcgMTU1SGAuDQoNCiogT25lIHN5bXB0b20gdGhhdCBkaXNhbWJpZ3VhdGVzIHRoZSB3
+b3JraW5nIGFuZCBub24td29ya2luZyBrZXJuZWxzLCANCmJlc2lkZXMgd2hldGhlciB0aGV5
+IGFjdHVhbGx5IGhhdmUgdGhlIGJ1ZywgaXMgdGhhdCB0aGUgYnJva2VuIGtlcm5lbHMgDQpj
+YXVzZSB4cmFuZHIgdG8gYWRkaXRpb25hbGx5IHJlcG9ydCB0aGUgMTQ0LjA1IHJlZnJlc2gg
+cmF0ZSBhcyBwb3NzaWJsZSANCmZvciB0aGUgbW9uaXRvciwgd2hlcmVhcyB0aGUgbm9uLWJy
+b2tlbiBrZXJuZWxzIGNvbnNpc3RlbnRseSBjYXVzZSANCnhyYW5kciB0byBvbmx5IGxpc3Qg
+cmVmcmVzaCByYXRlIDEyMCBhbmQgYmVsb3cgYXMgcG9zc2libGUuIEknbSBvbmx5IA0KZXZl
+ciB0ZXN0aW5nIHRoZSByZWZyZXNoIHJhdGUgb2YgMTIwLCBidXQgdGhlIHByZXNlbmNlIG9m
+IHRoZSAxNDQuMDUgDQpyYXRlIGlzIGNvcnJlbGF0ZWQuDQoNCklmIGFueSBvdGhlciBpbmZv
+cm1hdGlvbiBvciBhbnl0aGluZyBpcyBuZWVkZWQsIHBsZWFzZSB3cml0ZS4NCg0KDQpUaGFu
+ayB5b3UsDQpWYXMNCg0KLS0tLQ0KDQojcmVnemJvdCBpbnRyb2R1Y2VkOiAxZWZkNTM4NDI3
+N2ViNzFmY2UyMDkyMjU3OTA2MWNkM2FjZGIwN2NmDQojcmVnemJvdCB0aXRsZTogaW50ZWwg
+aUdQVSB3aXRoIEhETUkgUExMIHN0b3BwZWQgd29ya2luZyBhdCAxMDgwcEAxMjBIeiANCjFl
+ZmQ1Mzg0DQojcmVnemJvdCBsaW5rOiANCmh0dHBzOi8vZ2l0bGFiLmFyY2hsaW51eC5vcmcv
+YXJjaGxpbnV4L3BhY2thZ2luZy9wYWNrYWdlcy9saW51eC8tL2lzc3Vlcy8xNDUNCg0K
+--------------RS0LcFpFyMC1IIVh4SODTdRL
+Content-Type: application/pgp-keys; name="OpenPGP_0xB99FAEC6E0D5DF6D.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB99FAEC6E0D5DF6D.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Jun 2025 at 01:58, David Hildenbrand <david@redhat.com> wrote:
->
-> On 16.06.25 21:14, Christian Heusel wrote:
-> > On 25/06/16 11:02PM, Naresh Kamboju wrote:
-> >> The following test regressions noticed while running selftests/mm gup_=
-longterm
-> >> test cases on Dragonboard-845c, Dragonboard-410c, rock-pi-4, qemu-arm6=
-4 and
-> >> qemu-x86_64 this build have required selftest/mm/configs included and =
-toolchain
-> >> is clang nightly.
-> >>
-> >> Regressions found on Dragonboard-845c, Dragonboard-410c, rock-pi-4,
-> >> qemu-arm64 and qemu-x86_64
-> >>    -  selftests mm gup_longterm fails
-> >>
-> >> Regression Analysis:
-> >>   - New regression? Yes
-> >>   - Reproducibility? Yes
-> >>
-> >> Test regression: selftests mm gup_longterm error while loading shared
-> >> libraries liburing.so.2 cannot open shared object file No such file or
-> >> directory
->  >> Test regression: selftests mm cow error while loading shared
-> libraries>> liburing.so.2 cannot open shared object file No such file or
-> directory
-> >
-> > These do not really look like kernel regressions, rather like a bug in
-> > the userspace testing tool =F0=9F=A4=94 Could it be that the tests were=
- not
-> > rebuilt for the new liburing or that the dependency is not installed in
-> > the test environment?
->
-> It looks like the tests were build with liburing around, and then ran
-> without liburing around.
->
-> Note that the file for example has:
->
-> #ifdef LOCAL_CONFIG_HAVE_LIBURING
-> #include <liburing.h>
-> #endif /* LOCAL_CONFIG_HAVE_LIBURING */
->
-> You should be running into similar issues with cow.c, which uses the
-> exact same approach for detecting+linking liburing.
->
-> So seems like something is off in your testing environment?
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-The kselftest built with cross toolchain((gcc-13 and clang) vs (arm64 / x86=
-_64))
-and tar / zipped and exported to NFS and mounted by DUT the
-device under test by using overlayfs.
+xjMEYrX2ChYJKwYBBAHaRw8BAQdAf/bzdTDerOW5j+qrayMzPOCKthCx8KYKZo20
+cty68aPNKFZhc2lsaSBOb3Zpa292IDx2YXN5YS5ub3Zpa292QGdtYWlsLmNvbT7C
+jwQTFggANxYhBLKEQxE9sGxECbI4ubmfrsbg1d9tBQJitfYKBQkJZgGAAhsDBAsJ
+CAcFFQgJCgsFFgIDAQAACgkQuZ+uxuDV321klwEAm5+HyBecp+ofMZ6Ors+OvrET
+LFQU2B9wCd/d/i2NjJABAIssTvgdxlqFI6GjehRMPURi6W1uFMPzzp9gM1yeYXEG
+zjgEYrX2ChIKKwYBBAGXVQEFAQEHQODm5qV0UQrPhcJkaZVbhtVmb90gN6rIuN0Q
+/xTmhqJ4AwEIB8J+BBgWCAAmFiEEsoRDET2wbEQJsji5uZ+uxuDV320FAmK19goF
+CQlmAYACGwwACgkQuZ+uxuDV322trQEA1Yj4GvOlEPfyuhMfX8P0Ah/8QXCqgdMQ
+H7PaNgIFFokA/1DgWcc1XGFNRHpOGrJNnF4Ese1hWjYoqo2iBlURPQwP
+=3DhvG9
+-----END PGP PUBLIC KEY BLOCK-----
 
-The tar / zipped file has all installed binaries and script files to run te=
-sts.
+--------------RS0LcFpFyMC1IIVh4SODTdRL--
 
-However, The missing debian package onto the userspace has been installed
- + liburing-dev today. This will fix the reported problem.
+--------------Uc0vBnG4YG2ZGkz04pGupL9t--
 
-- Naresh
+--------------dtb1s0ai873eTd9PpSOnx5UG
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQSyhEMRPbBsRAmyOLm5n67G4NXfbQUCaFFBgQUDAAAAAAAKCRC5n67G4NXfbf5D
+AP9371ShOE4XL3p8s7b7jy/gYQYItA57SbyUgoMIVtSSwAD/Rln07IIIAVHqnUX6DS0uZ8+X9UUq
+YSDiN3aEMCuTpw8=
+=FiZd
+-----END PGP SIGNATURE-----
+
+--------------dtb1s0ai873eTd9PpSOnx5UG--
