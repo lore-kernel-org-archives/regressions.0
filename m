@@ -1,123 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346742DBF5F;
-	Tue, 17 Jun 2025 12:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2916B2E2674
+	for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 13:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164304; cv=none; b=r1pTI0hbo0NZm0446ZtUOJTxzTsxEgooho0wZ9OLRZlJqYKYAs/Ef4a46ajG6i/qanbnpjzlp8OXuBdpV9FkuYrK/EjEBwMvA0xBhiKLr/UkpLftEPjM20M/Af+NbwcZA3uFTa/4T5WNW37WVHV0t5N0aWsBOEJW/C+p0p7K5v4=
+	t=1750167843; cv=none; b=bTjjuRg5mLSExbK5efuU2sTf35bRx0l80hmvg7tRpQkawKgbOEbvRyEFJlw0QomWAUWUqIwbNW6UsyFnc/NWRGiwxhrz89S9kT+3/EZYh2N5EKVwRAZMohcKAgCiWdBPp/0qQWxEjh256+1+n3UCJ9KE8iLmAWYJbubgSS+2I+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164304; c=relaxed/simple;
-	bh=btFjE1s0qcxUFPoD5rLuwu/zQ5ZzD83LlZlyxmN4oG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqgB6XsiGHPMCop3LUlbznYdBR5E8p95rAMPweav9tm0V+r8SLjVlJorBOZmpMxIhwedIHObSbZSzOr8eUhNyr6qofa3FwVbiKMDGIkHqq6HpmWIPaLMippMvpq92HnmSmt76zuEVKmyuGL2yD0yFgH1GrMnxluOfxIK7GBrzP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNSpwbPh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750167843; c=relaxed/simple;
+	bh=BFQ9SO2t1J71+CICyMv1OPoOaaKRRkwWmkwVe0QJxP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HP2jOUxVeMHgeNc2ey9T4GlrhSiLC6lWmgSbhUkHdepjgwym47TS/wsxP0Sz5s6BItdxt0HAT+bgOONxK/3cA1lNymFg0dBy4JXHiMd8muc+hySqUMsSTp5sC24J/6S5N0S8zBydRwJGVPSE3jiC7u1wDjr4dsPumJF3zqaZYZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSNMXqNS; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNSpwbPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911E7C4CEE3;
-	Tue, 17 Jun 2025 12:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750164303;
-	bh=btFjE1s0qcxUFPoD5rLuwu/zQ5ZzD83LlZlyxmN4oG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BNSpwbPhri4YxN5J3FDj+6H0B4A13+TI+yZ1JEmru9MdBdEc7BZdoc5ZLcKarj3e0
-	 Rw3uPM+jlov1+2pGkcwnx3FQ/04rp3Bpfb1TIps9X/xDaF2U9hiOdND/K0U1iGKZ3p
-	 EgZHjNB7KDm/+AH8w36UHFS+A14cUhjzUThT0Hf2tEBpIVXWEsrlIVaJzwg8YgzBNo
-	 /lJoer/yPDddPuOLE1Gnbx7TB19f3pGRRkTcRnD6AK7Absy8hzdckZgxPzDj+Igy1D
-	 RugplDnA2VJzYn9zCNf3/YTTYISi40nsGptSaLvoFAYqzjmHgUxPGowjAz8IryjpVy
-	 AEM9pLbZ/Xpyg==
-Date: Tue, 17 Jun 2025 14:44:59 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: stable@vger.kernel.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
-Message-ID: <gsuqdu3l3tdw5pbhfnkigs2mplpzgdhu7d6zok33f4e66ct6yh@gebktvf36kwn>
-References: <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
- <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
- <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
- <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
- <M0QJfqa7-6M2vnPhyeyy36xCOmCEL83O7lj-ky1DXTqQXa677-oE8C_nAsBCBglBp_6k7vLeN4a2nJ6R3JuQxw==@protonmail.internalid>
- <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
- <hoszywa5az7z4yxubonbhs2p2ysnut3s7jjnkd7ckz4sgdyqw2@ifuor5qnl7yu>
- <B380AC75-6B14-4EC9-A398-61A2D33033A7@flyingcircus.io>
- <SUCM2QMQ3TSn-abqhAXLpdEfSqdyFNhrwY0lcyPJNfPdl-2TGGBPkiBEueiV75Jl2UfC30lfhLMCSq7ND7st6Q==@protonmail.internalid>
- <0FAE679D-6EE7-4F71-9451-94D0825D1BF8@flyingcircus.io>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSNMXqNS"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so8281987a12.0
+        for <regressions@lists.linux.dev>; Tue, 17 Jun 2025 06:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750167840; x=1750772640; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zecGBL4EFfqvJ1+S5Ps/tbhcKJ3SUOGOERPfVCGUV9U=;
+        b=aSNMXqNSR+M89z5//Zfaya8oP/7VGoJjuPoNB5iTymR8u+pc4boa44O7ZDmUFFhpJs
+         3C+nQqVeO4/btFalJWbeBbrL2KW2JN10/nrqyAwZwCoYME6XL9h7EBJRkwHI7imOT7Lr
+         1CfeG4hr6Xgg5vjMYW3TVhVg3MxSZTjyDbdrWiOht3+jbGEIs2DkLUsS78+8qjwVOnQk
+         Rgm42+CBCtTDtItr7JUnroce/vdUsOIRSAWGtmrlvY71M3Zu6qHqEn497DVL6KmuNVNe
+         a4dfrIKLFhAB7u/W9KFMa6CL5ZhvQPmn6zKNuvL0IedZVLKJBSrSFdyxJunqK+lXfWDp
+         ON4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750167840; x=1750772640;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zecGBL4EFfqvJ1+S5Ps/tbhcKJ3SUOGOERPfVCGUV9U=;
+        b=O/G6pFD7D0OQgdzQ+WSxTzKlWPIr4bN3G36MY+aZv8azLzQNPds1VFJw0qfyOx+Ob/
+         wIasclV7Fo0Q+xiXK68VNR5kldFOpSU2OfIcUBaDb+c8QFY8X4rWX/b8qG9FJrvWJAcp
+         nFTiE38vFWYzEurpevqyLKgPo61bx8RmOnMiS41KVlmqBh5xh7/+1/x8AyMS9naHRq37
+         3Delx71THmBgDu/2SCerM0bsYvP7NwVXQUXGC9XL89rnywiB2fYIqZUqGWcSLElGqfQz
+         Ha5PJ5/udnC967nYbaDp6g/pjBMB+4Kfg+8YWdNyxGzfeb7QlpV6spOyRwrLvZR9hwEd
+         ReMw==
+X-Gm-Message-State: AOJu0YzEZfeGAXFFahBOskvDECOCKBB/m1ySqvOpRItN5gKLOB7yd02i
+	g6pkpQhG3YJN62kIFMwB560BOfSpeQPigc7BZDWPMQzZswZNR3VhTrz3DhbV/WWJ
+X-Gm-Gg: ASbGnctHHcJLswHkj0ez6+UOpRO0APtqorisjbLwSwnxXd6rKUJ6foxBhV6fitjnEkf
+	86sH/oRGz4/PjD6hyFNrAzAO1Yyx3foqUqI7DVCrkHlFSUhQm4IDlsBQBXa2035wljgo82EAz6u
+	3C35qWn5SaGdxHO/cJPCp6+HHup64/9ss4/VfHohrpVUkI8C6l1snndQUzIT4+ZE4+ETtAj2Adf
+	sXkxzfDLVFg71rwCFhnN/7/+rq0D6UYp6CdluTNoWzTGnXAaGFBPzFn5eBDe0f5nSsDONqOrNbp
+	RtjqG8G17UMWBpKYsIOZTo3t8rXkJjOsrlW7Xx5YbadXxp1d9BWAeMk+uME7xF9/+OKTUMS6poQ
+	gI1cBoT3NDltl/59KRBUknhCzy4Z1BzjW+aQhORmhbf6u
+X-Google-Smtp-Source: AGHT+IGgIlcS/PryJ7lnGbffSNLneJYZk5+uA1B/WOdMk8Ma6F8q8Mlo7t8zz4EebhjQz/a0cLH/aA==
+X-Received: by 2002:a17:906:478d:b0:ad8:9b5d:2c1b with SMTP id a640c23a62f3a-adfad29dd5bmr1181198766b.9.1750167840364;
+        Tue, 17 Jun 2025 06:44:00 -0700 (PDT)
+Received: from [192.168.75.93] (217-122-252-220.cable.dynamic.v4.ziggo.nl. [217.122.252.220])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-adec81bb9cesm864213666b.49.2025.06.17.06.43.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 06:44:00 -0700 (PDT)
+Message-ID: <33046593-17e3-4bdc-9d4a-94dc94ef5e81@gmail.com>
+Date: Tue, 17 Jun 2025 15:43:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0FAE679D-6EE7-4F71-9451-94D0825D1BF8@flyingcircus.io>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] intel iGPU with HDMI PLL stopped working
+ at 1080p@120Hz 1efd5384
+To: Jani Nikula <jani.nikula@intel.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+ Suraj Kandpal <suraj.kandpal@intel.com>,
+ Khaled Almahallawy <khaled.almahallawy@intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org,
+ Christian Heusel <christian@heusel.eu>
+References: <8d7c7958-9558-4c8a-a81a-e9310f2d8852@gmail.com>
+ <afa8a7b2ced71e77655fb54f49b702c71506017d@intel.com>
+Content-Language: nl-NL, en-US
+From: Vas Novikov <vasya.novikov@gmail.com>
+Autocrypt: addr=vasya.novikov@gmail.com; keydata=
+ xjMEYrX2ChYJKwYBBAHaRw8BAQdAf/bzdTDerOW5j+qrayMzPOCKthCx8KYKZo20cty68aPN
+ KFZhc2lsaSBOb3Zpa292IDx2YXN5YS5ub3Zpa292QGdtYWlsLmNvbT7CjwQTFggANxYhBLKE
+ QxE9sGxECbI4ubmfrsbg1d9tBQJitfYKBQkJZgGAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQ
+ uZ+uxuDV321klwEAm5+HyBecp+ofMZ6Ors+OvrETLFQU2B9wCd/d/i2NjJABAIssTvgdxlqF
+ I6GjehRMPURi6W1uFMPzzp9gM1yeYXEGzjgEYrX2ChIKKwYBBAGXVQEFAQEHQODm5qV0UQrP
+ hcJkaZVbhtVmb90gN6rIuN0Q/xTmhqJ4AwEIB8J+BBgWCAAmFiEEsoRDET2wbEQJsji5uZ+u
+ xuDV320FAmK19goFCQlmAYACGwwACgkQuZ+uxuDV322trQEA1Yj4GvOlEPfyuhMfX8P0Ah/8
+ QXCqgdMQH7PaNgIFFokA/1DgWcc1XGFNRHpOGrJNnF4Ese1hWjYoqo2iBlURPQwP
+In-Reply-To: <afa8a7b2ced71e77655fb54f49b702c71506017d@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 01:54:43PM +0200, Christian Theune wrote:
-> 
-> 
-> > On 17. Jun 2025, at 07:44, Christian Theune <ct@flyingcircus.io> wrote:
-> >
-> >
-> >
-> >> On 16. Jun 2025, at 14:15, Carlos Maiolino <cem@kernel.org> wrote:
-> >>
-> >> On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune wrote:
-> >>
-> >>>
-> >>> # xfs_info /tmp/
-> >>> meta-data=/dev/vdb1              isize=512    agcount=8, agsize=229376 blks
-> >>>        =                       sectsz=512   attr=2, projid32bit=1
-> >>>        =                       crc=1        finobt=1, sparse=1, rmapbt=0
-> >>>        =                       reflink=0    bigtime=0 inobtcount=0 nrext64=0
-> >>>        =                       exchange=0
-> >>> data     =                       bsize=4096   blocks=1833979, imaxpct=25
-> >>>        =                       sunit=1024   swidth=1024 blks
-> >>> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
-> >>> log      =internal log           bsize=4096   blocks=2560, version=2
-> >>>        =                       sectsz=512   sunit=8 blks, lazy-count=1
-> >>> realtime =none                   extsz=4096   blocks=0, rtextents=0
-> >>
-> >> This is worrisome. Your journal size is 10MiB, this can easily keep stalling IO
-> >> waiting for log space to be freed, depending on the nature of the machine this
-> >> can be easily triggered. I'm curious though how you made this FS, because 2560
-> >> is below the minimal log size that xfsprogs allows since (/me goes look
-> >> into git log) 2022, xfsprogs 5.15.
-> >>
-> >> FWIW, one of the reasons the minimum journal log size has been increased is the
-> >> latency/stalls that happens when waiting for free log space, which is exactly
-> >> the symptom you've been seeing.
-> >>
-> >> I'd suggest you to check the xfsprogs commit below if you want more details,
-> >> but if this is one of the filesystems where you see the stalls, this might very
-> >> well be the cause:
-> >
-> > Interesting catch! I’ll double check this against our fleet and the affected machines and will dive into the traffic patterns of the specific underlying devices.
-> >
-> > This filesystem is used for /tmp and is getting created fresh after a “cold boot” from our hypervisor. It could be that a number of VMs have only seen warm reboots for a couple of years but get kernel upgrades with warm reboots quite regularly. We’re in the process of changing the /tmp filesystem creation to happen fresh during initrd so that the VM internal xfsprogs will more closely match the guest kernel.
-> 
-> I’ve checked the log size. A number of machines with very long uptimes have this outdated 10 MiB size. Many machines with less uptime have larger sizes (multiple hundred megabytes). Checking our codebase we let xfsprogs do their thing and don’t fiddle with the defaults.
-> 
-> The log sizes of the affected machines weren’t all set to 10 MiB - even machines with larger sizes were affected.
+Hi Jani and everyone,
 
-Bear in mind that this was the worst one you sent me, just because the other FS
-had a larger log, it doesn't mean it's enough or it won't face the same problems
-too, IIRC, the other configuration FS you sent, had a 64MiB log. xfsprogs has a
-default log size based on the FS size, so it won't take too much disk space for
-just the log, but the default may not be enough.
-This of course is speculation from my part giving the logs you provided, but
-might be worth to test your VMs with larger log sizes.
+On 17/06/2025 12.33, Jani Nikula wrote:
+> Does [1] help?
 
-> 
-> I’ll follow up - as promised - with further analysis whether IO starvation from the underlying storage may have occured.
-> 
-> Christian
-> 
-> --
-> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
-> Flying Circus Internet Operations GmbH · https://flyingcircus.io
-> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
-> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
-> 
-> 
+The patch works. (Applied on top of 6.16.0-rc2-1.1-mainline, built by 
+Christian @gromit who helped again.)
+
+The patch (or the new kernel) also have a side effect of xrandr allowing 
+a completely new refresh rate, ~144Hz. This new refresh also seems to 
+work (I cannot easily disambiguate 144 versus 120, but I can tell it's 
+not 60Hz). So as far as my hardware is concerned, this patch leaves the 
+whole system working in all scenarios that I've tested.
+
+Thanks!
+
+
+Kind regards,
+Vas
