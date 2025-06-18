@@ -1,222 +1,183 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCA63234
-	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 02:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750212979; cv=fail; b=YlAppNyPBqNF+fVOf6o7gACDmuf7F9LxuXhWcz6eNhGzQmFPOWYevO8nU6v1RNEO+tzR1iWGdmnQkOLs1DKOO5+TjzRB/rsb38u5ej99fiKRez9rm93x7C9ZCfejMqeUA4/gczRh1T1CD1jiql05CZXmmwR4imyVT3CemzmwShE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750212979; c=relaxed/simple;
-	bh=3/l8BEjgImSPWRbHINx0x1hzgN7j5F50qwhdXFaFJyw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=igLoodbe9HacTpyO7wdmV9mZmMsrVvlsyBRNFs+yuMAjas8yJooGRWt+4A6vinC/h+MS9TV61xVzX+9FxPnuJz5mUtyN1tnG+Twm1q69WDLf5mL/FnM9LW9s7pCIUEQLKE4Rv4pbVgGsc5uvyu9We94e8uXDJB/+80vAUfJRe9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FONAj70v; arc=fail smtp.client-ip=40.107.94.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593212F533D
+	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 07:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750231892; cv=none; b=mO/cPDT67TBmmRkuS057Ng4djTObvSMUJQzFtUe8pSA2EOWw4eUq+1qRWOv2kDfcpvc1zrZSQjUVZf4uAyDyNtgB38rK8Qt8j6u5Ht4y8lpmB6unOH9tIxIq8E2MpqXMPhdz4vSunlmyNgvOK5ggIdOZBL9F1kZA5yFm0dyGlAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750231892; c=relaxed/simple;
+	bh=qGKtNA+4Ur+0wRwwDR2ly6BdRm8nznmwwWHMjHlMxqI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=M1Mh7UNc7/1ROd7JJezryhmA0MdE4tW09QKc43AyFAWvLo6nuEqEkY1z9AL6Sr6GzXnkdRippZTNZdShS2GJOMz9Y+8iH1Dq6Ka/Zx6YOo5hbYnJoHpzfXtzVCNJPT9KeFwui3g1VtcR0bWAiQXeE5iynRvEFve90XhuABZZ/WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v2iriRO5; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FONAj70v"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vsJEo1m7cUG8sMY1jwygLKbqyLloarE61s7cdwUeLFayF5Pcqh/zcEvc/kTpO7jYGj8o/1vhMyeWFiDRv/eg5rSYQedhCV6+jXTSTCe/sZV4hwy1fOHVq2DCghGFbC9BjPIh5tx4DKcSsWPTjVPOofhKScFwV/EjYfdbyoc7neUUxaD1twLIPgQglb7ejizwylBmhcEICecp8ZA8lww7EEQnfaP1qz1KuiVM74kuXz+Y9dGoNSSLHlnNpdVRluWCFjOJLm23m6c6tgse1b7SyGa00CxSYPUVZjwQtOdiF8Vb+BhpKqSGurFFauHxGset1708OIEmUJkIuTVU7p0E+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bTpgnVzEdivgeqnxqiQHzgiLM5bPJQ57M9TbUBKQECo=;
- b=IsCG4zbnl0FuctxpLPA2V2RxTr500KlSUtLnnotqGzvmAMAibZOhuGBx3Z8j4XNjj2V+phLqYvV26H3VoIYU7nhlJ2P5AuEPsXA22SmguFrpnhQWUMQ0RIp6pCb17eoAKl1Xh67MvboJIJTTrOyG+w5+RmT05ooC62jSeCPNaFkgZC6VCLjwLM8KlJG1dECSe6xbQq6ggvjqX1//KVgsime+cHJpDtIHqpI3eLxO0f4iuX54VBDs2S8JYZAr+wVLtymlT3zeXMiDuSTDtsC0UAR2JDni7Nqq1wssSZDhjGy0DcVFBHy1eXultG9pM6RzjfxJGGuxWk0GjRd79J7HQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bTpgnVzEdivgeqnxqiQHzgiLM5bPJQ57M9TbUBKQECo=;
- b=FONAj70v0dT9uswXAcZD6XYK5SU5IbywDoDGrqdcShL65/ob0TOl7Ms2TThxrJgEmhfnsz4EDIDnfqEqIslp90fN62QBtzJcbNEnk0N4r260Zm/NCyP9UG/SGrzT/ILV9xnRNjQDWRQzKghmipT9aQCCoWl9KuZECDqOJm8QUYs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA1PR12MB6043.namprd12.prod.outlook.com (2603:10b6:208:3d5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
- 2025 02:16:13 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8835.026; Wed, 18 Jun 2025
- 02:16:11 +0000
-Message-ID: <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
-Date: Tue, 17 Jun 2025 21:16:09 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/amd/display: Radeon 840M/860M: bisected suspend
- crash
-To: Alex Hung <alex.hung@amd.com>, ggo@tuxedocomputers.com,
- stable@vger.kernel.org, regressions@lists.linux.dev,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
- Werner Sembach <wse@tuxedocomputers.com>,
- Christoffer Sandberg <cs@tuxedocomputers.com>
-References: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
- <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0078.namprd13.prod.outlook.com
- (2603:10b6:208:2b8::23) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v2iriRO5"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750231886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/LmJLS/LfF8q1QehsgbJlKxthaaM7XEKqiN320caAco=;
+	b=v2iriRO5XrGcDS4t443RomB1f03LSiiYcIO6+yBpEZAb9RcZyxtc1Wbj36kCDd8eqVIx09
+	BWiR0R/3YqCjcYv6SX9GcAjXGEQz+DD6PoX6DB+Sgu4XZS8hslFY2UOUK4qecImvYoRkFa
+	dfA0wMlPqbtmAR2RmgYWIlZBbT5qqbI=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB6043:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36df62ed-33fc-4bcf-dbb9-08ddae0e1842
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QTZzV0lUaDA1Ymt1WVRlNXhjNEhHRSt0dEkvYWF3cDBmUXd3bWptc05VTG1h?=
- =?utf-8?B?Znh5T3NRNU9USG1nN2g4clNKanl0YStQQnVkdlJyNEo0TktaSDhsMzF5MnNr?=
- =?utf-8?B?RldmYzNKVFJ2amdwdElnbkJOV1gzYThrZTBHa0R3VEIreTFKUUhIMGNjc001?=
- =?utf-8?B?eHVVRXhSeGhtTllEbXZjNDdjRHdsL1VCd0ZNU0xFQUJpODdkMWEvclRvOEFG?=
- =?utf-8?B?R3ZSK2RadEdCem1DaXhvRGx3dUdXWFBicm9yQXg2bFhQYTNQZXVLVWdsZlBM?=
- =?utf-8?B?a01SVkg4Uy8wRWVwelpDdFpCQ0w0Umt5UW10RnN5c3dEWC83M29iYVloT0tm?=
- =?utf-8?B?U1NkSFlXUkcwM083NU9kRnlweHFjSVdZSloxYkRsRU5pQVZBalRlVG40aGZV?=
- =?utf-8?B?VmltRlAwMlNWWUQxYklrYXNVUTljRm9XWDFxNlRpRDRYL0V5b0E1YmJPT3d4?=
- =?utf-8?B?L09LaUgrM1RtMXJ0OUlnTmR2TEo0QVpEVE1pdFlqWnByK0VzalNNeEJuYWpD?=
- =?utf-8?B?S2ZnY3J2dWVnVXp3YlZXamhQaHBEaWE0T3NmQUQyb0dnVXRNQVdZQmhjSGs1?=
- =?utf-8?B?VzVCVUpCa2h4eG0rQi9qVjNHZUluL0tVOUVYRzlPbTArOXJXTXk5YVhhakdL?=
- =?utf-8?B?dTl0bmV0WVhKV3pLdlAxQTBCY3ZrT1ZuMDhtTDExNHk3dkdkdkMzOWtlQlFl?=
- =?utf-8?B?cnI0ZEFWK3JGU3lOVlZXRERSRDY5bmFZT2JySWdLemFhcENBcmREWE9xd1Ax?=
- =?utf-8?B?TUoybGdjZkRMdWJibjE3aTcxM2V1Yk53WDYrMjNwamFmcFoyeEo0RFVMTzN0?=
- =?utf-8?B?Wmh2RGlSakpWYUs3TXpnQjZWK29EQmxOdUpSZVVxbXhpTGJIQkcvbWg2N2pi?=
- =?utf-8?B?aUZvRlB0eGFaaDF4dU5nay8rVzNDeHVKZ0NQd3lLZGF1VVlyc281WThEMkdj?=
- =?utf-8?B?VGc1TjNPaVljTUtHd0FSRThrazNBam9ZYlV4YUtheUU4Q0VpWU5YMVI1MlJS?=
- =?utf-8?B?dnZCdTNHWTl4V2h6dFU0OFpsbFJLamdiSEhVNWZPZkFtYzZuRkJBNGo5T0Ez?=
- =?utf-8?B?M3ZuMTRmWnkrNnh0QlhudVIyc2pLaWtVTkYrR1VQdE56Z0plL3YvUXdCZ2Q0?=
- =?utf-8?B?ZVFnWlV0WG16ek1SM2I3OEErOG1BRFFwMndZS1NzUEZRYTdrQVEyQXBWZ0NE?=
- =?utf-8?B?YVpoN2JISndLYXNsK0h2OEROc0RIbHl3bGxZbUJVTExVS21xeU05SFRCanU2?=
- =?utf-8?B?SVRUaC8zWXh4clFhYVVyMlViclZLQk5YYW1uVHMyNUFyS2ZRM0dnV1JVMEQy?=
- =?utf-8?B?ZVhWNjZMYjlrRWhKVUxVU25aQjVoRjVJMHQraXEyTXU1cmhPRXFVU2ZwV3dC?=
- =?utf-8?B?SDRsOGtlckhwekQxVG4rdnNET1JWSzgxbGhPaWk5VVRNZ0NSK08xeHRiMDJE?=
- =?utf-8?B?VGFQRkxlU0o3TzhLY3ZPSEMvOXBRY285azdwK0hHUUMyVDB1UnhiSS9BeklI?=
- =?utf-8?B?QVBQYjFaSUlGKzRHckhGMkpRMW5ObkpvNVBsT1JvR01nOUc5OERQR1hrdk5u?=
- =?utf-8?B?My9OYzBERmZBY1JYTGN5NHllRmRYdlFzRGVDN01UNWRHVzhnbExsdkE5NzB4?=
- =?utf-8?B?ZWtsTDV2S3l4cGR4MURzY0NMT3ZVL09aM05naVNFV0NXQUh4RTIrYnBlSy9y?=
- =?utf-8?B?K2RYM2tTbXZCNDhqL3JmaSs0eFBLUytoM0hycU5KbGJQN2IzUnN2TDZ5Q3p6?=
- =?utf-8?B?aCt0cEg4alk4bFYyNlkyUy9zTmRrbWwxcEROWGx4T3dZMmxpNld6eEhvVjB4?=
- =?utf-8?Q?G/Z22kUiJGbl9DahNj4/bgPT4bqyLcOu0RSnM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?STdaWWFaWU5uUFZhMTkyYllYckFDOGdMSitLVnNTL3d4dERlZDJoT3VGQWV5?=
- =?utf-8?B?ZXBuYkFWTDBmK3FNUGgrTHRHMmpsb2t2cHpyS2tGbDZGL0N4T2s0STRkU2hr?=
- =?utf-8?B?SjZoeHgyMk9EWVN6Z2lwUng2NTBZVnhWY0d0c3pmbzQvZG1yRVlFczJ2UE1y?=
- =?utf-8?B?RUtneUdvZHp4NW9JdUd0enNlZTFUUGd3TE5mRW9HYTNGRktmdDZIaW9lb285?=
- =?utf-8?B?RFBacnE5WXhGVEhKdGMvS1RicjZFdGpnVURaWWVjc3hQdXpqcnh5Qk5MWVNJ?=
- =?utf-8?B?MjlVSnZUa0V4VDFOQlBoU3p4bnlOWmxFOVJNWXU1MkhuWW9MTVNHNlY4cHUw?=
- =?utf-8?B?ai9CTzZMZFhlazVOQVpTZ2Q4cDgzYk9ML3I3N1krOURqZHYyNnJ1QkpZMStO?=
- =?utf-8?B?RS9XZEZGZHVkYUQ3Vk9KSU9yWXpsRGk4WHA4Njl6V3QrR1F1R0g0bFBjRUR6?=
- =?utf-8?B?TERlbEpOU1ZLRmxVWDJtT1lvMUllZmVkSHJRVkU4MGpCNUptZ0NieUk5cnVo?=
- =?utf-8?B?MUNkMWxITklBZWNBK2diRDcrUWh1cmx0Tm1lYTdQSmVMZmIrYUJ3OHNwM3JX?=
- =?utf-8?B?Vk9jYzRuc2tWOXc1WUJhaHl1dzNVaExwRmJkVVZUZjNCOUhZZFJIZUtuRUFJ?=
- =?utf-8?B?d3M2c2JsT2dYc3RHcTd5eGlwcis2S1RPS3NEZUw1ZnlZK0FzZ2xvY2dielJx?=
- =?utf-8?B?VUVyTy9pK0JzS2NSakU1Y1NIMHA4di92V1pjSThJUi9VL2Ywd2xmOEVrSHNN?=
- =?utf-8?B?T0NFcTR2dFZ5K00xSThWVkp5UjdDRWVtRUJXb2doR1FqV1c0eGZTQ29Gd21z?=
- =?utf-8?B?eXBlOERYR0grTjJpa1NoemZTTW1Bd2FoRGV3QlpwRm5kMkd1YlcrVFJvMWg0?=
- =?utf-8?B?RythUGxsclNPaURuYVVGc3V1TkF2MVZDWGt1ZXJkNzdadkI2U25xekNETk8r?=
- =?utf-8?B?TzI5QzQ3amM2OTEwaWhOQ3lnb3Z4bkNOb25YbmJNSXUzb0owaldzRE9ONzFB?=
- =?utf-8?B?cXUvUDg1Rm41L1hzTnFPOG95bXFsUWdEQ0FyNFdjZndsVElMRkc1aHdZVGFO?=
- =?utf-8?B?MXdLbk4zYTF5U2FaMXR3SFFQdmZLTUs1T0NhMkdqV1I0WEF6TXZxd0tSNzVK?=
- =?utf-8?B?QXVxMHBDZWZ6cStGQzB4MkF1NXJLeGJKd1F0emw0RlpSdmYySjFsRGJ6ZjF0?=
- =?utf-8?B?NGZZTTE1L2FZVVNIUldlMVJ0NjJCdVBFanF4VXgrZU1BcU9VV2dPRkRzWVJF?=
- =?utf-8?B?Y0F5OEN3WFdPU0FmSDJqN2JTZmZTYk9nY1JuM3p6QW9Tdm9IVVVhbDhvdlFl?=
- =?utf-8?B?SHBmYnlIN3dKMWgycmlCYjFNc2ZNWUxoY2FDZ3JMMG5BTVdmZHJOOE9ydUU5?=
- =?utf-8?B?d1BTS2xNNVpZWERzTGZjd2UzTXdsdHo1SXBnUDJjR1M1TWkzT2ZiYW0xSjhq?=
- =?utf-8?B?dkxIcS9ONkxWNm9SRXhsYUhaN004RGFEV3ZtbEpsc0FoUmhVTUJJbkh6NHNq?=
- =?utf-8?B?cWdKWkU2Qk9YSnNJSkxRNitHTW1rU1YrR216S2Z3U2IrYThWbDM1ZFg1RVZq?=
- =?utf-8?B?WDA1UFE4eGhmT0Q3a25LL0tGZEcwMnJUVE5MY0k2SSsyOGQ2U05icTRNZG14?=
- =?utf-8?B?M3JWU05SajcxKzNLMlNyWDJQS25XT0pwUXFCZGUzWFJXTUNNVzVwZmdzY2pD?=
- =?utf-8?B?ekl0T1E3ajRDeDhkaUZLbitrMDVGYmhpSXo4akV0QUV6OWhSZHpRMkNVTVdw?=
- =?utf-8?B?OC9MOXVhWXV0SzFib0lUalp6K0Zualk2aGVTZ05lcjZoNXBCNUo5d0hBb2t0?=
- =?utf-8?B?MStxMmtncXp1cnArNXVSakxDVFg3eVlVSFVkdVFaR3p0dzJTeStaNHFTTXBR?=
- =?utf-8?B?VjZkQkVodEI5TyszWVRhT1p5Z2lZWEFoa0xNbGtqKzJaYXp0anhFVkdTNkRk?=
- =?utf-8?B?RFZaeGhKaHhJUVNmNUNCYVRrTXhYT0c1RDNiZ0dZeE5VZGxuYVhxYnhZQ05z?=
- =?utf-8?B?cGdhWTVqWGY5S2YyMzA1NUJLcW1uQi8wVWhObUlvb1JlQW16TDZacXlxWllk?=
- =?utf-8?B?Z2RqWnJKQVc4K1RjcFVlR3d3WWlrQkpzTTEzOVVwSDVxVTNkVlJKUm9ScFAx?=
- =?utf-8?Q?SBzrqY6LPb1lV05P3ODVwyhFn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36df62ed-33fc-4bcf-dbb9-08ddae0e1842
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 02:16:11.8454
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: heHilvDs50vphycPXRTtH2YZXdbAf7qpsdsms6GMN0PXA1u9qMzjMQfmXUi/LnpAvc2XhTWeZvTKVv+KX1mgHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6043
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3853.100.6.1.1\))
+Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Matthew Schwartz <matthew.schwartz@linux.dev>
+In-Reply-To: <20250611164339.2828069-1-kuni1840@gmail.com>
+Date: Wed, 18 Jun 2025 00:30:58 -0700
+Cc: christian@heusel.eu,
+ davem@davemloft.net,
+ difrost.kernel@gmail.com,
+ dnaim@cachyos.org,
+ edumazet@google.com,
+ horms@kernel.org,
+ kuba@kernel.org,
+ kuniyu@amazon.com,
+ linux-kernel@vger.kernel.org,
+ mario.limonciello@amd.com,
+ netdev@vger.kernel.org,
+ pabeni@redhat.com,
+ regressions@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CAD52833-6A51-494F-A437-2459B772E768@linux.dev>
+References: <58be003a-c956-494b-be04-09a5d2c411b9@heusel.eu>
+ <20250611164339.2828069-1-kuni1840@gmail.com>
+To: Kuniyuki Iwashima <kuni1840@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 6/17/2025 6:42 PM, Alex Hung wrote:
-> Hi,
-> 
-> Thanks for reporting. Can you please create a bug at https:// 
-> gitlab.freedesktop.org/drm/amd/-/issues/ for issue tracking and log 
-> collection.
-> 
-> On 6/12/25 08:08, ggo@tuxedocomputers.com wrote:
->> Hi,
->>
->> I have discovered that two small form factor desktops with Ryzen AI 7
->> 350 and Ryzen AI 5 340 crash when woken up from suspend. I can see how
->> the LED on the USB mouse is switched on when I trigger a resume via
->> keyboard button, but the display remains black. The kernel also no
->> longer responds to Magic SysRq keys in this state.
->>
->> The problem affects all kernels after merge b50753547453 (v6.11.0). But
->> this merge only adds PCI_DEVICE_ID_AMD_1AH_M60H_ROOT with commit
->> 59c34008d (necessary to trigger this bug with Ryzen AI CPU).
->> I cherry-picked this commit and continued searching. Which finally led
->> me to commit f6098641d3e - drm/amd/display: fix s2idle entry for DCN3.5+
->>
->> If I remove the code, which has changed somewhat in the meantime, then
->> the suspend works without any problems. See the following patch.
->>
->> Regards,
->> Georg
->>
->>
->> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> index d3100f641ac6..76204ae70acc 100644
->> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->> @@ -3121,9 +3121,6 @@ static int dm_suspend(struct amdgpu_ip_block
->> *ip_block)
->>
->>       dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
->>
->> -    if (dm->dc->caps.ips_support && adev->in_s0ix)
->> -        dc_allow_idle_optimizations(dm->dc, true);
->> -
->>       dc_dmub_srv_set_power_state(dm->dc->ctx->dmub_srv,
->> DC_ACPI_CM_POWER_STATE_D3);
->>
->>       return 0;
->>
-> 
-> 
 
-That patch you did is basically blocking hardware sleep.  I wouldn't 
-call it a solution.
 
-If you haven't already; please use 
-https://git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug-tools.git/about/ 
-to triage this issue.  It will flag the most common things that are hard 
-to diagnose without knowledge.
+> On Jun 11, 2025, at 9:42=E2=80=AFAM, Kuniyuki Iwashima =
+<kuni1840@gmail.com> wrote:
+>=20
+> From: Christian Heusel <christian@heusel.eu>
+> Date: Wed, 11 Jun 2025 13:46:01 +0200
+>> On 25/06/10 09:22PM, Jacek =C5=81uczak wrote:
+>>> Hi,
+>>=20
+>> Hey,
+>>=20
+>>> Bisection points to:
+>>> [3f84d577b79d2fce8221244f2509734940609ca6] af_unix: Inherit sk_flags
+>>> at connect().
+>>=20
+>> I'm also suffering from an issue that I have bisected to the same =
+commit,
+>> although in a totally different environment and with other =
+reproduction
+>> steps: For me the Xorg server crashes as soon as I re-plug my laptops
+>> power chord and afterwards I can only switch to a TTY to debug. No
+>> errors are logged in the dmesg.
+>>=20
+>> This is the relevant excerpt from the Xorg log (full one is =
+attached):
+>>=20
+>> [    36.544] (EE) modeset(0): Failed to set CTM property: -13
+>> [    36.544] (EE) modeset(0): Failed to set CTM property: -13
+>> [    36.544] (II) modeset(0): EDID vendor "LEN", prod id 16553
+>> [    36.544] (II) modeset(0): Printing DDC gathered Modelines:
+>> [    36.544] (II) modeset(0): Modeline "1920x1080"x0.0  138.78  1920 =
+1968 2000 2080  1080 1090 1096 1112 -hsync -vsync (66.7 kHz eP)
+>> [    36.547] (EE) modeset(0): Failed to set CTM property: -13
+>> [    36.547] (EE) modeset(0): Failed to set CTM property: -13
+>> [    36.547] (II) modeset(0): EDID vendor "LEN", prod id 16553
+>> [    36.547] (II) modeset(0): Printing DDC gathered Modelines:
+>> [    36.547] (II) modeset(0): Modeline "1920x1080"x0.0  138.78  1920 =
+1968 2000 2080  1080 1090 1096 1112 -hsync -vsync (66.7 kHz eP)
+>> [    36.897] (WW) modeset(0): Present-unflip: queue flip during flip =
+on CRTC 0 failed: Permission denied
+>> [    37.196] (EE) modeset(0): Failed to set CTM property: -13
+>> [    37.196] (EE) modeset(0): failed to set mode: No such file or =
+directory
+>>=20
+>>=20
+>> I can also confirm that reverting the patch on top of 6.16-rc1 fixes =
+the
+>> issue for me (thanks for coming up with the revert to Naim from the
+>> CachyOS team!).
+>>=20
+>> My xorg version is 21.1.16-1 on Arch Linux and I have attached the
+>> revert, my xorg log from the crash and bisection log to this mail!
+>>=20
+>> I'll also CC a few of the netdev people that might have further =
+insights
+>> for this issue!
+>>=20
+>>> Reverting entire SO_PASSRIGHTS fixes the issue.
+>=20
+> Thanks for the report.
+>=20
+> Could you test the diff below ?
+>=20
+> look like some programs start listen()ing before setting
+> SO_PASSCRED or SO_PASSPIDFD and there's a small race window.
+>=20
+> ---8<---
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index fd6b5e17f6c4..87439d7f965d 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1971,7 +1971,8 @@ static void unix_maybe_add_creds(struct sk_buff =
+*skb, const struct sock *sk,
+> if (UNIXCB(skb).pid)
+> return;
+>=20
+> - if (unix_may_passcred(sk) || unix_may_passcred(other)) {
+> + if (unix_may_passcred(sk) || unix_may_passcred(other) ||
+> +     !other->sk_socket) {
+> UNIXCB(skb).pid =3D get_pid(task_tgid(current));
+> current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
+> }
+> ---8<---
 
-If that doesn't flag anything, please reproduce on a mainline kernel 
-(6.15.y or 6.16-rcX) and then file a bug as Alex suggested.  Attach the 
-report you generated from the tool there.
+Hello,=20
+
+On my MSI Claw with Lunar Lake chipset I am unable to make it past my =
+bootloader even with this posted diff.
+I bisected and it led to af_unix: Inherit sk_flags at connect().
+
+In my case, I am unable to attach any logs because my device completely =
+freezes before the journal initializes.
+
+This diff, which makes it essentially a full revert, lets me boot into a =
+kernel built from latest master:
+
+---8<---
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 22e170fb5dda..4dfe94c6d00c 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -1708,7 +1708,6 @@ static int unix_stream_connect(struct socket =
+*sock, struct sockaddr *uaddr,
+        unix_peer(newsk) =3D sk;
+        newsk->sk_state =3D TCP_ESTABLISHED;
+        newsk->sk_type =3D sk->sk_type;
+-       newsk->sk_scm_recv_flags =3D other->sk_scm_recv_flags;
+        init_peercred(newsk, &peercred);
+=20
+        newu =3D unix_sk(newsk);
+@@ -1840,6 +1839,7 @@ static int unix_accept(struct socket *sock, struct =
+socket *newsock,
+        unix_state_lock(tsk);
+        unix_update_edges(unix_sk(tsk));
+        newsock->state =3D SS_CONNECTED;
++       tsk->sk_scm_recv_flags =3D READ_ONCE(sk->sk_scm_recv_flags);
+        sock_graft(tsk, newsock);
+        unix_state_unlock(tsk);
+        return 0;
+---8<---
+
