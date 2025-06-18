@@ -1,258 +1,254 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4BF19F135
-	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 13:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA1B27E069
+	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 21:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254122; cv=none; b=g2vR3YrzGReUFk3mxElhzduIVwtRZgFMRMU4Z+pij95Qqy6VQ9I5u6TdwiMazMHZqtWrSPSOW2IF9OcqFLTBGn2PX2OHP6D5DAYUKZ8EjHreHZBwzRywMxBgHbQO+4eL4Pd2FCRwseKrblCzCr5ChG5u5kNKNOe6MRzO+ManzZY=
+	t=1750283698; cv=none; b=KIsSQE7qQhJH8ePsU9+HyGm4tBIYbAPwjy/2AqgflWX8DqDBAZjoDs2qYIWWJjbRL2TZ6SUbcP7uux8Y9CsfFcneyoGLekiy82Q57dVBTjULDPhp7WoE7+D1fkpGsOi1yd0Ua41Fp167CK6081kJ3vM3VGujkUiidCTyYORmYwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254122; c=relaxed/simple;
-	bh=U1Adh7LXT/5bB/srNjs/Q74DNy0BP80+21pefP89i9Y=;
+	s=arc-20240116; t=1750283698; c=relaxed/simple;
+	bh=t39FVWDmcaJhaf+zVkBbiZy0L4P2c/pGkD2Q7QN6nlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NrgMEXFrLp874auMvQrfNhEFiPmxbbAwgDBBhKQaVZo07XH59eZvRSX1gNpSdX7hUddx18LqHkpDlJsMzWK/k96QAFT/66LSzPAEwE4WTP/ufRRcZOxHOi+Lq4OLcix3yDET+/MQeIB316wuAGvMK+dUvA5UJ90ZdkqXF1BKqA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=i7X1mi7M; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4VOqI8ZSEQU9K1l56LAD8thOolMCtdpNVcjObrL9GE6a3oCdR7PCvGraQoe9Me3SAfv2RTzPyDxDZAe5dRiOOXjLuNYrzFB6GZRxUWLgZqaggkN/UCpzFB/qNo7iXgNeF4aUuRuPS3JwPobfkkf/G4ZNVaNSJ9xpdL+DX7DA+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=wwmjasEG; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="i7X1mi7M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1750254099; x=1750858899; i=christian@heusel.eu;
-	bh=U1Adh7LXT/5bB/srNjs/Q74DNy0BP80+21pefP89i9Y=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=i7X1mi7MBzJxj4siMjvOj8juLqRSYiJC1NyVgjvwE6ax9EuJGWmb1yA+qEN0qOGm
-	 UMqWgK2hRAZ3niQ+HEQ6bcTD6/d0j/NnyOLIf2Y5zUCXK+TEQbd8/XubsJkHQxIli
-	 HhKd/hqMeG3iy2yTSB9SZcXPvNlBi2J/6yWnafMD24wmRn2d471EHToE1BDamBhgu
-	 yFo0y//Z8muvzFu2+sPxZx+AWhKuarr3gVgwvXjM6dJboClLSVYaucApK1lCLF4j0
-	 9yVb42vlyPtVmA6pSHUH31Mwze4yP7kWskjVRnrUA/lQW+Olo5Idx9GsxGHdIHTzp
-	 Z5AbL157ICNS1yl9xg==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.187.65.175]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MGiAs-1uVmnQ0g2E-0065kb; Wed, 18 Jun 2025 15:41:39 +0200
-Date: Wed, 18 Jun 2025 15:41:34 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
-	Vitaly Lifshits <vitaly.lifshits@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
-Message-ID: <87584d6f-5a31-47aa-bba3-1aadfc18fbe6@heusel.eu>
-References: <Z_-l2q9ZhszFxiqA@mail-itl>
- <d37a7c9e-7b3f-afc2-b010-e9785f39a785@intel.com>
- <aAZF0JUKCF0UvfF6@mail-itl>
- <aAZH7fpaGf7hvX6T@mail-itl>
- <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
- <aB0zLQawNrImVqPE@mail-itl>
- <c918d4f5-ee53-4f64-b152-cea0f6d99c4f@molgen.mpg.de>
- <aB0-JLSDT03fosST@mail-itl>
- <aB1JnJG_CH5vxAsw@mail-itl>
- <aFK_ExmGqmi-oQby@mail-itl>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="wwmjasEG"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2363e973db1so964385ad.0
+        for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 14:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750283696; x=1750888496; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ibZ9nQ6oICIpsadgHEQD284rA292hgtTlZ/xFlP3Si0=;
+        b=wwmjasEGR6bE0Rf0X6FQqkkettEfJsXIuuOalF2UlIs9UD0h0UX0YsSCn9X6K4b5av
+         iYlOtPpbba1RRr/WZq2jVFPVTZbY6HPuYp1FRLDbmgjiZsEoOLB8Lder8297MqDseX31
+         XAs3YhIqcdjkUIDtaA+vHn/+wkNW0uqOAmumKlxA5JJ9a5P/VU4gs2cu2J2lwk+FjbAV
+         nrXYKh4ikrWdgDhG7E7adnISuMGqS6g+XJSpklQJjb+3XqlvgA8ZQ7clcKdhZIvP6fHs
+         Qxl1m6JmBNYLJEieWMspo1Wcsf4QnIzbF0k5PIjJ9U9S6ql57ffylzjWQNM/ke0UAevV
+         ymzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750283696; x=1750888496;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ibZ9nQ6oICIpsadgHEQD284rA292hgtTlZ/xFlP3Si0=;
+        b=kJwScoI+bWRr4AzGToVoVsrfYYH/NHvINxo2B4enCS9GCYPXK8xDNxFrs/NnQKybR0
+         HvSwLgBPJOF0YJn9V/ZdxRmKlU/zRBhK/AliMCkcUcgQg3jM/3k4pbvIoNKe9C4Ws0jq
+         NhOwo4TCoPys10gB3dldbGmy4HScM2aZnoMygQ4xssFCZu74E9zjJbjZg4Fig9KvhgrX
+         +MbMH+yj4l8wo+COrsyuxHoherNC4l7z+0JX92rpPYqfXBHuzfvUzblYjqTluGYnoi8O
+         0KW6+DJMM0jGW6jpktjbbp2xSVxRV2fMBD/0SPMxDMT47jNua+ufp2DI9dRmilvYmMEC
+         jq/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVCH/lEekeVfu8ip+ORsTt7wAtHbKKdb6VJQmD3bSnoeWDxMjzwobtcwwFiN2+4nI9FG9YDv8K9fSyEiw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz7mu7/50EMqBLQlQbbtfO37B5KQgkcDMPFRDi5a8us8kZhlQUP
+	KdL4t8QnuNk89kWVsZP2/2hx29rUeKlXz+0nqx5jTu/CkrGnd0TAlZzKMWP9qI/TKNwLZaSfscn
+	dOUHH
+X-Gm-Gg: ASbGncsRInt0lhtCTkB2QjYw2fN9RZhZKW5tZ7Snm/PIGJavwtx5Z0A6TTRyxJhob1i
+	9ul0dWqJsHKdhM2Ci7LaAHaD3Vq2gm5x3rxg3I23L371gEE76kluNFij0N4x4Tbk6hAg8F5qpPM
+	K2D+ksTlzMkATmeiQYk//Cq58QsQcBNmP+uhYuhtEXSwWfoamYfyhk7SwR+fmuj2+CVOQslzfb1
+	6tXRxvw96SOAHXZSIARTrNzN5JY2s+NiuNHQdUvHmYSAaVwxHk7ZejargoqzVQna60mhlYuACAJ
+	vretvduHi8ptwKnq4TYmCylARigZVyZnfinqY1gBG29Mi8h5TqFn+IWkSosELkWpmINUJ0hFm2f
+	53hJR1v2MObUK92J8gNDeEuyOv2OgEPzhD0YTNA==
+X-Google-Smtp-Source: AGHT+IEUIy1Ug7xua5mBZHByJ8Q4rsgKYtbliFIQ+Erm4QHJ1W80k3Lj161qO+rZEbPN8r2IUO9i9g==
+X-Received: by 2002:a17:902:ec90:b0:234:9ef7:a189 with SMTP id d9443c01a7336-237cbf317b1mr18466695ad.13.1750283696116;
+        Wed, 18 Jun 2025 14:54:56 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78169sm105813205ad.123.2025.06.18.14.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 14:54:55 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98.2)
+	(envelope-from <david@fromorbit.com>)
+	id 1uS0k8-00000000MLP-1QYT;
+	Thu, 19 Jun 2025 07:54:52 +1000
+Date: Thu, 19 Jun 2025 07:54:52 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Christian Theune <ct@flyingcircus.io>
+Cc: Carlos Maiolino <cem@kernel.org>, stable@vger.kernel.org,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	regressions@lists.linux.dev
+Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
+Message-ID: <aFM1rGs1zW52M8ov@dread.disaster.area>
+References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
+ <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
+ <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
+ <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
+ <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
+ <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
+ <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
+ <aFHsJmPhK6hBfEPC@dread.disaster.area>
+ <E4F29FAF-D17F-48BC-9F13-05F04C0C2AF5@flyingcircus.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="f5u6kpjicn4mlvgm"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFK_ExmGqmi-oQby@mail-itl>
-X-Provags-ID: V03:K1:NaeQa51SxlkdUa4Lvc/txxkbY+/R1JiRw6uUYhaNd+hzPWDnQwV
- AiLpOv6EsaDvBmaelfJtX2bnKTo7cgmxaxHdeQNcBVSsN/Cotdsi+Q5ZelPOMGv4QAQYdhK
- 1nJdpGE4S5gkDp5jXBQTH8Lq5zPhT9GHSGGyBb4lpguI3jCReDXcDA28SLnvKzyexjVUTsT
- gFGcMukN9iX/CoybcwqPA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FkBSYKoP0Jk=;qbLpRXiB3ysDdv67kmfvj3vb/tQ
- JrobnisDOQQJ+WZdWBQW57dZFXDYJaXjWJDAWszBZrddierzgjnTdC8I37NxVtBjIEMZuoohR
- RVv5/lcynIlMjCkFiAvv0g1PwypsGjuHwUxhbTQeV/vW4xiIxaah4GXDgxs12HgbOtRIgx1UH
- lndI6ET5Tyx4oCadcz5KFqNgCY9sjqoSzMcsf2M/8/U0inbx64+yk+hs1Kdew4W+npZyFxdwE
- RPGBVdxN9zREsdT4/Igsa5ZijjCwsvN5n36fxsKhOSXu3N3rkNK5yQ9wmMM3XOCS9kLYbiRdp
- mZxfUC0xs9CnJVb80r9lMN1WeNcOZhwf98w5KIj7eLx5OBJlQFuu7B/wkbJPiQ/HJbVqzMa0S
- jIqQS5ETUaQSYPJP5Nbtr7tYRw1w0Lcb7m01b1yl14LLR67UWAgEMQ43JOR3QjK98LkQYyZvR
- dSrExOT423zkwCZJYNu6ZjV4Zke7vNrDz++cojVfuYQDftclwX8kU0hCxMdlCglka/8kFLGgP
- 9o2X8xBGS2FCu8B4a5fG7bPgXXF2GUeipiqpXWe2MbWVudbsNUlCHB6l0NlJ814+ZSfVkhVAD
- FaOoMkf8xVY/R6qrkVxvfe4iLuEhz/bjqJe1DrgwuyrIYHi06DXvIyMRGC62y/vc2xSY1KJPC
- BLRytU0JHCcurOtSg36akD/VCO1SfKQooZK4HkuTpOSXhL2600B4aWyL84okH7D9F/MfflzOx
- depH+DdK031t5PPQeAO0UrPgfuhhalat03d7M+2ft3b9wvxurmx/By1gAoBfrRjZvScvHicQE
- 1hPyuPfDyi+HAQynmij+aOrFCzk1vvu0wEH14cq71Dow+TG3D1IIlgD5RYz8fRO6DLxuNjUP5
- fAfVDYrqVqcXyNexJca9j5LTRE6YgDdEtxlzMpoXtuw3j2TWuaKSvT2RolT7/hsXHGmlGOnEI
- QmFdO+qTNZA7/nb4R6UKJazneIlp/4E49DeLTJ8MiC/Q2OMBJyReJrH20SCY2xWyfUiXszt15
- RHrZ6cDSdVkNiXV7nyYIL1hqTyhOH/NQDax5Y9pJw/OO3DSVNm2AugGVrhnJUOleDGW87kI44
- tjrXhqOl2dCewTWm2/9NBxUsKaQBnPJusO9EO2eShs6w4jhxtLOQT81LxdzFhaSR+xSOd8A7c
- oGjd2fbZ7l7/DsORlqcsL5afuSc1dBQ5rPJcMXPVbvj7rpGnbZFIEG8inLU7Arfyll7oKNL+y
- 9xQz7vUgWyM+1zEhQpdCwJ3Ycgyke1X6BiAuOi32BOp1GVduPxiIrlmWfzdIoN6UJXBNRWaon
- z5VB6lS625RUMPeMMPlqMhWzYrorIevJrYpaHrOTJ2xXU39KdtF4rw34eGRosOwVKQzB4Gtpt
- BlyxlVt6WiFryX3s1Urz1q5yR9WFtuMvU/bFI=
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E4F29FAF-D17F-48BC-9F13-05F04C0C2AF5@flyingcircus.io>
+
+On Wed, Jun 18, 2025 at 03:01:26PM +0200, Christian Theune wrote:
+> 
+> 
+> > On 18. Jun 2025, at 00:28, Dave Chinner <david@fromorbit.com>
+> > wrote:
+> > 
+> > On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune
+> > wrote:
+> >>> Can you share the xfs_info of one of these filesystems? I'm
+> >>> curious about the FS geometry.
+> >> 
+> >> Sure:
+> >> 
+> >> # xfs_info / meta-data=/dev/disk/by-label/root isize=512
+> >> agcount=21, agsize=655040 blks =
+> >> sectsz=512   attr=2, projid32bit=1 =
+> >> crc=1        finobt=1, sparse=1, rmapbt=0 =
+> >> reflink=1    bigtime=1 inobtcount=1 nrext64=0 =
+> >> exchange=0 data     =                       bsize=4096
+> >> blocks=13106171, imaxpct=25 =                       sunit=0
+> >> swidth=0 blks naming   =version 2              bsize=4096
+> >> ascii-ci=0, ftype=1, parent=0 log      =internal log
+> >> bsize=4096   blocks=16384, version=2 =
+> >> sectsz=512   sunit=0 blks, lazy-count=1 realtime =none
+> >> extsz=4096   blocks=0, rtextents=0
+> > 
+> > From the logs, it was /dev/vda1 that was getting hung up, so I'm
+> > going to assume the workload is hitting the root partition,
+> > not:
+> > 
+> >> # xfs_info /tmp/ meta-data=/dev/vdb1              isize=512
+> >> agcount=8, agsize=229376 blks
+> > 
+> > ... this one that has a small log.
+> > 
+> > IOWs, I don't think the log size is a contributing factor
+> > here.
+> > 
+> > The indication from the logs is that the system is hung up
+> > waiting on slow journal writes. e.g. there are processes hung
+> > waiting for transaction reservations (i.e. no journal space
+> > available). Journal space is backed up on metadata writeback
+> > trying to force the journal to stable storage (which is blocked
+> > waiting for journal IO completion so it can issue more journal
+> > IO) and getting blocked so it can't make progress, either.
+> > 
+> > I think part of the issue is that journal writes issue device
+> > cache flushes and FUA writes, both of which require written data
+> > to be on stable storage before returning.
+> > 
+> > All this points to whatever storage is backing these VMs is
+> > extremely slow at guaranteeing persistence of data and
+> > eventually it can't keep up with the application making changes
+> > to the filesystem.  When the journal IO latency gets high enough
+> > you start to see things backing up and stall warnings
+> > appearing.
+> > 
+> > IOWs, this does not look like a filesystem issue from the
+> > information presented, just storage that can't keep up with the
+> > rate at which the filesystem can make modifications in memory.
+> > When the fs finally starts to throttle on the slow storage,
+> > that's when you notice just how slow the storage actually
+> > is...
+> > 
+> > [ Historical note: this is exactly the sort of thing we have
+> > seen for years with hardware RAID5/6 adapters with large amounts
+> > of NVRAM and random write workloads. They run as fast as NVRAM
+> > can sink the 4kB random writes, then when the NVRAM fills, they
+> > have to wait for hundreds of MB of cached 4kB random writes to
+> > be written to the RAID5/6 luns at 50-100 IOPS. This causes the
+> > exact same "filesystem is hung" symptoms as you are describing
+> > in this thread. ]
+> 
+> Yeah, I’m very wary of reporting these tracebacks as potential
+> bugs because of them easily being just a hint on slow storage. My
+> problem here is that I can’t point to anything that says the
+> storage would have been slow.
+> 
+> I’ve gone through all metrics and logs on the KVM servers as well
+> as the Ceph servers and they’ve been performing completely at
+> baseline level regarding errors, queues, iops, latency.
+> 
+> I’ve done a measurement to try to emulate those accesses by
+> running
+> 
+> $ fio --rw=randrw --name=synctest --bs=4k --direct=1 --numjobs=1
+> --ioengine=libaio --iodepth=1 --runtime=600 --write_barrier=1
+> --size=60m
+> 
+> I hope this is sufficiently comparable behaviour (maybe with a
+> different read/write ratio instead of 0.5?) to what XFS log
+> flushing does. This resulted in [1]. 
+
+Not really comparable. "write-barrier" is not the option for data
+integrity - fdatasync=8 would be closer, but even that doesn't
+replicate the cache flush/fua write pattern of journal IOs.
+
+Also, journals are write only and sequential, not random. The
+iodepth is typically 8 when fully busy, and the IO size ranges from
+single sector to logbsize (from /proc/mounts) depending on the
+workload.
+
+Metadata writeback to clear the journal, OTOH, is larger random
+4kB writes with no data integrity implied (the journal cache flush
+mechanism I mention above handles that).
 
 
---f5u6kpjicn4mlvgm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
-MIME-Version: 1.0
+> My interpretation of this measurement (and the VM showed no illnes
+> while this was running over 10 minutes): the VM is throttled at
+> 250 IOPs and is reporting back after 10 minutes of 4k random
+> writes with average IOPS of exactly 250. The latencies are a bit
+> varied, this could be due to Qemu throttling. The max latency was
+> 133ms, the average 2ms. This is on a 10g storage network with Ceph
+> that requires another network roundtrip for replication before
+> ACKing a write.
 
-On 25/06/18 03:28PM, Marek Marczykowski-G=C3=B3recki wrote:
-> On Fri, May 09, 2025 at 02:17:32AM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> > On Fri, May 09, 2025 at 01:28:36AM +0200, Marek Marczykowski-G=C3=B3rec=
-ki wrote:
-> > > On Fri, May 09, 2025 at 01:13:28AM +0200, Paul Menzel wrote:
-> > > > Dear Marek, dear Vitaly,
-> > > >=20
-> > > >=20
-> > > > Am 09.05.25 um 00:41 schrieb Marek Marczykowski-G=C3=B3recki:
-> > > > > On Thu, May 08, 2025 at 09:26:18AM +0300, Lifshits, Vitaly
-> > > > > > On 4/21/2025 4:28 PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > > > > > On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykowski-=
-G=C3=B3recki wrote:
-> > > > > > > > On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vitaly =
-wrote:
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > On 4/16/2025 3:43 PM, Marek Marczykowski-G=C3=B3recki wro=
-te:
-> > > > > > > > > > On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits, Vit=
-aly wrote:
-> > > > > > > > > > > Can you please also share the output of ethtool -i? I=
- would like to know the
-> > > > > > > > > > > NVM version that you have on your device.
-> > > > > > > > > >=20
-> > > > > > > > > > driver: e1000e
-> > > > > > > > > > version: 6.14.1+
-> > > > > > > > > > firmware-version: 1.1-4
-> > > > > > > > > > expansion-rom-version:
-> > > > > > > > > > bus-info: 0000:00:1f.6
-> > > > > > > > > > supports-statistics: yes
-> > > > > > > > > > supports-test: yes
-> > > > > > > > > > supports-eeprom-access: yes
-> > > > > > > > > > supports-register-dump: yes
-> > > > > > > > > > supports-priv-flags: yes
-> > > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > Your firmware version is not the latest, can you check wi=
-th the board
-> > > > > > > > > manufacturer if there is a BIOS update to your system?
-> > > > > > > >=20
-> > > > > > > > I can check, but still, it's a regression in the Linux driv=
-er - old
-> > > > > > > > kernel did work perfectly well on this hw. Maybe new driver=
- tries to use
-> > > > > > > > some feature that is missing (or broken) in the old firmwar=
-e?
-> > > > > > >=20
-> > > > > > > A little bit of context: I'm maintaining the kernel package f=
-or a Qubes
-> > > > > > > OS distribution. While I can try to update firmware on my tes=
-t system, I
-> > > > > > > have no influence on what hardware users will use this kernel=
-, and
-> > > > > > > which firmware version they will use (and whether all the ven=
-dors
-> > > > > > > provide newer firmware at all). I cannot ship a kernel that i=
-s known
-> > > > > > > to break network on some devices.
-> > > > > > >=20
-> > > > > > > > > Also, you mentioned that on another system this issue doe=
-sn't reproduce, do
-> > > > > > > > > they have the same firmware version?
-> > > > > > > >=20
-> > > > > > > > The other one has also 1.1-4 firmware. And I re-checked, e1=
-000e from
-> > > > > > > > 6.14.2 works fine there.
-> > > >=20
-> > > > > > Thank you for your detailed feedback and for providing the requ=
-ested
-> > > > > > information.
-> > > > > >=20
-> > > > > > We have conducted extensive testing of this patch across multip=
-le systems
-> > > > > > and have not observed any packet loss issues. Upon comparing th=
-e mentioned
-> > > > > > setups, we noted that while the LAN controller is similar, the =
-CPU differs.
-> > > > > > We believe that the issue may be related to transitions in the =
-CPU's low
-> > > > > > power states.
-> > > > > >=20
-> > > > > > Consequently, we kindly request that you disable the CPU low po=
-wer state
-> > > > > > transitions in the S0 system state and verify if the issue pers=
-ists. You can
-> > > > > > disable this in the kernel parameters on the command line with =
-idle=3Dpoll.
-> > > > > > Please note that this command is intended for debugging purpose=
-s only, as it
-> > > > > > may result in higher power consumption.
-> > > > >=20
-> > > > > I tried with idle=3Dpoll, and it didn't help, I still see a lot o=
-f packet
-> > > > > losses. But I can also confirm that idle=3Dpoll makes the system =
-use
-> > > > > significantly more power (previously at 25-30W, with this option =
-stays
-> > > > > at about 42W).
-> > > > >=20
-> > > > > Is there any other info I can provide, enable some debug features=
- or
-> > > > > something?
-> > > > >=20
-> > > > > I see the problem is with receiving packets - in my simple ping t=
-est,
-> > > > > the ping target sees all the echo requests (and respond to them),=
- but
-> > > > > the responses aren't reaching ping back (and are not visible on t=
-cpdump
-> > > > > on the problematic system either).
-> > > >=20
-> > > > As the cause is still unclear, can the commit please be reverted in=
- the
-> > > > master branch due adhere to Linux=E2=80=99 no-regression policy, so=
- that it can be
-> > > > reverted from the stable series?
-> > > >=20
-> > > > Marek, did you also test 6.15 release candidates?
-> > >=20
-> > > The last test I did was on 6.15-rc3. I can re-test on -rc5.
-> >=20
-> > Same with 6.15-rc5.
->=20
-> And the same issue still applies to 6.16-rc2. FWIW Qubes OS kernel has
-> this buggy patch revered and nobody complained (contrary to the version
-> with the patch included). Should I submit the revert patch?
+Oh. Ceph.
 
-Just submit a revert then =F0=9F=91=8D I have no authority here, but had go=
-od
-experience with just sending a revert patch in the past =F0=9F=A4=97
+Slow random write performance on ceph rbd devices seem to be a
+recurring problem - the filesystem is way faster than the storage,
+and by the time the filesystem throttles on journal space (even with
+small logs), the backlog of IO cannot be drained very quickly and so
+everything stalls.
 
-Cheers,
-Chris
+IOWs, a hard cap of 250 random 4kB write IOPS is extremely slow and
+a likely cause of your random stall problems. When you have lots of
+dirty metadata in memory, then it can take minutes of IO for
+writeback to free journal space to allow progress to be made again.
 
---f5u6kpjicn4mlvgm
-Content-Type: application/pgp-signature; name="signature.asc"
+For example, modify an inode (e.g. chmod), and that only takes ~250
+bytes of journal space to record. So a 10MB journal can hold ~40,000
+dirty inodes. If we assume that there maximum locality in these
+inodes (i.e. best case writeback IO patterns) we have ~1300 x 16kB
+writes to perform to empty the journal.
 
------BEGIN PGP SIGNATURE-----
+Hence there's up to 10-15s of writeback IO to "unstall" a small
+journal. Worst case, it's one 16kB write per inode, and that means
+potential for multiple minutes of writeback to unstall a 10MB
+journal. Now consider a 64MB journal, and the potential stalls
+waiting on metadata writeback are much, much worse...
 
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhSwg4ACgkQwEfU8yi1
-JYWccw/+K8uI558Nsi8UvcuVv0R4kgDY52VMb6rsW48vr5s6XE2PvdAngPESVbdH
-6DHPqDSTl4aqXRMvpe7Ep3HEgYrCPiWUyM0po3CBJLvUiQ8xmhOQ1S5SEhiYZxaV
-TAWWcJKMfuLdIJAbi8ZZi++gKP4U94+xm9lWWDQuGHJriebqWkQnNw6JgKCiYIuf
-3ALKLYeooFUR5eBpWMwMXtBfU3L1RZBiBtV0JluC443SdI2fGpxQRLLdMZd9QLZH
-mTSA8rTRldwCCm9HxxprbPM05EPjXhzAghRbWqlV0wFoCtUEOnErMK5HDT1heyiu
-gcgWL+ZmG/zSp7gF1zyTS8aSrEX3Z87K1jeeNWpRn0G3q1SE7/PaFqbwHsAolb5v
-zZmAZIDb6F6ZmzAMrsrIP77KsIYy9jSGPWq48za1ytznZB5uRBTDPAIC2HlZEG3m
-DOgDryAfQn/DIhirE0Ao0EmWRLKdGa53cPBqTFoE9/N7CR1mhSK4bi/d0bbsnC7M
-OT8IDgIO4z2MZhZJbo0oYPOUOeiyddcJhKoQZ0FetvfOtRuYugU993W4ZkBdm9vs
-veRIy5m+cqu7jm7zO8f+5rqRviRPY8qzlLUMLHJUp7C+HPDVyVdyGDuqC2SHDiSr
-VY0P6C7UiEbu9zZwMziLpRvBdRs67F6H50Uv3ifxGrs5yuL6Gh0=
-=yH9B
------END PGP SIGNATURE-----
+These stalls will come and go with workload peaks. The filesystem
+can soak up some of the peak into memory and the journal, then it
+throttles to storage speed and that's where the hung task warnings
+fire. Once the storage catches up, everything goes back to "normal"
+latencies.
 
---f5u6kpjicn4mlvgm--
+> I’m out of ideas for now, I’ll keep thinking about this. If anyone
+> has any pointer for further tests in any direction, I’m open to
+> anything. ;)
+
+Don't use hard throttling on IOPS rates. Measure IO rates over a
+longer period of time (e.g. rolling average over a minute) so that
+the storage can rapidly sink the short term IO peaks that occur when
+the workload runs the journal out of space and the fs throttles it
+whilst metadata writeback makes progress.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
