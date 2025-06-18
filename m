@@ -1,213 +1,588 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03352882DF
-	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 10:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242340; cv=fail; b=VTuE2VJsfsyUvSo2bUhTZcbwcPJ5xSg5MvoOR2xy+/0KVqVKtTCah3WsYYewhgtxgOgYdZ39GedpXAKrWfxYh8MuE1MgHi2GjWDrTV0mnSAalaWFcDb5uhkCjr6XsgDvTvx59JmrubmYOJVsKSE47bj6Az9F2CSBxgxh8GUXd68=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242340; c=relaxed/simple;
-	bh=KhyctfnbYoz0dPmNUF2yK/nBe4moFzKM+cfHXUWxkSo=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AUdyEMEHIZBzP1dONIfG6zG7FXDlbPRNNctjGOnlWB4AzmAY4t9bVPchqqPpkrUIzWlpLlyLpt9mp2U4WWqhBm8ofPsyP/hplooLbBkF6zZ3bKy33d5JlMexmVvFmxM61x9XEybyqDZykqEHlJdjFkwTp3SXjGLKdWFROoBAeJU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoaKV05y; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C452E719C
+	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 13:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750251713; cv=none; b=UMQDwoJRFniWXdI21diEoU1BQGzm+UpkKMfJLbKpkdJAlx3Yr8GP2yqepIbWK9uD1cmgHAjE7LRtJUIiVLtfkFkOVuIdrEGuH0BrY4omQvw7yyk0O1pc+2vu8dfaA66PAc3C5vTLsvSOF8bV2s6Nt51eMrO1f2FBAgrQ9/jwDps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750251713; c=relaxed/simple;
+	bh=7nzcdwTShcjaBqzYi1BqdbpDvuPoNl7aHDmFxqixCSw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gcncszy40vMCx5Mgx1YzYXBORutUlSW57pkJFyxqcuwhAh6Q/ky2CEMRpsc0QFOXGKvp8PafXESyhj5VKjniWSo/zT5TQE/t0+lUUxj1XP3IYHw0jNHgE0bNuiJEsSIQ8HwhxAy8VJAJ1TTb9W+fz8Gf1Yjfrb8Xt4cWcz1cI/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=B84o6AkA; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoaKV05y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750242339; x=1781778339;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=KhyctfnbYoz0dPmNUF2yK/nBe4moFzKM+cfHXUWxkSo=;
-  b=VoaKV05ytRFG9dWAMN2eRkSrZcs2A7MnVRC7uuc+R5bZqVXwCgPbsPRd
-   NVpEJtiLoAZUVsrPu4CltTZ8Y4iHqJUp0/XcKvNqyOSMenPmGW8e/0ygo
-   D0sAHsGA7AzYPoT5a3tpYxOadbyEFfcIuGOtRMxlCJrlsLdiP2U5GZIaM
-   DUKTHE8YarNpV0F5LH7N/1raqDP43rMHljF9DCFxGn5BUz8yEOIGvg0zr
-   4mVHxfgDoZDVIYah40HIgv+YIH9nm3MPzm4ydUrkPCj/w3nGI7JovtkfM
-   t+MnJ/VwyWbZczYeJj/lR0z3vRyJJrMk30u0ssXo8zE2/Jq6HLbmLQVwi
-   w==;
-X-CSE-ConnectionGUID: P57Nj2iURzKbnz3k3mHx7w==
-X-CSE-MsgGUID: PfYr25RQTEa2vrmeRnTz9w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52373256"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="52373256"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:25:38 -0700
-X-CSE-ConnectionGUID: 8ERKAbj2QuC8nQkDpBj1Yg==
-X-CSE-MsgGUID: 24TXGXNTR9yvOS5O4lvZyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="149233700"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:25:38 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 18 Jun 2025 03:25:37 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 18 Jun 2025 03:25:37 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.60)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 18 Jun 2025 03:25:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iGX20B3rXbIgvyNGLjGXuphoS+elL11iZibh1eoLTPT7aUNTGqCMGq8PxSmxRa/1OzLpmgxxd65AgIi5i9yMIkzI8DTd+O0Mfo4Xx8NqwD+wAT2UdmcRKZSt3/BFl4jBcF9MM7QUHEhN12eLQ/mQK0I01pqPgff4SUJn5Cxk/ILbaDqLsNeB62Uk3fNLsIJtG9HVSoekg9Ku9AGHlRD/Aj3qBC1NEsi/Ih53kWb0hJU2FkTWJShMoGGGI2OFtXHXpLRtcKuOUJp3o8Dd6/XmJP170xpevu8HsMhp3R0+e/raWd8E/4zse32iJ4WBK96EwFNM36Qr67M+7VoD53NKBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pcAaPr86Opfi5/rLvVjVlgxsf3SfRwrK33rNOu5FD1g=;
- b=mksYUv7m/85sfmCDrNcrP34dL+zBjENR/qJ0sBm5Z4mg0LSybr70TZPey/UwqnPP7Zx29ll4/mBsT3L1/kt8TIv6+M1DAK7SWOrkVGzvJYbo7YWhkGhcwY6afataX6bCJI5MfTsGTTUi7AxloRMP1D86JSgwtLHzjvMDTTqBuXxvKJCKAeSIvVal/svaEu0chqwzglDtd+nDFJz1XrcRCJectxlfYEW5ZQrh4cQx9p6JfYsO4V4z4gccu/yc529OEjumaZkgmMcjC/aLqbdlN4WRVnaprDPJBZaqJ9DDwqVKspxvWRE4alUEYNTw+AQtGME+2SyWOww7nWai6bEu2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
- by PH7PR11MB6032.namprd11.prod.outlook.com (2603:10b6:510:1d3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
- 2025 10:25:18 +0000
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6]) by MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::15b2:ee05:2ae7:cfd6%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 10:25:18 +0000
-Message-ID: <8597a1d6-d6e2-46a5-87c5-8444a2c7c342@intel.com>
-Date: Wed, 18 Jun 2025 12:25:13 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ixgbe broken after devlink support patch
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "Kaplan, David" <David.Kaplan@amd.com>, "jedrzej.jagielski@intel.com"
-	<jedrzej.jagielski@intel.com>, "anthony.l.nguyen@intel.com"
-	<anthony.l.nguyen@intel.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "horms@kernel.org" <horms@kernel.org>, Bharath R
-	<bharath.r@intel.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "intel-wired-lan@lists.osuosl.org"
-	<intel-wired-lan@lists.osuosl.org>
-References: <LV3PR12MB92658474624CCF60220157199470A@LV3PR12MB9265.namprd12.prod.outlook.com>
- <59faaf3b-d75d-4405-a7bb-a137918617e3@intel.com>
- <20250617160935.08f8652a@kernel.org>
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250617160935.08f8652a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZP191CA0037.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:10:4f8::9) To MN6PR11MB8102.namprd11.prod.outlook.com
- (2603:10b6:208:46d::9)
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="B84o6AkA"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1750251691;
+	bh=wk2aAWgreJVBMMw2qig0RsGdOKufxyrDOjIm9IeUi1U=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=B84o6AkAjTsWOo/bmJ1UQKoPiTOauaqWnhr9K0E3k06Dk8GWOHx9JF8cmDLY9Z89C
+	 uxrkY35X/kKK1pgRfxNJgKeK3wU14PLdYAROlf49AGupK6vmyWoLllPFbc/p8o0S/c
+	 IkDVGqsom4g1mk2VGHFOKt9mHdQwRifoy0SDEoL8=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|PH7PR11MB6032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aa35434-abbd-4034-44ed-08ddae526c46
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?S3Q0aU9VV1oyeXpCUVFUKzJ6NktqMGtoZzNlT2NxaXJjNjBUMm0yd2JzSnkw?=
- =?utf-8?B?TStuaTRsaEJzWEExTGx5S2cwMU0wVGpRWXhJQXN2N2tVcU1BdTRBYW53c3F0?=
- =?utf-8?B?U1IyMEZXWE04aHYvaXEvUG1LendLd0dmMmluK2c1MS9neWExRlRNSXdkTWoy?=
- =?utf-8?B?Ulc4Q0hGbXpzckQwelJLOVUrU1A0cTMyLzltRUxSSHRIRFBnd044MHNsVDdK?=
- =?utf-8?B?MUMrM2R3Q2F5SFhiM3lzMDFxVWFTdXpaN1V2K0Y1VlVJNEY2R2lzRmllV2Zp?=
- =?utf-8?B?Yk5xL1NRV2hSVVF2Qm4wbHphQXpPSndjcVRGSXB3VnBGNC9VeFZVT2VQUHMw?=
- =?utf-8?B?YzczZkRqNW1VbkgyNUNvOHFtNTVQRGQyTXNHb3RkS1pDQ0tFcVdwblFGeVlH?=
- =?utf-8?B?b21ZdGdpRG9mZnVxLzJock5HSUVtL0wreU13WUR0WW1ON1BnM3h3d2RCTStP?=
- =?utf-8?B?YWFNZ3B1M3JJcER1ZW95YSswbTYxSFRrdXNQQ1gzbzZaR1VKZjlMYkhQb3Rn?=
- =?utf-8?B?U3Bwc0grV011TEwxdEFkWlkyVGdnSzluSTJycGpTRHZYOEJHa2hrZHZmS3V0?=
- =?utf-8?B?VldWYXNzRlVwUGRINGdpS0E5a2QySzQ0SDNjZXNHaUt3UlR6dnNZMHMxSG1r?=
- =?utf-8?B?ejU1c05kVUJaaEFvSlcrdEVOQVZzYkRINkJtTGZtYmxzRmZTWG1RY1FyQktn?=
- =?utf-8?B?cEUvdTh2dFRKWFdsSitZYXBEODhoTWFyL1NwWXlyL3RvTk9uVGsxRlNVdHNI?=
- =?utf-8?B?QTR1NTFKZENhYlEwSDJ3eTJ3TkdVaXcwMkpsdUJMOTJCcnQ4TkRBbjY2a1ph?=
- =?utf-8?B?aXJhUHJPdTAvcFY0NCthMlZQaWt4bEs0Z2JIVGFHOGlBTGpvTFBlZTkyZ09J?=
- =?utf-8?B?bGh1eTJhTUtrZktVbDR5Q0xtY3phSjNBeUtTMEJmckNsem9yOVN6djVsQUg2?=
- =?utf-8?B?OFNUcDdsQm10eWJlNUk4YkFXaVhBN1cxMkR6dFBrR3ozL0FBM1hKbEIvUnBx?=
- =?utf-8?B?Zk0wTVNtejZxMlFmMXNLbks5c3dwU1g2emtOSk9lNlFLaWJMNFE4K2t2UWJN?=
- =?utf-8?B?OVJXRzFITmNTMFVkR1FWTVU0QkRqNytMTWlhUExyOUovN1pDV2loUVA1NHFY?=
- =?utf-8?B?aWZaa0VKYUhiVDZETXNDSmsyOG9NT01TQ3AvYmRSTmtJeWMyUzhiWncwY2tl?=
- =?utf-8?B?alJYZnAyZ0V2dkR0ZlZ2VkxXS2k5UE80bGZmM2hKYUt3NG5BdmRwekdvSFRm?=
- =?utf-8?B?S2pmZmhoSmhHZXFYaTRHL1NNYWZyTDlKQXpDd0lzRGlmSUR3RDdDcDU0MVBV?=
- =?utf-8?B?SXZ5TjVCOFZMTEY4a2NmRkw0bGhrQ3FFUC9pK2RxV0JCWkhwMGxoT0I1R0tt?=
- =?utf-8?B?bjFpZlg2SW41d2R0c201OTVFNmVMYlh0Y0JzS2J5RHlMVHZjYXJtUWY0ZnRJ?=
- =?utf-8?B?NjNJY0JOOHVqQys2UEFoN2NxbE1zYThsa2ZSYk5RNWdVTisvM0oxN3hxRUFL?=
- =?utf-8?B?d0RQS1ZhNFhvWkN2eTFtSExhVGYzUEUwWnVYM0Exak1lWmZ1K004RjA0a3d6?=
- =?utf-8?B?ZFpqMWp4K05RSGJIejZpL2RKVHVDSlhEd05qNFVyWGd3VXVjU1dQSE5PcXZI?=
- =?utf-8?B?S081N01ydDBCVVZlbmwvTFZuTEx4OXgvWVVaTUUvZUxyNWtZeWZaa1hvUzlr?=
- =?utf-8?B?TWpPYjJKQldIWkRyWThYUHBaTitZaXJqYmZrazNQMzlobnRkQkJ0cFR1RGQz?=
- =?utf-8?B?N2RGUUpRQnBoK0VPNmphUHF0dzdhcjN1LzIyT3cxUzIwenNKdVcwNTJhMG92?=
- =?utf-8?Q?yGDdjMJV02NBNYizMwJllnyv4F6DcwAy1fHdA=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N0NsR0FNZW50dWd0Ulgzb3BjUHNLdENaZE95bklzZXpqamsxY0NRbTI2WktG?=
- =?utf-8?B?a1hIRHhobi9ZdVN5Qnp5SC9kMElkOWExamdxQlBhQklaaUxYclVmL29HZ3lr?=
- =?utf-8?B?TlpRSDNKWDNMd3UyWHZ0bU15cmExWXl2L1ZiR0tQTGt6azg5Nm1DK0U5eVVW?=
- =?utf-8?B?YzVCRXhOWHVIYXM3Tk85SHlzSjh4RmljaUFUTGp0eDFCV1ZpSytUNktzTXY3?=
- =?utf-8?B?R2JlQnA4OG1WKzkyOUZYWVM4VDQyREJGRTZPUVhxSUZab2FmYXBKaEVQS2sw?=
- =?utf-8?B?TytNT1NoVDdtNlY4UDE0aGYrOVpaYU40UGxoNGlBRzdDdkVlVFQrSExZZXhU?=
- =?utf-8?B?YmFZV0hiYTBSbGNoRm1rdEtFL1R1T0VlZFJpbkNCQ2xwb0lIejg1TUUyc1da?=
- =?utf-8?B?ZVZ6ZC85NzBMK041VHZGNm8xQ2lZQ1oyYjN5NTloaEt3RVFTSTZOVEJGaGF1?=
- =?utf-8?B?SUo0R0FJM0hHTXducVNZeVdMRG1oMks4UzczZzQ1b09ycDkvcFZOa0tETTlI?=
- =?utf-8?B?dnFKR051Q3VkYktzTlYwK0xqVVdhR0JneXR0b0k2bll2eTJYVTlDNDhTTTVH?=
- =?utf-8?B?dkRvOUpFRytCa25RRmcvQm9VT1o0TTlaM1hWRksyb0hHTGYvMjBkSEdWcTk5?=
- =?utf-8?B?STNtODhSekpCWjhjSnBEYTVvNW81NjhNOVRSd3RyUkFTN2NEQUIwZTNCMU5q?=
- =?utf-8?B?a0drWktOL3JiTVZHSEJiTFpVOG8wb0VMejRJR3VKenN6b0dsR3lOcTV0OHBF?=
- =?utf-8?B?bkJSM3U2aE4yNTM2azlBRXMwTkN6dTBTUXJNajAxbGFHNXNQRmxNbUlxTTZi?=
- =?utf-8?B?QXZOY1RjT2VnYW1KYkc4K0pIWUx0RUJQbzFhalRkZVpCdjZKTzlaSEdldTV6?=
- =?utf-8?B?NmlHLzV4aGhxaHpMdkpRdmNTZ2JqMERFRmxNc29OU2l6UTVQV2RpRUlBSHpk?=
- =?utf-8?B?VWc2SDVmZmRSV3FNaGE1aWRzUHhkTmpxRk03QTFVNXcwYm1wRlFuVUErUStt?=
- =?utf-8?B?d3NobVRkUWs4REtrSHRtejJwa3BYT2x4cmZlQVNJelVCak9IWWVIYmpQV09Y?=
- =?utf-8?B?YWdLN1lCNXozZjVUc3pnRHhZZXhqWFE1cG9oVy9aWHJjUUh0R3R4M2phNEl1?=
- =?utf-8?B?ZVBneEVaNG1UMHZwa1U4YmRBOEZ6aU1PTFk3MFVlM3AxbUlYM2VmWS9Fa01a?=
- =?utf-8?B?QytxdWZXYW45eXdyNjYrQXkxRlJnYi9ZNGFwOUlOUDFWUUkzWTg0NzhNWnNJ?=
- =?utf-8?B?VnI1N0lxSlJheTRTR2c0RTlwM055eXl5OXl5Q1NlNmYwMENRRXVpT0lGNjNq?=
- =?utf-8?B?cjI3R0IwdGNldDBMSzdZMGhOS3M4YkRzZEhRc3UzSDJrWFJlUzBjL2JCa1Va?=
- =?utf-8?B?ZmVUWUlITUZpbCtTT2xucWdCTmxnUlpPbFc5SysrTXNxREVKVVhrRkQvMExD?=
- =?utf-8?B?b1NhTExndk5WQThpd2dadkN4bHJJWFk0VXNHL0JCMW93Y240UEFtVmJORVcr?=
- =?utf-8?B?eHhYdUwrUDJDUjd6RlhUVXRHellrY1diZzBaNFlqYXkrWVFla1ovZjRwZ1dt?=
- =?utf-8?B?a2tlMzhoUmQ4NThqMlVYSEFzUmhvQllBZC9QZ1BsK1ltUldmYVlzTzB2UWV4?=
- =?utf-8?B?QmdrWE1zQ3pwamVkSUhSbGJOM0pvNXg2RTU2eTVkdGFmazJUTWhlZ0xQWTdj?=
- =?utf-8?B?YmF1NkxJZVE3RVJleVRaWXEvRk82TzlxeSs3RjNRQW9CSGRMeUpJQXpQN01a?=
- =?utf-8?B?NGFCUVphV0dYUlBHdHl0Y2xxUTlIRXYrOTlzOWwvbWxSL0JqWWFRTHlqZ2JL?=
- =?utf-8?B?bTg0VDNpRVlodXdEYWNManFoTlZEdlZWbnExb2JNb0ZiNmpNL1JhelVJWjhK?=
- =?utf-8?B?TzVnWnNxN1ZZMjFXMU5GRGl6aEVOVE50L3lObU1IWVVTL1l3eHQwazZSQ2V1?=
- =?utf-8?B?aSt6ZzBJWS8vY2t0VXpEbEI5Q1BTZkZ6WlVIaTJ5SVBIQlNyZnFpYmxpRTRD?=
- =?utf-8?B?Rk42cUZHQ2lPRmoyYkRyNTdoOFpRRHY0YlNmQnJVSjRxYTEzbkdMZEt3cjZu?=
- =?utf-8?B?ZEFRUzV0QWY4V3NRQmphUVJTZ1FYWEZFYnBCNllOWDFKU2FhVnQyTjY1amZO?=
- =?utf-8?B?UzhZalVibndyMUd5eDJXS3htVlkyam84WkVCZWZqTXA0N3NvSzVXS0NIZWlH?=
- =?utf-8?B?VVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa35434-abbd-4034-44ed-08ddae526c46
-X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 10:25:18.5373
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lNo7sAjzo/SC1PObJzlhWSdcehy6ppJph6FIvu8h51pkbaFKmHkVuhoGuceNI8xm7aKxRWFNXy/wU/AdegskMol2rlmDoWIIi1JPsHdRL1k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6032
-X-OriginatorOrg: intel.com
-
-On 6/18/25 01:09, Jakub Kicinski wrote:
-> On Tue, 17 Jun 2025 11:01:18 +0200 Przemek Kitszel wrote:
->>> Normally, the device is given a name like enp194s0f0 and connects to the wired network.
->>
->> now the name is likely to be different, please see this thread:
->> https://lkml.org/lkml/2025/4/24/1750
->>
->> Is it possible that your network setup script has some part of interface
->> discovery hardcoded?
-> 
-> Hi Przemek, could you/someone on your side try the workaround
-> I suggested in the earlier thread? I'm not sure how actively
-> developed ixgbe is, if the work is not related to any new devices
-> with more complicated port topology breaking people's setups feels
-> pretty unnecessary.
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <aFHsJmPhK6hBfEPC@dread.disaster.area>
+Date: Wed, 18 Jun 2025 15:01:26 +0200
+Cc: Carlos Maiolino <cem@kernel.org>,
+ stable@vger.kernel.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ regressions@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E4F29FAF-D17F-48BC-9F13-05F04C0C2AF5@flyingcircus.io>
+References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
+ <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
+ <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
+ <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
+ <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
+ <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
+ <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
+ <aFHsJmPhK6hBfEPC@dread.disaster.area>
+To: Dave Chinner <david@fromorbit.com>
 
 
-yeah, we will fix that, thank you for the remainder
+
+> On 18. Jun 2025, at 00:28, Dave Chinner <david@fromorbit.com> wrote:
+>=20
+> On Mon, Jun 16, 2025 at 12:09:21PM +0200, Christian Theune wrote:
+>>> Can you share the xfs_info of one of these filesystems? I'm curious =
+about the FS
+>>> geometry.
+>>=20
+>> Sure:
+>>=20
+>> # xfs_info /
+>> meta-data=3D/dev/disk/by-label/root isize=3D512    agcount=3D21, =
+agsize=3D655040 blks
+>>         =3D                       sectsz=3D512   attr=3D2, =
+projid32bit=3D1
+>>         =3D                       crc=3D1        finobt=3D1, =
+sparse=3D1, rmapbt=3D0
+>>         =3D                       reflink=3D1    bigtime=3D1 =
+inobtcount=3D1 nrext64=3D0
+>>         =3D                       exchange=3D0
+>> data     =3D                       bsize=3D4096   blocks=3D13106171, =
+imaxpct=3D25
+>>         =3D                       sunit=3D0      swidth=3D0 blks
+>> naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, =
+ftype=3D1, parent=3D0
+>> log      =3Dinternal log           bsize=3D4096   blocks=3D16384, =
+version=3D2
+>>         =3D                       sectsz=3D512   sunit=3D0 blks, =
+lazy-count=3D1
+>> realtime =3Dnone                   extsz=3D4096   blocks=3D0, =
+rtextents=3D0
+>=20
+> =46rom the logs, it was /dev/vda1 that was getting hung up, so I'm
+> going to assume the workload is hitting the root partition, not:
+>=20
+>> # xfs_info /tmp/
+>> meta-data=3D/dev/vdb1              isize=3D512    agcount=3D8, =
+agsize=3D229376 blks
+>=20
+> ... this one that has a small log.
+>=20
+> IOWs, I don't think the log size is a contributing factor here.
+>=20
+> The indication from the logs is that the system is hung up waiting
+> on slow journal writes. e.g. there are processes hung waiting for
+> transaction reservations (i.e. no journal space available). Journal
+> space is backed up on metadata writeback trying to force the journal
+> to stable storage (which is blocked waiting for journal IO
+> completion so it can issue more journal IO) and getting blocked so
+> it can't make progress, either.
+>=20
+> I think part of the issue is that journal writes issue device cache
+> flushes and FUA writes, both of which require written data to be
+> on stable storage before returning.
+>=20
+> All this points to whatever storage is backing these VMs is
+> extremely slow at guaranteeing persistence of data and eventually it
+> can't keep up with the application making changes to the filesystem.
+> When the journal IO latency gets high enough you start to see things
+> backing up and stall warnings appearing.
+>=20
+> IOWs, this does not look like a filesystem issue from the
+> information presented, just storage that can't keep up with the rate
+> at which the filesystem can make modifications in memory. When the
+> fs finally starts to throttle on the slow storage, that's when you
+> notice just how slow the storage actually is...
+>=20
+> [ Historical note: this is exactly the sort of thing we have seen
+> for years with hardware RAID5/6 adapters with large amounts of NVRAM
+> and random write workloads. They run as fast as NVRAM can sink the
+> 4kB random writes, then when the NVRAM fills, they have to wait for
+> hundreds of MB of cached 4kB random writes to be written to the
+> RAID5/6 luns at 50-100 IOPS. This causes the exact same "filesystem
+> is hung" symptoms as you are describing in this thread. ]
+
+Yeah, I=E2=80=99m very wary of reporting these tracebacks as potential =
+bugs because of them easily being just a hint on slow storage. My =
+problem here is that I can=E2=80=99t point to anything that says the =
+storage would have been slow.
+
+I=E2=80=99ve gone through all metrics and logs on the KVM servers as =
+well as the Ceph servers and they=E2=80=99ve been performing completely =
+at baseline level regarding errors, queues, iops, latency.
+
+I=E2=80=99ve done a measurement to try to emulate those accesses by =
+running
+
+$ fio --rw=3Drandrw --name=3Dsynctest --bs=3D4k --direct=3D1 --numjobs=3D1=
+ --ioengine=3Dlibaio --iodepth=3D1 --runtime=3D600 --write_barrier=3D1 =
+--size=3D60m
+
+I hope this is sufficiently comparable behaviour (maybe with a different =
+read/write ratio instead of 0.5?) to what XFS log flushing does. This =
+resulted in [1].=20
+
+My interpretation of this measurement (and the VM showed no illnes while =
+this was running over 10 minutes): the VM is throttled at 250 IOPs and =
+is reporting back after 10 minutes of 4k random writes with average IOPS =
+of exactly 250. The latencies are a bit varied, this could be due to =
+Qemu throttling. The max latency was 133ms, the average 2ms. This is on =
+a 10g storage network with Ceph that requires another network roundtrip =
+for replication before ACKing a write.
+
+There is one more (somewhat far fetched thing) I could pull in here: out =
+of 11 VMs that have seen that are exhibiting those symptoms I have seen =
+two (including one already running on 6.12 at that time) that did log a =
+stacktrace[2] that reminded me of the memory/folio issue we debugged =
+late last year / earlier this year =
+(https://lkml.org/lkml/2024/9/12/1472)) =E2=80=A6 maybe it=E2=80=99s =
+worthwhile to consider whether this might be related. The outside =
+symptoms are similar: it recovers on its own at some point and I can=E2=80=
+=99t show any issue with the underlying storage at all.
+
+I=E2=80=99m out of ideas for now, I=E2=80=99ll keep thinking about this. =
+If anyone has any pointer for further tests in any direction, I=E2=80=99m =
+open to anything. ;)
+
+Thanks for all the help so far,
+Christian
+
+[1] The test results:
+
+synctest: (g=3D0): rw=3Drandrw, bs=3D(R) 4096B-4096B, (W) 4096B-4096B, =
+(T) 4096B-4096B, ioengine=3Dlibaio, iodepth=3D1
+fio-3.38
+Starting 1 process
+Jobs: 1 (f=3D1): [m(1)][100.0%][r=3D484KiB/s,w=3D517KiB/s][r=3D121,w=3D129=
+ IOPS][eta 00m:00s]
+synctest: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D655973: Wed Jun 18 =
+09:28:31 2025
+  read: IOPS=3D122, BW=3D489KiB/s (501kB/s)(29.9MiB/62557msec)
+    slat (usec): min=3D8, max=3D1096, avg=3D22.94, stdev=3D24.68
+    clat (usec): min=3D285, max=3D133773, avg=3D2745.14, stdev=3D2723.35
+     lat (usec): min=3D296, max=3D133812, avg=3D2768.08, stdev=3D2723.35
+    clat percentiles (usec):
+     |  1.00th=3D[   416],  5.00th=3D[   506], 10.00th=3D[   611], =
+20.00th=3D[   832],
+     | 30.00th=3D[  1713], 40.00th=3D[  2540], 50.00th=3D[  2737], =
+60.00th=3D[  3458],
+     | 70.00th=3D[  3621], 80.00th=3D[  3785], 90.00th=3D[  4555], =
+95.00th=3D[  4817],
+     | 99.00th=3D[  6063], 99.50th=3D[  7898], 99.90th=3D[ 22676], =
+99.95th=3D[ 78119],
+     | 99.99th=3D[133694]
+   bw (  KiB/s): min=3D  304, max=3D  608, per=3D99.90%, avg=3D489.79, =
+stdev=3D59.34, samples=3D125
+   iops        : min=3D   76, max=3D  152, avg=3D122.45, stdev=3D14.83, =
+samples=3D125
+  write: IOPS=3D123, BW=3D493KiB/s (504kB/s)(30.1MiB/62557msec); 0 zone =
+resets
+    slat (usec): min=3D11, max=3D1102, avg=3D25.54, stdev=3D23.33
+    clat (usec): min=3D1434, max=3D140566, avg=3D5337.34, stdev=3D7163.78
+     lat (usec): min=3D1453, max=3D140651, avg=3D5362.88, stdev=3D7164.02
+    clat percentiles (usec):
+     |  1.00th=3D[  1713],  5.00th=3D[  1926], 10.00th=3D[  2114], =
+20.00th=3D[  2868],
+     | 30.00th=3D[  3720], 40.00th=3D[  4080], 50.00th=3D[  4490], =
+60.00th=3D[  5014],
+     | 70.00th=3D[  5276], 80.00th=3D[  5866], 90.00th=3D[  6652], =
+95.00th=3D[  8979],
+     | 99.00th=3D[ 33162], 99.50th=3D[ 64750], 99.90th=3D[ 99091], =
+99.95th=3D[111674],
+     | 99.99th=3D[141558]
+   bw (  KiB/s): min=3D  336, max=3D  672, per=3D99.86%, avg=3D492.93, =
+stdev=3D60.30, samples=3D125
+   iops        : min=3D   84, max=3D  168, avg=3D123.23, stdev=3D15.08, =
+samples=3D125
+  lat (usec)   : 500=3D2.28%, 750=3D6.19%, 1000=3D2.66%
+  lat (msec)   : 2=3D9.39%, 4=3D40.59%, 10=3D36.82%, 20=3D1.26%, =
+50=3D0.41%
+  lat (msec)   : 100=3D0.34%, 250=3D0.05%
+  cpu          : usr=3D0.17%, sys=3D0.73%, ctx=3D15398, majf=3D0, =
+minf=3D11
+  IO depths    : 1=3D100.0%, 2=3D0.0%, 4=3D0.0%, 8=3D0.0%, 16=3D0.0%, =
+32=3D0.0%, >=3D64=3D0.0%
+     submit    : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.0%, 32=3D0.0%, =
+64=3D0.0%, >=3D64=3D0.0%
+     complete  : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.0%, 32=3D0.0%, =
+64=3D0.0%, >=3D64=3D0.0%
+     issued rwts: total=3D7655,7705,0,0 short=3D0,0,0,0 dropped=3D0,0,0,0
+     latency   : target=3D0, window=3D0, percentile=3D100.00%, depth=3D1
+
+Run status group 0 (all jobs):
+   READ: bw=3D489KiB/s (501kB/s), 489KiB/s-489KiB/s (501kB/s-501kB/s), =
+io=3D29.9MiB (31.4MB), run=3D62557-62557msec
+  WRITE: bw=3D493KiB/s (504kB/s), 493KiB/s-493KiB/s (504kB/s-504kB/s), =
+io=3D30.1MiB (31.6MB), run=3D62557-62557msec
+
+Disk stats (read/write):
+  vda: ios=3D7662/7865, sectors=3D61856/71089, merge=3D0/5, =
+ticks=3D21263/105909, in_queue=3D127177, util=3D98.62%
+ctheune@hannover96stag00:~/ > fio --rw=3Drandrw --name=3Dsynctest =
+--bs=3D4k --direct=3D1 --numjobs=3D1 --ioengine=3Dlibaio --iodepth=3D1 =
+--runtime=3D600 --write_barrier=3D1 --size=3D60m --time_based
+synctest: (g=3D0): rw=3Drandrw, bs=3D(R) 4096B-4096B, (W) 4096B-4096B, =
+(T) 4096B-4096B, ioengine=3Dlibaio, iodepth=3D1
+fio-3.38
+Starting 1 process
+Jobs: 1 (f=3D1): [m(1)][100.0%][r=3D408KiB/s,w=3D344KiB/s][r=3D102,w=3D86 =
+IOPS][eta 00m:00s]
+synctest: (groupid=3D0, jobs=3D1): err=3D 0: pid=3D656097: Wed Jun 18 =
+09:38:54 2025
+  read: IOPS=3D121, BW=3D485KiB/s (496kB/s)(284MiB/600006msec)
+    slat (usec): min=3D7, max=3D1126, avg=3D23.70, stdev=3D22.33
+    clat (usec): min=3D99, max=3D128424, avg=3D2834.26, stdev=3D1977.13
+     lat (usec): min=3D299, max=3D128439, avg=3D2857.97, stdev=3D1975.91
+    clat percentiles (usec):
+     |  1.00th=3D[  416],  5.00th=3D[  519], 10.00th=3D[  660], =
+20.00th=3D[ 1516],
+     | 30.00th=3D[ 2442], 40.00th=3D[ 2638], 50.00th=3D[ 2802], =
+60.00th=3D[ 3523],
+     | 70.00th=3D[ 3654], 80.00th=3D[ 3818], 90.00th=3D[ 4555], =
+95.00th=3D[ 4752],
+     | 99.00th=3D[ 5211], 99.50th=3D[ 7308], 99.90th=3D[12125], =
+99.95th=3D[23725],
+     | 99.99th=3D[71828]
+   bw (  KiB/s): min=3D   64, max=3D  672, per=3D100.00%, avg=3D485.12, =
+stdev=3D75.21, samples=3D1199
+   iops        : min=3D   16, max=3D  168, avg=3D121.27, stdev=3D18.80, =
+samples=3D1199
+  write: IOPS=3D120, BW=3D481KiB/s (493kB/s)(282MiB/600006msec); 0 zone =
+resets
+    slat (usec): min=3D10, max=3D1168, avg=3D26.84, stdev=3D22.15
+    clat (usec): min=3D1193, max=3D307265, avg=3D5397.02, stdev=3D8361.82
+     lat (usec): min=3D1343, max=3D307308, avg=3D5423.86, stdev=3D8362.12
+    clat percentiles (usec):
+     |  1.00th=3D[  1729],  5.00th=3D[  1975], 10.00th=3D[  2245], =
+20.00th=3D[  3097],
+     | 30.00th=3D[  3884], 40.00th=3D[  4178], 50.00th=3D[  4621], =
+60.00th=3D[  5014],
+     | 70.00th=3D[  5276], 80.00th=3D[  5800], 90.00th=3D[  6456], =
+95.00th=3D[  7898],
+     | 99.00th=3D[ 32900], 99.50th=3D[ 66847], 99.90th=3D[132645], =
+99.95th=3D[154141],
+     | 99.99th=3D[170918]
+   bw (  KiB/s): min=3D   56, max=3D  672, per=3D99.91%, avg=3D481.74, =
+stdev=3D74.40, samples=3D1199
+   iops        : min=3D   14, max=3D  168, avg=3D120.43, stdev=3D18.60, =
+samples=3D1199
+  lat (usec)   : 100=3D0.01%, 250=3D0.01%, 500=3D2.08%, 750=3D4.49%, =
+1000=3D2.13%
+  lat (msec)   : 2=3D8.44%, 4=3D42.49%, 10=3D38.81%, 20=3D0.89%, =
+50=3D0.31%
+  lat (msec)   : 100=3D0.24%, 250=3D0.11%, 500=3D0.01%
+  cpu          : usr=3D0.20%, sys=3D0.75%, ctx=3D145300, majf=3D0, =
+minf=3D12
+  IO depths    : 1=3D100.0%, 2=3D0.0%, 4=3D0.0%, 8=3D0.0%, 16=3D0.0%, =
+32=3D0.0%, >=3D64=3D0.0%
+     submit    : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.0%, 32=3D0.0%, =
+64=3D0.0%, >=3D64=3D0.0%
+     complete  : 0=3D0.0%, 4=3D100.0%, 8=3D0.0%, 16=3D0.0%, 32=3D0.0%, =
+64=3D0.0%, >=3D64=3D0.0%
+     issued rwts: total=3D72728,72217,0,0 short=3D0,0,0,0 =
+dropped=3D0,0,0,0
+     latency   : target=3D0, window=3D0, percentile=3D100.00%, depth=3D1
+
+Run status group 0 (all jobs):
+   READ: bw=3D485KiB/s (496kB/s), 485KiB/s-485KiB/s (496kB/s-496kB/s), =
+io=3D284MiB (298MB), run=3D600006-600006msec
+  WRITE: bw=3D481KiB/s (493kB/s), 481KiB/s-481KiB/s (493kB/s-493kB/s), =
+io=3D282MiB (296MB), run=3D600006-600006msec
+
+Disk stats (read/write):
+  vda: ios=3D72722/74795, sectors=3D582248/768053, merge=3D0/67, =
+ticks=3D206476/860665, in_queue=3D1067364, util=3D98.78%
+
+
+[2] second type of hung tasks that I considered unrelated so far
+
+May 17 03:30:23  kernel: INFO: task kworker/u18:2:19320 blocked for more =
+than 122 seconds.
+May 17 03:30:23  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:30:23  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:30:23  kernel: task:kworker/u18:2   state:D stack:0     =
+pid:19320 tgid:19320 ppid:2      flags:0x00004000
+May 17 03:30:23  kernel: Workqueue: writeback wb_workfn (flush-253:0)
+May 17 03:30:23  kernel: Call Trace:
+May 17 03:30:23  kernel:  <TASK>
+May 17 03:30:23  kernel:  __schedule+0x442/0x12d0
+May 17 03:30:23  kernel:  schedule+0x27/0xf0
+May 17 03:30:23  kernel:  io_schedule+0x46/0x70
+May 17 03:30:23  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:30:23  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:30:23  kernel:  writeback_iter+0x1ec/0x2d0
+May 17 03:30:23  kernel:  iomap_writepages+0x74/0x9e0
+May 17 03:30:23  kernel:  ? virtqueue_add_split+0xb1/0x7a0 [virtio_ring]
+May 17 03:30:23  kernel:  ? virtqueue_add_split+0x2af/0x7a0 =
+[virtio_ring]
+May 17 03:30:23  kernel:  xfs_vm_writepages+0x67/0xa0 [xfs]
+May 17 03:30:23  kernel:  do_writepages+0x8a/0x290
+May 17 03:30:23  kernel:  ? enqueue_hrtimer+0x35/0x90
+May 17 03:30:23  kernel:  ? hrtimer_start_range_ns+0x2b7/0x450
+May 17 03:30:23  kernel:  __writeback_single_inode+0x3d/0x350
+May 17 03:30:23  kernel:  ? wbc_detach_inode+0x116/0x250
+May 17 03:30:23  kernel:  writeback_sb_inodes+0x228/0x4e0
+May 17 03:30:23  kernel:  __writeback_inodes_wb+0x4c/0xf0
+May 17 03:30:23  kernel:  wb_writeback+0x1ac/0x330
+May 17 03:30:23  kernel:  ? get_nr_inodes+0x3b/0x60
+May 17 03:30:23  kernel:  wb_workfn+0x357/0x460
+May 17 03:30:23  kernel:  process_one_work+0x192/0x3b0
+May 17 03:30:23  kernel:  worker_thread+0x230/0x340
+May 17 03:30:23  kernel:  ? __pfx_worker_thread+0x10/0x10
+May 17 03:30:23  kernel:  kthread+0xd0/0x100
+May 17 03:30:23  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:30:23  kernel:  ret_from_fork+0x34/0x50
+May 17 03:30:23  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:30:23  kernel:  ret_from_fork_asm+0x1a/0x30
+May 17 03:30:23  kernel:  </TASK>
+May 17 03:30:23  kernel: INFO: task nix:21146 blocked for more than 122 =
+seconds.
+May 17 03:30:23  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:30:23  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:30:23  kernel: task:nix             state:D stack:0     =
+pid:21146 tgid:21146 ppid:21145  flags:0x00000002
+May 17 03:30:23  kernel: Call Trace:
+May 17 03:30:23  kernel:  <TASK>
+May 17 03:30:23  kernel:  __schedule+0x442/0x12d0
+May 17 03:30:23  kernel:  ? xas_load+0xd/0xe0
+May 17 03:30:23  kernel:  ? xa_load+0x77/0xb0
+May 17 03:30:23  kernel:  schedule+0x27/0xf0
+May 17 03:30:23  kernel:  io_schedule+0x46/0x70
+May 17 03:30:23  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:30:23  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:30:23  kernel:  folio_wait_writeback+0x2b/0x90
+May 17 03:30:23  kernel:  truncate_inode_partial_folio+0x5e/0x1c0
+May 17 03:30:23  kernel:  truncate_inode_pages_range+0x1de/0x410
+May 17 03:30:23  kernel:  truncate_pagecache+0x47/0x60
+May 17 03:30:23  kernel:  xfs_setattr_size+0xf6/0x3c0 [xfs]
+May 17 03:30:23  kernel:  xfs_vn_setattr+0x85/0x150 [xfs]
+May 17 03:30:23  kernel:  notify_change+0x301/0x500
+May 17 03:30:23  kernel:  ? do_truncate+0x98/0xf0
+May 17 03:30:23  kernel:  do_truncate+0x98/0xf0
+May 17 03:30:23  kernel:  do_ftruncate+0x104/0x170
+May 17 03:30:23  kernel:  do_sys_ftruncate+0x3d/0x80
+May 17 03:30:23  kernel:  do_syscall_64+0xb7/0x210
+May 17 03:30:23  kernel:  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+May 17 03:30:23  kernel: RIP: 0033:0x7f87aeb0d75b
+May 17 03:30:23  kernel: RSP: 002b:00007ffddbfc04b8 EFLAGS: 00000213 =
+ORIG_RAX: 000000000000004d
+May 17 03:30:23  kernel: RAX: ffffffffffffffda RBX: 0000000000000000 =
+RCX: 00007f87aeb0d75b
+May 17 03:30:23  kernel: RDX: 0000000000000000 RSI: 0000000000000003 =
+RDI: 0000000000000008
+May 17 03:30:23  kernel: RBP: 0000557d5dd46498 R08: 0000000000000000 =
+R09: 0000000000000000
+May 17 03:30:23  kernel: R10: 0000000000000000 R11: 0000000000000213 =
+R12: 0000000000000008
+May 17 03:30:23  kernel: R13: 0000557d5dcd2aa0 R14: 0000557d5dd46468 =
+R15: 0000000000000008
+May 17 03:30:23  kernel:  </TASK>
+
+
+
+
+May 17 03:32:26  kernel: INFO: task kworker/u18:2:19320 blocked for more =
+than 245 seconds.
+May 17 03:32:26  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:32:26  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:32:26  kernel: task:kworker/u18:2   state:D stack:0     =
+pid:19320 tgid:19320 ppid:2      flags:0x00004000
+May 17 03:32:26  kernel: Workqueue: writeback wb_workfn (flush-253:0)
+May 17 03:32:26  kernel: Call Trace:
+May 17 03:32:26  kernel:  <TASK>
+May 17 03:32:26  kernel:  __schedule+0x442/0x12d0
+May 17 03:32:26  kernel:  schedule+0x27/0xf0
+May 17 03:32:26  kernel:  io_schedule+0x46/0x70
+May 17 03:32:26  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:32:26  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:32:26  kernel:  writeback_iter+0x1ec/0x2d0
+May 17 03:32:26  kernel:  iomap_writepages+0x74/0x9e0
+May 17 03:32:26  kernel:  ? virtqueue_add_split+0xb1/0x7a0 [virtio_ring]
+May 17 03:32:26  kernel:  ? virtqueue_add_split+0x2af/0x7a0 =
+[virtio_ring]
+May 17 03:32:26  kernel:  xfs_vm_writepages+0x67/0xa0 [xfs]
+May 17 03:32:26  kernel:  do_writepages+0x8a/0x290
+May 17 03:32:26  kernel:  ? enqueue_hrtimer+0x35/0x90
+May 17 03:32:26  kernel:  ? hrtimer_start_range_ns+0x2b7/0x450
+May 17 03:32:26  kernel:  __writeback_single_inode+0x3d/0x350
+May 17 03:32:26  kernel:  ? wbc_detach_inode+0x116/0x250
+May 17 03:32:26  kernel:  writeback_sb_inodes+0x228/0x4e0
+May 17 03:32:26  kernel:  __writeback_inodes_wb+0x4c/0xf0
+May 17 03:32:26  kernel:  wb_writeback+0x1ac/0x330
+May 17 03:32:26  kernel:  ? get_nr_inodes+0x3b/0x60
+May 17 03:32:26  kernel:  wb_workfn+0x357/0x460
+May 17 03:32:26  kernel:  process_one_work+0x192/0x3b0
+May 17 03:32:26  kernel:  worker_thread+0x230/0x340
+May 17 03:32:26  kernel:  ? __pfx_worker_thread+0x10/0x10
+May 17 03:32:26  kernel:  kthread+0xd0/0x100
+May 17 03:32:26  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:32:26  kernel:  ret_from_fork+0x34/0x50
+May 17 03:32:26  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:32:26  kernel:  ret_from_fork_asm+0x1a/0x30
+May 17 03:32:26  kernel:  </TASK>
+May 17 03:32:26  kernel: INFO: task nix:21146 blocked for more than 245 =
+seconds.
+May 17 03:32:26  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:32:26  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:32:26  kernel: task:nix             state:D stack:0     =
+pid:21146 tgid:21146 ppid:21145  flags:0x00000002
+May 17 03:32:26  kernel: Call Trace:
+May 17 03:32:26  kernel:  <TASK>
+May 17 03:32:26  kernel:  __schedule+0x442/0x12d0
+May 17 03:32:26  kernel:  ? xas_load+0xd/0xe0
+May 17 03:32:26  kernel:  ? xa_load+0x77/0xb0
+May 17 03:32:26  kernel:  schedule+0x27/0xf0
+May 17 03:32:26  kernel:  io_schedule+0x46/0x70
+May 17 03:32:26  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:32:26  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:32:26  kernel:  folio_wait_writeback+0x2b/0x90
+May 17 03:32:26  kernel:  truncate_inode_partial_folio+0x5e/0x1c0
+May 17 03:32:26  kernel:  truncate_inode_pages_range+0x1de/0x410
+May 17 03:32:26  kernel:  truncate_pagecache+0x47/0x60
+May 17 03:32:26  kernel:  xfs_setattr_size+0xf6/0x3c0 [xfs]
+May 17 03:32:26  kernel:  xfs_vn_setattr+0x85/0x150 [xfs]
+May 17 03:32:26  kernel:  notify_change+0x301/0x500
+May 17 03:32:26  kernel:  ? do_truncate+0x98/0xf0
+May 17 03:32:26  kernel:  do_truncate+0x98/0xf0
+May 17 03:32:26  kernel:  do_ftruncate+0x104/0x170
+May 17 03:32:26  kernel:  do_sys_ftruncate+0x3d/0x80
+May 17 03:32:26  kernel:  do_syscall_64+0xb7/0x210
+May 17 03:32:26  kernel:  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+May 17 03:32:26  kernel: RIP: 0033:0x7f87aeb0d75b
+May 17 03:32:26  kernel: RSP: 002b:00007ffddbfc04b8 EFLAGS: 00000213 =
+ORIG_RAX: 000000000000004d
+May 17 03:32:26  kernel: RAX: ffffffffffffffda RBX: 0000000000000000 =
+RCX: 00007f87aeb0d75b
+May 17 03:32:26  kernel: RDX: 0000000000000000 RSI: 0000000000000003 =
+RDI: 0000000000000008
+May 17 03:32:26  kernel: RBP: 0000557d5dd46498 R08: 0000000000000000 =
+R09: 0000000000000000
+May 17 03:32:26  kernel: R10: 0000000000000000 R11: 0000000000000213 =
+R12: 0000000000000008
+May 17 03:32:26  kernel: R13: 0000557d5dcd2aa0 R14: 0000557d5dd46468 =
+R15: 0000000000000008
+May 17 03:32:26  kernel:  </TASK>
+
+May 17 03:34:29  kernel: INFO: task kworker/u18:2:19320 blocked for more =
+than 368 seconds.
+May 17 03:34:29  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:34:29  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:34:29  kernel: task:kworker/u18:2   state:D stack:0     =
+pid:19320 tgid:19320 ppid:2      flags:0x00004000
+May 17 03:34:29  kernel: Workqueue: writeback wb_workfn (flush-253:0)
+May 17 03:34:29  kernel: Call Trace:
+May 17 03:34:29  kernel:  <TASK>
+May 17 03:34:29  kernel:  __schedule+0x442/0x12d0
+May 17 03:34:29  kernel:  schedule+0x27/0xf0
+May 17 03:34:29  kernel:  io_schedule+0x46/0x70
+May 17 03:34:29  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:34:29  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:34:29  kernel:  writeback_iter+0x1ec/0x2d0
+May 17 03:34:29  kernel:  iomap_writepages+0x74/0x9e0
+May 17 03:34:29  kernel:  ? virtqueue_add_split+0xb1/0x7a0 [virtio_ring]
+May 17 03:34:29  kernel:  ? virtqueue_add_split+0x2af/0x7a0 =
+[virtio_ring]
+May 17 03:34:29  kernel:  xfs_vm_writepages+0x67/0xa0 [xfs]
+May 17 03:34:29  kernel:  do_writepages+0x8a/0x290
+May 17 03:34:29  kernel:  ? enqueue_hrtimer+0x35/0x90
+May 17 03:34:29  kernel:  ? hrtimer_start_range_ns+0x2b7/0x450
+May 17 03:34:29  kernel:  __writeback_single_inode+0x3d/0x350
+May 17 03:34:29  kernel:  ? wbc_detach_inode+0x116/0x250
+May 17 03:34:29  kernel:  writeback_sb_inodes+0x228/0x4e0
+May 17 03:34:29  kernel:  __writeback_inodes_wb+0x4c/0xf0
+May 17 03:34:29  kernel:  wb_writeback+0x1ac/0x330
+May 17 03:34:29  kernel:  ? get_nr_inodes+0x3b/0x60
+May 17 03:34:29  kernel:  wb_workfn+0x357/0x460
+May 17 03:34:29  kernel:  process_one_work+0x192/0x3b0
+May 17 03:34:29  kernel:  worker_thread+0x230/0x340
+May 17 03:34:29  kernel:  ? __pfx_worker_thread+0x10/0x10
+May 17 03:34:29  kernel:  kthread+0xd0/0x100
+May 17 03:34:29  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:34:29  kernel:  ret_from_fork+0x34/0x50
+May 17 03:34:29  kernel:  ? __pfx_kthread+0x10/0x10
+May 17 03:34:29  kernel:  ret_from_fork_asm+0x1a/0x30
+May 17 03:34:29  kernel:  </TASK>
+May 17 03:34:29  kernel: INFO: task nix:21146 blocked for more than 368 =
+seconds.
+May 17 03:34:29  kernel:       Not tainted 6.12.28 #1-NixOS
+May 17 03:34:29  kernel: "echo 0 > =
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+May 17 03:34:29  kernel: task:nix             state:D stack:0     =
+pid:21146 tgid:21146 ppid:21145  flags:0x00000002
+May 17 03:34:29  kernel: Call Trace:
+May 17 03:34:29  kernel:  <TASK>
+May 17 03:34:29  kernel:  __schedule+0x442/0x12d0
+May 17 03:34:29  kernel:  ? xas_load+0xd/0xe0
+May 17 03:34:29  kernel:  ? xa_load+0x77/0xb0
+May 17 03:34:29  kernel:  schedule+0x27/0xf0
+May 17 03:34:29  kernel:  io_schedule+0x46/0x70
+May 17 03:34:29  kernel:  folio_wait_bit_common+0x13f/0x340
+May 17 03:34:29  kernel:  ? __pfx_wake_page_function+0x10/0x10
+May 17 03:34:29  kernel:  folio_wait_writeback+0x2b/0x90
+May 17 03:34:29  kernel:  truncate_inode_partial_folio+0x5e/0x1c0
+May 17 03:34:29  kernel:  truncate_inode_pages_range+0x1de/0x410
+May 17 03:34:29  kernel:  truncate_pagecache+0x47/0x60
+May 17 03:34:29  kernel:  xfs_setattr_size+0xf6/0x3c0 [xfs]
+May 17 03:34:29  kernel:  xfs_vn_setattr+0x85/0x150 [xfs]
+May 17 03:34:29  kernel:  notify_change+0x301/0x500
+May 17 03:34:29  kernel:  ? do_truncate+0x98/0xf0
+May 17 03:34:29  kernel:  do_truncate+0x98/0xf0
+May 17 03:34:29  kernel:  do_ftruncate+0x104/0x170
+May 17 03:34:29  kernel:  do_sys_ftruncate+0x3d/0x80
+May 17 03:34:29  kernel:  do_syscall_64+0xb7/0x210
+May 17 03:34:29  kernel:  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+May 17 03:34:29  kernel: RIP: 0033:0x7f87aeb0d75b
+May 17 03:34:29  kernel: RSP: 002b:00007ffddbfc04b8 EFLAGS: 00000213 =
+ORIG_RAX: 000000000000004d
+May 17 03:34:29  kernel: RAX: ffffffffffffffda RBX: 0000000000000000 =
+RCX: 00007f87aeb0d75b
+May 17 03:34:29  kernel: RDX: 0000000000000000 RSI: 0000000000000003 =
+RDI: 0000000000000008
+May 17 03:34:29  kernel: RBP: 0000557d5dd46498 R08: 0000000000000000 =
+R09: 0000000000000000
+May 17 03:34:29  kernel: R10: 0000000000000000 R11: 0000000000000213 =
+R12: 0000000000000008
+May 17 03:34:29  kernel: R13: 0000557d5dcd2aa0 R14: 0000557d5dd46468 =
+R15: 0000000000000008
+May 17 03:34:29  kernel:  </TASK>
+
+
+
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
