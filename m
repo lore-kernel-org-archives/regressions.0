@@ -1,204 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12994280A3B;
-	Wed, 18 Jun 2025 09:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238581; cv=none; b=oWKrgImmiLlE96iw1DQbaSNddX7ahsImJHxPR/+NIjtcpvf8ecRbaarXOht4WnkFNdwVS0boZZP4lsOuYkZ0jruip5RYo8WcVbvCPjtEXivEB5c5ZUmGwSQF6A8lmftTL9VamxbBGHcPFx7r96VUFdnPIPuAxIQvFri7QTg9wiw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238581; c=relaxed/simple;
-	bh=PSShPwrbGtVrVSCJQllIkymRaGdtic3I5Zg3vyJX9w0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7QE8yAnlOojSFHTpoDXfFmSbR5cTr5e3ODUbomoYvjDieM9UkOYOj9TR3qt3AtXUI11fMoezZe+4X4xh7dNd70pjtjNoHnugyoMwKOnPjlW727ILeer0dIMTl3KexTkJWDwahuCG3ZdumYV2qlPPemoNUc/tSu39/5U/NvSsGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZDKThZg; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03352882DF
+	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 10:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750242340; cv=fail; b=VTuE2VJsfsyUvSo2bUhTZcbwcPJ5xSg5MvoOR2xy+/0KVqVKtTCah3WsYYewhgtxgOgYdZ39GedpXAKrWfxYh8MuE1MgHi2GjWDrTV0mnSAalaWFcDb5uhkCjr6XsgDvTvx59JmrubmYOJVsKSE47bj6Az9F2CSBxgxh8GUXd68=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750242340; c=relaxed/simple;
+	bh=KhyctfnbYoz0dPmNUF2yK/nBe4moFzKM+cfHXUWxkSo=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=AUdyEMEHIZBzP1dONIfG6zG7FXDlbPRNNctjGOnlWB4AzmAY4t9bVPchqqPpkrUIzWlpLlyLpt9mp2U4WWqhBm8ofPsyP/hplooLbBkF6zZ3bKy33d5JlMexmVvFmxM61x9XEybyqDZykqEHlJdjFkwTp3SXjGLKdWFROoBAeJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoaKV05y; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZDKThZg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC17C4CEE7;
-	Wed, 18 Jun 2025 09:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750238580;
-	bh=PSShPwrbGtVrVSCJQllIkymRaGdtic3I5Zg3vyJX9w0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cZDKThZgr9HUEW8OLQXxp8Z2odpNkMyaIKiZvNIlqBETxE7nwRe0TwSqlHm60wX4U
-	 t1T1y/LCqbZLRY6hxIksIiTLfYtigVn30NjQAZJTDUYIh6SY28gAc71O+eJNYNyy36
-	 ia6lhIKBuy/JzXwloIEhd6c69xk7jX+nbRsq0F2wO+Yp8lfF42p0eQeDBx6xCBefS0
-	 h9RgTUekXbiHeOeH9biiPPp20CbE7JbbvONY5bRm1N3vXVaILIPinUOURPiFOBdF66
-	 1DZeyP7Co/4ZJ4e98ENAUaZXymoB5XeJllN8Ph1ZIi7rS/d0oh+wdLSeSoXzUHfDd+
-	 WzW66njYQtf+A==
-Date: Wed, 18 Jun 2025 11:22:57 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
-	Francesco Dolcini <francesco@dolcini.it>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
-Message-ID: <20250618-fantastic-brown-elephant-df0ae4@houat>
-References: <20250612081834.GA248237@francesco-nb>
- <CAN9Xe3RFEXZuWTZB5E1tJdjXc9o_hB1ArgA5SvqbDUBkwYea8w@mail.gmail.com>
- <20250618105158.06e42668@booty>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoaKV05y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750242339; x=1781778339;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=KhyctfnbYoz0dPmNUF2yK/nBe4moFzKM+cfHXUWxkSo=;
+  b=VoaKV05ytRFG9dWAMN2eRkSrZcs2A7MnVRC7uuc+R5bZqVXwCgPbsPRd
+   NVpEJtiLoAZUVsrPu4CltTZ8Y4iHqJUp0/XcKvNqyOSMenPmGW8e/0ygo
+   D0sAHsGA7AzYPoT5a3tpYxOadbyEFfcIuGOtRMxlCJrlsLdiP2U5GZIaM
+   DUKTHE8YarNpV0F5LH7N/1raqDP43rMHljF9DCFxGn5BUz8yEOIGvg0zr
+   4mVHxfgDoZDVIYah40HIgv+YIH9nm3MPzm4ydUrkPCj/w3nGI7JovtkfM
+   t+MnJ/VwyWbZczYeJj/lR0z3vRyJJrMk30u0ssXo8zE2/Jq6HLbmLQVwi
+   w==;
+X-CSE-ConnectionGUID: P57Nj2iURzKbnz3k3mHx7w==
+X-CSE-MsgGUID: PfYr25RQTEa2vrmeRnTz9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52373256"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="52373256"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:25:38 -0700
+X-CSE-ConnectionGUID: 8ERKAbj2QuC8nQkDpBj1Yg==
+X-CSE-MsgGUID: 24TXGXNTR9yvOS5O4lvZyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="149233700"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:25:38 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 03:25:37 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 18 Jun 2025 03:25:37 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.60)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 03:25:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iGX20B3rXbIgvyNGLjGXuphoS+elL11iZibh1eoLTPT7aUNTGqCMGq8PxSmxRa/1OzLpmgxxd65AgIi5i9yMIkzI8DTd+O0Mfo4Xx8NqwD+wAT2UdmcRKZSt3/BFl4jBcF9MM7QUHEhN12eLQ/mQK0I01pqPgff4SUJn5Cxk/ILbaDqLsNeB62Uk3fNLsIJtG9HVSoekg9Ku9AGHlRD/Aj3qBC1NEsi/Ih53kWb0hJU2FkTWJShMoGGGI2OFtXHXpLRtcKuOUJp3o8Dd6/XmJP170xpevu8HsMhp3R0+e/raWd8E/4zse32iJ4WBK96EwFNM36Qr67M+7VoD53NKBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pcAaPr86Opfi5/rLvVjVlgxsf3SfRwrK33rNOu5FD1g=;
+ b=mksYUv7m/85sfmCDrNcrP34dL+zBjENR/qJ0sBm5Z4mg0LSybr70TZPey/UwqnPP7Zx29ll4/mBsT3L1/kt8TIv6+M1DAK7SWOrkVGzvJYbo7YWhkGhcwY6afataX6bCJI5MfTsGTTUi7AxloRMP1D86JSgwtLHzjvMDTTqBuXxvKJCKAeSIvVal/svaEu0chqwzglDtd+nDFJz1XrcRCJectxlfYEW5ZQrh4cQx9p6JfYsO4V4z4gccu/yc529OEjumaZkgmMcjC/aLqbdlN4WRVnaprDPJBZaqJ9DDwqVKspxvWRE4alUEYNTw+AQtGME+2SyWOww7nWai6bEu2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
+ by PH7PR11MB6032.namprd11.prod.outlook.com (2603:10b6:510:1d3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 10:25:18 +0000
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::15b2:ee05:2ae7:cfd6]) by MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::15b2:ee05:2ae7:cfd6%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 10:25:18 +0000
+Message-ID: <8597a1d6-d6e2-46a5-87c5-8444a2c7c342@intel.com>
+Date: Wed, 18 Jun 2025 12:25:13 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ixgbe broken after devlink support patch
+To: Jakub Kicinski <kuba@kernel.org>
+CC: "Kaplan, David" <David.Kaplan@amd.com>, "jedrzej.jagielski@intel.com"
+	<jedrzej.jagielski@intel.com>, "anthony.l.nguyen@intel.com"
+	<anthony.l.nguyen@intel.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "horms@kernel.org" <horms@kernel.org>, Bharath R
+	<bharath.r@intel.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "intel-wired-lan@lists.osuosl.org"
+	<intel-wired-lan@lists.osuosl.org>
+References: <LV3PR12MB92658474624CCF60220157199470A@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <59faaf3b-d75d-4405-a7bb-a137918617e3@intel.com>
+ <20250617160935.08f8652a@kernel.org>
+From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250617160935.08f8652a@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZP191CA0037.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:4f8::9) To MN6PR11MB8102.namprd11.prod.outlook.com
+ (2603:10b6:208:46d::9)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="5wasac5pi2r2rga2"
-Content-Disposition: inline
-In-Reply-To: <20250618105158.06e42668@booty>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|PH7PR11MB6032:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7aa35434-abbd-4034-44ed-08ddae526c46
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?S3Q0aU9VV1oyeXpCUVFUKzJ6NktqMGtoZzNlT2NxaXJjNjBUMm0yd2JzSnkw?=
+ =?utf-8?B?TStuaTRsaEJzWEExTGx5S2cwMU0wVGpRWXhJQXN2N2tVcU1BdTRBYW53c3F0?=
+ =?utf-8?B?U1IyMEZXWE04aHYvaXEvUG1LendLd0dmMmluK2c1MS9neWExRlRNSXdkTWoy?=
+ =?utf-8?B?Ulc4Q0hGbXpzckQwelJLOVUrU1A0cTMyLzltRUxSSHRIRFBnd044MHNsVDdK?=
+ =?utf-8?B?MUMrM2R3Q2F5SFhiM3lzMDFxVWFTdXpaN1V2K0Y1VlVJNEY2R2lzRmllV2Zp?=
+ =?utf-8?B?Yk5xL1NRV2hSVVF2Qm4wbHphQXpPSndjcVRGSXB3VnBGNC9VeFZVT2VQUHMw?=
+ =?utf-8?B?YzczZkRqNW1VbkgyNUNvOHFtNTVQRGQyTXNHb3RkS1pDQ0tFcVdwblFGeVlH?=
+ =?utf-8?B?b21ZdGdpRG9mZnVxLzJock5HSUVtL0wreU13WUR0WW1ON1BnM3h3d2RCTStP?=
+ =?utf-8?B?YWFNZ3B1M3JJcER1ZW95YSswbTYxSFRrdXNQQ1gzbzZaR1VKZjlMYkhQb3Rn?=
+ =?utf-8?B?U3Bwc0grV011TEwxdEFkWlkyVGdnSzluSTJycGpTRHZYOEJHa2hrZHZmS3V0?=
+ =?utf-8?B?VldWYXNzRlVwUGRINGdpS0E5a2QySzQ0SDNjZXNHaUt3UlR6dnNZMHMxSG1r?=
+ =?utf-8?B?ejU1c05kVUJaaEFvSlcrdEVOQVZzYkRINkJtTGZtYmxzRmZTWG1RY1FyQktn?=
+ =?utf-8?B?cEUvdTh2dFRKWFdsSitZYXBEODhoTWFyL1NwWXlyL3RvTk9uVGsxRlNVdHNI?=
+ =?utf-8?B?QTR1NTFKZENhYlEwSDJ3eTJ3TkdVaXcwMkpsdUJMOTJCcnQ4TkRBbjY2a1ph?=
+ =?utf-8?B?aXJhUHJPdTAvcFY0NCthMlZQaWt4bEs0Z2JIVGFHOGlBTGpvTFBlZTkyZ09J?=
+ =?utf-8?B?bGh1eTJhTUtrZktVbDR5Q0xtY3phSjNBeUtTMEJmckNsem9yOVN6djVsQUg2?=
+ =?utf-8?B?OFNUcDdsQm10eWJlNUk4YkFXaVhBN1cxMkR6dFBrR3ozL0FBM1hKbEIvUnBx?=
+ =?utf-8?B?Zk0wTVNtejZxMlFmMXNLbks5c3dwU1g2emtOSk9lNlFLaWJMNFE4K2t2UWJN?=
+ =?utf-8?B?OVJXRzFITmNTMFVkR1FWTVU0QkRqNytMTWlhUExyOUovN1pDV2loUVA1NHFY?=
+ =?utf-8?B?aWZaa0VKYUhiVDZETXNDSmsyOG9NT01TQ3AvYmRSTmtJeWMyUzhiWncwY2tl?=
+ =?utf-8?B?alJYZnAyZ0V2dkR0ZlZ2VkxXS2k5UE80bGZmM2hKYUt3NG5BdmRwekdvSFRm?=
+ =?utf-8?B?S2pmZmhoSmhHZXFYaTRHL1NNYWZyTDlKQXpDd0lzRGlmSUR3RDdDcDU0MVBV?=
+ =?utf-8?B?SXZ5TjVCOFZMTEY4a2NmRkw0bGhrQ3FFUC9pK2RxV0JCWkhwMGxoT0I1R0tt?=
+ =?utf-8?B?bjFpZlg2SW41d2R0c201OTVFNmVMYlh0Y0JzS2J5RHlMVHZjYXJtUWY0ZnRJ?=
+ =?utf-8?B?NjNJY0JOOHVqQys2UEFoN2NxbE1zYThsa2ZSYk5RNWdVTisvM0oxN3hxRUFL?=
+ =?utf-8?B?d0RQS1ZhNFhvWkN2eTFtSExhVGYzUEUwWnVYM0Exak1lWmZ1K004RjA0a3d6?=
+ =?utf-8?B?ZFpqMWp4K05RSGJIejZpL2RKVHVDSlhEd05qNFVyWGd3VXVjU1dQSE5PcXZI?=
+ =?utf-8?B?S081N01ydDBCVVZlbmwvTFZuTEx4OXgvWVVaTUUvZUxyNWtZeWZaa1hvUzlr?=
+ =?utf-8?B?TWpPYjJKQldIWkRyWThYUHBaTitZaXJqYmZrazNQMzlobnRkQkJ0cFR1RGQz?=
+ =?utf-8?B?N2RGUUpRQnBoK0VPNmphUHF0dzdhcjN1LzIyT3cxUzIwenNKdVcwNTJhMG92?=
+ =?utf-8?Q?yGDdjMJV02NBNYizMwJllnyv4F6DcwAy1fHdA=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N0NsR0FNZW50dWd0Ulgzb3BjUHNLdENaZE95bklzZXpqamsxY0NRbTI2WktG?=
+ =?utf-8?B?a1hIRHhobi9ZdVN5Qnp5SC9kMElkOWExamdxQlBhQklaaUxYclVmL29HZ3lr?=
+ =?utf-8?B?TlpRSDNKWDNMd3UyWHZ0bU15cmExWXl2L1ZiR0tQTGt6azg5Nm1DK0U5eVVW?=
+ =?utf-8?B?YzVCRXhOWHVIYXM3Tk85SHlzSjh4RmljaUFUTGp0eDFCV1ZpSytUNktzTXY3?=
+ =?utf-8?B?R2JlQnA4OG1WKzkyOUZYWVM4VDQyREJGRTZPUVhxSUZab2FmYXBKaEVQS2sw?=
+ =?utf-8?B?TytNT1NoVDdtNlY4UDE0aGYrOVpaYU40UGxoNGlBRzdDdkVlVFQrSExZZXhU?=
+ =?utf-8?B?YmFZV0hiYTBSbGNoRm1rdEtFL1R1T0VlZFJpbkNCQ2xwb0lIejg1TUUyc1da?=
+ =?utf-8?B?ZVZ6ZC85NzBMK041VHZGNm8xQ2lZQ1oyYjN5NTloaEt3RVFTSTZOVEJGaGF1?=
+ =?utf-8?B?SUo0R0FJM0hHTXducVNZeVdMRG1oMks4UzczZzQ1b09ycDkvcFZOa0tETTlI?=
+ =?utf-8?B?dnFKR051Q3VkYktzTlYwK0xqVVdhR0JneXR0b0k2bll2eTJYVTlDNDhTTTVH?=
+ =?utf-8?B?dkRvOUpFRytCa25RRmcvQm9VT1o0TTlaM1hWRksyb0hHTGYvMjBkSEdWcTk5?=
+ =?utf-8?B?STNtODhSekpCWjhjSnBEYTVvNW81NjhNOVRSd3RyUkFTN2NEQUIwZTNCMU5q?=
+ =?utf-8?B?a0drWktOL3JiTVZHSEJiTFpVOG8wb0VMejRJR3VKenN6b0dsR3lOcTV0OHBF?=
+ =?utf-8?B?bkJSM3U2aE4yNTM2azlBRXMwTkN6dTBTUXJNajAxbGFHNXNQRmxNbUlxTTZi?=
+ =?utf-8?B?QXZOY1RjT2VnYW1KYkc4K0pIWUx0RUJQbzFhalRkZVpCdjZKTzlaSEdldTV6?=
+ =?utf-8?B?NmlHLzV4aGhxaHpMdkpRdmNTZ2JqMERFRmxNc29OU2l6UTVQV2RpRUlBSHpk?=
+ =?utf-8?B?VWc2SDVmZmRSV3FNaGE1aWRzUHhkTmpxRk03QTFVNXcwYm1wRlFuVUErUStt?=
+ =?utf-8?B?d3NobVRkUWs4REtrSHRtejJwa3BYT2x4cmZlQVNJelVCak9IWWVIYmpQV09Y?=
+ =?utf-8?B?YWdLN1lCNXozZjVUc3pnRHhZZXhqWFE1cG9oVy9aWHJjUUh0R3R4M2phNEl1?=
+ =?utf-8?B?ZVBneEVaNG1UMHZwa1U4YmRBOEZ6aU1PTFk3MFVlM3AxbUlYM2VmWS9Fa01a?=
+ =?utf-8?B?QytxdWZXYW45eXdyNjYrQXkxRlJnYi9ZNGFwOUlOUDFWUUkzWTg0NzhNWnNJ?=
+ =?utf-8?B?VnI1N0lxSlJheTRTR2c0RTlwM055eXl5OXl5Q1NlNmYwMENRRXVpT0lGNjNq?=
+ =?utf-8?B?cjI3R0IwdGNldDBMSzdZMGhOS3M4YkRzZEhRc3UzSDJrWFJlUzBjL2JCa1Va?=
+ =?utf-8?B?ZmVUWUlITUZpbCtTT2xucWdCTmxnUlpPbFc5SysrTXNxREVKVVhrRkQvMExD?=
+ =?utf-8?B?b1NhTExndk5WQThpd2dadkN4bHJJWFk0VXNHL0JCMW93Y240UEFtVmJORVcr?=
+ =?utf-8?B?eHhYdUwrUDJDUjd6RlhUVXRHellrY1diZzBaNFlqYXkrWVFla1ovZjRwZ1dt?=
+ =?utf-8?B?a2tlMzhoUmQ4NThqMlVYSEFzUmhvQllBZC9QZ1BsK1ltUldmYVlzTzB2UWV4?=
+ =?utf-8?B?QmdrWE1zQ3pwamVkSUhSbGJOM0pvNXg2RTU2eTVkdGFmazJUTWhlZ0xQWTdj?=
+ =?utf-8?B?YmF1NkxJZVE3RVJleVRaWXEvRk82TzlxeSs3RjNRQW9CSGRMeUpJQXpQN01a?=
+ =?utf-8?B?NGFCUVphV0dYUlBHdHl0Y2xxUTlIRXYrOTlzOWwvbWxSL0JqWWFRTHlqZ2JL?=
+ =?utf-8?B?bTg0VDNpRVlodXdEYWNManFoTlZEdlZWbnExb2JNb0ZiNmpNL1JhelVJWjhK?=
+ =?utf-8?B?TzVnWnNxN1ZZMjFXMU5GRGl6aEVOVE50L3lObU1IWVVTL1l3eHQwazZSQ2V1?=
+ =?utf-8?B?aSt6ZzBJWS8vY2t0VXpEbEI5Q1BTZkZ6WlVIaTJ5SVBIQlNyZnFpYmxpRTRD?=
+ =?utf-8?B?Rk42cUZHQ2lPRmoyYkRyNTdoOFpRRHY0YlNmQnJVSjRxYTEzbkdMZEt3cjZu?=
+ =?utf-8?B?ZEFRUzV0QWY4V3NRQmphUVJTZ1FYWEZFYnBCNllOWDFKU2FhVnQyTjY1amZO?=
+ =?utf-8?B?UzhZalVibndyMUd5eDJXS3htVlkyam84WkVCZWZqTXA0N3NvSzVXS0NIZWlH?=
+ =?utf-8?B?VVE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa35434-abbd-4034-44ed-08ddae526c46
+X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 10:25:18.5373
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lNo7sAjzo/SC1PObJzlhWSdcehy6ppJph6FIvu8h51pkbaFKmHkVuhoGuceNI8xm7aKxRWFNXy/wU/AdegskMol2rlmDoWIIi1JPsHdRL1k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6032
+X-OriginatorOrg: intel.com
+
+On 6/18/25 01:09, Jakub Kicinski wrote:
+> On Tue, 17 Jun 2025 11:01:18 +0200 Przemek Kitszel wrote:
+>>> Normally, the device is given a name like enp194s0f0 and connects to the wired network.
+>>
+>> now the name is likely to be different, please see this thread:
+>> https://lkml.org/lkml/2025/4/24/1750
+>>
+>> Is it possible that your network setup script has some part of interface
+>> discovery hardcoded?
+> 
+> Hi Przemek, could you/someone on your side try the workaround
+> I suggested in the earlier thread? I'm not sure how actively
+> developed ixgbe is, if the work is not related to any new devices
+> with more complicated port topology breaking people's setups feels
+> pretty unnecessary.
 
 
---5wasac5pi2r2rga2
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
-MIME-Version: 1.0
-
-On Wed, Jun 18, 2025 at 10:51:58AM +0200, Luca Ceresoli wrote:
-> Hello Anusha, Francesco,
->=20
-> On Tue, 17 Jun 2025 11:17:20 -0500
-> Anusha Srivatsa <asrivats@redhat.com> wrote:
->=20
-> > On Thu, Jun 12, 2025 at 3:24=E2=80=AFAM Francesco Dolcini <francesco@do=
-lcini.it>
-> > wrote:
-> >=20
-> > > Hello all,
-> > >
-> > > Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation =
-in
-> > > place of devm_kzalloc()")
-> > > from 6.16-rc1 introduced a regression with this warning during probe
-> > > with panel dpi described in the DT.
-> > >
-> > > A revert solves the issue.
-> > >
-> > > The issue is that connector_type is set to DRM_MODE_CONNECTOR_DPI in
-> > > panel_dpi_probe() that after that change is called after
-> > > devm_drm_panel_alloc().
-> > >
-> > > I am not sure if there are other implication for this change in the c=
-all
-> > > ordering, apart the one that triggers this warning.
-> > >
-> > > [   12.089274] ------------[ cut here ]------------
-> > > [   12.089303] WARNING: CPU: 0 PID: 96 at
-> > > drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0xb8
-> > > [   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa
-> > > gpu_sched panel_simple imx6_media(C) imx_media_common
-> > > (C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 auto=
-fs4
-> > > [   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G
-> > >  C          6.16.0-rc1+ #1 PREEMPT
-> > > [   12.157446] Tainted: [C]=3DCRAP
-> > > [   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device T=
-ree)
-> > > [   12.166953] Workqueue: events_unbound deferred_probe_work_func
-> > > [   12.172805] Call trace:
-> > > [   12.172815]  unwind_backtrace from show_stack+0x10/0x14
-> > > [   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
-> > > [   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
-> > > [   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
-> > > [   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0x=
-b8
-> > > [   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
-> > > [   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
-> > > [   12.213220]  platform_probe from really_probe+0xd0/0x3a4
-> > > [   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
-> > > [   12.224486]  __driver_probe_device from driver_probe_device+0x30/0=
-xc0
-> > > [   12.230942]  driver_probe_device from __device_attach_driver+0x98/=
-0x10c
-> > > [   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
-> > > [   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
-> > > [   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
-> > > [   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0=
-xcc
-> > > [   12.261739]  deferred_probe_work_func from process_one_work+0x154/=
-0x2dc
-> > > [   12.268371]  process_one_work from worker_thread+0x250/0x3f0
-> > > [   12.274043]  worker_thread from kthread+0x12c/0x24c
-> > > [   12.278940]  kthread from ret_from_fork+0x14/0x28
-> > > [   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
-> > > [   12.288720] 9fa0:                                     00000000 000=
-00000
-> > > 00000000 00000000
-> > > [   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 000=
-00000
-> > > 00000000 00000000
-> > > [   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 000=
-00000
-> > > [   12.312050] ---[ end trace 0000000000000000 ]---
-> > >
-> > > #regzbot ^introduced: de04bb0089a96cc00d13b12cbf66a088befe3057
-> > >
-> > > Any advise?
-> > >
-> > > Hey Francesco! =20
-> >=20
-> > This mail reached my spam and I hadn't realised till today. Thanks for
-> > bringing this to attention.
-> >
-> > Thinking out loud here: If we called dpi_probe() before allocating the
-> > panel using devm_drm_panel_alloc()
-> > then we would have the connector type. But  dpi_probe() needs the panel=
- to
-> > be allocated....
->=20
-> Reading the panel-simple.c code, the handling of the panel_dsi
-> descriptor feels a bit hacky, and the recent change to
-> devm_drm_panel_alloc() breaks it easily. Perhaps it would be cleaner to
-> assess the whole descriptor before ding any allocation/init.
->=20
-> You're right tat panel_dpi_probe() needs the panel, but it's only at the
-> very end, to assign the descriptor:
->=20
->   panel->desc =3D desc;
->=20
-> I think a good fix would be to clean it up by having:
->=20
->  * panel_dpi_probe() not take a panel pointer but rather returning a
->    filled descriptor
->  * panel_simple_probe() call panel_dpi_probe() early [before
->    devm_drm_panel_alloc()] and get the filled descriptor
->  * call devm_drm_panel_alloc() with that descriptor in the panel-dsi
->    case, or with the good old descriptor otherwise
->=20
-> As a good side effect, it would get rid of a case where
-> devm_drm_panel_alloc() is called with a Unknown connector type.
->=20
-> Anusha, does it look like a good plan?
-
-It is, and I'd even go one step further. Like you said, panel_dpi_probe
-kind of exists to allocate and initialize the panel descriptor, and is
-called on the descriptor being equal to the (uninitialized) panel_dpi
-global variable.
-
-We should also get rid of that hack, so do something like creating a
-function that returns the descriptor, and is indeed called first in
-panel_simple_probe. It first calls of_device_get_match_data(), and if
-there's no match, and if the device is compatible with panel-dpi, then
-it calls panel_dpi_probe (we should probably change that name too). That
-way, we can get rid of the panel_dpi variable entirely.
-
-Maxime
-
---5wasac5pi2r2rga2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFKFbQAKCRAnX84Zoj2+
-diMrAX49jR2F5YwzXSIgY8Dc3IRNsN6JXUTfNI2yfEXLy7iLPI5ea2adZWpPTUcv
-MK28sbkBfRtkWVWkCrzMpmrqfVY4o88+mqpQ3/RTxn5amR5o45qK/kpxhxQMNH8+
-SNXe7JwvJw==
-=ku/C
------END PGP SIGNATURE-----
-
---5wasac5pi2r2rga2--
+yeah, we will fix that, thank you for the remainder
