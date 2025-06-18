@@ -1,272 +1,240 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0758C2E8E00
-	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 13:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253337; cv=none; b=Uwny/7i7zJdGJdSjBleQiChl/vl/f9r6IvKwW6ml8YbI+OAwnQCWXKLTWsaKuIoaRoLYW29PcMKFWS6vBokBPTyVFxBkGuZysA98nLMmhjRD3bbfc2jAYDrZH2tR4HFzZvm/dyW+7UyWVv18TCHXO7K47by008TRlQrW5bXBw6I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253337; c=relaxed/simple;
-	bh=4pvL2pRMcn6SX0QoJ4lt3Ga1uPDK5VKhU4BGa8uBuGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+i5mV/7HVXkfxXYpJpudpG72hRI9IVBhP9xXLyykNUd51EXQ+ESJHu7V+DMn7VuCaLlIZbzHLkr4q6oec5sCwtNxVub1P0luciF7CuCULPdppKpzwY2Eb5oA+Nd+QUu1vm7CO4Y4qRznfKE8o6UJ5mpnYMqw+mlJaQab/wtnFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=WIAuXkm9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Sd9kZIkw; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E93155A4E
+	for <regressions@lists.linux.dev>; Wed, 18 Jun 2025 13:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750253628; cv=fail; b=TsBWBYIwvN3AXglUI3JUlKnoUXCaRVf/fqJff715p2NDBlzxLZcZPdTeNz7PD5oylCWu0Xk/4TaSlE7XC1hjPlGCPJ2OgW4SvaN/HzpG91w+0DmBeJvqdwUa8cNmMMXsWhUMYBS3n7mFHv+nOuqb8yDNS0CiW8yIDFYnzKfkQQU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750253628; c=relaxed/simple;
+	bh=UNwzDvdrp83cWCCDQFKzEWMxsgG1i52/PrUjdwYmvTY=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=N8NbtrW6DEjStNXZtDdl8d/7/2B2RbDLPugPHqn74FNDG8LvUOszyl40Os6QVPDXgReJnzLwMaxReAClTk11gm1e3fphi5FsogkGS877bNKZMSBuBHV6He4PqYL8VM82M5WHyWqAmUQu4gIBW7vK54MlyHGKLUpvKUUFF6lQdeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWanwObr; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="WIAuXkm9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sd9kZIkw"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3C3EE13803E5;
-	Wed, 18 Jun 2025 09:28:55 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Wed, 18 Jun 2025 09:28:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750253335;
-	 x=1750339735; bh=vz/7ulDQUN+PP0dM9GXUeJUIxa3j77kggycAnGY4Aws=; b=
-	WIAuXkm9l14HnRsq+a1xjXC9OQMw0cStyCOO0VyO1kntZf+QvA1RXHQEE+5D336a
-	+FH+YijbW8zZS4F7C21Au630CUB27tUWo6QmQw3SCr+JZkxqDfYnwUfTNTTjU7q/
-	xIBAdGnSip0Rk3i45TIkQQHJtcXhpvFC1fUriosNzfqBUCsJSOze5nWFNaaH0bG1
-	iynaonWX6LxjIw6b7rqiYbop6VSdrXc+8xjE+ihWLE6I1i/4QBP+lOMJ+qhyL3KP
-	N4/jMjnRSkRDk3+Fs0CcW5yfE3tFCsbeVi3/daCSVd3pCiDv1mk4FzHjDhBDnJnw
-	MqFsPf/TGHsKjbzMC/nvRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750253335; x=1750339735; bh=vz/7ulDQUN+PP0dM9GXUeJUIxa3j77kggyc
-	AnGY4Aws=; b=Sd9kZIkwjLSpU63LKWOqonj0DhUPRtv3KFnyftCDFFHhMhRnB5C
-	YSpZKF/nvENe/HtM43I9NLi+UBlL8n7vidU1rxwSqyMNFUaqHKGDLlnP2RWxDTFV
-	VXUXxOzsNXTkpzIrniCXy8LIbPGL1LHLoVKwn7dB91bN1dCAac7iiRrEvqemVZdv
-	eREyXRdZS68rstll5G3p037yKeR6UfDVzddhhJnzL1pci2jbO4PcvAHcTE67SPZJ
-	tUORupVgtDItOelNRBA/8QAE/mgrCxjFbQXvVWE7gS5IL3HvgXGDwG2YJIyi4Yj7
-	j346176r/cBIF7229PSGdtskqQpK7TO7lQQ==
-X-ME-Sender: <xms:Fr9SaDXJus_9wzUBchy22L94tQaXiufEdKVnROeqHWYQeShz8rfzhA>
-    <xme:Fr9SaLllH_4qsIi8S7lkt7IzPA12B7PwPZ9NER9vhxA7C43-hUIf7z4WwbLb0HVFs
-    YV_GojJXvSTeg>
-X-ME-Received: <xmr:Fr9SaPbdrpTw5w0TpLJytfxSIOg8_i3mFK54MVTuFqKyrsBept5evnej6pthMxauXbyJo1JCd-lNSFhmDj_k_GDtE2hEvlN1nu4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvjeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeen
-    ucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomh
-    grrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggft
-    rfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettddvge
-    euteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnh
-    gspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphhmvghn
-    iigvlhesmhholhhgvghnrdhmphhgrdguvgdprhgtphhtthhopehvihhtrghlhidrlhhifh
-    hshhhithhssehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnthhhohhnhidrlhdrnhhg
-    uhihvghnsehinhhtvghlrdgtohhmpdhrtghpthhtohepphhriigvmhihshhlrgifrdhkih
-    htshiivghlsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhnthgvlhdqfihirhgvugdqlhgrnheslh
-    hishhtshdrohhsuhhoshhlrdhorhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnshes
-    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghshhgrlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:Fr9SaOXxiqGZJ6PRaIa1vVEGuUGYlV8waY0PKFMz6vUCtVlRJMMQZA>
-    <xmx:Fr9SaNmA3G7BgKOD7Z-LCPHmL8e5C1fA3zSKLINjbABD4bobzBU2OQ>
-    <xmx:Fr9SaLdumMaeA8tTEHRt0xFh8RLLLD6U7Ae96pcY-B2EBn2cB_M3hw>
-    <xmx:Fr9SaHEfsbeM9YCETFAke0FdKOpdgWawjzDq4svvZe4ZsdNf6LSutg>
-    <xmx:F79SaEJ90y1IT8yN5gw3royZ04hOBwZRf1UdlaDLIYQjXoAz976a7W8A>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 18 Jun 2025 09:28:53 -0400 (EDT)
-Date: Wed, 18 Jun 2025 15:28:51 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
-Message-ID: <aFK_ExmGqmi-oQby@mail-itl>
-References: <b5d72f51-3cd0-aeca-60af-41a20ad59cd5@intel.com>
- <Z_-l2q9ZhszFxiqA@mail-itl>
- <d37a7c9e-7b3f-afc2-b010-e9785f39a785@intel.com>
- <aAZF0JUKCF0UvfF6@mail-itl>
- <aAZH7fpaGf7hvX6T@mail-itl>
- <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
- <aB0zLQawNrImVqPE@mail-itl>
- <c918d4f5-ee53-4f64-b152-cea0f6d99c4f@molgen.mpg.de>
- <aB0-JLSDT03fosST@mail-itl>
- <aB1JnJG_CH5vxAsw@mail-itl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWanwObr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750253628; x=1781789628;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=UNwzDvdrp83cWCCDQFKzEWMxsgG1i52/PrUjdwYmvTY=;
+  b=PWanwObrViIfdgqEmTV8obiqCq/fQ27Y4nzvuJdmFTChDHkgWqGorsHX
+   +1arx/NpZwrqOxut1Nlj5OwIj8uqOt7RafEeuTP9w8EuHjCwIYkPz/vrx
+   Eayjq0LYpFzaD8mm+2LArzlJ5FtZzzMotWK9k3zqI0nWZ3cYWFhFT4EV3
+   iNBu/+lJcwxIAO0Won8wuJdNOaWjaZDyj4a3O/U/Krns+JLU3a4VJyxan
+   54Mn2k72vB7r6fsoxfPupxbDgmJlcxEsRWsSl4YKBrWjygjs41IxBGtB5
+   aX0l04PPwieBCrAbhXuVtxHT3z2+aiEOzAWljeZavmswQvOcvKw8cg7fa
+   w==;
+X-CSE-ConnectionGUID: Y6fffKzUR+Cbb7aRLTmMjw==
+X-CSE-MsgGUID: 2kuUZmwrSW+/a72Mn60Mdg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52612159"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52612159"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 06:33:47 -0700
+X-CSE-ConnectionGUID: V1Q77UV2SxuQXoHRi1PBXw==
+X-CSE-MsgGUID: q0GZ6Z1cQEi8TzwBL6Op7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154391815"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 06:33:47 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 06:33:46 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 18 Jun 2025 06:33:46 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.66) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 06:33:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oEcHojlwp2UPEggptmPA3SZLmREMjvz7KvBu6yBvlMUz7Ly87xOA1LHPiYHtrOnTQJsOifedBerg7sPMHgZ4eUGIqcd0PxfyMnFoqiw4+OuClaiCYU1Mk4xESNJSFwzhgx//j+b+XJo+tJGxIq0kxt9vhN3JL0DtyKvol5HgEykf5g+7i2HU+6l8zE4tmXlvm6lIfD41Zx6uDR8PrOfo/WLccwfDzaVHYnOOaDF4NyEpo5gPYsAFAamKfAhOkq+AeXAp2ut2cuBrpxb53LSjrqEc+X7Yx1BiqPuY2sByCPOSYsh00tTNCjIpEmvGNADvVosRFXYIvgOXh6yqu7mTug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1v5DQsYnr5LWfO1/1OmQC5r7LHbAAH0wqAmhff1BTt8=;
+ b=MQHGwZUbjY+H3xQLztI8qvPgj03yEL3gcXnZRaYV9Dvldd6pfh2JLQBoPMS6TVF3eKqqBgIaym+Kpz5jdEq/kul8fnZ/qWUKDYgLzHa2MRwprrJvyokeV7bv53XQ/9y4ylc+RMaFaECYmXCtHQryxZKHi4JU+U2oiY8Z5uRf+i7DplEHAWO3OQGEo2VIEGA920p3rtRxRVc8ETto1uJdkSWZwOgMElJn9ZJGx0Jf/DZ54jhJscfI2DomOQp4NhU3xsFX65adkuiI+rsjVjeWi9t2U5zFJDDYM4EM21JiICu7Oltp++XIfVjBrhysbVLuOctpSMiXhtuA4b5KKC3z0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5341.namprd11.prod.outlook.com (2603:10b6:5:390::22)
+ by IA1PR11MB6146.namprd11.prod.outlook.com (2603:10b6:208:3ee::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 13:33:43 +0000
+Received: from DM4PR11MB5341.namprd11.prod.outlook.com
+ ([fe80::397:7566:d626:e839]) by DM4PR11MB5341.namprd11.prod.outlook.com
+ ([fe80::397:7566:d626:e839%3]) with mapi id 15.20.8857.016; Wed, 18 Jun 2025
+ 13:33:43 +0000
+Message-ID: <8b7b2e44-5f04-452d-88a9-e728983d9640@intel.com>
+Date: Wed, 18 Jun 2025 19:03:36 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] intel iGPU with HDMI PLL stopped working
+ at 1080p@120Hz 1efd5384
+To: Jani Nikula <jani.nikula@intel.com>, Vas Novikov
+	<vasya.novikov@gmail.com>, <stable@vger.kernel.org>
+CC: <regressions@lists.linux.dev>, Suraj Kandpal <suraj.kandpal@intel.com>,
+	Khaled Almahallawy <khaled.almahallawy@intel.com>, Rodrigo Vivi
+	<rodrigo.vivi@intel.com>, <intel-gfx@lists.freedesktop.org>, Christian Heusel
+	<christian@heusel.eu>
+References: <8d7c7958-9558-4c8a-a81a-e9310f2d8852@gmail.com>
+ <afa8a7b2ced71e77655fb54f49b702c71506017d@intel.com>
+ <33046593-17e3-4bdc-9d4a-94dc94ef5e81@gmail.com>
+ <72c9ef36e81ddce8a9e91c5f3652489f5fa2d78d@intel.com>
+Content-Language: en-US
+From: "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>
+In-Reply-To: <72c9ef36e81ddce8a9e91c5f3652489f5fa2d78d@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYCPR01CA0068.jpnprd01.prod.outlook.com
+ (2603:1096:405:2::32) To DM4PR11MB5341.namprd11.prod.outlook.com
+ (2603:10b6:5:390::22)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iUL4KGRviabJX8Lu"
-Content-Disposition: inline
-In-Reply-To: <aB1JnJG_CH5vxAsw@mail-itl>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5341:EE_|IA1PR11MB6146:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc8b24ac-25df-4f50-a9e5-08ddae6cbe8f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?YjNlSE5hVTVCKzNOQi9RYmJGVkVsZ2VYRE5zN0treHV2UTliYTdlLzJXSDdC?=
+ =?utf-8?B?ckxDa1NpYlRjNzdzU1ZFWnFid0JRY0E0KzRZMXhmSnpkVjJ5MkYzck1QV3lm?=
+ =?utf-8?B?TVBReUt5QjlIcC93OGRIWHZwZzFtR1FOS3VoV2t1Z2ptWThUbE5jWHdhOXd5?=
+ =?utf-8?B?N3k3cytKLzVCYmsxOUdmQ3B2bUdZbUdGaE1YYlYwWUNLdjQ3V01hU0EvTXpr?=
+ =?utf-8?B?eGo1YWtObTg0MjR5UnpnUVQ1dzNJQkV0Q2c3ejJNcmIwY0ZEZ3BqdFBWajds?=
+ =?utf-8?B?L1VKMVZQNVJhWGZsTnI4SnNYcHdwYllkVEFmWnRxQ1JabXEvSmdSUjNEYWxt?=
+ =?utf-8?B?N3NaT2FzWTFPcFFESXM4WFFHZHdhYXQ1Ti9LRDVDMXBVS1IzaWZWZ3ppMVRh?=
+ =?utf-8?B?RzlGSEZzcnVuRUt4dXBnNUI3a24yUlh2ZjJ1YmV5RkkwWUdoWHowUkZOSGhK?=
+ =?utf-8?B?MWJmeHpzaEtjYUJEZEkvSXZqdU04L2hmQ2NYNmYzMFA4Ty82ZitIelc4VnNR?=
+ =?utf-8?B?STdxSEFxK0NwTGREQUxRK2tIK1FxYk9JZjdDN0NOcXQrQi9nRGNBVTVIViti?=
+ =?utf-8?B?S3pnZTZCZXFuL3lHbjZSeEEwY1A2Z1NIRVRUZ2JIMi9pT3pCckgrbkFxL3Bi?=
+ =?utf-8?B?eVl3cG1lbnRYZEpBaGJBbEZLVHFhWjBpODZUd0Q5WEltbnMyaVJGUXBqelVq?=
+ =?utf-8?B?QzdaOWN0WHpJWWlOQzNPdVlTVm5EU1pTek85SmQ0Z2pXMUh2bEN1TVlITHpM?=
+ =?utf-8?B?WkdFYkRmY2VtTDkzTFNRUUlXMGkvSjQxRjRnQzNlamkvMnU0aENWR3VLOUxm?=
+ =?utf-8?B?bW5ucjQ2ZTMwQ1NQVm56QlYrci92dE42Q2I5dGRiOHpMSTdsUTgzRHMzYWU1?=
+ =?utf-8?B?ZVlneG9UZ0FhVWUzM05WRGVlUFgzNk1ScGZXOTFNa09XWjg5Uy9pSWs5SE5s?=
+ =?utf-8?B?WjQ3c2k0QmJrSkFzVHNycFZkWFNveVp5enZmenh4djZsWGlFeEx6L3hjWGJE?=
+ =?utf-8?B?cXJQbUxUakF0QmNya2o4a0piRFFKY1pmV3FrQXBpa2owalN4V0xTRld5RFUv?=
+ =?utf-8?B?Sml0YVByclZCZVZkRnNHYmRLWEVtVVkzL20zYy9RN1BoZisrMzdQejBRK3h3?=
+ =?utf-8?B?Z0dNcDhnNjNGMU1KY0xrTjRnakcwTTd0S0RqY3FFOTJNbFdPT0VHY01oTXla?=
+ =?utf-8?B?VXdkNCtzRVRDT3RtdVd3MEdRWHdWeDZRU3lLQUR6c0FUMitwRWRHNHZJb1Ar?=
+ =?utf-8?B?VTJzWkFJcDFpNWhNMFdKQ1crK2hYak5iTU03alNyVGFHT3p5NUJRakFBbXdp?=
+ =?utf-8?B?NnlFR3hLYURiVW1KNjJWQ0JjSXppejJ1UFMrYXlPQng2OE5KMU0xSUh3SXBT?=
+ =?utf-8?B?eGNBYWV5NnhqQ00xTjl6aHNNdkFMRU1wbFY3UU1DWDc5NnJaQkhCQVBVWFJW?=
+ =?utf-8?B?UlhiYmZ5c3ZBMkFOTnNpNllXcmRrNzVWdm5EVUpqaDFDM0VaSjZYSmI3RTIy?=
+ =?utf-8?B?ZGxJeXp4bmVKclg4TGN4cVI3b3FwQldBblYzbzFleTZqQ2lXU256MHIzdlBK?=
+ =?utf-8?B?TFNuYVRaYUtZQzFuTE1zb2JyOU1GU2hQU1Zrd3B4aS94YUFwd0MvelNnZDNl?=
+ =?utf-8?B?Mm5Jc2tuQjZEa3lOOU5yL3I5SzVaUG13MklQaG5ITjlTV0ErcTRWWEgyV1hS?=
+ =?utf-8?B?YkUrdW1Zekh1S2RkRFdBbGY5MFpMZG1qVkpMckxJQ2prQ1V0NzhVVDRxbEsz?=
+ =?utf-8?B?L3ZaMzBpRG5KSWdLODc2SUFlMU94Z216SjRDempOR05vMEpXQUhoYzZ2MDcr?=
+ =?utf-8?B?M3NFeGNZVzRsamMzTGQybDIreFl2Y2ZTN21aRGpaNUN3M0NZdE5rQlZiNzVR?=
+ =?utf-8?B?NU8wbzB5QndvZGZTeEVzY0NUQlpLZElYMFZQVnA5dmRmU2V3OFFCSFIraVBh?=
+ =?utf-8?Q?yqO2ojJgGHw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5341.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VEpuK2E2NnM3SXZKdUU0Vys3K3k2SG5tSWw3bC81eUJvNHFKMnQxeVZjMkl4?=
+ =?utf-8?B?MFpHeEEwcHpjVHI2dm10dlIxMmljQ25kQjJiakRTS3ducS9RaGNRTUJLd051?=
+ =?utf-8?B?M2tFL0RiNE9Oa0UreUVWS3BoVEdMK2lGb0NYMjhTMlhJa2ZvdGNOQkxvU01x?=
+ =?utf-8?B?U0cveWs5MENFYW5QUWQxak40K3VjbmVpQW1oSFkyeWx4Y0RtbW5vSWcrYllC?=
+ =?utf-8?B?ZkpRTUFlckU2YUpodEp0RFcxbGFMK3U2SXB4bGFZL1BPcVpzUTFDeUd6amFZ?=
+ =?utf-8?B?MmlvclF3RmNTYncvOGdhbU1neHh0cFpZTWdYOGxUYy8wY2dFc0Jla1hYdjMw?=
+ =?utf-8?B?MG1NeGRqL2VzTnBQL2Y4UVhtNTJvRjFuYlRmZFdadTh6aW9MNGdNNnJ6SzRa?=
+ =?utf-8?B?TEQ5bEM5c1hjdFpzQk5xNHJOTTdwT0p0dTNhTmcyaXgwU0dwTk9GSUxYRlNl?=
+ =?utf-8?B?V2U4eFVWOTRSbVZlWmowVTBiNGxBdlJkT1pjdEJKUXlpUHZ2MWVXZE4wcWpQ?=
+ =?utf-8?B?Nlcwb0NFMmc2azEwNlIyMm1nUFUrdHltc1ZVamtqSTJoV1c0aWliK2F4WHdj?=
+ =?utf-8?B?bUV2aVJYSVF6b2c4ZVgrU2JsUWNCbXJPT1VBNW5DVldYbjhpY2plbkV5MFM1?=
+ =?utf-8?B?eEpyOU9TMkRYc1NEWDVRQStCNy9MR3ZGODdvRnRMRnAyakNKa0FwSE0zcjJR?=
+ =?utf-8?B?aUlPUUc1NWxkNG54c0pXMkVOd0RVVTVpc3VWN2JiK3NZaEdQMXZSSVBMaGlL?=
+ =?utf-8?B?ZjUzLy9BSXM2UUhBVDgzcUkybkczSnBxQXFlQVUzOFRRTXBnaWRJVGtSdDFE?=
+ =?utf-8?B?Z25KbUF4WFUxSkFaNWJQUHpwRk9GUEFiZE1yYXFGVWQ3ZE5qL2U2OVNRVHhr?=
+ =?utf-8?B?RGRXSjFkV0E0R1pUU05BVFdlZ0Y0Y3dlQktmRGFBOTV5MDlzL3hWbkdld3p1?=
+ =?utf-8?B?OWFzS09pNkcrNEVoOVVLb00zRTh5Qm9SQUJsdENTZVVONGZmcHlvVnUrZjQ0?=
+ =?utf-8?B?VHR3bFpEd1A3M0U1TUUwU3RSa2Rac0ZkTDVQWHVhRWlPVWFSSXRIMWVoWG9O?=
+ =?utf-8?B?bnVtOElGZjF5MmJLRlJ5TlU3bFM1elBpcmlyVm00TERaeE9TemIraUx6Qm9M?=
+ =?utf-8?B?WjBzajRHZHRpRDNYOEV6QjJYbGR3NEJMWnc2aWthTXR2YkNqN2ZZS3ExZnRp?=
+ =?utf-8?B?TXduTnMyQzBZcG9zbFdzYmZ4RFRtVXRNMVFwbml1T1BtT05Sd3hkeVgvTnM4?=
+ =?utf-8?B?VkIxWUVUVmVVVFl5TTgyS3BGVGpaWlVjK3I3a2srS3FrRjBZVjYwcG9BaUli?=
+ =?utf-8?B?MTYrTUtlbW9tVGxnbkk2WVQwSENubVJBZS9RWlFSTE8zcDczeVZtMllQZ3hF?=
+ =?utf-8?B?cU5mR0Nnejl1YTlpckJaYWZCT2xZTGVYUElCN0tMY3F1QkRDRXBsMVhYeGV3?=
+ =?utf-8?B?UVNZTVdtYlI0Zkt2QzZiVzhMVXU4RzJHZ29zbDA2dm5ObU53V0wvQVB1bUxH?=
+ =?utf-8?B?YWk4MWJEVjV4SU1aOXZEdjRLbUV3L080WGdyVDNQUjBxSkd6QlFXM2I3aUJR?=
+ =?utf-8?B?WEsveTIvcVBsd0tteW9FNHdaaXcxTlZHTHJSUEg5Z0x4aVR4dW1XbS8yTURM?=
+ =?utf-8?B?WFFGc3FWb2NnNk1WdXNtSld4a3QwcCtGSXZPdjN6K0VEaFdtVGZjcE1iQ1BM?=
+ =?utf-8?B?WkRndUpiNGlMMjZhcjJjWmlNS1lQZmhPTHFsc2FjeFEwVFBkR1FGcWhRcjZJ?=
+ =?utf-8?B?R1JVM1l3MnhYRUhwZXdXQjVMWmdwWmFsVWczSXg4NXFTUkMzVHVzbEtiN1dI?=
+ =?utf-8?B?SGl0Wm80dWhLaU1PMGdSYkJRMXErNzJXNU5YSHFvS1dDZmtyT0NhQXRXRTBr?=
+ =?utf-8?B?akZueG9uakVJU1k1MEFsMDNqVHJ5Uzd0NEkyb285eVF5bVpNdER6SkVrLzIw?=
+ =?utf-8?B?Nk9pQXozcndBSEx2TmxOcks4Q0RBZFBiRFVKeHQvQk4vQkN1YlhuQzlBc0Jk?=
+ =?utf-8?B?alU0OURzWHVQR3VTVUxoQUphd2xOME5rY3lCYndIenk1djFhV2hYMEloamxV?=
+ =?utf-8?B?eE9aMDBSYTN4MjUzS2hlNGsvY3A0MVRoK0ovUnN3WFdZRy9ITUlYK1dPOVN5?=
+ =?utf-8?B?VHE3MzRFdGtHNmZBbE03ZlhmbVAzN3h4b0tDd0UxRmQrYWdLMWZ6UEJIcDhw?=
+ =?utf-8?B?Znc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc8b24ac-25df-4f50-a9e5-08ddae6cbe8f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5341.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 13:33:43.6047
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f96nRa4FaIwb0jS2U0m6ktFFI50uRwHo9RZh4ClW7vWWYI58Kb4NnS743eTLBG8Mx1OrIsoPhnUPl6M8HXuWdBfc///mNkrIxjWd54DDsOM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6146
+X-OriginatorOrg: intel.com
 
 
---iUL4KGRviabJX8Lu
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Jun 2025 15:28:51 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
+On 6/17/2025 7:20 PM, Jani Nikula wrote:
+> On Tue, 17 Jun 2025, Vas Novikov <vasya.novikov@gmail.com> wrote:
+>> Hi Jani and everyone,
+>>
+>> On 17/06/2025 12.33, Jani Nikula wrote:
+>>> Does [1] help?
+>> The patch works. (Applied on top of 6.16.0-rc2-1.1-mainline, built by
+>> Christian @gromit who helped again.)
+>>
+>> The patch (or the new kernel) also have a side effect of xrandr allowing
+>> a completely new refresh rate, ~144Hz. This new refresh also seems to
+>> work (I cannot easily disambiguate 144 versus 120, but I can tell it's
+>> not 60Hz). So as far as my hardware is concerned, this patch leaves the
+>> whole system working in all scenarios that I've tested.
+> Thanks a lot for testing! Ankit will send a v2 of it, and I think we'll
+> have it in mainline and backported to stable in a few weeks.
+>
+> There's no need to file that bug report, this will suffice.
 
-On Fri, May 09, 2025 at 02:17:32AM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
-> On Fri, May 09, 2025 at 01:28:36AM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> > On Fri, May 09, 2025 at 01:13:28AM +0200, Paul Menzel wrote:
-> > > Dear Marek, dear Vitaly,
-> > >=20
-> > >=20
-> > > Am 09.05.25 um 00:41 schrieb Marek Marczykowski-G=C3=B3recki:
-> > > > On Thu, May 08, 2025 at 09:26:18AM +0300, Lifshits, Vitaly
-> > > > > On 4/21/2025 4:28 PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > > > > On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykowski-G=
-=C3=B3recki wrote:
-> > > > > > > On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vitaly wr=
-ote:
-> > > > > > > >=20
-> > > > > > > >=20
-> > > > > > > > On 4/16/2025 3:43 PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > > > > > > > On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits, Vital=
-y wrote:
-> > > > > > > > > > Can you please also share the output of ethtool -i? I w=
-ould like to know the
-> > > > > > > > > > NVM version that you have on your device.
-> > > > > > > > >=20
-> > > > > > > > > driver: e1000e
-> > > > > > > > > version: 6.14.1+
-> > > > > > > > > firmware-version: 1.1-4
-> > > > > > > > > expansion-rom-version:
-> > > > > > > > > bus-info: 0000:00:1f.6
-> > > > > > > > > supports-statistics: yes
-> > > > > > > > > supports-test: yes
-> > > > > > > > > supports-eeprom-access: yes
-> > > > > > > > > supports-register-dump: yes
-> > > > > > > > > supports-priv-flags: yes
-> > > > > > > > >=20
-> > > > > > > >=20
-> > > > > > > > Your firmware version is not the latest, can you check with=
- the board
-> > > > > > > > manufacturer if there is a BIOS update to your system?
-> > > > > > >=20
-> > > > > > > I can check, but still, it's a regression in the Linux driver=
- - old
-> > > > > > > kernel did work perfectly well on this hw. Maybe new driver t=
-ries to use
-> > > > > > > some feature that is missing (or broken) in the old firmware?
-> > > > > >=20
-> > > > > > A little bit of context: I'm maintaining the kernel package for=
- a Qubes
-> > > > > > OS distribution. While I can try to update firmware on my test =
-system, I
-> > > > > > have no influence on what hardware users will use this kernel, =
-and
-> > > > > > which firmware version they will use (and whether all the vendo=
-rs
-> > > > > > provide newer firmware at all). I cannot ship a kernel that is =
-known
-> > > > > > to break network on some devices.
-> > > > > >=20
-> > > > > > > > Also, you mentioned that on another system this issue doesn=
-'t reproduce, do
-> > > > > > > > they have the same firmware version?
-> > > > > > >=20
-> > > > > > > The other one has also 1.1-4 firmware. And I re-checked, e100=
-0e from
-> > > > > > > 6.14.2 works fine there.
-> > >=20
-> > > > > Thank you for your detailed feedback and for providing the reques=
-ted
-> > > > > information.
-> > > > >=20
-> > > > > We have conducted extensive testing of this patch across multiple=
- systems
-> > > > > and have not observed any packet loss issues. Upon comparing the =
-mentioned
-> > > > > setups, we noted that while the LAN controller is similar, the CP=
-U differs.
-> > > > > We believe that the issue may be related to transitions in the CP=
-U's low
-> > > > > power states.
-> > > > >=20
-> > > > > Consequently, we kindly request that you disable the CPU low powe=
-r state
-> > > > > transitions in the S0 system state and verify if the issue persis=
-ts. You can
-> > > > > disable this in the kernel parameters on the command line with id=
-le=3Dpoll.
-> > > > > Please note that this command is intended for debugging purposes =
-only, as it
-> > > > > may result in higher power consumption.
-> > > >=20
-> > > > I tried with idle=3Dpoll, and it didn't help, I still see a lot of =
-packet
-> > > > losses. But I can also confirm that idle=3Dpoll makes the system use
-> > > > significantly more power (previously at 25-30W, with this option st=
-ays
-> > > > at about 42W).
-> > > >=20
-> > > > Is there any other info I can provide, enable some debug features or
-> > > > something?
-> > > >=20
-> > > > I see the problem is with receiving packets - in my simple ping tes=
-t,
-> > > > the ping target sees all the echo requests (and respond to them), b=
-ut
-> > > > the responses aren't reaching ping back (and are not visible on tcp=
-dump
-> > > > on the problematic system either).
-> > >=20
-> > > As the cause is still unclear, can the commit please be reverted in t=
-he
-> > > master branch due adhere to Linux=E2=80=99 no-regression policy, so t=
-hat it can be
-> > > reverted from the stable series?
-> > >=20
-> > > Marek, did you also test 6.15 release candidates?
-> >=20
-> > The last test I did was on 6.15-rc3. I can re-test on -rc5.
->=20
-> Same with 6.15-rc5.
 
-And the same issue still applies to 6.16-rc2. FWIW Qubes OS kernel has
-this buggy patch revered and nobody complained (contrary to the version
-with the patch included). Should I submit the revert patch?
+Thanks Vas for reporting and testing and Christian for the help with 
+bisection/builds.
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
+Thanks Jani for first pointing out the sparse warning, and then for 
+quickly pointing out the fix.
 
---iUL4KGRviabJX8Lu
-Content-Type: application/pgp-signature; name=signature.asc
+I have sent the v2 of the fix [1].
 
------BEGIN PGP SIGNATURE-----
+[1] 
+https://lore.kernel.org/all/20250618130951.1596587-2-ankit.k.nautiyal@intel.com/
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhSvxMACgkQ24/THMrX
-1yyXAQf+K53U8Y6jWL6iyqumhg77CPbzn0qaQrxtA2sKrbY+GBzdBG3ptbzs1bY0
-T5YlBl9fiGCHMqAO1H/BgQnbHY7oRk2jMgR10m52fMWE0pnsHPcHxVi2ChLvrpfx
-UdYSbRHZpEDwVZNfQkAI0ppKGF/It+BtIjD9xWeLqOiezEr6GmT2Z1uvBywbwq4m
-AbK3ZFzvSHIEUyVQZMXopcGwsAzJWL19/zPJOLLXDIMhUy9mKvpNR7/MjivwuuT4
-Y0oy6tAuqGLJv3m0oIIByL7lAc/2oq0TizFTqOGnvGMJYALdXiA2QpKNZSc2MT8t
-NUXAGDW3WOntp2X+TvgJW4+pfqn8Rw==
-=MhTN
------END PGP SIGNATURE-----
+Regards,
 
---iUL4KGRviabJX8Lu--
+Ankit
+
+
+>
+>
+> BR,
+> Jani.
+>
+>
