@@ -1,318 +1,309 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EEB24A05D
-	for <regressions@lists.linux.dev>; Thu, 19 Jun 2025 12:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750335659; cv=fail; b=jZ6OzB7DYVyNIiLW7ZFcLvpcksG/kSXv5cFkcvz49mCjy6QGtsROuBbVXMfkzfwIm9rWy+DuiUSKazB7LbO3T5ohrJYCnktWfhkhecNbAmLeNA4dIpQ6klxdvtRoeUd7zLOhMbbkBJ/gvaR6IJCdodecokRw3D/mFBMf0dOs1nc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750335659; c=relaxed/simple;
-	bh=hm1eilQjWD5uR6udef3kiO+yhyPrLmOttbRWQLeLybg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LHMZ2jOzbnceK5wEWgkHIaPhVH6Q5syKQFiyjGfyLyJbr1oHyV26row6+bzGGR542+rmKeUuMcX7aogucF+2Rqq2lyMFMMtW1x8UmGzyN8M9Bvx0TMD0R1y4yZ0/epxjGy/cowCEFWIZz3kHlQBvI81Oz37ih4x+4bjIxqRL2ng=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PedG8n3z; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A87C21CC79
+	for <regressions@lists.linux.dev>; Thu, 19 Jun 2025 14:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750344567; cv=none; b=XzIF5WmkIG7y1MCC7jczxv9+5QjeWGlYQOdpY3hKB2yS6RVpG1PJGGBBVc5PSopPvxHLO679BArg6ZM8lbNS2DJux6QP9b8SMKx5eKvXk4rcyx5iJ7kSacCVV8fgzPawUXmtMMLhdhqE5+q04amayWsPZMdUvAUZihdQI6u4UhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750344567; c=relaxed/simple;
+	bh=RU1TZdvqOh6TP7GFugXAi4y1pUWPS4B3n+i6H5qQqzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdHaLNdCLqaw9O77Y49/vo8XHSCJXD7GZ74clOqt8c+8WPYNZP1pm1sySBHrXsZ61ZTRWmgrxo0xTpVmnZW6uo2pwRcrVfcxmQ3PnXBL6vT8EgWwp4i8qL1Y/ur1xipryI1e6HAtSW9r1XVp9K6D34RztXZofxWGMwkJczGgk/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=gRjTxKXa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iPTH6ECA; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PedG8n3z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750335657; x=1781871657;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=hm1eilQjWD5uR6udef3kiO+yhyPrLmOttbRWQLeLybg=;
-  b=PedG8n3ztEUcl75TV0fzAJ5MP1q1Hj2YDcZa22X4jl60MjwvSEy/CgDH
-   aRU+mrbXY251pm5JN1v4dWXrcZIZkH2tT/+LRinFVxu38zue2mwCOiW5P
-   XR8OsBxtwHfV+5W9uB2p0QDoM0JeEX7d+f4r81PWlIQVk2O+VkJYYZTfh
-   uWRylIPGQMrAyRb87lQeEQwibaiWgRsO1rMQTncwp8azeBBZFpmjtraE6
-   KAvqY/QP39zLc7p5CfTNw8eMB5qWwuwYh0ZNGzBnIB7Liy7wGDrd0P49f
-   NGrnkg4jbLncZSdb8Lbb2hN+fEys520dj+cOC8qogH7KVeti2BxUXZOdh
-   Q==;
-X-CSE-ConnectionGUID: uLyj2gJ5T0aPjfFwaJ3VZw==
-X-CSE-MsgGUID: Ery03YhASE6a+dKOirXDlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63190845"
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="63190845"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:20:57 -0700
-X-CSE-ConnectionGUID: qr3DPXlwSPmmdIgEgm48yg==
-X-CSE-MsgGUID: MbtttEb/QSqcl2xvXjb4WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="150136988"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:20:57 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 19 Jun 2025 05:20:56 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 19 Jun 2025 05:20:56 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.62) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 19 Jun 2025 05:20:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wneWMObSZSfEVqyHdx00PmQXQ7muM8cCqB8US4+x3oa3uNzoK2gOblUPvi+u85Jw4+ObY4OQ59Hi0BMM8e3rUf2gN10NWo8oyeNtuqh+TKkN1O3lubwbOlI5ems9NsNC9pydZa9ZFP/weEeOQVZRm7ZSjbO+Qy8A7ua6ySIIkp60/DFCQaAVmEZbmdNSM1RzJXtXrl3jYxSdHbjSKfBpmFPaVhDEunrBoC41Rq9dL1Z7YovNH9jqpi+H2pwqqBfA3WO5qdavvhsjLzy3oBtmNCUqVfqo6ItheGGyKIqBXsJXJReHWejSc1J5/zQC3axV/z5AcRQUjI/gRtCQJcVMlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e71mVzlvGYewF+T1SoRXLurZAZHWXDR0okizAH7Kgdc=;
- b=eXhhPxOyjvM1L9qPXgViUBYwdWUwTI9jpCZCjIqecNy9S0RYbqGAVGG/1s/45lSlUn3wvVBb/ZdY+CtVGeL3JtmhsE2uz+M5abJZRnMWQTpImwnTi5lH9k1VxI0JP1C5gz3ZvfDeZ28Lp9tLV75F+NsAO3Cs4yIA0nXAqBsKD/W27yvuPYQzk3mdXO4J6BqA0tCqGXoNq1PPSHhgXbNUGDyF9iC0aOxsDMQ1pEptX016iwJFIhzEs+628r15zYPjtHMz7GPGQhY1BV+wMN6daDLXMyMA/M3wU5LeSaBqRPtEnWz7oGnfoqNsreltUERdH8NMH6emBJFWry1otruXEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA3PR11MB9013.namprd11.prod.outlook.com (2603:10b6:208:57c::9)
- by LV2PR11MB6023.namprd11.prod.outlook.com (2603:10b6:408:17b::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Thu, 19 Jun
- 2025 12:20:40 +0000
-Received: from IA3PR11MB9013.namprd11.prod.outlook.com
- ([fe80::112f:20be:82b3:8563]) by IA3PR11MB9013.namprd11.prod.outlook.com
- ([fe80::112f:20be:82b3:8563%4]) with mapi id 15.20.8857.022; Thu, 19 Jun 2025
- 12:20:40 +0000
-Message-ID: <9fb5f018-7333-421b-8e2d-1f6eb98cffaa@intel.com>
-Date: Thu, 19 Jun 2025 15:20:35 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on Meteor
- Lake - 6.14.2
-To: Christian Heusel <christian@heusel.eu>,
-	=?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-CC: Paul Menzel <pmenzel@molgen.mpg.de>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	<netdev@vger.kernel.org>, <intel-wired-lan@lists.osuosl.org>,
-	<regressions@lists.linux.dev>, <stable@vger.kernel.org>, Sasha Levin
-	<sashal@kernel.org>
-References: <Z_-l2q9ZhszFxiqA@mail-itl>
- <d37a7c9e-7b3f-afc2-b010-e9785f39a785@intel.com> <aAZF0JUKCF0UvfF6@mail-itl>
- <aAZH7fpaGf7hvX6T@mail-itl> <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="gRjTxKXa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iPTH6ECA"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 581E4114020C;
+	Thu, 19 Jun 2025 10:49:24 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 19 Jun 2025 10:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750344564;
+	 x=1750430964; bh=bJZoX1H0pKg0M1SA/qWQWR7S8HdwU3H818dBwncJTdc=; b=
+	gRjTxKXa7EdZ4uJc6H+pm7CbN5FBQHL15xnfO/fGHk7dALRSpHGbMhV4avHhue87
+	pZlE7Gu6B21nUzZB5pavhcr5OTavYOmn48ofCng6C89hkpX5fQ/dU1zzLsbSiEk5
+	HmG8Bawu8LuUbPtIkOzqM6SQgI9lS+bXkEfyVkFCJi/9dumFfKrdG4Z4XC+xK4w5
+	ZmRnlB7Z0cy8HCl9AR4FQfd8Oa155Kuqz711wdKts1hYq4sT0Eq8UAwPCjjcFKKo
+	FBnwcQkynhl1OlBIKIXkRsqTCo4IZwroPRn/clzJMpTJGbi2gzFSosfJOrm94LYq
+	l44aKq+9AJxKluDYsDok2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1750344564; x=1750430964; bh=bJZoX1H0pKg0M1SA/qWQWR7S8HdwU3H818d
+	BwncJTdc=; b=iPTH6ECAQoWMY49Z8UaWWfUnvlldg3wFE6G50XJv0/Wj8W07mSn
+	XY5Syj7xDtGWCCDDr/LddbbemYIJgvoU3Yr4WxrI4hUF2NGspsdv3zSgZEVKPHDa
+	x9Ewh9MdGlA/uZMA+GUhSbBygjUKjxNhNRlycrFZIMBE+eMY+iklJ0urU6K8c3js
+	oDV58o+zO+XqQIfAVEa6AXc8lZpBEoG+vZt6RFSUYNmFMHdNubrIng3R02P20Jj6
+	u/WsLZMiBsy76X7fGYMoKv2brBjN94lkcLLmKCxvhlBNed+VkFGGR+0th9wKD6oc
+	nZDkuXbotYM6vHRoDyr3GhHq6UV+8qOf+ww==
+X-ME-Sender: <xms:cyNUaEnYa0G1sUb84ZBhFlK4VUI7EnqZb09Th03Ch3b__EKDbZfkZA>
+    <xme:cyNUaD3JfrhPZhAYb_im_3cEsgIMcIR4uwiVk8XU57QqPDTmjMZ5IW9VTRpHFChca
+    -Xc5QZbI_4DxA>
+X-ME-Received: <xmr:cyNUaCrVZNisjWjtpJLFBwpZlx_bqvLZOROBm1V6HEJVhgEJ6Vf4YvrwGLffyBmRMU6PcMdDhn2LLTAwtkiciuaSy0K5SivFwvA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
+    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
+    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepheduvdfghfet
+    gefftdfhfeethfehhefhtefgvefhvdetkeekkeduhedtgeeiieehnecuffhomhgrihhnpe
+    hlrghunhgthhhprggurdhnvghtpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhi
+    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhish
+    hisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepvhhithgrlhihrdhlihhfshhhihhtshesihhnth
+    gvlhdrtghomhdprhgtphhtthhopegthhhrihhsthhirghnsehhvghushgvlhdrvghupdhr
+    tghpthhtohepphhmvghniigvlhesmhholhhgvghnrdhmphhgrdguvgdprhgtphhtthhope
+    grnhhthhhonhihrdhlrdhnghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehp
+    rhiivghmhihslhgrfidrkhhithhsiigvlhesihhnthgvlhdrtghomhdprhgtphhtthhope
+    hnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehinhhtvghl
+    qdifihhrvgguqdhlrghnsehlihhsthhsrdhoshhuohhslhdrohhrghdprhgtphhtthhope
+    hrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohep
+    shhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:cyNUaAnrDe5gOluv7mW957b8hkPn-cs_e4l4l_hd67YhsdAQtUd_yg>
+    <xmx:cyNUaC3tppNB8Tf7EBGAdh3Lj7Y3neFd0u-PJVqLE7hWQE-OLXCA3g>
+    <xmx:cyNUaHsGjAPJ0XRwSVxI2FMYnwLQD7wl-HlbaIrc4VXiI_yLMtkolA>
+    <xmx:cyNUaOXVcmZYTyvSqiDSrseLZCxfNBnn0urA6Rg9YdpFvsbWI0Mjpg>
+    <xmx:dCNUaJ12bXse_-m0zr5Z1uEkvH76zhMMJ9d66p-WRWHZpM_FKcqjxUym>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 19 Jun 2025 10:49:20 -0400 (EDT)
+Date: Thu, 19 Jun 2025 16:49:18 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
+Cc: Christian Heusel <christian@heusel.eu>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	regressions@lists.linux.dev, stable@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
+ Meteor Lake - 6.14.2
+Message-ID: <aFQjby7mQxvShBm7@mail-itl>
+References: <aAZF0JUKCF0UvfF6@mail-itl>
+ <aAZH7fpaGf7hvX6T@mail-itl>
+ <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
  <aB0zLQawNrImVqPE@mail-itl>
  <c918d4f5-ee53-4f64-b152-cea0f6d99c4f@molgen.mpg.de>
- <aB0-JLSDT03fosST@mail-itl> <aB1JnJG_CH5vxAsw@mail-itl>
- <aFK_ExmGqmi-oQby@mail-itl> <87584d6f-5a31-47aa-bba3-1aadfc18fbe6@heusel.eu>
-Content-Language: en-US
-From: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-In-Reply-To: <87584d6f-5a31-47aa-bba3-1aadfc18fbe6@heusel.eu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TL2P290CA0004.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::13) To IA3PR11MB9013.namprd11.prod.outlook.com
- (2603:10b6:208:57c::9)
+ <aB0-JLSDT03fosST@mail-itl>
+ <aB1JnJG_CH5vxAsw@mail-itl>
+ <aFK_ExmGqmi-oQby@mail-itl>
+ <87584d6f-5a31-47aa-bba3-1aadfc18fbe6@heusel.eu>
+ <9fb5f018-7333-421b-8e2d-1f6eb98cffaa@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA3PR11MB9013:EE_|LV2PR11MB6023:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1019e605-dbef-4309-ea49-08ddaf2bb480
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NTFqTDgyY3RuQ3cxeWJEZzNPcHVmb1FzL1dzYUhOanBtR1NEZG1FdWtqSjJW?=
- =?utf-8?B?QTl5TkxSanhjaWI5cjFkdWJYdlR5cVJqdXlyc1k0UTF4b3VLYk1JbHNFNXBH?=
- =?utf-8?B?a1dLVUdHRGhyR2lEbjVIc2RiaTN5ZFBmTjlxZDBWUXMrWHB3K2xEOWlqbGpl?=
- =?utf-8?B?TmwzMFRlNUtIRDFVTVcwYTBlNnpZaUY0Z08za1ZhbVJMcDRSdENNZ2hmdUVD?=
- =?utf-8?B?Q04xRVdaNHNwNk9HQ2kyUFoyY0pvZTRXZlRFRkt3Y1RXVGlsN1BsOVE4dDQx?=
- =?utf-8?B?dGhOVTVCMExBSHh4a1MxcUFtSHNnNm9GWDBabldRVFpRR0U4TmNXYjdRQzdL?=
- =?utf-8?B?UFFBeG0wNy9XM2xpUkhlWVBlYkl6ZWJLVnJmbTVERzRWcSt5M3dVbEd6aWtm?=
- =?utf-8?B?VmFxU3ZLOURVdVp3QUthYi9PRFgyTXFLQ2JuWjFWT0ptUWpETTdWa1JwRDdB?=
- =?utf-8?B?bFozT2NwTGhlVTRXSmJBaVZQY2pWQUU2RUpKcENKaGxqSmtqWEVkOU9lOFhl?=
- =?utf-8?B?OUhueEt4ZTlxaGNhZjVaS0NHd1dTYWVhcUd6WU9rcWZEcDdYT2dsUEpXOWZ6?=
- =?utf-8?B?VDR3cE0xRlo4VG5xS1gzTUM4SkV5VVhwMEFWb3lpdUQwVVVyNm5pUDNaYk00?=
- =?utf-8?B?NW1XQjVlNWpzdWRZdkJQOVlvSzlkZ2pQN2xtWDFrYjdSUmhTZUlwdWJ1TWt6?=
- =?utf-8?B?VnQ2WlU1YXRoa1hSSExXaUM2cXlPNmUxaTRjMXRRNEhHQ09lekM4enVMbFZ0?=
- =?utf-8?B?MzIxZkV1em9nNUc3Z0RlVEtuSDFIdFM3VU5VS0lvRVVkRGVHZFNlZmtVZUtG?=
- =?utf-8?B?TmIxc2hUaUFzTFNTbklmUWhLbHd6alVqZnZNRTZodDNzWTdmK2tGeDRJWllT?=
- =?utf-8?B?RVE2akZQMzBBUVVsbXFxNkdjcmNiWEVPME5jR0NneXlhY2JvRUhJMis2UnlD?=
- =?utf-8?B?Q0k3K3luekFSSnBJRUNNRE82Y1BTR0xEMENKYkRVRTRVTTNEVFNESXkrU1dN?=
- =?utf-8?B?Nkc2eSt0Vk9QbHBTTXg0SkMvOXFxYUV1UWF5aUFrM1o2d251Rm5FOHdPenJr?=
- =?utf-8?B?UE1uRkh5SUI5bnZTenkyN3lzTDd6eEM4SnNrYS9ENjRndDdGOVJPand1Mjhi?=
- =?utf-8?B?T1UyOUxwbWJVL2podDc5UGJrOE80TlA2K3NwVitNRnRHd0J1andNZ1JPYzRl?=
- =?utf-8?B?U0pRbUhKMXBWL0Z2dXQzV2hCRFJ0WkZjLzVYb05qSXkzd3libGJrRzFtM1Uz?=
- =?utf-8?B?RndidVpzbUg2TmRjaWx1T0VRL3lwdWZCd3M3Q29iNUZtZ1NiU2FtaDM2RXR4?=
- =?utf-8?B?Y0p0eURaVGxPT01zclNyLzQzaE5kVUtBMWpkQUMzNDByZGhHbk9pRTBTQ3NS?=
- =?utf-8?B?aWtyb0xMT3I1WWxGYnc5YXVQb1NBb24xMURWWnRUem5uYnd6VWtEaXBLRHM3?=
- =?utf-8?B?SWlMZGZXYTV4R0F0RHdHbGVQU1pVMTVIQWJLUXBoZWZpWUJrTm9Ea0VWUkRl?=
- =?utf-8?B?ZUVhYjJRb0ZhTS9ZNWMrRGg5cTJrZENaMnNQVVkwR2llNFVpbFdMRVVtQTZn?=
- =?utf-8?B?Ky9ERUZTTW1DREN2am5LREFFenY1VmRjeEpuendJWkdWS0NKNFBHUW0rOWdP?=
- =?utf-8?B?M2xuUVdxTEltR0g3N0RmeEJETXpSQXBoTFAzWGpUclVXUnZxSGVISTRVUDd4?=
- =?utf-8?B?dzNsQzh1eG5PdnFZQklJcWQyb2N3TWoxSmhMWjVTRkcrWjFtT2x3S0N3R25B?=
- =?utf-8?B?OHBRcW1WWVF5dEFDaU8raU9YRDErdTd1bnhCZldSeThqeXFkOXZ0RDVPZllY?=
- =?utf-8?B?M09TR1d1bmFkaU9td0djWU5DOHRSN0VJbTFwWDZNSS9YbndQbTVma2FtTCtX?=
- =?utf-8?Q?nrABFhpKEK7vu?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA3PR11MB9013.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dGR6S2N2VkdQeVRLUWw4RUVkSWFlTWllWkhUYklxVlVtWlBDTS9yTENiei92?=
- =?utf-8?B?OVMwWnJpU0Y2d0lqNCtkTE9wWndGZ0J2Nkx5djB3Z3hMcFNGSFA4Rm14SURW?=
- =?utf-8?B?Ky9vZk1OMzdsa2tEdWxwdWptL1A5Tkp3d0ZLRmM2blhDWGU3NGpmZ0VMbndU?=
- =?utf-8?B?TFpySVQydUk1SXBmQ3N4REg0eDRzTmxGcnNkY3NLQ2xKTUFzbFRsUGJEYlY1?=
- =?utf-8?B?UWJtQVZWT1VUQzlRYXp6eGxlYnNpbmFnTmlaTFl1NHgxUnhPNGRLQ0IvbTZx?=
- =?utf-8?B?dS9nYUhDRVpIYmZtaW5ML1dEUTVxMGNqS09SQ1R5R2x2QWlRQzlyS3ZpWXhH?=
- =?utf-8?B?Ris1WXFjSWJiQkhieGFWM1BQbkZWbjN5dUhUc2VVR0R6UEdsL0o0dnlNZVo3?=
- =?utf-8?B?b1BzUnRscmdRQkp4OVlNbkx3elBRWTArTDZ5TWF0SU54R0N2RTZBRjJITG4v?=
- =?utf-8?B?T1RBdkZwcllVTUVQMmloeG80WmJabzA0RjFNZkdvbmNsTndpOVdYYXp2dzB5?=
- =?utf-8?B?dGIwTTFob3FFRURON0NXUEZZTmN2YW5CVnR4VmVpOEtFM1B3NDUrakdRczc4?=
- =?utf-8?B?d2xDMGoxbisrMTdiUmJBOHhVN0RsWmNOUldDdWg5aW00RWFZRnJyTmxMY0Yz?=
- =?utf-8?B?MSt2djhEVlBkaFJJUzgvcEx6alZra2dLQTlMbXI0RlJxaFRRWXJrU3AySm1P?=
- =?utf-8?B?cG5takJ5U2E1R0pRbnFtY1dlMnhHNHV3Q2tpYWJOZnZHdVJPNlpHSElmaFRI?=
- =?utf-8?B?a1FmZlJGcTdWMUlHYmVSOXFHQ0hlRDRSVnptUll6empJcERYUjltWS8rcC9k?=
- =?utf-8?B?N3Ntbzh3cW54bXJYVmdQQXlMTUpYcXh2K0h4NzJzb2dUMk1Wb21UMmRZUVcv?=
- =?utf-8?B?RExoK3dzNVlrMGRSUFpSNWpRRkxKSUhTeU43aHR5d1lpUnl4QTB4UkVPRkY1?=
- =?utf-8?B?Z1lYMThXQldocnVhcng0QUdNQThmaGpVZ293UmZSR1pVeHNUUDAvaEd5M25C?=
- =?utf-8?B?emZrbnVaczVlaklZdlpNVzJiaWtNemZHZmJsNzlDOEZueUZ3NWdaYzBBeEFq?=
- =?utf-8?B?WE5MNGgrYjF2d01zVEZPTzRWb0J3RVloM25hL1ozZWRhYjZtLzl3aklzdFFN?=
- =?utf-8?B?eFpEdDZhSTRBQm9Qc0p0UitacTY5SU12dUJod0hCYzRJd2NlNHhDVlpGNThS?=
- =?utf-8?B?TTJrOVUvUzFHajFoZUE2ei9mcWd1SXcraXhIa1BKM1diemNINXB0b014RUQr?=
- =?utf-8?B?TEp0MHFqNy85TE42RDlETFhmSHhYRWlCRThBTFlXcDZHTlVNL05ZQVZXbnBF?=
- =?utf-8?B?NUNnbGhmME1RUk1FdWZtcFpoVCtqdlhUZ2l2NXRRMXNNTmtrZkxFS0xCM0RS?=
- =?utf-8?B?TmF2cXEzY3BrbDdBUExkRVpGVjU4TTVBWUVTWWRzdk41dGJac0NYckxHY2RO?=
- =?utf-8?B?OHliclE1S0tHMDJVRDdYdWdYc3RTWUVKOVhBK1d4dGloUzhGVUNOUHB6d3BL?=
- =?utf-8?B?NDArTEV2RlRha3JoRWd3UnBJeWdiNDhPbW1QVWxLTXQrT0J6UDhET1MxTmpR?=
- =?utf-8?B?N2R5cnBaVkNnSVl3UzEyTDE5ZDBjVDY0RXU5SGFrZHBFU3poLzJzY1ExVHQz?=
- =?utf-8?B?TloxUDZnejBQSUk0dnJlVGlDNUl5d1dJZ1d2WXZTUlV2L1l4U0lyM25uMlZ2?=
- =?utf-8?B?K0ZrUUhYYWY5VjZZNlFHTnZZMGxYblR0dU1CMU0vdFlZSGVjNm5LWTBRYjNN?=
- =?utf-8?B?VUNKTzByeWF5UHhuOWVPdVRlUXdYQ0dpUi9kb2VDYm0rcTdhQXQ0MzJQWGp6?=
- =?utf-8?B?UXBuR3ZUc2d1ZU5RcVBjc1B6dUNadHdVVkc0SklTT2YzZWNKMUpZSllPYTZH?=
- =?utf-8?B?QVlnc2RGZWNXcVFsN0pNMXdGSXU4aVFBUFdyWU5KcC94ZkFsNHZ1YmxIaElR?=
- =?utf-8?B?MEg5ZEM0S0Q2TXJGWjBERXpIRTFjUDZoZ25vbkM2MU4zcXJDbW1HVGxLaTF4?=
- =?utf-8?B?TWhDbzF4WHAyeTdzVGh2UjJMYlovK2dTeVBRdzdIZUNrRGIwbFlxYUhzYTV3?=
- =?utf-8?B?cnUxQmF6elJMbEIzdHR4MmtlU0xaVHJOY0lBcHVLZWQvaS9ORzgwVHFyTzB6?=
- =?utf-8?B?U3d2N04zY3pGV3NDR0NIQlJBVXhxS2dvK1V1eU82TVY0R3kwT3N6N1hVa240?=
- =?utf-8?B?M2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1019e605-dbef-4309-ea49-08ddaf2bb480
-X-MS-Exchange-CrossTenant-AuthSource: IA3PR11MB9013.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2025 12:20:40.5884
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zA+cbeSVVOSXV8Ws5cmlr/nI8QhhaR892cbw9Ybsbs9vBjEVVgYJUNcSysfCAts1Yx24pnHoulCtdHvHz/B1ZT9fNT9rjZlCg9xow4ypXmA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6023
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vm5OGfsTLL6JBXBT"
+Content-Disposition: inline
+In-Reply-To: <9fb5f018-7333-421b-8e2d-1f6eb98cffaa@intel.com>
 
 
+--vm5OGfsTLL6JBXBT
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Jun 2025 16:49:18 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
+Cc: Christian Heusel <christian@heusel.eu>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	regressions@lists.linux.dev, stable@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
+ Meteor Lake - 6.14.2
 
-On 6/18/2025 4:41 PM, Christian Heusel wrote:
-> On 25/06/18 03:28PM, Marek Marczykowski-Górecki wrote:
->> On Fri, May 09, 2025 at 02:17:32AM +0200, Marek Marczykowski-Górecki wrote:
->>> On Fri, May 09, 2025 at 01:28:36AM +0200, Marek Marczykowski-Górecki wrote:
->>>> On Fri, May 09, 2025 at 01:13:28AM +0200, Paul Menzel wrote:
->>>>> Dear Marek, dear Vitaly,
->>>>>
->>>>>
->>>>> Am 09.05.25 um 00:41 schrieb Marek Marczykowski-Górecki:
->>>>>> On Thu, May 08, 2025 at 09:26:18AM +0300, Lifshits, Vitaly
->>>>>>> On 4/21/2025 4:28 PM, Marek Marczykowski-Górecki wrote:
->>>>>>>> On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykowski-Górecki wrote:
->>>>>>>>> On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vitaly wrote:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> On 4/16/2025 3:43 PM, Marek Marczykowski-Górecki wrote:
->>>>>>>>>>> On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits, Vitaly wrote:
->>>>>>>>>>>> Can you please also share the output of ethtool -i? I would like to know the
->>>>>>>>>>>> NVM version that you have on your device.
->>>>>>>>>>>
->>>>>>>>>>> driver: e1000e
->>>>>>>>>>> version: 6.14.1+
->>>>>>>>>>> firmware-version: 1.1-4
->>>>>>>>>>> expansion-rom-version:
->>>>>>>>>>> bus-info: 0000:00:1f.6
->>>>>>>>>>> supports-statistics: yes
->>>>>>>>>>> supports-test: yes
->>>>>>>>>>> supports-eeprom-access: yes
->>>>>>>>>>> supports-register-dump: yes
->>>>>>>>>>> supports-priv-flags: yes
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Your firmware version is not the latest, can you check with the board
->>>>>>>>>> manufacturer if there is a BIOS update to your system?
->>>>>>>>>
->>>>>>>>> I can check, but still, it's a regression in the Linux driver - old
->>>>>>>>> kernel did work perfectly well on this hw. Maybe new driver tries to use
->>>>>>>>> some feature that is missing (or broken) in the old firmware?
->>>>>>>>
->>>>>>>> A little bit of context: I'm maintaining the kernel package for a Qubes
->>>>>>>> OS distribution. While I can try to update firmware on my test system, I
->>>>>>>> have no influence on what hardware users will use this kernel, and
->>>>>>>> which firmware version they will use (and whether all the vendors
->>>>>>>> provide newer firmware at all). I cannot ship a kernel that is known
->>>>>>>> to break network on some devices.
->>>>>>>>
->>>>>>>>>> Also, you mentioned that on another system this issue doesn't reproduce, do
->>>>>>>>>> they have the same firmware version?
->>>>>>>>>
->>>>>>>>> The other one has also 1.1-4 firmware. And I re-checked, e1000e from
->>>>>>>>> 6.14.2 works fine there.
->>>>>
->>>>>>> Thank you for your detailed feedback and for providing the requested
->>>>>>> information.
->>>>>>>
->>>>>>> We have conducted extensive testing of this patch across multiple systems
->>>>>>> and have not observed any packet loss issues. Upon comparing the mentioned
->>>>>>> setups, we noted that while the LAN controller is similar, the CPU differs.
->>>>>>> We believe that the issue may be related to transitions in the CPU's low
->>>>>>> power states.
->>>>>>>
->>>>>>> Consequently, we kindly request that you disable the CPU low power state
->>>>>>> transitions in the S0 system state and verify if the issue persists. You can
->>>>>>> disable this in the kernel parameters on the command line with idle=poll.
->>>>>>> Please note that this command is intended for debugging purposes only, as it
->>>>>>> may result in higher power consumption.
->>>>>>
->>>>>> I tried with idle=poll, and it didn't help, I still see a lot of packet
->>>>>> losses. But I can also confirm that idle=poll makes the system use
->>>>>> significantly more power (previously at 25-30W, with this option stays
->>>>>> at about 42W).
->>>>>>
->>>>>> Is there any other info I can provide, enable some debug features or
->>>>>> something?
->>>>>>
->>>>>> I see the problem is with receiving packets - in my simple ping test,
->>>>>> the ping target sees all the echo requests (and respond to them), but
->>>>>> the responses aren't reaching ping back (and are not visible on tcpdump
->>>>>> on the problematic system either).
->>>>>
->>>>> As the cause is still unclear, can the commit please be reverted in the
->>>>> master branch due adhere to Linux’ no-regression policy, so that it can be
->>>>> reverted from the stable series?
->>>>>
->>>>> Marek, did you also test 6.15 release candidates?
->>>>
->>>> The last test I did was on 6.15-rc3. I can re-test on -rc5.
->>>
->>> Same with 6.15-rc5.
->>
->> And the same issue still applies to 6.16-rc2. FWIW Qubes OS kernel has
->> this buggy patch revered and nobody complained (contrary to the version
->> with the patch included). Should I submit the revert patch?
+On Thu, Jun 19, 2025 at 03:20:35PM +0300, Lifshits, Vitaly wrote:
+>=20
+>=20
+> On 6/18/2025 4:41 PM, Christian Heusel wrote:
+> > On 25/06/18 03:28PM, Marek Marczykowski-G=C3=B3recki wrote:
+> > > On Fri, May 09, 2025 at 02:17:32AM +0200, Marek Marczykowski-G=C3=B3r=
+ecki wrote:
+> > > > On Fri, May 09, 2025 at 01:28:36AM +0200, Marek Marczykowski-G=C3=
+=B3recki wrote:
+> > > > > On Fri, May 09, 2025 at 01:13:28AM +0200, Paul Menzel wrote:
+> > > > > > Dear Marek, dear Vitaly,
+> > > > > >=20
+> > > > > >=20
+> > > > > > Am 09.05.25 um 00:41 schrieb Marek Marczykowski-G=C3=B3recki:
+> > > > > > > On Thu, May 08, 2025 at 09:26:18AM +0300, Lifshits, Vitaly
+> > > > > > > > On 4/21/2025 4:28 PM, Marek Marczykowski-G=C3=B3recki wrote:
+> > > > > > > > > On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykow=
+ski-G=C3=B3recki wrote:
+> > > > > > > > > > On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vit=
+aly wrote:
+> > > > > > > > > > >=20
+> > > > > > > > > > >=20
+> > > > > > > > > > > On 4/16/2025 3:43 PM, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> > > > > > > > > > > > On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits,=
+ Vitaly wrote:
+> > > > > > > > > > > > > Can you please also share the output of ethtool -=
+i? I would like to know the
+> > > > > > > > > > > > > NVM version that you have on your device.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > driver: e1000e
+> > > > > > > > > > > > version: 6.14.1+
+> > > > > > > > > > > > firmware-version: 1.1-4
+> > > > > > > > > > > > expansion-rom-version:
+> > > > > > > > > > > > bus-info: 0000:00:1f.6
+> > > > > > > > > > > > supports-statistics: yes
+> > > > > > > > > > > > supports-test: yes
+> > > > > > > > > > > > supports-eeprom-access: yes
+> > > > > > > > > > > > supports-register-dump: yes
+> > > > > > > > > > > > supports-priv-flags: yes
+> > > > > > > > > > > >=20
+> > > > > > > > > > >=20
+> > > > > > > > > > > Your firmware version is not the latest, can you chec=
+k with the board
+> > > > > > > > > > > manufacturer if there is a BIOS update to your system?
+> > > > > > > > > >=20
+> > > > > > > > > > I can check, but still, it's a regression in the Linux =
+driver - old
+> > > > > > > > > > kernel did work perfectly well on this hw. Maybe new dr=
+iver tries to use
+> > > > > > > > > > some feature that is missing (or broken) in the old fir=
+mware?
+> > > > > > > > >=20
+> > > > > > > > > A little bit of context: I'm maintaining the kernel packa=
+ge for a Qubes
+> > > > > > > > > OS distribution. While I can try to update firmware on my=
+ test system, I
+> > > > > > > > > have no influence on what hardware users will use this ke=
+rnel, and
+> > > > > > > > > which firmware version they will use (and whether all the=
+ vendors
+> > > > > > > > > provide newer firmware at all). I cannot ship a kernel th=
+at is known
+> > > > > > > > > to break network on some devices.
+> > > > > > > > >=20
+> > > > > > > > > > > Also, you mentioned that on another system this issue=
+ doesn't reproduce, do
+> > > > > > > > > > > they have the same firmware version?
+> > > > > > > > > >=20
+> > > > > > > > > > The other one has also 1.1-4 firmware. And I re-checked=
+, e1000e from
+> > > > > > > > > > 6.14.2 works fine there.
+> > > > > >=20
+> > > > > > > > Thank you for your detailed feedback and for providing the =
+requested
+> > > > > > > > information.
+> > > > > > > >=20
+> > > > > > > > We have conducted extensive testing of this patch across mu=
+ltiple systems
+> > > > > > > > and have not observed any packet loss issues. Upon comparin=
+g the mentioned
+> > > > > > > > setups, we noted that while the LAN controller is similar, =
+the CPU differs.
+> > > > > > > > We believe that the issue may be related to transitions in =
+the CPU's low
+> > > > > > > > power states.
+> > > > > > > >=20
+> > > > > > > > Consequently, we kindly request that you disable the CPU lo=
+w power state
+> > > > > > > > transitions in the S0 system state and verify if the issue =
+persists. You can
+> > > > > > > > disable this in the kernel parameters on the command line w=
+ith idle=3Dpoll.
+> > > > > > > > Please note that this command is intended for debugging pur=
+poses only, as it
+> > > > > > > > may result in higher power consumption.
+> > > > > > >=20
+> > > > > > > I tried with idle=3Dpoll, and it didn't help, I still see a l=
+ot of packet
+> > > > > > > losses. But I can also confirm that idle=3Dpoll makes the sys=
+tem use
+> > > > > > > significantly more power (previously at 25-30W, with this opt=
+ion stays
+> > > > > > > at about 42W).
+> > > > > > >=20
+> > > > > > > Is there any other info I can provide, enable some debug feat=
+ures or
+> > > > > > > something?
+> > > > > > >=20
+> > > > > > > I see the problem is with receiving packets - in my simple pi=
+ng test,
+> > > > > > > the ping target sees all the echo requests (and respond to th=
+em), but
+> > > > > > > the responses aren't reaching ping back (and are not visible =
+on tcpdump
+> > > > > > > on the problematic system either).
+> > > > > >=20
+> > > > > > As the cause is still unclear, can the commit please be reverte=
+d in the
+> > > > > > master branch due adhere to Linux=E2=80=99 no-regression policy=
+, so that it can be
+> > > > > > reverted from the stable series?
+> > > > > >=20
+> > > > > > Marek, did you also test 6.15 release candidates?
+> > > > >=20
+> > > > > The last test I did was on 6.15-rc3. I can re-test on -rc5.
+> > > >=20
+> > > > Same with 6.15-rc5.
+> > >=20
+> > > And the same issue still applies to 6.16-rc2. FWIW Qubes OS kernel has
+> > > this buggy patch revered and nobody complained (contrary to the versi=
+on
+> > > with the patch included). Should I submit the revert patch?
+>=20
+> It is not a good idea to revert this patch as most of the systems will
+> encounter the original issues (PHY access and packet loss). The reason I
+> first introduced this patch was because big vendors reported the packet l=
+oss
+> issue. You can refer to the following sightings:
+> https://answers.launchpad.net/ubuntu/+question/816003
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2066064
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D218869
 
-It is not a good idea to revert this patch as most of the systems will 
-encounter the original issues (PHY access and packet loss). The reason I 
-first introduced this patch was because big vendors reported the packet 
-loss issue. You can refer to the following sightings:
-https://answers.launchpad.net/ubuntu/+question/816003
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2066064
-https://bugzilla.kernel.org/show_bug.cgi?id=218869
+It would be useful to have any of those links in the original commit...
 
-As an intermediate solution we can either use a privileged flag to make 
-it configurable. I will share with you a patch that might fix the issue
-on your system that I would like you to try.
+> As an intermediate solution we can either use a privileged flag to make it
+> configurable. I will share with you a patch that might fix the issue
+> on your system that I would like you to try.
 
-FYI, we are currently investigating a similar issue that seems to be due 
-to a misconfiguration of the system firmware.
+Yes, that patch works :)
 
-> 
-> Just submit a revert then 👍 I have no authority here, but had good
-> experience with just sending a revert patch in the past 🤗
-> 
-> Cheers,
-> Chris
+> FYI, we are currently investigating a similar issue that seems to be due =
+to
+> a misconfiguration of the system firmware.
 
+Can you share some details? I can forward the info to firmware
+developers for this system (it's Dasharo - coreboot-based firmware).
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--vm5OGfsTLL6JBXBT
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhUI28ACgkQ24/THMrX
+1ywBswf/axdjrt0YTe8yVedsXB0BdcGcvKydnbQDSnI3snpPrt37TBA6mWrSTDRL
+V4iYeWjfNMn2kPGi2uRq7uzx/WRU/Fu/Uc/AAFD8sSQl4dw4fNUIIX/CZTmEcvH+
+kTUGDOhO6NPUCryKOHqSx8M3nMuIc+dHeQt6NrXhJMsp9t8NkS8cijtT7XuEHajv
+ESc7VynKZNzS5vG4Jx1FlCXh1b1P3cXAKsaV/7k5mEIkjxtph1w/2lOTczq4iFaD
+QDR6cW563uPfgdJLnk8uzKnLCjWfAZyCVJhTjpXUUIBIkVMf2Z/lnAl1Nh41/FIo
+T2AARajG/M4oB/SV7F4hu61RfJXv5g==
+=bkS0
+-----END PGP SIGNATURE-----
+
+--vm5OGfsTLL6JBXBT--
