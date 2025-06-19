@@ -1,266 +1,250 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88785221546
-	for <regressions@lists.linux.dev>; Thu, 19 Jun 2025 10:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E229E221D93;
+	Thu, 19 Jun 2025 12:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750327523; cv=none; b=JfDdd0018aTTXtAj2+8sfa/ybrPMMZhe+Tk7oy2E4OAYBgrsjV18TkTzl9oMTD+TPcgj2dsinEUUVnO6qy7KH6AV9KALS/ikhjUzOm+xcGS3+pNnzBGeTXQEigZCp/3sExo53vZYvFPCP8ftxjGczHLc/Trh1tKnt+jEQnXp+lA=
+	t=1750334876; cv=none; b=Fsq90lgEENQruPEd37mDvCoYnLwLbryfueaHCh9Fy/lvGuqyTE2wC6p23h5N9kRJBvphwRMMSYEwTLlFekMxQMkdtjznyTYfOD3YdxIzSkZ3IT20bxxGzqEtDqr2CPUQmeLBDDFmFOP3+6vDGSglBFokxSj8tG+AxS5RonuwrLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750327523; c=relaxed/simple;
-	bh=XpsFOqhbSXBJcN0+b8Kb6VUCTkjT6ZQFUIxB23zC8wo=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=A9MA5HDj/c2tXbSgu09bSREgFCCnht55QsqsbSWDcXR4Mdelt4MuJ/D+KJ4BMWyak5z4S0l45ocspndt3qD1anJ51WtUhWBg8dGJrntI8xonCdRL0WPLHH2HRggAuCD4xQf6DdGOD9uGzYgoypTOeqjrtrVPjnc/bBmsgkXPt/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=KwVByJXE; arc=none smtp.client-ip=212.122.41.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	s=arc-20240116; t=1750334876; c=relaxed/simple;
+	bh=gHMcK5FXmhzyrik19qB7bBfBSgqYIFyvtGRWEL15uTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lahY/Ethlh5JlSri+qpbJVdPTMJUERD6S1PobxITnWn2dL95KJ9loaXwf68nJr4XSBZoLDzVT58L655b/GMKdehi2WuvumAWWiZVLSnFyljA7X+4zD9dPRi35uLGnF0bhohHN+H0bXcFOgbnYaGB8JUBmVeY9qAtkEpnt1K1AZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qb4njTXl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="KwVByJXE"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1750327516;
-	bh=XpsFOqhbSXBJcN0+b8Kb6VUCTkjT6ZQFUIxB23zC8wo=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=KwVByJXEj1CtcruNaA0r1463bh6OuGJhglQdt6AjZ9VOUbQCpi8qJb+qQYPUKrNv0
-	 7Ly7/UJV1hMUm/ygzSOC6PEPuHZsV9NgZ2GjSePExkc7/qVbcXrVnssvKZo5R52DbF
-	 10Ssi4wtUDwPXbsNJpvcLBOd753Fh4L37IWfFTSs=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qb4njTXl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21257C4CEEA;
+	Thu, 19 Jun 2025 12:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750334875;
+	bh=gHMcK5FXmhzyrik19qB7bBfBSgqYIFyvtGRWEL15uTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qb4njTXlBRdKnJZpfl2+ni+KlTxDgPty/Jj+RuE3M2mI1M7ryKK0SqGS0QN9yT4K/
+	 0bfC3CYC93oJZRh9aBDoH7nAf94xizMrMGhNbTaSROnqhfqqrj9EKxlQtmCAyoCUCW
+	 xI28sVgB+JcPyVFWvdV+l0uGXhpuQf/FHLDz6/zviybDDKwBRwbNHbk0xQk0K6M7B9
+	 nVf7dIo1hHj8mQldXy+cSqwdczeDQzGZG61tx13gNJDN+mFZosLyeCURqcYPmU9wYw
+	 8XKNvX4PM6/TXG1BdoU9zLFCcfGRh+OWs1kOrXtv6OU/LZ0YBEuihOCbfokpwF8J+8
+	 qQEf3s0El/isg==
+Date: Thu, 19 Jun 2025 14:07:52 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Francesco Dolcini <francesco@dolcini.it>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
+Message-ID: <20250619-ubiquitous-annoying-tamarin-bbfdad@houat>
+References: <20250612081834.GA248237@francesco-nb>
+ <CAN9Xe3RFEXZuWTZB5E1tJdjXc9o_hB1ArgA5SvqbDUBkwYea8w@mail.gmail.com>
+ <20250618105158.06e42668@booty>
+ <20250618-fantastic-brown-elephant-df0ae4@houat>
+ <CAN9Xe3RpkBx8k+=VqDFh1n+-35gHM_L3UQvCJH58bBPF6pPuuA@mail.gmail.com>
+ <CAN9Xe3R96sTf911-n4iX=PME1zfO4Z+XojQSyK4OF8qw7vL7hA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: temporary hung tasks on XFS since updating to 6.6.92
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <aFM1rGs1zW52M8ov@dread.disaster.area>
-Date: Thu, 19 Jun 2025 12:05:06 +0200
-Cc: Carlos Maiolino <cem@kernel.org>,
- stable@vger.kernel.org,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- regressions@lists.linux.dev
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="2h5cadptvtmbwers"
+Content-Disposition: inline
+In-Reply-To: <CAN9Xe3R96sTf911-n4iX=PME1zfO4Z+XojQSyK4OF8qw7vL7hA@mail.gmail.com>
+
+
+--2h5cadptvtmbwers
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <D2237B2F-0FA8-44EB-A5B3-E7BA4512A872@flyingcircus.io>
-References: <M1JxD6k5Sdxnq-pztTdv_FZwURA8AaT9qWNFUYGCmhiTRQFESfH7xqdOqQjz-oKQiin8pQckoNhfNyCHu-cxEQ==@protonmail.internalid>
- <14E1A49D-23BF-4929-A679-E6D5C8977D40@flyingcircus.io>
- <umhydsim2pkxhtux5hizyahwd6hy36yct5znt6u6ewo4fojvgy@zn4gkroozwes>
- <Z9Ih4yZoepxhmmH5Jrd1bCz35l6iPh5g2J61q2NR7loEdQb_aRquKdD1xLaE_5SPMlkBM8zLdVfdPvvKuNBrGQ==@protonmail.internalid>
- <3E218629-EA2C-4FD1-B2DB-AA6E40D422EE@flyingcircus.io>
- <g7wcgkxdlbshztwihayxma7xkxe23nic7zcreb3eyg3yeld5cu@yk7l2e4ibajk>
- <01751810-C689-4270-8797-FC0D632B6AB6@flyingcircus.io>
- <aFHsJmPhK6hBfEPC@dread.disaster.area>
- <E4F29FAF-D17F-48BC-9F13-05F04C0C2AF5@flyingcircus.io>
- <aFM1rGs1zW52M8ov@dread.disaster.area>
-To: Dave Chinner <david@fromorbit.com>
+Subject: Re: drm/panel/panel-simple v6.16-rc1 WARNING regression
+MIME-Version: 1.0
 
-Ouch, thanks for that explanation. I now get why and how this really is =
-either
-a log-related or even general dirty/writeback flushing issue. We =
-definitely
-have some quite sub-optimal settings here - so I=E2=80=99m revisiting =
-our dirty/writeback=20
-settings and XFS journal sizes. My understanding is that (in our
-situation) those should be sized based on the backing storage =
-performance -
-so typically we=E2=80=99ll end up with fixed sizes independent of the =
-available
-RAM or volume size that will guarantee an upper bound for worst case
-of flushing/processing.
+On Wed, Jun 18, 2025 at 04:45:31PM -0400, Anusha Srivatsa wrote:
+> On Wed, Jun 18, 2025 at 11:48=E2=80=AFAM Anusha Srivatsa <asrivats@redhat=
+=2Ecom>
+> wrote:
+> > On Wed, Jun 18, 2025 at 4:23=E2=80=AFAM Maxime Ripard <mripard@kernel.o=
+rg> wrote:
+> >
+> >> On Wed, Jun 18, 2025 at 10:51:58AM +0200, Luca Ceresoli wrote:
+> >> > Hello Anusha, Francesco,
+> >> >
+> >> > On Tue, 17 Jun 2025 11:17:20 -0500
+> >> > Anusha Srivatsa <asrivats@redhat.com> wrote:
+> >> >
+> >> > > On Thu, Jun 12, 2025 at 3:24=E2=80=AFAM Francesco Dolcini <
+> >> francesco@dolcini.it>
+> >> > > wrote:
+> >> > >
+> >> > > > Hello all,
+> >> > > >
+> >> > > > Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new
+> >> allocation in
+> >> > > > place of devm_kzalloc()")
+> >> > > > from 6.16-rc1 introduced a regression with this warning during p=
+robe
+> >> > > > with panel dpi described in the DT.
+> >> > > >
+> >> > > > A revert solves the issue.
+> >> > > >
+> >> > > > The issue is that connector_type is set to DRM_MODE_CONNECTOR_DP=
+I in
+> >> > > > panel_dpi_probe() that after that change is called after
+> >> > > > devm_drm_panel_alloc().
+> >> > > >
+> >> > > > I am not sure if there are other implication for this change in =
+the
+> >> call
+> >> > > > ordering, apart the one that triggers this warning.
+> >> > > >
+> >> > > > [   12.089274] ------------[ cut here ]------------
+> >> > > > [   12.089303] WARNING: CPU: 0 PID: 96 at
+> >> > > > drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0=
+xb8
+> >> > > > [   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa
+> >> > > > gpu_sched panel_simple imx6_media(C) imx_media_common
+> >> > > > (C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6
+> >> autofs4
+> >> > > > [   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted:=
+ G
+> >> > > >  C          6.16.0-rc1+ #1 PREEMPT
+> >> > > > [   12.157446] Tainted: [C]=3DCRAP
+> >> > > > [   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Dev=
+ice
+> >> Tree)
+> >> > > > [   12.166953] Workqueue: events_unbound deferred_probe_work_func
+> >> > > > [   12.172805] Call trace:
+> >> > > > [   12.172815]  unwind_backtrace from show_stack+0x10/0x14
+> >> > > > [   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
+> >> > > > [   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
+> >> > > > [   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
+> >> > > > [   12.195567]  warn_slowpath_fmt from
+> >> devm_drm_of_get_bridge+0xac/0xb8
+> >> > > > [   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x=
+164
+> >> > > > [   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
+> >> > > > [   12.213220]  platform_probe from really_probe+0xd0/0x3a4
+> >> > > > [   12.218551]  really_probe from __driver_probe_device+0x8c/0x1=
+d4
+> >> > > > [   12.224486]  __driver_probe_device from
+> >> driver_probe_device+0x30/0xc0
+> >> > > > [   12.230942]  driver_probe_device from
+> >> __device_attach_driver+0x98/0x10c
+> >> > > > [   12.237572]  __device_attach_driver from
+> >> bus_for_each_drv+0x90/0xe4
+> >> > > > [   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+> >> > > > [   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
+> >> > > > [   12.255285]  bus_probe_device from
+> >> deferred_probe_work_func+0x8c/0xcc
+> >> > > > [   12.261739]  deferred_probe_work_func from
+> >> process_one_work+0x154/0x2dc
+> >> > > > [   12.268371]  process_one_work from worker_thread+0x250/0x3f0
+> >> > > > [   12.274043]  worker_thread from kthread+0x12c/0x24c
+> >> > > > [   12.278940]  kthread from ret_from_fork+0x14/0x28
+> >> > > > [   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
+> >> > > > [   12.288720] 9fa0:                                     00000000
+> >> 00000000
+> >> > > > 00000000 00000000
+> >> > > > [   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000
+> >> 00000000
+> >> > > > 00000000 00000000
+> >> > > > [   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013
+> >> 00000000
+> >> > > > [   12.312050] ---[ end trace 0000000000000000 ]---
+> >> > > >
+> >> > > > #regzbot ^introduced: de04bb0089a96cc00d13b12cbf66a088befe3057
+> >> > > >
+> >> > > > Any advise?
+> >> > > >
+> >> > > > Hey Francesco!
+> >> > >
+> >> > > This mail reached my spam and I hadn't realised till today. Thanks=
+ for
+> >> > > bringing this to attention.
+> >> > >
+> >> > > Thinking out loud here: If we called dpi_probe() before allocating=
+ the
+> >> > > panel using devm_drm_panel_alloc()
+> >> > > then we would have the connector type. But  dpi_probe() needs the
+> >> panel to
+> >> > > be allocated....
+> >> >
+> >> > Reading the panel-simple.c code, the handling of the panel_dsi
+> >> > descriptor feels a bit hacky, and the recent change to
+> >> > devm_drm_panel_alloc() breaks it easily. Perhaps it would be cleaner=
+ to
+> >> > assess the whole descriptor before ding any allocation/init.
+> >> >
+> >> > You're right tat panel_dpi_probe() needs the panel, but it's only at=
+ the
+> >> > very end, to assign the descriptor:
+> >> >
+> >> >   panel->desc =3D desc;
+> >> >
+> >> > I think a good fix would be to clean it up by having:
+> >> >
+> >> >  * panel_dpi_probe() not take a panel pointer but rather returning a
+> >> >    filled descriptor
+> >> >  * panel_simple_probe() call panel_dpi_probe() early [before
+> >> >    devm_drm_panel_alloc()] and get the filled descriptor
+> >> >  * call devm_drm_panel_alloc() with that descriptor in the panel-dsi
+> >> >    case, or with the good old descriptor otherwise
+> >> >
+> >> > As a good side effect, it would get rid of a case where
+> >> > devm_drm_panel_alloc() is called with a Unknown connector type.
+> >> >
+> >> > Anusha, does it look like a good plan?
+> >>
+> >> It is, and I'd even go one step further. Like you said, panel_dpi_probe
+> >> kind of exists to allocate and initialize the panel descriptor, and is
+> >> called on the descriptor being equal to the (uninitialized) panel_dpi
+> >> global variable.
+> >>
+> >> We should also get rid of that hack, so do something like creating a
+> >> function that returns the descriptor, and is indeed called first in
+> >> panel_simple_probe. It first calls of_device_get_match_data(), and if
+> >> there's no match, and if the device is compatible with panel-dpi, then
+> >> it calls panel_dpi_probe (we should probably change that name too). Th=
+at
+> >> way, we can get rid of the panel_dpi variable entirely.
+> >>
+> >>
+> > Thanks Luca and Maxime.
+> > To summarize:
+> > 1. add a function like of_device_get_simple_dsi_match_data() which calls
+> > of_device_get_match_data(). if the device is compatible with panel-dpi,
+> > call
+> > panel-dpi-probe()
+> > 3. Change panel_dpi_probe() to return the panel descriptor
+> > 4. call devm_drm_panel_alloc()
+> >
+> >
+> Looking deeper it looks like I have some gaps in my understanding.
+> panel_simple_platform_probe()
+> already checks of_device_get_match_data() to call panel_simple_probe(). At
+> this point the change suggested is
+> to have to call it again to check if it is compatible with panel-dpi? If I
+> understand correctly panel_dpi is a fallback
+> and the only place the decision to probe panel_dpi() is with the hack.
 
-However, I=E2=80=99m still a bit puzzled why this has escalated to =
-user-visible
-incidents in the last weeks - we=E2=80=99ve been running with those =
-sub-optimal
-settings for a very long time and haven=E2=80=99t had these issues =
-before.
+I'm sure you can figure something out. And feel free to send me patches
+for a private review if you feel more comfortable that way.
 
-I took some time to educate myself further around the writeback =
-behaviour
-and noticed the special relationship with that keeps getting mentioned
-between writeback and cgroups and those are in play with our setup, so
-maybe it=E2=80=99s worth another look.=20
+Maxime
 
-Whenever this issue hits us, the system is running one of two system
-management tasks where one performs garbage collection on the nix store
-(which typically contains multiple generations of all packages on the
-system) and the other builds out a new system config. Those jobs are run =
-in
-separate cgroups and throttled at 31 RW IOPS (12.5% of 250) and 188 RW =
-IOPS
-(75% of 250). Those jobs aren=E2=80=99t time critical at all, so we want =
-to leave
-sufficient IOPS to not starve the actual workload.
+--2h5cadptvtmbwers
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Those jobs run relatively often without causing issues, but then =
-they=E2=80=99re
-also lazy. Still, even when they do work they do not always cause those
-issues. If they do, then i can see a sudden spike in our telemetry for
-dirty pages (around 300-400 MiB typically) followed by a jump in =
-writeback
-pages (which is typically a bit higher: around 200 MiB more than dirty =
-pages).
+-----BEGIN PGP SIGNATURE-----
 
-So far so good - that=E2=80=99s expected behaviour: one of the jobs =
-might be deleting
-a lot of files - so that=E2=80=99s lots of metadata operations in the =
-journal,
-and the other typically extracts archives, so many new files with =
-different sizes.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFP9mAAKCRAnX84Zoj2+
+dmGUAX9lkPTmSof8rdAbsqbqutnR0VMhpMXTErckzdIjfn52jPzCi2lwkEdOTSO1
+ciYHGK8Bf3UtW+YQPLiStMW75b+Py0Ditlm6IFforxt788D1036NSLEgfof4TYKB
+e6xyo+RzbQ==
+=tCEP
+-----END PGP SIGNATURE-----
 
-Here=E2=80=99s why I think there might be a bug lurking (or I=E2=80=99m =
-still missing something):
-
-When the journal in a volume is relatively small (10 MiB) but the amount =
-of
-data in writeback is around 450 MiB this indicates regular file content
-being flushed. I only see 3 mib/s at around 100 iops (indicating average =
-32k writes).
-
-The 100 IOPS is a weird number here. Especially as at this time customer =
-traffic
-is impacted and apparently completely stalled. My impression from =
-reading about
-the writeback mechanisms and your description of journal flushes was =
-that=20
-none of the flushing operations should cause a full stall until the =
-caches or
-journal is empty, but allow traffic to trickle, roughly at the backing =
-storage
-speed. Of course, if the system adds more traffic then is being written =
-out
-then it would still starve.
-
-(I=E2=80=99m guessing that the journal flush doesn=E2=80=99t go through =
-the writeback cache.
-So maybe the journal isn=E2=80=99t really involved here at all.)
-
-So, could it be that there is some (faulty) relationship with the cgroup
-throttling interacting with the writeback and/or journal flush that =
-causes=20
-a) the available IOPS from the backing storage not being properly used =
-and
-b) other traffic being stalled that shouldn=E2=80=99t be?
-
-How would I go about proving that?
-
-I tried again to replicate the worst case traffic patterns and ran=20
-
-fio --rw=3Drandwrite --name=3Dsynctest --bs=3D512 --direct=3D1 =
---numjobs=3D1 --ioengine=3Dlibaio --iodepth=3D8 --runtime=3D600 =
---fdatasync=3D8 --size=3D10m
-
-which gave me consistent ~250 IOPS and finished in around 80 seconds.=20
-
-I=E2=80=99m going to try to find a machine that exhibits the issues most =
-often
-and will a) apply lower bounds for the writeback cache, b) remove the
-cgroup limits and c) both.
-
-Thanks again,
-Christian
-
-> On 18. Jun 2025, at 23:54, Dave Chinner <david@fromorbit.com> wrote:
->=20
-> On Wed, Jun 18, 2025 at 03:01:26PM +0200, Christian Theune wrote:
->> [=E2=80=A6]
->> Yeah, I=E2=80=99m very wary of reporting these tracebacks as =
-potential
->> bugs because of them easily being just a hint on slow storage. My
->> problem here is that I can=E2=80=99t point to anything that says the
->> storage would have been slow.
->>=20
->> I=E2=80=99ve gone through all metrics and logs on the KVM servers as =
-well
->> as the Ceph servers and they=E2=80=99ve been performing completely at
->> baseline level regarding errors, queues, iops, latency.
->>=20
->> I=E2=80=99ve done a measurement to try to emulate those accesses by
->> running
->>=20
->> $ fio --rw=3Drandrw --name=3Dsynctest --bs=3D4k --direct=3D1 =
---numjobs=3D1
->> --ioengine=3Dlibaio --iodepth=3D1 --runtime=3D600 --write_barrier=3D1
->> --size=3D60m
->>=20
->> I hope this is sufficiently comparable behaviour (maybe with a
->> different read/write ratio instead of 0.5?) to what XFS log
->> flushing does. This resulted in [1].
->=20
-> Not really comparable. "write-barrier" is not the option for data
-> integrity - fdatasync=3D8 would be closer, but even that doesn't
-> replicate the cache flush/fua write pattern of journal IOs.
->=20
-> Also, journals are write only and sequential, not random. The
-> iodepth is typically 8 when fully busy, and the IO size ranges from
-> single sector to logbsize (from /proc/mounts) depending on the
-> workload.
->=20
-> Metadata writeback to clear the journal, OTOH, is larger random
-> 4kB writes with no data integrity implied (the journal cache flush
-> mechanism I mention above handles that).
->=20
->=20
->> My interpretation of this measurement (and the VM showed no illnes
->> while this was running over 10 minutes): the VM is throttled at
->> 250 IOPs and is reporting back after 10 minutes of 4k random
->> writes with average IOPS of exactly 250. The latencies are a bit
->> varied, this could be due to Qemu throttling. The max latency was
->> 133ms, the average 2ms. This is on a 10g storage network with Ceph
->> that requires another network roundtrip for replication before
->> ACKing a write.
->=20
-> Oh. Ceph.
->=20
-> Slow random write performance on ceph rbd devices seem to be a
-> recurring problem - the filesystem is way faster than the storage,
-> and by the time the filesystem throttles on journal space (even with
-> small logs), the backlog of IO cannot be drained very quickly and so
-> everything stalls.
->=20
-> IOWs, a hard cap of 250 random 4kB write IOPS is extremely slow and
-> a likely cause of your random stall problems. When you have lots of
-> dirty metadata in memory, then it can take minutes of IO for
-> writeback to free journal space to allow progress to be made again.
->=20
-> For example, modify an inode (e.g. chmod), and that only takes ~250
-> bytes of journal space to record. So a 10MB journal can hold ~40,000
-> dirty inodes. If we assume that there maximum locality in these
-> inodes (i.e. best case writeback IO patterns) we have ~1300 x 16kB
-> writes to perform to empty the journal.
->=20
-> Hence there's up to 10-15s of writeback IO to "unstall" a small
-> journal. Worst case, it's one 16kB write per inode, and that means
-> potential for multiple minutes of writeback to unstall a 10MB
-> journal. Now consider a 64MB journal, and the potential stalls
-> waiting on metadata writeback are much, much worse...
->=20
-> These stalls will come and go with workload peaks. The filesystem
-> can soak up some of the peak into memory and the journal, then it
-> throttles to storage speed and that's where the hung task warnings
-> fire. Once the storage catches up, everything goes back to "normal"
-> latencies.
->=20
->> I=E2=80=99m out of ideas for now, I=E2=80=99ll keep thinking about =
-this. If anyone
->> has any pointer for further tests in any direction, I=E2=80=99m open =
-to
->> anything. ;)
->=20
-> Don't use hard throttling on IOPS rates. Measure IO rates over a
-> longer period of time (e.g. rolling average over a minute) so that
-> the storage can rapidly sink the short term IO peaks that occur when
-> the workload runs the journal out of space and the fs throttles it
-> whilst metadata writeback makes progress.
->=20
-> -Dave.
-> --=20
-> Dave Chinner
-> david@fromorbit.com
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+--2h5cadptvtmbwers--
