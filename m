@@ -1,309 +1,182 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A87C21CC79
-	for <regressions@lists.linux.dev>; Thu, 19 Jun 2025 14:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3D524500E
+	for <regressions@lists.linux.dev>; Fri, 20 Jun 2025 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750344567; cv=none; b=XzIF5WmkIG7y1MCC7jczxv9+5QjeWGlYQOdpY3hKB2yS6RVpG1PJGGBBVc5PSopPvxHLO679BArg6ZM8lbNS2DJux6QP9b8SMKx5eKvXk4rcyx5iJ7kSacCVV8fgzPawUXmtMMLhdhqE5+q04amayWsPZMdUvAUZihdQI6u4UhY=
+	t=1750420557; cv=none; b=pYe2YXdnwrieZO4S/B+eaQb8sUWpQr3pFqrknrda33j1IGu+1JjwbPrUIxbOs4G1oULoJfOrVQCdyU1dfUhKnV9TO4T8TzEWEs35juTSPvA/ltSzNz2JT8YgwreVy4TEwlwjUSjz9TI9XA5ZV6QJdd+8L5GrFDazylYXLpX43SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750344567; c=relaxed/simple;
-	bh=RU1TZdvqOh6TP7GFugXAi4y1pUWPS4B3n+i6H5qQqzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QdHaLNdCLqaw9O77Y49/vo8XHSCJXD7GZ74clOqt8c+8WPYNZP1pm1sySBHrXsZ61ZTRWmgrxo0xTpVmnZW6uo2pwRcrVfcxmQ3PnXBL6vT8EgWwp4i8qL1Y/ur1xipryI1e6HAtSW9r1XVp9K6D34RztXZofxWGMwkJczGgk/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=gRjTxKXa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iPTH6ECA; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1750420557; c=relaxed/simple;
+	bh=bz1RmF0ne1dy26kmvs7vVr7cqD7gXbPeDxg9l6yhPDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fqEDTSCmNj8XWgOM9iiIucB4bp+5aGPb1O4Aw3+T+zn6afRkY13ew368eMWMR1cU9zzxvzFli71oufmWihRpOmIEIkdp4behZocnq3qYq7SJSSJ7Kds5qShXeA9pGvOSDDRXbJhhZ0UXCV0yK5muylqNwXU3WZqRahwgFOt4cac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CvQkZyeu; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="gRjTxKXa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iPTH6ECA"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 581E4114020C;
-	Thu, 19 Jun 2025 10:49:24 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Thu, 19 Jun 2025 10:49:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750344564;
-	 x=1750430964; bh=bJZoX1H0pKg0M1SA/qWQWR7S8HdwU3H818dBwncJTdc=; b=
-	gRjTxKXa7EdZ4uJc6H+pm7CbN5FBQHL15xnfO/fGHk7dALRSpHGbMhV4avHhue87
-	pZlE7Gu6B21nUzZB5pavhcr5OTavYOmn48ofCng6C89hkpX5fQ/dU1zzLsbSiEk5
-	HmG8Bawu8LuUbPtIkOzqM6SQgI9lS+bXkEfyVkFCJi/9dumFfKrdG4Z4XC+xK4w5
-	ZmRnlB7Z0cy8HCl9AR4FQfd8Oa155Kuqz711wdKts1hYq4sT0Eq8UAwPCjjcFKKo
-	FBnwcQkynhl1OlBIKIXkRsqTCo4IZwroPRn/clzJMpTJGbi2gzFSosfJOrm94LYq
-	l44aKq+9AJxKluDYsDok2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750344564; x=1750430964; bh=bJZoX1H0pKg0M1SA/qWQWR7S8HdwU3H818d
-	BwncJTdc=; b=iPTH6ECAQoWMY49Z8UaWWfUnvlldg3wFE6G50XJv0/Wj8W07mSn
-	XY5Syj7xDtGWCCDDr/LddbbemYIJgvoU3Yr4WxrI4hUF2NGspsdv3zSgZEVKPHDa
-	x9Ewh9MdGlA/uZMA+GUhSbBygjUKjxNhNRlycrFZIMBE+eMY+iklJ0urU6K8c3js
-	oDV58o+zO+XqQIfAVEa6AXc8lZpBEoG+vZt6RFSUYNmFMHdNubrIng3R02P20Jj6
-	u/WsLZMiBsy76X7fGYMoKv2brBjN94lkcLLmKCxvhlBNed+VkFGGR+0th9wKD6oc
-	nZDkuXbotYM6vHRoDyr3GhHq6UV+8qOf+ww==
-X-ME-Sender: <xms:cyNUaEnYa0G1sUb84ZBhFlK4VUI7EnqZb09Th03Ch3b__EKDbZfkZA>
-    <xme:cyNUaD3JfrhPZhAYb_im_3cEsgIMcIR4uwiVk8XU57QqPDTmjMZ5IW9VTRpHFChca
-    -Xc5QZbI_4DxA>
-X-ME-Received: <xmr:cyNUaCrVZNisjWjtpJLFBwpZlx_bqvLZOROBm1V6HEJVhgEJ6Vf4YvrwGLffyBmRMU6PcMdDhn2LLTAwtkiciuaSy0K5SivFwvA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdehkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
-    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
-    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepheduvdfghfet
-    gefftdfhfeethfehhefhtefgvefhvdetkeekkeduhedtgeeiieehnecuffhomhgrihhnpe
-    hlrghunhgthhhprggurdhnvghtpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhish
-    hisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepvhhithgrlhihrdhlihhfshhhihhtshesihhnth
-    gvlhdrtghomhdprhgtphhtthhopegthhhrihhsthhirghnsehhvghushgvlhdrvghupdhr
-    tghpthhtohepphhmvghniigvlhesmhholhhgvghnrdhmphhgrdguvgdprhgtphhtthhope
-    grnhhthhhonhihrdhlrdhnghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehp
-    rhiivghmhihslhgrfidrkhhithhsiigvlhesihhnthgvlhdrtghomhdprhgtphhtthhope
-    hnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehinhhtvghl
-    qdifihhrvgguqdhlrghnsehlihhsthhsrdhoshhuohhslhdrohhrghdprhgtphhtthhope
-    hrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohep
-    shhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:cyNUaAnrDe5gOluv7mW957b8hkPn-cs_e4l4l_hd67YhsdAQtUd_yg>
-    <xmx:cyNUaC3tppNB8Tf7EBGAdh3Lj7Y3neFd0u-PJVqLE7hWQE-OLXCA3g>
-    <xmx:cyNUaHsGjAPJ0XRwSVxI2FMYnwLQD7wl-HlbaIrc4VXiI_yLMtkolA>
-    <xmx:cyNUaOXVcmZYTyvSqiDSrseLZCxfNBnn0urA6Rg9YdpFvsbWI0Mjpg>
-    <xmx:dCNUaJ12bXse_-m0zr5Z1uEkvH76zhMMJ9d66p-WRWHZpM_FKcqjxUym>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 19 Jun 2025 10:49:20 -0400 (EDT)
-Date: Thu, 19 Jun 2025 16:49:18 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Cc: Christian Heusel <christian@heusel.eu>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
-Message-ID: <aFQjby7mQxvShBm7@mail-itl>
-References: <aAZF0JUKCF0UvfF6@mail-itl>
- <aAZH7fpaGf7hvX6T@mail-itl>
- <e0034a96-e285-98c8-b526-fb167747aedc@intel.com>
- <aB0zLQawNrImVqPE@mail-itl>
- <c918d4f5-ee53-4f64-b152-cea0f6d99c4f@molgen.mpg.de>
- <aB0-JLSDT03fosST@mail-itl>
- <aB1JnJG_CH5vxAsw@mail-itl>
- <aFK_ExmGqmi-oQby@mail-itl>
- <87584d6f-5a31-47aa-bba3-1aadfc18fbe6@heusel.eu>
- <9fb5f018-7333-421b-8e2d-1f6eb98cffaa@intel.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CvQkZyeu"
+Received: from [192.168.178.76] (host-212-18-30-247.customer.m-online.net [212.18.30.247])
+	(Authenticated sender: g.gottleuber@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 5CE232FC007C;
+	Fri, 20 Jun 2025 13:55:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1750420544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MO78KbUAIvE06t0LdPjySs+xxyAgHTWk9FjQUky7GBg=;
+	b=CvQkZyeuOaEMvd4IAB2YeZAFxWcuvq13KUo9ffknB+8+0jFnBoPCc+q6msywkwYcyzUh/M
+	LIgrZzIp48VzutnBXUHCP5l0FNMx+6AtlZA1MH3xzMimvS+y8ap0PQ4YFARHEU3zoNy6XB
+	W3ARagkHuENBzyL/iu4A6mPzPoJTZW4=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=g.gottleuber@tuxedocomputers.com smtp.mailfrom=g.gottleuber@tuxedocomputers.com
+Message-ID: <0d86a892-ebfb-40b9-b84c-ad8075905cd8@tuxedocomputers.com>
+Date: Fri, 20 Jun 2025 13:55:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vm5OGfsTLL6JBXBT"
-Content-Disposition: inline
-In-Reply-To: <9fb5f018-7333-421b-8e2d-1f6eb98cffaa@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/amd/display: Radeon 840M/860M: bisected suspend
+ crash
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Alex Hung <alex.hung@amd.com>, ggo@tuxedocomputers.com,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Werner Sembach <wse@tuxedocomputers.com>,
+ Christoffer Sandberg <cs@tuxedocomputers.com>
+References: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
+ <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
+ <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
+Content-Language: en-US
+From: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>
+Autocrypt: addr=g.gottleuber@tuxedocomputers.com; keydata=
+ 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
+ bsxTTcOuRnk=
+In-Reply-To: <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
---vm5OGfsTLL6JBXBT
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Jun 2025 16:49:18 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Cc: Christian Heusel <christian@heusel.eu>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [Intel-wired-lan] [REGRESSION] e1000e heavy packet loss on
- Meteor Lake - 6.14.2
 
-On Thu, Jun 19, 2025 at 03:20:35PM +0300, Lifshits, Vitaly wrote:
->=20
->=20
-> On 6/18/2025 4:41 PM, Christian Heusel wrote:
-> > On 25/06/18 03:28PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > On Fri, May 09, 2025 at 02:17:32AM +0200, Marek Marczykowski-G=C3=B3r=
-ecki wrote:
-> > > > On Fri, May 09, 2025 at 01:28:36AM +0200, Marek Marczykowski-G=C3=
-=B3recki wrote:
-> > > > > On Fri, May 09, 2025 at 01:13:28AM +0200, Paul Menzel wrote:
-> > > > > > Dear Marek, dear Vitaly,
-> > > > > >=20
-> > > > > >=20
-> > > > > > Am 09.05.25 um 00:41 schrieb Marek Marczykowski-G=C3=B3recki:
-> > > > > > > On Thu, May 08, 2025 at 09:26:18AM +0300, Lifshits, Vitaly
-> > > > > > > > On 4/21/2025 4:28 PM, Marek Marczykowski-G=C3=B3recki wrote:
-> > > > > > > > > On Mon, Apr 21, 2025 at 03:19:12PM +0200, Marek Marczykow=
-ski-G=C3=B3recki wrote:
-> > > > > > > > > > On Mon, Apr 21, 2025 at 03:44:02PM +0300, Lifshits, Vit=
-aly wrote:
-> > > > > > > > > > >=20
-> > > > > > > > > > >=20
-> > > > > > > > > > > On 4/16/2025 3:43 PM, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> > > > > > > > > > > > On Wed, Apr 16, 2025 at 03:09:39PM +0300, Lifshits,=
- Vitaly wrote:
-> > > > > > > > > > > > > Can you please also share the output of ethtool -=
-i? I would like to know the
-> > > > > > > > > > > > > NVM version that you have on your device.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > driver: e1000e
-> > > > > > > > > > > > version: 6.14.1+
-> > > > > > > > > > > > firmware-version: 1.1-4
-> > > > > > > > > > > > expansion-rom-version:
-> > > > > > > > > > > > bus-info: 0000:00:1f.6
-> > > > > > > > > > > > supports-statistics: yes
-> > > > > > > > > > > > supports-test: yes
-> > > > > > > > > > > > supports-eeprom-access: yes
-> > > > > > > > > > > > supports-register-dump: yes
-> > > > > > > > > > > > supports-priv-flags: yes
-> > > > > > > > > > > >=20
-> > > > > > > > > > >=20
-> > > > > > > > > > > Your firmware version is not the latest, can you chec=
-k with the board
-> > > > > > > > > > > manufacturer if there is a BIOS update to your system?
-> > > > > > > > > >=20
-> > > > > > > > > > I can check, but still, it's a regression in the Linux =
-driver - old
-> > > > > > > > > > kernel did work perfectly well on this hw. Maybe new dr=
-iver tries to use
-> > > > > > > > > > some feature that is missing (or broken) in the old fir=
-mware?
-> > > > > > > > >=20
-> > > > > > > > > A little bit of context: I'm maintaining the kernel packa=
-ge for a Qubes
-> > > > > > > > > OS distribution. While I can try to update firmware on my=
- test system, I
-> > > > > > > > > have no influence on what hardware users will use this ke=
-rnel, and
-> > > > > > > > > which firmware version they will use (and whether all the=
- vendors
-> > > > > > > > > provide newer firmware at all). I cannot ship a kernel th=
-at is known
-> > > > > > > > > to break network on some devices.
-> > > > > > > > >=20
-> > > > > > > > > > > Also, you mentioned that on another system this issue=
- doesn't reproduce, do
-> > > > > > > > > > > they have the same firmware version?
-> > > > > > > > > >=20
-> > > > > > > > > > The other one has also 1.1-4 firmware. And I re-checked=
-, e1000e from
-> > > > > > > > > > 6.14.2 works fine there.
-> > > > > >=20
-> > > > > > > > Thank you for your detailed feedback and for providing the =
-requested
-> > > > > > > > information.
-> > > > > > > >=20
-> > > > > > > > We have conducted extensive testing of this patch across mu=
-ltiple systems
-> > > > > > > > and have not observed any packet loss issues. Upon comparin=
-g the mentioned
-> > > > > > > > setups, we noted that while the LAN controller is similar, =
-the CPU differs.
-> > > > > > > > We believe that the issue may be related to transitions in =
-the CPU's low
-> > > > > > > > power states.
-> > > > > > > >=20
-> > > > > > > > Consequently, we kindly request that you disable the CPU lo=
-w power state
-> > > > > > > > transitions in the S0 system state and verify if the issue =
-persists. You can
-> > > > > > > > disable this in the kernel parameters on the command line w=
-ith idle=3Dpoll.
-> > > > > > > > Please note that this command is intended for debugging pur=
-poses only, as it
-> > > > > > > > may result in higher power consumption.
-> > > > > > >=20
-> > > > > > > I tried with idle=3Dpoll, and it didn't help, I still see a l=
-ot of packet
-> > > > > > > losses. But I can also confirm that idle=3Dpoll makes the sys=
-tem use
-> > > > > > > significantly more power (previously at 25-30W, with this opt=
-ion stays
-> > > > > > > at about 42W).
-> > > > > > >=20
-> > > > > > > Is there any other info I can provide, enable some debug feat=
-ures or
-> > > > > > > something?
-> > > > > > >=20
-> > > > > > > I see the problem is with receiving packets - in my simple pi=
-ng test,
-> > > > > > > the ping target sees all the echo requests (and respond to th=
-em), but
-> > > > > > > the responses aren't reaching ping back (and are not visible =
-on tcpdump
-> > > > > > > on the problematic system either).
-> > > > > >=20
-> > > > > > As the cause is still unclear, can the commit please be reverte=
-d in the
-> > > > > > master branch due adhere to Linux=E2=80=99 no-regression policy=
-, so that it can be
-> > > > > > reverted from the stable series?
-> > > > > >=20
-> > > > > > Marek, did you also test 6.15 release candidates?
-> > > > >=20
-> > > > > The last test I did was on 6.15-rc3. I can re-test on -rc5.
-> > > >=20
-> > > > Same with 6.15-rc5.
-> > >=20
-> > > And the same issue still applies to 6.16-rc2. FWIW Qubes OS kernel has
-> > > this buggy patch revered and nobody complained (contrary to the versi=
-on
-> > > with the patch included). Should I submit the revert patch?
->=20
-> It is not a good idea to revert this patch as most of the systems will
-> encounter the original issues (PHY access and packet loss). The reason I
-> first introduced this patch was because big vendors reported the packet l=
-oss
-> issue. You can refer to the following sightings:
-> https://answers.launchpad.net/ubuntu/+question/816003
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2066064
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218869
+Am 18.06.25 um 04:16 schrieb Mario Limonciello:
+> On 6/17/2025 6:42 PM, Alex Hung wrote:
+>> Hi,
+>>
+>> Thanks for reporting. Can you please create a bug at https:// 
+>> gitlab.freedesktop.org/drm/amd/-/issues/ for issue tracking and log 
+>> collection.
+>>
+>> On 6/12/25 08:08, ggo@tuxedocomputers.com wrote:
+>>> Hi,
+>>>
+>>> I have discovered that two small form factor desktops with Ryzen AI 7
+>>> 350 and Ryzen AI 5 340 crash when woken up from suspend. I can see how
+>>> the LED on the USB mouse is switched on when I trigger a resume via
+>>> keyboard button, but the display remains black. The kernel also no
+>>> longer responds to Magic SysRq keys in this state.
+>>>
+>>> The problem affects all kernels after merge b50753547453 (v6.11.0). But
+>>> this merge only adds PCI_DEVICE_ID_AMD_1AH_M60H_ROOT with commit
+>>> 59c34008d (necessary to trigger this bug with Ryzen AI CPU).
+>>> I cherry-picked this commit and continued searching. Which finally led
+>>> me to commit f6098641d3e - drm/amd/display: fix s2idle entry for DCN3.5+
+>>>
+>>> If I remove the code, which has changed somewhat in the meantime, then
+>>> the suspend works without any problems. See the following patch.
+>>>
+>>> Regards,
+>>> Georg
+>>>
+>>>
+>>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>> index d3100f641ac6..76204ae70acc 100644
+>>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>> @@ -3121,9 +3121,6 @@ static int dm_suspend(struct amdgpu_ip_block
+>>> *ip_block)
+>>>
+>>>       dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
+>>>
+>>> -    if (dm->dc->caps.ips_support && adev->in_s0ix)
+>>> -        dc_allow_idle_optimizations(dm->dc, true);
+>>> -
+>>>       dc_dmub_srv_set_power_state(dm->dc->ctx->dmub_srv,
+>>> DC_ACPI_CM_POWER_STATE_D3);
+>>>
+>>>       return 0;
+>>>
+>>
+>>
+> 
+> That patch you did is basically blocking hardware sleep.  I wouldn't 
+> call it a solution.
+> 
+> If you haven't already; please use 
+> https://git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug-tools.git/about/ 
+> to triage this issue.  It will flag the most common things that are hard 
+> to diagnose without knowledge.
+> 
+> If that doesn't flag anything, please reproduce on a mainline kernel 
+> (6.15.y or 6.16-rcX) and then file a bug as Alex suggested.  Attach the 
+> report you generated from the tool there.
+> 
 
-It would be useful to have any of those links in the original commit...
+Tested with newest mainline kernel 6.16.0-rc2 and the bug somehow
+changed. Now the system resumes always (with GUI), but NVMe is always
+disconnected. If I apply the patch resume works (including NVMe).
 
-> As an intermediate solution we can either use a privileged flag to make it
-> configurable. I will share with you a patch that might fix the issue
-> on your system that I would like you to try.
+Created an issue:
+https://gitlab.freedesktop.org/drm/amd/-/issues/4344 (with report)
 
-Yes, that patch works :)
+Regards,
+Georg
 
-> FYI, we are currently investigating a similar issue that seems to be due =
-to
-> a misconfiguration of the system firmware.
-
-Can you share some details? I can forward the info to firmware
-developers for this system (it's Dasharo - coreboot-based firmware).
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---vm5OGfsTLL6JBXBT
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhUI28ACgkQ24/THMrX
-1ywBswf/axdjrt0YTe8yVedsXB0BdcGcvKydnbQDSnI3snpPrt37TBA6mWrSTDRL
-V4iYeWjfNMn2kPGi2uRq7uzx/WRU/Fu/Uc/AAFD8sSQl4dw4fNUIIX/CZTmEcvH+
-kTUGDOhO6NPUCryKOHqSx8M3nMuIc+dHeQt6NrXhJMsp9t8NkS8cijtT7XuEHajv
-ESc7VynKZNzS5vG4Jx1FlCXh1b1P3cXAKsaV/7k5mEIkjxtph1w/2lOTczq4iFaD
-QDR6cW563uPfgdJLnk8uzKnLCjWfAZyCVJhTjpXUUIBIkVMf2Z/lnAl1Nh41/FIo
-T2AARajG/M4oB/SV7F4hu61RfJXv5g==
-=bkS0
------END PGP SIGNATURE-----
-
---vm5OGfsTLL6JBXBT--
