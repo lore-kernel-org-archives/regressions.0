@@ -1,182 +1,114 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3D524500E
-	for <regressions@lists.linux.dev>; Fri, 20 Jun 2025 11:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56D82222D2
+	for <regressions@lists.linux.dev>; Fri, 20 Jun 2025 19:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750420557; cv=none; b=pYe2YXdnwrieZO4S/B+eaQb8sUWpQr3pFqrknrda33j1IGu+1JjwbPrUIxbOs4G1oULoJfOrVQCdyU1dfUhKnV9TO4T8TzEWEs35juTSPvA/ltSzNz2JT8YgwreVy4TEwlwjUSjz9TI9XA5ZV6QJdd+8L5GrFDazylYXLpX43SA=
+	t=1750447246; cv=none; b=KXZGYR5aB+5O6PXfC4Eul6zVHqN63HaKjOqwGTgBYkl+FJlmiHWCMQ1kaB1uJ8sXgvoyfT3yGTlaSjaQ5piOrSp3HFkKj8g0SYalDp1ZNaIoRaJ3y8zkPUSsaATRRRih96P3Fm9Em+jlxCM2RY1BNzM0Vndeu42ar7Bvo8OsJOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750420557; c=relaxed/simple;
-	bh=bz1RmF0ne1dy26kmvs7vVr7cqD7gXbPeDxg9l6yhPDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fqEDTSCmNj8XWgOM9iiIucB4bp+5aGPb1O4Aw3+T+zn6afRkY13ew368eMWMR1cU9zzxvzFli71oufmWihRpOmIEIkdp4behZocnq3qYq7SJSSJ7Kds5qShXeA9pGvOSDDRXbJhhZ0UXCV0yK5muylqNwXU3WZqRahwgFOt4cac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CvQkZyeu; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1750447246; c=relaxed/simple;
+	bh=ilXnAqYMDwX2xluyBBX5nFo0usHqV7SIWUSbptLAfII=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FCrJNL3Qd3VHtVSCa/ETlXJl1pk7jvIi4gIq38/G2eCFc6QCkcsrcnWMH6OWi4coKGK/N+uXvkAgdJWOhgcZ+/JkklNibs8zjgSEch1wLiAIOZ1Rq4W0PHZgUvZrpPmvEv6Ik0jngVAaFN6EqQr8BkP6JrC7N7pPmMk2tcznQAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eC+ZVCCe; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CvQkZyeu"
-Received: from [192.168.178.76] (host-212-18-30-247.customer.m-online.net [212.18.30.247])
-	(Authenticated sender: g.gottleuber@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 5CE232FC007C;
-	Fri, 20 Jun 2025 13:55:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1750420544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MO78KbUAIvE06t0LdPjySs+xxyAgHTWk9FjQUky7GBg=;
-	b=CvQkZyeuOaEMvd4IAB2YeZAFxWcuvq13KUo9ffknB+8+0jFnBoPCc+q6msywkwYcyzUh/M
-	LIgrZzIp48VzutnBXUHCP5l0FNMx+6AtlZA1MH3xzMimvS+y8ap0PQ4YFARHEU3zoNy6XB
-	W3ARagkHuENBzyL/iu4A6mPzPoJTZW4=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=g.gottleuber@tuxedocomputers.com smtp.mailfrom=g.gottleuber@tuxedocomputers.com
-Message-ID: <0d86a892-ebfb-40b9-b84c-ad8075905cd8@tuxedocomputers.com>
-Date: Fri, 20 Jun 2025 13:55:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eC+ZVCCe"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45348bff79fso24728165e9.2
+        for <regressions@lists.linux.dev>; Fri, 20 Jun 2025 12:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750447243; x=1751052043; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=4UADvpkf2IiBFZKK6AAi88bvFyLNL2fvrTWtjFa2BEw=;
+        b=eC+ZVCCen3YdrJ1c2OPnNrVaJOeJKACA7vxrILeXeqD3tLSKhai6BDYwwKgeuwTiRw
+         5yKKqI6PjGJ9TFRkEx+OXqi166onIpxY129FX/G/IaISwfGfKjbT8ocbTM1s43YwyTPh
+         0NEKt7UlBt3HJJbYVxT2QGzOIgs50Ku9h5Cv3cuu3LM4kOofFaEdsK1TNClGEfY1wm5G
+         dNzCQlHHoz0nVC/B1tiGzY79RP1ZtDHlwtI264CV3YBGHrAMu/0fapX5opfsjtPlkKhF
+         4dL4zLfuRpKf6FTJHn7DMsbse59uj0mXSiSLsOuFL0vn1fMBo9XT3S1Q2qXljd3pBm0R
+         jHhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750447243; x=1751052043;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4UADvpkf2IiBFZKK6AAi88bvFyLNL2fvrTWtjFa2BEw=;
+        b=Mq0wkfTVUM7DeFo89C5r0eVGe/iW05LhNJWZHCoUBBiFkLGDi2M3qSLQTFtDyiwshP
+         i9tXgnVlSFM7wVvHg9wTUXe+AMDc+zqRNWIczcPmERgJTGIkkTbOHuP3hJvn4qX9gV2Z
+         Il+neyjPS5cb1EHfLPppXLdBF90HH+CHngjTzjQGyZWYu3nq46ST6Lepd1mZ0OHuhJ2p
+         NOv2X3gq9GUYkRKZ+6jdP/xP4cXpTxDXvZHhEJc+CN9EW4Uvgpz1ng6wgupF8UcltV6a
+         MJnYWhrSjbjH/OI/Tt2n9twOL+v5bMh76NboosIaxZiJKn4wQBssWiohURGroHjbJQzU
+         seHQ==
+X-Gm-Message-State: AOJu0YxhJZnECyAsSIoG0bY/z2VG7uc5MHol+sCHnG2r+LAWTCT3PwYn
+	rvNZAsJ5G2UUjX/+y5Cg8EBk1icS1LY7cK72V3Kii22YYaw8nv8ya0Qt
+X-Gm-Gg: ASbGncsOXoBnLOkdsdzWcQnyHThrhXPD2oaPAwvV1pXRlTf82cS8Td2v5vImjv/GrSt
+	HIXT0FXOWAtogEPeic2+TIgiP1IrfmvZRiZ7yBYQMNn+IXmLkIRD0J3gEDNMFZ7fcs2d+NHzETG
+	a9EFz8J5b1h9BNroGnKbPnsXg/mib2B/SMI9x24nRk8tQP2pecHkjkLQWSaES74E7weU+zqegFj
+	/vjAJQFeuynPIPWJve0+w/xwxPyc7aLz7CkAJEaTCwzpCrVoVG6KXPGKbM7UCi3rqS8Wcgicfzc
+	E9kOUm8t9f8MvAC11VCwZlklg3bgwaPrJoWeZVisOBT2be5qDaBj38l+72IW3m+/SyTCwfVCB7Y
+	6KoK87gGIHDZYkImH5gk=
+X-Google-Smtp-Source: AGHT+IG8aOoZC8S1rb/ev7lP9inHcJLu9ktL7RT5BqPIoEbcvhdGm52Wha1xhaCLBRuUuM1GSAo0nQ==
+X-Received: by 2002:a05:600c:3b2a:b0:43c:fdbe:4398 with SMTP id 5b1f17b1804b1-453659b68afmr35278195e9.6.1750447242856;
+        Fri, 20 Jun 2025 12:20:42 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e98b4bbsm66613005e9.15.2025.06.20.12.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 12:20:42 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 8766BBE2DE0; Fri, 20 Jun 2025 21:20:41 +0200 (CEST)
+Date: Fri, 20 Jun 2025 21:20:41 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: regressions@lists.linux.dev, Jeremy Lincicome <w0jrl1@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org, 1107979@bugs.debian.org,
+	stable@vger.kernel.org
+Subject: [regression v6.12.30..v6.12.32] mmc1: mmc_select_hs400 failed, error
+ -110 / boot regression on Lenovo IdeaPad 1 15ADA7
+Message-ID: <aFW0ia8Jj4PQtFkS@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/amd/display: Radeon 840M/860M: bisected suspend
- crash
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Alex Hung <alex.hung@amd.com>, ggo@tuxedocomputers.com,
- stable@vger.kernel.org, regressions@lists.linux.dev,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
- Werner Sembach <wse@tuxedocomputers.com>,
- Christoffer Sandberg <cs@tuxedocomputers.com>
-References: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
- <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
- <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
-Content-Language: en-US
-From: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>
-Autocrypt: addr=g.gottleuber@tuxedocomputers.com; keydata=
- xsFNBGgPWcABEACY/HWP9mAEt7CbrAzgH6KCAyrre7Bot8sgoTbhMZ9cb+BYrQEmeW05Hr5Z
- XsuwV63VgjR1rBnecySAsfl8IPEuOTncE0Ox7prT9U3pVKsY+v3HOYJiaB9UbQ2cMjXsKbIX
- uaQWYVkQNWCF0cQhiq0tmROq2WQjtc9ZbRgogi5G1VE/ePbGH8a+LQG4+aJdeRgZLeEQOm88
- ljnWfbnVbQNJXqq5IAyCjU9ZfnNtC+Y2o2KM4T+XC1NMfAWG82ef8WuXk9jNuRPDcIfwoI0w
- mnZGy/KSWLRJxOPzqOgNrpmmhjSBqykyQmiE9t9vjPGWlgF+s/ac1GaFuLTVJnYlO3OA5iLT
- 9VjGu4RuHBjwzmHPvp1eHN7GncoE4571TMXbeW6TCeGngv+RTm4dBtB1lOds/1CFOxc4ENZC
- TnGJHzciO7/hM3NB4HM9tkg31LoKTAoWRLiEQvtMTLmtrqHukd5OJp9Zoero8RUEhykSnFt8
- ojjcm4mZYf25n7r47nTpUq5G73jAF84biNh6PDp8RFoyWbTgzXQpDCwtUUjX2TgVomQZ5t3H
- 3gNYT5jfeLe5djxpR6as50k9XHE3Ux5wGlQvDqHAnY4bUq250WzzR0/RdJlKpzoczPaohAuB
- ggAXIHlmpVxcqUIBY9pTw1ILuQ+keia3DoBaliqwGrTam6lCBQARAQABzTNHZW9yZyBHb3R0
- bGV1YmVyIDxnLmdvdHRsZXViZXJAdHV4ZWRvY29tcHV0ZXJzLmNvbT7CwY0EEwEIADcWIQT9
- C+gw5/8BKoEjHTXh93ExJiZfygUCaA9ZwgUJBaOagAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJ
- EOH3cTEmJl/K+7AP/RPo5hpY2anSDAlB2/Zrdp9LhAc8H6xA/9JnpvBgrbUakoVs7Z+hUexa
- eFSu0WM4EOX5U0mfS2RcLjChVLcLqnFEXe80JzloZdRNzDCb7AoaUqb5zocPa4JKFLNlk341
- vbkm9G5FCoy+qAXG4KSOMaxEE0MaeZR1p3js9c1puFaazrJbdLEN/KU5O5KZ8Jd6+TdIXqf6
- Ujf8rgIpsgeABcbE9Yg6PiFBuCa/BoSLsk+k4L9Sef9xoqFAiJHhcGkxULuRr5gRpPn8uHce
- ICv8qipFeI/YDI1mpjSzP8Vd5FU42qvSq2SCvwAbF1YFrwL5/8yeuE7jVHZb6oWJ9PuCQ/gC
- Ik9HjNLFUS6lKW7TvBWlpBO6Qu9Uh+PrPmciXLRJEdOJFiXRJBWxnF4hJqBufWss77aWn8TX
- rf56+zeyle4RPULbOZEjcbF0Zu7UgSS/vimAIGYkpOBFWxmXCjamcIk4nnFIcu6HweDyzTba
- 3ZLGx0ulHPyk/XkOaNNwJpAzqp0r5evQIoAu8m8XfKoDbx5sLQyHCihQjepKC37yE/FVOVSA
- QK0MjD+vTqCAnYAhiraXwre7kvUYMa7cxdGf6mQkyRkkvzOya7l6d9hBsx76XhCXuWuzYPd2
- eDd0vgAaIwXV1auVchshmM+2HtjnCmVKYLdkgWWwtnPd/7EApb4XzsFNBGgPWcMBEADsDpi3
- jr3oHFtaTOskn1YyywlgqdhWzDYHRxK/UAQ8R3Orknapb0Z+g0PQ70oxTjVqg/XopGrzS3yx
- Y3IN1bLHoRzfXXf/xhhZRsVu6cFATNpgw5133adn9Z35+3rvGPaZUh1eXr24ps9j9krKvzel
- XbcW1OrKQ/mzcleYOetMizmKK40DaxJdjpKVRU03BACvoIUdpWMUTqUyNkDqemt1px0nTyGb
- kObGaV6+3D1dXpz5loYjCG9MnDFFEll9pRgObTO0p7N2YrXUz9uoYHHG5OddD3HrGgSm2N75
- 8P35jobO/RLpBcJtqIBR3zGGfDlWkahkUESGSnImqELA8X1gise71VqpLc8ETHoRENAiuSzi
- Rb8HSKzuMpXr20o602Y46CYXkgwb6KAzT2QbBFKi7mQ79u1NcbC2mPkhdeDiUK2nF7lR7mKt
- r2sfGOG1uoYt6h57Ija5hQKHcaqEXeRZLKnR2O6vMpabEsZBewLJymAtay4oLhSm6ya6et8c
- CBftq0Pigj7H+zcalURdr8g8Xa2if5EI7C8LIxRmq9U7eCBnQDHnczIudtDT856QMsIfqcb7
- nGJFLpw1HIBiwquNzfzwIGlEyfxSepM6uY16HlCwthK+nw7zFbxS/PNqYLVQxvyl8fBjqcNt
- ROZnd7IY9CECa9St892EU1SLk1OPIwARAQABwsF8BBgBCAAmFiEE/QvoMOf/ASqBIx014fdx
- MSYmX8oFAmgPWcMFCQWjmoACGwwACgkQ4fdxMSYmX8rbdA//ajzMle1dGtsnJC7gITmEO2qf
- mcvmVE3+n4A6193oPlStCePyET2AHyRWv4rAbY3Wl2e3ii0z4G3f3ONWkxjvemnzJFl/EjyO
- HoEX8e+cncr3lWyudw8IqXFVogdlPdMNfI6SX1EKekCVPot/dNoCKrZUqbn3Ag4pldHUehuD
- M6FaI6zDO3jdiDWY+MxwvY0isleNT7J/EXSVUEURo6pcA6hASadHqYs7lBBE/GmEJNqTbfMY
- wKWEzSoxWAV8nVWVLej1uqffmoSXJt2M8SV41i3OA2SaSVSnQNd/KAEPk9Uhn/d7ZFdBLO+L
- USSsfabGu8Uv9Ez5+gXF7QoElqrUjwJQ+d8L1BfotSJMbAuikij9XyBkBbRuj3FxM8Yfp9cP
- l5vI0gqfMbj36QaNhXZYl5kK0Erw+mwnK8a2p7j7RtvtrvEu+khfTLrDQCpgznTK2W8G7oLn
- iAVOWlEtKQXXVoSoDRDCETJV6bfOzuA9qVNjXgwaQQfA/QrFMusPKW0oOgmE3sobkmo6PZVD
- Cj0BY3cLZSuTw5fXtFuYf3rhyrDfzu7KYCMlwJiadQSrhUWU7hBG3Ip3bbgXayqcG3ytQb/F
- j2o6LfW/2XyMPLuL42mc+aKmuHqk5PqTkvlTr/pn0temEL/ofJ0c2ygkgSZqAhg/yr01AQcX
- bsxTTcOuRnk=
-In-Reply-To: <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi
 
+In Debian we got a regression report booting on a Lenovo IdeaPad 1
+15ADA7 dropping finally into the initramfs shell after updating from
+6.12.30 to 6.12.32 with messages before dropping into the intiramfs
+shell:
 
-Am 18.06.25 um 04:16 schrieb Mario Limonciello:
-> On 6/17/2025 6:42 PM, Alex Hung wrote:
->> Hi,
->>
->> Thanks for reporting. Can you please create a bug at https:// 
->> gitlab.freedesktop.org/drm/amd/-/issues/ for issue tracking and log 
->> collection.
->>
->> On 6/12/25 08:08, ggo@tuxedocomputers.com wrote:
->>> Hi,
->>>
->>> I have discovered that two small form factor desktops with Ryzen AI 7
->>> 350 and Ryzen AI 5 340 crash when woken up from suspend. I can see how
->>> the LED on the USB mouse is switched on when I trigger a resume via
->>> keyboard button, but the display remains black. The kernel also no
->>> longer responds to Magic SysRq keys in this state.
->>>
->>> The problem affects all kernels after merge b50753547453 (v6.11.0). But
->>> this merge only adds PCI_DEVICE_ID_AMD_1AH_M60H_ROOT with commit
->>> 59c34008d (necessary to trigger this bug with Ryzen AI CPU).
->>> I cherry-picked this commit and continued searching. Which finally led
->>> me to commit f6098641d3e - drm/amd/display: fix s2idle entry for DCN3.5+
->>>
->>> If I remove the code, which has changed somewhat in the meantime, then
->>> the suspend works without any problems. See the following patch.
->>>
->>> Regards,
->>> Georg
->>>
->>>
->>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->>> index d3100f641ac6..76204ae70acc 100644
->>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
->>> @@ -3121,9 +3121,6 @@ static int dm_suspend(struct amdgpu_ip_block
->>> *ip_block)
->>>
->>>       dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
->>>
->>> -    if (dm->dc->caps.ips_support && adev->in_s0ix)
->>> -        dc_allow_idle_optimizations(dm->dc, true);
->>> -
->>>       dc_dmub_srv_set_power_state(dm->dc->ctx->dmub_srv,
->>> DC_ACPI_CM_POWER_STATE_D3);
->>>
->>>       return 0;
->>>
->>
->>
-> 
-> That patch you did is basically blocking hardware sleep.  I wouldn't 
-> call it a solution.
-> 
-> If you haven't already; please use 
-> https://git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug-tools.git/about/ 
-> to triage this issue.  It will flag the most common things that are hard 
-> to diagnose without knowledge.
-> 
-> If that doesn't flag anything, please reproduce on a mainline kernel 
-> (6.15.y or 6.16-rcX) and then file a bug as Alex suggested.  Attach the 
-> report you generated from the tool there.
-> 
+mmc1: mmc_select_hs400 failed, error -110
+mmc1: error -110 whilst initialising MMC card
 
-Tested with newest mainline kernel 6.16.0-rc2 and the bug somehow
-changed. Now the system resumes always (with GUI), but NVMe is always
-disconnected. If I apply the patch resume works (including NVMe).
+The original report is at https://bugs.debian.org/1107979 and the
+reporter tested as well kernel up to 6.15.3 which still fails to boot.
 
-Created an issue:
-https://gitlab.freedesktop.org/drm/amd/-/issues/4344 (with report)
+Another similar report landed with after the same version update as
+https://bugs.debian.org/1107979 .
+
+I only see three commits touching drivers/mmc between
+6.12.30..6.12.32:
+
+28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing parameters")
+38828e0dc771 ("mmc: dw_mmc: add exynos7870 DW MMC support")
+67bb2175095e ("mmc: host: Wait for Vdd to settle on card power off")
+
+I have found a potential similar issue reported in ArchLinux at
+https://bbs.archlinux.org/viewtopic.php?id=306024
+
+I have asked if we can get more information out of the boot, but maybe
+this regression report already rings  bell for you?
+
+#regzbot introduced v6.12.30..v6.12.32
+#regzbot link: https://bugs.debian.org/1107979
+#regzbot link: https://bbs.archlinux.org/viewtopic.php?id=306024
 
 Regards,
-Georg
-
+Salvatore
