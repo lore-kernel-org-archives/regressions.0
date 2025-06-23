@@ -1,139 +1,132 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A2329DB84
-	for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 17:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8782D4B4D
+	for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 18:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750699847; cv=none; b=Hk4svEpdwkkdZDKSV/8arQLSszGwqsu2dU++ac9ipbynK+J9CXXPXjhUweK37Y9kMiQjU0j0cBRvU2WKXA+EmZL7jqJKkXWGyBC0MFgOcI5R8gmA6yjQZ+JY4UQ4jOYpvTVgKROtwhLo1deuZkub/oXFUfP/2d264xGkc2g4S3c=
+	t=1750703565; cv=none; b=P+M4FM71F0lma+uKsvyAAB6XS0iPKUG34zWPh1bXOVEYRAKi4sbODqJi0Huq7bM6PJk2hyUgpd96gklb52MOwLb0viIVF0opr73BJ5GZZAuHGYGKRvEiWjbq33J1jVqfetwoJ3JY6/evfB96WiFsqyCMMrnwMH1jMLhMqXFjStg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750699847; c=relaxed/simple;
-	bh=2BesTu0wNz7KZJSu07Q9JK+U9yK47g4valN5QlTVKo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRK8T3xwXmGZui9wS5FEAcY7CjvhL8dNNBQd57odtcdh7mlDZyYqCtI6+QJowvso1nByTCoADZXDeUBIy2hx649m89pejq6ytIKarPjVkkJEbFiVHhOt9T6A7plqXsIk4NFgk3OfsPg2VmfH5RP7HvGCRzjMm/vahFyWqWU7mwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHG3fcem; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750703565; c=relaxed/simple;
+	bh=j7unceZnAbI/jKhe8OzwmUSk4YWeCfoezAT5k/+mbtE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ii4Goog7vKlgxq+IEQcvYAXKbohysEZudBUFn0eBEKnVBQ4FlhENPnCDo7qm+mIx7ottSbD9Le55hbNwSct5Q926vqH04yqxaJddhR/7Rt/Sp5eY232hNHvwx4kjRFSBdNjlH9dGkxBcwTRlMkYjaia0AHVxbn1eAZJcMEgdMUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nk9OsJaT; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHG3fcem"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso2465923f8f.0
-        for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 10:30:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nk9OsJaT"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313a188174fso3497516a91.1
+        for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 11:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750699842; x=1751304642; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WXQZ1cIwev/BQqGGXRhlocv0p9SFoF8/dusQc6F0a2A=;
-        b=LHG3fcem/wKTyrirtAwCK55miUQR3ihbpRxWJUYqHHrGSxC52nZ1p0+UYl6StCvCek
-         NZ7uDCuMmUu0uJ1DdGUZSr9ctlNExd3FoQd9IxGUh75l/jSbi4e6OMylzss3jMGH+34j
-         xiJwfLB8OIjiJ6YFfXZop99FEtiACoVolzkLfn5iGYPgAPhS2nRK8uEQ4/rG+RJxxGZx
-         IKuEr2NVYVPr7xeeTZhpkTEVce/AO4PLObsJpdAQRxSHq2pqHxW2iKkwworLAm6TKAWW
-         bg//+yPYdaOf9s1J47Z5PGxGYJ8PETuLEA0Upfa4EUMgsec5XVjTVgcqq88k831WXRVq
-         BETw==
+        d=linaro.org; s=google; t=1750703563; x=1751308363; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kruPxOyyvUJ301Bt/UNLMGQOlJa4yMmtInWP2erojtI=;
+        b=Nk9OsJaTvEddkHbSxqDLjdTk2QyGcaFif31U6lEgeoElZjnjsJxCajl43W7tQZaafL
+         hZhMXRqnODHbiZ+6HrwMUXwYo/YION0uzqVVBXrDtuuRVKfl2wDV9kzdicTcNSYxLwEB
+         LV0Je5aE6Bn/TthlVpoWOk9hEv+wVfYbx9mkOMCZP1T1yyTCqZePNIEP3i4uEWjFe3sY
+         LD4bZ1pIWdQKIM76QS9hYQRiL67w4pWiFybBDfINznYzhf8AN4uR/1gCZkkrp6NpdXpe
+         qrrcR0FeJcRSq34/SbSN6uaGGrt21fuCPA56DxhK51Cu3lFKtqlOHnzZdqHRTSxHX27T
+         wzZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750699842; x=1751304642;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WXQZ1cIwev/BQqGGXRhlocv0p9SFoF8/dusQc6F0a2A=;
-        b=C6kZkFICFrY82Tqvq6REaqoSkToDGNNsixIYMF9NIbYav0IF63G4N/wk8n98UFMlpT
-         YrpDVajCNh+Pcw5tUvZjggp95IvxlMXynJWsL5VZYqk9olHBfBvulTC8cza0P/PIN1UN
-         g2t2OqEJfZxDL9N3N9o5A0/VYcWuRDBowqc6HUVCeRaL+uOj6jfZMGttSb63jTLAmujQ
-         KGHOw5UdbgyN2vz2HJegTX2tYKld0knkr1BaFGq/VukxvBnCsu3GhN4PyoJNj3gaMC8n
-         kr1VEgzimi/NDVu4wQiukYpsZEokyzDah1DVYlAZ0rIDe/i7sw08VAMaOUGMHe2rv+zH
-         O9LA==
-X-Gm-Message-State: AOJu0YyONQW1FuizMU7gpL1hXbgp0ZFhQp0JJ0+HzOs0QL+oOHEadyVL
-	QhjsKpjoaqcjAGOBHVQu6ebn1AIwKbBRizBW/IbNKmF2JEZBQYl9EoTv
-X-Gm-Gg: ASbGncv2Rb19fjBZh0igEY1+HfsVs8mv/Uu8npt0rpS9BW6hOaOUD5ISqPMulbRZNjE
-	TD+V+Ul74ja+x5nUY0HjsukiqzydBskUXiYxFDn2Vltn+Rzptu0UohTgugaUY4CsBsZ7TxnaqUE
-	0dSbgOcxIbSifX/zQlhw77mejEvyc7fN4ax4v9sR5uO6KDt515JazOWfa14a7RoSUrOCKIxLXEe
-	9lJ5XMcVrafjLmsyPjV4VYIPteSx4lh3DaIM53fdsnZSUCrTsIktc9VIVs18ARuRdWzq4suan6y
-	L82cCBdKUeH4wxbHvvOO9WOaTm9wnrwmirtgxX8vfQgimFNsBBUPAMKBN7JpQ/Q59UKs0z5Rw4l
-	xNlF13+Rm3dHgcCsE2Ido9v7mgbmPog==
-X-Google-Smtp-Source: AGHT+IEs1XjUK+7RdkSK9C+mWF0kQF29FZVxtmG0QAQoTQntyWVyT19lNoq/l9WZJeQpLq/vI6uOZg==
-X-Received: by 2002:a5d:5f8d:0:b0:3a4:dd8e:e16b with SMTP id ffacd0b85a97d-3a6d1301ffemr10136431f8f.20.1750699842006;
-        Mon, 23 Jun 2025 10:30:42 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6d1188c6esm9692456f8f.81.2025.06.23.10.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 10:30:41 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 20CA4BE2DE0; Mon, 23 Jun 2025 19:30:40 +0200 (CEST)
-Date: Mon, 23 Jun 2025 19:30:40 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Jeremy Lincicome <w0jrl1@gmail.com>
-Cc: regressions@lists.linux.dev, Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-mmc@vger.kernel.org, 1108065@bugs.debian.org,
-	stable@vger.kernel.org, net147@gmail.com
-Subject: Re: [regression v6.12.30..v6.12.32] mmc1: mmc_select_hs400 failed,
- error -110 / boot regression on Lenovo IdeaPad 1 15ADA7
-Message-ID: <aFmPQL3mzTag5OxY@eldamar.lan>
-References: <aFW0ia8Jj4PQtFkS@eldamar.lan>
- <aFXCv50hth-mafOR@eldamar.lan>
- <004c6e95-7c1b-4a7f-ab68-1774ce5a51d7@rock-chips.com>
+        d=1e100.net; s=20230601; t=1750703563; x=1751308363;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kruPxOyyvUJ301Bt/UNLMGQOlJa4yMmtInWP2erojtI=;
+        b=MpSkafFc7M/Vls8p9spmFCW59oe4UArRlNPxo5DI2g0u8Z5YLocjix8GWG5BnyKgH0
+         6kadNEc3oW32sBO18Tc3cBmMis/WJcF2abWTET4+2L2Jmupq87wJazFbsM6x+kR9IbYU
+         M1dGkMrm0qPiSM3O91HYRwDu5/gnsqg5db+4iS+2vigh0BzRTm0k84ypA3BNwQ49Ipt2
+         H6Pks3dFV7zo+HAYErBoTjZuMIMAZLI18VFoz8VgQOuLa8SilW3FjpA5L6r+A8qxSHeR
+         u2PCSashqGsnNoSVBwIuZSxCgjfT1GIhS9BxpQia6pE62KeKpQ2jMcGhxK8Fo7GlfsiT
+         y1Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCVQjrNwcxi3PzEs49QlrxhA5cKKpMuFIHwcTjgwvwPZOx2MF0//NKad1waUnkplSTLM2o941WW8Cdx23Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxsLi29nRgZoC6E/m60IZMYjsaB/WIx3M2gI2KCFLrfXSIsFTTs
+	r7omSSZd+x4qTuDejduG+LNFPEmQjo7Zg/23SnNiw0iSRu8sGfBT7MlxOX03OjZyp8lYeqCiENx
+	J7305e/7uc6JSLZYr337uH1Fs5FME9A8hp+pi6PHZ9A==
+X-Gm-Gg: ASbGnctCixjrmMoZPwmrmr/eCh1nRh8bWtgZlvWJ5mngv0x7J8in8U3lsnnGM+/asLg
+	8N/2d+nGntVJuMpGQdxplLjr/FQB+kKC723tlD852iNcBrlnKN8wvhd/FNmPfr+S2IjicoXBBUG
+	jj8G5wrimczVBfWFcVFtw98zoK8dIUS1jR/bmbSeNNZmrNwp3u4piLDEutWXTqSXWglNnp7rYEV
+	RTY
+X-Google-Smtp-Source: AGHT+IFN+MuBxJ+QUL+UQe2hu7b0+Ppkb80MQX/ZVfwxCOW2lGiDat39qnGph06M7YMdl+YKMYdCUOnoxk8zPjTW19g=
+X-Received: by 2002:a17:90b:4fd0:b0:311:a5ab:3d47 with SMTP id
+ 98e67ed59e1d1-315ccc48857mr832647a91.1.1750703562413; Mon, 23 Jun 2025
+ 11:32:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <004c6e95-7c1b-4a7f-ab68-1774ce5a51d7@rock-chips.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 24 Jun 2025 00:02:29 +0530
+X-Gm-Features: Ac12FXz8Xagh8-R9UdOPbyOpKzegWYcA5INp1WSEVpTVF86rd3gJifht0qGqOmw
+Message-ID: <CA+G9fYv2i5AOYOkepUq_Rz1wxfzu1o2W59xDgui7VPw7g-fV9w@mail.gmail.com>
+Subject: next-20250623: riscv defconfig raid6 recov_rvv.c use of undeclared
+ identifier 'raid6_empty_zero_page'
+To: open list <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-raid@vger.kernel.org
+Cc: Song Liu <song@kernel.org>, yukuai3@huawei.com, 
+	Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 23, 2025 at 05:13:38PM +0800, Shawn Lin wrote:
-> + Jonathan Liu
-> 
-> 在 2025/06/21 星期六 4:21, Salvatore Bonaccorso 写道:
-> > On Fri, Jun 20, 2025 at 09:20:41PM +0200, Salvatore Bonaccorso wrote:
-> > > Hi
-> > > 
-> > > In Debian we got a regression report booting on a Lenovo IdeaPad 1
-> > > 15ADA7 dropping finally into the initramfs shell after updating from
-> > > 6.12.30 to 6.12.32 with messages before dropping into the intiramfs
-> > > shell:
-> > > 
-> > > mmc1: mmc_select_hs400 failed, error -110
-> > > mmc1: error -110 whilst initialising MMC card
-> > > 
-> > > The original report is at https://bugs.debian.org/1107979 and the
-> > > reporter tested as well kernel up to 6.15.3 which still fails to boot.
-> > > 
-> > > Another similar report landed with after the same version update as
-> > > https://bugs.debian.org/1107979 .
-> > > 
-> > > I only see three commits touching drivers/mmc between
-> > > 6.12.30..6.12.32:
-> > > 
-> > > 28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing parameters")
-> > > 38828e0dc771 ("mmc: dw_mmc: add exynos7870 DW MMC support")
-> > > 67bb2175095e ("mmc: host: Wait for Vdd to settle on card power off")
-> > > 
-> > > I have found a potential similar issue reported in ArchLinux at
-> > > https://bbs.archlinux.org/viewtopic.php?id=306024
-> > > 
-> > > I have asked if we can get more information out of the boot, but maybe
-> > > this regression report already rings  bell for you?
-> 
-> Jonathan reported a similar failure regarding to hs400 on RK3399
-> platform.
-> https://lkml.org/lkml/2025/6/19/145
-> 
-> Maybe you could try to revert :
-> 28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing
-> parameters")
+Regressions on riscv defconfig builds with gcc-13 and clang failed
+on the Linux next-20250623 tag.
 
-Thanks.
+Regressions found on riscv
+* riscv, build
+  - clang-20-defconfig
+  - gcc-13-defconfig
+  - rustclang-nightly-lkftconfig-kselftest
+  - rustgcc-lkftconfig-kselftest
+  - rv32-clang-20-defconfig
 
-Jeremy, could you test the (unofficial!) packages at
-https://people.debian.org/~carnil/tmp/linux/1108065/ which consist of
-6.12.33-1 with the revert patch applied on top?
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-I have put a sha256sum file and signed it with my key in the Debian
-keyring for verification.
+Build regression: riscv defconfig raid6 recov_rvv.c use of undeclared
+identifier 'raid6_empty_zero_page'
 
-Regards,
-Salvatore
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log
+lib/raid6/recov_rvv.c:168:24: error: use of undeclared identifier
+'raid6_empty_zero_page'
+  168 |         ptrs[faila] = (void *)raid6_empty_zero_page;
+      |                               ^
+/lib/raid6/recov_rvv.c:171:24: error: use of undeclared identifier
+'raid6_empty_zero_page'
+  171 |         ptrs[failb] = (void *)raid6_empty_zero_page;
+      |                               ^
+/lib/raid6/recov_rvv.c:206:24: error: use of undeclared identifier
+'raid6_empty_zero_page'
+  206 |         ptrs[faila] = (void *)raid6_empty_zero_page;
+      |                               ^
+3 errors generated.
+
+## Source
+* Kernel version: 6.16.0-rc3-next-20250623
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
+* Git describe: next-20250623
+* Project details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250623/
+* Architectures: riscv
+* Toolchains: gcc-13
+* Kconfigs: defconfig
+
+## Build arm64
+* Build log: https://qa-reports.linaro.org/api/testruns/28829977/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250623/build/gcc-13-defconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytmqfZ6v24dxq5kjorJbgH6hC8/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytmqfZ6v24dxq5kjorJbgH6hC8/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
