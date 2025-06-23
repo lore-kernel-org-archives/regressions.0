@@ -1,112 +1,62 @@
-Received: from mail-m1973181.qiye.163.com (mail-m1973181.qiye.163.com [220.197.31.81])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8A617996
-	for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A473523C4EB;
+	Mon, 23 Jun 2025 10:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670955; cv=none; b=EOIdB6VSo8YQbdfUDVJNDfzDhlzdJct42Ww9Wqq7HHeJ0YAZFKWVFDVSgYsopL1Hlq64LqUbVj3qQhyXbYKwCHthjrHjMkHliCE1blsMpNK8IC//2xKtMGodwWcvaKGYcATY/gUvo1114QKVZQ6I2Ovzct3BiaAV/fJ+MW5cpXE=
+	t=1750673155; cv=none; b=mtsSUXwy+4ONJSq5/0qi66qN7/tEuA2WWUeFxr0Y2sBrTkYXatpdbdDrXTRkmBjFJr1ecVgSVE4TLuwjcTLpFimP36DmB/1uxeltIjd5psIa+v4zGcUSqXNAvpeq+CraWLPtWb5XRvV+jPcMlQ0Y5tdc/8ricsFfys5bTDWjqT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670955; c=relaxed/simple;
-	bh=rot3WInRgfCoXSQnTjnLS77VTpo+YcJ/anVZEHawAkc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FKlwpfr9iR+9ZSNftM2ayfpuy8o1TvDXkIWd2znJsOTToJyaUSOiDTC4RCZSoXm2MqZyCTfsurtee6Q6yobrw3eHKJry95LpY+cRAmQ6ESJAi8Co3lEWXbrfM4peVPGKFq9iZM/YIOXDmUkC8rLA7OFfkNorp/4kOZ5yF5a6zfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=TMGbPh7n; arc=none smtp.client-ip=220.197.31.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1750673155; c=relaxed/simple;
+	bh=mJsODAGPSoF3oPjRFD7iDvJ4j5DRmdr/CfzyIa7di1g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cjFZc6V9gg4USGwuTMOm/Qxmi4DgUAmDyGm7q0BN1f24+QrYDvbqAFaNvptlUqj8VrAru3xSFh1LShQXwicANyaaqWAR/DeMp1A5tw2yvISm4D56BI/HywIfLg2v/LONQtA2io9sVy7zAPxGPXCZ9iWd9R4oCHfrw8TBOi5oIPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=frzCpsbU; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="TMGbPh7n"
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 199b4e06c;
-	Mon, 23 Jun 2025 17:13:44 +0800 (GMT+08:00)
-Message-ID: <004c6e95-7c1b-4a7f-ab68-1774ce5a51d7@rock-chips.com>
-Date: Mon, 23 Jun 2025 17:13:38 +0800
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="frzCpsbU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=mJsODAGPSoF3oPjRFD7iDvJ4j5DRmdr/CfzyIa7di1g=;
+	t=1750673153; x=1751882753; b=frzCpsbUrOIkwzA7nT7piLrx5pMTd0ebf7KgbOCZ4XP99ea
+	gU6a/4F4Dxi1TIpf0doaSvHN6jLJSr4k3ue83LFjWLANzSoXJyDm3yRVjsB6Md1MtpDSFbp+TlCLH
+	qeDsdt5wm/1FvUzqYUCvMt/BrYEOXNX2B7vxR/MdGj+nkMUafek1l9tmkayDpCKiIR+IxrzzqupKG
+	sKdT11mL6VvU/PrZ92M1HTYz305KF6nkxKBJzOv+0NdatMl7uD8kYwdu27ZUQgxRzgtFkKrDkA9o7
+	XdM9B87GmRZNO1y0GaQGuoJ2Kv2gU0oXDNNTZtbVrC9wrCdjeHwgQ+9wOWqchOYQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uTe3R-00000007c9w-0uaO;
+	Mon, 23 Jun 2025 12:05:34 +0200
+Message-ID: <aa5977435ed7de7183ed68e5767bfcc430379df3.camel@sipsolutions.net>
+Subject: Re: [REGRESSION v6.16-rc3] Commit 83f3ac2848b4 breaks WiFi on Intel
+ AX200
+From: Johannes Berg <johannes@sipsolutions.net>
+To: "Colin King (gmail)" <colin.i.king@gmail.com>, Eric Naim
+ <dnaim@cachyos.org>, 	miriam.rachel.korenblit@intel.com,
+ regressions@lists.linux.dev
+Cc: linux-wireless@vger.kernel.org, Yedidya Benshimol
+	 <yedidya.ben.shimol@intel.com>
+Date: Mon, 23 Jun 2025 12:05:30 +0200
+In-Reply-To: <61cae2d3-d4a1-4715-8b63-0738e9ad5353@gmail.com>
+References: <1b3f2387-e27f-4b74-99b7-0596a9331a1e@cachyos.org>
+	 <61cae2d3-d4a1-4715-8b63-0738e9ad5353@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org,
- 1108065@bugs.debian.org, stable@vger.kernel.org, net147@gmail.com
-Subject: Re: [regression v6.12.30..v6.12.32] mmc1: mmc_select_hs400 failed,
- error -110 / boot regression on Lenovo IdeaPad 1 15ADA7
-To: Salvatore Bonaccorso <carnil@debian.org>, regressions@lists.linux.dev,
- Jeremy Lincicome <w0jrl1@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
-References: <aFW0ia8Jj4PQtFkS@eldamar.lan> <aFXCv50hth-mafOR@eldamar.lan>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <aFXCv50hth-mafOR@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkpLH1ZJGE1PQhpOSUNKSUNWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a979c109e6709cckunm166c0bc88900f9
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MAw6LAw5ATEwKCM5NzBONh4W
-	CSkaCxRVSlVKTE5LTUxLS0lOTkhIVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlDSU83Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=TMGbPh7nh9+DNCdsyZLDiucsAs/DU1OoHkwdIeDhQkX8XS0zJWrFNYMJNXtV6gfFUPNx83cvfprtGA8R8YbYDnbjAG/3jELTxopIJLBdMsl2FtGQXI5LQRtE8qxpOsOifPY5j3Js5bplcPXCLOJ+MZJ20rXn5YYMm1WmuR3Z16E=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=rRS7mqba5IZNQaTjq/rzjK6NiA1kw0qdSnaEJwzGxsg=;
-	h=date:mime-version:subject:message-id:from;
+X-malware-bazaar: not-scanned
 
-+ Jonathan Liu
+This should already be fixed by
+https://lore.kernel.org/r/20250622235542.66160fc997da.Iba487b3addfad95e51c7=
+d5ad79c962be3eab046f@changeid/
 
-在 2025/06/21 星期六 4:21, Salvatore Bonaccorso 写道:
-> On Fri, Jun 20, 2025 at 09:20:41PM +0200, Salvatore Bonaccorso wrote:
->> Hi
->>
->> In Debian we got a regression report booting on a Lenovo IdeaPad 1
->> 15ADA7 dropping finally into the initramfs shell after updating from
->> 6.12.30 to 6.12.32 with messages before dropping into the intiramfs
->> shell:
->>
->> mmc1: mmc_select_hs400 failed, error -110
->> mmc1: error -110 whilst initialising MMC card
->>
->> The original report is at https://bugs.debian.org/1107979 and the
->> reporter tested as well kernel up to 6.15.3 which still fails to boot.
->>
->> Another similar report landed with after the same version update as
->> https://bugs.debian.org/1107979 .
->>
->> I only see three commits touching drivers/mmc between
->> 6.12.30..6.12.32:
->>
->> 28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing parameters")
->> 38828e0dc771 ("mmc: dw_mmc: add exynos7870 DW MMC support")
->> 67bb2175095e ("mmc: host: Wait for Vdd to settle on card power off")
->>
->> I have found a potential similar issue reported in ArchLinux at
->> https://bbs.archlinux.org/viewtopic.php?id=306024
->>
->> I have asked if we can get more information out of the boot, but maybe
->> this regression report already rings  bell for you?
-
-Jonathan reported a similar failure regarding to hs400 on RK3399
-platform.
-https://lkml.org/lkml/2025/6/19/145
-
-Maybe you could try to revert :
-28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing 
-parameters")
-
->>
->> #regzbot introduced v6.12.30..v6.12.32
->> #regzbot link: https://bugs.debian.org/1107979
->> #regzbot link: https://bbs.archlinux.org/viewtopic.php?id=306024
-> 
-> *sigh* apologies for the "mess", the actual right report is
-> https://bugs.debian.org/1108065 (where #1107979 at least has
-> similarities or might have the same root cause).
-> 
-> #regzbot link: https://bugs.debian.org/1108065
-> 
-> Regards,
-> Salvatore
-> 
-> 
-
+johannes
