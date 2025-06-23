@@ -1,186 +1,163 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6951DB124
-	for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 20:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2885870838
+	for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 21:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750709797; cv=none; b=NBgwRM0mt1HQ2BvTudwdnjT95UI9DmzU+c3O9qIcT/BQZdgkom6lOsxG9rLdLV57XXsKKKIY9m/JrOyLPd9eyPdj/lnPathRJKo6boAYMZoJ2K38/q/Ey49weKEAqGCrfgSaji6rWck9EArcS2SZAgNI5I3Nw46yWRQ44j8FLsA=
+	t=1750712887; cv=none; b=emlS/geb85VjZtpHfCCH6mXKJecqJ6X5pz6Qm5OxwID287phqHD8WrdHDWM4rwZmtadxo6UUh0VEl2ivRapkv7UCC/nUIUJ10FXHNdMIMBYukFuk1naG6ikgiI6pr10nXrrNCqnxDDX8kms92yr7BBrhAEpVtK9g6mNTZEd1RhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750709797; c=relaxed/simple;
-	bh=JHHXqv0LaT+Sl9mMFX/Ae6l9ALRIkBrhLo7JcOJOnXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ELOH5bht1+z1Uqurbd2hOH9jMWbZ0pap/9y/zLTRv1kAIgxjonJuYC4IlUoO8cz38jj4nPqcN/ZKmVuJ7mQh1SJZhV+7l7RkrqbbhaBkR+FYV0K+V1lzgQ/wdAd3e0yW8aVzOcA2c/bIBcSR5lNCK1kyMW9bKlpTxYocWcRWWFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xAvlBy/w; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1750712887; c=relaxed/simple;
+	bh=9SEX81/ylUn0qfNAFFdpR6eIuqkOvq2GMYGbijhsiwo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AjDJYWF8SiU+folfkMLqp+cSGbQy353Npw/cbqa7pNeNDcDTKYrd0MHoOTrkcquEQbZKUUeE5Q7LnLWDnHn1jQYseigemwU1IoExnlfD2jPcnqmbuxbXAJIn2fxpd2of+LimJxqldGCWQAzH/8IO79hxetVhqBdApcmW89vGB9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIcQZqxb; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xAvlBy/w"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae0a420431bso84140666b.2
-        for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 13:16:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIcQZqxb"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-875f57e0cb9so464190139f.3
+        for <regressions@lists.linux.dev>; Mon, 23 Jun 2025 14:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750709793; x=1751314593; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cLEkhYw1KwcHEqZHkPQE50lr62xelk0uLtioyAiJVJY=;
-        b=xAvlBy/w1d7qP5FZrrTb+0VsPPjGnDybdaWIzb4nxJa/xZHFu9fMedw9SuX2DGYsXh
-         DSOV5e1Gr++0bPk5CSdKGwvwy6LR6OWluCd0pZJzzMp359z9npYtHR75/b7qxS6+Gkl8
-         pVoo+FtIPii2smOOgZ9HmszTwYsJKGiSrbpvGC36gi0rphhQocCFx0ZGnWkkxcWIjkUB
-         79lnWepYxcRlGJMeHdu3yHGPFokXB71muWW7VGznRrIzJp4qtk5YmVGJbPNXClGHHX9v
-         J9/UjMFJYtF4+pCXu3HDHAJkFnVPWcShJktLXJKBbuAEWMnkAkqh9UOx6DcWKwUuvAon
-         W1bQ==
+        d=gmail.com; s=20230601; t=1750712885; x=1751317685; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bvIGbgnG8gqohHLn+bw11uzo7U+PqrhPy5zMTSxuqJ4=;
+        b=bIcQZqxbPmdZvtc8hblIfakDvJtB8YicXtXrD1/ZmhwD21ST8nSPXa2MyDNHx9PPFb
+         /S06d3JUtKTNKN12371iwvqVozI79uThHlp3R5R62XtM6sZKaWXr9tTndKY2qvYshyZm
+         Gu6huXFj5N5bbrevCkqyLyiEcDxmPvn7f0hLugURpI9xdq/ICk++esZdPTv2YgePJzBP
+         w5FA3glqidDWXm1RPOcCt/v9ee2dp0fHqgPzFLl7MLCivTUGGPglZv5S/O2mQ9hk0kFN
+         tKiYEMUCJkMZy62yMSJ7W9SrFT1oUeN2WHfbRPaNBAAizcHTEa5KrK9X8/kmUl23IoM4
+         8Few==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750709793; x=1751314593;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cLEkhYw1KwcHEqZHkPQE50lr62xelk0uLtioyAiJVJY=;
-        b=be+LP+UipCjrbYjQYsNfMngRn5wEaUmjwI1Xps96rkaRS4tmby8/nYEDzmTAC+/+q8
-         ogQ2dZS6g4drFXJsvlfGZuqNqvISYogh3wnvzVn0jadCLemvPvokGnGmY3oUE6KPE7q2
-         O99eSnB4Cfxr5x0uHCQHPbdHHyv0wahbVl4fSQyr72lJOvguKfckPtdsoSrg3hu+eycJ
-         BZPVvjVCL7Gpff0HPcmtg1UlBQQ2k7RtffVKRrpyEtLbIOtXp2Z2M/jySrbH1HhPcTOp
-         nSq9OZuQk4xezGBWQGRe+k8L8zAG2hcytY03/s+RDxTfgsL2HdapQZ2rLKBB6tTURVt3
-         kbXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQJWPo1D6e/6zP0XR/iSZaFxGl5gveGX42cCjH3Llx1kXKFAm/d/M+slFoCAL/R9nrgKECxhskD9ppiA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwO8kQzxfu9IiepzH/U/4bFntGpTMrq29s6s7N0eOhlm1yUtE0m
-	Ykpy8zRGB03s4OnAp822DDyUyE5fuHgqdrPyssPfTHxAzmkOXPzYrAhFUfy46IkGZkpSfcOs3nK
-	ypXzet46HpeAUPJtFYF3JUMdPSLx0xv2Q67CwzkSNIWtBaeDSjqWFAqv4qg==
-X-Gm-Gg: ASbGnct7GMybJE0hCr7YjMJtr/nwsFYRB3VtChJ2pstIl7ioQt+4ehJhBtFs4X+xsM8
-	iN7grFAb8JPJl8PJpMPawXcYxOTr84j3fn6b1okr9Rzh+vqXWUC3s5kBB3lXUnqsHOaGGgKlFfL
-	GUptAn1VLqLyQayjxpMCSvRE4vZe9pIZ4nS34+PICJG3Q6mN+Z2qrcqMzgJ90NoXalRo9YPLBdI
-	AJ4
-X-Google-Smtp-Source: AGHT+IH8W2k769PxImmVrKNQTA+EhZNwz6gwpGQ4i/8HcB79n2XQjF93ywieBigkgN2AUYS9QOJXJEjcKy0xawy54jc=
-X-Received: by 2002:a17:907:2d89:b0:acb:b900:2bca with SMTP id
- a640c23a62f3a-ae0574451e3mr1122168866b.0.1750709793540; Mon, 23 Jun 2025
- 13:16:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750712885; x=1751317685;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bvIGbgnG8gqohHLn+bw11uzo7U+PqrhPy5zMTSxuqJ4=;
+        b=rs/yHJ4unUIW7k7WTzpJFPeSRjr4dLtITWpFQIzonIFhQv9e6oQC3hqmN//tRYwetp
+         k4whWymf/JUvV1k9guw43xudyYVAIFrJyEffmHmQKuCjjWhD9PrpNDDP+4IqYv5kCLDz
+         VgP6EkpxI7b34Txn636j0rCOrNHgK2jCcsPppnjPdakiEP03njzXX6+JoWmTI1DTLcz8
+         8IxB1Gexcj6F22xPF3FSl9fMP6JsNRdSHcQqXrphEBPvfCGBsd0lOkGRNk7nJ7I12fL4
+         uyfAVBvuOblvDBVlyD9rDzLbW5UKlB7X8EnHwSWkTfO86X3Q+XiHuVHpgEs2T+Kzn3ea
+         JjNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEVZ1OGi8UsMwbjoK5ki/5g62r1wpldng5t3cLItig5/ify5xo8GRi4JlMNIXFLpZo7QxsaYOJE9pZSw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzehJqPoIWflpwsweTLgi06rBFIFF/+D62AcAy8mU9NjV1WtjYQ
+	PaBkCSbtXOzqF9mVDKTizbX3ob69MFTZ192YKHhGEmRZoLx+YHqZLDc5
+X-Gm-Gg: ASbGncuwH6Ir9qZI+9oWlr0eykvCOCGeceW6JlTSIgiq/GTtgLIW7cx0VbGc/fTi0C1
+	3yVudTdcFROS8uPO6J0fovyiEUjKgGQozqirEKhXCdl3HAZlyp4+lc+tZyA3hw/NSDgyvLYNCVb
+	yfUvJH2RdlEA4HTpWuz3+Yk7+7BrlQdU98fRU5VGPasn2oyiPdWbzQQc0msbu/FRCCdHmBhLf0E
+	YDlXeCuOZPpd4bSDaK3rtQmN4nUf4nmJJNFaaS/4zxhM0l0OsEoxnxN90+foE4AqiH+k8U750Uq
+	oBnbmJstD6ogTpfM1RZmdTKbpKROeiVFzX7IVBJFxnaELDIMZcvFV++bSI5gi14=
+X-Google-Smtp-Source: AGHT+IGRBdyLzCtH0If0pGKqpe67dK6rtKBkWqYMo6tX7Tr29R+4oTCD4GFcLwpwfjNnogH+REegBw==
+X-Received: by 2002:a05:6e02:2705:b0:3de:25cb:42cc with SMTP id e9e14a558f8ab-3de38ca4f27mr142485925ab.10.1750712885171;
+        Mon, 23 Jun 2025 14:08:05 -0700 (PDT)
+Received: from ?IPV6:2601:282:d00:94b1::174? ([2601:282:d00:94b1::174])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de376271e0sm32486005ab.21.2025.06.23.14.08.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 14:08:04 -0700 (PDT)
+Message-ID: <8f8671c5-fefb-494a-9cb6-0f6412566164@gmail.com>
+Date: Mon, 23 Jun 2025 15:08:01 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv2i5AOYOkepUq_Rz1wxfzu1o2W59xDgui7VPw7g-fV9w@mail.gmail.com>
-In-Reply-To: <CA+G9fYv2i5AOYOkepUq_Rz1wxfzu1o2W59xDgui7VPw7g-fV9w@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 23 Jun 2025 22:16:22 +0200
-X-Gm-Features: Ac12FXyUtlAN5mo5G7XVHNzzalU5xEO1E42U1lrA8NLKvGONdwjAniZqy-W01ts
-Message-ID: <CAHVXubif=dPF2u=dQYhRR-VaRutX=b+7NmTkE5B-L+OxA5Krig@mail.gmail.com>
-Subject: Re: next-20250623: riscv defconfig raid6 recov_rvv.c use of
- undeclared identifier 'raid6_empty_zero_page'
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-raid@vger.kernel.org, 
-	Song Liu <song@kernel.org>, yukuai3@huawei.com, 
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Jeremy Lincicome <w0jrl1@gmail.com>
+Subject: Re: [regression v6.12.30..v6.12.32] mmc1: mmc_select_hs400 failed,
+ error -110 / boot regression on Lenovo IdeaPad 1 15ADA7
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, regressions@lists.linux.dev,
+ Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+ 1108065@bugs.debian.org, stable@vger.kernel.org, net147@gmail.com
+References: <aFW0ia8Jj4PQtFkS@eldamar.lan> <aFXCv50hth-mafOR@eldamar.lan>
+ <004c6e95-7c1b-4a7f-ab68-1774ce5a51d7@rock-chips.com>
+ <aFmPQL3mzTag5OxY@eldamar.lan>
+ <35be0df5-b769-43ce-a9c4-7df4d4683dab@gmail.com>
+ <aFml-1X0-vItR2Au@eldamar.lan>
+Content-Language: en-US
+In-Reply-To: <aFml-1X0-vItR2Au@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On Mon, Jun 23, 2025 at 8:32=E2=80=AFPM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
+On 6/23/25 13:07, Salvatore Bonaccorso wrote:
+> Hi,
 >
-> Regressions on riscv defconfig builds with gcc-13 and clang failed
-> on the Linux next-20250623 tag.
->
-> Regressions found on riscv
-> * riscv, build
->   - clang-20-defconfig
->   - gcc-13-defconfig
->   - rustclang-nightly-lkftconfig-kselftest
->   - rustgcc-lkftconfig-kselftest
->   - rv32-clang-20-defconfig
->
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
->
-> Build regression: riscv defconfig raid6 recov_rvv.c use of undeclared
-> identifier 'raid6_empty_zero_page'
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> ## Build log
-> lib/raid6/recov_rvv.c:168:24: error: use of undeclared identifier
-> 'raid6_empty_zero_page'
->   168 |         ptrs[faila] =3D (void *)raid6_empty_zero_page;
->       |                               ^
-> /lib/raid6/recov_rvv.c:171:24: error: use of undeclared identifier
-> 'raid6_empty_zero_page'
->   171 |         ptrs[failb] =3D (void *)raid6_empty_zero_page;
->       |                               ^
-> /lib/raid6/recov_rvv.c:206:24: error: use of undeclared identifier
-> 'raid6_empty_zero_page'
->   206 |         ptrs[faila] =3D (void *)raid6_empty_zero_page;
->       |                               ^
-> 3 errors generated.
->
-> ## Source
-> * Kernel version: 6.16.0-rc3-next-20250623
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next=
-/linux-next.git
-> * Git sha: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
-> * Git describe: next-20250623
-> * Project details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250623/
-> * Architectures: riscv
-> * Toolchains: gcc-13
-> * Kconfigs: defconfig
->
-> ## Build arm64
-> * Build log: https://qa-reports.linaro.org/api/testruns/28829977/log_file=
-/
-> * Build details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250623/build=
-/gcc-13-defconfig/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytm=
-qfZ6v24dxq5kjorJbgH6hC8/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2ytmqfZ6v24dxq5kjo=
-rJbgH6hC8/config
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> On Mon, Jun 23, 2025 at 12:58:43PM -0600, Jeremy Lincicome wrote:
+>> On 6/23/25 11:30, Salvatore Bonaccorso wrote:
+>>> On Mon, Jun 23, 2025 at 05:13:38PM +0800, Shawn Lin wrote:
+>>>> + Jonathan Liu
+>>>>
+>>>> 在 2025/06/21 星期六 4:21, Salvatore Bonaccorso 写道:
+>>>>> On Fri, Jun 20, 2025 at 09:20:41PM +0200, Salvatore Bonaccorso wrote:
+>>>>>> Hi
+>>>>>>
+>>>>>> In Debian we got a regression report booting on a Lenovo IdeaPad 1
+>>>>>> 15ADA7 dropping finally into the initramfs shell after updating from
+>>>>>> 6.12.30 to 6.12.32 with messages before dropping into the intiramfs
+>>>>>> shell:
+>>>>>>
+>>>>>> mmc1: mmc_select_hs400 failed, error -110
+>>>>>> mmc1: error -110 whilst initialising MMC card
+>>>>>>
+>>>>>> The original report is athttps://bugs.debian.org/1107979 and the
+>>>>>> reporter tested as well kernel up to 6.15.3 which still fails to boot.
+>>>>>>
+>>>>>> Another similar report landed with after the same version update as
+>>>>>> https://bugs.debian.org/1107979 .
+>>>>>>
+>>>>>> I only see three commits touching drivers/mmc between
+>>>>>> 6.12.30..6.12.32:
+>>>>>>
+>>>>>> 28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing parameters")
+>>>>>> 38828e0dc771 ("mmc: dw_mmc: add exynos7870 DW MMC support")
+>>>>>> 67bb2175095e ("mmc: host: Wait for Vdd to settle on card power off")
+>>>>>>
+>>>>>> I have found a potential similar issue reported in ArchLinux at
+>>>>>> https://bbs.archlinux.org/viewtopic.php?id=306024
+>>>>>>
+>>>>>> I have asked if we can get more information out of the boot, but maybe
+>>>>>> this regression report already rings  bell for you?
+>>>> Jonathan reported a similar failure regarding to hs400 on RK3399
+>>>> platform.
+>>>> https://lkml.org/lkml/2025/6/19/145
+>>>>
+>>>> Maybe you could try to revert :
+>>>> 28306c58daf8 ("mmc: sdhci: Disable SD card clock before changing
+>>>> parameters")
+>>> Thanks.
+>>>
+>>> Jeremy, could you test the (unofficial!) packages at
+>>> https://people.debian.org/~carnil/tmp/linux/1108065/ which consist of
+>>> 6.12.33-1 with the revert patch applied on top?
+>>>
+>>> I have put a sha256sum file and signed it with my key in the Debian
+>>> keyring for verification.
+>> Do I need all those packages?
+> Just the linux-image-6.12+unreleased-amd64-unsigned package to test
+> the patched kernel image and modules.
 
-The following diff fixes the issue and to me should be squashed into
-commit 44add101db9e5 ("lib/raid6: replace custom zero page with
-ZERO_PAGE") so adding Herbert as cc:
+I installed the package, and this is as far as I got.
+<https://share.bemyeyes.com/chat/oJcrv3N22q>
+for anyone who doesn't know, the above link is from Be My Eyes, an app 
+that allows me to read information not available with a screen reader 
+like Orca.
+I'm blind, and unable to read the Grub menu independently.
+I ran a bash script to extract the menu number for that kernel, then ran 
+grub-reboot to try and boot it on the next reboot.
+As far as I can tell, the system is trying to boot,but fails and returns 
+to Grub. Am I doing something wrong?
 
-diff --git a/lib/raid6/recov_rvv.c b/lib/raid6/recov_rvv.c
-index f29303795ccfe..5d54c4b437df7 100644
---- a/lib/raid6/recov_rvv.c
-+++ b/lib/raid6/recov_rvv.c
-@@ -165,10 +165,10 @@ static void raid6_2data_recov_rvv(int disks,
-size_t bytes, int faila,
-         * delta p and delta q
-         */
-        dp =3D (u8 *)ptrs[faila];
--       ptrs[faila] =3D (void *)raid6_empty_zero_page;
-+       ptrs[faila] =3D raid6_get_zero_page();
-        ptrs[disks - 2] =3D dp;
-        dq =3D (u8 *)ptrs[failb];
--       ptrs[failb] =3D (void *)raid6_empty_zero_page;
-+       ptrs[failb] =3D raid6_get_zero_page();
-        ptrs[disks - 1] =3D dq;
+-- 
+Sincerely,
+Jeremy Lincicome W0JRL
+JL Applied Technologies:
+https://jlappliedtechnologies.com
+SkyHubLink System:
+https://skyhublink.com
 
-        raid6_call.gen_syndrome(disks, bytes, ptrs);
-@@ -203,7 +203,7 @@ static void raid6_datap_recov_rvv(int disks,
-size_t bytes, int faila,
-         * Use the dead data page as temporary storage for delta q
-         */
-        dq =3D (u8 *)ptrs[faila];
--       ptrs[faila] =3D (void *)raid6_empty_zero_page;
-+       ptrs[faila] =3D raid6_get_zero_page();
-        ptrs[disks - 1] =3D dq;
-
-        raid6_call.gen_syndrome(disks, bytes, ptrs);
-
-Thanks,
-
-Alex
