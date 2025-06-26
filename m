@@ -1,230 +1,194 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B12215191
-	for <regressions@lists.linux.dev>; Thu, 26 Jun 2025 11:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B132E3361
+	for <regressions@lists.linux.dev>; Thu, 26 Jun 2025 12:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750936850; cv=none; b=i8/Zgyx1mCEzSB1z1gH2XJehL20SjZC3/7l+oa5YbKjmmNQWoeu/UzbyLufOXxPy14R+VUQMvoL437LlTU3MYN3XVR8Yi9TvFJtAUkrwHFIHzXGsycEkmoT8Q9PzJ1UAeZNtaa3sGebgB25YU/FoxHAXkIyUOqVQ/Pt6D+uuPQc=
+	t=1750941090; cv=none; b=jFUsRK2KtkwOFrEEOYmGjrVMQ3J/+nq8aL/Ol/qcPCCo4mplXTfRCGHCq8YVpMv63EvS2Qn/7/46MhuZJwVteNovRTpuwxQX9vuC4BGGeecyNf9qVu7YP0wIoo9ksElno3Z9doDyGvAo0lHCIc759yH5XjHhiUupV1236v3IuQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750936850; c=relaxed/simple;
-	bh=VU9tv04ZofpUdDCl5rmOTYOvZ0c9i0Uu2PSRiRaHGbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNLcuSY0hVGf4VdgBGiviNdFzjbWkksKqtqIc0M3HTUXCfrxUj7yw5tBCgTduTBeg2t0EorKaPaFJLFmguKf46gyDDKWObTWCaTlod3mk+RBDRrRk0g7H6Er9EsFULvgObneFh4BQXOZ062+tSRa6TMoePsD0JrFJnITQyrokwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DlJdDWjd; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750941090; c=relaxed/simple;
+	bh=ikAqrARMintdfzIAiwBkaBMZza4NhrCDSZUeSTVgGWs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=f/1euRC42KFeXGtqxJhW/kj01im0Ww4ZJfA/K20oKRUXyGCh5DAeB7wZXbqMucGlPHbotUouVDJVWDcIyyyz+EMVnfNIbteVY+qeE62pSuHYows4IfaInjwpYtZXIPHlDCaOK06A2PMNnVWykhev1r0Cb+5oT1MckzPYUspo6U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qgT3AXN9; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlJdDWjd"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ae0dffaa8b2so43182366b.0
-        for <regressions@lists.linux.dev>; Thu, 26 Jun 2025 04:20:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qgT3AXN9"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74ad4533ac5so1487075b3a.0
+        for <regressions@lists.linux.dev>; Thu, 26 Jun 2025 05:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750936847; x=1751541647; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWGvZw6MV7GFdDBKi+dQLKYsveFoasqLGDzAcy79qPA=;
-        b=DlJdDWjdxldOeLLsAS6agr4jGgUUAOEiMe7c5CL3+yJMIG7JKCpUz1mKxmbZt1sVpi
-         JD0YU6oAXoSUEN+BDwOYGrm7BB/AdFiHvBa23s0mE3PSmdav5b6sRenqMFQnGR17J78t
-         QfDS0/iOikDYUZ9BvWdMep4eX/pCVO17Np1zAxSb9qH3tW/HUhnoFkq7VaLEElXUXyfH
-         vR/UW8vuGASvlKI/UZGAf3CySeGMi5G1ycLWbtlnhToAWM7OqIfdpWmgJIAWoM8TcXUY
-         xvf3uv38Nj5YGAdzWrI/io+qYjIKt83ht0xyFTNRfUBZmBtwZfc0pxt2iX6K3plVkcnZ
-         s9jQ==
+        d=linaro.org; s=google; t=1750941087; x=1751545887; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EIOkAUyi7+ujarkTFH99WxEnz3RnUsZ9Cfbw2lKPPMg=;
+        b=qgT3AXN9afOCfpq0bxxrCOala0FnFjjxRu9Qc6aPYuEUVhM7T8a88tQuPF644l5yCR
+         j2msnivv3slEJKDMshsTRCRW4CA7So4XVNskI+4vVIcTwZ3byXOUmTszOumJHBr2JM5V
+         4wo91Wg0A0C0gePSq0A+H3XE8jHLsSa5E0AFMoo6ECoJZkI1nwWfHjXXShhkvE3gFtN0
+         bBNcbNfGbOzAWkyjtrGzXUqxI3G1aDnPyXlGmt6mDZw5Fmm2CWmrclZvbkYH2DwZKZPb
+         p05MOxSBMzOusVsfM21RYbbt0jgXTND3VWWm/vfTjxgjKFCBzg6EtCromq+iMeDWMKAE
+         VM9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750936847; x=1751541647;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YWGvZw6MV7GFdDBKi+dQLKYsveFoasqLGDzAcy79qPA=;
-        b=HgCx7txMx+sTwth3P0qUwBpU/mg2o610hsEVjpM0E5A6TVrS1FO7gaenRE3oe2Sj/U
-         oiLW9EcaSQ7NEnTqHVvqsupCMB2slaxolGWUYF9zMaKdyuMCk5/cpY2JM1y7qsHqf+76
-         0Y6iK/yBw6vBUl/Xs+hDXPUqrnGWgQ7FQHkx9MDK3G/MIfZEpHyENCIA+1M2ziVS0TOh
-         0Pw9v337Itmv0KUXGpM/Nm14IJ8Bs0DnD+tE4hEy+y1bK3xqEttVP/2zWmukLxgt2fAm
-         0tPV+X3JHtWiA/713HdHh0/ILAM2RFNjqQMUQea5Puikbp3V6w9nYmp9fw6MPbBpwous
-         FYvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWy1wvTWvtj5ld8y5q3V12MWzWXJQ0CvksfeSbfKMLqgg2c1ylnV/I1GtjoDB2x5oFi8qfME6not+0ptA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzuwhvTL/GZgc7fvbQTqoS1FGx/OKfZU5BgDE6NyaDHF+mw7N6O
-	gZ6N4YMzF8G2G1ulP6SxdW3UAGdI8T1ABXCs3bobtI1IqsgzElnTJzET3frO6bv47DZHA/XWwmW
-	GA6nv2npH3Hqdfotqanj2rIHnm4pJGXE=
-X-Gm-Gg: ASbGnctHH0dIFdaaaH8u/3Y1QGq/F70W39ytQ5EpHz44Lo0vI9QGTvFFRuNSlYnUxxT
-	u5Lzt0Z2Fto8v5VEHzQphdpIzdqinKze1CefsOU85eaINGSwJgo1LLDRrEboBUOdYVxgcwqJP3o
-	ZYBmjnL6qdqNcNoCQ1kzYO8kZv4O7QfBJjBv6k9e+V9S0=
-X-Google-Smtp-Source: AGHT+IFGmfCKJbvnbGzZtBmpy8UpMv0Gaae1MPevBZvEmkYAT/3EHECmHFwUpqq1SojkVMOTp1DkNUFg1K1CE3Q+O6k=
-X-Received: by 2002:a17:907:ba06:b0:ade:433c:6412 with SMTP id
- a640c23a62f3a-ae0be7fda14mr724079666b.3.1750936846702; Thu, 26 Jun 2025
- 04:20:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750941087; x=1751545887;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EIOkAUyi7+ujarkTFH99WxEnz3RnUsZ9Cfbw2lKPPMg=;
+        b=INdY40dk6KT5ZvQmJDUA75wJZGeqSu4Icib/udCGpiNe/0d4iKeqoTa6SZdoDwChPq
+         JLNxR2t/GobVLJmPYC7ZTEvafbyuOC7qNbzKNbG5g8/m0Gbjpx8mc9IrVm93meUZGXkW
+         waF4FRaD05kL02VIrgJjR03DNiQjK+Mtcc0s7U3ma/NCmsukiY6qamFxl9n8KmU66H0M
+         N5lAyxOgOE7Up+L4+vebHDaVUshnBH/BeY4XKpeeyGW6IMnrbH7f3pNY8qJEowYIL6JI
+         2jg16SAqzxjYZMQWrPt89xNE11k8R6gBa97W/A5Si0vOI0fXRYSpvSIY1ehj7OIe28fn
+         zorg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjlCjmmUryitrpX9Qc5y6oJAkSa/vPm8uyzXAGbhWFAjIf81JveU/7OCuKsHfL5ZaU26C3M08j/rGBNQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxM2G4tEeLt6Ol5ooseI3N3QsAC/JTBXlcCehYAu3cgzSk/yFXV
+	lkdUYL97y9MWk1Owg9NE1RQMmu/TuRYAwjUIJA4nQoceFUmahOUzqpwiJTBYK0OeNYjcydYt5yC
+	n2EzldsVe+l2GTCddAJ8Ff2R7PTvv5OsAqQrwmTFFIA==
+X-Gm-Gg: ASbGncumWQmzBEA4q3CALCZbR5pMB3YUWjLeSipWlN41wzkD0eMtTVJr4hezgE5tWhs
+	n+hT6gw8ih0njFmQsDmUcnDk84B8Th8/4Id/8ej8mghud5vn1a5o2vhMXMbJsL9wEfCqqnu/nJV
+	4bKM0bePv1AhZDGnjAQq9yVVjDW8Kmq/WqMmKrjTKKQI4clqOXVJiGhYQ3tgH13HOXNwIrBJevd
+	ujAR0hKuUkF0SQ=
+X-Google-Smtp-Source: AGHT+IGA5Lld9l17rfBeRi3J6RtVhUs8VMLhujLLvSb8uLda4du0G2dKBSQALBMM1VCCHZPZuj94xiQrzmJCa/zGAg8=
+X-Received: by 2002:a17:90a:ec8f:b0:30e:3737:7c87 with SMTP id
+ 98e67ed59e1d1-316d69c8e39mr4270600a91.5.1750941087313; Thu, 26 Jun 2025
+ 05:31:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtJO4DbiabJwpSamTPHjPzyrD3O6ZCwm2+CDEUA7f+ZYw@mail.gmail.com>
- <CAOQ4uxi9KjOx0JSakPYbsNaZj63nLiLzQE-_Hdq1H_MGrC8=6A@mail.gmail.com>
-In-Reply-To: <CAOQ4uxi9KjOx0JSakPYbsNaZj63nLiLzQE-_Hdq1H_MGrC8=6A@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 26 Jun 2025 13:20:34 +0200
-X-Gm-Features: Ac12FXxYyrb54qNUP16cQgT4q4pUUBMxVyyoX1vueeowLOsUWx2U9K5eznE3q9U
-Message-ID: <CAOQ4uxhkZ989daUzNos3=7ucsOWx9bRd36gLppA7ttgbquWkeg@mail.gmail.com>
-Subject: Re: stable-rc: 5.4 and 5.10: fanotify01.c:339: TFAIL:
- fanotify_mark(fd_notify, 0x00000001, 0x00000008, -100, ".") expected EXDEV:
- ENODEV (19)
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, Petr Vorel <pvorel@suse.cz>
-Cc: LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>, 
-	linux-stable <stable@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, chrubis <chrubis@suse.cz>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: multipart/mixed; boundary="000000000000c5d5e5063877c0ab"
-
---000000000000c5d5e5063877c0ab
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 26 Jun 2025 18:01:16 +0530
+X-Gm-Features: Ac12FXzu4alDLey0mZeuA43OiDuuxMWqb_ya1XrTviNkqYaW1clUM_UZCxNwuVM
+Message-ID: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+Subject: next-20250626: WARNING fs jbd2 transaction.c start_this_handle with ARM64_64K_PAGES
+To: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, LTP List <ltp@lists.linux.it>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 11:57=E2=80=AFAM Amir Goldstein <amir73il@gmail.com=
-> wrote:
->
-> On Thu, Jun 26, 2025 at 9:03=E2=80=AFAM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > Regression in the LTP syscalls/fanotify01 test on the Linux stable-rc 5=
-.4
-> > and 5.10 kernel after upgrading to LTP version 20250530.
-> >
-> >  - The test passed with LTP version 20250130
-> >  - The test fails with LTP version 20250530
-> >
-> > Regressions found on stable-rc 5.4 and 5.10 LTP syscalls fanotify01.c
-> > fanotify_mark expected EXDEV: ENODEV (19)
-> >
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducibility? Yes
-> >
-> > Test regression: stable-rc 5.4 and 5.10
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > fanotify01.c:339: TFAIL: fanotify_mark(fd_notify, 0x00000001,
-> > 0x00000008, -100, ".") expected EXDEV: ENODEV (19)
-> >
-> > The test expected fanotify_mark() to fail with EXDEV, but received
-> > ENODEV instead. This indicates a potential mismatch between updated
-> > LTP test expectations and the behavior of the 5.4 kernel=E2=80=99s fano=
-tify
-> > implementation.
-> >
->
-> Yap, that's true.
->
-> The change to fanotify01:
-> * db197b7b5 - fanotify01: fix test failure when running with nfs TMPDIR
->
-> Depends on this kernel change from v6.8:
-> * 30ad1938326b - fanotify: allow "weak" fsid when watching a single files=
-ystem
->
-> Which fs type is your LTP TMPDIR?
->
-> Can you please test this fix:
->
-> --- a/testcases/kernel/syscalls/fanotify/fanotify01.c
-> +++ b/testcases/kernel/syscalls/fanotify/fanotify01.c
-> @@ -374,7 +374,21 @@ static void setup(void)
->         }
->
->         if (fanotify_flags_supported_on_fs(FAN_REPORT_FID,
-> FAN_MARK_MOUNT, FAN_OPEN, ".")) {
-> -               inode_mark_fid_xdev =3D (errno =3D=3D ENODEV) ? EXDEV : e=
-rrno;
-> +               inode_mark_fid_xdev =3D errno;
-> +               if (inode_mark_fid_xdev =3D=3D ENODEV) {
-> +                       /*
-> +                        * The fs on TMPDIR has zero fsid.
-> +                        * On kernels <  v6.8 an inode mark fails with EN=
-ODEV.
-> +                        * On kernels >=3D v6.8 an inode mark is allowed =
-but multi
-> +                        * fs inode marks will fail with EXDEV.
-> +                        * See kernel commit 30ad1938326b
-> +                        * ("fanotify: allow "weak" fsid when watching
-> a single filesystem").
-> +                        */
-> +                       if
-> (fanotify_flags_supported_on_fs(FAN_REPORT_FID, FAN_MARK_INODE,
-> FAN_OPEN, "."))
-> +                               inode_mark_fid_xdev =3D errno;
-> +                       else
-> +                               inode_mark_fid_xdev =3D EXDEV;
-> +               }
->                 tst_res(TINFO | TERRNO, "TMPDIR does not support
-> reporting events with fid from multi fs");
->         }
->  }
->
->
+Regressions noticed on arm64 devices while running LTP syscalls mmap16
+test case on the Linux next-20250616..next-20250626 with the extra build
+config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
 
-Please test the attached patch instead.
-It is simpler and more correct in some configurations.
+Not reproducible with 4K page size.
 
-Thanks,
-Amir.
+Test environments:
+- Dragonboard-410c
+- Juno-r2
+- rk3399-rock-pi-4b
+- qemu-arm64
 
---000000000000c5d5e5063877c0ab
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-fanotify01-Fix-regression-on-kernels-v6.8.patch"
-Content-Disposition: attachment; 
-	filename="0001-fanotify01-Fix-regression-on-kernels-v6.8.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mcdakydf0>
-X-Attachment-Id: f_mcdakydf0
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-RnJvbSAyYjcxN2IyODRiZjhhODAzZjIyM2NhNGI2MjcxMGI5MTBiNjIyNTg0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
-YXRlOiBUaHUsIDI2IEp1biAyMDI1IDExOjU4OjAxICswMjAwClN1YmplY3Q6IFtQQVRDSF0gZmFu
-b3RpZnkwMTogRml4IHJlZ3Jlc3Npb24gb24ga2VybmVscyA8IHY2LjgKClRoZXJlIHdhcyBhIHRl
-c3QgcmVncmVzc2lvbiBpbiBjYXNlIHRoZSBUTVBESVIgaGFzIGEgemVybyBmc2lkLgoKS2VybmVs
-cyA8IHY2LjggZG8gbm90IGFsbG93IHNldHRpbmcgaW5vZGVzIG1hcmtzIG9uIHN1Y2ggZnMsIHdo
-aWxlCmtlcm5lbHMgPj0gdjYuOCBkbyBhbGxvdyB0byBzZXQgaW5vZGUgbWFya3MgYnV0IG9uIG9u
-IGEgc2luZ2xlIGZzLgoKQWRqdXN0IHRoZSB0ZXN0IGV4cGVjdGF0aW9uIGluIHRob3NlIHR3byBk
-aWZmZXJlbnQgY2FzZXMuCgpSZXBvcnRlZC1ieTogTmFyZXNoIEthbWJvanUgPG5hcmVzaC5rYW1i
-b2p1QGxpbmFyby5vcmc+Ckxpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2x0cC9DQStHOWZZ
-dEpPNERiaWFiSndwU2FtVFBIalB6eXJEM082WkN3bTIrQ0RFVUE3ZitaWXdAbWFpbC5nbWFpbC5j
-b20vCkZpeGVzOiBkYjE5N2I3YjUgKCJmYW5vdGlmeTAxOiBmaXggdGVzdCBmYWlsdXJlIHdoZW4g
-cnVubmluZyB3aXRoIG5mcyBUTVBESVIiKQpTaWduZWQtb2ZmLWJ5OiBBbWlyIEdvbGRzdGVpbiA8
-YW1pcjczaWxAZ21haWwuY29tPgotLS0KIHRlc3RjYXNlcy9rZXJuZWwvc3lzY2FsbHMvZmFub3Rp
-ZnkvZmFub3RpZnkwMS5jIHwgMTYgKysrKysrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEx
-IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvdGVzdGNhc2VzL2tl
-cm5lbC9zeXNjYWxscy9mYW5vdGlmeS9mYW5vdGlmeTAxLmMgYi90ZXN0Y2FzZXMva2VybmVsL3N5
-c2NhbGxzL2Zhbm90aWZ5L2Zhbm90aWZ5MDEuYwppbmRleCBmNTE0ZGMxZGYuLmRmNTBkODRhMSAx
-MDA2NDQKLS0tIGEvdGVzdGNhc2VzL2tlcm5lbC9zeXNjYWxscy9mYW5vdGlmeS9mYW5vdGlmeTAx
-LmMKKysrIGIvdGVzdGNhc2VzL2tlcm5lbC9zeXNjYWxscy9mYW5vdGlmeS9mYW5vdGlmeTAxLmMK
-QEAgLTc1LDYgKzc1LDcgQEAgc3RhdGljIGNoYXIgZm5hbWVbQlVGX1NJWkVdOwogc3RhdGljIGNo
-YXIgYnVmW0JVRl9TSVpFXTsKIHN0YXRpYyBpbnQgZmRfbm90aWZ5Owogc3RhdGljIGludCBmYW5f
-cmVwb3J0X2ZpZF91bnN1cHBvcnRlZDsKK3N0YXRpYyBpbnQgdG1wZnNfcmVwb3J0X2ZpZF91bnN1
-cHBvcnRlZDsKIHN0YXRpYyBpbnQgbW91bnRfbWFya19maWRfdW5zdXBwb3J0ZWQ7CiBzdGF0aWMg
-aW50IGlub2RlX21hcmtfZmlkX3hkZXY7CiBzdGF0aWMgaW50IGZpbGVzeXN0ZW1fbWFya191bnN1
-cHBvcnRlZDsKQEAgLTMzNSw5ICszMzYsMTEgQEAgcGFzczoKIAkgKiBXaGVuIHRlc3RlZCBmcyBo
-YXMgemVybyBmc2lkIChlLmcuIGZ1c2UpIGFuZCBldmVudHMgYXJlIHJlcG9ydGVkCiAJICogd2l0
-aCBmc2lkK2ZpZCwgd2F0Y2hpbmcgZGlmZmVyZW50IGZpbGVzeXN0ZW1zIGlzIG5vdCBzdXBwb3J0
-ZWQuCiAJICovCi0JcmV0ID0gcmVwb3J0X2ZpZCA/IGlub2RlX21hcmtfZmlkX3hkZXYgOiAwOwot
-CVRTVF9FWFBfRkRfT1JfRkFJTChmYW5vdGlmeV9tYXJrKGZkX25vdGlmeSwgRkFOX01BUktfQURE
-LCBGQU5fQ0xPU0VfV1JJVEUsCi0JCQkJCSBBVF9GRENXRCwgIi4iKSwgcmV0KTsKKwlpZiAoIXRt
-cGZzX3JlcG9ydF9maWRfdW5zdXBwb3J0ZWQpIHsKKwkJcmV0ID0gcmVwb3J0X2ZpZCA/IGlub2Rl
-X21hcmtfZmlkX3hkZXYgOiAwOworCQlUU1RfRVhQX0ZEX09SX0ZBSUwoZmFub3RpZnlfbWFyayhm
-ZF9ub3RpZnksIEZBTl9NQVJLX0FERCwgRkFOX0NMT1NFX1dSSVRFLAorCQkJCQkJIEFUX0ZEQ1dE
-LCAiLiIpLCByZXQpOworCX0KIAogCS8qIFJlbW92ZSBtYXJrIHRvIGNsZWFyIEZBTl9NQVJLX0lH
-Tk9SRURfU1VSVl9NT0RJRlkgKi8KIAlTQUZFX0ZBTk9USUZZX01BUksoZmRfbm90aWZ5LCBGQU5f
-TUFSS19SRU1PVkUgfCBtYXJrLT5mbGFnLApAQCAtMzczLDggKzM3NiwxMSBAQCBzdGF0aWMgdm9p
-ZCBzZXR1cCh2b2lkKQogCQlpbm9kZV9tYXJrX2ZpZF94ZGV2ID0gRVhERVY7CiAJfQogCi0JaWYg
-KGZhbm90aWZ5X2ZsYWdzX3N1cHBvcnRlZF9vbl9mcyhGQU5fUkVQT1JUX0ZJRCwgRkFOX01BUktf
-TU9VTlQsIEZBTl9PUEVOLCAiLiIpKSB7Ci0JCWlub2RlX21hcmtfZmlkX3hkZXYgPSAoZXJybm8g
-PT0gRU5PREVWKSA/IEVYREVWIDogZXJybm87CisJdG1wZnNfcmVwb3J0X2ZpZF91bnN1cHBvcnRl
-ZCA9IGZhbm90aWZ5X2luaXRfZmxhZ3Nfc3VwcG9ydGVkX29uX2ZzKEZBTl9SRVBPUlRfRklELCAi
-LiIpOworCWlmICghdG1wZnNfcmVwb3J0X2ZpZF91bnN1cHBvcnRlZCAmJgorCSAgICBmYW5vdGlm
-eV9mbGFnc19zdXBwb3J0ZWRfb25fZnMoRkFOX1JFUE9SVF9GSUQsIEZBTl9NQVJLX01PVU5ULCBG
-QU5fT1BFTiwgIi4iKSAmJgorCSAgICAoZXJybm8gPT0gRU5PREVWIHx8IGVycm5vID09IEVYREVW
-KSkgeworCQlpbm9kZV9tYXJrX2ZpZF94ZGV2ID0gRVhERVY7CiAJCXRzdF9yZXMoVElORk8gfCBU
-RVJSTk8sICJUTVBESVIgZG9lcyBub3Qgc3VwcG9ydCByZXBvcnRpbmcgZXZlbnRzIHdpdGggZmlk
-IGZyb20gbXVsdGkgZnMiKTsKIAl9CiB9Ci0tIAoyLjQzLjAKCg==
---000000000000c5d5e5063877c0ab--
+Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+transaction.c start_this_handle
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Test log
+<6>[   89.498969] loop0: detected capacity change from 0 to 614400
+<3>[   89.609561] operation not supported error, dev loop0, sector
+20352 op 0x9:(WRITE_ZEROES) flags 0x20000800 phys_seg 0 prio class 0
+<6>[   89.707795] EXT4-fs (loop0): mounted filesystem
+6786a191-5e0d-472b-8bce-4714e1a4fb44 r/w with ordered data mode. Quota
+mode: none.
+<3>[   90.023985] JBD2: kworker/u8:2 wants too many credits
+credits:416 rsv_credits:21 max:334
+<4>[   90.024973] ------------[ cut here ]------------
+<4>[ 90.025062] WARNING: fs/jbd2/transaction.c:334 at
+start_this_handle+0x4c0/0x4e0, CPU#0: 2/42
+<4>[   90.026661] Modules linked in: btrfs blake2b_generic xor
+xor_neon raid6_pq zstd_compress sm3_ce sha3_ce fuse drm backlight
+ip_tables x_tables
+<4>[   90.027952] CPU: 0 UID: 0 PID: 42 Comm: kworker/u8:2 Not tainted
+6.16.0-rc3-next-20250626 #1 PREEMPT
+<4>[   90.029043] Hardware name: linux,dummy-virt (DT)
+<4>[   90.029524] Workqueue: writeback wb_workfn (flush-7:0)
+<4>[   90.030050] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=--)
+<4>[ 90.030311] pc : start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1))
+<4>[ 90.030481] lr : start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1))
+<4>[   90.030656] sp : ffffc000805cb650
+<4>[   90.030785] x29: ffffc000805cb690 x28: fff00000dd1f5000 x27:
+ffffde2ec0272000
+<4>[   90.031097] x26: 00000000000001a0 x25: 0000000000000015 x24:
+0000000000000002
+<4>[   90.031360] x23: 0000000000000015 x22: 0000000000000c40 x21:
+0000000000000008
+<4>[   90.031618] x20: fff00000c231da78 x19: fff00000c231da78 x18:
+0000000000000000
+<4>[   90.031875] x17: 0000000000000000 x16: 0000000000000000 x15:
+0000000000000000
+<4>[   90.032859] x14: 0000000000000000 x13: 00000000ffffffff x12:
+0000000000000000
+<4>[   90.033225] x11: 0000000000000000 x10: ffffde2ebfba8bd0 x9 :
+ffffde2ebd34e944
+<4>[   90.033607] x8 : ffffc000805cb278 x7 : 0000000000000000 x6 :
+0000000000000001
+<4>[   90.033971] x5 : ffffde2ebfb29000 x4 : ffffde2ebfb293d0 x3 :
+0000000000000000
+<4>[   90.034294] x2 : 0000000000000000 x1 : fff00000c04dc080 x0 :
+000000000000004c
+<4>[   90.034772] Call trace:
+<4>[ 90.035068] start_this_handle (fs/jbd2/transaction.c:334
+(discriminator 1)) (P)
+<4>[ 90.035366] jbd2__journal_start (fs/jbd2/transaction.c:501)
+<4>[ 90.035586] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
+<4>[ 90.035807] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242
+fs/ext4/inode.c:2846)
+<4>[ 90.036004] ext4_writepages (fs/ext4/inode.c:2953)
+<4>[ 90.036233] do_writepages (mm/page-writeback.c:2636)
+<4>[ 90.036406] __writeback_single_inode (fs/fs-writeback.c:1680)
+<4>[ 90.036616] writeback_sb_inodes (fs/fs-writeback.c:1978)
+<4>[ 90.036891] wb_writeback (fs/fs-writeback.c:2156)
+<4>[ 90.037122] wb_workfn (fs/fs-writeback.c:2303 (discriminator 1)
+fs/fs-writeback.c:2343 (discriminator 1))
+<4>[ 90.037318] process_one_work (kernel/workqueue.c:3244)
+<4>[ 90.037517] worker_thread (kernel/workqueue.c:3316 (discriminator
+2) kernel/workqueue.c:3403 (discriminator 2))
+<4>[ 90.037752] kthread (kernel/kthread.c:463)
+<4>[ 90.037903] ret_from_fork (arch/arm64/kernel/entry.S:863)
+<4>[   90.038217] ---[ end trace 0000000000000000 ]---
+<2>[   90.039950] EXT4-fs (loop0): ext4_do_writepages: jbd2_start:
+9223372036854775807 pages, ino 14; err -28
+<3>[   90.040291] JBD2: kworker/u8:2 wants too many credits
+credits:416 rsv_credits:21 max:334
+<4>[   90.040374] ------------[ cut here ]------------
+<4>[ 90.040386] WARNING: fs/jbd2/transaction.c:334 at
+start_this_handle+0x4c0/0x4e0, CPU#1: 2/42
+
+
+## Source
+* Kernel version: 6.16.0-rc3-next-20250626
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: ecb259c4f70dd5c83907809f45bf4dc6869961d7
+* Git describe: 6.16.0-rc3-next-20250626
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250626/
+* Architectures: arm64
+* Toolchains: gcc-13
+* Kconfigs: gcc-13-lkftconfig-64k_page_size
+
+## Build arm64
+* Test log: https://qa-reports.linaro.org/api/testruns/28894530/log_file/
+* Test LAVA log 1:
+https://lkft.validation.linaro.org/scheduler/job/8331353#L6841
+* Test LAVA log 2:
+https://lkft.validation.linaro.org/scheduler/job/8331352#L8854
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250626/log-parser-test/exception-warning-fsjbd2transaction-at-start_this_handle/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
