@@ -1,98 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E9E19F420;
-	Fri, 27 Jun 2025 03:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390FC19CC3E;
+	Fri, 27 Jun 2025 05:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750996698; cv=none; b=SRT2q5FfBITYV0Y1PAwKeNEsClgXgbVwvP+vLTdTW69UGvt9y5ByHAo/Cq3xdq1CYYx+VESFQ7ooU/pUGCqvBtiiTl533qFXqr/gvG5Oxouzfb57ZDQshREUGXkhnxBhgSLVd9SxvI73XmZZOPmeigkzCaXNWjPRlP7Pf+WM6e4=
+	t=1751003553; cv=none; b=lFioWj4WjEWai8Tvgn5oAhNQhA+jgUtHoQbzfZ0v+IK8laeNkp8wMFxGx65eb1RyXC0LRgNIFmE1FFYSeed8NnZa1sua/AK3Hh1u8+9995us9+Z6IkODXXaGDU32gILxUQayHdmTekcady1meGePqF121hfPBUvXuWQjfSXmTaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750996698; c=relaxed/simple;
-	bh=j98qoPjak3wR5iuEcAqFbhakXDyF8DDvouUxcNq8yRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iqpy7+ki20R+yyGf/LnsMCExNEW2IXlgJEFxmCuVO+z5A2tXKSgStcsVTmnunab+hmiXREoz7gngfvb5zhTBPFwXBasOkiVP40sWf+9Pz1PLoujDuzgILdI9TLQKGQJeFhpYQDTz4jod9XakB9wkOlJX+BZTjpkCMafpxr1Gq6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmqm3dR/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751003553; c=relaxed/simple;
+	bh=I+cyzXXEFsVaAY+O6/we7LXtcWZMrSXWgPA81FRNw4c=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=FKpgUhV7IX/GjsI2QlLJgGiKTVXuf9vKs7ls4tJIEnZCkOUWpctfb1u7pTcpnke6F/8X4vAk8EiiyhkXktnOEO9ob1uJ+Dn4xaB+e6Mux13bLiuR1diqTFKl5R8/+2MjhnzOVkyKRpyjRA/TxE6/5blJlBN/sB18QIrTpqrXey0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=NUg3Q+FS; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmqm3dR/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161CAC4CEE3;
-	Fri, 27 Jun 2025 03:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750996698;
-	bh=j98qoPjak3wR5iuEcAqFbhakXDyF8DDvouUxcNq8yRo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gmqm3dR/SKhyAGApA2nrn7pDkVzzV3GMe25X2S9RO3FJS8Wu5IY9sZK8MQ3gxVHuB
-	 foKuVH96q8aczFyUTWFzY3wAvjKbwtYCrAqCmw8mxMQZtKskD46LeyIZqAwd3BPrL9
-	 nVfC8hiTDTFDB4sWoYBg8jPgHvvPHV3HaBQW6Fa0h3FNZ10L9F3gY+yewpvKFeLOvy
-	 5D9OWTwXEde6LFC4s1D7hqG0szvgpDNyKq2xusxpqEiGEIfk4+i9ALqEZo7thJ/78J
-	 u2xgYPBzDox8LIv2z8c3ZCCzcrMlLT4RUrZDNIL/RrtrtQMR1mpuYGgsdVe/WSjrCC
-	 qHkcgNALxkFsQ==
-Message-ID: <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
-Date: Thu, 26 Jun 2025 22:58:15 -0500
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="NUg3Q+FS"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1751003086;
+	bh=UyV35LOM07P/PALS6LcEMleCj1no3wxnvAIeYWaEtMU=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=NUg3Q+FSo4ZvGRStNFZRcyBK2LQb6PdQnA/gJ9PlV5t7nFWQSPNUt3RjFyklTZ+HC
+	 iXPD48xk53aOi7RlCQXLB0Orsic0/wjL9ImhlnrVhMz0XcN68kVY4/fHrIjaliksWB
+	 ojxzRZjZeTqF6MG9YpIg6T86PnpEhMf8g2ubuyd8=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-To: Askar Safin <safinaskar@zohomail.com>
-Cc: Linux i2c <linux-i2c@vger.kernel.org>,
- linux-acpi <linux-acpi@vger.kernel.org>,
- regressions <regressions@lists.linux.dev>,
- DellClientKernel <Dell.Client.Kernel@dell.com>,
- linux-gpio <linux-gpio@vger.kernel.org>, Raul E Rangel
- <rrangel@chromium.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Werner Sembach <wse@tuxedocomputers.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
- <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
- <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
+Date: Fri, 27 Jun 2025 07:44:31 +0200
+Cc: Antony Antony <antony.antony@secunet.com>,
+ David Howells <dhowells@redhat.com>,
+ Antony Antony <antony@phenome.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ Sedat Dilek <sedat.dilek@gmail.com>,
+ Maximilian Bosch <maximilian@mbosch.me>,
+ regressions@lists.linux.dev,
+ v9fs@lists.linux.dev,
+ netfs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C7DAFD20-65D2-4B61-A612-A25FCC0C9573@flyingcircus.io>
+References: <ZxFQw4OI9rrc7UYc@Antony2201.local>
+ <D4LHHUNLG79Y.12PI0X6BEHRHW@mbosch.me>
+ <c3eff232-7db4-4e89-af2c-f992f00cd043@leemhuis.info>
+ <D4LNG4ZHZM5X.1STBTSTM9LN6E@mbosch.me>
+ <CA+icZUVkVcKw+wN1p10zLHpO5gqkpzDU6nH46Nna4qaws_Q5iA@mail.gmail.com>
+ <3327438.1729678025@warthog.procyon.org.uk>
+ <ZxlQv5OXjJUbkLah@moon.secunet.de>
+ <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
+To: Ryan Lahfa <ryan@lahfa.xyz>
 
+Hi,
 
+we=E2=80=99re experiencing the same issue with a number of NixOS tests =
+that are heavy in operations copying from the v9fs mounted nix store.
 
-On 6/26/25 10:51 PM, Askar Safin wrote:
-> Okay, so here are results of new expirements.
-> 
-> Now I write 1 to /sys/power/pm_debug_messages in the beginning.
-> 
-> I was unable to find "last_hw_sleep" in /sys/power/suspend_stats on these particular kernel configurations.
-> But I print all other files in /sys/power/suspend_stats .
+> On 13. Jun 2025, at 00:24, Ryan Lahfa <ryan@lahfa.xyz> wrote:
+>=20
+> Hi everyone,
+>=20
+> Le Wed, Oct 23, 2024 at 09:38:39PM +0200, Antony Antony a =C3=A9crit :
+>> On Wed, Oct 23, 2024 at 11:07:05 +0100, David Howells wrote:
+>>> Hi Antony,
+>>>=20
+>>> I think the attached should fix it properly rather than working =
+around it as
+>>> the previous patch did.  If you could give it a whirl?
+>>=20
+>> Yes this also fix the crash.
+>>=20
+>> Tested-by: Antony Antony <antony.antony@secunet.com>
+>=20
+> I cannot confirm this fixes the crash for me. My reproducer is =
+slightly
+> more complicated than Max's original one, albeit, still on NixOS and
+> probably uses 9p more intensively than the automated NixOS testings
+> workload.
+>=20
+> Here is how to reproduce it:
+>=20
+> $ git clone https://gerrit.lix.systems/lix
+> $ cd lix
+> $ git fetch https://gerrit.lix.systems/lix refs/changes/29/3329/8 && =
+git checkout FETCH_HEAD
+> $ nix-build -A hydraJobs.tests.local-releng
+>=20
+> I suspect the reason for why Antony considers the crash to be fixed is
+> that the workload used to test it requires a significant amount of
+> chance and retries to trigger the bug.
+>=20
+> On my end, you can see our CI showing the symptoms:
+> =
+https://buildkite.com/organizations/lix-project/pipelines/lix/builds/2357/=
+jobs/019761e7-784e-4790-8c1b-f609270d9d19/log.
+>=20
+> We retried probably hundreds of times and saw different corruption
+> patterns, Python getting confused, ld.so getting confused, systemd
+> sometimes too. Python had a much higher chance of crashing in many of
+> our tests. We reproduced it over aarch64-linux (Ampere Altra Q80-30) =
+but
+> also Intel and AMD CPUs (~5 different systems).
 
-That's odd.  It should be made when the PMC core driver binds.  Maybe 
-others will know what's missing here.
+Yeah. We=E2=80=99re on AMD CPUs and it wasn=E2=80=99t hardware-bound.=20
 
-> 
-> I used same minimized config as in previous expirements.
-> I used modified script:
-> 
-> https://zerobin.net/?bccdd94f5f07bf85#8jop5IXDG32p0I7SBfEc29ng0/MdAFZgrqI9x+4A/Fo=
-> 
-> Here is dmesg for "good" commit "d86388c902b45fe2" without external mouse:
-> https://zerobin.net/?90d41139996f1cd8#Xuy0UjyxtXrOyLxq4YMP/IzUB559v7ESEIqsd/4Fqo0=
-> 
-> Here is dmesg for "bad" commit "1796f808e4bb2c07" without external mouse:
-> https://zerobin.net/?181b4d79c16fd9b3#nu0HyJX/r9cFtKitVxJB+3CZsGfwKHc6JLYX4OyZHR4=
-> 
-> Here is dmesg for "good" commit "d86388c902b45fe2" with external mouse:
-> https://zerobin.net/?a13c513b12549f62#LPLtc3MA1iSEPUjaizDk6xwBgEitH16hZE/WUWdgr6c=
-> 
-> Here is dmesg for "bad" commit "1796f808e4bb2c07" with external mouse:
-> https://zerobin.net/?cda0d7dd920ad66a#VHWKTp8motWKNJawyFC+v+qNP55an/ZR7HTlhmLJ7gA=
-> 
-> As we can see, external USB wireless mouse doesn't really change anything.
-> No wonder, I have CONFIG_USB_SUPPORT disabled in my minimized config. :)
-> 
-I see in your bad config interrupt 14 is waking the system.  In the good 
-config interrupt 8 is waking it.
+The errors we saw where:=20
 
-What is in /proc/interrupts?
+- malloc(): unaligned tcache chunk detected
+- segfaulting java processes
+- misbehaving filesystems (errors about internal structures in ext4, =
+incorrect file content in xfs)
+- crashing kernels when dealing with the outfall of those errors
+
+> As soon as we reverted to Linux 6.6 series, the bug went away.
+
+Same here, the otherway around: we came from 6.6.94 and updated to =
+6.12.34 and immediately saw a number of tests failing, all of which were =
+heavy in copying data from v9fs to the root filesystem in the VM.
+
+> We bisected but we started to have weirder problems, this is because =
+we
+> encountered the original regression mentioned in October 2024 and for =
+a
+> certain range of commits, we were unable to bisect anything further.
+
+I had already found the issue from last October when started bisecting, =
+I later got in touch with Ryan who recognized that we were chasing the =
+same issue. I stopped bisecting at that point - the bisect was already =
+homing in around the time of the changes in last October.
+
+> So I switched my bisection strategy to understand when the bug was
+> fixed, this lead me on the commit
+> e65a0dc1cabe71b91ef5603e5814359451b74ca7 which is the proper fix
+> mentioned here and on this discussion.
+>=20
+> Reverting this on the top of 6.12 cause indeed a massive amount of
+> traces, see this gist [1] for examples.
+
+Yeah. During bisect I noticed it flapping around with the original =
+October issues crashing immediately during boot.
+
+> Applying the "workaround patch" aka "[PATCH] 9p: Don't revert the I/O
+> iterator after reading" after reverting e65a0dc1cabe makes the problem
+> go away after 5 tries (5 tries were sufficient to trigger with the
+> proper fix).
+
+Yup, I applied the revert and workaround patch on top of 6.12.34 and the =
+reliably broken test became reliably green again.
+
+Our test can be reproduced, too:
+
+$ git clone https://github.com/flyingcircusio/fc-nixos.git
+$ cd fc-nixos
+$ eval $(./dev-setup)
+$ nix-build tests/matomo.nix
+
+The test will fail with ext4 complaining something like this:
+
+machine # [ 42.596728] =
+vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Copied =
+files, updating package link in /var/lib/matomo/current-package.
+machine # [ 42.788956] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 42.958590] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chown: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 43.068003] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm chmod: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+machine # [ 43.004098] =
+vn2haz1283lxz6iy0rai850a7jlgxbja-matomo-setup-update-pre[1233]: Giving =
+matomo read+write access to /var/lib/matomo/share/matomo.js, =
+/var/lib/matomo/share/piwik.js, /var/lib/matomo/share/config, =
+/var/lib/matomo/share/misc/user, /var/lib/matomo/share/js, =
+/var/lib/matomo/share/tmp, /var/lib/matomo/share/misc
+machine # [ 43.201319] EXT4-fs error (device vda): =
+htree_dirblock_to_tree:1109: inode #13138: block 5883: comm setfacl: bad =
+entry in directory: rec_len % 4 !=3D 0 - offset=3D0, inode=3D606087968, =
+rec_len=3D31074, size=3D4096 fake=3D0
+
+I=E2=80=99m also available for testing and further diagnosis.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
