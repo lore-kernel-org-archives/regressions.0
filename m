@@ -1,152 +1,153 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919AF3234
-	for <regressions@lists.linux.dev>; Fri, 27 Jun 2025 14:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47768221FBA
+	for <regressions@lists.linux.dev>; Sat, 28 Jun 2025 12:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751034754; cv=none; b=ddkTnFtoU2MU5tSPh8swfm2xwI8ZLUZ+2YTR/sYDTLaOJdeBs2jSbUgXYc73MWzk+XKUU43/ct3k1fSHvh7k6jpGg5RQ8xSHNu/cSuDBZp7Z8iCEMzGFjPs896Z+6EPLEzfCCBFblmwK8H5yO9hIBrGNeM+JXVec9FY8sIGUvAs=
+	t=1751115221; cv=none; b=V0deHdivA3i575XwxzlytXGSLZD/yCY6tQT7kyda6iw77f27gqd1ZEk+mtHZa1T4PpWB4xxes0FT4BCD4aaKkJfEiD3odrvdzkjDdPyEAKEaVG4bfyKWKIv/Y2wsZw3//9B4IV1Yj87ZAGsHK+91qkNhLwN+VhxjkjIgpej9G7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751034754; c=relaxed/simple;
-	bh=FrVhbkkVKeQtsuNIVg2sLAXrQNn1Hy74XCRKIHnkmJE=;
+	s=arc-20240116; t=1751115221; c=relaxed/simple;
+	bh=RPTWfAerU3YqFi9jqzXG9kMIOoAPkljelX3gg4t5Q+E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGhjPh6TFpi9Gy4sGYtUB0YtbpdMFiFrYriabFuQWt0NYoAwyFhoLuopdDIbTY5wIFsRGpSehOGiVmZvPlMbIW5UuttqX85vUE7pKDa5ZJhhQfV/WKmhsXuRJbsWWfts1cRBYyJ6hW6iP8m9hATFiz5IoqTYl7RhB7XozUpzdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Qdq/fjGV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JwN1jtOG; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjfjEXBw9e3ttNARkO+caJEgZfawFkEo3gHmH4A3kRXEky5xs2YCZGAIAaOSVFvJ2PvBj3wW2xua0t4mIOIgOfnNoZjT6jbY+lb4j3+e1W0dMHyscor480YQJSfOYZqXT8826cKBxcne205LmvxIE8MbYqz0faTb1vby8SyRu6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=d8BvBIo3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YI/Mb8u6; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Qdq/fjGV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JwN1jtOG"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id D8E6BEC00CE;
-	Fri, 27 Jun 2025 10:32:31 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Fri, 27 Jun 2025 10:32:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751034751;
-	 x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJncZGWBQM=; b=
-	Qdq/fjGV5338rPvsM0lAMiBopivn6bYP7Xdh+j3+fYbOzcVHOkIHmbqKIQ3FIgu9
-	RiEV7kfiaxik20A+OoupeLKl0CQTMU0GeaIoIE32t4fjISrp8KLcFWAtX02fFrNt
-	QyONhwtydqEcotsyBvS0ira/J5/m8Z+GyZY0mIFSs44gOg9MSWXYuwAZmx3bX+Pj
-	uTgDOeyM3pg+d0Exzbr3oylcuWSKbDRE2d+pXbH8kafi9Oy062cKQqiHxcaIkTl1
-	XgZWCXUnTo3kc/VpWOKJbON7hCy/RyO5jCmiXDlpjr3ag0H7w/M6vpu7vLl89wiV
-	b/jVcxpQLmztUmyJLH+/tQ==
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="d8BvBIo3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YI/Mb8u6"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 26AA9140020B;
+	Sat, 28 Jun 2025 08:53:37 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Sat, 28 Jun 2025 08:53:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1751115217; x=1751201617; bh=VHVKuKGAPV
+	KoI1l7NUOtuO0IqrKtntRvHVJ//HFzRV0=; b=d8BvBIo3u2tMvW788UT1Yg3AT8
+	NuB8FRnpxGCYsbsSpGG+EaEbiPY7QXh6bi8i2ErdQPRSaAgsqMfC8bD7o0NFQQma
+	9N7In19lOVJsym2EvIUkUJyXIbws+sKp0Cl3eVwUjoZQ5Mnb/MdbDF5p6onX28Tx
+	ZIR8Tgg9eivHHTor6uYaGq6uX+898ZqDVwUyePf6gvRprx5YSriAnDWgMllkoRhf
+	BXODnohl56NhtSjblU++RXDPX/U0wW6KiX0BebEHwA30q7rXTOTNdgoUAxHCORvW
+	jsRVfF3XJPrnNNBVBgW5y/GTSXRatm0dupyjwSgUfThWpq9/uJebVsH0WeYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751034751; x=1751121151; bh=chbCjC3t9JjOmLOSGQMKEQ3r5t5d3Ytx0IJ
-	ncZGWBQM=; b=JwN1jtOG9PxlAdco/5FkbwEpbGr7xouXfDtEINjVbLOA335VEA+
-	AancngIM76j0vgLMAWl5ZuuPmei8DI+3aSp0J7C5EBMc7HZj776JCKL8qLJXzmoR
-	d/6dorb64lyBhqcqX01Ck00IumFZia4oLb0PCfNYaeZeUfh3q6d6wqAjM2EvkgPJ
-	pBy0fWwfikOjElifnGbb0xpgPS9IPN/YSqCGG6Jt8xrHnndEWY6k6Glu+CcXsFa1
-	ycDzwPK8MPbUb9kq4lsITqPOkmpgnpWb1Qu1LsVIad4JwGaUn31k+HF3HpM2VBQr
-	sSYXCltzI2GkXCi8QZ8t5DDKQldXyJJf1aQ==
-X-ME-Sender: <xms:f6teaDUVuMTHaB4DaOxKKuiMrM-I1r2pF0aVTuYo7Rbl15TfIH_XSg>
-    <xme:f6teaLnBQPD4CFbf0w-JSYJ_SnD5e0P2UrETuM0UewBmOtqoiFQHyH8Oq14i4aFFN
-    gbF0Q52RCxzRg>
-X-ME-Received: <xmr:f6teaPYJi3VdOGOYa6leOQb4pcyxNDlFMjwXIRNjIA_AbOS8ltfHLlc-Yom4kQsIkqBDAQX6fNWTMply9GXEtZOzN61lVpBzfXM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdeffeduucetufdoteggodetrfdotf
+	1751115217; x=1751201617; bh=VHVKuKGAPVKoI1l7NUOtuO0IqrKtntRvHVJ
+	//HFzRV0=; b=YI/Mb8u6b0aOgHJUy9S6O0SzI5Zzd3CFt8nR8WY5H+bn6iYkNAh
+	Drv/bwSLvKUveqa04Pb/9oU3on/oVQUS2PP5PT2O6Nqhzm3TbX+b19aesPVwzxds
+	DyO2NrKDSDd2n9Kst4BnnDJzWKWow8UTSLlyNTaF5i3NhZHNkOhE9RnEny6N/UHz
+	X/bZANuR+k1DKhzQrLMRt+FVIXIZ1AHiqcuSd/gB5+ek/SS3ysYJpsB8NXFDDEj4
+	38XToxFAmrr4ZdA10hZrVjtaHsEP+uTyRysLRGVxSU822k4Qx+VBKKVbKfOwQqoV
+	Syqg0KyL1QHb83vkPOYT/18lN6wvF7FV9lQ==
+X-ME-Sender: <xms:0OVfaNwAnAGRWkrfTAT9AmwkLRmX4vweFtXr1DMegbeU2QUyC2MZKw>
+    <xme:0OVfaNQh-LLlbl8c24chbJvOLgppcTvOwhQlB1JOsCJPgJRYmsv7OuDoWq0mHu5so
+    SkTSNSHKbXKl1mcUw>
+X-ME-Received: <xmr:0OVfaHU32yDRLWavnn2cblWDcKD3fALe5RHMVfCNbKew76rzmT4d5NBn0jeJZE5ldt-LrT2Fue4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehleelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcuofgr
-    rhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvihhsih
-    gslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepieeluddvkeej
-    ueekhfffteegfeeiffefjeejvdeijedvgfejheetuddvkeffudeinecuffhomhgrihhnpe
-    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
-    gtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehmihhrihgrmhdrrhgrtghhvghlrdhkohhrvghnsghlihhtsehinhhtvghlrdgtohhmpd
-    hrtghpthhtoheptgholhhinhdrihdrkhhinhhgsehgmhgrihhlrdgtohhmpdhrtghpthht
-    oheplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:f6teaOWt0b55a6C0BYUvxye25OwMrLA48TSn15K5igQmIdJKJP_qiA>
-    <xmx:f6teaNmM4sKOgJuOw54bQolvNRgst1_3lUAAr8fydJeDvkQu8SvSww>
-    <xmx:f6teaLeK8wsC6P61srHNRiVBIPRyfX0sAEmuVL2Y9PRdd9k9QfjQAg>
-    <xmx:f6teaHELpOpp0amDhYynDwlKd5-sMErFShPm3ICh1QeCOmGskhz1eQ>
-    <xmx:f6teaB80l4ijJQjBi1wti_YKQA05yOm9AdFUNC0MpCSJ4ChszBXmWkhN>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Jun 2025 10:32:30 -0400 (EDT)
-Date: Fri, 27 Jun 2025 16:32:28 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
-Message-ID: <aF6rfM-RFrwFyoEw@mail-itl>
-References: <aF35FqJAw63NSl63@mail-itl>
- <aF35tbqxHtyj9fJO@mail-itl>
+    lhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehgtdfsredttd
+    dvnecuhfhrohhmpeetlhihshhsrgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeen
+    ucggtffrrghtthgvrhhnpefhfedvgfeliedvudegueefleehudellefgleetudehveelhe
+    etiefgteegvddutdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdr
+    tghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hhihesrghlhihsshgrrdhishdpnhgspghrtghpthhtohepfedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepsghughiiihhllhgrqdgurggvmhhonheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
+    vhdprhgtphhtthhopehlihhnuhigqdhushgssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:0OVfaPgm6csioXbB6DvgcxjrDIQfqP9VnunXlfxOAsRyM2TJBM8t_g>
+    <xmx:0OVfaPArLISqbiu6NL-wKpdnQK4yQpe9Evf2to0i2-DuabyCsjJIbA>
+    <xmx:0OVfaILxbhgu4qpoiwUDmwvIRPgBbRnMe1qD8aC-PTSkjlDnXkWgSw>
+    <xmx:0OVfaOAxrebK7kEQdCNYoEObvZ-L59m3Fx8HWYkwL8qsJMVEKu0Plg>
+    <xmx:0eVfaF7w_PdxAKsDFgssYPR2_1iTvStr8h-XPXYl7R-a5m1PQ0OO4vW5>
+Feedback-ID: i12284293:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 28 Jun 2025 08:53:36 -0400 (EDT)
+Received: by sf.qyliss.net (Postfix, from userid 1000)
+	id 2320626426AEC; Sat, 28 Jun 2025 14:53:35 +0200 (CEST)
+Date: Sat, 28 Jun 2025 14:53:35 +0200
+From: Alyssa Ross <hi@alyssa.is>
+To: regressions@lists.linux.dev
+Cc: linux-usb@vger.kernel.org, bugzilla-daemon@kernel.org
+Subject: Re: [Bug 220284] New: USB4 / Thunderbolt not working after boot
+ until thunderbolt module is reloaded
+Message-ID: <gsq43mj473w7osdxpfwuvk5mmef63oc2t3mjem43lb2zmdzzo5@3i6x5pnodszg>
+References: <bug-220284-208809@https.bugzilla.kernel.org/>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4mRJGigGX3Xsa7Rl"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="55jbroev6njdmhfc"
 Content-Disposition: inline
-In-Reply-To: <aF35tbqxHtyj9fJO@mail-itl>
+In-Reply-To: <bug-220284-208809@https.bugzilla.kernel.org/>
 
 
---4mRJGigGX3Xsa7Rl
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--55jbroev6njdmhfc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Jun 2025 16:32:28 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
+Subject: Re: [Bug 220284] New: USB4 / Thunderbolt not working after boot
+ until thunderbolt module is reloaded
+MIME-Version: 1.0
 
-On Fri, Jun 27, 2025 at 03:53:57AM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
-> On Fri, Jun 27, 2025 at 03:51:18AM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> > I see the only change there between rc2 and rc3 is fixing that WARN_ON
-> > condition. Unfortunately, I don't know what cmd_ver value I have there,
-> > but apparently it's outside of that range (and yet, the driver worked
-> > fine before).
-> >=20
-> > The device is:
-> > 02:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [808=
-6:2723] (rev 1a)
-> >     Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
-> >=20
-> > #regzbot introduced: v6.16-rc2..v6.16-rc3
->=20
-> Oh, I see it might be already fixed by
-> https://lore.kernel.org/linux-wireless/20250623111351.1819915-1-miriam.ra=
-chel.korenblit@intel.com/,
-> I'll test it.
+On Fri, Jun 27, 2025 at 05:29:56PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=220284
+>
+>             Bug ID: 220284
+>            Summary: USB4 / Thunderbolt not working after boot until
+>                     thunderbolt module is reloaded
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 6.15.3
+>           Hardware: AMD
+>                 OS: Linux
+>             Status: NEW
+>           Severity: normal
+>           Priority: P3
+>          Component: USB
+>           Assignee: drivers_usb@kernel-bugs.kernel.org
+>           Reporter: kim.lindberger@gmail.com
+>         Regression: Yes
+>
+> Laptop: Lenovo ThinkPad T14s Gen 4, model 21F8CTO1WW (AMD)
+>
+>
+> When upgrading from 6.15.2 to 6.15.3 my ThinkPad Thunderbolt 4 Dock stopped
+> working, giving basically no signs of life even when unplugged and replugged.
+> It doesn't start working again until the thunderbolt module is unloaded and
+> reloaded while the dock is still connected. If I unload and reload while the
+> dock is disconnected, nothing happens.
+>
+> When booting, I can also see
+>
+> thunderbolt 0000:c5:00.6: probe with driver thunderbolt failed with error -110
+>
+> in the log, which wasn't printed with prior kernels.
+>
+> I don't boot with the dock connected.
+>
+> The issue persist with 6.15.4.
 
-Yes, it does fix the issue.
+#regzbot introduced v6.15.2..v6.15.3 ^
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=220284
+#regzbot link: https://github.com/NixOS/nixpkgs/issues/420730
+#regzbot title USB4 / Thunderbolt not working after boot until thunderbolt module is reloaded
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---4mRJGigGX3Xsa7Rl
-Content-Type: application/pgp-signature; name=signature.asc
+--55jbroev6njdmhfc
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmheq30ACgkQ24/THMrX
-1yzvlwf/bo+OfRHbn4oHUi9G7NMHLS6YFNOdGC5vN0cgQuodid1A8EwsekXbID12
-xxorMjqSx1KzwZO+JLG5ZStXxK5yZ2SIJ6bwA2WS7625jnxxOXaXOuUO/GoJWfd8
-e7F1HFxP9eYXvjKA76qwIM5u8jCwWkHtZErGxfBfQrFJ5MVWWH15/VIZav5dQrNi
-gO2MIK/EQQU6IIUf16Qr0ZiNc1XUJiRUtDmGdmswEOateUDryUjd3Cz6wKcubk1G
-94tq1pBsXA+gtr5ygpDkPuCfx11IENO12gq98BaVFv6PwO2tzzyxaCQon7Gv9k3R
-GkV1Tn4GOkHJ9dvvxkqFFcpr3W/0uw==
-=OMSN
+iHUEABYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCaF/lzQAKCRBbRZGEIw/w
+ooP5AQDlE1/5JkjToRXOkSzQFfWr4k7eMvlAef06EyF5TM1xaQEA+mVJtTeNSOLT
+G/XoNJuqFy5BCYxpNJtRKt/I8Lh8yww=
+=7tOh
 -----END PGP SIGNATURE-----
 
---4mRJGigGX3Xsa7Rl--
+--55jbroev6njdmhfc--
