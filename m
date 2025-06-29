@@ -1,181 +1,97 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1421D235055
-	for <regressions@lists.linux.dev>; Sun, 29 Jun 2025 17:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7B8F54
+	for <regressions@lists.linux.dev>; Sun, 29 Jun 2025 21:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751219569; cv=none; b=ENHEwxIAHmjNEtk8Cn6uPH53mb8uWFQN0WwbLE8rzeTHcbuWjH5zeILaHUFZqwIenfVTc6v2c/4dCoaoBrGz239VylVEuG6QQB3z2Dl2hpspQcbiDuFjH2Ww0aUY1/oTfC50xTyTVaIGyZGkes92o4EIRE4Ml32ZprOxNWn0ACE=
+	t=1751231105; cv=none; b=XtFrspRvhiwWqIVfmTDgTganOPkJn/zAhHtHs64+R6aBWNxUS/1Nr/YgwHu0DWoKf+e7Bbb5sl7sQa8mA+q2J+Lsom66LCMiDtBq6pdGnk+BotzU8gIz4oDdjtsWivc7Qm44TeN+KMTDthHup6pOFOEFjmkY6I+AeU7qJlKdnMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751219569; c=relaxed/simple;
-	bh=Jh3m77P3PQ/B7E+ACnzpZWeLOCGladQ4T7buUTuFBEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkjVs/neP3CoaenbAzN+I0HbunribfE2qzVl5/DDL6IrDPexw+lVmqNeiYhgj/7wImbe8RnwtvVQ/A4XdjYToJEvJHiOiOOD9LUGjWOEYTt4/dsyFz826vblCseDeTo5xURThDeJrVJH9quy0ayJmF+J7t3gvGL11XqgA7nF2n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=f5j4E4oj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YppB/KH0; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="f5j4E4oj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YppB/KH0"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id B10927A007D;
-	Sun, 29 Jun 2025 13:52:44 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Sun, 29 Jun 2025 13:52:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1751219564; x=1751305964; bh=sTmHH/giVf
-	oxCmMF/goE2epW2Hw/LB/RMXLl9DOR2ro=; b=f5j4E4ojW2SFu3kpWV7gWwrIgb
-	XKy57GGZwWPIFPG3XB87e79r12RVIbQFAb/13M0L/wAmYZiSnTei6HWcmz6ret+Q
-	w3DjDxc/spcBglS8RKWZiTiVpIC9GITUs3wnSe/Mm7OElnVsNf91GFOP+VzHsuDw
-	Z9Z+7mfGJtOqj2Rgy4Wq2mM3Wz7YT6uqQDdnXcKezsdYmOdNDIL2h9jM1O4d1dxB
-	ZjY4E4FXJMZRhDWw7aoaPnRZP3gCD0UM/71KNtKEtxIiqAqjl9+Pw/DHVgXYT7hD
-	J+6GsN5jKNUNFJAK4sXfxIyZu34k2lL1M4hxF5jfVGwY3U6xqwNr0Y2PbXNA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751219564; x=1751305964; bh=sTmHH/giVfoxCmMF/goE2epW2Hw/LB/RMXL
-	l9DOR2ro=; b=YppB/KH0N+LG4+Cg78UnNp5bnpZJf08Rfw+ec+2j++kJL/NTFIa
-	+7ED9nXU8DZKbKlASMuxjmr7FAJYF5U12kzsu7ttxNCS0blJUEhSYWUVsHPTJIEs
-	shFSpJFZpHzoFCXiClddgYzirvkmmj10/ws+WGlo51eCCb6vgfZZRHWocfpj61Nv
-	CWcW1FLSyHqCLBvWTefjyFrD0FRK2ZdKDNu8AstO25JBG32AIhHPs6AhOYZaoPVu
-	ggqvBRZ7i3ye3N611q22AaM0lggGCRlkbG0DEd54DluFhLkq0N3ZPc+eBpFlhaXL
-	sJNkpLXtOIP4CWHQKbp3VM9vlqsx/PSCPdQ==
-X-ME-Sender: <xms:a31haKBd75CUdoCH8koM-xwpb-h3Yb6jja09aIa11AxcYdU01TNnfA>
-    <xme:a31haEi5fhuSCbKro6klStF3QSFHvfyFMbHzaPgwq_myh-mQcl9OeIdalwngADwCJ
-    HhSyiX01b2yAaYI4A>
-X-ME-Received: <xmr:a31haNnrK8Vh-2DRb2f5BMuxqj5DJCesWeNCD_cMTbM1llQcbPEUujD50B5lr87v4HhHGZmLwdDR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdelgeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesghdtsfertddtjeenucfhrhhomheptehlhihsshgrucft
-    ohhsshcuoehhihesrghlhihsshgrrdhisheqnecuggftrfgrthhtvghrnhepledvvdejke
-    efhfegteeuuddvgfduueetgfevffetudehvddvgeehueetgeegtefgnecuffhomhgrihhn
-    pehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhephhhisegrlhihshhsrgdrihhspdhnsggp
-    rhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhioh
-    drlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopeihvghhvgiikhgv
-    lhhshhgssehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvggrshdrnhhovghvvg
-    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhimhdrlhhinhgusggvrhhgvghrsehg
-    mhgrihhlrdgtohhmpdhrtghpthhtohepmhhitghhrggvlhdrjhgrmhgvthesihhnthgvlh
-    drtghomhdprhgtphhtthhopehrrghjrghtrdhkhhgrnhguvghlfigrlhesihhnthgvlhdr
-    tghomhdprhgtphhtthhopehsrghshhgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfigvshhtvghrihes
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:a31haIzNh0j_ejP-AvfP2DrnDp7KEuBkQREksGHKEoYaeydumDwFmg>
-    <xmx:a31haPQQ0gVd7zIou7hz8RCvRDASd2D9VE_FDeE9gLdkoK41Wyf12g>
-    <xmx:a31haDYMg-9eBAadpIg6DmdFXx7sEoN6d2JO6PpJRC37Lg3USvQ5zg>
-    <xmx:a31haIRIKkB5lw3tCcd5pLrIlOF6hStTBq-z9I42iLyGcfmU0c2L5A>
-    <xmx:bH1haCH8zel9jedTIdbMr8AZ6V4WqPeFXyazB_QDA7tASwDRRoW-VFrO>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 29 Jun 2025 13:52:43 -0400 (EDT)
-Received: by mbp.qyliss.net (Postfix, from userid 1000)
-	id E5C02C2C24F; Sun, 29 Jun 2025 19:52:41 +0200 (CEST)
-Date: Sun, 29 Jun 2025 19:52:41 +0200
-From: Alyssa Ross <hi@alyssa.is>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, andreas.noever@gmail.com, 
-	michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com, 
-	rajat.khandelwal@intel.com, mika.westerberg@linux.intel.com, linux-usb@vger.kernel.org, 
-	regressions@lists.linux.dev, kim.lindberger@gmail.com, linux@lunaa.ch, 
-	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
-Message-ID: <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
-References: <20250411151446.4121877-1-superm1@kernel.org>
+	s=arc-20240116; t=1751231105; c=relaxed/simple;
+	bh=xsyDr6U4FoDy0b4M5CcLb45x3YQ5bOCZwQ+DQIPuV50=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dZU3+zjMTlDkU0K0Pemibr9MAWO9Cgq4OK43QXfp/ZmG4W+nbfusxOSNhReWYD+yXzhPxwNgM9tOgcfWRuJufOF5kt7MQIdzd/hS9Km0Uss8/vsT0eFe26KeD8V9CBLRswXnTZmMp+HzvfbuV4SWDZL5mNSKpOkvS2baDwcQW6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.2.196] (p5b13a6da.dip0.t-ipconnect.de [91.19.166.218])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8C7B461E64787;
+	Sun, 29 Jun 2025 23:04:32 +0200 (CEST)
+Message-ID: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
+Date: Sun, 29 Jun 2025 23:04:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3u3w6kzefk6kcdxr"
-Content-Disposition: inline
-In-Reply-To: <20250411151446.4121877-1-superm1@kernel.org>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: [Regression] Panel flickering on Dell XPS 13 9360 with
+ drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Dear Linux folks,
 
 
---3u3w6kzefk6kcdxr
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
-MIME-Version: 1.0
+Just a heads-up, that very likely, merging of branch 
+*drm-fixes-2025-06-28* causes flickering of the panel of the Intel Kaby 
+Lake laptop Dell XPS 13 9360. 6.16.0-rc3 works fine, and with 
+6.16-rc3-00329-gdfba48a70cb6 the panel flickers. I try to bisect, but 
+maybe you already have an idea.
 
-On Fri, Apr 11, 2025 at 10:14:44AM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> commit a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect
-> on USB4 ports") introduced a sysfs file to control wake up policy
-> for a given USB4 port that defaulted to disabled.
->
-> However when testing commit 4bfeea6ec1c02 ("thunderbolt: Use wake
-> on connect and disconnect over suspend") I found that it was working
-> even without making changes to the power/wakeup file (which defaults
-> to disabled). This is because of a logic error doing a bitwise or
-> of the wake-on-connect flag with device_may_wakeup() which should
-> have been a logical AND.
->
-> Adjust the logic so that policy is only applied when wakeup is
-> actually enabled.
->
-> Fixes: a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect on USB=
-4 ports")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Hi! There have been a couple of reports of a Thunderbolt regression in
-recent stable kernels, and one reporter has now bisected it to this
-change:
+Kind regards,
 
- =E2=80=A2 https://bugzilla.kernel.org/show_bug.cgi?id=3D220284
- =E2=80=A2 https://github.com/NixOS/nixpkgs/issues/420730
+Paul
 
-Both reporters are CCed, and say it starts working after the module is
-reloaded.
 
-Link: https://lore.kernel.org/r/bug-220284-208809@https.bugzilla.kernel.org=
-%2F/
-(for regzbot)
-
-> ---
->  drivers/thunderbolt/usb4.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/thunderbolt/usb4.c b/drivers/thunderbolt/usb4.c
-> index e51d01671d8e7..3e96f1afd4268 100644
-> --- a/drivers/thunderbolt/usb4.c
-> +++ b/drivers/thunderbolt/usb4.c
-> @@ -440,10 +440,10 @@ int usb4_switch_set_wake(struct tb_switch *sw, unsi=
-gned int flags)
->  			bool configured =3D val & PORT_CS_19_PC;
->  			usb4 =3D port->usb4;
->
-> -			if (((flags & TB_WAKE_ON_CONNECT) |
-> +			if (((flags & TB_WAKE_ON_CONNECT) &&
->  			      device_may_wakeup(&usb4->dev)) && !configured)
->  				val |=3D PORT_CS_19_WOC;
-> -			if (((flags & TB_WAKE_ON_DISCONNECT) |
-> +			if (((flags & TB_WAKE_ON_DISCONNECT) &&
->  			      device_may_wakeup(&usb4->dev)) && configured)
->  				val |=3D PORT_CS_19_WOD;
->  			if ((flags & TB_WAKE_ON_USB4) && configured)
-> --
-> 2.43.0
->
-
---3u3w6kzefk6kcdxr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCaGF9ZwAKCRBbRZGEIw/w
-okxoAQDBclWigTvBxa6JKIkkt52I4sMh08AHziTd+wt3Sl2g8QEAp6S/3yciQUx2
-pXrMwDIZuq7mBlrT3HJOmOu+FOqI8AQ=
-=B+2Q
------END PGP SIGNATURE-----
-
---3u3w6kzefk6kcdxr--
+$ lspci -nn
+00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen 
+Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
+00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 
+620 [8086:5916] (rev 02)
+00:04.0 Signal processing controller [1180]: Intel Corporation Xeon 
+E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem 
+[8086:1903] (rev 02)
+00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 
+3.0 xHCI Controller [8086:9d2f] (rev 21)
+00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Thermal subsystem [8086:9d31] (rev 21)
+00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
+00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
+00:16.0 Communication controller [0780]: Intel Corporation Sunrise 
+Point-LP CSME HECI #1 [8086:9d3a] (rev 21)
+00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #1 [8086:9d10] (rev f1)
+00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #5 [8086:9d14] (rev f1)
+00:1c.5 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #6 [8086:9d15] (rev f1)
+00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #9 [8086:9d18] (rev f1)
+00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC 
+Controller [8086:9d58] (rev 21)
+00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC 
+[8086:9d21] (rev 21)
+00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD Audio 
+[8086:9d71] (rev 21)
+00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus 
+[8086:9d23] (rev 21)
+3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac 
+Wireless Network Adapter [168c:003e] (rev 32)
+3b:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A 
+PCI Express Card Reader [10ec:525a] (rev 01)
+3c:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe Solid 
+State Drive 512GB [1c5c:1284]
