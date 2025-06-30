@@ -1,97 +1,97 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7B8F54
-	for <regressions@lists.linux.dev>; Sun, 29 Jun 2025 21:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751231105; cv=none; b=XtFrspRvhiwWqIVfmTDgTganOPkJn/zAhHtHs64+R6aBWNxUS/1Nr/YgwHu0DWoKf+e7Bbb5sl7sQa8mA+q2J+Lsom66LCMiDtBq6pdGnk+BotzU8gIz4oDdjtsWivc7Qm44TeN+KMTDthHup6pOFOEFjmkY6I+AeU7qJlKdnMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751231105; c=relaxed/simple;
-	bh=xsyDr6U4FoDy0b4M5CcLb45x3YQ5bOCZwQ+DQIPuV50=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dZU3+zjMTlDkU0K0Pemibr9MAWO9Cgq4OK43QXfp/ZmG4W+nbfusxOSNhReWYD+yXzhPxwNgM9tOgcfWRuJufOF5kt7MQIdzd/hS9Km0Uss8/vsT0eFe26KeD8V9CBLRswXnTZmMp+HzvfbuV4SWDZL5mNSKpOkvS2baDwcQW6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.2.196] (p5b13a6da.dip0.t-ipconnect.de [91.19.166.218])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8C7B461E64787;
-	Sun, 29 Jun 2025 23:04:32 +0200 (CEST)
-Message-ID: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
-Date: Sun, 29 Jun 2025 23:04:31 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B7D78F24
+	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751267664; cv=pass; b=IX8JycFPHoSN3lQabjCLr6ys9oXMB0PtmHIuIhy4hKyOWQximtgd5ewSbShWkprjRMDqBhoJvcHPDvzNK3lqOPn6Fy32b0EnyeleoKDyz6oa+b4tHE53Lxjb0cSpjgmhMJjJT88EGRUCiPLZpC7zd/hoC4aySc3p8abaiAVCUps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751267664; c=relaxed/simple;
+	bh=Ny+909tFnzeBGP+zVu17ZybQEydTkcpvwzzTGjNzvpk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=MH3lEkgm24cBBpcWtpN8xYxS+WeIKelK495EiYGnAK6r1mIwNg/SYTVKr///NzcSwMwwisz8CyzRWrMgb/RcLTuQMUaXINB1gxB960v73h/BlcmTJOpDpauWxftt+jFUuBJjtZi0nyn1mPeCL5F84ZZnzQTCXjseL/TvFlFeoSw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=XO2CmYYn; arc=pass smtp.client-ip=136.143.188.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="XO2CmYYn"
+ARC-Seal: i=1; a=rsa-sha256; t=1751267657; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=G5kRKX+NlfiiNYF/RvR2HJ+o0BbZ6T42vBjuNjXkSGbpWoqcvOkMcjsiZPRlaUIztuMjkxzC5SKJJGWhLiswQ/N0IaJUnOFiAtlBXBJgFX9Jk3zQG3SQm5TFU2Eh3/ZMJw2c5y7kV3O8K09YPaqH4O0/huO7B6ogZonAiVMEnAQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751267657; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4g9b3rt0LEwBpyUQi7Y/ERedSAXvJddMYEJ9iWhZZck=; 
+	b=fKgrTIfETgbN2vPrVjoieXYPDA0o/h4QL54s29T8GZgZfEdqt9NCV5I8gShoyweHPN92kkzDYZI8Xh5Z0mcq/GZ0yZ2A23yEx5CfHZtA9rcEBM3hFcHLm/wDp2v3AgbnfN7MkD9Z/aKFwgQZf6P9jNRo5Do3Xbn4xCm5q3sL6yU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751267657;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=4g9b3rt0LEwBpyUQi7Y/ERedSAXvJddMYEJ9iWhZZck=;
+	b=XO2CmYYnpaNTIT8v0DM5tDTwqchQJz63wd5dtSdXi6fRlPyPqXt1OJDzi+yL9k0f
+	IuY/A9lmXKMCzfJyy/Q60h71BI22k+AiDP9b3U8wr4YwAmRaz/YfFTRrfpaLx9o6UQb
+	2YyxWAFIBDItpYFmjA4SiN3q05Sh/qHZ2af4zEuo=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1751267656272638.7175982375178; Mon, 30 Jun 2025 00:14:16 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Mon, 30 Jun 2025 00:14:16 -0700 (PDT)
+Date: Mon, 30 Jun 2025 11:14:16 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "Mario Limonciello" <superm1@kernel.org>
+Cc: "Linux i2c" <linux-i2c@vger.kernel.org>,
+	"linux-acpi" <linux-acpi@vger.kernel.org>,
+	"regressions" <regressions@lists.linux.dev>,
+	"DellClientKernel" <Dell.Client.Kernel@dell.com>,
+	"linux-gpio" <linux-gpio@vger.kernel.org>,
+	"Raul E Rangel" <rrangel@chromium.org>,
+	"Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
+	"Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+	"Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+	"Werner Sembach" <wse@tuxedocomputers.com>,
+	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Message-ID: <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
+In-Reply-To: <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
+References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
+ <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+ <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com> <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: [Regression] Panel flickering on Dell XPS 13 9360 with
- drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr08011227d2834feaa81ae7a61d8469c300002f53f71d2a8c9c14bafd63bc721216f32cb3d939ae981de558:zu080112274d7945573b527403042c24c100003ce6475868fd94ceabf382ee747bde5b10245760e856ceda14:rf0801122bbe182296f0d2f8051a9483d70000aac597d692a69bceb28f8074c107afd614e0604984148a79d0703fa681:ZohoMail
 
-Dear Linux folks,
+ ---- On Fri, 27 Jun 2025 07:58:15 +0400  Mario Limonciello <superm1@kernel.org> wrote ---
+ > That's odd.  It should be made when the PMC core driver binds.  Maybe
+ > others will know what's missing here.
 
+Command "grep -r -E -I last_hw_sleep ." in culpit kernel (1796f808e4bb2c074824d)
+shows nothing. (This is somewhere around 6.1).
 
-Just a heads-up, that very likely, merging of branch 
-*drm-fixes-2025-06-28* causes flickering of the panel of the Intel Kaby 
-Lake laptop Dell XPS 13 9360. 6.16.0-rc3 works fine, and with 
-6.16-rc3-00329-gdfba48a70cb6 the panel flickers. I try to bisect, but 
-maybe you already have an idea.
+So, culpit commit is too old.
 
+If you want, I can retest this thing on current master and on current master with
+revert 1796f808e4bb2c074824d.
 
-Kind regards,
+ > I see in your bad config interrupt 14 is waking the system.  In the good
+ > config interrupt 8 is waking it.
+ >
+ > What is in /proc/interrupts?
 
-Paul
+/proc/interrupts from culpit kernel: https://paste.debian.net/1382819/
 
+--
+Askar Safin
+https://types.pl/@safinaskar
 
-$ lspci -nn
-00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen 
-Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 
-620 [8086:5916] (rev 02)
-00:04.0 Signal processing controller [1180]: Intel Corporation Xeon 
-E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem 
-[8086:1903] (rev 02)
-00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 
-3.0 xHCI Controller [8086:9d2f] (rev 21)
-00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise 
-Point-LP Thermal subsystem [8086:9d31] (rev 21)
-00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise 
-Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise 
-Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-00:16.0 Communication controller [0780]: Intel Corporation Sunrise 
-Point-LP CSME HECI #1 [8086:9d3a] (rev 21)
-00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
-Express Root Port #1 [8086:9d10] (rev f1)
-00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
-Express Root Port #5 [8086:9d14] (rev f1)
-00:1c.5 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
-Express Root Port #6 [8086:9d15] (rev f1)
-00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
-Express Root Port #9 [8086:9d18] (rev f1)
-00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC 
-Controller [8086:9d58] (rev 21)
-00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC 
-[8086:9d21] (rev 21)
-00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD Audio 
-[8086:9d71] (rev 21)
-00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus 
-[8086:9d23] (rev 21)
-3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac 
-Wireless Network Adapter [168c:003e] (rev 32)
-3b:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A 
-PCI Express Card Reader [10ec:525a] (rev 01)
-3c:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe Solid 
-State Drive 512GB [1c5c:1284]
