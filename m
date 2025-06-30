@@ -1,244 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB003223DD4
-	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269383; cv=fail; b=Mit7EHxb3tUuxaM99kNcUmsuT5zCFe2i6TrIQGVUrATHdFoN+5TMeLjdryEugiazA4Dk2hogXPcifMSMaa3QetcHqSSsTfEjWkw0Z73j0Y+PWivcjLHAGB0KcUwi0p7poLmfq49RNKrEAxVzBtIncmyZBVk9jEI32P10YplZcpY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269383; c=relaxed/simple;
-	bh=3aNsKSNVvxbIoeyOWFpqrElquttYAKJjRiRZ77kKQXk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sjRUdNfCQFfdYDox/hEX1NuA++x3P/JtIrkCvt5gZEeARrCc5fAh4JtsgX1TovDPHdmi7et2+M5I+cDBM1jA2lcM11TjofZGN4t5PeU9x29tAwvPeRI3Vcl5y1MAMmdnJPc9wvMqjvpG5hIZrtLqgA+2acrwpAE4OnpTgdcxMbY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YHW/Juvt; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1B1A3A80
+	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751269837; cv=none; b=OFqAilcT+jTiBJlaz+FwekSntmZMGpL4+KFHEZEnN7P1HaNjWpik0TI99U4xmMu4QUgn4kGubtakxuy+3/FQRyAQ80ca6lDi2Tj3xT0bLUKdjuKhic/TwvV1Dg36c0o3zNxlyZfs/8V9tq7rJgUl+3kW3aY2NhaDTv2n5NzEj24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751269837; c=relaxed/simple;
+	bh=dW1S/Vd8ohxG3RdNI1svkbdQsHOBXKFy5ERXSJJ/UWU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j3Fofj25eZOdEBINvLdqL/h58glg2Sy4bVdLkF4KWDLjHyUVD8I0kTFND2Vi0e5uz3K47E6ixs8be7H2+/yZOsmsE53326jzrOKUHczIN3QRwKpKCuAb8HPrno95WuPUbD51ekf/5MWJ3ZDNTJwy4SKgkfcP9oNEqjx4PGns+lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SB0ZvQqZ; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YHW/Juvt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751269381; x=1782805381;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=3aNsKSNVvxbIoeyOWFpqrElquttYAKJjRiRZ77kKQXk=;
-  b=YHW/JuvtLB2slfSekhyhBnogoqnxoNFb2cKxx+/MLSP20dKr8+mMMudo
-   CbbvoVi62bsAlfLfzsnguJm2KxReTMO3eqoI8cO2feTqRR8ZJyjaXfRPX
-   oScV879BqPRK2fJ0H3+yAp/+I0DPxPNKb+c0f5XcwiPtGVYif5kqRJHOp
-   k4obqwrS5TNxkBp7dB/alLf0SLsXr6loPKG3WmADZddKJBCpE00lbPI8D
-   gb0GHt9ErQEHl14+6rDDMgE6LxkZJ3iCc/8LcORKUwnUTEDO0mzgA/MTs
-   S5evIPUgVWcRb8jVcBbFAJUka0hMgPKJLE+/k98nAO1r9jGXjpJMwJcgK
-   g==;
-X-CSE-ConnectionGUID: Eg0jSGcNTVOybSQoySrFqw==
-X-CSE-MsgGUID: 1RgVuf79SFGuKswdWzhz0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="56109082"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="56109082"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:42:07 -0700
-X-CSE-ConnectionGUID: BRkbsduKRdKp5DThoihq6Q==
-X-CSE-MsgGUID: 1mP/NsVgSCWTj4cLZ+1Xew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153690830"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:42:05 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 00:42:04 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 00:42:04 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.77)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 00:42:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fYs7Si/3/NqxGTGjIg52syzb4QVPrrN+x39BznYHArDcCsA8ce+r7zQTFaqcvkXsdHeZZpbLNgq2YDD+idrqWtCmZ+AQUnGtMpp+xELIVKzPaBBB5KbvO4fFB9GQrbowC7QakQ1a84A7+ztsTtdirnJ/U2RdxQpqkcDRH8nGy2R55wVy7/PcjP/SK/d/IndzYhzf7YaaQUC2cSTG7hk4aA4ydYOACbYQO7xeOcxi95KawzBfG+Xn9My/fvS89IMSXod3T+XGsY0/GcZLCy9jcdKGh+koY4w5SmuNbRD4csuydcq0urmw/uaAotOWja600WKFFcGZDhL0Qux+tt54HQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vIpMrERnKY4t4pYO2mGTfW2XN/diV6w/Y5so7PfQrrs=;
- b=mDtVdF2TEh5rtLQdTbC5KKmKRy9orMjr+3PeiCZNaO/OxUxoUktzHI/+BcJOjP9Jq6oFNHIou3lqaA9TH06t8YHiCHpBWeJWMHfeStjBmiQyvYgU2jNywleLTu9Rv8qt9P8Fyv24bwbohiX2pVcP4iqDUKqTGl7zx4CnIl1WukVPxTpnpALHv19k9NFfCFgpcD/VWxeBVKNf1YlIOz8RLJjsTqSqDL/ttQVYQxDKCanbKIgGchvOzlXMLVuqAUDfBh2NbX8ClSWSyZ2bHGID+Tm0Vf4/hJI9OoP94bfMzyfcMPcD4fzdRepe8+qBeWMzYxO3qRhK67vbWKd95CaGXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ0PR11MB4845.namprd11.prod.outlook.com (2603:10b6:a03:2d1::10)
- by DM3PPF5217261E0.namprd11.prod.outlook.com (2603:10b6:f:fc00::f21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 30 Jun
- 2025 07:41:48 +0000
-Received: from SJ0PR11MB4845.namprd11.prod.outlook.com
- ([fe80::8900:d137:e757:ac9f]) by SJ0PR11MB4845.namprd11.prod.outlook.com
- ([fe80::8900:d137:e757:ac9f%6]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 07:41:48 +0000
-Date: Mon, 30 Jun 2025 10:41:40 +0300
-From: Imre Deak <imre.deak@intel.com>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-CC: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, <intel-gfx@lists.freedesktop.org>,
-	<intel-xe@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
-	<regressions@lists.linux.dev>
-Subject: Re: [Regression] Panel flickering on Dell XPS 13 9360 with
- drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
-Message-ID: <aGI_tO6btgJluwUu@ideak-desk>
-Reply-To: <imre.deak@intel.com>
-References: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
-X-ClientProxiedBy: DU6P191CA0001.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:10:540::11) To SJ0PR11MB4845.namprd11.prod.outlook.com
- (2603:10b6:a03:2d1::10)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SB0ZvQqZ"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2eacb421554so483624fac.1
+        for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 00:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751269835; x=1751874635; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g/l29yXOs8sSf8dKtHOSd7SknDHgyt7qIGbzVZwBj1w=;
+        b=SB0ZvQqZv6NaXIbrOohFhCeo80C/VoHDjhARHnTFWUflO5Em+kJUxHDTVcA2lQrxE7
+         9jT8KygcvApm+ihhP5kxHBI/4ZQDEEsiS+9J+zeq3+b6/2NZgiBaYf70ydsrRcRVmrEA
+         MnIv5if21YWhtjwyYxucCabnc4pNyufxpdtoE1ulpVSJ+Snoyz3kEyS4n+aoYGO3zVwO
+         BJQhCcD7d4RHlatPdp3WyVjIvx55BsvO6o703wigyoD98euq7aGNd35M34wCRXxfk9eR
+         UONVr/Ip7PDE+NSanH7TMiRKbvM9IDcu50ci0NkiKOxAHelu0qJ2CDN2uGQjmZjw4wQE
+         6qSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751269835; x=1751874635;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g/l29yXOs8sSf8dKtHOSd7SknDHgyt7qIGbzVZwBj1w=;
+        b=GkBgC92phu3SIWqSzF8dEkMICJLy9E3DsnZ6Ki6xrudO3qlGvB4n9b6mQRDglDypkz
+         lr9JwpyDM0ISC1eYW86os+ooimoESLLzrBap0R7kNDu9j44bioD+z5kW12oeI3m0iG1P
+         jFgAWar7wDlxOsR+hCKPo8CulGPs1ZH22PtzJ5PO06yC5wdXvFFzE0+0xeQahqSU+6Am
+         KFJ3lZQWAUxeXJAG1KdxiGqBlVW69s3w4p53eBdpUd1e3j8LNkrJCebfufnRaLLApwEu
+         uSp2MOseggDusUCX64R+NrZNOup69a1Y8gMWVH67AYmxz0JKTdpCWJgHssyNuV2fu1PX
+         Vxiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUloUB+x7M1x+AprzwS2d6VyCXgaw+kT/ml7QHRCXvlRCXOsN3W6z1VDaSWsDZBXX8jo6bkqwhV7vyZZA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIjta9beldAbcn4U8Af7BBtKxMu54uJA3e7CsC/8DKjTrYMTW/
+	4wo/7r6OUZnOGdM8KmpTcBSsbqCLCrt8CBzjYGadil2hyQ5wOiRQ30Rqc+EqlH1AhBOThSfrOHk
+	6wlFBcSZEFlk2+YqO5OibjOCRv/0OlZQ5co8qiq92
+X-Gm-Gg: ASbGnctfxx4Orcl+89EbfKFufS67ZBDm4V1XMldDIbvl8DS7zVMyNq75LS3vxrXnABs
+	68UjaNDwWhOxxfVHbOlPnDc8Kv90H2fEOeRDcK3QtiCe9vnxHMUEbHet4xVTXZwcwvP2wOJ+d3m
+	D9DucrKSOzixkbH9w7HZoBTDmYvcqYyqO0kMNU/HuK
+X-Google-Smtp-Source: AGHT+IFit+5SfO0GaAfOTHQfprpfULo68GtNss9IbrHvpeb8NgCZTKNSUq0vwXRUdW21+78+Y5YUOVeOhVPtsz+8AOY=
+X-Received: by 2002:a05:6870:8a2c:b0:2d5:230f:b34d with SMTP id
+ 586e51a60fabf-2efed4511d7mr8439534fac.1.1751269834790; Mon, 30 Jun 2025
+ 00:50:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR11MB4845:EE_|DM3PPF5217261E0:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28b707f0-d953-4710-f7dd-08ddb7a9908b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4D/OSooieqZ0s11SCPELHk+HrnYT/hKaaZrp96l6euRTegalz9Z/M+mnGKQ2?=
- =?us-ascii?Q?AXzlqjm0rbD2bPi5zr++pC3sXx36OgI7VnUN+y8cXxEXFt41Xlh57SOxnDiO?=
- =?us-ascii?Q?YCauf33Ckp2jEHJlUbvjIVb3bcGvoFKzP7lBTT+ar2rtizPezV3DA2b1lb7z?=
- =?us-ascii?Q?pjJe4oYdKeQIsDJrOs+EbQtrUMFun4xWjNzWf6tP/vHTrwsF/mIkePdjn5AE?=
- =?us-ascii?Q?A25NscNU8VNvOWNl5JpbP/7fojVUB/LgYMGNq6a69Fd5tH+XH3XtRKQlXrNY?=
- =?us-ascii?Q?XR6AyoYB+haCXDtdxjrfF69PImve91gWxNCPsSlkZiX7eDIF9QYovZbXRC2L?=
- =?us-ascii?Q?cTZR3Vl8NBMdGcbiiEOnI/Z7Iqnwvf2GW4YMBpmq6qkXOX1k0xFlhxH253Z3?=
- =?us-ascii?Q?hJWz4URsBAxWGgzBU0/UvS/N13ZIcdF12y/JJJZBsGDgyy3bwjVRKTfcHUAF?=
- =?us-ascii?Q?M7oNONYLgcLEgjMYBkhNWKJFOVgnZdGVP+lduISWIatSd22MGSVcRSq74Jpw?=
- =?us-ascii?Q?oqn5nvXzEOi3PDEyxGnh5yK4cfCsA49QSmzKp0JHsiVr3mg9ifdXbosRXSbB?=
- =?us-ascii?Q?tVejcBYJap5Am4+jxLk9tFBwbFv8pPowIU364E373OTlEBc7F376AFQ3Wqm3?=
- =?us-ascii?Q?FqmGPMq0zFg7y4yxSr5K0/d/7KtjrRCx6zLR19njHLS1F++Yq1nU1AMhy33z?=
- =?us-ascii?Q?0N4jHWLKs031Mtq50Bekc1O5QOaV5Ss5lcYLHQQYj9GBUyRgheL4A22Hxh/X?=
- =?us-ascii?Q?0YA/RHDRXB6lEsWh9IEa3Lguth1P9lmMheHBqWuJyO3e4Dbm07TGVrTEpaCW?=
- =?us-ascii?Q?eAy/APmf72kUUgP2YtPOrymUnx9KTwp8gpE3Ga30qFq5UK6+C9ueYi9MJnHx?=
- =?us-ascii?Q?kbTPxI6RctU3LrV8BKPtP55z0eCCmxet0J9gAljZ4wm3LcZFTnM/gf/wOuNK?=
- =?us-ascii?Q?cRfS9wxL2LTZcqMR8FkAWx2UkkSREA2zxQ60T61VkEAIc/PYRGpQd7xcTAO+?=
- =?us-ascii?Q?lcEvte2Vz2D/o0MidhO6xnXNrC/UZiAEIzGudPfo4Qj3wsy+fhJnGIF+pu9O?=
- =?us-ascii?Q?8wClF2M2jKfTbRKqa8S7c/phuq2DE8JHJwwmwnbB1bnE1s+IAbMTPmy0GoOS?=
- =?us-ascii?Q?ouVLxJZofJZ4umdXBQ4ErXPHsbVEAgBmTl1dKkpq4VcV4kGu0q/m+FynRrXX?=
- =?us-ascii?Q?CM8afvd+/iTBtZw/bAVJUUzZHZ71ZeEs8RS0IE72te4yvMMx6+KGZP5Fd/LN?=
- =?us-ascii?Q?Iyfw9GoCN3SIkQAHkxbwdm54ZmUyk88nzfPqiN7YKcVinkRugmj1DkRZVcog?=
- =?us-ascii?Q?Mi+V3G+atGBkwNPpFDaUju0bYcG1jWYyr6Nq6u7ugg/ud59GdJHkERGD93vI?=
- =?us-ascii?Q?ejG7zio03DKfRRjnssh4t1hAxg/w7GdX47XwK4BuN5xE3qBd+fe1pvi2kgH6?=
- =?us-ascii?Q?e+AcDV57kXI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB4845.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rSL/XReUhVXHieGwL3IRg1/aZ6yyUi6kxnYR2PBY8rkk4sfdhpfnWfkzRx4/?=
- =?us-ascii?Q?VzsfkiiLg7YeHbpENmAXPGEICwHMJssu5V6nFX61GDugX3+2pP8cI3JtUp/C?=
- =?us-ascii?Q?EWuAXmGW3aJKOV3up7fx+TNIrAIn+elMRP/A7A0uKy7O80exkTqk5o4ftxIT?=
- =?us-ascii?Q?b7gna9lUptEUV+6ReThk4mOi6GiaZ5iwvX/1J+0HJnZIY39wqvYlFlHuWt8Q?=
- =?us-ascii?Q?UZu3VsY2eAlTLA2WE4SoOuvcLPC/22GV4nAa1wlzmwtMcfouqyOmBt9xn5Hb?=
- =?us-ascii?Q?2zt2eljD+FCPMeQsEjA7vvWDsvix7zzkjC3ICBTvkiD4WNRpepgGp0mzmrf/?=
- =?us-ascii?Q?WrVHqzuCfi7+6cUM5UEQlUM0FvH+pqILjwaxf2geOsOZcwnUPc4VbzeNrwFa?=
- =?us-ascii?Q?oVj/JgtUSitzW+KMCiOsWldgXu9zucIGeEMgZF32RrYXUVwPiKUgUIZWOUFZ?=
- =?us-ascii?Q?70ewV4Q22ixJimyc7SzjCeo0vc68WF6fyk55pL5YQUwxfLLOB44QX9aoMvIH?=
- =?us-ascii?Q?7hZofV2KF2/gDl7eqXlxE6Oln9m0sOcpwfXnbNCIywLqXKRHuE0XLzzXinY6?=
- =?us-ascii?Q?liR7iU4Zc7C54lw+sWcO3wLeciVLxW00TlOMg2x8NrfxZ3FJ+bBy3xK0pw7m?=
- =?us-ascii?Q?ZmkXsNG+57DC+nIAjbemrnowvdJIb2ZswCoyvJdFwlHY3PD5c9NFAHepDx7d?=
- =?us-ascii?Q?3qQWhKhRszGeT4qAaQeJLHVUaoqaYa/BlOCoQJumu9VJnrrEougaBA5Mx/zB?=
- =?us-ascii?Q?KGUPR7UTLu9jpIhnkC0ltnmSi7r4nR354o3zOGHhjgcOZqJo8xZhSjBnTJwj?=
- =?us-ascii?Q?j7anA4s7Y+hJ1F0nYQm9VmEm8rKg8+Qk7y+JudDK6U1iapBI7q4uLkk4tJTD?=
- =?us-ascii?Q?wLtPsTk2vseOCWCfjhb4ZJ9ktEdBqLWdtISaEYbIrOZY7+/tSX0wFJ5/rZZt?=
- =?us-ascii?Q?+6BoECTyHgYwM0sIliEDmMsD9zKjp4fuQDaF70ruLn+zAEl8JcGxQklXBvgq?=
- =?us-ascii?Q?jHUYCSM+B2lNw8ShUU+uZxnRRnQrSdQXu7rNSNrrkaFgvEM5q6G61Vdv+2/D?=
- =?us-ascii?Q?TdwhMHjSXjkQpRT+aRQiJRI6jiK+XJDYj+GDWwDq0VrU33IVhImZ47vDWIf1?=
- =?us-ascii?Q?bU8vPONkv9JDPHBU/CNOemUxRnHgUQTDUGyxoyzmnYl4jsnUboje0hOdhdBo?=
- =?us-ascii?Q?Ykj3gwCyDQub4Oj6NQluJzGC5a+hTDXTvDTkUIMoQtowBE0zNjEUKlKKdA8L?=
- =?us-ascii?Q?E8usoOHwid8+A2lHuOfXKqm6Ay2ZLesY4ANX7LG2SGtugO4pP2lYyao2Zapn?=
- =?us-ascii?Q?3kdZx+b+sPgFuAQlRLM4WF22BBbhnuoM/iEpj5doFP7K9+nd5hsXwM/c1Bzk?=
- =?us-ascii?Q?Ugfgqko/1P+7wxkCaX3JxrGZKQnEOsOJIR/wKBUA3v8fNUdL80UP9BkOOUFC?=
- =?us-ascii?Q?a2UOBtnmey3F9K3DXxPGwNLWONFVEFDWREre2Amlh3DXdXUE/NiDJyf/HkyD?=
- =?us-ascii?Q?C0D7wrZD6RG+YgtUld5LC3Peq+b5wIwm85TTf+IHDpAxlnbYy5GzYty5U1i/?=
- =?us-ascii?Q?9te6a+lkYRA5Gg92WnXujbcgzDH92V6S8PVLnphh?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28b707f0-d953-4710-f7dd-08ddb7a9908b
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB4845.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 07:41:48.4926
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: skdDHhr4ijbMk3N2T6aF+F0q8W+a3A0R5DNQzdff46CYjfE8DecvHbrS7RpDgCJWHnA16eJLFtwGCb+6pYs98g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF5217261E0
-X-OriginatorOrg: intel.com
+From: Ben Copeland <ben.copeland@linaro.org>
+Date: Mon, 30 Jun 2025 08:50:22 +0100
+X-Gm-Features: Ac12FXwbVbhKrQRrhmtGqdk3H80s3ORpUnDkppSOzjKooTKGOPIoCXyUl35_h8E
+Message-ID: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+Subject: next-20250627: IOMMU DMA warning during NVMe I/O completion after 06cae0e3f61c
+To: linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, kbusch@kernel.org, axboe@kernel.dk, 
+	hch@lst.de, sagi@grimberg.me
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 29, 2025 at 11:04:31PM +0200, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Just a heads-up, that very likely, merging of branch *drm-fixes-2025-06-28*
-> causes flickering of the panel of the Intel Kaby Lake laptop Dell XPS 13
-> 9360. 6.16.0-rc3 works fine, and with 6.16-rc3-00329-gdfba48a70cb6 the panel
-> flickers. I try to bisect, but maybe you already have an idea.
+A regression in the NVMe PCI driver triggers IOMMU DMA warnings during
+I/O completion on ARM64 systems. The issue manifests as
+drivers/iommu/dma-iommu.c warnings during the DMA unmapping process.
+IOMMU DMA unmapping warnings occur during NVMe completion processing.
+The warnings appear consistently during normal NVMe I/O operations.
 
-One possibility is:
-a3ef3c2da675 ("drm/dp: Change AUX DPCD probe address from DPCD_REV to LANE0_1_STATUS")
+- CONFIG_ARM64_64K_PAGES=y
 
-Could you open a ticket for this and provide a drm.debug=0x10e log with
-6.16-rc4 and try if the following commits in drm-tip fixes the issue?:
+Test Environment:
+* Ampere Altra - AmpereOne
 
-5281cbe0b55a ("drm/edid: Define the quirks in an enum list")
-0b4aa85e8981 ("drm/edid: Add support for quirks visible to DRM core and drivers")
-b87ed522b364 ("drm/dp: Add an EDID quirk for the DPCD register access probe")
-ed3648b9ec4c ("drm/i915/dp: Disable the AUX DPCD probe quirk if it's not required")
+Regression Analysis:
+ - New regression? Yes
+ - Reproducibility? Yes
 
-I also pushed these to:
-https://github.com/ideak/linux/commits/dpcd-probe-quirk
+First seen on next-20250627
+Good: next-20250626
+Bad: next-20250627
 
-Thanks,
-Imre
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> $ lspci -nn
-> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core
-> Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
-> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 620
-> [8086:5916] (rev 02)
-> 00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200
-> v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
-> 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0
-> xHCI Controller [8086:9d2f] (rev 21)
-> 00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise
-> Point-LP Thermal subsystem [8086:9d31] (rev 21)
-> 00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise
-> Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
-> 00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise
-> Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
-> 00:16.0 Communication controller [0780]: Intel Corporation Sunrise Point-LP
-> CSME HECI #1 [8086:9d3a] (rev 21)
-> 00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
-> Root Port #1 [8086:9d10] (rev f1)
-> 00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
-> Root Port #5 [8086:9d14] (rev f1)
-> 00:1c.5 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
-> Root Port #6 [8086:9d15] (rev f1)
-> 00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
-> Root Port #9 [8086:9d18] (rev f1)
-> 00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC Controller
-> [8086:9d58] (rev 21)
-> 00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC
-> [8086:9d21] (rev 21)
-> 00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD Audio
-> [8086:9d71] (rev 21)
-> 00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
-> (rev 21)
-> 3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac
-> Wireless Network Adapter [168c:003e] (rev 32)
-> 3b:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI
-> Express Card Reader [10ec:525a] (rev 01)
-> 3c:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe Solid
-> State Drive 512GB [1c5c:1284]
+## Test log
+[   32.699872] WARNING: drivers/iommu/dma-iommu.c:1232 at
+iommu_dma_unmap_page+0xc4/0xe8, CPU#13: swapper/13/0
+[   32.714204] Modules linked in: cdc_ether usbnet sm3_ce nvme sha3_ce
+nvme_core xhci_pci_renesas arm_cspmu_module arm_spe_pmu ipmi_devintf
+arm_cmn ipmi_msghandler cppc_cpufreq fuse drm backlight ip_tables
+x_tables
+[   32.732967] CPU: 13 UID: 0 PID: 0 Comm: swapper/13 Tainted: G W
+6.16.0-rc3-next-20250627 #1 PREEMPT
+[   32.743562] Tainted: [W]=WARN
+[   32.749381] Hardware name: Inspur NF5280R7/Mitchell MB, BIOS
+04.04.00004001 2025-02-04 22:23:30 02/04/2025
+[   32.759020] pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+[   32.768746] pc : iommu_dma_unmap_page+0xc4/0xe8
+[   32.776040] lr : iommu_dma_unmap_page+0x40/0xe8
+[   32.780559] sp : ffff8000801afde0
+[   32.783861] x29: ffff8000801afde0 x28: 0000000000000005 x27: fff00001d7d230f0
+[   32.790983] x26: 0000000000000000 x25: fff00001003da0c8 x24: 0000000000000002
+[   32.798106] x23: 0000000000000000 x22: 0000000000001000 x21: 00000000feed5000
+[   32.805229] x20: fff00001003da0c8 x19: fff00001d7d23000 x18: 0000000000080000
+[   32.812352] x17: 0000000000000040 x16: ffffae5c7594ea68 x15: 0000000000000000
+[   32.819474] x14: 000000000007ffff x13: 0000000000000001 x12: 000000000000002c
+[   32.826597] x11: 00000000000fffff x10: ffffffffffffffff x9 : ffffae5c76358e60
+[   32.833719] x8 : ffff8000801afd68 x7 : ffffae5c76358a78 x6 : 00000000feed5001
+[   32.840842] x5 : 000000000000000d x4 : ffffae5c76358a78 x3 : 0000000000000000
+[   32.847965] x2 : 0000000000000000 x1 : fff00001027e54c0 x0 : 0000000000000000
+[   32.855088] Call trace:
+[   32.857521] iommu_dma_unmap_page+0xc4/0xe8 (P)
+[   32.862039] dma_unmap_page_attrs+0x238/0x2a0
+[   32.866385] nvme_unmap_data+0x1dc/0x278 [nvme]
+[   32.870904] nvme_pci_complete_rq+0xb8/0x118 [nvme]
+[   32.878632] blk_complete_reqs+0x5c/0x80
+[   32.885320] blk_done_softirq+0x28/0x40
+[   32.892006] handle_softirqs+0x16c/0x408
+[   32.896436] __do_softirq+0x1c/0x28
+[   32.899912] ____do_softirq+0x18/0x30
+[   32.903561] call_on_irq_stack+0x24/0x30
+[   32.907472] do_softirq_own_stack+0x24/0x38
+[   32.911642] __irq_exit_rcu+0xd4/0x118
+[   32.915378] irq_exit_rcu+0x18/0x48
+[   32.918854] el1_interrupt+0x38/0x68
+[   32.922418] el1h_64_irq_handler+0x18/0x28
+[   32.926502] el1h_64_irq+0x6c/0x70
+[   32.929891] cpuidle_enter_state+0xcc/0x4c0 (P)
+[   32.934410] cpuidle_enter+0x40/0x60
+[   32.937972] do_idle+0x204/0x288
+[   32.941188] cpu_startup_entry+0x3c/0x50
+[   32.945098] secondary_start_kernel+0x140/0x168
+[   32.949617] __secondary_switched+0xc0/0xc8
+[   32.953788] ---[ end trace 0000000000000000 ]---
+
+## Bisection
+git bisect start
+# bad: [06cae0e3f61c4c1ef18726b817bbb88c29f81e57] nvme-pci: merge the
+simple PRP and SGL setup into a common helper
+git bisect bad 06cae0e3f61c4c1ef18726b817bbb88c29f81e57
+# good: [d6c12c69ef4fa33e32ceda4a53991ace01401cd9] block: add
+scatterlist-less DMA mapping helpers
+git bisect good d6c12c69ef4fa33e32ceda4a53991ace01401cd9
+# good: [07c81cbf438b769e0d673be3b5c021a424a4dc6f] nvme-pci: refactor
+nvme_pci_use_sgls
+git bisect good 07c81cbf438b769e0d673be3b5c021a424a4dc6f
+# first bad commit: [06cae0e3f61c4c1ef18726b817bbb88c29f81e57]
+nvme-pci: merge the simple PRP and SGL setup into a common helper
+
+## Source
+* Kernel version: 6.16.0-rc3-next-20250627
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 2aeda9592360c200085898a258c4754bfe879921
+* Git describe: 6.16.0-rc3-next-20250627
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master-ampere/build/next-20250627/
+* Architectures: arm64
+* Toolchains: gcc-13
+* Kconfigs: gcc-13-lkftconfig-64k_page_size
+
+## Build arm64
+* Test LAVA log:
+https://lkft-staging.validation.linaro.org/scheduler/job/180925#L7760
+* Build link: https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/
+* Kernel config:
+https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/config
+
+## Steps to reproduce:
+# https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/tuxmake_reproducer.sh
+
+Linaro LKFT
+https://lkft.linaro.org
