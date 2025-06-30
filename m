@@ -1,97 +1,244 @@
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B7D78F24
-	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB003223DD4
+	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267664; cv=pass; b=IX8JycFPHoSN3lQabjCLr6ys9oXMB0PtmHIuIhy4hKyOWQximtgd5ewSbShWkprjRMDqBhoJvcHPDvzNK3lqOPn6Fy32b0EnyeleoKDyz6oa+b4tHE53Lxjb0cSpjgmhMJjJT88EGRUCiPLZpC7zd/hoC4aySc3p8abaiAVCUps=
+	t=1751269383; cv=fail; b=Mit7EHxb3tUuxaM99kNcUmsuT5zCFe2i6TrIQGVUrATHdFoN+5TMeLjdryEugiazA4Dk2hogXPcifMSMaa3QetcHqSSsTfEjWkw0Z73j0Y+PWivcjLHAGB0KcUwi0p7poLmfq49RNKrEAxVzBtIncmyZBVk9jEI32P10YplZcpY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267664; c=relaxed/simple;
-	bh=Ny+909tFnzeBGP+zVu17ZybQEydTkcpvwzzTGjNzvpk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=MH3lEkgm24cBBpcWtpN8xYxS+WeIKelK495EiYGnAK6r1mIwNg/SYTVKr///NzcSwMwwisz8CyzRWrMgb/RcLTuQMUaXINB1gxB960v73h/BlcmTJOpDpauWxftt+jFUuBJjtZi0nyn1mPeCL5F84ZZnzQTCXjseL/TvFlFeoSw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=XO2CmYYn; arc=pass smtp.client-ip=136.143.188.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1751269383; c=relaxed/simple;
+	bh=3aNsKSNVvxbIoeyOWFpqrElquttYAKJjRiRZ77kKQXk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sjRUdNfCQFfdYDox/hEX1NuA++x3P/JtIrkCvt5gZEeARrCc5fAh4JtsgX1TovDPHdmi7et2+M5I+cDBM1jA2lcM11TjofZGN4t5PeU9x29tAwvPeRI3Vcl5y1MAMmdnJPc9wvMqjvpG5hIZrtLqgA+2acrwpAE4OnpTgdcxMbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YHW/Juvt; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="XO2CmYYn"
-ARC-Seal: i=1; a=rsa-sha256; t=1751267657; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=G5kRKX+NlfiiNYF/RvR2HJ+o0BbZ6T42vBjuNjXkSGbpWoqcvOkMcjsiZPRlaUIztuMjkxzC5SKJJGWhLiswQ/N0IaJUnOFiAtlBXBJgFX9Jk3zQG3SQm5TFU2Eh3/ZMJw2c5y7kV3O8K09YPaqH4O0/huO7B6ogZonAiVMEnAQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751267657; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4g9b3rt0LEwBpyUQi7Y/ERedSAXvJddMYEJ9iWhZZck=; 
-	b=fKgrTIfETgbN2vPrVjoieXYPDA0o/h4QL54s29T8GZgZfEdqt9NCV5I8gShoyweHPN92kkzDYZI8Xh5Z0mcq/GZ0yZ2A23yEx5CfHZtA9rcEBM3hFcHLm/wDp2v3AgbnfN7MkD9Z/aKFwgQZf6P9jNRo5Do3Xbn4xCm5q3sL6yU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751267657;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=4g9b3rt0LEwBpyUQi7Y/ERedSAXvJddMYEJ9iWhZZck=;
-	b=XO2CmYYnpaNTIT8v0DM5tDTwqchQJz63wd5dtSdXi6fRlPyPqXt1OJDzi+yL9k0f
-	IuY/A9lmXKMCzfJyy/Q60h71BI22k+AiDP9b3U8wr4YwAmRaz/YfFTRrfpaLx9o6UQb
-	2YyxWAFIBDItpYFmjA4SiN3q05Sh/qHZ2af4zEuo=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1751267656272638.7175982375178; Mon, 30 Jun 2025 00:14:16 -0700 (PDT)
-Received: from  [212.73.77.104] by mail.zoho.com
-	with HTTP;Mon, 30 Jun 2025 00:14:16 -0700 (PDT)
-Date: Mon, 30 Jun 2025 11:14:16 +0400
-From: Askar Safin <safinaskar@zohomail.com>
-To: "Mario Limonciello" <superm1@kernel.org>
-Cc: "Linux i2c" <linux-i2c@vger.kernel.org>,
-	"linux-acpi" <linux-acpi@vger.kernel.org>,
-	"regressions" <regressions@lists.linux.dev>,
-	"DellClientKernel" <Dell.Client.Kernel@dell.com>,
-	"linux-gpio" <linux-gpio@vger.kernel.org>,
-	"Raul E Rangel" <rrangel@chromium.org>,
-	"Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
-	"Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-	"Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
-	"Werner Sembach" <wse@tuxedocomputers.com>,
-	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Message-ID: <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
-In-Reply-To: <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
-References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
- <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
- <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com> <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YHW/Juvt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751269381; x=1782805381;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=3aNsKSNVvxbIoeyOWFpqrElquttYAKJjRiRZ77kKQXk=;
+  b=YHW/JuvtLB2slfSekhyhBnogoqnxoNFb2cKxx+/MLSP20dKr8+mMMudo
+   CbbvoVi62bsAlfLfzsnguJm2KxReTMO3eqoI8cO2feTqRR8ZJyjaXfRPX
+   oScV879BqPRK2fJ0H3+yAp/+I0DPxPNKb+c0f5XcwiPtGVYif5kqRJHOp
+   k4obqwrS5TNxkBp7dB/alLf0SLsXr6loPKG3WmADZddKJBCpE00lbPI8D
+   gb0GHt9ErQEHl14+6rDDMgE6LxkZJ3iCc/8LcORKUwnUTEDO0mzgA/MTs
+   S5evIPUgVWcRb8jVcBbFAJUka0hMgPKJLE+/k98nAO1r9jGXjpJMwJcgK
+   g==;
+X-CSE-ConnectionGUID: Eg0jSGcNTVOybSQoySrFqw==
+X-CSE-MsgGUID: 1RgVuf79SFGuKswdWzhz0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="56109082"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="56109082"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:42:07 -0700
+X-CSE-ConnectionGUID: BRkbsduKRdKp5DThoihq6Q==
+X-CSE-MsgGUID: 1mP/NsVgSCWTj4cLZ+1Xew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153690830"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:42:05 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 00:42:04 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 00:42:04 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.77)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 00:42:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fYs7Si/3/NqxGTGjIg52syzb4QVPrrN+x39BznYHArDcCsA8ce+r7zQTFaqcvkXsdHeZZpbLNgq2YDD+idrqWtCmZ+AQUnGtMpp+xELIVKzPaBBB5KbvO4fFB9GQrbowC7QakQ1a84A7+ztsTtdirnJ/U2RdxQpqkcDRH8nGy2R55wVy7/PcjP/SK/d/IndzYhzf7YaaQUC2cSTG7hk4aA4ydYOACbYQO7xeOcxi95KawzBfG+Xn9My/fvS89IMSXod3T+XGsY0/GcZLCy9jcdKGh+koY4w5SmuNbRD4csuydcq0urmw/uaAotOWja600WKFFcGZDhL0Qux+tt54HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vIpMrERnKY4t4pYO2mGTfW2XN/diV6w/Y5so7PfQrrs=;
+ b=mDtVdF2TEh5rtLQdTbC5KKmKRy9orMjr+3PeiCZNaO/OxUxoUktzHI/+BcJOjP9Jq6oFNHIou3lqaA9TH06t8YHiCHpBWeJWMHfeStjBmiQyvYgU2jNywleLTu9Rv8qt9P8Fyv24bwbohiX2pVcP4iqDUKqTGl7zx4CnIl1WukVPxTpnpALHv19k9NFfCFgpcD/VWxeBVKNf1YlIOz8RLJjsTqSqDL/ttQVYQxDKCanbKIgGchvOzlXMLVuqAUDfBh2NbX8ClSWSyZ2bHGID+Tm0Vf4/hJI9OoP94bfMzyfcMPcD4fzdRepe8+qBeWMzYxO3qRhK67vbWKd95CaGXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ0PR11MB4845.namprd11.prod.outlook.com (2603:10b6:a03:2d1::10)
+ by DM3PPF5217261E0.namprd11.prod.outlook.com (2603:10b6:f:fc00::f21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 30 Jun
+ 2025 07:41:48 +0000
+Received: from SJ0PR11MB4845.namprd11.prod.outlook.com
+ ([fe80::8900:d137:e757:ac9f]) by SJ0PR11MB4845.namprd11.prod.outlook.com
+ ([fe80::8900:d137:e757:ac9f%6]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
+ 07:41:48 +0000
+Date: Mon, 30 Jun 2025 10:41:40 +0300
+From: Imre Deak <imre.deak@intel.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+CC: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Rodrigo Vivi
+	<rodrigo.vivi@intel.com>, <intel-gfx@lists.freedesktop.org>,
+	<intel-xe@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
+	<regressions@lists.linux.dev>
+Subject: Re: [Regression] Panel flickering on Dell XPS 13 9360 with
+ drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
+Message-ID: <aGI_tO6btgJluwUu@ideak-desk>
+Reply-To: <imre.deak@intel.com>
+References: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
+X-ClientProxiedBy: DU6P191CA0001.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:540::11) To SJ0PR11MB4845.namprd11.prod.outlook.com
+ (2603:10b6:a03:2d1::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-Feedback-ID: rr08011227d2834feaa81ae7a61d8469c300002f53f71d2a8c9c14bafd63bc721216f32cb3d939ae981de558:zu080112274d7945573b527403042c24c100003ce6475868fd94ceabf382ee747bde5b10245760e856ceda14:rf0801122bbe182296f0d2f8051a9483d70000aac597d692a69bceb28f8074c107afd614e0604984148a79d0703fa681:ZohoMail
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR11MB4845:EE_|DM3PPF5217261E0:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28b707f0-d953-4710-f7dd-08ddb7a9908b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4D/OSooieqZ0s11SCPELHk+HrnYT/hKaaZrp96l6euRTegalz9Z/M+mnGKQ2?=
+ =?us-ascii?Q?AXzlqjm0rbD2bPi5zr++pC3sXx36OgI7VnUN+y8cXxEXFt41Xlh57SOxnDiO?=
+ =?us-ascii?Q?YCauf33Ckp2jEHJlUbvjIVb3bcGvoFKzP7lBTT+ar2rtizPezV3DA2b1lb7z?=
+ =?us-ascii?Q?pjJe4oYdKeQIsDJrOs+EbQtrUMFun4xWjNzWf6tP/vHTrwsF/mIkePdjn5AE?=
+ =?us-ascii?Q?A25NscNU8VNvOWNl5JpbP/7fojVUB/LgYMGNq6a69Fd5tH+XH3XtRKQlXrNY?=
+ =?us-ascii?Q?XR6AyoYB+haCXDtdxjrfF69PImve91gWxNCPsSlkZiX7eDIF9QYovZbXRC2L?=
+ =?us-ascii?Q?cTZR3Vl8NBMdGcbiiEOnI/Z7Iqnwvf2GW4YMBpmq6qkXOX1k0xFlhxH253Z3?=
+ =?us-ascii?Q?hJWz4URsBAxWGgzBU0/UvS/N13ZIcdF12y/JJJZBsGDgyy3bwjVRKTfcHUAF?=
+ =?us-ascii?Q?M7oNONYLgcLEgjMYBkhNWKJFOVgnZdGVP+lduISWIatSd22MGSVcRSq74Jpw?=
+ =?us-ascii?Q?oqn5nvXzEOi3PDEyxGnh5yK4cfCsA49QSmzKp0JHsiVr3mg9ifdXbosRXSbB?=
+ =?us-ascii?Q?tVejcBYJap5Am4+jxLk9tFBwbFv8pPowIU364E373OTlEBc7F376AFQ3Wqm3?=
+ =?us-ascii?Q?FqmGPMq0zFg7y4yxSr5K0/d/7KtjrRCx6zLR19njHLS1F++Yq1nU1AMhy33z?=
+ =?us-ascii?Q?0N4jHWLKs031Mtq50Bekc1O5QOaV5Ss5lcYLHQQYj9GBUyRgheL4A22Hxh/X?=
+ =?us-ascii?Q?0YA/RHDRXB6lEsWh9IEa3Lguth1P9lmMheHBqWuJyO3e4Dbm07TGVrTEpaCW?=
+ =?us-ascii?Q?eAy/APmf72kUUgP2YtPOrymUnx9KTwp8gpE3Ga30qFq5UK6+C9ueYi9MJnHx?=
+ =?us-ascii?Q?kbTPxI6RctU3LrV8BKPtP55z0eCCmxet0J9gAljZ4wm3LcZFTnM/gf/wOuNK?=
+ =?us-ascii?Q?cRfS9wxL2LTZcqMR8FkAWx2UkkSREA2zxQ60T61VkEAIc/PYRGpQd7xcTAO+?=
+ =?us-ascii?Q?lcEvte2Vz2D/o0MidhO6xnXNrC/UZiAEIzGudPfo4Qj3wsy+fhJnGIF+pu9O?=
+ =?us-ascii?Q?8wClF2M2jKfTbRKqa8S7c/phuq2DE8JHJwwmwnbB1bnE1s+IAbMTPmy0GoOS?=
+ =?us-ascii?Q?ouVLxJZofJZ4umdXBQ4ErXPHsbVEAgBmTl1dKkpq4VcV4kGu0q/m+FynRrXX?=
+ =?us-ascii?Q?CM8afvd+/iTBtZw/bAVJUUzZHZ71ZeEs8RS0IE72te4yvMMx6+KGZP5Fd/LN?=
+ =?us-ascii?Q?Iyfw9GoCN3SIkQAHkxbwdm54ZmUyk88nzfPqiN7YKcVinkRugmj1DkRZVcog?=
+ =?us-ascii?Q?Mi+V3G+atGBkwNPpFDaUju0bYcG1jWYyr6Nq6u7ugg/ud59GdJHkERGD93vI?=
+ =?us-ascii?Q?ejG7zio03DKfRRjnssh4t1hAxg/w7GdX47XwK4BuN5xE3qBd+fe1pvi2kgH6?=
+ =?us-ascii?Q?e+AcDV57kXI=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB4845.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rSL/XReUhVXHieGwL3IRg1/aZ6yyUi6kxnYR2PBY8rkk4sfdhpfnWfkzRx4/?=
+ =?us-ascii?Q?VzsfkiiLg7YeHbpENmAXPGEICwHMJssu5V6nFX61GDugX3+2pP8cI3JtUp/C?=
+ =?us-ascii?Q?EWuAXmGW3aJKOV3up7fx+TNIrAIn+elMRP/A7A0uKy7O80exkTqk5o4ftxIT?=
+ =?us-ascii?Q?b7gna9lUptEUV+6ReThk4mOi6GiaZ5iwvX/1J+0HJnZIY39wqvYlFlHuWt8Q?=
+ =?us-ascii?Q?UZu3VsY2eAlTLA2WE4SoOuvcLPC/22GV4nAa1wlzmwtMcfouqyOmBt9xn5Hb?=
+ =?us-ascii?Q?2zt2eljD+FCPMeQsEjA7vvWDsvix7zzkjC3ICBTvkiD4WNRpepgGp0mzmrf/?=
+ =?us-ascii?Q?WrVHqzuCfi7+6cUM5UEQlUM0FvH+pqILjwaxf2geOsOZcwnUPc4VbzeNrwFa?=
+ =?us-ascii?Q?oVj/JgtUSitzW+KMCiOsWldgXu9zucIGeEMgZF32RrYXUVwPiKUgUIZWOUFZ?=
+ =?us-ascii?Q?70ewV4Q22ixJimyc7SzjCeo0vc68WF6fyk55pL5YQUwxfLLOB44QX9aoMvIH?=
+ =?us-ascii?Q?7hZofV2KF2/gDl7eqXlxE6Oln9m0sOcpwfXnbNCIywLqXKRHuE0XLzzXinY6?=
+ =?us-ascii?Q?liR7iU4Zc7C54lw+sWcO3wLeciVLxW00TlOMg2x8NrfxZ3FJ+bBy3xK0pw7m?=
+ =?us-ascii?Q?ZmkXsNG+57DC+nIAjbemrnowvdJIb2ZswCoyvJdFwlHY3PD5c9NFAHepDx7d?=
+ =?us-ascii?Q?3qQWhKhRszGeT4qAaQeJLHVUaoqaYa/BlOCoQJumu9VJnrrEougaBA5Mx/zB?=
+ =?us-ascii?Q?KGUPR7UTLu9jpIhnkC0ltnmSi7r4nR354o3zOGHhjgcOZqJo8xZhSjBnTJwj?=
+ =?us-ascii?Q?j7anA4s7Y+hJ1F0nYQm9VmEm8rKg8+Qk7y+JudDK6U1iapBI7q4uLkk4tJTD?=
+ =?us-ascii?Q?wLtPsTk2vseOCWCfjhb4ZJ9ktEdBqLWdtISaEYbIrOZY7+/tSX0wFJ5/rZZt?=
+ =?us-ascii?Q?+6BoECTyHgYwM0sIliEDmMsD9zKjp4fuQDaF70ruLn+zAEl8JcGxQklXBvgq?=
+ =?us-ascii?Q?jHUYCSM+B2lNw8ShUU+uZxnRRnQrSdQXu7rNSNrrkaFgvEM5q6G61Vdv+2/D?=
+ =?us-ascii?Q?TdwhMHjSXjkQpRT+aRQiJRI6jiK+XJDYj+GDWwDq0VrU33IVhImZ47vDWIf1?=
+ =?us-ascii?Q?bU8vPONkv9JDPHBU/CNOemUxRnHgUQTDUGyxoyzmnYl4jsnUboje0hOdhdBo?=
+ =?us-ascii?Q?Ykj3gwCyDQub4Oj6NQluJzGC5a+hTDXTvDTkUIMoQtowBE0zNjEUKlKKdA8L?=
+ =?us-ascii?Q?E8usoOHwid8+A2lHuOfXKqm6Ay2ZLesY4ANX7LG2SGtugO4pP2lYyao2Zapn?=
+ =?us-ascii?Q?3kdZx+b+sPgFuAQlRLM4WF22BBbhnuoM/iEpj5doFP7K9+nd5hsXwM/c1Bzk?=
+ =?us-ascii?Q?Ugfgqko/1P+7wxkCaX3JxrGZKQnEOsOJIR/wKBUA3v8fNUdL80UP9BkOOUFC?=
+ =?us-ascii?Q?a2UOBtnmey3F9K3DXxPGwNLWONFVEFDWREre2Amlh3DXdXUE/NiDJyf/HkyD?=
+ =?us-ascii?Q?C0D7wrZD6RG+YgtUld5LC3Peq+b5wIwm85TTf+IHDpAxlnbYy5GzYty5U1i/?=
+ =?us-ascii?Q?9te6a+lkYRA5Gg92WnXujbcgzDH92V6S8PVLnphh?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28b707f0-d953-4710-f7dd-08ddb7a9908b
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB4845.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 07:41:48.4926
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: skdDHhr4ijbMk3N2T6aF+F0q8W+a3A0R5DNQzdff46CYjfE8DecvHbrS7RpDgCJWHnA16eJLFtwGCb+6pYs98g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF5217261E0
+X-OriginatorOrg: intel.com
 
- ---- On Fri, 27 Jun 2025 07:58:15 +0400  Mario Limonciello <superm1@kernel.org> wrote ---
- > That's odd.  It should be made when the PMC core driver binds.  Maybe
- > others will know what's missing here.
+On Sun, Jun 29, 2025 at 11:04:31PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> Just a heads-up, that very likely, merging of branch *drm-fixes-2025-06-28*
+> causes flickering of the panel of the Intel Kaby Lake laptop Dell XPS 13
+> 9360. 6.16.0-rc3 works fine, and with 6.16-rc3-00329-gdfba48a70cb6 the panel
+> flickers. I try to bisect, but maybe you already have an idea.
 
-Command "grep -r -E -I last_hw_sleep ." in culpit kernel (1796f808e4bb2c074824d)
-shows nothing. (This is somewhere around 6.1).
+One possibility is:
+a3ef3c2da675 ("drm/dp: Change AUX DPCD probe address from DPCD_REV to LANE0_1_STATUS")
 
-So, culpit commit is too old.
+Could you open a ticket for this and provide a drm.debug=0x10e log with
+6.16-rc4 and try if the following commits in drm-tip fixes the issue?:
 
-If you want, I can retest this thing on current master and on current master with
-revert 1796f808e4bb2c074824d.
+5281cbe0b55a ("drm/edid: Define the quirks in an enum list")
+0b4aa85e8981 ("drm/edid: Add support for quirks visible to DRM core and drivers")
+b87ed522b364 ("drm/dp: Add an EDID quirk for the DPCD register access probe")
+ed3648b9ec4c ("drm/i915/dp: Disable the AUX DPCD probe quirk if it's not required")
 
- > I see in your bad config interrupt 14 is waking the system.  In the good
- > config interrupt 8 is waking it.
- >
- > What is in /proc/interrupts?
+I also pushed these to:
+https://github.com/ideak/linux/commits/dpcd-probe-quirk
 
-/proc/interrupts from culpit kernel: https://paste.debian.net/1382819/
+Thanks,
+Imre
 
---
-Askar Safin
-https://types.pl/@safinaskar
-
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> $ lspci -nn
+> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core
+> Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 620
+> [8086:5916] (rev 02)
+> 00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200
+> v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02)
+> 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0
+> xHCI Controller [8086:9d2f] (rev 21)
+> 00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise
+> Point-LP Thermal subsystem [8086:9d31] (rev 21)
+> 00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise
+> Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
+> 00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise
+> Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
+> 00:16.0 Communication controller [0780]: Intel Corporation Sunrise Point-LP
+> CSME HECI #1 [8086:9d3a] (rev 21)
+> 00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
+> Root Port #1 [8086:9d10] (rev f1)
+> 00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
+> Root Port #5 [8086:9d14] (rev f1)
+> 00:1c.5 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
+> Root Port #6 [8086:9d15] (rev f1)
+> 00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express
+> Root Port #9 [8086:9d18] (rev f1)
+> 00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC Controller
+> [8086:9d58] (rev 21)
+> 00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC
+> [8086:9d21] (rev 21)
+> 00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD Audio
+> [8086:9d71] (rev 21)
+> 00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
+> (rev 21)
+> 3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac
+> Wireless Network Adapter [168c:003e] (rev 32)
+> 3b:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI
+> Express Card Reader [10ec:525a] (rev 01)
+> 3c:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe Solid
+> State Drive 512GB [1c5c:1284]
