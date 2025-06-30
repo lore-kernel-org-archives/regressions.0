@@ -1,90 +1,162 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D963C21CA14
-	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 08:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FE325DCF2
+	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 11:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273390; cv=none; b=JRQHrp3ieGAbvbhAo1BWp6wou3b9rRGmFoo/g9l2oY1P30bVk/v54d4hTtepnk2zHsJ4Gw9O8LuWNNGIXS5o9yjg5Y8a5rJSOX4+fwT3XO8mFkogTBtUU55DPvXiVdoWskeJTzihxyI4GsbCIhmFF3nxguyZXSaooqlNnvA6wlg=
+	t=1751283158; cv=none; b=QLBhy9gpmDYheJBo8+hhcN5Ymz5cb8Rs4y2mvm3FfQCdwsnq+xvnPyd9YYeoa7tWKACZ0cT6do5GqdaiVyCPbhixB0tz5WkXQvPzQg0itjMhBooxjw43wfZXPvYtoe2bJ0oJKw5+Zk9/uWoDOUJphwc1AhgYdyT1RIhaS0ICIKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273390; c=relaxed/simple;
-	bh=/T1XmqLkHGmZ4HU8CZhuAPLKatyDiVqkgbmpJsILy3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WzxzWfuLar62tyXJWhoOOWi66LQw3u8HrzAk958IQ/GQ3TqevSQjsOMpHeWgVTWewdqyIF8AJUEmNtTWg0LrNsI9nlNkSKxFYpe8G9t0wsWkhuQ0W5kmZX36XPecwoA2Gr7+FQtcWOEIS6swoWRTauP7oWZ7KNbr4Z+cfSF3Fro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.2.196] (p5dc55466.dip0.t-ipconnect.de [93.197.84.102])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 17BD061E64787;
-	Mon, 30 Jun 2025 10:49:17 +0200 (CEST)
-Message-ID: <16a1a6de-e2e2-4fed-9ca0-7bca50c7169c@molgen.mpg.de>
-Date: Mon, 30 Jun 2025 10:49:16 +0200
+	s=arc-20240116; t=1751283158; c=relaxed/simple;
+	bh=JrmlR7cLmGq/tenetqwJwHO2uvIPQlOMEhSGW/+rgAc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZIb4NtcQgkprQUww0Dfpqkenf6gmpfByGyFD43tXLEu9HFgCKabK1NTaL/YzM9vRgDexnOJwwsYN35NmMzVPBxsWxjh+5Kz8vYJF1f9yWGuBluEsYB6PpwaiN9w5y7I0LY6lY6PdWFFeuPkJ/tYusUOyagMaZ4WAXrE9w7svPoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=csu2QSGk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YiJ2a1fg; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="csu2QSGk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YiJ2a1fg"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 4C28B7A019A;
+	Mon, 30 Jun 2025 07:32:34 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Mon, 30 Jun 2025 07:32:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1751283154; x=1751369554; bh=oxMmJEyGhz
+	TthN/fcdYjXuV9Dle9faFe4SUXcAQ8dVk=; b=csu2QSGkClyMxmuRwIW0PwP+li
+	5gV1wqPMHqr/vTZyhDfR3pyk+JF0NtddP9i3ulCfqcC3h+XJxUzblBDK0ky3BuJU
+	67aE63jbUhZCV3NFu6+Wu2kXiMkMJCLFxgepLyuMIFINbH/ZU6FMLEhLqsOuQClJ
+	7rovYPb7fVJLrOQHnZTPjE0DGxqNY8yqqushnV+W9vfVpissJxLeTD2j6u4WuCzR
+	pPQeTWjbDMjBPdm7mLkUmbpVbbJpQPqyTh4Tbl4PPdpVerHV2xuKZVsqFGSZgWwQ
+	VujgOVsF2eW0wOCHEJBZAsvNuUmiELQINx1ORRyY+waHC+whPL7/hqk7xdKw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1751283154; x=1751369554; bh=oxMmJEyGhzTthN/fcdYjXuV9Dle9faFe4SU
+	XcAQ8dVk=; b=YiJ2a1fg8eGUzNMgDfTwhXdw4q527o3pahzWBnnnHJsMBWBsltg
+	nsvZ2XD76Z0XH3ezMJBg9ZjVZWSJwKmjPPKs9nu9w1Yf/JkXsd2ddLLTE2gpYHw3
+	paa00xKoJBGEgFAazZXWLBCJJxtGeE+Jxxao15o7jJNYcLWrdKgVD1qYykAtGzxZ
+	SNtVxThtzBqAP/nEyNnzwvrfbMu2TvZ/5f6jAmqGOO0h2btXNE+XbBNIS7YSIZzP
+	XXrVQDeE2dcuQyzl25TwgepNF3rdcAs6iIWFDaJibvIoRMxSjZzX8g4Spdxg0cQz
+	psoEBlSr4OT5xRuDiKVPvzMFn6Ydh+ixOpA==
+X-ME-Sender: <xms:0XViaMPHzfnTDOUAxmeSp_X8Lg2AIpMsDqNr5v8ED07hdDo5FIp0GQ>
+    <xme:0XViaC9c0ceDFpCq8eUOW_ZXwWdHrBryRO_FP-4Pnpu6usya189j81lWRbzdRuVvD
+    cHD68s-vPqzZpo2hQ>
+X-ME-Received: <xmr:0XViaDTSquGai8Nx7b9NNP8SwyqlVSdkD_vpYj2GVUehx16ylo8TmLjkIDBzhjsQ0SqSuHv-DBE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefhvfevufgjfhffkfggtgesghdtreertddtjeenucfhrhhomheptehlhihsshgrucft
+    ohhsshcuoehhihesrghlhihsshgrrdhisheqnecuggftrfgrthhtvghrnhepgfehhffgke
+    ekleejveeftdegtdetieduieeifedvheehleetgeekvefgudehuedvnecuffhomhgrihhn
+    pehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhephhhisegrlhihshhsrgdrihhspdhnsggp
+    rhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhioh
+    drlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopeihvghhvgiikhgv
+    lhhshhgssehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvggrshdrnhhovghvvg
+    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhimhdrlhhinhgusggvrhhgvghrsehg
+    mhgrihhlrdgtohhmpdhrtghpthhtohepmhhitghhrggvlhdrjhgrmhgvthesihhnthgvlh
+    drtghomhdprhgtphhtthhopehrrghjrghtrdhkhhgrnhguvghlfigrlhesihhnthgvlhdr
+    tghomhdprhgtphhtthhopehsrghshhgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfigvshhtvghrihes
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:0XViaEukabNgbE45KuY_Dw6mme3I0NhnKdROnZ2GQODuRKSiqcCHJw>
+    <xmx:0XViaEca_gh47sr9P5vqa3swavqttcmg-GR1jbuSe5raivaazb8sUQ>
+    <xmx:0XViaI2WJ2xFaT8AgCu0SxP3dJkVO-4cSDjCL8PSu8uBqCHPSOoSIw>
+    <xmx:0XViaI9ZtyAvIHts0MssvTOkAxEwbOxGDdxSl2s_OPuBsfA0m0oldw>
+    <xmx:0nViaBDb-wnrmph_UwUpRwy-__9ybQWQoEd9542yttoAigqp-H9f2-90>
+Feedback-ID: i12284293:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 30 Jun 2025 07:32:33 -0400 (EDT)
+Received: by sf.qyliss.net (Postfix, from userid 1000)
+	id D269C26678DCF; Mon, 30 Jun 2025 13:32:31 +0200 (CEST)
+From: Alyssa Ross <hi@alyssa.is>
+To: regressions@lists.linux.dev
+Cc: mario.limonciello@amd.com, andreas.noever@gmail.com,
+ michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com,
+ rajat.khandelwal@intel.com, mika.westerberg@linux.intel.com,
+ linux-usb@vger.kernel.org, kim.lindberger@gmail.com, linux@lunaa.ch, Sasha
+ Levin <sashal@kernel.org>, stable@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Mario Limonciello <superm1@kernel.org>
+Subject: Re: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
+In-Reply-To: <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
+References: <20250411151446.4121877-1-superm1@kernel.org>
+ <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
+Date: Mon, 30 Jun 2025 13:32:27 +0200
+Message-ID: <87v7odo46s.fsf@alyssa.is>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] Panel flickering on Dell XPS 13 9360 with
- drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
-To: Imre Deak <imre.deak@intel.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
- regressions@lists.linux.dev
-References: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
- <aGI_tO6btgJluwUu@ideak-desk>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <aGI_tO6btgJluwUu@ideak-desk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Dear Imre,
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Alyssa Ross <hi@alyssa.is> writes:
 
-Thank you for your reply.
+> On Fri, Apr 11, 2025 at 10:14:44AM -0500, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> commit a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect
+>> on USB4 ports") introduced a sysfs file to control wake up policy
+>> for a given USB4 port that defaulted to disabled.
+>>
+>> However when testing commit 4bfeea6ec1c02 ("thunderbolt: Use wake
+>> on connect and disconnect over suspend") I found that it was working
+>> even without making changes to the power/wakeup file (which defaults
+>> to disabled). This is because of a logic error doing a bitwise or
+>> of the wake-on-connect flag with device_may_wakeup() which should
+>> have been a logical AND.
+>>
+>> Adjust the logic so that policy is only applied when wakeup is
+>> actually enabled.
+>>
+>> Fixes: a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect on US=
+B4 ports")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+> Hi! There have been a couple of reports of a Thunderbolt regression in
+> recent stable kernels, and one reporter has now bisected it to this
+> change:
+>
+>  =E2=80=A2 https://bugzilla.kernel.org/show_bug.cgi?id=3D220284
+>  =E2=80=A2 https://github.com/NixOS/nixpkgs/issues/420730
+>
+> Both reporters are CCed, and say it starts working after the module is
+> reloaded.
+>
+> Link: https://lore.kernel.org/r/bug-220284-208809@https.bugzilla.kernel.o=
+rg%2F/
+> (for regzbot)
 
+Apparently[1] fixed by the first linked patch below, which is currently in
+the Thunderbolt tree waiting to be pulled into the USB tree.
 
-Am 30.06.25 um 09:41 schrieb Imre Deak:
-> On Sun, Jun 29, 2025 at 11:04:31PM +0200, Paul Menzel wrote:
+#regzbot monitor: https://lore.kernel.org/linux-usb/20250619213840.2388646-=
+1-superm1@kernel.org/
+#regzbot monitor: https://lore.kernel.org/linux-usb/20250626154009.GK282438=
+0@black.fi.intel.com/
 
->> Just a heads-up, that very likely, merging of branch *drm-fixes-2025-06-28*
->> causes flickering of the panel of the Intel Kaby Lake laptop Dell XPS 13
->> 9360. 6.16.0-rc3 works fine, and with 6.16-rc3-00329-gdfba48a70cb6 the panel
->> flickers. I try to bisect, but maybe you already have an idea.
-> 
-> One possibility is:
-> a3ef3c2da675 ("drm/dp: Change AUX DPCD probe address from DPCD_REV to LANE0_1_STATUS")
+[1]: https://github.com/NixOS/nixpkgs/issues/420730#issuecomment-3018563631
 
-Yes, that is the one my bisection pinpointed.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Could you open a ticket for this and provide a drm.debug=0x10e log with
-> 6.16-rc4 and try if the following commits in drm-tip fixes the issue?:
-> 
-> 5281cbe0b55a ("drm/edid: Define the quirks in an enum list")
-> 0b4aa85e8981 ("drm/edid: Add support for quirks visible to DRM core and drivers")
-> b87ed522b364 ("drm/dp: Add an EDID quirk for the DPCD register access probe")
-> ed3648b9ec4c ("drm/i915/dp: Disable the AUX DPCD probe quirk if it's not required")
-> 
-> I also pushed these to:
-> https://github.com/ideak/linux/commits/dpcd-probe-quirk
+-----BEGIN PGP SIGNATURE-----
 
-I created issue *[Regression] Panel flickering on Dell XPS 13 9360 with 
-drm-fixes-2025-06-28 merged (Linux 6.16-rc4)* [1], and will try your 
-proposed fixes later.
-
-[…]
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/14558
+iHUEARYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCaGJ1ywAKCRBbRZGEIw/w
+oiguAQCD0+DyZKWZ/DT6JDF6WXi8cVaX1sacdj2IQCj2Zfxu/wEAi2OPNEpEvxZx
+tgHo3hWI+2KnGFcpNcksmna1mhv82wE=
+=cA20
+-----END PGP SIGNATURE-----
+--=-=-=--
