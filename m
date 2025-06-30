@@ -1,178 +1,90 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F1B1A3A80
-	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 07:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D963C21CA14
+	for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 08:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269837; cv=none; b=OFqAilcT+jTiBJlaz+FwekSntmZMGpL4+KFHEZEnN7P1HaNjWpik0TI99U4xmMu4QUgn4kGubtakxuy+3/FQRyAQ80ca6lDi2Tj3xT0bLUKdjuKhic/TwvV1Dg36c0o3zNxlyZfs/8V9tq7rJgUl+3kW3aY2NhaDTv2n5NzEj24=
+	t=1751273390; cv=none; b=JRQHrp3ieGAbvbhAo1BWp6wou3b9rRGmFoo/g9l2oY1P30bVk/v54d4hTtepnk2zHsJ4Gw9O8LuWNNGIXS5o9yjg5Y8a5rJSOX4+fwT3XO8mFkogTBtUU55DPvXiVdoWskeJTzihxyI4GsbCIhmFF3nxguyZXSaooqlNnvA6wlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269837; c=relaxed/simple;
-	bh=dW1S/Vd8ohxG3RdNI1svkbdQsHOBXKFy5ERXSJJ/UWU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j3Fofj25eZOdEBINvLdqL/h58glg2Sy4bVdLkF4KWDLjHyUVD8I0kTFND2Vi0e5uz3K47E6ixs8be7H2+/yZOsmsE53326jzrOKUHczIN3QRwKpKCuAb8HPrno95WuPUbD51ekf/5MWJ3ZDNTJwy4SKgkfcP9oNEqjx4PGns+lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SB0ZvQqZ; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SB0ZvQqZ"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2eacb421554so483624fac.1
-        for <regressions@lists.linux.dev>; Mon, 30 Jun 2025 00:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751269835; x=1751874635; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=g/l29yXOs8sSf8dKtHOSd7SknDHgyt7qIGbzVZwBj1w=;
-        b=SB0ZvQqZv6NaXIbrOohFhCeo80C/VoHDjhARHnTFWUflO5Em+kJUxHDTVcA2lQrxE7
-         9jT8KygcvApm+ihhP5kxHBI/4ZQDEEsiS+9J+zeq3+b6/2NZgiBaYf70ydsrRcRVmrEA
-         MnIv5if21YWhtjwyYxucCabnc4pNyufxpdtoE1ulpVSJ+Snoyz3kEyS4n+aoYGO3zVwO
-         BJQhCcD7d4RHlatPdp3WyVjIvx55BsvO6o703wigyoD98euq7aGNd35M34wCRXxfk9eR
-         UONVr/Ip7PDE+NSanH7TMiRKbvM9IDcu50ci0NkiKOxAHelu0qJ2CDN2uGQjmZjw4wQE
-         6qSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751269835; x=1751874635;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g/l29yXOs8sSf8dKtHOSd7SknDHgyt7qIGbzVZwBj1w=;
-        b=GkBgC92phu3SIWqSzF8dEkMICJLy9E3DsnZ6Ki6xrudO3qlGvB4n9b6mQRDglDypkz
-         lr9JwpyDM0ISC1eYW86os+ooimoESLLzrBap0R7kNDu9j44bioD+z5kW12oeI3m0iG1P
-         jFgAWar7wDlxOsR+hCKPo8CulGPs1ZH22PtzJ5PO06yC5wdXvFFzE0+0xeQahqSU+6Am
-         KFJ3lZQWAUxeXJAG1KdxiGqBlVW69s3w4p53eBdpUd1e3j8LNkrJCebfufnRaLLApwEu
-         uSp2MOseggDusUCX64R+NrZNOup69a1Y8gMWVH67AYmxz0JKTdpCWJgHssyNuV2fu1PX
-         Vxiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUloUB+x7M1x+AprzwS2d6VyCXgaw+kT/ml7QHRCXvlRCXOsN3W6z1VDaSWsDZBXX8jo6bkqwhV7vyZZA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzIjta9beldAbcn4U8Af7BBtKxMu54uJA3e7CsC/8DKjTrYMTW/
-	4wo/7r6OUZnOGdM8KmpTcBSsbqCLCrt8CBzjYGadil2hyQ5wOiRQ30Rqc+EqlH1AhBOThSfrOHk
-	6wlFBcSZEFlk2+YqO5OibjOCRv/0OlZQ5co8qiq92
-X-Gm-Gg: ASbGnctfxx4Orcl+89EbfKFufS67ZBDm4V1XMldDIbvl8DS7zVMyNq75LS3vxrXnABs
-	68UjaNDwWhOxxfVHbOlPnDc8Kv90H2fEOeRDcK3QtiCe9vnxHMUEbHet4xVTXZwcwvP2wOJ+d3m
-	D9DucrKSOzixkbH9w7HZoBTDmYvcqYyqO0kMNU/HuK
-X-Google-Smtp-Source: AGHT+IFit+5SfO0GaAfOTHQfprpfULo68GtNss9IbrHvpeb8NgCZTKNSUq0vwXRUdW21+78+Y5YUOVeOhVPtsz+8AOY=
-X-Received: by 2002:a05:6870:8a2c:b0:2d5:230f:b34d with SMTP id
- 586e51a60fabf-2efed4511d7mr8439534fac.1.1751269834790; Mon, 30 Jun 2025
- 00:50:34 -0700 (PDT)
+	s=arc-20240116; t=1751273390; c=relaxed/simple;
+	bh=/T1XmqLkHGmZ4HU8CZhuAPLKatyDiVqkgbmpJsILy3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WzxzWfuLar62tyXJWhoOOWi66LQw3u8HrzAk958IQ/GQ3TqevSQjsOMpHeWgVTWewdqyIF8AJUEmNtTWg0LrNsI9nlNkSKxFYpe8G9t0wsWkhuQ0W5kmZX36XPecwoA2Gr7+FQtcWOEIS6swoWRTauP7oWZ7KNbr4Z+cfSF3Fro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.2.196] (p5dc55466.dip0.t-ipconnect.de [93.197.84.102])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 17BD061E64787;
+	Mon, 30 Jun 2025 10:49:17 +0200 (CEST)
+Message-ID: <16a1a6de-e2e2-4fed-9ca0-7bca50c7169c@molgen.mpg.de>
+Date: Mon, 30 Jun 2025 10:49:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Ben Copeland <ben.copeland@linaro.org>
-Date: Mon, 30 Jun 2025 08:50:22 +0100
-X-Gm-Features: Ac12FXwbVbhKrQRrhmtGqdk3H80s3ORpUnDkppSOzjKooTKGOPIoCXyUl35_h8E
-Message-ID: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
-Subject: next-20250627: IOMMU DMA warning during NVMe I/O completion after 06cae0e3f61c
-To: linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, linux-nvme@lists.infradead.org
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, kbusch@kernel.org, axboe@kernel.dk, 
-	hch@lst.de, sagi@grimberg.me
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] Panel flickering on Dell XPS 13 9360 with
+ drm-fixes-2025-06-28 merged (Linux 6.16-rc4)
+To: Imre Deak <imre.deak@intel.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <e8c595d4-716f-474c-99ae-c95a56e65d3d@molgen.mpg.de>
+ <aGI_tO6btgJluwUu@ideak-desk>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <aGI_tO6btgJluwUu@ideak-desk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-A regression in the NVMe PCI driver triggers IOMMU DMA warnings during
-I/O completion on ARM64 systems. The issue manifests as
-drivers/iommu/dma-iommu.c warnings during the DMA unmapping process.
-IOMMU DMA unmapping warnings occur during NVMe completion processing.
-The warnings appear consistently during normal NVMe I/O operations.
+Dear Imre,
 
-- CONFIG_ARM64_64K_PAGES=y
 
-Test Environment:
-* Ampere Altra - AmpereOne
+Thank you for your reply.
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
 
-First seen on next-20250627
-Good: next-20250626
-Bad: next-20250627
+Am 30.06.25 um 09:41 schrieb Imre Deak:
+> On Sun, Jun 29, 2025 at 11:04:31PM +0200, Paul Menzel wrote:
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>> Just a heads-up, that very likely, merging of branch *drm-fixes-2025-06-28*
+>> causes flickering of the panel of the Intel Kaby Lake laptop Dell XPS 13
+>> 9360. 6.16.0-rc3 works fine, and with 6.16-rc3-00329-gdfba48a70cb6 the panel
+>> flickers. I try to bisect, but maybe you already have an idea.
+> 
+> One possibility is:
+> a3ef3c2da675 ("drm/dp: Change AUX DPCD probe address from DPCD_REV to LANE0_1_STATUS")
 
-## Test log
-[   32.699872] WARNING: drivers/iommu/dma-iommu.c:1232 at
-iommu_dma_unmap_page+0xc4/0xe8, CPU#13: swapper/13/0
-[   32.714204] Modules linked in: cdc_ether usbnet sm3_ce nvme sha3_ce
-nvme_core xhci_pci_renesas arm_cspmu_module arm_spe_pmu ipmi_devintf
-arm_cmn ipmi_msghandler cppc_cpufreq fuse drm backlight ip_tables
-x_tables
-[   32.732967] CPU: 13 UID: 0 PID: 0 Comm: swapper/13 Tainted: G W
-6.16.0-rc3-next-20250627 #1 PREEMPT
-[   32.743562] Tainted: [W]=WARN
-[   32.749381] Hardware name: Inspur NF5280R7/Mitchell MB, BIOS
-04.04.00004001 2025-02-04 22:23:30 02/04/2025
-[   32.759020] pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[   32.768746] pc : iommu_dma_unmap_page+0xc4/0xe8
-[   32.776040] lr : iommu_dma_unmap_page+0x40/0xe8
-[   32.780559] sp : ffff8000801afde0
-[   32.783861] x29: ffff8000801afde0 x28: 0000000000000005 x27: fff00001d7d230f0
-[   32.790983] x26: 0000000000000000 x25: fff00001003da0c8 x24: 0000000000000002
-[   32.798106] x23: 0000000000000000 x22: 0000000000001000 x21: 00000000feed5000
-[   32.805229] x20: fff00001003da0c8 x19: fff00001d7d23000 x18: 0000000000080000
-[   32.812352] x17: 0000000000000040 x16: ffffae5c7594ea68 x15: 0000000000000000
-[   32.819474] x14: 000000000007ffff x13: 0000000000000001 x12: 000000000000002c
-[   32.826597] x11: 00000000000fffff x10: ffffffffffffffff x9 : ffffae5c76358e60
-[   32.833719] x8 : ffff8000801afd68 x7 : ffffae5c76358a78 x6 : 00000000feed5001
-[   32.840842] x5 : 000000000000000d x4 : ffffae5c76358a78 x3 : 0000000000000000
-[   32.847965] x2 : 0000000000000000 x1 : fff00001027e54c0 x0 : 0000000000000000
-[   32.855088] Call trace:
-[   32.857521] iommu_dma_unmap_page+0xc4/0xe8 (P)
-[   32.862039] dma_unmap_page_attrs+0x238/0x2a0
-[   32.866385] nvme_unmap_data+0x1dc/0x278 [nvme]
-[   32.870904] nvme_pci_complete_rq+0xb8/0x118 [nvme]
-[   32.878632] blk_complete_reqs+0x5c/0x80
-[   32.885320] blk_done_softirq+0x28/0x40
-[   32.892006] handle_softirqs+0x16c/0x408
-[   32.896436] __do_softirq+0x1c/0x28
-[   32.899912] ____do_softirq+0x18/0x30
-[   32.903561] call_on_irq_stack+0x24/0x30
-[   32.907472] do_softirq_own_stack+0x24/0x38
-[   32.911642] __irq_exit_rcu+0xd4/0x118
-[   32.915378] irq_exit_rcu+0x18/0x48
-[   32.918854] el1_interrupt+0x38/0x68
-[   32.922418] el1h_64_irq_handler+0x18/0x28
-[   32.926502] el1h_64_irq+0x6c/0x70
-[   32.929891] cpuidle_enter_state+0xcc/0x4c0 (P)
-[   32.934410] cpuidle_enter+0x40/0x60
-[   32.937972] do_idle+0x204/0x288
-[   32.941188] cpu_startup_entry+0x3c/0x50
-[   32.945098] secondary_start_kernel+0x140/0x168
-[   32.949617] __secondary_switched+0xc0/0xc8
-[   32.953788] ---[ end trace 0000000000000000 ]---
+Yes, that is the one my bisection pinpointed.
 
-## Bisection
-git bisect start
-# bad: [06cae0e3f61c4c1ef18726b817bbb88c29f81e57] nvme-pci: merge the
-simple PRP and SGL setup into a common helper
-git bisect bad 06cae0e3f61c4c1ef18726b817bbb88c29f81e57
-# good: [d6c12c69ef4fa33e32ceda4a53991ace01401cd9] block: add
-scatterlist-less DMA mapping helpers
-git bisect good d6c12c69ef4fa33e32ceda4a53991ace01401cd9
-# good: [07c81cbf438b769e0d673be3b5c021a424a4dc6f] nvme-pci: refactor
-nvme_pci_use_sgls
-git bisect good 07c81cbf438b769e0d673be3b5c021a424a4dc6f
-# first bad commit: [06cae0e3f61c4c1ef18726b817bbb88c29f81e57]
-nvme-pci: merge the simple PRP and SGL setup into a common helper
+> Could you open a ticket for this and provide a drm.debug=0x10e log with
+> 6.16-rc4 and try if the following commits in drm-tip fixes the issue?:
+> 
+> 5281cbe0b55a ("drm/edid: Define the quirks in an enum list")
+> 0b4aa85e8981 ("drm/edid: Add support for quirks visible to DRM core and drivers")
+> b87ed522b364 ("drm/dp: Add an EDID quirk for the DPCD register access probe")
+> ed3648b9ec4c ("drm/i915/dp: Disable the AUX DPCD probe quirk if it's not required")
+> 
+> I also pushed these to:
+> https://github.com/ideak/linux/commits/dpcd-probe-quirk
 
-## Source
-* Kernel version: 6.16.0-rc3-next-20250627
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 2aeda9592360c200085898a258c4754bfe879921
-* Git describe: 6.16.0-rc3-next-20250627
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master-ampere/build/next-20250627/
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: gcc-13-lkftconfig-64k_page_size
+I created issue *[Regression] Panel flickering on Dell XPS 13 9360 with 
+drm-fixes-2025-06-28 merged (Linux 6.16-rc4)* [1], and will try your 
+proposed fixes later.
 
-## Build arm64
-* Test LAVA log:
-https://lkft-staging.validation.linaro.org/scheduler/job/180925#L7760
-* Build link: https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/
-* Kernel config:
-https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/config
+[…]
 
-## Steps to reproduce:
-# https://storage.tuxsuite.com/public/ampere/ci/builds/2z6SDAcW8aM7PBWZ8oJ82QlfXvH/tuxmake_reproducer.sh
 
-Linaro LKFT
-https://lkft.linaro.org
+Kind regards,
+
+Paul
+
+
+[1]: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/14558
