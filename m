@@ -1,123 +1,73 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82263277CB0
-	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 17:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B6128136E;
+	Tue,  1 Jul 2025 19:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389922; cv=none; b=JMopSFa6UDU/rLwutEb+I4BDWlm+JAvJoHCzv08Hk+Bv4wPGc589dwCpeMpeUDxO8IPj/zyXrcWWf4LMpTlDIReDyKuWAATIutKDvEciw9WSXThDWKblro7+PlEGoh59hMP5mBOVLnUzjnQorFAR5pp8ii/bS+Nri+yXJlnyTUk=
+	t=1751399038; cv=none; b=kELBfqLkr9OfKPw2BL4QesAbH8ubSVJ2xvr4es29WARr8B6UmMDwj0nUeFx8Nu8QUyksrXMgz8Mfhd8aa36hiDA4kvBrQ36XD8UD1EFO7u+MuKuWN/vjmyOZp8rM44E24OEm0EF5YobejCJRRVA1QeLwmX3mrytnDojLutzQFII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389922; c=relaxed/simple;
-	bh=SX2heC/Qk6afxGMZKjrW09kyPvYeBI0adPXbi3Fnvpc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=k97T/jy/5F/JshydD/74Ikfm3BqxDkKO+zceuj5IrPwl/UJaqW5zGsXgQfMpF2Irgp9WGNmUIER9tbo6j4SfTKIqYfHC43I2nexB9loOv/K3vt1ojYb76NW8ZpKV1TUwSSV4Ia2t9x+hBHqnUsN0j0h1DQcMJgTwYyhyaeGFoik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=XS9t/U9R; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1751399038; c=relaxed/simple;
+	bh=YHWVpqomr7XSftU5O/rbq46bOk35329T72HjY7oYZWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gst5SA6310ELUSMfGTreK03mpAdsKQl8mlZP/mFadTo0rcZt0xZsDP5CGqa4MB1hC6v4O8qRFU4j8bc4ekFu+bsCdDTka2E2QWmOYITatjKhZpxBLMYKytHcIzaPFjoTOHpIS6O2ytCcpRTQ5AE9jQ0l4grvS4p2x9akoa1sk7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQDXDVy3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XS9t/U9R"
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 715803F1D1
-	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 17:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1751389918;
-	bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=XS9t/U9R+3zUPjGMo8TXfF8V4bFRO48sGEJTHDFEwALEQlklu34q5iWKNWJAxeJDN
-	 +K3J8c/GIUaMzj/GAXRLelvWCBv1t1aNu430TZblitWvrwTVWBchyyxHwyT9K2nFJV
-	 2SWUvcYUGjOfRYSLdpCwNODR9T1Oe/hhRKxARi7O1Z4AJmUcQosDyXFPrM9D3+2a97
-	 w2pqLs5qGElOjXvgryvDOJ7FE1c8xrUPTzjxFZdV2sZU22COfpkD6ECGQ0PtD7Jyp5
-	 u1S0HgtOspnVPWIHNGHSQOAgw/iDhvS32Yt2ki1VYu1t0R/B2Mce+anQPsZXBmoaSU
-	 nEIFsheOI6nHA==
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-6098216df4eso6089221a12.0
-        for <regressions@lists.linux.dev>; Tue, 01 Jul 2025 10:11:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751389918; x=1751994718;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
-        b=tOpcvRbnGDDsVFWsdRmaUqlUdSEbEDsKNokJCcCc2Rz2xLQUsalf0TBdnIh4+ASUpB
-         mJFYjyJ8JBvLgtckP59C2ngiS7wlmCVY/qXSUNFuiPnaj723zYUMuTqSkQuwF+goWVwX
-         JKVNKAJp9RyIlAQW6REn6tjhNblDfoFDpn/ZqZbR1LZKaFR3l7WHa4/Gja4bWzoIZiJy
-         2wyfDLEzn7qg10E1ynTdCxA3+Tr0SqK/B0fGEolgRVf5ynZSfdchdnJMYABlF7tW/rns
-         unYLpoUKNW+THgdlOn2MObsIerzo9NX+2OrWxkMxniGIemsPADl1mizPcSmA1KdJfdX1
-         Vv0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUUd+hMByyDmav3HsB//KAQeLXQXa68lBq55tuoXL4y8vbjscPCffW2xowoKxjr8RCB+o04Sqkv9xhjMA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzWrUAv560yymhoda+zZqx/vpuYgpJ6/fDAcE/kESrt8nRIUkFh
-	Ofkkp2XvuFLF7e5DGw7exhVIIWqvdCuyou7+0BrByZu9wN+jeeKcwDPHJf9KUC9x1tEk97p7eB0
-	eYK1Xv68hpY66AHLKlhv1zH8K+GbuT745L3lcgXHvPydF3QBa4936eugZq6c4z8XjlippblxdoI
-	bTWjG+
-X-Gm-Gg: ASbGncsIGml3HEoTKvNXG5kjyjfCsqXZWEmhwscnQZ/bOAYVwraoypcHLjiBFEwEF9F
-	JCVW63HD2u3ohJfRu2zUt69nkjdljS+0wrbmtuzAot1csmcOMLxuv6lkphHO12PCNU4GJKKaGQp
-	yJG2neFqGA8Q5iiFNpraHT+kd+rzcRH0AA8WLgH/oUFS0gHv7qvAqZIEhConPEQRNFM4wMN9gg6
-	2rbKNSZINyCX7oKVhkXC4ezn6wcSVhhbYowoaYxHAJn67bXDM6jOzjp19THDohrXJvOrB7RSIMg
-	clzLI5++R9rWLA90RMCzRsqjGJ+AVL2/EzH03xdfeCEKMDq7LSfHsCViKavzaI4V
-X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512626a12.7.1751389917970;
-        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEu8J6lVnS+AjHzqRmWb7aXWSa8lc+z3NV7ufWDiI84tWqPRb7bwIpffBsf/O52QDBXHBTQ1w==
-X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512601a12.7.1751389917513;
-        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
-Received: from t14s.. (adsl-6.109.242.31.tellas.gr. [109.242.31.6])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bbea9sm7818156a12.1.2025.07.01.10.11.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
-From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
-To: baolu.lu@linux.intel.com,
-	kevin.tian@intel.com,
-	jroedel@suse.de,
-	robin.murphy@arm.com,
-	will@kernel.org,
-	joro@8bytes.org,
-	dwmw2@infradead.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since Kernel 6.10
-Date: Tue,  1 Jul 2025 20:11:54 +0300
-Message-Id: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQDXDVy3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CF6C4CEEB;
+	Tue,  1 Jul 2025 19:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751399037;
+	bh=YHWVpqomr7XSftU5O/rbq46bOk35329T72HjY7oYZWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rQDXDVy3ZKakm5WAJdfVIKx08TcO85H8tT3HOcSYLKPL/qca/hS3RR704o7q5AXVi
+	 yIejjXkd9c6G/Po6Ka+wrYFvmR9JrnqjRiX/oSD2gu8669fK24/94LnPDLnuCqcgY6
+	 9jGc9dmCmuXNLHJygKpop1tr8B5JB5Z9PChrYFN2RsxRoxXAW6RZmTWZ+otI07EI9B
+	 nmBW5rth4IJH7a7/zS5fOmoP6FvwYCbgr3cul9J9vf7iiqEVy12qbkggnZjTygInPJ
+	 dbstu3lXbKNH3EcKeFsomP9Zp1KtGkw+lhixVgoVSssHCLoKrEiu34tqb732+rU77x
+	 oGIvZLs6wgmdA==
+Date: Tue, 1 Jul 2025 15:43:54 -0400
+From: Keith Busch <kbusch@kernel.org>
+To: Ben Copeland <ben.copeland@linaro.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
+	sagi@grimberg.me, iommu@lists.linux.dev
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
+ after 06cae0e3f61c
+Message-ID: <aGQ6eiL22KIMjSGo@kbusch-mbp>
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de>
+ <CAL0q8a7sE4a00ehKrkyepA_xA3Z2HiGv0LazvYe=2NciTkkPFQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL0q8a7sE4a00ehKrkyepA_xA3Z2HiGv0LazvYe=2NciTkkPFQ@mail.gmail.com>
 
-#regzbot introduced: 129dab6e1286
+On Mon, Jun 30, 2025 at 08:51:01PM +0100, Ben Copeland wrote:
+> 
+> [    1.083447] arm-smmu-v3 arm-smmu-v3.16.auto: option mask 0x0
+> [    1.083460] arm-smmu-v3 arm-smmu-v3.16.auto: IDR0.HTTU features(0x600000) overridden by FW configuration (0x0)
+> [    1.083463] arm-smmu-v3 arm-smmu-v3.16.auto: ias 48-bit, oas 48-bit (features 0x0094dfef)
 
-Hello everyone,
+Neat, I have machine with the same. The iommu granularity appears to be
+able to take on various values, so let's see what the iommu group's
+pgsize_bitmap is on mine with some bpf and drgn magic:
 
-We've identified a performance regression that starts with linux
-kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
-Bisection pointed to commit:
-129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map").
+  # bpftrace -e 'kfunc:iommu_group_show_type { printf("iommu_group: 0x%lx\n", args->group); }' &
+  # cat /sys/kernel/iommu_groups/0/type
+  iommu_group: 0xffff0000b54d0600
 
-The issue occurs when running fio against two NVMe devices located
-under the same PCIe bridge (dual-port NVMe configuration). Performance
-drops compared to configurations where the devices are on different
-bridges.
+  # drgn
+  >>> hex(Object(prog, "struct iommu_group *", 0xffff0000b54d0600).default_domain.pgsize_bitmap)
+  '0x20010000'
 
-Observed Performance:
-- Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
-- After the commit:
-  -- Same PCIe bridge: ~4985 MiB/s
-  -- Different PCIe bridges: ~6150 MiB/s
-
-
-Currently we can only reproduce the issue on a Z3 metal instance on
-gcp. I suspect the issue can be reproducible if you have a dual port
-nvme on any machine.
-At [1] there's a more detailed description of the issue and details
-on the reproducer. 
-
-Could you please advise on the appropriate path forward to mitigate or
-address this regression?
-
-Thanks,
-Jo
-
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2115738
+So 64k is the minimum iommu granularity in its current configuration.
+Definitely too big to guarantee coalescing nvme segments, so if yours is
+similarly configured, that explains why it takes the path you're taking.
