@@ -1,138 +1,123 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7038027E04E
-	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 17:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82263277CB0
+	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389693; cv=none; b=j9bMiegIpKtryKfJPBRoBmWL5BFwOGV04KxZUFA8hebjoAmDVaDUUUQGG8uNcDqaxFarlDaRfu3jzdXCB6jsjK6reBDSD1ZzK81f2NhOybRJaoFsOuvPjkQUcy9Uvy201w5Qfz5aHipGELDIWWQrqB+Hu4Ncofj9MFMbotu1btk=
+	t=1751389922; cv=none; b=JMopSFa6UDU/rLwutEb+I4BDWlm+JAvJoHCzv08Hk+Bv4wPGc589dwCpeMpeUDxO8IPj/zyXrcWWf4LMpTlDIReDyKuWAATIutKDvEciw9WSXThDWKblro7+PlEGoh59hMP5mBOVLnUzjnQorFAR5pp8ii/bS+Nri+yXJlnyTUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389693; c=relaxed/simple;
-	bh=Lyu8162aPlGdHqm8MMUtnBXbj7A8z2I/1kHmieIdhe0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KLI+oS7bpI7yKrPvpCRS0b7xnz3FHdADXLWksOAYFCKTgIeSbgDxZ0Oi0+8WQ0GhfXYrDBljrnEgOh0zfs44qRJo3vuixQnWO5mmoMWPGJoxrX1UM9xRDWCgBnLTrk9RTkqpjNqeXKRGuXNcdLK+zEv0Xq8Iov1CruxS5489ZpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUEIr1nH; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751389922; c=relaxed/simple;
+	bh=SX2heC/Qk6afxGMZKjrW09kyPvYeBI0adPXbi3Fnvpc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=k97T/jy/5F/JshydD/74Ikfm3BqxDkKO+zceuj5IrPwl/UJaqW5zGsXgQfMpF2Irgp9WGNmUIER9tbo6j4SfTKIqYfHC43I2nexB9loOv/K3vt1ojYb76NW8ZpKV1TUwSSV4Ia2t9x+hBHqnUsN0j0h1DQcMJgTwYyhyaeGFoik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=XS9t/U9R; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUEIr1nH"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b3c292bb4so53313021fa.1
-        for <regressions@lists.linux.dev>; Tue, 01 Jul 2025 10:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751389688; x=1751994488; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=A/oHeZZJmEJ3y7HUiY87UCgnZNS6QyZh5Cbvr7xE/rQ=;
-        b=ZUEIr1nHf7sVxM89twtl1nsrOcUeifKsnyMy4ZNvVEvruKBzBy4CvwS7YE3qB69XaC
-         qhtr+GS9Lci5VIqLXdm6dL+A6eeDEYBWdXCnaMttjWhoG7W9B9Q3/f9CX6DK3d8FOin+
-         76QIkAbm9zuRyh9MF9Evh05vtkzQohXQWAdTVNVRCV9D5PNHpk51g3NDjNHWzUTMVLmZ
-         0jUUs17+JWL7nKlqm0t0p919C6qJLdWaisqEsUvkDBX0Hgaz4NChGp1LdWoSgKrFHQ+a
-         MlJfnc6HoESox6EHHXYB/jeqjMSN/ZVpRLH/nkkzIsuWnlBafSSK6wK7Kh4CZQmzt807
-         sLPw==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XS9t/U9R"
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 715803F1D1
+	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 17:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751389918;
+	bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=XS9t/U9R+3zUPjGMo8TXfF8V4bFRO48sGEJTHDFEwALEQlklu34q5iWKNWJAxeJDN
+	 +K3J8c/GIUaMzj/GAXRLelvWCBv1t1aNu430TZblitWvrwTVWBchyyxHwyT9K2nFJV
+	 2SWUvcYUGjOfRYSLdpCwNODR9T1Oe/hhRKxARi7O1Z4AJmUcQosDyXFPrM9D3+2a97
+	 w2pqLs5qGElOjXvgryvDOJ7FE1c8xrUPTzjxFZdV2sZU22COfpkD6ECGQ0PtD7Jyp5
+	 u1S0HgtOspnVPWIHNGHSQOAgw/iDhvS32Yt2ki1VYu1t0R/B2Mce+anQPsZXBmoaSU
+	 nEIFsheOI6nHA==
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-6098216df4eso6089221a12.0
+        for <regressions@lists.linux.dev>; Tue, 01 Jul 2025 10:11:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751389688; x=1751994488;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A/oHeZZJmEJ3y7HUiY87UCgnZNS6QyZh5Cbvr7xE/rQ=;
-        b=DSPKnpJ08BMR9wx+nvCPR24RjO9hXzpRGCXw+Sdb6Z2cgB8g5+M220iEQ9RkgUqhaV
-         g5XDWXazawndVpH0gUFejX+530Mr5/TdzqUfto/vqRTIQDcasen24LFYmkI6YA9XEs0V
-         BcgFIu6i/IkedQWLUkdEyKSq34TWVDzaZnCQt6mOpNmzC9tizQTfNKNpWUxZ7lo8QVs7
-         CEP+PAbj68jt3JZ6VjYToGty2Lez1HUdO9Q8U+OXgOQyLbjnm4Lm9JMnqsDdgfgxdD8b
-         G7CE7LCL5qExwWAd630gmGdiTeomGsPd4L8BefSdYEQ6otJNuCGFehT3y0O7ECu+I0JB
-         xeeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcCRa0hg2pyjQMfGSWqCwpXfnuqZzA01GB3g4ZWYWFExMYjh3BTOMVqB6h/XudQQ/n6HeBgWc0IXtLnQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyb7lGOaE4qs4T3MaSTp60IvGu4GAE0/mWmWGKqIWdOtp2xxE56
-	/3pZ/jyqpON+s+pibz2AoALlquZJFBMqMcJ4y/HFEpKkPXi+7s15VcePjys8j6xp6Hnx76c+zdu
-	PmtKYBACBPiK3AWOJaiC6RuOmqdv1qmdtXg==
-X-Gm-Gg: ASbGncvO7lJHoP/S9aFfjZxxvp5/eiGDC9jUZgCpdTf6yHiXT8hAoEOw+QFL8I25500
-	89RzOtuVUv6nPBVoIwU1H1CbVaNMeDvyS0WYf4wSnLgVdkDr/VEKV1pv+DFTYbtyUtWn2AJ5+pi
-	5vuDrqpszxZFCu4Cugkq1DPRCIORCqm+5RlkqLuTAZVuE=
-X-Google-Smtp-Source: AGHT+IFDcrq99l7HlyKWB1faKIkaQ1PDP98axqJweblaWyxilVNxqkAj6/VOBrFhVh+9rRTrmMQ2to6liKTFqiYp4cs=
-X-Received: by 2002:a2e:a013:0:b0:32c:a097:41bb with SMTP id
- 38308e7fff4ca-32cdc4410a7mr32879921fa.5.1751389688165; Tue, 01 Jul 2025
- 10:08:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751389918; x=1751994718;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
+        b=tOpcvRbnGDDsVFWsdRmaUqlUdSEbEDsKNokJCcCc2Rz2xLQUsalf0TBdnIh4+ASUpB
+         mJFYjyJ8JBvLgtckP59C2ngiS7wlmCVY/qXSUNFuiPnaj723zYUMuTqSkQuwF+goWVwX
+         JKVNKAJp9RyIlAQW6REn6tjhNblDfoFDpn/ZqZbR1LZKaFR3l7WHa4/Gja4bWzoIZiJy
+         2wyfDLEzn7qg10E1ynTdCxA3+Tr0SqK/B0fGEolgRVf5ynZSfdchdnJMYABlF7tW/rns
+         unYLpoUKNW+THgdlOn2MObsIerzo9NX+2OrWxkMxniGIemsPADl1mizPcSmA1KdJfdX1
+         Vv0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUUd+hMByyDmav3HsB//KAQeLXQXa68lBq55tuoXL4y8vbjscPCffW2xowoKxjr8RCB+o04Sqkv9xhjMA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzWrUAv560yymhoda+zZqx/vpuYgpJ6/fDAcE/kESrt8nRIUkFh
+	Ofkkp2XvuFLF7e5DGw7exhVIIWqvdCuyou7+0BrByZu9wN+jeeKcwDPHJf9KUC9x1tEk97p7eB0
+	eYK1Xv68hpY66AHLKlhv1zH8K+GbuT745L3lcgXHvPydF3QBa4936eugZq6c4z8XjlippblxdoI
+	bTWjG+
+X-Gm-Gg: ASbGncsIGml3HEoTKvNXG5kjyjfCsqXZWEmhwscnQZ/bOAYVwraoypcHLjiBFEwEF9F
+	JCVW63HD2u3ohJfRu2zUt69nkjdljS+0wrbmtuzAot1csmcOMLxuv6lkphHO12PCNU4GJKKaGQp
+	yJG2neFqGA8Q5iiFNpraHT+kd+rzcRH0AA8WLgH/oUFS0gHv7qvAqZIEhConPEQRNFM4wMN9gg6
+	2rbKNSZINyCX7oKVhkXC4ezn6wcSVhhbYowoaYxHAJn67bXDM6jOzjp19THDohrXJvOrB7RSIMg
+	clzLI5++R9rWLA90RMCzRsqjGJ+AVL2/EzH03xdfeCEKMDq7LSfHsCViKavzaI4V
+X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512626a12.7.1751389917970;
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEu8J6lVnS+AjHzqRmWb7aXWSa8lc+z3NV7ufWDiI84tWqPRb7bwIpffBsf/O52QDBXHBTQ1w==
+X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512601a12.7.1751389917513;
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+Received: from t14s.. (adsl-6.109.242.31.tellas.gr. [109.242.31.6])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bbea9sm7818156a12.1.2025.07.01.10.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+To: baolu.lu@linux.intel.com,
+	kevin.tian@intel.com,
+	jroedel@suse.de,
+	robin.murphy@arm.com,
+	will@kernel.org,
+	joro@8bytes.org,
+	dwmw2@infradead.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since Kernel 6.10
+Date: Tue,  1 Jul 2025 20:11:54 +0300
+Message-Id: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250701141026.6133a3aa@ncopa-desktop>
-In-Reply-To: <20250701141026.6133a3aa@ncopa-desktop>
-From: =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>
-Date: Tue, 1 Jul 2025 19:07:32 +0200
-X-Gm-Features: Ac12FXwrtprVZYhiM1ym_K2LaLIEoBM9Qx0NTEAIAXP5_AbBQn0By7Xgq-OkN00
-Message-ID: <CAA76j90io241-a+2SDLfAMHY2ro4x-Bstw4AxKDOU_izW9goYg@mail.gmail.com>
-Subject: Re: [REGRESSION] v6.12.35: (build) kallsyms.h:21:10: fatal error:
- execinfo.h: No such file or directory
-To: Natanael Copa <ncopa@alpinelinux.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Achill Gilgenast <fossdd@pwned.life>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+#regzbot introduced: 129dab6e1286
 
- Thanks for pointing that out. I was not aware of it.
+Hello everyone,
 
-On Tue, 1 Jul 2025 at 14:10, Natanael Copa <ncopa@alpinelinux.org> wrote:
->
-> Hi!
->
-> I bumped into a build regression when building Alpine Linux kernel 6.12.35 on x86_64:
->
-> In file included from ../arch/x86/tools/insn_decoder_test.c:13:
-> ../tools/include/linux/kallsyms.h:21:10: fatal error: execinfo.h: No such file or directory
->    21 | #include <execinfo.h>
->       |          ^~~~~~~~~~~~
-> compilation terminated.
->
-> The 6.12.34 kernel built just fine.
->
-> I bisected it to:
->
-> commit b8abcba6e4aec53868dfe44f97270fc4dee0df2a (HEAD)
-> Author: Sergio Gonz_lez Collado <sergio.collado@gmail.com>
-> Date:   Sun Mar 2 23:15:18 2025 +0100
->
->     Kunit to check the longest symbol length
->
->     commit c104c16073b7fdb3e4eae18f66f4009f6b073d6f upstream.
->
-> which has this hunk:
->
-> diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decoder_test.c
-> index 472540aeabc2..6c2986d2ad11 100644
-> --- a/arch/x86/tools/insn_decoder_test.c
-> +++ b/arch/x86/tools/insn_decoder_test.c
-> @@ -10,6 +10,7 @@
->  #include <assert.h>
->  #include <unistd.h>
->  #include <stdarg.h>
-> +#include <linux/kallsyms.h>
->
->  #define unlikely(cond) (cond)
->
-> @@ -106,7 +107,7 @@ static void parse_args(int argc, char **argv)
->         }
->  }
->
-> -#define BUFSIZE 256
-> +#define BUFSIZE (256 + KSYM_NAME_LEN)
->
->  int main(int argc, char **argv)
->  {
->
-> It looks like the linux/kallsyms.h was included to get KSYM_NAME_LEN.
-> Unfortunately it also introduced the include of execinfo.h, which does
-> not exist on musl libc.
->
-> This has previously been reported to and tried fixed:
-> https://lore.kernel.org/stable/DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life/T/#t
->
-> Would it be an idea to revert commit b8abcba6e4ae til we have a proper
-> solution for this?
->
-> Thanks!
->
-> -nc
+We've identified a performance regression that starts with linux
+kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+Bisection pointed to commit:
+129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map").
+
+The issue occurs when running fio against two NVMe devices located
+under the same PCIe bridge (dual-port NVMe configuration). Performance
+drops compared to configurations where the devices are on different
+bridges.
+
+Observed Performance:
+- Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+- After the commit:
+  -- Same PCIe bridge: ~4985 MiB/s
+  -- Different PCIe bridges: ~6150 MiB/s
+
+
+Currently we can only reproduce the issue on a Z3 metal instance on
+gcp. I suspect the issue can be reproducible if you have a dual port
+nvme on any machine.
+At [1] there's a more detailed description of the issue and details
+on the reproducer. 
+
+Could you please advise on the appropriate path forward to mitigate or
+address this regression?
+
+Thanks,
+Jo
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2115738
