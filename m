@@ -1,357 +1,320 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AF25C6EC;
-	Tue,  1 Jul 2025 08:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359180; cv=none; b=OfrG2/6k2OHCLbsG9MmSm+t3o/VHfwVxOQnf0XNt+hqYG0rxOI8bafnAHra3R+Z0sgI7RM26Uas23rcWuzxH0lcGHRhMankgxRe0lBL2tAgSSVvHMTuco0MfRh1lrrqFqXqfubmJpfopu7gF23GEOWxT8Fd1MrfT2CW353WrX0U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359180; c=relaxed/simple;
-	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=a/s8+SMGz5fJdqW9FFY3kFLyySCxsfwdUvhC5LBAJFevdrBj/4Pme/wyfHSViCktstMRZ+5swa5//9CC2mztl9u7m4mwyPCZ/jug8HJw7i1Bf1BEOgRYHXYGSyE0Iey/0znLlwVxr+ThlvhV2KqzrEPiISGCeXJ9jrP/TpwwQm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCm73nGU; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82955233127
+	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 11:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751370391; cv=fail; b=JKdyOy8YzJI5K9uSXp484XRluibEIp9gDxfa1479A1QxJv0ubhyfOijCHZN72neMz+UKrNRnxPGW47WPbB+WUzKtGhhURO+Nt/SUZ2FMXeN9iQlr7QD67ZO8q3cBtIEi3TKy4ijyR/lcNiswD1GH/Vjr2VNG1Yae0gO1vtj5IuM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751370391; c=relaxed/simple;
+	bh=FG/auWgL1z61mgdBHnlq5Zvxk0QHL20SuhYMhR/B0aI=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=S54J9m6Xh2u1QYYitc5dxNpepPMHYibOInBEkQnd6F0wev6OXGQcfdvW+3PcerJ19tRhvseEgf1HP8JrrZOFSLpOmSRhXNc+ZSxMWsVD15iNSqXd4euC46QKSENo+n+cq/CNkkANymHzVaVwL+070a0qfK07iLh9G9BCh8dO0Fk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik26yW8Q; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCm73nGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EAAFC4CEEB;
-	Tue,  1 Jul 2025 08:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751359179;
-	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GCm73nGU15vuV2sTjTwwXn59T9LmFXeMdS+GEy1dhUPutHdW61z0dbqa33kLknsjA
-	 V3js4HL7jNYC9mKajEgkRipDo7+6fyP/+pwfid/yGs6uJinH3hFIxRsmpSjPDZ7R/i
-	 1OnDkV1UJABp5u0XzYdqGMQx333tHFmQzBvRVfCEC6FRlyL0GtUZEelhb2TFtiarbH
-	 ZaycuwMtRKXTPp9xaKfoiVSvi+zl/qXQZrteVa9h6ak0klUYtxPxDMxgesJv7izsEB
-	 W5dCQZKH42CnbxmRnGJptcX4yviL1iPVWJI9JsjdGXdU3xwWDe7Kyo/XgIMTQSLEJD
-	 7+XMuVY4oDe7A==
-Date: Tue, 1 Jul 2025 17:39:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Andy Chiu <andybnac@gmail.com>, alexghiti@rivosinc.com,
- palmer@dabbelt.com, "Andy Chiu" <andy.chiu@sifive.com>, =?UTF-8?B?Qmo=?=
- =?UTF-8?B?w7ZybiBUw7ZwZWw=?= <bjorn@rivosinc.com>, Mark Rutland
- <mark.rutland@arm.com>, "Alexandre Ghiti" <alex@ghiti.fr>,
- puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
- nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
- vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
- samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com, Han
- Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- regressions@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
- dynamic ftrace
-Message-Id: <20250701173934.cc92a6d1d5a976a6556e6863@kernel.org>
-In-Reply-To: <aGODMpq7TGINddzM@pie.lan>
-References: <aGODMpq7TGINddzM@pie.lan>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik26yW8Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751370389; x=1782906389;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FG/auWgL1z61mgdBHnlq5Zvxk0QHL20SuhYMhR/B0aI=;
+  b=ik26yW8QkkLIc1puoNAawGTRMiR0a6T8k/AB4+fPlgdsojjtMF0uf4XU
+   f8uhg+z58U+3Dyc5cgCRZAtnXs2drRML1mphe1AsI43R57Gf75QomXnao
+   lYJjzgrWz4Vn2hR0ha9OBfGN6hfN64+aQjRko1VSe7ZQTI4wh9kmbnOrg
+   bUklLcGm5juCRMLKogHMiRXXuGgiyZWuVgcdhIbx0MoyiDkFKo2BhPSSu
+   nzmpDO64ZSpTpXh/V/8QDDqI/3mSkT5eC/TkpdbEowBC4U3q39PYNa6y5
+   ajDwyJhSBhZsGbkwv2zXeFGN341ZewECGj9q+XrWgBYcz/RcVtoVmh5KQ
+   w==;
+X-CSE-ConnectionGUID: HZt5RchJT32bWfr+2mMD9g==
+X-CSE-MsgGUID: gCgzqIU/SiegEAAHINtVBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53774491"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53774491"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 04:46:29 -0700
+X-CSE-ConnectionGUID: MY4xvAnoSrqalg5ofK8B4A==
+X-CSE-MsgGUID: Mb6Fk6yZTNSvMJDOLHK2yA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="154475153"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 04:46:29 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 1 Jul 2025 04:46:28 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 1 Jul 2025 04:46:28 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.81)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 1 Jul 2025 04:46:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yYPzdaUUNdwEWBetEMcvaxpc6FPfqPhhWZYNRED7WvpKEzuPVpunq3Gg6QCxZdzOYngG+dmob0zPq3v22RvxNx4nkxjo0HC0MjaUtM7EB6qYq187FJFZ1jEMYgEIpqAG+XYqjBo4Z99V92jSua7OoYR7164ZLbBbOhgxxrMhhat8KWg2C4X4Un6URSpyg61lx6djY44xr2rz02vKdh2zyiW7nfRtoBeHnOyYwylRCRxthOWUo/wxxKAb17abVQC61+zfnpvvvHzn+VSuDIaGLkLbnjgl7LZf6nJV39/ARdRx0/x3/CG5xxoJlCffmsOUIYknZF7mRJfwqZ/X7/851w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BgTNWlnJzZgOEwhfTNVR8vgER4gyRXQGfVsmYdXdKL4=;
+ b=YxRt7/WSHfSuY8ZrrM5jhUkmL+6CYizz86YR/Dk8orPDl28buQvFAXvR9QCmHmPQg4NoLED4DHl2byD37YK5F/f2ziaYIvJiTHkCIrgCdS/ROpQcx2fw/c52snqdTDJGKDHLBt6W5ugWYi/vY0YJhktbY+c9YfrbIrwG9NLoUAOmkheBgKMahPbQBoetyBDJQ/pRFz2YWFEDui9V1Cx/mCTPPdc41UkbXRqMg7BT4RAoAmCsVjnnO8sLQQ7ZiY5FccJHnCzbYgY0QuXm/itxr2C4zXUrUPGBvl0TnTtKaFU2jXG+jRskC55UDE4l3Maocy6/f9RlMi1x6oI4MZBilg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF814058951.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::36) by SJ2PR11MB7428.namprd11.prod.outlook.com
+ (2603:10b6:a03:4cf::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Tue, 1 Jul
+ 2025 11:46:23 +0000
+Received: from DS4PPF814058951.namprd11.prod.outlook.com
+ ([fe80::a82d:bc86:12ef:3983]) by DS4PPF814058951.namprd11.prod.outlook.com
+ ([fe80::a82d:bc86:12ef:3983%7]) with mapi id 15.20.8857.026; Tue, 1 Jul 2025
+ 11:46:23 +0000
+Message-ID: <3023fe74-29c7-4a41-b805-c6b00fb0b3cc@intel.com>
+Date: Tue, 1 Jul 2025 14:46:18 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Packet loss after hot-plugging ethernet cable on HP
+ Zbook (Arrow Lake)
+To: En-Wei WU <en-wei.wu@canonical.com>, Tony Nguyen
+	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>, <netdev@vger.kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>
+CC: <regressions@lists.linux.dev>, <stable@vger.kernel.org>,
+	<sashal@kernel.org>
+References: <CAMqyJG3LVqfgqMcTxeaPur_Jq0oQH7GgdxRuVtRX_6TTH2mX5Q@mail.gmail.com>
+Content-Language: en-US
+From: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
+In-Reply-To: <CAMqyJG3LVqfgqMcTxeaPur_Jq0oQH7GgdxRuVtRX_6TTH2mX5Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TLZP290CA0007.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:9::7)
+ To DS4PPF814058951.namprd11.prod.outlook.com (2603:10b6:f:fc02::36)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF814058951:EE_|SJ2PR11MB7428:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bb38614-7cea-4264-9379-08ddb894e775
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?K1pmU2pDMExrdkhCUnZaVTh5Qjk5RlZsY3dBSWNudTNNY1UwOGFvSEp1QjNC?=
+ =?utf-8?B?bzhnd2x2enVVNjM4QUpzVmw4K21YMWY2MFl1eWIzVFZDd3JROTQyVWJTcisr?=
+ =?utf-8?B?QmxPNFYzQkZNNUJqTFA1QXVWc3NCb1l3Ylhla1BZSWVoeWZiTHN5TTdUWEd2?=
+ =?utf-8?B?dDNYREROczQyVjh3SUhPNWx1Q2UvdEZ0NmhFL3JiL1JXWXhCMnN3YURJb012?=
+ =?utf-8?B?dVZ4RWNJOXVnNmQxRkdNZlZ5NjBlV2dIN2YxSlhYUTYxUDlybzkzdUdUWGpH?=
+ =?utf-8?B?ZnZKbUZOUHNhcFJtc2UxT0c2WkxDbnkzWm5QTDkzVHpCeldCeUJVUkFnajJB?=
+ =?utf-8?B?ejBZWGovd1JaYnRZckgzOVRoNVdoa2MvZmxYcFZJVVpFNTVWNmlVOXhvRThT?=
+ =?utf-8?B?ak5PNXZhTFBaS3JTM21GSnJCLy9WanVyWDdBYzBta3UvWGRqUHpmRHFTYXFt?=
+ =?utf-8?B?OXl2UC9uNGRPczVhN1ZwbWQ0Q0JvYmczUXpIckh6R0NELzFJWnNaSXlKYTR3?=
+ =?utf-8?B?QjlrdHBXWWRlT0J1RDFENmdITEM3eGhFKzNEKy9uM2R2Ti9wUXQzQXdTS0FY?=
+ =?utf-8?B?ZE1UU1FyRWE3R0hnVUR6SU5GQ0ZQNnZzaHI5NjN4YUs4eUo4ejJ4U3haajhN?=
+ =?utf-8?B?akZhYitmUndyVXhtbUNXT0Y5Wjh0eTAyNm9qQW95MjJRc01iYXdaTlZGM0NG?=
+ =?utf-8?B?eDJrcFc4a2RSZGVUUTE5bHBkaFloU1dzdnpseW5jQVdnM2lvVXVFRkZtQ016?=
+ =?utf-8?B?VXJpNUFvbElIWk9oRzJhV3BJUUlQNTNqUXVHdWVKT25qT09OY213U3FYTGZu?=
+ =?utf-8?B?bFdieVR2dDBqbXQrUnlRbms1LzJvbDAvSU4rYWlUK2d3cVg4OXl1bEVRZUpB?=
+ =?utf-8?B?QmxGMklWbUsrVEMraXRJYVFrOHBNMFlBYS9YZlp0L24zeTBUVUwvVThseHo0?=
+ =?utf-8?B?dVJHc2J1TlE3QloyeHFwVEVjN2kwN0ZBejJ6UzVJTVQ1QmNTTCt0WUF5dWpp?=
+ =?utf-8?B?YU5nYzNFNW5DOTZ1NFF2UVhjbU5Dd2Z4ZVJLVUlla1ljN2FEZ2RjMTFiMnlH?=
+ =?utf-8?B?NklMUHU4aDQ4OFR0bDVKdzJob3ZhZEtRRktpR1FwV21qSDRuaG9DQ3NNNTVm?=
+ =?utf-8?B?V2dXRTBVSDcydDRHSjJtZ3A2MGlkakFHbWJFSms5T29KK1QxQ2VwQkFMWXM0?=
+ =?utf-8?B?c3RTS1VTMEM2YURUbHYrQkFOU3oyN2Q0dU1LTE1Hemt5ZDExbk5MZWoySDdU?=
+ =?utf-8?B?eEZwc3B5SWc5NEs0RVE4NXpCNjkwNC8zblpkaU9lbS80R3BlTVlnN1UyYzZh?=
+ =?utf-8?B?Y2RiSW12QkZ6MHA1R2NyakNtc2JyU3dmbHdCWlZmNFB3UjdTdkJkSmxMbEk1?=
+ =?utf-8?B?Z1N2WVJHQ2RhNE9MbE1ycWlZNUppcjFKREZLMjE4byt6bHFHZGhlV3J4Snli?=
+ =?utf-8?B?cnVQWWYycFQzRmN6WEZhNW9SaytQZU8yei9qczZZOG9TZDZHTS9OS1h1bVBL?=
+ =?utf-8?B?QWxOaUNmRWczYkJROEpsZ3FVWHpUS0dqQnpjMTRXZlhGNWZ1QUpJcHBkNG9w?=
+ =?utf-8?B?azFPYVdGb1hIRTdOYWZXSW5VdGZoUVlGUlFENUdNQ1pBRUVuZ2g2SVhTN1NQ?=
+ =?utf-8?B?SHYyY3RkREcydko0NEtZc0ZEcEo3ZDEwQ083VXh2OHFMNXJPK09rSGtwU0tS?=
+ =?utf-8?B?dXZRc3hWelFYelNUbE5qQ1loZHV6cVk0ZWN5TXlldW5ScDNVSGhMNWR0aXN4?=
+ =?utf-8?B?KzJuKzhBQnBwU2xHVFJST0JueDVkMm0ySTMzb1dWbEpGMkJGd04vZHYrWHJR?=
+ =?utf-8?B?Q3VrdzkvbGQ4RHJuTWNNWWJZNnkxeW9PSmdGbWgvaDhvTGg5S2ExYVlseHNS?=
+ =?utf-8?B?ZkdQOG8rYjlkaEJVc3l1VE1LUzJXbVgvaVlUYUhjMERyODJ0ODJrZmc0azln?=
+ =?utf-8?Q?uPx+IwCRUIU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF814058951.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eDZRbUdxdXRDZTMwZUNzMVhnRnhNM0hnL0J3a3RDVkNVNE5rRk9pWUJNaGRZ?=
+ =?utf-8?B?ZDhDb2RSZDFCR3oyODRZTXRzbzlUSXdCNE9GeW9ONkc5OTA1bkVlK1d0d1gy?=
+ =?utf-8?B?L0lKOGRSL202cWkrZDJnR2xMeXorMDhZa244bHZaVkUwRGw0V0MxbXZ2N0Vx?=
+ =?utf-8?B?UGRPMUVGVWpSMHpOR2dkMHBmdkR1VUNtTlMxYkJnQVlJZ0ZDb0xZNXZ6MVcz?=
+ =?utf-8?B?VTdJUnU3b0RHZ3VxZzd5eFJTVEc4bUJhQ3pCRmZXaGh6L1ZQZUtyeitEM3Vm?=
+ =?utf-8?B?MS81SDRKdGI5cHUvaGVxaE1QU3FyOFBWaDQzUzhxaGZtOGZneUdUL2JmZHRu?=
+ =?utf-8?B?K0g3eS9sZ2puOUZXdnRVQUhLc2JaYTFOeGF4YzlzeWhWT3E4QU43akdaclho?=
+ =?utf-8?B?UnVWeTV0T2ZMeU1UMXV1Q1J2RlNqbm9vQjZXTVhLTlZzSDN0UXIzMG9qR3Ar?=
+ =?utf-8?B?YlZaNGhwb2ZKSW9qcUE0MjVBOTh3aTJESHRHeExzc1F6SEZHUGFmYitEV2Nq?=
+ =?utf-8?B?YmhFNWVWOHRZbkVFMFRFZDMzSmtuR256eXhPKy9ZUnpBUzNMQUlIVnd6YUZi?=
+ =?utf-8?B?Q05mTDloRTNsUVB5elYvOHp3eWVMRlpJTC9uL1g2cUUxODA5SEhIazlsUjB0?=
+ =?utf-8?B?ZENQdGZWTHJPcnVPTTRmWlVadHlBelBrZWxRU1JMWXVvdXFJUm5VTDR4ZFlu?=
+ =?utf-8?B?V04rSjFGUHY4Vm1xVXNVVzZGRjlqTnhQanpmT2tQTzhUcjBFZ2IrbmtpSHhx?=
+ =?utf-8?B?Ym0za1huaEp3YVNHRFUralFOQ0pCeUkyTklnNlE5QlM5eTdKNld1L3VMS1R0?=
+ =?utf-8?B?NGVKRDNRbDBIekwwaTVqcS9XY1hWWlhkOEI5aUQzQnVTQnQxN3BXQWVYU25I?=
+ =?utf-8?B?RFYvZXFqRm5VU3BabmRKejlKcDVqZzZPMVk2NW5uaEhWdFJPcit3SzcwMTFi?=
+ =?utf-8?B?bVcwRDZXUkhFM253ZEZjc3ZSb2ZUck5kRFdZNld0TmI0UzhsWlRoVjBRUExC?=
+ =?utf-8?B?RHBoNmNYV3pERU43VDlUZDF6VVlka3dTSUFtbGlWK1dMOC94RDZYbDNIQWo0?=
+ =?utf-8?B?cjY4RXJEUXFVb1BSTVZBaTNQZUZjM0dFS3IySy8ySUNKdDdLZ0R1bXpoOTFZ?=
+ =?utf-8?B?SXdwazJXSFRjak03Z1ZYdDZ2OXlKc1BqeUg0UWczdmJhN2dNYWNIYmlaWlp3?=
+ =?utf-8?B?WjVtOTgxMlBlckVVN3FSVzA4WlJGY0srUFFBd3FOR2ZGeHp2b1R2NlQ5djgz?=
+ =?utf-8?B?ZXQ5V3FJeHFoV1VaZCt6VURTQk00bzVvUjZZaDVDL2VReW91UHVEazlER2VP?=
+ =?utf-8?B?OVBER0FKUVlyTUFnTFlQS0JyeFlYTUZINUhKTnF2R2FEVmptRzJldnB6cEpF?=
+ =?utf-8?B?WEMzNitaVlZDMXNLYm9aVmZlU1RzNVZpdCt3QUdFUm1OZlFRMS9HTWZna2xi?=
+ =?utf-8?B?SmllSDNCZzZHRUs3Z2ZBMlRGRlNvb3ZrNVRtMkx3cEpxS0E0cExhOGZTRnlL?=
+ =?utf-8?B?Z3lkanJKMDdvS2g1b3JQOUJEZlRqaFVNMlVKZDhWYnQzZ081L0pNaS9FdEVT?=
+ =?utf-8?B?MDlKaUsvbjZwM3B1V25iZzZTUXBNbHZqOHR5TGszM0tieTJmRmwrWnZNZmo2?=
+ =?utf-8?B?NytUWGhzME4yOS84N2dndlNOelFLQlUwbVFDUWR5bUd6ZStZV2xEZC9VWlhT?=
+ =?utf-8?B?emhNams3cWlkMnZjaVYzUFd2ZUdWT0ZtNnNLOUc2UEF5blNvNGZ5VmI0cnJJ?=
+ =?utf-8?B?WWc3djdlT3d0Um1KSnVuVnNRSUFKZW43N1RiTDJhNlUyNWdoQ08yVHErOGxZ?=
+ =?utf-8?B?V1RvNGhrQXpqd1dDUjh0QVU5bGw0QUEyQ2lSYXA1NUd2Mm9Hd05TTUdpOTNp?=
+ =?utf-8?B?RG1nNDZzR0Q0Qmp3QmdCZy9GMXV3T3lONy9vbWpaSVpxWmNwZHk0ellhRUdy?=
+ =?utf-8?B?QTJXNDhzdzBFalQ2aUE1OFV0NzBRUEpDb2gwWlpVOHh4bmFyOTgvQW9lMmw1?=
+ =?utf-8?B?VzFOTGZwK3VxRk1CUkFxc0tKdHpkNmkrOStwQjNkS2MrYWdZQmVpV2FwQ3hU?=
+ =?utf-8?B?NU1vL0ZSRllhTGRmYmFHZ2c5REY4YTE0VjQzdUh5Yy9WUHU3UmZYL0JvdTZl?=
+ =?utf-8?B?eWx2YU1hWDJ6c0dHWnB2RllwMTZKWGx1MnNjRUVRYkNWSnc3UXF1WUtLaHgx?=
+ =?utf-8?B?UXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bb38614-7cea-4264-9379-08ddb894e775
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF814058951.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 11:46:23.6963
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RwAYGaP6Q5FGILSRA+pE5VIvA+1k1MAEjBfKklKdUQUTwu0vBLuozp7AyXodVL42sm8C2RB7N1DuxwVokNWxVPUDoFH1dITIacnpcfpTQ1I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7428
+X-OriginatorOrg: intel.com
 
-On Tue, 1 Jul 2025 06:41:54 +0000
-Yao Zi <ziyao@disroot.org> wrote:
-
-> Linux v6.16 built with dynamic ftrace randomly oops or triggers
-> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+On 7/1/2025 8:31 AM, En-Wei WU wrote:
+> Hi,
 > 
-> [    9.913462] ------------[ ftrace bug ]------------
-> [    9.913921] usbcore: registered new interface driver hub
-> [    9.917914] ftrace faulted on modifying
-> [    9.922947] usbcore: registered new device driver usb
-> [    9.928062] [<ffffffff030b7a7c>] 0xffffffff030b7a7c
-> [    9.941963] Initializing ftrace call sites
-> [    9.946086] ftrace record flags: 2000000
-> [    9.950028]  (0)
->                 expected tramp: ffffffff8001f840
-> [    9.956592] ------------[ cut here ]------------
-> [    9.956597] WARNING: CPU: 3 PID: 673 at kernel/trace/ftrace.c:2213 ftrace_bug+0x278/0x2b0
-> [    9.956625] Modules linked in: fixed_phy(E+) fwnode_mdio(E) nvme_core(E) usbcore(E) scsi_mod(E) sdhci(E) libphy(E) nvme_keyring(E) scsi_common(E) usb_common(E) nvme_auth(E) cqhci(E) mdio_bus(E) mdio(E) mmc_core(E) gpio_dwapb(E) spi_sg2044_nor(E) i2c_designware_platform(E)
-> [    9.956667] CPU: 3 UID: 0 PID: 673 Comm: (udev-worker) Tainted: G            E       6.16.0-rc3-pioneer #2025.06.24.16.00+074b194ff VOLUNTARY
-> [    9.956677] Tainted: [E]=UNSIGNED_MODULE
-> [    9.956680] Hardware name: Milk-V Pioneer (DT)
-> [    9.956683] epc : ftrace_bug+0x278/0x2b0
-> [    9.956689]  ra : ftrace_bug+0x278/0x2b0
-> [    9.956694] epc : ffffffff80007018 ra : ffffffff80007018 sp : ffffffc60a2b3800
-> [    9.956698]  gp : ffffffff81dbf1e8 tp : ffffffd70246aac0 t0 : ffffffff8001ff48
-> [    9.956702]  t1 : 0000000000000020 t2 : 6465746365707865 s0 : ffffffc60a2b3830
-> [    9.956705]  s1 : ffffffff030b7a7c a0 : 0000000000000022 a1 : fffffff5ffaad8c0
-> [    9.956708]  a2 : 0000000000000010 a3 : fffffff5ffaad8c0 a4 : 0000000000000000
-> [    9.956711]  a5 : 0000000000000000 a6 : 0000000000007ffe a7 : 000000000015ffa8
-> [    9.956715]  s2 : ffffffd722b77130 s3 : fffffffffffffff2 s4 : ffffffd722b77130
-> [    9.956718]  s5 : fffffff5dda52b60 s6 : ffffffff030ca500 s7 : 0000000002000000
-> [    9.956721]  s8 : 0000000000000013 s9 : fffffff5dda52b60 s10: 0000000000000046
-> [    9.956724]  s11: 0000000000000014 t3 : ffffffff81dda237 t4 : ffffffff81dda237
-> [    9.956727]  t5 : ffffffff81dda238 t6 : ffffffc60a2b3628
-> [    9.956730] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000003
-> [    9.956735] [<ffffffff80007018>] ftrace_bug+0x278/0x2b0
-> [    9.956753] [<ffffffff8015cc32>] ftrace_process_locs+0x392/0x4f0
-> [    9.956762] [<ffffffff80160a3c>] ftrace_module_init+0x3c/0x58
-> [    9.956768] [<ffffffff800f4c8e>] load_module+0x178e/0x1f78
-> [    9.956777] [<ffffffff800f5682>] init_module_from_file+0x82/0xc8
-> [    9.956783] [<ffffffff800f58e8>] __riscv_sys_finit_module+0x1c0/0x300
-> [    9.956789] [<ffffffff80b10c58>] do_trap_ecall_u+0xa0/0x420
-> [    9.956795] [<ffffffff80b1e17a>] handle_exception+0x14a/0x156
-> [    9.956804] ---[ end trace 0000000000000000 ]---
+> I'm seeing a regression on an HP ZBook using the e1000e driver
+> (chipset PCI ID: [8086:57a0]) -- the system can't get an IP address
+> after hot-plugging an Ethernet cable. In this case, the Ethernet cable
+> was unplugged at boot. The network interface eno1 was present but
+> stuck in the DHCP process. Using tcpdump, only TX packets were visible
+> and never got any RX -- indicating a possible packet loss or
+> link-layer issue.
 > 
-> Here's the log when ftrace_bug() is triggered. It's worth noting that
-> all strange behaviors happen after the userspace starts to load modules.
+> This is on the vanilla Linux 6.16-rc4 (commit
+> 62f224733431dbd564c4fe800d4b67a0cf92ed10).
 > 
-> During debugging, we found if the kernel is built with lockdep enabled,
-> it triggers tons of warnings during kernel startup and module
-> initialization, which is reproducible on QEMU as well. A typical log
-> looks like,
+> Bisect says it's this commit:
 > 
-> [   30.219049] ------------[ cut here ]------------
-> [   30.219072] WARNING: CPU: 0 PID: 61 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
-> [   30.219113] Modules linked in:
-> [   30.219145] CPU: 0 UID: 0 PID: 61 Comm: modprobe Tainted: G        W           6.16.0-rc4 #64 NONE
-> [   30.219170] Tainted: [W]=WARN
-> [   30.219179] Hardware name: riscv-virtio,qemu (DT)
-> [   30.219189] epc : __patch_insn_write+0x356/0x3b8
-> [   30.219209]  ra : __patch_insn_write+0x352/0x3b8
-> [   30.219227] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000032b9e0
-> [   30.219239]  gp : ffffffff81a07500 tp : ff600000823199c0 t0 : ffffffff8001ee78
-> [   30.219250]  t1 : ff6000008231a9c0 t2 : 0000000000000000 s0 : ff2000000032ba30
-> [   30.219261]  s1 : 0000000000000008 a0 : 0000000000000000 a1 : ffffffff8181f318
-> [   30.219272]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000faa43398
-> [   30.219283]  a5 : 0000000000000000 a6 : 000000000e2d0519 a7 : 0000000000000004
-> [   30.219294]  s2 : ffffffff0258b3a0 s3 : 0000000000000008 s4 : 00000000000003a0
-> [   30.219305]  s5 : ff2000000032ba78 s6 : 00000000000003a8 s7 : 0000000002000000
-> [   30.219316]  s8 : 000000000000007a s9 : ff60000083a8a040 s10: 0000000000000147
-> [   30.219327]  s11: 000000000000007b t3 : 0000000000001fff t4 : 0000000000000004
-> [   30.219338]  t5 : 0000000000000002 t6 : 0000000000040000
-> [   30.219347] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
-> [   30.219360] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
-> [   30.219380] [<ffffffff80019268>] patch_text_nosync+0x48/0x80
-> [   30.219400] [<ffffffff8001ebb6>] ftrace_init_nop+0x3e/0xd0
-> [   30.219417] [<ffffffff8016cbe4>] ftrace_process_locs+0x29c/0x530
-> [   30.219436] [<ffffffff80170d14>] ftrace_module_init+0x3c/0x58
-> [   30.219454] [<ffffffff800f8500>] load_module+0x14f0/0x1c70
-> [   30.219473] [<ffffffff800f8e6a>] init_module_from_file+0x82/0xc8
-> [   30.219491] [<ffffffff800f9066>] idempotent_init_module+0x1b6/0x2b8
-> [   30.219510] [<ffffffff800f922c>] __riscv_sys_finit_module+0x64/0xa0
-> [   30.219528] [<ffffffff80b1c590>] do_trap_ecall_u+0x2b0/0x4e0
-> [   30.219549] [<ffffffff80b2b172>] handle_exception+0x14a/0x156
-> [   30.219573] irq event stamp: 5143
-> [   30.219582] hardirqs last  enabled at (5143): [<ffffffff80b1d55a>] irqentry_exit+0x6a/0x128
-> [   30.219601] hardirqs last disabled at (5141): [<ffffffff800365fc>] handle_softirqs+0x4a4/0x518
-> [   30.219620] softirqs last  enabled at (5142): [<ffffffff8003661a>] handle_softirqs+0x4c2/0x518
-> [   30.219637] softirqs last disabled at (5137): [<ffffffff800367ee>] __irq_exit_rcu+0xe6/0x120
-> [   30.219656] ---[ end trace 0000000000000000 ]---
-> [   30.219858] ------------[ cut here ]------------
+> commit efaaf344bc2917cbfa5997633bc18a05d3aed27f
+> Author: Vitaly Lifshits <vitaly.lifshits@intel.com>
+> Date:   Thu Mar 13 16:05:56 2025 +0200
 > 
-> With some digging, it's found that mutex_lock isn't correctly held when
-> ftrace_init_nop() initializes the address of ops stored before the
-> function entry., which is the cause of crashes: without correct lock
-> protection, __patch_insn_write() may wrongly modify the text segment if
-> the userspace concurrently issues module initialization, since all code
-> patching functions share two fixmap pages to modify the code.
+>      e1000e: change k1 configuration on MTP and later platforms
 > 
-> The bug was newly introduced by recent RISC-V ftrace changes[1] in
-> v6.16-rc1, precisely saying commit 881dadf0792c ("Merge patch series
-> "riscv: ftrace: atmoic patching and preempt improvements"").
+>      Starting from Meteor Lake, the Kumeran interface between the integrated
+>      MAC and the I219 PHY works at a different frequency. This causes sporadic
+>      MDI errors when accessing the PHY, and in rare circumstances could lead
+>      to packet corruption.
 > 
-> We also found another lockdep failure introduced by the series, which
-> could be reproduced by loading a module after enabling a tracer,
+>      To overcome this, introduce minor changes to the Kumeran idle
+>      state (K1) parameters during device initialization. Hardware reset
+>      reverts this configuration, therefore it needs to be applied in a few
+>      places.
 > 
->         cd /sys/kernel/debug/tracing
->         echo 0 > tracing_on
->         echo function > current_tracer
->         echo printk > set_ftrace_filter
->         echo 1 > tracing_on
->         modprobe xxx    # loading anything causes lockdep failures
+>      Fixes: cc23f4f0b6b9 ("e1000e: Add support for Meteor Lake")
+>      Signed-off-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+>      Tested-by: Avigail Dahan <avigailx.dahan@intel.com>
+>      Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 > 
-> a typical log for the issue looks like,
+>   drivers/net/ethernet/intel/e1000e/defines.h |  3 +++
+>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 80
+> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+>   drivers/net/ethernet/intel/e1000e/ich8lan.h |  4 ++++
+>   3 files changed, 82 insertions(+), 5 deletions(-)
 > 
-> [   40.420039] ------------[ cut here ]------------
-> [   40.420078] WARNING: CPU: 1 PID: 60 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
-> [   40.420145] Modules linked in: fuse(+)
-> [   40.420229] CPU: 1 UID: 0 PID: 60 Comm: modprobe Tainted: G        W           6.16.0-rc4+ #69 NONE
-> [   40.420272] Tainted: [W]=WARN
-> [   40.420296] Hardware name: riscv-virtio,qemu (DT)
-> [   40.420323] epc : __patch_insn_write+0x356/0x3b8
-> [   40.420367]  ra : __patch_insn_write+0x352/0x3b8
-> [   40.420409] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000030b9d0
-> [   40.420437]  gp : ffffffff81a07500 tp : ff60000083433380 t0 : ffffffff80024060
-> [   40.420465]  t1 : ffffffff81a0a250 t2 : 0000000000000001 s0 : ff2000000030ba20
-> [   40.420492]  s1 : 0000000000000004 a0 : 0000000000000000 a1 : ffffffff8181f318
-> [   40.420519]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000fac22398
-> [   40.420546]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000052464e43
-> [   40.420573]  s2 : ffffffff02581804 s3 : 0000000000000004 s4 : 0000000000000804
-> [   40.420600]  s5 : ff2000000030ba74 s6 : 0000000000000808 s7 : 0000000000000002
-> [   40.420628]  s8 : 0000000000000001 s9 : ffffffff818b09d8 s10: 00000000efffffff
-> [   40.420655]  s11: 0000000040000000 t3 : 0000000000100000 t4 : 0000000000000064
-> [   40.420682]  t5 : ff6000008392a9d0 t6 : ff600000837c6fff
-> [   40.420708] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
-> [   40.420740] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
-> [   40.420783] [<ffffffff800191f8>] patch_insn_write+0x48/0x70
-> [   40.420825] [<ffffffff8001eacc>] ftrace_make_call+0x8c/0xc0
-> [   40.420866] [<ffffffff8016c928>] __ftrace_replace_code+0xc0/0xd0
-> [   40.420909] [<ffffffff80170c82>] ftrace_module_enable+0x292/0x2d8
-> [   40.420951] [<ffffffff800f85e4>] load_module+0x15e4/0x1c70
-> [   40.420993] [<ffffffff800f8e5a>] init_module_from_file+0x82/0xc8
-> [   40.421035] [<ffffffff800f9056>] idempotent_init_module+0x1b6/0x2b8
-> [   40.421076] [<ffffffff800f921c>] __riscv_sys_finit_module+0x64/0xa0
-> [   40.421118] [<ffffffff80b1c580>] do_trap_ecall_u+0x2b0/0x4e0
-> [   40.421160] [<ffffffff80b2b162>] handle_exception+0x14a/0x156
-> [   40.421210] irq event stamp: 5977
-> [   40.421234] hardirqs last  enabled at (5977): [<ffffffff80b1d54a>] irqentry_exit+0x6a/0x128
-> [   40.421275] hardirqs last disabled at (5975): [<ffffffff800365ec>] handle_softirqs+0x4a4/0x518
-> [   40.421315] softirqs last  enabled at (5976): [<ffffffff8003660a>] handle_softirqs+0x4c2/0x518
-> [   40.421355] softirqs last disabled at (5969): [<ffffffff800367de>] __irq_exit_rcu+0xe6/0x120
-> [   40.421397] ---[ end trace 0000000000000000 ]---
+> Reverting this patch resolves the issue.
 > 
-> the text_mutex lock isn't taken when ftrace_module_enable() indirectly
-> calls ftrace_make_call(), which *theoretically* may trigger a race, too.
-
-Good catch! Thanks for this precise report.
-
-Hm, it seems that the ftrace_module_enable() takes a text_mutex via
-ftrace_arch_code_modify_prepare() on x86. But commit 5aa4ef955884 
-("riscv: ftrace: do not use stop_machine to update code") removed it
-from RISCV.
-
-
+> Based on the symptoms and the bisect result, this issue might be
+> similar to https://lore.kernel.org/intel-wired-lan/20250626153544.1853d106@onyx.my.domain/
 > 
-> Reverting the series fixes the second problem as well, but it's worth
-> noting that lockdep still reports a possible dead lock condition when
-> setting the tracer with
 > 
->         echo function > /sys/kernel/debug/tracing/current_tracer
+> Affected machine is:
+> HP ZBook X G1i 16 inch Mobile Workstation PC, BIOS 01.02.03 05/27/2025
+> (see end of message for dmesg from boot)
 > 
-> [   21.344316] ======================================================
-> [   21.345382] WARNING: possible circular locking dependency detected
-> [   21.346914] 6.16.0-rc4+ #70 Not tainted
-> [   21.347924] ------------------------------------------------------
-> [   21.348961] bash/58 is trying to acquire lock:
-> [   21.349844] ffffffff8181a0a0 (cpu_hotplug_lock){++++}-{0:0}, at: stop_machine+0x24/0x4c
-> [   21.354283]
-> [   21.354283] but task is already holding lock:
-> [   21.355431] ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
-> [   21.357233]
-> [   21.357233] which lock already depends on the new lock.
-> [   21.357233]
-> [   21.358534]
-> [   21.358534] the existing dependency chain (in reverse order) is:
-> [   21.359668]
-> [   21.359668] -> #2 (text_mutex){+.+.}-{4:4}:
-> [   21.360862]        lock_acquire+0xf0/0x30e
-> [   21.361749]        __mutex_lock+0xa6/0x8ee
-> [   21.362566]        mutex_lock_nested+0x20/0x28
-> [   21.363310]        arch_jump_label_transform_queue+0x48/0x100
-> [   21.364226]        __jump_label_update+0x42/0xe8
-> [   21.365034]        jump_label_update+0x126/0x1da
-> [   21.365764]        static_key_slow_inc_cpuslocked+0x6c/0xa4
-> [   21.366579]        static_key_slow_inc+0x26/0x3c
-> [   21.367305]        sched_clock_init+0x20/0x50
-> [   21.368041]        start_kernel+0x9b8/0xa94
-> [   21.368940]
-> [   21.368940] -> #1 (jump_label_mutex){+.+.}-{4:4}:
-> [   21.370062]        lock_acquire+0xf0/0x30e
-> [   21.370748]        __mutex_lock+0xa6/0x8ee
-> [   21.371459]        mutex_lock_nested+0x20/0x28
-> [   21.372136]        jump_label_init+0x38/0xee
-> [   21.372894]        setup_arch+0xd0/0x634
-> [   21.373568]        start_kernel+0x90/0xa94
-> [   21.374310]
-> [   21.374310] -> #0 (cpu_hotplug_lock){++++}-{0:0}:
-> [   21.375509]        check_noncircular+0x144/0x15c
-> [   21.376313]        __lock_acquire+0xd88/0x2176
-> [   21.377029]        lock_acquire+0xf0/0x30e
-> [   21.377683]        cpus_read_lock+0x44/0x118
-> [   21.378447]        stop_machine+0x24/0x4c
-> [   21.379123]        arch_ftrace_update_code+0x38/0x56
-> [   21.379896]        ftrace_startup+0xd0/0x170
-> [   21.380673]        register_ftrace_function+0x11c/0x1f0
-> [   21.381489]        function_trace_init+0x6c/0xae
-> [   21.382238]        tracing_set_tracer+0xba/0x14c
-> [   21.383044]        tracing_set_trace_write+0x96/0xd0
-> [   21.383871]        vfs_writev+0x1b8/0x400
-> [   21.384501]        do_writev+0x6e/0xe8
-> [   21.385168]        __riscv_sys_writev+0x22/0x2a
-> [   21.385919]        do_trap_ecall_u+0x2b0/0x4de
-> [   21.386695]        handle_exception+0x14a/0x156
-> [   21.387516]
-> [   21.387516] other info that might help us debug this:
-> [   21.387516]
-> [   21.388995] Chain exists of:
-> [   21.388995]   cpu_hotplug_lock --> jump_label_mutex --> text_mutex
-
-Yeah, this chain is correct. We can not get cpus_read_lock() after
-text_mutex. cpus_read_lock() before text_mutex and use
-stop_machine_cpuslocked() instead. (if revert the series).
-
-Thank you,
-
-
-> [   21.388995]
-> [   21.390786]  Possible unsafe locking scenario:
-> [   21.390786]
-> [   21.391724]        CPU0                    CPU1
-> [   21.392608]        ----                    ----
-> [   21.393357]   lock(text_mutex);
-> [   21.394035]                                lock(jump_label_mutex);
-> [   21.395118]                                lock(text_mutex);
-> [   21.396157]   rlock(cpu_hotplug_lock);
-> [   21.397030]
-> [   21.397030]  *** DEADLOCK ***
-> [   21.397030]
-> [   21.398110] 5 locks held by bash/58:
-> [   21.398751]  #0: ff60000080a59430 (sb_writers#6){.+.+}-{0:0}, at: do_writev+0x6e/0xe8
-> [   21.400343]  #1: ffffffff818b1548 (trace_types_lock){+.+.}-{4:4}, at: tracing_set_tracer+0x24/0x14c
-> [   21.401948]  #2: ffffffff818b0df8 (direct_mutex){+.+.}-{4:4}, at: register_ftrace_function+0x20/0x1f0
-> [   21.403531]  #3: ffffffff818b0908 (ftrace_lock){+.+.}-{4:4}, at: register_ftrace_function+0x110/0x1f0
-> [   21.405208]  #4: ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
-> [   21.406948]
-> [   21.406948] stack backtrace:
-> [   21.408285] CPU: 1 UID: 0 PID: 58 Comm: bash Not tainted 6.16.0-rc4+ #70 NONE
-> [   21.408915] Hardware name: riscv-virtio,qemu (DT)
-> [   21.409325] Call Trace:
-> [   21.409448] [<ffffffff80016fa8>] dump_backtrace+0x28/0x30
-> [   21.409546] [<ffffffff80002534>] show_stack+0x38/0x44
-> [   21.409595] [<ffffffff8000fe1a>] dump_stack_lvl+0x70/0x9c
-> [   21.409644] [<ffffffff8000fe5e>] dump_stack+0x18/0x20
-> [   21.409691] [<ffffffff800a764c>] print_circular_bug+0x26c/0x2bc
-> [   21.409744] [<ffffffff800a77e0>] check_noncircular+0x144/0x15c
-> [   21.409797] [<ffffffff800aa1a6>] __lock_acquire+0xd88/0x2176
-> [   21.409850] [<ffffffff800ab684>] lock_acquire+0xf0/0x30e
-> [   21.409902] [<ffffffff8002bd76>] cpus_read_lock+0x44/0x118
-> [   21.409954] [<ffffffff80144498>] stop_machine+0x24/0x4c
-> [   21.410000] [<ffffffff8001d1ea>] arch_ftrace_update_code+0x38/0x56
-> [   21.410050] [<ffffffff80161fe4>] ftrace_startup+0xd0/0x170
-> [   21.410102] [<ffffffff80162ee8>] register_ftrace_function+0x11c/0x1f0
-> [   21.410154] [<ffffffff8017d9ac>] function_trace_init+0x6c/0xae
-> [   21.410207] [<ffffffff80176444>] tracing_set_tracer+0xba/0x14c
-> [   21.410262] [<ffffffff8017656c>] tracing_set_trace_write+0x96/0xd0
-> [   21.410318] [<ffffffff80292d70>] vfs_writev+0x1b8/0x400
-> [   21.410365] [<ffffffff80293026>] do_writev+0x6e/0xe8
-> [   21.410411] [<ffffffff80294982>] __riscv_sys_writev+0x22/0x2a
-> [   21.410460] [<ffffffff80ab6704>] do_trap_ecall_u+0x2b0/0x4de
-> [   21.410508] [<ffffffff80ac4b0e>] handle_exception+0x14a/0x156
+> CPU model name:
+> Intel(R) Core(TM) Ultra 7 265H (Arrow Lake)
 > 
-> which seems to exist since at least v6.15.
+> ethtool output:
+> driver: e1000e
+> version: 6.16.0-061600rc4-generic
+> firmware-version: 0.1-4
+> expansion-rom-version:
+> bus-info: 0000:00:1f.6
+> supports-statistics: yes
+> supports-test: yes
+> supports-eeprom-access: yes
+> supports-register-dump: yes
+> supports-priv-flags: yes
 > 
-> Not sure either reverting the commits or fixing them up is a better
-> idea, but anyway the fatal first issue shouidn't go into the stable
-> release.
+> lspci output:
+> 0:1f.6 Ethernet controller [0200]: Intel Corporation Device [8086:57a0]
+>          DeviceName: Onboard Ethernet
+>          Subsystem: Hewlett-Packard Company Device [103c:8e1d]
+>          Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx+
+>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>          Latency: 0
+>          Interrupt: pin D routed to IRQ 162
+>          IOMMU group: 17
+>          Region 0: Memory at 92280000 (32-bit, non-prefetchable) [size=128K]
+>          Capabilities: [c8] Power Management version 3
+>                  Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA
+> PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>                  Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
+>          Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>                  Address: 00000000fee00798  Data: 0000
+>          Kernel driver in use: e1000e
+>          Kernel modules: e1000e
 > 
-> Thanks for your suggestions on the problems.
+> The relevant dmesg:
+> <<<cable disconnected>>>
 > 
-> Regards,
-> Yao Zi
+> [    0.927394] e1000e: Intel(R) PRO/1000 Network Driver
+> [    0.927398] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+> [    0.927933] e1000e 0000:00:1f.6: enabling device (0000 -> 0002)
+> [    0.928249] e1000e 0000:00:1f.6: Interrupt Throttling Rate
+> (ints/sec) set to dynamic conservative mode
+> [    1.155716] e1000e 0000:00:1f.6 0000:00:1f.6 (uninitialized):
+> registered PHC clock
+> [    1.220694] e1000e 0000:00:1f.6 eth0: (PCI Express:2.5GT/s:Width
+> x1) 24:fb:e3:bf:28:c6
+> [    1.220721] e1000e 0000:00:1f.6 eth0: Intel(R) PRO/1000 Network Connection
+> [    1.220903] e1000e 0000:00:1f.6 eth0: MAC: 16, PHY: 12, PBA No: FFFFFF-0FF
+> [    1.222632] e1000e 0000:00:1f.6 eno1: renamed from eth0
 > 
-> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+> <<<cable connected>>>
 > 
-> #regzbot introduced: 881dadf0792c
+> [  153.932626] e1000e 0000:00:1f.6 eno1: NIC Link is Up 1000 Mbps Half
+> Duplex, Flow Control: None
+> [  153.934527] e1000e 0000:00:1f.6 eno1: NIC Link is Down
+> [  157.622238] e1000e 0000:00:1f.6 eno1: NIC Link is Up 1000 Mbps Full
+> Duplex, Flow Control: None
+> 
+> No error message seen after hot-plugging the Ethernet cable.
 > 
 
+Thank your for the report.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+We did not encounter this issue during our patch testing. However, we 
+will attempt to reproduce it in our lab.
+
+One detail that caught my attention is that flow control is disabled in 
+both scenarios. Could you please check whether the issue persists when 
+flow control is enabled? This might require connecting to a link partner 
+that supports flow control.
+
