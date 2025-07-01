@@ -1,71 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A4919CC0A;
-	Tue,  1 Jul 2025 00:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751331264; cv=none; b=kOapyT5usna+ydEs6WdDYjm700G7WLXXbd58bQzO0rYHrQmV3Jm+dYojzevjYdzj/XM3srXFz7qWLk+ohAXCsPq69Iuc6j2C6YaTSzfMD2Ac4mN7P5yTPSRfBS2Sg8fzmgr2MBnUoCmg9MxwydLcZnUoRnjkivL0S+RNO/6PDDk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751331264; c=relaxed/simple;
-	bh=ToOw6uJVC9iS7TA1n50KV+hOesklTI3h/nf9C9Afkk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6y41+nMt09J84XjMDZciYHBQctR96m+riTn/WEigYQFu4+bYxpb70agvbtgu0fZ2CGjWhmbsdEO0CwJR89jkRmZ6eT2gUwlqVk9Y1VcIg8mdfFISyda5BbSi6WM8q0Knl8fYAXCH2xIc9JBd/4hjdTk2ndkpYLeXboXntxVtAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyK4qdqe; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC7678F4A
+	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 01:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751333916; cv=pass; b=a4flMaVHsmbrCOQtnFSSQYR1IVNjWazYvmOVDHeFU6+z6jFPqDFUNNZArWZ/RsgQTYqwPdWnbPAKP/U1GIa1Gk3/xfX2wcUcgZBOk0qjlgvcX1U10jWkNbzekt8ZCqx4GuuweQQKWfUR7WbqXJw1UQDBp8zO6E1wO8y3GOJzuIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751333916; c=relaxed/simple;
+	bh=v7FNCa21DJnvR2zTC15KT2oxyMh+OB7pBTrd7B7KZms=;
+	h=Date:From:To:Message-ID:In-Reply-To:Subject:MIME-Version:
+	 Content-Type; b=TFkEZCduhnRSMbyYJd25ypzJp0I4fzN6dC2UykOvVRzmaKhr7MFQ0hjjbPnl670TH9YCa0ef3Ae6h76EiwC/1to6aa9OG6iFnQ/NlMMxQQpJRE15WZwbLHQWXFOT497OaAomkeJg4vor2hBFNXk1DdGCdzkr76t0d13MOFl25t8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=AQ0e2Csh; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyK4qdqe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7683EC4CEF1;
-	Tue,  1 Jul 2025 00:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751331263;
-	bh=ToOw6uJVC9iS7TA1n50KV+hOesklTI3h/nf9C9Afkk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gyK4qdqe7n2SY35w+0A2VIvZMp5I/DS91mgGqJg0VUJl9P+KTZz8W8cM6NauRPs0d
-	 8Z4KahMYQfwakLpjFJGiBdtTnTTcsK2k3VLG0dsTY4g0X06c5R4UUaWbWKDxl5vlv5
-	 QKlX/ooQaHil84zfPAo5lowvdjELNQnek6Lqsuipnltx14giYoclu/w16F9r88UuhR
-	 MGKCx3M1BrRxxqIA2JZegKWGf7raug3DEawkejgjW6hmJ8unAsq08LDGwXHh6SeJJ8
-	 lWGlDH3/Qi9Ehh4+R6CBJMvIPnbhgBAfR88RZCIviqrJI9L51AMHzweUJD/rTjBAsN
-	 7P36XETuKdU8g==
-Date: Mon, 30 Jun 2025 18:54:19 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Ben Copeland <ben.copeland@linaro.org>, linux-kernel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
-	sagi@grimberg.me, iommu@lists.linux.dev
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <aGMxu6Yn514Xy55w@kbusch-mbp>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
- <20250630133343.GA26040@lst.de>
- <aGLyswGYD6Zai_sI@kbusch-mbp>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="AQ0e2Csh"
+ARC-Seal: i=1; a=rsa-sha256; t=1751333913; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VF2gh3MVI41rkUnDja/l4DLRXI8X5QtmNq75Rro97c8+xFY4adbRKOpm2wmeK5xohkwkut3N7cvhdNHHSrui2CyOth1sfhb7lzPFkwME/dEotWGUY6vbenUFc4fYyinnlaAJw3M0DPwmH/0xScLdsCZJfF32QzQQQbXXzNTVSCs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751333913; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=v7FNCa21DJnvR2zTC15KT2oxyMh+OB7pBTrd7B7KZms=; 
+	b=b7omv21wuQ3L+NnwqNzVC9dyV0OROTMYyMrA0G/XzHqyWqmWkEtw/151anhK678/N/+k1GPqJ6rMG0tio5oki9ngGQ/kY7HMv2lngzvfZbgzNGms5gMeccyA2rmqi530sTcsfJygY22t/0L0YnGGW1RIg897YLuojzkrQHqD/Hs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751333913;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To:Cc;
+	bh=v7FNCa21DJnvR2zTC15KT2oxyMh+OB7pBTrd7B7KZms=;
+	b=AQ0e2CshNN3QWDrgqyZVddZfnyVQwVjtQVHohLV1XbXQ6XzLDefBWlsJ2ogVwKdU
+	7K1aT301+rhFEvFL2asH1vWTx3poMItT7DMlEKejBmd52zDOl0JhSMmmPQ8N8yHM1c8
+	lW6tp7iFSuY+OSyRQLqN22rG86PWi1/+E1glUW+Y=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1751333911886418.7483786627944; Mon, 30 Jun 2025 18:38:31 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Mon, 30 Jun 2025 18:38:31 -0700 (PDT)
+Date: Tue, 01 Jul 2025 05:38:31 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "Linux Regressions" <regressions@lists.linux.dev>,
+	"Thorsten Leemhuis" <linux@leemhuis.info>
+Message-ID: <197c3a2bd41.128a00dd4617828.8338848291703569280@zohomail.com>
+In-Reply-To: 
+Subject: regzbot dashboard stalled (last update: 2025-04-14 11:39:48 (UTC))
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGLyswGYD6Zai_sI@kbusch-mbp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr080112275f87a45b75b0c9ad371ccc8d0000d07329bef4f945c8a862f557879d774873cb52d094e3e4e5e7:zu080112277644b9b31b9bbfa8fadb4ff2000025a66e16027baa865fea6d61af207146a4214e9ce66fed5906:rf0801122cc6b9881e1263cf846cb7725600000074e490cd98db35b4e90dcff0adddc06e74878f2dc689fa71eac2005a0a:ZohoMail
 
-On Mon, Jun 30, 2025 at 02:25:23PM -0600, Keith Busch wrote:
-> On Mon, Jun 30, 2025 at 03:33:43PM +0200, Christoph Hellwig wrote:
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -701,7 +701,7 @@ static void nvme_free_prps(struct request *req)
->         prp_list = iod->descriptors[desc];
->         do {
->                 dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
-> -               if (i == NVME_CTRL_PAGE_SIZE >> 3) {
-> +               if (i == NVME_CTRL_PAGE_SIZE >> 3 && length > NVME_CTRL_PAGE_SIZE) {
->                         prp_list = iod->descriptors[++desc];
->                         i = 0;
->                 }
-> --
-> 
-> But even that, the PRP setup doesn't match the teardown. We're calling
-> dma_map_page() on each PRP even if consecutive PRP's [...]
+regzbot dashboard stalled.
+https://linux-regtracking.leemhuis.info/regzbot/mainline/ shows: "compiled by regzbot on 2025-04-14 11:39:48 (UTC)"
 
-Err, I meant to say "dma_unmap_page()".
+
+--
+Askar Safin
+https://types.pl/@safinaskar
+
