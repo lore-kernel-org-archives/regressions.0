@@ -1,66 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86A526FA52;
-	Tue,  1 Jul 2025 14:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C92027933A
+	for <regressions@lists.linux.dev>; Tue,  1 Jul 2025 15:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379646; cv=none; b=HXMNV8C5HA7VxSPVsR3/I7a/Ke2Nh/h4ujLFxTIx4GXI8JY78fdnBWV3jQSae0s9+sSjlrjnqLdFLGuH8Sz8XiMVlasICOF+aN+PxBKEOVXVLvVTy5YpAGm/frvc4dDP81Zy3hf0Lh1ddDRb7yCOVM0qTpiP6BROqj9uYNeSWT0=
+	t=1751383288; cv=none; b=X3hs7gSIQWSRpHiT5sOZjacHzwNKgVRjDCrJvBtYkUr0l5zbcpUyRzubgHAb7M8E687vVjuz1K47UZn7LI0I8t/5V2raVkjcfIj2M3cZuJplwwsUKF1smAvA3gxK9MUmOkCXSlEezWEmkQrQ2yQ86BNWZY/1Yd0cHuqkAVvTrhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379646; c=relaxed/simple;
-	bh=rmzUj4ZD9gm0HoCKYYLt0+PcJutRfusCkPSoIPsvInY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cGcpF9jrrKkrcYrtmDtCUjwakUZDVZAxdPcrQDmX7ym+y+oQKcStTLxcGNuzfPKRM0UFZwCg0t6bVKq5spgGAyYXOnxSuaYTR1H6+QBe1TK6f9RByDq03FTZ7X1Tj7BBFHAtHZRNDuKhGdkCtBqgWiZNCCiRV86ZAVRiSPuu7go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrQmbsRO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrQmbsRO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204C0C4CEEB;
-	Tue,  1 Jul 2025 14:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751379645;
-	bh=rmzUj4ZD9gm0HoCKYYLt0+PcJutRfusCkPSoIPsvInY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rrQmbsROkn81Qa45c1fXnnZNNwmO4+YXtGItxTGRGBkTFbZZa5KYuNhhED+a2z1C8
-	 /jDDOdJEHdsA6yKmKxHPEKvd1wAf0YJlgIDu7C2HDh3tSeeVk8zTBYPKv/YtRr9LEx
-	 b/RDk95xlMMehf6Mmdn7gursNVIzApQqij+z0W2woKboY6lOQkFER0yZXIh86VSM3U
-	 Xaus1CtbQ1Httfkl7TuaCqqwIlbYxVot3BV5RHXyMco/pZzZrMI5abvI5dWKIuYzvk
-	 lC15LIJZPJ9L+TOwVn80cWzHv4IBjaVB35QJn2yCGW9XkSaSJq5vIzWBw2KLW4dmP0
-	 5dD1M7fg3HabA==
-Date: Tue, 1 Jul 2025 10:20:41 -0400
-From: Keith Busch <kbusch@kernel.org>
-To: Ben Copeland <ben.copeland@linaro.org>
-Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
-	sagi@grimberg.me, iommu@lists.linux.dev
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <aGPuue3_-BSPffR0@kbusch-mbp>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
- <20250630133343.GA26040@lst.de>
- <aGLyswGYD6Zai_sI@kbusch-mbp>
- <CAL0q8a7acv-9N1XUmJ9LAojdhm947eiira6Kx0tew-VVVCY6kg@mail.gmail.com>
+	s=arc-20240116; t=1751383288; c=relaxed/simple;
+	bh=gEJZSp/jqAQmTBET9Lgo0F4Y5CN9so5vYjZ9igwKwG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T3/mMw7hddL7PqkkSpp42sllcMBmyg1+koYXVXSXwlBcLWPtCARRTfVieVMU2DRnFxPE+DdLKKIeHvy4BE9DqfSlzMjf2aceN2u0NrvATF4iLjLhuq/Vkupsf21CY9I/bnJ4AwXQaeOECLan84WTdnaqw8tNJnieoXVZtAyQOx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id E517DB9E49;
+	Tue,  1 Jul 2025 15:21:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 62A7A2000E;
+	Tue,  1 Jul 2025 15:21:17 +0000 (UTC)
+Date: Tue, 1 Jul 2025 11:21:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Yao Zi <ziyao@disroot.org>, Andy Chiu <andybnac@gmail.com>,
+ alexghiti@rivosinc.com, palmer@dabbelt.com, Andy Chiu
+ <andy.chiu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Mark Rutland <mark.rutland@arm.com>,
+ puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
+ nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+ vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
+ samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com, Han
+ Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
+ dynamic ftrace
+Message-ID: <20250701112116.24cf8163@batman.local.home>
+In-Reply-To: <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
+References: <aGODMpq7TGINddzM@pie.lan>
+	<b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL0q8a7acv-9N1XUmJ9LAojdhm947eiira6Kx0tew-VVVCY6kg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 62A7A2000E
+X-Stat-Signature: 59cfkw1pdim9kresnutii68uakri7p8t
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/NJMVWipJuBxIYkuT6e6RUoPIwwQiqAis=
+X-HE-Tag: 1751383277-669370
+X-HE-Meta: U2FsdGVkX182ALet42c3iMi2YFUYr6K+qXWSp9Nc2/oYd4UWY+lrz0yseqtNdf6s4czTyAhl5x/WZDEy3JbSXCbHDUBzGKoGw881QaXZ0ZsNE5KwJ/VDEiMwGYgEDlxQRRgmsoe+oGOwdoiHeZGVY8opsV8mRqdJhWy1IQGC73NeW1eMVY3rIrmb+6G0erF4jL93o1W4Wx3KJs1PLKxzpg7wAW1ad9oPC98SY87CUhOkRZE1ZzVdjmLD+HsHgydL+CSpVZ93Y8SBw2qi066qFiGHlmYeeyU+chGglyPEoNGNo5zNX5cGPjR0HknSPNxd
 
-On Tue, Jul 01, 2025 at 02:05:04PM +0100, Ben Copeland wrote:
-> Even though SGLs are not supported, I gave you the patch a spin and
-> saw the same stack traces.
+On Tue, 1 Jul 2025 14:27:32 +0200
+Alexandre Ghiti <alex@ghiti.fr> wrote:
 
-Right, that patch applies only if SGL is not supported, but it's only
-fixing part of the problem, so I expected it would still fail.
+> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct=20
+> dyn_ftrace *rec)
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int nops[2], offset;
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>=20
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&text_mutex);
 
-The dma teardown needs to be symetric to the dma mapping, but we've
-removed the sg-table now, so we don't have the original mapping context
-in the completion path here. Christoph replied with a patch that tries
-to infer it based on the dma_addr continuity, which I think should work
-for you, but I'll have to look a bit closer to be confident it's always
-the correct assumption.
+This looks like a prime candidate for:
+
+	guard(mutex)(&text_mutex);
+
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D ftrace_rec_set_nop_op=
+s(rec);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 return ret;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 goto end;
+
+Then this change wouldn't be needed.
+
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D (unsigned long) &f=
+trace_caller - pc;
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nops[0] =3D to_auipc_t0(offse=
+t);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nops[1] =3D RISCV_INSN_NOP4;
+>=20
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&text_mutex);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D patch_insn_write((voi=
+d *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> +end:
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&text_mutex);
+
+and "end:" as well as the mutex_unlock() can be removed.
+
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>=20
+>=20
+> Andy is also taking a look, I'll let him confirm the above fix is correct.
+>=20
+> Thanks for the thorough report!
+
+Yes, thank you Yao Zi for the very detailed bug report! That made
+things so much easier.
+
+-- Steve
