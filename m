@@ -1,150 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D48C2F4A1E;
-	Wed,  2 Jul 2025 14:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CC972600
+	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 16:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466222; cv=none; b=iqs05x0Qtkt0FFrmJhJZL7zKvxj4o2XQ2QocntvaFbsw2aY0TPv3rJHvbP5OSjK3S+ujjD+3qgFZ39CXdGeRV8ff0DlgrMWVCsx4nQcmeaMEnMLYrApJvfr46E7Tg3he21r8C8OOG8Rj0z1i4buX3+ddIehFUxApIx2RDlonEe4=
+	t=1751474751; cv=none; b=UGw6sYd0sTG/RKs1uKVIE/mNEemlFs1VoXewz0hJ0Q0gm0SWdDDJCOoBk77vlKmMi9f3tcFLfaXlY+ZZVTUZ0UwOuZrbX0bH0ccK9daGFwstnypCAK30g6BLe9eSxrGi4hot9AKhcoaIxWD/Ihss35MR3hSEy0TkJQH50m4RWIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466222; c=relaxed/simple;
-	bh=9FemjpaTqLuSdN1CrIzgjRpE94SkV2iBWBurVjjK4O4=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=VYVMENSfNcR9fDJdN/aw0sMFqXNGUQb444JhkBNK7FMwOdgkftwfdYOTGORwiQuYWy6/IkbHYtUT4ZddTfO3P7qsndnA+EYbDe9XJasoNZriceyvxsVkRXBvuoESki9ScZ5HkUo2emdlqT+Nbbm7bF8MkfmpfzdQUCf8SfGIVnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WFinePNt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751474751; c=relaxed/simple;
+	bh=1kRYbnn+64e5fvrcUEY44l2pLTvO+W+1euniJXqJ388=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=phiGJHbpxxRlVlxEDZGnpYjCag3eteMfxrS+9pWU63Xy7TKYBOr5TEtuexvZct2OfhPADu9ORuiK5ViPyvDIrKv+/lHdJIKAhg6eIBoBwlWBE0DTdJ7BOBJfkm0S0T2RHlDeMqLdsxP6BbetKRliGmxlv2Y72swSzVOmRZRKdbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=q8SC4hf1; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WFinePNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6125AC4CEE7;
-	Wed,  2 Jul 2025 14:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751466221;
-	bh=9FemjpaTqLuSdN1CrIzgjRpE94SkV2iBWBurVjjK4O4=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=WFinePNtGRwbv2TtB/gvkFKE3JM+dczq1KMrog1ERyCWIR0kB5I8m5O2ybtXgSn3S
-	 pVbLxoVw58wg0zKEgWRiSurzITLaLGhFHBuQCw+kJ1c45IsFXX+2poQ6Xh7mKVUEFM
-	 JzTY9snj4PiNeW5f0AHWtPvpPJxkmLGTlG09oOZI=
-Subject: Patch "Revert "ipv6: save dontfrag in cork"" has been added to the 6.6-stable tree
-To: bacs@librecast.net,gregkh@linuxfoundation.org,regressions@lists.linux.dev,willemb@google.com
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 02 Jul 2025 16:23:38 +0200
-In-Reply-To: <20250702113731.2322-2-bacs@librecast.net>
-Message-ID: <2025070238-rake-gutter-96aa@gregkh>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="q8SC4hf1"
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D1FA43F5B7
+	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 16:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751474740;
+	bh=03JYsi6N1cb3oGmDBZSCpQc2VmKr0D5Wn0ycaeTgsEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=q8SC4hf1XOMRDiXHEJZr57gAtwsmp1EqowmRcTp76fJF36twgg/8qsAUCffkSCcxj
+	 HR8GI9rJJrR4rjmY7fE3wk46U8KOgqA/SdEjDW9j0COvsLvqjFo+rEJay++2Qvub6M
+	 en72ulIlRc8LeIFO6qrX+GaZbXMBbm+UWrIeElBJORDGaJhF6wmeL6frG6YWg3s3ea
+	 4D68CcytOZL5TdSjUuFRSYeSDT4LCwTnWbk6/YkbMrim73kb4d+/Khh2MjBkgF3Sa3
+	 gsKAYOjn+AePBtV4iGhq5KW4IR+sx0Rd2HqOBo/vj5HdliCo1Y+Nm8NUTzTKf+W8Bp
+	 Ds8IFxszEXM9A==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3122368d82bso6617933a91.0
+        for <regressions@lists.linux.dev>; Wed, 02 Jul 2025 09:45:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751474739; x=1752079539;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=03JYsi6N1cb3oGmDBZSCpQc2VmKr0D5Wn0ycaeTgsEE=;
+        b=PB2IWK7BHhDibczC47fMImTzxYgQC3TEe5JIGBSMtU9Tc3WDFTBGjflldQG9NjUZ1O
+         YPGsQQb1h21nh3t3lV1IaqSc8H1+wW4rZ1IG/ebE1JrhtLWTskQ7XeWxgDA8DpbRWMx+
+         z8aPVyDcRFxE32slnUafCShgV/8bGQNnz3AqiTwy5fkWLsMflTvWPdRfPpWCgKHLw4wB
+         Hqt2RiddOv+97HQlRorFX84AN4jYLlinU8p7LIrfEGoO2zVHBypte3X3+o7CysOxRqd4
+         sOpB9YizGZXWmbyccHUGobwtRRW+Q1GLnWFkvQtIf5f/sl+p96yVGOnBug8LXlDDj+DZ
+         2/ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUra3PJCuvUTsgT7SDEkTVkuOn5UQY+2Dn6Z5e4zXh2xJOmWfbmPH0zkYurP9RJEvw3BUsPsGo5zeM2sA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxhMemgsYXOQkoPXCFiVUpaRDJbzLloUCka/h6m4q8WbVjQJKnO
+	wBL4Hx/ISEEURvug+HSBxRX/hR41cOXimpWX3ikDfgwnJVOqQSRK6IOTE7UGOrExD/YulWXap2M
+	GPPfYlajtZ2oxeg5Bz49sRCBOgkgwDuzlnasnbXL1w3AAoSaUKtsvwkXiplGNEuFyGX0fKQECeb
+	lgIPE5xWXj8j/HWV10+kLQJwi+pcQauYNZutmksf84Q0aELaRzxCKS5T8=
+X-Gm-Gg: ASbGnctXR1Ql+f6Cn+Fwv0s3RCOLJZoigAJRsVF+B+C1LAv937W4i3NJyk0ZPd5D0R1
+	pb1bbQwGU3ncKah0zUsMIUVaXqDKBnvmBRAHthrbTGairx0ap6GCzUnQMVChrOeIYAalZ0vuf0e
+	o=
+X-Received: by 2002:a17:90b:1ccf:b0:312:25dd:1c99 with SMTP id 98e67ed59e1d1-31a9d68c415mr24969a91.19.1751474739298;
+        Wed, 02 Jul 2025 09:45:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUbiVnsCDOhE0Y6KvzUyFT+4UeGUQjHsPXTvcCNTFf9JU+yQRYphgb7sEjWquSS5yd2ifrnsCNngJaGe5SJcw=
+X-Received: by 2002:a17:90b:1ccf:b0:312:25dd:1c99 with SMTP id
+ 98e67ed59e1d1-31a9d68c415mr24919a91.19.1751474738923; Wed, 02 Jul 2025
+ 09:45:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+ <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com> <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
+In-Reply-To: <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
+From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Date: Wed, 2 Jul 2025 19:45:12 +0300
+X-Gm-Features: Ac12FXwfZGasDwsrUNpiRYFf5EsK6aBBSON-b9jeB0VIdRAW47jpQEz-5jaf9R4
+Message-ID: <CAOLeGd3a63_za6cYs3HyzFn1A=j7gaEcWurT9yuXknMspa80fA@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com, 
+	will@kernel.org, joro@8bytes.org, dwmw2@infradead.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jul 2, 2025 at 12:00=E2=80=AFPM Baolu Lu <baolu.lu@linux.intel.com>=
+ wrote:
+>
+> On 7/2/2025 1:14 PM, Baolu Lu wrote:
+> > On 7/2/25 01:11, Ioanna Alifieraki wrote:
+> >> #regzbot introduced: 129dab6e1286
+> >>
+> >> Hello everyone,
+> >>
+> >> We've identified a performance regression that starts with linux
+> >> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+> >> Bisection pointed to commit:
+> >> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in
+> >> iotlb_sync_map").
+> >>
+> >> The issue occurs when running fio against two NVMe devices located
+> >> under the same PCIe bridge (dual-port NVMe configuration). Performance
+> >> drops compared to configurations where the devices are on different
+> >> bridges.
+> >>
+> >> Observed Performance:
+> >> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+> >> - After the commit:
+> >>    -- Same PCIe bridge: ~4985 MiB/s
+> >>    -- Different PCIe bridges: ~6150 MiB/s
+> >>
+> >>
+> >> Currently we can only reproduce the issue on a Z3 metal instance on
+> >> gcp. I suspect the issue can be reproducible if you have a dual port
+> >> nvme on any machine.
+> >> At [1] there's a more detailed description of the issue and details
+> >> on the reproducer.
+> >
+> > This test was running on bare metal hardware instead of any
+> > virtualization guest, right? If that's the case,
+> > cache_tag_flush_range_np() is almost a no-op.
+> >
+> > Can you please show me the capability register of the IOMMU by:
+> >
+> > #cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
+>
+> Also, can you please try whether the below changes make any difference?
+> I've also attached a patch file to this email so you can apply the
+> change more easily.
+Thanks for the patch Baolu, I've tested and I can confirm we get ~6150MiB/s
+for nvme pairs both under the same and different bridge.
+The output of
+cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
+19ed008c40780c66
+for all nvmes.
+I got confirmation there's no virtualization happening on this instance
+at all.
+FWIW, I had run perf when initially investigating the issue and it was
+showing quite some time spent in cache_tag_flush_range_np().
 
-This is a note to let you know that I've just added the patch titled
-
-    Revert "ipv6: save dontfrag in cork"
-
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     revert-ipv6-save-dontfrag-in-cork.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From bacs@librecast.net  Wed Jul  2 16:20:41 2025
-From: Brett A C Sheffield <bacs@librecast.net>
-Date: Wed,  2 Jul 2025 13:37:32 +0200
-Subject: Revert "ipv6: save dontfrag in cork"
-To: gregkh@linuxfoundation.org
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org, willemb@google.com, Brett A C Sheffield <bacs@librecast.net>
-Message-ID: <20250702113731.2322-2-bacs@librecast.net>
-
-
-From: Brett A C Sheffield (Librecast) <bacs@librecast.net>
-
-This reverts commit 8ebf2709fe4dcd0a1b7b95bf61e529ddcd3cdf51 which is
-commit a18dfa9925b9ef6107ea3aa5814ca3c704d34a8a upstream.
-
-A regression was introduced when backporting this to the stable kernels
-without applying previous commits in this series.
-
-When sending IPv6 UDP packets larger than MTU, EMSGSIZE was returned
-instead of fragmenting the packets as expected.
-
-As there is no compelling reason for this commit to be present in the
-stable kernels it should be reverted.
-
-Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/ipv6.h  |    1 -
- net/ipv6/ip6_output.c |    9 ++++-----
- 2 files changed, 4 insertions(+), 6 deletions(-)
-
---- a/include/linux/ipv6.h
-+++ b/include/linux/ipv6.h
-@@ -199,7 +199,6 @@ struct inet6_cork {
- 	struct ipv6_txoptions *opt;
- 	u8 hop_limit;
- 	u8 tclass;
--	u8 dontfrag:1;
- };
- 
- /* struct ipv6_pinfo - ipv6 private area */
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1452,7 +1452,6 @@ static int ip6_setup_cork(struct sock *s
- 	}
- 	v6_cork->hop_limit = ipc6->hlimit;
- 	v6_cork->tclass = ipc6->tclass;
--	v6_cork->dontfrag = ipc6->dontfrag;
- 	if (rt->dst.flags & DST_XFRM_TUNNEL)
- 		mtu = np->pmtudisc >= IPV6_PMTUDISC_PROBE ?
- 		      READ_ONCE(rt->dst.dev->mtu) : dst_mtu(&rt->dst);
-@@ -1486,7 +1485,7 @@ static int __ip6_append_data(struct sock
- 			     int getfrag(void *from, char *to, int offset,
- 					 int len, int odd, struct sk_buff *skb),
- 			     void *from, size_t length, int transhdrlen,
--			     unsigned int flags)
-+			     unsigned int flags, struct ipcm6_cookie *ipc6)
- {
- 	struct sk_buff *skb, *skb_prev = NULL;
- 	struct inet_cork *cork = &cork_full->base;
-@@ -1542,7 +1541,7 @@ static int __ip6_append_data(struct sock
- 	if (headersize + transhdrlen > mtu)
- 		goto emsgsize;
- 
--	if (cork->length + length > mtu - headersize && v6_cork->dontfrag &&
-+	if (cork->length + length > mtu - headersize && ipc6->dontfrag &&
- 	    (sk->sk_protocol == IPPROTO_UDP ||
- 	     sk->sk_protocol == IPPROTO_ICMPV6 ||
- 	     sk->sk_protocol == IPPROTO_RAW)) {
-@@ -1914,7 +1913,7 @@ int ip6_append_data(struct sock *sk,
- 
- 	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
- 				 &np->cork, sk_page_frag(sk), getfrag,
--				 from, length, transhdrlen, flags);
-+				 from, length, transhdrlen, flags, ipc6);
- }
- EXPORT_SYMBOL_GPL(ip6_append_data);
- 
-@@ -2119,7 +2118,7 @@ struct sk_buff *ip6_make_skb(struct sock
- 	err = __ip6_append_data(sk, &queue, cork, &v6_cork,
- 				&current->task_frag, getfrag, from,
- 				length + exthdrlen, transhdrlen + exthdrlen,
--				flags);
-+				flags, ipc6);
- 	if (err) {
- 		__ip6_flush_pending_frames(sk, &queue, cork, &v6_cork);
- 		return ERR_PTR(err);
-
-
-Patches currently in stable-queue which might be from bacs@librecast.net are
-
-queue-6.6/revert-ipv6-save-dontfrag-in-cork.patch
+Thanks again!
+Jo
+>
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 7aa3932251b2..f60201ee4be0 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1796,6 +1796,18 @@ static int domain_setup_first_level(struct
+> intel_iommu *iommu,
+>                                           (pgd_t *)pgd, flags, old);
+>   }
+>
+> +static bool domain_need_iotlb_sync_map(struct dmar_domain *domain,
+> +                                      struct intel_iommu *iommu)
+> +{
+> +       if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+> +               return true;
+> +
+> +       if (rwbf_quirk || cap_rwbf(iommu->cap))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+>   static int dmar_domain_attach_device(struct dmar_domain *domain,
+>                                      struct device *dev)
+>   {
+> @@ -1833,6 +1845,8 @@ static int dmar_domain_attach_device(struct
+> dmar_domain *domain,
+>         if (ret)
+>                 goto out_block_translation;
+>
+> +       domain->iotlb_sync_map |=3D domain_need_iotlb_sync_map(domain, io=
+mmu);
+> +
+>         return 0;
+>
+>   out_block_translation:
+> @@ -3945,7 +3959,10 @@ static bool risky_device(struct pci_dev *pdev)
+>   static int intel_iommu_iotlb_sync_map(struct iommu_domain *domain,
+>                                       unsigned long iova, size_t size)
+>   {
+> -       cache_tag_flush_range_np(to_dmar_domain(domain), iova, iova + siz=
+e - 1);
+> +       struct dmar_domain *dmar_domain =3D to_dmar_domain(domain);
+> +
+> +       if (dmar_domain->iotlb_sync_map)
+> +               cache_tag_flush_range_np(dmar_domain, iova, iova + size -=
+ 1);
+>
+>         return 0;
+>   }
+> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+> index 3ddbcc603de2..7ab2c34a5ecc 100644
+> --- a/drivers/iommu/intel/iommu.h
+> +++ b/drivers/iommu/intel/iommu.h
+> @@ -614,6 +614,9 @@ struct dmar_domain {
+>         u8 has_mappings:1;              /* Has mappings configured throug=
+h
+>                                          * iommu_map() interface.
+>                                          */
+> +       u8 iotlb_sync_map:1;            /* Need to flush IOTLB cache or w=
+rite
+> +                                        * buffer when creating mappings.
+> +                                        */
+>
+>         spinlock_t lock;                /* Protect device tracking lists =
+*/
+>         struct list_head devices;       /* all devices' list */
+> --
+> 2.43.0
+>
+> Thanks,
+> baolu
