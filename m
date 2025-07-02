@@ -1,126 +1,190 @@
-Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
+Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE841E520C;
-	Wed,  2 Jul 2025 11:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2B127605C
+	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 13:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456752; cv=none; b=DqXl94IEm6g/Yr7Uf476uVD1X3+KP1AzYRhZAUZN36IB08oa2fAXk+3dLYsriilDPmMSxIA+d2SRRMLvMfPHes08VkeQzEk8y1xMyoLs/Otb073aABaPvqtC7gkMX1ces1br3GiB30aezgsLEjA1u4gFBhlY1W0s3sZyjgMa+0Q=
+	t=1751461513; cv=none; b=JqjslTx4+V5wS2xazBOPOtVfWiDKXuqogPsLSe6E+x3+PdYO8eNDNuzVIfMHkC6ZyXbEb2gYCTquGODWpOiOYV8Hh9F4JLEVyO+wNJV4qhBru/zbIBWjaoGgMyqOLhFgf97jTC8nd+E0IHwy3C23yKNUvKrQl9OhoCSHgt2vC3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456752; c=relaxed/simple;
-	bh=9AuOxN1fLsFD/X58/PFQmlQF9iWSU+GWlT4u317PpB8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IvdRb1FEVYYuxVnEK5ctff89YQBcFFiKnfBFVBAcaNrIsNH50k8yNPQH86FUjaPFcdUwP7P3tqVyWy1FKrSk9SRu+CPIVapl6dWhwjU/l9x7FOsWUCpkWralTcKkYcbpOB5X7JtVhxJ/GDaAHXQp3DH9iZTDQJV0eiIyH7/l1jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
-Received: from [2a0c:e303:0:7000:1adb:f2ff:fe4f:84eb] (port=48378 helo=karahi.gladserv.com)
-	by bregans-0.gladserv.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(envelope-from <bacs@librecast.net>)
-	id 1uWvn8-008bMu-2w;
-	Wed, 02 Jul 2025 11:38:18 +0000
-From: Brett A C Sheffield <bacs@librecast.net>
-To: gregkh@linuxfoundation.org
-Cc: regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	willemb@google.com,
-	Brett A C Sheffield <bacs@librecast.net>
-Subject: [PATCH 6.6.y] Revert "ipv6: save dontfrag in cork"
-Date: Wed,  2 Jul 2025 13:37:32 +0200
-Message-ID: <20250702113731.2322-2-bacs@librecast.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025070216-duplex-ecologist-20ce@gregkh>
-References: <2025070216-duplex-ecologist-20ce@gregkh>
+	s=arc-20240116; t=1751461513; c=relaxed/simple;
+	bh=6DbrUrjzqWPuGW013KxBtcgEZYWvCNIy8XMvL+T0r2M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aemtwcQaiwoqxYYopWFG9rlgknW2mBAbEDJR1odLd72nxcewgNZR92E75GwdQ5m4M5tvZala5WZzW5/hxY9itQGA7fXLPR+bvzMNAGfG7Ajv1dP4DYqjtycJdCnR3KskEeMMyIv5fFBPf+RWbx1g3K9WWkYkRGo6qU50ULakESk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 330F344211;
+	Wed,  2 Jul 2025 13:05:07 +0000 (UTC)
+Message-ID: <6d478129-324a-4c5a-8258-4abe3d0732d6@ghiti.fr>
+Date: Wed, 2 Jul 2025 15:05:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and dynamic
+ ftrace
+To: Yao Zi <ziyao@disroot.org>, Andy Chiu <andybnac@gmail.com>,
+ alexghiti@rivosinc.com, palmer@dabbelt.com, Andy Chiu
+ <andy.chiu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Mark Rutland <mark.rutland@arm.com>,
+ puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
+ nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+ vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
+ samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com
+Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+References: <aGODMpq7TGINddzM@pie.lan>
+ <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr> <aGUO8L7oXpvEpvZo@pie.lan>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <aGUO8L7oXpvEpvZo@pie.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepudffueegvddtgeeluefhueetteeugeeffeekhfehffdvudfhgedvheduudekffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopeiiihihrghoseguihhsrhhoohhtrdhorhhgpdhrtghpthhtoheprghnugihsghnrggtsehgmhgrihhlrdgtohhmpdhrt
+ ghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghnugihrdgthhhiuhesshhifhhivhgvrdgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphhurhgrnhhjrgihuddvsehgmhgrihhlrdgtohhm
 
-From: Brett A C Sheffield (Librecast) <bacs@librecast.net>
+Hi Yao,
 
-This reverts commit 8ebf2709fe4dcd0a1b7b95bf61e529ddcd3cdf51 which is
-commit a18dfa9925b9ef6107ea3aa5814ca3c704d34a8a upstream.
+On 7/2/25 12:50, Yao Zi wrote:
+> On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
+>> Hi Yao,
+>>
+>> On 7/1/25 08:41, Yao Zi wrote:
+>>> Linux v6.16 built with dynamic ftrace randomly oops or triggers
+>>> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+> ...
+>
+>>> Not sure either reverting the commits or fixing them up is a better
+>>> idea, but anyway the fatal first issue shouidn't go into the stable
+>>> release.
+>> Let's fix this, we were expecting issues with dynamic ftrace :)
+>>
+>> So the following diff fixes all the issues you mentioned (not the first
+>> crash though, I'll let you test and see if it works better, I don't have
+>> this board):
+> Thanks for the fix! I've tested it with both QEMU and SG2042, it does
+> fix the lockdep failures as well as the boot time crash on SG2042. The
+> boot-time crash is caused by the race so will disappear as long as we
+> fix the race.
+>
+>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>> index 4c6c24380cfd9..97ced537aa1e0 100644
+>> --- a/arch/riscv/kernel/ftrace.c
+>> +++ b/arch/riscv/kernel/ftrace.c
+>> @@ -14,6 +14,16 @@
+>>   #include <asm/text-patching.h>
+>>
+>>   #ifdef CONFIG_DYNAMIC_FTRACE
+>> +void ftrace_arch_code_modify_prepare(void)
+>> +{
+>> +       mutex_lock(&text_mutex);
+>> +}
+>> +
+>> +void ftrace_arch_code_modify_post_process(void)
+>> +{
+>> +       mutex_unlock(&text_mutex);
+>> +}
+>> +
+>>   unsigned long ftrace_call_adjust(unsigned long addr)
+>>   {
+>>          if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+>> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
+>> fentry_ip)
+>>
+>>   void arch_ftrace_update_code(int command)
+>>   {
+>> -       mutex_lock(&text_mutex);
+>>          command |= FTRACE_MAY_SLEEP;
+>>          ftrace_modify_all_code(command);
+>> -       mutex_unlock(&text_mutex);
+>>          flush_icache_all();
+>>   }
+>>
+>> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
+>> dyn_ftrace *rec)
+>>          unsigned int nops[2], offset;
+>>          int ret;
+>>
+>> +       mutex_lock(&text_mutex);
+> Besides using the guard API, could we swap the order between
+> ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
+> the critical region a little.
 
-A regression was introduced when backporting this to the stable kernels
-without applying previous commits in this series.
 
-When sending IPv6 UDP packets larger than MTU, EMSGSIZE was returned
-instead of fragmenting the packets as expected.
+If you don't mind, I won't, I don't like initializing stuff which could 
+never be used in case of error.
 
-As there is no compelling reason for this commit to be present in the
-stable kernels it should be reverted.
 
-Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
----
- include/linux/ipv6.h  | 1 -
- net/ipv6/ip6_output.c | 9 ++++-----
- 2 files changed, 4 insertions(+), 6 deletions(-)
+>
+> With or without the change, here's my tag,
+>
+> Tested-by: Yao Zi <ziyao@disroot.org>
+>
+> and also
+>
+> Reported-by: Han Gao <rabenda.cn@gmail.com>
+> Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
+>
+> for their first-hand report of boot-time crash and analysis for the
+> first lock issue.
 
-diff --git a/include/linux/ipv6.h b/include/linux/ipv6.h
-index d79851c5fabd..af8a771a053c 100644
---- a/include/linux/ipv6.h
-+++ b/include/linux/ipv6.h
-@@ -199,7 +199,6 @@ struct inet6_cork {
- 	struct ipv6_txoptions *opt;
- 	u8 hop_limit;
- 	u8 tclass;
--	u8 dontfrag:1;
- };
- 
- /* struct ipv6_pinfo - ipv6 private area */
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index 28777b142240..c86d5dca29df 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1452,7 +1452,6 @@ static int ip6_setup_cork(struct sock *sk, struct inet_cork_full *cork,
- 	}
- 	v6_cork->hop_limit = ipc6->hlimit;
- 	v6_cork->tclass = ipc6->tclass;
--	v6_cork->dontfrag = ipc6->dontfrag;
- 	if (rt->dst.flags & DST_XFRM_TUNNEL)
- 		mtu = np->pmtudisc >= IPV6_PMTUDISC_PROBE ?
- 		      READ_ONCE(rt->dst.dev->mtu) : dst_mtu(&rt->dst);
-@@ -1486,7 +1485,7 @@ static int __ip6_append_data(struct sock *sk,
- 			     int getfrag(void *from, char *to, int offset,
- 					 int len, int odd, struct sk_buff *skb),
- 			     void *from, size_t length, int transhdrlen,
--			     unsigned int flags)
-+			     unsigned int flags, struct ipcm6_cookie *ipc6)
- {
- 	struct sk_buff *skb, *skb_prev = NULL;
- 	struct inet_cork *cork = &cork_full->base;
-@@ -1542,7 +1541,7 @@ static int __ip6_append_data(struct sock *sk,
- 	if (headersize + transhdrlen > mtu)
- 		goto emsgsize;
- 
--	if (cork->length + length > mtu - headersize && v6_cork->dontfrag &&
-+	if (cork->length + length > mtu - headersize && ipc6->dontfrag &&
- 	    (sk->sk_protocol == IPPROTO_UDP ||
- 	     sk->sk_protocol == IPPROTO_ICMPV6 ||
- 	     sk->sk_protocol == IPPROTO_RAW)) {
-@@ -1914,7 +1913,7 @@ int ip6_append_data(struct sock *sk,
- 
- 	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
- 				 &np->cork, sk_page_frag(sk), getfrag,
--				 from, length, transhdrlen, flags);
-+				 from, length, transhdrlen, flags, ipc6);
- }
- EXPORT_SYMBOL_GPL(ip6_append_data);
- 
-@@ -2119,7 +2118,7 @@ struct sk_buff *ip6_make_skb(struct sock *sk,
- 	err = __ip6_append_data(sk, &queue, cork, &v6_cork,
- 				&current->task_frag, getfrag, from,
- 				length + exthdrlen, transhdrlen + exthdrlen,
--				flags);
-+				flags, ipc6);
- 	if (err) {
- 		__ip6_flush_pending_frames(sk, &queue, cork, &v6_cork);
- 		return ERR_PTR(err);
 
-base-commit: 3f5b4c104b7d3267d015daf9d9681c5fe3b01224
--- 
-2.49.0
+I'll add all those tags in the patch I'll send today (or tomorrow if the 
+CI is slow).
 
+Thanks again for the great bug report, really appreciated.
+
+Alex
+
+
+>
+> Regards,
+> Yao Zi
+>
+>>          ret = ftrace_rec_set_nop_ops(rec);
+>>          if (ret)
+>> -               return ret;
+>> +               goto end;
+>>
+>>          offset = (unsigned long) &ftrace_caller - pc;
+>>          nops[0] = to_auipc_t0(offset);
+>>          nops[1] = RISCV_INSN_NOP4;
+>>
+>> -       mutex_lock(&text_mutex);
+>>          ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+>> +end:
+>>          mutex_unlock(&text_mutex);
+>>
+>>          return ret;
+>>
+>> Andy is also taking a look, I'll let him confirm the above fix is correct.
+>>
+>> Thanks for the thorough report!
+>>
+>> Alex
+>>
+>>
+>>> Thanks for your suggestions on the problems.
+>>>
+>>> Regards,
+>>> Yao Zi
+>>>
+>>> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+>>>
+>>> #regzbot introduced: 881dadf0792c
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
