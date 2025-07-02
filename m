@@ -1,362 +1,234 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61C110F9
-	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 06:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD0D24338F;
+	Wed,  2 Jul 2025 09:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751436726; cv=none; b=grgqIM12y74jS3T9Snyf3g3Wf7f+b+wRWE1+SRrY8tEe/j+SOaBlbInRRmrstSh/eiowa1T4D5FdWtjWWv63uiqEbq23xdl/LbQCymzOsNw368PiGAAAv0BXe1zxUZD5LP+XGyjFm4obZ3DxeE3Yr1xOrNihlnjCUgIQQSOmdf4=
+	t=1751446808; cv=none; b=MS0kRAMZr1SWTRM/XPo5YBU6wlDXk7bDAKhpBevWT5hDF06sRAjJJw9vxp8LTxzLlg/uZANgSBmHKHrbTCB6hFvkCCeyq9TTdIQulHKLR1y1b4zPQ0GxPf32ApK4dU41rtOU5Ju0fHRzjW1T4d9k3VXereHY+t+YvTrmAeJQof8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751436726; c=relaxed/simple;
-	bh=4B3Yiyza0MsCbwQ2vUpwucGanxMQaIKTunigBl5uv2o=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q9jMfJnB9g55rkL0lyD3KSvNPSdFBLRZlG7fkP/RNmnqj77zc1sxGV//FVQTnAkryjOxVIRJDzD7+1gR2bkAVAXQn2h8bQoGYZlkr97+TDwIH6Fa/5AKlwO347uns0l2jmFmMl8j6c3ybechu8d/kRougW4K3reijZGbRpe+gjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H3SISqrg; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751446808; c=relaxed/simple;
+	bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:
+	 References:In-Reply-To; b=oWO/fzultzCS6K5deDupbbW0EjWar6q+JIzUH9GkzcM8+oP4XCtHtCBcq7UuaEyR/Tkk/XEWZy/1p6rtSOSBNyMt65SjGuAHYpLikE8X+Ki0jTdXnO0VjQIPU8Am3JXBEn/kA7aeSpZWgdG1IFKe9Lc0QfTeTWOvTO15Ty8Rkd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NibrHSar; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3SISqrg"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso6654231a91.3
-        for <regressions@lists.linux.dev>; Tue, 01 Jul 2025 23:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751436724; x=1752041524; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Lb5YxQe46bQxphBc6MuoFDKPPJCKWFXEePrLvBMePn4=;
-        b=H3SISqrg5mbp/CbcKbDTv56m4VxSi8fe3zsNKSq0aq0nmFZOCFgtxlvHgtStIvhE7j
-         VJtrS/MRs0Zsy9PVkQwavvpqeWVOSP0NFi5BMpUPFEopRAT8UbyQKjC+SYOupazC1h2q
-         iHAhROKR2PPmp7N+LttHBvoVw74JjLzxSclh33yWLEl48jRvTKr8wRoWzkaH6u3IFn1K
-         zyO/DFC3th82NUsrx/Q2wTD3v7mjJPK4uBUZjg7nQR12zmkgZS1bOnx9FsAv1mac4iay
-         fV/x02QZwR5jRqYrDqW7r3Z4rDEfEtG9V5e2Rond81wytm8o2siGPn/cSdD5GBxjFWRT
-         ZScg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751436724; x=1752041524;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lb5YxQe46bQxphBc6MuoFDKPPJCKWFXEePrLvBMePn4=;
-        b=Bc3FP0jpGfQ8VCiLu5qoZz1Qo6wBH4qjdzWslGFYwYEV3mdaxPtA/zMQHxvcMna17r
-         b9uUOINR2buKgr6IkBYHnrIBMQ0e8m3vbpNVpBHmW67EjMRx3Q3lQezNISLiyT2KagGN
-         Y6HSWEro4Zcu/DUvIguaHCgTDeMAcOlfB3sLyLM4Ygb69LNK/XCds9xBS4mVuUh9MOsc
-         peHHU9iiY9cYnDnNXpv1x88AKdxbkay7AcEINU8G0H1n8CLomJFCdigfYuw1tvA3qKyT
-         P53DA42BVoQdYAPXJcj7W9aehN5HwwrDpvkh/ugSaQQi8zHSvPhsmn7HOkNXPd9mQ1rR
-         5EYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWT5G0BFMpKR3KgTNFzQZMT38u7oJMJOPJSoKBB4bOYN06hFnw9X7qqNppQLAeZ/apPyFs2amXIXFOAZg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxALzH5abTTNeA5lEgdMjYQATw6leVu3WIvtu9V7iwB+s1V58Qy
-	cSb0xA8QFODkAl0k7vQvSImf1z44XWX8wnwH1RwxOcfeYgWuas7X50fyzNgbEgwP4zu0LyDLUE7
-	Xnp/fPP3sGh6/mvqnHRI5HOhQnigeBna0weOgeo7bXQ==
-X-Gm-Gg: ASbGncukXSOzlxxo0hsN8Csh4CUelBGr0HBQNcylauHZDZDJqLprvazclqHJskTQFYf
-	GXU35wkL66ro06mCke5DrPF8mCExEdVk68vnuoZKoWXoJro8ZgKso1wSZfGOEmW/2bNHkgQwBkZ
-	pa40kwTTVFbGhU7vj6jGF20fMKJsS/wKh5llXayTbFJGD3om9u9AmBG8RLrFG4AgJo76/aojtU2
-	S3K
-X-Google-Smtp-Source: AGHT+IHX3JUg7ee48oZ+6QdweZGTrlVWpDVWHxoTFgK/+7VIbxx0s7gMnPv3DlHc+HwcPCfsDEckdYYZvu2Eo5z8yWU=
-X-Received: by 2002:a17:90b:3e8a:b0:308:7270:d6ea with SMTP id
- 98e67ed59e1d1-31a90c08754mr2480761a91.30.1751436724062; Tue, 01 Jul 2025
- 23:12:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NibrHSar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751446807; x=1782982807;
+  h=message-id:date:mime-version:subject:from:to:references:
+   in-reply-to;
+  bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
+  b=NibrHSarcbASkUMY6PsYzDfDSSIelJvkne6Et1OXD7zvqID7Iz4F+w2s
+   3RrhAzZlXbdaDGkGAl9D1G9IwHuEtFzfG3xERdoYPEQfgO9J8BLbNI9hE
+   22SzEmpb1zwr/UbNKGk4b6xu+faaMb7l2hXdTnrs+N5BdkeNc2ciJx7N2
+   LDzngQaoyIHsPH0dkhrkhxDUMTkdK7hypbvZ/qxaLLqymHF1aAf/DjL5e
+   gwiGQ8wHv3Y9/HwPUn4k7PPuRJg9M2+Hw7E42be7ilZuucJbl2UA+Tfqh
+   rb4vHFYWFKT/pXTlUg+lX8iQo/24+56vIoJSLwKxkvZbHsqb9rnzVvxNi
+   w==;
+X-CSE-ConnectionGUID: H9/uu8R5QhCY60QZfrLLTg==
+X-CSE-MsgGUID: cYDzBT0SRGquiupXLg4qSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="63979302"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208,223";a="63979302"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:06 -0700
+X-CSE-ConnectionGUID: RifH1KUrRtuZRm+aVX2CrQ==
+X-CSE-MsgGUID: ZQGBJ625SRK6jkZ5y9Bn8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208,223";a="154342502"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:03 -0700
+Content-Type: multipart/mixed; boundary="------------3m0g6PfBR00YwHw0BbrfPgi0"
+Message-ID: <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
+Date: Wed, 2 Jul 2025 17:00:00 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 2 Jul 2025 11:41:51 +0530
-X-Gm-Features: Ac12FXzksO9JByY72D4vD4KCUhmxfXeKeKtQv722paIMPONKl9_Wie1LK0cAkzg
-Message-ID: <CA+G9fYtK67MNaNin6nv_vLhp4xRnsnSPBEsnQTOJ+V5F4yz4RA@mail.gmail.com>
-Subject: next-20250701: qemu-x86_64: BUG unable to handle page fault for
- address __cpa_flush_tlb
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	linux-mm <linux-mm@kvack.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+From: Baolu Lu <baolu.lu@linux.intel.com>
+To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+ kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
+ will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+ <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
 
-Regressions While booting the next-20250701 Linux kernel on a
-qemu-x86_64 virtual machine, a kernel panic is observed due to
-a page fault in the __cpa_flush_tlb function.
+This is a multi-part message in MIME format.
+--------------3m0g6PfBR00YwHw0BbrfPgi0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Test environments:
-- qemu-x86_64
+On 7/2/2025 1:14 PM, Baolu Lu wrote:
+> On 7/2/25 01:11, Ioanna Alifieraki wrote:
+>> #regzbot introduced: 129dab6e1286
+>>
+>> Hello everyone,
+>>
+>> We've identified a performance regression that starts with linux
+>> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+>> Bisection pointed to commit:
+>> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in 
+>> iotlb_sync_map").
+>>
+>> The issue occurs when running fio against two NVMe devices located
+>> under the same PCIe bridge (dual-port NVMe configuration). Performance
+>> drops compared to configurations where the devices are on different
+>> bridges.
+>>
+>> Observed Performance:
+>> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+>> - After the commit:
+>>    -- Same PCIe bridge: ~4985 MiB/s
+>>    -- Different PCIe bridges: ~6150 MiB/s
+>>
+>>
+>> Currently we can only reproduce the issue on a Z3 metal instance on
+>> gcp. I suspect the issue can be reproducible if you have a dual port
+>> nvme on any machine.
+>> At [1] there's a more detailed description of the issue and details
+>> on the reproducer.
+> 
+> This test was running on bare metal hardware instead of any
+> virtualization guest, right? If that's the case,
+> cache_tag_flush_range_np() is almost a no-op.
+> 
+> Can you please show me the capability register of the IOMMU by:
+> 
+> #cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? I need more data (Testing is in progress)
+Also, can you please try whether the below changes make any difference?
+I've also attached a patch file to this email so you can apply the
+change more easily.
 
-Boot regression: Linux next-20250701 qemu-x86_64 BUG unable to handle
-page fault for address __cpa_flush_tlb
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 7aa3932251b2..f60201ee4be0 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1796,6 +1796,18 @@ static int domain_setup_first_level(struct 
+intel_iommu *iommu,
+  					  (pgd_t *)pgd, flags, old);
+  }
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
++static bool domain_need_iotlb_sync_map(struct dmar_domain *domain,
++				       struct intel_iommu *iommu)
++{
++	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
++		return true;
++
++	if (rwbf_quirk || cap_rwbf(iommu->cap))
++		return true;
++
++	return false;
++}
++
+  static int dmar_domain_attach_device(struct dmar_domain *domain,
+  				     struct device *dev)
+  {
+@@ -1833,6 +1845,8 @@ static int dmar_domain_attach_device(struct 
+dmar_domain *domain,
+  	if (ret)
+  		goto out_block_translation;
 
-## Boot log
-<6>[    0.000000] Linux version 6.16.0-rc4-next-20250701
-(tuxmake@tuxmake) (x86_64-linux-gnu-gcc (Debian 13.3.0-16) 13.3.0, GNU
-ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT_DYNAMIC @1751364982
-<6>[    0.000000] Command line: console=ttyS0,115200 rootwait
-root=/dev/sda debug verbose console_msg_format=syslog
-systemd.log_level=warning rw earlycon
-<6>[    0.000000] x86/CPU: Model not found in latest microcode list
-<6>[    0.000000] BIOS-provided physical RAM map:
++	domain->iotlb_sync_map |= domain_need_iotlb_sync_map(domain, iommu);
++
+  	return 0;
 
-...
+  out_block_translation:
+@@ -3945,7 +3959,10 @@ static bool risky_device(struct pci_dev *pdev)
+  static int intel_iommu_iotlb_sync_map(struct iommu_domain *domain,
+  				      unsigned long iova, size_t size)
+  {
+-	cache_tag_flush_range_np(to_dmar_domain(domain), iova, iova + size - 1);
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++
++	if (dmar_domain->iotlb_sync_map)
++		cache_tag_flush_range_np(dmar_domain, iova, iova + size - 1);
 
-<6>[    2.292682] EXT4-fs (sda): mounted filesystem
-9c9bd7ea-a7a4-4c7c-bc54-7007f029c954 r/w with ordered data mode. Quota
-mode: none.
-<6>[    2.294012] VFS: Mounted root (ext4 filesystem) on device 8:0.
-<6>[    2.296792] devtmpfs: mounted
-<6>[    2.387406] Freeing unused kernel image (initmem) memory: 4092K
-<6>[    2.389312] Write protecting the kernel read-only data: 32768k
-<6>[    2.391640] Freeing unused kernel image (text/rodata gap) memory: 28K
-<1>[    2.393647] BUG: unable to handle page fault for address: 000000000002aa97
-<1>[    2.394089] #PF: supervisor read access in kernel mode
-<1>[    2.395026] #PF: error_code(0x0000) - not-present page
-<6>[    2.395623] PGD 0 P4D 0
-<4>[    2.396063] Oops: Oops: 0000 [#1] SMP PTI
-<4>[    2.396998] CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted
-6.16.0-rc4-next-20250701 #1 PREEMPT(voluntary)
-<4>[    2.397726] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-<4>[ 2.398454] RIP: 0010:__cpa_flush_tlb
-(arch/x86/mm/pat/set_memory.c:320 arch/x86/mm/pat/set_memory.c:408)
-<4>[ 2.399219] Code: 1e fa 0f 1f 44 00 00 55 48 89 e5 41 54 53 48 83
-7f 20 00 48 89 fb 74 5b 45 31 e4 31 ff eb 27 48 8b 13 a8 02 75 47 48
-c1 e7 0c <48> 03 3a 48 01 ff 48 d1 ff e8 26 f4 ff ff 41 8d 7c 24 01 49
-89 fc
-All code
-========
-   0: 1e                    (bad)
-   1: fa                    cli
-   2: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
-   7: 55                    push   %rbp
-   8: 48 89 e5              mov    %rsp,%rbp
-   b: 41 54                push   %r12
-   d: 53                    push   %rbx
-   e: 48 83 7f 20 00        cmpq   $0x0,0x20(%rdi)
-  13: 48 89 fb              mov    %rdi,%rbx
-  16: 74 5b                je     0x73
-  18: 45 31 e4              xor    %r12d,%r12d
-  1b: 31 ff                xor    %edi,%edi
-  1d: eb 27                jmp    0x46
-  1f: 48 8b 13              mov    (%rbx),%rdx
-  22: a8 02                test   $0x2,%al
-  24: 75 47                jne    0x6d
-  26: 48 c1 e7 0c          shl    $0xc,%rdi
-  2a:* 48 03 3a              add    (%rdx),%rdi <-- trapping instruction
-  2d: 48 01 ff              add    %rdi,%rdi
-  30: 48 d1 ff              sar    $1,%rdi
-  33: e8 26 f4 ff ff        call   0xfffffffffffff45e
-  38: 41 8d 7c 24 01        lea    0x1(%r12),%edi
-  3d: 49 89 fc              mov    %rdi,%r12
+  	return 0;
+  }
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 3ddbcc603de2..7ab2c34a5ecc 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -614,6 +614,9 @@ struct dmar_domain {
+  	u8 has_mappings:1;		/* Has mappings configured through
+  					 * iommu_map() interface.
+  					 */
++	u8 iotlb_sync_map:1;		/* Need to flush IOTLB cache or write
++					 * buffer when creating mappings.
++					 */
 
-Code starting with the faulting instruction
-===========================================
-   0: 48 03 3a              add    (%rdx),%rdi
-   3: 48 01 ff              add    %rdi,%rdi
-   6: 48 d1 ff              sar    $1,%rdi
-   9: e8 26 f4 ff ff        call   0xfffffffffffff434
-   e: 41 8d 7c 24 01        lea    0x1(%r12),%edi
-  13: 49 89 fc              mov    %rdi,%r12
-<4>[    2.399698] RSP: 0000:ffffb316c00e0f78 EFLAGS: 00010046
-<4>[    2.400494] RAX: 0000000000000169 RBX: ffffb316c0013e30 RCX:
-ffffb316c0013e30
-<4>[    2.401577] RDX: 000000000002aa97 RSI: 000000008b09dcbb RDI:
-0000000000000000
-<4>[    2.401910] RBP: ffffb316c00e0f88 R08: 000000000000546c R09:
-0000000000000000
-<4>[    2.402961] R10: 0000000000000000 R11: ffffb316c00e0ff8 R12:
-0000000000000000
-<4>[    2.403326] R13: ffff8e357bd2daa0 R14: ffff8e3500aaaeb8 R15:
-ffffffff95148f50
-<4>[    2.403927] FS:  0000000000000000(0000)
-GS:ffff8e35e47bc000(0000) knlGS:0000000000000000
-<4>[    2.404471] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[    2.404795] CR2: 000000000002aa97 CR3: 000000002ac48000 CR4:
-00000000000006f0
-<4>[    2.405623] Call Trace:
-<4>[    2.406562]  <IRQ>
-<4>[ 2.407678] __flush_smp_call_function_queue
-(arch/x86/include/asm/jump_label.h:36 include/trace/events/csd.h:64
-kernel/smp.c:135 kernel/smp.c:540)
-<4>[ 2.408101] generic_smp_call_function_single_interrupt (kernel/smp.c:458)
-<4>[ 2.408234] __sysvec_call_function_single
-(arch/x86/include/asm/jump_label.h:36
-arch/x86/include/asm/trace/irq_vectors.h:98 arch/x86/kernel/smp.c:272)
-<4>[ 2.409077] sysvec_call_function_single (arch/x86/kernel/smp.c:266
-(discriminator 35) arch/x86/kernel/smp.c:266 (discriminator 35))
-<4>[    2.409287]  </IRQ>
-<4>[    2.409408]  <TASK>
-<4>[ 2.409584] asm_sysvec_call_function_single
-(arch/x86/include/asm/idtentry.h:709)
-<4>[ 2.410108] RIP: 0010:pv_native_safe_halt (arch/x86/kernel/paravirt.c:82)
-<4>[ 2.410323] Code: 1f 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90
-90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d 85 ef 03
-00 fb f4 <c3> cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90
-90 90
-All code
-========
-   0: 1f                    (bad)
-   1: 84 00                test   %al,(%rax)
-   3: 00 00                add    %al,(%rax)
-   5: 00 00                add    %al,(%rax)
-   7: 0f 1f 40 00          nopl   0x0(%rax)
-   b: 90                    nop
-   c: 90                    nop
-   d: 90                    nop
-   e: 90                    nop
-   f: 90                    nop
-  10: 90                    nop
-  11: 90                    nop
-  12: 90                    nop
-  13: 90                    nop
-  14: 90                    nop
-  15: 90                    nop
-  16: 90                    nop
-  17: 90                    nop
-  18: 90                    nop
-  19: 90                    nop
-  1a: 90                    nop
-  1b: f3 0f 1e fa          endbr64
-  1f: eb 07                jmp    0x28
-  21: 0f 00 2d 85 ef 03 00 verw   0x3ef85(%rip)        # 0x3efad
-  28: fb                    sti
-  29: f4                    hlt
-  2a:* c3                    ret <-- trapping instruction
-  2b: cc                    int3
-  2c: cc                    int3
-  2d: cc                    int3
-  2e: cc                    int3
-  2f: 66 2e 0f 1f 84 00 00 cs nopw 0x0(%rax,%rax,1)
-  36: 00 00 00
-  39: 66 90                xchg   %ax,%ax
-  3b: 90                    nop
-  3c: 90                    nop
-  3d: 90                    nop
-  3e: 90                    nop
-  3f: 90                    nop
+  	spinlock_t lock;		/* Protect device tracking lists */
+  	struct list_head devices;	/* all devices' list */
+-- 
+2.43.0
 
-Code starting with the faulting instruction
-===========================================
-   0: c3                    ret
-   1: cc                    int3
-   2: cc                    int3
-   3: cc                    int3
-   4: cc                    int3
-   5: 66 2e 0f 1f 84 00 00 cs nopw 0x0(%rax,%rax,1)
-   c: 00 00 00
-   f: 66 90                xchg   %ax,%ax
-  11: 90                    nop
-  12: 90                    nop
-  13: 90                    nop
-  14: 90                    nop
-  15: 90                    nop
-<4>[    2.411151] RSP: 0000:ffffb316c00abea0 EFLAGS: 00010206
-<4>[    2.411522] RAX: ffff8e35e47bc000 RBX: ffff8e3500372e80 RCX:
-0000000000000001
-<4>[    2.411691] RDX: ffffffff9523177d RSI: ffffffff96b9a3df RDI:
-0000000000005464
-<4>[    2.412619] RBP: ffffb316c00abea8 R08: 0000000000005464 R09:
-0000000000000001
-<4>[    2.412810] R10: 0000004d8989ef00 R11: 000000000548e0b3 R12:
-0000000000000001
-<4>[    2.413067] R13: 0000000000000000 R14: 0000000000000000 R15:
-0000000000000000
-<4>[ 2.413403] ? do_idle (kernel/sched/idle.c:191 kernel/sched/idle.c:330)
-<4>[ 2.413737] ? default_idle (arch/x86/include/asm/paravirt.h:107
-arch/x86/kernel/process.c:757)
-<4>[ 2.413926] arch_cpu_idle (arch/x86/kernel/process.c:795)
-<4>[ 2.414072] default_idle_call (include/linux/cpuidle.h:144
-kernel/sched/idle.c:123)
-<4>[ 2.414608] do_idle (kernel/sched/idle.c:191 kernel/sched/idle.c:330)
-<4>[ 2.414744] cpu_startup_entry (kernel/sched/idle.c:427)
-<4>[ 2.414961] start_secondary (arch/x86/kernel/smpboot.c:203
-(discriminator 10) arch/x86/kernel/smpboot.c:283 (discriminator 10))
-<4>[ 2.415531] common_startup_64 (arch/x86/kernel/head_64.S:419)
-<4>[    2.415720]  </TASK>
-<4>[    2.415898] Modules linked in:
-<4>[    2.416303] CR2: 000000000002aa97
-<4>[    2.417490] ---[ end trace 0000000000000000 ]---
-<4>[ 2.417940] RIP: 0010:__cpa_flush_tlb
-(arch/x86/mm/pat/set_memory.c:320 arch/x86/mm/pat/set_memory.c:408)
-<4>[ 2.418250] Code: 1e fa 0f 1f 44 00 00 55 48 89 e5 41 54 53 48 83
-7f 20 00 48 89 fb 74 5b 45 31 e4 31 ff eb 27 48 8b 13 a8 02 75 47 48
-c1 e7 0c <48> 03 3a 48 01 ff 48 d1 ff e8 26 f4 ff ff 41 8d 7c 24 01 49
-89 fc
-All code
-========
-   0: 1e                    (bad)
-   1: fa                    cli
-   2: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
-   7: 55                    push   %rbp
-   8: 48 89 e5              mov    %rsp,%rbp
-   b: 41 54                push   %r12
-   d: 53                    push   %rbx
-   e: 48 83 7f 20 00        cmpq   $0x0,0x20(%rdi)
-  13: 48 89 fb              mov    %rdi,%rbx
-  16: 74 5b                je     0x73
-  18: 45 31 e4              xor    %r12d,%r12d
-  1b: 31 ff                xor    %edi,%edi
-  1d: eb 27                jmp    0x46
-  1f: 48 8b 13              mov    (%rbx),%rdx
-  22: a8 02                test   $0x2,%al
-  24: 75 47                jne    0x6d
-  26: 48 c1 e7 0c          shl    $0xc,%rdi
-  2a:* 48 03 3a              add    (%rdx),%rdi <-- trapping instruction
-  2d: 48 01 ff              add    %rdi,%rdi
-  30: 48 d1 ff              sar    $1,%rdi
-  33: e8 26 f4 ff ff        call   0xfffffffffffff45e
-  38: 41 8d 7c 24 01        lea    0x1(%r12),%edi
-  3d: 49 89 fc              mov    %rdi,%r12
+Thanks,
+baolu
+--------------3m0g6PfBR00YwHw0BbrfPgi0
+Content-Type: text/plain; charset=UTF-8;
+ name="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.patch"
+Content-Disposition: attachment;
+ filename*0="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
 
-Code starting with the faulting instruction
-===========================================
-   0: 48 03 3a              add    (%rdx),%rdi
-   3: 48 01 ff              add    %rdi,%rdi
-   6: 48 d1 ff              sar    $1,%rdi
-   9: e8 26 f4 ff ff        call   0xfffffffffffff434
-   e: 41 8d 7c 24 01        lea    0x1(%r12),%edi
-  13: 49 89 fc              mov    %rdi,%r12
-<4>[    2.418856] RSP: 0000:ffffb316c00e0f78 EFLAGS: 00010046
-<4>[    2.419172] RAX: 0000000000000169 RBX: ffffb316c0013e30 RCX:
-ffffb316c0013e30
-<4>[    2.419363] RDX: 000000000002aa97 RSI: 000000008b09dcbb RDI:
-0000000000000000
-<4>[    2.419552] RBP: ffffb316c00e0f88 R08: 000000000000546c R09:
-0000000000000000
-<4>[    2.419864] R10: 0000000000000000 R11: ffffb316c00e0ff8 R12:
-0000000000000000
-<4>[    2.420309] R13: ffff8e357bd2daa0 R14: ffff8e3500aaaeb8 R15:
-ffffffff95148f50
-<4>[    2.420816] FS:  0000000000000000(0000)
-GS:ffff8e35e47bc000(0000) knlGS:0000000000000000
-<4>[    2.421298] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[    2.421675] CR2: 000000000002aa97 CR3: 000000002ac48000 CR4:
-00000000000006f0
-<0>[    2.422354] Kernel panic - not syncing: Fatal exception in interrupt
-<0>[    2.425278] Kernel Offset: 0x13e00000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-<0>[    2.426205] ---[ end Kernel panic - not syncing: Fatal exception
-in interrupt ]---
+RnJvbSBkZGM0MjEwYTMzNjUxNDdkZjk3OGJkMGJmNDVkODI0YjljODY5ODc3IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBMdSBCYW9sdSA8YmFvbHUubHVAbGludXguaW50ZWwu
+Y29tPgpEYXRlOiBXZWQsIDIgSnVsIDIwMjUgMTY6NTE6NDggKzA4MDAKU3ViamVjdDogW1BB
+VENIIDEvMV0gaW9tbXUvdnQtZDogQXZvaWQgdW5uZWNlc3NhcnkgY2FjaGVfdGFnX2ZsdXNo
+X3JhbmdlX25wKCkKCkZvciB0ZXN0IHB1cnBvc2Ugb25seSEKClNpZ25lZC1vZmYtYnk6IEx1
+IEJhb2x1IDxiYW9sdS5sdUBsaW51eC5pbnRlbC5jb20+Ci0tLQogZHJpdmVycy9pb21tdS9p
+bnRlbC9pb21tdS5jIHwgMTkgKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9pb21tdS9p
+bnRlbC9pb21tdS5oIHwgIDMgKysrCiAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2ludGVsL2lv
+bW11LmMgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKaW5kZXggN2FhMzkzMjI1MWIy
+Li5mNjAyMDFlZTRiZTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUu
+YworKysgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKQEAgLTE3OTYsNiArMTc5Niwx
+OCBAQCBzdGF0aWMgaW50IGRvbWFpbl9zZXR1cF9maXJzdF9sZXZlbChzdHJ1Y3QgaW50ZWxf
+aW9tbXUgKmlvbW11LAogCQkJCQkgIChwZ2RfdCAqKXBnZCwgZmxhZ3MsIG9sZCk7CiB9CiAK
+K3N0YXRpYyBib29sIGRvbWFpbl9uZWVkX2lvdGxiX3N5bmNfbWFwKHN0cnVjdCBkbWFyX2Rv
+bWFpbiAqZG9tYWluLAorCQkJCSAgICAgICBzdHJ1Y3QgaW50ZWxfaW9tbXUgKmlvbW11KQor
+eworCWlmIChjYXBfY2FjaGluZ19tb2RlKGlvbW11LT5jYXApICYmICFkb21haW4tPnVzZV9m
+aXJzdF9sZXZlbCkKKwkJcmV0dXJuIHRydWU7CisKKwlpZiAocndiZl9xdWlyayB8fCBjYXBf
+cndiZihpb21tdS0+Y2FwKSkKKwkJcmV0dXJuIHRydWU7CisKKwlyZXR1cm4gZmFsc2U7Cit9
+CisKIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShzdHJ1Y3QgZG1hcl9k
+b21haW4gKmRvbWFpbiwKIAkJCQkgICAgIHN0cnVjdCBkZXZpY2UgKmRldikKIHsKQEAgLTE4
+MzMsNiArMTg0NSw4IEBAIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShz
+dHJ1Y3QgZG1hcl9kb21haW4gKmRvbWFpbiwKIAlpZiAocmV0KQogCQlnb3RvIG91dF9ibG9j
+a190cmFuc2xhdGlvbjsKIAorCWRvbWFpbi0+aW90bGJfc3luY19tYXAgfD0gZG9tYWluX25l
+ZWRfaW90bGJfc3luY19tYXAoZG9tYWluLCBpb21tdSk7CisKIAlyZXR1cm4gMDsKIAogb3V0
+X2Jsb2NrX3RyYW5zbGF0aW9uOgpAQCAtMzk0NSw3ICszOTU5LDEwIEBAIHN0YXRpYyBib29s
+IHJpc2t5X2RldmljZShzdHJ1Y3QgcGNpX2RldiAqcGRldikKIHN0YXRpYyBpbnQgaW50ZWxf
+aW9tbXVfaW90bGJfc3luY19tYXAoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLAogCQkJ
+CSAgICAgIHVuc2lnbmVkIGxvbmcgaW92YSwgc2l6ZV90IHNpemUpCiB7Ci0JY2FjaGVfdGFn
+X2ZsdXNoX3JhbmdlX25wKHRvX2RtYXJfZG9tYWluKGRvbWFpbiksIGlvdmEsIGlvdmEgKyBz
+aXplIC0gMSk7CisJc3RydWN0IGRtYXJfZG9tYWluICpkbWFyX2RvbWFpbiA9IHRvX2RtYXJf
+ZG9tYWluKGRvbWFpbik7CisKKwlpZiAoZG1hcl9kb21haW4tPmlvdGxiX3N5bmNfbWFwKQor
+CQljYWNoZV90YWdfZmx1c2hfcmFuZ2VfbnAoZG1hcl9kb21haW4sIGlvdmEsIGlvdmEgKyBz
+aXplIC0gMSk7CiAKIAlyZXR1cm4gMDsKIH0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUv
+aW50ZWwvaW9tbXUuaCBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaAppbmRleCAzZGRi
+Y2M2MDNkZTIuLjdhYjJjMzRhNWVjYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9pb21tdS9pbnRl
+bC9pb21tdS5oCisrKyBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaApAQCAtNjE0LDYg
+KzYxNCw5IEBAIHN0cnVjdCBkbWFyX2RvbWFpbiB7CiAJdTggaGFzX21hcHBpbmdzOjE7CQkv
+KiBIYXMgbWFwcGluZ3MgY29uZmlndXJlZCB0aHJvdWdoCiAJCQkJCSAqIGlvbW11X21hcCgp
+IGludGVyZmFjZS4KIAkJCQkJICovCisJdTggaW90bGJfc3luY19tYXA6MTsJCS8qIE5lZWQg
+dG8gZmx1c2ggSU9UTEIgY2FjaGUgb3Igd3JpdGUKKwkJCQkJICogYnVmZmVyIHdoZW4gY3Jl
+YXRpbmcgbWFwcGluZ3MuCisJCQkJCSAqLwogCiAJc3BpbmxvY2tfdCBsb2NrOwkJLyogUHJv
+dGVjdCBkZXZpY2UgdHJhY2tpbmcgbGlzdHMgKi8KIAlzdHJ1Y3QgbGlzdF9oZWFkIGRldmlj
+ZXM7CS8qIGFsbCBkZXZpY2VzJyBsaXN0ICovCi0tIAoyLjQzLjAKCg==
 
-## Source
-* Kernel version: 6.16.0-rc4-next-20250701
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 3f804361f3b9af33e00b90ec9cb5afcc96831e60
-* Git describe: 6.16.0-rc4-next-20250701
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: gcc-13-lkftconfig-no-kselftest-frag
-
-## Build arm64
-* Test log: https://qa-reports.linaro.org/api/testruns/28972335/log_file/
-* Test LAVA log 1:
-https://lkft.validation.linaro.org/scheduler/job/8336872#L5891
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250701/log-parser-boot/panic-multiline-kernel-panic-not-syncing-fatal-exception-in-interrupt/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zGk2ZJWqj1Ukob9bJAF1Jn6uK8/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2zGk2ZJWqj1Ukob9bJAF1Jn6uK8/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--------------3m0g6PfBR00YwHw0BbrfPgi0--
