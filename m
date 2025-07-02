@@ -1,183 +1,185 @@
-Received: from gbr-app-1.alpinelinux.org (gbr-app-1.alpinelinux.org [213.219.36.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E322725A64C
-	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 10:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.219.36.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE912561AE
+	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 10:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452977; cv=none; b=GnZ7kk9nIiu/1rY/yhl6cJAq2uw0R1zaA6XkVM1IUeKrcbE7CwOyjXm8jzn81w5WY5xSzKidseA5/1gfB6f0w83u6vXTrIiVASielO802z0uhCtvZrxiBZz8EFp7cRKohGAn0bcSWS0ZIV52Iaa0+syiJXo8Xmb6LteruurOszc=
+	t=1751453456; cv=none; b=XA1IRo6mg80z0BL+LLEcHPK1PNi+je3CNSYwWT9FkuoOkRQe3ExdLx/0rJC17eASNtIx/uq0Pa5Zis4+vdyBJ9upJ3/n01CIhILwO/I3wWtweCOQ6BtLPO6sYjnTZ2YTVUOUwZSsQlRwfvSSmbr25sIfCCm3fUcJMvF7y8w12uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452977; c=relaxed/simple;
-	bh=DUc3Z9IrKtC636KTDUahr2LgTAK2oVb/ZlZJBWaY9cU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ReSBpXdvVrOFXwzyW+x/IsdN5dJFmGMAZ8geV1Zaglp2GXjK512AbJH26G09sSvEMx3MwLeNXWnHtsZnV2FTmqfRgysa42xP4JvDMeh/sZZ3bVUURg2HOBSSKCzWvgdsmcq/fti6Y5e8dYjy1cD45VhhLgzkhapB3Xadeb7Ntzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org; spf=pass smtp.mailfrom=alpinelinux.org; dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b=Sm4qnWfZ; arc=none smtp.client-ip=213.219.36.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpinelinux.org
+	s=arc-20240116; t=1751453456; c=relaxed/simple;
+	bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUJmWs/cABK/VEU6GhCpoaa2DCcZ2LjJbY5Vu2oSWrZvzopaQGqM3Fapj7z+KjCw+sZritSPa794lXkGkwbIVKq7cRNX5rnkJKEQkwG2xuXd160o9H99filsH+LaaUgu9VeTfznrgq2GT+qnWuMiN5YMN6J2f6jeEwz6Yd8KH2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RnVx24f9; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b="Sm4qnWfZ"
-Received: from ncopa-desktop (unknown [IPv6:2001:4646:fb05:0:4fb5:52fd:8640:8e74])
-	(Authenticated sender: ncopa@alpinelinux.org)
-	by gbr-app-1.alpinelinux.org (Postfix) with ESMTPSA id 990B22235BE;
-	Wed,  2 Jul 2025 10:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpinelinux.org;
-	s=smtp; t=1751452973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r6J/8oqixf3r0pd99QlA4EJMgd8zRX4okR0pgaVruqM=;
-	b=Sm4qnWfZZK4AsDful0ncKnRJJ9iVSNPvTLow9lnt4NaVLyuuoFqFvwpcIu/slnAEnYM9LD
-	YPMVT6Ln/Q+MwnZGo3WD0qZ/SDhN99AqLcHU47mA6SHN1BFIk/+Ru/g2wWjlSxUqssgKhC
-	SnkHEzhKm9SrqYqPMwD1chpOfVP0sF8=
-Date: Wed, 2 Jul 2025 12:42:47 +0200
-From: Natanael Copa <ncopa@alpinelinux.org>
-To: Sergio =?ISO-8859-1?B?R29ueuFsZXo=?= Collado <sergio.collado@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, Achill Gilgenast
- <fossdd@pwned.life>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] v6.12.35: (build) kallsyms.h:21:10: fatal error:
- execinfo.h: No such file or directory
-Message-ID: <20250702124247.7540ec3a@ncopa-desktop>
-In-Reply-To: <CAA76j90io241-a+2SDLfAMHY2ro4x-Bstw4AxKDOU_izW9goYg@mail.gmail.com>
-References: <20250701141026.6133a3aa@ncopa-desktop>
-	<CAA76j90io241-a+2SDLfAMHY2ro4x-Bstw4AxKDOU_izW9goYg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-alpine-linux-musl)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RnVx24f9"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id D1B6D25989;
+	Wed,  2 Jul 2025 12:50:44 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id wXDIgFDv1hRC; Wed,  2 Jul 2025 12:50:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751453443; bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RnVx24f9NbGTPcW02J4/MbYtrfymL7Riba0/wdfkV2lAwx9rP1m+kCb0/bcq307O4
+	 oo9GMzcj/rrGQHZbDaRM4t07RH4cxgUK3TTX28E+t9UGTl7uB57tiZLJIqt+uWJY9G
+	 8V4Hut87c6Yg8tkudmT3/DYNX8AokQCL2xqQN6Ney3mA4DulZg7hJIyOQHsQNWydD0
+	 kuTPDcem79XpW8KZVfCXb5OyWqMHGfDMNuXZCECPze1vHh8B1U4vylPGACv1d2nfOA
+	 UFivrXR741lHUtMOtf8VrjvIZpDhJpYf9idLf9b7WxCIwe5TC3y24Iyw73FmSH5JD+
+	 HB4t47eI68uJQ==
+Date: Wed, 2 Jul 2025 10:50:24 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Alexandre Ghiti <alex@ghiti.fr>, Andy Chiu <andybnac@gmail.com>,
+	alexghiti@rivosinc.com, palmer@dabbelt.com,
+	Andy Chiu <andy.chiu@sifive.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Mark Rutland <mark.rutland@arm.com>, puranjay12@gmail.com,
+	paul.walmsley@sifive.com, greentime.hu@sifive.com,
+	nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+	vicent.chen@sifive.com, zong.li@sifive.com,
+	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
+	olivia.chu@sifive.com, c2232430@gmail.com
+Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
+ dynamic ftrace
+Message-ID: <aGUO8L7oXpvEpvZo@pie.lan>
+References: <aGODMpq7TGINddzM@pie.lan>
+ <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
 
-On Tue, 1 Jul 2025 19:07:32 +0200
-Sergio Gonz=E1lez Collado <sergio.collado@gmail.com> wrote:
+On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
+> Hi Yao,
+> 
+> On 7/1/25 08:41, Yao Zi wrote:
+> > Linux v6.16 built with dynamic ftrace randomly oops or triggers
+> > ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
 
-> Hello,
+...
 
-Hi Sergio,
+> > Not sure either reverting the commits or fixing them up is a better
+> > idea, but anyway the fatal first issue shouidn't go into the stable
+> > release.
+> 
+> Let's fix this, we were expecting issues with dynamic ftrace :)
+> 
+> So the following diff fixes all the issues you mentioned (not the first
+> crash though, I'll let you test and see if it works better, I don't have
+> this board):
 
->  Thanks for pointing that out. I was not aware of it.
+Thanks for the fix! I've tested it with both QEMU and SG2042, it does
+fix the lockdep failures as well as the boot time crash on SG2042. The
+boot-time crash is caused by the race so will disappear as long as we
+fix the race.
 
-No worries. It happens. Just slightly unfortunate that it tickled down
-to stable branches before it got fixed.
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4c6c24380cfd9..97ced537aa1e0 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -14,6 +14,16 @@
+>  #include <asm/text-patching.h>
+> 
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> +void ftrace_arch_code_modify_prepare(void)
+> +{
+> +       mutex_lock(&text_mutex);
+> +}
+> +
+> +void ftrace_arch_code_modify_post_process(void)
+> +{
+> +       mutex_unlock(&text_mutex);
+> +}
+> +
+>  unsigned long ftrace_call_adjust(unsigned long addr)
+>  {
+>         if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
+> fentry_ip)
+> 
+>  void arch_ftrace_update_code(int command)
+>  {
+> -       mutex_lock(&text_mutex);
+>         command |= FTRACE_MAY_SLEEP;
+>         ftrace_modify_all_code(command);
+> -       mutex_unlock(&text_mutex);
+>         flush_icache_all();
+>  }
+> 
+> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
+> dyn_ftrace *rec)
+>         unsigned int nops[2], offset;
+>         int ret;
+> 
+> +       mutex_lock(&text_mutex);
 
-It is trivial to fix but I wonder what is the best way though. Achill
-proposed to use #ifdef HAVE_BACKTRACE_SUPPORT in
-tools/include/linux/kallsyms.h but it appears that this was included
-only for KSYM_NAME_LEN.
+Besides using the guard API, could we swap the order between
+ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
+the critical region a little.
 
-KSYM_NAME_LEN appears to be defined multiple places:
+With or without the change, here's my tag,
 
-$ rg 'KSYM_NAME_LEN\s+512'
-include/linux/kallsyms.h
-18:#define KSYM_NAME_LEN 512
+Tested-by: Yao Zi <ziyao@disroot.org>
 
-tools/include/linux/kallsyms.h
-9:#define KSYM_NAME_LEN 512
+and also
 
-tools/lib/perf/include/perf/event.h
-107:#define KSYM_NAME_LEN 512
+Reported-by: Han Gao <rabenda.cn@gmail.com>
+Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
 
-tools/lib/symbol/kallsyms.h
-10:#define KSYM_NAME_LEN 512
+for their first-hand report of boot-time crash and analysis for the
+first lock issue.
 
-scripts/kallsyms.c
-34:#define KSYM_NAME_LEN                512
+Regards,
+Yao Zi
 
-So I wonder if it would be acceptable to simply:
-
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decod=
-er_test.c
-index 08cd913cbd4e..7916bf487ed2 100644
---- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -10,7 +10,6 @@
- #include <assert.h>
- #include <unistd.h>
- #include <stdarg.h>
--#include <linux/kallsyms.h>
-=20
- #include <asm/insn.h>
- #include <inat.c>
-@@ -105,6 +104,7 @@ static void parse_args(int argc, char **argv)
-        }
- }
-=20
-+#define KSYM_NAME_LEN 512
- #define BUFSIZE (256 + KSYM_NAME_LEN)
-=20
- int main(int argc, char **argv)
-
-I am also confused with who should be in the CC list.
-
-Thanks!
--nc
-=20
-> On Tue, 1 Jul 2025 at 14:10, Natanael Copa <ncopa@alpinelinux.org> wrote:
-> >
-> > Hi!
-> >
-> > I bumped into a build regression when building Alpine Linux kernel 6.12=
-.35 on x86_64:
-> >
-> > In file included from ../arch/x86/tools/insn_decoder_test.c:13:
-> > ../tools/include/linux/kallsyms.h:21:10: fatal error: execinfo.h: No su=
-ch file or directory
-> >    21 | #include <execinfo.h>
-> >       |          ^~~~~~~~~~~~
-> > compilation terminated.
-> >
-> > The 6.12.34 kernel built just fine.
-> >
-> > I bisected it to:
-> >
-> > commit b8abcba6e4aec53868dfe44f97270fc4dee0df2a (HEAD)
-> > Author: Sergio Gonz_lez Collado <sergio.collado@gmail.com>
-> > Date:   Sun Mar 2 23:15:18 2025 +0100
-> >
-> >     Kunit to check the longest symbol length
-> >
-> >     commit c104c16073b7fdb3e4eae18f66f4009f6b073d6f upstream.
-> >
-> > which has this hunk:
-> >
-> > diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_d=
-ecoder_test.c
-> > index 472540aeabc2..6c2986d2ad11 100644
-> > --- a/arch/x86/tools/insn_decoder_test.c
-> > +++ b/arch/x86/tools/insn_decoder_test.c
-> > @@ -10,6 +10,7 @@
-> >  #include <assert.h>
-> >  #include <unistd.h>
-> >  #include <stdarg.h>
-> > +#include <linux/kallsyms.h>=20
-> >
-> >  #define unlikely(cond) (cond)
-> >
-> > @@ -106,7 +107,7 @@ static void parse_args(int argc, char **argv)
-> >         }
-> >  }
-> >
-> > -#define BUFSIZE 256
-> > +#define BUFSIZE (256 + KSYM_NAME_LEN)
-> >
-> >  int main(int argc, char **argv)
-> >  {
-> >
-> > It looks like the linux/kallsyms.h was included to get
-> > KSYM_NAME_LEN. Unfortunately it also introduced the include of
-> > execinfo.h, which does not exist on musl libc.
-> >
-> > This has previously been reported to and tried fixed:
-> > https://lore.kernel.org/stable/DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life/T/=
-#t
-> >
-> > Would it be an idea to revert commit b8abcba6e4ae til we have a
-> > proper solution for this?
-> >
-> > Thanks!
-> >
-> > -nc =20
-
+>         ret = ftrace_rec_set_nop_ops(rec);
+>         if (ret)
+> -               return ret;
+> +               goto end;
+> 
+>         offset = (unsigned long) &ftrace_caller - pc;
+>         nops[0] = to_auipc_t0(offset);
+>         nops[1] = RISCV_INSN_NOP4;
+> 
+> -       mutex_lock(&text_mutex);
+>         ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> +end:
+>         mutex_unlock(&text_mutex);
+> 
+>         return ret;
+> 
+> Andy is also taking a look, I'll let him confirm the above fix is correct.
+> 
+> Thanks for the thorough report!
+> 
+> Alex
+> 
+> 
+> > 
+> > Thanks for your suggestions on the problems.
+> > 
+> > Regards,
+> > Yao Zi
+> > 
+> > [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+> > 
+> > #regzbot introduced: 881dadf0792c
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
