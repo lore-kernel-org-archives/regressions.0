@@ -1,74 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gbr-app-1.alpinelinux.org (gbr-app-1.alpinelinux.org [213.219.36.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30C32367D3;
-	Wed,  2 Jul 2025 09:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E322725A64C
+	for <regressions@lists.linux.dev>; Wed,  2 Jul 2025 10:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.219.36.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751450374; cv=none; b=tvdMLAq5nemdQHTf4ySrTx4Qgonk5YJaUNNz+1EDAOkrJBUIsk3ykAsEghMxUYW/e0oT704EyKAxvr0+RcluM9/CXRFv8LM+yDQbA0JElRe4x7WA9FWkw3oZzdqT7XNdoOKWjYZcKRLJXm78KoNotT8pgRDgA2dIlHxJsGJo8sk=
+	t=1751452977; cv=none; b=GnZ7kk9nIiu/1rY/yhl6cJAq2uw0R1zaA6XkVM1IUeKrcbE7CwOyjXm8jzn81w5WY5xSzKidseA5/1gfB6f0w83u6vXTrIiVASielO802z0uhCtvZrxiBZz8EFp7cRKohGAn0bcSWS0ZIV52Iaa0+syiJXo8Xmb6LteruurOszc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751450374; c=relaxed/simple;
-	bh=XMRpAQktxm89XHWwG+GVWrLa/+SVU+1NbDCJeQP02g4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p0iW64fE/PUIrbQqLx8hALov510gnEj/IX5PgfJXEhjLhlKZhbGf47/57WHleR4s4R3c9H2yHGiOkASxkFoCSw1wIkkNYWUFKUNkJ/ZuLt4WuWhIMovN4ds9E/bvzTpxWA9XK9TONmxSdRcth4GM4rX4f+hFTMIkXKCBD1G6Am8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uRtTu/8R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751452977; c=relaxed/simple;
+	bh=DUc3Z9IrKtC636KTDUahr2LgTAK2oVb/ZlZJBWaY9cU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ReSBpXdvVrOFXwzyW+x/IsdN5dJFmGMAZ8geV1Zaglp2GXjK512AbJH26G09sSvEMx3MwLeNXWnHtsZnV2FTmqfRgysa42xP4JvDMeh/sZZ3bVUURg2HOBSSKCzWvgdsmcq/fti6Y5e8dYjy1cD45VhhLgzkhapB3Xadeb7Ntzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org; spf=pass smtp.mailfrom=alpinelinux.org; dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b=Sm4qnWfZ; arc=none smtp.client-ip=213.219.36.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpinelinux.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uRtTu/8R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1CAFC4CEED;
-	Wed,  2 Jul 2025 09:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751450373;
-	bh=XMRpAQktxm89XHWwG+GVWrLa/+SVU+1NbDCJeQP02g4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uRtTu/8Rz2dABAnJUBZ0lc0kXLk/vshuNaa3QGDbSCIA2SmW54L5ayP+uWNxkCB4f
-	 VvzoZN17/fbTi66eV+agU76Vyeya+FH803y9R6sNVrSOMM31l0opOOGhe7P4f5vFlQ
-	 l2A95ncM9WQjqV3uBRgKWEkFtbRygo3ZzYPbmFPw=
-Date: Wed, 2 Jul 2025 11:59:30 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Brett Sheffield <brett@librecast.net>
-Cc: Willem de Bruijn <willemb@google.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: 6.12.y longterm regression - IPv6 UDP packet fragmentation
-Message-ID: <2025070216-duplex-ecologist-20ce@gregkh>
-References: <aElivdUXqd1OqgMY@karahi.gladserv.com>
- <2025061745-calamari-voyage-d27a@gregkh>
- <aFGl-mb--GOMY8ZQ@karahi.gladserv.com>
- <CA+FuTSen5bEXdTJzrPELKkNZs6N=BPDNxFKYpx2JQmXmFrb09Q@mail.gmail.com>
- <2025062212-erasable-riches-d3eb@gregkh>
- <aFfO8a7vS1jeBonh@karahi.gladserv.com>
+	dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b="Sm4qnWfZ"
+Received: from ncopa-desktop (unknown [IPv6:2001:4646:fb05:0:4fb5:52fd:8640:8e74])
+	(Authenticated sender: ncopa@alpinelinux.org)
+	by gbr-app-1.alpinelinux.org (Postfix) with ESMTPSA id 990B22235BE;
+	Wed,  2 Jul 2025 10:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpinelinux.org;
+	s=smtp; t=1751452973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r6J/8oqixf3r0pd99QlA4EJMgd8zRX4okR0pgaVruqM=;
+	b=Sm4qnWfZZK4AsDful0ncKnRJJ9iVSNPvTLow9lnt4NaVLyuuoFqFvwpcIu/slnAEnYM9LD
+	YPMVT6Ln/Q+MwnZGo3WD0qZ/SDhN99AqLcHU47mA6SHN1BFIk/+Ru/g2wWjlSxUqssgKhC
+	SnkHEzhKm9SrqYqPMwD1chpOfVP0sF8=
+Date: Wed, 2 Jul 2025 12:42:47 +0200
+From: Natanael Copa <ncopa@alpinelinux.org>
+To: Sergio =?ISO-8859-1?B?R29ueuFsZXo=?= Collado <sergio.collado@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, Achill Gilgenast
+ <fossdd@pwned.life>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] v6.12.35: (build) kallsyms.h:21:10: fatal error:
+ execinfo.h: No such file or directory
+Message-ID: <20250702124247.7540ec3a@ncopa-desktop>
+In-Reply-To: <CAA76j90io241-a+2SDLfAMHY2ro4x-Bstw4AxKDOU_izW9goYg@mail.gmail.com>
+References: <20250701141026.6133a3aa@ncopa-desktop>
+	<CAA76j90io241-a+2SDLfAMHY2ro4x-Bstw4AxKDOU_izW9goYg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-alpine-linux-musl)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFfO8a7vS1jeBonh@karahi.gladserv.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 22, 2025 at 11:37:53AM +0200, Brett Sheffield wrote:
-> On 2025-06-22 11:10, Greg KH wrote:
-> > On Tue, Jun 17, 2025 at 02:25:02PM -0400, Willem de Bruijn wrote:
-> > > FWIW, I did not originally intend for these changes to make it to stable.
-> > > 
-> > > The simplest short term solution is to revert this patch out of the
-> > > stable trees. But long term that may give more conflicts as later
-> > > patches need to be backported? Not sure what is wiser in such cases.
-> > 
-> > For now, I've applied the above 2 to the 6.12.y tree.  They do not apply
-> > any older.  If I should drop the change from the older stable trees,
-> > please let me know.
-> 
-> Thanks Greg.
-> 
-> For the older stable trees I agree with Willem that reverting the patch is the
-> simplest fix.
-> 
-> As it stands UDP is broken in the older stable trees, so if this can make it
-> into the next stable release that would be a good thing.
+On Tue, 1 Jul 2025 19:07:32 +0200
+Sergio Gonz=E1lez Collado <sergio.collado@gmail.com> wrote:
 
-Ok, can someone send me reverts for the needed branches?
+> Hello,
 
-thanks,
+Hi Sergio,
 
-greg k-h
+>  Thanks for pointing that out. I was not aware of it.
+
+No worries. It happens. Just slightly unfortunate that it tickled down
+to stable branches before it got fixed.
+
+It is trivial to fix but I wonder what is the best way though. Achill
+proposed to use #ifdef HAVE_BACKTRACE_SUPPORT in
+tools/include/linux/kallsyms.h but it appears that this was included
+only for KSYM_NAME_LEN.
+
+KSYM_NAME_LEN appears to be defined multiple places:
+
+$ rg 'KSYM_NAME_LEN\s+512'
+include/linux/kallsyms.h
+18:#define KSYM_NAME_LEN 512
+
+tools/include/linux/kallsyms.h
+9:#define KSYM_NAME_LEN 512
+
+tools/lib/perf/include/perf/event.h
+107:#define KSYM_NAME_LEN 512
+
+tools/lib/symbol/kallsyms.h
+10:#define KSYM_NAME_LEN 512
+
+scripts/kallsyms.c
+34:#define KSYM_NAME_LEN                512
+
+So I wonder if it would be acceptable to simply:
+
+diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decod=
+er_test.c
+index 08cd913cbd4e..7916bf487ed2 100644
+--- a/arch/x86/tools/insn_decoder_test.c
++++ b/arch/x86/tools/insn_decoder_test.c
+@@ -10,7 +10,6 @@
+ #include <assert.h>
+ #include <unistd.h>
+ #include <stdarg.h>
+-#include <linux/kallsyms.h>
+=20
+ #include <asm/insn.h>
+ #include <inat.c>
+@@ -105,6 +104,7 @@ static void parse_args(int argc, char **argv)
+        }
+ }
+=20
++#define KSYM_NAME_LEN 512
+ #define BUFSIZE (256 + KSYM_NAME_LEN)
+=20
+ int main(int argc, char **argv)
+
+I am also confused with who should be in the CC list.
+
+Thanks!
+-nc
+=20
+> On Tue, 1 Jul 2025 at 14:10, Natanael Copa <ncopa@alpinelinux.org> wrote:
+> >
+> > Hi!
+> >
+> > I bumped into a build regression when building Alpine Linux kernel 6.12=
+.35 on x86_64:
+> >
+> > In file included from ../arch/x86/tools/insn_decoder_test.c:13:
+> > ../tools/include/linux/kallsyms.h:21:10: fatal error: execinfo.h: No su=
+ch file or directory
+> >    21 | #include <execinfo.h>
+> >       |          ^~~~~~~~~~~~
+> > compilation terminated.
+> >
+> > The 6.12.34 kernel built just fine.
+> >
+> > I bisected it to:
+> >
+> > commit b8abcba6e4aec53868dfe44f97270fc4dee0df2a (HEAD)
+> > Author: Sergio Gonz_lez Collado <sergio.collado@gmail.com>
+> > Date:   Sun Mar 2 23:15:18 2025 +0100
+> >
+> >     Kunit to check the longest symbol length
+> >
+> >     commit c104c16073b7fdb3e4eae18f66f4009f6b073d6f upstream.
+> >
+> > which has this hunk:
+> >
+> > diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_d=
+ecoder_test.c
+> > index 472540aeabc2..6c2986d2ad11 100644
+> > --- a/arch/x86/tools/insn_decoder_test.c
+> > +++ b/arch/x86/tools/insn_decoder_test.c
+> > @@ -10,6 +10,7 @@
+> >  #include <assert.h>
+> >  #include <unistd.h>
+> >  #include <stdarg.h>
+> > +#include <linux/kallsyms.h>=20
+> >
+> >  #define unlikely(cond) (cond)
+> >
+> > @@ -106,7 +107,7 @@ static void parse_args(int argc, char **argv)
+> >         }
+> >  }
+> >
+> > -#define BUFSIZE 256
+> > +#define BUFSIZE (256 + KSYM_NAME_LEN)
+> >
+> >  int main(int argc, char **argv)
+> >  {
+> >
+> > It looks like the linux/kallsyms.h was included to get
+> > KSYM_NAME_LEN. Unfortunately it also introduced the include of
+> > execinfo.h, which does not exist on musl libc.
+> >
+> > This has previously been reported to and tried fixed:
+> > https://lore.kernel.org/stable/DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life/T/=
+#t
+> >
+> > Would it be an idea to revert commit b8abcba6e4ae til we have a
+> > proper solution for this?
+> >
+> > Thanks!
+> >
+> > -nc =20
+
