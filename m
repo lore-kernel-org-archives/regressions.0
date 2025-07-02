@@ -1,33 +1,33 @@
 Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2B3225A31;
-	Wed,  2 Jul 2025 11:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE841E520C;
+	Wed,  2 Jul 2025 11:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456548; cv=none; b=Vr+84DQYYOP7Ejtj3Qkdn6J7aCeU7qH9QrWiKtrkHjvd75zyYbqZVMEwkq91HP8G11jQbNBB8QFyetP1ve72FXO6x8h4YRHtxGGeXasyhGyYOa/ZcH9jhpQ984Mv1HyGiOlxOa5myJlzWk5PReIuogs78uNmgcvyYiRpCZg9zCk=
+	t=1751456752; cv=none; b=DqXl94IEm6g/Yr7Uf476uVD1X3+KP1AzYRhZAUZN36IB08oa2fAXk+3dLYsriilDPmMSxIA+d2SRRMLvMfPHes08VkeQzEk8y1xMyoLs/Otb073aABaPvqtC7gkMX1ces1br3GiB30aezgsLEjA1u4gFBhlY1W0s3sZyjgMa+0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456548; c=relaxed/simple;
-	bh=+c+g0hwh+gTGN67rs+cKJDOv3GKw4+E2VRFXjz9Rl0A=;
+	s=arc-20240116; t=1751456752; c=relaxed/simple;
+	bh=9AuOxN1fLsFD/X58/PFQmlQF9iWSU+GWlT4u317PpB8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tKVXWF8pGEXCsHZaAuQpq71TMahO0CushXnfI/8g/xYBbkqCRsx+Ws8eUPyv0QaXYxSURKlTv17CUjAdAJRVEPFvQ5hh3NIMlZWFBsPRKXQRqfgQYSjN0xBRiGukCitwGnYt+AGN/xLq2YhrDD0fSfXZUcnW9u66TQn78ce89kM=
+	 MIME-Version; b=IvdRb1FEVYYuxVnEK5ctff89YQBcFFiKnfBFVBAcaNrIsNH50k8yNPQH86FUjaPFcdUwP7P3tqVyWy1FKrSk9SRu+CPIVapl6dWhwjU/l9x7FOsWUCpkWralTcKkYcbpOB5X7JtVhxJ/GDaAHXQp3DH9iZTDQJV0eiIyH7/l1jw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
-Received: from [2a0c:e303:0:7000:1adb:f2ff:fe4f:84eb] (port=49576 helo=karahi.gladserv.com)
+Received: from [2a0c:e303:0:7000:1adb:f2ff:fe4f:84eb] (port=48378 helo=karahi.gladserv.com)
 	by bregans-0.gladserv.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(envelope-from <bacs@librecast.net>)
-	id 1uWvr5-008bNU-2n;
-	Wed, 02 Jul 2025 11:42:23 +0000
+	id 1uWvn8-008bMu-2w;
+	Wed, 02 Jul 2025 11:38:18 +0000
 From: Brett A C Sheffield <bacs@librecast.net>
 To: gregkh@linuxfoundation.org
 Cc: regressions@lists.linux.dev,
 	stable@vger.kernel.org,
 	willemb@google.com,
 	Brett A C Sheffield <bacs@librecast.net>
-Subject: [PATCH 6.1.y] Revert "ipv6: save dontfrag in cork"
-Date: Wed,  2 Jul 2025 13:41:51 +0200
-Message-ID: <20250702114150.2590-2-bacs@librecast.net>
+Subject: [PATCH 6.6.y] Revert "ipv6: save dontfrag in cork"
+Date: Wed,  2 Jul 2025 13:37:32 +0200
+Message-ID: <20250702113731.2322-2-bacs@librecast.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <2025070216-duplex-ecologist-20ce@gregkh>
 References: <2025070216-duplex-ecologist-20ce@gregkh>
@@ -41,7 +41,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Brett A C Sheffield (Librecast) <bacs@librecast.net>
 
-This reverts commit 4f809be95d9f3db13d31c574b8764c8d429f0c3b which is
+This reverts commit 8ebf2709fe4dcd0a1b7b95bf61e529ddcd3cdf51 which is
 commit a18dfa9925b9ef6107ea3aa5814ca3c704d34a8a upstream.
 
 A regression was introduced when backporting this to the stable kernels
@@ -60,7 +60,7 @@ Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
  2 files changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/include/linux/ipv6.h b/include/linux/ipv6.h
-index 9f27e004127b..9a44de45cc1f 100644
+index d79851c5fabd..af8a771a053c 100644
 --- a/include/linux/ipv6.h
 +++ b/include/linux/ipv6.h
 @@ -199,7 +199,6 @@ struct inet6_cork {
@@ -70,12 +70,12 @@ index 9f27e004127b..9a44de45cc1f 100644
 -	u8 dontfrag:1;
  };
  
- /**
+ /* struct ipv6_pinfo - ipv6 private area */
 diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index cfc276e5a249..f7a225da8525 100644
+index 28777b142240..c86d5dca29df 100644
 --- a/net/ipv6/ip6_output.c
 +++ b/net/ipv6/ip6_output.c
-@@ -1450,7 +1450,6 @@ static int ip6_setup_cork(struct sock *sk, struct inet_cork_full *cork,
+@@ -1452,7 +1452,6 @@ static int ip6_setup_cork(struct sock *sk, struct inet_cork_full *cork,
  	}
  	v6_cork->hop_limit = ipc6->hlimit;
  	v6_cork->tclass = ipc6->tclass;
@@ -83,7 +83,7 @@ index cfc276e5a249..f7a225da8525 100644
  	if (rt->dst.flags & DST_XFRM_TUNNEL)
  		mtu = np->pmtudisc >= IPV6_PMTUDISC_PROBE ?
  		      READ_ONCE(rt->dst.dev->mtu) : dst_mtu(&rt->dst);
-@@ -1484,7 +1483,7 @@ static int __ip6_append_data(struct sock *sk,
+@@ -1486,7 +1485,7 @@ static int __ip6_append_data(struct sock *sk,
  			     int getfrag(void *from, char *to, int offset,
  					 int len, int odd, struct sk_buff *skb),
  			     void *from, size_t length, int transhdrlen,
@@ -92,7 +92,7 @@ index cfc276e5a249..f7a225da8525 100644
  {
  	struct sk_buff *skb, *skb_prev = NULL;
  	struct inet_cork *cork = &cork_full->base;
-@@ -1540,7 +1539,7 @@ static int __ip6_append_data(struct sock *sk,
+@@ -1542,7 +1541,7 @@ static int __ip6_append_data(struct sock *sk,
  	if (headersize + transhdrlen > mtu)
  		goto emsgsize;
  
@@ -101,7 +101,7 @@ index cfc276e5a249..f7a225da8525 100644
  	    (sk->sk_protocol == IPPROTO_UDP ||
  	     sk->sk_protocol == IPPROTO_ICMPV6 ||
  	     sk->sk_protocol == IPPROTO_RAW)) {
-@@ -1885,7 +1884,7 @@ int ip6_append_data(struct sock *sk,
+@@ -1914,7 +1913,7 @@ int ip6_append_data(struct sock *sk,
  
  	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
  				 &np->cork, sk_page_frag(sk), getfrag,
@@ -110,7 +110,7 @@ index cfc276e5a249..f7a225da8525 100644
  }
  EXPORT_SYMBOL_GPL(ip6_append_data);
  
-@@ -2090,7 +2089,7 @@ struct sk_buff *ip6_make_skb(struct sock *sk,
+@@ -2119,7 +2118,7 @@ struct sk_buff *ip6_make_skb(struct sock *sk,
  	err = __ip6_append_data(sk, &queue, cork, &v6_cork,
  				&current->task_frag, getfrag, from,
  				length + exthdrlen, transhdrlen + exthdrlen,
@@ -120,7 +120,7 @@ index cfc276e5a249..f7a225da8525 100644
  		__ip6_flush_pending_frames(sk, &queue, cork, &v6_cork);
  		return ERR_PTR(err);
 
-base-commit: 7e69c33e4858ea275b2e1c0bf0bea13199e7e91b
+base-commit: 3f5b4c104b7d3267d015daf9d9681c5fe3b01224
 -- 
 2.49.0
 
