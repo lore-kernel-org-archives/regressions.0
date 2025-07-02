@@ -1,150 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE3A306DCA;
-	Tue,  1 Jul 2025 21:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93684221FC7;
+	Wed,  2 Jul 2025 05:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403662; cv=none; b=GSy21A3SUiH7pxAb184+ZicohYbRcAxbF+8AXN9sdUMxmlLbihRVuPPwYpn67i4+Pmn1iMQKtJo+P4KWytO9/doDmWfQeXlYg8sGV/APi6paQTQukjnR6gj6x/KyFBzFlxrGgniK2+MtDo2oVNfzHobWvoK0GhNisWErgwTMDfs=
+	t=1751433344; cv=none; b=Wc5as4u+yrHXmOKChs4X8/xP0ARj0w5/k32hwVm1ecHJcs4VXMi6ZAp+gxcQOTHvjqLgnksvHVMqPa+LbvX/mCe1jHTsb0VYIBS/0/e5XsqDgwItcC878miZvpa60I3fVyeynQ6MxwSPDUO+WpmmC0Pxtwy0Ceo7kWG48OU34BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751403662; c=relaxed/simple;
-	bh=KxNo7MC9iL3A0G0AkoA1BW65gW/zw4LvgAtZBo2U6AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXswJvTxt7xISTPA3MJyxz0KnASFqSO08g9uHqFJxT1U0JWyGIguIEZ+gf7/vt+LAHEUAvvpVrXvWpYC/cLQWK2NmE6MCloIFRQ0N4+rk7mzVIXwWhDboN35SV1qv5VzpJquh/pml1j1l5214DZEJzM8eXFQ+6h9B6qRTwC20V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gv3z6fjb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751433344; c=relaxed/simple;
+	bh=yA/VFyXgbsNQmFMOwhT88/9R1hkxNmEietIiNZ5dXEs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I+6Vp9fUvMqCaftxA9au02Onxn80JE9GLgzH2ruNbko69yyAhLcNpDwXQtv0tYMMV2GRNfSWsOuFE7rC40pWXRyJymhDPKiGlh+GWPIEV7g036YVkX/ILCCxWVPea14qiDf5UwhPFLwMjd+wJ+/9VMwwt8brFXjm6yL0s16PdKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrPshvA4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gv3z6fjb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37B9C4CEF5;
-	Tue,  1 Jul 2025 21:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751403662;
-	bh=KxNo7MC9iL3A0G0AkoA1BW65gW/zw4LvgAtZBo2U6AM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gv3z6fjbqba15oqwRlg4HTHo/E6gMJCSHGUj2KvcDZ+/SHoTsjxAHsANNmtHzNz0j
-	 z6zwAvM5Wkzt1tV/k9PNX3BYm/GdVqh3OkA8EPH7QBRwfn+o4QaOPf2s96HMJtwqu9
-	 gqFoITlilEaPpY7g4b+InUW2ikQFTUmrtJ0+9FzXEidhH8GIlOxjcmyL/iX8/jkDNv
-	 GoAoZzLspR0OvKwV6/7yY4T++V+NGSscI8LgbSB+qYkB4jv/VjXHdzyk8vhfz/yTKM
-	 SjVvUFngMePnvAYa71Xd1L4DIKVoefDbw0+1rAcCKS6OC4xpGrfu8shp2E8nq9N7If
-	 8cCCvGYUDGqAg==
-Date: Tue, 1 Jul 2025 17:00:58 -0400
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Ben Copeland <ben.copeland@linaro.org>, linux-kernel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
-	sagi@grimberg.me, iommu@lists.linux.dev,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <aGRMilWhgF4z0WOf@kbusch-mbp>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
- <20250630133343.GA26040@lst.de>
- <aGLyswGYD6Zai_sI@kbusch-mbp>
- <20250701132936.GA18807@lst.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrPshvA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751433343; x=1782969343;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=yA/VFyXgbsNQmFMOwhT88/9R1hkxNmEietIiNZ5dXEs=;
+  b=JrPshvA4DAbeHm97OcT1DZ3zBFbElQ7EpadkKyhgd/Jn0mXVuX7JAkqf
+   hAIKYWcubkk95IaDM9WMnMxynr9Y6Cbt0Kej2DtsbQczxUuMDphcoKh27
+   2TnH32vB3fMPOc9sjj5BKDDdNuhdrlAiDxT9Vx/tVwkoxG1ydoaT1zlv4
+   2RGM0AVxu/V/Nd0Q2r0bfpKQXXSya2JXFdXJ5EFV9LoVIj2MyT3WmWCYl
+   dsMn9DP6GnlnhUnjm8xfEuUeHxce+pnyH/A39MHyqt4gVoAb371XbZyF1
+   pGKGI1LIEnqZOOUHigp6UaVVy4keAyo1vL8hzWpuJaKvew7MzGMd6wXX7
+   g==;
+X-CSE-ConnectionGUID: 2CuTZ3saTzqdIway3PMC5Q==
+X-CSE-MsgGUID: st9KNX35T6mScnMBA3Y0fQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53583407"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53583407"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 22:15:42 -0700
+X-CSE-ConnectionGUID: oTaVz3k6S1qnLv+V1IVrug==
+X-CSE-MsgGUID: reW8n6DgSlCO/tJh9SjkFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153748196"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 22:15:39 -0700
+Message-ID: <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+Date: Wed, 2 Jul 2025 13:14:12 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701132936.GA18807@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+ kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
+ will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
-> Yes, that's broken, and I remember fixing it before.  A little digging
-> shows that my fixes disappeared between the oct 30 version of Leon's
-> dma-split branch and the latest one somewhere.  Below is what should
-> restore it, but at least when forcing my Intel IOMMU down this path it
-> still has issues with VPTEs already set.  So maybe Bob should not try
-> it quite yet.  I'll try to get to it, but my availability today and
-> tomorrow is a bit limited.
+On 7/2/25 01:11, Ioanna Alifieraki wrote:
+> #regzbot introduced: 129dab6e1286
+> 
+> Hello everyone,
+> 
+> We've identified a performance regression that starts with linux
+> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+> Bisection pointed to commit:
+> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map").
+> 
+> The issue occurs when running fio against two NVMe devices located
+> under the same PCIe bridge (dual-port NVMe configuration). Performance
+> drops compared to configurations where the devices are on different
+> bridges.
+> 
+> Observed Performance:
+> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+> - After the commit:
+>    -- Same PCIe bridge: ~4985 MiB/s
+>    -- Different PCIe bridges: ~6150 MiB/s
+> 
+> 
+> Currently we can only reproduce the issue on a Z3 metal instance on
+> gcp. I suspect the issue can be reproducible if you have a dual port
+> nvme on any machine.
+> At [1] there's a more detailed description of the issue and details
+> on the reproducer.
 
-Let's say we're using ARM64 SMMU configured with 64k granularity like I
-showed earlier.
+This test was running on bare metal hardware instead of any
+virtualization guest, right? If that's the case,
+cache_tag_flush_range_np() is almost a no-op.
 
-Now let's send a read command with 128k transfer, and let's assume the
-payload is two 64k aligned physical segments, so we have 2 bvecs.
+Can you please show me the capability register of the IOMMU by:
 
-Since nvme's virtual boundary is smaller than the iommu's granule, we
-won't attempt to coalesce. We instead iommu map each bvec segment
-individually.
+#cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
 
-And let's say each segment just so happens to get consecutive IOVA's.
-The mapping side had done each segment individually, but your proposal
-here will assume the contiguous dma_addr ranges were done as a single
-larger mapping. Is that okay?
+> 
+> Could you please advise on the appropriate path forward to mitigate or
+> address this regression?
+> 
+> Thanks,
+> Jo
+> 
+> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2115738
 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 38be1505dbd9..02bb5cf5db1a 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -678,40 +678,55 @@ static void nvme_free_prps(struct request *req)
->  	enum dma_data_direction dir = rq_dma_dir(req);
->  	int length = iod->total_len;
->  	dma_addr_t dma_addr;
-> -	int i, desc;
-> +	int prp_len, i, desc;
->  	__le64 *prp_list;
-> +	dma_addr_t dma_start;
->  	u32 dma_len;
->  
->  	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
-> -	dma_len = min_t(u32, length,
-> -		NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
-> -	length -= dma_len;
-> +	prp_len = NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1));
-> +	prp_len = min(length, prp_len);
-> +	length -= prp_len;
->  	if (!length) {
-> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
-> +		dma_unmap_page(dma_dev, dma_addr, prp_len, dir);
->  		return;
->  	}
->  
-> +	dma_start = dma_addr;
-> +	dma_len = prp_len;
-> +	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
-> +
->  	if (length <= NVME_CTRL_PAGE_SIZE) {
-> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
-> -		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
-> -		dma_unmap_page(dma_dev, dma_addr, length, dir);
-> -		return;
-> +		if (dma_addr != dma_start + dma_len) {
-> +			dma_unmap_page(dma_dev, dma_start, dma_len, dir);
-> +			dma_start = dma_addr;
-> +			dma_len = 0;
-> +		}
-> +		dma_len += length;
-> +		goto done;
->  	}
->  
->  	i = 0;
->  	desc = 0;
->  	prp_list = iod->descriptors[desc];
->  	do {
-> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
->  		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
->  			prp_list = iod->descriptors[++desc];
->  			i = 0;
->  		}
->  
->  		dma_addr = le64_to_cpu(prp_list[i++]);
-> -		dma_len = min(length, NVME_CTRL_PAGE_SIZE);
-> -		length -= dma_len;
-> +		if (dma_addr != dma_start + dma_len) {
-> +			dma_unmap_page(dma_dev, dma_start, dma_len, dir);
-> +			dma_start = dma_addr;
-> +			dma_len = 0;
-> +		}
-> +		prp_len = min(length, NVME_CTRL_PAGE_SIZE);
-> +		dma_len += prp_len;
-> +		length -= prp_len;
->  	} while (length);
-> +done:
-> +	dma_unmap_page(dma_dev, dma_start, dma_len, dir);
->  }
->  
->  static void nvme_free_sgls(struct request *req)
+Thanks,
+baolu
