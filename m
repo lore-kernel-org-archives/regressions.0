@@ -1,100 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3582EE287;
-	Thu,  3 Jul 2025 14:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9782F3635
+	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 15:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751554071; cv=none; b=EispTaWYD8swMAqsXXnnpbP2/ORKPZ7+P6ftlsVZxnwOmtRSQXvWaus5KsP1ZtTvRhwdoOS3Dfy5uFcGRmegIPlFuCkkcoS6CZy7Sw2psFew7SZC1Jl3tTosvwxg3T7EoZDJFGaLVNl2y60IbGNxC25UaRxRiTfg/3Nw7nlvp14=
+	t=1751555628; cv=none; b=CHzcddACA6M1TRBUL7Vk+yhwiy5l/RxiXWtq81zSscUFyxIpTHsC2Im6zu6Eq40LRxChkFvg/E6pHof3A42YnYwU1ThhhPPfoLTKqdk4G/iUdyG+2EP9VdP7m6PwIbzx2HThSRRr22Qv6Y1tHRJXKrFRyf7KHTgdfIQ6+JY+oHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751554071; c=relaxed/simple;
-	bh=RafIvVbiUyoUQKQHbRbqnjeFOB2hcSEJLccEvZ3+n+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZiYNbO/rXERazWZp1wQyRp7X7HLBoFfu1bxY+nw3JaI+6Bpj4mnAlCLauT3O000kF+vLTwOnbMbttn6k7SwS6D0ihAlsYSPFe18GOmPOj1jvT3MPaH1D+Dnl3BCze8339tsYwfnvQj4it4hdU99/OHxpfhb54BgQjUMrEXt2ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cgZTtq3I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751555628; c=relaxed/simple;
+	bh=ypjreYPJ7DpTt9JqUM3qZTM6pG61xK8rDbalnxcM+mg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=umM6Uvhch9pTjiJrFJjbhFI0UqAghARtQGXUvi0B/Grwlb9dpKiyNkaEfQl9eXLBGWXewiwC43LNs7K14u2kW7KnM66JtbeW2jXF78WDoQWAlp3CvJeZpy9BtcwGTQ0UlWv8speoxuQZmek6ZOfcyoNQj1GepCsIQLAtRkslN7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B3j9UWtH; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgZTtq3I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77903C4CEE3;
-	Thu,  3 Jul 2025 14:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751554071;
-	bh=RafIvVbiUyoUQKQHbRbqnjeFOB2hcSEJLccEvZ3+n+c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cgZTtq3IIlgui7JvyJN4aIixV24ZPVNX3mE2iFY2Geduz1t23gCzZfBxH11sZsxxU
-	 0XI6riDdtTsSOHSVKlp84rU9NekMRKyHT4ZxxLDoZ6k6ELlpgDTWesSu7r5C1WFkxj
-	 KxaQcRxFGj7/RrRhnrkhiFOMDxWeUUjA93aTxwchmLdyFufOu/Gk/zYusEo2W9Yw1o
-	 8sHO6a0yNfXBmr1ASbw4ys+YlOg70nj+WGdtzbwPLzjk6xZFUtZxOipqjX3mOZ40A+
-	 /7/aX2Z0O0s5iP4R3GmMXpWQ7FyllGbXRp9uS01Baohlo5YjOSNwXYEMdNoZx8Trh8
-	 RNl4I20EQUQOg==
-Message-ID: <84dfa466-d201-4a51-8794-6c64568bec95@kernel.org>
-Date: Thu, 3 Jul 2025 16:47:47 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3j9UWtH"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6119cd1a154so31281eaf.0
+        for <regressions@lists.linux.dev>; Thu, 03 Jul 2025 08:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751555626; x=1752160426; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KVPzloh1oUX1Y6h3ndP8c2+rIYKbbClu7XHnxXtmGIQ=;
+        b=B3j9UWtH/DSLBbbtcnt335yDGKsbbrblSnHp6Xr52I3Q4qO+9QU/TLfwM41zjfGQ5h
+         kkA4mzyEGloPzA53Mh5HJBoaXROuwqffhSz/prGVjVsFA0mgHYOiTyBx5M5GCeXp2Nbn
+         0fvOIup6yEmEmyYitYaujQ/KmVxYeDMxhsD63i0O+9EQe4GS6zGH8GO0z2IdlpvtXpUI
+         vClJ2SvH0ZT4pdfrknVwJtQa7oDPme+jOPTQWdrR+uANteqhERLhR+sWhlx1T3qIhTf/
+         8zyA9K55MzVnQUSr1yWRCCziDTWZj+oeXQAvD+87qrodApnd8kHToHJSyyxDzSGNhsFw
+         7Cjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751555626; x=1752160426;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KVPzloh1oUX1Y6h3ndP8c2+rIYKbbClu7XHnxXtmGIQ=;
+        b=l/a6+KN1F/0O8VNzxIN1noe9JZMcjll3gx9MCjs8ceNB6WgzyCxFd+J6TV9vCNK72w
+         MCBgx4nMvyJsVki5Xk60LS+8sEXzuupSBV/+1xn5Xx+b99RNkSQl9tvbWtB53cNI4VQQ
+         R73iFU48+Eau+QxZ27ywBzftKQB7DhTAllGKmmizvDEkPkkmxPs7TJfqgxek5sjwW3v4
+         QRmUDA9OR9QWGvgrhn8b0JLYEwX+NhGMLMDFWeheHAPjiuDdv/GwkZhYHAixsYZ/Vtsu
+         p7i7zE1F5ExzjmkNXIQbgXDCtmCnc5kg2jRVx8/bG+Fhq1jQajzvhZzuqiv+jtHt8lnw
+         APeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVW3PWyY33KESnZL8OGSNqoW2GQdz8lM68+lEfC1I3DW7/zeubdgbf1Hv69LrNh210gkRsKlmWfyMt9Fw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxASkLqCeBAYeKuQ89g+zD9nZYwgJzKjiPwj64nMsXzfFPBqk8U
+	RJZ67IV+/lMOm7rWxecXROqI/fv4QbOHZFyMqR8w/ixv9avAEPlzci6RvK+Teyn5np2vw118JqT
+	ycj/mHh26+AJBvd8YT7lWNMx4gKqf3MJ0c9bGsLPW
+X-Gm-Gg: ASbGncttXDu9AffUKGBmeqPOjsJR9FkukE9TBiyhU1hXspr8I4GpqTY8BP67HFdrmWl
+	LXw1zyqOQPxaNhJjnrt0Cys9QxEmRLFUPWQ3D5iM2JMhkJXIHrCvb4jOtrScdkO8Gf8Q9jxN+VC
+	qrSR/XqjUrbCay25i9/jo3fNUuaaoB2vHvjUS5pVUap6Idn9OxCo4=
+X-Google-Smtp-Source: AGHT+IFNofYLmKV5Ky0RG07x0qI3JXTBrrZQnExq8xPcLRUNb9KWtuoW/38SR0jSXaannNWxKg0dLKoxlfAIQh14pQs=
+X-Received: by 2002:a05:6870:288b:b0:2d4:e101:13ec with SMTP id
+ 586e51a60fabf-2f5a8d3f1b6mr6005725fac.33.1751555625656; Thu, 03 Jul 2025
+ 08:13:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] - Multiple userspace implementations of battery
- estimate broken after "ACPI: battery: negate current when discharging"
-To: Matthew Schwartz <matthew.schwartz@linux.dev>, pmarheine@chromium.org,
- Sebastian Reichel <sre@kernel.org>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
- rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org
-References: <87C1B2AF-D430-4568-B620-14B941A8ABA4@linux.dev>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <87C1B2AF-D430-4568-B620-14B941A8ABA4@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de> <aGLyswGYD6Zai_sI@kbusch-mbp>
+ <20250701132936.GA18807@lst.de> <aGRMilWhgF4z0WOf@kbusch-mbp>
+ <20250703093042.GA7387@lst.de> <aGaTw7SzermpfiD7@kbusch-mbp>
+In-Reply-To: <aGaTw7SzermpfiD7@kbusch-mbp>
+From: Ben Copeland <ben.copeland@linaro.org>
+Date: Thu, 3 Jul 2025 16:13:33 +0100
+X-Gm-Features: Ac12FXwWdPQaun6KP1n2WG90MWR4J8ZJY7tGLBNOTSkceZgMU661bsKnTuwWQZc
+Message-ID: <CAL0q8a62bcjkJdKjTUbEOXMRfaCr1eB4YWeNugdRO1GjLLQe0g@mail.gmail.com>
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion after 06cae0e3f61c
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk, sagi@grimberg.me, 
+	iommu@lists.linux.dev, Leon Romanovsky <leonro@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Matthew,
+On Thu, 3 Jul 2025 at 15:29, Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Thu, Jul 03, 2025 at 11:30:42AM +0200, Christoph Hellwig wrote:
+> > I think the idea to reconstruct the dma addresses from PRPs should
+> > be considered a failure by now.  It works fine for SGLs, but for
+> > PRPs we're better off just stashing them away.  Bob, can you try
+>
+> s/Bob/Ben
+>
+> > something like the patch below?  To be fully safe it needs a mempool,
+> > and it could use some cleanups, but it does pass testing on my setup
+> > here, so I'd love to see if if fixes your issue.
 
-On 3-Jul-25 3:54 AM, Matthew Schwartz wrote:
-> Hello,
-> 
-> I installed kernel 6.15.4 to find that my battery estimate on my handheld gaming device was completely inaccurate, instead giving negative values and an unknown estimated battery life in multiple places. 
-> 
-> After bisecting, I landed on "ACPI: battery: negate current when discharging” as the bad commit. This commit breaks not one but several userspace implementations of battery monitoring: Steam and MangoHud. Perhaps it breaks more, but those are the two I have noticed so far. 
+I have tested it on my system and can no longer see the regression.
 
-Thank you for reporting this.
+Happy to retest when the patch goes through.
 
-As Rafael already indicated this patch will need to be reverted to
-unbreak userspace.
+Tested-by: Ben Copeland <ben.copeland@linaro.org>
 
-But, the patch was actually doing the right thing, according to:
-
-Documentation/ABI/testing/sysfs-class-power
-
-What:           /sys/class/power_supply/<supply_name>/current_avg
-Date:           May 2007
-Contact:        linux-pm@vger.kernel.org
-Description:
-                Battery:
-...
-                Access: Read
-
-                Valid values: Represented in microamps. Negative values are
-                used for discharging batteries, positive values for charging
-                batteries and for USB IBUS current.
-
-(and the same for current_now)
-
-and there are many power_supply fuel-gauge drivers (1) under
-drivers/power/supply/ which do adhere to this specification
-and report a negative current for discharging.
-
-So if any of the userspace consumers of this API you mention
-were to run on hw with these drivers the same problem will
-be hit. Can you please file bugs against these userspace
-projects so that they can fix this?
-
-Regards,
-
-Hans
+Thank you!
 
 
+Ben
 
-1) For directly accessing fuel-gauge chips on devices where these
-are directly accessible instead of being exposed through ACPI
-
+>
+> Thanks for confirming.
+>
+> While this is starting to look a bit messy, I believe it's still an
+> overall win: you've cut down the vector walking in the setup path from 3
+> to 1, which reduces a non-trivial amount of overhead for even moderately
+> sized IO.
