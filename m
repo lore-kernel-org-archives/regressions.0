@@ -1,179 +1,290 @@
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com (sonic301-22.consmr.mail.gq1.yahoo.com [98.137.64.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638BC2F235D
-	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 18:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.64.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567714; cv=none; b=AbRYBc0liX+GTh2TC5n0gDUQ9aVFt1+FAk3A6ngxyfWxRf7HA19pMCG9GYBMY936Eo5+u3CDEkqoYEZ8bsyGE26HEPAo28he321h9Ec2Qmx7OBto6nmrt8nvvLo0KQ5IgOxZTDTTVUJvJDCj44cULBjH6/NJ4NvPWJdqfaaXzsA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751567714; c=relaxed/simple;
-	bh=+dGWQql/riTJw5LXzDDtI7Z0SZTVe9RhdHwHCSgrIEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m3nnVgIAcYh+7WZ7TIQ/jc/otGX/xM7idtfkWUXK3zSFmaKX5LHWiVHceBEgbGc7lCu21Q6/ZOGn+rbOAgXMHmuosBnZ1T+rsujC0LLIYe03P4ulhAlDX6r/52c8WeahDjsqZzN/DMlqytPUGaRSt7BHteoMoEWU+v49eveQLxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=Yz+UzLtf; arc=none smtp.client-ip=98.137.64.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2602F94AA;
+	Thu,  3 Jul 2025 19:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751572569; cv=pass; b=BaP5aqQpv83yrREuxEFg4YCAdiNeewUX+qQZkVXGFPJOBHUrRHH8ISOe96hEm+3ABzzT0wV7wVsafLAqkELbGm0Oy9qzrF8DWw3CZ5LHn2qEbP6rOKx2lgwnBduGpuxjykYa2BuPEAuhxhPV+vV5LZYI1vhT8O1uDFFRUV2WO7k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751572569; c=relaxed/simple;
+	bh=IIrR3QOH/JkqXcCnwaa3kE68scPpZ7hXsBjtQVtDYcM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:
+	 Content-Type; b=UxUjRto+fU/bea8j14NjmqCpHPOAPknIJmSHHYWizLA2qLyVDB4CHI2OmQNgnnoPlZpmUmjvs4BRy/wIY28Y4P1lBe8Y/80nHnx9ZNEaYuw+Y/FHhJ4PODm6/sqoPVCBJezDvAHZs7Gw+Nn1gHHbCIawspJ4RiQgbTbRrpesdAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=F1JYdi3+; arc=pass smtp.client-ip=136.143.188.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Yz+UzLtf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1751567706; bh=EXHlWa5asA9Z4RCqSrFnCiNHYAx1soLe4UthSuVCGas=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=Yz+UzLtfI9XxeD/hu1qZpZfySzMWZrRhTK5rq85W39ZrjIgTj5OcTqaUMAmVjNA93M89NttPSevoOtVL8XZgJrAwZtGMpwDFfMr4sYXMXw8V8ukK88EI5QUyAEwGCJbPW8+4189k0QyqmCVX0fEg2HUBY24KUvVaJW4AU1feLMvzCCGHIOW1MHQhuh4gkt6qoEIhxwhWbFrUT+EFd+iPrLawb+Fb6ym3MDt4j86MYEGd6HPKBKnDnZ5Wkp5RWqJ+DNUS2F84kIGtJKwAFC0tIwmP2g2AB1+5mC6Sn70lazDX/hka8eNX8ZLDeCf7jE6+j45LeKoBBBlyUl9lb/hCew==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1751567706; bh=Hrhy2ni07h5gydNEaQVhBeWfqsOHYuYGLunqIgvcQ9h=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=N0g343I3cz1J4rJZ/+nhdwFtWCgb2KXND5cLSqjKej+WvfoABDpNSFxSzP4USDALK631zugk+P6z760va/ixV6V4766jGafjmNNh/+8Hc8gBiBX+nhnVRIOqUmPGHC9MMLni6q+8EHvNUQtOZMzBVsfAwXOPESTyW2SdFzG/w3TiFTOm37upniz57FXtkED0QohFRBnYr0ouoU8frlnMAZtUUElkJHnzd4FkIV9yIEPhv4jYFvX8RDA571aj1cZJiaPjhbsHe0cXpBglasKMoM0O2PGKSnoLkgTalJVUdmK3R+SacPedGkd+iiU5cDPobqFqwbHZdr4fVPOe8u7x4Q==
-X-YMail-OSG: vcvWGOoVM1mgQsyzXm1E58.xLt2_4SWqk4fBZkRJTMlJMbcanRo09FUCHdczfwr
- .0r0S3L6hxwsj9ZYHcCA0ckjlEaPbtsi18npxhrRFDqkxXl78VVr5hHl_LBlDJkqlGaPY6CMBMHT
- rjXguqa91TtKbP5QzK0jCQNWvogt5FUeKqLSpQMhOft5f_.dERjKDU3pv98H5LX3Ek1Us3XWHCMH
- 7qKpoQaV659CdS96cKtsmWreHyLiJFCbXDNUdnfYYAb7cnWKUZmnStWCaOD1a4Ft5Ogjx5KmFnY7
- TpHvLezmNRNd9IGF2uqg6wnbkXEa1cARuRUF97JJcmlEA5NsQeM_s.IfSdjgKgMINbxj58wlUNta
- r6XGfqf0jTKGP6jSbQIGe9avwPwnqzTZgqb1E0L8SYSSZFQa7XeYvjClNc9EyCYOJkQ5q1uR.a9s
- Qq3ApymDoUUuG8Ua4KnZ1HMF19Xg0ejUZMIdU2MUkpCTY5ie46MXvN4h.piyk8FAHxrJ0L4_9.Xm
- 38GwRxBxGZ.he5Ovrybxd.6KCROg8fMzaYh0Gs1dCMcAtzYO6Byy9GolUx5_derQu4I3aQ3LvRpc
- Ds37RDxbImRtt6ASeCdo2g5zLaa3LD7OadOHZOhRAvl8Uc_GoxLYcKOy2zZuPi81lpnW_tz6U9rN
- MMnVkl..JK0eTDCG0q1DJMAnSgcQ8Abvm9D6_zwVbSVqaY5EXWH_8R4cTXCirNYDHeIvXPPSinB2
- FZF5t3g1xOTsK32DGXw3XJkHXg99GeNM91tNtAclDE9KVVxB6MvgnPTpAT0fHuVVR.FBFhYHJVm6
- 17ueM2yT.3h8Tjqia6rY6_au7GGTyngiRplYXgyU6ah968QfrpIo1PCgxM8T1_5o9lckJznVA4LQ
- zqh9r6IdNMqdtTXwW2a730D1WlelZ_LySj3NKvarxahcPgb2Vm9xSH2BMjCxA0gECxDE3n6oow4e
- CRhbmCt_y6b8WLai8MB22TdrYn_dfn1Jz1uli1EUeO5wisuIg9y9Z2YewcFAAzrffw0ylhtLetnT
- xWmpOdEjPq383uJWCGuOBFAqAfTjlYplg.ZmFDU2xz30.nLlfeOXdC.eMsxcVUO1taR4H7OX8Nzj
- vW2KxE9VsrEz8QjmOH.SeCSXfwxIkr4kDtfyrIRMQ.v20jnIbwFhBrlClrQaCKyC7_ztPLQAHiGM
- 3eC3uuNzZn8eZhgpgZw6rc65LATqaGWctFDA_IvOZezDAClzUxQVT7tE0pxRBTLa7uPUjYDhRNbX
- bMOPGBisJ04fZ.bmKc9TPdJjg5w6GIXdZwsJd9kvyw.HU.RLhgGiYB7vfXjtuoIzkWLSLomQhSKw
- rZ7eG35U85inedg0xSpFrw4H0_Lhwf.t4rmMq7K6ueuSPYXQmwqgVaor2FWUyu6w7xGaIZDmDT4e
- _UwYIwWUN8pEcfMbk4RjWgoFIJhVjhz5c5NK.aaBpgegikAF3FRWrAMK7YFauzI7II83qK1kJo2t
- EupynnoYKyBMTPDJsACpbg.p9fFl2gX3GJ5fgX.HipphYAER0RFHfftUxHgQzch1gzYS9Rxbc8Xd
- D7BtVxUlSdlBPdXXSMDSMPq1C0Q1NCN0rM8CXDF6R_41In7TxpWnO4DAj4bTqjTxELKi9tUH90aS
- LDBejKO3KQ6K9GT517.5JCUq8MBn_TYoY7AWr4kFvs9_S7VcooUqYXN3dZZyTvEqrmtkEaZ_Vlv_
- xxruWhr714_cPb5J6yIm36xvcvWPRZVYUQKthyYr.QO.F3GzQ86eo0DxE3XXEAsbMiUEFk0_c.NX
- B2MZxTzQcwj_DnAxf3wQsqdBfbkNiscAF7WOPSLtHmGqwDLldh.DGoGj81_YjejyyRICIUHyNOpD
- ftawoUQa08a0.kCpeH..a6jc31tnKwXOJHEA_wv9v9vKqAuK4jfWvdypkDrWxD8x79.KNac_2KKw
- jU50Om0v7gOMizNzOCbcfJx7fGmK1ELsb3l2_uN85l6UI27eGJDdp5.zBZMbRptNpPj2gfndO_mD
- h3wir7WfsasYPX7tZL.XDilylr8qtfBuSfweHx2MQvOeojJiyYOMqbX1Q6UlueMiRuWQ.EGObedd
- x4sayS0REOpgMaV0NQ0apLWpcvlK9R.LJ_83Gc0JlNKDsQcLlHfQ65sKR6sfM1TojZTKN6Yl3d7p
- AVtm8DbkymbW0LbkbATPxKRi0Jm4kiTNTyK_HBV01aKK_l5EpHzIrmncmXyKJ8t5X6WzjIwV4IsO
- Y54QPpVzuedkSNUXUGZm.mU43u.YJ
-X-Sonic-MF: <brchuckz@aol.com>
-X-Sonic-ID: dc7a2c9f-f440-4691-8260-e4cb2c65db45
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Thu, 3 Jul 2025 18:35:06 +0000
-Received: by hermes--production-bf1-689c4795f-895qn (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 074e72aac6a3c642c4975b8914dc21bf;
-          Thu, 03 Jul 2025 18:35:02 +0000 (UTC)
-Message-ID: <6b15fd25-5f42-43fe-81b6-ac7d0d9f1b3b@aol.com>
-Date: Thu, 3 Jul 2025 14:35:01 -0400
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="F1JYdi3+"
+ARC-Seal: i=1; a=rsa-sha256; t=1751572563; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=K3Doxz66X+eRpw34NwM121amlQKz9Ut+8FhuiXwfa0t9NPl/GU5qMBDLdxQKbLCWw8TptJo7EvJiPxTLHwVDj90jR80Mn434LoGPV1bWNly20IhP+/NZCLsNdXzpyY/xKmkXB5iNZWoAfQChakPsAD2jGpQpGFd3oLp6usM/hiE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751572563; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5UDu+J1qfvIbmB4eeRGeCJZdB4CKWUcfUwkW6EvkNSA=; 
+	b=ZHM9ue4fB+BEBDZgxFXw08VMXv7xGIo+iOHHxWpJV2glISj5RFeAPQklKA7lmMqcyAffGd+TxRIHALWYLA6ZaElsF50JEDkXsPZJ+W/uc5XMkFLxKo07B54BjdJRXkxJ/lNWQB631gP8QqaUxn9eSw1QrdqNzE+n+R2eXt6kwtk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
+	dmarc=pass header.from=<safinaskar@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751572563;
+	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=5UDu+J1qfvIbmB4eeRGeCJZdB4CKWUcfUwkW6EvkNSA=;
+	b=F1JYdi3+OaHBEp4NP1YB63dkEkPvxfYph4I9pXsUR4qMMdyP0k2evirgxKWZjZUO
+	5FOb3ZB5sz1vy6IJPu4azlJzibYHtF9AISxGFwp5Qrgh0Of0fZVjoI5AiS2Tox1GMdT
+	mnn9R/KHOkk67pxwjo5XzMv90NrxeicKJ9bVRNKY=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1751572560910466.47180646758443; Thu, 3 Jul 2025 12:56:00 -0700 (PDT)
+Received: from  [212.73.77.104] by mail.zoho.com
+	with HTTP;Thu, 3 Jul 2025 12:56:00 -0700 (PDT)
+Date: Thu, 03 Jul 2025 23:56:00 +0400
+From: Askar Safin <safinaskar@zohomail.com>
+To: "regressions" <regressions@lists.linux.dev>,
+	"intel-gfx" <intel-gfx@lists.freedesktop.org>,
+	"kexec" <kexec@lists.infradead.org>,
+	"dri-devel" <dri-devel@lists.freedesktop.org>,
+	"iommu" <iommu@lists.linux.dev>, "Ben Hutchings" <benh@debian.org>
+Cc: "anushasrivatsa" <anusha.srivatsa@intel.com>,
+	"joonaslahtinen" <joonas.lahtinen@linux.intel.com>,
+	"tvrtkoursulin" <tvrtko.ursulin@linux.intel.com>,
+	"janinikula" <jani.nikula@linux.intel.com>,
+	"josesouza" <jose.souza@intel.com>,
+	"davehansen" <dave.hansen@linux.intel.com>
+Message-ID: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
+In-Reply-To: 
+Subject: Second kexec_file_load (but not kexec_load) fails on i915 if
+ CONFIG_INTEL_IOMMU_DEFAULT_ON=n
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Linux 6.15.1 xen/dom0 domain_crash_sync called from
- entry.S
-To: Chuck Zmudzinski <brchuckz@netscape.net>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, xen-devel <xen-devel@lists.xenproject.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, =?UTF-8?B?SsO8cmdlbiBHcm8=?=
- =?UTF-8?B?w58=?= <jgross@suse.com>
-References: <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40.ref@netscape.net>
- <8ed96ec9-7c84-4bb4-90ec-5b753be9fd40@netscape.net>
- <8ad4304d-43bc-4584-bc69-822eb0661e7b@suse.com>
- <5a962cae-b65d-4a27-9189-20027344567e@netscape.net>
-Content-Language: en-US
-From: Chuck Zmudzinski <brchuckz@aol.com>
-In-Reply-To: <5a962cae-b65d-4a27-9189-20027344567e@netscape.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.24099 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+Feedback-ID: rr080112279e221c628c3c8337194dc1da000007a5bedeb4229900e9d1c6b83ffb2cc9cabcd56cff751ac9ce:zu08011227edaf1821e893dea4ed8cf46d0000f767958c8ea0f51086a4b07c6af889997c100881047eaef6f3:rf0801122c513fb65fe2d9c7508b1e6ba20000445815cedeac527ffff297daded9a8aa94dddc2ae52bc6ee42d48f88b0d0:ZohoMail
 
-On 6/11/25 5:34 PM, Chuck Zmudzinski wrote:
-> On 6/10/25 12:22 AM, Jürgen Groß wrote:
->> On 10.06.25 00:43, Chuck Zmudzinski wrote:
->>> Hi,
->>> 
->>> I am seeing the following regression between Linux 6.14.8 and 6.15.1.
->>> 
->>> Kernel version 6.14.8 boots fine but version 6.15.1 crashes and
->>> reboots on Xen. I don't know if 6.14.9 or 6.14.10 is affected, or
->>> if 6.15 or the 6.15 release candidates are affected because I did
->>> not test them.
->>> 
->>> Also, Linux 6.15.1 boots fine on bare metal without Xen.
->>> 
->>> Hardware: Intel i5-14500 Raptor Lake CPU, and ASRock B760M PG motherboard and 32 GB RAM.
->>> 
->>> Xen version: 4.19.2 (mockbuild@dynavirt.com) (gcc (GCC) 13.3.1 20240611 (Red Hat 13.3.1-2)) debug=n Sun Apr 13 15:24:29 PDT 2025
->>> 
->>> Xen Command line: placeholder dom0_mem=2G,max:2G conring_size=32k com1=9600,8n1,0x40c0,16,1:0.0 console=com1
->>> 
->>> Linux version 6.15.1-1.el9.elrepo.x86_64 (mockbuild@5b7a5dab3b71429898b4f8474fab8fa0) (gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5), GNU ld version 2.35.2-63.el9) #1 SMP PREEMPT_DYNAMIC Wed Jun  4 16:42:58 EDT 2025
->>> 
->>> Linux Kernel Command line: placeholder root=/dev/mapper/systems-rootalma ro crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=2ddc2e3b-8f7b-498b-a4e8-bb4d33a1e5a7 console=hvc0
->>> 
->>> The Linux 6.15.1 dom0 kernel causes Xen to crash and reboot, here are
->>> the last messages on the serial console (includes messages from both
->>> dom0 and Xen) before crash:
->>> 
->>> [    0.301573] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
->>> 
->>> [    0.301577] Register File Data Sampling: Vulnerable: No microcode
->>> 
->>> [    0.301581] ITS: Mitigation: Aligned branch/return thunks
->>> 
->>> [    0.301594] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
->>> 
->>> [    0.301598] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
->>> 
->>> [    0.301602] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
->>> 
->>> [    0.301605] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
->>> 
->>> [    0.301609] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
->>> 
->>> (XEN) Pagetable walk from ffffc9003ffffff8:
->>> (XEN)  L4[0x192] = 0000000855bee067 0000000000060e56
->>> (XEN)  L3[0x000] = 0000000855bed067 0000000000060e55
->>> (XEN)  L2[0x1ff] = 0000000855bf0067 0000000000060e58
->>> (XEN)  L1[0x1ff] = 8010000855bf2025 0000000000060e5a
->>> (XEN) domain_crash_sync called from entry.S: fault at ffff82d04036e5b0 x86_64/entry.S#domain_crash_page_fault_6x8+0/0x4
->>> (XEN) Domain 0 (vcpu#0) crashed on cpu#11:
->>> (XEN) ----[ Xen-4.19.2  x86_64  debug=n  Not tainted ]----
->>> (XEN) CPU:    11
->>> (XEN) RIP:    e033:[<ffffffff810014fe>]
->>> (XEN) RFLAGS: 0000000000010206   EM: 1   CONTEXT: pv guest (d0v0)
->>> (XEN) rax: ffffffff81fb12d0   rbx: 000000000000029a   rcx: 000000000000000c
->>> (XEN) rdx: 000000000000029a   rsi: ffffffff81000b99   rdi: ffffc900400000f0
->>> (XEN) rbp: 000000000000014d   rsp: ffffc90040000000   r8:  0000000000000f9c
->>> (XEN) r9:  0000000000000000   r10: 0000000000000000   r11: 0000000000000000
->>> (XEN) r12: 000000000000000c   r13: ffffffff82771530   r14: ffffffff827724cc
->>> (XEN) r15: ffffc900400000f0   cr0: 0000000080050033   cr4: 0000000000b526e0
->>> (XEN) cr3: 000000086ae24000   cr2: ffffc9003ffffff8
->>> (XEN) fsb: 0000000000000000   gsb: ffff88819ac55000   gss: 0000000000000000
->>> (XEN) ds: 0000   es: 0000   fs: 0000   gs: 0000   ss: e02b   cs: e033
->>> (XEN) Guest stack trace from rsp=ffffc90040000000:
->>> (XEN)   Stack empty.
->>> (XEN) Hardware Dom0 crashed: rebooting machine in 5 seconds.
->>> (XEN) Resetting with ACPI MEMORY or I/O RESET_REG.
->>> 
->>> I searched mailing lists but could not find a report similar to what I am
->>> seeing here.
->>> 
->>> I don't know what to try except to git bisect, but I have not done that yet.
->> 
->> This is a known issue.
->> 
->> A patch series to fix that has been posted:
->> 
->> https://lore.kernel.org/lkml/20250603111446.2609381-1-rppt@kernel.org/
->> 
->> 
->> Juergen
-> 
-> Yes, that patch set (the original 5 patches) fixes this issue (I
-> tested it on top of 6.15.2 released yesterday).
-> 
-> There is a suggested sixth patch in the thread, and I tried that
-> also but it caused a kernel panic in Xen PV dom0.
-> 
-> Thanks,
-> 
-> Chuck Zmudzinski
+TL;DR: I found a bug in strange interaction in kexec_file_load (but not kex=
+ec_load) and i915
+TL;DR#2: Second (sometimes third or forth) kexec (using kexec_file_load) fa=
+ils on my particular hardware
+TL;DR#3: I did 55 expirements, each of them required a lot of boots, in tot=
+al I did 1908 boots
 
-The fix for this issue landed in Linux 6.15.4. Thanks!
+Okay, so I found a bug. Steps to reproduce:
+- I have Dell Precision 7780
+- I have recent Debian x86_64 sid installed (bug reproducible with both Deb=
+ian kernels and mainline ones)
+- Bug is reproducible on many kernels, including very recent ones, for exam=
+ple 6.15.4
+- Boot system, then do kexec into the same system using kexec_file_load. I.=
+ e. pass --kexec-file-syscall to "kexec" command
+- Then kexec from this kexec'ed system again (i. e. you should do two kexec=
+'s in a row)
+- Then do 3rd kexec, etc
+- Repeat kexec's until you do 100 kexec's or your system start to misbehave
 
-Chuck Zmudzinski
+On my computer the system starts to misbehave after some number of kexec's.=
+ This always happens after 2nd kexec attempt.
+I. e. the first kexec is always successful. But second sometimes is not.
+I never was able to perform 100 kexec's in a row.
+After some kexec attempt the system starts to misbehave: oopses, panics, lo=
+cked system, etc.
+
+Notes:
+
+- I tried to bisect "kexec-tools" package, but bisect merely gave me commit=
+, which switched to kexec_file_load as a default.
+Bug is reproducible if we use kexec_file_load, but doesn't reproduce if we =
+use kexec_load
+
+- Bug is reproducible even if we boot via init=3D/bin/bash (note: this mean=
+s that initramfs is still part of the boot process). (If we boot to normal =
+GUI, bug is reproducible, too)
+
+- When I reproduce I use this command line: "root=3DUUID=3D... rootflags=3D=
+subvol=3D... ro init=3D..."
+
+- Debian package "plymouth" is required for reproducing. (It reproduces wit=
+h plymouth, but doesn't reproduce without plymouth.) But note that I never =
+see actual plymouth screen! I. e. presence of
+"plymouth" on the system somehow affects bug reproduciblity despite plymout=
+h animation never actually shown. I don't know why this happens, but I susp=
+ect that I don't pass "splash" to kernel command line, and thus don't see p=
+lymouth screen. But I suspect that plymouth is still included to initramfs =
+and from there somehow affects boot process
+
+- Bug reproduces in Debian, but doesn't reproduce in Ubuntu. After a lot of=
+ expirementing I finally understood why: Ubuntu kernel has CONFIG_INTEL_IOM=
+MU_DEFAULT_ON=3Dy, and Debian kernel has not. Additional expirements found =
+that it is culpit. I. e. the bug is reproducible with CONFIG_INTEL_IOMMU_DE=
+FAULT_ON=3Dn and not reproducbile with CONFIG_INTEL_IOMMU_DEFAULT_ON=3Dy . =
+(So advice for distributions: do what Ubuntu does, i. e. set CONFIG_INTEL_I=
+OMMU_DEFAULT_ON=3Dy to hide this bug)
+
+- Bug is not reproducible in old enough kernels, so I did bisect on Linux. =
+Bisect showed me these commits: d4a2393049..4a75f32fc7. I. e. bug is reprod=
+ucible in 4a75f32fc7, but doesn't reproduce in d4a2393049. Between them the=
+re is a middle commit 52407c220c44c8dcc6a, which is not testable. Here are =
+these commits:
+
+commit 4a75f32fc783128d0c42ef73fa62a20379a66828
+Author: Anusha Srivatsa <anusha.srivatsa@intel.com>
+
+=C2=A0 =C2=A0drm/i915/rpl-s: Add PCH Support for Raptor Lake S
+
+commit 52407c220c44c8dcc6aa8aa35ffc8a2db3c849a9
+Author: Anusha Srivatsa <anusha.srivatsa@intel.com>
+
+=C2=A0 =C2=A0drm/i915/rpl-s: Add PCI IDS for Raptor Lake S
+
+It seems these commits merely added support for my Intel GPU model. So this=
+ is fake regression. I'm not sure this should be treated as proper regressi=
+on and whether regzbot should be notified. (What do you think?)
+
+Still formally this is regression: I did expirements and they show that bug=
+ present in 4a75f32fc783128d0c42 and not present before. (Side note: in lat=
+est kernels both wayland and x11 work, in d4a2393049 x11 works and wayland =
+doesn't.)
+
+I tried to reproduce the bug in Qemu, but I was unable to do so. It seems I=
+ntel GPU is required, maybe even my particular model.
+
+Here is "lspci -vnn -d :*:0300" for my GPU:
+
+00:02.0 VGA compatible controller [0300]: Intel Corporation Raptor Lake-S U=
+HD Graphics [8086:a788] (rev 04) (prog-if 00 [VGA controller])
+        Subsystem: Dell Raptor Lake-S UHD Graphics [1028:0c42]
+        Flags: bus master, fast devsel, latency 0, IRQ 202, IOMMU group 0
+        Memory at 604b000000 (64-bit, non-prefetchable) [size=3D16M]
+        Memory at 4000000000 (64-bit, prefetchable) [size=3D256M]
+        I/O ports at 3000 [size=3D64]
+        Expansion ROM at 000c0000 [virtual] [disabled] [size=3D128K]
+        Capabilities: [40] Vendor Specific Information: Len=3D0c <?>
+        Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+        Capabilities: [ac] MSI: Enable+ Count=3D1/1 Maskable+ 64bit-
+        Capabilities: [d0] Power Management version 2
+        Capabilities: [100] Process Address Space ID (PASID)
+        Capabilities: [200] Address Translation Service (ATS)
+        Capabilities: [300] Page Request Interface (PRI)
+        Capabilities: [320] Single Root I/O Virtualization (SR-IOV)
+        Kernel driver in use: i915
+        Kernel modules: i915
+
+dmidecode:
+https://zerobin.net/?aebea072b93d8122#z4W9URnV+k9ZZErhP4etQkxlfpyRKf++uKMNo=
+O5PGjs=3D
+
+- I use "root=3DUUID=3D... rootflags=3Dsubvol=3D... ro init=3D..." as a com=
+mand line for reproducing. If I add "recovery nomodeset dis_ucode_ldr" (thi=
+s is options used by Ubuntu in recovery mode), the bug stops to reproduce
+
+Again, in short, full list of things required for successful reproducing:
+- Intel GPU, possibly my particular model
+- Kernel with support for my model (4a75f32fc783128d0c42 and later up to 6.=
+15.4)
+- Kexec at least two times. (One kexec never fails, 100 kexec's in a row ne=
+ver succeed)
+- kexec_file_load as opposed to kexec_load
+- Initramfs
+- Lack of parameters "recovery nomodeset dis_ucode_ldr" (i. e. one of them =
+stops reproducing)
+- plymouth
+- CONFIG_INTEL_IOMMU_DEFAULT_ON=3Dn
+
+Removing of ANY of them stops the bug, and I proved this by lots of expirem=
+ents.
+
+In total I did 55+ expirements, each of them required up to 100 boots. In t=
+otal I did 1908 (!!!!!!) boots on my physical laptop (I mean kexec boots he=
+re). No, I'm not faking this number, here is my actual directories with res=
+ults:
+
+user@subvolume:~$ ls /rbt/kx-results/
+@rec-2025-06-29T201723Z-bad-4    @rec-2025-06-29T214650Z-good-60  @rec-2025=
+-07-03T050626Z-bad-41    @rec-2025-07-03T104125Z-bad-28    @rec-2025-07-03T=
+133705Z-bad-3
+@rec-2025-06-29T203429Z-good-60  @rec-2025-06-29T215558Z-bad-8    @rec-2025=
+-07-03T060107Z-good-100  @rec-2025-07-03T111727Z-bad-13    @rec-2025-07-03T=
+141647Z-good-100
+@rec-2025-06-29T205626Z-good-60  @rec-2025-07-01T042949Z-bad-12   @rec-2025=
+-07-03T074810Z-good-100  @rec-2025-07-03T122242Z-good-100  @rec-2025-07-03T=
+145705Z-good-100
+@rec-2025-06-29T211612Z-bad-6    @rec-2025-07-02T120101Z-good-60  @rec-2025=
+-07-03T082914Z-good-100  @rec-2025-07-03T123958Z-bad-12    @rec-2025-07-03T=
+152406Z-bad-50
+@rec-2025-06-29T212932Z-good-60  @rec-2025-07-03T031038Z-good-60  @rec-2025=
+-07-03T100615Z-good-100  @rec-2025-07-03T132116Z-good-100  @rec-2025-07-03T=
+154204Z-bad-15
+user@subvolume:~$ ls /rbt/kx-manual-testing/
+2025-07-01-03-19-good-6  2025-07-01-03-56-good-4  2025-07-01-05-28-bad-3  2=
+025-07-01-06-35-bad-2  2025-07-01-09-46-good-8
+2025-07-01-03-44-good-3  2025-07-01-04-47-good-3  2025-07-01-06-19-bad-2  2=
+025-07-01-09-21-bad-2  2025-07-02-13-09-good
+user@subvolume:~$ ls /rbt/kx-vanilla-results/
+2025-06-30T005219Z_5.16.0-kx-df0cc57e057f18e4-3e17eec5ff024b63_1626_good_60=
+      2025-06-30T023542Z_5.16.0-rc2-kx-87bb2a410dcfb617-9f30253daecd39e5_16=
+63_bad_4
+2025-06-30T012313Z_5.17.0-kx-f443e374ae131c16-91b07dce12a83fab_1674_bad_1  =
+      2025-06-30T032312Z_5.16.0-rc2-kx-c9ee950a2ca55ea0-854a1f40ce042801_16=
+62_bad_6
+2025-06-30T013555Z_5.16.0-kx-22ef12195e13c5ec-9aaf880b25942f2a_1668_bad_7  =
+      2025-06-30T033528Z_5.16.0-rc2-kx-ba884a411700dc56-854a1f40ce042801_16=
+62_good_60
+2025-06-30T014106Z_5.16.0-kx-9bcbf894b6872216-b828905f3cf12050_1664_bad_2  =
+      2025-06-30T034645Z_5.16.0-rc2-kx-d4a23930490df39f-854a1f40ce042801_16=
+62_good_60
+2025-06-30T014634Z_5.16.0-rc5-kx-cb6846fbb83b574c-83e7c6cf2ede57b4_1663_bad=
+_6    2025-06-30T035232Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_16=
+62_bad_5
+2025-06-30T015713Z_5.16.0-rc2-kx-15bb79910fe734ad-9f30253daecd39e5_1663_goo=
+d_60  2025-06-30T042058Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_16=
+62_bad_1
+2025-06-30T020235Z_5.16.0-rc5-kx-b06103b5325364e0-26176b9b704a5c24_1664_bad=
+_6    2025-06-30T050000Z_6.15.4-kx-e60eb441596d1c70-2378f4efc5e956e5_2366_b=
+ad_2
+2025-06-30T020717Z_5.16.0-rc5-kx-eacef9fd61dcf5ea-26176b9b704a5c24_1664_bad=
+_1    2025-06-30T053011Z_6.15.4-kx-e60eb441596d1c70-2378f4efc5e956e5_2366_g=
+ood_60
+2025-06-30T021738Z_5.16.0-rc2-kx-67b858dd89932086-8d2f1d17f1e1933c_1662_goo=
+d_60  2025-06-30T060619Z_5.16.0-rc2-kx-d4a23930490df39f-854a1f40ce042801_16=
+62_good_60
+2025-06-30T022759Z_5.16.0-rc2-kx-17815f624a90579a-854a1f40ce042801_1662_goo=
+d_60  2025-06-30T061448Z_5.16.0-rc2-kx-4a75f32fc783128d-854a1f40ce042801_16=
+62_bad_1
+
+Each number in the end of file/directory name is number of boots. In total =
+we have 1908 boots. Testing was mostly automatical, using my script.
+
+Here is one example dmesg from mainline commit e60eb441596d1c70 (somewhere =
+around 6.15.4):
+
+https://zerobin.net/?119ff118fd47b363#BpziYs6dNz5PaT7H8w2hlveoEYa4DDtITGkyd=
+9o57LE=3D
+
+This is was dmesg from 2nd (and in the same time last) boot. The next boot =
+(i. e. kexec) was unsuccessful. Corresponding config:
+
+https://zerobin.net/?009c807e1df41af8#gnmrswlbaFbdPTuzNq6NFkQd/Jhb3Ds0ZlLiw=
+NanXnc=3D
+
+If you want results from all expirements, here is a link: https://filebin.n=
+et/45g2757b2iwaeen7 (1 Mb, expires after 7 days). Usually expirements come =
+with full reproducer script.
+
+But what I described above is already enough, I think this link is not need=
+ed.
+
+I will be available for testing in coming days, then I will switch to other=
+ things, and so will not be available for testing.
+If you want more time, then, please, ask for it, i. e. say me something lik=
+e "Please, be available for testing in more 10 days".
+
+--
+Askar Safin
+https://types.pl/@safinaskar
 
