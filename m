@@ -1,101 +1,224 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B585524A07A
-	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 05:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D143298CC0
+	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 07:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751522075; cv=none; b=O6Jh6Rbd2vQvjLyZMByUA17QEsgj5xoDzyeGwYJisfP/Y7ECvQ+ct/7m2xIzxd7UQtNg8IkV9wZCHfIKlD46RQOk/h+IE/Ioz0m2kPVB5Rp7AiNqXtXZTNV2il2QmtAxpHgyJ1ZCRQRblcaC2/SdXjIVXQ97GBI/Qf3jUp+94Kg=
+	t=1751527581; cv=none; b=oipJiSebD7b9Jcsgf7DqtaS5K7FhK6qXSajqVX/MAsPzyUvA7m7QAw+fCSPGNShazRZkM1aLx3DxwLglh7nLesVeIU/mUyH1ZrAiaPhFP5B8vERkQLtIEkMxXbZ2rtw5aYDE+z/7u7sACkvRCDIQ3IpRy3kQbq+nueeooc10Vwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751522075; c=relaxed/simple;
-	bh=ynaMprbr/DSk7Dkt3k87E6gZAMRkXioAAlMhDAoda0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=Jmpkr2Tcf4yHQhCD0iILqZB0E8Np2Q6HUFfbxBbXLu4NWOjyncc7fEGhBN8JTAN0y826vYROA1sfspGXkOgG16+nKJgfoPDR/fXU5SS4D9fPTpO3Ejk/MJ3qL5Zcb13wHE/FpJJ9UJthi68nYlhy+qalqMCJ8U3hj1fAonXaj38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cF84dpmr; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751527581; c=relaxed/simple;
+	bh=eXG7L6apoeVaPxa6zg1mVdlH+teKsLNGl93S/Tr0PoI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=js47uhg8rDiZ6+41755jnm5IUgNXh/75k13ihtEauva0umSkk19x+f7iG+y32igR70matnHGSwNYfAMGKRgNT/PMxBByKuq/Xicx8cSEi7wrdshofFW4k5z/lYSupMjJGvtW1X0k0AMffnoquOpwI2QOcjQ5JmSdw2Bb+F9OB1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bmqhdxxt; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cF84dpmr"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250703055425epoutp03695406790f7424ad9b1cc061674d6cc1~OqAnbzW3a3134831348epoutp038
-	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 05:54:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250703055425epoutp03695406790f7424ad9b1cc061674d6cc1~OqAnbzW3a3134831348epoutp038
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751522065;
-	bh=NxhRoGxQMDU6ikoL0AvSCUO26Gv9OAsjIwBiwwpSKio=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=cF84dpmrmzWjHNPHxPkL0xB6K1V3QiXx3h7tlMt4iX8M/BNaSyagHwwh1asL4iu0R
-	 ELj/u+7lSrDb2UM9h/bFQRtnqqN8vowfJOnAsJLaeA1EGtSgbNL576G91cETjbvs1q
-	 lahDNWO+uKGcP7sPDMBIrpcM5IE3ISpVGEBInEkw=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250703055424epcas5p1f09110c8969685ee00f9025484fee311~OqAm-TMbr1811418114epcas5p1g;
-	Thu,  3 Jul 2025 05:54:24 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bXmDb2qvPz2SSKg; Thu,  3 Jul
-	2025 05:54:23 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250703055422epcas5p2e210090b98d77bd394c7cd9e67bf0a04~OqAlHBl3V1762917629epcas5p2g;
-	Thu,  3 Jul 2025 05:54:22 +0000 (GMT)
-Received: from [107.122.11.51] (unknown [107.122.11.51]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250703055421epsmtip29b9ecb294e8afd118e03a01b6b09faaf~OqAj0L1Ch3089030890epsmtip2E;
-	Thu,  3 Jul 2025 05:54:21 +0000 (GMT)
-Message-ID: <07c07d1f-2eb6-437f-931c-0f04b129eb08@samsung.com>
-Date: Thu, 3 Jul 2025 11:24:20 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bmqhdxxt"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b31c84b8052so9066946a12.1
+        for <regressions@lists.linux.dev>; Thu, 03 Jul 2025 00:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751527578; x=1752132378; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GAMKSN1cf/DpMVRo6gFlykOi6cd+hJQyMWIE0kM7p2Y=;
+        b=Bmqhdxxtr3GRtbV93S12m+BWGBQeR2vW2N4e+9g1KjXIAKSToKic7/eJ6gV39cDtJG
+         GnTADrjj0jQrk5+hS4UKsFRzX1QF79jK5L5HsMMsmRg+LN1bt3XrOur879hIuGwuQQLG
+         7rIi+wXe4ek4SzF4j9XFeOcNJiWg+4HUgFX5pkCumfz032mJ8drZce64TlWu+KwmkFMO
+         yIg5E3nVY+h6laNnkDY5a/nYLmcE4gC0ZufG3+4UJbpZCvvppMZbtESzTO7nsBPfZwXr
+         ESNY0kEbcs1rzniVOZ/Vg7rhGrytxRG+2D4kKpf0EyaOY0dG+EG9miC5+Vwzb0htbugl
+         d0jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751527578; x=1752132378;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GAMKSN1cf/DpMVRo6gFlykOi6cd+hJQyMWIE0kM7p2Y=;
+        b=rgt2v4rQu+SmQO/FXv6qh61EkeuOggH7LmJC51uRvN+WlTGG2wMqmPcDZwf+3BOCx+
+         n/PrYIN35DhH3Eykrqg2tsdYmkkULr3HyNSG/Dd2mLCr+VIlHLF1ncEXB9c24BCkY7wC
+         C1Rml03zi+b4fQwzNspWd0TYL9UTrKhRCFLsWu1Vl6gpMs2/JvyiBcBoxVOK68+SLqkh
+         rwpcK+5H3xAwU/fFrsv2WXCwuDpCWlPnW7qXXZUzU5hVETisfjuJ81bF1kULBguH3O//
+         krGHkUV/iOh5ISvD9OSYWiBlfYDDGItJmM475ilGoVkEaz0M9BTQh3l8kNV0Tc1mUsqM
+         uerg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlSIfXUT2RoVpwAYOW/uWOF1XWnhQ8Ec3cNONkeagqjkWSOpCn4i5Qnay7LcPTSFzUkOUDlltfdk7MYA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyV1Xq11P/xUnjMmQKnvMIw+RBz1iICO16U/RjDMcaFwwWeIsRW
+	tDy6CKPMpqhg5glGILNm/SAXPkZqO8uWkrmcfeykG6jgEx130t1YdI1tkHchItsuMonjCSGyohd
+	IJ6MizcToUoEVUK6hdve3KbwA+g1a90B1ieN9apNuyA==
+X-Gm-Gg: ASbGncsstGfTvgOq2UlvLuD3M/xAtip2c6VSsiHGcBqsaFKvldtCxvDQ1UF9O4YjXpB
+	D0xW81rg5uiCnFzclMB06zjoXy3NxZCyikkFSt3RpQTlexmLavqjWX5r4AZaQO2JQcFV7iySlBq
+	brtPlPB9kGAUykO5BT1Gn/1onNNPFyhIpiBjaZy8Xct+OXz/E9yBHoNOX5fh8jDaOeQbY5jdbMk
+	UdN3YZaLWN7NQ==
+X-Google-Smtp-Source: AGHT+IFBtroNhRgT2smI4MTW+nF7Q1k9nWSGPUagsoi7hbtQlf2pdM4tjmPERmB0KQXgaKAhNH2kWUgg6ohVrZtxleU=
+X-Received: by 2002:a17:90a:d60c:b0:313:1a8c:c2c6 with SMTP id
+ 98e67ed59e1d1-31a90bc9850mr9100678a91.16.1751527578511; Thu, 03 Jul 2025
+ 00:26:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-To: Ben Copeland <ben.copeland@linaro.org>, linux-kernel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, kbusch@kernel.org,
-	axboe@kernel.dk, hch@lst.de, sagi@grimberg.me
-Content-Language: en-US
-From: Kanchan Joshi <joshi.k@samsung.com>
-In-Reply-To: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250703055422epcas5p2e210090b98d77bd394c7cd9e67bf0a04
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250630075218epcas5p1f3d467fffa468cac0ccd012c193e94df
-References: <CGME20250630075218epcas5p1f3d467fffa468cac0ccd012c193e94df@epcas5p1.samsung.com>
-	<CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+In-Reply-To: <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 3 Jul 2025 12:56:06 +0530
+X-Gm-Features: Ac12FXzBgwMwFGfOkzvJ_EzX-plndvQT1fRe69w5kV27SFg1-zbk8bDaXp-Lnc4
+Message-ID: <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, LTP List <ltp@lists.linux.it>, 
+	"Theodore Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/30/2025 1:20 PM, Ben Copeland wrote:
-> # first bad commit: [06cae0e3f61c4c1ef18726b817bbb88c29f81e57]
-> nvme-pci: merge the simple PRP and SGL setup into a common helper
+On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
+>
+> Hi, Naresh!
+>
+> On 2025/6/26 20:31, Naresh Kamboju wrote:
+> > Regressions noticed on arm64 devices while running LTP syscalls mmap16
+> > test case on the Linux next-20250616..next-20250626 with the extra build
+> > config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
+> >
+> > Not reproducible with 4K page size.
+> >
+> > Test environments:
+> > - Dragonboard-410c
+> > - Juno-r2
+> > - rk3399-rock-pi-4b
+> > - qemu-arm64
+> >
+> > Regression Analysis:
+> > - New regression? Yes
+> > - Reproducibility? Yes
+> >
+> > Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+> > transaction.c start_this_handle
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Thank you for the report. The block size for this test is 1 KB, so I
+> suspect this is the issue with insufficient journal credits that we
+> are going to resolve.
 
-this patch had the problem [0] of not setting 'iod->first_dma' which can 
-trigger that IOMMU warning on unmap.
-But problem was transient as a subsequent patch removed the 
-iod->first_dma and made unmapping work without that.
+I have applied your patch set [1] and tested and the reported
+regressions did not fix.
+Am I missing anything ?
 
-[0]
--static blk_status_t nvme_setup_prp_simple(struct nvme_dev *dev,
--               struct request *req, struct nvme_rw_command *cmnd,
--               struct bio_vec *bv)
-+static blk_status_t nvme_pci_setup_data_simple(struct request *req,
-+               enum nvme_use_sgl use_sgl)
-  {
-         struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
--       unsigned int offset = bv->bv_offset & (NVME_CTRL_PAGE_SIZE - 1);
--       unsigned int first_prp_len = NVME_CTRL_PAGE_SIZE - offset;
--
--       iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req), 0);
--       if (dma_mapping_error(dev->dev, iod->first_dma))
+[1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
 
-iod->first_dma does not get set, and that can cause unmap on invalid 
-address during teardown.
+>
+> Thanks,
+> Yi.
 
+- Naresh
 
+> >
+> > ## Test log
+> > <6>[   89.498969] loop0: detected capacity change from 0 to 614400
+> > <3>[   89.609561] operation not supported error, dev loop0, sector
+> > 20352 op 0x9:(WRITE_ZEROES) flags 0x20000800 phys_seg 0 prio class 0
+> > <6>[   89.707795] EXT4-fs (loop0): mounted filesystem
+> > 6786a191-5e0d-472b-8bce-4714e1a4fb44 r/w with ordered data mode. Quota
+> > mode: none.
+> > <3>[   90.023985] JBD2: kworker/u8:2 wants too many credits
+> > credits:416 rsv_credits:21 max:334
+> > <4>[   90.024973] ------------[ cut here ]------------
+> > <4>[ 90.025062] WARNING: fs/jbd2/transaction.c:334 at
+> > start_this_handle+0x4c0/0x4e0, CPU#0: 2/42
+> > <4>[   90.026661] Modules linked in: btrfs blake2b_generic xor
+> > xor_neon raid6_pq zstd_compress sm3_ce sha3_ce fuse drm backlight
+> > ip_tables x_tables
+> > <4>[   90.027952] CPU: 0 UID: 0 PID: 42 Comm: kworker/u8:2 Not tainted
+> > 6.16.0-rc3-next-20250626 #1 PREEMPT
+> > <4>[   90.029043] Hardware name: linux,dummy-virt (DT)
+> > <4>[   90.029524] Workqueue: writeback wb_workfn (flush-7:0)
+> > <4>[   90.030050] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT
+> > -SSBS BTYPE=--)
+> > <4>[ 90.030311] pc : start_this_handle (fs/jbd2/transaction.c:334
+> > (discriminator 1))
+> > <4>[ 90.030481] lr : start_this_handle (fs/jbd2/transaction.c:334
+> > (discriminator 1))
+> > <4>[   90.030656] sp : ffffc000805cb650
+> > <4>[   90.030785] x29: ffffc000805cb690 x28: fff00000dd1f5000 x27:
+> > ffffde2ec0272000
+> > <4>[   90.031097] x26: 00000000000001a0 x25: 0000000000000015 x24:
+> > 0000000000000002
+> > <4>[   90.031360] x23: 0000000000000015 x22: 0000000000000c40 x21:
+> > 0000000000000008
+> > <4>[   90.031618] x20: fff00000c231da78 x19: fff00000c231da78 x18:
+> > 0000000000000000
+> > <4>[   90.031875] x17: 0000000000000000 x16: 0000000000000000 x15:
+> > 0000000000000000
+> > <4>[   90.032859] x14: 0000000000000000 x13: 00000000ffffffff x12:
+> > 0000000000000000
+> > <4>[   90.033225] x11: 0000000000000000 x10: ffffde2ebfba8bd0 x9 :
+> > ffffde2ebd34e944
+> > <4>[   90.033607] x8 : ffffc000805cb278 x7 : 0000000000000000 x6 :
+> > 0000000000000001
+> > <4>[   90.033971] x5 : ffffde2ebfb29000 x4 : ffffde2ebfb293d0 x3 :
+> > 0000000000000000
+> > <4>[   90.034294] x2 : 0000000000000000 x1 : fff00000c04dc080 x0 :
+> > 000000000000004c
+> > <4>[   90.034772] Call trace:
+> > <4>[ 90.035068] start_this_handle (fs/jbd2/transaction.c:334
+> > (discriminator 1)) (P)
+> > <4>[ 90.035366] jbd2__journal_start (fs/jbd2/transaction.c:501)
+> > <4>[ 90.035586] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
+> > <4>[ 90.035807] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242
+> > fs/ext4/inode.c:2846)
+> > <4>[ 90.036004] ext4_writepages (fs/ext4/inode.c:2953)
+> > <4>[ 90.036233] do_writepages (mm/page-writeback.c:2636)
+> > <4>[ 90.036406] __writeback_single_inode (fs/fs-writeback.c:1680)
+> > <4>[ 90.036616] writeback_sb_inodes (fs/fs-writeback.c:1978)
+> > <4>[ 90.036891] wb_writeback (fs/fs-writeback.c:2156)
+> > <4>[ 90.037122] wb_workfn (fs/fs-writeback.c:2303 (discriminator 1)
+> > fs/fs-writeback.c:2343 (discriminator 1))
+> > <4>[ 90.037318] process_one_work (kernel/workqueue.c:3244)
+> > <4>[ 90.037517] worker_thread (kernel/workqueue.c:3316 (discriminator
+> > 2) kernel/workqueue.c:3403 (discriminator 2))
+> > <4>[ 90.037752] kthread (kernel/kthread.c:463)
+> > <4>[ 90.037903] ret_from_fork (arch/arm64/kernel/entry.S:863)
+> > <4>[   90.038217] ---[ end trace 0000000000000000 ]---
+> > <2>[   90.039950] EXT4-fs (loop0): ext4_do_writepages: jbd2_start:
+> > 9223372036854775807 pages, ino 14; err -28
+> > <3>[   90.040291] JBD2: kworker/u8:2 wants too many credits
+> > credits:416 rsv_credits:21 max:334
+> > <4>[   90.040374] ------------[ cut here ]------------
+> > <4>[ 90.040386] WARNING: fs/jbd2/transaction.c:334 at
+> > start_this_handle+0x4c0/0x4e0, CPU#1: 2/42
+> >
+> >
+> > ## Source
+> > * Kernel version: 6.16.0-rc3-next-20250626
+> > * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> > * Git sha: ecb259c4f70dd5c83907809f45bf4dc6869961d7
+> > * Git describe: 6.16.0-rc3-next-20250626
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250626/
+> > * Architectures: arm64
+> > * Toolchains: gcc-13
+> > * Kconfigs: gcc-13-lkftconfig-64k_page_size
+> >
+> > ## Build arm64
+> > * Test log: https://qa-reports.linaro.org/api/testruns/28894530/log_file/
+> > * Test LAVA log 1:
+> > https://lkft.validation.linaro.org/scheduler/job/8331353#L6841
+> > * Test LAVA log 2:
+> > https://lkft.validation.linaro.org/scheduler/job/8331352#L8854
+> > * Test details:
+> > https://regressions.linaro.org/lkft/linux-next-master/next-20250626/log-parser-test/exception-warning-fsjbd2transaction-at-start_this_handle/
+> > * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/config
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+> >
+>
