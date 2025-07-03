@@ -1,201 +1,134 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A8623BCF1;
-	Thu,  3 Jul 2025 09:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1312E1743
+	for <regressions@lists.linux.dev>; Thu,  3 Jul 2025 10:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751535052; cv=none; b=DigVtPwWDKCnr7XQnMHnTWdhArwAuwyWHtvQJux/NQMKy9EnAdfuq9Yf9BJy6UGl5ayJFaf65NYEkbkEDG3Kpcowq+m7dXuAQvQFDWxPjcG25gkR+/7G4ZQj9Kn9OmDmRS8FTIx5Y5MfSr+dszfe/6DxSWBL8eIsecw/AYwWuS8=
+	t=1751539634; cv=none; b=OXT9S7ZGF2b+efHdxNOAx3IuOwvo07MkwYk5iAM6vyfJ5PhkdydQdCXlSD9rhCOgiWH6GjU0+RRN+egv0rpx7fqCel8AvPWCg71RpUBaC4t25DRHtX81rG6ASyGh24/FItHMpypmZD0SswnvhNKPKnLG0q40kfT4q6pOTzMpM5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751535052; c=relaxed/simple;
-	bh=5dEuxX6YNR/26yYDBwOG+R9/sOuOWGvFuUFdmXGa/us=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EG0Gs7wUfZsmR6BJ5Z7qU+aS10HWn+Qmc+b38yBCRr8ZTPXmX/L0BmQZo4DFXEuX0IV2gaqF9csLiaY+r4C/TLwHZIZxFXTD2qSfYJM9Fsa3yRWDZhPkKt6y/JmziGMkYuqJKMaUgB0d+txhk9g4dvYIVA/l/yVCiVus+gRKhM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 880E668C4E; Thu,  3 Jul 2025 11:30:43 +0200 (CEST)
-Date: Thu, 3 Jul 2025 11:30:42 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Ben Copeland <ben.copeland@linaro.org>,
-	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org,
-	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
-	sagi@grimberg.me, iommu@lists.linux.dev,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <20250703093042.GA7387@lst.de>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com> <20250630133343.GA26040@lst.de> <aGLyswGYD6Zai_sI@kbusch-mbp> <20250701132936.GA18807@lst.de> <aGRMilWhgF4z0WOf@kbusch-mbp>
+	s=arc-20240116; t=1751539634; c=relaxed/simple;
+	bh=NkBVSvIRK6m5xJpAYwjcb6boeOKxulWEgOMtKfEgvGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aGFSF83/Yzg7g8ne0QreuBGmuTrGh8FhH8ORY5NlmrMS2AKEAjuAiFa4P9tvFqubP/bWyhEMpG47WFuYavdvi6RENLCH3NSjoXuBaF4LA9hYtcglkMojSGE6ExjKDcgYqq4W8isMzpwxidu0WQKJvkvTiVByNhsIYXA3lcaLtrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWIS2WAn; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWIS2WAn"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23c76ed4a7fso11298955ad.1
+        for <regressions@lists.linux.dev>; Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751539632; x=1752144432; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yT116BmQVYQp7TgXBQY166ymvqYjgN3gIl7mlb2d3wM=;
+        b=UWIS2WAnCVrO5Dr5k47FrEo/wfGKXaTEHQ/ydcS9rz7G5+k8ZyqUf6izNUT2a3jk4l
+         octaMHFXDvrl84kqH8haXRkS6x1fsr9/awb7l9zjPbncw6CmUKgNIFSrnV+kPu+h8aEW
+         ArtznblEzjWJwowCAGeqtSLjvOX68iLvi81CAJ8Fk7mA8OnqHCC5oRLpSYMUwn6HRKts
+         vRFhy3dNxItugmXOCVbl9YDVl7hCbLsjEw4bNRP7EOzA2forSKnqty5y7kI0LZMacov1
+         bzUnTfUjgxp9QkcvGyMYkSYBVKdNYoO+TWkIMT7za6hFxa11zDJtUBpGKj52nht+L6BV
+         qwHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751539632; x=1752144432;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yT116BmQVYQp7TgXBQY166ymvqYjgN3gIl7mlb2d3wM=;
+        b=lrd3j4XlpEnkvMPsLPmvoyQWlgadJQCGTLvvBfanBJH6wV0Pwp+JIBnLmKYynbknUL
+         0U8RjMZ3AbsJTPVUjnL7chDhGHjYhXa268OiMfMFUP4X1HDfFEatwiKhICRQqOw/AiKO
+         5xT2beZEfuGlB+UcK64UAn8fEbOfwvhExidV13Pm59YEJAV4XdA2Q4hzWTewnIHbgwVj
+         Sbn/AqJvlOz9t3n6r3kkJNKBwaPKBWomR4UfhgkjQhNruJF3bZHqZSQkExnYY9YSxYcX
+         7xG7PW7EqaAk6D6jxQGKxpdV8cURNXy6FyGqvtApUvlvdPoFG0ZjX/bh9xN8xMvWH+JB
+         +9BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZYpFNTYzAKZzdDic7d2caAmKU+pbMSmGBRvCjH6oTHS7x4U0uzLIu6+nmISbVNe9ArqIfElz4gIX7yw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMDRgF3ujTVmiaJ6brxie/My+0e1s8QtftNecODlWuiEOatumR
+	W8GIRg2LEpnftFBrtxyVzV/2cVmOuAVHsbqZzrhWSwd17tE6toxTbTcI
+X-Gm-Gg: ASbGncvhRPvgiKcDc7gTTXD0q96FWNWQNPFBG01nopBBohK+MtB+NOSpLYX7zmr/W+7
+	kPjpp+EAWtjcnksr6fxUtcVPy2FcNxM/aG968wTj8VmZ9uRDGFXfImTQ5WvPnacNCAJyRG9Dedl
+	YZcAx4hHxArIAck+wi4AIsEF1OhATPCGSnydV6J/QjILoNee3UMQnPIJZwkMGJEli1kZkJfCbki
+	6oPID1CddAP+LzKL94JO19EKgMsfZ8f0BU3SRuZenNz5L9YWmPKcXekWqEkCPVUJn0SbKf7FETG
+	wGviTP+alL+4zs9ofuYBvAgYydNeBI8z4SP73wwM2Xwplsid08rALgfA7HiL9Rjwz4aOiho/9at
+	l6No=
+X-Google-Smtp-Source: AGHT+IE+BSY2N3Ksp1Ngu882oItJhHDV437LBfkyE/yfOf+Y7Tt3xVRjNgqMrrvyEVdLEqjOCjXpZg==
+X-Received: by 2002:a17:903:1aab:b0:234:f825:b2c3 with SMTP id d9443c01a7336-23c7a1f0e25mr31795975ad.17.1751539632373;
+        Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+Received: from [30.221.128.104] ([47.246.101.56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39b9f2sm162265655ad.99.2025.07.03.03.47.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jul 2025 03:47:12 -0700 (PDT)
+Message-ID: <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
+Date: Thu, 3 Jul 2025 18:47:08 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGRMilWhgF4z0WOf@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
+ Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+ <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+From: Joseph Qi <jiangqi903@gmail.com>
+In-Reply-To: <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 05:00:58PM -0400, Keith Busch wrote:
-> On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
-> > Yes, that's broken, and I remember fixing it before.  A little digging
-> > shows that my fixes disappeared between the oct 30 version of Leon's
-> > dma-split branch and the latest one somewhere.  Below is what should
-> > restore it, but at least when forcing my Intel IOMMU down this path it
-> > still has issues with VPTEs already set.  So maybe Bob should not try
-> > it quite yet.  I'll try to get to it, but my availability today and
-> > tomorrow is a bit limited.
-> 
-> Let's say we're using ARM64 SMMU configured with 64k granularity like I
-> showed earlier.
-> 
-> Now let's send a read command with 128k transfer, and let's assume the
-> payload is two 64k aligned physical segments, so we have 2 bvecs.
-> 
-> Since nvme's virtual boundary is smaller than the iommu's granule, we
-> won't attempt to coalesce. We instead iommu map each bvec segment
-> individually.
-> 
-> And let's say each segment just so happens to get consecutive IOVA's.
-> The mapping side had done each segment individually, but your proposal
-> here will assume the contiguous dma_addr ranges were done as a single
-> larger mapping. Is that okay?
 
-Not on the DMA API level, and depending on the implementation also
-not in practice.
 
-I think the idea to reconstruct the dma addresses from PRPs should
-be considered a failure by now.  It works fine for SGLs, but for
-PRPs we're better off just stashing them away.  Bob, can you try
-something like the patch below?  To be fully safe it needs a mempool,
-and it could use some cleanups, but it does pass testing on my setup
-here, so I'd love to see if if fixes your issue.
+On 2025/7/3 15:26, Naresh Kamboju wrote:
+> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
+>>
+>> Hi, Naresh!
+>>
+>> On 2025/6/26 20:31, Naresh Kamboju wrote:
+>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
+>>> test case on the Linux next-20250616..next-20250626 with the extra build
+>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
+>>>
+>>> Not reproducible with 4K page size.
+>>>
+>>> Test environments:
+>>> - Dragonboard-410c
+>>> - Juno-r2
+>>> - rk3399-rock-pi-4b
+>>> - qemu-arm64
+>>>
+>>> Regression Analysis:
+>>> - New regression? Yes
+>>> - Reproducibility? Yes
+>>>
+>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+>>> transaction.c start_this_handle
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>
+>> Thank you for the report. The block size for this test is 1 KB, so I
+>> suspect this is the issue with insufficient journal credits that we
+>> are going to resolve.
+> 
+> I have applied your patch set [1] and tested and the reported
+> regressions did not fix.
+> Am I missing anything ?
+> 
+> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+> 
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index f5cf90ddc3e9..f1242e321a58 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -262,6 +262,11 @@ enum nvme_iod_flags {
- 	IOD_SINGLE_SEGMENT	= 1U << 2,
- };
- 
-+struct dma_vec {
-+	dma_addr_t addr;
-+	unsigned int len;
-+};
-+
- /*
-  * The nvme_iod describes the data in an I/O.
-  */
-@@ -274,6 +279,8 @@ struct nvme_iod {
- 	unsigned int total_len;
- 	struct dma_iova_state dma_state;
- 	void *descriptors[NVME_MAX_NR_DESCRIPTORS];
-+	struct dma_vec *dma_vecs;
-+	unsigned int nr_dma_vecs;
- 
- 	dma_addr_t meta_dma;
- 	struct sg_table meta_sgt;
-@@ -676,42 +683,12 @@ static void nvme_free_prps(struct request *req)
- 	struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
- 	struct device *dma_dev = nvmeq->dev->dev;
- 	enum dma_data_direction dir = rq_dma_dir(req);
--	int length = iod->total_len;
--	dma_addr_t dma_addr;
--	int i, desc;
--	__le64 *prp_list;
--	u32 dma_len;
--
--	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
--	dma_len = min_t(u32, length,
--		NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
--	length -= dma_len;
--	if (!length) {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		return;
--	}
--
--	if (length <= NVME_CTRL_PAGE_SIZE) {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
--		dma_unmap_page(dma_dev, dma_addr, length, dir);
--		return;
--	}
--
--	i = 0;
--	desc = 0;
--	prp_list = iod->descriptors[desc];
--	do {
--		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
--		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
--			prp_list = iod->descriptors[++desc];
--			i = 0;
--		}
-+	unsigned int i;
- 
--		dma_addr = le64_to_cpu(prp_list[i++]);
--		dma_len = min(length, NVME_CTRL_PAGE_SIZE);
--		length -= dma_len;
--	} while (length);
-+	for (i = 0; i < iod->nr_dma_vecs; i++)
-+		dma_unmap_page(dma_dev, iod->dma_vecs[i].addr,
-+				iod->dma_vecs[i].len, dir);
-+	kfree(iod->dma_vecs);
- }
- 
- static void nvme_free_sgls(struct request *req)
-@@ -770,6 +747,17 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 	unsigned int prp_len, i;
- 	__le64 *prp_list;
- 
-+	if (dma_need_unmap(nvmeq->dev->dev)) {
-+		/* XXX: use mempool */
-+		iod->dma_vecs = kmalloc_array(blk_rq_nr_phys_segments(req),
-+				sizeof(struct dma_vec), GFP_NOIO);
-+		if (!iod->dma_vecs)
-+			return BLK_STS_RESOURCE;
-+		iod->dma_vecs[0].addr = iter->addr;
-+		iod->dma_vecs[0].len = iter->len;
-+		iod->nr_dma_vecs++;
-+	}
-+
- 	/*
- 	 * PRP1 always points to the start of the DMA transfers.
- 	 *
-@@ -793,6 +781,11 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 				goto bad_sgl;
- 			goto done;
- 		}
-+		if (dma_need_unmap(nvmeq->dev->dev)) {
-+			iod->dma_vecs[iod->nr_dma_vecs].addr = iter->addr;
-+			iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
-+			iod->nr_dma_vecs++;
-+		}
- 	}
- 
- 	/*
-@@ -838,6 +831,12 @@ static blk_status_t nvme_pci_setup_data_prp(struct request *req,
- 					goto bad_sgl;
- 				goto done;
- 			}
-+			if (dma_need_unmap(nvmeq->dev->dev)) {
-+				iod->dma_vecs[iod->nr_dma_vecs].addr =
-+					iter->addr;
-+				iod->dma_vecs[iod->nr_dma_vecs].len = iter->len;
-+				iod->nr_dma_vecs++;
-+			}
- 		}
- 
- 		/*
-@@ -1108,6 +1107,7 @@ static blk_status_t nvme_prep_rq(struct request *req)
- 	iod->nr_descriptors = 0;
- 	iod->total_len = 0;
- 	iod->meta_sgt.nents = 0;
-+	iod->nr_dma_vecs = 0;
- 
- 	ret = nvme_setup_cmd(req->q->queuedata, req);
- 	if (ret)
+I can also reproduce the similar warning with xfstests generic/730 under
+64k page size + 4k block size.
+
+Thanks,
+Joseph
+
+
