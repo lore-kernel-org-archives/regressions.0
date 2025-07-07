@@ -1,170 +1,111 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1905E199FD0
-	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 05:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED0B1A0BF1;
+	Mon,  7 Jul 2025 07:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751864591; cv=none; b=fd3K7bRNimWm0NIQnwM4SEqZqDtxJvV340iKfp6yrex7gfQqoZsCXQtwJl1dzYYNh16fTr26qLOF5pT+0ViwBDsc/krpo/AE95koGEI1NqgHGNWFnMOxOxQkQxsQQi9wh778SQK/L+I5o3A+fv9AOgByHoGKZZZ+bUcKlJfpRmY=
+	t=1751875038; cv=none; b=bUbk1FC8IXCTfzq5/xyQI88RtNBJlHLr55ggz+U2dLZlDVg+88syp8KehrFtkDAfUzE1t9inL8Ua8+aWn8bRpSOEVkkfv++2ExrXaykZGR047QFDnL4ZGcwygnH+NMmMEtMLuFFm4wBJht1QV4mUq37CmzR2KwH6fMbwiQiANQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751864591; c=relaxed/simple;
-	bh=qau8kLo7RA0oR8tZ7uNWb49Vo54Zep7OP61bVD0/SQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K8AfiCOYZ9uCmROT+FMmIJpn+YDBmeuo+rS7Y+7Sg3u1lM5FaHYM+yF2qJwu4EYzdHsFECBi58tCXZwJ+1DQ4FdV0HRkcvaiXZe/PDhQSa96EuNwbSpAZJvocSnUuzX7SENXw6UW/sDuKex2m7TcMilD34tcvFY/y3/dprO/ULI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bbBvY4SMVzKHMsv
-	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 13:03:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 173171A0851
-	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 13:03:04 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgB3JSMHVWto_lGhAw--.4001S3;
-	Mon, 07 Jul 2025 13:03:03 +0800 (CST)
-Message-ID: <a5726ab3-99ed-430a-a883-d04e972b6e76@huaweicloud.com>
-Date: Mon, 7 Jul 2025 13:03:02 +0800
+	s=arc-20240116; t=1751875038; c=relaxed/simple;
+	bh=clixo0WX7xiieK6BB2BUIJIDIXXL6gQ+H7kdA9xRXJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVq2+wYTCST6HlJq+Qge5qd/FNZS64nTJhWQ1556KvLek/vU6qMEk2jESOXXHiCRmfjBnqrvDvdXPPz/1B3SZiOzJcE+P6MLwfIQdm+zcbbtpOrUlp3KxqkFJREwh1u3LYWqz02PurN8IqKaOwmlWW1sw8MFVeMdcU09IKt45zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1pWZxct4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1pWZxct4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB6DC4CEE3;
+	Mon,  7 Jul 2025 07:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751875037;
+	bh=clixo0WX7xiieK6BB2BUIJIDIXXL6gQ+H7kdA9xRXJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1pWZxct43kpoiYEX6qfUlU+4ZrJQntDmlyhs7OfKYvtMFuXRh5zesOQpq/9z3jNqm
+	 bxOd1moerKqEQ6zr6T5w1vOC3AUxMM4/IH5nXP075cXSxUFSDKCZvs5sBm6/Y+kLmQ
+	 3cyVHoO6k5NtdS5vfBFe4shpB1ru0qmOcBGtVnQM=
+Date: Mon, 7 Jul 2025 09:57:13 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, andreas.noever@gmail.com,
+	michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com,
+	rajat.khandelwal@intel.com, mika.westerberg@linux.intel.com,
+	linux-usb@vger.kernel.org, kim.lindberger@gmail.com, linux@lunaa.ch,
+	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	Alyssa Ross <hi@alyssa.is>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
+Message-ID: <2025070737-charbroil-imply-7b5e@gregkh>
+References: <20250411151446.4121877-1-superm1@kernel.org>
+ <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
+ <87v7odo46s.fsf@alyssa.is>
+ <51d5393c-d0e1-4f35-bed0-16c7ce40a8a8@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
- with ARM64_64K_PAGES
-To: Joseph Qi <jiangqi903@gmail.com>
-Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
- Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Naresh Kamboju <naresh.kamboju@linaro.org>
-References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
- <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
- <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
- <2ee5547a-fa11-49fb-98b7-898d20457d7e@gmail.com>
- <094a1420-9060-4dcf-9398-8873193f5f7b@huaweicloud.com>
- <5db1e0c2-a192-4883-9535-dd269efdff74@gmail.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <5db1e0c2-a192-4883-9535-dd269efdff74@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgB3JSMHVWto_lGhAw--.4001S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrW5CFWxuF1kKw4UXr4rGrg_yoW5tFy3pF
-	y5JF1UAF47K348XF4Iqr40gw1UtanFqrWUWr98Gr1UCF4qyr18CF4SgF1UuFZ8K3yxZryD
-	X3ykua4Iqr1Ut3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUb
-	mii3UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51d5393c-d0e1-4f35-bed0-16c7ce40a8a8@kernel.org>
 
-On 2025/7/7 9:43, Joseph Qi wrote:
+On Sun, Jul 06, 2025 at 10:46:53AM -0400, Mario Limonciello wrote:
+> On 6/30/25 07:32, Alyssa Ross wrote:
+> > Alyssa Ross <hi@alyssa.is> writes:
+> > 
+> > > On Fri, Apr 11, 2025 at 10:14:44AM -0500, Mario Limonciello wrote:
+> > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > 
+> > > > commit a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect
+> > > > on USB4 ports") introduced a sysfs file to control wake up policy
+> > > > for a given USB4 port that defaulted to disabled.
+> > > > 
+> > > > However when testing commit 4bfeea6ec1c02 ("thunderbolt: Use wake
+> > > > on connect and disconnect over suspend") I found that it was working
+> > > > even without making changes to the power/wakeup file (which defaults
+> > > > to disabled). This is because of a logic error doing a bitwise or
+> > > > of the wake-on-connect flag with device_may_wakeup() which should
+> > > > have been a logical AND.
+> > > > 
+> > > > Adjust the logic so that policy is only applied when wakeup is
+> > > > actually enabled.
+> > > > 
+> > > > Fixes: a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect on USB4 ports")
+> > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > Hi! There have been a couple of reports of a Thunderbolt regression in
+> > > recent stable kernels, and one reporter has now bisected it to this
+> > > change:
+> > > 
+> > >   • https://bugzilla.kernel.org/show_bug.cgi?id=220284
+> > >   • https://github.com/NixOS/nixpkgs/issues/420730
+> > > 
+> > > Both reporters are CCed, and say it starts working after the module is
+> > > reloaded.
+> > > 
+> > > Link: https://lore.kernel.org/r/bug-220284-208809@https.bugzilla.kernel.org%2F/
+> > > (for regzbot)
+> > 
+> > Apparently[1] fixed by the first linked patch below, which is currently in
+> > the Thunderbolt tree waiting to be pulled into the USB tree.
+> > 
+> > #regzbot monitor: https://lore.kernel.org/linux-usb/20250619213840.2388646-1-superm1@kernel.org/
+> > #regzbot monitor: https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
+> > 
+> > [1]: https://github.com/NixOS/nixpkgs/issues/420730#issuecomment-3018563631
 > 
+> Hey Greg,
 > 
-> On 2025/7/5 15:10, Zhang Yi wrote:
->> On 2025/7/3 18:47, Joseph Qi wrote:
->>>
->>>
->>> On 2025/7/3 15:26, Naresh Kamboju wrote:
->>>> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
->>>>>
->>>>> Hi, Naresh!
->>>>>
->>>>> On 2025/6/26 20:31, Naresh Kamboju wrote:
->>>>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
->>>>>> test case on the Linux next-20250616..next-20250626 with the extra build
->>>>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
->>>>>>
->>>>>> Not reproducible with 4K page size.
->>>>>>
->>>>>> Test environments:
->>>>>> - Dragonboard-410c
->>>>>> - Juno-r2
->>>>>> - rk3399-rock-pi-4b
->>>>>> - qemu-arm64
->>>>>>
->>>>>> Regression Analysis:
->>>>>> - New regression? Yes
->>>>>> - Reproducibility? Yes
->>>>>>
->>>>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
->>>>>> transaction.c start_this_handle
->>>>>>
->>>>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>>>>
->>>>> Thank you for the report. The block size for this test is 1 KB, so I
->>>>> suspect this is the issue with insufficient journal credits that we
->>>>> are going to resolve.
->>>>
->>>> I have applied your patch set [1] and tested and the reported
->>>> regressions did not fix.
->>>> Am I missing anything ?
->>>>
->>>> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
->>>>
->>>
->>> I can also reproduce the similar warning with xfstests generic/730 under
->>> 64k page size + 4k block size.
->>>
->>
->> Hi, Joseph!
->>
->> I cannot reproduce this issue on my machine. Theoretically, the 'rsv_credits'
->> should be 113 under 64k page size + 4k block size, I don't think it would
->> exceed the max user trans buffers. Could you please give more details?
->> What is the configuration of your xfstests? and what does the specific error
->> log look like?
->>
-> I'm testing on arm 64K ECS with xfstests local.config as follows:
+> Can you pick up the pull request from Mika from a week and a half ago with
+> this fix for the next 6.16-rc?
 > 
-> export TEST_DEV=/dev/nvme1n1p1
-> export TEST_DIR=/mnt/test
-> export SCRATCH_DEV=/dev/nvme1n1p2
-> export SCRATCH_MNT=/mnt/scratch
-> > Each disk part is 250G and formated with 4k block size.
-> 
-> The dmesg shows the following warning:
-> 
-> [  137.174661] JBD2: kworker/u32:0 wants too many credits credits:32 rsv_credits:1577 max:2695
-> ...
-> [  137.175544] Call trace:
-> [  137.175545]  start_this_handle+0x3bc/0x3d8 (P)
-> [  137.175548]  jbd2__journal_start+0x10c/0x248
-> [  137.175550]  __ext4_journal_start_sb+0xe4/0x1b0
-> [  137.175553]  ext4_do_writepages+0x430/0x768
-> [  137.175556]  ext4_writepages+0x8c/0x118
-> [  137.175558]  do_writepages+0xac/0x180
-> [  137.175561]  __writeback_single_inode+0x48/0x328
-> [  137.175563]  writeback_sb_inodes+0x244/0x4a0
-> [  137.175564]  wb_writeback+0xec/0x3a0
-> [  137.175566]  wb_do_writeback+0xc0/0x250
-> [  137.175568]  wb_workfn+0x70/0x1b0
-> [  137.175570]  process_one_work+0x180/0x400
-> [  137.175573]  worker_thread+0x254/0x2c8
-> [  137.175575]  kthread+0x124/0x130
-> [  137.175577]  ret_from_fork+0x10/0x20
-> ...
+> https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
 
-OK, well. Since you did not specifically set MKFS_OPTIONS="-b 4096, the
-generic/730 will use scsi_debug to create a file system image with a size of
-256MB, a block size of 1KB, and a log size of 8MB. Consequently, the issue
-did not actually occur in a 4KB block size environment, so the root cause
-is the same as Naresh's report.
+Yes, I was waiting for this last round to go to Linus as the pull
+request was made against a newer version of Linus's tree than I
+currently had in my "for linus" branch.  I'll go get to that later
+today.
 
-Thanks,
-Yi.
+thanks,
 
+greg k-h
