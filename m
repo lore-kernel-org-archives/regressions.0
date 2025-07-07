@@ -1,117 +1,177 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mx.olsak.net (unknown [37.205.8.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A5D14F9FB
-	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 08:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0974621B8E7
+	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 20:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751876182; cv=none; b=C9OXK3iIWp/BYH3+Sxl2PTBXceKblR4+F8gzsMtA3QIvr2HBFmT7NwTh3mrYQiBUjlGuQ1aNVv546A9VS/Viu6CNrZon+IHLnIa8h243Tlnx7tHCfuP08vX0vpg4zdlRrfxf+7qe7BBKTK2lLoOklri8HCIOXMsyyhH6zrfczRo=
+	t=1751919580; cv=none; b=YKl1zd9bLDmrBuLInPOxejItYvD2/w4SSB4iTSe6//LlROZNddnd+vre0ex0BnykbOohEeKo2HFDiupweGB+bS7AAPzxgYgo3kjZaYiKFy8MEC/MaPjJT77zqQdLNTSkZidg9h1VMjI6Sh9b39HgAEsU7IzFuX61ABtksKQ01fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751876182; c=relaxed/simple;
-	bh=XUSiHXeAqft3KWjBwWsENIyb3v/gq+2wG2azJgaM9vU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j9ehg4NY9IEE5U6CJgbuJS1B7rPMVPdmg1wOhJUK+SuN96zPk0KzhU8K/tB4FjUcq9zUDuBzXXU3TXlYjCfqomfa/t0VGY/hPdY+KskDbSLO5Vp8MEpzwgo0qCDtBez/C++ZQjlhFSxMJeqDoBG7ek5LAZKL3AST+FxsoqbRgbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E26D2116B;
-	Mon,  7 Jul 2025 08:16:19 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C96613757;
-	Mon,  7 Jul 2025 08:16:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DG/2BlOCa2jaLwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 07 Jul 2025 08:16:19 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B292EA0992; Mon,  7 Jul 2025 10:16:18 +0200 (CEST)
-Date: Mon, 7 Jul 2025 10:16:18 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Theodore Ts'o <tytso@mit.edu>, linux-ext4 <linux-ext4@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	LTP List <ltp@lists.linux.it>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
- with ARM64_64K_PAGES
-Message-ID: <mfx57o5lsxdkjpd3kq2y7ozkfu4rgr6zugdsnyqlhktwuh4dmw@7ldfhzgozaoo>
-References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
- <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
- <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
- <1c7ae5cb-61ad-404c-950a-ba1b5895e6c3@huaweicloud.com>
- <c2dvcablaximwjnwg67spegwkntxjgezu6prvyyto4vjnx6rvh@w3xgx4jjq4bb>
- <021aad1d-61ba-484f-88d1-9a482707ff94@huaweicloud.com>
+	s=arc-20240116; t=1751919580; c=relaxed/simple;
+	bh=k2MHhgPjfUDLsGEEH67EpKvSCmfi9RUC7fUdRelYLkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QN+GMvmrlveIFkMAtUInVBeImsfoXWhXg8zvrz6d7hQTNIZMYZM3FbP7nlDtEeCuiZ0cVVNt/Ac2GnNdHu1s+jzb7mEj0Ngiq8kJjS70AqmARXEHKBTnJPNdjl2flvJ1Kgeyint12RSb1pxCb8ibIGFNAC9mIYfArqwiyJo022o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=pgNHVJSp; arc=none smtp.client-ip=37.205.8.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="pgNHVJSp"
+DKIM-Signature: a=rsa-sha256; bh=fHH6v5yGNVwg8uMoTuKvnyh2VkMrVbbrie/9BKZs8WU=;
+ c=relaxed/relaxed; d=dujemihanovic.xyz;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
+ i=@dujemihanovic.xyz; s=default; t=1751918643; v=1; x=1752350643;
+ b=pgNHVJSpO+4a34f+EgFX8ByNKF3dBwRptZimjNRgVRZqH5invAlB3+V9UYM2anUrPQBUnkXw
+ NyYgBEykvI/4f5jZ9Prvsj25EbKSjiOnbLjJbJi5flZgT/YGrs7a1VNG0/HziEt2Pzt1goYUm86
+ MAe/QZA5soJ3+0UpfugXPYGpwRF8kViFjvjE8lg0iL6b1Ev9wEd2MVFLs5G87flEzyar3dIqv8B
+ mNCW3RIpi5Z3a42pHPhDJVBXrRDVLHWj+OrNYv2MPGaktgizoRa+4YSXddslh5bLfMmOnre/OQP
+ nBkXkUwuyXFsxS7QZ8ACnSBdet2+8+NFUBe3Y9t1auD/w==
+Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
+ ESMTPS id f8bc91aa; Mon, 07 Jul 2025 22:04:03 +0200
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
+To: Robert Jarzmik <robert.jarzmik@free.fr>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Karel Balej <balejk@matfyz.cz>
+Subject:
+ [REGRESSION] samsung,coreprimevelte oops and lockup while probing SM5504
+Date: Mon, 07 Jul 2025 22:04:02 +0200
+Message-ID: <3367665.aeNJFYEL58@radijator>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <021aad1d-61ba-484f-88d1-9a482707ff94@huaweicloud.com>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: 2E26D2116B
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Mon 07-07-25 12:54:56, Zhang Yi wrote:
-> On 2025/7/4 19:17, Jan Kara wrote:
-> > I wouldn't really disable it for 64K page size. I'd rather limit max folio
-> > order to 1024 blocks. That actually makes sense as a general limitation of
-> > our current implementation (linked lists of bhs in each folio don't really
-> > scale). We can use mapping_set_folio_order_range() for that instead of
-> > mapping_set_large_folios().
-> > 
-> 
-> Indeed, after noticing that Btrfs also calls mapping_set_folio_order_range()
-> to set the maximum size of a folio, I thought this solution should work. So
-> I changed my mind and was going to try this solution. However, I guess limit
-> max folio order to 1024 blocks is somewhat too small. I'd like to limit the
-> order to 2048 blocks, because this this allows a file system with a 1KB
-> block size to achieve a maximum folio size to PMD size in x86 with a 4KB
-> page size, this is useful for increase the TLB efficiency and reduce page
-> fault handling overhead.
+Hi,
 
-OK. In my opinion whoever runs with 1k blocksize doesn't really care about
-performance too much and thus is unlikely to care about getting 2M pages
-:). But whatever, the limit of 2048 blocks is fine by me.
+After rebasing my samsung,coreprimevelte patchset to v6.16-rc5 (from v6.14), I 
+found that the board would not successfully boot. Through serial I managed to 
+extract this oops (stack trace decoded):
 
-> I defined a new macro, something like this:
-> 
-> /*
->  * Limit the maximum folio order to 2048 blocks to prevent overestimation
->  * of reserve handle credits during the folio writeback in environments
->  * where the PAGE_SIZE exceeds 4KB.
->  */
-> #define EXT4_MAX_PAGECACHE_ORDER(i)             \
->                 min(MAX_PAGECACHE_ORDER, (11 + (i)->i_blkbits - PAGE_SIZE))
-								  ^^^ PAGE_SHIFT
+[    1.281921] Unable to handle kernel paging request at virtual address 
+00676e6965657246
+[    1.281927] Mem abort info:
+[    1.281930]   ESR = 0x0000000096000004
+[    1.281933]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.281938]   SET = 0, FnV = 0
+[    1.281941]   EA = 0, S1PTW = 0
+[    1.281944]   FSC = 0x04: level 0 translation fault
+[    1.281948] Data abort info:
+[    1.281950]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    1.281953]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.281957]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.281961] [00676e6965657246] address between user and kernel address 
+ranges
+[    1.281968] Internal error: Oops: 0000000096000004 [#1]  SMP
+[    1.281974] Modules linked in:
+[    1.281995] Tainted: [S]=CPU_OUT_OF_SPEC
+[    1.281998] Hardware name: Samsung Galaxy Core Prime VE LTE (DT)
+[    1.282003] Workqueue: events_unbound deferred_probe_work_func
+[    1.282018] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    1.282025] pc : try_module_get (kernel/module/main.c:883 (discriminator 
+2)) 
+[    1.282035] lr : gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131 
+(discriminator 1) drivers/gpio/gpiolib.c:1929 (discriminator 1)) 
+[    1.282044] sp : ffff8000811d3280
+[    1.282047] x29: ffff8000811d3280 x28: 000000000000001c x27: 
+0000000000000002
+[    1.282057] x26: ffff800080ce3c50 x25: ffff800080700e08 x24: 
+ffff00000341f800
+[    1.282068] x23: ffff000002ea6c00 x22: 000000000000001c x21: 
+0000000000000000
+[    1.282077] x20: 0000000000000000 x19: ffff000002f03880 x18: 
+0000000000000000
+[    1.282087] x17: 0000000000000000 x16: 000000009e839b88 x15: 
+ffff0000025ec490
+[    1.282097] x14: ffff800080f6ae78 x13: 0000000000000001 x12: 
+000000004c68655d
+[    1.282107] x11: 0000000000000180 x10: 0000000000000a70 x9 : 
+ffff8000805a6fd4
+[    1.282116] x8 : ffff0000025eced0 x7 : ffff0000025ec400 x6 : 
+00000000cbc1e127
+[    1.282126] x5 : ffff000002c5b328 x4 : 0000000000000000 x3 : 
+0000000000000000
+[    1.282136] x2 : ffff0000025ec400 x1 : 20676e6965657246 x0 : 
+20676e6965657246
+[    1.282146] Call trace:
+[    1.282150] try_module_get (kernel/module/main.c:883 (discriminator 2)) (P)
+[    1.282159] gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131 (discriminator 
+1) drivers/gpio/gpiolib.c:1929 (discriminator 1)) 
+[    1.282167] __setup_irq (kernel/irq/manage.c:1341 (discriminator 1) kernel/
+irq/manage.c:1529 (discriminator 1)) 
+[    1.282177] request_threaded_irq (kernel/irq/manage.c:2126) 
+[    1.282186] regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
+irq.c:923) 
+[    1.282197] devm_regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
+irq.c:1085) 
+[    1.282206] devm_regmap_add_irq_chip (drivers/base/regmap/regmap-
+irq.c:1123) 
+[    1.282215] sm5022_muic_i2c_probe (drivers/extcon/extcon-sm5502.c:714) 
+[    1.282225] i2c_device_probe (drivers/i2c/i2c-core-base.c:591) 
+[    1.282235] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657) 
+[    1.282243] __driver_probe_device (drivers/base/dd.c:799) 
+[    1.282252] driver_probe_device (drivers/base/dd.c:829) 
+[    1.282260] __device_attach_driver (drivers/base/dd.c:958) 
+[    1.282269] bus_for_each_drv (drivers/base/bus.c:462) 
+[    1.282277] __device_attach (drivers/base/dd.c:1031) 
+[    1.282285] device_initial_probe (drivers/base/dd.c:1079) 
+[    1.282294] bus_probe_device (drivers/base/bus.c:537) 
+[    1.282301] device_add (drivers/base/core.c:3699) 
+[    1.282308] device_register (drivers/base/core.c:3775) 
+[    1.282316] i2c_new_client_device (drivers/i2c/i2c-core-base.c:1022) 
+[    1.282325] of_i2c_register_device (drivers/i2c/i2c-core-of.c:77) 
+[    1.282332] of_i2c_register_devices (drivers/i2c/i2c-core-of.c:104 
+(discriminator 1)) 
+[    1.282339] i2c_register_adapter (drivers/i2c/i2c-core-base.c:1594) 
+[    1.282347] i2c_add_adapter (drivers/i2c/i2c-core-base.c:1670 drivers/i2c/
+i2c-core-base.c:1650) 
+[    1.282356] i2c_add_numbered_adapter (drivers/i2c/i2c-core-base.c:1703) 
+[    1.282366] __i2c_bit_add_bus (drivers/i2c/algos/i2c-algo-bit.c:659) 
+[    1.282373] i2c_bit_add_numbered_bus (drivers/i2c/algos/i2c-algo-bit.c:683) 
+[    1.282380] i2c_gpio_probe (drivers/i2c/busses/i2c-gpio.c:432) 
+[    1.282387] platform_probe (drivers/base/platform.c:1405) 
+[    1.282397] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657) 
+[    1.282405] __driver_probe_device (drivers/base/dd.c:799) 
+[    1.282413] driver_probe_device (drivers/base/dd.c:829) 
+[    1.282422] __device_attach_driver (drivers/base/dd.c:958) 
+[    1.282430] bus_for_each_drv (drivers/base/bus.c:462) 
+[    1.282438] __device_attach (drivers/base/dd.c:1031) 
+[    1.282446] device_initial_probe (drivers/base/dd.c:1079) 
+[    1.282455] bus_probe_device (drivers/base/bus.c:537) 
+[    1.282462] deferred_probe_work_func (drivers/base/dd.c:124) 
+[    1.282471] process_one_work (arch/arm64/include/asm/jump_label.h:36 
+include/trace/events/workqueue.h:110 kernel/workqueue.c:3243) 
+[    1.282479] worker_thread (kernel/workqueue.c:3315 (discriminator 2) 
+kernel/workqueue.c:3402 (discriminator 2)) 
+[    1.282487] kthread (kernel/kthread.c:464) 
+[    1.282494] ret_from_fork (arch/arm64/kernel/entry.S:863) 
+[ 1.282506] Code: a9bd7bfd 910003fd b4000260 aa0003e1 (b9400000)
+(disassembly omitted since the script treated it as x86 for some reason)
+[    1.282512] ---[ end trace 0000000000000000 ]---
+[    1.298926] mmc0: new HS200 MMC card at address 0001
+[    1.331699] mmc2: SDHCI controller on d4280800.mmc [d4280800.mmc] using 
+ADMA
+[    1.333834] mmcblk0: mmc0:0001 QN1SMB 7.28 GiB
+[    1.368613] mmc2: new high speed SDIO card at address 0001
+[    1.373418]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 
+p16 p17 p18 p19
+[    1.688785] mmcblk0boot0: mmc0:0001 QN1SMB 4.00 MiB
+[    1.693415] mmcblk0boot1: mmc0:0001 QN1SMB 4.00 MiB
+[    1.697474] mmcblk0rpmb: mmc0:0001 QN1SMB 512 KiB, chardev (248:0)
+(dmesg ends here, display freezes, no further signs of life)
 
-Otherwise looks good to me.
+I went through recent commits to sm5502, gpiolib and finally gpio-pxa to check 
+whether any of them could be causing issues. Eventually I stumbled upon 
+20117cf426b6 ("gpio: pxa: Make irq_chip immutable") and reverted it locally, 
+after which the board started booting again.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+#regzbot introduced: 20117cf426b6
+
+Regards,
+--
+Duje
+
+
