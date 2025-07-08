@@ -1,166 +1,152 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC39A22ACF3
-	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 10:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAB026B095
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 11:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751969689; cv=none; b=G86xJOGc4gbGqueVoFdb9sVId8+/sOcLrLOJ1ellFxtCagfly/SK2ei9bu5cRuwcQEfwT1lidae300dmCP1wYb52s6GkNoeXq2ZK3ut9/B3DeLcQqz9Noeix0ivvlz1xjelKNJwWRMpGsDPlPvIU12cyMmIDIR20EsL01p5uHpc=
+	t=1751975948; cv=none; b=fPohsqGgh6db23B1DtJWvP3ofyXmNeeQeQLLOztUE3sSSamXxwFZTaXiTLmqFfCzAx2vS9BWsD0ADN9r/NwNFVmtdavOvMu/j8Zzg3l2vEEUUjbE4TDc4ZFTpk7YDzl4BBFTx5rdMi5niIDs4biks4rBTaQBLo3OoXY4fM9zxrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751969689; c=relaxed/simple;
-	bh=pVC7GxX7t70O6nV2vsIuzXnuZ90xj4rHSPK+8DUoSsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snTSKUiGmi0pxKjVWWeMx3E5JCviuQLQnO0ZqPKZtoxun2uzjr2MrezNL7D84HtFRyHXz/bXPA6i9vQK2IUoid7t+DccWRDrLGE89Y6kgF873vD17lFhkBi++0mY68guImVFrm6cKJKTThsIdHtXqJO2wkOxi9B6OB7nzgq/nHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=phhqAlQb; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1751975948; c=relaxed/simple;
+	bh=L2kk/Y50TQGvVvlwNBwHcYOeOmCnkOn1jHt2wqQjjiU=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=UdwUyDYdUJoKSzA10YhyWy2mjixQBQLRWeEFBLEKao0MszfsWpWGM1hbRABQy/ULfAKFqBNLUsj0UNZvgr0/oX/yq9FSUKTCEcwd7kzw2TwZMtv+v5Mn0a26mRgRnzC1TeaKjH2aPb/rsfiQmibYshj2SMRqCA8Iyg7Bex64/gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=EFbyIOgU; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="phhqAlQb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1751969683; x=1752574483; i=christian@heusel.eu;
-	bh=pVC7GxX7t70O6nV2vsIuzXnuZ90xj4rHSPK+8DUoSsM=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=phhqAlQbPd9dDE+4Z/IvYh7fgfGT9H4/ezDogouElhqVfWe1B0dEaUSIgRs8uQwo
-	 eDYLPo0JRouEgAuUi7atEVyGHgP1h0v0bKZE2KUrVGaEXvhLX1GoRe7B8625q6MHC
-	 N+TAWTjAMf9GScJ9QI/ihVHtFeM+4N0qT6qAxz/8WDRuHzNVOv66auQexUpciwSRk
-	 ItyKo5kMnR9hhM2MLnim39MGXm3+NxHUXPb/UPjt4c2gL5vF/tJAcDZtjmdB+Z5//
-	 YpGwDOF2+X6rAn1cMY3+OlomEcLek34/9AO8qlRatN/W7Nyuct+jH6tYQ0ux1kYV+
-	 y2MXsz4Yeqo6OmqWow==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.247]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MyK9U-1ura8N2VIK-0117h4; Tue, 08 Jul 2025 12:14:43 +0200
-Date: Tue, 8 Jul 2025 12:14:41 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: tzimmermann@suse.de, asrivats@redhat.com, 
-	Christian =?utf-8?B?S8O2bmln?= <Christian.Koenig@amd.com>, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	sumit.semwal@linaro.org, linux-media@vger.kernel.org, 
-	dri-devel <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: 6.16-rc5/regression/bisected - WARNING in
- drm_gem_object_handle_put_unlocked after commit 5307dce878d4
-Message-ID: <a028ff08-8478-4cab-8bf6-3c9ea4b21ccc@heusel.eu>
-References: <CABXGCsNxhEu+win6h1Zwi-0e4NeURzOt2KA=BXakRz08moG4uA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="EFbyIOgU"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-710f39f5cb9so36752507b3.3
+        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 04:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1751975946; x=1752580746; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=itTve5oaCyFz6zqdqEqDpECcZdI9RhkR/BeCO9Yg03M=;
+        b=EFbyIOgUR6o0UkxjlxgG5hxszohIXvZvTo0Wb6WO8SPwdWwRD3GMSVP8kLkRGtgFCV
+         2K9oHvz4WTPK8EJXeJnlBoNu5kWgD6JHRabjV9dPodr5MjKFbrhm+SS5nAY10F1VNvj6
+         j8nD6Hf/CVdpyEq1w4Qi0x6HHhaT9NmckbANmDD3eISUGHVVFDq/bK0HxHBlNPsb5BAe
+         /W4Cyg2bjmXG8xYBvbr3qmWA91sxFRE4Y9iWswwonEGBbjaShzTQ2M/YD8RwA1xrYrEC
+         rdUbOmAwdJf45OA80ixwQLzJ35RuPNoGUzNqKn5K50FtFdnk2v7Is68fI0JUxfujIE7p
+         QZSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751975946; x=1752580746;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=itTve5oaCyFz6zqdqEqDpECcZdI9RhkR/BeCO9Yg03M=;
+        b=L2LPV9mI1nYEUCtz473JQey4DXyfLZUo5rp2o4c4U2Gy+dcfNTsHYlzj5W07+3+UJK
+         ZJ4/8NtZhl/lIE3FvGpVQaxbD8xCcGrHc8eZKJnFnBEu8bcYnwM7ij+XG+YkubrNDbBB
+         Ct4LtLyEsvQIBhYfmSgHSJkttroqkmzpo7ML4qLBsFdeekVEGOozCI8s9cEuFeTZzDJC
+         IkXbvE0uAnsHBgD/rMp5pryDoNUE4/O+RS4i+JHFh4lj9XZ84fWQYX+n/AMGcfWsDpTX
+         Twu/aTWdS2fkVe3KLNXtBsPxcm61f16rEC0wgxxqvQ5hiGkRVfD0iz+uo32HAIhLctCX
+         2L1A==
+X-Gm-Message-State: AOJu0YwY+oEKXr5WSWPnqPhWbFWJokSVI79DSwOtJBGIpI8fFeg+bWSc
+	b3gujJoqZmhBigC6Gq2HwXdXPi3IyWc5NNrn0cNT4GsnZT11Dtcg2lxrIr2e6AxF3h+Nq01DLzc
+	kEtT+5gGOVd0AbELm1ajSMTtbD7knOeQJNFVQ3OBGng==
+X-Gm-Gg: ASbGncvCUsj9dRVRsd2T/n9mqplmqLF/+0nhHtuKL0b4CPWjkDK0rtcEBFPig0sjfNR
+	8FYTFIp79aphSLKw9VjYmJhCcFsUgS4wir53Z0kA9maSP3BfxvjflAOtQCSadOh7lKfhwJelz45
+	0Ug49BUpEQHYiC0VF1fC4rlBk8f4VbRMk1KqdSql3JxQ==
+X-Google-Smtp-Source: AGHT+IEcYuwWugFSk8BbEt3kvM/tcewci3Uxixw5z4wz2ahT+N1YSv8Y0nwJmVXjo8ArBo0Frjk47hX4gsbSRPOwnaQ=
+X-Received: by 2002:a05:690c:9b0e:b0:716:4e16:4494 with SMTP id
+ 00721157ae682-717a0403abdmr34042437b3.20.1751975945855; Tue, 08 Jul 2025
+ 04:59:05 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 8 Jul 2025 04:59:04 -0700
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 8 Jul 2025 04:59:04 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fya22ekfcjwoyp6c"
-Content-Disposition: inline
-In-Reply-To: <CABXGCsNxhEu+win6h1Zwi-0e4NeURzOt2KA=BXakRz08moG4uA@mail.gmail.com>
-X-Provags-ID: V03:K1:kP9F2Oeo9EM+WR1is69hCSu10i0wMrSM8tP03uSWtSAgZa+h4UW
- /G52w2AJzg55Fj+GRg/neWqrxYh9CW8AS8/zNoToIatTcTUCofxizj0i+EuI644J3i14PRS
- nPVy8+aQCMw8Qi157G29tt0Eo+sS3nF9qzWOoYWASCyjrEXjvh1hP7sbDNG4kKbf8g7+hfr
- vPPPR8g3XexELk3WeaDjg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Il5a69wpHRQ=;tXMGCjBoUFpNgIw+/QVJAYQyWdy
- NEmoP3T61ygnivtqIUnRtLSM8P95LRfltSoY4EcAuVKb6ZhJsiTvCMBwU5v0DnuujMt80ImiF
- ShmKJz8t8JawVw53/YHfo3bsCobz2BGzG43m4tfvRR8l8NTs5ArXgJWl+5z/7C77QZ+WOQ0AT
- kRAIocgkcrnrbLiGJoLFxjYqqGLmMmpvC7/lhln+L5vT4l8iGVtcUkoXgoz6E8DDut2pBDnoh
- MxBRzssivhDe6cUpR4aPqFe4WyvezSsfX3lEj5IOyOFjRrhihr8fFuJTYdh3ShjJu3RlKtbo5
- evrLXH4dU1nSeRfI82yCxjUG2UHBZVICovu2IJAk9N2qa9IIoCmzJs/HQA32+F1JYW1BTCjpS
- 11Rhjk28rTKQF2kl2lUwEDjWbAWFjNJjRpB9FPpFP/YGYoqgIb54lWtyY7eS73GKWXXIAegoK
- mRQpZIDsXc3IJIzS5iS+hNW4YZaFQzEyp3vlBl8OY3+RH7S405lPTtddgG5J8jVgZ4EwpV99E
- 4tCMrFKEbV1+21KNFVghB94CqO3cyud4LeZc0P/6EJPvsD6QkaRcZ1U64ogvXDeCxDrV/PD/S
- INDdeAfh2tcPICXNMr2HgrdIlEOeHpdhSPVhS82Y1xPgpjxW5AbmWijEeNadzv8MR29twkLtZ
- fQA/B3cmUts9y9aBXOM5oBrrsAoCHxTtivi1iY6Yu77LHZs+PwCTHoD27U46nhNyLX1hl13Hf
- YuFy9FN/c7/TnXNin4c/gPDhWw8Emagt8c8EVJkkQnBgMyJCjuZlDrI9bm3bfIDkssJA0zHMs
- 3Lo0RkMYqHRuDuNp3eZhwVEv2EkjBq7vUqILpGSVr3yx/0bb2KiXacfvcZp85DtadRMTvDshl
- Di7JyU8cyomWrWP9FZRc3liocGKmF+Z43/yw/mRHePkb41HOE7ztA8OinIUvYW7uWhLpPuGrk
- wJsxPF8OgSWBrLeywbybKSEqDqwdY0otYMV5RF+dUm5QryJUqS6MT6EisMaYnjEiVMDJDmm9y
- nCeuruUOKJdRaFPHT+K7EgdArSQXQ6khFYDQZmxGgcbaltHeW5Y8u6vm05LzL7XOiuu0BMf4U
- Oz9v+d821PhdBOw0Wtz0VyAsT2DeQwrbi/dUYvaGymzGZ554fzykSUP6eRyzo7+LP9Am1gG34
- PzEezJqMw1Lf2tZOIOWtz5bbYeGBjuLhZDx7NH0GilYftKv3nwiIemEBCgrPXlzvMOJbY+oCs
- K9eO5tQt8+wGDrSgj95XyFgNrPwHwYy8MeK4f/XAhn+i59SHu7JzEOEr7hAHGlFH3Mx+hPEyY
- Y9ywk/bZsL5Lql6yAjlHthWLPUpuQKou4yXQTNmF2krFY4w5o749dfZv+yXmqWU4WPApaTeLu
- QterSEC31/YaxbJccQKl2Kand4EE11YR1P14QhTu8HILSd84JtHhGCBMDUS5nY+bfbX10YQMS
- 7mMi+h+e9Z8MEwFPhGhNd8pZOcmzCK4PPsDb4Dd1QUo5O3nIo9mN2KiGxCTmNA8sUbd5hwMg8
- WcsUFiXIsY1FHThI0tPa6UVAOqms/3r9tIdfaMVtLZKA1KtgKtQPMcdizFnAqCXD77XgwxMUG
- w4MjoUy5p/9BgYrMDEQuIIcBnkhkwThy7JUwZ72qHtRWyGredv4gI4EcAQFCb9/AEy+a8NOe9
- c=
-
-
---fya22ekfcjwoyp6c
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 8 Jul 2025 04:59:04 -0700
+X-Gm-Features: Ac12FXzQf85I7ySs1jjo3fwnQ21tGgy5H21viXt0JfbJVMgIc-A5vSibed-yOM0
+Message-ID: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
+Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGZvcm1hdCDigJglbGTigJkgZQ==?=
+	=?UTF-8?B?eHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVudCAyIGguLi4=?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: 6.16-rc5/regression/bisected - WARNING in
- drm_gem_object_handle_put_unlocked after commit 5307dce878d4
-MIME-Version: 1.0
 
-On 25/07/08 02:26PM, Mikhail Gavrilov wrote:
-> Hi Thomas,
+Hello,
 
-Hey Mike,
+New build issue found on next/master:
 
-> After commit 5307dce878d4 ("drm/gem: Acquire references on GEM handles
-> for framebuffers"), my kernel log becomes flooded with the following
-> warning:
-> WARNING: CPU: 5 PID: 1812 at drivers/gpu/drm/drm_gem.c:286
-> drm_gem_object_handle_put_unlocked+0x207/0x330
->=20
-> This occurs during normal GNOME Shell usage, and the trace appears
-> repeatedly. A full stack trace is included below.
->=20
-> I bisected the issue to this commit:
-> 5307dce878d4 drm/gem: Acquire references on GEM handles for framebuffers
+---
+ format =E2=80=98%ld=E2=80=99 expects argument of type =E2=80=98long int=E2=
+=80=99, but argument 2 has
+type =E2=80=98size_t=E2=80=99 {aka =E2=80=98unsigned int=E2=80=99} [-Werror=
+=3Dformat=3D] in
+drivers/platform/x86/intel/pmt/discovery.o
+(drivers/platform/x86/intel/pmt/discovery.c)
+[logspec:kbuild,kbuild.compiler.error]
+---
 
-I think this is the same issue as the already fixed
-https://gitlab.freedesktop.org/drm/amd/-/issues/4393
+- dashboard: https://d.kernelci.org/i/maestro:8fa7949e2280282be6a5756d890d8=
+a9cc1472e21
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  58ba80c4740212c29a1cf9b48f588e60a7612209
 
-Also this is the fix linked in the issue:
-https://lore.kernel.org/dri-devel/663110e1-3aa0-4f6f-8727-3a240bc96075@kern=
-el.org/T/#me2a0f3254a57cdd157ba79344ab8d51476ba18e5
 
-> Reverting this commit on top of current mainline kernel (6.16-rc5)
-> fixes the issue =E2=80=94 the warnings disappear completely.
->=20
-> My hardware config: https://linux-hardware.org/?probe=3Dce4c44c524
->=20
-> Kernel config, full bisect logs, and kernel logs from each bisect step
-> are attached.
-> Please take a look as soon as possible =E2=80=94 this regression could af=
-fect
-> any user relying on fbdev or shadow planes, and the commit is already
-> CC'ed to stable@vger.kernel.org.
-> It would be unfortunate if this made it into a stable release without
-> being addressed.
->=20
-> Thanks in advance!
->=20
-> --
-> Best Regards,
-> Mike Gavrilov.
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+drivers/platform/x86/intel/pmt/discovery.c:427:35: error: format =E2=80=98%=
+ld=E2=80=99
+expects argument of type =E2=80=98long int=E2=80=99, but argument 2 has typ=
+e =E2=80=98size_t=E2=80=99
+{aka =E2=80=98unsigned int=E2=80=99} [-Werror=3Dformat=3D]
+  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+size, &res_size))
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~
+      |                                                               |
+      |
+size_t {aka unsigned int}
+./include/asm-generic/bug.h:112:31: note: in definition of macro =E2=80=98_=
+_WARN_printf=E2=80=99
+  112 |                 __warn_printk(arg);
+         \
+      |                               ^~~
+drivers/platform/x86/intel/pmt/discovery.c:427:13: note: in expansion
+of macro =E2=80=98WARN=E2=80=99
+  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+size, &res_size))
+      |             ^~~~
+drivers/platform/x86/intel/pmt/discovery.c:427:53: note: format string
+is defined here
+  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+size, &res_size))
+      |                                                   ~~^
+      |                                                     |
+      |                                                     long int
+      |                                                   %d
+  CC [M]  drivers/platform/chrome/wilco_ec/telemetry.o
+cc1: all warnings being treated as errors
 
-Cheers,
-Chris
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
 
---fya22ekfcjwoyp6c
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+# Builds where the incident occurred:
 
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhs75EACgkQwEfU8yi1
-JYXsLg/+ObOtHgsihU/489f7Y2qWKv5s/4scLsWukSapGhIEIxW0sWySxqzC1Zg9
-JKzfWpnsBe3LbXbTo2/CxhdMaQ8kZWODBig7q0mHJJ72Ag3sBMfhcPkqHaGi2LDV
-AJTcfdb2hnRwbeDAfIFeHBZUws9fVNaNBQw4/n4HuZNSBjI+VC4uAIKk2USnzmPT
-2SEZTXsZw7zKx1lYs/pmOqMguNpbyYstcgqXjH1nxJxLC0X7p5pQTNlqYaKx4lZX
-yj7Eusoff/Va4x4nVv+5FlErKVbAXyRgCH16X99hzdSeda28JbZUqoI1HLZ8D+TY
-PdAlknCqzmKMd7T3DTdMzc0r8K2t1BCpcvJTa8Tl/imo9OV6sdzFLHW9Zrd3ek7x
-e/aV45/7HCDpLpIVDA6t2OUDf9ydeKlIs7koSGBO8nmKBRjmj+XZDIQY4WK1uAw/
-JOSJL/sWF2lqh3GXTPLgy8EXi6GpHuuUnqVjjX1DA+9Pq9Wyl9gNbqmnt7yL7Ry2
-Z6ZkTnlmeKRkOeLmIC3gtnAn37cFm+QNqkRuTFwZPMTVdoxSJMoO/7QNyEWuz5ei
-tLsVAYCHuPKaRzD+IJn9mORKEeY0XLqV0sVrTQLVEf/jx6FB2IvM1BmanMc9Oh4b
-UCqFH2z6b/SyLnqPsTujbWRKpP7gNNfxGkySHlkPcYRiA2EUbR0=
-=iEvw
------END PGP SIGNATURE-----
+## defconfig+kcidebug+x86-board on (i386):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:686cf98934612746bbb465bb
 
---fya22ekfcjwoyp6c--
+
+#kernelci issue maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
