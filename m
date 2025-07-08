@@ -1,177 +1,227 @@
-Received: from mx.olsak.net (unknown [37.205.8.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0974621B8E7
-	for <regressions@lists.linux.dev>; Mon,  7 Jul 2025 20:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4869721883F
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 02:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751919580; cv=none; b=YKl1zd9bLDmrBuLInPOxejItYvD2/w4SSB4iTSe6//LlROZNddnd+vre0ex0BnykbOohEeKo2HFDiupweGB+bS7AAPzxgYgo3kjZaYiKFy8MEC/MaPjJT77zqQdLNTSkZidg9h1VMjI6Sh9b39HgAEsU7IzFuX61ABtksKQ01fA=
+	t=1751940693; cv=none; b=Jf/rLZQqI+QrStjgMCl+eAOIWnT+mfYyAZQ6kwTYHxbdqS61/m8nZJlDtBzpgbVrFdW56iolJWK1m++8OOr9/JDAK/SHIqonacqSMKwyeatSIsprdsw68lLm+QvLTAJKVx7pmUGlBl9m/gUhsLtLWbP68U5Naz9YXKMmyM5NZiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751919580; c=relaxed/simple;
-	bh=k2MHhgPjfUDLsGEEH67EpKvSCmfi9RUC7fUdRelYLkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QN+GMvmrlveIFkMAtUInVBeImsfoXWhXg8zvrz6d7hQTNIZMYZM3FbP7nlDtEeCuiZ0cVVNt/Ac2GnNdHu1s+jzb7mEj0Ngiq8kJjS70AqmARXEHKBTnJPNdjl2flvJ1Kgeyint12RSb1pxCb8ibIGFNAC9mIYfArqwiyJo022o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=pgNHVJSp; arc=none smtp.client-ip=37.205.8.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="pgNHVJSp"
-DKIM-Signature: a=rsa-sha256; bh=fHH6v5yGNVwg8uMoTuKvnyh2VkMrVbbrie/9BKZs8WU=;
- c=relaxed/relaxed; d=dujemihanovic.xyz;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
- i=@dujemihanovic.xyz; s=default; t=1751918643; v=1; x=1752350643;
- b=pgNHVJSpO+4a34f+EgFX8ByNKF3dBwRptZimjNRgVRZqH5invAlB3+V9UYM2anUrPQBUnkXw
- NyYgBEykvI/4f5jZ9Prvsj25EbKSjiOnbLjJbJi5flZgT/YGrs7a1VNG0/HziEt2Pzt1goYUm86
- MAe/QZA5soJ3+0UpfugXPYGpwRF8kViFjvjE8lg0iL6b1Ev9wEd2MVFLs5G87flEzyar3dIqv8B
- mNCW3RIpi5Z3a42pHPhDJVBXrRDVLHWj+OrNYv2MPGaktgizoRa+4YSXddslh5bLfMmOnre/OQP
- nBkXkUwuyXFsxS7QZ8ACnSBdet2+8+NFUBe3Y9t1auD/w==
-Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
- ESMTPS id f8bc91aa; Mon, 07 Jul 2025 22:04:03 +0200
-From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
-To: Robert Jarzmik <robert.jarzmik@free.fr>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Karel Balej <balejk@matfyz.cz>
-Subject:
- [REGRESSION] samsung,coreprimevelte oops and lockup while probing SM5504
-Date: Mon, 07 Jul 2025 22:04:02 +0200
-Message-ID: <3367665.aeNJFYEL58@radijator>
+	s=arc-20240116; t=1751940693; c=relaxed/simple;
+	bh=/ZaA0gW2tRVZAnlXgh8+Tgwg9uThks4N84qAFsHXznk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FjgjMf3yq2UbKEAI3s2xmpGPPryxcTFj9sfZe84Z0nN1907PTLc7Pp/XiGc3Ph0VHIsGqrfU923I6IaKVfOJqR5zcApJUKcn63XPayUJmyDuw+d42FNFEngpU8ZrRVHg9uL9sCcLnJREnrRxmae8Sa01dmFeCuKm4bySU6WJpL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bbl346pnkzYQttj
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 10:11:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id BF8AA1A143B
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 10:11:27 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgA3mSZJfmxoAK0BBA--.64195S3;
+	Tue, 08 Jul 2025 10:11:23 +0800 (CST)
+Message-ID: <683b8d88-0ded-476f-9ed0-bd76a0c3128f@huaweicloud.com>
+Date: Tue, 8 Jul 2025 10:11:21 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250626: WARNING fs jbd2 transaction.c start_this_handle
+ with ARM64_64K_PAGES
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Joseph Qi <jiangqi903@gmail.com>
+Cc: linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ LTP List <ltp@lists.linux.it>, Theodore Ts'o <tytso@mit.edu>,
+ Jan Kara <jack@suse.cz>, Anders Roxell <anders.roxell@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+References: <CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com>
+ <2dbc199b-ef22-4c22-9dbd-5e5876e9f9b4@huaweicloud.com>
+ <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <CA+G9fYv5zpLxeVLqYbDLLUOxmAzuXDbaZobvpCBBBuZJKLMpPQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgA3mSZJfmxoAK0BBA--.64195S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw43Zry5uF17XrWkJFyUAwb_yoWxZFWxpa
+	43tF1UKr40vr1xJrW0q3WFqryUtr1qyFykJrnFqr18GFnFvF18JFWIgryrKF9rJ348u34x
+	Ar4qk3srKr4jy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi,
+On 2025/7/3 15:26, Naresh Kamboju wrote:
+> On Thu, 26 Jun 2025 at 19:23, Zhang Yi <yi.zhang@huaweicloud.com> wrote:
+>>
+>> Hi, Naresh!
+>>
+>> On 2025/6/26 20:31, Naresh Kamboju wrote:
+>>> Regressions noticed on arm64 devices while running LTP syscalls mmap16
+>>> test case on the Linux next-20250616..next-20250626 with the extra build
+>>> config fragment CONFIG_ARM64_64K_PAGES=y the kernel warning noticed.
+>>>
+>>> Not reproducible with 4K page size.
+>>>
+>>> Test environments:
+>>> - Dragonboard-410c
+>>> - Juno-r2
+>>> - rk3399-rock-pi-4b
+>>> - qemu-arm64
+>>>
+>>> Regression Analysis:
+>>> - New regression? Yes
+>>> - Reproducibility? Yes
+>>>
+>>> Test regression: next-20250626 LTP mmap16 WARNING fs jbd2
+>>> transaction.c start_this_handle
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>
+>> Thank you for the report. The block size for this test is 1 KB, so I
+>> suspect this is the issue with insufficient journal credits that we
+>> are going to resolve.
+> 
+> I have applied your patch set [1] and tested and the reported
+> regressions did not fix.
+> Am I missing anything ?
+> 
+> [1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+> 
 
-After rebasing my samsung,coreprimevelte patchset to v6.16-rc5 (from v6.14), I 
-found that the board would not successfully boot. Through serial I managed to 
-extract this oops (stack trace decoded):
+Hi, Naresh and Joseph!
 
-[    1.281921] Unable to handle kernel paging request at virtual address 
-00676e6965657246
-[    1.281927] Mem abort info:
-[    1.281930]   ESR = 0x0000000096000004
-[    1.281933]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    1.281938]   SET = 0, FnV = 0
-[    1.281941]   EA = 0, S1PTW = 0
-[    1.281944]   FSC = 0x04: level 0 translation fault
-[    1.281948] Data abort info:
-[    1.281950]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[    1.281953]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    1.281957]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    1.281961] [00676e6965657246] address between user and kernel address 
-ranges
-[    1.281968] Internal error: Oops: 0000000096000004 [#1]  SMP
-[    1.281974] Modules linked in:
-[    1.281995] Tainted: [S]=CPU_OUT_OF_SPEC
-[    1.281998] Hardware name: Samsung Galaxy Core Prime VE LTE (DT)
-[    1.282003] Workqueue: events_unbound deferred_probe_work_func
-[    1.282018] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    1.282025] pc : try_module_get (kernel/module/main.c:883 (discriminator 
-2)) 
-[    1.282035] lr : gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131 
-(discriminator 1) drivers/gpio/gpiolib.c:1929 (discriminator 1)) 
-[    1.282044] sp : ffff8000811d3280
-[    1.282047] x29: ffff8000811d3280 x28: 000000000000001c x27: 
-0000000000000002
-[    1.282057] x26: ffff800080ce3c50 x25: ffff800080700e08 x24: 
-ffff00000341f800
-[    1.282068] x23: ffff000002ea6c00 x22: 000000000000001c x21: 
-0000000000000000
-[    1.282077] x20: 0000000000000000 x19: ffff000002f03880 x18: 
-0000000000000000
-[    1.282087] x17: 0000000000000000 x16: 000000009e839b88 x15: 
-ffff0000025ec490
-[    1.282097] x14: ffff800080f6ae78 x13: 0000000000000001 x12: 
-000000004c68655d
-[    1.282107] x11: 0000000000000180 x10: 0000000000000a70 x9 : 
-ffff8000805a6fd4
-[    1.282116] x8 : ffff0000025eced0 x7 : ffff0000025ec400 x6 : 
-00000000cbc1e127
-[    1.282126] x5 : ffff000002c5b328 x4 : 0000000000000000 x3 : 
-0000000000000000
-[    1.282136] x2 : ffff0000025ec400 x1 : 20676e6965657246 x0 : 
-20676e6965657246
-[    1.282146] Call trace:
-[    1.282150] try_module_get (kernel/module/main.c:883 (discriminator 2)) (P)
-[    1.282159] gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131 (discriminator 
-1) drivers/gpio/gpiolib.c:1929 (discriminator 1)) 
-[    1.282167] __setup_irq (kernel/irq/manage.c:1341 (discriminator 1) kernel/
-irq/manage.c:1529 (discriminator 1)) 
-[    1.282177] request_threaded_irq (kernel/irq/manage.c:2126) 
-[    1.282186] regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
-irq.c:923) 
-[    1.282197] devm_regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
-irq.c:1085) 
-[    1.282206] devm_regmap_add_irq_chip (drivers/base/regmap/regmap-
-irq.c:1123) 
-[    1.282215] sm5022_muic_i2c_probe (drivers/extcon/extcon-sm5502.c:714) 
-[    1.282225] i2c_device_probe (drivers/i2c/i2c-core-base.c:591) 
-[    1.282235] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657) 
-[    1.282243] __driver_probe_device (drivers/base/dd.c:799) 
-[    1.282252] driver_probe_device (drivers/base/dd.c:829) 
-[    1.282260] __device_attach_driver (drivers/base/dd.c:958) 
-[    1.282269] bus_for_each_drv (drivers/base/bus.c:462) 
-[    1.282277] __device_attach (drivers/base/dd.c:1031) 
-[    1.282285] device_initial_probe (drivers/base/dd.c:1079) 
-[    1.282294] bus_probe_device (drivers/base/bus.c:537) 
-[    1.282301] device_add (drivers/base/core.c:3699) 
-[    1.282308] device_register (drivers/base/core.c:3775) 
-[    1.282316] i2c_new_client_device (drivers/i2c/i2c-core-base.c:1022) 
-[    1.282325] of_i2c_register_device (drivers/i2c/i2c-core-of.c:77) 
-[    1.282332] of_i2c_register_devices (drivers/i2c/i2c-core-of.c:104 
-(discriminator 1)) 
-[    1.282339] i2c_register_adapter (drivers/i2c/i2c-core-base.c:1594) 
-[    1.282347] i2c_add_adapter (drivers/i2c/i2c-core-base.c:1670 drivers/i2c/
-i2c-core-base.c:1650) 
-[    1.282356] i2c_add_numbered_adapter (drivers/i2c/i2c-core-base.c:1703) 
-[    1.282366] __i2c_bit_add_bus (drivers/i2c/algos/i2c-algo-bit.c:659) 
-[    1.282373] i2c_bit_add_numbered_bus (drivers/i2c/algos/i2c-algo-bit.c:683) 
-[    1.282380] i2c_gpio_probe (drivers/i2c/busses/i2c-gpio.c:432) 
-[    1.282387] platform_probe (drivers/base/platform.c:1405) 
-[    1.282397] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657) 
-[    1.282405] __driver_probe_device (drivers/base/dd.c:799) 
-[    1.282413] driver_probe_device (drivers/base/dd.c:829) 
-[    1.282422] __device_attach_driver (drivers/base/dd.c:958) 
-[    1.282430] bus_for_each_drv (drivers/base/bus.c:462) 
-[    1.282438] __device_attach (drivers/base/dd.c:1031) 
-[    1.282446] device_initial_probe (drivers/base/dd.c:1079) 
-[    1.282455] bus_probe_device (drivers/base/bus.c:537) 
-[    1.282462] deferred_probe_work_func (drivers/base/dd.c:124) 
-[    1.282471] process_one_work (arch/arm64/include/asm/jump_label.h:36 
-include/trace/events/workqueue.h:110 kernel/workqueue.c:3243) 
-[    1.282479] worker_thread (kernel/workqueue.c:3315 (discriminator 2) 
-kernel/workqueue.c:3402 (discriminator 2)) 
-[    1.282487] kthread (kernel/kthread.c:464) 
-[    1.282494] ret_from_fork (arch/arm64/kernel/entry.S:863) 
-[ 1.282506] Code: a9bd7bfd 910003fd b4000260 aa0003e1 (b9400000)
-(disassembly omitted since the script treated it as x86 for some reason)
-[    1.282512] ---[ end trace 0000000000000000 ]---
-[    1.298926] mmc0: new HS200 MMC card at address 0001
-[    1.331699] mmc2: SDHCI controller on d4280800.mmc [d4280800.mmc] using 
-ADMA
-[    1.333834] mmcblk0: mmc0:0001 QN1SMB 7.28 GiB
-[    1.368613] mmc2: new high speed SDIO card at address 0001
-[    1.373418]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 
-p16 p17 p18 p19
-[    1.688785] mmcblk0boot0: mmc0:0001 QN1SMB 4.00 MiB
-[    1.693415] mmcblk0boot1: mmc0:0001 QN1SMB 4.00 MiB
-[    1.697474] mmcblk0rpmb: mmc0:0001 QN1SMB 512 KiB, chardev (248:0)
-(dmesg ends here, display freezes, no further signs of life)
+Thanks to Jan's assistance, I've fixed this issue in my latest series
+and both tests passed on my machine. Could you please give it a try?
 
-I went through recent commits to sm5502, gpiolib and finally gpio-pxa to check 
-whether any of them could be causing issues. Eventually I stumbled upon 
-20117cf426b6 ("gpio: pxa: Make irq_chip immutable") and reverted it locally, 
-after which the board started booting again.
+https://lore.kernel.org/linux-ext4/20250707140814.542883-1-yi.zhang@huaweicloud.com/
 
-#regzbot introduced: 20117cf426b6
+Thanks,
+Yi.
 
-Regards,
---
-Duje
 
+>>>
+>>> ## Test log
+>>> <6>[   89.498969] loop0: detected capacity change from 0 to 614400
+>>> <3>[   89.609561] operation not supported error, dev loop0, sector
+>>> 20352 op 0x9:(WRITE_ZEROES) flags 0x20000800 phys_seg 0 prio class 0
+>>> <6>[   89.707795] EXT4-fs (loop0): mounted filesystem
+>>> 6786a191-5e0d-472b-8bce-4714e1a4fb44 r/w with ordered data mode. Quota
+>>> mode: none.
+>>> <3>[   90.023985] JBD2: kworker/u8:2 wants too many credits
+>>> credits:416 rsv_credits:21 max:334
+>>> <4>[   90.024973] ------------[ cut here ]------------
+>>> <4>[ 90.025062] WARNING: fs/jbd2/transaction.c:334 at
+>>> start_this_handle+0x4c0/0x4e0, CPU#0: 2/42
+>>> <4>[   90.026661] Modules linked in: btrfs blake2b_generic xor
+>>> xor_neon raid6_pq zstd_compress sm3_ce sha3_ce fuse drm backlight
+>>> ip_tables x_tables
+>>> <4>[   90.027952] CPU: 0 UID: 0 PID: 42 Comm: kworker/u8:2 Not tainted
+>>> 6.16.0-rc3-next-20250626 #1 PREEMPT
+>>> <4>[   90.029043] Hardware name: linux,dummy-virt (DT)
+>>> <4>[   90.029524] Workqueue: writeback wb_workfn (flush-7:0)
+>>> <4>[   90.030050] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT
+>>> -SSBS BTYPE=--)
+>>> <4>[ 90.030311] pc : start_this_handle (fs/jbd2/transaction.c:334
+>>> (discriminator 1))
+>>> <4>[ 90.030481] lr : start_this_handle (fs/jbd2/transaction.c:334
+>>> (discriminator 1))
+>>> <4>[   90.030656] sp : ffffc000805cb650
+>>> <4>[   90.030785] x29: ffffc000805cb690 x28: fff00000dd1f5000 x27:
+>>> ffffde2ec0272000
+>>> <4>[   90.031097] x26: 00000000000001a0 x25: 0000000000000015 x24:
+>>> 0000000000000002
+>>> <4>[   90.031360] x23: 0000000000000015 x22: 0000000000000c40 x21:
+>>> 0000000000000008
+>>> <4>[   90.031618] x20: fff00000c231da78 x19: fff00000c231da78 x18:
+>>> 0000000000000000
+>>> <4>[   90.031875] x17: 0000000000000000 x16: 0000000000000000 x15:
+>>> 0000000000000000
+>>> <4>[   90.032859] x14: 0000000000000000 x13: 00000000ffffffff x12:
+>>> 0000000000000000
+>>> <4>[   90.033225] x11: 0000000000000000 x10: ffffde2ebfba8bd0 x9 :
+>>> ffffde2ebd34e944
+>>> <4>[   90.033607] x8 : ffffc000805cb278 x7 : 0000000000000000 x6 :
+>>> 0000000000000001
+>>> <4>[   90.033971] x5 : ffffde2ebfb29000 x4 : ffffde2ebfb293d0 x3 :
+>>> 0000000000000000
+>>> <4>[   90.034294] x2 : 0000000000000000 x1 : fff00000c04dc080 x0 :
+>>> 000000000000004c
+>>> <4>[   90.034772] Call trace:
+>>> <4>[ 90.035068] start_this_handle (fs/jbd2/transaction.c:334
+>>> (discriminator 1)) (P)
+>>> <4>[ 90.035366] jbd2__journal_start (fs/jbd2/transaction.c:501)
+>>> <4>[ 90.035586] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
+>>> <4>[ 90.035807] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242
+>>> fs/ext4/inode.c:2846)
+>>> <4>[ 90.036004] ext4_writepages (fs/ext4/inode.c:2953)
+>>> <4>[ 90.036233] do_writepages (mm/page-writeback.c:2636)
+>>> <4>[ 90.036406] __writeback_single_inode (fs/fs-writeback.c:1680)
+>>> <4>[ 90.036616] writeback_sb_inodes (fs/fs-writeback.c:1978)
+>>> <4>[ 90.036891] wb_writeback (fs/fs-writeback.c:2156)
+>>> <4>[ 90.037122] wb_workfn (fs/fs-writeback.c:2303 (discriminator 1)
+>>> fs/fs-writeback.c:2343 (discriminator 1))
+>>> <4>[ 90.037318] process_one_work (kernel/workqueue.c:3244)
+>>> <4>[ 90.037517] worker_thread (kernel/workqueue.c:3316 (discriminator
+>>> 2) kernel/workqueue.c:3403 (discriminator 2))
+>>> <4>[ 90.037752] kthread (kernel/kthread.c:463)
+>>> <4>[ 90.037903] ret_from_fork (arch/arm64/kernel/entry.S:863)
+>>> <4>[   90.038217] ---[ end trace 0000000000000000 ]---
+>>> <2>[   90.039950] EXT4-fs (loop0): ext4_do_writepages: jbd2_start:
+>>> 9223372036854775807 pages, ino 14; err -28
+>>> <3>[   90.040291] JBD2: kworker/u8:2 wants too many credits
+>>> credits:416 rsv_credits:21 max:334
+>>> <4>[   90.040374] ------------[ cut here ]------------
+>>> <4>[ 90.040386] WARNING: fs/jbd2/transaction.c:334 at
+>>> start_this_handle+0x4c0/0x4e0, CPU#1: 2/42
+>>>
+>>>
+>>> ## Source
+>>> * Kernel version: 6.16.0-rc3-next-20250626
+>>> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+>>> * Git sha: ecb259c4f70dd5c83907809f45bf4dc6869961d7
+>>> * Git describe: 6.16.0-rc3-next-20250626
+>>> * Project details:
+>>> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250626/
+>>> * Architectures: arm64
+>>> * Toolchains: gcc-13
+>>> * Kconfigs: gcc-13-lkftconfig-64k_page_size
+>>>
+>>> ## Build arm64
+>>> * Test log: https://qa-reports.linaro.org/api/testruns/28894530/log_file/
+>>> * Test LAVA log 1:
+>>> https://lkft.validation.linaro.org/scheduler/job/8331353#L6841
+>>> * Test LAVA log 2:
+>>> https://lkft.validation.linaro.org/scheduler/job/8331352#L8854
+>>> * Test details:
+>>> https://regressions.linaro.org/lkft/linux-next-master/next-20250626/log-parser-test/exception-warning-fsjbd2transaction-at-start_this_handle/
+>>> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/
+>>> * Kernel config:
+>>> https://storage.tuxsuite.com/public/linaro/lkft/builds/2z2V7LhiJecGzINkU7ObVQTwoR1/config
+>>>
+>>> --
+>>> Linaro LKFT
+>>> https://lkft.linaro.org
+>>>
+>>
+> 
+> 
 
