@@ -1,59 +1,58 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAB026B095
-	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 11:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6B26CE33
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 11:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751975948; cv=none; b=fPohsqGgh6db23B1DtJWvP3ofyXmNeeQeQLLOztUE3sSSamXxwFZTaXiTLmqFfCzAx2vS9BWsD0ADN9r/NwNFVmtdavOvMu/j8Zzg3l2vEEUUjbE4TDc4ZFTpk7YDzl4BBFTx5rdMi5niIDs4biks4rBTaQBLo3OoXY4fM9zxrM=
+	t=1751975949; cv=none; b=Zsv7nRlnr8na6je8RB/yRFrKi+R9hRBFrW948KhGkb4lYBtRDNkx2XUQSwt9Xgmkq2cqABLEBV8Vxj5vjGcKM3irmhDZ9FMYrieo13psjiqJ37Zd07w6f9B57Qm+g7Z/p/gJ/DwxB/I9Ycga0HzeIFogLAQyH75seMOrS3Cn1zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751975948; c=relaxed/simple;
-	bh=L2kk/Y50TQGvVvlwNBwHcYOeOmCnkOn1jHt2wqQjjiU=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=UdwUyDYdUJoKSzA10YhyWy2mjixQBQLRWeEFBLEKao0MszfsWpWGM1hbRABQy/ULfAKFqBNLUsj0UNZvgr0/oX/yq9FSUKTCEcwd7kzw2TwZMtv+v5Mn0a26mRgRnzC1TeaKjH2aPb/rsfiQmibYshj2SMRqCA8Iyg7Bex64/gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=EFbyIOgU; arc=none smtp.client-ip=209.85.128.182
+	s=arc-20240116; t=1751975949; c=relaxed/simple;
+	bh=l4YWMze/oS4h0PoeJI6+srjACyEMe2Xs4EmUu6v8QWI=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=QQK4mfwTvA0mJxNsfex5lcpqJDczK8lCIiMHOmiMVymygPfo34y5XMfVEbk0KuNubxePIuzMCMLO9RnyCaobVigNAybe8Gra/pJaOwqL2zw56BJcHImsg3s1Oy+lg5BRdthqTAmuyd49p+Ffl+UQkVsEjVwhTNb09EX6kmZ3TtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=Roct4t2V; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="EFbyIOgU"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-710f39f5cb9so36752507b3.3
-        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 04:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="Roct4t2V"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81826d5b72so3758950276.3
+        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 04:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1751975946; x=1752580746; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=itTve5oaCyFz6zqdqEqDpECcZdI9RhkR/BeCO9Yg03M=;
-        b=EFbyIOgUR6o0UkxjlxgG5hxszohIXvZvTo0Wb6WO8SPwdWwRD3GMSVP8kLkRGtgFCV
-         2K9oHvz4WTPK8EJXeJnlBoNu5kWgD6JHRabjV9dPodr5MjKFbrhm+SS5nAY10F1VNvj6
-         j8nD6Hf/CVdpyEq1w4Qi0x6HHhaT9NmckbANmDD3eISUGHVVFDq/bK0HxHBlNPsb5BAe
-         /W4Cyg2bjmXG8xYBvbr3qmWA91sxFRE4Y9iWswwonEGBbjaShzTQ2M/YD8RwA1xrYrEC
-         rdUbOmAwdJf45OA80ixwQLzJ35RuPNoGUzNqKn5K50FtFdnk2v7Is68fI0JUxfujIE7p
-         QZSg==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1751975947; x=1752580747; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gtzSxUVKERYTmkdWodmf6sDIEA7o3urEegtQwrIBFeo=;
+        b=Roct4t2VROpDGsOcdeICpB/McM8MsKLq3wpD/1h2Au7a4pVtBgIkDyYnmEGCtPWi4i
+         uimWyGN3Uxs8WQ2Q3yUU8+s6P34FSEnupYJ1lcwcD7XvUEhhZt0WHHQ779hDdIOcSlfP
+         mNd45Dy2W4GSVqHbe7wrgijWnqXYamRnxlefkwCEOMniIjFPCACh5j7L4+aUMqJIn1IF
+         iqD1bYQTjhhCy6JSvj1y/2FGSuK6E52Sv82h9OeP2nL1aywKuIOp8b/iLxP7iSo7xYpG
+         g60XIj8I3/ICqJzn7ITIx088EUfTzUEt3Vk7Qsn0Oo0R96IHKQmJpd4R7hiNDVjrg2YL
+         5Zjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751975946; x=1752580746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=itTve5oaCyFz6zqdqEqDpECcZdI9RhkR/BeCO9Yg03M=;
-        b=L2LPV9mI1nYEUCtz473JQey4DXyfLZUo5rp2o4c4U2Gy+dcfNTsHYlzj5W07+3+UJK
-         ZJ4/8NtZhl/lIE3FvGpVQaxbD8xCcGrHc8eZKJnFnBEu8bcYnwM7ij+XG+YkubrNDbBB
-         Ct4LtLyEsvQIBhYfmSgHSJkttroqkmzpo7ML4qLBsFdeekVEGOozCI8s9cEuFeTZzDJC
-         IkXbvE0uAnsHBgD/rMp5pryDoNUE4/O+RS4i+JHFh4lj9XZ84fWQYX+n/AMGcfWsDpTX
-         Twu/aTWdS2fkVe3KLNXtBsPxcm61f16rEC0wgxxqvQ5hiGkRVfD0iz+uo32HAIhLctCX
-         2L1A==
-X-Gm-Message-State: AOJu0YwY+oEKXr5WSWPnqPhWbFWJokSVI79DSwOtJBGIpI8fFeg+bWSc
-	b3gujJoqZmhBigC6Gq2HwXdXPi3IyWc5NNrn0cNT4GsnZT11Dtcg2lxrIr2e6AxF3h+Nq01DLzc
-	kEtT+5gGOVd0AbELm1ajSMTtbD7knOeQJNFVQ3OBGng==
-X-Gm-Gg: ASbGncvCUsj9dRVRsd2T/n9mqplmqLF/+0nhHtuKL0b4CPWjkDK0rtcEBFPig0sjfNR
-	8FYTFIp79aphSLKw9VjYmJhCcFsUgS4wir53Z0kA9maSP3BfxvjflAOtQCSadOh7lKfhwJelz45
-	0Ug49BUpEQHYiC0VF1fC4rlBk8f4VbRMk1KqdSql3JxQ==
-X-Google-Smtp-Source: AGHT+IEcYuwWugFSk8BbEt3kvM/tcewci3Uxixw5z4wz2ahT+N1YSv8Y0nwJmVXjo8ArBo0Frjk47hX4gsbSRPOwnaQ=
-X-Received: by 2002:a05:690c:9b0e:b0:716:4e16:4494 with SMTP id
- 00721157ae682-717a0403abdmr34042437b3.20.1751975945855; Tue, 08 Jul 2025
- 04:59:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751975947; x=1752580747;
+        h=cc:to:subject:message-id:date:reply-to:from:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtzSxUVKERYTmkdWodmf6sDIEA7o3urEegtQwrIBFeo=;
+        b=nr8aLtxosXTzyIqBE3mgfGhIBk+Uopc/HFD+dUu9AuctnJ8ZvOwYktg2aZad1GVzG3
+         cTYEcj4ccSYsu3kkTmHaYP31OUyjdLNDkiRYHimB+n1xzaQVMTb5WuUaXcfOuBS2R01u
+         xfFpQv9ZFW+Pw5cTAQjsZJ8h5GAEp5BaeupHdQdSVGF0WQ3/MsBFvFPAAMDIVnlZQhfc
+         TyDb98DibW9N4IJb69J4SayxK47sSkyJ6fwoeOPQnEoG6hXaFLSAfYEPluQKNOPZ/Qox
+         0kUdzkQbwaInIAlE1/3J6eIYPY1fYaum/T1mENmXYLrGQPJv/+NGpQRizCch7hCTiDrN
+         kscQ==
+X-Gm-Message-State: AOJu0YyNgRy3vF7n0jesBWiQQeujqjL5gw+WvMLMPfsGlzIScfh/6RR1
+	7GCzHATL+NEbsYhxnNs9oSneEuNANiPzktm1fqkfeuycJwp+R8AD+rDVQ9RR09GIBshXSzsNbwy
+	ur1+9SKorzI55Z27RHhl1J8/kKT8rcsOOFKxKJxuJKQ==
+X-Gm-Gg: ASbGnct0DD9WIfv4aSsu7cE6/Iri19Gj0/w8TzbZuZF+5hcii45zL+SeTH/iNsUYe6d
+	5P7LOe1x0nRWVQ/MLWZd2s2jJAckkfB6icJRkDMYrpeekVO+gg02//ChTo19P+UcUNrApWE6eZT
+	5TbI9klbwycr3v5hf0VMCoqFpo4XY4yki5q78eo7EOyw==
+X-Google-Smtp-Source: AGHT+IHldcdfL3KDEtXQ5coruO648VbCeq4DNQV8fjNhsOKR6jna0NqzlmNfbozuk89fRAZyu9pcN0kJL/if35bHIeI=
+X-Received: by 2002:a05:690c:46c8:b0:70e:2a0c:bc5 with SMTP id
+ 00721157ae682-7179e464094mr49136347b3.38.1751975947430; Tue, 08 Jul 2025
+ 04:59:07 -0700 (PDT)
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 8 Jul 2025 04:59:04 -0700
+ HTTPREST; Tue, 8 Jul 2025 04:59:05 -0700
 Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 8 Jul 2025 04:59:04 -0700
+ HTTPREST; Tue, 8 Jul 2025 04:59:05 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,86 +61,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 from: KernelCI bot <bot@kernelci.org>
 Reply-To: kernelci@lists.linux.dev
-Date: Tue, 8 Jul 2025 04:59:04 -0700
-X-Gm-Features: Ac12FXzQf85I7ySs1jjo3fwnQ21tGgy5H21viXt0JfbJVMgIc-A5vSibed-yOM0
-Message-ID: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
-Subject: =?UTF-8?B?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGZvcm1hdCDigJglbGTigJkgZQ==?=
-	=?UTF-8?B?eHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUg4oCYbG9uZyBpbnTigJksIGJ1dCBhcmd1bWVudCAyIGguLi4=?=
+Date: Tue, 8 Jul 2025 04:59:05 -0700
+X-Gm-Features: Ac12FXxdG7SBioohOVIdrl2kRCgFlhwWfZBNI-8C0Yojen0DOxGOdqxZG-1I8wc
+Message-ID: <CACo-S-0GQ5cmyK=xXjWxJrTfUu7_B2gHD0z5fO2O=QVi3CEt2g@mail.gmail.com>
+Subject: [REGRESSION] next/master: (build) variable 'sys_info_avail' is not
+ needed and will not be emitted [-...
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
 New build issue found on next/master:
 
 ---
- format =E2=80=98%ld=E2=80=99 expects argument of type =E2=80=98long int=E2=
-=80=99, but argument 2 has
-type =E2=80=98size_t=E2=80=99 {aka =E2=80=98unsigned int=E2=80=99} [-Werror=
-=3Dformat=3D] in
-drivers/platform/x86/intel/pmt/discovery.o
-(drivers/platform/x86/intel/pmt/discovery.c)
-[logspec:kbuild,kbuild.compiler.error]
+ variable 'sys_info_avail' is not needed and will not be emitted
+[-Werror,-Wunneeded-internal-declaration] in lib/sys_info.o
+(lib/sys_info.c) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:8fa7949e2280282be6a5756d890d8=
-a9cc1472e21
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
+- dashboard: https://d.kernelci.org/i/maestro:5c04e00f1c1b59acf474835a714df4aec7228b6a
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  58ba80c4740212c29a1cf9b48f588e60a7612209
 
 
 Log excerpt:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-drivers/platform/x86/intel/pmt/discovery.c:427:35: error: format =E2=80=98%=
-ld=E2=80=99
-expects argument of type =E2=80=98long int=E2=80=99, but argument 2 has typ=
-e =E2=80=98size_t=E2=80=99
-{aka =E2=80=98unsigned int=E2=80=99} [-Werror=3Dformat=3D]
-  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
-size, &res_size))
-      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~
-      |                                                               |
-      |
-size_t {aka unsigned int}
-./include/asm-generic/bug.h:112:31: note: in definition of macro =E2=80=98_=
-_WARN_printf=E2=80=99
-  112 |                 __warn_printk(arg);
-         \
-      |                               ^~~
-drivers/platform/x86/intel/pmt/discovery.c:427:13: note: in expansion
-of macro =E2=80=98WARN=E2=80=99
-  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
-size, &res_size))
-      |             ^~~~
-drivers/platform/x86/intel/pmt/discovery.c:427:53: note: format string
-is defined here
-  427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
-size, &res_size))
-      |                                                   ~~^
-      |                                                     |
-      |                                                     long int
-      |                                                   %d
-  CC [M]  drivers/platform/chrome/wilco_ec/telemetry.o
-cc1: all warnings being treated as errors
+=====================================================
+lib/sys_info.c:52:19: error: variable 'sys_info_avail' is not needed
+and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+   52 | static const char sys_info_avail[] =
+"tasks,mem,timers,locks,ftrace,all_bt,blocked_tasks";
+      |                   ^~~~~~~~~~~~~~
+1 error generated.
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+=====================================================
 
 
 # Builds where the incident occurred:
 
-## defconfig+kcidebug+x86-board on (i386):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:686cf98934612746bbb465bb
+## x86_64_defconfig on (x86_64):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:686cf90434612746bbb46434
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:686cf90a34612746bbb4643a
 
 
-#kernelci issue maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+#kernelci issue maestro:5c04e00f1c1b59acf474835a714df4aec7228b6a
 
 Reported-by: kernelci.org bot <bot@kernelci.org>
 
