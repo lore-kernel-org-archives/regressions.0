@@ -1,119 +1,266 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6B26CE33
-	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 11:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5592718E02A
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 19:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751975949; cv=none; b=Zsv7nRlnr8na6je8RB/yRFrKi+R9hRBFrW948KhGkb4lYBtRDNkx2XUQSwt9Xgmkq2cqABLEBV8Vxj5vjGcKM3irmhDZ9FMYrieo13psjiqJ37Zd07w6f9B57Qm+g7Z/p/gJ/DwxB/I9Ycga0HzeIFogLAQyH75seMOrS3Cn1zo=
+	t=1752004576; cv=none; b=NoAMoa6A5s9Wk5GaDgWZfuZJw8G7et0GC2LyCHIITPy81jLjPmxEoQOdGcGikTXndGtJsqbzy4nUa/rMA4I1tW0XTUkFV+eJmrusFGQthRgitQbWCA+AsZSciL79DhZe0OvDQ50Pqf7eT3EdsACse0v67jFCawndJHd7vs54V0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751975949; c=relaxed/simple;
-	bh=l4YWMze/oS4h0PoeJI6+srjACyEMe2Xs4EmUu6v8QWI=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=QQK4mfwTvA0mJxNsfex5lcpqJDczK8lCIiMHOmiMVymygPfo34y5XMfVEbk0KuNubxePIuzMCMLO9RnyCaobVigNAybe8Gra/pJaOwqL2zw56BJcHImsg3s1Oy+lg5BRdthqTAmuyd49p+Ffl+UQkVsEjVwhTNb09EX6kmZ3TtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=Roct4t2V; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1752004576; c=relaxed/simple;
+	bh=18iaciKyn+45GheNp5Lp5r6hvjqTRnJ6ICEZp2o2ZXI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IIucwsn3eY2+Kme/Rb+1mBpgHp+1J0kpzKBaM+nJjYH7BmNfjpHxZwAD3gpp7ZszQcFyCms1iJ5Gzvun3crzsiZsd8qYTAWBKekAWDlIU5UNRdyQ1ljmcVcKt1g75IZnbyK6yvExGx2EE5ZsjNU6PRx1IjsOf62S2vR6RRteNuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pOCG0mL/; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="Roct4t2V"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81826d5b72so3758950276.3
-        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 04:59:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOCG0mL/"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-311c95ddfb5so4232175a91.2
+        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 12:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1751975947; x=1752580747; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gtzSxUVKERYTmkdWodmf6sDIEA7o3urEegtQwrIBFeo=;
-        b=Roct4t2VROpDGsOcdeICpB/McM8MsKLq3wpD/1h2Au7a4pVtBgIkDyYnmEGCtPWi4i
-         uimWyGN3Uxs8WQ2Q3yUU8+s6P34FSEnupYJ1lcwcD7XvUEhhZt0WHHQ779hDdIOcSlfP
-         mNd45Dy2W4GSVqHbe7wrgijWnqXYamRnxlefkwCEOMniIjFPCACh5j7L4+aUMqJIn1IF
-         iqD1bYQTjhhCy6JSvj1y/2FGSuK6E52Sv82h9OeP2nL1aywKuIOp8b/iLxP7iSo7xYpG
-         g60XIj8I3/ICqJzn7ITIx088EUfTzUEt3Vk7Qsn0Oo0R96IHKQmJpd4R7hiNDVjrg2YL
-         5Zjg==
+        d=linaro.org; s=google; t=1752004573; x=1752609373; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fcuG5E4fTyzhfyZjqsSebYPzJkILt8R+EifxtuZ0S9Q=;
+        b=pOCG0mL/C5/l1Q4pTxhuTB6Vy/w9XxUa1alvotAAmNsiVSWshR11bEvDPQiL9sm/We
+         aOzSBMUV1Dp+FC3uDG5c7faJElkXNjY3tLR5oRzMMeaV8XH8enIolUi6AwMEc5kEvqPx
+         zWinIMu/zGz186j0qD4Yj75bETnp0L6EsOz9VcPM/9kht9P9yhpZz5ziCddp721o5p6N
+         EqeHFkP43lpSdq0xyR0YPZkOfQj8zqb47M93x1XXktvcP5wGYiArV+d/BFDRX+3HL6Vg
+         Rnalf/JvP7bekpSjpVvNAu9TebrHDWATZC/944N/xhxb1vHHvdFMVsR6DudPNz1qxcd1
+         3uAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751975947; x=1752580747;
-        h=cc:to:subject:message-id:date:reply-to:from:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gtzSxUVKERYTmkdWodmf6sDIEA7o3urEegtQwrIBFeo=;
-        b=nr8aLtxosXTzyIqBE3mgfGhIBk+Uopc/HFD+dUu9AuctnJ8ZvOwYktg2aZad1GVzG3
-         cTYEcj4ccSYsu3kkTmHaYP31OUyjdLNDkiRYHimB+n1xzaQVMTb5WuUaXcfOuBS2R01u
-         xfFpQv9ZFW+Pw5cTAQjsZJ8h5GAEp5BaeupHdQdSVGF0WQ3/MsBFvFPAAMDIVnlZQhfc
-         TyDb98DibW9N4IJb69J4SayxK47sSkyJ6fwoeOPQnEoG6hXaFLSAfYEPluQKNOPZ/Qox
-         0kUdzkQbwaInIAlE1/3J6eIYPY1fYaum/T1mENmXYLrGQPJv/+NGpQRizCch7hCTiDrN
-         kscQ==
-X-Gm-Message-State: AOJu0YyNgRy3vF7n0jesBWiQQeujqjL5gw+WvMLMPfsGlzIScfh/6RR1
-	7GCzHATL+NEbsYhxnNs9oSneEuNANiPzktm1fqkfeuycJwp+R8AD+rDVQ9RR09GIBshXSzsNbwy
-	ur1+9SKorzI55Z27RHhl1J8/kKT8rcsOOFKxKJxuJKQ==
-X-Gm-Gg: ASbGnct0DD9WIfv4aSsu7cE6/Iri19Gj0/w8TzbZuZF+5hcii45zL+SeTH/iNsUYe6d
-	5P7LOe1x0nRWVQ/MLWZd2s2jJAckkfB6icJRkDMYrpeekVO+gg02//ChTo19P+UcUNrApWE6eZT
-	5TbI9klbwycr3v5hf0VMCoqFpo4XY4yki5q78eo7EOyw==
-X-Google-Smtp-Source: AGHT+IHldcdfL3KDEtXQ5coruO648VbCeq4DNQV8fjNhsOKR6jna0NqzlmNfbozuk89fRAZyu9pcN0kJL/if35bHIeI=
-X-Received: by 2002:a05:690c:46c8:b0:70e:2a0c:bc5 with SMTP id
- 00721157ae682-7179e464094mr49136347b3.38.1751975947430; Tue, 08 Jul 2025
- 04:59:07 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 8 Jul 2025 04:59:05 -0700
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 8 Jul 2025 04:59:05 -0700
+        d=1e100.net; s=20230601; t=1752004573; x=1752609373;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fcuG5E4fTyzhfyZjqsSebYPzJkILt8R+EifxtuZ0S9Q=;
+        b=c0k1o9XRvG2BzBE+VFLPTSMMZCGkQV8WZ723BR6PA91FJwTOgAVclENAjfWEF1AK7j
+         AezNtrj2KKP7eyE+/vBDk1/rYb1pYYtthqBaWIxn12nBS+88lv9KnWXRyi9o1Kc20R/B
+         RzJflkQ1QHhS+xKKJr6Xz0AIK2+wot2pFa7otyb8O19fJbGigV/U6Otuj2TvJDPFwm7s
+         4JQCG9NTkvlLukgwSjZX5zKvVDWS4EDIoNScjnOsfd8Z9cf36puHe70YEQFgIlIL2EEO
+         9SUSVBxgeyQkNyvwjVsC1UgyBP29X7ghC7fvcFkQ5JoBea+fyQ4dGIAqSzX+lZ19RbZP
+         gwnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJHjf5R98ALNMpT+nmT/tfBE69YLdIl4nNeZQXHDbrwyI63ssH8tzsWWCf2jttbaM1Oq1BUcYhlgFSKw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx/XnB9RWB796Mc5rcne4q6Z5C/unGok/xQNbkzqNrv8m3DkETo
+	3QV80pZs+ZWWfEAZ4pNVJFvokmsPjaiGqr3swezTdFthDIu6uNe1sDYDhNU5FU7eyxAqmx/9lmL
+	P6DKRqdjN5JJTQiT9IdxFJRxImX0tps/k/jm1mOLcuA==
+X-Gm-Gg: ASbGncvW+dlrYSmeOnnyeR4zDAUXvu5B29L03aqaS58vxeTIHZfSrT4qYBGyvbLhLiP
+	UXExOHOAAyFE8Wt7mpZb1WJ50a6z/njbJ29bdkDlN8wLrZpZXE/bJ2VaxZZRTaBVuj8w6seqdym
+	sSnQc6ICtoDnAqDmWb6N0wB1m3vF/rsKSzYMtfCZ8QTYrvHKvKJTT3vqfgyQmt9GH+sZmIwgIpG
+	paM
+X-Google-Smtp-Source: AGHT+IH1WcHMrc+Cx7EB48e8fd7QMVUFeWNKORr34eb7+XKwNQeqddn6j25Gc7eNrqIxILdBkq7WHCsCmrgo2+4jX5k=
+X-Received: by 2002:a17:90b:540c:b0:313:2adc:b4c4 with SMTP id
+ 98e67ed59e1d1-31c2ee883f8mr524731a91.24.1752004573492; Tue, 08 Jul 2025
+ 12:56:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 8 Jul 2025 04:59:05 -0700
-X-Gm-Features: Ac12FXxdG7SBioohOVIdrl2kRCgFlhwWfZBNI-8C0Yojen0DOxGOdqxZG-1I8wc
-Message-ID: <CACo-S-0GQ5cmyK=xXjWxJrTfUu7_B2gHD0z5fO2O=QVi3CEt2g@mail.gmail.com>
-Subject: [REGRESSION] next/master: (build) variable 'sys_info_avail' is not
- needed and will not be emitted [-...
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 9 Jul 2025 01:26:02 +0530
+X-Gm-Features: Ac12FXw5XamTN-G7jH7C1o7OwNlZc4uAmE5CpwkARwumTP0dviyOQNAlpADWzt8
+Message-ID: <CA+G9fYtvLHtjKbw-zpqGmtmBMgyJ0B8aiVwd8R=vRnj9YOZ3Xw@mail.gmail.com>
+Subject: next-20250702 kernel NULL pointer dereference adv7511_cec_register_volatile
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, dri-devel@lists.freedesktop.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Abdun Nihaal <abdun.nihaal@gmail.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Regression on the Dragonboard 410c while booting Linux next-20250702 tag
+kernel the following kernel crash noticed. This is specific to the device.
 
-New build issue found on next/master:
+Test environments:
+- Dragonboard-410c
 
----
- variable 'sys_info_avail' is not needed and will not be emitted
-[-Werror,-Wunneeded-internal-declaration] in lib/sys_info.o
-(lib/sys_info.c) [logspec:kbuild,kbuild.compiler.error]
----
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-- dashboard: https://d.kernelci.org/i/maestro:5c04e00f1c1b59acf474835a714df4aec7228b6a
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  58ba80c4740212c29a1cf9b48f588e60a7612209
+This issue started from next-20250702
+Good: next-20250625
+Bad: next-20250702 till next-20250708
 
+Boot regression: next-20250702 kernel NULL pointer dereference
+adv7511_cec_register_volatile
 
-Log excerpt:
-=====================================================
-lib/sys_info.c:52:19: error: variable 'sys_info_avail' is not needed
-and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-   52 | static const char sys_info_avail[] =
-"tasks,mem,timers,locks,ftrace,all_bt,blocked_tasks";
-      |                   ^~~~~~~~~~~~~~
-1 error generated.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-=====================================================
+I am investigating this issue,
+Planning to revert and re-build and test in a loop.
+  c871c199accb3 regmap: fix potential memory leak of regmap_bus
 
+FYI,
+The modules were not built with debug information enabled,
+which is why some address-to-line mappings are missing.
 
-# Builds where the incident occurred:
+## Boot log
 
-## x86_64_defconfig on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:686cf90434612746bbb46434
+[   10.847835]  cs_system_cfg: CoreSight Configuration manager initialised
+[   10.867200] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000398
+[   10.867258] Mem abort info:
+[   10.875089]   ESR = 0x0000000096000004
+[   10.877585]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   10.881411]   SET = 0, FnV = 0
+[   10.886870]   EA = 0, S1PTW = 0
+[   10.889738]   FSC = 0x04: level 0 translation fault
+[   10.892763] Data abort info:
+[   10.897638]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[   10.900751]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   10.906056]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   10.911178] user pgtable: 4k pages, 48-bit VAs, pgdp=000000008358a000
+[   10.916562] [0000000000000398] pgd=0000000000000000, p4d=0000000000000000
+[   10.922903] Internal error: Oops: 0000000096000004 [#1]  SMP
+[   10.929659] Modules linked in: v4l2_async v4l2_mem2mem coresight
+qcom_q6v5 snd_compress llcc_qcom ocmem qcom_sysmon drm_exec snd_pcm
+videobuf2_v4l2 gpu_sched adv7511 qcom_common drm_dp_aux_bus snd_timer
+videodev qcom_glink_smem drm_display_helper mdt_loader snd qmi_helpers
+videobuf2_memops cec videobuf2_common qnoc_msm8916 qcom_spmi_vadc
+soundcore qcom_spmi_temp_alarm qcom_pon qcom_vadc_common
+drm_client_lib rtc_pm8xxx phy_qcom_usb_hs mc ramoops display_connector
+qcom_rng rpmsg_ctrl qcom_stats reed_solomon socinfo rpmsg_char
+rmtfs_mem drm_kms_helper drm fuse backlight ip_tables x_tables
+[   10.965027] CPU: 1 UID: 0 PID: 250 Comm: irq/48-3-0039 Not tainted
+6.16.0-rc4-next-20250702 #1 PREEMPT
+[   10.987220] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   10.996416] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   11.003359] pc : adv7511_cec_register_volatile+0xc/0x30 adv7511
+[   11.010042] lr : regmap_volatile (drivers/base/regmap/regmap.c:153)
+[   11.016286] sp : ffff8000832e3bf0
+[   11.020277] x29: ffff8000832e3bf0 x28: 0000000000000000 x27: ffff8000821bb000
+[   11.023757] x26: 00000000ffffffff x25: 0000000000000004 x24: 0000000000000001
+[   11.030876] x23: ffff8000801db37c x22: ffff000004839000 x21: ffff000004839000
+[   11.037994] x20: 0000000000000081 x19: ffff8000832e3cc0 x18: 0000000000000001
+[   11.045112] x17: 00000000000000c7 x16: 00000000000000c4 x15: ffff00000af04a60
+[   11.052231] x14: 0000000000000000 x13: ffff00000af04a60 x12: 0000000000000000
+[   11.059349] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   11.066467] x8 : 005fffffffffffff x7 : ffff000005850400 x6 : 0000000000000000
+[   11.073584] x5 : ffff00000ac78a00 x4 : ffff8000832e3910 x3 : ffff00000ac78980
+[   11.080703] x2 : ffff8000832e3cc0 x1 : 0000000000000081 x0 : ffff00000483b020
+[   11.087822] Call trace:
+[   11.094930] adv7511_cec_register_volatile+0xc/0x30 adv7511 (P)
+[   11.097194] regcache_read (drivers/base/regmap/regcache.c:273)
+[   11.103438] _regmap_read (drivers/base/regmap/regmap.c:2805)
+[   11.107084] regmap_read (drivers/base/regmap/regmap.c:2850)
+[   11.110643] adv7511_cec_irq_process+0x6c/0x2d0 adv7511
+[   11.113859] adv7511_irq_process+0xf8/0x130 adv7511
+[   11.119326] adv7511_irq_handler+0x18/0x28 adv7511
+[   11.124362] irq_thread_fn (kernel/irq/manage.c:1131)
+[   11.129394] irq_thread (kernel/irq/manage.c:1257)
+[   11.132953] kthread (kernel/kthread.c:465)
+[   11.136164] ret_from_fork (arch/arm64/kernel/entry.S:863)
+[ 11.139642] Code: d65f03c0 d503245f f9403c09 92fff408 (f941cd29)
+All code
+========
+   0: d65f03c0 ret
+   4: d503245f bti c
+   8: f9403c09 ldr x9, [x0, #120]
+   c: 92fff408 mov x8, #0x5fffffffffffff      // #27021597764222975
+  10:* f941cd29 ldr x9, [x9, #920] <-- trapping instruction
 
-## x86_64_defconfig+kselftest+x86-board on (x86_64):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:686cf90a34612746bbb4643a
+Code starting with the faulting instruction
+===========================================
+   0: f941cd29 ldr x9, [x9, #920]
+[   11.143205] ---[ end trace 0000000000000000 ]---
 
+<trim >
 
-#kernelci issue maestro:5c04e00f1c1b59acf474835a714df4aec7228b6a
+[   11.934731] WARNING: drivers/iommu/io-pgtable-arm.c:569 at
+arm_lpae_map_pages+0x94/0x170, CPU#0: udev-worker)/212
+[   11.938388] Modules linked in: snd_soc_lpass_platform venus_core(+)
+coresight_tmc(+) coresight_replicator snd_soc_msm8916_analog
+snd_soc_apq8016_sbc snd_soc_qcom_common qrtr snd_soc_core
+videobuf2_dma_sg coresight_stm coresight_funnel qcom_q6v5_mss
+coresight_tpiu v4l2_fwnode stm_core coresight_cti snd_pcm_dmaengine
+qcom_pil_info v4l2_async v4l2_mem2mem coresight qcom_q6v5 snd_compress
+llcc_qcom ocmem qcom_sysmon drm_exec snd_pcm videobuf2_v4l2 gpu_sched
+adv7511 qcom_common drm_dp_aux_bus snd_timer videodev qcom_glink_smem
+drm_display_helper mdt_loader snd qmi_helpers videobuf2_memops cec
+videobuf2_common qnoc_msm8916 qcom_spmi_vadc soundcore
+qcom_spmi_temp_alarm qcom_pon qcom_vadc_common drm_client_lib
+rtc_pm8xxx phy_qcom_usb_hs mc ramoops display_connector qcom_rng
+rpmsg_ctrl qcom_stats reed_solomon socinfo rpmsg_char rmtfs_mem
+drm_kms_helper drm fuse backlight ip_tables x_tables
+[   12.004415] CPU: 0 UID: 0 PID: 212 Comm: (udev-worker) Tainted: G
+   D             6.16.0-rc4-next-20250702 #1 PREEMPT
+[   12.026582] Tainted: [D]=DIE
+[   12.037498] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   12.040458] pstate: 000000c5 (nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   12.047139] pc : arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:?)
+[   12.053818] lr : qcom_iommu_map (drivers/iommu/arm/arm-smmu/qcom_iommu.c:441)
+[   12.058332] sp : ffff800083263320
+[   12.062410] x29: ffff800083263320 x28: ffffffffffffffff x27: 0000000000000000
+[   12.065715] x26: ffff00000323b908 x25: ffff00000323ba38 x24: 00000000dd800000
+[   12.072834] x23: 000000008d900000 x22: 0000000000100000 x21: 0000000000000002
+[   12.079952] x20: 0000000000000003 x19: ffff800083263398 x18: 0000000000000002
+[   12.087070] x17: 0000000000000000 x16: 000000000000000b x15: ffff00000586e540
+[   12.094188] x14: 0000000000000000 x13: 000000000225ce00 x12: 0000000000ffffff
+[   12.101308] x11: 0000000001000000 x10: 0000000000000000 x9 : 0000000000000001
+[   12.108424] x8 : 0000000000001000 x7 : ffff800083263398 x6 : 0000000000000820
+[   12.115544] x5 : 0000000000000003 x4 : 0000000000000002 x3 : 0000000000100000
+[   12.122660] x2 : 000000008d900000 x1 : 00000000dd800000 x0 : 00000000ffffffea
+[   12.129780] Call trace:
+[   12.136888] arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:?) (P)
+[   12.139150] iommu_map_nosync (drivers/iommu/iommu.c:2511)
+[   12.143661] iommu_map_sg (drivers/iommu/iommu.c:2679)
+[   12.147740] __iommu_dma_alloc_noncontiguous (drivers/iommu/dma-iommu.c:982)
+[   12.151390] iommu_dma_alloc (drivers/iommu/dma-iommu.c:1007
+drivers/iommu/dma-iommu.c:1650)
+[   12.156682] dma_alloc_attrs (kernel/dma/mapping.c:639)
+[   12.160240] venus_hfi_create+0xa8/0x2a4 venus_core
+[   12.164064] hfi_create+0x58/0x70 venus_core
+[   12.169270] venus_probe+0x1e4/0x410 venus_core
+[   12.173611] platform_probe (drivers/base/platform.c:1405)
+[   12.178382] really_probe (drivers/base/dd.c:581)
+[   12.182029] __driver_probe_device (drivers/base/dd.c:?)
+[   12.185676] driver_probe_device (drivers/base/dd.c:829)
+[   12.190015] __driver_attach (drivers/base/dd.c:1216)
+[   12.193921] bus_for_each_dev (drivers/base/bus.c:369)
+[   12.197741] driver_attach (drivers/base/dd.c:1233)
+[   12.201907] bus_add_driver (drivers/base/bus.c:679)
+[   12.205466] driver_register (drivers/base/driver.c:250)
+[   12.209025] __platform_driver_register (drivers/base/platform.c:867)
+[   12.212846] init_module+0x20/0xfc0 venus_core
+[   12.217708] do_one_initcall (init/main.c:1247)
+[   12.222393] do_init_module (kernel/module/main.c:3046)
+[   12.225953] load_module (kernel/module/main.c:3516)
+[   12.229773] __arm64_sys_finit_module (kernel/module/main.c:3708
+kernel/module/main.c:3720 kernel/module/main.c:3746
+kernel/module/main.c:3730 kernel/module/main.c:3730)
+[   12.233507] invoke_syscall (arch/arm64/kernel/syscall.c:50)
+[   12.238279] el0_svc_common (arch/arm64/kernel/syscall.c:139)
+[   12.241924] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+[   12.245568] el0_svc (arch/arm64/kernel/entry-common.c:169)
+[   12.248868] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:825)
+[   12.251822] el0t_64_sync (arch/arm64/kernel/entry.S:600)
+[   12.256249] ---[ end trace 0000000000000000 ]---
+[   12.260539] qcom-venus 1d00000.video-codec: probe with driver
+qcom-venus failed with error -12
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
+## Source
+* Kernel version: 6.16.0-rc4-next-20250702
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 50c8770a42faf8b1c7abe93e7c114337f580a97d
+* Git describe: next-20250702
+* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250702
+* Architectures: arm64
+* Toolchains: clang-20
+* Kconfigs: clang-20-lkftconfig
+
+## Build
+* Test log: https://lkft.validation.linaro.org/scheduler/job/8340008#L3918
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250702/testruns/1508774/
+* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2zJjZIDW19DCm0eKABryy1jSCKy
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJjWqcwkW83XEGlOylHYZ8h98F/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJjWqcwkW83XEGlOylHYZ8h98F/config
 
 --
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Linaro LKFT
+https://lkft.linaro.org
