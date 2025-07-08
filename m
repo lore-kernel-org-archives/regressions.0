@@ -1,56 +1,56 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5592718E02A
-	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 19:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE6F241661
+	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 20:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752004576; cv=none; b=NoAMoa6A5s9Wk5GaDgWZfuZJw8G7et0GC2LyCHIITPy81jLjPmxEoQOdGcGikTXndGtJsqbzy4nUa/rMA4I1tW0XTUkFV+eJmrusFGQthRgitQbWCA+AsZSciL79DhZe0OvDQ50Pqf7eT3EdsACse0v67jFCawndJHd7vs54V0c=
+	t=1752008194; cv=none; b=Y7bKUJJZBHNvGboZ0PCK7ufrDUvztSb7OKG/nnY1UwjrZCt53QJpCPAx8FurQqL5Bsemx94hxm6yrcohVRZOj04KGerdPu1oX8nUrCovf0FSLHjJofbiQhKVsV2/UFN4zVxvTbaXyRSP9Rxu94S3vZheW+CKWxDpcWYbebHqbDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752004576; c=relaxed/simple;
-	bh=18iaciKyn+45GheNp5Lp5r6hvjqTRnJ6ICEZp2o2ZXI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IIucwsn3eY2+Kme/Rb+1mBpgHp+1J0kpzKBaM+nJjYH7BmNfjpHxZwAD3gpp7ZszQcFyCms1iJ5Gzvun3crzsiZsd8qYTAWBKekAWDlIU5UNRdyQ1ljmcVcKt1g75IZnbyK6yvExGx2EE5ZsjNU6PRx1IjsOf62S2vR6RRteNuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pOCG0mL/; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1752008194; c=relaxed/simple;
+	bh=QWPvRiiRNGFMyCgCGc86X3uMnNsiVudXBIDmZn8JYm0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HfWFANZ/QQVprS/WUFYmNWDLgjVj0P/L8BSqg949bNeiuDHnh2ytY4sMUO49FCThsGf0XF3ybl3pOMpGuWXSM9sAGeu46U3Mqt0WjZxhg3vq9BBxmg4BIEKLVdntMTXtPB02CXgtcX56ZlEnRhq8t/iwEumtjOWkWZj2Ohw7sMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=whHZOQPV; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOCG0mL/"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-311c95ddfb5so4232175a91.2
-        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 12:56:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whHZOQPV"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-315b0050bb5so3453188a91.0
+        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 13:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752004573; x=1752609373; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1752008192; x=1752612992; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=fcuG5E4fTyzhfyZjqsSebYPzJkILt8R+EifxtuZ0S9Q=;
-        b=pOCG0mL/C5/l1Q4pTxhuTB6Vy/w9XxUa1alvotAAmNsiVSWshR11bEvDPQiL9sm/We
-         aOzSBMUV1Dp+FC3uDG5c7faJElkXNjY3tLR5oRzMMeaV8XH8enIolUi6AwMEc5kEvqPx
-         zWinIMu/zGz186j0qD4Yj75bETnp0L6EsOz9VcPM/9kht9P9yhpZz5ziCddp721o5p6N
-         EqeHFkP43lpSdq0xyR0YPZkOfQj8zqb47M93x1XXktvcP5wGYiArV+d/BFDRX+3HL6Vg
-         Rnalf/JvP7bekpSjpVvNAu9TebrHDWATZC/944N/xhxb1vHHvdFMVsR6DudPNz1qxcd1
-         3uAQ==
+        bh=3pXQkIHAJr9S1j3/p3ihualPbjTR8B2gdT4yaBml1p8=;
+        b=whHZOQPVAa4us9fkJaK1p5qPlFf25qqNhu7niGqChlQimoJl5MAvRhg8lSL4CNGgUu
+         gGoZwj9dmhJtGQ+slR5kXSFO3o9wPP6x1Nnlucjik95KmRJOOwV//kKjJr1SQXmbLBQf
+         jiaQZ1AAsIgYe29CT+ltrWMVFP2sMsxPEZWhPmpMGQm39ZxpXHCoaHTchTg6nG/W/aNl
+         ISHd4C1nknBMamfwWrKYQBMZlyXVNwY9ag5/gxHAAzGhfObO01X6ApaKEO26J5YQ9ujA
+         vJoAgMCfvq/BH9hEYbPK/WEc2nw4tkxXDCx2QrPVUOcFgvWZ77woBMaEphZh75S0vHOd
+         3+0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752004573; x=1752609373;
+        d=1e100.net; s=20230601; t=1752008192; x=1752612992;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fcuG5E4fTyzhfyZjqsSebYPzJkILt8R+EifxtuZ0S9Q=;
-        b=c0k1o9XRvG2BzBE+VFLPTSMMZCGkQV8WZ723BR6PA91FJwTOgAVclENAjfWEF1AK7j
-         AezNtrj2KKP7eyE+/vBDk1/rYb1pYYtthqBaWIxn12nBS+88lv9KnWXRyi9o1Kc20R/B
-         RzJflkQ1QHhS+xKKJr6Xz0AIK2+wot2pFa7otyb8O19fJbGigV/U6Otuj2TvJDPFwm7s
-         4JQCG9NTkvlLukgwSjZX5zKvVDWS4EDIoNScjnOsfd8Z9cf36puHe70YEQFgIlIL2EEO
-         9SUSVBxgeyQkNyvwjVsC1UgyBP29X7ghC7fvcFkQ5JoBea+fyQ4dGIAqSzX+lZ19RbZP
-         gwnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJHjf5R98ALNMpT+nmT/tfBE69YLdIl4nNeZQXHDbrwyI63ssH8tzsWWCf2jttbaM1Oq1BUcYhlgFSKw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/XnB9RWB796Mc5rcne4q6Z5C/unGok/xQNbkzqNrv8m3DkETo
-	3QV80pZs+ZWWfEAZ4pNVJFvokmsPjaiGqr3swezTdFthDIu6uNe1sDYDhNU5FU7eyxAqmx/9lmL
-	P6DKRqdjN5JJTQiT9IdxFJRxImX0tps/k/jm1mOLcuA==
-X-Gm-Gg: ASbGncvW+dlrYSmeOnnyeR4zDAUXvu5B29L03aqaS58vxeTIHZfSrT4qYBGyvbLhLiP
-	UXExOHOAAyFE8Wt7mpZb1WJ50a6z/njbJ29bdkDlN8wLrZpZXE/bJ2VaxZZRTaBVuj8w6seqdym
-	sSnQc6ICtoDnAqDmWb6N0wB1m3vF/rsKSzYMtfCZ8QTYrvHKvKJTT3vqfgyQmt9GH+sZmIwgIpG
-	paM
-X-Google-Smtp-Source: AGHT+IH1WcHMrc+Cx7EB48e8fd7QMVUFeWNKORr34eb7+XKwNQeqddn6j25Gc7eNrqIxILdBkq7WHCsCmrgo2+4jX5k=
-X-Received: by 2002:a17:90b:540c:b0:313:2adc:b4c4 with SMTP id
- 98e67ed59e1d1-31c2ee883f8mr524731a91.24.1752004573492; Tue, 08 Jul 2025
- 12:56:13 -0700 (PDT)
+        bh=3pXQkIHAJr9S1j3/p3ihualPbjTR8B2gdT4yaBml1p8=;
+        b=rrfbyr/Rplc5BB0io54Rentl+2bo/j3mjQG1B+Lq3HHWm8A9cKgYPlE7P0RLxdRmPe
+         gTNidB5+U4buWMI06Sm/+XTAd72VbM74dXWmKdU9trspVr9wkx8DkqCeVHhUHS4qBAi7
+         1JCFqhQ6qgfi08WFZcuTA9ybMMz1c+uu/yyoLLIL8WH9FrpcX5G2XtjWN+kwwvO6qdHP
+         eTXxyoEQoDYloqOJmuWdc9ozKLSNoBcuSM+4UnFubXxEX4k7rpDgg/hVkYKDUt2o+ezD
+         dqpwFch5l4OSx5aAzPE+j8Z8+LyB0UxZwZu0pm/0zuFJUGsF5SQXYgd3WMZ9fq1u6OL0
+         Dsaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO4aNNobXOn0e0JuxKb6CjP8IGHZPcE8af11Fcgh79cWD96fn9kFrRNBWxXlF5LWEJwauyJjwwCduHbA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywl9aZrTLYbVBryBP7Jv4XAjC9pIpvVMMDYp4asvzWsGF/PCpjW
+	EUn2OFQq/uDnGZYrSkxVpX5flxGbiHg+WBjHQb4xq0ZJ/dAbCRbjvCeRXuTb93qte30MIC4hUwa
+	LOt2gJ5FSfmLqOKZY7kIHtJR3RmXSEQ2s7WrVPVzQSg==
+X-Gm-Gg: ASbGncvAlNgCcV6bCXg1L9TaKSzTVwmwHOvdbslijpulUHDkM6RZvs1B1Jj9Ubvzy0U
+	DY03ZLD8BsoxzTMnJ92r8pkIKr6ucnOobKpWT8DMQr9zEnpmLBg/dd9vYYvGVkcvkxt4G4IX8kH
+	omKsZovmWMP8gbpa3UugbRvecV9CkWBsir6TsvDZy9VK3hSxlhPZ84QwNYUC6c1C523BcpILfL6
+	u0z
+X-Google-Smtp-Source: AGHT+IGJjNBJUVHmy/B2HV316zkVrmSzrXj1371W7H8n8TnjXT5OrgmxYv4rWnEpdhhpl0rBK+7aMFoP2UGCRst496I=
+X-Received: by 2002:a17:90b:2250:b0:311:ffe8:20ee with SMTP id
+ 98e67ed59e1d1-31c2fd0c0d5mr60732a91.11.1752008191676; Tue, 08 Jul 2025
+ 13:56:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,21 +58,23 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 9 Jul 2025 01:26:02 +0530
-X-Gm-Features: Ac12FXw5XamTN-G7jH7C1o7OwNlZc4uAmE5CpwkARwumTP0dviyOQNAlpADWzt8
-Message-ID: <CA+G9fYtvLHtjKbw-zpqGmtmBMgyJ0B8aiVwd8R=vRnj9YOZ3Xw@mail.gmail.com>
-Subject: next-20250702 kernel NULL pointer dereference adv7511_cec_register_volatile
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, dri-devel@lists.freedesktop.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Abdun Nihaal <abdun.nihaal@gmail.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
+Date: Wed, 9 Jul 2025 02:26:20 +0530
+X-Gm-Features: Ac12FXxc-1PfLug_Y5gb__Es1xtxsWat7zzf8xE4vfR7Aio1kMdUlcUODvihcqg
+Message-ID: <CA+G9fYvif6kDDFar5ZK4Dff3XThSrhaZaJundjQYujaJW978yg@mail.gmail.com>
+Subject: next-20250702 WARNING iommu io-pgtable-arm.c at arm_lpae_map_pages qcom_iommu_map
+To: open list <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Regression on the Dragonboard 410c while booting Linux next-20250702 tag
-kernel the following kernel crash noticed. This is specific to the device.
+Regression identified while booting the Dragonboard 410c (Qualcomm
+APQ8016 SBC) using the Linux next-20250702 kernel tag. During device
+initialization, the kernel triggers a WARNING in the arm_lpae_map_pages()
+function, which is part of the IOMMU subsystem. The call trace also involves
+qcom_iommu_map().
 
 Test environments:
 - Dragonboard-410c
@@ -81,166 +83,90 @@ Regression Analysis:
 - New regression? Yes
 - Reproducibility? Yes
 
-This issue started from next-20250702
-Good: next-20250625
-Bad: next-20250702 till next-20250708
-
-Boot regression: next-20250702 kernel NULL pointer dereference
-adv7511_cec_register_volatile
+Boot regression: next-20250702 WARNING iommu io-pgtable-arm.c at
+arm_lpae_map_pages qcom_iommu_map
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I am investigating this issue,
-Planning to revert and re-build and test in a loop.
-  c871c199accb3 regmap: fix potential memory leak of regmap_bus
-
-FYI,
-The modules were not built with debug information enabled,
-which is why some address-to-line mappings are missing.
+List of suspected patches with recent changes.
+ * https://lore.kernel.org/all/0-v2-68a2e1ba507c+1fb-iommu_rm_ops_pgsize_jgg@nvidia.com/
 
 ## Boot log
 
-[   10.847835]  cs_system_cfg: CoreSight Configuration manager initialised
-[   10.867200] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000398
-[   10.867258] Mem abort info:
-[   10.875089]   ESR = 0x0000000096000004
-[   10.877585]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   10.881411]   SET = 0, FnV = 0
-[   10.886870]   EA = 0, S1PTW = 0
-[   10.889738]   FSC = 0x04: level 0 translation fault
-[   10.892763] Data abort info:
-[   10.897638]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[   10.900751]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[   10.906056]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[   10.911178] user pgtable: 4k pages, 48-bit VAs, pgdp=000000008358a000
-[   10.916562] [0000000000000398] pgd=0000000000000000, p4d=0000000000000000
-[   10.922903] Internal error: Oops: 0000000096000004 [#1]  SMP
-[   10.929659] Modules linked in: v4l2_async v4l2_mem2mem coresight
-qcom_q6v5 snd_compress llcc_qcom ocmem qcom_sysmon drm_exec snd_pcm
-videobuf2_v4l2 gpu_sched adv7511 qcom_common drm_dp_aux_bus snd_timer
-videodev qcom_glink_smem drm_display_helper mdt_loader snd qmi_helpers
-videobuf2_memops cec videobuf2_common qnoc_msm8916 qcom_spmi_vadc
-soundcore qcom_spmi_temp_alarm qcom_pon qcom_vadc_common
-drm_client_lib rtc_pm8xxx phy_qcom_usb_hs mc ramoops display_connector
-qcom_rng rpmsg_ctrl qcom_stats reed_solomon socinfo rpmsg_char
-rmtfs_mem drm_kms_helper drm fuse backlight ip_tables x_tables
-[   10.965027] CPU: 1 UID: 0 PID: 250 Comm: irq/48-3-0039 Not tainted
+[    9.504700] ------------[ cut here ]------------
+[    9.509432] WARNING: drivers/iommu/io-pgtable-arm.c:569 at
+arm_lpae_map_pages+0x30/0x1cc, CPU#0: udev-worker)/216
+[    9.514301] Modules linked in: snd_soc_core venus_core(+) qrtr
+videobuf2_dma_sg qcom_q6v5_mss v4l2_fwnode snd_compress adv7511
+llcc_qcom snd_pcm_dmaengine snd_pcm ocmem qcom_pil_info qcom_q6v5
+v4l2_async drm_exec snd_timer qcom_sysmon v4l2_mem2mem gpu_sched
+videobuf2_memops snd videobuf2_v4l2 qcom_common drm_dp_aux_bus
+qcom_spmi_temp_alarm qcom_pon qcom_spmi_vadc drm_display_helper
+rtc_pm8xxx soundcore videodev qcom_glink_smem qcom_vadc_common
+mdt_loader cec qmi_helpers qnoc_msm8916 videobuf2_common
+drm_client_lib mc phy_qcom_usb_hs qcom_stats qcom_rng ramoops socinfo
+rpmsg_ctrl rmtfs_mem rpmsg_char display_connector reed_solomon
+drm_kms_helper fuse drm backlight ip_tables x_tables
+[    9.562593] CPU: 0 UID: 0 PID: 216 Comm: (udev-worker) Not tainted
 6.16.0-rc4-next-20250702 #1 PREEMPT
-[   10.987220] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[   10.996416] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   11.003359] pc : adv7511_cec_register_volatile+0xc/0x30 adv7511
-[   11.010042] lr : regmap_volatile (drivers/base/regmap/regmap.c:153)
-[   11.016286] sp : ffff8000832e3bf0
-[   11.020277] x29: ffff8000832e3bf0 x28: 0000000000000000 x27: ffff8000821bb000
-[   11.023757] x26: 00000000ffffffff x25: 0000000000000004 x24: 0000000000000001
-[   11.030876] x23: ffff8000801db37c x22: ffff000004839000 x21: ffff000004839000
-[   11.037994] x20: 0000000000000081 x19: ffff8000832e3cc0 x18: 0000000000000001
-[   11.045112] x17: 00000000000000c7 x16: 00000000000000c4 x15: ffff00000af04a60
-[   11.052231] x14: 0000000000000000 x13: ffff00000af04a60 x12: 0000000000000000
-[   11.059349] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-[   11.066467] x8 : 005fffffffffffff x7 : ffff000005850400 x6 : 0000000000000000
-[   11.073584] x5 : ffff00000ac78a00 x4 : ffff8000832e3910 x3 : ffff00000ac78980
-[   11.080703] x2 : ffff8000832e3cc0 x1 : 0000000000000081 x0 : ffff00000483b020
-[   11.087822] Call trace:
-[   11.094930] adv7511_cec_register_volatile+0xc/0x30 adv7511 (P)
-[   11.097194] regcache_read (drivers/base/regmap/regcache.c:273)
-[   11.103438] _regmap_read (drivers/base/regmap/regmap.c:2805)
-[   11.107084] regmap_read (drivers/base/regmap/regmap.c:2850)
-[   11.110643] adv7511_cec_irq_process+0x6c/0x2d0 adv7511
-[   11.113859] adv7511_irq_process+0xf8/0x130 adv7511
-[   11.119326] adv7511_irq_handler+0x18/0x28 adv7511
-[   11.124362] irq_thread_fn (kernel/irq/manage.c:1131)
-[   11.129394] irq_thread (kernel/irq/manage.c:1257)
-[   11.132953] kthread (kernel/kthread.c:465)
-[   11.136164] ret_from_fork (arch/arm64/kernel/entry.S:863)
-[ 11.139642] Code: d65f03c0 d503245f f9403c09 92fff408 (f941cd29)
-All code
-========
-   0: d65f03c0 ret
-   4: d503245f bti c
-   8: f9403c09 ldr x9, [x0, #120]
-   c: 92fff408 mov x8, #0x5fffffffffffff      // #27021597764222975
-  10:* f941cd29 ldr x9, [x9, #920] <-- trapping instruction
-
-Code starting with the faulting instruction
-===========================================
-   0: f941cd29 ldr x9, [x9, #920]
-[   11.143205] ---[ end trace 0000000000000000 ]---
-
-<trim >
-
-[   11.934731] WARNING: drivers/iommu/io-pgtable-arm.c:569 at
-arm_lpae_map_pages+0x94/0x170, CPU#0: udev-worker)/212
-[   11.938388] Modules linked in: snd_soc_lpass_platform venus_core(+)
-coresight_tmc(+) coresight_replicator snd_soc_msm8916_analog
-snd_soc_apq8016_sbc snd_soc_qcom_common qrtr snd_soc_core
-videobuf2_dma_sg coresight_stm coresight_funnel qcom_q6v5_mss
-coresight_tpiu v4l2_fwnode stm_core coresight_cti snd_pcm_dmaengine
-qcom_pil_info v4l2_async v4l2_mem2mem coresight qcom_q6v5 snd_compress
-llcc_qcom ocmem qcom_sysmon drm_exec snd_pcm videobuf2_v4l2 gpu_sched
-adv7511 qcom_common drm_dp_aux_bus snd_timer videodev qcom_glink_smem
-drm_display_helper mdt_loader snd qmi_helpers videobuf2_memops cec
-videobuf2_common qnoc_msm8916 qcom_spmi_vadc soundcore
-qcom_spmi_temp_alarm qcom_pon qcom_vadc_common drm_client_lib
-rtc_pm8xxx phy_qcom_usb_hs mc ramoops display_connector qcom_rng
-rpmsg_ctrl qcom_stats reed_solomon socinfo rpmsg_char rmtfs_mem
-drm_kms_helper drm fuse backlight ip_tables x_tables
-[   12.004415] CPU: 0 UID: 0 PID: 212 Comm: (udev-worker) Tainted: G
-   D             6.16.0-rc4-next-20250702 #1 PREEMPT
-[   12.026582] Tainted: [D]=DIE
-[   12.037498] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[   12.040458] pstate: 000000c5 (nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   12.047139] pc : arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:?)
-[   12.053818] lr : qcom_iommu_map (drivers/iommu/arm/arm-smmu/qcom_iommu.c:441)
-[   12.058332] sp : ffff800083263320
-[   12.062410] x29: ffff800083263320 x28: ffffffffffffffff x27: 0000000000000000
-[   12.065715] x26: ffff00000323b908 x25: ffff00000323ba38 x24: 00000000dd800000
-[   12.072834] x23: 000000008d900000 x22: 0000000000100000 x21: 0000000000000002
-[   12.079952] x20: 0000000000000003 x19: ffff800083263398 x18: 0000000000000002
-[   12.087070] x17: 0000000000000000 x16: 000000000000000b x15: ffff00000586e540
-[   12.094188] x14: 0000000000000000 x13: 000000000225ce00 x12: 0000000000ffffff
-[   12.101308] x11: 0000000001000000 x10: 0000000000000000 x9 : 0000000000000001
-[   12.108424] x8 : 0000000000001000 x7 : ffff800083263398 x6 : 0000000000000820
-[   12.115544] x5 : 0000000000000003 x4 : 0000000000000002 x3 : 0000000000100000
-[   12.122660] x2 : 000000008d900000 x1 : 00000000dd800000 x0 : 00000000ffffffea
-[   12.129780] Call trace:
-[   12.136888] arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:?) (P)
-[   12.139150] iommu_map_nosync (drivers/iommu/iommu.c:2511)
-[   12.143661] iommu_map_sg (drivers/iommu/iommu.c:2679)
-[   12.147740] __iommu_dma_alloc_noncontiguous (drivers/iommu/dma-iommu.c:982)
-[   12.151390] iommu_dma_alloc (drivers/iommu/dma-iommu.c:1007
+[    9.584779] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    9.594059] pstate: 000000c5 (nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    9.601002] pc : arm_lpae_map_pages
+(drivers/iommu/io-pgtable-arm.c:569 (discriminator 7))
+[    9.607682] lr : qcom_iommu_map (drivers/iommu/arm/arm-smmu/qcom_iommu.c:441)
+[    9.612196] sp : ffff800083a9b4e0
+[    9.616274] x29: ffff800083a9b4e0 x28: 0000000000000004 x27: 0000000000200000
+[    9.619579] x26: 0000000000000003 x25: ffff000004a2ec78 x24: ffff800083a9b550
+[    9.626698] x23: 0000000000000002 x22: 0000000000100000 x21: 000000008f400000
+[    9.633816] x20: 0000000000000000 x19: ffff000004a2eb48 x18: 0000000000000000
+[    9.640934] x17: ffff000003807000 x16: ffff000003806e00 x15: ffff000004a2ec78
+[    9.648051] x14: ffff000003ef8000 x13: 0000000000000001 x12: ffff000004a2ec10
+[    9.655170] x11: 0000000000000004 x10: 0000000000000820 x9 : 0000000000000000
+[    9.662287] x8 : ffff8000809fe7a4 x7 : ffff800083a9b550 x6 : 0000000000001000
+[    9.669406] x5 : 0000000000000003 x4 : 0000000000000002 x3 : 0000000000100000
+[    9.676530] x2 : 000000008f400000 x1 : 00000000dd800000 x0 : ffff000004a2ec00
+[    9.683643] Call trace:
+[    9.690752] arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:569
+(discriminator 7)) (P)
+[    9.693013] iommu_map_nosync (drivers/iommu/iommu.c:2505)
+[    9.697524] iommu_map_sg (drivers/iommu/iommu.c:2677)
+[    9.701604] __iommu_dma_alloc_noncontiguous (drivers/iommu/dma-iommu.c:982)
+[    9.705253] iommu_dma_alloc (drivers/iommu/dma-iommu.c:1006
 drivers/iommu/dma-iommu.c:1650)
-[   12.156682] dma_alloc_attrs (kernel/dma/mapping.c:639)
-[   12.160240] venus_hfi_create+0xa8/0x2a4 venus_core
-[   12.164064] hfi_create+0x58/0x70 venus_core
-[   12.169270] venus_probe+0x1e4/0x410 venus_core
-[   12.173611] platform_probe (drivers/base/platform.c:1405)
-[   12.178382] really_probe (drivers/base/dd.c:581)
-[   12.182029] __driver_probe_device (drivers/base/dd.c:?)
-[   12.185676] driver_probe_device (drivers/base/dd.c:829)
-[   12.190015] __driver_attach (drivers/base/dd.c:1216)
-[   12.193921] bus_for_each_dev (drivers/base/bus.c:369)
-[   12.197741] driver_attach (drivers/base/dd.c:1233)
-[   12.201907] bus_add_driver (drivers/base/bus.c:679)
-[   12.205466] driver_register (drivers/base/driver.c:250)
-[   12.209025] __platform_driver_register (drivers/base/platform.c:867)
-[   12.212846] init_module+0x20/0xfc0 venus_core
-[   12.217708] do_one_initcall (init/main.c:1247)
-[   12.222393] do_init_module (kernel/module/main.c:3046)
-[   12.225953] load_module (kernel/module/main.c:3516)
-[   12.229773] __arm64_sys_finit_module (kernel/module/main.c:3708
-kernel/module/main.c:3720 kernel/module/main.c:3746
-kernel/module/main.c:3730 kernel/module/main.c:3730)
-[   12.233507] invoke_syscall (arch/arm64/kernel/syscall.c:50)
-[   12.238279] el0_svc_common (arch/arm64/kernel/syscall.c:139)
-[   12.241924] do_el0_svc (arch/arm64/kernel/syscall.c:152)
-[   12.245568] el0_svc (arch/arm64/kernel/entry-common.c:169)
-[   12.248868] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:825)
-[   12.251822] el0t_64_sync (arch/arm64/kernel/entry.S:600)
-[   12.256249] ---[ end trace 0000000000000000 ]---
-[   12.260539] qcom-venus 1d00000.video-codec: probe with driver
-qcom-venus failed with error -12
+[    9.710546] dma_alloc_attrs (kernel/dma/mapping.c:638)
+[    9.714452] venus_hfi_create+0xa8/0x248 venus_core
+[    9.718015] hfi_create+0x54/0x6c venus_core
+[    9.723221] venus_probe+0x254/0x574 venus_core
+[    9.727563] platform_probe (drivers/base/platform.c:1404)
+[    9.732333] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+[    9.735979] __driver_probe_device (drivers/base/dd.c:799)
+[    9.739626] driver_probe_device (drivers/base/dd.c:829)
+[    9.743879] __driver_attach (drivers/base/dd.c:1216 drivers/base/dd.c:1155)
+[    9.747871] bus_for_each_dev (drivers/base/bus.c:370)
+[    9.751690] driver_attach (drivers/base/dd.c:1234)
+[    9.755510] bus_add_driver (drivers/base/bus.c:678)
+[    9.759330] driver_register (drivers/base/driver.c:249)
+[    9.762889] __platform_driver_register (drivers/base/platform.c:868)
+[    9.766623] qcom_venus_driver_init+0x20/0xfc0 venus_core
+[    9.771486] do_one_initcall (init/main.c:1269)
+[    9.776865] do_init_module (kernel/module/main.c:3046)
+[    9.780685] load_module (kernel/module/main.c:3516)
+[    9.784503] init_module_from_file (kernel/module/main.c:3709)
+[    9.788237] __arm64_sys_finit_module (kernel/module/main.c:3720
+kernel/module/main.c:3746 kernel/module/main.c:3730
+kernel/module/main.c:3730)
+[    9.792668] invoke_syscall (arch/arm64/include/asm/current.h:19
+arch/arm64/kernel/syscall.c:54)
+[    9.797264] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:139)
+[    9.800911] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+[    9.805683] el0_svc (arch/arm64/include/asm/irqflags.h:55
+arch/arm64/include/asm/irqflags.h:76
+arch/arm64/kernel/entry-common.c:169
+arch/arm64/kernel/entry-common.c:182
+arch/arm64/kernel/entry-common.c:772)
+[    9.808982] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:791)
+[    9.811934] el0t_64_sync (arch/arm64/kernel/entry.S:600)
+[    9.816362] ---[ end trace 0000000000000000 ]---
 
 ## Source
 * Kernel version: 6.16.0-rc4-next-20250702
@@ -249,17 +175,18 @@ qcom-venus failed with error -12
 * Git describe: next-20250702
 * Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250702
 * Architectures: arm64
-* Toolchains: clang-20
-* Kconfigs: clang-20-lkftconfig
+* Toolchains: gcc-13
+* Kconfigs: gcc-13-lkftconfig
 
 ## Build
-* Test log: https://lkft.validation.linaro.org/scheduler/job/8340008#L3918
+* Test log: https://qa-reports.linaro.org/api/testruns/28989497/log_file/
+* Test LAVA log: https://lkft.validation.linaro.org/scheduler/job/8339869#L3862
 * Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250702/testruns/1508774/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2zJjZIDW19DCm0eKABryy1jSCKy
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJjWqcwkW83XEGlOylHYZ8h98F/
+https://regressions.linaro.org/lkft/linux-next-master/next-20250702/boot/gcc-13-lkftconfig-no-kselftest-frag/
+* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2zJgUBCVJbqFPufxneFurZszovX
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJgRgltAwUHEijfEA14MY3VTTF/
 * Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJjWqcwkW83XEGlOylHYZ8h98F/config
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJgRgltAwUHEijfEA14MY3VTTF/config
 
 --
 Linaro LKFT
