@@ -1,193 +1,138 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE6F241661
-	for <regressions@lists.linux.dev>; Tue,  8 Jul 2025 20:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6AC14883F;
+	Tue,  8 Jul 2025 22:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752008194; cv=none; b=Y7bKUJJZBHNvGboZ0PCK7ufrDUvztSb7OKG/nnY1UwjrZCt53QJpCPAx8FurQqL5Bsemx94hxm6yrcohVRZOj04KGerdPu1oX8nUrCovf0FSLHjJofbiQhKVsV2/UFN4zVxvTbaXyRSP9Rxu94S3vZheW+CKWxDpcWYbebHqbDc=
+	t=1752012232; cv=none; b=FhFWQRT18DvSkW1cUBA5Cgzl4ckqF0qznNMm54JpkJyx2kgzNeDbNgerQ1S5BDGXTwWirVL9mnWBn+cCaixSZ0JWiQqYpqyPOdu8ZhrBztqFP7VcaYQRFAMqNNYVitZhnrJjnr1F3tqNA6lpJv2WnXI91qsMrpVcyz8Y1JVw1Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752008194; c=relaxed/simple;
-	bh=QWPvRiiRNGFMyCgCGc86X3uMnNsiVudXBIDmZn8JYm0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HfWFANZ/QQVprS/WUFYmNWDLgjVj0P/L8BSqg949bNeiuDHnh2ytY4sMUO49FCThsGf0XF3ybl3pOMpGuWXSM9sAGeu46U3Mqt0WjZxhg3vq9BBxmg4BIEKLVdntMTXtPB02CXgtcX56ZlEnRhq8t/iwEumtjOWkWZj2Ohw7sMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=whHZOQPV; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1752012232; c=relaxed/simple;
+	bh=tXVDsd7NOD6A2M7p7qUaNCd/pRPGJ1t7jA8NgRtoCgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwECrHDr1POllsxG1jtsH70+N9MwK8hSJQDrOtJUyTEDWZF0jXPVCQ9Jjf6mUvQ0bWQ5vU8VbauT5gopu9bBGAQ+ujn5sADlyvPcfbl5Puu9sUWUAq9c9xLr0k1LxNsm5IpO0fVKdN9rZ6f4yRvBe7/svjTa39aHOri3kIeZO5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RexGCZPp; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whHZOQPV"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-315b0050bb5so3453188a91.0
-        for <regressions@lists.linux.dev>; Tue, 08 Jul 2025 13:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752008192; x=1752612992; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3pXQkIHAJr9S1j3/p3ihualPbjTR8B2gdT4yaBml1p8=;
-        b=whHZOQPVAa4us9fkJaK1p5qPlFf25qqNhu7niGqChlQimoJl5MAvRhg8lSL4CNGgUu
-         gGoZwj9dmhJtGQ+slR5kXSFO3o9wPP6x1Nnlucjik95KmRJOOwV//kKjJr1SQXmbLBQf
-         jiaQZ1AAsIgYe29CT+ltrWMVFP2sMsxPEZWhPmpMGQm39ZxpXHCoaHTchTg6nG/W/aNl
-         ISHd4C1nknBMamfwWrKYQBMZlyXVNwY9ag5/gxHAAzGhfObO01X6ApaKEO26J5YQ9ujA
-         vJoAgMCfvq/BH9hEYbPK/WEc2nw4tkxXDCx2QrPVUOcFgvWZ77woBMaEphZh75S0vHOd
-         3+0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752008192; x=1752612992;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3pXQkIHAJr9S1j3/p3ihualPbjTR8B2gdT4yaBml1p8=;
-        b=rrfbyr/Rplc5BB0io54Rentl+2bo/j3mjQG1B+Lq3HHWm8A9cKgYPlE7P0RLxdRmPe
-         gTNidB5+U4buWMI06Sm/+XTAd72VbM74dXWmKdU9trspVr9wkx8DkqCeVHhUHS4qBAi7
-         1JCFqhQ6qgfi08WFZcuTA9ybMMz1c+uu/yyoLLIL8WH9FrpcX5G2XtjWN+kwwvO6qdHP
-         eTXxyoEQoDYloqOJmuWdc9ozKLSNoBcuSM+4UnFubXxEX4k7rpDgg/hVkYKDUt2o+ezD
-         dqpwFch5l4OSx5aAzPE+j8Z8+LyB0UxZwZu0pm/0zuFJUGsF5SQXYgd3WMZ9fq1u6OL0
-         Dsaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVO4aNNobXOn0e0JuxKb6CjP8IGHZPcE8af11Fcgh79cWD96fn9kFrRNBWxXlF5LWEJwauyJjwwCduHbA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywl9aZrTLYbVBryBP7Jv4XAjC9pIpvVMMDYp4asvzWsGF/PCpjW
-	EUn2OFQq/uDnGZYrSkxVpX5flxGbiHg+WBjHQb4xq0ZJ/dAbCRbjvCeRXuTb93qte30MIC4hUwa
-	LOt2gJ5FSfmLqOKZY7kIHtJR3RmXSEQ2s7WrVPVzQSg==
-X-Gm-Gg: ASbGncvAlNgCcV6bCXg1L9TaKSzTVwmwHOvdbslijpulUHDkM6RZvs1B1Jj9Ubvzy0U
-	DY03ZLD8BsoxzTMnJ92r8pkIKr6ucnOobKpWT8DMQr9zEnpmLBg/dd9vYYvGVkcvkxt4G4IX8kH
-	omKsZovmWMP8gbpa3UugbRvecV9CkWBsir6TsvDZy9VK3hSxlhPZ84QwNYUC6c1C523BcpILfL6
-	u0z
-X-Google-Smtp-Source: AGHT+IGJjNBJUVHmy/B2HV316zkVrmSzrXj1371W7H8n8TnjXT5OrgmxYv4rWnEpdhhpl0rBK+7aMFoP2UGCRst496I=
-X-Received: by 2002:a17:90b:2250:b0:311:ffe8:20ee with SMTP id
- 98e67ed59e1d1-31c2fd0c0d5mr60732a91.11.1752008191676; Tue, 08 Jul 2025
- 13:56:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RexGCZPp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=E2QTMLNz+wpmxWaHkhuqHev5xzFIG4QbvWSVsi2ak1c=; b=RexGCZPp/ke/j+v4PkBiS63YoY
+	wyrgKh7N5DPhqdkWpzOnWYaoasivhm5J6cvzz/Q2eeK+15y1WJDufUyjHAKVEvD41jT1emXukejQf
+	uXAPB9EP01x5fEAJsEntL0Xj2YwL2vM+ie+EIFvqsIthNNhqSlF+QmJjeRM2c1xMM3lKAwTnNqwYc
+	xRytEdYF6JrPzALeeUKpl/O2yyKKLRGQ0SWZnuiTFkM03b+LFmIY4DkkVURubaLyFlfqW4n4A24kJ
+	xAI8XnX4IfVJlUaWTItvQPhBGT9S0EHe56RoI8Ia0GEXtYWGnyXuksyUEH0ROHFWo1IsITGgb9x6s
+	DKnIR5CQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uZGPh-00000001Jge-2j3k;
+	Tue, 08 Jul 2025 22:03:45 +0000
+Message-ID: <6c1056da-8cbe-477f-be95-10a395c60443@infradead.org>
+Date: Tue, 8 Jul 2025 15:03:41 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 9 Jul 2025 02:26:20 +0530
-X-Gm-Features: Ac12FXxc-1PfLug_Y5gb__Es1xtxsWat7zzf8xE4vfR7Aio1kMdUlcUODvihcqg
-Message-ID: <CA+G9fYvif6kDDFar5ZK4Dff3XThSrhaZaJundjQYujaJW978yg@mail.gmail.com>
-Subject: next-20250702 WARNING iommu io-pgtable-arm.c at arm_lpae_map_pages qcom_iommu_map
-To: open list <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_next/master=3A_=28build=29_format_?=
+ =?UTF-8?B?4oCYJWxk4oCZIGV4cGVjdHMgYXJndW1lbnQgb2YgdHlwZSDigJhsb25nIGludA==?=
+ =?UTF-8?B?4oCZLCBidXQgYXJndW1lbnQgMiBoLi4u?=
+To: kernelci@lists.linux.dev, kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com,
+ linux-next@vger.kernel.org, david.e.box@linux.intel.com,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CACo-S-29Degjym-azsJNSd1yofLOB2_Rf5xpa9b7L-14OPn7wQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Regression identified while booting the Dragonboard 410c (Qualcomm
-APQ8016 SBC) using the Linux next-20250702 kernel tag. During device
-initialization, the kernel triggers a WARNING in the arm_lpae_map_pages()
-function, which is part of the IOMMU subsystem. The call trace also involves
-qcom_iommu_map().
 
-Test environments:
-- Dragonboard-410c
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+On 7/8/25 4:59 AM, KernelCI bot wrote:
+> Hello,
+> 
+> New build issue found on next/master:
+> 
+> ---
+>  format ‘%ld’ expects argument of type ‘long int’, but argument 2 has
+> type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=] in
+> drivers/platform/x86/intel/pmt/discovery.o
+> (drivers/platform/x86/intel/pmt/discovery.c)
+> [logspec:kbuild,kbuild.compiler.error]
+> ---
+> 
+> - dashboard: https://d.kernelci.org/i/maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> - commit HEAD:  58ba80c4740212c29a1cf9b48f588e60a7612209
+> 
+> 
+> Log excerpt:
+> =====================================================
+> drivers/platform/x86/intel/pmt/discovery.c:427:35: error: format ‘%ld’
+> expects argument of type ‘long int’, but argument 2 has type ‘size_t’
+> {aka ‘unsigned int’} [-Werror=format=]
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~  ~~~~
+>       |                                                               |
+>       |
+> size_t {aka unsigned int}
+> ./include/asm-generic/bug.h:112:31: note: in definition of macro ‘__WARN_printf’
+>   112 |                 __warn_printk(arg);
+>          \
+>       |                               ^~~
+> drivers/platform/x86/intel/pmt/discovery.c:427:13: note: in expansion
+> of macro ‘WARN’
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |             ^~~~
+> drivers/platform/x86/intel/pmt/discovery.c:427:53: note: format string
+> is defined here
+>   427 |         if (WARN(size > res_size, "Bad table size %ld > %pa",
+> size, &res_size))
+>       |                                                   ~~^
+>       |                                                     |
+>       |                                                     long int
+>       |                                                   %d
+>   CC [M]  drivers/platform/chrome/wilco_ec/telemetry.o
+> cc1: all warnings being treated as errors
+> 
+> =====================================================
+> 
+> 
+> # Builds where the incident occurred:
+> 
+> ## defconfig+kcidebug+x86-board on (i386):
+> - compiler: gcc-12
+> - dashboard: https://d.kernelci.org/build/maestro:686cf98934612746bbb465bb
+> 
+> 
+> #kernelci issue maestro:8fa7949e2280282be6a5756d890d8a9cc1472e21
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> 
+> --
+> This is an experimental report format. Please send feedback in!
+> Talk to us at kernelci@lists.linux.dev
+> 
+> Made with love by the KernelCI team - https://kernelci.org
+> 
 
-Boot regression: next-20250702 WARNING iommu io-pgtable-arm.c at
-arm_lpae_map_pages qcom_iommu_map
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+This is from commit d9a0788093565:
+platform/x86/intel/pmt: Add PMT Discovery driver
 
-List of suspected patches with recent changes.
- * https://lore.kernel.org/all/0-v2-68a2e1ba507c+1fb-iommu_rm_ops_pgsize_jgg@nvidia.com/
+Cc:ing David Box.
 
-## Boot log
+-- 
+~Randy
 
-[    9.504700] ------------[ cut here ]------------
-[    9.509432] WARNING: drivers/iommu/io-pgtable-arm.c:569 at
-arm_lpae_map_pages+0x30/0x1cc, CPU#0: udev-worker)/216
-[    9.514301] Modules linked in: snd_soc_core venus_core(+) qrtr
-videobuf2_dma_sg qcom_q6v5_mss v4l2_fwnode snd_compress adv7511
-llcc_qcom snd_pcm_dmaengine snd_pcm ocmem qcom_pil_info qcom_q6v5
-v4l2_async drm_exec snd_timer qcom_sysmon v4l2_mem2mem gpu_sched
-videobuf2_memops snd videobuf2_v4l2 qcom_common drm_dp_aux_bus
-qcom_spmi_temp_alarm qcom_pon qcom_spmi_vadc drm_display_helper
-rtc_pm8xxx soundcore videodev qcom_glink_smem qcom_vadc_common
-mdt_loader cec qmi_helpers qnoc_msm8916 videobuf2_common
-drm_client_lib mc phy_qcom_usb_hs qcom_stats qcom_rng ramoops socinfo
-rpmsg_ctrl rmtfs_mem rpmsg_char display_connector reed_solomon
-drm_kms_helper fuse drm backlight ip_tables x_tables
-[    9.562593] CPU: 0 UID: 0 PID: 216 Comm: (udev-worker) Not tainted
-6.16.0-rc4-next-20250702 #1 PREEMPT
-[    9.584779] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    9.594059] pstate: 000000c5 (nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    9.601002] pc : arm_lpae_map_pages
-(drivers/iommu/io-pgtable-arm.c:569 (discriminator 7))
-[    9.607682] lr : qcom_iommu_map (drivers/iommu/arm/arm-smmu/qcom_iommu.c:441)
-[    9.612196] sp : ffff800083a9b4e0
-[    9.616274] x29: ffff800083a9b4e0 x28: 0000000000000004 x27: 0000000000200000
-[    9.619579] x26: 0000000000000003 x25: ffff000004a2ec78 x24: ffff800083a9b550
-[    9.626698] x23: 0000000000000002 x22: 0000000000100000 x21: 000000008f400000
-[    9.633816] x20: 0000000000000000 x19: ffff000004a2eb48 x18: 0000000000000000
-[    9.640934] x17: ffff000003807000 x16: ffff000003806e00 x15: ffff000004a2ec78
-[    9.648051] x14: ffff000003ef8000 x13: 0000000000000001 x12: ffff000004a2ec10
-[    9.655170] x11: 0000000000000004 x10: 0000000000000820 x9 : 0000000000000000
-[    9.662287] x8 : ffff8000809fe7a4 x7 : ffff800083a9b550 x6 : 0000000000001000
-[    9.669406] x5 : 0000000000000003 x4 : 0000000000000002 x3 : 0000000000100000
-[    9.676530] x2 : 000000008f400000 x1 : 00000000dd800000 x0 : ffff000004a2ec00
-[    9.683643] Call trace:
-[    9.690752] arm_lpae_map_pages (drivers/iommu/io-pgtable-arm.c:569
-(discriminator 7)) (P)
-[    9.693013] iommu_map_nosync (drivers/iommu/iommu.c:2505)
-[    9.697524] iommu_map_sg (drivers/iommu/iommu.c:2677)
-[    9.701604] __iommu_dma_alloc_noncontiguous (drivers/iommu/dma-iommu.c:982)
-[    9.705253] iommu_dma_alloc (drivers/iommu/dma-iommu.c:1006
-drivers/iommu/dma-iommu.c:1650)
-[    9.710546] dma_alloc_attrs (kernel/dma/mapping.c:638)
-[    9.714452] venus_hfi_create+0xa8/0x248 venus_core
-[    9.718015] hfi_create+0x54/0x6c venus_core
-[    9.723221] venus_probe+0x254/0x574 venus_core
-[    9.727563] platform_probe (drivers/base/platform.c:1404)
-[    9.732333] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
-[    9.735979] __driver_probe_device (drivers/base/dd.c:799)
-[    9.739626] driver_probe_device (drivers/base/dd.c:829)
-[    9.743879] __driver_attach (drivers/base/dd.c:1216 drivers/base/dd.c:1155)
-[    9.747871] bus_for_each_dev (drivers/base/bus.c:370)
-[    9.751690] driver_attach (drivers/base/dd.c:1234)
-[    9.755510] bus_add_driver (drivers/base/bus.c:678)
-[    9.759330] driver_register (drivers/base/driver.c:249)
-[    9.762889] __platform_driver_register (drivers/base/platform.c:868)
-[    9.766623] qcom_venus_driver_init+0x20/0xfc0 venus_core
-[    9.771486] do_one_initcall (init/main.c:1269)
-[    9.776865] do_init_module (kernel/module/main.c:3046)
-[    9.780685] load_module (kernel/module/main.c:3516)
-[    9.784503] init_module_from_file (kernel/module/main.c:3709)
-[    9.788237] __arm64_sys_finit_module (kernel/module/main.c:3720
-kernel/module/main.c:3746 kernel/module/main.c:3730
-kernel/module/main.c:3730)
-[    9.792668] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:54)
-[    9.797264] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:139)
-[    9.800911] do_el0_svc (arch/arm64/kernel/syscall.c:152)
-[    9.805683] el0_svc (arch/arm64/include/asm/irqflags.h:55
-arch/arm64/include/asm/irqflags.h:76
-arch/arm64/kernel/entry-common.c:169
-arch/arm64/kernel/entry-common.c:182
-arch/arm64/kernel/entry-common.c:772)
-[    9.808982] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:791)
-[    9.811934] el0t_64_sync (arch/arm64/kernel/entry.S:600)
-[    9.816362] ---[ end trace 0000000000000000 ]---
-
-## Source
-* Kernel version: 6.16.0-rc4-next-20250702
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 50c8770a42faf8b1c7abe93e7c114337f580a97d
-* Git describe: next-20250702
-* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250702
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: gcc-13-lkftconfig
-
-## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/28989497/log_file/
-* Test LAVA log: https://lkft.validation.linaro.org/scheduler/job/8339869#L3862
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250702/boot/gcc-13-lkftconfig-no-kselftest-frag/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2zJgUBCVJbqFPufxneFurZszovX
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJgRgltAwUHEijfEA14MY3VTTF/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2zJgRgltAwUHEijfEA14MY3VTTF/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
