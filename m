@@ -1,144 +1,147 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDF227EFE9
-	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 05:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC102D4B41
+	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 09:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752125385; cv=none; b=nsqYscZXd8VAoG/kIaqZDydFdxSnUFhp6eAbtsw2oRdHai7J7BYuW8hktvFH7eJlUPbKjyQekevhe+M7ibruF9ft1F4TT+PHuuMs3oAniCau03JF7bvZVYRWJ00ljUEd9H61sVnMmMtiDCpQFv2KZ291cKlwQMT5hogBBBf0yoE=
+	t=1752141548; cv=none; b=ozlFvB5xJOIViGtlxeGqymSVTRpwoXzvCQElCj7VaLu47koBpsRYAnzaouj+mnRCKgU07Lzvp9M+cmyp3wXvzKcRfmFKyGCwUnxlIpeiUKj/MOTEe1jp9cNHt/CCvSSyeNJUv6a5BXQDO7SrDYaUbQEWVQuoMIycBTc+I5U9qpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752125385; c=relaxed/simple;
-	bh=/QPuXsPagYMGpuO++ga2bvKg6r8N2PD+9bXgY6UAalA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Xp51TgbfGXyk4WjNqAJfpCy7VTfevGoLs9RLuRBuG3t6555yI5eGcJBdhb4pHFXFO71cjOHEtiuLN36rWXVfk6e3VQcN76aPRPwEGf/4ORSQ/quNbyGELwqxGBO86hnZErfLGz5Ov50v4971wzGydIbuqc4V6Mn/4LVFN51uPV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=dpEcEaSB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MsZwvZgo; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
+	s=arc-20240116; t=1752141548; c=relaxed/simple;
+	bh=6yv5CFJYg6pTTof2JcjC8om6Vi1/YsgX1I/zy2a1V3o=;
+	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=WFGP5C0H70HGzIXnBQp4qirCoP4fhxRuMOdG5qNYbHgzv/X3Thv9P3xtSdDytx0uJFb6O9TPJrimocIBpazXwjzyFWw+C0PVq3uCxPLf4en3aKOhhYsckRORTJs/1AV/oadQy0M6IkL8om3Fs0iWf+GXzg0Osl4rzFnw0iY5w/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=kUzK9iDt; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="dpEcEaSB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MsZwvZgo"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 08B2EEC02C4;
-	Thu, 10 Jul 2025 01:29:42 -0400 (EDT)
-Received: from phl-imap-18 ([10.202.2.89])
-  by phl-compute-01.internal (MEProxy); Thu, 10 Jul 2025 01:29:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1752125382; x=1752211782; bh=MMdcP6sTGpt1a34kdXef9pIIHzLJ2Phl
-	UnquDYalTow=; b=dpEcEaSB+rvHX7NOtf3DLw2cIXI6kRIBtQyH+moUZPxnaPeQ
-	jTThoXdLvKtXuWfqrEvreXnfq5QClZVEsgn9Em7OEZsDihS9Ta1LwaxyQzG/b0sd
-	fVBiKea1uwLnrrLNDB35P0CSuaWvqDtEpoFWqrnrG4Zb6SOmFVkVCPML/Z21nY97
-	7sW61daFgD7B0vf1peVaKmyJ7GNqYC0/qdA9wZRJPzub7E+LURdj/qk9CIFkGpnj
-	1Iw+lSM1majH3Z1kndffLbYB3XqvtzjRnpef61BdHj5df13Qhhf228UxvKvaZ/8d
-	OCksksHEk/5g/IRQmWSNkftOaq9j77BRM8azUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752125382; x=
-	1752211782; bh=MMdcP6sTGpt1a34kdXef9pIIHzLJ2PhlUnquDYalTow=; b=M
-	sZwvZgoJZfeeOhzRMYtUCEOT4XIzsCihSkh5oMAcx96sRulMmNmZQHH/qjCdcyFt
-	J4voUeqKJ3BozcEvdMA+C9SpKqQa1RoxmaKM5E3U5fP5ZITH4AFYIB0CgjTmVh5h
-	yTHB5TmGtaJUmKxTMWbPGaSRwEEwQ5AqAl7qb1kHC5i6r12a1oXSdrGsJxXbqwNn
-	WuTdMykOTOIfuQTQSqZvWCFhaK8KSFMGvNOY6pq1JKXBPHamR2Fv2Ca2gkqnKHxa
-	sUMed0Tb1Y4K4OmeNepJfRPV/k/9CKXmpW3Q7j54qIEg/tRD4/Ow5x1yahZiQP1D
-	jMmggzJ/1zntOQlmKDpiQ==
-X-ME-Sender: <xms:xU9vaOhZl45z-rfB9RxF_qp7NXcX1YCEJvpn_83dFwQvi7TbEUJfCA>
-    <xme:xU9vaPDTDQty_E-xxXjH9NrUy1ZIarZtAVtYYT4xsWqFGExmKh7nj_7IFcfzMmBst
-    lc43IENkO3kmt9sdLg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefleeiudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertd
-    ertddtnecuhfhrohhmpedfofgrthhhvgifucfotgeurhhiuggvfdcuoehmrghtthesthhr
-    rghvvghrshgvrdgtohhmrdgruheqnecuggftrfgrthhtvghrnhephfdtueffteevgfeihe
-    fhvefffffggeeggeeigeehkeelgfeitedtveehtdevffeknecuffhomhgrihhnpehkvghr
-    nhgvlhdrohhrghdpthhrrghvvghrshgvrdgtohhmrdgruhdprghrmhhlihhnuhigrdhorh
-    hgrdhukhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pehmrghtthesthhrrghvvghrshgvrdgtohhmrdgruhdpnhgspghrtghpthhtohepfedpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdho
-    rhhgrdhukhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuh
-    igrdguvghvpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:xU9vaIgexHGtXks1vbezMqLHC3sZR36QBPL49RLnqklMoTcbbG4dfQ>
-    <xmx:xU9vaLk9OSd4bAwTtlBPKEBMlZFh0aGYx56i5jNF9k76S0IyAKVeSQ>
-    <xmx:xU9vaMqLf07Xa9JMvqZNK7gpl2pAQHyMtXaoDVRnfQfmv2aCcaNdhw>
-    <xmx:xU9vaME2X7s1_F1j7DNuJXdtR4Ral7iIBIyZMsU4dqvhCS04_D7nGw>
-    <xmx:xk9vaJZHjvk8IRH_1R-WQ_vE3UeOpKkdVSP-ihyOjamn_e1cZI11jFL9>
-Feedback-ID: i426947f3:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 92C9315C008E; Thu, 10 Jul 2025 01:29:41 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="kUzK9iDt"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso675073276.2
+        for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 02:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1752141545; x=1752746345; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tfPYL34FapnC4GPOI5oKk+QzBPVtKMCrzZZzT6Z9TGs=;
+        b=kUzK9iDttWoDOwHLnTkjHBe+DWsIq9ygQSICSviswS59Rk0QK17yoocH7UGkuxWywe
+         zbRt3nY1jv6oDc7EQRgvilhSDEKtBeLt6GuXxeFw0s8XUwry1zpzZ3odi6T1pRW5dJPF
+         7N+Hvbq7lzPYO1npwFdk6+OYYGp+k/oaIjMS69bPKEhSPTPK6ly/3s8keGxrcuE/BVqz
+         jueHRhSB/Zcs2rmYUAijIK9wKdMnx0a4SFacW8X+ogqMnrv4Ce122ao8skPU9f1PYBBl
+         PRJHeI8UxckGNIutd+gsT2XHrTywvJJoUBXOt0bRqJT7XDvEOFTt/OyPq8mbQ7TKbAEp
+         dRiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752141545; x=1752746345;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
+         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tfPYL34FapnC4GPOI5oKk+QzBPVtKMCrzZZzT6Z9TGs=;
+        b=PLziJMpbIkT+k7CdSAl+Wv9nhSsiQbDCEcWmMWb+538ULVe423kPmGZyN00Wh+1ERL
+         sm1u5BcltcXbRWBSgcHcjhkYzU5PDp+DC/+6IQTyFV14bzyRSh9skJtTZdYTbjw/OUCd
+         qcc4zwgTFuxn60aRaY2eO0Xgl33z8DjFcCVo/4Hjggg9WxhX3VclOSyDYmQtIjyJIFHY
+         S7k+AO49SLmp7wdyFrHTmqD+ZUs2KL2GMjSBK7O8N4ZcYU24LSe/whDOeUxTqMMv3D/W
+         keCP0Iv3PzF0yycGwhDnblILqZzW6+oZzENCdvI83E9Ua9MJ7/G89fFMuLAJcuNKZ4+E
+         NMgA==
+X-Gm-Message-State: AOJu0YxkxJKkcUob6iXfrQkIVjs+vLdqRi0PQmwMZSEBrwv36iPY+vSv
+	1rXLXtIt/TTsUwcx92vLr+mhurcFgwf8dwFOQQYPRyboX9u5xQ6NdXoy6BExQZE+lAN4ETxA8TG
+	dCiOdFHsx496PY/iqe8K0+ynuAPPAdakhq9rWAZaG6g==
+X-Gm-Gg: ASbGncsKZP2YWwWFAzExOJEeVS1Bu5ZSDj4NczNm4AEEHrX0xEbW6O5DQs3DwhT/joq
+	nDV7aMBlk3RF6h99QX5tacAR6+GRG45EAA5dv3O8z9FRQdQ7oN7ijL7mQpGD0R7CrW64jrag6+v
+	l7hAkxVUla5WlBwOudedYwuq6THqlOUQ/vDSKlSreSqg==
+X-Google-Smtp-Source: AGHT+IEvnVOnHYxR6L/U9hATW8VlP/nRreoqxAWBxTJdckQ8TG2I2oMFRHXWKaTXYa0HCcEiTEz1z7+6bQnQfU+whgM=
+X-Received: by 2002:a05:6902:1b8f:b0:e87:9bb7:beac with SMTP id
+ 3f1490d57ef6-e8b7a32b090mr2099503276.15.1752141545488; Thu, 10 Jul 2025
+ 02:59:05 -0700 (PDT)
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 10 Jul 2025 02:59:03 -0700
+Received: from 415818378487 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 10 Jul 2025 02:59:03 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: T7d5bb7b82feda5d9
-Date: Thu, 10 Jul 2025 15:29:01 +1000
-From: "Mathew McBride" <matt@traverse.com.au>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev
-Message-Id: <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
-In-Reply-To: <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
-References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
- <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
- <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
- <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
- <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
-Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+from: KernelCI bot <bot@kernelci.org>
+Reply-To: kernelci@lists.linux.dev
+Date: Thu, 10 Jul 2025 02:59:03 -0700
+X-Gm-Features: Ac12FXwKSGRsI8--21ZXA6ao9GKzE5Y-Pb9yoM_YMb3xR8GzxcScAmYZhY7fekQ
+Message-ID: <CACo-S-0z4uY0xuN_fxBkFy2HtH19LtPWD8FkWEFsCVpMGPHGjA@mail.gmail.com>
+Subject: =?UTF-8?Q?=5BREGRESSION=5D_next=2Fmaster=3A_=28build=29_ignoring_return_va?=
+	=?UTF-8?Q?lue_of_=E2=80=98u64=5Freplace=5Fbits=E2=80=99_declared_with_attribut=2E=2E=2E?=
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Russell,
+Hello,
 
-On Wed, Apr 23, 2025, at 7:01 PM, Mathew McBride wrote:
-> 
-[snip]
+New build issue found on next/master:
 
-Just following up on this issue where directly connected SFP+ modules stopped linking up after the introduction of in-band capabilities.
+---
+ ignoring return value of =E2=80=98u64_replace_bits=E2=80=99 declared with =
+attribute
+=E2=80=98warn_unused_result=E2=80=99 [-Werror=3Dunused-result] in
+arch/arm64/kvm/sys_regs.o (arch/arm64/kvm/sys_regs.c)
+[logspec:kbuild,kbuild.compiler.error]
+---
 
-The diff you provided below[1] resolved the issue. 
-Were you planning on submitting it as a patch? If not, I'd be happy to send it in.
+- dashboard: https://d.kernelci.org/i/maestro:a2914456a7f9a96dd6b9a22a0784d=
+af92bd464f3
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
+it
+- commit HEAD:  b551c4e2a98a177a06148cf16505643cd2108386
+- tags: next-20250710
 
-Best Regards,
-Matt
 
-[1] https://lore.kernel.org/all/aAe94Tkf-IYjswfP@shell.armlinux.org.uk/
-> Thanks Russell!
-> 
-> The diff below does fix the problem, 10G SFP's now link up again.
-> 
-> I should note that Alex Guzman was the one who originally reported the issue to me, he has also confirmed this diff resolves the issue.
-> Link: https://forum.traverse.com.au/t/sfp-ports-stop-working-with-linux-6-14-in-arch-linux/1076/4
-> 
-> > Please try the diff below:
-> > 
-> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> > index 1bdd5d8bb5b0..2147e2d3003a 100644
-> > --- a/drivers/net/phy/phylink.c
-> > +++ b/drivers/net/phy/phylink.c
-> > @@ -3624,6 +3624,15 @@ static int phylink_sfp_config_optical(struct phylink *pl)
-> > phylink_dbg(pl, "optical SFP: chosen %s interface\n",
-> >     phy_modes(interface));
-> >  
-> > + /* GBASE-R interfaces with the exception of KR do not have autoneg at
-> > + * the PCS. As the PCS is media facing, disable the Autoneg bit in the
-> > + * advertisement.
-> > + */
-> > + if (interface == PHY_INTERFACE_MODE_5GBASER ||
-> > +     interface == PHY_INTERFACE_MODE_10GBASER ||
-> > +     interface == PHY_INTERFACE_MODE_25GBASER)
-> > + __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
-> > +
-> > if (!phylink_validate_pcs_inband_autoneg(pl, interface,
-> > config.advertising)) {
-> > phylink_err(pl, "autoneg setting not compatible with PCS");
-> > 
-> > -- 
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-> > 
-> 
+Log excerpt:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+arch/arm64/kvm/sys_regs.c:2654:17: error: ignoring return value of
+=E2=80=98u64_replace_bits=E2=80=99 declared with attribute =E2=80=98warn_un=
+used_result=E2=80=99
+[-Werror=3Dunused-result]
+ 2654 |                 u64_replace_bits(val, hpmn, MDCR_EL2_HPMN);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  CC      fs/nfs/nfstrace.o
+  CC      fs/nfs/export.o
+  CC      fs/lockd/svc4proc.o
+  CC      drivers/soc/qcom/ubwc_config.o
+  CC      lib/bsearch.o
+  CC      kernel/bpf/token.o
+  CC      net/netfilter/xt_CLASSIFY.o
+  CC      lib/find_bit.o
+  CC      lib/llist.o
+  CC      kernel/trace/trace_functions.o
+  CC      net/ethtool/pause.o
+  CC      mm/mmu_notifier.o
+cc1: all warnings being treated as errors
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+
+# Builds where the incident occurred:
+
+## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+a=
+rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:686f7f5234612746bbbdc9f7
+
+## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config+lab-setup+a=
+rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
+on (arm64):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:686f7f5434612746bbbdc9fa
+
+
+#kernelci issue maestro:a2914456a7f9a96dd6b9a22a0784daf92bd464f3
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
