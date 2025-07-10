@@ -1,147 +1,110 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC102D4B41
-	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 09:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526941DDD1
+	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 10:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752141548; cv=none; b=ozlFvB5xJOIViGtlxeGqymSVTRpwoXzvCQElCj7VaLu47koBpsRYAnzaouj+mnRCKgU07Lzvp9M+cmyp3wXvzKcRfmFKyGCwUnxlIpeiUKj/MOTEe1jp9cNHt/CCvSSyeNJUv6a5BXQDO7SrDYaUbQEWVQuoMIycBTc+I5U9qpQ=
+	t=1752143943; cv=none; b=Do2JPRoWbZT1uhL8/58aSIXbNkA+Ts3n6KdMhnvINLoc6YTGRCN0P1QUq89vGFSl2H3t7dOnaOrDJ5vzaVzG4jpJ9KaydhJ7a4ojgB1aqd0sy9swr6dYxiheVogJXZErfUMfHJLXlB5jF5ZIl/hbLWEicSTmpaPdsbtFaTM3oR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752141548; c=relaxed/simple;
-	bh=6yv5CFJYg6pTTof2JcjC8om6Vi1/YsgX1I/zy2a1V3o=;
-	h=MIME-Version:from:Date:Message-ID:Subject:To:Cc:Content-Type; b=WFGP5C0H70HGzIXnBQp4qirCoP4fhxRuMOdG5qNYbHgzv/X3Thv9P3xtSdDytx0uJFb6O9TPJrimocIBpazXwjzyFWw+C0PVq3uCxPLf4en3aKOhhYsckRORTJs/1AV/oadQy0M6IkL8om3Fs0iWf+GXzg0Osl4rzFnw0iY5w/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=kUzK9iDt; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1752143943; c=relaxed/simple;
+	bh=bOq1S86mddNs1t3c+GIE+flM47EO6XwLKrs4d+t/1vU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzmDHRToPtS2/guw0VYlpVR72nOnT+A6ArCXXQB/0QYYO+jBq90QfL4Go2qYqXcASFm/L+Lr7p6wrd3n2VP02krXZWW49AFxkQ7ZrhNp0fy7Gx5jHljWRGjgYL1p+SdAbxs+UpKxqATogPl0xvT+4ZDvBMSEnC3fg09oplAkRcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lqNpjqM3; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="kUzK9iDt"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso675073276.2
-        for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 02:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqNpjqM3"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311e46d38ddso840671a91.0
+        for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 03:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1752141545; x=1752746345; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfPYL34FapnC4GPOI5oKk+QzBPVtKMCrzZZzT6Z9TGs=;
-        b=kUzK9iDttWoDOwHLnTkjHBe+DWsIq9ygQSICSviswS59Rk0QK17yoocH7UGkuxWywe
-         zbRt3nY1jv6oDc7EQRgvilhSDEKtBeLt6GuXxeFw0s8XUwry1zpzZ3odi6T1pRW5dJPF
-         7N+Hvbq7lzPYO1npwFdk6+OYYGp+k/oaIjMS69bPKEhSPTPK6ly/3s8keGxrcuE/BVqz
-         jueHRhSB/Zcs2rmYUAijIK9wKdMnx0a4SFacW8X+ogqMnrv4Ce122ao8skPU9f1PYBBl
-         PRJHeI8UxckGNIutd+gsT2XHrTywvJJoUBXOt0bRqJT7XDvEOFTt/OyPq8mbQ7TKbAEp
-         dRiQ==
+        d=linaro.org; s=google; t=1752143940; x=1752748740; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MLPDqWFr7HY4ZL0X+/Ee2b+5Y/FPW1cep7YKLBKdVvo=;
+        b=lqNpjqM38cwL6yeGO09Mk8Z22EeZ/UzH5zSFaMntFJwFeFM5jWMVCDCcxnIAmYjN3b
+         IZL+L8hDKRC6KvG3nPOOoL67jblA8OscCHCEogXAnaGklL+262M4F8Snv9NEGw4FE5sm
+         JPJIEiFaHQEk+8kje1JuI+7GceDDgk1mIYWMq8oVbkd9yyw34WY1RdJ3Ex+shWWNI/xQ
+         LovLWjuvDgzzfvPSm+aIi/cn2D9X1Sv/uygKgtTEsA1Hpeh4/37eJlIB3UQhrKrZYQ2G
+         Eno2/Y9PkZLq6iEfkkMl5MQtKvZoj4+DdgjlGSg98qWMpoUFEX4UW9TZkdRT4ZpPQMWe
+         9FCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752141545; x=1752746345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:reply-to
-         :from:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfPYL34FapnC4GPOI5oKk+QzBPVtKMCrzZZzT6Z9TGs=;
-        b=PLziJMpbIkT+k7CdSAl+Wv9nhSsiQbDCEcWmMWb+538ULVe423kPmGZyN00Wh+1ERL
-         sm1u5BcltcXbRWBSgcHcjhkYzU5PDp+DC/+6IQTyFV14bzyRSh9skJtTZdYTbjw/OUCd
-         qcc4zwgTFuxn60aRaY2eO0Xgl33z8DjFcCVo/4Hjggg9WxhX3VclOSyDYmQtIjyJIFHY
-         S7k+AO49SLmp7wdyFrHTmqD+ZUs2KL2GMjSBK7O8N4ZcYU24LSe/whDOeUxTqMMv3D/W
-         keCP0Iv3PzF0yycGwhDnblILqZzW6+oZzENCdvI83E9Ua9MJ7/G89fFMuLAJcuNKZ4+E
-         NMgA==
-X-Gm-Message-State: AOJu0YxkxJKkcUob6iXfrQkIVjs+vLdqRi0PQmwMZSEBrwv36iPY+vSv
-	1rXLXtIt/TTsUwcx92vLr+mhurcFgwf8dwFOQQYPRyboX9u5xQ6NdXoy6BExQZE+lAN4ETxA8TG
-	dCiOdFHsx496PY/iqe8K0+ynuAPPAdakhq9rWAZaG6g==
-X-Gm-Gg: ASbGncsKZP2YWwWFAzExOJEeVS1Bu5ZSDj4NczNm4AEEHrX0xEbW6O5DQs3DwhT/joq
-	nDV7aMBlk3RF6h99QX5tacAR6+GRG45EAA5dv3O8z9FRQdQ7oN7ijL7mQpGD0R7CrW64jrag6+v
-	l7hAkxVUla5WlBwOudedYwuq6THqlOUQ/vDSKlSreSqg==
-X-Google-Smtp-Source: AGHT+IEvnVOnHYxR6L/U9hATW8VlP/nRreoqxAWBxTJdckQ8TG2I2oMFRHXWKaTXYa0HCcEiTEz1z7+6bQnQfU+whgM=
-X-Received: by 2002:a05:6902:1b8f:b0:e87:9bb7:beac with SMTP id
- 3f1490d57ef6-e8b7a32b090mr2099503276.15.1752141545488; Thu, 10 Jul 2025
- 02:59:05 -0700 (PDT)
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 10 Jul 2025 02:59:03 -0700
-Received: from 415818378487 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 10 Jul 2025 02:59:03 -0700
+        d=1e100.net; s=20230601; t=1752143940; x=1752748740;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MLPDqWFr7HY4ZL0X+/Ee2b+5Y/FPW1cep7YKLBKdVvo=;
+        b=plyqX6LGLCkA7rZ2omSawdPF3Cho5ge1n1lu7FLnmQVUP4JeeyZn9JXN5uqsiJsb9M
+         1Xapv/gZDihfvQMjY5onPRcIVGMtY9dzBPvBY9lGeWzkp/lrRYKJo8l+tpZFZYOEny1g
+         XuQxCLb1TWHZmLEu3tbcz4Sukb3CMsFX26TCy9NlYyZfm/Cyr0R8gOkbkRAQ7l/zyoYt
+         QA09WXAEVEgIasKtLfeHxb83E8qKpiztACPD06h+XelTP8h2e7y2AbOlMCJKHkP76y/S
+         14EQfynafsXplFlN+F1OgTIvZk+9YJmipLEoq2O8US5eiE5HjP5FWcbhGUVB/8pZKaRd
+         HTYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuYonhczTjrfyCB/26ExSTYsxsGcMKYfVe3ads4D6nVs5MyQ52jwG1S1piYvoFR3GScjx55vLOdaDXNA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTz4wTzW6zgi9//63XbHq6dH3EjmuyyCHFg3rwjggzpAKg6xqT
+	+ZC53LhiJb//tYQ7Eo5ZNgPNMy75hqJl6K/jd+ZvlLxNi4IbjouyyMyWv7c+y0cIiCWkdEyJodX
+	xva6rqgsYUCsEI9WfXPfvjIHm8ihGzj/Q0lyr81v2ka/7Ov4PmGG7lXI=
+X-Gm-Gg: ASbGnctr6rOg2mymo7RUBtq+NFiXdMadrBPuDSuSF4c0H1nUj0k5WKZpkhiTDFIU7x2
+	lJ7c1Vg90NyDP/SOFDZi+bgkhyd7yZOI1YeB6GIGUO7WemlMvSvoLN8SEO23IRxCQhqnS4adpxu
+	KeO/X/1Dpl+e65ryMwCOaZ/JMmyTMSwHEFZIvyguWULazL38jlFmUp9igQnHCUoOcaEDW2CEMvJ
+	tAp
+X-Google-Smtp-Source: AGHT+IF9HrmL73KmCwDT1MWVIrgb9v//Mn1nJ3PtCEIP384xvWi3eMjx3HlKX4Pj8a+SRL4ABwL4m3N71r4QX1de5KM=
+X-Received: by 2002:a17:90b:4d01:b0:311:d258:3473 with SMTP id
+ 98e67ed59e1d1-31c2fcffda2mr9114226a91.13.1752143939684; Thu, 10 Jul 2025
+ 03:38:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-from: KernelCI bot <bot@kernelci.org>
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 10 Jul 2025 02:59:03 -0700
-X-Gm-Features: Ac12FXwKSGRsI8--21ZXA6ao9GKzE5Y-Pb9yoM_YMb3xR8GzxcScAmYZhY7fekQ
-Message-ID: <CACo-S-0z4uY0xuN_fxBkFy2HtH19LtPWD8FkWEFsCVpMGPHGjA@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BREGRESSION=5D_next=2Fmaster=3A_=28build=29_ignoring_return_va?=
-	=?UTF-8?Q?lue_of_=E2=80=98u64=5Freplace=5Fbits=E2=80=99_declared_with_attribut=2E=2E=2E?=
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+References: <CA+G9fYvif6kDDFar5ZK4Dff3XThSrhaZaJundjQYujaJW978yg@mail.gmail.com>
+ <20250709002521.GB1599700@nvidia.com> <CA+G9fYtOZLYe7yN7EdaEHLyJgVypgKFO2R6POoiEZv7PcLw+3A@mail.gmail.com>
+ <20250709162609.GD1599700@nvidia.com>
+In-Reply-To: <20250709162609.GD1599700@nvidia.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 10 Jul 2025 16:08:48 +0530
+X-Gm-Features: Ac12FXx5xt6u8jalX3Lvwlf9RAo_uOe7364GnM5xmt0PiJa5mXcltsuEN5V11ag
+Message-ID: <CA+G9fYti-72RmdttPNsSzBAxVyt-Oci37mOwCE=YGUR83hEa6A@mail.gmail.com>
+Subject: Re: next-20250702 WARNING iommu io-pgtable-arm.c at
+ arm_lpae_map_pages qcom_iommu_map
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: open list <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Nicolin Chen <nicolinc@nvidia.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, 9 Jul 2025 at 21:56, Jason Gunthorpe <jgg@nvidia.com> wrote:
+>
+> On Wed, Jul 09, 2025 at 04:14:26PM +0530, Naresh Kamboju wrote:
+> > I have tested this patch on top of Linux next-20250702 tag,
+> > and found kernel warning,
+>
+> Oh, yeah, I guess that hacky fix is not going to work.
+>
+> Then this is probably good enough (against linux-next):
+>
+> --- a/drivers/iommu/arm/arm-smmu/qcom_iommu.c
+> +++ b/drivers/iommu/arm/arm-smmu/qcom_iommu.c
+> @@ -335,7 +335,7 @@ static struct iommu_domain *qcom_iommu_domain_alloc_paging(struct device *dev)
+>
+>         mutex_init(&qcom_domain->init_mutex);
+>         spin_lock_init(&qcom_domain->pgtbl_lock);
+> -       qcom_domain->domain.pgsize_bitmap = SZ_4K | SZ_64K | SZ_1M | SZ_16M;
+> +       qcom_domain->domain.pgsize_bitmap = SZ_4K | SZ_2M;
+>
+>         return &qcom_domain->domain;
+>  }
 
-New build issue found on next/master:
+I have tested the above patch and it fixes the reported issue.
 
----
- ignoring return value of =E2=80=98u64_replace_bits=E2=80=99 declared with =
-attribute
-=E2=80=98warn_unused_result=E2=80=99 [-Werror=3Dunused-result] in
-arch/arm64/kvm/sys_regs.o (arch/arm64/kvm/sys_regs.c)
-[logspec:kbuild,kbuild.compiler.error]
----
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-- dashboard: https://d.kernelci.org/i/maestro:a2914456a7f9a96dd6b9a22a0784d=
-af92bd464f3
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.g=
-it
-- commit HEAD:  b551c4e2a98a177a06148cf16505643cd2108386
-- tags: next-20250710
-
-
-Log excerpt:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-arch/arm64/kvm/sys_regs.c:2654:17: error: ignoring return value of
-=E2=80=98u64_replace_bits=E2=80=99 declared with attribute =E2=80=98warn_un=
-used_result=E2=80=99
-[-Werror=3Dunused-result]
- 2654 |                 u64_replace_bits(val, hpmn, MDCR_EL2_HPMN);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  CC      fs/nfs/nfstrace.o
-  CC      fs/nfs/export.o
-  CC      fs/lockd/svc4proc.o
-  CC      drivers/soc/qcom/ubwc_config.o
-  CC      lib/bsearch.o
-  CC      kernel/bpf/token.o
-  CC      net/netfilter/xt_CLASSIFY.o
-  CC      lib/find_bit.o
-  CC      lib/llist.o
-  CC      kernel/trace/trace_functions.o
-  CC      net/ethtool/pause.o
-  CC      mm/mmu_notifier.o
-cc1: all warnings being treated as errors
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-
-
-# Builds where the incident occurred:
-
-## cros://chromeos-6.6/arm64/chromiumos-mediatek.flavour.config+lab-setup+a=
-rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
-on (arm64):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:686f7f5234612746bbbdc9f7
-
-## cros://chromeos-6.6/arm64/chromiumos-qualcomm.flavour.config+lab-setup+a=
-rm64-chromebook+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy
-on (arm64):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:686f7f5434612746bbbdc9fa
-
-
-#kernelci issue maestro:a2914456a7f9a96dd6b9a22a0784daf92bd464f3
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
+* https://lkft.validation.linaro.org/scheduler/job/8351756#L2565
 
 --
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Linaro LKFT
+https://lkft.linaro.org
