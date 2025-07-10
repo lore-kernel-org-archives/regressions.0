@@ -1,207 +1,144 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350C22036FF
-	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 04:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDF227EFE9
+	for <regressions@lists.linux.dev>; Thu, 10 Jul 2025 05:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752123381; cv=none; b=UbIdqArUFIZ8TCmQzB8tpXZpes0mL9Cg+HvTpi9b/c8c18kwgzkAPdHkaHikyHEUnhINOejR1BNQQXc+oaRHxo4WEtzOfwOADez7QhwcDxEvgjLS7/9j5oelU3lkMZzCdKwKM55N/kV4hdekgw4D1U2s5yDnZnEonI0O98cBCxI=
+	t=1752125385; cv=none; b=nsqYscZXd8VAoG/kIaqZDydFdxSnUFhp6eAbtsw2oRdHai7J7BYuW8hktvFH7eJlUPbKjyQekevhe+M7ibruF9ft1F4TT+PHuuMs3oAniCau03JF7bvZVYRWJ00ljUEd9H61sVnMmMtiDCpQFv2KZ291cKlwQMT5hogBBBf0yoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752123381; c=relaxed/simple;
-	bh=yoYShoaIiXR3w5F9oxenNhPzVKXL6kFxBM5IHG70IRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pd4b70teBI6sojxHczhBgK/93nEiyqGWJnn/dTGJE6kJFhiBvSVW+0q1gw8naKoIclJLbyHyHynwyUE2Ux3YlU0+uiaqwIcX9kdiowp+VL3A+LcQIoNCy4Itbt8juYZ8vq71SqDbPTUZWYOjjnB2qIevKE9cacRapTr14OQ+v54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FcM0TkDR; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1752125385; c=relaxed/simple;
+	bh=/QPuXsPagYMGpuO++ga2bvKg6r8N2PD+9bXgY6UAalA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Xp51TgbfGXyk4WjNqAJfpCy7VTfevGoLs9RLuRBuG3t6555yI5eGcJBdhb4pHFXFO71cjOHEtiuLN36rWXVfk6e3VQcN76aPRPwEGf/4ORSQ/quNbyGELwqxGBO86hnZErfLGz5Ov50v4971wzGydIbuqc4V6Mn/4LVFN51uPV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=dpEcEaSB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MsZwvZgo; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FcM0TkDR"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-87f26496daeso233792241.2
-        for <regressions@lists.linux.dev>; Wed, 09 Jul 2025 21:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1752123379; x=1752728179; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yoYShoaIiXR3w5F9oxenNhPzVKXL6kFxBM5IHG70IRs=;
-        b=FcM0TkDRriAzNp0CwlSl9Psg3zis2mYo13YNZVv7t5VPjcNKokAzXeGiYVMTMN+v+p
-         ESGUmZqW+jwD16SCpEZClrnnNM11mfWAugTMfFuH7xd8/I83r/sT45MelkiP1zZQ6ekO
-         Qe5pvyztJJ0tJFINSR4AwK7YqwRGJXJubTZ7g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752123379; x=1752728179;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yoYShoaIiXR3w5F9oxenNhPzVKXL6kFxBM5IHG70IRs=;
-        b=lmkYsEvGIEvSjCsZ54SbyXFe+I7N1sFBseg5qUnLLeGnEUSolKaEHI+4t/Dw4wjjTR
-         drnlGv8YCBDiG40yOaDvNPI7UBf46BC6p1aOUNwpj07UGUAoMrug2kQKjX7gYgHdA9pJ
-         1Ec17ONzkZjhC3hdyIVR4DsVwpaD8lWh8jpvk02zD++aPRmtnMUjJpbk4oirTwmXlFSl
-         xKLfOs2bAbVvFvwwossFEd+WUt0CI4R++ZkPYdwdSHGJAcS49G668iES1HJZ6xZbGl2M
-         Urb9a7XocN/gY3h+P7wjNg0mHVG9AWqxzTqIneXsm5BoKAvCjRtIr2ZdCGInq0HaGyen
-         2DOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh81yVCn4bAeoh0tSbIIT3fkDCT11ybt8bMYj+knAyvi5Aug/viP8TMlIoFzZ0CzclbLqFyd7Y5axHgg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx7SAwtmySIJZFyiI19JA+4JqaUtRtFyHlxaMOqroUb+3jzhYJq
-	ZpsApPpTJs0fn+UW5U/pEN4TG/monlfdNNCkKHO73Z9I/0d7JDJRqpf08q6pTHWjqG2GZz8wM9H
-	38Lu5W4PTr83ArZ4S+TzHChTH05BpIVAcpciZfKe9
-X-Gm-Gg: ASbGncvFqcwTuEpEcZPZetqc9to6ame/lByJYUiPnKKNzgEV4HDtBYro/L2/3844VS8
-	n0lzHg6T3OEQEB0ZmMNfEq4PFk6q7LDK8OWv6eP9ihthsyFSWs3WMXAxilTwif9BgBwzrJE9Js0
-	s/w8Sqh3L4NKXBtSjzrpqZ/SHOZ1EhXE34hQsB7Q1F88Q=
-X-Google-Smtp-Source: AGHT+IFzs97Dddx7FNhI64YbIS8Rx6OltW9IW20sNOOzblps6/5oY5gO8vvwnu78AMYV5yRt1nkQT7p69PYqaE4VJzQ=
-X-Received: by 2002:a05:6102:dca:b0:4e2:beb9:191 with SMTP id
- ada2fe7eead31-4f62e1adecemr629501137.20.1752123378841; Wed, 09 Jul 2025
- 21:56:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="dpEcEaSB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MsZwvZgo"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 08B2EEC02C4;
+	Thu, 10 Jul 2025 01:29:42 -0400 (EDT)
+Received: from phl-imap-18 ([10.202.2.89])
+  by phl-compute-01.internal (MEProxy); Thu, 10 Jul 2025 01:29:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
+	 t=1752125382; x=1752211782; bh=MMdcP6sTGpt1a34kdXef9pIIHzLJ2Phl
+	UnquDYalTow=; b=dpEcEaSB+rvHX7NOtf3DLw2cIXI6kRIBtQyH+moUZPxnaPeQ
+	jTThoXdLvKtXuWfqrEvreXnfq5QClZVEsgn9Em7OEZsDihS9Ta1LwaxyQzG/b0sd
+	fVBiKea1uwLnrrLNDB35P0CSuaWvqDtEpoFWqrnrG4Zb6SOmFVkVCPML/Z21nY97
+	7sW61daFgD7B0vf1peVaKmyJ7GNqYC0/qdA9wZRJPzub7E+LURdj/qk9CIFkGpnj
+	1Iw+lSM1majH3Z1kndffLbYB3XqvtzjRnpef61BdHj5df13Qhhf228UxvKvaZ/8d
+	OCksksHEk/5g/IRQmWSNkftOaq9j77BRM8azUA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752125382; x=
+	1752211782; bh=MMdcP6sTGpt1a34kdXef9pIIHzLJ2PhlUnquDYalTow=; b=M
+	sZwvZgoJZfeeOhzRMYtUCEOT4XIzsCihSkh5oMAcx96sRulMmNmZQHH/qjCdcyFt
+	J4voUeqKJ3BozcEvdMA+C9SpKqQa1RoxmaKM5E3U5fP5ZITH4AFYIB0CgjTmVh5h
+	yTHB5TmGtaJUmKxTMWbPGaSRwEEwQ5AqAl7qb1kHC5i6r12a1oXSdrGsJxXbqwNn
+	WuTdMykOTOIfuQTQSqZvWCFhaK8KSFMGvNOY6pq1JKXBPHamR2Fv2Ca2gkqnKHxa
+	sUMed0Tb1Y4K4OmeNepJfRPV/k/9CKXmpW3Q7j54qIEg/tRD4/Ow5x1yahZiQP1D
+	jMmggzJ/1zntOQlmKDpiQ==
+X-ME-Sender: <xms:xU9vaOhZl45z-rfB9RxF_qp7NXcX1YCEJvpn_83dFwQvi7TbEUJfCA>
+    <xme:xU9vaPDTDQty_E-xxXjH9NrUy1ZIarZtAVtYYT4xsWqFGExmKh7nj_7IFcfzMmBst
+    lc43IENkO3kmt9sdLg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdefleeiudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertd
+    ertddtnecuhfhrohhmpedfofgrthhhvgifucfotgeurhhiuggvfdcuoehmrghtthesthhr
+    rghvvghrshgvrdgtohhmrdgruheqnecuggftrfgrthhtvghrnhephfdtueffteevgfeihe
+    fhvefffffggeeggeeigeehkeelgfeitedtveehtdevffeknecuffhomhgrihhnpehkvghr
+    nhgvlhdrohhrghdpthhrrghvvghrshgvrdgtohhmrdgruhdprghrmhhlihhnuhigrdhorh
+    hgrdhukhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehmrghtthesthhrrghvvghrshgvrdgtohhmrdgruhdpnhgspghrtghpthhtohepfedpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdho
+    rhhgrdhukhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuh
+    igrdguvghvpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:xU9vaIgexHGtXks1vbezMqLHC3sZR36QBPL49RLnqklMoTcbbG4dfQ>
+    <xmx:xU9vaLk9OSd4bAwTtlBPKEBMlZFh0aGYx56i5jNF9k76S0IyAKVeSQ>
+    <xmx:xU9vaMqLf07Xa9JMvqZNK7gpl2pAQHyMtXaoDVRnfQfmv2aCcaNdhw>
+    <xmx:xU9vaME2X7s1_F1j7DNuJXdtR4Ral7iIBIyZMsU4dqvhCS04_D7nGw>
+    <xmx:xk9vaJZHjvk8IRH_1R-WQ_vE3UeOpKkdVSP-ihyOjamn_e1cZI11jFL9>
+Feedback-ID: i426947f3:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 92C9315C008E; Thu, 10 Jul 2025 01:29:41 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <4baJtp-j_IHshbbcugGEFuYVWNnoYMQ_-KELjaMMYPw1XwqyMJgfW4tO-hj1UhMId4hypNTOZrucUaOGx4qb3E-fIvhqS289kwlu_LR9nH0=@proton.me>
- <2025070938-abiding-speller-23be@gregkh>
-In-Reply-To: <2025070938-abiding-speller-23be@gregkh>
-From: Ajay Kaher <ajay.kaher@broadcom.com>
-Date: Thu, 10 Jul 2025 10:26:07 +0530
-X-Gm-Features: Ac12FXwvlXU88kjs6bXCHzFaXIxap9g2PsdUPaAH_4psVrIMCaIVnR6b-7Iv_ac
-Message-ID: <CAD2QZ9ZoBJYHq+SLvw07Uo5Cp5tqMoDjOGY+TbJHaEUB7ODt9A@mail.gmail.com>
-Subject: Re: VMware Workstation Pro w/ recent Kernel-6.15.4
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Christopher Turcotte <clturcotte@proton.me>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"alexey.makhalova@broadcom.com" <alexey.makhalova@broadcom.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Prajakta Malla <prajakta.malla@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000a08be006398c037f"
+X-ThreadId: T7d5bb7b82feda5d9
+Date: Thu, 10 Jul 2025 15:29:01 +1000
+From: "Mathew McBride" <matt@traverse.com.au>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev
+Message-Id: <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
+In-Reply-To: <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
+References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
+ <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+ <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
+ <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
+ <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
+Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
---000000000000a08be006398c037f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Russell,
 
-On Wed, Jul 9, 2025 at 6:39=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Wed, Jul 09, 2025 at 12:42:02PM +0000, Christopher Turcotte wrote:
-> > Good morning
-> >
-> > I'm hoping for a resolution to an issue I'm currently having with the l=
-atest kernel release and Workstation Pro (Free Edition). Every time I try t=
-o open Workstation, it's prompting me to reinstall modules that ultimately =
-fail (see screenshots). Also see the attached log file. After doing some re=
-search, I see the issue is that several header files are missing. I've trie=
-d to manually compile and install original modules, but with no success. I'=
-m still faced with an incompatibility issue and the latest kernel. This pro=
-blem does not occur when I switch back to kernel 6.14.
->
-> As you are using external modules, please contact the authors of them as
-> there's nothing we can do here about them, sorry.
->
+On Wed, Apr 23, 2025, at 7:01 PM, Mathew McBride wrote:
+> 
+[snip]
 
-Thanks Christopher for reporting this issue.
+Just following up on this issue where directly connected SFP+ modules stopped linking up after the introduction of in-band capabilities.
 
-Please note that Fedora 42 is not yet officially supported as a host
-operating system for Workstation.
-Refer following link for 'Supported host operating systems Workstation Pro'=
-:
-https://knowledge.broadcom.com/external/article?legacyId=3D80807
+The diff you provided below[1] resolved the issue. 
+Were you planning on submitting it as a patch? If not, I'd be happy to send it in.
 
-- Ajay
+Best Regards,
+Matt
 
---000000000000a08be006398c037f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-fEfjRz/Z5b6J+pnCj2dzb2Wir3qx4rt1/aShjQasncmTZ0r8rOk2G3RmKolDmTmWPMeCgzL2KeQs
-QRXTsKFFi0np4iUyWo+MDCofsswor1HkoXwlmoIAdrFL+cw3qvOowpOB0pe3+G1rWNvJvYsOAzG6
-2a8X0kwMSTEGjJgAX+jQjqwdP8C4ZxmE7n236E9GiM8kfhFFAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF2FqYXkua2FoZXJAYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQkdXtSp1Dzqn1C33ctprG/
-nnkbNDANBgkqhkiG9w0BAQsFAAOCAgEAQbg6h5rEci8mKF65wFYkl7cvu+zaAia4d24Ef/05x2/P
-WAuBmkkDNwevol3iJzQNwlOuR4yR0sZchzw7mXSsqBhq1dgSNbReQ0qJU0YWze48y5rGlyZvCB1Q
-Z8FbyfrHGx4ZQJcjB1zeXJqqW6DPE5O8XOw+xTEKzIQxJFLgBF71RT5Jg4kJIY560kzMLBYKzS1f
-7fRmy20PR3frP6J2SwKPhNCsXVDP3t0KC5dUnlUf/1Ux2sVe/6G8+G7lBCG3A1TaN4j9woYHN7Y/
-U0LCVM46Gf7bFsu7RzwcrKtSOnfJ3Fs7V+IWCrTMvbCSQylAy3+BMkMGFZ0WwtXNLxbYIEhKAZmH
-npugOtDKS6j4LkLxkHr/dTYZvfdOXZXTIlz8qTfkTKw4ES4KW3EGzfnRZCL2VD27/GAtt0hwPWrY
-HL087+VQLA9RUVdfnigRjZOPWo//78ZaDd9PPWbLKqa6EIboR2nSV5miF9fQinDnxToBGplQEcXG
-WwCF8syc/0n0xzLlb/IOwxmkzMizN/3/vVp5eGh64OGdhSwzZDBQuVS08Wgfd3nVHT6zh1F0jBgZ
-ACv82jjjtABB+Tg1VZ0vcRr5ZzTC1WylB7ik6soemgWAgbrQfhNh0uHr9jq+NAbTA4wqUK6gA5LP
-kPwzH0/UqVP+eM3EQII1r4Uiee8YifwxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgwc6GO95nPh0DhXVGYwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIFD6
-vxsEiUHNVDj/oIgST8o/lDAcbg2P03GM599y+UT9MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI1MDcxMDA0NTYxOVowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAAMqsohcRLclUSPQbkkEsrJWnQRfdpt+J9X2whjv
-NcmbEvIvOqEhBOK6y2eB9Bt5FuTShMyaJtscVqi5LXaF0jbqyTDkySbzuKFbaVdqIoUwyW8yuQrB
-KwlXU13iyCzS+BcLp17sh9wjAB/ensA6mjJLt3J/JkoMRhfhn6r8fev+AmVHsgsP3pVGW0hEI34Y
-EZn42Kb2HXOVIg1v4vk4THB2vPd5iULS9ehZ1BVjsab+xXoCSLnAlxh5LV2awtEoOHzybUlT3jgL
-uIXMAvhqaNPbad7ZfEBFayQF9PtPZZnjArnWqM+ayEjQMMcGoi5NgAZNJMd2qPDyYatvbBkicMA=
---000000000000a08be006398c037f--
+[1] https://lore.kernel.org/all/aAe94Tkf-IYjswfP@shell.armlinux.org.uk/
+> Thanks Russell!
+> 
+> The diff below does fix the problem, 10G SFP's now link up again.
+> 
+> I should note that Alex Guzman was the one who originally reported the issue to me, he has also confirmed this diff resolves the issue.
+> Link: https://forum.traverse.com.au/t/sfp-ports-stop-working-with-linux-6-14-in-arch-linux/1076/4
+> 
+> > Please try the diff below:
+> > 
+> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > index 1bdd5d8bb5b0..2147e2d3003a 100644
+> > --- a/drivers/net/phy/phylink.c
+> > +++ b/drivers/net/phy/phylink.c
+> > @@ -3624,6 +3624,15 @@ static int phylink_sfp_config_optical(struct phylink *pl)
+> > phylink_dbg(pl, "optical SFP: chosen %s interface\n",
+> >     phy_modes(interface));
+> >  
+> > + /* GBASE-R interfaces with the exception of KR do not have autoneg at
+> > + * the PCS. As the PCS is media facing, disable the Autoneg bit in the
+> > + * advertisement.
+> > + */
+> > + if (interface == PHY_INTERFACE_MODE_5GBASER ||
+> > +     interface == PHY_INTERFACE_MODE_10GBASER ||
+> > +     interface == PHY_INTERFACE_MODE_25GBASER)
+> > + __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
+> > +
+> > if (!phylink_validate_pcs_inband_autoneg(pl, interface,
+> > config.advertising)) {
+> > phylink_err(pl, "autoneg setting not compatible with PCS");
+> > 
+> > -- 
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> > 
+> 
