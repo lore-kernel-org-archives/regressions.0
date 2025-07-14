@@ -1,75 +1,33 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D70D1A5BA3
-	for <regressions@lists.linux.dev>; Mon, 14 Jul 2025 16:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5892620D5;
+	Mon, 14 Jul 2025 16:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752510160; cv=none; b=knRzltpajqmctOJIMKfsXVaFpBGY9WvV9FidGLvaO82lJqkpSkIR+gts6uXfFhe2ICTcVqPua4H+GyblkjSYCB3cu9khzJPpMLUxZ/VBPoCdZ5EzXJpFsB0AH5SKh6+NxMysO4Q+16/xvCPXlRCoMOm3SCWZOKlyNadjA8HsujY=
+	t=1752510942; cv=none; b=JhpyJRcUT5MkklL7bzj5OiU19JrDcJrwhqH7gPXor4n970vw0qv0o0n0wNykWpMl4HGyqWuv+LEDkmxpCf59tLY5cpmgBywLwgpKeHx/KyNaQ1kpc762EnJpW7ecovWxE2pVlIGqpHm7QJR3qGcZdGZy6RnWkzxWJpVyWjnFQE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752510160; c=relaxed/simple;
-	bh=bav8Kj0Kj5ICDe2azROBf526jpLSAr4kH1AUWPoYazY=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:Cc:To:
-	 In-Reply-To:Content-Type; b=YmmChyByj7yb6V94g7Qe2zd1BtPv8h+IXUqJIMvvEJZWY3nU4y9YlKBYkEfuEpyMiyrMvsGhbEM/KKouFEGI5ANmbUkAwN8FZHgAG9wLhldP20l/SrAlUOejVDJ8yW5gM/rVZQmw1xeFkQQHKxiqHnOPGM4FTSPvl04j3lS0kw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net; spf=pass smtp.mailfrom=dev-mail.net; dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b=qbtcQfpW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UOmasbrm; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev-mail.net
+	s=arc-20240116; t=1752510942; c=relaxed/simple;
+	bh=HCTIYugXe3ybLmowCq2D9pzqaHhFBDzT2Z0kcsA7nhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHPLnyYO8fdvGgAwMO35O+jnWK7jXbmHA+Dy0jONK3YKnaNN8str5rHlNPycWnAfQ8ZCtS8n42Q0B/73XBc0yCBn1dbi0ZbFAqhfjZEguznlMqfr32Amb9B/zDoVCJb59cJJez64d1wyTxeWfsX31k01tD9is1Tcg/KHiJxvOEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFoc59lB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b="qbtcQfpW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UOmasbrm"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 921CF140005E;
-	Mon, 14 Jul 2025 12:22:37 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Mon, 14 Jul 2025 12:22:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev-mail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1752510157; x=1752596557; bh=o0JWuKS61J+6y1YtXkwC7qWXMI5gm+tQ68M
-	Z+Bzs3jY=; b=qbtcQfpWL/qdNuSNn1tblpNBpi9TZBtoy423djnEpd56DZPx19x
-	iGsC/Zw+28Z/P0FOK0LDeLK2QhM/B4r9waOKpqjfYNxF80jJqnrWue2cHeL1uzOh
-	PdvOlxsGR730hjrQIzWIXoH3jcLaNf+uvM9h03fdEQa8vLOd9awjdDox2Ajnyvc6
-	MDGdWIybBtmHc/pI9DRmFCbGHOueYJwnYakP7sDA0JyBMpi+l57d/no5zUiY0g2D
-	PW4QXT+c1TgNpqOq9U6R7ntJe73uxPjqGjeF8qwGKIjRGQ/hY5Ooc1zBRLsNK7Hk
-	O5T+SlIjindW1X1slJsaB3H2xEvvGvrxgQQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752510157; x=
-	1752596557; bh=o0JWuKS61J+6y1YtXkwC7qWXMI5gm+tQ68MZ+Bzs3jY=; b=U
-	Omasbrm2d5qUGEBU9hwqewBeCH2k3VaHCDIf/cqm4tpRI4AsEYjtQpwtf0BMwcU5
-	0qMm+ePq1xyEsQML9dLBzLFEwQIXcezGH03/3SUQRMK0/HE5xcGtOMBj+F8ajgdc
-	v4pQkNJlcq8zdcqWkwqu9OTV7VebE8huTzXFAirRy7EA55zmpywWIYuFvhxYAErf
-	jzH2Stwkq42m3oOUOlXp9aDVFH/K0hzzHBOCzCmwxiv64q0SShpbylOk/X1aDcnX
-	yREpqSQbLnbGJi/4RCGwbJzCC2AHLLvxoFLkp4h2vPhxiCqUJFfNMMGVg8bTx9Ed
-	OxRcXHuiWuyjKMGwnvutg==
-X-ME-Sender: <xms:zS51aHN0BaSO_N1oChFcMJFFv9sF3DxDIy3zoEImNYwbqXWFE-D6cg>
-    <xme:zS51aK5kvLphFsbRu-lKvGPlzvpEbAQWxaWdsOz7TcYscIWDd0n3iZLYP48irUGof
-    HnAZFSOhCXbu3XL>
-X-ME-Received: <xmr:zS51aIMdqxYM5oz-g4xg6KefIKW47_Wp2WY-fJV78gaYVDd4i0lfKKSMd_Wvag7XLRcABY3fqIYACTWrFkgSiiqsFJmkCazH43VL5w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehvdegvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepkfffgggfufhrfhfhvefvjggtgfesthejre
-    dttddvjeenucfhrhhomhepphhgnhguuceophhgnhguseguvghvqdhmrghilhdrnhgvtheq
-    necuggftrfgrthhtvghrnhepjedtuddvffffhfevueejudeludfggfejjeekheffudejte
-    ejfefguedugfejjeefnecuffhomhgrihhnpehrvgguhhgrthdrtghomhenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpghhnugesuggvvhdqmh
-    grihhlrdhnvghtpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:zS51aIn1tw3tTbsxbjHLLviZYDesk_-4huW4flkbUVHSW7SzX93G8g>
-    <xmx:zS51aPSYCvitJcULZbbCp4IZsCFe_oD5kWmbx-cCwf0WaeE66-Kdiw>
-    <xmx:zS51aEBgXO8JW7PUPI1S9sePRO1fzQZain-FX1c0Nc2tN4WJeKz9hw>
-    <xmx:zS51aOT-mAzP_6LWYSMuOIZqoKJ7IopCr-YyNl0XRzscNWNq2nV7WA>
-    <xmx:zS51aIxmxf5B8uVk8jHdS5yScfyvvMDvmp5xOAZIr5OIKelAi9E0Hg1T>
-Feedback-ID: if6e94526:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Jul 2025 12:22:36 -0400 (EDT)
-Message-ID: <cdae477c-6281-4ee0-b635-9c3bab483cbe@dev-mail.net>
-Date: Mon, 14 Jul 2025 12:22:36 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFoc59lB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7FFC4CEED;
+	Mon, 14 Jul 2025 16:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752510941;
+	bh=HCTIYugXe3ybLmowCq2D9pzqaHhFBDzT2Z0kcsA7nhI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tFoc59lB7p3DS+EG+cbfcNxThwczpLZw+oWAaDlUE1pnYxwjcDWMipv7X+Hi1jBE2
+	 oSzSUphDbDG3DMZXmY3pQpQdopCVp1+ytg0DibEw6Z9nX4ZR3j7A21fTHf/MTPYdPU
+	 kT/LGqIeg81vWG1Oxc2qO9HEaY5Ilnyl1RzFi9rB0gHV0MM0abv/tk97UJzGcVMWr4
+	 ag7tLS8Z46CCRPPi+L4/u0AnUfxo0LEDQLGVqjL2rU8UgRHJTl8XirLjpnrqhtzy9a
+	 gTGHUWD6w039b4I9r6grLoVJycZPPEgTf4fl2SV+5+rMCgRLMQD49AG7MOEYM/kjwz
+	 8gfXF4tNL0o7Q==
+Message-ID: <bb98ecb6-eb56-44d9-8f80-3172f9e7de03@kernel.org>
+Date: Mon, 14 Jul 2025 11:35:39 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -77,41 +35,94 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [REGRESSION]: fwd: regression in 6.15.5: KVM guest launch FAILSs with
- missing CPU feature error (sbpb, ibpb-brtype)
-Content-Language: en-US, es-ES
-Reply-To: pgnd@dev-mail.net
-References: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
-From: pgnd <pgnd@dev-mail.net>
-Cc: regressions@lists.linux.dev
-To: stable@vger.kernel.org
-In-Reply-To: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
-X-Forwarded-Message-Id: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
+Subject: Re: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: mario.limonciello@amd.com, andreas.noever@gmail.com,
+ michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com,
+ rajat.khandelwal@intel.com, mika.westerberg@linux.intel.com,
+ linux-usb@vger.kernel.org, kim.lindberger@gmail.com, linux@lunaa.ch,
+ Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+ Alyssa Ross <hi@alyssa.is>, regressions@lists.linux.dev
+References: <20250411151446.4121877-1-superm1@kernel.org>
+ <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
+ <87v7odo46s.fsf@alyssa.is> <51d5393c-d0e1-4f35-bed0-16c7ce40a8a8@kernel.org>
+ <2025070737-charbroil-imply-7b5e@gregkh>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <2025070737-charbroil-imply-7b5e@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-(already submitted @ Fedora; advised to post here to upstream as well)
+On 7/7/25 2:57 AM, Greg Kroah-Hartman wrote:
+> On Sun, Jul 06, 2025 at 10:46:53AM -0400, Mario Limonciello wrote:
+>> On 6/30/25 07:32, Alyssa Ross wrote:
+>>> Alyssa Ross <hi@alyssa.is> writes:
+>>>
+>>>> On Fri, Apr 11, 2025 at 10:14:44AM -0500, Mario Limonciello wrote:
+>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>
+>>>>> commit a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect
+>>>>> on USB4 ports") introduced a sysfs file to control wake up policy
+>>>>> for a given USB4 port that defaulted to disabled.
+>>>>>
+>>>>> However when testing commit 4bfeea6ec1c02 ("thunderbolt: Use wake
+>>>>> on connect and disconnect over suspend") I found that it was working
+>>>>> even without making changes to the power/wakeup file (which defaults
+>>>>> to disabled). This is because of a logic error doing a bitwise or
+>>>>> of the wake-on-connect flag with device_may_wakeup() which should
+>>>>> have been a logical AND.
+>>>>>
+>>>>> Adjust the logic so that policy is only applied when wakeup is
+>>>>> actually enabled.
+>>>>>
+>>>>> Fixes: a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect on USB4 ports")
+>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> Hi! There have been a couple of reports of a Thunderbolt regression in
+>>>> recent stable kernels, and one reporter has now bisected it to this
+>>>> change:
+>>>>
+>>>>    • https://bugzilla.kernel.org/show_bug.cgi?id=220284
+>>>>    • https://github.com/NixOS/nixpkgs/issues/420730
+>>>>
+>>>> Both reporters are CCed, and say it starts working after the module is
+>>>> reloaded.
+>>>>
+>>>> Link: https://lore.kernel.org/r/bug-220284-208809@https.bugzilla.kernel.org%2F/
+>>>> (for regzbot)
+>>>
+>>> Apparently[1] fixed by the first linked patch below, which is currently in
+>>> the Thunderbolt tree waiting to be pulled into the USB tree.
+>>>
+>>> #regzbot monitor: https://lore.kernel.org/linux-usb/20250619213840.2388646-1-superm1@kernel.org/
+>>> #regzbot monitor: https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
+>>>
+>>> [1]: https://github.com/NixOS/nixpkgs/issues/420730#issuecomment-3018563631
+>>
+>> Hey Greg,
+>>
+>> Can you pick up the pull request from Mika from a week and a half ago with
+>> this fix for the next 6.16-rc?
+>>
+>> https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
+> 
+> Yes, I was waiting for this last round to go to Linus as the pull
+> request was made against a newer version of Linus's tree than I
+> currently had in my "for linus" branch.  I'll go get to that later
+> today.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
--------- Forwarded Message --------
-Subject: regression in 6.15.5: KVM guest launch FAILSs with missing CPU feature error (sbpb, ibpb-brtype)
-Date: Sun, 13 Jul 2025 17:37:57 -0400
-From: pgnd <pgnd@dev-mail.net>
-Reply-To: pgnd@dev-mail.net
-To: kernel@lists.fedoraproject.org
+Greg,
 
-i'm seeing a regression on Fedora 42 kernel 6.15.4 -> 6.15.5 on AMD Ryzen 5 5600G host (x86_64)
+Sorry to be a bugger, but I was surprised I didn't see this come in -rc6 
+this week, and I went and double checked your "usb-linus" branch [1] and 
+didn't see it there.
 
-kvm guests that launch ok under kernels 6.15.[3,4] fail with the following error when attempting to autostart under 6.15.5:
+Thanks,
 
-	internal error: Failed to autostart VM: operation failed: guest CPU doesn't match specification: missing features: sbpb,ibpb-brtype
-
-no changes made to libvirt, qemu, or VM defs between kernel versions.
-re-booting to old kernel versions restores expected behavior.
-
-maybe related (?) to recent changes in AMD CPU feature exposure / mitigation handling in kernel 6.15.5?
-
-i've opened a bug:
-
-	https://bugzilla.redhat.com/show_bug.cgi?id=2379784
-
-
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/log/?h=usb-linus
