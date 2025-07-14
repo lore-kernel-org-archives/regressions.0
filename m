@@ -1,133 +1,117 @@
-Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F0E8F58
-	for <regressions@lists.linux.dev>; Sun, 13 Jul 2025 15:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D70D1A5BA3
+	for <regressions@lists.linux.dev>; Mon, 14 Jul 2025 16:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752419515; cv=none; b=f1AUINF3DiLm8Kv0HLlEd9U5k4VOjIMsJcazcVJvlnNe9rbNom23QrP03FI0WCzLuwxeA/WJqzNCOC4eS7CBkEO4yhKrowCN07lwAvQ3jyoIpdHpJfP3Uebhd/vUsOZAVr5GbyPLnjDD6jWs9INL1rvpjuKWLkBThlvDZlEYHgg=
+	t=1752510160; cv=none; b=knRzltpajqmctOJIMKfsXVaFpBGY9WvV9FidGLvaO82lJqkpSkIR+gts6uXfFhe2ICTcVqPua4H+GyblkjSYCB3cu9khzJPpMLUxZ/VBPoCdZ5EzXJpFsB0AH5SKh6+NxMysO4Q+16/xvCPXlRCoMOm3SCWZOKlyNadjA8HsujY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752419515; c=relaxed/simple;
-	bh=PfTjSv++iWs3nsnLdZ+RAXwaBaheZhBmfHoz0CqUMPc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Wf6jyo/nNcPzlAZAxOjaGOFSFDXS60meFbdsG6WMyhy1+I+0sWhLfjGvenSRVtleZ+otGAMVopV8tY1WlO65AFtcMRzKGcZrD2tJHGcUvdcsRSkVykFP5kUBvKf52ECpWmJpsQr+Imi4cpBk/Ecj9tG+zuql/VJHpr94uQzbQY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=N/ApaWs3; arc=none smtp.client-ip=5.161.67.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
+	s=arc-20240116; t=1752510160; c=relaxed/simple;
+	bh=bav8Kj0Kj5ICDe2azROBf526jpLSAr4kH1AUWPoYazY=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:Cc:To:
+	 In-Reply-To:Content-Type; b=YmmChyByj7yb6V94g7Qe2zd1BtPv8h+IXUqJIMvvEJZWY3nU4y9YlKBYkEfuEpyMiyrMvsGhbEM/KKouFEGI5ANmbUkAwN8FZHgAG9wLhldP20l/SrAlUOejVDJ8yW5gM/rVZQmw1xeFkQQHKxiqHnOPGM4FTSPvl04j3lS0kw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net; spf=pass smtp.mailfrom=dev-mail.net; dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b=qbtcQfpW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UOmasbrm; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev-mail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev-mail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="N/ApaWs3"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mx.nixnet.email (Postfix) with ESMTPSA id 2970E7D32D;
-	Sun, 13 Jul 2025 17:11:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
-	t=1752419512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QV6ytnbZ9xmU9afl8WRFWceOCnE372hzW6oLlYuoxeI=;
-	b=N/ApaWs3h5NTsqvgeAeYjsm2X+XckC+aA84lOJWjUORwmKrbx+jo5vXidLssyl4xZOnWh/
-	a/qX4UOeOFngth4LhcHmlpdUjEdC9GhDH7PwM1Z0SjE4NwvSLicxO0eOOs6UHztq4cSP1H
-	+0bHRZNQF6Sgx77zBu3yWIWqf7y9ntg=
+	dkim=pass (2048-bit key) header.d=dev-mail.net header.i=@dev-mail.net header.b="qbtcQfpW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UOmasbrm"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 921CF140005E;
+	Mon, 14 Jul 2025 12:22:37 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Mon, 14 Jul 2025 12:22:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev-mail.net; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
+	1752510157; x=1752596557; bh=o0JWuKS61J+6y1YtXkwC7qWXMI5gm+tQ68M
+	Z+Bzs3jY=; b=qbtcQfpWL/qdNuSNn1tblpNBpi9TZBtoy423djnEpd56DZPx19x
+	iGsC/Zw+28Z/P0FOK0LDeLK2QhM/B4r9waOKpqjfYNxF80jJqnrWue2cHeL1uzOh
+	PdvOlxsGR730hjrQIzWIXoH3jcLaNf+uvM9h03fdEQa8vLOd9awjdDox2Ajnyvc6
+	MDGdWIybBtmHc/pI9DRmFCbGHOueYJwnYakP7sDA0JyBMpi+l57d/no5zUiY0g2D
+	PW4QXT+c1TgNpqOq9U6R7ntJe73uxPjqGjeF8qwGKIjRGQ/hY5Ooc1zBRLsNK7Hk
+	O5T+SlIjindW1X1slJsaB3H2xEvvGvrxgQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1752510157; x=
+	1752596557; bh=o0JWuKS61J+6y1YtXkwC7qWXMI5gm+tQ68MZ+Bzs3jY=; b=U
+	Omasbrm2d5qUGEBU9hwqewBeCH2k3VaHCDIf/cqm4tpRI4AsEYjtQpwtf0BMwcU5
+	0qMm+ePq1xyEsQML9dLBzLFEwQIXcezGH03/3SUQRMK0/HE5xcGtOMBj+F8ajgdc
+	v4pQkNJlcq8zdcqWkwqu9OTV7VebE8huTzXFAirRy7EA55zmpywWIYuFvhxYAErf
+	jzH2Stwkq42m3oOUOlXp9aDVFH/K0hzzHBOCzCmwxiv64q0SShpbylOk/X1aDcnX
+	yREpqSQbLnbGJi/4RCGwbJzCC2AHLLvxoFLkp4h2vPhxiCqUJFfNMMGVg8bTx9Ed
+	OxRcXHuiWuyjKMGwnvutg==
+X-ME-Sender: <xms:zS51aHN0BaSO_N1oChFcMJFFv9sF3DxDIy3zoEImNYwbqXWFE-D6cg>
+    <xme:zS51aK5kvLphFsbRu-lKvGPlzvpEbAQWxaWdsOz7TcYscIWDd0n3iZLYP48irUGof
+    HnAZFSOhCXbu3XL>
+X-ME-Received: <xmr:zS51aIMdqxYM5oz-g4xg6KefIKW47_Wp2WY-fJV78gaYVDd4i0lfKKSMd_Wvag7XLRcABY3fqIYACTWrFkgSiiqsFJmkCazH43VL5w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehvdegvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurhepkfffgggfufhrfhfhvefvjggtgfesthejre
+    dttddvjeenucfhrhhomhepphhgnhguuceophhgnhguseguvghvqdhmrghilhdrnhgvtheq
+    necuggftrfgrthhtvghrnhepjedtuddvffffhfevueejudeludfggfejjeekheffudejte
+    ejfefguedugfejjeefnecuffhomhgrihhnpehrvgguhhgrthdrtghomhenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehpghhnugesuggvvhdqmh
+    grihhlrdhnvghtpdhnsggprhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:zS51aIn1tw3tTbsxbjHLLviZYDesk_-4huW4flkbUVHSW7SzX93G8g>
+    <xmx:zS51aPSYCvitJcULZbbCp4IZsCFe_oD5kWmbx-cCwf0WaeE66-Kdiw>
+    <xmx:zS51aEBgXO8JW7PUPI1S9sePRO1fzQZain-FX1c0Nc2tN4WJeKz9hw>
+    <xmx:zS51aOT-mAzP_6LWYSMuOIZqoKJ7IopCr-YyNl0XRzscNWNq2nV7WA>
+    <xmx:zS51aIxmxf5B8uVk8jHdS5yScfyvvMDvmp5xOAZIr5OIKelAi9E0Hg1T>
+Feedback-ID: if6e94526:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Jul 2025 12:22:36 -0400 (EDT)
+Message-ID: <cdae477c-6281-4ee0-b635-9c3bab483cbe@dev-mail.net>
+Date: Mon, 14 Jul 2025 12:22:36 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 13 Jul 2025 17:11:49 +0200
-Message-Id: <DBB0VCNJ51WM.3562BZU969YMN@pwned.life>
-Cc: "Natanael Copa" <ncopa@alpinelinux.org>, <stable@vger.kernel.org>,
- <regressions@lists.linux.dev>, =?utf-8?q?Sergio_Gonz=C3=A1lez_Collado?=
- <sergio.collado@gmail.com>, "Achill Gilgenast" <fossdd@pwned.life>
-Subject: Re: [REGRESSION] v6.12.35: (build) kallsyms.h:21:10: fatal error:
- execinfo.h: No such file or directory
-From: "Achill Gilgenast" <fossdd@pwned.life>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-X-Greeting: Hi mom! Look, I'm in somebodys mail client!
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250701141026.6133a3aa@ncopa-desktop>
- <2025070104-ether-wipe-9c19@gregkh> <DBAZXHXZCG1H.2PHV0NWGFKJQ6@pwned.life>
- <2025071349-enforced-darkroom-164c@gregkh>
-In-Reply-To: <2025071349-enforced-darkroom-164c@gregkh>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: [REGRESSION]: fwd: regression in 6.15.5: KVM guest launch FAILSs with
+ missing CPU feature error (sbpb, ibpb-brtype)
+Content-Language: en-US, es-ES
+Reply-To: pgnd@dev-mail.net
+References: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
+From: pgnd <pgnd@dev-mail.net>
+Cc: regressions@lists.linux.dev
+To: stable@vger.kernel.org
+In-Reply-To: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
+X-Forwarded-Message-Id: <a34aef44-75e1-49d7-8210-5269542c1857@dev-mail.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun Jul 13, 2025 at 4:38 PM CEST, Greg Kroah-Hartman wrote:
-> On Sun, Jul 13, 2025 at 04:27:36PM +0200, Achill Gilgenast wrote:
->> On Tue Jul 1, 2025 at 2:26 PM CEST, Greg Kroah-Hartman wrote:
->> > On Tue, Jul 01, 2025 at 02:10:26PM +0200, Natanael Copa wrote:
->> >> Hi!
->> >>=20
->> >> I bumped into a build regression when building Alpine Linux kernel 6.=
-12.35 on x86_64:
->> >>=20
->> >> In file included from ../arch/x86/tools/insn_decoder_test.c:13:
->> >> ../tools/include/linux/kallsyms.h:21:10: fatal error: execinfo.h: No =
-such file or directory
->> >>    21 | #include <execinfo.h>
->> >>       |          ^~~~~~~~~~~~
->> >> compilation terminated.
->> >>=20
->> >> The 6.12.34 kernel built just fine.
->> >>=20
->> >> I bisected it to:
->> >>=20
->> >> commit b8abcba6e4aec53868dfe44f97270fc4dee0df2a (HEAD)
->> >> Author: Sergio Gonz_lez Collado <sergio.collado@gmail.com>
->> >> Date:   Sun Mar 2 23:15:18 2025 +0100
->> >>=20
->> >>     Kunit to check the longest symbol length
->> >>    =20
->> >>     commit c104c16073b7fdb3e4eae18f66f4009f6b073d6f upstream.
->> >>    =20
->> >> which has this hunk:
->> >>=20
->> >> diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn=
-_decoder_test.c
->> >> index 472540aeabc2..6c2986d2ad11 100644
->> >> --- a/arch/x86/tools/insn_decoder_test.c
->> >> +++ b/arch/x86/tools/insn_decoder_test.c
->> >> @@ -10,6 +10,7 @@
->> >>  #include <assert.h>
->> >>  #include <unistd.h>
->> >>  #include <stdarg.h>
->> >> +#include <linux/kallsyms.h>
->> >> =20
->> >>  #define unlikely(cond) (cond)
->> >> =20
->> >> @@ -106,7 +107,7 @@ static void parse_args(int argc, char **argv)
->> >>         }
->> >>  }
->> >> =20
->> >> -#define BUFSIZE 256
->> >> +#define BUFSIZE (256 + KSYM_NAME_LEN)
->> >> =20
->> >>  int main(int argc, char **argv)
->> >>  {
->> >>=20
->> >> It looks like the linux/kallsyms.h was included to get KSYM_NAME_LEN.
->> >> Unfortunately it also introduced the include of execinfo.h, which doe=
-s
->> >> not exist on musl libc.
->> >>=20
->> >> This has previously been reported to and tried fixed:
->> >> https://lore.kernel.org/stable/DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life/=
-T/#t
->> >>=20
->> >> Would it be an idea to revert commit b8abcba6e4ae til we have a prope=
-r
->> >> solution for this?
->> >
->> > Please get the fix in Linus's tree first and then we can backport it a=
-s
->> > needed.
->>=20
->> The patch now landed in Linus's tree as a95743b53031 ("kallsyms: fix
->> build without execinfo"). Please backport it into the stable trees.
->
-> Already all queued up!
->
-> Thanks for letting us know.
+(already submitted @ Fedora; advised to post here to upstream as well)
 
-Nice, thanks!
+-------- Forwarded Message --------
+Subject: regression in 6.15.5: KVM guest launch FAILSs with missing CPU feature error (sbpb, ibpb-brtype)
+Date: Sun, 13 Jul 2025 17:37:57 -0400
+From: pgnd <pgnd@dev-mail.net>
+Reply-To: pgnd@dev-mail.net
+To: kernel@lists.fedoraproject.org
+
+i'm seeing a regression on Fedora 42 kernel 6.15.4 -> 6.15.5 on AMD Ryzen 5 5600G host (x86_64)
+
+kvm guests that launch ok under kernels 6.15.[3,4] fail with the following error when attempting to autostart under 6.15.5:
+
+	internal error: Failed to autostart VM: operation failed: guest CPU doesn't match specification: missing features: sbpb,ibpb-brtype
+
+no changes made to libvirt, qemu, or VM defs between kernel versions.
+re-booting to old kernel versions restores expected behavior.
+
+maybe related (?) to recent changes in AMD CPU feature exposure / mitigation handling in kernel 6.15.5?
+
+i've opened a bug:
+
+	https://bugzilla.redhat.com/show_bug.cgi?id=2379784
+
+
