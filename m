@@ -1,144 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDAD2D29CF;
-	Tue, 15 Jul 2025 05:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C5926B2A6
+	for <regressions@lists.linux.dev>; Tue, 15 Jul 2025 06:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752558966; cv=none; b=q6jaYiZvxuPy5FHxvOZnZAfUN4E4U5WqXqR8ksUkvkA0kYUV3WXlZ9vBDaZqCH2tMr5JmDUrhRmZEjojq/zpufuzbpll5Sm2NXgfdAAQ2oVFbID2lFO6UBb02xv2VE96z0+U60of29JsDxszCVHhqBAK+RemPEdDEo0lu9ifh3w=
+	t=1752561445; cv=none; b=OSq41peI2MqM1QyT6WwEtaNWrEgSwBnzCHCsclJTKU6GUpHlXFqw722FLa02xCyHEgeo7IFjkA68m3g6uWI0qz3cSHhUL+jn3PqlrxtWg3dRdTBWc/lpq3linndT9KQao7ND/BrTZiyr3OrkjCFXqWwnAxHhUn679NhXvIim0Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752558966; c=relaxed/simple;
-	bh=Tm/bLrHAyjqlxAbci7zBwGiOLC1PnlncvMx9VRv6rwY=;
+	s=arc-20240116; t=1752561445; c=relaxed/simple;
+	bh=p+dk/vPve33hJypV4SAVkoPVl7FKtzfqNq0uRIRqJbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdrLxlEGrmXVVpremlcr/GMEWrdPQvBUIVid+spBqo8FIF5ARaF0IC+GIMPC/CclPXGPfjHGvEC18hTSwOaO1n7gxqDYlL859SuSSDX5J/pRYqATH37Qkkh+XdvFrcm1j5lYaxYOMsZSmEJIghzoIduOg05h7l0/kwdVb10JEaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mA5FHg6J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type:Content-Disposition; b=slO0fXyZhxJV1s6hqADdq3ZmAH1b55hN8FdEgRVQLOzqcRSHruxIrNyLXTCM0w0F7oCWb+n7fVrq1BBTAXsw0n+Nf0p7tQ8psX/A/IFWyInHb6+HHtvO93yVBhfZEhBItKey1iC0v68gHPsohHmpfJefsR+1rbKmxg6GM+2w8uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dZ4xaHNY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mA5FHg6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB68C4CEF8;
-	Tue, 15 Jul 2025 05:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1752558965;
-	bh=Tm/bLrHAyjqlxAbci7zBwGiOLC1PnlncvMx9VRv6rwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mA5FHg6JotJX7HnwrRSf2X4czKopA5D7yxKcDXLdKR2kpyIWHSIFdZRwEJlqIIYVz
-	 +2DQvPQf4JxvlAjd5GrOwEIrPN2klA+ozkjbc5IHl2qAzLUs/QaXqT7qr4pxxeWXyQ
-	 S0UuUEv8JciDdZsxmK+jATNRPYiqqI3+0VFlCPn0=
-Date: Tue, 15 Jul 2025 07:56:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, andreas.noever@gmail.com,
-	michael.jamet@intel.com, westeri@kernel.org, YehezkelShB@gmail.com,
-	rajat.khandelwal@intel.com, mika.westerberg@linux.intel.com,
-	linux-usb@vger.kernel.org, kim.lindberger@gmail.com, linux@lunaa.ch,
-	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-	Alyssa Ross <hi@alyssa.is>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] thunderbolt: Fix a logic error in wake on connect
-Message-ID: <2025071552-drinking-moisten-5bf7@gregkh>
-References: <20250411151446.4121877-1-superm1@kernel.org>
- <cavyeum32dd7kxj65argtem6xh2575oq3gcv3svd3ubnvdc6cr@6nv7ieimfc5e>
- <87v7odo46s.fsf@alyssa.is>
- <51d5393c-d0e1-4f35-bed0-16c7ce40a8a8@kernel.org>
- <2025070737-charbroil-imply-7b5e@gregkh>
- <bb98ecb6-eb56-44d9-8f80-3172f9e7de03@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dZ4xaHNY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752561443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PJNrGnddCS+K+I/ghI3UvfktypplC8pV6M7MGR0tlpY=;
+	b=dZ4xaHNYWHNTYGYvUbIOiZWKKiRqjEFseBX1lAcJbqX/9XmYQeox2Gga2pkezlIPuVn6mJ
+	OhegEzZp4LnYgWklDD1pEsCIT5dh4KDf35NEOzzha/V5TIHWm47KgxoOPPzuYTUZrSIDkg
+	9U15Yeab6oBGc3rT7NC3T4NayOwmFmg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-Y2ABCGivMxinmS1AsXatdQ-1; Tue,
+ 15 Jul 2025 02:37:19 -0400
+X-MC-Unique: Y2ABCGivMxinmS1AsXatdQ-1
+X-Mimecast-MFC-AGG-ID: Y2ABCGivMxinmS1AsXatdQ_1752561437
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D71671801233;
+	Tue, 15 Jul 2025 06:37:16 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.210])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62AE2180174E;
+	Tue, 15 Jul 2025 06:37:13 +0000 (UTC)
+Date: Tue, 15 Jul 2025 14:37:09 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Askar Safin <safinaskar@zohomail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Cc: regressions <regressions@lists.linux.dev>,
+	intel-gfx <intel-gfx@lists.freedesktop.org>,
+	kexec <kexec@lists.infradead.org>,
+	dri-devel <dri-devel@lists.freedesktop.org>,
+	iommu <iommu@lists.linux.dev>, Ben Hutchings <benh@debian.org>,
+	anushasrivatsa <anusha.srivatsa@intel.com>,
+	joonaslahtinen <joonas.lahtinen@linux.intel.com>,
+	tvrtkoursulin <tvrtko.ursulin@linux.intel.com>,
+	josesouza <jose.souza@intel.com>,
+	davehansen <dave.hansen@linux.intel.com>
+Subject: Re: Second kexec_file_load (but not kexec_load) fails on i915 if
+ CONFIG_INTEL_IOMMU_DEFAULT_ON=n
+Message-ID: <aHX3FSMif/LDmTtq@MiWiFi-R3L-srv>
+References: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
+ <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <cd3ca680ac5751368941713c1071e04d69544d47@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: zwm3qdXrS5qNlakxLoY4BsQwidzOH5X6OPsR2rYv4tU_1752561437
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bb98ecb6-eb56-44d9-8f80-3172f9e7de03@kernel.org>
 
-On Mon, Jul 14, 2025 at 11:35:39AM -0500, Mario Limonciello wrote:
-> On 7/7/25 2:57 AM, Greg Kroah-Hartman wrote:
-> > On Sun, Jul 06, 2025 at 10:46:53AM -0400, Mario Limonciello wrote:
-> > > On 6/30/25 07:32, Alyssa Ross wrote:
-> > > > Alyssa Ross <hi@alyssa.is> writes:
-> > > > 
-> > > > > On Fri, Apr 11, 2025 at 10:14:44AM -0500, Mario Limonciello wrote:
-> > > > > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > > 
-> > > > > > commit a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect
-> > > > > > on USB4 ports") introduced a sysfs file to control wake up policy
-> > > > > > for a given USB4 port that defaulted to disabled.
-> > > > > > 
-> > > > > > However when testing commit 4bfeea6ec1c02 ("thunderbolt: Use wake
-> > > > > > on connect and disconnect over suspend") I found that it was working
-> > > > > > even without making changes to the power/wakeup file (which defaults
-> > > > > > to disabled). This is because of a logic error doing a bitwise or
-> > > > > > of the wake-on-connect flag with device_may_wakeup() which should
-> > > > > > have been a logical AND.
-> > > > > > 
-> > > > > > Adjust the logic so that policy is only applied when wakeup is
-> > > > > > actually enabled.
-> > > > > > 
-> > > > > > Fixes: a5cfc9d65879c ("thunderbolt: Add wake on connect/disconnect on USB4 ports")
-> > > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > > > 
-> > > > > Hi! There have been a couple of reports of a Thunderbolt regression in
-> > > > > recent stable kernels, and one reporter has now bisected it to this
-> > > > > change:
-> > > > > 
-> > > > >    • https://bugzilla.kernel.org/show_bug.cgi?id=220284
-> > > > >    • https://github.com/NixOS/nixpkgs/issues/420730
-> > > > > 
-> > > > > Both reporters are CCed, and say it starts working after the module is
-> > > > > reloaded.
-> > > > > 
-> > > > > Link: https://lore.kernel.org/r/bug-220284-208809@https.bugzilla.kernel.org%2F/
-> > > > > (for regzbot)
-> > > > 
-> > > > Apparently[1] fixed by the first linked patch below, which is currently in
-> > > > the Thunderbolt tree waiting to be pulled into the USB tree.
-> > > > 
-> > > > #regzbot monitor: https://lore.kernel.org/linux-usb/20250619213840.2388646-1-superm1@kernel.org/
-> > > > #regzbot monitor: https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
-> > > > 
-> > > > [1]: https://github.com/NixOS/nixpkgs/issues/420730#issuecomment-3018563631
-> > > 
-> > > Hey Greg,
-> > > 
-> > > Can you pick up the pull request from Mika from a week and a half ago with
-> > > this fix for the next 6.16-rc?
-> > > 
-> > > https://lore.kernel.org/linux-usb/20250626154009.GK2824380@black.fi.intel.com/
-> > 
-> > Yes, I was waiting for this last round to go to Linus as the pull
-> > request was made against a newer version of Linus's tree than I
-> > currently had in my "for linus" branch.  I'll go get to that later
-> > today.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
+On 07/04/25 at 11:29am, Jani Nikula wrote:
+> On Thu, 03 Jul 2025, Askar Safin <safinaskar@zohomail.com> wrote:
+> > TL;DR: I found a bug in strange interaction in kexec_file_load (but not kexec_load) and i915
+> > TL;DR#2: Second (sometimes third or forth) kexec (using kexec_file_load) fails on my particular hardware
+> > TL;DR#3: I did 55 expirements, each of them required a lot of boots, in total I did 1908 boots
 > 
-> Greg,
-> 
-> Sorry to be a bugger, but I was surprised I didn't see this come in -rc6
-> this week, and I went and double checked your "usb-linus" branch [1] and
-> didn't see it there.
-> 
-> Thanks,
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/log/?h=usb-linus
+> Thanks for the detailed debug info. I'm afraid all I can say at this
+> point is, please file all of this in a bug report as described in
+> [1]. Please add the drm.debug related options, and attach the dmesgs and
+> configs in the bug instead of pointing at external sites.
 
-It's in there:
+Yeah, that's very great example people can refer to when reporting
+issues to upstream, thanks for the details.
 
-$ git lg main..usb-linus
-*   cd0f8649d0e1 - (HEAD -> usb-linus, origin/usb-linus, kroah.org/usb-linus, work-linus) Merge tag 'usb-serial-6.16-rc6' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-linus (6 days ago) <Greg Kroah-Hartman>
-|\  
-| * 08f49cdb71f3 - USB: serial: option: add Foxconn T99W640 (3 weeks ago) <Slark Xiao>
-* 3014168731b7 - usb: gadget: configfs: Fix OOB read on empty string write (6 days ago) <Xinyu Liu>
-* 67a59f82196c - usb: musb: fix gadget state on disconnect (8 days ago) <Drew Hamilton>
-* 9fccced2d25b - Merge tag 'thunderbolt-for-v6.16-rc4' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt into usb-linus (8 days ago) <Greg Kroah-Hartman>
-* 2cdde91c14ec - thunderbolt: Fix bit masking in tb_dp_port_set_hops() (3 weeks ago) <Alok Tiwari>
-* 58d71d4242ce - thunderbolt: Fix wake on connect at runtime (3 weeks ago) <Mario Limonciello>
+For the bug itself, I would hope Intel GPU people can have a look, see
+what's happened and how to fix. For kexec reboot, we have got problems
+on Nvidia GPU and amdgpu which makes kexec reboot hard to do continuous
+switching to 2nd kernel. In Redhat, we have met this several years ago,
+and we tried to contact GPU dev, while there's no way to fix it. Finaly
+we have to declare not supporting kexec reboot formally. This Intel GPU
+issue could be a different one, I still hope GPU dev can have a look.
 
-I'll get this to Linus for the next -rc.
+Currently, many people are investing much effort on KHO, K-state, etc
+in upstream to make kexec reboot versatile and flexible. I am very glad
+to see that. And I guess people possiblly have met the same GPU issues on
+Nvidia and AMD gpu as I mentioned, and trying to solve them. Otherwise,
+no matter how wonderful KHO, K-state or K-anything are, they are just sky
+scraper on sand.
 
-thanks,
+Personal opinion.
 
-greg k-h
+Thanks
+Baoquan
+
