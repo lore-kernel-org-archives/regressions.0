@@ -1,138 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7BA2F49F3
-	for <regressions@lists.linux.dev>; Wed, 16 Jul 2025 12:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CED92E3715;
+	Wed, 16 Jul 2025 17:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752669908; cv=none; b=X2+U2ML1z2RT3gcEDjA5/2h9k9fokJ8fMU2RI4V1H3O14WfJ1tw6ggnJewAQKh0ZYQExp0fq6VZt3ZAWhvK/Y55OPimadzvheCI53Fu3RdsBNckBH3oCBaFTKzLIcphfHi/K2d4dICEGR+bpAxgJ1QLOuUr37EmxJS8Oh58E68Q=
+	t=1752687449; cv=none; b=DGGiMMKmYeFZP3EmPcbbgngFvxf7jDHGydmVtvJjPYDWJGXMu+94ZUC5OGoNKNcQ/8lWkB8VyO0TkA3Dz/A5vLzQlN/wsz7iAz6TuTshvTc9AA589Fdi0q2vqoXfV5dHmXdetYM9TbgECZxq5lqB1e5MNs+emG3zruUC2WxMM/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752669908; c=relaxed/simple;
-	bh=bpsgmgeDGEc1PhZcHWMBFolFyeCIgQauwicXcX6/NmU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YzxnCgnjjCgadqd114BTlTASp2/7tOp0QxuGcyW1D6LzwrCdwPxa8AaxeV+6zTNCfG8dF69EKTBzldp2O0TqGpfFC6tPawUYaujEdBvJwr80kvVsTfpaj1bKQfSo8Or8H5YB4MhJm+LAwY5pBa1h+4PdqDSu24P/GDDXyUDe9bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rl/OH9by; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752687449; c=relaxed/simple;
+	bh=f6IxuR+5LyLa3xTmgpVU7XxYAsnemiPidYN2+s4atr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CmFEoajDRBzmqgRqO0EnLWI9o8gih0dHNj1NuT5z8NqntfkAJI2Nh6iyzimgChHBIDp002uN5u5ulPo2Y+yc/Nmgt0KMhf85ahx9iRK+4c83df22BFPxsdsF0VKLihlL5GV3WnUALZG/wGrQ2GzAQGf1fCfRhcV+a8XrQZ9VypA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYW8J2ED; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rl/OH9by"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752669906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/6quTScKxILcudF7nQxBzrgXnyLUQnBhym3m6W7b0cU=;
-	b=Rl/OH9byRFjlesE6HcKql9VmK9/45cE+Mon4/mxnnou2euV8f1Znl8LnIr11m3WOmS4I2w
-	ZqZzXHHXuwqtNymMc33nt9v3U/TYtGUIIiXyROUTwqL9KzL5eHvAHStqlSFZSmfnL4Plw1
-	aWdcScyi4xDA7FC25km8gQ5B3xnSCv4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-322-cdU086dvM8ubdr7GK5D3jQ-1; Wed,
- 16 Jul 2025 08:45:03 -0400
-X-MC-Unique: cdU086dvM8ubdr7GK5D3jQ-1
-X-Mimecast-MFC-AGG-ID: cdU086dvM8ubdr7GK5D3jQ_1752669901
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 271821800165;
-	Wed, 16 Jul 2025 12:45:01 +0000 (UTC)
-Received: from RHTRH0061144 (unknown [10.22.65.149])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ADA491801712;
-	Wed, 16 Jul 2025 12:44:57 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Guillaume Nault <gnault@redhat.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,  Stefano Brivio
- <sbrivio@redhat.com>,  Jakub Kicinski <kuba@kernel.org>,  "David S.
- Miller" <davem@davemloft.net>,  David Ahern <dsahern@kernel.org>,  Eric
- Dumazet <edumazet@google.com>,  Simon Horman <horms@kernel.org>,
-  netdev@vger.kernel.org,  Paolo Abeni <pabeni@redhat.com>,  Charles Bordet
- <rough.rock3059@datachamp.fr>,  linux-kernel@vger.kernel.org,
-  regressions@lists.linux.dev,  stable@vger.kernel.org,
-  1108860@bugs.debian.org
-Subject: Re: [regression] Wireguard fragmentation fails with VXLAN since
- 8930424777e4 ("tunnels: Accept PACKET_HOST skb_tunnel_check_pmtu().")
- causing network timeouts
-In-Reply-To: <aHYiwvElalXstQVa@debian> (Guillaume Nault's message of "Tue, 15
-	Jul 2025 11:43:30 +0200")
-References: <aHVhQLPJIhq-SYPM@eldamar.lan> <aHYiwvElalXstQVa@debian>
-Date: Wed, 16 Jul 2025 08:44:55 -0400
-Message-ID: <f7tjz485mpk.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYW8J2ED"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D638C4CEE7;
+	Wed, 16 Jul 2025 17:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752687448;
+	bh=f6IxuR+5LyLa3xTmgpVU7XxYAsnemiPidYN2+s4atr4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UYW8J2EDgjaUvT+v3iFQ/kMHBSTYJjFPWoXht+YbSLLZsVpONIftuM/hfz46XWwuY
+	 p89VhWrQ/AaieXAg5C6PCToVdGj74+1kLm9am+ZEiY+amNXwoiRoTgtwNlurTgp2jM
+	 sOawO/Odi8bpE86VnH9hvLsEMlECSc+MnmNcC7YrcQ2uYEhkvMwMuaGTw3aGsIES3y
+	 fLyusMNfy673x0d5M9PTriG9x+NS/1/8kkXYb0s0YU4XUO7h846H4dp82VrKIAEr/2
+	 1Z7J8czO4r53xTPBGIcmjt3qtTn7Yfv1oy6m68DAzyQ69cxyqa2KftvMrDlQJrzu0q
+	 tGj9OudfOpjJA==
+Date: Wed, 16 Jul 2025 12:37:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: iwlwifi stopped working with AX200 (6.16-rc3 regression)
+Message-ID: <20250716173726.GA2545047@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aF6rfM-RFrwFyoEw@mail-itl>
 
-Guillaume Nault <gnault@redhat.com> writes:
+On Fri, Jun 27, 2025 at 04:32:28PM +0200, Marek Marczykowski-Górecki wrote:
+> On Fri, Jun 27, 2025 at 03:53:57AM +0200, Marek Marczykowski-Górecki wrote:
+> > On Fri, Jun 27, 2025 at 03:51:18AM +0200, Marek Marczykowski-Górecki wrote:
+> > > I see the only change there between rc2 and rc3 is fixing that WARN_ON
+> > > condition. Unfortunately, I don't know what cmd_ver value I have there,
+> > > but apparently it's outside of that range (and yet, the driver worked
+> > > fine before).
+> > > 
+> > > The device is:
+> > > 02:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [8086:2723] (rev 1a)
+> > >     Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
+> > > 
+> > > #regzbot introduced: v6.16-rc2..v6.16-rc3
+> > 
+> > Oh, I see it might be already fixed by
+> > https://lore.kernel.org/linux-wireless/20250623111351.1819915-1-miriam.rachel.korenblit@intel.com/,
+> > I'll test it.
+> 
+> Yes, it does fix the issue.
 
-> On Mon, Jul 14, 2025 at 09:57:52PM +0200, Salvatore Bonaccorso wrote:
->> Hi,
->> 
->> Charles Bordet reported the following issue (full context in
->> https://bugs.debian.org/1108860)
->> 
->> > Dear Maintainer,
->> > 
->> > What led up to the situation?
->> > We run a production environment using Debian 12 VMs, with a network
->> > topology involving VXLAN tunnels encapsulated inside Wireguard
->> > interfaces. This setup has worked reliably for over a year, with MTU set
->> > to 1500 on all interfaces except the Wireguard interface (set to 1420).
->> > Wireguard kernel fragmentation allowed this configuration to function
->> > without issues, even though the effective path MTU is lower than 1500.
->> > 
->> > What exactly did you do (or not do) that was effective (or ineffective)?
->> > We performed a routine system upgrade, updating all packages include the
->> > kernel. After the upgrade, we observed severe network issues (timeouts,
->> > very slow HTTP/HTTPS, and apt update failures) on all VMs behind the
->> > router. SSH and small-packet traffic continued to work.
->> > 
->> > To diagnose, we:
->> > 
->> > * Restored a backup (with the previous kernel): the problem disappeared.
->> > * Repeated the upgrade, confirming the issue reappeared.
->> > * Systematically tested each kernel version from 6.1.124-1 up to
->> > 6.1.140-1. The problem first appears with kernel 6.1.135-1; all earlier
->> > versions work as expected.
->> > * Kernel version from the backports (6.12.32-1) did not resolve the
->> > problem.
->> > 
->> > What was the outcome of this action?
->> > 
->> > * With kernel 6.1.135-1 or later, network timeouts occur for
->> > large-packet protocols (HTTP, apt, etc.), while SSH and small-packet
->> > protocols work.
->> > * With kernel 6.1.133-1 or earlier, everything works as expected.
->> > 
->> > What outcome did you expect instead?
->> > We expected the network to function as before, with Wireguard handling
->> > fragmentation transparently and no application-level timeouts,
->> > regardless of the kernel version.
->> 
->> While triaging the issue we found that the commit 8930424777e4
->> ("tunnels: Accept PACKET_HOST in skb_tunnel_check_pmtu()." introduces
->> the issue and Charles confirmed that the issue was present as well in
->> 6.12.35 and 6.15.4 (other version up could potentially still be
->> affected, but we wanted to check it is not a 6.1.y specific
->> regression).
->> 
->> Reverthing the commit fixes Charles' issue.
->> 
->> Does that ring a bell?
->
-> It doesn't ring a bell. Do you have more details on the setup that has
-> the problem? Or, ideally, a self-contained reproducer?
+The patch you mention appears to have been merged and appears in
+v6.16-rc4:
 
-+1 - I tested this patch with an OVS setup using vxlan and geneve
-tunnels.  A reproducer or more details would help.
+  https://git.kernel.org/linus/93598167dcb6 ("wifi: iwlwifi: mvm: assume '1' as the default mac_config_cmd version")
 
->> Regards,
->> Salvatore
->> 
+so perhaps this entry in the regression tracker can be closed?  Maybe
+a response including this would do the trick?
 
+  #regzbot fix: 93598167dcb6 ("wifi: iwlwifi: mvm: assume '1' as the default mac_config_cmd version")
