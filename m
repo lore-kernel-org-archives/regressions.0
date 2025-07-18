@@ -1,81 +1,116 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1204E2BD590
-	for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 14:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526C82BE7D5
+	for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 15:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752849390; cv=none; b=L7TMjRnECR8Puu8mzEN2DMcxRZGkcN1AQvHCXd7DfdQOymvwU+ctWNbgPb3qpYaUvntSxCXKUMWaQypkIguTVNhRFKKSQ5VbjHkUsvioNlqMjJHIJkZwX0V2b903/ye+YZWhyQGgLkpXxo9iNPWmDIdkYS95+yT4AAr6q3e2E50=
+	t=1752851642; cv=none; b=kmVbcRlDvK87l9oLL3MBAgtqvuGob90/iNxapo3nIrIXxNdKWAqkl0jG2EMer2C5WmYIOL+DV4CfaUdHPhyAuBEmBd2n+fPHPedKITU+1k1kxNugGcRgdcShUJCu92V9XJjOZFt8QbvJpV7GWu0SHgACZrA4V3h1F4oxQXIZiuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752849390; c=relaxed/simple;
-	bh=mCJTMl6hmU/t/n7RMrAexSGMCuHAoxTnyKTXuygkquM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qu4tpm4OTOW2e7fLjLhc3NlVvEIEmRZahSLM1ldkgsN7W77eJQC6s0FLSoq9MMB1L9jfPoQfkAOjxlRmp0ZhuyRTaOoEKKC/HtDaUm8QGtexdinVNyrcwkaWupjF+nQW7tSilzMTDG1Cxg6M1P7BW00BFosl3qfxPqIuO3x1Iuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi; spf=pass smtp.mailfrom=hacktheplanet.fi; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=ipPcvZM3; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=XJuhlFvi; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hacktheplanet.fi
+	s=arc-20240116; t=1752851642; c=relaxed/simple;
+	bh=OUqZ5wNGKKnCBC5vVfgW9TIFWi1WfowOiIwORtRVcko=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EFV6XpraNf/1IP20AhESaY1eMsVXHGuAv1Z12rmPGrowY7qe8V/00Ga3VqVcjfJNu3gsWz+oW18nDcd6tBIZYGfSE0J8pCGQRncBsjIqvDEUs90Exe73CclqfKSopAMS23WC6TcS9rrpPo4T0Tn4DtRaifQTaHtO/vP8JbS/XVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=bUsVmuGH; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="ipPcvZM3";
-	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="XJuhlFvi"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=gibson; bh=mCJTMl6hmU/t/
-	n7RMrAexSGMCuHAoxTnyKTXuygkquM=; h=in-reply-to:references:subject:cc:
-	to:from:date; d=hacktheplanet.fi; b=ipPcvZM3bpMRJzxRS0cot5qFHDc+uFbNh/
-	hJrhoxcKvc68HaecB44RlKS7zlclhqvmPniNnPsgpormEgUYIVt6FDOowL7BvGrzRvlvjN
-	otPTSFQUyLVli7gPNsRtNMZlz9J2nvVjLHpcDvUn2N9IQhYfUx3uh57SqfMgMRkc3bsOH0
-	YXVuBwLGfTW5mwbyxFuTVNwfs/r6vkgDRihTr+MeGUrCO0Q9wT1Y264pYbO5NiR2Ub5/I7
-	je7NJ2i8fwnZOy9YJkZMXLdWZrsX6ja4gVfP5V8KpCcUZxmIEfvG0a0vaTnNky58NwqVaR
-	yO13azxNMKaq2ZkNDH/eVRUdb84A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hacktheplanet.fi;
-	s=key1; t=1752849384;
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="bUsVmuGH"
+Received: from [192.168.42.116] (p5b164062.dip0.t-ipconnect.de [91.22.64.98])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 93F852FC004D;
+	Fri, 18 Jul 2025 17:13:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1752851638;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U4fWzDUDVjTYg2bPTnEOawxX6k0jS8mMVyArseOI0Ro=;
-	b=XJuhlFvinkI3yznxCnIYv2c0XaEPy6pnW/s+axNlivjtyGr1LBuHtl9DMslPWcbGJOEUI2
-	NJKOpBr6bVvFxOtkeDf2x/i1lqyo0h3D0fk3h7GvAnkI189C++7fCwsBPCcd9+1beaeaKk
-	vlBmjvmrd1fG82LdTsqNjDR1Up5AZepcwFD/6XEcyCn9TvbQK1pJSJeAQa37bOZYEUTNR1
-	6+fC2dKgKnu+70i+2Hrdy5ajG6SUg59oPhq9YuuImiVhC5735Mcz7oLPX06Y/ywteZK77h
-	AbGzTzFLwmQqmBtfqA28gVhfve6tglukDQQ+EnkyfN4seCDrbWcNjhknLAcDxg==
-Date: Fri, 18 Jul 2025 23:36:17 +0900
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lauri Tirkkonen <lauri@hacktheplanet.fi>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] drm/amd/display: backlight brightness set to 0 at
- amdgpu initialization
-Message-ID: <aHpb4ZTZ5FoOBUrZ@hacktheplanet.fi>
-References: <aHn33vgj8bM4s073@hacktheplanet.fi>
- <d92458bf-fc2b-47bf-b664-9609a3978646@kernel.org>
+	bh=b1GZB9aCRyWzRbOios75n7sVmGOIc6KupMplYAeaYUw=;
+	b=bUsVmuGHT+PPNs37J80yG6f8U4QWLWrdABljftFel8Z1VEtlvQeNUJp25LGh/sqh791yKH
+	c6EuHltQJYRBqQkGm8UvGKp2nPNpBKuZ4r2XCONt28YgWGuX4dopRtOpBYA4u4Jn/3kpJD
+	mPLZ4Cp5SXZCB4GLLcz7IwrvZN41chA=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <14737334-507e-41b2-8d3d-88a3f7a02b04@tuxedocomputers.com>
+Date: Fri, 18 Jul 2025 17:13:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d92458bf-fc2b-47bf-b664-9609a3978646@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+From: Werner Sembach <wse@tuxedocomputers.com>
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+To: Askar Safin <safinaskar@zohomail.com>,
+ Mario Limonciello <superm1@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux i2c <linux-i2c@vger.kernel.org>,
+ linux-acpi <linux-acpi@vger.kernel.org>,
+ regressions <regressions@lists.linux.dev>,
+ DellClientKernel <Dell.Client.Kernel@dell.com>,
+ linux-gpio <linux-gpio@vger.kernel.org>, Raul E Rangel
+ <rrangel@chromium.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
+ <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+ <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
+ <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
+ <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
+ <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
+ <1981ab878bb.122f8227039020.1935112937005363340@zohomail.com>
+Content-Language: en-US
+In-Reply-To: <1981ab878bb.122f8227039020.1935112937005363340@zohomail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 18 2025 08:10:06 -0500, Mario Limonciello wrote:
-> Do you by chance have an OLED panel?  I believe what's going on is that
-> userspace is writing zero or near zero and on OLED panels with older kernels
-> this means non-visible.
+Hi,
 
-Yes, this is an OLED panel. But I don't believe it's userspace writing
-anything at this point in the boot; before the bisected commit,
-brightness was set to 32 (out of max 255) on this hardware when I
-checked from the initramfs rescue shell. At the bisected commit, it's 0
-(out of max 255).
+Am 18.07.25 um 01:29 schrieb Askar Safin:
+>   ---- On Mon, 30 Jun 2025 22:40:28 +0400  Mario Limonciello<superm1@kernel.org> wrote ---
+>   > Looks like your interrupt 14 is ACPI device INTC1085:00.
+>   >
+>   > Some quick searches this seems to be an Intel GPIO controller.
+>   >
+>   > Andy,
+>   >
+>   > Any ideas how to debug next?
+>
+> So what?
+>
+> I will repeat: similar bugs were already fixed here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=782eea0c89f7d071d6b56ecfa1b8b0c81164b9be
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a69982c37cd0586e6832268155349301b87f2e35
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4cb786180dfb5258ff3111181b5e4ecb1d4a297b
+>
+> So we just need to add similar patch. I. e. something similar to this:
+>
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "NL5xRU"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_wake = "ELAN0415:00@9",
+> +		},
+>
+> Remaining question: how should I get these strings on my system? "NL5xRU" and "ELAN0415:00@9"?
 
-> There is another commit that fixes the behavior that is probably missing.
+DMI_MATCH(DMI_BOARD_NAME, *) will match to /sys/class/dmi/id/board_name 
+(/sys/class/dmi/id/ also contains a lot of other strings to identify your device 
+e.g. /sys/class/dmi/id/sys_vendor which can be matched with 
+DMI_MATCH(DMI_SYS_VENDOR, *))
 
-Which commit is that? It's not in 6.15.7?
+How to get "ELAN0415:00@9" is somewhere buried in here 
+https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1725104
 
--- 
-Lauri Tirkkonen | lotheac @ IRCnet
+Best regards,
+
+Werner
+
+> --
+> Askar Safin
+> https://types.pl/@safinaskar
+>
