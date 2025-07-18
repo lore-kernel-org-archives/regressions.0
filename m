@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BD41C8610;
-	Fri, 18 Jul 2025 15:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327342DEA74;
+	Fri, 18 Jul 2025 17:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752852021; cv=none; b=FKvElMrYppPkDuisLtV9uYvpC57kFXCNFwyEFqf+9CbNDv7lO4WnOX9PfjvE17tqbPWM3ekC7uUTnKC1TLn03pRf/tpE2+c22ejmOl0JxkwAI/4p09Mj2O3f0ZG3xVhzZ0Q+VswjShhrLkHPhWGpn5jIrY/bJQdqmNuz0D3UnJQ=
+	t=1752858813; cv=none; b=EkMAKu2sia3zubLKzf6s5c0bnIknvyQ5pbyg0zKD00u6GdEK+RG18A5jrROH4Ef7Z7TdaCiJZJzaU9qYq4TCiikfLNXgkCBxCN84eM0O210nmfGYckjLzqNORVxKsNve3yphnmot0h0SAzuj7aAVjm6DQej+zV+K81aRKxN1qRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752852021; c=relaxed/simple;
-	bh=BmGkU7v8BAThTINykDYD2vQ7zEBSXJ270qquLCbAUcQ=;
+	s=arc-20240116; t=1752858813; c=relaxed/simple;
+	bh=2pMGWRUOR5c7ZDdNY06BPXHKdFbDc8dujXWYjj01bJw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FdVrrhp/WgQ/SvbVNrPTG1HGxvKTzs7mNLk+ZkhzKuWaOBZqoMPWj338iLApwa7reFoVlZdspxjPcFXgTXG/g7EFBSFso7wPwbKslLhALm/CLIJAtbO+UaCdY1amqY9Hc0DBZ1f+ZoSB1aFnXqSBHMAOQfkdPjw2TnPrM8uj+bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5rACPPi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PIITH1apfe9QUI9lpbovxgANUgsYJ9x7ZY+EIUl9VZS+coWEaSzNQe+QBKPpY1/jhtPJaji+CZrWynUF6TIr/EvBg9dgV7hiWnAwb8MHsjAFXcKye4Bkrcw4I3RvcsjfWAJNMN12/iMxxd+PpDq/FwU2SVZmFDOPU5Jm10Tg0Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQGamUG3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5rACPPi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F70C4CEEB;
-	Fri, 18 Jul 2025 15:20:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQGamUG3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06757C4CEEB;
+	Fri, 18 Jul 2025 17:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752852020;
-	bh=BmGkU7v8BAThTINykDYD2vQ7zEBSXJ270qquLCbAUcQ=;
+	s=k20201202; t=1752858812;
+	bh=2pMGWRUOR5c7ZDdNY06BPXHKdFbDc8dujXWYjj01bJw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B5rACPPidNkSshBiD3ikqPXOcUAx4KQoausVIibqDXeUiad54EPpDhwf5+UQllZOm
-	 g8QJQJ8DNH8e4lRFkRs3dAyq3z3/C9qEJENXEIypZGajl49a8FKa6ZFNH8lLidICyK
-	 4fYtRpVIh/jQae3n7q/KFpbvBBkBFyDAPaodPjZt3JLtrTcEwcLe/oAFUtXIhhXI4Q
-	 1U1Dm3mKnPcFFXW1VqoMs/4izUKsrsa6/fZHtiWCO/7JbGsFKha5tTu3A915KehtXU
-	 Sfk7cTfKBAup71xlo3SwQiuVTgOXqMP4P7UE5Ij9umz/L+sGjX7yoYwbHSX6kfsN5G
-	 BEfbqD/Y4FqVw==
-Message-ID: <b8ec91d0-1c87-4bcc-8dec-49d6864fff23@kernel.org>
-Date: Fri, 18 Jul 2025 10:20:18 -0500
+	b=mQGamUG3MbPPT3I1fdY9Esh2CwwC9tagkypvGkQlqv0/Vc/1oVyZyY0CqQGYCIggq
+	 fQS/4Hg4dFpwa7v6OTh0V2mhoq6AUM1Z8WuFOCey4/CC1pRu2Mtuw5MrUoVOh9e6rH
+	 D15hgvG2aPdwnAWfkJcG8VTRmtWmBErgGe4Fyvq6td77p5j5zaAVeoL4dhOzvtdH7t
+	 ML06TOWq18T5fWrwrXWFUdiCbagnZ/8uEKz0r1Wugg7Hcc+L3NDF4zPqRIL8LcbDaT
+	 3+HwpqWSGUBz2wzuYphpJUA7YKXTzaQHsA3/WX2HdzU5Qx+2vloxgySMKR5kET9lZd
+	 lAw6rTVHS5T0Q==
+Message-ID: <46de4f2a-8836-42cd-a621-ae3e782bf253@kernel.org>
+Date: Fri, 18 Jul 2025 12:13:30 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,93 +35,40 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Askar Safin <safinaskar@zohomail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux i2c <linux-i2c@vger.kernel.org>,
- linux-acpi <linux-acpi@vger.kernel.org>,
- regressions <regressions@lists.linux.dev>,
- DellClientKernel <Dell.Client.Kernel@dell.com>,
- linux-gpio <linux-gpio@vger.kernel.org>, Raul E Rangel
- <rrangel@chromium.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
- <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
- <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
- <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
- <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
- <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
- <1981ab878bb.122f8227039020.1935112937005363340@zohomail.com>
- <14737334-507e-41b2-8d3d-88a3f7a02b04@tuxedocomputers.com>
+Subject: Re: [REGRESSION] drm/amd/display: backlight brightness set to 0 at
+ amdgpu initialization
+To: Lauri Tirkkonen <lauri@hacktheplanet.fi>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Wayne Lin <wayne.lin@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <aHn33vgj8bM4s073@hacktheplanet.fi>
+ <d92458bf-fc2b-47bf-b664-9609a3978646@kernel.org>
+ <aHpb4ZTZ5FoOBUrZ@hacktheplanet.fi>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <14737334-507e-41b2-8d3d-88a3f7a02b04@tuxedocomputers.com>
+In-Reply-To: <aHpb4ZTZ5FoOBUrZ@hacktheplanet.fi>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 7/18/2025 10:13 AM, Werner Sembach wrote:
-> Hi,
+On 7/18/2025 9:36 AM, Lauri Tirkkonen wrote:
+> On Fri, Jul 18 2025 08:10:06 -0500, Mario Limonciello wrote:
+>> Do you by chance have an OLED panel?  I believe what's going on is that
+>> userspace is writing zero or near zero and on OLED panels with older kernels
+>> this means non-visible.
 > 
-> Am 18.07.25 um 01:29 schrieb Askar Safin:
->>   ---- On Mon, 30 Jun 2025 22:40:28 +0400  Mario 
->> Limonciello<superm1@kernel.org> wrote ---
->>   > Looks like your interrupt 14 is ACPI device INTC1085:00.
->>   >
->>   > Some quick searches this seems to be an Intel GPIO controller.
->>   >
->>   > Andy,
->>   >
->>   > Any ideas how to debug next?
->>
->> So what?
->>
->> I will repeat: similar bugs were already fixed here:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ 
->> commit/?id=782eea0c89f7d071d6b56ecfa1b8b0c81164b9be
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ 
->> commit/?id=a69982c37cd0586e6832268155349301b87f2e35
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ 
->> commit/?id=4cb786180dfb5258ff3111181b5e4ecb1d4a297b
->>
->> So we just need to add similar patch. I. e. something similar to this:
->>
->> +        .matches = {
->> +            DMI_MATCH(DMI_BOARD_NAME, "NL5xRU"),
->> +        },
->> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
->> +            .ignore_wake = "ELAN0415:00@9",
->> +        },
->>
->> Remaining question: how should I get these strings on my system? 
->> "NL5xRU" and "ELAN0415:00@9"?
+> Yes, this is an OLED panel. But I don't believe it's userspace writing
+> anything at this point in the boot; before the bisected commit,
+> brightness was set to 32 (out of max 255) on this hardware when I
+> checked from the initramfs rescue shell. At the bisected commit, it's 0
+> (out of max 255).
 > 
-> DMI_MATCH(DMI_BOARD_NAME, *) will match to /sys/class/dmi/id/board_name 
-> (/sys/class/dmi/id/ also contains a lot of other strings to identify 
-> your device e.g. /sys/class/dmi/id/sys_vendor which can be matched with 
-> DMI_MATCH(DMI_SYS_VENDOR, *))
+>> There is another commit that fixes the behavior that is probably missing.
 > 
-> How to get "ELAN0415:00@9" is somewhere buried in here https:// 
-> gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1725104
+> Which commit is that? It's not in 6.15.7?
 > 
-> Best regards,
-> 
-> Werner
-> 
->> -- 
->> Askar Safin
->> https://types.pl/@safinaskar
->>
 
-Before jumping into quirk development I think we need to know exactly 
-what GPIO is being tripped and that needs to be matched against the Dell 
-design (or Intel specs if it's an "internal" GPIO).
+https://github.com/torvalds/linux/commit/39d81457ad3417a98ac826161f9ca0e642677661
 
-That's why I was hoping Andy could help advise.
-
-On the issue that was linked there we knew the GPIO was tied to the 
-attention interrupt for touchpad/touchscreen causing the issue so it was 
-easy to look at an acpidump and figure out what it's supposed to be.
+No; it's not currently backported.  Assuming it helps your issue I think 
+it's a good argument to backport.
