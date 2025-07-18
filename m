@@ -1,107 +1,161 @@
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FAE246BCD
-	for <regressions@lists.linux.dev>; Thu, 17 Jul 2025 23:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752794962; cv=pass; b=F3GqoioylooCdeJlcIyDoT7BWFSpmZldvcGUdagSGvxR4Uo2ke+hPgxnMgwQh2x2aC5gofk2P3WOifNU6QO+J8wAnEQzwAZVgfNkk7Ywf3mRr6xgiOhT3xb+wND4j5AACOTx9E/7tN9nTTMF+M9POV8Sq53+J/6DqYqxMZswnb8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752794962; c=relaxed/simple;
-	bh=DZeq33iotwCplBbfY3UTeCCqP46RQE37PvRc1oKQ7qQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=pePs8wXRflatsStDQHknUWNNjFwp7pxFjWE1spvozOdOVIA5Tw9Qxwc9tLJou6W65Sa1QFnIQwQce1bTxj2byoKsqbJ46OC66t+Y+tc+xJtrs/ByNRfD59OF9IINTJsooAI2UXfdNQX9Wc+rxin+HRwT5FJg9BETLqDZDNr8qBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b=RieZBhPI; arc=pass smtp.client-ip=136.143.188.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E9202983
+	for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 07:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752823790; cv=none; b=uN8iIJzAncNdGCQqba8+7F4ViNs8Zm2mtKUTnmKs1KuAyyOACCyar6fThyS+9iNDHj22Q4704MQFjfWWFW6bfNCKGUfOalwjeZJgxjCH6l5/o6KfeFN2B2CSRr7SRyuiKX4CnaWHt3F694MOgvbeGRHpPvRx1dz2Rhv89ir9cy8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752823790; c=relaxed/simple;
+	bh=73mtiu+STtAofJ48KZx5LpXK+i6ebmLNIL3vWgzqJLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fcq2ag5iKuF+5TUtH0pJTlAwwDDqqIiWfrsWHqucm+71lKDjkL4d11qfpBHKAX+S++XvSjy2KcVPkN8Kbq1bZwqEDJFG/XdtODQW3eRJH3d9bgfDssGQQVvZxIpAD939Y9sOgRliOecFu+F45e23Y6CpjUWd8G2p5PBxQ6ty4hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi; spf=pass smtp.mailfrom=hacktheplanet.fi; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=a7+PYmKf; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=tknHJYvL; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hacktheplanet.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=safinaskar@zohomail.com header.b="RieZBhPI"
-ARC-Seal: i=1; a=rsa-sha256; t=1752794955; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JjYm2+Vru3Bt9pf3BOrBxJynRVSEUBdOCAQnnpAWsSnjYYNOIkazOBSZGxJwhT14lMRfgHp82+zaeaVEmgIUPL0es/VpchR9Ju3bl90g52hiRgFntgDOeiM85OKkuqn9l3mzD/u6DbBiiPm/NE9a+M+5M/1kjOZT370tE0cbVRo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752794955; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=HvDZdUpV5WbDrzd2FyycIgzTMOBOo9H31V9aeiCTf80=; 
-	b=koVAbV3H94UWScHq09qZcdPhwQ6rH2iDO3JmKNfHKW8FkOHPRxETJCs3m+YRi/NfHow0sDEkKRV+0hZXb/Z9mJIT5SB6tvuqJlZEpmhyzZTp20CvPmLCO6NuOsIXBWmDpH2IoBcZ1lM5w5f8iwst9eWCx/xI0ucSe44O4L4mlUw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=safinaskar@zohomail.com;
-	dmarc=pass header.from=<safinaskar@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752794955;
-	s=zm2022; d=zohomail.com; i=safinaskar@zohomail.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=HvDZdUpV5WbDrzd2FyycIgzTMOBOo9H31V9aeiCTf80=;
-	b=RieZBhPI8VL4XUpV5nir++qsXTVGcHTfHWBegxJkfeLiA6x0Z4mbOq0v27BbuvlK
-	+tU4/DkhImC73x50zn8sAsHK8zZUGyuRled5qDXC6OGnmWGrJOByl99vK+Ag5XffENm
-	zW2BYnqPj6bGKoKqV08MgA19pRKPx6nWmq8ZEtXU=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1752794953927271.55135502634243; Thu, 17 Jul 2025 16:29:13 -0700 (PDT)
-Received: from  [212.73.77.104] by mail.zoho.com
-	with HTTP;Thu, 17 Jul 2025 16:29:13 -0700 (PDT)
-Date: Fri, 18 Jul 2025 03:29:13 +0400
-From: Askar Safin <safinaskar@zohomail.com>
-To: "Mario Limonciello" <superm1@kernel.org>,
-	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Linux i2c" <linux-i2c@vger.kernel.org>,
-	"linux-acpi" <linux-acpi@vger.kernel.org>,
-	"regressions" <regressions@lists.linux.dev>,
-	"DellClientKernel" <Dell.Client.Kernel@dell.com>,
-	"linux-gpio" <linux-gpio@vger.kernel.org>,
-	"Raul E Rangel" <rrangel@chromium.org>,
-	"Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
-	"Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-	"Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
-	"Werner Sembach" <wse@tuxedocomputers.com>
-Message-ID: <1981ab878bb.122f8227039020.1935112937005363340@zohomail.com>
-In-Reply-To: <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
-References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
- <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
- <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
- <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
- <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com> <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
+	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="a7+PYmKf";
+	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="tknHJYvL"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=gibson; bh=73mtiu+STtAof
+	J48KZx5LpXK+i6ebmLNIL3vWgzqJLY=; h=subject:cc:to:from:date;
+	d=hacktheplanet.fi; b=a7+PYmKf8EKl1hzrXSVa4Rv2HljxSXmckUz2WnfEvJbnaQu5
+	amJNJ4Q1qjlbYAxR1OFYuJj8AWncxLr6na28JiGbl6bC3Zgog/Z6ywhB0/v3hsJ/qbP8dg
+	iTec99VduSJytEbt4lclDhXSQ4AvbLZSVMHSPbjoupYF8xEGOuIG2F50o4UXt+FYN2Lb3U
+	9iJdsZJ77Bay9nKFbgUl9fD8x1XaUYQe/KLhTaV3uRx2Di/ZODs4k2DF8+q7njod/Ai24p
+	u86sVJMRaS3F3ooq8/SSBf8XyXkK1ZlgVvG015L3OFgf77UMyxlggkQp5XoBVMUfaQLOuN
+	c9oXjW3aRKty5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hacktheplanet.fi;
+	s=key1; t=1752823782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=naR/zISxdFD2IfX/9yHd+kaNh8ZX3NCQpAGgz3lCALA=;
+	b=tknHJYvLZXqQ0IL6jKStI7SHa6OsP3K6O9VMjw64cde4D24l5zbLP5hXaeTIEY164KJz62
+	+VftPSvMFZBEQZZb5Po9izwkraz9sliNePOfN1z5AwPApmu8jVnUoL0Nd2hxsOLhx8mu4H
+	dJXX0WQZtWTH2IotCPFYp3Ka1idrykSYLkIVWjeq7VAWHQhve+nqqiuhIYhs2PiS8T0El9
+	kLCy8bwCWqmwf3lbnx1BAjyRej5rnHUsbEx2sBwxn340HbD5ebPqZNF78NQWeZekNfjDKt
+	Yo69ay6XOMbwHhToP6YFxF/msP/qFq2ZC50TNNPna1+6rp6VhrtFsAoRSTddsw==
+Date: Fri, 18 Jul 2025 16:29:34 +0900
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lauri Tirkkonen <lauri@hacktheplanet.fi>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Wayne Lin <wayne.lin@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [REGRESSION] drm/amd/display: backlight brightness set to 0 at
+ amdgpu initialization
+Message-ID: <aHn33vgj8bM4s073@hacktheplanet.fi>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-Feedback-ID: rr080112271604c982856de098a59a030c00009f9271007d987a22c3c9d3e5e8ee71808d862f55175c6be342:zu080112273a964176b8858c250f6f14be00002c05b71f5f33ff50b4e23d9d0cdd11ef16eb04e7b7610fc334:rf0801122b800401834c36798dbafd4fbc00000e4fdcce44309af734e6aa92eacc2dd282ab10c9dfc454f7869db8e666:ZohoMail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
- ---- On Mon, 30 Jun 2025 22:40:28 +0400  Mario Limonciello <superm1@kernel.org> wrote --- 
- > Looks like your interrupt 14 is ACPI device INTC1085:00.
- > 
- > Some quick searches this seems to be an Intel GPIO controller.
- > 
- > Andy,
- > 
- > Any ideas how to debug next?
+Hi,
 
-So what?
+I hit this regression on the stable kernel on Alpine with a Lenovo Yoga
+Slim 7 Pro 17ACH5. During early boot, when the amdgpu module gets
+loaded, backlight brightness is set to zero, resulting in a black
+screen (and nothing in userspace is running yet to handle brightness
+keys; I need to use an external monitor or type in my rootfs passphrase
+blind).
 
-I will repeat: similar bugs were already fixed here:
+#regzbot introduced: 6c56c8ec6f9762c33bd22f31d43af4194d12da53
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=782eea0c89f7d071d6b56ecfa1b8b0c81164b9be
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a69982c37cd0586e6832268155349301b87f2e35
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4cb786180dfb5258ff3111181b5e4ecb1d4a297b
+bisect log:
 
-So we just need to add similar patch. I. e. something similar to this:
+git bisect start
+# status: waiting for both good and bad commits
+# good: [e60eb441596d1c70e4a264d2bac726c6cd2da067] Linux 6.15.4
+git bisect good e60eb441596d1c70e4a264d2bac726c6cd2da067
+# status: waiting for bad commit, 1 good commit known
+# bad: [1562d948232546cfad45a1beddc70fe0c7b34950] Linux 6.15.6
+git bisect bad 1562d948232546cfad45a1beddc70fe0c7b34950
+# good: [5e10620cb8e76279fd86411536c3fa0f486cd634] drm/xe/vm: move rebind_work init earlier
+git bisect good 5e10620cb8e76279fd86411536c3fa0f486cd634
+# bad: [ece85751c3e46c0e3c4f772113f691b7aec81d5d] btrfs: record new subvolume in parent dir earlier to avoid dir logging races
+git bisect bad ece85751c3e46c0e3c4f772113f691b7aec81d5d
+# bad: [9f5d2487a9fad1d36bcf107d1f3b1ebc8b6796cf] iommufd/selftest: Add asserts testing global mfd
+git bisect bad 9f5d2487a9fad1d36bcf107d1f3b1ebc8b6796cf
+# good: [c0687ec5625b2261d48936d03c761e38657f4a4b] rust: completion: implement initial abstraction
+git bisect good c0687ec5625b2261d48936d03c761e38657f4a4b
+# bad: [889906e6eb5fab990c9b6b5fe8f1122b2416fc22] drm/amd/display: Export full brightness range to userspace
+git bisect bad 889906e6eb5fab990c9b6b5fe8f1122b2416fc22
+# good: [c7d15ba11c8561c5f325ffeb27ed8a4e82d4d322] io_uring/kbuf: flag partial buffer mappings
+git bisect good c7d15ba11c8561c5f325ffeb27ed8a4e82d4d322
+# good: [66089fa8c9ed162744037ab0375e38cc74c7f7ed] drm/amd/display: Add debugging message for brightness caps
+git bisect good 66089fa8c9ed162744037ab0375e38cc74c7f7ed
+# bad: [cd711c87c2862be5e71eee79901f94e1c943f9fc] drm/amd/display: Only read ACPI backlight caps once
+git bisect bad cd711c87c2862be5e71eee79901f94e1c943f9fc
+# bad: [6c56c8ec6f9762c33bd22f31d43af4194d12da53] drm/amd/display: Fix default DC and AC levels
+git bisect bad 6c56c8ec6f9762c33bd22f31d43af4194d12da53
+# first bad commit: [6c56c8ec6f9762c33bd22f31d43af4194d12da53] drm/amd/display: Fix default DC and AC levels
 
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "NL5xRU"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "ELAN0415:00@9",
-+		},
+'dmesg|grep amd' on 6.15.7 on this machine:
 
-Remaining question: how should I get these strings on my system? "NL5xRU" and "ELAN0415:00@9"?
---
-Askar Safin
-https://types.pl/@safinaskar
+[    0.319726] perf/amd_iommu: Detected AMD IOMMU #0 (2 banks, 4 counters/bank).
+[    4.090573] [drm] amdgpu kernel modesetting enabled.
+[    4.094238] amdgpu: Virtual CRAT table created for CPU
+[    4.095389] amdgpu: Topology: Add CPU node
+[    4.096451] amdgpu 0000:03:00.0: enabling device (0006 -> 0007)
+[    4.174815] amdgpu 0000:03:00.0: amdgpu: detected ip block number 0 <soc15_common>
+[    4.176034] amdgpu 0000:03:00.0: amdgpu: detected ip block number 1 <gmc_v9_0>
+[    4.176992] amdgpu 0000:03:00.0: amdgpu: detected ip block number 2 <vega10_ih>
+[    4.177911] amdgpu 0000:03:00.0: amdgpu: detected ip block number 3 <psp>
+[    4.178799] amdgpu 0000:03:00.0: amdgpu: detected ip block number 4 <smu>
+[    4.179704] amdgpu 0000:03:00.0: amdgpu: detected ip block number 5 <dm>
+[    4.180594] amdgpu 0000:03:00.0: amdgpu: detected ip block number 6 <gfx_v9_0>
+[    4.181445] amdgpu 0000:03:00.0: amdgpu: detected ip block number 7 <sdma_v4_0>
+[    4.182299] amdgpu 0000:03:00.0: amdgpu: detected ip block number 8 <vcn_v2_0>
+[    4.183114] amdgpu 0000:03:00.0: amdgpu: detected ip block number 9 <jpeg_v2_0>
+[    4.183910] amdgpu 0000:03:00.0: amdgpu: Fetched VBIOS from VFCT
+[    4.184800] amdgpu: ATOM BIOS: 113-CEZANNE-017
+[    4.208484] amdgpu 0000:03:00.0: vgaarb: deactivate vga console
+[    4.208493] amdgpu 0000:03:00.0: amdgpu: Trusted Memory Zone (TMZ) feature enabled
+[    4.208509] amdgpu 0000:03:00.0: amdgpu: MODE2 reset
+[    4.209086] amdgpu 0000:03:00.0: amdgpu: VRAM: 2048M 0x000000F400000000 - 0x000000F47FFFFFFF (2048M used)
+[    4.209099] amdgpu 0000:03:00.0: amdgpu: GART: 1024M 0x0000000000000000 - 0x000000003FFFFFFF
+[    4.209376] [drm] amdgpu: 2048M of VRAM memory ready
+[    4.209386] [drm] amdgpu: 6912M of GTT memory ready.
+[    4.210517] amdgpu 0000:03:00.0: amdgpu: Found VCN firmware Version ENC: 1.24 DEC: 8 VEP: 0 Revision: 3
+[    4.927350] amdgpu 0000:03:00.0: amdgpu: reserve 0x400000 from 0xf47f400000 for PSP TMR
+[    5.010609] amdgpu 0000:03:00.0: amdgpu: RAS: optional ras ta ucode is not available
+[    5.021347] amdgpu 0000:03:00.0: amdgpu: RAP: optional rap ta ucode is not available
+[    5.021357] amdgpu 0000:03:00.0: amdgpu: SECUREDISPLAY: securedisplay ta ucode is not available
+[    5.021725] amdgpu 0000:03:00.0: amdgpu: SMU is initialized successfully!
+[    5.131949] amdgpu 0000:03:00.0: amdgpu: [drm] Using ACPI provided EDID for eDP-1
+[    5.385266] kfd kfd: amdgpu: Allocated 3969056 bytes on gart
+[    5.385286] kfd kfd: amdgpu: Total number of KFD nodes to be created: 1
+[    5.385435] amdgpu: Virtual CRAT table created for GPU
+[    5.385562] amdgpu: Topology: Add dGPU node [0x1638:0x1002]
+[    5.385569] kfd kfd: amdgpu: added device 1002:1638
+[    5.385582] amdgpu 0000:03:00.0: amdgpu: SE 1, SH per SE 1, CU per SH 8, active_cu_number 8
+[    5.385592] amdgpu 0000:03:00.0: amdgpu: ring gfx uses VM inv eng 0 on hub 0
+[    5.385598] amdgpu 0000:03:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+[    5.385605] amdgpu 0000:03:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+[    5.385612] amdgpu 0000:03:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 5 on hub 0
+[    5.385619] amdgpu 0000:03:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 6 on hub 0
+[    5.385625] amdgpu 0000:03:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 7 on hub 0
+[    5.385632] amdgpu 0000:03:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 8 on hub 0
+[    5.385639] amdgpu 0000:03:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 9 on hub 0
+[    5.385645] amdgpu 0000:03:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 10 on hub 0
+[    5.385652] amdgpu 0000:03:00.0: amdgpu: ring kiq_0.2.1.0 uses VM inv eng 11 on hub 0
+[    5.385659] amdgpu 0000:03:00.0: amdgpu: ring sdma0 uses VM inv eng 0 on hub 8
+[    5.385665] amdgpu 0000:03:00.0: amdgpu: ring vcn_dec uses VM inv eng 1 on hub 8
+[    5.385672] amdgpu 0000:03:00.0: amdgpu: ring vcn_enc0 uses VM inv eng 4 on hub 8
+[    5.385679] amdgpu 0000:03:00.0: amdgpu: ring vcn_enc1 uses VM inv eng 5 on hub 8
+[    5.385685] amdgpu 0000:03:00.0: amdgpu: ring jpeg_dec uses VM inv eng 6 on hub 8
+[    5.454665] amdgpu 0000:03:00.0: amdgpu: Runtime PM not available
+[    5.455003] amdgpu 0000:03:00.0: amdgpu: [drm] Using custom brightness curve
+[    5.455339] [drm] Initialized amdgpu 3.63.0 for 0000:03:00.0 on minor 1
+[    5.480731] fbcon: amdgpudrmfb (fb0) is primary device
+[    6.796057] amdgpu 0000:03:00.0: [drm] fb0: amdgpudrmfb frame buffer device
 
+-- 
+Lauri Tirkkonen | lotheac @ IRCnet
