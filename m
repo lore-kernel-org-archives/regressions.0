@@ -1,161 +1,254 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E9202983
-	for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 07:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5802BEC23
+	for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 11:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752823790; cv=none; b=uN8iIJzAncNdGCQqba8+7F4ViNs8Zm2mtKUTnmKs1KuAyyOACCyar6fThyS+9iNDHj22Q4704MQFjfWWFW6bfNCKGUfOalwjeZJgxjCH6l5/o6KfeFN2B2CSRr7SRyuiKX4CnaWHt3F694MOgvbeGRHpPvRx1dz2Rhv89ir9cy8=
+	t=1752837209; cv=none; b=Go0Ke3oN6aAdiSsPWkXJXpmuFQJBDQ+mNkPPMr+3Soby86MbijMpxeeYoOmFsX1So0Gcdk0Em8cmKI8c8tOXVZoC42nDlHjPk29bT5wdUHo712vVuH5eJ5ofIgWzbBsVNomdb4/72TsfC4cYcp2YG+KYR23Lmf+Yjqn3Th1RiEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752823790; c=relaxed/simple;
-	bh=73mtiu+STtAofJ48KZx5LpXK+i6ebmLNIL3vWgzqJLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fcq2ag5iKuF+5TUtH0pJTlAwwDDqqIiWfrsWHqucm+71lKDjkL4d11qfpBHKAX+S++XvSjy2KcVPkN8Kbq1bZwqEDJFG/XdtODQW3eRJH3d9bgfDssGQQVvZxIpAD939Y9sOgRliOecFu+F45e23Y6CpjUWd8G2p5PBxQ6ty4hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi; spf=pass smtp.mailfrom=hacktheplanet.fi; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=a7+PYmKf; dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b=tknHJYvL; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hacktheplanet.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hacktheplanet.fi
+	s=arc-20240116; t=1752837209; c=relaxed/simple;
+	bh=fyq992ghjiN1KAlcI1YrvA4Yycur+ovMG5WSElQM5M8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=I32QiTXoIpqOQc2q1BdKP2mX1KjnZGAt801E9eVTgluX3xt6OVZaitlcwGxRUVRlDBYz5rOsDS2Li23TkIpNsyGp/SO4qXjJ8ekpDt7eZ2Vaw7ZHae+4TFA/vGVssZHt6oR6UKhmBRnMkSK/7u7PZpSDwSZKnrAwSkPucPY8z/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rN+DiHBd; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="a7+PYmKf";
-	dkim=pass (2048-bit key) header.d=hacktheplanet.fi header.i=@hacktheplanet.fi header.b="tknHJYvL"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=gibson; bh=73mtiu+STtAof
-	J48KZx5LpXK+i6ebmLNIL3vWgzqJLY=; h=subject:cc:to:from:date;
-	d=hacktheplanet.fi; b=a7+PYmKf8EKl1hzrXSVa4Rv2HljxSXmckUz2WnfEvJbnaQu5
-	amJNJ4Q1qjlbYAxR1OFYuJj8AWncxLr6na28JiGbl6bC3Zgog/Z6ywhB0/v3hsJ/qbP8dg
-	iTec99VduSJytEbt4lclDhXSQ4AvbLZSVMHSPbjoupYF8xEGOuIG2F50o4UXt+FYN2Lb3U
-	9iJdsZJ77Bay9nKFbgUl9fD8x1XaUYQe/KLhTaV3uRx2Di/ZODs4k2DF8+q7njod/Ai24p
-	u86sVJMRaS3F3ooq8/SSBf8XyXkK1ZlgVvG015L3OFgf77UMyxlggkQp5XoBVMUfaQLOuN
-	c9oXjW3aRKty5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hacktheplanet.fi;
-	s=key1; t=1752823782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=naR/zISxdFD2IfX/9yHd+kaNh8ZX3NCQpAGgz3lCALA=;
-	b=tknHJYvLZXqQ0IL6jKStI7SHa6OsP3K6O9VMjw64cde4D24l5zbLP5hXaeTIEY164KJz62
-	+VftPSvMFZBEQZZb5Po9izwkraz9sliNePOfN1z5AwPApmu8jVnUoL0Nd2hxsOLhx8mu4H
-	dJXX0WQZtWTH2IotCPFYp3Ka1idrykSYLkIVWjeq7VAWHQhve+nqqiuhIYhs2PiS8T0El9
-	kLCy8bwCWqmwf3lbnx1BAjyRej5rnHUsbEx2sBwxn340HbD5ebPqZNF78NQWeZekNfjDKt
-	Yo69ay6XOMbwHhToP6YFxF/msP/qFq2ZC50TNNPna1+6rp6VhrtFsAoRSTddsw==
-Date: Fri, 18 Jul 2025 16:29:34 +0900
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lauri Tirkkonen <lauri@hacktheplanet.fi>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [REGRESSION] drm/amd/display: backlight brightness set to 0 at
- amdgpu initialization
-Message-ID: <aHn33vgj8bM4s073@hacktheplanet.fi>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rN+DiHBd"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b39011e5f8eso1580337a12.0
+        for <regressions@lists.linux.dev>; Fri, 18 Jul 2025 04:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752837207; x=1753442007; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2ugICqfFgDIHEho8XiK+TfnaiVKr7b0xokHuPH4p4dU=;
+        b=rN+DiHBdsNUyXASASWOHw627H8sCxEjH3YqypQxLTEfbYkpzKH9qkIJr86VqUMUTxe
+         zmqjDZq3XmmjV+9C2mBo0WwjmbAmsOhPtRDjpc6RkNeHFWqS/h8DqQsFE+38YDmQDhE4
+         Z7AhsT90rgWJ82/WR9wN/SfWY6gwNEg/lUO6rtrreXongwyMFmmx/u2wkSsBw62xbBsZ
+         txnlteZbjsbpvHk83dJt/PDhBwGlvJpx19oLcX6YDHZZuoiwH8DKmBE++mSY71m5HHjt
+         OPLhp+qBjCAEhmk9wzEfaXx/oG3CxfapsV3BmM/BeX+bcBwJpNn4Cau1QumBtwUFDFc/
+         Qjpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752837207; x=1753442007;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ugICqfFgDIHEho8XiK+TfnaiVKr7b0xokHuPH4p4dU=;
+        b=NeA9sN34WMVxrjgkAofJUGw3ZQBwjunchKneOL2Gck0kRJ0qbpZPjEzioDxVTKXKR6
+         tWZfcHCbG7kIxcxbygVENF7JGVDUmxvidC60c7XivVRKOi3yg5molMgOPDKQ6YkfdmPd
+         LE0ofk7giRiA8HsoAJQ5gN/z88wutbZ/wnzkyk8B8ZwOHXXtbx87k8P6cF88e4cqIZw6
+         MzmVYka1Is6flVycoXJH5sLtrVI6iomw59PtbLaT60iLqD9YodvuYEqgjblPtpFvBVN6
+         yM/Y3M/CdvvowHipbTd3K/EQmlEpNySeMixH+At6S/sXaBICJ/kdvhEpaGG673ovphJE
+         v2IA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3/vDhWuYZt1hMpp4pscjjRLyb7ZmeIcwourt6LpshCDypnjGT7NO0UHTrjTrBdNShXEIwEPI7mwYmwA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+eN/5QA62MRAlfzrl33gZnVZviHMVopuMOUDp0mDSpqo0Rupb
+	a2iAA/r4w1HHEdE8F/fTqU/aubgLt4DX9mYxmce3XjgIA/AEYC0fUIkCZhROkBBEs3hSFX5HpZ3
+	rRRDp+oPEcKCgMEdBW8NCeWGb5HV3hciPr2WnPX7GoQ==
+X-Gm-Gg: ASbGncsGVIO4gWqakyRA/h5etMuivHL0blVC4FLrLcqB1riLinmefyG2DxytINdOUnb
+	KbD+0NaMSNFiMoUIyMntKjF+JSm2oy47F5DW6nCSg2ijBTWsqipZmYrSqdMNOou82nIxPVHQ0Qc
+	taEAaHIRLkBQosDfuNBaesvsZdFDFrxwJAx95cpub9OSn4sVgSoVq6DODDOSoHWTehycTJwuDw3
+	dfxpXNDX5v+T2a19/hf9SSMhK/cuwdGq5Sq16djlxTBSp+d8lw=
+X-Google-Smtp-Source: AGHT+IGOkia721AY676t+fmu13gN1NV66S9oFI8NxbveWX6OhwIQaoS76AvEpNR9I6Tz21cUYHEq199KgcfAe2+qFsY=
+X-Received: by 2002:a17:90b:3f08:b0:312:e91c:e340 with SMTP id
+ 98e67ed59e1d1-31c9f4c507bmr14357476a91.35.1752837206629; Fri, 18 Jul 2025
+ 04:13:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 18 Jul 2025 16:43:15 +0530
+X-Gm-Features: Ac12FXyn7oadQvZ8ThG2f13b6pdzjNTb1LAR3UQzOj2T0pPa55C9A9OIPclltvQ
+Message-ID: <CA+G9fYu5=3n84VY+vTbCAcfFKOq7Us5vgBZgpypY4MveM=eVwg@mail.gmail.com>
+Subject: arm64 dragonboard 410c Internal error Oops dev_pm_opp_put core_clks_enable
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-clk <linux-clk@vger.kernel.org>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Benjamin Copeland <ben.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+The following Boot regressions are noticed on the Linux
+next-20250708with gcc-13 and clang-20 toolchains for the dragonboard
+410c device.
 
-I hit this regression on the stable kernel on Alpine with a Lenovo Yoga
-Slim 7 Pro 17ACH5. During early boot, when the amdgpu module gets
-loaded, backlight brightness is set to zero, resulting in a black
-screen (and nothing in userspace is running yet to handle brightness
-keys; I need to use an external monitor or type in my rootfs passphrase
-blind).
+First seen on the tag next-20250708.
+Good: next-20250704
+Bad:  next-20250708
 
-#regzbot introduced: 6c56c8ec6f9762c33bd22f31d43af4194d12da53
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-bisect log:
+Boot regression: arm64 dragonboard 410c Internal error Oops
+dev_pm_opp_put core_clks_enable
 
-git bisect start
-# status: waiting for both good and bad commits
-# good: [e60eb441596d1c70e4a264d2bac726c6cd2da067] Linux 6.15.4
-git bisect good e60eb441596d1c70e4a264d2bac726c6cd2da067
-# status: waiting for bad commit, 1 good commit known
-# bad: [1562d948232546cfad45a1beddc70fe0c7b34950] Linux 6.15.6
-git bisect bad 1562d948232546cfad45a1beddc70fe0c7b34950
-# good: [5e10620cb8e76279fd86411536c3fa0f486cd634] drm/xe/vm: move rebind_work init earlier
-git bisect good 5e10620cb8e76279fd86411536c3fa0f486cd634
-# bad: [ece85751c3e46c0e3c4f772113f691b7aec81d5d] btrfs: record new subvolume in parent dir earlier to avoid dir logging races
-git bisect bad ece85751c3e46c0e3c4f772113f691b7aec81d5d
-# bad: [9f5d2487a9fad1d36bcf107d1f3b1ebc8b6796cf] iommufd/selftest: Add asserts testing global mfd
-git bisect bad 9f5d2487a9fad1d36bcf107d1f3b1ebc8b6796cf
-# good: [c0687ec5625b2261d48936d03c761e38657f4a4b] rust: completion: implement initial abstraction
-git bisect good c0687ec5625b2261d48936d03c761e38657f4a4b
-# bad: [889906e6eb5fab990c9b6b5fe8f1122b2416fc22] drm/amd/display: Export full brightness range to userspace
-git bisect bad 889906e6eb5fab990c9b6b5fe8f1122b2416fc22
-# good: [c7d15ba11c8561c5f325ffeb27ed8a4e82d4d322] io_uring/kbuf: flag partial buffer mappings
-git bisect good c7d15ba11c8561c5f325ffeb27ed8a4e82d4d322
-# good: [66089fa8c9ed162744037ab0375e38cc74c7f7ed] drm/amd/display: Add debugging message for brightness caps
-git bisect good 66089fa8c9ed162744037ab0375e38cc74c7f7ed
-# bad: [cd711c87c2862be5e71eee79901f94e1c943f9fc] drm/amd/display: Only read ACPI backlight caps once
-git bisect bad cd711c87c2862be5e71eee79901f94e1c943f9fc
-# bad: [6c56c8ec6f9762c33bd22f31d43af4194d12da53] drm/amd/display: Fix default DC and AC levels
-git bisect bad 6c56c8ec6f9762c33bd22f31d43af4194d12da53
-# first bad commit: [6c56c8ec6f9762c33bd22f31d43af4194d12da53] drm/amd/display: Fix default DC and AC levels
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-'dmesg|grep amd' on 6.15.7 on this machine:
+## Test log
+[   12.512749] Internal error: Oops: 0000000096000004 [#1]  SMP
+[   12.518471] Modules linked in: drm_dp_aux_bus qcom_vadc_common
+venus_core(+) qcom_pon(+) qmi_helpers videobuf2_dma_sg qnoc_msm8916
+qcom_stats drm_display_helper v4l2_mem2mem videobuf2_memops qcom_rng
+mdt_loader videobuf2_v4l2 cec videobuf2_common drm_client_lib
+display_connector rpmsg_ctrl rpmsg_char ramoops drm_kms_helper socinfo
+reed_solomon rmtfs_mem fuse drm backlight ip_tables x_tables
+[   12.527390] input: pm8941_resin as
+/devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:resin/input/input2
+[   12.536414] CPU: 1 UID: 0 PID: 245 Comm: (udev-worker) Not tainted
+6.16.0-rc6-next-20250717 #1 PREEMPT
+[   12.536428] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   12.536435] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   12.536445] pc : dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685)
+[   12.595660] lr : core_clks_enable+0x54/0x148 venus_core
+[   12.595754] sp : ffff80008492b600
+[   12.595760] x29: ffff80008492b600 x28: ffff80008492bba0 x27: ffff0000047a6138
+[   12.595778] x26: 0000000000000000 x25: ffff800082c4fe38 x24: ffff80007b3b8ba0
+[   12.595795] x23: ffff00000b2e00c8 x22: ffff00000b2e0080 x21: 0000000000000000
+[   12.595811] x20: 0000000000000000 x19: ffffffffffffffee x18: 0000000000000000
+[   12.595827] x17: 0000000000000000 x16: 1fffe000006c0ae1 x15: 0000000000000000
+[   12.629871] x14: 0000000000000000 x13: 007473696c5f7974 x12: 696e696666615f65
+[   12.629890] x11: ffff00003fa551c0 x10: 0000000000000020 x9 : ffff80007b3a5684
+[   12.629908] x8 : ffffffffffffffde x7 : ffff000009ade040 x6 : 0000000000000000
+[   12.629924] x5 : 0000000000000002 x4 : 00000000c0000000 x3 : 0000000000000001
+[   12.629939] x2 : 0000000000000002 x1 : ffffffffffffffde x0 : ffffffffffffffee
+[   12.629956] Call trace:
+[   12.629962]  dev_pm_opp_put+0x24/0x58 (P)
+[   12.629981]  core_clks_enable+0x54/0x148 venus_core
+[   12.630064]  core_power_v1+0x78/0x90 venus_core
+[   12.691130]  venus_runtime_resume+0x6c/0x98 venus_core
+[   12.691214]  pm_generic_runtime_resume+0x34/0x58
+[   12.691233]  __genpd_runtime_resume+0x38/0x90
+[   12.691247]  genpd_runtime_resume+0xe0/0x2f0
+[   12.691261]  __rpm_callback+0x50/0x1f0
+[   12.691272]  rpm_callback+0x7c/0x90
+[   12.691281]  rpm_resume+0x46c/0x650
+[   12.721332]  __pm_runtime_resume+0x58/0xa8
+[   12.721345]  venus_probe+0x2d8/0x588 venus_core
+[   12.721409]  platform_probe+0x64/0xa8
+[   12.721423]  really_probe+0xc8/0x3a0
+[   12.721433]  __driver_probe_device+0x84/0x170
+[   12.721443]  driver_probe_device+0x44/0x120
+[   12.721453]  __driver_attach+0xf8/0x208
+[   12.749283]  bus_for_each_dev+0x90/0xf8
+[   12.749299]  driver_attach+0x2c/0x40
+[   12.749314]  bus_add_driver+0x118/0x248
+[   12.749328]  driver_register+0x64/0x138
+[   12.749339]  __platform_driver_register+0x2c/0x40
+[   12.749350]  qcom_venus_driver_init+0x28/0xfb8 venus_core
+[   12.772990]  do_one_initcall+0x60/0x290
+[   12.773012]  do_init_module+0x60/0x268
+[   12.773028]  load_module+0x1e00/0x2060
+[   12.773042]  init_module_from_file+0x90/0xe0
+[   12.773057]  __arm64_sys_finit_module+0x270/0x370
+[   12.773070]  invoke_syscall+0x50/0x120
+[   12.773081]  el0_svc_common.constprop.0+0xc8/0xf0
+[   12.773091]  do_el0_svc+0x24/0x38
+[   12.773100]  el0_svc+0x3c/0x138
+[   12.773116]  el0t_64_sync_handler+0xa0/0xe8
+[   12.773130]  el0t_64_sync+0x198/0x1a0
+[   12.817608] Code: 910003fd f9000bf3 91004013 aa1303e0 (f9402821)
+All code
+========
+   0: 910003fd mov x29, sp
+   4: f9000bf3 str x19, [sp, #16]
+   8: 91004013 add x19, x0, #0x10
+   c: aa1303e0 mov x0, x19
+  10:* f9402821 ldr x1, [x1, #80] <-- trapping instruction
 
-[    0.319726] perf/amd_iommu: Detected AMD IOMMU #0 (2 banks, 4 counters/bank).
-[    4.090573] [drm] amdgpu kernel modesetting enabled.
-[    4.094238] amdgpu: Virtual CRAT table created for CPU
-[    4.095389] amdgpu: Topology: Add CPU node
-[    4.096451] amdgpu 0000:03:00.0: enabling device (0006 -> 0007)
-[    4.174815] amdgpu 0000:03:00.0: amdgpu: detected ip block number 0 <soc15_common>
-[    4.176034] amdgpu 0000:03:00.0: amdgpu: detected ip block number 1 <gmc_v9_0>
-[    4.176992] amdgpu 0000:03:00.0: amdgpu: detected ip block number 2 <vega10_ih>
-[    4.177911] amdgpu 0000:03:00.0: amdgpu: detected ip block number 3 <psp>
-[    4.178799] amdgpu 0000:03:00.0: amdgpu: detected ip block number 4 <smu>
-[    4.179704] amdgpu 0000:03:00.0: amdgpu: detected ip block number 5 <dm>
-[    4.180594] amdgpu 0000:03:00.0: amdgpu: detected ip block number 6 <gfx_v9_0>
-[    4.181445] amdgpu 0000:03:00.0: amdgpu: detected ip block number 7 <sdma_v4_0>
-[    4.182299] amdgpu 0000:03:00.0: amdgpu: detected ip block number 8 <vcn_v2_0>
-[    4.183114] amdgpu 0000:03:00.0: amdgpu: detected ip block number 9 <jpeg_v2_0>
-[    4.183910] amdgpu 0000:03:00.0: amdgpu: Fetched VBIOS from VFCT
-[    4.184800] amdgpu: ATOM BIOS: 113-CEZANNE-017
-[    4.208484] amdgpu 0000:03:00.0: vgaarb: deactivate vga console
-[    4.208493] amdgpu 0000:03:00.0: amdgpu: Trusted Memory Zone (TMZ) feature enabled
-[    4.208509] amdgpu 0000:03:00.0: amdgpu: MODE2 reset
-[    4.209086] amdgpu 0000:03:00.0: amdgpu: VRAM: 2048M 0x000000F400000000 - 0x000000F47FFFFFFF (2048M used)
-[    4.209099] amdgpu 0000:03:00.0: amdgpu: GART: 1024M 0x0000000000000000 - 0x000000003FFFFFFF
-[    4.209376] [drm] amdgpu: 2048M of VRAM memory ready
-[    4.209386] [drm] amdgpu: 6912M of GTT memory ready.
-[    4.210517] amdgpu 0000:03:00.0: amdgpu: Found VCN firmware Version ENC: 1.24 DEC: 8 VEP: 0 Revision: 3
-[    4.927350] amdgpu 0000:03:00.0: amdgpu: reserve 0x400000 from 0xf47f400000 for PSP TMR
-[    5.010609] amdgpu 0000:03:00.0: amdgpu: RAS: optional ras ta ucode is not available
-[    5.021347] amdgpu 0000:03:00.0: amdgpu: RAP: optional rap ta ucode is not available
-[    5.021357] amdgpu 0000:03:00.0: amdgpu: SECUREDISPLAY: securedisplay ta ucode is not available
-[    5.021725] amdgpu 0000:03:00.0: amdgpu: SMU is initialized successfully!
-[    5.131949] amdgpu 0000:03:00.0: amdgpu: [drm] Using ACPI provided EDID for eDP-1
-[    5.385266] kfd kfd: amdgpu: Allocated 3969056 bytes on gart
-[    5.385286] kfd kfd: amdgpu: Total number of KFD nodes to be created: 1
-[    5.385435] amdgpu: Virtual CRAT table created for GPU
-[    5.385562] amdgpu: Topology: Add dGPU node [0x1638:0x1002]
-[    5.385569] kfd kfd: amdgpu: added device 1002:1638
-[    5.385582] amdgpu 0000:03:00.0: amdgpu: SE 1, SH per SE 1, CU per SH 8, active_cu_number 8
-[    5.385592] amdgpu 0000:03:00.0: amdgpu: ring gfx uses VM inv eng 0 on hub 0
-[    5.385598] amdgpu 0000:03:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
-[    5.385605] amdgpu 0000:03:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
-[    5.385612] amdgpu 0000:03:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 5 on hub 0
-[    5.385619] amdgpu 0000:03:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 6 on hub 0
-[    5.385625] amdgpu 0000:03:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 7 on hub 0
-[    5.385632] amdgpu 0000:03:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 8 on hub 0
-[    5.385639] amdgpu 0000:03:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 9 on hub 0
-[    5.385645] amdgpu 0000:03:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 10 on hub 0
-[    5.385652] amdgpu 0000:03:00.0: amdgpu: ring kiq_0.2.1.0 uses VM inv eng 11 on hub 0
-[    5.385659] amdgpu 0000:03:00.0: amdgpu: ring sdma0 uses VM inv eng 0 on hub 8
-[    5.385665] amdgpu 0000:03:00.0: amdgpu: ring vcn_dec uses VM inv eng 1 on hub 8
-[    5.385672] amdgpu 0000:03:00.0: amdgpu: ring vcn_enc0 uses VM inv eng 4 on hub 8
-[    5.385679] amdgpu 0000:03:00.0: amdgpu: ring vcn_enc1 uses VM inv eng 5 on hub 8
-[    5.385685] amdgpu 0000:03:00.0: amdgpu: ring jpeg_dec uses VM inv eng 6 on hub 8
-[    5.454665] amdgpu 0000:03:00.0: amdgpu: Runtime PM not available
-[    5.455003] amdgpu 0000:03:00.0: amdgpu: [drm] Using custom brightness curve
-[    5.455339] [drm] Initialized amdgpu 3.63.0 for 0000:03:00.0 on minor 1
-[    5.480731] fbcon: amdgpudrmfb (fb0) is primary device
-[    6.796057] amdgpu 0000:03:00.0: [drm] fb0: amdgpudrmfb frame buffer device
+Code starting with the faulting instruction
+===========================================
+   0: f9402821 ldr x1, [x1, #80]
+[   12.817618] ---[ end trace 0000000000000000 ]---
 
--- 
-Lauri Tirkkonen | lotheac @ IRCnet
+...
+[   38.070603] Internal error: Oops: 0000000096000004 [#2]  SMP
+[   38.077336] Modules linked in: pm8916_wdt snd_soc_lpass_apq8016
+snd_soc_msm8916_digital snd_soc_lpass_cpu snd_soc_msm8916_analog
+snd_soc_apq8016_sbc msm qcom_wcnss_pil snd_soc_lpass_platform
+snd_soc_qcom_common snd_soc_core snd_compress qrtr coresight_stm
+ubwc_config coresight_cpu_debug snd_pcm_dmaengine qcom_q6v5_mss
+llcc_qcom stm_core snd_pcm coresight_cti qcom_pil_info ocmem snd_timer
+qcom_q6v5 drm_gpuvm adv7511 snd qcom_sysmon drm_exec soundcore
+gpu_sched qcom_common qcom_spmi_temp_alarm rtc_pm8xxx qcom_spmi_vadc
+qcom_glink_smem qcom_camss drm_dp_aux_bus qcom_vadc_common
+venus_core(+) qcom_pon qmi_helpers videobuf2_dma_sg qnoc_msm8916
+qcom_stats drm_display_helper v4l2_mem2mem videobuf2_memops qcom_rng
+mdt_loader videobuf2_v4l2 cec videobuf2_common drm_client_lib
+display_connector rpmsg_ctrl rpmsg_char ramoops drm_kms_helper socinfo
+reed_solomon rmtfs_mem fuse drm backlight ip_tables x_tables
+[   38.140171] CPU: 0 UID: 0 PID: 1202 Comm: irq/55-3-0039 Tainted: G
+    D             6.16.0-rc6-next-20250717 #1 PREEMPT
+[   38.162330] Tainted: [D]=DIE
+[   38.173246] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   38.176294] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   38.182980] pc : adv7511_cec_register_volatile+0xc/0x40 adv7511
+[   38.189659] lr : regmap_volatile
+(/builds/linux/drivers/base/regmap/regmap.c:153)
+[   38.195904] sp : ffff8000869e3bf0
+[   38.199896] x29: ffff8000869e3bf0 x28: ffff00000b38eeac x27: ffff8000801e1700
+[   38.203289] x26: ffff8000801de1b0 x25: ffff8000829a0210 x24: ffff00000a091d80
+[   38.210408] x23: 0000000000000070 x22: 0000000000000096 x21: ffff8000869e3cb4
+[   38.217525] x20: 0000000000000096 x19: ffff00000366f400 x18: 0000000000000098
+[   38.224643] x17: 00000000000000c7 x16: 00000000000000c4 x15: 00000000000000bf
+[   38.231761] x14: 00000000000000be x13: 00000000000000ff x12: 00000000000000f6
+[   38.238881] x11: 00000000000000f4 x10: 00000000000000cb x9 : ffff800080c83384
+[   38.245997] x8 : ffff8000869e3a78 x7 : 0000000000000000 x6 : 0000000000000001
+[   38.253115] x5 : ffff8000829a0000 x4 : 0000000000000000 x3 : ffff00000366f400
+[   38.260233] x2 : ffff80007b4b74d8 x1 : 0000000000000096 x0 : 0000000000000000
+[   38.267353] Call trace:
+[   38.274460]  adv7511_cec_register_volatile+0xc/0x40 adv7511 (P)
+[   38.276726]  regcache_read+0x3c/0x100
+[   38.282973]  _regmap_read+0x90/0x190
+[   38.286615]  regmap_read+0x54/0x88
+[   38.290260]  adv7511_cec_irq_process+0xb4/0x310 adv7511
+[   38.293477]  adv7511_irq_process+0xc4/0x158 adv7511
+[   38.298946]  adv7511_irq_handler+0x20/0x40 adv7511
+[   38.303979]  irq_thread_fn+0x34/0xb8
+[   38.309010]  irq_thread+0x198/0x3b0
+[   38.312570]  kthread+0x138/0x228
+[   38.315781]  ret_from_fork+0x10/0x20
+[   38.319260] Code: ffff8000 aa1e03e9 d503201f f9403c00 (f941cc00)
+All code
+========
+   0: ffff8000 .inst 0xffff8000 ; undefined
+   4: aa1e03e9 mov x9, x30
+   8: d503201f nop
+   c: f9403c00 ldr x0, [x0, #120]
+  10:* f941cc00 ldr x0, [x0, #920] <-- trapping instruction
+
+Code starting with the faulting instruction
+===========================================
+   0: f941cc00 ldr x0, [x0, #920]
+[   38.322823] ---[ end trace 0000000000000000 ]---
+
+
+## Source
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250717/
+* Git sha: 024e09e444bd2b06aee9d1f3fe7b313c7a2df1bb
+* Git describe: 6.16.0-rc6-next-20250717
+* kernel version: next-20250717
+* Architectures: arm64 (Dragonboard 410c)
+* Toolchains: clang-20 gcc-13
+* Kconfigs: defconfig+lkftconfigs
+
+## Test
+* Test log:https://qa-reports.linaro.org/api/testruns/29169813/log_file/
+* Test LAVA: https://lkft.validation.linaro.org/scheduler/job/8361760#L3403
+* Test run: https://regressions.linaro.org/lkft/linux-next-master/next-20250717/testruns/1662734/
+* Test history:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250717/log-parser-test/internal-error-oops-oops-smp/history/
+* Test plan: https://regressions.linaro.org/lkft/linux-next-master/next-20250717/log-parser-test/internal-error-oops-oops-smp/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zzwEWZON9hQQK9VfaE276a89yt/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2zzwEWZON9hQQK9VfaE276a89yt/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
