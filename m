@@ -1,33 +1,33 @@
-Received: from dijkstra.felixrichter.tech (dijkstra.felixrichter.tech [37.120.184.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B9C219E93
-	for <regressions@lists.linux.dev>; Sat, 19 Jul 2025 10:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.184.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C3826563B
+	for <regressions@lists.linux.dev>; Sat, 19 Jul 2025 12:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752919862; cv=none; b=BunDdavB1eTBySfhcgDC/Rnr2hreO4wxGDaYDLEOnH6+KfMUuzlb/Q0UIYWDUNiAZIWNhiTlBc1sVAMa2inQtW813z8pRZ8WKbFeaKfIyQCUhMyR7nd2y/WL+d5iDIwxp6On9lA5wbXftbbiP6s9q9pU/DXGstSBEWdSx4TDXqc=
+	t=1752927815; cv=none; b=LCWgEVWY1QqtCICqYCOz5ZKxiKccJLXZ5Wfz10lBBOiA1lNmQCnXOT91mt2nDWUdIWJM9Guh7X1bIu3pLpXm+MAGwrZzlEiHgqzlButoWfHmHNWhY0u/y4dMW8FCLAifbzCt3jVvdM2QcKCuT3H0z3opogYfXym8F/dYXaqYEVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752919862; c=relaxed/simple;
-	bh=3VNfUxSAOp65CvuEaSzBq77SlXZOKw58vVaXGiL/O5w=;
+	s=arc-20240116; t=1752927815; c=relaxed/simple;
+	bh=rXHQfe407yjkkKswishihzg72FBM7pCyyGx4HxRmnpY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qdyUOY3aEDZZ88IQ+p3piGZY6wu5BaEycHo0u3ep8jjbR5z5wxK6AdnEZGteBktWpzIYjI6FaZIkB4EJba696EyuTDA10rZUueoTZ8HHNbDqbOPsuzwX7LUZDrs80TBTJm9hbGO0xFTu23YqNUbN/HZXW2+cweWoLrDqkSf326k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=felixrichter.tech; spf=pass smtp.mailfrom=felixrichter.tech; dkim=pass (1024-bit key) header.d=felixrichter.tech header.i=@felixrichter.tech header.b=Jl34XNkt; arc=none smtp.client-ip=37.120.184.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=felixrichter.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=felixrichter.tech
+	 In-Reply-To:Content-Type; b=V3juZZH9SamnaeWZyH7htAw3bOk6pkQldC5KNiCH4ykRflS7zG0c0wgEXXs4+CSAK6OLrVD8HfJ9o9BfK5RzYRcEcHPJD7fRM2a89KV5XG/BA7RG8UI94pasY3Izk1mpLFc7aID29HoiTjuxRH7Js84PUWLe7mtmilpBRXYKD7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7hB0lAw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=felixrichter.tech header.i=@felixrichter.tech header.b="Jl34XNkt"
-Received: from [10.130.10.1] (unknown [10.130.10.1])
-	by dijkstra.felixrichter.tech (Postfix) with ESMTPSA id BF8651A30BD;
-	Sat, 19 Jul 2025 12:11:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=felixrichter.tech;
-	s=20210926; t=1752919899;
-	bh=3VNfUxSAOp65CvuEaSzBq77SlXZOKw58vVaXGiL/O5w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Jl34XNktwUvmuKXe7npo+PCYFQW/xOBr1+GtI/8at3IY6Mfm29wl8adA41SvXnFAl
-	 PoDU7ZOUVe8YMCXvQHyJh+XFfmiHXON4PLPjQnNncDG0YYX+KsiLQvT0u5fZBJuNZ3
-	 z0TOW2IAFN6kQhgrqR4phjTkIX+jkZZxYAWNY22A=
-Message-ID: <5f63ae37-793e-4e34-a8ab-1845121fcd7e@felixrichter.tech>
-Date: Sat, 19 Jul 2025 12:10:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7hB0lAw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3285EC4CEE3;
+	Sat, 19 Jul 2025 12:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752927815;
+	bh=rXHQfe407yjkkKswishihzg72FBM7pCyyGx4HxRmnpY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b7hB0lAwjWTCiUvMsStmSYP8Vlyp2zHavjEb56gHh97QGGKmnSc3TtPVwSaKdX8Hh
+	 MgvkfiAjLsj2ftxJnZHYmz+34StZK0U9lABaAcRHmtZ/4Q+tR34ziDh0S0kPPCLfsy
+	 5RFxyIvl14cg4aFZdiNe1NcNHyFndLi8ShSZJDnF57ELHyF4DsgT/Slt2fEIO6Kv6I
+	 1IvRISLrJ4PSX9M9SCCEWntAez4zabQTudrgm88KjsAMe+1D4a8dz2xlEifvMMu+IM
+	 H3Yt3RfM3U+q70yU9HOjU1Jx01XBuXJk/Q9iIHddwjsqcMdoTm3Gk9h/TU2ni21/oF
+	 JPK0YtKGaDNiw==
+Message-ID: <79d7b8a1-b472-4f32-a724-1f2303fb2cab@kernel.org>
+Date: Sat, 19 Jul 2025 07:23:32 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -36,108 +36,111 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Regression: DDC I2C Display Freezing for internal displays
-To: Mario Limonciello <superm1@kernel.org>,
+To: Felix Richter <judge@felixrichter.tech>,
  Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, jonas@3j14.de
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ jonas@3j14.de, seanpaul@chromium.org
 References: <0863bc3e-7364-4572-bb72-fc85657cbad7@felixrichter.tech>
  <d9706fe0-7965-457d-830e-19f9aafee855@felixrichter.tech>
  <1c64c181-4e96-4274-975b-454f7207af92@kernel.org>
+ <5f63ae37-793e-4e34-a8ab-1845121fcd7e@felixrichter.tech>
 Content-Language: en-US
-From: Felix Richter <judge@felixrichter.tech>
-Autocrypt: addr=judge@felixrichter.tech; keydata=
- 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
-In-Reply-To: <1c64c181-4e96-4274-975b-454f7207af92@kernel.org>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <5f63ae37-793e-4e34-a8ab-1845121fcd7e@felixrichter.tech>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Thanks for the reply.
-
-I am aware that i can read and `edid` via sysfs from the drm device. I 
-did not know about `drm_info` but from a quick look at it I don't think 
-it provides the information I need.
-
-The problem is not that I need more information about the attached 
-display. The problem is that there is not enough information about the 
-what `i2c` device corresponds to which monitors ddc channel. Relying on 
-udev hierarchies is not sufficient, because in many cases the relevant 
-i2c device has no parent drm output device. So when I have no 
-information about the i2c device I need to get more information by 
-reading from it. Then I know more and can map the device to the correct 
-display. I am happy to change the approach if there is a simpler way for 
-me to get this information.
-
-Ultimately I don't think that me accessing the bus should be the issue 
-here … This issue did not happen with kernel 6.6, so it definitely 
-qualifies as a regression. In my mind it is the job of the driver to 
-handle resource allocation, so if the bus is in use by somebody else it 
-is the kernels job to handle who uses it. It is not the users job to 
-have to worry about some sort of synchronization issue. That is the 
-operating systems job.
-
-People have been experiencing similar screen freezing issues randomly on 
-this drm issue thread: 
-https://gitlab.freedesktop.org/drm/amd/-/issues/4141#note_3016182
-
-This example highlights an issue that can be triggered reliably with a 
-very similar effect. It may not be the same issue, but they may be related.
 
 
-On 7/18/25 20:02, Mario Limonciello wrote:
->
-> At least to me, this issue sounds like a case that multiple entities 
-> are trying to communicate with the panel at the same time.
->
-> By setting dcdebugmask=0x10 what you're essentially doing is stopping 
-> the display hardware from trying to put the panel into PSR.  So there 
-> is "less" I2C traffic to fight with.
->
-> *Why* are you using I2C to read the EDID like this?  Could you instead 
-> use /sys/class/drm/cardX-inputY/edid?  Or even better - can you use 
-> the information from drm_info to make decisions?
->
-> I think the less I2C traffic done directly from userspace the better 
-> when it comes to synchronization issues..
->
+On 7/19/25 5:10 AM, Felix Richter wrote:
+> Thanks for the reply.
+> 
+> I am aware that i can read and `edid` via sysfs from the drm device. I 
+> did not know about `drm_info` but from a quick look at it I don't think 
+> it provides the information I need.
+> 
+> The problem is not that I need more information about the attached 
+> display. The problem is that there is not enough information about the 
+> what `i2c` device corresponds to which monitors ddc channel. Relying on 
+> udev hierarchies is not sufficient, because in many cases the relevant 
+> i2c device has no parent drm output device. So when I have no 
+> information about the i2c device I need to get more information by 
+> reading from it. Then I know more and can map the device to the correct 
+> display. I am happy to change the approach if there is a simpler way for 
+> me to get this information.
+
+❯ ls -alh /sys/class/drm/*/ddc
+
+> 
+> Ultimately I don't think that me accessing the bus should be the issue 
+> here … This issue did not happen with kernel 6.6, so it definitely 
+> qualifies as a regression. In my mind it is the job of the driver to 
+> handle resource allocation, so if the bus is in use by somebody else it 
+> is the kernels job to handle who uses it. It is not the users job to 
+> have to worry about some sort of synchronization issue. That is the 
+> operating systems job.
+> 
+
+I get where you're coming from, but there are cases that are ultimately 
+impossible to prevent when it comes to "long", or "frequent" sequences 
+and responding to interrupts.  There are lots of examples like this in 
+the kernel that if you break what a driver is doing with a device from a 
+userspace interface you get to pick up the pieces.
+
+I'll give you two examples:
+
+1) You can access R/W PCI config data.
+/sys/bus/pci/devices/*/config
+
+You can break power management state machines, bus mastering, really 
+anything a device driver can do from a userspace application.  For 
+example if I had a userspace app that did something like this:
+
+dd if=/dev/zero of=/sys/bus/pci/devices/${BDF}/config bs=1 count=4096
+
+and it broke how can the kernel do anything about it?
+
+2) There was a case that fwupd was doing something very similar to you 
+with a "probe" but with the DP aux character device.  It was trying to 
+detect devices with updates and would fight specifically with link 
+training.  The outcome was non-functional devices.  The workaround 
+currently employed is that fwupd will wait a few seconds (5 or 10, I 
+forget) and then do the probe to avoid that fight.  This doesn't solve 
+things though because there are pulse interrupts that could still come 
+at any time.  The DP spec has response requirements for these.
+
+We talked about it at the display next hackfest this year and the 
+decision was this information that fwupd was needing should be pushed 
+into the kernel (let fwupd probe a sysfs file that gets cached data the 
+driver fetched).
+
+
+> People have been experiencing similar screen freezing issues randomly on 
+> this drm issue thread: https://gitlab.freedesktop.org/drm/amd/-/ 
+> issues/4141#note_3016182> > This example highlights an issue that can be triggered reliably with a
+> very similar effect. It may not be the same issue, but they may be related.
+
+Yeah; I'm aware of this thread and agree it's an issue with similar 
+symptoms.
+
+> 
+> 
+> On 7/18/25 20:02, Mario Limonciello wrote:
+>>
+>> At least to me, this issue sounds like a case that multiple entities 
+>> are trying to communicate with the panel at the same time.
+>>
+>> By setting dcdebugmask=0x10 what you're essentially doing is stopping 
+>> the display hardware from trying to put the panel into PSR.  So there 
+>> is "less" I2C traffic to fight with.
+>>
+>> *Why* are you using I2C to read the EDID like this?  Could you instead 
+>> use /sys/class/drm/cardX-inputY/edid?  Or even better - can you use 
+>> the information from drm_info to make decisions?
+>>
+>> I think the less I2C traffic done directly from userspace the better 
+>> when it comes to synchronization issues..
+>>
+> 
 
