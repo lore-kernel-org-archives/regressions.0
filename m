@@ -1,148 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28161A2630
-	for <regressions@lists.linux.dev>; Mon, 21 Jul 2025 14:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3539D1F2361
+	for <regressions@lists.linux.dev>; Mon, 21 Jul 2025 21:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753107548; cv=none; b=RGZtfSmVzZhkZvHdqH9aifUP8Drz3Ckx1oo55H02OLn5jZ2XEL4olBgC4iYsFNN41/kgfuxUWPRzI7CCCAd74jkbqUBLskp9M6vcUXuQQtZ8lR4ZpMdmUAxYQ/bWZvUd6Nc8opIjJdDxWhLjrbIK82IkKedIChvIaQzcWWYjnuw=
+	t=1753134611; cv=none; b=RtwuK5jUgv0aDF4pq50u3WvJTEgU/2s7P7HUukwe7Q7Jeip4GXYFwK1AxtbkaZo2pxZxXCCT9W19b9d4faC9KMHrXj0PryyXM2rWbwSNqTuBzYuWXa7JlVEJGaVUfodfvtUluGVIyhGbBMmktY8XTcvNEnn2OSWlyI6KV1wNDMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753107548; c=relaxed/simple;
-	bh=PhDPFlnHiVIpBF5FuQv8/HIP8sSK465sZA17RBAssoc=;
+	s=arc-20240116; t=1753134611; c=relaxed/simple;
+	bh=qhtWDUO4sns6nxCpFEYKNVcTP1ZIn5b3fGq/f+Hx6uw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X4CKuSI18i1jEVgBAMuFfFOkkD6q9UZMhNYYdpwBw0eSr2UBlJDV6vVZhym0E67xkH/gv6VuJDBa57J5oizHinquzjGQ8bVYaf/yKB9PE6Rb5Leg6EvwRefn47agNpZGC74/cTAqY/qV/EFKrtZD/Nug/pN/bcH6bRVBVGFHbXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KaR+HD4F; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=bwcDysUI9jop07QNG76GURkTNMT2x7PqM0CzqoTXe2aEm5V5YcyB/f2gOsWKHA/3HZebzuEZ9C76jJztDGa9ZpSvyfCBuQGuviJoTvwuTN+fglO3/iXfo34VPOFH6aeV0lCcpvFit5yyNUrdx+RVdKX0DlwUMUISdoWJYcGMBRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lONL3IaS; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KaR+HD4F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753107545;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I2e2g+RSdLVrXvuMyT6qHHm4bEHxvzYzZzIUO+TrG+M=;
-	b=KaR+HD4FD6pHoUmP//6Mmxa7bisdzPMl03x54Ii3n0Uwj0umlLEmWwsCF/8hi3Icu5ZlhQ
-	cGDJjKJcV1hAeBSWfO+d6BZvUQKrGeMrQqqoTUdEU/r5L/k5qEr+QM3t+NtDO5AznMnhXx
-	GavArUfSNH/IzWJDzDppr8bcP5qADL8=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-134-fuP0Ck1WNxiFhHJ5Q1HoNg-1; Mon, 21 Jul 2025 10:19:02 -0400
-X-MC-Unique: fuP0Ck1WNxiFhHJ5Q1HoNg-1
-X-Mimecast-MFC-AGG-ID: fuP0Ck1WNxiFhHJ5Q1HoNg_1753107541
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-31e3d563a53so50013a91.3
-        for <regressions@lists.linux.dev>; Mon, 21 Jul 2025 07:19:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lONL3IaS"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e740a09eae0so4756213276.1
+        for <regressions@lists.linux.dev>; Mon, 21 Jul 2025 14:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753134609; x=1753739409; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NjSFTK7/jtmmy4Qgy5FYJA9GOyMmTJFi70ip4qLJxOM=;
+        b=lONL3IaS8h955GRj73VgG+/Ys9nBohbv+sojEsk+PtGmzksUhRdByxOOLukZ6MyGKw
+         yrxpVw5E6RHHvY00N6/xYO9FXJONgNZLYc8OQFYSjjqnjGoRKmAZ+DfQmx637MQo7i6h
+         uf7dsRiTEqtzVZtCSm8lrL0T6v+F1yjaaXnsjYFiVDFkTdy9q9aNBF6uVI4oRodjIpYH
+         t1/4fUq/H+GT5lX0xFNQn56t2tH5KwmBp69EaPgHPgmrhyQX2ptD/nT5KzsZYIawfNK5
+         IGi451BbfnT5ibdyl/q18VBFT/wCWCAPq1YZ0nUpBheh4+vZ1Zsvz+lFDxwwx5ah4W89
+         qVtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753107541; x=1753712341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I2e2g+RSdLVrXvuMyT6qHHm4bEHxvzYzZzIUO+TrG+M=;
-        b=lqDMLiGqJo/S/CG0IXHhR8161UWRD522NxzGbGeNoF2wou+9tq90b3B1dbn06j2H6U
-         tejI4bLPrhs8LxLCoQLwpsrIEFaNLgqtv4afamm9FIV7zIMzKBWOOutznqR0RIawj9ZM
-         DJKIxdfZR5gTaBiKLyqAlic8mw4kwFawyJAL2fznBhSbH/Vxfw2M2BJbnywAY8FJE7xa
-         oKJWV0wzJfGluKuosBwU+hobeA9KqBwzphdptAaBrLdV5my1RkHTQHnfQK1Pk6ELYdfg
-         ni9fWdVroysGk+mCvC6oQhrQpNuyPBnRWG70rGk5R2VR1cGERjYdtRFAyAKQShQoWAoZ
-         tXzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaRhzsejFxY9QIVNUd53V+cYIJhYco84pJd4RnQh0ZQlpyEYqY1yuj4vg8541Jr7vcUasjJAxWDzWaig==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnrWyYQI/9tz6H/KajUfDXK2ThaIQ2QQw6CXdDvyurYWtkWlHy
-	Dv/j2vuzhrnpXtA1PStWxJ7R3NVJx+bcfZ6HBJC8CFlPXxW2vR5mBjNRot7bCFSkV05qBFW+Pqn
-	2rVki1JNUfLdCXuv9Dx3ypjZuHVX0xGNn0cNKNE7oSQ4A3r7b6CQ7UwAu9wECCWWeoCky4M6Qzc
-	5U+a/Z7qTZzj5qrijpb25JTnYvHF2i5gDCdh89K6E=
-X-Gm-Gg: ASbGnctMfWNSKFnfYZDtcAKgs7AuSwk58siCWCJG/f9LTTrRn6J3FtwMMh7ZgKSuw0F
-	4k6gj+BnATL+SjVh7uYCrIMG82MR41osb5aGQoKE2UmjuQwCq/JQ4TnVKAhvPiAILX4gmdEp5E4
-	Pv4OvqptGLeEHJPKoljMtKPQ==
-X-Received: by 2002:a17:90b:2252:b0:312:1508:fb4e with SMTP id 98e67ed59e1d1-31c9f45e1bamr34067980a91.17.1753107541239;
-        Mon, 21 Jul 2025 07:19:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJIdqihCeYBVzkOqoaHkVeRUSem0hiE8oGsu0T7UvW6Id9zyyr788yaoKXL+Z4xHCOtXdyTT7abtsFJKNwYFA=
-X-Received: by 2002:a17:90b:2252:b0:312:1508:fb4e with SMTP id
- 98e67ed59e1d1-31c9f45e1bamr34067933a91.17.1753107540404; Mon, 21 Jul 2025
- 07:19:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753134609; x=1753739409;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NjSFTK7/jtmmy4Qgy5FYJA9GOyMmTJFi70ip4qLJxOM=;
+        b=xFiWbJzZLymcgSfWdhZ2IGrff94wsh3i5K6sbGhTiqIYgyCYziKpgWd1u8oEiV4dX9
+         YPtK2xiCASAgRFingcM08Cswi/8vC/496Sb+fVXEMzQ//S16zBgkzReX1/p6LzUL+GAM
+         Y3Zl04rvX1FPjqYx/rp/SKkgSrq7kbl7PMBv1mJ8iKwtPcEcXzQg3WSSjA70IWDveols
+         +jKrIN4kuc2S+qunZ+kenIxo5aDqNMBJpPwvf80xpqaJj1za81PR5ZMZXRT6S32S8nIj
+         WTu8iCFVjQYbzNIaeOdf+E6V0EhMv7FG8rduiPj5CAn7cYS1aOPmptBdX0nj1302i30o
+         SMvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWza438jz8Ft0U9s94uFNM8l/agmeHa6fdjlw9hA2svi07FpsAOk9OWZQQkwYg8duIe9gmS8fGC6lMb+Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyeSIkX9LjzBo9FTh/ostgCVjyM/1NKBn8qs1VuRDfGfdDgzdSN
+	/PtgY8bnbX3gGQnnevzctP3Y2QRfG9tnqX+n2c6d7wDKIlZ8BvSWEKFGo2S/8Ts8kbOXi36TagY
+	CDRAN6OCxtDF/UIDONaRP1DK+1HNB62A=
+X-Gm-Gg: ASbGncsf1V+FiVcDffKkeX2PdBkjNoaF1z0AZjQBTfDeVV7KvJ3KM5MtW418m7c4U0b
+	wFSQOptQp+CyFiP0AttAfm79AT6hcrAm/byyQMX6o8rPhMvx3zbAnLr/uANoNDBYgH8asG6Oz+k
+	RsC6ZGVdOl8jM1ifNba/p3gOpiGUulrfiycFMpjfJbBMsAhoGDlg+WHiXArXbpFqv7yCNim4tJF
+	7Qfwg==
+X-Google-Smtp-Source: AGHT+IHp/QbVQpP/iW3i0q+M7DawEhqXJBs3W2nF9CrWya5gk5Oil5znpkrHUlUK8ishKwyW/R30sNoCM3IK6kLc0uk=
+X-Received: by 2002:a05:6902:2289:b0:e87:982c:5524 with SMTP id
+ 3f1490d57ef6-e8c5f8ac5dbmr19834485276.24.1753134608982; Mon, 21 Jul 2025
+ 14:50:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <197d1dc3bff.c01ddb9024897.1898328361232711826@zohomail.com>
- <cd3ca680ac5751368941713c1071e04d69544d47@intel.com> <197d710ac39.10e2c241536088.2706332519040181850@zohomail.com>
-In-Reply-To: <197d710ac39.10e2c241536088.2706332519040181850@zohomail.com>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Mon, 21 Jul 2025 22:18:48 +0800
-X-Gm-Features: Ac12FXzDdHF_s7WVKonqNsgMwmdC6Q6zqqujKluH5OQTrSCN3xvRecpp-sj16FU
-Message-ID: <CAF+s44SvWGxwty3FA6ZpR3GoXEbqXRDoT9H6KBj_jy0yM1jjLw@mail.gmail.com>
-Subject: Re: Second kexec_file_load (but not kexec_load) fails on i915 if CONFIG_INTEL_IOMMU_DEFAULT_ON=n
-To: Askar Safin <safinaskar@zohomail.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, regressions <regressions@lists.linux.dev>, 
-	intel-gfx <intel-gfx@lists.freedesktop.org>, kexec <kexec@lists.infradead.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, iommu <iommu@lists.linux.dev>, 
-	Ben Hutchings <benh@debian.org>, joonaslahtinen <joonas.lahtinen@linux.intel.com>, 
-	josesouza <jose.souza@intel.com>, davehansen <dave.hansen@linux.intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: sg6wtgFODZzKYDinchwzTxWnLcJO99a4z2Bq0oRWg-k_1753107541
-X-Mimecast-Originator: redhat.com
+References: <Z-XvFvGigpY7JYFn@debian.local> <20250716184226.GA2547862@bhelgaas>
+In-Reply-To: <20250716184226.GA2547862@bhelgaas>
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+Date: Mon, 21 Jul 2025 22:49:58 +0100
+X-Gm-Features: Ac12FXxNXBAeAhVAwWwxwk96-aVdQChQ7gw5acnVbXB8GPPK7GVjU3cHaObwRy0
+Message-ID: <CAP-bSRZ+Ovj-MRVU9H5_nruA2wSTZ73Z1VXTbf4FFaPWVXP9dQ@mail.gmail.com>
+Subject: Re: [REGRESSION] iwlwifi: probe with driver iwlwifi failed with error -22
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "kvalo@kernel.org" <kvalo@kernel.org>, 
+	"Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>, 
+	"Berg, Johannes" <johannes.berg@intel.com>, 
+	"benjamin@sipsolutions.net" <benjamin@sipsolutions.net>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 5, 2025 at 4:12=E2=80=AFAM Askar Safin <safinaskar@zohomail.com=
-> wrote:
+On Wed, 16 Jul 2025 at 19:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
->  ---- On Fri, 04 Jul 2025 12:29:01 +0400  Jani Nikula <jani.nikula@linux.=
-intel.com> wrote ---
->  > Thanks for the detailed debug info. I'm afraid all I can say at this
->  > point is, please file all of this in a bug report as described in
->  > [1]. Please add the drm.debug related options, and attach the dmesgs a=
-nd
->  > configs in the bug instead of pointing at external sites.
+> On Fri, Mar 28, 2025 at 12:36:38AM +0000, Chris Bainbridge wrote:
+> > Hi,
+> >
+> > Laptop: Lenovo Legion 7 16ACHg6.
+> > Wifi: Killer(R) Wi-Fi 6 AX1650x 160MHz Wireless Network Adapter (200NGW)
+> > 04:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [8086:2723] (rev 1a)
+> >
+> > Wifi stopped working in recent kernel builds:
+> >
+> > [   20.907824] Intel(R) Wireless WiFi driver for Linux
+> > [   20.907955] iwlwifi 0000:04:00.0: enabling device (0000 -> 0002)
+> > [   20.912024] ee1004 2-0050: 512 byte EE1004-compliant SPD EEPROM, read-only
+> > [   20.913666] NET: Registered PF_BLUETOOTH protocol family
+> > [   20.913670] Bluetooth: HCI device and connection manager initialized
+> > [   20.913806] Bluetooth: HCI socket layer initialized
+> > [   20.913810] Bluetooth: L2CAP socket layer initialized
+> > [   20.913828] Bluetooth: SCO socket layer initialized
+> > [   20.917455] iwlwifi 0000:04:00.0: Detected crf-id 0x3617, cnv-id 0x100530 wfpm id 0x80000000
+> > [   20.917674] iwlwifi 0000:04:00.0: PCI dev 2723/1654, rev=0x340, rfid=0x10a100
+> > [   20.917679] iwlwifi: No config found for PCI dev 2723/1654, rev=0x340, rfid=0x10a100
+> > [   20.920126] iwlwifi 0000:04:00.0: probe with driver iwlwifi failed with error -22
+> >
+> > Bisect led to:
+> >
+> > commit 75a3313f52b7e08e7e73746f69a68c2b7c28bb2b (HEAD)
+> > Author: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> > Date:   Wed Feb 5 14:55:42 2025 +0200
+> >
+> >     wifi: iwlwifi: make no_160 more generic
 >
-> Okay, now let me speculate how to fix this bug. :) I think someone with m=
-oderate kexec understanding
-> and with Intel GPU should do this: reproduce the bug and then slowly modi=
-fy kexec_file_load code until it
-> becomes kexec_load code. (Or vice versa.) In the middle of this modificat=
-ion the bug stops to reproduce,
-> and so we will know what exactly causes it.
+> https://git.kernel.org/linus/64dc5d5e341d ("Revert "wifi: iwlwifi:
+> make no_160 more generic"") appeared in v6.15-rc5 and reverts
+> 75a3313f52b7 ("wifi: iwlwifi: make no_160 more generic"), so it
+> *looks* like this regression should be fixed, but it still appears in
+> the tracker at https://linux-regtracking.leemhuis.info/regzbot/mainline/
 >
-> kexec_file_load and kexec_load should behave the same. If they do not, th=
-en we should
-> understand, why. We should closely review their code.
->
-> Also, in case of kexec_load kernel uncompressing and parsing performed by=
- "kexec" userspace
-> tool, and in case of kexec_file_load by kernel. So we should closely revi=
-ew this two uncompressing/parsing code fragments.
-> I think that this bug is related to kexec, not to i915. And thus it shoul=
-d be fixed by kexec people, not by i915 people. (But I may be wrong.)
->
+> If it is resolved, can somebody send the appropriate regzbot fix
+> command?  (See https://linux-regtracking.leemhuis.info/about/#tldr)
 
-I tend to agree with Baoquan on this scene when kexec rebooted with a
-graphic card.
-I heard that this was due to the missed initialization on the graphic
-card by the firmware in the kexec reboot process. But it is not an
-official explanation. If any experts could enlighten me on this, I'd
-really appreciate it.
+Yes, that revert fixed it.
 
-IMHO, you could try blacklisting the i915 module to see if
-kexec_file_load works without issues - this would help narrow down the
-culprit.
-
-Thanks,
-
-Pingfan
-
-> But okay, I reported it to that bug tracker anyway: https://gitlab.freede=
-sktop.org/drm/i915/kernel/-/issues/14598
->
-> Maybe there is separate kexec bug tracker?
->
-> Also, your bug tracker is cool. One can attach files in the middle of rep=
-ort. Why not whole kernel uses it? :)
->
-> --
-> Askar Safin
-> https://types.pl/@safinaskar
->
->
-
+#regzbot fix: 64dc5d5e341d
