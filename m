@@ -1,230 +1,182 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04657F9
-	for <regressions@lists.linux.dev>; Tue, 22 Jul 2025 14:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84381E835C;
+	Tue, 22 Jul 2025 15:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753194565; cv=none; b=Gwy67Nc7amUSHAenrMPFFvOl0SF+pOn4BUB+34EcBSkJe3QoBqPrCl6AjaucXiVID8nlOI8qZYjeBsaoHK+x37rPFC4/+ptl3qdmrtJoxyGElUHZDV5gaCN83ARi8RhfP7o+eBcK223Mzr3F19wwoidqlWxzVGdLiUuBb33Ziio=
+	t=1753199553; cv=none; b=HmmncWSsc3kmXFyiI+hViwGVltwwAlkKb4rJ2FWS84RZu2u3e92dnDq5DsD6D76YDo1YeuUI6nxRngMpoGvS7XONXdwvOhrIKp00x3h6Uj9Jhc1gNmiZD3ZekXw6jy3s9H/OpuoV6/YPh1wQq9abw/3qUbjBjjpi2wvtOYZq0x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753194565; c=relaxed/simple;
-	bh=Bz2lYfbytRSiejdP21L6tfMCCVrhxdwYUI5Y2oAvcNM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HWhddicZBNtZVjC8CmEEHLysjZTqrJUYtpC4PngnCG1mwS6ha6G47k2gyppecs4bbF5QRkfqu7scE/PdhflKUmoGUnG8UckvEnWH2HBppThmK2DMvkFIkbTubNJxrQm/2ECpT7LI4ZduRkIXGEiq6q87k6AV2sKA25pzmeKkVkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p0kaabCD; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1753199553; c=relaxed/simple;
+	bh=NKIckEBHqBmnJvHxD9TEvb7YwLSxeVHJM6pwdtCy+XI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ws6KDgMA5qdYoKeBwVygo/od6rLa3T8A6WPZK+aoXc/Ok3AyLcSv5ry7J0EeQ5/kNavy7nKNrhj+wt8F5yf6Pz8bRbaZrK11sQkye7OcN8wMKbilX5l+2NNWp7KR/zWHzrp/QmNmhNU33gbt3JiAftmmmYoR1fBfmr0xJIVqQ0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=eBP2stPY; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p0kaabCD"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311bd8ce7e4so4657450a91.3
-        for <regressions@lists.linux.dev>; Tue, 22 Jul 2025 07:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753194563; x=1753799363; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w4j/dqB0FEJVP++msFICUJGBS7c5vIhwDliD0r1Ztug=;
-        b=p0kaabCDq8bPpUaPZwoyxDG0+U4lFeJaxi4NFM00RWJlxorCIQ27GoCKRW8MT+kP01
-         LCJysOhB3WKV91yMTs/6A1q4CtfFFV4sIKWzK8mm4FCkZixdykpZY+YdSUPmUTf7QUf/
-         ZwR8giy+gpJMm1tNq20bolZncu5DilArRJ6msH29TYVoUVbzXRQoITgG2YnzW3/6Nu7T
-         mh++ryiQB9gLpLE1OSU6PwaoAFwueWdjnzJsR+tEzb2T1Obod8UkH98lPjDfA734+wI7
-         Q7KWuCr04OBrqV8JbpG+5YAd1R/u3ASroe7KCeSRANASdpVRFhHzK6LT3fTJ1WxMXaW2
-         pHBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753194563; x=1753799363;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w4j/dqB0FEJVP++msFICUJGBS7c5vIhwDliD0r1Ztug=;
-        b=SLYw05UNILBXq1/NoOE2twU+2ocNka5Ei15LBgIy3xa85DODMlW5eTtwGuRcbNyChp
-         YYCQD3/0CNbKIiAD+InG/c1GefpH/8bNy/2GMr8Z1hveRgaTboQnQDYRl9vriKjUUmtL
-         hZdmz0bOyWzylLmicaUOuUCVQhFLAtCQK9hobmrQ+4F16XOOW0lWWADrjO9QDlX5/Tvq
-         WXHjH0cl5Yu6W+pbd5xVeLsluyTi492pOlFq579GzWAwT5xtqcNsfEWm3k96/XxFp8wY
-         3mEit3hBRHbHEIJsDXfrxmF4bfoQbKRHtg3tjkEZ33ACB+UvSmTuXr0ruPVDgtipznwm
-         Baog==
-X-Forwarded-Encrypted: i=1; AJvYcCVoTUH5jOofB15Ri9wx9ItluRIJI5gwz93IOjRnjsmV5nO+nfVdceQW8DoL0J3R7vsPCe6/pf8yKOxfOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwsUpVToTIhM00JFTkhPNlK0Z2RMtGnhmdDaxfVummd8Erxqwl1
-	Z/n3ZPn9BqyBfJgbeYKFYSzcTNynWxEu8h3Og8HmsjJV25VQOJ6D0axnt2b1xtDQXumShCcjtpp
-	CTQfmZ7c7v0VHTEsqrmlEHm24uIgmc/390kWwKq/2qA==
-X-Gm-Gg: ASbGnctR4zvfClAtsKE47StDMaNI3AtIDHEOxuniBh9ui+HEalVNV3wpu8HE1Q5flKv
-	Dgia0fP3or/430xAi1GkNCWPCX+GpfI36YkANQesAPw+mHfYYyHQPGL3zpzYK7xtfq44+DtZ9tD
-	2SmgXxFm852bmbJi0SMxeyzVS6t7zncvoxWY6eFQTOl/09ibMbeO4Z+eKB8jVvSl/yMyT5jsIdk
-	Dc6RT40ApyXxlvXHFvMHWxpGO0DCapxFy18KctD
-X-Google-Smtp-Source: AGHT+IGViVGo30JiX8Iobzc1nz2CMFoTAV0xD2CPDCL3v8RSJq2399IbiFlY9qPHicdWf4XFVuhv/Tq4f+y6dIWOKcQ=
-X-Received: by 2002:a17:90b:2710:b0:311:fde5:c4c2 with SMTP id
- 98e67ed59e1d1-31cc2512f33mr21973154a91.1.1753194562844; Tue, 22 Jul 2025
- 07:29:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="eBP2stPY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=VnT1lsyxAx1cjwJoJ8JV0jArnRtTHaiwpHz8oLjh3zw=;
+	t=1753199551; x=1754409151; b=eBP2stPYnnDtBx4AqjRy7LoCwq/rosDn41OZawPUd8rm0X7
+	Kb47ZsUzr0Bu+Ks7Lilr0JSJIcxVVciSB9p/b1pD8lixfYwxvWnFGVdlfV4x1osdJ2Iq+n0wP6c9e
+	WFgrESxtO5BcOMnxud256vjGJe6LAUSrjGZRMrwW+V8rkmGw8T86doGOpAhsPMhLjWADba3Mzjwys
+	TSC5NB1aprbLWhyXbXDcFOW1OTuljSWFO+2Vo5iAPVFgbdy8J6RGf4wuyvp/1nTIlqwut/slbyTCd
+	+YoqLzDuBhLrMY6fkJfaJc2ExIHClu32o6XZhzh0dbIHlTSqB3nl2axiKx5z93NA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1ueFI5-00000002Jtb-225B;
+	Tue, 22 Jul 2025 17:52:29 +0200
+Message-ID: <1dd41163c95eb818d13006ffc07b0815ce10b1ec.camel@sipsolutions.net>
+Subject: Re: [git bisect] rsi_usb oops
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Cameron Williams <cang1@live.co.uk>, linux-wireless@vger.kernel.org
+Cc: regressions@lists.linux.dev, Remi Pommarel <repk@triplefau.lt>
+Date: Tue, 22 Jul 2025 17:52:28 +0200
+In-Reply-To: <AM0PR02MB37936431F3602A64BAF8550DC46DA@AM0PR02MB3793.eurprd02.prod.outlook.com>
+References: 
+	<AM0PR02MB37936431F3602A64BAF8550DC46DA@AM0PR02MB3793.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 22 Jul 2025 19:59:11 +0530
-X-Gm-Features: Ac12FXy-ZjVvt-T4i3MttzsHoSjov0ZMbtIf-x7c-wsH5Vg-oeIRD3f4bfuDeLg
-Message-ID: <CA+G9fYupPsQoBrtF=-WT0nSy6m+yG1p9m68Z18Bp-Y=QMFD_tQ@mail.gmail.com>
-Subject: next-20250717: arm64: rk3399-rock-pi-4b: NFS mount failure with 64K
- page size
-To: linux-rockchip@lists.infradead.org, linux-mm <linux-mm@kvack.org>, 
-	Netdev <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	"David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-malware-bazaar: not-scanned
 
-The rk3399-rock-pi-4b device fails to mount the root filesystem over
-NFS when the kernel is built with 64K page size.
-CONFIG_ARM64_64K_PAGES=y
+Hi,
 
-This regression was first observed with the Linux next-20250717 tag
-and continues to persist through next-20250722.
+> Commit 378677eb8f44621ecc9ce659f7af61e5baa94d81 ("wifi:
+> mac80211: Purge vif txq in ieee80211_do_stop()") seems to
+> have made rsi_usb/rsi_91x cause a kernel panic when
+> removing the USB while the interface is up.
 
-Device: rk3399-rock-pi-4b
-Build Configuration: lkftconfig-64k_page_size
+So it's been a while ... is this still happening?
 
-Regression Window:
+> =3D=3D USB disconnected =3D=3D
+> [   81.093884] [     T11] usb 1-2: USB disconnect, device number 4
+> [   81.145395] [     T11] BUG: unable to handle page fault for address: 0=
+00000009dff2338
+> [   81.145637] [     T11] #PF: supervisor read access in kernel mode
+> [   81.145868] [     T11] #PF: error_code(0x0000) - not-present page
+> [   81.146096] [     T11] PGD 0 P4D 0=20
+> [   81.146323] [     T11] Oops: Oops: 0000 [#1] SMP NOPTI
+> [   81.146548] [     T11] CPU: 0 UID: 0 PID: 11 Comm: kworker/0:1 Kdump: =
+loaded Not tainted 6.15.0 #1 PREEMPT(voluntary)  c74d5f1746d8801a78fe4695a5=
+1ca9b00b89ab7e
+> [   81.146790] [     T11] Hardware name: Dell Inc. Latitude E7250/0TPHC4,=
+ BIOS A19 01/23/2018
+> [   81.147026] [     T11] Workqueue: usb_hub_wq hub_event
+> [   81.147267] [     T11] RIP: 0010:fq_flow_reset.constprop.0+0x12/0x140 =
+[mac80211]
+> [   81.147608] [     T11] Code: 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 48=
+ 89 f5 53 <48> 8b 5e 18 4c 8b 3e 48 85 db 74 6a 4c 8d 6e 18 49 89 fc 49 39 =
+dd
+> [   81.148175] [     T11] RSP: 0018:ffffcb54c009b918 EFLAGS: 00010202
+> [   81.148466] [     T11] RAX: ffff89629dff2328 RBX: ffff89629dff2328 RCX=
+: ffff89628cb49210
+> [   81.148757] [     T11] RDX: 000000009dff2328 RSI: 000000009dff2320 RDI=
+: ffff89628cb489c0
 
- Good: next-20250716
- Bad: next-20250717.. Still Bad: next-20250722
-
-Kernel Config Impact:
-CONFIG_ARM64_64K_PAGES=y  - NFS mount fails
-CONFIG_ARM64_4K_PAGES=y  - NFS mount works as expected
-
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
-
-Boot regression:  next-20250717 arm64 rk3399-rock-pi-4b NFS mount
-failure with 64K page size
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Boot log
-
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-[    0.000000] Linux version 6.16.0-rc6-next-20250717
-(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 13.3.0-16) 13.3.0,
-GNU ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT @1752747461
-[    0.000000] KASLR disabled due to lack of seed
-[    0.000000] Machine model: Radxa ROCK Pi 4B
-[    0.000000] efi: UEFI not found.
-[    0.000000] earlycon: uart0 at MMIO32 0x00000000ff1a0000 (options
-'1500000n8')
-[    0.000000] printk: legacy bootconsole [uart0] enabled
-[    0.000000] OF: reserved mem: Reserved memory: No reserved-memory
-node in the DT
-[    0.000000] NUMA: Faking a node at [mem
-0x0000000000200000-0x00000000f7ffffff]
-
-<trim>
-
-[    6.520442] Sending DHCP requests ..
-[   13.295867] platform sdio-pwrseq: deferred probe pending:
-pwrseq_simple: reset control not ready
-[   13.295887] dwmmc_rockchip fe310000.mmc: IDMAC supports 32-bit address mode.
-[   13.296260] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to fe310000.mmc
-[   13.296278] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff650000.video-codec
-[   13.297085] dwmmc_rockchip fe310000.mmc: Using internal DMA controller.
-[   13.297660] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff660000.video-codec
-[   13.298653] dwmmc_rockchip fe310000.mmc: Version ID is 270a
-[   13.299536] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff680000.rga
-[   13.300164] dwmmc_rockchip fe310000.mmc: DW MMC controller at irq
-49,32 bit host data width,256 deep fifo
-[   13.301117] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff880000.i2s
-[   13.304227] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff8a0000.i2s
-[   13.305148] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff8f0000.vop
-[   13.306071] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff900000.vop
-[   13.307009] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff940000.hdmi
-[   13.307937] rockchip-pm-domain
-ff310000.power-management:power-controller: sync_state() pending due
-to ff9a0000.gpu
-[   14.620509] ., OK
-[   14.636949] IP-Config: Got DHCP answer from 10.66.16.15, my address
-is 10.66.30.7
-[   14.637647] IP-Config: Complete:
-[   14.637955]      device=eth0, hwaddr=0a:fb:82:cd:ed:a8,
-ipaddr=10.66.30.7, mask=255.255.240.0, gw=10.66.16.1
-[   14.638845]      host=10.66.30.7, domain=lkftlab, nis-domain=(none)
-[   14.639417]      bootserver=0.0.0.0, rootserver=10.66.16.116, rootpath=
-[   14.639440]      nameserver0=10.66.16.15
-[   14.641679] clk: Disabling unused clocks
-[   14.646347] dw-apb-uart ff1a0000.serial: forbid DMA for kernel console
-[   14.647091] check access for rdinit=/init failed: -2, ignoring
-[   14.762496] VFS: Mounted root (nfs filesystem) on device 0:22.
-[   14.763768] devtmpfs: mounted
-[   14.775761] Freeing unused kernel memory: 4928K
-[   14.776566] Run /sbin/init as init process
-[   95.816464] random: crng init done
-[  195.556677] nfs: server 10.66.16.116 not responding, still trying
-..
-[  195.556703] nfs: server 10.66.16.116 not responding, still trying
-[  195.556869] nfs: server 10.66.16.116 not responding, still trying
-[  195.557010] nfs: server 10.66.16.116 not responding, still trying
-[  195.557055] nfs: server 10.66.16.116 not responding, still trying
-[  195.557114] nfs: server 10.66.16.116 not responding, still trying
-[  195.557166] nfs: server 10.66.16.116 not responding, still trying
-[  195.557217] nfs: server 10.66.16.116 not responding, still trying
-[  195.557269] nfs: server 10.66.16.116 not responding, still trying
-[  195.557304] nfs: server 10.66.16.116 not responding, still trying
-[  227.459759] nfs: server 10.66.16.116 OK
-[  227.459868] nfs: server 10.66.16.116 OK
-[  227.681008] nfs: server 10.66.16.116 OK
-[  319.645474] nfs: server 10.66.16.116 OK
-[  407.677657] nfs: server 10.66.16.116 OK
-[  499.834818] nfs: server 10.66.16.116 OK
-[  587.895692] nfs: server 10.66.16.116 OK
-[  680.052774] nfs: server 10.66.16.116 OK
-[  768.113810] nfs: server 10.66.16.116 OK
-[  860.270785] nfs: server 10.66.16.116 OK
-#
-[  948.331418] nfs: server 10.66.16.116 OK
-#
-[ 1096.679211] nfs: server 10.66.16.116 OK
-#
-[ 1274.856436] nfs: server 10.66.16.116 OK
-#
-[ 1488.985700] nfs: server 10.66.16.116 OK
+This is just ... weird. RDX and RSI are pretty much holding truncated
+pointers of RAX and RBX respectively? How does that happen?
 
 
-## Source
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250717/
-* Git sha: 024e09e444bd2b06aee9d1f3fe7b313c7a2df1bb
-* Git describe: 6.16.0-rc6-next-20250717
-* kernel version: next-20250717
-* Architectures: arm64 (rock-pi-4b)
-* Toolchains: gcc-13
-* Kconfigs: defconfig+64K page size
 
-## Test
-* Test log: https://qa-reports.linaro.org/api/testruns/29168904/log_file/
-* Test LAVA: https://lkft.validation.linaro.org/scheduler/job/8364278#L924
-* Test run: https://regressions.linaro.org/lkft/linux-next-master/next-20250717/testruns/1662101/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2zzwHDuV3xvZBKkAtqlmroSxuIS
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2zzwEbz0aS3AtluE2oRQ9gMvFTY/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2zzwEbz0aS3AtluE2oRQ9gMvFTY/config
+The Code: seems to be the very first few instructions of
+
+static void fq_flow_reset(struct fq *fq,
+                          struct fq_flow *flow,
+                          fq_skb_free_t free_func)
+{
+        struct fq_tin *tin =3D flow->tin;
+        struct sk_buff *skb;
+
+        while ((skb =3D fq_flow_dequeue(fq, flow)))
+
+and thus of
+
+static struct sk_buff *fq_flow_dequeue(struct fq *fq,
+                                       struct fq_flow *flow)
+{
+        struct sk_buff *skb;
+
+        lockdep_assert_held(&fq->lock); // not compiled
+
+        skb =3D __skb_dequeue(&flow->queue);
+
+and offset of queue inside flow is 0x18:
+
+  18:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  1d:	41 57                	push   %r15
+  1f:	41 56                	push   %r14
+  21:	41 55                	push   %r13
+  23:	41 54                	push   %r12
+  25:	55                   	push   %rbp
+  26:	48 89 f5             	mov    %rsi,%rbp
+  29:	53                   	push   %rbx
+  2a:*	48 8b 5e 18          	mov    0x18(%rsi),%rbx		<-- trapping instructi=
+on
+  2e:	4c 8b 3e             	mov    (%rsi),%r15
 
 
---
-Linaro LKFT
-https://lkft.linaro.org
+I guess fq_flow_reset() didn't get inlined, but fq_flow_dequeue() did,
+so that the calling convention uses RDI, RSI, RDX for =20
+
+static void fq_flow_reset(struct fq *fq,
+                          struct fq_flow *flow,
+                          fq_skb_free_t free_func)
+
+respectively, so RSI for 'flow', which matches the crash on
+__skb_dequeue(&flow->queue) being=20
+
+  2a:*	48 8b 5e 18          	mov    0x18(%rsi),%rbx		<-- trapping instructi=
+on
+
+
+But how did RSI get truncated? And free_func being such a pointer?
+
+
+> [   81.151984] [     T11]  ieee80211_txq_purge+0x3f/0x130 [mac80211 43c49=
+02366977cd272d3ef7b3fb48467d12f0d58]
+
+calls it via fq_tin_reset():
+
+static void fq_tin_reset(struct fq *fq,
+                         struct fq_tin *tin,
+                         fq_skb_free_t free_func)
+{
+        struct list_head *head;
+        struct fq_flow *flow;
+
+        for (;;) {
+                head =3D &tin->new_flows;
+                if (list_empty(head)) {
+                        head =3D &tin->old_flows;
+                        if (list_empty(head))
+                                break;
+                }
+
+                flow =3D list_first_entry(head, struct fq_flow, flowchain);
+                fq_flow_reset(fq, flow, free_func);
+
+
+but that's about as far as I get ... I'm probably just chasing ghosts
+and completely wrong about all of this...
+
+> I have kernel dumps, vmcore dumps, whatever you may need,
+> any help is appreciated!
+
+If it still happens, I guess it might help to put some noinline
+annotations on some of the functions involved to get a better handle on
+what exactly is being passed. And run it in a VM ;-)
+
+johannes
