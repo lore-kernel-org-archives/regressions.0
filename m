@@ -1,147 +1,67 @@
-Received: from r3-18.sinamail.sina.com.cn (r3-18.sinamail.sina.com.cn [202.108.3.18])
+Received: from mail3-163.sinamail.sina.com.cn (mail3-163.sinamail.sina.com.cn [202.108.3.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D9778F26
-	for <regressions@lists.linux.dev>; Wed, 23 Jul 2025 01:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DEA1853
+	for <regressions@lists.linux.dev>; Wed, 23 Jul 2025 01:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753232645; cv=none; b=pb79qvkKz58LMFZNauvP9+bYDJ1Oi0P7/5IKr1MbCJTYdSRv1/AdtSjTvj5ihIaU0SKLYYScNUUV8Lq2QIyjvARt/UlzHag/p9nZpRhbaTX5y8DUCFvSaCdKwMTs89WuFj6pCAhKJ5thgrBJLdUFr3Vzpv1PoyfEJDlT2CfNk7k=
+	t=1753233401; cv=none; b=F2GJm9mijFc/VBz3yetLRJ+v5pgXO8AzCq/v20JYp/Gxg1CIcZOSgGwMfFSqUY8LZillXOD/0FNO3GfXD+IL31F5nGNuTyYAuO2m64rCXFDfJnHORW0TJtr5vsET7lRB2ogwy5dXJ2hhfnfoTuUsyCMFFy8AVtjYGR/l9xlzaGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753232645; c=relaxed/simple;
-	bh=uSar9xHTnGUQj7iYqiDRlLrJCkeSSB2Ouf2GH3Pr1+Q=;
+	s=arc-20240116; t=1753233401; c=relaxed/simple;
+	bh=HpWAxKz6dfEx2qW8PsoDIuxoAlc/svq1hqnRyFq7Tqo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dgI9LIR5v0UZz2jH9mnt+D1DwJ+5nCqtqlDo+uhI864+1RxD4oo2u1t2oUwta4NsxYkeM1K6IDuc4tWe+T4YMpPFkJyQF7LBuxIly20AmdEDIt4np/Vp8x8XBy0Vcv68ZuKPIMHAqskbilJ0fb421bimOLQQlb/wk/5Ov8azvxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=zLCWk2gg; arc=none smtp.client-ip=202.108.3.18
+	 MIME-Version; b=CE76antx3LzMnakSDNyCOuCh5IMMCgpa8UEVMhSDAbRlNgELKLIDXU3YZBDauWA/fa7YhNIXTkJK0VXtik1Js4vordQoHq7UzxslSrY7B1/4NpBe8FhC79eqVe/Tto6fk7wNGpRp8WKGaNyv0Hyz3+2DuNVSso/n/9fkEz88MDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=yjGek5gU; arc=none smtp.client-ip=202.108.3.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="zLCWk2gg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1753232641;
-	bh=xV1mGKNcZIdCI/Yqy+MW7AgI9iRp29g0Rl6VzIV3Dek=;
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="yjGek5gU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1753233396;
+	bh=UdnmmYRw0AJu5tW+PGAvB+7PLFGNJroJtC9cg2Qz3GQ=;
 	h=From:Subject:Date:Message-ID;
-	b=zLCWk2ggowIAIt6ldC/3CyPSRUxfdp6pBxqcCj/ehsROpgz1jTi9w+SHAtaktiph5
-	 7N8/qyxSJAa9Fs2Om62xOd1pCFgZGuLhMkHNi4SwGmxP09c49od/sjZ4pVa7I7AkKK
-	 lfHCxeJrdagIRyye/DuZRjFZacnT1b4HCghDqm8I=
+	b=yjGek5gUDUiDjMMgHIWNLKPSEuwz3XvuMYMC3qfj4eN8u+spHjYoE3qM1YU1k8R15
+	 Kze2/TH7Tv6N66PKZHpKn98HMMnhp+pmu4fO/8N3g8vX7BJdIEnUrbrxMBdtwkT+Aw
+	 wnq+bsu8l5i8YkJQ4+h6k0f0/fi2UOVjcTCzNxjY=
 X-SMAIL-HELO: localhost.localdomain
 Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.32) with ESMTP
-	id 688034F200000F1B; Wed, 23 Jul 2025 09:03:50 +0800 (CST)
+	by sina.com (10.54.253.34) with ESMTP
+	id 688037E800006558; Wed, 23 Jul 2025 09:16:26 +0800 (CST)
 X-Sender: hdanton@sina.com
 X-Auth-ID: hdanton@sina.com
 Authentication-Results: sina.com;
 	 spf=none smtp.mailfrom=hdanton@sina.com;
 	 dkim=none header.i=none;
 	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1175294456963
-X-SMAIL-UIID: FB494A7CF96241028F43B38BAFEACAE8-20250723-090350-1
+X-SMAIL-MID: 6659856291967
+X-SMAIL-UIID: 56B947E8854B457CB095FF38F41598FD-20250723-091626-1
 From: Hillf Danton <hdanton@sina.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: thomas.hellstrom@linux.intel.com,
-	axboe@kernel.dk,
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	thomas.hellstrom@linux.intel.com,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ming Lei <ming.lei@redhat.com>,
 	regressions@lists.linux.dev
 Subject: Re: 6.15/regression/bisected - lockdep warning: circular locking dependency detected when plugging USB stick after ffa1e7ada456
-Date: Wed, 23 Jul 2025 09:03:34 +0800
-Message-ID: <20250723010336.2793-1-hdanton@sina.com>
-In-Reply-To: <CABXGCsO5mFu9fOq8oKwByZaAjJrCB_V0hKgOsLLJJ4x3PmHr1g@mail.gmail.com>
-References: <CABXGCsPgCBahYRtEZUZiAZtkX51gDE_XZQqK=apuhZ_fOK=Dkg@mail.gmail.com> <20250722005125.2765-1-hdanton@sina.com>
+Date: Wed, 23 Jul 2025 09:16:13 +0800
+Message-ID: <20250723011614.2812-1-hdanton@sina.com>
+In-Reply-To: <8acbc346-98f8-44fc-9675-0c3a7da87d21@kernel.dk>
+References: <20250722005125.2765-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Jul 2025 12:11:36 +0500 Mikhail Gavrilov wrote:
-> On Tue, Jul 22, 2025 at 5:51 AM Hillf Danton <hdanton@sina.com> wrote:
-> >
+On Tue, 22 Jul 2025 06:14:18 -0600 Jens Axboe wrote:
+> On 7/21/25 6:51 PM, Hillf Danton wrote:
 > > Try the diff that serializes elevator_change() with q->elevator_lock if
 > > reproducer is available.
-> >
-> > --- x/block/elevator.c
-> > +++ y/block/elevator.c
-> > @@ -661,6 +661,7 @@ static int elevator_change(struct reques
-> >         unsigned int memflags;
-> >         int ret = 0;
-> >
-> > +       /* updaters should be serialized */
-> >         lockdep_assert_held(&q->tag_set->update_nr_hwq_lock);
-> >
-> >         memflags = blk_mq_freeze_queue(q);
-> > @@ -674,11 +675,11 @@ static int elevator_change(struct reques
-> >          * Disk isn't added yet, so verifying queue lock only manually.
-> >          */
-> >         blk_mq_cancel_work_sync(q);
-> > +       blk_mq_unfreeze_queue(q, memflags);
-> >         mutex_lock(&q->elevator_lock);
-> >         if (!(q->elevator && elevator_match(q->elevator->type, ctx->name)))
-> >                 ret = elevator_switch(q, ctx);
-> >         mutex_unlock(&q->elevator_lock);
-> > -       blk_mq_unfreeze_queue(q, memflags);
-> >         if (!ret)
-> >                 ret = elevator_change_done(q, ctx);
-> >
 > 
-> Hi Hillf,
+> Hillf, these seemingly random and not tested or thought through patches
+> flung out in response to reports is not useful. It just wastes peoples
+> time and resources.
 > 
-> Thanks for the patch.
-> 
-> I tested your proposed diff that serializes elevator_change() with
-> q->elevator_lock. Unfortunately, instead of the previous lockdep
-> warning, I'm now seeing a soft lockup warning.
-> 
-> Here is the relevant excerpt from the kernel log:
-> 
-> [   78.573292] sd 6:0:0:0: [sda] Assuming drive cache: write through
-> [   78.581496] ------------[ cut here ]------------
-> [   78.581507] WARNING: CPU: 7 PID: 300 at block/elevator.c:578
-> elevator_switch+0x512/0x630
-> 
-> This happens after plugging in a USB flash stick (sd 6:0:0:0) with the
-> patched kernel.
-> 
-> Full dmesg trace is attached below.
-> 
-> Let me know if you'd like me to try additional debugging or patches.
-> 
-> Thanks for looking into this!
-
-In order to cure the deadlock, queue is thawed before switching elevator,
-so lets see what comes out with that warning ignored.
-
---- x/block/elevator.c
-+++ y/block/elevator.c
-@@ -575,7 +575,6 @@ static int elevator_switch(struct reques
- 	struct elevator_type *new_e = NULL;
- 	int ret = 0;
- 
--	WARN_ON_ONCE(q->mq_freeze_depth == 0);
- 	lockdep_assert_held(&q->elevator_lock);
- 
- 	if (strncmp(ctx->name, "none", 4)) {
-@@ -661,6 +660,7 @@ static int elevator_change(struct reques
- 	unsigned int memflags;
- 	int ret = 0;
- 
-+	/* updaters should be serialized */
- 	lockdep_assert_held(&q->tag_set->update_nr_hwq_lock);
- 
- 	memflags = blk_mq_freeze_queue(q);
-@@ -674,11 +674,11 @@ static int elevator_change(struct reques
- 	 * Disk isn't added yet, so verifying queue lock only manually.
- 	 */
- 	blk_mq_cancel_work_sync(q);
-+	blk_mq_unfreeze_queue(q, memflags);
- 	mutex_lock(&q->elevator_lock);
- 	if (!(q->elevator && elevator_match(q->elevator->type, ctx->name)))
- 		ret = elevator_switch(q, ctx);
- 	mutex_unlock(&q->elevator_lock);
--	blk_mq_unfreeze_queue(q, memflags);
- 	if (!ret)
- 		ret = elevator_change_done(q, ctx);
- 
---
+Interesting, if you are right, so does the guy who created the deadlock, no?
