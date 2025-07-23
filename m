@@ -1,171 +1,147 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazolkn19011077.outbound.protection.outlook.com [52.103.32.77])
+Received: from r3-18.sinamail.sina.com.cn (r3-18.sinamail.sina.com.cn [202.108.3.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE13284B4C
-	for <regressions@lists.linux.dev>; Tue, 22 Jul 2025 22:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753221988; cv=fail; b=m7Ww6AzYvXr4Hzb2XpK9IY9usM4rZ2+AOJdQA/tCAWJyeMsUOTOzX58ENTqw1a6+K/5Ch+oA1yMGAtZ7RQ7B2jr+x8UOfazial2hCmboxaEJEbHLm8OpIg5w5hB+hnELZPE2H+adFQppHlJ7MKlk33vkGQPtCFdYtrW8xzvUOzI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753221988; c=relaxed/simple;
-	bh=5wUFlIHdxcy+LX8pDlGBQBc1mijmNThEmxOC5233zQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uGu9uDsy2PzGwhBxUDprWlgWzCb8Io5cxFwaDMnHhcyBJSaPqnmE8WUaVI4exXhl5CdAaLvzckfVw6A2NCHfJpFh+kah5/ECd4lBUw8IJS7LRnU8TPsn7nudoIDdmDflpCiPmUNcvVHocE55nkKh/x9n+mB+/RE630a4wgBNMRU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.co.uk; spf=pass smtp.mailfrom=live.co.uk; dkim=pass (2048-bit key) header.d=LIVE.CO.UK header.i=@LIVE.CO.UK header.b=kryUJTmv; arc=fail smtp.client-ip=52.103.32.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D9778F26
+	for <regressions@lists.linux.dev>; Wed, 23 Jul 2025 01:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753232645; cv=none; b=pb79qvkKz58LMFZNauvP9+bYDJ1Oi0P7/5IKr1MbCJTYdSRv1/AdtSjTvj5ihIaU0SKLYYScNUUV8Lq2QIyjvARt/UlzHag/p9nZpRhbaTX5y8DUCFvSaCdKwMTs89WuFj6pCAhKJ5thgrBJLdUFr3Vzpv1PoyfEJDlT2CfNk7k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753232645; c=relaxed/simple;
+	bh=uSar9xHTnGUQj7iYqiDRlLrJCkeSSB2Ouf2GH3Pr1+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dgI9LIR5v0UZz2jH9mnt+D1DwJ+5nCqtqlDo+uhI864+1RxD4oo2u1t2oUwta4NsxYkeM1K6IDuc4tWe+T4YMpPFkJyQF7LBuxIly20AmdEDIt4np/Vp8x8XBy0Vcv68ZuKPIMHAqskbilJ0fb421bimOLQQlb/wk/5Ov8azvxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=zLCWk2gg; arc=none smtp.client-ip=202.108.3.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=LIVE.CO.UK header.i=@LIVE.CO.UK header.b="kryUJTmv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XUM+A4Z4vLecvbGC7C2Z1O5wNAKgRke1MUcTXAkZBfy72OCNmOOOLZu1mKgpu5MdE+8uDA9vkTMLZKDJrYyHAQBv09/mx+kg/i9RtynwOO61iGbAwm/N7q4XtPVR4xJcG2a6ahIDnfxpWccCOW588GmEKdTWZMUvzqJxSQqRf9KVrVOmoc+dr8SqsHAY1HemGv4jd5RmFPUynU8JnsxkW3JIwISm3Aoxwk68VlsbTqA/QBIxXZtbt8PVXuvJLSrNLKHIuSliPoXOlFfPr8CMNM1Q4EtFi4b2lqrMMujgiyGtLLtJXj9q7s+c+Le56oUzinyc8fTUNSk4exuZCqM7XQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=72wXplFtB2znsl5m+NUxxxlPUr4BLFVKu6bG/BkTmKg=;
- b=p/TTIFCUbbslvhvxd/9MXxeBiaN7zus25bmXIpx/d9N+jV/Lr8JRnbSqI3CbdAbCSOJmDXGmOXLF0tUrfVemesSVq8p6zzi2dVw45pT9ov07KbGNxeIImTjJae//u/zdtc8jw1Ks6P/20myeKuZX9jl62KmOaqHxgLEEUsYrKjXKzRxumSty+mWJ4WRmw8arI66fMoJwgV6fCnRHUazsHMmGnlt3OMycxLz1PsZiqyN8ZZugYZLZ74PKfzN12SCIAKApLsGt1dhQkDzkFel0AoLYbfwLGxa0+EVXv+Y4ohPEJDQ3sOx0cUxkw8xzfbVlJt5L/o5Thl0LoQ+vy+JvqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=LIVE.CO.UK;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=72wXplFtB2znsl5m+NUxxxlPUr4BLFVKu6bG/BkTmKg=;
- b=kryUJTmvoeWBR95HWw/Gu+GFQ0lfy97wr9iIevpE9Mhi7QAbcvTnbFyo9rgg3knzNmn4AEbFQflGOiSb1MsVa4UNbOCt1FCYc7i5HBeSnuIcra3VHtoLsJJ8rH/HZBi4R+Gp8iAfmWE/GfYMU4mEyXtOnJHpvaydD1SNIcLTjExVhOKnyFElgaNwDxS5X+R2eIF+2JEaZle6XtwGzLULAdT6fouqVGTgtdC6A6NSznePCtIoiRePa2K1ZgvKNF46SgQFC/DcVUe+myZZYU/R5qu4mQQWXXH0/AD9ESXGBdi7YslnxAp6zBhEwa0WEWL3dHEAx8HzA7tRTIdUhwtBjg==
-Received: from DB7PR02MB3802.eurprd02.prod.outlook.com (2603:10a6:5:3::15) by
- AM7PR02MB6050.eurprd02.prod.outlook.com (2603:10a6:20b:1a7::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.21; Tue, 22 Jul
- 2025 22:06:23 +0000
-Received: from DB7PR02MB3802.eurprd02.prod.outlook.com
- ([fe80::879f:859:ac4c:9963]) by DB7PR02MB3802.eurprd02.prod.outlook.com
- ([fe80::879f:859:ac4c:9963%6]) with mapi id 15.20.8943.029; Tue, 22 Jul 2025
- 22:06:23 +0000
-Date: Tue, 22 Jul 2025 23:06:21 +0100
-From: Cameron Williams <cang1@live.co.uk>
-To: johannes.berg@intel.com, linux-wireless@vger.kernel.org
-Cc: regressions@lists.linux.dev, Remi Pommarel <repk@triplefau.lt>
-Subject: Re: [git bisect] rsi_usb oops
-Message-ID:
- <DB7PR02MB3802D0C33789AD0A70874778C45CA@DB7PR02MB3802.eurprd02.prod.outlook.com>
-References: <AM0PR02MB37936431F3602A64BAF8550DC46DA@AM0PR02MB3793.eurprd02.prod.outlook.com>
- <1dd41163c95eb818d13006ffc07b0815ce10b1ec.camel@sipsolutions.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1dd41163c95eb818d13006ffc07b0815ce10b1ec.camel@sipsolutions.net>
-X-ClientProxiedBy: LO2P265CA0013.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:62::25) To DB7PR02MB3802.eurprd02.prod.outlook.com
- (2603:10a6:5:3::15)
-X-Microsoft-Original-Message-ID: <aIALXQdetKB4vsyC@CHIHIRO>
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="zLCWk2gg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1753232641;
+	bh=xV1mGKNcZIdCI/Yqy+MW7AgI9iRp29g0Rl6VzIV3Dek=;
+	h=From:Subject:Date:Message-ID;
+	b=zLCWk2ggowIAIt6ldC/3CyPSRUxfdp6pBxqcCj/ehsROpgz1jTi9w+SHAtaktiph5
+	 7N8/qyxSJAa9Fs2Om62xOd1pCFgZGuLhMkHNi4SwGmxP09c49od/sjZ4pVa7I7AkKK
+	 lfHCxeJrdagIRyye/DuZRjFZacnT1b4HCghDqm8I=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 688034F200000F1B; Wed, 23 Jul 2025 09:03:50 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 1175294456963
+X-SMAIL-UIID: FB494A7CF96241028F43B38BAFEACAE8-20250723-090350-1
+From: Hillf Danton <hdanton@sina.com>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: thomas.hellstrom@linux.intel.com,
+	axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ming Lei <ming.lei@redhat.com>,
+	regressions@lists.linux.dev
+Subject: Re: 6.15/regression/bisected - lockdep warning: circular locking dependency detected when plugging USB stick after ffa1e7ada456
+Date: Wed, 23 Jul 2025 09:03:34 +0800
+Message-ID: <20250723010336.2793-1-hdanton@sina.com>
+In-Reply-To: <CABXGCsO5mFu9fOq8oKwByZaAjJrCB_V0hKgOsLLJJ4x3PmHr1g@mail.gmail.com>
+References: <CABXGCsPgCBahYRtEZUZiAZtkX51gDE_XZQqK=apuhZ_fOK=Dkg@mail.gmail.com> <20250722005125.2765-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR02MB3802:EE_|AM7PR02MB6050:EE_
-X-MS-Office365-Filtering-Correlation-Id: db1ad1f9-80e3-42f2-c534-08ddc96bff0e
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|5072599009|8060799014|15080799012|19110799012|6090799003|40105399003|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yW5X/7oE6QK2SUm+aP/vmYCR0reyNn+Q3/HiMBIxF62Q5lEC8Cn28aLr0oGU?=
- =?us-ascii?Q?5eIrpsLFRI/OwefI6EetxFPWYfCiHekCfaKQZXebbX1Wt/xsu9s5s2qpXMxm?=
- =?us-ascii?Q?EMFpC//b+EbKy8plKnvnIFw5lYwVi72UGbPsnDAsFGmy8Z2aoKlUI1I9+Tp/?=
- =?us-ascii?Q?c1hCWuxuLCV0BnWbNu2GKVmO5v28gfftclPao4xD8uA1etshlobpY3kGaUrY?=
- =?us-ascii?Q?Eq36toVTn1ylBGbIwO7/wKW4sDofWb9sakWJXPWsV7O9vd83LTh8N/xxhxbB?=
- =?us-ascii?Q?BvOIu0C/eVbjbCenN1SObzZvmBF0mEZL+4QnPFfTXDOhEjEyzMAAPNGdu3hK?=
- =?us-ascii?Q?jWPOoJ3GCwke0o20kGcq85+fo6/Gq/9oxix+JtzX+IesZ2g2ZhfhZHDL8nf8?=
- =?us-ascii?Q?EO2V8fhMiZXO4Wg9lHEzf2YyxZsPcephAp4uSLWMXb5Wait+gKGoPLDrEoan?=
- =?us-ascii?Q?oAXi1NGnVregy41mUage/CMqUWiCtwE1U+fV8RbMhhu4R7+SaLQ2Y7+OEx4M?=
- =?us-ascii?Q?/h8BgrW9kxSu9K3J9jQj0JRlheBG6atzKz+Hl63NtqTLxe4iTZZPgXad+X0c?=
- =?us-ascii?Q?gIQVoSBM/MiY5ME5caOMj6uGZQRXoE3HYynQzrDc5Jnzyg6xlJ+MTGrVUUjg?=
- =?us-ascii?Q?a4J9oDzLcDKz4Gfufon/74TlsQ6xgIoDn39VGbvQbeqRU0x5US8t4yFu43FS?=
- =?us-ascii?Q?xRIUGnvEuo8J/4ty7Tof/DU4g7U3uVFtZWDuWUg29jF1Tkq0333Jc+cEk4Mt?=
- =?us-ascii?Q?DG4Ucty+dtZoV3MQJ7F6mXGJRh/7Bz92LSiqe8jwKgeD9IPIcH/uoHPlB8b7?=
- =?us-ascii?Q?iH+izdGi0zLNTGIi7izYtXj0B4RdvX4Cz/Q/j09rr/r/xNaJG4d2O93TxgbN?=
- =?us-ascii?Q?l3wh6n7w5os0EEN26U7WUG89AsusrPiHpzBVkr1K6ZVGI6L1FbHXAATFOZOB?=
- =?us-ascii?Q?e2RSm62tpR2yeSq6tGXSmJ/QxyQSLYQ8MLiZ/x6grPLhw5E/joSy6M7TK06L?=
- =?us-ascii?Q?ucQE9OJRRaMvJRJXP8ovdaHstVlMxTzQ4ZOwawqO6oZSLORXeozkErqqlh9L?=
- =?us-ascii?Q?h83X+TFFKshGxY1n6+yUba0X/NYRL9te2Z+EK/ptevxaSvLJ+L0ZYu7BsNvl?=
- =?us-ascii?Q?GVZc1xJzje9TVGonCOiR3BQdQ5+PC1PZ6w=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ncbWYZmefxYNK3cxEGVs3pA+ZdDxk4Ovp20uJ3FuIeDOV1Pg40+KjiKAEi1m?=
- =?us-ascii?Q?agy19OgmjU8OoRctW6ujl6iqhB3720MtW3pNCgGKsFj6VXiIUHNO4HQihSms?=
- =?us-ascii?Q?JITNjGctVMfvss8y8w2Xa9+Vf6EdfSa4vV27KAOtDASzqGa9ojNXcchorbPE?=
- =?us-ascii?Q?1UHpEfo5hwCKm4HsSpeMgXh1LKVHJyuEi+OfO76JDOI3DxfGgGXyXqa91RW+?=
- =?us-ascii?Q?GySVa21MfdBLqWqAXcWOIfuDf3lyBUPktd9YbU6uf0jMwux3/R5yzrnqi750?=
- =?us-ascii?Q?515ItLa1yJy3zEZuB7NPUEXGLdSn06JtwVynIJV0qIIMHKlYgT6Tkz95nXrO?=
- =?us-ascii?Q?JW+EwKcpekYOIyoulQdC2vcpLqhJKteLK/RfOVD0F+YsVy7hXCoDwgIBD8zJ?=
- =?us-ascii?Q?sjPeGJDe3/h+koWSMYPauNWVMxc4zRII7MdhpVIKYP4SpwjmV7hCWDMMEF/p?=
- =?us-ascii?Q?oyir7BNKN/UEu/gGwU2ifJceuXHQ0v+13o4Qn+HkN/swFpcmV5Y0+Dyw9KbH?=
- =?us-ascii?Q?xvXjkyfS14Wt1059yO6zGTgBubhHHAPN9rg8L1Vi+tACaD8RpVRem6AdLHW1?=
- =?us-ascii?Q?ynMRjKQ1m/guN3fn3JnOyPobrtd6s55JQ1kcXCZoVZ4XE2BkZE1p793WZta0?=
- =?us-ascii?Q?zppq9U7bAgmVai/QyG2BU7X/X8n8BYbKJcXHXCic+8WsteoFUuZoPbJaAgJI?=
- =?us-ascii?Q?Md5aeuDyyplwi2xUmTPfngzbd682VYHNdEM4q9oiD6FbX2g3ml/iOygpJfsV?=
- =?us-ascii?Q?Bl5XORssHilRnwySQW+pN+DsixSq8lNH73gMBrj9PIV4fipNOmI7NQ9YDSCg?=
- =?us-ascii?Q?eRm106lLPrHfzr9AySeHXUG+Z8rza/HjJ+25Kqw36hitmUqCnoiw7872X2Ha?=
- =?us-ascii?Q?mNbIxldheXOQd69cdNErykmHRqKp86cNif8EEhgxlQgqKer0m2mJU5RXdk6n?=
- =?us-ascii?Q?k7D8RtfoZ1AqmJvkE8yvPYRuTYDXEGX/tQdGwdOMb16RmnG3xHzDvNgbvzqd?=
- =?us-ascii?Q?5dZbnPgetYYgqqMH1xTRoyojJRLSts3TE1+B6XYaVcz++NMaBVkS2CN5nXXi?=
- =?us-ascii?Q?gcotKC1wKxQWK0oZY0EM/jE4K9eF/rABfhJf//wwFrSWrRFlY8fFMdCNKTuo?=
- =?us-ascii?Q?NslJ9boJOmYd5GW8D1WBnxnB6UftQ3WxQr217LASfvDyPhIb6LrnIQ1XaTCg?=
- =?us-ascii?Q?n8LKQRVHKUHWKYvnezYepRA7K74WKg9vU1xPbg=3D=3D?=
-X-OriginatorOrg: sct-15-20-8534-20-msonline-outlook-5faa0.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: db1ad1f9-80e3-42f2-c534-08ddc96bff0e
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR02MB3802.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2025 22:06:23.7342
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6050
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 22, 2025 at 05:52:28PM +0200, Johannes Berg wrote:
-> Hi,
+On Tue, 22 Jul 2025 12:11:36 +0500 Mikhail Gavrilov wrote:
+> On Tue, Jul 22, 2025 at 5:51 AM Hillf Danton <hdanton@sina.com> wrote:
+> >
+> > Try the diff that serializes elevator_change() with q->elevator_lock if
+> > reproducer is available.
+> >
+> > --- x/block/elevator.c
+> > +++ y/block/elevator.c
+> > @@ -661,6 +661,7 @@ static int elevator_change(struct reques
+> >         unsigned int memflags;
+> >         int ret = 0;
+> >
+> > +       /* updaters should be serialized */
+> >         lockdep_assert_held(&q->tag_set->update_nr_hwq_lock);
+> >
+> >         memflags = blk_mq_freeze_queue(q);
+> > @@ -674,11 +675,11 @@ static int elevator_change(struct reques
+> >          * Disk isn't added yet, so verifying queue lock only manually.
+> >          */
+> >         blk_mq_cancel_work_sync(q);
+> > +       blk_mq_unfreeze_queue(q, memflags);
+> >         mutex_lock(&q->elevator_lock);
+> >         if (!(q->elevator && elevator_match(q->elevator->type, ctx->name)))
+> >                 ret = elevator_switch(q, ctx);
+> >         mutex_unlock(&q->elevator_lock);
+> > -       blk_mq_unfreeze_queue(q, memflags);
+> >         if (!ret)
+> >                 ret = elevator_change_done(q, ctx);
+> >
 > 
-> > Commit 378677eb8f44621ecc9ce659f7af61e5baa94d81 ("wifi:
-> > mac80211: Purge vif txq in ieee80211_do_stop()") seems to
-> > have made rsi_usb/rsi_91x cause a kernel panic when
-> > removing the USB while the interface is up.
+> Hi Hillf,
 > 
-> So it's been a while ... is this still happening?
-I checked a few versions ago, I can't remember which one off the top
-of my head, but yeah this seems to still be an issue.
-> > [   81.148175] [     T11] RSP: 0018:ffffcb54c009b918 EFLAGS: 00010202
-> > [   81.148466] [     T11] RAX: ffff89629dff2328 RBX: ffff89629dff2328 RCX= ffff89628cb49210
-> > [   81.148757] [     T11] RDX: 000000009dff2328 RSI: 000000009dff2320 RDI= ffff89628cb489c0
+> Thanks for the patch.
 > 
-> This is just ... weird. RDX and RSI are pretty much holding truncated
-> pointers of RAX and RBX respectively? How does that happen?
-> (...)
-> but that's about as far as I get ... I'm probably just chasing ghosts
-> and completely wrong about all of this...
->
-I went down the same rabbit hole as you and came to the same
-conclusion, at this point in the code it was just going over my head.
+> I tested your proposed diff that serializes elevator_change() with
+> q->elevator_lock. Unfortunately, instead of the previous lockdep
+> warning, I'm now seeing a soft lockup warning.
+> 
+> Here is the relevant excerpt from the kernel log:
+> 
+> [   78.573292] sd 6:0:0:0: [sda] Assuming drive cache: write through
+> [   78.581496] ------------[ cut here ]------------
+> [   78.581507] WARNING: CPU: 7 PID: 300 at block/elevator.c:578
+> elevator_switch+0x512/0x630
+> 
+> This happens after plugging in a USB flash stick (sd 6:0:0:0) with the
+> patched kernel.
+> 
+> Full dmesg trace is attached below.
+> 
+> Let me know if you'd like me to try additional debugging or patches.
+> 
+> Thanks for looking into this!
 
-This driver and chip is a really odd one. In the proprietary driver
-for this chip, it brings up a virtual "rpine0" interface along with
-wlan0/hci0, and although this tree driver doesn't do that it wouldn't
-surprise me if there is some inspired logic in this driver for that.
-> > I have kernel dumps, vmcore dumps, whatever you may need,
-> > any help is appreciated!
-> 
-> If it still happens, I guess it might help to put some noinline
-> annotations on some of the functions involved to get a better handle on
-> what exactly is being passed. And run it in a VM ;-)
->
-I will try this next week sometime when I am back from vacation and I
-can access the chip. I will have to play about with inlining the code
-since C isn't my strongest, but I will try and get you the details.
-Thanks for looking into this!
-> johannes
-> 
-Cameron
+In order to cure the deadlock, queue is thawed before switching elevator,
+so lets see what comes out with that warning ignored.
 
-P.S. Thanks for the notice about Outlook bouncing your email to me,
-I know exactly how annoying M$ can be about blocking whatever it
-feels like. I should really switch at some point...
+--- x/block/elevator.c
++++ y/block/elevator.c
+@@ -575,7 +575,6 @@ static int elevator_switch(struct reques
+ 	struct elevator_type *new_e = NULL;
+ 	int ret = 0;
+ 
+-	WARN_ON_ONCE(q->mq_freeze_depth == 0);
+ 	lockdep_assert_held(&q->elevator_lock);
+ 
+ 	if (strncmp(ctx->name, "none", 4)) {
+@@ -661,6 +660,7 @@ static int elevator_change(struct reques
+ 	unsigned int memflags;
+ 	int ret = 0;
+ 
++	/* updaters should be serialized */
+ 	lockdep_assert_held(&q->tag_set->update_nr_hwq_lock);
+ 
+ 	memflags = blk_mq_freeze_queue(q);
+@@ -674,11 +674,11 @@ static int elevator_change(struct reques
+ 	 * Disk isn't added yet, so verifying queue lock only manually.
+ 	 */
+ 	blk_mq_cancel_work_sync(q);
++	blk_mq_unfreeze_queue(q, memflags);
+ 	mutex_lock(&q->elevator_lock);
+ 	if (!(q->elevator && elevator_match(q->elevator->type, ctx->name)))
+ 		ret = elevator_switch(q, ctx);
+ 	mutex_unlock(&q->elevator_lock);
+-	blk_mq_unfreeze_queue(q, memflags);
+ 	if (!ret)
+ 		ret = elevator_change_done(q, ctx);
+ 
+--
