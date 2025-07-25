@@ -1,134 +1,99 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16CD18DF62
-	for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 08:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BA72BEFEA
+	for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 08:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753432155; cv=none; b=ZTonl/Hjl7OFxdckRRvj52nJHy6dspIGpu1qkEB4XRvCNIRsy3r/+u8aN6cXDgxbA7LJoUkQoHKtdpm9Bw/mzFDh2KZdt30CGFLD9/CH9NOku/37+PmrbqmGxP5+1PTsjfdV1aWUxQP6Cnfz3wS5RZFiaIRXx2LZAGZqamViIT4=
+	t=1753432708; cv=none; b=oYzJm2fJokXdiRQ2Rc6PEDc4NLZyELMwPFC0us2eqE4icB1lTb7HmbsTOWvYDOOL+MB3bjyMYPZhq8C0q+73FV7Rckj4pr4GacpviEbQ/QJtY5rfXtRUUitA+7QoRNorAquc4oA/ISIBHQwPAeRLmmdSfH+Ar8XEWBhNi64KGq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753432155; c=relaxed/simple;
-	bh=Gzfs8ekUj7A3y/LG9Rcdqmp5q5m+aBsb1GKoNaKBk5M=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=R8qngg86tSGzWD6xGb+VQ5oPSyxr+ZxQfbkIqVMaCwD48zw90kPrYMXsmHumnhjljhe6zHXwKRf8fozj7EGNEHQUPDXYgzKLHKUu3c2uvUzBXr1R3TjnmnURrDjaLKLpAjOBKZsEkSCNojVvOJ79oWO80/lVd9k4ZmTvuPr4JWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YTTXrJcn; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1753432708; c=relaxed/simple;
+	bh=TXwNMHahCwTnrJfL9xKeS40A5b6CJKKrcTK+pyajkkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ih7bvoL3SzRAaKBN2KORP5g9GD+jzBs2oBn7XHx8AUQmkmapu9rd/owrr9Xcz/aLlUmrgMCphRY9WwcmGhMzAFbfyH6LUt8HPRGb/+LaJBmNGRoKuzTubNZVaPjDKesNYTiZZDX+tQONAM/4zvLcEptSntjzEbu1tEzrGBYc4aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KQ+5xKtP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YTTXrJcn"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23aeac7d77aso18077275ad.3
-        for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 01:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753432153; x=1754036953; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6SlG4p7PzGNJex+qeliN43z/Wd9scMaF4+MTCIpEF4U=;
-        b=YTTXrJcnwISYg8IZQiNmYF+CWGeIVIOeTcgCTYn98SBZcfkNOHspDNf+B37bu2BwJ3
-         YdxBc5fhkJtbQcV3Uvh4oe7wjfdEXpYzFOsZJ+CwbljmudazJ+HJQG8Y8EdsHRPNaj2+
-         0MtlRVuO1vCryuo2ndSpdJLCRx54twbBTd8jKkApHp1bewlgRFh+npqz4BFubrwGoUTW
-         tYaLDuc9E+ciYfYFMEzoapRe1pdowzsGiXiH7tFjZSxmV78Kbfri6U6EBFDOCohOYe5A
-         fkgi2LIVX8vxqmfjw05qHsmfMVGUcEw6vHjC38t69Hzx+sTU6yJ9mzod5Zp1PCy8GgRn
-         QRIg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQ+5xKtP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753432705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TXwNMHahCwTnrJfL9xKeS40A5b6CJKKrcTK+pyajkkA=;
+	b=KQ+5xKtPHdEiqUOYpuIOj4mtT2+1MC7I2uqDseaN2EFTzrFf2XlIC2137LfKi4z8ujZLsF
+	XgvO97Dml1rqX0wS3Y/Cw2/4byWioaoUkGp96cvxHazhIdhO6pe4skoLqhgs/P/MQMYcfA
+	JOufG4wpKrjDT+NblIu5dECwxkGrMTw=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-463-k9umbOlJMYSm58OMbkokbQ-1; Fri, 25 Jul 2025 04:38:19 -0400
+X-MC-Unique: k9umbOlJMYSm58OMbkokbQ-1
+X-Mimecast-MFC-AGG-ID: k9umbOlJMYSm58OMbkokbQ_1753432698
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-23507382e64so19980225ad.2
+        for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 01:38:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753432153; x=1754036953;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6SlG4p7PzGNJex+qeliN43z/Wd9scMaF4+MTCIpEF4U=;
-        b=PjZrBm44oRV/5baozV0dhOTRV3tk3Und645dHzi67Go0hivpvbI5re6fwyY4AbTocT
-         e0bsRlItlu5v6f5b+sFymMg6DCqWyQkNlQCz/CzWz0pmcbLncVH0qjvXiicThA/vxSvw
-         qgbDrsjTEi6Dj7+xxp3RckCTb6x5+NLJs2c2fd6MLAe7geSOHqo9maKYxA7rOeRWLTMS
-         MlZLDI2DiPhFtzbUWMhpnUwHC1D/4kAWj1eMPrctPRQ4+KsEBfdW0xGIRx+3gSBbPaXN
-         iSOzwPTRQiRL8Q0d7fJ7oBgUUKYv3wdZFhRKUorXJVf5VoLHoN0NCTi6hYG/f2ziR+Ri
-         eo6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWfr8vfuJX3DPDEj5SiD1X+3ohUq+mjaL+nmNDsyYomb8fRKY74mf4N+busGh+K+tgeVtq0/9mVTvMmHQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwBVWpdhEcWomZFnZQSrdbiTavyzNZSfPKdwtBCFQ0Y/PRT1CR9
-	gzd2lEH6A7rmhzqljwSHFOvoZBC3lOTtoRmjzgENs3fs8LczdXo8jjy2wmy20Bc/myPJgrJce84
-	EI4BwdhEKCRDfk+j59PikJOd8Imu6nnxG1M4C+3BJiA==
-X-Gm-Gg: ASbGnctyFeDjs444FrED/CrY3AXm9JkP5R8DZ5GedmZ/M/SvjefqnF9LidiG+86fH7R
-	1HrxthMJBnqfPTjZVP4JKEREe1rL3Vl+/3zOBBQOYUa3QhCUXWF105ZiCBtsGjtKv/erGCUtUMT
-	4Hf3AXcWGG0iV0uaL/cm5CUzYFQ03rYFmClSWMuEn093rljwaxFa2RbHQSMnj6znlkdQLOJ0yBs
-	mr30QvqJMn3LbfDlEzDmpzJoKUbUL2l8nCmgCI=
-X-Google-Smtp-Source: AGHT+IFSOXd5d9LlBPfvNONAe739PRS1T7pG7hnn8qLMr/8kfPoBeVKvxu7CgmKTzBsjPnN0S5gW0/AjsKP4cqXAV5c=
-X-Received: by 2002:a17:902:ea0e:b0:234:c8f6:1b11 with SMTP id
- d9443c01a7336-23fb3167767mr14742145ad.44.1753432153221; Fri, 25 Jul 2025
- 01:29:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753432698; x=1754037498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TXwNMHahCwTnrJfL9xKeS40A5b6CJKKrcTK+pyajkkA=;
+        b=QfAGEpFBYVJZsJ4M9vNrv2qV5NSPP3Xd9p8d/M2JacRekeSowk9eqXgKWr2tb7aqNz
+         V1VuS/083KrGVTQGTdUOGFGBel0h+UOfLO9/hO7ERmbicwUs5NnuY1L3DQ4JwPOJGMuF
+         TlN2WsM6+z3Vo1n9jy0EBQElZqRueUHXSMk4qXjT50OCJa9rCzJ0tAglhxo5eRSw1OIJ
+         NgvbzvuB7vOn64jktdjlv8h272TRkD4JGUNkESDSbURPI0tIBKByw9eTMEuToHfLA5iY
+         pm60AZNOAnvuzebbjXHTK3c0mPL31qLVEqGNsV++muK4TF6pOaFVhVNKUiU4Ys2P91BA
+         ow3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUjsyF2P9jqTcP7N43xY8ytWOWgmcAffg4bIoVCdeatBEnxCLGbVopRJDoDBDV5P3OkX8Rxbyv4kq1UQg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwQwtVJs76+rERu+KaSI19LeA2Kq8QlzyUyFIIiyMPsEYuo9BmG
+	LuWL7sx1ONSEcXZRWYRyZMcoeKmz9Jpv8m+b4ttsKlox48UmJSc+T8mFeRPAJX94EWArT10fnKE
+	KM4ZKT2OWKVRzXXmrHc6FafyGiSZmgn8Q7B+MNJVy40qMTAQlMFzR5TZdyiTf1XK8IMzs/At0FV
+	KQUsuWbwbfNeNf7fwz9toWJrasfsa/1fUGG08xfeYjumZ5yRIOcg==
+X-Gm-Gg: ASbGncuVG3yX3/9YKp8mFY6wyOaG+MUIForoR/oU5+Q/hK5sJLx4O8TQSDVRLW3M9Gx
+	grkThjf2dejgp2hiakQ5otmgHbx+hR33GAaT6oPOh0sCFf+XRTr5mGn3joTd7tks3hsdQxhbepP
+	31KFZ04u7ieVvIsNyomGAR
+X-Received: by 2002:a17:902:ea02:b0:234:9375:e081 with SMTP id d9443c01a7336-23fb319041emr15224855ad.42.1753432697781;
+        Fri, 25 Jul 2025 01:38:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHxiXGFsVJ6VCDQe69iuWZ8IkeaAljBvCSgmtMhHsWEWWFbjBiBJy5Wl237ze4kjSg2FPfsWB5YeRg80cn+io=
+X-Received: by 2002:a17:902:ea02:b0:234:9375:e081 with SMTP id
+ d9443c01a7336-23fb319041emr15224615ad.42.1753432697398; Fri, 25 Jul 2025
+ 01:38:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 25 Jul 2025 13:59:02 +0530
-X-Gm-Features: Ac12FXzWcEWmXcr7ADQOYVMNJ8JhbU_ZioQdsFR-c7JnlJg189CYfO6gbl9zBIk
-Message-ID: <CA+G9fYtBk8qnpWvoaFwymCx5s5i-5KXtPGpmf=_+UKJddCOnLA@mail.gmail.com>
-Subject: next-20250723 arm atags_to_fdt.c undefined reference to `__sanitizer_cov_stack_depth'
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, kees@kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
+References: <175341594422.117.11494999566960779174@508e4dbc6f9f> <d2e84599-bf73-44bb-a0f4-a5fe4086978e@infradead.org>
+In-Reply-To: <d2e84599-bf73-44bb-a0f4-a5fe4086978e@infradead.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 25 Jul 2025 16:38:06 +0800
+X-Gm-Features: Ac12FXwJd96XrGIsW0Jv49edVkL7BCbWfeMwc-34kp0AVdNMEzvYogs4x3NChbM
+Message-ID: <CACGkMEuFbNMiFUY-aYHgZTvLcypFJWatgAuGB_M25f7QyzqTEw@mail.gmail.com>
+Subject: Re: [REGRESSION] next/master: (build) variable 'id' is uninitialized
+ when used here [-Werror,-Wuninitial...
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: kernelci@lists.linux.dev, kernelci-results@groups.io, 
+	regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: g_k9oLMmGYRqLj5jgPzKDuS1d3IYxBKHwCjTQpbYnpw_1753432698
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regressions noticed while building arm builds with gcc-13 and gcc-8
-toolchains on the Linux next-20250723 to next-20250725 tags.
+On Fri, Jul 25, 2025 at 1:03=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
+> wrote:
+>
+> due to commit 60c060930f481:
+>
+> +cc Jason Wang
 
-First seen on the Linux next-20250723
-Good: next-20250722
-Bad:  next-20250723 and next-20250725
+I've posted a fix:
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+https://lore.kernel.org/virtualization/20250725083635.73355-1-jasowang@redh=
+at.com/T/#u
 
-## Build regressions
-* arm, build
-  - gcc-13-lkftconfig-hardening
-  - gcc-8-lkftconfig-hardening
+Thanks
 
-Build regression: next-20250723 arm atags_to_fdt.c undefined reference
-to `__sanitizer_cov_stack_depth'
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-arm-linux-gnueabihf-ld: arch/arm/boot/compressed/atags_to_fdt.o: in
-function `atags_to_fdt':
-arch/arm/boot/compressed/atags_to_fdt.c:135:(.text+0x118): undefined
-reference to `__sanitizer_cov_stack_depth'
-
-## Source
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250725/
-* Git sha: d7af19298454ed155f5cf67201a70f5cf836c842
-* Git describe: 6.16.0-rc7-next-20250725
-* kernel version: next-20250723 next-20250725
-* Architectures: arm
-* Toolchains: gcc-8 gcc-13
-* Kconfigs: hardening
-
-## Test
-* Test log: https://qa-reports.linaro.org/api/testruns/29244662/log_file/
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250725/log-parser-build-gcc/general-ld-undefined-reference-undefined-reference-to-__sanitizer_cov_stack_depth/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250725/testrun/29244662/suite/build/test/gcc-13-lkftconfig-hardening/history/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/30LiHIefapv5cGlikeKrTz4lSKR
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30LiHIefapv5cGlikeKrTz4lSKR/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/30LiHIefapv5cGlikeKrTz4lSKR/config
-
-## steps to reproduce
-   *  tuxmake --runtime podman --target-arch arm --toolchain gcc-13 \
-              --kconfig defconfig --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/netdev.config
-\
-              --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/systemd.config
-\
-              --kconfig-add CONFIG_ARM_LPAE=y \
-              --kconfig-add hardening.config
-
---
-Linaro LKFT
-https://lkft.linaro.org
