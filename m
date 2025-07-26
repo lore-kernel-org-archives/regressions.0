@@ -1,125 +1,84 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACE7210F4A
-	for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 12:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909691D555;
+	Sat, 26 Jul 2025 00:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753445978; cv=none; b=PMPTWvVPOlTZdVG9SnO5s8ewPhd5sSPsRd3z5ADBvmcMeuVyIoBs2uBqYVYWeLJj5pO2Pa+ugrISbuGG66YA2vAsNQBWH5gXrd5bkHAbM2/bOkohIf/o0wWuiwaSRyMFh/R9HrfY9WxGOEDD9WupNz8esaursh8LVLwgDRmoTc4=
+	t=1753490410; cv=none; b=JZkarSpvpZqa/qNNYHQgQcSqQNssKdrcpGEDAjIvQHwsnIkzFxT62yigVuGZ5yGAJly1k9kLuEndv6N9FMoRqlC/JRv0eNG85gicEhjxA/bXm/8xTbpxASIHLVEPI/oa+0wQaCGrjkGIn7DPDjkWBZ+eZdoZpWX4mqTwFWFhKJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753445978; c=relaxed/simple;
-	bh=C0Hps5C7VVp6TMJa5SSauLjDYas/RuYUmWcHmSjZVvE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MZuY35olHil2Kr5X+W5SLYJaModDEaNr5J6qPTpQfqMODapIaosPg7s3XjhVFPmhuPQwcGCkfZb1L+qn2wKC4FJ+O2SBZkpOJDdy6Nvg1su0c6EfTZJmHdZ4S0ak4Xob450bftrIEmE6SMZd2xDrp/i5XQpCoFoL0S+qyKK2ssA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=szjkE0YE; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1753490410; c=relaxed/simple;
+	bh=0ljOxLf3asG8EXlvRRWHYhLY5dkENjRCIl0TEBmEpuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdYddDyV2q/UMuHS3AgPpHSNE9dunDSY1dnukxIQVMRcM8dAlygthSW/OXRESLuC+inuddY43Z32SWL9D3kjWH//9rV1V3MYfIBrqr7ILgG8YNSyaAL5ycWAVKmDbRfMeDOglyNiBLUKmhOkwDxgzSb7Nqko5n/BhWHtdhYPB4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIAwoYcf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szjkE0YE"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23f8df98e41so17698975ad.0
-        for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 05:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753445976; x=1754050776; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NeMfxo6+NjtkxLuUXyqyKSelgastqUQJsatQRBwVL9M=;
-        b=szjkE0YE4/f2xzFNpMBcirnWyBkrUBCtPshLlTV7/ScAjeo6ZkUG7BxxWtWkDKb+Dl
-         1Rvx8pM8/T8gQdM/0iIvy6ZfsNKTmRG749u16M+WyVnU5PVMaDH+pjoebdtkCg2Xj8O4
-         hFTR9RG8AtjVfQmn9ZudLrKgIgkVAs0MFsIkbAnm3sqhbK1qGBVsBTkzO95nrslpp/fb
-         zv/acAXR4pkd3TVoIDfoJPhurnJxneKjTCihZ8FgREb39PkhlW9TnOl9sF02iJxjUJRy
-         W8CNMKBd5iX1mmYqG6G4WCnbDoatUGvj0WbPdraF3/NKAYgrthrFbDDddnqdv/QvbSs4
-         grtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753445976; x=1754050776;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NeMfxo6+NjtkxLuUXyqyKSelgastqUQJsatQRBwVL9M=;
-        b=MfP/DJDVWa5ta3nI1AoPs94mF62okSS7KX9yNs7cwLVwSZvuCWT1FjN6ypmBboIo6R
-         fNc1v27URdgo1OlgIMRMQc86QN44N2dMwuIVmXvw9eR2Of2HjW/LjUpwZGCsqMTamCO/
-         hmLeYs/qv1ThV8r+dOMvToN8/okN0ptxcifNQfY5i5wSBFv8PlfQfcczixxp0RYz9LTi
-         KFsP/XVKRUkyqd70HB103ln5LA1x0ESMj+54+WNjAQnWonKSLP332IxCcfx5aBqAPHLN
-         oBlnVdt522w1h+5eqm9YG0N9IhmnSNIb0YVU5pW5uBtTPnt4r/2vNoltKcZaO+VV6erg
-         UOiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrsNl4Syp2xRyuqenbWkwwIDueSeXWkxzR9KCpmC5fp2mkjdmLrqQW8Vq4Y2+7yhCbPQa6gf+VBZJR6w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyWqLvJHpBo+Gw+I2IQLdlwiSK1f5N7heJp/w9/3l5+8BpmujOe
-	204QQ+U917RJakL91aPE11Vj+2TjFAnzNTgbALkFQpMkCu2UkbmDttsNBxajJs+wAu1truZXkrF
-	GuoTnVtE9+os6vQ+spBBs0sP5mvCh1NDl/RN503nRyA==
-X-Gm-Gg: ASbGncvxrlImnT8eWZITm9R4hzlsOKsAkXvh0R5zwDvyJ2nWY0zwn8Dn7AqeMVCUMuR
-	U3N2w1l+nPCWNlwLnCxAir5KdyUkkU981h/XNqCutiDSomRFbhm2p+bCT9pdLWL8Iw69Jkv0bSG
-	kxrmb4Rr0GD4hiabouoQeh+FySAOw9YZZIyRZXISjjdqNmcYssHI46RdvtK+5WMk5eh6MRFQfL4
-	TzR7OnmlZIs44sLMJf6eFDnXljAVBiYCQP84UE=
-X-Google-Smtp-Source: AGHT+IGdYljlX5X3dzqQG4BZUzWT+e8A4L5gJt/XoCo4bLpcHRLiUWIeX/SHGfQbsZ8DVFMGkkjaR0FrY9REWiry2is=
-X-Received: by 2002:a17:903:1b05:b0:234:b743:c7a4 with SMTP id
- d9443c01a7336-23fb30e42a3mr30388225ad.38.1753445975730; Fri, 25 Jul 2025
- 05:19:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIAwoYcf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D8FDC4CEE7;
+	Sat, 26 Jul 2025 00:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753490410;
+	bh=0ljOxLf3asG8EXlvRRWHYhLY5dkENjRCIl0TEBmEpuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qIAwoYcfsZX1JS5swQvuHh4YAx0Dnjek7XHbdZP95vmn5NhVaWu8fz5mXlu5BBIAC
+	 x6YOX8sgCFIcwnCJiFrMCZLDejXSr5vsm7Qe4GKcJlMH7O0ky8j3xOIizTdbLij8FA
+	 fqeMmkJgU9YDKqv2atpEgKynTwztATUXn+GiIk8Q2Ah/WppIH2agLqoMsvbdPbZwxG
+	 CsG0gH/hqJVWGMxmA+DwhKy/2mMFW4VSAwH8mxoJSjrMcDtc6gx50fEcIJbdxST+Hr
+	 /xYR7l1GHiIwy1yT/iT1EOHzrYB3/50GYc3b0mqdEu5mIY/9GWugfC635HDgQOBeXc
+	 arPS14ZlZY6Cw==
+Date: Fri, 25 Jul 2025 17:40:09 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>
+Subject: Re: next-20250723 arm atags_to_fdt.c undefined reference to
+ `__sanitizer_cov_stack_depth'
+Message-ID: <202507251739.E62B1C95@keescook>
+References: <CA+G9fYtBk8qnpWvoaFwymCx5s5i-5KXtPGpmf=_+UKJddCOnLA@mail.gmail.com>
+ <aINJTDD3je4XJ6VO@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 25 Jul 2025 17:49:24 +0530
-X-Gm-Features: Ac12FXwd36DF0XFKorhLZXh2IFhKm9PTaX7sVXvKuHjnNnv3_TFODhgbB7WE3cU
-Message-ID: <CA+G9fYs2LDdWX-w=7JA26tkYN450qg0230H9mfB-PymqmPsZ4Q@mail.gmail.com>
-Subject: next-20250725 nomadik-rng.c undefined reference to `amba_release_regions'
-To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aINJTDD3je4XJ6VO@shell.armlinux.org.uk>
 
-Regressions noticed while building x86_64 and s390 builds with gcc-13
-toolchain with allyesconfig on the Linux next-20250725 tag.
+On Fri, Jul 25, 2025 at 10:07:24AM +0100, Russell King (Oracle) wrote:
+> On Fri, Jul 25, 2025 at 01:59:02PM +0530, Naresh Kamboju wrote:
+> > Regressions noticed while building arm builds with gcc-13 and gcc-8
+> > toolchains on the Linux next-20250723 to next-20250725 tags.
+> > 
+> > First seen on the Linux next-20250723
+> > Good: next-20250722
+> > Bad:  next-20250723 and next-20250725
+> > 
+> > Regression Analysis:
+> > - New regression? Yes
+> > - Reproducibility? Yes
+> > 
+> > ## Build regressions
+> > * arm, build
+> >   - gcc-13-lkftconfig-hardening
+> >   - gcc-8-lkftconfig-hardening
+> > 
+> > Build regression: next-20250723 arm atags_to_fdt.c undefined reference
+> > to `__sanitizer_cov_stack_depth'
+> 
+> "cov" suggests "coverty", and that the symbol is not available in the
+> kernel suggests that coverty isn't supported.
 
-First seen on the Linux next-20250725
-Good: next-20250724
-Bad:  next-20250725
+This is the coverage sanitizer and related to my changes. Sorry! This
+didn't show up in my build testing, I'll reproduce it and get it fixed.
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
-
-* s390, build
-  - gcc-13-allyesconfig
-
-* x86_64, build
-  - gcc-13-allyesconfig
-
-Build regression: next-20250725 nomadik-rng.c undefined reference to
-`amba_release_regions'
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-x86_64-linux-gnu-ld: nomadik-rng.c:(.text+0x6fa057a): undefined
-reference to `amba_release_regions'
-x86_64-linux-gnu-ld: nomadik-rng.c:(.text+0x6fa05a0): undefined
-reference to `amba_release_regions'
-
-## Source
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Project: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250725/
-* Git sha: d7af19298454ed155f5cf67201a70f5cf836c842
-* Git describe: 6.16.0-rc7-next-20250725
-* kernel version: next-20250725
-* Architectures: x86_64 s390
-* Toolchains: gcc-13
-* Kconfigs: allyesconfig
-
-## Test
-* Test log: https://qa-reports.linaro.org/api/testruns/29245454/log_file/
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250725/log-parser-build-gcc/general-ld-undefined-reference-undefined-reference-to-amba_release_regions/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/30LiIUwnkUApDe74DgNCqkngoPB
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30LiIUwnkUApDe74DgNCqkngoPB/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/30LiIUwnkUApDe74DgNCqkngoPB/config
-
-## steps to reproduce
- * tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-13
---kconfig allyesconfig
-
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Kees Cook
