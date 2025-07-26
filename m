@@ -1,84 +1,309 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909691D555;
-	Sat, 26 Jul 2025 00:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B634521348
+	for <regressions@lists.linux.dev>; Sat, 26 Jul 2025 01:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753490410; cv=none; b=JZkarSpvpZqa/qNNYHQgQcSqQNssKdrcpGEDAjIvQHwsnIkzFxT62yigVuGZ5yGAJly1k9kLuEndv6N9FMoRqlC/JRv0eNG85gicEhjxA/bXm/8xTbpxASIHLVEPI/oa+0wQaCGrjkGIn7DPDjkWBZ+eZdoZpWX4mqTwFWFhKJY=
+	t=1753492590; cv=none; b=jpUjAZKyjmAtG/mFmdDDmf26xF87/BBPBskhWaUSYi6JWYbYyZzzcMQGtfMYEt8WfhrwcmvNMXYi+5dA6u9OP0Q0xa03zVmpY9PVTZqx6MVCMeRJoPwU3h+3UIUsm/q6pzps5uCZ/Bsjnplsn8W3eipbHAyMhsQ4DV4urzTS8P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753490410; c=relaxed/simple;
-	bh=0ljOxLf3asG8EXlvRRWHYhLY5dkENjRCIl0TEBmEpuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DdYddDyV2q/UMuHS3AgPpHSNE9dunDSY1dnukxIQVMRcM8dAlygthSW/OXRESLuC+inuddY43Z32SWL9D3kjWH//9rV1V3MYfIBrqr7ILgG8YNSyaAL5ycWAVKmDbRfMeDOglyNiBLUKmhOkwDxgzSb7Nqko5n/BhWHtdhYPB4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIAwoYcf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753492590; c=relaxed/simple;
+	bh=A+DLYEBZHjbPEKb4Gqj5iMUWPXTPgnHHysYdeCmeeIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QX4She0ir/cOXbIP9Lpil+rdOSTZ8klawRIaIF3CImpq5H0Pjf6LGgLRNb1wQ2Vh7zkD4eBT1p+1iEhxmMR18AqBe3z08ajsA86aeF68KzTnVwqBmvBbvUofnU7iHt/l3pyYGkD/m3nREjxdNK57A55arkgKepvHT+lYS+pO03g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvAh3UB+; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIAwoYcf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D8FDC4CEE7;
-	Sat, 26 Jul 2025 00:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753490410;
-	bh=0ljOxLf3asG8EXlvRRWHYhLY5dkENjRCIl0TEBmEpuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qIAwoYcfsZX1JS5swQvuHh4YAx0Dnjek7XHbdZP95vmn5NhVaWu8fz5mXlu5BBIAC
-	 x6YOX8sgCFIcwnCJiFrMCZLDejXSr5vsm7Qe4GKcJlMH7O0ky8j3xOIizTdbLij8FA
-	 fqeMmkJgU9YDKqv2atpEgKynTwztATUXn+GiIk8Q2Ah/WppIH2agLqoMsvbdPbZwxG
-	 CsG0gH/hqJVWGMxmA+DwhKy/2mMFW4VSAwH8mxoJSjrMcDtc6gx50fEcIJbdxST+Hr
-	 /xYR7l1GHiIwy1yT/iT1EOHzrYB3/50GYc3b0mqdEu5mIY/9GWugfC635HDgQOBeXc
-	 arPS14ZlZY6Cw==
-Date: Fri, 25 Jul 2025 17:40:09 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>
-Subject: Re: next-20250723 arm atags_to_fdt.c undefined reference to
- `__sanitizer_cov_stack_depth'
-Message-ID: <202507251739.E62B1C95@keescook>
-References: <CA+G9fYtBk8qnpWvoaFwymCx5s5i-5KXtPGpmf=_+UKJddCOnLA@mail.gmail.com>
- <aINJTDD3je4XJ6VO@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvAh3UB+"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4ab7384b108so29406471cf.0
+        for <regressions@lists.linux.dev>; Fri, 25 Jul 2025 18:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753492586; x=1754097386; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+3wL90PTGk/ln0g+DfvE2KqqysVDgICkM8ai1CipU4s=;
+        b=UvAh3UB+r3LdHlWZ/RjMhibiCvrF7fcLuYn+U1u0EK0bqDtXprxKQv0QGyVmWoJVR9
+         +Pm6Py9dw1PXvJLsuk35mwV6H0DFjljSsUEZ7zHxEzIKgBW3muXTacPESaD7Wpg3uFrI
+         VXW/tbwP9cQDAhvjSrdbvF7k0DKezaJpC+4pBivySTLl7rzWTpgPC05KszJSzyFZwcYa
+         2svFdp0VsIoGqLwEropExNOdNUvwOeto1wBU23Mt++ELuAUvLw5w59QN+W+yuYmmG5Ro
+         BlcJ7xx+N7OVkeyzh0jw3nM9fu9w8bn47uGFPhkDlUSIyxnTIMaSwKIVxydUhQZrc3/A
+         17ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753492586; x=1754097386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+3wL90PTGk/ln0g+DfvE2KqqysVDgICkM8ai1CipU4s=;
+        b=P9bxbIKjwFNEZvwmo71X1aKzIEdyhV+g3K0Q72BpMoPPqcgiD4qrIi9l+TAcc+Gau2
+         YISM2P7LBupU6wbVeTuxoLPeLPaSrrNFYzIoUGox05q6X3CwpLk4SLj8yNgU1IO/oTcR
+         rwkmupvaY2PZ8HNWsuafOkZ91xxUzS8RgS4WF9lWm3qysezEb6QXHGEyU05GYqiMOiAv
+         nEqkAeGJJOzXJ83rt84bNAxsjrU61pDy6mn9eYVgUna2UexIifKXz9JZXd20ZBNANjQB
+         6XEiTCUdqsJmU+ACTgSNTiSzF2Dg5JP6m+ojJlxfo8UQ43UheF4nwlFBV7mxUzAlCyL4
+         nc9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWAXwpcKVFGI3LmeGkQgKjARmZY5bETttIKLU3hMuVok7j5KIKivSCAFYIFMOWGQLzRyOJxaBNzzpMLuw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy6zkAbopzahZPUa1FvOhmQflBO+ekL0cPVcm8b8kR1EKNbTTbo
+	KgJxq2CQVaGMbHPLTcZ4mgFU35C46jqaPweVLcyRgtsQn3rLcBuvZhrDn6Lmv+dj4spDvaC3WTw
+	buMHz+gg2Y407bMYD6NRmqK9xc0/KqgU=
+X-Gm-Gg: ASbGnctW312OmtKcB6MJIpuaFLJQvSQooD88GkvT/rZt2KDgsBhnYDOY7N/OZ/c/RMN
+	JEhXG8m5k/N9aXqfhYR2K5zLorzDVSEFN0EjdzDlcc8TM0WQMNGnzuV58rY6PivYo+8NZcsQQ4I
+	6NUydByByOy0STxsPft3x9A8iJCA9hObIa0bDMkMUQZB8BF6bfI2jxBTpm8CoNrfvgbKtR5hl0v
+	kgwTxA=
+X-Google-Smtp-Source: AGHT+IHA6MAWvCAFknvGjN01kW0YSiAmTWDknlm+9zgfPFOgXpK3YgxcKpk7P+6ZJn0jP1CHQ4ztram7FXEAQAYa4gg=
+X-Received: by 2002:a05:622a:34a:b0:494:a2b8:88f0 with SMTP id
+ d75a77b69052e-4ae8f012526mr46072551cf.33.1753492586365; Fri, 25 Jul 2025
+ 18:16:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aINJTDD3je4XJ6VO@shell.armlinux.org.uk>
+References: <CA+G9fYs5AdVM-T2Tf3LciNCwLZEHetcnSkHsjZajVwwpM2HmJw@mail.gmail.com>
+ <20250723144637.GW2672070@frogsfrogsfrogs> <CAJnrk1Z7wcB8uKWcrAuRAZ8B-f8SKnOuwtEr-=cHa+ApR_sgXQ@mail.gmail.com>
+ <20250723212020.GY2672070@frogsfrogsfrogs> <CAJnrk1bFWRTGnpNhW_9MwSYZw3qPnPXZBeiwtPSrMhCvb9C3qg@mail.gmail.com>
+ <CAJnrk1byTVJtuOyAyZSVYrusjhA-bW6pxBOQQopgHHbD3cDUHw@mail.gmail.com>
+In-Reply-To: <CAJnrk1byTVJtuOyAyZSVYrusjhA-bW6pxBOQQopgHHbD3cDUHw@mail.gmail.com>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Fri, 25 Jul 2025 18:16:15 -0700
+X-Gm-Features: Ac12FXzimnd_vsyILA4Tel0YjqyEWWgthWY0MmY0akKuYlWvyLQqpBlaOUBO320
+Message-ID: <CAJnrk1ZYR=hM5k90H57tOv=fe6F-r8dO+f3wNuCT_w3j8YNYNQ@mail.gmail.com>
+Subject: Re: next-20250721 arm64 16K and 64K page size WARNING fs fuse file.c
+ at fuse_iomap_writeback_range
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, linux-fsdevel@vger.kernel.org, 
+	linux-mm <linux-mm@kvack.org>, linux-xfs@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Miklos Szeredi <miklos@szeredi.hu>, Jan Kara <jack@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <liam.howlett@oracle.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 25, 2025 at 10:07:24AM +0100, Russell King (Oracle) wrote:
-> On Fri, Jul 25, 2025 at 01:59:02PM +0530, Naresh Kamboju wrote:
-> > Regressions noticed while building arm builds with gcc-13 and gcc-8
-> > toolchains on the Linux next-20250723 to next-20250725 tags.
-> > 
-> > First seen on the Linux next-20250723
-> > Good: next-20250722
-> > Bad:  next-20250723 and next-20250725
-> > 
-> > Regression Analysis:
-> > - New regression? Yes
-> > - Reproducibility? Yes
-> > 
-> > ## Build regressions
-> > * arm, build
-> >   - gcc-13-lkftconfig-hardening
-> >   - gcc-8-lkftconfig-hardening
-> > 
-> > Build regression: next-20250723 arm atags_to_fdt.c undefined reference
-> > to `__sanitizer_cov_stack_depth'
-> 
-> "cov" suggests "coverty", and that the symbol is not available in the
-> kernel suggests that coverty isn't supported.
+On Thu, Jul 24, 2025 at 12:14=E2=80=AFPM Joanne Koong <joannelkoong@gmail.c=
+om> wrote:
+>
+> On Wed, Jul 23, 2025 at 3:37=E2=80=AFPM Joanne Koong <joannelkoong@gmail.=
+com> wrote:
+> >
+> > On Wed, Jul 23, 2025 at 2:20=E2=80=AFPM Darrick J. Wong <djwong@kernel.=
+org> wrote:
+> > >
+> > > On Wed, Jul 23, 2025 at 11:42:42AM -0700, Joanne Koong wrote:
+> > > > On Wed, Jul 23, 2025 at 7:46=E2=80=AFAM Darrick J. Wong <djwong@ker=
+nel.org> wrote:
+> > > > >
+> > > > > [cc Joanne]
+> > > > >
+> > > > > On Wed, Jul 23, 2025 at 05:14:28PM +0530, Naresh Kamboju wrote:
+> > > > > > Regressions found while running LTP msync04 tests on qemu-arm64=
+ running
+> > > > > > Linux next-20250721, next-20250722 and next-20250723 with 16K a=
+nd 64K
+> > > > > > page size enabled builds.
+> > > > > >
+> > > > > > CONFIG_ARM64_64K_PAGES=3Dy ( kernel warning as below )
+> > > > > > CONFIG_ARM64_16K_PAGES=3Dy ( kernel warning as below )
+> > > > > >
+> > > > > > No warning noticed with 4K page size.
+> > > > > > CONFIG_ARM64_4K_PAGES=3Dy works as expected
+> > > > >
+> > > > > You might want to cc Joanne since she's been working on large fol=
+io
+> > > > > support in fuse.
+> > > > >
+> > > > > > First seen on the tag next-20250721.
+> > > > > > Good: next-20250718
+> > > > > > Bad:  next-20250721 to next-20250723
+> > > >
+> > > > Thanks for the report. Is there a link to the script that mounts th=
+e
+> > > > fuse server for these tests? I'm curious whether this was mounted a=
+s a
+> > > > fuseblk filesystem.
+> > > >
+> > > > > >
+> > > > > > Regression Analysis:
+> > > > > > - New regression? Yes
+> > > > > > - Reproducibility? Yes
+> > > > > >
+> > > > > > Test regression: next-20250721 arm64 16K and 64K page size WARN=
+ING fs
+> > > > > > fuse file.c at fuse_iomap_writeback_range
+> > > > > >
+> > > > > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > > > >
+> > > > > > ## Test log
+> > > > > > ------------[ cut here ]------------
+> > > > > > [  343.828105] WARNING: fs/fuse/file.c:2146 at
+> > > > > > fuse_iomap_writeback_range+0x478/0x558 [fuse], CPU#0: msync04/4=
+190
+> > > > >
+> > > > >         WARN_ON_ONCE(len & (PAGE_SIZE - 1));
+> > > > >
+> > > > > /me speculates that this might be triggered by an attempt to writ=
+e back
+> > > > > some 4k fsblock within a 16/64k base page?
+> > > > >
+> > > >
+> > > > I think this can happen on 4k base pages as well actually. On the
+> > > > iomap side, the length passed is always block-aligned and in fuse, =
+we
+> > > > set blkbits to be PAGE_SHIFT so theoretically block-aligned is alwa=
+ys
+> > > > page-aligned, but I missed that if it's a "fuseblk" filesystem, tha=
+t
+> > > > isn't true and the blocksize is initialized to a default size of 51=
+2
+> > > > or whatever block size is passed in when it's mounted.
+> > >
+> > > <nod> I think you're correct.
+> > >
+> > > > I'll send out a patch to remove this line. It doesn't make any
+> > > > difference for fuse_iomap_writeback_range() logic whether len is
+> > > > page-aligned or not; I had added it as a sanity-check against sketc=
+hy
+> > > > ranges.
+> > > >
+> > > > Also, I just noticed that apparently the blocksize can change
+> > > > dynamically for an inode in fuse through getattr replies from the
+> > > > server (see fuse_change_attributes_common()). This is a problem sin=
+ce
+> > > > the iomap uses inode->i_blkbits for reading/writing to the bitmap. =
+I
+> > > > think we will have to cache the inode blkbits in the iomap_folio_st=
+ate
+> > > > struct unfortunately :( I'll think about this some more and send ou=
+t a
+> > > > patch for this.
+> > >
+> > > From my understanding of the iomap code, it's possible to do that if =
+you
+> > > flush and unmap the entire pagecache (whilst holding i_rwsem and
+> > > mmap_invalidate_lock) before you change i_blkbits.  Nobody *does* thi=
+s
+> > > so I have no idea if it actually works, however.  Note that even I do=
+n't
+> > > implement the flush and unmap bit; I just scream loudly and do nothin=
+g:
+> >
+> > lol! i wish I could scream loudly and do nothing too for my case.
+> >
+> > AFAICT, I think I just need to flush and unmap that file and can leave
+> > the rest of the files/folios in the pagecache as is? But then if the
+> > file has active refcounts on it or has been pinned into memory, can I
+> > still unmap and remove it from the page cache? I see the
+> > invalidate_inode_pages2() function but my understanding is that the
+> > page still stays in the cache if it has has active references, and if
+> > the page gets mmaped and there's a page fault on it, it'll end up
+> > using the preexisting old page in the page cache.
+>
+> Never mind, I was mistaken about this. Johannes confirmed that even if
+> there's active refcounts on the folio, it'll still get removed from
+> the page cache after unmapping and the page cache reference will get
+> dropped.
+>
+> I think I can just do what you suggested and call
+> filemap_invalidate_inode() in fuse_change_attributes_common() then if
+> the inode blksize gets changed. Thanks for the suggestion!
+>
 
-This is the coverage sanitizer and related to my changes. Sorry! This
-didn't show up in my build testing, I'll reproduce it and get it fixed.
+Thinking about this some more, I don't think this works after all
+because the writeback + page cache removal and inode blkbits update
+needs to be atomic, else after we write back and remove the pages from
+the page cache, a write could be issued right before we update the
+inode blkbits. I don't think we can hold the inode lock the whole time
+for it either since writeback could be intensive. (also btw, I
+realized in hindsight that invalidate_inode_pages2_range() would have
+been the better function to call instead of
+filemap_invalidate_inode()).
 
--- 
-Kees Cook
+> >
+> > I don't think I really need to have it removed from the page cache so
+> > much as just have the ifs state for all the folios in the file freed
+> > (after flushing the file) so that it can start over with a new ifs.
+> > Ideally we could just flush the file, then iterate through all the
+> > folios in the mapping in order of ascending index, and kfree their
+> > ->private, but I'm not seeing how we can prevent the case of new
+> > writes / a new ifs getting allocated for folios at previous indexes
+> > while we're trying to do the iteration/kfreeing.
+> >
+
+Going back to this idea, I think this can work. I realized we don't
+need to flush the file, it's enough to free the ifs, then update the
+inode->i_blkbits, then reallocate the ifs (which will now use the
+updated blkbits size), and if we hold the inode lock throughout, that
+prevents any concurrent writes.
+Something like:
+     inode_lock(inode);
+     XA_STATE(xas, &mapping->i_pages, 0);
+     xa_lock_irq(&mapping->i_pages);
+     xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_TAG_DIRTY) {
+          folio_lock(folio);
+          if (folio_test_dirty(folio)) {
+                  folio_wait_writeback(folio);
+                  kfree(folio->private);
+          }
+          folio_unlock(folio);
+     }
+    inode->i_blkbits =3D new_blkbits_size;
+    xas_set(&xas, 0);
+    xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_TAG_DIRTY) {
+          folio_lock(folio);
+          if (folio_test_dirty(folio) && !folio_test_writeback(folio))
+                 folio_mark_dirty(folio);
+          folio_unlock(folio);
+    }
+    xa_unlock_irq(&mapping->i_pages);
+    inode_unlock(inode);
+
+
+I think this is the only approach that doesn't require changes to iomap.
+
+I'm going to think about this some more next week and will try to send
+out a patch for this then.
+
+
+Thanks,
+Joanne
+
+> > >
+> > > void fuse_iomap_set_i_blkbits(struct inode *inode, u8 new_blkbits)
+> > > {
+> > >         trace_fuse_iomap_set_i_blkbits(inode, new_blkbits);
+> > >
+> > >         if (inode->i_blkbits =3D=3D new_blkbits)
+> > >                 return;
+> > >
+> > >         if (!S_ISREG(inode->i_mode))
+> > >                 goto set_it;
+> > >
+> > >         /*
+> > >          * iomap attaches per-block state to each folio, so we cannot=
+ allow
+> > >          * the file block size to change if there's anything in the p=
+age cache.
+> > >          * In theory, fuse servers should never be doing this.
+> > >          */
+> > >         if (inode->i_mapping->nrpages > 0) {
+> > >                 WARN_ON(inode->i_blkbits !=3D new_blkbits &&
+> > >                         inode->i_mapping->nrpages > 0);
+> > >                 return;
+> > >         }
+> > >
+> > > set_it:
+> > >         inode->i_blkbits =3D new_blkbits;
+> > > }
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/=
+commit/?h=3Dfuse-iomap-attrs&id=3Dda9b25d994c1140aae2f5ebf10e54d0872f5c884
+> > >
+> > > --D
+> > >
+> > > >
+> > > > Thanks,
+> > > > Joanne
+> > > >
