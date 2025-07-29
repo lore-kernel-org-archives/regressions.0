@@ -1,77 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35A3288C3A
-	for <regressions@lists.linux.dev>; Tue, 29 Jul 2025 10:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A5F2110E;
+	Tue, 29 Jul 2025 13:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753784433; cv=none; b=KPTeAbnKxjvUaZkZ9DUKrcaIxMFwgNLbZbmvykaodOdIzZtbUCyFCiE2Kcz0fKdpmNnN7W65cHaY6FC8bsq+wLVSP0RwUgvivptU7S3La3HVx7m7F2z3DJUt6LQgx1yoxhoRZ3v8stT2K/Zmif8XE0+rV9vZptGKQEHrjjbCPsA=
+	t=1753796405; cv=none; b=Ntnvdo0j2VF2J80RrVpC6oL9G0zcrhbeQkvZMF5V+HE9epeUL9x6LqzbyeX6J+OKLeQbBH/PUopJ2Q40xuz/HXaVfKjfIBw1AHHODlZye771qD5D1Sa92mudg9Iq3yPlPvQR8VxeVDSHyhTdfnQg/LRKnWmpAjMEv9qb2CLj8nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753784433; c=relaxed/simple;
-	bh=u9g9xTirDI5BoZdPd2gtcPkZvUCKI6czZ27irfE2iIU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gPJIe4rvyC6OURzuYEVCma4SkuXkfOkLo9fzanAw/AYsRggibDgqnXgjnjeLiY/dvJSD2+kZPO9t/i31IzjvncjyEaanEk3d9+CkFlVC4VcliEb17GTzKH/4YJzyDVVCKJgzKKYPZxq8M4N2mzrs8z+NcbiR/in2Qe6zfTOU2bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MogjU+in; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1753796405; c=relaxed/simple;
+	bh=f/LGPw/5dHlTrw7lOR6Cg83JH1ggAoCnyHGQ66Ie3yA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cLb5/jcS1pcxZN0PMqXTFYNp3ZnEcizoSRrJBNCguTuWxbQQkBJgeI1CZ6WIhVByRWYNENvfoA3lNv6gaWQD4NJGSHYtnGeP/1bbd1ViUszgy3ETCW4Hlgv7uD3OXhcMeepKsRBFHz6+2A8PoD0WAHIjmLB2aT5PTPKg/lFjFtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dqkkjz6Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MogjU+in"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753784431; x=1785320431;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=u9g9xTirDI5BoZdPd2gtcPkZvUCKI6czZ27irfE2iIU=;
-  b=MogjU+in8CINj/Jb2fL/Wfeu2+Ki0htBeI3fQtuyCM759PCHzv3KB52z
-   Pl9TrLeZcI58YVl+Dl+FlTwSCSVcJrohZGfzUBE5IM/69lMRWnfilQgWz
-   oNXA00OqauxLVZOfZJF9PTeeU+HEcYO38A54FX5sREqSQaFZdkVFQ56DJ
-   AdafgKqOGBJFuDsGAdfjnZER38QgXJcv/La3Hhv0s5mkeq3J0E5OqdRNK
-   hKBtHoe6JeyqNiA/3rHEXvSpgzrO5YmrVH6Uw6ZKjeXWkM1AigHpqzCR5
-   cCwle7sEcB2ryPs317uibRhk5/nq+r2MGolUsx8M6o0MvAk3PSsskHF93
-   A==;
-X-CSE-ConnectionGUID: c8INwNjnSj286PW1F1w/5w==
-X-CSE-MsgGUID: lE4CY5KtTKycjV6G67bR/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="59872760"
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="59872760"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 03:20:31 -0700
-X-CSE-ConnectionGUID: RXJlBpLLQlWpDWW8k/7zRw==
-X-CSE-MsgGUID: b62qSJQPQKun17BHcYAXTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="163006701"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.22])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 03:20:27 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Andy Mindful <andy.mindful@gmail.com>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, linux-pm@vger.kernel.org
-Cc: intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-acpi@vger.kernel.org, rafael@kernel.org,
- ville.syrjala@linux.intel.com, tglx@linutronix.de
-Subject: Re: [REGRESSION] tty lockup and WWAN loss after hibernate/suspend
- in 6.8+ on ThinkPad X1 Carbon Gen 10
-In-Reply-To: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
-Date: Tue, 29 Jul 2025 13:20:25 +0300
-Message-ID: <642d439ea1be8e48ee5c47fd3921a786452fb931@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dqkkjz6Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE713C4CEEF;
+	Tue, 29 Jul 2025 13:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753796404;
+	bh=f/LGPw/5dHlTrw7lOR6Cg83JH1ggAoCnyHGQ66Ie3yA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Dqkkjz6Yz0TPt/dDJ3zE1lSYh5f71snL7ISfGBJgmkApPm0o8t+VLbMo1n7So/vTg
+	 d5MlDEjzD0Vfh5kxZrVa4JM2EwxmzcUHYnaQH25tiSkJ+z5jrZz11eaLV2dSKGlPmf
+	 slYo15lf7/m4aFVH1Cc+Q0s95rVSmQhLPOVoKh4SJPcAsQEGmUs63jLA0rhz61NPNa
+	 wPpWpBxdw1YNCS0Jm6FJfBXLhp3pFPJUNvuYeSHXLMwSXIJB6oiGwYk0EXMMS3udaM
+	 VoFr4stxRBEJxccV6UNbt5N2vYaJodc0pdp5i+xtMTbavumi0kSfYXqwrcGHocnGrK
+	 KsCxZjxg3Vnpw==
+Date: Tue, 29 Jul 2025 22:40:00 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: "Alan J. Wylie" <alan@wylie.me.uk>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: "stack state/frame" and "jump dest instruction" errors (was Re:
+ Linux 6.16)
+Message-Id: <20250729224000.2f23f59acc79a78f47c1624f@kernel.org>
+In-Reply-To: <hla34nepia6wyi2fndx5ynud4dagxd7j75xnkevtxt365ihkjj@4p746zsu6s6z>
+References: <CAHk-=wh0kuQE+tWMEPJqCR48F4Tip2EeYQU-mi+2Fx_Oa1Ehbw@mail.gmail.com>
+	<871pq06728.fsf@wylie.me.uk>
+	<hla34nepia6wyi2fndx5ynud4dagxd7j75xnkevtxt365ihkjj@4p746zsu6s6z>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 29 Jul 2025, Andy Mindful <andy.mindful@gmail.com> wrote:
-> Please let me know if any further information or testing is required.
+On Mon, 28 Jul 2025 08:42:44 -0700
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-Likely the quickest way to find the root cause is to bisect the issue.
+> On Mon, Jul 28, 2025 at 09:41:35AM +0100, Alan J. Wylie wrote:
+> > #regzbot introduced: 6.15.8..6.16
 
+> I don't have time to look at this for at least the next few days, but I
+> suspect this one:
+> 
+>      1a3:	8f ea 78 10 c3 0a 06 00 00 	bextr  $0x60a,%ebx,%eax
 
-BR,
-Jani.
+Thanks for finding!
+Indeed, this is encoded by XOP which is not currently supported
+by x86 decodeer. 
+
+> 
+> in which case the kernel's x86 decoder (which objtool also uses) needs
+> to be updated.
+
+OK, let me see how XOP works.
+
+Thank you,
 
 -- 
-Jani Nikula, Intel
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
