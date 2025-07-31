@@ -1,579 +1,156 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3471422127B
-	for <regressions@lists.linux.dev>; Wed, 30 Jul 2025 22:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BB72C158D
+	for <regressions@lists.linux.dev>; Thu, 31 Jul 2025 13:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753916070; cv=none; b=YHcydXiDv0mKO683d+cvqemO3NGLU8YOYJ30O3+e8ijPymipa4f+lwW9iMGCPyLDf7cWEkzL88rbZp5HGXFCUKolwZj6PpV+W8aygrm5PmhTiij7Ium1DqohXB3O+I7Xcbxtcje6ij5Hkv3wsujDurDvFT1FRqjCkOw44ZrGhMU=
+	t=1753968754; cv=none; b=oUqwPSi2WD62mOgAiFD/RipVNKacIUhEJZQvyXeTjGF0TNKwHTC7gjNNUBLRntnn1KW+ApaHTIFd+DDZlq5KeXpbw8Y3QP7Ep2AYzfuq6ZYtJuMT9NH/bt7b1pllpg3cXZJgSHdohcMJeK4d0ksDhQusvBbKuxMEdbg8S8OyjnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753916070; c=relaxed/simple;
-	bh=PyQbiQOpQfAQnsQo79jnw5m1Q8Vu67NeZTAEjmFJT2k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFk5+f+YPXjvzMDpJAkT88uqe0N1Id85MVMDqtWJGkjVAR017Uvb8Z0GSjSYUerRLEFOJi+WGHrFAw+AbJ0kS/aa0bx8RR7Ok0yEj0oZ/3xQxtaOkJkSYUUMBY1k0NMHQDSN5HU/YEPEqT4zkFPSCH0Q9augmryz3LHjIkGJYfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMUMrEZE; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753968754; c=relaxed/simple;
+	bh=DwLv3NVgK+NLuVZxUkGdJBfD5FPTwniAQK5bZRxIfmU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=a+y27PTtyb/rXDzJEyG0wG3RLTi29eV99Xowft1gejg3lCAAkIpN3/6afwiZ17L/bimCIgCUJZQnXDOvHw/zBSJIDyS/68CFm/MpqGbNJw29+byEtt4BC7j2L+kzLPn87E3/ByW5KAzl+h2szPr130w9smSTq3lSigi2HQeZrhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mxHcerDJ; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMUMrEZE"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4ab3802455eso3833061cf.2
-        for <regressions@lists.linux.dev>; Wed, 30 Jul 2025 15:54:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mxHcerDJ"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-76bc5e68d96so451892b3a.3
+        for <regressions@lists.linux.dev>; Thu, 31 Jul 2025 06:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753916067; x=1754520867; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t7x2O+/3mlZ+l6d/dEpYOvhMfX3zDYsyk28CoMvKB+w=;
-        b=cMUMrEZE6k9YX8Hc2TPCjwOKd+VAeCb0ZS3kn7LV/J0csz3jlFey26ruTd20KqhlPK
-         QMBBnSCmfhA9QhU5Do6rjKrzARrXc5m0ugAD95bCAI6b+4gGt+rv/PXX/x+tkueZ2KT7
-         5qAAfavBBUsxeT7uYosSp6TNUd21kWxlMlM8HYRqMA6QlEZmDnNKkTqcn9I+2m201sxQ
-         T3ouEv1uFLcsjhCsgTLWmHQDwxCHbCI4+GHYG2uYx3UMZtZtsHUp4cZbKYk06IvqNlaX
-         RLZo+YG+yJ8v3d0tP9ZJDUrU43CDBVjhzsG7GFrH7uvl58jwwILya39kEy+7km6sGxsS
-         yVUA==
+        d=linaro.org; s=google; t=1753968752; x=1754573552; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cmXYzT6zJ9rS420ixrln5bVB+UwoUFt5tecWAfMb5OA=;
+        b=mxHcerDJvhZqwm6Rkam1Zc7lxE3eKmI+GZQY2LBJyPDSoJn8S1zOTYJJVB1gr3VpZX
+         jmH0LOvHcM14d0MOEYhg14veZUNLbLmT+DGg8yrIM1s1N+le7A2n6XWcx9Emvpx71QE0
+         hZizGd3C8Y4l3kaKLJXwd9q2pLN7I7vZCZbX1UBMM8DPiolB58HNziyOHHWsHWFl/RFF
+         TNEUS0ya4sKenuCiN/j5Vi8NVT2TgP2FfWbbhV/io1QyvK1E3TNCtJLVo6XR8h+xPsnZ
+         9LJR+lUQ8kETDDfZZusfJ0u+cjDNJV6I9AQlxGEUKcKhdmQy9fjzujlexTQsGv5mWP2j
+         B8RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753916067; x=1754520867;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t7x2O+/3mlZ+l6d/dEpYOvhMfX3zDYsyk28CoMvKB+w=;
-        b=dKrLEQxCALcXuttfscsy+5OAJhm25AWwzhAfJhB93gUoSqkMySlGbejDm9kTJ6RoUF
-         +1hSStrPfK9VzxaVo3G3vEkBD7oj87+lr1h1hwNL55WDl01PZ8Aeo/0BarPVnBgGPGAb
-         aWUqJW56/GmpZjbNPJiPNHW38DcdjWci4x+1F9VH16m//LSFkZ8Wh7TgXCj2B7+Z5F/k
-         Todp2XQ9pTgcwtDBWpgJ5UrFvFv3slaencZmDh+8CTTfEk+hQTkQAb/w56rkndYuzcCc
-         z1YjtaDzxX/y/XJ7P+gVN2c+I9r9tktg2HpLhPo9vtxUapFxbGZCqV6Qa17GPGkr3uE8
-         JHUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa41Sif6ciiohtX4R/DatYBUQ72abVuIIb3njzt7xg8WAXtvoSMx+Jj260isiqWzL66LEWWCb7cN+kYA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwrWHQWXr0vuSiQhAMv9I61Gbfrebf4Q/goBdrfAitJp8KSBO2I
-	LnFXPdn40sUwk/xvMEacW4e05VY2BorGi5WXwJgwZPkhRiulV5+to0B6pGZILXQjbgeORHrIR9P
-	lO+X/D9Z/NXhCZzCHUcPYus9WT5y44CM=
-X-Gm-Gg: ASbGnct/YLCIoplbDu0oC310whzmK2sO/IBs9FYgSzGQ+ncdOLkCo7S6L9+kwaewfqZ
-	y7+rHbZa8Cikl6qERtnvI9NZ4rPfYBnGzYntz85xbLZ3QEYage+6AJ5MyN9b4GETJG/b0yADxmV
-	DMbmQ3iWB83c7ymaL6vu6L1UUctGfeQVlRk42ZM6h1b8HVFiL3z6QhQjOoOy2Si83oc6j9bgTyM
-	FaqjZQjsG+VD49LPA==
-X-Google-Smtp-Source: AGHT+IE3gTZ85BCBwLQ0fCe6kQ6ib21Oo5WSfpehSS1BBczqmefHEgbEcmysVIEVfQKV/+OP8jG24Ai+6x/al/9/eqk=
-X-Received: by 2002:ac8:580d:0:b0:4ab:667e:93f1 with SMTP id
- d75a77b69052e-4aedbc4b8aamr92091181cf.48.1753916066703; Wed, 30 Jul 2025
- 15:54:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753968752; x=1754573552;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cmXYzT6zJ9rS420ixrln5bVB+UwoUFt5tecWAfMb5OA=;
+        b=a5rjt87GL6+xzn+D/KcBW9y8JA2goNQUVbHMXjYKQv8fCa2PHzBAArDr/nHSZieYiP
+         1DHkxQxprIdpcHbY5TbNkNlRpPGex0jHt/Woz9PbbEKaMeSD6J1hx7YuORh55jVTv0zD
+         RKsZPghPgP/YiC5SEkChAMz4IXfW1A97rkWjnJNPq6MomA7hjW2BDf7QO+roaAXm5AiN
+         f7pIjmbdGQZhzttHlRLUzSrI+eHHTpq0oR8FCfZDNCufdJZ9rsCW0S6piHxNkEr5BlE9
+         vqhKnavlZbIUjnhoXGBOOpP6RpnorRhnOiL7theNCGYeGVCAtAnBspiOqi4M6WGV4iQi
+         gRHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWj/IoY1AdFG9b7ejEDat8ipaHgY8EMRvUCiqEVcdAH9G7D76KJoEjbIrPCCTWrsce+guezTJhoGvFiZQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxri1IF4G1F5bg1SJrS5ojJ8lNJ1e9G648JlGC5aH3Od+zQ+dCF
+	/ZS5wOUlRu/Ye1N4EuIPazRkkdXqY3SLS/61x1qwm6Z1/PCyssI3LBjS+xkpppQNBz8ahMnYz7y
+	q9P/HAyveWxtHO1cJa4vLzPOj3ABLcqbGqE7X+N5m4w==
+X-Gm-Gg: ASbGncv2JxHxMGciqMSum+ZBNkJZISV4Oh4o9+8kw0WOw5DvqxlmbYehyhZQk/sG1GR
+	q+8ETvMwYNTvGgKMfVRlj8miyQLZVmPLDS7sYSLwwKchynIhWfr4vahhkZktzr4r8a5X3PTQuCz
+	GsmJ1U1Gw9jtd4RRyUZ3dOevuWbcIstVhSPq+oJBhntOmjdCS8zSNhp5OWu6oRBchGUHmEy6zZC
+	Umn3oqhoKBJIE7P7s5HxTc3B6SOZSfNGqA1Cbji
+X-Google-Smtp-Source: AGHT+IHMOlGLBVMZYIfdD8TgOlG751bAmep6oG9qqVy6znDcDyIXiYVE8rT/XtpzFlKEZWKLciEH9UdIeYkn8YVABic=
+X-Received: by 2002:a17:902:ef11:b0:240:725d:c396 with SMTP id
+ d9443c01a7336-24096b17fb3mr112149505ad.34.1753968752058; Thu, 31 Jul 2025
+ 06:32:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250723212020.GY2672070@frogsfrogsfrogs> <CAJnrk1bFWRTGnpNhW_9MwSYZw3qPnPXZBeiwtPSrMhCvb9C3qg@mail.gmail.com>
- <CAJnrk1byTVJtuOyAyZSVYrusjhA-bW6pxBOQQopgHHbD3cDUHw@mail.gmail.com>
- <CAJnrk1ZYR=hM5k90H57tOv=fe6F-r8dO+f3wNuCT_w3j8YNYNQ@mail.gmail.com>
- <20250728171425.GR2672029@frogsfrogsfrogs> <CAJnrk1bBesBijYRD1Wf_01OSBykJ0VzwFZKZFev0wPn9wYc98Q@mail.gmail.com>
- <20250728191117.GE2672070@frogsfrogsfrogs> <CAJnrk1bTgTcb4aUWqczXEH+7+SWQAdppxYbSAPNCVY6xXb-=hQ@mail.gmail.com>
- <20250729202151.GD2672049@frogsfrogsfrogs> <CAJnrk1ZXN40WEwKXn7ycy2topGTvxFh_UfsM_vwhM+0CtTsJKQ@mail.gmail.com>
- <20250729234018.GW2672029@frogsfrogsfrogs>
-In-Reply-To: <20250729234018.GW2672029@frogsfrogsfrogs>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 30 Jul 2025 15:54:15 -0700
-X-Gm-Features: Ac12FXzGxWFWHF6oVrKTFLWe0DFHviK4ZwZ4SMKMH5xLKbAvpddy60UsHkq8GcU
-Message-ID: <CAJnrk1b691Z3=_V0dU2Vb2qbiQd+0JUMj1ABDMip6vzzGZAf3w@mail.gmail.com>
-Subject: Re: next-20250721 arm64 16K and 64K page size WARNING fs fuse file.c
- at fuse_iomap_writeback_range
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, linux-xfs@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Miklos Szeredi <miklos@szeredi.hu>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <liam.howlett@oracle.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 31 Jul 2025 19:02:20 +0530
+X-Gm-Features: Ac12FXz5D2sJ8CLUiMTBbTCix6pCoDq6lk-VMWBeOCc2LNXohdtN5ecn-7jz4iY
+Message-ID: <CA+G9fYv-c6D6tJKw9x05+U_VxrpTAQCKADTeYg4jsjaJkX+isw@mail.gmail.com>
+Subject: next-20250730 x86, s390, riscv gcc-8 hardening.config vmlinux symbol
+ `.modinfo' required but not present
+To: open list <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 29, 2025 at 4:40=E2=80=AFPM Darrick J. Wong <djwong@kernel.org>=
- wrote:
->
-> On Tue, Jul 29, 2025 at 04:23:02PM -0700, Joanne Koong wrote:
-> > On Tue, Jul 29, 2025 at 1:21=E2=80=AFPM Darrick J. Wong <djwong@kernel.=
-org> wrote:
-> > >
-> > > On Mon, Jul 28, 2025 at 02:28:31PM -0700, Joanne Koong wrote:
-> > > > On Mon, Jul 28, 2025 at 12:11=E2=80=AFPM Darrick J. Wong <djwong@ke=
-rnel.org> wrote:
-> > > > >
-> > > > > On Mon, Jul 28, 2025 at 10:44:01AM -0700, Joanne Koong wrote:
-> > > > > > On Mon, Jul 28, 2025 at 10:14=E2=80=AFAM Darrick J. Wong <djwon=
-g@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, Jul 25, 2025 at 06:16:15PM -0700, Joanne Koong wrote:
-> > > > > > > > On Thu, Jul 24, 2025 at 12:14=E2=80=AFPM Joanne Koong <joan=
-nelkoong@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Wed, Jul 23, 2025 at 3:37=E2=80=AFPM Joanne Koong <joa=
-nnelkoong@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Wed, Jul 23, 2025 at 2:20=E2=80=AFPM Darrick J. Wong=
- <djwong@kernel.org> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Wed, Jul 23, 2025 at 11:42:42AM -0700, Joanne Koon=
-g wrote:
-> > > > > > > > > > > > On Wed, Jul 23, 2025 at 7:46=E2=80=AFAM Darrick J. =
-Wong <djwong@kernel.org> wrote:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > [cc Joanne]
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Wed, Jul 23, 2025 at 05:14:28PM +0530, Naresh =
-Kamboju wrote:
-> > > > > > > > > > > > > > Test regression: next-20250721 arm64 16K and 64=
-K page size WARNING fs
-> > > > > > > > > > > > > > fuse file.c at fuse_iomap_writeback_range
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Reported-by: Linux Kernel Functional Testing <l=
-kft@linaro.org>
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > ## Test log
-> > > > > > > > > > > > > > ------------[ cut here ]------------
-> > > > > > > > > > > > > > [  343.828105] WARNING: fs/fuse/file.c:2146 at
-> > > > > > > > > > > > > > fuse_iomap_writeback_range+0x478/0x558 [fuse], =
-CPU#0: msync04/4190
-> > > > > > > > > > > > >
-> > > > > > > > > > > > >         WARN_ON_ONCE(len & (PAGE_SIZE - 1));
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > /me speculates that this might be triggered by an=
- attempt to write back
-> > > > > > > > > > > > > some 4k fsblock within a 16/64k base page?
-> > > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > I think this can happen on 4k base pages as well ac=
-tually. On the
-> > > > > > > > > > > > iomap side, the length passed is always block-align=
-ed and in fuse, we
-> > > > > > > > > > > > set blkbits to be PAGE_SHIFT so theoretically block=
--aligned is always
-> > > > > > > > > > > > page-aligned, but I missed that if it's a "fuseblk"=
- filesystem, that
-> > > > > > > > > > > > isn't true and the blocksize is initialized to a de=
-fault size of 512
-> > > > > > > > > > > > or whatever block size is passed in when it's mount=
-ed.
-> > > > > > > > > > >
-> > > > > > > > > > > <nod> I think you're correct.
-> > > > > > > > > > >
-> > > > > > > > > > > > I'll send out a patch to remove this line. It doesn=
-'t make any
-> > > > > > > > > > > > difference for fuse_iomap_writeback_range() logic w=
-hether len is
-> > > > > > > > > > > > page-aligned or not; I had added it as a sanity-che=
-ck against sketchy
-> > > > > > > > > > > > ranges.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Also, I just noticed that apparently the blocksize =
-can change
-> > > > > > > > > > > > dynamically for an inode in fuse through getattr re=
-plies from the
-> > > > > > > > > > > > server (see fuse_change_attributes_common()). This =
-is a problem since
-> > > > > > > > > > > > the iomap uses inode->i_blkbits for reading/writing=
- to the bitmap. I
-> > > > > > > > > > > > think we will have to cache the inode blkbits in th=
-e iomap_folio_state
-> > > > > > > > > > > > struct unfortunately :( I'll think about this some =
-more and send out a
-> > > > > > > > > > > > patch for this.
-> > > > > > > > > > >
-> > > > > > > > > > > From my understanding of the iomap code, it's possibl=
-e to do that if you
-> > > > > > > > > > > flush and unmap the entire pagecache (whilst holding =
-i_rwsem and
-> > > > > > > > > > > mmap_invalidate_lock) before you change i_blkbits.  N=
-obody *does* this
-> > > > > > > > > > > so I have no idea if it actually works, however.  Not=
-e that even I don't
-> > > > > > > > > > > implement the flush and unmap bit; I just scream loud=
-ly and do nothing:
-> > > > > > > > > >
-> > > > > > > > > > lol! i wish I could scream loudly and do nothing too fo=
-r my case.
-> > > > > > > > > >
-> > > > > > > > > > AFAICT, I think I just need to flush and unmap that fil=
-e and can leave
-> > > > > > > > > > the rest of the files/folios in the pagecache as is? Bu=
-t then if the
-> > > > > > > > > > file has active refcounts on it or has been pinned into=
- memory, can I
-> > > > > > > > > > still unmap and remove it from the page cache? I see th=
-e
-> > > > > > > > > > invalidate_inode_pages2() function but my understanding=
- is that the
-> > > > > > > > > > page still stays in the cache if it has has active refe=
-rences, and if
-> > > > > > > > > > the page gets mmaped and there's a page fault on it, it=
-'ll end up
-> > > > > > > > > > using the preexisting old page in the page cache.
-> > > > > > > > >
-> > > > > > > > > Never mind, I was mistaken about this. Johannes confirmed=
- that even if
-> > > > > > > > > there's active refcounts on the folio, it'll still get re=
-moved from
-> > > > > > > > > the page cache after unmapping and the page cache referen=
-ce will get
-> > > > > > > > > dropped.
-> > > > > > > > >
-> > > > > > > > > I think I can just do what you suggested and call
-> > > > > > > > > filemap_invalidate_inode() in fuse_change_attributes_comm=
-on() then if
-> > > > > > > > > the inode blksize gets changed. Thanks for the suggestion=
-!
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > Thinking about this some more, I don't think this works aft=
-er all
-> > > > > > > > because the writeback + page cache removal and inode blkbit=
-s update
-> > > > > > > > needs to be atomic, else after we write back and remove the=
- pages from
-> > > > > > > > the page cache, a write could be issued right before we upd=
-ate the
-> > > > > > > > inode blkbits. I don't think we can hold the inode lock the=
- whole time
-> > > > > > > > for it either since writeback could be intensive. (also btw=
-, I
-> > > > > > > > realized in hindsight that invalidate_inode_pages2_range() =
-would have
-> > > > > > > > been the better function to call instead of
-> > > > > > > > filemap_invalidate_inode()).
-> > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > I don't think I really need to have it removed from the=
- page cache so
-> > > > > > > > > > much as just have the ifs state for all the folios in t=
-he file freed
-> > > > > > > > > > (after flushing the file) so that it can start over wit=
-h a new ifs.
-> > > > > > > > > > Ideally we could just flush the file, then iterate thro=
-ugh all the
-> > > > > > > > > > folios in the mapping in order of ascending index, and =
-kfree their
-> > > > > > > > > > ->private, but I'm not seeing how we can prevent the ca=
-se of new
-> > > > > > > > > > writes / a new ifs getting allocated for folios at prev=
-ious indexes
-> > > > > > > > > > while we're trying to do the iteration/kfreeing.
-> > > > > > > > > >
-> > > > > > > >
-> > > > > > > > Going back to this idea, I think this can work. I realized =
-we don't
-> > > > > > > > need to flush the file, it's enough to free the ifs, then u=
-pdate the
-> > > > > > > > inode->i_blkbits, then reallocate the ifs (which will now u=
-se the
-> > > > > > > > updated blkbits size), and if we hold the inode lock throug=
-hout, that
-> > > > > > > > prevents any concurrent writes.
-> > > > > > > > Something like:
-> > > > > > > >      inode_lock(inode);
-> > > > > > > >      XA_STATE(xas, &mapping->i_pages, 0);
-> > > > > > > >      xa_lock_irq(&mapping->i_pages);
-> > > > > > > >      xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_=
-TAG_DIRTY) {
-> > > > > > > >           folio_lock(folio);
-> > > > > > > >           if (folio_test_dirty(folio)) {
-> > > > > > > >                   folio_wait_writeback(folio);
-> > > > > > > >                   kfree(folio->private);
-> > > > > > > >           }
-> > > > >
-> > > > > Heh, I didn't even see this chunk, distracted as I am today. :/
-> > > > >
-> > > > > So this doesn't actually /initiate/ writeback, it just waits
-> > > > > (potentially for a long time) for someone else to come along and =
-do it.
-> > > > > That might not be what you want since the blocksize change will a=
-ppear
-> > > > > to stall while nothing else is going on in the system.
-> > > >
-> > > > I thought if the folio isn't under writeback then
-> > > > folio_wait_writeback() just returns immediately as a no-op.
-> > > > I don't think we need/want to initiate writeback, I think we only n=
-eed
-> > > > to ensure that if it is already under writeback, that writeback
-> > > > finishes while it uses the old i_blksize so nothing gets corrupted.=
- As
-> > > > I understand it (but maybe I'm misjudging this), holding the inode
-> > > > lock and then initiating writeback is too much given that writeback
-> > > > can take a long time (eg if the fuse server writes the data over so=
-me
-> > > > network).
-> > > >
-> > > > >
-> > > > > Also, unless you're going to put this in buffered-io.c, it's not
-> > > > > desirable for a piece of code to free something it didn't allocat=
-e.
-> > > > > IOWs, I don't think it's a good idea for *fuse* to go messing wit=
-h a
-> > > > > folio->private that iomap set.
-> > > >
-> > > > Okay, good point. I agree. I was hoping to have this not bleed into
-> > > > the iomap library but maybe there's no getting around that in a goo=
-d
-> > > > way.
-> > >
-> > > <shrug> Any other filesystem that has mutable file block size is goin=
-g
-> > > to need something to enact a change.
-> > >
-> > > > >
-> > > > > > > >           folio_unlock(folio);
-> > > > > > > >      }
-> > > > > > > >     inode->i_blkbits =3D new_blkbits_size;
-> > > > > > >
-> > > > > > > The trouble is, you also have to resize the iomap_folio_state=
- objects
-> > > > > > > attached to each folio if you change i_blkbits...
-> > > > > >
-> > > > > > I think the iomap_folio_state objects automatically get resized=
- here,
-> > > > > > no? We first kfree the folio->private which kfrees the entire i=
-fs,
-> > > > >
-> > > > > Err, right, it does free the ifs and recreate it later if necessa=
-ry.
-> > > > >
-> > > > > > then we change inode->i_blkbits to the new size, then when we c=
-all
-> > > > > > folio_mark_dirty(), it'll create the new ifs which creates a ne=
-w folio
-> > > > > > state object using the new/updated i_blkbits size
-> > > > > >
-> > > > > > >
-> > > > > > > >     xas_set(&xas, 0);
-> > > > > > > >     xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_T=
-AG_DIRTY) {
-> > > > > > > >           folio_lock(folio);
-> > > > > > > >           if (folio_test_dirty(folio) && !folio_test_writeb=
-ack(folio))
-> > > > > > > >                  folio_mark_dirty(folio);
-> > > > > > >
-> > > > > > > ...because iomap_dirty_folio doesn't know how to reallocate t=
-he folio
-> > > > > > > state object in response to i_blkbits having changed.
-> > > > >
-> > > > > Also, what about clean folios that have an ifs?  You'd still need=
- to
-> > > > > handle the ifs's attached to those.
-> > > >
-> > > > Ah you're right, there could be clean folios there too that have an
-> > > > ifs. I think in the above logic, if we iterate through all
-> > > > mapping->i_pages (not just PAGECACHE_TAG_DIRTY marked ones) and mov=
-e
-> > > > the kfree to after the "if (folio_test_dirty(folio))" block, then i=
-t
-> > > > addresses that case. eg something like this:
-> > > >
-> > > >      inode_lock(inode);
-> > > >      XA_STATE(xas, &mapping->i_pages, 0);
-> > > >      xa_lock_irq(&mapping->i_pages);
-> > > >      xas_for_each(&xas, folio, ULONG_MAX) {
-> > > >           folio_lock(folio);
-> > > >           if (folio_test_dirty(folio))
-> > > >                   folio_wait_writeback(folio);
-> > > >           kfree(folio->private);
-> > > >           folio_unlock(folio);
-> > > >      }
-> > > >     inode->i_blkbits =3D new_blkbits;
-> > > >     xas_set(&xas, 0);
-> > > >     xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_TAG_DIRTY=
-) {
-> > > >           folio_lock(folio);
-> > > >           if (folio_test_dirty(folio) && !folio_test_writeback(foli=
-o))
-> > > >                  folio_mark_dirty(folio);
-> > > >           folio_unlock(folio);
-> > > >     }
-> > > >     xa_unlock_irq(&mapping->i_pages);
-> > > >     inode_unlock(inode);
-> > > >
-> > > >
-> > > > >
-> > > > > So I guess if you wanted iomap to handle a blocksize change, you =
-could
-> > > > > do something like:
-> > > > >
-> > > > > iomap_change_file_blocksize(inode, new_blkbits) {
-> > > > >         inode_lock()
-> > > > >         filemap_invalidate_lock()
-> > > > >
-> > > > >         inode_dio_wait()
-> > > > >         filemap_write_and_wait()
-> > > > >         if (new_blkbits > mapping_min_folio_order()) {
-> > > > >                 truncate_pagecache()
-> > > > >                 inode->i_blkbits =3D new_blkbits;
-> > > > >         } else {
-> > > > >                 inode->i_blkbits =3D new_blkbits;
-> > > > >                 xas_for_each(...) {
-> > > > >                         <create new ifs>
-> > > > >                         <translate uptodate/dirty state to new if=
-s>
-> > > > >                         <swap ifs>
-> > > > >                         <free old ifs>
-> > > > >                 }
-> > > > >         }
-> > > > >
-> > > > >         filemap_invalidate_unlock()
-> > > > >         inode_unlock()
-> > > > > }
-> > > >
-> > > > Do you prefer this logic to the one above that walks through
-> > > > &mapping->i_pages? If so, then I'll go with this way.
-> > >
-> > > Yes.  iomap should not be tightly bound to the pagecache's xarray; I
-> > > don't even really like the xas_for_each that I suggested above.
-> >
-> > Okay, sounds good.
-> >
-> > >
-> > > > The part I'm unsure about is that this logic seems more disruptive =
-(eg
-> > > > initiating writeback while holding the inode lock and doing work fo=
-r
-> > > > unmapping/page cache removal) than the other approach, but I guess
-> > > > this is also rare enough that it doesn't matter much.
-> > >
-> > > I hope it's rare enough that doing truncate_pagecache unconditionally
-> > > won't be seen as a huge burden.
-> > >
-> > > iomap_change_file_blocksize(inode, new_blkbits) {
-> > >         inode_dio_wait()
-> > >         filemap_write_and_wait()
-> > >         truncate_pagecache()
-> > >
-> > >         inode->i_blkbits =3D new_blkbits;
-> > > }
-> > >
-> > > fuse_file_change_blocksize(inode, new_blkbits) {
-> > >         inode_lock()
-> > >         filemap_invalidate_lock()
-> > >
-> > >         iomap_change_file_blocksize(inode, new_blkbits);
-> > >
-> > >         filemap_invalidate_unlock()
-> > >         inode_unlock()
-> > > }
-> > >
-> > > Though my question remains -- is there a fuse filesystem that changes
-> > > the blocksize at runtime such that we can test this??
-> >
-> > There's not one currently but I was planning to hack up the libfuse
-> > passthrough_hp server to test the change.
->
-> Heh, ok.
->
-> I guess I could also hack up fuse2fs to change its own blocksize
-> randomly to see how many programs that pisses off. :)
->
-> (Not right now though, gotta prepare for fossy tomorrow...)
->
+Regressions while building x86, S390 and riscv64 with hardening.config on the
+Linux next-20250730 and next-20250731.
 
-What I've been using as a helpful sanity-check so far has been running
-fstests generic/750 after adding this line to libfuse:
+Build pass with gcc-13 with hardening.config fails with gcc-8
 
-+++ b/lib/fuse_lowlevel.c
-@@ -547,6 +547,8 @@ int fuse_reply_attr(fuse_req_t req, const struct stat *=
-attr,
-        arg.attr_valid_nsec =3D calc_timeout_nsec(attr_timeout);
-        convert_stat(attr, &arg.attr);
-+       arg.attr.blksize =3D 4096;
-        return send_reply_ok(req, &arg, size);
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Yes
 
-and modifying the kernel side logic in fuse_change_attributes_common()
-to unconditionally execute the page cache removal logic if
-attr->blksize !=3D 0.
+First seen on the next-20250730
+Good: next-20250729
+Bad: next-20250730
 
+Build regression: next-20250730 x86 gcc-8 hardening.config vmlinux
+symbol `.modinfo' required but not present
+Build regression: next-20250730 S390 gcc-8 hardening.config vmlinux
+symbol `.modinfo' required but not present
+Build regression: next-20250730 riscv64 gcc-8 hardening.config vmlinux
+symbol `__rela_dyn_end' required but not present
 
-While running this however, I discovered another problem :/ we can't
-grab the inode lock here in the fuse path because the vfs layer that
-calls into this logic may already be holding the inode lock (eg the
-stack traces I was seeing included path_openat()  ->
-inode_permission() -> fuse_permission() which then fetches the
-blksize, and the vfs rename path), while there are other call paths
-that may not be holding the lock already.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I don't really see a good solution here. The simplest one imo would be
-to cache "u8 blkbits" in the iomap_folio_state struct - are you okay
-with that or do you think there's a better solution here?
+## Build log x86
+x86_64-linux-gnu-objcopy: vmlinux: symbol `.modinfo' required but not present
+x86_64-linux-gnu-objcopy:vmlinux: no symbols
+make[3]: *** [scripts/Makefile.vmlinux:97: vmlinux] Error 1
+make[3]: Target '__default' not remade because of errors.
 
+## Build log S390
+s390x-linux-gnu-ld: .tmp_vmlinux1: warning: allocated section
+`.got.plt' not in segment
+s390x-linux-gnu-ld: .tmp_vmlinux2: warning: allocated section
+`.got.plt' not in segment
+s390x-linux-gnu-ld: vmlinux.unstripped: warning: allocated section
+`.got.plt' not in segment
+s390x-linux-gnu-objcopy: vmlinux: warning: allocated section
+`.got.plt' not in segment
+s390x-linux-gnu-objcopy: vmlinux: symbol `.modinfo' required but not present
+s390x-linux-gnu-objcopy:vmlinux: no symbols
+make[3]: *** [scripts/Makefile.vmlinux:97: vmlinux] Error
 
-Thanks,
-Joanne
+## Build log riscv64
+riscv64-linux-gnu-objcopy: vmlinux.unstripped: warning: empty loadable
+segment detected at vaddr=0xffffffff81e5b000, is this intentional?
+riscv64-linux-gnu-objcopy: vmlinux: symbol `__rela_dyn_end' required
+but not present
+riscv64-linux-gnu-objcopy:vmlinux: no symbols
+make[3]: *** [scripts/Makefile.vmlinux:97: vmlinux] Error 1
 
-> --D
->
-> > >
-> > > --D
-> > >
-> > > > Thanks,
-> > > > Joanne
-> > > >
-> > > > >
-> > > > > --D
-> > > > >
-> > > > > > > --D
-> > > > > > >
-> > > > > > > >           folio_unlock(folio);
-> > > > > > > >     }
-> > > > > > > >     xa_unlock_irq(&mapping->i_pages);
-> > > > > > > >     inode_unlock(inode);
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > I think this is the only approach that doesn't require chan=
-ges to iomap.
-> > > > > > > >
-> > > > > > > > I'm going to think about this some more next week and will =
-try to send
-> > > > > > > > out a patch for this then.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > Thanks,
-> > > > > > > > Joanne
-> > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > void fuse_iomap_set_i_blkbits(struct inode *inode, u8=
- new_blkbits)
-> > > > > > > > > > > {
-> > > > > > > > > > >         trace_fuse_iomap_set_i_blkbits(inode, new_blk=
-bits);
-> > > > > > > > > > >
-> > > > > > > > > > >         if (inode->i_blkbits =3D=3D new_blkbits)
-> > > > > > > > > > >                 return;
-> > > > > > > > > > >
-> > > > > > > > > > >         if (!S_ISREG(inode->i_mode))
-> > > > > > > > > > >                 goto set_it;
-> > > > > > > > > > >
-> > > > > > > > > > >         /*
-> > > > > > > > > > >          * iomap attaches per-block state to each fol=
-io, so we cannot allow
-> > > > > > > > > > >          * the file block size to change if there's a=
-nything in the page cache.
-> > > > > > > > > > >          * In theory, fuse servers should never be do=
-ing this.
-> > > > > > > > > > >          */
-> > > > > > > > > > >         if (inode->i_mapping->nrpages > 0) {
-> > > > > > > > > > >                 WARN_ON(inode->i_blkbits !=3D new_blk=
-bits &&
-> > > > > > > > > > >                         inode->i_mapping->nrpages > 0=
-);
-> > > > > > > > > > >                 return;
-> > > > > > > > > > >         }
-> > > > > > > > > > >
-> > > > > > > > > > > set_it:
-> > > > > > > > > > >         inode->i_blkbits =3D new_blkbits;
-> > > > > > > > > > > }
-> > > > > > > > > > >
-> > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwon=
-g/xfs-linux.git/commit/?h=3Dfuse-iomap-attrs&id=3Dda9b25d994c1140aae2f5ebf1=
-0e54d0872f5c884
-> > > > > > > > > > >
-> > > > > > > > > > > --D
-> > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > Thanks,
-> > > > > > > > > > > > Joanne
-> > > > > > > > > > > >
-> > > > > > > >
-> > > >
-> >
+## Source
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 84b92a499e7eca54ba1df6f6c6e01766025943f1
+* Git describe: next-20250731
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731
+* Architectures: x86, s390, riscv
+* Toolchains: gcc-8
+* Kconfigs: hardening.config
+
+## Build
+* Build details 1:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731/testrun/29316787/suite/build/test/gcc-8-lkftconfig-hardening/details/
+* Build details 2:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731/testrun/29317240/suite/build/test/gcc-8-lkftconfig-hardening/details/
+* Build details 3:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731/testrun/29317236/suite/build/test/gcc-8-lkftconfig-hardening/details/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250731/testrun/29316787/suite/build/test/gcc-8-lkftconfig-hardening/history/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30cmb9OdgONks9mQHuMJ5hkW09f/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/30cmb9OdgONks9mQHuMJ5hkW09f/config
+
+## Steps to reproduce
+ * tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8
+--kconfig defconfig \
+           --kconfig-add CONFIG_DEBUG_INFO_REDUCED=y \
+           --kconfig-add CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y \
+           --kconfig-add CONFIG_IGB=y \
+           --kconfig-add hardening.config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
