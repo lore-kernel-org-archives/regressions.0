@@ -1,74 +1,66 @@
-Received: from mx0e-0085b301.gpphosted.com (mx0e-0085b301.gpphosted.com [67.231.147.199])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D3120B22;
-	Thu, 31 Jul 2025 20:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.147.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753995511; cv=none; b=c75R8hB+fN2XbMxl4S1ZzvVvZAsQ6PKyNUO+TAiFsgsOGXmbFCc/IHteSTIEh4pUWqKVVubm2xq4Sqk409/FqTfr7/uReVFEwZa6Jlo+mm3M3TGbSzoq0h1SkdXctmXJSBpde5E36mGQ6UYgK5Xy+FmTQG+SF4QQFbUVpjgS6V8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753995511; c=relaxed/simple;
-	bh=zlH0RfC76DhvbnUaV2GPtwg3u0KKc/8zibG7tbyBxZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bdc+KOiilUTDu87Wkf77WAKyvAba0bvNAPBfh6Cdb2DHH2KDfe+h2qbw2q26FJtErLgxhvz/Ym8DLworozs3+ZWUWQj/1QXLiLAZzK0mMK2z6830x4m5p/JtmGCC5AXtqVSHoLKtCAXdkZoeD6A84gVgEA9FEjARth1l4w5SPGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=viasat.com; spf=pass smtp.mailfrom=viasat.com; dkim=pass (2048-bit key) header.d=viasat.com header.i=@viasat.com header.b=JEj7nAXD; arc=none smtp.client-ip=67.231.147.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=viasat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=viasat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC001DFCB
+	for <regressions@lists.linux.dev>; Fri,  1 Aug 2025 12:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754051554; cv=fail; b=PiWBgmTkMFY2rExaTQI/NsK9ciqtnNEPHXVjDPeRGRb+YD1cNYhVBRjVM/+hgdSg08OYzHuTBfm5E6GdDS8CvLuvtakvV0by+3tgVXRpvjMh7ggZlFTl1O2mFNtGtmAI7kKvD+RfmoYXlkXPby8oy4s5G1P0th4qMWnp9g3a9Ac=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754051554; c=relaxed/simple;
+	bh=jjrb7C79Ex6lN8/iPHspI94fzEDicnyWBDshw2mCdSk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=e+O9/xeZCYd1DJ2WBIEieoMpFjuaGX9+A2U7eId5M5iE/U554IpqQ1/Q9+4Ohbpq+BnKXUtXYTYmiDxo4kIU/Z/qku+OjexL1Gomau8DppPRD4KyDyyS4g2BpzqI6R7M8OjrOq7EdRFy917QyUEaSSa+Enx1meZluXGXMvJTMU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GIZeW8ci; arc=fail smtp.client-ip=40.107.93.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=viasat.com header.i=@viasat.com header.b="JEj7nAXD"
-Received: from pps.filterd (m0351329.ppops.net [127.0.0.1])
-	by mx0e-0085b301.gpphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56VJgaKB006710;
-	Thu, 31 Jul 2025 20:44:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=viasat.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=2y4disjWUjWYFrysJhW0zowUF5MQL9jLgrMDCcueTZg=;
- b=JEj7nAXD1WoQEDwpGXSakQplDvohZfFYYtlkfQqfN+EwsliHaOriTEC7vZmeLQByPOTI
- 3H5EPMMSS6fDDGkpCmmSDriufBHmxuKBbuczQG598phEq2JCEponPDZuMEYrAGgJ6+ZR
- yfxZLDKwjTIn4W246ZdyOA1hHEyOe5KaAVYKC10K10ov1YrzYaHJ9A7xx1gARFNGpPQc
- zx7afkPRT4s70d7bdpfg8AFle+sJbxUKAQZJROaeP7rWDcZnmH2294uTmKTlBJ/+CNRv
- WbRYSflB+kooXsTlQcUGjyAz7VHi0H51gR1JNhR1JCNzkalrWzQcb967gnq5EkGcP0jB BA== 
-Received: from wdc1exchp03.hq.corp.viasat.com ([8.37.104.42])
-	by mx0e-0085b301.gpphosted.com (PPS) with ESMTPS id 488esu0c19-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 31 Jul 2025 20:44:04 +0000
-Received: from WDC1EXCHP05.hq.corp.viasat.com (10.228.7.145) by
- WDC1EXCHP03.hq.corp.viasat.com (10.228.7.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 31 Jul 2025 14:44:03 -0600
-Received: from WDC1EXCHP05.hq.corp.viasat.com ([fe80::e59e:1518:91aa:55e9]) by
- WDC1EXCHP05.hq.corp.viasat.com ([fe80::e59e:1518:91aa:55e9%14]) with mapi id
- 15.01.2507.039; Thu, 31 Jul 2025 14:44:02 -0600
-From: "Jones, Morgan" <Morgan.Jones@viasat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Heusel
-	<christian@heusel.eu>
-CC: Mario Limonciello <mario.limonciello@amd.com>,
-        Sasha Levin
-	<sashal@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Arcari
-	<darcari@redhat.com>,
-        Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "viresh.kumar@linaro.org"
-	<viresh.kumar@linaro.org>,
-        "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
-        "perry.yuan@amd.com" <perry.yuan@amd.com>,
-        "skhan@linuxfoundation.org"
-	<skhan@linuxfoundation.org>,
-        "li.meng@amd.com" <li.meng@amd.com>,
-        "ray.huang@amd.com" <ray.huang@amd.com>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-        Linux kernel regressions list
-	<regressions@lists.linux.dev>
-Subject: RE: [EXTERNAL] Re: linux-6.6.y regression on amd-pstate
-Thread-Topic: [EXTERNAL] Re: linux-6.6.y regression on amd-pstate
-Thread-Index: AQHbAfgjMcfsLm0RPUe9mEZa119bzrJOUuoAgAAExwCCAFqV0A==
-Date: Thu, 31 Jul 2025 20:44:02 +0000
-Message-ID: <534cb3af86bd4371800ebfb3035382c2@viasat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GIZeW8ci"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pUgUGHQgeT7hClnkxE2eCr46gSj+zwkD0LAwQPqc8nkSrOXmUvzKP3B9+6LKZu2QD2OtWAR8dIr/iLRlDdjt3+bIjeG3VYHEVAZVr7mnb+191RMYPj+9SvzLwCis6nDGsqN0byJTPbYlK41Yb0O/i3vDVD3dA5jO7taDDJjsFSt8WOtbZGyL0FArnMFtwIkJCptd80/4D3pOO79kfZVWzP8OnRXxt+IiTpUXKy7bHI1vw2/0nRxSamKCzyH+n9ts6LpftInPu2GS/2dZCY4qmprLPeUkm6ugfLKyS/6SYP3TIZmjgGvAWufFkJfE3sU6Knwho5CqqpzZEiteDC2X8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pb6749OBLPKlltDZbx5flSg+BBhKMJjd5oJXMwbP1F4=;
+ b=QuI6IPcANCh4cl8axSD37EV7mT23/EV5ulQNo2+HF5WPuKcgwCpNV8mv2vjX4W1pQCEIbXD/obxhgQEhyxnKzCtriNQltxy0eHzPHE0OO/6gGXC+0t/zG8bhtRn5PRuBW9vORqi92vdYZl2RBQfPfDOMPHe0n5UxIPHNnlK0UHaVwT4EZdgzkIHv77Cl3ptHl4hCCsKoietBCnDGAMpHvFwOU0+bPmZNGrBdRQiB32oIyqeMsz1t+birxOYTM0HbcQQTpLnoV7PG6lY5gRHGrVh34SbADGe9jHJB0RzgMjpY56GCCKddrhnHfvVNBpi65TgAMF4GzupDqJBLtnSfdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pb6749OBLPKlltDZbx5flSg+BBhKMJjd5oJXMwbP1F4=;
+ b=GIZeW8ci6XDlh3wat6fzst5r2yVii1pZFjyACx6FS0pfUrG1Ne+wGYw9jbWXBi2y6byqtj3d1i3mAS6JGfDTkv7PdL52mVnnze4/oaSamb3Da+onRYqAPELRdRmT+i1+BLpr0BgJYx1u/Hl3Fe5TS5P4znG9VuKmVUnP8y99RmM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DS5PPF6BCF148B6.namprd12.prod.outlook.com (2603:10b6:f:fc00::652) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.13; Fri, 1 Aug
+ 2025 12:32:30 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8989.017; Fri, 1 Aug 2025
+ 12:32:30 +0000
+Message-ID: <a9fd04bc-bd13-4bea-97da-2ed3beeb78ce@amd.com>
+Date: Fri, 1 Aug 2025 18:02:18 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: linux-6.6.y regression on amd-pstate
+To: "Jones, Morgan" <Morgan.Jones@viasat.com>
+Cc: Sasha Levin <sashal@kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ David Arcari <darcari@redhat.com>,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ "rafael@kernel.org" <rafael@kernel.org>,
+ "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+ "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
+ "perry.yuan@amd.com" <perry.yuan@amd.com>,
+ "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+ "li.meng@amd.com" <li.meng@amd.com>, "ray.huang@amd.com"
+ <ray.huang@amd.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Christian Heusel <christian@heusel.eu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 References: <66f08ce529d246bd8315c87fe0f880e6@viasat.com>
  <645f2e77-336b-4a9c-b33e-06043010028b@amd.com>
  <2e36ee28-d3b8-4cdb-9d64-3d26ef0a9180@amd.com>
@@ -80,177 +72,196 @@ References: <66f08ce529d246bd8315c87fe0f880e6@viasat.com>
  <2024090834-hull-unbalance-ca6b@gregkh>
  <2ffb55e3-6752-466a-b06b-98c324a8d3cc@heusel.eu>
  <2024090825-clarity-cofounder-5c79@gregkh>
-In-Reply-To: <2024090825-clarity-cofounder-5c79@gregkh>
-Accept-Language: en-US
+ <534cb3af86bd4371800ebfb3035382c2@viasat.com>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <534cb3af86bd4371800ebfb3035382c2@viasat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1P287CA0014.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::29) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-ORIG-GUID: rNIW7h3nN3UqglVKc0s-xxVSD8karOTt
-X-Proofpoint-GUID: rNIW7h3nN3UqglVKc0s-xxVSD8karOTt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDE1MCBTYWx0ZWRfX4nN+1EmU7bN/ dYErwNdOvfXw7lZvRoN7AHOlEQUGKNWWPDmS0p7XFmnGvSVp5FlFCdStZG1zOi/yTDvrkrHBgID 8xwVsReQgIUZkWOjAKtSSgZhl/I57dNQtNwfT6UU151q3zhmOP/+/yJdGJKMcSY29lvu9EMfK6a
- WdG4cRMs/8j0r+4W/8PhOrW1soGZX5BCuQSTqXv0I5gvZGwH1nmcd2IqggDmR9JfChDDM9bjHe1 9YJagsNud5tqJocYZrxEtCS+giU57CMigOM0rDCx0M7F81f0fywO/74IcuThJia/+HSc64TybwE 9/SoNzSKORUTlU/aIK8+XiNOhA0WJcOcaQezc51OONhFjFlMjsXF+P6c2VmkaTkxK/1eiFkcZRg UhTzXLFH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-31_04,2025-07-31_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 phishscore=0 clxscore=1011
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2507310150
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS5PPF6BCF148B6:EE_
+X-MS-Office365-Filtering-Correlation-Id: 122ba1d6-c5b5-4f74-ab29-08ddd0f77b13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U2lJWm9nWk5rMG5pQ01SZDd0cTBRZ1NIU1JlOS9CSGlSL0dheUR2YlJOWS9U?=
+ =?utf-8?B?eFpJVmRrdWpiL1hQZnNVZEtqRWRiaEN3OFJrZDdKTHMvTC9oVVQ1N1RTVVBF?=
+ =?utf-8?B?azZBNnJ6c0duOEJ6Um9HZDF3RUJIZ3Yxc3RGcmw4aXRObkphdzFhSXR0Vlpa?=
+ =?utf-8?B?SXRHM1A1ZWZUMUY5QkJydDNFZTRLUmloTnBqOVVxcE1HVzQyMGZ0UStSdUxC?=
+ =?utf-8?B?dlVXM3VSKzVFTFl4NjBqSmNtWlVyaHUxQVU0MDZaNlhudFllUWIwdVlNQWF4?=
+ =?utf-8?B?UFY2Q1lBQ0hENVlQcHk1RlA1eGVnL3EwZGdWcGkyVGVTQUZtQ3RnRmtESGhD?=
+ =?utf-8?B?Y2x2NVRkYVR1c1lOMGk5V3BZVklXNXBKZnRvc1B3cGgwNTd2VzNBSXlJYkdR?=
+ =?utf-8?B?c0xFSTJBV2R4eTNhTXQwMGR3SnJrOGlDZXo3NUk3OHV6VVlHRjdOYThPdzN2?=
+ =?utf-8?B?UW8xUkR1MThkRjd0Ymx1RTNmemlucmdhNkxPenE0azdCWmtvNGVnbmdUeU1w?=
+ =?utf-8?B?NXN3alpqYWVwSkdLNi80Ujc0MUhQNVp6bEliV0J6R1BXbXhqZ3JQUVNhR2JY?=
+ =?utf-8?B?azhSdHBJYTVGQTkzRWRQbnFhMlVJbXBoOEJrMkhmTUswWnMyQWpvb1JBYmRm?=
+ =?utf-8?B?aVVFSmF0aTZVOEFvNjhMQlZvT2NZWEovVHRYRnpFRk5WQ2xmb0ZQVUtPSVg2?=
+ =?utf-8?B?Z0R6SGNpcjZSaTFhWEx1RXVZNmd6WjViLzRUNVpPRHYzNE9zaU1NU0lZOUFq?=
+ =?utf-8?B?TEVlcVZvRGNndmxiWjduR3lJcDhCeG1SSU54SU41MHdrR0pydW1RbVN2eENM?=
+ =?utf-8?B?cEQzTW04aE0ydStEQVIyeE4yZExVNTZGUmFUTzE2M1pWWG1SSkZJUXYzMFdI?=
+ =?utf-8?B?R3d5NzNyQ3NHeXpGNUlaZFlnVGtaTkVLZWFyNWo5aHF6bHMvaHF5TXp2RG1p?=
+ =?utf-8?B?SEFsT2MxK3gwOUZQanVsRjNTUCszRWI1RnNYOW9keEk5RGxlb2Y4dU5vaXR0?=
+ =?utf-8?B?aUMzcHVJTkQ0bktqMG9nMlErR1RtZldTT1QrMWd1Yy9CU1FvTVdzamFmQVlF?=
+ =?utf-8?B?SGtOVnlvVTVob2o1RllZSkwzYWZDSjJRQUpvRG9nbThOQ29pL3NiNUZTL0tO?=
+ =?utf-8?B?c01RZmdPVVN2NHFLN2k4cnR6bXZhRWpKVzBpcUczLzRjNXhlY2l5Wm5rV1lW?=
+ =?utf-8?B?SFVjUjFjTUdPaE1PK1JuNzNmbWk3T1pISFNMUVVCR2pZUThyYXZrMHlTQXgv?=
+ =?utf-8?B?NEVtSUF1cTJCdytPNVBvaDlWVmVGTkZpZ09VSUdWNXoyUTMySXgzd2w5R1Js?=
+ =?utf-8?B?OG93VXdLL1p6S2c3cTlOcERBVmRicENFaDdxRTZGVGJmUUZHWDJoRU4wWWs5?=
+ =?utf-8?B?c2Q1cWZibUUzb1dtbFdudUlWbWZkNGgwU0RvMS9Ed1hUV1lxVFhDVnpIbVJn?=
+ =?utf-8?B?TkpzUzRVeC95cUVMVmFaQ003TVdNSWNvL2ExSlVnZjA0d1AwTmhRRGlCOEpZ?=
+ =?utf-8?B?M0JuTGU3ZEZPNEZER3pEdlNJQ1ByMnBTK25MZ1hiVnBoQ2VvZlZLbEF0Q3pM?=
+ =?utf-8?B?bEVtVlVpTWZNeEhRWXNGRlZsMzcvazlPNDB2QUxzZWlkTVhKUTdIVlFtVHpC?=
+ =?utf-8?B?RGJIR21ibjFUMGlvRkxLaE43ZkI5N0dCZ3lDaUFXQUZqeU5NUXdwbHFORDln?=
+ =?utf-8?B?Z3pUSkprY2E1U0ZDZ1lPMzJ3VkJxR0JaUndmdHBBWnRTU3VqVmhxUWQyV2U2?=
+ =?utf-8?B?VzRxa01nb1VnSnJ6WVFRald4anVDMzV3SzZaR24xZWhGa1RVUjM3WVF0V09z?=
+ =?utf-8?B?ZUpBU0Y3S296d1lHaGtHM1YvQ0VnRXFJaU9Hd2FxSkJtdXJCNSswRDgwWjNB?=
+ =?utf-8?B?T1dxV3NyUWNDQXk4eFI0dFVzUGtHMEtiMGs2VmdFbmMyQm5UNWI4SkJDSk5j?=
+ =?utf-8?Q?OK4zJczpMAs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ODNXRDRDcDNxR2ZRL0xHS0Z1STduSVlRcXhjb0xDb2FrMjdjQjNSTkdIZ3ND?=
+ =?utf-8?B?V2FUVWUxS2pWZkJIdjZZaXFMYTRqTUgwandQRGcwR0hBVFIzMWoxTnRDVzJh?=
+ =?utf-8?B?QlFNbUl5SXdhblZxN0pDYmwyU29YdE1TbjhQV2o2Ym5xUFIxMWNwdlhXY2lB?=
+ =?utf-8?B?eThqUy80MGVhQUUrRERuQnVVK3hBTFNwNnhJZGlmam00VDcyY2NkOFFYeGdr?=
+ =?utf-8?B?TUc4YXBZV05xOHU1elJtV2FSUHVYT1VTMFJQYVJ3eWFHMGp4U1V6QnVKNDZ4?=
+ =?utf-8?B?Qkk5SFliM3dJQTE0Z3JRKzN4UWRYVjlpV2FERHZQc254TWVSanNKdTJOZGNi?=
+ =?utf-8?B?V2hMbXliRVNxbGtZRm5pTUtEQndPcUhETXp4ZExVdEluTHF3UzlrazZVM21j?=
+ =?utf-8?B?ZysxWnNzelFubGRmT2w5VWxHK2ovcVdSbTZPWXRTaXRRQ1lUeWJ6bVFudWVY?=
+ =?utf-8?B?b1pvTFp4UjhYSURwT2JLSzhVeFVwN2E4eXRMTENHUmFQV1NTeVJvMjNKS3Zo?=
+ =?utf-8?B?TTJIVnBaRmZ2UjBhSUJhSkRxT0lveXljc3JUSWg3bXM0ckhTUVR5SDl6NERS?=
+ =?utf-8?B?RlpxaGFpVENYYmRyelFROWFuR0RhR2lFT1o4S1gxaGxnRWt6OXkwRnMrYmdl?=
+ =?utf-8?B?YkxZYkZTQzhvY1hrSms3ajMvejFuOUEzdFB4Z0Z1NmN6WlExOGRUaUF1bWVN?=
+ =?utf-8?B?d3cxaFN3emNlc2Qxd3N5UnM5ZXVWUEJwR2ZhNXVqU0duOGxUaHBJaDNVR1hu?=
+ =?utf-8?B?OCtsY1JadzFuNHBZUG5qc052Nzh4R2dSbzNlT29yQ2xnajRyeTFDNFhMZmtj?=
+ =?utf-8?B?TVZ6WG80a0lsTS9tWFZOVTRwYU1GUXlOOThGM0FxL283aUFvQUx1V0hNSStI?=
+ =?utf-8?B?Y0EyUWZXM2FUMVhSRUttQVRSdkpUbjc1dzRGN1lkRXNHeU1xQXdiNXd5dXY3?=
+ =?utf-8?B?Z05YTDJKZ3RObGEyZVhJaXRqcFFFWHA3TmNKTllTL3RCN203K2VraVNvSTVt?=
+ =?utf-8?B?QjFueEpNNldkSGhSbG9ML3NBdngvWjZLbW9IbFRhMEdFZ08rNVZsekRaSVlZ?=
+ =?utf-8?B?UVpxNTBBT3hRK21JamNYTXVKaW5qUThHd213WGFUVk1laFdkdWsyRFI1eTVr?=
+ =?utf-8?B?dlQzR1A4dExMYXY0K3BzZTRGSnJFTDU2Y1QwZU10aStIVjFnbTlScENobW85?=
+ =?utf-8?B?aGdIdTJPOGR5MXpCYURVS2FsM3NlanBBZ3NqRjVKNE1DdDBVUnN2cnJnV3Mw?=
+ =?utf-8?B?cUx4VHRtalc5WkxHQVYxZGpIVmRnNmFyajU1N2plQzlRcHJZZmxGbXcvOUZw?=
+ =?utf-8?B?dGU5Z0RibGNaUTZ3dk5yZlBOZzNkc2NmK1hGdjFPWGtKK2dkMHo0b3ZWWlcz?=
+ =?utf-8?B?Q3M0UVpzbEk4dWJEUDJ2VTBLUUNrOVU1YUpLN2hqOEJkMzZJOUtzaWpCcm4v?=
+ =?utf-8?B?ZEtMdlFZMkswaXYrSDZ0NU5odklia1Iva2QrRzJxaE5uZEw2Qi82bHd6UGdl?=
+ =?utf-8?B?cnhzOWdaZ1hIaDNDQU4veWVwa0pPN2V4QU5SQ05xakZLanpXb0YyL0ZucUM2?=
+ =?utf-8?B?MkdwQ213NjFCekJEVkdFVXQ1dzBsTTlFVjBuaVhDT2RGWnpHSTMvQ0RGTjY4?=
+ =?utf-8?B?MDNnbHYwanJiU1JSU3ptM3E4Y1pZRVUzYTVISnN1WEc4TU5OSzhqQmNGTG8r?=
+ =?utf-8?B?UC9KdmxZRkhHN1F2VHZnZ0RGdVpkMjYzR1hqWEdaM0xCV05lU3g2Y3VJcXFO?=
+ =?utf-8?B?RUcramhQMElmdEJuVC9Qa2VUQVBZLzBxWnZBbFpkaERxZmlNdnE3UXozOW5x?=
+ =?utf-8?B?dWd3dWxSbFVNTVpEVXBPdkRkdDRRT3ZPcW9GRU9wTC9BZjNYZEp1TS81Y1pG?=
+ =?utf-8?B?OFZyVmF1UFdmK04yeHhDQjBrTytLS3EwYTUzWTN3VXFvcXQzYmZta0F4QWFJ?=
+ =?utf-8?B?a0dLUFFOTGxMUDdsZXlTWDg3M3pZampEbkFWS0JsSkUwdUxYWjUxZ2RMQkxN?=
+ =?utf-8?B?a1FUMUQ3TExORWVSMFdJalNuek9LWGVoSmV0c0tGdkZ1OGY2R1drRVI5VDRH?=
+ =?utf-8?B?MzczR0FtSGRiZXZ5WktXSDR2WFR3ei9CTnJKVUdmeWRhOExMc3R5a2ZnZkdS?=
+ =?utf-8?Q?JCzZGqRdOsUaJdpls7TXzVsfY?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 122ba1d6-c5b5-4f74-ab29-08ddd0f77b13
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2025 12:32:30.0854
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nWy8BXHqWGW+wwl6X88skw1R7mEnCB2mFS4c0u8X6u9ShXlkeCjQSLa7pDHGIpV8CDYPJFc6j1DjhhWq+rgJ5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF6BCF148B6
 
-Hey all,
+On 8/1/2025 2:14 AM, Jones, Morgan wrote:
+> Hey all,
+> 
+> I think some form of this is back between 6.12 and 6.15 on our fractious AMD EPYC 7702. The symptom appears to be that the core will not boost past 2 GHz (the nominal frequency), so we lose out on 1.36 GHz of boost frequency. Downgrade from 6.15.7 to LTS (6.12.39) seems to fix it.
+> 
+> Keeping an eye out for other threads reporting similar symptoms on recent kernels:
+> 
+> [    0.000000] Linux version 6.15.7-xanmod1 (nixbld@localhost) (gcc (GCC) 14.2.1 20250322, GNU ld (GNU Binutils) 2.44) #1-NixOS SMP PREEMPT_DYNAMIC Tue Jan  1 00:00:00 UTC 1980
+> 
+> # cat /proc/cmdline
+> [snip] amd_pstate=active amd_prefcore=enable amd_pstate.shared_mem=1
+> 
+> # cat /proc/cpuinfo
+> [snip]
+> processor       : 127
+> vendor_id       : AuthenticAMD
+> cpu family      : 23
+> model           : 49
+> model name      : AMD EPYC 7702 64-Core Processor
+> stepping        : 0
+> microcode       : 0x830107d
+> cpu MHz         : 400.000
+> cache size      : 512 KB
+> physical id     : 0
+> siblings        : 128
+> core id         : 63
+> cpu cores       : 64
+> apicid          : 127
+> initial apicid  : 127
+> fpu             : yes
+> fpu_exception   : yes
+> cpuid level     : 16
+> wp              : yes
+> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca sev sev_es
+> bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass retbleed smt_rsb srso ibpb_no_ret
+> bogomips        : 3992.75
+> TLB size        : 3072 4K pages
+> clflush size    : 64
+> cache_alignment : 64
+> address sizes   : 43 bits physical, 48 bits virtual
+> power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
+> 
+> # cpupower frequency-info
+> analyzing CPU 76:
+>    driver: amd-pstate-epp
+>    CPUs which run at the same hardware frequency: 76
+>    CPUs which need to have their frequency coordinated by software: 76
+>    energy performance preference: performance
+>    hardware limits: 408 MHz - 3.36 GHz
+>    available cpufreq governors: performance powersave
+>    current policy: frequency should be within 1.51 GHz and 3.36 GHz.
+>                    The governor "performance" may decide which speed to use
+>                    within this range.
+>    current CPU frequency: 1.98 GHz (asserted by call to kernel)
+>    boost state support:
+>      Supported: yes
+>      Active: yes
+>    amd-pstate limits:
+>      Highest Performance: 255. Maximum Frequency: 3.36 GHz.
+>      Nominal Performance: 152. Nominal Frequency: 2.00 GHz.
+>      Lowest Non-linear Performance: 115. Lowest Non-linear Frequency: 1.51 GHz.
+>      Lowest Performance: 31. Lowest Frequency: 400 MHz.
+>      Preferred Core Support: 0. Preferred Core Ranking: 255.
+> 
+> Regards,
+> Morgan
+> 
 
-I think some form of this is back between 6.12 and 6.15 on our fractious AM=
-D EPYC 7702. The symptom appears to be that the core will not boost past 2 =
-GHz (the nominal frequency), so we lose out on 1.36 GHz of boost frequency.=
- Downgrade from 6.15.7 to LTS (6.12.39) seems to fix it.
+Hello Morgan,
 
-Keeping an eye out for other threads reporting similar symptoms on recent k=
-ernels:
+6.12 to 6.15 unfortunately includes a pretty big overhaul to the 
+amd-pstate driver.  But I'm pretty surprised to hear this regression as 
+we have had a lot of mileage on it across a very wide variety of hardware.
 
-[    0.000000] Linux version 6.15.7-xanmod1 (nixbld@localhost) (gcc (GCC) 1=
-4.2.1 20250322, GNU ld (GNU Binutils) 2.44) #1-NixOS SMP PREEMPT_DYNAMIC Tu=
-e Jan  1 00:00:00 UTC 1980
+That being said:
+1) Please capture a report using amd-pstate from amd-debug-tools 
+(https://git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug-tools.git/about/) 
+both on a good and bad kernel and share them.
 
-# cat /proc/cmdline
-[snip] amd_pstate=3Dactive amd_prefcore=3Denable amd_pstate.shared_mem=3D1
+2) Can you reproduce on mainline 6.16?
 
-# cat /proc/cpuinfo
-[snip]
-processor       : 127
-vendor_id       : AuthenticAMD
-cpu family      : 23
-model           : 49
-model name      : AMD EPYC 7702 64-Core Processor
-stepping        : 0
-microcode       : 0x830107d
-cpu MHz         : 400.000
-cache size      : 512 KB
-physical id     : 0
-siblings        : 128
-core id         : 63
-cpu cores       : 64
-apicid          : 127
-initial apicid  : 127
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 16
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca =
-cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe=
-1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_a=
-picid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 mo=
-vbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_leg=
-acy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext per=
-fctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate s=
-sbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdse=
-ed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc c=
-qm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbn=
-oinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushb=
-yasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spe=
-c_ctrl umip rdpid overflow_recov succor smca sev sev_es
-bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass r=
-etbleed smt_rsb srso ibpb_no_ret
-bogomips        : 3992.75
-TLB size        : 3072 4K pages
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 43 bits physical, 48 bits virtual
-power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
+If 1 and 2 don't lead an obvious answer:
 
-# cpupower frequency-info
-analyzing CPU 76:
-  driver: amd-pstate-epp
-  CPUs which run at the same hardware frequency: 76
-  CPUs which need to have their frequency coordinated by software: 76
-  energy performance preference: performance
-  hardware limits: 408 MHz - 3.36 GHz
-  available cpufreq governors: performance powersave
-  current policy: frequency should be within 1.51 GHz and 3.36 GHz.
-                  The governor "performance" may decide which speed to use
-                  within this range.
-  current CPU frequency: 1.98 GHz (asserted by call to kernel)
-  boost state support:
-    Supported: yes
-    Active: yes
-  amd-pstate limits:
-    Highest Performance: 255. Maximum Frequency: 3.36 GHz.
-    Nominal Performance: 152. Nominal Frequency: 2.00 GHz.
-    Lowest Non-linear Performance: 115. Lowest Non-linear Frequency: 1.51 G=
-Hz.
-    Lowest Performance: 31. Lowest Frequency: 400 MHz.
-    Preferred Core Support: 0. Preferred Core Ranking: 255.
+3) Can you please bisect?
 
-Regards,
-Morgan
-
------Original Message-----
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>=20
-Sent: Sunday, September 8, 2024 7:30 AM
-To: Christian Heusel <christian@heusel.eu>
-Cc: Mario Limonciello <mario.limonciello@amd.com>; Jones, Morgan <Morgan.Jo=
-nes@viasat.com>; Sasha Levin <sashal@kernel.org>; linux-pm@vger.kernel.org;=
- linux-kernel@vger.kernel.org; David Arcari <darcari@redhat.com>; Dhananjay=
- Ugwekar <Dhananjay.Ugwekar@amd.com>; rafael@kernel.org; viresh.kumar@linar=
-o.org; gautham.shenoy@amd.com; perry.yuan@amd.com; skhan@linuxfoundation.or=
-g; li.meng@amd.com; ray.huang@amd.com; stable@vger.kernel.org; Linux kernel=
- regressions list <regressions@lists.linux.dev>
-Subject: [EXTERNAL] Re: linux-6.6.y regression on amd-pstate
-
-On Sun, Sep 08, 2024 at 04:12:28PM +0200, Christian Heusel wrote:
-> Hey Greg,
->=20
-> On 24/09/08 04:05PM, Greg Kroah-Hartman wrote:
-> > On Thu, Sep 05, 2024 at 04:14:26PM -0500, Mario Limonciello wrote:
-> > > + stable
-> > > + regressions
-> > > New subject
-> > >=20
-> > > Great news.
-> > >=20
-> > > Greg, Sasha,
-> > >=20
-> > > Can you please pull in these 3 commits specifically to 6.6.y to=20
-> > > fix a regression that was reported by Morgan in 6.6.y:
-> > >=20
-> > > commit 12753d71e8c5 ("ACPI: CPPC: Add helper to get the highest=20
-> > > performance
-> > > value")
-> >=20
-> > This is fine, but:
-> >=20
-> > > commit ed429c686b79 ("cpufreq: amd-pstate: Enable amd-pstate=20
-> > > preferred core
-> > > support")
-> >=20
-> > This is not a valid git id in Linus's tree :(
->=20
-> f3a052391822 ("cpufreq: amd-pstate: Enable amd-pstate preferred core=20
-> support")
->=20
-> >=20
-> > > commit 3d291fe47fe1 ("cpufreq: amd-pstate: fix the highest=20
-> > > frequency issue which limits performance")
-> >=20
-> > And neither is this :(
->=20
-> bf202e654bfa ("cpufreq: amd-pstate: fix the highest frequency issue=20
-> which limits performance")
->=20
-> > So perhaps you got them wrong?
->=20
-> I have added the ID's of the matching commits from Linus' tree above!=20
-> :)
->=20
-
-Thanks, that works, all now queued up.
-
-greg k-h
+Thanks,
