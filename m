@@ -1,174 +1,560 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4843F14E2F2
-	for <regressions@lists.linux.dev>; Sun,  3 Aug 2025 22:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754259289; cv=none; b=EGxnEWrqR5IG2nuwwD+ziO4U/ODJPm0tyGE2MQYU43AnnRIvXm1Kte3deD7lFyRKHL1CV6wxOcZjpanwBk2SKZEOP0Csp8gQu5Qwr6iC/+I+kkbmpusqRFuJih02SY+5FmJhFZRp3mr3XoRuzE1UQbGU3t9i7hrhmxcLETF/WTI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754259289; c=relaxed/simple;
-	bh=jCA+B26yt4eBvjuQTruNUskC+lN1NcLE1p2jjRy77nw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JvM39CdRlJJJj48uVfY6f2eHfhdi7hONOM9czUa5CUD6xVnBqnxAYWI9kxsvBCOzyHE1nQQIE22LBRqEfLNcEIeKmFQXvv4pj4+2D9zH9jWZ27ckgDTNpvObkYP2aZX5gm9yqRFcYjjPHTvoVGVGDNwGcxsr6BkeawWPnI4if2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lE8WMlXU; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB4D1E89C
+	for <regressions@lists.linux.dev>; Mon,  4 Aug 2025 07:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754294219; cv=fail; b=m4itGIziDkM5mlRQZQqK+uHKliI3CrmlO5C/GSyNrYZP4yhzPwDuRBcYueom/vm+C3UCUKEHMpX0HWpUM1FkyJLzMmTP7a0ytaaVwkC/S8oiIdjQhaod6jCYYf1KxLgctn5SjLWKXrJz2xBxsp4fYaIm23RxZJk+ODu8gwkeO5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754294219; c=relaxed/simple;
+	bh=56w7iZH4jp5PHWEiWyK2MNfKADszyqWhiF+G6HOilQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Au14EQdVZkSGcr316r/YyeBZGctIN+2YMpeie0jgc+1DLluYj0ejKph8Q29/kcfDmtuFlgQx+I6ABskfA/p4/0ygY++6VWr5KIeYbHA8DkRtpD2YNiB9RkGm9sdcB6+JMTqKoU7yp2AYxsLchXd75WuwAcQTdIhmG+1Xs3jfP0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NzXVcpcD; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UZ0Kjd+a; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lE8WMlXU"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-458b885d6eeso8155145e9.3
-        for <regressions@lists.linux.dev>; Sun, 03 Aug 2025 15:14:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NzXVcpcD";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UZ0Kjd+a"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5747gEbr018646;
+	Mon, 4 Aug 2025 07:56:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=MAvoMMsW/cQkR8nAA9
+	fec1QmFIVifCXNy3z7FCsLucs=; b=NzXVcpcDkHZ6nGNKW5t/EQQQA1LuSQQ2A3
+	USsc3wsdalLHdYbvL5xGThMS3rsLynQvKmH4Ij6hXpNuK9cBEAL+SvnFY9rMZkrc
+	UMV1OMxm4nADZcoNxn4sZ0kCbJ71Byq/yH0xKRg9i9SK1SkzR0TQ96tVtdPIcVNb
+	wJzujZUCD8lqkelnSuEqS74Z5x44mHRxRx7z5Dc2M6OWXAmUxD5iQn/OzFZ+W5Nj
+	/XDwIeJmHq61MQvhgZtB7Hcl3uN6oYfyeO29T/O06DEvuOHfe37r8cXzr1/NsC5e
+	8k2dxk3VA6KmK+xjCV/NvkurzZWLPX8UuI584Iqw07bt0MZt2zEA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4899kfa5ee-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 07:56:17 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5745vo6I031868;
+	Mon, 4 Aug 2025 07:56:00 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48a7juaq0t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 04 Aug 2025 07:56:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sRKs0nI2FgZy4yXMGW+Jb9/oJOvdGlT9KxlcL4v0QLDMjF+paZv1iPwnG/AtPXySNJfgEqUmEcq1vDKlZH6mGs38dcIwgM7i8K+MjpFFagOtz8W6E6Qk4jzBX+nbwfveKeu7L1NiUH30+ZLryS+fCzGP1ZJ9oEWInqK01qlMFJIymEF0RMtS3hH/xm6FlclK6w/vcwFiURumQfr4ovBFVJzjnJ+GPpwjwCi368qCfLKmy8qXkhEtAzaZNxipFNRhyZD6uVIPmrE3L5pCvIX71WVYoxqEnk5RpnfbDdUkYNyPehjGxSRfCM/mWh6PoyFWjPPxMnv7Ojj/bdP2COXuew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MAvoMMsW/cQkR8nAA9fec1QmFIVifCXNy3z7FCsLucs=;
+ b=y7QJc8s3t2P/vrI5j4ksO5KglDRQOjdkGJCIiD+z2VeNRQYTF6nF7SwVb25XLjFFuyX9G7hna5Wm/59hslLXPGdt4GG5+TC4QFpRKbSB5+Dn2eI5bneGBSi8XgZqLO0ZLijXk45fOpERjQC/nbOPbg/YqX8G7RGAyEVtG6gZa1uD2FvcHell/XbUqK5uvrpwgG5In+jP9cxsUNpYKhijeCmKO2BxhPkqxEcnTv5zl2p1XXqRje1PwY7EyhtQIHuX0kmp8aF5y+I6N7Vu0TtOii0Z9nrRA9jlsaoTEHDDBms9i4LABPKB0IRxrToSMzpBsIbrVmxEiyAGvSjbqREKSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754259285; x=1754864085; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0xVGKF+K4gOfiuafZICbFNoZopzH0Rl1WckmY49p58Q=;
-        b=lE8WMlXUE3qGjNsqs6eSHJH+SZ21jzAg0aqhr0levDOurteVzi8UqdgTuqS2L5OGCq
-         ufYymJNwnXtg4ARDUaKD4BdQ1/EDkDU8cejFPHVuSqTAPi/99msgINWjexjPudsZ2U59
-         9UIvHNfjTkXbt3IWDZPI8ysYq/Lp0Ty0VprbNtMaVNjqeNyzeAZnq6AOTwP3UHSBgJvQ
-         In9vcBpjf8DCYSBqwNCE+QV5bJkfbxeeMptSpE5c5vSdb6u7+nrLEtMb3vsTsf0tI0/o
-         /h6G4bauncV+untALHN6Z9DknxRu/nqnXzb6BBJghZdmNiSM6VL75egrHO2/ZmpsabFl
-         149w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754259285; x=1754864085;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0xVGKF+K4gOfiuafZICbFNoZopzH0Rl1WckmY49p58Q=;
-        b=Of6SNZZVZarJqgxPPd7doZQ8KW/+eJ3ACb5cnDRnGtbjBWe5uVzh6pR/wz/HWmmOAv
-         /Ty3g+tagnW0YkSJOqQVnIRJVayQcTangl64PSKIJEg4+lkitxB3K2UaZv5IOJ3TX4B3
-         W/27tBwmI6zXzV9xQ0prEVKu2hTBhemnIUCrV/ovtr2idhs5/3Ts4f+B+Rl9rBSCfQr2
-         AinjPsTsTBVZiibpAFIfp4c/Co3d3sKlmUeeSBUOH0QVsS4CJKpAG81di5Giv8H+URms
-         jGf3QSPpKoFWwms2MBPKQEAOobQdm8YWmQFW5vaVC89Go4iQ3rfZ/y52DElk3VfJUJVl
-         5krQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3LgmEd0WkpBRCXx9aFFU9B6+xwxrIkXQl3uPPrgvONUnwx2phpx650q9UA8ktjyqnbuKO6YRD8AkWsQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywy9+NFTNTEh2UqtorXEj4zZ4KpbKOQYH7j22n5OxIy2nRaL3Ci
-	xlTmDMYqRB5EYOqYzhris1RzIueA4qBMPqUf4rXy6NHhfYjntE9dmFZa
-X-Gm-Gg: ASbGnctwVNawz44PuO26U2mYeWcTuXS5savDxOANdOksSMSndZKeskLXM2PeYTzu1Rr
-	Mssu98RV2nTpEq5IQ7JXwfzzx3GH1pOBv6FUHG/VZ0ZnTcVY1vVxEEKEShq637+T3dan2tlaf9Q
-	t54xvjJfV6hTQ+acr4+WQMc925MfujX7H1ybdae+qFIVl6C3nRbRwmdfaTg1RtV4HYyEw7CoWWM
-	olfnuRq6gsPE5QWcDARyjWQF4DZLh1K2yZdS8u47NnOy61a1WKnH8huGy8Nvgc8FIs364rkMms/
-	Avf+9MnvNMAqv43Jiu5CZiuTxJX3s07CZ7XrVpg1gNANvYQ73WEOnXa5I/BEG0IkeD5DWhCt8UF
-	s1gKup6P3tew/RCWNi1Yinoayoo2nSbgvdg==
-X-Google-Smtp-Source: AGHT+IE597ZjLw0rLXTSN6O4+pECB+zeaGaGHlO+g4BENVFxXy3M0VanhjSvyGAWe8WaJ+T5bFfdDA==
-X-Received: by 2002:a05:600c:c162:b0:456:eab:6344 with SMTP id 5b1f17b1804b1-458b69eb569mr62921335e9.15.1754259285260;
-        Sun, 03 Aug 2025 15:14:45 -0700 (PDT)
-Received: from debian.local ([90.252.123.198])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4589ee5795esm145895925e9.25.2025.08.03.15.14.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Aug 2025 15:14:44 -0700 (PDT)
-Date: Sun, 3 Aug 2025 23:14:42 +0100
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: surenb@google.com, bsegall@google.com, dietmar.eggemann@arm.com,
-	mingo@redhat.com, hannes@cmpxchg.org, juri.lelli@redhat.com,
-	mgorman@suse.de, peterz@infradead.org, rostedt@goodmis.org,
-	vschneid@redhat.com, vincent.guittot@linaro.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] intermittent psi_avgs_work soft lockup
-Message-ID: <aI_fUhpBrIBrJ073@debian.local>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MAvoMMsW/cQkR8nAA9fec1QmFIVifCXNy3z7FCsLucs=;
+ b=UZ0Kjd+a9aR28Sr0GGxaKyhIlszeVUMFdzgPdAO7RkiXE/euV4w6i3y5tLOpbHaRMVnVk6IhC0VSZ8XHM9qCOqKuWco5lURVot/WkqTI2dfRwsCC5JnHDJYmCdXZyq3wr4YDCGTineOasf96nkGAeNpMe7m4qYY23xbIhxPxrRo=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by CH3PR10MB7805.namprd10.prod.outlook.com (2603:10b6:610:1bc::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.20; Mon, 4 Aug
+ 2025 07:55:58 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23%7]) with mapi id 15.20.8989.018; Mon, 4 Aug 2025
+ 07:55:57 +0000
+Date: Mon, 4 Aug 2025 16:55:43 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E. McKenney" <paulmck@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ben Copeland <benjamin.copeland@linaro.org>
+Subject: Re: next-20250729: PREEMPT_RT: rock Pi 4b Internal error Oops
+ kmem_cache_alloc_bulk_noprof - kernel locking rtmutex.c at
+ __rt_mutex_slowlock_locked
+Message-ID: <aJBnf738fPEmVqGo@hyeyoo>
+References: <CA+G9fYumD2MGjECCv0wx2V_96_FKNtFQpT63qVNrrCmomoPYVQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYumD2MGjECCv0wx2V_96_FKNtFQpT63qVNrrCmomoPYVQ@mail.gmail.com>
+X-ClientProxiedBy: SL2PR03CA0015.apcprd03.prod.outlook.com
+ (2603:1096:100:55::27) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|CH3PR10MB7805:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb1b38d3-2e57-4920-ffb2-08ddd32c58aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tnQ4nYCK5S2cuYObjJCTTKwTVSdE86nkAzx9TqXWCLUTsh4AHyo3fZuvE1bI?=
+ =?us-ascii?Q?yX9w33/2tNiqv/TDVDHb9CeNGk6YLzsqDheSAfKA6kitjjOMfIa6NL/i7Akb?=
+ =?us-ascii?Q?HW+cQL9b0av6XR+9H4BGhzFe2ulYw/R+wgXrmiUP+p2cEItOJUx2Xv3azX9i?=
+ =?us-ascii?Q?00WHz76h5UblTdML1Tnn0OVzCGjomcH8wZjmWdxZkWxIgTRjXtCImva802fI?=
+ =?us-ascii?Q?0tDUErni+bInXOfx+VLmmoeFdd/7PBfUNLLsuLpiy6/9YdxjpaavLO9C5X4o?=
+ =?us-ascii?Q?l8gAYBifnUXsFp4oVnTeYXnen3PnKbNtHrqj/UPQ57QNoWl/+NKPsWK8t4N/?=
+ =?us-ascii?Q?bbDxm3yVS/0a6Cc1CymufCc5WcoUxaatmfcOjoMNeWCDj6YZKixmRQfd7Mp/?=
+ =?us-ascii?Q?7TszFvg9omuto5skS1mbhTPH805VgW4RgY5+tD353ZvvOozF+JtuNois3PRw?=
+ =?us-ascii?Q?386TkLbxt2G4KjmJqG9ZVsp03P1HjvRqYSRfog0YFy+BzGCds8dlC/dmF/Im?=
+ =?us-ascii?Q?JpeJilIwqVSAXd/inRqTmzDO6AmGjGnhfMIJD9VYO8EZ/3TGdDbJ3+327KMa?=
+ =?us-ascii?Q?iAF9gsqfNWfyPB/lmq/VhY+FIvnjIxnk48DC8J096Frn17FDfKzx3WTYbops?=
+ =?us-ascii?Q?ToJgSpbZLMIWr9I9ilwEvqaUYD6qYEa5nImmeF6EnQOQKSdbbobTNZIpjmJw?=
+ =?us-ascii?Q?Sikd0NHxKUDxNfRt4OXcqogAwsXieX0xHHiIETVX7qSb6WBvtHL7a8xu1+Ll?=
+ =?us-ascii?Q?tB+0CXMsNYI+jgpiysMsuiDf7PM3xs+vw1FmLDSNltPSmplH0FXP7Lcm+B7T?=
+ =?us-ascii?Q?2fpyIK8NGf17hK2v6psvPJyx6ZY7BAeXGP1vvOtHTbnenedVRQJrGsgOVyrS?=
+ =?us-ascii?Q?WAxz6LDVmUsxI/3tcnCmjH0xCjahdJ9AQGqwtgGHdYpCZ3/62qDmYbuURqRj?=
+ =?us-ascii?Q?7wC7HbNyEJHAB3ZtRVoQWdI99Zml1kw9ItCZi29yQ6bQByFmVhmxhI3rtuBy?=
+ =?us-ascii?Q?wyHBB4QkbXxVQqKqKi6DNCq7+OTOlMGAH8Logdj4SK3jpzMo0FJNlZBOIecj?=
+ =?us-ascii?Q?QFGYt1YPFXedlcTzDi32kvcFYx+VrrOKN3+SeLYyV7zncXc9125I7IbWwxAQ?=
+ =?us-ascii?Q?4P9E/G9OPKypum1TC0/WXFTncVTc0Qqzrl05ISrl+Cwoce9LtjN21yaYUp77?=
+ =?us-ascii?Q?twXNCGnjSxYrUXaPw6j5ho86cE4W42559ihkg2ENfGHkE09cPV4Drtm5/I+x?=
+ =?us-ascii?Q?xdIBvGDXke99sG09fSMhv//pRwX6zF6SgcTKsh3xp6Y/P8Py8IsZqwmRUusx?=
+ =?us-ascii?Q?8adnHx+8gNyYK+OM3Y9aVsFpn5zoiJOwvy3VUVbgIWTc1/VuTKB9RgY7XMu3?=
+ =?us-ascii?Q?tsZ5OoQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?vHMoh5Zjzen84Lddp9We4YuPZf3LTHAJ7ZnMpNfG2OQNaIY3VEjgxQ0U87Or?=
+ =?us-ascii?Q?gzwqgYoyePzLMx728fv8xAXwOqzTO53aij8yF9Mo7kWm2H6iaj8zW9zmCK5E?=
+ =?us-ascii?Q?urclTxQ/okzKtqr7lXu18JWRYu6KBoJAv1xVF/FVv2ccIqAXxmvO/QNZ/G7Y?=
+ =?us-ascii?Q?WLOt0+C1+84eQdRyEfDcKV4nu/XvtdDdp3bXAUMp4E6pOBloiZDjSQojYeCu?=
+ =?us-ascii?Q?JynEumNI7J1hiZr+BvxdN5Fe3Idc8wdv9O0PozYJhiBSXWEfnruWYzb3wuVY?=
+ =?us-ascii?Q?kZQ8BVCmGwm0D8laTc0x1SfHF/5x+XzUVXglyevQtMnfH/wUsP68qu3YTd1C?=
+ =?us-ascii?Q?ncyoprcwDFCvJx+tezltkouytEXgSUnNUW4Qf9LTpiqqXJeZ+U+02zKZt3W9?=
+ =?us-ascii?Q?NCJx55YWL0gbrwmOF0VPI4bZumLu/ImE9KAJ2EL5bxhlazGEMasr1dJsgdeE?=
+ =?us-ascii?Q?AO5XeNS6PSHPDpRqC+oEm/dpU1C2SrcWy3MpcfzbQq3ydIgvAtEoiIgyFr+h?=
+ =?us-ascii?Q?+P+shtAzR+euGsSqQCnWy/PvM4hMJR4snNcVyhMEsp3cddYW991eyjOnzMIN?=
+ =?us-ascii?Q?SOij2hCTvVPJwaeJ2zXlzUXq7n4lI/VRi7cQL83S8Iri0I/OiGjwBLlzUl18?=
+ =?us-ascii?Q?Ja/3s34xKcKbDW/Bx+Dna9Vq3ktRFKKGz/+3cCae0HS1a/k+FMWxlzpgoSjC?=
+ =?us-ascii?Q?pVH3dvjc/7FaPaAndMHFDu20mFwyj32/I/UqYVpvMI0PYeM8Y5bv2IumunoE?=
+ =?us-ascii?Q?6WOsMvIbv6q27Z2q7iSXQphKzzCbGOj2N+oGbwoaYmNbzhXsNbeMX+/wn00t?=
+ =?us-ascii?Q?FQkwmuBh+sMn1jef+ln4QQXXQTqcE3uKx+Zdu7Lq5QIZik2kexMfwrVxcbhb?=
+ =?us-ascii?Q?xDl/VnfbP399oeqC7h4PYEH6XmSFNjdC5BiuoOQD3bGqvYKt4KFYwVHwXBii?=
+ =?us-ascii?Q?V035T9mZCEwjK70IVoSbplt37NfVG+UiiyZJY0Arh6lUrwghv/KH/HUz+wTT?=
+ =?us-ascii?Q?j1Ir6A0r3WHAt6SZphS9xEep+fEbjgIkO4RA+6bpyqu65hieqh9zseT7t62m?=
+ =?us-ascii?Q?clQtca1Lz8Hdeavg1Q39JF0v/X3sK/mDhGzfE+UclFchySpVvyY45FklbDzv?=
+ =?us-ascii?Q?WArlmUxpXrEJkBY15WVoO0PQud2FNeSOIEhIslNjThMPEw++QpEtXp2GsHz7?=
+ =?us-ascii?Q?jEqqMA58YE1UH4Aa/eQLH3Icl3H8o4oxmJjhC0bGnSLOhUxp2TDOBgAYhQkO?=
+ =?us-ascii?Q?zE9fwDusARCyecbFc0KP0WL0sW9fUXrCr0sIIqHetX49cL1xkkMOpgwD2SZs?=
+ =?us-ascii?Q?ejRpwj79k3ZxldMe2WmrbCloYNsOAaRt+ZS+cgorJVbjRelX4KM/GrIsU0Wm?=
+ =?us-ascii?Q?WgLkZPDWvAept5jEXm4bm2nT8RBkVoadZ6CeJ+7cXuaIOLtAOV1GwfoP9y+l?=
+ =?us-ascii?Q?Pik6TbmoZ1rjkKrIO0f9sd0qdHj6cudku345kP0bPbYtkQR//4ADtJAX30SS?=
+ =?us-ascii?Q?VCSswi3XnYi9nRTGihgrV5jnVvAQYN5iSvR7YiisT5elAY5A3rlThmqi1qTi?=
+ =?us-ascii?Q?Us1s4mSIJpTez2VHr9sWk3FYp2F73gTxY+GYeK4i?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	RzzLg7zB79ZC/IJSnROqszWChhtCPaAMbyaZ6apuq2MMzpxnmbVx3lq1NpsgQuFrOMhbpIY2V685M55+y4eNIfz+V4nv640Xagv+RFFGv5jJrjzjbQXCys1AZR4SH+N/Q1ORTKw4jed983SfGSs1unppK1sYqMyTK+PjCsISq8G3+v/T1BdE9+YLC8q6yetnJ9GLRvwh3jUrHNEB1iS1gulroaoOn+AxKSIiea85DOGUEE3mug8ZrYK0lqQac39eOh+zvfBYN7+B1mwakKS6EggkiFrvCXTQ3jyzIJLviBwHXOqQNHrEYSc0KUXwuzLGZJpGe7vD3ST1vSYtwpetyKhJFR/m/0+RaNF5P10BIYjleys5KePjQzKlFH50dd2eKcJEAesrqQUyxPVbwohKjgb0acmgKNjXN2jwZa6YGDksJ46GH+DTYVsH23LbURb44Li+s9i7ThRXeQsXtvT3PxflgHU4Y+32Svq/yr3PRBOewTCoVrJCO5mxPBcaK26UtSQL065c4sCl8sKMoj6Fa3W3ejoXtXHiOUCEMI8DQQGqXJiCO/jqcl/sflP9+xiav/4h8/E2UN9tgqHWdY20Wvs5PBFG0gs0Nge0GKXdfpY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb1b38d3-2e57-4920-ffb2-08ddd32c58aa
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2025 07:55:57.8363
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 64EdQC/JEH241ldMiXNuoF86ViAUPNNfBJUv9yblqIf5YnSdRIQFDbqGqEAKV3oAbA2y5zvvZV5T18Y7w+KxIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7805
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-04_03,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2508040041
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA0MDA0MiBTYWx0ZWRfXzmc2RSa907pp
+ yxHv5a67x1k4HVTCgEh0nDT20iizJ5mYIAh2oCrrl+PvGUVOJcr1vgemLRw2ftY7eQ6/paYj8xR
+ nMf3XNZ2mdgLcztsjKcIM38ed2pgcQCa6RC/yqF/gKqQDT/kmmTUGJ4ATI7hzpbuJUbW8SSmyAj
+ j3ePpi10UPFuDHoVpuqGQraYkdWqVwmEYwjAKcRcT9iQT3gaRZy423nTDdRgnOyirILqGxnfKzc
+ zv+v2rzseaSFzLvZVtDZiNVjcUT8Q0xq7WI9LrNcd3LS1kjTrYowmdmUBIvP0pNNAIMLGQHabzJ
+ ENR8Cn0JctsY2cY6N9czI12muScgnDDICXeIQIAMT5w5Eg+7FiZNu4bva1Bbp2aDxme9MOn705R
+ tq99IB5Ak0GSBk3tAPW2H4wQgGHnHtt9UuDsvyDf+tsRlsfyEvkpLn5zJkiRVX4+H7cxF9WE
+X-Proofpoint-GUID: EWSfRUAK4cX0OFgWK8CSuNOBU0x6cjOC
+X-Proofpoint-ORIG-GUID: EWSfRUAK4cX0OFgWK8CSuNOBU0x6cjOC
+X-Authority-Analysis: v=2.4 cv=VMvdn8PX c=1 sm=1 tr=0 ts=689067a1 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=Oh2cFVv5AAAA:8 a=KKAkSRfTAAAA:8
+ a=21D8NHQQAAAA:8 a=X6i5wfACDdJPGZCuSDMA:9 a=CjuIK1q_8ugA:10
+ a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22 a=aE7_2WBlPvBBVsBbSUWX:22
 
-Hello,
+On Sat, Aug 02, 2025 at 03:45:51PM +0530, Naresh Kamboju wrote:
+> Regressions found while validating Linux next on the Radxa Rock Pi 4B
+> platform, we observed kernel crashes and deadlock warnings when running LTP
+> syscall and controller tests under specific PREEMPT_RT configurations.
+> These issues appear to be regressions introduced in next-20250729.
+> 
+> * CONFIG_EXPERT=y
+> * CONFIG_PREEMPT_RT=y
+> * CONFIG_LAZY_PREEMPT=y
+> 
+> Regression Analysis:
+> - New regression? Yes
+> - Reproducibility? Intermittent
+> 
+> First seen on the next-20250729
+> Good: next-20250728
+> Bad: next-20250729 and next-20250801
+> 
+> Test regression: next-20250729 rock Pi 4b Internal error Oops
+> kmem_cache_alloc_bulk_noprof
+> Test regression: next-20250729 rock Pi 4b WARNING kernel locking
+> rtmutex.c at __rt_mutex_slowlock_locked
+> Test regression: next-20250729 rock Pi 4b WARNING kernel rcu
+> tree_plugin.h at rcu_note_context_switch
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I'm getting intermittent soft lockups with recent kernel builds. This is
-a new error that I haven't seen before.
+Thanks for the report, Naresh!
 
-An example lockup from 6.16.0-08685-g260f6f4fda93:
+based on the stack trace, I think there might be a use-after-free or
+buffer overflow bug that could trigger this.
 
-[39389.154516] iwlwifi 0000:01:00.0: Queue 3 is stuck 4977 5129
-[39400.400429] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [kworker/2=
-:1:1751316]
-[39400.400433] Modules linked in: snd_seq_dummy snd_hrtimer snd_seq xt_conn=
-track nft_chain_nat xt_MASQUERADE nf_nat nf_conntrack_netlink nf_conntrack =
-nf_defrag_ipv6 nf_defrag_ipv4 xfrm_user xfrm_algo xt_addrtype nft_compat x_=
-tables nf_tables br_netfilter bridge stp llc ccm overlay qrtr rfcomm cmac a=
-lgif_hash algif_skcipher af_alg bnep binfmt_misc ext4 mbcache jbd2 nls_asci=
-i nls_cp437 vfat fat snd_hda_codec_generic snd_hda_codec_hdmi intel_rapl_ms=
-r intel_rapl_common iwlmvm snd_hda_intel snd_acp3x_pdm_dma snd_soc_dmic snd=
-_acp3x_rn kvm_amd snd_hda_codec uvcvideo snd_soc_core mac80211 snd_usb_audi=
-o btusb snd_intel_dspcfg snd_compress videobuf2_vmalloc snd_usbmidi_lib btr=
-tl libarc4 videobuf2_memops kvm snd_rawmidi snd_hwdep snd_pci_acp6x btintel=
- uvc snd_seq_device snd_hda_core snd_pci_acp5x btbcm videobuf2_v4l2 irqbypa=
-ss snd_pcm btmtk iwlwifi snd_rn_pci_acp3x sg videodev rapl snd_timer videob=
-uf2_common wmi_bmof ee1004 snd_acp_config pcspkr bluetooth cfg80211 snd_soc=
-_acpi k10temp snd mc snd_pci_acp3x soundcore ccp rfkill ac
-[39400.400478]  battery acpi_tad amd_pmc joydev evdev msr parport_pc ppdev =
-lp parport efi_pstore fuse nvme_fabrics configfs nfnetlink efivarfs autofs4=
- crc32c_cryptoapi btrfs blake2b_generic xor raid6_pq hid_microsoft ff_memle=
-ss hid_cmedia r8153_ecm cdc_ether usbnet r8152 mii libphy mdio_bus usbhid d=
-m_crypt dm_mod sd_mod uas usb_storage scsi_mod scsi_common amdgpu drm_clien=
-t_lib i2c_algo_bit drm_ttm_helper ttm drm_panel_backlight_quirks drm_exec d=
-rm_suballoc_helper amdxcp drm_buddy gpu_sched hid_multitouch drm_display_he=
-lper ucsi_acpi hid_generic drm_kms_helper typec_ucsi sp5100_tco roles xhci_=
-pci cec i2c_hid_acpi watchdog typec xhci_hcd amd_sfh i2c_hid rc_core nvme i=
-2c_piix4 thunderbolt video usbcore ghash_clmulni_intel serio_raw hid crc16 =
-nvme_core fan i2c_smbus usb_common button wmi drm aesni_intel
-[39400.400514] irq event stamp: 28884
-[39400.400515] hardirqs last  enabled at (28883): [<ffffffffb6200dc6>] asm_=
-sysvec_apic_timer_interrupt+0x16/0x20
-[39400.400521] hardirqs last disabled at (28884): [<ffffffffb71185fa>] sysv=
-ec_apic_timer_interrupt+0xa/0xc0
-[39400.400526] softirqs last  enabled at (28882): [<ffffffffb64f934d>] __ir=
-q_exit_rcu+0xcd/0x140
-[39400.400530] softirqs last disabled at (28877): [<ffffffffb64f934d>] __ir=
-q_exit_rcu+0xcd/0x140
-[39400.400533] CPU: 2 UID: 0 PID: 1751316 Comm: kworker/2:1 Not tainted 6.1=
-6.0-08685-g260f6f4fda93 #489 PREEMPT(voluntary)
-[39400.400535] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BI=
-OS F.17 12/18/2024
-[39400.400537] Workqueue: events psi_avgs_work
-[39400.400541] RIP: 0010:collect_percpu_times+0x2d5/0x440
-[39400.400543] Code: 00 00 00 00 00 41 8b 0c 94 48 0f af c8 48 01 4c d5 00 =
-48 83 c2 01 48 83 fa 06 75 e9 8d 53 01 e9 aa fd ff ff f3 90 48 8b 3c 24 <48=
-> 8b 14 fd 20 d0 6d b7 48 01 c2 8b 12 f6 c2 01 0f 84 ab fe ff ff
-[39400.400545] RSP: 0018:ffffc06b07823cf8 EFLAGS: 00000202
-[39400.400546] RAX: ffffffffb82abc80 RBX: ffffe06aff48f440 RCX: 00000000000=
-00006
-[39400.400548] RDX: 00000000000014b7 RSI: ffffffffb76b7293 RDI: 00000000000=
-0000d
-[39400.400548] RBP: ffffc06b07823d70 R08: 0000000000000001 R09: 00000000000=
-00000
-[39400.400549] R10: 0000000000000001 R11: 0000000000000003 R12: ffffc06b078=
-23d50
-[39400.400550] R13: ffffe06aff48f454 R14: 000000000000000d R15: ffffffffb82=
-abc80
-[39400.400551] FS:  0000000000000000(0000) GS:ffff9d9f4e072000(0000) knlGS:=
-0000000000000000
-[39400.400552] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[39400.400553] CR2: 00000c2100382000 CR3: 0000000387c3b000 CR4: 00000000007=
-50ef0
-[39400.400554] PKRU: 55555554
-[39400.400555] Call Trace:
-[39400.400557]  <TASK>
-[39400.400571]  psi_avgs_work+0x56/0xe0
-[39400.400576]  process_one_work+0x22b/0x5b0
-[39400.400588]  worker_thread+0x1d6/0x3c0
-[39400.400592]  ? bh_worker+0x260/0x260
-[39400.400594]  kthread+0x115/0x260
-[39400.400599]  ? kthreads_online_cpu+0x120/0x120
-[39400.400603]  ret_from_fork+0x231/0x2a0
-[39400.400606]  ? kthreads_online_cpu+0x120/0x120
-[39400.400610]  ret_from_fork_asm+0x11/0x20
-[39400.400621]  </TASK>
-[39400.404429] watchdog: BUG: soft lockup - CPU#4 stuck for 21s! [kworker/4=
-:0:1751752]
+Could you please try to reproduce it with KASAN enabled to confirm that
+it is the case?
+ 
+> ## Test log
+> [  527.570253] Unable to handle kernel paging request at virtual
+> address 003f0020f94020a1
+> [  527.570274] Mem abort info:
+> [  527.570277]   ESR = 0x0000000096000004
+> [  527.570282]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [  527.570288]   SET = 0, FnV = 0
+> [  527.570292]   EA = 0, S1PTW = 0
+> [  527.570297]   FSC = 0x04: level 0 translation fault
+> [  527.570302] Data abort info:
+> [  527.570305]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> [  527.570310]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [  527.570316]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [  527.570322] [003f0020f94020a1] address between user and kernel address ranges
+> [  527.570330] Internal error: Oops: 0000000096000004 [#1]  SMP
+> [  527.570336] Modules linked in: brcmfmac rockchip_dfi brcmutil
+> cfg80211 snd_soc_hdmi_codec dw_hdmi_i2s_audio dw_hdmi_cec
+> snd_soc_simple_card snd_soc_audio_graph_card hci_uart
+> snd_soc_rockchip_i2s snd_soc_es8316 snd_soc_spdif_tx
+> snd_soc_simple_card_utils btqca rtc_rk808 rockchipdrm btbcm
+> snd_soc_core dw_hdmi_qp bluetooth snd_compress reset_gpio analogix_dp
+> snd_pcm_dmaengine panfrost hantro_vpu dw_mipi_dsi rfkill rockchip_rga
+> drm_shmem_helper drm_dp_aux_bus snd_pcm gpu_sched dw_hdmi pwrseq_core
+> videobuf2_dma_sg v4l2_vp9 snd_timer drm_display_helper v4l2_h264
+> v4l2_jpeg phy_rockchip_pcie snd v4l2_mem2mem cec videobuf2_dma_contig
+> soundcore videobuf2_memops drm_client_lib videobuf2_v4l2
+> drm_dma_helper videobuf2_common rockchip_saradc drm_kms_helper
+> industrialio_triggered_buffer kfifo_buf rockchip_thermal
+> pcie_rockchip_host coresight_cpu_debug fuse drm backlight
+> [  527.570493] CPU: 3 UID: 0 PID: 34254 Comm: mkdir Not tainted
+> 6.16.0-next-20250801 #1 PREEMPT_RT
+> [  527.570502] Hardware name: Radxa ROCK Pi 4B (DT)
+> [  527.570506] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  527.570512] pc : kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
+> (discriminator 1) mm/slub.c:5403 (discriminator 1))
+> [  527.570527] lr : kmem_cache_alloc_bulk_noprof
+> (include/linux/atomic/atomic-arch-fallback.h:457
+> include/linux/atomic/atomic-instrumented.h:33
+> include/linux/kfence.h:127 mm/slub.c:5307 mm/slub.c:5403)
+> [  527.570533] sp : ffff80008e24b8f0
+> [  527.570536] x29: ffff80008e24b930 x28: 00ff000000584610 x27: ffff800082b30538
+> [  527.570545] x26: ffff8000816b64dc x25: 0000000000000cc0 x24: 0000000000000000
+> [  527.570554] x23: 0000000000000004 x22: ffff0000f7579d20 x21: 0000000000000001
+> [  527.570563] x20: 0000000000000001 x19: ffff000000405b00 x18: ffff80008e24bcd0
+> [  527.570572] x17: 0000000000000000 x16: ffff800081e18420 x15: 0000ffffa2670fff
+> [  527.570582] x14: 0000000000000000 x13: 1fffe000017942e1 x12: 0000ffffa2470fff
+> [  527.570591] x11: ffff00000bca1708 x10: 0000000000000001 x9 : ffff8000816e41a4
+> [  527.570600] x8 : ffff80008e24b850 x7 : fefefefefefefefe x6 : ffff800082b30000
+> [  527.570608] x5 : d63f0020f9402021 x4 : ffff0000f7579d58 x3 : 0000000000000000
+> [  527.570617] x2 : 0000000000000000 x1 : 0000000000000100 x0 : 0000000000000080
+> [  527.570627] Call trace:
+> [  527.570631] kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
 
-It appears to happen randomly when I have been away from the laptop for
-some time and return, or sometimes if I leave it overnight. It also
-looks like it occurs on 2% of system boots. Bisecting with such a low
-failure probability takes a long time. I haven't identified the bad
-commit yet, but I think I have narrowed it down to between v6.16-rc6
-(good) and v6.16-rc6-79-g44e4e0297c3c (bad). At this rate, I should have
-a more exact bisect result within a week.
+It crashes in get_freepointer() because a bad pointer is passed to it.
 
-#regzbot introduced: v6.16-rc6..v6.16-rc6-79-g44e4e0297c3c
+I think it is reasonable to suspect that the freelist chain is corrupt
+due to a use-after-free or buffer overflow (either in maple tree code,
+or something else that shares the cache with maple tree nodes).
+
+> (discriminator 1) mm/slub.c:5403 (discriminator 1)) (P)
+> [  527.570639] mas_alloc_nodes (lib/maple_tree.c:1278)
+> [  527.570651] mas_node_count_gfp (lib/maple_tree.c:1339)
+> [  527.570661] mas_preallocate (lib/maple_tree.c:5538 (discriminator 1))
+> [  527.570667] __split_vma (mm/vma.c:528 (discriminator 1))
+> [  527.570677] vma_modify (mm/vma.c:1633)
+> [  527.570685] vma_modify_flags (mm/vma.c:1650)
+> [  527.570694] mprotect_fixup (mm/mprotect.c:819)
+> [  527.570704] do_mprotect_pkey (mm/mprotect.c:993)
+> [  527.570713] __arm64_sys_mprotect (mm/mprotect.c:1011)
+> [  527.570722] invoke_syscall (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/syscall.c:54)
+> [  527.570731] el0_svc_common.constprop.0
+> (include/linux/thread_info.h:135 (discriminator 2)
+> arch/arm64/kernel/syscall.c:140 (discriminator 2))
+> [  527.570737] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+> [  527.570744] el0_svc (arch/arm64/include/asm/irqflags.h:82
+> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:169 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:182 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:880 (discriminator 1))
+> [  527.570752] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
+> [  527.570760] el0t_64_sync (arch/arm64/kernel/entry.S:596)
+> [ 527.570772] Code: 1400000c f94002c5 b4000aa5 b9402a60 (f86068a0)
+> All code
+> ========
+>    0: 1400000c b 0x30
+>    4: f94002c5 ldr x5, [x22]
+>    8: b4000aa5 cbz x5, 0x15c
+>    c: b9402a60 ldr w0, [x19, #40]
+>   10:* f86068a0 ldr x0, [x5, x0] <-- trapping instruction
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0: f86068a0 ldr x0, [x5, x0]
+> [  527.570778] ---[ end trace 0000000000000000 ]---
+> [  527.570800] ------------[ cut here ]------------
+> [  527.570803] rtmutex deadlock detected
+> [  527.570827] WARNING: kernel/locking/rtmutex.c:1674 at
+> __rt_mutex_slowlock_locked.constprop.0+0x800/0x8e0, CPU#3: mkdir/34254
+> [  527.570841] Modules linked in: brcmfmac rockchip_dfi brcmutil
+> cfg80211 snd_soc_hdmi_codec dw_hdmi_i2s_audio dw_hdmi_cec
+> snd_soc_simple_card snd_soc_audio_graph_card hci_uart
+> snd_soc_rockchip_i2s snd_soc_es8316 snd_soc_spdif_tx
+> snd_soc_simple_card_utils btqca rtc_rk808 rockchipdrm btbcm
+> snd_soc_core dw_hdmi_qp bluetooth snd_compress reset_gpio analogix_dp
+> snd_pcm_dmaengine panfrost hantro_vpu dw_mipi_dsi rfkill rockchip_rga
+> drm_shmem_helper drm_dp_aux_bus snd_pcm gpu_sched dw_hdmi pwrseq_core
+> videobuf2_dma_sg v4l2_vp9 snd_timer drm_display_helper v4l2_h264
+> v4l2_jpeg phy_rockchip_pcie snd v4l2_mem2mem cec videobuf2_dma_contig
+> soundcore videobuf2_memops drm_client_lib videobuf2_v4l2
+> drm_dma_helper videobuf2_common rockchip_saradc drm_kms_helper
+> industrialio_triggered_buffer kfifo_buf rockchip_thermal
+> pcie_rockchip_host coresight_cpu_debug fuse drm backlight
+> [  527.570965] CPU: 3 UID: 0 PID: 34254 Comm: mkdir Tainted: G      D
+>            6.16.0-next-20250801 #1 PREEMPT_RT
+> [  527.570973] Tainted: [D]=DIE
+> [  527.570976] Hardware name: Radxa ROCK Pi 4B (DT)
+> [  527.570979] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  527.570985] pc : __rt_mutex_slowlock_locked.constprop.0
+> (kernel/locking/rtmutex.c:1674 (discriminator 1)
+> kernel/locking/rtmutex.c:1734 (discriminator 1)
+> kernel/locking/rtmutex.c:1760 (discriminator 1))
+> [  527.570993] lr : __rt_mutex_slowlock_locked.constprop.0
+> (kernel/locking/rtmutex.c:1674 (discriminator 1)
+> kernel/locking/rtmutex.c:1734 (discriminator 1)
+> kernel/locking/rtmutex.c:1760 (discriminator 1))
+> [  527.571001] sp : ffff80008e24b2e0
+> [  527.571004] x29: ffff80008e24b370 x28: ffff000007c1a600 x27: ffff000007c1a601
+> [  527.571013] x26: ffff80008e24b318 x25: ffff000007c1a600 x24: 00000000ffffffdd
+> [  527.571023] x23: 00000000ffffffdd x22: 0000000000000001 x21: ffff000007c1a601
+> [  527.571032] x20: ffff80008e24b2f0 x19: ffff00001d756e30 x18: 0000000000000000
+> [  527.571041] x17: 65676e6172207373 x16: 6572646461206c65 x15: 0000000000000000
+> [  527.571050] x14: 0000000000000020 x13: 0a64657463657465 x12: 64206b636f6c6461
+> [  527.571059] x11: 656820747563205b x10: ffff800082adac08 x9 : ffff80008015020c
+> [  527.571068] x8 : ffff80008e24af08 x7 : 0000000000000001 x6 : ffff800082a5e000
+> [  527.571077] x5 : ffff000007c1a600 x4 : 0000000000000000 x3 : 0000000000000027
+> [  527.571086] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000007c1a600
+> [  527.571094] Call trace:
+> [  527.571097] __rt_mutex_slowlock_locked.constprop.0
+> (kernel/locking/rtmutex.c:1674 (discriminator 1)
+> kernel/locking/rtmutex.c:1734 (discriminator 1)
+> kernel/locking/rtmutex.c:1760 (discriminator 1)) (P)
+> [  527.571107] __rwbase_read_lock (kernel/locking/rwbase_rt.c:114)
+> [  527.571117] down_read (kernel/locking/rwsem.c:1540)
+> [  527.571126] acct_collect (arch/arm64/include/asm/jump_label.h:36
+> include/linux/mmap_lock.h:41 include/linux/mmap_lock.h:454
+> kernel/acct.c:597)
+> [  527.571135] do_exit (kernel/exit.c:932)
+> [  527.571143] make_task_dead
+> (arch/arm64/include/asm/atomic_ll_sc.h:95 (discriminator 2)
+> arch/arm64/include/asm/atomic.h:52 (discriminator 2)
+> include/linux/atomic/atomic-arch-fallback.h:564 (discriminator 2)
+> include/linux/atomic/atomic-arch-fallback.h:1020 (discriminator 2)
+> include/linux/atomic/atomic-instrumented.h:454 (discriminator 2)
+> kernel/exit.c:1049 (discriminator 2))
+> [  527.571150] die (arch/arm64/kernel/traps.c:231)
+> [  527.571157] die_kernel_fault (arch/arm64/mm/fault.c:313)
+> [  527.571167] __do_kernel_fault (arch/arm64/mm/fault.c:375 (discriminator 5))
+> [  527.571177] do_bad_area (arch/arm64/mm/fault.c:482)
+> [  527.571186] do_translation_fault (arch/arm64/mm/fault.c:792)
+> [  527.571195] do_mem_abort (arch/arm64/mm/fault.c:929 (discriminator 1))
+> [  527.571204] el1_abort (arch/arm64/include/asm/daifflags.h:28
+> arch/arm64/kernel/entry-common.c:482)
+> [  527.571210] el1h_64_sync_handler (arch/arm64/kernel/entry-common.c:637)
+> [  527.571218] el1h_64_sync (arch/arm64/kernel/entry.S:591)
+
+The deadlock wouldn't have been triggered if it didn't crash in SLUB, so
+this looks rather irrelevant.
+
+-- 
+Cheers,
+Harry / Hyeonggon
+
+> [  527.571225] kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
+> (discriminator 1) mm/slub.c:5403 (discriminator 1)) (P)
+> [  527.571232] mas_alloc_nodes (lib/maple_tree.c:1278)
+> [  527.571241] mas_node_count_gfp (lib/maple_tree.c:1339)
+> [  527.571251] mas_preallocate (lib/maple_tree.c:5538 (discriminator 1))
+> [  527.571257] __split_vma (mm/vma.c:528 (discriminator 1))
+> [  527.571265] vma_modify (mm/vma.c:1633)
+> [  527.571273] vma_modify_flags (mm/vma.c:1650)
+> [  527.571282] mprotect_fixup (mm/mprotect.c:819)
+> [  527.571290] do_mprotect_pkey (mm/mprotect.c:993)
+> [  527.571299] __arm64_sys_mprotect (mm/mprotect.c:1011)
+> [  527.571308] invoke_syscall (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/syscall.c:54)
+> [  527.571314] el0_svc_common.constprop.0
+> (include/linux/thread_info.h:135 (discriminator 2)
+> arch/arm64/kernel/syscall.c:140 (discriminator 2))
+> [  527.571321] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+> [  527.571327] el0_svc (arch/arm64/include/asm/irqflags.h:82
+> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:169 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:182 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:880 (discriminator 1))
+> [  527.571334] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
+> [  527.571341] el0t_64_sync (arch/arm64/kernel/entry.S:596)
+> [  527.571349] ---[ end trace 0000000000000000 ]---
+> [  527.571354] ------------[ cut here ]------------
+> [  527.571356] Voluntary context switch within RCU read-side critical section!
+> [  527.571372] WARNING: kernel/rcu/tree_plugin.h:332 at
+> rcu_note_context_switch+0x4ec/0x538, CPU#3: mkdir/34254
+> [  527.571383] Modules linked in: brcmfmac rockchip_dfi brcmutil
+> cfg80211 snd_soc_hdmi_codec dw_hdmi_i2s_audio dw_hdmi_cec
+> snd_soc_simple_card snd_soc_audio_graph_card hci_uart
+> snd_soc_rockchip_i2s snd_soc_es8316 snd_soc_spdif_tx
+> snd_soc_simple_card_utils btqca rtc_rk808 rockchipdrm btbcm
+> snd_soc_core dw_hdmi_qp bluetooth snd_compress reset_gpio analogix_dp
+> snd_pcm_dmaengine panfrost hantro_vpu dw_mipi_dsi rfkill rockchip_rga
+> drm_shmem_helper drm_dp_aux_bus snd_pcm gpu_sched dw_hdmi pwrseq_core
+> videobuf2_dma_sg v4l2_vp9 snd_timer drm_display_helper v4l2_h264
+> v4l2_jpeg phy_rockchip_pcie snd v4l2_mem2mem cec videobuf2_dma_contig
+> soundcore videobuf2_memops drm_client_lib videobuf2_v4l2
+> drm_dma_helper videobuf2_common rockchip_saradc drm_kms_helper
+> industrialio_triggered_buffer kfifo_buf rockchip_thermal
+> pcie_rockchip_host coresight_cpu_debug fuse drm backlight
+> [  527.571503] CPU: 3 UID: 0 PID: 34254 Comm: mkdir Tainted: G      D
+> W           6.16.0-next-20250801 #1 PREEMPT_RT
+> [  527.571512] Tainted: [D]=DIE, [W]=WARN
+> [  527.571514] Hardware name: Radxa ROCK Pi 4B (DT)
+> [  527.571517] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  527.571523] pc : rcu_note_context_switch
+> (kernel/rcu/tree_plugin.h:332 (discriminator 1))
+> [  527.571529] lr : rcu_note_context_switch
+> (kernel/rcu/tree_plugin.h:332 (discriminator 1))
+> [  527.571535] sp : ffff80008e24b1e0
+> [  527.571538] x29: ffff80008e24b1e0 x28: ffff000007c1a600 x27: ffff000007c1a601
+> [  527.571548] x26: 0000000000000000 x25: ffff000007c1a600 x24: ffff800082a60368
+> [  527.571557] x23: 0000000000000000 x22: ffff000007c1a600 x21: ffff800083125260
+> [  527.571566] x20: 0000000000000000 x19: ffff0000f7576080 x18: 0000000000000000
+> [  527.571575] x17: 65676e6172207373 x16: 6572646461206c65 x15: 0000000000000000
+> [  527.571583] x14: 0000000000000020 x13: 216e6f6974636573 x12: 206c616369746972
+> [  527.571593] x11: 6320656469732d64 x10: 6165722055435220 x9 : ffff80008015020c
+> [  527.571602] x8 : 6863746977732074 x7 : 7865746e6f632079 x6 : 7261746e756c6f56
+> [  527.571611] x5 : ffff80008317146f x4 : 0000000000000000 x3 : 0000000000000027
+> [  527.571619] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000007c1a600
+> [  527.571628] Call trace:
+> [  527.571630] rcu_note_context_switch (kernel/rcu/tree_plugin.h:332
+> (discriminator 1)) (P)
+> [  527.571638] __schedule (kernel/sched/core.c:634
+> kernel/sched/sched.h:1519 kernel/sched/sched.h:1841
+> kernel/sched/core.c:6865)
+> [  527.571647] rt_mutex_schedule (kernel/sched/core.c:7044
+> kernel/sched/core.c:7339)
+> [  527.571655] __rt_mutex_slowlock_locked.constprop.0
+> (kernel/locking/rtmutex.c:1676 kernel/locking/rtmutex.c:1734
+> kernel/locking/rtmutex.c:1760)
+> [  527.571665] __rwbase_read_lock (kernel/locking/rwbase_rt.c:114)
+> [  527.571674] down_read (kernel/locking/rwsem.c:1540)
+> [  527.571683] acct_collect (arch/arm64/include/asm/jump_label.h:36
+> include/linux/mmap_lock.h:41 include/linux/mmap_lock.h:454
+> kernel/acct.c:597)
+> [  527.571690] do_exit (kernel/exit.c:932)
+> [  527.571696] make_task_dead
+> (arch/arm64/include/asm/atomic_ll_sc.h:95 (discriminator 2)
+> arch/arm64/include/asm/atomic.h:52 (discriminator 2)
+> include/linux/atomic/atomic-arch-fallback.h:564 (discriminator 2)
+> include/linux/atomic/atomic-arch-fallback.h:1020 (discriminator 2)
+> include/linux/atomic/atomic-instrumented.h:454 (discriminator 2)
+> kernel/exit.c:1049 (discriminator 2))
+> [  527.571703] die (arch/arm64/kernel/traps.c:231)
+> [  527.571710] die_kernel_fault (arch/arm64/mm/fault.c:313)
+> [  527.571719] __do_kernel_fault (arch/arm64/mm/fault.c:375 (discriminator 5))
+> [  527.571729] do_bad_area (arch/arm64/mm/fault.c:482)
+> [  527.571738] do_translation_fault (arch/arm64/mm/fault.c:792)
+> [  527.571746] do_mem_abort (arch/arm64/mm/fault.c:929 (discriminator 1))
+> [  527.571755] el1_abort (arch/arm64/include/asm/daifflags.h:28
+> arch/arm64/kernel/entry-common.c:482)
+> [  527.571761] el1h_64_sync_handler (arch/arm64/kernel/entry-common.c:637)
+> [  527.571769] el1h_64_sync (arch/arm64/kernel/entry.S:591)
+> [  527.571775] kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
+> (discriminator 1) mm/slub.c:5403 (discriminator 1)) (P)
+> [  527.571782] mas_alloc_nodes (lib/maple_tree.c:1278)
+> [  527.571792] mas_node_count_gfp (lib/maple_tree.c:1339)
+> [  527.571802] mas_preallocate (lib/maple_tree.c:5538 (discriminator 1))
+> [  527.571808] __split_vma (mm/vma.c:528 (discriminator 1))
+> [  527.571816] vma_modify (mm/vma.c:1633)
+> [  527.571824] vma_modify_flags (mm/vma.c:1650)
+> [  527.571833] mprotect_fixup (mm/mprotect.c:819)
+> [  527.571842] do_mprotect_pkey (mm/mprotect.c:993)
+> [  527.571850] __arm64_sys_mprotect (mm/mprotect.c:1011)
+> [  527.571859] invoke_syscall (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/syscall.c:54)
+> [  527.571866] el0_svc_common.constprop.0
+> (include/linux/thread_info.h:135 (discriminator 2)
+> arch/arm64/kernel/syscall.c:140 (discriminator 2))
+> [  527.571872] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+> [  527.571878] el0_svc (arch/arm64/include/asm/irqflags.h:82
+> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:169 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:182 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:880 (discriminator 1))
+> [  527.571885] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
+> [  527.571893] el0t_64_sync (arch/arm64/kernel/entry.S:596)
+> [  527.571900] ---[ end trace 0000000000000000 ]---
+> [  540.645451] sched: DL replenish lagged too much
+> 
+> ## Source
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git sha: 54efec8782214652b331c50646013f8526570e8d
+> * Git describe: next-20250729
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250729
+> * Architectures: arm64
+> * Toolchains: gcc-13
+> * Kconfigs: Preempt_rt
+> 
+> ## Test
+> * Test log 1: https://qa-reports.linaro.org/api/testruns/29282584/log_file/
+> * Test log 2:https://qa-reports.linaro.org/api/testruns/29337984/log_file/
+> * Test lava log: https://lkft.validation.linaro.org/scheduler/job/8373114#L19186
+> * Test details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20250729/log-parser-test/exception-rtmutex-deadlock-detected/
+> * Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/30XMjtCEi0VzsU1gYZ0a7kcTkLJ
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30fq2ElntxgscJ13dnaD7iL5Z1G/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/30fq2ElntxgscJ13dnaD7iL5Z1G/config
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
