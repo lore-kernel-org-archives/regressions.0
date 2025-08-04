@@ -1,287 +1,227 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C475A1DF248
-	for <regressions@lists.linux.dev>; Mon,  4 Aug 2025 10:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4746523ABB9
+	for <regressions@lists.linux.dev>; Mon,  4 Aug 2025 10:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754302325; cv=none; b=daEUBw/Nrl9YZs4RpQ9HE1zWn+Hn9hXLS9n1Sf2m2VXOHrIoHmbMDq2lgG8Cd5ktOZG7xPvLA474AQC2tCUYffi6GyMkWyeWHg00SeyWU6k490mDdM3bUtDs9WSe8Qvu2NTwu+XJntG+W3NcV/fI6VxZdr4s/bptPyFEJVE3OKY=
+	t=1754305065; cv=none; b=Yx0NNGq0CZSX4VDe6hATeon+w1RltLEHfBlHzBR2wMV96tiYtB9I4+rS0/5F8w5GqzDygAuT9S6BQPqhWpwiyM2vte/wlzE4FJaosIALhJRlFTdi1KmRUu8U5Lt/t/J01AHDr1GyCXrfrx7DkyzhbpQFMsYxMniUAqQSMoqHOJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754302325; c=relaxed/simple;
-	bh=hZApIlBOWv7ok5FEqKF3cdEVfDjYEno/iYtxfVdOxuo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=TLK6TOuZ4FltmEYkEQJro315MuQVwTw6D6ZiGtCbi0ptuKvK1SHukzW6LhlW1MgW7Q1fKHpvy6ItygYCYdCZPnH1czwR7YrPh6PXpjkdEKa3R3sf1NVOygxAP8q2nTC8ntWcSNyi2KkVJ0UP58ULz5hAjYRPLP7/NBtRVHnrHzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o6TpIOKV; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1754305065; c=relaxed/simple;
+	bh=EKcmbw33i158VkcjIOBGndTohyXppuVVNq4r8SoAwu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jtrkazhb7rlsJ4DP/zUGtICw7PokEcgKXRD7cqcbaG+oXpYT88lnxXgk7bMW12rN6kDrS/UiIdXjBCD9Ph9tGNRyZXftI+n4mdIihdxaQOtxg5MkGa0l8hjwMDDlhSrNz/ksy+DwqzZH7f8rsTcJV+b9CwbZXr0gSvpKix7u1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EaJwCgMI; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6TpIOKV"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3190fbe8536so2639490a91.3
-        for <regressions@lists.linux.dev>; Mon, 04 Aug 2025 03:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaJwCgMI"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af8fd1b80e5so704404066b.2
+        for <regressions@lists.linux.dev>; Mon, 04 Aug 2025 03:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754302323; x=1754907123; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+m9dNDoA2LrkBnWEk52swdGfOHuXAiWRRUcjSMLrQRc=;
-        b=o6TpIOKVZ3rgKIaE4vNEtj5gteERQwOgFmwdtC7U6GnmLvWi40bhUDR/oHB6OqEEF/
-         CCi13F600I5oXJxJRlwsVYX39Z15GixIUTayjC1BHw2WLOWKvsBxHId5Z8g6F5ThNcA6
-         pADwfwfVZNifheldLBLzxg3gCsJfNDUFskfjt4E1BG/ce7HKPwNEkOrIhzvBmi8ykbVS
-         YIWVt127tF32ldk2mLfGGKUIFf6m0Me/jVzuE92F5kz65bODJqO9ziW8nsD8gH7FMRX5
-         G5jHJZCNIG+2KIBwIw5wTbLzzSMotpqE6VWkB/gawr4Lc261i77RQUJX7EB9Gte7k0wu
-         z+kQ==
+        d=gmail.com; s=20230601; t=1754305061; x=1754909861; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EKcmbw33i158VkcjIOBGndTohyXppuVVNq4r8SoAwu4=;
+        b=EaJwCgMInOb0u4RD2+scr51V4CgdypFNG9LvDTI0Km7SY0XKkdd/WC6IerBOcpY4ec
+         tgR3gofUqepmBeXp/xgePTB5+EakRETtymJ2LjaEE4Fon0Eqa/GYdAfyCVUMpMT9H8RI
+         HrKotnnnMWekfXJhL6fHaCcEOiv97ChzcDZczg/pdqEdFn0WKquXr32qz+2c5O9TcnxA
+         o9yGWv59PWKvQC+j6YbL0UT9iifO20wrcFkc3mfb8FUYXzWCnqq3rsjAaq+4ODKLIINK
+         M1W5W99NrmDVCQa4Gp7gj9thArwozcFLPm5xeUIT4+jQ9kFZc3dIBj1bDC941FxXJxA+
+         mSag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754302323; x=1754907123;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+m9dNDoA2LrkBnWEk52swdGfOHuXAiWRRUcjSMLrQRc=;
-        b=DfJ2STTf/Xas90MgkvQhLWvsqn12vVuutRpzYnZLIl8CJM3GTlPi1ClGQ8n42FFrJZ
-         P216P88I5cTZpwZcOyx7WPdCX1gIn7nh/KSGB2hux0mH+maLgnYcdkDuefYu32CHeuxd
-         ib8nFcLVj0arTx1zWdHrnQ3Veyb+zwMMbRXs1USWirXLVf8L9Uwsw/W6m4hRXJGFktpM
-         ZeZSFSUdETaGfMvfLXblpwY44JntfyVd6i9nXXGBDIVZL15aQat7pIatDbLEWMLHRB4s
-         YkKuYQPvg1RZ3ZlY7c2iduvg1FDwuvaItaBqF3g7SnmicWlI6fjzIW62szSj5uwf/LQI
-         1A8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUErEMAxZb2+ebd7hPK4xqm4c5zZh2AomFXqKRUxd9llxV/cf82EEHD13YBtgkAiTDp03uifsnhqI1htA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCYzEuKybP+l1kogTisS7OHR1QqyF966hWzXYuLBJiazBb0OdY
-	zzuEQnXmssU+qRbPSRmtvLHZNRcALjQdG8orfeFW4LY80FStcQtnAqSfGDsOw5V299dSY/SIQiS
-	8Hh4vXo7ItBe0wFLCEi75C2EC+Gte9atlaZni0ZUuHg==
-X-Gm-Gg: ASbGnctv1g4zWL9PPAUuLP4gwDt3ncdbGrYRv/ya54Le8auyMhaBabOhdu8aSvOLQlX
-	epBpnij7O9fobpbL5I4+1uQJe84gIVH0x9srmThLPGmNBnnLGMeg/25j7CKuStRvgnqpUEDoCbP
-	F07WNkwOxnBDAI7O++QLJalp+S4Qhz8yOtS6U8rJuuqB1rNvwCAdgJMOq/juqIldE2ytQPeikYP
-	9l0cIiuqvqMXh5NqeMnWJIH/HG0Nc4zC/0vQvk=
-X-Google-Smtp-Source: AGHT+IGmoaWXbNeWHeHrWCnDRCt/5bpldGAOryYToFxsZb5CspShWUEkgr/A2ZYVYe7ryQGoP6JWlwkDsrdA48AD4cg=
-X-Received: by 2002:a17:90b:1c86:b0:321:265a:e0d3 with SMTP id
- 98e67ed59e1d1-321265ae4bamr8421691a91.25.1754302322958; Mon, 04 Aug 2025
- 03:12:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754305061; x=1754909861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EKcmbw33i158VkcjIOBGndTohyXppuVVNq4r8SoAwu4=;
+        b=lqWQ8dlQ7xQW9Iu4sKFlWcvwcB+M6MitW512s6w/Z+E+IATxoaYUkoAYlAnqTsiOrk
+         za+fdOvQZujbAB9Z5CeLNiLJ+nf8R0RMfLchONvcdPpTkyikINwJGjE3nLgk7EF1zYQg
+         9g22OBFm3x+c4Bo2NIkYw29ECRhq/N/9ToNNMvPabyKzMU4qn4B4969HlSGEoVrGTzkB
+         6OvI+JIE4MHPOzp6d9fv4r1K4jpMJGHIr5/OTJfnpiaSHKTvarWX3othyj30Wg2RyPiy
+         DbudYAAoFAhn004Lr9XBS8bKxuIOPncbNSUd/8iBYBiN5+MWW/+NrkhWE5L4zJi/4j3X
+         YoGw==
+X-Gm-Message-State: AOJu0YyQCMkb2NqrqV8ecAN6Qp4iF7tvejbK7CvPjQgh/POuadLioZAX
+	eB6QikS2zR7HDBdm+Kbve5CpGWDb+eSlqdwJF5Uy8LmT+WGwnA/h8penrVxoWrgK6rvYlS1R3lR
+	YENrTfIbcR4h+t2a0haXSct/GPBRjFkcYmb9V7oOqNQ==
+X-Gm-Gg: ASbGnctMbSFu6Rz8/nzZ4Rp7XvGIQbWxZi4LTn7725qbUmU7uv4wWH8+4qiRP37WnJm
+	G4AvYaBQSrZxkdOlCPiMJI7NOaU/QMqGjQS3zbvLSg0Iy19wEoZYiXkZm6RH/KBhupKhzUvCc1U
+	qsHIsj5A1jz/JCibor1XIDrxDKO4xD2zLwedRFwS2ZEmUEWU8HbGzDt5qf9KIkoGISUIMQjsH6C
+	c2xWtFtfNsxkWxE3s0=
+X-Google-Smtp-Source: AGHT+IEKgWeCpweInZoRf8h+ySc8h8Zd/5K3fLo9Iz1IaB8JQ0OeLLaC5QAwreLPpuNZD9vPayfW02ltcKhkV1SLfyI=
+X-Received: by 2002:a17:907:2da5:b0:af2:5a26:b32a with SMTP id
+ a640c23a62f3a-af9401a7898mr948553966b.30.1754305060799; Mon, 04 Aug 2025
+ 03:57:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 4 Aug 2025 15:41:51 +0530
-X-Gm-Features: Ac12FXwHubfFBQejxBFSQfy7WS98qKcbwEiY123z2BlqNH5k05Q6sO7VgOAYTX4
-Message-ID: <CA+G9fYuDtzPpJOX7wdWAf2QmHyc-5v0cZ2Wood8cRwCttuyRmA@mail.gmail.com>
-Subject: next-20250804: clang-nightly hardening.config boot failed on arm64 rock-pi-4b
-To: clang-built-linux <llvm@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	linux-hardening@vger.kernel.org
-Cc: kees@kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
+References: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
+ <642d439ea1be8e48ee5c47fd3921a786452fb931@intel.com> <CACTEcX5Y3PNXNkhnK1dGFe+k3sigOZNpj66KKGAS9XeHqRu35w@mail.gmail.com>
+ <0b15e33603a46f6cc7ad7d09a156044f11367169@intel.com>
+In-Reply-To: <0b15e33603a46f6cc7ad7d09a156044f11367169@intel.com>
+From: Andy Mindful <andy.mindful@gmail.com>
+Date: Mon, 4 Aug 2025 13:57:29 +0300
+X-Gm-Features: Ac12FXzOJ88j54Uw6RBDAtH4-5VhCyZG1ALSoSGb8O5tAtMwgrRtuY8do-ly4uo
+Message-ID: <CACTEcX47bUd2tp=LYkQnhK29Js=vLN0JfXL8Aq6mOFBVYumpzQ@mail.gmail.com>
+Subject: Re: [REGRESSION] tty lockup and WWAN loss after hibernate/suspend in
+ 6.8+ on ThinkPad X1 Carbon Gen 10
+To: regressions@lists.linux.dev, pbonzini@redhat.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-acpi@vger.kernel.org, rafael@kernel.org, ville.syrjala@linux.intel.com, 
+	tglx@linutronix.de, Christian Brauner <brauner@kernel.org>, 
+	Jani Nikula <jani.nikula@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regressions found while booting the Linux next-20250804 on the
-qemu-arm64, dragonboard-410c, rock-pi-4b due to following kernel log.
+Double-checked bisect, looks like I've have found broken commit:
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? yes
+git bisect start
+# status: waiting for both good and bad commits
+# good: [6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1] Linux 6.7.11
+git bisect good 6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1
+# status: waiting for bad commit, 1 good commit known
+# bad: [6613476e225e090cc9aad49be7fa504e290dd33d] Linux 6.8-rc1
+git bisect bad 6613476e225e090cc9aad49be7fa504e290dd33d
+# skip: [0dd3ee31125508cd67f7e7172247f05b7fd1753a] Linux 6.7
+git bisect skip 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+# good: [ba5afb9a84df2e6b26a1b6389b98849cd16ea757] fs: rework
+listmount() implementation
+git bisect good ba5afb9a84df2e6b26a1b6389b98849cd16ea757
+# good: [61da593f4458f25c59f65cfd9ba1bda570db5db7] Merge tag
+'media/v6.8-2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+git bisect good 61da593f4458f25c59f65cfd9ba1bda570db5db7
+# bad: [e38f734add21d75d76dbcf7b214f4823131c1bae] Merge tag
+'staging-6.8-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+git bisect bad e38f734add21d75d76dbcf7b214f4823131c1bae
+# bad: [5d197e97fb106c09d3d013be341e5961fd70ec8a] Merge tag
+'hsi-for-6.8' of
+git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi
+git bisect bad 5d197e97fb106c09d3d013be341e5961fd70ec8a
+# good: [1b1934dbbdcf9aa2d507932ff488cec47999cf3f] Merge tag
+'docs-6.8-2' of git://git.lwn.net/linux
+git bisect good 1b1934dbbdcf9aa2d507932ff488cec47999cf3f
+# bad: [8c9244af4dc8680a453e759331f0c93d5bde1898] Merge tag
+'kvm-x86-svm-6.8' of https://github.com/kvm-x86/linux into HEAD
+git bisect bad 8c9244af4dc8680a453e759331f0c93d5bde1898
+# bad: [783288010035e4c250a0b6491a4642cdb8d30548] KVM: x86: add
+missing "depends on KVM"
+git bisect bad 783288010035e4c250a0b6491a4642cdb8d30548
+# bad: [1c3c87d720cbd1ff86dc1bfc6df8ee9adce5879b] Merge tag
+'kvm-x86-selftests-6.7-rcN' of https://github.com/kvm-x86/linux into
+HEAD
+git bisect bad 1c3c87d720cbd1ff86dc1bfc6df8ee9adce5879b
+# good: [8d99e347c097ab3f9fb93d0f88dddf20051d7c88] KVM: selftests:
+Convert lib's mem regions to KVM_SET_USER_MEMORY_REGION2
+git bisect good 8d99e347c097ab3f9fb93d0f88dddf20051d7c88
+# bad: [6c370dc65374db5afbc5c6c64c662f922a2555ad] Merge branch
+'kvm-guestmemfd' into HEAD
+git bisect bad 6c370dc65374db5afbc5c6c64c662f922a2555ad
+# good: [43f623f350ce1c46c53b6b77f4dbe741af8c44f3] KVM: selftests: Add
+x86-only selftest for private memory conversions
+git bisect good 43f623f350ce1c46c53b6b77f4dbe741af8c44f3
+# good: [8a89efd43423cb3005c5e641e846184e292c1465] KVM: selftests: Add
+basic selftest for guest_memfd()
+git bisect good 8a89efd43423cb3005c5e641e846184e292c1465
+# good: [5d74316466f4aabdd2ee1e33b45e4933c9bc3ea1] KVM: selftests: Add
+a memory region subtest to validate invalid flags
+git bisect good 5d74316466f4aabdd2ee1e33b45e4933c9bc3ea1
+# first bad commit: [6c370dc65374db5afbc5c6c64c662f922a2555ad] Merge
+branch 'kvm-guestmemfd' into HEAD
 
-First seen on the next-20250804
-Good: next-20250801
-Bad: next-20250804
-
-Test regression: next-20250804 clang-nightly hardening.config boot
-failed on arm64 rock-pi-4b
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Rk3399-rock-pi-4b
-[    0.006047] kfence: initialized - using 2097152 bytes for 255
-objects at 0x(____ptrval____)-0x(____ptrval____)
-[    0.007767] Unable to handle kernel execute from non-executable
-memory at virtual address 00000000820d0614
-[    0.008666] Mem abort info:
-[    0.008933]   ESR = 0x0000000086000004
-[    0.009284]   EC = 0x21: IABT (current EL), IL = 32 bits
-[    0.009780]   SET = 0, FnV = 0
-[    0.010074]   EA = 0, S1PTW = 0
-[    0.010376]   FSC = 0x04: level 0 translation fault
-[    0.010834] [00000000820d0614] user address but active_mm is swapper
-[    0.011424] Internal error: Oops: 0000000086000004 [#1]  SMP
-[    0.011954] Modules linked in:
-[    0.012255] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-6.16.0-next-20250804 #1 PREEMPT
-[    0.013053] Hardware name: Radxa ROCK Pi 4B (DT)
-[    0.013486] pstate: 80500205 (Nzcv Daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.014138] pc : 0x820d0614
-[    0.014414] lr : start_kernel+0x1d8/0x388
-[    0.014806] sp : ffff800082703e80
-[    0.015121] x29: ffff800082703e90 x28: 0000000000000000 x27: 00000000f3ff3ad0
-[    0.015802] x26: 00000000f3f2bf18 x25: 0000000000000000 x24: 0000000000000710
-[    0.016481] x23: 0000000000000003 x22: 00000000f1f31468 x21: 00000000f1ef9000
-[    0.017160] x20: ffff80008270a000 x19: ffff800082716ac0 x18: ffff800082715ac8
-[    0.017841] x17: 0000000000000004 x16: 000000000000000c x15: 00000000000000ac
-[    0.018521] x14: 0000000000000400 x13: 0000000000000000 x12: ffff0000f749b2ac
-[    0.019200] x11: 0000000000000000 x10: 0000000000000002 x9 : 0000000000000006
-[    0.019880] x8 : 00000000000000c0 x7 : 0000000000000000 x6 : 00000000b1f352b2
-[    0.020557] x5 : ffff800082703b78 x4 : 0000000000000000 x3 : ffff800082703d30
-[    0.021240] x2 : fffffffffffffb54 x1 : ffff0000f75b5180 x0 : 0000000000000000
-[    0.021921] Call trace:
-[    0.022159]  0x820d0614 (P)
-[    0.022433]  __primary_switched+0x90/0x9c
-[    0.022854] Unable to handle kernel write to read-only memory at
-virtual address 0000000000000008
-[    0.023677] Mem abort info:
-[    0.023942]   ESR = 0x0000000096000044
-[    0.024291]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.024788]   SET = 0, FnV = 0
-[    0.025078]   EA = 0, S1PTW = 0
-[    0.025375]   FSC = 0x04: level 0 translation fault
-[    0.025831] Data abort info:
-[    0.026103]   ISV = 0, ISS = 0x00000044, ISS2 = 0x00000000
-[    0.026613]   CM = 0, WnR = 1, TnD = 0, TagAccess = 0
-[    0.027088]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    0.027585] [0000000000000008] user address but active_mm is swapper
-
-## Qemu-arm64 boot failed log
-<6>[    0.000056] sched_clock: 61 bits at 1000MHz, resolution 1ns,
-wraps every 4398046511103ns
-<6>[    0.003490] kfence: initialized - using 2097152 bytes for 255
-objects at 0x(____ptrval____)-0x(____ptrval____)
-<2>[    0.016829] Unhandled 64-bit el1h sync exception on CPU0, ESR
-0x000000003a000000 -- PSTATE.IL
-<4>[    0.018731] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-6.16.0-next-20250804 #1 PREEMPT
-<4>[    0.018869] Hardware name: linux,dummy-virt (DT)
-<4>[    0.019015] pstate: 72500209 (nZCV Daif +PAN -UAO +TCO -DIT
--SSBS BTYPE=--)
-<4>[    0.019099] pc : start_kernel+0x1e8/0x388
-<4>[    0.019688] lr : start_kernel+0x1d8/0x388
-<4>[    0.019706] sp : ffffb0d172f03e80
-<4>[    0.019723] x29: ffffb0d172f03e90 x28: 0000000000000000 x27:
-0000000000000000
-<4>[    0.020240] x26: 0000000000000000 x25: 0000000000000000 x24:
-0000000000000000
-<4>[    0.020264] x23: 0000000000000000 x22: 0000000000000000 x21:
-0000000048000000
-<4>[    0.020288] x20: ffffb0d172f0a000 x19: ffffb0d172f16ac0 x18:
-ffffb0d172f15ac0
-<4>[    0.020311] x17: 0000000000000000 x16: 0000000000000008 x15:
-00000000000001e8
-<4>[    0.020334] x14: 0000000000000400 x13: 0000000000000000 x12:
-fff00000ff395f6c
-<4>[    0.020357] x11: 0000000000000000 x10: 0000000000000000 x9 :
-0000000000000002
-<4>[    0.020397] x8 : 00000000000000c0 x7 : 0000000000000000 x6 :
-00000000c333cce7
-<4>[    0.020419] x5 : 00000000f80cd09e x4 : 0000000000000000 x3 :
-ffffb0d172f03d30
-<4>[    0.020441] x2 : fffffffffffffb54 x1 : fff00000ff397cc0 x0 :
-0000000000000000
-<0>[    0.020652] Kernel panic - not syncing: Unhandled exception
-<4>[    0.020740] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-6.16.0-next-20250804 #1 PREEMPT
-<4>[    0.020757] Hardware name: linux,dummy-virt (DT)
-<4>[    0.020843] Call trace:
-<4>[    0.020960]  show_stack+0x18/0x28 (C)
-<4>[    0.021107]  __dump_stack+0x28/0x3c
-<4>[    0.021136]  dump_stack_lvl+0x24/0x6c
-<4>[    0.021151]  dump_stack+0x18/0x24
-<4>[    0.021166]  vpanic+0x10c/0x384
-<4>[    0.021181]  panic+0x48/0x4c
-<4>[    0.021195]  __panic_unhandled+0x68/0x6c
-<4>[    0.021239]  el1_abort+0x0/0x5c
-<4>[    0.021258]  el1h_64_sync+0x70/0x74
-<4>[    0.021341]  start_kernel+0x1e8/0x388 (P)
-<4>[    0.021359]  __primary_switched+0x90/0x9c
-<0>[    0.028904] ---[ end Kernel panic - not syncing: Unhandled exception ]---
-
-## Dragonboard-410c boot failed log
-
-[    0.019420] Unable to handle kernel execute from non-executable
-memory at virtual address 0000000082150614
-[    0.028831] Unable to handle kernel write to read-only memory at
-virtual address 0000000000000008
-[    0.028839] Mem abort info:
-[    0.028842]   ESR = 0x0000000096000044
-[    0.028847]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.028853]   SET = 0, FnV = 0
-[    0.028858]   EA = 0, S1PTW = 0
-[    0.028864]   FSC = 0x04: level 0 translation fault
-[    0.028869] Data abort info:
-[    0.028872]   ISV = 0, ISS = 0x00000044, ISS2 = 0x00000000
-[    0.028878]   CM = 0, WnR = 1, TnD = 0, TagAccess = 0
-[    0.028884]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    0.028892] [0000000000000008] user address but active_mm is swapper
-[    0.028899] Internal error: Oops: 0000000096000044 [#1]  SMP
-[    0.028907] Modules linked in:
-[    0.028919] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-6.16.0-next-20250804 #1 PREEMPT
-[    0.028932] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    0.028939] pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.028949] pc : ret_to_kernel+0x8/0x68
-[    0.028966] lr : el1h_64_irq+0x70/0x74
-[    0.028975] sp : ffff8000827837e0
-[    0.028981] x29: ffff800082783908 x28: ffff800082796ac0 x27: ffff800082b352c8
-[    0.028998] x26: 0000000000000000 x25: ffff800082d10000 x24: ffff800082796ac0
-[    0.029014] x23: 0000000020400205 x22: ffff8000801e3dfc x21: 0000000082149000
-[    0.029030] x20: 0000000000000000 x19: ffff8000827839f4 x18: ffff800082795b30
-[    0.029046] x17: 00000000a540670c x16: 00000000a540670c x15: 00000000000a0d34
-[    0.029062] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-[    0.029078] x11: 0000000000000000 x10: ffff800082796ac0 x9 : ffff800082745598
-[    0.029093] x8 : 0000000000000000 x7 : 205d303234393130 x6 : 302e30202020205b
-[    0.029109] x5 : ffff800082d111c8 x4 : ffff8000827837b7 x3 : ffff8000827837e0
-[    0.029125] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff800082d10f7c
-[    0.029141] Call trace:
-[    0.029146]  ret_to_kernel+0x8/0x68 (P)
-[    0.029161]  console_flush_all+0x2ac/0x3cc (P)
-[    0.029175]  console_unlock+0x80/0x17c
-[    0.029191]  vprintk_emit+0x208/0x2ac
-[    0.029208]  vprintk_default+0x44/0x70
-[    0.029225]  vprintk+0x34/0xb4
-[    0.029236]  _printk+0x54/0x80
-[    0.029249]  die_kernel_fault+0x40/0x74
-[    0.029261]  vma_end_read+0x0/0x94
-[    0.029277]  do_page_fault+0x44/0x768
-[    0.029292]  do_translation_fault+0x4c/0x68
-[    0.029307]  do_mem_abort+0x54/0xa8
-[    0.029322]  el1_abort+0x3c/0x5c
-[    0.029335]  el1h_64_sync_handler+0x50/0xfc
-[    0.029346]  el1h_64_sync+0x70/0x74
-[    0.029358]  0x82150614 (P)
-[    0.029368]  __primary_switched+0x90/0x9c
-[    0.029393] Code: 944fdb51 d5184035 d5184016 a94007e0 (a800ada6)
-[    0.029401] ---[ end trace 0000000000000000 ]---
-[    0.029408] Kernel panic - not syncing: Attempted to kill the idle task!
-[    0.282802] ---[ end Kernel panic - not syncing: Attempted to kill
-the idle task! ]---
-
-
-Rock-pi-4b
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29369027/suite/boot/test/clang-nightly-lkftconfig-hardening/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29369027/suite/boot/test/clang-nightly-lkftconfig-hardening/details/
-
-Qemu-arm64
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29368323/suite/boot/test/clang-nightly-lkftconfig-hardening/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29368323/suite/boot/test/clang-nightly-lkftconfig-hardening/details/
-
-Dragonboard-410c
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29368937/suite/boot/test/clang-nightly-lkftconfig-hardening/details/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29368937/suite/boot/test/clang-nightly-lkftconfig-hardening/log
-
- ## Source
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 5c5a10f0be967a8950a2309ea965bae54251b50e
-* Git describe: next-20250804
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804
-* Architectures: arm64
-* Toolchains: clang-nigtly Debian clang version 22.0.0
-(++20250803105249+e640ca8b9adc-1~exp1~20250803225437.1615)
-* Kconfigs: hardening.config
-
-## Build
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250804/testrun/29368937/suite/boot/test/clang-nightly-lkftconfig-hardening/history/
-* Test history 1:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250804/boot/clang-nightly-lkftconfig-hardening/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/30oCAKqSuQzYzKbypjmyC5lVNoC
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/30oC7nI5ieJMRpDzpr0LBsg5Tnp/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/30oC7nI5ieJMRpDzpr0LBsg5Tnp/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+=D0=BF=D0=BD, 4 =D1=81=D0=B5=D1=80=D0=BF. 2025=E2=80=AF=D1=80. =D0=BE 11:15=
+ Jani Nikula <jani.nikula@intel.com> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> On Sun, 03 Aug 2025, Andy Mindful <andy.mindful@gmail.com> wrote:
+> > Here what I have from bisecting, please let me know if it makes things
+> > clearer or not.
+>
+> Doesn't point at graphics, anyway.
+>
+> Cc: Christian.
+>
+>
+> BR,
+> Jani.
+>
+>
+> >
+> > git bisect log
+> > git bisect start
+> > # status: waiting for both good and bad commits
+> > # good: [6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1] Linux 6.7.11
+> > git bisect good 6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1
+> > # status: waiting for bad commit, 1 good commit known
+> > # bad: [6613476e225e090cc9aad49be7fa504e290dd33d] Linux 6.8-rc1
+> > git bisect bad 6613476e225e090cc9aad49be7fa504e290dd33d
+> > # skip: [0dd3ee31125508cd67f7e7172247f05b7fd1753a] Linux 6.7
+> > git bisect skip 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+> > # good: [ba5afb9a84df2e6b26a1b6389b98849cd16ea757] fs: rework
+> > listmount() implementation
+> > git bisect good ba5afb9a84df2e6b26a1b6389b98849cd16ea757
+> > # good: [61da593f4458f25c59f65cfd9ba1bda570db5db7] Merge tag
+> > 'media/v6.8-2' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> > git bisect good 61da593f4458f25c59f65cfd9ba1bda570db5db7
+> > # bad: [e38f734add21d75d76dbcf7b214f4823131c1bae] Merge tag
+> > 'staging-6.8-rc1' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+> > git bisect bad e38f734add21d75d76dbcf7b214f4823131c1bae
+> > # bad: [5d197e97fb106c09d3d013be341e5961fd70ec8a] Merge tag
+> > 'hsi-for-6.8' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi
+> > git bisect bad 5d197e97fb106c09d3d013be341e5961fd70ec8a
+> > # good: [1b1934dbbdcf9aa2d507932ff488cec47999cf3f] Merge tag
+> > 'docs-6.8-2' of git://git.lwn.net/linux
+> > git bisect good 1b1934dbbdcf9aa2d507932ff488cec47999cf3f
+> > # good: [1b1934dbbdcf9aa2d507932ff488cec47999cf3f] Merge tag
+> > 'docs-6.8-2' of git://git.lwn.net/linux
+> > git bisect good 1b1934dbbdcf9aa2d507932ff488cec47999cf3f
+> > # bad: [8c9244af4dc8680a453e759331f0c93d5bde1898] Merge tag
+> > 'kvm-x86-svm-6.8' of https://github.com/kvm-x86/linux into HEAD
+> > git bisect bad 8c9244af4dc8680a453e759331f0c93d5bde1898
+> > # bad: [783288010035e4c250a0b6491a4642cdb8d30548] KVM: x86: add
+> > missing "depends on KVM"
+> > git bisect bad 783288010035e4c250a0b6491a4642cdb8d30548
+> > # bad: [783288010035e4c250a0b6491a4642cdb8d30548] KVM: x86: add
+> > missing "depends on KVM"
+> > git bisect bad 783288010035e4c250a0b6491a4642cdb8d30548
+> > # bad: [861deac3b092f37b2c5e6871732f3e11486f7082] Linux 6.7-rc7
+> > git bisect bad 861deac3b092f37b2c5e6871732f3e11486f7082
+> >
+> > # being on a 861deac3b092
+> > git bisect bad
+> > The merge base ba5afb9a84df2e6b26a1b6389b98849cd16ea757 is bad.
+> > This means the bug has been fixed between
+> > ba5afb9a84df2e6b26a1b6389b98849cd16ea757 and
+> > [1b1934dbbdcf9aa2d507932ff488cec47999cf3f
+> > 61da593f4458f25c59f65cfd9ba1bda570db5db7
+> > 6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1
+> > ba5afb9a84df2e6b26a1b6389b98849cd16ea757].
+> >
+> > Thanks.
+> >
+> > =D0=B2=D1=82, 29 =D0=BB=D0=B8=D0=BF. 2025=E2=80=AF=D1=80. =D0=BE 13:20 =
+Jani Nikula <jani.nikula@intel.com> =D0=BF=D0=B8=D1=88=D0=B5:
+> >>
+> >> On Tue, 29 Jul 2025, Andy Mindful <andy.mindful@gmail.com> wrote:
+> >> > Please let me know if any further information or testing is required=
+.
+> >>
+> >> Likely the quickest way to find the root cause is to bisect the issue.
+> >>
+> >>
+> >> BR,
+> >> Jani.
+> >>
+> >> --
+> >> Jani Nikula, Intel
+>
+> --
+> Jani Nikula, Intel
