@@ -1,96 +1,118 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEC926FD84
-	for <regressions@lists.linux.dev>; Mon,  4 Aug 2025 13:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E3220766C
+	for <regressions@lists.linux.dev>; Mon,  4 Aug 2025 14:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754314369; cv=none; b=TjXq0TGYqSSWu5LL2ivg939l3i/zJm3LJZckX3tZ2BW4wQ+QKZmK0qVLCIho204084wHFotWnRXWp8MBztv1iNbUJgWTCnxRG5dTpNGy2AxlVOTsFZ0RqHX2ICCU/u0WE+zH9ZG2hptxMfC5oqQmDRykDzvt4C4rjdaeSzIX1c0=
+	t=1754319046; cv=none; b=JBuU/Bv+LUv+G1KDfSjWESbI13GdXbGBJhDHgWxLqs2s9S2ObcfRI/RVpK1tnF0IowCaYzhurjgxbrW4XS/doQl+YlKmfbjJal1F651GIRDTQNa4TmL4QgM0TC7PPsDwABVyKe9gvDTezGlYcUXgioqJACjF0sMRhbuPqmDO8mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754314369; c=relaxed/simple;
-	bh=c2zZubdYruK/gDLxhJT/Dee+/3njse4nUBcteSLRYms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtqYEmvPI8mH8Ga4yRYqZpRZFhsB6/Il1eTsTOosPiWCKeYHcslGkHRVO71/ZD15erH1UGcA8zRJRa2EIIZUWGAtZtcUIFQbnm8wgg13MpysagWB4I32iwXWeV+nyDjj4RrH4PaRTaOa95sXjumwp+zxHZzGW9ZABnRqjCQI198=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=boUjKes+; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1754319046; c=relaxed/simple;
+	bh=Th/zbNG2w/sGAVRFlv12HJ6Li/jSTJBgQ6X2ZZll/S0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EHWeyLnF8AbubBlWr9BJy0NCpE9onAmo1YPw8Pbtb9N5JQe0zdp7oR6ZO4AOiluzMLeicG3UjQvxY2KHjKCY4prWT19/5CQKGqyuAUeIyES+Js9tRbiFEuVt0CWLt+bfEsOnGQEP2aVU+h8vRtkofGsX1ecGGyZxYo9nJ2obWj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O7CmMmct; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="boUjKes+"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-7076eaa5febso12523766d6.2
-        for <regressions@lists.linux.dev>; Mon, 04 Aug 2025 06:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1754314365; x=1754919165; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ARdbuY4ihnBfNqmPKZqv+tAobgDvylQcvqI7MjhLvS8=;
-        b=boUjKes+q0aCWiJIDyLGoq8e4gohYT+lXIjuKfHNnJI4uRiHZMcsLiWJO4D3FbIu3G
-         5S4/hSlLYCCLC9veb9FZEuyqu5i4yXOppozfVbmKwJagN2/g6pIh3nDy2YEFeQSuBj1A
-         hZ8+wGdWBkDpIOWkyF+yqiO5L7BqXH2BmAjjcU7kH7OIH3dC5aHrv33CyRHt2rRYqTBv
-         DsVP1eYbO69EU4uU1w5ozHBwg4dyp0z8lCnfpEtEwOoNVNY0/ZdcqbCFoaqdz+lFxfiW
-         1xE/k52S1acA35vvSh+GSc5m+KCdkYyCpt0lRfaYz9UO21GELv1VRhIzs/nzWeoki+/S
-         +NcQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7CmMmct"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754319044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Th/zbNG2w/sGAVRFlv12HJ6Li/jSTJBgQ6X2ZZll/S0=;
+	b=O7CmMmctRo8TFZp9kSQeC6rDb/zMSZ0HCHtbqtVv/qprOjythyKSwsXPkdGKeC+prscCG/
+	iPvAZr3GrJvnAGlgdvZL1vLCszCYW18ffDvPJgI81KeCyUBP4qNSgYJg07OJPuAKMc/aCW
+	n6sAfIZsr84pmte4/ictBb0pPG34+kQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-20-pydCRLxvMKG92F7JZswPRg-1; Mon, 04 Aug 2025 10:50:43 -0400
+X-MC-Unique: pydCRLxvMKG92F7JZswPRg-1
+X-Mimecast-MFC-AGG-ID: pydCRLxvMKG92F7JZswPRg_1754319042
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3b7806a620cso1995955f8f.3
+        for <regressions@lists.linux.dev>; Mon, 04 Aug 2025 07:50:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754314365; x=1754919165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ARdbuY4ihnBfNqmPKZqv+tAobgDvylQcvqI7MjhLvS8=;
-        b=Iuas+vLTrU2ZI15MO7PF0BvX5zh/htL7kDv/qOyRMc6tAxQmW/uBK9T7RpbhlDUaHa
-         0jpkIToOOacAKzRBJQB/X7rxTGxZ9B+yW3Ilay+3CzI9OqoZ30gCIQPdvLuRw0KmOH5v
-         jRQ7wvP6+HQZVef9pT8mpoA45agevULFQwHtmXXDrMQeZxEfDtXsVnhpCXD3R2Zr8WQc
-         b4pfnhvgF4tiL+4xdsvV40ucDmDIRUwumzKT0VqDUOmoTDr1TahdAG8AX17b2nAkot/p
-         5OSCmzM0UDQjEOEEH0ZxRJ4ikx84Jnwy1hNkteReEOLigMBpE3EqxQRw1BqHSDbVdXxp
-         4enA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxi0g9HRVWbP+jcB0vjKcQTD85J82njKpdYLYLrGghW7YTUOxLk6WaVZM7b6JqBz2f5cKwSzzLg3Rn7g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/m9ljWH5qGbGNCDJkzJz0kNwuNGCmdO34FQ6USyGDmsPYTyeY
-	atX6MoAWgns1mBFuCU2vWq30pBFBvRijF7gsS7X8MBSGi+qcJGBOJd9LleEJ4xHJLgU=
-X-Gm-Gg: ASbGncsbbixcxY2HsLV1Vx3gxRFqVeKWguaQqFNZmkzvgBZXAjqSw6JhQRBu7wnZ9Oc
-	I6lkoGBQPIcg/PepyA329LZ3xPgLxZ+c9RtzqW+3Hq09blJ+yIByhouwKerbVx8vZCibWQc+mEl
-	1lmRwVVl5MZ8mjXX091sFBnu4FPcUnC+IvA+YjsJyBxFUijtRO1cD8k9W2oldU4xkwQZMx7eea3
-	4Xb/FOErhuisNKUi3dcqPDm8uePlnd/5CvQQTViFX0Ipq64s7IUtSEnKxTGB4nywD5zIxsVGZYx
-	Lmno7EIGkY14SxxVcCjPoFsXxTCg1HLPi68D7/+tlHrnNgsrD+RG43FKUGVqSo7Vh2aMYzq87es
-	2uJdIQ9E3l7dQfKri3PvDTg==
-X-Google-Smtp-Source: AGHT+IF7J9OrujvHAgN5i0H7oCNZ6uBRyDC1EFC/YvErPRsiTQSvUU17oBWdAHJzGy7XoL/W1tODjA==
-X-Received: by 2002:a05:6214:4015:b0:707:77cb:5b0b with SMTP id 6a1803df08f44-70936243ecemr127645756d6.26.1754314364892;
-        Mon, 04 Aug 2025 06:32:44 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-7077cde6062sm58097776d6.71.2025.08.04.06.32.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Aug 2025 06:32:44 -0700 (PDT)
-Date: Mon, 4 Aug 2025 09:32:40 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Chris Bainbridge <chris.bainbridge@gmail.com>
-Cc: linux-kernel@vger.kernel.org, surenb@google.com, bsegall@google.com,
-	dietmar.eggemann@arm.com, mingo@redhat.com, juri.lelli@redhat.com,
-	mgorman@suse.de, peterz@infradead.org, rostedt@goodmis.org,
-	vschneid@redhat.com, vincent.guittot@linaro.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] intermittent psi_avgs_work soft lockup
-Message-ID: <20250804133240.GA1303466@cmpxchg.org>
-References: <aI_fUhpBrIBrJ073@debian.local>
+        d=1e100.net; s=20230601; t=1754319042; x=1754923842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Th/zbNG2w/sGAVRFlv12HJ6Li/jSTJBgQ6X2ZZll/S0=;
+        b=GxO/F8CEOeshCDSKG4Ho+i7sk0O/mkxwqHlYoD/8qCkTB0dt+VgU1ff417KCrt6x7S
+         1Po5kv0IgxZOc0HsgoORPB9/oOsS8O8AgiQ+SNrc/f7n0AtgjPTTSu3m1pMcaSP6TSaZ
+         BagoGFTPeDstTY+LSd+L5HyIP/tYLc8SB27ly47/Rdzf4Uh5zYhE77soSt0b1BvOFfe9
+         THHcpbdXrynUH5Uya44agz0STq2EXnB2+R8+OB9XJO3eOwgxtf+Cwqx5PzZJEKjr1jC+
+         JzlXlWXbNmv66MTvdBplNZYy1CJrYmNSVO0au0fWHJlOaUIUAeheELFhIYfFXV6ofZca
+         uRSQ==
+X-Gm-Message-State: AOJu0YwGkdjrg0vrNFFO8not5QChHI0Wc/N9KxHhRPejsbrka/7LHoNQ
+	y5nxXZSzannAOoshfwZxXq260+NSYy+/ep6YOqbmXF0ZF0pbYwzhy971wTWXoidHAHjSSdiKeSH
+	SDt5yHvV1Q+6wlUPCQBQCaYyivBpP0xfY0NJmQWAdgcnaywaZlmqZCMV7Hk0bLgvTPGqoF4l7AP
+	k6fPqGWhhP26e2UVh3pJ1ybyF0srROq238xyZu6qM=
+X-Gm-Gg: ASbGncsYl0RcaBxcR3as6n2lIMGWQ+w9Glf9yb/kHQEAhhNdQd39WlkPpvi553FlFhj
+	HtF4A5NfQmr2T59ieU8rs8zFak+zZgu7FwSZ5VcxH6czU5er+ZWPFhDjGqNf4b55iE+vCKNAlA+
+	hJpR9Qe+ehLwLa5l3GsUs3
+X-Received: by 2002:a05:6000:1788:b0:3b7:94c3:2786 with SMTP id ffacd0b85a97d-3b8d94c1c49mr6701554f8f.34.1754319041976;
+        Mon, 04 Aug 2025 07:50:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgsw4pwEJUoqykoSclSWi0JkSR9VtvKkMXz/zduARm+hjzykjvBGRpvCt0a+Ds377veRWW/i7OVVOUhVwFvkM=
+X-Received: by 2002:a05:6000:1788:b0:3b7:94c3:2786 with SMTP id
+ ffacd0b85a97d-3b8d94c1c49mr6701520f8f.34.1754319041488; Mon, 04 Aug 2025
+ 07:50:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aI_fUhpBrIBrJ073@debian.local>
+References: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
+ <642d439ea1be8e48ee5c47fd3921a786452fb931@intel.com> <CACTEcX5Y3PNXNkhnK1dGFe+k3sigOZNpj66KKGAS9XeHqRu35w@mail.gmail.com>
+ <0b15e33603a46f6cc7ad7d09a156044f11367169@intel.com> <CACTEcX47bUd2tp=LYkQnhK29Js=vLN0JfXL8Aq6mOFBVYumpzQ@mail.gmail.com>
+In-Reply-To: <CACTEcX47bUd2tp=LYkQnhK29Js=vLN0JfXL8Aq6mOFBVYumpzQ@mail.gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 4 Aug 2025 16:50:28 +0200
+X-Gm-Features: Ac12FXwltMgUzEEB8nqMLRA_D51YfOsfFkH1rt4nc_9cVgH_FR6V2EdEIAFZooc
+Message-ID: <CABgObfZKKeqMrAUyS8CB4ARkW_8Z9QREgpgYcq2jxoQ9ppS6MA@mail.gmail.com>
+Subject: Re: [REGRESSION] tty lockup and WWAN loss after hibernate/suspend in
+ 6.8+ on ThinkPad X1 Carbon Gen 10
+To: Andy Mindful <andy.mindful@gmail.com>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
+	rafael@kernel.org, ville.syrjala@linux.intel.com, tglx@linutronix.de, 
+	Christian Brauner <brauner@kernel.org>, Jani Nikula <jani.nikula@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 8Ueze888F53GlCBvfNsMWQDZdw2TtRGSJRiLD9mOm94_1754319042
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Chris,
+On Mon, Aug 4, 2025 at 12:57=E2=80=AFPM Andy Mindful <andy.mindful@gmail.co=
+m> wrote:
+> Double-checked bisect, looks like I've have found broken commit:
+>
+> > > git bisect bad
+> > > The merge base ba5afb9a84df2e6b26a1b6389b98849cd16ea757 is bad.
+> > > This means the bug has been fixed between
+> > > ba5afb9a84df2e6b26a1b6389b98849cd16ea757 and
+> > > [1b1934dbbdcf9aa2d507932ff488cec47999cf3f
+> > > 61da593f4458f25c59f65cfd9ba1bda570db5db7
+> > > 6fc5460ed8dd0edf29e7c5cfb1ef9b1aa04208a1
+> > > ba5afb9a84df2e6b26a1b6389b98849cd16ea757].
 
-On Sun, Aug 03, 2025 at 11:14:42PM +0100, Chris Bainbridge wrote:
-> Hello,
-> 
-> I'm getting intermittent soft lockups with recent kernel builds. This is
-> a new error that I haven't seen before.
+This skip is messing up the results:
 
-This smells of the seqlock re-init problem in 570c8efd5eb7. Could you
-try to see if the below patch fixes it for you?
+# skip: [0dd3ee31125508cd67f7e7172247f05b7fd1753a] Linux 6.7
+git bisect skip 0dd3ee31125508cd67f7e7172247f05b7fd1753a
 
-https://lore.kernel.org/lkml/20250716104050.GR1613200@noisy.programming.kicks-ass.net/
+and there are still 3858 commits in
+ba5afb9a84df2e6b26a1b6389b98849cd16ea757..{1b1934dbbdcf9aa2d507932ff488cec4=
+7999cf3f,61da593f4458f25c59f65cfd9ba1bda570db5db7,ba5afb9a84df2e6b26a1b6389=
+b98849cd16ea757}
 
-We probably want Cc: stable on this patch now that 6.16 is released.
+Any chance you can get 6.7 to work and restrict the range further?
 
-Thanks
+Thanks,
+
+Paolo
+
