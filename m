@@ -1,189 +1,60 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB2B2749CF;
-	Tue,  5 Aug 2025 12:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53D3224256
+	for <regressions@lists.linux.dev>; Wed,  6 Aug 2025 08:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754396750; cv=none; b=plepDIGwoCGrmofennzs7VfAdy6AbbKBicklK1b3dGj0l5VJvAOf8cNaTwpL20f1wF4e9uoMbbvN1q3fLGcs7Om0IHvidmpVKPeT0l2d+xER6wVFJjFgafBkIUUQpxt29LkL34PxK7QIVcrDfv/pgPH2f5BdJ5LxWdQiGIzZSG0=
+	t=1754468116; cv=none; b=E5iULCSHNvdTcyhdjTUyIXdNjKEtYJq3jUaNoywUwKCZ6pW+Y/Mr+fYTavmtp5gNWwydYRXf3FSIqp+DMr9b+0nQ3s+sfHwRmqOtRq06G4fE8djdMtSvO3lxT0cLGY/ZEwk0YSilHCH2CQlCxd/8fo+3M2rAiYVvVsScAhryk68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754396750; c=relaxed/simple;
-	bh=9uqag+0+Xegzr+l3svBjDjVLIzo35g9RdE8wlR/GZQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u883W4S4OFNlbTWrI03bTDEIE93Z5l/rqJfPOMkE4d77dJvGilnOEINLvx8OOYRBXbO3b4K8155XS0+xf+h33sYqUlPuQslhObu7WoxQSQVYo143vwFQ6Rz2s0sLZUEUXDc+oPYI48VTSQhRrxY3gE9e0hzijYRpT5QoQ9E/qdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=SKQSEjqI; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SKQSEjqI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1754396391;
-	bh=89aa+0VDBNvHlryLxy5mMqLpPniftwYq/dfu5JfPqyY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SKQSEjqIBN4TmNlTX7jape8XnXnJpGjHwxwtzp61KNUThPFAm2MwNAPN18DupEAYq
-	 4v2wc4dzBh9I/+b0mWFYPcPRf+PuusfxGSsXLCAV/Chdofb7Cs7Ixh8MRouN5IRaai
-	 kyuuXmibbuv7YLCxQ1k9DBlVOzjJxZb3EQO+AdLyKnaEN5mG0pvOvXW5f66e5/5gq2
-	 63INV/sivRnletACxAeoxg5EdkLfZa5uHrxPcg9/cBFN7+VHm3EAypUyB/kH23YeTH
-	 wWORwBGf4YwLZndBt3dmbTV7fFsEpPnQQzm4EcwhFd3TmEJegotVLOEfw89WVxJsAY
-	 x7ApaZRgctm3A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bxCD72n1jz4wb0;
-	Tue,  5 Aug 2025 22:19:51 +1000 (AEST)
-Date: Tue, 5 Aug 2025 22:19:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Reza Amini <reza.amini@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>
-Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
- kernelci-results@groups.io, regressions@lists.linux.dev, gus@collabora.com,
- linux-next@vger.kernel.org
-Subject: Re: [REGRESSION] next/master: (build) the frame size of 1448 bytes
- is larger than 1024 bytes [-Werror=fr...
-Message-ID: <20250805221946.6b8e0a42@canb.auug.org.au>
-In-Reply-To: <175437354419.1010.14815981800290011272@508e4dbc6f9f>
-References: <175437354419.1010.14815981800290011272@508e4dbc6f9f>
+	s=arc-20240116; t=1754468116; c=relaxed/simple;
+	bh=IVUCScq+wgERBDN1As1mbw1tOvrOYQlA9OvBxMzkBvE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=B4oN5QgX7w8tVeMFsCkBLEy1Sg7/K7AulJXcvytGZC4Rm6EGuisAvXXToPusCokWFOQlSZIgsMVytf9wn1NbU71IesYYyVpxPWGDmLs20DMalkG/sU6iBj4XHj30wjy5mfxBLU/R5Qirs3J0RIwPM5pFga1Q2ehVYL1bKLkrWtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.192] (ip5f5af7ca.dynamic.kabel-deutschland.de [95.90.247.202])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 76E2261EA1BEA;
+	Wed, 06 Aug 2025 10:15:09 +0200 (CEST)
+Message-ID: <10172c80-daec-4e20-ab57-a483cf1afc02@molgen.mpg.de>
+Date: Wed, 6 Aug 2025 10:15:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FTRV2MXrS//G=iarmlT=MuP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Quiet crackling noise at boot and after stopping music
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---Sig_/FTRV2MXrS//G=iarmlT=MuP
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Dear Linux folks,
 
-Hi all,
 
-On Tue, 05 Aug 2025 05:59:04 -0000 KernelCI bot <bot@kernelci.org> wrote:
->
-> Hello,
->=20
-> New build issue found on next/master:
->=20
-> ---
->  the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3Dframe-=
-larger-than=3D] in drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn1=
-0_hwseq.o (drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.=
-c) [logspec:kbuild,kbuild.compiler.error]
-> ---
->=20
-> - dashboard: https://d.kernelci.org/i/maestro:4d4120bf99fecc5f852604382b7=
-c406b99440116
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-> - commit HEAD:  afec768a6a8fe7fb02a08ffce5f2f556f51d4b52
-> - tags: next-20250805
->=20
->=20
-> Log excerpt:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:608:1: =
-error: the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3Dfr=
-ame-larger-than=3D]
->   608 | }
->       | ^
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_hws=
-eq.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_ini=
-t.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_hwseq=
-.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_init.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_hws=
-eq.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_ini=
-t.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_hwseq=
-.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_init.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_hwseq=
-.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_init.o
-> drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c: In fun=
-ction =E2=80=98dcn10_log_hubp_states=E2=80=99:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:447:1: =
-error: the frame size of 1156 bytes is larger than 1024 bytes [-Werror=3Dfr=
-ame-larger-than=3D]
->   447 | }
->       | ^
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_hws=
-eq.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_ini=
-t.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_hws=
-eq.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_ini=
-t.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/irq_service.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce80/irq_service_=
-dce80.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce110/irq_service=
-_dce110.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce120/irq_service=
-_dce120.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn10/irq_service_=
-dcn10.o
->   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn20/irq_service_=
-dcn20.o
-> cc1: all warnings being treated as errors
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->=20
->=20
-> # Builds where the incident occurred:
->=20
-> ## defconfig+kcidebug+x86-board on (i386):
-> - compiler: gcc-12
-> - dashboard: https://d.kernelci.org/build/maestro:689185f279d5d217e5430785
->=20
->=20
-> #kernelci issue maestro:4d4120bf99fecc5f852604382b7c406b99440116
->=20
-> Reported-by: kernelci.org bot <bot@kernelci.org>
->=20
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
->=20
-> Made with love by the KernelCI team - https://kernelci.org
->=20
+I believe the Realtek refactoring caused a regression on my Intel Kaby 
+Lake laptop Dell XPS 13 9360. There is quiet crackling noise during 
+boot, when GDM is started, and also after playing music is stopped. It’s 
+reproducible with 6.16.0-04055-g14bed9bc81ba, that contains the sound 
+subsystem pull request.
 
-Presumably caused by commit
+177bf8620cf4 Merge tag 'sound-6.17-rc1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
 
-  e63e9f8b3d1c ("drm/amd/display: Fixing hubp programming of 3dlut fast loa=
-d")
+I uploaded the run of alsa-info [1]. I try to verify with plain 6.16 later.
 
-from the amdgpu tree.  Just making the two new pLabels arrays "static"
-(and maybe "const") will probably help.  Maybe declaring them "static
-const char *pLabels[]" ?
 
---=20
-Cheers,
-Stephen Rothwell
+Kind regards,
 
---Sig_/FTRV2MXrS//G=iarmlT=MuP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Paul
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmiR9uMACgkQAVBC80lX
-0GynsAf/aC0QnO59J48o2kuKmTnJ/uh9mJTKPKwA/qWoVcnOpnlR9/IPZ+PLS8rM
-qosMIkjXtQqEHGsmFy+/1vxFIs3jsN1fmVKoCS160xPXMkEFaL7ASZkjnHD6XrAu
-ZHjAgNDOCTJhJSYPs4kK8Pc+3oKt/IwUbiwn0u3PwJJKJ13x2JSXf2RumJbYON0H
-Dv78FbxqCDhiwhuV+l5bYS/+9VQZavamw5jL19Uqkgs9jprTMaInvGyiI037MVTp
-bGQTHjDhgyOecT1rVL7uEFqDtNMgnWDCm46SClHesUXJOPHk3JsO3QAinUsz3yS1
-mA6k86oVel0OJwKKwweFkHBEw1w4wQ==
-=jTO4
------END PGP SIGNATURE-----
-
---Sig_/FTRV2MXrS//G=iarmlT=MuP--
+[1]: https://alsa-project.org/db/?f=6d2c66f2374b4ee6eb406a1d2cce60d1f17bed33
