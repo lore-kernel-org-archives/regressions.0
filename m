@@ -1,35 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD8B1C5D72;
-	Thu,  7 Aug 2025 15:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B7427381C;
+	Thu,  7 Aug 2025 16:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754581966; cv=none; b=Tkt+UjtomVyfebJM79Prsm+qa615IR8lml3nHrPrDjF3S0/NYsg+C5bUhzWhHMUClp7Ls+EjE5KGdX78frU33Zq0NAt5kHAE/KmUsPsH/h+wpNd+TTr6YfQg7gwCLtT7ALac9eLl0966OG/dtLQmaBxdHOX87Bs2qJBKAamu52c=
+	t=1754582583; cv=none; b=dZZuSflDH+zyUEoe2UbxLz+xL3puZfESDP10hgaHb+edsTX7Xm5LSr6/pXMrNpR96GA+UCo84LbaFSmNcLz2Feo3XXNEXDNR5lBlwOdfSP9YHWeU7lgo/V5SSq4n1DATr6yDcYvv2JlcfbjuVCjvmrdCdT9lD45CJkQ1rUS0NfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754581966; c=relaxed/simple;
-	bh=YRS94p/FbNM9/y4FbArYf7EcAJfwjlAscxKZ9U1T7JE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWlGXMn40/RPQjsEA8vUn3n5SvIR+kcxS9ZK7mKDYndBRIHIgh+87vJqiwVNZraVv45fxgkbYgGG/tKgm7MJZFs1Ta0akoUj2NPNAz42JFH8xHSc2NsYHLufHKidThOJTLn019smdV/7TOoiGMcLRpkZcbVesx2HDlaoy1pffqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I0zNu88/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754582583; c=relaxed/simple;
+	bh=hcnVu7tDgb/ADY1nYYF8paHUskD2YSfWU7CIZv1TN6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XEacrmwCwXN6/0xzPTsr0pK9FBcXoTvsZcgqXFjPIVeeQ18v7v3nGU+Q42DJczcZ9FXJZlVgkY5ykaAjwYU+B1BxVoa+c78gODxBOQORiGHdEwRyijFI8Ts4gMKJwPWqscShSWULws8iBRHBFLOj7dcFqmtq8dPwW6rdHfzdCaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZNejh4T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I0zNu88/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECDBC4CEEB;
-	Thu,  7 Aug 2025 15:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1754581966;
-	bh=YRS94p/FbNM9/y4FbArYf7EcAJfwjlAscxKZ9U1T7JE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I0zNu88/pI1njpXl57TwTnMUoFUiRSmn6pOk1qOKUF8x9lEfd97ZjHjsWSQTfW9Bh
-	 TO/UgCX3A6NBkxfJbhTA73oqf485HTiGCyAY18slvwqJHJGiHYjLHrw7zJzh8C50k4
-	 NizCfgVGOwX7RCgcN8Tq+pyLuPP3QWgePlVSaCr4=
-Date: Thu, 7 Aug 2025 16:52:41 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: cat <cat@plan9.rocks>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [REGRESSION] vfio gpu passthrough stopped working
-Message-ID: <2025080724-sage-subplot-3d0f@gregkh>
-References: <718C209F-22BD-4AF3-9B6F-E87E98B5239E@plan9.rocks>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZNejh4T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC465C4CEEB;
+	Thu,  7 Aug 2025 16:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754582583;
+	bh=hcnVu7tDgb/ADY1nYYF8paHUskD2YSfWU7CIZv1TN6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mZNejh4TyoaZNvB+A3Ma6NgB3CkunSmrXCGpZD3LkXdb/F9gO03Zoqijchx/yfGx8
+	 f9U8hfjYmqQIHCkeOkIvP6JuoVsXpJahsDP8PLQ9uQDo9HA5tMwoVWy3oFhcP35ENi
+	 oWGNV8cBWSWKUM8QpqhEzj3tNmCGOs0VhKMZYzuIety8yoAMh1+s7x8LUgDSRI8jtQ
+	 maCwH0E3luvZn3J1yoZQsvmEnvOKVPFSNuGWbnL9c8jK5xmbMshy1fC7rXnjTwc9xn
+	 TekFNyAHWwXvmC9BlVVI9z1lXXyT2nQZ42e2ZUzik55jFOsWNgb+GwK0PrJN/6xfS0
+	 cuW2jMfcKkj1Q==
+Date: Thu, 7 Aug 2025 11:03:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: namcao@linutronix.de, mani@kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Commit d7d8ab87e3e ("PCI: vmd: Switch to
+ msi_create_parent_irq_domain()") causes early-stage reboots on my Dell
+ XPS-9320
+Message-ID: <20250807160301.GA50800@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,31 +44,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <718C209F-22BD-4AF3-9B6F-E87E98B5239E@plan9.rocks>
+In-Reply-To: <dfa40e48-8840-4e61-9fda-25cdb3ad81c1@panix.com>
 
-On Thu, Aug 07, 2025 at 03:31:17PM +0000, cat wrote:
-> #regzbot introduced: v6.12.34..v6.12.35
+On Wed, Aug 06, 2025 at 04:07:30PM -0700, Kenneth Crudup wrote:
 > 
-> After upgrade to kernel 6.12.35, vfio passthrough for my GPU has stopped working within a windows VM, it sees device in device manager but reports that it did not start correctly. I compared lspci logs in the vm before and after upgrade to 6.12.35, and here are the changes I noticed:
+> I'm running Linus' master (as of today, cca7a0aae8958c9b1).
 > 
-> - the reported link speed for the passthrough GPU has changed from 2.5 to 16GT/s
-> - the passthrough GPU has lost it's 'BusMaster' and MSI enable flags
-> - latency measurement feature appeared
+> If I revert the named commit, I can boot OK. Unfortunately there's no real
+> output before the machine reboots, to help identify the problem.
 > 
-> These entries also began appearing within the vm in dmesg when host kernel is 6.12.35 or above:
+> I have a(n enabled) VMD in my Alderlake machine:
 > 
-> [    1.963177] nouveau 0000:01:00.0: sec2(gsp): mbox 1c503000 00000001
-> [    1.963296] nouveau 0000:01:00.0: sec2(gsp):booter-load: boot failed: -5
-> ...
-> [    1.964580] nouveau 0000:01:00.0: gsp: init failed, -5
-> [    1.964641] nouveau 0000:01:00.0: init failed with -5
-> [    1.964681] nouveau: drm:00000000:00000080: init failed with -5
-> [    1.964721] nouveau 0000:01:00.0: drm: Device allocation failed: -5
-> [    1.966318] nouveau 0000:01:00.0: probe with driver nouveau failed with error -5
-> 
-> 
-> 6.12.34 worked fine, and latest 6.12 LTS does not work either. I am using intel CPU and nvidia GPU (for passthrough, and as my GPU on linux system).
+> [    0.141952] [      T1] smpboot: CPU0: 12th Gen Intel(R) Core(TM) i7-1280P
+> (family: 0x6, model: 0x9a, stepping: 0x3)
 
-Can you use git bisect to find the offending commit?
-
-
+#regzbot introduced: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
