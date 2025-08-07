@@ -1,197 +1,267 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A3710957
-	for <regressions@lists.linux.dev>; Thu,  7 Aug 2025 11:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D491B255F3F
+	for <regressions@lists.linux.dev>; Thu,  7 Aug 2025 13:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754565626; cv=none; b=so/h1EK8wyfyUNz+CcMhaRIAWQCfFArDRXcF4qLeOQRgvNWfeu2fHnthmeYCMGRyNVzy4pxnrUbRetO56wxkmoXoiiIb3QN/bZ9lVkQXqjK7tMa1b+p2orlRhrxd64SOBhL5ppHb6yjTRRNv4cIALdmgP0Kgajnov6+WgPU6Br8=
+	t=1754572124; cv=none; b=clqtZ30+0IefrBrJDdfjZSKNzmE/h7PsJ8LMLABoV3seiuMBbmp3D/zXhWBkPQPhThnf18OKh7db4etRsVWMGHH0wEiNh2iiYYukYCUy0JKgMYRV6EO7JTnZLXQTu5qCmES7Q2eyINlMuRb4XC88iN3Of4XnbE7eTlZ5ghl+Yhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754565626; c=relaxed/simple;
-	bh=bT199VEQVqscKcI1ySGvbrsT+zAn6cUa1qjcLrPjd5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJMLC5RW46irknJJP52xedj+1VUDSg+Kgxp7EcYQzaAnK+SSXH5i4DuggLixA94EOdDTni2lyEHvkotdORaQY/J3NGxr1sJl7Vd//kTi6x/bFaQkqNnL5aMo6dZiXjjW1IXlIyM9u5XCmHRjlOUuN3QU2rJxpQwanXRGNd7zvsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SKATQS3I; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1754572124; c=relaxed/simple;
+	bh=URcEUoEdbL5TkgsWujjaYCJlh1NPKxZwcixR2gJRS0E=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Nf5oAbfRiSVvw/w4CYtmN8qEA41wdroOEeUjUjsuU03q5shXXe5jeTnH7VLQnlk7MVHLyv9LedXsitVl+ToOHQ4AjTwjbMK9ZtTvcmZ3ZlDWrS9okqShGYIEPF+8aIymdBa3ZOH1yyp4lTUlyQBlMwFwo8FkDOt6U38vrYNiitU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T/qL9ETq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SKATQS3I"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4563cfac2d2so7128715e9.3
-        for <regressions@lists.linux.dev>; Thu, 07 Aug 2025 04:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754565623; x=1755170423; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t+xe2dZhSU0YB/2XKMOmDkqHorIZkYeC9Ed4u60MW1U=;
-        b=SKATQS3IHJ+5tepOfkqLmA9gf6XOxlDkDoT4zgzkgvqmm+hxNvaFi8YpCap9AmxHy5
-         uCXCpOQVUmeFQjDPumOjXaGsief+yFwcgATXwsgza/t1/osaurrDWXlH+YdcarguXKsg
-         q2FpiA/FdwP/+VaPjG5brwsL7yV/NeFDHuxMq6LiEucF9XUaJ5PsYMcnzvJF+ucZxYRv
-         Qu7+EZfyOGchpPym9En3obPVh4eJEdrO3bE2V2nEwJYy2TJi8bPH+cuGtlEuGbOkVmZq
-         sZp8LqllhF8G2V02cWTLSEqNTmHBjSqmUoIUh2947TqFqnWsTLsUcpG9GGoRAOk3ddUl
-         OeyQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T/qL9ETq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754572121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQYgV0X5e6OdkcED4BPO2+bBh1IW+KXBCsjfdvvJSgg=;
+	b=T/qL9ETqMSjoLr+PrWkKebElNMuvId1qhiB1UGDWpagKMZCRC5s4TPbfgAMP6CCPqamAcL
+	h8YD4Egqx8Rp1em5f06tu21sM0hH6U53xbRrS3qzxl7/4En1tFd8wEMrIY90BfzuvDy8b8
+	1RfzhJq6rvZ+YDJM1Fn/DhFpypyp/yc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-388-l9tzJtrLP-WXGZ55z4agRA-1; Thu, 07 Aug 2025 09:08:40 -0400
+X-MC-Unique: l9tzJtrLP-WXGZ55z4agRA-1
+X-Mimecast-MFC-AGG-ID: l9tzJtrLP-WXGZ55z4agRA_1754572120
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5bb68b386so327694085a.3
+        for <regressions@lists.linux.dev>; Thu, 07 Aug 2025 06:08:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754565623; x=1755170423;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t+xe2dZhSU0YB/2XKMOmDkqHorIZkYeC9Ed4u60MW1U=;
-        b=IcQa1LCr4UhHjufr/3EskS0y0hqlhYW1xKdg7mG6Rrs24e7Qs4H+qKoh0OqiKAs4r7
-         kKiFUcF8I3Uzx+6EnviuxC2EKy2arG5U1xBs7lQZv3nk6tn8/PZhpoFnsx4nwuv0KaFj
-         YNE/qjMTzBHzZh7C7QWslcCsgWPr4bwOhSWVK0ipy/kDXjCW8j7u+BtcQUK0vqULLwHq
-         GVqGPOeBRJ3/isr4ml3Lyqv8gJyr0pooLEXLL8WFhUk8HhpFQgCikiT78LjZuxOW2nIA
-         7S2M8zjp2ddqm5kng4VjehNuVe3GtA+FLYZ81UQgUMFXPTR4/G8vqoNgUKvidSpw803H
-         de2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWbhQz/LSesEzZiz6dhJuH0Yw0tjaWxaHIqJeIXvORmgsrMD+110ZRLqTUopZe8v/tqUhMUK6KOQfKz/w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YydRefKHLs8JE6xlMf/eYtWGz2upC62cwwmV+h0c6xj58GDri96
-	ehNCFCE0Pm8dWFA21Y5of928/6aRCcVozGqANVDVlJJJzUd9GGwoU0ZFhb7R2kjJdWo=
-X-Gm-Gg: ASbGncvb2jaKn3muCICKH5vWpf/TtMQRiZCbYP+xpBDT/63QDpbpMTkWz+Yn1zR2zus
-	QSKWMa2wkBndfedrFNZHoxKJZ9+uWy8A7LXrCaBmR7OV5sxRxvCo9k425mGE6OL2pbdGaYXgzUC
-	HfCsBhvNL7DfIHlBvSK7r63RuV/Gx9bkSvkNR6KYhDPEah1wScAAa287NUjbQnyghfYRjzv7AsR
-	xs26k7A83Xcj2VFLrW8Csoyu08h5b8wHftd+iSVZSjKUfzciHE0zAHKMbjd/Xl+Su9llXI1Xw3/
-	73Tt+3jViXMkMBVKiK2lVFaagbKNJlUzHXNaDWYbc+f13Kh2wHLzvxYjhNujSQJDtPrPoebhbcv
-	thVj/rpsqVNksPVnDf6JDfT+EEQU=
-X-Google-Smtp-Source: AGHT+IHle4/R1ej0UE31AopKf2sNC+DTWDiHvIqjOlfMPaSTgNALiUGVLhXkvILnmSQe+GoiHKqW1Q==
-X-Received: by 2002:a05:600c:3b98:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-459f33960a5mr5645055e9.20.1754565622973;
-        Thu, 07 Aug 2025 04:20:22 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e6214640sm88873865e9.1.2025.08.07.04.20.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 04:20:22 -0700 (PDT)
-Date: Thu, 7 Aug 2025 14:20:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Renjiang Han <quic_renjiang@quicinc.com>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	Cgroups <cgroups@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	linux-fsdevel@vger.kernel.org, Song Liu <song@kernel.org>,
-	yukuai3@huawei.com, Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>
-Subject: Re: next-20250804 Unable to handle kernel execute from
- non-executable memory at virtual address idem_hash
-Message-ID: <66c0fb9f-c9fc-4186-9450-ecf726b6791f@suswa.mountain>
-References: <CA+G9fYvZtbQLoS=GpaZ_uzm3YiZEQmz0oghnwVamNQ49CosT2w@mail.gmail.com>
- <aJNsreA4FuxalDc8@stanley.mountain>
- <CA+G9fYvEGBAAEetvvtXWsGb3EQ2sTOM=szkxZ4m-Gt2bTszBdQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1754572120; x=1755176920;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uQYgV0X5e6OdkcED4BPO2+bBh1IW+KXBCsjfdvvJSgg=;
+        b=aJfpU4AgXBRWzf+TskAD2/ZdLrwUDNATN3ycvfeI4lq6v1nYJoTaZVF//Uva+/4Phk
+         fLWXf5YhVGIxLkRclCwPpIv+3ndtPu7reqa5VbFRpSxWkEBfdNF3sFPXog1Z2Y/8Bq6c
+         i3gAMyV19aBN/TSJyFpXIysel6vZmR/BDoq5dYS52838PlFiufy+RbkazKZD+ZLGc7Ig
+         x5SpJy3o+J9/mqsN4B8XBNFrQpDrvI8DDgagfnrh6GZ2fvEiOHKmums9GJ14SRj5JZio
+         tYz3tzIgN8KpiLKEq6/BKTEWpuajpC8UxZN55OKZ+N6fY2hYbaA47WVJjL1VPsECIHrg
+         x4GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXQpVwpKeKqqZ7kqTo/4X/lBykr8fIXxabwoVjDio1ADakE3eoYV3NGt1ejS0sRoeNLW3qlr7IWMuy9g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwG1DuSljqNXRRGAPS12+XJlNKtKcYy4hmNQd1p6UNXoWDDtxcs
+	irJ6YyYMVFCiU5VRWTO7+bl6pJ63AMEgVPf0m2yzsJWgkgw0lt0Stp5GhffwJiL7an9FC/GMuAn
+	DhXtv95CjdNi+9iFTiNTicwtHUxT2qkKtqlWvNOyidEO7LMZcZa0WBJchbWdgFv5x
+X-Gm-Gg: ASbGncv4p04ti13AI3lMaCB8xl2TiCBFz+qqKZoJ2MEm3Y228AziU1TegjLpq66DwTi
+	kZInBKIQCJgsBoAq6ZBx2pZzpl6Oqbwka/VI0Ro87p2RMYywVo6um9psLNe9nzxg1nJpir4eEbh
+	zKKllB92VWU2wP36VAbM5GD1JkurWA3uq5BraylltH1ajItfyRZ7qguSp8EdH5C051DWzDtgr2i
+	+yMZwNJ3BqjbOuxPOGMZvDl+0kxeVe3AYTYjuOPc5EPGtKCYlPobw6xCqv4tLEUFpfULsJVJtUC
+	4/fxITNjIwE/nh338I4yTjxqrYm1btbqu8s9q11ePhYOxNH/w61Rn3CrRBFrKp3Eq27aJBgS6XJ
+	qcgBzeAmPjA==
+X-Received: by 2002:a05:620a:4043:b0:7e6:211b:217a with SMTP id af79cd13be357-7e814e9a51fmr827516085a.43.1754572119620;
+        Thu, 07 Aug 2025 06:08:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHQYAus5qYLEVmfUEL8E4TfiRxMW8Y9h4TXOXPM9H13FxW8syk8V1fqHYb0D+NKKCK5hi3jZg==
+X-Received: by 2002:a05:620a:4043:b0:7e6:211b:217a with SMTP id af79cd13be357-7e814e9a51fmr827510685a.43.1754572119107;
+        Thu, 07 Aug 2025 06:08:39 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:ecbe:130d:668d:951d? ([2601:188:c180:4250:ecbe:130d:668d:951d])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-7077ce37c01sm98732806d6.79.2025.08.07.06.08.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Aug 2025 06:08:38 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <c2888d14-e01d-4d28-866e-edeac0532d2a@redhat.com>
+Date: Thu, 7 Aug 2025 09:08:37 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvEGBAAEetvvtXWsGb3EQ2sTOM=szkxZ4m-Gt2bTszBdQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250805: ampere: WARNING: kernel/cgroup/cpuset.c:1352 at
+ remote_partition_disable
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Cgroups <cgroups@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ kamalesh.babulal@oracle.com
+References: <CA+G9fYtktEOzRWohqWpsGegS2PAcYh7qrzAr=jWCxfUMEvVKfQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYtktEOzRWohqWpsGegS2PAcYh7qrzAr=jWCxfUMEvVKfQ@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: utrxz7K4S2-Fjc_rSEOPaLs8AJECgC7WFAG7MwZAinM_1754572120
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 07, 2025 at 02:51:29PM +0530, Naresh Kamboju wrote:
-> Hi Dan,
-> 
-> On Wed, 6 Aug 2025 at 20:24, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > On Tue, Aug 05, 2025 at 12:50:28AM +0530, Naresh Kamboju wrote:
-> > > While booting and testing selftest cgroups and filesystem testing on arm64
-> > > dragonboard-410c the following kernel warnings / errors noticed and system
-> > > halted and did not recover with selftests Kconfig enabled running the kernel
-> > > Linux next tag next-20250804.
-> > >
-> > > Regression Analysis:
-> > > - New regression? Yes
-> > > - Reproducibility? Re-validation is in progress
-> > >
-> > > First seen on the next-20250804
-> > > Good: next-20250801
-> > > Bad: next-20250804
-> > >
-> > > Test regression: next-20250804 Unable to handle kernel execute from
-> > > non-executable memory at virtual address idem_hash
-> > > Test regression: next-20250804 refcount_t: addition on 0;
-> > > use-after-free refcount_warn_saturate
-> > >
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > >
-> > > ## Test crash log
-> > > [    9.811341] Unable to handle kernel NULL pointer dereference at
-> > > virtual address 000000000000002e
-> > > [    9.811444] Mem abort info:
-> > > [    9.821150]   ESR = 0x0000000096000004
-> > > [    9.833499]   SET = 0, FnV = 0
-> > > [    9.833566]   EA = 0, S1PTW = 0
-> > > [    9.835511]   FSC = 0x04: level 0 translation fault
-> > > [    9.838901] Data abort info:
-> > > [    9.843788]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> > > [    9.846565]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> > > [    9.851938]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> > > [    9.853510] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: registered as rtc0
-> > > [    9.856992] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000856f8000
-> > > [    9.862446] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: setting system
-> > > clock to 1970-01-01T00:00:31 UTC (31)
-> > > [    9.868789] [000000000000002e] pgd=0000000000000000, p4d=0000000000000000
-> > > [    9.875459] Internal error: Oops: 0000000096000004 [#1]  SMP
-> > > [    9.889547] input: pm8941_pwrkey as
-> > > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:pwrkey/input/input1
-> > > [    9.891545] Modules linked in: qcom_spmi_temp_alarm rtc_pm8xxx
-> > > qcom_pon(+) qcom_pil_info videobuf2_dma_sg ubwc_config qcom_q6v5
-> > > venus_core(+) qcom_sysmon qcom_spmi_vadc v4l2_fwnode llcc_qcom
-> > > v4l2_async qcom_vadc_common qcom_common ocmem v4l2_mem2mem drm_gpuvm
-> > > videobuf2_memops qcom_glink_smem videobuf2_v4l2 drm_exec mdt_loader
-> > > qmi_helpers gpu_sched drm_dp_aux_bus qnoc_msm8916 videodev
-> > > drm_display_helper qcom_stats videobuf2_common cec qcom_rng
-> > > drm_client_lib mc phy_qcom_usb_hs socinfo rpmsg_ctrl display_connector
-> > > rpmsg_char ramoops rmtfs_mem reed_solomon drm_kms_helper fuse drm
-> > > backlight
-> > > [    9.912286] input: pm8941_resin as
-> > > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:resin/input/input2
-> > > [    9.941186] CPU: 2 UID: 0 PID: 221 Comm: (udev-worker) Not tainted
-> > > 6.16.0-next-20250804 #1 PREEMPT
-> > > [    9.941200] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> > > [    9.941206] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > > [    9.941215] pc : dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685)
-> > > [    9.941233] lr : core_clks_enable+0x54/0x148 venus_core
-> > > [   10.004266] sp : ffff8000842b35f0
-> > > [   10.004273] x29: ffff8000842b35f0 x28: ffff8000842b3ba0 x27: ffff0000047be938
-> > > [   10.004289] x26: 0000000000000000 x25: 0000000000000000 x24: ffff80007b350ba0
-> > > [   10.004303] x23: ffff00000ba380c8 x22: ffff00000ba38080 x21: 0000000000000000
-> > > [   10.004316] x20: 0000000000000000 x19: ffffffffffffffee x18: 00000000ffffffff
-> > > [   10.004330] x17: 0000000000000000 x16: 1fffe000017541a1 x15: ffff8000842b3560
-> > > [   10.004344] x14: 0000000000000000 x13: 007473696c5f7974 x12: 696e696666615f65
-> > > [   10.004358] x11: 00000000000000c0 x10: 0000000000000020 x9 : ffff80007b33f2bc
-> > > [   10.004371] x8 : ffffffffffffffde x7 : ffff0000044a4800 x6 : 0000000000000000
-> > > [   10.004384] x5 : 0000000000000002 x4 : 00000000c0000000 x3 : 0000000000000001
-> > > [   10.004397] x2 : 0000000000000002 x1 : ffffffffffffffde x0 : ffffffffffffffee
-> > > [   10.004412] Call trace:
-> > > [   10.004417] dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685) (P)
-> > > [   10.004435] core_clks_enable+0x54/0x148 venus_core
-> > > [   10.004504] core_power_v1+0x78/0x90 venus_core
-> > > [   10.004560] venus_runtime_resume+0x6c/0x98 venus_core
-> > > [   10.004616] pm_generic_runtime_resume
-> >
-> > Could you try adding some error checking to core_clks_enable()?
-> > Does the patch below help?
-> 
-> Your patch works.
-> The attached patch from Sasha fixes this reported problem on today's
-> Linux next tag.
-> 
-> $ git log --oneline next-20250805..next-20250807 --
-> drivers/media/platform/qcom/venus/pm_helpers.c
-> 7881cd6886a89 media: venus: Fix OPP table error handling
-> 
+On 8/7/25 4:27 AM, Naresh Kamboju wrote:
+> Regressions noticed intermittently on AmpereOne while running selftest
+> cgroup testing
+> with Linux next-20250805 and earlier seen on next-20250722 tag also.
+>
+> Regression Analysis:
+> - New regression? Yes
+> - Reproducibility? Intermittent
+>
+> First seen on the next-20250722 and after next-20250805.
+>
+> Test regression: next-20250805 ampere WARNING kernel cgroup cpuset.c
+> at remote_partition_disable
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> ## Test log
+> selftests: cgroup: test_cpuset_prs.sh
+> Running state tRunning state transition test ...
+> ransition test ...
+> Running test 0 ...
+> Running test 1 ...
+> Running test 2 ...
+> Running test 3 ...
+> Running test 4 ...
+> Running test 5 ...
+> Running test 6 ...
+> Running test 7 ...
+> Running test 8 ...
+> Running test 9 ...
+> Running test 10 ...
+> Running test 11 ...
+> Running test 12 ...
+> Running test 13 ...
+> Running test 14 ...
+> Running test 15 ...
+> Running test 16 ...
+> Running test 17 ...
+> Running test 18 ...
+> Running test 19 ...
+> [  137.504549] psci: CPU2 killed (polled 0 ms)
+> [  137.747094] Detected PIPT I-cache on CPU2
+> [  137.747214] GICv3: CPU2: found redistributor 3500 region 0:0x0000400201cc0000
+> [  137.747312] CPU2: Booted secondary processor 0x0000003500 [0xc00fac40]
+>
+> <>
+>
+> Running test 63 ...
+> Running test 64 ...
+> Running test 66 ...
+> [  174.929535] psci: CPU3 killed (polled 0 ms)
+> [  175.263087] Detected PIPT I-cache on CPU3
+> [  175.263203] GICv3: CPU3: found redistributor 3501 region 0:0x0000400201d00000
+> [  175.263300] CPU3: Booted secondary processor 0x0000003501 [0xc00fac40]
+> [  175.434129] workqueue: Interrupted when creating a worker thread
+> "kworker/u1028:0"
+> ** replaying previous printk message **
+> [  175.434129] workqueue: Interrupted when creating a worker thread
+> "kworker/u1028:0"
+> [  175.440230] ------------[ cut here ]------------
+> [  175.440234] WARNING: kernel/cgroup/cpuset.c:1352 at
+> remote_partition_disable+0x120/0x160, CPU#170: rmdir/33763
+> [  175.467456] Modules linked in: cdc_ether usbnet sm3_ce sha3_ce nvme
+> nvme_core xhci_pci_renesas arm_cspmu_module ipmi_devintf arm_spe_pmu
+> ipmi_msghandler arm_cmn cppc_cpufreq fuse drm backlight
+> [  175.484676] CPU: 170 UID: 0 PID: 33763 Comm: rmdir Not tainted
+> 6.16.0-next-20250805 #1 PREEMPT
+> [  175.493365] Hardware name: Inspur NF5280R7/Mitchell MB, BIOS
+> 04.04.00004001 2025-02-04 22:23:30 02/04/2025
+> [  175.503178] pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+> not ok 12 selftests: cgroup: test_cpuset_prs.sh TIMEOUT 45 seconds
+> [  175.510130] pc : remote_partition_disable
+> (kernel/cgroup/cpuset.c:1352 (discriminator 1)
+> kernel/cgroup/cpuset.c:1342 (discriminator 1)
+> kernel/cgroup/cpuset.c:1514 (discriminator 1))
 
-I feel a bit bad about this, because I saw this bug as a static
-checker warning:
+The warning is caused by workqueue_unbound_exclude_cpumask() returning 
+an error which should not normally happen. There is a "workqueue: 
+Interrupted when creating a worker thread" which may cause problem in 
+the workqueue code leading to this error. That particular error happens 
+when kthread_create_on_node() fails to create the requested worker kthread.
 
-drivers/media/platform/qcom/venus/pm_helpers.c:51 core_clks_enable() error: 'opp' dereferencing possible ERR_PTR()
+The test itself uses the hotplug code rather heavily to offline/online 
+CPUs to test the cpuset code related to hotplug. I don't know if that is 
+part of the problem or not. Anyway, there isn't any big change in the 
+cpuset code recently. I think the real bug may lie in other kernel areas 
+used by the cpuset code.
 
-But I figured that leaving out the error checking was probably
-deliberate so I didn't report it...  I'll go through my list of old
-warnings and review them again.
+Cheers,
+Longman
 
-$ grep "dereferencing possible ERR_PTR" smatch_warns.txt | wc -l
-115
 
-regards,
-dan carpenter
+> [  175.518032] lr : remote_partition_disable
+> (kernel/cgroup/cpuset.c:1352 (discriminator 1)
+> kernel/cgroup/cpuset.c:1514 (discriminator 1))
+> [  175.525849] sp : ffff8000c853bb90
+> [  175.529585] x29: ffff8000c853bb90 x28: ffff00017badc800 x27: 0000000000000000
+> timeout set to 45
+> [  175.536713] x26: 0000000000000000 x25: ffff00014c422540 x24: ffffb1c71020b000
+> [  175.545489] x23: ffff000113769c00 x22: 0000000000000001 x21: ffffb1c71020b5c0
+> [  175.552615] x20: ffff8000c853bbd0 x19: ffff000113769a00 x18: 00000000ffffffff
+> selftests: cgroup: test_cpuset_v1_hp.sh
+> [  175.559910] x17: 31752f72656b726f x16: 776b222064616572 x15: 68742072656b726f
+> [  175.569900] x14: 0000000000000004 x13: ffffb1c70fb4f160 x12: 0000000000000000
+> cpuset v1 mount point not found!
+> [  175.577888] x11: 000002f6b9bf58c3 x10: 0000000000000023 x9 : ffffb1c70d6bdff8
+> Test SKIPPED
+> ok 13 selftests: cgroup: test_cpuset_v1_hp.sh #SKIP
+> [  175.587877] x8 : ffff8000c853bad0 x7 : 0000000000000000 x6 : 0000000000000001
+> [  175.597864] x5 : ffffb1c70e87a488 x4 : fffffdffc40a88e0 x3 : 000000000080007d
+> [  175.607849] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 00000000fffffff4
+> [  175.615578] Call trace:
+> [  175.618013] remote_partition_disable (kernel/cgroup/cpuset.c:1352
+> (discriminator 1) kernel/cgroup/cpuset.c:1342 (discriminator 1)
+> kernel/cgroup/cpuset.c:1514 (discriminator 1)) (P)
+> [  175.623057] update_prstate (include/linux/spinlock.h:376
+> kernel/cgroup/cpuset.c:2963)
+> [  175.626799] cpuset_css_killed (kernel/cgroup/cpuset.c:3598)
+> [  175.630713] kill_css.part.0 (kernel/cgroup/cgroup.c:5968)
+> [  175.634464] cgroup_destroy_locked (kernel/cgroup/cgroup.c:6058
+> (discriminator 4))
+> [  175.638810] cgroup_rmdir (kernel/cgroup/cgroup.c:6102)
+> [  175.642376] kernfs_iop_rmdir (fs/kernfs/dir.c:1286)
+> [  175.646203] vfs_rmdir (fs/namei.c:4461 fs/namei.c:4438)
+> [  175.649515] do_rmdir (fs/namei.c:4516 (discriminator 1))
+> [  175.652823] __arm64_sys_unlinkat (fs/namei.c:4690 (discriminator 2)
+> fs/namei.c:4684 (discriminator 2) fs/namei.c:4684 (discriminator 2))
+> [  175.656998] invoke_syscall (arch/arm64/include/asm/current.h:19
+> arch/arm64/kernel/syscall.c:54)
+> [  175.660738] el0_svc_common.constprop.0
+> (include/linux/thread_info.h:135 (discriminator 2)
+> arch/arm64/kernel/syscall.c:140 (discriminator 2))
+> [  175.665431] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+> [  175.668735] el0_svc (arch/arm64/include/asm/irqflags.h:82
+> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:169 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:182 (discriminator 1)
+> arch/arm64/kernel/entry-common.c:880 (discriminator 1))
+> [  175.671877] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
+> [  175.676052] el0t_64_sync (arch/arm64/kernel/entry.S:596)
+> [  175.679705] ---[ end trace 0000000000000000 ]---
+>
+>
+> ## Source
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git sha: afec768a6a8fe7fb02a08ffce5f2f556f51d4b52
+> * Git describe: next-20250805
+> * Architectures: arm64
+> * Toolchains: gcc-13
+> * Kconfigs: defconfig+selftests/*/configs
+>
+> ## Build
+> * Test log 1: https://qa-reports.linaro.org/api/testruns/29220998/log_file/
+> * Test log 2: https://qa-reports.linaro.org/api/testruns/29395866/log_file/
+> * LAVA log: https://lkft-staging.validation.linaro.org/scheduler/job/187100#L6621
+> * Test history:
+> https://regressions.linaro.org/lkft/linux-next-master-ampere/next-20250805/log-parser-test/exception-warning-kernelcgroupcpuset-at-remote_partition_disable/history/
+> * Test plan: https://tuxapi.tuxsuite.com/v1/groups/ampere/projects/ci/tests/30rj0dIdTXUiGfYMA7suavpa77r
+> * Build link: https://storage.tuxsuite.com/public/ampere/ci/builds/30rj0OYSDUMeT0cyTDioTe5XVOI/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/ampere/ci/builds/30rj0OYSDUMeT0cyTDioTe5XVOI/config
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+>
 
