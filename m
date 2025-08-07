@@ -1,134 +1,221 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F31D5ABA;
-	Thu,  7 Aug 2025 07:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E99244EA1
+	for <regressions@lists.linux.dev>; Thu,  7 Aug 2025 08:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754550438; cv=none; b=XSaUQPsK3ru8AP/Z4YLLfDRc51CiOrbiCuM49SPYeg9TQfKg2JDatFg++EwcYIqmBgdVBeMmYWEMP/aNxJUKUcVBFYcX2JmGO9PJsBLn1sF4Ly6B8DCXyqyKBBamqXW2OoiwlS2BLyCxX6q/jMskFkEg84otbEato3/zvwUje+w=
+	t=1754555267; cv=none; b=JwH0a9a0KjhYxP+s+NDHHgbi3V44teNmEgbw0/wAJVCT35GX6tVeA27+Q1ELudiVTNwwiZpm3dY7pG/xsa3U/O4cIvhGZbwn4pWA/7wAeOtGm1y8ZIDYDvtrvfIhj8xU9vu77MtAHuwJOUHZ3Y5X8kid906vcSAD7TBIEGKotdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754550438; c=relaxed/simple;
-	bh=zkoi1u9rRTeLoqOid1Hi3KnNhzzCFY0gV6iN5SemtZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tMvTExdS9PNpy5PT/Cz6SAIc66jmzzkvRtgTPZb/sU1889Uabu2OnZXMnXj9IcSwqjA3hwPaQO5w93Bzf5P8WMsytiQizryaRWgNZHV1NY+8iRq5BAcJp893gpF9zpb13VdJzurg19GEc87HPnkEEUctnguXk/E/2yohzd8AbjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kyVuJYVC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1754555267; c=relaxed/simple;
+	bh=wQefuaorp9x2+iC+U7LVaZGnAnYxvKAf6jocxcyUsKQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=YHdPLFKvigq7GWSydFn7yCxCAeY4M1BrZp4tf+6jOD6QVGaTcTJyTSUNYjHLfeClA5dIdr0w1VWPqSK1Ck8LPY4wAOSEGUsV0hqytSKN+XMAXgUMo0GH8f5RZiDjgSOTtXL9eBKmFhJlw+ujmJ4zE1W3eKdz0eOznuROAb6f+d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q74L804U; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kyVuJYVC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=OC4ewFJt3pSuBvem9jBIWzZT0RIGds8UTBu+dI6BD+U=; t=1754550436;
-	x=1754982436; b=kyVuJYVC7hP7z22UIkA/qb7ShLLcQaPC/nnOtBIH9I8oACh6mbpUSgLDmvJ26
-	e054g/yjT4cmPQn2ZnXJXKpjueFTl7Ye8tGLDVikB+PTIRfYvnu/MMUPMyZLsQS2fvgcX1RqHUy6Q
-	hoKBOqXNmrTnYCZuZ1FiUNGdlGGNiH9q0mFmUeAcI8xJdhJw76pmOYy8qCZlcNH3aM1JN5ZMBOF4E
-	+By0llJIrveelh4/3s9Uf7ctXajVBJS33QwVP189kKPNeTYJyMKIAZHhivlCHGa0e3ZTkvNXhjlyI
-	FoBebFSzlde0Mb09WR3B+9nkK5idVR/aWC8p0TjmFx7Sti9wQQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1ujuiW-00FZpR-29;
-	Thu, 07 Aug 2025 09:07:12 +0200
-Message-ID: <d6b93806-2d0b-40b2-a795-16ab78bc0048@leemhuis.info>
-Date: Thu, 7 Aug 2025 09:07:11 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q74L804U"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23dc5bcf49eso7965955ad.2
+        for <regressions@lists.linux.dev>; Thu, 07 Aug 2025 01:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1754555265; x=1755160065; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vtZ6qEjcenL9MHWaCdG5/xReaOz82Rc4Yl0gbz6jebg=;
+        b=Q74L804UVgxBC+JqlcNh4OYqfgWFOV2DG5ieGHbch8QsAEgSc/QMlTK63DdFSVbMeR
+         yAbaWiedspsoFJFN99/hb3eKhgN3RkFoBHkGQ7RQTQ3vSmo6UO1gH8qStFK7j9M85hiD
+         MJRd1574npiTc3LauFSnTRKNJhcyoNjTlLKAvXHutx6bnlCRvHtR28Uu6FHGftKGqiCD
+         GpK9UGU82Bo2lO54hN5GAVU4I8umxMrD3hnQRzsGzD0K8gXoVg5i7OWGbBUl+nKv+hpY
+         2ZLhxV5DgRZoE5SiAwqbe1RlPxR2w0egKbCsYtQUezZV0FjiFUgDOt9d+aDOkc/UpBH+
+         3UPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754555265; x=1755160065;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vtZ6qEjcenL9MHWaCdG5/xReaOz82Rc4Yl0gbz6jebg=;
+        b=BaA6RpjLyidgKPWscZIyLE+uc/PUxwE2mGd3CBU5FX1WivRf3qAqEQ/6px8v2HSyLv
+         /q9c/IANp1fTitjFruATEjvV1f4v9IsO92Yptf1CiK2gvA9ysiE2y3okt9dxZHif+aJ1
+         QU65qS0c5Y3fP78n7QWsmdIu2FxPL7M0n8Y5CMFqPMDQKUCmiyem0vUw3xTfyDsKe9sV
+         0DBon6ebU9C7kddhEGcK6AQVaBiZ+jkSGXF9243dN8cI7b+CLyemMXG9qlQzAopUH/6P
+         a4XxX2/8cKwkL/sD6mIVPgaGLUGHuomu/Q9vTFKlzljVHUp8/XDMC+sPgOuqHoOIwPoz
+         T96A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZsTyV6JGYF3SHDJYTu68AwxldECqFGSuXtjplu8iptkEp2xRTOLO13z9EuY6useTfYiwDffkhJ7lNaQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzt1rVQsfdfBpOzEqqt9E+la7gXqFLaJYCv7Y+FFlFWQG1Rwf2d
+	pIb2rXflpaZLPTzPCEauum8Q99QoNXVvpdkJlHliOy7w2Npy+I/7gX8sr46kftz7EdJVGX8fE3U
+	FAvZXNQJ4jec1v+SqRD1DXiTMW4MH6r95PGwBeNtW0g==
+X-Gm-Gg: ASbGncsjBGSQuCDPLYaC8tZnkSOKwa1mIUGqNccHnf0ArgbZO3ONwPPnmvoPMDkcXrO
+	MRyCA4JK5wowV0xbx3LqGGrHA9prJidPTr+bA/APDfCpHojy/XsxZP6FW70x0RnBpqZP5T+OINA
+	59uufQLFBHhZMe3vW4seg2P5xwqzlG7y3F8hAuFo2ExRl0Y5eyFMbF0JqD6+ANkxItp1GUn949P
+	ahmqFSl9a5z8mi3LwvCJFFR22JH2HODo4ZrDavX
+X-Google-Smtp-Source: AGHT+IG090lvuakWHoCesKEHG/8FV69SOxDuNH9rLcZUnqgjT9x3D1J+oMPFACpctkhGwiVLlbZqH5w8lUruqCh92Y0=
+X-Received: by 2002:a17:903:3bce:b0:242:8a7:6a6c with SMTP id
+ d9443c01a7336-2429f32c024mr91984475ad.17.1754555265025; Thu, 07 Aug 2025
+ 01:27:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] tty lockup and WWAN loss after hibernate/suspend in
- 6.8+ on ThinkPad X1 Carbon Gen 10
-To: Andy Mindful <andy.mindful@gmail.com>, regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-acpi@vger.kernel.org, rafael@kernel.org,
- ville.syrjala@linux.intel.com, tglx@linutronix.de,
- Christian Brauner <brauner@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>,
- "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-References: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
- <642d439ea1be8e48ee5c47fd3921a786452fb931@intel.com>
- <CACTEcX5Y3PNXNkhnK1dGFe+k3sigOZNpj66KKGAS9XeHqRu35w@mail.gmail.com>
- <0b15e33603a46f6cc7ad7d09a156044f11367169@intel.com>
- <CACTEcX47bUd2tp=LYkQnhK29Js=vLN0JfXL8Aq6mOFBVYumpzQ@mail.gmail.com>
- <CABgObfZKKeqMrAUyS8CB4ARkW_8Z9QREgpgYcq2jxoQ9ppS6MA@mail.gmail.com>
- <CACTEcX7oa+Shj=uYiRMoWpng+RZXDeQrOa-VTRmzVVtXJMCgLQ@mail.gmail.com>
- <CACTEcX7hsRkzYEBg4pQd5s36p_ZXJM=dtxSGmBjfkt5sWrXP8g@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <CACTEcX7hsRkzYEBg4pQd5s36p_ZXJM=dtxSGmBjfkt5sWrXP8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1754550436;d41eb4ca;
-X-HE-SMSGID: 1ujuiW-00FZpR-29
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 7 Aug 2025 13:57:34 +0530
+X-Gm-Features: Ac12FXzlLNIJAbNMG5_Ik7bZZCMv8iz6h3sAFL5MIIrcVzRLBwRvVd6YtBeMaBs
+Message-ID: <CA+G9fYtktEOzRWohqWpsGegS2PAcYh7qrzAr=jWCxfUMEvVKfQ@mail.gmail.com>
+Subject: next-20250805: ampere: WARNING: kernel/cgroup/cpuset.c:1352 at remote_partition_disable
+To: Cgroups <cgroups@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, kamalesh.babulal@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 06.08.25 10:40, Andy Mindful wrote:
-> 
-> Can somebody advise how to properly bisect issues in linux-stable
-> repository between v6.7.11 to v6.8-rc1 tags?
+Regressions noticed intermittently on AmpereOne while running selftest
+cgroup testing
+with Linux next-20250805 and earlier seen on next-20250722 tag also.
 
-You can't directly bisect, as their development paths diverged with
-v6.7; so if 6.7.11 is working, it might be due to a change that was
-added between 6.7 and 6.7.11 (this is unlikely, but a possibility). So
-you have to check if 6.7 is working and then bisect between 6.7 and
-6.8-rc1 (in case 6.7 was fine) or between 6.7 and 6.7.11 (in case it was
-not).
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Intermittent
 
-But TBH: from your bisection results you shared in this thread so far it
-looks a bit like your test is unreliable. Likely because it's a timing
-issue or something like that which makes things work or not. That, the
-age of kernels you try to bisect, and what Maciej explained elsewhere in
-this thread at
-https://lore.kernel.org/all/cfc561fb-29a9-4a19-a2e5-0f3f28e5e63a@maciej.szmigiero.name/
-makes me think that it's not worth a bisection, as I guess the result is
-unlikely to change anything (but I could be wrong).
+First seen on the next-20250722 and after next-20250805.
 
-Ciao, Thorsten
+Test regression: next-20250805 ampere WARNING kernel cgroup cpuset.c
+at remote_partition_disable
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Test log
+selftests: cgroup: test_cpuset_prs.sh
+Running state tRunning state transition test ...
+ransition test ...
+Running test 0 ...
+Running test 1 ...
+Running test 2 ...
+Running test 3 ...
+Running test 4 ...
+Running test 5 ...
+Running test 6 ...
+Running test 7 ...
+Running test 8 ...
+Running test 9 ...
+Running test 10 ...
+Running test 11 ...
+Running test 12 ...
+Running test 13 ...
+Running test 14 ...
+Running test 15 ...
+Running test 16 ...
+Running test 17 ...
+Running test 18 ...
+Running test 19 ...
+[  137.504549] psci: CPU2 killed (polled 0 ms)
+[  137.747094] Detected PIPT I-cache on CPU2
+[  137.747214] GICv3: CPU2: found redistributor 3500 region 0:0x0000400201cc0000
+[  137.747312] CPU2: Booted secondary processor 0x0000003500 [0xc00fac40]
+
+<>
+
+Running test 63 ...
+Running test 64 ...
+Running test 66 ...
+[  174.929535] psci: CPU3 killed (polled 0 ms)
+[  175.263087] Detected PIPT I-cache on CPU3
+[  175.263203] GICv3: CPU3: found redistributor 3501 region 0:0x0000400201d00000
+[  175.263300] CPU3: Booted secondary processor 0x0000003501 [0xc00fac40]
+[  175.434129] workqueue: Interrupted when creating a worker thread
+"kworker/u1028:0"
+** replaying previous printk message **
+[  175.434129] workqueue: Interrupted when creating a worker thread
+"kworker/u1028:0"
+[  175.440230] ------------[ cut here ]------------
+[  175.440234] WARNING: kernel/cgroup/cpuset.c:1352 at
+remote_partition_disable+0x120/0x160, CPU#170: rmdir/33763
+[  175.467456] Modules linked in: cdc_ether usbnet sm3_ce sha3_ce nvme
+nvme_core xhci_pci_renesas arm_cspmu_module ipmi_devintf arm_spe_pmu
+ipmi_msghandler arm_cmn cppc_cpufreq fuse drm backlight
+[  175.484676] CPU: 170 UID: 0 PID: 33763 Comm: rmdir Not tainted
+6.16.0-next-20250805 #1 PREEMPT
+[  175.493365] Hardware name: Inspur NF5280R7/Mitchell MB, BIOS
+04.04.00004001 2025-02-04 22:23:30 02/04/2025
+[  175.503178] pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+not ok 12 selftests: cgroup: test_cpuset_prs.sh TIMEOUT 45 seconds
+[  175.510130] pc : remote_partition_disable
+(kernel/cgroup/cpuset.c:1352 (discriminator 1)
+kernel/cgroup/cpuset.c:1342 (discriminator 1)
+kernel/cgroup/cpuset.c:1514 (discriminator 1))
+[  175.518032] lr : remote_partition_disable
+(kernel/cgroup/cpuset.c:1352 (discriminator 1)
+kernel/cgroup/cpuset.c:1514 (discriminator 1))
+[  175.525849] sp : ffff8000c853bb90
+[  175.529585] x29: ffff8000c853bb90 x28: ffff00017badc800 x27: 0000000000000000
+timeout set to 45
+[  175.536713] x26: 0000000000000000 x25: ffff00014c422540 x24: ffffb1c71020b000
+[  175.545489] x23: ffff000113769c00 x22: 0000000000000001 x21: ffffb1c71020b5c0
+[  175.552615] x20: ffff8000c853bbd0 x19: ffff000113769a00 x18: 00000000ffffffff
+selftests: cgroup: test_cpuset_v1_hp.sh
+[  175.559910] x17: 31752f72656b726f x16: 776b222064616572 x15: 68742072656b726f
+[  175.569900] x14: 0000000000000004 x13: ffffb1c70fb4f160 x12: 0000000000000000
+cpuset v1 mount point not found!
+[  175.577888] x11: 000002f6b9bf58c3 x10: 0000000000000023 x9 : ffffb1c70d6bdff8
+Test SKIPPED
+ok 13 selftests: cgroup: test_cpuset_v1_hp.sh #SKIP
+[  175.587877] x8 : ffff8000c853bad0 x7 : 0000000000000000 x6 : 0000000000000001
+[  175.597864] x5 : ffffb1c70e87a488 x4 : fffffdffc40a88e0 x3 : 000000000080007d
+[  175.607849] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 00000000fffffff4
+[  175.615578] Call trace:
+[  175.618013] remote_partition_disable (kernel/cgroup/cpuset.c:1352
+(discriminator 1) kernel/cgroup/cpuset.c:1342 (discriminator 1)
+kernel/cgroup/cpuset.c:1514 (discriminator 1)) (P)
+[  175.623057] update_prstate (include/linux/spinlock.h:376
+kernel/cgroup/cpuset.c:2963)
+[  175.626799] cpuset_css_killed (kernel/cgroup/cpuset.c:3598)
+[  175.630713] kill_css.part.0 (kernel/cgroup/cgroup.c:5968)
+[  175.634464] cgroup_destroy_locked (kernel/cgroup/cgroup.c:6058
+(discriminator 4))
+[  175.638810] cgroup_rmdir (kernel/cgroup/cgroup.c:6102)
+[  175.642376] kernfs_iop_rmdir (fs/kernfs/dir.c:1286)
+[  175.646203] vfs_rmdir (fs/namei.c:4461 fs/namei.c:4438)
+[  175.649515] do_rmdir (fs/namei.c:4516 (discriminator 1))
+[  175.652823] __arm64_sys_unlinkat (fs/namei.c:4690 (discriminator 2)
+fs/namei.c:4684 (discriminator 2) fs/namei.c:4684 (discriminator 2))
+[  175.656998] invoke_syscall (arch/arm64/include/asm/current.h:19
+arch/arm64/kernel/syscall.c:54)
+[  175.660738] el0_svc_common.constprop.0
+(include/linux/thread_info.h:135 (discriminator 2)
+arch/arm64/kernel/syscall.c:140 (discriminator 2))
+[  175.665431] do_el0_svc (arch/arm64/kernel/syscall.c:152)
+[  175.668735] el0_svc (arch/arm64/include/asm/irqflags.h:82
+(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+arch/arm64/kernel/entry-common.c:169 (discriminator 1)
+arch/arm64/kernel/entry-common.c:182 (discriminator 1)
+arch/arm64/kernel/entry-common.c:880 (discriminator 1))
+[  175.671877] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
+[  175.676052] el0t_64_sync (arch/arm64/kernel/entry.S:596)
+[  175.679705] ---[ end trace 0000000000000000 ]---
+
+
+## Source
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: afec768a6a8fe7fb02a08ffce5f2f556f51d4b52
+* Git describe: next-20250805
+* Architectures: arm64
+* Toolchains: gcc-13
+* Kconfigs: defconfig+selftests/*/configs
+
+## Build
+* Test log 1: https://qa-reports.linaro.org/api/testruns/29220998/log_file/
+* Test log 2: https://qa-reports.linaro.org/api/testruns/29395866/log_file/
+* LAVA log: https://lkft-staging.validation.linaro.org/scheduler/job/187100#L6621
+* Test history:
+https://regressions.linaro.org/lkft/linux-next-master-ampere/next-20250805/log-parser-test/exception-warning-kernelcgroupcpuset-at-remote_partition_disable/history/
+* Test plan: https://tuxapi.tuxsuite.com/v1/groups/ampere/projects/ci/tests/30rj0dIdTXUiGfYMA7suavpa77r
+* Build link: https://storage.tuxsuite.com/public/ampere/ci/builds/30rj0OYSDUMeT0cyTDioTe5XVOI/
+* Kernel config:
+https://storage.tuxsuite.com/public/ampere/ci/builds/30rj0OYSDUMeT0cyTDioTe5XVOI/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
