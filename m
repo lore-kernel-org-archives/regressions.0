@@ -1,227 +1,197 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC111E8328
-	for <regressions@lists.linux.dev>; Thu,  7 Aug 2025 09:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A3710957
+	for <regressions@lists.linux.dev>; Thu,  7 Aug 2025 11:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754558505; cv=none; b=sgM36Tt451m15GLAhOL1aJj4L1Gzo84/D3/JSY0rkgYUcVWim4pNmcxo3D4G3SwEsQperlYzX/yNU32c27CcA1bG3E0MXrjCK3VBheslEJ9B1KyFleP0oz5g7iNJRGqaf2WpbqZHQY0fT0Xf4nMWp/+KHyUF9mfBRkTJwj864m4=
+	t=1754565626; cv=none; b=so/h1EK8wyfyUNz+CcMhaRIAWQCfFArDRXcF4qLeOQRgvNWfeu2fHnthmeYCMGRyNVzy4pxnrUbRetO56wxkmoXoiiIb3QN/bZ9lVkQXqjK7tMa1b+p2orlRhrxd64SOBhL5ppHb6yjTRRNv4cIALdmgP0Kgajnov6+WgPU6Br8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754558505; c=relaxed/simple;
-	bh=2kF9Xp/i+CMWgPLaCGqbMiGiYTpga7r7YABuRUKkC+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G/aLw1p65b0+nNh5Lj90xQlWCYZx0L5IYaVWQVKTr43NZWmcHVt1UXSS7mM/xJXyCO+wYONLqHcCz0lv6fMjWal895uRCJPlR+WQaDIZa/QeH2d6pHL/8AZvshDKlbjN8YKPvZ4pGaZKNxmL7dOot5X0YMEgYuYdvRUZYVSAIqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MhFOm+fF; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1754565626; c=relaxed/simple;
+	bh=bT199VEQVqscKcI1ySGvbrsT+zAn6cUa1qjcLrPjd5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJMLC5RW46irknJJP52xedj+1VUDSg+Kgxp7EcYQzaAnK+SSXH5i4DuggLixA94EOdDTni2lyEHvkotdORaQY/J3NGxr1sJl7Vd//kTi6x/bFaQkqNnL5aMo6dZiXjjW1IXlIyM9u5XCmHRjlOUuN3QU2rJxpQwanXRGNd7zvsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SKATQS3I; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhFOm+fF"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24009eeb2a7so7054935ad.0
-        for <regressions@lists.linux.dev>; Thu, 07 Aug 2025 02:21:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SKATQS3I"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4563cfac2d2so7128715e9.3
+        for <regressions@lists.linux.dev>; Thu, 07 Aug 2025 04:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754558502; x=1755163302; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nazhVQn6Jruflxd4sQmZQocx4oQcxFqDx6cnHObT89c=;
-        b=MhFOm+fFhr7XL31c95t6HSmRj2fvljz5LUG9rwXE4ZkErneXQUyIw3Su5pfjamqlQ+
-         j+CslSOwXqu0c4X8oChqtdx4Oa2I0uY1JXtU+VWz9Um+1466ejeJZhYOHCLoagPDl4So
-         CsRg9qy2KP3i4RHfacu6KnE37lF2kjWB6uN0+MfjgPaMdZCljpOYXXR+uOrYAeRNYaF+
-         rkTgr9GXmvmC+ZBNrVDMqH9NT07TKXdoPSwxRXoQsGGwIVRVpnH6K4U3Nige4VVT6y09
-         WmbkQioZRl0xsJOdBcq/qjhsHX99qyo/Jrz7xO3kE3oVprwNS4KOvaqAF7BkCeOpel5Z
-         zakw==
+        d=linaro.org; s=google; t=1754565623; x=1755170423; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+xe2dZhSU0YB/2XKMOmDkqHorIZkYeC9Ed4u60MW1U=;
+        b=SKATQS3IHJ+5tepOfkqLmA9gf6XOxlDkDoT4zgzkgvqmm+hxNvaFi8YpCap9AmxHy5
+         uCXCpOQVUmeFQjDPumOjXaGsief+yFwcgATXwsgza/t1/osaurrDWXlH+YdcarguXKsg
+         q2FpiA/FdwP/+VaPjG5brwsL7yV/NeFDHuxMq6LiEucF9XUaJ5PsYMcnzvJF+ucZxYRv
+         Qu7+EZfyOGchpPym9En3obPVh4eJEdrO3bE2V2nEwJYy2TJi8bPH+cuGtlEuGbOkVmZq
+         sZp8LqllhF8G2V02cWTLSEqNTmHBjSqmUoIUh2947TqFqnWsTLsUcpG9GGoRAOk3ddUl
+         OeyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754558502; x=1755163302;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nazhVQn6Jruflxd4sQmZQocx4oQcxFqDx6cnHObT89c=;
-        b=TeQ6KGOgxRFNzo3A4OmgQ/+Mv1yNNseo2BnetjBfkZKxvT5LWXEeYK0J/rCO/XRNud
-         JhQQGO5GWuuVU/YADfPTsC8zcCb96C0oXA/so9pboF58Fa4hBOheR00xqO4jgekKqbub
-         6Ugzap+WBHe1sfjk0H2KP8D/9kdweV9VkDoN73D6iL4F7VOtOHTy8wZlBtE6xQ6y3+N6
-         2c80VVQpb+jCmaOCYYLTKIguRQ1/eG8sy+zRTN/mVM2Nn4gIBAYjXBnfJeDe+1IzVwrf
-         72wQBMgNcvEyCT4MjtG8+h40impbWmDX9QqpZ4Cz52GyidvBIqpb+/ZzEdH+dVso3w4I
-         8Bcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnomo1N6248+1frWdywhLvrwui1Y5LwIdrulZPjScTgKMV5nWd0pm9IpSWBoYCd/pTCqFcxaO4GURjVw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyFvsawHmQTnsxuN1rgSCUO2KLBXqeuhCvXJRVcnn1/TMMJ2BKP
-	oMaD1aHO0q/CCSiqI5rgZfh3Pfmz0eSCEPnT808WKpJrQMriOZOBvVyduzgrX5BvJIYCbtfznNX
-	y2e0LWRtsFNWzo4tPuNKbLiBXcdesWF4tzp7cEwMIEA8aYvjPXZpyOU0=
-X-Gm-Gg: ASbGncuP0RhLxTh6m925yQSQoseBb+H477k5jHx6c1+tWWOwSJ6OpzH43UyuMANOe80
-	mq7h5JrO8GebmFVsdxcshWCM+MLzFxufnyBO3b9rL7zdZPClsKufY9rrkPKaQ/4dbuCR/QlADxy
-	TbfmM0/+Urh5gGb5Bx0i8U+2V+Dmx31oIZpzhO+kjim9WiJefN8ggvgs2Q3X0zrSbrNtgT7OoO4
-	fWtrYzhE0uQerwLYuBd6j1q+ikRzF/bHeIEWTcrId9vuJXg4XEF
-X-Google-Smtp-Source: AGHT+IENUNZHbWNhDkjrlDBP/IMI+ox17dvQGf1pPh/T6DNibPj5t5Kqy2cH1NAjJtx9Hg5ja440tS5wnPkyrNZunu0=
-X-Received: by 2002:a17:903:2f89:b0:240:967a:fec3 with SMTP id
- d9443c01a7336-2429f30b074mr82279045ad.29.1754558502039; Thu, 07 Aug 2025
- 02:21:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754565623; x=1755170423;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+xe2dZhSU0YB/2XKMOmDkqHorIZkYeC9Ed4u60MW1U=;
+        b=IcQa1LCr4UhHjufr/3EskS0y0hqlhYW1xKdg7mG6Rrs24e7Qs4H+qKoh0OqiKAs4r7
+         kKiFUcF8I3Uzx+6EnviuxC2EKy2arG5U1xBs7lQZv3nk6tn8/PZhpoFnsx4nwuv0KaFj
+         YNE/qjMTzBHzZh7C7QWslcCsgWPr4bwOhSWVK0ipy/kDXjCW8j7u+BtcQUK0vqULLwHq
+         GVqGPOeBRJ3/isr4ml3Lyqv8gJyr0pooLEXLL8WFhUk8HhpFQgCikiT78LjZuxOW2nIA
+         7S2M8zjp2ddqm5kng4VjehNuVe3GtA+FLYZ81UQgUMFXPTR4/G8vqoNgUKvidSpw803H
+         de2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWbhQz/LSesEzZiz6dhJuH0Yw0tjaWxaHIqJeIXvORmgsrMD+110ZRLqTUopZe8v/tqUhMUK6KOQfKz/w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YydRefKHLs8JE6xlMf/eYtWGz2upC62cwwmV+h0c6xj58GDri96
+	ehNCFCE0Pm8dWFA21Y5of928/6aRCcVozGqANVDVlJJJzUd9GGwoU0ZFhb7R2kjJdWo=
+X-Gm-Gg: ASbGncvb2jaKn3muCICKH5vWpf/TtMQRiZCbYP+xpBDT/63QDpbpMTkWz+Yn1zR2zus
+	QSKWMa2wkBndfedrFNZHoxKJZ9+uWy8A7LXrCaBmR7OV5sxRxvCo9k425mGE6OL2pbdGaYXgzUC
+	HfCsBhvNL7DfIHlBvSK7r63RuV/Gx9bkSvkNR6KYhDPEah1wScAAa287NUjbQnyghfYRjzv7AsR
+	xs26k7A83Xcj2VFLrW8Csoyu08h5b8wHftd+iSVZSjKUfzciHE0zAHKMbjd/Xl+Su9llXI1Xw3/
+	73Tt+3jViXMkMBVKiK2lVFaagbKNJlUzHXNaDWYbc+f13Kh2wHLzvxYjhNujSQJDtPrPoebhbcv
+	thVj/rpsqVNksPVnDf6JDfT+EEQU=
+X-Google-Smtp-Source: AGHT+IHle4/R1ej0UE31AopKf2sNC+DTWDiHvIqjOlfMPaSTgNALiUGVLhXkvILnmSQe+GoiHKqW1Q==
+X-Received: by 2002:a05:600c:3b98:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-459f33960a5mr5645055e9.20.1754565622973;
+        Thu, 07 Aug 2025 04:20:22 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459e6214640sm88873865e9.1.2025.08.07.04.20.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Aug 2025 04:20:22 -0700 (PDT)
+Date: Thu, 7 Aug 2025 14:20:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Renjiang Han <quic_renjiang@quicinc.com>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	Cgroups <cgroups@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-fsdevel@vger.kernel.org, Song Liu <song@kernel.org>,
+	yukuai3@huawei.com, Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>
+Subject: Re: next-20250804 Unable to handle kernel execute from
+ non-executable memory at virtual address idem_hash
+Message-ID: <66c0fb9f-c9fc-4186-9450-ecf726b6791f@suswa.mountain>
+References: <CA+G9fYvZtbQLoS=GpaZ_uzm3YiZEQmz0oghnwVamNQ49CosT2w@mail.gmail.com>
+ <aJNsreA4FuxalDc8@stanley.mountain>
+ <CA+G9fYvEGBAAEetvvtXWsGb3EQ2sTOM=szkxZ4m-Gt2bTszBdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvZtbQLoS=GpaZ_uzm3YiZEQmz0oghnwVamNQ49CosT2w@mail.gmail.com>
- <aJNsreA4FuxalDc8@stanley.mountain>
-In-Reply-To: <aJNsreA4FuxalDc8@stanley.mountain>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 7 Aug 2025 14:51:29 +0530
-X-Gm-Features: Ac12FXzDGhnu1-S9XsmcuSQdpNl-4x-pjyL4dJsRMo-Zz2V8DR8MxaCT9WEoD8A
-Message-ID: <CA+G9fYvEGBAAEetvvtXWsGb3EQ2sTOM=szkxZ4m-Gt2bTszBdQ@mail.gmail.com>
-Subject: Re: next-20250804 Unable to handle kernel execute from non-executable
- memory at virtual address idem_hash
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Renjiang Han <quic_renjiang@quicinc.com>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Cgroups <cgroups@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
-	Song Liu <song@kernel.org>, yukuai3@huawei.com, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: multipart/mixed; boundary="00000000000040a1ab063bc2fcd6"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvEGBAAEetvvtXWsGb3EQ2sTOM=szkxZ4m-Gt2bTszBdQ@mail.gmail.com>
 
---00000000000040a1ab063bc2fcd6
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Dan,
-
-On Wed, 6 Aug 2025 at 20:24, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Tue, Aug 05, 2025 at 12:50:28AM +0530, Naresh Kamboju wrote:
-> > While booting and testing selftest cgroups and filesystem testing on arm64
-> > dragonboard-410c the following kernel warnings / errors noticed and system
-> > halted and did not recover with selftests Kconfig enabled running the kernel
-> > Linux next tag next-20250804.
+On Thu, Aug 07, 2025 at 02:51:29PM +0530, Naresh Kamboju wrote:
+> Hi Dan,
+> 
+> On Wed, 6 Aug 2025 at 20:24, Dan Carpenter <dan.carpenter@linaro.org> wrote:
 > >
-> > Regression Analysis:
-> > - New regression? Yes
-> > - Reproducibility? Re-validation is in progress
+> > On Tue, Aug 05, 2025 at 12:50:28AM +0530, Naresh Kamboju wrote:
+> > > While booting and testing selftest cgroups and filesystem testing on arm64
+> > > dragonboard-410c the following kernel warnings / errors noticed and system
+> > > halted and did not recover with selftests Kconfig enabled running the kernel
+> > > Linux next tag next-20250804.
+> > >
+> > > Regression Analysis:
+> > > - New regression? Yes
+> > > - Reproducibility? Re-validation is in progress
+> > >
+> > > First seen on the next-20250804
+> > > Good: next-20250801
+> > > Bad: next-20250804
+> > >
+> > > Test regression: next-20250804 Unable to handle kernel execute from
+> > > non-executable memory at virtual address idem_hash
+> > > Test regression: next-20250804 refcount_t: addition on 0;
+> > > use-after-free refcount_warn_saturate
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > ## Test crash log
+> > > [    9.811341] Unable to handle kernel NULL pointer dereference at
+> > > virtual address 000000000000002e
+> > > [    9.811444] Mem abort info:
+> > > [    9.821150]   ESR = 0x0000000096000004
+> > > [    9.833499]   SET = 0, FnV = 0
+> > > [    9.833566]   EA = 0, S1PTW = 0
+> > > [    9.835511]   FSC = 0x04: level 0 translation fault
+> > > [    9.838901] Data abort info:
+> > > [    9.843788]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> > > [    9.846565]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > > [    9.851938]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > > [    9.853510] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: registered as rtc0
+> > > [    9.856992] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000856f8000
+> > > [    9.862446] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: setting system
+> > > clock to 1970-01-01T00:00:31 UTC (31)
+> > > [    9.868789] [000000000000002e] pgd=0000000000000000, p4d=0000000000000000
+> > > [    9.875459] Internal error: Oops: 0000000096000004 [#1]  SMP
+> > > [    9.889547] input: pm8941_pwrkey as
+> > > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:pwrkey/input/input1
+> > > [    9.891545] Modules linked in: qcom_spmi_temp_alarm rtc_pm8xxx
+> > > qcom_pon(+) qcom_pil_info videobuf2_dma_sg ubwc_config qcom_q6v5
+> > > venus_core(+) qcom_sysmon qcom_spmi_vadc v4l2_fwnode llcc_qcom
+> > > v4l2_async qcom_vadc_common qcom_common ocmem v4l2_mem2mem drm_gpuvm
+> > > videobuf2_memops qcom_glink_smem videobuf2_v4l2 drm_exec mdt_loader
+> > > qmi_helpers gpu_sched drm_dp_aux_bus qnoc_msm8916 videodev
+> > > drm_display_helper qcom_stats videobuf2_common cec qcom_rng
+> > > drm_client_lib mc phy_qcom_usb_hs socinfo rpmsg_ctrl display_connector
+> > > rpmsg_char ramoops rmtfs_mem reed_solomon drm_kms_helper fuse drm
+> > > backlight
+> > > [    9.912286] input: pm8941_resin as
+> > > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:resin/input/input2
+> > > [    9.941186] CPU: 2 UID: 0 PID: 221 Comm: (udev-worker) Not tainted
+> > > 6.16.0-next-20250804 #1 PREEMPT
+> > > [    9.941200] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> > > [    9.941206] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > > [    9.941215] pc : dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685)
+> > > [    9.941233] lr : core_clks_enable+0x54/0x148 venus_core
+> > > [   10.004266] sp : ffff8000842b35f0
+> > > [   10.004273] x29: ffff8000842b35f0 x28: ffff8000842b3ba0 x27: ffff0000047be938
+> > > [   10.004289] x26: 0000000000000000 x25: 0000000000000000 x24: ffff80007b350ba0
+> > > [   10.004303] x23: ffff00000ba380c8 x22: ffff00000ba38080 x21: 0000000000000000
+> > > [   10.004316] x20: 0000000000000000 x19: ffffffffffffffee x18: 00000000ffffffff
+> > > [   10.004330] x17: 0000000000000000 x16: 1fffe000017541a1 x15: ffff8000842b3560
+> > > [   10.004344] x14: 0000000000000000 x13: 007473696c5f7974 x12: 696e696666615f65
+> > > [   10.004358] x11: 00000000000000c0 x10: 0000000000000020 x9 : ffff80007b33f2bc
+> > > [   10.004371] x8 : ffffffffffffffde x7 : ffff0000044a4800 x6 : 0000000000000000
+> > > [   10.004384] x5 : 0000000000000002 x4 : 00000000c0000000 x3 : 0000000000000001
+> > > [   10.004397] x2 : 0000000000000002 x1 : ffffffffffffffde x0 : ffffffffffffffee
+> > > [   10.004412] Call trace:
+> > > [   10.004417] dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685) (P)
+> > > [   10.004435] core_clks_enable+0x54/0x148 venus_core
+> > > [   10.004504] core_power_v1+0x78/0x90 venus_core
+> > > [   10.004560] venus_runtime_resume+0x6c/0x98 venus_core
+> > > [   10.004616] pm_generic_runtime_resume
 > >
-> > First seen on the next-20250804
-> > Good: next-20250801
-> > Bad: next-20250804
-> >
-> > Test regression: next-20250804 Unable to handle kernel execute from
-> > non-executable memory at virtual address idem_hash
-> > Test regression: next-20250804 refcount_t: addition on 0;
-> > use-after-free refcount_warn_saturate
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > ## Test crash log
-> > [    9.811341] Unable to handle kernel NULL pointer dereference at
-> > virtual address 000000000000002e
-> > [    9.811444] Mem abort info:
-> > [    9.821150]   ESR = 0x0000000096000004
-> > [    9.833499]   SET = 0, FnV = 0
-> > [    9.833566]   EA = 0, S1PTW = 0
-> > [    9.835511]   FSC = 0x04: level 0 translation fault
-> > [    9.838901] Data abort info:
-> > [    9.843788]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> > [    9.846565]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> > [    9.851938]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> > [    9.853510] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: registered as rtc0
-> > [    9.856992] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000856f8000
-> > [    9.862446] rtc-pm8xxx 200f000.spmi:pmic@0:rtc@6000: setting system
-> > clock to 1970-01-01T00:00:31 UTC (31)
-> > [    9.868789] [000000000000002e] pgd=0000000000000000, p4d=0000000000000000
-> > [    9.875459] Internal error: Oops: 0000000096000004 [#1]  SMP
-> > [    9.889547] input: pm8941_pwrkey as
-> > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:pwrkey/input/input1
-> > [    9.891545] Modules linked in: qcom_spmi_temp_alarm rtc_pm8xxx
-> > qcom_pon(+) qcom_pil_info videobuf2_dma_sg ubwc_config qcom_q6v5
-> > venus_core(+) qcom_sysmon qcom_spmi_vadc v4l2_fwnode llcc_qcom
-> > v4l2_async qcom_vadc_common qcom_common ocmem v4l2_mem2mem drm_gpuvm
-> > videobuf2_memops qcom_glink_smem videobuf2_v4l2 drm_exec mdt_loader
-> > qmi_helpers gpu_sched drm_dp_aux_bus qnoc_msm8916 videodev
-> > drm_display_helper qcom_stats videobuf2_common cec qcom_rng
-> > drm_client_lib mc phy_qcom_usb_hs socinfo rpmsg_ctrl display_connector
-> > rpmsg_char ramoops rmtfs_mem reed_solomon drm_kms_helper fuse drm
-> > backlight
-> > [    9.912286] input: pm8941_resin as
-> > /devices/platform/soc@0/200f000.spmi/spmi-0/0-00/200f000.spmi:pmic@0:pon@800/200f000.spmi:pmic@0:pon@800:resin/input/input2
-> > [    9.941186] CPU: 2 UID: 0 PID: 221 Comm: (udev-worker) Not tainted
-> > 6.16.0-next-20250804 #1 PREEMPT
-> > [    9.941200] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> > [    9.941206] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [    9.941215] pc : dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685)
-> > [    9.941233] lr : core_clks_enable+0x54/0x148 venus_core
-> > [   10.004266] sp : ffff8000842b35f0
-> > [   10.004273] x29: ffff8000842b35f0 x28: ffff8000842b3ba0 x27: ffff0000047be938
-> > [   10.004289] x26: 0000000000000000 x25: 0000000000000000 x24: ffff80007b350ba0
-> > [   10.004303] x23: ffff00000ba380c8 x22: ffff00000ba38080 x21: 0000000000000000
-> > [   10.004316] x20: 0000000000000000 x19: ffffffffffffffee x18: 00000000ffffffff
-> > [   10.004330] x17: 0000000000000000 x16: 1fffe000017541a1 x15: ffff8000842b3560
-> > [   10.004344] x14: 0000000000000000 x13: 007473696c5f7974 x12: 696e696666615f65
-> > [   10.004358] x11: 00000000000000c0 x10: 0000000000000020 x9 : ffff80007b33f2bc
-> > [   10.004371] x8 : ffffffffffffffde x7 : ffff0000044a4800 x6 : 0000000000000000
-> > [   10.004384] x5 : 0000000000000002 x4 : 00000000c0000000 x3 : 0000000000000001
-> > [   10.004397] x2 : 0000000000000002 x1 : ffffffffffffffde x0 : ffffffffffffffee
-> > [   10.004412] Call trace:
-> > [   10.004417] dev_pm_opp_put (/builds/linux/drivers/opp/core.c:1685) (P)
-> > [   10.004435] core_clks_enable+0x54/0x148 venus_core
-> > [   10.004504] core_power_v1+0x78/0x90 venus_core
-> > [   10.004560] venus_runtime_resume+0x6c/0x98 venus_core
-> > [   10.004616] pm_generic_runtime_resume
->
-> Could you try adding some error checking to core_clks_enable()?
-> Does the patch below help?
+> > Could you try adding some error checking to core_clks_enable()?
+> > Does the patch below help?
+> 
+> Your patch works.
+> The attached patch from Sasha fixes this reported problem on today's
+> Linux next tag.
+> 
+> $ git log --oneline next-20250805..next-20250807 --
+> drivers/media/platform/qcom/venus/pm_helpers.c
+> 7881cd6886a89 media: venus: Fix OPP table error handling
+> 
 
-Your patch works.
-The attached patch from Sasha fixes this reported problem on today's
-Linux next tag.
+I feel a bit bad about this, because I saw this bug as a static
+checker warning:
 
-$ git log --oneline next-20250805..next-20250807 --
-drivers/media/platform/qcom/venus/pm_helpers.c
-7881cd6886a89 media: venus: Fix OPP table error handling
+drivers/media/platform/qcom/venus/pm_helpers.c:51 core_clks_enable() error: 'opp' dereferencing possible ERR_PTR()
 
-- Naresh
+But I figured that leaving out the error checking was probably
+deliberate so I didn't report it...  I'll go through my list of old
+warnings and review them again.
 
---00000000000040a1ab063bc2fcd6
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="media-venus-fix-opp-table-error-handling.patch"
-Content-Disposition: attachment; 
-	filename="media-venus-fix-opp-table-error-handling.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_me16oaig0>
-X-Attachment-Id: f_me16oaig0
+$ grep "dereferencing possible ERR_PTR" smatch_warns.txt | wc -l
+115
 
-Y29tbWl0IDc4ODFjZDY4ODZhODllZGE4NDgxOTJkM2Y1NzU5Y2UwODY3MmUwODQKQXV0aG9yOiBT
-YXNoYSBMZXZpbiA8c2FzaGFsQGtlcm5lbC5vcmc+CkRhdGU6ICAgVHVlIEF1ZyA1IDA4OjU4OjIw
-IDIwMjUgLTA0MDAKCiAgICBtZWRpYTogdmVudXM6IEZpeCBPUFAgdGFibGUgZXJyb3IgaGFuZGxp
-bmcKICAgIAogICAgVGhlIHZlbnVzIGRyaXZlciBmYWlscyB0byBjaGVjayBpZiBkZXZfcG1fb3Bw
-X2ZpbmRfZnJlcV97Y2VpbCxmbG9vcn0oKQogICAgcmV0dXJucyBhbiBlcnJvciBwb2ludGVyIGJl
-Zm9yZSBjYWxsaW5nIGRldl9wbV9vcHBfcHV0KCkuIFRoaXMgY2F1c2VzCiAgICBhIGNyYXNoIHdo
-ZW4gT1BQIHRhYmxlcyBhcmUgbm90IHByZXNlbnQgaW4gZGV2aWNlIHRyZWUuCiAgICAKICAgIFVu
-YWJsZSB0byBoYW5kbGUga2VybmVsIGFjY2VzcyB0byB1c2VyIG1lbW9yeSBvdXRzaWRlIHVhY2Nl
-c3Mgcm91dGluZXMKICAgIGF0IHZpcnR1YWwgYWRkcmVzcyAwMDAwMDAwMDAwMDAwMDJlCiAgICAu
-Li4KICAgIHBjIDogZGV2X3BtX29wcF9wdXQrMHgxYy8weDRjCiAgICBsciA6IGNvcmVfY2xrc19l
-bmFibGUrMHg0Yy8weDE2YyBbdmVudXNfY29yZV0KICAgIAogICAgQWRkIElTX0VSUigpIGNoZWNr
-cyBiZWZvcmUgY2FsbGluZyBkZXZfcG1fb3BwX3B1dCgpIHRvIGF2b2lkCiAgICBkZXJlZmVyZW5j
-aW5nIGVycm9yIHBvaW50ZXJzLgogICAgCiAgICBGaXhlczogYjE3OTIzNGI1ZTU5ICgibWVkaWE6
-IHZlbnVzOiBwbV9oZWxwZXJzOiB1c2Ugb3BwLXRhYmxlIGZvciB0aGUgZnJlcXVlbmN5IikKICAg
-IFNpZ25lZC1vZmYtYnk6IFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVsLm9yZz4KICAgIFNpZ25l
-ZC1vZmYtYnk6IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4K
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3Fjb20vdmVudXMvcG1faGVscGVy
-cy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9xY29tL3ZlbnVzL3BtX2hlbHBlcnMuYwppbmRl
-eCA4ZGQ1YTliMGQwNjBjLi5lMzJmODg2MmE5ZjkwIDEwMDY0NAotLS0gYS9kcml2ZXJzL21lZGlh
-L3BsYXRmb3JtL3Fjb20vdmVudXMvcG1faGVscGVycy5jCisrKyBiL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0vcWNvbS92ZW51cy9wbV9oZWxwZXJzLmMKQEAgLTQ4LDcgKzQ4LDggQEAgc3RhdGljIGlu
-dCBjb3JlX2Nsa3NfZW5hYmxlKHN0cnVjdCB2ZW51c19jb3JlICpjb3JlKQogCWludCByZXQ7CiAK
-IAlvcHAgPSBkZXZfcG1fb3BwX2ZpbmRfZnJlcV9jZWlsKGRldiwgJmZyZXEpOwotCWRldl9wbV9v
-cHBfcHV0KG9wcCk7CisJaWYgKCFJU19FUlIob3BwKSkKKwkJZGV2X3BtX29wcF9wdXQob3BwKTsK
-IAogCWZvciAoaSA9IDA7IGkgPCByZXMtPmNsa3NfbnVtOyBpKyspIHsKIAkJaWYgKElTX1Y2KGNv
-cmUpKSB7CkBAIC02NjAsNyArNjYxLDggQEAgc3RhdGljIGludCBkZWNpZGVfY29yZShzdHJ1Y3Qg
-dmVudXNfaW5zdCAqaW5zdCkKIAkvKlRPRE8gOiBkaXZpZGUgdGhpcyBpbnN0LT5sb2FkIGJ5IHdv
-cmtfcm91dGUgKi8KIAogCW9wcCA9IGRldl9wbV9vcHBfZmluZF9mcmVxX2Zsb29yKGRldiwgJm1h
-eF9mcmVxKTsKLQlkZXZfcG1fb3BwX3B1dChvcHApOworCWlmICghSVNfRVJSKG9wcCkpCisJCWRl
-dl9wbV9vcHBfcHV0KG9wcCk7CiAKIAltaW5fbG9hZGVkX2NvcmUoaW5zdCwgJm1pbl9jb3JlaWQs
-ICZtaW5fbG9hZCwgZmFsc2UpOwogCW1pbl9sb2FkZWRfY29yZShpbnN0LCAmbWluX2xwX2NvcmVp
-ZCwgJm1pbl9scF9sb2FkLCB0cnVlKTsKQEAgLTExMjEsNyArMTEyMyw4IEBAIHN0YXRpYyBpbnQg
-bG9hZF9zY2FsZV92NChzdHJ1Y3QgdmVudXNfaW5zdCAqaW5zdCkKIAlmcmVxID0gbWF4KGZyZXFf
-Y29yZTEsIGZyZXFfY29yZTIpOwogCiAJb3BwID0gZGV2X3BtX29wcF9maW5kX2ZyZXFfZmxvb3Io
-ZGV2LCAmbWF4X2ZyZXEpOwotCWRldl9wbV9vcHBfcHV0KG9wcCk7CisJaWYgKCFJU19FUlIob3Bw
-KSkKKwkJZGV2X3BtX29wcF9wdXQob3BwKTsKIAogCWlmIChmcmVxID4gbWF4X2ZyZXEpIHsKIAkJ
-ZGV2X2RiZyhkZXYsIFZEQkdMICJyZXF1ZXN0ZWQgY2xvY2sgcmF0ZTogJWx1IHNjYWxpbmcgY2xv
-Y2sgcmF0ZSA6ICVsdVxuIiwKQEAgLTExMzEsNyArMTEzNCw4IEBAIHN0YXRpYyBpbnQgbG9hZF9z
-Y2FsZV92NChzdHJ1Y3QgdmVudXNfaW5zdCAqaW5zdCkKIAl9CiAKIAlvcHAgPSBkZXZfcG1fb3Bw
-X2ZpbmRfZnJlcV9jZWlsKGRldiwgJmZyZXEpOwotCWRldl9wbV9vcHBfcHV0KG9wcCk7CisJaWYg
-KCFJU19FUlIob3BwKSkKKwkJZGV2X3BtX29wcF9wdXQob3BwKTsKIAogc2V0X2ZyZXE6CiAK
---00000000000040a1ab063bc2fcd6--
+regards,
+dan carpenter
+
