@@ -1,163 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C794C27A123;
-	Fri,  8 Aug 2025 11:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83056277030
+	for <regressions@lists.linux.dev>; Fri,  8 Aug 2025 13:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754652278; cv=none; b=VSHtzwa7FnNyfN5BBOwCl9rqe81Zu1m6XbPefLn9enxAIoKaixv2c+J4459zgIdPsjZz3eWeCWvV0RphV5iRqizm9Ik1wt+oh66KgQg8IhYYrBN32nxaiUqxQ1e61Hi4QmGwlN40z2fKqnXG4paOrAJWDaIUhccdnpLPJUcwQNk=
+	t=1754658901; cv=none; b=Nl+MNA0awAMp3wiPaEeDp9a6cx1wsl6EweTOxMn5dJNatrwC1z1W62VRzmMZKDywX92+3OKCVOjcAqkIrKGzPf00WO85VdcHaF/IgbAPHsS/Uu0FljFb1GDg4OsylxAe/JCcp2FQVvSwavpxai88/N0kl65JQPT6v7b2fc+v8I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754652278; c=relaxed/simple;
-	bh=G8XBDE8Dsdoq13Ly8auEDySbXA8PcvpOjtCB/bcB1Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uypwYNa0Nge9Nqv+9D5uY02+XNR1kFaVWulbGrNH4ITo3G3zBNs7hEPc7W1z9yzmFMukm0IPHezOawPR1Y7clis8PgrEeJoYXSuvokJt14KEoSy3JGQfEjOEIPFMVxKR8dQMUQcC411M8oE9xM0rvr1k64sqHjklZAiG/lmF77k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIZcQEQm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754658901; c=relaxed/simple;
+	bh=LzZ2gmBzKad8vP6vcqj+QiAbXuf+vjCf/xlWhLPeWco=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=p23HlkV46dVQy8qYfGR3GFVo6Oe1tvucXuUT6n4uo9YSViYtzVSPojfWT50dfgA2ZI/DXHbOvPa+Oo7MyBnsppdn3QQYgyHFUz5LzBr14/3AQ3NTcIfODjJp21PEs0g6uPpbIpnaAUp9VktSvjdj1WZSRM7XELzEMHKEwu8ru30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKChVLlM; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIZcQEQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB49C4CEED;
-	Fri,  8 Aug 2025 11:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754652276;
-	bh=G8XBDE8Dsdoq13Ly8auEDySbXA8PcvpOjtCB/bcB1Uo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIZcQEQmb2EsfdnJKyBOEKi4tLdQvrZbohWfRHKkpyfRXc8CwqqzT5fVnB7/GxZiE
-	 NqvDvbO4ZofZBESiChq3+nW4tIus+68ZlNH8bsly4+si/u0YfbqkwIBGq8CFCViQo4
-	 /KhACcUbFOa0OD8+hkffDEz53ZtHcRhP1ZcDz+dp9ex6vdXjgiSYUeg08PwL34nuLk
-	 9tr9mKmtKQv+CSfPjHCUgCdqEMwBiuvRTP/4xDR283aGd0217HwI/mLBUEGy0wfAQF
-	 NRZb9J0t9hYHj+70EY/k0GNkk+nHieD6LzEgUR+J5wAHMKByrjlA4gj6Add953CoDc
-	 E6v1BLX2jkjkA==
-Date: Fri, 8 Aug 2025 12:24:29 +0100
-From: Will Deacon <will@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	linux-mm <linux-mm@kvack.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Ben Copeland <benjamin.copeland@linaro.org>
-Subject: Re: next-20250729: PREEMPT_RT: rock Pi 4b Internal error Oops
- kmem_cache_alloc_bulk_noprof - kernel locking rtmutex.c at
- __rt_mutex_slowlock_locked
-Message-ID: <aJXebTmgnrWw7Ks4@willie-the-truck>
-References: <CA+G9fYumD2MGjECCv0wx2V_96_FKNtFQpT63qVNrrCmomoPYVQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKChVLlM"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-617c40825c9so3285298a12.2
+        for <regressions@lists.linux.dev>; Fri, 08 Aug 2025 06:14:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754658898; x=1755263698; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1G84+v4zX75P6WqTk0EXQj0TqNSq6e+rkwRaOXJCVZ4=;
+        b=eKChVLlM9T20agDcM4bAAKIUAxQd4z/QaNY3BZ61hIMX9bkZD0/jo92soqoA8cc84a
+         bbryYu1oFiy+shsKnuQvCnNsp+nut82HKCwxtsd+SrJNcyxMMwvtpMQb8JiQr4OGrTSn
+         iY9tAMVsl4yQyyFKmRNv3WupOTTiQ8XRtrrlKT1d+yk9vzkjzocL9VplldTj38v/z5ma
+         SsW1TYJCoHSUBuViCC1zvBr5qF4SAI4XLdL1vqZtBupAllxdOdZn1DbUF8ERM5LnOBUv
+         /fDUoRkXlm5FCR+ebplGJZlZJ0hifveLkN+1CnMgGop7f92rDlnI6eIeJSEEuSz+612h
+         xk2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754658898; x=1755263698;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1G84+v4zX75P6WqTk0EXQj0TqNSq6e+rkwRaOXJCVZ4=;
+        b=clQ9mxXfLJ0efllRX9q94/l1sMVO8zM5TmlTa7M5CLZud9Uv7RsoNo+ny/L3OdIC0k
+         h5THLUDoMZLIhz+0kNc48MsY8vH3H70wc9n2uqlD3CONi9lgD4nHvtenV2lPEE70k+sv
+         D7ytCyibl2mbeFlJTKUE6rBxaGDGUgS1Gv9EdMZF5qQq/bpYJ6g2quCpYpBTkgtxH/qY
+         hq17WC/yW8fk+u4AkjJvYyxAfPeDJUvY4e0UA/3iMOjhZHgZvw/5Ojydcc/JWHWYANYa
+         JTAa1ZxeZ2b1TyTqSnAuvmw9Cf5+UDK8MFEF4qb/BPc5+pga9Z6ralqaAPYj1XzSP0hQ
+         6ifA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7eHPf5SC1+9xsIpYubXg2kSSpQljf9673ZQ0qnCQmxaiTWN3aZxDHlmstmGDx1MvKixWj/5O9OlL62w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwR2+Pxhp/fvfQ9Ew5i50JigZ9L35K3kjTTQVP0pMrxE5Gv71fW
+	hbwjJO9Eoz/DiKyoPiOZ5hMvsGe5X+r/geGohMfP10N1dllZLbE907C7GGMFqVE+dFzvSmXF2Pl
+	JTBBcs++2t3w2pf3JkFgG0l+lmWoZvT4=
+X-Gm-Gg: ASbGncslZnZHaoyufmIoXl3vuHRud+DYwhV8ccMGoa0duELS/DaX7/y2WVg8KEu59er
+	asAU4pTsn7YLT7XLfPknmmFcw0hV2eun9x5OjOIXGFxKIch79p2YQ5dbcqbbMUqkpUyyuBqrrz0
+	GKL8hN/BgSwJzSW219SefihafvLqocHcuvs77ftAI8JmjHEZffkHHjAeadpPH2hEWcJ1xajAPlS
+	57qbMySTTArts127lT1
+X-Google-Smtp-Source: AGHT+IGevCoZbL9izzwy5cwLKx4/i/TmXKqJBSAQOcJkM9XKP6Ea/sJmVJxiOYQUmUx3N5L5pL8CK1+aI275dIXumZs=
+X-Received: by 2002:a05:6402:2547:b0:602:1b8b:2925 with SMTP id
+ 4fb4d7f45d1cf-617e2e95eeamr1953333a12.29.1754658897651; Fri, 08 Aug 2025
+ 06:14:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYumD2MGjECCv0wx2V_96_FKNtFQpT63qVNrrCmomoPYVQ@mail.gmail.com>
+From: Tal Inbar <inbartdev@gmail.com>
+Date: Fri, 8 Aug 2025 16:14:46 +0300
+X-Gm-Features: Ac12FXzGwyXXWIsqoqW4GYVdq-yIoDbSx7m80eMIrFIy-Ylc2aYJJ2tFHDO8ZrQ
+Message-ID: <CAJmAMMyOk7AVqQRrtK4Oum2uVKreGeLJ943-kkRCTspoGApZ8w@mail.gmail.com>
+Subject: [REGRESSION] [BISECTED] MT7925 wireless speed drops to zero since
+ kernel 6.14.3 - wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_cmd
+To: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Naresh,
+Hi,
 
-On Sat, Aug 02, 2025 at 03:45:51PM +0530, Naresh Kamboju wrote:
-> ## Test log
-> [  527.570253] Unable to handle kernel paging request at virtual
-> address 003f0020f94020a1
-> [  527.570274] Mem abort info:
-> [  527.570277]   ESR = 0x0000000096000004
-> [  527.570282]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  527.570288]   SET = 0, FnV = 0
-> [  527.570292]   EA = 0, S1PTW = 0
-> [  527.570297]   FSC = 0x04: level 0 translation fault
-> [  527.570302] Data abort info:
-> [  527.570305]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> [  527.570310]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [  527.570316]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [  527.570322] [003f0020f94020a1] address between user and kernel address ranges
-> [  527.570330] Internal error: Oops: 0000000096000004 [#1]  SMP
-> [  527.570336] Modules linked in: brcmfmac rockchip_dfi brcmutil
-> cfg80211 snd_soc_hdmi_codec dw_hdmi_i2s_audio dw_hdmi_cec
-> snd_soc_simple_card snd_soc_audio_graph_card hci_uart
-> snd_soc_rockchip_i2s snd_soc_es8316 snd_soc_spdif_tx
-> snd_soc_simple_card_utils btqca rtc_rk808 rockchipdrm btbcm
-> snd_soc_core dw_hdmi_qp bluetooth snd_compress reset_gpio analogix_dp
-> snd_pcm_dmaengine panfrost hantro_vpu dw_mipi_dsi rfkill rockchip_rga
-> drm_shmem_helper drm_dp_aux_bus snd_pcm gpu_sched dw_hdmi pwrseq_core
-> videobuf2_dma_sg v4l2_vp9 snd_timer drm_display_helper v4l2_h264
-> v4l2_jpeg phy_rockchip_pcie snd v4l2_mem2mem cec videobuf2_dma_contig
-> soundcore videobuf2_memops drm_client_lib videobuf2_v4l2
-> drm_dma_helper videobuf2_common rockchip_saradc drm_kms_helper
-> industrialio_triggered_buffer kfifo_buf rockchip_thermal
-> pcie_rockchip_host coresight_cpu_debug fuse drm backlight
-> [  527.570493] CPU: 3 UID: 0 PID: 34254 Comm: mkdir Not tainted
-> 6.16.0-next-20250801 #1 PREEMPT_RT
-> [  527.570502] Hardware name: Radxa ROCK Pi 4B (DT)
-> [  527.570506] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [  527.570512] pc : kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
-> (discriminator 1) mm/slub.c:5403 (discriminator 1))
-> [  527.570527] lr : kmem_cache_alloc_bulk_noprof
-> (include/linux/atomic/atomic-arch-fallback.h:457
-> include/linux/atomic/atomic-instrumented.h:33
-> include/linux/kfence.h:127 mm/slub.c:5307 mm/slub.c:5403)
-> [  527.570533] sp : ffff80008e24b8f0
-> [  527.570536] x29: ffff80008e24b930 x28: 00ff000000584610 x27: ffff800082b30538
-> [  527.570545] x26: ffff8000816b64dc x25: 0000000000000cc0 x24: 0000000000000000
-> [  527.570554] x23: 0000000000000004 x22: ffff0000f7579d20 x21: 0000000000000001
-> [  527.570563] x20: 0000000000000001 x19: ffff000000405b00 x18: ffff80008e24bcd0
-> [  527.570572] x17: 0000000000000000 x16: ffff800081e18420 x15: 0000ffffa2670fff
-> [  527.570582] x14: 0000000000000000 x13: 1fffe000017942e1 x12: 0000ffffa2470fff
-> [  527.570591] x11: ffff00000bca1708 x10: 0000000000000001 x9 : ffff8000816e41a4
-> [  527.570600] x8 : ffff80008e24b850 x7 : fefefefefefefefe x6 : ffff800082b30000
-> [  527.570608] x5 : d63f0020f9402021 x4 : ffff0000f7579d58 x3 : 0000000000000000
-> [  527.570617] x2 : 0000000000000000 x1 : 0000000000000100 x0 : 0000000000000080
-> [  527.570627] Call trace:
-> [  527.570631] kmem_cache_alloc_bulk_noprof (mm/slub.c:5343
-> (discriminator 1) mm/slub.c:5403 (discriminator 1)) (P)
-> [  527.570639] mas_alloc_nodes (lib/maple_tree.c:1278)
-> [  527.570651] mas_node_count_gfp (lib/maple_tree.c:1339)
-> [  527.570661] mas_preallocate (lib/maple_tree.c:5538 (discriminator 1))
-> [  527.570667] __split_vma (mm/vma.c:528 (discriminator 1))
-> [  527.570677] vma_modify (mm/vma.c:1633)
-> [  527.570685] vma_modify_flags (mm/vma.c:1650)
-> [  527.570694] mprotect_fixup (mm/mprotect.c:819)
-> [  527.570704] do_mprotect_pkey (mm/mprotect.c:993)
-> [  527.570713] __arm64_sys_mprotect (mm/mprotect.c:1011)
-> [  527.570722] invoke_syscall (arch/arm64/include/asm/current.h:19
-> arch/arm64/kernel/syscall.c:54)
-> [  527.570731] el0_svc_common.constprop.0
-> (include/linux/thread_info.h:135 (discriminator 2)
-> arch/arm64/kernel/syscall.c:140 (discriminator 2))
-> [  527.570737] do_el0_svc (arch/arm64/kernel/syscall.c:152)
-> [  527.570744] el0_svc (arch/arm64/include/asm/irqflags.h:82
-> (discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
-> 1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:169 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:182 (discriminator 1)
-> arch/arm64/kernel/entry-common.c:880 (discriminator 1))
-> [  527.570752] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
-> [  527.570760] el0t_64_sync (arch/arm64/kernel/entry.S:596)
-> [ 527.570772] Code: 1400000c f94002c5 b4000aa5 b9402a60 (f86068a0)
-> All code
-> ========
->    0: 1400000c b 0x30
->    4: f94002c5 ldr x5, [x22]
->    8: b4000aa5 cbz x5, 0x15c
->    c: b9402a60 ldr w0, [x19, #40]
->   10:* f86068a0 ldr x0, [x5, x0] <-- trapping instruction
-> 
-> Code starting with the faulting instruction
-> ===========================================
->    0: f86068a0 ldr x0, [x5, x0]
-> [  527.570778] ---[ end trace 0000000000000000 ]---
-> [  527.570800] ------------[ cut here ]------------
+Since kernel v6.14.3, when using wireless to connect to my home router
+on my laptop, my wireless connection slows down to unusable speeds.
 
-If you're able to repro this, please could you see if the patch below
-helps at all?
 
-https://lore.kernel.org/r/20250806145611.3962-1-dev.jain@arm.com
+More specifically, since kernel 6.14.3, when connecting to the
+wireless networks of my OpenWRT Router on my Lenovo IdeaPad Slim 15
+16AKP10 laptop,
+either a 2.4ghz or a 5ghz network, the connection speed drops down to
+0.1-0.2 Mbps download and 0 Mbps upload when measured using
+speedtest-cli.
+My laptop uses an mt7925 chip according to the loaded driver and firmware.
 
-Cheers,
 
-Will
+Detailed Description:
+
+As mentioned above, my wireless connection becomes unusable when using
+linux 6.14.3 and above, dropping speeds to almost 0 Mbps,
+even when standing next to my router. Further, pinging archlinux.org
+results in "Temporary failure in name resolution".
+Any other wireless device in my house can successfully connect to my
+router and properly use the internet with good speeds, eg. iphones,
+ipads, raspberry pi and a windows laptop.
+When using my Lenovo laptop on a kernel 6.14.3 or higher to connect to
+other access points, such as my iPhone's hotspot and some TPLink and
+Zyxel routers - the connection speed is good, and there are no issues,
+which makes me believe there's something going on with my OpenWRT
+configuration in conjunction with a commit introduced on kernel 6.14.3
+for the mt7925e module as detailed below.
+
+I have followed a related issue previously reported on the mailing
+list regarding a problem with the same wifi chip on kernel 6.14.3, but
+the merged fix doesn't seem to fix my problem:
+https://lore.kernel.org/linux-mediatek/EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me/
+
+I've tested stable builds of 6.15 as well up to 6.15.9 in the last
+month, which also do not fix the problem.
+I've also built and bisected v6.14 on june using guides on the Arch
+Linux wiki, for the following bad commit, same as the previously
+mentioned reported issue:
+
+[80007d3f92fd018d0a052a706400e976b36e3c87] wifi: mt76: mt7925:
+integrate *mlo_sta_cmd and *sta_cmd
+
+Testing further this week, I cloned mainline after 6.16 was released,
+built and tested it, and the issue still persists.
+I reverted the following commits on mainline and retested, to
+successfully see good wireless speeds:
+
+[0aa8496adda570c2005410a30df963a16643a3dc] wifi: mt76: mt7925: fix
+missing hdr_trans_tlv command for broadcast wtbl
+[cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1] wifi: mt76: mt7925:
+integrate *mlo_sta_cmd and *sta_cmd
+
+Then, reverting *only* 0aa8496adda570c2005410a30df963a16643a3dc causes
+the issue to reproduce, which confirms the issue is caused by commit
+cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 on mainline.
+
+I've attached the following files to a bugzilla ticket:
+
+- lspci -nnk output:
+https://bugzilla.kernel.org/attachment.cgi?id=308466
+
+- dmesg output:
+https://bugzilla.kernel.org/attachment.cgi?id=308465
+
+- .config for the built mainline kernel:
+https://bugzilla.kernel.org/attachment.cgi?id=308467
+
+
+More information:
+
+OS Distribution: Arch Linux
+
+Linux build information from /proc/version:
+Linux version 6.16.0linux-mainline-11853-g21be711c0235
+(tal@arch-debug) (gcc (GCC) 15.1.1 20250729, GNU ld (GNU Binutils)
+2.45.0) #3 SMP PREEMPT_DYNAMIC
+
+OpenWRT Version on my Router: 24.10.2
+
+Laptop Hardware:
+- Lenovo IdeaPad Slim 15 16AKP10 laptop (x86_64 Ryzen AI 350 CPU)
+- Network device as reported by lscpi: 14c3:7925
+- Network modules and driver in use: mt7925e
+- mediatek chip firmware as of dmesg:
+  HW/SW Version: 0x8a108a10, Build Time: 20250526152947a
+  WM Firmware Version: ____000000, Build Time: 20250526153043
+
+
+Referencing regzbot:
+
+#regzbot introduced: 80007d3f92fd018d0a052a706400e976b36e3c87
+
+
+Please let me know if any other information is needed, or if there is
+anything else that I can test on my end.
+
+Thanks,
+Tal Inbar
