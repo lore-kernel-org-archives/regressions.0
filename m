@@ -1,80 +1,64 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182822578A
-	for <regressions@lists.linux.dev>; Mon, 11 Aug 2025 14:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC0146447;
+	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754921177; cv=none; b=uexegzozEPHdEs2QBh9tUwGqzkpwv3zSHzpMDnsGUAqBQpEWiKjSC4u/NqYFdxus39Z+37g6LvgAkuGIpmgueZjHhPYzS7u0V9F1z+rH2Igw9iFEA6M19ol7USJwIsFaoCtGXzW1uQoqEGVCFuvj/Kdjrn+KrxF92DcsChj/Ei0=
+	t=1754923137; cv=none; b=Z+xY+VncfSzc+RVvnZDUm+F+aGuVfkqaD3rWF7HgyVQ6ChXmH1IW+qG2678ufM0+fI2KEmArZ+wFLwlqA58I9i/se7EjWfxWIBhCt1PpnfLoauo9fXmtNJ6cIbVjKgmPaP+4bm5lu456pnSnII/c4jteE1HOtkAEqt9dCOmnBgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754921177; c=relaxed/simple;
-	bh=oFtYo3U0qdWvDHjlfJam5B1mnTb+9DwyaUOSt65uqOA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=qCVtw8wGN9Kd+Nx3UjyvtnHEYBZaC2y1WQ52S7S67tshV+XxAzLHGnCW2wFQtArwr7iKfCLH3SsovqbwVMAOJ5yNNknvf3CtbZNDrZF6kCTC3eaxfp9pUtW8lexiIgyor2BfZTYfxlkBe0pTIb/WrlKdnW+A4miU+pzipHVS17I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yykTOcDu; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1754923137; c=relaxed/simple;
+	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MXCxQzfX2rjwVK8CFVmVlBpvTO720z6lzEL+ng00EbWbmZGvKFHgTOwMdi+iH7V/lyc/OHR21OsaeuzuwCLlw4Elhetxbqu1KUQ7+N+q0rkwbavJvSiu0Q48mJoghG05zfGSedHhO9ptwCG3KoSW9aMOssfR2hGmbclezrXyTsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAXyy64c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yykTOcDu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=oFtYo3U0qdWvDHjlfJam5B1mnTb+9DwyaUOSt65uqOA=; t=1754921175;
-	x=1755353175; b=yykTOcDuNFmw9xWW5IukNOxjq2uvZnIyHcW+A1cudXV4FB6HvdNRynyYmQKEc
-	ktVhGFWzVpJBnzDvOyGxsDFsjR5ygp1Bs36Kp43DSi30vXqpmKh39NYD1zRjlCyYlSY9HrQQpLNza
-	wwKXJqTpMX8vBqvnjt8+u6MQ2wb4y6mIoXv/Cql5GZdx8RkemttaZYvRWf8dWcSN027DAyALfuAZ9
-	i6hevya07MpQ4PwhzV4Ae/7xazgK6958qu8XOvo+/cC0gzUQY6hxXcmRZmnAfWNX4ZLOw8oleTeU3
-	hAcaVAA1uMlvl4n+7PgymuF1nv03fiOK/92v9NNixLG8E+QEUw==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1ulTA8-00GsmX-1k;
-	Mon, 11 Aug 2025 16:06:08 +0200
-Message-ID: <63f97b70-bdb5-4f36-936a-2094b3e4d959@leemhuis.info>
-Date: Mon, 11 Aug 2025 16:06:06 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAXyy64c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EB2C4CEED;
+	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754923137;
+	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rAXyy64cl/0Vqx16bd11on8kaBxmNBqqvHQkGrVD/cssPvyfXyzzL6CvbgzMVz9Ou
+	 xt12AXdopJlFCKQWHKIRFTYBDzfG+t+CL3buVGedwVSOGmFH+GoFbH/3fycPdSLhZ8
+	 da2YRJK6LCMmFDeKxQfBIWb4movWv+D0ViObnRBKHp5A8P1rXwnHiICa8mpTpV+JCk
+	 uiQGg8m7Wfa3b6osa6Isry3Nvp0k8tyAJ/3P3XrjfCR8SHyr26YrVsrdfkuBen3Ak/
+	 N1kajTLPuqmPXn0PW1pyoszYPVbYtZN93zUz5EHOW9Yw20xE3weQZNRMecNvSckhzS
+	 32AGinS4/wk7A==
+Date: Mon, 11 Aug 2025 09:38:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: namcao@linutronix.de, mani@kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Commit d7d8ab87e3e ("PCI: vmd: Switch to
+ msi_create_parent_irq_domain()") causes early-stage reboots on my Dell
+ XPS-9320
+Message-ID: <20250811143856.GA132204@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1754921175;5e7dc111;
-X-HE-SMSGID: 1ulTA8-00GsmX-1k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250807160301.GA50800@bhelgaas>
 
+On Thu, Aug 07, 2025 at 11:03:03AM -0500, Bjorn Helgaas wrote:
+> On Wed, Aug 06, 2025 at 04:07:30PM -0700, Kenneth Crudup wrote:
+> > 
+> > I'm running Linus' master (as of today, cca7a0aae8958c9b1).
+> > 
+> > If I revert the named commit, I can boot OK. Unfortunately there's no real
+> > output before the machine reboots, to help identify the problem.
+> > 
+> > I have a(n enabled) VMD in my Alderlake machine:
+> > 
+> > [    0.141952] [      T1] smpboot: CPU0: 12th Gen Intel(R) Core(TM) i7-1280P
+> > (family: 0x6, model: 0x9a, stepping: 0x3)
+> 
+> #regzbot introduced: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
 
-
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/20250807160301.GA50800@bhelgaas/
-#regzbot fix d5c647b08ee02c
-
-#regzbot report:
-https://lore.kernel.org/all/f2b70e6e-bff6-42f3-82a2-81eed892cc30@linux.dev/
-#regzbot introduced: b8adc31cc0ca
-#regzbot summary: drm: amdgpu: freeze while shutting down Steam inside
-of gamescoperestore,process.").
-#regzbot fix: drm/amdgpu: Fix race condition in amdgpu_vm_wait_idle
-during process kill
-
-#regzbot report:
-https://lore.kernel.org/stable/718C209F-22BD-4AF3-9B6F-E87E98B5239E@plan9.rocks/
-#regzbot introduced: fb5873b779dd585
-#regzbot fix ff7ccaadb0bf6b79a87
-
-
+#regzbot fix: d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
