@@ -1,256 +1,137 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB3E2DEA83
-	for <regressions@lists.linux.dev>; Mon, 11 Aug 2025 09:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C8E220F4F;
+	Mon, 11 Aug 2025 12:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754903317; cv=none; b=jUrspOHjRMJDVPaIQNep5mX5Nf7tMrnsVhSiOQWDCo8sLLc7f9njevW765dkJsmM/YPDQEOI83UMsc6pL4iAU0en9x8y6pFC9e1/zJtBrwroXfQAZENoO7dNQSUYYQE6k9BK4t5sP+mIDalPrYcyKteRcnbWy2dmu1A8MSBeDPQ=
+	t=1754916238; cv=none; b=Au90HPoMxO14WMapvlfcpEmHAODG3mspTMz3idvQyMOtSIYgWyTF1/2c6DJ14mf3w1pU+9q9zQA0S4YqKfF5GUwx4cm1zGLWdMxzgtJdY+z1+GFMOpbCzuTBMq+SSkLBBfEkkcjE+Rm9vIXG9+wzDWJo2H5ZGD73bk6zU6T4Lzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754903317; c=relaxed/simple;
-	bh=GxSBTCNgd4eJENpfjoGCAFFcGIxRfntdX/fQersbJVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BF+pwEuQC7SCiR7Vgnr5sdfGbUFTD7K4JUeM9qJ+gbFfJCJo8Mw6Ce80ciF0Yaw7FWQAboxqRXHumcTVEqoOK+EPo8WfEiB5VAjAU1t1BjxdaP+RiFQW15IqBUpU4VXA6Ymcni2rBc0KZ3dhXb8uhANwbsr13p9z7FKe9vhlCWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JfT7DAMh; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754916238; c=relaxed/simple;
+	bh=q9CYpkq6EBQT1zx02Btohpgz+ceFDDYnuRg4/W3LVks=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=JtUIQCssZ9oabwVPGqN/9thS5UUfrgvUvUl6JNyDd4E2+IegvTHy/XBMn6OSEIYPrKL4aIUI6OT/sRQP4HfRToP1CrOkE3HOCznSGUBTx3rakup8mCv7u3LsHf5J7wpNK/H//XcPiu6OQDHJvzCj419d3GNi/vx6O6wTkbsG1/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bzzt.net; spf=pass smtp.mailfrom=bzzt.net; dkim=pass (2048-bit key) header.d=bzzt.net header.i=@bzzt.net header.b=OelWDBRP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Gtfip+fv; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bzzt.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bzzt.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfT7DAMh"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-af90fd52147so614677366b.3
-        for <regressions@lists.linux.dev>; Mon, 11 Aug 2025 02:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754903314; x=1755508114; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VwHawNcF/JQ8X+Uy0Ve0MFsO6tqiI9dn3acsx3kJnRQ=;
-        b=JfT7DAMh5Sm/wZJHdzgzmMfr+5ZIAjMb1P6Ad10uG0e3jfEv+yDTDkNu7xE7bim4LC
-         vX/V19y879icyTL40esev6HakhxTT9rbZ0QE7hfPqmLAXn4/7hgLwcp8zCXfc9w3STS5
-         K3LDw5YTJ6OFRppF0GFnTO3ZihuBI0INz2STM1dZZ6oSZ3ycE9tSnbFHlxAU1JXNNXHc
-         HdRGwk8vBPOCao3/UTqyBtupEirlO1VuCpuOD/k+jzqxPn1LbEgTGW16qWJXrTrhXufK
-         4nYPZnvEVSpmVI9018nfxbhqJdaWyEFt+iPxNbmBLkQDbh3fHCLo/Bsgg+NBuSIjKIuO
-         HdZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754903314; x=1755508114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VwHawNcF/JQ8X+Uy0Ve0MFsO6tqiI9dn3acsx3kJnRQ=;
-        b=Gv1LM2ET8ZLpXQ1IBEcbH9sumZm89s0Qsjxo0IEcO0O3Qorzd+7daC57uVXrIUAHEC
-         FALC0KbSwHTbWmOhYMAMtHBEmFxvV5qPTzWWN7HqzNg0aT9VcVTS9iLBI7WQOeh+kuko
-         W0fPFEHP0zGeA0rp8nbJuHjnLlDERt1SEj6HKli0g1ju03rSjMzRL05kEx9ecv74XqFf
-         3WsheyQyxs1ww+nHgsRCf2dhE3THtjNS92TngQJPvNnOqhPgP3S6fotXzAQ7dI4V25cG
-         WjxDQGisfob7oE1FqUOtKF2+lvvNdw+iznzi/uOn6pZ03xbkLt/CLG1Yh5JyJHxKCeL4
-         xQkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWW2QwUDVLVLy2Opczqx6UkEd5AIkWXzeWESB6jLi9xWFZrd8CTxFQnN4sHQtSj+ajRRVLYPuNHyvOnUw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwRs+B98cj+ltAw1YW3QwQjNbWa7ZnBrxY0k7w5aByqQxd34UrI
-	x7Pf/I5Dw5MEH6gH4kci1AINgKLiSwFTcXswePY2H6zjzaQUiFUvzp14SKJ0U7qQrDoFYCic6Sn
-	jmg1BKJ4R07BRjVqHWiM7IvQO6dvoqxk=
-X-Gm-Gg: ASbGnct4vxxvomGG0335Wjx6uYM7Y2hz6d38zz1LPkFGSAQ4g3t/hX2z87G+3xo3Lfu
-	ps8jsiNkf1OrZ7Fco2BDfdJ4q7gIuo4vZXZPkqjUvQxAJPf3TkMlgMVnXlIdqR1UFRHqdM7H0Td
-	wLt22/CUM9Dr5bUzJh+DN7UB/pAlzoLA/tYbsdIvjGCJKVtCCqgYCQ8v9uacE+EgDk9Xbid3xJh
-	u64DPP34w==
-X-Google-Smtp-Source: AGHT+IGdt733GvWY5lAGoK+XbGYb2hLaYemZnckhDKBvkh4Fb3S8ppPlbLEYEw1YiRpusRegIQ+oXaTyXeg6ZsGhcWk=
-X-Received: by 2002:a17:907:d89:b0:aec:6600:dbe3 with SMTP id
- a640c23a62f3a-af9c6544634mr1151954766b.56.1754903313414; Mon, 11 Aug 2025
- 02:08:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bzzt.net header.i=@bzzt.net header.b="OelWDBRP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gtfip+fv"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id BAA2E7A006B;
+	Mon, 11 Aug 2025 08:43:55 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-12.internal (MEProxy); Mon, 11 Aug 2025 08:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bzzt.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1754916235;
+	 x=1755002635; bh=YkBFMLQbtD0UKNRwkM7bGtf9VKzKcYkWlxvxgGNKmDc=; b=
+	OelWDBRPmo+LJMFYtneBfj6svlM9BUi/QkkBUFz7IpbQviRNpmcx6R8d5nh8p8Lx
+	7Pi7Ealdt7YQ91o6qWh29pjnTxoKTrMs0eBVPaBOTQg7hPUMOKYWcDf/PXbxGAYf
+	T0voxONXvC4GaoNH5c6j9V8n6exWRF1rUNh3hDaTRxENuUE9d5cMhhuyBWAKXik+
+	UDt2odiVbQArbI1Lyv/lgQFTFxMMyk/m+xCWqey/tGtAkbBZ7Fh9tBxo8hVftII6
+	S+IYVO4Iwowk1k78hNLW6YpeaxIvE9NZCsxUiZ6sgr4JbTDHhjxg1Xj0chEQDTDR
+	KmnI/v6D92m6iZwcymDTdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754916235; x=
+	1755002635; bh=YkBFMLQbtD0UKNRwkM7bGtf9VKzKcYkWlxvxgGNKmDc=; b=G
+	tfip+fvgnVkmQH3fjBkg9vM3/fx3jdoI8boecjOzTrQgMY/xXce31iHP/XPyBPuv
+	u9HPLahY7riKN8DiwLnpCmyFSH87GLIHcZpFTF6iRrAI+lvoWw+zZIiEchFJQmow
+	Ocw2RWGpVaoETE7nFsaewNkpoM/7MOSb6BHoRL8v5PXf22qcuztQumFxUYEF772g
+	QkTCKiM/riQwPRjccxpuygqP7/+UNC2JcfvGK7YWrFhLwStapSdwELix17tSK1Jr
+	NqTdPzagumPwFIceN/dxcL3byjD5sHb+vPjsKZqVbyMKGztKK56qhC1Gktxc6hRR
+	1ProkTAPvZSItv9yH9FUA==
+X-ME-Sender: <xms:iuWZaMnRFA1kliU9fUEJdoDsNFaYq-ZACIoYcivDBjoxb89HjvI79A>
+    <xme:iuWZaL0EmkEf1v0avhologb0zUvM6G6vmt9x9dEewTGzK_eeFRRkb9v7w2975fulr
+    LynyUybrJ8jJhvKEps>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddufedvgeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucenucfjughrpefoggffhffvvefkjghfufgtgfesthejre
+    dtredttdenucfhrhhomhepfdetrhhnohhuthcugfhnghgvlhgvnhdfuceorghrnhhouhht
+    segsiiiithdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffleeigedvgfdtkeehvdektd
+    fgtdejhfffleejjefgiefggfetffevkeehudejnecuffhomhgrihhnpehkvghrnhgvlhdr
+    ohhrghdpvghnghgvlhgvnhdrvghunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhhouhhtsegsiiiithdrnhgvthdpnhgspghrtghpthht
+    ohepudejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhmrgguvghushestg
+    houggvfihrvggtkhdrohhrghdprhgtphhtthhopehlihhnuhigpghoshhssegtrhhuuggv
+    sgihthgvrdgtohhmpdhrtghpthhtohepshgvuggrthdrughilhgvkhesghhmrghilhdrtg
+    homhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
+    oheplhhutghhohesihhonhhkohhvrdhnvghtpdhrtghpthhtohepsghrrghunhgvrheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvghrihgtvhhhsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehrhigrnheslhgrhhhfrgdrgiihiidprhgtphhtthhopehnvghtfhhsse
+    hlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:iuWZaEUb246Zggj5KdtXg-fipRp0Z2p9OtJsHVNSnP-_Zq6DB_-jyQ>
+    <xmx:iuWZaC1NJrQtpRUcNoc_Cy7idwRjoo983rXmKN3-SrglbLrYRSNflQ>
+    <xmx:iuWZaN3lSeb_b0-MMrtrh5ge-g8Cnq5M0wETtB8hVOT1d5XT522bGw>
+    <xmx:iuWZaJmMVkoKDd4K07Tm4qYMgOs9VUQfbL1BoY5z5b_c0T55Ja_2Aw>
+    <xmx:i-WZaG5VJR7GXEf6kibh-z4FktAYp_11bAldArILSOO_BLTV0sE84zMf>
+Feedback-ID: i8a1146c4:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 7548618C0066; Mon, 11 Aug 2025 08:43:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJmAMMyOk7AVqQRrtK4Oum2uVKreGeLJ943-kkRCTspoGApZ8w@mail.gmail.com>
- <CAJmAMMyt5QQQOavVy+Gytf00Y0F6G+GCLYhj0E9RZ8cV85gwCw@mail.gmail.com> <10850475be9302b5b397173c1d4554335c0df966.camel@mediatek.com>
-In-Reply-To: <10850475be9302b5b397173c1d4554335c0df966.camel@mediatek.com>
-From: Tal Inbar <inbartdev@gmail.com>
-Date: Mon, 11 Aug 2025 12:08:22 +0300
-X-Gm-Features: Ac12FXxpDyTwSrfAbNsg-NT2mwV9frv3BhLyjLgyjeTQ1rashWaHY-G52WOJkz4
-Message-ID: <CAJmAMMxtH+WnJfU2tcHRxP472cnyM4cZ7vaTcZN0NSxQ6U5HCg@mail.gmail.com>
-Subject: Re: [REGRESSION] [BISECTED] MT7925 wireless speed drops to zero since
- kernel 6.14.3 - wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_cmd
-To: =?UTF-8?B?TWluZ3llbiBIc2llaCAo6Kyd5piO6Ku6KQ==?= <Mingyen.Hsieh@mediatek.com>
-Cc: Sean Wang <Sean.Wang@mediatek.com>, 
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, =?UTF-8?B?QWxsYW4gV2FuZyAo546L5a625YGJKQ==?= <Allan.Wang@mediatek.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	=?UTF-8?B?RGVyZW4gV3UgKOatpuW+t+S7gSk=?= <Deren.Wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: AtAeKOSr4ONc
+Date: Mon, 11 Aug 2025 14:43:21 +0200
+From: "Arnout Engelen" <arnout@bzzt.net>
+To: "Dominique Martinet" <asmadeus@codewreck.org>
+Cc: ryan@lahfa.xyz, antony.antony@secunet.com, antony@phenome.org,
+ brauner@kernel.org, ericvh@kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net,
+ maximilian@mbosch.me, netfs@lists.linux.dev, regressions@lists.linux.dev,
+ sedat.dilek@gmail.com, v9fs@lists.linux.dev,
+ "Matthew Wilcox" <willy@infradead.org>, dhowells@redhat.com
+Message-Id: <9294e7ac-4a3f-4a48-8e3e-0659955bf165@app.fastmail.com>
+In-Reply-To: <aJmfBTflGvAI6sBs@codewreck.org>
+References: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
+ <20250810175712.3588005-1-arnout@bzzt.net> <aJlAD0nPcR2kvAtS@codewreck.org>
+ <aJmfBTflGvAI6sBs@codewreck.org>
+Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Mingyen,
+On Mon, Aug 11, 2025, at 02:57, asmadeus@codewreck.org wrote:
+> Arnout Engelen wrote on Sun, Aug 10, 2025 at 07:57:11PM +0200:
+> > I have a smallish nix-based reproducer at [3], and a more involved setup
+> > with a lot of logging enabled and a convenient way to attach gdb at [4].
+> > You start the VM and then 'cat /repro/default.json' manually, and see if
+> > it looks 'truncated'.
+> 
+> Thank you!!! I was able to reproduce with this!
+>
+> Anyway this is a huge leap forward (hopeful it's the same problem and we
+> don't have two similar issues lurking here...), we can't thank you
+> enough.
 
-I'll see what I can gather and I'll let you know.
+Great - that means a lot ;)
 
-Tal
+On Mon, Aug 11, 2025, at 09:43, Dominique Martinet wrote:
+> So that wasn't a 9p bug, I'm not sure if I should be happy or not?
 
-On Mon, Aug 11, 2025 at 4:47=E2=80=AFAM Mingyen Hsieh (=E8=AC=9D=E6=98=8E=
-=E8=AB=BA)
-<Mingyen.Hsieh@mediatek.com> wrote:
->
-> On Fri, 2025-08-08 at 17:37 +0300, Tal Inbar wrote:
-> >
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >
-> >
-> > typo, laptop model is:
-> > Lenovo IdeaPad Slim 5 16AKP10
-> >
-> > On Fri, Aug 8, 2025 at 4:14=E2=80=AFPM Tal Inbar <inbartdev@gmail.com> =
-wrote:
-> > >
-> > > Hi,
-> > >
-> > > Since kernel v6.14.3, when using wireless to connect to my home
-> > > router
-> > > on my laptop, my wireless connection slows down to unusable speeds.
-> > >
-> > >
-> > > More specifically, since kernel 6.14.3, when connecting to the
-> > > wireless networks of my OpenWRT Router on my Lenovo IdeaPad Slim 15
-> > > 16AKP10 laptop,
-> > > either a 2.4ghz or a 5ghz network, the connection speed drops down
-> > > to
-> > > 0.1-0.2 Mbps download and 0 Mbps upload when measured using
-> > > speedtest-cli.
-> > > My laptop uses an mt7925 chip according to the loaded driver and
-> > > firmware.
-> > >
-> > >
-> > > Detailed Description:
-> > >
-> > > As mentioned above, my wireless connection becomes unusable when
-> > > using
-> > > linux 6.14.3 and above, dropping speeds to almost 0 Mbps,
-> > > even when standing next to my router. Further, pinging
-> > > archlinux.org
-> > > results in "Temporary failure in name resolution".
-> > > Any other wireless device in my house can successfully connect to
-> > > my
-> > > router and properly use the internet with good speeds, eg. iphones,
-> > > ipads, raspberry pi and a windows laptop.
-> > > When using my Lenovo laptop on a kernel 6.14.3 or higher to connect
-> > > to
-> > > other access points, such as my iPhone's hotspot and some TPLink
-> > > and
-> > > Zyxel routers - the connection speed is good, and there are no
-> > > issues,
-> > > which makes me believe there's something going on with my OpenWRT
-> > > configuration in conjunction with a commit introduced on kernel
-> > > 6.14.3
-> > > for the mt7925e module as detailed below.
-> > >
-> > > I have followed a related issue previously reported on the mailing
-> > > list regarding a problem with the same wifi chip on kernel 6.14.3,
-> > > but
-> > > the merged fix doesn't seem to fix my problem:
-> > > https://lore.kernel.org/linux-mediatek/EmWnO5b-acRH1TXbGnkx41eJw654vm=
-CR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vf=
-dg=3D@pm.me/
-> > >
-> > > I've tested stable builds of 6.15 as well up to 6.15.9 in the last
-> > > month, which also do not fix the problem.
-> > > I've also built and bisected v6.14 on june using guides on the Arch
-> > > Linux wiki, for the following bad commit, same as the previously
-> > > mentioned reported issue:
-> > >
-> > > [80007d3f92fd018d0a052a706400e976b36e3c87] wifi: mt76: mt7925:
-> > > integrate *mlo_sta_cmd and *sta_cmd
-> > >
-> > > Testing further this week, I cloned mainline after 6.16 was
-> > > released,
-> > > built and tested it, and the issue still persists.
-> > > I reverted the following commits on mainline and retested, to
-> > > successfully see good wireless speeds:
-> > >
-> > > [0aa8496adda570c2005410a30df963a16643a3dc] wifi: mt76: mt7925: fix
-> > > missing hdr_trans_tlv command for broadcast wtbl
-> > > [cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1] wifi: mt76: mt7925:
-> > > integrate *mlo_sta_cmd and *sta_cmd
-> > >
-> > > Then, reverting *only* 0aa8496adda570c2005410a30df963a16643a3dc
-> > > causes
-> > > the issue to reproduce, which confirms the issue is caused by
-> > > commit
-> > > cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 on mainline.
-> > >
-> > > I've attached the following files to a bugzilla ticket:
-> > >
-> > > - lspci -nnk output:
-> > > https://urldefense.com/v3/__https://bugzilla.kernel.org/attachment.cg=
-i?id=3D308466__;!!CTRNKA9wMg0ARbw!gTAaJeIN6s3eF_Kp6U3iwfv0wCCO_BVcRkNVpJYnw=
-R8qeqIIh134mEJ5dxdeNqzuWSPF2ocLAt43LxaBTIY-7w$
-> > >
-> > > - dmesg output:
-> > > https://urldefense.com/v3/__https://bugzilla.kernel.org/attachment.cg=
-i?id=3D308465__;!!CTRNKA9wMg0ARbw!gTAaJeIN6s3eF_Kp6U3iwfv0wCCO_BVcRkNVpJYnw=
-R8qeqIIh134mEJ5dxdeNqzuWSPF2ocLAt43LxY1pkjZCA$
-> > >
-> > > - .config for the built mainline kernel:
-> > > https://urldefense.com/v3/__https://bugzilla.kernel.org/attachment.cg=
-i?id=3D308467__;!!CTRNKA9wMg0ARbw!gTAaJeIN6s3eF_Kp6U3iwfv0wCCO_BVcRkNVpJYnw=
-R8qeqIIh134mEJ5dxdeNqzuWSPF2ocLAt43LxYcu-Db2g$
-> > >
-> > >
-> > > More information:
-> > >
-> > > OS Distribution: Arch Linux
-> > >
-> > > Linux build information from /proc/version:
-> > > Linux version 6.16.0linux-mainline-11853-g21be711c0235
-> > > (tal@arch-debug) (gcc (GCC) 15.1.1 20250729, GNU ld (GNU Binutils)
-> > > 2.45.0) #3 SMP PREEMPT_DYNAMIC
-> > >
-> > > OpenWRT Version on my Router: 24.10.2
-> > >
-> > > Laptop Hardware:
-> > > - Lenovo IdeaPad Slim 15 16AKP10 laptop (x86_64 Ryzen AI 350 CPU)
-> > > - Network device as reported by lscpi: 14c3:7925
-> > > - Network modules and driver in use: mt7925e
-> > > - mediatek chip firmware as of dmesg:
-> > >   HW/SW Version: 0x8a108a10, Build Time: 20250526152947a
-> > >   WM Firmware Version: ____000000, Build Time: 20250526153043
-> > >
-> > >
-> > > Referencing regzbot:
-> > >
-> > > #regzbot introduced: 80007d3f92fd018d0a052a706400e976b36e3c87
-> > >
-> > >
-> > > Please let me know if any other information is needed, or if there
-> > > is
-> > > anything else that I can test on my end.
-> > >
-> > > Thanks,
-> > > Tal Inbar
->
-> Hi,
->
-> Can you capture a sniffer log? There should be some configuration
-> differences that we can identify from the packet frames during the
-> connection process. So please provide the sniffer logs when connecting
-> to your OpenWRT, TPLink, and Zyxel.
->
-> Or you can check for any configuration differences between OpenWRT and
-> the other routers, which might also help with debugging.
->
-> Thanks~
->
-> Yen.
->
->
-> *********** MEDIATEK Confidentiality Notice
->  ***********
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or
-> otherwise exempt from disclosure under applicable laws. It is
-> intended to be conveyed only to the designated recipient(s). Any
-> use, dissemination, distribution, printing, retaining or copying
-> of this e-mail (including its attachments) by unintended recipient(s)
-> is strictly prohibited and may be unlawful. If you are not an
-> intended recipient of this e-mail, or believe that you have received
-> this e-mail in error, please notify the sender immediately
-> (by replying to this e-mail), delete any and all copies of this
-> e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+:D
+
+> I've sent "proper-ish" patches at [1] which most concerned people should
+> be in Cc; I'm fairly confident this will make the bug go away but any
+> testing is appreciated, please reply to the patches with a Tested-by if
+> you have time.
+> 
+> [1] https://lkml.kernel.org/r/20250811-iot_iter_folio-v1-0-d9c223adf93c@codewreck.org
+
+Awesome!
+
+
+Kind regards,
+
+-- 
+Arnout Engelen
+Engelen Open Source
+https://engelen.eu
