@@ -1,137 +1,80 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C8E220F4F;
-	Mon, 11 Aug 2025 12:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182822578A
+	for <regressions@lists.linux.dev>; Mon, 11 Aug 2025 14:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754916238; cv=none; b=Au90HPoMxO14WMapvlfcpEmHAODG3mspTMz3idvQyMOtSIYgWyTF1/2c6DJ14mf3w1pU+9q9zQA0S4YqKfF5GUwx4cm1zGLWdMxzgtJdY+z1+GFMOpbCzuTBMq+SSkLBBfEkkcjE+Rm9vIXG9+wzDWJo2H5ZGD73bk6zU6T4Lzc=
+	t=1754921177; cv=none; b=uexegzozEPHdEs2QBh9tUwGqzkpwv3zSHzpMDnsGUAqBQpEWiKjSC4u/NqYFdxus39Z+37g6LvgAkuGIpmgueZjHhPYzS7u0V9F1z+rH2Igw9iFEA6M19ol7USJwIsFaoCtGXzW1uQoqEGVCFuvj/Kdjrn+KrxF92DcsChj/Ei0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754916238; c=relaxed/simple;
-	bh=q9CYpkq6EBQT1zx02Btohpgz+ceFDDYnuRg4/W3LVks=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=JtUIQCssZ9oabwVPGqN/9thS5UUfrgvUvUl6JNyDd4E2+IegvTHy/XBMn6OSEIYPrKL4aIUI6OT/sRQP4HfRToP1CrOkE3HOCznSGUBTx3rakup8mCv7u3LsHf5J7wpNK/H//XcPiu6OQDHJvzCj419d3GNi/vx6O6wTkbsG1/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bzzt.net; spf=pass smtp.mailfrom=bzzt.net; dkim=pass (2048-bit key) header.d=bzzt.net header.i=@bzzt.net header.b=OelWDBRP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Gtfip+fv; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bzzt.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bzzt.net
+	s=arc-20240116; t=1754921177; c=relaxed/simple;
+	bh=oFtYo3U0qdWvDHjlfJam5B1mnTb+9DwyaUOSt65uqOA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=qCVtw8wGN9Kd+Nx3UjyvtnHEYBZaC2y1WQ52S7S67tshV+XxAzLHGnCW2wFQtArwr7iKfCLH3SsovqbwVMAOJ5yNNknvf3CtbZNDrZF6kCTC3eaxfp9pUtW8lexiIgyor2BfZTYfxlkBe0pTIb/WrlKdnW+A4miU+pzipHVS17I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yykTOcDu; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bzzt.net header.i=@bzzt.net header.b="OelWDBRP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gtfip+fv"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id BAA2E7A006B;
-	Mon, 11 Aug 2025 08:43:55 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-12.internal (MEProxy); Mon, 11 Aug 2025 08:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bzzt.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1754916235;
-	 x=1755002635; bh=YkBFMLQbtD0UKNRwkM7bGtf9VKzKcYkWlxvxgGNKmDc=; b=
-	OelWDBRPmo+LJMFYtneBfj6svlM9BUi/QkkBUFz7IpbQviRNpmcx6R8d5nh8p8Lx
-	7Pi7Ealdt7YQ91o6qWh29pjnTxoKTrMs0eBVPaBOTQg7hPUMOKYWcDf/PXbxGAYf
-	T0voxONXvC4GaoNH5c6j9V8n6exWRF1rUNh3hDaTRxENuUE9d5cMhhuyBWAKXik+
-	UDt2odiVbQArbI1Lyv/lgQFTFxMMyk/m+xCWqey/tGtAkbBZ7Fh9tBxo8hVftII6
-	S+IYVO4Iwowk1k78hNLW6YpeaxIvE9NZCsxUiZ6sgr4JbTDHhjxg1Xj0chEQDTDR
-	KmnI/v6D92m6iZwcymDTdw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754916235; x=
-	1755002635; bh=YkBFMLQbtD0UKNRwkM7bGtf9VKzKcYkWlxvxgGNKmDc=; b=G
-	tfip+fvgnVkmQH3fjBkg9vM3/fx3jdoI8boecjOzTrQgMY/xXce31iHP/XPyBPuv
-	u9HPLahY7riKN8DiwLnpCmyFSH87GLIHcZpFTF6iRrAI+lvoWw+zZIiEchFJQmow
-	Ocw2RWGpVaoETE7nFsaewNkpoM/7MOSb6BHoRL8v5PXf22qcuztQumFxUYEF772g
-	QkTCKiM/riQwPRjccxpuygqP7/+UNC2JcfvGK7YWrFhLwStapSdwELix17tSK1Jr
-	NqTdPzagumPwFIceN/dxcL3byjD5sHb+vPjsKZqVbyMKGztKK56qhC1Gktxc6hRR
-	1ProkTAPvZSItv9yH9FUA==
-X-ME-Sender: <xms:iuWZaMnRFA1kliU9fUEJdoDsNFaYq-ZACIoYcivDBjoxb89HjvI79A>
-    <xme:iuWZaL0EmkEf1v0avhologb0zUvM6G6vmt9x9dEewTGzK_eeFRRkb9v7w2975fulr
-    LynyUybrJ8jJhvKEps>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddufedvgeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefoggffhffvvefkjghfufgtgfesthejre
-    dtredttdenucfhrhhomhepfdetrhhnohhuthcugfhnghgvlhgvnhdfuceorghrnhhouhht
-    segsiiiithdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffleeigedvgfdtkeehvdektd
-    fgtdejhfffleejjefgiefggfetffevkeehudejnecuffhomhgrihhnpehkvghrnhgvlhdr
-    ohhrghdpvghnghgvlhgvnhdrvghunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhhouhhtsegsiiiithdrnhgvthdpnhgspghrtghpthht
-    ohepudejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrshhmrgguvghushestg
-    houggvfihrvggtkhdrohhrghdprhgtphhtthhopehlihhnuhigpghoshhssegtrhhuuggv
-    sgihthgvrdgtohhmpdhrtghpthhtohepshgvuggrthdrughilhgvkhesghhmrghilhdrtg
-    homhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
-    oheplhhutghhohesihhonhhkohhvrdhnvghtpdhrtghpthhtohepsghrrghunhgvrheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvghrihgtvhhhsehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehrhigrnheslhgrhhhfrgdrgiihiidprhgtphhtthhopehnvghtfhhsse
-    hlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:iuWZaEUb246Zggj5KdtXg-fipRp0Z2p9OtJsHVNSnP-_Zq6DB_-jyQ>
-    <xmx:iuWZaC1NJrQtpRUcNoc_Cy7idwRjoo983rXmKN3-SrglbLrYRSNflQ>
-    <xmx:iuWZaN3lSeb_b0-MMrtrh5ge-g8Cnq5M0wETtB8hVOT1d5XT522bGw>
-    <xmx:iuWZaJmMVkoKDd4K07Tm4qYMgOs9VUQfbL1BoY5z5b_c0T55Ja_2Aw>
-    <xmx:i-WZaG5VJR7GXEf6kibh-z4FktAYp_11bAldArILSOO_BLTV0sE84zMf>
-Feedback-ID: i8a1146c4:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7548618C0066; Mon, 11 Aug 2025 08:43:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yykTOcDu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=oFtYo3U0qdWvDHjlfJam5B1mnTb+9DwyaUOSt65uqOA=; t=1754921175;
+	x=1755353175; b=yykTOcDuNFmw9xWW5IukNOxjq2uvZnIyHcW+A1cudXV4FB6HvdNRynyYmQKEc
+	ktVhGFWzVpJBnzDvOyGxsDFsjR5ygp1Bs36Kp43DSi30vXqpmKh39NYD1zRjlCyYlSY9HrQQpLNza
+	wwKXJqTpMX8vBqvnjt8+u6MQ2wb4y6mIoXv/Cql5GZdx8RkemttaZYvRWf8dWcSN027DAyALfuAZ9
+	i6hevya07MpQ4PwhzV4Ae/7xazgK6958qu8XOvo+/cC0gzUQY6hxXcmRZmnAfWNX4ZLOw8oleTeU3
+	hAcaVAA1uMlvl4n+7PgymuF1nv03fiOK/92v9NNixLG8E+QEUw==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1ulTA8-00GsmX-1k;
+	Mon, 11 Aug 2025 16:06:08 +0200
+Message-ID: <63f97b70-bdb5-4f36-936a-2094b3e4d959@leemhuis.info>
+Date: Mon, 11 Aug 2025 16:06:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AtAeKOSr4ONc
-Date: Mon, 11 Aug 2025 14:43:21 +0200
-From: "Arnout Engelen" <arnout@bzzt.net>
-To: "Dominique Martinet" <asmadeus@codewreck.org>
-Cc: ryan@lahfa.xyz, antony.antony@secunet.com, antony@phenome.org,
- brauner@kernel.org, ericvh@kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net,
- maximilian@mbosch.me, netfs@lists.linux.dev, regressions@lists.linux.dev,
- sedat.dilek@gmail.com, v9fs@lists.linux.dev,
- "Matthew Wilcox" <willy@infradead.org>, dhowells@redhat.com
-Message-Id: <9294e7ac-4a3f-4a48-8e3e-0659955bf165@app.fastmail.com>
-In-Reply-To: <aJmfBTflGvAI6sBs@codewreck.org>
-References: <w5ap2zcsatkx4dmakrkjmaexwh3mnmgc5vhavb2miaj6grrzat@7kzr5vlsrmh5>
- <20250810175712.3588005-1-arnout@bzzt.net> <aJlAD0nPcR2kvAtS@codewreck.org>
- <aJmfBTflGvAI6sBs@codewreck.org>
-Subject: Re: [REGRESSION] 9pfs issues on 6.12-rc1
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-On Mon, Aug 11, 2025, at 02:57, asmadeus@codewreck.org wrote:
-> Arnout Engelen wrote on Sun, Aug 10, 2025 at 07:57:11PM +0200:
-> > I have a smallish nix-based reproducer at [3], and a more involved setup
-> > with a lot of logging enabled and a convenient way to attach gdb at [4].
-> > You start the VM and then 'cat /repro/default.json' manually, and see if
-> > it looks 'truncated'.
-> 
-> Thank you!!! I was able to reproduce with this!
->
-> Anyway this is a huge leap forward (hopeful it's the same problem and we
-> don't have two similar issues lurking here...), we can't thank you
-> enough.
-
-Great - that means a lot ;)
-
-On Mon, Aug 11, 2025, at 09:43, Dominique Martinet wrote:
-> So that wasn't a 9p bug, I'm not sure if I should be happy or not?
-
-:D
-
-> I've sent "proper-ish" patches at [1] which most concerned people should
-> be in Cc; I'm fairly confident this will make the bug go away but any
-> testing is appreciated, please reply to the patches with a Tested-by if
-> you have time.
-> 
-> [1] https://lkml.kernel.org/r/20250811-iot_iter_folio-v1-0-d9c223adf93c@codewreck.org
-
-Awesome!
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1754921175;5e7dc111;
+X-HE-SMSGID: 1ulTA8-00GsmX-1k
 
 
-Kind regards,
 
--- 
-Arnout Engelen
-Engelen Open Source
-https://engelen.eu
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20250807160301.GA50800@bhelgaas/
+#regzbot fix d5c647b08ee02c
+
+#regzbot report:
+https://lore.kernel.org/all/f2b70e6e-bff6-42f3-82a2-81eed892cc30@linux.dev/
+#regzbot introduced: b8adc31cc0ca
+#regzbot summary: drm: amdgpu: freeze while shutting down Steam inside
+of gamescoperestore,process.").
+#regzbot fix: drm/amdgpu: Fix race condition in amdgpu_vm_wait_idle
+during process kill
+
+#regzbot report:
+https://lore.kernel.org/stable/718C209F-22BD-4AF3-9B6F-E87E98B5239E@plan9.rocks/
+#regzbot introduced: fb5873b779dd585
+#regzbot fix ff7ccaadb0bf6b79a87
+
+
