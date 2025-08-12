@@ -1,197 +1,121 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4AE229B21;
-	Tue, 12 Aug 2025 03:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DF3A930;
+	Tue, 12 Aug 2025 12:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754969136; cv=none; b=blHxFn1FNST2dNC0Gfj70mr2tTcKRjAtyu8dV6/qbljrauHbM5crElPk66D+9Z/lNDHEWrkgm91RMZGFKBBS5x72DEskC/vFU4QKsIG8kXU2NbzsfG9CnzrM5BfIGJq99Le6Pdj8ymxJ7Jf7EYjpmL0vNG0rBdarQm5wQXkBl4E=
+	t=1755001064; cv=none; b=OwZHo5yUitlr8JotA7W3o9jDMdXpMMpCA+MO0A/vSO/V2J7RxBS/1L1hwTZawXMK81sy45nQrrFOoyJOTDTiOK70TpWbiwziTEahvpKvzGer5Qp4lznlUXgg+BZ2FpfkKQf+qnSUOaJY2X9EmLgfZFpAovn3LbmPJP0kKBpph5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754969136; c=relaxed/simple;
-	bh=oh3/V4dA+0v3cOVL0zenzJ7GsKbVpDvqrGv5pEAO+Lw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qiAQ47soZK4b4vdMRFHAbM6p2dsp6TCux4MaOEpbeIu5YeTg2b6x6MkLd9wqTKSZbqax40RZlve9pboPEEMivRh/x5vKyZN+P6lYM5+V4K2qhCefNCFdvO72PIMXQ3fcqEMxuwMaaqjVkzc6aM1RLjqqzEaXg+p+aXBTGvVQFak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=R67qNNE3; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1755001064; c=relaxed/simple;
+	bh=ql2eiy9WW2A7j0whgh0cHFCNgdY36PvAET4wwdLslhc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aVyrSifNjAgAeorjr1FNx0YNt5WNECZgUW8yXfEBNE0exYYmPrqdxABGleU4lydAYIr9g2RXKQF4bijQ6QRRf3QLk4T8/RQ7rt87sxdaa3XRtpGdegExdbKAWc4zsUB/2Q8IER9+kOAbT06iDXu7Le4i/de76eRdQsf0uCXygUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=0gg6VJuZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R67qNNE3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1754969132;
-	bh=L2z+znZyyoi+9OktLbbAjlOC4KE/UrrdfjmwfapEs60=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=R67qNNE3uAE3JfVIovGpzvYRXDwE6vk6tgQ8ER1As3DQwLI6uk7cHVgqBXhoc7ofe
-	 Km1/veN4bjISnGpLSEA7TyCrzBiBvp/y21zb9gUJKSn2ort01UpascCnvyVWY/aXbC
-	 ZsiLRrT+CU4+AJFdQ9xYGUb33quLQA9tjQjJ4TQs7nK7MQ0ax5FrgQ3qiM+8rIcRi8
-	 BL9PJFBKAssM2zaCNyE7XtVbSaqcg7WpA6QSFxKbVGWYrqShWhWvHRwG0eQsI4uOvZ
-	 JPoL1jUsbTmdByvuXUIMcFF/xLDx1AnnehgCNSgLk4kdPW0VhoCYLbJLYLYpQNpBIz
-	 Z60Fpk+SQb1MA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4c1H2M5JrLz4xcZ;
-	Tue, 12 Aug 2025 13:25:31 +1000 (AEST)
-Date: Tue, 12 Aug 2025 13:25:31 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Reza Amini <reza.amini@amd.com>, Alex Deucher
- <alexander.deucher@amd.com>
-Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
- kernelci-results@groups.io, regressions@lists.linux.dev, gus@collabora.com,
- linux-next@vger.kernel.org
-Subject: Re: [REGRESSION] next/master: (build) the frame size of 1448 bytes
- is larger than 1024 bytes [-Werror=fr...
-Message-ID: <20250812132531.3012f3f7@canb.auug.org.au>
-In-Reply-To: <20250805221946.6b8e0a42@canb.auug.org.au>
-References: <175437354419.1010.14815981800290011272@508e4dbc6f9f>
-	<20250805221946.6b8e0a42@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="0gg6VJuZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=YFD6SFhAr+B8aSYU1jg4PN5C+z8ECT4Cn654J2jkvdA=; t=1755001062;
+	x=1755433062; b=0gg6VJuZw1p+iY2AYQ0YtyLHdr6vp6Xe/6YQbhpUUMsnRJ35mvG4V1/sUNV2u
+	7+yY86HsYxs+g9P0sjmmi04TLyAwkd5jfKpiWWC7gkSAx9vkYPJpztAUE+boimW7re03df4HZl+CL
+	zZ8wdgetaGTEp85mvItL2sTRXnHTkmSI6zrJBLzObQ5G0a5r1QDj+sPCKPk/H9qZVQvr0FohddbX5
+	amjjQRSM/xgAi8GJWO3qlNDBSVFa9zUllJjfFGODwozgIAoPT9nx9tWgEmNNoZuSJWuRCzik80x7V
+	HwqjlHV/dWKfOr8r0Pt1HmD9XF+/RD3LsQqYDxbpCpl+Fm/Q9g==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1ulnwi-003lHj-1u;
+	Tue, 12 Aug 2025 14:17:40 +0200
+Message-ID: <6455123a-6785-4173-b145-3a1a3eb48175@leemhuis.info>
+Date: Tue, 12 Aug 2025 14:17:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iy=iDwnNrrMkmv5qyTjEL8k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/iy=iDwnNrrMkmv5qyTjEL8k
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+To: Mathew McBride <matt@traverse.com.au>,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev
+References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
+ <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+ <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
+ <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
+ <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
+ <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1755001062;37485743;
+X-HE-SMSGID: 1ulnwi-003lHj-1u
 
-Hi all,
+Lo!
 
-On Tue, 5 Aug 2025 22:19:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Tue, 05 Aug 2025 05:59:04 -0000 KernelCI bot <bot@kernelci.org> wrote:
-> >
-> > New build issue found on next/master:
-> >=20
-> > ---
-> >  the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3Dfram=
-e-larger-than=3D] in drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dc=
-n10_hwseq.o (drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwse=
-q.c) [logspec:kbuild,kbuild.compiler.error]
-> > ---
-> >=20
-> > - dashboard: https://d.kernelci.org/i/maestro:4d4120bf99fecc5f852604382=
-b7c406b99440116
-> > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
-xt.git
-> > - commit HEAD:  afec768a6a8fe7fb02a08ffce5f2f556f51d4b52
-> > - tags: next-20250805
-> >=20
-> >=20
-> > Log excerpt:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:608:1=
-: error: the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3D=
-frame-larger-than=3D]
-> >   608 | }
-> >       | ^
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_h=
-wseq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_i=
-nit.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_hws=
-eq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_ini=
-t.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_h=
-wseq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_i=
-nit.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_hws=
-eq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_ini=
-t.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_hws=
-eq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_ini=
-t.o
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c: In f=
-unction =E2=80=98dcn10_log_hubp_states=E2=80=99:
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:447:1=
-: error: the frame size of 1156 bytes is larger than 1024 bytes [-Werror=3D=
-frame-larger-than=3D]
-> >   447 | }
-> >       | ^
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_h=
-wseq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_i=
-nit.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_h=
-wseq.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_i=
-nit.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/irq_service.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce80/irq_servic=
-e_dce80.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce110/irq_servi=
-ce_dce110.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce120/irq_servi=
-ce_dce120.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn10/irq_servic=
-e_dcn10.o
-> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn20/irq_servic=
-e_dcn20.o
-> > cc1: all warnings being treated as errors
-> >=20
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >=20
-> >=20
-> > # Builds where the incident occurred:
-> >=20
-> > ## defconfig+kcidebug+x86-board on (i386):
-> > - compiler: gcc-12
-> > - dashboard: https://d.kernelci.org/build/maestro:689185f279d5d217e5430=
-785
-> >=20
-> >=20
-> > #kernelci issue maestro:4d4120bf99fecc5f852604382b7c406b99440116
-> >=20
-> > Reported-by: kernelci.org bot <bot@kernelci.org>
-> >=20
-> > --
-> > This is an experimental report format. Please send feedback in!
-> > Talk to us at kernelci@lists.linux.dev
-> >=20
-> > Made with love by the KernelCI team - https://kernelci.org
-> >  =20
->=20
-> Presumably caused by commit
->=20
->   e63e9f8b3d1c ("drm/amd/display: Fixing hubp programming of 3dlut fast l=
-oad")
->=20
-> from the amdgpu tree.  Just making the two new pLabels arrays "static"
-> (and maybe "const") will probably help.  Maybe declaring them "static
-> const char *pLabels[]" ?
+On 10.07.25 07:29, Mathew McBride wrote:
+> Hi Russell,
+> 
+> On Wed, Apr 23, 2025, at 7:01 PM, Mathew McBride wrote:
+>>
+> [snip]
+> 
+> Just following up on this issue where directly connected SFP+ modules stopped linking up after the introduction of in-band capabilities.
+> 
+> The diff you provided below[1] resolved the issue. 
+> Were you planning on submitting it as a patch? If not, I'd be happy to send it in.
 
-Ping?
+I might be missing something, but from here it looks like it fall
+through the cracks on Russell's side. This is nothing bad, this can
+happen, especially during summer and thus vacation time. I'd thus say:
+wait two or three days if this reminds him of the patch, otherwise go
+ahead and submit it yourself to get the regression fixed.
 
---=20
-Cheers,
-Stephen Rothwell
+Ciao, Thorsten
 
---Sig_/iy=iDwnNrrMkmv5qyTjEL8k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> [1] https://lore.kernel.org/all/aAe94Tkf-IYjswfP@shell.armlinux.org.uk/
+>> Thanks Russell!
+>>
+>> The diff below does fix the problem, 10G SFP's now link up again.
+>>
+>> I should note that Alex Guzman was the one who originally reported the issue to me, he has also confirmed this diff resolves the issue.
+>> Link: https://forum.traverse.com.au/t/sfp-ports-stop-working-with-linux-6-14-in-arch-linux/1076/4
+>>
+>>> Please try the diff below:
+>>>
+>>> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+>>> index 1bdd5d8bb5b0..2147e2d3003a 100644
+>>> --- a/drivers/net/phy/phylink.c
+>>> +++ b/drivers/net/phy/phylink.c
+>>> @@ -3624,6 +3624,15 @@ static int phylink_sfp_config_optical(struct phylink *pl)
+>>> phylink_dbg(pl, "optical SFP: chosen %s interface\n",
+>>>     phy_modes(interface));
+>>>  
+>>> + /* GBASE-R interfaces with the exception of KR do not have autoneg at
+>>> + * the PCS. As the PCS is media facing, disable the Autoneg bit in the
+>>> + * advertisement.
+>>> + */
+>>> + if (interface == PHY_INTERFACE_MODE_5GBASER ||
+>>> +     interface == PHY_INTERFACE_MODE_10GBASER ||
+>>> +     interface == PHY_INTERFACE_MODE_25GBASER)
+>>> + __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
+>>> +
+>>> if (!phylink_validate_pcs_inband_autoneg(pl, interface,
+>>> config.advertising)) {
+>>> phylink_err(pl, "autoneg setting not compatible with PCS");
+>>>
+>>> -- 
+>>> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+>>> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>>>
+>>
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmiatCsACgkQAVBC80lX
-0GxVMgf/YhuBd3FES8a3zhQzqi/KEuf83u63Db849vipdqiE1/UEKyPWil/0l6jt
-1ZhPIrAjXmAW0i4uh6qJLi3e20xc7X6S1SLcyI7JS1kscPYH3hCd5xYX0eHkAl/S
-8Dhe/UycqUYL2Aq7wscf3kUQ8B6zEPYaxYVVV64DQIX9PQ1OGZSwKgGwK+9lxrX1
-Ycec7inR8HKPPdoFj0dTt4zJWxzw9/9joYAyyAdDfohdePJFfziz8aUu6dDmqbo+
-dGRMEpbmtyyAVa9Ti0sL/HnrvP7/3bRsK79xA/IPunDA0F357jASnu44XxdbEGcB
-Y78qJ36QyWe4unYXAgv79SnlslFqcA==
-=UKgg
------END PGP SIGNATURE-----
-
---Sig_/iy=iDwnNrrMkmv5qyTjEL8k--
