@@ -1,64 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC0146447;
-	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4AE229B21;
+	Tue, 12 Aug 2025 03:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923137; cv=none; b=Z+xY+VncfSzc+RVvnZDUm+F+aGuVfkqaD3rWF7HgyVQ6ChXmH1IW+qG2678ufM0+fI2KEmArZ+wFLwlqA58I9i/se7EjWfxWIBhCt1PpnfLoauo9fXmtNJ6cIbVjKgmPaP+4bm5lu456pnSnII/c4jteE1HOtkAEqt9dCOmnBgQ=
+	t=1754969136; cv=none; b=blHxFn1FNST2dNC0Gfj70mr2tTcKRjAtyu8dV6/qbljrauHbM5crElPk66D+9Z/lNDHEWrkgm91RMZGFKBBS5x72DEskC/vFU4QKsIG8kXU2NbzsfG9CnzrM5BfIGJq99Le6Pdj8ymxJ7Jf7EYjpmL0vNG0rBdarQm5wQXkBl4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923137; c=relaxed/simple;
-	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MXCxQzfX2rjwVK8CFVmVlBpvTO720z6lzEL+ng00EbWbmZGvKFHgTOwMdi+iH7V/lyc/OHR21OsaeuzuwCLlw4Elhetxbqu1KUQ7+N+q0rkwbavJvSiu0Q48mJoghG05zfGSedHhO9ptwCG3KoSW9aMOssfR2hGmbclezrXyTsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAXyy64c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1754969136; c=relaxed/simple;
+	bh=oh3/V4dA+0v3cOVL0zenzJ7GsKbVpDvqrGv5pEAO+Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qiAQ47soZK4b4vdMRFHAbM6p2dsp6TCux4MaOEpbeIu5YeTg2b6x6MkLd9wqTKSZbqax40RZlve9pboPEEMivRh/x5vKyZN+P6lYM5+V4K2qhCefNCFdvO72PIMXQ3fcqEMxuwMaaqjVkzc6aM1RLjqqzEaXg+p+aXBTGvVQFak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=R67qNNE3; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAXyy64c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EB2C4CEED;
-	Mon, 11 Aug 2025 14:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754923137;
-	bh=RBPx0dxNh+rNTcptWvcSPGABtt0/X8BmM7RC5h2kOkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rAXyy64cl/0Vqx16bd11on8kaBxmNBqqvHQkGrVD/cssPvyfXyzzL6CvbgzMVz9Ou
-	 xt12AXdopJlFCKQWHKIRFTYBDzfG+t+CL3buVGedwVSOGmFH+GoFbH/3fycPdSLhZ8
-	 da2YRJK6LCMmFDeKxQfBIWb4movWv+D0ViObnRBKHp5A8P1rXwnHiICa8mpTpV+JCk
-	 uiQGg8m7Wfa3b6osa6Isry3Nvp0k8tyAJ/3P3XrjfCR8SHyr26YrVsrdfkuBen3Ak/
-	 N1kajTLPuqmPXn0PW1pyoszYPVbYtZN93zUz5EHOW9Yw20xE3weQZNRMecNvSckhzS
-	 32AGinS4/wk7A==
-Date: Mon, 11 Aug 2025 09:38:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: namcao@linutronix.de, mani@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Commit d7d8ab87e3e ("PCI: vmd: Switch to
- msi_create_parent_irq_domain()") causes early-stage reboots on my Dell
- XPS-9320
-Message-ID: <20250811143856.GA132204@bhelgaas>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R67qNNE3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1754969132;
+	bh=L2z+znZyyoi+9OktLbbAjlOC4KE/UrrdfjmwfapEs60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R67qNNE3uAE3JfVIovGpzvYRXDwE6vk6tgQ8ER1As3DQwLI6uk7cHVgqBXhoc7ofe
+	 Km1/veN4bjISnGpLSEA7TyCrzBiBvp/y21zb9gUJKSn2ort01UpascCnvyVWY/aXbC
+	 ZsiLRrT+CU4+AJFdQ9xYGUb33quLQA9tjQjJ4TQs7nK7MQ0ax5FrgQ3qiM+8rIcRi8
+	 BL9PJFBKAssM2zaCNyE7XtVbSaqcg7WpA6QSFxKbVGWYrqShWhWvHRwG0eQsI4uOvZ
+	 JPoL1jUsbTmdByvuXUIMcFF/xLDx1AnnehgCNSgLk4kdPW0VhoCYLbJLYLYpQNpBIz
+	 Z60Fpk+SQb1MA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4c1H2M5JrLz4xcZ;
+	Tue, 12 Aug 2025 13:25:31 +1000 (AEST)
+Date: Tue, 12 Aug 2025 13:25:31 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Reza Amini <reza.amini@amd.com>, Alex Deucher
+ <alexander.deucher@amd.com>
+Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
+ kernelci-results@groups.io, regressions@lists.linux.dev, gus@collabora.com,
+ linux-next@vger.kernel.org
+Subject: Re: [REGRESSION] next/master: (build) the frame size of 1448 bytes
+ is larger than 1024 bytes [-Werror=fr...
+Message-ID: <20250812132531.3012f3f7@canb.auug.org.au>
+In-Reply-To: <20250805221946.6b8e0a42@canb.auug.org.au>
+References: <175437354419.1010.14815981800290011272@508e4dbc6f9f>
+	<20250805221946.6b8e0a42@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250807160301.GA50800@bhelgaas>
+Content-Type: multipart/signed; boundary="Sig_/iy=iDwnNrrMkmv5qyTjEL8k";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, Aug 07, 2025 at 11:03:03AM -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 06, 2025 at 04:07:30PM -0700, Kenneth Crudup wrote:
-> > 
-> > I'm running Linus' master (as of today, cca7a0aae8958c9b1).
-> > 
-> > If I revert the named commit, I can boot OK. Unfortunately there's no real
-> > output before the machine reboots, to help identify the problem.
-> > 
-> > I have a(n enabled) VMD in my Alderlake machine:
-> > 
-> > [    0.141952] [      T1] smpboot: CPU0: 12th Gen Intel(R) Core(TM) i7-1280P
-> > (family: 0x6, model: 0x9a, stepping: 0x3)
-> 
-> #regzbot introduced: d7d8ab87e3e7 ("PCI: vmd: Switch to msi_create_parent_irq_domain()")
+--Sig_/iy=iDwnNrrMkmv5qyTjEL8k
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-#regzbot fix: d5c647b08ee0 ("PCI: vmd: Fix wrong kfree() in vmd_msi_free()")
+Hi all,
+
+On Tue, 5 Aug 2025 22:19:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> On Tue, 05 Aug 2025 05:59:04 -0000 KernelCI bot <bot@kernelci.org> wrote:
+> >
+> > New build issue found on next/master:
+> >=20
+> > ---
+> >  the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3Dfram=
+e-larger-than=3D] in drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dc=
+n10_hwseq.o (drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwse=
+q.c) [logspec:kbuild,kbuild.compiler.error]
+> > ---
+> >=20
+> > - dashboard: https://d.kernelci.org/i/maestro:4d4120bf99fecc5f852604382=
+b7c406b99440116
+> > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git
+> > - commit HEAD:  afec768a6a8fe7fb02a08ffce5f2f556f51d4b52
+> > - tags: next-20250805
+> >=20
+> >=20
+> > Log excerpt:
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:608:1=
+: error: the frame size of 1448 bytes is larger than 1024 bytes [-Werror=3D=
+frame-larger-than=3D]
+> >   608 | }
+> >       | ^
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_h=
+wseq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn303/dcn303_i=
+nit.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_hws=
+eq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn31/dcn31_ini=
+t.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_h=
+wseq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn314/dcn314_i=
+nit.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_hws=
+eq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn32/dcn32_ini=
+t.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_hws=
+eq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn35/dcn35_ini=
+t.o
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c: In f=
+unction =E2=80=98dcn10_log_hubp_states=E2=80=99:
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn10/dcn10_hwseq.c:447:1=
+: error: the frame size of 1156 bytes is larger than 1024 bytes [-Werror=3D=
+frame-larger-than=3D]
+> >   447 | }
+> >       | ^
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_h=
+wseq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn351/dcn351_i=
+nit.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_h=
+wseq.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/hwss/dcn401/dcn401_i=
+nit.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/irq_service.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce80/irq_servic=
+e_dce80.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce110/irq_servi=
+ce_dce110.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dce120/irq_servi=
+ce_dce120.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn10/irq_servic=
+e_dcn10.o
+> >   CC      drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn20/irq_servic=
+e_dcn20.o
+> > cc1: all warnings being treated as errors
+> >=20
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >=20
+> >=20
+> > # Builds where the incident occurred:
+> >=20
+> > ## defconfig+kcidebug+x86-board on (i386):
+> > - compiler: gcc-12
+> > - dashboard: https://d.kernelci.org/build/maestro:689185f279d5d217e5430=
+785
+> >=20
+> >=20
+> > #kernelci issue maestro:4d4120bf99fecc5f852604382b7c406b99440116
+> >=20
+> > Reported-by: kernelci.org bot <bot@kernelci.org>
+> >=20
+> > --
+> > This is an experimental report format. Please send feedback in!
+> > Talk to us at kernelci@lists.linux.dev
+> >=20
+> > Made with love by the KernelCI team - https://kernelci.org
+> >  =20
+>=20
+> Presumably caused by commit
+>=20
+>   e63e9f8b3d1c ("drm/amd/display: Fixing hubp programming of 3dlut fast l=
+oad")
+>=20
+> from the amdgpu tree.  Just making the two new pLabels arrays "static"
+> (and maybe "const") will probably help.  Maybe declaring them "static
+> const char *pLabels[]" ?
+
+Ping?
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/iy=iDwnNrrMkmv5qyTjEL8k
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmiatCsACgkQAVBC80lX
+0GxVMgf/YhuBd3FES8a3zhQzqi/KEuf83u63Db849vipdqiE1/UEKyPWil/0l6jt
+1ZhPIrAjXmAW0i4uh6qJLi3e20xc7X6S1SLcyI7JS1kscPYH3hCd5xYX0eHkAl/S
+8Dhe/UycqUYL2Aq7wscf3kUQ8B6zEPYaxYVVV64DQIX9PQ1OGZSwKgGwK+9lxrX1
+Ycec7inR8HKPPdoFj0dTt4zJWxzw9/9joYAyyAdDfohdePJFfziz8aUu6dDmqbo+
+dGRMEpbmtyyAVa9Ti0sL/HnrvP7/3bRsK79xA/IPunDA0F357jASnu44XxdbEGcB
+Y78qJ36QyWe4unYXAgv79SnlslFqcA==
+=UKgg
+-----END PGP SIGNATURE-----
+
+--Sig_/iy=iDwnNrrMkmv5qyTjEL8k--
