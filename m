@@ -1,171 +1,73 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8A21A256E;
-	Wed, 13 Aug 2025 06:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00491B87E9
+	for <regressions@lists.linux.dev>; Wed, 13 Aug 2025 08:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755065586; cv=none; b=mQG2LNBISZ9alaxrNEDU1FT+dOvoOGuE0B2XI/4GeP4nvR/J62Fxx6rq7qHnYxfNHS5g/trU6oJNcNxyQblPJIkYLBaiTMP0KeY2GOKBs1vC56cKO7lvMOuXCPy9YViG4hokdeR75OIq+Wdd4i7IH8u8lmq7w0Tkv94L5KbEzxI=
+	t=1755073867; cv=none; b=VL3IueVG2SknM+CJlzr36yLkN9kMrZdHtbg4t7M1JJrDx4Ndnxp/vQ0yRO224nFc1Ef5n8ZgyhDsjr5rGotWdkwMeV8yySjGrX39ptFoEowxCmXNmZ55YBqmefQup/9chIOCOmllUzffYn+JaPI69vlPC3t3sm7MeQONRz/zFCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755065586; c=relaxed/simple;
-	bh=gGvv5qBocT3MGjOCRTO++ZDE2aZYiCw9yd8Lmihb7Bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=geP79FytiTOj3r8Ve7zaAephUFxMulJtWUQg3QX7KKdY6O221G0Tw5ii0RSARYKInDW7zJwjD6gdtTqFVQb6DFjXcj9B21RI9po6S5vPeeNaj6AKXw2z4FF/JuGy40We2DcB9RpQ5uTJoDbcZbEFCyQOWWWPa3d64vDBkWvmZIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Io7tQ0H/; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1755073867; c=relaxed/simple;
+	bh=sLC6/uoNSqUP9RfoykDkWY4pMILLcviQIOuEyYUQj6E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Ta9DvEhnn1LziCMA1we/FQypCfquq+QOYJzaPRNDp6LHFNSRj6hZR+NvKQL2ETjbCGkMbhB//hbJs0uaZrh4uMYrWwrAs9PFGIqoX7BQgbubedriTSyxhHKqc1NccaAiLwhzb0kEbyNp5E8GpvtppkHv5qzzCm5Xo6IXHiSDQsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qr3MAEG6; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Io7tQ0H/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1755065580;
-	bh=qYVt4Zxf129LD0FO9JFjw9WPOgPssVkDWXKWHNiLpWI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Io7tQ0H/yZIxPUu8BhvWpZAectB1JJV8dO5CxeWWWZNI8Gst7Q87lN5iC82gKNUa/
-	 o40ScU9YMnCKoUda10x7bCgHS+4OOgrFO4wg9j+1KFmqvPoWXAug98f0rUCaETPwbg
-	 MEMdKOtKoe3HgNpAOLeRtZ81xOFjDGqGfxuRgqZJBuhLtPyhuK9Ju1H/tahzqn5a5R
-	 nOJgfeaXqyUUpD3D8wI1Q/lW328bEClgr+E03JPt4EfIMUn6uM20hmIjpMZd1K5B0V
-	 7tnPqcqmXLX622XmseSa1SqoH0jwComw6Zlc1axvCej+My8grwYDLtnRb03zp++JXM
-	 pBgBurynAny/g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4c1yj73YXnz4wcn;
-	Wed, 13 Aug 2025 16:12:59 +1000 (AEST)
-Date: Wed, 13 Aug 2025 16:12:58 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
- kernelci-results@groups.io, regressions@lists.linux.dev, gus@collabora.com,
- linux-next@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>
-Subject: Re: [REGRESSION] next/pending-fixes: (build)
- ./include/linux/iov_iter.h:171:7: error: variable 'remain' is used...
-Message-ID: <20250813161258.68661171@canb.auug.org.au>
-In-Reply-To: <175506114403.296.12737351814093118427@99cfaf6094a7>
-References: <175506114403.296.12737351814093118427@99cfaf6094a7>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qr3MAEG6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=sLC6/uoNSqUP9RfoykDkWY4pMILLcviQIOuEyYUQj6E=; t=1755073862;
+	x=1755505862; b=qr3MAEG6DoSkFYeGLBS0FzcXOud4Lg4hejqhVEl1Gl2WqCff+RALi9Hx85iXH
+	LGA+5Mv0YFYWhfmMrLA1hAirQi6dAYl/MnKiE9fpQ2KNm45O7seFMbYGWIfZp7i/ECtIl+nEUcBw9
+	MOLPeg2y60icM/qoMh2vUZdIKKPUL6P/RPD2x1zW8ucArrxmXdoDmHby6Pdmwf6d09zehIc+uQGu3
+	MZJaqe8kDhPEQmHYmqjvmIm3ZftC1dL/JZxMEud9tL/TqJmIul7tJEUiSdj4nq5AYoTs+9Me4/4nI
+	u++cp8jda8gb7ldSiZokwEbiqY8MV4TwwIftj5mXwLLYRH9XGw==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1um6su-007gr2-2d;
+	Wed, 13 Aug 2025 10:31:00 +0200
+Message-ID: <243fb437-9646-4d60-9a8d-a50ebef2822a@leemhuis.info>
+Date: Wed, 13 Aug 2025 10:31:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ckNnx3JwNN/So0/By+g2gap";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1755073862;e950bf45;
+X-HE-SMSGID: 1um6su-007gr2-2d
 
---Sig_/ckNnx3JwNN/So0/By+g2gap
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Wed, 13 Aug 2025 04:59:04 -0000 KernelCI bot <bot@kernelci.org> wrote:
->
-> New build issue found on next/pending-fixes:
->=20
-> ---
->  ./include/linux/iov_iter.h:171:7: error: variable 'remain' is used unini=
-tialized whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized=
-] in net/core/skbuff.o (net/core/skbuff.c) [logspec:kbuild,kbuild.compiler.=
-error]
-> ---
->=20
-> - dashboard: https://d.kernelci.org/i/maestro:e3e604796d8d054968bf2b979c7=
-940708d16e0ee
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-> - commit HEAD:  1b07edbd37d5ab410613ebe09b0641d0f4fe717b
->=20
->=20
->=20
-> Log excerpt:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> In file included from net/core/skbuff.c:66:
-> ./include/linux/iov_iter.h:171:7: error: variable 'remain' is used uninit=
-ialized whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
->   171 |                 if (skip >=3D fsize)
->       |                     ^~~~~~~~~~~~~
-> ./include/linux/iov_iter.h:190:7: note: uninitialized use occurs here
->   190 |                 if (remain)
->       |                     ^~~~~~
-> ./include/linux/iov_iter.h:171:3: note: remove the 'if' if its condition =
-is always false
->   171 |                 if (skip >=3D fsize)
->       |                 ^~~~~~~~~~~~~~~~~~
->   172 |                         goto next;
->       |                         ~~~~~~~~~
-> ./include/linux/iov_iter.h:163:22: note: initialize the variable 'remain'=
- to silence this warning
->   163 |                 size_t part, remain, consumed;
->       |                                    ^
->       |                                     =3D 0
->   CC      drivers/pci/search.o
->   CC      sound/core/seq/seq_dummy.o
->   CC      lib/ctype.o
->   CC      lib/dec_and_lock.o
->   AR      sound/i2c/other/built-in.a
->   AR      sound/i2c/built-in.a
->   CC      kernel/fork.o
-> 1 error generated.
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->=20
->=20
-> # Builds where the incident occurred:
->=20
-> ## x86_64_defconfig on (x86_64):
-> - compiler: clang-17
-> - dashboard: https://d.kernelci.org/build/maestro:689c1610233e484a3f9165be
->=20
-> ## x86_64_defconfig+kselftest+x86-board on (x86_64):
-> - compiler: clang-17
-> - dashboard: https://d.kernelci.org/build/maestro:689c1617233e484a3f9165c4
->=20
->=20
-> #kernelci issue maestro:e3e604796d8d054968bf2b979c7940708d16e0ee
->=20
-> Reported-by: kernelci.org bot <bot@kernelci.org>
->=20
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
->=20
-> Made with love by the KernelCI team - https://kernelci.org
->=20
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-This is caused by commit
+#regzbot report: https://lore.kernel.org/lkml/aF35FqJAw63NSl63@mail-itl/
+#regzbot fix: 93598167dcb6
 
-  eacecdbf2789 ("iov_iter: iterate_folioq: fix handling of offset >=3D foli=
-o size")
+#regzbot report:
+https://lore.kernel.org/amd-gfx/f2b70e6e-bff6-42f3-82a2-81eed892cc30@linux.dev/
+#regzbot introduced: 1f02f2044bda1d
 
-in the mm-hotfixes-unstable branch of the mm-hotfixes tree.
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/3519
+#regzbot resolve: reporter cannot reproduce it anymore
 
-This is now commit
 
-  b8da3ae0ae53 ("iov_iter: iterate_folioq: fix handling of offset >=3D foli=
-o size")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ckNnx3JwNN/So0/By+g2gap
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmicLOoACgkQAVBC80lX
-0Gy1+Qf8C/PHElFrT+Rpi3gZlFVtsREeuOH+grAsgqS+YB7xk1mjzx0ZGnbUs5YN
-JYyjWNFLlddQSgtWyJ3pFhQdGjzGJZglx96YZ1U2OLvrhpdPeOK4Wpe+1UJ+qeZ4
-X0wkjBDzpP0RzfGJ3p1SIOS1NOeYk3BghGSO5+OF6Iiy9aoKcpPo5Ys6GIWfGbW+
-ykhXQMm+dZ/SVqJZO6/SCtNR5nu34qXSU142PVxQt6w3vUSI/aV6TWTz+Ui5A52W
-JDWZ7TauQ1YsXITWiNj81ZH8Qjgf+Lhx7IXV0Tca9FsoKA5JRsBhzHZb9g7UhSHA
-41llClX/pqZXLPgDcAICbjmZr0dtIg==
-=Plwf
------END PGP SIGNATURE-----
-
---Sig_/ckNnx3JwNN/So0/By+g2gap--
