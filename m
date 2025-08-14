@@ -1,40 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.intra2net.com (smtp.intra2net.com [193.186.7.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ED5199924;
-	Thu, 14 Aug 2025 15:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4009A26C3AA
+	for <regressions@lists.linux.dev>; Thu, 14 Aug 2025 21:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.186.7.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755186917; cv=none; b=ecTZWMtVYnKXgFa1vt3LWMtVO0sz6rMLVbDhiph/g7MeF9nPB43jP796FLHUIgkytRvf5INY5GKJZiSKgc3AozIwzoy1/x6a4GMCUbj8DaZ2tcBSdHiITT9LG8zZya9uItsPZDbtXhgMRJ0jckTE0lNSy3G+xmMp+8W3FWCdBgY=
+	t=1755206359; cv=none; b=ZnE3j70ztiNjhe6JwvF4KpZ/CC23SxGG5TNiSkQf5X/fWr4owLLm0FzUMRU7mQejo1dvnNQdYZ0NdLaIB0Q9YucLSv4R3+w6R+evzeCu0A2k3sqLbA+utZcw39qUsmrvtHjnxnho4Q3f3Rhla1umpZKinTOiGZJmUcL6smUfiXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755186917; c=relaxed/simple;
-	bh=pNoOMxoVif7AoyiRpnN5xwsXW1L4F+EIAdkruCe1QFI=;
+	s=arc-20240116; t=1755206359; c=relaxed/simple;
+	bh=xCPsJpDKPj91rotcjidTWpVxvm5Hal4jeaGObio8uoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BcGJTdlqhqP+fznR3v3wZHtOamPkckcGDnBC+bSejudm6DpUr/7t8/g4MubFyxobVuDBNHIP1FjSu6mg8LDyynkIf51J90pbAPPWamZKmKe0fsRI5Mw1fnCLP0YcitI2kuvmwjRvI3SWB2ICmQPcuinP3uGCvCNpDEIQGG0hX80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpJFIplf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=NVgdxM0osEoHJ54rLoArVDecWuuXPpZu4j7P5wdSOzMHyDVofsR9k88MFfegWB0SydHma6K2Y+Ph3jSHOhEQIQ8B3FncGwiSxgj0OMaV3rStk5WpJvBiEjkhDgMFSrslp1DDeJHUznj6MB47X+lLhrZ/GuvUsjqfpLe0HUcwlVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com; spf=none smtp.mailfrom=intra2net.com; dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b=chuH0orP; arc=none smtp.client-ip=193.186.7.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=intra2net.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpJFIplf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C00C4CEED;
-	Thu, 14 Aug 2025 15:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755186917;
-	bh=pNoOMxoVif7AoyiRpnN5xwsXW1L4F+EIAdkruCe1QFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dpJFIplfKFLWyg/RslYgpbmCzo4bCDaJEg1wvvhJkucH96EJtmrTfS6ui5cgoBHq5
-	 BTVY51h7fshM/ahs+3IBJjPFTS6Yz/ORaKvEezn8N4dMsDDo0ipA9bbPK1c1xWNB+V
-	 EzWrKazjdJawzhH0SMQWtoJkVaI3gKssk6YZc43axvIW0E3GRW2+lPMmrnBOxcxSXe
-	 Cb5J2AY3k4zGUP30qJJ+KyRp4FkyFdbtseORRlGvW4HHbiNl9ai/8F/D4OF0gkfsS4
-	 06aqNBl/J4lfwdUxKPViKJ0Dz6rtVxwPTQGwr8416bf4oAgc8xCjorSCJnbt+U8wnE
-	 N7ELI2pSPRR1A==
-Date: Thu, 14 Aug 2025 10:55:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hui Wang <hui.wang@canonical.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
-	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b="chuH0orP"
+Received: from mail.m.i2n (mail.m.i2n [172.17.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.intra2net.com (Postfix) with ESMTPS id 27EF920073;
+	Thu, 14 Aug 2025 23:13:34 +0200 (CEST)
+Received: from localhost (mail.m.i2n [127.0.0.1])
+	by localhost (Postfix) with ESMTP id 19DE036C;
+	Thu, 14 Aug 2025 23:13:34 +0200 (CEST)
+X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.70.112,VDF=8.20.60.120)
+X-Spam-Level: 0
+DKIM-Signature: v=1; d=intra2net.com; s=ncc-1701; a=rsa-sha256;
+	c=relaxed/relaxed; t=1755206013; x=1756070013; h=Cc:Cc:Content-Disposition:
+	Content-Disposition:Content-Type:Content-Type:Date:Date:From:From:
+	MIME-Version:MIME-Version:Message-ID:Message-ID:To:To; bh=B2IHiGCXGeMXOHlXmyS
+	IirvVqoZ6y6uk7TO5Z7ODjOo=; b=chuH0orP3a5W068CjU3Vo2vSaQa4skwWQ8zDmd4RlnDm6+5s
+	A8bcr1r631bdFzzMgRPCaHhm/bJ0C6YROXG7PzYs2GNfJIU1/DY13Bq5edqhMVG9nRcamTlwvSdCD
+	pGTNwBn4M9SwUeinHLTmHYLFhz57ART5dTTTUNVMLQcnUH1KOwUexPlUpiZN/RvnrP+kyZ/r/6lmS
+	g3H0mBEKBm/XVJb2h542b+mJCEBA1xnGCgJWmKjBjLclpGtyxfXfXJHXpTCR4KwN/6PWH0NN9ZFnI
+	/qJJuwF6UtafG58VxzLDMyyixjGNHE3aZCr+QxgbapVCRidnBO1YUJ9cVxuX1mQ==
+Received: from localhost (unknown [192.168.12.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.m.i2n (Postfix) with ESMTPS id 157D4C1;
+	Thu, 14 Aug 2025 23:13:33 +0200 (CEST)
+Date: Thu, 14 Aug 2025 23:13:32 +0200
+From: Thomas Jarosch <thomas.jarosch@intra2net.com>
+To: stable@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, Lion Ackermann <nnamrec@gmail.com>,
 	regressions@lists.linux.dev
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Message-ID: <20250814155515.GA331116@bhelgaas>
+Subject: [REGRESSION] 5.15.181 -> 5.15.189: kernel oops in drr_qlen_notify
+Message-ID: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,88 +57,99 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611101442.387378-1-hui.wang@canonical.com>
+User-Agent: NeoMutt/20180716
 
-On Wed, Jun 11, 2025 at 06:14:42PM +0800, Hui Wang wrote:
-> Prior to commit d591f6804e7e ("PCI: Wait for device readiness with
-> Configuration RRS"), this Intel nvme [8086:0a54] works well. Since
-> that patch is merged to the kernel, this nvme stops working.
-> 
-> Through debugging, we found that commit introduces the RRS polling in
-> the pci_dev_wait(), for this nvme, when polling the PCI_VENDOR_ID, it
-> will return ~0 if the config access is not ready yet, but the polling
-> expects a return value of 0x0001 or a valid vendor_id, so the RRS
-> polling doesn't work for this nvme.
-> 
-> Here we add a pci quirk to disable the RRS polling for the device.
-> 
-> Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
-> Link: https://bugs.launchpad.net/bugs/2111521
-> Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Hi,
 
-To help keep this top of mind:
+I'm seeing a reproducible kernel oops on my home router updating from 5.15.181 to 5.15.189:
 
-#regzbot introduced: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
+kernel BUG at lib/list_debug.c:50!
+invalid opcode: 0000 [#1] SMP NOPTI
+..
+Call Trace:
+ <TASK>
+ drr_qlen_notify+0x11/0x50 [sch_drr]
+ qdisc_tree_reduce_backlog+0x93/0xf0
+ drr_graft_class+0x109/0x220 [sch_drr]
+ qdisc_graft+0xdd/0x510
+ ? qdisc_create+0x335/0x510
+ tc_modify_qdisc+0x53f/0x9d0
+ rtnetlink_rcv_msg+0x134/0x370
+ ? __getblk_gfp+0x22/0x230
+ ? rtnl_calcit.isra.38+0x130/0x130
+ netlink_rcv_skb+0x4f/0x100
+ rtnetlink_rcv+0x10/0x20
+ netlink_unicast+0x1d2/0x2a0
+ netlink_sendmsg+0x22a/0x480
+ ? netlink_broadcast+0x20/0x20
+ ____sys_sendmsg+0x25f/0x280
+ ? copy_msghdr_from_user+0x5b/0x90
+ ___sys_sendmsg+0x77/0xc0
+ ? __sys_recvmsg+0x5a/0xb0
+ ? do_filp_open+0xc3/0x120
+ __sys_sendmsg+0x5d/0xb0
+ __x64_sys_sendmsg+0x1a/0x20
+ x64_sys_call+0x17f1/0x1c80
+ do_syscall_64+0x53/0x80
+ ? exit_to_user_mode_prepare+0x2c/0x140
+ ? irqentry_exit_to_user_mode+0xe/0x20
+ ? irqentry_exit+0x1d/0x30
+ ? exc_page_fault+0x1e7/0x610
+ ? do_syscall_64+0x5f/0x80
+ entry_SYSCALL_64_after_hwframe+0x6c/0xd6
+..
+RIP: 0010:__list_del_entry_valid.cold.1+0xf/0x69
 
-> ---
->  drivers/pci/probe.c  |  3 ++-
->  drivers/pci/quirks.c | 18 ++++++++++++++++++
->  include/linux/pci.h  |  2 ++
->  3 files changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4b8693ec9e4c..848fa0e6cf60 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1270,7 +1270,8 @@ static void pci_enable_rrs_sv(struct pci_dev *pdev)
->  	if (root_cap & PCI_EXP_RTCAP_RRS_SV) {
->  		pcie_capability_set_word(pdev, PCI_EXP_RTCTL,
->  					 PCI_EXP_RTCTL_RRS_SVE);
-> -		pdev->config_rrs_sv = 1;
-> +		if (!(pdev->dev_flags & PCI_DEV_FLAGS_NO_RRS_SV))
-> +			pdev->config_rrs_sv = 1;
->  	}
->  }
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index cf483d82572c..519e48ff6448 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6336,3 +6336,21 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
->  #endif
-> +
-> +/*
-> + * Although the root port device claims to support RRS, some devices don't work
-> + * with RRS polling, when reading the Vendor ID, they just return ~0 if config
-> + * access is not ready, this will break the pci_dev_wait(). Here disable the RRS
-> + * forcibly for this type of device.
-> + */
-> +static void quirk_no_rrs_sv(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *root;
-> +
-> +	root = pcie_find_root_port(dev);
-> +	if (root) {
-> +		root->dev_flags |= PCI_DEV_FLAGS_NO_RRS_SV;
-> +		root->config_rrs_sv = 0;
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0a54, quirk_no_rrs_sv);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 05e68f35f392..f4dd9ada12e4 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -247,6 +247,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
->  	/* Device requires write to PCI_MSIX_ENTRY_DATA before any MSIX reads */
->  	PCI_DEV_FLAGS_MSIX_TOUCH_ENTRY_DATA_FIRST = (__force pci_dev_flags_t) (1 << 13),
-> +	/* Do not use Configuration Request Retry Status polling in pci_dev_wait() */
-> +	PCI_DEV_FLAGS_NO_RRS_SV = (__force pci_dev_flags_t) (1 << 14),
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 2.34.1
-> 
+
+syzbot reported a similar looking thing here:
+
+[v5.15] BUG: unable to handle kernel paging request in drr_qlen_notify
+https://groups.google.com/g/syzkaller-lts-bugs/c/_QJHiMHwfRw/m/2j1nSU1hBgAJ
+
+and here:
+
+"[syzbot] [net?] general protection fault in drr_qlen_notify"
+https://www.spinics.net/lists/netdev/msg1105420.html
+
+syzboot bisected it to:
+
+****************************************
+commit e269f29e9395527bc00c213c6b15da04ebb35070
+Refs: v5.15.186-114-ge269f29e9395
+Author:     Lion Ackermann <nnamrec@gmail.com>
+AuthorDate: Mon Jun 30 15:27:30 2025 +0200
+Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CommitDate: Thu Jul 10 15:57:46 2025 +0200
+
+    net/sched: Always pass notifications when child class becomes empty
+
+    [ Upstream commit 103406b38c600fec1fe375a77b27d87e314aea09 ]
+****************************************
+
+The last line of the commit message mentions:
+
+"This is not a problem after the recent patch series
+that made all the classful qdiscs qlen_notify() handlers idempotent."
+
+
+It looks like the "idempotent" patches are missing from the 5.15 stable series.
+
+Like this one:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sched/sch_drr.c?id=df008598b3a00be02a8051fde89ca0fbc416bd55
+
+I've tried Ubuntu's backport for 5.15:
+https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/commit/?id=7804135b4bdd82525f3ca0c4ad139ada6b7662d4
+
+It seems to be identical to:
+https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/
+
+While the kernel didn't oops anymore with the patch applied, the network traffic behaves erratic:
+TCP traffic works, ICMP seems "stuck". tcpdump showed no icmp traffic on the ppp device.
+
+
+Tomorrow I will try if I can reproduce the issue on a test VM.
+
+Anything else I should try?
+
+Thanks in advance,
+Thomas
