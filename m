@@ -1,54 +1,58 @@
 Received: from smtp.intra2net.com (smtp.intra2net.com [193.186.7.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4009A26C3AA
-	for <regressions@lists.linux.dev>; Thu, 14 Aug 2025 21:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2F259CBF
+	for <regressions@lists.linux.dev>; Fri, 15 Aug 2025 09:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.186.7.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755206359; cv=none; b=ZnE3j70ztiNjhe6JwvF4KpZ/CC23SxGG5TNiSkQf5X/fWr4owLLm0FzUMRU7mQejo1dvnNQdYZ0NdLaIB0Q9YucLSv4R3+w6R+evzeCu0A2k3sqLbA+utZcw39qUsmrvtHjnxnho4Q3f3Rhla1umpZKinTOiGZJmUcL6smUfiXI=
+	t=1755249488; cv=none; b=XknKqZr7juWi8nscU5cfWlGxdVvml/x4iA9C2qeTZF3c833yrAzoA0wflktc7j9lxZ1Y1BLkyFA3P67sdsr82uAwzneEKoPIfkz7wthaiFphyhVLOM1XcHwL3QyD1zpgn8Jo2KBDx1K/gpzNuslhhfIRFNOI/kHzTvLwwBHk/rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755206359; c=relaxed/simple;
-	bh=xCPsJpDKPj91rotcjidTWpVxvm5Hal4jeaGObio8uoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NVgdxM0osEoHJ54rLoArVDecWuuXPpZu4j7P5wdSOzMHyDVofsR9k88MFfegWB0SydHma6K2Y+Ph3jSHOhEQIQ8B3FncGwiSxgj0OMaV3rStk5WpJvBiEjkhDgMFSrslp1DDeJHUznj6MB47X+lLhrZ/GuvUsjqfpLe0HUcwlVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com; spf=none smtp.mailfrom=intra2net.com; dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b=chuH0orP; arc=none smtp.client-ip=193.186.7.79
+	s=arc-20240116; t=1755249488; c=relaxed/simple;
+	bh=ZjukBWkX33Zd0Drahy0drCFWzLRXBro57ZoyS2RjzOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LpWHFMFe5vu8lF36UQU57yaj1nX6n1+Mur3EroLmvQH9GuURAekNsxFSLgiA/C3gZo99xZ0E0LoS02kQzTuP8c/pOyu+mtuUVZJWQ7NDL1fOjxo9EZTAeRgyJIVFfTTMai6g/+bbKFgx7tVRmr6kpFvzVUvypm9ACCwoYRwXrU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com; spf=none smtp.mailfrom=intra2net.com; dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b=r0Dyl4BA; arc=none smtp.client-ip=193.186.7.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=intra2net.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b="chuH0orP"
+	dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b="r0Dyl4BA"
 Received: from mail.m.i2n (mail.m.i2n [172.17.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.intra2net.com (Postfix) with ESMTPS id 27EF920073;
-	Thu, 14 Aug 2025 23:13:34 +0200 (CEST)
+	by smtp.intra2net.com (Postfix) with ESMTPS id CEDEC20073;
+	Fri, 15 Aug 2025 11:18:03 +0200 (CEST)
 Received: from localhost (mail.m.i2n [127.0.0.1])
-	by localhost (Postfix) with ESMTP id 19DE036C;
-	Thu, 14 Aug 2025 23:13:34 +0200 (CEST)
-X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.70.112,VDF=8.20.60.120)
+	by localhost (Postfix) with ESMTP id C287A317;
+	Fri, 15 Aug 2025 11:18:03 +0200 (CEST)
+X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.70.112,VDF=8.20.60.128)
 X-Spam-Level: 0
 DKIM-Signature: v=1; d=intra2net.com; s=ncc-1701; a=rsa-sha256;
-	c=relaxed/relaxed; t=1755206013; x=1756070013; h=Cc:Cc:Content-Disposition:
+	c=relaxed/relaxed; t=1755249483; x=1756113483; h=Cc:Cc:Content-Disposition:
 	Content-Disposition:Content-Type:Content-Type:Date:Date:From:From:
-	MIME-Version:MIME-Version:Message-ID:Message-ID:To:To; bh=B2IHiGCXGeMXOHlXmyS
-	IirvVqoZ6y6uk7TO5Z7ODjOo=; b=chuH0orP3a5W068CjU3Vo2vSaQa4skwWQ8zDmd4RlnDm6+5s
-	A8bcr1r631bdFzzMgRPCaHhm/bJ0C6YROXG7PzYs2GNfJIU1/DY13Bq5edqhMVG9nRcamTlwvSdCD
-	pGTNwBn4M9SwUeinHLTmHYLFhz57ART5dTTTUNVMLQcnUH1KOwUexPlUpiZN/RvnrP+kyZ/r/6lmS
-	g3H0mBEKBm/XVJb2h542b+mJCEBA1xnGCgJWmKjBjLclpGtyxfXfXJHXpTCR4KwN/6PWH0NN9ZFnI
-	/qJJuwF6UtafG58VxzLDMyyixjGNHE3aZCr+QxgbapVCRidnBO1YUJ9cVxuX1mQ==
-Received: from localhost (unknown [192.168.12.2])
+	In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:
+	References:References:To:To; bh=8dY+ZMfn1nOuq2XNiUusBi+/dm59apjnsIhMDFob0KI=;
+	b=r0Dyl4BAN1vtTJzNajcu7AeR/tRbQq5LMiQMGaxvEOY89+AnzVih2YJ4KYQJH6bkiYkOV44LsuJ
+	iz6PuqUoJGcbW3+znKCUcNWW+AEEkXnoXuXk4N0W4RrDvFB8+8k6zjYIfyI4Cc4XdRJn7VYWF5DzO
+	Q47gXrjp9v22B3u5PoNdT5b7I1tDqb0xikO51XVgKfKsy/vIz3a/51GIX2oGPvPgqrM3BKcghEu3O
+	OBK1hHg9jm+SwRHNS2pHYdDNHV4u5Z3EkLAuiyO2RuK8MhvwjwJyXN2Tdr2PhuafkNXCBD6zG7lw6
+	+aaWp37Ug2aH1Z9TheZ9nKhwBw5Y8nLzLhRw==
+Received: from localhost (storm.m.i2n [172.16.1.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.m.i2n (Postfix) with ESMTPS id 157D4C1;
-	Thu, 14 Aug 2025 23:13:33 +0200 (CEST)
-Date: Thu, 14 Aug 2025 23:13:32 +0200
+	by mail.m.i2n (Postfix) with ESMTPS id F3D8DC1;
+	Fri, 15 Aug 2025 11:18:02 +0200 (CEST)
+Date: Fri, 15 Aug 2025 11:18:02 +0200
 From: Thomas Jarosch <thomas.jarosch@intra2net.com>
 To: stable@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, Lion Ackermann <nnamrec@gmail.com>,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] 5.15.181 -> 5.15.189: kernel oops in drr_qlen_notify
-Message-ID: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
+	regressions@lists.linux.dev,
+	Siddh Raman Pant <siddh.raman.pant@oracle.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [REGRESSION] 5.15.181 -> 5.15.189: kernel oops in drr_qlen_notify
+Message-ID: <20250815091802.5mqk34hsq5yg74a6@intra2net.com>
+References: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,99 +61,36 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
 User-Agent: NeoMutt/20180716
 
-Hi,
+Hello again,
 
-I'm seeing a reproducible kernel oops on my home router updating from 5.15.181 to 5.15.189:
+You wrote on Thu, Aug 14, 2025 at 11:13:32PM +0200:
+> I'm seeing a reproducible kernel oops on my home router updating from 5.15.181 to 5.15.189:
+> ..
+>
+> It seems to be identical to:
+> https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/
+> 
+> While the kernel didn't oops anymore with the patch applied, the network traffic behaves erratic:
+> TCP traffic works, ICMP seems "stuck". tcpdump showed no icmp traffic on the ppp device.
 
-kernel BUG at lib/list_debug.c:50!
-invalid opcode: 0000 [#1] SMP NOPTI
-..
-Call Trace:
- <TASK>
- drr_qlen_notify+0x11/0x50 [sch_drr]
- qdisc_tree_reduce_backlog+0x93/0xf0
- drr_graft_class+0x109/0x220 [sch_drr]
- qdisc_graft+0xdd/0x510
- ? qdisc_create+0x335/0x510
- tc_modify_qdisc+0x53f/0x9d0
- rtnetlink_rcv_msg+0x134/0x370
- ? __getblk_gfp+0x22/0x230
- ? rtnl_calcit.isra.38+0x130/0x130
- netlink_rcv_skb+0x4f/0x100
- rtnetlink_rcv+0x10/0x20
- netlink_unicast+0x1d2/0x2a0
- netlink_sendmsg+0x22a/0x480
- ? netlink_broadcast+0x20/0x20
- ____sys_sendmsg+0x25f/0x280
- ? copy_msghdr_from_user+0x5b/0x90
- ___sys_sendmsg+0x77/0xc0
- ? __sys_recvmsg+0x5a/0xb0
- ? do_filp_open+0xc3/0x120
- __sys_sendmsg+0x5d/0xb0
- __x64_sys_sendmsg+0x1a/0x20
- x64_sys_call+0x17f1/0x1c80
- do_syscall_64+0x53/0x80
- ? exit_to_user_mode_prepare+0x2c/0x140
- ? irqentry_exit_to_user_mode+0xe/0x20
- ? irqentry_exit+0x1d/0x30
- ? exc_page_fault+0x1e7/0x610
- ? do_syscall_64+0x5f/0x80
- entry_SYSCALL_64_after_hwframe+0x6c/0xd6
-..
-RIP: 0010:__list_del_entry_valid.cold.1+0xf/0x69
+I didn't realize yesterday that the bandwidth management script uses both drr and hfsc.
+
+There is an upcoming patch series proposed for the 5.15 stable queue:
+
+1. "[PATCH 5.15, 5.10 2/6] sch_drr: make drr_qlen_notify() idempotent"
+https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/#t
+
+2. "[PATCH 5.15, 5.10 3/6] sch_hfsc: make hfsc_qlen_notify() idempotent"
+https://lore.kernel.org/stable/8f1d425178ad93064465e15c68b38890b10b5814.1754751592.git.siddh.raman.pant@oracle.com/
 
 
-syzbot reported a similar looking thing here:
+With those two patches applied, kernel 5.15.189 doesn't oops anymore.
+(if I drop the hfsc related patch, ICMP is broken as reported)
 
-[v5.15] BUG: unable to handle kernel paging request in drr_qlen_notify
-https://groups.google.com/g/syzkaller-lts-bugs/c/_QJHiMHwfRw/m/2j1nSU1hBgAJ
+Thanks for all the hard work on the stable kernel series! It's highly appreciated.
 
-and here:
-
-"[syzbot] [net?] general protection fault in drr_qlen_notify"
-https://www.spinics.net/lists/netdev/msg1105420.html
-
-syzboot bisected it to:
-
-****************************************
-commit e269f29e9395527bc00c213c6b15da04ebb35070
-Refs: v5.15.186-114-ge269f29e9395
-Author:     Lion Ackermann <nnamrec@gmail.com>
-AuthorDate: Mon Jun 30 15:27:30 2025 +0200
-Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CommitDate: Thu Jul 10 15:57:46 2025 +0200
-
-    net/sched: Always pass notifications when child class becomes empty
-
-    [ Upstream commit 103406b38c600fec1fe375a77b27d87e314aea09 ]
-****************************************
-
-The last line of the commit message mentions:
-
-"This is not a problem after the recent patch series
-that made all the classful qdiscs qlen_notify() handlers idempotent."
-
-
-It looks like the "idempotent" patches are missing from the 5.15 stable series.
-
-Like this one:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sched/sch_drr.c?id=df008598b3a00be02a8051fde89ca0fbc416bd55
-
-I've tried Ubuntu's backport for 5.15:
-https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/commit/?id=7804135b4bdd82525f3ca0c4ad139ada6b7662d4
-
-It seems to be identical to:
-https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/
-
-While the kernel didn't oops anymore with the patch applied, the network traffic behaves erratic:
-TCP traffic works, ICMP seems "stuck". tcpdump showed no icmp traffic on the ppp device.
-
-
-Tomorrow I will try if I can reproduce the issue on a test VM.
-
-Anything else I should try?
-
-Thanks in advance,
+Cheers,
 Thomas
