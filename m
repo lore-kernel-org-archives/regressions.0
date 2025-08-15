@@ -1,58 +1,58 @@
-Received: from smtp.intra2net.com (smtp.intra2net.com [193.186.7.79])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2F259CBF
-	for <regressions@lists.linux.dev>; Fri, 15 Aug 2025 09:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.186.7.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E63B1A314E
+	for <regressions@lists.linux.dev>; Fri, 15 Aug 2025 10:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755249488; cv=none; b=XknKqZr7juWi8nscU5cfWlGxdVvml/x4iA9C2qeTZF3c833yrAzoA0wflktc7j9lxZ1Y1BLkyFA3P67sdsr82uAwzneEKoPIfkz7wthaiFphyhVLOM1XcHwL3QyD1zpgn8Jo2KBDx1K/gpzNuslhhfIRFNOI/kHzTvLwwBHk/rk=
+	t=1755253133; cv=none; b=g4FBao3gbRKXgpQ7NT3DAmNwiwafCw5cniUovH2PyLmF54QeNq9zszTFOR4dIZMixNtiJGT2LtizAd3Rk3hfrrn5TYOHl2AjS4H3Q/XIcqJeZQM1ocFNo40zp/ucf9DQRUC69j0eE72yCn7QwJqVZxx6VfXb0VYWcsUuBkabXgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755249488; c=relaxed/simple;
-	bh=ZjukBWkX33Zd0Drahy0drCFWzLRXBro57ZoyS2RjzOU=;
+	s=arc-20240116; t=1755253133; c=relaxed/simple;
+	bh=t89BDj+s6NTWdxfwmklWhPUBlzAY0DHwSTUE9wUWjIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LpWHFMFe5vu8lF36UQU57yaj1nX6n1+Mur3EroLmvQH9GuURAekNsxFSLgiA/C3gZo99xZ0E0LoS02kQzTuP8c/pOyu+mtuUVZJWQ7NDL1fOjxo9EZTAeRgyJIVFfTTMai6g/+bbKFgx7tVRmr6kpFvzVUvypm9ACCwoYRwXrU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com; spf=none smtp.mailfrom=intra2net.com; dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b=r0Dyl4BA; arc=none smtp.client-ip=193.186.7.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intra2net.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=intra2net.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZaMBNVtmk24O+FZvck5gYb8FIg5L8xzFFNfIE3AVnOT08FQNOqH5FtRrFGRz3N2rVghlivXIrFR8i3KxC/bzOkbpTVZKBQK9TuNfEgBEyPC78wJw59ObmI2XQU80iUtjJ50y4fIUc62/rxuq27Gu/EyYiJYFxGFsrZuOwuYEoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=QxMvlQ3f; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intra2net.com header.i=@intra2net.com header.b="r0Dyl4BA"
-Received: from mail.m.i2n (mail.m.i2n [172.17.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.intra2net.com (Postfix) with ESMTPS id CEDEC20073;
-	Fri, 15 Aug 2025 11:18:03 +0200 (CEST)
-Received: from localhost (mail.m.i2n [127.0.0.1])
-	by localhost (Postfix) with ESMTP id C287A317;
-	Fri, 15 Aug 2025 11:18:03 +0200 (CEST)
-X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.70.112,VDF=8.20.60.128)
-X-Spam-Level: 0
-DKIM-Signature: v=1; d=intra2net.com; s=ncc-1701; a=rsa-sha256;
-	c=relaxed/relaxed; t=1755249483; x=1756113483; h=Cc:Cc:Content-Disposition:
-	Content-Disposition:Content-Type:Content-Type:Date:Date:From:From:
-	In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:
-	References:References:To:To; bh=8dY+ZMfn1nOuq2XNiUusBi+/dm59apjnsIhMDFob0KI=;
-	b=r0Dyl4BAN1vtTJzNajcu7AeR/tRbQq5LMiQMGaxvEOY89+AnzVih2YJ4KYQJH6bkiYkOV44LsuJ
-	iz6PuqUoJGcbW3+znKCUcNWW+AEEkXnoXuXk4N0W4RrDvFB8+8k6zjYIfyI4Cc4XdRJn7VYWF5DzO
-	Q47gXrjp9v22B3u5PoNdT5b7I1tDqb0xikO51XVgKfKsy/vIz3a/51GIX2oGPvPgqrM3BKcghEu3O
-	OBK1hHg9jm+SwRHNS2pHYdDNHV4u5Z3EkLAuiyO2RuK8MhvwjwJyXN2Tdr2PhuafkNXCBD6zG7lw6
-	+aaWp37Ug2aH1Z9TheZ9nKhwBw5Y8nLzLhRw==
-Received: from localhost (storm.m.i2n [172.16.1.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.m.i2n (Postfix) with ESMTPS id F3D8DC1;
-	Fri, 15 Aug 2025 11:18:02 +0200 (CEST)
-Date: Fri, 15 Aug 2025 11:18:02 +0200
-From: Thomas Jarosch <thomas.jarosch@intra2net.com>
-To: stable@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, Lion Ackermann <nnamrec@gmail.com>,
-	regressions@lists.linux.dev,
-	Siddh Raman Pant <siddh.raman.pant@oracle.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [REGRESSION] 5.15.181 -> 5.15.189: kernel oops in drr_qlen_notify
-Message-ID: <20250815091802.5mqk34hsq5yg74a6@intra2net.com>
-References: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="QxMvlQ3f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JZjx72MweuPnKMGhIqN2pESLyuEeXWe50emThtaqpd0=; b=QxMvlQ3fp6CRI9uFk5eQpYp4Et
+	bEXhNVljLSvkaQXihAcsNd9+ChASTss69+qJOasWd94AlUSBmErnH5mvVZuzuteQP9boNgk5g5/5v
+	19AIxoInU2tZEMEkGoPBH0jWtE3lKwqow3lPxjn3k403QKoNuVrNiPptsMIisfR1OVc6PsxmH06SH
+	EOhuFunqQhf1AsUb1+/Y9VQejo3QfyrrqiyqOuaxNFjNi/79u+NKgw0S3m//GWIc6nwRsfmEuPrlJ
+	4QAfmXtYTsbpM49YgoKGxO8syj9PUZYKj+9qMv9HYucii6qotC2N6BYeJGrBV7T96WVl8PGj0mhVw
+	oe3Mr5ng==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40324)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1umrWA-0000ws-2s;
+	Fri, 15 Aug 2025 11:18:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1umrW7-0007k7-37;
+	Fri, 15 Aug 2025 11:18:35 +0100
+Date: Fri, 15 Aug 2025 11:18:35 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Mathew McBride <matt@traverse.com.au>, netdev@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+Message-ID: <aJ8JezoKkgKLoRCR@shell.armlinux.org.uk>
+References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
+ <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
+ <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
+ <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
+ <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
+ <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
+ <6455123a-6785-4173-b145-3a1a3eb48175@leemhuis.info>
+ <aJtvE_yDGDyAfA5s@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,36 +61,64 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250814211332.lp3ibcp5oopnov46@intra2net.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <aJtvE_yDGDyAfA5s@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hello again,
-
-You wrote on Thu, Aug 14, 2025 at 11:13:32PM +0200:
-> I'm seeing a reproducible kernel oops on my home router updating from 5.15.181 to 5.15.189:
-> ..
->
-> It seems to be identical to:
-> https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/
+On Tue, Aug 12, 2025 at 05:42:59PM +0100, Russell King (Oracle) wrote:
+> On Tue, Aug 12, 2025 at 02:17:39PM +0200, Thorsten Leemhuis wrote:
+> > Lo!
+> > 
+> > On 10.07.25 07:29, Mathew McBride wrote:
+> > > Hi Russell,
+> > > 
+> > > On Wed, Apr 23, 2025, at 7:01 PM, Mathew McBride wrote:
+> > >>
+> > > [snip]
+> > > 
+> > > Just following up on this issue where directly connected SFP+ modules stopped linking up after the introduction of in-band capabilities.
+> > > 
+> > > The diff you provided below[1] resolved the issue. 
+> > > Were you planning on submitting it as a patch? If not, I'd be happy to send it in.
+> > 
+> > I might be missing something, but from here it looks like it fall
+> > through the cracks on Russell's side. This is nothing bad, this can
+> > happen, especially during summer and thus vacation time. I'd thus say:
+> > wait two or three days if this reminds him of the patch, otherwise go
+> > ahead and submit it yourself to get the regression fixed.
 > 
-> While the kernel didn't oops anymore with the patch applied, the network traffic behaves erratic:
-> TCP traffic works, ICMP seems "stuck". tcpdump showed no icmp traffic on the ppp device.
+> Yes, the reminder was sent during July when I wasn't looking at email,
+> and as you can imagine, if I spend three weeks on vacation, I am _not_
+> going to catch up with that pile of email - if I were, there'd be no
+> point taking vacation because the mental effort would be just the same
+> as having no vacation.
+> 
+> I have been debating whether we should actually do something like this,
+> especially given the issues with 2500base-X:
+> 
+> -       if (!phylink_validate_pcs_inband_autoneg(pl, interface,
+> -                                                config.advertising)) {
+> -               phylink_err(pl, "autoneg setting not compatible with PCS");
+> -               return -EINVAL;
+> +       while (!phylink_validate_pcs_inband_autoneg(pl, interface,
+> +                                                   config.advertising)) {
+> +               if (!test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +                             config.advertising)) {
+> +                       phylink_err(pl, "autoneg setting is not compatible with PCS");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
+>         }
+> 
+> which turns it into something generic - but my problem with that is..
+> what if the module (e.g. a GPON module immitating a fibre module)
+> requires Autoneg but the PCS doesn't support Autoneg for the selected
+> interface mode.
 
-I didn't realize yesterday that the bandwidth management script uses both drr and hfsc.
+Please note that I'm waiting for a response from those who have the
+problem... and this thread is again getting buried, so likely I'll
+forget about it soon.
 
-There is an upcoming patch series proposed for the 5.15 stable queue:
-
-1. "[PATCH 5.15, 5.10 2/6] sch_drr: make drr_qlen_notify() idempotent"
-https://lore.kernel.org/stable/bcf9c70e9cf750363782816c21c69792f6c81cd9.1754751592.git.siddh.raman.pant@oracle.com/#t
-
-2. "[PATCH 5.15, 5.10 3/6] sch_hfsc: make hfsc_qlen_notify() idempotent"
-https://lore.kernel.org/stable/8f1d425178ad93064465e15c68b38890b10b5814.1754751592.git.siddh.raman.pant@oracle.com/
-
-
-With those two patches applied, kernel 5.15.189 doesn't oops anymore.
-(if I drop the hfsc related patch, ICMP is broken as reported)
-
-Thanks for all the hard work on the stable kernel series! It's highly appreciated.
-
-Cheers,
-Thomas
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
