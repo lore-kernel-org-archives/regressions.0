@@ -1,148 +1,166 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B2B22FDEC
-	for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 09:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9EA31814C
+	for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 11:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755511185; cv=none; b=m+xRqt1XEBpqfTG8OSPF5I+QVzApzBsbDEWP/kQHGAUncqgKRtoBSXGEP7YMIy8zwuJQgVJC3D4hab/tcAYpOxIgEvBbT/CNRBd2zqTtGkEF2W+dZe/SW8eHgM3hnYqelO/UAdCBcjrwQew6hWFqtfbBmOAUqvTTqkW64OnepN0=
+	t=1755516303; cv=none; b=m1z7D+2WF2sp8AJ4GSNvsKPU+fOc/WByYKo43jmnweyIVsfqs1hlRyTnhwx0kSaODimCKe6/bdexYPFY+T+o/IaFaa6ja0HBUEh8t8qzUZS4gym9DFx37CVE6h82X8gqXOWMWeN2WiEGfMjABpIhsHH3+HEYL07dBQZhA4564WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755511185; c=relaxed/simple;
-	bh=twwPGYS1pbbNbuwI6/Ok6z1KZmaKvAG11JMwUXega2A=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NnSXV+qXAUVcQubuMmKDwiNXCaL8nzWhFuYJNS/qhcv99Fr8XZQOeuW0h+y4fVbw3TQ1RqRHcDLdvBH0BR19vMAAjxI4ICn50bQMuiExq/R9h7h/4LY+CR/umlQ112s0Xa5xmLgTaY5Tgtjz1TICB7oFPLNBTptQYbDo8j4uOtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au; spf=pass smtp.mailfrom=traverse.com.au; dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b=fhd+aRR2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M35/EaaG; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=traverse.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=traverse.com.au
+	s=arc-20240116; t=1755516303; c=relaxed/simple;
+	bh=Qkbr+uQCuilHZLSmb/1/G8odbybj74cC3/YfI227FYI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b9oDVXQw7gusBoVITGKxKM9cnNzfh2gUdI8ggyvXtjyZq0lBrvIuqAjVWcIVzJXBObHN+7sORbZrAffmkB59Y3Afc+baV6cm0D/gnVYeduMMSTrn2Ed/YBBz7s/sGtVNGkbWp2jAKrg7SxHgN5/0ll767jRshYG+cnQLBYpf84Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=arFx1KDr; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=traverse.com.au header.i=@traverse.com.au header.b="fhd+aRR2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M35/EaaG"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 86D6C140013C;
-	Mon, 18 Aug 2025 05:59:42 -0400 (EDT)
-Received: from phl-imap-18 ([10.202.2.89])
-  by phl-compute-01.internal (MEProxy); Mon, 18 Aug 2025 05:59:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=traverse.com.au;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1755511182; x=1755597582; bh=vscckBoxHZW6gSP7SrE9QcCOjCZtgpxE
-	DeAcTbH1FEg=; b=fhd+aRR22pgq+BmJG7af6D8wpREpiF5rWNjOmSWiKXdr+UBH
-	F6dGf12xgEDJnSwYF5WiiN0crR4FJ41KAW8TTcRunK7W9HXOm6LjBlVf2NGIFs9x
-	tSvxUr8461L5I2ATt5EkyHUyNH71yj8mN9guFe2BXdPmmZwEoaMohWXe9DZhA7N2
-	MmNsARtLGPO466yUk0EiuJTNeIrso84VtZznrp9Go9Mc28VeGAKyq8Gm+qqWslGn
-	C46g4dHV1RXA9Io6l2KYXE8aSSub0c12x3WOwUvOYQkF79nccS0K8DWZlkpUS0sT
-	vB12hEB9Uo8evtMT+4NT89a21wOHwxropYNXgg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1755511182; x=
-	1755597582; bh=vscckBoxHZW6gSP7SrE9QcCOjCZtgpxEDeAcTbH1FEg=; b=M
-	35/EaaGURVdgmi0tZFgfhTZg+sRG3h5w6pOvOtiyQWR24iRlXwrcqNxPE9mtzoY9
-	JRLjojs4pu5aDMxWA1kiLOI4kf6FIrqB03rIswkq8T8Z/H/TBNEVIiApIQ3a+j7u
-	z1xe7YLOCwC2dt98dD3TRolNkYZ715DJlMcjzenWaQ2R7IEjE6Nace7hUXYybPp2
-	MgAscISay2kZndK1wuN6ByfE7ZJyqKp1SHwz6OD4rDFcShJJmrptqiLSQYbX08P6
-	21lxkKMJ+0o/2n6FBNBSmnQ6yS/WE9lWbStl1p96/eXSnGli58jw6qYl23M+hJzH
-	30oUYkqNg7UM2lLTAG62w==
-X-ME-Sender: <xms:jfmiaLO1f_Hpfr9DaG3Xw4Pcg84qQzlzR4n8_9-gatKsdAYCClHSGg>
-    <xme:jfmiaF9LmZOXSSRm1q8tuy3zuJ4GXFh7J4dI-U7YVXb_XX9gv49S58a2lJTdPjAKe
-    yj3yrlxJneGcuXLjWY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduhedvfedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefoggffhffvvefkjghfufgtgfesthejre
-    dtredttdenucfhrhhomhepfdforghthhgvficuofgtuehrihguvgdfuceomhgrthhtseht
-    rhgrvhgvrhhsvgdrtghomhdrrghuqeenucggtffrrghtthgvrhhnpefgvdegkeejheffhe
-    eileehveffteelkeevgfffleduffetvdekhfeiudevtdffheenucffohhmrghinheprghr
-    mhhlihhnuhigrdhorhhgrdhukhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmrghtthesthhrrghvvghrshgvrdgtohhmrdgruhdpnhgspghr
-    tghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugiesrg
-    hrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehl
-    vggvmhhhuhhishdrihhnfhhopdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhish
-    htshdrlhhinhhugidruggvvhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghr
-    nhgvlhdrohhrgh
-X-ME-Proxy: <xmx:jfmiaHOlOKxuSzdQ0svgfN9o9qIve7Gvhp4KcdThGkeMI48Z_AEM2g>
-    <xmx:jfmiaNdW2htAXvd7wz5zjEv-I2tZK7AqygrlSfR0MKqz8qrHqddvpw>
-    <xmx:jfmiaMtN0QtHA0aPXaWlnXG5CC-2rlHnmsUHuNxhZOuzZ50dfFCzvQ>
-    <xmx:jfmiaGk-PApM0bPrnSW-KMuPigpnWUHIxUWZW2oaqR-wYK30rAS3pw>
-    <xmx:jvmiaFD6HKi7_EHdWzI5Jiy9LwKSTwYkpLBersIKOkgq06SeTxom4cvh>
-Feedback-ID: i426947f3:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B592A15C008C; Mon, 18 Aug 2025 05:59:41 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="arFx1KDr"
+dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=To:From;
+	bh=UxZbz9psm4mpR+SeH60qIj7pVbyxVdlqxbXa5D5Xxhw=;
+	b=arFx1KDryvlRqvvhPYG6oYfE5ivJ1gxdCmv+ydI3uSSKl724tQDCuxar0BqNiYAeAU38uOvvH
+	GAMu7vomlkrMcchvyV4Yr10+3pFJ36k3uPSaUS9o9d68czax7LspoJx54hCwE6xlGCt/ag4Hp23
+	NRjOLcxLGmqkYhaL+m+pNh8=
+Received: from w003.hihonor.com (unknown [10.68.17.88])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4c59Nd1yQ9zYlvVq;
+	Mon, 18 Aug 2025 19:24:49 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w003.hihonor.com
+ (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 18 Aug
+ 2025 19:24:57 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 18 Aug
+ 2025 19:24:57 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
+	<adobriyan@gmail.com>, <rick.p.edgecombe@intel.com>, <ast@kernel.org>,
+	<k.shutemov@gmail.com>, <jirislaby@kernel.org>,
+	<linux-fsdevel@vger.kernel.org>
+CC: <polynomial-c@gmx.de>, <gregkh@linuxfoundation.org>,
+	<stable@vger.kernel.org>, <regressions@lists.linux.dev>, wangzijie
+	<wangzijie1@honor.com>
+Subject: [PATCH v2] proc: fix missing pde_set_flags() for net proc files
+Date: Mon, 18 Aug 2025 19:24:28 +0800
+Message-ID: <20250818112428.953835-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AUKiri1zhdSZ
-Date: Mon, 18 Aug 2025 19:59:21 +1000
-From: "Mathew McBride" <matt@traverse.com.au>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
- "Thorsten Leemhuis" <regressions@leemhuis.info>
-Message-Id: <681ec035-65f5-4aba-a448-cdb589fa5161@app.fastmail.com>
-In-Reply-To: <aJtvE_yDGDyAfA5s@shell.armlinux.org.uk>
-References: <Z1F1b8eh8s8T627j@shell.armlinux.org.uk>
- <E1tJ8NM-006L5J-AH@rmk-PC.armlinux.org.uk>
- <025c0ebe-5537-4fa3-b05a-8b835e5ad317@app.fastmail.com>
- <aAe94Tkf-IYjswfP@shell.armlinux.org.uk>
- <f7eac1d6-34eb-4eba-937d-c6624f9a6826@app.fastmail.com>
- <2d709754-3d4a-4803-b86f-9efa2a6bf655@app.fastmail.com>
- <6455123a-6785-4173-b145-3a1a3eb48175@leemhuis.info>
- <aJtvE_yDGDyAfA5s@shell.armlinux.org.uk>
-Subject: Re: [REGRESSION] net: pcs-lynx: 10G SFP no longer links up
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
+ (10.68.31.243)
 
-Hi Russell,
+To avoid potential UAF issues during module removal races, we use pde_set_flags()
+to save proc_ops flags in PDE itself before proc_register(), and then use
+pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
 
-On Wed, Aug 13, 2025, at 2:42 AM, Russell King (Oracle) wrote:
+However, the pde_set_flags() call was missing when creating net related proc files.
+This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
 
-> 
-> Yes, the reminder was sent during July when I wasn't looking at email,
-> and as you can imagine, if I spend three weeks on vacation, I am _not_
-> going to catch up with that pile of email - if I were, there'd be no
-> point taking vacation because the mental effort would be just the same
-> as having no vacation.
-> 
-No problem. I was not sure if you were on vacation or not.
+Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+NULL check for proc_ops in pde_set_flags().
 
-> I have been debating whether we should actually do something like this,
-> especially given the issues with 2500base-X:
-> 
-> -       if (!phylink_validate_pcs_inband_autoneg(pl, interface,
-> -                                                config.advertising)) {
-> -               phylink_err(pl, "autoneg setting not compatible with PCS");
-> -               return -EINVAL;
-> +       while (!phylink_validate_pcs_inband_autoneg(pl, interface,
-> +                                                   config.advertising)) {
-> +               if (!test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +                             config.advertising)) {
-> +                       phylink_err(pl, "autoneg setting is not compatible with PCS");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               __clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, config.advertising);
->         }
-> 
+[1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
 
-I have just given this version a quick test with (at 10G only, I have not tested 1 or 2.5G configs), and it seems to work.
+Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al)
+Reported-by: Lars Wendler <polynomial-c@gmx.de>
+Signed-off-by: wangzijie <wangzijie1@honor.com>
+---
+v2:
+- followed by Jiri's suggestion to refractor code and reformat commit message
+---
+ fs/proc/generic.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
-My board doesn't natively support 2.5G (due to a component in the signal path) but I can modify a board to work with 2.5G if testing these GPON or other imitator modules is helpful to you.
+diff --git a/fs/proc/generic.c b/fs/proc/generic.c
+index 76e800e38..003031839 100644
+--- a/fs/proc/generic.c
++++ b/fs/proc/generic.c
+@@ -367,6 +367,23 @@ static const struct inode_operations proc_dir_inode_operations = {
+ 	.setattr	= proc_notify_change,
+ };
+ 
++static void pde_set_flags(struct proc_dir_entry *pde)
++{
++	if (!pde->proc_ops)
++		return;
++
++	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
++		pde->flags |= PROC_ENTRY_PERMANENT;
++	if (pde->proc_ops->proc_read_iter)
++		pde->flags |= PROC_ENTRY_proc_read_iter;
++#ifdef CONFIG_COMPAT
++	if (pde->proc_ops->proc_compat_ioctl)
++		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
++#endif
++	if (pde->proc_ops->proc_lseek)
++		pde->flags |= PROC_ENTRY_proc_lseek;
++}
++
+ /* returns the registered entry, or frees dp and returns NULL on failure */
+ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+ 		struct proc_dir_entry *dp)
+@@ -374,6 +391,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+ 	if (proc_alloc_inum(&dp->low_ino))
+ 		goto out_free_entry;
+ 
++	pde_set_flags(dp);
++
+ 	write_lock(&proc_subdir_lock);
+ 	dp->parent = dir;
+ 	if (pde_subdir_insert(dir, dp) == false) {
+@@ -561,20 +580,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
+ 	return p;
+ }
+ 
+-static void pde_set_flags(struct proc_dir_entry *pde)
+-{
+-	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+-		pde->flags |= PROC_ENTRY_PERMANENT;
+-	if (pde->proc_ops->proc_read_iter)
+-		pde->flags |= PROC_ENTRY_proc_read_iter;
+-#ifdef CONFIG_COMPAT
+-	if (pde->proc_ops->proc_compat_ioctl)
+-		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+-#endif
+-	if (pde->proc_ops->proc_lseek)
+-		pde->flags |= PROC_ENTRY_proc_lseek;
+-}
+-
+ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent,
+ 		const struct proc_ops *proc_ops, void *data)
+@@ -585,7 +590,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+ 	if (!p)
+ 		return NULL;
+ 	p->proc_ops = proc_ops;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_data);
+@@ -636,7 +640,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
+ 	p->proc_ops = &proc_seq_ops;
+ 	p->seq_ops = ops;
+ 	p->state_size = state_size;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_seq_private);
+@@ -667,7 +670,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
+ 		return NULL;
+ 	p->proc_ops = &proc_single_ops;
+ 	p->single_show = show;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_single_data);
+-- 
+2.25.1
 
-> which turns it into something generic - but my problem with that is..
-> what if the module (e.g. a GPON module immitating a fibre module)
-> requires Autoneg but the PCS doesn't support Autoneg for the selected
-> interface mode.
-> 
-
-Many Thanks,
-Matt
-
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-> 
