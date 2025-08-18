@@ -1,234 +1,117 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB72D320CD8
-	for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 14:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230C48C0B
+	for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 21:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755528063; cv=none; b=pCc+10O2yT2Pn9oNshFD4oZjK/QHMg/PBDgAx3irVSXVg4UHWPBbq10Fg+47E/q4C8QiPdMWiA9FVz7ZmEiLfHy6y8h415jFYdzjdsgd0CPGIH5LUY1BULLagEZidKrBBjY1HSGMF6/65BJzVBsvT6oAWk3z++JRRnzYDCDcMfQ=
+	t=1755551471; cv=none; b=nnzscybNiT54MvKCBjxB/0Iz9vHvOenMJwsmvkg5b9cQY+FY5Za1M0KJQlet0I0Ra/L2xlbw6nD7+N60oBIe6RLRucSxzEMlVspsHBxjxLJBj16lARJqqz4dHNi2y8yyis+uA8a+lFcEtunxe0HIAuIrAmgJjlGTb0l3Tv9ozbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755528063; c=relaxed/simple;
-	bh=hUrN8X66aiYm96Km2llUj/Mpt5uGUgCzzoe8GK4Eiio=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OLE6mAqNh1rm92LhVeRu5C6t2QAPKo+CAHO1kKyHt8iQ6Qe5qtNoa3jAVYEBo93SgJU5OAmIYnjE7I/OAw+4OBSLuvOlAAvNoUT5wNThXea6RMN6MIZqmTDO9gdOMVXLv4wDtV3md5HDHjEdNUJF8Wp2P4Zp9O/1BBHFHW5HoJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhO5FUqP; arc=none smtp.client-ip=209.85.215.173
+	s=arc-20240116; t=1755551471; c=relaxed/simple;
+	bh=UJIyNxUgKpmKm2iPEBk8lYWBVJ6uUVk8tfvKgZYRrW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gajZhETMUATNS3gEczcqveck00YjFV5NEdtxVV2SVZYQQGbicAH8h6bMYErzRZXyzazdgmWRvfuKt8CZWxiKG8taWfAICtdgTIdRisCSZ+kj3X7bbtq0hjFgMZXjjvE2epGCnAYq3okmuliwA21hqXmnaqDMHQ/G7OHA7p3Ia0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBB0dwWz; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhO5FUqP"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b4719e9d1d1so357957a12.3
-        for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 07:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBB0dwWz"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55ce5287a47so4183473e87.3
+        for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 14:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755528061; x=1756132861; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ga7x4F6HXFvk/iDnErF+LYjvyTvsTBsxWHavwkOdolE=;
-        b=IhO5FUqP4OrcegEUjW8lV3cT3Gkxz2pJXPtuyF70KuGCp0zMM+zTqGITuHObC3yPwM
-         4EjDttPxgwCuO952AfxhNM7MyEVjRnRHxq/b0LARw2R3hWtj8/6egtRDzkRpI0oNCCKY
-         o9koxebav0UzsBLdmUe/DxXQzm/0ufHRKJ8VqBHfUD4FXUmz2ZNf/TnaVecT8tx6NUcy
-         V7K3rINE0zPUUmz0Gus2d/8m5SlVIXPk9cfllBpthNYuQRUBKuebDOamrMmlGxD6oLOW
-         +FUN4QVD2B86ymsThoOC4Nzb7XC/beTQ4tdf5eWSrgvx3sKSk8OtXWpRizQdvnd56aUs
-         5Etg==
+        d=gmail.com; s=20230601; t=1755551468; x=1756156268; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UJIyNxUgKpmKm2iPEBk8lYWBVJ6uUVk8tfvKgZYRrW4=;
+        b=QBB0dwWzwNBeGopt2VbapbEwrwcprYatAH22/try2wAMWMelnxWOYXT89uVFp3NkNH
+         cpwmxnrWpCszDxoCQeiD65CM7rhpkkJ3lwI7xd5OjYF57JYrivld7zjBDsfmbMyIpgIJ
+         EzoDP4Hl9THWIq/L47idWlgUmrqU3XD2MBeVLMMGD6aL+3EN/t3bp1RCOL0/quMUZcec
+         ocShG985oCH8tna94rmg/WshmvoPyafKE2yU4Z0BoDkr7FkGpbt0sZHzqf4p2PO8GLF+
+         2lHsbNN9uu4hG39dR6MIhs5easoYeHyjXXprY/cgm7wuhwi39IzNVVy+Se5N8wPkTKzd
+         9bKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755528061; x=1756132861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ga7x4F6HXFvk/iDnErF+LYjvyTvsTBsxWHavwkOdolE=;
-        b=W0HZLgFl4VKhgLMGhOiepsGgSltpt4mLBQ3BfMRkIIjPXqIMCCmqRy2L7ad54IDrQA
-         A25lTE9w3ZM1uKgd2/YPNbImhvXgrrmXTGzCYTVgV0mEb/1zdVUYBFU64DexzsYruXMr
-         09rG8Z2lCc6QcE54P2k1NAeyOfBUYe/oR4gux3zz2rF9TQWtmUJiNZ2zohsvVa+1XR71
-         q0xZ0z3dvdRkDofbppOrR1c+Vk6rBItp1wJN4hpbBPU6mIu+0//yQPADT95lCGOGR0Iu
-         S4pXMnqsHIbBjzoscl3HwfMzYfbDXtb6pL75lZDYsmVPiVY+6DR74f4VjIlVG8jE+OzX
-         3cNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEjHShelSC/e2N63RgFEcuS5IqYQ43DWYFyUGHDXlNLmJdu/26Gr4Mx57mMIw1kRcZ8f9VBj7HQyQHTw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzWvrTjQVGxB81n4CmHdCOkKqL4akqxVgASXsXDPLpXk/TSaUpQ
-	RFmWzG67T9mPNWVrcFJAtzTVX6IfyZpvG3qbwBD9U/HpzV4ZOVsYlAzXJZsKXh7GpeVnWJ1rMrz
-	ws4dqepR89J+dlq7JaEFBbQzyCUPdFtE=
-X-Gm-Gg: ASbGncuJ6nEmFeU58GXr0A0SVc+eyGfKqOLpb2SRP6aJTwjC/DqGzXTFWJ3GWSLo1xd
-	SYUkWuDlt5+3oswzwkI+azWg0cEFzPao+G9vn+miTcGCDJilSTuRA28bmFt+EMzjUsOBDzizLsA
-	PR4NECpVh1sJaU8zKiN4vrSLOJqO/Fxiy3IS3awCpSDr215ViskX3jJ6DMMAqHMtiDLD3R5Pdcl
-	TJD9kY=
-X-Google-Smtp-Source: AGHT+IFrZuHxnN6IEK2r0tU2rCISF4H6sQekXuMVPVLd12u6wT/T0WzrgzvbiXwK8pkxTScnu7v9TIQRfM72tM0NwgE=
-X-Received: by 2002:a17:902:ce81:b0:240:b9c0:bc6f with SMTP id
- d9443c01a7336-2446d9b61a8mr85410995ad.10.1755528060990; Mon, 18 Aug 2025
- 07:41:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755551468; x=1756156268;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UJIyNxUgKpmKm2iPEBk8lYWBVJ6uUVk8tfvKgZYRrW4=;
+        b=BhulzO5Uf+rbu+keSwv7zBQx92ks5WUpY4wd12NVo4RTkT8E2OG0butaevWxAFeoK3
+         ptLkbjs7B2vzS0r3nPcfW2tvOm9bLrMGcyLfSkkQRsk+Z9d451l3ru6JoF24QoTkwOCx
+         bzO/NkM89X6MZ9eM1jiGkcIIg9L3/+99zJQq/8PDXMmrfk1/fmPRpOyd+xwS847mYjiF
+         gUq+lZq67cPMhCXNqz1vChTQ9n4Zr4hXNCgpWs8tUFiN3YiQ3Xm0pt9Ss/OahnBJrARS
+         WPu8YsFR5GB+KpdkvyR/Ct+UBQw0Q+h21wt02dSwKnTrPX2B1H0KCjxpXhggiBG+X2nw
+         gtnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWROz/MTbq8e6F9WHlOHrsmEntkN4VL/CM0wLQv61PMzPbUj/1rCSBCjZ4coihZDp+o5Fc2lezPqo9BAg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw4ysavZdX3L/VUp2BNieO3R/eSA8J6EqTNvrnUeDQvrzX7TuJ0
+	cXy7HsEZQi3Ss/Vl/qV6WSPLGf+ABb5ltVsQ2gPWTA/katPipXqyhcM7
+X-Gm-Gg: ASbGncsiyQ6E5TF7+I+GItub4jurQuBJlV/qSnLtNpDLaxtwZiF3EYhDL/EgSz+5aaj
+	xjs0E96sNVj/fGXykaFSCXZTFLPt4Ph0jjwkavkEXCfoh4KRS4rPEsEBzKN3v7fTekEieGlU4yE
+	ySyu7gXW3YirhsBTUy7ySoOaPMDl0tGvU/PiNVYQZX0CeFLvrEe1iDOtNEflr2UlOrNHCJO0Ej0
+	w3SBXL7jNMy8M/ov1Iu90jGmS+F0CXILHBZRoEA+GcSuQH1pvPpsR4ERObK/hadeiFzC4P8HR1E
+	G/mYuadgxchR1AXDy90HtAgmwiG9Y8GOo+zBpxp2CzhZNyf/e1hU7J24S31QhKgPv7u2oOwuUna
+	UFgFGqBWIpdURf4OfVsyWRwSNeaAYIqbEmOE=
+X-Google-Smtp-Source: AGHT+IHyb1FrQPxz3w4i0plT2sVm/OSdfFLcWlAkcbyUv9AoYYMZUyrDcNr5CaZKgQX06WcX0WerHw==
+X-Received: by 2002:a05:6512:3411:b0:55c:e5c3:1a44 with SMTP id 2adb3069b0e04-55e007db76bmr79328e87.48.1755551467880;
+        Mon, 18 Aug 2025 14:11:07 -0700 (PDT)
+Received: from foxbook (bfd208.neoplus.adsl.tpnet.pl. [83.28.41.208])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3340a41d30csm21776721fa.7.2025.08.18.14.11.06
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 18 Aug 2025 14:11:07 -0700 (PDT)
+Date: Mon, 18 Aug 2025 23:11:03 +0200
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org
+Cc: Niklas Neronin <niklas.neronin@linux.intel.com>,
+ regressions@lists.linux.dev, Christian Heusel <christian@heusel.eu>
+Subject: [REGRESSION 6.16] xHCI host not responding to stop endpoint command
+ after suspend and resume
+Message-ID: <20250818231103.672ec7ed@foxbook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsO+EmR0QgFGjCbq74gzwbQbb76wjt1vOOOJnsCqj9hAhg@mail.gmail.com>
-In-Reply-To: <CABXGCsO+EmR0QgFGjCbq74gzwbQbb76wjt1vOOOJnsCqj9hAhg@mail.gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 18 Aug 2025 10:40:49 -0400
-X-Gm-Features: Ac12FXwnCiAjxoLjrPm2Gg52sSUwUKE37VYAtOU7LySFLtZAWT--6c5O3IBbCZY
-Message-ID: <CADnq5_PdzYSzFL7KDsPV7zqX2avwn-NhSJqyVVPYF9LOMEyhWg@mail.gmail.com>
-Subject: Re: REGRESSION drm/amdgpu: Radeon 7900 XTX hang & gpu_sched "Trying
- to push to a killed entity" since 1f02f2044bda (6.17-rc)
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Gang.Ba@amd.com, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 18, 2025 at 10:32=E2=80=AFAM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> Hi Gang,
->
-> Between commits 4b290aae788e and 89748acdf226 my Radeon 7900 XTX
-> starts hanging when Steam performs shader compilation, with the
-> following messages/stack trace:
->
-> [ 9254.082549] kworker/u129:2 (15855) used greatest stack depth: 19656
-> bytes left
-> [ 9435.589185] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.590340] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.590465] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.590881] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.592513] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.594059] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.596428] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9435.597828] [drm:drm_sched_entity_push_job [gpu_sched]] *ERROR*
-> Trying to push to a killed entity
-> [ 9585.848993] INFO: task kworker/u132:12:18278 blocked for more than
-> 122 seconds.
-> [ 9585.849006]       Tainted: G             L     ------  ---
-> 6.17.0-0.rc0.250801g89748acdf226.7.fc43.x86_64+debug #1
-> [ 9585.849010] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [ 9585.849013] task:kworker/u132:12 state:D stack:28600 pid:18278
-> tgid:18278 ppid:2      task_flags:0x4208060 flags:0x00004000
-> [ 9585.849022] Workqueue: ttm ttm_bo_delayed_delete [ttm]
-> [ 9585.849032] Call Trace:
-> [ 9585.849034]  <TASK>
-> [ 9585.849037]  __schedule+0x8d2/0x1be0
-> [ 9585.849044]  ? __pfx___schedule+0x10/0x10
-> [ 9585.849051]  ? __lock_release.isra.0+0x1cb/0x340
-> [ 9585.849059]  schedule+0xd4/0x260
-> [ 9585.849062]  schedule_timeout+0x17f/0x260
-> [ 9585.849065]  ? __pfx_schedule_timeout+0x10/0x10
-> [ 9585.849067]  ? find_held_lock+0x2b/0x80
-> [ 9585.849074]  ? lockdep_hardirqs_on_prepare.part.0+0x92/0x170
-> [ 9585.849076]  ? trace_hardirqs_on+0x18/0x150
-> [ 9585.849081]  dma_fence_default_wait+0x472/0x700
-> [ 9585.849087]  ? find_held_lock+0x2b/0x80
-> [ 9585.849089]  ? __pfx_dma_fence_default_wait+0x10/0x10
-> [ 9585.849092]  ? __pfx_dma_fence_default_wait_cb+0x10/0x10
-> [ 9585.849095]  ? mark_held_locks+0x40/0x70
-> [ 9585.849098]  ? lockdep_hardirqs_on_prepare.part.0+0x92/0x170
-> [ 9585.849103]  dma_fence_wait_timeout+0x344/0x540
-> [ 9585.849107]  dma_resv_wait_timeout+0xeb/0x190
-> [ 9585.849111]  ? __pfx_dma_resv_wait_timeout+0x10/0x10
-> [ 9585.849117]  ? rcu_is_watching+0x15/0xe0
-> [ 9585.849122]  ttm_bo_delayed_delete+0x34/0x100 [ttm]
-> [ 9585.849128]  process_one_work+0x87a/0x14d0
-> [ 9585.849140]  ? __pfx_process_one_work+0x10/0x10
-> [ 9585.849145]  ? find_held_lock+0x2b/0x80
-> [ 9585.849153]  ? assign_work+0x156/0x390
-> [ 9585.849161]  worker_thread+0x5f2/0xfd0
-> [ 9585.849172]  ? __pfx_worker_thread+0x10/0x10
-> [ 9585.849175]  kthread+0x3b0/0x770
-> [ 9585.849178]  ? local_clock_noinstr+0xf/0x130
-> [ 9585.849182]  ? __pfx_kthread+0x10/0x10
-> [ 9585.849186]  ? rcu_is_watching+0x15/0xe0
-> [ 9585.849188]  ? __pfx_kthread+0x10/0x10
-> [ 9585.849192]  ret_from_fork+0x3ef/0x510
-> [ 9585.849196]  ? __pfx_kthread+0x10/0x10
-> [ 9585.849198]  ? __pfx_kthread+0x10/0x10
-> [ 9585.849201]  ret_from_fork_asm+0x1a/0x30
-> [ 9585.849210]  </TASK>
->
-> I can also reproduce the same error when starting a campaign in Halo
-> Infinite (without relying on Steam=E2=80=99s shader pre-cache UI), which =
-made
-> bisecting feasible.
->
-> 1f02f2044bda1db1fd995bc35961ab075fa7b5a2 is the first bad commit
-> commit 1f02f2044bda1db1fd995bc35961ab075fa7b5a2 (HEAD)
-> Author: Gang Ba <Gang.Ba@amd.com>
-> Date:   Tue Jul 8 14:36:13 2025 -0400
->
->     drm/amdgpu: Avoid extra evict-restore process.
->
->     If vm belongs to another process, this is fclose after fork,
->     wait may enable signaling KFD eviction fence and cause parent
-> process queue evicted.
->
->     [677852.634569]  amdkfd_fence_enable_signaling+0x56/0x70 [amdgpu]
->     [677852.634814]  __dma_fence_enable_signaling+0x3e/0xe0
->     [677852.634820]  dma_fence_wait_timeout+0x3a/0x140
->     [677852.634825]  amddma_resv_wait_timeout+0x7f/0xf0 [amdkcl]
->     [677852.634831]  amdgpu_vm_wait_idle+0x2d/0x60 [amdgpu]
->     [677852.635026]  amdgpu_flush+0x34/0x50 [amdgpu]
->     [677852.635208]  filp_flush+0x38/0x90
->     [677852.635213]  filp_close+0x14/0x30
->     [677852.635216]  do_close_on_exec+0xdd/0x130
->     [677852.635221]  begin_new_exec+0x1da/0x490
->     [677852.635225]  load_elf_binary+0x307/0xea0
->     [677852.635231]  ? srso_alias_return_thunk+0x5/0xfbef5
->     [677852.635235]  ? ima_bprm_check+0xa2/0xd0
->     [677852.635240]  search_binary_handler+0xda/0x260
->     [677852.635245]  exec_binprm+0x58/0x1a0
->     [677852.635249]  bprm_execve.part.0+0x16f/0x210
->     [677852.635254]  bprm_execve+0x45/0x80
->     [677852.635257]  do_execveat_common.isra.0+0x190/0x200
->
->     Suggested-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->     Signed-off-by: Gang Ba <Gang.Ba@amd.com>
->     Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->     Cc: stable@vger.kernel.org
->
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> Reverting 1f02f2044bda on top of 6.17-rc2 fully eliminates the hang on
-> my system.
+Hi,
 
-Should be fixed in:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3Daa5fc4362fac9351557eb27c745579159a2e4520
+Two Arch Linux users reported that a suspend cycle makes their xHCI
+controllers die since the 6.16 release.
 
-Alex
+Link:
+https://bbs.archlinux.org/viewtopic.php?id=307641
 
->
-> Environment:
->     GPU: AMD Radeon 7900 XTX
->     Kernel: 6.17-rc2
->     Distro: Fedora Rawhide
->     Hardware probe: https://linux-hardware.org/?probe=3D99f5cf44a4
->     Kernel config and full dmesg are attached.
->
-> Reproducer (two ways)
->     Launch Steam and trigger shader compilation (automatic background
-> pre-cache or any action that compiles shaders).
->     Alternatively, launch Halo Infinite and start a campaign. Within a
-> short time the GPU hang occurs and gpu_sched prints repeated
-> *ERROR* Trying to push to a killed entity, followed by a blocked
-> ttm_bo_delayed_delete worker as in the trace above.
->
-> Impact / notes
->     This is a runtime GPU hang on a current RDNA3 card; the offending
-> commit is CC=E2=80=99d to stable, so it would be good to fix or revert be=
-fore
-> it propagates.
->
-> Thanks for looking into this.
->
-> --
-> Best Regards,
-> Mike Gavrilov.
+Posted log snippet:
+Aug 16 12:12:53 talc kernel: xhci_hcd 0000:00:14.0: xHCI host not responding to stop endpoint command
+Aug 16 12:12:53 talc kernel: xhci_hcd 0000:00:14.0: xHCI host controller not responding, assume dead
+Aug 16 12:12:53 talc kernel: xhci_hcd 0000:00:14.0: HC died; cleaning up
+Aug 16 12:12:53 talc kernel: usb 1-8: PM: dpm_run_callback(): usb_dev_resume returns -22
+Aug 16 12:12:53 talc kernel: usb 1-5: PM: dpm_run_callback(): usb_dev_resume returns -5
+Aug 16 12:12:53 talc kernel: usb 1-5: PM: failed to resume async: error -5
+Aug 16 12:12:53 talc kernel: usb 1-8: PM: failed to resume async: error -22
+Aug 16 12:12:53 talc kernel: OOM killer enabled.
+Aug 16 12:12:53 talc kernel: Restarting tasks: Starting
+Aug 16 12:12:53 talc kernel: mei_hdcp 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04: bound 0000:00:02.0 (ops i915_hdcp_ops [i915])
+Aug 16 12:12:53 talc kernel: usb 1-5: USB disconnect, device number 3
+Aug 16 12:12:53 talc kernel: Restarting tasks: Done
+Aug 16 12:12:53 talc kernel: random: crng reseeded on system resumption
+Aug 16 12:12:53 talc kernel: usb 1-8: USB disconnect, device number 4
+Aug 16 12:12:53 talc kernel: PM: suspend exit
+
+I tried suspending my PC packed with several xHCs and none of them died,
+so it may be hardware specific. The log shows this Intel PCI ID:
+
+Aug 16 12:07:31 talc kernel: pci 0000:00:14.0: [8086:4ded] type 00 class 0x0c0330 conventional PCI endpoint
+
+
+A bisect effort is ongoing and c0c9379f235d ("Merge tag 'usb-6.16-rc1'
+of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb") is bad,
+so that's where the bug likely came from.
+
+Any ideas what it could be? I have none, looks like it may be another
+utterly unobvious issue from a trivial cleanup patch.
+
+Christian (Cc) is the Arch package maintainer helping track this down.
+
+Regards,
+Michal
