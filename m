@@ -1,166 +1,80 @@
-Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9EA31814C
-	for <regressions@lists.linux.dev>; Mon, 18 Aug 2025 11:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64555258EC7;
+	Mon, 18 Aug 2025 11:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755516303; cv=none; b=m1z7D+2WF2sp8AJ4GSNvsKPU+fOc/WByYKo43jmnweyIVsfqs1hlRyTnhwx0kSaODimCKe6/bdexYPFY+T+o/IaFaa6ja0HBUEh8t8qzUZS4gym9DFx37CVE6h82X8gqXOWMWeN2WiEGfMjABpIhsHH3+HEYL07dBQZhA4564WQ=
+	t=1755517342; cv=none; b=nCAvllbieVOSV0Z4ZWnMD+USqBM/BGZwQWHL2ez6eAe48gVqPnvC41xeYiGCwfGqACN6O3iTXA79YmJ/79B2vd2zllbgPUtcS0wa1lR8rIuArWTS5ZLYm0pEz8DKYhmB/fi9ngQIBHw8LkxPZ6cIsapy/xR+y4IAgGzli0Sfffc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755516303; c=relaxed/simple;
-	bh=Qkbr+uQCuilHZLSmb/1/G8odbybj74cC3/YfI227FYI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b9oDVXQw7gusBoVITGKxKM9cnNzfh2gUdI8ggyvXtjyZq0lBrvIuqAjVWcIVzJXBObHN+7sORbZrAffmkB59Y3Afc+baV6cm0D/gnVYeduMMSTrn2Ed/YBBz7s/sGtVNGkbWp2jAKrg7SxHgN5/0ll767jRshYG+cnQLBYpf84Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=arFx1KDr; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+	s=arc-20240116; t=1755517342; c=relaxed/simple;
+	bh=oC5vZnztnlIcER5pgvEzBD+Ze82XllsXn8EMgCLpIMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaoyizuf7at6m0OhZDkAoGHoocACasfi49NF22CdHh9xZz9Yj2w8EAPy9H6k8FZYMHsmZzOys86w8buQ54dSKSpphWiSKHC3hk6LDgOdm4EDjcUGdwonulL9+blGkr9Jfq0PfNy6hnMWkHt3nQJhR0eN8Xgk+h4YlWAo9zC7MVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=V503yscL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="arFx1KDr"
-dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=To:From;
-	bh=UxZbz9psm4mpR+SeH60qIj7pVbyxVdlqxbXa5D5Xxhw=;
-	b=arFx1KDryvlRqvvhPYG6oYfE5ivJ1gxdCmv+ydI3uSSKl724tQDCuxar0BqNiYAeAU38uOvvH
-	GAMu7vomlkrMcchvyV4Yr10+3pFJ36k3uPSaUS9o9d68czax7LspoJx54hCwE6xlGCt/ag4Hp23
-	NRjOLcxLGmqkYhaL+m+pNh8=
-Received: from w003.hihonor.com (unknown [10.68.17.88])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4c59Nd1yQ9zYlvVq;
-	Mon, 18 Aug 2025 19:24:49 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w003.hihonor.com
- (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 18 Aug
- 2025 19:24:57 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 18 Aug
- 2025 19:24:57 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
-	<adobriyan@gmail.com>, <rick.p.edgecombe@intel.com>, <ast@kernel.org>,
-	<k.shutemov@gmail.com>, <jirislaby@kernel.org>,
-	<linux-fsdevel@vger.kernel.org>
-CC: <polynomial-c@gmx.de>, <gregkh@linuxfoundation.org>,
-	<stable@vger.kernel.org>, <regressions@lists.linux.dev>, wangzijie
-	<wangzijie1@honor.com>
-Subject: [PATCH v2] proc: fix missing pde_set_flags() for net proc files
-Date: Mon, 18 Aug 2025 19:24:28 +0800
-Message-ID: <20250818112428.953835-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="V503yscL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4822AC4CEEB;
+	Mon, 18 Aug 2025 11:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1755517342;
+	bh=oC5vZnztnlIcER5pgvEzBD+Ze82XllsXn8EMgCLpIMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V503yscL+OdWMGhcI5jZ6ao7SgIQiZy5m9+pRerk16nT3qlNc1x+/59nlIqp+SP2v
+	 7OkP1cuptCAOSnN5p601ml5vawmYA3jTQiM3XrokheL6rsAkafQmuGvgpAXzkCLlWG
+	 Frd3rhr07h1EYMy/hSgMmZDS3h/iszFoOUo4YgS0=
+Date: Mon, 18 Aug 2025 13:42:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: wangzijie <wangzijie1@honor.com>
+Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, adobriyan@gmail.com,
+	rick.p.edgecombe@intel.com, ast@kernel.org, k.shutemov@gmail.com,
+	jirislaby@kernel.org, linux-fsdevel@vger.kernel.org,
+	polynomial-c@gmx.de, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v2] proc: fix missing pde_set_flags() for net proc files
+Message-ID: <2025081810-hulk-polio-097b@gregkh>
+References: <20250818112428.953835-1-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
- (10.68.31.243)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250818112428.953835-1-wangzijie1@honor.com>
 
-To avoid potential UAF issues during module removal races, we use pde_set_flags()
-to save proc_ops flags in PDE itself before proc_register(), and then use
-pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
+On Mon, Aug 18, 2025 at 07:24:28PM +0800, wangzijie wrote:
+> To avoid potential UAF issues during module removal races, we use pde_set_flags()
+> to save proc_ops flags in PDE itself before proc_register(), and then use
+> pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
+> 
+> However, the pde_set_flags() call was missing when creating net related proc files.
+> This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+> inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
+> 
+> Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+> NULL check for proc_ops in pde_set_flags().
+> 
+> [1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+> 
+> Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al)
+> Reported-by: Lars Wendler <polynomial-c@gmx.de>
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+> v2:
+> - followed by Jiri's suggestion to refractor code and reformat commit message
+> ---
+>  fs/proc/generic.c | 36 +++++++++++++++++++-----------------
+>  1 file changed, 19 insertions(+), 17 deletions(-)
+> 
 
-However, the pde_set_flags() call was missing when creating net related proc files.
-This omission caused incorrect behavior which FMODE_LSEEK was being cleared
-inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
 
-Fix this by ensuring pde_set_flags() is called when register proc entry, and add
-NULL check for proc_ops in pde_set_flags().
+<formletter>
 
-[1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al)
-Reported-by: Lars Wendler <polynomial-c@gmx.de>
-Signed-off-by: wangzijie <wangzijie1@honor.com>
----
-v2:
-- followed by Jiri's suggestion to refractor code and reformat commit message
----
- fs/proc/generic.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-index 76e800e38..003031839 100644
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -367,6 +367,23 @@ static const struct inode_operations proc_dir_inode_operations = {
- 	.setattr	= proc_notify_change,
- };
- 
-+static void pde_set_flags(struct proc_dir_entry *pde)
-+{
-+	if (!pde->proc_ops)
-+		return;
-+
-+	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
-+		pde->flags |= PROC_ENTRY_PERMANENT;
-+	if (pde->proc_ops->proc_read_iter)
-+		pde->flags |= PROC_ENTRY_proc_read_iter;
-+#ifdef CONFIG_COMPAT
-+	if (pde->proc_ops->proc_compat_ioctl)
-+		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
-+#endif
-+	if (pde->proc_ops->proc_lseek)
-+		pde->flags |= PROC_ENTRY_proc_lseek;
-+}
-+
- /* returns the registered entry, or frees dp and returns NULL on failure */
- struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
- 		struct proc_dir_entry *dp)
-@@ -374,6 +391,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
- 	if (proc_alloc_inum(&dp->low_ino))
- 		goto out_free_entry;
- 
-+	pde_set_flags(dp);
-+
- 	write_lock(&proc_subdir_lock);
- 	dp->parent = dir;
- 	if (pde_subdir_insert(dir, dp) == false) {
-@@ -561,20 +580,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
- 	return p;
- }
- 
--static void pde_set_flags(struct proc_dir_entry *pde)
--{
--	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
--		pde->flags |= PROC_ENTRY_PERMANENT;
--	if (pde->proc_ops->proc_read_iter)
--		pde->flags |= PROC_ENTRY_proc_read_iter;
--#ifdef CONFIG_COMPAT
--	if (pde->proc_ops->proc_compat_ioctl)
--		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
--#endif
--	if (pde->proc_ops->proc_lseek)
--		pde->flags |= PROC_ENTRY_proc_lseek;
--}
--
- struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 		struct proc_dir_entry *parent,
- 		const struct proc_ops *proc_ops, void *data)
-@@ -585,7 +590,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 	if (!p)
- 		return NULL;
- 	p->proc_ops = proc_ops;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_data);
-@@ -636,7 +640,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
- 	p->proc_ops = &proc_seq_ops;
- 	p->seq_ops = ops;
- 	p->state_size = state_size;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_seq_private);
-@@ -667,7 +670,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
- 		return NULL;
- 	p->proc_ops = &proc_single_ops;
- 	p->single_show = show;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_single_data);
--- 
-2.25.1
-
+</formletter>
