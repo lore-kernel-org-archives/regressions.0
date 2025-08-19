@@ -1,174 +1,111 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366D333EB09
-	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 13:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E564C1FA272;
+	Tue, 19 Aug 2025 14:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755611127; cv=none; b=SNl7jLebDLumCyZe3hKSyFLpcubWoYYkjRavVIvC8BvBdyQLbX1aYmtMqGmmTUwz47FC3ZkQ+3lzCn+fLGVXPA9Eyy7fx4cH+0J1iMSI9u5sv6tm//dYNNMySKZnTgN3MzIxaY0gXMRAkPLD//MCrmVr6ZdJcS1mEUN4h4oAShs=
+	t=1755612061; cv=none; b=tmAFFIml02faULvFKrI+g5NoUhGthJNFcADCL3hkLN1xFHpg/ZYyAw+5F258PWEF0Wfrb1hjNS1XZOvt8gG3lSZdvb8Tq/z4qT6upOgN95bLPWkuoNijHrSCD0mV9e67RxKh11Mbw3RA6Nd+Pe91tcr33ZS4yyLqWA2WT3R1Sy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755611127; c=relaxed/simple;
-	bh=SarDp3gPgO/YdgGtf3xtssRMRvDNPW1kKle/w7h6F4U=;
+	s=arc-20240116; t=1755612061; c=relaxed/simple;
+	bh=ha4t6RRIk6XpkYKIpDFUbToR4GM8kq4XAbtG+yoAZGk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sOumeNz83SnPfhokAONvCTdyB5oTMxnhlgRxiZJkeD38qSr3D2gjpmqmySXxmWqa6YzLN1PU/YUQm6TiyLtqpcXCYSq1kjqBaxGbhRpux5MJMjaNtcKEeumjRr8h5A+6mtUuh7i2Q7VfHdIesrde3aah2kFAeMP/3OsygjY6PKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TyLpsfR6; arc=none smtp.client-ip=209.85.218.46
+	 To:Cc:Content-Type; b=S1ydCru2uPQLgRynnuVcYcNhFVavP6tmLT+tMuqmfyiHIIqHTYUg2k5tXqEmK4NiE9lmHpoGKaRx2f1M1td3bXcNiiGWUKqDIrEDp2lJXuEXW2OmB+d9v6MLAlyMnSBoPCHP4vQII8FcxLUGDl/uqu7Gm9MfgqHvmtmZhjrso24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CriPKwcL; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyLpsfR6"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb78ead12so749835766b.1
-        for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 06:45:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CriPKwcL"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24457f57ed4so9743955ad.0;
+        Tue, 19 Aug 2025 07:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755611123; x=1756215923; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SarDp3gPgO/YdgGtf3xtssRMRvDNPW1kKle/w7h6F4U=;
-        b=TyLpsfR68pOjJM7OpiTVlU7Bb8qrSdirHbQbtI51VdTN7XYHvFsvo7v3nD4Xd2fJAm
-         0temHw09iKMR42XP0HbmsQHuXWSg0NNCl73I82eb8x+ZiYp6UCuN0kYjM04WiHikDSgn
-         EUSzvh/bbEmu6H8LY6bdX3PdcMhS/bTrWcRXaABb5mmK5YJIrj4EAWdj784NtEUYhPoq
-         zQKDmgewLiRVEerCsOOQo06aJF1wv+WpuvNeCOWzeGTmRrM4hDHZl4Mz3Axp0NT/Fhkx
-         Mp6xiNzO7peUlc6tuDBc2Oq7tiwvmGYWPLXwt2y1Jb52RjeogYxD1n78+YWYr78843oG
-         wdsA==
+        d=gmail.com; s=20230601; t=1755612059; x=1756216859; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=50WBtMPwvOw9oYEsHnoDkF8zoLwvDN0HfFQfOPg/bdE=;
+        b=CriPKwcLu0eKJtTcr3a8I0cqQlBe+bYIH7xwFNGIPrz5BaRZ3y7BLhYmb1CcNmRCE+
+         7p6tDlQxNKHW5XIxEbvgIrTCflaQZZfzu1smdXX8FGTLJdYrrYAaMyCR+8/qUavSHg50
+         qWFMMGYWk67lhGiMaKi5U0qUx1jkjwlLLIIoKvJONoBVP7PuMp4FfzJhd9KIa6UvLZ0q
+         7mluON59rfbC/o+EzoT8AdnmypHcTkUoEdrLn5KMPmmMsdHAVzqWpLkDgr2BBLZ9pN1m
+         VUmazSomNgul01RbUTy9EwHPuWOrFNMdX1D/QW6bvu3cz4l7DiVlQfufHhPFzPvf7Czd
+         ssMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755611123; x=1756215923;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SarDp3gPgO/YdgGtf3xtssRMRvDNPW1kKle/w7h6F4U=;
-        b=lI4qi0s2nduaUT47bTAVzG+1YO9AdhvkAm5AG+NkjdX21qT2Pq9r9dvaXhjevBDFZS
-         wPPzti7blDP3lrJR/U/jYSs0pCcJmBlGVbaGFQZXWJQT9BABgqLobIiS6xP5r8Ft4lOQ
-         8HErzKun8fbFb+YsdE0NgTHmpl8mE9OY1yG+FrYhMmNT8mmGgGLxGy0DodibKoSOQtnm
-         AaULs2hcAWaWwLxBAwDMHhlMI/ZJvoCfyK1+YKGOhZlv4AV+Y7iKTH1He68uCbVz1xLC
-         0wPL/WYv0agaKvFYPTlNDdTRJS8nDl5EXi+thKfqV4nTMRSdnehsrIAHqOaSljaFJaeZ
-         0G9g==
-X-Gm-Message-State: AOJu0Yz82DzU9we/V5+yI1JEy19NyiT+P65y4rgrqR24XeNyWL3IhDB/
-	5pg5e6zmObS4vgV9EmvECKUge9he08/WAKhJL8mFuOc3kDov628rV2FSXXAlPEdpA07KdkJhdmc
-	F1DmdIF0RDoPYqAd5vMBOFQoJopfAp5Q2/naT5RuThg5k
-X-Gm-Gg: ASbGncvv7+IRgS8LuthdmlJ5sTkpfbl2xgdGD2EA0zFhhyOfN9yvJ5kJhJXmqAZMh/w
-	fnSbOryAz/0hDwkG6sS4YIe74IbHaeWnMJBJWQnQEVtrbVVt3NUj/HqRXgNnk2jri5IAP28EUXt
-	rrsQX5XM/YS4QWyJm5EokskAFs//BqhPruGtmxjCkilAVz/o6xZSDfmjfMSzSpQYERATj3mxc2H
-	xoPa0A=
-X-Google-Smtp-Source: AGHT+IGuEnssLntoKTg06N8UVz0+UwKwOhj3+VWR97223SWuRF4IgMIPW9I5hYz5V+54tTv67rXumI/lXzSaP19IpJs=
-X-Received: by 2002:a17:906:dc8b:b0:af9:1d21:65a1 with SMTP id
- a640c23a62f3a-afddc95a1dbmr279438766b.11.1755611122852; Tue, 19 Aug 2025
- 06:45:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755612059; x=1756216859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=50WBtMPwvOw9oYEsHnoDkF8zoLwvDN0HfFQfOPg/bdE=;
+        b=pX8+ubuj9k+n+OPsmkZwWnDW5vSSp6Kpr2AooxTLYXvtIw+5fi8ZFFHreG+crXxrrV
+         9QHBB2+vNXFLRMoQVW8SN5BJimE7jBaBhZ4QhAOJDebdUdgibC/xN2HPjYLVgi7Y+oyH
+         ml8AOFqvoH92ogCjC2Gt0JOhG4R9JWdUYJHWsO1GIJ9L25J8EcQGHWSuq/FG9+Lbr6rh
+         ETzR/gRraMb2sM4YcmehbcG2C5yZ5B3XosLlVbHcmgajN/DhY/Mkz45QdRTdYL7uKacD
+         sc/AWz0TboohRULlb7Wlep/3KFrLa5BkGkEUtgSsXILd8aODiiGOpiGA2ej039AhURzd
+         dOtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZmXBM7xg/rtDLWSbpEzzRFuJTawc+J9nas5s3LfCs5KD6jA8+zPif3Q19UAN2ElPYQ7LdhkG7uIThu1Y=@lists.linux.dev, AJvYcCXfw7yAEGQ9iirVlLgl5J6ZvKf7PYt1sfspd1IgdrqEikKm6wvtlbsrTFM4oWKxobdB+75M@lists.linux.dev
+X-Gm-Message-State: AOJu0YwU4hx5lwlPg1yxztSf65Im1iFLE0QORoH2NdXr9krDcUaVGx1q
+	xZqTZbITKFtKrdAAcEp0ptNGhxrqpybNnHOGMypS7HanEyruPNsV9rb9eEPLvGXoWJjeXyPUrLt
+	EwOTLz8VakrqriZvdsCB4FbNoA6r0U1E=
+X-Gm-Gg: ASbGnct283mRvj1B4PpXdO0R+f+oexo/eQFlt8x9QUKHLT2Xcn14z4BRl4bXCVGC3Ls
+	Aq4Pa0b938Osb9YMrWRTzY5vQhichj58KNuIjQggH4fDZcHFTFsPoxnS/HvsSsWMIie4Aid5HI8
+	Vfp2TewK52BeFh2XWZZqZNhOTHjm1kT0T+bEjGHRfBvd4pr5KwmzFu7+9sSYQVf4S+jDortrUsK
+	LfGB1p4
+X-Google-Smtp-Source: AGHT+IFGLtNsuaHcZ9bLDDqN7J8ChtiAW1fZ0dZtuV570UBvC/PTJYsyK7ZfZ8g0ZH1WGMch8OcgtZ3J7WCfv1Mzp/4=
+X-Received: by 2002:a17:902:f547:b0:240:1879:c2fd with SMTP id
+ d9443c01a7336-245e02ba0ecmr19746985ad.2.1755612057723; Tue, 19 Aug 2025
+ 07:00:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACTEcX6oXBot1VBApOyKVMVXsAN9BsvQMLa8J0iKpNeB-eLttQ@mail.gmail.com>
- <642d439ea1be8e48ee5c47fd3921a786452fb931@intel.com> <CACTEcX5Y3PNXNkhnK1dGFe+k3sigOZNpj66KKGAS9XeHqRu35w@mail.gmail.com>
- <0b15e33603a46f6cc7ad7d09a156044f11367169@intel.com> <CACTEcX47bUd2tp=LYkQnhK29Js=vLN0JfXL8Aq6mOFBVYumpzQ@mail.gmail.com>
- <CABgObfZKKeqMrAUyS8CB4ARkW_8Z9QREgpgYcq2jxoQ9ppS6MA@mail.gmail.com>
- <CACTEcX7oa+Shj=uYiRMoWpng+RZXDeQrOa-VTRmzVVtXJMCgLQ@mail.gmail.com> <CACTEcX7hsRkzYEBg4pQd5s36p_ZXJM=dtxSGmBjfkt5sWrXP8g@mail.gmail.com>
-In-Reply-To: <CACTEcX7hsRkzYEBg4pQd5s36p_ZXJM=dtxSGmBjfkt5sWrXP8g@mail.gmail.com>
-From: Andy Mindful <andy.mindful@gmail.com>
-Date: Tue, 19 Aug 2025 16:45:11 +0300
-X-Gm-Features: Ac12FXzUXiaf2APgZGDQHtK929W1yQQZJ8xoGGhTI90NnJ6i0iL0VZZKQ0T6JiQ
-Message-ID: <CACTEcX4CBv9BTgvSrhJsFvPYLm_e5ms1PWzxsjv-hnudxiRTTw@mail.gmail.com>
-Subject: Re: [REGRESSION] tty lockup and WWAN loss after hibernate/suspend in
- 6.8+ on ThinkPad X1 Carbon Gen 10
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-acpi@vger.kernel.org, rafael@kernel.org, ville.syrjala@linux.intel.com, 
-	tglx@linutronix.de, Christian Brauner <brauner@kernel.org>, 
-	Jani Nikula <jani.nikula@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, regressions@leemhuis.info
+References: <CA+G9fYv+gELzgcL4y8rOQbTxv2Y2JQTFhNkgUcLbzPJ_yDTziA@mail.gmail.com>
+In-Reply-To: <CA+G9fYv+gELzgcL4y8rOQbTxv2Y2JQTFhNkgUcLbzPJ_yDTziA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 19 Aug 2025 16:00:44 +0200
+X-Gm-Features: Ac12FXxTFIhGwb8CqneZObiwy9IEE8bW5R6jDoBMnubJoMsWPuCWTeTncYkgRXU
+Message-ID: <CANiq72k-Z9=EVVXgJp1OuKwSbQ3qq723B0F2PaPzRD4P+QEQ=A@mail.gmail.com>
+Subject: Re: next-20250818: rust: `ARCH_KMALLOC_MINALIGN` is defined multiple times
+To: Naresh Kamboju <naresh.kamboju@linaro.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
+	Danilo Krummrich <dakr@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org, 
+	clang-built-linux <llvm@lists.linux.dev>, Miguel Ojeda <ojeda@kernel.org>, wedsonaf@gmail.com, 
+	Gary Guo <gary@garyguo.net>, Benno Lossin <benno.lossin@proton.me>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Aug 19, 2025 at 10:40=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> Build regressions were detected on multiple architectures (arm, arm64,
+> riscv) with the Linux next-20250818 tag when building with Rust-enabled
+> configurations (rust-gcc and rust-clang) from selftests/rust/config.
+>
+> Duplicate definition of ARCH_KMALLOC_MINALIGN in Rust bindings is
+> causing build failures across affected toolchains.
 
-I've tried to bisect this again on a branch 'linux-6.8.y' @ linux-stable.
+Thanks a lot Naresh, this was reported already by Thorsten and me yesterday=
+:
 
-I made a commit log via: git log --oneline > commits-linux-6.8.y.txt
-And started manually searching bad and good commits, this is the log:
-3a2bd2b150f4 - bad
-35a4474b5c3d - bad
-dc97f6344f20 - bad
-b85ea95d0864 - bad
-ffc253263a13 - good
+    https://lore.kernel.org/rust-for-linux/8aa05f08-ef6e-4dfe-9453-beaab7b3=
+cb98@leemhuis.info/
 
-Once I have good, I switched back to: git checkout linux-6.8.y and
-started bisecting,
-which lead to below log:
+A patch from Danilo is in flight to fix it:
 
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [3a2bd2b150f45844d99267696256716e4f23bf53] printk: Use
-prb_first_seq() as base for 32bit seq macros
-git bisect bad 3a2bd2b150f45844d99267696256716e4f23bf53
-# status: waiting for good commit(s), bad commit known
-# bad: [35a4474b5c3dd4315f72bd53e87b97f128d9bb3d] Merge tag
-'bcachefs-2024-01-21' of https://evilpiepirate.org/git/bcachefs
-git bisect bad 35a4474b5c3dd4315f72bd53e87b97f128d9bb3d
-# status: waiting for good commit(s), bad commit known
-# bad: [dc97f6344f205b0dfa144e1b3e16d6dc05383d57] cxl/pci: Register
-for and process CPER events
-git bisect bad dc97f6344f205b0dfa144e1b3e16d6dc05383d57
-# status: waiting for good commit(s), bad commit known
-# bad: [b85ea95d086471afb4ad062012a4d73cd328fa86] Linux 6.7-rc1
-git bisect bad b85ea95d086471afb4ad062012a4d73cd328fa86
-# status: waiting for good commit(s), bad commit known
-# good: [ffc253263a1375a65fa6c9f62a893e9767fbebfa] Linux 6.6
-git bisect good ffc253263a1375a65fa6c9f62a893e9767fbebfa
-# good: [7d461b291e65938f15f56fe58da2303b07578a76] Merge tag
-'drm-next-2023-10-31-1' of git://anongit.freedesktop.org/drm/drm
-git bisect good 7d461b291e65938f15f56fe58da2303b07578a76
-# good: [2a80532c0745e140852e6b579bbe8371332bb45d] Merge tag
-'printk-for-6.7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux
-git bisect good 2a80532c0745e140852e6b579bbe8371332bb45d
-# good: [2a80532c0745e140852e6b579bbe8371332bb45d] Merge tag
-'printk-for-6.7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux
-git bisect good 2a80532c0745e140852e6b579bbe8371332bb45d
-# bad: [e70703890b2586bc3567365d391c260d23fb7a94] Merge tag
-'topic/nvidia-gsp-2023-11-03' of git://anongit.freedesktop.org/drm/drm
-git bisect bad e70703890b2586bc3567365d391c260d23fb7a94
-# good: [b06f58ad8e8c4154bc88d83b4fd70f74ede50193] Merge tag
-'driver-core-6.7-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-git bisect good b06f58ad8e8c4154bc88d83b4fd70f74ede50193
-# good: [1f24458a1071f006e3f7449c08ae0f12af493923] Merge tag
-'tty-6.7-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-git bisect good 1f24458a1071f006e3f7449c08ae0f12af493923
-# bad: [bfafa2c19d706ab1db0b581f9d3886469fab8627] Merge tag
-'phy-for-6.7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy
-git bisect bad bfafa2c19d706ab1db0b581f9d3886469fab8627
-# bad: [9b6db9a3a675fc2f33b587a9909dcef20c4b3794] Merge tag
-'thunderbolt-for-v6.7-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt into
-usb-next
-git bisect bad 9b6db9a3a675fc2f33b587a9909dcef20c4b3794
-# good: [efa33cd89c8acc510ed0e4dbf98fc1cf3220b9dc] USB: typec:
-tps6598x: Add status trace for tps25750
-git bisect good efa33cd89c8acc510ed0e4dbf98fc1cf3220b9dc
-# bad: [ff8e4630fa3c1f8775f162ceaf52ba8b656927de] usb: gadget:
-lpc32xx-udc: Convert to use module_platform_driver()
-git bisect bad ff8e4630fa3c1f8775f162ceaf52ba8b656927de
-# bad: [c087fada0a6180ab5b88b11c1776eef02f8d556f] xhci: Clean up stale
-comment on ERST_SIZE macro
-git bisect bad c087fada0a6180ab5b88b11c1776eef02f8d556f
-# bad: [5220d8b04a840fa09434072c866d032b163419e3] dt-bindings: usb:
-gpio-sbu-mux: Make 'mode-switch' not required
-git bisect bad 5220d8b04a840fa09434072c866d032b163419e3
-# bad: [1034cc423f1b4a7a9a56d310ca980fcd2753e11d] gpio: update Intel
-LJCA USB GPIO driver
-git bisect bad 1034cc423f1b4a7a9a56d310ca980fcd2753e11d
-# bad: [bfd3824c88081f9b2101d68376f14779ce26691f] i2c: Add support for
-Intel LJCA USB I2C driver
-git bisect bad bfd3824c88081f9b2101d68376f14779ce26691f
-# good: [acd6199f195d6de814ac4090ce0864a613b1580e] usb: Add support
-for Intel LJCA device
-git bisect good acd6199f195d6de814ac4090ce0864a613b1580e
-# first bad commit: [bfd3824c88081f9b2101d68376f14779ce26691f] i2c:
-Add support for Intel LJCA USB I2C driver
+    https://lore.kernel.org/rust-for-linux/20250818180923.192042-1-dakr@ker=
+nel.org/
 
-Can you please advise, if it makes sense and results are accurate?
+If you could test it, that would be great. I assume Danilo will apply
+the patch on top of alloc-next, since the issue is just inside that
+branch that goes into linux-next.
 
-Best regards!
-Andriy
+Thanks!
+
+Cheers,
+Miguel
