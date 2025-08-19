@@ -1,155 +1,75 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617D3043C2
-	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 17:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC3F304989
+	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 17:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755624946; cv=none; b=MLZlTVROyyI2u95o6/QeHzxRqmbBUHFx4lYsn9Nj98hVATghUnp2CtWWDsPMB4Zznv8KRQ34C8JOrgvbER3FjpIqbJ1U1EGuY+3P5yxVuZD8yyiVnpJNnjFnWPmIMsU+jE8+NHyAWfV8j7mTQ79A+DO5tvAqznkrYUnqvFqwHpQ=
+	t=1755624981; cv=none; b=J6bEZ56nIJKIEfLvqmfHl60dqh64XwFUiLAcjMG84VDM+4oSpdI2gNd/8vNcs9LCAlB7xlgcRLFdt6BZ/TW7CXX+pvzqqxPbg3MmQLAWafYIOLrTDumDZLr6Mxfiyc5XlWZksm9gTv0zsWBJJ/ZtRyj81m1LMykxFCgQuGVCS38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755624946; c=relaxed/simple;
-	bh=TbYlPaN8y09mXVm7U32ZTGP7XaIU/o4ZbvH5yZ+Q6Yc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=cpaqf4Sk0DdCPXhYHfRzxTaLuP9E9LmenPLM6i3R+xKz2JmuljJrdE+x4KVqFOfdVaIGAEmgr0gMCv3RMi64Pi4qVSXs9yPHifAAngH05Yjo/RWQZ6aaWEpAV4xJXAiCugDDOLsivzq3+WmyfBoaPn0ZxtEJ3m2nyHMtF95zWTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=a4y0J3+M; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Y79F2h1d; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1755624981; c=relaxed/simple;
+	bh=v1iFWk+WhBvlGv4FF4pqip2HhMgUj5gOst7ERK3X6b8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=BpcPHBfJhPghEDS3RL4R+rtIki3PQlRMRgKF6G1MhB4T0uqC+41cUse3Hi+0jgt9mmZqcQK6OMSWCWE3ErdMRbvfAh1329KUsTqvE3rgILEOcucEwRiKwBmB22riWzIaZXS67XBCsxMXWWKgAwwuWBER/6DSBBwteSAol/TpKos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NLZ69iJc; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="a4y0J3+M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y79F2h1d"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A3EC014001C8;
-	Tue, 19 Aug 2025 13:35:43 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 19 Aug 2025 13:35:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1755624943;
-	 x=1755711343; bh=AfPyoG66MRGoGsRhRebr6qC/Wlem8LqEZGgBOHpR/7g=; b=
-	a4y0J3+MvFBxCiIo7y8SBfeEQ/CQ+2iaHuTNLWWVz0kWW97s8sDRxeO/uTJG6ve/
-	RG8uTSu0nu4ah3qpS4pJKFMx1TLXiRT10N2vMuuKgmuscNmALPRExwuw13MyZdkl
-	nNWhMrj4T3Rq44G6mQFGHPWrYR3ofoNdiZudI/fyj6tIhaLkhL/qMwcJQeWexhi1
-	T8jYeBHOM5uEdQbSlno0NX6SWUK3O9b6HbZjCFlx5FlbyK5jKs9qBqlyDSoPB2UA
-	VQoet9S3JMD91jOgAYIJYWHBNfodKxW6ucjVWi3dXo+mS6t6FKO/rgHpC2SKgW8N
-	tKc9gAl76lsW0mbLa8nFig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1755624943; x=
-	1755711343; bh=AfPyoG66MRGoGsRhRebr6qC/Wlem8LqEZGgBOHpR/7g=; b=Y
-	79F2h1d7oVPzJyNsaCA0z99ZOPZuGOz9skw/dVePF2rinpsiutMH1/rpAhyBUjnp
-	f4SiSRIoieGOoV9OVeJIF09URPqF4DTfV+Og2WtRhpjwGVsogr2QoIGAUwb2sRVa
-	RtnnC/Eb+gj6KVWY7juYDOaS5uTzXm+emjKAhaR04A24qogp6Dfhw+apITKf+z4b
-	6O/XHOuuUgY0KQh3r/bMW9p13cKi8Yn7qVo9ZZXCcraJhmQNPMHqHon0YV9g8rDL
-	v9ZI82APtyRpxVY5xP00r9ETlpy94mbKXH+zgAN/2GM3rVMrtlKhH6eMTvY1xWJ8
-	nGRhUY9gG7XQeOMRpYDLQ==
-X-ME-Sender: <xms:7rWkaAMu4G6h_VRqx2PP7t1V_8KAaxIJLjUgTrYPbQ0SAcQY8W7WdA>
-    <xme:7rWkaG9lhOtDlVxcRRtIMZ-ss9PcIoDu_UJLjfNtEnmK_dig_cqGg1XcSdjJ4zczR
-    15uHXOTReKIHOtu17Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheeiuddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehrmhhkodhkvghrnhgvlhesrghrmhhlihhnuhigrdhorhhgrdhukh
-    dprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohep
-    rghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtoh
-    epkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigv
-    lhhlsehlihhnrghrohdrohhrghdprhgtphhtthhopegsvghnjhgrmhhinhdrtghophgvlh
-    grnhgusehlihhnrghrohdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghr
-    sehlihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdrkhgrmhgsohhjuheslh
-    hinhgrrhhordhorhhgpdhrtghpthhtoheprghgohhruggvvghvsehlihhnuhigrdhisghm
-    rdgtohhm
-X-ME-Proxy: <xmx:7rWkaOosbCTr4cAmiU6JpdChoouFQxnpot3ea40SuFsNm33heoRmgg>
-    <xmx:7rWkaBxQgCCVUjv7bBke2u5GEbDDHFEEZR_2yu_qi1GFgxykD6GC7A>
-    <xmx:7rWkaGIbPb2M4YfKlHa-77x2qddx56AXIQLmp-pv8mbOusaPGNzAHA>
-    <xmx:7rWkaD79QucciIfIZd3HAgp5e23HgjtH2OnGtRFAdLU4VUEywQZDmw>
-    <xmx:77WkaDF0xjZgLdJnMyexR335RTOn6twT6-Eu1zNmUegTtRAyXRN7yd7h>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CA9C8700065; Tue, 19 Aug 2025 13:35:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NLZ69iJc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=v1iFWk+WhBvlGv4FF4pqip2HhMgUj5gOst7ERK3X6b8=; t=1755624979;
+	x=1756056979; b=NLZ69iJcL6UFvLVD55o5gTPeUJaaAzvtG4Z0zMtTFCbRsi6V2+OX8u74HE73Y
+	AmYyjpdNlC/5OwWeSqgRaMcaXl+5iCibos4Vn2Ouy+AV5G1XNhfWbTAU5yEYr+ZiBDSaVZAapFrlO
+	wjzVqNDsRvh/hvsu0u2oyY+dx/X2EZfqWvpMat1YwPC84RO6/MfwQid5OvC8SX4PTL2no7uDG7y1j
+	B2EiAvMKy65czb1BRmYzvkXTCEREQdNbRUl3+GNuOGV1wrrBrNjCkCizihZ3kO637wRVRkr7xA7HT
+	j5u2lcxspDHwXiiCSTN68T8EdRolB2C31prwFtzNPwImoLXg+w==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1uoQFn-000spQ-0W;
+	Tue, 19 Aug 2025 19:36:11 +0200
+Message-ID: <ad88ed3c-9224-4ee7-b97d-87ead559258b@leemhuis.info>
+Date: Tue, 19 Aug 2025 19:36:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: ANJBU5t4alyg
-Date: Tue, 19 Aug 2025 19:35:20 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Russell King" <rmk+kernel@armlinux.org.uk>
-Cc: "open list" <linux-kernel@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- linux-s390@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
- "Jakub Kicinski" <kuba@kernel.org>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
- "Jose Abreu" <joabreu@synopsys.com>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>
-Message-Id: <0666e47e-a675-47b6-9b6a-5d4e33f6bf5e@app.fastmail.com>
-In-Reply-To: <20250819160049.4004887A48-agordeev@linux.ibm.com>
-References: 
- <CA+G9fYuY=O9EU6yY_QzVdqYyvWVFMcUSM9f9rFg-+1sRVFS6zQ@mail.gmail.com>
- <20250819160049.4004887A48-agordeev@linux.ibm.com>
-Subject: Re: next-20250813 s390 allyesconfig undefined reference to
- `stmmac_simple_pm_ops'
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1755624979;4b83ecc6;
+X-HE-SMSGID: 1uoQFn-000spQ-0W
 
-On Tue, Aug 19, 2025, at 18:00, Alexander Gordeev wrote:
-> On Tue, Aug 19, 2025 at 03:07:56PM +0530, Naresh Kamboju wrote:
-> CONFIG_PM is not defined on s390 and as result stmmac_simple_pm_ops ends up
-> in _DISCARD_PM_OPS(). The below patch fixes the linking, but it is by no
-> means a correct solution:
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c 
-> b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> index 5769165ee5ba..d475a77e4871 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> @@ -668,7 +668,7 @@ static struct pci_driver loongson_dwmac_driver = {
->  	.probe = loongson_dwmac_probe,
->  	.remove = loongson_dwmac_remove,
->  	.driver = {
-> -		.pm = &stmmac_simple_pm_ops,
-> +		.pm = &__static_stmmac_simple_pm_ops,
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The correct solution is to make the PM_SLEEP versions use this
+#regzbot report:
+https://lore.kernel.org/stable/CAJmAMMyOk7AVqQRrtK4Oum2uVKreGeLJ943-kkRCTspoGApZ8w@mail.gmail.com/
+#regzbot introduced: cb1353ef3473
+#regzbot fix: wifi: mt76: mt7925: skip EHT MLD TLV on non-MLD and pass
+conn_state for sta_cmd
+#regzbot monitor:
+https://lore.kernel.org/all/20250818030201.997940-1-mingyen.hsieh@mediatek.com/
 
-            .pm = pm_sleep_ptr(stmmac_simple_pm_ops),
-
-or the corresponding version for the PM_RUNTIME+PM_SLEEP drivers:
-
-            .pm = pm_ptr(stmmac_pltfrm_pm_ops),
- 
-By convention, the pm_ptr()/pm_sleep_ptr() macro should be
-used for any driver using DEFINE_DEV_PM_OPS() or its variants,
-though missing that does not produce a warning for non-exported
-options and only wastes a few bytes of .data.
-
->  #define _DISCARD_PM_OPS(name, license, ns)				\
-> -	static __maybe_unused const struct dev_pm_ops __static_##name
-> +	__maybe_unused const struct dev_pm_ops __static_##name 
-
-This would cause a lot of link failures elsewhere, since _DISCARD_PM_OPS
-needs to ensure the operations are discarded by the compiler, which does
-not happen when they are defined as a global symbol.
-
-The idea of making this a 'static __maybe_unused' symbol is that
-the actual functions get discarded as well but don't need an individual
-__maybe_unused annotation or an #ifdef around them to prevent a
-warning for unused symbols.
-
-     Arnd
+#regzbot report:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.14.y&id=85f6414167da39e0da30bf370f1ecda5a58c6f7b
+#regzbot introduced: efaaf344bc291
+#regzbot dup:
+https://lore.kernel.org/intel-wired-lan/CAMqyJG3LVqfgqMcTxeaPur_Jq0oQH7GgdxRuVtRX_6TTH2mX5Q@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/intel-wired-lan/20250626153544.1853d106@onyx.my.domain/
