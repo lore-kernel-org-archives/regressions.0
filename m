@@ -1,111 +1,267 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E564C1FA272;
-	Tue, 19 Aug 2025 14:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FDC298CB2
+	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 16:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755612061; cv=none; b=tmAFFIml02faULvFKrI+g5NoUhGthJNFcADCL3hkLN1xFHpg/ZYyAw+5F258PWEF0Wfrb1hjNS1XZOvt8gG3lSZdvb8Tq/z4qT6upOgN95bLPWkuoNijHrSCD0mV9e67RxKh11Mbw3RA6Nd+Pe91tcr33ZS4yyLqWA2WT3R1Sy8=
+	t=1755619281; cv=none; b=eBKF6zf40R+K0pTtmZ8g56OmYpqRIIIVrsCzf2DKBHQKVEn/DItJuX4prO5EVHLXpAiHpk+Bz24HWQ6jnrDCxX5tMgRxcByAnqDroYhWqAM8gfhtq+5pjcX8tCcNb/2HhhuEPIoj3bqDcMVVbkK1Zs1NxNGUKAT9JMAp1Y6pOjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755612061; c=relaxed/simple;
-	bh=ha4t6RRIk6XpkYKIpDFUbToR4GM8kq4XAbtG+yoAZGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S1ydCru2uPQLgRynnuVcYcNhFVavP6tmLT+tMuqmfyiHIIqHTYUg2k5tXqEmK4NiE9lmHpoGKaRx2f1M1td3bXcNiiGWUKqDIrEDp2lJXuEXW2OmB+d9v6MLAlyMnSBoPCHP4vQII8FcxLUGDl/uqu7Gm9MfgqHvmtmZhjrso24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CriPKwcL; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755619281; c=relaxed/simple;
+	bh=aOZqyF6r0ZNJ15innnz31uLzrImxXGEftRXbABW1cgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k6cOZwoPcSufvLCOHAnITwId7DFUKnE4SkhO1Mt0msY9M50ZbhCy9c3zGXctWAsxTERRZY1nASW5KgjpEelvFtNLNTM0q1J1MSeSlxGEkz4zCKUh0RvPpXM2xdllCINu9y6xMF6SBRT46452Nm+pEeY03DIzaeV2OA+Ehkjh2Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K8/InV76; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CriPKwcL"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24457f57ed4so9743955ad.0;
-        Tue, 19 Aug 2025 07:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755612059; x=1756216859; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50WBtMPwvOw9oYEsHnoDkF8zoLwvDN0HfFQfOPg/bdE=;
-        b=CriPKwcLu0eKJtTcr3a8I0cqQlBe+bYIH7xwFNGIPrz5BaRZ3y7BLhYmb1CcNmRCE+
-         7p6tDlQxNKHW5XIxEbvgIrTCflaQZZfzu1smdXX8FGTLJdYrrYAaMyCR+8/qUavSHg50
-         qWFMMGYWk67lhGiMaKi5U0qUx1jkjwlLLIIoKvJONoBVP7PuMp4FfzJhd9KIa6UvLZ0q
-         7mluON59rfbC/o+EzoT8AdnmypHcTkUoEdrLn5KMPmmMsdHAVzqWpLkDgr2BBLZ9pN1m
-         VUmazSomNgul01RbUTy9EwHPuWOrFNMdX1D/QW6bvu3cz4l7DiVlQfufHhPFzPvf7Czd
-         ssMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755612059; x=1756216859;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=50WBtMPwvOw9oYEsHnoDkF8zoLwvDN0HfFQfOPg/bdE=;
-        b=pX8+ubuj9k+n+OPsmkZwWnDW5vSSp6Kpr2AooxTLYXvtIw+5fi8ZFFHreG+crXxrrV
-         9QHBB2+vNXFLRMoQVW8SN5BJimE7jBaBhZ4QhAOJDebdUdgibC/xN2HPjYLVgi7Y+oyH
-         ml8AOFqvoH92ogCjC2Gt0JOhG4R9JWdUYJHWsO1GIJ9L25J8EcQGHWSuq/FG9+Lbr6rh
-         ETzR/gRraMb2sM4YcmehbcG2C5yZ5B3XosLlVbHcmgajN/DhY/Mkz45QdRTdYL7uKacD
-         sc/AWz0TboohRULlb7Wlep/3KFrLa5BkGkEUtgSsXILd8aODiiGOpiGA2ej039AhURzd
-         dOtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZmXBM7xg/rtDLWSbpEzzRFuJTawc+J9nas5s3LfCs5KD6jA8+zPif3Q19UAN2ElPYQ7LdhkG7uIThu1Y=@lists.linux.dev, AJvYcCXfw7yAEGQ9iirVlLgl5J6ZvKf7PYt1sfspd1IgdrqEikKm6wvtlbsrTFM4oWKxobdB+75M@lists.linux.dev
-X-Gm-Message-State: AOJu0YwU4hx5lwlPg1yxztSf65Im1iFLE0QORoH2NdXr9krDcUaVGx1q
-	xZqTZbITKFtKrdAAcEp0ptNGhxrqpybNnHOGMypS7HanEyruPNsV9rb9eEPLvGXoWJjeXyPUrLt
-	EwOTLz8VakrqriZvdsCB4FbNoA6r0U1E=
-X-Gm-Gg: ASbGnct283mRvj1B4PpXdO0R+f+oexo/eQFlt8x9QUKHLT2Xcn14z4BRl4bXCVGC3Ls
-	Aq4Pa0b938Osb9YMrWRTzY5vQhichj58KNuIjQggH4fDZcHFTFsPoxnS/HvsSsWMIie4Aid5HI8
-	Vfp2TewK52BeFh2XWZZqZNhOTHjm1kT0T+bEjGHRfBvd4pr5KwmzFu7+9sSYQVf4S+jDortrUsK
-	LfGB1p4
-X-Google-Smtp-Source: AGHT+IFGLtNsuaHcZ9bLDDqN7J8ChtiAW1fZ0dZtuV570UBvC/PTJYsyK7ZfZ8g0ZH1WGMch8OcgtZ3J7WCfv1Mzp/4=
-X-Received: by 2002:a17:902:f547:b0:240:1879:c2fd with SMTP id
- d9443c01a7336-245e02ba0ecmr19746985ad.2.1755612057723; Tue, 19 Aug 2025
- 07:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8/InV76"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JARCHT029140;
+	Tue, 19 Aug 2025 16:00:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=fye+OHNoGD4lXYyQACDiIUe5MYN9Xa
+	HHY+ta4HK6mNo=; b=K8/InV76Xh82YoCdFs7afgsZEyttlHXt63Zh6YobeMZEfj
+	EtEbXE30jaehfJyaeqUQ83sSm0POVwmx857TgqrX4heoLZlpueQcqDPttXgbixLh
+	+x6fS5j6uHwtRnGEHpTxSUVUJQ2TIjIBGfjGCswGSqzL5RwHqK9HeQgT2wbUVsNm
+	CV+/ZMTT7lP2wE4x53M8hod5yeuJ9GiUqyy+rbt+O8ogNoUX7+udpUtK76Do1m3K
+	bdO+hEoQtooovRGyArJquMC7qTaD/oTN7MJSPmqTjx8Q2+gT15OG9GVahxAm+LTI
+	MhJAb5unREIT+boWspoVlHOV5F0X1FCrbTBVaeAw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48jhny7tyc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 16:00:55 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57JFb7r6002336;
+	Tue, 19 Aug 2025 16:00:54 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 48k7132mru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 16:00:54 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57JG0oZx17891648
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Aug 2025 16:00:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D4BC920040;
+	Tue, 19 Aug 2025 16:00:50 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9264120043;
+	Tue, 19 Aug 2025 16:00:50 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 19 Aug 2025 16:00:50 +0000 (GMT)
+Date: Tue, 19 Aug 2025 18:00:49 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc: open list <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Ben Copeland <benjamin.copeland@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: next-20250813 s390 allyesconfig undefined reference to
+ `stmmac_simple_pm_ops'
+Message-ID: <20250819160049.4004887A48-agordeev@linux.ibm.com>
+References: <CA+G9fYuY=O9EU6yY_QzVdqYyvWVFMcUSM9f9rFg-+1sRVFS6zQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv+gELzgcL4y8rOQbTxv2Y2JQTFhNkgUcLbzPJ_yDTziA@mail.gmail.com>
-In-Reply-To: <CA+G9fYv+gELzgcL4y8rOQbTxv2Y2JQTFhNkgUcLbzPJ_yDTziA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 19 Aug 2025 16:00:44 +0200
-X-Gm-Features: Ac12FXxTFIhGwb8CqneZObiwy9IEE8bW5R6jDoBMnubJoMsWPuCWTeTncYkgRXU
-Message-ID: <CANiq72k-Z9=EVVXgJp1OuKwSbQ3qq723B0F2PaPzRD4P+QEQ=A@mail.gmail.com>
-Subject: Re: next-20250818: rust: `ARCH_KMALLOC_MINALIGN` is defined multiple times
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Danilo Krummrich <dakr@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org, 
-	clang-built-linux <llvm@lists.linux.dev>, Miguel Ojeda <ojeda@kernel.org>, wedsonaf@gmail.com, 
-	Gary Guo <gary@garyguo.net>, Benno Lossin <benno.lossin@proton.me>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYuY=O9EU6yY_QzVdqYyvWVFMcUSM9f9rFg-+1sRVFS6zQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=XbqJzJ55 c=1 sm=1 tr=0 ts=68a49fb7 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=Oh2cFVv5AAAA:8 a=KKAkSRfTAAAA:8
+ a=21D8NHQQAAAA:8 a=ahG22T8F7ss3M2HWSyoA:9 a=CjuIK1q_8ugA:10
+ a=7KeoIwV6GZqOttXkcoxL:22 a=cvBusfyB2V15izCimMoJ:22 a=aE7_2WBlPvBBVsBbSUWX:22
+X-Proofpoint-ORIG-GUID: 9Z9-gqwcFfsgViyTJkXM6n-D0d5Fvw5I
+X-Proofpoint-GUID: 9Z9-gqwcFfsgViyTJkXM6n-D0d5Fvw5I
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE2MDAyNyBTYWx0ZWRfX1w887gs6d+JU
+ WJ2lF70BNWuAIYxgdFAMVinJZDtIPe9cHScfdEU9HCAWflvccCZ7J9Q0dPGPo9T7qpqiaeedKNO
+ KhmrniIdTJ39NAVZF66mFYPN7+6tCko/7AhWQoDpu6YvHp2zaIujT8SPekyZWgrQfhlKRHRE4d1
+ jVrqRnqM/HpFxDv1htpHx1IkTf/vH4/3Ejtj5XgBxduNQPA//BfK1t7O62YuPsuc0dpm5M+2IAu
+ mr6Pv3CMQC/XPEcNniPgg2kZnRjWg5+LcfWqyG51KLKQsodtJpKnGoeBF83sdKkRVaIUWF/Ii4u
+ InQuS2rZqU9p1v2snv0qU/EnSy6rhxZYbU+d3ZNS3zK5JsSOkxMzwgcu5VWr05h5macL6glvvc8
+ oBBW3MKx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-19_02,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1011 malwarescore=0 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508160027
 
-On Tue, Aug 19, 2025 at 10:40=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> Build regressions were detected on multiple architectures (arm, arm64,
-> riscv) with the Linux next-20250818 tag when building with Rust-enabled
-> configurations (rust-gcc and rust-clang) from selftests/rust/config.
->
-> Duplicate definition of ARCH_KMALLOC_MINALIGN in Rust bindings is
-> causing build failures across affected toolchains.
+On Tue, Aug 19, 2025 at 03:07:56PM +0530, Naresh Kamboju wrote:
 
-Thanks a lot Naresh, this was reported already by Thorsten and me yesterday=
-:
+Hi Naresh,
 
-    https://lore.kernel.org/rust-for-linux/8aa05f08-ef6e-4dfe-9453-beaab7b3=
-cb98@leemhuis.info/
+> Build regressions were detected on the s390 architecture with the
+> Linux next-20250813 tag when building with the allyesconfig configuration.
+> 
+> The failure is caused by unresolved symbol references to stmmac_simple_pm_ops
+> in multiple STMMAC driver object files, resulting in a link error during
+> vmlinux generation.
+> 
+> First seen on next-20250813
+> Good: next-20250812
+> Bad: next-20250813 and next-20250819
+> 
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+> 
+> * s390, build
+>   - gcc-13-allyesconfig
+> 
+> Boot regression: next-20250813 s390 allyesconfig undefined reference
+> to `stmmac_simple_pm_ops'
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build log
+> s390x-linux-gnu-ld:
+> drivers/net/ethernet/stmicro/stmmac/dwmac-rk.o:(.data.rel+0xa0):
+> undefined reference to `stmmac_simple_pm_ops'
+> s390x-linux-gnu-ld:
+> drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.o:(.data.rel+0xa0):
+> undefined reference to `stmmac_simple_pm_ops'
+> s390x-linux-gnu-ld:
+> drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o:(.data.rel+0xe0):
+> undefined reference to `stmmac_simple_pm_ops'
+> s390x-linux-gnu-ld:
+> drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.o:(.data.rel+0xe0):
+> undefined reference to `stmmac_simple_pm_ops'
+> make[3]: *** [/scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
+> 
+> ## Source
+> * Kernel version: 6.17.0-rc2
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git describe: next-20250818
+> * Git commit: 3ac864c2d9bb8608ee236e89bf561811613abfce
+> * Architectures: s390
+> * Toolchains: gcc-13
+> * Kconfigs: allyesconfig
+> 
+> ## Build
+> * Build log: https://qa-reports.linaro.org/api/testruns/29579401/log_file/
+> * Build details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20250818/build/gcc-13-allyesconfig/
+> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE/config
 
-A patch from Danilo is in flight to fix it:
 
-    https://lore.kernel.org/rust-for-linux/20250818180923.192042-1-dakr@ker=
-nel.org/
+I guess it boils down to these commits:
 
-If you could test it, that would be great. I assume Danilo will apply
-the patch on top of alloc-next, since the issue is just inside that
-branch that goes into linux-next.
+0a529da8cfe3 Merge branch 'net-stmmac-improbe-suspend-resume-architecture'
+d6e1f2272960 net: stmmac: mediatek: convert to resume() method
+c7308b2f3d0d net: stmmac: stm32: convert to suspend()/resume() methods
+d7a276a5768f net: stmmac: rk: convert to suspend()/resume() methods
+c91918a1e976 net: stmmac: pci: convert to suspend()/resume() methods
+38772638d6d1 net: stmmac: loongson: convert to suspend()/resume() methods
+062b42801733 net: stmmac: intel: convert to suspend()/resume() methods
+b51f34bc85e3 net: stmmac: platform: legacy hooks for suspend()/resume() methods
+7e84b3fae58c net: stmmac: provide a set of simple PM ops
+07bbbfe7addf net: stmmac: add suspend()/resume() platform ops
 
-Thanks!
+CONFIG_PM is not defined on s390 and as result stmmac_simple_pm_ops ends up
+in _DISCARD_PM_OPS(). The below patch fixes the linking, but it is by no
+means a correct solution:
 
-Cheers,
-Miguel
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index 5769165ee5ba..d475a77e4871 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -668,7 +668,7 @@ static struct pci_driver loongson_dwmac_driver = {
+ 	.probe = loongson_dwmac_probe,
+ 	.remove = loongson_dwmac_remove,
+ 	.driver = {
+-		.pm = &stmmac_simple_pm_ops,
++		.pm = &__static_stmmac_simple_pm_ops,
+ 	},
+ };
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index ac8288301994..69fcc8f10ccc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -1820,7 +1820,7 @@ static struct platform_driver rk_gmac_dwmac_driver = {
+ 	.remove = rk_gmac_remove,
+ 	.driver = {
+ 		.name           = "rk_gmac-dwmac",
+-		.pm		= &stmmac_simple_pm_ops,
++		.pm		= &__static_stmmac_simple_pm_ops,
+ 		.of_match_table = rk_gmac_dwmac_match,
+ 	},
+ };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 77a04c4579c9..d3e1eb35b231 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -669,7 +669,7 @@ static struct platform_driver stm32_dwmac_driver = {
+ 	.remove = stm32_dwmac_remove,
+ 	.driver = {
+ 		.name           = "stm32-dwmac",
+-		.pm		= &stmmac_simple_pm_ops,
++		.pm		= &__static_stmmac_simple_pm_ops,
+ 		.of_match_table = stm32_dwmac_match,
+ 	},
+ };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index bf95f03dd33f..c5554ede0ba4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -375,6 +375,7 @@ enum stmmac_state {
+ };
+ 
+ extern const struct dev_pm_ops stmmac_simple_pm_ops;
++extern const struct dev_pm_ops __static_stmmac_simple_pm_ops;
+ 
+ int stmmac_mdio_unregister(struct net_device *ndev);
+ int stmmac_mdio_register(struct net_device *ndev);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index e6a7d0ddac2a..d1710f26d65a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -286,7 +286,7 @@ static struct pci_driver stmmac_pci_driver = {
+ 	.probe = stmmac_pci_probe,
+ 	.remove = stmmac_pci_remove,
+ 	.driver         = {
+-		.pm     = &stmmac_simple_pm_ops,
++		.pm     = &__static_stmmac_simple_pm_ops,
+ 	},
+ };
+ 
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index cc7b2dc28574..05524761fd51 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -381,7 +381,7 @@ const struct dev_pm_ops name = { \
+ 	const struct dev_pm_ops name
+ 
+ #define _DISCARD_PM_OPS(name, license, ns)				\
+-	static __maybe_unused const struct dev_pm_ops __static_##name
++	__maybe_unused const struct dev_pm_ops __static_##name
+ 
+ #ifdef CONFIG_PM
+ #define _EXPORT_DEV_PM_OPS(name, license, ns)		_EXPORT_PM_OPS(name, license, ns)
+
+
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
