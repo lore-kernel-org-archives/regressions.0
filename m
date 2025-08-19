@@ -1,117 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68C93451DA
-	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 09:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A1D304BC6
+	for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 09:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755594538; cv=none; b=k/0F3Lv8Lx4M0wFqT2hceUA9lgxzJmBNG21PpOiYJVP9wRbadEVbqwYDNtAuTQSWQEUAJ3jGPTd6ILO4fkXogQGrw6sR4fuKn4QB8mBeb/b3erEHaeM0T1qtTxX4SXYSkH2zF03dKTh7tUumA+e3QOv69TcBqIEK44f9zB5Qp/o=
+	t=1755596290; cv=none; b=H0y1ZKqkDfftpZGJ0yXbxDMnRIfsdtn+foCi4rTWzVYuiThsFEjCcVVhntBaThypzgkXRhcf96423HQbmQujTpQyucwaMkbCFkdU2vzrHGgADmrOKqsYNBp+SmDEkhd6OZrNjZA3RgqJGpZhHhQaKiDM0RzpJj1Mj8NEfsqw8cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755594538; c=relaxed/simple;
-	bh=Um6H15QTrz1VtvFLrWmOBXUQe9Tpje+hs4nXchQonZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mbC81pVXsEWNTKAH/I+BwSCbd62kyGsQrCTMqVLbB2W/4ARfkacaafeT/F+VtNPTwg9oHNxbfOs+WDy2EINoffJRxhGbMX8y8YsbewwW8kEj+mOZSahQArSt1lZ7qtshKEEJ7f8+6vY0cp1RltZKaifdK4Oy7KZYunXZag43Y+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIZUu4el; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755596290; c=relaxed/simple;
+	bh=2V8M7LV7ljgsDumKXBHQhC4o9NF1oxLIPIk0ANfKKUU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=KTTJrNkF8/Vt1FNS89dQu3/8CL6TygaoGBzIVv6Kp5dFii+snQtSQ5UmNS6TRA566yRPlbOCya/6O371GQ3RH14Pi6ugvL6gW8A0PP/IZwc/WWB8qF7TQardarFtBI++9KA3QGM8lY8+7Qvjhzuy7DDJoW+C8nw95DkofAjXqU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tGm5Cu4W; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIZUu4el"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755594537; x=1787130537;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Um6H15QTrz1VtvFLrWmOBXUQe9Tpje+hs4nXchQonZk=;
-  b=iIZUu4elu5PY/KDz5Th8yHWMBztEbfUhiqvPiIfvXIZeVnNQ4ZjtASGI
-   QGseQymqHXS0NpOTL/LNbXPoqN61bY3fp42ym6lUhh/UeSgVJf7Cy1WAm
-   BJfRzFmiAt5ih2fM9KuBBucFW9IrBW8qoHbNlo2wGpe1lHvwi5//oYDKc
-   lLht9BqPxhU8za0JQffpjf4ZMUl900y14IBSVuywNPz98jiQegNGT/Ggy
-   WCCLFcfoIDmrhpSHanjuuLYScKdvZ8+KWIo1aE3mVcEOv48tXj+0cfqZ0
-   mvh8qBfiXd2E5F6qswVI4Dhw1LzKbMx8jTkr4qxS9JGP+9GHcdqthUvo0
-   Q==;
-X-CSE-ConnectionGUID: hNAyobMeTn6rn4Vgi+S19w==
-X-CSE-MsgGUID: Iatn8xzKTx6Z6qS/VQYcuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="75404106"
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="75404106"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:08:56 -0700
-X-CSE-ConnectionGUID: XGY+0hm6Q3OsRqFC/dLnww==
-X-CSE-MsgGUID: +NA/tFbaQiSsN+JNURKLeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="173156968"
-Received: from nneronin-mobl1.ger.corp.intel.com (HELO [10.245.255.75]) ([10.245.255.75])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 02:08:55 -0700
-Message-ID: <a036342a-a430-4dc6-94a2-abc12cd3dd0f@linux.intel.com>
-Date: Tue, 19 Aug 2025 12:08:46 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tGm5Cu4W"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-24457f47000so41846875ad.0
+        for <regressions@lists.linux.dev>; Tue, 19 Aug 2025 02:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755596288; x=1756201088; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=T6K8gy0h4bXhy9f6BhVNVyKHxXc0oXpO4f2ZuZ3PvLY=;
+        b=tGm5Cu4WGiC9EtMaq8lYPrIJ1Xc/b/OMz6ASpCtEUUiyBjEv9CRrzRoRfGXusYG9iQ
+         ETwQbx9DwejwPSj0xO8hWVnD9MSOKaQR8XCqQf8TclN/kopkwuWIZAo8+sN4rJdhw732
+         9JOhfZrpS65asfi7qTnfYIHKbQqHZQGCsHoawrmlWhqDJ6ceSI6eW76kWTRdQqPSyZyW
+         eiNaNAS6NH4dPfPr4cnzXxlFeJnNuO+voldolLEhYn5EP+PBwnBaOWtfHMBraYSobFN6
+         pJA4CJ1o91YSca4V550wY+wKt0TOKePYnANnDIM6RpPcK1KwHjMXSsiJ6wX4du+xHVd5
+         vwDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755596288; x=1756201088;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T6K8gy0h4bXhy9f6BhVNVyKHxXc0oXpO4f2ZuZ3PvLY=;
+        b=Zt9FtIzoBWg+oYql8nu3eDD/8lZigBDT9VvISmB4D9CO7bwa9mIT0fBw1I1OEzr8Db
+         HdqAqZLVfNphLxrzjAPte88amBSsL1N4ke6yOiRYblpEMgZWJ5VaVdAQB+GqqFETT7Sx
+         +drZIGnI7t6v786qtRE9FPFtcD4FwQcZlEiffO8vaN7wxx282ICCZj4oKm5ze7YuetCX
+         jIEK/kaLZ1gs7wF1XJ5PLoKeHPyX6drnuoczG5/BbEyDgrGOnT/DV5Akfm4RxAgZp3Nr
+         3Clw+PBzNW5Ao+ESDqLbou3XmKxkojVrGmrjImFddJRhsFcsGVd+Fmuj0AIWz3TYtk7t
+         yCmg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1oLDFt+cBTuQ+eHejpdIvxTy3gtfQsTnNFNu37ZqDN79oif45wMKyHIEr6/xwJnYqc5N286L9n0f5dg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxQaqsii0Mj4lvH4GGR3Hns3sQzt9Zu07V1wbCOSBkBY2OFz1uk
+	6YXA3mlkbmAFZC5suiRLyNCu6kz5tlaQxgDyToIjlrrqK8NYZgBj/rEIr9GNOi5Bo5q7ENB8AwC
+	6xD9z78PT+1fpU0GYiA/KHzM6fCaDInaHX0GPkOyxog==
+X-Gm-Gg: ASbGncsFMdXz9gOtJjpijET5NwGRIFCDuTd91+HEcBVu2vgJNikBvoFgndmpITDGiru
+	VB77TqHlkcv6w++liy64RQ22Nf8/ah3MNaW1wtAYiJWnHzCnQ3z7qSsI5mt48DhmoL9PxN9xxXV
+	sr+Wmji3Qgze9CIlGfAXvfl34r+ZTHjAwyrPMsK3udnzZ6OV3LhSUSfv/cSpLyOiXBKjpqEnMRz
+	ytX0KZWokEdyf8SpBcTe2vheRI/GUjS3VzF4TVCjnIEZhDaVc4=
+X-Google-Smtp-Source: AGHT+IFIxdv+Gumf/6w+v7ffwNzZJemUXI7WRTzzUiAmKNSzZs75iWdEANwcTsNoYtnMKamFklfbi/D3t+vz0EWJMZw=
+X-Received: by 2002:a17:902:f609:b0:234:ba37:879e with SMTP id
+ d9443c01a7336-245e049e36cmr28797065ad.38.1755596287861; Tue, 19 Aug 2025
+ 02:38:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION 6.16] xHCI host not responding to stop endpoint
- command after suspend and resume
-To: Mathias Nyman <mathias.nyman@linux.intel.com>,
- =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
- linux-usb@vger.kernel.org
-Cc: regressions@lists.linux.dev, Christian Heusel <christian@heusel.eu>
-References: <20250818231103.672ec7ed@foxbook>
- <20250819084153.2c13c187@foxbook>
- <2f2b66b5-d845-4e75-aaac-87974b592b4a@linux.intel.com>
-Content-Language: en-US
-From: "Neronin, Niklas" <niklas.neronin@linux.intel.com>
-In-Reply-To: <2f2b66b5-d845-4e75-aaac-87974b592b4a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 19 Aug 2025 15:07:56 +0530
+X-Gm-Features: Ac12FXzSzL7CxVGEj_WaufEFOr4fMyspvQA0mI9KFbrlZz1H1yL9N-ZCIEodprQ
+Message-ID: <CA+G9fYuY=O9EU6yY_QzVdqYyvWVFMcUSM9f9rFg-+1sRVFS6zQ@mail.gmail.com>
+Subject: next-20250813 s390 allyesconfig undefined reference to `stmmac_simple_pm_ops'
+To: open list <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	linux-s390@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Ben Copeland <benjamin.copeland@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
+Build regressions were detected on the s390 architecture with the
+Linux next-20250813 tag when building with the allyesconfig configuration.
 
+The failure is caused by unresolved symbol references to stmmac_simple_pm_ops
+in multiple STMMAC driver object files, resulting in a link error during
+vmlinux generation.
 
-On 19/08/2025 11.56, Mathias Nyman wrote:
-> On 19.8.2025 9.41, Michał Pecio wrote:
->> On Mon, 18 Aug 2025 23:11:03 +0200, Michał Pecio wrote:
->>> A bisect effort is ongoing and c0c9379f235d ("Merge tag 'usb-6.16-rc1'
->>> of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb") is bad,
->>> so that's where the bug likely came from.
->>
->> Looks like the result is in.
->>
->> e1db856bd28891d70008880d7f1d3b8d1ea948fd is the first bad commit
->> commit e1db856bd28891d70008880d7f1d3b8d1ea948fd
->> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
->> Date:   Thu May 15 16:56:14 2025 +0300
->>
->>      usb: xhci: remove '0' write to write-1-to-clear register
-> 
-> Thanks for tracking this down, I see the issue now
-> 
-> We may lose interrupts due to this patch, example:
-> 
-> Hardware sets IMAN_IP BIT(0) when in needs attention
-> Driver later allows xHC interrupt by setting IMAN_IE BIT(1), but
-> Driver clears IMAN_IP (RW1C) when setting IMAN_IE so no interrupt is triggered.
+First seen on next-20250813
+Good: next-20250812
+Bad: next-20250813 and next-20250819
 
-Apologies for my blunder.
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-So, there can be an interrupt pending even when the interrupt is not enabled?
-But there (ideally) should not be an interrupt pending when disabling the interrupt?
+* s390, build
+  - gcc-13-allyesconfig
 
-I can submit a fix patch.
+Boot regression: next-20250813 s390 allyesconfig undefined reference
+to `stmmac_simple_pm_ops'
 
-Best regards,
-Niklas
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
->  
-> interrupts are only triggered if both IMAN_IE and IMAN_IP are set, (and some other
-> moderation and event handling bits are correct)
-> 
-> we need to make sure we don't accidentally clear a pending interrupt (IMAN_IP)
-> in both the enable and disable case.
-> 
-> Thanks
-> Mathias
-> 
-> 
+## Build log
+s390x-linux-gnu-ld:
+drivers/net/ethernet/stmicro/stmmac/dwmac-rk.o:(.data.rel+0xa0):
+undefined reference to `stmmac_simple_pm_ops'
+s390x-linux-gnu-ld:
+drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.o:(.data.rel+0xa0):
+undefined reference to `stmmac_simple_pm_ops'
+s390x-linux-gnu-ld:
+drivers/net/ethernet/stmicro/stmmac/stmmac_pci.o:(.data.rel+0xe0):
+undefined reference to `stmmac_simple_pm_ops'
+s390x-linux-gnu-ld:
+drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.o:(.data.rel+0xe0):
+undefined reference to `stmmac_simple_pm_ops'
+make[3]: *** [/scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
 
+## Source
+* Kernel version: 6.17.0-rc2
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250818
+* Git commit: 3ac864c2d9bb8608ee236e89bf561811613abfce
+* Architectures: s390
+* Toolchains: gcc-13
+* Kconfigs: allyesconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29579401/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250818/build/gcc-13-allyesconfig/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/31RcVYdjsdhroYxXs4TJYixUCaE/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
