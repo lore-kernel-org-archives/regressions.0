@@ -1,182 +1,150 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FB52DCF77
-	for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 21:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7FB1F4192
+	for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 23:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755725534; cv=none; b=jO1XGxCBOrYr7frdAmanxKSEsP92XYRfxRR3f4AMtnsOTUDWuLDyqHavwfZkDRXmO2yPcHKaRwuzQ4/RvbHdv6Vc9c2ycVoexFg85GnuCfqJmcBqzvZNLUlIjfov7Gpo7SR6ZCrbK4cNDIhNOKIFwitU2WFRkadL2KmW+1tzgpU=
+	t=1755731668; cv=none; b=VIkw1xxHoIMx5OvbK2f3ZyFD2ZJ4obN7YplzIaYv9lCfB1h9ERzzk1zMQDtjjDaFcrv7FPNAf9M1Bm9d4k/xDhzND/1U01/wnq2p1Pu+Jrs5aLo+l20pqjSCHYdbioU4beD1/dhEO4Q3TmvABjZX800GiiJlVcaX9rVShHIzUyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755725534; c=relaxed/simple;
-	bh=3xpW3vbTXuAa4h70YLTRF4ZpMZcLo2DxjvNjcdzDjPo=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=lDB2kvo3Um1EeF5kQ0O5fJsdI0MApr/JkRm1YX2TuLcYZ9ZylzPm/iRAA9QaCfEfpsMJULqpzy7hn0WrBlMFLn0TDS3/jI98uOxKxX+wEOB4pfrGqmOm0XMuNi7/C4BwCsti2nXan6tA8tpdnca+OmDCH8y8pNrz9MAEmwGpcLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=lER7st8D; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1755731668; c=relaxed/simple;
+	bh=PIL6xm/7vGenGtn3AXVWgyrRZCu371nEigq24oJZOkc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mt2kf8Bv6ynhV8eW8Wb2drQCjji6e99E9HUGJDrAHvGeO+R/jQhciSiuO3htVnc4N9y+GHeOH9utMZo0Fr0GgPeJvukwn4UsFO5q7Iw4fA++bZv+mGq1DxxIv1OKBPCZDtbZS3JlGTUpMYpxDwzgVcmtjaU/7bR5q8Zl7xBloNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIBb8QM6; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="lER7st8D"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-245f2a8fa81so9005745ad.0
-        for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 14:32:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIBb8QM6"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3b9edf504e6so279690f8f.3
+        for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 16:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1755725532; x=1756330332; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=InuGVvwTKh+B2hT/7asI2kNXOmTYdYr5ePDpN0Ushgs=;
-        b=lER7st8DnL0Chav2a88veUpdJtaFDTH9f9BnnbxV4C4xRXDx2hdRxsCseuAVwboSZ+
-         KmfqzetlBhFvFOvrPv9xmQpCovH9N4YQkTSRDDzF5+Z3S18DdWZ5pH72uHUXBNNMEXxL
-         Fpn1ZNks18Ynnhl9ytl1MtGZz1oMyh4YWBakQXVY2By9bV3ZD5no8vC8HkRqIYly8/tT
-         QbLAQqwhVUV1XhRC5Opjq9VK1QNOLFQVh//s9zj/YrRP6jzs/QjnfwfPNiYj1D+jhQw0
-         c1SmkzE2rymaz52BFh5AxP5u50IDPgToOO/InGUID6Lw8xgWPX+0rV7eMVVQ4mo005BA
-         RGwA==
+        d=gmail.com; s=20230601; t=1755731665; x=1756336465; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PIL6xm/7vGenGtn3AXVWgyrRZCu371nEigq24oJZOkc=;
+        b=HIBb8QM6rzoEAPjod816bOYIIExkz2HmO8WOzVE2xXRo++FWoUbD2tK+pk4o/dOnFZ
+         RZc9UGd2+IEYkuinF0DHW81gHtYTwbBayPNITZj+mytBSN82yNUHwhitBVURvxZFTjgJ
+         Wj8rtS6TxzXZfCrsKnUW/pmGhkIlU4aj8A/8BVYn+FTBZfSygn3gTeLTnxxVJx57LU9H
+         F5N+vg4iNbKh75ZyDzhB0Yr2d1M1rsK62eUPxUUUt9RV/USfdBZ85c/If/pay4XA1wbh
+         dzfpJujx9ZESGi3pWrwgu9aB0NhXPRBRgxk/KMqOCsFUYDxNJ6m2Kd6sfEdvRqTNN8PT
+         Yzpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755725532; x=1756330332;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=InuGVvwTKh+B2hT/7asI2kNXOmTYdYr5ePDpN0Ushgs=;
-        b=MKGqmYY8XCHM6581PTI8dujgf0tg7wBuzxtsSRiT+OKpPv7RdL6BDrqsxHraiu5tUH
-         r5Ovl2sbSDW5vIxSQoACSkGKWu/azjEJbN3BNp8PWy2rRwHMYIyMtR/1weT/WpC939XV
-         ZxWSTU0assP3SyVqJ2yUwo3ogn+eic9cNlCCvtJW9OHSm7VMwSE406mOvLeC5FnC3KMb
-         dEAtcQeinUm3qISRW4vGCozNDGGokTLEJURh+fjhpdsDKEHCJanHDogl1+ObiK22QjsN
-         TwEDrNDfSZ6GZp1MnoqDCA2yaBGkNYe6MYYKrh/enCZXYsUy0qCMrg3AcMkOMgj/OqkW
-         5Z3A==
-X-Gm-Message-State: AOJu0YxJEKLkDWD38DqkiEmxsZwquQj+ElE6jMl149crvpN7Fr7VMqO7
-	GT+H0ySxriIyXJZoSI0zlntFlS1kf/+FBSnhGXNXD6pofcM7JLWqKtApzHvo75h1nDg=
-X-Gm-Gg: ASbGncvIJ9SHCu3/pj1SPXGoO6PlQ7gan6IN+HlnuO+107A1FSa0aF93hRua/qHRSv2
-	SqkoDuVKT+pKeWaZm3aJ5aoKX14vnmNtOEBRIemw0RDLEYZ2mGEH9Kmf/avUgtP0/1Y4zDDOvyZ
-	w52DK/EK2KoeuL7aveJC0rkkpcUqv3LrLM5sN+kSEmBZWLd7xBU+fjeHeekkea3Czwqntc51v5o
-	0oW7U0hTdlv0lb9AzOG92iu+7GWf2qJLUFAWlrSvTAON4byFLFHOyOMt1KuS/K906qib9KWWvrw
-	PfU3R9qGBwmXxougNR1ztp0Hp3KRewzRhlLzpaY3s9F+gVTjbalLaq4NDj/ucDGXCSc0W0T6J3s
-	xrWvG52IrlBjSqA==
-X-Google-Smtp-Source: AGHT+IGHrnK9yr9BayI7JczkiTs7D79VmmcsxOmdpCvqDTiMCnbNAzM8z3QBRa/SiLP49Mnj2HfpUQ==
-X-Received: by 2002:a17:903:3d0c:b0:23e:3911:433e with SMTP id d9443c01a7336-246028e3f7emr238035ad.5.1755725531947;
-        Wed, 20 Aug 2025 14:32:11 -0700 (PDT)
-Received: from poutine ([2804:1b3:a702:7d26:1577:2536:a82d:763b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245fb80cc20sm8412335ad.81.2025.08.20.14.32.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Aug 2025 14:32:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20230601; t=1755731665; x=1756336465;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PIL6xm/7vGenGtn3AXVWgyrRZCu371nEigq24oJZOkc=;
+        b=GTpEhDOYx3V+xUml6Bnwpy4RSO4PyBS0+87DwtVttNDLuMERCxsc2D7M/2N6EphbvW
+         3P2zhfEdJ/VHt4An9kVRrvBm1iFxNFH17x0brmdHEtUHOKr4rdZBT4e5niYDk6wTKDtL
+         HCIYSLBZP/eStJMKWAI1FESPDFYMPFRr4Q8SZd6wANPk4I6djpnMoLkQD/YIjO9xYTnE
+         +cd6AJ9XxydPJ+aqQFeNITNnby4gZUoVAe3wvGrCihaZ5GiVlQq5uo2+3tMgLaciJcyA
+         VP08lvXO6PQPv+Kvu83Ea62pyBRvsHpiA3QfUpWuwp4KcX7v7DiuhuZzGVDZ8X8CDJCV
+         lXOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzjuZVEueeBUMnhy662eISzDpGvyIVpuTZIFkbt6WE2TH3YnC0HcizhNBUiPQHBR0TlUXt6hw6TpkLBA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGnESg6T4I5z5VdHwuiZSb6qPK6Il2DHpACcUfWHBgm2ev/BQU
+	NL3yXl+619xnSZPkbWsjW6/D20OL2ZrPZ8kFkf7guwaO8DbZWiXFryPxx1t7yT1KC6JNzuM7+Iq
+	QfsN4U7hUslBUmLlOf8E8N6bSrslyoJ0=
+X-Gm-Gg: ASbGncsq8C0Zar+WQNQQSklAQZc1lhL/7jNLWNQleZskqvPwyhcKbLJ9r6i6hX9KzZu
+	+hiUcSMuQj40anD78LIgII/+MldK+OhmxfEF/ZxjBSh47E8z+NAAoEx40Hw1mW3vdjHSM7XF8O6
+	8GbAUj3T/Ltn8BcqnO0RmqSRZViYZzLM0Aup9CZ4q/zd+s82ml4OcOAYUAC6xg4N5FbZRuWOghe
+	1da2kmxYjvk2K5PapWbjHc=
+X-Google-Smtp-Source: AGHT+IF7xL/J5qeGU7qUUnHMyy+vQH5Tt2oPV3P8wpyhba8q4+IEiSNutYzfYaQSwQ/uCj8lCOLnITp6KN356O7nlYQ=
+X-Received: by 2002:a05:6000:2911:b0:3a5:8934:493a with SMTP id
+ ffacd0b85a97d-3c49736a0f9mr356214f8f.44.1755731664163; Wed, 20 Aug 2025
+ 16:14:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (boot) NULL pointer dereference at virtual
- address
- 0000000000000000 [logs...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, kernel@pengutronix.de,
- linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Wed, 20 Aug 2025 21:32:09 -0000
-Message-ID: <175572552798.3846090.14922877369801775537@poutine>
+From: =?UTF-8?B?5Za15YWs5a2Q?= <miaogongzi0227@gmail.com>
+Date: Thu, 21 Aug 2025 07:14:12 +0800
+X-Gm-Features: Ac12FXx0gBLh0T8RlKB41soMuTeq_ifB1SJzNYMK84XGbBhFyPuTKVJTzH5GSIM
+Message-ID: <CACBcRwK8wUbJ_S=z4QQg_CGfVWQaMd6HktdNCRkfG22Ypgg63w@mail.gmail.com>
+Subject: [REGRESSION] IPv6 RA default router advertisement fails after kernel
+ 6.12.42 updates
+To: stable@vger.kernel.org, netdev@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>, regressions@lists.linux.dev, 
+	edumazet@google.com, kuba@kernel.org, sashal@kernel.org, 
+	yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+While testing Linux kernel 6.12.42 on OpenWrt, we observed a
+regression in IPv6 Router Advertisement (RA) handling for the default
+router.
+
+Affected commits
+
+The following commits appear related and may have introduced the issue:
+
+ipv6: fix possible infinite loop in fib6_info_uses_dev()=EF=BC=9A
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
+=3Dv6.12.42&id=3Ddb65739d406c72776fbdbbc334be827ef05880d2
+
+ipv6: prevent infinite loop in rt6_nlmsg_size()=EF=BC=9A
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
+=3Dv6.12.42&id=3Dcd8d8bbd9ced4cc5d06d858f67d4aa87745e8f38
+
+ipv6: annotate data-races around rt->fib6_nsiblings=EF=BC=9A
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
+=3Dv6.12.42&id=3D0c58f74f8aa991c2a63bb58ff743e1ff3d584b62
+
+Problem description=EF=BC=9A
+
+In Linux kernel 6.12.42, IPv6 FIB multipath and concurrent access
+handling was made stricter (READ_ONCE / WRITE_ONCE + RCU retry).
+
+The RA =E2=80=9CAutomatic=E2=80=9D mode relies on checking whether a local =
+default route exists.
+
+With the stricter FIB handling, this check can fail in multipath scenarios.
+
+As a result, RA does not advertise a default route, and IPv6 clients
+on LAN fail to receive the default gateway.
+
+Steps to reproduce
+
+Run OpenWrt with kernel 6.12.42 (or 6.12.43) on a router with br-lan bridge=
+.
+
+Configure IPv6 RA in Automatic default router mode.
+
+Observe that no default route is advertised to clients (though
+prefixes may still be delivered).
 
 
+Expected behavior
 
+Router Advertisement should continue to advertise the default route as
+in kernel 6.12.41 and earlier.
 
+Client IPv6 connectivity should not break.
 
+Actual behavior
 
-Hello,
+RA fails to advertise a default route in Automatic mode.
 
-New boot regression found on next/master:
+Clients do not install a default IPv6 route =E2=86=92 connectivity fails.
 
----
- NULL pointer dereference at virtual address 0000000000000000 [logspec:generic_linux_boot,linux.kernel.null_pointer_dereference]
----
+Temporary workaround
 
-- dashboard: https://d.kernelci.org/i/maestro:1c62b4814576fd3f202d7069afdd657b704f7534
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  5303936d609e09665deda94eaedf26a0e5c3a087
-- tags: next-20250820
+Change RA default router mode from Automatic =E2=86=92 Always / Use availab=
+le
+prefixes in OpenWrt.
 
+This bypasses the dependency on local default route check and restores
+correct RA behavior.
 
-Log excerpt:
-=====================================================
-[    0.627596] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[    0.635868] Mem abort info:
-[    0.638638]   ESR = 0x0000000096000004
-[    0.642411]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.647746]   SET = 0, FnV = 0
-[    0.650800]   EA = 0, S1PTW = 0
-[    0.653958]   FSC = 0x04: level 0 translation fault
-[    0.658863] Data abort info:
-[    0.661737]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[    0.667258]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    0.672333]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    0.677671] [0000000000000000] user address but active_mm is swapper
-[    0.684059] Internal error: Oops: 0000000096000004 [#1]  SMP
-[    0.689741] Modules linked in:
-[    0.692805] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-rc2-next-20250820 #1 PREEMPT
-[    0.701727] Hardware name: NXP i.MX8MPlus EVK board (DT)
-[    0.707065] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.714064] pc : __pi_strcmp+0x20/0x140
-[    0.717912] lr : pinmux_func_name_to_selector+0x68/0xa4
-[    0.723165] sp : ffff80008304b590
-[    0.726487] x29: ffff80008304b590 x28: ffff0000c0ad02c0 x27: ffff800081ee00b0
-[    0.733662] x26: ffff800081c8e260 x25: ffff800081c8e000 x24: ffff00017f3cc0a8
-[    0.740837] x23: ffff800082af68b0 x22: ffff00017f3cc0a0 x21: 0000000000000001
-[    0.748012] x20: ffff0000c0ad00c0 x19: 0000000000000000 x18: 0000000000000010
-[    0.755187] x17: 20297328656c6379 x16: 632079636e65646e x15: 0000000000000001
-[    0.762362] x14: 0000000000000000 x13: 0000000000000002 x12: 00000000000b7b02
-[    0.769537] x11: 0000000000000040 x10: 0000fffe80c33f60 x9 : ffff0000c0ad0100
-[    0.776712] x8 : 0101010101010101 x7 : 0000000000000000 x6 : 0000000000000000
-[    0.783887] x5 : 0000000000000000 x4 : ffff0000c0ad0108 x3 : 0000000000000000
-[    0.791062] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff00017f3cc0a0
-[    0.798240] Call trace:
-[    0.800690]  __pi_strcmp+0x20/0x140 (P)
-[    0.804540]  pinmux_generic_add_pinfunction+0x28/0xe0
-[    0.809612]  imx_pinctrl_parse_functions.constprop.0.isra.0+0x140/0x488
-[    0.816262]  imx_pinctrl_probe+0x440/0x508
-[    0.820374]  imx8mp_pinctrl_probe+0x18/0x24
-[    0.824574]  platform_probe+0x5c/0x98
-[    0.828250]  really_probe+0xbc/0x298
-[    0.831837]  __driver_probe_device+0x78/0x12c
-[    0.836212]  driver_probe_device+0xd8/0x15c
-[    0.840412]  __device_attach_driver+0xb8/0x134
-[    0.844877]  bus_for_each_drv+0x84/0xe0
-[    0.848727]  __device_attach+0x9c/0x188
-[    0.852577]  device_initial_probe+0x14/0x20
-[    0.856775]  bus_probe_device+0xac/0xb0
-[    0.860625]  device_add+0x5cc/0x79c
-[    0.864127]  of_device_add+0x44/0x60
-[    0.867714]  of_platform_device_create_pdata+0x90/0x124
-[    0.872962]  of_platform_bus_create+0x158/0x39c
-[    0.877512]  of_platform_bus_create+0x1a0/0x39c
-[    0.882064]  of_platform_bus_create+0x1a0/0x39c
-[    0.886614]  of_platform_populate+0x74/0x108
-[    0.890899]  of_platform_default_populate_init+0xf0/0x108
-[    0.896327]  do_one_initcall+0x80/0x1c4
-[    0.900177]  kernel_init_freeable+0x208/0x2e4
-[    0.904552]  kernel_init+0x20/0x1d8
-[    0.908052]  ret_from_fork+0x10/0x20
-[    0.911644] Code: f240095f 54000401 b50002c6 d503201f (f86a6803)
+Additional notes
 
-=====================================================
+This appears to be an unintended side effect of the stricter FIB
+handling changes introduced in 6.12.42. Please advise if this has
+already been reported or if I should prepare a minimal reproducer
+outside OpenWrt.
 
-
-# Hardware platforms affected:
-
-## imx8mp-evk
-- dashboard: https://d.kernelci.org/test/maestro:68a55d5d233e484a3fa29ea6
-- compatibles: fsl,imx8mp-evk | fsl,imx8mp
-- 1 fails since 2025-08-20 20:03 UTC
-- test path: boot
-- last pass: https://d.kernelci.org/test/maestro:68a4264f233e484a3fa08a8c
-    - on 2025-08-19 07:22 UTC
-    - commit hash:  886e5e7b0432360842303d587bb4a65d10741ae8
-    - test id:  maestro:68a4264f233e484a3fa08a8c
-
-
-#kernelci issue maestro:1c62b4814576fd3f202d7069afdd657b704f7534
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Thanks,
+[GitHub: mgz0227]
