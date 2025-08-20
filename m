@@ -1,294 +1,118 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC24C19D8A8;
-	Wed, 20 Aug 2025 10:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755685513; cv=pass; b=PRV/G9DrIXbVhMRH23phLteOhIoWWPEW+kf19WG6wbfP8aAedt7H7DSL2bgT/6tvnpsba58/6IgdcdxnnRLCabOxeLlZ+NuaPSvsqHk1CA8699wJIA7VDrfXFA7UeY7wEj0SAZTOmHTKnzmbDYueqe1iSoPyb2P3+cyO1BLB/n0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755685513; c=relaxed/simple;
-	bh=MutQRfU1vlAAyDrHvo83dHCHOplPvJiMt+FOhq2qVoQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KFkwTL/Cjy72m3G227WMd/Gj5+pJ6t5NolTYNDn7dDbo7E24/Z8z1paMeZoZ6rCd/uDSttADwPqxW9XhAcLt5aNLo+p+X3zn1lkCzC8T+tKhshdFJx4JSi2d3ujO/SkhvN17touRF25aNluARGeIsEJEOoNIbtoe9X+Q0jA93Eg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=LX4KEaee; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A215E2EF655
+	for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 13:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755695645; cv=none; b=R7H3Kc67brtx6M8AwgO6r3CCJUlWolJRliobLfOp5M/pHhNc3DXnmjhFwI66tJ7wDcFVOtmLWFYzWEBWklTl0s1K2TP6ZRwj2sv1bVHOb4KZARPPc+pvwbezcVEIsXb5MZczBSZx9ablcF87LvvTd1wCX8r/3AOEm2coO3OshCM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755695645; c=relaxed/simple;
+	bh=KPSqciT5t06cKS/juMXRjSVgnjxRqIsScfumcMkysfU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hAxmQuKxT9SJP7FfWkycSKfuJKzM6i3yukxEWLi5qCNSdLPoSJu3VBO7F7isA2cR20CrX05j6hhDHE3EJpxkZLV1Zc2lyIkJs97kx8ztSa1ZCBFLeRKHhOhGePL9T1tszUc1Us/655ojf6yuolgPPz4DrzDehlxabpcCqRdQZrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G5IMLkeD; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="LX4KEaee"
-ARC-Seal: i=1; a=rsa-sha256; t=1755685507; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h+AXgcvpxaUzhSA5YhulYfrjQ4KFcdOtl1RQpZ7oMSLx4x/g+mILjjK+xwqh50gjr+AmDdUdaIGIn0MEI6apJ3oIokXP1gsF6Dc/JpXEg41cB/PnMQ2m4cgkJOgTGgzArDs3BdIeFLXGwzEvgXPQ2xXXnQXI68kUjrS8HgaQ7wg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1755685507; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1BvZFqmRTJ7ahMq/XeE/0dEi295M+UK3CiexvNDLCpk=; 
-	b=Q7mFMEBNFHrliTOFA8r99c0TuW6/ceLcyqDZcmb4qS9Mofdo4DwZZ3ttTu7Xsue2cXn6d0RetGQCbvd8ek7KXWQHrEogY/OSfvUKIzNLombVH2xVqZUjR+xGZ0gydYEEEUKqiW0G8zaxULO7cOwchW7KIBgGNAf5uW/z2k20LBc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755685507;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=1BvZFqmRTJ7ahMq/XeE/0dEi295M+UK3CiexvNDLCpk=;
-	b=LX4KEaeeJkwci3Q/FTR8g0+bk4Xjs8UzJvLG0dZbfihZ98yMW1ucPyZuQvbZzwEQ
-	AviazBo0V/TeIh3b2NkExDU4tl4hZzf9KonGFrBfPv78LXbVNPNuM8LvEVSreXR7jb8
-	xlBfwwtJorwTGvM8KIbnMp/lzm9f1x5r3W42Wexg=
-Received: by mx.zohomail.com with SMTPS id 1755685504993404.4586990290858;
-	Wed, 20 Aug 2025 03:25:04 -0700 (PDT)
-Message-ID: <b169f9cc331254dafc3060b0dc3b8bfee882a285.camel@collabora.com>
-Subject: Re: [REGRESSION] next/master: (boot) sleeping function called from
- invalid context at kernel/locking/rw...
-From: Gustavo Padovan <gus@collabora.com>
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-mediatek@lists.infradead.org, 
-	linux-next@vger.kernel.org
-Date: Wed, 20 Aug 2025 07:25:00 -0300
-In-Reply-To: <175568535010.3222387.7351336690916179632@poutine>
-References: <175568535010.3222387.7351336690916179632@poutine>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G5IMLkeD"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-244581cc971so75704385ad.2
+        for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 06:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755695643; x=1756300443; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UEhLj+QpdbdIXsYiUCu+v2MbxwMNrA1QXcK0xjWmvUg=;
+        b=G5IMLkeDnXmAgr4nsfml+6yWbtxNfLXmJXzl6kew0N8I/V1T58Pe7g3LkbTyy/beyz
+         uGuijg08aQOHF+EbFHELHdEcXL1woIXxxZCyObSLPCF7G+iiLUvukO7kWagAWMcyvQak
+         N8se//52TnxDclmxMELl+cTH6EYxj8WBegnUIRrFLizA/Ub/mWQ27SHfi90aCDOriYaS
+         vfw5p2qZcB/R6jKxsoQDCX8QEgCYrKk+3rYYuJigskIVFr0Ffy8IcW/n2IvB9vnAoE6n
+         8Ro6VOkr5aLY+woXDr90jdR13lrDBWCqxrFJ/W07yh5GfNW4FS3RJY4FOLWhwQhnec2b
+         WoiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755695643; x=1756300443;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UEhLj+QpdbdIXsYiUCu+v2MbxwMNrA1QXcK0xjWmvUg=;
+        b=enbM+vPZllP9Xw0tV680xBgKoQRbKP2MAKhG6aWs/SDG4UdaqfYKul8gtcw//AFaig
+         l2WOw8ZIvs9JP4T386lnTEXqtBHQi/XLGvLz6wy0BXvFYJ14wiFGpVkxNWVXf/cdSenb
+         NnI3t0/ZyEJmrj1/KFSHEZRCj6OS1pw14fCBiMpt6S6A6tnL6Hjv+AU85/+RDYxxELHk
+         PZvxf/krbVluuMUDOUjLXSPuIUp1fiX9YcvLFcmtFy6cpxECGLVnHezV1LEuoP6VHuDL
+         LRV/B/mxzDM6lWz+wVCIUkGIXdZJkCwJtmJ/QiNbJ95pBvSMHx4ghjngVTDG33t3/FN1
+         +67g==
+X-Forwarded-Encrypted: i=1; AJvYcCUyw4ga/mAEamSaPh+b4yEVd+FWe8Um28v2B2UO4oycxxyres22ptj6W7HdPPYUP2H+MugfRW7z/Q4uZA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzfkVU0H3dvClEvYUyD9ttlTuvMsW1FDO6r6QOn63+OMMfvn8bd
+	oVJTeQz+kZtyuHkiE0GxGZ3hHfh3tVR5jmAZP+hNT5iwfz14FPj8pGIZ+ip15n35Tz4NkTu5Wpj
+	uq1jZh2c1EzQ34zTKXABCEvRs9OQ/8BOH8JrcFJ3XBg==
+X-Gm-Gg: ASbGncv84fV4/9Yjrm1chr29xSo2WcD65z0/dr8dEsZrQ8JN0Co3d0WBoB5BY6f3r3e
+	Cca7qp3EuiVHQNAPKi+EvEDg3Kc9p7G92ZpNmoX5mwScKkTWUq0ec4uxlbpmjVTUtZApXcXtjfe
+	PFnWOc5fZev1PNVoU0h5Agy0Z2O7mC5yhUTbsIb4N1k4jrEzJUz5TQZjx6Ocets8NhFDjJxAyUq
+	dqpy+Qtpg4CY1OgPUM1Ccna47L6U2pXgjZAXeg=
+X-Google-Smtp-Source: AGHT+IFBJmOUaT50s2oqxUyYw4FxsnPw5mGp4PfDEiEg3YvV4hdLkFdHYDMKytflbhE2y2paxnWvZ4jXvQbb3KvxgAs=
+X-Received: by 2002:a17:903:1b48:b0:243:926:b1f3 with SMTP id
+ d9443c01a7336-245ef1728b2mr39549355ad.24.1755695642929; Wed, 20 Aug 2025
+ 06:14:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 20 Aug 2025 18:43:51 +0530
+X-Gm-Features: Ac12FXxC0MUMoUEpSUxG3tHBnH_B58ps1yvcBAmlPD_lH0pv4jzn6YQynSvCFy4
+Message-ID: <CA+G9fYtS9nDqC7g-B4285gmxDNRkYQixyPYMuzgDg5-sy2FumQ@mail.gmail.com>
+Subject: next-20250819: sdhci-cadence.c error variable 'hrs37_mode' is
+ uninitialized when used here [-Werror,-Wuninitialized]
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-08-20 at 10:22 +0000, KernelCI bot wrote:
->=20
->=20
->=20
->=20
->=20
-> Hello,
->=20
-> New boot regression found on next/master:
->=20
-> ---
-> =C2=A0sleeping function called from invalid context at
-> kernel/locking/rwsem.c:1589
-> [logspec:generic_linux_boot,linux.kernel.bug]
-> ---
->=20
-> - dashboard:
-> https://d.kernelci.org/i/maestro:4a7604ad2b208f9142109c871e17a6453ee9ff9c
-> - giturl:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> - commit HEAD:=C2=A0 5303936d609e09665deda94eaedf26a0e5c3a087
-> - tags: next-20250820
->=20
->=20
-> Log excerpt:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
+The following build warnings / errors noticed with arm64 defconfig
+and x86 allyesconfig with clang-20 and clang-nightly toolchains.
 
-Our logspec tool failed to collect the relevant part of the crash.
-Here it is: (We will fix this).
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
+Build regression: next-20250819 sdhci-cadence.c error variable
+'hrs37_mode' is uninitialized when used here [-Werror,-Wuninitialized]
 
-[    5.926489] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[    5.930486] [ BUG: Invalid wait context ]
-[    5.934484] 6.17.0-rc2-next-20250820 #1 Not tainted
-[    5.939350] -----------------------------
-[    5.943347] kworker/u32:0/12 is trying to lock:
-[    5.947864] ffffbca6d49c19b8 (sysfs_symlink_target_lock){+.+.}-
-{3:3}, at: sysfs_remove_dir+0x48/0xe8
-[    5.956997] other info that might help us debug this:
-[    5.962034] context-{5:5}
-[    5.964642] 4 locks held by kworker/u32:0/12:
-[    5.968986]  #0: ffff0000c0039148
-((wq_completion)events_unbound){+.+.}-{0:0}, at:
-process_one_work+0x674/0x1800
-[    5.979153]  #1: ffff800080187ce0 (deferred_probe_work){+.+.}-{0:0},
-at: process_one_work+0x698/0x1800
-[    5.988450]  #2: ffff0000c24a10f8 (&dev->mutex){....}-{4:4}, at:
-__device_attach+0x80/0x358
-[    5.996794]  #3: ffffbca6d6571cd8 (devtree_lock){....}-{2:2}, at:
-of_find_node_with_property+0x34/0x204
-[    6.003882] usb 1-1: new high-speed USB device number 2 using xhci-
-mtk
-[    6.006180] stack backtrace:
-[    6.006183] CPU: 7 UID: 0 PID: 12 Comm: kworker/u32:0 Not tainted
-6.17.0-rc2-next-20250820 #1 PREEMPT
-[    6.006187] Hardware name: Acer Tomato (rev2) board (DT)
-[    6.006190] Workqueue: events_unbound deferred_probe_work_func
-[    6.006195] Call trace:
-[    6.006196]  show_stack+0x18/0x24 (C)
-[    6.006201]  dump_stack_lvl+0x90/0xd0
-[    6.006205]  dump_stack+0x1c/0x28
-[    6.006208]  __lock_acquire+0x924/0xc2c
-[    6.006213]  lock_acquire.part.0+0x164/0x25c
-[    6.006216]  lock_acquire+0x88/0x1a0
-[    6.006219]  _raw_spin_lock+0xa8/0xd8
-[    6.006223]  sysfs_remove_dir+0x48/0xe8
-[    6.006226]  __kobject_del+0xb0/0x27c
-[    6.006228]  kobject_release+0xfc/0x134
-[    6.006231]  kobject_put+0xb0/0x130
-[    6.006234]  of_node_put+0x18/0x28
-[    6.006237]  of_find_node_with_property+0xcc/0x204
-[    6.006240]  scpsys_get_bus_protection_legacy+0x16c/0x428
-[    6.006244]  scpsys_probe+0x3bc/0x584
-[    6.006247]  platform_probe+0xc4/0x1c0
-[    6.006250]  really_probe+0x188/0x5d0
-[    6.006253]  __driver_probe_device+0x160/0x2e8
-[    6.006256]  driver_probe_device+0x5c/0x298
-[    6.006259]  __device_attach_driver+0x184/0x328
-[    6.006262]  bus_for_each_drv+0x104/0x18c
-[    6.006265]  __device_attach+0x168/0x358
-[    6.006268]  device_initial_probe+0x14/0x20
-[    6.006271]  bus_probe_device+0x128/0x160
-[    6.006274]  deferred_probe_work_func+0x128/0x1d0
-[    6.006277]  process_one_work+0x740/0x1800
-[    6.006279]  worker_thread+0x738/0xb88
-[    6.006282]  kthread+0x328/0x3d4
-[    6.006285]  ret_from_fork+0x10/0x20
-[    6.006291] BUG: sleeping function called from invalid context at
-kernel/locking/rwsem.c:1589
-[    6.017529] i2c_hid_of 4-0010: i2c_hid_get_input: IRQ triggered but
-there's no data
-[    6.024878] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
-12, name: kworker/u32:0
-[    6.024881] preempt_count: 1, expected: 0
-[    6.024882] RCU nest depth: 0, expected: 0
-[    6.024884] INFO: lockdep is turned off.
-[    6.024886] irq event stamp: 537370
-[    6.024887] hardirqs last  enabled at (537369): [<ffffbca6cf0a140c>]
-_raw_spin_unlock_irqrestore+0x84/0x90
-[    6.024891] hardirqs last disabled at (537370): [<ffffbca6cf0a033c>]
-_raw_spin_lock_irqsave+0xe0/0xf4
-[    6.024894] softirqs last  enabled at (365608): [<ffffbca6cb9bcfc4>]
-handle_softirqs+0x8ec/0xd90
-[    6.219570] softirqs last disabled at (365431): [<ffffbca6cb810ab8>]
-__do_softirq+0x14/0x20
-[    6.227908] CPU: 7 UID: 0 PID: 12 Comm: kworker/u32:0 Not tainted
-6.17.0-rc2-next-20250820 #1 PREEMPT
-[    6.227912] Hardware name: Acer Tomato (rev2) board (DT)
-[    6.227914] Workqueue: events_unbound deferred_probe_work_func
-[    6.227919] Call trace:
-[    6.227920]  show_stack+0x18/0x24 (C)
-[    6.227923]  dump_stack_lvl+0x90/0xd0
-[    6.227927]  dump_stack+0x1c/0x28
-[    6.227930]  __might_resched+0x360/0x578
-[    6.227933]  __might_sleep+0xa4/0x16c
-[    6.227937]  down_write+0x8c/0x21c
-[    6.227940]  kernfs_remove+0x28/0x4c
-[    6.227944]  sysfs_remove_dir+0xa8/0xe8
-[    6.227947]  __kobject_del+0xb0/0x27c
-[    6.227950]  kobject_release+0xfc/0x134
-[    6.227952]  kobject_put+0xb0/0x130
-[    6.227955]  of_node_put+0x18/0x28
-[    6.227958]  of_find_node_with_property+0xcc/0x204
-[    6.227961]  scpsys_get_bus_protection_legacy+0x16c/0x428
-[    6.227965]  scpsys_probe+0x3bc/0x584
-[    6.227967]  platform_probe+0xc4/0x1c0
-[    6.227971]  really_probe+0x188/0x5d0
-[    6.227974]  __driver_probe_device+0x160/0x2e8
-[    6.227977]  driver_probe_device+0x5c/0x298
-[    6.227980]  __device_attach_driver+0x184/0x328
-[    6.227983]  bus_for_each_drv+0x104/0x18c
-[    6.227985]  __device_attach+0x168/0x358
-[    6.227988]  device_initial_probe+0x14/0x20
-[    6.227991]  bus_probe_device+0x128/0x160
-[    6.227993]  deferred_probe_work_func+0x128/0x1d0
-[    6.227996]  process_one_work+0x740/0x1800
-[    6.227999]  worker_thread+0x738/0xb88
-[    6.228002]  kthread+0x328/0x3d4
-[    6.228004]  ret_from_fork+0x10/0x20
-[   31.875576] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[   32.017394] rcu: ?7-...0: (14 ticks this GP)
-idle=3D3c14/1/0x4000000000000000 softirq=3D936/941 fqs=3D1298
-[   32.026515] rcu: ?(detected by 5, t=3D6503 jiffies, g=3D-383, q=3D816
-ncpus=3D8)
-[   32.033203] Sending NMI from CPU 5 to CPUs 7:
-[   44.067673] watchdog: CPU1: Watchdog detected hard LOCKUP on cpu 2
-[   44.073902] Modules linked in:
-[   44.073927] irq event stamp: 17405
-[   44.073942] hardirqs last  enabled at (17405): [<ffffbca6ce8032c0>]
-psci_cpu_suspend_enter+0x1b8/0x320
-[   44.073994] hardirqs last disabled at (17404): [<ffffbca6cbaba4e8>]
-do_idle+0xf8/0x1a0
-[   44.074038] softirqs last  enabled at (17402): [<ffffbca6cb9bcfc4>]
-handle_softirqs+0x8ec/0xd90
-[   44.074079] softirqs last disabled at (17397): [<ffffbca6cb810ab8>]
-__do_softirq+0x14/0x20
-[   44.074118] Sending NMI from CPU 1 to CPUs 2:
-[   44.103650] watchdog: CPU5: Watchdog detected hard LOCKUP on cpu 6
-[   44.125270] Modules linked in:
-[   44.125273] irq event stamp: 26161
-[   44.125274] hardirqs last  enabled at (26161): [<ffffbca6ce8032c0>]
-psci_cpu_suspend_enter+0x1b8/0x320
-[   44.125281] hardirqs last disabled at (26160): [<ffffbca6cbaba4e8>]
-do_idle+0xf8/0x1a0
-[   44.125286] softirqs last  enabled at (26140): [<ffffbca6cb9bcfc4>]
-handle_softirqs+0x8ec/0xd90
-[   44.125289] softirqs last disabled at (26135): [<ffffbca6cb810ab8>]
-__do_softirq+0x14/0x20
-[   56.471758] sched: DL replenish lagged too much
-[  109.911578] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  109.917672] rcu: ?7-...0: (14 ticks this GP)
-idle=3D3c14/1/0x4000000000000000 softirq=3D936/941 fqs=3D4192
-[  109.926794] rcu: ?(detected by 4, t=3D26012 jiffies, g=3D-383, q=3D816
-ncpus=3D8)
-[  109.933570] Sending NMI from CPU 4 to CPUs 7:
-[  187.931577] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  187.937669] rcu: ?7-...0: (14 ticks this GP)
-idle=3D3c14/1/0x4000000000000000 softirq=3D936/941 fqs=3D7593
-[  187.946790] rcu: ?(detected by 4, t=3D45517 jiffies, g=3D-383, q=3D816
-ncpus=3D8)
-[  187.953565] Sending NMI from CPU 4 to CPUs 7:
-[  265.951574] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  265.957666] rcu: ?7-...0: (14 ticks this GP)
-idle=3D3c14/1/0x4000000000000000 softirq=3D936/941 fqs=3D10993
-[  265.966873] rcu: ?(detected by 5, t=3D65022 jiffies, g=3D-383, q=3D816
-ncpus=3D8)
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
->=20
->=20
-> # Hardware platforms affected:
->=20
-> ## mt8186-corsola-steelix-sku131072
-> - dashboard:
-> https://d.kernelci.org/test/maestro:68a572e9233e484a3fa2c0db
-> - compatibles: google,steelix-sku131072 | google,steelix
-> - 1 fails since 2025-08-20 07:25 UTC
-> - test path: boot
-> - last pass:
-> https://d.kernelci.org/test/maestro:68a429e6233e484a3fa0aba6
-> =C2=A0=C2=A0=C2=A0 - on 2025-08-19 07:38 UTC
-> =C2=A0=C2=A0=C2=A0 - commit hash:=C2=A0 886e5e7b0432360842303d587bb4a65d1=
-0741ae8
-> =C2=A0=C2=A0=C2=A0 - test id:=C2=A0 maestro:68a429e6233e484a3fa0aba6
->=20
-> ## mt8195-cherry-tomato-r2
-> - dashboard:
-> https://d.kernelci.org/test/maestro:68a572ea233e484a3fa2c0e1
-> - compatibles: google,tomato-rev2 | google,tomato | mediatek,mt8195
-> - 1 fails since 2025-08-20 07:25 UTC
-> - test path: boot
-> - last pass:
-> https://d.kernelci.org/test/maestro:68a2ce76233e484a3f9e5dcc
-> =C2=A0=C2=A0=C2=A0 - on 2025-08-18 06:55 UTC
-> =C2=A0=C2=A0=C2=A0 - commit hash:=C2=A0 3ac864c2d9bb8608ee236e89bf5618116=
-13abfce
-> =C2=A0=C2=A0=C2=A0 - test id:=C2=A0 maestro:68a2ce76233e484a3f9e5dcc
->=20
->=20
-> #kernelci issue maestro:4a7604ad2b208f9142109c871e17a6453ee9ff9c
->=20
-> Reported-by: kernelci.org bot <bot@kernelci.org>
->=20
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
->=20
-> Made with love by the KernelCI team - https://kernelci.org
+## Build log
+drivers/mmc/host/sdhci-cadence.c:297:9: error: variable 'hrs37_mode'
+is uninitialized when used here [-Werror,-Wuninitialized]
+  297 |         writel(hrs37_mode, hrs37_reg);
+      |                ^~~~~~~~~~
+drivers/mmc/host/sdhci-cadence.c:291:16: note: initialize the variable
+'hrs37_mode' to silence this warning
+  291 |         u32 hrs37_mode;
+      |                       ^
+      |                        = 0
 
+## Source
+* Kernel version: 6.17.0-rc2
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250819
+* Git commit: 3ac864c2d9bb8608ee236e89bf561811613abfce
+* Architectures: arm64 x86
+* Toolchains: clang-20
+* Kconfigs: defconfig and allyesconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29595553/log_file/
+* Build details x86:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250819/log-parser-build-clang/clang-compiler-drivers_mmc_host_sdhci-cadence_c-error-variable-hrs_mode-is-uninitialized-when-used-here/
+* Build details arm64:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250819/log-parser-build-clang/clang-compiler-drivers_mmc_host_sdhci-cadence_c-warning-variable-hrs_mode-is-uninitialized-when-used-here/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31UgO4773uaneRjyDrf418EXcDd
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31UgO4773uaneRjyDrf418EXcDd/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/31UgO4773uaneRjyDrf418EXcDd/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
