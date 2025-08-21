@@ -1,169 +1,162 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EFC3093B6
-	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 10:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D18E308F18
+	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 10:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755773828; cv=none; b=NSrER0Mb7NAcUhijeea3/qIQwRW6EzIMqWunCBTFcTuneM4uSAXvzxGz6GDy7wUa61ALs0lSVS58G+KOSNGkcFE9RB6R/ioVMA9I6b4AFaEzI74FqjvZrRLv4eyrZ9sO+JiS1OzQ+VwtzcTlph+UaWCK6Qdy+6rs55J304YU7AM=
+	t=1755773896; cv=none; b=uf0SHAKs+B4CVnXckwKblCkTaQzofZ/iIeFqe1l9Igj3XxpGpi8FFZKzT1q5rOZYOSOY9gOoTGx+Z8Zy+I08SQQzgoJxttAoeEklbFCCKFPTRLRQthyO+J1EEf6vI2T1GLJZUhHTthgDrKCTPFbrIf2oGmPkSrJHH+STidm3krA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755773828; c=relaxed/simple;
-	bh=GKkrz4iTgMP3imRBkVGMq2ugMtvxmgGCSinBgcoSxj0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qcrp9BhecDhwzupqQFvW7Lgu+2SpIjpho0k+EfIEIdfAObikDEp/4rIedTL8nTUydI/DurnDOCPrP0oAp7G/FSwNPCvycFHmq8z/VeiMTZIkBeTY9Suol9G3NzMOT0awPxXhlj2drQr1Xe8QH8nHB+ZYg0tCt9yBHDNTD5ouWRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HdBcOIOe; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HdBcOIOe"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-244580591b0so6675005ad.1
-        for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 03:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755773826; x=1756378626; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BXsydsgT+UVZBwSeBHcvaKFCB1p8eK/mNY2QWJNzsz4=;
-        b=HdBcOIOea+BtGz/+F6Pk0dPL3YQBc/W9nN6UA+f3Dk+GYof/Qhz33LhC93yP53fV5l
-         pfgYYUFi9FRgeS/b2+VkKhOdHQGEiGBcgOv6RudgX72V6oFVAMoJbMe+QIWHgaPF0njZ
-         k2nWvxN1PSiAXkOe6uKYgH38dEmEIhQAPwqAMSMn5+eGXR7Y0q8DYZkVj1tbL7+r8UX8
-         5jMZyFLvZwe/5J8TFcMuj0vidCXgX50pJRVelNd9zP9XoUfsNwQnO9mruNe/JeJcuT2g
-         R2WV9yV7YYikNnsVWpr82Tnk/wVqUBl6th2dwj9At0xV18PKe6FJ5oIUbtIs+yT/1OHh
-         8dtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755773826; x=1756378626;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BXsydsgT+UVZBwSeBHcvaKFCB1p8eK/mNY2QWJNzsz4=;
-        b=l3rsiNR9f3pPKHjKkeFhHzNEPQ/e3CWczaRkB+OFO+IIpFRkIan1ALUJHhOcgmKUzP
-         KcaOXAIe18jfl8gVMCQ53h287t8OIJGpxhPfX8zGAhKsZB1QyHdYuFKcxGuKNUtZgIyZ
-         ewFhpsQazz9Wk1caPm47XDzmawZ7MVNQ/pW8Ck4fuDKcrDM6FW+3crvzdald3MIdmDTB
-         /1JcMNncaFHdRCGG4XspthG9wmxYgkHrpzBdT2OzPb7Bq46xO1YY+ZmIgND2RAqWSGqQ
-         yeTlZEBOAljYfW04KM2Ma2xaZIbe4QoOMENYyzIZ7U3GaZWpHMfebNUY5PHelrFrHslv
-         sn/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVrq48DYccGaAiOCkJ/vHF0nJieXDw/Vitm5qeZXipGaIngidNau8dTdc0RhgIhgrJ5cU0LGWQ/+DSIrA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzu189YiSNkKwyuPTswBc4DJQflCKu8t8cxCstY0c9AcKkqFILl
-	rb70uI6wDRM3LuDwUsxdgBbvCWU77LH2bM0TGJnFSgZFchzFmNJ8v05C60fwpJ2D61GChuYIsOb
-	qE+fnoGcxCt6qGCLNbq0RZeOMSJ7oUiMJFIyzYR/MWA==
-X-Gm-Gg: ASbGncvSW2x4U8/tDo9hatYTHEpS9EInB8scT6bWdlJFh4jNIp2jmGj22MltiRqz4kx
-	pNV7P00oQ/1eCy0AWnm6BWJ80JgwQg6pb1ACfW7W5ZifmhiTMLJLY6WkLYkGZ+qJXM3jDl5o/Am
-	Sa+n6GUyHPeT78ZG+B10z5r38sRM4cJwO9YtG9Qy75zGvAdoaqXB4/5dZ6Ix68cnsGezKv3C+RI
-	ypdZQU5UHSy52b89OlPtZ+6wgFJRsmkzROsDg==
-X-Google-Smtp-Source: AGHT+IFA9JWo/za7RvCQ3N8qUZg3xh+FzJDUXahmuU7qDSv65XS/0qQKuLW50NG6gdpjZGNKx/9zfTkOGpG5BzWpnok=
-X-Received: by 2002:a17:903:b50:b0:240:6fd0:25b7 with SMTP id
- d9443c01a7336-245fede05e2mr27786565ad.38.1755773826455; Thu, 21 Aug 2025
- 03:57:06 -0700 (PDT)
+	s=arc-20240116; t=1755773896; c=relaxed/simple;
+	bh=l3jMKIk6lYIIzI4SccsDJUmeup9tuX38D/XM4qedxQU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k9YALQ1oS/qWu7MXOxgISf6DxjFqOtw8eXno5JFk+wgaTBuvUyqz5D0hD+ir4kHDBBIz6MHiHUQixuW774vBGzujNekFLweIbzdfYn7osOYNvr8bD80Qam+1D1B5DM0OtVAEBNN8YmkB0RY49sa91xx9G3U5fqJoKOHT+28M+/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w011.hihonor.com (unknown [10.68.20.122])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4c70fC2v03zYl7h7;
+	Thu, 21 Aug 2025 18:57:55 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w011.hihonor.com
+ (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 21 Aug
+ 2025 18:58:08 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 21 Aug
+ 2025 18:58:07 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <akpm@linux-foundation.org>, <brauner@kernel.org>,
+	<viro@zeniv.linux.org.uk>, <adobriyan@gmail.com>,
+	<rick.p.edgecombe@intel.com>, <ast@kernel.org>, <k.shutemov@gmail.com>,
+	<jirislaby@kernel.org>, <linux-fsdevel@vger.kernel.org>
+CC: <polynomial-c@gmx.de>, <gregkh@linuxfoundation.org>,
+	<stable@vger.kernel.org>, <regressions@lists.linux.dev>, wangzijie
+	<wangzijie1@honor.com>
+Subject: [PATCH v3] proc: fix missing pde_set_flags() for net proc files
+Date: Thu, 21 Aug 2025 18:58:06 +0800
+Message-ID: <20250821105806.1453833-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 21 Aug 2025 16:26:55 +0530
-X-Gm-Features: Ac12FXwxxHIFgYcRpbKhe10fmgTcb2IwuVwDMdkZzGeMc7x8TUDiIvJE5OkVtOk
-Message-ID: <CA+G9fYthMAr3w=U_GmbLPgMb7xNdjbqmxYWF0iUEuJzxnw3dxg@mail.gmail.com>
-Subject: next-20250821 cacheflush.h:61:3: error: incompatible pointer types
- passing 'memdesc_flags_t *' to parameter of type 'volatile unsigned long *' [-Werror,-Wincompatible-pointer-types]
-To: open list <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
+ (10.68.31.243)
 
-The following build warnings / errors noticed with mips defconfig with
-clang-20 and gcc-12 toolchains.
+To avoid potential UAF issues during module removal races, we use pde_set_flags()
+to save proc_ops flags in PDE itself before proc_register(), and then use
+pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+However, the pde_set_flags() call was missing when creating net related proc files.
+This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
 
-Build regression: next-20250821 cacheflush.h:61:3: error: incompatible
-pointer types passing 'memdesc_flags_t *' to parameter of type
-'volatile unsigned long *' [-Werror,-Wincompatible-pointer-types]
+Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+NULL check for proc_ops in pde_set_flags().
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+[1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
 
-* mips, build
-  - clang-nightly-allnoconfig
-  - clang-nightly-defconfig
-  - clang-nightly-lkftconfig-hardening
-  - clang-nightly-lkftconfig-lto-full
-  - clang-nightly-lkftconfig-lto-thing
-  - clang-nightly-tinyconfig
-  - gcc-12-allnoconfig
-  - gcc-12-ath79_defconfig
-  - gcc-12-bcm47xx_defconfig
-  - gcc-12-bcm63xx_defconfig
-  - gcc-12-cavium_octeon_defconfig
-  - gcc-12-defconfig
-  - gcc-12-malta_defconfig
-  - gcc-12-rt305x_defconfig
-  - gcc-12-tinyconfig
-  - gcc-13-lkftconfig-hardening
-  - gcc-8-allnoconfig
-  - gcc-8-ath79_defconfig
-  - gcc-8-bcm47xx_defconfig
-  - gcc-8-bcm63xx_defconfig
-  - gcc-8-cavium_octeon_defconfig
-  - gcc-8-defconfig
-  - gcc-8-lkftconfig-hardening
-  - gcc-8-malta_defconfig
-  - gcc-8-rt305x_defconfig
-  - gcc-8-tinyconfig
+Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al")
+Cc: stable@vger.kernel.org
+Reported-by: Lars Wendler <polynomial-c@gmx.de>
+Signed-off-by: wangzijie <wangzijie1@honor.com>
+---
+v3:
+- followed by Christian's suggestion to stash pde->proc_ops in a local const variable
+v2:
+- followed by Jiri's suggestion to refractor code and reformat commit message
+---
+ fs/proc/generic.c | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
+diff --git a/fs/proc/generic.c b/fs/proc/generic.c
+index 76e800e38..bd0c099cf 100644
+--- a/fs/proc/generic.c
++++ b/fs/proc/generic.c
+@@ -367,6 +367,25 @@ static const struct inode_operations proc_dir_inode_operations = {
+ 	.setattr	= proc_notify_change,
+ };
+ 
++static void pde_set_flags(struct proc_dir_entry *pde)
++{
++	const struct proc_ops *proc_ops = pde->proc_ops;
++
++	if (!proc_ops)
++		return;
++
++	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
++		pde->flags |= PROC_ENTRY_PERMANENT;
++	if (proc_ops->proc_read_iter)
++		pde->flags |= PROC_ENTRY_proc_read_iter;
++#ifdef CONFIG_COMPAT
++	if (proc_ops->proc_compat_ioctl)
++		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
++#endif
++	if (proc_ops->proc_lseek)
++		pde->flags |= PROC_ENTRY_proc_lseek;
++}
++
+ /* returns the registered entry, or frees dp and returns NULL on failure */
+ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+ 		struct proc_dir_entry *dp)
+@@ -374,6 +393,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+ 	if (proc_alloc_inum(&dp->low_ino))
+ 		goto out_free_entry;
+ 
++	pde_set_flags(dp);
++
+ 	write_lock(&proc_subdir_lock);
+ 	dp->parent = dir;
+ 	if (pde_subdir_insert(dir, dp) == false) {
+@@ -561,20 +582,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
+ 	return p;
+ }
+ 
+-static void pde_set_flags(struct proc_dir_entry *pde)
+-{
+-	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+-		pde->flags |= PROC_ENTRY_PERMANENT;
+-	if (pde->proc_ops->proc_read_iter)
+-		pde->flags |= PROC_ENTRY_proc_read_iter;
+-#ifdef CONFIG_COMPAT
+-	if (pde->proc_ops->proc_compat_ioctl)
+-		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+-#endif
+-	if (pde->proc_ops->proc_lseek)
+-		pde->flags |= PROC_ENTRY_proc_lseek;
+-}
+-
+ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+ 		struct proc_dir_entry *parent,
+ 		const struct proc_ops *proc_ops, void *data)
+@@ -585,7 +592,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+ 	if (!p)
+ 		return NULL;
+ 	p->proc_ops = proc_ops;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_data);
+@@ -636,7 +642,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
+ 	p->proc_ops = &proc_seq_ops;
+ 	p->seq_ops = ops;
+ 	p->state_size = state_size;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_seq_private);
+@@ -667,7 +672,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
+ 		return NULL;
+ 	p->proc_ops = &proc_single_ops;
+ 	p->single_show = show;
+-	pde_set_flags(p);
+ 	return proc_register(parent, p);
+ }
+ EXPORT_SYMBOL(proc_create_single_data);
+-- 
+2.25.1
 
-## Build error mips
-In file included from include/linux/cacheflush.h:5:
-arch/mips/include/asm/cacheflush.h:61:3: error: incompatible pointer
-types passing 'memdesc_flags_t *' to parameter of type 'volatile
-unsigned long *' [-Werror,-Wincompatible-pointer-types]
-   61 |                 folio_set_dcache_dirty(folio);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/include/asm/cacheflush.h:42:27: note: expanded from macro
-'folio_set_dcache_dirty'
-   42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
-      |                                  ^~~~~~~~~~~~~~~
-arch/mips/include/asm/bitops.h:89:70: note: passing argument to
-parameter 'addr' here
-   89 | static inline void set_bit(unsigned long nr, volatile unsigned
-long *addr)
-      |                                                                      ^
-
-In file included from include/linux/cacheflush.h:5:
-arch/mips/include/asm/cacheflush.h:70:3: error: incompatible pointer
-types passing 'memdesc_flags_t *' to parameter of type 'volatile
-unsigned long *' [-Werror,-Wincompatible-pointer-types]
-   70 |                 folio_set_dcache_dirty(page_folio(page));
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/include/asm/cacheflush.h:42:27: note: expanded from macro
-'folio_set_dcache_dirty'
-   42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
-      |                                  ^~~~~~~~~~~~~~~
-arch/mips/include/asm/bitops.h:89:70: note: passing argument to
-parameter 'addr' here
-   89 | static inline void set_bit(unsigned long nr, volatile unsigned
-long *addr)
-      |                                                                      ^
-2 errors generated.
-
-## Source
-* Kernel version: 6.17.0-rc2
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: next-20250821
-* Git commit: 7fa4d8dc380fbd81a9d702a855c50690c9c6442c
-* Architectures: mips
-* Toolchains: clang-20 gcc-12
-* Kconfigs: defconfig
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29616797/log_file/
-* Build details mips:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250821/build/clang-nightly-defconfig/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
