@@ -1,162 +1,141 @@
-Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D18E308F18
-	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 10:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752DB30C340
+	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 11:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755773896; cv=none; b=uf0SHAKs+B4CVnXckwKblCkTaQzofZ/iIeFqe1l9Igj3XxpGpi8FFZKzT1q5rOZYOSOY9gOoTGx+Z8Zy+I08SQQzgoJxttAoeEklbFCCKFPTRLRQthyO+J1EEf6vI2T1GLJZUhHTthgDrKCTPFbrIf2oGmPkSrJHH+STidm3krA=
+	t=1755774528; cv=none; b=RwtJd0LTCb86YnJsvzINhdyKs9W9oosozcvy6ElONDqzADv1r0lNw74MAhDfZ4aqzA47xRIWyfVE82SNRvDHWpo4RM9ae0dQXZHgKQjymjj1/TY4q2wy+IvTgMYC4285U3FnDAOXDPTy04bzuJ52nNSdE9rWH9FBS6MBgDPWbHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755773896; c=relaxed/simple;
-	bh=l3jMKIk6lYIIzI4SccsDJUmeup9tuX38D/XM4qedxQU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k9YALQ1oS/qWu7MXOxgISf6DxjFqOtw8eXno5JFk+wgaTBuvUyqz5D0hD+ir4kHDBBIz6MHiHUQixuW774vBGzujNekFLweIbzdfYn7osOYNvr8bD80Qam+1D1B5DM0OtVAEBNN8YmkB0RY49sa91xx9G3U5fqJoKOHT+28M+/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w011.hihonor.com (unknown [10.68.20.122])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4c70fC2v03zYl7h7;
-	Thu, 21 Aug 2025 18:57:55 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w011.hihonor.com
- (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 21 Aug
- 2025 18:58:08 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 21 Aug
- 2025 18:58:07 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <akpm@linux-foundation.org>, <brauner@kernel.org>,
-	<viro@zeniv.linux.org.uk>, <adobriyan@gmail.com>,
-	<rick.p.edgecombe@intel.com>, <ast@kernel.org>, <k.shutemov@gmail.com>,
-	<jirislaby@kernel.org>, <linux-fsdevel@vger.kernel.org>
-CC: <polynomial-c@gmx.de>, <gregkh@linuxfoundation.org>,
-	<stable@vger.kernel.org>, <regressions@lists.linux.dev>, wangzijie
-	<wangzijie1@honor.com>
-Subject: [PATCH v3] proc: fix missing pde_set_flags() for net proc files
-Date: Thu, 21 Aug 2025 18:58:06 +0800
-Message-ID: <20250821105806.1453833-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1755774528; c=relaxed/simple;
+	bh=wo8fFKRkmyhr5A9bJwCdfaCDsrAwCqyfhGhNWQU/vBQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=r0EQc9nx6Mk2/8zsQd5C5plAiG+zP/SRvlCd7fW92WgKVMa/93uiXFKsfUofKULFkSJpo4xCSyjTsMIdfj0YrmOb2gG8OF1Mok3pt63/hf8xF/OGJSwrgEglCJZAoT9twur0iMR5iUUN/AokgeRm2OWwfrHbd/+79plhU+lau6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q6ljF4fO; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q6ljF4fO"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2445827be70so9351705ad.3
+        for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 04:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755774526; x=1756379326; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pz2lRLfqaRELH/ch1+xtt9bzWUsIFWaw5ujjaHxpXSw=;
+        b=Q6ljF4fOlmqdVeIBxRo/hHI+pn7Nk29JKyKjUzRDagga9AQl5GkC9ao/uG2oEItF9j
+         nqkdvDtb95Gas68imn1vYfWMRLvol8dyhLWuzkpGoMsEbUnO9cmOUmFBwbynM5RLIR1O
+         Joc9pNuENLYcB1Yf8APRZ79FLSAFwge2J4tuWuV/kMZEb7btK6gexb+5Y0EQw7aJOTrb
+         rCqN+sA9FZIynMaCF13b+wqqsSYLMvBN7Z/7R5LdEg7qsYXaEvluCvWggvV17mhGbM0V
+         EurcPsdC4hC/s9BQuRWcrbBeQc033D/5J4qG8bMPo8SPza6Et03/Dhn8Wyf/ciTA3YTF
+         8fqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755774526; x=1756379326;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pz2lRLfqaRELH/ch1+xtt9bzWUsIFWaw5ujjaHxpXSw=;
+        b=VVJweIgrnvz/SCQm/4ZFQOQnn1dSLp8mvB+SXPYpQP44fUtgppFQS5F6OYesapvude
+         U1sl7YSb8tvuGBwSh4Zq53dlN0HZlNmHq9sRYqPCtxCtMtpptdo3Xg7E7sxUPjmgLVVY
+         y23q4dHvc7qtCSfTzJH69egHUY/vydJ1KrfqGRJPJpdk8Oz2Ev1f5V5hGhtecj6Yaoc9
+         3XwCuqpD0jKuRrewKH4DsEjRmFD6snXAnT6xFRECTczVhxj560hebXwqhJ6W1JcUeP5q
+         sznAYpkzQRdGDXLeVmGernHWwgd41QTwQd4+J1quzugnpLVGeGeJuDKMGUGH3LD18KSq
+         SSiA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0wJfdHMEbG5Qs30OjZ5I5a9YRhydU0pYOhzWdy1el4GC+80G3R4NK/cqaIDnqLXePpGynqK1GSkxvhg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxIOlx+PI0YFATWBlZA+EC5ifTErGgR3jnhqGILviyGUN7ZeVUl
+	wMhKgO0kRy61No9F99CMC/49F9nEks3c2XtW+4BajMUYKvctgDP26w/ruU9xn6CMlW7YACnvV/Z
+	fa9efljgwAiwENZgoQZ7sTMrHzVBh43hep/K7q6kYeQ==
+X-Gm-Gg: ASbGncuyunSbClIwmM8sEcIoNvXgaOBYnk7eMvIUB7mZM9QkgWUIv/6mx/6PYgDNP4d
+	nX87/C9htMtUTZMPYNU2/+hYrJcPRjX/fR0+h9Q01j0Xme4ZoONsodRrZhT77h6dzBVHia5gLVd
+	sfR/MAfWiLKLvhDP30CzDlJ31YCu6eWCSSKe2NJv6XTd+3CXkSavUnVIjcwJ4cYnJSluC80kZKX
+	3bngNatHpudplAGFB8Z9CauM0W37WDXkT32hQ==
+X-Google-Smtp-Source: AGHT+IGqJIXkeZ1cPE92KQPkVZFoOov2gyYnj+M9lqpBVRW5SAgiAAGuqW38eqvgWo6dJioAKo2uIFcmCS3PrSxJ3x0=
+X-Received: by 2002:a17:903:3d0c:b0:246:571:4b24 with SMTP id
+ d9443c01a7336-24605714c82mr21886425ad.61.1755774525706; Thu, 21 Aug 2025
+ 04:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
- (10.68.31.243)
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 21 Aug 2025 16:38:34 +0530
+X-Gm-Features: Ac12FXxrwC8J1BsX_IcVeNAB7p8j33bNwbFGted2nZTmpvEH-5C9tgp38KBgcNs
+Message-ID: <CA+G9fYss3ztUGNvEu07Veck+09Lsied5TGbb-2fSw8H5wxRaJw@mail.gmail.com>
+Subject: next-20250821: tinyconfig: kernel/panic.c error: implicit declaration
+ of function 'panic_print_deprecated'; did you mean 'panic_print_set'? [-Werror=implicit-function-declaration]
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Petr Mladek <pmladek@suse.com>, Ingo Molnar <mingo@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-To avoid potential UAF issues during module removal races, we use pde_set_flags()
-to save proc_ops flags in PDE itself before proc_register(), and then use
-pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
+The following build warnings / errors are noticed with arc, arm, arm64 defconfig
+with clang-20 and gcc-12 toolchains.
 
-However, the pde_set_flags() call was missing when creating net related proc files.
-This omission caused incorrect behavior which FMODE_LSEEK was being cleared
-inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-Fix this by ensuring pde_set_flags() is called when register proc entry, and add
-NULL check for proc_ops in pde_set_flags().
+Build regression: next-20250821 tinyconfig kernel panic.c error
+implicit declaration of function 'panic_print_deprecated'; did you
+mean 'panic_print_set'? [-Werror=implicit-function-declaration]
 
-[1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al")
-Cc: stable@vger.kernel.org
-Reported-by: Lars Wendler <polynomial-c@gmx.de>
-Signed-off-by: wangzijie <wangzijie1@honor.com>
----
-v3:
-- followed by Christian's suggestion to stash pde->proc_ops in a local const variable
-v2:
-- followed by Jiri's suggestion to refractor code and reformat commit message
----
- fs/proc/generic.c | 38 +++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+* arc, build
+  - gcc-9-tinyconfig
 
-diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-index 76e800e38..bd0c099cf 100644
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -367,6 +367,25 @@ static const struct inode_operations proc_dir_inode_operations = {
- 	.setattr	= proc_notify_change,
- };
- 
-+static void pde_set_flags(struct proc_dir_entry *pde)
-+{
-+	const struct proc_ops *proc_ops = pde->proc_ops;
-+
-+	if (!proc_ops)
-+		return;
-+
-+	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
-+		pde->flags |= PROC_ENTRY_PERMANENT;
-+	if (proc_ops->proc_read_iter)
-+		pde->flags |= PROC_ENTRY_proc_read_iter;
-+#ifdef CONFIG_COMPAT
-+	if (proc_ops->proc_compat_ioctl)
-+		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
-+#endif
-+	if (proc_ops->proc_lseek)
-+		pde->flags |= PROC_ENTRY_proc_lseek;
-+}
-+
- /* returns the registered entry, or frees dp and returns NULL on failure */
- struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
- 		struct proc_dir_entry *dp)
-@@ -374,6 +393,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
- 	if (proc_alloc_inum(&dp->low_ino))
- 		goto out_free_entry;
- 
-+	pde_set_flags(dp);
-+
- 	write_lock(&proc_subdir_lock);
- 	dp->parent = dir;
- 	if (pde_subdir_insert(dir, dp) == false) {
-@@ -561,20 +582,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
- 	return p;
- }
- 
--static void pde_set_flags(struct proc_dir_entry *pde)
--{
--	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
--		pde->flags |= PROC_ENTRY_PERMANENT;
--	if (pde->proc_ops->proc_read_iter)
--		pde->flags |= PROC_ENTRY_proc_read_iter;
--#ifdef CONFIG_COMPAT
--	if (pde->proc_ops->proc_compat_ioctl)
--		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
--#endif
--	if (pde->proc_ops->proc_lseek)
--		pde->flags |= PROC_ENTRY_proc_lseek;
--}
--
- struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 		struct proc_dir_entry *parent,
- 		const struct proc_ops *proc_ops, void *data)
-@@ -585,7 +592,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 	if (!p)
- 		return NULL;
- 	p->proc_ops = proc_ops;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_data);
-@@ -636,7 +642,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
- 	p->proc_ops = &proc_seq_ops;
- 	p->seq_ops = ops;
- 	p->state_size = state_size;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_seq_private);
-@@ -667,7 +672,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
- 		return NULL;
- 	p->proc_ops = &proc_single_ops;
- 	p->single_show = show;
--	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_single_data);
--- 
-2.25.1
+* arm, build
+  - clang-20-tinyconfig
+  - clang-nightly-tinyconfig
+  - gcc-13-tinyconfig
+  - gcc-8-tinyconfig
 
+* arm64, build
+  - clang-20-tinyconfig
+  - clang-nightly-tinyconfig
+  - gcc-13-tinyconfig
+  - gcc-8-tinyconfig
+
+* parisc, build
+  - gcc-11-tinyconfig
+
+* powerpc, build
+  - clang-20-tinyconfig
+  - clang-nightly-tinyconfig
+  - gcc-13-tinyconfig
+  - gcc-8-tinyconfig
+
+## Build log
+kernel/panic.c: In function 'panic_print_set':
+kernel/panic.c:954:9: error: implicit declaration of function
+'panic_print_deprecated'; did you mean 'panic_print_set'?
+[-Werror=implicit-function-declaration]
+  954 |         panic_print_deprecated();
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+      |         panic_print_set
+cc1: some warnings being treated as errors
+
+## Source
+* Kernel version: 6.17.0-rc2
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250821
+* Git commit: 7fa4d8dc380fbd81a9d702a855c50690c9c6442c
+* Architectures: arc arm arm64
+* Toolchains: clang-20 gcc-12
+* Kconfigs: defconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29616870/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250821/build/clang-20-tinyconfig/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31aRY2vQ0cMol9wA63TKkoCPsxC
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRY2vQ0cMol9wA63TKkoCPsxC/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRY2vQ0cMol9wA63TKkoCPsxC/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
