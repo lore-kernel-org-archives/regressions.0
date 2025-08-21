@@ -1,34 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06A2335BC8;
-	Thu, 21 Aug 2025 13:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B65334392
+	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 13:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755782763; cv=none; b=HEDfPygh6WIGKGNnCT/ev+wvt33x5hxuw0+ps2xIILCgRhqLPKD9aeMivRh/V8bVYHYRCj8jwK6K+bpaLfFdHjIMa836yEXFuCHZb8FNyrZGBOq5WQnOuT5vUQyBhy9DBBbKqe7VbIlR/r5x+DC8r9v3QXHkj70J/DVN4r1t3Pk=
+	t=1755782977; cv=none; b=IWjpN3Bcyz2NeiKEtu4/AhWI9VU6WmcYBiT3trVD/UiorkoAMMLL2Tq5jtTML+utQ0oS7NzOHIzpyb4r03c3MMnBWwVmK1bCbjIKd/dSQmxKchLhQFMlOepOArM98eSSs+nKeNqBsRhT3QpDHdAC14+VDxKfGqJDa/z19R8fbxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755782763; c=relaxed/simple;
-	bh=GO8pJQFJ0YUKLoac5wgIzPjbn80v89bo2xx3UBW9vbs=;
+	s=arc-20240116; t=1755782977; c=relaxed/simple;
+	bh=wc5v9uTTIL728+hB7UJTKaDvwgtQwqhmi3Vl/hFU5ak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rc371Wh5VrK8khtpP0/O4GIuWRSHgdR2J+fmS7tt87aF+2oR7Bk+rNfwvRb/AZ8tXL8lC1gfMVxVsGcV1Hz/e8BhILP8Co24cxqAxkl2yqDBMH7q5QyrEo59G+U9pmzGGJt/e+RibHRcjor/qw5QoGbysb+OqftUPEjmocEPJJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D182FiHl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JZdbFSrBANc4gu8VZrmWt5ByjSR0ZXhj5JDmNNW8qgI2Hh/b9Mvoz3W1B5DPkSxS5Cdjambs6rXxd5LO3IEW8WwZRRENCXJqWGr+ZIDVlxw7VQeG+POsk+ESF5vm8X6O0wssd/RupY3REHQJ6NECcObUwexKVLYf1+h0WZdVTlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=adqU2xFW; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D182FiHl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1337BC4CEEB;
-	Thu, 21 Aug 2025 13:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755782762;
-	bh=GO8pJQFJ0YUKLoac5wgIzPjbn80v89bo2xx3UBW9vbs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D182FiHlRfiLy66V21/SOiXc+cGWMClHUTdfPi83FjxV1g5g6YRvJXcsGgcTvDBnz
-	 a/jiyYB7cajKTb/0+K+lOEEpbvYfXm7iktzUZAOHbRjnkYQtojosj/xIiQOFUONcwi
-	 nwpH8RJL3EW4WOFQNQ6q8hANBkFQaJ3K6yNzzaP8=
-Date: Thu, 21 Aug 2025 15:25:59 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="adqU2xFW"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-246013de800so135675ad.0
+        for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 06:29:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1755782975; x=1756387775; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J13Esd7nTONrArlNpUKcH+9/JHXUHsKEy/Ib89aPaCQ=;
+        b=adqU2xFWHawl1rffDXfXy/+Wd76a8FEs7T6fp+NXvC5xgYxFsGmAkCWY/h1v5bGBba
+         Io4lVz7qUct0kp6L2jroVzM+TaEVUCfFYTKSDonU/gCDFMmsbeTvWT3jydi+YXH1bLle
+         ffZo1kZ50t9FHLY582cFo3DheDHR+ladD1VDvgl/U3KC0AuWUs9fxG94qifCCnePWtBg
+         OSWKQcgosQYZyG9i+HngJepwGioSDB7jCTrk7WGjd9er2Y3V3CZAzzIIJIf1UJCHXNCK
+         UTz1Rvk60odaSgmOrcOI19oGYXmqB3MZt268GZRqoD1PxB7zElKW358rbOUYUsjVifc4
+         7drA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755782975; x=1756387775;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J13Esd7nTONrArlNpUKcH+9/JHXUHsKEy/Ib89aPaCQ=;
+        b=QI3P6kGG8tnZuj4T0ySpBMDeMe8uQoQlEtxfQFnjCXdH9VW7YA2nhvxD3nhGlQ8Wak
+         RnN/FWJNTnlSClBMrMySKVZTErzuGOo5VXfSzTbQqgM2xjpfhd52DQJoxSc4f3KYIfRe
+         DqHI6txl3nhf1WLYZuGZp3bpJoxPqlzQouNPk2VZO82kQ1t6bo/krTWVmH7Kl51Lq2uz
+         ngETyeSmzmR2yGZLhygrgFuj12twRhYb9tEnqaEhHNjkCjQ33+pwXHhPQSZI2E+ZOrkJ
+         kuwe3Ogm+DohZm8QEu50JIT6R+ohRQ3hIDW3jzx0c/oQTthnhzcJXUU4Lqif6ccW5Tbj
+         1/+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWESpw/qLaHMXk3Hqfl75woiGKb6IVzhUum+suCM1PbicrApUWVooNI/bx0Z+hHjeXI213Q6iKy/470Ug==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwTNaAzeEZ+18QRh8gMpQVss1qi21zKDgEfxzJDqe7T9LfCL9Y1
+	o/DjeZqcmYX7BwxdWN4SvR7/xVsI4aetVkh/BGxM3C8Yzpb1FQCHFNaUKs1+orUfPg==
+X-Gm-Gg: ASbGncs83forwA6bQ4mnSMMhQzGA+4RNFd1UdYM5x3bEvPDk6BFXCZEV17+fe21g2ma
+	U3hm94XnNi0mQEyJqQoTzS7Xp4J6NzN4fLbAEOOuvrlKA2DD88aCO7Yy+2x4DwrDPFkVoM5ijOW
+	Gv7q5sPOUiBSe5YIBHyDYbvA71myae9MAky5CZsxyyIJBXPvUh2AlanFnP1LNg0q80CS9G6hlBp
+	EnlEp+32NgfQJAM9WhyOqKIzKP1PB5/wM2lgd+mAUBNs7NFIfNY7Z9rudXuZPlXZszXkXq4YlRz
+	7NSAxtrzjGIZgdanp2GTfp9ohCe7ABacBKcNLjTeXWm6Q81H+sEnmTFtxpNWm/vNeksdPOMol/5
+	3qFthMmCFuNYX1EYown+B96m3Xu/JdgUnxzXu9o5kpWVvPO+yGdDdUbKse9+IFw==
+X-Google-Smtp-Source: AGHT+IEJ89+AicE1lZQ3XnhpL5tHd/m1IsnyOgUW94AR1BOA58fjSEzDksF9jqNKQwq8P3RC6Erj0g==
+X-Received: by 2002:a17:903:166e:b0:234:b441:4d4c with SMTP id d9443c01a7336-24602317afcmr3273645ad.5.1755782975217;
+        Thu, 21 Aug 2025 06:29:35 -0700 (PDT)
+Received: from google.com (3.32.125.34.bc.googleusercontent.com. [34.125.32.3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76e7d4fd2f5sm8344077b3a.74.2025.08.21.06.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Aug 2025 06:29:34 -0700 (PDT)
+Date: Thu, 21 Aug 2025 13:29:29 +0000
+From: Carlos Llamas <cmllamas@google.com>
 To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Carlos Llamas <cmllamas@google.com>, Li Li <dualli@google.com>,
-	Tiffany Yang <ynaffit@google.com>, John Stultz <jstultz@google.com>,
-	Shai Barack <shayba@google.com>,
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Li Li <dualli@google.com>, Tiffany Yang <ynaffit@google.com>,
+	John Stultz <jstultz@google.com>, Shai Barack <shayba@google.com>,
 	=?iso-8859-1?Q?Thi=E9baud?= Weksteen <tweek@google.com>,
 	kernel-team@android.com, linux-kernel@vger.kernel.org,
 	"David S. Miller" <davem@davemloft.net>,
@@ -48,7 +82,7 @@ Cc: Carlos Llamas <cmllamas@google.com>, Li Li <dualli@google.com>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
 Subject: Re: [PATCH v20 3/5] binder: introduce transaction reports via netlink
-Message-ID: <2025082120-phoney-husband-d028@gregkh>
+Message-ID: <aKcfOXcutUwoivDD@google.com>
 References: <20250727182932.2499194-1-cmllamas@google.com>
  <20250727182932.2499194-4-cmllamas@google.com>
  <e21744a4-0155-40ec-b8c1-d81b14107c9f@leemhuis.info>
@@ -128,9 +162,17 @@ On Thu, Aug 21, 2025 at 03:00:50PM +0200, Thorsten Leemhuis wrote:
 > > How exactly are you building this?
 > 
 > Just "cd tools/net/ynl; make".
+> 
+> Ciao, Thorsten
 
-Odd, this works for me in the driver-core-next branch, but in linux-next
-it blows up like this.  Is it a merge issue somewhere?  I don't know
-what this tool is doing to attempt to debug it myself, sorry.
+Judging by the regex in the error log it seems there is a new
+restriction to not using underscores in the yml files. This restriction
+probably raced with my patch in next. It should be very easy to fix. Can
+you please try replacing the underscores?
 
-greg k-h
+ $ sed -i 's/_/-/' Documentation/netlink/specs/binder.yaml
+
+I think that should fix your build. I'll try to reproduce.
+
+--
+Carlos Llamas
