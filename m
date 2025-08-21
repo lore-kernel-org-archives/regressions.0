@@ -1,138 +1,164 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A822E7193
-	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 06:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88062135AD;
+	Thu, 21 Aug 2025 07:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755759547; cv=none; b=Jx918S4RA9boW/8hPUXXKKs4kz5RBWktYpBTkp6j/Hiocu+DLZEAl225TqL4nbsSXBzmos5a2b/D2ZVuMnrJry98gFq3dm0HGT4sVmce8AVm49ea9qW9eAzbOKNruZ2nb97IiTx0CdGWWh5UCkouW3rx0exo1PPJbV5ZRuU3EO0=
+	t=1755761757; cv=none; b=b997F6RQVD+seNGBVNpMYvvjR02UmLPb8mbHsbmGi5qGx/cuSR/v+rKFqyY0yO2iMjmvaGPB56xHX+c1MjSTVJPD7R7ExtV/jebb2S46YN7KUAaYI8fo41xdKhGarLt3iuVCOLdmeLsPcvcnIjJIn130H3HPGONSibVKHvRKbNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755759547; c=relaxed/simple;
-	bh=ZSv4wB36PfS5VGVUvJHoEWowEtmZNAEhcpaOx0Rgfow=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=R1FwwZ9ecEFSXuscc9HoIPWkB+ajG4Q2wY+3DBG40NUPoHH00xG8gMt+2hqmESat1ysPY09JeORlLnW4oJr73u1wEoWiQKR0t5npI/jIEmAEUZSRk4RIPFDjt7Wayk6PxMcsaEzvapVRPHZBOmj/Mc6+wfeYMJLugkDWN3sA9Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=aqpV94ht; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1755761757; c=relaxed/simple;
+	bh=XjakIgVMScc39Ggf2ZqZHSX4qON8F54/Tai9PDv/FqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEyJ4+HQD1HfPTHhrnmPgPWrSnBzArNf7GtvLHTDK9qkvQUT7Fsg/aTSs7HRHOspC9MLeSYvOJlqs/JX/pkebQmwtXqL1KwPDzo510hi/UVHCyOK8NwKS0loW1oqAT74kPJ4dbCd2psyNfgg6ZGURDIN0PZuYG2P7eedSJ4sc3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nw86EYFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="aqpV94ht"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-245fb4c8738so8161275ad.0
-        for <regressions@lists.linux.dev>; Wed, 20 Aug 2025 23:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1755759545; x=1756364345; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pkmYqFYcjlIoTyAuPZAuVl8TGuuRtgnNe9g9iFR96f0=;
-        b=aqpV94htvPSefJ+SBNyd9hSCXGBDCVf7uocJCmdfgM/36pcVHUR/f2+teNP8cPLbpY
-         Ne2OOrL+LfcInZdNAtMO9mVrfrxLaG1fTjSc474zcTXuEUt2Uaq1936Eqk4386IxDKwD
-         OF4YRbZo19+ZJ3uUtivEMiGmedKYZldDVWfQB+9jGSmSYaLwA0w1Lz76bwDAGBWbxS/P
-         Ay7EeMCm+LPDGqnGB73GoxWncf+ptUg6lZjzAu32aJXTJzTXBUFvvQ+UhG4oBhM0XVd2
-         Kq07bYoCAWit4Ef882ZbMXbr33DfZjEOLb761ozRgQ1x+9JYOMKnpNO+vpFxt3lZWgTC
-         SREQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755759545; x=1756364345;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pkmYqFYcjlIoTyAuPZAuVl8TGuuRtgnNe9g9iFR96f0=;
-        b=TtglUZum6wypl/vkbFTxLOiKarQ8axAvq9wKbms/FTNv0qD9e2wX3nuCF74vVUhb7S
-         LJHlP15tmpBxdObg3vEtv/clEN17teEQL+3on4uuHg8hVENln6Q7KGPm33DnY1qLzHPF
-         OO75aNy6n5foae4CQib0W0QBL9rzC01Pwiw8U2w0qiFKoPkO3kg9syRmCg7v5g/D12gs
-         RrUHdqRAsFyAlePS9upwurdZcnqbLRDN1TsAnBF/g73F2zims7svxG7AvP4n37yY0kcN
-         OYV3Qsguh9icgpZsmu/oZGVH1wY0Nsw+JOe+bl3PAxi0doCnSkJYN4VVwdws8bS8r8Xk
-         Z+JQ==
-X-Gm-Message-State: AOJu0Yxivfbx21rGy5P30+SMDD50H7/3AwZRgLhYlaVCDFHomdJfIWIK
-	rxAgK3bpoJc6zOL3B+4LWcXJfe7KcKDnVfL2qmSaqd9uWV1dCZyPCIEup8EjDLBriB1IwLpuLDt
-	gm6xv72w=
-X-Gm-Gg: ASbGncu6zsK6B5MHHboowMpcGif/HgC8ijsfJuolJ5PqZiF1WtYr9ab6MN80lf2BiIH
-	kJ3Ouoa3hbj1ze+fMFloGWNQSQa4bC/DiDxbIcCcotB4pPHJgP72XmYQK/3ztc3zVAy4iGyCOlP
-	UJGzEWLPrpDNiPotLczWRcwrSu3H/SlPgr2GdN9zr0310xqzf21sUfqxUGtXuenJmcGKzwNSuDe
-	jVVJqg9+vX9vfEc/Jk6+Wy+9A9whH7FXlQZSlo6Zf4+8zl6zuPCU4ZOssj8yU61RAygjxnGrVWa
-	nfL5pD3kTwEz91NqdFItyUJb6iBEscCsty6hkaO/3LV39u/p8/vQSwHQc6CMYvzvzKtCg5JFB5a
-	rABFOS9eP/G51IFXVTkXjwlVzUrY=
-X-Google-Smtp-Source: AGHT+IG/B5stGNdGiwG8KC7dcHDlE7l2ZKDOB0YFdWhSQXQwzaKtVXo2UoJt5gDvGcZfJ2c7sYJGJg==
-X-Received: by 2002:a17:903:41c7:b0:240:671c:6341 with SMTP id d9443c01a7336-245fed7e771mr19297955ad.26.1755759544756;
-        Wed, 20 Aug 2025 23:59:04 -0700 (PDT)
-Received: from 16ad3c994827 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-324f384ddc1sm349449a91.0.2025.08.20.23.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Aug 2025 23:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nw86EYFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE07C4CEED;
+	Thu, 21 Aug 2025 07:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755761756;
+	bh=XjakIgVMScc39Ggf2ZqZHSX4qON8F54/Tai9PDv/FqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nw86EYFGhEJULwiaGcI2Jo6ijR0iI8PIODVk0ydQNM0Ecp3GGMb/HIg9BUZohgN0z
+	 GBcRbMtnz+aODLC2iREJkg92InPS06BXDGgtGSlxY+B75k2rgiXTliTnXyVXXgw8L1
+	 DVzX7ThqZhA0gCm6dfS1c77obyIKysDEh+tZ3bXDoV6JAyhk8d4+wSrife0MzAJ4lg
+	 /uciIFjKJEhHf4gtso8jrVa0YwNHwGFgSPbyAKNil9QYIQr8y0iBD7ZHLB/dHn4lJx
+	 MHSGACjwkGvKlHDiA87YxIcL8BxlVv2+vrZtBN14sQcezcBT/JwDuWmyX5N5Y7vDao
+	 qQMMRlNbjLKSQ==
+Date: Thu, 21 Aug 2025 09:35:50 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: wangzijie <wangzijie1@honor.com>
+Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, 
+	adobriyan@gmail.com, rick.p.edgecombe@intel.com, ast@kernel.org, k.shutemov@gmail.com, 
+	jirislaby@kernel.org, linux-fsdevel@vger.kernel.org, polynomial-c@gmx.de, 
+	gregkh@linuxfoundation.org, stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH RESEND v2] proc: fix missing pde_set_flags() for net proc
+ files
+Message-ID: <20250821-wagemut-serpentinen-e5f4b6f505f6@brauner>
+References: <20250818123102.959595-1-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [REGRESSION] next/master: (build)
- ./arch/mips/include/asm/cacheflush.h:42:34:
- error: passing argumen...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 21 Aug 2025 06:59:03 -0000
-Message-ID: <175575954332.147.3671353627841122443@16ad3c994827>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250818123102.959595-1-wangzijie1@honor.com>
 
+On Mon, Aug 18, 2025 at 08:31:02PM +0800, wangzijie wrote:
+> To avoid potential UAF issues during module removal races, we use pde_set_flags()
+> to save proc_ops flags in PDE itself before proc_register(), and then use
+> pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
+> 
+> However, the pde_set_flags() call was missing when creating net related proc files.
+> This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+> inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
+> 
+> Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+> NULL check for proc_ops in pde_set_flags().
+> 
+> [1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+> 
+> Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al)
+> Cc: stable@vger.kernel.org
+> Reported-by: Lars Wendler <polynomial-c@gmx.de>
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+> v2:
+> - followed by Jiri's suggestion to refractor code and reformat commit message
+> ---
+>  fs/proc/generic.c | 36 +++++++++++++++++++-----------------
+>  1 file changed, 19 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/proc/generic.c b/fs/proc/generic.c
+> index 76e800e38..003031839 100644
+> --- a/fs/proc/generic.c
+> +++ b/fs/proc/generic.c
+> @@ -367,6 +367,23 @@ static const struct inode_operations proc_dir_inode_operations = {
+>  	.setattr	= proc_notify_change,
+>  };
+>  
+> +static void pde_set_flags(struct proc_dir_entry *pde)
+> +{
 
+Stash pde->proc_ops in a local const variable instead of chasing the
+pointer multiple times. Aside from that also makes it easier to read.
+Otherwise seems fine.
 
-
-
-Hello,
-
-New build issue found on next/master:
-
----
- ./arch/mips/include/asm/cacheflush.h:42:34: error: passing argument 2 of ‘set_bit’ from incompatible pointer type [-Werror=incompatible-pointer-types] in arch/mips/kernel/asm-offsets.s (arch/mips/kernel/asm-offsets.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:dfad1cace3166f976876f942be0d5f653324d85c
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  7fa4d8dc380fbd81a9d702a855c50690c9c6442c
-- tags: next-20250821
-
-
-Log excerpt:
-=====================================================
-                 from arch/mips/kernel/asm-offsets.c:12:
-./arch/mips/include/asm/bitops.h:89:70: note: expected ‘volatile long unsigned int *’ but argument is of type ‘memdesc_flags_t *’
-   89 | static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
-      |                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-./arch/mips/include/asm/cacheflush.h: In function ‘flush_dcache_page’:
-./arch/mips/include/asm/cacheflush.h:42:34: error: passing argument 2 of ‘set_bit’ from incompatible pointer type [-Werror=incompatible-pointer-types]
-   42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
-      |                                  ^~~~~~~~~~~~~~~
-      |                                  |
-      |                                  memdesc_flags_t *
-./arch/mips/include/asm/cacheflush.h:70:17: note: in expansion of macro ‘folio_set_dcache_dirty’
-   70 |                 folio_set_dcache_dirty(page_folio(page));
-      |                 ^~~~~~~~~~~~~~~~~~~~~~
-./arch/mips/include/asm/bitops.h:89:70: note: expected ‘volatile long unsigned int *’ but argument is of type ‘memdesc_flags_t *’
-   89 | static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
-      |                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-cc1: some warnings being treated as errors
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## 32r2el_defconfig on (mips):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:68a6c16c233e484a3fa4cedd
-
-## 32r2el_defconfig+allnoconfig on (mips):
-- compiler: gcc-12
-- dashboard: https://d.kernelci.org/build/maestro:68a6c169233e484a3fa4ceda
-
-
-#kernelci issue maestro:dfad1cace3166f976876f942be0d5f653324d85c
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+> +	if (!pde->proc_ops)
+> +		return;
+> +
+> +	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+> +		pde->flags |= PROC_ENTRY_PERMANENT;
+> +	if (pde->proc_ops->proc_read_iter)
+> +		pde->flags |= PROC_ENTRY_proc_read_iter;
+> +#ifdef CONFIG_COMPAT
+> +	if (pde->proc_ops->proc_compat_ioctl)
+> +		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+> +#endif
+> +	if (pde->proc_ops->proc_lseek)
+> +		pde->flags |= PROC_ENTRY_proc_lseek;
+> +}
+> +
+>  /* returns the registered entry, or frees dp and returns NULL on failure */
+>  struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+>  		struct proc_dir_entry *dp)
+> @@ -374,6 +391,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+>  	if (proc_alloc_inum(&dp->low_ino))
+>  		goto out_free_entry;
+>  
+> +	pde_set_flags(dp);
+> +
+>  	write_lock(&proc_subdir_lock);
+>  	dp->parent = dir;
+>  	if (pde_subdir_insert(dir, dp) == false) {
+> @@ -561,20 +580,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
+>  	return p;
+>  }
+>  
+> -static void pde_set_flags(struct proc_dir_entry *pde)
+> -{
+> -	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+> -		pde->flags |= PROC_ENTRY_PERMANENT;
+> -	if (pde->proc_ops->proc_read_iter)
+> -		pde->flags |= PROC_ENTRY_proc_read_iter;
+> -#ifdef CONFIG_COMPAT
+> -	if (pde->proc_ops->proc_compat_ioctl)
+> -		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+> -#endif
+> -	if (pde->proc_ops->proc_lseek)
+> -		pde->flags |= PROC_ENTRY_proc_lseek;
+> -}
+> -
+>  struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+>  		struct proc_dir_entry *parent,
+>  		const struct proc_ops *proc_ops, void *data)
+> @@ -585,7 +590,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+>  	if (!p)
+>  		return NULL;
+>  	p->proc_ops = proc_ops;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_data);
+> @@ -636,7 +640,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
+>  	p->proc_ops = &proc_seq_ops;
+>  	p->seq_ops = ops;
+>  	p->state_size = state_size;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_seq_private);
+> @@ -667,7 +670,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
+>  		return NULL;
+>  	p->proc_ops = &proc_single_ops;
+>  	p->single_show = show;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_single_data);
+> -- 
+> 2.25.1
+> 
