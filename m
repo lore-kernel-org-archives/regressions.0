@@ -1,185 +1,200 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C33341AD9
-	for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 13:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBA31684B4
+	for <regressions@lists.linux.dev>; Fri, 22 Aug 2025 06:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755783812; cv=none; b=SxiUuDJVX6UW1vrsik1DCWkGfFPKy1aSesZzah6B9G1ZplbPLycxv/KXP3vmuyLUb1NHI8RWf1sEdOtzQZjUEu7w50Kv5oUoNgRilfYcChORcI7w97UrR9qq+VwYVta8k25+azQMGBSEaTkvmyat3zvY3nAeTIIKEPXx3cr6J+Q=
+	t=1755844256; cv=none; b=FVugBeBwxZ2e/KE9Hg/TSKHZdfinsVplNirWPuAZJRc8AX7HRJWHWCLN0M4g8EEEpKFg1J5d3tk1C9MkgXWVTfW82fvWL85zrcxUi35rNBxQuRCVNbt06vBCbJMYZlZhHV4hTlbczCTramiZmtwb06YIeek5MKwXLEhrNw4Osqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755783812; c=relaxed/simple;
-	bh=kDR7IcPzIqy9bbYLH2uEiJyNApziIC+MQ80BckAIB5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I1CfRRb4GOaEwA0c4S9NtAKuQgm6mvCrkOtZtSTq2rne5UYfZaIu+xt8DvOfW16HHlXte/EJ7qk5wlXbqIfKoEFzdzo5ZyCLZSpnooDxslx487GNsLLY/7lmXZy4aP0xE2y2fdDBvY259KkNWmns4nMcbN4NzZYF7JXESP4yqXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r9VZGL/w; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r9VZGL/w"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2445826fd9dso11673275ad.3
-        for <regressions@lists.linux.dev>; Thu, 21 Aug 2025 06:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755783810; x=1756388610; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4TKKxJUqDz6CrlAYZ9i2quMno6mJSPy8hdIxNc2ssT8=;
-        b=r9VZGL/w4O6TxqAzj0bOs4SLICc3ayk749I5mTt1yErilDiBydbqub0ciOGFLlEPA4
-         ebdjtd3mSfse3iTSPp0mEVQtWmnbt3/01vcjl3Cpo/u03M4izBx+g3hJH5olobgIpcEO
-         EXQ/O6yC7F0LHSJeFYFqW+O6zRcJRg9/J8gv/LQmpYIIAu7hh1jga9qlgLy6hvSgYmDP
-         n5UdhuWrIqxkvMqIgqNGZ+2uHJEas0ra+cWGW8KeiNts+vvnNCp9ujuDALhuEPwT1+rj
-         5coRVqVtr0A/lWrx0yWYOu/caGmSyQCYuTM7dQKQvD6KKhKfzHLTVwMLS4/bGVHQiuEP
-         yGGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755783810; x=1756388610;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4TKKxJUqDz6CrlAYZ9i2quMno6mJSPy8hdIxNc2ssT8=;
-        b=lsMFsg7LCgQ1lviSyshvOhhL0ih975/vdrTiGdMIiBgOWXL6UmWBnSVwdTElYUaUS9
-         ocT/0VVUVg4HTrED3eScZYjyYNzSTIzupKvZgK4bk0Zzdy1Zs6NxIypAt6avWgkf1i8I
-         RWCSRjGIhYH26rTGTe1wDdwZghL+o4MQrbMjVB7iXuiutnkt6j2NLT1PpznTGopPabtU
-         FqiOFEkv45RX+ScbmBn0du+/c2wcdEMRHekCcNc+SKdx7Dnpxhc4Ik32TguvtZJKh2U7
-         2EgSvtOe64MkOwVLgFYI9ZDw/llbz9KhYdCBmbz2khj0Bju64XKwaHJWZ5LKByD8kGVA
-         lU+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUPY6baE9dphS+GwYUt56Ef/CwUruJ8kpRcwblkW25Oqk333dfQe8yABaUpe8G1JFFbZjkmHzu6X+TiBg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwragRwxOf2/c7timvZ7aWWtSHgcctE+bM5mBjkrc+fe4rMyQpj
-	NGhyeBJnh9cwobacOSZ8ikiM4J22Ek/el18TpVWnjNPkd2GlbFGidAp985tpirhm/ZDcPzpVfyR
-	QDSH4TB0Eg7S2ln6ZzQw6KYR1pDi2RJNN53bq8bl70Q==
-X-Gm-Gg: ASbGncumEBw8HKWuC2Bow0b6SBTEcVu76b5A1POArMVpmnAUP7K68Y99MHg4P1IOEZM
-	QYHEmNd8F6To5Y6fN2LsnSs0DKbVA/rtTkmWSz30/q/nmM6NzCBRtnza8WeTlcpI1n0blC1xIyr
-	INuycJGg7ZMbXvqLlfgr6LLvYVUtRMDSmdBsZ8wUhcD08CP1qBUqdd+TkU3tDMGj6rD5I5116Y1
-	cwpT8CyX7cexk7qz1XXrREbc9RfiWGUjYKUdYDFXNs4VI3KM0g=
-X-Google-Smtp-Source: AGHT+IELgByc3NnsMiO4ohlSNnw7P3I9l1WOk61YcazCJ1eLTSo0Jd6s6qKsge3KcqTIkNDOkvcx67/Y6od2fhS10yk=
-X-Received: by 2002:a17:902:d584:b0:23f:c760:fdf0 with SMTP id
- d9443c01a7336-245fedc8c92mr33954055ad.45.1755783810391; Thu, 21 Aug 2025
- 06:43:30 -0700 (PDT)
+	s=arc-20240116; t=1755844256; c=relaxed/simple;
+	bh=6/NaqANrmLyuM39qP7BCORtnUZ/QctrWrMXQ54qP3Hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q4UUYMhCWF5pjUjU+rJXUNTLkvwD/xv+pXxlCpHTNN0Z2JsnT8wNIOMhnsMGkGed2KM4ODLa+jG5nswCAmKqw2JAgM0iMyquQm0K2Ed7AHLDqz8RcN3qKnORQY70KSZfbbPNFd+rw3x1vWZTohKBtnFqZnvl5KnpIsFB1eL3J50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.192] (ip5f5af7b3.dynamic.kabel-deutschland.de [95.90.247.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6E01B61E647B3;
+	Fri, 22 Aug 2025 08:30:17 +0200 (CEST)
+Message-ID: <9416fdb1-d92e-4183-83d8-6a3001103045@molgen.mpg.de>
+Date: Fri, 22 Aug 2025 08:30:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYthMAr3w=U_GmbLPgMb7xNdjbqmxYWF0iUEuJzxnw3dxg@mail.gmail.com>
-In-Reply-To: <CA+G9fYthMAr3w=U_GmbLPgMb7xNdjbqmxYWF0iUEuJzxnw3dxg@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 21 Aug 2025 19:13:18 +0530
-X-Gm-Features: Ac12FXweVlItcIxXxm0jYGOpeOdEH-mXExl8DfwFQGTW8B_Dt-4zHZjVzLsg8Gc
-Message-ID: <CA+G9fYvkpmqGr6wjBNHY=dRp71PLCoi2341JxOudi60yqaeUdg@mail.gmail.com>
-Subject: Re: next-20250821 cacheflush.h:61:3: error: incompatible pointer
- types passing 'memdesc_flags_t *' to parameter of type 'volatile unsigned
- long *' [-Werror,-Wincompatible-pointer-types]
-To: open list <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Anders Roxell <anders.roxell@linaro.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH net] i40e: Prevent unwanted interface
+ name changes
+To: Calvin Owens <calvin@wbinvd.org>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jedrzej Jagielski
+ <jedrzej.jagielski@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, intel-wired-lan@lists.osuosl.org,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, regressions@lists.linux.dev
+References: <94d7d5c0bb4fc171154ccff36e85261a9f186923.1755661118.git.calvin@wbinvd.org>
+ <CADEbmW100menFu3KACm4p72yPSjbnQwnYumDCGRw+GxpgXeMJA@mail.gmail.com>
+ <aKXqVqj_bUefe1Nj@mozart.vkv.me> <aKYI5wXcEqSjunfk@mozart.vkv.me>
+ <e71fe3bf-ec97-431e-b60c-634c5263ad82@intel.com>
+ <aKcr7FCOHZycDrsC@mozart.vkv.me>
+ <8f077022-e98a-4e30-901b-7e014fe5d5b2@intel.com>
+ <aKfwuFXnvOzWx5De@mozart.vkv.me>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <aKfwuFXnvOzWx5De@mozart.vkv.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 21 Aug 2025 at 16:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The following build warnings / errors noticed with mips defconfig with
-> clang-20 and gcc-12 toolchains.
->
-> Regression Analysis:
-> - New regression? yes
-> - Reproducibility? yes
->
-> Build regression: next-20250821 cacheflush.h:61:3: error: incompatible
-> pointer types passing 'memdesc_flags_t *' to parameter of type
-> 'volatile unsigned long *' [-Werror,-Wincompatible-pointer-types]
+[Cc: regressions@lists.linux.dev]
 
-Anders bisected and found this,
+TLDR; for the regression folks: This is about a two year old commit 
+first appearing in Linux 6.7 (so after the 6.6 LTS series release), part 
+of which Red Hat reverted in their distro last year to address the 
+userspace regression. Users hit by this might not be able to log into 
+their systems due to the network not being configured.
 
-# first bad commit:
-   [30f45bf18d55a411f576afe48d50e78a2eef7e23]
-    mm: introduce memdesc_flags_t
 
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> * mips, build
->   - clang-nightly-allnoconfig
->   - clang-nightly-defconfig
->   - clang-nightly-lkftconfig-hardening
->   - clang-nightly-lkftconfig-lto-full
->   - clang-nightly-lkftconfig-lto-thing
->   - clang-nightly-tinyconfig
->   - gcc-12-allnoconfig
->   - gcc-12-ath79_defconfig
->   - gcc-12-bcm47xx_defconfig
->   - gcc-12-bcm63xx_defconfig
->   - gcc-12-cavium_octeon_defconfig
->   - gcc-12-defconfig
->   - gcc-12-malta_defconfig
->   - gcc-12-rt305x_defconfig
->   - gcc-12-tinyconfig
->   - gcc-13-lkftconfig-hardening
->   - gcc-8-allnoconfig
->   - gcc-8-ath79_defconfig
->   - gcc-8-bcm47xx_defconfig
->   - gcc-8-bcm63xx_defconfig
->   - gcc-8-cavium_octeon_defconfig
->   - gcc-8-defconfig
->   - gcc-8-lkftconfig-hardening
->   - gcc-8-malta_defconfig
->   - gcc-8-rt305x_defconfig
->   - gcc-8-tinyconfig
->
->
-> ## Build error mips
-> In file included from include/linux/cacheflush.h:5:
-> arch/mips/include/asm/cacheflush.h:61:3: error: incompatible pointer
-> types passing 'memdesc_flags_t *' to parameter of type 'volatile
-> unsigned long *' [-Werror,-Wincompatible-pointer-types]
->    61 |                 folio_set_dcache_dirty(folio);
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/mips/include/asm/cacheflush.h:42:27: note: expanded from macro
-> 'folio_set_dcache_dirty'
->    42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
->       |                                  ^~~~~~~~~~~~~~~
-> arch/mips/include/asm/bitops.h:89:70: note: passing argument to
-> parameter 'addr' here
->    89 | static inline void set_bit(unsigned long nr, volatile unsigned
-> long *addr)
->       |                                                                      ^
->
-> In file included from include/linux/cacheflush.h:5:
-> arch/mips/include/asm/cacheflush.h:70:3: error: incompatible pointer
-> types passing 'memdesc_flags_t *' to parameter of type 'volatile
-> unsigned long *' [-Werror,-Wincompatible-pointer-types]
->    70 |                 folio_set_dcache_dirty(page_folio(page));
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/mips/include/asm/cacheflush.h:42:27: note: expanded from macro
-> 'folio_set_dcache_dirty'
->    42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
->       |                                  ^~~~~~~~~~~~~~~
-> arch/mips/include/asm/bitops.h:89:70: note: passing argument to
-> parameter 'addr' here
->    89 | static inline void set_bit(unsigned long nr, volatile unsigned
-> long *addr)
->       |                                                                      ^
-> 2 errors generated.
->
-> ## Source
-> * Kernel version: 6.17.0-rc2
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git describe: next-20250821
-> * Git commit: 7fa4d8dc380fbd81a9d702a855c50690c9c6442c
-> * Architectures: mips
-> * Toolchains: clang-20 gcc-12
-> * Kconfigs: defconfig
->
-> ## Build
-> * Build log: https://qa-reports.linaro.org/api/testruns/29616797/log_file/
-> * Build details mips:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250821/build/clang-nightly-defconfig/
-> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/31aRYnoYJbpEW0zZyTGvO2w7OCn/config
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+Dear Calvin, dear Przemek,
 
-- Naresh
+
+Thank you for raising this issue.
+
+
+Am 22.08.25 um 06:23 schrieb Calvin Owens:
+> On Thursday 08/21 at 22:39 +0200, Przemek Kitszel wrote:
+>> On 8/21/25 16:23, Calvin Owens wrote:
+>>> On Thursday 08/21 at 10:00 +0200, Przemek Kitszel wrote:
+>>>> On 8/20/25 19:41, Calvin Owens wrote:
+>>>>> On Wednesday 08/20 at 08:31 -0700, Calvin Owens wrote:
+>>>>>> On Wednesday 08/20 at 08:42 +0200, Michal Schmidt wrote:
+>>>>>>> On Wed, Aug 20, 2025 at 6:30 AM Calvin Owens <calvin@wbinvd.org> wrote:
+>>>>>>>> The same naming regression which was reported in ixgbe and fixed in
+>>>>>>>> commit e67a0bc3ed4f ("ixgbe: prevent from unwanted interface name
+>>>>>>>> changes") still exists in i40e.
+>>>>>>>>
+>>>>>>>> Fix i40e by setting the same flag, added in commit c5ec7f49b480
+>>>>>>>> ("devlink: let driver opt out of automatic phys_port_name generation").
+>>>>>>>>
+>>>>>>>> Fixes: 9e479d64dc58 ("i40e: Add initial devlink support")
+>>>>>>>
+>>>>>>> But this one's almost two years old. By now, there may be more users
+>>>>>>> relying on the new name than on the old one.
+>>>>>>> Michal
+>>>>>>
+>>>>>> Well, I was relying on the new ixgbe names, and I had to revert them
+>>>>>> all in a bunch of configs yesterday after e67a0bc3ed4f :)
+>>>>
+>>>> we have fixed (changed to old naming scheme) ixgbe right after the
+>>>> kernel was used by real users (modulo usual delay needed to invent
+>>>> a good solution)
+>>>
+>>> No, the "fix" actually broke me for a *second time*, because I'd
+>>> already converted my infrastructure to use the *new* names, which match
+>>> i40e and the rest of the world.
+>>>
+>>> We've seen *two* user ABI regressions in the last several months in
+>>> ixgbe now, both of which completely broke networking on the system.
+>>>
+>>> I'm not here to whine about that: I just want to save as many people out
+>>> there in the real world as I can the trouble of having to do the same
+>>> work (which has absolutely no benefit) over the next five years in i40e.
+>>>
+>>> If it's acceptable to break me for a second time to "fix" this, because
+>>> I'm the minority of users (a viewpoint I am in agreement with), it
+>>> should also be acceptable to break the minority of i40e users who are
+>>> running newer kernels to "fix" it there too.
+>>>
+>>> Why isn't it?
+>>
+>> I think we agree that it is ok-ish to sometime break setups for bleeding
+>> edge users, then fix (aka undo). It's bad that this time it was with
+>> effect equivalent to the first breakage (hope that it was easier to fix
+>> locally when it occurred second time in a row).
+> 
+> I just want to re-emphasize, it was *not* my intent to gripe at you
+> about this. A big reason I test new kernels is in the hope I can hit
+> things like this myself and get them fixed before they impact the wide
+> userbase, I'm only frustrated I'm probably too late here to do that.
+> 
+>> But we dispute over change from Oct 2023, for me it is carved in stone
+>> at this point. Every user either adjusted or worked it around [1]
+> 
+> IMHO the date of the release (Jan 2024) is more relevant than the
+> commit date, but it's not really that different in this case.
+> 
+> I think there's merit to the idea that the lack of complaining is a sign
+> that most users have not had to adjust yet, because if they had, they'd
+> have complained about it. But I don't have any real data either way.
+> 
+> The objections raised over the new interface naming in ixgbe are in no
+> way specific to ixgbe. You can s/ixgbe/i40e/ any mail about it and
+> nothing really changes. They're generalized objections against the
+> renaming of interfaces, so from a certain POV people *are* actively
+> complaining.
+> 
+>>>>> And, even if it is e67a0bc3ed4f that introduced it, v6.7 was the first
+>>>>> release with it. I strongly suspect most servers with i40e NICs running
+>>>>> in the wild are running older kernels than that, and have not yet
+>>>>> encountered the naming regression. But you probably have much better
+>>>>> data about that than I do :)
+>>>>
+>>>> Red Hat patches their kernels with current code of the drivers that their
+>>>> customers use (including i40e and ixgbe)
+>>>> One could expect that changes made today to those will reach RHEL 10.3,
+>>>> even if it would be named "kernel 6.12".
+>>>>
+>>>> (*) the changes will likely be also in 10.2, but I don't want to make
+>>>> any promises from Intel or Red Hat here
+>>>
+>>> But how many i40e users are actually on the most recent version of RHEL?
+>>> Not very many, is my guess. RHEL9 is 5.14, and has the old behavior.
+>>
+>> RHEL 9 backported devlink for i40e in July 2024 [0], together with undo
+>> of interface name change [1] (this likely tells why there were zero
+>> complains from RH users).
+>>
+>> [0]
+>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/commit/bcbc349375ecd977aa429c3eff4d182b74dcdd8a
+>>
+>> [1]
+>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/commit/5ab8aa31dc2b44fbd6761bb19463f5427b9be245
+> 
+> Heh. Thank you very much for checking that, and for the links.
+
+Too bad Red Hat didn’t report this over a year ago upstream.
+
+>>> If you actually have data on that, obviously that's different. But it
+>>> sounds like you're guessing just like I am.
+>>
+>> I could only guess about other OS Vendors, one could check it also
+>> for Ubuntu in their public git, but I don't think we need more data, as
+>> ultimate judge here are Stable Maintainers
+> 
+> Maybe I'm barking up the wrong tree, it's udev after all that decides to
+> read the thing in /sys and name the interfaces differently because it's
+> there...
+> 
+> In any case, Debian stable is on 6.12 and didn't patch it (just
+> checked), so I concede, it is simply too late :/
+
+I disagree. Debian admins do not upgrade their servers to the newest 
+stable release right away to exactly avoid such issues. So I’d argue, as 
+with Red Hat, that the change should be reverted as soon as possible, 
+before even more users are hit by this.
+
+But, as Przemek is one of the two subsystem maintainers, I guess his 
+opinion matters quite a lot.
+
+
+Kind regards,
+
+Paul
