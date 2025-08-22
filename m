@@ -1,124 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8652E8B74;
-	Fri, 22 Aug 2025 12:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D47310624;
+	Fri, 22 Aug 2025 17:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755866504; cv=none; b=rQ7mHG7VNkuYvMAyo25AVDTuZsnlMxFr4OLCXLBpFYOEhCZE3f4JCNuHn737IgAIiTWuGN/+6N06NkRWr5bzbSyYpv7uLWvBbdRVUOLa88LdaOs6MkXAUGcjlfwf9rZmnYlIjy1oVEueWWvkI6OGfI3vPGYSEVrXXKUSz7qovvY=
+	t=1755882545; cv=none; b=pUSVTjcP4Nx3E5GsOKH/wc+2L6MaYCuZzfE0DpMsBfpFRmokrnyoPsO7GqC0oA7k7Co3k6vlgJseyWwp7cX9/AP21II/dq5o/uJE4JHxdF0jW7+/H+f2OeUzvArJGgRFVQ/YVgUGsWcthz8G5eYJGuXfSh03lRT54wv8UQiPiQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755866504; c=relaxed/simple;
-	bh=NDGevwGXrFEFnsGuH0jC2kHyh2ATY5gReQLcWgkCWaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXuy/y9NCf+mu9/gGgpylSUhHk0vygkiftcQDyjstr5mjRLfwocRXxpX9y9WrYWm9IIXWlHmg+Rc4s5rCNRTUshPXjSV6Ln2lNSmVY7Sk2qUlgZU5A2URzeFQYFP+3984Efqv3+FwV8R02pf4Fh8hbnimyPnuEoWElpbzrUFDTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R8hreah1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R8hreah1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9E6C4CEED;
-	Fri, 22 Aug 2025 12:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755866503;
-	bh=NDGevwGXrFEFnsGuH0jC2kHyh2ATY5gReQLcWgkCWaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8hreah116dFx2QJ7LWqjRzRUBwRbKSk0BkWPXjUXMNFsNo8RmVH1TnSFBkUXX4ZM
-	 /tIrBt3hgFiVxWZzDXOgPgY8bNrr11rTebd86My+GASrfOC0AaweI3raoqLECYxdq5
-	 0MsfAdrKj4Y3Tz7JYvWZhOs+qGN4y1J8+lnYOgoA=
-Date: Fri, 22 Aug 2025 14:41:40 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Luca Boccassi <bluca@debian.org>
-Cc: Christian Heusel <christian@heusel.eu>, Zhang Yi <yi.zhang@huawei.com>,
-	Sasha Levin <sashal@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	heftig@archlinux.org
-Subject: Re: [REGRESSION][STABLE] ext4: too many credits wanted / file system
- issue in v6.16.1
-Message-ID: <2025082214-oink-kindling-11cf@gregkh>
-References: <3d7f77d2-b1f8-4d49-b36a-927a943efc2f@heusel.eu>
- <CAMw=ZnRtmhi8aaO+xsT=kgXYhB8u3sgBdtevrxDWctTLteWYoA@mail.gmail.com>
+	s=arc-20240116; t=1755882545; c=relaxed/simple;
+	bh=ahzZ/0mvs0l2sMIO3U7UUbHaORgWwhdGQPeal2ZB710=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GwyhkpTGv+NCRdiu2l9KRvgdZkv1xO707MpqoQWKmKEgbnTHhHDBbjcmx9j3StiUJ63jRv0GIfWMomyarCpswbELdVJUdjk6i/SaSIZkV/GPqCE7aNMqWl9Eate7wKQrF+a2alzT/meYc8p0QIW/lRbRo6kcFEn6hTMUQBT5a2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
+From: Brett A C Sheffield <bacs@librecast.net>
+To: regressions@lists.linux.dev
+Cc: Brett A C Sheffield <bacs@librecast.net>,
+	netdev@vger.kernel.org,
+	stable@vger.kernel.org,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	oscmaes92@gmail.com,
+	kuba@kernel.org
+Subject: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes
+Date: Fri, 22 Aug 2025 16:50:51 +0000
+Message-ID: <20250822165231.4353-4-bacs@librecast.net>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMw=ZnRtmhi8aaO+xsT=kgXYhB8u3sgBdtevrxDWctTLteWYoA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 19, 2025 at 11:38:11PM +0100, Luca Boccassi wrote:
-> On Tue, 19 Aug 2025 at 21:53, Christian Heusel <christian@heusel.eu> wrote:
-> >
-> > Hello everyone,
-> >
-> > the systemd CI has [recently noticed][0] an issue within the ext4 file
-> > system after the Arch Linux kernel was upgraded to 6.16.1. The issue is
-> > exclusive to the stable tree and does not occur on 6.16 and not on
-> > 6.17-rc2. I have also tested 6.16.2-rc1 and it still contains the bug.
-> >
-> > I was able to bisect the issue between 6.16 and 6.16.1 to the following
-> > commit:
-> >
-> >     b9c561f3f29c2 ("ext4: fix insufficient credits calculation in ext4_meta_trans_blocks()")
-> >
-> > The issue can be reproduced by running the tests from
-> > [TEST-58-REPART.sh][1] by running the [systemd integration tests][2].
-> > But if there are any suggestions I can also test myself as the initial
-> > setup for the integration tests is a bit involved.
-> >
-> > It is not yet clear to me whether this has real-world impact besides the
-> > test, but the systemd devs said that it's not a particularily demanding
-> > workflow, so I guess it is expected to work and could cause issues on
-> > other systems too.
-> >
-> > Also does anybody have an idea which backport could be missing?
-> >
-> > Cheers,
-> > Chris
-> >
-> > [0]: https://github.com/systemd/systemd/actions/runs/17053272497/job/48345703316#step:14:233
-> > [1]: https://github.com/systemd/systemd/blob/main/test/units/TEST-58-REPART.sh
-> > [2]: https://github.com/systemd/systemd/blob/main/test/integration-tests/README.md
-> >
-> > ---
-> >
-> > #regzbot introduced: b9c561f3f29c2
-> > #regzbot title: [STABLE] ext4: too many credits wanted / file system issue in v6.16.1
-> > #regzbot link: https://github.com/systemd/systemd/actions/runs/17053272497/job/48345703316#step:14:233
-> >
-> > ---
-> >
-> > git bisect start
-> > # status: waiting for both good and bad commits
-> > # good: [038d61fd642278bab63ee8ef722c50d10ab01e8f] Linux 6.16
-> > git bisect good 038d61fd642278bab63ee8ef722c50d10ab01e8f
-> > # status: waiting for bad commit, 1 good commit known
-> > # bad: [3e0969c9a8c57ff3c6139c084673ebedfc1cf14f] Linux 6.16.1
-> > git bisect bad 3e0969c9a8c57ff3c6139c084673ebedfc1cf14f
-> > # good: [288f1562e3f6af6d9b461eba49e75c84afa1b92c] media: v4l2-ctrls: Fix H264 SEPARATE_COLOUR_PLANE check
-> > git bisect good 288f1562e3f6af6d9b461eba49e75c84afa1b92c
-> > # bad: [f427460a1586c2e0865f9326b71ed6e5a0f404f2] f2fs: turn off one_time when forcibly set to foreground GC
-> > git bisect bad f427460a1586c2e0865f9326b71ed6e5a0f404f2
-> > # bad: [5f57327f41a5bbb85ea382bc389126dd7b8f2d7b] scsi: elx: efct: Fix dma_unmap_sg() nents value
-> > git bisect bad 5f57327f41a5bbb85ea382bc389126dd7b8f2d7b
-> > # good: [9143c604415328d5dcd4d37b8adab8417afcdd21] leds: pca955x: Avoid potential overflow when filling default_label (take 2)
-> > git bisect good 9143c604415328d5dcd4d37b8adab8417afcdd21
-> > # good: [9c4f20b7ac700e4b4377f85e36165a4f6ca85995] RDMA/hns: Fix accessing uninitialized resources
-> > git bisect good 9c4f20b7ac700e4b4377f85e36165a4f6ca85995
-> > # good: [0b21d1962bec2e660c22c4c4231430f97163dcf8] perf tests bp_account: Fix leaked file descriptor
-> > git bisect good 0b21d1962bec2e660c22c4c4231430f97163dcf8
-> > # good: [3dbe96d5481acd40d6090f174d2be8433d88716d] clk: thead: th1520-ap: Correctly refer the parent of osc_12m
-> > git bisect good 3dbe96d5481acd40d6090f174d2be8433d88716d
-> > # bad: [c6714f30ef88096a8da9fcafb6034dc4e9aa467d] clk: sunxi-ng: v3s: Fix de clock definition
-> > git bisect bad c6714f30ef88096a8da9fcafb6034dc4e9aa467d
-> > # bad: [b9c561f3f29c2d6e1c1d3ffc202910bef250b7d8] ext4: fix insufficient credits calculation in ext4_meta_trans_blocks()
-> > git bisect bad b9c561f3f29c2d6e1c1d3ffc202910bef250b7d8
-> > # first bad commit: [b9c561f3f29c2d6e1c1d3ffc202910bef250b7d8] ext4: fix insufficient credits calculation in ext4_meta_trans_blocks()
-> 
-> The full kernel warning (immediately after the ext4 fs stops working):
+Fix the regression introduced in 9e30ecf23b1b whereby IPv4 broadcast
+packets were having their ethernet destination field mangled.  This
+broke WOL magic packets and likely other IPv4 broadcast.
 
-I've pushed out a 6.16.3-rc1 that should hopefully resolve this.
+The regression can be observed by sending an IPv4 WOL packet using
+the wakeonlan program to any ethernet address:
 
-thanks,
+ wakeonlan 46:3b:ad:61:e0:5d
 
-greg k-h
+and capturing the packet with tcpdump:
+
+ tcpdump -i eth0 -w /tmp/bad.cap dst port 9
+
+The ethernet destination MUST be ff:ff:ff:ff:ff:ff for broadcast, but is
+mangled with 9e30ecf23b1b applied.
+
+Revert the change made in 9e30ecf23b1b and ensure the MTU value for
+broadcast routes is retained by calling ip_dst_init_metrics() directly,
+avoiding the need to enter the main code block in rt_set_nexthop().
+
+Simplify the code path taken for broadcast packets back to the original
+before the regression, adding only the call to ip_dst_init_metrics().
+
+The broadcast_pmtu.sh selftest provided with the original patch still
+passes with this patch applied.
+
+Fixes: 9e30ecf23b1b ("net: ipv4: fix incorrect MTU in broadcast routes")
+Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
+---
+ net/ipv4/route.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index f639a2ae881a..eaf78e128aca 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -2588,6 +2588,7 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
+ 	do_cache = true;
+ 	if (type == RTN_BROADCAST) {
+ 		flags |= RTCF_BROADCAST | RTCF_LOCAL;
++		fi = NULL;
+ 	} else if (type == RTN_MULTICAST) {
+ 		flags |= RTCF_MULTICAST | RTCF_LOCAL;
+ 		if (!ip_check_mc_rcu(in_dev, fl4->daddr, fl4->saddr,
+@@ -2657,8 +2658,12 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
+ 			rth->dst.output = ip_mc_output;
+ 			RT_CACHE_STAT_INC(out_slow_mc);
+ 		}
++		if (type == RTN_BROADCAST) {
++			/* ensure MTU value for broadcast routes is retained */
++			ip_dst_init_metrics(&rth->dst, res->fi->fib_metrics);
++		}
+ #ifdef CONFIG_IP_MROUTE
+-		if (type == RTN_MULTICAST) {
++		else if (type == RTN_MULTICAST) {
+ 			if (IN_DEV_MFORWARD(in_dev) &&
+ 			    !ipv4_is_local_multicast(fl4->daddr)) {
+ 				rth->dst.input = ip_mr_input;
+
+base-commit: 01b9128c5db1b470575d07b05b67ffa3cb02ebf1
+-- 
+2.49.1
+
