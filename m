@@ -1,99 +1,67 @@
-Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D47310624;
-	Fri, 22 Aug 2025 17:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAE023B0;
+	Sat, 23 Aug 2025 01:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755882545; cv=none; b=pUSVTjcP4Nx3E5GsOKH/wc+2L6MaYCuZzfE0DpMsBfpFRmokrnyoPsO7GqC0oA7k7Co3k6vlgJseyWwp7cX9/AP21II/dq5o/uJE4JHxdF0jW7+/H+f2OeUzvArJGgRFVQ/YVgUGsWcthz8G5eYJGuXfSh03lRT54wv8UQiPiQg=
+	t=1755912772; cv=none; b=pXIJV+o25KBtUpf9mdbJCBSm/3X0rbdAwypF931o9VcChWGvOm5RR1HyDK6vq0zWKa2f+AfQ+XB8lqMh8QCZ9cdjhtkQioodktn+4lsTHua7QF8uIS+JopL18NZ2nYothXF5RNIhAszwMJhINe4FW1ZvTrYVeCYqqYpw4Gs6+8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755882545; c=relaxed/simple;
-	bh=ahzZ/0mvs0l2sMIO3U7UUbHaORgWwhdGQPeal2ZB710=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GwyhkpTGv+NCRdiu2l9KRvgdZkv1xO707MpqoQWKmKEgbnTHhHDBbjcmx9j3StiUJ63jRv0GIfWMomyarCpswbELdVJUdjk6i/SaSIZkV/GPqCE7aNMqWl9Eate7wKQrF+a2alzT/meYc8p0QIW/lRbRo6kcFEn6hTMUQBT5a2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
-From: Brett A C Sheffield <bacs@librecast.net>
-To: regressions@lists.linux.dev
-Cc: Brett A C Sheffield <bacs@librecast.net>,
-	netdev@vger.kernel.org,
-	stable@vger.kernel.org,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	oscmaes92@gmail.com,
-	kuba@kernel.org
-Subject: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes
-Date: Fri, 22 Aug 2025 16:50:51 +0000
-Message-ID: <20250822165231.4353-4-bacs@librecast.net>
-X-Mailer: git-send-email 2.49.1
+	s=arc-20240116; t=1755912772; c=relaxed/simple;
+	bh=2bJlQ73zMhkZi/w8Svsurn0QcFTsicZAyfdxSWwE4Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FsG1rvp5hX87SuwimFGEwYkKuBNhpxB8pBZm8HWZeZWz0MCkJV+GeqJBJ27aFzPyojR9cPELggUs8dTrbvAFGlEunWIP6L3CsQwJn7KotOiqScBPRHHexmZmqjdEYVgf/FPAilk0OGc2+yGPaSje1RDYZV6rtms+KSHfVTiq+Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRRtUsef; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRRtUsef"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8AEC4CEED;
+	Sat, 23 Aug 2025 01:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755912771;
+	bh=2bJlQ73zMhkZi/w8Svsurn0QcFTsicZAyfdxSWwE4Do=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rRRtUsefvqRilZsk4SwuF02AFFr2GQfdOlwmdU4PwfZgBWq1FwoDpJ6mcf366dt6E
+	 Hsa6JAKNkFk6n0Y49YlS1+4az7XQFUqYhrpDYWqyJDHIxFLtGRBCYo9ln/mWHSbpzf
+	 CfmVfCGccIUucsacuAt5aVsBtpB4DGkrc/tqHVjqldbrZIll8mGS5Gu39y+Au1z4B8
+	 zYh8zKMRhRpmkc37d02IYfsdXBggdC+5ZpzC7/CzPfFvBGZom6fApxJWy4ZT5ZVnKe
+	 dCS5G7bMLgaHtIH8gkFBPy0b3KDnuqgzVQSdPVrLnS0xeAoLVlKl/7AA+VYL/tcgZW
+	 MzE3K0hITHyGw==
+Date: Fri, 22 Aug 2025 18:32:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Brett A C Sheffield <bacs@librecast.net>
+Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
+ stable@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
+ oscmaes92@gmail.com
+Subject: Re: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in
+ broadcast routes
+Message-ID: <20250822183250.2a9cb92c@kernel.org>
+In-Reply-To: <20250822165231.4353-4-bacs@librecast.net>
+References: <20250822165231.4353-4-bacs@librecast.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Fix the regression introduced in 9e30ecf23b1b whereby IPv4 broadcast
-packets were having their ethernet destination field mangled.  This
-broke WOL magic packets and likely other IPv4 broadcast.
+Thanks for bisecting and fixing!
 
-The regression can be observed by sending an IPv4 WOL packet using
-the wakeonlan program to any ethernet address:
+> The broadcast_pmtu.sh selftest provided with the original patch still
+> passes with this patch applied.
 
- wakeonlan 46:3b:ad:61:e0:5d
+Hm, yes, AFACT we're losing PMTU discovery but perhaps original commit
+wasn't concerned with that. Hopefully Oscar can comment.
 
-and capturing the packet with tcpdump:
+On Fri, 22 Aug 2025 16:50:51 +0000 Brett A C Sheffield wrote:
+> +		if (type == RTN_BROADCAST) {
+> +			/* ensure MTU value for broadcast routes is retained */
+> +			ip_dst_init_metrics(&rth->dst, res->fi->fib_metrics);
 
- tcpdump -i eth0 -w /tmp/bad.cap dst port 9
+You need to check if res->fi is actually set before using it
 
-The ethernet destination MUST be ff:ff:ff:ff:ff:ff for broadcast, but is
-mangled with 9e30ecf23b1b applied.
-
-Revert the change made in 9e30ecf23b1b and ensure the MTU value for
-broadcast routes is retained by calling ip_dst_init_metrics() directly,
-avoiding the need to enter the main code block in rt_set_nexthop().
-
-Simplify the code path taken for broadcast packets back to the original
-before the regression, adding only the call to ip_dst_init_metrics().
-
-The broadcast_pmtu.sh selftest provided with the original patch still
-passes with this patch applied.
-
-Fixes: 9e30ecf23b1b ("net: ipv4: fix incorrect MTU in broadcast routes")
-Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
----
- net/ipv4/route.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index f639a2ae881a..eaf78e128aca 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2588,6 +2588,7 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
- 	do_cache = true;
- 	if (type == RTN_BROADCAST) {
- 		flags |= RTCF_BROADCAST | RTCF_LOCAL;
-+		fi = NULL;
- 	} else if (type == RTN_MULTICAST) {
- 		flags |= RTCF_MULTICAST | RTCF_LOCAL;
- 		if (!ip_check_mc_rcu(in_dev, fl4->daddr, fl4->saddr,
-@@ -2657,8 +2658,12 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
- 			rth->dst.output = ip_mc_output;
- 			RT_CACHE_STAT_INC(out_slow_mc);
- 		}
-+		if (type == RTN_BROADCAST) {
-+			/* ensure MTU value for broadcast routes is retained */
-+			ip_dst_init_metrics(&rth->dst, res->fi->fib_metrics);
-+		}
- #ifdef CONFIG_IP_MROUTE
--		if (type == RTN_MULTICAST) {
-+		else if (type == RTN_MULTICAST) {
- 			if (IN_DEV_MFORWARD(in_dev) &&
- 			    !ipv4_is_local_multicast(fl4->daddr)) {
- 				rth->dst.input = ip_mr_input;
-
-base-commit: 01b9128c5db1b470575d07b05b67ffa3cb02ebf1
--- 
-2.49.1
-
+Could you add a selftest / test case for the scenario we broke?
+selftests can be in C / bash / Python. If bash hopefully socat
+can be used to repro, cause it looks like wakeonlan is not very
+widely packaged.
