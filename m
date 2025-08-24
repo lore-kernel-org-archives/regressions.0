@@ -1,77 +1,91 @@
-Received: from bregans-1.gladserv.net (bregans-1.gladserv.net [185.128.211.58])
+Received: from out2.virusfree.cz (out2.virusfree.cz [89.187.156.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72C242D8D;
-	Sat, 23 Aug 2025 12:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.211.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3493523C511
+	for <regressions@lists.linux.dev>; Sun, 24 Aug 2025 09:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.187.156.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755951894; cv=none; b=O9IkNI6Z6PTStsbH+P3n/IrG09SWVJ0I+qEkp5PTCDVbSwO6qBqloe0Pzf3E58buOCHt/4iFuoIxOG2qOIHWeOXSxg4joIfEghuSoP0XpHR1YYQYDJPbtJSMDXK8GMT4kyjXSFU6t/jqfGC1A4MenISkZXcnYXxH8ymNtkvjN48=
+	t=1756026475; cv=none; b=Esw6vo/fX02DKgo78yAKp5bSQoL8NrqY2EettqXb6GK3LUZPsBhFP+se7xuSSxFsQtUibt+rKDlsmaTxCXTf1gC7eKCA0lN64bt7QzULIkqI0WuQCUuuZwgtIwNBoK2sMS3dIdaSFi0k755K/Jo34VwUoQxfiIitAlhjaBPKUFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755951894; c=relaxed/simple;
-	bh=c7VGgCZa6f+HzVnoJzeCjnygZt875/U69l5XA+/hQEI=;
+	s=arc-20240116; t=1756026475; c=relaxed/simple;
+	bh=Mq+/hYWq0cVG+amD6qkQ0L109sYYur24JCBfR8TL8t0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ME62g+HtBaep0bWZacx6hps0Qy9LWRjdBpmPGJXSDTiHFhkcm7vQmUcrvZ+IVJRtq+yO3ZwBnqGlGstaUy3cenXO0jBT2grcA2+WZa3F9QC0uXU/+z0/VYNWuR0TncODOx15BE8WKAvXHxwWvBXoGuhbCwooqufutDKdF2hODCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.211.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
-Date: Sat, 23 Aug 2025 14:24:39 +0200
-From: Brett Sheffield <brett@librecast.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
-	stable@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
-	oscmaes92@gmail.com
-Subject: Re: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in
- broadcast routes
-Message-ID: <aKmzB57MKbpXh-_Z@karahi.gladserv.com>
-References: <20250822165231.4353-4-bacs@librecast.net>
- <20250822183250.2a9cb92c@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DIdrsVzvT+j/EEEakEro/B60LRXpVzmWgsKInh6tZy1HMWFtcnXtXSTFS2VpkVRbzqcKjhe0A/UINqCwi9m4gMO3mFo6eUDUqhw1jT8y71qzQrcFkIY6uGodX7U7H9d01Fmcc4Dbsohdixi07KXsY7hzVjsfhaECedcOFHd2h/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=excello.cz; spf=pass smtp.mailfrom=excello.cz; dkim=pass (2048-bit key) header.d=excello.cz header.i=@excello.cz header.b=UFCMSKIB; arc=none smtp.client-ip=89.187.156.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=excello.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=excello.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=excello.cz header.i=@excello.cz header.b="UFCMSKIB"
+Received: (qmail 4987 invoked from network); 24 Aug 2025 11:01:08 +0200
+Received: from vm1.excello.cz by vm1.excello.cz
+ (VF-Scanner: Clear:RC:0(89.187.156.50):SC:0(-0.410381/5.0):CC:0:;
+ processed in 0.5 s); 24 Aug 2025 09:01:08 +0000
+X-VF-Scanner-Mail-From: pv@excello.cz
+X-VF-Scanner-Rcpt-To: regressions@lists.linux.dev
+X-VF-Scanner-ID: 20250824090107.635564.4954.vm1.excello.cz.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=excello.cz; h=
+	date:message-id:from:to:subject:reply-to; q=dns/txt; s=default2;
+	 t=1756026067; bh=FTo/8VYVYhnYGdhHVBkoNGOEq4VXoYQoUU679M2OnzU=; b=
+	UFCMSKIB3ziRjlURnAipSVzV4yy1JEF4MxM6fT5SSSH7S8IfJo/5Xza9JyE6qxAj
+	FbaZrIfjwVNHZiyi3pyZdz4erXWnKaLnBYg9a6o45CQW47o/ABehQjHR6PA+GwQX
+	ucFGUyBS2Dx4LnZ5evl1Yl5uYKqwk9z7wrYWq1dvSNY0dJlDLWm09aB0BHeJXHf9
+	3SO+prI5o/aI3g+sCjrJ1xk9GxxGE5+AgNjTHSLItEMhzkazjtcg8x5uCt0Fwo01
+	Alc0P68wLvoMILCJSQkSDQaEWtJMbOyTVdoFeifpmSoZRA4b3r5X2prqcMaDw2Nc
+	U1boe9ojq/zWGiul5Y+ppA==
+Received: from posta.excello.cz (89.187.156.50)
+  by out2.virusfree.cz with ESMTPS (TLSv1.3, TLS_AES_256_GCM_SHA384); 24 Aug 2025 11:01:07 +0200
+Received: from arkam (nat-86g.starnet.cz [109.164.54.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by posta.excello.cz (Postfix) with ESMTPSA id 4FA8F9D7482;
+	Sun, 24 Aug 2025 11:00:57 +0200 (CEST)
+Date: Sun, 24 Aug 2025 11:00:55 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <pv@excello.cz>
+To: wangzijie <wangzijie1@honor.com>
+Cc: akpm@linux-foundation.org, brauner@kernel.org, viro@zeniv.linux.org.uk,
+	adobriyan@gmail.com, rick.p.edgecombe@intel.com, ast@kernel.org,
+	k.shutemov@gmail.com, jirislaby@kernel.org,
+	linux-fsdevel@vger.kernel.org, polynomial-c@gmx.de,
+	gregkh@linuxfoundation.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3] proc: fix missing pde_set_flags() for net proc files
+Message-ID: <20258249055-aKrUxz36A3Yw6qDd-pv@excello.cz>
+References: <20250821105806.1453833-1-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250822183250.2a9cb92c@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250821105806.1453833-1-wangzijie1@honor.com>
 
-On 2025-08-22 18:32, Jakub Kicinski wrote:
-> Thanks for bisecting and fixing!
+On Thu, Aug 21, 2025 at 06:58:06PM +0800, wangzijie wrote:
+> To avoid potential UAF issues during module removal races, we use pde_set_flags()
+> to save proc_ops flags in PDE itself before proc_register(), and then use
+> pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
 > 
-> > The broadcast_pmtu.sh selftest provided with the original patch still
-> > passes with this patch applied.
+> However, the pde_set_flags() call was missing when creating net related proc files.
+> This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+> inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
 > 
-> Hm, yes, AFACT we're losing PMTU discovery but perhaps original commit
-> wasn't concerned with that. Hopefully Oscar can comment.
-
-Indeed. This takes it back to the previous behaviour.
-
-> On Fri, 22 Aug 2025 16:50:51 +0000 Brett A C Sheffield wrote:
-> > +		if (type == RTN_BROADCAST) {
-> > +			/* ensure MTU value for broadcast routes is retained */
-> > +			ip_dst_init_metrics(&rth->dst, res->fi->fib_metrics);
+> Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+> NULL check for proc_ops in pde_set_flags().
 > 
-> You need to check if res->fi is actually set before using it
+> [1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+> 
+> Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al")
+> Cc: stable@vger.kernel.org
+> Reported-by: Lars Wendler <polynomial-c@gmx.de>
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
 
-Ah, yes.  Fixed.
+Tested-by: Petr Vaněk <pv@excello.cz>
 
-> Could you add a selftest / test case for the scenario we broke?
-> selftests can be in C / bash / Python. If bash hopefully socat
-> can be used to repro, cause it looks like wakeonlan is not very
-> widely packaged.
+We have noticed lseek issue with /proc/self/net/sockstat file recently
+and this patch fixes it for us.
 
-Self-test added using socat as requested. If you want this wrapped in namespaces
-etc. let me know. I started doing that, but decided a simpler test without
-requiring root was better and cleaner.
-
-Thanks for the review Jakub.  v2 patches sent.
-
-Cheers,
-
-
-Brett
--- 
-Brett Sheffield (he/him)
-Librecast - Decentralising the Internet with Multicast
-https://librecast.net/
-https://blog.brettsheffield.com/
+Thanks,
+Petr
