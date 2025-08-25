@@ -1,117 +1,84 @@
-Received: from support.bugseng.com (mail.bugseng.com [162.55.131.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEAC29B77E
-	for <regressions@lists.linux.dev>; Mon, 25 Aug 2025 21:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=162.55.131.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756158665; cv=pass; b=M9fMxPreuyE/pivRANSxYCOBXsr82kZYmPjUnzMM1pccxvk3FRFFBpBpqTygoqx9B2bmmYIUqYq+hzz2m4j9AbqTdl9QLsLRatwg7CpvUt/RboZbtKyu+MKBvUpsBfs5JhwcvFald10qix6KL8a8n9TfBvcnjMjA3QvJtdbL0k4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756158665; c=relaxed/simple;
-	bh=Sxg8UGUkNSPcHnK3WfU9gOagF9nKZh7qvFXxzCg6eBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b9eSgBGEjQUh9b9gT/G3kv8oqXUpIpjNfrTxADE8HegEpZ3P1OmxjZr8Zuu9/ejyqEQkpJ7+8f7v/4T4w5CMORTj0YvMn2K5B+VJbws/TykLRz+e2fh+D3RTMZtz2vDgnbOMzBLHxCQR34aRgQMQodKB8tSrI0Ry41ulPXKExJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; arc=pass smtp.client-ip=162.55.131.47
-Authentication-Results: bugseng.com; arc=none smtp.remote-ip=135.181.133.111
-ARC-Seal: i=1; d=bugseng.com; s=openarc; a=rsa-sha256; cv=none; t=1756158190;
-	b=3UrokH7dlEW73ah57rFFCDGOtWgoElJl8oYnwLzTJWMREKde/7u+4ewA1VPyu07jSWQh
-	 3TLVoSfqiVDtSdSkC0N1BE0F+h5V4Re4PalxHvFCqOwVRJ61+pXneMUIQyQBYN8CvKj28
-	 xHc2sRibVMbp6osAawttEIxVFdXRtegGGEir4Hx0wL2Z7MQEVqHoxZShDHZoQa2pxeM1z
-	 u06xiIc50NrwkTE4bE+yAN+/EZPErQBUTwyPDqy4fo5WbNYC9RbQrxYbuPcODQ8hwy/B/
-	 vFf8GuaF8DzuTpz4Im4CgIHth4Hvhi5uRsUtT/8yUXd0W8FoDW7zRxE9KGrW1ZUGWrTzo
-	 OllqSn3dB54qHiCxYfHnraitRnDjSQ8RZW3o/WCEqu4BhCCV9Et2sgsFsUgYBZjcf0WlS
-	 RmWGvTF7Z2xuT7APIeYFprQ9mgckMZjHnOt0SRCT8g6uxQn1kionoc+LK1rEy8OI0+DFI
-	 fNfw5FodA0VIFcYCjTPiA5TRlF9il7bEaojRZEbFXN722k+i2HdcXuy4xa5pex3QrJzae
-	 jk4cermVpZ2R3rD6+nyhQqDgbwu1Pu9T6xiWzEDFIFQOA3nds0He513qYhyKcMuMn8ool
-	 j40MYsdQ/j0VWK9jdjxhcuz49qaVq2n7jfYtEasgsTZk38vvt+qLkLssauP6CXk=
-ARC-Message-Signature: i=1; d=bugseng.com; s=openarc; a=rsa-sha256;
-	c=relaxed/relaxed; t=1756158190;
-	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=OdPgDqkLgH4vvEd5//GdxbEVBYaCBTm9uHrvVmZJwj4=;
-	b=LgUWm4urIveDA+EgqvTA9J6hf0qE2Rnmqb2gMvCkF5vOT0kZ9dktco7T7dRg7cEXNUnR
-	 8VRI0T4ZwYvgFl3gZ06QLZChRqKAWrXKzJ2Sw3xWGrz5zDVLGGjVnF3p/ELTeiNpOdq8z
-	 BzRf0tQxwMrEQL2SVQJXwAJmn5yl0COynYL7K+I7Wjo6p1Arcs4p0grlXDAft+zll3EnJ
-	 LkUJ7I18tGAW3xwJJkK//HFsVxo2e9hsBwu9lgsMXyZrP/AeWAB7Fj/6Ky2xUIu20XBcM
-	 FieSD8gc6OTyBmE7AgFOfeXvtr2PGe5qiRcnbXaTgRgFwiKsejF8tWpJYGjalNDxlozcC
-	 P5NpaTGZrUsr0lWqaH8xMMhqo+81BAVcnoJsJZ5Ldcq5cXBssCARDg1Z8N7XoKEXIjWZJ
-	 jmoCSJfjnhWIITFIJON8jTdwxNTgo7C/KIokV+HApjSYyVCJexSLOR96I3nFVWXxx73W6
-	 Ksm8vAgleOOXrag7xEX9cc38uHNuw5TySX4vAXg7ij7Fk1ke783l0192vm2a7Lb7Puj+n
-	 ZEia4lnt2gZ2AoBaJvWbZ3pXcKfzn5Brte8vuPY+7dFAifDGoedWzQO8jMKUbXAymMkPb
-	 lgwg9inLBbJGRcnszfkux/vYu0h9TNN+GdyGw/Sy4F2+US9uh8aylrZpf3xRQIQ=
-ARC-Authentication-Results: i=1; bugseng.com; arc=none smtp.remote-ip=135.181.133.111
-Received: from eclairit (eclairit.com [135.181.133.111])
-	by support.bugseng.com (Postfix) with ESMTPS id 2E42E4EEBC47;
-	Mon, 25 Aug 2025 23:43:10 +0200 (CEST)
-Received: by eclairit (Postfix, from userid 1011)
-	id 8A0B2644066B; Mon, 25 Aug 2025 23:43:09 +0200 (CEST)
-From: Nicola Vetrini <nicola.vetrini@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	regressions@lists.linux.dev
-Cc: tsbogend@alpha.franken.de,
-	willy@infradead.org,
-	anders.roxell@linaro.org,
-	naresh.kamboju@linaro.org,
-	Nicola Vetrini <nicola.vetrini@gmail.com>
-Subject: [PATCH] mips: fix compilation error
-Date: Mon, 25 Aug 2025 23:42:45 +0200
-Message-ID: <20250825214245.1838158-1-nicola.vetrini@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0317C2C3261;
+	Mon, 25 Aug 2025 22:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756162592; cv=none; b=l3UXBOWKsh5iCNUpGi38aXQ1kDQxcum7AmwF79So0nR1mTYWfuvzQa6irb3Yz8ZxABM/fjrd7g5/fe8/RQPx9B/QP+fICOlrk2vD99fg7ijova+nFHsRZ0ahJSBuvdMu8axeWp6pVcUCkGDAAd2YlXt2tGSJO4GZmP4hYvUBbDU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756162592; c=relaxed/simple;
+	bh=1EwS02lvQFkf1B1/XBnY3ItiLLai366NbFmVSIdJjyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M5+vPN9a/N+/s4/keLYbFIKgYwk8etki7j50wSTHNgttFFw98sb9/NBXVbpwYucSljDFytBjbWFNxWc6MF8IOOcOohbo51ofq3QDJdJ3nEjKlA1qxgTlaxz8NRCLHobxNG+wgI44B/ica/JOTlvbubk4tktRmkRQcxlkij3sZ3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZwsOn/3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZwsOn/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C326C4CEED;
+	Mon, 25 Aug 2025 22:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756162591;
+	bh=1EwS02lvQFkf1B1/XBnY3ItiLLai366NbFmVSIdJjyY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bZwsOn/3Pj9RnVq2HgNIxcs4N8XRlIVgl8jxLTCxR2SJd7TlVMiObIm7soDAO6SLL
+	 jqh5hlRJM06cuhDmMs6LtnKsjCu5aZNqzW9TnUfATG8WSYro4hBeWPj+WJWJrGl0G4
+	 DljoPOYJjwpkHPWelKoPt1+HmYyulIVqtXIORzjzKt+nq1ffOkMeuOPSW7tBdg8pvD
+	 dl/yQzHN65i3hlr8L+gjMcQ38rdeRlzIeBqAsuwxVG6t8hEy/rYC9zV+QK70bISF9e
+	 Y/tSBtxFHS5nF9cU2D7QPNvmyznDhd/H0lFaUcLsmq0YeT1rPRoFEMIdIq/f1OIDS+
+	 nZb5fyuAbOHLA==
+Date: Mon, 25 Aug 2025 15:56:30 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Oscar Maes <oscmaes92@gmail.com>
+Cc: bacs@librecast.net, brett@librecast.net, davem@davemloft.net,
+ dsahern@kernel.org, netdev@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Subject: Re: [PATCH net 1/2] net: ipv4: fix regression in local-broadcast
+ routes
+Message-ID: <20250825155630.5848c357@kernel.org>
+In-Reply-To: <20250825060918.4799-1-oscmaes92@gmail.com>
+References: <20250825060229-oscmaes92@gmail.com>
+	<20250825060918.4799-1-oscmaes92@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The following build error occurs on a mips build configuration
-(32r2el_defconfig and similar ones)
-./arch/mips/include/asm/cacheflush.h:42:34: error: passing argument 2 of ‘set_bit’
-from incompatible pointer type [-Werror=incompatible-pointer-types]
-   42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
-      |                                  ^~~~~~~~~~~~~~~
-      |                                  |
-      |                                  memdesc_flags_t *
+On Mon, 25 Aug 2025 08:09:17 +0200 Oscar Maes wrote:
+> Commit 9e30ecf23b1b ("net: ipv4: fix incorrect MTU in broadcast routes")
+> introduced a regression where local-broadcast packets would have their
+> gateway set in __mkroute_output, which was caused by fi = NULL being
+> removed.
+> 
+> Fix this by resetting the fib_info for local-broadcast packets.
 
-This is due to changes introduced by
-commit 30f45bf18d55 ("mm: introduce memdesc_flags_t"), which did not update
-these usage sites.
+Meaning that 9e30ecf23b1b would still change behavior for the subnet
+broadcast address?
 
-Link: https://lore.kernel.org/lkml/CA+G9fYvkpmqGr6wjBNHY=dRp71PLCoi2341JxOudi60yqaeUdg@mail.gmail.com/
-Fixes: 30f45bf18d55 ("mm: introduce memdesc_flags_t")
-Signed-off-by: Nicola Vetrini <nicola.vetrini@gmail.com>
----
-First time sending a Linux patch, so I may have gotten some part of
-it wrong.
+> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> index f639a2ae881a..98d237e3ec04 100644
+> --- a/net/ipv4/route.c
+> +++ b/net/ipv4/route.c
+> @@ -2575,9 +2575,12 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
+>  		    !netif_is_l3_master(dev_out))
+>  			return ERR_PTR(-EINVAL);
+>  
+> -	if (ipv4_is_lbcast(fl4->daddr))
+> +	if (ipv4_is_lbcast(fl4->daddr)) {
+>  		type = RTN_BROADCAST;
+> -	else if (ipv4_is_multicast(fl4->daddr))
+> +
+> +		/* reset fi to prevent gateway resolution */
+> +		fi = NULL;
+> +	} else if (ipv4_is_multicast(fl4->daddr))
+>  		type = RTN_MULTICAST;
+>  	else if (ipv4_is_zeronet(fl4->daddr))
+>  		return ERR_PTR(-EINVAL);
 
-Bisection was done at the provided link.
----
- arch/mips/include/asm/cacheflush.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/mips/include/asm/cacheflush.h b/arch/mips/include/asm/cacheflush.h
-index 1f14132b3fc9..5d283ef89d90 100644
---- a/arch/mips/include/asm/cacheflush.h
-+++ b/arch/mips/include/asm/cacheflush.h
-@@ -37,11 +37,11 @@
- #define PG_dcache_dirty			PG_arch_1
- 
- #define folio_test_dcache_dirty(folio)		\
--	test_bit(PG_dcache_dirty, &(folio)->flags)
-+	test_bit(PG_dcache_dirty, &(folio)->flags.f)
- #define folio_set_dcache_dirty(folio)	\
--	set_bit(PG_dcache_dirty, &(folio)->flags)
-+	set_bit(PG_dcache_dirty, &(folio)->flags.f)
- #define folio_clear_dcache_dirty(folio)	\
--	clear_bit(PG_dcache_dirty, &(folio)->flags)
-+	clear_bit(PG_dcache_dirty, &(folio)->flags.f)
- 
- extern void (*flush_cache_all)(void);
- extern void (*__flush_cache_all)(void);
-
-base-commit: 6c68f4c0a147c025ae0b25fab688c7c47964a02f
+nit: please add curly braces around all branches of this if / else if /
+else ladder, per kernel coding style guide.
 -- 
-2.43.0
-
+pw-bot: cr
