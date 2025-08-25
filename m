@@ -1,80 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from support.bugseng.com (mail.bugseng.com [162.55.131.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC596283FD0;
-	Mon, 25 Aug 2025 19:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756151784; cv=none; b=bVDTBN6HtM7mae+PSAhNia2T5EM+VmPRldl5dRIduJVMw5zlrzKSquJygjVzN4VUMberllnn4xWm/l5eX8q8j5C34RigBYBCNdvKFqgeX8a7cfcZpOuetfwjNY0j3LeEJig0mn2v1Q1ATod7g9sroq2cg4WYzrVf74Ne1cWOQAE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756151784; c=relaxed/simple;
-	bh=hVscp1LYJaE3qcWw1GcbvK5mxrfCB+Tpux7lBFjeAVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IxIkQV2fRbuaKCajgNgZuJ+D2sDXJX0m2a0gD2AzijB7JTMu86UU6Y7tdPpFd5ZzaVsoIbfxeoUqr/IcCQWwO4k7zF35S/d86I9D+L8TAlJGWWjvLXMy0nlLwq1au+d1OyMWbjkIgDkVErnkSC/Mc5KqbErc8mD/Mtc08HraobM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTeAa+2u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTeAa+2u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2926AC113D0;
-	Mon, 25 Aug 2025 19:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756151783;
-	bh=hVscp1LYJaE3qcWw1GcbvK5mxrfCB+Tpux7lBFjeAVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pTeAa+2uOaISM98RRzC4Nn9WsSf6YSnwYgEVzqlFEkSipaSB9bsubD0esBLaK0qRe
-	 Xoz6/+sA3FMfCp1GLgVG/1xN2OZE1Z47LrAjd7WZnqr5PSco+5OqLJFRn7C6H3Uzg/
-	 lA8E6HVDHwHmLaQZmbxGbgPx8i6UneXWZbrkjXJ9omsb3Jw0NuuvTMDikSNDpE1O7O
-	 GAqabyk803NyWP8+6151e+wjA1onWrEyyYy5uk/a/0Mt8VKXd+Hr7jof2Bq/TsnK/+
-	 xDi0QSyWJ9lhL0yKWGVlIjq8TKkTfDNz4jv9lAieSBPXG5K4vmntqP1rPXmyLovOeC
-	 TdJB5NU4zK0FA==
-Date: Mon, 25 Aug 2025 15:56:21 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Nathan Gao <zcgao@amazon.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [REGRESSION] fs: ERR_PTR dereference in expand_files() on
- v6.12.43
-Message-ID: <aKy_5bOIZwolisn2@laps>
-References: <20250825152725.43133-1-zcgao@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEAC29B77E
+	for <regressions@lists.linux.dev>; Mon, 25 Aug 2025 21:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=162.55.131.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756158665; cv=pass; b=M9fMxPreuyE/pivRANSxYCOBXsr82kZYmPjUnzMM1pccxvk3FRFFBpBpqTygoqx9B2bmmYIUqYq+hzz2m4j9AbqTdl9QLsLRatwg7CpvUt/RboZbtKyu+MKBvUpsBfs5JhwcvFald10qix6KL8a8n9TfBvcnjMjA3QvJtdbL0k4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756158665; c=relaxed/simple;
+	bh=Sxg8UGUkNSPcHnK3WfU9gOagF9nKZh7qvFXxzCg6eBo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b9eSgBGEjQUh9b9gT/G3kv8oqXUpIpjNfrTxADE8HegEpZ3P1OmxjZr8Zuu9/ejyqEQkpJ7+8f7v/4T4w5CMORTj0YvMn2K5B+VJbws/TykLRz+e2fh+D3RTMZtz2vDgnbOMzBLHxCQR34aRgQMQodKB8tSrI0Ry41ulPXKExJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; arc=pass smtp.client-ip=162.55.131.47
+Authentication-Results: bugseng.com; arc=none smtp.remote-ip=135.181.133.111
+ARC-Seal: i=1; d=bugseng.com; s=openarc; a=rsa-sha256; cv=none; t=1756158190;
+	b=3UrokH7dlEW73ah57rFFCDGOtWgoElJl8oYnwLzTJWMREKde/7u+4ewA1VPyu07jSWQh
+	 3TLVoSfqiVDtSdSkC0N1BE0F+h5V4Re4PalxHvFCqOwVRJ61+pXneMUIQyQBYN8CvKj28
+	 xHc2sRibVMbp6osAawttEIxVFdXRtegGGEir4Hx0wL2Z7MQEVqHoxZShDHZoQa2pxeM1z
+	 u06xiIc50NrwkTE4bE+yAN+/EZPErQBUTwyPDqy4fo5WbNYC9RbQrxYbuPcODQ8hwy/B/
+	 vFf8GuaF8DzuTpz4Im4CgIHth4Hvhi5uRsUtT/8yUXd0W8FoDW7zRxE9KGrW1ZUGWrTzo
+	 OllqSn3dB54qHiCxYfHnraitRnDjSQ8RZW3o/WCEqu4BhCCV9Et2sgsFsUgYBZjcf0WlS
+	 RmWGvTF7Z2xuT7APIeYFprQ9mgckMZjHnOt0SRCT8g6uxQn1kionoc+LK1rEy8OI0+DFI
+	 fNfw5FodA0VIFcYCjTPiA5TRlF9il7bEaojRZEbFXN722k+i2HdcXuy4xa5pex3QrJzae
+	 jk4cermVpZ2R3rD6+nyhQqDgbwu1Pu9T6xiWzEDFIFQOA3nds0He513qYhyKcMuMn8ool
+	 j40MYsdQ/j0VWK9jdjxhcuz49qaVq2n7jfYtEasgsTZk38vvt+qLkLssauP6CXk=
+ARC-Message-Signature: i=1; d=bugseng.com; s=openarc; a=rsa-sha256;
+	c=relaxed/relaxed; t=1756158190;
+	h=Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=OdPgDqkLgH4vvEd5//GdxbEVBYaCBTm9uHrvVmZJwj4=;
+	b=LgUWm4urIveDA+EgqvTA9J6hf0qE2Rnmqb2gMvCkF5vOT0kZ9dktco7T7dRg7cEXNUnR
+	 8VRI0T4ZwYvgFl3gZ06QLZChRqKAWrXKzJ2Sw3xWGrz5zDVLGGjVnF3p/ELTeiNpOdq8z
+	 BzRf0tQxwMrEQL2SVQJXwAJmn5yl0COynYL7K+I7Wjo6p1Arcs4p0grlXDAft+zll3EnJ
+	 LkUJ7I18tGAW3xwJJkK//HFsVxo2e9hsBwu9lgsMXyZrP/AeWAB7Fj/6Ky2xUIu20XBcM
+	 FieSD8gc6OTyBmE7AgFOfeXvtr2PGe5qiRcnbXaTgRgFwiKsejF8tWpJYGjalNDxlozcC
+	 P5NpaTGZrUsr0lWqaH8xMMhqo+81BAVcnoJsJZ5Ldcq5cXBssCARDg1Z8N7XoKEXIjWZJ
+	 jmoCSJfjnhWIITFIJON8jTdwxNTgo7C/KIokV+HApjSYyVCJexSLOR96I3nFVWXxx73W6
+	 Ksm8vAgleOOXrag7xEX9cc38uHNuw5TySX4vAXg7ij7Fk1ke783l0192vm2a7Lb7Puj+n
+	 ZEia4lnt2gZ2AoBaJvWbZ3pXcKfzn5Brte8vuPY+7dFAifDGoedWzQO8jMKUbXAymMkPb
+	 lgwg9inLBbJGRcnszfkux/vYu0h9TNN+GdyGw/Sy4F2+US9uh8aylrZpf3xRQIQ=
+ARC-Authentication-Results: i=1; bugseng.com; arc=none smtp.remote-ip=135.181.133.111
+Received: from eclairit (eclairit.com [135.181.133.111])
+	by support.bugseng.com (Postfix) with ESMTPS id 2E42E4EEBC47;
+	Mon, 25 Aug 2025 23:43:10 +0200 (CEST)
+Received: by eclairit (Postfix, from userid 1011)
+	id 8A0B2644066B; Mon, 25 Aug 2025 23:43:09 +0200 (CEST)
+From: Nicola Vetrini <nicola.vetrini@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	regressions@lists.linux.dev
+Cc: tsbogend@alpha.franken.de,
+	willy@infradead.org,
+	anders.roxell@linaro.org,
+	naresh.kamboju@linaro.org,
+	Nicola Vetrini <nicola.vetrini@gmail.com>
+Subject: [PATCH] mips: fix compilation error
+Date: Mon, 25 Aug 2025 23:42:45 +0200
+Message-ID: <20250825214245.1838158-1-nicola.vetrini@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250825152725.43133-1-zcgao@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 25, 2025 at 08:27:25AM -0700, Nathan Gao wrote:
->Hi,
->
->I noticed an ERR_PTR dereference issue in expand_files() on kernel 6.12.43
->when allocating large file descriptor tables. The issue occurs when
->alloc_fdtable() returns ERR_PTR(-EMFILE) for large nr input, but
->expand_fdtable() is not properly checking these error returns. dup_fd()
->seems also have the issue, missing proper ERR_PTR handling.
->
->The ERR_PTR return was introduced by d4f9351243c1 ("fs: Prevent file
->descriptor table allocations exceeding INT_MAX") which adds INT_MAX limit
->check in alloc_fdtable().
+The following build error occurs on a mips build configuration
+(32r2el_defconfig and similar ones)
+./arch/mips/include/asm/cacheflush.h:42:34: error: passing argument 2 of ‘set_bit’
+from incompatible pointer type [-Werror=incompatible-pointer-types]
+   42 |         set_bit(PG_dcache_dirty, &(folio)->flags)
+      |                                  ^~~~~~~~~~~~~~~
+      |                                  |
+      |                                  memdesc_flags_t *
 
-Ugh, sorry :(
+This is due to changes introduced by
+commit 30f45bf18d55 ("mm: introduce memdesc_flags_t"), which did not update
+these usage sites.
 
->I was able to trigger this with the unshare_test selftest:
->
->[   40.283906] BUG: unable to handle page fault for address: ffffffffffffffe8
->...
->[   40.287436] RIP: 0010:expand_files+0x7e/0x1c0
->...
->[   40.366211] Kernel panic - not syncing: Fatal exception
->
->Looking at the upstream kernel, this can be addressed by Al Viro's
->fdtable series [1], which added the ERR_PTR handling in this code path.
->Perhaps backporting this series, especially 1d3b4be ("alloc_fdtable():
->change calling conventions.") would help resolve the issue.
+Link: https://lore.kernel.org/lkml/CA+G9fYvkpmqGr6wjBNHY=dRp71PLCoi2341JxOudi60yqaeUdg@mail.gmail.com/
+Fixes: 30f45bf18d55 ("mm: introduce memdesc_flags_t")
+Signed-off-by: Nicola Vetrini <nicola.vetrini@gmail.com>
+---
+First time sending a Linux patch, so I may have gotten some part of
+it wrong.
 
-I agree. I'll pick up. Thanks for the report!
+Bisection was done at the provided link.
+---
+ arch/mips/include/asm/cacheflush.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/arch/mips/include/asm/cacheflush.h b/arch/mips/include/asm/cacheflush.h
+index 1f14132b3fc9..5d283ef89d90 100644
+--- a/arch/mips/include/asm/cacheflush.h
++++ b/arch/mips/include/asm/cacheflush.h
+@@ -37,11 +37,11 @@
+ #define PG_dcache_dirty			PG_arch_1
+ 
+ #define folio_test_dcache_dirty(folio)		\
+-	test_bit(PG_dcache_dirty, &(folio)->flags)
++	test_bit(PG_dcache_dirty, &(folio)->flags.f)
+ #define folio_set_dcache_dirty(folio)	\
+-	set_bit(PG_dcache_dirty, &(folio)->flags)
++	set_bit(PG_dcache_dirty, &(folio)->flags.f)
+ #define folio_clear_dcache_dirty(folio)	\
+-	clear_bit(PG_dcache_dirty, &(folio)->flags)
++	clear_bit(PG_dcache_dirty, &(folio)->flags.f)
+ 
+ extern void (*flush_cache_all)(void);
+ extern void (*__flush_cache_all)(void);
+
+base-commit: 6c68f4c0a147c025ae0b25fab688c7c47964a02f
 -- 
-Thanks,
-Sasha
+2.43.0
+
