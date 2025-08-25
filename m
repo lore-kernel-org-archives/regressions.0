@@ -1,103 +1,127 @@
-Received: from pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.12.53.23])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEBE2FCBF1
-	for <regressions@lists.linux.dev>; Mon, 25 Aug 2025 15:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.12.53.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3007D2FD7C6
+	for <regressions@lists.linux.dev>; Mon, 25 Aug 2025 15:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756135662; cv=none; b=bDk/4M3BD8xQdxvoQFAM3EaahcYyMBcVQS6wbCoorYF9/51wKxs/Eb7Tw68BdZCvYdbXjfwyfYfa9OmoBVQsC6qpnY0Sl7Zxj6kGIRL69Tm24eFHe5pJRL7DzpTZAAjouE9+c6SgwAa/UjjgdVtbIVGvTO/96sge+2zibvR6S9Y=
+	t=1756136097; cv=none; b=GqID6g400T/dfvqhqTh9/8E5fMk+6jPpHCQ/T8FngGalUKbh9HeuUJ8cL5sFsVw0m78DcUP1UWur7jdIlmxIgz8UgvNcDzkJSf0zeNwq6uzOeXPnp0dUa1JuAxAswMjC+VoCavUesSfZSQhiyO0wlMxAgzgFN9E1ohPrTPlCysw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756135662; c=relaxed/simple;
-	bh=9teZsTlxaiCMeOlbM7YIEPYnNGo5OqA0QqKK4+oc4Ns=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QUpOL9m+FxYKE3KosiQNV6I/xP6MaXk1qgWaYtnR7+8OjJfDBy1ejH8DlwENULHyqiU7B8BBwED+rJZb+JDkrQu0z48ApFoBGt5DVVCyV7Zz4LMDg+TTuSrclXC90QX+rlZV5Y20Rw2qugDFKWTsvdFYevzESNwqz46PYLCJ0X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=MmUXfq8D; arc=none smtp.client-ip=52.12.53.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1756136097; c=relaxed/simple;
+	bh=92FvKfWnhbgX/oEXcYLlIFBi8KWdGOA8VnyRR7wf9Hc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpcNdxH2c5C2F98lJVPUEc1PgUz6FhHF3MH5wiL9bWLbYJUkFs7lfdPPec3S9EPiGfVWQJh3r1UiUzF8xdaCuMOqgsQDyFnAQlHlL9ebyS8rlGWq9TWVnGL5ahBiXeclTa86kiosjCuDZz7cwJssCgWitCicR4JewzVMvuoQqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kZUWUDfk; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="MmUXfq8D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1756135660; x=1787671660;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pjR3IxmlegVTQ8y8i+n1XtxsAeGOstInWSOCpUqe+tk=;
-  b=MmUXfq8Dq6g8cjhuRgL9Fti7x/nIDO90WPT6MvX5gMNWBUE9pExtjljC
-   zHhG0mqY6wUEmNQaPORh0at5PForiH3q4Vb8ev0eZURs16LMyFoYFauma
-   FRgpJNY2nw/99Xo0sqLiih9VvhILCdt42ovroSCn/MLOylLFRnHIyoeRM
-   hkQVhxEgYj8DC2sScLSLRQgjC6U2jt8ogAoxbCtlHc9Ed06a7tvyyuW+B
-   DbYK+OGAnn4htRNYN92odRP+Gowfqc36TqbTWcs0oSG1Nt0ayQqe2ua+F
-   IkBObDqN3DpYSlq7lg+CCbYL1UaXj8sFeafdldUvvOJ+x12bOCQsjbQPe
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kZUWUDfk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756136096; x=1787672096;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=92FvKfWnhbgX/oEXcYLlIFBi8KWdGOA8VnyRR7wf9Hc=;
+  b=kZUWUDfkWYOIMb5AEvoRF06C9cj5G6nEZtQXHI/z8RFF4rJ2epThynAM
+   o3Tc4R9tPJ1+eAOf8Jc1k0MU8FTTnA47ybHEFXOwZxU0F8UCemAeK3Jln
+   Phyl2Te9kO9288RhUt5SfCRJKf+R0aW06/EX1/O/X4O7kgZkvP2NvhZIi
+   9RoydN7HGowHAMkhUloIPkuJD4NDvG9jOwN2luIHzwDZmFgXOWmI7TLi/
+   l9LD6Mk73R0dmxWy5HXZ9yK2VOZ6VT1l1tiKfMQ6Yz7nJQd5Lui9zESBk
+   1IxKeu+re1z4S2JClFeajynFj32Qaw9T7hn06KE977KdM5V4zCjAmKRl+
    g==;
-X-CSE-ConnectionGUID: ga3VzlrpSj+HL4YyCc3hVg==
-X-CSE-MsgGUID: aGHBHyP+SVyVvc1gK/EdTA==
-X-IronPort-AV: E=Sophos;i="6.18,213,1751241600"; 
-   d="scan'208";a="1635991"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 15:27:40 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:23105]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.61.91:2525] with esmtp (Farcaster)
- id 1152cbe8-a41b-4717-b99d-7936b4c67de5; Mon, 25 Aug 2025 15:27:39 +0000 (UTC)
-X-Farcaster-Flow-ID: 1152cbe8-a41b-4717-b99d-7936b4c67de5
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17;
- Mon, 25 Aug 2025 15:27:39 +0000
-Received: from 6c7e67c92ceb.amazon.com (10.106.100.51) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.17;
- Mon, 25 Aug 2025 15:27:39 +0000
-From: Nathan Gao <zcgao@amazon.com>
-To: <stable@vger.kernel.org>
-CC: <regressions@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>, Nathan Gao
-	<zcgao@amazon.com>
-Subject: [REGRESSION] fs: ERR_PTR dereference in expand_files() on v6.12.43
-Date: Mon, 25 Aug 2025 08:27:25 -0700
-Message-ID: <20250825152725.43133-1-zcgao@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+X-CSE-ConnectionGUID: 80+NMKKyRDWOEBZ8h9bINg==
+X-CSE-MsgGUID: Ne0yvER1SdWdmfPmZF44iA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="75951672"
+X-IronPort-AV: E=Sophos;i="6.18,213,1751266800"; 
+   d="scan'208";a="75951672"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 08:34:54 -0700
+X-CSE-ConnectionGUID: PNS3coS5SjCQJuHiK1Gh4g==
+X-CSE-MsgGUID: avPdlaS8SRu9E4evfbts1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,213,1751266800"; 
+   d="scan'208";a="200215687"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 08:34:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uqZDc-00000008Y0G-020s;
+	Mon, 25 Aug 2025 18:34:48 +0300
+Date: Mon, 25 Aug 2025 18:34:47 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Askar Safin <safinaskar@zohomail.com>,
+	Linux i2c <linux-i2c@vger.kernel.org>,
+	linux-acpi <linux-acpi@vger.kernel.org>,
+	regressions <regressions@lists.linux.dev>,
+	DellClientKernel <Dell.Client.Kernel@dell.com>,
+	linux-gpio <linux-gpio@vger.kernel.org>,
+	Raul E Rangel <rrangel@chromium.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+Message-ID: <aKyCl_ly_LhtEOpc@smile.fi.intel.com>
+References: <197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com>
+ <5d7ee2bc-6595-46f1-8c8f-0c439f033407@kernel.org>
+ <197af82e9e7.10ca643e5467232.6943045931834955890@zohomail.com>
+ <6f42c722-cfa5-416d-8b63-730ad88e6b9d@kernel.org>
+ <197bfafc23e.e6344936595425.1881540896161671378@zohomail.com>
+ <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9eac81e6-b4ee-4210-84ac-cbf7bf811130@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
+On Mon, Jun 30, 2025 at 02:40:28PM -0400, Mario Limonciello wrote:
+> On 6/30/2025 3:14 AM, Askar Safin wrote:
+> >   ---- On Fri, 27 Jun 2025 07:58:15 +0400  Mario Limonciello <superm1@kernel.org> wrote ---
+> >   > That's odd.  It should be made when the PMC core driver binds.  Maybe
+> >   > others will know what's missing here.
+> > 
+> > Command "grep -r -E -I last_hw_sleep ." in culpit kernel (1796f808e4bb2c074824d)
+> > shows nothing. (This is somewhere around 6.1).
+> > 
+> > So, culpit commit is too old.
+> > 
+> > If you want, I can retest this thing on current master and on current master with
+> > revert 1796f808e4bb2c074824d.
+> > 
+> >   > I see in your bad config interrupt 14 is waking the system.  In the good
+> >   > config interrupt 8 is waking it.
+> >   >
+> >   > What is in /proc/interrupts?
+> > 
+> > /proc/interrupts from culpit kernel: https://paste.debian.net/1382819/
+> > 
+> > --
+> > Askar Safin
+> > https://types.pl/@safinaskar
+> > 
+> 
+> Looks like your interrupt 14 is ACPI device INTC1085:00.
+> 
+> Some quick searches this seems to be an Intel GPIO controller.
+> 
+> Andy,
+> 
+> Any ideas how to debug next?
 
-I noticed an ERR_PTR dereference issue in expand_files() on kernel 6.12.43
-when allocating large file descriptor tables. The issue occurs when
-alloc_fdtable() returns ERR_PTR(-EMFILE) for large nr input, but
-expand_fdtable() is not properly checking these error returns. dup_fd()
-seems also have the issue, missing proper ERR_PTR handling.
+I believe it's related to the touchpad (can you check that wake happens due to
+actually IRQ on pin 355 of the GPIO controller?
 
-The ERR_PTR return was introduced by d4f9351243c1 ("fs: Prevent file
-descriptor table allocations exceeding INT_MAX") which adds INT_MAX limit
-check in alloc_fdtable().
 
-I was able to trigger this with the unshare_test selftest:
-
-[   40.283906] BUG: unable to handle page fault for address: ffffffffffffffe8
-...
-[   40.287436] RIP: 0010:expand_files+0x7e/0x1c0
-...
-[   40.366211] Kernel panic - not syncing: Fatal exception
-
-Looking at the upstream kernel, this can be addressed by Al Viro's
-fdtable series [1], which added the ERR_PTR handling in this code path.
-Perhaps backporting this series, especially 1d3b4be ("alloc_fdtable():
-change calling conventions.") would help resolve the issue.
-
-Thanks for all the work on stable tree.
-
-Best,
-Nathan Gao
-
-[1] https://lore.kernel.org/all/20241007173912.GR4017910@ZenIV/
-
-Signed-off-by: Nathan Gao <zcgao@amazon.com>
 -- 
-2.47.3
+With Best Regards,
+Andy Shevchenko
+
 
