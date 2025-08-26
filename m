@@ -1,68 +1,36 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E7A1CEAC2
-	for <regressions@lists.linux.dev>; Tue, 26 Aug 2025 19:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEAB26CE0A;
+	Tue, 26 Aug 2025 22:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756237556; cv=none; b=ctA93K+V33bAU2o9wMK1KD7BEo7QqNuBorZeKfqZir9QVWgbab6gazQjww0FYYLYOrlqazWi5WOyF1bnA39kZXkX3AuDhIF1GVeuY0TY6JYcUh+3JjcY7kvMHY9DX9BTL9pFduY96/Xssn7BxMWqGBXfsiGzlhO2fYYk6l+b2ns=
+	t=1756246207; cv=none; b=WrZZY6I61qJBZ+IbIs+9TIZRU5lXCEDCykF4FdNyNDZwLyaWn2rh3AauK+kPRPfwkullgqB9TfOzkiDogROmGlCz+l3VrqFfHOd0a5eS4GChcBfZrk3JHVh0bfLZ4nh/nrVazxgJos+MgoYFfPTBfluwmfOgstUVEt8on7jk3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756237556; c=relaxed/simple;
-	bh=JzdvJ3D4cIox4VnfVjxmXcW2+yE9RmgV3r9R+q8PdFU=;
+	s=arc-20240116; t=1756246207; c=relaxed/simple;
+	bh=fioVeqhXNB9Fxx0/JBG7Xt/edyDhgxPlIFy5Og5p0OA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQhW53EJx1/Qo/I4EJNJni9ZiOwRMQwd1OI+AR0IwocdVuiWIzELh6q3/fajsZ721VZ3CYunStEqGDzWsjrgjZaY5nG+ITBurEXS5/WlSiuNT6gxLqPT0WuyurqlHqdHIM/pz4AxYxCLkILlWEBLIhUIu8/HRXyTReJqeobYKcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S2txBGX7; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=KmRkDgEeu61e1KhE1KMcNzNQg5/CUa8NS4NrFr3h9qyPLbpUq7SWMibZDkoXSZQBBLInujrFto/y6wdo/y1qKIeH4gudQSRyuZ8NuhYCTNg7Pj0GatbStFUL9SK9fKruZqnulpg5CNtpb8eGfoox1DsPUoIn14PEm7B816ycEfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJk+3Sxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S2txBGX7"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f52dd2bf9so33357e87.2
-        for <regressions@lists.linux.dev>; Tue, 26 Aug 2025 12:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756237551; x=1756842351; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IXuip4G3eXQRlL52moPjD1+7Xz7J18hYMMxbx4Ti2y4=;
-        b=S2txBGX7oN9fPl6JjxSCKvlhOV+hR3zy0H6g6iLaQEZu7GtyKLypDILGzRyPLV8L4h
-         1runVzS49vImhfRFp5OadYYe9+ksGG1JNguwkQCzchZvghgCZNxb29hEe2DhR6tVA+jP
-         yLhYFAn1Jc32tYKLRu0+lUygzcmbGirPBEak1j1aBI7gN+IvixoTZi60wHLIhQUhsPyn
-         IDLQLidKnnJiCZ8cs8Nvb/1gj0o9FcdDl8s8n4n1ADq+Kixa81pTh3/hWXaTX3r9VpmB
-         Fib4eRfUftSOKHysaxfYKDxzBf4FuNwzsru+gy/HgOMHbvEv00fmwHz4sUw/ab5XUGEA
-         f/sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756237551; x=1756842351;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IXuip4G3eXQRlL52moPjD1+7Xz7J18hYMMxbx4Ti2y4=;
-        b=xIMbc1hsGpQ+Od8itAX+5Fcd1ZRWT67dP++88+mriaPlAkjVLv2w4o1YVdLvSzGRjO
-         tcYOBLvzkpCDSTTVnJ3Zv/wteZyeiA0CsuRxInBIC6mLCI3GBFzT6sPlSRMEK+B7B8Iw
-         GfSlRK5RPG2gFixktefhxqhM6XKVL3nuS+m8OrJV6FThDLMMeJYYfPZqrVF6eqswJkUk
-         GeudxHoE/uiIzBzWbwMuBFurBqZnNewBekWmBoscZReTy4ZGsnVIwvT8yFwYKTc29TZA
-         qQM5nTkjfnyyqWT8dXWgeaQ37gIP6J2TbqAPRWoJ7MClYiWqvK2XX1m1waPoHDI7B2+d
-         5N0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ6K6Zm3sARpI6zWyHj0Au8M5iknlihikkIPvPEibc8gjQMyYxcBul0EZ66flKX6aQKC9AXMvRZSjlNA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyYJ3DY25mGjqadhTMJTbeb0og/sA2Jz26TLQBYoFUeHqzGPRaC
-	h4o5EiAP6PZCUma4dHKZ2Nn6nLXBMaAWo5U+AGknQcm4zMZIulcvHm7njoKmTbEvDvA=
-X-Gm-Gg: ASbGncsTwfjMRilbVT2/7//6wNESDXac6Pxo4TAbIJJZKMkHdiTL+uL8rtAd/YZ2FF8
-	vPO9eWllTR03R181z3DAG8BUwJdLrz0ArmKuTRK76QFfLbpyJW9c0f2YVEV2y2wPFHAETlP41W2
-	6JKT+ap8mGyfh4Xi16P0rEf3qT5HJnLIVdjzc/WbGIdjvNFQ7Muspj3f0MC/6vC0IpQrKGM1feb
-	9zrn4/NETi8aCTy1s24WrFPFL/wpj+sYBqEDYzR/tIAru5IdUquY4u5or63t8Ea2l91SB3kzL6y
-	Qwg6B4BHRBII49A0dcAq6yOrWr3G3u2jGYW127FqRnRQiZhpo2rYBFSkUpdixfrY6mAvCwEyl2Z
-	/RG2RUcquDYcGmJjMGEv98841Jr+H59NEdULtG3zg/v3F1GPv8gVaqaBw/P2TJ2hvq9dP3obfWC
-	Z5MfvkXcSLiIo=
-X-Google-Smtp-Source: AGHT+IEt8Nv0C9k6B51P0Bu6omHX78GtGUI5akzFwO0EsKKpWO1hUm2te9ZXs4y0v64KaGbBkwbGtQ==
-X-Received: by 2002:a05:651c:20cd:20b0:334:1db:486d with SMTP id 38308e7fff4ca-33650e22e7dmr16358621fa.2.1756237551336;
-        Tue, 26 Aug 2025 12:45:51 -0700 (PDT)
-Received: from monster (c-85-229-7-191.bbcust.telenor.se. [85.229.7.191])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3365e20cc9csm23313081fa.10.2025.08.26.12.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 12:45:50 -0700 (PDT)
-Date: Tue, 26 Aug 2025 21:45:48 +0200
-From: Anders Roxell <anders.roxell@linaro.org>
-To: Inochi Amaoto <inochiama@gmail.com>, regressions@lists.linux.dev,
-	linux-next@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJk+3Sxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21115C4CEF1;
+	Tue, 26 Aug 2025 22:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756246206;
+	bh=fioVeqhXNB9Fxx0/JBG7Xt/edyDhgxPlIFy5Og5p0OA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UJk+3Sxv/gNM9s2ymXEAgMEo/4Q6+p9e9IZExcg2d6IvBe/d10vPtfqIgwgQv70FH
+	 ED5m9jC4xK0JecdtQKVWffqWrXcw737m5QStsQdU2rkJxJyFKxvYlDar5Y/hP0Ubec
+	 C6YWhDP53rmMgiiSHlVTt3rUS4hBBDDHTdZ0ipqienuCu7Hc7vKR7KeTIV/fkdn1vb
+	 x3kI9lSjfYQ75pPPSFxkKZq0yluEn5A22/f3dWQ+4pFt7LHxgy5yVXxKT85c4ylMvK
+	 MQz9dhkZInJK/lZ+/WAqXz8CmeQ/SdMUvrhzvYTXIsTw4n6NF1y1km0BQ7IEc3U8zx
+	 jmcanHhP74vtA==
+Date: Tue, 26 Aug 2025 15:09:59 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Anders Roxell <anders.roxell@linaro.org>
+Cc: Inochi Amaoto <inochiama@gmail.com>, regressions@lists.linux.dev,
+	linux-next@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
 	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Shradha Gupta <shradhagupta@linux.microsoft.com>,
@@ -77,101 +45,102 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	benjamin.copeland@linaro.org
 Subject: Re: [PATCH v2 2/4] PCI/MSI: Add startup/shutdown for per device
  domains
-Message-ID: <aK4O7Hl8NCVEMznB@monster>
+Message-ID: <20250826220959.GA4119563@ax162>
 References: <20250813232835.43458-1-inochiama@gmail.com>
  <20250813232835.43458-3-inochiama@gmail.com>
+ <aK4O7Hl8NCVEMznB@monster>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250813232835.43458-3-inochiama@gmail.com>
+In-Reply-To: <aK4O7Hl8NCVEMznB@monster>
 
-On 2025-08-14 07:28, Inochi Amaoto wrote:
-> As the RISC-V PLIC can not apply affinity setting without calling
-> irq_enable(), it will make the interrupt unavailble when using as
-> an underlying IRQ chip for MSI controller.
+On Tue, Aug 26, 2025 at 09:45:48PM +0200, Anders Roxell wrote:
+> Regressions found while booting the Linux next-20250826 on the
+> qemu-arm64, qemu-armv7 due to following kernel log.
 > 
-> Implement .irq_startup() and .irq_shutdown() for the PCI MSI and
-> MSI-X templates. For chips that specify MSI_FLAG_PCI_MSI_STARTUP_PARENT,
-> these startup and shutdown the parent as well, which allows the
-> irq on the parent chip to be enabled if the irq is not enabled
-> when allocating. This is necessary for the MSI controllers which
-> use PLIC as underlying IRQ chip.
+> Bisection identified this commit as the cause of the regression.
 > 
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Regression Analysis:
+> - New regression? Yes
+> - Reproducible? Yes
+> 
+> First seen on the next-20250826
+> Good: next-20250825
+> Bad: next-20250826
+> 
+> Test regression: next-20250826 gcc-13 boot failed on qemu-arm64 and
+> qemu-armv7.
+> 
+> Expected behavior: System should boot normally and virtio block devices
+> should be detected and initialized immediately.
+> 
+> Actual behavior: System hangs for ~30 seconds during virtio block device
+> initialization before showing scheduler deadline replenish errors and
+> failing to complete boot.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> [...]
+> <6>[    1.369038] virtio-pci 0000:00:01.0: enabling device (0000 ->
+> 0003)
+> <6>[    1.420097] Serial: 8250/16550 driver, 4 ports, IRQ sharing
+> enabled
+> <6>[    1.450858] msm_serial: driver initialized
+> <6>[    1.454489] SuperH (H)SCI(F) driver initialized
+> <6>[    1.456056] STM32 USART driver initialized
+> <6>[    1.513325] loop: module loaded
+> <6>[    1.515744] virtio_blk virtio0: 2/0/0 default/read/poll queues
+> <5>[    1.527859] virtio_blk virtio0: [vda] 5397504 512-byte logical
+> blocks (2.76 GB/2.57 GiB)
+> <4>[   29.761219] sched: DL replenish lagged too much
+> [here it hangs]
 
-Regressions found while booting the Linux next-20250826 on the
-qemu-arm64, qemu-armv7 due to following kernel log.
+FWIW, I am also seeing this on real arm64 hardware (an LX2160A board and
+an Ampere Altra one) but with my NVMe drives failing to be recognized.
+In somewhat ironic fashion, I am seeing the message from cover letter
+repeating.
 
-Bisection identified this commit as the cause of the regression.
+  nvme nvme0: I/O tag 8 (1008) QID 0 timeout, completion polled
+  [  125.810062] dracut-initqueue[640]: Timed out while waiting for udev queue to empty.
+  nvme nvme0: I/O tag 9 (1009) QID 0 timeout, completion polled
 
-Regression Analysis:
-- New regression? Yes
-- Reproducible? Yes
+I am happy to test patches or provide information.
 
-First seen on the next-20250826
-Good: next-20250825
-Bad: next-20250826
+Cheers,
+Nathan
 
-Test regression: next-20250826 gcc-13 boot failed on qemu-arm64 and
-qemu-armv7.
-
-Expected behavior: System should boot normally and virtio block devices
-should be detected and initialized immediately.
-
-Actual behavior: System hangs for ~30 seconds during virtio block device
-initialization before showing scheduler deadline replenish errors and
-failing to complete boot.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-[...]
-<6>[    1.369038] virtio-pci 0000:00:01.0: enabling device (0000 ->
-0003)
-<6>[    1.420097] Serial: 8250/16550 driver, 4 ports, IRQ sharing
-enabled
-<6>[    1.450858] msm_serial: driver initialized
-<6>[    1.454489] SuperH (H)SCI(F) driver initialized
-<6>[    1.456056] STM32 USART driver initialized
-<6>[    1.513325] loop: module loaded
-<6>[    1.515744] virtio_blk virtio0: 2/0/0 default/read/poll queues
-<5>[    1.527859] virtio_blk virtio0: [vda] 5397504 512-byte logical
-blocks (2.76 GB/2.57 GiB)
-<4>[   29.761219] sched: DL replenish lagged too much
-[here it hangs]
-
-
-Reverting this commit restores normal boot behavior.
-
-
-qemu-arm64
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250826/testrun/29663822/suite/boot/test/gcc-13-lkftconfig/log
-
-qemu-armv7
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250826/testrun/29663615/suite/boot/test/gcc-13-lkftconfig/log
-
-## Source
-* Git tree:
-* https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: d0630b758e593506126e8eda6c3d56097d1847c5
-* Git describe: next-20250826
-* Project details: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250826
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: gcc-13-lkftconfig
-
-
-## Build
-* Test history: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250826/testrun/29663822/suite/boot/test/gcc-13-lkftconfig/history/
-* Test link: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/31oo1cMOi0uSNKYApi80iQahbLi
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31onzS5UmJVvvZucEhtB1veoJA1/
-* Kernel config: https://storage.tuxsuite.com/public/linaro/lkft/builds/31onzS5UmJVvvZucEhtB1veoJA1/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+# bad: [d0630b758e593506126e8eda6c3d56097d1847c5] Add linux-next specific files for 20250826
+# good: [b6add54ba61890450fa54fd9327d10fdfd653439] Merge tag 'pinctrl-v6.17-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+git bisect start 'd0630b758e593506126e8eda6c3d56097d1847c5' 'b6add54ba61890450fa54fd9327d10fdfd653439'
+# good: [968d16786392f6e047329f5eff66acc131636019] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+git bisect good 968d16786392f6e047329f5eff66acc131636019
+# good: [042e9f528d5362c499b5d8e2716cf6f64ca53add] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git
+git bisect good 042e9f528d5362c499b5d8e2716cf6f64ca53add
+# bad: [beebb75399dc36e7c244db0a08426053b4581ecc] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
+git bisect bad beebb75399dc36e7c244db0a08426053b4581ecc
+# good: [62df8fb299358a45a915381de09025cf5e6a4a8f] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+git bisect good 62df8fb299358a45a915381de09025cf5e6a4a8f
+# bad: [1e6d2dcb13c8d94b56de1eff60235ca90587046b] Merge branch 'master' of https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+git bisect bad 1e6d2dcb13c8d94b56de1eff60235ca90587046b
+# bad: [a0daa9e939dbcd7767090151771d94ade75a4fd5] Merge branch into tip/master: 'x86/build'
+git bisect bad a0daa9e939dbcd7767090151771d94ade75a4fd5
+# bad: [d147a3db0dfa15c8e460f007128bd0fe2e1b877f] Merge branch into tip/master: 'perf/core'
+git bisect bad d147a3db0dfa15c8e460f007128bd0fe2e1b877f
+# good: [be5697d7136525a91e7f30fdca2e7de737d9a8ed] Merge branch into tip/master: 'irq/core'
+git bisect good be5697d7136525a91e7f30fdca2e7de737d9a8ed
+# good: [5d299897f1e36025400ca84fd36c15925a383b03] perf: Split out the RB allocation
+git bisect good 5d299897f1e36025400ca84fd36c15925a383b03
+# bad: [7fb83eb664e9b3a0438dd28859e9f0fd49d4c165] irqchip/loongson-eiointc: Route interrupt parsed from bios table
+git bisect bad 7fb83eb664e9b3a0438dd28859e9f0fd49d4c165
+# bad: [7ee4a5a2ec3748facfb4ca96e4cce6cabbdecab2] irqchip/sg2042-msi: Set MSI_FLAG_MULTI_PCI_MSI flags for SG2044
+git bisect bad 7ee4a5a2ec3748facfb4ca96e4cce6cabbdecab2
+# bad: [9d8c41816bac518b4824f83b346ae30a1be83f68] irqchip/sg2042-msi: Fix broken affinity setting
+git bisect bad 9d8c41816bac518b4824f83b346ae30a1be83f68
+# bad: [54f45a30c0d0153d2be091ba2d683ab6db6d1d5b] PCI/MSI: Add startup/shutdown for per device domains
+git bisect bad 54f45a30c0d0153d2be091ba2d683ab6db6d1d5b
+# first bad commit: [54f45a30c0d0153d2be091ba2d683ab6db6d1d5b] PCI/MSI: Add startup/shutdown for per device domains
