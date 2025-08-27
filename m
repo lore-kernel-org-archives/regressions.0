@@ -1,107 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB90F72610;
-	Wed, 27 Aug 2025 10:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67551C1F12;
+	Wed, 27 Aug 2025 14:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756290817; cv=none; b=BLv3Mf8q8QEJfm2ghtuhRMIK5iQRnegFoHuFBzFElw2vHQ9/uNmski4YDAoiEuh5mEGj/Sl0U5nDZlHLYmrki7m3Gnzbr6v1fKvGRN8jlFrjSmj6EfFx2Z4L1iVC7pE9FWXSxm45YJG+ZgT4BOwb1bPCb2ZMwwqzDt4f51DcMIA=
+	t=1756304822; cv=none; b=NgXekyzNSjv5Tle/m0eqYsyXdCBftQnzxTqYi8Dq8jqwGDmPewOfoyeLGIcIl67Ak+pakd8o0NaT+BCZgm5HgDTd+RM9uB7b2pBUJzEBG62vrqnNX2Cs5MiPP0L7FCtS/4hCnk0e9f7EGUOnoDwYjL3M1yg5JmjrR+Mrnf9ppmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756290817; c=relaxed/simple;
-	bh=9QsnH71YbkSyX/7fRAS+Fy/72P1UW6IJD9KrB9U0euc=;
+	s=arc-20240116; t=1756304822; c=relaxed/simple;
+	bh=QpuHB39nAGQwyhSesxsgKIlahRSa5eB803jWfbfWbxA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+zBHTI9ua3bYZMuMpKcxOURlf+JTsK8ybxBngEdoO4rs1P2H0ueWO+XWs9Tqmp+4EDzIzwoYWbaO0a08SkMG7IZKPBZFCati2kAjV70OPBToxdpc6EQNFdkTRKEOw1NIaz2vQHNi+twz7WBX2zV/t3FYFtR16YPaGV39IKxNOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOnMdSV3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOnMdSV3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD46C4CEEB;
-	Wed, 27 Aug 2025 10:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756290816;
-	bh=9QsnH71YbkSyX/7fRAS+Fy/72P1UW6IJD9KrB9U0euc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bOnMdSV3araDsoInT7APCgqwtFtYPjVxUS2hKgZDZGdHyWpqpXLV76YSCGzK6kEZ0
-	 FjDmGzfiIkOelOs/qHpOJeytAxYVP+ddMm29P1nQVNwV+CAODnwR5Q8z1cHDPVhEss
-	 Wozpklupd8uTwA2VB9wX3QzHlpyzfUEJed0dA3RmC2MevNGOAknS9s31L+MOFmnZi6
-	 xBwEeodGCPPXYGHJiu1gl6BIXpcrEmJUpjM79xdS+tlg9QG+qkEqzZB8NMGZLUKi9k
-	 5wDeAi6VSdo15cqHrRqpg45+1uylaLt6PifnEGQHyyJlsqLbpWv9fd7j+vX6PSJtT6
-	 yyRb0l98iiKbw==
-Date: Wed, 27 Aug 2025 11:33:29 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>,
-	Inochi Amaoto <inochiama@gmail.com>, regressions@lists.linux.dev,
-	linux-next@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Juergen Gross <jgross@suse.com>, Nicolin Chen <nicolinc@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>, arnd@arndb.de,
-	dan.carpenter@linaro.org, naresh.kamboju@linaro.org,
-	benjamin.copeland@linaro.org
-Subject: Re: [PATCH v2 2/4] PCI/MSI: Add startup/shutdown for per device
- domains
-Message-ID: <91a9db15-8e3c-4b49-a34f-61e043040de9@sirena.org.uk>
-References: <20250813232835.43458-1-inochiama@gmail.com>
- <20250813232835.43458-3-inochiama@gmail.com>
- <aK4O7Hl8NCVEMznB@monster>
- <20250826220959.GA4119563@ax162>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwJkRfz7At+8vHDgvNe50O/S6Nd6iqM7UG/Cy1PFpCkhbrdvY9Zm8wHAXpWr5dRVfDNkTA0ectvddeqxGy3nvhwBzFPEpbsozG7nctszUPQNnh9x4ARloHe4FliI3qqCSkhj9mer9QlEhrFo7A4vc2bHFzwA7C/RbibSfOhua2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
+Date: Wed, 27 Aug 2025 14:26:47 +0000
+From: Brett A C Sheffield <bacs@librecast.net>
+To: Oscar Maes <oscmaes92@gmail.com>
+Cc: netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net,
+	dsahern@kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net v3 2/2] selftests: net: add test for destination in
+ broadcast packets
+Message-ID: <aK8Vp6yrrIoQEmxr@auntie>
+References: <20250827062322.4807-1-oscmaes92@gmail.com>
+ <20250827062322.4807-2-oscmaes92@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="X6vJ3MJZfuQb9wf/"
-Content-Disposition: inline
-In-Reply-To: <20250826220959.GA4119563@ax162>
-X-Cookie: Keep out of the sunlight.
-
-
---X6vJ3MJZfuQb9wf/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250827062322.4807-2-oscmaes92@gmail.com>
 
-On Tue, Aug 26, 2025 at 03:09:59PM -0700, Nathan Chancellor wrote:
-> On Tue, Aug 26, 2025 at 09:45:48PM +0200, Anders Roxell wrote:
+On 2025-08-27 08:23, Oscar Maes wrote:
+> Add test to check the broadcast ethernet destination field is set
+> correctly.
+> 
+> This test sends a broadcast ping, captures it using tcpdump and
+> ensures that all bits of the 6 octet ethernet destination address
+> are correctly set by examining the output capture file.
+> 
+> Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
+> ---
+> Link to discussion:
+> https://lore.kernel.org/netdev/20250822165231.4353-4-bacs@librecast.net/
+> 
+> Thanks to Brett Sheffield for writing the initial version of this
+> selftest!
 
-> > <5>[    1.527859] virtio_blk virtio0: [vda] 5397504 512-byte logical
-> > blocks (2.76 GB/2.57 GiB)
-> > <4>[   29.761219] sched: DL replenish lagged too much
-> > [here it hangs]
+Thanks for leaving my author name in the file.  Perhaps you might consider
+adding:
 
-> FWIW, I am also seeing this on real arm64 hardware (an LX2160A board and
-> an Ampere Altra one) but with my NVMe drives failing to be recognized.
-> In somewhat ironic fashion, I am seeing the message from cover letter
-> repeating.
+Co-Authored-By: Brett A C Sheffield <bacs@librecast.net>
 
->   nvme nvme0: I/O tag 8 (1008) QID 0 timeout, completion polled
->   [  125.810062] dracut-initqueue[640]: Timed out while waiting for udev queue to empty.
->   nvme nvme0: I/O tag 9 (1009) QID 0 timeout, completion polled
+to your commit message. I spend quite a bit of my Saturday bisecting and
+diagnosing,  and writing the patch and test.
 
-> I am happy to test patches or provide information.
+>  tools/testing/selftests/net/Makefile          |  1 +
+>  .../selftests/net/broadcast_ether_dst.sh      | 82 +++++++++++++++++++
+>  2 files changed, 83 insertions(+)
+>  create mode 100755 tools/testing/selftests/net/broadcast_ether_dst.sh
+> 
+> diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+> index b31a71f2b372..56ad10ea6628 100644
+> --- a/tools/testing/selftests/net/Makefile
+> +++ b/tools/testing/selftests/net/Makefile
+> @@ -115,6 +115,7 @@ TEST_PROGS += skf_net_off.sh
+>  TEST_GEN_FILES += skf_net_off
+>  TEST_GEN_FILES += tfo
+>  TEST_PROGS += tfo_passive.sh
+> +TEST_PROGS += broadcast_ether_dst.sh
+>  TEST_PROGS += broadcast_pmtu.sh
+>  TEST_PROGS += ipv6_force_forwarding.sh
+>  
+> diff --git a/tools/testing/selftests/net/broadcast_ether_dst.sh b/tools/testing/selftests/net/broadcast_ether_dst.sh
+> new file mode 100755
+> index 000000000000..865b5c7c8c8a
+> --- /dev/null
+> +++ b/tools/testing/selftests/net/broadcast_ether_dst.sh
+> @@ -0,0 +1,82 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Author: Brett A C Sheffield <bacs@librecast.net>
+> +# Author: Oscar Maes <oscmaes92@gmail.com>
+> +#
+> +# Ensure destination ethernet field is correctly set for
+> +# broadcast packets
+> +
+> +source lib.sh
+> +
+> +CLIENT_IP4="192.168.0.1"
+> +GW_IP4="192.168.0.2"
+> +
+> +setup() {
+> +	setup_ns CLIENT_NS SERVER_NS
+> +
+> +	ip -net "${SERVER_NS}" link add link1 type veth \
+> +		peer name link0 netns "${CLIENT_NS}"
+> +
+> +	ip -net "${CLIENT_NS}" link set link0 up
+> +	ip -net "${CLIENT_NS}" addr add "${CLIENT_IP4}"/24 dev link0
+> +
+> +	ip -net "${SERVER_NS}" link set link1 up
+> +
+> +	ip -net "${CLIENT_NS}" route add default via "${GW_IP4}"
+> +	ip netns exec "${CLIENT_NS}" arp -s "${GW_IP4}" 00:11:22:33:44:55
+> +}
+> +
+> +cleanup() {
+> +	rm -f "${CAPFILE}"
+> +	ip -net "${SERVER_NS}" link del link1
+> +	cleanup_ns "${CLIENT_NS}" "${SERVER_NS}"
+> +}
+> +
+> +test_broadcast_ether_dst() {
+> +	local rc=0
+> +	CAPFILE=$(mktemp -u cap.XXXXXXXXXX)
+> +
+> +	echo "Testing ethernet broadcast destination"
+> +
+> +	# start tcpdump listening for icmp
+> +	# tcpdump will exit after receiving a single packet
+> +	# timeout will kill tcpdump if it is still running after 2s
+> +	timeout 2s ip netns exec "${CLIENT_NS}" \
+> +		tcpdump -i link0 -c 1 -w "${CAPFILE}" icmp &> /dev/null &
+> +	pid=$!
+> +	sleep 0.1 # let tcpdump wake up
+> +
+> +	# send broadcast ping
+> +	ip netns exec "${CLIENT_NS}" \
+> +		ping -W0.01 -c1 -b 255.255.255.255 &> /dev/null
+> +
+> +	# wait for tcpdump for exit after receiving packet
+> +	wait "${pid}"
+> +
+> +	# compare ethernet destination field to ff:ff:ff:ff:ff:ff
+> +	ether_dst=$(tcpdump -r "${CAPFILE}" -tnne 2>/dev/null | \
+> +			awk '{sub(/,/,"",$3); print $3}')
+> +	if [[ "${ether_dst}" == "ff:ff:ff:ff:ff:ff" ]]; then
+> +		echo "[ OK ]"
+> +		rc="${ksft_pass}"
+> +	else
+> +		echo "[FAIL] expected dst ether addr to be ff:ff:ff:ff:ff:ff," \
+> +			"got ${ether_dst}"
+> +		rc="${ksft_fail}"
+> +	fi
+> +
+> +	return "${rc}"
+> +}
+> +
+> +if [ ! -x "$(command -v tcpdump)" ]; then
+> +	echo "SKIP: Could not run test without tcpdump tool"
+> +	exit "${ksft_skip}"
+> +fi
+> +
+> +trap cleanup EXIT
+> +
+> +setup
+> +test_broadcast_ether_dst
+> +
+> +exit $?
+> -- 
+> 2.39.5
+> 
+> 
 
-Same here, it's breaking at least Orion O6.
-
---X6vJ3MJZfuQb9wf/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiu3vgACgkQJNaLcl1U
-h9CdeAf402KdhbaIwGLMVW/ZufuvG6tLwjEE10wBQg5laZZvUvnIyvGFbVKu7435
-ZNGuRRz+vrtWUELyalj8weCiMypGRn/0cwcQMNwqRojfxNP0H7bX4sbnbJ2p+XlL
-URDc8VRdIm5T7i4OuF+hd3vb3Bz4DCmLf2mnGS0FXKmq1LKywbufDgNqFLAO5QT3
-X5aa8E2n5SvTMUI600g6dAc/t2qBEiwaHoj/qsME/i2LpqddFZnziad+OKQlroOa
-3Ib4vOfVAKoX19X8FhiEubukWrpA14cQgM3QHz/53sM67fl+nizB+Va4+MopqxXc
-KfuEuADsssk2u1Hu2+lDnBvZBKV2
-=FiXm
------END PGP SIGNATURE-----
-
---X6vJ3MJZfuQb9wf/--
+-- 
