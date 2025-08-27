@@ -1,172 +1,77 @@
-Received: from bregans-0.gladserv.net (bregans-0.gladserv.net [185.128.210.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67551C1F12;
-	Wed, 27 Aug 2025 14:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.128.210.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013D432BF3D;
+	Wed, 27 Aug 2025 16:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756304822; cv=none; b=NgXekyzNSjv5Tle/m0eqYsyXdCBftQnzxTqYi8Dq8jqwGDmPewOfoyeLGIcIl67Ak+pakd8o0NaT+BCZgm5HgDTd+RM9uB7b2pBUJzEBG62vrqnNX2Cs5MiPP0L7FCtS/4hCnk0e9f7EGUOnoDwYjL3M1yg5JmjrR+Mrnf9ppmE=
+	t=1756310990; cv=none; b=bjdM/CkMqEIqyDL7LlHspl36xrsfw8B5nD+6Ys0qWXbTjaDDJUAgCi/ezSv+T3cAgwqAMNpO84UTXdya7F2qY0H9LP436JaVTMVX+pD+b9DZ+S43+jQ/a7SNGWgpoN9hD6Tan9r54XgR+fvw17aeekhkW4HNXwdiGCVwdFKJ73o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756304822; c=relaxed/simple;
-	bh=QpuHB39nAGQwyhSesxsgKIlahRSa5eB803jWfbfWbxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DwJkRfz7At+8vHDgvNe50O/S6Nd6iqM7UG/Cy1PFpCkhbrdvY9Zm8wHAXpWr5dRVfDNkTA0ectvddeqxGy3nvhwBzFPEpbsozG7nctszUPQNnh9x4ARloHe4FliI3qqCSkhj9mer9QlEhrFo7A4vc2bHFzwA7C/RbibSfOhua2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net; spf=pass smtp.mailfrom=librecast.net; arc=none smtp.client-ip=185.128.210.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=librecast.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=librecast.net
-Date: Wed, 27 Aug 2025 14:26:47 +0000
-From: Brett A C Sheffield <bacs@librecast.net>
-To: Oscar Maes <oscmaes92@gmail.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net,
-	dsahern@kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net v3 2/2] selftests: net: add test for destination in
- broadcast packets
-Message-ID: <aK8Vp6yrrIoQEmxr@auntie>
-References: <20250827062322.4807-1-oscmaes92@gmail.com>
- <20250827062322.4807-2-oscmaes92@gmail.com>
+	s=arc-20240116; t=1756310990; c=relaxed/simple;
+	bh=QD3kLgq34CY++IsN8XVnnQSyo5Jh98WQg23u1O6HVYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwedIZfQfNgFj3jgQKgXq1TWp8szWEp7vhnYC4zSciPfIXa0hMTLVs/zXRUhCVd5q0CCUsWvJ3w+7DcNCwmLwL9i6FgblDsuoZmyBN1iTgdcEw5gSf0zyfeppnnhslgY8u4v75L+6ykOXuGEVGqUmUO4iIf+alcxoMD/VnvmUek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRhf9J3i; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRhf9J3i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B187C4CEEB;
+	Wed, 27 Aug 2025 16:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756310989;
+	bh=QD3kLgq34CY++IsN8XVnnQSyo5Jh98WQg23u1O6HVYs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vRhf9J3iQXrjKVnr3uDRMstK2OgzhWUA4lHyIWgFgUgI872SVisQWDx7qfGXJ0mqr
+	 pDTSLFOsj1Y2Nv7B0GrumPIbHEmrVn4y/xESSi0vnQBoK8eDfqUbBY5w+oG8nXsnkC
+	 clZiRGBbgyWRmU5+IMSuo1kYfPwHrfnD3LoMhbwhJqZ9hNUkYXSgRTtS2YEzBO8xYa
+	 LM7YGmcRRbv1xC6az6NAz3QqBXHx2tPnoCYyJM/LVWqdxhn7EBnJaQ+Hyge0Q9jePu
+	 uNcYmj2qUmLAHLrXdGbGXvqa0LabETbhqyF1iEeBUd20+Oq5r2UHeXMaf60ToPqFb7
+	 hf6hFPFivHUWw==
+Message-ID: <a42b28d5-e81e-4131-8c00-8925b097070a@kernel.org>
+Date: Wed, 27 Aug 2025 10:09:48 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250827062322.4807-2-oscmaes92@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3 1/2] net: ipv4: fix regression in local-broadcast
+ routes
+Content-Language: en-US
+To: Oscar Maes <oscmaes92@gmail.com>, netdev@vger.kernel.org,
+ bacs@librecast.net, brett@librecast.net, kuba@kernel.org
+Cc: davem@davemloft.net, regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250827062322.4807-1-oscmaes92@gmail.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250827062322.4807-1-oscmaes92@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-08-27 08:23, Oscar Maes wrote:
-> Add test to check the broadcast ethernet destination field is set
-> correctly.
+On 8/27/25 12:23 AM, Oscar Maes wrote:
+> Commit 9e30ecf23b1b ("net: ipv4: fix incorrect MTU in broadcast routes")
+> introduced a regression where local-broadcast packets would have their
+> gateway set in __mkroute_output, which was caused by fi = NULL being
+> removed.
 > 
-> This test sends a broadcast ping, captures it using tcpdump and
-> ensures that all bits of the 6 octet ethernet destination address
-> are correctly set by examining the output capture file.
+> Fix this by resetting the fib_info for local-broadcast packets. This
+> preserves the intended changes for directed-broadcast packets.
 > 
+> Cc: stable@vger.kernel.org
+> Fixes: 9e30ecf23b1b ("net: ipv4: fix incorrect MTU in broadcast routes")
+> Reported-by: Brett A C Sheffield <bacs@librecast.net>
+> Closes: https://lore.kernel.org/regressions/20250822165231.4353-4-bacs@librecast.net
 > Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
 > ---
 > Link to discussion:
 > https://lore.kernel.org/netdev/20250822165231.4353-4-bacs@librecast.net/
 > 
-> Thanks to Brett Sheffield for writing the initial version of this
-> selftest!
-
-Thanks for leaving my author name in the file.  Perhaps you might consider
-adding:
-
-Co-Authored-By: Brett A C Sheffield <bacs@librecast.net>
-
-to your commit message. I spend quite a bit of my Saturday bisecting and
-diagnosing,  and writing the patch and test.
-
->  tools/testing/selftests/net/Makefile          |  1 +
->  .../selftests/net/broadcast_ether_dst.sh      | 82 +++++++++++++++++++
->  2 files changed, 83 insertions(+)
->  create mode 100755 tools/testing/selftests/net/broadcast_ether_dst.sh
+> Thanks to Brett Sheffield for finding the regression and writing
+> the initial fix!
 > 
-> diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-> index b31a71f2b372..56ad10ea6628 100644
-> --- a/tools/testing/selftests/net/Makefile
-> +++ b/tools/testing/selftests/net/Makefile
-> @@ -115,6 +115,7 @@ TEST_PROGS += skf_net_off.sh
->  TEST_GEN_FILES += skf_net_off
->  TEST_GEN_FILES += tfo
->  TEST_PROGS += tfo_passive.sh
-> +TEST_PROGS += broadcast_ether_dst.sh
->  TEST_PROGS += broadcast_pmtu.sh
->  TEST_PROGS += ipv6_force_forwarding.sh
->  
-> diff --git a/tools/testing/selftests/net/broadcast_ether_dst.sh b/tools/testing/selftests/net/broadcast_ether_dst.sh
-> new file mode 100755
-> index 000000000000..865b5c7c8c8a
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/broadcast_ether_dst.sh
-> @@ -0,0 +1,82 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Author: Brett A C Sheffield <bacs@librecast.net>
-> +# Author: Oscar Maes <oscmaes92@gmail.com>
-> +#
-> +# Ensure destination ethernet field is correctly set for
-> +# broadcast packets
-> +
-> +source lib.sh
-> +
-> +CLIENT_IP4="192.168.0.1"
-> +GW_IP4="192.168.0.2"
-> +
-> +setup() {
-> +	setup_ns CLIENT_NS SERVER_NS
-> +
-> +	ip -net "${SERVER_NS}" link add link1 type veth \
-> +		peer name link0 netns "${CLIENT_NS}"
-> +
-> +	ip -net "${CLIENT_NS}" link set link0 up
-> +	ip -net "${CLIENT_NS}" addr add "${CLIENT_IP4}"/24 dev link0
-> +
-> +	ip -net "${SERVER_NS}" link set link1 up
-> +
-> +	ip -net "${CLIENT_NS}" route add default via "${GW_IP4}"
-> +	ip netns exec "${CLIENT_NS}" arp -s "${GW_IP4}" 00:11:22:33:44:55
-> +}
-> +
-> +cleanup() {
-> +	rm -f "${CAPFILE}"
-> +	ip -net "${SERVER_NS}" link del link1
-> +	cleanup_ns "${CLIENT_NS}" "${SERVER_NS}"
-> +}
-> +
-> +test_broadcast_ether_dst() {
-> +	local rc=0
-> +	CAPFILE=$(mktemp -u cap.XXXXXXXXXX)
-> +
-> +	echo "Testing ethernet broadcast destination"
-> +
-> +	# start tcpdump listening for icmp
-> +	# tcpdump will exit after receiving a single packet
-> +	# timeout will kill tcpdump if it is still running after 2s
-> +	timeout 2s ip netns exec "${CLIENT_NS}" \
-> +		tcpdump -i link0 -c 1 -w "${CAPFILE}" icmp &> /dev/null &
-> +	pid=$!
-> +	sleep 0.1 # let tcpdump wake up
-> +
-> +	# send broadcast ping
-> +	ip netns exec "${CLIENT_NS}" \
-> +		ping -W0.01 -c1 -b 255.255.255.255 &> /dev/null
-> +
-> +	# wait for tcpdump for exit after receiving packet
-> +	wait "${pid}"
-> +
-> +	# compare ethernet destination field to ff:ff:ff:ff:ff:ff
-> +	ether_dst=$(tcpdump -r "${CAPFILE}" -tnne 2>/dev/null | \
-> +			awk '{sub(/,/,"",$3); print $3}')
-> +	if [[ "${ether_dst}" == "ff:ff:ff:ff:ff:ff" ]]; then
-> +		echo "[ OK ]"
-> +		rc="${ksft_pass}"
-> +	else
-> +		echo "[FAIL] expected dst ether addr to be ff:ff:ff:ff:ff:ff," \
-> +			"got ${ether_dst}"
-> +		rc="${ksft_fail}"
-> +	fi
-> +
-> +	return "${rc}"
-> +}
-> +
-> +if [ ! -x "$(command -v tcpdump)" ]; then
-> +	echo "SKIP: Could not run test without tcpdump tool"
-> +	exit "${ksft_skip}"
-> +fi
-> +
-> +trap cleanup EXIT
-> +
-> +setup
-> +test_broadcast_ether_dst
-> +
-> +exit $?
-> -- 
-> 2.39.5
-> 
+>  net/ipv4/route.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
 
--- 
+Reviewed-by: David Ahern <dsahern@kernel.org>
+
+
