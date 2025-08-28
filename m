@@ -1,142 +1,123 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9D43009EE
-	for <regressions@lists.linux.dev>; Thu, 28 Aug 2025 09:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D50F30C61E
+	for <regressions@lists.linux.dev>; Thu, 28 Aug 2025 10:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756374907; cv=none; b=TEl0CGrZXskjWOM89Lnou+PXge4GS50uW7ni9k7/fcf0+ewsRx7YuRq3d4CgygUDHUCYhEvW7xUdyEEUT/TMp7JzgZGo6LT9uf6K3AymN7rGoAaYbgw/CeFtcA5oAdnmDC84usm2SfT88QeYuHkjSlHeUI2PjkWMtLQ0ktYmjN8=
+	t=1756377326; cv=none; b=E1kMuJu40msK3M8AwCHbzQIh9AZLuiEHUVaFsv19JS2lA5IGRZHyq4Rkzxux4AzbSSRg48zJFojUuVzBk1mBrvJD41Y7O3A4RrAgmxhsXu/iUvKNcZLs4snb7kPznYYykH2zuM/S+Pd2KDnCAS1G/xioNkuRO7C1S3HAmOTzWCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756374907; c=relaxed/simple;
-	bh=ZVfqOwwixQhN1YsADMJ1GsK96L3zPIgJ19cSnfmn7Po=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tBualpb7biEhEsIuQTX0OeR6oPe4IESjh5pChrxAHSQs1lhyd3CsPwmjtf8UBHZgkRq1Dtp//4IVbOgharM7AGif2I8QRimfbV9JPWwy5uGp0F6WKPu0OGi4eeigWUIxZZvAT6suo0rHzAiBP0YfrvRBnolYky2oafuY3lPSP8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TQrboDOB; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756377326; c=relaxed/simple;
+	bh=YBqvM7XD9rhPf/QZIHMHzzRfeAeDBLeryJu/pKtxx0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A4gzpi6lejRX303gP73HP482z1b1Vc2yby8qFFkC0xKk344DNrdgqFkAnNqZrq2fOa5WeLIFYEL+cTMN/Iq9qz0Shaam/Jx8RaZD/Z+Y3oZ/f9Tmp2SqulqwCm7BfBVPOwcTbKUNH7cmgP/lZbdweJhD8h4LwmFXH9BpoyN7WVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bYgngK8p; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TQrboDOB"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b49e0686139so752137a12.2
-        for <regressions@lists.linux.dev>; Thu, 28 Aug 2025 02:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756374905; x=1756979705; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0jvuITZ/unJkIw6qmtKmEjkIbRFIhMwWVAIfVS1zjig=;
-        b=TQrboDOB86JzqIhHGLk7urNHNs2ljeRUwd9I5P1w1MIsFzZ4cyaFH4IImeQ8mISRSo
-         HJ1B/nlv7CDjMYFhG1COAG/NknEyWuq2fTeRB+1nvt+BbrXXNmJdi8y5BubcGRNyyIva
-         69noOT7WeWpXcaJW/qX3YgfHtRoGLxjfoEUnw7QezQJBqKLMTbdfrQ5iGanltYyYZzJ9
-         ujjqw/yheFzN88rYh4lfOLUjrYSspiloTyRx3LGehweWPMsMtmLCQi60Qi7g/+LL8mYy
-         T9NBJjEpwukI7iU4vpdNlv0q2Uv3Hm55dWAAnSLNlg8RFN/SPRmzx+3n9mYQpmR54oh9
-         CvLQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYgngK8p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1756377323;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C02piPLI6v0W2skD1ryvCSQgX2iEqThf0fPi4OBy2HY=;
+	b=bYgngK8p1RSv9x7c5ZJe5KgbttInzEhPraMsJeKnwzi2X+JnU/GNrmUOcdlbbMeBlb7xQ+
+	Vu30Op2+at5YFdl8HZ4bKWioJfw98TEze5PO63/KzRqp8JCRJGC//KJ1/vqF4E4IwgLoRD
+	l9trL9jCZm9Ly/1YZmrM0jJZNxVoSaw=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-22-GkUZSPhsNHuu2krRR1j57Q-1; Thu, 28 Aug 2025 06:35:22 -0400
+X-MC-Unique: GkUZSPhsNHuu2krRR1j57Q-1
+X-Mimecast-MFC-AGG-ID: GkUZSPhsNHuu2krRR1j57Q_1756377322
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4b28434045aso27153841cf.2
+        for <regressions@lists.linux.dev>; Thu, 28 Aug 2025 03:35:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756374905; x=1756979705;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0jvuITZ/unJkIw6qmtKmEjkIbRFIhMwWVAIfVS1zjig=;
-        b=CuqgA5Pq5YsT3NonqUu+zfZs+IHawxf1sXSMo1xaYU+vMMT/TquxNgQ14L0gQOA7hx
-         Jp5QpxQwAc8WdvE7JWPdlBEtovkT9O8Jr50kYalAxrHJqVppvAQdz3OqGYw8qudOmsDd
-         YeG9zSUKdrIvb/z9i7SHxA6TUdwx3PXid0UJ8/b1IaYhfR89K+GqEhwiDdPp/ATXyqW2
-         geaATCCF7tg9evioGwYcryaINyg7Rha0IkNpxja1ArLBsaLp7Z2DOykeFnXtx4LU4lzZ
-         lBEWLYU3vGmIa4q8rGQ5tOvjzKIvL8u7BqZubk8pyVknneuZfHkbyqIQ9UOoeatYRWL0
-         gMaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFnzMbe0hjD26r07uJoEnuBxo1AYQEGAagKQlFFohpROY4m9rkud18n0LuQ22AfR7Mn4LFanKLY6JizA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzgbjGUJAQUUJjKVFVjwBDLfIcifA/XGQKztY3dpzuIusQl807y
-	U3VzOrvgJfaxV2/MFrd2+911fKVQa3a/JexFoPar9EFd+FK0PGD/3TJleCGlpAI0yXtshcRyktq
-	2fYLlm7DisJl58W6GbC0JIpz83t+Ijhr7B5hX6N8/Ng==
-X-Gm-Gg: ASbGncs6zrWCfTX4Pdkj0pFxZTzM2fLQ2PFQrgHIjY7SNPJLSaoud1ikRg1Hz7N+j/+
-	YlIcK2Cm/PhJhn9jM0Ihn6oRjt+6tQK+KnE4yTBbGcRgjjKcoaopaE6aam+2KZ24LvJgx2yGMmQ
-	mzEBn2EXm72dPB9Qp835w3d9/nhQIPq0Aa5Ok8mEBE+c2MbdW6MJMd+OJdbIxMWSS9fHVnqM1aU
-	JlJ1pxk5M2iGiUeRz6EBMza2z/kcLqp7YOSZCSi
-X-Google-Smtp-Source: AGHT+IFguJ+Z2YRJ9oQ+HqMrtwdA6Gs0EPRzyWeqEUpa81kCuYGFXDbA1Lv8HrhL0LBAfCI3DqPu7qWgxYGM1sgbFHg=
-X-Received: by 2002:a17:903:11c9:b0:243:47:f61b with SMTP id
- d9443c01a7336-2462eeecaaamr332793775ad.45.1756374905075; Thu, 28 Aug 2025
- 02:55:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756377321; x=1756982121;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C02piPLI6v0W2skD1ryvCSQgX2iEqThf0fPi4OBy2HY=;
+        b=qW5BJQwkIVvhKjq/+E+n0xJTh07d3CyxtxJ32jFjwfo3L3UDdcxqiuE3BSsrInsz/J
+         nVif57IQyVx6Ga0XyNQMQ2X2b+bL6pLVju+A7jYsPxlWIPHZyUmLvG54vSYuGb15DJGp
+         SYMftwS4XRfA8Wqm1wz3UxMvKq3SLI5iXyLiK/prXQVAzQlczoCyc3fzZIJUEqWOJF1G
+         hUz6a+OJhh6IXOGS66NlmPKTRBhqJPMAK9Q0Nrj2APwW8uKIi/o8odBYMVNdobhO0Iow
+         bIFJk3NxbSRrQwEb+x2YhYc/CwSxID4dldCPa6McchcxfgxO0fTrdsNiKMd+7ACMNjXF
+         Zhtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaBPsQWmaHAv6mw3P+9EGexKJEpr89aWI2Kb0mE8pzyOH4PLqAAJ7cZMK3u/OW3kdTIdgKWX3VaaIa/g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzxK7ENp5wJ2RFC66sFRJDf5XR+Qndw1yg4e5t447Fqe++OF66P
+	jO8hCmpc2qKPdRCZGDdiXPw3dUlwgglJhPa8Y3HhCE4hGv5ZspNF8dJHoIfVuKFHZ24XLwCIziO
+	6ftTSHjBjjuK9F1MEAxbn7fLlONwC8adqVu/l+OeCwNmc7rT8OHwv7HgqzKz9XZx6DvUlvhfl
+X-Gm-Gg: ASbGncuOX3r3xS4QXDHWqBiJ3R3u43ovKKYboIEvMN+pNRayDM67e6TcsN3omOOvjlZ
+	PMfZQwKvLbRumczLBLLBH+/KG/jNaXoiOBVB7t2A3qwAc6rbPMvkKY/ws7szKffbF1/FErgAUe4
+	GVZckDbHMEeJWo1VkxWzbSADSvJ8rkbrXWIVhh6JzJ5kyxiPObJDWihvtT5XW+fPjZ+Cq49/HKZ
+	8/z2ano3ONpgj8ZprxdCHW0uRqDHQB3aWQavsIlCDZB1zaz9O5wZisvILMgwnmeJ2A8dTC9Qw9G
+	reWKuF8GOf4JaWziDmq7dRcxZfP82MUlzZTqnFUkbaRgjeefKgAq6F89sSu417+a5GTydQCS7o6
+	c5qzXWJ/A/tQ=
+X-Received: by 2002:a05:622a:550f:b0:4b0:7cb2:cec3 with SMTP id d75a77b69052e-4b2aab47d61mr372948701cf.38.1756377321280;
+        Thu, 28 Aug 2025 03:35:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsh4vekrR3evrfrykNJt1W3/7S1JncvhmesTGIkRdX8pXGCxyUdMsfB9JJjtB2UfPg8BKFAw==
+X-Received: by 2002:a05:622a:550f:b0:4b0:7cb2:cec3 with SMTP id d75a77b69052e-4b2aab47d61mr372948281cf.38.1756377320714;
+        Thu, 28 Aug 2025 03:35:20 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2712:7e10:4d59:d956:544f:d65c? ([2a0d:3344:2712:7e10:4d59:d956:544f:d65c])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b2f52f650asm27706631cf.28.2025.08.28.03.35.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Aug 2025 03:35:20 -0700 (PDT)
+Message-ID: <7090d5ae-c598-4db5-a051-b31720a27746@redhat.com>
+Date: Thu, 28 Aug 2025 12:35:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 28 Aug 2025 15:24:53 +0530
-X-Gm-Features: Ac12FXyceiP5RR-C_nUh1L7LdZ5AX72S9AZ1y-5AioD-F1Rzld83iOQ0aG3Om6s
-Message-ID: <CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com>
-Subject: next-20250826 gcc-8 compiler_types.h:572:38: error: call to
- '__compiletime_assert_478' declared with attribute error: FIELD_PREP: value
- too large for the field
-To: open list <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in
+ broadcast routes
+To: kernel test robot <oliver.sang@intel.com>,
+ Brett A C Sheffield <bacs@librecast.net>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org, davem@davemloft.net,
+ dsahern@kernel.org, oscmaes92@gmail.com, kuba@kernel.org
+References: <202508281637.f1c00f73-lkp@intel.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <202508281637.f1c00f73-lkp@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: wcASPWdAj0IeHhEOKC0dRXdeDvgL0ThYrZjRJlrWbWM_1756377322
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The following build warnings / errors noticed on arm riscv mips with
-gcc-8 toolchain but gcc-13 build pass for the following configs.
+On 8/28/25 10:17 AM, kernel test robot wrote:
+> commit: a1b445e1dcd6ee9682d77347faf3545b53354d71 ("[REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes")
+> url: https://github.com/intel-lab-lkp/linux/commits/Brett-A-C-Sheffield/net-ipv4-fix-regression-in-broadcast-routes/20250825-181407
+> patch link: https://lore.kernel.org/all/20250822165231.4353-4-bacs@librecast.net/
+> patch subject: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes
+> 
+> in testcase: trinity
+> version: trinity-x86_64-ba2360ed-1_20241228
+> with following parameters:
+> 
+> 	runtime: 300s
+> 	group: group-04
+> 	nr_groups: 5
+> 
+> 
+> 
+> config: x86_64-randconfig-104-20250826
+> compiler: clang-20
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+Since I just merged v3 of the mentioned patch and I'm wrapping the PR
+for Linus, the above scared me more than a bit.
 
-First seen on next-20250826
-Good: next-20250825
-Bad: next-20250826 to next-20250828
+AFAICS the issue reported here is the  unconditional 'fi' dereference
+spotted and fixed during code review, so no real problem after all.
 
-Build regression: next-20250826 gcc-8 compiler_types.h:572:38: error:
-call to '__compiletime_assert_478' declared with attribute error:
-FIELD_PREP: value too large for the field
+/P
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-arm:
-  build:
-    * gcc-8-integrator_defconfig
-    * gcc-8-omap1_defconfig
-    * gcc-8-footbridge_defconfig
-
-riscv:
-  build:
-    * gcc-8-defconfig
-    * gcc-8-lkftconfig-hardening
-
-mips:
-    * cavium_octeon_defconfig
-    * malta_defconfig
-    * defconfig
-
-## Build log
-drivers/pci/pci.c: In function 'pcie_set_readrq':
-include/linux/compiler_types.h:572:38: error: call to
-'__compiletime_assert_478' declared with attribute error: FIELD_PREP:
-value too large for the field
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-                                      ^
-
-Anders bisected this and found,
-# first bad commit:
-  [cbc654d18d3743cff70b2dafb64c903b8cd01f2b]
-  bitops: Add __attribute_const__ to generic ffs()-family implementations
-
-
-## Source
-* Kernel version: 6.17.0-rc3-next-20250828
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: next-20250828
-* Architectures: arm riscv mips
-* Toolchains: gcc-8
-* Kconfigs: integrator_defconfig, omap1_defconfig, footbridge_defconfig
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29694807/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250828/build/gcc-8-footbridge_defconfig/
-* Build error details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250828/log-parser-build-gcc/gcc-compiler-include_linux_compiler_types_h-error-call-to-__compiletime_assert_-declared-with-attribute-error-field_prep-value-too-large-for-the-field/history/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/31u6OUKGnkxZYEIbLMDV9Fi1OgZ
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/31u6OUKGnkxZYEIbLMDV9Fi1OgZ/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/31u6OUKGnkxZYEIbLMDV9Fi1OgZ/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
