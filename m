@@ -1,38 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2C82C374B;
-	Fri, 29 Aug 2025 12:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7349201269
+	for <regressions@lists.linux.dev>; Fri, 29 Aug 2025 13:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756471089; cv=none; b=UVFzN7a/KEP3SnM76/uSG5fl5Vl7oDPEiM7azf678DtKxd9kHemkV728b8ibdf7fhytY6NQZ62rTrE1omW8NGfRWl/tZoZXWXQk3n3wktiMJhoywBcnIAWfnRX7lg6vzz1Adw2nfZs037fI8SDuWi+jyl7KK2HLiSHr/5lhYp6Y=
+	t=1756472839; cv=none; b=McCpiVsac+UKfK1sm6Xk+ndGVVGzXbRGfSX5PruDtT1yormnEoKrUYwaAcah4LuyWCk438L36gA57Ctyhck141daK8y2wYKyHIa5taCudTY3I0RfTBrRw+5WRpYrnMO2LlNKSRIFyHvRzE5hjMfQ5UFry2/H5P+8w8t7k85r1ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756471089; c=relaxed/simple;
-	bh=WpCT1BEi88kOYc1KlNxAEIr7FEnG2KH3hWXRvs1KhWc=;
+	s=arc-20240116; t=1756472839; c=relaxed/simple;
+	bh=ZbDH6zTwtEEonn5uvFO9CmF6GHUwV2nyZ8z8TUtCRBY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sQR3apC6pwbePdmHn9RL7nXG8VFsvN8zwO7MywhP6SAQ7L8sJS2WDafnE9eluDIHlnjKIq3FMiYiHaEcgNAAVENWQyFgsrwPMo6Mz5lBlHVqppY37P593whwi5ear0h08AdRGtBd1lLhONg/Xw7SEqaHjQEU/ZEeU5N+Wy6Cxfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=xm8vajwe; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=e3oa4qmmEKtMDiCOUUmvJY1xFGE8hFFrrvinHMMW156+iD2rmpCDxdOK6jAzXKnE9LVMEKnogRrvDrRG6qSRcaDKSFhJHSA1ALJ3iSTikGic++OACR8i1KXG0Rf0OzdB7efnLVp4JorcyKOP+ZhVx3o7tjKcfLLuaTRN3kkOpvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=092QEI3v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BC8B4WF4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=092QEI3v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BC8B4WF4; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="xm8vajwe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=OzmW5No5ytDzgBIZKPfdhdcoLrbkRFgOz/I63mOxbCI=; t=1756471087;
-	x=1756903087; b=xm8vajweWj/w9gj8fS7xXwQe5sBSk0CP3ftRQLLyEIOY5KP3XzUOnIezX3i0L
-	a9LSP//0FQ1IShilw3tnNRlWKpLOMyhSGoCPEYeHPmupluWtKI8pjJ/I5ch5JkJ59vb1ZL3C7qvyQ
-	ca+q12Cyz5vdcA+NRe/iWYqHGyry5Z/6HEOpppeFlo8FsHS1iEA6p8km64UqgEO5/JHza+Iw4ns1e
-	Rb6+gKjHm48sNOEDi6ifeyuQp4ULwvxhewh9lZ7IYVLhHk6CInjQ6iqau0l0ti+1/BuUVkqXzfH1R
-	RaVZf1leeipzGKUkHEQj/yFPLIQCmSJuAvyXujH9zotNTmZSUg==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1uryMn-00AAN3-1Q;
-	Fri, 29 Aug 2025 14:38:05 +0200
-Message-ID: <27863761-d747-459a-af85-18abe207c0ca@leemhuis.info>
-Date: Fri, 29 Aug 2025 14:38:04 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="092QEI3v";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BC8B4WF4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="092QEI3v";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BC8B4WF4"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B3C1C20830;
+	Fri, 29 Aug 2025 13:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756472834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ilyD2cOqtOyzlqVOjqg7d1mL9eol5NAIIMG9rO12+G8=;
+	b=092QEI3vdZ5MfnWCWaNxsh8LRwDG1nQFm6VkQGw8zVRFmBW/siW3/GWob+t5xliX+O0cIc
+	I6wL6vqAa34JpFXbVYhXHkgPzCKMLYmouKTOK+fI5f9LUfJzMMeSl3uYdBOEgFfk9mSQWy
+	40of5pVOPzAWrs+gfKractLI5N2S/tk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756472834;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ilyD2cOqtOyzlqVOjqg7d1mL9eol5NAIIMG9rO12+G8=;
+	b=BC8B4WF4vIeLstkdhNKmt2Mpari9L6+7osWQJJ9VkHPdmh/jOJZHl9rIacEtAvZL+SENsy
+	MIuOVnGIheogB5Cw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=092QEI3v;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BC8B4WF4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1756472834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ilyD2cOqtOyzlqVOjqg7d1mL9eol5NAIIMG9rO12+G8=;
+	b=092QEI3vdZ5MfnWCWaNxsh8LRwDG1nQFm6VkQGw8zVRFmBW/siW3/GWob+t5xliX+O0cIc
+	I6wL6vqAa34JpFXbVYhXHkgPzCKMLYmouKTOK+fI5f9LUfJzMMeSl3uYdBOEgFfk9mSQWy
+	40of5pVOPzAWrs+gfKractLI5N2S/tk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1756472834;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ilyD2cOqtOyzlqVOjqg7d1mL9eol5NAIIMG9rO12+G8=;
+	b=BC8B4WF4vIeLstkdhNKmt2Mpari9L6+7osWQJJ9VkHPdmh/jOJZHl9rIacEtAvZL+SENsy
+	MIuOVnGIheogB5Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C3C713326;
+	Fri, 29 Aug 2025 13:07:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2ND1IAKmsWh9eAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 29 Aug 2025 13:07:14 +0000
+Message-ID: <ef6558a9-c44a-4c66-967c-187f260f73e1@suse.de>
+Date: Fri, 29 Aug 2025 15:07:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,42 +83,162 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bug report - Sticky keys acting not sticky sometimes
-To: Alerymin <alerdev.ca4x6@simplelogin.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-References: <175646738541.6.2676742517164037652.877606794@simplelogin.com>
- <dd24398b-0d10-45d4-b93d-4377c017f2e7@leemhuis.info>
- <175646914218.7.12773379431621187280.877650584@simplelogin.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <175646914218.7.12773379431621187280.877650584@simplelogin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1756471087;983e20da;
-X-HE-SMSGID: 1uryMn-00AAN3-1Q
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+To: Nick Bowler <nbowler@draconx.ca>, Doug Anderson <dianders@chromium.org>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+ <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+ <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: B3C1C20830
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,suse.de:dkim,suse.de:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
 
-On 29.08.25 14:05, Alerymin wrote:
-> On Friday, August 29th, 2025 at 11:58, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 29.08.25 13:36, Alerymin wrote:
-> 
-> Well, I read the reporting page a bit too quickly so I CCed the
-> regressions list while I shouldn't have, sorry. I've never seen it
-> work normally, it's not a regression.
+Hi,
 
-Happens, no worries. But in that case a hint to anyone that might reply
-to this thread: feel free to drop the regressions list and the stable
-list (it's off-topic there, too)
+it's been a while since you sent this report. I assume, the problem is 
+this there?
 
-> On a github issues on kbd-
-> project legionus had a few ideas about it: https://github.com/
-> legionus/kbd/issues/140
+Am 30.04.25 um 15:28 schrieb Nick Bowler:
+> Hi Doug,
+>
+> On Mon, Apr 28, 2025 at 01:40:25PM -0700, Doug Anderson wrote:
+>> On Sun, Apr 20, 2025 at 9:26■PM Nick Bowler <nbowler@draconx.ca> wrote:
+>>> I recently noticed that on current kernels I lose video output from
+>>> my Blackbird's AST2500 BMC after a reboot
+> [...]
+>>>    ce3d99c8349584bc0fbe1e21918a3ea1155343aa is the first bad commit
+>>>    commit ce3d99c8349584bc0fbe1e21918a3ea1155343aa
+>>>    Author: Douglas Anderson <dianders@chromium.org>
+>>>    Date:   Fri Sep 1 16:39:53 2023 -0700
+>>>
+>>>        drm: Call drm_atomic_helper_shutdown() at shutdown time for misc drivers
+> [...]
+>> Bleh. That's not good. If I had to guess there's some subtle bug /
+>> missing timing constraint that's being triggered here. A few things to
+>> try:
+>>
+>> 1. Add a several second delay after the call to
+>> "drm_atomic_helper_shutdown()", like msleep(5000) or something like
+>> that. That's kind of a shot in the dark, but it's fairly common for
+>> panels to get upset if you turn them off and then turn them on again
+>> too quickly. This would be my blind guess of what is happening.
+> Adding msleep(5000) does nothing except that once the video turns off
+> it now takes 5 seconds longer to reboot.
+>
+>> 2. Could you give more details about what panel you're using?
+> According to the documentation I have for the machine, the video output
+> of the AST2500 BMC is connected to an IT66121 HDMI transmitter.
 
-FWIW, some developers do not follow links in cases like this, as they
-get a lot of reports every day and not much time at hand (and walking
-through other tickets often is cumbersome). You chances will thus be
-higher is you summarize the important bits in a case like this; then
-people might follow the link if they really care.
+That dmesg refers to a SIL164. I always thought these where only for 
+DVI. With the IT66121, I'd expect the warning from [1] in the dmesg.
 
-Good luck! Ciao, Thorsten
+[1] 
+https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_main.c#L196
+
+
+The ast driver doesn't do much during shutdown. Could you please 
+out-comment the lines at either [2] xor [3] and report on either effect? 
+These calls turn of the video chip's memory access and sync pulses. Not 
+doing that might resolve the problem.
+
+[2] 
+https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L835
+[3] 
+https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L839
+
+Best regards
+Thomas
+
+>
+> Then in turn I have that connected to some generic HDMI->VGA adapter
+> (PrimeCables branded).  I also tried with another much more expensive
+> device (Extron DVI-RGB 200) and observe no difference in behaviour.
+>
+> i think these devices are working and there's just no output signal
+> on the hdmi port.
+>
+>> Ideally it'd be great if you could say which device tree you're using too.
+> Not sure how to answer this.  Do you want me to look at something
+> specific in /proc/device-tree?  Or dump it somehow?
+>
+>> 3. Any chance you can gather the `dmesg` from a failing boot and
+>> provide it somehow? Are there any errors in the logs from the failing
+>> boot?
+> To clarify, there is no boot failure.  There is just no video output
+> after rebooting.  I can then boot Linux again by any method that works
+> without being able to see the screen, and then everything is fine once
+> I do that.
+>
+> I've attached the dmesg output (gzipped) from after such a reboot.
+> Except for the order and the timestamps, the messages are identical to
+> when I boot after rebooting a kernel which does not disable the video.
+>
+> Thanks,
+>    Nick
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
+
