@@ -1,105 +1,82 @@
-Received: from mail-107164.simplelogin.co (mail-107164.simplelogin.co [79.135.107.164])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90217B676
-	for <regressions@lists.linux.dev>; Fri, 29 Aug 2025 11:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=79.135.107.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756467395; cv=pass; b=Q08D1xqv7z2eQ/d8+oN/TOjr9tp4oIIViCr9hCKfIwvsmNyF5W0V6BXVxO5Rd9pFTqgpRwZ91j69orbA8QbiXZ5RnDinftxyJNSA51U2Pfa6JKKj0tcIaWUiL52llhnbQ9vNttb5Sojc/riY/rHwr2XtHEyWgVLkpu2nF6orCII=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756467395; c=relaxed/simple;
-	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
-	h=Date:Subject:MIME-Version:Content-Type:From:To:Cc:Message-ID; b=vCGZHAT8e1yXHIzAT9JA8dn28DO/tG+GBhE4gIA6YQBvvnE9unqKyPB/+BiTavUdSLllgqQUsPPMODArVWtn/RHrBmZ4noBUI4R19Etqc+vciwsIvVesV8ZIbnJWvpD3b7BwH3wNIuD1oFFX+JUyElAJM8CYOuW2SkTWIFHO9ok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com; spf=pass smtp.mailfrom=simplelogin.com; dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b=e5mSuqV0; arc=pass smtp.client-ip=79.135.107.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelogin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485E82D12E4;
+	Fri, 29 Aug 2025 11:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756468684; cv=none; b=CgAP3W7tMonYwqiTUXQOuTER3qEfpAPc2Rw6hx1IhJ2DY0r5doqBCmBbZBfXozqTlsl8pFd1tifwISwPYyIyJpeiUs/ZTdmeLSN61jOiqepbbN7Jy/LKQdawU/rFaFLa1/z+eov7Rg2TcU06uZSy3o7i4RHWFJPZL7OENyT8PIg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756468684; c=relaxed/simple;
+	bh=ynveZ1yqv7u1kVZVuyyTknKuM8nqhb1csnyz1gTkaao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xe8f8qLdk0bHdWzu42HR7AZVOEoXYJg05wo1lv0Oz07HzuaXw0kxwZ3JqgHtUO50bjVj+NolHIkwYuIZrPSawOtaHe5DHXqeHSlKPe8QxGhAtB9Vmooax3NlEsGXZjhpMnisoB+4FIHkTB1qpaf2waF0cOriQShz+cfRfGAS4c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yWKc1Z2Z; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b="e5mSuqV0"
-ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1756467386;
-	cv=none; b=YB0t0JmMhlI8gsOr+MH9DuOK+pOZvWl4sMCiabMWkaCrKEOzP2ZWWsGnC4fjc66lyRaeCv4fblXqttmcOkV4XRWREDWyXxyQSf49gx1D1dWhUHctlIFm0TVNqU3sC741WBK4m6lp5ex4VgJ36o+3n7vgIj3LXGi3/UmgyONbGNcCm27WvMfeiol7RWarQzmpJibVlTZjYIlba+g3pcTq3oVUkZp69z6sbtozMz3uHRQdDu/NNJcHAfjIOmhNrJfwNN0V4rdjjQaeClZ4f0ShUvKGJS+8mo85UR/FLfEB698ky/XooynvzeCxRf6K6zpoO/af4RjXdKLHkGSKp+UC1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
-	t=1756467386; c=relaxed/simple;
-	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
-	h=Date:Subject:From:To:Cc; b=y5MKKGtDw6rsBCBH/1ezCZmrpHKWMJINC89gdrRn5uWr/WtCjEyk+dcazIIhWori3K/mOcrNxyj3PWABPytw6WzlAnXs25L+1GtvbsHbQOZ2s0WXhGXg9bbGZYw96BXr5HJQSz3pqPcToAKVAe2oFCIM1oqEaYIYEf16ckNGrHiFGIERGKeGpemlOaK2uMqiUWc9WYqATaUooafrWD8McY+EiRpTabnDohInlm3kdRFbx13FaHpDZBgb/PNxgILXGkiEr1ho1U4wgnqhuZCnooxntJsL1Ja8X4mPxbuAXPBFGqnTrDAgsizRa2YzGVf87rU6jdDigo3Um/ZMaFgetw==
-ARC-Authentication-Results: i=1; mail.protonmail.ch
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simplelogin.com;
-	s=dkim; t=1756467385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
-	b=e5mSuqV08ySpUz1i+5D0S+8mlpchjtmJzzUpP8dnnnmlcjuOheHlLeXSmOqL7G+vfIVBqZ
-	A4QLu08Y87Ke5+Qsa98WtohyVs3Fdh7Zc1dqsPx+dC+gOqg1Eel+l4bcS/wq5PTOVQ4Lvi
-	g/rGe77aFOKcSkV08CfTIwje0I72ODw=
-Date: Fri, 29 Aug 2025 11:36:18 +0000
-Subject: Re: Bug report - Sticky keys acting not sticky sometimes
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yWKc1Z2Z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=OiUAwF7kCruDwiTlDNNG4PcIpUt2a1KBnH5GQtUR5Ug=; t=1756468682;
+	x=1756900682; b=yWKc1Z2ZKMYNWv9c74FcEHV9NMLErerVvI5QR1iXby/TTErStde/CVOxaGpVx
+	fw9IsXESbG5N/l6NAz6VIeSUskgCPpw4ILubRbotP4zJmtFLX+T1A3cy8Pg89bWjH85Zpyy3sapP5
+	bqQqaVfsTp3Wpc6j3y/fkgF3+Og6mK4edug3JwwdigpBhB/8ttovc27XU1W5IKtHFYeFm2CSb3zMh
+	wYtrk8GM2UcMj0sGVAGxeXtgdj3D42MjEOFsXE9Uj7Ic78wu5wpl238nSXJsuRJZRcpUZ4karIco/
+	E5Z/AMTCaIs8POXQvhaSETEJR0FzbhaIBpljxTEeQ3g1zWVVJA==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1urxjz-00A0uS-0E;
+	Fri, 29 Aug 2025 13:57:59 +0200
+Message-ID: <dd24398b-0d10-45d4-b93d-4377c017f2e7@leemhuis.info>
+Date: Fri, 29 Aug 2025 13:57:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg=pgp-sha512;
- boundary="------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055";
- charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug report - Sticky keys acting not sticky sometimes
+To: Alerymin <alerdev.ca4x6@simplelogin.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, dmitry.torokhov@gmail.com,
+ linux-input@vger.kernel.org
+References: <175646738541.6.2676742517164037652.877606794@simplelogin.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <175646738541.6.2676742517164037652.877606794@simplelogin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-From: Alerymin <alerdev.ca4x6@simplelogin.com>
-To: stable@vger.kernel.org
-Cc: 
- regressions@lists.linux.dev,dmitry.torokhov@gmail.com,linux-input@vger.kernel.org
-Message-ID: <175646738541.6.2676742517164037652.877606794@simplelogin.com>
-X-SimpleLogin-Type: Reply
-X-SimpleLogin-EmailLog-ID: 877606799
-X-SimpleLogin-Want-Signing: yes
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1756468682;4e6a38f4;
+X-HE-SMSGID: 1urxjz-00A0uS-0E
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055
-Content-Type: multipart/mixed;boundary=---------------------2a429f09b9a235ef4171a0b772069893
+Lo!
 
------------------------2a429f09b9a235ef4171a0b772069893
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;charset=utf-8
+On 29.08.25 13:36, Alerymin wrote:
+> Note:
+> The issue looks like it's from tty directly but I don't see who is the maintainer, so I email the closest I can get
+> 
+> Description:
+> In command line, sticky keys reset only when typing ASCII and ISO-8859-1 characters.
+> Tested with the QWERTY Lafayette layout: https://codeberg.org/Alerymin/kbd-qwerty-lafayette
+> 
+> Observed Behaviour:
+> When the layout is loaded in ISO-8859-15, most characters typed don't reset the sticky key, unless it's basic ASCII characters or Unicode
+> When the layout is loaded in ISO-8859-1, the sticky key works fine.
+> 
+> Expected behaviour:
+> Sticky key working in ISO-8859-1 and ISO-8859-15
+> 
+> System used:
+> Arch Linux, kernel 6.16.3-arch1-1
 
-Note:
-The issue looks like it's from tty directly but I don't see who is the mai=
-ntainer, so I email the closest I can get
+Thx for the report. You CCed the regressions list, so please allow me to
+ask: what's the last version where this worked? And FWIW in case nobody
+comes around with an idea what might cause this any time soon: could you
+bisect[1] what's causing the problem? Ciao, Thorsten
 
-Description:
-In command line, sticky keys reset only when typing ASCII and ISO-8859-1 c=
-haracters.
-Tested with the QWERTY Lafayette layout: https://codeberg.org/Alerymin/kbd=
--qwerty-lafayette
-
-Observed Behaviour:
-When the layout is loaded in ISO-8859-15, most characters typed don't rese=
-t the sticky key, unless it's basic ASCII characters or Unicode
-When the layout is loaded in ISO-8859-1, the sticky key works fine.
-
-Expected behaviour:
-Sticky key working in ISO-8859-1 and ISO-8859-15
-
-System used:
-Arch Linux, kernel 6.16.3-arch1-1
------------------------2a429f09b9a235ef4171a0b772069893--
-
---------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-
-wrsEARYKAG0FgmixkKQJkOLfGQMiQb0dRRQAAAAAABwAIHNhbHRAbm90YXRp
-b25zLm9wZW5wZ3Bqcy5vcmfTkqPJNkGeCHWxoJzCDGaTeoq+AMlCzt0LqPcI
-IlruHRYhBA/2MWvcJ0ye/0b56OLfGQMiQb0dAABIgAD+NuL4jcK/RKvUdskM
-n6FkZTldQiUuCyUrX4G4YHVuyfoBALiduiZYfYIiL1itze8hd9zWWXnCF7HV
-3bIzIlVhQQ8C
-=BCRE
------END PGP SIGNATURE-----
-
-
---------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055--
-
-
+[1]
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
