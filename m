@@ -1,225 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mail-107164.simplelogin.co (mail-107164.simplelogin.co [79.135.107.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5FE30CD84;
-	Fri, 29 Aug 2025 02:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90217B676
+	for <regressions@lists.linux.dev>; Fri, 29 Aug 2025 11:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=79.135.107.164
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756433324; cv=fail; b=XSPPper1AGOcYKT8KSiXBqAA1szZq/mUIu3qDrTNLReYjTB7CzCzdkrdahGCzrTNBVGzcz32u3+biC/A0RFxXqZvgIFiFK/SylLyopP202TwdflgieELB+nEBIn4QcrDi/DU9VgB1HJlV9yDEhvIZstK9uUIP9f4QStGEh0W1gs=
+	t=1756467395; cv=pass; b=Q08D1xqv7z2eQ/d8+oN/TOjr9tp4oIIViCr9hCKfIwvsmNyF5W0V6BXVxO5Rd9pFTqgpRwZ91j69orbA8QbiXZ5RnDinftxyJNSA51U2Pfa6JKKj0tcIaWUiL52llhnbQ9vNttb5Sojc/riY/rHwr2XtHEyWgVLkpu2nF6orCII=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756433324; c=relaxed/simple;
-	bh=y+VzVsZOvRSPHMFExDZgmvybPFlpXFhZ3pzDOPPpfmM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VsDtWl4eT3BCqTz50ck6CFy0nYiBMztNo3lowNBVTtBdiypxxLZhpvkTb96GjyWuCPSoWf6ZgOnQzo5tKX/4XN698X/1LCg6dvYjAwQpDqWgkEQYNzKRaS7guKDFMt5Ws//Uz4cLyohk0KFqvhWIJKDN84aZTHc3MbdTfpgV5Wg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFjPKsh3; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1756467395; c=relaxed/simple;
+	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
+	h=Date:Subject:MIME-Version:Content-Type:From:To:Cc:Message-ID; b=vCGZHAT8e1yXHIzAT9JA8dn28DO/tG+GBhE4gIA6YQBvvnE9unqKyPB/+BiTavUdSLllgqQUsPPMODArVWtn/RHrBmZ4noBUI4R19Etqc+vciwsIvVesV8ZIbnJWvpD3b7BwH3wNIuD1oFFX+JUyElAJM8CYOuW2SkTWIFHO9ok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com; spf=pass smtp.mailfrom=simplelogin.com; dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b=e5mSuqV0; arc=pass smtp.client-ip=79.135.107.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=simplelogin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simplelogin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFjPKsh3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756433323; x=1787969323;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=y+VzVsZOvRSPHMFExDZgmvybPFlpXFhZ3pzDOPPpfmM=;
-  b=SFjPKsh3XlnL414PDMD+o8KFJRNsSw7VHHCc39z3ZSPCVuuAIqI9GaVy
-   jdTo1XDf8czNoOM1NAewhDRfHF2y+dItiG3R/OiEeFc+v8nES966CzejG
-   ISoCWlzh7Z2y0CpHq3PRgeY1jPm6+m/o+LpGSYcc+73dnGer9lFwIR4OO
-   LVddRtbSNVK+VXbb0leL6prj6K6QzMI12wFQ9RqoY5YZzzEvFlg+k5Zmu
-   fgsVy7yNcZBX/eM6EhxIVd7D8Ir2GhtXKJEwWi+kbdD/aNg86VWP8puWb
-   P7I/lbgReJmbrJn5fNICY9/mfnhmgxYZ6Lq+PfLbfDez8niLAuQW5u4tF
-   w==;
-X-CSE-ConnectionGUID: +2GrmLgISJKAXfvuZ+c2zQ==
-X-CSE-MsgGUID: xeYVevyuQZ+7d12SViaTTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11536"; a="69311756"
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="69311756"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 19:08:42 -0700
-X-CSE-ConnectionGUID: hfv50E6nS9ysdSmSlGf+0w==
-X-CSE-MsgGUID: vM3DQ+iOQvG+hK935+Xpxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,221,1751266800"; 
-   d="scan'208";a="170652098"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2025 19:08:42 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Thu, 28 Aug 2025 19:08:41 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Thu, 28 Aug 2025 19:08:41 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (40.107.212.68)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Thu, 28 Aug 2025 19:08:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OiYYk7xRYpC2dsugiJvrzuV6baBvkUGpF5TxSuw7drr7vRh0HkS4ZNu/SQfK2LYxkJtJoi8mxzsP0oksWePM3N1YCR4HlziEHTzpHs2mG0Fts8IOKDtpy04ABsGcR6lwDCiviqiFY7rljB5j6Rna4G9Mu8v5HN3/DAkPZX6OQlNE/53vLBnLkO2gaKmK4ZjG7JKttAPnMpXTCIAHZ/FuiPQPBatHgVvmtHSJbGZHqRuaMsgdF4ehzI8zi6wgsCb5rXs9BpTS99x8Z+iy0I6VCDs/O+2IOA3bmtaJrKYdWj8ntGXU5YQZU0vXsILJvo2hujUnfa+box+3vdHJDFc6ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oGeVJtsXXfqwC4R4ssYqVRpn98vwc5MJRAz7e8GYPfM=;
- b=j5r1LhYOy8yB0jq/YTVmFV9VsJPcK6bzQHWY1orqrcwhV4d2UcSWQZNDh7Rs+7F2zg67Lp5+xduDVqteiR9x8g/HB4ySJgls1Qc0by4yChohYUAZHH/R0PldUiyHzPz+lqxDvmiiag2fUbXbSSO8mTUsm9vk5Cp0ptUBNJKRusrP5icNyTyX7aiJE2coAcqHajg4m3YJ+4bBUP90iqtZT9ehkkCuIESILqA01mS0twYgnNHESz1U7sWUX5yxWw1d2Ia6kVYonYwwkWfW4GYRdXMJpjHTT55B6dT+opNLV+rPq7PxPECU/RayEWo5SjqpXSkcHL0ZAx5HByH3beRbEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by PH3PPFD80FA6330.namprd11.prod.outlook.com (2603:10b6:518:1::d52) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.20; Fri, 29 Aug
- 2025 02:08:34 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.9052.019; Fri, 29 Aug 2025
- 02:08:34 +0000
-Date: Fri, 29 Aug 2025 10:08:23 +0800
-From: Oliver Sang <oliver.sang@intel.com>
-To: Brett A C Sheffield <bacs@librecast.net>
-CC: Paolo Abeni <pabeni@redhat.com>, <oe-lkp@lists.linux.dev>,
-	<lkp@intel.com>, <netdev@vger.kernel.org>, <regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<oscmaes92@gmail.com>, <kuba@kernel.org>, <oliver.sang@intel.com>
-Subject: Re: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in
- broadcast routes
-Message-ID: <aLELl3NLlZmgeAki@xsang-OptiPlex-9020>
-References: <202508281637.f1c00f73-lkp@intel.com>
- <7090d5ae-c598-4db5-a051-b31720a27746@redhat.com>
- <aLAzki2ObTlTfSZd@auntie>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aLAzki2ObTlTfSZd@auntie>
-X-ClientProxiedBy: SI1PR02CA0044.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::6) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (1024-bit key) header.d=simplelogin.com header.i=@simplelogin.com header.b="e5mSuqV0"
+ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1756467386;
+	cv=none; b=YB0t0JmMhlI8gsOr+MH9DuOK+pOZvWl4sMCiabMWkaCrKEOzP2ZWWsGnC4fjc66lyRaeCv4fblXqttmcOkV4XRWREDWyXxyQSf49gx1D1dWhUHctlIFm0TVNqU3sC741WBK4m6lp5ex4VgJ36o+3n7vgIj3LXGi3/UmgyONbGNcCm27WvMfeiol7RWarQzmpJibVlTZjYIlba+g3pcTq3oVUkZp69z6sbtozMz3uHRQdDu/NNJcHAfjIOmhNrJfwNN0V4rdjjQaeClZ4f0ShUvKGJS+8mo85UR/FLfEB698ky/XooynvzeCxRf6K6zpoO/af4RjXdKLHkGSKp+UC1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
+	t=1756467386; c=relaxed/simple;
+	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
+	h=Date:Subject:From:To:Cc; b=y5MKKGtDw6rsBCBH/1ezCZmrpHKWMJINC89gdrRn5uWr/WtCjEyk+dcazIIhWori3K/mOcrNxyj3PWABPytw6WzlAnXs25L+1GtvbsHbQOZ2s0WXhGXg9bbGZYw96BXr5HJQSz3pqPcToAKVAe2oFCIM1oqEaYIYEf16ckNGrHiFGIERGKeGpemlOaK2uMqiUWc9WYqATaUooafrWD8McY+EiRpTabnDohInlm3kdRFbx13FaHpDZBgb/PNxgILXGkiEr1ho1U4wgnqhuZCnooxntJsL1Ja8X4mPxbuAXPBFGqnTrDAgsizRa2YzGVf87rU6jdDigo3Um/ZMaFgetw==
+ARC-Authentication-Results: i=1; mail.protonmail.ch
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=simplelogin.com;
+	s=dkim; t=1756467385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=n5DoHCNywup6l9+BRLWy4SYpfOtSuxQUT+2Jlv4Y8nY=;
+	b=e5mSuqV08ySpUz1i+5D0S+8mlpchjtmJzzUpP8dnnnmlcjuOheHlLeXSmOqL7G+vfIVBqZ
+	A4QLu08Y87Ke5+Qsa98WtohyVs3Fdh7Zc1dqsPx+dC+gOqg1Eel+l4bcS/wq5PTOVQ4Lvi
+	g/rGe77aFOKcSkV08CfTIwje0I72ODw=
+Date: Fri, 29 Aug 2025 11:36:18 +0000
+Subject: Re: Bug report - Sticky keys acting not sticky sometimes
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|PH3PPFD80FA6330:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f3a73ad-c2ac-4aef-e8ad-08dde6a0f520
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ScHyf4uNtCWqkWioQyyZneeKkVAU+9WosjN6VWwEXxDVJVcV9eb+AQiG8mo/?=
- =?us-ascii?Q?bYjvDjVOo1Dl64oz0hFozBshtpLzcdesLtXQBAzvy4RVAuXiMWkQuf+6Kucm?=
- =?us-ascii?Q?ogKdXex4vbOnTvK9SqAEknXFgqxDhwozwB61EWMU8Pnelpz6uC49v+16rjYd?=
- =?us-ascii?Q?ePwldQSRw+YvoGby4Ug1+28iwNO/gvhv9ppBW3+inrqbQBIQwsU6PKqmKH+2?=
- =?us-ascii?Q?ptUWg2AmmUy32Hm7Ym62pz6cFd2P6bRdMnF0FLs0s+3ChANskuccYZDLNtOQ?=
- =?us-ascii?Q?ZGU0F8f/jKVliUW7RUmIiYYvSNwlUiR7Ods9FAOX5qy+5OOKVFrgHhpUAM3X?=
- =?us-ascii?Q?d4xljIe7RU09ToHuDlLJ5AY71pvTNfZqC2jdq9gUT5pkRYGzfPIpGvjUsF6s?=
- =?us-ascii?Q?yhRArUS7gcfh7UusuJMAL5gre1wes5iKTGEgBkHu7w1uNNP72HLeIrPLizAj?=
- =?us-ascii?Q?gdKnVly56wHhuoqndqisqBUpLGFGG7XeRVFRrDPXTBFroddam3YXQx7wuKie?=
- =?us-ascii?Q?+tn8TmVXhEw0HVqMN+Kb4hRI/usJyaaOuw7kFDaquhAMDXD+apbj0Wkd9jmT?=
- =?us-ascii?Q?IgYcpkZ+iQYN8e5jXxLPQJ82pCneBx/KRHIpe7poiBhfTBGn/4/TYeESMC0w?=
- =?us-ascii?Q?A7ScC0LqGS+N3zFVLs9u9GU2JQ452R1JJ8iPJSYaJNF2CVr8TUBdfobMlBf5?=
- =?us-ascii?Q?3/nsY5Msywt4llpbBQwX/7IwNmZ2sue46ww5P7QLZdgzGFMWbdvjh6Nq1iAw?=
- =?us-ascii?Q?pbt925c3h8+eGZwYSH5QFO6DNIICkDuM572xwFQIyK7qxzpiPI6CtDSvPGb5?=
- =?us-ascii?Q?/EAmLnw0anZX+PVszP6qzo8BgaAZgh3g4Y5wfE3k59W8GvhKRJsaA4+4MFN2?=
- =?us-ascii?Q?swqdYbvS8zaCY8bEnb+B2cbQX1m0y1vyu2QUTwrnd3ZhnhN9E2BnyJR/Sz9b?=
- =?us-ascii?Q?OgNWGgjsaB+hFJ0/VPiFHNeejMyeBN/ckH8R0Q+rCHeOzsglRCs50qF5O+gO?=
- =?us-ascii?Q?ljNmNMr+tYowkbojhA6a9uRG4JoWT+2qwVDeTH4udpA9WWnYmxJuQ66Dg3Bq?=
- =?us-ascii?Q?Pc+JTf5Xcp+VbMnqgUN1PVYbNTY1hToewJB3MJCtClr2hV0rrUOcvy6FgIm6?=
- =?us-ascii?Q?KG9rD24AWXuae+urfQeUrC0SzpNp8gTO2qH+ReK1MVTN0MvK1p1z5goebkn0?=
- =?us-ascii?Q?Hng2zu8mZp8unDHsU5YMPg5xagjdLj7Cieq6xZQgXzInACScw4m/CGa97dqS?=
- =?us-ascii?Q?9+bHwv+0jdTNv6AF9/hMS50yTwC5qd1H0x3ysElZZW4ym5ZT7OlV0OahNmXW?=
- =?us-ascii?Q?Abqmmz6UGLOcU8IxiQkwCVDU5o06hbEAWaugASSFc730xCN3QNKxM0E6i9+E?=
- =?us-ascii?Q?Iti+H8b59QqzzgH6IJuRgj5i4PXM08t2Bcout587o+crzCPHIRTxjQaVRwS/?=
- =?us-ascii?Q?KsgcSk0LOMY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yQFhPLelYTPafta9NcxRG4ayZZVae8hFFPcyepckUsfT/3QL2MlayDsLSsl+?=
- =?us-ascii?Q?1ByS8fYT5kUz5dqZVs3QqrH8KipQ7E8mkAFfwRwz8sJDe1J7XztIwcuHK/T0?=
- =?us-ascii?Q?8ntnwPHMKndjsodPS9YZL7NAv9896OMwVs14ao6qC0jF8Al9MKgSIbGAHT5/?=
- =?us-ascii?Q?zdIBGnKQ0dmlpl+JKNjvtgGhkyn5qDAhQttA4wpOQbKYPcED1OTnxdfQ0s7V?=
- =?us-ascii?Q?SzljynA4/E+yd/8pzBcLXuBtAj1o+NlAjYxQpmekrQaWtKyyabNtU6ZdqOyQ?=
- =?us-ascii?Q?gLUA1JOxxLhvteWikHF/SWqeLkVym0ccAyg66TlBM+no7iACXvbUn9Z/4EmY?=
- =?us-ascii?Q?JuEoGXILYOeE+xrOMg3r5rw8FFC3ZkHmCZyuz8UB/AD1+xvbrD/NtfeMZJMN?=
- =?us-ascii?Q?D2yJISChyKUq3IrS1QDdMVSFXg1NRMD1OmaET7S8tvoIiyCYedqTsOiCsDsm?=
- =?us-ascii?Q?Oyb8egxqvR47Y2Vsvp2nlPxf4+qY2smuPamqTnqCGsWHUuGdiuicRZddoh4v?=
- =?us-ascii?Q?EHhfo9G2ts0IL3Xj2jojritJ7b3xZJ/VGlCEd55rr2cyUvPXIw4KEhr3+1us?=
- =?us-ascii?Q?2fbD4dWPm6iHY82wmbQaVGHlYV812DliXJxaouPFCYSbojdkVn0kpImWxakB?=
- =?us-ascii?Q?P9ZIOVda9XzDhbqWIN7Yt0d+F/HDGPFfcRCMGTHiBTjpwAJhl4k+6uSvxytL?=
- =?us-ascii?Q?f0Z7kac9lFuYy7nLYoYARKWeN+T+3CIL+ads3r4LH7aPHavA7UbG3dwk2Wpq?=
- =?us-ascii?Q?Px3tLXJSrv+PbnIMe9lLguFCRZ1u+jE1zYc82Dj5kvhZ+o+cQJTn2Bj/WGUf?=
- =?us-ascii?Q?pYIDjT9sr14khZnh9j/+9JdBO9BUtJiN8u1Utr6OwrCfbUQwj4U/h8nv/ohi?=
- =?us-ascii?Q?y+ZXyudXaftpp+uEz/mdw2lb9W0lg2YrrM33tK/V68FrF9AVLirCb25eXEsr?=
- =?us-ascii?Q?BACzUz6x7b6zPwKXjWAdaGL8f3bISKstiKti/girhriVf5n6D59rhIt1sKer?=
- =?us-ascii?Q?wPXgWqH7Z8LwsWhDd2Vfzxbt4YfrM9/NdyXR2lDzOnb/OycGBeVYpgLztB6m?=
- =?us-ascii?Q?CTqSngmpJdwNfLb7huYJVSpej8ipDNw3zk32tOeHrtGbWFuyobQffCPphYmN?=
- =?us-ascii?Q?RvZgBhqvdAmBzo2L+auPjyuDB4Lpzt6VHfLz26lD2lK+9mcXNm+d0cOdzwnM?=
- =?us-ascii?Q?miiETWELF6cMg3H5cDpjpm7ab5NHHZ/+8DL07YYKvirQtLNNWQLlCpF3z5Ew?=
- =?us-ascii?Q?ekjHQBRR/EzvVAGgxt0XJJIj2C263I/ypHAwQNB7HTWUa1apgbp7JBukQqRZ?=
- =?us-ascii?Q?tSSpOmwKInc3/cDG/4SA8B8OSpIc8S8Pmi57qBJyE8dtZ1L2rt/huQ+axMgQ?=
- =?us-ascii?Q?35wVqq88LIt0kNesP/v//fdc7SaJJnwshGD7trbWfE0YuVYQnWgQV8NewI9Q?=
- =?us-ascii?Q?l+hVIYO13YLLbyOAXieqH/7TVgmk3GK0fZ1tC+2P9qT0EiQC86wtZE+or6Zl?=
- =?us-ascii?Q?H6QrlCitnjl7ebr/m7lTgza5tzM2QCgJoB+3HayYlmTfcMFGvhiYOklNtA+i?=
- =?us-ascii?Q?0PtPNWsIvqsTUJckvLh6rYI2/PA+AgKGrcYQTSoU83KJV10iZ5YERd+4nl+0?=
- =?us-ascii?Q?Zg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f3a73ad-c2ac-4aef-e8ad-08dde6a0f520
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2025 02:08:33.9315
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EtostEE1RwAE3ZSiMQRjung9Ed/USQWb4WJyO/gKH8t4T4UHdU354uK/S1m5zJQ4Ol8bbR9jzkbt7vQImWaO4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFD80FA6330
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg=pgp-sha512;
+ boundary="------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055";
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
+From: Alerymin <alerdev.ca4x6@simplelogin.com>
+To: stable@vger.kernel.org
+Cc: 
+ regressions@lists.linux.dev,dmitry.torokhov@gmail.com,linux-input@vger.kernel.org
+Message-ID: <175646738541.6.2676742517164037652.877606794@simplelogin.com>
+X-SimpleLogin-Type: Reply
+X-SimpleLogin-EmailLog-ID: 877606799
+X-SimpleLogin-Want-Signing: yes
 
-hi, Brett, hi, Paolo Abeni,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055
+Content-Type: multipart/mixed;boundary=---------------------2a429f09b9a235ef4171a0b772069893
 
-On Thu, Aug 28, 2025 at 10:46:42AM +0000, Brett A C Sheffield wrote:
-> On 2025-08-28 12:35, Paolo Abeni wrote:
-> > On 8/28/25 10:17 AM, kernel test robot wrote:
-> > > commit: a1b445e1dcd6ee9682d77347faf3545b53354d71 ("[REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes")
-> > > url: https://github.com/intel-lab-lkp/linux/commits/Brett-A-C-Sheffield/net-ipv4-fix-regression-in-broadcast-routes/20250825-181407
-> > > patch link: https://lore.kernel.org/all/20250822165231.4353-4-bacs@librecast.net/
-> > > patch subject: [REGRESSION][BISECTED][PATCH] net: ipv4: fix regression in broadcast routes
-> > > 
-> > > in testcase: trinity
-> > > version: trinity-x86_64-ba2360ed-1_20241228
-> > > with following parameters:
-> > > 
-> > > 	runtime: 300s
-> > > 	group: group-04
-> > > 	nr_groups: 5
-> > > 
-> > > 
-> > > 
-> > > config: x86_64-randconfig-104-20250826
-> > > compiler: clang-20
-> > > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> > > 
-> > > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > Since I just merged v3 of the mentioned patch and I'm wrapping the PR
-> > for Linus, the above scared me more than a bit.
-> > 
-> > AFAICS the issue reported here is the  unconditional 'fi' dereference
-> > spotted and fixed during code review, so no real problem after all.
-> 
-> Correct. Jakub spotted the error, it was fixed in a v2 5 days ago, and has since
-> been superceded by Oscar's patch, so nothing to worry about.
-> 
-> Is there a way to indicate to bots not to check superceded patches. In this case
-> I'd have though my v2 would have been a signal? Is there something else I should
-> have done?
+-----------------------2a429f09b9a235ef4171a0b772069893
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-sorry for this. our bot failed to recognize the mail structure to spot out the
-v2 patch.
+Note:
+The issue looks like it's from tty directly but I don't see who is the mai=
+ntainer, so I email the closest I can get
 
-we'll consider how to improve it or be more careful while manual check. sorry
-for inconvience caused.
+Description:
+In command line, sticky keys reset only when typing ASCII and ISO-8859-1 c=
+haracters.
+Tested with the QWERTY Lafayette layout: https://codeberg.org/Alerymin/kbd=
+-qwerty-lafayette
 
-> 
-> Brett
-> -- 
-> 
+Observed Behaviour:
+When the layout is loaded in ISO-8859-15, most characters typed don't rese=
+t the sticky key, unless it's basic ASCII characters or Unicode
+When the layout is loaded in ISO-8859-1, the sticky key works fine.
+
+Expected behaviour:
+Sticky key working in ISO-8859-1 and ISO-8859-15
+
+System used:
+Arch Linux, kernel 6.16.3-arch1-1
+-----------------------2a429f09b9a235ef4171a0b772069893--
+
+--------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmixkKQJkOLfGQMiQb0dRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmfTkqPJNkGeCHWxoJzCDGaTeoq+AMlCzt0LqPcI
+IlruHRYhBA/2MWvcJ0ye/0b56OLfGQMiQb0dAABIgAD+NuL4jcK/RKvUdskM
+n6FkZTldQiUuCyUrX4G4YHVuyfoBALiduiZYfYIiL1itze8hd9zWWXnCF7HV
+3bIzIlVhQQ8C
+=BCRE
+-----END PGP SIGNATURE-----
+
+
+--------a3bdc29b6e5aab888bbfaee2534b07ce6e38dc4f5969853691b6d737927ae055--
+
+
