@@ -1,168 +1,143 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ADB245005
-	for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 09:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10E1E7262B
+	for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 10:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756547318; cv=none; b=ENFey2N/HJOxuMAJ/lwx1wVgj6RkPn06+a+DFJM5Chit5ErvncgDqSWYyHNJPcy1/XggTPUNxDCihWMC//nbsbclR8qTlSatfkYa66YsJBSvtuzHxu6MZ6G65KRoLOknyomzGj8++9mH8zZFEHztMpZuDX/EsxFKfObU6Cz9JmE=
+	t=1756548410; cv=none; b=sQr1CIP4C1yMculDO6U7qOcbg9dPQjZroyBeyxGF8zLXTWAl233U14Snl7ocmY590Xx97qjgOX5dG9WEdjBvWHFadFDt0fKtcShCnOOnhFGgwdKW/FsopNc07ryGaprm7xhthTtPHQ3ZexBcifWMSGRJ983AwduzaDN/3kEJNFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756547318; c=relaxed/simple;
-	bh=WrBzWUBbNLVi1TVHVDGcJFK1o+XYYsxTimvrazHOL+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a7UXuVnhfwAQC5+c4EQqmLsvyFKaAz/EO4fe6lkYlDKQiMcGc3QwIOXignPsPoOIs8YDESLb5NpyNCicrNAVbJWUt09SSitNZyl6HJneHPuj2TnD/V4C5A/wHAVoFY2XBTXTNIlQLYNi9fGuK6QIUak1x+qUnSVsWmseDwRUSE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ch5ORZXJ; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756548410; c=relaxed/simple;
+	bh=wq6sPf++8fQX1W8xsz2ZV0XLtM+pG8imSne7OwZQMQI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Zx246JgfkGg3p1bUlMlllnBE3LlMiknEEhq9v8LL04p+UIcVzOmy3JErplUI9Sgk8jdwFFNnlB1WxcW/Axd+GMy5Kdpl6UzphkGykDNaMvHSDKTZrNpvEICkhZiJEIaasv7+4tTgLbAhjTlQT9ovxTx6w9eyrj1Na3FWU2Yinr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=nQmGtciu reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ch5ORZXJ"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55ce508d4d6so2653188e87.0
-        for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 02:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756547314; x=1757152114; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dp4t+5XjcUN448FoaeZJP4HhV6YJjFsdimtWRYF00KI=;
-        b=Ch5ORZXJgwXEzHubNimqzfroXE/wAhwKbpsfDzu16b3GieCiFxWy9VXuPnoMatyuJg
-         we12O15DJj7cJoc7c5f+2hvdocKzLlD7JnkYszbYeZY3BeRlOF9/ASaMtdyhJj6HkmOM
-         8l4/DjW3OPsMwVZn08MrF4yGSBiA8PFGVL22tucnyQ4ikHg1lur8Kub0/YW0xeYwtmAe
-         +pMiMLZOKuSUmM9NH8lQThoLJLbKXE8XP83vHSeZTU8h3N5NiWet1vWiW2sT7CkZq20J
-         fhDvkrWvIsiowDdKq5x+0Wk9w6mKWuo7qU6HUq+19d6te+RiOC3GnBtTd6M0onKmTUeq
-         trbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756547314; x=1757152114;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dp4t+5XjcUN448FoaeZJP4HhV6YJjFsdimtWRYF00KI=;
-        b=IPEMgBx/yowgaapaqMdFPyVvHLf8GcaL0KSwK26zUpwOP2Bh/WZ7HPeJvYELDB9sr4
-         Fd27RdRzM4OCZVBt58UDj6YaxgQZX5a6hRadCQticN6cMLNkBIQpt2Gc1Bt9sI0nEDe8
-         HfqiELwJHfpnwAR7HUCi9l8STwtmXJfL5mRuRUNHwm6/oz/O1HWe2Aqbs2DAWO2UOUtq
-         uyYYSQ/7xkOdMs23cpp+/zElDbMMD8E7qmgdAnA27Udt0ugQr9AJV2JeHernMA+87GHb
-         XICYOIWO+RbcJeeexfTtQDFyRG+phH2KRiygXUSjq5TeL7QRiJjYzKbUp7yZQ/TGO5mr
-         yocQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbTe57S/H3R1NYWdB3+Bt2lL9NLUZbolMf5PLE0VAzHr1V8qP6dCm5ka+N7nbLqVxRGbr1OZtawwdwTw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwriHrq2bg1xegHhMfWjZzokbcuYuA1NihLo5IGYY3yOYqNckjN
-	fxVc9QA8LLSrhKpxpEc7GQ7ls9B9IEnVR8l4Rxc0g+qPYBtKZCnkimCL
-X-Gm-Gg: ASbGncvTGRmaouvd54ECaihimNwfX09qaAXpSVewgXd5uTr/2q1tdTamJPgrhLSQLoJ
-	k2/apzm7VnSQvXyXl/ZE2o+EuVjFjt82jvDLW2j+S+JBUT0Y/0/Cg63O7BLjmgFv9BD9vv7fb1j
-	KRBFBSyrde2i7uQnmcK9RFKEiQd7JuSPnQaIWCchNIYjl2aqI3W4IEFt4Jx1J+R+TxjTqG6wZWJ
-	tcVnhgHpFhYqB7QHoLsK1LUDxSxXRkOzBccN4hzqYT3VxQihPX8Bbiw74OLXTvQt2mmwZB5l2IW
-	5ToRRH44rZmao4JA52A48TRb5IVmuzNvTYugxTG7w8ASoFnWDVKJrJYtcZo83tHXfQ1jPSq71cW
-	Roii3efVfnNFftQrL4DuDHaOOZRkDIFHS0l2bGaMA/dN+Dg==
-X-Google-Smtp-Source: AGHT+IGdB28Kgve/k09nulGg5xE5ZB+QMPE3o6zmbFp9NBmgjzvdnMtt6dfwBVuvpO1a7qA3If8MlQ==
-X-Received: by 2002:a05:6512:6812:b0:55f:4a34:e333 with SMTP id 2adb3069b0e04-55f708ecf28mr337051e87.33.1756547313289;
-        Sat, 30 Aug 2025 02:48:33 -0700 (PDT)
-Received: from foxbook (bhd106.neoplus.adsl.tpnet.pl. [83.28.93.106])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55f676dd6e2sm1299335e87.23.2025.08.30.02.48.32
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sat, 30 Aug 2025 02:48:32 -0700 (PDT)
-Date: Sat, 30 Aug 2025 11:48:28 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: David Wang <00107082@163.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="nQmGtciu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=gRzC1+q4sB/DFmr8FP4KkTBSoxP41b+AouK6rccVA9U=; b=n
+	QmGtciuCL/gyWn2ujHdiFfEC1AWTHgKK332Rr4H4z9SnMuXNlxFEElwFx++hzGDe
+	tHWrPlpU4gmvmUE76UEaoDCfMZuralRqPI8WCOemGUCF6svCMOfa+D03YfrPlGjn
+	vNasChhbYGX00My7DaHCY/nid/Oly/GTIAVWofcv/E=
+Received: from 00107082$163.com ( [111.35.190.191] ) by
+ ajax-webmail-wmsvr-40-139 (Coremail) ; Sat, 30 Aug 2025 18:06:03 +0800
+ (CST)
+Date: Sat, 30 Aug 2025 18:06:03 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
 Cc: WeitaoWang-oc@zhaoxin.com, mathias.nyman@linux.intel.com,
- gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- surenb@google.com, kent.overstreet@linux.dev
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	surenb@google.com, kent.overstreet@linux.dev
 Subject: Re: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after
  suspend/resume cycle.
-Message-ID: <20250830114828.3dd8ed56.michal.pecio@gmail.com>
-In-Reply-To: <20250829181354.4450-1-00107082@163.com>
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.4-cmXT build
+ 20250723(a044bf12) Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250830114828.3dd8ed56.michal.pecio@gmail.com>
 References: <20250829181354.4450-1-00107082@163.com>
+ <20250830114828.3dd8ed56.michal.pecio@gmail.com>
+X-NTES-SC: AL_Qu2eBPmft0st5SWYZekZnEYQheY4XMKyuPkg1YJXOp80iSXK+joRR0V7JmbW0fCNMwGHgBOJWjdJxu9IYrF/XZOlKghOCNEQEKiz3kOzUED6
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Message-ID: <1e8f53d5.2c21.198fa70f4f7.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:iygvCgD3f4MMzbJoi8skAA--.816W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMxG5qmiyvgHQnQACsb
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Sat, 30 Aug 2025 02:13:54 +0800, David Wang wrote:
-> Hi,
->
-> I have been watching kernel memory usage for drivers for a while, via /proc/allocinfo.
-> After upgrade to 6.17-rc3, I notice memory usage behavior changes for usb drivers:
-> 
-> Before rc3, after several suspend/resume cycles, usb devices's memory usage is very stable:
-> 
->        40960        5 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 9
->         1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 2
->          320       10 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 31
->         1920       15 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 31
->          112       12 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 32
->         1792       28 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 59
-> 
-> But with rc3, the memory usage increase after each suspend/resume cycle: 
-> 
-> #1:
->        49152        6 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 9
->         1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 2
->          384       12 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 32
->         2176       17 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 32
->          128       14 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 34
->         2048       32 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 61
-> #2:
->        57344        7 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 13
->         1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 3
->          448       14 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 46
->         2432       19 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 43
->          144       16 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 44
->         2304       36 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 82
-> #3:
->        65536        8 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 17
->         1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 4
->          512       16 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 60
->         2688       21 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 54
->          160       18 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 54
->         2560       40 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 103
-> 
-> The memory increasing pattern keeps going on for each suspend/resume afterwards, I am not
-> sure whether those memory would be released sometime later.
-> 
-> And in kernel log, two lines of error always showed up after suspend/resume:
-> 
-> 	[  295.613598] xhci_hcd 0000:03:00.0: dma_pool_destroy xHCI ring segments busy
-> 	[  295.613605] xhci_hcd 0000:03:00.0: dma_pool_destroy xHCI input/output contexts busy
-
-Hi,
-
-Good work, looks like suspend/resume is a little understested corner
-of this driver.
-
-Did you check whether the same leak occurs if you simply disconnect
-a device or if it's truly unique to suspend?
-
-> And bisect narrow down to commit 2eb03376151bb8585caa23ed2673583107bb5193(
-> "usb: xhci: Fix slot_id resource race conflict"):
-
-I see a trivial bug which everyone (myself included tbh) missed before.
-Does this help?
-
-diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-index f11e13f9cdb4..f294032c2ad7 100644
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -932,7 +932,7 @@ void xhci_free_virt_device(struct xhci_hcd *xhci, struct xhci_virt_device *dev,
-  */
- static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_id)
- {
--	struct xhci_virt_device *vdev;
-+	struct xhci_virt_device *vdev, *tmp_vdev;
- 	struct list_head *tt_list_head;
- 	struct xhci_tt_bw_info *tt_info, *next;
- 	int i;
-@@ -952,8 +952,8 @@ static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_i
- 		if (tt_info->slot_id == slot_id) {
- 			/* are any devices using this tt_info? */
- 			for (i = 1; i < HCS_MAX_SLOTS(xhci->hcs_params1); i++) {
--				vdev = xhci->devs[i];
--				if (vdev && (vdev->tt_info == tt_info))
-+				tmp_vdev = xhci->devs[i];
-+				if (tmp_vdev && (tmp_vdev->tt_info == tt_info))
- 					xhci_free_virt_devices_depth_first(
- 						xhci, i);
- 			}
-
-
+CgpBdCAyMDI1LTA4LTMwIDE3OjQ4OjI4LCAiTWljaGHFgiBQZWNpbyIgPG1pY2hhbC5wZWNpb0Bn
+bWFpbC5jb20+IHdyb3RlOgo+T24gU2F0LCAzMCBBdWcgMjAyNSAwMjoxMzo1NCArMDgwMCwgRGF2
+aWQgV2FuZyB3cm90ZToKPj4gSGksCj4+Cj4+IEkgaGF2ZSBiZWVuIHdhdGNoaW5nIGtlcm5lbCBt
+ZW1vcnkgdXNhZ2UgZm9yIGRyaXZlcnMgZm9yIGEgd2hpbGUsIHZpYSAvcHJvYy9hbGxvY2luZm8u
+Cj4+IEFmdGVyIHVwZ3JhZGUgdG8gNi4xNy1yYzMsIEkgbm90aWNlIG1lbW9yeSB1c2FnZSBiZWhh
+dmlvciBjaGFuZ2VzIGZvciB1c2IgZHJpdmVyczoKPj4gCj4+IEJlZm9yZSByYzMsIGFmdGVyIHNl
+dmVyYWwgc3VzcGVuZC9yZXN1bWUgY3ljbGVzLCB1c2IgZGV2aWNlcydzIG1lbW9yeSB1c2FnZSBp
+cyB2ZXJ5IHN0YWJsZToKPj4gCj4+ICAgICAgICA0MDk2MCAgICAgICAgNSBkcml2ZXJzL3VzYi9o
+b3N0L3hoY2ktbWVtLmM6OTgwIFt4aGNpX2hjZF0gZnVuYzp4aGNpX2FsbG9jX3ZpcnRfZGV2aWNl
+IDkKPj4gICAgICAgICAxMDI0ICAgICAgICAxIGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo4
+NDEgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdHRfaW5mbyAyCj4+ICAgICAgICAgIDMyMCAg
+ICAgICAxMCBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6NDYxIFt4aGNpX2hjZF0gZnVuYzp4
+aGNpX2FsbG9jX2NvbnRhaW5lcl9jdHggMzEKPj4gICAgICAgICAxOTIwICAgICAgIDE1IGRyaXZl
+cnMvdXNiL2hvc3QveGhjaS1tZW0uYzozNzcgW3hoY2lfaGNkXSBmdW5jOnhoY2lfcmluZ19hbGxv
+YyAzMQo+PiAgICAgICAgICAxMTIgICAgICAgMTIgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5j
+OjQ5IFt4aGNpX2hjZF0gZnVuYzp4aGNpX3NlZ21lbnRfYWxsb2MgMzIKPj4gICAgICAgICAxNzky
+ICAgICAgIDI4IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzozOCBbeGhjaV9oY2RdIGZ1bmM6
+eGhjaV9zZWdtZW50X2FsbG9jIDU5Cj4+IAo+PiBCdXQgd2l0aCByYzMsIHRoZSBtZW1vcnkgdXNh
+Z2UgaW5jcmVhc2UgYWZ0ZXIgZWFjaCBzdXNwZW5kL3Jlc3VtZSBjeWNsZTogCj4+IAo+PiAjMToK
+Pj4gICAgICAgIDQ5MTUyICAgICAgICA2IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo5ODAg
+W3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdmlydF9kZXZpY2UgOQo+PiAgICAgICAgIDEwMjQg
+ICAgICAgIDEgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjg0MSBbeGhjaV9oY2RdIGZ1bmM6
+eGhjaV9hbGxvY190dF9pbmZvIDIKPj4gICAgICAgICAgMzg0ICAgICAgIDEyIGRyaXZlcnMvdXNi
+L2hvc3QveGhjaS1tZW0uYzo0NjEgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfY29udGFpbmVy
+X2N0eCAzMgo+PiAgICAgICAgIDIxNzYgICAgICAgMTcgZHJpdmVycy91c2IvaG9zdC94aGNpLW1l
+bS5jOjM3NyBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9yaW5nX2FsbG9jIDMyCj4+ICAgICAgICAgIDEy
+OCAgICAgICAxNCBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6NDkgW3hoY2lfaGNkXSBmdW5j
+OnhoY2lfc2VnbWVudF9hbGxvYyAzNAo+PiAgICAgICAgIDIwNDggICAgICAgMzIgZHJpdmVycy91
+c2IvaG9zdC94aGNpLW1lbS5jOjM4IFt4aGNpX2hjZF0gZnVuYzp4aGNpX3NlZ21lbnRfYWxsb2Mg
+NjEKPj4gIzI6Cj4+ICAgICAgICA1NzM0NCAgICAgICAgNyBkcml2ZXJzL3VzYi9ob3N0L3hoY2kt
+bWVtLmM6OTgwIFt4aGNpX2hjZF0gZnVuYzp4aGNpX2FsbG9jX3ZpcnRfZGV2aWNlIDEzCj4+ICAg
+ICAgICAgMTAyNCAgICAgICAgMSBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6ODQxIFt4aGNp
+X2hjZF0gZnVuYzp4aGNpX2FsbG9jX3R0X2luZm8gMwo+PiAgICAgICAgICA0NDggICAgICAgMTQg
+ZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjQ2MSBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxv
+Y19jb250YWluZXJfY3R4IDQ2Cj4+ICAgICAgICAgMjQzMiAgICAgICAxOSBkcml2ZXJzL3VzYi9o
+b3N0L3hoY2ktbWVtLmM6Mzc3IFt4aGNpX2hjZF0gZnVuYzp4aGNpX3JpbmdfYWxsb2MgNDMKPj4g
+ICAgICAgICAgMTQ0ICAgICAgIDE2IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo0OSBbeGhj
+aV9oY2RdIGZ1bmM6eGhjaV9zZWdtZW50X2FsbG9jIDQ0Cj4+ICAgICAgICAgMjMwNCAgICAgICAz
+NiBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6MzggW3hoY2lfaGNkXSBmdW5jOnhoY2lfc2Vn
+bWVudF9hbGxvYyA4Mgo+PiAjMzoKPj4gICAgICAgIDY1NTM2ICAgICAgICA4IGRyaXZlcnMvdXNi
+L2hvc3QveGhjaS1tZW0uYzo5ODAgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdmlydF9kZXZp
+Y2UgMTcKPj4gICAgICAgICAxMDI0ICAgICAgICAxIGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0u
+Yzo4NDEgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdHRfaW5mbyA0Cj4+ICAgICAgICAgIDUx
+MiAgICAgICAxNiBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6NDYxIFt4aGNpX2hjZF0gZnVu
+Yzp4aGNpX2FsbG9jX2NvbnRhaW5lcl9jdHggNjAKPj4gICAgICAgICAyNjg4ICAgICAgIDIxIGRy
+aXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzozNzcgW3hoY2lfaGNkXSBmdW5jOnhoY2lfcmluZ19h
+bGxvYyA1NAo+PiAgICAgICAgICAxNjAgICAgICAgMTggZHJpdmVycy91c2IvaG9zdC94aGNpLW1l
+bS5jOjQ5IFt4aGNpX2hjZF0gZnVuYzp4aGNpX3NlZ21lbnRfYWxsb2MgNTQKPj4gICAgICAgICAy
+NTYwICAgICAgIDQwIGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzozOCBbeGhjaV9oY2RdIGZ1
+bmM6eGhjaV9zZWdtZW50X2FsbG9jIDEwMwo+PiAKPj4gVGhlIG1lbW9yeSBpbmNyZWFzaW5nIHBh
+dHRlcm4ga2VlcHMgZ29pbmcgb24gZm9yIGVhY2ggc3VzcGVuZC9yZXN1bWUgYWZ0ZXJ3YXJkcywg
+SSBhbSBub3QKPj4gc3VyZSB3aGV0aGVyIHRob3NlIG1lbW9yeSB3b3VsZCBiZSByZWxlYXNlZCBz
+b21ldGltZSBsYXRlci4KPj4gCj4+IEFuZCBpbiBrZXJuZWwgbG9nLCB0d28gbGluZXMgb2YgZXJy
+b3IgYWx3YXlzIHNob3dlZCB1cCBhZnRlciBzdXNwZW5kL3Jlc3VtZToKPj4gCj4+IAlbICAyOTUu
+NjEzNTk4XSB4aGNpX2hjZCAwMDAwOjAzOjAwLjA6IGRtYV9wb29sX2Rlc3Ryb3kgeEhDSSByaW5n
+IHNlZ21lbnRzIGJ1c3kKPj4gCVsgIDI5NS42MTM2MDVdIHhoY2lfaGNkIDAwMDA6MDM6MDAuMDog
+ZG1hX3Bvb2xfZGVzdHJveSB4SENJIGlucHV0L291dHB1dCBjb250ZXh0cyBidXN5Cj4KPkhpLAo+
+Cj5Hb29kIHdvcmssIGxvb2tzIGxpa2Ugc3VzcGVuZC9yZXN1bWUgaXMgYSBsaXR0bGUgdW5kZXJz
+dGVzdGVkIGNvcm5lcgo+b2YgdGhpcyBkcml2ZXIuCj4KPkRpZCB5b3UgY2hlY2sgd2hldGhlciB0
+aGUgc2FtZSBsZWFrIG9jY3VycyBpZiB5b3Ugc2ltcGx5IGRpc2Nvbm5lY3QKPmEgZGV2aWNlIG9y
+IGlmIGl0J3MgdHJ1bHkgdW5pcXVlIHRvIHN1c3BlbmQ/Cj4KPj4gQW5kIGJpc2VjdCBuYXJyb3cg
+ZG93biB0byBjb21taXQgMmViMDMzNzYxNTFiYjg1ODVjYWEyM2VkMjY3MzU4MzEwN2JiNTE5MygK
+Pj4gInVzYjogeGhjaTogRml4IHNsb3RfaWQgcmVzb3VyY2UgcmFjZSBjb25mbGljdCIpOgo+Cj5J
+IHNlZSBhIHRyaXZpYWwgYnVnIHdoaWNoIGV2ZXJ5b25lIChteXNlbGYgaW5jbHVkZWQgdGJoKSBt
+aXNzZWQgYmVmb3JlLgo+RG9lcyB0aGlzIGhlbHA/Cj4KPmRpZmYgLS1naXQgYS9kcml2ZXJzL3Vz
+Yi9ob3N0L3hoY2ktbWVtLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMKPmluZGV4IGYx
+MWUxM2Y5Y2RiNC4uZjI5NDAzMmMyYWQ3IDEwMDY0NAo+LS0tIGEvZHJpdmVycy91c2IvaG9zdC94
+aGNpLW1lbS5jCj4rKysgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMKPkBAIC05MzIsNyAr
+OTMyLDcgQEAgdm9pZCB4aGNpX2ZyZWVfdmlydF9kZXZpY2Uoc3RydWN0IHhoY2lfaGNkICp4aGNp
+LCBzdHJ1Y3QgeGhjaV92aXJ0X2RldmljZSAqZGV2LAo+ICAqLwo+IHN0YXRpYyB2b2lkIHhoY2lf
+ZnJlZV92aXJ0X2RldmljZXNfZGVwdGhfZmlyc3Qoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBpbnQg
+c2xvdF9pZCkKPiB7Cj4tCXN0cnVjdCB4aGNpX3ZpcnRfZGV2aWNlICp2ZGV2Owo+KwlzdHJ1Y3Qg
+eGhjaV92aXJ0X2RldmljZSAqdmRldiwgKnRtcF92ZGV2Owo+IAlzdHJ1Y3QgbGlzdF9oZWFkICp0
+dF9saXN0X2hlYWQ7Cj4gCXN0cnVjdCB4aGNpX3R0X2J3X2luZm8gKnR0X2luZm8sICpuZXh0Owo+
+IAlpbnQgaTsKPkBAIC05NTIsOCArOTUyLDggQEAgc3RhdGljIHZvaWQgeGhjaV9mcmVlX3ZpcnRf
+ZGV2aWNlc19kZXB0aF9maXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2kKPiAJ
+CWlmICh0dF9pbmZvLT5zbG90X2lkID09IHNsb3RfaWQpIHsKPiAJCQkvKiBhcmUgYW55IGRldmlj
+ZXMgdXNpbmcgdGhpcyB0dF9pbmZvPyAqLwo+IAkJCWZvciAoaSA9IDE7IGkgPCBIQ1NfTUFYX1NM
+T1RTKHhoY2ktPmhjc19wYXJhbXMxKTsgaSsrKSB7Cj4tCQkJCXZkZXYgPSB4aGNpLT5kZXZzW2ld
+Owo+LQkJCQlpZiAodmRldiAmJiAodmRldi0+dHRfaW5mbyA9PSB0dF9pbmZvKSkKPisJCQkJdG1w
+X3ZkZXYgPSB4aGNpLT5kZXZzW2ldOwo+KwkJCQlpZiAodG1wX3ZkZXYgJiYgKHRtcF92ZGV2LT50
+dF9pbmZvID09IHR0X2luZm8pKQo+IAkJCQkJeGhjaV9mcmVlX3ZpcnRfZGV2aWNlc19kZXB0aF9m
+aXJzdCgKPiAJCQkJCQl4aGNpLCBpKTsKPiAJCQl9CgoKSSBub3RpY2UgdGhpcyB0b28sICBqdXN0
+IGEgZmV3IG1pbnV0ZXMgYWdvLCBJIGp1c3Qgc3RhcnRlZCBidWlsZGluZyBhIHBhdGNoIHdpdGgg
+dGhpcyAqc2lsbHkqIGJ1ZyBmaXhlZC4gIAooVGhlIGRldmljZSBwb2ludGVyIGlzIHdyb25nLCB0
+aGF0IGlzIG1vc3QgbGlrZWx5IHRoZSBjdWxwcml0OiB0aGUgdmlydHVhbCBkZXZpY2UgaXMgbm90
+IHByb3Blcmx5IGZyZWVkIGFuZCBoZW5jZSBtZW1vcnkgbGVhay4pCldpbGwgdXBkYXRlIGxhdGVy
+LgoKCkRhdmlkCj4K
