@@ -1,40 +1,38 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897D21401B
-	for <regressions@lists.linux.dev>; Fri, 29 Aug 2025 18:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from outbound.mr.icloud.com (p-west2-cluster4-host9-snip4-10.eps.apple.com [57.103.69.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C8AC2EF
+	for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 03:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.69.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756491353; cv=none; b=aNzKMVXVwH+Dog59Br0YZpPOiEINA7p9nUU+GFCauo+zTalglP+dbu/QLWK2IgUJ0UAZZrshLQLGoDJQgCStDl5x/cTyz9ptS1lSlCmzUQJ5/RhM8M7z9oeXDWXbgyBpW3k3KnVRIEaEWceHRt8kq3pgiXGd9Qw7HEkU7VRbE/0=
+	t=1756524536; cv=none; b=F54INg66cu/LpfujNS7pyheB1wy5a1dOo2zFV/liZkLcsEbZcT1kSMxgM8IshJMtFe1sbMvY9y+CA+u777OjkX58e7knAJu2t11FixEun1kMY5yI1I9Mo24AL5v3Z7nSxJdxg2DpLxseaBxvvJ1NnnMP4LsI2+9b0keFreVnb0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756491353; c=relaxed/simple;
-	bh=Vnyqj1sA+eIkplLrCxNKuA2MWjJFlyxhJHFMJUC8XJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYqknzjBLbe9t1Pv8KzCLcHZoFGyR3iv0oDMGmIYO6FKSE9BqYIjVwS/rxSfXhd6PCgvjVtxs71Rlqlm4aEW45+7p+Bp+7LEBcYNVFIt8XzRRqQJHZqoeVrwdQ/zlU/Spv0wq3bGREC3YdfjujyVSJH5hwwKgBtDsgcOsy7XgeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=D2MkfVAj; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1756524536; c=relaxed/simple;
+	bh=oAJaJdqcidptvzmYMl2IOWbM7fLuPhubxk7so3LFLPU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GJHIFFoPDbNglm0C4yQX/gbUSH9DbeMhkO3JpJkWVX/kfZG2ksoc2jeVOHuOBcpkGRHE5YVXGltAPgQvA9Kax1erj3pMMs4CaZ1+zqzk/UYOVJOo/fU57Ajd3JDbYHuxSpNaWuRl7QOn934Hd2ecd89ZAKLHB6zg02MoYsUdJak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=vkpzfyxa; arc=none smtp.client-ip=57.103.69.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="D2MkfVAj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=R6
-	s5WxCEkgSAAluKgFDGaXXXwuLdmTx3ZMN+nst+nbM=; b=D2MkfVAjGdb9dPxF8y
-	Wmw4ISC3+3vc3O0BbhB96tZjHdwSH28Uf66QAMbm4e+tWebP+olMQtFXz7ZMmm8w
-	3pK4cThCTNSqiVkMKzurMHcGKndjbko9DZhZNTS89l+BOiNoyeFOshLSTlNt/4jN
-	D0f2HFhtibrLELoZlXXjIsHZM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBn4qXi7bFoEYb2Eg--.41361S4;
-	Sat, 30 Aug 2025 02:14:11 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: WeitaoWang-oc@zhaoxin.com,
-	mathias.nyman@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	surenb@google.com,
-	kent.overstreet@linux.dev
-Subject: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after suspend/resume cycle.
-Date: Sat, 30 Aug 2025 02:13:54 +0800
-Message-ID: <20250829181354.4450-1-00107082@163.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="vkpzfyxa"
+Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-2a-100-percent-0 (Postfix) with ESMTPS id 950041800174;
+	Sat, 30 Aug 2025 03:28:51 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1; bh=1IpNM/gXHPSSSkkDpJXK8IZa6rUz5T5Ra5Vu8zrL17c=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=vkpzfyxawFwl6wzlx3oLzUk+ZPU3p8NoMtsx8naW5iO2uCNZOYPyjupY6K7cbww1qGRvsyz/wvHFTMU4/Wc0KP/kOdaxM7kBgKiOZ3JZDW+zF3FJhC0jb/mVbulix9IrmaO4Eq7cXBsUcSyRQcc/ysTIu8sIeZg2S032K9x9R/oZ2aXDRNcx9hOl+QOGz2L/PZJ8atuA9nS90j+ppKEZ1kZEeOBatKZnQlLA8GdbBJB4em4OSOS6yiFZHjAXofIu5rp8BtTdyE6Ri5Up1nGHc7bZWAcbmO4lCW+YL/tYuQwvOuEdV+gNOPpJq53NxA51uqs4K2sdhYVCAWulZoA7Yw==
+mail-alias-created-date: 1632196724000
+Received: from hitch.danm.net (mr-asmtp-me-k8s.p00.prod.me.com [17.57.152.38])
+	by p00-icloudmta-asmtp-us-west-2a-100-percent-0 (Postfix) with ESMTPSA id B6FDF1800143;
+	Sat, 30 Aug 2025 03:28:50 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: linux-crypto@vger.kernel.org
+Cc: dan@danm.net,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	regressions@lists.linux.dev
+Subject: [REGRESSION][BISECTED][PATCH 0/1] v6.16 panic/hang in zswap
+Date: Fri, 29 Aug 2025 21:28:38 -0600
+Message-ID: <20250830032839.11005-1-dan@danm.net>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,89 +40,82 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBn4qXi7bFoEYb2Eg--.41361S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuFWDurW3AFyrGw17KF45Wrg_yoW7Xw15pF
-	4fZ34jkrn0yrWxZF4DuryDAa4rJa18GrW8Wr9rG3y5ZrWjqw1UXF4qyFW7A3Wa9r4UJ34Y
-	qFn0gr95W3y7GaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jY89tUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMwi4qmixlu1tEwABs0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAzMiBTYWx0ZWRfX+Lts1DYLmsza
+ yZieEJw/u+LvJf89P7CPh3Y7XlU1DL2tV9hpzdJZGfBqUUnMQP2tiR13z/3IAtV8Q3Box+qolNF
+ n8TfXII46P6Md9BColk+sZ7SVoNeE9MkwjrCQnfD3UU6Wi7bzBpcShLK8o294fTI81NsGg8klBW
+ e1wr4FVcs51dk+lVq3/Fk4Ds8djuBPg1yApv+fgxIllnmNetlo98KB/hHToQrSRVFUJ2bS1qF9d
+ zIO1vunjPOkmvtM4WQlqtspWGy7s4pETO6e1pXtJsyYc+ZgnNngCq41ZExDynHUnBODsi3g6Y=
+X-Proofpoint-GUID: iVIHFsv660FxQ85KPsH7ixBo8Q0awJwa
+X-Proofpoint-ORIG-GUID: iVIHFsv660FxQ85KPsH7ixBo8Q0awJwa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-30_01,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
+ mlxlogscore=999 clxscore=1030 adultscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2506270000 definitions=main-2508300032
+X-JNJ: AAAAAAABq91JXbT91Y9sZnoI8YmqcEVjaAPZme6LZOS+Vfv0o2QP4pelurMzGb2FBlh7+09Hv3fEnE7+y0kVnbmCchI0WJbWTIjh87zzNlnMal2O2Em6uCSpu7eCxJejIm2/PGNn10fp8d7+jg0IOpSxQB8AnCFJ1+jtmsn9M+IdtiH5yuqaVvnaGSnqeNqjN4ztalpyuts+YXAU/9dE1e6OBVlsT7LCXwEujdSst8LNi2+dFhJJWxXDU8DzxNbYTKxK+cB2jWbIQNY6nlPFjHKbTAAActRNUqR+tBn1ci5biyKMY10fqDoXyMIAt+NqVJjUjHHjI2onZMvwqiITbw4i8yfBzFLEyq9z4d1pq/faSyb+KjzSEByo10U5stNGMjAMUACWOKXFhq+QgkzPcjicVbUWuplLGdBbHG1tLmzUcEOHK3SMZVUTmSe6xCP8ekQlqh/j1Y48uwx8Dhe8E+5V/PGFQpIS80gwaTUqlLlyuKHxG81F16t/srr58iBab0WGurG2edAVW9F4yh7mgPBn5VRksC2bofvkHF3n70oOdfPHz4VTYLoBdDnJBKL6cknga96w78Zawy+aKBHxX9RC71PwSkm2K5zF9SQNdR13NmO2Jg==
 
-Hi,
+Hello crypto folks,
 
-I have been watching kernel memory usage for drivers for a while, via /proc/allocinfo.
-After upgrade to 6.17-rc3, I notice memory usage behavior changes for usb drivers:
+For some time now I've been battling a system hang that has been
+sporadically affecting some of my machines. It seemed to be introduced
+sometime during the v6.16 rc releases, but I couldn't quite pin it
+down because it was reproducible (though not very easily) in some of
+the versions I built, but not in others. The problem seemed to come
+and go. At one point I thought I had bisected it to a netfilter fix,
+but that ended up being wrong and led nowhere[1], and I was about
+ready to give up on it. Then just yesterday one of the machines that
+had been sporadically encountering the issue finally produced a panic
+instead of just hanging. The panic indicated the problem was in swapd
+in the LZ4 compression code (all of my machines that have been
+affected use zswap).
 
-Before rc3, after several suspend/resume cycles, usb devices's memory usage is very stable:
+Armed with the knowledge that it's a swap problem, I tried to find an
+easier and more reliable method to reproduce the problem to try to
+better bisect it. I found that I can use the stress-ng[2] tool's page
+swapping stressor to immediately and reliably reproduce the
+panic. Then, on another affected machine, I ran the page swapping
+stressor and also immediately reproduced the hang (so I was fairly
+confident that the hang and panic were both caused by the same
+regression).
 
-       40960        5 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 9
-        1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 2
-         320       10 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 31
-        1920       15 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 31
-         112       12 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 32
-        1792       28 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 59
+Then I tried bisecting the problem and immediately hit a new snag,
+which was that suddenly on a new build of v6.16.0 I couldn't reproduce
+the problem, even though I'd reproduced it on that version
+before. Eventually I began to suspect that structure layout
+randomization was causing the non-reproducibility (and was the reason
+my previous attempt to bisect it failed). Using the randstruct.seed
+file from one of the known bad kernel builds I had, I was able to
+confirm that randstruct does indeed affect the issue. Now with a
+"known bad" randstruct.seed I was able to successfully bisect it to
+commit 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation
+code into acomp"). Instead of just reverting that commit, I tried to
+understand why this change would be affected by randstruct, and I
+believe I found the problem. Two related structs require the same
+ordering of a couple of fields but one of the structs is new and would
+be automatically randomized by randstruct (because it only contains
+function pointers). I put together the following patch which resolves
+the issue. It works by making the two related structs use a shared
+struct which can be randomized and still ensure both of the structs
+end up with the same layout.
 
-But with rc3, the memory usage increase after each suspend/resume cycle: 
+-- Dan
 
-#1:
-       49152        6 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 9
-        1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 2
-         384       12 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 32
-        2176       17 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 32
-         128       14 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 34
-        2048       32 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 61
-#2:
-       57344        7 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 13
-        1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 3
-         448       14 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 46
-        2432       19 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 43
-         144       16 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 44
-        2304       36 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 82
-#3:
-       65536        8 drivers/usb/host/xhci-mem.c:980 [xhci_hcd] func:xhci_alloc_virt_device 17
-        1024        1 drivers/usb/host/xhci-mem.c:841 [xhci_hcd] func:xhci_alloc_tt_info 4
-         512       16 drivers/usb/host/xhci-mem.c:461 [xhci_hcd] func:xhci_alloc_container_ctx 60
-        2688       21 drivers/usb/host/xhci-mem.c:377 [xhci_hcd] func:xhci_ring_alloc 54
-         160       18 drivers/usb/host/xhci-mem.c:49 [xhci_hcd] func:xhci_segment_alloc 54
-        2560       40 drivers/usb/host/xhci-mem.c:38 [xhci_hcd] func:xhci_segment_alloc 103
+[1] https://lore.kernel.org/regressions/20250731194901.7156-1-dan@danm.net/
+[2] https://github.com/ColinIanKing/stress-ng
 
-The memory increasing pattern keeps going on for each suspend/resume afterwards, I am not
-sure whether those memory would be released sometime later.
+#regzbot introduced: 42d9f6c77479
 
-And in kernel log, two lines of error always showed up after suspend/resume:
+Dan Moulding (1):
+  crypto: acomp: Use shared struct for context alloc and free ops
 
-	[  295.613598] xhci_hcd 0000:03:00.0: dma_pool_destroy xHCI ring segments busy
-	[  295.613605] xhci_hcd 0000:03:00.0: dma_pool_destroy xHCI input/output contexts busy
+ crypto/acompress.c                  |  6 +++---
+ crypto/lz4.c                        |  6 ++++--
+ include/crypto/internal/acompress.h | 10 +++++++---
+ include/crypto/internal/scompress.h |  5 +----
+ 4 files changed, 15 insertions(+), 12 deletions(-)
 
-And bisect narrow down to commit 2eb03376151bb8585caa23ed2673583107bb5193(
-"usb: xhci: Fix slot_id resource race conflict"):
-
-	git bisect start 'drivers/usb'
-	# status: waiting for both good and bad commits
-	# good: [c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9] Linux 6.17-rc2
-	git bisect good c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9
-	# status: waiting for bad commit, 1 good commit known
-	# bad: [1b237f190eb3d36f52dffe07a40b5eb210280e00] Linux 6.17-rc3
-	git bisect bad 1b237f190eb3d36f52dffe07a40b5eb210280e00
-	# good: [e86ba12cf84ab9cf42fbc2382235fa7ba616e18b] Merge tag 'nfs-for-6.17-2' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
-	git bisect good e86ba12cf84ab9cf42fbc2382235fa7ba616e18b
-	# good: [471b25a2fcbb25dccd7c9bece30313f2440a554e] Merge tag 'for-linus-iommufd' of git://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd
-	git bisect good 471b25a2fcbb25dccd7c9bece30313f2440a554e
-	# good: [52025b8fc992972168128be40bffee7eafa532b5] Merge tag 'driver-core-6.17-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core
-	git bisect good 52025b8fc992972168128be40bffee7eafa532b5
-	# bad: [8004d08330e1aa7ae797778509e864f7ac3da687] Merge tag 'usb-6.17-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-	git bisect bad 8004d08330e1aa7ae797778509e864f7ac3da687
-	# good: [a381c6d6f646226924809d0ad01a9465786da463] usb: typec: maxim_contaminant: re-enable cc toggle if cc is open and port is clean
-	git bisect good a381c6d6f646226924809d0ad01a9465786da463
-	# good: [4013aef2ced9b756a410f50d12df9ebe6a883e4a] ftrace: Fix potential warning in trace_printk_seq during ftrace_dump
-	git bisect good 4013aef2ced9b756a410f50d12df9ebe6a883e4a
-	# bad: [2eb03376151bb8585caa23ed2673583107bb5193] usb: xhci: Fix slot_id resource race conflict
-	git bisect bad 2eb03376151bb8585caa23ed2673583107bb5193
-	# good: [309b6341d5570fb2b41b923de2fc9bb147106b80] usb: typec: fusb302: Revert incorrect threaded irq fix
-	git bisect good 309b6341d5570fb2b41b923de2fc9bb147106b80
-	# first bad commit: [2eb03376151bb8585caa23ed2673583107bb5193] usb: xhci: Fix slot_id resource race conflict
-
-
-
-Thanks
-David
+-- 
+2.49.1
 
