@@ -1,151 +1,327 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A868DF76
-	for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 10:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from outbound.mr.icloud.com (p-west2-cluster1-host9-snip4-10.eps.apple.com [57.103.68.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF6D2D0630
+	for <regressions@lists.linux.dev>; Sat, 30 Aug 2025 17:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.68.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756549084; cv=none; b=LBJ0pWu0Ds8e9CIx9uegbLrqoXfNuyiTmAKsTkngFOzRccOemT/gNj3Hj1+oKshqmejp26lbNH9XKvTWLtr3LuQG2NvAmxyqezyMwJuwvVsZ1VkTnfpmIZElFYNR8BtV3zmuXzXeQMrOfSxaWzhDDlm6WpI58JHR4M93PHNaOgE=
+	t=1756574964; cv=none; b=fy0ltezm3Z2Ug+GPDmdWF7opR8mLZyDYYokVGMGKjW/Fn0Znooenp4HKqwf8WNBAIzG7DeBUxYF6WrTL7MXRpnDfsSN77nRAQwT+5iUThB5uDIVDQPhrxgHqhncv6PBrfqbr+37SCKbn1/dvefVkGcYwZpxNuEvIDoNuzKx/puQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756549084; c=relaxed/simple;
-	bh=0w3YD8sb0RsX3y4Q5t8QZY/EchpMvzahkWMQ4sDo2Ys=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=s2m1Si0xZj18xSc10mvP77W4ZJ75y1T3NBKEm4Qt/BRb87Xxvi3ZJYTM8c5EK7Lx+e/vKOVt3jLkJCkqt0upTV9uFeJjfmpTJJUZ3oJZ6Cc6unxbi6HHrTRzfafrBEsDNAjJ2ESaHrme2b88gs8B1APWpdD5HiFwUffIvtXyxhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=HfsX2sG9 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1756574964; c=relaxed/simple;
+	bh=DIERJkRrJK9puBZWtdHmc4b3UIwlZYb+TgAqoQGpbSg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fcPiW9X86s/9YXXai4IH01aJemrEgVpYWE2MrBE/gFrpXJXcNm11/iJvW4h54O66Ugrii6whMsWN7casmqeGMqduRhGJWWbmX4rk43kEIvKxoz5aD0Dr5CGk4ZyXPAHPW6SoT5QRDnV4Wiz3pcQYWHWQ+AvcGFP3TYe0OLdcidY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=amUIbkCh; arc=none smtp.client-ip=57.103.68.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="HfsX2sG9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=EyP7AQUP7TP7kXoIPH1lKGMAhRYZRfOP8QoxBd9jQfI=; b=H
-	fsX2sG9G0l2wwY9n+SP4FsKsVkvwLQOWWOodAPvg9g/mHk1A/s1SVHhp+4BnQIPB
-	sJQbPUP2z6GKbJFyGnKTc2VA21pXo7nC8w9WR8McxKzWE1cdogbD8OktWu95IASw
-	FUYdLXNftltoweXQhaH1GkQxPNQq0P3nlcWXZL2fps=
-Received: from 00107082$163.com ( [111.35.190.191] ) by
- ajax-webmail-wmsvr-40-133 (Coremail) ; Sat, 30 Aug 2025 18:17:26 +0800
- (CST)
-Date: Sat, 30 Aug 2025 18:17:26 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: WeitaoWang-oc@zhaoxin.com, mathias.nyman@linux.intel.com,
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	surenb@google.com, kent.overstreet@linux.dev
-Subject: Re: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after
- suspend/resume cycle.
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20250519(9504565a)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250830114828.3dd8ed56.michal.pecio@gmail.com>
-References: <20250829181354.4450-1-00107082@163.com>
- <20250830114828.3dd8ed56.michal.pecio@gmail.com>
-X-NTES-SC: AL_Qu2eBPmftkgv4CCdZukXn0oTju85XMCzuv8j3YJeN500mSXW+jIDdm5AMmXN3PmPFgGmoQm0dwRQyvxjQYhRRomb2bOuKJeOUNRWw8Ux1/pM
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="amUIbkCh"
+Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-2a-20-percent-2 (Postfix) with ESMTPS id AD28B18001DB;
+	Sat, 30 Aug 2025 17:29:18 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1; bh=v5ueKS1UZY89i14LOMD59Ed6Eyy8uNKzkv3j0KgEDs8=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=amUIbkCh1hOd2TBUPgoFAMe8Hyh3FsnjhhpwjNbqCynYWH+DoJ6C2iat02+omMOF3tZj6+BOAmxmBRz23I6Ogh392e1c7zAWcXBGi0pHMW0e+pC+OHej7CIsi8hgEGlTW/M5sAykKDSQVrqnnKG/yj+AqwBXLedswhvQuIzIuGefbnYAS+4fVJ/GFI6hGxqtFlnRElLReaK+39c70J+bhLcakp/srHH7F4OD/+JB8A1B5issf5fCzMRPF7ZAWp7d2T6XcSCu+DIvO3MfZ6HasOXbknZLO1Fi3dO1ZYH52JmguCIytNMs/9ifePO2F0JsFohEMO1LMii7injUIpZy5w==
+mail-alias-created-date: 1632196724000
+Received: from hitch.danm.net (mr-asmtp-me-k8s.p00.prod.me.com [17.57.152.38])
+	by p00-icloudmta-asmtp-us-west-2a-20-percent-2 (Postfix) with ESMTPSA id 500B218009D1;
+	Sat, 30 Aug 2025 17:29:17 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: dan@danm.net
+Cc: davem@davemloft.net,
+	herbert@gondor.apana.org.au,
+	linux-crypto@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH v2] crypto: acomp: Use shared struct for context alloc and free ops
+Date: Sat, 30 Aug 2025 11:28:01 -0600
+Message-ID: <20250830172801.6889-1-dan@danm.net>
+X-Mailer: git-send-email 2.49.1
+In-Reply-To: <20250830032839.11005-2-dan@danm.net>
+References: <20250830032839.11005-2-dan@danm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hSgvCgD3__u2z7JoIF8lAA--.311W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiMxG5qmiyvgHQnQAEsd
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDE4NSBTYWx0ZWRfX6VDDrPqmnpbu
+ MhDI/ey/h2YlSYu2WW+7h9FDVZoqlc9DVd8m96k04RJc95oQ0MdeY/BBMSKRPqxA2MNY+sJFizc
+ 1gmw/kerUrySHjfIRqgXJrxg4xMKhaIxv5Q7t06KyKzDyZzre8DDOdVhtkNQSsk66Rfs7FOrKOE
+ 1OAYYY1Mx4ROqiJl02dSrxuFHee5aOz1GYF53uguLb3jP55O4+44glD9DBE2YIzI9jm6hTvit2c
+ GlkdQAPaJjUbyMIrknmdti4+61XUqS6v0vQHHl8EdiJANK0ltt39ri8QgHY6yxvZDULcbm8VE=
+X-Proofpoint-ORIG-GUID: J5X9G7NX8XuUSdV5iwIKF9-ZuzYU723Q
+X-Proofpoint-GUID: J5X9G7NX8XuUSdV5iwIKF9-ZuzYU723Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-30_07,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 clxscore=1030 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2506270000 definitions=main-2508300185
+X-JNJ: AAAAAAABZ2zJSC3CG2hD5s2cVq9X+D/fiDr2TbvwjfxYgSYqywA0nBZVWoPnpJ1XW0ukA/E2UjcxEU17kznYeqN1mJnkHjB4yEwFbFqJIO8lH+Nqx4GwW3oQE1jIuNFdxtglrZV/Xk37ujgqk6VOcoO2mDcdWSmb9+0hkSub9+aIPBEoymYTOCIBueTLNcbEu70Flzdm8qBNguVhjHTFdi1evbn+T7b8As7SLn7bIJD1MSMlOAsaWBSEGz88jX03F7GF7/3EX8+DcDDvXDq9czBpyRTGU3yWO6D9nSwCjkKZomlcCnZhW10pmG9fOHj2J6FdzzEj7djnLUjlefqho7yIAzdJqtCoSqHi9nOD406GJe/DF5Z14llWfm6819I+PCs5GSYjAmMbocXgp8j2sMY+2tgYndua1HMtxMO9tNAQPUCPjYXU5K5lJEaxKpwp7smrZ8N/p5vhrhdGW25xF3rdLtc8Zo6mDYrdbhV4MkEH3LdPtb2upY8Akz+s/r6yLmbbUF9KFTVuChtdSN9kwvkXI99Aku7lloveNTuUTsohalbyXW3ExJpkgmS6FC0lF1AtQZ+QteawCaqprMBKdwXY
 
-CkF0IDIwMjUtMDgtMzAgMTc6NDg6MjgsICJNaWNoYcWCIFBlY2lvIiA8bWljaGFsLnBlY2lvQGdt
-YWlsLmNvbT4gd3JvdGU6Cj5PbiBTYXQsIDMwIEF1ZyAyMDI1IDAyOjEzOjU0ICswODAwLCBEYXZp
-ZCBXYW5nIHdyb3RlOgo+PiBIaSwKPj4KPj4gSSBoYXZlIGJlZW4gd2F0Y2hpbmcga2VybmVsIG1l
-bW9yeSB1c2FnZSBmb3IgZHJpdmVycyBmb3IgYSB3aGlsZSwgdmlhIC9wcm9jL2FsbG9jaW5mby4K
-Pj4gQWZ0ZXIgdXBncmFkZSB0byA2LjE3LXJjMywgSSBub3RpY2UgbWVtb3J5IHVzYWdlIGJlaGF2
-aW9yIGNoYW5nZXMgZm9yIHVzYiBkcml2ZXJzOgo+PiAKPj4gQmVmb3JlIHJjMywgYWZ0ZXIgc2V2
-ZXJhbCBzdXNwZW5kL3Jlc3VtZSBjeWNsZXMsIHVzYiBkZXZpY2VzJ3MgbWVtb3J5IHVzYWdlIGlz
-IHZlcnkgc3RhYmxlOgo+PiAKPj4gICAgICAgIDQwOTYwICAgICAgICA1IGRyaXZlcnMvdXNiL2hv
-c3QveGhjaS1tZW0uYzo5ODAgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdmlydF9kZXZpY2Ug
-OQo+PiAgICAgICAgIDEwMjQgICAgICAgIDEgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjg0
-MSBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxvY190dF9pbmZvIDIKPj4gICAgICAgICAgMzIwICAg
-ICAgIDEwIGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo0NjEgW3hoY2lfaGNkXSBmdW5jOnho
-Y2lfYWxsb2NfY29udGFpbmVyX2N0eCAzMQo+PiAgICAgICAgIDE5MjAgICAgICAgMTUgZHJpdmVy
-cy91c2IvaG9zdC94aGNpLW1lbS5jOjM3NyBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9yaW5nX2FsbG9j
-IDMxCj4+ICAgICAgICAgIDExMiAgICAgICAxMiBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6
-NDkgW3hoY2lfaGNkXSBmdW5jOnhoY2lfc2VnbWVudF9hbGxvYyAzMgo+PiAgICAgICAgIDE3OTIg
-ICAgICAgMjggZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjM4IFt4aGNpX2hjZF0gZnVuYzp4
-aGNpX3NlZ21lbnRfYWxsb2MgNTkKPj4gCj4+IEJ1dCB3aXRoIHJjMywgdGhlIG1lbW9yeSB1c2Fn
-ZSBpbmNyZWFzZSBhZnRlciBlYWNoIHN1c3BlbmQvcmVzdW1lIGN5Y2xlOiAKPj4gCj4+ICMxOgo+
-PiAgICAgICAgNDkxNTIgICAgICAgIDYgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjk4MCBb
-eGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxvY192aXJ0X2RldmljZSA5Cj4+ICAgICAgICAgMTAyNCAg
-ICAgICAgMSBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6ODQxIFt4aGNpX2hjZF0gZnVuYzp4
-aGNpX2FsbG9jX3R0X2luZm8gMgo+PiAgICAgICAgICAzODQgICAgICAgMTIgZHJpdmVycy91c2Iv
-aG9zdC94aGNpLW1lbS5jOjQ2MSBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxvY19jb250YWluZXJf
-Y3R4IDMyCj4+ICAgICAgICAgMjE3NiAgICAgICAxNyBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVt
-LmM6Mzc3IFt4aGNpX2hjZF0gZnVuYzp4aGNpX3JpbmdfYWxsb2MgMzIKPj4gICAgICAgICAgMTI4
-ICAgICAgIDE0IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo0OSBbeGhjaV9oY2RdIGZ1bmM6
-eGhjaV9zZWdtZW50X2FsbG9jIDM0Cj4+ICAgICAgICAgMjA0OCAgICAgICAzMiBkcml2ZXJzL3Vz
-Yi9ob3N0L3hoY2ktbWVtLmM6MzggW3hoY2lfaGNkXSBmdW5jOnhoY2lfc2VnbWVudF9hbGxvYyA2
-MQo+PiAjMjoKPj4gICAgICAgIDU3MzQ0ICAgICAgICA3IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1t
-ZW0uYzo5ODAgW3hoY2lfaGNkXSBmdW5jOnhoY2lfYWxsb2NfdmlydF9kZXZpY2UgMTMKPj4gICAg
-ICAgICAxMDI0ICAgICAgICAxIGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo4NDEgW3hoY2lf
-aGNkXSBmdW5jOnhoY2lfYWxsb2NfdHRfaW5mbyAzCj4+ICAgICAgICAgIDQ0OCAgICAgICAxNCBk
-cml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmM6NDYxIFt4aGNpX2hjZF0gZnVuYzp4aGNpX2FsbG9j
-X2NvbnRhaW5lcl9jdHggNDYKPj4gICAgICAgICAyNDMyICAgICAgIDE5IGRyaXZlcnMvdXNiL2hv
-c3QveGhjaS1tZW0uYzozNzcgW3hoY2lfaGNkXSBmdW5jOnhoY2lfcmluZ19hbGxvYyA0Mwo+PiAg
-ICAgICAgICAxNDQgICAgICAgMTYgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjQ5IFt4aGNp
-X2hjZF0gZnVuYzp4aGNpX3NlZ21lbnRfYWxsb2MgNDQKPj4gICAgICAgICAyMzA0ICAgICAgIDM2
-IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzozOCBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9zZWdt
-ZW50X2FsbG9jIDgyCj4+ICMzOgo+PiAgICAgICAgNjU1MzYgICAgICAgIDggZHJpdmVycy91c2Iv
-aG9zdC94aGNpLW1lbS5jOjk4MCBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxvY192aXJ0X2Rldmlj
-ZSAxNwo+PiAgICAgICAgIDEwMjQgICAgICAgIDEgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5j
-Ojg0MSBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9hbGxvY190dF9pbmZvIDQKPj4gICAgICAgICAgNTEy
-ICAgICAgIDE2IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYzo0NjEgW3hoY2lfaGNkXSBmdW5j
-OnhoY2lfYWxsb2NfY29udGFpbmVyX2N0eCA2MAo+PiAgICAgICAgIDI2ODggICAgICAgMjEgZHJp
-dmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjM3NyBbeGhjaV9oY2RdIGZ1bmM6eGhjaV9yaW5nX2Fs
-bG9jIDU0Cj4+ICAgICAgICAgIDE2MCAgICAgICAxOCBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVt
-LmM6NDkgW3hoY2lfaGNkXSBmdW5jOnhoY2lfc2VnbWVudF9hbGxvYyA1NAo+PiAgICAgICAgIDI1
-NjAgICAgICAgNDAgZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jOjM4IFt4aGNpX2hjZF0gZnVu
-Yzp4aGNpX3NlZ21lbnRfYWxsb2MgMTAzCj4+IAo+PiBUaGUgbWVtb3J5IGluY3JlYXNpbmcgcGF0
-dGVybiBrZWVwcyBnb2luZyBvbiBmb3IgZWFjaCBzdXNwZW5kL3Jlc3VtZSBhZnRlcndhcmRzLCBJ
-IGFtIG5vdAo+PiBzdXJlIHdoZXRoZXIgdGhvc2UgbWVtb3J5IHdvdWxkIGJlIHJlbGVhc2VkIHNv
-bWV0aW1lIGxhdGVyLgo+PiAKPj4gQW5kIGluIGtlcm5lbCBsb2csIHR3byBsaW5lcyBvZiBlcnJv
-ciBhbHdheXMgc2hvd2VkIHVwIGFmdGVyIHN1c3BlbmQvcmVzdW1lOgo+PiAKPj4gCVsgIDI5NS42
-MTM1OThdIHhoY2lfaGNkIDAwMDA6MDM6MDAuMDogZG1hX3Bvb2xfZGVzdHJveSB4SENJIHJpbmcg
-c2VnbWVudHMgYnVzeQo+PiAJWyAgMjk1LjYxMzYwNV0geGhjaV9oY2QgMDAwMDowMzowMC4wOiBk
-bWFfcG9vbF9kZXN0cm95IHhIQ0kgaW5wdXQvb3V0cHV0IGNvbnRleHRzIGJ1c3kKPgo+SGksCj4K
-Pkdvb2Qgd29yaywgbG9va3MgbGlrZSBzdXNwZW5kL3Jlc3VtZSBpcyBhIGxpdHRsZSB1bmRlcnN0
-ZXN0ZWQgY29ybmVyCj5vZiB0aGlzIGRyaXZlci4KPgo+RGlkIHlvdSBjaGVjayB3aGV0aGVyIHRo
-ZSBzYW1lIGxlYWsgb2NjdXJzIGlmIHlvdSBzaW1wbHkgZGlzY29ubmVjdAo+YSBkZXZpY2Ugb3Ig
-aWYgaXQncyB0cnVseSB1bmlxdWUgdG8gc3VzcGVuZD8KPgo+PiBBbmQgYmlzZWN0IG5hcnJvdyBk
-b3duIHRvIGNvbW1pdCAyZWIwMzM3NjE1MWJiODU4NWNhYTIzZWQyNjczNTgzMTA3YmI1MTkzKAo+
-PiAidXNiOiB4aGNpOiBGaXggc2xvdF9pZCByZXNvdXJjZSByYWNlIGNvbmZsaWN0Iik6Cj4KPkkg
-c2VlIGEgdHJpdmlhbCBidWcgd2hpY2ggZXZlcnlvbmUgKG15c2VsZiBpbmNsdWRlZCB0YmgpIG1p
-c3NlZCBiZWZvcmUuCj5Eb2VzIHRoaXMgaGVscD8KPgo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
-L2hvc3QveGhjaS1tZW0uYyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYwo+aW5kZXggZjEx
-ZTEzZjljZGI0Li5mMjk0MDMyYzJhZDcgMTAwNjQ0Cj4tLS0gYS9kcml2ZXJzL3VzYi9ob3N0L3ho
-Y2ktbWVtLmMKPisrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYwo+QEAgLTkzMiw3ICs5
-MzIsNyBAQCB2b2lkIHhoY2lfZnJlZV92aXJ0X2RldmljZShzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ks
-IHN0cnVjdCB4aGNpX3ZpcnRfZGV2aWNlICpkZXYsCj4gICovCj4gc3RhdGljIHZvaWQgeGhjaV9m
-cmVlX3ZpcnRfZGV2aWNlc19kZXB0aF9maXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBz
-bG90X2lkKQo+IHsKPi0Jc3RydWN0IHhoY2lfdmlydF9kZXZpY2UgKnZkZXY7Cj4rCXN0cnVjdCB4
-aGNpX3ZpcnRfZGV2aWNlICp2ZGV2LCAqdG1wX3ZkZXY7Cj4gCXN0cnVjdCBsaXN0X2hlYWQgKnR0
-X2xpc3RfaGVhZDsKPiAJc3RydWN0IHhoY2lfdHRfYndfaW5mbyAqdHRfaW5mbywgKm5leHQ7Cj4g
-CWludCBpOwo+QEAgLTk1Miw4ICs5NTIsOCBAQCBzdGF0aWMgdm9pZCB4aGNpX2ZyZWVfdmlydF9k
-ZXZpY2VzX2RlcHRoX2ZpcnN0KHN0cnVjdCB4aGNpX2hjZCAqeGhjaSwgaW50IHNsb3RfaQo+IAkJ
-aWYgKHR0X2luZm8tPnNsb3RfaWQgPT0gc2xvdF9pZCkgewo+IAkJCS8qIGFyZSBhbnkgZGV2aWNl
-cyB1c2luZyB0aGlzIHR0X2luZm8/ICovCj4gCQkJZm9yIChpID0gMTsgaSA8IEhDU19NQVhfU0xP
-VFMoeGhjaS0+aGNzX3BhcmFtczEpOyBpKyspIHsKPi0JCQkJdmRldiA9IHhoY2ktPmRldnNbaV07
-Cj4tCQkJCWlmICh2ZGV2ICYmICh2ZGV2LT50dF9pbmZvID09IHR0X2luZm8pKQo+KwkJCQl0bXBf
-dmRldiA9IHhoY2ktPmRldnNbaV07Cj4rCQkJCWlmICh0bXBfdmRldiAmJiAodG1wX3ZkZXYtPnR0
-X2luZm8gPT0gdHRfaW5mbykpCj4gCQkJCQl4aGNpX2ZyZWVfdmlydF9kZXZpY2VzX2RlcHRoX2Zp
-cnN0KAo+IAkJCQkJCXhoY2ksIGkpOwoKSSBjb25maXJtZWQgdGhpcyAqc2lsbHkqIGNvZGUgaXMg
-dGhlIHJvb3QgY2F1c2Ugb2YgdGhpcyBtZW1vcnkgbGVhay4KQW5kIEkgd291bGQgc3VnZ2VzdCBz
-aW1wbGVyIGNvZGUgY2hhbmdlcyAod2hpY2ggaXMgd2hhdCBJIHdhcyB0ZXN0aW5nKTogIAoKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMgYi9kcml2ZXJzL3VzYi9ob3N0
-L3hoY2ktbWVtLmMKaW5kZXggODFlYWFkODdhM2Q5Li5jNGE2NTQ0YWExMDcgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tZW0uYworKysgYi9kcml2ZXJzL3VzYi9ob3N0L3hoY2kt
-bWVtLmMKQEAgLTk2Miw3ICs5NjIsNyBAQCBzdGF0aWMgdm9pZCB4aGNpX2ZyZWVfdmlydF9kZXZp
-Y2VzX2RlcHRoX2ZpcnN0KHN0cnVjdCB4aGNpX2hjZCAqeGhjaSwgaW50IHNsb3RfaQogb3V0Ogog
-ICAgICAgIC8qIHdlIGFyZSBub3cgYXQgYSBsZWFmIGRldmljZSAqLwogICAgICAgIHhoY2lfZGVi
-dWdmc19yZW1vdmVfc2xvdCh4aGNpLCBzbG90X2lkKTsKLSAgICAgICB4aGNpX2ZyZWVfdmlydF9k
-ZXZpY2UoeGhjaSwgdmRldiwgc2xvdF9pZCk7CisgICAgICAgeGhjaV9mcmVlX3ZpcnRfZGV2aWNl
-KHhoY2ksIHhoY2ktPmRldnNbc2xvdF9pZF0sIHNsb3RfaWQpOwogfQogCiBpbnQgeGhjaV9hbGxv
-Y192aXJ0X2RldmljZShzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2lkLAoKCgpUaGFu
-a3MKRGF2aWQK
+In commit 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation
+code into acomp"), the crypto_acomp_streams struct was made to rely on
+having the alloc_ctx and free_ctx operations defined in the same order
+as the scomp_alg struct. But in that same commit, the alloc_ctx and
+free_ctx members of scomp_alg may be randomized by structure layout
+randomization, since they are contained in a pure ops structure
+(containing only function pointers). If the pointers within scomp_alg
+are randomized, but those in crypto_acomp_streams are not, then
+the order may no longer match. This fixes the problem by defining a
+shared structure that both crypto_acomp_streams and scomp_alg share:
+acomp_ctx_ops. This new pure ops structure may now be randomized,
+while still allowing both crypto_acomp_streams and scomp_alg to have
+matching layout.
+
+Signed-off-by: Dan Moulding <dan@danm.net>
+Fixes: 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation code into acomp")
+---
+Changes in v2:
+  * Also patch all other crypto algorithms that use struct scomp_alg
+    (v1 patch only patched LZ4).
+  * Fix whitespace errors.
+
+ crypto/842.c                          |  6 ++++--
+ crypto/acompress.c                    |  6 +++---
+ crypto/deflate.c                      |  6 ++++--
+ crypto/lz4.c                          |  6 ++++--
+ crypto/lz4hc.c                        |  6 ++++--
+ crypto/lzo-rle.c                      |  6 ++++--
+ crypto/lzo.c                          |  6 ++++--
+ crypto/zstd.c                         |  6 ++++--
+ drivers/crypto/nx/nx-common-powernv.c |  6 ++++--
+ drivers/crypto/nx/nx-common-pseries.c |  6 ++++--
+ include/crypto/internal/acompress.h   | 10 +++++++---
+ include/crypto/internal/scompress.h   |  5 +----
+ 12 files changed, 47 insertions(+), 28 deletions(-)
+
+diff --git a/crypto/842.c b/crypto/842.c
+index 8c257c40e2b9..e0fa2de0cb88 100644
+--- a/crypto/842.c
++++ b/crypto/842.c
+@@ -54,8 +54,10 @@ static int crypto842_sdecompress(struct crypto_scomp *tfm,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= crypto842_alloc_ctx,
+-	.free_ctx		= crypto842_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= crypto842_alloc_ctx,
++		.free_ctx	= crypto842_free_ctx,
++	},
+ 	.compress		= crypto842_scompress,
+ 	.decompress		= crypto842_sdecompress,
+ 	.base			= {
+diff --git a/crypto/acompress.c b/crypto/acompress.c
+index be28cbfd22e3..ff910035ee42 100644
+--- a/crypto/acompress.c
++++ b/crypto/acompress.c
+@@ -375,7 +375,7 @@ static void acomp_stream_workfn(struct work_struct *work)
+ 		if (ps->ctx)
+ 			continue;
+ 
+-		ctx = s->alloc_ctx();
++		ctx = s->ctx_ops.alloc_ctx();
+ 		if (IS_ERR(ctx))
+ 			break;
+ 
+@@ -398,7 +398,7 @@ void crypto_acomp_free_streams(struct crypto_acomp_streams *s)
+ 		return;
+ 
+ 	cancel_work_sync(&s->stream_work);
+-	free_ctx = s->free_ctx;
++	free_ctx = s->ctx_ops.free_ctx;
+ 
+ 	for_each_possible_cpu(i) {
+ 		struct crypto_acomp_stream *ps = per_cpu_ptr(streams, i);
+@@ -427,7 +427,7 @@ int crypto_acomp_alloc_streams(struct crypto_acomp_streams *s)
+ 	if (!streams)
+ 		return -ENOMEM;
+ 
+-	ctx = s->alloc_ctx();
++	ctx = s->ctx_ops.alloc_ctx();
+ 	if (IS_ERR(ctx)) {
+ 		free_percpu(streams);
+ 		return PTR_ERR(ctx);
+diff --git a/crypto/deflate.c b/crypto/deflate.c
+index 21404515dc77..5ea6e857871f 100644
+--- a/crypto/deflate.c
++++ b/crypto/deflate.c
+@@ -54,8 +54,10 @@ static void deflate_free_stream(void *ctx)
+ }
+ 
+ static struct crypto_acomp_streams deflate_streams = {
+-	.alloc_ctx = deflate_alloc_stream,
+-	.free_ctx = deflate_free_stream,
++	.ctx_ops		= {
++		.alloc_ctx	= deflate_alloc_stream,
++		.free_ctx	= deflate_free_stream,
++	},
+ };
+ 
+ static int deflate_compress_one(struct acomp_req *req,
+diff --git a/crypto/lz4.c b/crypto/lz4.c
+index 7a984ae5ae52..f7eb0702e175 100644
+--- a/crypto/lz4.c
++++ b/crypto/lz4.c
+@@ -68,8 +68,10 @@ static int lz4_sdecompress(struct crypto_scomp *tfm, const u8 *src,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= lz4_alloc_ctx,
+-	.free_ctx		= lz4_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= lz4_alloc_ctx,
++		.free_ctx	= lz4_free_ctx,
++	},
+ 	.compress		= lz4_scompress,
+ 	.decompress		= lz4_sdecompress,
+ 	.base			= {
+diff --git a/crypto/lz4hc.c b/crypto/lz4hc.c
+index 9c61d05b6214..e6ab1f35b6cb 100644
+--- a/crypto/lz4hc.c
++++ b/crypto/lz4hc.c
+@@ -66,8 +66,10 @@ static int lz4hc_sdecompress(struct crypto_scomp *tfm, const u8 *src,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= lz4hc_alloc_ctx,
+-	.free_ctx		= lz4hc_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= lz4hc_alloc_ctx,
++		.free_ctx	= lz4hc_free_ctx,
++	},
+ 	.compress		= lz4hc_scompress,
+ 	.decompress		= lz4hc_sdecompress,
+ 	.base			= {
+diff --git a/crypto/lzo-rle.c b/crypto/lzo-rle.c
+index ba013f2d5090..48352c213937 100644
+--- a/crypto/lzo-rle.c
++++ b/crypto/lzo-rle.c
+@@ -70,8 +70,10 @@ static int lzorle_sdecompress(struct crypto_scomp *tfm, const u8 *src,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= lzorle_alloc_ctx,
+-	.free_ctx		= lzorle_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= lzorle_alloc_ctx,
++		.free_ctx	= lzorle_free_ctx,
++	},
+ 	.compress		= lzorle_scompress,
+ 	.decompress		= lzorle_sdecompress,
+ 	.base			= {
+diff --git a/crypto/lzo.c b/crypto/lzo.c
+index 7867e2c67c4e..9d53aca2491e 100644
+--- a/crypto/lzo.c
++++ b/crypto/lzo.c
+@@ -70,8 +70,10 @@ static int lzo_sdecompress(struct crypto_scomp *tfm, const u8 *src,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= lzo_alloc_ctx,
+-	.free_ctx		= lzo_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= lzo_alloc_ctx,
++		.free_ctx	= lzo_free_ctx,
++	},
+ 	.compress		= lzo_scompress,
+ 	.decompress		= lzo_sdecompress,
+ 	.base			= {
+diff --git a/crypto/zstd.c b/crypto/zstd.c
+index 7570e11b4ee6..057a1f5f93cb 100644
+--- a/crypto/zstd.c
++++ b/crypto/zstd.c
+@@ -175,8 +175,10 @@ static int zstd_sdecompress(struct crypto_scomp *tfm, const u8 *src,
+ }
+ 
+ static struct scomp_alg scomp = {
+-	.alloc_ctx		= zstd_alloc_ctx,
+-	.free_ctx		= zstd_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= zstd_alloc_ctx,
++		.free_ctx	= zstd_free_ctx,
++	},
+ 	.compress		= zstd_scompress,
+ 	.decompress		= zstd_sdecompress,
+ 	.base			= {
+diff --git a/drivers/crypto/nx/nx-common-powernv.c b/drivers/crypto/nx/nx-common-powernv.c
+index fd0a98b2fb1b..5f7aff7d43e6 100644
+--- a/drivers/crypto/nx/nx-common-powernv.c
++++ b/drivers/crypto/nx/nx-common-powernv.c
+@@ -1043,8 +1043,10 @@ static struct scomp_alg nx842_powernv_alg = {
+ 	.base.cra_priority	= 300,
+ 	.base.cra_module	= THIS_MODULE,
+ 
+-	.alloc_ctx		= nx842_powernv_crypto_alloc_ctx,
+-	.free_ctx		= nx842_crypto_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= nx842_powernv_crypto_alloc_ctx,
++		.free_ctx	= nx842_crypto_free_ctx,
++	},
+ 	.compress		= nx842_crypto_compress,
+ 	.decompress		= nx842_crypto_decompress,
+ };
+diff --git a/drivers/crypto/nx/nx-common-pseries.c b/drivers/crypto/nx/nx-common-pseries.c
+index f528e072494a..221dbb9e6b48 100644
+--- a/drivers/crypto/nx/nx-common-pseries.c
++++ b/drivers/crypto/nx/nx-common-pseries.c
+@@ -1020,8 +1020,10 @@ static struct scomp_alg nx842_pseries_alg = {
+ 	.base.cra_priority	= 300,
+ 	.base.cra_module	= THIS_MODULE,
+ 
+-	.alloc_ctx		= nx842_pseries_crypto_alloc_ctx,
+-	.free_ctx		= nx842_crypto_free_ctx,
++	.ctx_ops		= {
++		.alloc_ctx	= nx842_pseries_crypto_alloc_ctx,
++		.free_ctx	= nx842_crypto_free_ctx,
++	},
+ 	.compress		= nx842_crypto_compress,
+ 	.decompress		= nx842_crypto_decompress,
+ };
+diff --git a/include/crypto/internal/acompress.h b/include/crypto/internal/acompress.h
+index 2d97440028ff..c84a17ac26ca 100644
+--- a/include/crypto/internal/acompress.h
++++ b/include/crypto/internal/acompress.h
+@@ -55,15 +55,19 @@ struct acomp_alg {
+ 	};
+ };
+ 
++struct acomp_ctx_ops {
++	void *(*alloc_ctx)(void);
++	void (*free_ctx)(void *);
++};
++
+ struct crypto_acomp_stream {
+ 	spinlock_t lock;
+ 	void *ctx;
+ };
+ 
+ struct crypto_acomp_streams {
+-	/* These must come first because of struct scomp_alg. */
+-	void *(*alloc_ctx)(void);
+-	void (*free_ctx)(void *);
++	/* This must come first because of struct scomp_alg. */
++	struct acomp_ctx_ops ctx_ops;
+ 
+ 	struct crypto_acomp_stream __percpu *streams;
+ 	struct work_struct stream_work;
+diff --git a/include/crypto/internal/scompress.h b/include/crypto/internal/scompress.h
+index 533d6c16a491..1d807a15aef2 100644
+--- a/include/crypto/internal/scompress.h
++++ b/include/crypto/internal/scompress.h
+@@ -35,10 +35,7 @@ struct scomp_alg {
+ 			  void *ctx);
+ 
+ 	union {
+-		struct {
+-			void *(*alloc_ctx)(void);
+-			void (*free_ctx)(void *ctx);
+-		};
++		struct acomp_ctx_ops ctx_ops;
+ 		struct crypto_acomp_streams streams;
+ 	};
+ 
+-- 
+2.49.1
+
