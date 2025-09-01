@@ -1,175 +1,107 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647EB1A2630
-	for <regressions@lists.linux.dev>; Mon,  1 Sep 2025 10:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 247DC2F37
+	for <regressions@lists.linux.dev>; Mon,  1 Sep 2025 11:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756722016; cv=none; b=kDgbI9823bUJ1nRnQAqWQIsAdS9HW2mgzC2ClXarjMG/qfdRRUW7ptpBzoWFhrpytvtSOMEmQqCoeLfc2ossxOSZcZSYIlxkDPWCIzmbpNbC9Pr0UoqC8DV4sZgnMKkTsHgF+uPLMhRnGIrtnFtC008FsbeYsI9hS+ZkHchOQMw=
+	t=1756725500; cv=none; b=GAvSYQn58iIuKISfj2XLgkDh8Tsc3kt1TO5h+B3Zn9m2M8BdgnByGQQYY50enIEtgseR+LTEpTKvHPIyO9hR1SzHCAyBnLKb4VMIClL4XUlTo7mZhyVneO3MRAajvmhMPVgNgay4tGBsSnrigKLfsjPgrCJyGta+q4+t7MhoEKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756722016; c=relaxed/simple;
-	bh=Y8Tb+m/HScr5qE9ER9dJ8sPMOqgFCRTapvm6JyzihTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Cf4d+JvIsHUoUrrglV8upWI+g7XbdQa7qXqLsrii0/MzP8rvGGj8qApv+vXwOP2Xk3rAbN7RLVs2ZthJJC8YeLJ34o0lsNwaYiHW/fntl4uw9BUFu5yA9Ea/Wm3DQzHzhPyG0ztuIm7CRVnfODI5sYu+WpWZ716lKf8H8QJXQms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=TIDXfaM2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iQNOygej; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1756725500; c=relaxed/simple;
+	bh=IVmbxiakIq39e/9ee4FAF69TVetQLrpss0ewxo3jaVk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=qL3VBKpR6Z/avDAI9CakyHqW5ysnRJk4Lq+E2u5HpGzN2wvs3eR1qmfwnen4esIzl+S4yF+ux6NiJd+c6Xy9vwQivzWItAyqja2/G2K5f/HPXNfMvvg0iLxzDmQRT8DybkkDFfQjuTkau1ML4WWBOkVlLOCs/sIpKeIK81DYswg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=aK6I6f2H reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="TIDXfaM2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iQNOygej"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 668421D00238;
-	Mon,  1 Sep 2025 06:20:12 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 06:20:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm2; t=1756722012; x=1756808412; bh=j9
-	opy8fANg8wAVYAeXir3BkxPG3tSAJ23TA9BHXHU5w=; b=TIDXfaM269Jcsbckd0
-	sy/SweI5yhufpKsZXiAmjjjedw9LzJVogSA0AnBsuzvR2UlKZAHAOfwzZRKgzaMi
-	1Pjv1zY1wffW2w10nx3fymKlvgJtxS2esLLAqQYBrQuf210tLO8ppBjr3RT23xke
-	KvnssNfURzLEmhaH9XlzE8jp0ZSHObMPycjyIf+fSliip6ZSdSjiMks+3pDunoUT
-	5rcPGUkJjkfZHoUcuyW16RPkN4VW1zcCY22jJ1uwUbv1od8OjvPWLGgRFIdi1z5z
-	PdbIExJ/TT8Rs8hTVnv5LVVH/yIjb+afPRW6ZQP5Do++aTgDE8zhhCHtE1TnGGs3
-	9mjQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1756722012; x=1756808412; bh=j9opy8fANg8wAVYAeXir3BkxPG3t
-	SAJ23TA9BHXHU5w=; b=iQNOygejlW4FIxfPDPiQumCLiwlHAImmG1HoFxVgtWDS
-	ipYjydA9wG2X3jll6pUYtwtRbFvpmQZkQNk4TOf9/AH82Di66/PuDzpruazkTMmy
-	UxYEa175MvtapmmhJeVBghu2Fdul6i9nbuyNdyNGAfG/xJ5WsobEuzHVledGhynz
-	xJh4ZBz4vRkH2AaM6F1ff/Sxi+CdyDGvXGNfv8Mvmz1Dk9HXb0DNRNwaC13MmzrU
-	+cuRufc7e1MEQtsWoLh4vGX8nUKIx0rdBOpaYKbLzp6We3rDUV4Hy7CZuWdFZUKK
-	Nz8k1XCAWN0b4xsH7P43ygDyuoGlT08LWWuIZodc8w==
-X-ME-Sender: <xms:W3O1aKQmvHfJ6xldhmw4ectEwmgqFhjHpqYI6SGxYw68yZPSin2Qyg>
-    <xme:W3O1aMqgIWQD4CLo5ItHg-a6L0L9pIoBE9pQL9p3aPGoS-1xAUMeEq8aZLklHfwsS
-    hj6mc4kkx2P_ZdL9Vo>
-X-ME-Received: <xmr:W3O1aHmni0yU1gb9VLpaWvkjcV8oTsSHsXcNsb8wmNjyArevWHQOBpDa8y1tDQbMuBCn6tdqGGNU1G9wzCoTdGFZJiYEJwxjgB32Aw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleduledtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpeflrghnnhgvucfi
-    rhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqnecuggftrfgrthhtvghrnhepfeehle
-    dtheefteejfedvheetuedttdetleegudeuteejveetieefuedvfeffvdeinecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepkedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhish
-    htshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprh
-    gtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikh
-    hosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhishhhnhhuohgtvhesghhmrghi
-    lhdrtghomhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:W3O1aFc0-eIKH-oi_W_NM5S9AGVtkVh5cNE5nk4bmLORSG0_ITbytA>
-    <xmx:XHO1aDop90wgW4yLZN9cdpsL_AQOGYQvEZAtdeI4i1AozwaRDYoXzQ>
-    <xmx:XHO1aPOlxeon_JhzC9c3-J6QhV_I_ToP9qzlSEKMN8cJOzGUXlVynQ>
-    <xmx:XHO1aGjhD7dqgE0rXqjj9utAPF8P4-t1c3hCnmDAu_BqpWsZTfowJw>
-    <xmx:XHO1aHbZv2CO5wUd6PBXUtA6IWAw6YNY4PpLduPYwiHTg5Z1aIs70fHq>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 1 Sep 2025 06:20:11 -0400 (EDT)
-From: Janne Grunau <j@jannau.net>
-Date: Mon, 01 Sep 2025 12:20:07 +0200
-Subject: [PATCH] HID: lenovo: Use KEY_PERFORMANCE instead of ACPI's
- platform_profile
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="aK6I6f2H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=TlHUQQuyeZYSu+OfqT//Uc4L/7XQ/BI0UmWamh72sGQ=; b=a
+	K6I6f2Hqhw7QHkwy9i3dmvpvz7nduWqzSGXsHa4yq3lxdd8+Zh7Y+0BsWxG6s8S7
+	shgl6mHfhWf3+f2seFW6U8cm4/Bb7POnzlwT0J+tR51ok1WDvJzEmUhNgU5npYuC
+	DFSP+1+kQjcQAOCHhLp23Nx/vXPRvGLFWTX4qhg6UI=
+Received: from 00107082$163.com ( [111.35.190.191] ) by
+ ajax-webmail-wmsvr-40-118 (Coremail) ; Mon, 1 Sep 2025 19:17:38 +0800 (CST)
+Date: Mon, 1 Sep 2025 19:17:38 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Mathias Nyman" <mathias.nyman@linux.intel.com>
+Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
+	WeitaoWang-oc@zhaoxin.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, surenb@google.com,
+	kent.overstreet@linux.dev
+Subject: Re: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after
+ suspend/resume cycle.
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20250519(9504565a)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
+References: <20250829181354.4450-1-00107082@163.com>
+ <20250830114828.3dd8ed56.michal.pecio@gmail.com>
+ <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
+ <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
+X-NTES-SC: AL_Qu2eBPuZukwu7iCeYOkZnEYQheY4XMKyuPkg1YJXOp80qCTy+hwydm5aNHzv3PmOGwymoQmreip/791XQrd1U54+YxnU7kfbLoF40EGGjjrz
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250901-hid-lenovo-drop-platform_profile-v1-1-e2e9c68483ab@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAFZztWgC/x2N0QqDMAwAf0XyvEBVinS/MmSUNdVAbUoqMhD/3
- eLjwXF3QiVlqvDuTlA6uLLkBv2rg9/q80LIoTEMZrDGmR5XDpgoyyEYVAqW5Pcoun2LSuREGGz
- Txjg5bx20TFGK/H8Wn/m6bkUm0uxyAAAA
-X-Change-ID: 20250901-hid-lenovo-drop-platform_profile-d59013f79a59
-To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Vishnu Sankar <vishnuocv@gmail.com>
-Cc: linux-input@vger.kernel.org, regressions@lists.linux.dev, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2600; i=j@jannau.net;
- s=yk2024; h=from:subject:message-id;
- bh=Y8Tb+m/HScr5qE9ER9dJ8sPMOqgFCRTapvm6JyzihTs=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhoytxZFhacmLxDviJ/mo5X07ciH7jM0fm1+6c821rztEM
- 0zf8tizo5SFQYyLQVZMkSVJ+2UHw+oaxZjaB2Ewc1iZQIYwcHEKwETSHBn+u9mrLuCO0Jlw8eje
- pjMc7spiX/yS13b/N+I5pfmVo9c9kZHhCXeJ83K55zaHP+XrM7bER3vXty8/of9L+k5Lzsqg6Z8
- 4AA==
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
+Message-ID: <7e8a138e.af64.19904ff3496.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:digvCgD3X_jTgLVotogmAA--.3994W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEBO7qmi1e6ChNQABsB
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Commit 84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd
-Fn keys") added a dependency on ACPI's platform_profile. This should not
-be done for generic USB devices as this prevents using the devices on
-non ACPI devices like Apple silicon Macs and other non-ACPI arm64
-systems. An attempt to allow using platform_profile on non-ACPI systems
-was rejected in [1] and instead platform_profile was made to fail during
-init in commit dd133162c9cf ("ACPI: platform_profile: Avoid initializing
-on non-ACPI platforms").
-So remove the broken dependency and instead let's user space handle this
-keycode by sending the new KEY_PERFORMANCE. Stable backport depends on
-commit 89c5214639294 ("Input: add keycode for performance mode key").
-
-[1]: https://lore.kernel.org/linux-acpi/CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com/
-
-Cc: regressions@lists.linux.dev
-Cc: stable@vger.kernel.org
-Fixes: 84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn keys")
-Signed-off-by: Janne Grunau <j@jannau.net>
----
- #regzbot introduced: 84c9d2a968c82
----
- drivers/hid/Kconfig      | 2 --
- drivers/hid/hid-lenovo.c | 4 +---
- 2 files changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index a57901203aeb284acd23be727d2fad0c137c101c..8ae63f8257cd582448e9683ca7fc654c8e465c0f 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -597,8 +597,6 @@ config HID_LED
- 
- config HID_LENOVO
- 	tristate "Lenovo / Thinkpad devices"
--	depends on ACPI
--	select ACPI_PLATFORM_PROFILE
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	help
-diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-index b3121fa7a72d73f2b9ac12f36bc3d87c2649c69b..654879814f97aaf876ac16c00bf9efca22d116f3 100644
---- a/drivers/hid/hid-lenovo.c
-+++ b/drivers/hid/hid-lenovo.c
-@@ -32,8 +32,6 @@
- #include <linux/leds.h>
- #include <linux/workqueue.h>
- 
--#include <linux/platform_profile.h>
--
- #include "hid-ids.h"
- 
- /* Userspace expects F20 for mic-mute KEY_MICMUTE does not work */
-@@ -734,7 +732,7 @@ static int lenovo_raw_event_TP_X12_tab(struct hid_device *hdev, u32 raw_data)
- 				report_key_event(input, KEY_RFKILL);
- 				return 1;
- 			}
--			platform_profile_cycle();
-+			report_key_event(input, KEY_PERFORMANCE);
- 			return 1;
- 		case TP_X12_RAW_HOTKEY_FN_F10:
- 			/* TAB1 has PICKUP Phone and TAB2 use Snipping tool*/
-
----
-base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
-change-id: 20250901-hid-lenovo-drop-platform_profile-d59013f79a59
-
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
-
+CkF0IDIwMjUtMDktMDEgMTg6MTQ6MzIsICJNYXRoaWFzIE55bWFuIiA8bWF0aGlhcy5ueW1hbkBs
+aW51eC5pbnRlbC5jb20+IHdyb3RlOgo+T24gMzAuOC4yMDI1IDEzLjE3LCBEYXZpZCBXYW5nIHdy
+b3RlOgo+PiAKPj4gQXQgMjAyNS0wOC0zMCAxNzo0ODoyOCwgIk1pY2hhxYIgUGVjaW8iIDxtaWNo
+YWwucGVjaW9AZ21haWwuY29tPiB3cm90ZToKPj4+Cj4+PiBIaSwKPj4+Cj4+PiBHb29kIHdvcmss
+IGxvb2tzIGxpa2Ugc3VzcGVuZC9yZXN1bWUgaXMgYSBsaXR0bGUgdW5kZXJzdGVzdGVkIGNvcm5l
+cgo+Pj4gb2YgdGhpcyBkcml2ZXIuCj4+Pgo+Pj4gRGlkIHlvdSBjaGVjayB3aGV0aGVyIHRoZSBz
+YW1lIGxlYWsgb2NjdXJzIGlmIHlvdSBzaW1wbHkgZGlzY29ubmVjdAo+Pj4gYSBkZXZpY2Ugb3Ig
+aWYgaXQncyB0cnVseSB1bmlxdWUgdG8gc3VzcGVuZD8KPj4+Cj4+Pj4gQW5kIGJpc2VjdCBuYXJy
+b3cgZG93biB0byBjb21taXQgMmViMDMzNzYxNTFiYjg1ODVjYWEyM2VkMjY3MzU4MzEwN2JiNTE5
+MygKPj4+PiAidXNiOiB4aGNpOiBGaXggc2xvdF9pZCByZXNvdXJjZSByYWNlIGNvbmZsaWN0Iik6
+Cj4+Pgo+Pj4gSSBzZWUgYSB0cml2aWFsIGJ1ZyB3aGljaCBldmVyeW9uZSAobXlzZWxmIGluY2x1
+ZGVkIHRiaCkgbWlzc2VkIGJlZm9yZS4KPj4+IERvZXMgdGhpcyBoZWxwPwo+Pj4KPj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3ho
+Y2ktbWVtLmMKPj4+IGluZGV4IGYxMWUxM2Y5Y2RiNC4uZjI5NDAzMmMyYWQ3IDEwMDY0NAo+Pj4g
+LS0tIGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+PiArKysgYi9kcml2ZXJzL3VzYi9o
+b3N0L3hoY2ktbWVtLmMKPj4+IEBAIC05MzIsNyArOTMyLDcgQEAgdm9pZCB4aGNpX2ZyZWVfdmly
+dF9kZXZpY2Uoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBzdHJ1Y3QgeGhjaV92aXJ0X2RldmljZSAq
+ZGV2LAo+Pj4gICAqLwo+Pj4gc3RhdGljIHZvaWQgeGhjaV9mcmVlX3ZpcnRfZGV2aWNlc19kZXB0
+aF9maXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2lkKQo+Pj4gewo+Pj4gLQlz
+dHJ1Y3QgeGhjaV92aXJ0X2RldmljZSAqdmRldjsKPj4+ICsJc3RydWN0IHhoY2lfdmlydF9kZXZp
+Y2UgKnZkZXYsICp0bXBfdmRldjsKPj4+IAlzdHJ1Y3QgbGlzdF9oZWFkICp0dF9saXN0X2hlYWQ7
+Cj4+PiAJc3RydWN0IHhoY2lfdHRfYndfaW5mbyAqdHRfaW5mbywgKm5leHQ7Cj4+PiAJaW50IGk7
+Cj4+PiBAQCAtOTUyLDggKzk1Miw4IEBAIHN0YXRpYyB2b2lkIHhoY2lfZnJlZV92aXJ0X2Rldmlj
+ZXNfZGVwdGhfZmlyc3Qoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBpbnQgc2xvdF9pCj4+PiAJCWlm
+ICh0dF9pbmZvLT5zbG90X2lkID09IHNsb3RfaWQpIHsKPj4+IAkJCS8qIGFyZSBhbnkgZGV2aWNl
+cyB1c2luZyB0aGlzIHR0X2luZm8/ICovCj4+PiAJCQlmb3IgKGkgPSAxOyBpIDwgSENTX01BWF9T
+TE9UUyh4aGNpLT5oY3NfcGFyYW1zMSk7IGkrKykgewo+Pj4gLQkJCQl2ZGV2ID0geGhjaS0+ZGV2
+c1tpXTsKPj4+IC0JCQkJaWYgKHZkZXYgJiYgKHZkZXYtPnR0X2luZm8gPT0gdHRfaW5mbykpCj4+
+PiArCQkJCXRtcF92ZGV2ID0geGhjaS0+ZGV2c1tpXTsKPj4+ICsJCQkJaWYgKHRtcF92ZGV2ICYm
+ICh0bXBfdmRldi0+dHRfaW5mbyA9PSB0dF9pbmZvKSkKPj4+IAkJCQkJeGhjaV9mcmVlX3ZpcnRf
+ZGV2aWNlc19kZXB0aF9maXJzdCgKPj4+IAkJCQkJCXhoY2ksIGkpOwo+PiAKPj4gSSBjb25maXJt
+ZWQgdGhpcyAqc2lsbHkqIGNvZGUgaXMgdGhlIHJvb3QgY2F1c2Ugb2YgdGhpcyBtZW1vcnkgbGVh
+ay4KPj4gQW5kIEkgd291bGQgc3VnZ2VzdCBzaW1wbGVyIGNvZGUgY2hhbmdlcyAod2hpY2ggaXMg
+d2hhdCBJIHdhcyB0ZXN0aW5nKToKPj4gCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
+aG9zdC94aGNpLW1lbS5jIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IGluZGV4IDgx
+ZWFhZDg3YTNkOS4uYzRhNjU0NGFhMTA3IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0
+L3hoY2ktbWVtLmMKPj4gKysrIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IEBAIC05
+NjIsNyArOTYyLDcgQEAgc3RhdGljIHZvaWQgeGhjaV9mcmVlX3ZpcnRfZGV2aWNlc19kZXB0aF9m
+aXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2kKPj4gICBvdXQ6Cj4+ICAgICAg
+ICAgIC8qIHdlIGFyZSBub3cgYXQgYSBsZWFmIGRldmljZSAqLwo+PiAgICAgICAgICB4aGNpX2Rl
+YnVnZnNfcmVtb3ZlX3Nsb3QoeGhjaSwgc2xvdF9pZCk7Cj4+IC0gICAgICAgeGhjaV9mcmVlX3Zp
+cnRfZGV2aWNlKHhoY2ksIHZkZXYsIHNsb3RfaWQpOwo+PiArICAgICAgIHhoY2lfZnJlZV92aXJ0
+X2RldmljZSh4aGNpLCB4aGNpLT5kZXZzW3Nsb3RfaWRdLCBzbG90X2lkKTsKPj4gICB9Cj4+ICAg
+Cj4+ICAgaW50IHhoY2lfYWxsb2NfdmlydF9kZXZpY2Uoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBp
+bnQgc2xvdF9pZCwKPj4gCj4KPlRoYW5rcyB0byBib3RoIGZvciBjYXRjaGluZyB0aGlzCj4KPkkg
+Y2FuIHF1aWNrbHkgdHVybiB0aGlzIGludG8gYSBwcm9wZXIgcGF0Y2ggdW5sZXNzIG9uZSBvZiB5
+b3Ugd291bGQgbGlrZSB0byBzdWJtaXQgb25lPwoKT2gsIEkgd2FzIG5vdCBwbGFubmluZyB0byBz
+dWJtaXQgYSBwYXRjaCBhdCBhbGwsIHNpbmNlIE1pY2hhxYIgUGVjaW8gZ290IHRoZSBjcmVkaXQg
+b2YgcHVibGlzaGluZyB0aGUgZmlyc3QgcGF0Y2guCgpUaGFua3MKRGF2aWQKCj4KPlRoYW5rcwo+
+TWF0aGlhcwo=
