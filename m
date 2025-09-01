@@ -1,299 +1,137 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E172494ED
-	for <regressions@lists.linux.dev>; Sun, 31 Aug 2025 08:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66122AE72
+	for <regressions@lists.linux.dev>; Mon,  1 Sep 2025 10:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756630242; cv=none; b=SvSviu52H/dKp0zNC4JFeQL97LZO9Ufx0/Xd9e9cN5kdfJmLkFWMby6nIBML7YUjxkeo9NugDpyVZ947g/4EO+ag4j4SXgUrjHBaOgq45e5HNEp9ZRit0Ix47fm/iY/Pw5a1c1PL5tqII5DEL8/ViMSEt94EZvYDl4ONDe2/PlE=
+	t=1756721678; cv=none; b=HNV3EOvf3AIV0Dd8ylfNnojOOx1/DbkTIpB/hMVp2FNX3ExEeQtMjwoHSU9IcMkg2ITGyDzlfsfIIz2hnhLsGtdGl65gLxKAOG7SJWRISxaq/QXeUkVdEdtp7sLMkUozrGiyTC9tLZwV8YHNH20MLnrB01JcO1+N3egGR8hgIEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756630242; c=relaxed/simple;
-	bh=62ZRVz/a+iniPXqEtHjttYlsm229Roujk0h7I8/fUu8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject; b=eQ8fC0q2Bg2GrBz1zRt4uRuZ25hAwlgSE+YakXjWL2knKh+hfHskQY6y9Fcm0RwISQ1CEIzaUFSL25koUZCmvYvXXlAxXjaaiyKymXE9c4r18fb/8DWj4eJ4L3Yat2wD+9mSCtbdlOmw2CUqFDNnzG8xAEqNUQ/+9hBTHY97YnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gVeTnjzK; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756721678; c=relaxed/simple;
+	bh=++rslcevR8QjmGoAcvJL5azDRHJk0uixOjvrEL/xZR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z3JgvxZ9psfLCyDvIBbHfloU58D4q5iqZ1FlftJeESbQMM9rzWyX96zqVPeNSF2lMb/TMn3H0Ev2Jj9y6iY9mjTfaULwc0fGys0iaZQdeXsnpv7h4cX8UDsNxxjwEA9jAOIXRCx6MhaiIXlEd0YN4fPrBltkOTULpy53bufbmik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VVsKYkO0; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVeTnjzK"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45b869d3571so582915e9.1
-        for <regressions@lists.linux.dev>; Sun, 31 Aug 2025 01:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756630238; x=1757235038; darn=lists.linux.dev;
-        h=subject:cc:to:from:message-id:date:content-transfer-encoding
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SDzUuUDnSod+LyxqsRnFLfeinRJ17SRAkYjqkM4gx88=;
-        b=gVeTnjzKxyTD70lgipWuAxbGG1+7JYnvtGRnn5oHxwfTwhfk038MVXEFYRtwMHVn/S
-         qyAx2C8IX6EqUqYjaXa8ln+w6qvsM+erL0evUjJOrrh3s+qwAVOWbCaXK6J3Xfcz7WON
-         zgH+WgkhLDUcbaZ/hi/wtujFDnKV3b7Uxtrup7ZwV1rwlUrtM/Lsdlo4D4+rMc/SIo+E
-         1Y3JOPhZzvBbbXhGXy8ukmgH+sQrRh61dZ49LW2IMMrwunMnkAKasyWDYcIrMbGLPbNL
-         ojZeiib3vdoMx7Eac87cLMj4ZQWEFLHP9Y0IbCWKQBlPH2XNnT0ZcSNyG8aNvF7F0SEr
-         eUgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756630238; x=1757235038;
-        h=subject:cc:to:from:message-id:date:content-transfer-encoding
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SDzUuUDnSod+LyxqsRnFLfeinRJ17SRAkYjqkM4gx88=;
-        b=kofKjd/lQUABB348tDlNpi74luJgHy6ed2SsgHcmJcuJWYqeH/dbNK1AJ8TdMDiFlv
-         88tzCoOC8ajMjxoPHwCXzuK/7XDJNLdsGc9coImXCtMvCrWMt9VCCPtMCURcWZHZQob2
-         Ve9nhUERtnTppeFG0SqmD1laRFXDtWx8iyeJGUyK81sYhk48B6pqqlI962ACNs9h0q4s
-         KjzX0S9a+X0sDGmjKg67IlxSvM7t4EfdQuesiBlW4DvCRm2a71sOSqes9Uaov7HGJ4cb
-         21v9IrEKlVYsz8T8e/cpQlCmVXHgtjNwrZ7YqkTn8H/b57Y1z5wycYghbEzgWn2MpIbx
-         HqBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZYB5vD3iue+PfvDJyL9eoVhlNnA5qZZaV86lEthztrYPaqu/caVqIjnpwLqnUxd0XFE/OjdNQu34W8Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyis5ct5VgMOvcuY5ujunFQelG5+IA6xfmlDm1vOJ8kM004XhWh
-	dD+3wYDfz7GolD+yvTa9GHACaez+fGRRJOjv7ASCeu9ayLT6BF0Xb5bQ
-X-Gm-Gg: ASbGnctvfWLJHbJDE14bmx9gksszyQXiFH7nUwiNS3CZT6S1lIocanPGcWgOqdvqufK
-	UUGUk3OPeI33jAnqnHyxsdjIrRZz8w+/kg5iUBbqiz8JAg3Cfcgx2zA1OLDZCUBf86y9rwUO7Yo
-	qsfm/FMoM6woT63ezvaO0Pe6ICSG1ww6VwoLrStLRRnqruWPhmoJdUOkfHdFnW+mZ2POKSVK3Hi
-	rb+2eT/dMHNllh4omJAN+oLdqeKcnhanwjkIZFZRO3WIyprgPjt9TBOsA62L/lTeDnog0ICQHb7
-	traua9VzA6GqjitpoqCcSZxKTCjNZ8YZvSuoyU3UwDN81YN2i5nc6EiRHU+2YPGtiIJFt+v2h6v
-	K+I1GfG4LZBGj/rqv36H0GuBX1sEvDwhHVg3woWAbzjruXVS0ZWKqlr7/8yAv1cBVY1aW0aGvaS
-	TlW0B2a9BTphFg
-X-Google-Smtp-Source: AGHT+IFVKA49diDb1kHmVgVOw4Z/GlIBlMufFjdRe8fWtG1R/vlyL6dSlDFFSWc04qEN0fBFzYQQEw==
-X-Received: by 2002:a05:600c:4f87:b0:45b:8482:5ad4 with SMTP id 5b1f17b1804b1-45b855341femr29104325e9.13.1756630237982;
-        Sun, 31 Aug 2025 01:50:37 -0700 (PDT)
-Received: from localhost (public-gprs292944.centertel.pl. [31.62.31.145])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e74b72esm110605875e9.0.2025.08.31.01.50.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 Aug 2025 01:50:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VVsKYkO0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756721677; x=1788257677;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=++rslcevR8QjmGoAcvJL5azDRHJk0uixOjvrEL/xZR4=;
+  b=VVsKYkO0nfUcOcxYEeXq2jzHU3w06/UT4pLN2oILnUBAqs/YpJPNZ5XA
+   GizyrfCwr0+orN8TACyapokEqGRCIckDXio0a2sz5lF8PEtmdhBqdhhYV
+   vBIMvpUt54bBGug2OhuM9u00AzU3HUiSiugKX//ASztABxHOnBPWkH4R9
+   bBcmtybmtMNO4TJSLzV5uRXt+NueLZzm3D8/ADr+RwZka1cVH0YJXI3c1
+   PJy7+d+JCk4vHD26D9KvxRtgeKmHP84bLzFYbYTj1dpDPJdO5tmkQ7M4K
+   THBLhLWRXhNE6hkQsdgY6xGagXKeg8wTzEBfyQbBX7aoCmXz0OIeo8oWH
+   Q==;
+X-CSE-ConnectionGUID: WqiZkru8RkmBLLbtb8aK9g==
+X-CSE-MsgGUID: tJ7qgmMJRqGhRReWUh9UNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11539"; a="46557121"
+X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
+   d="scan'208";a="46557121"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2025 03:14:36 -0700
+X-CSE-ConnectionGUID: Uef/WmyORcS59GHhWDr9YA==
+X-CSE-MsgGUID: jO5WfRq2SpShvbeGn9wU5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,225,1751266800"; 
+   d="scan'208";a="201911481"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO [10.245.244.170]) ([10.245.244.170])
+  by orviesa002.jf.intel.com with ESMTP; 01 Sep 2025 03:14:34 -0700
+Message-ID: <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
+Date: Mon, 1 Sep 2025 13:14:32 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 31 Aug 2025 10:50:35 +0200
-Message-Id: <DCGHG5UJT9G3.2K1GHFZ3H87T0@gmail.com>
-From: =?utf-8?q?Hubert_Wi=C5=9Bniewski?= <hubert.wisniewski.25632@gmail.com>
-To: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Oleksij
- Rempel" <linux@rempel-privat.de>
-Cc: <linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
- <regressions@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: [REGRESSION] net: usb: asix: deadlock on interface setup
-X-Mailer: aerc 0.20.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after
+ suspend/resume cycle.
+To: David Wang <00107082@163.com>, =?UTF-8?Q?Micha=C5=82_Pecio?=
+ <michal.pecio@gmail.com>
+Cc: WeitaoWang-oc@zhaoxin.com, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, surenb@google.com, kent.overstreet@linux.dev
+References: <20250829181354.4450-1-00107082@163.com>
+ <20250830114828.3dd8ed56.michal.pecio@gmail.com>
+ <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Trying to bring an AX88772B-based USB-Ethernet adapter up results in a
-deadlock if the adapter was suspended at the time. Most network-related
-software hangs up indefinitely as a result. This can happen on systems
-which configure USB power control to 'auto' by default, e.g. laptops
-running `tlp`.
+On 30.8.2025 13.17, David Wang wrote:
+> 
+> At 2025-08-30 17:48:28, "Michał Pecio" <michal.pecio@gmail.com> wrote:
+>>
+>> Hi,
+>>
+>> Good work, looks like suspend/resume is a little understested corner
+>> of this driver.
+>>
+>> Did you check whether the same leak occurs if you simply disconnect
+>> a device or if it's truly unique to suspend?
+>>
+>>> And bisect narrow down to commit 2eb03376151bb8585caa23ed2673583107bb5193(
+>>> "usb: xhci: Fix slot_id resource race conflict"):
+>>
+>> I see a trivial bug which everyone (myself included tbh) missed before.
+>> Does this help?
+>>
+>> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+>> index f11e13f9cdb4..f294032c2ad7 100644
+>> --- a/drivers/usb/host/xhci-mem.c
+>> +++ b/drivers/usb/host/xhci-mem.c
+>> @@ -932,7 +932,7 @@ void xhci_free_virt_device(struct xhci_hcd *xhci, struct xhci_virt_device *dev,
+>>   */
+>> static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_id)
+>> {
+>> -	struct xhci_virt_device *vdev;
+>> +	struct xhci_virt_device *vdev, *tmp_vdev;
+>> 	struct list_head *tt_list_head;
+>> 	struct xhci_tt_bw_info *tt_info, *next;
+>> 	int i;
+>> @@ -952,8 +952,8 @@ static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_i
+>> 		if (tt_info->slot_id == slot_id) {
+>> 			/* are any devices using this tt_info? */
+>> 			for (i = 1; i < HCS_MAX_SLOTS(xhci->hcs_params1); i++) {
+>> -				vdev = xhci->devs[i];
+>> -				if (vdev && (vdev->tt_info == tt_info))
+>> +				tmp_vdev = xhci->devs[i];
+>> +				if (tmp_vdev && (tmp_vdev->tt_info == tt_info))
+>> 					xhci_free_virt_devices_depth_first(
+>> 						xhci, i);
+> 
+> I confirmed this *silly* code is the root cause of this memory leak.
+> And I would suggest simpler code changes (which is what I was testing):
+> 
+> 
+> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> index 81eaad87a3d9..c4a6544aa107 100644
+> --- a/drivers/usb/host/xhci-mem.c
+> +++ b/drivers/usb/host/xhci-mem.c
+> @@ -962,7 +962,7 @@ static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_i
+>   out:
+>          /* we are now at a leaf device */
+>          xhci_debugfs_remove_slot(xhci, slot_id);
+> -       xhci_free_virt_device(xhci, vdev, slot_id);
+> +       xhci_free_virt_device(xhci, xhci->devs[slot_id], slot_id);
+>   }
+>   
+>   int xhci_alloc_virt_device(struct xhci_hcd *xhci, int slot_id,
+> 
 
+Thanks to both for catching this
 
-Steps to reproduce:
-  Try to bring the interface up while the adapter is suspended. For
-  example, assuming that the device is on bus 1, port 1:
-    root@usb-eth-test:/sys/bus/usb/devices/1-1/power# echo auto > control
-    root@usb-eth-test:/sys/bus/usb/devices/1-1/power# cat runtime_status
-    suspended
-    root@usb-eth-test:/sys/bus/usb/devices/1-1/power# ip link set enp0s1u1 =
-up
+I can quickly turn this into a proper patch unless one of you would like to submit one?
 
-
-Expectations vs reality:
-  The interface should be brought up and be able to operate, but instead
-  the `ip` command hangs up and never returns, and lockdep emits the
-  following warning (decoded here):
-    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-    WARNING: possible recursive locking detected
-    6.17.0-rc3 #1 Not tainted
-    --------------------------------------------
-    ip/273 is trying to acquire lock:
-    ffffffffb906e748 (rtnl_mutex){+.+.}-{4:4}, at: ax88772_resume (drivers/=
-net/usb/asix_devices.c:650)
-
-    but task is already holding lock:
-    ffffffffb906e748 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink (net/core/r=
-tnetlink.c:3893 net/core/rtnetlink.c:4057)
-
-    other info that might help us debug this:
-    Possible unsafe locking scenario:
-
-    CPU0
-    ----
-    lock(rtnl_mutex);
-    lock(rtnl_mutex);
-
-    *** DEADLOCK ***
-
-    May be due to missing lock nesting notation
-
-    1 lock held by ip/273:
-    #0: ffffffffb906e748 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink (net/co=
-re/rtnetlink.c:3893 net/core/rtnetlink.c:4057)
-
-    stack backtrace:
-    CPU: 0 UID: 0 PID: 273 Comm: ip Not tainted 6.17.0-rc3 #1 PREEMPT(volun=
-tary)
-    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
-1.16.3-2 04/01/2014
-    Call Trace:
-    <TASK>
-    dump_stack_lvl (lib/dump_stack.c:122)
-    print_deadlock_bug.cold (kernel/locking/lockdep.c:3044)
-    __lock_acquire (kernel/locking/lockdep.c:3897 kernel/locking/lockdep.c:=
-5237)
-    ? usb_start_wait_urb (drivers/usb/core/message.c:83)
-    lock_acquire (kernel/locking/lockdep.c:470 (discriminator 4) kernel/loc=
-king/lockdep.c:5870 (discriminator 4) kernel/locking/lockdep.c:5825 (discri=
-minator 4))
-    ? ax88772_resume (drivers/net/usb/asix_devices.c:650)
-    __mutex_lock (arch/x86/include/asm/jump_label.h:36 include/trace/events=
-/lock.h:95 kernel/locking/mutex.c:600 kernel/locking/mutex.c:760)
-    ? ax88772_resume (drivers/net/usb/asix_devices.c:650)
-    ? ax88772_resume (drivers/net/usb/asix_devices.c:650)
-    ? __usbnet_read_cmd (drivers/net/usb/usbnet.c:2065)
-    ? ax88772_resume (drivers/net/usb/asix_devices.c:650)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ax88772_resume (drivers/net/usb/asix_devices.c:650)
-    asix_resume (drivers/net/usb/asix_devices.c:663)
-    usb_resume_interface.isra.0 (drivers/usb/core/driver.c:1375)
-    usb_resume_both (drivers/usb/core/driver.c:1532 (discriminator 1))
-    ? __pfx_usb_runtime_resume (drivers/usb/core/driver.c:1981)
-    __rpm_callback (drivers/base/power/runtime.c:406)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    rpm_callback (include/linux/sched/mm.h:339 (discriminator 1) include/li=
-nux/sched/mm.h:369 (discriminator 1) drivers/base/power/runtime.c:458 (disc=
-riminator 1))
-    ? __pfx_usb_runtime_resume (drivers/usb/core/driver.c:1981)
-    rpm_resume (drivers/base/power/runtime.c:934)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? lock_release (kernel/locking/lockdep.c:5536 kernel/locking/lockdep.c:=
-5889 kernel/locking/lockdep.c:5875)
-    rpm_resume (drivers/base/power/runtime.c:913)
-    __pm_runtime_resume (include/linux/spinlock.h:406 drivers/base/power/ru=
-ntime.c:1193)
-    usb_autopm_get_interface (include/linux/pm_runtime.h:532 drivers/usb/co=
-re/driver.c:1828)
-    usbnet_open (drivers/net/usb/usbnet.c:899)
-    __dev_open (net/core/dev.c:1684)
-    __dev_change_flags (net/core/dev.c:9549)
-    netif_change_flags (net/core/dev.c:9612)
-    do_setlink.isra.0 (net/core/rtnetlink.c:3143 (discriminator 1))
-    ? lock_release (kernel/locking/lockdep.c:5536 kernel/locking/lockdep.c:=
-5889 kernel/locking/lockdep.c:5875)
-    ? rtnl_newlink (net/core/rtnetlink.c:3893 net/core/rtnetlink.c:4057)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? __mutex_lock (include/trace/events/lock.h:122 (discriminator 2) kerne=
-l/locking/mutex.c:607 (discriminator 2) kernel/locking/mutex.c:760 (discrim=
-inator 2))
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? rtnl_newlink (net/core/rtnetlink.c:3893 net/core/rtnetlink.c:4057)
-    ? lock_release (kernel/locking/lockdep.c:5536 kernel/locking/lockdep.c:=
-5889 kernel/locking/lockdep.c:5875)
-    rtnl_newlink (net/core/rtnetlink.c:3761 (discriminator 1) net/core/rtne=
-tlink.c:3920 (discriminator 1) net/core/rtnetlink.c:4057 (discriminator 1))
-    ? lock_acquire (kernel/locking/lockdep.c:470 (discriminator 4) kernel/l=
-ocking/lockdep.c:5870 (discriminator 4) kernel/locking/lockdep.c:5825 (disc=
-riminator 4))
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? find_held_lock (kernel/locking/lockdep.c:5350 (discriminator 1))
-    ? rtnetlink_rcv_msg (include/linux/rcupdate.h:341 (discriminator 1) inc=
-lude/linux/rcupdate.h:871 (discriminator 1) net/core/rtnetlink.c:6944 (disc=
-riminator 1))
-    ? __pfx_rtnl_newlink (net/core/rtnetlink.c:3948)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? rtnetlink_rcv_msg (net/core/rtnetlink.c:6945)
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    ? __pfx_rtnetlink_rcv_msg (net/core/rtnetlink.c:6849)
-    netlink_rcv_skb (net/netlink/af_netlink.c:2552)
-    netlink_unicast (net/netlink/af_netlink.c:1321 net/netlink/af_netlink.c=
-:1346)
-    netlink_sendmsg (net/netlink/af_netlink.c:1896)
-    ____sys_sendmsg (net/socket.c:714 (discriminator 1) net/socket.c:729 (d=
-iscriminator 1) net/socket.c:2614 (discriminator 1))
-    ___sys_sendmsg (net/socket.c:2670)
-    ? lock_release (kernel/locking/lockdep.c:5536 kernel/locking/lockdep.c:=
-5889 kernel/locking/lockdep.c:5875)
-    __sys_sendmsg (net/socket.c:2700 (discriminator 1))
-    ? srso_alias_return_thunk (arch/x86/lib/retpoline.S:183)
-    do_syscall_64 (arch/x86/entry/syscall_64.c:63 (discriminator 1) arch/x8=
-6/entry/syscall_64.c:94 (discriminator 1))
-    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-    RIP: 0033:0x7fddcbcb2687
-    Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8=
- fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f =
-80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
-    All code
-    =3D=3D=3D=3D=3D=3D=3D=3D
-       0:	48 89 fa             	mov    %rdi,%rdx
-       3:	4c 89 df             	mov    %r11,%rdi
-       6:	e8 58 b3 00 00       	call   0xb363
-       b:	8b 93 08 03 00 00    	mov    0x308(%rbx),%edx
-      11:	59                   	pop    %rcx
-      12:	5e                   	pop    %rsi
-      13:	48 83 f8 fc          	cmp    $0xfffffffffffffffc,%rax
-      17:	74 1a                	je     0x33
-      19:	5b                   	pop    %rbx
-      1a:	c3                   	ret
-      1b:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
-      22:	00
-      23:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
-      28:	0f 05                	syscall
-      2a:*	5b                   	pop    %rbx		<-- trapping instruction
-      2b:	c3                   	ret
-      2c:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-      33:	83 e2 39             	and    $0x39,%edx
-      36:	83 fa 08             	cmp    $0x8,%edx
-      39:	75 de                	jne    0x19
-      3b:	e8 23 ff ff ff       	call   0xffffffffffffff63
-
-    Code starting with the faulting instruction
-    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-       0:	5b                   	pop    %rbx
-       1:	c3                   	ret
-       2:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-       9:	83 e2 39             	and    $0x39,%edx
-       c:	83 fa 08             	cmp    $0x8,%edx
-       f:	75 de                	jne    0xffffffffffffffef
-      11:	e8 23 ff ff ff       	call   0xffffffffffffff39
-    RSP: 002b:00007fffad1c7b60 EFLAGS: 00000202 ORIG_RAX: 000000000000002e
-    RAX: ffffffffffffffda RBX: 00007fddcba85840 RCX: 00007fddcbcb2687
-    RDX: 0000000000000000 RSI: 00007fffad1c7c10 RDI: 0000000000000003
-    RBP: 00007fffad1c7c10 R08: 0000000000000000 R09: 0000000000000000
-    R10: 0000000000000000 R11: 0000000000000202 R12: 00007fffad1c8300
-    R13: 0000000000000000 R14: 0000555b0fa13020 R15: 0000000000000000
-    </TASK>
-
-
-Details:
-  I have used QEMU with USB passthrough to catch the issue, but this
-  happens on real hardware as well.
-
-  The bug has already been reported on bugzilla
-  (https://bugzilla.kernel.org/show_bug.cgi?id=3D215199), but this was
-  probably not the right place.
-
-  USB device: Edimax USB 2.0 Fast Ethernet Adapter, model no. EU-4208
-  USB device IDs: 0b95:772b ASIX Electronics Corp. AX88772B
-
-  Kernel version (/proc/version):
-    Linux version 6.17.0-rc3 (hubert25632@B550M-AE) (gcc (Debian 14.2.0-19)
-    14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT_DYNAMIC
-    Sat Aug 30 21:43:30 CEST 2025
-
-  iproute2 version: ip utility, iproute2-6.16.0, libbpf 1.6.2
-  OS: Debian GNU/Linux forky/sid
-  CPU architecture: x86_64
-  Kernel config: https://pastebin.com/MiBZnCgC
-  dmesg log: https://pastebin.com/JXiZTiAT
-
-  Last good kernel version: v5.13
-  First bad commit: 4a2c7217cd5a ("net: usb: asix: ax88772: manage PHY PM f=
-rom MAC")
-
-
-Possible workaroud:
-  Users of `tlp` can add the following statement to `/etc/tlp.conf` to
-  prevent the adapter from being suspended automatically:
-    USB_DENYLIST=3D"0b95:772b"
-
-
-#regzbot introduced: 4a2c7217cd5a
+Thanks
+Mathias
