@@ -1,107 +1,131 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 247DC2F37
-	for <regressions@lists.linux.dev>; Mon,  1 Sep 2025 11:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540861CAA6C
+	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 07:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756725500; cv=none; b=GAvSYQn58iIuKISfj2XLgkDh8Tsc3kt1TO5h+B3Zn9m2M8BdgnByGQQYY50enIEtgseR+LTEpTKvHPIyO9hR1SzHCAyBnLKb4VMIClL4XUlTo7mZhyVneO3MRAajvmhMPVgNgay4tGBsSnrigKLfsjPgrCJyGta+q4+t7MhoEKU=
+	t=1756798228; cv=none; b=T3qQIUPFx8XXkYh8vQOAtncH5RPVT9CjxuASSM7i6E5LLlQqXO9yRCdS+dP/ykFRbnae8Z4OtypDIjT3BZavczZiu87YaOXYae8HD3oOEcYnA/814yBjuIvSigBnOpohYf9g5iYScvNMoD1J1a45XTSrbXK2XcTisY0KbIta94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756725500; c=relaxed/simple;
-	bh=IVmbxiakIq39e/9ee4FAF69TVetQLrpss0ewxo3jaVk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=qL3VBKpR6Z/avDAI9CakyHqW5ysnRJk4Lq+E2u5HpGzN2wvs3eR1qmfwnen4esIzl+S4yF+ux6NiJd+c6Xy9vwQivzWItAyqja2/G2K5f/HPXNfMvvg0iLxzDmQRT8DybkkDFfQjuTkau1ML4WWBOkVlLOCs/sIpKeIK81DYswg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=aK6I6f2H reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1756798228; c=relaxed/simple;
+	bh=6lFl9dPjmRTYDx+CpfGuVDgR/X9YMe5minGWPTR0f7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jd5gmpKLLM2Y+lnBgXEty971eDOQQqmJthUsGdtOG1vyEJ44eE/3aThfi7WWkwAKPraP7jijCI8tULzDcCs5jtpvv9K39q0WNo6G7mcpd2Z8TQNsnyb4MNGa05LPHQnpm8MpQP4emrF1/EQl3YPi3VtUdJlqCQ+yJTyUI/eUyeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnxGJKsk; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="aK6I6f2H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=TlHUQQuyeZYSu+OfqT//Uc4L/7XQ/BI0UmWamh72sGQ=; b=a
-	K6I6f2Hqhw7QHkwy9i3dmvpvz7nduWqzSGXsHa4yq3lxdd8+Zh7Y+0BsWxG6s8S7
-	shgl6mHfhWf3+f2seFW6U8cm4/Bb7POnzlwT0J+tR51ok1WDvJzEmUhNgU5npYuC
-	DFSP+1+kQjcQAOCHhLp23Nx/vXPRvGLFWTX4qhg6UI=
-Received: from 00107082$163.com ( [111.35.190.191] ) by
- ajax-webmail-wmsvr-40-118 (Coremail) ; Mon, 1 Sep 2025 19:17:38 +0800 (CST)
-Date: Mon, 1 Sep 2025 19:17:38 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Mathias Nyman" <mathias.nyman@linux.intel.com>
-Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
-	WeitaoWang-oc@zhaoxin.com, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, surenb@google.com,
-	kent.overstreet@linux.dev
-Subject: Re: [REGRESSION 6.17-rc3] usb/xhci: possible memory leak after
- suspend/resume cycle.
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20250519(9504565a)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnxGJKsk"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f68d7a98aso3398062e87.3
+        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 00:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756798223; x=1757403023; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x0jB3VEYTfpyq2xHIYY2lQr0Fn3bHWi6R5aEr8IPA5Y=;
+        b=HnxGJKsk5LTCeINee1ZseyyCydb7cjMZIeTwkmTg1lnvjtU6kRuL2KHjryqRVV93Nm
+         qRPydK67ARX6YMlQj5ytuXlEliR4q0niSzNdhoJil35A69jm/L4Wtc84Qlyhw4F3Wlfx
+         esNRcrFsnC/TKz8Xw/sjpV7qwWWKbAGkuIL+uaJzj3jOjkImTvxl0Of7XKbjI/Ek2R9a
+         HkoCGFHj+MQ4Ozmilk62wWmm49xngZIz7ZBrYfkloXzu4HPzC9c4mGPA8DAQdabFTa6V
+         4WZjVDEx2wDOZruwDy5qiN3A3L6LWQVtfCbAwuHT1xQ+LZYZVbFUT404vAumD6KRs9co
+         Kc/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756798223; x=1757403023;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x0jB3VEYTfpyq2xHIYY2lQr0Fn3bHWi6R5aEr8IPA5Y=;
+        b=DEIN6b9tU+DazLsWjRWB6gpz28xn4v+viyYuEG5bwc/mZp0TXefKW6qE18ajbD31L9
+         978NNaLwS41hQJs6CC81HPOSzZU4nIPsdYRK3dGsibvZALLHJn3ca2HESYPxIeCQvyMI
+         6xc9FTwBQBsu91aXX2NHIrwS4K8SYL7xUjLMsPLvolOrm327/U+XfqWY5G6B+YzZQIpi
+         ftQdMqan8i5F1VygRVXxJTV8VXrzXW8Z8ZkQKNH6CuKmL6z465GQWIIm0j+yOXg430ye
+         unZtqdVJvlZnG/ZDF0iaa8wL49rzkC7Vab8kLerqfCMAyaZuOSpMKwTDioavximNWXM6
+         /hQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSI5VoNzhAz49TpiITvk4OCUBZVbWITpdDUxN4RieOam1ewq0n9S27c8KAp19mfgXvyB5XGrbUeQKr1w==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz5bF8U1ZlFNvkbhmSS0ts0w5UGe2X5kr2FVioi/Bq5VLw2J3K/
+	QDS61Jd451DT/hrMBJo1Vu+byDkcJyI+OJe8cq5GIzly+ZaGlj1Zj+HK
+X-Gm-Gg: ASbGncvVDc/lCc1rpjLtw8jKvr3SPGCozmgd0BjZu04j+UmaDNsIGUrqGatTX+m19cj
+	yxBHNNWLXIGPslzIwmIxH7eO3aHiYlPaTL10e9ndA++v+Myw0GT06EZV0/qMiTX6A5dxvO24Imn
+	QW56jvY2PltDJ1WAYQ5LRiYjeurlImkuxcR20x+2+5lX84N/ChddJyv/EezJoPCu41gFex5gIJN
+	CQzDnOUIOVL7DV/jz6F6ZjVkK7tPhkL7+DlJnt7C2TJDbhHRzU1xQRe08VPIuP0NGdwKntdu4z7
+	1GquaKvHXQF7NERzYrizn8BgNW1mR0tx+PzMLQQF62HW3jaNxUrCgm3dkSPh+Zt5ppixpfxw71F
+	//AQM1+8KOG9c5jJGtMw871tzyzBAGvoyWhp0uSbFM0g9Sw==
+X-Google-Smtp-Source: AGHT+IEWt9xLa/lW4Z2IgsvRs7xgmPRe947bvzcKipdb44i4HmmTpqxjUyWqGAice/Yqb7gSCy1u+A==
+X-Received: by 2002:a05:6512:151a:20b0:560:84b0:2def with SMTP id 2adb3069b0e04-56084b03203mr158032e87.56.1756798222936;
+        Tue, 02 Sep 2025 00:30:22 -0700 (PDT)
+Received: from foxbook (bey208.neoplus.adsl.tpnet.pl. [83.28.36.208])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-337f508fb9esm2774801fa.56.2025.09.02.00.30.21
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 02 Sep 2025 00:30:22 -0700 (PDT)
+Date: Tue, 2 Sep 2025 09:30:17 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: David Wang <00107082@163.com>, WeitaoWang-oc@zhaoxin.com,
+ gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ surenb@google.com, kent.overstreet@linux.dev
+Subject: [PATCH] usb: xhci: Fix xhci_free_virt_devices_depth_first()
+Message-ID: <20250902093017.13d6c666.michal.pecio@gmail.com>
 In-Reply-To: <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
 References: <20250829181354.4450-1-00107082@163.com>
- <20250830114828.3dd8ed56.michal.pecio@gmail.com>
- <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
- <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
-X-NTES-SC: AL_Qu2eBPuZukwu7iCeYOkZnEYQheY4XMKyuPkg1YJXOp80qCTy+hwydm5aNHzv3PmOGwymoQmreip/791XQrd1U54+YxnU7kfbLoF40EGGjjrz
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	<20250830114828.3dd8ed56.michal.pecio@gmail.com>
+	<5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
+	<f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <7e8a138e.af64.19904ff3496.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:digvCgD3X_jTgLVotogmAA--.3994W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEBO7qmi1e6ChNQABsB
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-CkF0IDIwMjUtMDktMDEgMTg6MTQ6MzIsICJNYXRoaWFzIE55bWFuIiA8bWF0aGlhcy5ueW1hbkBs
-aW51eC5pbnRlbC5jb20+IHdyb3RlOgo+T24gMzAuOC4yMDI1IDEzLjE3LCBEYXZpZCBXYW5nIHdy
-b3RlOgo+PiAKPj4gQXQgMjAyNS0wOC0zMCAxNzo0ODoyOCwgIk1pY2hhxYIgUGVjaW8iIDxtaWNo
-YWwucGVjaW9AZ21haWwuY29tPiB3cm90ZToKPj4+Cj4+PiBIaSwKPj4+Cj4+PiBHb29kIHdvcmss
-IGxvb2tzIGxpa2Ugc3VzcGVuZC9yZXN1bWUgaXMgYSBsaXR0bGUgdW5kZXJzdGVzdGVkIGNvcm5l
-cgo+Pj4gb2YgdGhpcyBkcml2ZXIuCj4+Pgo+Pj4gRGlkIHlvdSBjaGVjayB3aGV0aGVyIHRoZSBz
-YW1lIGxlYWsgb2NjdXJzIGlmIHlvdSBzaW1wbHkgZGlzY29ubmVjdAo+Pj4gYSBkZXZpY2Ugb3Ig
-aWYgaXQncyB0cnVseSB1bmlxdWUgdG8gc3VzcGVuZD8KPj4+Cj4+Pj4gQW5kIGJpc2VjdCBuYXJy
-b3cgZG93biB0byBjb21taXQgMmViMDMzNzYxNTFiYjg1ODVjYWEyM2VkMjY3MzU4MzEwN2JiNTE5
-MygKPj4+PiAidXNiOiB4aGNpOiBGaXggc2xvdF9pZCByZXNvdXJjZSByYWNlIGNvbmZsaWN0Iik6
-Cj4+Pgo+Pj4gSSBzZWUgYSB0cml2aWFsIGJ1ZyB3aGljaCBldmVyeW9uZSAobXlzZWxmIGluY2x1
-ZGVkIHRiaCkgbWlzc2VkIGJlZm9yZS4KPj4+IERvZXMgdGhpcyBoZWxwPwo+Pj4KPj4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbWVtLmMgYi9kcml2ZXJzL3VzYi9ob3N0L3ho
-Y2ktbWVtLmMKPj4+IGluZGV4IGYxMWUxM2Y5Y2RiNC4uZjI5NDAzMmMyYWQ3IDEwMDY0NAo+Pj4g
-LS0tIGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+PiArKysgYi9kcml2ZXJzL3VzYi9o
-b3N0L3hoY2ktbWVtLmMKPj4+IEBAIC05MzIsNyArOTMyLDcgQEAgdm9pZCB4aGNpX2ZyZWVfdmly
-dF9kZXZpY2Uoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBzdHJ1Y3QgeGhjaV92aXJ0X2RldmljZSAq
-ZGV2LAo+Pj4gICAqLwo+Pj4gc3RhdGljIHZvaWQgeGhjaV9mcmVlX3ZpcnRfZGV2aWNlc19kZXB0
-aF9maXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2lkKQo+Pj4gewo+Pj4gLQlz
-dHJ1Y3QgeGhjaV92aXJ0X2RldmljZSAqdmRldjsKPj4+ICsJc3RydWN0IHhoY2lfdmlydF9kZXZp
-Y2UgKnZkZXYsICp0bXBfdmRldjsKPj4+IAlzdHJ1Y3QgbGlzdF9oZWFkICp0dF9saXN0X2hlYWQ7
-Cj4+PiAJc3RydWN0IHhoY2lfdHRfYndfaW5mbyAqdHRfaW5mbywgKm5leHQ7Cj4+PiAJaW50IGk7
-Cj4+PiBAQCAtOTUyLDggKzk1Miw4IEBAIHN0YXRpYyB2b2lkIHhoY2lfZnJlZV92aXJ0X2Rldmlj
-ZXNfZGVwdGhfZmlyc3Qoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBpbnQgc2xvdF9pCj4+PiAJCWlm
-ICh0dF9pbmZvLT5zbG90X2lkID09IHNsb3RfaWQpIHsKPj4+IAkJCS8qIGFyZSBhbnkgZGV2aWNl
-cyB1c2luZyB0aGlzIHR0X2luZm8/ICovCj4+PiAJCQlmb3IgKGkgPSAxOyBpIDwgSENTX01BWF9T
-TE9UUyh4aGNpLT5oY3NfcGFyYW1zMSk7IGkrKykgewo+Pj4gLQkJCQl2ZGV2ID0geGhjaS0+ZGV2
-c1tpXTsKPj4+IC0JCQkJaWYgKHZkZXYgJiYgKHZkZXYtPnR0X2luZm8gPT0gdHRfaW5mbykpCj4+
-PiArCQkJCXRtcF92ZGV2ID0geGhjaS0+ZGV2c1tpXTsKPj4+ICsJCQkJaWYgKHRtcF92ZGV2ICYm
-ICh0bXBfdmRldi0+dHRfaW5mbyA9PSB0dF9pbmZvKSkKPj4+IAkJCQkJeGhjaV9mcmVlX3ZpcnRf
-ZGV2aWNlc19kZXB0aF9maXJzdCgKPj4+IAkJCQkJCXhoY2ksIGkpOwo+PiAKPj4gSSBjb25maXJt
-ZWQgdGhpcyAqc2lsbHkqIGNvZGUgaXMgdGhlIHJvb3QgY2F1c2Ugb2YgdGhpcyBtZW1vcnkgbGVh
-ay4KPj4gQW5kIEkgd291bGQgc3VnZ2VzdCBzaW1wbGVyIGNvZGUgY2hhbmdlcyAod2hpY2ggaXMg
-d2hhdCBJIHdhcyB0ZXN0aW5nKToKPj4gCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
-aG9zdC94aGNpLW1lbS5jIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IGluZGV4IDgx
-ZWFhZDg3YTNkOS4uYzRhNjU0NGFhMTA3IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0
-L3hoY2ktbWVtLmMKPj4gKysrIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW1lbS5jCj4+IEBAIC05
-NjIsNyArOTYyLDcgQEAgc3RhdGljIHZvaWQgeGhjaV9mcmVlX3ZpcnRfZGV2aWNlc19kZXB0aF9m
-aXJzdChzdHJ1Y3QgeGhjaV9oY2QgKnhoY2ksIGludCBzbG90X2kKPj4gICBvdXQ6Cj4+ICAgICAg
-ICAgIC8qIHdlIGFyZSBub3cgYXQgYSBsZWFmIGRldmljZSAqLwo+PiAgICAgICAgICB4aGNpX2Rl
-YnVnZnNfcmVtb3ZlX3Nsb3QoeGhjaSwgc2xvdF9pZCk7Cj4+IC0gICAgICAgeGhjaV9mcmVlX3Zp
-cnRfZGV2aWNlKHhoY2ksIHZkZXYsIHNsb3RfaWQpOwo+PiArICAgICAgIHhoY2lfZnJlZV92aXJ0
-X2RldmljZSh4aGNpLCB4aGNpLT5kZXZzW3Nsb3RfaWRdLCBzbG90X2lkKTsKPj4gICB9Cj4+ICAg
-Cj4+ICAgaW50IHhoY2lfYWxsb2NfdmlydF9kZXZpY2Uoc3RydWN0IHhoY2lfaGNkICp4aGNpLCBp
-bnQgc2xvdF9pZCwKPj4gCj4KPlRoYW5rcyB0byBib3RoIGZvciBjYXRjaGluZyB0aGlzCj4KPkkg
-Y2FuIHF1aWNrbHkgdHVybiB0aGlzIGludG8gYSBwcm9wZXIgcGF0Y2ggdW5sZXNzIG9uZSBvZiB5
-b3Ugd291bGQgbGlrZSB0byBzdWJtaXQgb25lPwoKT2gsIEkgd2FzIG5vdCBwbGFubmluZyB0byBz
-dWJtaXQgYSBwYXRjaCBhdCBhbGwsIHNpbmNlIE1pY2hhxYIgUGVjaW8gZ290IHRoZSBjcmVkaXQg
-b2YgcHVibGlzaGluZyB0aGUgZmlyc3QgcGF0Y2guCgpUaGFua3MKRGF2aWQKCj4KPlRoYW5rcwo+
-TWF0aGlhcwo=
+Reusing 'vdev' for iteration caused a recent commit to malfunction
+uexpectedly, resulting in a reported memory leak and potential UAF
+if devices are freed in bad order. Using a second variable solves
+this problem, and maybe others later.
+
+HCS_MAX_SLOTS(xhci->hcs_params1) is the highest possible slot_id,
+so change the iteration range to include it. Currently this doesn't
+seem to cause problems because the only caller begins with freeing
+the topmost slot_id, but it breaks documented functionality.
+
+Reported-by: David Wang <00107082@163.com>
+Closes: https://lore.kernel.org/linux-usb/20250829181354.4450-1-00107082@163.com/
+Fixes: 2eb03376151b ("usb: xhci: Fix slot_id resource race conflict")
+Fixes: ee8665e28e8d ("xhci: free xhci virtual devices with leaf nodes first")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+---
+ drivers/usb/host/xhci-mem.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index eed5926b200e..db7dc70c37e5 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -932,7 +932,7 @@ void xhci_free_virt_device(struct xhci_hcd *xhci, struct xhci_virt_device *dev,
+  */
+ static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_id)
+ {
+-	struct xhci_virt_device *vdev;
++	struct xhci_virt_device *vdev, *vdev_i;
+ 	struct list_head *tt_list_head;
+ 	struct xhci_tt_bw_info *tt_info, *next;
+ 	int i;
+@@ -951,9 +951,9 @@ static void xhci_free_virt_devices_depth_first(struct xhci_hcd *xhci, int slot_i
+ 		/* is this a hub device that added a tt_info to the tts list */
+ 		if (tt_info->slot_id == slot_id) {
+ 			/* are any devices using this tt_info? */
+-			for (i = 1; i < HCS_MAX_SLOTS(xhci->hcs_params1); i++) {
+-				vdev = xhci->devs[i];
+-				if (vdev && (vdev->tt_info == tt_info))
++			for (i = 1; i <= HCS_MAX_SLOTS(xhci->hcs_params1); i++) {
++				vdev_i = xhci->devs[i];
++				if (vdev_i && (vdev_i->tt_info == tt_info))
+ 					xhci_free_virt_devices_depth_first(
+ 						xhci, i);
+ 			}
+-- 
+2.48.1
