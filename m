@@ -1,159 +1,170 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6732EA49F
-	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 09:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B0C275AE1
+	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 09:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756804192; cv=none; b=Apn+NS1lEfYlwael59xR7th1WzJFO7hrX9QtmNjQjwZeLhdobsibRxgZaTiuzN0nm+iBoEZBG+eIjycBUj0coloSbS6u33ynFZRGzwaxlW4/gT8HXfWGyBhu8Xd5ydMvi+yNzvzEgcPmohuHad4mvLHgq2/Yu1EfpPr4891/Cnc=
+	t=1756805433; cv=none; b=m88sVGV4msBdaAkuijIIvjzip2KuJlXOUH9aSWbOmydYEWrhZsKDiuHXBplvwQFP+i15Obqa6b6/Tsz/3CVWwv6MbdvevD5F2VdSp5fa8MKRVYuVBYSSKhAh/tRyhVI8ioVF/81MAIn5wYra++r3JxpXtc0rTL8kUEoiCd8jM74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756804192; c=relaxed/simple;
-	bh=A8eyEfj3BP3VmKLPbiefQOv3kForpLTfoyzNz1iTBI4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b9Q6JhzQD1qZ43fcw+bEPrM8lvwEVxi7JekyAc1w7ZFrnmVJBKI9HyoTxtUyiGKdzNtygZhDCWIqmJ4yn3bepoLpI8rgIPZFJ+QjeyqEWdzxkWSDc5d+PN2mWsbgARszKnVqFcjKWOAay6yYTajzqd3nsrrAgFroYBwGT7s+nsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FegpyobY; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756805433; c=relaxed/simple;
+	bh=dM/J4EWSRWSIxbOj5OAlxBlqKOA6FNTaQsCA4gH91BM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ehVJ2HTUnZJyf9SI6vazLMxNfYXYRO3loBSqXJ23sN99AmLShneYZTzTW9AAdkg9i24aErPzu78vACk8A9dOnZ2+W9ssFduLtemY6DwdCJMdsNbxXVzxBOBFGd7098Q+DJbD/LoEEHj0eWPzTdf9LrJKlQgMImu6n9EGsD0T3eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RRXcCrK6; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FegpyobY"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3dae49b1293so202219f8f.1
-        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 02:09:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RRXcCrK6"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7722bcb989aso2744438b3a.1
+        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 02:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756804189; x=1757408989; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+        d=linaro.org; s=google; t=1756805431; x=1757410231; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
-        b=FegpyobY53lG0uqeGAW9qpMqnOZUt+TlosbHy9SY2wcJiRb1GzPVBl6kAmjQfAsRjI
-         4bwIyg+8mL+VyRVQ8VdZENAALzerzHbgET4QakAxyMWumGaBwPziyJgvkidqMME0gm35
-         MAkrpvnoPHTbTGkbzGfSYfYZP9/C8h/HR6pRF48Dfm2CzfPYYYu4ZHEjkeOK5QfO3HwF
-         sxojkDQXdkAZf+QcmImMmIdw0wjFm5xZ4QbZ3wEODC53wDJJRYbB0sNAMt5o6BXpGvgb
-         oOIzVca2bRgSU9BDlGz0qpGcVb38OHQ4nfI1yKqaP7V/pGl4+ldJdl9vEZ3zUhiv+KJe
-         VELQ==
+        bh=D7OKt9F9u3JGw8Hji9kO63gaBin4yVJprAEpigams7g=;
+        b=RRXcCrK6OK0zzhI6QNub7ST2SvKuMsnB/YetRLFoaYtR7xrGBmcx0VVa7e6SI9YKhm
+         Be0MN2ZhxMovguJr9ZYp4sfD7b4mfX/BrJ2XCpQ0nv9rtucM//9kqodecngfuMZSFnEn
+         vqbevtWF3U9sgS0fQHnMdc14XO15lLaF8yNujYXpW5LC7BJdQGkGt3XXmNBEbS3hF4BX
+         OcFfRM3HeFLo/PxnVh8A5pmRehXIyLDvfTURhMfr35bmUlqjGURFFB56CdDzuVwIv1l9
+         AaxkIyTumN/45Cp0xRWt4oubum9+jKGBa9YljixSboqwNeIc4kcUrGxZGU915FnuTdwi
+         bSow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756804189; x=1757408989;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1756805431; x=1757410231;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
-        b=qDuoPUiGkokjo1RyxgvFguqPBL8pA0DbzuhXlA0EA2WUbgy9txoTY1ggJsnEAYC5PP
-         ZrgvhDk60r2arLlVqHmbAaS7ospK2qcpxO4dWkudh72ovhMcUaYaGF/CVmgeuaE92HPX
-         1ycsG6VKrh7Gh8RZk+uGOIDWSgRtkZvfGrJXp8kriIJ9kV0ee78rKeej+KroZ1s8PfS7
-         63+cSLBg49wT7oiT07p6l5GtakqUYKyNs2Z8UNQpRw7tA+qGpUMgakg/tnfohRtLxnPm
-         Pqg2QHHmR/+RT5f3gz69RZklimlGejd+n+vpqzhybVfxfAdro2/bYjQ0qP7NQwJxdG9N
-         5neA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOoOp+SFXfA7/TMm9Xck5+zgmTuaBkZa8/hBHRfMC8JDA6CFiesS1CGLGx8gUMfkl/feqHQ/uMEgY9gw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxCXyQ8QkH8mXGcV6nCsYKMS/LaLOdM/pGNuHf+hPK/EauIXJ46
-	SG/4KD0cBvt6+1LIZOcIDavNkkPn4lPmWiJ6rMi1RULWvF61SXYQyLHM0ge32Lqh
-X-Gm-Gg: ASbGnctPEEyF6NFLTbAyKKpCrhhfx5SGEhI/E8qoDO01h+Dimlq1OFbmfZe4+AQiApP
-	bn3nN6x321wEESRRcNuUo/RfAEhKY29BVXhDgMhQZrZnIUgoeHyoytHeEMgd4xe5JqXD+O/wuPe
-	CnUlDL2hGN3QXKd/T3i++k5DfevTuQfPSHG1pL1kLjmMmaIr2sr15elFDbvytNfkJFGUCoelYlx
-	xAWuZCgw2+plSJVR2xpsIzqldSr9JPps0Jhkm5eHxB8HQQZT5D0akVufmZraQFoOCWB+lRCTIZl
-	dnujz3Vxxp2WkFQj7tz5WM6DcZq503+XdbZ4OBPut/MlSaYRltAmrN8K0nK/237TvHI2BPH/RvL
-	fFWCUcz60SpkFYB9MzPLlQFi0C7eK75oTqcok+sNiNJUp09wWdJuDeWUr3//VdclH9mr2LQ==
-X-Google-Smtp-Source: AGHT+IHNGi1WlUp37oda1jCD0mIQM+pwLYeo9d0bEci6H/DuqNOy5AfU0gRE95Kv3q/RMJ5wltAJRg==
-X-Received: by 2002:a05:6000:2586:b0:3cd:c10d:3b6b with SMTP id ffacd0b85a97d-3d1de4b9891mr7783573f8f.27.1756804188869;
-        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:3f02:d36b:e22e:74c6? ([2a02:168:6806:0:3f02:d36b:e22e:74c6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33add294sm20017536f8f.29.2025.09.02.02.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
-Message-ID: <1cc6781ea584aa00a8cda23db1fc8cd59f852a3d.camel@gmail.com>
-Subject: Re: [Bug 220479] New: [regression 6.16] mvebu: no pci devices
- detected on turris omnia
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Jan Palus <jpalus@fastmail.com>, Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Thomas Petazzoni	
- <thomas.petazzoni@bootlin.com>, Pali =?ISO-8859-1?Q?Roh=E1r?=
- <pali@kernel.org>, 	linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, 	regressions@lists.linux.dev
-Date: Tue, 02 Sep 2025 11:09:47 +0200
-In-Reply-To: <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
-References: <bug-220479-41252@https.bugzilla.kernel.org/>
-	 <20250820184603.GA633069@bhelgaas>
-	 <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-2+b1 
+        bh=D7OKt9F9u3JGw8Hji9kO63gaBin4yVJprAEpigams7g=;
+        b=Sb+2ep1Jbh77cxafWxxIfNuvbWHMOEMcpwwQO0KbmamPmFdMUe6Jzj0y9hD+FfzE8z
+         UKo7pP28+FG3Ez1rj1FIQ4WsCus/yeQhfa7zUQZO4W0S7zSShmek3ElxauY4eSgGYte1
+         AZjFiz5tkqOtNTckGU9yGKHWzvFYLTjWgx54Xx1B753YKowMfNqbQaeoNA7TNcxMUUFs
+         vXGQaG7CTF5TKJ/yDrkyllvgfquKHaG/NcJPbs5XArwOpZrlaskI4n5O2DiFxws/D3U5
+         ljLNjWpo1xbmCS2NiAoio/QYe8LuqZMiycaa7xC8tsv0navj0e629Vk40DmN+KG9TrZg
+         R4MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfoRXw0KWm+i9HkXiA+RBssdbetFVdy8wagaCKtzL6Xv1ENEvNkrNo/+3zlxUq1F3zpwftHoWtx6V4fA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx8ACOOzk/e9Jefwu10IQ5Z+T7eyNI/3UUkApYRz4jOg/Uuq/hL
+	Sc5ujOG9HzpPqXi5AcYYaz+O9nS9m3G1Fi0JR+jai2L//yGDc8xTyxChEvXV3dfB4oE7sRGEKiq
+	CgNSag4tBMrrG6aaWUFLE5mDVYfYcUMDpTwDw23XWsQ==
+X-Gm-Gg: ASbGncsVkURZSrOXvEVmwWx0wQYRQTlZNXNjo63BvJcbj/8Ic5accPOqWMJp+FzHFvN
+	CsMD5hd50L1nWFlEQQDKC/39go9OI/MD2HKD4Z/WqKvp9p9vmFycjVbYgyjuUG4ubCNLprd3YaV
+	idbUmWlHHRnhreIAVMckDAAn7Xr0tJjTFlBkY0zQwxMtprdRcrj5I/WI8fOxvzq9JFv0QJVKQSL
+	SaR7Au5CsH66xdoSoEw4EshF2Gsc4xLUUOLCzmc
+X-Google-Smtp-Source: AGHT+IE8Yrx7PIEHWr7GBuT6CR6OOXizH5auPXW+y/+V0FBm3oCtap+/O+brH9ArwbKXJtHKdi5XLNVxxZpQhJ6oyCI=
+X-Received: by 2002:a05:6a20:1595:b0:243:d26c:4802 with SMTP id
+ adf61e73a8af0-243d6e00a3cmr14965979637.16.1756805430855; Tue, 02 Sep 2025
+ 02:30:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 2 Sep 2025 15:00:19 +0530
+X-Gm-Features: Ac12FXx1zyo6Or4T4_OK4vkNL4SKnoNS4plyRwcQt4YbOf4Pp4VblMYRHeLcvTI
+Message-ID: <CA+G9fYsgiqTo7t3e36P5cysc+jEX5Fub1quTj+fuKGM8jkxbFA@mail.gmail.com>
+Subject: next-20250901 drivers bluetooth bpa10x.c:77:33: error: array type has
+ incomplete element type 'struct h4_recv_pkt'
+To: linux-bluetooth@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	Calvin Owens <calvin@wbinvd.org>, pmenzel@molgen.mpg.de, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-08-21 at 02:45 +0200, Jan Palus wrote:
->=20
-> Relevant fragment of mvebu_get_tgt_attr() in mentioned commit:
->=20
-> +		u32 slot =3D upper_32_bits(range.bus_addr);
-> =C2=A0
-> -		if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_IO)
-> +		if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
-> =C2=A0			rtype =3D IORESOURCE_IO;
-> -		else if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_MEM32)
-> +		else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32)
-> =C2=A0			rtype =3D IORESOURCE_MEM;
-> =C2=A0		else
-> =C2=A0			continue;
-> =C2=A0
-> =C2=A0		if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
->=20
+The following build warnings / errors are noticed on powerpc ppc6xx_defconfig
+with gcc-13 toolchain running on Linux next-20250901 and next-20250902.
 
-As far as I understand the situation, of_pci_range_parser_one() inherently =
-uses bus->get_flags()
-aka of_bus_pci_get_flags() to determine range.flags (see drivers/of/address=
-.c).
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-And of_bus_pci_get_flags() does essentially the same thing as the code abov=
-e in mvebu_get_tgt_attr().
-So, now the translation logic is applied twice - which probably was not int=
-ended.
+First seen on next-20250901
+Bad: next-20250901 and next-20250902
+Good: next-20250829
 
-To restore the original behaviour, I think the determination of rtype from =
-range.flags must be=C2=A0
-completely removed, and rtype must be replaced by range.flags.
+Build regression: next-20250901 drivers bluetooth bpa10x.c:77:33:
+error: array type has incomplete element type 'struct h4_recv_pkt'
 
-Something like this on top of mainline - completely untested, but maybe wor=
-th a try.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pc=
-i-mvebu.c
-index 755651f338..3fce4a2b63 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -1168,9 +1168,6 @@ static void __iomem *mvebu_pcie_map_registers(struct =
-platform_device *pdev,
-        return devm_ioremap_resource(&pdev->dev, &port->regs);
- }
-=20
--#define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
--#define    DT_TYPE_IO                 0x1
--#define    DT_TYPE_MEM32              0x2
- #define DT_CPUADDR_TO_TARGET(cpuaddr) (((cpuaddr) >> 56) & 0xFF)
- #define DT_CPUADDR_TO_ATTR(cpuaddr)   (((cpuaddr) >> 48) & 0xFF)
-=20
-@@ -1189,17 +1186,9 @@ static int mvebu_get_tgt_attr(struct device_node *np=
-, int devfn,
-                return -EINVAL;
-=20
-        for_each_of_range(&parser, &range) {
--               unsigned long rtype;
-                u32 slot =3D upper_32_bits(range.bus_addr);
-=20
--               if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
--                       rtype =3D IORESOURCE_IO;
--               else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32=
-)
--                       rtype =3D IORESOURCE_MEM;
--               else
--                       continue;
--
--               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
-+               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D range.flags)=
- {
-                        *tgt =3D DT_CPUADDR_TO_TARGET(range.cpu_addr);
-                        *attr =3D DT_CPUADDR_TO_ATTR(range.cpu_addr);
-                        return 0;
+Powerpc:
+  build:
+    * gcc-13-ppc6xx_defconfig
+    * gcc-8-ppc6xx_defconfig
+
+Build error:
+drivers/bluetooth/bpa10x.c:77:33: error: array type has incomplete
+element type 'struct h4_recv_pkt'
+   77 | static const struct h4_recv_pkt bpa10x_recv_pkts[] = {
+      |                                 ^~~~~~~~~~~~~~~~
+drivers/bluetooth/bpa10x.c:78:11: error: 'H4_RECV_ACL' undeclared here
+(not in a function)
+   78 |         { H4_RECV_ACL,     .recv = hci_recv_frame },
+      |           ^~~~~~~~~~~
+drivers/bluetooth/bpa10x.c:79:11: error: 'H4_RECV_SCO' undeclared here
+(not in a function)
+   79 |         { H4_RECV_SCO,     .recv = hci_recv_frame },
+      |           ^~~~~~~~~~~
+drivers/bluetooth/bpa10x.c:80:11: error: 'H4_RECV_EVENT' undeclared
+here (not in a function)
+   80 |         { H4_RECV_EVENT,   .recv = hci_recv_frame },
+      |           ^~~~~~~~~~~~~
+drivers/bluetooth/bpa10x.c: In function 'bpa10x_rx_complete':
+drivers/bluetooth/bpa10x.c:99:37: error: implicit declaration of
+function 'h4_recv_buf' [-Werror=implicit-function-declaration]
+   99 |                 data->rx_skb[idx] = h4_recv_buf(hdev, data->rx_skb[idx],
+      |                                     ^~~~~~~~~~~
+In file included from include/linux/array_size.h:5,
+                 from include/linux/kernel.h:16,
+                 from drivers/bluetooth/bpa10x.c:9:
+include/linux/compiler.h:197:82: error: expression in static assertion
+is not an integer
+  197 | #define __BUILD_BUG_ON_ZERO_MSG(e, msg, ...)
+((int)sizeof(struct {_Static_assert(!(e), msg);}))
+      |
+                  ^
+include/linux/compiler.h:202:33: note: in expansion of macro
+'__BUILD_BUG_ON_ZERO_MSG'
+  202 | #define __must_be_array(a)
+__BUILD_BUG_ON_ZERO_MSG(!__is_array(a), \
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~
+include/linux/array_size.h:11:59: note: in expansion of macro '__must_be_array'
+   11 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) +
+__must_be_array(arr))
+      |
+^~~~~~~~~~~~~~~
+drivers/bluetooth/bpa10x.c:103:49: note: in expansion of macro 'ARRAY_SIZE'
+  103 |
+ARRAY_SIZE(bpa10x_recv_pkts));
+      |                                                 ^~~~~~~~~~
+drivers/bluetooth/bpa10x.c: At top level:
+drivers/bluetooth/bpa10x.c:77:33: warning: 'bpa10x_recv_pkts' defined
+but not used [-Wunused-variable]
+   77 | static const struct h4_recv_pkt bpa10x_recv_pkts[] = {
+      |                                 ^~~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
 
 
+## Source
+* Kernel version: 6.17.0-rc4
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250902
+* Git commit: 3db46a82d467bd23d9ebc473d872a865785299d8
+* Architectures: powerpc
+* Toolchains: gcc-13
+* Kconfigs: ppc6xx_defconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250902/testrun/29725581/suite/build/test/gcc-13-ppc6xx_defconfig/log
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250901/log-parser-build-gcc/gcc-compiler-drivers_bluetooth_bpax_c-error-array-type-has-incomplete-element-type-struct-h_recv_pkt/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/328DwMMwNOpSAj0qnRpJavgtz9C
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/328DwMMwNOpSAj0qnRpJavgtz9C/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/328DwMMwNOpSAj0qnRpJavgtz9C/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
