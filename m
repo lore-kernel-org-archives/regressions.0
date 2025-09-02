@@ -1,118 +1,145 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780922F3C0F
-	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 10:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3692D8785
+	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 12:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756810705; cv=none; b=uqvsGnaumBXNfZ/+ohTuzob8HCgRFjTR5XMBxY2HIFhajJKEbJVzbBlqqQjqzc/C9pDwBAxal3vUrKFNMTEA0+ZpDwnrI5fLdwVRkz+DK45q6Ju3bxQxETW7p2dA4VKvrvzAF/mHyHGZ5sXqu9/23R7txZ/+E4MCPD6OMgOFUtQ=
+	t=1756817926; cv=none; b=ThtvqwJsQvTaZXR9oFNFbuHRhYEYe+MiPwcFC3YHBNPRl7xhCEZIg6CoZKKQW0RhP1ykZcbKkcwEsAQnsP57odNAQaukyvMIZAHvyAmLNjk8Q3JmL0wN02uDGs2C+KgRGXdIcfqG7APOy5wVZvdGglx6j/nvsNOLFZlmJ1E8jzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756810705; c=relaxed/simple;
-	bh=gfMxdtz4DcDDUc86U5Qw8d4o1LVk/9GYcubnw19a7Vo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RU3+VYnLQWDWanMpmXWYnCxa0UQHfts/On1ufmWvnmdsfmyI0E077k1Vs8dBYpt2Yy77gItUpinfLHpDpl4t7FFbjX5qEE1NP9Fmz9QxBS6/pEY/0J3tA7vNI/m+jk0N9Zs0LyL+Alt2p3wQtuXBXBi3y+BVblACxVzH1zU3reE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y612vBuP; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756817926; c=relaxed/simple;
+	bh=JbvKZYq/T9c+ex/qOUiFNhbDFAJ4YblHQurbSxyz1VA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NmAdTwZZ8RlDwEGzu3hmJyF5CjAy22eRBQjAV6qXkzj+nYIdjdPy6Whc8snPJxf2A6EihQIqRyA2ZHfDbq7waLgOL4b8B/bG/Vww3Gsjh4H6rRpn05A6v5CTBlH/XSryblJQIMUNvRRSP61SJxOURoEomKwtPFJAole9bDzVn8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RH2p/s+9; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y612vBuP"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-324e6daaa39so5007738a91.0
-        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 03:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756810704; x=1757415504; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gfMxdtz4DcDDUc86U5Qw8d4o1LVk/9GYcubnw19a7Vo=;
-        b=y612vBuPCHfapVX90XzFMYsR7HejzrNwavu/a/Bq6akDLZ1BAnAW/rdFXl4pfspl6K
-         aty+YfCZjPwuyfhNaWnI/g9/JfL10CxbcELP6xT4xvBwTtJpCmse+lHweG2TAXj2pqw3
-         fRP5t9aSGoX+nKyV57fzonbbLmSFzmx7LZtyyPdavjS9VYi53EY0oKTFa2nsndbX/DO6
-         HVtaSjoFwLGKl5DP9Wab/vvGy6ffWuelfAKIw0XqmwSoTJUZDFw0fQ6H7CXDzM/VUgvY
-         80eS4jXUu169D2D1WooQZNQec0NB3kPag7pBFCGvyRJfXR+rC8A/rX0QcemCeutEXX+W
-         aRew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756810704; x=1757415504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gfMxdtz4DcDDUc86U5Qw8d4o1LVk/9GYcubnw19a7Vo=;
-        b=AKvaKL7Ls8Hn0qAV3eebuR5Xtq3gSRQKU1tOn4WinvSlM+n/eNI/Cg/8uvpIL4Wnav
-         XG+Ma3UEsOlAEsh9+DT1K409ilJsIXbShCvYU+15ZoRKZd0VgOWDlHa6URlCWlnY5KlL
-         VUZWT1CbhBwNHB4YhdUzuyffUodEu+I30+NobwTgNh2+poL+Sp+1hc0E2M505yvp4mPO
-         2I8ADnkw4utkFrt5OBp8gwge4Zmf/khX5l6cAv8kZ99Ezwi34sH3jJpdapy6YDYuBJyI
-         ZGGvb/xt77kHgauwJsGytF5AfPt9tEmtfkVVdG0HWoxHA7snznJ/S8W5U9OWsalr4wNj
-         hWvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlARMYrUAin018yS4NNoay0tIym5qwm7LNBdTQg5meqO1gIxIoJ1hfGoPqIYrFKsgXIzSC52woC495Hw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxxvKGaw0+TRD2i5IKfddPyMIrHdUddOJ+aekGn5qBKL0hDvyvl
-	Ni7ETc34157UtilZbwUWUqv4X2Zi6g+t8D40IGZ6covFPurMZJdKwCN9S9x3n467WpTFd4g4oCw
-	oGGNHGX2DqOi/4UJUUX7JWpnBgqFZT1Vg5Sp1AqzNNA==
-X-Gm-Gg: ASbGncsnwT368UTUSDbmro6pilZZl5SaW8GWyAXVEO4yxl4T9oY9N2rHorKF5ORPn2j
-	TkXDa+UAWyjG4TUuXY4LJzUB7Q8S+h3EXibRdU94/Q0emz0Qeq9MEQxbowYuBYM1H71hQAL/w9O
-	VByYvrGOxhTQnekwn6dcv6EjI9RjkBq/75Hfl4IKSWkO66HvnUhKAZ7L0MVRgKCHG3q2V1KjdO+
-	AasbqegNkPz9xAoXYbY7E1LJirky55kheJAlREJMqQfIsqDrGm8bxiQY8108A==
-X-Google-Smtp-Source: AGHT+IGJeRstlFmXn141hA2zh0v1vPIYwwf6A3NPxDQM214Prr0kW78Uc+Oyrqot7bU7+e2O3OZyDHf9cjoIhRs+pqU=
-X-Received: by 2002:a17:90b:3c8a:b0:31e:ec58:62e2 with SMTP id
- 98e67ed59e1d1-328156c9641mr16594645a91.19.1756810703718; Tue, 02 Sep 2025
- 03:58:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RH2p/s+9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756817925; x=1788353925;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JbvKZYq/T9c+ex/qOUiFNhbDFAJ4YblHQurbSxyz1VA=;
+  b=RH2p/s+9c0GVNoogMwXquql4CuddXQaPCsmUNSq9AMj+9//KpeITJot4
+   it5wc0xUzfqXM2Ewep7JiHeTbVLZD9zVRc+T9j0lnB5Q265Hz76bks+FF
+   uaV2I+WssBLiwRFRyj68ar1yBtvymlPbrm9iZRTZD8G6Z1hNaN0dTpHHz
+   /LWotSvCEApsDGZR6wVqmPXmpRg8uiLka73JJgeaqYdpww1rcUUr9wYYC
+   SgLKzgn53VxeaoptaZ1EFpCI+4Rk7UaVxc/nzk1u8KKfemBv8zaZWqHQB
+   1MkEhpYQVMNNcjLrva6oLCds8rB8iwT/2nK/FWw8RWZiEINYV4D1dLvHj
+   A==;
+X-CSE-ConnectionGUID: uTwethocRLyKCOjcDaBBjQ==
+X-CSE-MsgGUID: kbeXkF6nTdm9bqCAzuyv5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="58295408"
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="58295408"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 05:58:44 -0700
+X-CSE-ConnectionGUID: m2TTrK6USFGW+SuBwk1Wmg==
+X-CSE-MsgGUID: 1cdbdKubTfm/vYWEHWTpkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="171713789"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.245.245.90]) ([10.245.245.90])
+  by fmviesa009.fm.intel.com with ESMTP; 02 Sep 2025 05:58:42 -0700
+Message-ID: <20baae05-167f-42bc-aa08-33df1aaa095a@linux.intel.com>
+Date: Tue, 2 Sep 2025 15:58:40 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtktEOzRWohqWpsGegS2PAcYh7qrzAr=jWCxfUMEvVKfQ@mail.gmail.com>
- <hyqcffknmjwjuogoe4ynubs3adk47t2iw4urnpjscdgjjivqz7@b5ue6csrs2qt>
-In-Reply-To: <hyqcffknmjwjuogoe4ynubs3adk47t2iw4urnpjscdgjjivqz7@b5ue6csrs2qt>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 2 Sep 2025 16:28:12 +0530
-X-Gm-Features: Ac12FXyK-roq9UdfvDh1RySejuG-CgVtu9pGL08wENDIna7l8Tu1FBMlsn9aQjg
-Message-ID: <CA+G9fYvA=945et87Q=_c6b-TWjSBxy4H-X9iNsb1_Pj9GCXUaw@mail.gmail.com>
-Subject: Re: next-20250805: ampere: WARNING: kernel/cgroup/cpuset.c:1352 at remote_partition_disable
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Cgroups <cgroups@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, kamalesh.babulal@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: xhci: Fix xhci_free_virt_devices_depth_first()
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: David Wang <00107082@163.com>, WeitaoWang-oc@zhaoxin.com,
+ gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ surenb@google.com, kent.overstreet@linux.dev
+References: <20250829181354.4450-1-00107082@163.com>
+ <20250830114828.3dd8ed56.michal.pecio@gmail.com>
+ <5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
+ <f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
+ <20250902093017.13d6c666.michal.pecio@gmail.com>
+ <446082a4.7dbe.199098cd654.Coremail.00107082@163.com>
+ <20250902104630.6a9f088a.michal.pecio@gmail.com>
+ <20250902110730.723a48a0.michal.pecio@gmail.com>
+ <6042295b-8dad-4816-8505-b9b6c6f6049d@linux.intel.com>
+ <20250902125549.03f22bcf.michal.pecio@gmail.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250902125549.03f22bcf.michal.pecio@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Aug 2025 at 19:56, Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
->
-> Hi.
->
-> On Thu, Aug 07, 2025 at 01:57:34PM +0530, Naresh Kamboju <naresh.kamboju@=
-linaro.org> wrote:
-> > Regressions noticed intermittently on AmpereOne while running selftest
-> > cgroup testing
-> > with Linux next-20250805 and earlier seen on next-20250722 tag also.
-> >
-> > Regression Analysis:
-> > - New regression? Yes
-> > - Reproducibility? Intermittent
-> >
-> > First seen on the next-20250722 and after next-20250805.
->
-> Naresh, can you determine also the last good revision? That would be
-> ideal to have some endpoints for bisection. (To look for any interacting
-> changes that Waiman was getting at.)
+On 2.9.2025 13.55, Michał Pecio wrote:
+> On Tue, 2 Sep 2025 13:13:12 +0300, Mathias Nyman wrote:
+>> On 2.9.2025 12.07, Michał Pecio wrote:
+>>> On Tue, 2 Sep 2025 10:46:30 +0200, Michał Pecio wrote:
+>>>> On Tue, 2 Sep 2025 16:30:48 +0800 (CST), David Wang wrote:
+>>>>> About the change from "<" to "<=", I did not observe any difference on my system. Is it because my system does not use up all slots?
+>>>>
+>>>> This too, you would need to fiddle with devices (or connect enough
+>>>> of them) to reach Slot ID 255 (probably the highest on most systems),
+>>>> depending on the xHCI controller and its ID allocation policy.
+>>>
+>>> This made me wonder what those policies are. I'm too lazy for thorough
+>>> testing, but I plugged and unplugged the same device a few times.
+>>>
+>>> Most HCs kept assigning ID 1, so they likely always pick the lowest.
+>>>
+>>> My AMD chipset, two ASMedia USB 3.1 controllers and a Fresco FL1100
+>>> kept assigning sequentially increasing IDs, so I suppose I could pump
+>>> it up near the top, connect two high speed hubs and trigger this bug.
+>>>    
+>>>> But also as explained, this bug doesn't make things go boom just yet.
+>>>>
+>>>> Except if combined with your bug in an obscure edge case:
+>>>>
+>>>> 1. A high speed hub has slot ID HCS_MAX_SLOTS-1 and some TT children.
+>>>> 2. Another high speed hub has slot ID HCS_MAX_SLOTS.
+>>>> 3. We start with freeing the second hub.
+>>>> 4. The loop is entered and leaves vdev pointing at the first hub.
+>>>> 5. The first hub is freed instead of the second one.
+>>>> 6. Then its children are freed and UAF its tt_info.
+>>
+>> I'm not sure I follow the above.
+>>
+>> I agree that changing the "<" to "<=" makes sense, but fortunately for us there shouldn't be any
+>> issue with current implementation as xhci_free_virt_devices_depth_first() is called with highest possible
+>> slot_id value first:
+>>
+>> in xhci-memm.c:
+>>    for (i = HCS_MAX_SLOTS(xhci->hcs_params1); i > 0; i--)
+>>                   xhci_free_virt_devices_depth_first(xhci, i);
+>>
+>> if HCS_MAX_SLOTS slot_id is a hs-hub then all its children have slot_id < HCS_MAX_SLOTS,
+>> and loop works fine.
+> 
+> The loop works fine, but it exists with vdev pointing at MAX_SLOTS-1
+> due to off by one and then this happens:
+> 
+> 	xhci_free_virt_device(xhci, vdev, slot_id);
+> 
+> which means:
+> 
+> 	xhci_free_virt_device(xhci, xhci->devs[MAX_SLOTS-1], MAX_SLOTS);
+> 
+> If MAX_SLOTS-1 is a high speed hub, it will be freed right now, without
+> freeing its children first.
+> 
+> And whatever this device is, it will be freed without nulling
+> xhci->devs[MAX_SLOTS-1], which might cause other UAF later (not sure).
+> 
+> I think it's possible, though I haven't tried actually triggering it.
+> The problem didn't exist before this recent patch.
+> 
 
-Michal,
-Since this was an intermittent issue, I do not have a good end point
-of the bisection.
+I see, yes with the slot_id regression the incorrect vdev will cause issues.
 
-As I repeat,
-First seen on the next-20250722 and after next-20250805
-and not seen after this.
+Sent the patch to fix it forward
 
-Reference:
-- https://regressions.linaro.org/lkft/linux-next-master-ampere/next-2025080=
-5/log-parser-test/exception-warning-kernelcgroupcpuset-at-remote_partition_=
-disable/history/?page=3D1
-
-- Naresh
-
->
-> Thanks,
-> Michal
+Thanks
+Mathias
