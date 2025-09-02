@@ -1,114 +1,159 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD8B2E9EB9
-	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 09:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6732EA49F
+	for <regressions@lists.linux.dev>; Tue,  2 Sep 2025 09:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756804059; cv=none; b=Eqb7n7EMC5MgUxkDfArHwbgND05sjZFzivOigzWB6tcWVTrOUdrVP3JIwsueqg1lgEkfdVHCqBHeF098L+Gw7Pm1R4YBiv+H31g3nRqf4LdgJaioVwJjQeN8i4VBZykK8elkDmypx0akEJyqNIxKN2dblKrqVHPToBDS7kaN4MM=
+	t=1756804192; cv=none; b=Apn+NS1lEfYlwael59xR7th1WzJFO7hrX9QtmNjQjwZeLhdobsibRxgZaTiuzN0nm+iBoEZBG+eIjycBUj0coloSbS6u33ynFZRGzwaxlW4/gT8HXfWGyBhu8Xd5ydMvi+yNzvzEgcPmohuHad4mvLHgq2/Yu1EfpPr4891/Cnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756804059; c=relaxed/simple;
-	bh=e00OUdT1mnCF6eVI0EFyPvJzgm4igqdrftik66PJbew=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fivyX/CZzzGgIORJ4RVPzEXdRxXl9w58lOu0XMJK/CEkTWGnqePlu+gjPMtIKGLqXCDPa4QwXWjwUD3WeTFc9JMitfXNPk6Z1tDyPBdjuQmc1MTyIqePVz3qBFO3r7um01AbcPWmlXNhF04lRx7oEFo9gWHbTs1RG6DibrislEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dk4rdEVM; arc=none smtp.client-ip=209.85.208.170
+	s=arc-20240116; t=1756804192; c=relaxed/simple;
+	bh=A8eyEfj3BP3VmKLPbiefQOv3kForpLTfoyzNz1iTBI4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=b9Q6JhzQD1qZ43fcw+bEPrM8lvwEVxi7JekyAc1w7ZFrnmVJBKI9HyoTxtUyiGKdzNtygZhDCWIqmJ4yn3bepoLpI8rgIPZFJ+QjeyqEWdzxkWSDc5d+PN2mWsbgARszKnVqFcjKWOAay6yYTajzqd3nsrrAgFroYBwGT7s+nsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FegpyobY; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dk4rdEVM"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-336cdca667aso21206651fa.0
-        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 02:07:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FegpyobY"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3dae49b1293so202219f8f.1
+        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 02:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756804055; x=1757408855; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e00OUdT1mnCF6eVI0EFyPvJzgm4igqdrftik66PJbew=;
-        b=dk4rdEVMMF0tnsOX9dkoanFquf4EmffDPgV/GBMbeWyxKvxvmT7bBoym7QemYtu+7d
-         aZcsI5EMxBBUrqGPlvrZGsJSw1dEJqm/B1ievc/jRnCJ4t3AiIwUCH2+Fp4j7iV5oeh/
-         9SOtJAGW03HPiUqDYqqQc1pRD/wsgMvc6erUeCzOEzZcs9E971sFQUSQ/wOJNTcF4PSH
-         E7N9HssptHsNQ8NI8l2NwEemDDJrDa8wXR5wZhwhIFLjw/DNe8h3tZdnMdiLTKxj3P8g
-         BHAvlnHaH3cE0rkwAedlbuUTXdiNGExG/dKJiL4j4eqqOPt7e2st+pHtRbRflp+9m0j1
-         ftIw==
+        d=gmail.com; s=20230601; t=1756804189; x=1757408989; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
+        b=FegpyobY53lG0uqeGAW9qpMqnOZUt+TlosbHy9SY2wcJiRb1GzPVBl6kAmjQfAsRjI
+         4bwIyg+8mL+VyRVQ8VdZENAALzerzHbgET4QakAxyMWumGaBwPziyJgvkidqMME0gm35
+         MAkrpvnoPHTbTGkbzGfSYfYZP9/C8h/HR6pRF48Dfm2CzfPYYYu4ZHEjkeOK5QfO3HwF
+         sxojkDQXdkAZf+QcmImMmIdw0wjFm5xZ4QbZ3wEODC53wDJJRYbB0sNAMt5o6BXpGvgb
+         oOIzVca2bRgSU9BDlGz0qpGcVb38OHQ4nfI1yKqaP7V/pGl4+ldJdl9vEZ3zUhiv+KJe
+         VELQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756804055; x=1757408855;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e00OUdT1mnCF6eVI0EFyPvJzgm4igqdrftik66PJbew=;
-        b=OOLHJhovqnKIK3+ksFxZUYxGXG3HftBt0taAiChplr+n9XJCAuDLEl3aXj9dmRHRgV
-         cQPk2GYklm/8FjtHss+HTZwCrrNhvmsrnAoyjmzFuWunyoDIiu3QBSTDo+z0upxOdRiU
-         y9BKJGGbXtZXwrcY+mVhAqAhV+7YeU1+BwFp/xryHm3TM3kv94E/JkHtUOwGtNMj5tNA
-         4gnQ8SrN5tF0SpxKQFzNDEgNLk6WwydYj3zcC1uJ22guqFB6Vn7XzfHmS30MMbklR2Ov
-         /nIZbSxOrw72slk+FhykK+KN6SrTS8w2FCt7kDueiS/43fP/HDyNWfcM9nR8Pc1tLF0f
-         06rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOxj3nBww3/qnXFrNGzIahM/oyoeipsP7mAtOh0Dzh1/xXMoMkczxcKvvvazXvPN/blLdSa5ifrH/Q9Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/JHWHPJ3tXs61pPcvETWE06dazJKBhJPu320XvLGz5M3DLjJ9
-	7vwOFLiIUfQ1t4WS8eng4kDqfb+BH43e4ZjGTnT7xYeq7CVlYOrGh5/W
-X-Gm-Gg: ASbGnctv5b67XSUbwPGRlrz1jcj/2S67/e8MpAO+wZt2yock3ZTKLSqyaQKOFShKbGo
-	YS1QMs7lziOoevkcKWb+iKOqDYzTg4ttV0TvOCEFv9I2IpLFRHqMcwhmxoHMP9HQafbbx4OeH5O
-	ZRRDonVGA0S9sjoNtBAYO1GgmocSG1l5GfC34rreCYgIkju8bEmx5KQ3oGD1/Wbjs6GfPiTeHPX
-	WyvuarKiS38RcCN83vuTNMd7/fJijsumVeBg6vgADeGhmC2N4ZZMRIqZkMFAiOFbWui3AWprtau
-	Qs5QM2SsOknhG33T05Z60ReGYy8dLbzHd0MqGDe4Nk5rC9cEIaRzPoDf1v4I9AbU70U81OQZ1wm
-	5+okogA9Z/YPoAT24KXs7elSn1O8LXxBa1Jg=
-X-Google-Smtp-Source: AGHT+IHD58ilwmPkhIhYFUWS4Wih4aWkYtPscZqFvQLCpLtyUtPO/FiEvUW/jiZcpPFZj0WebPje1g==
-X-Received: by 2002:a05:651c:50e:b0:336:8267:c1fa with SMTP id 38308e7fff4ca-336ca9b696emr26732971fa.19.1756804055195;
-        Tue, 02 Sep 2025 02:07:35 -0700 (PDT)
-Received: from foxbook (bey208.neoplus.adsl.tpnet.pl. [83.28.36.208])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-560827a020dsm530210e87.118.2025.09.02.02.07.34
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 02 Sep 2025 02:07:34 -0700 (PDT)
-Date: Tue, 2 Sep 2025 11:07:30 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: "David Wang" <00107082@163.com>
-Cc: "Mathias Nyman" <mathias.nyman@linux.intel.com>,
- WeitaoWang-oc@zhaoxin.com, gregkh@linuxfoundation.org,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, surenb@google.com, kent.overstreet@linux.dev
-Subject: Re: [PATCH] usb: xhci: Fix xhci_free_virt_devices_depth_first()
-Message-ID: <20250902110730.723a48a0.michal.pecio@gmail.com>
-In-Reply-To: <20250902104630.6a9f088a.michal.pecio@gmail.com>
-References: <20250829181354.4450-1-00107082@163.com>
-	<20250830114828.3dd8ed56.michal.pecio@gmail.com>
-	<5051e27a.2ba3.198fa7b5f31.Coremail.00107082@163.com>
-	<f9476552-a6dc-4f1c-91da-b15c8f0d9844@linux.intel.com>
-	<20250902093017.13d6c666.michal.pecio@gmail.com>
-	<446082a4.7dbe.199098cd654.Coremail.00107082@163.com>
-	<20250902104630.6a9f088a.michal.pecio@gmail.com>
+        d=1e100.net; s=20230601; t=1756804189; x=1757408989;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bw74ZDWYln3R5EhzIwK/dVcSfr5R7Z8FO22rXgIrEXw=;
+        b=qDuoPUiGkokjo1RyxgvFguqPBL8pA0DbzuhXlA0EA2WUbgy9txoTY1ggJsnEAYC5PP
+         ZrgvhDk60r2arLlVqHmbAaS7ospK2qcpxO4dWkudh72ovhMcUaYaGF/CVmgeuaE92HPX
+         1ycsG6VKrh7Gh8RZk+uGOIDWSgRtkZvfGrJXp8kriIJ9kV0ee78rKeej+KroZ1s8PfS7
+         63+cSLBg49wT7oiT07p6l5GtakqUYKyNs2Z8UNQpRw7tA+qGpUMgakg/tnfohRtLxnPm
+         Pqg2QHHmR/+RT5f3gz69RZklimlGejd+n+vpqzhybVfxfAdro2/bYjQ0qP7NQwJxdG9N
+         5neA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOoOp+SFXfA7/TMm9Xck5+zgmTuaBkZa8/hBHRfMC8JDA6CFiesS1CGLGx8gUMfkl/feqHQ/uMEgY9gw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxCXyQ8QkH8mXGcV6nCsYKMS/LaLOdM/pGNuHf+hPK/EauIXJ46
+	SG/4KD0cBvt6+1LIZOcIDavNkkPn4lPmWiJ6rMi1RULWvF61SXYQyLHM0ge32Lqh
+X-Gm-Gg: ASbGnctPEEyF6NFLTbAyKKpCrhhfx5SGEhI/E8qoDO01h+Dimlq1OFbmfZe4+AQiApP
+	bn3nN6x321wEESRRcNuUo/RfAEhKY29BVXhDgMhQZrZnIUgoeHyoytHeEMgd4xe5JqXD+O/wuPe
+	CnUlDL2hGN3QXKd/T3i++k5DfevTuQfPSHG1pL1kLjmMmaIr2sr15elFDbvytNfkJFGUCoelYlx
+	xAWuZCgw2+plSJVR2xpsIzqldSr9JPps0Jhkm5eHxB8HQQZT5D0akVufmZraQFoOCWB+lRCTIZl
+	dnujz3Vxxp2WkFQj7tz5WM6DcZq503+XdbZ4OBPut/MlSaYRltAmrN8K0nK/237TvHI2BPH/RvL
+	fFWCUcz60SpkFYB9MzPLlQFi0C7eK75oTqcok+sNiNJUp09wWdJuDeWUr3//VdclH9mr2LQ==
+X-Google-Smtp-Source: AGHT+IHNGi1WlUp37oda1jCD0mIQM+pwLYeo9d0bEci6H/DuqNOy5AfU0gRE95Kv3q/RMJ5wltAJRg==
+X-Received: by 2002:a05:6000:2586:b0:3cd:c10d:3b6b with SMTP id ffacd0b85a97d-3d1de4b9891mr7783573f8f.27.1756804188869;
+        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:3f02:d36b:e22e:74c6? ([2a02:168:6806:0:3f02:d36b:e22e:74c6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33add294sm20017536f8f.29.2025.09.02.02.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 02:09:48 -0700 (PDT)
+Message-ID: <1cc6781ea584aa00a8cda23db1fc8cd59f852a3d.camel@gmail.com>
+Subject: Re: [Bug 220479] New: [regression 6.16] mvebu: no pci devices
+ detected on turris omnia
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Jan Palus <jpalus@fastmail.com>, Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Thomas Petazzoni	
+ <thomas.petazzoni@bootlin.com>, Pali =?ISO-8859-1?Q?Roh=E1r?=
+ <pali@kernel.org>, 	linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, 	regressions@lists.linux.dev
+Date: Tue, 02 Sep 2025 11:09:47 +0200
+In-Reply-To: <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
+References: <bug-220479-41252@https.bugzilla.kernel.org/>
+	 <20250820184603.GA633069@bhelgaas>
+	 <42rznc7krv3gdwmdzfz6o5nalnzleiwfg44yleqjet67cu4ijm@pwap3ph2n2u7>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+b1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2 Sep 2025 10:46:30 +0200, Micha=C5=82 Pecio wrote:
-> On Tue, 2 Sep 2025 16:30:48 +0800 (CST), David Wang wrote:
-> > About the change from "<" to "<=3D", I did not observe any difference o=
-n my system. Is it because my system does not use up all slots? =20
+On Thu, 2025-08-21 at 02:45 +0200, Jan Palus wrote:
 >=20
-> This too, you would need to fiddle with devices (or connect enough
-> of them) to reach Slot ID 255 (probably the highest on most systems),
-> depending on the xHCI controller and its ID allocation policy.
-
-This made me wonder what those policies are. I'm too lazy for thorough
-testing, but I plugged and unplugged the same device a few times.
-
-Most HCs kept assigning ID 1, so they likely always pick the lowest.
-
-My AMD chipset, two ASMedia USB 3.1 controllers and a Fresco FL1100
-kept assigning sequentially increasing IDs, so I suppose I could pump
-it up near the top, connect two high speed hubs and trigger this bug.
-
-> But also as explained, this bug doesn't make things go boom just yet.
+> Relevant fragment of mvebu_get_tgt_attr() in mentioned commit:
 >=20
-> Except if combined with your bug in an obscure edge case:
+> +		u32 slot =3D upper_32_bits(range.bus_addr);
+> =C2=A0
+> -		if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_IO)
+> +		if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
+> =C2=A0			rtype =3D IORESOURCE_IO;
+> -		else if (DT_FLAGS_TO_TYPE(flags) =3D=3D DT_TYPE_MEM32)
+> +		else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32)
+> =C2=A0			rtype =3D IORESOURCE_MEM;
+> =C2=A0		else
+> =C2=A0			continue;
+> =C2=A0
+> =C2=A0		if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
 >=20
-> 1. A high speed hub has slot ID HCS_MAX_SLOTS-1 and some TT children.
-> 2. Another high speed hub has slot ID HCS_MAX_SLOTS.
-> 3. We start with freeing the second hub.
-> 4. The loop is entered and leaves vdev pointing at the first hub.
-> 5. The first hub is freed instead of the second one.
-> 6. Then its children are freed and UAF its tt_info.
+
+As far as I understand the situation, of_pci_range_parser_one() inherently =
+uses bus->get_flags()
+aka of_bus_pci_get_flags() to determine range.flags (see drivers/of/address=
+.c).
+
+And of_bus_pci_get_flags() does essentially the same thing as the code abov=
+e in mvebu_get_tgt_attr().
+So, now the translation logic is applied twice - which probably was not int=
+ended.
+
+To restore the original behaviour, I think the determination of rtype from =
+range.flags must be=C2=A0
+completely removed, and rtype must be replaced by range.flags.
+
+Something like this on top of mainline - completely untested, but maybe wor=
+th a try.
+
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pc=
+i-mvebu.c
+index 755651f338..3fce4a2b63 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -1168,9 +1168,6 @@ static void __iomem *mvebu_pcie_map_registers(struct =
+platform_device *pdev,
+        return devm_ioremap_resource(&pdev->dev, &port->regs);
+ }
+=20
+-#define DT_FLAGS_TO_TYPE(flags)       (((flags) >> 24) & 0x03)
+-#define    DT_TYPE_IO                 0x1
+-#define    DT_TYPE_MEM32              0x2
+ #define DT_CPUADDR_TO_TARGET(cpuaddr) (((cpuaddr) >> 56) & 0xFF)
+ #define DT_CPUADDR_TO_ATTR(cpuaddr)   (((cpuaddr) >> 48) & 0xFF)
+=20
+@@ -1189,17 +1186,9 @@ static int mvebu_get_tgt_attr(struct device_node *np=
+, int devfn,
+                return -EINVAL;
+=20
+        for_each_of_range(&parser, &range) {
+-               unsigned long rtype;
+                u32 slot =3D upper_32_bits(range.bus_addr);
+=20
+-               if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_IO)
+-                       rtype =3D IORESOURCE_IO;
+-               else if (DT_FLAGS_TO_TYPE(range.flags) =3D=3D DT_TYPE_MEM32=
+)
+-                       rtype =3D IORESOURCE_MEM;
+-               else
+-                       continue;
+-
+-               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D rtype) {
++               if (slot =3D=3D PCI_SLOT(devfn) && type =3D=3D range.flags)=
+ {
+                        *tgt =3D DT_CPUADDR_TO_TARGET(range.cpu_addr);
+                        *attr =3D DT_CPUADDR_TO_ATTR(range.cpu_addr);
+                        return 0;
+
+
