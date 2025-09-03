@@ -1,160 +1,112 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B23F1DE2B4;
-	Wed,  3 Sep 2025 12:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E8630ACEC;
+	Wed,  3 Sep 2025 16:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756901075; cv=none; b=JeWFi4rq9CQ7sQkw2SnwzRE+xGmioSpJlBHKPlXS2hnN9JmBkrd5rRE9Ptu06xV19TrHBkwo0Y2TrUWOIbV0nBdb/nxePcrXIuuUkk8EMpHauU9GclGg5aEsd3F+0kN5efQjjW3OeCM5lu4lCa70/eUcSE4EG/62lqJ+vGc2AlA=
+	t=1756918776; cv=none; b=JfS3LqQVrDDHEKw7k1iA/7tmU7FWi5d7u0RkEq3tUdxXiyJPGaIEnxdMGvIwY3rsOIKpPZjt909m4BewJO2rvocDx/gLRE3cucxUHEJMGXVk2cw2f7qJ7oMUdtbYyExqd4dw4tNPqA8dyxL3uQNgAdbeZfW6sIkrRNSENiqne4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756901075; c=relaxed/simple;
-	bh=Cyl0v7APsVBlLf5GdVdQAGAKxUgHPijlDA5HLDYiuLc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qzhZaZ/U1N2zAnNu8F4bGoUkve5WnwPfrWZh9HrTUJ+mwSOgPsHo0Z2AclAROJvY1b2aI81IfjUak6LzdJW8A7FO/CM+OptcdtfFTHacil3DttfzdiubJFexU+p5KUwrsyZ8p34rnS11LhVnVoUgNixfiLxR1RmhLsKgdoBMQsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hbvI6FyV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KhmTLhfR; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1756918776; c=relaxed/simple;
+	bh=Bqf24ykq34pargsaFkq2Si91QolnsDSUcmZFVagHHxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPAUA5wnyXlfQeYnHtLYLpI34jMrKdQ1Qpb+XVty3OtAqWvBB5/fn3hf7qgln+6MWN/OihOnjYfYb1Uwsd69TCimYVMudT1BkgAeYn+qe4BH4pw0bZ8eZMfKBSmfMj9/a8VEe2pGmIjhRJJyBPAG73ekMJ1wtcjCLfAxJq1gd+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du5TE5lY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hbvI6FyV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KhmTLhfR"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 999AF1D0001D;
-	Wed,  3 Sep 2025 08:04:31 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Wed, 03 Sep 2025 08:04:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1756901071;
-	 x=1756987471; bh=0xh9A7T8d3rEQAPQjYtdSK93dJzr1kzBQLs074dUMbA=; b=
-	hbvI6FyVCUJbdHkWoowZ1gCAHul+DGlhRs5tJrt3Muw9J8jT8xR5VL6yBlPflqlO
-	fLAheQzkl2Cjn671HL6aWxlog/J4eE6poZpPVvXO8mdm4p4ouxaQIW4Y234jCCbV
-	vPekvr0fDoNoCZf1kn0l+dr9/YoosactGYyMCK9inCK7ObeW7UyuJeGQ76RKpw1O
-	aKMrUjimJ8qKlRcJ7PeYeSeWgLLIhVmcIBt2xLRUWL2qBSZ75AYjIrzgC80aG7Az
-	61TIbSHy1rUmQWk/AaNisodrwfuBw5qqpPGVyA03G8n7nLWCGYzceCIYKhoONgCC
-	0T96yJaiBoHeaQb9d3nqgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756901071; x=
-	1756987471; bh=0xh9A7T8d3rEQAPQjYtdSK93dJzr1kzBQLs074dUMbA=; b=K
-	hmTLhfRpVKxhwZGrzgunLrJk0daRun/vSinsM45s4jnFVjc4ENRAa23NotMuy69+
-	/eScqHr1ImEpQXqxHJWrpAMctVXWrBR15vB34UzE2JyOFT6KvIJ+ENvtmOz3lIe9
-	/Xby/3CK+SgMp5Uws1jWSW48cQDVgnrAQeaUvefKN/XZIxi0ewpR2sRRGzjzQKl4
-	eCtMHOeWl9MypAz8oGhqD4eS4Dv7bYLPfC9RMbLeGIKI3LBhT27C2nDP8DkC/osf
-	yCwHtbVC+nkTtHlpvC9pJoykE8wLWLEWGffcCmgCle4qiXKPm3ewS83jKkdiYJ/B
-	leGB8192ASOzeAle04rDw==
-X-ME-Sender: <xms:zy64aGL2PbY7A2AyGHsaYHQrYwcCvmFvfV90tP5S5ydKeAoxyZUCOg>
-    <xme:zy64aOIPDKrxPO1BE9x3YIdOrGRSZ_MQGP_JezXP67p-MUgKqNg4SmP_KqbUmWuEm
-    9L2STadQOwI8CeiwNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeftdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
-    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhkoh
-    hulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnuggvrhhsrdhrohigvghllhes
-    lhhinhgrrhhordhorhhgpdhrtghpthhtohepsggvnhhjrghmihhnrdgtohhpvghlrghnug
-    eslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhdrtggrrhhpvghnthgvrheslhhi
-    nhgrrhhordhorhhgpdhrtghpthhtohepnhgrrhgvshhhrdhkrghmsghojhhusehlihhnrg
-    hrohdrohhrghdprhgtphhtthhopehlkhhfthdqthhrihgrghgvsehlihhsthhsrdhlihhn
-    rghrohdrohhrghdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggvvh
-    dprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:zy64aBnGeSuglvz5cWZB_X8Jxmi9kZQK5Z3rxwiUsjYh00AG7IyEYA>
-    <xmx:zy64aKWxzbE-AQeKVsxRuIfn5Bu3-wOPboVSpiHYv7I_f1pAxHE2XA>
-    <xmx:zy64aKTUEPpeo3sUuGTGzZzd2eRgK3PIm6OpagAfF5ZciXiBq1kTqg>
-    <xmx:zy64aHAv3Z7ZG9JlvBggXq44yGFTD0Rh_K_qdpz3Uqj2Pspn4XHNTQ>
-    <xmx:zy64aPT303sFsMLQiJhjIjCKuzQ5b191bpSzUN65_K9iqkvImicu2Ijc>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EC1C4700069; Wed,  3 Sep 2025 08:04:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du5TE5lY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA1FC4CEE7;
+	Wed,  3 Sep 2025 16:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756918776;
+	bh=Bqf24ykq34pargsaFkq2Si91QolnsDSUcmZFVagHHxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Du5TE5lYoogdhCZUtO1tel1NWCb+x+qPCPq3AV01bnDFGXDJRT39do3O1tCPzV4rh
+	 yS0i9EHdHo7tJ+8i/v93XBaqHQ5atOrYSve6VFvjL21XhFRWFqOJR86gnyEW4s2464
+	 sKhw6iR1mdlWKulnBALC/mBZYBz02XHK0rCLL7eBcdMeboglcMnGj6uW6ulA9t4d/+
+	 DNzP3DvqvpWSPMl/0+2yVxKLSnMBOG4XbQqsgMuxCrzV/wp/KdED0zTxhyojEwuA2O
+	 IWnf0MUhCF1wzyx07TUlZNwhYU09CKPzn1Qs7E7SyJ0dbDSd9EcbjDAshkm9U18Kyk
+	 /BFUncYou4Ecg==
+Date: Wed, 3 Sep 2025 09:59:31 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Vinod Koul <vkoul@kernel.org>, Guodong Xu <guodong@riscstar.com>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Benjamin Copeland <benjamin.copeland@linaro.org>
+Subject: Re: next-20250903 x86_64 clang-20 allyesconfig mmp_pdma.c:1188:14:
+ error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+Message-ID: <20250903165931.GA3288670@ax162>
+References: <CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com>
+ <a07b0ebf-25e7-48ba-a1da-2c04fc0e027f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AvKhge5cS9gB
-Date: Wed, 03 Sep 2025 14:04:10 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- clang-built-linux <llvm@lists.linux.dev>,
- "open list" <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
- lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Guodong Xu" <guodong@riscstar.com>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>
-Message-Id: <a07b0ebf-25e7-48ba-a1da-2c04fc0e027f@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com>
-References: 
- <CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com>
-Subject: Re: next-20250903 x86_64 clang-20 allyesconfig mmp_pdma.c:1188:14: error:
- shift count >= width of type [-Werror,-Wshift-count-overflow]
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a07b0ebf-25e7-48ba-a1da-2c04fc0e027f@app.fastmail.com>
 
-On Wed, Sep 3, 2025, at 12:08, Naresh Kamboju wrote:
+On Wed, Sep 03, 2025 at 02:04:10PM +0200, Arnd Bergmann wrote:
+> On Wed, Sep 3, 2025, at 12:08, Naresh Kamboju wrote:
+> 
+> > Build error:
+> > drivers/dma/mmp_pdma.c:1188:14: error: shift count >= width of type
+> > [-Werror,-Wshift-count-overflow]
+> >  1188 |         .dma_mask = DMA_BIT_MASK(64),   /* force 64-bit DMA
+> > addr capability */
+> >       |                     ^~~~~~~~~~~~~~~~
+> > include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
+> >    73 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+> >       |                                                      ^ ~~~
+> 
+> I see two separate issues:
+> 
+> 1. The current DMA_BIT_MASK() definition seems unfortunate, as the
+> '(n) == 64' check is meant to avoid this problem, but I think this
+> only works inside of a function, not in a static structure definition.
 
-> Build error:
-> drivers/dma/mmp_pdma.c:1188:14: error: shift count >= width of type
-> [-Werror,-Wshift-count-overflow]
->  1188 |         .dma_mask = DMA_BIT_MASK(64),   /* force 64-bit DMA
-> addr capability */
->       |                     ^~~~~~~~~~~~~~~~
-> include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
->    73 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
->       |                                                      ^ ~~~
+Right, this is one of our longest outstanding issues :/
 
-I see two separate issues:
+https://github.com/ClangBuiltLinux/linux/issues/92
+https://github.com/llvm/llvm-project/issues/38137
 
-1. The current DMA_BIT_MASK() definition seems unfortunate, as the
-'(n) == 64' check is meant to avoid this problem, but I think this
-only works inside of a function, not in a static structure definition.
-This could perhaps be avoided by replacing the ?: operator with
-__builtin_choose_expr(), but that likely causes other build failures.
+This only happens at global scope.
 
-2. The dma_mask logic in this driver looks very strange and makes
-no sense to me.
+> This could perhaps be avoided by replacing the ?: operator with
+> __builtin_choose_expr(), but that likely causes other build failures.
 
-Guodong Xu just added the line above, to set the dma mask for the spacemit
-variant, with the new logic being:
+Yeah, that makes the problem worse somehow even though GCC says the
+non-taken option should not be evaluated...
 
-+       /* Set DMA mask based on ops->dma_mask, or OF/platform */
-+       if (pdev->ops->dma_mask)
-+               dma_set_mask(pdev->dev, pdev->ops->dma_mask);
-+       else if (pdev->dev->coherent_dma_mask)
-                dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
-        else
-                dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
+  drivers/dma/mmp_pdma.c:1188:14: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+   1188 |         .dma_mask = DMA_BIT_MASK(64),   /* force 64-bit DMA addr capability */
+        |                     ^~~~~~~~~~~~~~~~
+  include/linux/dma-mapping.h:73:70: note: expanded from macro 'DMA_BIT_MASK'
+     73 | #define DMA_BIT_MASK(n) __builtin_choose_expr((n) == 64, ~0ULL, (1ULL<<(n))-1)
+        |                                                                      ^ ~~~
+  drivers/dma/mmp_pdma.c:1323:27: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+   1323 |                 dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
+        |                                         ^~~~~~~~~~~~~~~~
+  include/linux/dma-mapping.h:73:70: note: expanded from macro 'DMA_BIT_MASK'
+     73 | #define DMA_BIT_MASK(n) __builtin_choose_expr((n) == 64, ~0ULL, (1ULL<<(n))-1)
+        |                                                                      ^ ~~~
 
-This has multiple problems:
+> Guodong, how about a patch to drop all the custom dma_mask handling
+> and instead just use dma_set_mask_and_coherent(DMA_BIT_MASK(64))
+> or dma_set_mask_and_coherent(DMA_BIT_MASK(32)) here? Instead of
+> passing the mask in the mmp_pdma_ops, you can replace it e.g. with
+> a 'bool addr64' flag, or an 'int dma_width' number that
+> gets passed into the DMA_MASK_MASK().
 
- - the coherent_dma_mask is still left at the default 32-bit mask
-   for spacemit, which I think is a mistake, even if the effect
-   is the same
- - The existing
-   dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
-   is completely bogus, as the driver should just set a fixed
-   32-bit mask based on the capabilities of the device. No other
-   driver bsides mmp_pdma.c and pxa_dma.c does this.
- - The pxa/mmp variant clearly supports 32-bit addressing, no more,
-   no less, so just setting the 32-bit mask should be enough.
+If this works, I think it is worth pursuing to avoid this bogus
+warning/error.
 
-Guodong, how about a patch to drop all the custom dma_mask handling
-and instead just use dma_set_mask_and_coherent(DMA_BIT_MASK(64))
-or dma_set_mask_and_coherent(DMA_BIT_MASK(32)) here? Instead of
-passing the mask in the mmp_pdma_ops, you can replace it e.g. with
-a 'bool addr64' flag, or an 'int dma_width' number that
-gets passed into the DMA_MASK_MASK().
-
-     Arnd
+Cheers,
+Nathan
