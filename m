@@ -1,83 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11401C861A
-	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 01:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930822C375E
+	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 06:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756863327; cv=none; b=VgKyTn1U1sBR9+znSR1Gljtesk8GpVaoJhilyWm2JMIdEY2gMxijClf8GEZru9cbTmUcIXDo1w2TUe21NZUMCUlG59aXdPeuWRmUI9vBtBK+JzKKtfWtkKUxgsJzo6MZGlQqYd1AOvgldq+Gbe3wep9N2ePz+Ukmw09ozrWY15I=
+	t=1756881993; cv=none; b=K/BRwenyTr123dXYQRRWbUz+nSfWV27LJ37HjRL0h2E3i8cNzu5pcmUFxVEBJiktIF/CTLnbjZfakqwL8ISPGKtzunXxm0jw+q+c8Z9IXuCKh2fvsCdcE/6UwAY9OvBRbAQJvrNVDm2tHr8O7lxsAn/Yxun1czHCMIHogUG84RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756863327; c=relaxed/simple;
-	bh=kS0eRVrXMVdTSsrinzwyl4LziFG+Xfgo2McFxCw9UeI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zt3mUSPK02IscB+1EcG5bXLcGy2vjYNOoTFIdEvpCp4XqKBdjdtWSxv6VVQKghRVEUipJFWA/pGO+Zn3Ua7PWhmt1XioT1lolXzagAZe/Y6/2iVa4Ny3wwP/URSuQeacvU8pnUgYEAzl1bN6ERVxstuHmwDceRGuCHmjJWO/YWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lf4dDe7+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lf4dDe7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371FDC4AF09
-	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 01:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756863327;
-	bh=kS0eRVrXMVdTSsrinzwyl4LziFG+Xfgo2McFxCw9UeI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Lf4dDe7+J6l0yXw95iXWOF/wm1WdfTiWEELwC53Zh8PYlfuBOfrQXRBxUxHrbVlkS
-	 djiA9qcwzo04PZpEwbgNv9IozvADQ9WJHdY96vAYNYFDWOGL9D19mFAEil56iwp9HD
-	 9J4LUeW6A34CCKRuN5rOwZ2clprEPCEFwtncogfwQQUqBZaheBfsqnJsaSbgK4HVIZ
-	 p8kvIO6WbzGNo8Y6Goi+AJtP6m3KC3/SwNcoc6UXP9CCOWqGD8GGSYWzxgrDr+K02V
-	 Mb7d/X7N1FPMlCcfYNo1m3Vu7j5qTfMC7ENTgoHd7/O0zN9d9Vdl2Pc2AC1AU6rL+R
-	 HjA620BWFbrHA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-619487c8865so793442a12.1
-        for <regressions@lists.linux.dev>; Tue, 02 Sep 2025 18:35:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXDVwxoy3eML34WyGFxOpTH8gwhDgQ1tFlfbq9PRO3hIF9rCzGSxx50AP6aNXpfczgqOsu6/pw5NR2Zpw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyvr5KCUFd7vNqCSweeqepenmQXxf+ASMPciy2CKstYr8A+90R8
-	opNdHpnoRhtRIaElahvdZU9RMdNbxYzu71RpTu6O38qJkS4vyc2VQWSoJtUgkJxh8pql6OdxYhi
-	Xe1+KzBaaoT+53HXxhUGGX3SI7nax8g==
-X-Google-Smtp-Source: AGHT+IEyXujD35HTtCO9FAM4YHy4q5+2GF7J4I60L81qqYnXOHcmZ+uGWkffKxS4WQb6DcbLXVDv7SM4I97Y1At2C48=
-X-Received: by 2002:a17:907:3e06:b0:b04:5bb5:2745 with SMTP id
- a640c23a62f3a-b045bb52c9fmr290922166b.21.1756863325754; Tue, 02 Sep 2025
- 18:35:25 -0700 (PDT)
+	s=arc-20240116; t=1756881993; c=relaxed/simple;
+	bh=1Ai3J0OtNFLrQkIvtX6zHQqcvy0P1Ph7PXPl85zrnb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJNQ0BRBPjP1dWw+4K8kwGgA13cyPdjEgrFbPiUOWgoXNpiJ2+Jqk3qIlQTTQGOzXav+ZTaubQLxQI/olUfzMgJlkmZwtQ5KOhqjipQzHb+2q3rOQQ9vTFgtVN7vWcCjriUGWBW0nObcE7eLbkb0RWtRTePS6znFN7lQ36rRSjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uthG9-00042x-7J; Wed, 03 Sep 2025 08:46:21 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uthG7-003W5b-2M;
+	Wed, 03 Sep 2025 08:46:19 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uthG7-00HVQ8-1u;
+	Wed, 03 Sep 2025 08:46:19 +0200
+Date: Wed, 3 Sep 2025 08:46:19 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Oleksij Rempel <linux@rempel-privat.de>,
+	Hubert =?utf-8?Q?Wi=C5=9Bniewski?= <hubert.wisniewski.25632@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] net: usb: asix: deadlock on interface setup
+Message-ID: <aLfkOyYFY5ZGG6lZ@pengutronix.de>
+References: <DCGHG5UJT9G3.2K1GHFZ3H87T0@gmail.com>
+ <20250902163511.181fa76a@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <bug-220479-41252@https.bugzilla.kernel.org/> <20250820184603.GA633069@bhelgaas>
- <20250902203226.u4i43vygl4bl2dqa@pali>
-In-Reply-To: <20250902203226.u4i43vygl4bl2dqa@pali>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 2 Sep 2025 20:35:14 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+cytAQAtSB7VjR8oKrXJJSSrOouKQZYQAWNvu+tStTnA@mail.gmail.com>
-X-Gm-Features: Ac12FXw30tgPmSSwJF2Zx6uteBTHUpxo3W52x3Ym0Mw_DjEpBw5DBBVaxiwsK_w
-Message-ID: <CAL_Jsq+cytAQAtSB7VjR8oKrXJJSSrOouKQZYQAWNvu+tStTnA@mail.gmail.com>
-Subject: Re: [Bug 220479] New: [regression 6.16] mvebu: no pci devices
- detected on turris omnia
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Jan Palus <jpalus@fastmail.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250902163511.181fa76a@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On Tue, Sep 2, 2025 at 3:32=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> wr=
-ote:
->
-> These issues have been discussed more times for last 3 years.
-> Tested changes which are fixing real bugs and are improving the
-> pci-mvebu.c driver from people listed as M: in MAINTAINERS are being
-> rejected or silently ignored. And untested changes which are not going
-> to fix any bug are being accepted and causing new regressions. People
-> then reporting bug reports to M: people who cannot do anything with it.
-> The only advice which they can get is to not use mainline kernel.
-> This pci-mvebu.c driver in mainline kernel is broken and nobody wanted
-> to do anything with this situation for last 3 years, I was pointing for
-> it more times. Due to this I'm ignoring bug reports for pci-mvebu.c
-> driver for mainline kernel.
+On Tue, Sep 02, 2025 at 04:35:11PM -0700, Jakub Kicinski wrote:
+> On Sun, 31 Aug 2025 10:50:35 +0200 Hubert Wiśniewski wrote:
+> > Trying to bring an AX88772B-based USB-Ethernet adapter up results in a
+> > deadlock if the adapter was suspended at the time. Most network-related
+> > software hangs up indefinitely as a result. This can happen on systems
+> > which configure USB power control to 'auto' by default, e.g. laptops
+> > running `tlp`.
+>  
+> Oleksij, this seems to date back to commit e0bffe3e6894 ("net: asix:
+> ax88772: migrate to phylink"). Taking rtnl_lock in runtime resume
+> callbacks is known to result in unhappiness :(
+> 
+> Could you check if commit e110bc825897 ("net: usb:
+> lan78xx: Convert to PHYLINK for improved PHY and MAC management")
+> isn't similarly flawed?
 
-This makes no sense. Mainline is broken, but yet there's a regression
-in mainline breaking the driver. The pci-mvebu.c maintainers have the
-ability to test patches, but refuse to test any submitted patches
-other than their own. I guess the only solution here is just remove
-the driver...
+Yes, sorry for delay answer.  I'll investigate it at Friday.
 
-Rob
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
