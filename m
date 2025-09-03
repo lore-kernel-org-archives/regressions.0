@@ -1,87 +1,195 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930822C375E
-	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 06:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162811E2307
+	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 06:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756881993; cv=none; b=K/BRwenyTr123dXYQRRWbUz+nSfWV27LJ37HjRL0h2E3i8cNzu5pcmUFxVEBJiktIF/CTLnbjZfakqwL8ISPGKtzunXxm0jw+q+c8Z9IXuCKh2fvsCdcE/6UwAY9OvBRbAQJvrNVDm2tHr8O7lxsAn/Yxun1czHCMIHogUG84RI=
+	t=1756882693; cv=none; b=BN9Zx0BjjoxtfBpnqXySPpmaHlPmW5InA67RHeCzAB7gRSX7jxCn/5c2g3rXcb+B1TDVSq1mAfEwCcYvrtJEyOIQp3x8nJHkuDAPXffmtJYBmRp60cetQDoPNUTGNisZfMDWntOQnrCd/WLfvd4joY3MyoY0n4kv4YEBxtD4AHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756881993; c=relaxed/simple;
-	bh=1Ai3J0OtNFLrQkIvtX6zHQqcvy0P1Ph7PXPl85zrnb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lJNQ0BRBPjP1dWw+4K8kwGgA13cyPdjEgrFbPiUOWgoXNpiJ2+Jqk3qIlQTTQGOzXav+ZTaubQLxQI/olUfzMgJlkmZwtQ5KOhqjipQzHb+2q3rOQQ9vTFgtVN7vWcCjriUGWBW0nObcE7eLbkb0RWtRTePS6znFN7lQ36rRSjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uthG9-00042x-7J; Wed, 03 Sep 2025 08:46:21 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uthG7-003W5b-2M;
-	Wed, 03 Sep 2025 08:46:19 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uthG7-00HVQ8-1u;
-	Wed, 03 Sep 2025 08:46:19 +0200
-Date: Wed, 3 Sep 2025 08:46:19 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Oleksij Rempel <linux@rempel-privat.de>,
-	Hubert =?utf-8?Q?Wi=C5=9Bniewski?= <hubert.wisniewski.25632@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] net: usb: asix: deadlock on interface setup
-Message-ID: <aLfkOyYFY5ZGG6lZ@pengutronix.de>
-References: <DCGHG5UJT9G3.2K1GHFZ3H87T0@gmail.com>
- <20250902163511.181fa76a@kernel.org>
+	s=arc-20240116; t=1756882693; c=relaxed/simple;
+	bh=2BZhoOUZheHr4Wb/vRNV2zyISKB/M04ADASgZrBV3iU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jV0yE3ml6b7ABbnYOpNHQKFmg/4mwM87leKW4IwIwQTmMxHBiIj68tGi0nmDwCEvwAsnqySFNwjH/akBWAE0wtzGOihD18gdcApEPvyMXDodRTAzov2gAz5xayJcH+beaUVaq6lcUDivSM12U8Vj1gZU9vGsCdFDcoSW+H3g1q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w002.hihonor.com (unknown [10.68.28.120])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4cGthw6cNMzYnVPM;
+	Wed,  3 Sep 2025 14:57:36 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w002.hihonor.com
+ (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 3 Sep
+ 2025 14:57:58 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 3 Sep
+ 2025 14:57:58 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <wangzijie1@honor.com>
+CC: <adobriyan@gmail.com>, <akpm@linux-foundation.org>, <ast@kernel.org>,
+	<brauner@kernel.org>, <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+	<k.shutemov@gmail.com>, <linux-fsdevel@vger.kernel.org>,
+	<polynomial-c@gmx.de>, <regressions@lists.linux.dev>,
+	<rick.p.edgecombe@intel.com>, <stable@vger.kernel.org>,
+	<viro@zeniv.linux.org.uk>, <spender@grsecurity.net>
+Subject: Re: [PATCH v3] proc: fix missing pde_set_flags() for net proc files
+Date: Wed, 3 Sep 2025 14:57:58 +0800
+Message-ID: <20250903065758.3678537-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250821105806.1453833-1-wangzijie1@honor.com>
+References: <20250821105806.1453833-1-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250902163511.181fa76a@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+Content-Type: text/plain
+X-ClientProxiedBy: w012.hihonor.com (10.68.27.189) To a011.hihonor.com
+ (10.68.31.243)
 
-On Tue, Sep 02, 2025 at 04:35:11PM -0700, Jakub Kicinski wrote:
-> On Sun, 31 Aug 2025 10:50:35 +0200 Hubert Wiśniewski wrote:
-> > Trying to bring an AX88772B-based USB-Ethernet adapter up results in a
-> > deadlock if the adapter was suspended at the time. Most network-related
-> > software hangs up indefinitely as a result. This can happen on systems
-> > which configure USB power control to 'auto' by default, e.g. laptops
-> > running `tlp`.
->  
-> Oleksij, this seems to date back to commit e0bffe3e6894 ("net: asix:
-> ax88772: migrate to phylink"). Taking rtnl_lock in runtime resume
-> callbacks is known to result in unhappiness :(
+> To avoid potential UAF issues during module removal races, we use pde_set_flags()
+> to save proc_ops flags in PDE itself before proc_register(), and then use
+> pde_has_proc_*() helpers instead of directly dereferencing pde->proc_ops->*.
 > 
-> Could you check if commit e110bc825897 ("net: usb:
-> lan78xx: Convert to PHYLINK for improved PHY and MAC management")
-> isn't similarly flawed?
+> However, the pde_set_flags() call was missing when creating net related proc files.
+> This omission caused incorrect behavior which FMODE_LSEEK was being cleared
+> inappropriately in proc_reg_open() for net proc files. Lars reported it in this link[1].
+> 
+> Fix this by ensuring pde_set_flags() is called when register proc entry, and add
+> NULL check for proc_ops in pde_set_flags().
+> 
+> [1]: https://lore.kernel.org/all/20250815195616.64497967@chagall.paradoxon.rec/
+> 
+> Fixes: ff7ec8dc1b64 ("proc: use the same treatment to check proc_lseek as ones for proc_read_iter et.al")
+> Cc: stable@vger.kernel.org
+> Reported-by: Lars Wendler <polynomial-c@gmx.de>
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+> v3:
+> - followed by Christian's suggestion to stash pde->proc_ops in a local const variable
+> v2:
+> - followed by Jiri's suggestion to refractor code and reformat commit message
+> ---
+>  fs/proc/generic.c | 38 +++++++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/proc/generic.c b/fs/proc/generic.c
+> index 76e800e38..bd0c099cf 100644
+> --- a/fs/proc/generic.c
+> +++ b/fs/proc/generic.c
+> @@ -367,6 +367,25 @@ static const struct inode_operations proc_dir_inode_operations = {
+>  	.setattr	= proc_notify_change,
+>  };
+>  
+> +static void pde_set_flags(struct proc_dir_entry *pde)
+> +{
+> +	const struct proc_ops *proc_ops = pde->proc_ops;
+> +
+> +	if (!proc_ops)
+> +		return;
+> +
+> +	if (proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+> +		pde->flags |= PROC_ENTRY_PERMANENT;
+> +	if (proc_ops->proc_read_iter)
+> +		pde->flags |= PROC_ENTRY_proc_read_iter;
+> +#ifdef CONFIG_COMPAT
+> +	if (proc_ops->proc_compat_ioctl)
+> +		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+> +#endif
+> +	if (proc_ops->proc_lseek)
+> +		pde->flags |= PROC_ENTRY_proc_lseek;
+> +}
+> +
+>  /* returns the registered entry, or frees dp and returns NULL on failure */
+>  struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+>  		struct proc_dir_entry *dp)
+> @@ -374,6 +393,8 @@ struct proc_dir_entry *proc_register(struct proc_dir_entry *dir,
+>  	if (proc_alloc_inum(&dp->low_ino))
+>  		goto out_free_entry;
+>  
+> +	pde_set_flags(dp);
+> +
+>  	write_lock(&proc_subdir_lock);
+>  	dp->parent = dir;
+>  	if (pde_subdir_insert(dir, dp) == false) {
+> @@ -561,20 +582,6 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
+>  	return p;
+>  }
+>  
+> -static void pde_set_flags(struct proc_dir_entry *pde)
+> -{
+> -	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT)
+> -		pde->flags |= PROC_ENTRY_PERMANENT;
+> -	if (pde->proc_ops->proc_read_iter)
+> -		pde->flags |= PROC_ENTRY_proc_read_iter;
+> -#ifdef CONFIG_COMPAT
+> -	if (pde->proc_ops->proc_compat_ioctl)
+> -		pde->flags |= PROC_ENTRY_proc_compat_ioctl;
+> -#endif
+> -	if (pde->proc_ops->proc_lseek)
+> -		pde->flags |= PROC_ENTRY_proc_lseek;
+> -}
+> -
+>  struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+>  		struct proc_dir_entry *parent,
+>  		const struct proc_ops *proc_ops, void *data)
+> @@ -585,7 +592,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+>  	if (!p)
+>  		return NULL;
+>  	p->proc_ops = proc_ops;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_data);
+> @@ -636,7 +642,6 @@ struct proc_dir_entry *proc_create_seq_private(const char *name, umode_t mode,
+>  	p->proc_ops = &proc_seq_ops;
+>  	p->seq_ops = ops;
+>  	p->state_size = state_size;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_seq_private);
+> @@ -667,7 +672,6 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
+>  		return NULL;
+>  	p->proc_ops = &proc_single_ops;
+>  	p->single_show = show;
+> -	pde_set_flags(p);
+>  	return proc_register(parent, p);
+>  }
+>  EXPORT_SYMBOL(proc_create_single_data);
+> -- 
+> 2.25.1
 
-Yes, sorry for delay answer.  I'll investigate it at Friday.
+Hi all,
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Sorry for disturbing, Brad reported type confusion introduced by this patch
+to me, we missed a part in the definition of proc_dir_entry:
+        union {
+                const struct proc_ops *proc_ops;
+                const struct file_operations *proc_dir_ops;
+        };
+
+Quoting the email he sent to me:
+"
+any dereference of ->proc_ops assuming it is a proc_ops structure results in type confusion,
+it probably won't be (easily) noticed without CONFIG_RANDSTRUCT because of the way in which
+proc_flags overlaps with the module owner pointer in the file_operations structure(and the
+alignment of the struct module pointed to).
+
+With RANDSTRUCT enabled, users are likely to observe warnings on proc dir removal like:
+[ 19.093369] removing permanent /proc entry '12/i8042'
+[ 19.093396] WARNING: CPU: 0 PID: 1 at fs/proc/generic.c:886
+remove_proc_subtree+0xcc/0x218
+"
+
+I examined where proc_register() is called, we can do !S_ISDIR(dp->mode) test before calling
+pde_set_flags() to fix it(Brad also suggested to do this), or we can drop this patch and
+apply the initial version[1]. I think the former is better.
+
+Dose anyone have any suggestions?
+
+[1] https://lore.kernel.org/all/20250818040535.564611-1-wangzijie1@honor.com/.
+
