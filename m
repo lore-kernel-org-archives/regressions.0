@@ -1,103 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3F82820B6;
-	Wed,  3 Sep 2025 07:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AF835957
+	for <regressions@lists.linux.dev>; Wed,  3 Sep 2025 10:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885814; cv=none; b=AsGn5xut16nTBKIzJcehuUQ4XXT/S7JhTxnaCB1HulLO25i0ClBQWOel7pBI2/g1WjThKHnfCPiKoPEzvojQBOoViOXkYCIxYvjkunxe6UbtnDBXtz6iUNV3OnQnwiAz24PpLfGw3+B2MoY3QGclV5szABl49CvblIxZfGpMyQY=
+	t=1756894104; cv=none; b=J/mnVNr7Yv5X0wsglnG53i9cpAY776VxkF6LNL/3Vk4NBjOcusU3lwYX8Wqmw+/OzrWNEUisaagdxhlpVx8QoRpAnvCn5yY7CL6RBZ5AvDyQF/ViYCa552ndS+BbDYcihCZwNnpFoEfMRkOPU4VEVPjz4Hh7FZaZrXEMImHGjGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885814; c=relaxed/simple;
-	bh=5akVTFofggby9D3NroVdSFslNTvcjqv8xij7f8QA1t8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TB018P4+eL++woiokLrXWqS6aq1pvYeyfMRcYr14ZPVaYPV0pOBzL++K5vvPb17IicSWviAbSXm5uG+IfULvgBajkptp8n4Y9VuL92Sp4ijZh5YnsPvxSxrWn8ht40AS/rchWlLUjnXhY0Jcc0W1KUIhcFUbu/UZop1cVKLkNY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgQJrgQb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756894104; c=relaxed/simple;
+	bh=N60bxwoBK42jCkCkhaiyJ2RpMvLMJ+7cNdqT2d4o0Pw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fVT5nHcvk9up4xaH+6dpRy/DIuxAz5fdv7YpSSE8fJNjs+K2J/oNd5u9Hu20A7U8k+qd+erTbASWkLskBEq4ilgr0HvEpyKES6lGDn25MYJovd/XrZIG5L1BHBjNFYIcTEziZG58BMqr+AJ24vuy5prUFnOusPZauaYGsfq6kyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QD6Eo5R5; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgQJrgQb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBEC7C4CEF0;
-	Wed,  3 Sep 2025 07:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756885813;
-	bh=5akVTFofggby9D3NroVdSFslNTvcjqv8xij7f8QA1t8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CgQJrgQbFSIpsGJz3v4UQ/I4zcdTTIQxNXa0T3A6+MC/W3X4Ly4UVjMwGXYg8FJiK
-	 1JBzpl1daPS8nag5vkVFH0i9U+rfh5uSszNxuV7cy0Lg8W83JP+z6W1ScHxc0g12WD
-	 qTNu2dOprqyF+eqWLi479M6GiHMDvMSKRPjo4pXraKRoeKSgpzrf8FvTuGQU/RJPXI
-	 zTPRbgFFopyqFE+kqXfiiwWvJ/w7h7ihBAZYvsGo79/qZQyT9+uNIt1FAXWKr6XnSI
-	 8IRIkmL9uj/4fcCbF3DjWWp1A0Io+CQIkD9RryGxYZ7CevkiOWp5cU+Bkj2obEZN1Y
-	 sPdQ2YMgVsisA==
-Date: Wed, 3 Sep 2025 13:20:04 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Jan Palus <jpalus@fastmail.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [Bug 220479] New: [regression 6.16] mvebu: no pci devices
- detected on turris omnia
-Message-ID: <fi257eqhpzxp245g5vab3ttth5kuiuwpk7dsyhnoxo4sjlq535@fgpwb442eeek>
-References: <bug-220479-41252@https.bugzilla.kernel.org/>
- <20250820184603.GA633069@bhelgaas>
- <20250902203226.u4i43vygl4bl2dqa@pali>
- <CAL_Jsq+cytAQAtSB7VjR8oKrXJJSSrOouKQZYQAWNvu+tStTnA@mail.gmail.com>
- <20250903073558.6v2d7q6n6hm2vv3a@pali>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QD6Eo5R5"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-32326793a85so5054537a91.1
+        for <regressions@lists.linux.dev>; Wed, 03 Sep 2025 03:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756894102; x=1757498902; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m8UwOAQLFxlapL4wJjDPziLZroOio1WKHWOdBe615V4=;
+        b=QD6Eo5R54PIu2KzHjRhEnmLkGhh6ZsdSRiBC1KexRhDjZz17jfryQhhBkl5eDidEoT
+         +K0H3HkUApBkrDLbkcm/ctgBdvbcabqF0rmg9m70Gikjrd6p51QP+hMIMJDP1SySwvUn
+         aT5YdBz1hbe8qrTgwkmdV/EVMEyLSS+9FaSi0JM46yKUgVXB3TdC4X9y60HgwaJhEMo/
+         AZeJcaYo7TZQ7aMCmxiJXLH90DZeAbIyUjRy2DgY731qZTXPT1ilPRWD9VoFIkV+v9xN
+         ugHEVwzXJXpfIkOmNuL4w1lXuQi9r4YgTx9jJn/fuiX0YZbZ3ur9eZVEb+p75mtJX7BR
+         WN7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756894102; x=1757498902;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m8UwOAQLFxlapL4wJjDPziLZroOio1WKHWOdBe615V4=;
+        b=sla22kLxZjCTu3hNLduKqxUTut9Yt5XD/am6lZgRrt2jd5b5V4l5P7b3FzSBXEqIHE
+         WVfbnpm1GVuno8ikO5d/koI/Jj+Kgr4lxO4o52SeJbH/7vjEciBDGl2pKI5mbD6dVZbT
+         xtzO89MRC0tpeWh+HtHLupzcY0T5ucbzUmdrx88bn86uUH3mZal5o43V5RR1KBbzIB8N
+         94t1HKSCaADGnO+SPkrcEkm8qh1X+f46n5EEEmcKmUWjvOWuCih1+lI/5RvXUYcpTmBb
+         3JgPsSZza9SPQRFKAlnmEvzaI8mxVffNppU/Mmx6Sh0BDItvYgK2uRXVtTH1cl+xr15g
+         r18Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW5DL6vJ/D6lLfK7x3wsKXAgRI9iDd35gl6KiW+JrZih/OO7hEAVp/nGjj9yhS08Y5lK690NYPCZo9V/g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzjym23e4QcR3mANkGBURicCBItwERHE+glSHagXEVO7W7gJBj8
+	cHVyJh2BUu1troHseVF6vDWkdj+8aEt+rbv3S1t4wjdl8uTVJL89MvfKHeIB6L1pt8vq/1qG+/l
+	/zVnNBJgNzualKEAKbnl1nw96wUDjx9jBYQnGgsNmaw==
+X-Gm-Gg: ASbGncsbXp26UuVN9zjb24kFITWuc4SXzuniOSAXMr1ZpsXZg3rl9sOPTD+O+j3/N7y
+	RgDHhAlNrwi/RDC9k8+eld+8BcqyIRiVenotU1R+Vt1DeyjJ8F83nnUGfqT3tmgM/i6P0BLP2Xh
+	+hn0fRynx60mQcjXYQfD74m2mHUt1h99xHPNxBnixIAu6cBBps/UxV/lbh5h4mPrHb7+c4FjRM+
+	OiLzZzfB5VFJikLnToo2d3iWNdFJeAkUnGSfLvK
+X-Google-Smtp-Source: AGHT+IFXPS/WTlketDT7Ry+T0jvnXkJWiEWLHz4L2qR0cIclYFFQxTiDX5NTPXgKjBbk7T07stAxT1Awro5pXflUEHw=
+X-Received: by 2002:a17:90b:54c5:b0:329:8160:437a with SMTP id
+ 98e67ed59e1d1-3298160446amr17933963a91.24.1756894102326; Wed, 03 Sep 2025
+ 03:08:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250903073558.6v2d7q6n6hm2vv3a@pali>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 3 Sep 2025 15:38:11 +0530
+X-Gm-Features: Ac12FXxzMFZM2zT7oOOLzDits6M_03K1dnyTRhCYTrY8QuqW8ke90eorpMyKwq0
+Message-ID: <CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com>
+Subject: next-20250903 x86_64 clang-20 allyesconfig mmp_pdma.c:1188:14: error:
+ shift count >= width of type [-Werror,-Wshift-count-overflow]
+To: clang-built-linux <llvm@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
+	dmaengine@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Vinod Koul <vkoul@kernel.org>, Guodong Xu <guodong@riscstar.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 03, 2025 at 09:35:58AM GMT, Pali Rohár wrote:
-> On Tuesday 02 September 2025 20:35:14 Rob Herring wrote:
-> > On Tue, Sep 2, 2025 at 3:32 PM Pali Rohár <pali@kernel.org> wrote:
-> > >
-> > > These issues have been discussed more times for last 3 years.
-> > > Tested changes which are fixing real bugs and are improving the
-> > > pci-mvebu.c driver from people listed as M: in MAINTAINERS are being
-> > > rejected or silently ignored. And untested changes which are not going
-> > > to fix any bug are being accepted and causing new regressions. People
-> > > then reporting bug reports to M: people who cannot do anything with it.
-> > > The only advice which they can get is to not use mainline kernel.
-> > > This pci-mvebu.c driver in mainline kernel is broken and nobody wanted
-> > > to do anything with this situation for last 3 years, I was pointing for
-> > > it more times. Due to this I'm ignoring bug reports for pci-mvebu.c
-> > > driver for mainline kernel.
-> > 
-> > This makes no sense. Mainline is broken, but yet there's a regression
-> > in mainline breaking the driver. The pci-mvebu.c maintainers have the
-> > ability to test patches, but refuse to test any submitted patches
-> > other than their own. I guess the only solution here is just remove
-> > the driver...
-> > 
-> > Rob
-> 
-> This is not the way how to get patches being tested. Ignoring other
-> people and taking untested patches because you did not wanted to
-> communicate with maintainers. I have no reason to test other patches if
-> my own are being ignored. This is fair. In past I spent lot of time on
-> addressing issues in this driver, preparing fixes for real bugs and
-> whole time was wasted. And if you expected that it would work in that,
-> then go ahead and do it, remove the driver.
-> 
+The following build warnings / errors were noticed on x86_64 allyesconfig
+with clang-20 toolchain running on Linux next-20250903 tag.
 
-Pali, as I communicated earlier, please send your fixes again and I'll try to
-get them merged if we do not have any blocking reasons and the patches make
-sense. I do not know what happened earlier with your patches and that's
-irrelevant for me.
+But the gcc-13 builds passed.
 
-But if none of the other mainainters oppose your changes (IRQ in specific),
-there are no reasons to not merge them IMO. But if there are concerns, then it
-is your job to address them.
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-That being said, if you do not want to send them again and the driver continues
-to being untested in mainline, we may need to mark it as Orphan/Obsolete and get
-it removed later.
+First seen on next-20250903
+Bad: next-20250903
+Good: next-20250902
 
-- Mani
+Build regression: next-20250903 x86_64 clang-20 allyesconfig
+mmp_pdma.c:1188:14: error: shift count >= width of type
+[-Werror,-Wshift-count-overflow]
 
--- 
-மணிவண்ணன் சதாசிவம்
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+x86_64:
+  build:
+    * clang-20-allyesconfig
+
+Build error:
+drivers/dma/mmp_pdma.c:1188:14: error: shift count >= width of type
+[-Werror,-Wshift-count-overflow]
+ 1188 |         .dma_mask = DMA_BIT_MASK(64),   /* force 64-bit DMA
+addr capability */
+      |                     ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
+   73 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+      |                                                      ^ ~~~
+1 error generated.
+make[5]: *** [scripts/Makefile.build:287: drivers/dma/mmp_pdma.o] Error 1
+
+
+## Source
+* Kernel version: 6.17.0-rc4
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250903
+* Git commit: 5d50cf9f7cf20a17ac469c20a2e07c29c1f6aab7
+* Architectures: x86_64
+* Toolchains: clang-20
+* Kconfigs: allyesconfig
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29752023/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250903/build/clang-20-allyesconfig/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32B39xPuITjxcbak13h2MrLZJP4/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
