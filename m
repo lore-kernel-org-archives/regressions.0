@@ -1,171 +1,308 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765A22FD7B2
-	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 08:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEE81F4622
+	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 09:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757060775; cv=none; b=s+Av7jjinPpOx1yWawWic2MvH0Uhwoc0rEMEoUjp6zTiP0Ajky2YE/AaxGttZU3eU50IbUudKh6TVtnpC9d29GtQ6IuQ7aogGsq4HoeikPXv0LwhshmUwJcrAjfIDAO5kFy++pAUxGOLqPLL/b6B2JaSCPNglHuqsAogfn2pC08=
+	t=1757064661; cv=none; b=MyiIsAo7v1GBcjVd4lcDvHEOYcRLGuTzSq/Xy1yRhPEEwS2AvVFJeVApz0kofsjS0U6xVQ+VKGlCXHGVcxZxQDKnLlT6PK02BIHi9GedHQmBQuo+hPEvZLe8xBSyfm59GnWSpOXLBqB0eRLKWM/y+WePPjWNRkZYs7b6mjdHPPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757060775; c=relaxed/simple;
-	bh=3/EUyVSXw7ZBzcFANZXOOB2TNuayGC6MtQRvvDpVK7I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=M5XYYxbVJFjIdqK8xQcSxxHS1/XfTfdUsjsFRz7yKnqLlptYM5/+UoYtIco2Blwe2wLgIdkp7Ep4LgESfgeiJK+s8uLOQqrE9K3xPmEUoehHlR3J899rd8L8OQdUD8tBfA9ViU9Wm0PSIF055psz/LKukDMKMBqfGikvwlL9HcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VJ4n1zk4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FYDfoGiZ; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1757064661; c=relaxed/simple;
+	bh=cComBjj/vDPU72+FvDU/MvSfl4KJJjzD7B7BldnVSPI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mSfcShD/B3kVpXfZlmbxOnmMhhKXc8kfJ384EfR75ADZzL7X8H0Ti2mJ7+UA2IB8MF3KyeTUxj+sSE2320hNULE1FKItUZVFt0N1pukblYt5xC88rLZyqSDvpxn8XWk7MK/AjI4L48anOM/227WRIf0pdLpz/jcXJGITYPms788=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v+aKV88I; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VJ4n1zk4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FYDfoGiZ"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 93A09EC03E5;
-	Fri,  5 Sep 2025 04:26:10 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 05 Sep 2025 04:26:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1757060770;
-	 x=1757147170; bh=46Gf8YV7inpP79cT31JMwJ9zdtW7od2OINqJDqlzb0Y=; b=
-	VJ4n1zk4hXV58Qsiz7ZHwS+VtME25cWGVlG5GfvcxTEzgVcJ/lm2lwj+PX5gj/34
-	JfdJeXeaQL7yx9nwT+x8gi7qxA0c4K4fDtG/FkCZCFzN1CUTQHgVCL6Z/Gf6eRkd
-	RfgHGBpSUn8pCdMv3RIE3YAZwX0gRXHLRxz3yZNfE4G7NfvO0doYqsL9e3/kVKSq
-	nTdfKyHy4uz5XYDG+DB0g8SBu+Y5qa8qMKcwR+/625hkTKcuohzgq67bJA8I13s/
-	zDsUyuSaYY2XZiUwcnB6vE0rHEqSPE1BrHE2ipPOI08pRVahSpuoJv2wGLxANRe1
-	WXkIKgbm1luXp16ZZ9vf9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757060770; x=
-	1757147170; bh=46Gf8YV7inpP79cT31JMwJ9zdtW7od2OINqJDqlzb0Y=; b=F
-	YDfoGiZXEFyTPFB2CGXAhT4i7V836VnksZorSOjm8v2363Mo6NJpoSsBAMiyuvk9
-	qXqcIF6NEaRhI9kPfxdYrQEqYOID3RsAVgN2ONhOjqCipCDGWPRxQQpwG40P4+1i
-	2MrmzEDLhNg+GeiVYi5uSMQDOMWySmt1YSd5I4kcLJNj4D7XI25J7AipmOivIqLT
-	W7VapMInyPo6MWUMlsZn8TFnCIduPCk5b9RmALgSxGi50ASPi/eCkMzmjr4FAMjS
-	5SJm0G/Rq10R9luYnKJJL0Gbkd8eHKwkXdZI1BWOf4UBphLo1phQ0WxK5w7tubPA
-	1NXu0Af+Xwq9KynkGOSCw==
-X-ME-Sender: <xms:op66aGQ-RsuVUFNkZr4UFTFwQxLNAVaKnIvpZkIuE_ezbYJWoQXAyw>
-    <xme:op66aLyEHC2ljzxZ-CmN5GQ1rl3dOr0D2ci7KdUCYUPoLxoX6a8kXXRwnduM5ZqeA
-    mHeX-7lQ5fH1Wc5NoA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekgeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    epfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefhnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphht
-    thhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghhvghlghgrrghsse
-    hgohhoghhlvgdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdr
-    ohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hnuggvrhhsrdhrohigvghllheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsggvnhhj
-    rghmihhnrdgtohhpvghlrghnugeslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnh
-    drtggrrhhpvghnthgvrheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhkfhhtsehl
-    ihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdrkhgrmhgsohhjuheslhhinh
-    grrhhordhorhhgpdhrtghpthhtoheplhhkfhhtqdhtrhhirghgvgeslhhishhtshdrlhhi
-    nhgrrhhordhorhhg
-X-ME-Proxy: <xmx:op66aCbnxvvIFpBFKThejSSZRVGNvGdPZSuVSQxB-6IHC-JVhvB42g>
-    <xmx:op66aJ8i4NRTjbFcyuMWPI6ML38DE854QfiSO1QC8wqr9k00SE3j7A>
-    <xmx:op66aKEX_g-E95x55WeQ-QGpIGU06uk0K5XUGZdrbDl1SI_qM4BZ_Q>
-    <xmx:op66aLdGksGkDFFlf6_CozAODynMQ_ZpZYJnrEtuKAZx9-MtW4sd1Q>
-    <xmx:op66aDHxl1tQ3z5cm0pz_IyQiihs7DyiYW6v36RjOIb6ZMngPUrWDAXp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 05BD2700065; Fri,  5 Sep 2025 04:26:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v+aKV88I"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b4f8bf49aeaso1619788a12.1
+        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 02:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757064659; x=1757669459; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+LobxBsVhrOLP6eF1oCgb7vPNLRbOh2IXRKPy/RCs6I=;
+        b=v+aKV88I8K+bzexJkXrOtnaAOTX20+ZV8+KWmFDJaYisljOrp/2QBgCk/hqN5K1pI6
+         4PuNeZV7IxFZOZScRnlviweJzJ5yehoQKn82DF0rt79yuZNuaerjdxmHVzTv9wpp9lqy
+         T0OmWK19nZE0IZb2LoYsukDnRPUIx5TINCzWpoCLhOgU6zBvoMHJUd/eBJtHTOUb/8ms
+         q+NZTWXsfBwzk5LUjUMB1usmv3DVDr4U8gN/NvOWc0oAKOr6dhIedpEKMyteUxMwLY7k
+         ngf2ka29lA11LtDVj46QFSlulfa/XvPuIIKCV4TL64dl8pD7XY4t7e+4thu1sAVIQeyT
+         Ht/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757064659; x=1757669459;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+LobxBsVhrOLP6eF1oCgb7vPNLRbOh2IXRKPy/RCs6I=;
+        b=oPwliKxCMyxQquiDxTdPEhV++KiNnbnXIy4AwaPWexsQWvFAs+INRfls9IAzNX8ef9
+         Xr6CL1Ib3yIf4icIDNxuGEp6/JcAERItSqwHIX1/mAnBo4Uc2LInXnvz0LrO6gsOjEjl
+         4M8MqzLd4we/o7BEMF2rjKQ2LAwYWMQM5zvW3+UMJpyxmXQpvaUhs8n8D6bUYfT9JLE0
+         U1LVKC+X/FIZY/ySkdNLt8RIJvqUKaayNbl2WX79MYjpCPFcyTaCtAI5M1jRoNVemVuN
+         zpRUzIPL/kVe/Bq1C5GXf7EqgjyXEXqCnbtBF00nJsLq/nVmOzNVMt0Hx8XxRS27rc8Q
+         54/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW5BntgHuIbHkZ7RNgbVGrAMDzR5SluUhDhjXeJTXxF52YIz/DZ2B99/PuAKvXcVpGzYpT8eJgNaHw/7Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwBL7A/60RQ9kEHD4y7pxK1NdroddQAsbToZWEa+KNNVwiD+0HE
+	RXsICwRCa4r6iLDlb/PgSxqicrooB3dOGXc3Xzs0gpkGmH1E1rjLOtQskP6LAS1ZqQdWUXRclkd
+	IT7K70Ej55U+fm2T2NUzhhtYp/gD3+jtizjH5Bx1jfw==
+X-Gm-Gg: ASbGncs0SJeDCFB4paovo5oEs/RGPpwmtXovlD3qkQqb1zy9qjpXXYa+s4e+xqngxuk
+	wvGbwpTW5PLVHp837qssUHGT2dNsWplFCITDuWXfK/pk05sy9NGgJfZpS64oSEb3Mhq+45Vg/7h
+	nPx/zJ1u+HgvwqwhzYDgU0P3lC0H6obLD1jjVJLcCcegVq7H1ec2OI59p5TMHwZyb34SiEBJSD6
+	zPn4fYX6n1zxgkP++qBSOWZBa3fl61x87ooIC0F
+X-Google-Smtp-Source: AGHT+IHXA2PhuxH15MNyIwAlo4Zsa1wegxGTRmX/0N7BbPmF1yBcGj4uXgca0x/iboAEfGk+fwKK4A1E3Kyu6BjOlso=
+X-Received: by 2002:a17:90b:4d92:b0:327:e018:204a with SMTP id
+ 98e67ed59e1d1-3281531d3e3mr29191395a91.0.1757064658607; Fri, 05 Sep 2025
+ 02:30:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: ABrrY9NwCfcB
-Date: Fri, 05 Sep 2025 10:25:49 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>
-Cc: "Linaro Kernel Functional Testing" <lkft@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Peter Zijlstra" <peterz@infradead.org>, linux-hardening@vger.kernel.org
-Message-Id: <d430f9ac-153c-41da-9cbe-53aa2f9d0fc3@app.fastmail.com>
-In-Reply-To: <20250905052836.work.425-kees@kernel.org>
-References: <20250905052836.work.425-kees@kernel.org>
-Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 5 Sep 2025 15:00:47 +0530
+X-Gm-Features: Ac12FXzSXlXs-UMpYMYTMehHV94NkxIEElsCgVxRk1HWKsb_351cP0b29GGHSf8
+Message-ID: <CA+G9fYsmo39mXw-U7VKJgHWTBB5bXNgwOqNfmDWRqvbqmxnD2g@mail.gmail.com>
+Subject: next-20250905: x86_64: udpgso_bench.sh triggers NULL deref in zerocopy_fill_skb_from_iter
+To: Netdev <netdev@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Biggers <ebiggers@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Shuah Khan <shuah@kernel.org>, Willem de Bruijn <willemb@google.com>, 
+	Pengtao He <hept.hept.hept@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 5, 2025, at 07:28, Kees Cook wrote:
-> After commit cbc654d18d37 ("bitops: Add __attribute_const__ to generic
-> ffs()-family implementations"), which allows GCC's value range tracker
-> to see past ffs(), GCC 8 on ARM thinks that it might be possible that
-> "ffs(rq) - 8" used here:
->
-> 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->
-> could wrap below 0, leading to a very large value, which would be out of
-> range for the FIELD_PREP() usage:
->
-> drivers/pci/pci.c: In function 'pcie_set_readrq':
-> include/linux/compiler_types.h:572:38: error: call to 
-> '__compiletime_assert_471' declared with attribute error: FIELD_PREP: 
-> value too large for the field
-> ...
-> drivers/pci/pci.c:5896:6: note: in expansion of macro 'FIELD_PREP'
->   v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->       ^~~~~~~~~~
->
-> If the result of the ffs() is bounds checked before being used in
-> FIELD_PREP(), the value tracker seems happy again. :)
->
-> Fixes: cbc654d18d37 ("bitops: Add __attribute_const__ to generic 
-> ffs()-family implementations")
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: 
-> https://lore.kernel.org/linux-pci/CA+G9fYuysVr6qT8bjF6f08WLyCJRG7aXAeSd2F7=zTaHHd7L+Q@mail.gmail.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
+The following kernel crash was noticed on x86_64 running selftests net
+udpgso_bench.sh
+on Linux next-20250905 tag.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Regression Analysis:
+- New regression? yes
+- Reproducibility? Re-validation is in progress
 
-This looks good to me individually, however I have now tried to
-do more randconfig tests with the __attribute_const change
-and gcc-8.5.0, and so far found two other files with the
-same issue:
+First seen on next-20250905
+Bad: next-20250905
+Good: next-20250904
 
-In file included from <command-line>:
-In function 'mtk_dai_etdm_out_configure.constprop',
-    inlined from 'mtk_dai_etdm_configure' at sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:2168:3:
-include/linux/compiler_types.h:575:38: error: call to '__compiletime_assert_416' declared with attribute error: FIELD_PREP: value too large for the field
-sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:2065:10: note: in expansion of macro 'FIELD_PREP'
-   val |= FIELD_PREP(ETDM_OUT_CON4_FS_MASK, get_etdm_fs_timing(rate));
-sound/soc/mediatek/mt8188/mt8188-dai-etdm.c:1971:10: note: in expansion of macro 'FIELD_PREP'
-   val |= FIELD_PREP(ETDM_IN_CON3_FS_MASK, get_etdm_fs_timing(rate));
+Test regression: next-20250905 x86_64 selftests net BUG kernel NULL
+pointer dereference zerocopy_fill_skb_from_iter
 
-drivers/mmc/host/meson-gx-mmc.c: In function 'meson_mmc_start_cmd':
-drivers/mmc/host/meson-gx-mmc.c:811:14: note: in expansion of macro 'FIELD_PREP'
-   cmd_cfg |= FIELD_PREP(CMD_CFG_TIMEOUT_MASK,
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-This is fairly rare, but over time there are likely going to be
-others like them. I see three possible ways forward here:
+x86_64:
+ Test:
+    * selftests: net: udpgso_bench.sh
 
-a) fix them individually as we run into them, hoping for the best
-b) skip that one compile time check on older compilers, like Anders'
-   new patch
-c) try to come up with a more robust FIELD_PREP() implementation
+Test error:
+selftests: net: udpgso_bench.sh
+ipv4
+tcp
 
-I already tried hacking on FIELD_PREP(), but my feeling is that it
-is already getting out of hand with its complexity, and needs to
-become simpler instead. The root cause for the warning here is
-apparently the way it evaluates the macro arguments multiple times,
-and that causes both extra compile-time complexity and extra code
-paths where part of the invocation goes through an inline function
-and another path that does not. It may be possible to change this
-in a way that moves the BUILD_BUG_ON() portions into an __always_inline
-function, and only uses the macro to deal with the type differences.
+<trim>
 
-     Arnd
+# tcp zerocopy
+[  991.110488] SELinux: unrecognized netlink message: protocol=4
+nlmsg_type=19 sclass=netlink_tcpdiag_socket pid=64835 comm=ss
+# RTNETLINK answers: Invalid argument
+[  991.129878] BUG: kernel NULL pointer dereference, address: 0000000000000008
+[  991.136850] #PF: supervisor read access in kernel mode
+[  991.141986] #PF: error_code(0x0000) - not-present page
+[  991.147118] PGD 0 P4D 0
+[  991.149657] Oops: Oops: 0000 [#1] SMP PTI
+[  991.153661] CPU: 0 UID: 0 PID: 64842 Comm: udpgso_bench_tx Tainted:
+G S                  6.17.0-rc4-next-20250905 #1 PREEMPT(voluntary)
+[  991.165907] Tainted: [S]=CPU_OUT_OF_SPEC
+[  991.169825] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.7 12/07/2021
+[  991.177209] RIP: 0010:zerocopy_fill_skb_from_iter
+(include/linux/page-flags.h:284)
+[ 991.182954] Code: 4d 85 c0 0f 84 04 01 00 00 44 39 c7 41 0f 4d f8 4c
+63 de 4a 8b 54 dc 30 49 89 d6 4d 29 ce 49 c1 fe 06 49 d3 ee 4d 85 f6
+74 24 <48> 8b 4a 08 f6 c1 01 0f 85 cb 00 00 00 0f 1f 44 00 00 31 c9 48
+f7
+All code
+========
+   0: 4d 85 c0              test   %r8,%r8
+   3: 0f 84 04 01 00 00    je     0x10d
+   9: 44 39 c7              cmp    %r8d,%edi
+   c: 41 0f 4d f8          cmovge %r8d,%edi
+  10: 4c 63 de              movslq %esi,%r11
+  13: 4a 8b 54 dc 30        mov    0x30(%rsp,%r11,8),%rdx
+  18: 49 89 d6              mov    %rdx,%r14
+  1b: 4d 29 ce              sub    %r9,%r14
+  1e: 49 c1 fe 06          sar    $0x6,%r14
+  22: 49 d3 ee              shr    %cl,%r14
+  25: 4d 85 f6              test   %r14,%r14
+  28: 74 24                je     0x4e
+  2a:* 48 8b 4a 08          mov    0x8(%rdx),%rcx <-- trapping instruction
+  2e: f6 c1 01              test   $0x1,%cl
+  31: 0f 85 cb 00 00 00    jne    0x102
+  37: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+  3c: 31 c9                xor    %ecx,%ecx
+  3e: 48                    rex.W
+  3f: f7                    .byte 0xf7
+
+Code starting with the faulting instruction
+===========================================
+   0: 48 8b 4a 08          mov    0x8(%rdx),%rcx
+   4: f6 c1 01              test   $0x1,%cl
+   7: 0f 85 cb 00 00 00    jne    0xd8
+   d: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+  12: 31 c9                xor    %ecx,%ecx
+  14: 48                    rex.W
+  15: f7                    .byte 0xf7
+[  991.201691] RSP: 0018:ffffb11281d0ba90 EFLAGS: 00010202
+[  991.206910] RAX: ffffe14ec4208000 RBX: 0000000000005000 RCX: 0000000000000009
+[  991.214033] RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000001000
+[  991.221156] RBP: ffffb11281d0bb88 R08: 00000000000020ff R09: ffffe14ec4208000
+[  991.228280] R10: 0000000000000005 R11: 0000000000000006 R12: ffff96b4825f4200
+[  991.235406] R13: 0000000000000001 R14: 000000003d6277bf R15: 0000000000000000
+[  991.242529] FS:  00007f41e80b9740(0000) GS:ffff96b83bc1b000(0000)
+knlGS:0000000000000000
+[  991.250608] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  991.256378] CR2: 0000000000000008 CR3: 0000000106c42003 CR4: 00000000003706f0
+[  991.263513] Call Trace:
+[  991.265956]  <TASK>
+[  991.268055] __zerocopy_sg_from_iter (net/core/datagram.c:?)
+[  991.272674] ? kmalloc_reserve (net/core/skbuff.c:581)
+[  991.276599] skb_zerocopy_iter_stream (net/core/skbuff.c:1867)
+[  991.281219] tcp_sendmsg_locked (net/ipv4/tcp.c:1283)
+[  991.285493] tcp_sendmsg (net/ipv4/tcp.c:1393)
+[  991.288896] inet6_sendmsg (net/ipv6/af_inet6.c:661)
+[  991.292466] __sock_sendmsg (net/socket.c:717)
+[  991.296126] __sys_sendto (net/socket.c:?)
+[  991.299785] __x64_sys_sendto (net/socket.c:2235 net/socket.c:2231
+net/socket.c:2231)
+[  991.303622] x64_sys_call (arch/x86/entry/syscall_64.c:41)
+[  991.307462] do_syscall_64 (arch/x86/entry/syscall_64.c:?)
+[  991.311128] ? irqentry_exit (kernel/entry/common.c:210)
+[  991.314881] ? exc_page_fault (arch/x86/mm/fault.c:1536)
+[  991.318720] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+[  991.323762] RIP: 0033:0x7f41e814b687
+[ 991.327352] Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00
+59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10
+0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff
+ff
+All code
+========
+   0: 48 89 fa              mov    %rdi,%rdx
+   3: 4c 89 df              mov    %r11,%rdi
+   6: e8 58 b3 00 00        call   0xb363
+   b: 8b 93 08 03 00 00    mov    0x308(%rbx),%edx
+  11: 59                    pop    %rcx
+  12: 5e                    pop    %rsi
+  13: 48 83 f8 fc          cmp    $0xfffffffffffffffc,%rax
+  17: 74 1a                je     0x33
+  19: 5b                    pop    %rbx
+  1a: c3                    ret
+  1b: 0f 1f 84 00 00 00 00 nopl   0x0(%rax,%rax,1)
+  22: 00
+  23: 48 8b 44 24 10        mov    0x10(%rsp),%rax
+  28: 0f 05                syscall
+  2a:* 5b                    pop    %rbx <-- trapping instruction
+  2b: c3                    ret
+  2c: 0f 1f 80 00 00 00 00 nopl   0x0(%rax)
+  33: 83 e2 39              and    $0x39,%edx
+  36: 83 fa 08              cmp    $0x8,%edx
+  39: 75 de                jne    0x19
+  3b: e8 23 ff ff ff        call   0xffffffffffffff63
+
+Code starting with the faulting instruction
+===========================================
+   0: 5b                    pop    %rbx
+   1: c3                    ret
+   2: 0f 1f 80 00 00 00 00 nopl   0x0(%rax)
+   9: 83 e2 39              and    $0x39,%edx
+   c: 83 fa 08              cmp    $0x8,%edx
+   f: 75 de                jne    0xffffffffffffffef
+  11: e8 23 ff ff ff        call   0xffffffffffffff39
+[  991.346124] RSP: 002b:00007ffdd843ba50 EFLAGS: 00000202 ORIG_RAX:
+000000000000002c
+[  991.353680] RAX: ffffffffffffffda RBX: 00007f41e80b9740 RCX: 00007f41e814b687
+[  991.360806] RDX: 000000000000f180 RSI: 000056251f1fd100 RDI: 0000000000000005
+[  991.367931] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[  991.375063] R10: 0000000004000000 R11: 0000000000000202 R12: 0000000000000000
+[  991.382193] R13: 000056251f1fb080 R14: 000001a670e438d8 R15: 0000000000000005
+[  991.389357]  </TASK>
+[  991.391571] Modules linked in: mptcp_diag tcp_diag inet_diag
+xt_conntrack xfrm_user ipip bridge stp llc geneve vxlan act_csum
+act_pedit openvswitch nsh nf_nat nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 psample cls_flower sch_prio xt_mark nft_compat
+nf_tables sch_ingress act_mirred cls_basic sch_fq_codel vrf pktgen
+macvtap macvlan tap x86_pkg_temp_thermal ip_tables x_tables [last
+unloaded: test_bpf]
+[  991.426812] CR2: 0000000000000008
+[  991.430121] ---[ end trace 0000000000000000 ]---
+[  991.434733] RIP: 0010:zerocopy_fill_skb_from_iter
+(include/linux/page-flags.h:284)
+[ 991.440477] Code: 4d 85 c0 0f 84 04 01 00 00 44 39 c7 41 0f 4d f8 4c
+63 de 4a 8b 54 dc 30 49 89 d6 4d 29 ce 49 c1 fe 06 49 d3 ee 4d 85 f6
+74 24 <48> 8b 4a 08 f6 c1 01 0f 85 cb 00 00 00 0f 1f 44 00 00 31 c9 48
+f7
+All code
+========
+   0: 4d 85 c0              test   %r8,%r8
+   3: 0f 84 04 01 00 00    je     0x10d
+   9: 44 39 c7              cmp    %r8d,%edi
+   c: 41 0f 4d f8          cmovge %r8d,%edi
+  10: 4c 63 de              movslq %esi,%r11
+  13: 4a 8b 54 dc 30        mov    0x30(%rsp,%r11,8),%rdx
+  18: 49 89 d6              mov    %rdx,%r14
+  1b: 4d 29 ce              sub    %r9,%r14
+  1e: 49 c1 fe 06          sar    $0x6,%r14
+  22: 49 d3 ee              shr    %cl,%r14
+  25: 4d 85 f6              test   %r14,%r14
+  28: 74 24                je     0x4e
+  2a:* 48 8b 4a 08          mov    0x8(%rdx),%rcx <-- trapping instruction
+  2e: f6 c1 01              test   $0x1,%cl
+  31: 0f 85 cb 00 00 00    jne    0x102
+  37: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+  3c: 31 c9                xor    %ecx,%ecx
+  3e: 48                    rex.W
+  3f: f7                    .byte 0xf7
+
+Code starting with the faulting instruction
+===========================================
+   0: 48 8b 4a 08          mov    0x8(%rdx),%rcx
+   4: f6 c1 01              test   $0x1,%cl
+   7: 0f 85 cb 00 00 00    jne    0xd8
+   d: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+  12: 31 c9                xor    %ecx,%ecx
+  14: 48                    rex.W
+  15: f7                    .byte 0xf7
+[  991.459215] RSP: 0018:ffffb11281d0ba90 EFLAGS: 00010202
+[  991.464434] RAX: ffffe14ec4208000 RBX: 0000000000005000 RCX: 0000000000000009
+[  991.471557] RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000001000
+[  991.478681] RBP: ffffb11281d0bb88 R08: 00000000000020ff R09: ffffe14ec4208000
+[  991.485807] R10: 0000000000000005 R11: 0000000000000006 R12: ffff96b4825f4200
+[  991.492930] R13: 0000000000000001 R14: 000000003d6277bf R15: 0000000000000000
+[  991.500054] FS:  00007f41e80b9740(0000) GS:ffff96b83bc1b000(0000)
+knlGS:0000000000000000
+[  991.508132] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  991.513870] CR2: 0000000000000008 CR3: 0000000106c42003 CR4: 00000000003706f0
+[  991.520994] note: udpgso_bench_tx[64842] exited with irqs disabled
+
+
+## Source
+* Kernel version: 6.17.0-rc4
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: next-20250905
+* Git commit: be5d4872e528796df9d7425f2bd9b3893eb3a42c
+* Architectures: x86_64
+* Toolchains: clang-nightly
+* Kconfigs: defconfig+selftests/*/config
+
+## Build
+* Test log: https://qa-reports.linaro.org/api/testruns/29777495/log_file/
+* LAVA test log: https://lkft.validation.linaro.org/scheduler/job/8434053#L16943
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250905/log-parser-test/oops-oops-oops-smp-pti/
+* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32GkXBGNRNDEj5d64zd73eXhXQC
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32GkU7mdlpISpPeeeEwIfAJuzqG/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32GkU7mdlpISpPeeeEwIfAJuzqG/config
+
+--
+Linaro LKFT
+https://lkft.linaro.org
