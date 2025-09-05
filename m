@@ -1,142 +1,115 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210C2C028F
-	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 10:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA45E34AB04
+	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 12:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757069592; cv=none; b=CyCqEHqhosHo3z9O0IXGTN80NfCPyv7QvAZf88JN83UDkvTeYqqfASZx7FzX91KENCgHSRYCc9EejiRUd2mvUftJRb0tGDAQiMQjppBH+z3tP0/wiHeNqLD5UfaR1Tlz594hA3WPQfSDfm7eydMlp9DUkqevpzWL35zZB4cFSko=
+	t=1757075341; cv=none; b=Ij5hfoO2e9OQHSIlViDFwUfo3sZnVo+MWaWkkdD6PiZkGvgu5hVwZgO1uu8GfryiF0EXx1ucCp1oTpw/X7RQYGc0u3pN0jmDXzeAAfKSseQD5oX4P/f9KXy9w6vrBGTxU+I7sicvqOXwhcaGMDIxbeGUvRKTkULCuLg8Xsgo5XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757069592; c=relaxed/simple;
-	bh=o7v/HNWnjHt/Uzn1Ge3TzJ7eh0hyU3DB0ZeYdCA8Zk8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Ejvft1SelIi7lg5DXwjZJPpUkm6fq7piV9lIZGkExMD+25ii4U7Y1jjNhwJPzhmpzcoAlJHYoa09c2jXqxmYcULhKJAw3VLKE3ekF1k5RXqDTNOZUSowG0L9HHUGVAPCzkauUxZW9t7pl82UZ2Wy24FTyj75g4dcPlup+y5rlJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jH4lr9KD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QmEL5ag9; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1757075341; c=relaxed/simple;
+	bh=1e+7pVVhym3gaMFer/Sr7WBp0M9KyyXCLvjyMZeZThc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=H6ipUvNDYFNG57HH+e9CXXXJ0y2lVPQHoekdZby1ms/ISH5WQC603RyfAHd0e3t2LJWz9kjC6BxiQwOuZlxFlHPlRnt46ktArxERe1MT74AsBda337qSRe1JodRVDJdHkbRfdTjRKNcQutlTgqG5iOaKnCMHSLR7lBzYBeElYO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWc1WyzD; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jH4lr9KD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QmEL5ag9"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 24212EC03F9;
-	Fri,  5 Sep 2025 06:53:10 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 05 Sep 2025 06:53:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1757069590;
-	 x=1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=
-	jH4lr9KDGzqJf3o9wPt8s35oNXSKy5YUhWK4AWy+zrd2Lz7QDfZUNbRmjME6kf63
-	u2lOCEwcjey642T8NpEBeEHLbQyufe4Tp0z0klSpY+HyXfd2D8NBBE0OdoRQxmW6
-	Avu0bnOg3dMWvCWoSHPlTZUcK6qaAE03Ee0f1BpFM7CoaDA8atty/6EUP78QoeXA
-	1ExaSub1qp38LG6DIB1PACOmgoha68w/FUK8nM+hqfwQErfExKUtaCevx8EaYND8
-	L+axBmjn5NivHKsVAkeO8OBpTj2/BnyiTodlvMWQTAgbxMDtpl0BAsS/tTTkfm8N
-	6nC8iHOl/V7RqW4pY0glKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1757069590; x=
-	1757155990; bh=LLX3L6AOVZij89L899m4GOoTR6qvTds5RNaEn3slUp0=; b=Q
-	mEL5ag9goV29QlI2c24+hx/oAx4oWyV8b5vCwUVAExSeA5fjX1NNQp34EY0iDF9z
-	5KRq5vGbIkT/v9rDc+Qo/G2sAFepcOCShNhWOzdBOqier1GPAXzsKcd1i5n1Llqt
-	nnrpCdLuJ3mNDRQAaN3uly/GD8PPOoLjE81W4kYL0SbSipE6IP4nMXZPgxxrL8YE
-	jQwCTwxg7b2Oag9SZ9y3MxlN2DpF9C2//gGoYXqU0VgCTbUWQMmTCkTBQMPL5/s0
-	FLJplIgZxgSRlLyCCyMVy809F6BiRTTETCTRie2vMHn77PBvgb9uGSdKn0p+CEga
-	Hkg7QvG61EGlriR5/JygA==
-X-ME-Sender: <xms:FcG6aG48mVVtE-tVka-hZF0wTFYusVXo9DWMC914E8dZEDjSjHv0IA>
-    <xme:FcG6aP6q538NkYX-o-njEIuQLMk5FQFUnBshrms8GQHILltbLC8unsYuZ4Gvne9ZI
-    zURj8l_zjKNlbtufQ4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdekjedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
-    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepph
-    gvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhgvvghssehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigvlhhlsehlihhnrghroh
-    drohhrghdprhgtphhtthhopegsvghnjhgrmhhinhdrtghophgvlhgrnhgusehlihhnrghr
-    ohdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdroh
-    hrghdprhgtphhtthhopehlkhhftheslhhinhgrrhhordhorhhgpdhrtghpthhtohepnhgr
-    rhgvshhhrdhkrghmsghojhhusehlihhnrghrohdrohhrghdprhgtphhtthhopehlkhhfth
-    dqthhrihgrghgvsehlihhsthhsrdhlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:FcG6aABbyTmpwQCB5B1ukcfVsjGJ8ALCSDbQGb915dStrKnMhfBBwA>
-    <xmx:FcG6aHFS-Ugn6hBNjQVt_BhZ8V2QqzKuTOlBT3OjYVhP1CtzB1IJVg>
-    <xmx:FcG6aAsgRlGuUAz_TUFvY3Dht7UDMpqqpM6wBD7rRTDDDILlLs3w8w>
-    <xmx:FcG6aNkXhfJ3-_wPhSXJa4CVMG4EyMK5XJdkj18KPS3kJTz6jgzPCw>
-    <xmx:FsG6aMOQcHjgRB3ah_2HvCAog_UPeWTqXlgVtrAS07LZLHqhj86HCRr6>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6A4E0700065; Fri,  5 Sep 2025 06:53:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWc1WyzD"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-244582738b5so17200315ad.3
+        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 05:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757075339; x=1757680139; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Vt2kS9Ofun09w/F1kEUInf1+goE6RJwp8Jq2yr6GTno=;
+        b=bWc1WyzDUkw/E3rIv+X5AJF444XiOHLjzzgGmvdxn123lZbOo5aQ3KwiGOqSLxZBql
+         SofT3JfRg/v7JqIVdAsncS0gnlrTxqB6nB6FZu64d7NtV008V6SxOunPo6PQT7khGVBz
+         TSxVFhJLNw6roW7FgjCwcMpjip3qCzII6lbcQH2VZNXPM7Rxpguqrld8U4YnZETLFbk3
+         dCg5BuotcQLOzQNUg6Fcx7IZP6DQYnMCD9+8c8srbcpCNObKmCra9knFqUiVpAjjz2eh
+         zQvwvSjMIIEmSWcOQtfiYmFB6NHc5/esNGijxnKCtgBSl0+BynxapYbDyN6uVme9uSHR
+         CuIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757075339; x=1757680139;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vt2kS9Ofun09w/F1kEUInf1+goE6RJwp8Jq2yr6GTno=;
+        b=RTwf0IxTr+oHFOnCEf7pDIlaWq4+p3NY88HQW6SpZYidWXmdr4ImvlA/CGSJ5w+Qbf
+         T2iGOmF4pby8T5CKF84ofQtVOmZtJfjCbIeU/1OJckYSXH6p4bEhiFE2agmCRjggjlgq
+         jWidyui4kxb1+GAilsSgDuoUDvmjV8auFto55NzOixTVCgyw40vAeMwKm9gfRPqCjvkk
+         FnMAyy7Ddd33Nbha5SDFt9pwXgYAHhD/T2MTNu38vurXPg23Ja8jLUCSTwoLHYOSRayp
+         4VFEX/fwLpWgWTdRBi+uFOzMd5eyGJb59LpBW0w+aljrnQXebGEtx8Taldbcm0tqi9tF
+         dPGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc2u3btqPiBARMXIjxZK4ky7hDGqDMWONfws6sWNZE4S9fbBu2NTgPkhkydbF75xwxnVrUP1FB7phdIA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywwo+DrzicRbAM1inO5CbEJmexGGaHtKyleTvo30/HWOOFuwGQD
+	3lUAyKy/zrWCmyN3rXBlaZ8l+VmqZvtzHiMqKCcHoeop9ULSeyQdquN/k9P2j7MKLA3vwUmwt3K
+	yuZSz8jPDqT0tqFoYNef5i8bB9+8QEgd48JbLHkA9Yg==
+X-Gm-Gg: ASbGncu2fyi/Ppujudf8f9bwjA0VanONIR5q0OygZlaTEv8hhzpOad6zusfFCUUdOHf
+	pKH4C2QbXqM7H8fvaV5kiH8gDqDZdTvkdBzS75zlETOrq3OSM0hmUTYiQ0NrDZqqh58Nwwbm/HA
+	JBjGAIjCFJidbFwvxs4+P5UmljtULv7JXWTuiTyQ+V1YjIHsw4o3ygQnhfUSD+RLdtaYVhTF1Nv
+	EL0PPIBSAwmqnHtfn+gvBo5xvd3Jwwq8PnAexMI
+X-Google-Smtp-Source: AGHT+IF2VyihlpYLlMLSpcAIk2s/i+EE+s5Gnsq5S4v8IDPjr3MF6OBdBjnQtI+Tuw5M38cyKFUCV97IWUQkg/iXocw=
+X-Received: by 2002:a17:903:2385:b0:246:80ef:87fc with SMTP id
+ d9443c01a7336-24944af38c7mr260768135ad.45.1757075339192; Fri, 05 Sep 2025
+ 05:28:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: ABrrY9NwCfcB
-Date: Fri, 05 Sep 2025 12:52:44 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Anders Roxell" <anders.roxell@linaro.org>, "Kees Cook" <kees@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- "Linaro Kernel Functional Testing" <lkft@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Benjamin Copeland" <benjamin.copeland@linaro.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Peter Zijlstra" <peterz@infradead.org>, linux-hardening@vger.kernel.org
-Message-Id: <f5db760e-c143-4f6c-9389-309a362f0baf@app.fastmail.com>
-In-Reply-To: 
- <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
-References: <20250905052836.work.425-kees@kernel.org>
- <CADYN=9Kd9w0pAMJJD1jq4RSum5+Xzk04yPZiQxi9tmEBtHPEMA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Test for bit underflow in pcie_set_readrq()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 5 Sep 2025 17:58:45 +0530
+X-Gm-Features: Ac12FXw7Gdb40oCU__VJhJHzl8UybprNIkBlFrRCtJMXzI7n6pFfMa6roDMYZnY
+Message-ID: <CA+G9fYsT3b3Qd-m6tSDOgAXpgLPWz0QD_Z6a+_ff4oTecA85PQ@mail.gmail.com>
+Subject: kvm-unit-tests hang on Arm FVP with protected mode
+To: kvmarm@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Fuad Tabba <tabba@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Mark Brown <broonie@kernel.org>, 
+	Aishwarya TCV <Aishwarya.TCV@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 5, 2025, at 10:16, Anders Roxell wrote:
-> On Fri, 5 Sept 2025 at 07:28, Kees Cook <kees@kernel.org> wrote:
->> @@ -5949,7 +5950,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->>                         rq = mps;
->>         }
->>
->> -       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->> +       firstbit = ffs(rq);
->> +       if (firstbit < 8)
->> +               return -EINVAL;
->> +       v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, firstbit - 8);
->
-> Hi Kees,
->
-> Thank you for looking into this.
->
-> These warnings are not a one time thing.  the later versions of gcc
-> can figure it
-> out that firstbit is at least 8 based on the "rq < 128" (i guess), so
-> we're adding
-> bogus code.  maybe we should just disable the check for gcc-8.
+kvm-unit-tests consistently hang on Arm FVP when booted with
+kvm-arm.mode=protected across both 4K and 64K page-size kernel builds.
 
-Out of the three failures I saw, two also happened with gcc-9, but
-gcc-10 looks clean so far.
+Running the same tests with kvm-arm.mode=vhe completes successfully.
 
->          \
-> +                                       (0 + (_val)) : 0,
->          \
->                                  _pfx "value too large for the field"); \
->                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
->                                  __bf_cast_unsigned(_reg, ~0ull),       \
->
-> I found similar patterns with ffs and FIELD_PREP here
-> drivers/dma/uniphier-xdmac.c row 156 and 165
-> drivers/gpu/drm/i915/display/intel_cursor_regs.h row 17
+Anders, bisected and identified the first bad commit as:
 
-I did not come across build failures for these.
+  066daa8d3bc2694c392e14091978043aed7b1f23
+  KVM: arm64: Initialize HCRX_EL2 traps in pKVM
 
-    Arnd
+Regression Analysis:
+- Reproducibility? yes
+
+Test regression: kvm-unit-tests hang on Arm FVP with kvm-arm.mode=protected
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Environment:
+Platform: Arm FVP base-revc
+Kernel: arm64 (tested with 4K and 64K page sizes)
+Mode: kvm-arm.mode=protected (hangs) vs kvm-arm.mode=vhe (passes)
+Test suite: kvm-unit-tests (./run_tests.sh -a -t -v)
+Cmdline args : kvm-arm.mode=protected
+Kernel: Mainline master and Linux next master
+
+Test run log:
+INFO: running kvm unit tests ...
++ [ True = false ]
++ ./run_tests.sh -a -t -v
++ tee -a /lava-1/0/tests/0_kvm-unit-tests/automated/linux/kvm-unit-tests/output/result_log.txt
+TAP version 13
+
+Links:
+https://regressions.linaro.org/lkft/linux-mainline-master/v6.17-rc4/lava/kvm-unit-tests/history/?page=1
+https://qa-reports.linaro.org/api/testruns/29720932/log_file/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
