@@ -1,201 +1,132 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4808D274B50
-	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 18:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F64427B4E8
+	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 21:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757097704; cv=none; b=OeWhe0EeK8LLTnZSjlK8+uU/4xPPJXpVv5fn0rinke2bQGgObbbTrYjhZnGi8rjEh4cZ8OpLzU+n8HHTH7WllHkjv+Au4pD7eLSzcfyr/5rKocDrTfg8e2FK1k9gcKiYaLj0/RuOPSha5tnp4pjLGfFBXwVlDCOuSianP5PT5og=
+	t=1757107225; cv=none; b=sGZ2+FlXNe5fnUZK7O5acQ19zTb6waTzK71903HF6U9fJJMJE3zt1vNrcZoFM0N/UbQySrQpwAyHjwFv9p+gQz6LEF+AVZ3B03gpXRjJPS6dwe5UoGqPOSyj9p9rLnBUxipL1n38eQ1Q3xpxwnic4fHDK/aGE09RCa7QoBU5330=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757097704; c=relaxed/simple;
-	bh=gnFYk0hFNHgf1Sg+25eZm51d37xcfphZYvcwItGfNFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WSUMAhCjuKHr+CRGpMfY93Ypv2wJ9Txp68nnf08ecngvZp4BOm/HSwakqbWXPQT/OklzY1ihN0gi+vAbL5BffQ/JlwCuiwL0rgDRlH0cbnHPDbaujyiA6+z/gyL5TpvA4nvjjKqkj/gf7QQkWqRIk54E8fVjQpbHHhNT59uE5vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bcPrKnlz; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1757107225; c=relaxed/simple;
+	bh=1CyIY4Gge20GP7y0cDU45m2jcj75ZJgT0UYbOpjMvYw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X2x+M23dtV5fKBZMZo65SfI/s8bw5775TpdSJX/kzcLhL+u6oABiqIICmZFxIytVd41gFlpGtPZjy65OPpCJgrUgUG35ekTemwqm3kK3agEItlAbf9VNpuplR8+/Bc9SRjrTI1uEYV85KzeljWACMgCVXw0F8t+q0DPJ+BDl+1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f2nHk78p; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bcPrKnlz"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-723ad237d1eso23534847b3.1
-        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 11:41:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f2nHk78p"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f76277413so3137640e87.3
+        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 14:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1757097701; x=1757702501; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uDEg+eeO21xMg+I2e1MREOvahBXCNbXJKYsvFNtWL1o=;
-        b=bcPrKnlz+LwibVH6VLwVcXiILuyON61k6ZLDVC85rWkQHUfqSvlHOPpft8PtmaQ03V
-         oldFxEzVsyYDUh5+olGRA75G2FnQbPGwSYqKdqwJ7PTjZ7rzt3+F7+3iHiywl+F9wXgB
-         dmGKi5WCEgUM7GKwWPLAkaCl265O5A0QZjFfK3nYKBRNz9olNMLomZ/JD6wrNPiyr1F+
-         V2Oerkad69EQise3Rn6PP0COAChOw2WLTZy3APZiEgz+AFL/34c1KjLW4FnNvwFBKsHK
-         PSztz0TIVK17uk/cBp1PGEcIrYny8PzNlDI47DQn21yANfjWiU/N6qkrZgSBvOIzt50S
-         fbKg==
+        d=google.com; s=20230601; t=1757107222; x=1757712022; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ihoNevlLzJDBSuy8DxcqIRmMmQ3q65NAy+tYYX30mhs=;
+        b=f2nHk78phHkzepZpjRW3HZbgtXpDuVpDT9WsK0QeFVpJm/gLjcyw6jVVJFtejuOqxA
+         f0dHZZWGXcYQPs4grR6/E+oJE4b44YmHYooiWV1H8l14S7kdj86x4BxNeP0VxgBsqdrU
+         lb38HSxN6b37dtobqL7WNCegFX/2a7U+LuPpM3AfOau+Pq+EYrJ0xS4oRWT7C4ELWaPG
+         WUx7Vpj7+ylY8qb7LgTLkWbHXkp9dnAJyqAAJhTuuy1f0qxBnzU09vTaKeJzx0/5bWIs
+         kkfG9I8+KUOchSxmI/cPw0UaHziKKF1s2JYheOHIg0Vr2XoAfwPDSiJzA0/ODf5eRrsr
+         f2NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757097701; x=1757702501;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDEg+eeO21xMg+I2e1MREOvahBXCNbXJKYsvFNtWL1o=;
-        b=rzvOp395wl3SqmeTR9PvrWxZ4IFxBjHgyvKd72HsxMzG52uN6Lf/imWcnvkdD5KPL6
-         /MyUKgDdle5ApQhBU61ntM2cvQBmO78STvyLhyIdFVlGI+Kf80Amc+vEbfLCxwYhf+i9
-         xIt0xWELv9LveduN1ddP2WOA2zyeVVZtPGSEEbH8pBjE2TFenchuoSspSwFhFdMJsJ23
-         f1FgNcUqtLIxzA3vMWJxHS6d14oE2N95JbZEoTm+gPeFRZKoMzQ5/Zx1BEDNnYUdWeCD
-         2Y5rwlvfJUCIESfEk91FSuI0Db/CR7zE41Sdy1Cz6ehMDpBLm3BB1sqYGsTZiax6DCSP
-         fFOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZZST0lpXHJQEK8UNR2J5630BykTT5pm1LSrcCu7cHmHfLNvwdX9/FA7IL20+LoeAVjVZDFROkS63eKw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxp5plXYHh80WnUoOplEBjAs6XrYfJcDTQ2wkHVdO0sjnB7iC18
-	CqmXVx3YypH3llRcKIxuNPJC3NjkI52H0t/MI5x0Xxr75exl6fjQYkkJKbK5boztl1U=
-X-Gm-Gg: ASbGncsCye/VPdGTGL7nCBsVbzPcYMJLwdW+7Yg5441M99s/IgViB6Jj+5L7i2QIjO6
-	6+fQhMZ68YwLIYrx/8BieAlzypT4MQEWYTEkV3LPK2T9DGy2h0dH1uhrFWyvWD+61oEozz2vAC7
-	an743eOPD3Ki0QS/54MVsHDr3DhnUkgJtvbwRmvfQJTd4bqAPbd8OfGiRlJSIatQdH71UX7oaWu
-	iPFHclXGSXFkH+mdT/f1pF7EG5rZehgjLEJpTw1jXcO5Jrbd+ZbTUPLiatTqY0hmSa5/mdo/WgV
-	5kZAXTUbkYmn2hkKqHtctBKTM/ufItRaY764kMB9t+mB8Sa4nyog+y19Edm29iHs+T/DIQ7jVHw
-	buhoBGJphodzDMgW3wCCKBPsohTcYUg==
-X-Google-Smtp-Source: AGHT+IEIFnMuJGf9nlLx/o+R7Xas6e/S1Sd/cHueNiJaJ6sHQ2tImMIluyjeRBxWo7Ry2qiJSUsBgA==
-X-Received: by 2002:a53:c945:0:b0:604:3849:9bc8 with SMTP id 956f58d0204a3-604385901a2mr5807335d50.22.1757097700854;
-        Fri, 05 Sep 2025 11:41:40 -0700 (PDT)
-Received: from [172.17.0.109] ([50.168.186.2])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-723a82d58b8sm31690837b3.9.2025.09.05.11.41.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Sep 2025 11:41:40 -0700 (PDT)
-Message-ID: <c482c91d-5a5b-4f82-81c1-b694962009ea@kernel.dk>
-Date: Fri, 5 Sep 2025 12:41:39 -0600
+        d=1e100.net; s=20230601; t=1757107222; x=1757712022;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ihoNevlLzJDBSuy8DxcqIRmMmQ3q65NAy+tYYX30mhs=;
+        b=tAm21vONPuXbjKzz6Y+P5xMtuw95O8gb3kyQ93kIvgjJ6zHsYZ8WGcIeVmhvk1VDlM
+         Nhf47HdDjazMr2cohil+oMFyvkESGvWiTKNBX2tnqiMueffjI3hK8AvMrOtMw3K2VW7f
+         s+AuLKBoHIw6EjKDgF9Xx4EAwCQD3y3Y+06lUY81BGZqar0tO4Zl6TSIpuRyyK+mebX1
+         MNM80bGb5dt0+bPzT2vEdWkxfqXO18e3GMTchnf7Y0Yhz8XpxHYCiKjLDlAp7Olj4OFk
+         telQfgYHc5fZNLr7Fq21CN0z+BTKbSdQi39ipa/YE3whym3hniCUWN8sC65fFdSbKdab
+         Nzaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXi+gpcLsFQIxtbB9Yk1wZGEhOAPZxwtwOKMT+AaCuZIpYWXwvxJ+qVJtO/rBCT26Y0rnb4EqyZEzajAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMS2lMHP4qCLGT+fekBgY7QQY8deJA+gbg6FXjoPxc906oAmxV
+	5a17VXCzThOQBGf0hxYT5epfGeMxJ0wAqV80ZIlGTjUa1ob3Wi9Dzp7jS4ayS+mKmUpgZpnXEHS
+	DXfe1jrNz16+t2+tFhp+q6Mih1eSChFJgMEWO+jc=
+X-Gm-Gg: ASbGncvDl6CbrwjGVNi13n1ZUili9ZojBQUYI6uELQ3x3kzgwC/aMccEnf3J/7WF83f
+	XxbwKPrxvoevag9q2kB4CZvZB3F+ceptP2nXm7AUMyPQQtcHfarZOb3yM0KBt+b9rcAK2UbS5iR
+	p8ZvNemTmNtnkAqnELsae/gM87wErHztaj0gM3QZBBuVocQxMNCrrdR6JFHsFi5DLtdtGKpn7Uo
+	R+9PF1hWqLlQmfQBQTTPXJiNXWxi6L5LjFYQ7tq2tb8QajAQE5H0A==
+X-Google-Smtp-Source: AGHT+IGklKSxmgtyLJoi1vvHN7sLHpD+0Iy8PrXyLbJxGTq/1I6kUc4ziYI23n3kTAxDik0wCpIxXBb5i2BdIOMmD6k=
+X-Received: by 2002:a05:6512:3b12:b0:55f:6831:6ee7 with SMTP id
+ 2adb3069b0e04-562601b5384mr78383e87.21.1757107221283; Fri, 05 Sep 2025
+ 14:20:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: qemu-arm64: xfstests crash in bio_iov_iter_get_pages on
- next-20250904
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- Linux btrfs <linux-btrfs@vger.kernel.org>,
- linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Christoph Hellwig <hch@lst.de>, David Sterba <dsterba@suse.cz>,
- "Darrick J. Wong" <djwong@kernel.org>,
- Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Ben Copeland <benjamin.copeland@linaro.org>,
- David Hildenbrand <david@redhat.com>
-References: <CA+G9fYtsamwXQzuQm4dYNC8kbSJzGAQvZ5mr4BA8X9WE29+yyg@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CA+G9fYtsamwXQzuQm4dYNC8kbSJzGAQvZ5mr4BA8X9WE29+yyg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYv0mbEBVs0oTiM+H4X-y7ZCwYpfa0hGCQCeVkW2ufGD_w@mail.gmail.com>
+ <CANDhNCpWWNpBQfeGq_Bj1pEWTYULJGaubTuPJ2Yxjg4_ESzgBw@mail.gmail.com>
+In-Reply-To: <CANDhNCpWWNpBQfeGq_Bj1pEWTYULJGaubTuPJ2Yxjg4_ESzgBw@mail.gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 5 Sep 2025 14:20:09 -0700
+X-Gm-Features: Ac12FXyJR8KmvN8T2fwKhwhjrwRXLtrixZllcL7-1u48pK2bWIjS9VPSJc01V20
+Message-ID: <CANDhNCrJYMcK+dak8ASX6uoVFkNSHMf3Bn1kOXDtqNqFb7LkJQ@mail.gmail.com>
+Subject: Re: arm64/juno-r2: Kernel panic in cgroup_fj_stress.sh on next-20250904
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, Cgroups <cgroups@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/5/25 6:58 AM, Naresh Kamboju wrote:
-> The following regressions were detected on qemu-arm64 while running
-> xfstests with the Linux next-20250904 tag. The system crashed with an
-> internal error in bio_iov_iter_get_pages(), resulting in an Oops during
-> direct I/O write operations.
-> 
-> Regression Analysis:
-> - New regression? yes
-> - Reproducibility? yes
-> 
-> First seen on next-20250904
-> Bad: next-20250904 and next-20250905
-> Good: next-20250822
-> 
-> Test regression: next-20250904 qemu-arm64 xfstests Internal error Oops
-> bio_iov_iter_get_pages
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> qemu-arm64:
-> Test:
-> * xfstests
-> 
-> Test crash:
-> 
-> [ 2074.633472] Internal error: Oops: 0000000096000004 [#1]  SMP
-> [ 2074.639619] Modules linked in: sm3_ce sha3_ce fuse drm backlight dm_mod
-> [ 2074.651698] CPU: 0 UID: 0 PID: 154238 Comm: xfs_io Not tainted
-> 6.17.0-rc4-next-20250904 #1 PREEMPT
-> [ 2074.652132] Hardware name: linux,dummy-virt (DT)
-> [ 2074.652429] pstate: 22402009 (nzCv daif +PAN -UAO +TCO -DIT -SSBS BTYPE=--)
-> [ 2074.652716] pc : bio_iov_iter_get_pages (block/bio.c:1074
-> block/bio.c:1272 block/bio.c:1336)
-> [ 2074.701159] lr : bio_iov_iter_get_pages (block/bio.c:1072
-> block/bio.c:1272 block/bio.c:1336)
-> [ 2074.701366] sp : ffff800080f83950
-> [ 2074.701506] x29: ffff800080f83980 x28: 000000000006f000 x27: fff00000c03b9408
-> [ 2074.701853] x26: 0000000000001000 x25: 0000000000000091 x24: ffffc1ffc153b480
-> [ 2074.702133] x23: 0000000000000002 x22: 00000000ffffffff x21: 0000000000000100
-> [ 2074.702421] x20: 0000000000000001 x19: 0000000000001000 x18: 0000000000001000
-> [ 2074.702710] x17: 0000000000000000 x16: 0000000000000000 x15: fff00000ff6e9a80
-> [ 2074.702987] x14: fff0000007413500 x13: ffffa44770f6e000 x12: ffffc1ffc0000000
-> [ 2074.703264] x11: 0000000000001000 x10: fff00000cf850800 x9 : fff00000cf850b78
-> [ 2074.703510] x8 : ffffc1ffc153ac08 x7 : 0000ffff9626f000 x6 : 0000000000000fff
-> [ 2074.703794] x5 : 0000000000021000 x4 : ffffc1ffbf000000 x3 : 7878782f78787878
-> [ 2074.704079] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000001000
-> [ 2074.704436] Call trace:
-> [ 2074.704685] bio_iov_iter_get_pages (block/bio.c:1074
-> block/bio.c:1272 block/bio.c:1336) (P)
-> [ 2074.704971] iomap_dio_bio_iter (fs/iomap/direct-io.c:437)
-> [ 2074.705167] __iomap_dio_rw (include/linux/uio.h:228
-> fs/iomap/direct-io.c:530 fs/iomap/direct-io.c:559
-> fs/iomap/direct-io.c:729)
-> [ 2074.705331] btrfs_direct_write+0x1f4/0x3bc
-> [ 2074.713828] btrfs_do_write_iter+0x18c/0x1ec
-> [ 2074.725568] btrfs_file_write_iter+0x14/0x20
-> [ 2074.725936] vfs_write (fs/read_write.c:593 fs/read_write.c:686)
-> [ 2074.731508] __arm64_sys_pwrite64 (fs/read_write.c:793
-> fs/read_write.c:801 fs/read_write.c:798 fs/read_write.c:798)
-> [ 2074.731822] invoke_syscall (arch/arm64/kernel/syscall.c:35
-> arch/arm64/kernel/syscall.c:49)
-> [ 2074.737438] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:132)
-> [ 2074.737885] do_el0_svc (arch/arm64/kernel/syscall.c:151)
-> [ 2074.738235] el0_svc (arch/arm64/kernel/entry-common.c:879)
-> [ 2074.785073] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:899)
-> [ 2074.785245] el0t_64_sync (arch/arm64/kernel/entry.S:596)
-> [ 2074.785643] Code: f9400fea d2820000 7940c377 f8795943 (f9400462)
-> All code
-> ========
->    0: f9400fea ldr x10, [sp, #24]
->    4: d2820000 mov x0, #0x1000                // #4096
->    8: 7940c377 ldrh w23, [x27, #96]
->    c: f8795943 ldr x3, [x10, w25, uxtw #3]
->   10:* f9400462 ldr x2, [x3, #8] <-- trapping instruction
-> 
-> Code starting with the faulting instruction
-> ===========================================
->    0: f9400462 ldr x2, [x3, #8]
-> [ 2074.786668] ---[ end trace 0000000000000000 ]---
-> 
-> 
-> ## Source
-> * Kernel version: 6.17.0-rc4-next-20250904
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git describe: next-20250904
-> * Git commit: 4ac65880ebca1b68495bd8704263b26c050ac010
-> * Architectures / Devices: qemu-arm64
-> * Toolchains: gcc-13
-> * Kconfigs: defconfig+xfstests
-> * xfstests: v2024.12.01
-> 
-> ## Build
-> * Test log: https://qa-reports.linaro.org/api/testruns/29762004/log_file/
-> * Test details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250904/log-parser-test/internal-error-oops-oops-smp/
-> * Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32E6ypoTqaDjAEJISuUAAgkPUva
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32E6us2qcXmnop3jTYQMOB9eVPt/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/32E6us2qcXmnop3jTYQMOB9eVPt/config
-> * xfstests: https://storage.tuxboot.com/overlays/debian/trixie/arm64/xfstests/v2024.12.01/xfstests.tar.xz
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+On Fri, Sep 5, 2025 at 10:50=E2=80=AFAM John Stultz <jstultz@google.com> wr=
+ote:
+>
+> On Fri, Sep 5, 2025 at 6:21=E2=80=AFAM Naresh Kamboju <naresh.kamboju@lin=
+aro.org> wrote:
+> >
+> > Kernel warnings and a panic were observed on Juno-r2 while running
+> > LTP controllers (cgroup_fj_stress.sh) on the Linux next-20250904 with
+> > SCHED_PROXY_EXEC=3Dy enabled build.
+> >
+> > Regression Analysis:
+> > - New regression? yes
+> > - Reproducibility? yes
+> >
+> > First seen on next-20250904
+> > Bad: next-20250904
+> > Good: next-20250822
+> >
+> > Test regression: next-20250904 juno-r2 cgroup_fj_stress.sh kernel panic
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Thank you for the testing and the report here!
+>
+> > Juno-r2:
+> >  * LTP controllers
+> >    * cgroup_fj_stress.sh
+> >
+> > Test crash:
+> > cgroup_fj_stress_net_cls_1_200_one:
+> > [  365.917504] /usr/local/bin/kirk[402]: cgroup_fj_stress_net_cls_1_200=
+_one:
+> > start (command: cgroup_fj_stress.sh net_cls 1 200 one)
+> > [  374.230110] ------------[ cut here ]------------
+> > [  374.230132] WARNING: lib/timerqueue.c:55 at
+> > timerqueue_del+0x68/0x70, CPU#5: swapper/5/0
+>
+> This looks like we are removing a timer that was already removed from the=
+ queue.
+>
+> I don't see anything obvious right away in the delta that would clue
+> me into what's going on, but I'll try to reproduce this.
 
-Adding David and leaving report intact, perhaps try if it's the same
-that syzbot reported:
+So far I've not been able to reproduce this in my environment.  If you
+are able to reproduce this easily, could you try enabling
+CONFIG_DEBUG_OBJECTS_TIMERS to see if it shows anything?
 
-https://lore.kernel.org/io-uring/68babfe5.a00a0220.eb3d.0011.GAE@google.com/T/#m28a0c46852dbbfb8ae655256f4e8270d81a33076
-
--- 
-Jens Axboe
+thanks
+-john
