@@ -1,318 +1,416 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1462B27AC5A
-	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 13:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F9534DCE1
+	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 13:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757078510; cv=none; b=qv195trzZCkxBekEX/Yg85bqtZO7u4+wj8k7ZXHx1IZ6iVfnT8QstM4t/nBubmylQVSy+brAZxk5wyswqtju5xfDlsR5HMuPXnaJ2blPpIK14j000KUhgT7NGLafmU8k0S/xfk/elAcusdYf72X5aqkImBfJEoNpxribzqD/PAI=
+	t=1757078889; cv=none; b=dbzXCqR9RVz+i65lYbNJWEZLStMyLEf/4InkFbKgYUwOJQ2QxK1piinV5dbJM9Ke5HD3W2GFeg1VROG3FnAKwBL8JlcGOfgzusHR9sY9BAaQsyHdQ8dUNibuDadHh7IEiVZayy9TNhCahhhuFmpj146FlMXRjYNkzEq3+GPvt/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757078510; c=relaxed/simple;
-	bh=9mDoi6LM/1M15H0qUd3lUWkKBmRMc7KMMvsoeJoL5fM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=E+CfxbeyI+7Hlh78J06NVYsvDyp7u+AdV817SvtNzttvoqaI/XvgbGMY7uHdWG39EWjEMmyfyS9sqAijCqbNt69dwLrkeTGGwkRATdzdevkuNBLyZVrEidV5FeKSu4pM7n2uwDN2v2DQoiOS7M5QxDwlr/UNUnTFSzfqyw/paqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MsDqbU0Z; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757078889; c=relaxed/simple;
+	bh=00lP1MO7V96rpDy5Iqjhv/dbeh8Q0ASIz04S3hGBHjA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BEfdC1eE6MSGRssBBGQ9b4uwhWLDzA+0iBCCl0Q7Ug1pg8J/4mxPTiSddXelfx+IyMWyM7FzHwaimDS0blMWdDm9xq/LwPWsZSQ+5mYUHIwn77GefZ9Y91mEITMqh31ml//orLHCovuLd0WHPkqHtubxjByYdKua5PfXgriE8kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OvzIcV8o; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MsDqbU0Z"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7724df82cabso2529156b3a.2
-        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 06:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757078506; x=1757683306; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Vqf5jZApOZXImUvf7d+PDbTEFRnl9YOqDB+msnfnaR4=;
-        b=MsDqbU0Zzc6Zz7dPIGLofO/Nh+I9cW89QScwBuOLhetTDAkt5J93qHEKsUaLtFx9Q6
-         0VSR4nSwpyyCOcb+zUiUccO7GUf4U7miFhRxp/Ss+K7y84e2LLjLV4EoK/JIS6Jg2hKB
-         89nRngJkr5vmuCp+lk0iHuW48rV0ZLkA9OXApfEIXKAmwZy5nJxnj9YuZsf3p8Pk4/T2
-         Z8Eo1oO3Idx5lyiKvejSWgpH52EmPEMkvQcjjcaNsQJF1Sr6x0LfDmEc93EVunXywZSS
-         ZzxapDiMCRXv1/AnEd1CdVx0b0prP4sftuG1Uf4aAB8M2RrWWHsZ0ZUJ+thcPjhlwdPu
-         okUg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvzIcV8o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757078885;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3WiqqmvmkyU9dyNVWkSqj8OsGhyXBJbKIwB2/k8dKmc=;
+	b=OvzIcV8oKiGX/LOJsTCvfrx/sTgGcBXSghXuz6gkMZVeWEXjFzniNuLz06e4ZGuyv74bG0
+	rkMPRmY/Q7REZhpFpvDszKoNrmkHqvgHRZyrwlXBIYzQ/CEjuRTVjn/cEXzngi07CMoaE0
+	PKz7VYEEQw244w0BdfG/eR1iRYlK+iw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-298-KrOQT5LENimoDSSLn6HwYQ-1; Fri, 05 Sep 2025 09:28:04 -0400
+X-MC-Unique: KrOQT5LENimoDSSLn6HwYQ-1
+X-Mimecast-MFC-AGG-ID: KrOQT5LENimoDSSLn6HwYQ_1757078883
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3e2055ce94bso1166340f8f.2
+        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 06:28:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757078506; x=1757683306;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vqf5jZApOZXImUvf7d+PDbTEFRnl9YOqDB+msnfnaR4=;
-        b=AIJiOU84B00jkPlBSv8ImmZnzKOWQ/uK1C53FS4Rw2lJzPXhx61+bGiMSG35mGKwBI
-         M7/nW8UFCNKCIU+2XKFUW2COvYuJ9ZM5DYt7qeVp6ZwaLYHx/T0j71gX8XXWT/mfJt80
-         gr4oQrEsjDHP3Y3Rr7MyoXolsHLosnDIxU1on5Qsam1qOOhJKercQQk/hrggrIlfTYS2
-         JRqAuAyI/SryNaaym6GcykzoHpMTj6g/0g6cYvX2pzjdGmqI/6CfzLRqkxx3iV5ZdASV
-         PBNxjIeBGZdejm/ioGlr6FG1lS+1HtHlXMXO01FjSYlcTNnzkBt/Psy/Dcs3UsWUj9U/
-         I+PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWA1KdFXYElKaTd6OF/0ZDeXOMXx+SN/xKRIjNTxuihOXBer2FSwkqEuor7RvsjJiQdlLWncQ7RG4lExw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxmCLbRhJuxPVC1tKnI2t+Jcns/pLeYq6xQOYXN4RDY7zA1Tp1z
-	SneIYGyL0BWad6WGOd6gSuY0TbZYi+o7eGX0PvSyJXjAfcgY0OiL+LtNmbbvMx9+OxROQI9mMFm
-	E4tdJeAetsvCcQIuW3QVKOILGa3WFazgnM42Swdm0WA==
-X-Gm-Gg: ASbGncsSU5efCGIYAdqq1FFwCYiCp/yV28K4ESHL9VrV6O6z1Vi4+2aT+ak9pq89TcC
-	Gj+JSByGiEeUKt2ONELTfXchfQeJBO254oSSHpdDJjPga6KruE/yKFr966dtPpr/W9VqiHX/JWn
-	rE2yM73ua19rJXkbyuTP5n4B3zn6+/DoXpdneq6gXP5IcBgM9L3mZRMWNvwByJ5MyIlyBwGuZ5e
-	Q5LSHJqyCBPd88n5Z113AmeACFeugYbtAoPIcVUXm4efHC5Azk=
-X-Google-Smtp-Source: AGHT+IHIrghsl/YelmGfQe/X3UG5MxYSntb1FbdGSiNftIY2R2l0wnkLivmcJRILX4OAb2+KqxgaW1tz7aGUlThd0Vo=
-X-Received: by 2002:a17:903:f8d:b0:246:255a:1913 with SMTP id
- d9443c01a7336-24944b29d4fmr293099855ad.39.1757078506183; Fri, 05 Sep 2025
- 06:21:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757078883; x=1757683683;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3WiqqmvmkyU9dyNVWkSqj8OsGhyXBJbKIwB2/k8dKmc=;
+        b=cG/NVartZWbjrz4BQs8EAWksDqnNHiFDYLbyfQodWznn0tBzrg6OiSGzFYjo2B6kzZ
+         O9ImtB02IEch/qc/bwLvxD+2OGPZtfLmZmBCOzkP8A5U7rwJ7jyUGtcemevE6bsGldN4
+         kfcdtthWLIOe2EOHpBRJgBZpQqtpJAhuio1XPz0U0yVDm2fRxWqdiOkHGl8O/SYeBjcV
+         DzdoE1OWuvkpznG7VinThcE9O5Ax+uJlIC9sV6VxbmS4SRqcUmHYLbZrM7R88OJn8uc/
+         4pmslI9g9WrQvanrXtkowQH7MLP5fAyic1eHo02BkwRZ7y8Ek+u+S5usaDzyEy42pxe7
+         6wbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXESfm6BaMef28hQqqTOqZgKhI7V5Tkzml1VbLjqmbUTNB4HXnj8kX6K7MZ8HIDjXC411lM1Hhw1lZSKg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwXzzfOOHLzYySYggGKa+AggYBevSFRqjpTXjJXLWINpDYmaLSf
+	xQ0gHP6/lWCEpeSkfVy7vzBRtU2arDdLlyXPdjhfzgOCMGv9G1QNMWbJqiUFlgM8pKnjEkSAcIy
+	yIvUqX+LERAj0x0Jr63qhs7cClz0Rw7wFyUW8Ptsnpg3P12sf7QN2JhF5ZivynwPi4a7rz+xG
+X-Gm-Gg: ASbGncv+KaG5laxOKAGNbKhhBf68FRy7kfQXpzKA4M2IWjwo6biXNA0W+OgoBMBFYVU
+	Czu8Ni9zPbcQuP67OYpi9UzmvLDRp5PN8hz4kOXXQBQJFNCegaKx6rRtGG17NNalpr9MRiQtixm
+	sYJC4xsMvZJ6ojSq3i21vKR+DZBHaeM5oTEhi6moJPqHBua9boFgruAyw3cEQW+uoUWaPG/phE1
+	+RSdhbhdlgS+41XQT50xyEefDyAkLszNwsBaC2r96EdHys4JyydqwvtGK+289wImKtg11uGjmBO
+	Dceyl5UmZ3bmTriVGMmPBlI/VKLAn9BCzcnnUZB/4M/So9vJCB0nGdQqdHTyLEhaP1Gt9oTnk+V
+	HegPgcoATj4K3oWbAteCFrAEfWAwfwRRcaYSNPkWTQUrBbH2wC+PmtG88
+X-Received: by 2002:a5d:64c3:0:b0:3e4:d981:e31f with SMTP id ffacd0b85a97d-3e4d981e979mr899303f8f.60.1757078882922;
+        Fri, 05 Sep 2025 06:28:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmzbvGKGMXC1b4s32EUu5W51ZgOauNi8Zf/J3DfcPBT1LhN4y6O0qNuzW+PSJeZxpA24bWOw==
+X-Received: by 2002:a5d:64c3:0:b0:3e4:d981:e31f with SMTP id ffacd0b85a97d-3e4d981e979mr899266f8f.60.1757078882342;
+        Fri, 05 Sep 2025 06:28:02 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4d:e00:298:59cc:2514:52? (p200300d82f4d0e00029859cc25140052.dip0.t-ipconnect.de. [2003:d8:2f4d:e00:298:59cc:2514:52])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33fb9db4sm31599368f8f.47.2025.09.05.06.28.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Sep 2025 06:28:01 -0700 (PDT)
+Message-ID: <0118a233-90fc-484b-b539-d8df641a25ad@redhat.com>
+Date: Fri, 5 Sep 2025 15:28:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 5 Sep 2025 18:51:33 +0530
-X-Gm-Features: Ac12FXxQOU9K4qqJhThdvxXyAV48yJE93vCtDOM1jkvPUHrfTSlejpUqZy-anv4
-Message-ID: <CA+G9fYv0mbEBVs0oTiM+H4X-y7ZCwYpfa0hGCQCeVkW2ufGD_w@mail.gmail.com>
-Subject: arm64/juno-r2: Kernel panic in cgroup_fj_stress.sh on next-20250904
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, Cgroups <cgroups@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, John Stultz <jstultz@google.com>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250905: x86_64: udpgso_bench.sh triggers NULL deref in
+ zerocopy_fill_skb_from_iter
+From: David Hildenbrand <david@redhat.com>
+To: Eric Dumazet <edumazet@google.com>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Netdev <netdev@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Biggers <ebiggers@google.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Ben Copeland <benjamin.copeland@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>, Shuah Khan <shuah@kernel.org>,
+ Willem de Bruijn <willemb@google.com>, Pengtao He <hept.hept.hept@gmail.com>
+References: <CA+G9fYsmo39mXw-U7VKJgHWTBB5bXNgwOqNfmDWRqvbqmxnD2g@mail.gmail.com>
+ <CANn89iKciN019j88sGYpi_Boi7ggJoSnV4gOW=5grp+skkKnBA@mail.gmail.com>
+ <a4e4be39-b0e6-4632-878d-0765c9475984@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <a4e4be39-b0e6-4632-878d-0765c9475984@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: cy9lnqMI4UcG2pfroZUv0BSuEJ1pPR4a7vw87o1-1l4_1757078883
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Kernel warnings and a panic were observed on Juno-r2 while running
-LTP controllers (cgroup_fj_stress.sh) on the Linux next-20250904 with
-SCHED_PROXY_EXEC=y enabled build.
+On 05.09.25 15:07, David Hildenbrand wrote:
+> On 05.09.25 14:55, Eric Dumazet wrote:
+>> On Fri, Sep 5, 2025 at 2:30 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>>
+>>> The following kernel crash was noticed on x86_64 running selftests net
+>>> udpgso_bench.sh
+>>> on Linux next-20250905 tag.
+>>>
+>>> Regression Analysis:
+>>> - New regression? yes
+>>> - Reproducibility? Re-validation is in progress
+>>>
+>>> First seen on next-20250905
+>>> Bad: next-20250905
+>>> Good: next-20250904
+>>>
+>>> Test regression: next-20250905 x86_64 selftests net BUG kernel NULL
+>>> pointer dereference zerocopy_fill_skb_from_iter
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>>
+>>> x86_64:
+>>>    Test:
+>>>       * selftests: net: udpgso_bench.sh
+>>>
+>>> Test error:
+>>> selftests: net: udpgso_bench.sh
+>>> ipv4
+>>> tcp
+>>>
+>>> <trim>
+>>>
+>>> # tcp zerocopy
+>>> [  991.110488] SELinux: unrecognized netlink message: protocol=4
+>>> nlmsg_type=19 sclass=netlink_tcpdiag_socket pid=64835 comm=ss
+>>> # RTNETLINK answers: Invalid argument
+>>> [  991.129878] BUG: kernel NULL pointer dereference, address: 0000000000000008
+>>> [  991.136850] #PF: supervisor read access in kernel mode
+>>> [  991.141986] #PF: error_code(0x0000) - not-present page
+>>> [  991.147118] PGD 0 P4D 0
+>>> [  991.149657] Oops: Oops: 0000 [#1] SMP PTI
+>>> [  991.153661] CPU: 0 UID: 0 PID: 64842 Comm: udpgso_bench_tx Tainted:
+>>> G S                  6.17.0-rc4-next-20250905 #1 PREEMPT(voluntary)
+>>> [  991.165907] Tainted: [S]=CPU_OUT_OF_SPEC
+>>> [  991.169825] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+>>> 2.7 12/07/2021
+>>> [  991.177209] RIP: 0010:zerocopy_fill_skb_from_iter
+>>> (include/linux/page-flags.h:284)
+>>> [ 991.182954] Code: 4d 85 c0 0f 84 04 01 00 00 44 39 c7 41 0f 4d f8 4c
+>>> 63 de 4a 8b 54 dc 30 49 89 d6 4d 29 ce 49 c1 fe 06 49 d3 ee 4d 85 f6
+>>> 74 24 <48> 8b 4a 08 f6 c1 01 0f 85 cb 00 00 00 0f 1f 44 00 00 31 c9 48
+>>> f7
+>>> All code
+>>> ========
+>>>      0: 4d 85 c0              test   %r8,%r8
+>>>      3: 0f 84 04 01 00 00    je     0x10d
+>>>      9: 44 39 c7              cmp    %r8d,%edi
+>>>      c: 41 0f 4d f8          cmovge %r8d,%edi
+>>>     10: 4c 63 de              movslq %esi,%r11
+>>>     13: 4a 8b 54 dc 30        mov    0x30(%rsp,%r11,8),%rdx
+>>>     18: 49 89 d6              mov    %rdx,%r14
+>>>     1b: 4d 29 ce              sub    %r9,%r14
+>>>     1e: 49 c1 fe 06          sar    $0x6,%r14
+>>>     22: 49 d3 ee              shr    %cl,%r14
+>>>     25: 4d 85 f6              test   %r14,%r14
+>>>     28: 74 24                je     0x4e
+>>>     2a:* 48 8b 4a 08          mov    0x8(%rdx),%rcx <-- trapping instruction
+>>>     2e: f6 c1 01              test   $0x1,%cl
+>>>     31: 0f 85 cb 00 00 00    jne    0x102
+>>>     37: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+>>>     3c: 31 c9                xor    %ecx,%ecx
+>>>     3e: 48                    rex.W
+>>>     3f: f7                    .byte 0xf7
+>>>
+>>> Code starting with the faulting instruction
+>>> ===========================================
+>>>      0: 48 8b 4a 08          mov    0x8(%rdx),%rcx
+>>>      4: f6 c1 01              test   $0x1,%cl
+>>>      7: 0f 85 cb 00 00 00    jne    0xd8
+>>>      d: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+>>>     12: 31 c9                xor    %ecx,%ecx
+>>>     14: 48                    rex.W
+>>>     15: f7                    .byte 0xf7
+>>> [  991.201691] RSP: 0018:ffffb11281d0ba90 EFLAGS: 00010202
+>>> [  991.206910] RAX: ffffe14ec4208000 RBX: 0000000000005000 RCX: 0000000000000009
+>>> [  991.214033] RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000001000
+>>> [  991.221156] RBP: ffffb11281d0bb88 R08: 00000000000020ff R09: ffffe14ec4208000
+>>> [  991.228280] R10: 0000000000000005 R11: 0000000000000006 R12: ffff96b4825f4200
+>>> [  991.235406] R13: 0000000000000001 R14: 000000003d6277bf R15: 0000000000000000
+>>> [  991.242529] FS:  00007f41e80b9740(0000) GS:ffff96b83bc1b000(0000)
+>>> knlGS:0000000000000000
+>>> [  991.250608] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [  991.256378] CR2: 0000000000000008 CR3: 0000000106c42003 CR4: 00000000003706f0
+>>> [  991.263513] Call Trace:
+>>> [  991.265956]  <TASK>
+>>> [  991.268055] __zerocopy_sg_from_iter (net/core/datagram.c:?)
+>>> [  991.272674] ? kmalloc_reserve (net/core/skbuff.c:581)
+>>> [  991.276599] skb_zerocopy_iter_stream (net/core/skbuff.c:1867)
+>>> [  991.281219] tcp_sendmsg_locked (net/ipv4/tcp.c:1283)
+>>> [  991.285493] tcp_sendmsg (net/ipv4/tcp.c:1393)
+>>> [  991.288896] inet6_sendmsg (net/ipv6/af_inet6.c:661)
+>>> [  991.292466] __sock_sendmsg (net/socket.c:717)
+>>> [  991.296126] __sys_sendto (net/socket.c:?)
+>>> [  991.299785] __x64_sys_sendto (net/socket.c:2235 net/socket.c:2231
+>>> net/socket.c:2231)
+>>> [  991.303622] x64_sys_call (arch/x86/entry/syscall_64.c:41)
+>>> [  991.307462] do_syscall_64 (arch/x86/entry/syscall_64.c:?)
+>>> [  991.311128] ? irqentry_exit (kernel/entry/common.c:210)
+>>> [  991.314881] ? exc_page_fault (arch/x86/mm/fault.c:1536)
+>>> [  991.318720] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+>>> [  991.323762] RIP: 0033:0x7f41e814b687
+>>> [ 991.327352] Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00
+>>> 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10
+>>> 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff
+>>> ff
+>>> All code
+>>> ========
+>>>      0: 48 89 fa              mov    %rdi,%rdx
+>>>      3: 4c 89 df              mov    %r11,%rdi
+>>>      6: e8 58 b3 00 00        call   0xb363
+>>>      b: 8b 93 08 03 00 00    mov    0x308(%rbx),%edx
+>>>     11: 59                    pop    %rcx
+>>>     12: 5e                    pop    %rsi
+>>>     13: 48 83 f8 fc          cmp    $0xfffffffffffffffc,%rax
+>>>     17: 74 1a                je     0x33
+>>>     19: 5b                    pop    %rbx
+>>>     1a: c3                    ret
+>>>     1b: 0f 1f 84 00 00 00 00 nopl   0x0(%rax,%rax,1)
+>>>     22: 00
+>>>     23: 48 8b 44 24 10        mov    0x10(%rsp),%rax
+>>>     28: 0f 05                syscall
+>>>     2a:* 5b                    pop    %rbx <-- trapping instruction
+>>>     2b: c3                    ret
+>>>     2c: 0f 1f 80 00 00 00 00 nopl   0x0(%rax)
+>>>     33: 83 e2 39              and    $0x39,%edx
+>>>     36: 83 fa 08              cmp    $0x8,%edx
+>>>     39: 75 de                jne    0x19
+>>>     3b: e8 23 ff ff ff        call   0xffffffffffffff63
+>>>
+>>> Code starting with the faulting instruction
+>>> ===========================================
+>>>      0: 5b                    pop    %rbx
+>>>      1: c3                    ret
+>>>      2: 0f 1f 80 00 00 00 00 nopl   0x0(%rax)
+>>>      9: 83 e2 39              and    $0x39,%edx
+>>>      c: 83 fa 08              cmp    $0x8,%edx
+>>>      f: 75 de                jne    0xffffffffffffffef
+>>>     11: e8 23 ff ff ff        call   0xffffffffffffff39
+>>> [  991.346124] RSP: 002b:00007ffdd843ba50 EFLAGS: 00000202 ORIG_RAX:
+>>> 000000000000002c
+>>> [  991.353680] RAX: ffffffffffffffda RBX: 00007f41e80b9740 RCX: 00007f41e814b687
+>>> [  991.360806] RDX: 000000000000f180 RSI: 000056251f1fd100 RDI: 0000000000000005
+>>> [  991.367931] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+>>> [  991.375063] R10: 0000000004000000 R11: 0000000000000202 R12: 0000000000000000
+>>> [  991.382193] R13: 000056251f1fb080 R14: 000001a670e438d8 R15: 0000000000000005
+>>> [  991.389357]  </TASK>
+>>> [  991.391571] Modules linked in: mptcp_diag tcp_diag inet_diag
+>>> xt_conntrack xfrm_user ipip bridge stp llc geneve vxlan act_csum
+>>> act_pedit openvswitch nsh nf_nat nf_conntrack nf_defrag_ipv6
+>>> nf_defrag_ipv4 psample cls_flower sch_prio xt_mark nft_compat
+>>> nf_tables sch_ingress act_mirred cls_basic sch_fq_codel vrf pktgen
+>>> macvtap macvlan tap x86_pkg_temp_thermal ip_tables x_tables [last
+>>> unloaded: test_bpf]
+>>> [  991.426812] CR2: 0000000000000008
+>>> [  991.430121] ---[ end trace 0000000000000000 ]---
+>>> [  991.434733] RIP: 0010:zerocopy_fill_skb_from_iter
+>>> (include/linux/page-flags.h:284)
+>>> [ 991.440477] Code: 4d 85 c0 0f 84 04 01 00 00 44 39 c7 41 0f 4d f8 4c
+>>> 63 de 4a 8b 54 dc 30 49 89 d6 4d 29 ce 49 c1 fe 06 49 d3 ee 4d 85 f6
+>>> 74 24 <48> 8b 4a 08 f6 c1 01 0f 85 cb 00 00 00 0f 1f 44 00 00 31 c9 48
+>>> f7
+>>> All code
+>>> ========
+>>>      0: 4d 85 c0              test   %r8,%r8
+>>>      3: 0f 84 04 01 00 00    je     0x10d
+>>>      9: 44 39 c7              cmp    %r8d,%edi
+>>>      c: 41 0f 4d f8          cmovge %r8d,%edi
+>>>     10: 4c 63 de              movslq %esi,%r11
+>>>     13: 4a 8b 54 dc 30        mov    0x30(%rsp,%r11,8),%rdx
+>>>     18: 49 89 d6              mov    %rdx,%r14
+>>>     1b: 4d 29 ce              sub    %r9,%r14
+>>>     1e: 49 c1 fe 06          sar    $0x6,%r14
+>>>     22: 49 d3 ee              shr    %cl,%r14
+>>>     25: 4d 85 f6              test   %r14,%r14
+>>>     28: 74 24                je     0x4e
+>>>     2a:* 48 8b 4a 08          mov    0x8(%rdx),%rcx <-- trapping instruction
+>>>     2e: f6 c1 01              test   $0x1,%cl
+>>>     31: 0f 85 cb 00 00 00    jne    0x102
+>>>     37: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+>>>     3c: 31 c9                xor    %ecx,%ecx
+>>>     3e: 48                    rex.W
+>>>     3f: f7                    .byte 0xf7
+>>>
+>>> Code starting with the faulting instruction
+>>> ===========================================
+>>>      0: 48 8b 4a 08          mov    0x8(%rdx),%rcx
+>>>      4: f6 c1 01              test   $0x1,%cl
+>>>      7: 0f 85 cb 00 00 00    jne    0xd8
+>>>      d: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
+>>>     12: 31 c9                xor    %ecx,%ecx
+>>>     14: 48                    rex.W
+>>>     15: f7                    .byte 0xf7
+>>> [  991.459215] RSP: 0018:ffffb11281d0ba90 EFLAGS: 00010202
+>>> [  991.464434] RAX: ffffe14ec4208000 RBX: 0000000000005000 RCX: 0000000000000009
+>>> [  991.471557] RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000001000
+>>> [  991.478681] RBP: ffffb11281d0bb88 R08: 00000000000020ff R09: ffffe14ec4208000
+>>> [  991.485807] R10: 0000000000000005 R11: 0000000000000006 R12: ffff96b4825f4200
+>>> [  991.492930] R13: 0000000000000001 R14: 000000003d6277bf R15: 0000000000000000
+>>> [  991.500054] FS:  00007f41e80b9740(0000) GS:ffff96b83bc1b000(0000)
+>>> knlGS:0000000000000000
+>>> [  991.508132] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [  991.513870] CR2: 0000000000000008 CR3: 0000000106c42003 CR4: 00000000003706f0
+>>> [  991.520994] note: udpgso_bench_tx[64842] exited with irqs disabled
+>>>
+>>>
+>>> ## Source
+>>> * Kernel version: 6.17.0-rc4
+>>> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+>>> * Git describe: next-20250905
+>>> * Git commit: be5d4872e528796df9d7425f2bd9b3893eb3a42c
+>>> * Architectures: x86_64
+>>> * Toolchains: clang-nightly
+>>> * Kconfigs: defconfig+selftests/*/config
+>>>
+>>> ## Build
+>>> * Test log: https://qa-reports.linaro.org/api/testruns/29777495/log_file/
+>>> * LAVA test log: https://lkft.validation.linaro.org/scheduler/job/8434053#L16943
+>>> * Test details:
+>>> https://regressions.linaro.org/lkft/linux-next-master/next-20250905/log-parser-test/oops-oops-oops-smp-pti/
+>>> * Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32GkXBGNRNDEj5d64zd73eXhXQC
+>>> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32GkU7mdlpISpPeeeEwIfAJuzqG/
+>>> * Kernel config:
+>>> https://storage.tuxsuite.com/public/linaro/lkft/builds/32GkU7mdlpISpPeeeEwIfAJuzqG/config
+>>>
+>>> --
+>>> Linaro LKFT
+>>> https://lkft.linaro.org
+>>
+>> I suspect a bug added in mm/gup.c recently
+>>
+>> commit db076b5db550aa34169dceee81d0974c7b2a2482
+>> Author: David Hildenbrand <david@redhat.com>
+>> Date:   Mon Sep 1 17:03:40 2025 +0200
+>>
+>>       mm/gup: remove record_subpages()
+>>
+>>       We can just cleanup the code by calculating the #refs earlier, so we can
+>>       just inline what remains of record_subpages().
+>>
+>>       Calculate the number of references/pages ahead of times, and record them
+>>       only once all our tests passed.
+>>
+>>       Link: https://lkml.kernel.org/r/20250901150359.867252-20-david@redhat.com
+>>       Signed-off-by: David Hildenbrand <david@redhat.com>
+>>       Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>>
+> 
+> Yes, fix already on its way:
+> 
+> https://lkml.kernel.org/r/5090355d-546a-4d06-99e1-064354d156b5@redhat.com
+> 
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+#syz dup: [syzbot] [io-uring?] KASAN: null-ptr-deref Read in io_sqe_buffer_register
 
-First seen on next-20250904
-Bad: next-20250904
-Good: next-20250822
+-- 
+Cheers
 
-Test regression: next-20250904 juno-r2 cgroup_fj_stress.sh kernel panic
+David / dhildenb
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Juno-r2:
- * LTP controllers
-   * cgroup_fj_stress.sh
-
-Test crash:
-cgroup_fj_stress_net_cls_1_200_one:
-[  365.917504] /usr/local/bin/kirk[402]: cgroup_fj_stress_net_cls_1_200_one:
-start (command: cgroup_fj_stress.sh net_cls 1 200 one)
-[  374.230110] ------------[ cut here ]------------
-[  374.230132] WARNING: lib/timerqueue.c:55 at
-timerqueue_del+0x68/0x70, CPU#5: swapper/5/0
-[  374.242899] Modules linked in: tda9950 panfrost tda998x hdlcd
-drm_shmem_helper cec drm_client_lib gpu_sched onboard_usb_dev
-drm_dma_helper drm_kms_helper fuse drm backlight
-[  374.258403] CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Not tainted
-6.17.0-rc4-next-20250904 #1 PREEMPT
-[  374.267300] Hardware name: ARM Juno development board (r2) (DT)
-[  374.273232] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  374.280213] pc : timerqueue_del (lib/timerqueue.c:55 (discriminator 1))
-[  374.284236] lr : __hrtimer_run_queues (kernel/time/hrtimer.c:1121
-(discriminator 1) kernel/time/hrtimer.c:1741 (discriminator 1)
-kernel/time/hrtimer.c:1825 (discriminator 1))
-[  374.288960] sp : ffff800083283d40
-[  374.292279] x29: ffff800083283d40 x28: ffff00097edac1c0 x27: ffff00097edac730
-[  374.299445] x26: 0000000000000001 x25: 00000000000000c0 x24: ffff800082a9feb0
-[  374.306611] x23: 0000000000000060 x22: ffff000800396040 x21: ffff00097edac180
-[  374.313776] x20: ffff00097edac1e0 x19: ffff00097edac730 x18: ffff80008f8b3be0
-[  374.320942] x17: ffff8008fc418000 x16: ffff800083280000 x15: 0000000000000000
-[  374.328108] x14: 00003d0900000000 x13: 0000000000000000 x12: 003d090000000000
-[  374.335273] x11: 0000000000000000 x10: ffff800081754498 x9 : ffff8000801aa89c
-[  374.342439] x8 : 1fffe001044892a1 x7 : 0000000000000004 x6 : 0000000000000004
-[  374.349603] x5 : 0000000014000000 x4 : 0000000000000001 x3 : 0000000000000001
-[  374.356768] x2 : 00000000000000c0 x1 : ffff00097edac730 x0 : ffff00097edac730
-[  374.363933] Call trace:
-[  374.366383] timerqueue_del (lib/timerqueue.c:55 (discriminator 1)) (P)
-[  374.370410] __hrtimer_run_queues (kernel/time/hrtimer.c:1121
-(discriminator 1) kernel/time/hrtimer.c:1741 (discriminator 1)
-kernel/time/hrtimer.c:1825 (discriminator 1))
-[  374.374786] hrtimer_interrupt (kernel/time/hrtimer.c:1890)
-[  374.378813] tick_handle_oneshot_broadcast (kernel/time/tick-broadcast.c:768)
-[  374.383970] arch_timer_mmio_handler
-(drivers/clocksource/arm_arch_timer_mmio.c:192)
-[  374.388434] __handle_irq_event_percpu (kernel/irq/handle.c:158)
-[  374.393158] handle_irq_event (kernel/irq/handle.c:193
-kernel/irq/handle.c:210)
-[  374.397010] handle_fasteoi_irq (kernel/irq/chip.c:766)
-[  374.401208] handle_irq_desc (kernel/irq/irqdesc.c:670)
-[  374.404974] generic_handle_domain_irq (kernel/irq/irqdesc.c:726)
-[  374.409609] gic_handle_irq (arch/arm64/include/asm/io.h:80
-include/asm-generic/io.h:336 drivers/irqchip/irq-gic.c:341)
-[  374.413285] call_on_irq_stack (arch/arm64/kernel/entry.S:893)
-[  374.417223] do_interrupt_handler (arch/arm64/kernel/entry-common.c:314)
-[  374.421424] el1_interrupt (arch/arm64/kernel/entry-common.c:654
-arch/arm64/kernel/entry-common.c:668)
-[  374.425013] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:674)
-[  374.429123] el1h_64_irq (arch/arm64/kernel/entry.S:592)
-[  374.432536] cpuidle_enter_state (drivers/cpuidle/cpuidle.c:293
-(discriminator 1)) (P)
-[  374.437085] cpuidle_enter (drivers/cpuidle/cpuidle.c:391 (discriminator 2))
-[  374.440680] ------------[ cut here ]------------
-[  374.445303] WARNING: arch/arm64/kernel/stacktrace.c:211 at
-dump_backtrace+0x624/0x6f0, CPU#5: swapper/5/0
-[  374.454901] Modules linked in: tda9950 panfrost tda998x hdlcd
-drm_shmem_helper cec drm_client_lib gpu_sched onboard_usb_dev
-drm_dma_helper drm_kms_helper fuse drm backlight
-[  374.470392] CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Not tainted
-6.17.0-rc4-next-20250904 #1 PREEMPT
-[  374.479288] Hardware name: ARM Juno development board (r2) (DT)
-[  374.485218] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  374.492197] pc : dump_backtrace (arch/arm64/kernel/stacktrace.c:211
-(discriminator 1) arch/arm64/kernel/stacktrace.c:236 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:266 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:295 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:366 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:492 (discriminator 1))
-[  374.496392] lr : dump_backtrace (arch/arm64/kernel/stacktrace.c:198
-arch/arm64/kernel/stacktrace.c:236 arch/arm64/kernel/stacktrace.c:266
-arch/arm64/kernel/stacktrace.c:295 arch/arm64/kernel/stacktrace.c:366
-arch/arm64/kernel/stacktrace.c:492)
-[  374.500586] sp : ffff800083283980
-[  374.503905] x29: ffff800083283a50 x28: ffff000800396040 x27: ffff000800396040
-[  374.511070] x26: ffff800082561000 x25: ffff800082561650 x24: ffff800080038848
-[  374.518236] x23: ffff800081731bf8 x22: ffff8000822d00a8 x21: ffff80008231a5c0
-[  374.525401] x20: ffff000800396040 x19: ffff8000833dbde0 x18: 0000000000000000
-[  374.532566] x17: 3337636164653739 x16: 3030306666666620 x15: 0000000000000000
-[  374.539731] x14: 0000000000000000 x13: 303678302f303478 x12: 302b7265746e655f
-[  374.546896] x11: 746174735f726574 x10: ffff800082b1f8c0 x9 : ffff800080022c7c
-[  374.554061] x8 : ffff8000832836e8 x7 : ffff800082ac78c0 x6 : 00000000ffffefff
-[  374.561226] x5 : 0000000000000a00 x4 : ffff8000833dc000 x3 : ffff8000833dbdf8
-[  374.568390] x2 : 0000000000000018 x1 : ffff8000833dbde0 x0 : ffff000800396040
-[  374.575555] Call trace:
-[  374.578003] dump_backtrace (arch/arm64/kernel/stacktrace.c:211
-(discriminator 1) arch/arm64/kernel/stacktrace.c:236 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:266 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:295 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:366 (discriminator 1)
-arch/arm64/kernel/stacktrace.c:492 (discriminator 1)) (P)
-[  374.582201] show_regs (arch/arm64/kernel/process.c:249)
-[  374.585444] __warn (kernel/panic.c:899)
-[  374.588515] report_bug (lib/bug.c:176 lib/bug.c:215)
-[  374.592021] bug_brk_handler (arch/arm64/kernel/traps.c:1000
-(discriminator 1))
-[  374.595783] do_el1_brk64 (arch/arm64/kernel/debug-monitors.c:266
-(discriminator 1))
-[  374.599285] el1_brk64 (arch/arm64/kernel/entry-common.c:466
-arch/arm64/kernel/entry-common.c:577)
-[  374.602523] el1h_64_sync_handler (arch/arm64/kernel/entry-common.c:630)
-[  374.606720] el1h_64_sync (arch/arm64/kernel/entry.S:591)
-[  374.610220] timerqueue_del (lib/timerqueue.c:55 (discriminator 1)) (P)
-[  374.614246] __hrtimer_run_queues (kernel/time/hrtimer.c:1121
-(discriminator 1) kernel/time/hrtimer.c:1741 (discriminator 1)
-kernel/time/hrtimer.c:1825 (discriminator 1))
-[  374.618621] hrtimer_interrupt (kernel/time/hrtimer.c:1890)
-[  374.622648] tick_handle_oneshot_broadcast (kernel/time/tick-broadcast.c:768)
-[  374.627803] arch_timer_mmio_handler
-(drivers/clocksource/arm_arch_timer_mmio.c:192)
-[  374.632265] __handle_irq_event_percpu (kernel/irq/handle.c:158)
-[  374.636988] handle_irq_event (kernel/irq/handle.c:193
-kernel/irq/handle.c:210)
-[  374.640840] handle_fasteoi_irq (kernel/irq/chip.c:766)
-[  374.645037] handle_irq_desc (kernel/irq/irqdesc.c:670)
-[  374.648801] generic_handle_domain_irq (kernel/irq/irqdesc.c:726)
-[  374.653437] gic_handle_irq (arch/arm64/include/asm/io.h:80
-include/asm-generic/io.h:336 drivers/irqchip/irq-gic.c:341)
-[  374.657111] call_on_irq_stack (arch/arm64/kernel/entry.S:893)
-[  374.661048] do_interrupt_handler (arch/arm64/kernel/entry-common.c:314)
-[  374.665247] el1_interrupt (arch/arm64/kernel/entry-common.c:654
-arch/arm64/kernel/entry-common.c:668)
-[  374.668835] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:674)
-[  374.672945] el1h_64_irq (arch/arm64/kernel/entry.S:592)
-[  374.676358] cpuidle_enter_state (drivers/cpuidle/cpuidle.c:293
-(discriminator 1)) (P)
-[  374.680905] cpuidle_enter (drivers/cpuidle/cpuidle.c:391 (discriminator 2))
-[  374.684502] ---[ end trace 0000000000000000 ]---
-[  374.689128] ---[ end trace 0000000000000000 ]---
-[  374.693835] Unable to handle ker
-** replaying previous printk message **
-[  374.693835] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000000
-[  374.693868] Mem abort info:
-[  374.693886]   ESR = 0x0000000086000004
-[  374.693905]   EC = 0x21: IABT (current EL), IL = 32 bits
-[  374.693927]   SET = 0, FnV = 0
-[  374.693947]   EA = 0, S1PTW = 0
-[  374.693962]   FSC = 0x04: level 0 translation fault
-[  374.693977] user pgtable: 4k pages, 48-bit VAs, pgdp=00000008aea5a000
-[  374.693994] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[  374.694035] Internal error: Oops: 0000000086000004 [#1]  SMP
-[  374.703134] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[  374.703143] Mem abort info:
-[  374.703147]   ESR = 0x0000000096000004
-[  374.703151]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  374.703157]   SET = 0, FnV = 0
-[  374.703161]   EA = 0, S1PTW = 0
-[  374.703165]   FSC = 0x04: level 0 translation fault
-[  374.703169] Data abort info:
-[  374.703172]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  374.703177]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  374.703182]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  374.703187] user pgtable: 4k pages, 48-bit VAs, pgdp=00000008a41ec000
-[  374.703193] [0000000000000008] pgd=0000000000000000, p4d=0000000000000000
-[  374.815063] Modules linked in: tda9950 panfrost tda998x hdlcd
-drm_shmem_helper cec drm_client_lib gpu_sched onboard_usb_dev
-drm_dma_helper drm_kms_helper fuse drm backlight
-[  374.830558] CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Tainted: G
-W           6.17.0-rc4-next-20250904 #1 PREEMPT
-[  374.841022] Tainted: [W]=WARN
-[  374.843993] Hardware name: ARM Juno development board (r2) (DT)
-[  374.849923] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  374.856902] pc : 0x0
-[  374.859095] lr : 0x0
-[  374.861286] sp : ffff8000833dbe10
-[  374.864605] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
-[  374.871770] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-[  374.878934] x23: 0000000000000000 x22: ffff800082a9fff0 x21: ffff000800396040
-[  374.886100] x20: ffff80008012a008 x19: ffff8000833dbe20 x18: ffff80008f8b3be0
-[  374.893265] x17: 000000040044ffff x16: 00500072b5503510 x15: 0000000000000000
-[  374.900430] x14: ffff000800396040 x13: ffff8008fc418000 x12: ffff8000817397a4
-[  374.907596] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff80008170625c
-[  374.914761] x8 : ffff8000833dbc78 x7 : 0000000000000001 x6 : 0000000000186a00
-[  374.921925] x5 : 0000000000000003 x4 : 00000011010e3938 x3 : 0000000000000002
-[  374.929090] x2 : ffff00097edba678 x1 : 0000000000000003 x0 : 0000000000000002
-[  374.936254] Call trace:
-[  374.938703]  0x0 (P)
-[ 374.940907] Code: io_uring LICENSES Makefile security io_uring
-LICENSES Makefile security io_uring LICENSES Makefile security
-io_uring LICENSES Makefile security (????????)
-All code
-========
-
-Code starting with the faulting instruction
-===========================================
-[  374.947014] ---[ end trace 0000000000000000 ]---
-[  374.951641] Internal error: Oops: 0000000096000004 [#2]  SMP
-[  374.951658] Kernel panic - not syncing: Attempted to kill the idle task!
-[  374.953970] SMP: stopping secondary CPUs
-[  376.060825] SMP: failed to stop secondary CPUs 0
-[  376.076083] Kernel Offset: disabled
-[  376.079576] CPU features: 0x040000,020c3c00,20002000,0400421b
-[  376.085335] Memory Limit: none
-[  376.088411] ---[ end Kernel panic - not syncing: Attempted to kill
-the idle task! ]---
-
-
-## Source
-* Kernel version: 6.17.0-rc4-next-20250904
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: next-20250904
-* Git commit: 4ac65880ebca1b68495bd8704263b26c050ac010
-* Architectures: arm64 juno-r2
-* Toolchains: gcc-13
-* Kconfigs: defconfig+CONFIG_SCHED_PROXY_EXEC=y
-
-## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/29766906/log_file/
-* LAVA test log: https://lkft.validation.linaro.org/scheduler/job/8432765#L2200
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250904/log-parser-test/internal-error-oops-oops-smp/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32E6y9CzIvIeuyHJXf1h2OhxJQ7
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32E6udmeNgo23dOYnG0U5g38mql/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/32E6udmeNgo23dOYnG0U5g38mql/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
