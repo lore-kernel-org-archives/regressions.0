@@ -1,119 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859C535208A;
-	Fri,  5 Sep 2025 13:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A682741C3
+	for <regressions@lists.linux.dev>; Fri,  5 Sep 2025 17:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757079528; cv=none; b=k1M2xfCRhbU9smknKlme+pecHD19SI+Yx8nBP0HrElNespKZWm5eby0Gp4izy8jkre8MuzvXvKxVYY0y2AP2sCj4ewyrGt49BDKdDF3tMttAG4qj6r99LhQ6/Nxxc1BPxVU6HbkzCK3vQ9ZfPFky9eAOZXPh6VV7zAfjT0nllXw=
+	t=1757094664; cv=none; b=TIts6n/4O5lkZ+fRJrsMyOga/nvBnEGegNfLrjzR7cpcgbyvMbqrAD64Pr8FeNoFPxfPBg1p0k4VI+Jh0jGHkIBM79mYRX/o+7T1+p+RRKDMFy1QFh5P/JK735cCFBCBtucoydLFrb8euA9/HtDByZYtlvB10z+uYKrc8nsaX8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757079528; c=relaxed/simple;
-	bh=+RfIeCiYHGfOQAYZpOBH5xFxrQIjFV5rbqolCOJUiVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LVgq8ij0+NGbBuhU3JB2Cvk6bPAyiR8TLT/XdJOSG2NoRl/5CCb/jOszc7zif+KM9Qlla36kbzhJxyzPp1x5rIwQ00LNmRJ/hmgLqaFYeXPHZTZV6gbyXXqu+r56gtQPE4SyjRI4zC7GYt67YD7iC0HWHNH43E8sEAT8CkXwyFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goqvWAlu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757094664; c=relaxed/simple;
+	bh=xnZs4CJraYZQ5wDbYLO6uLnEPPN/QIdzXCOFwkslhQs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h9Bm8FOI0X9Wc2LSXgAW5Vb7pfXJJn5FbOQje3Qqtep3Bj4qDX2IkSZaDORqvebOsogel8CdkeXNWzHA6T8skIKR4aDbectHfnm0PgG5JmvftoBSRlRZpWXS5zaJ/YSqei7B5+rD+G9vvW5vts5r0q1g2kTbCIK3wdJ5ieDAMpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QTxen2cQ; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goqvWAlu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B7FC4CEF1;
-	Fri,  5 Sep 2025 13:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757079528;
-	bh=+RfIeCiYHGfOQAYZpOBH5xFxrQIjFV5rbqolCOJUiVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=goqvWAluxfzf8BkxFwUH6Ln7miVt6sUnhYEjzlJ0bfEm6Z+hkN7Vbm+5YeSyn4CZq
-	 nfc/ZWNn4ruTbxMbNZUqC/HtAnC6ie9u7NgP+pl4PTtHfQIkHasEbxJQCEIuZG7c6G
-	 3YJH26/oE9qL2Xkghwa6/0lf4A3/FEFYpnEgDsQvJkjT2T2ftwdCzOHTphbw1NRKn8
-	 HV1egnOIdjeyvJpeDSdBn/jomeNlNAN6ZnNGOsiwu7EutupADa1bHHpkcN4zKF34qr
-	 Xi/Xfb07GAaelXX5R9irbB92nla6CsdO+hpRpj2iAnhtRUIGi52egIr9m97RUdDx7h
-	 3YfsrU1YqhEGA==
-Date: Fri, 5 Sep 2025 14:38:41 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, kvmarm@lists.linux.dev,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Fuad Tabba <tabba@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	Aishwarya TCV <Aishwarya.TCV@arm.com>
-Subject: Re: kvm-unit-tests hang on Arm FVP with protected mode
-Message-ID: <345e42db-eabd-4e34-abf5-d9974dfe55d1@sirena.org.uk>
-References: <CA+G9fYsT3b3Qd-m6tSDOgAXpgLPWz0QD_Z6a+_ff4oTecA85PQ@mail.gmail.com>
- <87ms79ystc.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QTxen2cQ"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f720ffe34so3150188e87.1
+        for <regressions@lists.linux.dev>; Fri, 05 Sep 2025 10:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757094661; x=1757699461; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZaXyfPMqwoi89bLGQQm9R1wibinvU7q12XwB+QMftqw=;
+        b=QTxen2cQtXcta4f5gO4T5f3+Wzl2l0lhgTG1YnD5Qai2/Vg1CxXKzqF2PEyQWpiNMT
+         c8Go0Iw2A6YGddhJ/yaAgUJ+2p5kVx8FOAbeuvkgGocfIoqfsR9ZtvZFwEhih5hFcDr8
+         b4ogcZ0m+nTMAyzM9c3JSzVuCOEpP1EScX2Q3vZfxqds+yOFDe947+gy5L0G/Z5Pwiel
+         WZ35uxCPFduKufMSGl0331ITfMsifrbP8IcpQcXzbajFMEQMRwkIF2j2G+Uha30sMcR9
+         gTZXJBFsrGqMJfLfYUTYiBEuU7FREgNlLQyGdcpyTb/D8IrWuhCxhW7xQvfS8zYN6WV7
+         +wYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757094661; x=1757699461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZaXyfPMqwoi89bLGQQm9R1wibinvU7q12XwB+QMftqw=;
+        b=ED7+7vvSiLIWY5tYxG9+QZ1sO61rUThBTKsw7u/XRYzONSywZfNXTWRmKrhbIrdMmL
+         jBe8seluWbgk826qLPoxtrRJlLvcKOYVsm7qkoizVvkQEDQyp1FXNJL2+oelIWYK8qQT
+         gdf9wxJwsewhflNZDdriTqJdRlsiGcDwl3TQ187htY9Aizxr75eSZAjzQXehfcKiCuYZ
+         wv9E/CFumh2Ty8nMn0f+9olmt2TaywQ3NyDhGY+e9bHtUKR37JLI+DOvjnoKl05Q7PZ6
+         y63m+aM4Lc0r+oo3GHXKaNF17T3frQn19dMHa/jd7zb27OSDxmW3K2+vRqY920rbreXU
+         IIog==
+X-Forwarded-Encrypted: i=1; AJvYcCWT3vT+tD6ix3K1u/13je9QW3ipjDvN4TupzN3z7RuDyAKm960kGjYKJ7ExJmOp3DwtHBQ91qCT3hCicw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyeSJ17cEE1xUGKM4LaRV0mxo6dDIrIAiJo2ngXnBNSWziZk5/9
+	HFMAsEHapS8zxUg+S3aAYwAv125j+ag1u3xPbPiRlQoI/+7wFum3xOdAl/4ESPZYKTkGhIlZvdz
+	11//Zxc30YcsVrfoBhYN3P9T7wGT5h/9e9at134I=
+X-Gm-Gg: ASbGncuHVKkqCq//VpzJg+7wsgS35pLxZwN4NFchxGhvE23KQyphVBsvLqZGTrHY+F9
+	5jrTrkobRle6izL64GZuhdLXglA0o3Feusq74jM/4IYMvsggeenJKU7T8DGtQr97aIeS9I4+sMl
+	RukHE/vmYQy0Aec3Vl3zMJBHtckj7Ztc2kGEt06cQQVPIc7smvgY+TOkbP8eSiHxI0ndiFVPGC2
+	x5w/AMbet2kYlIcby1y4Ou54oEqVyBw4F/6cByBwtU=
+X-Google-Smtp-Source: AGHT+IHovfJi9UxsADA1y41PVTn87JQTAj3Hx1c4SPMGqx4uQRvjNmPj9yRmM3NVbenXyWcNvhGxjH9edA0XcuveD74=
+X-Received: by 2002:a05:6512:b8f:b0:55f:4ac2:a59a with SMTP id
+ 2adb3069b0e04-560995d4d53mr1317878e87.22.1757094660686; Fri, 05 Sep 2025
+ 10:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ftKo7STfvoWEjFz0"
-Content-Disposition: inline
-In-Reply-To: <87ms79ystc.wl-maz@kernel.org>
-X-Cookie: He who laughs, lasts.
+References: <CA+G9fYv0mbEBVs0oTiM+H4X-y7ZCwYpfa0hGCQCeVkW2ufGD_w@mail.gmail.com>
+In-Reply-To: <CA+G9fYv0mbEBVs0oTiM+H4X-y7ZCwYpfa0hGCQCeVkW2ufGD_w@mail.gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 5 Sep 2025 10:50:48 -0700
+X-Gm-Features: Ac12FXzVJdbZI6etdAi_p7uTw8KZ7iah-8DwGxTzPcTMM_M3HAoZ1BASAyToy4g
+Message-ID: <CANDhNCpWWNpBQfeGq_Bj1pEWTYULJGaubTuPJ2Yxjg4_ESzgBw@mail.gmail.com>
+Subject: Re: arm64/juno-r2: Kernel panic in cgroup_fj_stress.sh on next-20250904
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, Cgroups <cgroups@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 5, 2025 at 6:21=E2=80=AFAM Naresh Kamboju <naresh.kamboju@linar=
+o.org> wrote:
+>
+> Kernel warnings and a panic were observed on Juno-r2 while running
+> LTP controllers (cgroup_fj_stress.sh) on the Linux next-20250904 with
+> SCHED_PROXY_EXEC=3Dy enabled build.
+>
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+>
+> First seen on next-20250904
+> Bad: next-20250904
+> Good: next-20250822
+>
+> Test regression: next-20250904 juno-r2 cgroup_fj_stress.sh kernel panic
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
---ftKo7STfvoWEjFz0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the testing and the report here!
 
-On Fri, Sep 05, 2025 at 01:42:07PM +0100, Marc Zyngier wrote:
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> Juno-r2:
+>  * LTP controllers
+>    * cgroup_fj_stress.sh
+>
+> Test crash:
+> cgroup_fj_stress_net_cls_1_200_one:
+> [  365.917504] /usr/local/bin/kirk[402]: cgroup_fj_stress_net_cls_1_200_o=
+ne:
+> start (command: cgroup_fj_stress.sh net_cls 1 200 one)
+> [  374.230110] ------------[ cut here ]------------
+> [  374.230132] WARNING: lib/timerqueue.c:55 at
+> timerqueue_del+0x68/0x70, CPU#5: swapper/5/0
 
-> > INFO: running kvm unit tests ...
-> > + [ True = false ]
-> > + ./run_tests.sh -a -t -v
-> > + tee -a /lava-1/0/tests/0_kvm-unit-tests/automated/linux/kvm-unit-tests/output/result_log.txt
-> > TAP version 13
+This looks like we are removing a timer that was already removed from the q=
+ueue.
 
-> What do you expect us to do with such a non-report? Can you please, at
-> the very least, identify which test in that test suite triggers the
-> failure?
+I don't see anything obvious right away in the delta that would clue
+me into what's going on, but I'll try to reproduce this.
 
-Looking at the log file that isn't password protected that's the last
-line of output so it'll have hung trying to do the first test, based on
-the log from another machine:
-
-   https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250905/testrun/29777055/suite/kvm-unit-tests/test/debug-bp-migration-timeout-duration90s/log
-
-it seems that should be
-
-   ok 1 - selftest-setup: selftest: setup: smp: number of CPUs matches expectation
-
-that's died for the version they're using.
-
-> > Links:
-> > https://regressions.linaro.org/lkft/linux-mainline-master/v6.17-rc4/lava/kvm-unit-tests/history/?page=1
-
-> What is there? This link requires a login, and goes to 11 on the
-> scale of being useless.
-
-My Linaro account appears to have been disabled at some point so I
-can't access it either.  If this is affecting mainline presumably it's
-been an issue in at least -next for a while.
-
---ftKo7STfvoWEjFz0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmi65+AACgkQJNaLcl1U
-h9DLewf+Ls/00LL8UkAstP2PfYnm8MYv7sEGvfU6pcxX76rmhhoo+wHh/P4hYxIc
-GnEmWTawHaooNeTHseqYhjmZExdIu4kjBFLylfnR0kl70I7Z9fj2lNke/I5l6esd
-y6+T8DWSATVhQTebL9S/tmeQ223uLeJxoWU3o2Cex5787ehN5TMly7bqCBleQNrE
-C6WrgNNVDCffoSsFFv+CCCRtptBgSIUmJTox4dxFIAvmJ3NLhe9yB2SCvQGGWIRr
-mp9DPS9eygW3mJsa3IWwmUhpA1nVrUbcmI+KFXgTdDwP36xjlLGj0E0o41TL8NiJ
-O1/Rrzn/W690wZtEzwjotbV4+hBASg==
-=/HVR
------END PGP SIGNATURE-----
-
---ftKo7STfvoWEjFz0--
+thanks
+-john
