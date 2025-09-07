@@ -1,144 +1,110 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D7E21255E
-	for <regressions@lists.linux.dev>; Sat,  6 Sep 2025 08:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6CC17A31E
+	for <regressions@lists.linux.dev>; Sun,  7 Sep 2025 15:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757148254; cv=none; b=Yt2pDPNzg+GQzsXs5VRyCeWCK+GrXfSd66oqfbAWhwVom6Tqkh97CmqXBNNIcbN8568eDP86BxrY7bcyXDgvjXPYRBpw7LkCU9gzlWYyZE0q4MF5yhUsH2WvoS8S/DGhuDvNGmdI0xlQGZgrsKGZXTfMOG0/80WcP6MQNnKgNRw=
+	t=1757257829; cv=none; b=VzLK9an7ZzRbfYHhjNeFJLTz/ykLJcNuKzpfNrae/kGyRV6rWOWmK0ofZy+VdAlZxpCYG5g6WTkPT//KZ00eCwOJ9MYxA2o39cO3tSnnYMoHrC2VeVOd8Gp+OhGf8jiHmwn6EaFV5G/55cA1mJ5r2iplD3HspSS1YaRn1yUt0RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757148254; c=relaxed/simple;
-	bh=ioBMi4/eFSTZR/gwR4miHwSmbvpNL7DYm9ThLt7uKdU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MhLgQNarBE1ThvVNhiy0KeDNNZtw9ERGps5f5n1iyojXR+SQ2yz1Ns2Qgjck4FARzIGV/Kg4xSzn1hu27y8EeiIQExBJNRGk1CxDOhetYC88fty05xpkagqm2wBsea5tl/S0+BpWKW6ACsf6WjWNyqpr8giBsAYsc/LENADFi3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H1b8r4UA; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757257829; c=relaxed/simple;
+	bh=sAHtV31vC7+DbBtKfZ3bGC6susimxTF4qxvoih3PDug=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mQq0dftvmFd3HxGkDRfRxGte53eW0UBiP2fkU4PJj2IU8/gpnXTMSPtFWVKaGsbUHeWbnmUd3K+xkBQOgJUKhtmwKtuGrr8YHBeFfoT/k5mwBZwua5EtNZ5c71OSS2u2ZC9TwfPF6pCazzOLepxv8xZOGJOlCr5bOAUZlKhc6Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=md0X8i/a; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1b8r4UA"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-324e6daaa39so2816736a91.0
-        for <regressions@lists.linux.dev>; Sat, 06 Sep 2025 01:44:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="md0X8i/a"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-afeec747e60so677402166b.0
+        for <regressions@lists.linux.dev>; Sun, 07 Sep 2025 08:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757148252; x=1757753052; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ew5mxc5caN5gcDtxTwu7IwmhCpTzTpkvaeyIZ+j1bkQ=;
-        b=H1b8r4UAJeQDU0onQn0RQEHhLBEtYKf9Nml7lFcPM55xCCYeafJZK3vNsV+qbjBlLU
-         L5MWZz2brr0HQCpuvhISFfE3j16P+rjc/mQqVLh0QNg/kyxNLq9M+4chvA2Uw3EgqUn3
-         piaakZXJoigCJjo7QHHvFhfgyK5griNjvX66j9uGV7gHJgKxBETG4RKyZKLkmbDSJ9om
-         N5T69YbhkR4nc7mTTV09sLGkvyYGRFUQu2ELhUakkGtDIAr0bpUPlMILYGuCbe56aubY
-         1Ah6pmG8P++Aa1hvIdcqQ1P1tlwbCi6haFcHCSzCCEI+OdbaEiFjYNTddLarKzoQDKFM
-         HWtQ==
+        d=gmail.com; s=20230601; t=1757257826; x=1757862626; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=oJuiBORU7uFgAwcceqMl7pia4M58UQmYtjkhakEe8GY=;
+        b=md0X8i/ak5fdjztqM+kKivS+5G+0b1/wBCHWsiHH4ji4SynvZrrCTOaz3jsfORoUbv
+         v1msD832ddO0ZIpxdj6pasKJzx/L9O752sBF46FQDytjMUoXcfmQziKvKQ8xkH9PYqFM
+         RKR7iYLXXVwCxWDC9n/szm1dUYIHzcl2iShcgG8WRZj4WWOXxDk1Vj/b45VqRoThUfrR
+         qkLDfIKl+VU0OlNvgN0BkAvlIDNHE6BaWInDFYC9gQjej1Npg3JcUQW5HH7T0rj4QR0U
+         Y9+Vh8NC2/j+W+u0GwtIqezGMIRZ3ejk8SmQ5pfmn/HnujyQB3vRyo4ihOs6ECwQRwJ+
+         n7Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757148252; x=1757753052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ew5mxc5caN5gcDtxTwu7IwmhCpTzTpkvaeyIZ+j1bkQ=;
-        b=WZZdECMNv+eX1oTmkVlhY7vlV962sPszAW3nLH9OZtm4XbSiPFsmRCig5Rx51+nGqG
-         KKh9ob4zm4iFfmHaRDHCsqGI9+ZSHtgNtZrcfyaxTTtOoTQSBVr2DZGpQ8Ms/NTeYuAO
-         9EhmBl1rUJ4Ju6V/u8Ajdf8ybVUt6NPm5WDmpmAX3Qe/Uvi95uQSaCcaTNGYGl8QIbJi
-         ynozEMGFP91fvJXXJi3SwyU9TZ+p8ZKiJ/Gkq1LYvLC6G5/PqFLvSIczz9vV0MGZsXIB
-         M2QUFmYehXU/nyMZg3QC9wY9BrP854IIkwJoSOTv6oMvhlJAqEvtLv/HxC7zwIS3/R9/
-         6/Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWkPosZ8y+OV4HV0dst0q0CVRtjeKwpmfKx3hpBB+M3JoHWO8H1eL6jfCwacd4E6CZSCBi10xzQJf+2WQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz9A/Vpk2CfjbR9nNuSI+LuactSctCy//X2D00sfsXlv29HsCN+
-	HQjozkdGAUGcVk+DL3dqNuXkSJBNdJ3mwKvKDyvbPn1LwrPKHEN5r+yUjFVCq+df4PnMYH9vjlY
-	GYNDTxxAtMr6RUu4/6pk/Op3tG0TkeBvL7O9gJH6yGA==
-X-Gm-Gg: ASbGncuf8IYCPCW1aaoMY1NANJ4MIseGP9FdRIhiNn2hAcVAiUuVnRRJ+XMK/7ld9Hi
-	HNlA8wSvoH3uTGmweIuS1YNsjRVbdfAEaKBrnxqpk9BYVh/6KmPMYhWgQCNc1BT7a3J0ZYecG7g
-	I50VjtgkPKQIyG8G8DIVwqznAO1ehFOicAGXR38lwhewt1gYizJTx83exzQ8UAKbXp5K7Tlm3Ta
-	6V1PZunCSnSn3zRa+zTpHDpOPdi2rT7FIjvX9oQEoRV28vW+g==
-X-Google-Smtp-Source: AGHT+IFWY6ZjZ54pmmCwZjzjcEHYHuEaPv0XvwL3Eflpm/wFl4W2+BYv03gcg0aI3CC8OEM/T3fJ+UI2CYpLLpEbOeM=
-X-Received: by 2002:a17:90b:3852:b0:329:e729:b2a1 with SMTP id
- 98e67ed59e1d1-32d440d9ff0mr2516690a91.35.1757148252335; Sat, 06 Sep 2025
- 01:44:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757257826; x=1757862626;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oJuiBORU7uFgAwcceqMl7pia4M58UQmYtjkhakEe8GY=;
+        b=QRrsgi4hpHDODX7axfwTD6PP6cb86RU0i6u9zLrLm8tz6oTW5vhjGP6U7Tnn0KhLnF
+         VT69mciFKF/MktqvJHEWIkTBsSeQPwPNcmLmoi8idzxkYRF/8ms5rrtpJwwZCevAH+SV
+         moDg1+Chggaxf2IVK4STrUb5ht9BFqGdroyegxmkb3uLtpc74FWw67QG+itRFme8b5hq
+         AYVlqbRtnRtlAIH379BVUPXVQ3ijIAsROg7GiMEtblGoSji3fM/wArpAfe4CZgCnwZRn
+         JRfGsaXDbN7JvN8TTvbFltFTugwyiQ6kC3IqIbu1dku0Z8rhMvQ9k2uQFu11prASiL3A
+         6Upg==
+X-Forwarded-Encrypted: i=1; AJvYcCVY82VxUtSoiw8WdbZUoEJ5CajWMrNrFqHPwvfV5Qa+JVx86CEd+Rk0uZh8EBrZ/CQmwSQ4+XhUYiQ8NQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzdnhYrh2aKUU71fQQqdTNAyuDtStaLzdEaP/me1e50RgMg6jya
+	8VxUetc0ikne31strU6oRNqCMsNmG8q2sRO6hDdacgPLtgyqtkl6BkdA
+X-Gm-Gg: ASbGncsX2vdO/n+GLsCG4qgV22uVMsimns+Bic+4lXVfVA/esePf92togbus+Uy823N
+	R35gOU4t7cTqiRMTRYuHn4qrFdiOlA6e2HGnaRIeyOrY2R4x/4Rzi16ZvDlgl9eu8kZIaoYb3vv
+	6sEsQnGhJx6F01eVFRH28pE2jXYhvesrOYY7EyUI0ObyL05OGZEQAaI0nUd82U9Su42WqjQ4toM
+	HxggCv6fU9ZmseYxnnjxXzTlMjxouj39UTQYRtEgJhRfAhii0IOk7ckGz3V6F+Gdq1lTCa9UDmx
+	/VHkdHt3bJnCs/X1+HrwBLBSebIeiPVyNRNisiuGh9uGhkt7fzBtC1w5RA6mukBSPWFOe2z94pY
+	kQfV9yQKdCMG1DTNyxD84bI0KP/yDpMKmZiUasn4ABGA2fETt733ikmoILdl3i7jSvw==
+X-Google-Smtp-Source: AGHT+IEd/pDyjRmSKqgdbInAZgvxP22+j7RYNze25r80HBPkSMsOwswGrmhAArMFjtCaphKv56oPEA==
+X-Received: by 2002:a17:906:99c5:b0:b04:858e:c1ee with SMTP id a640c23a62f3a-b04b13c13b7mr513268266b.2.1757257826138;
+        Sun, 07 Sep 2025 08:10:26 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b041800e89esm1837245366b.30.2025.09.07.08.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Sep 2025 08:10:25 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 4DBCCBE2EE7; Sun, 07 Sep 2025 17:10:24 +0200 (CEST)
+Date: Sun, 7 Sep 2025 17:10:24 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Zhang Heng <zhangheng@kylinos.cn>, Jiri Kosina <jkosina@suse.com>,
+	Staffan Melin <staffan.melin@oscillator.se>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org, 1114557@bugs.debian.org
+Subject: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+Message-ID: <aL2gYJaXoB6p_oyM@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv0mbEBVs0oTiM+H4X-y7ZCwYpfa0hGCQCeVkW2ufGD_w@mail.gmail.com>
- <CANDhNCpWWNpBQfeGq_Bj1pEWTYULJGaubTuPJ2Yxjg4_ESzgBw@mail.gmail.com> <CANDhNCrJYMcK+dak8ASX6uoVFkNSHMf3Bn1kOXDtqNqFb7LkJQ@mail.gmail.com>
-In-Reply-To: <CANDhNCrJYMcK+dak8ASX6uoVFkNSHMf3Bn1kOXDtqNqFb7LkJQ@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sat, 6 Sep 2025 14:14:00 +0530
-X-Gm-Features: Ac12FXyDB-xmFe72rMp4oqEaC6ssFIEBHl2K-2wenWmXDkTJZrm_JyQxx_K7VTs
-Message-ID: <CA+G9fYuhDU=5b0my6yMy+ni=K_SFCRxncWJFvj0DVuLftTWYUA@mail.gmail.com>
-Subject: Re: arm64/juno-r2: Kernel panic in cgroup_fj_stress.sh on next-20250904
-To: John Stultz <jstultz@google.com>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, Cgroups <cgroups@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, 6 Sept 2025 at 02:50, John Stultz <jstultz@google.com> wrote:
->
-> On Fri, Sep 5, 2025 at 10:50=E2=80=AFAM John Stultz <jstultz@google.com> =
-wrote:
-> >
-> > On Fri, Sep 5, 2025 at 6:21=E2=80=AFAM Naresh Kamboju <naresh.kamboju@l=
-inaro.org> wrote:
-> > >
-> > > Kernel warnings and a panic were observed on Juno-r2 while running
-> > > LTP controllers (cgroup_fj_stress.sh) on the Linux next-20250904 with
-> > > SCHED_PROXY_EXEC=3Dy enabled build.
-> > >
-> > > Regression Analysis:
-> > > - New regression? yes
-> > > - Reproducibility? yes
-> > >
-> > > First seen on next-20250904
-> > > Bad: next-20250904
-> > > Good: next-20250822
-> > >
-> > > Test regression: next-20250904 juno-r2 cgroup_fj_stress.sh kernel pan=
-ic
-> > >
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Thank you for the testing and the report here!
-> >
-> > > Juno-r2:
-> > >  * LTP controllers
-> > >    * cgroup_fj_stress.sh
-> > >
-> > > Test crash:
-> > > cgroup_fj_stress_net_cls_1_200_one:
-> > > [  365.917504] /usr/local/bin/kirk[402]: cgroup_fj_stress_net_cls_1_2=
-00_one:
-> > > start (command: cgroup_fj_stress.sh net_cls 1 200 one)
-> > > [  374.230110] ------------[ cut here ]------------
-> > > [  374.230132] WARNING: lib/timerqueue.c:55 at
-> > > timerqueue_del+0x68/0x70, CPU#5: swapper/5/0
-> >
-> > This looks like we are removing a timer that was already removed from t=
-he queue.
-> >
-> > I don't see anything obvious right away in the delta that would clue
-> > me into what's going on, but I'll try to reproduce this.
->
-> So far I've not been able to reproduce this in my environment.  If you
-> are able to reproduce this easily, could you try enabling
-> CONFIG_DEBUG_OBJECTS_TIMERS to see if it shows anything?
+Hi Zhang, hi Jiri,
 
-I have been running in CI loop for these tests to reproduce and did not
-find this again.
+In Debian Staffan Melin reported that after an update containing the
+commit 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY"),
+the input device with same idVendor and idProduct, the Jieli
+Technology USB Composite Device, does not get recognized anymore.
 
-I will add this extra Kconfig CONFIG_DEBUG_OBJECTS_TIMERS
-and re-run to reproduce this reported regression.
+The full Debian report is at: https://bugs.debian.org/1114557
 
-- Naresh
+The issue is not specific to the 6.12.y series and confirmed in 6.16.3
+as well.
 
->
-> thanks
-> -john
+Staffan Melin did bisect the kernels between 6.12.38 (which was still
+working) and 6.1.41 (which was not), confirming by bisection that the
+offending commit is 
+
+1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY")
+
+#regzbot introduced: 1a8953f4f774
+#regzbot monitor: https://bugs.debian.org/1114557
+
+So it looks that the quirk applied is unfortunately affecting
+negatively as well Staffan Melin case.
+
+Can you have a look?
+
+Regards,
+Salvatore
