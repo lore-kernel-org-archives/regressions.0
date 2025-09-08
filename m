@@ -1,41 +1,41 @@
-Received: from outbound.mr.icloud.com (p-west2-cluster2-host11-snip4-3.eps.apple.com [57.103.68.206])
+Received: from outbound.mr.icloud.com (p-west2-cluster2-host7-snip4-10.eps.apple.com [57.103.68.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF3E22256F
-	for <regressions@lists.linux.dev>; Mon,  8 Sep 2025 16:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.68.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A12B9A5
+	for <regressions@lists.linux.dev>; Mon,  8 Sep 2025 16:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.68.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757347223; cv=none; b=qpqgBUEGkcbc995DT2rp3tkg7av4YKBDHUsnzHosJ9GgfqQjkyoJ4wH3R4RLA4E9QqtqEaH0EIPqpRN+gqkFE+l8LgKyBmHtMpcm8T7oczL0UcTMecT+gfrUjtpPFs/89HOTaJxUejcFDWMBBOEbvNf+7DCuCEfzx7wvQwRKdbQ=
+	t=1757347976; cv=none; b=iVdxd4Vg+jcOG49WThD207l3213IS2ts6N5OE3b/vYUaMGmim1JsKh4JUVnTtCzJJuPCefL44W6DzOAWdIeZ643y59l3CMVgnjsj2TiNu8w0aj5+V7kp0+7+7QTnhr6lDdLvXrcWf2JRK8PMMBu09Tlqe6uG3p8tb3qs7PSwAaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757347223; c=relaxed/simple;
-	bh=nl1kADrvQmF1grDqtsvY60ihALanrqXaHtIrW05R8Yk=;
+	s=arc-20240116; t=1757347976; c=relaxed/simple;
+	bh=zdaNYbm8MeQoL6nou+7g27VbKL+FOqKNDUAWB/zsJD4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ub046ONJCMczMAUeQ/euBRksPl0YFvrf+sz6/ubZ1vNtL6iovinZnJL263sIRICOIcOSlSVw1QPm8vIuTFJaBOxkU7qJQ2XgoCuEpV26Lkm7zed83Nd0vo5yPSDk/C8dWh7Ydg7s1G4s/R1DTdO4wNZmJCKLAG8LQ/zlRxbL8kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=gshDRdkq; arc=none smtp.client-ip=57.103.68.206
+	 MIME-Version; b=U1A1rJYXtCotNTk4lv1IUYDofsovZhBMf3BNHMsmoKFRy5nlWJ7pfLO8hEP0p3FnODlU1AR6tW5fqSN/5lBrtJKIr+tUfPZIsRmOiESnWVCvi+rF0zKQ+gfOB6rp4hDcKv3vGzsXDJooEZnGN5I79zfTG8B7EDGl3XAGYQVpHs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=c130O1L8; arc=none smtp.client-ip=57.103.68.253
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="gshDRdkq"
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="c130O1L8"
 Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-2a-20-percent-1 (Postfix) with ESMTPS id 95AAB180011F;
-	Mon,  8 Sep 2025 16:00:18 +0000 (UTC)
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1; bh=143GXK4f81n8UgBLDB+Lfcxek6oM+4KOhRh1gnXFQKQ=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=gshDRdkqLbckpjU+hdgdH3d1Q15fVfUbvryGTw36HPLJCTk9JZdqjPh2IjMGHlwQoDb4x1DzNTYc+gpek3ycOB3PGuQZJt3/2up5XBUMnLdvS6TsC/p4vGq7cZmqpTwn6ITxmRxueO/cAmhn7VJ/8uiQYsDulXVLW9bj9cFF4pSU96lWhe2vLEpzz1Twkxkhqh48noifwu5X9oAq3lVIOe5apjXepwGdkGckIFfljReXkRFxfybw8tiR5FImYwha1aZ+ZaaWD6MUZT5suXX8koPwSeth2sXKjlcsh4eDZ4Hq/SWy1y9Gv5FEe/7SoWVys6kNGIyfESLcA6ms9LYxbw==
+	by p00-icloudmta-asmtp-us-west-2a-20-percent-2 (Postfix) with ESMTPS id 9208A1800856;
+	Mon,  8 Sep 2025 16:12:51 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1; bh=BxR6Es+jHBGS3Dcb/o7sbGzq483CRQegevkqso1i/VU=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=c130O1L8R+QgqmxAmihTNbNADoebMLmy1+XNLhGWhCwhEymVna/M00DuoCIi/TXasiV1HMepKoppmbMxGWzZPslG6XhMzvrfXrgAiWDgsHY215ZUzE9YVHiHwVUalXwIQ0xRW8/2CHEuEhLC9sRldeSOoN0Hc60UeSdodScxapa00ZCFmp/Ln+Rtr2LIuk2lrfxAUUhw69o39tRt5M6Px5Ybx8JrQ3J5n/c9lqpU0uKjD9F2CZ7HaByg7pLnpMWl3NWa+fKHaTLgk2xJP/9dfGIWG0URVdQrnhdjCDSAQMDGng40ZLKiseJH2Zl5LFFOOKiACcy4P/cTBf2JRc4HdQ==
 mail-alias-created-date: 1632196724000
 Received: from hitch.danm.net (mr-asmtp-me-k8s.p00.prod.me.com [17.57.152.38])
-	by p00-icloudmta-asmtp-us-west-2a-20-percent-1 (Postfix) with ESMTPSA id DDC0A180037F;
-	Mon,  8 Sep 2025 16:00:17 +0000 (UTC)
+	by p00-icloudmta-asmtp-us-west-2a-20-percent-2 (Postfix) with ESMTPSA id B55071800462;
+	Mon,  8 Sep 2025 16:12:50 +0000 (UTC)
 From: Dan Moulding <dan@danm.net>
 To: dan@danm.net
 Cc: davem@davemloft.net,
 	herbert@gondor.apana.org.au,
 	linux-crypto@vger.kernel.org,
 	regressions@lists.linux.dev
-Subject: [PATCH v4] crypto: acomp/scomp: Use same definition of context alloc and free ops
-Date: Mon,  8 Sep 2025 10:00:02 -0600
-Message-ID: <20250908160002.26673-1-dan@danm.net>
+Subject: [PATCH v5] crypto: acomp/scomp: Use same definition of context alloc and free ops
+Date: Mon,  8 Sep 2025 10:12:43 -0600
+Message-ID: <20250908161243.27239-1-dan@danm.net>
 X-Mailer: git-send-email 2.49.1
-In-Reply-To: <20250907203615.7299-1-dan@danm.net>
-References: <20250907203615.7299-1-dan@danm.net>
+In-Reply-To: <20250908160002.26673-1-dan@danm.net>
+References: <20250908160002.26673-1-dan@danm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,21 +43,21 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE1NyBTYWx0ZWRfX5Ni4oTJNapmT
- DQa4MKTTfnBMKG0/6E4PjgLD0nJD/jJA8Cngvda1JBf6A1gUbWB1kDea+mNWWOgko2UapHEKaE7
- /fjsUq1zJW03k9Pqke6VCf5aGyqc8Rf5EMz5/PWMH4Bk3lGLPOMMdeEdiG/svCI3KJcPrNIYDN3
- HuJir8IVinKox9wq7YbiC+SkrKit4adnbrqKH+3JPQ9rlyhkKN21YdDWXq5eBKZXwAODIizrJhH
- aB+AvPdVkK9GqDQqzoIPwctcRRJB0MZCgHjrJklpiEI/KjGK4s1JOGOQjeSWCcq1023S0xEEA=
-X-Proofpoint-GUID: vdTYWVQ6lEzAN35Ksh0TN9BbKjPJIm6v
-X-Proofpoint-ORIG-GUID: vdTYWVQ6lEzAN35Ksh0TN9BbKjPJIm6v
+X-Proofpoint-ORIG-GUID: 0LzOZ-0YGPa-agYMJLbSNXsS8PEv2Aeu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDE2MSBTYWx0ZWRfX760CWkzhhFcs
+ XP+kakD1g7JflrzGMGr4x1c2+e7bUmdsUj7U91voqEDd1ZCnN8TtnsYWAittO9Djqpr/xV/4wPO
+ hSSmvrPBU6nRBh3rxsxw5kJg4HR+MYlg9YGX9+gpb6E1QcNLfhUNJTdetXroatE0Irm1pe2vFpJ
+ E53kimaAF5esmLCu+eVEIJl5jsGUm2NN/vgZ1RC0Kois2z7Vwf0d2ETJjHYWFS7YByjr0uetKhp
+ wtI2Xv0t/4owsZUmGuQ+jc75/gGvNwmwLg+SdoFSUsbv8zvmnlkqbueCMeQTed2rVjz32cPps=
+X-Proofpoint-GUID: 0LzOZ-0YGPa-agYMJLbSNXsS8PEv2Aeu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-08_05,2025-09-08_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 malwarescore=0 adultscore=0
- clxscore=1030 spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2506270000 definitions=main-2509080157
-X-JNJ: AAAAAAABubPFun+tW33USlyNh70lf7oICSeFgPhNzHcYAlO0CgbDCMOIYIDvLWQWgJUbT5pe+1MjMT07OezvZz/2wIz/nCQoNpU6AF3/RnMzrEj9OCaeF4mbNj2QphahhiFxuoF7KsOc1zdEd0UZwEYmocRfyJ88+j0UnfdQJ5JjiF/acfdFiUWPY40seFu4zarbsg7oD+ryXcXGcKTZW0iJato+qpIIF9Hkax1LcVj+DdpuLUwQsrx56be9k/YL0+t+G6J64t0bBjqDhUSD3OLBHUnoUCdq7dGp/kLClCpwxQXeRUqC9L9Yps7WmElzhEpKG8JLymnddjzGdQUIptzjcNskMM99E9ete0c3FeyPFnTDgJbXCdNca3kG9c/9JUuUU2+Fp5iPBhXST2sgDdwVvWlm6/I5kYXyFDEIgK4qfmoHmmH6TyRj+jW7jGZxzxYtOrGyXg3sL9SMgAEiwKrpBL52/rMcFay7bKJzwWn4Nqa0/5xmBl/IIBn9Ordui68o0pETynlZkz+REmE5fM6HoByoKL0PKb/pc0fbPyOT1ffFZErHtVY0ZZ8cios/avFrstdCEzX1mhBLfAfDEOwJG5JTINcBl2emnf8ehjs8THx8Jn1j4VdllT0DQrgskIVGxMKkof5f1MRl
+ definitions=2025-09-08_06,2025-09-08_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 phishscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 clxscore=1030 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2506270000 definitions=main-2509080161
+X-JNJ: AAAAAAABuwVZ5hz3LdasHbnNhat10B6A6VxNjIPOP3XRvfeLpYQbR0cRz4TFxU9m4Nb/J0SnrZuWgty/y0YgyHXWAL1DoTsECMd5i5VygY09Yo7AsYM+HSOHmb2JRpPfGUXcNirCSiI3zTVGHePFDZ9Kh1tr82bsDc4nHM8UfK6vxfH+ISF3IjioamkVCo60z6U1gq36qUEXQniIxfhzlT7XpH0KX2/bPOwFocWzARmezpgk8owPsijTovFSFVr6vt6Du0mcE2srtggspJGeajqsy3c4lLOG7MlhLNUuwa2PtOwVULrdEHBXiSX/62O7Ai8Jsetx/NHYIwdtjWKsCCKwXshK3l2jgRrjWKO2+1KVIuYPFdXmkjPm7uv0vExCP0L9gaY4/g4CuHotrBBQuS1VPtvYs6zbKeNO0dxWsJpO2woXy650wloiJsbyi7Rkh9GdlaB2FhVipKH60M8guCXT3070N8imXdejkabaqA+bY04rmXlKDj6lmq7QcM4baBBFriBI+YcqgdvBCWLC6GDggTZKikhK4zwfMSh7D3v9gxVytn+OCHgU5uiU7tP7sB4PRYJzcMSfpHIrnVUqSm+m81O9emeX58ZK1XEhwdL0NWXmBX3PotWXcguPiHF/E9z5nRFEoldaTrE=
 
 In commit 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation
 code into acomp"), the crypto_acomp_streams struct was made to rely on
@@ -76,6 +76,12 @@ Signed-off-by: Dan Moulding <dan@danm.net>
 Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
 Fixes: 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation code into acomp")
 ---
+Changes in v4:
+  * After the change in v3, the deflate algorithm was no longer
+    affected, but the patch still had some whitespace changes in
+    deflate.c. This version removes those (so deflate.c is no longer
+    patched here).
+
 Changes in v4:
   * Rebased on crypto-2.6/master (previous versions were based on
     stable v6.16).
@@ -96,7 +102,6 @@ Changes in v2:
   * Fix whitespace errors.
 
  crypto/842.c                          |  6 ++++--
- crypto/deflate.c                      |  4 ++--
  crypto/lz4.c                          |  6 ++++--
  crypto/lz4hc.c                        |  6 ++++--
  crypto/lzo-rle.c                      |  6 ++++--
@@ -104,7 +109,7 @@ Changes in v2:
  drivers/crypto/nx/nx-common-powernv.c |  6 ++++--
  drivers/crypto/nx/nx-common-pseries.c |  6 ++++--
  include/crypto/internal/scompress.h   | 11 +----------
- 9 files changed, 31 insertions(+), 26 deletions(-)
+ 8 files changed, 29 insertions(+), 24 deletions(-)
 
 diff --git a/crypto/842.c b/crypto/842.c
 index 8c257c40e2b9..4007e87bed80 100644
@@ -123,21 +128,6 @@ index 8c257c40e2b9..4007e87bed80 100644
  	.compress		= crypto842_scompress,
  	.decompress		= crypto842_sdecompress,
  	.base			= {
-diff --git a/crypto/deflate.c b/crypto/deflate.c
-index 21404515dc77..f602ea038bb7 100644
---- a/crypto/deflate.c
-+++ b/crypto/deflate.c
-@@ -54,8 +54,8 @@ static void deflate_free_stream(void *ctx)
- }
- 
- static struct crypto_acomp_streams deflate_streams = {
--	.alloc_ctx = deflate_alloc_stream,
--	.free_ctx = deflate_free_stream,
-+	.alloc_ctx	= deflate_alloc_stream,
-+	.free_ctx	= deflate_free_stream,
- };
- 
- static int deflate_compress_one(struct acomp_req *req,
 diff --git a/crypto/lz4.c b/crypto/lz4.c
 index 7a984ae5ae52..57b713516aef 100644
 --- a/crypto/lz4.c
