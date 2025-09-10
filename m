@@ -1,141 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4381F31A070
-	for <regressions@lists.linux.dev>; Wed, 10 Sep 2025 11:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885A12749E2
+	for <regressions@lists.linux.dev>; Wed, 10 Sep 2025 12:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757502569; cv=none; b=F448zTzkpnau0Kp9O8lpFDre356L3wYZwnKoPxHNQ0DdaPNfrQ6zNi6APAIstKB/+6nG2XMPR6Qn1GTIkzKwqEoLRuRphP5ie4PxbL8+18RF7LK2AYcBD3DSHD0pEEfFpTjf9kpXQs19PAVdb9498//TObHvUuCxuMAPpaQ/GM0=
+	t=1757507311; cv=none; b=QFZc9sGoey7KT7GtK3hfUTD3gddLGkJAe/JqR0vg4/oZrWHhzhol4zUUjfmPDJkKjfOXC7S9jk/CdtPyaMRnAEh/6X/c6qXj6z24M2F7ZovAsrMCGnhCWxUF/qD+2M6dTMoQ7vPKJK40n6zsyUJ9Uqg6PwDgdtPX5rFc5PhnZZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757502569; c=relaxed/simple;
-	bh=BQ2XtYRwei+F/8LMUKBdKEm+z8pxUaNiGAkH40rNEKc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aZvocAPfDXgTzJEaNUUtgARKlpQEKhzH/Fyo5fp+1Zeya+UCegMHuH8B54YlE92ksoxPZ3+NBVXtUooNztUgNJueN3re7KxNPoDrA49hXdZzEMtEWM6HipiCckyQnyXQihVeLfZAs0kCfxfx7QuMGrzW7pn9OQHPmriqCQxHCTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HPrk7u7Z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1757507311; c=relaxed/simple;
+	bh=xr+pHWDpFhG101gZJW36qscUm47fFzwtzUnoWeWDmLY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ib1wKAEvdnPc3EVXOFmF3pwPUfu6sR1vyAdh6fl7PNxVQGoZ8qz6SE34tK98vkQ1/t8ZuRfzhPxNNebepeE6HG9fDMyQCLQXqRZRU5NI83y5pwXe70AciXLLAphUMZCxyOQK0gXJaw+PPcwY8wCx7e11S6MFgy1yhhhmh2WGbvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c780gDmB; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HPrk7u7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757502566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EEfKAAgF77B0N35cHlVCZR8H3qoPVBq2FQNy2mJIamk=;
-	b=HPrk7u7ZaSZTh4jOKCdVu2CnJAdddbfTonlDn9pyM4WMafX7E5oEWXm8mqB6tzoMd7gyuO
-	aMaN1cJ1xNMdsleooq3+qUUKACcPwc5fTaiGYcJ5FEbGVPplqOa/3tDv3sTlm5//S6SIiO
-	9T17r9ff6wJ37rCrBAMoevDMWYWH74c=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-qAv_nB54MJipL-tm2M_zgw-1; Wed, 10 Sep 2025 07:09:24 -0400
-X-MC-Unique: qAv_nB54MJipL-tm2M_zgw-1
-X-Mimecast-MFC-AGG-ID: qAv_nB54MJipL-tm2M_zgw_1757502564
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3dacc10dd30so4857104f8f.0
-        for <regressions@lists.linux.dev>; Wed, 10 Sep 2025 04:09:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c780gDmB"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-77287fb79d3so5330096b3a.1
+        for <regressions@lists.linux.dev>; Wed, 10 Sep 2025 05:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757507309; x=1758112109; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uKKz38rJoChd6hasvypIOinRdsvj7L3C/cH5A2UhAis=;
+        b=c780gDmBF1n7DRUWItnWjqi22D9M9bGnZ4BYnZYK5DEwX13DGK+BnuX3+++rZo8Up5
+         3mqgP7rlQZb+jCEmaJ4l5JL2Vbfi++BB4dfjw1nmxbRSLyFbUfiK1y6e/6CkG7yzvA/3
+         HVgSFb4A3gQlO8LRFnAs/ESNAifon11IYfXp9wI2hFl607hHiC29v3wuqAnQ+Po+WC85
+         wv3garWhZzBw00Ohc/XLh/FnQiJb+EuHB58u6gqa3ts5hiaAIth3t29J/3Rc6aD3z5MY
+         ZWC3z/QsrzpyHa4/5VIRBpSd5Dz7KI2Sh+CsTZ1+G2JRF+NU46YbIvzYzwjEhHcQOawG
+         +WIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757502563; x=1758107363;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EEfKAAgF77B0N35cHlVCZR8H3qoPVBq2FQNy2mJIamk=;
-        b=chP1q20cHEUQHQofzi1HDSWs9GpTD3zlOws7wO6pN3hupY6qROlZHb6dvfeRKJcFmE
-         UtAgyReUmGjTUcWSsIxiyWV4exArFESdREQePSJiBtZQRtGti81II0NOh6hcgaqkIdVq
-         n9Ex3p3xBc0NCG1Zj7H43X5YKxh0oaDFaAk9/GCMmgsaskhPYiZlbyDB0cheTujM2DWC
-         P4MmOxFTs/qAz3iaj3whWXjzVzKno8DOvIIlNfFZSCYb3esYCSnr3PFHoz3956hql5dA
-         FmMrmRQ7SMcyvZVvz6PYA/uMNMARhK9vYS2GymRuih9P0L/0ueE08wvOy8LU0qU11iO+
-         5PmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoBTSpssGzFnfFdz14ODkDlHnvi0SRd1M+RIwE/HS1XUONW29aDbbT4L59qC9ldJkUkC28XKc7NSvf7A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwJZWKjeF5d5kUelZendy6g3S11Guk9SqixKc4EAUhqYiuBsJWd
-	pL5D112Ua2j7DgXSHnSZ1YRBG5lXQsl2CMjz3dqLn8oW9gc9A2CHHhoP9HI5hiy8YTpiQbxcMPu
-	dds+Xp/xtF/QAhBAIqRu9S/J8hLQB5z7a/rV/t5wtmvuvgBFIE10zBNS3nRyrdv78
-X-Gm-Gg: ASbGncu2Hlz8/KUdTgdOwb+RbTVBcu+rxFbx52mkdz8JB7JIxE5Ev/aD85OlPQb2ONr
-	mTI/VCDUA+WmLs7Axz5kQSS2E161Cbop5dMtFunC9W4J5FwmWN8QRnqxjdPx2cY5tpvi80Ex7GZ
-	czFnW4i3Qc07ndhlL7C0u6Q10Jyy7XONArh8jAKH2oc1P4oDvstsOGO9Mq9o9QX1cJdSwU3QwW0
-	n4wdzf0L+EoYCBepTndGt0uUfWbfImmTMDNnuKZkL4Zl+UlAyo+YGYV1b2H9edfvCtNno8O9d2N
-	JQN+22x3fxYeCnVUc/znf8fI1r2ztGsZUnGwzBfYs4kFR3uAi5T4YajADuDNIzySbLt6GDjEGzm
-	vOiS+hjugLhvEEOMs2ttKMA==
-X-Received: by 2002:a05:6000:2889:b0:3e5:50:e044 with SMTP id ffacd0b85a97d-3e643555859mr13543076f8f.45.1757502563465;
-        Wed, 10 Sep 2025 04:09:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEtsE6TP99LwCM9DefOr4NgVBIR7vSn0IU371t63+HnR3UaFYs5LDu32sAvz1H1Dto10pgN1g==
-X-Received: by 2002:a05:6000:2889:b0:3e5:50:e044 with SMTP id ffacd0b85a97d-3e643555859mr13543046f8f.45.1757502563021;
-        Wed, 10 Sep 2025 04:09:23 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45df1ba282dsm26332925e9.5.2025.09.10.04.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Sep 2025 04:09:22 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Brett A C Sheffield <bacs@librecast.net>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Simona Vetter <simona@ffwll.ch>, Helge
- Deller <deller@gmx.de>, Thomas Zimmermann <tzimmermann@suse.de>, Lee Jones
- <lee@kernel.org>, Murad Masimov <m.masimov@mt-integration.ru>, Yongzhen
- Zhang <zhangyongzhen@kylinos.cn>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 1/1] Revert "fbdev: Disable sysfb device registration
- when removing conflicting FBs"
-In-Reply-To: <aMFYeV4UdD7NnrSC@karahi.gladserv.com>
-References: <20250910095124.6213-3-bacs@librecast.net>
- <20250910095124.6213-5-bacs@librecast.net>
- <87frcuegb7.fsf@minerva.mail-host-address-is-not-set>
- <aMFYeV4UdD7NnrSC@karahi.gladserv.com>
-Date: Wed, 10 Sep 2025 13:09:20 +0200
-Message-ID: <87cy7yef8f.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1757507309; x=1758112109;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uKKz38rJoChd6hasvypIOinRdsvj7L3C/cH5A2UhAis=;
+        b=VUp/W0O6WPgC3BYeGQf/oJNvVWP1JiLrx/VFPed90h466nrW6hDjz+aS7Da4B6IlN5
+         XM0aSqSwFK/TtIS0u+VbnIYLlWGbqqNkkmMpSmsbQsXSSrLUxTcLEeqx07kr6hn1rlo2
+         lSOHtkEabfwvacXu59XUXwxrieBKfSZt6GoKIb/3cvm5U4L6NO2qMvnrDWBK7sL2AA8S
+         VDL6f+qKtAKjJ4pj2SuOFH5ge9erhcTT/4l7ZmHhDnGwlpTjHAcOMubNWmHkgoFwSoqa
+         seNOt3MjogtKYXldFZ81xHtLOITEzxX7rZYeXxRMscGsAbx/nsKPh+D0mRgbLzZHPArc
+         rWyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhveXuQctiWmWQMczwyu8S3RuKuNfNDuusbC3XsiD/+DtdLOO4hoiGe8wxxkCNYmVzOh3XjzwoicRLlg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy/HHqQw4Giiqrxp/2y52L+muDRNjP6h4jCECQE0OUVrbxdQoo0
+	M484sRCcuyQBJSqKacwNKzBF9fShcA3KYVOkY83OLo5xhA13HdKZGAxQ2ROHWUpEyr3DHDIpcVT
+	zSHFLIHrBDmGxgn2XvRB6qD0QB9yNBnf1py8zbjIJcQ==
+X-Gm-Gg: ASbGncsLpHKBf6Kk48MIsJ0RFWISx/yxam3uV6gY4YQd8F1myUTqfP/285I8OVboELB
+	Tzo7PgevQ5ZUOEThDvV5YawLBUPOb9+pm/0NoARmgzpUStQF4ApRSMeWT6nMUaWDl+rmbzvpc3W
+	MeRLCKLv5x+U9LeCeViw9SzW9qnuQ5BikbF73+eFNENdk2fThartrmgcunkG1J84uePOyTaXs4U
+	DXQrJ6GLIKs6zz6v5ejSsCFKUrWk5MvZH8oQE+764zcT2H6AzFtfPzL90vO129m5nHLTzxqM55j
+	wPZmWY3P25fAPngFkw==
+X-Google-Smtp-Source: AGHT+IG4qzDgYzLw61c20CouFv01sBXpB434aIve9D/nBM4iCZ8x3Y3u0nVvalLiKmVp0DIuV/6ujgGhDDoSGv7mFtM=
+X-Received: by 2002:a05:6a20:734a:b0:243:b38b:eba3 with SMTP id
+ adf61e73a8af0-2533d225e5amr22112020637.20.1757507308800; Wed, 10 Sep 2025
+ 05:28:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: PNolrXR0yBYX9QF50dyMYhNTskZQhCrNXajS680Zf9o_1757502564
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 10 Sep 2025 17:58:17 +0530
+X-Gm-Features: AS18NWC_Ip5gUfztIBhg-V1fX8vYtT8uTSYaRWdst2tMKb6IDGdmP3wp0PVgMdM
+Message-ID: <CA+G9fYuW3VZHpAzoL5pRXu6_K9LMHynNzMO9ULrdsC4UKY-ELA@mail.gmail.com>
+Subject: next-20250910: ERROR: modpost: "typec_switch_set" [drivers/extcon/extcon-ptn5150.ko]
+ undefined!
+To: open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Frank Li <Frank.Li@nxp.com>, 
+	Xu Yang <xu.yang_2@nxp.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Brett A C Sheffield <bacs@librecast.net> writes:
+The following build warnings / errors are noticed with arm64 defconfig+
+with gcc-12 and gcc-13 toolchains on the Linux next-20250910 tag.
 
-> On 2025-09-10 12:46, Javier Martinez Canillas wrote:
->> Brett A C Sheffield <bacs@librecast.net> writes:
->> 
->> Hello Brett,
->> 
->> > This reverts commit 13d28e0c79cbf69fc6f145767af66905586c1249.
->> >
->> > Commit ee7a69aa38d8 ("fbdev: Disable sysfb device registration when
->> > removing conflicting FBs") was backported to 5.15.y LTS. This causes a
->> > regression where all virtual consoles stop responding during boot at:
->> >
->> > "Populating /dev with existing devices through uevents ..."
->> >
->> > Reverting the commit fixes the regression.
->> >
->> > Signed-off-by: Brett A C Sheffield <bacs@librecast.net>
->> > ---
->> 
->> In the other email you said:
->> 
->> > Newer stable kernels with this
->> > patch (6.1.y, 6.6.y, 6.12,y, 6.15.y, 6.16.y) and mainline are unaffected.
->> 
->> But are you proposing to revert the mentioned commit in mainline too
->> or just in the 5.15.y LTS tree ?
->
-> Only the 5.15.y tree. Sorry - that could have been clearer.  There's no
-> regression anywhere else. Mainline and other stable kernels are all ok.
->
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? yes
 
-That's what I thought but just wanted to confirm that was the case. Thanks!
+Build regression: next-20250910: arm64: "typec_switch_set"
+[drivers/extcon/extcon-ptn5150.ko] undefined!
+Build regression: next-20250910: arm64: "fwnode_typec_switch_get"
+[drivers/extcon/extcon-ptn5150.ko] undefined!
 
-> Cheers,
->
->
-> Brett
->
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
--- 
-Best regards,
+The suspected patch, (The git bisection is in progress)
+  0d6a9aca15c987b4774f7fdb34114ab0d483766a
+  extcon: ptn5150: Add Type-C orientation switch support
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+## Build log
+ERROR: modpost: "typec_switch_set" [drivers/extcon/extcon-ptn5150.ko] undefined!
+ERROR: modpost: "fwnode_typec_switch_get"
+[drivers/extcon/extcon-ptn5150.ko] undefined!
 
+## Source
+* Kernel version: 6.17.0-rc5
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: 6.17.0-rc5-next-20250910
+* Git commit: 5f540c4aade9f1d58fb7b9490b4b7d5214ec9746
+* Architectures: arm64
+* Toolchains: gcc-12 and gcc-13
+* Kconfigs: defconfig+lkftconfigs
+
+## Build
+* Build log: https://qa-reports.linaro.org/api/testruns/29839409/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250910/build/gcc-12-lkftconfig-graviton4/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32V3KFrDCJV0h7Mw72c5hdncTEL
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32V3KFrDCJV0h7Mw72c5hdncTEL/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32V3KFrDCJV0h7Mw72c5hdncTEL/config
+
+--
+Linaro LKFT
