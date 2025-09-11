@@ -1,80 +1,33 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65ED2E718B
-	for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 08:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502262E975A;
+	Thu, 11 Sep 2025 09:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757580317; cv=none; b=SWSz/cvwMF4YA0oOi36oLSH7kKBexTTRm7TnOig5R7lDTZBiowbIoOcRDGW3oystV8AD2dcM9fxhpvpmMITOBTXXUmhOIjq2qm9UfpmsqeGuuGcmPXik8269ItvrVHnnPe0nlnEnl9xl03rColoGejUfg8Suu2NKYiwN9J+T49U=
+	t=1757583645; cv=none; b=j+D7YX41s1X5+7gC1e+2YYsESwmSrCiw2PzLwFE7mS8bYsq6NEWtjpMLugzAvzJsocBketr+7N54kCQhWSIL+VKN8jZK49GfeKPp69UVWv8gwpSgnrjQo3lSCRk/lLCaLiD/K8jA62ecvvnTU1eFYc8vmUv7ia3dn5Fg5dHxSR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757580317; c=relaxed/simple;
-	bh=ZQIJIOP5IaFNP+FW+nqdBwFuwdPyRVPSvu2e6eR4fcQ=;
+	s=arc-20240116; t=1757583645; c=relaxed/simple;
+	bh=xt64zrr/lxWZUjAUgd2iHBnjkwAc3+1CEp1tCAr52z0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLCUctZkqbYIb3lBM8zmjD7JmmRJG2lRBPupqkM8sUFGe/IHUfd7DgWx75bOST2K4hGKAGd9nycXFCwhFWVNJ+11p/S7Of/hgElhLwYZLV0ORTTeXEPThPqccHPT2W/iAbJtKUTvTNVLJLitqVBkj1Y28YOHoJ9yypes5AD7fJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kKiVFuVz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=frCjNW5L; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kKiVFuVz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=frCjNW5L; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=MtiKyZZkwrwb1WrvNJf3NsNrM25ghceQA7mXMkdcKiE2AVod6lW1tymFqiPR0kObxaym04z+biQIedKzpeOhT+mvSi9FUeb4aWLmmxgZdy/a/ajm7hW/Z01wu2SlNA4Tif6UPTTfM3eMMDj+Hax44on9+kVRvQDKGYW8+bYPNW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snvitfwS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kKiVFuVz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="frCjNW5L";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kKiVFuVz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="frCjNW5L"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2223268672;
-	Thu, 11 Sep 2025 08:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757580312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry8cOkx2zIlc+wzBeJkoq6Du2FeV1h0pV2EEvMd6IT0=;
-	b=kKiVFuVzB2MFbKNbBxuMO/vdrJXFFEgaNcBH2B46AGhSVHk2/ZnKWIf69HLa5IGMUjp69C
-	XEzZMfv70JELhdn6BT1bCtpqEEqfjlrkexP5uj/eBTJgM+bersPdjPeF2eswgeGUcXVMZl
-	Ie0QRoLgf3jfIRXx4chmQ17+PtMfwqM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757580312;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry8cOkx2zIlc+wzBeJkoq6Du2FeV1h0pV2EEvMd6IT0=;
-	b=frCjNW5LAXoegNDf3SQAYBIHJxfHVfoJlpDY7dN+SbqS0SRxmsSTxM2NmRgK+Nwmdf3EdP
-	pwXBRCcvu4VqKIDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1757580312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry8cOkx2zIlc+wzBeJkoq6Du2FeV1h0pV2EEvMd6IT0=;
-	b=kKiVFuVzB2MFbKNbBxuMO/vdrJXFFEgaNcBH2B46AGhSVHk2/ZnKWIf69HLa5IGMUjp69C
-	XEzZMfv70JELhdn6BT1bCtpqEEqfjlrkexP5uj/eBTJgM+bersPdjPeF2eswgeGUcXVMZl
-	Ie0QRoLgf3jfIRXx4chmQ17+PtMfwqM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1757580312;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ry8cOkx2zIlc+wzBeJkoq6Du2FeV1h0pV2EEvMd6IT0=;
-	b=frCjNW5LAXoegNDf3SQAYBIHJxfHVfoJlpDY7dN+SbqS0SRxmsSTxM2NmRgK+Nwmdf3EdP
-	pwXBRCcvu4VqKIDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ECA5C1372E;
-	Thu, 11 Sep 2025 08:45:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /wxjOReMwmiedQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 11 Sep 2025 08:45:11 +0000
-Message-ID: <fa727f7b-92d5-4fd2-b9cf-a19b27303a22@suse.cz>
-Date: Thu, 11 Sep 2025 10:45:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snvitfwS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285CCC4CEF0;
+	Thu, 11 Sep 2025 09:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757583644;
+	bh=xt64zrr/lxWZUjAUgd2iHBnjkwAc3+1CEp1tCAr52z0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=snvitfwSCLkpj43x3vQbes+YL7jGFU0weXdseaNpEtt/HZB9EJbgu8Z0iDaxCFQn+
+	 HIxll5ELYaMf+aWpCIQTT9Gnkli1o2feZ1Ft6piX+FMr6mB3a2mZMi9GxtTpJO4BNn
+	 XHZaOX2GPRiEnVKFR0vjw76SFSiohkpVx4w2lYvEsLbg1d4XfxWi4+Zi+5gp/Jd7UU
+	 hJlSEso0z3sWccxycnXhRibz8zA6NV0GIoBGQZ8JgcTHkC0wQ1smrscgl09ySgAGdL
+	 mQabr6TyIYaxlY54vnGXmqAHi1MarqKnRnJY/ht0rR8+/V05GLlEBSZlgtDdhsFN41
+	 t1lfC1ptLmPHA==
+Message-ID: <6710e476-9f64-4bd7-b5e4-e065a2423c27@kernel.org>
+Date: Thu, 11 Sep 2025 11:40:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -82,93 +35,93 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250911: mm/slub.c:3960:27: error: a function declaration
- without a prototype is deprecated in all versions of C void
- flush_all_rcu_sheaves()
-Content-Language: en-US
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- clang-built-linux <llvm@lists.linux.dev>, linux-mm <linux-mm@kvack.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Ben Copeland <benjamin.copeland@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+Subject: Re: next-20250910: ERROR: modpost: "typec_switch_set"
+ [drivers/extcon/extcon-ptn5150.ko] undefined!
+To: Naresh Kamboju <naresh.kamboju@linaro.org>, imx@lists.linux.dev,
+ lkft-triage@lists.linaro.org, Xu Yang <xu.yang_2@nxp.com>
+Cc: open list <linux-kernel@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, Linux Regressions
+ <regressions@lists.linux.dev>, MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>,
  Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYtUi3bnZ2zycCot6KGeZcn67JAvz=wZm=6f2w9ZnL=0Uw@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CA+G9fYtUi3bnZ2zycCot6KGeZcn67JAvz=wZm=6f2w9ZnL=0Uw@mail.gmail.com>
+ Anders Roxell <anders.roxell@linaro.org>,
+ Ben Copeland <benjamin.copeland@linaro.org>, Frank Li <Frank.Li@nxp.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Stephen Boyd <swboyd@chromium.org>
+References: <CA+G9fYuW3VZHpAzoL5pRXu6_K9LMHynNzMO9ULrdsC4UKY-ELA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CA+G9fYuW3VZHpAzoL5pRXu6_K9LMHynNzMO9ULrdsC4UKY-ELA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:url,linaro.org:email,suse.cz:mid,tuxsuite.com:url,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.30
 
-On 9/11/25 10:37, Naresh Kamboju wrote:
-> The following build warnings / errors noticed on aram arm64 defconfig
-> with clang-20 and clang-nightly toolchains on the Linux next-20250911 tag.
+On 10/09/2025 14:28, Naresh Kamboju wrote:
+> The following build warnings / errors are noticed with arm64 defconfig+
+> with gcc-12 and gcc-13 toolchains on the Linux next-20250910 tag.
 > 
 > Regression Analysis:
-> - New regression? yes
+> - New regression? Yes
 > - Reproducibility? yes
 > 
-> Build regression: next-20250911: mm/slub.c:3960:27: error: a function
-> declaration without a prototype is deprecated in all versions of C
-> void flush_all_rcu_sheaves()
+> Build regression: next-20250910: arm64: "typec_switch_set"
+> [drivers/extcon/extcon-ptn5150.ko] undefined!
+> Build regression: next-20250910: arm64: "fwnode_typec_switch_get"
+> [drivers/extcon/extcon-ptn5150.ko] undefined!
 > 
 > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
-> ## Build log
-> mm/slub.c:3960:27: error: a function declaration without a prototype
-> is deprecated in all versions of C [-Werror,-Wstrict-prototypes]
->  3960 | void flush_all_rcu_sheaves()
->       |                           ^
->       |                            void
-> 1 error generated.
+> The suspected patch, (The git bisection is in progress)
+>   0d6a9aca15c987b4774f7fdb34114ab0d483766a
+>   extcon: ptn5150: Add Type-C orientation switch support
 
-Thanks, fixed already for tomorrow's -next
-> ## Source
-> * Kernel version: 6.17.0-rc5
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git describe: 6.17.0-rc5-next-20250911
-> * Git commit: 8f21d9da46702c4d6951ba60ca8a05f42870fe8f
-> * Architectures: arm, arm64, i386,  mips, powerpc, riscv, s390
-> * Toolchains: clang-20 and clang-nightly
-> * clang: Debian clang version 20.1.8
-> (++20250809043815+87f0227cb601-1~exp1~20250809163919.3)
-> * Kconfigs: defconfig+lkftconfigs
-> 
-> ## Build
-> * Build log: https://qa-reports.linaro.org/api/testruns/29853978/log_file/
-> * Build details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250911/build/clang-20-defconfig/
-> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32XlFDtH7RdddaA6FHskupLDDSO
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFDtH7RdddaA6FHskupLDDSO/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFDtH7RdddaA6FHskupLDDSO/config
-> * Build log details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250911/log-parser-build-clang/clang-compiler-mm_slub_c-error-a-function-declaration-without-a-prototype-is-deprecated-in-all-versions-of-c/
-> 
-> --
-> Linaro LKFT
-> 
+I think the patch was dropped from the next.
 
+Still some addressing from the author would be nice...
+
+
+Best regards,
+Krzysztof
