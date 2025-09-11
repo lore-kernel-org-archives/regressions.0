@@ -1,127 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502262E975A;
-	Thu, 11 Sep 2025 09:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05EE30C354
+	for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 10:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757583645; cv=none; b=j+D7YX41s1X5+7gC1e+2YYsESwmSrCiw2PzLwFE7mS8bYsq6NEWtjpMLugzAvzJsocBketr+7N54kCQhWSIL+VKN8jZK49GfeKPp69UVWv8gwpSgnrjQo3lSCRk/lLCaLiD/K8jA62ecvvnTU1eFYc8vmUv7ia3dn5Fg5dHxSR8=
+	t=1757587118; cv=none; b=Y5CY4Mbd4GZ0TL9vW5pc6SZ0Qqvg8gdflrQL+0BYVgn+PAvEyUqd+wGcRnQXfRZ7Rwb8ZKCCwa3dxR8MYS0ltf/mAIl/UgfwvBwcWjyvQp0ErDXbFBWGkntWYrV67nZS2QlHecdC2dXjQh6qAbD3x4bQrY8dXedU8aFJT6tRx4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757583645; c=relaxed/simple;
-	bh=xt64zrr/lxWZUjAUgd2iHBnjkwAc3+1CEp1tCAr52z0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MtiKyZZkwrwb1WrvNJf3NsNrM25ghceQA7mXMkdcKiE2AVod6lW1tymFqiPR0kObxaym04z+biQIedKzpeOhT+mvSi9FUeb4aWLmmxgZdy/a/ajm7hW/Z01wu2SlNA4Tif6UPTTfM3eMMDj+Hax44on9+kVRvQDKGYW8+bYPNW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snvitfwS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757587118; c=relaxed/simple;
+	bh=PzZndjRhCyfeDaH3rPUOnP5JNre8OuaxnyLSwSi5YvI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZGj/tCqMWIx6EO5ovJXInz6Juk/kVpnOtFy2CmzGBX/qiVsMuMS0VaCmEzx/rNzCpmtGFJRmSO48m8HLwdjNsGscE+x3kiB7W+FLglabAsitXPCbXvQ0akhhawnbqJpr8kWXk9RpWQpbTjeMTwRU40ehtT+XdgxY8AYleiyjKKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wdIWSOvk; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snvitfwS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285CCC4CEF0;
-	Thu, 11 Sep 2025 09:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757583644;
-	bh=xt64zrr/lxWZUjAUgd2iHBnjkwAc3+1CEp1tCAr52z0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=snvitfwSCLkpj43x3vQbes+YL7jGFU0weXdseaNpEtt/HZB9EJbgu8Z0iDaxCFQn+
-	 HIxll5ELYaMf+aWpCIQTT9Gnkli1o2feZ1Ft6piX+FMr6mB3a2mZMi9GxtTpJO4BNn
-	 XHZaOX2GPRiEnVKFR0vjw76SFSiohkpVx4w2lYvEsLbg1d4XfxWi4+Zi+5gp/Jd7UU
-	 hJlSEso0z3sWccxycnXhRibz8zA6NV0GIoBGQZ8JgcTHkC0wQ1smrscgl09ySgAGdL
-	 mQabr6TyIYaxlY54vnGXmqAHi1MarqKnRnJY/ht0rR8+/V05GLlEBSZlgtDdhsFN41
-	 t1lfC1ptLmPHA==
-Message-ID: <6710e476-9f64-4bd7-b5e4-e065a2423c27@kernel.org>
-Date: Thu, 11 Sep 2025 11:40:39 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wdIWSOvk"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-76e4fc419a9so486478b3a.0
+        for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 03:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757587116; x=1758191916; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hwCf+x6+iQDwlYTBOswpM6ZU+Uqffi/8oPlDvFPRj5I=;
+        b=wdIWSOvkyMmUELdlTEp9yDgArHsAWkn2nCrC7hv/GCaryGlGm5UohzFd9OUqShCp/D
+         ySGv4Qf/0Ir0l64iOT7lnrpN6qE+EjSZ+9JQc5Ncp9kYTumJT7BnzmgoP+PvsT/qGyPL
+         Naj8DDapKdT5/2d/4FmjnRSZesHgau0rJD3/5e1nUQhR5xa2uJysD++gigQxznDncaHX
+         2fyNue854+q9TEuRiT6DtdLXDaiWz9F4t3uhfTtMMG+nkevcDs+s/O+2UBNpXAtmpjjm
+         PasFkwC6M95My8gplMxMdUH/Ec6fIE680qYU5GzSe/YerSKdCR2IrAxkelguuMDSS5KV
+         P5Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757587116; x=1758191916;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hwCf+x6+iQDwlYTBOswpM6ZU+Uqffi/8oPlDvFPRj5I=;
+        b=v6rrdTqCYPwMiW5+THO9fTQSXn6ebHmYn9tJf27zpcuH0l02vt4wUTuwdrR63TNtAj
+         2K5fRDrhMIAaVEibxjjuLaAfw83xeZpsonZjISVHDUDDh1bO92bT6hr0OCA5fANed0lj
+         YVWaR/wd0PUBTrnguz3inSdWxo8B35TmE2eXJKerRjuoh0IvlboPa+3vst9Sb6YT5irg
+         2w5LlK58A2UDZKy+wjv07go98zMnWvdJfL1zyFrqaMhl6L8rYgArs+Irxw0XYSNO8HDr
+         Av3yWqGV32XCPxPF7GP7V6/61Qk/6IDh/h+9bMwiNI8OnL3QeoVe3WN+rQM9sAWQOPCt
+         5cYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUb/v6iAbEBYEBP4OfuvKHNxchXEGR4aCbp2hVILXB+PpFUGP1DbEA/+EbLNwIyByMXcQBPrF0Ok28Aiw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzOdTc1VqlzRXkB7e5pL/jGaXC8km+m3/eviWIuZkat5cRAiLxg
+	L0FYdAAQHmRN05MR2AsPKfir7OygRu1FBKcwnY6QnScdhBBFhnSf3wMjPye8/XTiWE+5TpMbudC
+	R7t97Fssixx6pCpz11m3BKJvTUXkYQk3ozFoOOmg7avHEx5tH9HvGa58=
+X-Gm-Gg: ASbGncvLHBhjm4mED2k8tgXzM+8lozvf+SsdEEJ8LRbHQ8asOH8Nhl+cz3GRYbxo9O6
+	oOaPQkW8aa4LHC9OFbs9MzHzPG9SjRWx1CJX51ofWv9uKKTB5MgfHah2la3HY/TeSvzgJvx5IsL
+	+H8zaZw+Envp6ix/jycLvkB4X1G9TMLZcki7KPnanuLHnj8bg1KnJQ9WbAwOl8IM0xE4nwOtYTl
+	8IkZpaoWNeoGgmvzXEB8nn4V9/o6B6VfEm5quKKtcYi/0CdLKOsU6J8kxhQBbntr0mpb7XtHGkN
+	VuGtFFc=
+X-Google-Smtp-Source: AGHT+IFF9nLAlf5H5zTpQVUA1xDoSRqbppJFcEnC+SSt2NXKIJkElcllJglnQQoxzmnCvg9l74mXa81/q4BpW7N5QUs=
+X-Received: by 2002:a05:6a20:1585:b0:24c:f8f:2b95 with SMTP id
+ adf61e73a8af0-2534557a863mr28371984637.40.1757587115788; Thu, 11 Sep 2025
+ 03:38:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250910: ERROR: modpost: "typec_switch_set"
- [drivers/extcon/extcon-ptn5150.ko] undefined!
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, imx@lists.linux.dev,
- lkft-triage@lists.linaro.org, Xu Yang <xu.yang_2@nxp.com>
-Cc: open list <linux-kernel@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, Linux Regressions
- <regressions@lists.linux.dev>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>,
- Ben Copeland <benjamin.copeland@linaro.org>, Frank Li <Frank.Li@nxp.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Stephen Boyd <swboyd@chromium.org>
-References: <CA+G9fYuW3VZHpAzoL5pRXu6_K9LMHynNzMO9ULrdsC4UKY-ELA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CA+G9fYuW3VZHpAzoL5pRXu6_K9LMHynNzMO9ULrdsC4UKY-ELA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 11 Sep 2025 16:08:24 +0530
+X-Gm-Features: AS18NWDU1yGbFPHd1Xuf1CRGujHNL9_s9RGs2SutoTfTFAoxI3RGpotdfxd9IuI
+Message-ID: <CA+G9fYsenOs88SO8ZRYnuDXU8tk=o-kS1Q=fvLbV3=6WKSJR2g@mail.gmail.com>
+Subject: next-20250911 acct01.c 123 TFAIL acct(.) expected EISDIR EACCES (13)
+To: open list <linux-kernel@vger.kernel.org>, LTP List <ltp@lists.linux.it>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Jani Nikula <jani.nikula@intel.com>, 
+	Jeff Layton <jlayton@kernel.org>, Arnd Bergmann <arnd@arndb.de>, chrubis <chrubis@suse.cz>, 
+	Petr Vorel <pvorel@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/09/2025 14:28, Naresh Kamboju wrote:
-> The following build warnings / errors are noticed with arm64 defconfig+
-> with gcc-12 and gcc-13 toolchains on the Linux next-20250910 tag.
-> 
-> Regression Analysis:
-> - New regression? Yes
-> - Reproducibility? yes
-> 
-> Build regression: next-20250910: arm64: "typec_switch_set"
-> [drivers/extcon/extcon-ptn5150.ko] undefined!
-> Build regression: next-20250910: arm64: "fwnode_typec_switch_get"
-> [drivers/extcon/extcon-ptn5150.ko] undefined!
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> The suspected patch, (The git bisection is in progress)
->   0d6a9aca15c987b4774f7fdb34114ab0d483766a
->   extcon: ptn5150: Add Type-C orientation switch support
+The following LTP syscalls acct01 test failed on qemu-arm64, qemu-x86_64,
+x86-64 and rock-pi-4b running the Linux next-20250911 tag kernel.
 
-I think the patch was dropped from the next.
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-Still some addressing from the author would be nice...
+Test regression: next-20250911 acct01.c 123 TFAIL acct(.) expected
+EISDIR EACCES (13)
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Best regards,
-Krzysztof
+Initial investigation pointing to this commit id, (Need to bisect)
+$ git log --oneline next-20250910..next-20250911  -- kernel/acct.c
+   ccc54b556054d kernel/acct.c: saner struct file treatment
+
+## Test log
+tst_test.c:1953: TINFO: LTP version: 20250530
+tst_test.c:1956: TINFO: Tested kernel: 6.17.0-rc5-next-20250911 #1 SMP
+PREEMPT @1757575072 aarch64
+tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+tst_kconfig.c:676: TINFO: CONFIG_TRACE_IRQFLAGS kernel option detected
+which might slow the execution
+tst_test.c:1774: TINFO: Overall timeout per run is 0h 21m 36s
+acct01.c:123: TFAIL: acct(.) expected EISDIR: EACCES (13)
+acct01.c:123: TPASS: acct(/dev/null) : EACCES (13)
+acct01.c:123: TPASS: acct(/tmp/does/not/exist) : ENOENT (2)
+acct01.c:123: TPASS: acct(./tmpfile/) : ENOTDIR (20)
+acct01.c:123: TPASS: acct(./tmpfile) : EPERM (1)
+acct01.c:123: TPASS: acct(NULL) : EPERM (1)
+acct01.c:123: TPASS: acct(test_file_eloop1) : ELOOP (40)
+acct01.c:123: TPASS: acct(aaaa...) : ENAMETOOLONG (36)
+acct01.c:123: TPASS: acct(ro_mntpoint/file) : EROFS (30)
+acct01.c:123: TPASS: acct(Invalid address) : EFAULT (14)
+Summary:
+passed   9
+failed   1
+
+## Source
+* Kernel version: 6.17.0-rc5
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe: 6.17.0-rc5-next-20250911
+* Git commit: 8f21d9da46702c4d6951ba60ca8a05f42870fe8f
+* Architectures:  qemu-arm64, qemu-x86_64, x86_64 and rock-pi-4b
+* Toolchains: gcc-13
+* Kconfigs: defconfig+lkftconfigs
+
+## Build
+* Test log: https://qa-reports.linaro.org/api/testruns/29854528/log_file/
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250911/ltp-syscalls/acct01/
+* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32XlIYnaqlBd51NRfEjNdOSzoa9
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFRJ0UBKszjvazzyFA2gCmdT/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFRJ0UBKszjvazzyFA2gCmdT/config
+
+--
+Linaro LKFT
