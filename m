@@ -1,57 +1,57 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05EE30C354
-	for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 10:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489AE2DC794
+	for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 19:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757587118; cv=none; b=Y5CY4Mbd4GZ0TL9vW5pc6SZ0Qqvg8gdflrQL+0BYVgn+PAvEyUqd+wGcRnQXfRZ7Rwb8ZKCCwa3dxR8MYS0ltf/mAIl/UgfwvBwcWjyvQp0ErDXbFBWGkntWYrV67nZS2QlHecdC2dXjQh6qAbD3x4bQrY8dXedU8aFJT6tRx4Q=
+	t=1757618341; cv=none; b=swY3AFnXKlNlAJz1OhAz1xKToYuRSA8MKqVbfoXLLgQu7u38j+IBK9Jczd0Wdq3z9yypjE23/v5fsQu/MRopq3V+6T6gQfxavuU9hSVw97XlBxbKBDhh6sxiJZ5SimuLJSTCos6s9lIL30gZKvgJp7m27Po7wQrHkPcKMATWvJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757587118; c=relaxed/simple;
-	bh=PzZndjRhCyfeDaH3rPUOnP5JNre8OuaxnyLSwSi5YvI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZGj/tCqMWIx6EO5ovJXInz6Juk/kVpnOtFy2CmzGBX/qiVsMuMS0VaCmEzx/rNzCpmtGFJRmSO48m8HLwdjNsGscE+x3kiB7W+FLglabAsitXPCbXvQ0akhhawnbqJpr8kWXk9RpWQpbTjeMTwRU40ehtT+XdgxY8AYleiyjKKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wdIWSOvk; arc=none smtp.client-ip=209.85.210.173
+	s=arc-20240116; t=1757618341; c=relaxed/simple;
+	bh=/Ke+Nb1gsfRDyew1MtLRw+g0cKYvwkI9gUaQtMkfHhc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AQsfGiVxmXV+QF3a4oimovPlT6oZlrZLTMs9fiNN2MR2uW1tHVKsKvUjA7CGC8+X8ImLH3JO7CMS7VQuJFBz+gIVWa6uxDjP6SdBHQHBL9Obqem6O14dWgiDPu77D8rRkRsXgwDtOX4RghpJ3Rf0LUFg7nz4J16ItqUn9vVzAmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v9FpK6PY; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wdIWSOvk"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-76e4fc419a9so486478b3a.0
-        for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 03:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9FpK6PY"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-25caef29325so6167575ad.2
+        for <regressions@lists.linux.dev>; Thu, 11 Sep 2025 12:19:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757587116; x=1758191916; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1757618339; x=1758223139; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=hwCf+x6+iQDwlYTBOswpM6ZU+Uqffi/8oPlDvFPRj5I=;
-        b=wdIWSOvkyMmUELdlTEp9yDgArHsAWkn2nCrC7hv/GCaryGlGm5UohzFd9OUqShCp/D
-         ySGv4Qf/0Ir0l64iOT7lnrpN6qE+EjSZ+9JQc5Ncp9kYTumJT7BnzmgoP+PvsT/qGyPL
-         Naj8DDapKdT5/2d/4FmjnRSZesHgau0rJD3/5e1nUQhR5xa2uJysD++gigQxznDncaHX
-         2fyNue854+q9TEuRiT6DtdLXDaiWz9F4t3uhfTtMMG+nkevcDs+s/O+2UBNpXAtmpjjm
-         PasFkwC6M95My8gplMxMdUH/Ec6fIE680qYU5GzSe/YerSKdCR2IrAxkelguuMDSS5KV
-         P5Eg==
+        bh=OMzXnLutBDyDe0cFRFFwMkAW7rZFHmfwIn2gFvrd1lk=;
+        b=v9FpK6PYtDJrnWDnfv1gW97XYvU4TckO0mf6M4aFGFUPWzLhfGCIkP53NpipAVONbr
+         rFrZxl/ondH40ZOB53+XsblLo1/Fi34PwL10TELJlK4il39HHqgpu9gr49zqmWyfyWMb
+         rmb+7q7PAn/WzqbAJg98HH9hPp6UfyX6h2xLVMSvBzvXrxnuTejDdJh/R5/5S5VnFpcU
+         K5ZEDvRSD0depD0G+Kl4+Iclr0c0V51wGCNcUvq13Y2g4Cp6ipwJwEufP/P9vTepduCU
+         rHSIs7rf04M0mtCq6KfMnI+PSnrn1ct+rKU93qmTqToXj05+jisbnQyJoYn/MOgYv1Ac
+         jd+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757587116; x=1758191916;
+        d=1e100.net; s=20230601; t=1757618339; x=1758223139;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hwCf+x6+iQDwlYTBOswpM6ZU+Uqffi/8oPlDvFPRj5I=;
-        b=v6rrdTqCYPwMiW5+THO9fTQSXn6ebHmYn9tJf27zpcuH0l02vt4wUTuwdrR63TNtAj
-         2K5fRDrhMIAaVEibxjjuLaAfw83xeZpsonZjISVHDUDDh1bO92bT6hr0OCA5fANed0lj
-         YVWaR/wd0PUBTrnguz3inSdWxo8B35TmE2eXJKerRjuoh0IvlboPa+3vst9Sb6YT5irg
-         2w5LlK58A2UDZKy+wjv07go98zMnWvdJfL1zyFrqaMhl6L8rYgArs+Irxw0XYSNO8HDr
-         Av3yWqGV32XCPxPF7GP7V6/61Qk/6IDh/h+9bMwiNI8OnL3QeoVe3WN+rQM9sAWQOPCt
-         5cYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb/v6iAbEBYEBP4OfuvKHNxchXEGR4aCbp2hVILXB+PpFUGP1DbEA/+EbLNwIyByMXcQBPrF0Ok28Aiw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzOdTc1VqlzRXkB7e5pL/jGaXC8km+m3/eviWIuZkat5cRAiLxg
-	L0FYdAAQHmRN05MR2AsPKfir7OygRu1FBKcwnY6QnScdhBBFhnSf3wMjPye8/XTiWE+5TpMbudC
-	R7t97Fssixx6pCpz11m3BKJvTUXkYQk3ozFoOOmg7avHEx5tH9HvGa58=
-X-Gm-Gg: ASbGncvLHBhjm4mED2k8tgXzM+8lozvf+SsdEEJ8LRbHQ8asOH8Nhl+cz3GRYbxo9O6
-	oOaPQkW8aa4LHC9OFbs9MzHzPG9SjRWx1CJX51ofWv9uKKTB5MgfHah2la3HY/TeSvzgJvx5IsL
-	+H8zaZw+Envp6ix/jycLvkB4X1G9TMLZcki7KPnanuLHnj8bg1KnJQ9WbAwOl8IM0xE4nwOtYTl
-	8IkZpaoWNeoGgmvzXEB8nn4V9/o6B6VfEm5quKKtcYi/0CdLKOsU6J8kxhQBbntr0mpb7XtHGkN
-	VuGtFFc=
-X-Google-Smtp-Source: AGHT+IFF9nLAlf5H5zTpQVUA1xDoSRqbppJFcEnC+SSt2NXKIJkElcllJglnQQoxzmnCvg9l74mXa81/q4BpW7N5QUs=
-X-Received: by 2002:a05:6a20:1585:b0:24c:f8f:2b95 with SMTP id
- adf61e73a8af0-2534557a863mr28371984637.40.1757587115788; Thu, 11 Sep 2025
- 03:38:35 -0700 (PDT)
+        bh=OMzXnLutBDyDe0cFRFFwMkAW7rZFHmfwIn2gFvrd1lk=;
+        b=VZATThOfv4ll50APpLiMMEdmJ84JeLNnknlqAgeheSKnXEjTya7xKo4WVhFRPi3hFH
+         Dj8kE5JDnvDsACta/zO9HwjMiw9pG/1Ijn/KNbAv9G+RFEQoRIktyX7D9Po1kDL0I3Nb
+         dWeu/IQYdPFA3fIzq0Cd81K8QhpWLgs91+OYjMvK6uFmRObnnSTC+VqEHJ2OZ+Q9BOw+
+         ECcwdHtGNy9+B3+m3T6rjt80KnPUfgKNxoCKhqZPM8/qwro1dbZYNlC/yoEFEyv78rGk
+         mSXPaeErETcEpTtqkmk2ewM7xQt+xcvZFD8nq5rHX2OsZMCmfmvSAEVedDDvSDhu+Jd2
+         4GXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZD1eDYq6NCb8G0GV/7hYC6jM782RsafLZFP1SDGsMAoqSgE53Ct3+ejn1tSkns4m7ogNDmCZFGg7dgg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwClZEA9Mj9H88cdLnagyBWKro3jt+9fZme2jnxZmvaba5f+M87
+	6Mf02TDyASSYpBet4OM4ewerU+XtRZmHUK1d0ne4L3MDVsnE2t4MCfGjaQ9k3ITfc34NGMc4PJE
+	VLTcK7espxLXNtE0juqDg67izbgCus6UPOJM002GjHA==
+X-Gm-Gg: ASbGnculgPIzNF/fz/voyxWbhKuEBCE2MuDLM4ejRNBeM+OeIieO/eh8/5aLAJrvaMb
+	CKchFPZ84GGClycnriaz4zJfJNOuPMTMCBX+SDIhrU3S+uupdtkcbAdI08S6GkMdJMT1Ca+fulg
+	k1REph5BWjBeDykg/67DXjLRhSI19KMLBwJ/jAnHG3egVDkFvaFqvW/3OcKCdVf8I/6Dw0b6fW1
+	ansSSH+xkssCIZST/EkFbbZ9WJW5Dwh+kbuqxUVUJ39F9wE3skwHnwS3f5LyzkQzK6FoY+C3dgK
+	kUpsig==
+X-Google-Smtp-Source: AGHT+IFcvNFERCt1pxcRVC0LrxIO5qX9I6ZaHaKu41AXHxq/mmXTSKA/Xpf/xNIANgUEzlw3GdicyiK9s1eIUs3kKeA=
+X-Received: by 2002:a17:902:f60c:b0:24c:c8d1:2bec with SMTP id
+ d9443c01a7336-25d26a50ba4mr4742195ad.40.1757618339416; Thu, 11 Sep 2025
+ 12:18:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,74 +59,76 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 11 Sep 2025 16:08:24 +0530
-X-Gm-Features: AS18NWDU1yGbFPHd1Xuf1CRGujHNL9_s9RGs2SutoTfTFAoxI3RGpotdfxd9IuI
-Message-ID: <CA+G9fYsenOs88SO8ZRYnuDXU8tk=o-kS1Q=fvLbV3=6WKSJR2g@mail.gmail.com>
-Subject: next-20250911 acct01.c 123 TFAIL acct(.) expected EISDIR EACCES (13)
-To: open list <linux-kernel@vger.kernel.org>, LTP List <ltp@lists.linux.it>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Jani Nikula <jani.nikula@intel.com>, 
-	Jeff Layton <jlayton@kernel.org>, Arnd Bergmann <arnd@arndb.de>, chrubis <chrubis@suse.cz>, 
-	Petr Vorel <pvorel@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
+Date: Fri, 12 Sep 2025 00:48:47 +0530
+X-Gm-Features: AS18NWDec12kyfne2e8LlQ-fqp880gCW8MHrmOTo3P_JiNjAs1Vmr9Ipa42F9ss
+Message-ID: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
+Subject: next-20250909: selftests/arm64/gcs/basic-gcs.c:390:30: error: use of
+ undeclared identifier 'HWCAP_GCS'
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Shuah Khan <shuah@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-The following LTP syscalls acct01 test failed on qemu-arm64, qemu-x86_64,
-x86-64 and rock-pi-4b running the Linux next-20250911 tag kernel.
+The following build warnings / errors noticed on arm64 defconfig
+with clang-20 and gcc-13 toolchains on the Linux next-20250909
+till next-20250911 tag while building selftests/arm64.
 
 Regression Analysis:
-- New regression? yes
+- New regression? Yes
 - Reproducibility? yes
 
-Test regression: next-20250911 acct01.c 123 TFAIL acct(.) expected
-EISDIR EACCES (13)
+First seen on  next-20250909
+ Good: next-20250908
+ Bad: next-20250909 till next-20250911
+
+Test regression: next-20250909:
+selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
+identifier 'HWCAP_GCS'
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Initial investigation pointing to this commit id, (Need to bisect)
-$ git log --oneline next-20250910..next-20250911  -- kernel/acct.c
-   ccc54b556054d kernel/acct.c: saner struct file treatment
+## Build log
+selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
+identifier 'HWCAP_GCS'
+  390 |         if (!(getauxval(AT_HWCAP) & HWCAP_GCS))
+      |                                     ^
+1 error generated.
 
-## Test log
-tst_test.c:1953: TINFO: LTP version: 20250530
-tst_test.c:1956: TINFO: Tested kernel: 6.17.0-rc5-next-20250911 #1 SMP
-PREEMPT @1757575072 aarch64
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:676: TINFO: CONFIG_TRACE_IRQFLAGS kernel option detected
-which might slow the execution
-tst_test.c:1774: TINFO: Overall timeout per run is 0h 21m 36s
-acct01.c:123: TFAIL: acct(.) expected EISDIR: EACCES (13)
-acct01.c:123: TPASS: acct(/dev/null) : EACCES (13)
-acct01.c:123: TPASS: acct(/tmp/does/not/exist) : ENOENT (2)
-acct01.c:123: TPASS: acct(./tmpfile/) : ENOTDIR (20)
-acct01.c:123: TPASS: acct(./tmpfile) : EPERM (1)
-acct01.c:123: TPASS: acct(NULL) : EPERM (1)
-acct01.c:123: TPASS: acct(test_file_eloop1) : ELOOP (40)
-acct01.c:123: TPASS: acct(aaaa...) : ENAMETOOLONG (36)
-acct01.c:123: TPASS: acct(ro_mntpoint/file) : EROFS (30)
-acct01.c:123: TPASS: acct(Invalid address) : EFAULT (14)
-Summary:
-passed   9
-failed   1
+The suspected commit pointing to,
+  kselftest/arm64/gcs: Use nolibc's getauxval()
+  a985fe638344492727528e52416211dda1c391d5
+
 
 ## Source
 * Kernel version: 6.17.0-rc5
 * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
 * Git describe: 6.17.0-rc5-next-20250911
 * Git commit: 8f21d9da46702c4d6951ba60ca8a05f42870fe8f
-* Architectures:  qemu-arm64, qemu-x86_64, x86_64 and rock-pi-4b
-* Toolchains: gcc-13
-* Kconfigs: defconfig+lkftconfigs
+* Architectures: arm64
+* Toolchains: gcc-13 and clang-20
+* Kconfigs: defconfig
 
 ## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/29854528/log_file/
-* Test details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250911/ltp-syscalls/acct01/
-* Test plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/32XlIYnaqlBd51NRfEjNdOSzoa9
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFRJ0UBKszjvazzyFA2gCmdT/
+* Build log: https://qa-reports.linaro.org/api/testruns/29827060/log_file/
+* Build details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20250909/log-parser-build-clang/clang-compiler-basic-gcs_c-error-use-of-undeclared-identifier-hwcap_gcs/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32RzudgbCUiqGUoFtquJ9IEIDXZ
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32RzudgbCUiqGUoFtquJ9IEIDXZ/
 * Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/32XlFRJ0UBKszjvazzyFA2gCmdT/config
+https://storage.tuxsuite.com/public/linaro/lkft/builds/32RzudgbCUiqGUoFtquJ9IEIDXZ/config
+
+## Steps to reproduce
+ $ tuxmake --runtime podman --target-arch arm64 \
+ --toolchain clang-nightly \
+ --kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/32RzudgbCUiqGUoFtquJ9IEIDXZ/config
+\
+ LLVM=1 LLVM_IAS=1 debugkernel dtbs dtbs-legacy headers kernel kselftest modules
 
 --
 Linaro LKFT
