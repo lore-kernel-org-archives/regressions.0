@@ -1,77 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv9.manufrog.com (sv9.manufrog.com [46.246.119.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B465F30AAC1;
-	Fri, 12 Sep 2025 14:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B7F28314B
+	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 19:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.246.119.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757687042; cv=none; b=UGsG1/ixvHLVJhKBH4F31W8Xy5OHxzvB/jfmKFube9B5yra+GRv/FY9kRTDU1qPTbifraNBjbSke52U1QsPEZnQTmp3dYOwe3VnDSBBCQ9NT2kBg9jgwjdB3P7/UDqd678uxA6s+ydc8i4CMKn9um6j7fQKa/2Gp++EhhmfGQnw=
+	t=1757707038; cv=none; b=Be0gLfL4lQ18TwxaS1C6i8PMc8qu5uGLL/fGbHk982cY0FDIsOZ8zdx71ECcZNyE/lSLr282IqHemKGs7tWRZ1RyDzeSynUcinHQ0Subiei9Dpl4rphX9wl1bLg8MEDLfe+3vUOH+1mPffOOJ2uREWIqIglugNfx2+v82ugWvYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757687042; c=relaxed/simple;
-	bh=R9Zeya4tIZdJ8t94wN+9Fj9g2LtCWVpIo57dpc9HrUE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=neZpJpgEjHUSZXDUFtvEWrSsCf8ytpkAEN3/xCd34LLeyY4nXYEcfFjTZ40I7exTNbyqD8ieA7TR0yEJIDHIFBDY8rkSH4+PufgQ4uQjJw+4Cf1FmUJbJH/f8YdILqgMafECihy8s+jxxTyCpv8ZvZ2tbISBpQA4DbCGX7mQHKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPLulpa4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757707038; c=relaxed/simple;
+	bh=RuV43at9oIUzSJcsK485G4uQ64nYxSvVDGjhkRb7P5A=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Oq4Ie1Rp9U5uc/RhUjCv+wpz6PBrpxSbHv+NScSZnUbICJcLxe1Q1V2drpQMnonmAFpZB+GZAhH9lJp7mvdCCPoWYsMPAE8oMKveRbv/oZvo/VJutMsreWVBQrponxCGtcZZn+xPoP9rPunG5eckjiIlpZV8DzYxKCf4OYB1SMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se; spf=pass smtp.mailfrom=oscillator.se; dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b=Dji0bKfm; arc=none smtp.client-ip=46.246.119.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oscillator.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPLulpa4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5A9C4CEF1;
-	Fri, 12 Sep 2025 14:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757687042;
-	bh=R9Zeya4tIZdJ8t94wN+9Fj9g2LtCWVpIo57dpc9HrUE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=NPLulpa47j4FchkAg0+e1DteIR2wNllZWlEvBnS4etFWATgvq8zNDhR5oaZ6HpL+E
-	 gHudbpt85nxGJxFZz7Td79wkgh8OaYzh6zjIqRESs8BtmZ1zvKBBA0t4/W6Ek78/iz
-	 94sN9bZKwV6z2WJNGLeH33li78U+XXOqJr1Rn0v2tnJ+8scoNdV21dRUVtyVEooSDh
-	 /suh8SxefYR+mf+pfztdRfh9qLeRrHGf3nKRLGegH3lzfZ4pr4fpZlAI271BIoNOh9
-	 WljLCmkXFUL8hIPc0+ndeb8pzXjw+23AugIIGhHyuaErbuQYchgYNs0lMqV2IvD2kr
-	 HqnhlG+wEQvxg==
-Date: Fri, 12 Sep 2025 16:23:59 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Janne Grunau <j@jannau.net>
-cc: Benjamin Tissoires <bentiss@kernel.org>, 
-    Vishnu Sankar <vishnuocv@gmail.com>, linux-input@vger.kernel.org, 
-    regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    stable@vger.kernel.org
-Subject: Re: [PATCH] HID: lenovo: Use KEY_PERFORMANCE instead of ACPI's
- platform_profile
-In-Reply-To: <20250901-hid-lenovo-drop-platform_profile-v1-1-e2e9c68483ab@jannau.net>
-Message-ID: <s5q84snp-733q-o350-16ns-n2qroo550opn@xreary.bet>
-References: <20250901-hid-lenovo-drop-platform_profile-v1-1-e2e9c68483ab@jannau.net>
+	dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b="Dji0bKfm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=oscillator.se; s=default; h=Content-Transfer-Encoding:Content-Type:
+	Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9g4tINQ3Nuz9BImuzc0dqyBpOKAEGiLicPpQhPXc8pk=; b=Dji0bKfmqJiUkwVgBmJmsWAB/L
+	tffBxTLVA5K2FGhBefgPhkphycN/gKjMZyv73ZA9EVqF8Mxl+O/72ZlrVVkzQ0prW/nuXIzv9Fo+m
+	u6CZAc7AoqFRMBmUbfmuGCUfDfPD6waroHkYNoEHW2SZjKa0ttcimM5RYimQJxuPGuouqsXPOXFor
+	IIlSfMvzAJ5Mf1V9rlKQRL3amtWWMjREakspeL764lE/Ix7fhdK6oSZR7CTxnYkkD3gi7H+JqOi90
+	DYiYzuzwunAcGHGiddd4T4UK1jDvX40p7Rfob6hWDGLg4J7pPL72y8kj3DCR/XgkrRwc110PIGyYf
+	4WJbqYWg==;
+Received: from [::1] (port=51882 helo=sv9.manufrog.com)
+	by sv9.manufrog.com with esmtpa (Exim 4.98.2)
+	(envelope-from <staffan.melin@oscillator.se>)
+	id 1ux9tP-0000000AD8S-1vEg;
+	Fri, 12 Sep 2025 21:57:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Date: Fri, 12 Sep 2025 21:57:04 +0200
+From: Staffan Melin <staffan.melin@oscillator.se>
+To: zhangheng <zhangheng@kylinos.cn>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, Jiri Kosina
+ <jkosina@suse.com>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org, 1114557@bugs.debian.org
+Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+In-Reply-To: <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+References: <aL2gYJaXoB6p_oyM@eldamar.lan>
+ <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+User-Agent: Roundcube Webmail/1.6.11
+Message-ID: <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
+X-Sender: staffan.melin@oscillator.se
+Organization: Oscillator
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - sv9.manufrog.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oscillator.se
+X-Get-Message-Sender-Via: sv9.manufrog.com: authenticated_id: staffan.melin@oscillator.se
+X-Authenticated-Sender: sv9.manufrog.com: staffan.melin@oscillator.se
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Mon, 1 Sep 2025, Janne Grunau wrote:
+Thank you,
 
-> Commit 84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd
-> Fn keys") added a dependency on ACPI's platform_profile. This should not
-> be done for generic USB devices as this prevents using the devices on
-> non ACPI devices like Apple silicon Macs and other non-ACPI arm64
-> systems. An attempt to allow using platform_profile on non-ACPI systems
-> was rejected in [1] and instead platform_profile was made to fail during
-> init in commit dd133162c9cf ("ACPI: platform_profile: Avoid initializing
-> on non-ACPI platforms").
-> So remove the broken dependency and instead let's user space handle this
-> keycode by sending the new KEY_PERFORMANCE. Stable backport depends on
-> commit 89c5214639294 ("Input: add keycode for performance mode key").
+I tried to apply this patch to 6.12.39, the first problematic kernel, as 
+well as 6.12.41, the first bad I tried, and on both I got an error 
+message:
+
+Applying: HID: quirks: Add device descriptor for 4c4a:4155
+error: patch failed: drivers/hid/hid-quirks.c:1068
+error: drivers/hid/hid-quirks.c: patch does not apply
+Patch failed at 0001 HID: quirks: Add device descriptor for 4c4a:4155
+
+To which kernel version should I apply the patch?
+
+I used the command
+git am < <file>
+
+Best regards,
+
+Staffan
+
+
+On 2025-09-12 14:49, zhangheng wrote:
+> I am currently working on resolving this issue by limiting the original 
+> patch
 > 
-> [1]: https://lore.kernel.org/linux-acpi/CAJZ5v0icRdTSToaKbdf=MdRin4NyB2MstUVaQo8VR6-n7DkVMQ@mail.gmail.com/
+> based on the information in the device descriptor to avoid affecting 
+> your device,
 > 
-> Cc: regressions@lists.linux.dev
-> Cc: stable@vger.kernel.org
-> Fixes: 84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn keys")
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  #regzbot introduced: 84c9d2a968c82
-
-Applied, thanks.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+> You can try this patch and look forward to your reply.
+> 
+> 
+> 在 2025/9/7 23:10, Salvatore Bonaccorso 写道:
+>> Hi Zhang, hi Jiri,
+>> 
+>> In Debian Staffan Melin reported that after an update containing the
+>> commit 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY"),
+>> the input device with same idVendor and idProduct, the Jieli
+>> Technology USB Composite Device, does not get recognized anymore.
+>> 
+>> The full Debian report is at: https://bugs.debian.org/1114557
+>> 
+>> The issue is not specific to the 6.12.y series and confirmed in 6.16.3
+>> as well.
+>> 
+>> Staffan Melin did bisect the kernels between 6.12.38 (which was still
+>> working) and 6.1.41 (which was not), confirming by bisection that the
+>> offending commit is
+>> 
+>> 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY")
+>> 
+>> #regzbot introduced: 1a8953f4f774
+>> #regzbot monitor: https://bugs.debian.org/1114557
+>> 
+>> So it looks that the quirk applied is unfortunately affecting
+>> negatively as well Staffan Melin case.
+>> 
+>> Can you have a look?
+>> 
+>> Regards,
+>> Salvatore
