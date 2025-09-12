@@ -1,132 +1,80 @@
-Received: from sv9.manufrog.com (sv9.manufrog.com [46.246.119.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B7F28314B
-	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 19:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.246.119.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD3019644B;
+	Fri, 12 Sep 2025 23:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757707038; cv=none; b=Be0gLfL4lQ18TwxaS1C6i8PMc8qu5uGLL/fGbHk982cY0FDIsOZ8zdx71ECcZNyE/lSLr282IqHemKGs7tWRZ1RyDzeSynUcinHQ0Subiei9Dpl4rphX9wl1bLg8MEDLfe+3vUOH+1mPffOOJ2uREWIqIglugNfx2+v82ugWvYg=
+	t=1757718761; cv=none; b=uQKiGzGnmEocJetkdBtPUhr1mcSMDOPBwbN0a4A3jMB2cwbKr9EgM465L7gzsuBgyVKZoduHqNtzK1e038Q3xFhtG3yo7Bh6DrgZlT1qOmtG1pWll3Aj82zayRsd1CSnVA/PM4UITECtsVOyXfEMaGuffSs3nMrKLdH8XtKXyvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757707038; c=relaxed/simple;
-	bh=RuV43at9oIUzSJcsK485G4uQ64nYxSvVDGjhkRb7P5A=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Oq4Ie1Rp9U5uc/RhUjCv+wpz6PBrpxSbHv+NScSZnUbICJcLxe1Q1V2drpQMnonmAFpZB+GZAhH9lJp7mvdCCPoWYsMPAE8oMKveRbv/oZvo/VJutMsreWVBQrponxCGtcZZn+xPoP9rPunG5eckjiIlpZV8DzYxKCf4OYB1SMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se; spf=pass smtp.mailfrom=oscillator.se; dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b=Dji0bKfm; arc=none smtp.client-ip=46.246.119.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oscillator.se
+	s=arc-20240116; t=1757718761; c=relaxed/simple;
+	bh=thLvIl+wvhNHd/h+/PMgcFZYDNKs/se5pXZ8NvBGink=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZDWeopZExbtgmHnx9f+60pOZyCrVq5K5gnGSGwLXL/3crPq275YmIWPtOxxTXaZXjk4VpN0lSe9PZpAaNYGXl/0KKkOQLbySvTWHbqiNXBPJtPWLUJ+dTC6riTD3qIvj1oE7kNUdQ/ORNYTqzZ0meLbwhFy+XYBS6nbJIaQ5YFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=uPvN51zy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b="Dji0bKfm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=oscillator.se; s=default; h=Content-Transfer-Encoding:Content-Type:
-	Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9g4tINQ3Nuz9BImuzc0dqyBpOKAEGiLicPpQhPXc8pk=; b=Dji0bKfmqJiUkwVgBmJmsWAB/L
-	tffBxTLVA5K2FGhBefgPhkphycN/gKjMZyv73ZA9EVqF8Mxl+O/72ZlrVVkzQ0prW/nuXIzv9Fo+m
-	u6CZAc7AoqFRMBmUbfmuGCUfDfPD6waroHkYNoEHW2SZjKa0ttcimM5RYimQJxuPGuouqsXPOXFor
-	IIlSfMvzAJ5Mf1V9rlKQRL3amtWWMjREakspeL764lE/Ix7fhdK6oSZR7CTxnYkkD3gi7H+JqOi90
-	DYiYzuzwunAcGHGiddd4T4UK1jDvX40p7Rfob6hWDGLg4J7pPL72y8kj3DCR/XgkrRwc110PIGyYf
-	4WJbqYWg==;
-Received: from [::1] (port=51882 helo=sv9.manufrog.com)
-	by sv9.manufrog.com with esmtpa (Exim 4.98.2)
-	(envelope-from <staffan.melin@oscillator.se>)
-	id 1ux9tP-0000000AD8S-1vEg;
-	Fri, 12 Sep 2025 21:57:06 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="uPvN51zy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0316C4CEF1;
+	Fri, 12 Sep 2025 23:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1757718761;
+	bh=thLvIl+wvhNHd/h+/PMgcFZYDNKs/se5pXZ8NvBGink=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uPvN51zyf0Gk16PKadXMueozooisxs0w/wRwX29tBoqJBTo4x5gLEZpsOMl3SAiZ8
+	 toWs4v4s+Isvs0SZ9f6cZt+BntkInj1O5MG9ejH/dcfWaJNIEJiJCuhLdTEqG5LxpN
+	 hvsFbObfpXYXO9VjF+Ym6Y3HlQutUmpGWu0QAL64=
+Date: Fri, 12 Sep 2025 16:12:40 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, kasan-dev
+ <kasan-dev@googlegroups.com>, linux-mm <linux-mm@kvack.org>, open list
+ <linux-kernel@vger.kernel.org>, linux-riscv
+ <linux-riscv@lists.infradead.org>, linux-s390@vger.kernel.org,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, Andrew Morton <akpm@linuxfoundation.org>,
+ Kevin Brodsky <kevin.brodsky@arm.com>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
+ Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, Ben
+ Copeland <benjamin.copeland@linaro.org>
+Subject: Re: next-20250912: riscv: s390: mm/kasan/shadow.c
+ 'kasan_populate_vmalloc_pte' pgtable.h:247:41: error: statement with no
+ effect [-Werror=unused-value]
+Message-Id: <20250912161240.0a5fac78fed5ed8ddc32450a@linux-foundation.org>
+In-Reply-To: <d7a03a2b-d950-4645-80f2-63830bd84f76@redhat.com>
+References: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
+	<d7a03a2b-d950-4645-80f2-63830bd84f76@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Fri, 12 Sep 2025 21:57:04 +0200
-From: Staffan Melin <staffan.melin@oscillator.se>
-To: zhangheng <zhangheng@kylinos.cn>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, Jiri Kosina
- <jkosina@suse.com>, Benjamin Tissoires <bentiss@kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org, 1114557@bugs.debian.org
-Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
- SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
- Composite Device
-In-Reply-To: <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
-References: <aL2gYJaXoB6p_oyM@eldamar.lan>
- <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
-User-Agent: Roundcube Webmail/1.6.11
-Message-ID: <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
-X-Sender: staffan.melin@oscillator.se
-Organization: Oscillator
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - sv9.manufrog.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oscillator.se
-X-Get-Message-Sender-Via: sv9.manufrog.com: authenticated_id: staffan.melin@oscillator.se
-X-Authenticated-Sender: sv9.manufrog.com: staffan.melin@oscillator.se
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you,
+On Fri, 12 Sep 2025 13:34:37 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-I tried to apply this patch to 6.12.39, the first problematic kernel, as 
-well as 6.12.41, the first bad I tried, and on both I got an error 
-message:
-
-Applying: HID: quirks: Add device descriptor for 4c4a:4155
-error: patch failed: drivers/hid/hid-quirks.c:1068
-error: drivers/hid/hid-quirks.c: patch does not apply
-Patch failed at 0001 HID: quirks: Add device descriptor for 4c4a:4155
-
-To which kernel version should I apply the patch?
-
-I used the command
-git am < <file>
-
-Best regards,
-
-Staffan
-
-
-On 2025-09-12 14:49, zhangheng wrote:
-> I am currently working on resolving this issue by limiting the original 
-> patch
-> 
-> based on the information in the device descriptor to avoid affecting 
-> your device,
-> 
-> You can try this patch and look forward to your reply.
+> > [-Werror=unused-value]
+> >    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
+> >        |                                         ^
+> > mm/kasan/shadow.c:322:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
+> >    322 |         arch_enter_lazy_mmu_mode();
+> >        |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> > mm/kasan/shadow.c: In function 'kasan_depopulate_vmalloc_pte':
+> > include/linux/pgtable.h:247:41: error: statement with no effect
+> > [-Werror=unused-value]
+> >    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
+> >        |                                         ^
+> > mm/kasan/shadow.c:497:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
+> >    497 |         arch_enter_lazy_mmu_mode();
+> >        |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
+> > 
 > 
 > 
-> 在 2025/9/7 23:10, Salvatore Bonaccorso 写道:
->> Hi Zhang, hi Jiri,
->> 
->> In Debian Staffan Melin reported that after an update containing the
->> commit 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY"),
->> the input device with same idVendor and idProduct, the Jieli
->> Technology USB Composite Device, does not get recognized anymore.
->> 
->> The full Debian report is at: https://bugs.debian.org/1114557
->> 
->> The issue is not specific to the 6.12.y series and confirmed in 6.16.3
->> as well.
->> 
->> Staffan Melin did bisect the kernels between 6.12.38 (which was still
->> working) and 6.1.41 (which was not), confirming by bisection that the
->> offending commit is
->> 
->> 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY")
->> 
->> #regzbot introduced: 1a8953f4f774
->> #regzbot monitor: https://bugs.debian.org/1114557
->> 
->> So it looks that the quirk applied is unfortunately affecting
->> negatively as well Staffan Melin case.
->> 
->> Can you have a look?
->> 
->> Regards,
->> Salvatore
+> I'm afraid these changes landed in -mm-unstable a bit too early.
+> 
+
+OK, I'll drop Patch series "Nesting support for lazy MMU mode", v2.
+
