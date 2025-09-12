@@ -1,150 +1,103 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF942E172B
-	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 10:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B94B7405A;
+	Fri, 12 Sep 2025 10:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757672621; cv=none; b=IezS8z1sXM0qrzHUcFIOZmktkHVpRumXmvv/U1YjyV+WqI/VXDbzUecSZGit3IkC98cofO2Z9VwMRoTK0l4Dllziwx1vsC9oekH2jHVi1jxgrWrVm1CDlg88QABWw41/ElqS88Osw9P3fhmX0SxkCR4t4mSs4/Y5SKln4t/ZaME=
+	t=1757674196; cv=none; b=YoNsDyH1y8eBfhaZ1YORoM6yJfl/r2WdhFChJsTDV8038TlQUAxtz2BuMy62/bn0b3jAeo6OtouNX3mkRCajX/PKNyuIrPv7DhqI2t61pIFKEP2tYANb/1HzhM8ll4kA5/ipQf1cCtIBsYIinJ1KPtrKFQSghdjVQEqBaH9njgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757672621; c=relaxed/simple;
-	bh=L8+Vfsd5NRO7vLKj/WDn0QKcl6cnx+8yrLmAU9BNATI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NQPSJPFrgOsEp1aPqofiWlZ0CVyak2aKCDf5gBxpzr7bXB1X8vmN2re1Q99ziFERT4QAtsTKfUuAviT2WceeRCKRmfgjwBH/FQr/POP23uTLFbeygsrvNzZ1+gdS9dXnmaRDYF6oUy05iMINLC85E+fuCct3+f4jWJpjvJoT3TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TAtZe3Eh; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757674196; c=relaxed/simple;
+	bh=iXfdxi7NTU+LyAxuFNWMuc0/Yz4Vt7OLdRQgeuCuM5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpKlUl5X2vHO76oe08ja1xusIF8PANw3EuZsOOJZ657umaGBLs4XEcaXPzRH5UcU94cUkIiv2AQRt/A5E0uGLmWaO/tyFA0ak+QqDvaDASz/hHYNCF6R6V5SpWP4nH/VvLtotDrHZ+aup3QmBdLySSjhtTsSdlqhUVVgCLYjeAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6HgQC33; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TAtZe3Eh"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24cb39fbd90so15220495ad.3
-        for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 03:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757672619; x=1758277419; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yxaMEqYA6uym+Ir6zcrN22UPH27k/nnjzDJpTYQxN6I=;
-        b=TAtZe3EhA8aGK9fvBW4BOBVrRyA7QwU16IM4fZI8pHd2B7SkLoakPvULs4ijbq6im5
-         YvNkdTTLfC3QUZyfWFKiU96Pr7S+T1aT5XiUKQUDo+QU556luq8h9H5tg4QYDGr96F5Z
-         Sk8qFU+bUdRpPsM8dmrj7xzpuzEDIMnX/l1ATcWrBRvCsxmaQx6afb6g5dbmlJMtPzLt
-         hMACB54i1YMu0ia1JePbP1ewcf904FEjjpMQxdJpsuh2R7dkHjovqp28rpPsY3zmhfUM
-         1NGJ+mebC8xy1ZheChTrlUfC3DHT7NApz5kq1a9cZYFDXNhasBiQjbQKz2w86PslWPXA
-         gLsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757672619; x=1758277419;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yxaMEqYA6uym+Ir6zcrN22UPH27k/nnjzDJpTYQxN6I=;
-        b=nftcKOo0KfjG68LEphV5/Uvos4Mgv5S5ohAcH8Z00EWTtgqGS46MfUWG5WnFVWFQVf
-         NLCCcDS4WD4IckOk0r2lp4HOEvWmbjLOtP3GjBtJQeZVpK3VG/uBRQ0gLcxHgpgBxKd6
-         Xyfeo6zEalqrv2wEnTw3o8X9/A/f7HSrEqXoJdwKjDHz86llt/Th1RBxH4RAMv6MSRQH
-         moHW5Y1PfV2mClEtnUdNfCw3LRWeHfKg6PYxmNAPmIw8NVuciYtD5/snRbiyXUT9mcjS
-         wk4c9qF/Vw/c4a4Mgh9kr1x3/2A2E614xkJhSf4Z3calHdgqgUqb8tlf76t6ohchjr4s
-         vnMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtHzpZbuwzvqTvZGcASM/54gzAQ8DxfuWr4rl9eWAQLSIFzDXqhtkM8HrUHIzHD9gPViaUcREDp0ZdOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxvZc/LRS7ee/j6KSWNY/s658pToPf1EbwMn8yqKuNSIOARfDKD
-	V8PqYQsikY9uBXvMb/J+159eJLjYURZqJyeZ1SD/eKoBc6v0wzF7FtTztAYvD0y7OPSRw1sjmFG
-	xfodjyjbIRyQFIqT9E67Ijr5zPFK+ekQYllqtBGpopA==
-X-Gm-Gg: ASbGnct1SIgYzx4KZCssOL8LNg7ly/OfspEsDiDeqYWZ42KP87oLsb2ek8fBWJ8wp0W
-	IS4BlXzNo+FuwIWfsm0fDVuOHyxITYtckLsb3FXN1A980KrQnWy8KCi35vXcjUk32QA07a8d5V0
-	oJpRKFfoz+3grDnqaIBtNHJDgKVRwDRKmczMrmMiKNoa4P4Y1LyAUG/JsfYNI2idbL4gy+GXJDV
-	845ToYUANRm/u3ZOO8/7MLoF3eM8czHZ/7ywgpLc7CukV+cC5Y1GTzi6sk/JGFYHXLA8UjvUHBW
-	+czMiKM=
-X-Google-Smtp-Source: AGHT+IFnlh7Lcvev/z+g8geBZVyzuCDqftK69x/3dM4A4/rPwhVxriJu5LaQAhPmA/dUWQDP37JDEPq7LkU6t/uT414=
-X-Received: by 2002:a17:903:2407:b0:240:3c51:1063 with SMTP id
- d9443c01a7336-25d2576f18bmr30549565ad.23.1757672618671; Fri, 12 Sep 2025
- 03:23:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6HgQC33"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02B9C4CEF1;
+	Fri, 12 Sep 2025 10:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757674196;
+	bh=iXfdxi7NTU+LyAxuFNWMuc0/Yz4Vt7OLdRQgeuCuM5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G6HgQC33/g0o1mTr2TIiMT6vdS/Pq//5mMwW64MX6iHJlwTcIXmbHkFGVJlu01GDm
+	 b4qXgljYTLIMDhZsMggj5tUNVtwJ0qoPOXFhhm+T9DsAU8CcETxwWRIS+WreqnXQCr
+	 /mqHOtZqX4imM4LfGuEyi4Omdx6sbCI2gCxbYOWeSK3hDnPe7pIQKFwX4V7e0zKgP1
+	 UbnEqrdG0rN4HSsO/pFUYWgFprl7Ytma8VTpvNuxSg4iVB8r4L9SOgjCIfzkwF60jA
+	 4Em1eHMujCZjh6EHy6HKuuyR+ZcnCtKupHSSVgRdRYJ/PoVJeF4uW/IcWS3vBwlTq+
+	 DiIGnXHL0NCXA==
+Date: Fri, 12 Sep 2025 11:49:50 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	Shuah Khan <shuah@kernel.org>
+Subject: Re: next-20250909: selftests/arm64/gcs/basic-gcs.c:390:30: error:
+ use of undeclared identifier 'HWCAP_GCS'
+Message-ID: <965c8d7e-c5f2-4bd8-ab7c-c3116632f015@sirena.org.uk>
+References: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
+ <1e331ebb-3315-4cbe-b194-ccbeeaded4da@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
- <1e331ebb-3315-4cbe-b194-ccbeeaded4da@t-8ch.de>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mSJ2Vs6vpLoMhbcO"
+Content-Disposition: inline
 In-Reply-To: <1e331ebb-3315-4cbe-b194-ccbeeaded4da@t-8ch.de>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Sep 2025 15:53:26 +0530
-X-Gm-Features: AS18NWBiNtyoZJdw5AR77Ehen6tmbxWoHZEhVULSIr8zN1kPljDdD8rhs__pSZI
-Message-ID: <CA+G9fYvrcRNBbg15UEcaZuYgs1pHU2i7h=zvJ2yHNo5i4fZ_nA@mail.gmail.com>
-Subject: Re: next-20250909: selftests/arm64/gcs/basic-gcs.c:390:30: error: use
- of undeclared identifier 'HWCAP_GCS'
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Cookie: Your domestic life may be harmonious.
+
+
+--mSJ2Vs6vpLoMhbcO
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
-
-On Fri, 12 Sept 2025 at 12:00, Thomas Wei=C3=9Fschuh <linux@weissschuh.net>=
- wrote:
->
-> Hi Naresh,
->
+On Fri, Sep 12, 2025 at 08:30:08AM +0200, Thomas Wei=DFschuh wrote:
 > On 2025-09-12 00:48:47+0530, Naresh Kamboju wrote:
-> > The following build warnings / errors noticed on arm64 defconfig
-> > with clang-20 and gcc-13 toolchains on the Linux next-20250909
-> > till next-20250911 tag while building selftests/arm64.
-> >
-> > Regression Analysis:
-> > - New regression? Yes
-> > - Reproducibility? yes
-> >
-> > First seen on  next-20250909
-> >  Good: next-20250908
-> >  Bad: next-20250909 till next-20250911
-> >
-> > Test regression: next-20250909:
-> > selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
-> > identifier 'HWCAP_GCS'
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > ## Build log
-> > selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
-> > identifier 'HWCAP_GCS'
-> >   390 |         if (!(getauxval(AT_HWCAP) & HWCAP_GCS))
-> >       |                                     ^
-> > 1 error generated.
-> >
-> > The suspected commit pointing to,
-> >   kselftest/arm64/gcs: Use nolibc's getauxval()
-> >   a985fe638344492727528e52416211dda1c391d5
->
-> That suspicion looks correct. I am wondering a bit how this works for
-> the other selftests which use this symbol.
->
-> Can you give this one a try:
->
 
-I have applied this patch and tested and reported build regressions
-got fixed.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-> diff --git a/tools/testing/selftests/arm64/gcs/gcs-util.h b/tools/testing=
-/selftests/arm64/gcs/gcs-util.h
 > index c99a6b39ac14..816b497634d6 100644
 > --- a/tools/testing/selftests/arm64/gcs/gcs-util.h
 > +++ b/tools/testing/selftests/arm64/gcs/gcs-util.h
 > @@ -26,6 +26,10 @@ struct user_gcs {
 >  };
 >  #endif
->
+>=20
 > +#ifndef HWCAP_GCS
 > +#define HWCAP_GCS (1UL << 32)
 > +#endif
 > +
->  /* Shadow Stack/Guarded Control Stack interface */
->  #define PR_GET_SHADOW_STACK_STATUS     74
->  #define PR_SET_SHADOW_STACK_STATUS      75
 
---
-Linaro LKFT
+We're doing that for glibc using tests because there's some unfortunate
+interaction between including the relevant kernel header and glibc's
+headers (I forget the details) which means that including the kernel
+header directly conflicts with something glibc is doing.  For nolibc I
+would expect us to using the kernel's hwcap definitions?
+
+--mSJ2Vs6vpLoMhbcO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjD+s4ACgkQJNaLcl1U
+h9Bt6Qf/XdB1JDZOdU6heyTp+JQNrJnashNYRH4Aes6zoMxSkpZXP6KwEVScZ33e
+mWNgJ1qzjIKi2qhUvTekSbjjhORaUnZm66B5hJtRjAaeYCMd4zLsYoZmawMLWH5T
+k8MhocrSVmo3wEqT+ng0zRP0EqmYWDMXXgEurrqyV4BD8x+RI7FW/wNamai1MJpR
+QqzhPmHaVmd8Y2IG6r58wUY45CbkUVMj5jvgcFOmUQZacaqmf1SUJqYLT9HkDvxD
+JTe57vBvdczjwbucCAzVuNd3jP0unRe65VryUr3sheZEfKWhN6tt1ZzGsRIAIFps
+M2x66/eYmn1/M1/5G4T21mA5E+fpLg==
+=b3j+
+-----END PGP SIGNATURE-----
+
+--mSJ2Vs6vpLoMhbcO--
