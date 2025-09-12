@@ -1,140 +1,196 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8812957C2
-	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 11:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906692FF16D
+	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 11:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757676771; cv=none; b=h0tSOKWQrXM4bcSj3Jrua7M0VvYdtSE0YNId8TwCbC4rHBinP/wjmIYRFBVUNRNsAJ9ryIClwCTaJPTz1iCYUsIjlUgy+GtKA+kn1D6t1fH92yvWp7IP99j0wzH7FhINlTna6yz+v8F+R2WGCuRGZ9XehLqUlvwcD4hAERuDshg=
+	t=1757676885; cv=none; b=uCSjzXSPdsIEUQyWRtUBmmOxF88k3tlp+ZlkwY3IsNBnONxVLciJmQ/KA3VECfysCbHPJ22tsLANJD7MBO89IN3u9pzTQrtzA1zkS/goi0lvYjXBSuypvYlexuZf3YR+WtS78jpMIFRU765SEokFm+w2OENgrD6fB5hWpbphm1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757676771; c=relaxed/simple;
-	bh=mEjJFVIYIe7tqpxYWnwn8npcdZ3rzCy2M6nLHqTd3WY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HJxveRWx+dqfTlMOF7ASb5VSJgEzRdivRzc3FyhtSf9KqQeG4m8N3WhjQWoGnf3RU+m8fp2A3CA7YSrDbUXXZepZzl+h1b0FieoyS1rzcL5TEdBA0z4d5ZKlZPyw4/XOqQRzGjgIvTyOgzo0i65AN7lodsO0OlV08q+evvaPIMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j37E3051; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757676885; c=relaxed/simple;
+	bh=2xByMI5F86FXQ/YNzPul1DNfvLb05F0F4wRGQQrq5Fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhexrwrOJTQ3XGNcL8Uyr0Y8M9Wbk8yUMANr4Mv0QIJeGArZfIYSh8TwWoLKusG7MOFq/WthEPlzTXNr5ATtgq/2oCzOikv0v9yFgPzh7j1F4neBJhjBjMyOTV826AYiUQxQr9Yq/MkFGMUM2B+WBNiXPblheAoiErUIlSBeiDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lz3BmvmO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j37E3051"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-244580523a0so17995005ad.1
-        for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 04:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757676768; x=1758281568; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y6Vu9krI8L/L917eJRdmIwH3Jf+YuSh9fi/gZdnGGTM=;
-        b=j37E3051gXJSQctu6j3m+wV9U/K9uO61cBSvxcH7UHDKrlsFus9mcFSG1a9FI0huh5
-         1Siaw2Ns/eIm2yKxqUsRPbmIkzL8UFSPHGlR2hHRkNGm3+ksRD0D9DoSqNQEZtUrSTWk
-         UQL3BIEXm+KkriHiIXLoBqhA9ScT+beCLHhIqJfzlgXPuBKDCQO7th3hyHzuEkVdzTKg
-         eTMxGLaXBUcVkfuE0A73/APxWFThH/NFxcygsVU9xNO3IwvaFebJ+wJO9qhhlftT7Jro
-         SPosR9MvRf1OQKY4GN58IyOvacdbD0vDNtEj4nBZhMpr6oOHPWjOejnso7d8FiKt/xE3
-         dQTg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lz3BmvmO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1757676882;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZWd+C+6xlO7ZNnElus07Td372OLIDupg0E/fPHS2G6s=;
+	b=Lz3BmvmOLHBg/6PtImScADLSvnkSvbLTJCj/a/WTlvF5gSQUuwTULUQcgYQPULlq0SSYXV
+	KqkohEldUl7R36u4fvakdAiYm6vFbloC8I7Y+/SmMv6DaYufEgi7pvlCT3YYcYrvn2ogBE
+	cDvzx9W0B/XKTWarrkWnKaKMXn0EjnM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-159-hCCmRqiiOS-ZzE_lQ1po0A-1; Fri, 12 Sep 2025 07:34:41 -0400
+X-MC-Unique: hCCmRqiiOS-ZzE_lQ1po0A-1
+X-Mimecast-MFC-AGG-ID: hCCmRqiiOS-ZzE_lQ1po0A_1757676880
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45b920e0c25so11812315e9.3
+        for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 04:34:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757676768; x=1758281568;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y6Vu9krI8L/L917eJRdmIwH3Jf+YuSh9fi/gZdnGGTM=;
-        b=eL3Rw+ciUVGqhTA6p8KANMnhJHn+xv5BCgnuTTc9YKW9u6LlKR+Qj4Jha2vKM7wFoo
-         dek9fwRJ0iUvAqcauU8Sz6y/5ioOpSFNMhDltUeiSwDR2e2qS3/4amu6w++YMwENX/fI
-         XnhcQZwhLQL3//5sLViRGx4K4lvSvQeHYP8wWy03lMP5E/5Su7pnq/UX6pTAgkib5/hQ
-         7AEy0wsMJRt2iqpcyGfJy4plqKlcZSyyV9J++60cCdj2lIyDgSJvzwcH3n0+Mnz4Im8U
-         4pxObWjaq1tRloPJkqBnyUhB0hvm23XTINOpnZ7AlEArx1WB49d0d9H5hveaieNpOUxB
-         oi9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXmxYFYXYMlU4fBxhqDvaXXsJ9RnDeFBOODUj9DT1rcb1TbYo2lK16fdUTE603NYAmpBpod/P1BaY/DuA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzsMVjtLuq8INfLN/KBabQoDfvfRUuuxrohGAq6xa8gQuJlCOia
-	PUlhBJ4I/gWETGxlxMsDoGRXXhGlj6WgqqPO4U8EGjCmpAOfBgadZ7VB1qOyrdoO5AlYoTM+m11
-	5vTj1RJIMPO/iHIC/AbOKb+PfC2Am9NbTMtRjfJMm1Q==
-X-Gm-Gg: ASbGncufm/qEcQ3/ai9ttdhocXCzPKXl3X8iJkwf3LzONopWIKvti4LycauiLL0+Aop
-	THOF68n6fWhe0BOusL20aKgRxLh42zmFJbKK+OOCKIiUS4tMWp/Dg9BGOdgRi85w5I3/ib0I+4F
-	pdpCpNR8S//nAhBT4e6gAxpdc57FWlaelYyv3foGZkWedk0KDDk5LHDZRKga8mu/ZckDvNeNyvG
-	HshD/hvIRfRp03OaQQz/HMvQdWBe8IIX4JfM1O6LIbBZFwgrQVIjF/awaAbjZ5W8M/F2xQ4j91x
-	dHWpDP8=
-X-Google-Smtp-Source: AGHT+IF1n0wZVljtgQdO4YjkTkuDA16K7j3EGrt+LavVV05cNjZjVMw0mRnQJqWQrvbyjkw61l+wH9wnd6eTRWsTKWg=
-X-Received: by 2002:a17:902:c40d:b0:251:a3b3:1580 with SMTP id
- d9443c01a7336-25d24cac4eemr35190575ad.6.1757676768437; Fri, 12 Sep 2025
- 04:32:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757676880; x=1758281680;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZWd+C+6xlO7ZNnElus07Td372OLIDupg0E/fPHS2G6s=;
+        b=X59pQGRaF40ehAb2AYHj9UMgJ1FZCsXwL4Nj50bola1NWPGk3SYMoqYFvNqw0kPnYP
+         L9lNv44ebPYrmBKJwXErQwixqzRuXZ6POu3EgjyQSKpwZb8ZrDsPkMo/q4VwXhexHumd
+         zkqi1oLWsXQulOUyX2erQmpMv5U+XP70/Pi1Qx9SNL4oINHE1AjIqVR5s23rWC3/Y1LZ
+         H4OcWm7Py06DtsEyGQOwCzoJgytvhYLlCwoKUe+GZcGk3bQDWuZigfNpUJsj0AXnvUMk
+         oukXQH5s/7WiyoyYbi6cY0sp4STEUFE6Y7WQdyDC2OXkF+bWntPyHpv1lc8w69H1pdOz
+         L/2g==
+X-Forwarded-Encrypted: i=1; AJvYcCX50v6fFNepsUlbZ4p6waiQqXKZGqdcFhsxpoU8PqJmdv5pgjrMtDzmV2fVhkzEPiUCvLVOoC76wWz1nw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwZ20NWRG86SZEH+HfmWC15izpy+cbik/swo1CPjC9LM3TgWRgO
+	sw6l92rmhyx59iTQeOVauKMuCwvFoTK/dv8+yMAbx5zG4vZNT3mJpQtG0KQ7kAZ5QdOILwjWpKQ
+	v4ZcleqVKxARXV6gF8/zzfVbGj55J57kaOuCdulQyK6hq1uA6QSddoqyhJ5oCmutt
+X-Gm-Gg: ASbGnct6OHnSwYCirmaoQHyruDF+xR5ZvyIULGI6cFEo08pL0NixAZgavQThndsAmNU
+	IumkLhA8X2lM8Hu/n7CZyn5VybMX8+ufw2LcHdAxx7TMFwzpuIWSSoNt5TVhSVCnwgdVowCG/sc
+	zp5wi6N0x37r91bH3kO0AbzFkpod+UCwISlPlXarsJj9XxDHqs+EUe3nWYihewjOS0U0FbRnnn9
+	Kw7bkGcYSpwh1LJIUH2Oqbh3bklTQ2C380x/vwtqqaCOpl0ykBlQMreiIgHSkdTs3WX4QxKNXXd
+	p6vXMmhhKRCYSkuqBRjm0jb5vJHSpLMgixwbfibYJJt/oAstG75Oli7kOfPDIkKAqLBsH8nSGPH
+	FyFbyVPQIBG3tRWxApbeNkuiUnb1CKeP7Jr7j2Vg1swEj0QFMLlvFdVvSlyjOZusn4Xs=
+X-Received: by 2002:a05:600c:3b85:b0:45d:e285:c4ec with SMTP id 5b1f17b1804b1-45f216696c8mr21980535e9.4.1757676880115;
+        Fri, 12 Sep 2025 04:34:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBCLdYjQPkVnjO0W8XKaGSgjZLsccprLNd6W9/Xe0KR1we4p5qR7REUfvO0pBQsst9YNwS0w==
+X-Received: by 2002:a05:600c:3b85:b0:45d:e285:c4ec with SMTP id 5b1f17b1804b1-45f216696c8mr21980295e9.4.1757676879669;
+        Fri, 12 Sep 2025 04:34:39 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f20:da00:b70a:d502:3b51:1f2d? (p200300d82f20da00b70ad5023b511f2d.dip0.t-ipconnect.de. [2003:d8:2f20:da00:b70a:d502:3b51:1f2d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607ccf9esm6158472f8f.40.2025.09.12.04.34.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Sep 2025 04:34:39 -0700 (PDT)
+Message-ID: <d7a03a2b-d950-4645-80f2-63830bd84f76@redhat.com>
+Date: Fri, 12 Sep 2025 13:34:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Sep 2025 17:02:36 +0530
-X-Gm-Features: AS18NWCRkwK2BEtW0uxWjqehT8uEFjWUmULflZWeqoftij31KvQE0_RmSXQs-jg
-Message-ID: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
-Subject: next-20250912: riscv: s390: mm/kasan/shadow.c 'kasan_populate_vmalloc_pte'
- pgtable.h:247:41: error: statement with no effect [-Werror=unused-value]
-To: kasan-dev <kasan-dev@googlegroups.com>, linux-mm <linux-mm@kvack.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: next-20250912: riscv: s390: mm/kasan/shadow.c
+ 'kasan_populate_vmalloc_pte' pgtable.h:247:41: error: statement with no
+ effect [-Werror=unused-value]
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ kasan-dev <kasan-dev@googlegroups.com>, linux-mm <linux-mm@kvack.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ linux-riscv <linux-riscv@lists.infradead.org>, linux-s390@vger.kernel.org,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, Andrew Morton <akpm@linuxfoundation.org>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ Ben Copeland <benjamin.copeland@linaro.org>
+References: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: epNBQBYWEtPIjMWMG5RBkVwD0xIh6Ch_FD-nRDujxFk_1757676880
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following build warnings / errors noticed on the riscv and s390
-with allyesconfig build on the Linux next-20250912 tag.
-
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
-
-Build regression: next-20250912 mm/kasan/shadow.c
-'kasan_populate_vmalloc_pte' pgtable.h error statement with no effect
-[-Werror=unused-value]
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-$ git log --oneline next-20250911..next-20250912 --  mm/kasan/shadow.c
-  aed53ec0b797a mm: introduce local state for lazy_mmu sections
-  307f2dc9b308e kasan: introduce ARCH_DEFER_KASAN and unify static key
-across modes
-
-## Test log
-In file included from include/linux/kasan.h:37,
-                 from mm/kasan/shadow.c:14:
-mm/kasan/shadow.c: In function 'kasan_populate_vmalloc_pte':
-include/linux/pgtable.h:247:41: error: statement with no effect
-[-Werror=unused-value]
-  247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
-      |                                         ^
-mm/kasan/shadow.c:322:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
-  322 |         arch_enter_lazy_mmu_mode();
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-mm/kasan/shadow.c: In function 'kasan_depopulate_vmalloc_pte':
-include/linux/pgtable.h:247:41: error: statement with no effect
-[-Werror=unused-value]
-  247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
-      |                                         ^
-mm/kasan/shadow.c:497:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
-  497 |         arch_enter_lazy_mmu_mode();
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-## Source
-* Kernel version: 6.17.0-rc5
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: 6.17.0-rc5-next-20250912
-* Git commit: 590b221ed4256fd6c34d3dea77aa5bd6e741bbc1
-* Architectures: riscv, s390
-* Toolchains: gcc (Debian 13.3.0-16) 13.3.0
-* Kconfigs: allyesconfig
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29863344/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250912/log-parser-build-gcc/gcc-compiler-include_linux_pgtable_h-error-statement-with-no-effect/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32aTGVWBLzkF7PsIq9FBtLK3T4W
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32aTGVWBLzkF7PsIq9FBtLK3T4W/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/32aTGVWBLzkF7PsIq9FBtLK3T4W/config
-
-## Steps to reproduce
- $ tuxmake --runtime podman --target-arch riscv --toolchain gcc-13
---kconfig allyesconfig
+On 12.09.25 13:32, Naresh Kamboju wrote:
+> The following build warnings / errors noticed on the riscv and s390
+> with allyesconfig build on the Linux next-20250912 tag.
+> 
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+> 
+> Build regression: next-20250912 mm/kasan/shadow.c
+> 'kasan_populate_vmalloc_pte' pgtable.h error statement with no effect
+> [-Werror=unused-value]
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> $ git log --oneline next-20250911..next-20250912 --  mm/kasan/shadow.c
+>    aed53ec0b797a mm: introduce local state for lazy_mmu sections
+>    307f2dc9b308e kasan: introduce ARCH_DEFER_KASAN and unify static key
+> across modes
+> 
+> ## Test log
+> In file included from include/linux/kasan.h:37,
+>                   from mm/kasan/shadow.c:14:
+> mm/kasan/shadow.c: In function 'kasan_populate_vmalloc_pte':
+> include/linux/pgtable.h:247:41: error: statement with no effect
+> [-Werror=unused-value]
+>    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
+>        |                                         ^
+> mm/kasan/shadow.c:322:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
+>    322 |         arch_enter_lazy_mmu_mode();
+>        |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> mm/kasan/shadow.c: In function 'kasan_depopulate_vmalloc_pte':
+> include/linux/pgtable.h:247:41: error: statement with no effect
+> [-Werror=unused-value]
+>    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
+>        |                                         ^
+> mm/kasan/shadow.c:497:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
+>    497 |         arch_enter_lazy_mmu_mode();
+>        |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> 
 
 
---
-Linaro LKFT
+I'm afraid these changes landed in -mm-unstable a bit too early.
+
+
+-- 
+Cheers
+
+David / dhildenb
+
