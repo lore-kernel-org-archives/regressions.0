@@ -1,73 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906692FF16D
-	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 11:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD903009CB
+	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 12:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757676885; cv=none; b=uCSjzXSPdsIEUQyWRtUBmmOxF88k3tlp+ZlkwY3IsNBnONxVLciJmQ/KA3VECfysCbHPJ22tsLANJD7MBO89IN3u9pzTQrtzA1zkS/goi0lvYjXBSuypvYlexuZf3YR+WtS78jpMIFRU765SEokFm+w2OENgrD6fB5hWpbphm1k=
+	t=1757681364; cv=none; b=oHqguq2g8DPRO3S6wdWY+ZWcYAwjBKKn83UNFXvdEQkjbEEGQdjg272ufGfoUP+WchhgW5AYT31yIxxGNbJ1beWY7ydRcyW404lDlZapGROQTxG14gnlZYQRgVwmmDwQ6P/xmxJ38rPg7XqnyooVnq02b6kZL+PDyv744Ig6zCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757676885; c=relaxed/simple;
-	bh=2xByMI5F86FXQ/YNzPul1DNfvLb05F0F4wRGQQrq5Fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jhexrwrOJTQ3XGNcL8Uyr0Y8M9Wbk8yUMANr4Mv0QIJeGArZfIYSh8TwWoLKusG7MOFq/WthEPlzTXNr5ATtgq/2oCzOikv0v9yFgPzh7j1F4neBJhjBjMyOTV826AYiUQxQr9Yq/MkFGMUM2B+WBNiXPblheAoiErUIlSBeiDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lz3BmvmO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lz3BmvmO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757676882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZWd+C+6xlO7ZNnElus07Td372OLIDupg0E/fPHS2G6s=;
-	b=Lz3BmvmOLHBg/6PtImScADLSvnkSvbLTJCj/a/WTlvF5gSQUuwTULUQcgYQPULlq0SSYXV
-	KqkohEldUl7R36u4fvakdAiYm6vFbloC8I7Y+/SmMv6DaYufEgi7pvlCT3YYcYrvn2ogBE
-	cDvzx9W0B/XKTWarrkWnKaKMXn0EjnM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-159-hCCmRqiiOS-ZzE_lQ1po0A-1; Fri, 12 Sep 2025 07:34:41 -0400
-X-MC-Unique: hCCmRqiiOS-ZzE_lQ1po0A-1
-X-Mimecast-MFC-AGG-ID: hCCmRqiiOS-ZzE_lQ1po0A_1757676880
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45b920e0c25so11812315e9.3
-        for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 04:34:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757676880; x=1758281680;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZWd+C+6xlO7ZNnElus07Td372OLIDupg0E/fPHS2G6s=;
-        b=X59pQGRaF40ehAb2AYHj9UMgJ1FZCsXwL4Nj50bola1NWPGk3SYMoqYFvNqw0kPnYP
-         L9lNv44ebPYrmBKJwXErQwixqzRuXZ6POu3EgjyQSKpwZb8ZrDsPkMo/q4VwXhexHumd
-         zkqi1oLWsXQulOUyX2erQmpMv5U+XP70/Pi1Qx9SNL4oINHE1AjIqVR5s23rWC3/Y1LZ
-         H4OcWm7Py06DtsEyGQOwCzoJgytvhYLlCwoKUe+GZcGk3bQDWuZigfNpUJsj0AXnvUMk
-         oukXQH5s/7WiyoyYbi6cY0sp4STEUFE6Y7WQdyDC2OXkF+bWntPyHpv1lc8w69H1pdOz
-         L/2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX50v6fFNepsUlbZ4p6waiQqXKZGqdcFhsxpoU8PqJmdv5pgjrMtDzmV2fVhkzEPiUCvLVOoC76wWz1nw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZ20NWRG86SZEH+HfmWC15izpy+cbik/swo1CPjC9LM3TgWRgO
-	sw6l92rmhyx59iTQeOVauKMuCwvFoTK/dv8+yMAbx5zG4vZNT3mJpQtG0KQ7kAZ5QdOILwjWpKQ
-	v4ZcleqVKxARXV6gF8/zzfVbGj55J57kaOuCdulQyK6hq1uA6QSddoqyhJ5oCmutt
-X-Gm-Gg: ASbGnct6OHnSwYCirmaoQHyruDF+xR5ZvyIULGI6cFEo08pL0NixAZgavQThndsAmNU
-	IumkLhA8X2lM8Hu/n7CZyn5VybMX8+ufw2LcHdAxx7TMFwzpuIWSSoNt5TVhSVCnwgdVowCG/sc
-	zp5wi6N0x37r91bH3kO0AbzFkpod+UCwISlPlXarsJj9XxDHqs+EUe3nWYihewjOS0U0FbRnnn9
-	Kw7bkGcYSpwh1LJIUH2Oqbh3bklTQ2C380x/vwtqqaCOpl0ykBlQMreiIgHSkdTs3WX4QxKNXXd
-	p6vXMmhhKRCYSkuqBRjm0jb5vJHSpLMgixwbfibYJJt/oAstG75Oli7kOfPDIkKAqLBsH8nSGPH
-	FyFbyVPQIBG3tRWxApbeNkuiUnb1CKeP7Jr7j2Vg1swEj0QFMLlvFdVvSlyjOZusn4Xs=
-X-Received: by 2002:a05:600c:3b85:b0:45d:e285:c4ec with SMTP id 5b1f17b1804b1-45f216696c8mr21980535e9.4.1757676880115;
-        Fri, 12 Sep 2025 04:34:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGBCLdYjQPkVnjO0W8XKaGSgjZLsccprLNd6W9/Xe0KR1we4p5qR7REUfvO0pBQsst9YNwS0w==
-X-Received: by 2002:a05:600c:3b85:b0:45d:e285:c4ec with SMTP id 5b1f17b1804b1-45f216696c8mr21980295e9.4.1757676879669;
-        Fri, 12 Sep 2025 04:34:39 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f20:da00:b70a:d502:3b51:1f2d? (p200300d82f20da00b70ad5023b511f2d.dip0.t-ipconnect.de. [2003:d8:2f20:da00:b70a:d502:3b51:1f2d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607ccf9esm6158472f8f.40.2025.09.12.04.34.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 04:34:39 -0700 (PDT)
-Message-ID: <d7a03a2b-d950-4645-80f2-63830bd84f76@redhat.com>
-Date: Fri, 12 Sep 2025 13:34:37 +0200
+	s=arc-20240116; t=1757681364; c=relaxed/simple;
+	bh=oi151mNxHUuVdrfzLR78YFpChdK2PjgzYFmvMQ2UUb4=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=HJNtj3VPsQrnUaFBUBEeJJXFSZHHge4yuo462ckOccCmvwmpfwe7JVnaxT0J8F4YPOFZTkSD0My2zDk727d0XNW3wwbPLnoai7PJV/tvng9nr/Z8BS2sY0cxlUlHomqli+wOiaEIMQ478GmoP1L9gKAEXr7ZbxrxSqXlx5JKxBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: e208d14a8fd611f0b29709d653e92f7d-20250912
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:7ff57fff-cbca-4fd2-bf5e-2daefe46416d,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:5,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:7dcd282119355a477bc719e660f0dc54,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:1,File:2,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: e208d14a8fd611f0b29709d653e92f7d-20250912
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangheng@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1646010829; Fri, 12 Sep 2025 20:49:12 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 719C2E009009;
+	Fri, 12 Sep 2025 20:49:12 +0800 (CST)
+X-ns-mid: postfix-68C416C8-1693817
+Received: from [172.25.120.76] (unknown [172.25.120.76])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 2B69FE009008;
+	Fri, 12 Sep 2025 20:49:08 +0800 (CST)
+Content-Type: multipart/mixed; boundary="------------SLPeU6QBqpLSmPmWisb5FvmK"
+Message-ID: <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+Date: Fri, 12 Sep 2025 20:49:07 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -75,122 +48,108 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250912: riscv: s390: mm/kasan/shadow.c
- 'kasan_populate_vmalloc_pte' pgtable.h:247:41: error: statement with no
- effect [-Werror=unused-value]
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- kasan-dev <kasan-dev@googlegroups.com>, linux-mm <linux-mm@kvack.org>,
- open list <linux-kernel@vger.kernel.org>,
- linux-riscv <linux-riscv@lists.infradead.org>, linux-s390@vger.kernel.org,
- lkft-triage@lists.linaro.org, Linux Regressions
- <regressions@lists.linux.dev>, Andrew Morton <akpm@linuxfoundation.org>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Anders Roxell <anders.roxell@linaro.org>,
- Ben Copeland <benjamin.copeland@linaro.org>
-References: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <CA+G9fYvQekqNdZpOeibBf0DZNjqR+ZGHRw1yHq6uh0OROZ9sRw@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: epNBQBYWEtPIjMWMG5RBkVwD0xIh6Ch_FD-nRDujxFk_1757676880
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+To: Salvatore Bonaccorso <carnil@debian.org>, Jiri Kosina <jkosina@suse.com>,
+ Staffan Melin <staffan.melin@oscillator.se>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, 1114557@bugs.debian.org
+References: <aL2gYJaXoB6p_oyM@eldamar.lan>
+From: zhangheng <zhangheng@kylinos.cn>
+In-Reply-To: <aL2gYJaXoB6p_oyM@eldamar.lan>
+
+This is a multi-part message in MIME format.
+--------------SLPeU6QBqpLSmPmWisb5FvmK
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 12.09.25 13:32, Naresh Kamboju wrote:
-> The following build warnings / errors noticed on the riscv and s390
-> with allyesconfig build on the Linux next-20250912 tag.
-> 
-> Regression Analysis:
-> - New regression? yes
-> - Reproducibility? yes
-> 
-> Build regression: next-20250912 mm/kasan/shadow.c
-> 'kasan_populate_vmalloc_pte' pgtable.h error statement with no effect
-> [-Werror=unused-value]
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> $ git log --oneline next-20250911..next-20250912 --  mm/kasan/shadow.c
->    aed53ec0b797a mm: introduce local state for lazy_mmu sections
->    307f2dc9b308e kasan: introduce ARCH_DEFER_KASAN and unify static key
-> across modes
-> 
-> ## Test log
-> In file included from include/linux/kasan.h:37,
->                   from mm/kasan/shadow.c:14:
-> mm/kasan/shadow.c: In function 'kasan_populate_vmalloc_pte':
-> include/linux/pgtable.h:247:41: error: statement with no effect
-> [-Werror=unused-value]
->    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
->        |                                         ^
-> mm/kasan/shadow.c:322:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
->    322 |         arch_enter_lazy_mmu_mode();
->        |         ^~~~~~~~~~~~~~~~~~~~~~~~
-> mm/kasan/shadow.c: In function 'kasan_depopulate_vmalloc_pte':
-> include/linux/pgtable.h:247:41: error: statement with no effect
-> [-Werror=unused-value]
->    247 | #define arch_enter_lazy_mmu_mode()      (LAZY_MMU_DEFAULT)
->        |                                         ^
-> mm/kasan/shadow.c:497:9: note: in expansion of macro 'arch_enter_lazy_mmu_mode'
->    497 |         arch_enter_lazy_mmu_mode();
->        |         ^~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> 
+I am currently working on resolving this issue by limiting the original=20
+patch
+
+based on the information in the device descriptor to avoid affecting=20
+your device,
+
+You can try this patch and look forward to your reply.
 
 
-I'm afraid these changes landed in -mm-unstable a bit too early.
+=E5=9C=A8 2025/9/7 23:10, Salvatore Bonaccorso =E5=86=99=E9=81=93:
+> Hi Zhang, hi Jiri,
+>
+> In Debian Staffan Melin reported that after an update containing the
+> commit 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY"),
+> the input device with same idVendor and idProduct, the Jieli
+> Technology USB Composite Device, does not get recognized anymore.
+>
+> The full Debian report is at: https://bugs.debian.org/1114557
+>
+> The issue is not specific to the 6.12.y series and confirmed in 6.16.3
+> as well.
+>
+> Staffan Melin did bisect the kernels between 6.12.38 (which was still
+> working) and 6.1.41 (which was not), confirming by bisection that the
+> offending commit is
+>
+> 1a8953f4f774 ("HID: Add IGNORE quirk for SMARTLINKTECHNOLOGY")
+>
+> #regzbot introduced: 1a8953f4f774
+> #regzbot monitor: https://bugs.debian.org/1114557
+>
+> So it looks that the quirk applied is unfortunately affecting
+> negatively as well Staffan Melin case.
+>
+> Can you have a look?
+>
+> Regards,
+> Salvatore
+--------------SLPeU6QBqpLSmPmWisb5FvmK
+Content-Type: text/plain; charset=UTF-8;
+ name="0001-HID-quirks-Add-device-descriptor-for-4c4a-4155.patch"
+Content-Disposition: attachment;
+ filename*0="0001-HID-quirks-Add-device-descriptor-for-4c4a-4155.patch"
+Content-Transfer-Encoding: base64
 
+RnJvbSA5ZmI0ZmQzODczZTU2OTM2NDdlNTE3Yzc5NjAzODNjNDUyM2NkMDkzIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBaaGFuZyBIZW5nIDx6aGFuZ2hlbmdAa3lsaW5vcy5j
+bj4KRGF0ZTogRnJpLCAxMiBTZXAgMjAyNSAyMDozODoxOCArMDgwMApTdWJqZWN0OiBbUEFU
+Q0hdIEhJRDogcXVpcmtzOiBBZGQgZGV2aWNlIGRlc2NyaXB0b3IgZm9yIDRjNGE6NDE1NQoK
+VHdvIFVTQiBkZXZpY2VzIHVzZSB0aGUgc2FtZSBJRC4gVG8gYXZvaWQgYWZmZWN0aW5nIGZ1
+bmN0aW9uYWxpdHksCmRldmljZSBkZXNjcmlwdG9ycyBhcmUgYWRkZWQgdG8gZGlzdGluZ3Vp
+c2ggYmV0d2VlbiB0aGVtCgpTaWduZWQtb2ZmLWJ5OiBaaGFuZyBIZW5nIDx6aGFuZ2hlbmdA
+a3lsaW5vcy5jbj4KLS0tCiBkcml2ZXJzL2hpZC9oaWQtcXVpcmtzLmMgfCAxNyArKysrKysr
+KysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2hpZC9oaWQtcXVpcmtzLmMgYi9kcml2ZXJz
+L2hpZC9oaWQtcXVpcmtzLmMKaW5kZXggZmZkMDM0NTY2ZTJlLi5kMzlhOGU1M2VhMzYgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvaGlkL2hpZC1xdWlya3MuYworKysgYi9kcml2ZXJzL2hpZC9o
+aWQtcXVpcmtzLmMKQEAgLTkxMyw2ICs5MTMsMTcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBo
+aWRfZGV2aWNlX2lkIGhpZF9pZ25vcmVfbGlzdFtdID0gewogI2VuZGlmCiAJeyBISURfVVNC
+X0RFVklDRShVU0JfVkVORE9SX0lEX1lFQUxJTkssIFVTQl9ERVZJQ0VfSURfWUVBTElOS19Q
+MUtfUDRLX0IySykgfSwKIAl7IEhJRF9VU0JfREVWSUNFKFVTQl9WRU5ET1JfSURfUVVBTlRB
+LCBVU0JfREVWSUNFX0lEX1FVQU5UQV9IUF81TVBfQ0FNRVJBXzU0NzMpIH0sCisJeyB9Cit9
+OworLyoKKyAqIGhpZF9pZ25vcmVfbWljIC0gTWljcm9waG9uZSBkZXZpY2VzIGRvIG5vdCBy
+ZXF1aXJlIEhJRCBjb3JlIHByb2Nlc3NpbmcKKyAqCisgKiBOb3cgdGhlcmUgYXJlIHR3byBV
+U0IgZGV2aWNlcyB1c2luZyB0aGUgc2FtZSBJRCwgb25lIGlzIHRoZSBtaWNyb3Bob25lIGFu
+ZCB0aGUgb3RoZXIKKyAqIGlzIHRoZSB0b3VjaCBzY3JlZW4uIFRoZSB0b3VjaCBzY3JlZW4g
+cmVxdWlyZXMgaGlkIGNvcmUgcHJvY2Vzc2luZywgYnV0IHRoZQorICogbWljcm9waG9uZSBk
+b2VzIG5vdC4gVGhlIHR3byBoYXZlIGRpZmZlcmVudCBiY2RJRHMsIHdoaWNoIHdpbGwgYmUg
+dXNlZCB0bworICogZGlzdGluZ3Vpc2ggdGhlbSBpbiB0aGUgZnV0dXJlCisgKi8KK3N0YXRp
+YyBjb25zdCBzdHJ1Y3QgaGlkX2RldmljZV9pZCBoaWRfaWdub3JlX21pY1tdID0gewogCXsg
+SElEX1VTQl9ERVZJQ0UoVVNCX1ZFTkRPUl9JRF9TTUFSVExJTktURUNITk9MT0dZLCBVU0Jf
+REVWSUNFX0lEX1NNQVJUTElOS1RFQ0hOT0xPR1lfNDE1NSkgfSwKIAl7IH0KIH07CkBAIC0x
+MDY4LDYgKzEwNzksOSBAQCBib29sIGhpZF9pZ25vcmUoc3RydWN0IGhpZF9kZXZpY2UgKmhk
+ZXYpCiAJICAgIGhkZXYtPnF1aXJrcyAmIEhJRF9RVUlSS19JR05PUkVfTU9VU0UpCiAJCXJl
+dHVybiB0cnVlOwogCisJaWYoaGlkX21hdGNoX2lkKGhkZXYsIGhpZF9pZ25vcmVfbWljKSAm
+JiAoaGRldi0+dmVyc2lvbiA+IDEuMSkpCisJCXJldHVybiB0cnVlOworCiAJcmV0dXJuICEh
+aGlkX21hdGNoX2lkKGhkZXYsIGhpZF9pZ25vcmVfbGlzdCk7CiB9CiBFWFBPUlRfU1lNQk9M
+X0dQTChoaWRfaWdub3JlKTsKQEAgLTEyNjYsNyArMTI4MCw4IEBAIHN0YXRpYyB1bnNpZ25l
+ZCBsb25nIGhpZF9nZXRzX3NxdWlyayhjb25zdCBzdHJ1Y3QgaGlkX2RldmljZSAqaGRldikK
+IAljb25zdCBzdHJ1Y3QgaGlkX2RldmljZV9pZCAqYmxfZW50cnk7CiAJdW5zaWduZWQgbG9u
+ZyBxdWlya3MgPSBoZGV2LT5pbml0aWFsX3F1aXJrczsKIAotCWlmIChoaWRfbWF0Y2hfaWQo
+aGRldiwgaGlkX2lnbm9yZV9saXN0KSkKKwlpZiAoaGlkX21hdGNoX2lkKGhkZXYsIGhpZF9p
+Z25vcmVfbGlzdCkgfHwKKwkgICAoaGlkX21hdGNoX2lkKGhkZXYsIGhpZF9pZ25vcmVfbWlj
+KSAmJiAoaGRldi0+dmVyc2lvbiA+IDEuMSkpKQogCQlxdWlya3MgfD0gSElEX1FVSVJLX0lH
+Tk9SRTsKIAogCWlmIChoaWRfbWF0Y2hfaWQoaGRldiwgaGlkX21vdXNlX2lnbm9yZV9saXN0
+KSkKLS0gCjIuNDcuMQoK
 
--- 
-Cheers
-
-David / dhildenb
-
+--------------SLPeU6QBqpLSmPmWisb5FvmK--
