@@ -1,49 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D948DB67F;
-	Thu, 11 Sep 2025 21:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C95E1DE2BD
+	for <regressions@lists.linux.dev>; Fri, 12 Sep 2025 06:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757624510; cv=none; b=NRsk4hEXK1lR7FH1+Wpo81Qv2m6mYZroLpmq6ggQvB4do+//Ch2nolx+xZorMRlR+EBa56h7nOIcvt++nvHQdU6NN1ei772yjyKVA5hDR5+0wfkWrqV+I4KSp7ykn1Jph0lFD8h/Ndh2kuFJDdOTD9Kzhs2kqDvN1DF4ncv/sxQ=
+	t=1757658996; cv=none; b=FizswtBQ8VNkrbCe0H9H4ceE5uFSh/p6VJFoVyqVxq0oqXavbKiR5bNTXVtkvvIywHXPVUgcgtmqKhvJfPKXf1FHOhnWA1gr68s0FIijOUD+LY7s7O2e9gDpujttZLmEG+oisNS84ZydP4zItGoH3vz3PQtSadvW83ZM7u8Y//g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757624510; c=relaxed/simple;
-	bh=TnKAQTc7XGro9Bv4vH66mq9n6MJAi4rgkbNv8BEGp+A=;
+	s=arc-20240116; t=1757658996; c=relaxed/simple;
+	bh=KnbWWZ1vZ7cS+SnFrToVLk6/eP2S5BM8goClXA6cIBo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1zLRcuHVHMhdvqZXkwvobphr9s1asLnTdwDAqsS08Cp2HsXTFGGJ17nlfc29Ghw5ztJ7wiDoz86WoLZ68buVkzzl3U1Ba5NMhngkav5euqyubK4I4Or/4kX4PsrLF+m7QneQWbA7ENWLM6bocBCHT53jVHcJuLx6JPN+c0kR/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AN10WaBm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNJ3hCeoFF5FXoLRuqOVhBU4v3juRNygkGPQ8JP7ER1WXZUyvLiMOuo9eOW9T3S0LJwC6CB8b/Ds0H5OlDBvApVpDRnycLHyKeZlkcUEjWxHFxyH9fK3IT9fw95CIepba1DnpBZ+T0ReVHEkmzg/M2sOaCqRRAbMAmMDMIkegkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NWW8IpDm; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AN10WaBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B037BC4CEF0;
-	Thu, 11 Sep 2025 21:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757624509;
-	bh=TnKAQTc7XGro9Bv4vH66mq9n6MJAi4rgkbNv8BEGp+A=;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NWW8IpDm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1757658608;
+	bh=KnbWWZ1vZ7cS+SnFrToVLk6/eP2S5BM8goClXA6cIBo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AN10WaBmgi+RXVhno4BE+S55iu8EnUJWANOscD0dQ6FBxV/ctEQVofudWCJwFvmYz
-	 yHPg5tSaSWUx6VV0B9WLKe/r1DEIB/s/ZQzAYrLYI+9MYzktAza/scMSJPqdAShmcD
-	 FjvHHKPc2HInQOfx8yNRu5co5MSNyDCw1nlwlRtmn6mWypUk0rA041rgWjLVzVHzVU
-	 qB+YNPEfYu7Nmx09q/in82XKv8qqYdWxMUGlH662MHmpSEY9L8iTa7ikRtEuayM39v
-	 tIsr/voF7PQtSbBM9rqYsf0uaB8mQTyPY0bibuuwH4xta1CG8bj4iosC3tDqwWQIf/
-	 5vtty7su7aKYA==
-Date: Thu, 11 Sep 2025 22:01:43 +0100
-From: Mark Brown <broonie@kernel.org>
+	b=NWW8IpDmvTnK2lh7vg8icSbnes7lYwmiq1z2K9xdMjog0SFC7Nulxdk4NhgoLFL+N
+	 5is3M5aEjcbpPkEYimcIjAdz6+MDL5d6IhrxJs+Ca2tjClKJw/ZgSGfipmF5RfkbcW
+	 cl4yQSPmGAYVo1yFYkUMOEDmhttWGbRhKtoqMjG0=
+Date: Fri, 12 Sep 2025 08:30:08 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
 To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	Shuah Khan <shuah@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>, Shuah Khan <shuah@kernel.org>
 Subject: Re: next-20250909: selftests/arm64/gcs/basic-gcs.c:390:30: error:
  use of undeclared identifier 'HWCAP_GCS'
-Message-ID: <a275fc97-24d8-477d-b7aa-79c2d61d93ad@sirena.org.uk>
+Message-ID: <1e331ebb-3315-4cbe-b194-ccbeeaded4da@t-8ch.de>
 References: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -51,53 +43,59 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vzK/nDSaTzO/04Bu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
-X-Cookie: Your domestic life may be harmonious.
 
+Hi Naresh,
 
---vzK/nDSaTzO/04Bu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 12, 2025 at 12:48:47AM +0530, Naresh Kamboju wrote:
+On 2025-09-12 00:48:47+0530, Naresh Kamboju wrote:
 > The following build warnings / errors noticed on arm64 defconfig
 > with clang-20 and gcc-13 toolchains on the Linux next-20250909
 > till next-20250911 tag while building selftests/arm64.
->=20
+> 
 > Regression Analysis:
 > - New regression? Yes
 > - Reproducibility? yes
->=20
+> 
 > First seen on  next-20250909
 >  Good: next-20250908
 >  Bad: next-20250909 till next-20250911
->=20
+> 
 > Test regression: next-20250909:
 > selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
 > identifier 'HWCAP_GCS'
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build log
+> selftests/arm64/gcs/basic-gcs.c:390:30: error: use of undeclared
+> identifier 'HWCAP_GCS'
+>   390 |         if (!(getauxval(AT_HWCAP) & HWCAP_GCS))
+>       |                                     ^
+> 1 error generated.
+> 
+> The suspected commit pointing to,
+>   kselftest/arm64/gcs: Use nolibc's getauxval()
+>   a985fe638344492727528e52416211dda1c391d5
 
-This will be due to Thomas Wei=DFschuh's nolibc changes which went in
-during that time period and did change the program to use nolibc's
-getauxval, presumably that's broken with this clang version or
-something?
+That suspicion looks correct. I am wondering a bit how this works for
+the other selftests which use this symbol.
 
---vzK/nDSaTzO/04Bu
-Content-Type: application/pgp-signature; name="signature.asc"
+Can you give this one a try:
 
------BEGIN PGP SIGNATURE-----
+diff --git a/tools/testing/selftests/arm64/gcs/gcs-util.h b/tools/testing/selftests/arm64/gcs/gcs-util.h
+index c99a6b39ac14..816b497634d6 100644
+--- a/tools/testing/selftests/arm64/gcs/gcs-util.h
++++ b/tools/testing/selftests/arm64/gcs/gcs-util.h
+@@ -26,6 +26,10 @@ struct user_gcs {
+ };
+ #endif
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjDOLcACgkQJNaLcl1U
-h9BI/Qf9EK0NgoUZ4q96FEARPBhR/Va4JSSHIcl2WyWNfMuLGBi4fv3F6r3GQlnS
-/pv7buWYB/3owgjNjmJTDIjTCuqoaGSyoAsIQJCac6gAi1Fn99E6XQ6fP8dGHNAd
-A1H/dQsANu/5zzLxFZe2AHwBL9xrvWr55ZnhoL7R9C0eU+u3HbNzoiTr0sJvtOti
-vxDis4GP1Jc2b7W9R/t9iE7czTRIDSM3CbCzWn4PwSm5AkifhWzvgV18719x+NQB
-Sx/0X+5x2BcGr5a7RTc+3BhJvFg59eRvi6MrPHHTvGbebxSJ1Y0M6Jucix8WMQEI
-oUOM7SJHlvm4AIZS+P2HD2EsCC5Yuw==
-=zR3h
------END PGP SIGNATURE-----
-
---vzK/nDSaTzO/04Bu--
++#ifndef HWCAP_GCS
++#define HWCAP_GCS (1UL << 32)
++#endif
++
+ /* Shadow Stack/Guarded Control Stack interface */
+ #define PR_GET_SHADOW_STACK_STATUS     74
+ #define PR_SET_SHADOW_STACK_STATUS      75
