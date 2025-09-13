@@ -1,67 +1,39 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC792E2845
-	for <regressions@lists.linux.dev>; Sat, 13 Sep 2025 08:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22B42D5946;
+	Sat, 13 Sep 2025 09:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757753635; cv=none; b=ti/kUBnMfGP1/u/pCIhRf2xKvsJMJgfeJvA7HihXbhy0jDJz/+b471/ishNVQaVL2SVqmKaH11b+/Oou7LXlT6oRwH2oSrJKZESdeMUH2au4vBlENypTBrQS3dK2zbOfe9dbNnfBf6YX/yj+Q/HUsqGd/4iMH2rBLb8mRJCv3Z8=
+	t=1757755681; cv=none; b=QycCDrcyrx9VY+foF5PiIGd1Lv9kE9FmW9Blz3Lj4DmReYxJyNsaYQ9sIrnYxP5VhoZLQEkFIeYAt7qbfMANcejl71CSKGZZlFkmhTKUy3eikJlASyLQIQyQ+Ekwq8AFJn2lAfulqSMuDpzS/Ly3iGlqY9kaTnFhHIYxdkptUF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757753635; c=relaxed/simple;
-	bh=hjX/8U9e+Qrmt58XABWZDNFleTWJFxO/SMBT8NBKylk=;
+	s=arc-20240116; t=1757755681; c=relaxed/simple;
+	bh=awvsvpXqRlkZ99qbX4b278mAef9+7B1wvnHRlagBzLY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UkMLCxf6u+6+G7KKkCtURN5QNJjv/vXD9EM506dcUtBQFKmEKjBQIt6WEJXxrhIjcDMWcxs8Uqmo0sb5zRf2ZObhM/lHREdqbZbx+jUg7A33JR4M0mn7t2H3Zz1nNfTA3fF4jCvoEvNzpR6Xw4ctwW7LeJjgK+mTRQ6uU9j7GVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNkcLiw/; arc=none smtp.client-ip=209.85.218.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtvrXjCjwyEQH137hWhx2fk14CQKAZN95cKKp8MUrJg+agL8D4BsyD0wdQk8GdiMXrKUdetjnSBbi+25zAdyId6AulfRZroqWoeRIQ/ownFRpQFYxjqpwYBRbjn5ZeWxfyKoUdd11dfEfNPBnfEebYbrKq0QJjNpx5CFhPhkRHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=QeKv04cO; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNkcLiw/"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b07883a5feeso474630666b.1
-        for <regressions@lists.linux.dev>; Sat, 13 Sep 2025 01:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757753632; x=1758358432; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nRBsxly/heSok1/GwCP1v2e7VTjywigrOJtGbwcrN40=;
-        b=ZNkcLiw/8BaBYx9TPbUtkiWiLbWkMSmiCv7TfmiYMu9h0q71rmoGKi9HKvvrumoDcO
-         s0ptpZY0s+BHJq4K1a09SlHhns+NZGZrArGYnfIkCZesFgKTbrd7EiTZ+a6lOg1JkyYw
-         cFlMX6excer+xHQGUgTYnUn6WGI6HLo5CZNSjkxPF+8/JJtTvD0eT65UaNKP179sl0bd
-         XFBkveMSIbFljsBii6pQ3hiV0iWjrFvmVyR7RySEDa7Dconet5eYSVjVSQ3Y2IUWNF45
-         yaR51sRqrmrQZU71cx1VLjscxWL1SOGHPSjtEN+7KXnf/gMUQIZirpkJhAYAFhx8wnrB
-         ZC0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757753632; x=1758358432;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nRBsxly/heSok1/GwCP1v2e7VTjywigrOJtGbwcrN40=;
-        b=wIBb9BgH2OQRehdIIRY5/BCXBi+5XEvbO6rGefVDx+peCjoqf9P9tXRdG2SDv91yCR
-         BCFXer8h6veX/7nDzPl4A9F4rWXy5HqgFwxknkClW9cQhmL/J1x8s8FLWiXlpFyYQ7Wd
-         33nlb5AHwjskpwu9X3adlxwEDkxtgzI9Xy+vnYhJXyHL+te7XvhOCsBol9yYwI5u1GOn
-         hzZcbrpW9vTjHf3b4naijFvqPvf4xdOLPPD7MN9AJqbPC73ysWaHrmISuKaubOUJmTXu
-         JZ57YZothUtrBF2s6UA13CNuRs3J1Nb1Aor/2X20CcEN5rOS+eNqL/hPnWSKj503z/83
-         qGHg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Ig6wB+Xu89MiW7buQL1nzEZLHCsXGu03SI6hyAeZLpsme31tyTlYINaNj7eKDJqTfR9Gv3F+/g1GJA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvqyIwpzX47zcwonMt2upHDhim2eFVXcwlgta9O2bXT9AZKygb
-	zefNuir9sXrEbtFtoigVJcBDNMGym3isXpBCWKqN2sM33m5tXQw+kz8L
-X-Gm-Gg: ASbGncsLUm++fiEVkMnNmF2aS9IX/aoOhMMpcFX8VhdGnpaDzCbwbCfPCU8HuZhuq4M
-	Sjku2RPze6G1Ze55xtlNjWebqwKds6NiB7QRW3NsRLCQslLVyUYTCWyZNQ45NHC79W7XKm3sU3Z
-	tTpwP+b0yzQDyojSlA+K+pcigJvww2n9ojM1eysqCHOTmrcRu4+0rt06MivYVzZGV742Q7KTCTc
-	GYruoAY8IHDvXpxv6SmpWoXpPvZwSrX0sjploQv5YplZbFnBeNU0B0afuzdCtCOIWEphKE9Wni8
-	LfafEdQh2t76RCAIDBHwGWYtCLPPKAwf7Ksx3IgLmfN4V+nrpyYXWH3LPI5waMJugjqgkeHU6WA
-	hJ6TOtQk48bZNZEarvJRwKh6zKK8aPRElhQCdZFgSHddXBS+i8q6mHuGYFLyvCPXDGqU=
-X-Google-Smtp-Source: AGHT+IGRNH90vlh6pNSpSkah5E3lqgD6Qwr2bzQ2h7i2Vu2i65lG54BlgGQar3DeQCKypUkZNJ4X9A==
-X-Received: by 2002:a17:907:9805:b0:b04:5385:e80 with SMTP id a640c23a62f3a-b07c3a98830mr539708866b.64.1757753631816;
-        Sat, 13 Sep 2025 01:53:51 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b07d09e5414sm218564466b.18.2025.09.13.01.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 01:53:50 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="QeKv04cO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wz1Nlepo1I7EPbDFYbA1uUSymAbIx41UYBcLNwJ+PYc=; b=QeKv04cO6mDZSLvW3OACnmxb7i
+	K0Jlp9Ouyy6BecJDom2lxOwncLPnXGR5YSOBMqmAhfH2NL0+cbKvUHD3fnPEelCSJUHGPWJk3YMIf
+	KlJytgg32HZXnQlt2ymr4KnTe+NCA+Dv2BnJFGN8xXw07D+4c2r66JCPwwjDQihsRVFFH3MjRgifY
+	5GNa4nbQ5ooHLnY/kFEnEJNd4+k37ahpZlqRBP7geBejojRf766mY7MzyOLyOiMmle0EDceaPGSU9
+	NOWvGmr4VHgPcWNW85TdGfS/s9l7NjumbkJoeM2CgE6JJprDynTM3KnlBUQ8TdQ1fjjT4416YEXL2
+	LxiTj66g==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1uxM2e-00AMpN-B5; Sat, 13 Sep 2025 08:55:32 +0000
 Received: by eldamar.lan (Postfix, from userid 1000)
-	id E9A76BE2DE0; Sat, 13 Sep 2025 10:53:49 +0200 (CEST)
-Date: Sat, 13 Sep 2025 10:53:49 +0200
+	id 6F5D9BE2DE0; Sat, 13 Sep 2025 10:55:31 +0200 (CEST)
+Date: Sat, 13 Sep 2025 10:55:31 +0200
 From: Salvatore Bonaccorso <carnil@debian.org>
 To: Staffan Melin <staffan.melin@oscillator.se>
 Cc: zhangheng <zhangheng@kylinos.cn>, Jiri Kosina <jkosina@suse.com>,
@@ -72,23 +44,32 @@ Cc: zhangheng <zhangheng@kylinos.cn>, Jiri Kosina <jkosina@suse.com>,
 Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
  SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
  Composite Device
-Message-ID: <aMUxHZF-7p7--1qS@eldamar.lan>
+Message-ID: <aMUxg6FLqDetwiGu@eldamar.lan>
 References: <aL2gYJaXoB6p_oyM@eldamar.lan>
  <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
  <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
+ <aMUxHZF-7p7--1qS@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="SSq+zSyke7FBHmjg"
+Content-Disposition: inline
+In-Reply-To: <aMUxHZF-7p7--1qS@eldamar.lan>
+X-Debian-User: carnil
+
+
+--SSq+zSyke7FBHmjg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
 
 Hi Staffan,
 
 chiming in hopefully it is of help.
+
+Now really with the patch ...
 
 On Fri, Sep 12, 2025 at 09:57:04PM +0200, Staffan Melin wrote:
 > Thank you,
@@ -108,10 +89,76 @@ fix needs to be developed first for mainline. So the patch is targeted
 there.
 
 But please find attached an updated patch which hopefully should work
-which resolved the context changes.
+which resolved the context changes on top of 6.12.47.
 
 But ideally you can provide a Tested-by on zhangheng's mainline patch
 to get things rolling as needed.
 
 Regards,
 Salvatore
+
+--SSq+zSyke7FBHmjg
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-HID-quirks-Add-device-descriptor-for-4c4a-4155.patch"
+
+From 16b03e802a858ebf3eafcfdb22e3025e1a840afd Mon Sep 17 00:00:00 2001
+From: Zhang Heng <zhangheng@kylinos.cn>
+Date: Fri, 12 Sep 2025 20:38:18 +0800
+Subject: [PATCH] HID: quirks: Add device descriptor for 4c4a:4155
+
+Two USB devices use the same ID. To avoid affecting functionality,
+device descriptors are added to distinguish between them
+
+Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
+---
+ drivers/hid/hid-quirks.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 64f9728018b8..cbb658c2c60d 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -898,6 +898,17 @@ static const struct hid_device_id hid_ignore_list[] = {
+ #endif
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_YEALINK, USB_DEVICE_ID_YEALINK_P1K_P4K_B2K) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_QUANTA, USB_DEVICE_ID_QUANTA_HP_5MP_CAMERA_5473) },
++	{ }
++};
++/*
++ * hid_ignore_mic - Microphone devices do not require HID core processing
++ *
++ * Now there are two USB devices using the same ID, one is the microphone and the other
++ * is the touch screen. The touch screen requires hid core processing, but the
++ * microphone does not. The two have different bcdIDs, which will be used to
++ * distinguish them in the future
++ */
++static const struct hid_device_id hid_ignore_mic[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SMARTLINKTECHNOLOGY, USB_DEVICE_ID_SMARTLINKTECHNOLOGY_4155) },
+ 	{ }
+ };
+@@ -1061,6 +1072,9 @@ bool hid_ignore(struct hid_device *hdev)
+ 	    hid_match_id(hdev, hid_mouse_ignore_list))
+ 		return true;
+ 
++	if(hid_match_id(hdev, hid_ignore_mic) && (hdev->version > 1.1))
++		return true;
++
+ 	return !!hid_match_id(hdev, hid_ignore_list);
+ }
+ EXPORT_SYMBOL_GPL(hid_ignore);
+@@ -1259,7 +1273,8 @@ static unsigned long hid_gets_squirk(const struct hid_device *hdev)
+ 	const struct hid_device_id *bl_entry;
+ 	unsigned long quirks = hdev->initial_quirks;
+ 
+-	if (hid_match_id(hdev, hid_ignore_list))
++	if (hid_match_id(hdev, hid_ignore_list) ||
++	   (hid_match_id(hdev, hid_ignore_mic) && (hdev->version > 1.1)))
+ 		quirks |= HID_QUIRK_IGNORE;
+ 
+ 	if (hid_match_id(hdev, hid_have_special_driver))
+-- 
+2.51.0
+
+
+--SSq+zSyke7FBHmjg--
