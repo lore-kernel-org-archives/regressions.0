@@ -1,135 +1,129 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from cosmicgizmosystems.com (beyond-windows.com [63.249.102.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D119B2820CB
-	for <regressions@lists.linux.dev>; Mon, 15 Sep 2025 19:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E643923A564
+	for <regressions@lists.linux.dev>; Mon, 15 Sep 2025 23:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.249.102.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757963696; cv=none; b=RQIaPZxhTayo4EDsAvrUDcQlSqDzFWBfjQqxGDm/YRnV2OR1wa8w+AQm0X2++b1p6N4YZ9TXf/Ig9vmQLcgqFzz6vuBCfgghUAkgbtDXYcQnz5eOxtJairxa3rDgXYVLLF7Iy64d8WRvR2Y6ePpuFb5k3oudq6Ht5FIEs0T9t6w=
+	t=1757978139; cv=none; b=ObW60ppOXRj0QrYCLsbAOgfwd5DI+avufkBcY6Xs8bFBUzFd8DHY4/+R28TtBzJMUt1xmvsiU+yAhsBNoyFyFX/HpNe+ppdigkrQauuxgEMxjQKOaQBYpkQlfNu23sojM85mT0odukSRn61Vez7cD5htJ9y2vaPqmslwrqPTLfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757963696; c=relaxed/simple;
-	bh=c/xwwXA3LmBOBhBu2xW7scBMnY4EehI2985j3EdXFks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PM8T1+3KJWlCN7y7CUsPuJyKbVnTPAJ8U1rshCYad9mxfFqU6iphfatO/T8Ohl0f9bU6GJU7v72kT0xE0ddZm2UGNg47nLOJ7mu3oOyC9eRwrA5cFc4Yuiu3teccRxP44Nczo6S81VM38ljRut4uppwwQwUejUGVabK8vFEUI9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aIRjzTOj; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aIRjzTOj"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-772843b6057so4094410b3a.3
-        for <regressions@lists.linux.dev>; Mon, 15 Sep 2025 12:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757963694; x=1758568494; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x6wqGfRu2qI7+46L6ERmQDqDyxlRm+K7+bHyAwd1/ys=;
-        b=aIRjzTOjn05x2/GgVEdm655We9ABlm6Epz1yFzTk7xohvTw4SYXrfdjmKfGCCxyuSo
-         CgW+M1lsjKyF3xB0uA+5MADs3uVDREVB+0bGfpLPrcWYXAh6sjv4z1m8QgRCZnTScmZt
-         KMmBzp3++du9nsmzwXtbprlbI37+KHKyWjbXvpX+v0cKfAJ2pbGb0F9CEM3ga9eF8i8V
-         yDeDPIr6LnCn/vG8dBwCKcuPopoIcNi2+0ZFvmVWI0Ma8vJBBj1teLCSyX3sPdhwn2TM
-         /G03RisNPPexti4IPORm7tvZKuXzNrPqZh2VSEwYwS4lXhYljP1j+XT6hixdIe7O8y87
-         pHFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757963694; x=1758568494;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6wqGfRu2qI7+46L6ERmQDqDyxlRm+K7+bHyAwd1/ys=;
-        b=mGUbzXcN57kY78LuvbNWqdhp44zek0lJ1g2SoWRrnDIYMz/PmirekHpFXjWf607p6l
-         myNUvMKGIS1Zu7aLN4ULbafUfjCSI9svCLfrvsZ7GCyEoSDu/hvHzX9OIwj2IelSVJMY
-         5UFDWFk0QN9afmpwLQEA364bEiTQ/q9+r+8OL5aty+KRYVrvoI/werwRLeTxrHo8RWPd
-         C9LgiPgzbXfJVgGEsuVFtWByXqHthDq5gCuzDGb2A6TVpjqKMcyavMhWhW8UCXa1CAoK
-         Ok7zhguE7+6S9Q89kLSXtvf9kz8Ri7EON3pcHztoSGbvBFhaQKBP/PGuak4LbFN81dDD
-         eFZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRfcQmAL8YWtuLXO69eAJyYbuVM416+sKY/f9k4jcCdUcmqG4+g4cimS1p04vDsnMrJUDfBGvdW9v8HA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxRvKdeTg9H7ohsbizvh5P+NMir1Q5eEv33mtAejnf2yvrGkhk4
-	uiGsAT8JTXTWngVY9F3v3BxVy74A7WANINVxfyPxcy2ORJNTXCF/xMU9VVKK1qPL+aA3UcKvyZM
-	JzrxkM8rh09dEvMkCZhKYdSWslRp8WXIkrr5X9IYFRg==
-X-Gm-Gg: ASbGncu2Wevt3U+Ia/f3R3QG24GUuULn35hdSAAlrQTkff679di3MHDg4+ioLIG8B4/
-	6vyVakCvummrBMSHE5YddgiJuT97JYNGQczBBGwgQnsuHjZhyqrwiGHaQu4JxjFNHWRDlNZwlNc
-	ezIHXl2RIxsaT25eeo/4a97bLmAbmG6fNsbQjBgldjoU+fBxrUsU6ur1HIjkJUDiUp09unrVxp5
-	RX3JI4OqXg4fgRMqWwCjUBNrUtr7kfJuwJ+llS9xddsxnCwd+HVaw6t+u6ZOd3s1daUqddaTu2e
-	YRRVGQ==
-X-Google-Smtp-Source: AGHT+IFS5Yosk8zDvCLXFq8KmRAPDnuqfaDSdxmgmvOa6yUNvkUlqGro+dILUrXNR4yBf3K+Z0YAEwYFzYRDWuMc2Nk=
-X-Received: by 2002:a17:903:40d1:b0:267:bd66:14f3 with SMTP id
- d9443c01a7336-267bd661815mr9354435ad.51.1757963694201; Mon, 15 Sep 2025
- 12:14:54 -0700 (PDT)
+	s=arc-20240116; t=1757978139; c=relaxed/simple;
+	bh=0+yASABHD1oLRJxQ4j3zNau+abec8VVEFlh79vv6Gy8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U4uDGw3sbo22LJU1pahIvEMpZxTtiH9dWAgMV7L5yuMIYqOMt+e6AOvkZwoQdjMgmYknRx/3Qvyo6Fw79fAyN7h3Jnd6XEv700vPM4qxWAeO327NWIn2ajnCAoznEP81GVJHliIORjhznzOWknaf3JRKiKqAYYZsEZOTs05Ufnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com; spf=pass smtp.mailfrom=cosmicgizmosystems.com; arc=none smtp.client-ip=63.249.102.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cosmicgizmosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cosmicgizmosystems.com
+Received: from [10.0.0.100] (c-71-193-224-155.hsd1.wa.comcast.net [71.193.224.155])
+	by host11.cruzio.com (Postfix) with ESMTPSA id CD3301E7ACA9;
+	Mon, 15 Sep 2025 16:06:43 -0700 (PDT)
+Message-ID: <735c20da-c052-4528-ad91-185a835ca40c@cosmicgizmosystems.com>
+Date: Mon, 15 Sep 2025 16:06:39 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv77X+kKz2YT6xw7=9UrrotTbQ6fgNac7oohOg8BgGvtw@mail.gmail.com>
- <1e331ebb-3315-4cbe-b194-ccbeeaded4da@t-8ch.de> <965c8d7e-c5f2-4bd8-ab7c-c3116632f015@sirena.org.uk>
- <5e4d9943-3a8d-4281-9007-f49bfc66dc6d@weissschuh.net> <b9b8b8cf-4920-4f9d-bcea-bea913058601@weissschuh.net>
- <a1dc9839-ab45-4dd6-9eeb-4bbc35bf8d90@sirena.org.uk> <5fe12804-2538-42c5-b5c7-66d36ff947d9@t-8ch.de>
-In-Reply-To: <5fe12804-2538-42c5-b5c7-66d36ff947d9@t-8ch.de>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 16 Sep 2025 00:44:42 +0530
-X-Gm-Features: AS18NWAPyThDdNoP11CbNq-0STFMKwn1jS9ssO9hoUB8yYX9018L0FgtP4-g6Ow
-Message-ID: <CA+G9fYsnPBYoeVMzQJMCPA1JGhcJXr53Y-_uOMKdB_3D7ZGQNQ@mail.gmail.com>
-Subject: Re: next-20250909: selftests/arm64/gcs/basic-gcs.c:390:30: error: use
- of undeclared identifier 'HWCAP_GCS'
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Mark Brown <broonie@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+To: zhangheng <zhangheng@kylinos.cn>,
+ Staffan Melin <staffan.melin@oscillator.se>,
+ Salvatore Bonaccorso <carnil@debian.org>
+Cc: Jiri Kosina <jkosina@suse.com>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org, 1114557@bugs.debian.org
+References: <aL2gYJaXoB6p_oyM@eldamar.lan>
+ <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+ <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
+ <aMUxHZF-7p7--1qS@eldamar.lan> <aMUxg6FLqDetwiGu@eldamar.lan>
+ <f08669ec112d6ab2f62e35c0c96d1f06@oscillator.se>
+ <94520aac-2a68-40d2-b188-80f9e361d6de@kylinos.cn>
+Content-Language: en-US
+From: Terry Junge <linuxhid@cosmicgizmosystems.com>
+In-Reply-To: <94520aac-2a68-40d2-b188-80f9e361d6de@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Sept 2025 at 14:53, Thomas Wei=C3=9Fschuh <linux@weissschuh.net>=
- wrote:
->
-> On 2025-09-12 12:14:00+0100, Mark Brown wrote:
-> > On Fri, Sep 12, 2025 at 01:07:58PM +0200, Thomas Wei=C3=9Fschuh wrote:
-> >
-> > > The Makefile does *not* use -nostdinc, so the nolibc program probably=
- finds the toolchain's glibc asm/hwcap.h.
-> > > There also doesn't seem to be a static arm64 hwcap header in tools/in=
-clude in the first place.
-> > > I am still wondering how this works for the other tests.
-> >
-> > make headers_install puts a copy in usr/include, probably we just need
-> > to include that in the include path.
->
-> Naresh, could you test the patch below?
-> The other custom $(CC) rules in the gcs directory are also not
-> respecting $(CFLAGS), but I'll leave these for now.
 
-I have applied this patch on top of Linux next-20250912 tag and
-tested and reported build regressions got fixed.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On 9/15/25 1:37 AM, zhangheng wrote:
+> Apply this new patch and test the kernel again. I don't have the original mic device in my hands, which means I have to wait for a response for testing now.
+> 
+> You can test it first, and the other mic device also needs to be retested
 
-> diff --git a/tools/testing/selftests/arm64/gcs/Makefile b/tools/testing/s=
-elftests/arm64/gcs/Makefile
-> index d2f3497a9..1fbbf0ca1 100644
-> --- a/tools/testing/selftests/arm64/gcs/Makefile
-> +++ b/tools/testing/selftests/arm64/gcs/Makefile
-> @@ -14,11 +14,11 @@ LDLIBS+=3D-lpthread
->  include ../../lib.mk
->
->  $(OUTPUT)/basic-gcs: basic-gcs.c
-> -       $(CC) -g -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostd=
-lib \
-> -               -static -include ../../../../include/nolibc/nolibc.h \
-> +       $(CC) $(CFLAGS) -fno-asynchronous-unwind-tables -fno-ident -s -no=
-stdlib -nostdinc \
-> +               -static -I../../../../include/nolibc -include ../../../..=
-/include/nolibc/nolibc.h \
->                 -I../../../../../usr/include \
->                 -std=3Dgnu99 -I../.. -g \
-> -               -ffreestanding -Wall $^ -o $@ -lgcc
-> +               -ffreestanding $^ -o $@ -lgcc
->
->  $(OUTPUT)/gcs-stress-thread: gcs-stress-thread.S
->         $(CC) -nostdlib $^ -o $@
->
+Your patch will not work as you expect for two reasons.
 
-- Naresh
+	if (hid_match_id(hdev, hid_ignore_list) ||
+	   (hid_match_id(hdev, hid_ignore_mic) && (hdev->version > 1.1)))
+ 		quirks |= HID_QUIRK_IGNORE;
+
+hdev->version is U32 not float. Version (bcdDevice) 1.00 would be 0x0100. The value 1.1 is probably cast to 0x0001.
+
+Second, both devices have identical VID, PID, bcdDevice, and Product names.
+
+[  563.104908] usb 1-1.4.1.2: New USB device found, idVendor=4c4a, idProduct=4155, bcdDevice= 1.00
+[  563.104910] usb 1-1.4.1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  563.104911] usb 1-1.4.1.2: Product: USB Composite Device
+[  563.104912] usb 1-1.4.1.2: Manufacturer: SmartlinkTechnology
+[  563.104913] usb 1-1.4.1.2: SerialNumber: 20201111000001
+
+[   10.451534] usb 3-3: New USB device found, idVendor=4c4a, idProduct=4155, bcdDevice= 1.00
+[   10.451540] usb 3-3: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   10.451543] usb 3-3: Product: USB Composite Device
+[   10.451545] usb 3-3: Manufacturer: Jieli Technology
+[   10.451546] usb 3-3: SerialNumber: FFFFFFFFFFFFFFFF
+
+If you could get the descriptors for the microphone device, it would be helpful.
+
+Thanks,
+Terry
+
+> 
+> 在 2025/9/13 21:11, Staffan Melin 写道:
+>> Ah, thanks, I get it now :)
+>>
+>> So I got 6.16.7, and the patch applied without problems.
+>>
+>> But no luck, the same results as before: touchscreen not working, xinput --list not showing the Jieli touchscreen. dmesg shows the same as before, too.
+>>
+>> Best regards,
+>>
+>> Staffan
+>>
+>>
+>> On 2025-09-13 10:55, Salvatore Bonaccorso wrote:
+>>> Hi Staffan,
+>>>
+>>> chiming in hopefully it is of help.
+>>>
+>>> Now really with the patch ...
+>>>
+>>> On Fri, Sep 12, 2025 at 09:57:04PM +0200, Staffan Melin wrote:
+>>>> Thank you,
+>>>>
+>>>> I tried to apply this patch to 6.12.39, the first problematic kernel, as
+>>>> well as 6.12.41, the first bad I tried, and on both I got an error message:
+>>>>
+>>>> Applying: HID: quirks: Add device descriptor for 4c4a:4155
+>>>> error: patch failed: drivers/hid/hid-quirks.c:1068
+>>>> error: drivers/hid/hid-quirks.c: patch does not apply
+>>>> Patch failed at 0001 HID: quirks: Add device descriptor for 4c4a:4155
+>>>>
+>>>> To which kernel version should I apply the patch?
+>>>
+>>> As the deveopment goes from mainline then down to stable series, the
+>>> fix needs to be developed first for mainline. So the patch is targeted
+>>> there.
+>>>
+>>> But please find attached an updated patch which hopefully should work
+>>> which resolved the context changes on top of 6.12.47.
+>>>
+>>> But ideally you can provide a Tested-by on zhangheng's mainline patch
+>>> to get things rolling as needed.
+>>>
+>>> Regards,
+>>> Salvatore
+
