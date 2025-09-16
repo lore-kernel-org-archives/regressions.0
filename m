@@ -1,165 +1,164 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F73C21FF26
-	for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 14:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B5B328582
+	for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 16:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758033962; cv=none; b=c4czeqltLPC3INnB50/OpLncyJLS7/qT3mVdC0bWgVMz8wE28hcJZU82xuDcvFd83qZjcY5xASv790ZYOXozWADYjLzKWae47ZxvHHpDsAJxXFUnM57clO3HEQXke43dSLU7CYV1ipP1UYqYR3o0Mvdh0gYUPJE5ehfimyPkh1I=
+	t=1758040012; cv=none; b=STkQxceLHzlBz0ghmsJPEgf5LkC/7ZrCpXtS21RC0x8TdFkD8HDlOXEPg0udTJhN1zhKrmHu5bl2xMLnZ/+vT+VL1UmKZUrjChE9Vi/oBD/d67jW/yCwTV3bCzJtuBbNmnmIsxZv1ZbwAp0MfoMPJJaD8L/Ee+jKO2fhTe52k1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758033962; c=relaxed/simple;
-	bh=Z4yxPByTTztB3sFM24pH2Wpl4V1ijJZSaEJbVYamofs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fBueQpwB4PFrnMCrdC94g/sUv+Z9TFUDunxpV/bgZ0Ko33ycNTP0XL8s9nqFOctg6qoMsuxatUUpXU9h7bEj/Rmit1cHRr/xGFzu0HlckkIy7TzVvmxFt3slPSZWO1bHDZH8EAvZtB/5hAy3NXw4PqdtehqZxRMTpyo51kcCOzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=nIX6VdGE; arc=none smtp.client-ip=212.227.17.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1758040012; c=relaxed/simple;
+	bh=PxBeY2ICmRxL7V6JGWbT7z+W48PkV2S3brfnG0Ta/Sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qKQpbbJv/tdWefA5FDYBTBEFawbEJou5DBywq4LGltPrszCkahlCRiz372diUehlT8/J3MT5Jzuhh/sR8AcYvkfxciJcoM7mf4wW/QJXx28M4iH0e8+j28XDUVc+/dDdxkMFfjAtnzbB2ElM0gk+2c+0bM4d5oA54sTVtjeJjBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BhOYNq7l; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="nIX6VdGE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1758033950; x=1758638750; i=christian@heusel.eu;
-	bh=DHLESqABxDP34BOvNFzhwzlJxFfjxILjfvStq3LsGmc=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=nIX6VdGEpYpQwlJkeWUKxZqtAj4t2uA0AvHbLNZNz78LJnFSC3gT/MTNxNCl/+iy
-	 iS2MOIPn/0IziI3RqixJXKqiPQTmD13P04p4eI+h4gtkT6fh6f3zHlPacDWtDSwDW
-	 /i97waOm96nlYzvNE3Nbe6tcbmeyba5Co8ExDntA6xJ7gMdXw/CygC8PTQ20M167z
-	 /lQ2g5MaL1dS+nTKJ7+R98ccbQ/9SYUg2l+PwHs80J1VEYHnzZ0Ve2fZqUFbWrH96
-	 D1yIAOFEr+1p87XjtiTN9JcSvnaKAj4dGtmGD7oS9rfqRdTLC0SzRZldGBj6ducxJ
-	 pDxgNlbTfFb1CPoESA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.247]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MqapC-1uccOM0JtI-00gGFn; Tue, 16 Sep 2025 16:45:50 +0200
-Date: Tue, 16 Sep 2025 16:45:49 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Mark Brown <broonie@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Build break due to merge commit in linux-next 20250916
-Message-ID: <0fee48bb-7411-4414-b4e7-395a8c3d0f6c@heusel.eu>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhOYNq7l"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-77b2e3169dcso626225b3a.2
+        for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 09:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1758040010; x=1758644810; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s4w1twc2Jux9/iX+9+EawZxCflWASdrv9dd1/gUc0LA=;
+        b=BhOYNq7lpN5rhx+syU7GRjYaKY7KW6/7bvPz8bXphkTuluSV6zJo6rC0yrWyBgVlGm
+         7e8MRbM4UQ+3wqVc8uD3N8V3QS48+A2ySeSg2mT8s54XRL4pAykKOcsBP+eJkUca7+t7
+         prcGWxZEM8Iy3yVJOCL5/+Gz0zFiNbWydWI1DJjnUsFDn35YLBB1M2+j+jfAIo4Em9Yd
+         XUwGHkVg5vDFAN3q2sJ2LaUVEsaCsS43mCoh5IiAHk55v2ibPm1Ood86GpGSDiP+OXgw
+         zpjBxWZJAP69jcT6MNpwJeonOhwLZHVENO23GFlrBCESlNxZZR/ztCkYHMRVg7xVQYHP
+         07vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758040010; x=1758644810;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s4w1twc2Jux9/iX+9+EawZxCflWASdrv9dd1/gUc0LA=;
+        b=f0czBw3zaiusnzfCPR4nH94znuSrxAaLph4eEOflBj/AOdYxgX397fAqpPgvwHL+69
+         JoQmL8s+48N/JCsvhF1Cczmus+Wd023HzVmzQqMmqNoQLnv4iq3rGajiTL3E3Cl0n7Xa
+         VNYShQh3sbf/Ox6HDnlD8cV9I9oHNEjzZ0FwYcXl4C7EIbpx4Uvo0OEyaHX5X29iRsWb
+         v47/6rJwV+Rnvr6YsTJGDp7gdSsIWQ7RvQKDD6mEROO1atpwNtxCTwhyRTiNlflp1Vs7
+         egAhXd4VNV6ectBLUm+Lna5FI1ASP4lZQesJ2VVCPhVnGel9qLn1r7VUnYfycimQecsQ
+         lL+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXyZ7gd0ulX0qtSnoZfVSlswQ3zB3eCvdSjYcCmV9kFoGlR/AZzfq14m5l9EiHVJhC/Wr2OOWJmf4r9Lw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyJYbLFEZDtgt2zsi/HsoAWAwxLoKtYTy22Cox2brA7JE6RVNjc
+	qhpLrLB2JIgOTGPPtZPII2sZlZQO2exa4CCVd/Iw/2lumIftoLGlvDZtdBumnIlTgCQ1e9Fd/5L
+	gHNbuoGEBEGEvCFn4GcC8q/9AWz6JAZx/9mU3tthRBQ==
+X-Gm-Gg: ASbGncvPE4IL0v9mH0+ZNJJ2Ht7msWHgU3Z7GPOhMbDD5Dw3xlf8ISmUIru4z/6xsvL
+	RkvYwvXXVgEGaWa/WGdX0G+wHakRMUlYcEmCT5VGAXI6bvMxsYJ0KwsYC41ZC29uVcHsyNOM8rP
+	UGTLtv3c84jXieHwRUoXoujV2vlvB1svPPsyc2nTAD8FIal5ZKqEuty+Ac4/L/PKcIF8RGF/IOT
+	vQOuHblOtmAin2kmjcWKF4R5dfD42MOOGngwAqCru77UN9l///f+r06MSXNWtZSRBb8cJI=
+X-Google-Smtp-Source: AGHT+IHuTUY+Teyoa1eWvti9PIr/otK14LfkQmbXX52ZUETrjjVY6olQ+9HFTHWNNqsEYSy8wzDykuGz9e1hPuCuCPc=
+X-Received: by 2002:a05:6a20:c28a:b0:262:4378:9df2 with SMTP id
+ adf61e73a8af0-26243789f89mr10527030637.44.1758040009637; Tue, 16 Sep 2025
+ 09:26:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="soqtuarrnej3pntp"
-Content-Disposition: inline
-X-Provags-ID: V03:K1:KLBvgUOUZ/Tmyex3ihBWRR17/OkITuu5wgiFZAEW9vFLwdCZHi9
- 4EuzkApEl62S6yg68f+JRrNULWWuZodNpGFWOLbKeff2xH5EIDdfb6Tj9PoDjoXUkkwH9v5
- Q0QVA+1C5nM/o/b2oIdVqs9JVxiOrgFBEGZh6Ynm5xHACWwwM6AZzisRaTGG/fYv75g/E9E
- BhK+GQmUTXEyAiEU72DUQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sgXqWcJGCU0=;wOe20pMJ1oc68nxQBKqMuxETpcZ
- XNbnm/iv45D1YipRuW0DQ2KDV5pKv/Tnv7N/iLGKLyI9M2E+tvKk/RFzzGrGhMbD1AyBupdCB
- pvyYO/MQUh9l88N3589goTsB+euOyh2ZWsXSlrKfzM9qwwCuvA4gmbsDKAmjYZmp50ECsmrKF
- jU0uAGppNIefpp8NgUqWXqRcBpRyfl5LMzcJORWDkxksNW9bLDwwzWjuAsPbxaQ4Q2gQyijrs
- tr80x8vMxf1gjnLhN98xLGGHrP7xZ/Ba9p0Je8IhZWCpel7m7goddWvPzOVXJPQFUEia3agNS
- HRYX827VvMZsaiRB26GyWruONGoSujHCUzSpffRBmPWyif/G5JrQQjbIHHcFsDXOJJt5/eR6+
- KfuSBkAP7MjkXjgYxbaA00uUORz2rvmH0OW5LdQSxx+QwGy/pTB87rJ6nZ4dtxkg+6tCoq6ko
- ORU9hNsPk/E7ql5Pe/0G0fZBkCKxDfgS6sjCSUw4rrAyhF2hhqsirpVRpgGv8V/nUzI67K09P
- Ws/7SY7oFA6/k02PtjvH2aY8yP+OzBX42p8iu9B3o6GbC6wJsZ5a5mSNcfXTBlgllKymTIdxS
- MHjKCE9YUH56o/949pHTNBJTpkitW6P6x020r5PDvaYhry3n+gfW79n5wERLPTpD3sDO2pBPi
- 6I/loalzmU4Da7/9vIo/EwbgjJBq7xIaHJwUJ2wwJhZW/I07dusv4rX9AgE5EQOaY1a1Mt0m+
- pf3ldpkkQkiX8LULCAZCwZehM3xjsKwOF9+yVgaKDAbPoX50khlOFmNbwX+Sg3RM9lM3PLdt+
- EMX6syObfskI/ME0hFAKftUeld7/cxr+AFvtn97EU4VnmjJkT7fur0lR3DFt2NsI0UwZnvjcW
- +xNl2imcVIpxGYfJKmiEs0UJPwdQ5pXSQ4newXQ1n6j+Yl9ORvRB1e8J4EnKbcPRoYf9ctZu6
- lZ3DZ5EESsvOOs1vK6hpXslUBkXeKkRNjAN0fsiWAmcip16iB2pGQif/JQFf6UCuLF49IKxBG
- y3p1qImI3+MyiH5yzO4cuQhD3/x7bjCoCNOsQhcSDQoqh3VASWUk3HIfu3C0znnmc0KIVmCUM
- IM3K7JNYv3KNqeavoi26ptak94N4ZO0D/di7xgpLtrxSPACWfN1yIX4bp4F5MPlMZPztbnReW
- kpxuDCBWfhM3IC5yltP4S1tUyu0LUQiX/va5pI7lmcDeqNRRVMscPdrbh7AtsaK61+ZupR4Ih
- /KbJSo0c+JSPd1TBpqaZxJ+k2qEHL4ZZnsetZzg9Xzt0qq7I/cd3HjHHBwus31xXlBR/KvEai
- f8w2hJadP7q6LMwwDMrlPcWpK5TTwjnu/FPDLE5ijzV5gZlVU19L27IHW9/csigmL5qpXZEOt
- qaVmxJqYbpLJpj3FK9szQS7xFyPw+jibDIN2zU0KTZzysbLrDyrXZ0UYOzE1cg+ymTpTrgu2O
- zPv1YW+DOKL0COp2MiIPKi4qE7aCuktX10HtlMwPJLuojo5Txow3cmImwbG2vHVzg/6hHqfQA
- a8W9gpnUhJxPqRbcj2NlsU8yq1UQJ9Jzx4amU3P6f8zuCaP16RGV05Vs5MqxRUKwfZgHWzYOw
- 7M7sCu9xqVDNzenUODVkGVHxiBba0JiiUUq2UQqfFuuQ5KMcC1Na4rmTvUbaOxsF7WjZjHLQ4
- ey8G0SBfRV6EAwgpfi3pF6dhIHg7s+a3o6uQMTGBlSDM34p2u0ZQBxKbfOol5JZJTC8U67gTE
- euVB6B5+SpFNL/1Rz7WmEtMCk2nFGiZ43htcVjr9JnNKqRfkCMCCAERw=
+References: <CA+G9fYtT7HNBM2XBbePeZ-Fw+ig7SJ+JE_NpQ1VuHR_TvAjX2w@mail.gmail.com>
+In-Reply-To: <CA+G9fYtT7HNBM2XBbePeZ-Fw+ig7SJ+JE_NpQ1VuHR_TvAjX2w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 16 Sep 2025 21:56:38 +0530
+X-Gm-Features: AS18NWDfejtlQ9zlS_9kzf9pQW6YsiN2lV16eZmPLVxyOpZY0K_VUANrsx-p3cc
+Message-ID: <CA+G9fYs4JB0ngq+aryXHVQSq-f05cb4agCfyM9zN0SgprQf0_A@mail.gmail.com>
+Subject: Re: next-20250915: error[E0425]: cannot find function
+ `atomic_read_acquire` in crate `bindings`
+To: rust-for-linux@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>, 
+	Elle Rhumsaa <elle@weathered-steel.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 16 Sept 2025 at 11:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> The following build warnings / errors noticed on the arm arm64 and x86_64
+> with rust config build on the Linux next-20250915 tag.
+>
+> First seen on next-20250915
+> Good: next-20250912
+> Bad: next-20250915
+>
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+>
+> * arm, build
+>   - rustclang-lkftconfig-kselftest
+>   - rustgcc-lkftconfig-kselftest
+>
+> * arm64, build
+>   - rustclang-lkftconfig-kselftest
+>   - rustgcc-lkftconfig-kselftest
+>
+> * x86_64, build
+>   - rustgcc-lkftconfig-kselftest
+>   - rustclang-nightly-lkftconfig-kselftest
+>
+> Build regression: next-20250915: error[E0425]: cannot find function
+> `atomic_read_acquire` in crate `bindings`
 
---soqtuarrnej3pntp
-Content-Type: multipart/mixed; protected-headers=v1;
-	boundary="oirrfxxu7ldff2jk"
-Content-Disposition: inline
-Subject: Build break due to merge commit in linux-next 20250916
-MIME-Version: 1.0
+Anders bisected this build regressions and found,
 
+# first bad commit:
+ [eb57133305f61b612252382d0c1478bba7f57b67]
+ rust: sync: Add basic atomic operation mapping framework
 
---oirrfxxu7ldff2jk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> ## Build log
+> error[E0425]: cannot find function `atomic_read_acquire` in crate `bindings`
+>    --> rust/kernel/sync/atomic/internal.rs:124:37
+>     |
+> 124 |                   $unsafe { bindings::[< $ctype _ $func >]($($c_arg,)*) }
+>     |                                       ^^^^^^^^^^^^^^^^^^^^ not
+> found in `bindings`
+> ...
+> 201 | / declare_and_impl_atomic_methods!(
+> 202 | |     /// Basic atomic operations
+> 203 | |     pub trait AtomicBasicOps {
+> 204 | |         /// Atomic read (load).
+> ...   |
+> 216 | | );
+>     | |_- in this macro invocation
+>     |
+>     = note: this error originates in the macro `impl_atomic_method`
+> which comes from the expansion of the macro
+> `declare_and_impl_atomic_methods` (in Nightly builds, run with -Z
+> macro-backtrace for more info)
+> error: aborting due to 34 previous errors
+>
+> For more information about this error, try `rustc --explain E0425`.
+> make[3]: *** [rust/Makefile:553: rust/kernel.o] Error 1
+>
+>
+> ## Source
+> * Kernel version: 6.17.0-rc6
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git describe: 6.17.0-rc6-next-20250915
+> * Git commit: c3067c2c38316c3ef013636c93daa285ee6aaa2e
+> * Architectures: arm, arm64 and x86_64
+> * Toolchains: gcc (Debian 15.2.0-3) 15.2.0
+> * Kconfigs: rust config
+>
+> ## Build
+> * Build log: https://qa-reports.linaro.org/api/testruns/29894207/log_file/
+> * Build details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20250915/build/rustgcc-lkftconfig-kselftest/
+> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm/config
+>
+> --
+> Linaro LKFT
 
-Hey Mark,
-
-I have noticed that the recent linux-next release fails to build due to
-a syntax error in the rust code:
-
-      EXPORTS rust/exports_bindings_generated.h
-      RUSTC L rust/kernel.o
-    error: expected one of `,` or `}`, found `;`
-      --> rust/kernel/block/mq/gen_disk.rs:12:23
-       |
-    12 |     fmt::{self, Write};
-       |                       ^
-       |                       |
-       |                       expected one of `,` or `}`
-       |                       help: missing `,`
-
-    error: aborting due to 1 previous error
-
-    make[2]: *** [rust/Makefile:553: rust/kernel.o] Error 1
-
-It seems like this error was introduced in 6e86e08cdc19 ("Merge branch
-'rust-next' of https://github.com/Rust-for-Linux/linux.git") and
-introduced with the merge, the attached patch fixes it.
-
-Cheers,
-Chris
-
---oirrfxxu7ldff2jk
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="linux-next-20250914-fix-rust-compilation.patch"
-
-diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
-index 51a239118ead..1ce815c8cdab 100644
---- a/rust/kernel/block/mq/gen_disk.rs
-+++ b/rust/kernel/block/mq/gen_disk.rs
-@@ -9,7 +9,7 @@
-     bindings,
-     block::mq::{Operations, TagSet},
-     error::{self, from_err_ptr, Result},
--    fmt::{self, Write};
-+    fmt::{self, Write},
-     prelude::*,
-     static_lock_class,
-     str::NullTerminatedFormatter,
-
---oirrfxxu7ldff2jk--
-
---soqtuarrnej3pntp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmjJd/gACgkQwEfU8yi1
-JYWhcRAAg9hc0wPAhl6CBaDNZ6Q5WPj9jqXOhYtRJB/OyzY/QEBk7v9tVrG4GXQ7
-cfuo+ydiBEYLd1lW2dBBGtvzLuhnrR5JqAe3d5mYgJvf5Fgdk34iy1TUv5pZayBN
-wglepAhz2nW075IkA8k4KfvI13NTbTP14dsOkNBv0Tp+s6nGefeNYmG7fetCHpzy
-3aVbnSbNmHvTHkWxF7juEovsH9fyecjo6570XCH55jNrsfxJNSUtUMyBIzo7Mk4H
-qZp+F3Gxl3UWjO2pamiJEGCw5mXDddQ3QrjrJ4WiNu2tgEd6NkIMaOp6J4hgGjLt
-CQ6ditGl8P/96wrugL96VJnyuMTKHJ4+7jkfVfYyLaPQDuM+tFaV6gdy8K3BiI3R
-gHvsKQ3aKZ39pZdD0VQlGXlCbRPEVZaiIazVnYjZnxuH+itH3N2I3wSL1o4wZoz7
-xnH/vq1FAXsuGY89uCsMU79H64bGeRNaH48inv175N1R1JHJ9UZCfTK/I/e9Lanh
-cU1WQD7wbfLt31/sW87Z+C1o9OYK6bTB5PoU7fQf7OEmkJpunvIC8Y3mpfx/+7Xm
-jwMyyHa3ZKU4+R+RHK+e7hoo/M9m4vytXLJQMTvt8kgNDw1BWOXHVD2ggpn9fvhe
-yZYEbKQxgBJXBrChq8kTZBai4d/+UlMS1KF2W8RLRESFRtQGOB8=
-=rJIi
------END PGP SIGNATURE-----
-
---soqtuarrnej3pntp--
+- Naresh
