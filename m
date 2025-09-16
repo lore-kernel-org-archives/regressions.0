@@ -1,164 +1,138 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B5B328582
-	for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 16:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE572F25FB
+	for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 16:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758040012; cv=none; b=STkQxceLHzlBz0ghmsJPEgf5LkC/7ZrCpXtS21RC0x8TdFkD8HDlOXEPg0udTJhN1zhKrmHu5bl2xMLnZ/+vT+VL1UmKZUrjChE9Vi/oBD/d67jW/yCwTV3bCzJtuBbNmnmIsxZv1ZbwAp0MfoMPJJaD8L/Ee+jKO2fhTe52k1s=
+	t=1758040286; cv=none; b=BAu2r/nMHM++u2Hzwv0q+x4nTeJa7A/FqXFj28ZZfYBzjyIs9vzQ5xy40uOQoCD0Pal50VmrIDL2voqkHCNvjGqcEkJArlBGwnWfJtokNwfrf/KEoz9pnpfm6hqdLCanW70aKj0QCJWLS3rgSReTriJhOUmXqbozN6EmCco5wks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758040012; c=relaxed/simple;
-	bh=PxBeY2ICmRxL7V6JGWbT7z+W48PkV2S3brfnG0Ta/Sg=;
+	s=arc-20240116; t=1758040286; c=relaxed/simple;
+	bh=dAyZBLZ3deSFmd3TqM+cMI9+qPNkumh+pm2PAUP11RE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKQpbbJv/tdWefA5FDYBTBEFawbEJou5DBywq4LGltPrszCkahlCRiz372diUehlT8/J3MT5Jzuhh/sR8AcYvkfxciJcoM7mf4wW/QJXx28M4iH0e8+j28XDUVc+/dDdxkMFfjAtnzbB2ElM0gk+2c+0bM4d5oA54sTVtjeJjBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BhOYNq7l; arc=none smtp.client-ip=209.85.210.175
+	 To:Cc:Content-Type; b=fQAmMEDy9xosow9AeAM+vs+CsCCsuxzGB7lHp24ZYH6IEC+ryQ/Xnur5mYZg7BaxVcx0oaGVzz/eMojq6kuz+gMUJ0fnBJ+emZPuaQI+/VcbPDvHOZCxQu4l4H/PdS/cSXrELKp77ILX2d5gAL2BYI1zEQBZxSB+4Nv2LwPxGAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RLR7Q9n9; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhOYNq7l"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-77b2e3169dcso626225b3a.2
-        for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 09:26:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RLR7Q9n9"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b4f9d61e7deso3486186a12.2
+        for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 09:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758040010; x=1758644810; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=s4w1twc2Jux9/iX+9+EawZxCflWASdrv9dd1/gUc0LA=;
-        b=BhOYNq7lpN5rhx+syU7GRjYaKY7KW6/7bvPz8bXphkTuluSV6zJo6rC0yrWyBgVlGm
-         7e8MRbM4UQ+3wqVc8uD3N8V3QS48+A2ySeSg2mT8s54XRL4pAykKOcsBP+eJkUca7+t7
-         prcGWxZEM8Iy3yVJOCL5/+Gz0zFiNbWydWI1DJjnUsFDn35YLBB1M2+j+jfAIo4Em9Yd
-         XUwGHkVg5vDFAN3q2sJ2LaUVEsaCsS43mCoh5IiAHk55v2ibPm1Ood86GpGSDiP+OXgw
-         zpjBxWZJAP69jcT6MNpwJeonOhwLZHVENO23GFlrBCESlNxZZR/ztCkYHMRVg7xVQYHP
-         07vw==
+        d=linaro.org; s=google; t=1758040284; x=1758645084; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sh23vzAY4zhgyBViC+bSV8XfkSwZGUCWtaMJhyioQaQ=;
+        b=RLR7Q9n9NuRdOUwahZK5DUoMgXpZdPcuC0+5O6zo0x2kBDWApR+jdPKW6ACGiF3uSr
+         j//WlFKlu8OjUPIXSiRHY1636FiL/NaPByFvwGa7HVvtxUDlvrRXtJ5TQJyXHEtpXFco
+         tAmGDw/nBh7Zurq8i7qG4KWWBzr3Ml+VjRpdVlsYYmvk9+9AcUnh0K4UzGcmVWKyj2LH
+         fay0KbmSfsYe+jwjjrm6gt9bGB7wk7s4N+bIbJdM2im7vAXxXSiv7wJNQ4fXZ99q0TfD
+         ziT4J6LPo7uXDPtVCLQa0TCe0DwLZVi+glvvvHny7Da54aFo+89048QcJwN/6hA86mw/
+         X5vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758040010; x=1758644810;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s4w1twc2Jux9/iX+9+EawZxCflWASdrv9dd1/gUc0LA=;
-        b=f0czBw3zaiusnzfCPR4nH94znuSrxAaLph4eEOflBj/AOdYxgX397fAqpPgvwHL+69
-         JoQmL8s+48N/JCsvhF1Cczmus+Wd023HzVmzQqMmqNoQLnv4iq3rGajiTL3E3Cl0n7Xa
-         VNYShQh3sbf/Ox6HDnlD8cV9I9oHNEjzZ0FwYcXl4C7EIbpx4Uvo0OEyaHX5X29iRsWb
-         v47/6rJwV+Rnvr6YsTJGDp7gdSsIWQ7RvQKDD6mEROO1atpwNtxCTwhyRTiNlflp1Vs7
-         egAhXd4VNV6ectBLUm+Lna5FI1ASP4lZQesJ2VVCPhVnGel9qLn1r7VUnYfycimQecsQ
-         lL+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXyZ7gd0ulX0qtSnoZfVSlswQ3zB3eCvdSjYcCmV9kFoGlR/AZzfq14m5l9EiHVJhC/Wr2OOWJmf4r9Lw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyJYbLFEZDtgt2zsi/HsoAWAwxLoKtYTy22Cox2brA7JE6RVNjc
-	qhpLrLB2JIgOTGPPtZPII2sZlZQO2exa4CCVd/Iw/2lumIftoLGlvDZtdBumnIlTgCQ1e9Fd/5L
-	gHNbuoGEBEGEvCFn4GcC8q/9AWz6JAZx/9mU3tthRBQ==
-X-Gm-Gg: ASbGncvPE4IL0v9mH0+ZNJJ2Ht7msWHgU3Z7GPOhMbDD5Dw3xlf8ISmUIru4z/6xsvL
-	RkvYwvXXVgEGaWa/WGdX0G+wHakRMUlYcEmCT5VGAXI6bvMxsYJ0KwsYC41ZC29uVcHsyNOM8rP
-	UGTLtv3c84jXieHwRUoXoujV2vlvB1svPPsyc2nTAD8FIal5ZKqEuty+Ac4/L/PKcIF8RGF/IOT
-	vQOuHblOtmAin2kmjcWKF4R5dfD42MOOGngwAqCru77UN9l///f+r06MSXNWtZSRBb8cJI=
-X-Google-Smtp-Source: AGHT+IHuTUY+Teyoa1eWvti9PIr/otK14LfkQmbXX52ZUETrjjVY6olQ+9HFTHWNNqsEYSy8wzDykuGz9e1hPuCuCPc=
-X-Received: by 2002:a05:6a20:c28a:b0:262:4378:9df2 with SMTP id
- adf61e73a8af0-26243789f89mr10527030637.44.1758040009637; Tue, 16 Sep 2025
- 09:26:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758040284; x=1758645084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sh23vzAY4zhgyBViC+bSV8XfkSwZGUCWtaMJhyioQaQ=;
+        b=CmE4ruMKfQsbIlKYK2xbf+57JHIK8ibjkiDTMtpQyd2nqtG0oWAo68XBoBlTleWBIV
+         D1rgucPkwAquWYWAxWI1MuUoFJPD1ZPmctWNNwlgTwNi5LGrBfNrI9YoGX2E1Mi3bFOw
+         XC/mecGAGIoTbPI6FkpQR3Rauo+jud7qK5KKESSqnbURbLfxlpzFT354yXqxg7JJD65I
+         4pJQ3TTPZO4Gz8jmHvafzb8X1KArkiiCRJl4VOGAkIQR3s6H5UnAnSNqT44GONCr/3ch
+         F8f9qzLwHkh7NJgldMNAtPw7LPZnGgwGIZ2YrIaE+WyS/0wq+OFNaa2c9+30bfw2/Js7
+         46oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYFatgvXU8R5vXThWDggDE7E+P9IWUugFCl7L97jphN56oezOXo4qBJK/bV6AMUHQkDb1Ht8XE7JQfrw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy7065vwE2KZGxmhPXnxcQG+Iik0EPNv+44sg3+Df8+dlzyfrk1
+	9zlvu+HVSCuuwFuVa31qFHhPxPMbA2F1vYmn4HkUx3G1RzslkmxuCeekNAorR1UUIzDOg0z0r5K
+	8uNzkl4mlnbf7421hdkntmMKNCo6ts+TrMtkDKB5bAA==
+X-Gm-Gg: ASbGncspxAh6San50pUKJmsuX8EJNOgQfpP7Ergpwr2fcge3PciGbRiUPUdqp5xZc/B
+	wZlnPaEwz+Zf6PBSrCua7wbP1v+sutTVaiZ8iSmFl5vHyqolDcndOlWq7z7bzGqqEXiMa7RA/N6
+	OLKtyp63pHlr3dh376k3LMxrNunGjWXhZaCKqFwMg3PlL2BAiKuoj6/gGyqKt/qRMH8hjdq5eVF
+	Qc/uunlHnBCEgWKqMF5K+oFhiq7BhT1YkpiXbR0sfMNm4gYJw5YYADdTUAuzcnbYChXOMA=
+X-Google-Smtp-Source: AGHT+IECix1AVjlUybWwIVsJ9ka34tk4B2CLcGJk1N772RB5xGMQFqHG7lxLaX0geY/djsujO8rX54rNeXzB0pVIUu4=
+X-Received: by 2002:a17:903:22c9:b0:246:4077:4563 with SMTP id
+ d9443c01a7336-25d26077119mr182620025ad.34.1758040283778; Tue, 16 Sep 2025
+ 09:31:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtT7HNBM2XBbePeZ-Fw+ig7SJ+JE_NpQ1VuHR_TvAjX2w@mail.gmail.com>
-In-Reply-To: <CA+G9fYtT7HNBM2XBbePeZ-Fw+ig7SJ+JE_NpQ1VuHR_TvAjX2w@mail.gmail.com>
+References: <CA+G9fYuFdesVkgGOow7+uQpw-QA6hdqBBUye8CKMxGAiwHagOA@mail.gmail.com>
+ <arfepejkmgi63wepbkfhl2jjbhleh5degel7i3o7htgwjsayqg@z3pjoszloxni> <h3ov4pformuvguwsxtziqui2alarqno37kdru4bjsppeok4sth@yb4iposv7okd>
+In-Reply-To: <h3ov4pformuvguwsxtziqui2alarqno37kdru4bjsppeok4sth@yb4iposv7okd>
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 16 Sep 2025 21:56:38 +0530
-X-Gm-Features: AS18NWDfejtlQ9zlS_9kzf9pQW6YsiN2lV16eZmPLVxyOpZY0K_VUANrsx-p3cc
-Message-ID: <CA+G9fYs4JB0ngq+aryXHVQSq-f05cb4agCfyM9zN0SgprQf0_A@mail.gmail.com>
-Subject: Re: next-20250915: error[E0425]: cannot find function
- `atomic_read_acquire` in crate `bindings`
-To: rust-for-linux@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Benno Lossin <lossin@kernel.org>, 
-	Elle Rhumsaa <elle@weathered-steel.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+Date: Tue, 16 Sep 2025 22:01:11 +0530
+X-Gm-Features: AS18NWAmN3EQ1CXxJUBXHQK10t01W_4u2E9Mk2iKi6ZR0XCV66DIDrPHefQHuH8
+Message-ID: <CA+G9fYu7RAGNnHEJjLdH=YhEyUJ8gvcR-+JV79Z4OxO3ODTu-g@mail.gmail.com>
+Subject: Re: next-20250915: LTP chdir01 df01_sh stat04 tst_device.c:97: TBROK:
+ Could not stat loop device 0
+To: Jan Kara <jack@suse.cz>
+Cc: linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
+	Christian Brauner <brauner@kernel.org>, chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Amir Goldstein <amir73il@gmail.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Anuj Gupta <anuj20.g@samsung.com>, 
+	Kanchan Joshi <joshi.k@samsung.com>, Anders Roxell <anders.roxell@linaro.org>, 
 	Ben Copeland <benjamin.copeland@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 16 Sept 2025 at 11:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Tue, 16 Sept 2025 at 17:04, Jan Kara <jack@suse.cz> wrote:
 >
-> The following build warnings / errors noticed on the arm arm64 and x86_64
-> with rust config build on the Linux next-20250915 tag.
+> On Tue 16-09-25 13:04:42, Jan Kara wrote:
+> > On Tue 16-09-25 12:57:26, Naresh Kamboju wrote:
+> > > The following LTP chdir01 df01_sh and stat04 tests failed on the rock=
+-pi-4b
+> > > qemu-arm64 on the Linux next-20250915 tag build.
+> > >
+> > > First seen on next-20250915
+> > > Good: next-20250912
+> > > Bad: next-20250915
+> > >
+> > > Regression Analysis:
+> > > - New regression? yes
+> > > - Reproducibility? yes
+> > >
+> > > * rk3399-rock-pi-4b, ltp-smoke
+> > > * qemu-arm64, ltp-smoke
+> > > * qemu-arm64-compat, ltp-smoke
+> > >  - chdir01
+> > >   - df01_sh
+> > >   - stat04
+> > >
+> > > Test regression: next-20250915: LTP chdir01 df01_sh stat04
+> > > tst_device.c:97: TBROK: Could not stat loop device 0
+> >
+> > This is really strange. Those failing tests all start to complain that
+> > /dev/loop0 doesn't exist (open gets ENOENT)... The fact that this is
+> > limited to only a few archs suggests it's some race somewhere but I don=
+'t
+> > see any relevant changes in linux-block in last three days...
 >
-> First seen on next-20250915
-> Good: next-20250912
-> Bad: next-20250915
->
-> Regression Analysis:
-> - New regression? yes
-> - Reproducibility? yes
->
-> * arm, build
->   - rustclang-lkftconfig-kselftest
->   - rustgcc-lkftconfig-kselftest
->
-> * arm64, build
->   - rustclang-lkftconfig-kselftest
->   - rustgcc-lkftconfig-kselftest
->
-> * x86_64, build
->   - rustgcc-lkftconfig-kselftest
->   - rustclang-nightly-lkftconfig-kselftest
->
-> Build regression: next-20250915: error[E0425]: cannot find function
-> `atomic_read_acquire` in crate `bindings`
+> Ha, Mark Brown tracked this [1] to changes in VFS tree in
+> extensible_ioctl_valid(). More discussion there I guess.
 
-Anders bisected this build regressions and found,
+That right,
+Ander=E2=80=99s bisection confirmed the same commit that Mark Brown reporte=
+d.
 
 # first bad commit:
- [eb57133305f61b612252382d0c1478bba7f57b67]
- rust: sync: Add basic atomic operation mapping framework
+ [60949057a2e71c9244e82608adf269e62e6ac443]
+block: use extensible_ioctl_valid()
 
 >
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> [1] https://lore.kernel.org/all/02da33e3-6583-4344-892f-a9784b9c5b1b@sire=
+na.org.uk
 >
-> ## Build log
-> error[E0425]: cannot find function `atomic_read_acquire` in crate `bindings`
->    --> rust/kernel/sync/atomic/internal.rs:124:37
->     |
-> 124 |                   $unsafe { bindings::[< $ctype _ $func >]($($c_arg,)*) }
->     |                                       ^^^^^^^^^^^^^^^^^^^^ not
-> found in `bindings`
-> ...
-> 201 | / declare_and_impl_atomic_methods!(
-> 202 | |     /// Basic atomic operations
-> 203 | |     pub trait AtomicBasicOps {
-> 204 | |         /// Atomic read (load).
-> ...   |
-> 216 | | );
->     | |_- in this macro invocation
->     |
->     = note: this error originates in the macro `impl_atomic_method`
-> which comes from the expansion of the macro
-> `declare_and_impl_atomic_methods` (in Nightly builds, run with -Z
-> macro-backtrace for more info)
-> error: aborting due to 34 previous errors
->
-> For more information about this error, try `rustc --explain E0425`.
-> make[3]: *** [rust/Makefile:553: rust/kernel.o] Error 1
->
->
-> ## Source
-> * Kernel version: 6.17.0-rc6
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git describe: 6.17.0-rc6-next-20250915
-> * Git commit: c3067c2c38316c3ef013636c93daa285ee6aaa2e
-> * Architectures: arm, arm64 and x86_64
-> * Toolchains: gcc (Debian 15.2.0-3) 15.2.0
-> * Kconfigs: rust config
->
-> ## Build
-> * Build log: https://qa-reports.linaro.org/api/testruns/29894207/log_file/
-> * Build details:
-> https://regressions.linaro.org/lkft/linux-next-master/next-20250915/build/rustgcc-lkftconfig-kselftest/
-> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/32l4UDzp0FMtS73JeG3kWpcoQrm/config
+>                                                                 Honza
 >
 > --
-> Linaro LKFT
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
 - Naresh
