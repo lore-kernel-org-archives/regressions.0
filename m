@@ -1,165 +1,82 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7902C2EB5A1
-	for <regressions@lists.linux.dev>; Tue, 16 Sep 2025 11:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EB4307ACC;
+	Tue, 16 Sep 2025 11:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758022468; cv=none; b=YRy6DDKLxOmWxjL4ObXv6wyuyTtcQYq57jhZoriszmpeozfDuFeUIA5T36qOeB92tttqoMgt8tHMhJ87B6gDYwVL6ZKJGUe8MGQqCSGMd7wmIh/xJSl4f6NXbLPYx0DnDtuLyFxlAd9iLWq9cFW7S6Xibv1Bdq8VufLEd89wF+c=
+	t=1758023707; cv=none; b=V0lNAjm8G8Yn/scuIW/GFWpGTtc+nTfSZMtWsP7V9GP46QXTrDz5y/90AxRrNUbfhRjaPmEyNs2TVXhLtg/6HYyr8NWWXE1o78LqnU+SiPI49u/k0Q05PJ9N6m/DdihNWMIhqP/81txZ64UcWAzguFeffreAgWDLkU+SZ9O6eAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758022468; c=relaxed/simple;
-	bh=jwda/6LBG50JcQMwFvG4rqPYkyTWOkeUBQzc/cXs8fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BTwvn5Vg/0Ij7ADHPJZTsuoq/CgIigpy7wDImzbEJ8KcKbPCFBy2/1TIe0fklQHhukJtgYQWUD7PB1nZPk9QDB8lu7bkLyHSSo3KzcWW1DIafwMinjZ9xGRKg6YQmvs22hgUG5r+DBsQchKGHjUgEGYitbYk/TvTwjiBMziFHoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZzV0iWwc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ulsCkgJd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZzV0iWwc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ulsCkgJd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1758023707; c=relaxed/simple;
+	bh=Fdt+WsydTPvGmJTKMBjBVMdXBGFU6PliCLKixaPKnhc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s7QYAWH8X7d4s9520hz5+xTk0Og1Mlnh7fBle+NDxCjKzeP30+ierq13gCzHGhyTQyJTRYyE30isvKzh0H/GXxWU6qGojtiuB2I0BMGSFohTKYyc8PvsKJzrHfJPf4/8Qz0qb09S/sF12B93VwPrudm7XVXNELTVxRpFAp4z4vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=atM7F/NV; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZzV0iWwc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ulsCkgJd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZzV0iWwc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ulsCkgJd"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C912C21FF4;
-	Tue, 16 Sep 2025 11:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1758022464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fhBm9oRUq/7LCO1SyruLQVKq17cgO0pzPjr5cDTj58=;
-	b=ZzV0iWwcoKjp7+Gy1ZV+BpXEIOt5ZcdiWXAkNVrrekCNUoUQRtlMWthaTgG7AW5SIYMyIJ
-	317AnruR+qSDy65As8tGZpkm2ppMAo3fk3XAgCYhiVjvAYtctBlrf/ePO229N07lFi7kvd
-	jbMC1jeu8KtHWZtmS2+giDlaxuporkg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1758022464;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fhBm9oRUq/7LCO1SyruLQVKq17cgO0pzPjr5cDTj58=;
-	b=ulsCkgJdSXAE7/HZLZpLAjWF5RNEZoJwYRIavxhpzDtXVvVaeb9qbezCibJRGcaUUyXi9W
-	rs5q+ynr7jQYN+Bw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1758022464; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fhBm9oRUq/7LCO1SyruLQVKq17cgO0pzPjr5cDTj58=;
-	b=ZzV0iWwcoKjp7+Gy1ZV+BpXEIOt5ZcdiWXAkNVrrekCNUoUQRtlMWthaTgG7AW5SIYMyIJ
-	317AnruR+qSDy65As8tGZpkm2ppMAo3fk3XAgCYhiVjvAYtctBlrf/ePO229N07lFi7kvd
-	jbMC1jeu8KtHWZtmS2+giDlaxuporkg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1758022464;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5fhBm9oRUq/7LCO1SyruLQVKq17cgO0pzPjr5cDTj58=;
-	b=ulsCkgJdSXAE7/HZLZpLAjWF5RNEZoJwYRIavxhpzDtXVvVaeb9qbezCibJRGcaUUyXi9W
-	rs5q+ynr7jQYN+Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB54613ACD;
-	Tue, 16 Sep 2025 11:34:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kIS3LUBLyWgyZgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 16 Sep 2025 11:34:24 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 777E6A0A56; Tue, 16 Sep 2025 13:34:16 +0200 (CEST)
-Date: Tue, 16 Sep 2025 13:34:16 +0200
-From: Jan Kara <jack@suse.cz>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-block <linux-block@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, LTP List <ltp@lists.linux.it>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Anuj Gupta <anuj20.g@samsung.com>, 
-	Kanchan Joshi <joshi.k@samsung.com>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
-Subject: Re: next-20250915: LTP chdir01 df01_sh stat04 tst_device.c:97:
- TBROK: Could not stat loop device 0
-Message-ID: <h3ov4pformuvguwsxtziqui2alarqno37kdru4bjsppeok4sth@yb4iposv7okd>
-References: <CA+G9fYuFdesVkgGOow7+uQpw-QA6hdqBBUye8CKMxGAiwHagOA@mail.gmail.com>
- <arfepejkmgi63wepbkfhl2jjbhleh5degel7i3o7htgwjsayqg@z3pjoszloxni>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="atM7F/NV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=9BnqEj9RHHv7quzPDQGpxHMHL8zNwveBfzJJlOw44Vo=; t=1758023705;
+	x=1758455705; b=atM7F/NVIIO0hza0cynMotMSb/unPJXwkn9roSteflcxTXv35nsCzp5Ps52Sz
+	cJUWPZqGa8PxTvsufuiN/KZ67i/ch7E/irNSvkQchWsUgTDkvSrI9B4syA9umW7rr5WaUcB0FfmFF
+	uLML3/vb1Ire+gjqpHzyNTlWnVY3nj6YB4PdkjzjtG3+pRZvhnWBOqY6YB1vMpWFmKAVPS1IoMskK
+	PogmVYJ0lY6Z4v8N1KSFMSuViLKWbdA7YcmRKu73P67I2oc2Nx3x1WANBxE/rXBdIHOwWfokExj2B
+	3AqQqqH4qZf8CQmlPukK32RytftNXneZ1UmmM90K4Z0CMRrP5w==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1uyUGt-001mgL-0H;
+	Tue, 16 Sep 2025 13:54:55 +0200
+Message-ID: <26bc2a33-2a45-468c-a3c1-6ef2ed414f44@leemhuis.info>
+Date: Tue, 16 Sep 2025 13:54:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arfepejkmgi63wepbkfhl2jjbhleh5degel7i3o7htgwjsayqg@z3pjoszloxni>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-7.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.it,lists.linaro.org,lists.linux.dev,kernel.org,suse.cz,arndb.de,linaro.org,zeniv.linux.org.uk,gmail.com,oracle.com,samsung.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -7.80
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.16 fae58d0155 prevents boot of google-tomato
+ (mt8195)
+To: ninelore <9l@9lo.re>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+References: <QwcOPAuQZfqo0I9EwUu4tVCuhXRvtfAgFZ7Hq896xRKosseOz3wvuKJFV1YLUTTTwMANMW6bZPUfLwXQPPgBFiYEzKUjMGZ5D56349pz4m8=@9lo.re>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <QwcOPAuQZfqo0I9EwUu4tVCuhXRvtfAgFZ7Hq896xRKosseOz3wvuKJFV1YLUTTTwMANMW6bZPUfLwXQPPgBFiYEzKUjMGZ5D56349pz4m8=@9lo.re>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1758023705;dbe6d3b8;
+X-HE-SMSGID: 1uyUGt-001mgL-0H
 
-On Tue 16-09-25 13:04:42, Jan Kara wrote:
-> On Tue 16-09-25 12:57:26, Naresh Kamboju wrote:
-> > The following LTP chdir01 df01_sh and stat04 tests failed on the rock-pi-4b
-> > qemu-arm64 on the Linux next-20250915 tag build.
-> > 
-> > First seen on next-20250915
-> > Good: next-20250912
-> > Bad: next-20250915
-> > 
-> > Regression Analysis:
-> > - New regression? yes
-> > - Reproducibility? yes
-> > 
-> > * rk3399-rock-pi-4b, ltp-smoke
-> > * qemu-arm64, ltp-smoke
-> > * qemu-arm64-compat, ltp-smoke
-> >  - chdir01
-> >   - df01_sh
-> >   - stat04
-> > 
-> > Test regression: next-20250915: LTP chdir01 df01_sh stat04
-> > tst_device.c:97: TBROK: Could not stat loop device 0
+Lo!
+
+On 16.09.25 01:22, ninelore wrote:
 > 
-> This is really strange. Those failing tests all start to complain that
-> /dev/loop0 doesn't exist (open gets ENOENT)... The fact that this is
-> limited to only a few archs suggests it's some race somewhere but I don't
-> see any relevant changes in linux-block in last three days...
+> starting with the bisected commit
+> fae58d0155a979a8c414bbc12db09dd4b2f910d0 ("[v2] drm/mediatek: Fix
+> device/node reference count leaks in mtk_drm_get_all_drm_priv") on
+> 6.16.y my chromebook codenamed google-tomato with the SoC MT8195
+> seems to hang while initializing drm. Kernel messages over serial
+> show CPU stalls some minutes later. I am attaching the full kernel
+> logs below.
+> 
+> This issue is present in 6.16.7, however not in v6.17-rc6
 
-Ha, Mark Brown tracked this [1] to changes in VFS tree in
-extensible_ioctl_valid(). More discussion there I guess.
+A problem caused by the upstream commit of the change you mentioned
+above was fixed for v6.17-rc6, see 4de37a48b6b58f ("drm/mediatek: fix
+potential OF node use-after-free") or
+https://lore.kernel.org/all/20250829090345.21075-2-johan@kernel.org/
 
-[1] https://lore.kernel.org/all/02da33e3-6583-4344-892f-a9784b9c5b1b@sirena.org.uk
+I wonder if that might fix your problem. It's currently scheduled to be
+included in the next 6.16.y release.
 
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Ciao, Thorsten
