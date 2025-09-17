@@ -1,38 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D3B1F5820;
-	Wed, 17 Sep 2025 07:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7173C31BC8E
+	for <regressions@lists.linux.dev>; Wed, 17 Sep 2025 09:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758095943; cv=none; b=dBl5MD9jELgYYPk8Wf1wLgN3RtBxrZbfhoRiblWwyP6ggsNjGkdNQkxJWUFjbFs/whZ4nw2U8Ej/9tK7K4A06OVxuk/CsQdyogfXsnxZDKaJke+18yqYdDNT9oobVLeBK0yYdHrzs3ck1rxITLKsR9tCtecvh9C3aDyZgaiH0Sc=
+	t=1758100946; cv=none; b=Y5lbwl+Ld5DMZo9jxtQnGzvGC+eepHIrRJWOBxKcKJbDQljv7M8oXW3WB8J17E5i6Laehz/wYEAyLRYo7pDkF0Y9L911cLxQOXYlsoTG2d3Qic+WlHkIA/t+i8gP+VbgTV3KSqYWo4R8bCw5aRk0z2+VsugK9Lqjb709p7+pNTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758095943; c=relaxed/simple;
-	bh=xPlj9hKZKNnsY6fR6/EPwxV8vPWiC/geMmQfF3953+0=;
+	s=arc-20240116; t=1758100946; c=relaxed/simple;
+	bh=4rqOyiSkcpcIH/dxIeBxNpewbTSCz0YZQXtbQvs3zhs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rwENoh9yVuIfkxf/nQZnAl6fwQbfgFFksx2cruS05vGw7qnoDjfJm2wmdU7GHGz6rVYZrsWnBFbjVlrXYv+MGRwl++sLVtkhLfnqdt5pEJ04L8WH+bZHyqt6Y4RkJ9HpNS9Ilmmu6lpdrkCWoyX0vlQ6OecVhOCBRXPs0iR4ZX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=15MDKaUm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=DYheHCenLJiwOkqTG7ctv8G6WP+oyroPkErPtx2Pgksuo19dPMKDgpc7jcyC+461/kCC9HB2hNAuH8mhNktDZPaCSH76oWyQOar5ST53agfW1TqAEbxSRhUl3z9mah39S1uHf5jglq5L+HtpTR/9RfO8qPXcLxzxTKCC0p5mVpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ES7RQhZS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=es6JhH94; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ES7RQhZS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=es6JhH94; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="15MDKaUm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=svTYNtVQsiCri3uBTHAaw+1TBg/7Z71XpCGcz6mZpPg=; t=1758095941;
-	x=1758527941; b=15MDKaUmpVlzmOiDvprkXW5wTjaHUiPQ4Hk3DknJqNGpJwNbKVUJrrTG+Rcnc
-	F/J93+9whZ1xRdwUgosQSnu/HzvZvFyjMeaUcF26EzDUCrJCFaj6r/CahMQyJtZ2f5WiAPwr0j7v9
-	Aei3WPPH+wwjidsi+qnhby1H7AJGfqD//ZQuASsvxELVPR+q01A6lI6tbjXyUenC3YX5fTpiRFOY1
-	9dVJEbif18jTtcs4i0MEcuXop3577GExij4xAy/4XOFdBhWmYf5uoDwc02EjxeFVokGaC+yl6fgi5
-	QFUMrRLSxbAQ7Qa3oBsDlzssblU5lMgRfr7825TB5rYXY2Y9WQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1uyn43-005P7w-2O;
-	Wed, 17 Sep 2025 09:58:55 +0200
-Message-ID: <228245d0-4620-48c7-b4bd-532bb873bdf2@leemhuis.info>
-Date: Wed, 17 Sep 2025 09:58:54 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ES7RQhZS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="es6JhH94";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ES7RQhZS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="es6JhH94"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 97B2021CDE;
+	Wed, 17 Sep 2025 09:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758100942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5OUSzatc1uca+q4xLVADriR1gt43NjG0rmdpzThzARw=;
+	b=ES7RQhZSdvZv3qrEfG7Ks+o73DR1co/vDajxoEw29qbDhtWqcCVXC1Y5gpOH3g6f0vtA1J
+	gkXvjlG6GcDl0M0/7qSdc5Dsk5fn+TTNuNG7KPGUVBkBHkDXI2DFzbrsK9cQxBRgG5SadN
+	QpRR66TmBDKD/7nHZ9AVjxQLDd04suo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758100942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5OUSzatc1uca+q4xLVADriR1gt43NjG0rmdpzThzARw=;
+	b=es6JhH945YRLdvnBtO/hYzosMrH168B86DNHnVFN9vCZSD5wm/hxD0/BSY7eNtmei8DjIe
+	/Xazz4PHt7KJ/lDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ES7RQhZS;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=es6JhH94
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1758100942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5OUSzatc1uca+q4xLVADriR1gt43NjG0rmdpzThzARw=;
+	b=ES7RQhZSdvZv3qrEfG7Ks+o73DR1co/vDajxoEw29qbDhtWqcCVXC1Y5gpOH3g6f0vtA1J
+	gkXvjlG6GcDl0M0/7qSdc5Dsk5fn+TTNuNG7KPGUVBkBHkDXI2DFzbrsK9cQxBRgG5SadN
+	QpRR66TmBDKD/7nHZ9AVjxQLDd04suo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1758100942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5OUSzatc1uca+q4xLVADriR1gt43NjG0rmdpzThzARw=;
+	b=es6JhH945YRLdvnBtO/hYzosMrH168B86DNHnVFN9vCZSD5wm/hxD0/BSY7eNtmei8DjIe
+	/Xazz4PHt7KJ/lDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 71032137C3;
+	Wed, 17 Sep 2025 09:22:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wvk8Gs59ymgQHgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 17 Sep 2025 09:22:22 +0000
+Message-ID: <b0cbc791-a209-4756-acf0-e869888294ac@suse.de>
+Date: Wed, 17 Sep 2025 11:22:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,111 +83,113 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: next-20250915: error[E0425]: cannot find function
- `atomic_read_acquire` in crate `bindings`
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Christian Heusel <christian@heusel.eu>, Mark Brown <broonie@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- rust-for-linux@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- lkft-triage@lists.linaro.org, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, Alice Ryhl <aliceryhl@google.com>,
- Benno Lossin <lossin@kernel.org>, Elle Rhumsaa <elle@weathered-steel.dev>,
- Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>,
- Ben Copeland <benjamin.copeland@linaro.org>
-References: <CA+G9fYtT7HNBM2XBbePeZ-Fw+ig7SJ+JE_NpQ1VuHR_TvAjX2w@mail.gmail.com>
- <CA+G9fYs4JB0ngq+aryXHVQSq-f05cb4agCfyM9zN0SgprQf0_A@mail.gmail.com>
- <27366f94-67d4-4b73-b420-cacdbe9d603f@heusel.eu>
- <aMpma-2UokTo0u9j@stanley.mountain>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <aMpma-2UokTo0u9j@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+To: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
+Cc: Douglas Anderson <dianders@chromium.org>
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1758095941;957203a3;
-X-HE-SMSGID: 1uyn43-005P7w-2O
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 97B2021CDE
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 
-On 17.09.25 09:42, Dan Carpenter wrote:
-> On Tue, Sep 16, 2025 at 06:46:06PM +0200, Christian Heusel wrote:
->> On 25/09/16 09:56PM, Naresh Kamboju wrote:
->>> On Tue, 16 Sept 2025 at 11:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>>>
->>>> The following build warnings / errors noticed on the arm arm64 and x86_64
->>>> with rust config build on the Linux next-20250915 tag.
->>>>
->>>> First seen on next-20250915
->>>> Good: next-20250912
->>>> Bad: next-20250915
-> [...]
->>>> Build regression: next-20250915: error[E0425]: cannot find function
->>>> `atomic_read_acquire` in crate `bindings`
->>>
->>> Anders bisected this build regressions and found,
->>>
->>> # first bad commit:
->>>  [eb57133305f61b612252382d0c1478bba7f57b67]
->>>  rust: sync: Add basic atomic operation mapping framework
->>
->> Is this still an issue on next-20250916?
+Hi
 
-FWIW, I ran into this on next-20250915 and it afaics was fixed for
-next-20250916.
+Am 21.04.25 um 06:26 schrieb Nick Bowler:
+> Hi,
+>
+> I recently noticed that on current kernels I lose video output from
+> my Blackbird's AST2500 BMC after a reboot, which makes it difficult to
+> boot the system again (the video output will come on only after Linux
+> is booted again).
+>
+> With Linux 6.6 and earlier, there is no problem rebooting, everything
+> is fine.
+>
+> I bisected to this commit:
+>
+>    ce3d99c8349584bc0fbe1e21918a3ea1155343aa is the first bad commit
+>    commit ce3d99c8349584bc0fbe1e21918a3ea1155343aa
+>    Author: Douglas Anderson <dianders@chromium.org>
+>    Date:   Fri Sep 1 16:39:53 2023 -0700
+>
+>        drm: Call drm_atomic_helper_shutdown() at shutdown time for misc drivers
+>
+> This commit does not revert cleanly on 6.14, but I can easily undo
+> the changes this commit made to the ast driver, and this is enough
+> to restore working behaviour.
+>
+> Let me know if you need any more info!
 
->> As far as I can tell this has
->> been fixed, but now there is another rust build issue, see
->> https://lore.kernel.org/regressions/0fee48bb-7411-4414-b4e7-395a8c3d0f6c@heusel.eu/
->> for more information.
-> 
-> next-20250916 still fails but with a different Rust issue.
+Would you be able to test a patch?
 
-Ran into that that merge mistake, too, but that can be fixed by the
-patch Christian linked to above  -- and I expect Mark (now CCed) has
-seen it and will resolve this with today's -next.
+Best regards
+Thomas
 
-> [...]
+>
+> Thanks,
+>    Nick
 
-Ciao, Thorsten
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
+
