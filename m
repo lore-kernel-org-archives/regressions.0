@@ -1,223 +1,235 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sv9.manufrog.com (sv9.manufrog.com [46.246.119.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ECB298CA4
-	for <regressions@lists.linux.dev>; Thu, 18 Sep 2025 18:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F582EC099
+	for <regressions@lists.linux.dev>; Thu, 18 Sep 2025 19:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.246.119.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758220532; cv=none; b=liD+3K0JSYjDx6/EkJBGNgIEN3nGB8heSbwdHxtKSC4Xt7p0BCamyBfauMY442bunLr5/IDyiDA2cZFVVbMVUKvyHWtkkF1MsJG67aMaYmPwtZPGzNgAQ8xJyDO+bcMpr5wFaT1FZ1GpiRNv8JyV8lE9JS1T+fBgmVyA3wJIfmY=
+	t=1758225413; cv=none; b=equMMsywfGGCYhKr/3/lUuOUs28ZporEX7t3QD9xCm475zWVu7gwUADcQskFiwQLmEubZ10gcqhbM+3oEW6kXSlByU5umUEtNOe916mme5UqLayTrhg9g77bg5WEGlkQsfplF+TOAn/xheOPDFT0m+hM47HDhFRndT0BMfGTuys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758220532; c=relaxed/simple;
-	bh=7JWrZqhhxtwxsKzUS484cYA9BE4S3MG4+Hm4TzvixgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TIkp4nBKWjIGRidFBABpf5sn9eqWR24HogLUOmSNhO1Ykym0/rPTloHR6jKhJTDhMxSwBKDUCz6bFSw+i6FQbOUrCri16lIi/VAr4Qvpzlk2+Fa4oBuR9fl//b8uz4d5d4EYV2lT2cLRr0bK4OF1aoAwnLSw9wDkIklZ5sHK1PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrHweXBS; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758225413; c=relaxed/simple;
+	bh=r7WAXRduQEHoix8J0gLBB9Wc6pQciyeE5NKHP7MstB4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Jw/fhTZ1m3N/DurdGiHRcYfz7qplMCMB4Ejxu0YaT1i4d+e2s/NltldRk0VuUtPmEKtSJbepTcaKK1Rdq3LeC9M29hc1j8p5vUQKNEHaI6EBbICOXQA8h9vgZjB+giOJrLJ6rU4VI2wFCOXXB0NKJyZ5IIOsiW0q+D/5buhPRm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se; spf=pass smtp.mailfrom=oscillator.se; dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b=IDdu7ovv; arc=none smtp.client-ip=46.246.119.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oscillator.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrHweXBS"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b2350899a40so123015266b.3
-        for <regressions@lists.linux.dev>; Thu, 18 Sep 2025 11:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758220529; x=1758825329; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DF8mdGy7rQ30a9eWz48AP7z4kPvyfSZCRABtJwRlC0=;
-        b=SrHweXBSQvDPFkACCn3sUAPQEZX6nlJ7G0/5zy0G/po5u2RuiSgkNYx/ixq15XMhcW
-         iElg8eZe6MN7LYX5Khxx4kLmXdw+PH33vL3/tnKGuO7M+J7mWAuSEN2ataH0Rri/Lurf
-         iucW/Bmr7L6Pi6Jj06/gIjgjycvIg8wov0m4xD4z7RrOYsKPzzAmwH/kfQSRw5TNoRvc
-         SQr9diKq+eZWv/tS/gOjzVZfDGrg0FrtiWTNx24TuI3EKZImTnHArxWdtTr8YO/1tIRP
-         JRbU4b2x364mA6dvl3xG0zO4kP7mhd/yRc5jpRJE339VZZkGtFnybdXEr7D0iXyI0FZ4
-         R0xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758220529; x=1758825329;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9DF8mdGy7rQ30a9eWz48AP7z4kPvyfSZCRABtJwRlC0=;
-        b=TRt2rZy8tYeiNbvEHCgnVpWUKoORbvGpc9pRSPGM4DUcWHwuixfjvOiuLsttoMqinM
-         v+rnzhd/LvUnbtUNnjbOVZ7/1nnKvNlSC9xOJbVKK/I5o8iZgjnhK8srgDR/jhnRtZ5g
-         b0rAeo+d3I6x+VcZJxjatKhk1kXIrnOigEmp1fOcvAYImp5t0yJNr32GXG9+WqQoYXpq
-         dGhXnA37Zqa8omS63LQZL2V7FNBs14aUt8/y91qo3+0KKaIvh28L0+bUp45aN0RoPOrd
-         EQ5x115jOEowOdw5++xxr0KEZ9p5wYwjNDloyQ1r7tv7DimYjAheZT0LYlJejrgocIL3
-         l5RA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXROL4jVlEvo6gYrX53OBqKcpHMnePJ2c8PllNQzWa5cTS8uNG5s+E3KAeoT8/UYONR+ZwZM2Lws1wnw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxZq9sb+n6Oh763K63j79mAJCFhYuR/UWCDi8VpyFza7VqmRebi
-	YX0zWsXw65Er6TgqGSv8Z0Bj9d4OB4rE9XGJPwnTixVfl9UZ1LnpqQfg
-X-Gm-Gg: ASbGncszUgBL3sIFb77v52zdjjUpjqps+PNi48cHKaq6Bi8t8qCx1xtQqjSizZYaPCD
-	HqpFKwqpMQBsHcWErR3UhoQKvtyuv26HFXUruBQCYNiC1VdY8vR5TeDjnFlXXnFevw9P7zIqs29
-	A2R7IuQDe/Kl3MTkSa/XYBXk08+YjL4FgvBND8BwcZuqSi6HsIBmKApaYGlsU64TXcmSxwRVpIU
-	AZ6DSyCT8lu/+A7eIkxmqXcCD8zJyQqpsYeFbAcTgF6PEMKWbNJM/BtFomo58F7QVpABPnoXVy7
-	DZSO1fUPPUbqHBL5iCTSDdXJyEinc8PA4FgefnV3z3ZM6LpWSEU/2es8pFO0pht0F/AJooyNBSs
-	wLgmGBmLDFpxndX39S1Q/jsF9U3tYsM7ZK7KY2Nc=
-X-Google-Smtp-Source: AGHT+IG+2F9Tdqn75yCUehgh0hWjS/B3B6NaTXRMxweuRMKUwCI/DRvlIaiDT/f+5WUUCMePXP8wBQ==
-X-Received: by 2002:a17:907:728f:b0:b04:9468:4a21 with SMTP id a640c23a62f3a-b24ee6ef486mr25159666b.14.1758220528565;
-        Thu, 18 Sep 2025 11:35:28 -0700 (PDT)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b1fcfe88d97sm245887466b.58.2025.09.18.11.35.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 11:35:28 -0700 (PDT)
-From: Askar Safin <safinaskar@gmail.com>
-To: andriy.shevchenko@linux.intel.com
-Cc: Dell.Client.Kernel@dell.com,
-	bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com,
-	dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	regressions@lists.linux.dev,
-	rrangel@chromium.org,
-	safinaskar@zohomail.com,
-	superm1@kernel.org,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own from suspend
-Date: Thu, 18 Sep 2025 21:33:36 +0300
-Message-ID: <20250918183336.5633-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
-References: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b="IDdu7ovv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=oscillator.se; s=default; h=Content-Transfer-Encoding:Content-Type:
+	Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pceG8WN/hVwIKwsmqxsfKdZEBJJDbsw7zIFKIJ+0JIY=; b=IDdu7ovvSe8Apv0r0tTzMJzUPo
+	BL1inegAcsrsA2yj2XKF1FSj1CLdANPGhPjx1ytm8Wjc1UyBnEGzUGjNCNF+rfSW40rR0YqFyZOfJ
+	vrrUnjwTu8CrPzLz2Rbk+Ehv00cCdaGf4xvDND0GeVzvoDS9hyGCVkKvg39+YBd4g0nlI6qFhWSju
+	96vILA2vvEyAoUInfU5Rr1LpABqsiFcWrWEaAx1jue5gczTGTEv/ZEHrmX6AiUR2C1Rv2ubcfomYh
+	/3WC6P3m9lzX+oLeu48yAwsKnSik1EnsvEnsbsQK+BSh0VHFfab3Ywq29YCDFrRZxCLISkp837WAj
+	A7ibMTzA==;
+Received: from [::1] (port=55482 helo=sv9.manufrog.com)
+	by sv9.manufrog.com with esmtpa (Exim 4.98.2)
+	(envelope-from <staffan.melin@oscillator.se>)
+	id 1uzKkF-0000000GIW5-1oZ6;
+	Thu, 18 Sep 2025 21:56:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Date: Thu, 18 Sep 2025 21:56:38 +0200
+From: Staffan Melin <staffan.melin@oscillator.se>
+To: zhangheng <zhangheng@kylinos.cn>
+Cc: Terry Junge <linuxhid@cosmicgizmosystems.com>, Salvatore Bonaccorso
+ <carnil@debian.org>, Jiri Kosina <jkosina@suse.com>, Benjamin Tissoires
+ <bentiss@kernel.org>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, 1114557@bugs.debian.org
+Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+In-Reply-To: <54b4b55c-ef29-40ae-a576-0c0b35ea9625@kylinos.cn>
+References: <aL2gYJaXoB6p_oyM@eldamar.lan>
+ <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+ <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
+ <aMUxHZF-7p7--1qS@eldamar.lan> <aMUxg6FLqDetwiGu@eldamar.lan>
+ <f08669ec112d6ab2f62e35c0c96d1f06@oscillator.se>
+ <94520aac-2a68-40d2-b188-80f9e361d6de@kylinos.cn>
+ <735c20da-c052-4528-ad91-185a835ca40c@cosmicgizmosystems.com>
+ <54b4b55c-ef29-40ae-a576-0c0b35ea9625@kylinos.cn>
+User-Agent: Roundcube Webmail/1.6.11
+Message-ID: <3c299b65351c489fea95ec8b93518b6b@oscillator.se>
+X-Sender: staffan.melin@oscillator.se
+Organization: Oscillator
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - sv9.manufrog.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oscillator.se
+X-Get-Message-Sender-Via: sv9.manufrog.com: authenticated_id: staffan.melin@oscillator.se
+X-Authenticated-Sender: sv9.manufrog.com: staffan.melin@oscillator.se
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Andy Shevchenko:
-> In other words we need to enable debug of the pin control subsystem and see
-> what it will print in dmesg.
+Thank you for the patches!
 
-You mean I should enable CONFIG_DEBUG_PINCTRL? Okay, I did this.
+Unfortunately I could not apply v3, I got an error message.
 
-So, today I tested everything on fresh kernel, 6.17.0-rc6, without any
-patches.
+While I could apply patch v4 and compile and test it, same result as 
+before -- no working touchscreen, and touchscreen not visible on xinput 
+--list. This was on 6.16.7.
 
-My config is: https://zerobin.net/?ebecc538f6caa22b#88c2k08G8+cZoMjgU9N/WYy28qQjyBW+/H78ygujZxY=
-It was generated from Debian config using localmodconfig.
-I added few tweaks, in particular I enabled CONFIG_DEBUG_PINCTRL.
+Best regards,
 
-# cat /proc/cmdline 
-BOOT_IMAGE=/@rootfs/boot/vmlinuz-6.17.0-rc6 root=UUID=015793d4-ad51-4da7-844b-fcc3bcb13a0b ro rootflags=subvol=@rootfs log_buf_len=4M ignore_loglevel
-
-I run this script:
-https://zerobin.net/?327f3aa3ef7ce845#Ycu017J9YbRga8uGaCKRzsH7J/lB8D4RudpwTll5lbo=
-
-This script runs "rtcwake -s 6 -m mem" multiple times. Sometimes my laptop wakes on timer (because of rtcwake),
-and sometimes it wakes up too early on its own (and this is a bug).
-
-My script did suspend 7 times:
-
-# dmesg | grep s2idle
-[  117.934504] PM: suspend entry (s2idle)
-[  127.141741] PM: suspend entry (s2idle)
-[  131.299554] PM: suspend entry (s2idle)
-[  140.034802] PM: suspend entry (s2idle)
-[  144.592260] PM: suspend entry (s2idle)
-[  154.038621] PM: suspend entry (s2idle)
-[  163.034299] PM: suspend entry (s2idle)
-
-Out of them my laptop woke up on timer 4 times and on its own (i. e. due to bug) 3 times:
-
-# dmesg | grep 'woke up'
-[  126.087936] will-wake: attempt 0: woke up in time
-[  130.248820] will-wake: attempt 1: woke up early
-[  138.988770] will-wake: attempt 2: woke up in time
-[  143.545973] will-wake: attempt 3: woke up early
-[  152.993654] will-wake: attempt 4: woke up in time
-[  161.988956] will-wake: attempt 5: woke up in time
-[  166.329080] will-wake: attempt 6: woke up early
-
-Here is full output of "dmesg --level=debug+":
-https://zerobin.net/?f704a2d56603f4ec#SRrzc2mt2FNNqcltx/ULmtLZRdRH9frdgoODU03AXwE=
-
-/proc/interrupts:
-https://zerobin.net/?b7ba5047ca84ab29#TjMUjkAdhpIuKbnvPpuYyNWa/ilA/ciGKwwSbx6KRFc=
-
-# head -n 1000 /sys/class/dmi/id/*
-==> /sys/class/dmi/id/bios_date <==
-07/15/2025
-
-==> /sys/class/dmi/id/bios_release <==
-1.23
-
-==> /sys/class/dmi/id/bios_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/bios_version <==
-1.23.6
-
-==> /sys/class/dmi/id/board_asset_tag <==
+Staffan
 
 
-==> /sys/class/dmi/id/board_name <==
-0C6JVW
-
-==> /sys/class/dmi/id/board_serial <==
-/JNLHW44/VNCMV0046P029A/
-
-==> /sys/class/dmi/id/board_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/board_version <==
-A00
-
-==> /sys/class/dmi/id/chassis_asset_tag <==
-
-
-==> /sys/class/dmi/id/chassis_serial <==
-JNLHW44
-
-==> /sys/class/dmi/id/chassis_type <==
-10
-
-==> /sys/class/dmi/id/chassis_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/chassis_version <==
-
-
-==> /sys/class/dmi/id/ec_firmware_release <==
-1.18
-
-==> /sys/class/dmi/id/modalias <==
-dmi:bvnDellInc.:bvr1.23.6:bd07/15/2025:br1.23:efr1.18:svnDellInc.:pnPrecision7780:pvr:rvnDellInc.:rn0C6JVW:rvrA00:cvnDellInc.:ct10:cvr:sku0C42:
-
-==> /sys/class/dmi/id/power <==
-head: error reading '/sys/class/dmi/id/power': Is a directory
-
-==> /sys/class/dmi/id/product_family <==
-Precision
-
-==> /sys/class/dmi/id/product_name <==
-Precision 7780
-
-==> /sys/class/dmi/id/product_serial <==
-JNLHW44
-
-==> /sys/class/dmi/id/product_sku <==
-0C42
-
-==> /sys/class/dmi/id/product_uuid <==
-4c4c4544-004e-4c10-8048-cac04f573434
-
-==> /sys/class/dmi/id/product_version <==
-
-
-==> /sys/class/dmi/id/subsystem <==
-head: error reading '/sys/class/dmi/id/subsystem': Is a directory
-
-==> /sys/class/dmi/id/sys_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/uevent <==
-MODALIAS=dmi:bvnDellInc.:bvr1.23.6:bd07/15/2025:br1.23:efr1.18:svnDellInc.:pnPrecision7780:pvr:rvnDellInc.:rn0C6JVW:rvrA00:cvnDellInc.:ct10:cvr:sku0C42:
-
-
-Output of dmidecode:
-https://zerobin.net/?e7783ba3bd93c895#EAVgKSZQrn0aGC6t9a/RKeZpp1/9TAYlDhHMh2lcpfQ=
-
--- 
-Askar Safin
+On 2025-09-18 16:05, zhangheng wrote:
+> It's interesting that I found another USB device with the same ID, but
+> it's a USB headphone, device descriptors in headphone.txt
+> 
+> Microphone.txt is the device descriptor for SMARTLINKTechnology.
+> 
+> I was originally planning to differentiate according to bcdHID, but
+> there is hdev ->version=0x100, therefore, I created the v3 patch.
+> 
+> The microphone device is normal, but I'm not sure if your touchscreen
+> function is working properly.
+> 
+> [   67.417805] usb 1-3.4.2: new full-speed USB device number 11 using
+> xhci_hcd
+> [   67.566700] usb 1-3.4.2: New USB device found, idVendor=4c4a,
+> idProduct=4155, bcdDevice= 1.00
+> [   67.566707] usb 1-3.4.2: New USB device strings: Mfr=1, Product=2,
+> SerialNumber=3
+> [   67.566712] usb 1-3.4.2: Product: USB Composite Device
+> [   67.566717] usb 1-3.4.2: Manufacturer: SmartlinkTechnology
+> [   67.566721] usb 1-3.4.2: SerialNumber: 20201111000001
+> [   67.568816] DEBUG: drivers/hid/hid-quirks.c 1227 hid_gets_squirk
+> hdev->version = 0x100
+> [   67.568827] DEBUG: drivers/hid/hid-quirks.c 1025 hid_ignore
+> hdev->version = 0x100
+> [   67.568832] DEBUG: drivers/hid/hid-quirks.c 1227 hid_gets_squirk
+> hdev->version = 0x100
+> [   67.569256] DEBUG: drivers/hid/hid-quirks.c 1227 hid_gets_squirk
+> hdev->version = 0x201
+> 
+> [   39.692821] DEBUG: drivers/hid/usbhid/hid-core.c 985 usbhid_parse
+> dev->serial = 20201111000001
+> 
+>  Later, I thought of using a serial number, Later, I thought of using
+> a serial number, but the headphone serial number was NULL,
+> 
+> and printing it directly would trigger OOPs, at present, I can only
+> consider distinguishing between manufacturers, this is v4 patch.
+> 
+> If there are better ideas or patches, they can also be provided. The
+> microphone device will arrive in a few days, and I will verify it
+> then.
+> 
+> 在 2025/9/16 7:06, Terry Junge 写道:
+> 
+>> On 9/15/25 1:37 AM, zhangheng wrote:
+>> 
+>>> Apply this new patch and test the kernel again. I don't have the
+>>> original mic device in my hands, which means I have to wait for a
+>>> response for testing now.
+>>> 
+>>> You can test it first, and the other mic device also needs to be
+>>> retested
+>> 
+>> Your patch will not work as you expect for two reasons.
+>> 
+>> if (hid_match_id(hdev, hid_ignore_list) ||
+>> (hid_match_id(hdev, hid_ignore_mic) && (hdev->version >
+>> 1.1)))
+>> quirks |= HID_QUIRK_IGNORE;
+>> 
+>> hdev->version is U32 not float. Version (bcdDevice) 1.00 would be
+>> 0x0100. The value 1.1 is probably cast to 0x0001.
+>> 
+>> Second, both devices have identical VID, PID, bcdDevice, and Product
+>> names.
+>> 
+>> [  563.104908] usb 1-1.4.1.2: New USB device found, idVendor=4c4a,
+>> idProduct=4155, bcdDevice= 1.00
+>> [  563.104910] usb 1-1.4.1.2: New USB device strings: Mfr=1,
+>> Product=2, SerialNumber=3
+>> [  563.104911] usb 1-1.4.1.2: Product: USB Composite Device
+>> [  563.104912] usb 1-1.4.1.2: Manufacturer: SmartlinkTechnology
+>> [  563.104913] usb 1-1.4.1.2: SerialNumber: 20201111000001
+>> 
+>> [   10.451534] usb 3-3: New USB device found, idVendor=4c4a,
+>> idProduct=4155, bcdDevice= 1.00
+>> [   10.451540] usb 3-3: New USB device strings: Mfr=1, Product=2,
+>> SerialNumber=3
+>> [   10.451543] usb 3-3: Product: USB Composite Device
+>> [   10.451545] usb 3-3: Manufacturer: Jieli Technology
+>> [   10.451546] usb 3-3: SerialNumber: FFFFFFFFFFFFFFFF
+>> 
+>> If you could get the descriptors for the microphone device, it would
+>> be helpful.
+>> 
+>> Thanks,
+>> Terry
+>> 
+>> 在 2025/9/13 21:11, Staffan Melin 写道:
+>> 
+>> Ah, thanks, I get it now :)
+>> 
+>> So I got 6.16.7, and the patch applied without problems.
+>> 
+>> But no luck, the same results as before: touchscreen not working,
+>> xinput --list not showing the Jieli touchscreen. dmesg shows the
+>> same as before, too.
+>> 
+>> Best regards,
+>> 
+>> Staffan
+>> 
+>> On 2025-09-13 10:55, Salvatore Bonaccorso wrote:
+>> 
+>> Hi Staffan,
+>> 
+>> chiming in hopefully it is of help.
+>> 
+>> Now really with the patch ...
+>> 
+>> On Fri, Sep 12, 2025 at 09:57:04PM +0200, Staffan Melin wrote:
+>> 
+>> Thank you,
+>> 
+>> I tried to apply this patch to 6.12.39, the first problematic
+>> kernel, as
+>> well as 6.12.41, the first bad I tried, and on both I got an error
+>> message:
+>> 
+>> Applying: HID: quirks: Add device descriptor for 4c4a:4155
+>> error: patch failed: drivers/hid/hid-quirks.c:1068
+>> error: drivers/hid/hid-quirks.c: patch does not apply
+>> Patch failed at 0001 HID: quirks: Add device descriptor for
+>> 4c4a:4155
+>> 
+>> To which kernel version should I apply the patch?
+>> 
+>> As the deveopment goes from mainline then down to stable series, the
+>> fix needs to be developed first for mainline. So the patch is
+>> targeted
+>> there.
+>> 
+>> But please find attached an updated patch which hopefully should
+>> work
+>> which resolved the context changes on top of 6.12.47.
+>> 
+>> But ideally you can provide a Tested-by on zhangheng's mainline
+>> patch
+>> to get things rolling as needed.
+>> 
+>> Regards,
+>> Salvatore
