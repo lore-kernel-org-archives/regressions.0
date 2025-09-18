@@ -1,81 +1,78 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C89524166F
-	for <regressions@lists.linux.dev>; Thu, 18 Sep 2025 10:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECFB34BA40
+	for <regressions@lists.linux.dev>; Thu, 18 Sep 2025 11:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758192371; cv=none; b=peHmvZszLis+8vOU9RD5M4lAgUAsChmnDSw3+MrJ7CxU+uavsQeY+CD9TN/p94mTpIyS+RXIobqzrNhx3FDYT8q0Bkmi3G1q704/mLsIaPgS4n2lfRSq5q9sFCzSCbs9oUFMt2zYUMKJ7EgT08fgxCnqqPZij3KsuEbbAyXa+hM=
+	t=1758194241; cv=none; b=NcyJlCe3350fZ8HEuIzkBz0kgM18n51g7+3NlOqXA9jYfmzc0roSrfy2pQyCKZi9rG6rDiCTWDoRljJyNWNb3Bl2MXKVNC5/uhujBZxl/iXHALaMTtJsicAZvi31JUDBaiI6kglfSccoEx3DjGGsrT8yIOCD6U4iUl1h8Kn7Vhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758192371; c=relaxed/simple;
-	bh=cskxF2+t8ZU+B/eGyKpaqVnA/nEr+X0l95obWNBZ8qE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cLcGlygU839A3YQu4OTP/ApxM45TnOnN1dPZeJGpKFfa6WZKJj+DdkdzcPj0TafA7XDGjGtbsiJxmx1bH0RiAHGfHJ4G8e9gc6n8QQpXBSwXHU+yRhmCLlcraK3hda2TJZSwib38o4LkHdNun/sXs8Lh5tbtQxKwRRy1OOJlWUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TDrPe35d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0GUztMsY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mVyXxPkJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ukON/A9n; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1758194241; c=relaxed/simple;
+	bh=5xd+NGV+lAIDMPSigypEJ6Q/N7yFLwkU6bsnytLdDtE=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=h6VgBxuWNUId3+pt6udj7XMTGpUsS9oIT5T7Wequwj5C6t8ltMTdUBuFIrjOnUfZxyeEMblDqNMGDdU37WPaCQjoTB/a6UetYni0A7fLZUu9jRaRNb+FVsXnWgCCfkSU3jhflK1/YznNYcNBT2LvZfr069bJ/esFuOC4OAjcPmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a/nuax2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=h7voNygG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=a/nuax2c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=h7voNygG; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TDrPe35d";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0GUztMsY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mVyXxPkJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ukON/A9n"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a/nuax2c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="h7voNygG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="a/nuax2c";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="h7voNygG"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0ABE92203C;
-	Thu, 18 Sep 2025 10:46:05 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 72056336E7;
+	Thu, 18 Sep 2025 11:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758192366; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758194237; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cej2a0mrBRkH7qjve9cU+gIZkeKH5Z6YbpT1Jmo+9T8=;
-	b=TDrPe35di1avDZB9IIv8LPv7hptQg00w23tLv0bY9nafw9n5QQKKtzcNn0nvDiDnFG0vuD
-	AstMYpw+MzJS4ZCes4LpLTV+8Cn8oRCJdXiNzgMC6QHa5t4l2ByOh8IfGJihYswHhLf+g9
-	iTuRgiRzC+J9NIukxolnw7wgtpi4lsE=
+	bh=mut0b748Hi+Q5LznaSKN6uCnTAhEVcZK4pYNYVoEwis=;
+	b=a/nuax2cmfkhubJeAoLVxVYHr1ojN7o1zNQdKLihxDkWJdbjL01R3vNH5pyqeovt/8GHZO
+	uiNHzqUmO+tdiJldMIl8yMs4DlCBaoSQAXnDWW2ONwtnIekR2lW+zlz//3bz2pd/6u3K8C
+	Xi8oQGWpcJ6tYZiYhiKFtRHlzD+eQIM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758192366;
+	s=susede2_ed25519; t=1758194237;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cej2a0mrBRkH7qjve9cU+gIZkeKH5Z6YbpT1Jmo+9T8=;
-	b=0GUztMsYXIX4A7yt4G5RkvPXiHaVsfdicw68FFjE4ds/AXyM869b5kRJF1P5iKDz896eao
-	LdBSEJlonluKuODA==
+	bh=mut0b748Hi+Q5LznaSKN6uCnTAhEVcZK4pYNYVoEwis=;
+	b=h7voNygGEVSiJ/N3Lq0JGbSTVvoEn6yC6rakBXAHgfjMBg1ks4frCqDuCjDz85L5ocNSG1
+	53cYHqaRZbBJFpCw==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mVyXxPkJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="ukON/A9n"
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="a/nuax2c";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=h7voNygG
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1758192365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1758194237; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cej2a0mrBRkH7qjve9cU+gIZkeKH5Z6YbpT1Jmo+9T8=;
-	b=mVyXxPkJthWMROhM0De9AkIg7t1IGb3/3d2KJAJawztqMHmbF06jXt/3OZcMj5M+OTnkq9
-	peQNydypQPVl1ZWgsRvX11X0LnRYm76g5GZ9quXx/3p7xTg6zhKWS6yVHTPA3NyEiLo/Xn
-	PuMBzKQxuj2gWiZBWnuRMdF9+GlRp40=
+	bh=mut0b748Hi+Q5LznaSKN6uCnTAhEVcZK4pYNYVoEwis=;
+	b=a/nuax2cmfkhubJeAoLVxVYHr1ojN7o1zNQdKLihxDkWJdbjL01R3vNH5pyqeovt/8GHZO
+	uiNHzqUmO+tdiJldMIl8yMs4DlCBaoSQAXnDWW2ONwtnIekR2lW+zlz//3bz2pd/6u3K8C
+	Xi8oQGWpcJ6tYZiYhiKFtRHlzD+eQIM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1758192365;
+	s=susede2_ed25519; t=1758194237;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Cej2a0mrBRkH7qjve9cU+gIZkeKH5Z6YbpT1Jmo+9T8=;
-	b=ukON/A9noW8FIISuCAq8i018+LnZtioyQnwLxoLHBfLKhvrr5Y3h5olDdyWmd9d5HVGdaQ
-	zVhu/fLwIwAVCMBA==
+	bh=mut0b748Hi+Q5LznaSKN6uCnTAhEVcZK4pYNYVoEwis=;
+	b=h7voNygGEVSiJ/N3Lq0JGbSTVvoEn6yC6rakBXAHgfjMBg1ks4frCqDuCjDz85L5ocNSG1
+	53cYHqaRZbBJFpCw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D424213A39;
-	Thu, 18 Sep 2025 10:46:04 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4106F13A39;
+	Thu, 18 Sep 2025 11:17:17 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id A91dMuziy2jlcwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 18 Sep 2025 10:46:04 +0000
-Message-ID: <2d62f7a1-712f-4868-8e21-e2d5b616c43a@suse.de>
-Date: Thu, 18 Sep 2025 12:46:04 +0200
+	id VuMxDj3qy2hzfgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 18 Sep 2025 11:17:17 +0000
+Content-Type: multipart/mixed; boundary="------------vupL6B6jOl0dl79XEW8C83jg"
+Message-ID: <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
+Date: Thu, 18 Sep 2025 13:17:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -120,40 +117,43 @@ Autocrypt: addr=tzimmermann@suse.de; keydata=
  Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
  4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
 In-Reply-To: <cox6kpackepnunrlhpsssvgdmjd24477cc7mide52xptmmoxyr@ijjotb3xju3v>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 X-Spam-Level: 
 X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 0ABE92203C
+X-Rspamd-Queue-Id: 72056336E7
 X-Rspamd-Action: no action
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
+X-Spamd-Result: default: False [-3.41 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
 	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
 	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,bootlin.com:url]
-X-Spam-Score: -4.51
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,bootlin.com:url,suse.de:dkim,suse.de:mid,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	HAS_ATTACHMENT(0.00)[]
+X-Spam-Score: -3.41
+
+This is a multi-part message in MIME format.
+--------------vupL6B6jOl0dl79XEW8C83jg
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hi
 
@@ -180,10 +180,7 @@ Am 18.09.25 um 04:04 schrieb Nick Bowler:
 >
 >        ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xb6, 0xfc, vgacrb6);
 
-Great, thanks for testing! I'll see if i can make a workaround for your 
-system.
-
-Could you please provide me with 'lspci -nvv' of the device?
+Please test if the attached patch fixes the problem for you.
 
 Best regards
 Thomas
@@ -202,3 +199,57 @@ GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
 HRB 36809 (AG Nuernberg)
 
 
+--------------vupL6B6jOl0dl79XEW8C83jg
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ast-Use-VGACR17-sync-enable.patch"
+Content-Disposition: attachment;
+ filename="0001-ast-Use-VGACR17-sync-enable.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA1MWViYjU3M2EwOTA0OTRkZTc5Y2JiNzFlOWIyOTI1NWUxMzY0ZTFjIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogVGh1LCAxOCBTZXAgMjAyNSAwOTo1MDoyOCArMDIwMApTdWJqZWN0
+OiBbUEFUQ0hdIGFzdDogVXNlIFZHQUNSMTcgc3luYyBlbmFibGUKCkJsYW5rIHRoZSBkaXNw
+bGF5IGJ5IGRpc2FibGluZyBzeW5jIHB1bHNlcyB3aXRoIFZHQUNSMTc8Nz4uIFNvbWUKQk1D
+J3MgZG9uJ3QgaGFuZGxlIFZHQUNSQjYgY29ycmVjdGx5LiBBbmQgZG9uJ3QgbW9kaWZ5IFZH
+QVNSMSdzIFNECmJpdCwgd2hpY2ggb25seSBkaXNhYmxlcyBHUFUgYWNjZXNzIHRvIFZSQU0u
+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jIHwgMTQgKysrKysrLS0tLS0t
+LS0KIGRyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X3JlZy5oICB8ICAxICsKIDIgZmlsZXMgY2hh
+bmdlZCwgNyBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9hc3QvYXN0X21vZGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9hc3QvYXN0
+X21vZGUuYwppbmRleCBiNGU4ZWRjN2M3NjcuLjBkZjA2ZGU5YjY0NCAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9h
+c3QvYXN0X21vZGUuYwpAQCAtODM2LDIyICs4MzYsMjAgQEAgYXN0X2NydGNfaGVscGVyX2F0
+b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiBzdGF0aWMgdm9pZCBhc3RfY3J0
+Y19oZWxwZXJfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBk
+cm1fYXRvbWljX3N0YXRlICpzdGF0ZSkKIHsKIAlzdHJ1Y3QgYXN0X2RldmljZSAqYXN0ID0g
+dG9fYXN0X2RldmljZShjcnRjLT5kZXYpOworCXU4IHZnYWNyMTcgPSAweDAwOwogCi0JYXN0
+X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FDUkksIDB4YjYsIDB4ZmMsIDB4
+MDApOwotCWFzdF9zZXRfaW5kZXhfcmVnX21hc2soYXN0LCBBU1RfSU9fVkdBU1JJLCAweDAx
+LCAweGRmLCAweDAwKTsKKwl2Z2FjcjE3IHw9IEFTVF9JT19WR0FDUjE3X1NZTkNfRU5BQkxF
+OworCWFzdF9zZXRfaW5kZXhfcmVnX21hc2soYXN0LCBBU1RfSU9fVkdBQ1JJLCAweDE3LCAw
+eDdmLCB2Z2FjcjE3KTsKIH0KIAogc3RhdGljIHZvaWQgYXN0X2NydGNfaGVscGVyX2F0b21p
+Y19kaXNhYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IGRybV9hdG9taWNfc3Rh
+dGUgKnN0YXRlKQogewogCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqb2xkX2NydGNfc3RhdGUg
+PSBkcm1fYXRvbWljX2dldF9vbGRfY3J0Y19zdGF0ZShzdGF0ZSwgY3J0Yyk7CiAJc3RydWN0
+IGFzdF9kZXZpY2UgKmFzdCA9IHRvX2FzdF9kZXZpY2UoY3J0Yy0+ZGV2KTsKLQl1OCB2Z2Fj
+cmI2OworCXU4IHZnYWNyMTcgPSAweGZmOwogCi0JYXN0X3NldF9pbmRleF9yZWdfbWFzayhh
+c3QsIEFTVF9JT19WR0FTUkksIDB4MDEsIDB4ZGYsIEFTVF9JT19WR0FTUjFfU0QpOwotCi0J
+dmdhY3JiNiA9IEFTVF9JT19WR0FDUkI2X1ZTWU5DX09GRiB8Ci0JCSAgQVNUX0lPX1ZHQUNS
+QjZfSFNZTkNfT0ZGOwotCWFzdF9zZXRfaW5kZXhfcmVnX21hc2soYXN0LCBBU1RfSU9fVkdB
+Q1JJLCAweGI2LCAweGZjLCB2Z2FjcmI2KTsKKwl2Z2FjcjE3ICY9IH5BU1RfSU9fVkdBQ1Ix
+N19TWU5DX0VOQUJMRTsKKwlhc3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZH
+QUNSSSwgMHgxNywgMHg3ZiwgdmdhY3IxNyk7CiAKIAkvKgogCSAqIEhXIGN1cnNvcnMgcmVx
+dWlyZSB0aGUgdW5kZXJseWluZyBwcmltYXJ5IHBsYW5lIGFuZCBDUlRDIHRvCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9yZWcuaCBiL2RyaXZlcnMvZ3B1L2RybS9h
+c3QvYXN0X3JlZy5oCmluZGV4IGUxNWFkYWYzYTgwZS4uMzA1NzhlM2IwN2U0IDEwMDY0NAot
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9yZWcuaAorKysgYi9kcml2ZXJzL2dwdS9k
+cm0vYXN0L2FzdF9yZWcuaApAQCAtMjksNiArMjksNyBAQAogI2RlZmluZSBBU1RfSU9fVkdB
+R1JJCQkJKDB4NEUpCiAKICNkZWZpbmUgQVNUX0lPX1ZHQUNSSQkJCSgweDU0KQorI2RlZmlu
+ZSBBU1RfSU9fVkdBQ1IxN19TWU5DX0VOQUJMRQlCSVQoNykgLyogY2FsbGVkICJIYXJkd2Fy
+ZSByZXNldCIgaW4gZG9jcyAqLwogI2RlZmluZSBBU1RfSU9fVkdBQ1I4MF9QQVNTV09SRAkJ
+KDB4YTgpCiAjZGVmaW5lIEFTVF9JT19WR0FDUjk5X1ZHQU1FTV9SU1JWX01BU0sJR0VOTUFT
+SygxLCAwKQogI2RlZmluZSBBU1RfSU9fVkdBQ1JBMV9WR0FJT19ESVNBQkxFRAlCSVQoMSkK
+LS0gCjIuNTEuMAoK
+
+--------------vupL6B6jOl0dl79XEW8C83jg--
