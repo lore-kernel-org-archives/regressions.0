@@ -1,86 +1,150 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7FA221544;
-	Fri, 19 Sep 2025 05:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7BC34BA28
+	for <regressions@lists.linux.dev>; Sat, 20 Sep 2025 03:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758259577; cv=none; b=saDN/nl/l3VjEJO3gUTedvYo9Ozpw7/Dm6vxRE21XZJOkVJVSexAEl6gUChexgs1Us8HobcvExvtlr5hQXpE95BCMSqpzAd+/mxjxkA+tGXm65pL4iwJfVH//HGG8E87hX609+Xmr5Az1a6DsT6FZE5creKlg8XGXnAb9N1yLBQ=
+	t=1758340309; cv=none; b=egvZi7wP2//M7udRlIog8ImZ0XlTk+YkbmC+XHAN1UpfJ7rG6qO6N3bZKjOkw4UQDFpZ8g1SmEKAermqPAJ00Q/lTdkTZqbJvlDl75RkqBSkoOSt5Nb7XYHyWukZ87r8yjd5krFCkAfvCs/b6aNs4vCiUmTSEfw554krDEYzGVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758259577; c=relaxed/simple;
-	bh=6r4jkJdeIG14qcprpmzE8FnhltEYwQM6z8RdBo+8MmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LykZixHT971YN2BvBV/hO0DOorjOMFva7IMihLud1VZXQnxIGuT2XlVjblVZILu/4gc94wzwMP0MqWwnBzyxXWkz4fGIcrkRlIs5ZxuDyos64hPaKk0J/l+lKRZnPxhB5TEHZBVfY1MGMQL6qYe32Omjs8NApu/jYxyNamtzBk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=E0LnbaDT; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1758340309; c=relaxed/simple;
+	bh=4nyax13VUWR5a5t0mPW0ffDF7ObllscDnqllciX7WU0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SG13yXiWde3kyr8Pd5EosDadAfzLWH9IN5hsiJtOZD6gtewlQ2CDdOCAsVLPYooo5mrA/FIfIaZOFwgAwYLZRWinZvPCI4QdMpgypdLDmG9zOFoBHtiltL6qpqwrr6Po/Pn2TiQ8eenSLsw+8R9qffu7heR8XLDVVhUyg4H7PDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wIl/WThV; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="E0LnbaDT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=APGCrIWwUZU9xTDPwf41AxSbF6mMd4oZliNSkrRCWfU=; t=1758259576;
-	x=1758691576; b=E0LnbaDTEDAHZ2z19Jlgwg6R95IRWMenyiYw5FsKwJqOIZ966LAL9Iuzpsdt/
-	aU4YEzXip1wfFh9z+GWPoStv02bZHjrsPQmmyYe+8Q+MXZ3rSHtn+8OsOPXka9TFD340+b2V8aXEX
-	1EaNAUHrltMyOwGgRPEOYh82hiISsO3DTnuOMUr75PAElqjcSD+y1NpYbu3aQpjl4vUaAX/RmjWA+
-	9O6yq4pBVha37WdFT6ntlMg1yh9heY/0qgIFXdQSVYo8g9a9Efmgpm0hBDeh6ZfdQkrSvD/9rQPEu
-	Mn2WCm/lpeHfKjT3URG9rBQ29lTIhqzTIbE3Q2ihBeEk4322yQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1uzTdH-00E6Rr-12;
-	Fri, 19 Sep 2025 07:26:07 +0200
-Message-ID: <b8c4ed52-260d-4963-8d8f-4976229dd4e5@leemhuis.info>
-Date: Fri, 19 Sep 2025 07:26:06 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wIl/WThV"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-32e09eaf85dso3242944a91.1
+        for <regressions@lists.linux.dev>; Fri, 19 Sep 2025 20:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758340308; x=1758945108; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HpEOj5LSM2D4OpUTxa8SKWTebNuWvFU+5fQLpVHxJlM=;
+        b=wIl/WThVgiAHdJo3dSW41D7kkEnaogMENHYEcQmWoxoPr6O36YpHw9aNchfkodmowj
+         vvimzFUQWUegruqE6VTN6ImXABciumGGO1n1GGNQNwyd9rQKx9g9+tP0YJ75sOlvXPCx
+         gGhcT4cYHAkd3Pys5qfGHQRtRxn/y8VhmxYdsxGPp2Wv24KQ188MjzlgDp/YJ0U6DWoZ
+         +uEDufV6XRoHxXxfvsFHei/M4LVy0+ah1rXoozUk8EcJrlETs8OUPOCu3lc0VScE+r6X
+         u9/H0SkcMwxwHTnXKSAUgIzLioWQ761pTUw0IpG4m91oIK1cZHqGSvk0wfGs5hoRLki2
+         f26w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758340308; x=1758945108;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HpEOj5LSM2D4OpUTxa8SKWTebNuWvFU+5fQLpVHxJlM=;
+        b=S8CNc5j8qNx2AFfHseUDn2Jk3KnAtF2geyNVQmBDc0sY2DC50maJuf7s75ZMRcXd4K
+         rUwnjRhq4Qkjfg+ajpSZpFuhbUfl+mPFrnlcnWnYhz3uOGo5t2+zKa46bsx8LQE2Tt23
+         kIQVujL/DXNgViQ5g68Kt60DL9h4U8AHNjwjrL74kQuSYWg+bvyJ91Q76Zu88Ty3yxD3
+         AxAJthGLRdn1PxWujTPgBCzPRZ3GOw6+24DchXcycugjVV0z1xx/H+yVDLOIbuN94gqB
+         +UU5fIRuZs5lZYC9D54AQmTDe/+uu7GCOtwLEfK1zW6qJhj+0jHBWdFF8+a7PBFlc34p
+         x0Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEJkcE8jql00loj4o2GX5YNjEMF0xQOWw/5/6pvpX1YB09pRLYlfSym1gsM0//1E5Tr5I21EDdlOH7tw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZdEutgBBnxLQFem+vUGXnYfObRH8mQdJ+9L3snvVxPNRPFv7M
+	ICFjAj5aQ+61PqDyeF/WlK5AN5giTvWxBgx1wbLRYRoz5YhcTQQPMuj790y8rrOABhQDX8yi6Fr
+	vYjIPww==
+X-Google-Smtp-Source: AGHT+IGDEsmJS0RWHAZl4i+dA/zrRM6jZJwlfPLgPe6OetInXPKDxFrf8pBdb+Fr9jhrRctW5rKl2lRcuTw=
+X-Received: from pjbta12.prod.google.com ([2002:a17:90b:4ecc:b0:329:ccdd:e725])
+ (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3146:b0:330:604a:1009
+ with SMTP id 98e67ed59e1d1-3309834c31fmr7114857a91.23.1758340307754; Fri, 19
+ Sep 2025 20:51:47 -0700 (PDT)
+Date: Sat, 20 Sep 2025 03:50:43 +0000
+In-Reply-To: <caa08e5b15bc35b9f3c24f679c62ded1e8e58925.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Build break due to merge commit in linux-next 20250916
-To: Christian Heusel <christian@heusel.eu>, Mark Brown <broonie@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Bert Karwatzki <spasswolf@web.de>
-References: <0fee48bb-7411-4414-b4e7-395a8c3d0f6c@heusel.eu>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <0fee48bb-7411-4414-b4e7-395a8c3d0f6c@heusel.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1758259576;a749e26e;
-X-HE-SMSGID: 1uzTdH-00E6Rr-12
+Mime-Version: 1.0
+References: <caa08e5b15bc35b9f3c24f679c62ded1e8e58925.camel@gmail.com>
+X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
+Message-ID: <20250920035146.2149127-1-kuniyu@google.com>
+Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
+From: Kuniyuki Iwashima <kuniyu@google.com>
+To: brian.scott.sampson@gmail.com
+Cc: christian@heusel.eu, davem@davemloft.net, difrost.kernel@gmail.com, 
+	dnaim@cachyos.org, edumazet@google.com, horms@kernel.org, kuba@kernel.org, 
+	kuni1840@gmail.com, kuniyu@google.com, linux-kernel@vger.kernel.org, 
+	mario.limonciello@amd.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-CCing Bert, who ran into a similar problem and send a similar patch.
+From: brian.scott.sampson@gmail.com
+Date: Wed, 17 Sep 2025 15:25:07 -0500
+> > Thanks for testing the painful scenario.
+> > 
+> > Could you apply this on top of the previous diff and give it
+> > another shot ?
+> > 
+> > I think the application hit a race similar to one in 43fb2b30eea7.
+> Just tested again with latest mainline, but no change. Once suspended,
+> keyboard becomes inactive and no longer accepts any input, so no way to
+> switch to tty to view dmesg. The only way to move forward after
+> suspending is holding down power to hard shutdown, then power back on.
+> I tried enabling persistence in the systemd journal, then checking
+> journalctl -k -b -1, but nothing is recorded from dmesg after the
+> suspend.
 
-On 16.09.25 16:45, Christian Heusel wrote:
-> 
-> I have noticed that the recent linux-next release fails to build due to
-> a syntax error in the rust code:
-> 
->       EXPORTS rust/exports_bindings_generated.h
->       RUSTC L rust/kernel.o
->     error: expected one of `,` or `}`, found `;`
->       --> rust/kernel/block/mq/gen_disk.rs:12:23
->        |
->     12 |     fmt::{self, Write};
->        |                       ^
->        |                       |
->        |                       expected one of `,` or `}`
->        |                       help: missing `,`
-> 
->     error: aborting due to 1 previous error
-> 
->     make[2]: *** [rust/Makefile:553: rust/kernel.o] Error 1
-> 
-> It seems like this error was introduced in 6e86e08cdc19 ("Merge branch
-> 'rust-next' of https://github.com/Rust-for-Linux/linux.git") and
-> introduced with the merge, the attached patch fixes it.
+Thank you for your patience.
 
-Mark, that error from next-20250916 was gone in next-20250917, but came
-back with next-20250918 yesterday. Maybe due to something git rerere had
-recorded? But whatever, just wanted to let you know.
+I assumed SO_PASSCRED was the problem, but I missed
+SO_PASSCRED was also inherited durint accept().
 
-Ciao, Thorsten
+Could you apply this on top of the previous changes ?
+
+Also, could you tell what desktop manager and distro
+you are using ?  If this attempt fails, I'll try to
+reproduce with the same version on my desktop.
+
+---8<---
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 211084602e01..b61d4fdb7fc4 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -541,7 +541,8 @@ struct sock {
+ 				sk_scm_rights : 1,
+ 				sk_scm_embryo_cred: 1,
+ 				sk_scm_parent_cred: 1,
+-				sk_scm_unused : 2;
++				sk_scm_parent_sec: 1,
++				sk_scm_unused : 1;
+ 		};
+ 	};
+ 	u8			sk_clockid;
+diff --git a/net/core/scm.c b/net/core/scm.c
+index e603bf5400e0..359d56d454b4 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -435,7 +435,8 @@ static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *s
+ 	struct lsm_context ctx;
+ 	int err;
+ 
+-	if (sk->sk_scm_security) {
++	if (sk->sk_scm_security || sk->sk_scm_parent_sec) {
++		WARN_ON_ONCE(!sk->sk_scm_security);
+ 		err = security_secid_to_secctx(scm->secid, &ctx);
+ 
+ 		if (err >= 0) {
+@@ -449,7 +450,7 @@ static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *s
+ 
+ static bool scm_has_secdata(struct sock *sk)
+ {
+-	return sk->sk_scm_security;
++	return sk->sk_scm_security || sk->sk_scm_parent_sec;
+ }
+ #else
+ static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *scm)
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index b6ff7ad0443a..a35082269990 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -1899,6 +1899,7 @@ static int unix_accept(struct socket *sock, struct socket *newsock,
+ 	unix_update_edges(unix_sk(tsk));
+ 	newsock->state = SS_CONNECTED;
+ 	tsk->sk_scm_parent_cred = sk->sk_scm_credentials;
++	tsk->sk_scm_parent_sec = sk->sk_scm_security;
+ 	sock_graft(tsk, newsock);
+ 	unix_state_unlock(tsk);
+ 	return 0;
+---8<---
