@@ -1,150 +1,110 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7BC34BA28
-	for <regressions@lists.linux.dev>; Sat, 20 Sep 2025 03:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD42FFF8A;
+	Sat, 20 Sep 2025 12:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758340309; cv=none; b=egvZi7wP2//M7udRlIog8ImZ0XlTk+YkbmC+XHAN1UpfJ7rG6qO6N3bZKjOkw4UQDFpZ8g1SmEKAermqPAJ00Q/lTdkTZqbJvlDl75RkqBSkoOSt5Nb7XYHyWukZ87r8yjd5krFCkAfvCs/b6aNs4vCiUmTSEfw554krDEYzGVg=
+	t=1758371060; cv=none; b=kl73xVV+R4Z6UOaxSqvp0zE4pzz5cvfnqaUT6chI0gblqWYJM3yPs4Ce/GtxI5QQT85kVNDVcynkN1WBL3TGKEQSkUo+7AgmCny42Uj8QxdYDJ8yfSarhWWPeaiW6d+qVs5QBXXR0MC0Xk++bPU79REKJGTJ1eu1XDh2uREYy1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758340309; c=relaxed/simple;
-	bh=4nyax13VUWR5a5t0mPW0ffDF7ObllscDnqllciX7WU0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SG13yXiWde3kyr8Pd5EosDadAfzLWH9IN5hsiJtOZD6gtewlQ2CDdOCAsVLPYooo5mrA/FIfIaZOFwgAwYLZRWinZvPCI4QdMpgypdLDmG9zOFoBHtiltL6qpqwrr6Po/Pn2TiQ8eenSLsw+8R9qffu7heR8XLDVVhUyg4H7PDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wIl/WThV; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kuniyu.bounces.google.com
+	s=arc-20240116; t=1758371060; c=relaxed/simple;
+	bh=+VCl2qNOG76VOfRVAj3hMp0FVTlFw4IHD4CkVEVV9qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAMajFcXjltnFODXeAAfiyLD2skMsxPDIzguPYtZvVam5/zmPkGQ0ll/dsx1FcxFVqKrp8mR7qMSuwI42n7JpDnk0VD4HBhPB2X5Jdf42BgPpoLOktCumeqvcFe/Fy4yKzzxWpWL2Kqr/aoe4uNc+ul7zyRvXXceXP2ispA4g8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=BQgzDLUk; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wIl/WThV"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-32e09eaf85dso3242944a91.1
-        for <regressions@lists.linux.dev>; Fri, 19 Sep 2025 20:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758340308; x=1758945108; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HpEOj5LSM2D4OpUTxa8SKWTebNuWvFU+5fQLpVHxJlM=;
-        b=wIl/WThVgiAHdJo3dSW41D7kkEnaogMENHYEcQmWoxoPr6O36YpHw9aNchfkodmowj
-         vvimzFUQWUegruqE6VTN6ImXABciumGGO1n1GGNQNwyd9rQKx9g9+tP0YJ75sOlvXPCx
-         gGhcT4cYHAkd3Pys5qfGHQRtRxn/y8VhmxYdsxGPp2Wv24KQ188MjzlgDp/YJ0U6DWoZ
-         +uEDufV6XRoHxXxfvsFHei/M4LVy0+ah1rXoozUk8EcJrlETs8OUPOCu3lc0VScE+r6X
-         u9/H0SkcMwxwHTnXKSAUgIzLioWQ761pTUw0IpG4m91oIK1cZHqGSvk0wfGs5hoRLki2
-         f26w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758340308; x=1758945108;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HpEOj5LSM2D4OpUTxa8SKWTebNuWvFU+5fQLpVHxJlM=;
-        b=S8CNc5j8qNx2AFfHseUDn2Jk3KnAtF2geyNVQmBDc0sY2DC50maJuf7s75ZMRcXd4K
-         rUwnjRhq4Qkjfg+ajpSZpFuhbUfl+mPFrnlcnWnYhz3uOGo5t2+zKa46bsx8LQE2Tt23
-         kIQVujL/DXNgViQ5g68Kt60DL9h4U8AHNjwjrL74kQuSYWg+bvyJ91Q76Zu88Ty3yxD3
-         AxAJthGLRdn1PxWujTPgBCzPRZ3GOw6+24DchXcycugjVV0z1xx/H+yVDLOIbuN94gqB
-         +UU5fIRuZs5lZYC9D54AQmTDe/+uu7GCOtwLEfK1zW6qJhj+0jHBWdFF8+a7PBFlc34p
-         x0Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEJkcE8jql00loj4o2GX5YNjEMF0xQOWw/5/6pvpX1YB09pRLYlfSym1gsM0//1E5Tr5I21EDdlOH7tw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZdEutgBBnxLQFem+vUGXnYfObRH8mQdJ+9L3snvVxPNRPFv7M
-	ICFjAj5aQ+61PqDyeF/WlK5AN5giTvWxBgx1wbLRYRoz5YhcTQQPMuj790y8rrOABhQDX8yi6Fr
-	vYjIPww==
-X-Google-Smtp-Source: AGHT+IGDEsmJS0RWHAZl4i+dA/zrRM6jZJwlfPLgPe6OetInXPKDxFrf8pBdb+Fr9jhrRctW5rKl2lRcuTw=
-X-Received: from pjbta12.prod.google.com ([2002:a17:90b:4ecc:b0:329:ccdd:e725])
- (user=kuniyu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3146:b0:330:604a:1009
- with SMTP id 98e67ed59e1d1-3309834c31fmr7114857a91.23.1758340307754; Fri, 19
- Sep 2025 20:51:47 -0700 (PDT)
-Date: Sat, 20 Sep 2025 03:50:43 +0000
-In-Reply-To: <caa08e5b15bc35b9f3c24f679c62ded1e8e58925.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="BQgzDLUk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
+	From:Date:cc:to:subject:message-id:date:from:reply-to;
+	bh=qHT8BTzKJhP5NNuPsa6/wkhiJ9T4Mc5AUPkCGtid+r8=; b=BQgzDLUkRT5bICBTs58EM3KrHO
+	YDPfJ/i355q++ehPHfQ6+qdJKSlzXV30z+4kJK3muaVACQVO7zH7Te3BlPfMP2raZAtSAHSLw1UM0
+	ZOkop71XLAdVXpNd7XtfVwWqqh3K50rpccD182V5IbURLXiDL1d0zNMW3OItkQEfnnL4tp5PT6U1s
+	RhuHr3lbDWhJNmasDbKf4WM8DBEvE/oJuWGBdUDn/hI1Fz90inHur3TSYx3yzvJy6w5vwn2bH7bjb
+	L7fGEuM7j/FfORs7p7xpTiKIN90RMGuawkFGN4cJIbANsOnFzVixLe91r8clDIUgtalEpb0WFGtmq
+	lO0XFeDA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uzwdM-00704f-2u;
+	Sat, 20 Sep 2025 20:24:10 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 20 Sep 2025 20:24:08 +0800
+Date: Sat, 20 Sep 2025 20:24:08 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Dan Moulding <dan@danm.net>
+Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v5] crypto: acomp/scomp: Use same definition of context
+ alloc and free ops
+Message-ID: <aM6c6IzPiHnmqTaX@gondor.apana.org.au>
+References: <20250908160002.26673-1-dan@danm.net>
+ <20250908161243.27239-1-dan@danm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <caa08e5b15bc35b9f3c24f679c62ded1e8e58925.camel@gmail.com>
-X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
-Message-ID: <20250920035146.2149127-1-kuniyu@google.com>
-Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
-From: Kuniyuki Iwashima <kuniyu@google.com>
-To: brian.scott.sampson@gmail.com
-Cc: christian@heusel.eu, davem@davemloft.net, difrost.kernel@gmail.com, 
-	dnaim@cachyos.org, edumazet@google.com, horms@kernel.org, kuba@kernel.org, 
-	kuni1840@gmail.com, kuniyu@google.com, linux-kernel@vger.kernel.org, 
-	mario.limonciello@amd.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250908161243.27239-1-dan@danm.net>
 
-From: brian.scott.sampson@gmail.com
-Date: Wed, 17 Sep 2025 15:25:07 -0500
-> > Thanks for testing the painful scenario.
-> > 
-> > Could you apply this on top of the previous diff and give it
-> > another shot ?
-> > 
-> > I think the application hit a race similar to one in 43fb2b30eea7.
-> Just tested again with latest mainline, but no change. Once suspended,
-> keyboard becomes inactive and no longer accepts any input, so no way to
-> switch to tty to view dmesg. The only way to move forward after
-> suspending is holding down power to hard shutdown, then power back on.
-> I tried enabling persistence in the systemd journal, then checking
-> journalctl -k -b -1, but nothing is recorded from dmesg after the
-> suspend.
+On Mon, Sep 08, 2025 at 10:12:43AM -0600, Dan Moulding wrote:
+> In commit 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation
+> code into acomp"), the crypto_acomp_streams struct was made to rely on
+> having the alloc_ctx and free_ctx operations defined in the same order
+> as the scomp_alg struct. But in that same commit, the alloc_ctx and
+> free_ctx members of scomp_alg may be randomized by structure layout
+> randomization, since they are contained in a pure ops structure
+> (containing only function pointers). If the pointers within scomp_alg
+> are randomized, but those in crypto_acomp_streams are not, then
+> the order may no longer match. This fixes the problem by removing the
+> union from scomp_alg so that both crypto_acomp_streams and scomp_alg
+> will share the same definition of alloc_ctx and free_ctx, ensuring
+> they will always have the same layout.
+> 
+> Signed-off-by: Dan Moulding <dan@danm.net>
+> Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Fixes: 42d9f6c77479 ("crypto: acomp - Move scomp stream allocation code into acomp")
+> ---
+> Changes in v4:
+>   * After the change in v3, the deflate algorithm was no longer
+>     affected, but the patch still had some whitespace changes in
+>     deflate.c. This version removes those (so deflate.c is no longer
+>     patched here).
+> 
+> Changes in v4:
+>   * Rebased on crypto-2.6/master (previous versions were based on
+>     stable v6.16).
+> 
+> Changes in v3:
+>   * Intead of adding a new struct containing alloc and free function
+>     pointers, which both crypto_acomp_streams and scomp_alg can share,
+>     simply remove the union that was added to scomp_alg, forcing it to
+>     share the same definition of the function pointers from
+>     crypto_acomp_streams. The pointers won't be randomized in this
+>     version (since there is no pure ops struct any longer), but
+>     overall the structure layout is simpler and more sensible this
+>     way. This change was suggested by Herbert Xu.
+> 
+> Changes in v2:
+>   * Also patch all other crypto algorithms that use struct scomp_alg
+>     (v1 patch only patched LZ4).
+>   * Fix whitespace errors.
+> 
+>  crypto/842.c                          |  6 ++++--
+>  crypto/lz4.c                          |  6 ++++--
+>  crypto/lz4hc.c                        |  6 ++++--
+>  crypto/lzo-rle.c                      |  6 ++++--
+>  crypto/lzo.c                          |  6 ++++--
+>  drivers/crypto/nx/nx-common-powernv.c |  6 ++++--
+>  drivers/crypto/nx/nx-common-pseries.c |  6 ++++--
+>  include/crypto/internal/scompress.h   | 11 +----------
+>  8 files changed, 29 insertions(+), 24 deletions(-)
 
-Thank you for your patience.
-
-I assumed SO_PASSCRED was the problem, but I missed
-SO_PASSCRED was also inherited durint accept().
-
-Could you apply this on top of the previous changes ?
-
-Also, could you tell what desktop manager and distro
-you are using ?  If this attempt fails, I'll try to
-reproduce with the same version on my desktop.
-
----8<---
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 211084602e01..b61d4fdb7fc4 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -541,7 +541,8 @@ struct sock {
- 				sk_scm_rights : 1,
- 				sk_scm_embryo_cred: 1,
- 				sk_scm_parent_cred: 1,
--				sk_scm_unused : 2;
-+				sk_scm_parent_sec: 1,
-+				sk_scm_unused : 1;
- 		};
- 	};
- 	u8			sk_clockid;
-diff --git a/net/core/scm.c b/net/core/scm.c
-index e603bf5400e0..359d56d454b4 100644
---- a/net/core/scm.c
-+++ b/net/core/scm.c
-@@ -435,7 +435,8 @@ static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *s
- 	struct lsm_context ctx;
- 	int err;
- 
--	if (sk->sk_scm_security) {
-+	if (sk->sk_scm_security || sk->sk_scm_parent_sec) {
-+		WARN_ON_ONCE(!sk->sk_scm_security);
- 		err = security_secid_to_secctx(scm->secid, &ctx);
- 
- 		if (err >= 0) {
-@@ -449,7 +450,7 @@ static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *s
- 
- static bool scm_has_secdata(struct sock *sk)
- {
--	return sk->sk_scm_security;
-+	return sk->sk_scm_security || sk->sk_scm_parent_sec;
- }
- #else
- static void scm_passec(struct sock *sk, struct msghdr *msg, struct scm_cookie *scm)
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index b6ff7ad0443a..a35082269990 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -1899,6 +1899,7 @@ static int unix_accept(struct socket *sock, struct socket *newsock,
- 	unix_update_edges(unix_sk(tsk));
- 	newsock->state = SS_CONNECTED;
- 	tsk->sk_scm_parent_cred = sk->sk_scm_credentials;
-+	tsk->sk_scm_parent_sec = sk->sk_scm_security;
- 	sock_graft(tsk, newsock);
- 	unix_state_unlock(tsk);
- 	return 0;
----8<---
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
