@@ -1,127 +1,94 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sv9.manufrog.com (sv9.manufrog.com [46.246.119.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F0A317702
-	for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 18:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A90221F26
+	for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 18:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.246.119.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564009; cv=none; b=OQP2ZHJ2lY9b+uvqrAe02ge9nEnakjewkfAALH9DCMQGTaHPuHKKZksXE43IEH2oAYfSYwX4u/mzvvXA4NvxODPYvKWJ/egb0uz685b/kwpvAGjjCJLhQ9EXmjTsATkIN6qHNdJo4LYIoyaxtpeKCJf1xgpdJlgxdWqzR6Ek56U=
+	t=1758565996; cv=none; b=O2VkB/pacNRHwYBjc7QhEOK2dNax2QJlyrauUAM+fpE5Z/Iv4zOUQzEF5Vu0TPSZQ+pL/CCngaMS0PbnF8RYPpO+oVmSGSWc55NghEfV57UUMcU2Ee62bKY50vfSjyuqE1AtvLoZzbtlJDHCCVGYWCeIJkQ8P7oIXNMlX6fNA6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564009; c=relaxed/simple;
-	bh=LyFQcvfyyUbzuum2T68G+X8Y3wIlSo94RVd3tQx/fGM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ljscv89xT/7pGlpCV0BGgRVHf1TKU7omDDFHtXCzEGrVNkwuxueRqEOR0+25vlp2aQ/JFyBl1PLhQK6A836/nzPNK6ztCaz+rN1NJfvj3LZmikpx+AmFeZUNGcBIx3EyC7uGAQ4DoYJKOklrvFt00+wLhXpDe/XktA2Js7vQER4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L7rcPIvi; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1758565996; c=relaxed/simple;
+	bh=XdGBiNg8TBwn4eBBkY16k9IX+wOVuGrJsvgd296IEp8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=hAaqQLculjTr6+XNGzPYNKpB+CiMhw/ss5G0Hofphn4qfTfyzeQh9UbRSbjfzxKL+9WuedG+ebSgSQR0lITX03eOqmmiaHVBKHG0TnbtBTEUaEYcscFQRqBRTgEP+kD+XGtJbfqfzuScZclMyg/OqAIXES5waErXnLTZVyyMCHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se; spf=pass smtp.mailfrom=oscillator.se; dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b=emwnlFtY; arc=none smtp.client-ip=46.246.119.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oscillator.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oscillator.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L7rcPIvi"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-273a0aeed57so19972595ad.1
-        for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 11:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758564007; x=1759168807; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3tEHA5BGFi0qZLtSrmyzVuEmtCHCJP0b4IMQl2NugYg=;
-        b=L7rcPIviSyF84nE8+AU54rumpArZSM1lN94BgxfXiQn4bpJUmLqJ3W7MkYklSXSZ9T
-         Sz0A5w5zAqU1SpFSgnlyFMqXsHqkNBs7tGCyfj5FrgVtha8VQUM0vDjVcUttePi89WVx
-         esuRtkf2BDKKnX0nI9Yi+tB4G4clcbIO8aIOpxZHCcP3DKwKSH2XI13IwVE6Z+iL+iBg
-         +PqGhJwPaOzYgCGDIzovKjWEW2sZQ6Wj8tMSz0IQK6wJNlSENhUzFSsOCmNm6kwx4YSJ
-         hNa2PJDZYxC4XSLHOsTlS/PUviwB1ogaxXaHOXzOxv8QrHThuvI+YKV0ML4+woDr+XmX
-         5lng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758564007; x=1759168807;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3tEHA5BGFi0qZLtSrmyzVuEmtCHCJP0b4IMQl2NugYg=;
-        b=gUH5Nlikmf4njW0qBdFmaZdOc+CCKBpx+r2lTUk1Pfc+43tKqpDe1AIrSobXCGkPpX
-         u0QtJGmb3y+ubPA8m3ZDDliN3gvxzBWp556Yujj822u+qj2y2BqO0yjL/fsLEmsMOMzk
-         UxsSTbAxYuOeZs3XKk1T6Ck+S4C772tnHjjhopN6kWZ0MYcCuBuET183mUREdEbczwfT
-         4HnK2iq7s3dQijjhQ8Rpp+mlwqXel2K25QOq2H5pRP4KglkDenII52qZCrQGwjSCL1Q8
-         C0o9xaEjrOCtcoy+yD6xHqZ8FxiPxhaz0dGX6ly3rqS3xefG+398KuOcQS8FgibtRmlF
-         DBfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFi4IkDTwflyhKSEgzij5RdAO7gODCUyVNVcwp18dxND0bJNMTtG5iLOUv3xACDk8Dm8ESC3viN4BKHw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyg7f67DTbP3rpMXj/8WIBWoZifzuq1ItCstareEtsfmrR8Apar
-	AxtRU+3zMFZKn8oxrDZr3xB2Obdhd/kZWuDTqNRGZ2r1OAtnV021CvPLrcWXOfTMsUN/pG2Ze2E
-	ZyZK8a8b73skxeafGhtvZD4NR0+QcJtJoLcLlz9lhmQ==
-X-Gm-Gg: ASbGncsTjUTZJqX7cB/96t7cqVy9DmXBmSfCaLMqCFFAKD/USQYXBtCPXv3f+QD6dNT
-	lP7yu/WwMll8wB13PDFpVQAYcpm/BGOfmgzc6U6sODzYLBAWMZWJytCpAGIheYbGKdGV1MZgUI/
-	iZv15n2jOAjymjdbIS152zIMLMNXgdjEzkcFmuz3+3N4x0MkSKVFF1jXrAZdiLReTMjE3e3n7fg
-	PreHmXX/VuJN6S6zZN7IJE33VarQrG2STF/D26V
-X-Google-Smtp-Source: AGHT+IHnq0rLb8m5TMIAGXGLN0gHFwtTPEoJOMo0Qxa07UPXisa8PfZthBdHiar633sbMLp+TiDunSqrb9HsyhZzMag=
-X-Received: by 2002:a17:903:98d:b0:272:a227:245b with SMTP id
- d9443c01a7336-272a2274fc9mr102985765ad.17.1758564006785; Mon, 22 Sep 2025
- 11:00:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oscillator.se header.i=@oscillator.se header.b="emwnlFtY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=oscillator.se; s=default; h=Content-Transfer-Encoding:Content-Type:
+	Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=mnzsiREZ105BZTytHd/QqUUYjLw2IRFwIKQqvFV4GsA=; b=emwnlFtYuRakkFf38X7qRmohb4
+	ODirxNiPJiYboox4HRMekGJqUZaDEHeZOoBQLemRvcwGQMfkfBj11I2vL+w1MFJU+/ooVWtkggFqp
+	MjTM6qQYonEU52HlaYKJ2FyDzHvNa+kZuyCrxtLqZbm9dj2kvUGv5LMsFASqV/w4Ot/f+VWSIgsvX
+	gixowmT8Iwm0IIzeRSEC0faIWItvRb8ABZ9cL5u44RUie7RI5Ik77zguScr6NY0H81O+j/5V2OEVt
+	RTrA1U27JWVyBkwQQqmdTrBYSprDojMQPRJ9Q3caD3r9kduB9iefn45WF7gLST2TShgp3y4+aJYX6
+	+8kHE8qw==;
+Received: from [::1] (port=50132 helo=sv9.manufrog.com)
+	by sv9.manufrog.com with esmtpa (Exim 4.98.2)
+	(envelope-from <staffan.melin@oscillator.se>)
+	id 1v0lLU-0000000ABge-0Yjq;
+	Mon, 22 Sep 2025 20:33:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 22 Sep 2025 23:29:53 +0530
-X-Gm-Features: AS18NWDZwi1AO6kqN91ksL9x8G8Q2hcf5hfKdURyXPsi-NfZZp3RQHelXSAMyc8
-Message-ID: <CA+G9fYvq732po6A=X=1Bm_zLZMAK50y+8sEToWVm38uQfOke1Q@mail.gmail.com>
-Subject: next-20250922: arm riscv32 flexfilelayout.c:685:2: error:
- incompatible pointer types passing 'u32 *'
-To: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Anna Schumaker <anna.schumaker@oracle.com>, Jonathan Curley <jcurley@purestorage.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 22 Sep 2025 20:33:00 +0200
+From: Staffan Melin <staffan.melin@oscillator.se>
+To: zhangheng <zhangheng@kylinos.cn>
+Cc: Terry Junge <linuxhid@cosmicgizmosystems.com>, Salvatore Bonaccorso
+ <carnil@debian.org>, Jiri Kosina <jkosina@suse.com>, Benjamin Tissoires
+ <bentiss@kernel.org>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, 1114557@bugs.debian.org
+Subject: Re: [regression] 1a8953f4f774 ("HID: Add IGNORE quirk for
+ SMARTLINKTECHNOLOGY") causes issue with ID 4c4a:4155 Jieli Technology USB
+ Composite Device
+In-Reply-To: <01ce8d55-6054-4efa-bed5-ce4c6c6bc0e6@kylinos.cn>
+References: <aL2gYJaXoB6p_oyM@eldamar.lan>
+ <c8f3d402-e0ec-4767-b925-d7764aec3d93@kylinos.cn>
+ <e81e8d68cb33c7de7b0e353791e21e53@oscillator.se>
+ <aMUxHZF-7p7--1qS@eldamar.lan> <aMUxg6FLqDetwiGu@eldamar.lan>
+ <f08669ec112d6ab2f62e35c0c96d1f06@oscillator.se>
+ <94520aac-2a68-40d2-b188-80f9e361d6de@kylinos.cn>
+ <735c20da-c052-4528-ad91-185a835ca40c@cosmicgizmosystems.com>
+ <54b4b55c-ef29-40ae-a576-0c0b35ea9625@kylinos.cn>
+ <3c299b65351c489fea95ec8b93518b6b@oscillator.se>
+ <01ce8d55-6054-4efa-bed5-ce4c6c6bc0e6@kylinos.cn>
+User-Agent: Roundcube Webmail/1.6.11
+Message-ID: <11f1363dcdec98f4275e4df3145e4f24@oscillator.se>
+X-Sender: staffan.melin@oscillator.se
+Organization: Oscillator
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - sv9.manufrog.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oscillator.se
+X-Get-Message-Sender-Via: sv9.manufrog.com: authenticated_id: staffan.melin@oscillator.se
+X-Authenticated-Sender: sv9.manufrog.com: staffan.melin@oscillator.se
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-The arm and riscv32 builds failed on the Linux next-20250922 tag build due
-to following build warnings / errors with clang toolchain.
+Thank you,
 
-First seen on next-20250922
-Good: next-20250919
-Bad: next-20250922
+I can confirm that this patch fixes the touchscreen issue on my GPD DUO.
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+Tested-by: staffan.melin@oscillator.se
 
-Test regression: next-20250922: arm riscv32 flexfilelayout.c:685:2:
-error: incompatible pointer types passing 'u32 *'
+Thank you for your work!
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Staffan
 
-## Build error
-
-fs/nfs/flexfilelayout/flexfilelayout.c:685:2: error: incompatible
-pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of
-type 'uint64_t *' (aka 'unsigned long long *')
-[-Wincompatible-pointer-types]
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/asm-generic/div64.h:199:22: note: expanded from macro 'do_div'
-  199 |                 __rem = __div64_32(&(n), __base);       \
-      |                                    ^~~~
-arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                             ^
-
-
-## Source
-* Kernel version: 6.17.0-rc7
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: 6.17.0-rc6-next-20250922
-* Git commit: bf2602a3cb2381fb1a04bf1c39a290518d2538d1
-* Architectures: arm riscv32
-* Toolchains: Debian clang version 20.1.8
-* Kconfigs: lkftconfigs
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29967175/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250922/log-parser-build-clang/clang-compiler-fs_nfs_flexfilelayout_flexfilelayout_c-error-incompatible-pointer-types-passing-u-aka-unsigned-int-to-parameter-of-type-uint_t-aka-unsigned-long-long/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/333IdxAGk8S0TDZQ0YbgzNOtKgs/config
-
---
-Linaro LKFT
+On 2025-09-22 11:21, zhangheng wrote:
+> Please help test this patch, I will push it to the kernel community. 
+> Currently, the microphone device is functioning normally
