@@ -1,61 +1,61 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CF2305E2E
-	for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 11:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB80A2FB97A
+	for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 11:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758542350; cv=none; b=Ffik98u6hFWnGE2N348frT7VIOeRiXJV2pVIB76WG//8k8WoXHbzudF8VrpuEbfRncFiZMRSrbW2Kd1HzZXtMkuIAdQ1w+dhGg64+8CQk3Cplz5mopkM6USAIzqmCAY2G4zvWrAcJqCbu9HUBGUVvZLkyyzTJ4lJpGooGaZ2CPs=
+	t=1758542351; cv=none; b=BKw/yhevpBEUmcBQOcGzKfZFOj3JYkSwZEyIu2FiAnLtMirqHp7WV/swmufIKyKJM0laAI+CrpYjJo3PFU4hMBD3KZLuyM/tNUtt/tCuV50UzJJjBMP+1bo59TEmXuYr5UjofWV0X4aH2w2PDKuYL4LO/9htBwDL5rrIhbKmS10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758542350; c=relaxed/simple;
-	bh=8iOAb7k9M3R892MfyDBFeeAalq8574Z6x4gz4w92fzI=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=ZWrRp1S5+ttas6NLPRjxioOZN+TxQusQ2H3wwuRYVuJn7qJAOveMUOmd0NnIQaBK44Eri6zFKlsJmubZa6k07OiwMiLq0aMLyQmY011BeTIJEcgqca6xUI/LxJkGjGyXaW0Tmmj/19H4t2qh5Ac7bDBHkzgy5tkOM4nF0k+nneQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=ZxPPxThd; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1758542351; c=relaxed/simple;
+	bh=kNHccVyhVKFN1OQ3GbJtvkWS9i6VeWKckXRnMPsrSv4=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=syM60hIXt8AIQBBpyOduSPIxY2dWmtoEOn7nxXA5ixrz4DVbC47uvvQva8lBGJk1MoMU2pXbLSPH3VoOyEWfhWuA8OfX2HSXG4Tt5YILCNwrY7UPX9pc6GpSX5hEGwVpGs8foLusTne98dvmCygdOnZNi6joxzYwqJTgSqo35P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=0/acxua1; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="ZxPPxThd"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-77f169d8153so1981795b3a.3
-        for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 04:59:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="0/acxua1"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b5516255bedso2224449a12.3
+        for <regressions@lists.linux.dev>; Mon, 22 Sep 2025 04:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1758542348; x=1759147148; darn=lists.linux.dev;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1758542349; x=1759147149; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3szr+kJTUuNS+iVcKOU+a7GHZg5bpUVvZtqIRdh2MYc=;
-        b=ZxPPxThdaj1EYS9XzjEMFV2xWk3MDDVGux7V5Qo+7mt/UwP5LztAbEYrnSxaS5zy1X
-         IBUizyWPL0KRQ4PjMqGuOliYn4dQcBwi7kCWwfHgJV9FojFyGevixqTzo+nWxXiBiXOr
-         WI26yLAYaQDTZvJ9avEjHkkhjDXE01xw9hiwjWBrt2/M7C3uKcHZ6raP+Ik8ziQ6Oc5h
-         KZC7DS7EbPG3ijYKYU2X5eO8Gi4HcmONhjHkBR2yAmK6gFZoZ5HXlif/EZGoxkmiZ+/q
-         w0UhNqs9br6ti4RO1NI8akFzyEnLtNnzOxkLFCeJ++6XCln3hjMDvNzGiIiCYSZc4I45
-         8mlA==
+        bh=Jc/ZaEN5reK8P6OfyJuXUb0G94xSPoKCeSzYTJwvaOU=;
+        b=0/acxua1rNjLnStlzK3AkDZ6cE5N5ywPflBezkurwRsMzLVLotoTdXlKn5+3wA7t7K
+         VXlHzjOJBKeY5vzrPiMu+WgmKOrAftyaYABtJrHNYvnelgltigNifRq02Wmk+L8nmDnd
+         PWrIeTGs2pvv1zSf9Hj26Qietg+hTbwkmM0m4axNXsSjA8d4ZZgUMJ/ehHBld9iSiGSB
+         UykcjUSQ6WNhhNFiBr/G7ZyCmthNOD4nJ9+MBDpSHVoBbUQxE7KjfeZesYZ3UKSZX1Ad
+         NmmO3D8fXuxncX0PwqCmlLlFNTdU9Au1QtPtOPLWVfIBjeIdLCE814AUSRXHsx1ZVbUx
+         YFOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758542348; x=1759147148;
+        d=1e100.net; s=20230601; t=1758542349; x=1759147149;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=3szr+kJTUuNS+iVcKOU+a7GHZg5bpUVvZtqIRdh2MYc=;
-        b=e3cDlHJB4ogSnmRnX0ug6POnUfaAeHwNNn9YzccZ9WFv08cqDYVDI6Y8tR2OARxsiu
-         lW52ZUQ7Oy2g1/MSsWc3sm2xC3NRnOZjoSBfQvlaRpzo4Habqjfa9yg1wiHNgrYkxLRU
-         xGWNnb/DRqq0P68+O6kEEvjnetjQYH13hW8BHPg85oRp9TTBMDY+wBFHUs10KUJ/IYtL
-         Gor4sZXHpUxrXMDcEOCob0/pUhJJW3PHQvm/KWjyEql1zwb61XCeEqF6aQx8kyQjJCD3
-         urG9XCPTP4Bn+7nLPU4UbLhKjPAoEXpQ9YS3/mpBFPYOYs4yK8IcgMduWPOVFSoKHDDf
-         8CLA==
-X-Gm-Message-State: AOJu0Yw37kp0ULXJ1+pjybtFwkpmBHHhiiX4ca8I0eu7SW2GGT+FubSo
-	PghlRAj3dZe6V8DvqUqzpBxH+EE0lUWOvu2saIRYGR4jOHkq04kWmYfmGHsjxvrzSZM=
-X-Gm-Gg: ASbGnctYu+IxWOgVilBj7gkxbYfjL1oMf+2p6QDhUVUbh4EkWxHry6j0gFnlMIiE1s6
-	eyCOk85HAr0Jf8vrso9zli5YSKs5zTfvNpDWd8t79ViFHBbSfLY7+awH+p3pHQeWJSElEWFpG1K
-	FajnKUHEcb7uAEaK9BotBfin8yqrc2lnzeS1mVZOC02ktxlJUZW+z0e22AqBC7uXiwwN7UeRmbf
-	3faLfR26NCYgpWf3Uwki60hLtCjO1K3+qjZGdBhOi5WfuEViDXOVEGGae5XMCkucLlLyunJ9DSt
-	PvZ2oLKNyWLW0TW+txGF5isdM7NnUSF2x1hmty8vkFukPr98OZsqoT6FWUFt5/hHRQi0T0qlJuD
-	6gasakop2n74D1Q46
-X-Google-Smtp-Source: AGHT+IEo6TxyeKQFPnH7fFjO/SFRiLs45bi+V+6/rjTaNwCleBNEA0whKIvyEP7jO4bUrtuvNsLcZw==
-X-Received: by 2002:a05:6a20:9149:b0:253:1e04:4f4 with SMTP id adf61e73a8af0-29272b52720mr17042976637.48.1758542348016;
-        Mon, 22 Sep 2025 04:59:08 -0700 (PDT)
-Received: from 166871acc15a ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54ff3fd7easm12057676a12.30.2025.09.22.04.59.06
+        bh=Jc/ZaEN5reK8P6OfyJuXUb0G94xSPoKCeSzYTJwvaOU=;
+        b=dgQJdACI4XaurKYeb2HeMHKsf3EAqWBPHD5DJ/uL2fZIB7KB4i/+XiCiyTR/TFMEBA
+         CzVq/tLByuSrNXLX2N720oWTeUpAxzshI9wgTsq0+4Cn+VKaEhnssJYcBtR3VDZLAAdP
+         j9ZXDvSbd7/vU0BrxHR+T3ETfPcsNe0P3JZjxZfMqkaD02qUjVrJMZaWYxJTRePlrh3V
+         TiMIXIJvPgorJWvoinjJRzaxWvUaK2DTYbbF0m7OHuNNMn7L7VkTmghP8YeFrhCR4CL1
+         n/xRuLmoXb69aokXlCPJcDwu1TRAnz/EvvVPEkrO0ACA9A/wvveDexkEusb08Vljkj84
+         pEiw==
+X-Gm-Message-State: AOJu0YwG4JM7U6r5H+N8vFZ/BnN7bYCl4AbrenB1r74TBO5COMnX6c5S
+	bTvx/yhrpihn4rifOgmGXXIbqTgp3z2MymSdFikRH9bs3y83T7P5P14t0jgHnnCflzA=
+X-Gm-Gg: ASbGncvNSXoFrVOjOv1Hw6XTti/1sjEM0aSZ5ibUrWpPyNZr4DEua5EU1rRyfDqReoc
+	mn+vMWPvHQjHzcytLkUJJ9v0ORnMUg8ChPdVYqcBBaQj7wXqeqQ22JNs2/OwDksHt62lplLleLj
+	O/fCi5fPZfbFnpBKg47wJe/g90ir+60QvXHWtjQE68J8ri3XqO8X15fZDPQNcXsz4ledSfnAdda
+	Tb/LYsZdqa99ATdZ0eNFYxpk0vjEkuuYpdjgo/QfhY9A7RfL/v8BUY/4uVzAMnRtB8lmKXOIviG
+	60iKgJaoLUnl1ECdETvw1QZ4S/5rLpAVLi3ib68L8CvSU5yWHL6M+qE7JBIbVJhiliBnVMxsGc2
+	k5u3vl4NJnoP1EmEr
+X-Google-Smtp-Source: AGHT+IGaah20WWf6zDyy5pEROJgGsdgzHlGhdH0dWiABEOwpsdDWWFvP8zAL12/abVSK3xo8Cf3v5w==
+X-Received: by 2002:a17:90b:1fc7:b0:32b:aee1:18d5 with SMTP id 98e67ed59e1d1-33098385e48mr15232374a91.29.1758542349103;
+        Mon, 22 Sep 2025 04:59:09 -0700 (PDT)
+Received: from 1dfac204f25d ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b55138043b6sm9742415a12.26.2025.09.22.04.59.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 04:59:07 -0700 (PDT)
+        Mon, 22 Sep 2025 04:59:08 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -63,16 +63,17 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) comparison of distinct pointer
- types
- ('typeof ((mirror_idx)) *' (a...
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?q?=5BREGRESSION=5D_next/master=3A_=28build=29_in_expansion_of_macro_?=
+ =?utf-8?q?=E2=80=98do=5Fdiv=E2=80=99_in_fs/nfs/flexfilelayout/flexfilela=2E?=
+ =?utf-8?q?=2E=2E?=
 From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Mon, 22 Sep 2025 11:59:06 -0000
-Message-ID: <175854234627.725.771324603757490830@166871acc15a>
+Date: Mon, 22 Sep 2025 11:59:07 -0000
+Message-ID: <175854234740.873.17699577477730961398@1dfac204f25d>
 
 
 
@@ -83,10 +84,10 @@ Hello,
 New build issue found on next/master:
 
 ---
- comparison of distinct pointer types ('typeof ((mirror_idx)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types] in fs/nfs/flexfilelayout/flexfilelayout.o (fs/nfs/flexfilelayout/flexfilelayout.c) [logspec:kbuild,kbuild.compiler.warning]
+ in expansion of macro ‘do_div’ in fs/nfs/flexfilelayout/flexfilelayout.o (fs/nfs/flexfilelayout/flexfilelayout.c) [logspec:kbuild,kbuild.compiler.note]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:76d27462ca9e8dd64519bf79c841aca15d98a0e5
+- dashboard: https://d.kernelci.org/i/maestro:2e882f7ffaba317e489e0a937b7ab5ce4ccd25b3
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  bf2602a3cb2381fb1a04bf1c39a290518d2538d1
 - tags: next-20250922
@@ -94,57 +95,75 @@ New build issue found on next/master:
 
 Log excerpt:
 =====================================================
-fs/nfs/flexfilelayout/flexfilelayout.c:685:2: warning: comparison of distinct pointer types ('typeof ((mirror_idx)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro ‘do_div’
   685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:183:28: note: expanded from macro 'do_div'
-  183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-      |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
-fs/nfs/flexfilelayout/flexfilelayout.c:685:2: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:199:22: note: expanded from macro 'do_div'
-  199 |                 __rem = __div64_32(&(n), __base);       \
-      |                                    ^~~~
-./arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                             ^
-fs/nfs/flexfilelayout/flexfilelayout.c:685:2: warning: shift count >= width of type [-Wshift-count-overflow]
-  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:195:25: note: expanded from macro 'do_div'
+      |         ^~~~~~
+In file included from ./include/linux/array_size.h:5,
+                 from ./include/linux/kernel.h:16:
+./include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
   195 |         } else if (likely(((n) >> 32) == 0)) {          \
-      |                                ^  ~~
-./include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      |                                ^~
+./include/linux/compiler.h:76:45: note: in definition of macro ‘likely’
    76 | # define likely(x)      __builtin_expect(!!(x), 1)
       |                                             ^
-fs/nfs/flexfilelayout/flexfilelayout.c:696:9: warning: comparison of distinct pointer types ('typeof ((mirror_idx)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
-  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:183:28: note: expanded from macro 'do_div'
-  183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-      |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
-fs/nfs/flexfilelayout/flexfilelayout.c:696:9: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:199:22: note: expanded from macro 'do_div'
+fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro ‘do_div’
+  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+      |         ^~~~~~
+./include/asm-generic/div64.h:199:36: error: passing argument 1 of ‘__div64_32’ from incompatible pointer type [-Werror=incompatible-pointer-types]
   199 |                 __rem = __div64_32(&(n), __base);       \
       |                                    ^~~~
-./arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
+      |                                    |
+      |                                    u32 * {aka unsigned int *}
+fs/nfs/flexfilelayout/flexfilelayout.c:685:9: note: in expansion of macro ‘do_div’
+  685 |         do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+      |         ^~~~~~
+./arch/arm/include/asm/div64.h:24:45: note: expected ‘uint64_t *’ {aka ‘long long unsigned int *’} but argument is of type ‘u32 *’ {aka ‘unsigned int *’}
    24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-      |                                             ^
-fs/nfs/flexfilelayout/flexfilelayout.c:696:9: warning: shift count >= width of type [-Wshift-count-overflow]
+      |                                   ~~~~~~~~~~^
+fs/nfs/flexfilelayout/flexfilelayout.c: In function ‘calc_dss_id_from_commit’:
+./include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+  183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+      |                                   ^~
+fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro ‘do_div’
   696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/asm-generic/div64.h:195:25: note: expanded from macro 'do_div'
+      |                ^~~~~~
+./include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
   195 |         } else if (likely(((n) >> 32) == 0)) {          \
-      |                                ^  ~~
-./include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      |                                ^~
+./include/linux/compiler.h:76:45: note: in definition of macro ‘likely’
    76 | # define likely(x)      __builtin_expect(!!(x), 1)
       |                                             ^
-  AR      drivers/phy/mediatek/built-in.a
-  AR      drivers/phy/microchip/built-in.a
-4 warnings and 2 errors generated.
+fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro ‘do_div’
+  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+      |                ^~~~~~
+./include/asm-generic/div64.h:199:36: error: passing argument 1 of ‘__div64_32’ from incompatible pointer type [-Werror=incompatible-pointer-types]
+  199 |                 __rem = __div64_32(&(n), __base);       \
+      |                                    ^~~~
+      |                                    |
+      |                                    u32 * {aka unsigned int *}
+fs/nfs/flexfilelayout/flexfilelayout.c:696:16: note: in expansion of macro ‘do_div’
+  696 |         return do_div(mirror_idx, flseg->mirror_array[0]->dss_count);
+      |                ^~~~~~
+./arch/arm/include/asm/div64.h:24:45: note: expected ‘uint64_t *’ {aka ‘long long unsigned int *’} but argument is of type ‘u32 *’ {aka ‘unsigned int *’}
+   24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+      |                                   ~~~~~~~~~~^
+  CC      lib/zstd/decompress/zstd_decompress.o
+  CC      fs/lockd/clntxdr.o
+  AR      drivers/pci/msi/built-in.a
+  CC      net/ipv6/ip6_input.o
+  CC      net/ethtool/pause.o
+  AR      drivers/video/console/built-in.a
+  CC      drivers/video/backlight/as3711_bl.o
+  CC      net/xfrm/xfrm_sysctl.o
+  CC      drivers/pci/pcie/aspm.o
+  AR      drivers/pinctrl/sunplus/built-in.a
+  CC      drivers/pinctrl/sunxi/pinctrl-sunxi.o
+  CC      fs/fat/misc.o
+  CC      drivers/video/backlight/backlight.o
+  CC      lib/zstd/decompress/zstd_decompress_block.o
+  CC      fs/lockd/host.o
+cc1: some warnings being treated as errors
+  CC      net/ethtool/eee.o
 
 =====================================================
 
@@ -152,11 +171,35 @@ fs/nfs/flexfilelayout/flexfilelayout.c:696:9: warning: shift count >= width of t
 # Builds where the incident occurred:
 
 ## multi_v7_defconfig on (arm):
-- compiler: clang-17
-- dashboard: https://d.kernelci.org/build/maestro:68d1301275b320799d36f149
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1305075b320799d36f18b
+
+## multi_v7_defconfig+CONFIG_CPU_BIG_ENDIAN=y on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1304375b320799d36f17f
+
+## multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1304a75b320799d36f185
+
+## multi_v7_defconfig+CONFIG_SMP=n on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1304675b320799d36f182
+
+## multi_v7_defconfig+CONFIG_THUMB2_KERNEL=y on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1304d75b320799d36f188
+
+## multi_v7_defconfig+kselftest on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1305375b320799d36f18e
+
+## multi_v7_defconfig+preempt_rt on (arm):
+- compiler: gcc-12
+- dashboard: https://d.kernelci.org/build/maestro:68d1305775b320799d36f191
 
 
-#kernelci issue maestro:76d27462ca9e8dd64519bf79c841aca15d98a0e5
+#kernelci issue maestro:2e882f7ffaba317e489e0a937b7ab5ce4ccd25b3
 
 Reported-by: kernelci.org bot <bot@kernelci.org>
 
