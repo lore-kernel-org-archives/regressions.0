@@ -1,119 +1,109 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91A42652A6
-	for <regressions@lists.linux.dev>; Tue, 23 Sep 2025 09:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAB8275108
+	for <regressions@lists.linux.dev>; Tue, 23 Sep 2025 22:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758621074; cv=none; b=MP3W6QkhWkZ9NZtLaL+2s8r3sxqCthFzQzNNY0E17rHWzLl3doCr2dAa97GkGvlwWXuS8WYQpXpQDiCMzyWBHVLAc1HpYAraRwQgpuUIsB9tKCAoOZxF+NeiQv+A2B/FyxMX7ocuWVdWXKUBm5HK5ZZv8O1MAjYHL/VQQ5jcfaU=
+	t=1758665993; cv=none; b=rak2PRpMWTX+ZYrSDanWIlFLhbgpMN+b8LeNq3nrrGLo+VAxbVlCwqoOuMSbtfHIbsqIIBj4L6zkgjslmES3nT+PsjGqTLDv+teGr1RHgDhJJ418K1zUKOicE3nIc7dnFj+HjZ11KevxYbLmEWjJnnNgChW3A4VHfaZIvo8+8hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758621074; c=relaxed/simple;
-	bh=aXu4O1FN+YVhKDNpeEOiwXtioblobCHbcZCuvieGJ5U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=vCpDw1E0wHMjc2b49/LpJ80zvTZQ0EMaX+3iqagokxLd4FUxk5iPCajvbSMSur9N3fnbR4P7JS5tNG3rBv0xwP0E4gcIAQuvVIA6OdA/QXKhdZIlLfpsYWp8EEfa0FhaKC0WBZK2APuY52iKl7osXJCo+N9HrcluN//VgQJSQxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jMXsFu7z; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1758665993; c=relaxed/simple;
+	bh=kuspQguKDMN2QP07Ofn/e8FxPXEd28GZFNAFhZqNgXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D/qnSCaiJauG950g67dA1lm94g0K4rvD+z78wnfOdTcNvYp/puzIv1V2/H1yugd33Q9AM1N9p1swlAKXg5EUij46UjcuaPMqVvcmhCGvpW1/iM1sR4IEqd58zsumSXprQLc01+Vf0keOw5+xS4AlBenY93hC1O6BnHytELsygoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iwell.eu; spf=pass smtp.mailfrom=iwell.eu; dkim=pass (2048-bit key) header.d=iwell-eu.20230601.gappssmtp.com header.i=@iwell-eu.20230601.gappssmtp.com header.b=RyAPZv56; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iwell.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwell.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jMXsFu7z"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-267f0fe72a1so37532145ad.2
-        for <regressions@lists.linux.dev>; Tue, 23 Sep 2025 02:51:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iwell-eu.20230601.gappssmtp.com header.i=@iwell-eu.20230601.gappssmtp.com header.b="RyAPZv56"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b30ead58e0cso182802266b.0
+        for <regressions@lists.linux.dev>; Tue, 23 Sep 2025 15:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758621072; x=1759225872; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ujUSntEdEB2Zj8RW3cXBNzPb5lb7mNEARj7gYfxpl6o=;
-        b=jMXsFu7zAROP/mkxSe1CrBHTaC5uZVBfcy/kq+lx7Ig3RziM4YVRhfjN3kQwoWeuQS
-         J5JyQt6pE87jBkneOESKrzGygYw2dkPoFBDlRd2Vawg7WU3SxsWbAQCqOx1T2DCoOBJ9
-         JVnyk3r8eV+rzJ8881kD8AJHZXu/XtibJi8Tu5hf2Z3UmSrX8WyU90piVrW50dEoO17d
-         ua3ZBqmVdUAbabvZ8oG/FOs9pqASLCyxUWU21xjcOYb4M25zWnFAzjN83hIoML3JZ/pU
-         n5hffTqoX4OPfz+U2w7ZnThv0BnfCBzAKRWmCefJBlgX/WzqMD0JElfkUMfN7s55cflG
-         7kog==
+        d=iwell-eu.20230601.gappssmtp.com; s=20230601; t=1758665989; x=1759270789; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pZoDAc2wyhln1U3oJuCYDkDreDeByhBAvuQoDZOwjao=;
+        b=RyAPZv56HLW1PqYpDd24GHk5+h+IoCAGs8rmHxyGbJHWM054MYyvIKvLPa0o0gUosz
+         LpCPbH38aLZWwNc921Gt2sdK9lHI/D8wdE+KoK4LzOaqXt+aD6tTMi8d90TKdTFcJ1RZ
+         ID4zr6Y8VBX5jq94im+K8BGzM2SQuPLyu8AhgAtgSZwdcbW65GMUti+a0ZVF18OCQmqw
+         M03NB+yBxpAyeN+z5PS+yM52jw/tkyyhRr36iV1jf/g8mv98FY81KZ5GrsQ3FkiY6qzt
+         GRS68tFUcRCitapO88/IN2bcj+FhgiHxTxgn6WnghJUba7yEvdIb5Att81y88JYuC9Ax
+         C9EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758621072; x=1759225872;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ujUSntEdEB2Zj8RW3cXBNzPb5lb7mNEARj7gYfxpl6o=;
-        b=lKIfAeFwVnd6FvDO6lwzZa6IhDXR6tu4Irebyzz7PDOsoA06mUeSNc1GWDpizf+xer
-         3dCi4AGxJJGRvewLqdOpRsQUbMy2huJfeDJT1kbcNTlGq4bim9KjzT2lPWT2Dndp3Ttp
-         V67tCUhAugwedLpaI83bfiH0Oc7URaMGz6qdHYcXv2jW5Np5TFEdVNByszM2ST7H+UAc
-         bwYs5mxtD5HsGXOQinamt3gLhMCtEpuYUSn1f8u28iWgNDMcSw/8XYsNQ26gijQfQ6U1
-         79hrSWlgQ5kudAuAdH+YluDwWTBIjQGrORfktkuvqFvVNEd2liQtnY+d64eKpm/stE0x
-         Dyng==
-X-Forwarded-Encrypted: i=1; AJvYcCX1Q60rfPe1V0ivz4OyfO07G+ci1XiiwgiHdtO9mME+ym4tXcz+CWjOIR4FQYWiJdDyRbL61BOd9dbbVA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxaW6hJ0/UUyupVxn56W8uRdwiUCnGJ+DVf1YldeTW2jvECVBTV
-	0TEgwaXjoM8LcblsAKNmycQiNBrmZM5ftVbApGF7qTEZxDosQkFYjrhy/mu/YrECd9RujRWzDHR
-	AWN3zimW8Jvbl361hgv3mCp1tND/Xc29CoZU+XKopoQ==
-X-Gm-Gg: ASbGncu4qlGyQygQdCdlHmf/kOSmfofhSORLkJsLMBVBiIuuq+jeNPKdrBSsocPPTCB
-	Nwn1sRfwbYcPMPPRty5JbHihson6dd2xpHqI94HCFFjuH1RSaC7YhH3EH7I3SgkADSkBL3jB4ed
-	9mzlVExr3FuwUvoIRsatkvqRQJgztYyujpMtyKe3/lagyWkctRerBlRhG0cXYatLMWBB4ZYg602
-	6KeaIBPj2UJK0ZpL8Sg9jP6myVviubxwAyAzFpAlg18DtFqW2g=
-X-Google-Smtp-Source: AGHT+IFHus42Ak5ruWRhTAyg3xMfr+guDvkTkhHI6eHQ3GvPvUzkyf4uNtM2sp4MCW+8IQd4OjacMuEUwlCpUIFW7h0=
-X-Received: by 2002:a17:902:ecc5:b0:264:c886:8188 with SMTP id
- d9443c01a7336-27cc2c98b42mr26887555ad.24.1758621071785; Tue, 23 Sep 2025
- 02:51:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758665989; x=1759270789;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pZoDAc2wyhln1U3oJuCYDkDreDeByhBAvuQoDZOwjao=;
+        b=d6AVgsM+Sef+RTsesaXl6ChHqThu+2FH3hGtfqFqq6OYJEM2aLi9qlsBvbXsRQ4UNz
+         kmZ6zclcgd7UpaTVs6WYnJP5voLRVx0GRWunaf1xazEWvk29fetT2Rs6KiZtHLVrTQe9
+         HzOj1ynHa/HvUOwFskv/anZeG9dFXMoZtETmbBA3YGugFarMh7nJ2O9FtE2jN+3i5Wvq
+         GRzgaABDsMvuvWP55wHKpXGtBt02BqA6nYRIJuk9uGJEIvp4MphKygmwlvFPGLx9R2i0
+         n+CqQ/+8ifi63YPYHECTXywft1jFxVSSdcJQotUPCUyfLxPm1JlJD7pYQ3X2ZwFsFkrO
+         rp7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVETFFxE/6yKNnzDM97/FAciH3SprZvr15TArBbpfbTzWF7deEPOz5JNOqkskckdYzYi10V7CZcxEU6gw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwhFO/vfZsBKi8bLzLHpc95REksmtGy8c3ZkDWBHTtK/s+BV1ce
+	SlQ2kwsWCD3PHReqoNznW+Uql7Q3nW6fEe9xb7xpkrNM71HUgcx25ZDDJQ7P7x8IRriN4wZHBL5
+	jxJnrimid7w==
+X-Gm-Gg: ASbGnctesbta3GZvBbAO0uGqDJTsX89+WTayHwOTl7XI/kGcZZ5dGjql8PPlTBEhH+k
+	cdsUI8I7KxtCbfp+zAHtmpOh3AFDdRaV02HT27OqIAc+LI1pkjLiTc9+9azX25NTRox/sNG18Dh
+	Arl5eHo3fZ7nfizzXEkqhV1S7osTtzL0MbjZ2ogipnSnPAi6NkEqbtL4QqH97lMtsUp2iRTPFb1
+	ZXtJi8O+38doUN8RfDzEigPrliVC/VAfyswUkibjptqSThUuDf2OAvlcBC516/602JiefD0ZuW7
+	W0WIgkXYihfr8VC+0gTn7+384yAj9Ch2DslQO8jTUBEz1iiN8tuA2V2weJCwXpvpsnyBWx63bRI
+	pM/v/VLhNS8Is417n9AtgZs8+dZJSfrDn3eq6JmTz16Ltszh6eJVqIsLi
+X-Google-Smtp-Source: AGHT+IEzCEwbixWOf1mAG9edDAoF9t3pu71R6SaOM3SQN+LM7ZMPhOBWU5qdpOcyem+S8HdoFV3sDA==
+X-Received: by 2002:a17:907:9627:b0:b08:85d0:3d8b with SMTP id a640c23a62f3a-b3026e7495dmr394989166b.21.1758665989378;
+        Tue, 23 Sep 2025 15:19:49 -0700 (PDT)
+Received: from localhost.localdomain ([178.224.220.25])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b2c56c2389fsm581187066b.79.2025.09.23.15.19.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 23 Sep 2025 15:19:49 -0700 (PDT)
+From: Marnix Rijnart <marnix.rijnart@iwell.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: Marnix Rijnart <marnix.rijnart@iwell.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION][PATCH] serial: 8250_pci: Fix broken RS485 for F81504/508/512
+Date: Wed, 24 Sep 2025 00:17:33 +0200
+Message-ID: <20250923221756.26770-1-marnix.rijnart@iwell.eu>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 23 Sep 2025 15:21:00 +0530
-X-Gm-Features: AS18NWCTfgTcnoVtFJ38FtxMSy0NvoryOqAycB2FQR-fdtYRDlc0bdIbrsPkR5s
-Message-ID: <CA+G9fYuZZUQq=7qPavXnHZtX9oQ=amfYVeYRZu3SHfD0ReD6nQ@mail.gmail.com>
-Subject: next-20250922: xe_device_sysfs.c:300:25: error: label 'cleanup' used
- but not defined
-To: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Lukasz Laguna <lukasz.laguna@intel.com>, Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-	Jonathan Cavitt <jonathan.cavitt@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-The arm64 and x86_64 builds failed on the Linux next-20250922 tag build due
-to following build warnings / errors with gcc and clang toolchain.
+Commit 4afeced ("serial: core: fix sanitizing check for RTS settings")
+introduced a regression making it impossible to unset
+SER_RS485_RTS_ON_SEND from userspace if SER_RS485_RTS_AFTER_SEND is
+unsupported. Because these devices need RTS to be low on TX (fecf27a)
+they are effectively broken.
 
-First seen on next-20250922
-Good: next-20250919
-Bad: next-20250922
+The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND,
+so fix this by announcing support for SER_RS485_RTS_AFTER_SEND,
+similar to commit 068d35a.
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+Signed-off-by: Marnix Rijnart <marnix.rijnart@iwell.eu>
+---
+ drivers/tty/serial/8250/8250_pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Test regression: next-20250922: xe_device_sysfs.c:300:25: error: label
-'cleanup' used but not defined
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index 152f914c599d..a9da222bd174 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -1645,7 +1645,7 @@ static int pci_fintek_rs485_config(struct uart_port *port, struct ktermios *term
+ }
+ 
+ static const struct serial_rs485 pci_fintek_rs485_supported = {
+-	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND,
++	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_RTS_AFTER_SEND,
+ 	/* F81504/508/512 does not support RTS delay before or after send */
+ };
+ 
+-- 
+2.51.0
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build error
-drivers/gpu/drm/xe/xe_device_sysfs.c: In function 'xe_device_sysfs_init':
-drivers/gpu/drm/xe/xe_device_sysfs.c:300:25: error: label 'cleanup'
-used but not defined
-  300 |                         goto cleanup;
-      |                         ^~~~
-
-## Source
-* Kernel version: 6.17.0-rc7
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git describe: 6.17.0-rc6-next-20250922
-* Git commit: bf2602a3cb2381fb1a04bf1c39a290518d2538d1
-* Architectures: arm64, x86_64
-* Toolchains: gcc-13 and clang-20
-* Kconfigs: allyesconfig
-
-## Build
-* Build log: https://qa-reports.linaro.org/api/testruns/29968978/log_file/
-* Build details:
-https://regressions.linaro.org/lkft/linux-next-master/next-20250922/log-parser-build-gcc/gcc-compiler-drivers_gpu_drm_xe_xe_device_sysfs_c-error-label-cleanup-used-but-not-defined/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/333Idt9y0485dJThIiCgCMB7ehs
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/333Idt9y0485dJThIiCgCMB7ehs/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/333Idt9y0485dJThIiCgCMB7ehs/config
-
---
-Linaro LKFT
