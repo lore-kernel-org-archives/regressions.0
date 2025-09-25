@@ -1,126 +1,168 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006D4287510
-	for <regressions@lists.linux.dev>; Wed, 24 Sep 2025 21:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CC51397
+	for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 00:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758749082; cv=none; b=NWrSLzu6xMYGmzFsiZ6N0W/O+Y81UAAuVWl6FE/Ex0BzWzwPhrus5WV7iNmg4PoYOxlmdYw06P5uDR3V6NplCLq4y1WxUOEKoUZCQIVWCFM2PKc3QGHuHiuDx+QJq0YHmRTQexZbJCo8xVvnXiRcc3liFpKhOXqKWU5YxDI+O7c=
+	t=1758760186; cv=none; b=Xd9xo9OCteHiyarx96ilLNBhn2yLT0dAxUedAGBzcbrE512AkeJmTEQeIBmIJCa3q+V9G4fa7HEtBQerWNjzJyNbuXwRJPQ8Zs1/xAvIg4bkbn6Q80dFaHvIuCV9/+b2qate+pNOG3tpeOnhziIkW5YjgyzPV1mYvAxfFupdn4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758749082; c=relaxed/simple;
-	bh=yYlJMEiOn4ahL9VGQHqHfLn8g81HGorNFwQNV25DIPY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BNne0CAkbnUGng92ZgGW3hhVFmuxI+ptHdrAzij2vwd1uDwmNOHwI/YhO/2QTVT6W2lGjmQdDsAsqiL4+Qf3TD5ZDqWyhVg8FDFwBi/aW0IWN6PJ6SP2h0vigH9SGBv/nG79QXvOxPFQzazYSapNv38NWcIPeyibokpubwdDToE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=KfbWVWnQ; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1758760186; c=relaxed/simple;
+	bh=rGrJhkEhVL8fDzcbwtX0Nlx0/Ial1/o06KA95F1aKyE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=j9uuZc5vt5Wcde3wwy9QHUIPW90ynafBnyB1vlh+kFhFDdzI55vvtJDfEVgQ4DUrRBg2gXRoUqp4mHBPLXIytaLE9P4u1HxV9ztuY7CARQNYVybppG/dQX5amSJcdr4PMzEy2K/yrDdu0swexKpT8moSdOeLTMx5eZvGCu89gh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hJBBi+ZL; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="KfbWVWnQ"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b556284db11so296463a12.0
-        for <regressions@lists.linux.dev>; Wed, 24 Sep 2025 14:24:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hJBBi+ZL"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-57abcb8a41eso12113e87.1
+        for <regressions@lists.linux.dev>; Wed, 24 Sep 2025 17:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1758749080; x=1759353880; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+dhLUMSWCJCb7Nc7Lx/+68xlS8KMxySblqVYlmSCjYI=;
-        b=KfbWVWnQ2RgUHsEz44O4lQTvbU6t8Bqoss0HTSTqi2AXbfzQHW7C5+S8SmLp+UnM9Y
-         ZFNRx2T82ECc48kR5vvo3Olv8pJAhurQS8KhFcvbEDQgwxZ0uumcBD+uyE36HVJm6Jx+
-         jaTOvy21J/zJ5CHRXGPyTU9rujboWmlwwx/NtjX1DGl9r05tAkjCL49+b6Peo1bAyAuB
-         HFSp5gI96ezvDGSVEtzB0LEFah9ZeY2n9le1Da/xfic3p9WtICtqAuaPzaRznwONUbKl
-         miJcUocgbR04fCr+Ao+s+XZnV6N7/FqgaBT8V5/hhgsjAE8i7KlgrygRJCj+YLt8Tstj
-         +LJQ==
+        d=google.com; s=20230601; t=1758760183; x=1759364983; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rGrJhkEhVL8fDzcbwtX0Nlx0/Ial1/o06KA95F1aKyE=;
+        b=hJBBi+ZL4GI2BU5ksow7PPB8zXnM98m2SMGkNeh4P9Cm+Cu9uRy8+dKaGshdVhhoZa
+         8mEZfgEAgTOTNkPeoXIalIsSQ6v/BICWI1UEz/X4XqLh3QSqOaWljxKg1B76GWi64LIO
+         IEkrlMDW/XQt6Z8Cbhl1A0Cpe4arEzhd1A89HgKG7mGe8RPuBlgtUJnODXxUjFrvsRER
+         Lf5lmCiGNRVkimjJlZgfZO/PvsITCutPAaI1bRk26FKEyLdxGBPZh4wha+INAyEyX1sx
+         eNp+p8R+3YUi4iBVuo5uKvZ7eXWLOIAnPIjpwBYLctrIdoUktkvYbukx0ClMGkc0fIOl
+         3jyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758749080; x=1759353880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+dhLUMSWCJCb7Nc7Lx/+68xlS8KMxySblqVYlmSCjYI=;
-        b=vK8Sj68nqMOCR8M5om/F3Wekb699EcFvCxmGnF3Jfqm16hoWh1kAclGWFB0uVZvt6n
-         weLN7JhIA980XGz3Qq4JI682Zv7mHQJaByfrHfhZgRe3UHQMN80j9GGJEKnwDK75Rf1c
-         7sBO/x/+KbGs6MtMPZA4cn1b8oGj8mQiKfgZ4VGMID/EB2vSuF6aTIf2FC6TAHl8Nn3B
-         hFIFIzZY7Qq1YdH4WQSJe061LYoEnW81bcZ0YbmoVc6ZIfbhIIqbYl352/sHia66F9Sw
-         8pwuMx0W/IIKVUw3BA/R22bI+WPlCtNxyfIX6JU3Qda5ErQvVn3LEfExMO/3TvVKQqcW
-         C3yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBnoY2r2jPbN6qUcGzaVuu4pV/S9UkEBqfq1kNqdGbKPh7MobA0QbeucO7BapZi42Tl2iO/v2hREAVXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxW1oa1WZ42sJ5dhdZQjyiY5epfI0ZGlPj0Hw+UERkv2WC0TBOM
-	MyJLQLR6fcNYssGI7+AIgLQ7ehmIlTXnKskmh+M3PJyCI1loPqDeQMv5GFqAulRCTIenXNGbAd6
-	MJd4bU2kXPfDuLrZMatfy0dkX65JYml4RAbDfnNnD
-X-Gm-Gg: ASbGncuOYOQ0igg7o+tNRPJLm+MWeqJt94dHn371Y8lF3XlyEr3sdW4pFfGD41kqk8J
-	nNQPUBjEui4/DTnRett2ny7v33T3b9k1zyFksbtgMmpxfRfybvnhuD+KTH7VqZN0NvE+D6qRe0r
-	M8C4C9p8CtnFI8xc4GtxHEs6oDqPKy10elp93NdFPepQnhV/5OnGRPulb3lHRZV70biU6K2zSa5
-	HVZbTKXMNTdpnaZIQ==
-X-Google-Smtp-Source: AGHT+IHR9pP1MvU0qJbfCGQoZkW8eEMjmqKvK5A67Eqc2Nnt+qxlyEAnQFYtUTxdfOJEIc9WV2+K5Q4lRtal6pKd1BM=
-X-Received: by 2002:a17:90b:5343:b0:32d:17ce:49d5 with SMTP id
- 98e67ed59e1d1-3342a2b08bcmr1001670a91.23.1758749080200; Wed, 24 Sep 2025
- 14:24:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758760183; x=1759364983;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rGrJhkEhVL8fDzcbwtX0Nlx0/Ial1/o06KA95F1aKyE=;
+        b=A1Ews5xAbDhyMMHBa6YPdm60s2cg5niwknzECw1m8f/yPD7l0qj5rh2yAW6ckPSwBN
+         osYtYKr58O8tBIsUcZ0ftXm8gycR1KBYz8M7hS0P73PgVYcWlh4WGpb6FUxm/2IeAJ0+
+         Yp4MJL6mCMpBZLjankfaHXHiqbgY3DN3stH++v2C9VXHX3Kb4FKrnh14YfYuPEuYfelt
+         rP1VhGjSHYctQyf1wyn2dYOpX1W4qJL1tFjGCGiQVLQsZ9jbVsvLKr1Rn2D1w5N+fVuG
+         gdueBNQvQ+h5SvvlP4cjcOO6Jqj0edOu7dd4xWOWnMqGBwq3PU3NHDIdAl8bewhzjYbJ
+         u5Eg==
+X-Gm-Message-State: AOJu0YxBtSgHFrDyelAeVyXRnLCUk8ZaTEdcBLafjB2PjxIotUUaLh6k
+	maNs91r3PjmDeS9yb+svXqP8ZPqWAWsURDRh3RXQT7jxrRRbF8It9FrlxhWLsaDaolN3UR1nXOT
+	cBZP46ym4EuAydG2DIyF33Pc5mXQ6srjYzXhVaUQI
+X-Gm-Gg: ASbGncsw6ubHGRajUe9vxgh0N3xqZ+Yv4TPV0I6E/nEYJOTFI1We6YitcW8Pwx5Hjhx
+	IQMucNY9Xs1eMq/NQgUc6ZjI5XfgVlqerTwst4XvW4rlSbR8h6rnYgpcIAV9s5SsnsAotp6QCIP
+	34mnFuBOstB1tZ5LtCvfsdvv69gFBBiLRkKC5kH2k++p/LP1L6jaHTnWJ2Nix5nYjg13Xbe/3oT
+	ANMaOz0Hh+UNrDlNo0WUy3M
+X-Google-Smtp-Source: AGHT+IF29hX9gih8LwttPUfoJ3ziAEqxYld5pZxsEuTKcsm+ojcC4pZPrneDxgNLw1hROYWi7BymTX+vJ5G4M6w8ZGA=
+X-Received: by 2002:a05:6512:6092:b0:576:4ceb:a167 with SMTP id
+ 2adb3069b0e04-582b1552a7emr239612e87.5.1758760182481; Wed, 24 Sep 2025
+ 17:29:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <e5d594d0aee93da67a22a42d0e2b4e6e463ab894.camel@gmail.com>
-In-Reply-To: <e5d594d0aee93da67a22a42d0e2b4e6e463ab894.camel@gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 24 Sep 2025 17:24:28 -0400
-X-Gm-Features: AS18NWCNQQSQBWtRenUjLlMUKvi01cd9ZXZW5J6vPc0TKqgJOAr2w5N1LESqTqk
-Message-ID: <CAHC9VhRu=-J5xdKgYOJ1eqQ6EiMoEJ3M+cjDU8AHrts-=DoTvg@mail.gmail.com>
-Subject: Re: [bug report] [regression?] bpf lsm breaks /proc/*/attr/current
- with security= on commandline
-To: Filip Hejsek <filip.hejsek@gmail.com>
-Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
+From: Chenglong Tang <chenglongtang@google.com>
+Date: Wed, 24 Sep 2025 17:29:31 -0700
+X-Gm-Features: AS18NWBhdBOTvWF0Ty1kP-ZkTeb619FZATRTEkhft-g2-Fo8clpTokAq1JhLagM
+Message-ID: <CAOdxtTYQye1Rtp-sG48Re+_ihD637NDXTG_V_uLkerg=m1Nbtw@mail.gmail.com>
+Subject: [REGRESSION] workqueue/writeback: Severe CPU hang due to kworker
+ proliferation during I/O flush and cgroup cleanup
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, tj@kernel.org, roman.gushchin@linux.dev, 
+	linux-mm@kvack.org, lakitu-dev@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 13, 2025 at 1:01=E2=80=AFPM Filip Hejsek <filip.hejsek@gmail.co=
-m> wrote:
->
-> Hello,
->
-> TLDR: because of bpf lsm, putting security=3Dselinux on commandline
->       results in /proc/*/attr/current returning errors.
->
-> When the legacy security=3D commandline option is used, the specified lsm
-> is added to the end of the lsm list. For example, security=3Dapparmor
-> results in the following order of security modules:
->
->    capability,landlock,lockdown,yama,bpf,apparmor
->
-> In particular, the bpf lsm will be ordered before the chosen major lsm.
->
-> This causes reads and writes of /proc/*/attr/current to fail, because
-> the bpf hook overrides the apparmor/selinux hook.
+Hello,
 
-What kernel are you using?  Things appear to work correctly on my
-kernel that is tracking upstream (Fedora Rawhide + some unrelated
-bits):
+This is Chenglong from Google Container Optimized OS. I'm reporting a
+severe CPU hang regression that occurs after a high volume of file
+creation and subsequent cgroup cleanup.
 
-% uname -a
-Linux dev-rawhide-1.lan 6.17.0-0.rc7.250923gd1ab3.57.1.secnext.fc44.x86_64 =
-#1 SM
-P PREEMPT_DYNAMIC Tue Sep 23 10:07:14 EDT 2025 x86_64 GNU/Linux
-% cat /proc/cmdline
-BOOT_IMAGE=3D(hd0,gpt4)/boot/vmlinuz-6.17.0-0.rc7.250923gd1ab3.57.1.secnext=
-.fc44.x
-86_64 root=3DUUID=3D285029fa-4431-45e9-af1b-298ab0caf16a ro console=3DttyS0=
- mitigation
-s=3Doff security=3Dselinux
-% cat /sys/kernel/security/lsm; echo ""
-lockdown,capability,yama,selinux,bpf,landlock,ipe,ima,evm
-% id -Z
-unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-% cat /proc/self/attr/current; echo ""
-unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+Through bisection, the issue appears to be caused by a chain reaction
+between three commits related to writeback, unbound workqueues, and
+CPU-hogging detection. The issue is greatly alleviated on the latest
+mainline kernel but is not fully resolved, still occurring
+intermittently (~1 in 10 runs).
 
-I even ran it against the LSM initialization rework that has been
-proposed, but has not yet been accepted/merged, and that worked the
-same as above.
+How to reproduce
 
-Is this a distro kernel with a lot of "special" patches which aren't
-present upstream?
+The kernel v6.1 is good. The hang is reliably triggered(over 80%
+chance) on kernels v6.6 and 6.12 and intermittently on
+mainline(6.17-rc7) with the following steps:
 
---=20
-paul-moore.com
+Environment: A machine with a fast SSD and a high core count (e.g.,
+Google Cloud's N2-standard-128).
+
+Workload: Concurrently generate a large number of files (e.g., 2
+million) using multiple services managed by systemd-run. This creates
+significant I/O and cgroup churn.
+
+Trigger: After the file generation completes, terminate the
+systemd-run services.
+
+Result: Shortly after the services are killed, the system's CPU load
+spikes, leading to a massive number of kworker/+inode_switch_wbs
+threads and a system-wide hang/livelock where the machine becomes
+unresponsive (20s - 300s).
+
+Analysis and Problematic Commits
+
+1. The initial commit: The process begins with a worker that can get
+stuck busy-waiting on a spinlock.
+
+Commit: ("writeback, cgroup: release dying cgwbs by switching attached inodes")
+
+Effect: This introduced the inode_switch_wbs_work_fn worker to clean
+up cgroup writeback structures. Under our test load, this worker
+appears to hit a highly contended wb->list_lock spinlock, causing it
+to burn 100% CPU without sleeping.
+
+2. The Kworker Explosion: A subsequent change misinterprets the
+spinning worker from Stage 1, leading to a runaway feedback loop of
+worker creation.
+
+Commit: 616db8779b1e ("workqueue: Automatically mark CPU-hogging work
+items CPU_INTENSIVE")
+
+Effect: This logic sees the spinning worker, marks it as
+CPU_INTENSIVE, and excludes it from concurrency management. To handle
+the work backlog, it spawns a new kworker, which then also gets stuck
+on the same lock, repeating the cycle. This directly causes the
+kworker count to explode from <50 to 100-2000+.
+
+3. The System-Wide Lockdown: The final piece allows this localized
+worker explosion to saturate the entire system.
+
+Commit: 8639ecebc9b1 ("workqueue: Implement non-strict affinity scope
+for unbound workqueues")
+
+Effect: This change introduced non-strict affinity as the default. It
+allows the hundreds of kworkers created in Stage 2 to be spread by the
+scheduler across all available CPU cores, turning the problem into a
+system-wide hang.
+
+Current Status and Mitigation
+
+Mainline Status: On the latest mainline kernel, the hang is far less
+frequent and the kworker counts are reduced back to normal (<50),
+suggesting other changes have partially mitigated the issue. However,
+the hang still occurs, and when it does, the kworker count still
+explodes (e.g., 300+), indicating the underlying feedback loop
+remains.
+
+Workaround: A reliable mitigation is to revert to the old workqueue
+behavior by setting affinity_strict to 1. This contains the kworker
+proliferation to a single CPU pod, preventing the system-wide hang.
+
+Questions
+
+Given that the issue is not fully resolved, could you please provide
+some guidance?
+
+1. Is this a known issue, and are there patches in development that
+might fully address the underlying spinlock contention or the kworker
+feedback loop?
+
+2. Is there a better long-term mitigation we can apply other than
+forcing strict affinity?
+
+Thank you for your time and help.
+
+Best regards,
+
+Chenglong
