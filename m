@@ -1,245 +1,190 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09B30648B
-	for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 16:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BD7313E3E
+	for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 18:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758819527; cv=none; b=K4TZ4DidzlTlziGFJnNZjxPMEKQ5o7Ito4Ov7yDXhx2FJRt9m/bbWzBQcA8GrDTQdFjlUcvo3A9OjpPmQszXIjAohP9Hgg39/1xni2h/B9Ja/fI3R+U6QoVeM9uplZa4uKPZXpmBkTkrh2IjXnTUENQZmmVzFeva/lDr412vVXc=
+	t=1758825022; cv=none; b=rOiJlRTrw+AU2bnyfMlXkRFlWeodOJf46oLgaNaeL/ioPFTe0IKq0yw0pl9zB8hgnMUXtkrj+mo1SZsQWjL3cBB1tp4gChYaN4Z2Btn21UDF9Cza5RKhQ+DHBbsEY62QmXorw8tHqXDqUGX6mSlidI0spRDzTWW8Qt2tyB+E/8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758819527; c=relaxed/simple;
-	bh=OYPt7rOi6P5t7UUoGeJ0cu65gDoDgf43KCnZmOl/mnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SLzzeQlQGSfNLgfKsCZe3hkBPtF0trD46Th6ZBoF+4pXiIraxuFyuoL7RTEzEhmPwWWZebcDIt7wn8TCbfLfgXXYKhmOtOiiH6R+gkK5ipFrhOOUn0EpzJTNTXRQqW/7mGO4G8uH7RJyoio8lxG3F8mM4VtrMEZT5qKdVTfplb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cBtb4m+N; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1758825022; c=relaxed/simple;
+	bh=tCSiCHjiYLBxiKxlzQijJtKjNIcmFyJ2Vn54zVJDrFE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UAwoCpOlSNJs4HJsdcg30B7Y3QnNx8sRkEjDl184rp8Q4v5UcCWvoL4/uZlJDQjD8gxEDpK/NbGSqV0o2xx5+RuKL55jBc28gDm36yt6YT7GKzNMYyqtyMibwn1G9qcc9RCef0ILHNhd0PsVPxRJElA9bVJxqmBi/UhX1PgLGgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TvWxZeZX; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBtb4m+N"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-57bf9bb803dso200e87.1
-        for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 09:58:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvWxZeZX"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-77f3405c38aso1382433b3a.0
+        for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 11:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758819523; x=1759424323; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yq6K8HIdEhD+E9swYwDQPb1XoskrFD+rIaFeN3MEj6U=;
-        b=cBtb4m+NghOu2nB73H/yvXtPIgGUtqCeEM7YmHgnKnTln4/Ihv//SvBveyETowdhAg
-         WYt3g2vaEA1CYFiebXxuWY66fWxOrSHFYEeJFoA3rTxieM+SYkvc+Ffk4R2ZMYdrSKO6
-         Fjf+hptRFJOvuZVWyww5CbeowGatJI0A4k53bSwme7/lvE3k9u1ul6EVUV5VG6y/h6c4
-         76ChNVL0QyNrAj/H6jUIZ0so9ESbCiLtSq5yNwcxJSh7IISy+VNHJFt060TRsRwj0KWT
-         1jo2HW1W/ezKkBNvWSu88b2ZXfhH+2cCWnYvDXdESXAgTXobhIwfPHp1yth0bU9tMQd+
-         u4TQ==
+        d=linaro.org; s=google; t=1758825019; x=1759429819; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AD3Aprn/2Yo5LyXOC6U3dPN+8zQtQVUv9tcaZi7+WVY=;
+        b=TvWxZeZX/QJvIFvT1oIy7cGerkFiozCsaa2jE53LMZEGEql3M31UCbOdrWg7N33aBh
+         jPvJc2WSYEJoDfaSpYE9AqImow0TgGEzUJ0lBs15dGESlyUOgJIUwloA41BH21Bxe9E1
+         tMQY3mepKGAqEJwC27u3LUFCXfILkm5KwKCjebmmAvFrmUXko8naYJXRXe82rBYlffpO
+         B40ld1tjCKDdo/WCDYJwL1EgxE5Hvzn5Ygmd4Y0Axj38/PWWJq95NYlVFtd96GRotCH6
+         zveKTAb5Dh8ZZFlLPDxGKLcrEObPpI2latvH2PvPxQqsoyAk69JeFSEd86qmPNah6jpb
+         /1Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758819523; x=1759424323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yq6K8HIdEhD+E9swYwDQPb1XoskrFD+rIaFeN3MEj6U=;
-        b=wR9nDwDVfTS+cHLty5U2jh3MEXHuY+QuqYBjjJWCM/aYAD09xITG2i8yXywgEfQpZd
-         Yk70cEegUamMKLev68flqq/RRW0k8qzPSFEruj/kqNQSfPkYg0tOAf0rYeFiWn2UXjPX
-         M9f9CJ7vqA2KpK75KJGjLMGocYkV5Y9APGrYr1kFbh5ntKDlPy1Czef8YWdwiqZJcoju
-         FrBsHoE4jGN7hrHIy4NMeAdFg5UrI2cP8PH03hNfvPQbiXNNN37XptEoDKGbY5wXec5/
-         zQM4irHbBd8pHBfggRvOGjlx876DTgQlkqnH3fp21KVUJ7qzu1NWH+YXhp5u7WGZ5xrt
-         fvjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWAcXq9zQkgBBxzXUnCwfvojgu2TwKBFjM26fwMfum2cVL5sppqmV93hxmh18XXl8TVl/tJ1CqHyRCEQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxoNpx9ipSBbeJlp5gBS1w9UFQSKDXx1dPgmoj6x5htZ6JGVr18
-	SUgXOKGTZMagTNATVQVMhEvnTIf7GxYSGZtw+hQSrsIAfgBQcmtPZMgR1e+eyQ/C8Ck6xwYF5eU
-	ocOYKtkTD2ugd0WkQYYc2xHy36axETX0PxGurAHBY
-X-Gm-Gg: ASbGncuFGdj0HU9OZBNL11s20XgQk6NCuyaPDpFjP+KvjAS7d3jwskWumZxcTTo7ko8
-	w1zXsbJGjZHS3Fmb7nx7IcCnxH+tDNhPzwsksh+djOEWiFOPL+//lloV0K7Hn7n7kEV7et4p51F
-	W75TwibHh+iezbh/NxL0PXmB9VD32FND+rn9t/Uk7lKVcSeBdWC7UsxCgz7cZUMmcFHwTBzRcnS
-	dwUiMMXaLqSVfQlQ4VXRlki
-X-Google-Smtp-Source: AGHT+IGJxwQPsa1HBrOtLrDgPHg2NyLPfDxj76oZhDbyhTXsObrV+BiQuT52NKznoNST7PhF7zcIbJIyyNp5aMzCq1I=
-X-Received: by 2002:ac2:5b81:0:b0:57b:f611:f918 with SMTP id
- 2adb3069b0e04-582b2a9560fmr321110e87.3.1758819523044; Thu, 25 Sep 2025
- 09:58:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758825019; x=1759429819;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AD3Aprn/2Yo5LyXOC6U3dPN+8zQtQVUv9tcaZi7+WVY=;
+        b=jJu4mnwTCVkDykarWW1n8lQMXogtwifhcOp36cw5QNcCv+rigcH/IstaNGw8EYSO6g
+         dTSmzCsbHAqrsK9gJMa3gGwNyWy2NlImuAzbmct1cFkvW5QxL0PPmMTZ7wqgFBFGV7Sk
+         OsdoTK9kx2B2fGJUVCwhtDlQ38H9ecIoxS+ffNilQxA2WWF9urKICV7bf0M0mUO6FvLK
+         xEKiLBdcreZFiS5YRrsdj0NOD0B2vpig2vHbrso94G6yMbPJxYgGHsyFu4+vpBi9cxao
+         V28O+jbm+RQ2/H7s3h192BEGfhh5yNpPW66oVeO/8c+J+BoveHQR/wnaYnaxB8HFgjQP
+         W91g==
+X-Forwarded-Encrypted: i=1; AJvYcCWxlDYeQazOgZvJ2gWi3fjqpYvfiPf4pAaMK3XscnkDPsG1HxUId/QB6cvXbRJiRJxww8oPBBTOGTOuuw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyO2D3nCE3anyC5yf+oqI7Xjx4A7vohHg18aWIfNkvu3Tah9f1E
+	eePYG02jvKx8IH8O4MZ8xqIGiHlpD/JX06gq5yLMK5AH5qf5xuTvCHQeCbOQ4OxS+MVMD+Mwwh7
+	bk8VfryfGxGddLc5G+4Vcrfe4V8YsTAuEvUUZqEXuHw==
+X-Gm-Gg: ASbGncsaQfjYgljO3jfPsPbWulxYZjW/33hiBjw40ylPEnKkydWhrAoQ0umfInLEnfB
+	2BqCRzIzzPPswxZ9barxnhdqmxA6gDZDXxbnCS6WvN2pL8/bC4ZMqHZjEuDV2oca2AFq6JolYUR
+	5UR5BMFdLOQbbyaLvVA83AXWeTem62PNsgzIJT0nXLyFNtmPm6qYh8x/vxqzkjCuZ/0A1/A4Ufv
+	CO6DeOM6qZJZ2tgck7VV6fDAEvAa7pt9rTalKZ5
+X-Google-Smtp-Source: AGHT+IG0aEHA+SJ8POTvI7rXmHNNRmnCFjhfAJmzMzYuwnnWzgcjC3HMZZQWT5S9lDAxvmI0iW8mMspWOZ82crH3Q5k=
+X-Received: by 2002:a17:902:fccf:b0:273:31fb:a872 with SMTP id
+ d9443c01a7336-27ed4a06cefmr33651145ad.6.1758825019214; Thu, 25 Sep 2025
+ 11:30:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOdxtTZJqgDNMtqsq51hQ0azanFPLXHMAJ-mRhRS6yjzYhMf_A@mail.gmail.com>
- <aNSSNgUeMSTtlimW@slm.duckdns.org>
-In-Reply-To: <aNSSNgUeMSTtlimW@slm.duckdns.org>
-From: Chenglong Tang <chenglongtang@google.com>
-Date: Thu, 25 Sep 2025 09:58:31 -0700
-X-Gm-Features: AS18NWBXIryw_12tNJ7Zcnq0SWl772-SIFkfVkMUoyR0eC464fAlVAG0qvqtTdI
-Message-ID: <CAOdxtTan9jvwzbww0Jm6e4nOiCcwH8cvPHHXpNtRU6ZHUBg=4g@mail.gmail.com>
-Subject: Re: [REGRESSION] workqueue/writeback: Severe CPU hang due to kworker
- proliferation during I/O flush and cgroup cleanup
-To: Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	roman.gushchin@linux.dev, linux-mm@kvack.org, lakitu-dev@google.com
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 26 Sep 2025 00:00:08 +0530
+X-Gm-Features: AS18NWDtBpm_KTK7hpnu3EgD5L63hZbjcu26dinYNzF8NjUERzFkzicBNK0EhOQ
+Message-ID: <CA+G9fYueO8kP8mXVNmbHkyrFPKpt-onPfeyNXLuLGGjiO1WFfQ@mail.gmail.com>
+Subject: next-20250924: Internal error: Oops: mnt_ns_release
+ (fs/namespace.c:148) __arm64_sys_listmount (fs/namespace.c:5936)
+To: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Confirmed the patches worked for the mainline(6.17-rc7). But it's
-still flaky(1/13) if I simply apply the patches to v6.12.46.
+While running LTP syscalls tests on Linux next-20250924 tag build
+the following kernel oops noticed on arm64 and x86_64 devices.
 
-I think there should be some gap commits that I should apply as well.
+First seen on next-20250924
+Good: next-20250923
+Bad: next-2025094
 
-Here is the diff between the two kernel versions after patches are applied:
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index fad8ddfa622bb..62d85c5086ba1 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -65,7 +65,7 @@ struct wb_writeback_work {
-* timestamps written to disk after 12 hours, but in the worst case a
-* few inodes might not their timestamps updated for 24 hours.
-*/
--static unsigned int dirtytime_expire_interval =3D 12 * 60 * 60;
-+unsigned int dirtytime_expire_interval =3D 12 * 60 * 60;
-static inline struct inode *wb_inode(struct list_head *head)
-{
-@@ -290,6 +290,7 @@ void __inode_attach_wb(struct inode *inode, struct
-folio *folio)
-if (unlikely(cmpxchg(&inode->i_wb, NULL, wb)))
-wb_put(wb);
-}
-+EXPORT_SYMBOL_GPL(__inode_attach_wb);
-/**
-* inode_cgwb_move_to_attached - put the inode onto wb->b_attached list
-@@ -770,9 +771,8 @@ bool cleanup_offline_cgwb(struct bdi_writeback *wb)
-* writeback completion, wbc_detach_inode() should be called. This is used
-* to track the cgroup writeback context.
-*/
--static void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
-- struct inode *inode)
-- __releases(&inode->i_lock)
-+void wbc_attach_and_unlock_inode(struct writeback_control *wbc,
-+ struct inode *inode)
-{
-if (!inode_cgwb_enabled(inode)) {
-spin_unlock(&inode->i_lock);
-@@ -802,24 +802,7 @@ static void wbc_attach_and_unlock_inode(struct
-writeback_control *wbc,
-if (unlikely(wb_dying(wbc->wb) && !css_is_dying(wbc->wb->memcg_css)))
-inode_switch_wbs(inode, wbc->wb_id);
-}
--
--/**
-- * wbc_attach_fdatawrite_inode - associate wbc and inode for fdatawrite
-- * @wbc: writeback_control of interest
-- * @inode: target inode
-- *
-- * This function is to be used by __filemap_fdatawrite_range(), which is a=
-n
-- * alternative entry point into writeback code, and first ensures @inode i=
-s
-- * associated with a bdi_writeback and attaches it to @wbc.
-- */
--void wbc_attach_fdatawrite_inode(struct writeback_control *wbc,
-- struct inode *inode)
--{
-- spin_lock(&inode->i_lock);
-- inode_attach_wb(inode, NULL);
-- wbc_attach_and_unlock_inode(wbc, inode);
--}
--EXPORT_SYMBOL_GPL(wbc_attach_fdatawrite_inode);
-+EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
-/**
-* wbc_detach_inode - disassociate wbc from inode and perform foreign detect=
-ion
-@@ -1282,13 +1265,6 @@ static void bdi_split_work_to_wbs(struct
-backing_dev_info *bdi,
-}
-}
--static inline void wbc_attach_and_unlock_inode(struct writeback_control *w=
-bc,
-- struct inode *inode)
-- __releases(&inode->i_lock)
--{
-- spin_unlock(&inode->i_lock);
--}
--
-#endif /* CONFIG_CGROUP_WRITEBACK */
-/*
-@@ -2475,7 +2451,14 @@ static void wakeup_dirtytime_writeback(struct
-work_struct *w)
-schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
-}
--static int dirtytime_interval_handler(const struct ctl_table *table, int w=
-rite,
-+static int __init start_dirtytime_writeback(void)
-+{
-+ schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
-+ return 0;
-+}
-+__initcall(start_dirtytime_writeback);
-+
-+int dirtytime_interval_handler(const struct ctl_table *table, int write,
-void *buffer, size_t *lenp, loff_t *ppos)
-{
-int ret;
-@@ -2486,25 +2469,6 @@ static int dirtytime_interval_handler(const
-struct ctl_table *table, int write,
-return ret;
-}
--static const struct ctl_table vm_fs_writeback_table[] =3D {
-- {
-- .procname =3D "dirtytime_expire_seconds",
-- .data =3D &dirtytime_expire_interval,
-- .maxlen =3D sizeof(dirtytime_expire_interval),
-- .mode =3D 0644,
-- .proc_handler =3D dirtytime_interval_handler,
-- .extra1 =3D SYSCTL_ZERO,
-- },
--};
--
--static int __init start_dirtytime_writeback(void)
--{
-- schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
-- register_sysctl_init("vm", vm_fs_writeback_table);
-- return 0;
--}
--__initcall(start_dirtytime_writeback);
--
-/**
-* __mark_inode_dirty - internal function to mark an inode dirty
-*
+Test regression: next-20250924: Internal error: Oops: mnt_ns_release
+(fs/namespace.c:148) __arm64_sys_listmount (fs/namespace.c:5936)
 
-On Wed, Sep 24, 2025 at 5:52=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> On Wed, Sep 24, 2025 at 05:24:15PM -0700, Chenglong Tang wrote:
-> > The kernel v6.1 is good. The hang is reliably triggered(over 80% chance=
-) on
-> > kernels v6.6 and 6.12 and intermittently on mainline(6.17-rc7) with the
-> > following steps:
-> > -
-> >
-> > *Environment:* A machine with a fast SSD and a high core count (e.g.,
-> > Google Cloud's N2-standard-128).
-> > -
-> >
-> > *Workload:* Concurrently generate a large number of files (e.g., 2 mill=
-ion)
-> > using multiple services managed by systemd-run. This creates significan=
-t
-> > I/O and cgroup churn.
-> > -
-> >
-> > *Trigger:* After the file generation completes, terminate the systemd-r=
-un
-> > services.
-> > -
-> >
-> > *Result:* Shortly after the services are killed, the system's CPU load
-> > spikes, leading to a massive number of kworker/+inode_switch_wbs thread=
-s
-> > and a system-wide hang/livelock where the machine becomes unresponsive =
-(20s
-> > - 300s).
->
-> Sounds like:
->
->  http://lkml.kernel.org/r/20250912103522.2935-1-jack@suse.cz
->
-> Can you see whether those patches resolve the problem?
->
-> Thanks.
->
-> --
-> tejun
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+$  git log --oneline next-20250923..next-20250924  -- fs/namespace.c
+c54644c3221b6 (next/fs-next) Merge branch 'for-next' of
+https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
+1f28cc19559a8 Merge branch 'namespace-6.18' into vfs.all
+e2c277f720291 Merge branch 'kernel-6.18.clone3' into vfs.all
+b2af83d5b8223 Merge branch 'vfs-6.18.mount' into vfs.all
+29ecd1ca48ec2 Merge branch 'vfs-6.18.misc' into vfs.all
+d7610cb7454bb ns: simplify ns_common_init() further
+59bfb66816809 listmount: don't call path_put() under namespace semaphore
+2bc5bfbfd3f27 statmount: don't call path_put() under namespace semaphore
+
+
+## Test log
+[   41.821877] Internal error: Oops: 0000000096000005 [#1]  SMP
+[   41.919038] Modules linked in: cdc_ether usbnet sm3_ce sha3_ce nvme
+xhci_pci_renesas nvme_core arm_cspmu_module arm_spe_pmu ipmi_devintf
+ipmi_msghandler arm_cmn cppc_cpufreq drm fuse backlight
+[   41.944048] CPU: 14 UID: 0 PID: 6416 Comm: listmount04 Not tainted
+6.17.0-rc7-next-20250924 #1 PREEMPT
+[   41.958197] Hardware name: Inspur NF5280R7/Mitchell MB, BIOS
+04.04.00004001 2025-02-04 22:23:30 02/04/2025
+[   41.967837] pstate: 63400009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+[   41.974958] pc : mnt_ns_release
+(arch/arm64/include/asm/atomic_lse.h:62 (discriminator 1)
+arch/arm64/include/asm/atomic_lse.h:76 (discriminator 1)
+arch/arm64/include/asm/atomic.h:51 (discriminator 1)
+include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 1)
+include/linux/atomic/atomic-instrumented.h:401 (discriminator 1)
+include/linux/refcount.h:389 (discriminator 1)
+include/linux/refcount.h:432 (discriminator 1)
+include/linux/refcount.h:450 (discriminator 1) fs/namespace.c:148
+(discriminator 1))
+[   41.981910] lr : __arm64_sys_listmount (fs/namespace.c:5936)
+[   41.993467] sp : ffff8000ff5afd50
+[   42.000329] x29: ffff8000ff5afd50 x28: fff00001bd947380 x27: 0000000000000000
+[   42.007454] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000100
+[   42.030726] x23: 0000000000000000 x22: 0000000000000020 x21: ffff8000ff5afdc8
+[   42.038281] x20: 0000aaaabd6a1110 x19: 0000000000000000 x18: 0000000000000000
+[   42.045405] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   42.052528] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[   42.075541] x11: 0000000000000000 x10: 0000000000000000 x9 : ffffda68dcdbbe30
+[   42.082835] x8 : ffff8000ff5afda0 x7 : fefefefefefefefe x6 : ffffda68df5e9000
+[   42.096212] x5 : fff00001bd947380
+[   42.108978]  x4 : fff00001bd947380 x3 : 0000000000000000
+[   42.114449] x2 : 0000000000000000 x1 : 00000000ffffffff x0 : 00000000000000b8
+[   42.134515] Call trace:
+[   42.139725]  mnt_ns_release (arch/arm64/include/asm/atomic_lse.h:62
+(discriminator 1) arch/arm64/include/asm/atomic_lse.h:76
+(discriminator 1) arch/arm64/include/asm/atomic.h:51 (discriminator 1)
+include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 1)
+include/linux/atomic/atomic-instrumented.h:401 (discriminator 1)
+include/linux/refcount.h:389 (discriminator 1)
+include/linux/refcount.h:432 (discriminator 1)
+include/linux/refcount.h:450 (discriminator 1) fs/namespace.c:148
+(discriminator 1)) (P)
+[   42.143811]  __arm64_sys_listmount (fs/namespace.c:5936)
+[   42.148327]  invoke_syscall.constprop.0
+(arch/arm64/include/asm/syscall.h:61 arch/arm64/kernel/syscall.c:54)
+[   42.159193]  do_el0_svc (include/linux/thread_info.h:135
+(discriminator 2) arch/arm64/kernel/syscall.c:140 (discriminator 2)
+arch/arm64/kernel/syscall.c:151 (discriminator 2))
+[   42.163970]  el0_svc (arch/arm64/include/asm/irqflags.h:82
+(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
+1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
+arch/arm64/kernel/entry-common.c:102 (discriminator 1)
+arch/arm64/kernel/entry-common.c:745 (discriminator 1))
+[   42.173791]  el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:764)
+[   42.185342]  el0t_64_sync (arch/arm64/kernel/entry.S:596)
+[   42.189165] Code: aa0003f3 9102e000 d503201f 12800001 (b8610001)
+All code
+========
+   0: aa0003f3 mov x19, x0
+   4: 9102e000 add x0, x0, #0xb8
+   8: d503201f nop
+   c: 12800001 mov w1, #0xffffffff            // #-1
+  10:* b8610001 ldaddl w1, w1, [x0] <-- trapping instruction
+
+Code starting with the faulting instruction
+===========================================
+   0: b8610001 ldaddl w1, w1, [x0]
+[   42.211485] ---[ end trace 0000000000000000 ]---
+
+## Source
+* Kernel version: 6.17.0-rc7
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git describe:  6.17.0-rc7-next-20250924
+* Git commit: b5a4da2c459f79a2c87c867398f1c0c315779781
+* Architectures: arm64, x86_64
+* Toolchains: gcc-13
+* Kconfigs: defconfig+lkftconfig
+
+## Build
+* Test log arm64: https://qa-reports.linaro.org/api/testruns/30007634/log_file/
+* Test log x86_64: https://qa-reports.linaro.org/api/testruns/30000230/log_file/
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master-ampere/next-20250924/log-parser-test/internal-error-oops-oops-smp/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/ampere/projects/ci/tests/339teV8pAwrsgeSJq9beV5V11U8
+* Build link: https://storage.tuxsuite.com/public/ampere/ci/builds/339teBhKZ4DENKbJJNnbWKh5ud1/
+* Kernel config:
+https://storage.tuxsuite.com/public/ampere/ci/builds/339teBhKZ4DENKbJJNnbWKh5ud1/config
+
+--
+Linaro LKFT
