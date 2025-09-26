@@ -1,229 +1,100 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A03523D7D8
-	for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 19:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5808F6F;
+	Fri, 26 Sep 2025 06:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758827277; cv=none; b=BO5pQx4es0rRUfZ3rIEfPr7xh44ICa6HbxM68raLTPaIsNU0Qumgh8a8KwWffO88kx76Uc65QOF+3OkxIiTLnq/kXYdQhiSoJhSP8cdqBo+Ht7M2/OHTOz7eI9lGb+y4Xek7fZA3nRn6O67R07aDt4C9rYJFL4VNLylEeVHCPK8=
+	t=1758869287; cv=none; b=gLb3dbRosgAgbKrx0akqPBrfwo2/WUJgfYEkf+ehGPNBoYt+HC2n6Ul29vVyTp2hF57lyzq3DD4nUPEx7lQUVUhh9qxfBVS9YhBCa0PDH3JJME+jEENpxdxe2uUKakWcK6sjN26e0aaK/04d006TDtYjTQr4UN/5Hcig9m4q0Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758827277; c=relaxed/simple;
-	bh=KoOuFDKSPX2klwRtvL8Njx5yrBi2bJBopsiE7v/B7qs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HfpndAqu4KHQ18Q1iguBfrgDPpv9ZrVTKhYwxSR+hhax8Wt/3yZe8wTFEuIxlCUM59DTRvXMI/BP8IBIqtB8QMaBaEIuWFETEJnlvV2DXbu4n0Db87yj/TrUyfTCCBObyEHnmy9vm71n01cv8HCoLJz7t/dgL3D+5pERO4Id+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=EigHyR9t; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1758869287; c=relaxed/simple;
+	bh=+yA/JJLiAgN8GgnTni7nhwSz3g3A80NM5yHtKOcsFi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fTxFIWTZB3VjOD/hJ7S+DheTs2dHnvAH2JFo2o40sJzZHhbJuYoQ3wNw7uZeoBORLG/btUef3nYfmpK9F0be4p0aOKZBV184rCY7aQxOzvqVyZJn1rrPHPTMGi7883q/zmMjmNrpsjEYs08gzSDodvv7SiMXxvkclU1t4E6hM4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=SLCLAiPj; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EigHyR9t"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-62fca01f0d9so2564128a12.3
-        for <regressions@lists.linux.dev>; Thu, 25 Sep 2025 12:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1758827274; x=1759432074; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AnE2Gq1iLGz1QD5Hyp8/IV1Uxk92c5IOYXKZcLObpV0=;
-        b=EigHyR9tgABAO2JUuj/cVqq5+/X8dZ4dUQkfC64/SbyeIDAcvP5trEFl/oWsc4F5Ne
-         7iASRFiU08QGtLodke0hyd0wlMI+GAgXcwNpN+Q7UaboQW3c2PpO4QCJaCXcRrGplI13
-         +bEikOEa0d0n3acHb9mH2bA25Rz5TIQ5/aUIYpkcQdV2ZBt6PUXo2emWDYkL3HZrLOTo
-         lQNj4WsEKAigjL0ueFuS9/9sSn0d386ugxpz4f1+NoVhzx4skwbqoyI7F9DQOsCtTr1X
-         Lk8oz55wgDjQEzvWNENumms0xWJ8LWXzO6Vh/4hnBZNxkVuQGrVfZwwxKQuZvWm7R25c
-         HHjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758827274; x=1759432074;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AnE2Gq1iLGz1QD5Hyp8/IV1Uxk92c5IOYXKZcLObpV0=;
-        b=mryinUo55WjkLSSlgWnk1odt4kdNW4OuaN4xHQPrlv4tbExSCIz32KkjS8CxGvDbuR
-         7TocNVSusKRy3hmC578Yfdbf0J3uGoNfA+t1uMfre9r8I8xluq+qBuLMkg00y/PV9Sbp
-         wiugGyTZvNKrv8L9yk6H9qT4ROeQAMoK9+HIvvrEjrwJRcIfhjVDGNVoEmk9MaaewRNG
-         hCDN4d99oGnemQGWQDUoqJh6zM5r9z1LVleV8F3BSeZsM8UwInNry8C4S5f9tO8C9ph+
-         gDqJr5e9rk0JCLjww6DXEnaYUeZbv1foNQMRBVliy4mrhYPGmitzQd4fLdv5v6WDq5E/
-         r2eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNQ0j7RRK/jTBxN/WDtcJVHs7otQrfu/pKPKO/2/PUC+XrRJeFJiD5nqMdhNMCebz9fC4+VE9KMpgJow==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw9yCue/puuzIy77w6FV0VAzP2rMf+OlyyYK9gGE1wYvkv7B1IW
-	MxPxgrN98HxcYQ29lalyq68UJdcFiKK7D4EAFNl25Mq0YIfAFp9J7qIDvcFaW44KQKzufiPa6a3
-	bg0D6tqsGCUrutIV6YakR8IoQ/d4RVmxfuOZ265Ma
-X-Gm-Gg: ASbGnctk5EQa9c4pPXpc+f7Nz3B/M1ilP7JAf5vQcgswNDdUJa2bfZxwTLLfwz0ZZQH
-	Hus0bgfzV8aWRpxlDr6zoN8Lk+gp1uycEORuHZ7+alumgpTLfHu1MUWKlHi+9ykaLeQFOly/Afo
-	AJdj9z4ytPzkPatAlN3iCdcLwwRE85HmzRS3uzT1i/iMP1B9b9TPt+XaMvxYtahuFDswt/Sv+5+
-	Z5pwZk=
-X-Google-Smtp-Source: AGHT+IGLc7hFNG8WuXb2SfufhUFhhl1/ya5jRSzbJcWtufW9tGBtXFiVuposkEkIcCeVdtoUErBBP6Keqv0SnBd3hsE=
-X-Received: by 2002:a05:6402:2685:b0:62b:2f0:974f with SMTP id
- 4fb4d7f45d1cf-6349fa06340mr3619141a12.15.1758827273663; Thu, 25 Sep 2025
- 12:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="SLCLAiPj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K0XisOwhWijwoOa3QwHt0TYzTp5652DJvsJj1cLXIWI=; b=SLCLAiPj29jDcqxXPuaTmqA86E
+	5YmcTYDmxJWZjZSjr44Pk1Phg74DUVX3KVmfbihnjgyPkkhrddR2cb4g7bRYVYeHnbwLHoEHu4TGA
+	5rCvc/wxjMU5yrJeZHuGDwzKpI3ewlEIs0WF3FBP6kEYIP6FkKQgEOD3L7boKxClHGdvElFvN9X/u
+	OJXrFKYc0vg96vpJTd9SQak2y95eLkvlbZHuNJ2IJ0Z9fsQs/qq6hGyw6/mmjT0971eP5xwMq2rkW
+	IMy7tQl4gxCkaOaXfOHCroj5okY1+N48ltFUAD2yPc9t24nY/Mp6zRM0vgsvvr5QLF+53Hac1WiPg
+	kSjV3zLA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v22FO-00000000tSF-0E7U;
+	Fri, 26 Sep 2025 06:48:02 +0000
+Date: Fri, 26 Sep 2025 07:48:01 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Jan Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: next-20250924: Internal error: Oops: mnt_ns_release
+ (fs/namespace.c:148) __arm64_sys_listmount (fs/namespace.c:5936)
+Message-ID: <20250926064801.GE39973@ZenIV>
+References: <CA+G9fYueO8kP8mXVNmbHkyrFPKpt-onPfeyNXLuLGGjiO1WFfQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <e5d594d0aee93da67a22a42d0e2b4e6e463ab894.camel@gmail.com>
- <CAHC9VhRu=-J5xdKgYOJ1eqQ6EiMoEJ3M+cjDU8AHrts-=DoTvg@mail.gmail.com>
- <cd35aa283cf010188a3b0e318f2c16655224767c.camel@gmail.com>
- <CAHC9VhQ-c65UJS+dRaRFn_D=Sq++QXePTsCkN+cV5BVQEbf9fQ@mail.gmail.com> <9df66167c205e341bd5896376e06950aa7bd7240.camel@gmail.com>
-In-Reply-To: <9df66167c205e341bd5896376e06950aa7bd7240.camel@gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 25 Sep 2025 15:07:40 -0400
-X-Gm-Features: AS18NWDrz8xrbmHXwU1qY0zPoiMU7YlGfdslHp8uO3WfwIh7peya76l18x6AcR4
-Message-ID: <CAHC9VhThNjmKjaJL_G-ow-eBEwTyn6nNe8irOu8yDWMrGhOnAA@mail.gmail.com>
-Subject: Re: [bug report] [regression?] bpf lsm breaks /proc/*/attr/current
- with security= on commandline
-To: Filip Hejsek <filip.hejsek@gmail.com>
-Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYueO8kP8mXVNmbHkyrFPKpt-onPfeyNXLuLGGjiO1WFfQ@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Sep 25, 2025 at 12:25=E2=80=AFPM Filip Hejsek <filip.hejsek@gmail.c=
-om> wrote:
-> On Thu, 2025-09-25 at 11:28 -0400, Paul Moore wrote:
-> > On Thu, Sep 25, 2025 at 10:56=E2=80=AFAM Filip Hejsek <filip.hejsek@gma=
-il.com> wrote:
-> > > On Wed, 2025-09-24 at 17:24 -0400, Paul Moore wrote:
-> > > > On Sat, Sep 13, 2025 at 1:01=E2=80=AFPM Filip Hejsek <filip.hejsek@=
-gmail.com> wrote:
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > TLDR: because of bpf lsm, putting security=3Dselinux on commandli=
-ne
-> > > > >       results in /proc/*/attr/current returning errors.
-> > > > >
-> > > > > When the legacy security=3D commandline option is used, the speci=
-fied lsm
-> > > > > is added to the end of the lsm list. For example, security=3Dappa=
-rmor
-> > > > > results in the following order of security modules:
-> > > > >
-> > > > >    capability,landlock,lockdown,yama,bpf,apparmor
-> > > > >
-> > > > > In particular, the bpf lsm will be ordered before the chosen majo=
-r lsm.
-> > > > >
-> > > > > This causes reads and writes of /proc/*/attr/current to fail, bec=
-ause
-> > > > > the bpf hook overrides the apparmor/selinux hook.
-> > > >
-> > > > What kernel are you using?
-> > >
-> > > I'm using Arch Linux kernel, which is very close to mainline. I have
-> > > also tested my own build from git sources (I used a stripped down
-> > > config which I based on config from Arch). Example in QEMU:
-> > >
-> > > $ qemu-system-x86_64 -nodefaults -accel kvm -cpu host -smp cpus=3D2 -=
-m 1G -display none -kernel ~/git/linux/arch/x86/boot/bzImage -initrd ./init=
-ramfs.img -serial mon:stdio -append 'console=3DttyS0 security=3Dselinux'
-> > > :: mounting '' on real root
-> > > mount: /new_root: no valid filesystem type specified.
-> > > ERROR: Failed to mount '' on real root
-> > > You are now being dropped into an emergency shell.
-> > > sh: can't access tty; job control turned off
-> > > [rootfs ~]# uname -a
-> > > Linux archlinux 6.17.0-rc7-00020-gcec1e6e5d1ab #3 SMP PREEMPT_DYNAMIC=
- Thu Sep 25 16:28:02 CEST 2025 x86_64 GNU/Linux
-> > > [rootfs ~]# mount -t securityfs securityfs /sys/kernel/security
-> > > [rootfs ~]# cat /proc/cmdline
-> > > console=3DttyS0 security=3Dselinux
-> > > [rootfs ~]# cat /sys/kernel/security/lsm; echo
-> > > capability,landlock,lockdown,yama,bpf,selinux
-> > > [rootfs ~]# cat /proc/self/attr/current
-> > > cat: read error: Invalid argument
-> > >
-> > > (Note: In this example, uname reports archlinux, but that's only
-> > > because I based the config on Arch config, it's not actually an Arch
-> > > kernel.)
-> > >
-> > > Maybe the different behavior is caused by a different config? You can
-> > > find the Arch config at [1]. Based on Fedora package sources, I think
-> > > their config has
-> > >
-> > >    CONFIG_LSM=3D"lockdown,yama,integrity,selinux,bpf,landlock,ipe"
-> > >
-> > > while the Arch config has
-> > >
-> > >    CONFIG_LSM=3D"landlock,lockdown,yama,integrity,bpf"
-> >
-> > That's interesting, you're running a LSM that isn't normally run in
-> > your distro and you're not properly initializing it (no policy load).
-> > Both are acceptable, but you're definitely operating in the
-> > corner-iest of corner cases ;)
-> >
-> > I'd have to look at the relevant code, but I suspect that with
-> > "selinux" missing from the CONFIG_LSM list and you manually specifying
-> > it on the kernel command line with "security=3Dselinux" you are getting
-> > it placed at the very end as opposed to what I saw (I have "selinux"
-> > in my CONFIG_LSM list).  It's further complicated by the fact that the
-> > procfs call into the LSM's security_getprocattr() hook is going to
-> > pass a 0/zero into the hook as the @lsmid which means "first
-> > available".
-> >
-> > Considering that the "security=3D" parameter is a legacy option, I'd
-> > encourage you to try the "lsm=3D" parameter (make sure you specify the
-> > full list of LSMs you want, in order) to see if that works.
->
-> Yes, that works.
->
-> The problem isn't that there wouldn't be any working configuration. The
-> problem is that a userspace program (in my case CRIU) was broken and I
-> had to spend time figuring out what the cause of the issue was. I'm not
-> the only one who encountered this issue [1].
+On Fri, Sep 26, 2025 at 12:00:08AM +0530, Naresh Kamboju wrote:
 
-Arguably, when a Linux distro that is enabling new features, e.g.
-multiple LSMs and/or the BPF LSM, they have an obligation to migrate
-away from legacy/deprecated configuration knobs to properly use those
-new features.
+[snip]
 
-With the "security=3D" command line option only supporting one LSM, it's
-going to be hard to do the right thing in all situations; someone is
-always going to be upset with the placement in a multi-LSM system.
-Perhaps it's time to make a push to properly deprecate and eventually
-remove the "security=3D" command line option; it would definitely
-simplify the kernel code.
+With 59bfb6681680 "listmount: don't call path_put() under namespace semaphore"
+we get this:
 
-> So in reporting this issue, I was just hoping to help future users
-> avoid the same problem. If you think this is a waste of time, feel free
-> to ignore this (and sorry I didn't make this clear in the first email).
->
-> Lastly, I will offer a few thoughts:
->  * The fact that the security parameter can break programs like this is
->    highly non-obvious and undocumented.
+static void __free_klistmount_free(const struct klistmount *kls)
+{
+	path_put(&kls->root);
+	kvfree(kls->kmnt_ids);
+	mnt_ns_release(kls->ns);
+}
 
-https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+...
 
-I'll agree that the documentation probably should carry a stronger
-warning, but it is marked as deprecated.
+SYSCALL_DEFINE4(listmount, const struct mnt_id_req __user *, req,
+		u64 __user *, mnt_ids, size_t, nr_mnt_ids, unsigned int, flags)
+{
+	struct klistmount kls __free(klistmount_free) = {};
+	const size_t maxcount = 1000000;
+	struct mnt_id_req kreq;
+	ssize_t ret;
+		   
+	if (flags & ~LISTMOUNT_REVERSE)
+		return -EINVAL;
 
->  * The BPF LSM hook which causes this breakage is useless, because a
->    BPF program cannot be attached to it. I think it would make sense to
->    just remove it.
+which will oops if it takes that failure exit - if you are initializing
+something with any kind of cleanup on it, you'd better make sure
+the cleanup will survive being called for the initial value...
 
-That would be a decision the BPF LSM maintainer would need to make.
-There is precedent for doing things like this in the BPF LSM, and I
-would tend to agree that this hook probably has little use for the
-usual BPF LSMs.
+Christian, that's your branch and I don't want to play with rebasing
+it - had it been mine, the fix would be folded into commit in question,
+with the rest of the branch cherry-picked on top of fixed commit,
+but everyone got their own preferences in how to do such stuff.
 
->  * Switching to using /proc/*/attr/<lsm>/* solves the problem from the
->    userspace side. Unfortunately, selinux does not have its
->    subdirectory in attr.
+Minimal fix would be to make mnt_ns_release(NULL) a no-op.
 
-This is a legacy carryover from the early days of the LSM framework
-and SELinux.  By the time there was a need for LSM specific entries in
-procfs there was already a significant amount of userspace that relied
-on getting SELinux info from /proc/*/attr; migrating to
-/proc/*/attr/selinux (or any other path for that matter) would have
-broken too many things.
-
-The good news is that there are a number of reasons why we want to get
-away from using procfs for these things anyway, and we recently added
-a few LSM syscalls to both solve the procfs problems and better
-support multiple LSMs.  LWN.net wrote a nice article on the syscalls
-which you can find at the link below:
-
-* https://lwn.net/Articles/919059
-
---=20
-paul-moore.com
+BTW, I suspect that one of the sources of confusion had been the fact that
+__free(mnt_ns_release) *does* treat NULL as no-op; in statmount(2) you
+are using that and get away with NULL as initializer.  In listmount(2)),
+OTOH, you are dealing with the function call - same identifier, different
+behaviour...
