@@ -1,43 +1,38 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D242433AD
-	for <regressions@lists.linux.dev>; Fri, 26 Sep 2025 23:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F502C8CE;
+	Sat, 27 Sep 2025 07:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758927916; cv=none; b=Mi1Q2P/h0AdxNW1yJBlzWPLKgZ9KpW4C4ds0TcJhTBn84nCzI+cayB5hciPwJdwP9CRL1286oupuQGyIpIpFKpjFEqQOm6I4JceNrDq7YDgR4lqXiM11AwHEK36KgYoOaJDmLXFXBj6Si5d0PFxp4w35AFfCXaXQNFUJjW5ztK0=
+	t=1758956490; cv=none; b=GlHcgSp05DhGekWQj8EmEW8FC1blTTsHJamuP2gdhnpDlUazF0/tkqLx1LItxBTOWJcwOg8CD/HQegPWkLlGKxtfio71LlA23LvlER7gaod6vuwgc890I+obEXTXONEW6RQIDKdSOWpcrDGhvmeWstQlfgHWuhO+2NWIDFIMVtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758927916; c=relaxed/simple;
-	bh=9fbFrDq9Q608yE5Sbyzp6hLo4hkVOoXPQ/HT2QVjj58=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Bd7fUXCscarjVcVk/V+WWIcg+J3B4GtrTgpYus49J8Cyx+Gp8UkKQ8p9LzBCDXQuHI7zq3XRn6p/VnLRoRERXGjb9rRyc9nMISuwnA+DsN1JDpz3SzV6oxw5Okcf9VVqStU3WG3anff0cQN5Al+UasGufncoHJO2yXKsufpQ0fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com; spf=pass smtp.mailfrom=iyanmv.com; dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b=vPb2fNok; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iyanmv.com
+	s=arc-20240116; t=1758956490; c=relaxed/simple;
+	bh=7SHaprNodxj8zBds5Y9LV1amr5gBsiPxGO5lKnTDsqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eAJsyyziuUTXMyaPvPdG7hjB2exHRd5b/orJYthQv2OEh+7/ZbpvoyMAih/ovrAIb2D2haOn2Yvh+okUSZyFVqbAU08GbXmSTXHZq6v7kC/jXRghvAUWDUgzitiG9RjAwkJ9g7mA2/b5FuNloWvzbsJe5AnTd9psOD/LRAbSYRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JA0UmAn2; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b="vPb2fNok"
-Received: from MTA-07-4.privateemail.com (mta-07.privateemail.com [198.54.127.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4cYQx05c42z2xBK
-	for <regressions@lists.linux.dev>; Fri, 26 Sep 2025 18:58:28 -0400 (EDT)
-Received: from mta-07.privateemail.com (localhost [127.0.0.1])
-	by mta-07.privateemail.com (Postfix) with ESMTP id 4cYQwr32JCz3hhVC;
-	Fri, 26 Sep 2025 18:58:20 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=iyanmv.com; s=default;
-	t=1758927500; bh=9fbFrDq9Q608yE5Sbyzp6hLo4hkVOoXPQ/HT2QVjj58=;
-	h=Date:To:Cc:From:Subject:From;
-	b=vPb2fNokeh6suvaZgdgelv4ttuk1ggGvRblYhdtX8fpLtmg4GOVpf0eci62aRPk+A
-	 rGpqFgDm0UETEk4sNrm74e9FBnloA5qbDXysBbsbBuf2wKyZ/y1xWHWWa3Gibz/86E
-	 jlZoCwe4GSq7OlQAruKh6X/y6nknKLpuG7knmrfaY3mXXMdUNI6MDMM4nmU+qss8tC
-	 vMnYwYHWyiWaG6rtjTmS+8AOs/yLTDAmPOhOfpbSF4rg/Kr2d+N8Zw1EdlCnsIMP06
-	 9AB18fWnaSzRM506z2tCrfI/GiiYADKFv5+65n1HE7Mp28qD4pi67QZR40IGqJ+p2s
-	 IlUkrd5KWlWHg==
-Received: from [192.168.69.204] (adsl-89-217-41-119.adslplus.ch [89.217.41.119])
-	by mta-07.privateemail.com (Postfix) with ESMTPA;
-	Fri, 26 Sep 2025 18:58:16 -0400 (EDT)
-Message-ID: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
-Date: Sat, 27 Sep 2025 00:58:10 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JA0UmAn2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=aS1bMUN422aSyFnyffqqsGN9POA+Q9RpYAHQ+N9wwe0=; t=1758956488;
+	x=1759388488; b=JA0UmAn2666zIZAIRK3wwzFrHl2iPQUKKS2ngOJYHutFPv9861/NSCVuU6KyR
+	u9Mu72MfeEUdvzW/89ygNs4+O+x0iG0UEdlGqtLE9/JnDC+AYm5OgGfSYPtdHAjmlCta3s8x8Mctk
+	1ig3GMQ0FafJYxlYeORK7XrsmVZwy2okHX5nL+txRAI7dxuPUZ0hBwWUdeKQ0Nv8+n1TCGggVxmTh
+	gXxhFjjBhvPiMbHmz0Kvsynil93vm7sG61N932OvDBAA3o4TNpOnge1nCl1zLr7PUQ4ZN9Mt6NcHD
+	3HyMvzdaFXZqkMdel1QT/uybE/9BGZ6Pg1LZEQ1wP2G2t3MW7Q==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1v2OOx-00AUVj-0y;
+	Sat, 27 Sep 2025 08:27:23 +0200
+Message-ID: <3e5abb75-2192-46dc-a44e-d66fed87fc63@leemhuis.info>
+Date: Sat, 27 Sep 2025 08:27:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,77 +40,120 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: stable@vger.kernel.org
-Content-Language: en-US, es-ES
-Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
- sashal@kernel.org
-From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
-Subject: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't boot
- with 6.16.9 and Xe driver
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------dnSgrBGw2pAPx7gtbe9QyB3f"
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH v4 1/6] vduse: make domain_lock an rwlock
+To: =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "Michael S . Tsirkin" <mst@redhat.com>
+Cc: Yongji Xie <xieyongji@bytedance.com>, Cindy Lu <lulu@redhat.com>,
+ jasowang@redhat.com, linux-kernel@vger.kernel.org,
+ Maxime Coquelin <mcoqueli@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, Laurent Vivier <lvivier@redhat.com>,
+ virtualization@lists.linux.dev, Stefano Garzarella <sgarzare@redhat.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250925091335.1964283-1-eperezma@redhat.com>
+ <20250925091335.1964283-2-eperezma@redhat.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20250925091335.1964283-2-eperezma@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1758956488;410e1dfe;
+X-HE-SMSGID: 1v2OOx-00AUVj-0y
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------dnSgrBGw2pAPx7gtbe9QyB3f
-Content-Type: multipart/mixed; boundary="------------Bv8zz6f9B88KdLNUc0pUQvE0";
- protected-headers="v1"
-From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
- sashal@kernel.org
-Message-ID: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
-Subject: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't boot
- with 6.16.9 and Xe driver
+On 25.09.25 11:13, Eugenio Pérez wrote:
+> It will be used in a few more scenarios read-only so make it more
+> scalable.
+> [...]
+> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
+> index e7bced0b5542..2b6a8958ffe0 100644
+> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/cdev.h>
+>  #include <linux/device.h>
+>  #include <linux/eventfd.h>
+> +#include <linux/rwlock.h>
 
---------------Bv8zz6f9B88KdLNUc0pUQvE0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Lo! My daily -next builds based for Fedora using the Fedora rawhide
+failed yesterday on various archs. I suspect it's due to above change,
+as this was the error I got:
 
-SGVsbG8sDQoNCkFmdGVyIHVwZ3JhZGluZyB0byA2LjE2LjkgdGhpcyBtb3JuaW5nLCBteSBs
-YXB0b3AgY2FuJ3QgYm9vdC4gSSBjYW5ub3QgDQpnZXQgYW55IGxvZ3MgYmVjYXVzZSB0aGUg
-a2VybmVsIHNlZW1zIHRvIGZyZWV6ZSB2ZXJ5IGVhcmx5LCBldmVuIGJlZm9yZSANCkknbSBh
-c2tlZCBmb3IgdGhlIGZ1bGwgZGlzayBlbmNyeXB0aW9uIHBhc3NwaHJhc2UuDQoNClRoaXMg
-aXMgYSByZWdyZXNzaW9uIGZyb20gNi4xNi44IHRvIDYuMTYuOS4NCg0KSSBkaWQgYSBnaXQg
-YmlzZWN0IGluIHRoZSBzdGFibGUvbGludXggYW5kIHRoaXMgaXMgdGhlIGNvbW1pdCBjYXVz
-aW5nIA0KdGhlIGlzc3VlIGZvciBtZToNCg0KOTcyMDdhNGZlZDUzNDhmZjVjNWU3MWE3MzAw
-ZGI5YjYzODY0MDg3OSBpcyB0aGUgZmlyc3QgYmFkIGNvbW1pdA0KY29tbWl0IDk3MjA3YTRm
-ZWQ1MzQ4ZmY1YzVlNzFhNzMwMGRiOWI2Mzg2NDA4NzkgKEhFQUQpDQpBdXRob3I6IERhbmll
-bGUgQ2VyYW9sbyBTcHVyaW8gPGRhbmllbGUuY2VyYW9sb3NwdXJpb0BpbnRlbC5jb20+DQpE
-YXRlOiAgIFdlZCBKdW4gMjUgMTM6NTQ6MDYgMjAyNSAtMDcwMA0KDQogICAgIGRybS94ZS9n
-dWM6IEVuYWJsZSBleHRlbmRlZCBDQVQgZXJyb3IgcmVwb3J0aW5nDQoNCiAgICAgWyBVcHN0
-cmVhbSBjb21taXQgYTdmZmNlYTg2MzFhZjkxNDc5Y2FiMTBhYTdmYmZkMDcyMmYwMWQ5YSBd
-DQoNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDYyNTIwNTQwNS4xNjUzMjEy
-LTMtZGFuaWVsZS5jZXJhb2xvc3B1cmlvQGludGVsLmNvbS8NCg0KSG93IHRvIHJlcHJvZHVj
-ZToNCg0KMS4gVXBncmFkZSB0byA2LjE2LjkNCjIuIEVuYWJsZSB0aGUgWGUgZHJpdmVyIGJ5
-IHBhc3NpbmcgaTkxNS5mb3JjZV9wcm9iZT0hN2Q1NSANCnhlLmZvcmNlX3Byb2JlPTdkNTUN
-CjMuIFJlYm9vdA0KDQpCZXN0IHJlZ2FyZHMsDQpJecOhbg0KDQotLSANCkl5w6FuIE3DqW5k
-ZXogVmVpZ2ENCkdQRyBLZXk6IDIwNEMgNDYxRiBCQThDIDgxRDEgMDMyNyAgRTY0NyA0MjJF
-IDM2OTQgMzExRSA1QUMxDQoNCg==
+"""
+In file included from drivers/vdpa/vdpa_user/vduse_dev.c:17:
+./include/linux/rwlock.h:5:3: error: #error "Please do not include this
+file directly."
+    5 | # error "Please do not include this file directly."
+      |   ^~~~~
+./include/linux/rwlock.h:27:10: warning: ‘rwlock_init’ redefined
+   27 | # define rwlock_init(lock)                                      \
+      |          ^~~~~~~~~~~
+In file included from ./include/linux/spinlock_rt.h:153,
+                 from ./include/linux/spinlock.h:455,
+                 from ./include/linux/sched.h:37,
+                 from ./include/linux/percpu.h:12,
+                 from ./arch/x86/include/asm/msr.h:16,
+                 from ./arch/x86/include/asm/tsc.h:11,
+                 from ./arch/x86/include/asm/timex.h:6,
+                 from ./include/linux/timex.h:67,
+                 from ./include/linux/time32.h:13,
+                 from ./include/linux/time.h:60,
+                 from ./include/linux/jiffies.h:10,
+                 from ./include/linux/ktime.h:25,
+                 from ./include/linux/timer.h:6,
+                 from ./include/linux/netdevice.h:24,
+                 from ./include/linux/if_vlan.h:10,
+                 from ./include/linux/virtio_net.h:5,
+                 from drivers/vdpa/vdpa_user/vduse_dev.c:11:
+"""
 
---------------Bv8zz6f9B88KdLNUc0pUQvE0--
+For a complete log, see
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/09603789-next-next-all/builder-live.log.gz
 
---------------dnSgrBGw2pAPx7gtbe9QyB3f
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Reverting the series made things work for me.
 
------BEGIN PGP SIGNATURE-----
+> [...]
 
-iQIzBAEBCgAdFiEEIExGH7qMgdEDJ+ZHQi42lDEeWsEFAmjXGoIACgkQQi42lDEe
-WsGeMg//V1/IlZOJicsTn3ReQWxr14M4xZRFdnaNPQYbEtmxv5Omrubu3PWpepfo
-m/JtM3W6vup+Q8cTGWSW+OdgiRu2r162oSDu5wG29u8smzL8xr1r9MrGDI7YQ2HV
-WwXBBNNSfY9fFNLKuYBIJsq5cV1Wl4YQGKwIx/mDV1QedSHetW7O3BIIQqgXNmEZ
-AB3ZlWaJrejruY39YoJfJ2BFlYI7DmaySxZEzMYDNxiEg41AkJd6Jklm9HD28Vga
-5uLeqfQO0aQv4rM0f8PKed/ykMIbNeEO1YyT9g5niP0IXKX+fArvB7GtWUhh8OwY
-zy3paJE0UGGbgEFopnyDr1i9DjTcK5ceAYq/B0Vgpo7ahhknmmpOrsZb1RCtn1/h
-rjVi3D4RE5YyjGcJ8WpSZIUm3X77Hn0q/m4AY9Z/Ly+iAeUTQERFrG3X3VNkScSX
-RJ7KOkXo1IrHBLfaMEyKOX0yWFwvGgBkC4c0u1w42MAXe6TFkAGxDRKL6j1VENCc
-wqaJGaR1FdZnc9HzUhE2rHTOr+h8WBtwK6zV13nYxe9IRvXVC0kU6SQsVy0mTWj1
-e1wKSuKp2cp3pKrWzPKXR3ugZH006ssmiRh845wRMSKUk/XH6wNC7CcAj9xf06jp
-T8mZcdxwWUAhBFnxRg1v162+7HLQG9qWRMsX0v3tOTBs9zSDYs0=
-=kxv8
------END PGP SIGNATURE-----
-
---------------dnSgrBGw2pAPx7gtbe9QyB3f--
+Ciao, Thorsten
