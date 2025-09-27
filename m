@@ -1,44 +1,38 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18212E0B42
-	for <regressions@lists.linux.dev>; Sat, 27 Sep 2025 14:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAC219C540;
+	Sat, 27 Sep 2025 14:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758982816; cv=none; b=lWjK9ArkrXQAK42bHzWLq0dx8jz4JHz2s29HwjOez1r4FUnRvaCksAZwa20PiRA/2Qu/+QDdZpFj6XoYa0v0hjIyADLeeLwHFOrh79vvwuX8HbHQ2PI9vO5YdwgJY3XJY6BmgB9YKCDERMPf1BbkoYFxJQwq/w/BJx5vJfLd1Aw=
+	t=1758983492; cv=none; b=u3JcPfe0Ohs53UflB2p2DBXrX1VbkItjppNIPZYv2UwImt5gkXYhUlOtP0MFfX1zMAohSF5bphFPq+K6RPT8HIDaeV+31fCz8vbJCDedjef7id/2fafNpO50yoC8sHZqZcHmr8mZRzU0btY7P+Fxo6H5eE6zKSZ2srCwXsi66lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758982816; c=relaxed/simple;
-	bh=u/aFZEeB1E+Rq+glcc1onQp64X8cmqYISYhciilIgdY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hZAd3h5amQvwBqZ9YzCcoOudR6GPWdfQRCdB27vNe76CqyaCxVAq1Cihsk8iI/A71Bz7W7E/4x7Lx7xNdwDUHaO4NKL/f9p+bj8tuaCRNRVT9xgYULAfLhKIWKwqHgfdNPXHSwwM/uhutF7UjjNs7qU3rlyyKyYUe+5OuxIUTx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com; spf=pass smtp.mailfrom=iyanmv.com; dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b=tHLUJ8zU; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iyanmv.com
+	s=arc-20240116; t=1758983492; c=relaxed/simple;
+	bh=vXTABgwTk52fHmAXgUkZ8YK1uChcVr4A5lzh5g1WjZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trxqQapTn0hhD7+LD2ZnAfRv6PuEP0PPmRFF+cPb6xqzQjvsdF0Dl96Cn6Y6vXZbgb++xBwxtjMlWterkE9oTUUMrok/8DilAWLUHbEg6Ds7FxzRWPwZpgXMt4TVXnwz9kvD1VEjguEHbUVr6ii/yAXT9KaT9SGBP9SYnfmVAM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dGLq8iqI; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b="tHLUJ8zU"
-Received: from MTA-12-4.privateemail.com (mta-12-1.privateemail.com [198.54.122.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4cYqNW5dYRz2xB3
-	for <regressions@lists.linux.dev>; Sat, 27 Sep 2025 10:20:11 -0400 (EDT)
-Received: from mta-12.privateemail.com (localhost [127.0.0.1])
-	by mta-12.privateemail.com (Postfix) with ESMTP id 4cYqNN2fdpz3hhVv;
-	Sat, 27 Sep 2025 10:20:04 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=iyanmv.com; s=default;
-	t=1758982804; bh=u/aFZEeB1E+Rq+glcc1onQp64X8cmqYISYhciilIgdY=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=tHLUJ8zU1oC59Ace4FGwF6ihTSKHBRAZuKCTamZ0W9eVEev6yZki9QdC92jFuWyiI
-	 kLN0uX6RaPLgUme1KhoQrHtiqRxYIDI3RS2gJGFDGRIDYGqmXzUPtYBkQJUx0P4PsC
-	 lnR7GVU9dZEf4Okd53lmZLATravcBhgZIahwBCb/nO/RJsXxzysO0oZNGKV4HoeQ5M
-	 t2O1Pdx9rjhU6jsqR8+IJxATzJl6ZJvf3xgbicIXYHgqq9uA0mAYelPzBa2MOmtD84
-	 jO+5TzTfY8ncgau5W/diGQGX6ejHubO6d0JpVqc99lx5KwJhOh9SOHb8Ao+g5l0Zai
-	 XeVFNPGID8A0A==
-Received: from [10.59.223.244] (mob-194-230-148-174.cgn.sunrise.net [194.230.148.174])
-	by mta-12.privateemail.com (Postfix) with ESMTPA;
-	Sat, 27 Sep 2025 10:19:58 -0400 (EDT)
-Message-ID: <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
-Date: Sat, 27 Sep 2025 16:19:54 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dGLq8iqI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=vXTABgwTk52fHmAXgUkZ8YK1uChcVr4A5lzh5g1WjZ4=; t=1758983490;
+	x=1759415490; b=dGLq8iqIV34qrajGHMc2T/HrZAFKdavDDlfVwzEx8Y+fYWSVd+uEDbYjUMYk7
+	baS3Wbf9R76tKCr0IwwGWBjJdV59+YyD9HpNYjSljBlFnXeTbgPcI8EXwR1mq0hQ8vxDB5Hargnie
+	eLkrci6OfZlZA5xBX7AinSRMsx4VfJJmWLGrBHuNradNfywCqmZ+ehCPLi9gr2II4wcMNJE4qi/kx
+	hg4oMTJmWePCcvcDEQouq8EtBpEsYAT6uqgI4PpjHUH5+MQuhM+HPjBAItoLkuTvXqLiwIALMyqiC
+	7A/OcdWJNXQG1eIE2VJKOvueAZRe2OxL9FTA07mpM++DYVcmCw==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1v2VxP-00BYar-2d;
+	Sat, 27 Sep 2025 16:31:27 +0200
+Message-ID: <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
+Date: Sat, 27 Sep 2025 16:31:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,86 +40,43 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
 Subject: Re: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't
  boot with 6.16.9 and Xe driver
-To: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org
+To: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>,
+ stable@vger.kernel.org
 Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
- sashal@kernel.org
+ sashal@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 References: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
  <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
-Content-Language: en-US
-In-Reply-To: <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------FtzT8p0XJFBd0rm32PLPoACu"
-X-Virus-Scanned: ClamAV using ClamSMTP
+ <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1758983490;754d97fa;
+X-HE-SMSGID: 1v2VxP-00BYar-2d
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------FtzT8p0XJFBd0rm32PLPoACu
-Content-Type: multipart/mixed; boundary="------------xyw6Hd0QOJr01ek7spqCaNTr";
- protected-headers="v1"
-From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
- sashal@kernel.org
-Message-ID: <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
-Subject: Re: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't
- boot with 6.16.9 and Xe driver
-References: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
- <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
-In-Reply-To: <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
+On 27.09.25 16:19, Iyán Méndez Veiga wrote:
+> On 27/09/2025 14:52, Thorsten Leemhuis wrote:
+>> Does 6.17-rc7 work for you? We need to know if this needs to be fixed in
+>> just the stable tree or if it is something that needs to be addressed in
+>> mainline as well.
+> 6.17-rc7 boots fine, so the issue is just in the stable tree.
 
---------------xyw6Hd0QOJr01ek7spqCaNTr
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Thx. Could you also try if reverting the patch from 6.16.y helps? Note,
+you might need to revert "drm/xe/guc: Set RCS/CCS yield policy" as well,
+which apparently depends on the patch that causes your problems.
 
-SGVsbG8sDQoNCk9uIDI3LzA5LzIwMjUgMTQ6NTIsIFRob3JzdGVuIExlZW1odWlzIHdyb3Rl
-Og0KPiBEb2VzIDYuMTctcmM3IHdvcmsgZm9yIHlvdT8gV2UgbmVlZCB0byBrbm93IGlmIHRo
-aXMgbmVlZHMgdG8gYmUgZml4ZWQgaW4NCj4ganVzdCB0aGUgc3RhYmxlIHRyZWUgb3IgaWYg
-aXQgaXMgc29tZXRoaW5nIHRoYXQgbmVlZHMgdG8gYmUgYWRkcmVzc2VkIGluDQo+IG1haW5s
-aW5lIGFzIHdlbGwuDQoNCjYuMTctcmM3IGJvb3RzIGZpbmUsIHNvIHRoZSBpc3N1ZSBpcyBq
-dXN0IGluIHRoZSBzdGFibGUgdHJlZS4NCj4gSnVzdCB3b25kZXJpbmc6IHdoeSBhcmUgdGhv
-c2UgcGFyYW1ldGVycyBuZWVkZWQ/IElzIHRoZSBoYXJkd2FyZSBub3QNCj4gZnVsbHkgc3Vw
-cG9ydGVkIGJlIHRoZSB4ZSBkcml2ZXIgeWV0Pw0KDQppOTE1IGlzIHN0aWxsIHRoZSBkZWZh
-dWx0IGRyaXZlciBmb3IgTWV0ZW9yIExha2UgaW50ZWdyYXRlZCBHUFVzLCBzbyANCnRoYXQn
-cyB3aHkgSSBuZWVkIHRvIHBhc3MgdGhvc2UgcGFyYW1ldGVycy4gTHVuYXIgTGFrZSBhbHJl
-YWR5IHVzZXMgWGUgDQpieSBkZWZhdWx0LCB0aG91Z2guIEluIG15IGV4cGVyaWVuY2UsIGZv
-ciBhdCBsZWFzdCB0aGUgbGFzdCB0d28ga2VybmVsIA0KcmVsZWFzZSBjeWNsZXMsIEkndmUg
-b2JzZXJ2ZWQgYmV0dGVyIGJhdHRlcnkgbGlmZSBhbmQgcGVyZm9ybWFuY2UgdXNpbmcgDQp0
-aGUgWGUgZHJpdmVyLg0KDQpJIGRvIG5vdCBoYXZlIGNvbmNyZXRlIG51bWJlcnMgYWJvdXQg
-cG93ZXIgdXNhZ2UgYW5kIGJhdHRlcnkgbGlmZSwganVzdCANCm15IChzdWJqZWN0aXZlKSBm
-ZWVsaW5nIGFmdGVyIHVzaW5nIHRoZSBsYXB0b3AgZm9yIGEgd2VlayB3aXRoIGk5MTUgYW5k
-IA0KYW5vdGhlciB3ZWVrIHdpdGggWGUuIEFib3V0IHBlcmZvcm1hbmNlLCBNaWNoYWVsIGZy
-b20gUGhvcm9uaXggcmVjZW50bHkgDQpzaGFyZWQgc29tZSBiZW5jaG1hcmtzIHdpdGggYSBD
-b3JlIFVsdHJhIDcgMTU1SCAoc2FtZSBDUFUgYXMgdGhlIA0KVGhpbmtwYWQgWDEgQ2FyYm9u
-IEdlbiAxMik6DQoNCmh0dHBzOi8vd3d3LnBob3Jvbml4LmNvbS9yZXZpZXcvaW50ZWwtbXRs
-LWk5MTUteGUtbGludXgNCj4gQ2lhbywgVGhvcnN0ZW4NCg0KQmVzdCwNCkl5w6FuDQoNCi0t
-IA0KSXnDoW4gTcOpbmRleiBWZWlnYQ0KR1BHIEtleTogMjA0QyA0NjFGIEJBOEMgODFEMSAw
-MzI3ICBFNjQ3IDQyMkUgMzY5NCAzMTFFIDVBQzENCg0K
+>> Just wondering: why are those parameters needed? Is the hardware not
+>> fully supported be the xe driver yet?
+> i915 is still the default driver for Meteor Lake integrated GPUs, so
+> that's why I need to pass those parameters. Lunar Lake already uses Xe
+> by default, though. In my experience, for at least the last two kernel
+> release cycles, I've observed better battery life and performance using
+> the Xe driver.
 
---------------xyw6Hd0QOJr01ek7spqCaNTr--
+Thx for letting us know!
 
---------------FtzT8p0XJFBd0rm32PLPoACu
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Cia, Thorsten
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEIExGH7qMgdEDJ+ZHQi42lDEeWsEFAmjX8ooACgkQQi42lDEe
-WsGdmg/9EnWxWzUnOPi8IFufL6gPeZO0ZVJrzrTzg05UhD30liYZB9vwcskmrrxs
-3jmBe4yqouhd6E2CI4ZaieAVf2L0U0WOZ85I7eRsxQY8SZ7KFknfv4cFpRXp0YdX
-XP6WWCQtaFwcIrXkZgyY3ULQ9kx4E0phUMKHSKruv+kfYGoLCaZvj5NqKTEef1ua
-ayJOZyAkbi4kMrDQA4G69jnaY299jfbBq7KPFpInIVP5/z4M8aKfkD/YXoh18+4L
-b4WHrMeRB7/hd+GHgmoNmeTl2n0j7wKy/JVxfIB1IzFaUENYcTqcqNLCl4oEBvyp
-PJc+F7rYYXtsZ+8MW4bPRPChATDmTER7ms9ReBG97/0X772NRKZVEaXEHLb8h9vI
-A9TurH5AIvbleaKUvb/oapKq9bBUOmP3YE+fX+DINM2MXiZ4sYwW2dIUKP8s9R1p
-l/XUaf4U7P+WAAfCUzhZf25cmor5JwiE79WI0kJ6HrCE9EyYthtA+B7NWvcaAaiM
-rsrZiJtc69I0qtE/a1Bf3U7uFMwQ0NB0y59w2cpbi0vasCBOLGfxC5y4vPWGvKdW
-VPpnnMcqdmeK5SwbD7CxTgkXDANOExiCOq4gn4LhoLQ54ifwwgmX5M9YJkqaUwJb
-KamTQcks7WUQqqCa/kp0lOHyToI+s2t+wcyCJhdnTol8jcmiWEU=
-=hFwr
------END PGP SIGNATURE-----
-
---------------FtzT8p0XJFBd0rm32PLPoACu--
