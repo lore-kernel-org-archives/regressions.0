@@ -1,38 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAC219C540;
-	Sat, 27 Sep 2025 14:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E982913C914
+	for <regressions@lists.linux.dev>; Sun, 28 Sep 2025 11:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758983492; cv=none; b=u3JcPfe0Ohs53UflB2p2DBXrX1VbkItjppNIPZYv2UwImt5gkXYhUlOtP0MFfX1zMAohSF5bphFPq+K6RPT8HIDaeV+31fCz8vbJCDedjef7id/2fafNpO50yoC8sHZqZcHmr8mZRzU0btY7P+Fxo6H5eE6zKSZ2srCwXsi66lc=
+	t=1759058227; cv=none; b=aLmzzpDCM+3/t04gKBJiOFHlld1LzLRTTRL4pNOGN6Rqye1S5/YJrpDY526FmSCGJ6BuuUwPLoS5hPYvcYB3m9vzevvVyqhzqXSPSadBt2KkvK4R3xbLrLOtdis0AVGjd4BCIuhMMvfsXHjYDQ9ZvCTJejRMNkMME+XCiWB3qRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758983492; c=relaxed/simple;
-	bh=vXTABgwTk52fHmAXgUkZ8YK1uChcVr4A5lzh5g1WjZ4=;
+	s=arc-20240116; t=1759058227; c=relaxed/simple;
+	bh=a/TGHaNmSB/SspzCyEVsastyjIzuA7jN1ADD7CrCWi0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=trxqQapTn0hhD7+LD2ZnAfRv6PuEP0PPmRFF+cPb6xqzQjvsdF0Dl96Cn6Y6vXZbgb++xBwxtjMlWterkE9oTUUMrok/8DilAWLUHbEg6Ds7FxzRWPwZpgXMt4TVXnwz9kvD1VEjguEHbUVr6ii/yAXT9KaT9SGBP9SYnfmVAM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dGLq8iqI; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=g/o7AWcqzAm7DHDXentHV99BMn4TvUQSEDv/TYxqrCdcPravswQiRU9sVeHLseJ8iLlSeAn5htDXjRrCqHmaqvaKbw0jRXzo5iHQEtYMvKVpiCpFG7boEEbK8M8At7h9rU86bQ6baeJ2Qq1Fvv1pYcUIf5jhB5TMTBFi1+vgDKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com; spf=pass smtp.mailfrom=iyanmv.com; dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b=iIe9Lzn/; arc=none smtp.client-ip=162.0.218.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iyanmv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iyanmv.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dGLq8iqI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=vXTABgwTk52fHmAXgUkZ8YK1uChcVr4A5lzh5g1WjZ4=; t=1758983490;
-	x=1759415490; b=dGLq8iqIV34qrajGHMc2T/HrZAFKdavDDlfVwzEx8Y+fYWSVd+uEDbYjUMYk7
-	baS3Wbf9R76tKCr0IwwGWBjJdV59+YyD9HpNYjSljBlFnXeTbgPcI8EXwR1mq0hQ8vxDB5Hargnie
-	eLkrci6OfZlZA5xBX7AinSRMsx4VfJJmWLGrBHuNradNfywCqmZ+ehCPLi9gr2II4wcMNJE4qi/kx
-	hg4oMTJmWePCcvcDEQouq8EtBpEsYAT6uqgI4PpjHUH5+MQuhM+HPjBAItoLkuTvXqLiwIALMyqiC
-	7A/OcdWJNXQG1eIE2VJKOvueAZRe2OxL9FTA07mpM++DYVcmCw==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1v2VxP-00BYar-2d;
-	Sat, 27 Sep 2025 16:31:27 +0200
-Message-ID: <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
-Date: Sat, 27 Sep 2025 16:31:27 +0200
+	dkim=pass (2048-bit key) header.d=iyanmv.com header.i=@iyanmv.com header.b="iIe9Lzn/"
+Received: from MTA-10-3.privateemail.com (mta-10.privateemail.com [198.54.118.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4cZMGd0tw5z2x9y
+	for <regressions@lists.linux.dev>; Sun, 28 Sep 2025 07:16:57 -0400 (EDT)
+Received: from mta-10.privateemail.com (localhost [127.0.0.1])
+	by mta-10.privateemail.com (Postfix) with ESMTP id 4cZMGT1psNz3hhdT;
+	Sun, 28 Sep 2025 07:16:49 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=iyanmv.com; s=default;
+	t=1759058209; bh=a/TGHaNmSB/SspzCyEVsastyjIzuA7jN1ADD7CrCWi0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iIe9Lzn/0e5Trq8XCFljdX+vR9A4+FbyxiyIj4jYxXjx6iqkP2fNoayGD3jGQFOyE
+	 rszSQg9Dq5tau3hX5tC84k8iBpdvhSU4EfOy0YpVkPIPBZnktVgGiKXyd1TFzK3ScJ
+	 0Jypt448UBCKjvQl/ABe4D8gv5H/jzG9Gf2c4iW8y21PViOL7kEeQUPPacRA0qRd0l
+	 LEKitRQY24AhlE9waPHQnbCNdzIawtZhZ9gl8GT4FJ0EoUJZJFUcJk0ps2wxFyjp0i
+	 keytpt4n7tUF3EaDX6o/RfaYgm3g6gR2lsmY0b1fX9ziBhit+v4lVuH5bUx9GRoEtJ
+	 MQ92isihwceeA==
+Received: from [192.168.69.204] (adsl-89-217-41-119.adslplus.ch [89.217.41.119])
+	by mta-10.privateemail.com (Postfix) with ESMTPA;
+	Sun, 28 Sep 2025 07:16:42 -0400 (EDT)
+Message-ID: <afd60150-7371-49f4-a95d-d9147e067757@iyanmv.com>
+Date: Sun, 28 Sep 2025 13:16:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,41 +48,76 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't
  boot with 6.16.9 and Xe driver
-To: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>,
- stable@vger.kernel.org
+To: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org
 Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
  sashal@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 References: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
  <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
  <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1758983490;754d97fa;
-X-HE-SMSGID: 1v2VxP-00BYar-2d
+ <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
+Content-Language: en-US, es-ES
+From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
+In-Reply-To: <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Z0c7yz0fCawqyGmbY488aY7a"
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On 27.09.25 16:19, Iyán Méndez Veiga wrote:
-> On 27/09/2025 14:52, Thorsten Leemhuis wrote:
->> Does 6.17-rc7 work for you? We need to know if this needs to be fixed in
->> just the stable tree or if it is something that needs to be addressed in
->> mainline as well.
-> 6.17-rc7 boots fine, so the issue is just in the stable tree.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Z0c7yz0fCawqyGmbY488aY7a
+Content-Type: multipart/mixed; boundary="------------ki4ifLJhud3SM6JLgxL6ned4";
+ protected-headers="v1"
+From: =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?= <me@iyanmv.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, daniele.ceraolospurio@intel.com,
+ sashal@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Message-ID: <afd60150-7371-49f4-a95d-d9147e067757@iyanmv.com>
+Subject: Re: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't
+ boot with 6.16.9 and Xe driver
+References: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
+ <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
+ <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
+ <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
+In-Reply-To: <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
 
-Thx. Could you also try if reverting the patch from 6.16.y helps? Note,
-you might need to revert "drm/xe/guc: Set RCS/CCS yield policy" as well,
-which apparently depends on the patch that causes your problems.
+--------------ki4ifLJhud3SM6JLgxL6ned4
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
->> Just wondering: why are those parameters needed? Is the hardware not
->> fully supported be the xe driver yet?
-> i915 is still the default driver for Meteor Lake integrated GPUs, so
-> that's why I need to pass those parameters. Lunar Lake already uses Xe
-> by default, though. In my experience, for at least the last two kernel
-> release cycles, I've observed better battery life and performance using
-> the Xe driver.
+T24gMjcvMDkvMjAyNSAxNjozMSwgVGhvcnN0ZW4gTGVlbWh1aXMgd3JvdGU6DQo+IFRoeC4g
+Q291bGQgeW91IGFsc28gdHJ5IGlmIHJldmVydGluZyB0aGUgcGF0Y2ggZnJvbSA2LjE2Lnkg
+aGVscHM/IE5vdGUsDQo+IHlvdSBtaWdodCBuZWVkIHRvIHJldmVydCAiZHJtL3hlL2d1Yzog
+U2V0IFJDUy9DQ1MgeWllbGQgcG9saWN5IiBhcyB3ZWxsLA0KPiB3aGljaCBhcHBhcmVudGx5
+IGRlcGVuZHMgb24gdGhlIHBhdGNoIHRoYXQgY2F1c2VzIHlvdXIgcHJvYmxlbXMuDQoNClll
+cywgcmV2ZXJ0aW5nIGJvdGggZGQxYTQxNWRjZmQ1ICJkcm0veGUvZ3VjOiBTZXQgUkNTL0ND
+UyB5aWVsZCBwb2xpY3kiIA0KYW5kIDk3MjA3YTRmZWQ1MyAiZHJtL3hlL2d1YzogRW5hYmxl
+IGV4dGVuZGVkIENBVCBlcnJvciByZXBvcnRpbmciIGZyb20gDQo2LjE2LnkgZml4ZXMgdGhl
+IGlzc3VlIGZvciBtZS4NCg0KQmVzdCwNCkl5w6FuDQoNCi0tIA0KSXnDoW4gTcOpbmRleiBW
+ZWlnYQ0KR1BHIEtleTogMjA0QyA0NjFGIEJBOEMgODFEMSAwMzI3ICBFNjQ3IDQyMkUgMzY5
+NCAzMTFFIDVBQzENCg==
 
-Thx for letting us know!
+--------------ki4ifLJhud3SM6JLgxL6ned4--
 
-Cia, Thorsten
+--------------Z0c7yz0fCawqyGmbY488aY7a
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEIExGH7qMgdEDJ+ZHQi42lDEeWsEFAmjZGRIACgkQQi42lDEe
+WsG+VhAAgbDnUCYKvGj1hUQVpz9lTsQB5vY+Vfgdasudnesj+0CoZu0tR9pWivj9
+J9QuUooFA+HwVuj4/QeGOqo2GIInjy8Q2ZVYN836U8MBsF9culOXCuaSpft7YljS
+MgaNcW1h7dYZ7yAN2719MuGsOLWjwbmp1hVftng2jypdvz3Do8qMGE1RZkw9i89A
+knuGUMkI5wyJ6QXaSfN/tb2ocBeLGjsUwWdQH/KHxw8jy53D/pfIcXpTWrCIseKS
+PocR5Q3ffEOVbAfRIDlpp9X1YTByUm/S/GOlxEYskuJ70T2BVnuCmgQcO53xSpWP
+voEX1dwBGz6QXh/9sQKfYqkAS8kPv4TcdWaGHYxXFFTVfnECiNP34SBlRjTmhUkF
+DliFLS+/AAewYbrq2ua3s9LM8FKvHAyc5Lmson/jwrvas5pmDX5cCA8ZNVSq12CV
+woxLpxMQBC83DEA5Y66ZFQW7DjqNpKVpWYckl4lotF5TUcAjPj2qiJvTOw+FoPbd
+V3KuBtUMDoikEekfzYNLPSJiJgvbtfPGHyVg+XB7O7qzqGaVylxSHbMgiYdGRL/R
+tnJgfq1DRhTK+IrI8lwd6Oiab9Bs8HoHVwzvVfYxgpsXyLUQJGFUiFO/rzothKkH
+qVewDDmxYDCcyLkJy4DmlIsW7I3Qre4gVHFOyMtwj8K/wJzTfik=
+=3gtP
+-----END PGP SIGNATURE-----
+
+--------------Z0c7yz0fCawqyGmbY488aY7a--
