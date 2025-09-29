@@ -1,150 +1,152 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C947C33F9;
-	Mon, 29 Sep 2025 04:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759119338; cv=pass; b=lL8zGD3x3Uc1O/ViJd3jA5VxRIWQZfD5m+qyNoQhpHxON+qEcK5Z9ek+fHjCUuI7/x1daztcfUbdEvqwkh/NPiQibW1n0wrwNdvcM0Mc9MySgpVuVyZZreeKlrSViME8FHPWxLqaayUJVQubPvoISd4SG3LZUa7CqcV+2dELvac=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759119338; c=relaxed/simple;
-	bh=4VGHV4/A319H/0sQtCBFb7zsNGq2H+CR9M+BkV8xXOw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AjCL2gs4jsExtvKXCVtUtvOXI3y9I32eqeOMMIrbQMtfSX5pmN1Sq337aeIGD+C+QuF/RJnQsw81JqOrb/Zaf6RTN+UIErAXk1Ej55tRPOLlg8+VLfNuoNfU/BFoUXskwP8rteP8x4evmgOxJaXkwfWtiBSsR/deDfzhgWi6I9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=denys.f@collabora.com header.b=aAn1LdMe; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36C29B8DD
+	for <regressions@lists.linux.dev>; Mon, 29 Sep 2025 05:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759124602; cv=none; b=QKpqyjOns4uniSjVtDm6Mnur77eEGJfR1ofq8S8Ci0Ruj0jMY6Mlmn7wC6qfKYPu8kG7npr19eWguI/0/uHnXYWviG6UUi+x7WLjr7K2vN5hk8a5WRx/MvgszmwYfak8Y+sYSh07v77mhhJ2oCIPda/dcfTXaNJdRFdNH31Ws6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759124602; c=relaxed/simple;
+	bh=KkdQm9LnjT0oDZgSyvNFLyYVXfgAVdlyFZQg4ncaicA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GySYYEZHSw31umnqyRmGTbNGTDcXKmUSSPZ9wHVXlIzCIF9B7Gqj9FYR0CUw9AqrLFgEJowQ4RkFg+BHMqHKMWItUft8lFBp5e2Rw/56JHnxnGX3VGzrK5SQcmen65duL2N82BG75anu9wDtZWpjW0gtni0QV9ZMy2m8ZwbxwAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bq29YAo4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=denys.f@collabora.com header.b="aAn1LdMe"
-ARC-Seal: i=1; a=rsa-sha256; t=1759119331; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Vh089FZjQ2qtMyvXrcHAQIe+HVCm19NtZSmTK3kQH4Uj1unesXsg2Pb4i8W8wGm2bTor0W6h8z9uHdDp43p/NrDUzATK3c36uUFxZMX0JXRl3sqwBbJBn9HGBYaSIcksJMWVxXrNZS2/Zgq69cKA6UpMF9IPgipXQRIXJXE2Tpk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1759119331; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4VGHV4/A319H/0sQtCBFb7zsNGq2H+CR9M+BkV8xXOw=; 
-	b=DIVuZ1pmm/NMjgxW/paaZOr8vejdAnbYrk9EFgxpzx39ThePgK5FMpCxEKq7waFaVi9TdohLPnYZbDyYyfmYj7jS9IxNf+wnKIG+946RRr0cDBVN9FF1Fq28AQ6uX38G/PFDCUbwdX8yuuBLG9S+1+Xezsaou5m84dhti0pk5y8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=denys.f@collabora.com;
-	dmarc=pass header.from=<denys.f@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759119331;
-	s=zohomail; d=collabora.com; i=denys.f@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=4VGHV4/A319H/0sQtCBFb7zsNGq2H+CR9M+BkV8xXOw=;
-	b=aAn1LdMebKOOUpLZv0Q2MJ4ftaPK9BzbelFpKYbKnHC74U8owgjpMvkYKp7bfWHk
-	M8XAGk1qC9qi6w+9u/C+PP9Wy7f1SESHgbTSn75aHzgdSUIILfVBf/u+boaUi1gQd9D
-	Mi5OqIoSGDVHIBHazR2XOsVMiPZ9mU7DqNfKLrOA=
-Received: by mx.zohomail.com with SMTPS id 1759119327847600.3374137196645;
-	Sun, 28 Sep 2025 21:15:27 -0700 (PDT)
-Message-ID: <b10bcf92dfd2fc13ed90b4da6e9ab8a3b61ce724.camel@collabora.com>
-Subject: Re: [REGRESSION] next/master: (build) undefined reference to
- `pm_hibernation_mode_is_suspend' in vmlinux...
-From: Denys Fedoryshchenko <denys.f@collabora.com>
-To: Randy Dunlap <rdunlap@infradead.org>, kernelci@lists.linux.dev, 
-	kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com,
- linux-next@vger.kernel.org
-Date: Mon, 29 Sep 2025 07:15:24 +0300
-In-Reply-To: <bb21b532-b68f-4c02-a9bd-7e8aa3c07258@infradead.org>
-References: <175890594349.36.5014274970333071394@1e895cdadf47>
-	 <bb21b532-b68f-4c02-a9bd-7e8aa3c07258@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bq29YAo4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1759124599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DLDJM/v1GnCONjQIRc/rqkZtzK/nAlZhViXrPHYBAQ0=;
+	b=bq29YAo4Scu78XCZbmXpy03GT6cUYzT1rHfgMEI5o6pwp8PVNs30DJSVC458G/6IyYg6Mh
+	73e+Bm/pLmYjhrAA0y1l6EErQcM2TdO9qf/XAEXYyiarUd0tiEGlDEi9FssH9FtMX8RWOe
+	oHy6ShZivLEcWJVCLkGBsXUgCvY/aWY=
+Received: from mail-yx1-f71.google.com (mail-yx1-f71.google.com
+ [74.125.224.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-447-O4wN5-QuNDe2_Wqs_WLS5Q-1; Mon, 29 Sep 2025 01:43:17 -0400
+X-MC-Unique: O4wN5-QuNDe2_Wqs_WLS5Q-1
+X-Mimecast-MFC-AGG-ID: O4wN5-QuNDe2_Wqs_WLS5Q_1759124597
+Received: by mail-yx1-f71.google.com with SMTP id 956f58d0204a3-6354174c1a4so5107221d50.0
+        for <regressions@lists.linux.dev>; Sun, 28 Sep 2025 22:43:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759124597; x=1759729397;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DLDJM/v1GnCONjQIRc/rqkZtzK/nAlZhViXrPHYBAQ0=;
+        b=TjrdEzc2hNJjhrFpVCrwRk4E8fifJG9eQkqTwvJjND6a0w8X8sya4t54QT+H6FSzUU
+         kWlGnu+73i99xGkvMjdoHTAwPurjjJFQBS9letCuARqeZkKMJ86bkmHoFhLi6BueJmYZ
+         ERy4NhilzBOVMtd9W9B+JH0YovthcOOI6k6M2VXmMc3pcYkJWTgaCiOZwMA+3pTBUesT
+         zjsDPzlqwoCMgJRmm47B/i0uCRCYh4vZdcMwQ85USceOHN0t3Xd+ms13pduNZDALv1aW
+         Ra5RErH65NglHrQxS2p1CWoWM9+aBbpZcTNxA56yROpPqskHwjjckpwSqKj8bBZgXI/P
+         3Wfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQNAyve8sDsKWa+vfeFBsH3psHbLYJkPVoVxoSIydTUkaatEA2xzIxbXT+CQLEZc223tFhk43CSAt+kA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyO/wpHqE7M2Z1Zr7wxT7IIAGnUITZ5uQBFz6GeUyLZAaIGevwN
+	4wiIkuZyvAhwxU73icOo6MLcmZgrojo209a5MwkWFOODVG4awr1nKGJvJfwLZf65+2wr2yHZKK6
+	/cnQBZs6vm1MnEpNtFMuXnr/+wQg7hJ7h2+oXYCgwLb1Ou7+xKnJ0W3dZsjGobwjOht9dFz2W84
+	K4x74KRj4SEoSCg7znb801mS9oGEaKTIMawlGrUYY=
+X-Gm-Gg: ASbGncs93rH8VvSFvRSy8hqNaZM1Z2ktd5Va+WNECsM95Yq8i5Xs/X0QM4b+oOwyu7Y
+	JDtJN1+Kry3wpmGL+n63ldyjRNirSX6goYkKhFivnqJeUIWUFS33CV0jnFKwEZ0bpzKxi1X8Xqo
+	LtJ5PIffnAuFaTL1JfJfL/Nx5D27sROL1v1WQAcyeNkc7blKRDJ9kcIdhwEvDnPP0FiNZ2mMD2S
+	oArSc9f
+X-Received: by 2002:a05:690e:22c4:b0:635:4ece:20ab with SMTP id 956f58d0204a3-6361a873801mr13564064d50.48.1759124596990;
+        Sun, 28 Sep 2025 22:43:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZRprYWH3GKFK0J+/EVnsfKtUL40W8QVLXJUwLVUPi9R0BTd57XmXjDp56sXiMQ2Op70w6PccJcX5wX4kfJoA=
+X-Received: by 2002:a05:690e:22c4:b0:635:4ece:20ab with SMTP id
+ 956f58d0204a3-6361a873801mr13564052d50.48.1759124596652; Sun, 28 Sep 2025
+ 22:43:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+References: <20250925091335.1964283-1-eperezma@redhat.com> <20250925091335.1964283-2-eperezma@redhat.com>
+ <3e5abb75-2192-46dc-a44e-d66fed87fc63@leemhuis.info>
+In-Reply-To: <3e5abb75-2192-46dc-a44e-d66fed87fc63@leemhuis.info>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Mon, 29 Sep 2025 07:42:38 +0200
+X-Gm-Features: AS18NWBlM_AwzI2-s0Otvy63KDuzlTLedZ6DoP5wCZ9FlMjm8eYezVLoJQUZ6gw
+Message-ID: <CAJaqyWehjiVeq360A=1_+=eRSDjoF3zNsNF0Lf-45YeiT5Pk7Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] vduse: make domain_lock an rwlock
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Yongji Xie <xieyongji@bytedance.com>, Cindy Lu <lulu@redhat.com>, 
+	jasowang@redhat.com, linux-kernel@vger.kernel.org, 
+	Maxime Coquelin <mcoqueli@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Laurent Vivier <lvivier@redhat.com>, virtualization@lists.linux.dev, 
+	Stefano Garzarella <sgarzare@redhat.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: sZKnV4kObHs1-EmC7bF8l3Yi7tXag5hkWH3DtcuiQF0_1759124597
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Randy,
+On Sat, Sep 27, 2025 at 9:01=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
+nfo> wrote:
+>
+> On 25.09.25 11:13, Eugenio P=C3=A9rez wrote:
+> > It will be used in a few more scenarios read-only so make it more
+> > scalable.
+> > [...]
+> > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_use=
+r/vduse_dev.c
+> > index e7bced0b5542..2b6a8958ffe0 100644
+> > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/cdev.h>
+> >  #include <linux/device.h>
+> >  #include <linux/eventfd.h>
+> > +#include <linux/rwlock.h>
+>
+> Lo! My daily -next builds based for Fedora using the Fedora rawhide
+> failed yesterday on various archs. I suspect it's due to above change,
+> as this was the error I got:
+>
+> """
+> In file included from drivers/vdpa/vdpa_user/vduse_dev.c:17:
+> ./include/linux/rwlock.h:5:3: error: #error "Please do not include this
+> file directly."
+>     5 | # error "Please do not include this file directly."
+>       |   ^~~~~
+> ./include/linux/rwlock.h:27:10: warning: =E2=80=98rwlock_init=E2=80=99 re=
+defined
+>    27 | # define rwlock_init(lock)                                      \
+>       |          ^~~~~~~~~~~
+> In file included from ./include/linux/spinlock_rt.h:153,
+>                  from ./include/linux/spinlock.h:455,
+>                  from ./include/linux/sched.h:37,
+>                  from ./include/linux/percpu.h:12,
+>                  from ./arch/x86/include/asm/msr.h:16,
+>                  from ./arch/x86/include/asm/tsc.h:11,
+>                  from ./arch/x86/include/asm/timex.h:6,
+>                  from ./include/linux/timex.h:67,
+>                  from ./include/linux/time32.h:13,
+>                  from ./include/linux/time.h:60,
+>                  from ./include/linux/jiffies.h:10,
+>                  from ./include/linux/ktime.h:25,
+>                  from ./include/linux/timer.h:6,
+>                  from ./include/linux/netdevice.h:24,
+>                  from ./include/linux/if_vlan.h:10,
+>                  from ./include/linux/virtio_net.h:5,
+>                  from drivers/vdpa/vdpa_user/vduse_dev.c:11:
+> """
+>
+> For a complete log, see
+> https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/f=
+edora-rawhide-x86_64/09603789-next-next-all/builder-live.log.gz
+>
+> Reverting the series made things work for me.
+>
 
-On Sun, 2025-09-28 at 18:13 -0700, Randy Dunlap wrote:
-> Hi,
->=20
-> On 9/26/25 9:59 AM, KernelCI bot wrote:
-> >=20
-> >=20
-> >=20
-> >=20
-> > Hello,
-> >=20
-> > New build issue found on next/master:
-> >=20
-> > ---
-> > =C2=A0undefined reference to `pm_hibernation_mode_is_suspend' in
-> > vmlinux.unstripped (drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c)
-> > [logspec:kbuild,kbuild.compiler.linker_error]
-> > ---
-> >=20
-> > - dashboard:
-> > https://d.kernelci.org/i/maestro:74f8fe195e9e78290f1dae54754bf5b8d4b2a8=
-93
-> > - giturl:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > - commit HEAD:=C2=A0 262858079afde6d367ce3db183c74d8a43a0e83f
-> > - tags: next-20250926
-> >=20
-> >=20
-> > Log excerpt:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > =C2=A0 LD=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .tmp_vmlinux1
-> > ld: drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o: in function
-> > `amdgpu_pmops_thaw':
-> > /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:2677:
-> > undefined reference to `pm_hibernation_mode_is_suspend'
-> >=20
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >=20
-> >=20
-> > # Builds where the incident occurred:
-> >=20
-> > ## cros://chromeos-6.6/x86_64/chromeos-amd-
-> > stoneyridge.flavour.config+lab-setup+x86-
-> > board+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy on
-> > (x86_64):
-> > - compiler: gcc-12
-> > - dashboard:
-> > https://d.kernelci.org/build/maestro:68d6bd56aabea828fddae00b
-> >=20
-> > ## cros://chromeos-6.6/x86_64/chromeos-intel-
-> > pineview.flavour.config+lab-setup+x86-
-> > board+CONFIG_MODULE_COMPRESS=3Dn+CONFIG_MODULE_COMPRESS_NONE=3Dy on
-> > (x86_64):
-> > - compiler: gcc-12
-> > - dashboard:
-> > https://d.kernelci.org/build/maestro:68d6bd59aabea828fddae00e
-> >=20
->=20
-> Is there a URL for the .config file that causes the
-> build error?
-Yes,
-https://files.kernelci.org/kbuild-gcc-12-x86-chromeos-intel-68d6bd59aabea82=
-8fddae00e/.config
+I don't know how this error didn't shout out in my env, fixing it.
+Thanks for the heads up!
 
-You can safely disable the firmware files option. The build error will
-still be reproducible.
-
-Thank you for feedback!
-
-
->=20
-> Thanks.
->=20
-> >=20
-> > #kernelci issue maestro:74f8fe195e9e78290f1dae54754bf5b8d4b2a893
-> >=20
-> > Reported-by: kernelci.org bot <bot@kernelci.org>
-> >=20
-> > --
-> > This is an experimental report format. Please send feedback in!
-> > Talk to us at kernelci@lists.linux.dev
-> >=20
-> > Made with love by the KernelCI team - https://kernelci.org
-> >=20
