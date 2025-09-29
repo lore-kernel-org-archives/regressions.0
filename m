@@ -1,97 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135C328152D;
-	Mon, 29 Sep 2025 09:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759138952; cv=none; b=jQJDK+qPsDWV5qweW8qUGsWrF+P5Xx5IA/1+xa4M5WPO2+qfZ9FkZfWbSiCA4+ozPh79QoCIGf2eTZunxrkwUKhcds5x5cNqtF4G2hdSoQDi/Jysv9eKQ3+xt6GZvZYMWLzmxwDJq/GGpoWDQYVsNiRJOyVW2GKs4sYQlC3Cu8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759138952; c=relaxed/simple;
-	bh=Qv26ICdLq9U5gcfQfCKC9j2lUk9PpPgh4O9mv/QG1wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UZ31F2VafEDf52DzrM4hRaoanOwXNeuNs5h0nw7/tMlgSr6P/E+2gHBcWinQnrZDFdaPDMwTjTQjQXhY+yofeAy82/TWFtF7BqLtMIMv6SLGO8P1A9ucR/v4KuC4bDkMK0pBdxlPDaUm3JxFSZOFvr46Ahq/sew2nIxBbX7D4P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQlwnpfd; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26962571C2;
+	Mon, 29 Sep 2025 11:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759146040; cv=pass; b=E1NyYf8y36dGoEfrk05oLr9EfdLGdULI1Phn0bseR/7GBIsOyXa/Y7Xv4UrEEBDRC6OwriNs4KfngNgujiuaTvHGSj3FQeiPlJTEgALOwwpPXFUQOzevSdNEWCY2ORjCZRbB0kaXE/EdA8MIQ79j9NkYcWgfzMtzQ5qJp743e2s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759146040; c=relaxed/simple;
+	bh=t4HPCmbSZ7KPxv+YtKRZJV8CeOnbdMb3auZdX+/t21Q=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=Q7dHGe917monYl3bGqDinD3YqBOHfJZIFc+zu5ux383Bk/19IsOiA5ue2ugxnGBX6pbOI9Yh4AQA0NLj0vzIW7PmOD7PlAHLPm6hn1icepOeYF9KgZiHYceQy4gx/Z4hxf54axYG0t1yE89hgq+VJpIg7KGW9IaYW4EEOuX4qt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=UGZGCrE6; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQlwnpfd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C743C4CEF4;
-	Mon, 29 Sep 2025 09:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759138951;
-	bh=Qv26ICdLq9U5gcfQfCKC9j2lUk9PpPgh4O9mv/QG1wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XQlwnpfdR3rthr61jm4Q1E5+ktiBLlgutLJFirTeN0S7+/VvcCF/S29B9RhngDJ9z
-	 dI1jKYSJuJ3nnx/0fZTVkVmvGsOgnOVvMjei+cnZM70LRMyflxbC86TKe2owy8ld1P
-	 aQP1DmWj/YPlABnQFoy2g6tPan1GKLfu52RqhvQPHvDYT11zWRaZzA+cUtx4TFbvst
-	 1qKOp/e5eUBIotdyDGSD5fnoQLM8zCdI1W9moFEypdidnMKsrZh8bhQpOo/jOtovYm
-	 WOGydD6irJlbi3ET6uvjP2QCbDie3N9Y4o9Oc8Y87Dhzo0TyEM1jKAvyUE9YUWjCpU
-	 7mpv74mxu1VPA==
-Date: Mon, 29 Sep 2025 11:42:27 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Jan Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Ben Copeland <benjamin.copeland@linaro.org>, Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: next-20250924: Internal error: Oops: mnt_ns_release
- (fs/namespace.c:148) __arm64_sys_listmount (fs/namespace.c:5936)
-Message-ID: <20250929-heldenhaft-kosenamen-fa3be48edae0@brauner>
-References: <CA+G9fYueO8kP8mXVNmbHkyrFPKpt-onPfeyNXLuLGGjiO1WFfQ@mail.gmail.com>
- <20250926064801.GE39973@ZenIV>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="UGZGCrE6"
+ARC-Seal: i=1; a=rsa-sha256; t=1759146037; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UbVEbJgwLhbGImFUlkOne36D2RyeEWPmWu4B+ppghdGnU3PJBepaazRU/VHVYOBHML/4UBJRCuSeg6xEbitZrcH9mt+HLCB4CWlNxGOA6atTxOr5W/F8WXBYZeep0O3tagPk5pRoIf1jfsit11dQujSJsUiQ8BSn4ZjvVHB+C9Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1759146037; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Gr2ud+7pnO2idJUfZ1ygGkUOU5cQ7t6/cfA+nmLSymo=; 
+	b=dd1FXqMpWqJr0kWou5Cq2HqYo+zksh4Zmhg12GPN9OlbpBdeApLOuV39QfsefGwf0oDv1dUm+N+y3UuBSZyCeu8JYW+LhniFcsyW1UNXz4xhqw0Kzk04aCefZng2iFP6SO/k4o7ac9u+g6Vbyh/fbGTXafdMG7CJwu09yiX7uKU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=gus@collabora.com;
+	dmarc=pass header.from=<gus@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759146037;
+	s=zohomail; d=collabora.com; i=gus@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Gr2ud+7pnO2idJUfZ1ygGkUOU5cQ7t6/cfA+nmLSymo=;
+	b=UGZGCrE6N7JFklL67np+On1mkDFZ6tcfz90YhoRlS11Z3skTbyokJDSrt4CJPWW8
+	QgOucRxa2uptleyHmppMgfEi3KVAuqCUlpVgtqQGvA514bhLPHWSXRfQU/3eFpYtnVo
+	FE9g+ZgyUlSiBu2st4lUMTEh9jgZsIpuix3wJux0=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1759146036779787.570110356764; Mon, 29 Sep 2025 04:40:36 -0700 (PDT)
+Date: Mon, 29 Sep 2025 08:40:36 -0300
+From: Gustavo Padovan <gus@collabora.com>
+To: "Denys Fedoryshchenko" <denys.f@collabora.com>
+Cc: "Randy Dunlap" <rdunlap@infradead.org>,
+	"kernelci" <kernelci@lists.linux.dev>,
+	"kernelci-results" <kernelci-results@groups.io>,
+	"regressions" <regressions@lists.linux.dev>,
+	"linux-next" <linux-next@vger.kernel.org>
+Message-ID: <19995464e11.7f75fad1483203.4516273948739211660@collabora.com>
+In-Reply-To: <b10bcf92dfd2fc13ed90b4da6e9ab8a3b61ce724.camel@collabora.com>
+References: <175890594349.36.5014274970333071394@1e895cdadf47>
+	 <bb21b532-b68f-4c02-a9bd-7e8aa3c07258@infradead.org> <b10bcf92dfd2fc13ed90b4da6e9ab8a3b61ce724.camel@collabora.com>
+Subject: Re: [REGRESSION] next/master: (build) undefined reference to
+ `pm_hibernation_mode_is_suspend' in vmlinux...
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250926064801.GE39973@ZenIV>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Fri, Sep 26, 2025 at 07:48:01AM +0100, Al Viro wrote:
-> On Fri, Sep 26, 2025 at 12:00:08AM +0530, Naresh Kamboju wrote:
-> 
-> [snip]
-> 
-> With 59bfb6681680 "listmount: don't call path_put() under namespace semaphore"
-> we get this:
-> 
-> static void __free_klistmount_free(const struct klistmount *kls)
-> {
-> 	path_put(&kls->root);
-> 	kvfree(kls->kmnt_ids);
-> 	mnt_ns_release(kls->ns);
-> }
-> 
-> ...
-> 
-> SYSCALL_DEFINE4(listmount, const struct mnt_id_req __user *, req,
-> 		u64 __user *, mnt_ids, size_t, nr_mnt_ids, unsigned int, flags)
-> {
-> 	struct klistmount kls __free(klistmount_free) = {};
-> 	const size_t maxcount = 1000000;
-> 	struct mnt_id_req kreq;
-> 	ssize_t ret;
-> 		   
-> 	if (flags & ~LISTMOUNT_REVERSE)
-> 		return -EINVAL;
-> 
-> which will oops if it takes that failure exit - if you are initializing
-> something with any kind of cleanup on it, you'd better make sure
-> the cleanup will survive being called for the initial value...
-> 
-> Christian, that's your branch and I don't want to play with rebasing
-> it - had it been mine, the fix would be folded into commit in question,
-> with the rest of the branch cherry-picked on top of fixed commit,
-> but everyone got their own preferences in how to do such stuff.
-> 
-> Minimal fix would be to make mnt_ns_release(NULL) a no-op.
-> 
-> BTW, I suspect that one of the sources of confusion had been the fact that
-> __free(mnt_ns_release) *does* treat NULL as no-op; in statmount(2) you
-> are using that and get away with NULL as initializer.  In listmount(2)),
-> OTOH, you are dealing with the function call - same identifier, different
-> behaviour...
+Hi Randy,
 
-Ah, fuck me. Thanks for spotting that! I'll take care of it.
+
+---- On Mon, 29 Sep 2025 01:15:24 -0300 Denys Fedoryshchenko <denys.f@collabora.com> wrote ---
+
+ > Hi Randy, 
+ >  
+ > On Sun, 2025-09-28 at 18:13 -0700, Randy Dunlap wrote: 
+ > > Hi, 
+ > > 
+ > > On 9/26/25 9:59 AM, KernelCI bot wrote: 
+ > > > 
+ > > > 
+ > > > 
+ > > > 
+ > > > Hello, 
+ > > > 
+ > > > New build issue found on next/master: 
+ > > > 
+ > > > --- 
+ > > >  undefined reference to `pm_hibernation_mode_is_suspend' in 
+ > > > vmlinux.unstripped (drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c) 
+ > > > [logspec:kbuild,kbuild.compiler.linker_error] 
+ > > > --- 
+ > > > 
+ > > > - dashboard: 
+ > > > https://d.kernelci.org/i/maestro:74f8fe195e9e78290f1dae54754bf5b8d4b2a893 
+ > > > - giturl: 
+ > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
+ > > > - commit HEAD:  262858079afde6d367ce3db183c74d8a43a0e83f 
+ > > > - tags: next-20250926 
+ > > > 
+ > > > 
+ > > > Log excerpt: 
+ > > > ===================================================== 
+ > > >   LD      .tmp_vmlinux1 
+ > > > ld: drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o: in function 
+ > > > `amdgpu_pmops_thaw': 
+ > > > /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:2677: 
+ > > > undefined reference to `pm_hibernation_mode_is_suspend' 
+ > > > 
+ > > > ===================================================== 
+ > > > 
+ > > > 
+ > > > # Builds where the incident occurred: 
+ > > > 
+ > > > ## cros://chromeos-6.6/x86_64/chromeos-amd- 
+ > > > stoneyridge.flavour.config+lab-setup+x86- 
+ > > > board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on 
+ > > > (x86_64): 
+ > > > - compiler: gcc-12 
+ > > > - dashboard: 
+ > > > https://d.kernelci.org/build/maestro:68d6bd56aabea828fddae00b 
+ > > > 
+ > > > ## cros://chromeos-6.6/x86_64/chromeos-intel- 
+ > > > pineview.flavour.config+lab-setup+x86- 
+ > > > board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on 
+ > > > (x86_64): 
+ > > > - compiler: gcc-12 
+ > > > - dashboard: 
+ > > > https://d.kernelci.org/build/maestro:68d6bd59aabea828fddae00e 
+ > > > 
+ > > 
+ > > Is there a URL for the .config file that causes the 
+ > > build error? 
+ > Yes, 
+ > https://files.kernelci.org/kbuild-gcc-12-x86-chromeos-intel-68d6bd59aabea828fddae00e/.config 
+ 
+Out of curiosity,  have you tried to find the config in our Dashboard? We added basic information in
+the email report and then the Dashboard link take you to our comprehensive report.
+
+
+Any feedback here?
+
+
+Best,
+
+- Gus
