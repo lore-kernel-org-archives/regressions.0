@@ -1,57 +1,57 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7855A2C08CF
-	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 10:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A128F2FB603
+	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 11:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759228804; cv=none; b=W26cKEDn9u7vKZBxMnkHch3JvLKudPy83520BHA565p61yM7+5rKtYX0q0GfG+vV6UOfF/BJaUA1kpfHav6SnIryX8eEZDZ7VxNtqoLhve2HrY31dwI0Ouq6y8h4BmlOiwGKN1Rf4DiP3xNHDKcbTfwnKDzU5eH0ajV1PSK5uo0=
+	t=1759230009; cv=none; b=EqShJwm9wLt8Y6h3S9G1JJrul5dodR+9EePUvT01U/17OWOwM8qpTZvZrNS4jX9mzFWqBTEeYd9zGQwcNNMqBZjCZYYhwWT4NXtxV+dKoT6g0XfE6VJiHXxK25yDXvnWjKQ9lCYLWPLzWkGdXinG+dKtPYHO3JK9ByJfeG5uDFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759228804; c=relaxed/simple;
-	bh=madMCCpXf9roOD5eZkqbrUzSQr5guKNIA3QTRpCiy38=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GijcNXRLL39kfxhfJC0a0YkNaRPNN7VeL2xosHDxTOCxwTJJGSQUQRI6+RIybsFLnp2OmAPZNSVGCfOJenHdb+k1bZBLGlYyXOfAejIKdUAYuouAfBZS+vmKABTuaxUwbsFKCHYZyrO5d1roB6fzRA7NEly4vcocOXyhZRu3+/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fqcOPedF; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1759230009; c=relaxed/simple;
+	bh=wFnoy4QXjxAmYJyA1+5t7l0ikN0i8PEuNczTcDuAws4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rZei607N8kLC18Fx64grYgPrbuS/tQMvQetYC27SdQ1grMRdgmsejVYlyEnqy09lSVLLfW+ngI4kOtjByZNgY7nKAmgtUl8rIXKfOap/IBPv0rD5xjdI7UIm8dHDSYpfwmhWXSWNNXDZ/VAwGRRFV0tV+zBMHE//wOtFXutDL2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BQihEaK+; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqcOPedF"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b55517e74e3so6055929a12.2
-        for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 03:40:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQihEaK+"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b4755f37c3eso5393761a12.3
+        for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 04:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759228801; x=1759833601; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1759230007; x=1759834807; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=tc0zQApF0WO4ZgUj5cHoP64Ut3mPNC7SB7c0om1scqU=;
-        b=fqcOPedF6UrDP7l1WjoO3S/+q57Czb7kIYWSjrA/nvY0+O5t3pgZp/zlc8Xyvq4m2u
-         FC7vZyuxArURgc7XWdB2+gjlgXGDdJbNSv3lrRiG+rGfdgDFxzwm6W5ZiMrkLvrea2wZ
-         lohi4ByZlZzGQACqLY7n+9fCip4uEhB8ef93m11lwXhQ/O0kv5YCpnLe7lxQ+1CT/fOa
-         yc4DT7dLndSx5E/u0NHi853bCiJBzhEEmbfI75r5M0IjrqpxsoT6AfhUYUlrX4mP/I5Y
-         PhIfbUF6yMqVf8VfdgO5veQjpRcKaA5UWyIZP3AWiJY94eZYUSMg/B2stI3LW8tAIIHd
-         G3lw==
+        bh=BW2Qtj+KVSZo32MbcvWapFjwhM8eljdM2/EMaeJKXfU=;
+        b=BQihEaK+B6vVDoOxeNQ4G2o4KAGX8UKOzeGjUHadd+NyVY53757A2fI5EYs54FqFs2
+         zp6bDNMl2iAcIJGQk/85R5gBThIvNdYgkNq1aQJRbTJgq24TLLErBxzwJrsoJiiHhthU
+         3JYpBpG78cT2FlBk1dDZyq/zPV2LFO5QjWOhNK2DaY/sOdH/1lc7VoKFbm7jwLgePWL+
+         MfYaMxlCeyaxxjfMGbnliu+boCIwf/Mt4ZfvBC6lozaiUpUvdoHuEHJBNA3Hg7ImFb/M
+         Zn286EXo/Ec9RBzJQ3MAPwYOD8FXr6Bz/XIFILeNcF6xrU8qSWZdqwArxp4ONjW3BndO
+         Qk9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759228801; x=1759833601;
+        d=1e100.net; s=20230601; t=1759230007; x=1759834807;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tc0zQApF0WO4ZgUj5cHoP64Ut3mPNC7SB7c0om1scqU=;
-        b=TZPGO6LDRwH2MeolVfGgRK2bsiQ+XrVxosiWvL5u5cHztlRe3i3mWhkCJ91+0TTcDJ
-         NV/sun0SfTI8JOiOr8Ezy+4HppXzPX6l6MS/tKDNFsXHwfYGwOZ9z2X808Dvab8MS5yy
-         YymyLlHZhdkyClCJAECnidjy0gRNHbD82dhaYTwvBTX3cS3waq7M50to5Tgf3KBwak6J
-         q1SH+jG46vbP0HjoIMWWAIUL4fOGe01lA7eoxfqfDJyfhT+IrTYC/E0yBDqYUZBBf1MY
-         v0nJjh/scek8C0xk2wCaOfwwxSWYufW6AMAPtXiSdxbDb35K+rz/860uc1SIa2PVAl2r
-         q5Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCX21gf645eBicXpsoBSbOYZpySP1+VObhOQJKGCvNUHkG3jnWu10VToP3yqqsSAekbpnRhiBvJ5BRgGBQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz4Y4ANAbcM0GeEzHzd98AHFHrgH/AmxcFJPflztGJ4KuveAIDQ
-	PDf6EGb3jTUKfumRqy85R7t3SQ0RArUvLO3hQCQZXPebYGSL79UjsqxZFp69MdCuqtLcvgd0FwU
-	ia9d1k4K+sYeoQ+VUVyuSRO1RBcplgyDZMVS5wCzfJw==
-X-Gm-Gg: ASbGncugbapwkXDd9U5/DF6DzghIUY3eYLqfYS7ICvo8g8NOLsUBDDQBfuxPBToPkaW
-	k5STb4brxTh2u+fO7ZagW2S0n1ADcgHjXHszNMdrZAer+7msF21864ZbMUhpZzdBMy+e0T/9uqL
-	v4aXzSQYNIWGRFmkbLeMjdjiUss+kgK9tkl6zsWafkISjvCUvF+TtzbFYp+7ZbCWplCd5ppoT2C
-	hnhcFQFHCWiT88Y84bwgbnlyNZCEIq/d+sAr7qfhu4jRMxyqKUFMXD40bFksbT4KSVEEQ4/9TGM
-	DxDEeyydbMlHiVh1lG9gAE5wuo6iqg==
-X-Google-Smtp-Source: AGHT+IHPY6eK3MHywKJURzS/I0UrL9t8viPGr6htqx4ToAI+8mmTLnKAaeTRI9hZkLb5EMHh5z7FlYyTqvUNFKADuYQ=
-X-Received: by 2002:a17:902:d58d:b0:24e:593b:d107 with SMTP id
- d9443c01a7336-27ed4a5a856mr224706895ad.32.1759228801555; Tue, 30 Sep 2025
- 03:40:01 -0700 (PDT)
+        bh=BW2Qtj+KVSZo32MbcvWapFjwhM8eljdM2/EMaeJKXfU=;
+        b=c5Bn3J4TQatYlYvrHwmsrm+twxb2f0pZfNQlDvxGkvZORRsPwn8g/zOfCiXfNjrQfY
+         7TrtBzj1a33ytGiLAKGsANzSg4B9gHO/22wTnUJduM0KEGHdtrBibau1uX248OUd7wOT
+         uSISWzcGqWmDVGtDFTI6/v9cSZC3dg/O23cmaYQIaU3nRy/ADRDrrbnsAMAr/9IPeYck
+         NLuMHgZeJb8XsY9Digsjcx2w/MPD6mN7gfhhBl6tfKc7wq9wJXN20WZnQePsInsczjPM
+         qSNr7b6UmqXptbb942JNWyAukuId/HKUF0CiKzhCe+G7mxoUv/qqkSzjrM8INxy5xJML
+         GAaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIk+Yat7QvgBKmQhSYtC+x5bA5AGQbhvUb3A8ZmxSq2lG7Zsfbgow62LftBt7Y5pNLmd+cjg3xF6m8PQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzrlKMuhjP1hKNXsePdbQXYfhcOu8JtVlMhLDnduh4rKp2iTuE1
+	KgifpTPY6aoZWsBiU/1+l008USI2i+4liRCOumM4MkEXgErJDEb0NjCViahK+ouk9XJWHqLQDyC
+	mWgW79jCpbNIoXGx2XKgA0xzBjDWQrSAELC1lOKWJlw==
+X-Gm-Gg: ASbGncu0oZt6h4An4ADH4XsOylPP6RkrPE67WY25MTK+LWkLnxUiz38w5ik82XoCT2T
+	daidLAyx9j+zdd5v9b8rpZ2SuF9zA04v5deoUXR8Vbg5KJ0WnkIRXnDch6i6wcX55oOvORCxeqO
+	lrEpQ1b6JIJRxi0QWmlPw/JylqpaHmv3fflc1Rvs7axN67Ss9kzIsgI5XgmciQ5tIsLPP/Wmoe6
+	7KaokrEzeSz5RE/FoXrVYDvsQoeMbvTJ7mRmhdmlaX/54bWkq2H03AQOwZmAZnqW1+jVPBzFRk0
+	A1TOLIEhET1x1uqdlGSv6kQrylrxKQ==
+X-Google-Smtp-Source: AGHT+IHtPuZgSVMGlUzaI5vj/KwcQ6zTwdUWSWUwa6mgNiKsVgXu8raJbRpSbZR/+jnNv3jtSjo9LDhitaHxBXunC00=
+X-Received: by 2002:a17:902:e809:b0:24e:3cf2:2453 with SMTP id
+ d9443c01a7336-27ed4a89ac5mr212915705ad.61.1759230006932; Tue, 30 Sep 2025
+ 04:00:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,150 +59,58 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 30 Sep 2025 16:09:50 +0530
-X-Gm-Features: AS18NWBzICskyp2rABk9ODkH4ArO_EhP6FnFBEP1dKyBVps0whfUGZOR_aFNgW8
-Message-ID: <CA+G9fYtnXeG6oVrq+5v70sE2W7Wws_zcc63VaXZjy1b1O1S-FQ@mail.gmail.com>
-Subject: LTP: swapon/off: 16K and 64K page size libswap.c:230: TFAIL: swapon()
- on fuse failed: EINVAL (22)
-To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Joanne Koong <joannelkoong@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Date: Tue, 30 Sep 2025 16:29:54 +0530
+X-Gm-Features: AS18NWA_909avJZvTE7jLbzzAOBb2Sb9YrnKfuZvYcjUAeZSImH28wlpR68IqJ4
+Message-ID: <CA+G9fYuUcs_-SKWSbiAgyzuhE9-oqSAGDQOU6pTPfwq57+cWSw@mail.gmail.com>
+Subject: selftests: kvm: irqfd_test: KVM_IRQFD failed, rc: -1 errno: 11
+ (Resource temporarily unavailable)
+To: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, kvmarm@lists.linux.dev, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: kvm list <kvm@vger.kernel.org>, Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-LTP syscalls swapon01, swapon02, swapon03, swapoff01 and swapoff02 test failing
-on 16K and 64K page arm64 devices and passed with default 4K page size.
+The selftests: kvm: irqfd_test consistently fails across all test platforms
+since its introduction in Linux next-20250625. The failure occurs due to
+a KVM_IRQFD ioctl returning errno 11 (Resource temporarily unavailable).
+This has been observed from day one and is reproducible on all test runs.
 
-These failures are noticed on Linux next and mainline master (v6.17).
+Reproducibility: 100% failure on all test platforms since
+next-20250625..next-20250929
 
-This test failed on 16K page size builds and 64K page size builds.
- * CONFIG_ARM64_64K_PAGES=y
- * CONFIG_ARM64_16K_PAGES=y
+Test fails on the below list
+ * graviton4
+ * rk3399-rock-pi-4b
 
-First seen on next-20250821
-Good: next-20250820
-Bad: next-20250821 ..next-20250929
+## Initial Observations:
+The test is attempting to register an IRQFD but fails with EAGAIN (errno 11).
+This likely indicates resource exhaustion or unsupported behavior on
+affected ARM-based platforms.
 
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
+Could you please advise on the way forward for this test?
+Should we treat this as an unsupported case on ARM platforms,
+or is there a missing implementation/configuration that needs to be addressed?
 
-Test regression: LTP swapon/off 16K and 64K page size LTP
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+## Test log
+selftests: kvm: irqfd_test
+Random seed: 0x6b8b4567
+==== Test Assertion Failure ====
+  include/kvm_util.h:527: !ret
+  pid=721 tid=721 errno=11 - Resource temporarily unavailable
+     1 0x000000000040250f: kvm_irqfd at kvm_util.h:527
+     2 0x000000000040222f: main at irqfd_test.c:100
+     3 0x0000ffffbd43229b: ?? ??:0
+     4 0x0000ffffbd43237b: ?? ??:0
+addr2line:      5 0x000000000040206f: DWARF error: mangled line number
+section (bad file number)
+addr2line: DWARF error: mangled line number section (bad file number)
+_start at ??:?
+  KVM_IRQFD failed, rc: -1 errno: 11 (Resource temporarily unavailable)
+not ok 4 selftests: kvm: irqfd_test exit=254
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Anders, bisected this on the Linux next and found the,
-# first bad commit:
-  [bd24d2108e9c8459d2c9f3d6d910b0053887df57]
-  fuse: fix fuseblk i_blkbits for iomap partial writes
-
-## Test logs
-### swapon01
-
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
-swapon01.c:39: TINFO: create a swapfile size of 128 megabytes (MB)
-swapon01.c:25: TFAIL: tst_syscall(__NR_swapon, SWAP_FILE, 0) failed: EINVAL (22)
-
-### swapon02
-
-Windows will not be able to boot from this device.
-tst_test.c:1229: TINFO: Mounting /dev/loop0 to
-/tmp/LTP_swaybkEDa/mntpoint fstyp=ntfs flags=0
-tst_test.c:1229: TINFO: Trying FUSE...
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
-swapon02.c:52: TINFO: create a swapfile size of 1 megabytes (MB)
-swapon02.c:53: TINFO: create a swapfile size of 1 megabytes (MB)
-swapon02.c:56: TWARN: swapon(alreadyused) failed: EINVAL (22)
-swapon02.c:73: TPASS: swapon(2) fail with Path does not exist : ENOENT (2)
-swapon02.c:73: TPASS: swapon(2) fail with Invalid path : EINVAL (22)
-swapon02.c:73: TPASS: swapon(2) fail with Permission denied : EPERM (1)
-swapon02.c:73: TFAIL: swapon(2) fail with File already used expected
-EBUSY: EINVAL (22)
-
-### swapon03
-
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
-swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
-swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
-swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
-swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
-swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
-
-### swapoff01
-
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
-swapoff01.c:44: TINFO: create a swapfile with 65536 block numbers
-swapoff01.c:44: TCONF: Insufficient disk space to create swap file
-tst_test.c:1888: TINFO: === Testing on tmpfs ===
-tst_test.c:1217: TINFO: Skipping mkfs for TMPFS filesystem
-tst_test.c:1193: TINFO: Limiting tmpfs size to 350MB
-tst_test.c:1229: TINFO: Mounting ltp-tmpfs to
-/tmp/LTP_swahnekXb/mntpoint fstyp=tmpfs flags=0
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:21: TINFO: FIBMAP ioctl is NOT supported: EINVAL (22)
-libswap.c:228: TCONF: Swapfile on tmpfs not implemented
-Summary:
-passed   0
-failed   1
-broken   0
-skipped  7
-
-### swapoff02
-
-st_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
-swapoff02.c:88: TINFO: create a swapfile size of 1 megabytes (MB)
-swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - ENOENT
-: path does not exist
-swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - EINVAL
-: Invalid file
-swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - EPERM
-: Permission denied
-tst_test.c:1888: TINFO: === Testing on tmpfs ===
-tst_test.c:1217: TINFO: Skipping mkfs for TMPFS filesystem
-tst_test.c:1193: TINFO: Limiting tmpfs size to 32MB
-tst_test.c:1229: TINFO: Mounting ltp-tmpfs to
-/tmp/LTP_swaXbUs2F/mntpoint fstyp=tmpfs flags=0
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:21: TINFO: FIBMAP ioctl is NOT supported: EINVAL (22)
-libswap.c:228: TCONF: Swapfile on tmpfs not implemented
-Summary:
-passed   18
-failed   1
-broken   0
-skipped  1
-
-Here I am sharing mainline tree and logs.
-
-## Source
-* Kernel version: 6.17.0
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-* Git describe: v6.17
-* Git commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
-* Architectures: arm64
-* Toolchains: gcc-13
-* Kconfigs: lkftconfig+CONFIG_ARM64_64K_PAGES=y
-* Kconfigs: lkftconfig+CONFIG_ARM64_16K_PAGES=y
-
-## Build
-* Test log arm64: https://qa-reports.linaro.org/api/testruns/30048876/log_file/
-* Test log LAVA: https://lkft.validation.linaro.org/scheduler/job/8468115#L28598
-* Test details:
-https://regressions.linaro.org/lkft/linux-mainline-master/v6.17/ltp-syscalls/swapon03/
-* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/33LezR2rctMs0EwZpyIDqRhU7s4
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/33Ley5LZz1crQhBtb1KXJMuS2GB/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/33Ley5LZz1crQhBtb1KXJMuS2GB/config
-
---
-Linaro LKFT
+## Links
+   * https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250929/testrun/30048394/suite/kselftest-kvm/test/kvm_irqfd_test/log
+   * https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250929/testrun/30048394/suite/kselftest-kvm/test/kvm_irqfd_test/details/
