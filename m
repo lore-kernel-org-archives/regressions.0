@@ -1,143 +1,159 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a8-83.smtp-out.amazonses.com (a8-83.smtp-out.amazonses.com [54.240.8.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FEB23CEF9
-	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 17:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514591684B0
+	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 17:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759252863; cv=none; b=JFVXOA2k33h4WWkPP9wAztvXos0K2q7CLbVzsIgfTZQ6CS0he+5Spn1ddJvYtBbr4OXySoZWbIFLMk3ZIdlqYAw/DFEpn2dSKt0Ll+xTcTsxowY1gzDveDTjElyo2czIrj3zXWOwifQqFNGP1H7RwMDM5Kc5KW12HZa3x2wEHVU=
+	t=1759253501; cv=none; b=b9PwsqBP6ItNuBeoYsGNE9ZlKIZvpikjq8Oc8ry2VTQ9F2flFB+w1WaK2acdjDhTi2B4xf0DfWjxKk7FRhB1qdeClgcRhwF9CZdANgK+ltC3nTVHjnie++ZdNVjeC3f7Y/x+de+Dn1AxlUAEyB4gV1biNOjU+PVLRuvzInG6+T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759252863; c=relaxed/simple;
-	bh=AJLtM91/33fmVR/qlQdypVuIczViZNMesjHgSFxWODs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SR4oNBgCVfVbpyOvwrTIx/z5GWwb6tB6KmHPMY4MUMhxgi5Basyn2F8CocnQ0pi5YGTN2d1yx2/Px3kJ1+z3kAqNHxvE7lj1d/NURlAvejJmuDRL8TJMR41cHyZqqDDHE5cQjjyaWP2hCr5dkyzQX581+4wD5dnbf1c1dxcvFhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iwell.eu; spf=pass smtp.mailfrom=iwell.eu; dkim=pass (2048-bit key) header.d=iwell-eu.20230601.gappssmtp.com header.i=@iwell-eu.20230601.gappssmtp.com header.b=dwEisfQ+; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iwell.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwell.eu
+	s=arc-20240116; t=1759253501; c=relaxed/simple;
+	bh=mrJ/ZQYqKE4cT6lTBvckUQj1x2hcVTevKOZJdKtO/YA=;
+	h=From:Content-Type:Mime-Version:Subject:Message-ID:Date:Cc:To; b=eHt1+RYZQn1LPONo/aivNcsZNRZ5DZIQD/xjr7PNcC3t7IuNzBFR3nYk9+RAo6+NJVwVtyENLkynVvuOL2MoxjrZ/TLU+rr6JoOZ2rCd5KjGGA3CbB3mtVCEA/Yj27MZ27BpelXGozhh7BwGn3uol6+8TgY0bzrpRgcO1/zKQpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kvanals.org; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (2048-bit key) header.d=kvanals.org header.i=@kvanals.org header.b=NA5kwX0m; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=EkGY2UdE; arc=none smtp.client-ip=54.240.8.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kvanals.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iwell-eu.20230601.gappssmtp.com header.i=@iwell-eu.20230601.gappssmtp.com header.b="dwEisfQ+"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6366b7fd337so1433489a12.0
-        for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 10:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwell-eu.20230601.gappssmtp.com; s=20230601; t=1759252859; x=1759857659; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CBeBiFZ8CYYNIOcno906wggBnrfnmw8kk5vZNSaIIco=;
-        b=dwEisfQ+lOqwdCcTfKOwGliSLNoL7fKnpVT1/qkKvYKTr0BC7oUCscPG5QPVlUonTw
-         oRnX1SNFmzGGii6uIJjeMmXs8Zd97QF2OuQdprgoHv6NKe8iQScGzedqgRvQ9fjMSFJN
-         vq8ZnlbzOJSq0XYZkX1gsNs1BgqaxS5EzEpomWc9S+ImluNN5YY44BA0gvCH93kv/ZyX
-         LJkUQkAwlW68PPxtJzCovNi/p6CxrgUbIVRGg0GW66kYF7k4XSWFbejPaw07a0vJTlkT
-         3rsRM6cXfq4H67KXDwbS/rjcQ0gClajruCuVWqDNNxkq3GxjKesaKLI++RXXyCijWOJe
-         fHOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759252859; x=1759857659;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CBeBiFZ8CYYNIOcno906wggBnrfnmw8kk5vZNSaIIco=;
-        b=EJ2K1hheyuwKAmKAQ6afqbUOXjhdnQjxulGEtdApasUcxTfHibMIDV9LV3JwO0HbjS
-         LskGbPlhI19tOdBa3uoP/Y4WBe0LW9PwTSZeaNH8Bt22Q9Fo+7Aku5Ud16XtznhVtC3t
-         sGf9zqH8l2rUUXW9D82RWcuJHLrRPJX6QyPXW8Oc8x0/DJLhfkBzW8/clU2bxIHxnTLg
-         fpMPNhwHb4NhKfKQAcvXtB1AaTndgQVUjrArcHdENRa6Vr8C3DMvsU2DU9mJSU0DTu7A
-         mGm19QnQaLaLh679tTcnmB2WT2IFBJcqaH5LQNcpJNkGXyNv3WfBbafZnz3V6aCAr6Ps
-         rO+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWROylzHuozCsC/tdqLF4A5Wl8CNI8Bda3fXB7APuSCQaCP0z2hse8B21IwqJ+X8BXgNpoh3onxa/8xBQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzAkQpnb8eUo+4JoT3ykUs7+R+/m9UWXJ+9nWq/7sb1UKVwhKCh
-	Sr3L1BIFXWIRfCiwdr/Yno7ZCpvbBrSEnFbGRBNP8mr6bptu6KJphOQ3Aj34Nc8ujeaR2xrq6/Q
-	tdHKAyn13Kq18lyadAxg0iYyIUmAP2+GFBMGv3TkxvRKSQ19xgzPE6YM=
-X-Gm-Gg: ASbGncvqcB5wQ1BIt6fJu1/97RgRur3Gth/XHJGBTAjzuEU7gp1lqAwDFg7Ac+uEHjN
-	W5YZ6PViqx8p8kvaU3bWk+iNT7tzcrt7+HYgSNvWpmJjoLHXskWIJLBzTcfUfp1YIYbPCCnsLoD
-	FC3YIneZQRzJ6346jpVTIFaQOyHjj/gOlv8cpggqTMbgoDd7zobovB+H9gJAJ2bnnwoGAmLl18A
-	0PuAOcGh0g/+fPFBn8wXAkKSO5I7crC
-X-Google-Smtp-Source: AGHT+IF6gmWMMmnvd8SXAqteiQRvavbIiqTU4ziQkpjq2GxFYPnxTuZRkuqmxUhWfFskN7jiuo/ToSuXYLZtYEdbzhQ=
-X-Received: by 2002:a05:6402:4305:b0:634:a584:6e44 with SMTP id
- 4fb4d7f45d1cf-63678ca5df9mr759820a12.18.1759252859032; Tue, 30 Sep 2025
- 10:20:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kvanals.org header.i=@kvanals.org header.b="NA5kwX0m";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EkGY2UdE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=xojwidlurxakxokupknu2uvuxvz4uggf; d=kvanals.org; t=1759253498;
+	h=From:Content-Type:Content-Transfer-Encoding:Mime-Version:Subject:Message-Id:Date:Cc:To;
+	bh=mrJ/ZQYqKE4cT6lTBvckUQj1x2hcVTevKOZJdKtO/YA=;
+	b=NA5kwX0muIsKzjQ6KptfNhWaAegj5sDHVEAGqr05/VoStItaGc6E83955RY/5nOG
+	15xJa3L+q1tEVT5Y0v5bcidxN6kDV41GL4AronaCx6vNs8Odpy0vSQA4io/0wQsClOq
+	z2L+dMybKE5kiNucAY2SdRA0LiaOCxcpRTcHxsZLBzNsXfEBpAQF//uWAKt11ok3BIc
+	LPSOvtVGxRVSjFBqb4Ae1VAuyeb+c8B34byvHg5XhBE9/xmdMj0b7Wh4ihd9yl+6y3K
+	EpvPsZYzPduYEyqGbhHXBdeTnbp2cHpl7SU32bQKSJMgCvdtWMgHFZsQb5JQbGGg8yS
+	0ZZDoq4vQg==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1759253498;
+	h=From:Content-Type:Content-Transfer-Encoding:Mime-Version:Subject:Message-Id:Date:Cc:To:Feedback-ID;
+	bh=mrJ/ZQYqKE4cT6lTBvckUQj1x2hcVTevKOZJdKtO/YA=;
+	b=EkGY2UdEtWoWsUGdpBsa4EhUKScgiiyLSRPUNRfurJNblm319wA1CgXL6p0te2Hf
+	cNIyWaNGnKz8iB2XrbVPBB7uoexyYK2tQ9Vi+hLM+XYzsLIJRSjlRkgimQOSnAt9VFC
+	2sBoNltszsrV5PZfWM34dJg0h5kGw2rsDcpXRc+g=
+From: Kenneth Van Alstyne <kvanals@kvanals.org>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20250923221756.26770-1-marnix.rijnart@iwell.eu> <0ab2436f-5c0d-966f-7095-d281292c494c@linux.intel.com>
-In-Reply-To: <0ab2436f-5c0d-966f-7095-d281292c494c@linux.intel.com>
-From: Marnix Rijnart <marnix.rijnart@iwell.eu>
-Date: Tue, 30 Sep 2025 19:20:48 +0200
-X-Gm-Features: AS18NWBUxk6JDFUrYMRmquwKP7cxr7696-nl8HLRBqtqZNVEfYHLfT27GfYxE-I
-Message-ID: <CAAn10+fRb8VXnDEsSuCj782rp43ZEeov2yXnB2pYxXGNc-2niQ@mail.gmail.com>
-Subject: Re: [REGRESSION][PATCH] serial: 8250_pci: Fix broken RS485 for F81504/508/512
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.100.1.1.5\))
+Subject: KVM: arm64: Regression in at least linux-6.1.y tree with recent
+ FPSIMD/SVE/SME fix 
+Message-ID: <010001999bae0958-4d80d25d-8dda-4006-a6b9-798f3e774f6c-000000@email.amazonses.com>
+Date: Tue, 30 Sep 2025 17:31:38 +0000
+Cc: regressions@lists.linux.dev, will@kernel.org, catalin.marinas@arm.com
+To: stable@vger.kernel.org
+X-Mailer: Apple Mail (2.3864.100.1.1.5)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (olympus.kvanals.org [IPv6:2600:1f18:42d5:300:0:0:0:ffff]); Tue, 30 Sep 2025 17:31:38 +0000 (UTC)
+Feedback-ID: ::1.us-east-1.5jHMwTu/Jzmoolk7Ak3w+RKcSxXCCShHRX8XGxXgrSs=:AmazonSES
+X-SES-Outgoing: 2025.09.30-54.240.8.83
 
-This is my first interaction with the kernel community, so I did my
-best to read up on the expected practices but maybe I missed
-something.
+Greetings:
 
-I didn't add a Fixes tag for commit 4afeced because it doesn't cause
-the bug by itself, it's the interaction between it and an older commit
-(456d523) that create the issue together. What's the right way to tag
-this?
+Sending via plain text email -- apologies if you receive this twice.
 
-I didn't Cc stable because I understood this to be only required for
-point release regressions within a stable series
-(https://docs.kernel.org/admin-guide/reporting-regressions.html).
-Release 6.8 introduced this regression. Should I still Cc them?
+If this isn't the process for reporting a regression in a LTS kernel per =
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html, =
+I'm happy to follow another process.
 
-If these tags need to added, what's the best way to do so? Resubmit
-the patch (as a v2)?
+Kernel 6.1.149 introduced a regression, at least on our ARM Cortex =
+A57-based platforms, via commit 8f4dc4e54eed4bebb18390305eb1f721c00457e1 =
+in arch/arm64/kernel/fpsimd.c where booting KVM VMs eventually leads to =
+a spinlock recursion BUG and crash of the box.
+
+Reverting that commit via the below reverts to the old (working) =
+behavior:
+
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 837d1937300a57..bc42163a7fd1f0 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -1851,10 +1851,10 @@ void fpsimd_save_and_flush_cpu_state(void)
+  if (!system_supports_fpsimd())
+  return;
+  WARN_ON(preemptible());
+- get_cpu_fpsimd_context();
++ __get_cpu_fpsimd_context();
+  fpsimd_save();
+  fpsimd_flush_cpu_state();
+- put_cpu_fpsimd_context();
++ __put_cpu_fpsimd_context();
+ }
+  #ifdef CONFIG_KERNEL_MODE_NEON
+
+It's not entirely clear to me if this is specific to our firmware, =
+specific to ARM Cortex A57, or more systemic as we lack sufficiently =
+differentiated hardware to know.  I've tested on the latest 6.1 kernel =
+in addition to the one in the log below and have also tested a number of =
+firmware versions available for these boxes.
+
+Steps to reproduce:
+
+Boot VM in qemu-system-aarch64 with "-accel kvm" and "-cpu host" flags =
+set -- no other arguments seem to matter
+Generate CPU load in VM
+
+Kernel log:
+
+[sjc1] root@si-compute-kvm-e0fff70016b4:/# [  805.905413] BUG: spinlock =
+recursion on CPU#7, CPU 3/KVM/57616
+[  805.905452]  lock: 0xffff3045ef850240, .magic: dead4ead, .owner: CPU =
+3/KVM/57616, .owner_cpu: 7
+[  805.905477] CPU: 7 PID: 57616 Comm: CPU 3/KVM Tainted: G           O  =
+     6.1.152 #1
+[  805.905495] Hardware name: SoftIron SoftIron Platform =
+Mainboard/SoftIron Platform Mainboard, BIOS 1.31 May 11 2023
+[  805.905516] Call trace:
+[  805.905524]  dump_backtrace+0xe4/0x110
+[  805.905538]  show_stack+0x20/0x30
+[  805.905548]  dump_stack_lvl+0x6c/0x88
+[  805.905561]  dump_stack+0x18/0x34
+[  805.905571]  spin_dump+0x98/0xac
+[  805.905583]  do_raw_spin_lock+0x70/0x128
+[  805.905596]  _raw_spin_lock+0x18/0x28
+[  805.905607]  raw_spin_rq_lock_nested+0x18/0x28
+[  805.905620]  update_blocked_averages+0x70/0x550
+[  805.905634]  run_rebalance_domains+0x50/0x70
+[  805.905645]  handle_softirqs+0x198/0x328
+[  805.905659]  __do_softirq+0x1c/0x28
+[  805.905669]  ____do_softirq+0x18/0x28
+[  805.905680]  call_on_irq_stack+0x30/0x48
+[  805.905691]  do_softirq_own_stack+0x24/0x30
+[  805.905703]  do_softirq+0x74/0x90
+[  805.905714]  __local_bh_enable_ip+0x64/0x80
+[  805.905727]  fpsimd_save_and_flush_cpu_state+0x5c/0x68
+[  805.905740]  kvm_arch_vcpu_put_fp+0x4c/0x88
+[  805.905752]  kvm_arch_vcpu_put+0x28/0x88
+[  805.905764]  kvm_sched_out+0x38/0x58
+[  805.905774]  __schedule+0x55c/0x6c8
+[  805.905786]  schedule+0x60/0xa8
+[  805.905796]  kvm_vcpu_block+0x5c/0x90
+[  805.905807]  kvm_vcpu_halt+0x440/0x468
+[  805.905818]  kvm_vcpu_wfi+0x3c/0x70
+[  805.905828]  kvm_handle_wfx+0x18c/0x1f0
+[  805.905840]  handle_exit+0xb8/0x148
+[  805.905851]  kvm_arch_vcpu_ioctl_run+0x6c4/0x7b0
+[  805.905863]  kvm_vcpu_ioctl+0x1d0/0x8b8
+[  805.905874]  __arm64_sys_ioctl+0x9c/0xe0
+[  805.905886]  invoke_syscall+0x78/0x108
+[  805.905899]  el0_svc_common.constprop.3+0xb4/0xf8
+[  805.905912]  do_el0_svc+0x78/0x88
+[  805.905922]  el0_svc+0x48/0x78
+[  805.905932]  el0t_64_sync_handler+0x40/0xc0
+[  805.905943]  el0t_64_sync+0x18c/0x190
+[  806.048300] hrtimer: interrupt took 2976 ns
+[  826.924613] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+SoC 0 became not ready
+SoC 0 became ready
 
 Thanks,
-Marnix
 
-Op di 30 sep 2025 om 13:32 schreef Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com>:
->
-> On Wed, 24 Sep 2025, Marnix Rijnart wrote:
->
-> > Commit 4afeced ("serial: core: fix sanitizing check for RTS settings")
-> > introduced a regression making it impossible to unset
-> > SER_RS485_RTS_ON_SEND from userspace if SER_RS485_RTS_AFTER_SEND is
-> > unsupported. Because these devices need RTS to be low on TX (fecf27a)
-> > they are effectively broken.
-> >
-> > The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND,
-> > so fix this by announcing support for SER_RS485_RTS_AFTER_SEND,
-> > similar to commit 068d35a.
-> >
-> > Signed-off-by: Marnix Rijnart <marnix.rijnart@iwell.eu>
->
-> The Fixes tag is missing?
->
-> (And Cc stable tag will be necessary as well).
->
-> > ---
-> >  drivers/tty/serial/8250/8250_pci.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/82=
-50/8250_pci.c
-> > index 152f914c599d..a9da222bd174 100644
-> > --- a/drivers/tty/serial/8250/8250_pci.c
-> > +++ b/drivers/tty/serial/8250/8250_pci.c
-> > @@ -1645,7 +1645,7 @@ static int pci_fintek_rs485_config(struct uart_po=
-rt *port, struct ktermios *term
-> >  }
-> >
-> >  static const struct serial_rs485 pci_fintek_rs485_supported =3D {
-> > -     .flags =3D SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND,
-> > +     .flags =3D SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_=
-RTS_AFTER_SEND,
-> >       /* F81504/508/512 does not support RTS delay before or after send=
- */
-> >  };
-> >
-> >
->
-> --
->  i.
->
+--
+Kenneth Van Alstyne, Jr.
+
