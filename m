@@ -1,235 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7C6248881
-	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 09:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759223101; cv=fail; b=tdnJF9vbpEjJhuBGbkSJ/65grtVLPsfZNOoFi66l52q3OmCnVJFr/XQYwxBgNKwRxJxqRB+6rkTrAKLWvSbeBUpcqMdySGYr5WVijf4Fj9liavcFjyXrsWTv/sbgdeVO+qOf2gpa+DzuR81ZYnapMW6FKwaHaSsrg9OvOxBCRpg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759223101; c=relaxed/simple;
-	bh=4M01BfqNiw8LOZElVByNxxEsTh0lL3cN0Df06qVKssk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=skfdkW0NBgGznQhnr9RiTnyhIijhEy1nx33DEflVUbSy53ehBiIfY0GTjz600Kc1IRxuMFrXXU9Ci1+ov0F/iO8qqbyiq8htsoK2kXPaMrE8N0qyGFU3tZvjQffsRvJ4PD4G0dAmLZFVflvR4Ia/blMm0Lphd4yi+dg9lm87AlI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XF01AjWQ; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7855A2C08CF
+	for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 10:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759228804; cv=none; b=W26cKEDn9u7vKZBxMnkHch3JvLKudPy83520BHA565p61yM7+5rKtYX0q0GfG+vV6UOfF/BJaUA1kpfHav6SnIryX8eEZDZ7VxNtqoLhve2HrY31dwI0Ouq6y8h4BmlOiwGKN1Rf4DiP3xNHDKcbTfwnKDzU5eH0ajV1PSK5uo0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759228804; c=relaxed/simple;
+	bh=madMCCpXf9roOD5eZkqbrUzSQr5guKNIA3QTRpCiy38=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GijcNXRLL39kfxhfJC0a0YkNaRPNN7VeL2xosHDxTOCxwTJJGSQUQRI6+RIybsFLnp2OmAPZNSVGCfOJenHdb+k1bZBLGlYyXOfAejIKdUAYuouAfBZS+vmKABTuaxUwbsFKCHYZyrO5d1roB6fzRA7NEly4vcocOXyhZRu3+/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fqcOPedF; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XF01AjWQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759223100; x=1790759100;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4M01BfqNiw8LOZElVByNxxEsTh0lL3cN0Df06qVKssk=;
-  b=XF01AjWQrSrg5g//VU0eRMeHnzlsE7b/hsgf0UBQC22sKp5QdFDt0YuL
-   XaPrrtEQtCQnoOo3It9bB/0ZgeIxJN61rzTxNl8sS0KqUMcKR0q4EpJ8x
-   BvY+m4GOvLneFbhemQvbQTKeFIHmSW+b6ZJXfS+PsQ2KlJRt3od1TuTOA
-   csSsQExCwq2PxHZVv4lyE0GqXkOqTN53tyrXMyHpqTQKXBwl0fbkDIgLD
-   KcJ8/PmOPUi3tY7aRfQsaA7zVMAgYVAWM7pU0D2910QRr5wRFCLviCxsW
-   9cs2sq4nLkiR3xjs7fOih0fDd24Vi97qJY8ru+FEZVTytIAgBjtOuTjxL
-   A==;
-X-CSE-ConnectionGUID: 319MuUa/RhqriUI/jVW6CQ==
-X-CSE-MsgGUID: xhboaOAMQRej3xSXFjw6Rw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="60512064"
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="60512064"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 02:04:58 -0700
-X-CSE-ConnectionGUID: JNUp6Q61RHmokGHPa4VtUA==
-X-CSE-MsgGUID: CPOrCU0kSUmXJ3dkKW+DGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,304,1751266800"; 
-   d="scan'208";a="182892759"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 02:04:48 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 30 Sep 2025 02:04:48 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Tue, 30 Sep 2025 02:04:48 -0700
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.38) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Tue, 30 Sep 2025 02:04:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OclqvGIvTN9yknzk1dcvsWU4JdXh2a08bmVUsJP/VCcRt/BIiBwEtfVrmAkQUsJxtA6R3U6XmsR7U+7+sqtc8zcK5SzvfwB1eDwIOpOp84+8Qpk/WvO4Ls7l/goxAfByZogtJhP4fXejiog/cMBTfdHVXgb9eKk41Yg1aRMc1jHxho4XIptabrPDJjtqb1oTAGQM3MLSDlORZZDHXUcE5B4ZSPIxnGcrhIiAvCsdSa1Zui2cglchjbPZFU0aozrhPKZmsn76nqsS4U4jpo932l4QSkORhLWlxuzpK6VpwIJ9kAyBJSaDqqqhRwM4DdmL4Kl0q591gMO70i+LTgocYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OmMutJJ/VnZCRk47XH0jfkez1siY/uUcKhRal80w4Vc=;
- b=M00R40475r+Wgxm6MRGgSrNErFSe6r3cwfj7FzKSvWpRTmd4u1l1WYFt0BQtyLPC1BXZ2MiYGUP89Emmf/6okf3K8LV4bfziYcwyL0Vkaq6HCqW+tLfb0gawJ1J6+XDjfPecX5PxIwtXVw7DjokskHdsTBB6BDnXRuZWyqity9yaOkLPR9ySPWKphYEESEEqfaryiTLxmow6ycq0S1WBIp3TkZ3q1rIy7tU4RwZfb5vsVRDJ9LzKNHTBNdvdaGB90NJ2cU2ZpclYIAKg0r5KqSxI7peDZ3qEFdYObeJ3rCKSkvqIxBG7M/fFw/bMNzvGD2TD3QrHVFahqmTFvyXcKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5)
- by CY8PR11MB7195.namprd11.prod.outlook.com (2603:10b6:930:93::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Tue, 30 Sep
- 2025 09:04:46 +0000
-Received: from PH7PR11MB7605.namprd11.prod.outlook.com
- ([fe80::48d7:f2a6:b18:1b87]) by PH7PR11MB7605.namprd11.prod.outlook.com
- ([fe80::48d7:f2a6:b18:1b87%5]) with mapi id 15.20.9160.014; Tue, 30 Sep 2025
- 09:04:46 +0000
-Message-ID: <a6055d09-62e4-4c56-abcf-0fb2fedf42a3@intel.com>
-Date: Tue, 30 Sep 2025 02:04:38 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/xe/guc: Lenovo Thinkpad X1 Carbon Gen 12 can't
- boot with 6.16.9 and Xe driver
-To: Sasha Levin <sashal@kernel.org>, =?UTF-8?Q?Iy=C3=A1n_M=C3=A9ndez_Veiga?=
-	<me@iyanmv.com>
-CC: Thorsten Leemhuis <regressions@leemhuis.info>, <stable@vger.kernel.org>,
-	<regressions@lists.linux.dev>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-References: <616f634e-63d2-45cb-a4f9-b34973cc5dfd@iyanmv.com>
- <88ffbb16-bd1a-4d96-a10d-69516f98036e@leemhuis.info>
- <92577e77-3f40-45a3-8e67-d9c6f5ffeb86@iyanmv.com>
- <aa72cb3c-bed3-413d-840d-05aa72a60c5c@leemhuis.info>
- <afd60150-7371-49f4-a95d-d9147e067757@iyanmv.com> <aNlW7ekiC0dNPxU3@laps>
-Content-Language: en-US
-From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-In-Reply-To: <aNlW7ekiC0dNPxU3@laps>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: WA2P291CA0010.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1e::16) To PH7PR11MB7605.namprd11.prod.outlook.com
- (2603:10b6:510:277::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqcOPedF"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b55517e74e3so6055929a12.2
+        for <regressions@lists.linux.dev>; Tue, 30 Sep 2025 03:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759228801; x=1759833601; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tc0zQApF0WO4ZgUj5cHoP64Ut3mPNC7SB7c0om1scqU=;
+        b=fqcOPedF6UrDP7l1WjoO3S/+q57Czb7kIYWSjrA/nvY0+O5t3pgZp/zlc8Xyvq4m2u
+         FC7vZyuxArURgc7XWdB2+gjlgXGDdJbNSv3lrRiG+rGfdgDFxzwm6W5ZiMrkLvrea2wZ
+         lohi4ByZlZzGQACqLY7n+9fCip4uEhB8ef93m11lwXhQ/O0kv5YCpnLe7lxQ+1CT/fOa
+         yc4DT7dLndSx5E/u0NHi853bCiJBzhEEmbfI75r5M0IjrqpxsoT6AfhUYUlrX4mP/I5Y
+         PhIfbUF6yMqVf8VfdgO5veQjpRcKaA5UWyIZP3AWiJY94eZYUSMg/B2stI3LW8tAIIHd
+         G3lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759228801; x=1759833601;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tc0zQApF0WO4ZgUj5cHoP64Ut3mPNC7SB7c0om1scqU=;
+        b=TZPGO6LDRwH2MeolVfGgRK2bsiQ+XrVxosiWvL5u5cHztlRe3i3mWhkCJ91+0TTcDJ
+         NV/sun0SfTI8JOiOr8Ezy+4HppXzPX6l6MS/tKDNFsXHwfYGwOZ9z2X808Dvab8MS5yy
+         YymyLlHZhdkyClCJAECnidjy0gRNHbD82dhaYTwvBTX3cS3waq7M50to5Tgf3KBwak6J
+         q1SH+jG46vbP0HjoIMWWAIUL4fOGe01lA7eoxfqfDJyfhT+IrTYC/E0yBDqYUZBBf1MY
+         v0nJjh/scek8C0xk2wCaOfwwxSWYufW6AMAPtXiSdxbDb35K+rz/860uc1SIa2PVAl2r
+         q5Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCX21gf645eBicXpsoBSbOYZpySP1+VObhOQJKGCvNUHkG3jnWu10VToP3yqqsSAekbpnRhiBvJ5BRgGBQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz4Y4ANAbcM0GeEzHzd98AHFHrgH/AmxcFJPflztGJ4KuveAIDQ
+	PDf6EGb3jTUKfumRqy85R7t3SQ0RArUvLO3hQCQZXPebYGSL79UjsqxZFp69MdCuqtLcvgd0FwU
+	ia9d1k4K+sYeoQ+VUVyuSRO1RBcplgyDZMVS5wCzfJw==
+X-Gm-Gg: ASbGncugbapwkXDd9U5/DF6DzghIUY3eYLqfYS7ICvo8g8NOLsUBDDQBfuxPBToPkaW
+	k5STb4brxTh2u+fO7ZagW2S0n1ADcgHjXHszNMdrZAer+7msF21864ZbMUhpZzdBMy+e0T/9uqL
+	v4aXzSQYNIWGRFmkbLeMjdjiUss+kgK9tkl6zsWafkISjvCUvF+TtzbFYp+7ZbCWplCd5ppoT2C
+	hnhcFQFHCWiT88Y84bwgbnlyNZCEIq/d+sAr7qfhu4jRMxyqKUFMXD40bFksbT4KSVEEQ4/9TGM
+	DxDEeyydbMlHiVh1lG9gAE5wuo6iqg==
+X-Google-Smtp-Source: AGHT+IHPY6eK3MHywKJURzS/I0UrL9t8viPGr6htqx4ToAI+8mmTLnKAaeTRI9hZkLb5EMHh5z7FlYyTqvUNFKADuYQ=
+X-Received: by 2002:a17:902:d58d:b0:24e:593b:d107 with SMTP id
+ d9443c01a7336-27ed4a5a856mr224706895ad.32.1759228801555; Tue, 30 Sep 2025
+ 03:40:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB7605:EE_|CY8PR11MB7195:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65803665-2844-4e1c-6c58-08de000066ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bTZDUGFEd3hZa3hVdXhhUlpCWTlZWWZ3bytnMUJ3cmFOcHFrSDlrQURTUDgv?=
- =?utf-8?B?bkp5RHRkSHArd2JDM2tMdEpYKzNQSUhxa0pWREkxdVRTN3Y5UUhFVk8wNWZZ?=
- =?utf-8?B?Ukt5SHp5eU1iUTRzNnY5VVJqbzAwWlR0YUt3bFBsSDFxYkwwd2U4UzhzckJI?=
- =?utf-8?B?ODdjSnVnclpsa3czL1l6cExSVWlQOURlQUk3c0lKYjVQdU90TmVIdStTU1pN?=
- =?utf-8?B?T0ZPMnllN3pQZ0lBZFhSaTg1Q1NhbGI3YUdpOHQwTkNwajVyNUg5bHlNUmM2?=
- =?utf-8?B?V1o3UmpTWkV2OWxIVS9lajZQWmg2ZjhaWEFUUVRvelRGQXA2dUZxdDhXSHUr?=
- =?utf-8?B?V0lEVmszZkhxVzlFU1pScDl1TlRtT09Qb3V2RzlrRDdoNTRBRmNJWmlQd2dp?=
- =?utf-8?B?NWJzNXZ4aEVFalRkRXJQZ0tFUE5yUXZuWjVVQ0NvVG5nTmk5UkxFaVpzVDU2?=
- =?utf-8?B?VWFmMENUYzN0eVFLbXlSVjBXU2dQZDAzK1paU3hYU2diSFhGMStscnRsQmQz?=
- =?utf-8?B?aE9WeVFNS3pQVW1iRHphWk9TZFJaNlF4SmI1Qkg1aXpQenhrTTI2UkQ0UCt1?=
- =?utf-8?B?ZVFkWkhWTW9iYVZPbXJsZ1ZOSCtsdzF0NG03eTd0T1drVjYxcUVyU0ViWldo?=
- =?utf-8?B?ZTJWZDlRNllTdk9FM2FBTHN0RFRsWTgvWnVHLzI3VFAvMU1HUHpDTWxwZldM?=
- =?utf-8?B?TUhaNEFSTzBHeERRem5SL2hyYlE2WjVCWjBQSENKRUUvUlRmSEgvSEJYUFdx?=
- =?utf-8?B?anBSaEJTZUducXF3V0JuWDBVaUdqRnhSa0FsUFFBNE93NXh4UmttNCt5YVRP?=
- =?utf-8?B?YmpNcVBUb0VveWY5SmVKRTduN0k1YnZZREZXdHp6Tzk5N0VSdE9NcFZ3czVx?=
- =?utf-8?B?WDNrRG5ITDhpM0hucFhpRFB4Uk55UU4wOGJtOWIrai9SWGEvVFdKVFplMDFV?=
- =?utf-8?B?cytaTmYwWFU3SzRuYlJSdTBwWjBaUmlSa0NqdnZlRjJKblNXTTJkZ3F5bVRI?=
- =?utf-8?B?b3diNlNoV2l1eHNhTUpCeW5uWDhmWkQ3aUpGZk1QYmVnK1p1UnhiQU8xaE4r?=
- =?utf-8?B?VEU0NHVZZlNXTHphak5CU29FcHVWT0hJcFJaRTYxZUJiTUd3d2J5MDVqQSsr?=
- =?utf-8?B?NGdJWEdiNm9nR0syRzVMSDJ4dEJjajRMaDU4cHhiSVcrN0ZrTkROQ1k5UldV?=
- =?utf-8?B?a0NRQXhZQzBqZ2k0dDdQSU9yK0RDVksvRUN0aXhiaHBaMTl3L2lOb1JxZjly?=
- =?utf-8?B?QzZzU1ZPeUFTb1dOU2NBL0VtanlPczBEZ0ZKelc5WWc0UTVRaGxtaElJT3JC?=
- =?utf-8?B?UnNFTjU4bVlyeGpXaDFuTnhmbjQ5QmhtbkJoaktpalBrUDJLU2YxaUZRWVUz?=
- =?utf-8?B?RklVZlFFTG1FcWZVUEZ0NHlVc3puZi8rM0MwUzI4M1BaaHZLaW5QRTRkSXB1?=
- =?utf-8?B?aXdWQjZXQnVmekliMS9EUzJYTkI4dkppTjN5cklYTWxRTmhUQ2NDL3BnSytF?=
- =?utf-8?B?a2J4azVyU1luNVVrWlJCLzVnMlUrYW5ndEVUZkZabXZCYWw2QTVsVFE3ejVB?=
- =?utf-8?B?SlVITlN1VEs0WnJYVVJEQlJpaWNNUGVUbFdYclRhR0Z2eWwxQ1ZXR2M4SGtL?=
- =?utf-8?B?SzNmTS9rS0lsNXlXR3Jqdzlxcjl4c3ZucVMyekNQaG1VT2lLOXljTUhXQU1n?=
- =?utf-8?B?Y2NkWXhiZkYwMFYrRkVoTjhJZkZaOFA4WDNGMTVqcExiT2RTUC80czJ2Zjds?=
- =?utf-8?B?S3NKNUFPdzJyd0thaFUwb0M3SG83SzYyOE1sSDNkcjBEMndWRWx3MXgxdWtK?=
- =?utf-8?B?STUwUDRvTlBRN0pTeW5aZE1TeUI5RlhjS1ROWVo5ZGU0R3V2VUgwZHRCUDRM?=
- =?utf-8?B?ZnhMVC9Va09va3FBWlp0b1BDbXI5T0oxSGRqWmR3Q00vUHZGMS9HWFJZa1Ix?=
- =?utf-8?Q?cSUUQ9A5QwLEgR66jpCZ6+PqtvOV8kMT?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB7605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N3liL2ZwWEpBMnNQUWtzTU4xYXBTYUlBQlNRWFk4SElZU0RzdE5KVTdEQWgr?=
- =?utf-8?B?a243OHdxa3A2dTAzQmxoMnh1QXZoNHpJS1BGcG1DenA3OHBIZWkyYjRZWW0v?=
- =?utf-8?B?WFlZaFVOWmNRTEd4TDl2SG1yYnR3VllDWVNyeFFRaGQwbXJheHk4YmQ4YTNO?=
- =?utf-8?B?NzNNMW9NenhHNEJPU1B6UlRGcmI2Vk84WnJCTUd6SnlPSm5ZbWx0QVNSVnZI?=
- =?utf-8?B?Q1YyclA1Sk1GK1FZU1JBYjgwbTBtZmV3SSs1ZnFycjhpekRSSDZTRkE3b2Ur?=
- =?utf-8?B?TFhFdWQvTUlJNlhDMkdJLzg4ZDNTbFlleDZUamZ6TDNLS3R6YnV4YUg0QkNI?=
- =?utf-8?B?RkorNSsvMjBETDlTNGwzVzNuekNLV3VYMXhPTDQrbW9OaERIY1dGcHhKbDUv?=
- =?utf-8?B?bko5N01TYTR4U2ZtUllMWk04Kzc2UnBVSG05ZXF3YkJwcERRTFhGejFkZXpZ?=
- =?utf-8?B?Y1JKTHhYVjBrdCsrZloybS9nZFM2WG5PcnQ2MzZDTGlGZ252eER0UkhtRm53?=
- =?utf-8?B?L1RMTGdNYmYvYXlZU045RnVsTDYrTW1KaTMrclUwREo0eXNPcWpCUkQxTFRE?=
- =?utf-8?B?L2NFL05ramErRURaZnFKK2dycTJ2UDkrTGxkYVhvalRZRnhVN0tTbHN3Smw5?=
- =?utf-8?B?WXcwUWhBSUIyRGJpaTBCeEtpbThLZTJ5ZWl1QUJxOHhRL3NqOGZPVmVCUllr?=
- =?utf-8?B?OWFTYmljc3oweFRXcSs5RVNVVFo2NmRqekw3Z05zSWFCQS9Cc01wZWtkQmVJ?=
- =?utf-8?B?bVBoWXNESk5WWEFHbmwxdmk4QlVVM0w2bDlFaHhjbHgzR29vT2NocDJoTStB?=
- =?utf-8?B?ZFlpM256V1dBYnJ2VUsxYWRwZEErZ1g4NkMwbktjL2VyWlRhMFF0engvejBF?=
- =?utf-8?B?Ukd1OGxKRi80T1IvbWJvQktGZVJaS2h5ejlGVE1qNWNBSytVcVdMb2VMWkxn?=
- =?utf-8?B?dkpDYTg2Mnk5QktRSk9jaUJab1lLL2Zpa3Y4aDVMMUw2WXVKNFNyamtoMXRO?=
- =?utf-8?B?a3NYb0lXdUpqNElnaFJVWjdOdG9GN0JFM3FKUm11MWxTNzZrMTZmMENTTlhj?=
- =?utf-8?B?RThjUVc1L005RnVKcDd5a2RtcWZqbXoyaU9iSXhLQ0N3ckNCaWNyUkN3Z1FE?=
- =?utf-8?B?UXhhNDRudWhvckRza1dyTERXMXFOYlFaUWJReWJRZUFHczd2ejFNNi9jaGZa?=
- =?utf-8?B?YVVvYytDVDlKeDA2RlJidFhxWkYyY3NlZFE5bHh4MlpUQ1V0SEN0MWo2Y0VQ?=
- =?utf-8?B?SWs5TXlOMnZSdDk3RWN0Y29nOEVhSWR6U3QwYWsyNHduR1FVb3V6YlhPSEp1?=
- =?utf-8?B?RHNPVVNib3RnWWgzRUJobjc1NVlwa2ZaUHQ5bXlkYU40UVVHQnAzcnVMVkNB?=
- =?utf-8?B?TlpubHFnL0ptNlpIbXRYdGhNNm1hSU1CeEpaNlJFYTRzMzgwQjNESUl6cVZt?=
- =?utf-8?B?SWVDbElOWm5BRnBTL1J3R2pJTGlNTzZ2VTNSaUl4eHBCdVBid2VNeE1TVXJI?=
- =?utf-8?B?MitNY1dnRnFYZGFQVzNqYVlaOCtGLzBOWFZLc3NVVUxXUFFteFZ3SThvM0hk?=
- =?utf-8?B?ZmNBYXJNMG9OUG4va2JlS0E0S1cxTFhIYWR5bUhxNStiM0hscG40ZURndW9j?=
- =?utf-8?B?RG52VFl1WUhVMmNydFRwd2pwM3laVzIxQ2xQc3lFbldTUzlqSW5YTFllTGwv?=
- =?utf-8?B?YmZ2WWROZXBvYkJldzdaQ3VlYUFIaityL0NHY2U3SE5tUjdiNmpGd0FmTDRm?=
- =?utf-8?B?eDEydThyRGtxcVk5clJiNTAzbXEvbGVMenphSFE0cTFLZjAzRkJaNC9FNU9T?=
- =?utf-8?B?QmJBRUZTeHhOTG0zZEQzWVJGRVRwQ0J2dnJ1Sm4zTVNDeWN3RTlFTGlTSkpI?=
- =?utf-8?B?c1g3dTJMYjk2SmtQRGh1bUZrNHo4SUpUMFBmV3JvSWU2TGw0UXFKT0ozOWts?=
- =?utf-8?B?QVZOYVp0dnVuL29mUWdQTW1NcXRlZFlYVGRER3JVSC9nNzN3aU5OMW5yUGR4?=
- =?utf-8?B?eFA3NDFSMzVYNjJ2L28wYVFRT3dqUGxiODdxV3JvWURDY3ZmdUx1dWVXMXRF?=
- =?utf-8?B?dkoyV1ZPdWIzL1kvTnkvaDFYRFozamU4Z0w4ZzV2bXlES25qWHRsTGY1aC9u?=
- =?utf-8?B?bDVnRnkwRHNZekpEa0xZTHNsZzFKSTNEMlJ4TkpIY0tQUituYWUrbTBLUmd5?=
- =?utf-8?B?eEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65803665-2844-4e1c-6c58-08de000066ca
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB7605.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2025 09:04:46.0776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zjHbUz2dzf6TP4u1DLs6W+vBLuFwFDwd09qMRBzcw58k9fTm99F2RxEWzAPOWskIIvAYVZhSBk2yuUeJDfBem067aa3K/UuevyRqWsVNOL8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7195
-X-OriginatorOrg: intel.com
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 30 Sep 2025 16:09:50 +0530
+X-Gm-Features: AS18NWBzICskyp2rABk9ODkH4ArO_EhP6FnFBEP1dKyBVps0whfUGZOR_aFNgW8
+Message-ID: <CA+G9fYtnXeG6oVrq+5v70sE2W7Wws_zcc63VaXZjy1b1O1S-FQ@mail.gmail.com>
+Subject: LTP: swapon/off: 16K and 64K page size libswap.c:230: TFAIL: swapon()
+ on fuse failed: EINVAL (22)
+To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Joanne Koong <joannelkoong@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	Miklos Szeredi <mszeredi@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+LTP syscalls swapon01, swapon02, swapon03, swapoff01 and swapoff02 test failing
+on 16K and 64K page arm64 devices and passed with default 4K page size.
 
+These failures are noticed on Linux next and mainline master (v6.17).
 
-On 9/28/2025 8:40 AM, Sasha Levin wrote:
-> On Sun, Sep 28, 2025 at 01:16:34PM +0200, Iyán Méndez Veiga wrote:
->> On 27/09/2025 16:31, Thorsten Leemhuis wrote:
->>> Thx. Could you also try if reverting the patch from 6.16.y helps? Note,
->>> you might need to revert "drm/xe/guc: Set RCS/CCS yield policy" as 
->>> well,
->>> which apparently depends on the patch that causes your problems.
->>
->> Yes, reverting both dd1a415dcfd5 "drm/xe/guc: Set RCS/CCS yield 
->> policy" and 97207a4fed53 "drm/xe/guc: Enable extended CAT error 
->> reporting" from 6.16.y fixes the issue for me.
->
-> Thanks for the report and investigation!
->
-> I'll revert these two.
->
+This test failed on 16K page size builds and 64K page size builds.
+ * CONFIG_ARM64_64K_PAGES=y
+ * CONFIG_ARM64_16K_PAGES=y
 
-Hi,
+First seen on next-20250821
+Good: next-20250820
+Bad: next-20250821 ..next-20250929
 
-Thanks for the bisect and the quick turnaround on this (and sorry for 
-not replying earlier, I just came back from vacation :) ).
-Just wanted to add a quick comment as the author of both patches. I have 
-no idea why these patches would cause issues on 6.16 but not on 6.17, 
-nothing significant should be different between the two releases in the 
-impacted area. However, no one has actually ever reported hitting the 
-starvation issue mitigated by the RCS/CCS patch (which has been there 
-since 6.13), likely because it can only be reproduced if the GPU is 
-heavily overloaded by multiple apps; therefore, given that 6.16 is not 
-an LTS, I'm not going to attempt to reproduce and debug this and re-send 
-the patches for that kernel version.
-Please let me know if there are any concerns with this approach or if 
-the issue pops up on 6.17.
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-Thanks
-Daniele
+Test regression: LTP swapon/off 16K and 64K page size LTP
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Anders, bisected this on the Linux next and found the,
+# first bad commit:
+  [bd24d2108e9c8459d2c9f3d6d910b0053887df57]
+  fuse: fix fuseblk i_blkbits for iomap partial writes
+
+## Test logs
+### swapon01
+
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+swapon01.c:39: TINFO: create a swapfile size of 128 megabytes (MB)
+swapon01.c:25: TFAIL: tst_syscall(__NR_swapon, SWAP_FILE, 0) failed: EINVAL (22)
+
+### swapon02
+
+Windows will not be able to boot from this device.
+tst_test.c:1229: TINFO: Mounting /dev/loop0 to
+/tmp/LTP_swaybkEDa/mntpoint fstyp=ntfs flags=0
+tst_test.c:1229: TINFO: Trying FUSE...
+libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
+tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+swapon02.c:52: TINFO: create a swapfile size of 1 megabytes (MB)
+swapon02.c:53: TINFO: create a swapfile size of 1 megabytes (MB)
+swapon02.c:56: TWARN: swapon(alreadyused) failed: EINVAL (22)
+swapon02.c:73: TPASS: swapon(2) fail with Path does not exist : ENOENT (2)
+swapon02.c:73: TPASS: swapon(2) fail with Invalid path : EINVAL (22)
+swapon02.c:73: TPASS: swapon(2) fail with Permission denied : EPERM (1)
+swapon02.c:73: TFAIL: swapon(2) fail with File already used expected
+EBUSY: EINVAL (22)
+
+### swapon03
+
+tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
+swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
+swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
+swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
+swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
+swapon03.c:54: TFAIL: swapon(filename, 0) failed: EINVAL (22)
+
+### swapoff01
+
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+swapoff01.c:44: TINFO: create a swapfile with 65536 block numbers
+swapoff01.c:44: TCONF: Insufficient disk space to create swap file
+tst_test.c:1888: TINFO: === Testing on tmpfs ===
+tst_test.c:1217: TINFO: Skipping mkfs for TMPFS filesystem
+tst_test.c:1193: TINFO: Limiting tmpfs size to 350MB
+tst_test.c:1229: TINFO: Mounting ltp-tmpfs to
+/tmp/LTP_swahnekXb/mntpoint fstyp=tmpfs flags=0
+libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
+tst_ioctl.c:21: TINFO: FIBMAP ioctl is NOT supported: EINVAL (22)
+libswap.c:228: TCONF: Swapfile on tmpfs not implemented
+Summary:
+passed   0
+failed   1
+broken   0
+skipped  7
+
+### swapoff02
+
+st_ioctl.c:26: TINFO: FIBMAP ioctl is supported
+libswap.c:230: TFAIL: swapon() on fuse failed: EINVAL (22)
+swapoff02.c:88: TINFO: create a swapfile size of 1 megabytes (MB)
+swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - ENOENT
+: path does not exist
+swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - EINVAL
+: Invalid file
+swapoff02.c:53: TPASS: swapoff(2) expected failure; Got errno - EPERM
+: Permission denied
+tst_test.c:1888: TINFO: === Testing on tmpfs ===
+tst_test.c:1217: TINFO: Skipping mkfs for TMPFS filesystem
+tst_test.c:1193: TINFO: Limiting tmpfs size to 32MB
+tst_test.c:1229: TINFO: Mounting ltp-tmpfs to
+/tmp/LTP_swaXbUs2F/mntpoint fstyp=tmpfs flags=0
+libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
+tst_ioctl.c:21: TINFO: FIBMAP ioctl is NOT supported: EINVAL (22)
+libswap.c:228: TCONF: Swapfile on tmpfs not implemented
+Summary:
+passed   18
+failed   1
+broken   0
+skipped  1
+
+Here I am sharing mainline tree and logs.
+
+## Source
+* Kernel version: 6.17.0
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* Git describe: v6.17
+* Git commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+* Architectures: arm64
+* Toolchains: gcc-13
+* Kconfigs: lkftconfig+CONFIG_ARM64_64K_PAGES=y
+* Kconfigs: lkftconfig+CONFIG_ARM64_16K_PAGES=y
+
+## Build
+* Test log arm64: https://qa-reports.linaro.org/api/testruns/30048876/log_file/
+* Test log LAVA: https://lkft.validation.linaro.org/scheduler/job/8468115#L28598
+* Test details:
+https://regressions.linaro.org/lkft/linux-mainline-master/v6.17/ltp-syscalls/swapon03/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/33LezR2rctMs0EwZpyIDqRhU7s4
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/33Ley5LZz1crQhBtb1KXJMuS2GB/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/33Ley5LZz1crQhBtb1KXJMuS2GB/config
+
+--
+Linaro LKFT
