@@ -1,219 +1,172 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E5F2264CD
-	for <regressions@lists.linux.dev>; Wed,  1 Oct 2025 07:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32522765EC;
+	Wed,  1 Oct 2025 09:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759303593; cv=none; b=h/WfKQE8JQbWIq+UMwU3tifLzfrIRIdmAwScQsjqkeLOSbkynGuW8on3n7BVsYFTpnbS2g+uosg1tsW1g+mrfYm735L/Lw6qPZZZu46UrYOtxvWy+KYXeaz7e8IQzUWesEaC9Dh/DjTShaVwJ8uhHcfzHJcG9e9oHIj5t+SxYvQ=
+	t=1759311173; cv=none; b=bIeh41vxEZhaujkOWUZ5J/hEwgYKeVHOSAFRcZoOUcd7usZdsgU78THSCvhc8FjsPmULs7yrlP0MZcdoK+9O4dYsXd2vIVSLPbB+AcVcJg5KrKbuBsx8pv1osK4K9cH2WW3tY3CjX68bmkumOxtKa1QlcWIZkWBGoUa15fWBebk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759303593; c=relaxed/simple;
-	bh=IwuqPxpVDOB/EDqFDD+Gzqb0EzgmfIOVeCRMxs++Yh4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bvBvVIHDgn3I+JcahfIO5t0skJiVls1rc/SS/W+G0FgmvWP/AGHTzg1Gd54iFrldQLMfec3em4u1+931y46yTRH7qFVR9muDq+6+82XwD9j+Eu6xpRSUgJf/gScwN4eRmi1AsE/uIyctU8+uPqRnlHbQ6xFMISak8N39bUQ2vUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VNlnvK+o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IjP7RogM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VNlnvK+o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IjP7RogM; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1759311173; c=relaxed/simple;
+	bh=UJ5Nrj//XI4MYIzbnakq8QPry+1jzsB8A4m7sh8T2gA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X95X0eH3+J2TrAM7E3gSXwI/hA08qNNtK2ziMH1A1a5WWpIc4P1RmBxKTTwMrmZWQ6pbI0RTF2JeD9p1Kg7+pBTv54/y7DQMLcfG8Fp3lFOlZVWF0JlcNQe5Qo+4gSjNxFvXgOu6bEFFC01VPpSLfwXP1m8HeH6o6ZJ2KXIw/ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxJWr6HC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VNlnvK+o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IjP7RogM";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VNlnvK+o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IjP7RogM"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7338F33792;
-	Wed,  1 Oct 2025 07:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1759303589; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ljBjy/LjeL7uYel8A4Fv7mzFx9XdqLEcQZBp9TZ9/rA=;
-	b=VNlnvK+oMtsPDbDYbjubnbidFBSgez2uqiV8C2D/Ckm7+zOfGyXPvA2uS8eNO94zxLH2XN
-	D0kjRwIR3FCnLVdD383JO5MOAmQrOhuNlV4iBBhH5HXx5CYqrjGpB6tQkvqNS5nwByGckN
-	ic1EM667CQ2txbiIln9BKhItB9e9P3E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1759303589;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ljBjy/LjeL7uYel8A4Fv7mzFx9XdqLEcQZBp9TZ9/rA=;
-	b=IjP7RogMgihdImOk8yEmupUMqVfiUEbd3o1tUQvKJTbYV9dg5e98Xok+e5SzBq1IUdfKI/
-	lwfjV9R9ip1sw1Dw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=VNlnvK+o;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=IjP7RogM
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1759303589; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ljBjy/LjeL7uYel8A4Fv7mzFx9XdqLEcQZBp9TZ9/rA=;
-	b=VNlnvK+oMtsPDbDYbjubnbidFBSgez2uqiV8C2D/Ckm7+zOfGyXPvA2uS8eNO94zxLH2XN
-	D0kjRwIR3FCnLVdD383JO5MOAmQrOhuNlV4iBBhH5HXx5CYqrjGpB6tQkvqNS5nwByGckN
-	ic1EM667CQ2txbiIln9BKhItB9e9P3E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1759303589;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ljBjy/LjeL7uYel8A4Fv7mzFx9XdqLEcQZBp9TZ9/rA=;
-	b=IjP7RogMgihdImOk8yEmupUMqVfiUEbd3o1tUQvKJTbYV9dg5e98Xok+e5SzBq1IUdfKI/
-	lwfjV9R9ip1sw1Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4355713A3F;
-	Wed,  1 Oct 2025 07:26:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WixID6XX3Gj7HAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 01 Oct 2025 07:26:29 +0000
-Message-ID: <5949fd73-3ca4-4bd9-8092-2d9923dcbfd3@suse.de>
-Date: Wed, 1 Oct 2025 09:26:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxJWr6HC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02C5C4CEF4;
+	Wed,  1 Oct 2025 09:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759311171;
+	bh=UJ5Nrj//XI4MYIzbnakq8QPry+1jzsB8A4m7sh8T2gA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WxJWr6HCADQ9SHytSVb/WM8rkT5Hl/hXX+JyJIO5LalLr0RzMDHRv1dc0VvekL+D1
+	 23vRK/27KxUmvCPzn3AO2jUDXVCo5nLygHKcOoHwHLW6cqSHs8CHFaol9FD+0CL6l6
+	 fxVhrkzxLSPo8y0CCrlmojDvYL+Rsyge2tm4eLvjdkWCc43WHud7OLkMPhCfAlKTF8
+	 Fmq5grfl9oz2tbArCTErEJ/PpqhGTo6bouJ9LQ+2J/zAU63tM/LMgSFiHg29Buf54C
+	 wcVqHKEFNywNwzSNLS/LLEgGNl66mspsZZQRag8IrTRKGavS6VfvYF0Jm8Q+5DhL+1
+	 OVZQvQPXTM2MQ==
+Date: Wed, 1 Oct 2025 10:32:46 +0100
+From: Will Deacon <will@kernel.org>
+To: Kenneth Van Alstyne <kvanals@kvanals.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+	catalin.marinas@arm.com, ardb@kernel.org, mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org, maz@kernel.org
+Subject: Re: KVM: arm64: Regression in at least linux-6.1.y tree with recent
+ FPSIMD/SVE/SME fix
+Message-ID: <aNz1PnARMC4DPeYb@willie-the-truck>
+References: <010001999bae0958-4d80d25d-8dda-4006-a6b9-798f3e774f6c-000000@email.amazonses.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
-References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
- <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
- <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
- <ef6558a9-c44a-4c66-967c-187f260f73e1@suse.de>
- <xeipdyk2i2lpkg4rrvz4cl2l3ch62sl4zoa73qvlms3ek3zkci@y7xqbgjulaet>
- <cox6kpackepnunrlhpsssvgdmjd24477cc7mide52xptmmoxyr@ijjotb3xju3v>
- <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
-Content-Language: en-US
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 7338F33792
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,bootlin.com:url];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,bootlin.com:url]
-X-Spam-Score: -4.51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <010001999bae0958-4d80d25d-8dda-4006-a6b9-798f3e774f6c-000000@email.amazonses.com>
 
-Hi Nick
+Hi Kenneth,
 
-Am 18.09.25 um 13:17 schrieb Thomas Zimmermann:
-> Hi
->
-> Am 18.09.25 um 04:04 schrieb Nick Bowler:
->> On Wed, Sep 17, 2025 at 11:14:45AM -0400, Nick Bowler wrote:
->>> On Fri, Aug 29, 2025 at 03:07:14PM +0200, Thomas Zimmermann wrote:
->>>> The ast driver doesn't do much during shutdown. Could you please 
->>>> out-comment
->>>> the lines at either [2] xor [3] and report on either effect? These 
->>>> calls
->>>> turn of the video chip's memory access and sync pulses. Not doing 
->>>> that might
->>>> resolve the problem.
->>>>
->>>> [2] 
->>>> https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L835
->>>> [3] 
->>>> https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L839
->>> I can try this.
->> OK, I tested 6.17-rc6 and reproduced the problem on this version.  Then:
->>
->>    - Deleting [2] (only) appears to make no difference whatsoever. That
->>      is, deleting the following line in ast_mode.c:
->>
->>        ast_set_index_reg_mask(ast, AST_IO_VGASRI, 0x01, 0xdf, 
->> AST_IO_VGASR1_SD);
->>
->>    - Deleting [3] (only) appears sufficient to make things work again,
->>      that is, deleting the following line in ast_mode.c:
->>
->>        ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xb6, 0xfc, vgacrb6);
->
-> Please test if the attached patch fixes the problem for you.
+Thanks for the report.
 
-Have you been able to test the patch?
+On Tue, Sep 30, 2025 at 05:31:38PM +0000, Kenneth Van Alstyne wrote:
+> Sending via plain text email -- apologies if you receive this twice.
+> 
+> If this isn't the process for reporting a regression in a LTS kernel per
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html,
+> I'm happy to follow another process.
+> 
+> Kernel 6.1.149 introduced a regression, at least on our ARM Cortex
+> A57-based platforms, via commit 8f4dc4e54eed4bebb18390305eb1f721c00457e1
+> in arch/arm64/kernel/fpsimd.c where booting KVM VMs eventually leads to a
+> spinlock recursion BUG and crash of the box.
+> 
+> Reverting that commit via the below reverts to the old (working) behavior:
+> 
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 837d1937300a57..bc42163a7fd1f0 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -1851,10 +1851,10 @@ void fpsimd_save_and_flush_cpu_state(void)
+>   if (!system_supports_fpsimd())
+>   return;
+>   WARN_ON(preemptible());
+> - get_cpu_fpsimd_context();
+> + __get_cpu_fpsimd_context();
+>   fpsimd_save();
+>   fpsimd_flush_cpu_state();
+> - put_cpu_fpsimd_context();
+> + __put_cpu_fpsimd_context();
+>  }
+>   #ifdef CONFIG_KERNEL_MODE_NEON
 
-Best regards
-Thomas
+Hmm, the problem with doing that is it will reintroduce the bug that
+8f4dc4e54eed ("KVM: arm64: Fix kernel BUG() due to bad backport of
+FPSIMD/SVE/SME fix") was trying to fix (see the backtrace in the commit
+message). So the old behaviour is still broken, just in a slightly
+different way.
 
->
-> Best regards
-> Thomas
->
->>
->> Thanks,
->>    Nick
->
+> It's not entirely clear to me if this is specific to our firmware,
+> specific to ARM Cortex A57, or more systemic as we lack sufficiently
+> differentiated hardware to know.  I've tested on the latest 6.1 kernel in
+> addition to the one in the log below and have also tested a number of
+> firmware versions available for these boxes.
+> 
+> Steps to reproduce:
+> 
+> Boot VM in qemu-system-aarch64 with "-accel kvm" and "-cpu host" flags set -- no other arguments seem to matter
+> Generate CPU load in VM
+> 
+> Kernel log:
+> 
+> [sjc1] root@si-compute-kvm-e0fff70016b4:/# [  805.905413] BUG: spinlock recursion on CPU#7, CPU 3/KVM/57616
+> [  805.905452]  lock: 0xffff3045ef850240, .magic: dead4ead, .owner: CPU 3/KVM/57616, .owner_cpu: 7
+> [  805.905477] CPU: 7 PID: 57616 Comm: CPU 3/KVM Tainted: G           O       6.1.152 #1
+> [  805.905495] Hardware name: SoftIron SoftIron Platform Mainboard/SoftIron Platform Mainboard, BIOS 1.31 May 11 2023
+> [  805.905516] Call trace:
+> [  805.905524]  dump_backtrace+0xe4/0x110
+> [  805.905538]  show_stack+0x20/0x30
+> [  805.905548]  dump_stack_lvl+0x6c/0x88
+> [  805.905561]  dump_stack+0x18/0x34
+> [  805.905571]  spin_dump+0x98/0xac
+> [  805.905583]  do_raw_spin_lock+0x70/0x128
+> [  805.905596]  _raw_spin_lock+0x18/0x28
+> [  805.905607]  raw_spin_rq_lock_nested+0x18/0x28
+> [  805.905620]  update_blocked_averages+0x70/0x550
+> [  805.905634]  run_rebalance_domains+0x50/0x70
+> [  805.905645]  handle_softirqs+0x198/0x328
+> [  805.905659]  __do_softirq+0x1c/0x28
+> [  805.905669]  ____do_softirq+0x18/0x28
+> [  805.905680]  call_on_irq_stack+0x30/0x48
+> [  805.905691]  do_softirq_own_stack+0x24/0x30
+> [  805.905703]  do_softirq+0x74/0x90
+> [  805.905714]  __local_bh_enable_ip+0x64/0x80
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+Argh, this is because we can't simply mask/unmask softirqs and so when
+they get re-enabled we process anything pending. I _think_ irqs are
+disabled at this point, so perhaps we should only bother with
+disabling/enabling softirqs if hardirqs are enabled, a bit like the hack
+Ard had in:
 
+https://lore.kernel.org/all/20250924152651.3328941-13-ardb+git@google.com/
+
+Hacky diff at the end.
+
+> [  805.905727]  fpsimd_save_and_flush_cpu_state+0x5c/0x68
+> [  805.905740]  kvm_arch_vcpu_put_fp+0x4c/0x88
+> [  805.905752]  kvm_arch_vcpu_put+0x28/0x88
+> [  805.905764]  kvm_sched_out+0x38/0x58
+
+(I think we run context_switch() => prepare_task_switch() here, so irqs
+are disabled)
+
+Will
+
+--->8
+
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index fc51cdd5aaa7..a79df0804d67 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -184,7 +184,8 @@ static void __get_cpu_fpsimd_context(void)
+  */
+ static void get_cpu_fpsimd_context(void)
+ {
+-       local_bh_disable();
++       if (!irqs_disabled())
++               local_bh_disable();
+        __get_cpu_fpsimd_context();
+ }
+ 
+@@ -205,7 +206,8 @@ static void __put_cpu_fpsimd_context(void)
+ static void put_cpu_fpsimd_context(void)
+ {
+        __put_cpu_fpsimd_context();
+-       local_bh_enable();
++       if (!irqs_disabled())
++               local_bh_enable();
+ }
+ 
+ static bool have_cpu_fpsimd_context(void)
 
