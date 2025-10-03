@@ -1,243 +1,141 @@
-Received: from a8-88.smtp-out.amazonses.com (a8-88.smtp-out.amazonses.com [54.240.8.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE1218A6CF
-	for <regressions@lists.linux.dev>; Wed,  1 Oct 2025 17:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49217C148
+	for <regressions@lists.linux.dev>; Fri,  3 Oct 2025 04:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759340882; cv=none; b=PBsJ1Oj0ozBNVAKg4PNk2PEzRXt6hJXpbMRlse25aYTha3EtvSWJOHu01oaQnK6riHoUVldwLT3Fnm3zD+5lVKq4+9Cll3xN7Uf0ZBXfhm1u8YZOU62aHPZM+8KvUtdd6BEPmNuVdfThS0Ky8AynoaiJqgXjsQCeTBDX2911uJ8=
+	t=1759467547; cv=none; b=oLd2u8Qe4cPJXus/HedzwPCqW5LE7fmBJeSOtjt7/MdFWLuFCtfGpXhc8te7yJK0RGV57qPh4Lk3y7U0i/FvXhQ2eJNd8i9rLC1yJfy/zN77NP99fZWnSMQmEsllL1TMuqDVsRr5v0oACcUTOV4PjE/VJ6fjmeeEz0BSxG/P0BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759340882; c=relaxed/simple;
-	bh=aBM58zz7LIm5qVT9yhJTwKXLHuaEoiEGSu/GD9elgxw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-ID:References:To; b=n3p3nPSVQLMs4KgbShvBaXVOl3KdjoEpgKdjiRYEIwxM2bZQULmgzhnXNgHc2pQbkOkzIOu0NeuonkliJuV4CMaH1K5do2MIRnQgZXGP4R2rhKlxHKDDqHZPe/toV/TQvj+cOmDkuGA2Zd6rA08e+hgS0NjF6Um39yYuRBenUgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kvanals.org; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (2048-bit key) header.d=kvanals.org header.i=@kvanals.org header.b=Zs3VeK4e; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=szcpz0Bd; arc=none smtp.client-ip=54.240.8.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kvanals.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1759467547; c=relaxed/simple;
+	bh=rGqUzefOsezmXKul4+ZX90yT85oKURSlxUtycuN1gVQ=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=trUIKZeyjrnOrE8W58O1gZkHxgDAGeHKGX0T+PsJBWukYxV8UO7nWjk4j9qNtZwfK1GlGGi6Te7UvHVHt69M32K4e14EXA5S4dvGGga6r27XDjOOnSIgpkX66imf9E7TLajmjOQop8abz1fKnU2oBC2MQ/wBDRJAKoB/eeK2pJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=CfWGYZM8; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kvanals.org header.i=@kvanals.org header.b="Zs3VeK4e";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="szcpz0Bd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=xojwidlurxakxokupknu2uvuxvz4uggf; d=kvanals.org; t=1759340878;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:To;
-	bh=aBM58zz7LIm5qVT9yhJTwKXLHuaEoiEGSu/GD9elgxw=;
-	b=Zs3VeK4eH7akdmeuFEMA6S80Ogqod0D5imEX76WD0mOXSiVydr4ho2/9KPZeadpW
-	Qliu6eql10u1xgQiOTeMgQliu+ZpkMgFGEMRFQC9QBbSJ/+dHd7E21TXSbCXLz6ko6l
-	jv05ErBjtAl0q+I+5VcR3zhIKI5SyV84ajL5xORkt9IKQrrVvjGtVoHvYHnLEkmCd43
-	nxakYPGbU+oTZXdjMQBFK6FfvarRDFMV4B4EdnMigdWG0xUwTJDhoVOE6cPO0K1x9A2
-	0ScZfqGLQtZEVZo9g0sfJ/UBOZYZmPXVMvDMVKOZOff1aD9Gvx42tZrRvq5fP6Zp+v8
-	HzEwjfE0OA==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1759340878;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:References:To:Feedback-ID;
-	bh=aBM58zz7LIm5qVT9yhJTwKXLHuaEoiEGSu/GD9elgxw=;
-	b=szcpz0Bd//xaJWMRd0OlMMdk2Z0zmSKxEOdaBGcymQWFOy0fK4pyXT6agRQrTeMq
-	PsE9lQzxgoiJevp5y7E19lJXNM3+X16tMf1y61K9KfM1mp5CEkblfLEPZAddwxIp13g
-	Acq/wDj0AkzQHgqAYRk1UI5lXB9+49Bqg1z7Exa0=
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="CfWGYZM8"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-28e8c5d64d8so16769655ad.1
+        for <regressions@lists.linux.dev>; Thu, 02 Oct 2025 21:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1759467545; x=1760072345; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dngT4ej3KSbM1/KlbBDOSEDv6EzhiSm+d/v67xipPiA=;
+        b=CfWGYZM8OZ3FuG7QrCB6fYUt3Wc0ayHDVlKR4khvE6Zhttb5YrQLtCTIsLDrCzFgn3
+         pTN7D+G/E/ayOIf8tgppjpoW1noOL3pGEu7H6Uc8umkZyCTMDi1P43cJgPicv1cVnop4
+         DAaSTxKKycurqpVa8KXzK3yWXhW66axEHIGzBN13CEKVp4YFIB4Z4foh6FjE+KifeNAg
+         T3DGDin/2NIYHGC5ucgAM3KhrarNgRFCU+LOIZ11+IXbkz2LkIulN1rUFB54C5Vg6s/X
+         mV0SC72v0Kpa8HIv4sYYkFzqEEKJJhrx++9mxdfmj3uhv7LS002e1puUfrywe3g29pg2
+         W62Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759467545; x=1760072345;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dngT4ej3KSbM1/KlbBDOSEDv6EzhiSm+d/v67xipPiA=;
+        b=gbyOcuMwuijjsrGndhpamuiQMa8aE41etUAMYV5VPqHj3n18AHHxa1Es9SabPElEoC
+         tYvp4BkwVapVhYb+mbujMkKbisaHT0RdT7pDghguQYZ+dl23TJC0NJAk+W1m6JZ29trh
+         JARO7+mlwXwANKscdUA/FbUHZEg7NRei0w0hvgJfPx4UIXwU5gIRApSuyaO8a/sk4R4s
+         i3gY//66BkyjMo0sq1hm+SNJym7FWPo5+pY+IhGu1ToCaehT+oIPPReU+JBPG4k11vvr
+         rtnpSQ3t6ZubuE5Oworxjuh177MZy2RQCzcULYeWp3yggICwS/CpPCpSsZuQo4E8/F9y
+         4uCQ==
+X-Gm-Message-State: AOJu0YxkH6FXSbePDnFOVtqwdM/NcOkPnUR2pIXl0TbFtxVo941RvU71
+	bKagjr+q6ObvQ0sH/duo1EkzU+cF8HzVWHNqu4gG5QFoRUFXcnsVHWkRjdvar0QaMwvoUxy9nvB
+	vkmce
+X-Gm-Gg: ASbGncsY/Nqp+MhGfqH3qHA97bv3tyzpsOr8D/ZSZP6JkpxD/slvv/BMCKU11uO4Xfg
+	h1zS5ra9O+FM82ZGLl3gjWG/6P+i0yrRzya34Oe497EAG4pq0RbjuPQ0HcXihAb4sL3fsU4aGDB
+	0/VIv5i4kj8dHmmI44MwQtP1JARzDxFsXnxG7spJQE4Sj3KUajwjakpvTT8IXSJgHE/wadLbPCR
+	/c7M1pEuMe8TWh3TgZnLG+sSEDqEq/mKO8H3mInLnwXonqScFBrsA/J/LiTVgkn4mPpXAnr87wG
+	cOiTtplR1N+1JXJac0lVXBwVr1yKkNZm8xVLmKUPJEZp1D1Whjbm8T8sDeLJYG3Ttk3AFU/xEGf
+	bY+3a8Seb3wX2qgKS4WwbJdHG954H1axZgW8rGm48
+X-Google-Smtp-Source: AGHT+IHD3HVlSVzfPWyZQs1cGp8X25YkCQFpM67rvjbB1x39sP+7slyYG+hMrHhagqTWvwZQthTjDg==
+X-Received: by 2002:a17:902:ced0:b0:27d:339c:4b0 with SMTP id d9443c01a7336-28e9a5fa863mr20875195ad.35.1759467545502;
+        Thu, 02 Oct 2025 21:59:05 -0700 (PDT)
+Received: from c325b7c58cb6 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-28e8d1b9e5asm37075435ad.74.2025.10.02.21.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Oct 2025 21:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.100.1.1.5\))
-Subject: Re: KVM: arm64: Regression in at least linux-6.1.y tree with recent
- FPSIMD/SVE/SME fix
-From: Kenneth Van Alstyne <kvanals@kvanals.org>
-In-Reply-To: <aNz1PnARMC4DPeYb@willie-the-truck>
-Date: Wed, 1 Oct 2025 17:47:58 +0000
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	catalin.marinas@arm.com, ardb@kernel.org, mark.rutland@arm.com, 
-	linux-arm-kernel@lists.infradead.org, maz@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <01000199a0e35b65-1c5cae69-ae59-43ad-b6ac-491cc43f5ca5-000000@email.amazonses.com>
-References: <010001999bae0958-4d80d25d-8dda-4006-a6b9-798f3e774f6c-000000@email.amazonses.com>
- <aNz1PnARMC4DPeYb@willie-the-truck>
-To: Will Deacon <will@kernel.org>
-X-Mailer: Apple Mail (2.3864.100.1.1.5)
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (olympus.kvanals.org [IPv6:2600:1f18:42d5:300:0:0:0:ffff]); Wed, 01 Oct 2025 17:47:58 +0000 (UTC)
-Feedback-ID: ::1.us-east-1.5jHMwTu/Jzmoolk7Ak3w+RKcSxXCCShHRX8XGxXgrSs=:AmazonSES
-X-SES-Outgoing: 2025.10.01-54.240.8.88
-
-Hi Will, thanks for the prompt reply and thorough explanation!
-
-On the 6.1 branch, those functions have additional logic around realtime =
-kernels, like so:
-
-static void get_cpu_fpsimd_context(void)
-{
-        if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-                local_bh_disable();
-        else
-                preempt_disable();
-        __get_cpu_fpsimd_context();
-}
-
-...
-
-static void put_cpu_fpsimd_context(void)
-{
-        __put_cpu_fpsimd_context();
-        if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-                local_bh_enable();
-        else
-                preempt_enable();
-}
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) format specifies type 'size_t'
+ (aka
+ 'unsigned int') but the argume...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Fri, 03 Oct 2025 04:59:03 -0000
+Message-ID: <175946754326.289.9829841122484465364@c325b7c58cb6>
 
 
-Honestly, we don't even set CONFIG_PREEMPT_RT for our ARM64 kernels, but =
-in the interest of being complete, should we also not call =
-preempt_enable/disable if (!irqs_disabled()) ?
 
-I'm assuming this will get queued up for a fix in the stable branches =
-soon in any case.
 
-Thanks,
+
+Hello,
+
+New build issue found on mainline/master:
+
+---
+ format specifies type 'size_t' (aka 'unsigned int') but the argument has type 'unsigned long' [-Werror,-Wformat] in fs/btrfs/disk-io.o (fs/btrfs/disk-io.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:0632e4e1eb4e0d786f6df5aabd5d5cfa7f942266
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  e406d57be7bd2a4e73ea512c1ae36a40a44e499e
+
+
+
+Log excerpt:
+=====================================================
+fs/btrfs/disk-io.c:3401:28: error: format specifies type 'size_t' (aka 'unsigned int') but the argument has type 'unsigned long' [-Werror,-Wformat]
+ 3400 |                            "support for block size %u with page size %zu is experimental, some features may be missing",
+      |                                                                      ~~~
+      |                                                                      %lu
+ 3401 |                            fs_info->sectorsize, PAGE_SIZE);
+      |                                                 ^~~~~~~~~
+fs/btrfs/messages.h:47:51: note: expanded from macro 'btrfs_warn'
+   47 |         btrfs_printk_in_rcu(fs_info, KERN_WARNING fmt, ##args)
+      |                                                   ~~~    ^~~~
+fs/btrfs/messages.h:84:31: note: expanded from macro 'btrfs_printk_in_rcu'
+   84 |         btrfs_printk(fs_info, fmt, ##args);             \
+      |                               ~~~    ^~~~
+fs/btrfs/messages.h:27:32: note: expanded from macro 'btrfs_printk'
+   27 |         _btrfs_printk(fs_info, fmt, ##args)
+      |                                ~~~    ^~~~
+./include/vdso/page.h:15:19: note: expanded from macro 'PAGE_SIZE'
+   15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:68df3c03841b167e8d3c9151
+
+## i386_defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (i386):
+- compiler: clang-17
+- dashboard: https://d.kernelci.org/build/maestro:68df3c6d841b167e8d3c91c9
+
+
+#kernelci issue maestro:0632e4e1eb4e0d786f6df5aabd5d5cfa7f942266
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
 
 --
-Kenneth Van Alstyne, Jr.
-(228) 547-8045
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
 
-> On Oct 1, 2025, at 05:32, Will Deacon <will@kernel.org> wrote:
->=20
-> Hi Kenneth,
->=20
-> Thanks for the report.
->=20
-> On Tue, Sep 30, 2025 at 05:31:38PM +0000, Kenneth Van Alstyne wrote:
->> Sending via plain text email -- apologies if you receive this twice.
->>=20
->> If this isn't the process for reporting a regression in a LTS kernel =
-per
->> =
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html,
->> I'm happy to follow another process.
->>=20
->> Kernel 6.1.149 introduced a regression, at least on our ARM Cortex
->> A57-based platforms, via commit =
-8f4dc4e54eed4bebb18390305eb1f721c00457e1
->> in arch/arm64/kernel/fpsimd.c where booting KVM VMs eventually leads =
-to a
->> spinlock recursion BUG and crash of the box.
->>=20
->> Reverting that commit via the below reverts to the old (working) =
-behavior:
->>=20
->> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
->> index 837d1937300a57..bc42163a7fd1f0 100644
->> --- a/arch/arm64/kernel/fpsimd.c
->> +++ b/arch/arm64/kernel/fpsimd.c
->> @@ -1851,10 +1851,10 @@ void fpsimd_save_and_flush_cpu_state(void)
->>  if (!system_supports_fpsimd())
->>  return;
->>  WARN_ON(preemptible());
->> - get_cpu_fpsimd_context();
->> + __get_cpu_fpsimd_context();
->>  fpsimd_save();
->>  fpsimd_flush_cpu_state();
->> - put_cpu_fpsimd_context();
->> + __put_cpu_fpsimd_context();
->> }
->>  #ifdef CONFIG_KERNEL_MODE_NEON
->=20
-> Hmm, the problem with doing that is it will reintroduce the bug that
-> 8f4dc4e54eed ("KVM: arm64: Fix kernel BUG() due to bad backport of
-> FPSIMD/SVE/SME fix") was trying to fix (see the backtrace in the =
-commit
-> message). So the old behaviour is still broken, just in a slightly
-> different way.
->=20
->> It's not entirely clear to me if this is specific to our firmware,
->> specific to ARM Cortex A57, or more systemic as we lack sufficiently
->> differentiated hardware to know.  I've tested on the latest 6.1 =
-kernel in
->> addition to the one in the log below and have also tested a number of
->> firmware versions available for these boxes.
->>=20
->> Steps to reproduce:
->>=20
->> Boot VM in qemu-system-aarch64 with "-accel kvm" and "-cpu host" =
-flags set -- no other arguments seem to matter
->> Generate CPU load in VM
->>=20
->> Kernel log:
->>=20
->> [sjc1] root@si-compute-kvm-e0fff70016b4:/# [  805.905413] BUG: =
-spinlock recursion on CPU#7, CPU 3/KVM/57616
->> [  805.905452]  lock: 0xffff3045ef850240, .magic: dead4ead, .owner: =
-CPU 3/KVM/57616, .owner_cpu: 7
->> [  805.905477] CPU: 7 PID: 57616 Comm: CPU 3/KVM Tainted: G           =
-O       6.1.152 #1
->> [  805.905495] Hardware name: SoftIron SoftIron Platform =
-Mainboard/SoftIron Platform Mainboard, BIOS 1.31 May 11 2023
->> [  805.905516] Call trace:
->> [  805.905524]  dump_backtrace+0xe4/0x110
->> [  805.905538]  show_stack+0x20/0x30
->> [  805.905548]  dump_stack_lvl+0x6c/0x88
->> [  805.905561]  dump_stack+0x18/0x34
->> [  805.905571]  spin_dump+0x98/0xac
->> [  805.905583]  do_raw_spin_lock+0x70/0x128
->> [  805.905596]  _raw_spin_lock+0x18/0x28
->> [  805.905607]  raw_spin_rq_lock_nested+0x18/0x28
->> [  805.905620]  update_blocked_averages+0x70/0x550
->> [  805.905634]  run_rebalance_domains+0x50/0x70
->> [  805.905645]  handle_softirqs+0x198/0x328
->> [  805.905659]  __do_softirq+0x1c/0x28
->> [  805.905669]  ____do_softirq+0x18/0x28
->> [  805.905680]  call_on_irq_stack+0x30/0x48
->> [  805.905691]  do_softirq_own_stack+0x24/0x30
->> [  805.905703]  do_softirq+0x74/0x90
->> [  805.905714]  __local_bh_enable_ip+0x64/0x80
->=20
-> Argh, this is because we can't simply mask/unmask softirqs and so when
-> they get re-enabled we process anything pending. I _think_ irqs are
-> disabled at this point, so perhaps we should only bother with
-> disabling/enabling softirqs if hardirqs are enabled, a bit like the =
-hack
-> Ard had in:
->=20
-> =
-https://lore.kernel.org/all/20250924152651.3328941-13-ardb+git@google.com/=
-
->=20
-> Hacky diff at the end.
->=20
->> [  805.905727]  fpsimd_save_and_flush_cpu_state+0x5c/0x68
->> [  805.905740]  kvm_arch_vcpu_put_fp+0x4c/0x88
->> [  805.905752]  kvm_arch_vcpu_put+0x28/0x88
->> [  805.905764]  kvm_sched_out+0x38/0x58
->=20
-> (I think we run context_switch() =3D> prepare_task_switch() here, so =
-irqs
-> are disabled)
->=20
-> Will
->=20
-> --->8
->=20
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index fc51cdd5aaa7..a79df0804d67 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -184,7 +184,8 @@ static void __get_cpu_fpsimd_context(void)
->  */
-> static void get_cpu_fpsimd_context(void)
-> {
-> -       local_bh_disable();
-> +       if (!irqs_disabled())
-> +               local_bh_disable();
->        __get_cpu_fpsimd_context();
-> }
->=20
-> @@ -205,7 +206,8 @@ static void __put_cpu_fpsimd_context(void)
-> static void put_cpu_fpsimd_context(void)
-> {
->        __put_cpu_fpsimd_context();
-> -       local_bh_enable();
-> +       if (!irqs_disabled())
-> +               local_bh_enable();
-> }
->=20
-> static bool have_cpu_fpsimd_context(void)
-
+Made with love by the KernelCI team - https://kernelci.org
