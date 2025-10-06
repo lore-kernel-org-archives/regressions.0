@@ -1,589 +1,161 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513C027A45C
-	for <regressions@lists.linux.dev>; Mon,  6 Oct 2025 12:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759752620; cv=none; b=aCg0/yLBHhDGorNZ724IGG1MlibwM0+/m+oNgtXtBXUi2EhgnGDBbyM7zxXPN9N4nkcWv6Wxc7brm69gT6Fwjx1N2zdg9BH8YxyK0sDkiMgCSV2Zu5AYS8AusgFLQHGfgsPfvr5GypbbNm0ZPQPUnpFmdBLLS0GMKjzVbLasfGA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759752620; c=relaxed/simple;
-	bh=OMcjzqyHYFvX5Cr2mXN6248km4EoR9oE5IXrLXSuDck=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SzIKe6lGz+LjfU+BjibDxJY33+ae0mUwx3pY9OVpA36u+ERTJ7Lj0GZ5XOdwcTA9WEb6/U83SVLBWE4y73q/t+fvHdtd8fQaHyNu+4rnCpaCDgbrwu6/N6s08blKbRyI3VdhbMz+9PiuvO3EimscxOXdKZnGBarakS9Ax/kGWN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=R94u915o; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEFA6ADD;
+	Mon,  6 Oct 2025 12:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759753342; cv=pass; b=hOSuplILs/8M2Shqd7BwZQqUbKkIEy66lCg4za5UilATHqlB9Tu6GhhQW/SBLIS7hZTxctTRZlKQxGF/31Elh5HqsIiAWPdOOrRwprc6YcWceSwzJ4Xup2Y2uCK8So5UqUHUoz/ifHWzK25xCwhYqd+WnhflX6cD01xSsSRrsyw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759753342; c=relaxed/simple;
+	bh=Cfb7FRjFZmCB8vUEgOuDDxx/haSXnMo8EqJA8oc9EJg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=U3KkPBbAkbin4KMA0qwYwpiWI9OJBGCSA+pwTkixWk96OmtniHpO6fRg4i29uksP3l7iVWyP81z25xPL5M5E0Y7VY1wcpSB6bU+Fjn1wrCDdmwmS4dOn/JMumTxn7x6y+jqCdBI58f87S2hYbjQZLaovieK7y+giMMDT67WFfm4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=GyldJFDq; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="R94u915o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1759752592; x=1760357392; i=spasswolf@web.de;
-	bh=QL8VZtyw0/u7Oq0yLpGopt+0WuV9B2HS01+h5w8UVjM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=R94u915ovAfRv/qUBdXCjbbRrFNYSlNt9EzlYsj+lRuNQE5sjOmE5XDBZg7zTryg
-	 GhWJ0Bqr/XSXYxOrXSPhJd1miES3jKFRrvk5Hz/rSg8da07h6iSBNq0okrSIvygvi
-	 GoF0obiLijyZoXi+a3CK78iQkL2bOTr2OE5+gCHoBONZ65e332TwUsowNLJWTSFlv
-	 b+2XZWKRR8Aad/TPklwH6SF+kMjRPpH/xJYZMTfAnfYde0ugmtDpEeNbh3BFb1uG6
-	 5VSzOIktikcDwdUYIZw3PojjfbBzOVQVHfC4ZvAX836RDLLFvbHdSdRLXe7Oyg68K
-	 R5EAyuRwv1b8dYNG4w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
- (mrweb006 [213.165.67.108]) with ESMTPSA (Nemesis) id
- 1MLijs-1uoDBX43ge-00J1t8; Mon, 06 Oct 2025 14:09:52 +0200
-From: Bert Karwatzki <spasswolf@web.de>
-To: linux-kernel@vger.kernel.org
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	linux-next@vger.kernel.org,
-	linux-stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [REGRESSION 03/04] Crash during resume of pcie bridge
-Date: Mon,  6 Oct 2025 14:09:42 +0200
-Message-ID: <20251006120944.7880-4-spasswolf@web.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251006120944.7880-1-spasswolf@web.de>
-References: <20251006120944.7880-1-spasswolf@web.de>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="GyldJFDq"
+ARC-Seal: i=1; a=rsa-sha256; t=1759753338; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZqGPp9bcqisQgCoM398DqFAmvMikl4FemjQkWz//frBhJGnEwzrVb9XZuRyAok7lyW8tehn6yD83l3g1uGUwaD3BIdmfO4kSVSnLX9cYvdnjHHnGFR+NjbXZRL0Tr6RlisXRrx8ek8CM+9/aIi86NY3wIAoYRtT0PC97veISO/c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1759753338; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0PGjF5NxhYIIid/zoNg6qd3BG9reBVQfm6q4DIfg9L8=; 
+	b=OVtpkDTW3QzpMU7TYIsbq5zwIFRS58LOnp4aoY0h197DNs4TDtnkLaYzeubKisf8ZDsk8y559/S53DgZzi+FL1hsATPQku6fITaRX3aZP7bX3Jr+3VEk57595llUb5k12koDNjF+7N6u5WokTda/r4TRiXvlj5DHYTI1BDP2Egk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=gus@collabora.com;
+	dmarc=pass header.from=<gus@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759753338;
+	s=zohomail; d=collabora.com; i=gus@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=0PGjF5NxhYIIid/zoNg6qd3BG9reBVQfm6q4DIfg9L8=;
+	b=GyldJFDqdNqUSVybUZDnOfv1d1rMtPVALYKdHucgTCwruOodqFi+yUrFPA2FSTyH
+	xzqwBf/qhUX9DoPDaLQkrexTqnb+jGo+CyWFdpu/VUI5J+2TatuH+VuYBjiLgEdJ6Ap
+	AxUDvDfev9iQ10+mKN0svtMaWgkerH1egC8NZE1Q=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1759753336091770.3359606843917; Mon, 6 Oct 2025 05:22:16 -0700 (PDT)
+Date: Mon, 06 Oct 2025 09:22:16 -0300
+From: Gustavo Padovan <gus@collabora.com>
+To: "Randy Dunlap" <rdunlap@infradead.org>
+Cc: "Denys Fedoryshchenko" <denys.f@collabora.com>,
+	"kernelci" <kernelci@lists.linux.dev>,
+	"kernelci-results" <kernelci-results@groups.io>,
+	"regressions" <regressions@lists.linux.dev>,
+	"linux-next" <linux-next@vger.kernel.org>
+Message-ID: <199b978f4fb.49020b682270448.1218727940872425598@collabora.com>
+In-Reply-To: <bccbcccb-a3db-4b34-962c-14e79cc8bece@infradead.org>
+References: <175890594349.36.5014274970333071394@1e895cdadf47>
+ <bb21b532-b68f-4c02-a9bd-7e8aa3c07258@infradead.org>
+ <b10bcf92dfd2fc13ed90b4da6e9ab8a3b61ce724.camel@collabora.com>
+ <19995464e11.7f75fad1483203.4516273948739211660@collabora.com> <bccbcccb-a3db-4b34-962c-14e79cc8bece@infradead.org>
+Subject: Re: [REGRESSION] next/master: (build) undefined reference to
+ `pm_hibernation_mode_is_suspend' in vmlinux...
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m8dS2t/6d4noACAWJlbqVgv+fXwTk6g6gZPWiuU+qDT94px7sO/
- szlPXfCeeGBB3DrT4pAnzh/+mUpzIzOzmFchwMkXnvsJq79PjN/G/j2ZdKBYk97ElODnfYz
- JsS2KpVok4iOr4dXRPdzm/dT4y3EWsx/01oCqqihYWmmzkZ5Eh0aAHU0b8wTCCKjKbOHvN+
- u63N+GwdqI283JFFvBrOQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1UyTuLUOY/A=;P2N4qUvBtWyFugn5wXDck97uqyu
- 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
- tRNMg2DWu0XJfzkZiqiPaACAGOurPKEFBrerM9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-In order to get a working crash I removed some of the monitoring again:
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index bc365c0dbe2f..a984ccd4a2a0 100644
-=2D-- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -514,60 +514,46 @@ static void acpi_bus_notify(acpi_handle handle, u32 =
-type, void *data)
-=20
- 	switch (type) {
- 	case ACPI_NOTIFY_BUS_CHECK:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_CHECK\n", __func__, __LINE__);
- 		acpi_handle_debug(handle, "ACPI_NOTIFY_BUS_CHECK event\n");
- 		break;
-=20
- 	case ACPI_NOTIFY_DEVICE_CHECK:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK\n", __func__, __LINE_=
-_);
- 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK event\n");
- 		break;
-=20
- 	case ACPI_NOTIFY_DEVICE_WAKE:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_WAKE\n", __func__, __LINE__=
-);
- 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_WAKE event\n");
- 		return;
-=20
- 	case ACPI_NOTIFY_EJECT_REQUEST:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_EJECT_REQUEST\n", __func__, __LINE=
-__);
- 		acpi_handle_debug(handle, "ACPI_NOTIFY_EJECT_REQUEST event\n");
- 		break;
-=20
- 	case ACPI_NOTIFY_DEVICE_CHECK_LIGHT:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK_LIGHT\n", __func__, _=
-_LINE__);
- 		acpi_handle_debug(handle, "ACPI_NOTIFY_DEVICE_CHECK_LIGHT event\n");
- 		/* TBD: Exactly what does 'light' mean? */
- 		return;
-=20
- 	case ACPI_NOTIFY_FREQUENCY_MISMATCH:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_FREQUENCY_MISMATCH\n", __func__, _=
-_LINE__);
- 		acpi_handle_err(handle, "Device cannot be configured due "
- 				"to a frequency mismatch\n");
- 		return;
-=20
- 	case ACPI_NOTIFY_BUS_MODE_MISMATCH:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_MODE_MISMATCH\n", __func__, __=
-LINE__);
- 		acpi_handle_err(handle, "Device cannot be configured due "
- 				"to a bus mode mismatch\n");
- 		return;
-=20
- 	case ACPI_NOTIFY_POWER_FAULT:
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_POWER_FAULT\n", __func__, __LINE__=
-);
- 		acpi_handle_err(handle, "Device has suffered a power fault\n");
- 		return;
-=20
- 	default:
--		printk(KERN_INFO "%s %d: acpi unknown event type\n", __func__, __LINE__=
-);
- 		acpi_handle_debug(handle, "Unknown event type 0x%x\n", type);
- 		return;
- 	}
-=20
- 	adev =3D acpi_get_acpi_dev(handle);
--	if (adev)
--		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
--	else
--		printk(KERN_INFO "%s %d: adev =3D NULL\n", __func__, __LINE__);
--	=09
-=20
- 	if (adev && ACPI_SUCCESS(acpi_hotplug_schedule(adev, type)))
- 		return;
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index 9a7dc432b50d..4e0583274b8f 100644
-=2D-- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -539,7 +539,6 @@ static void acpi_pm_notify_handler(acpi_handle handle,=
- u32 val, void *not_used)
- 	if (!adev)
- 		return;
-=20
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 	mutex_lock(&acpi_pm_notifier_lock);
-=20
- 	if (adev->wakeup.flags.notifier_present) {
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 0f6a16856119..5ff343096ece 100644
-=2D-- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1167,7 +1167,6 @@ void acpi_os_wait_events_complete(void)
- 	 * Make sure the GPE handler or the fixed event handler is not used
- 	 * on another CPU after removal.
- 	 */
--	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
- 	if (acpi_sci_irq_valid())
- 		synchronize_hardirq(acpi_sci_irq);
- 	flush_workqueue(kacpid_wq);
-@@ -1185,7 +1184,6 @@ static void acpi_hotplug_work_fn(struct work_struct =
-*work)
- {
- 	struct acpi_hp_work *hpw =3D container_of(work, struct acpi_hp_work, wor=
-k);
-=20
--	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
- 	acpi_os_wait_events_complete();
- 	acpi_device_hotplug(hpw->adev, hpw->src);
- 	kfree(hpw);
-@@ -1194,7 +1192,6 @@ static void acpi_hotplug_work_fn(struct work_struct =
-*work)
- acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src)
- {
- 	struct acpi_hp_work *hpw;
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
-=20
- 	acpi_handle_debug(adev->handle,
- 			  "Scheduling hotplug event %u for deferred handling\n",
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index d53be7e0388d..065abe56f440 100644
-=2D-- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -251,7 +251,6 @@ static int acpi_scan_check_and_detach(struct acpi_devi=
-ce *adev, void *p)
- {
- 	struct acpi_scan_handler *handler =3D adev->handler;
- 	uintptr_t flags =3D (uintptr_t)p;
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
-=20
- 	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
-=20
-@@ -315,7 +314,6 @@ static void acpi_scan_check_subtree(struct acpi_device=
- *adev)
- {
- 	uintptr_t flags =3D ACPI_SCAN_CHECK_FLAG_STATUS;
-=20
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 	acpi_scan_check_and_detach(adev, (void *)flags);
- }
-=20
-@@ -371,7 +369,6 @@ static int acpi_scan_rescan_bus(struct acpi_device *ad=
-ev)
- {
- 	struct acpi_scan_handler *handler =3D adev->handler;
- 	int ret;
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
-=20
- 	if (handler && handler->hotplug.scan_dependent)
- 		ret =3D handler->hotplug.scan_dependent(adev);
-@@ -388,7 +385,6 @@ static int acpi_scan_device_check(struct acpi_device *=
-adev)
- {
- 	struct acpi_device *parent;
-=20
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 	acpi_scan_check_subtree(adev);
-=20
- 	if (!acpi_device_is_present(adev))
-@@ -416,24 +412,19 @@ static int acpi_scan_device_check(struct acpi_device=
- *adev)
- static int acpi_scan_bus_check(struct acpi_device *adev)
- {
- 	acpi_scan_check_subtree(adev);
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
-=20
- 	return acpi_scan_rescan_bus(adev);
- }
-=20
- static int acpi_generic_hotplug_event(struct acpi_device *adev, u32 type)
- {
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 	switch (type) {
- 	case ACPI_NOTIFY_BUS_CHECK:
--		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 		return acpi_scan_bus_check(adev);
- 	case ACPI_NOTIFY_DEVICE_CHECK:
--		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 		return acpi_scan_device_check(adev);
- 	case ACPI_NOTIFY_EJECT_REQUEST:
- 	case ACPI_OST_EC_OSPM_EJECT:
--		dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 		if (adev->handler && !adev->handler->hotplug.enabled) {
- 			dev_info(&adev->dev, "Eject disabled\n");
- 			return -EPERM;
-@@ -450,7 +441,6 @@ void acpi_device_hotplug(struct acpi_device *adev, u32=
- src)
- 	u32 ost_code =3D ACPI_OST_SC_NON_SPECIFIC_FAILURE;
- 	int error =3D -ENODEV;
-=20
--	dev_info(&adev->dev, "%s %d\n", __func__, __LINE__);
- 	lock_device_hotplug();
- 	mutex_lock(&acpi_scan_lock);
-=20
-@@ -476,10 +466,9 @@ void acpi_device_hotplug(struct acpi_device *adev, u3=
-2 src)
- 		 * There may be additional notify handlers for device objects
- 		 * without the .event() callback, so ignore them here.
- 		 */
--		if (notify) {
--			dev_info(&adev->dev, "%s %d: calling notify =3D %px\n", __func__, __LI=
-NE__, (void *) notify);
-+		if (notify)
- 			error =3D notify(adev, src);
--		} else
-+		else
- 			goto out;
- 	}
- 	switch (error) {
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 895898c3cd56..27cce7f1b1d3 100644
-=2D-- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -142,6 +142,8 @@ EXPORT_SYMBOL_GPL(pm_runtime_suspended_time);
-  */
- static void pm_runtime_deactivate_timer(struct device *dev)
- {
-+	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-+		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	if (dev->power.timer_expires > 0) {
- 		hrtimer_try_to_cancel(&dev->power.suspend_timer);
- 		dev->power.timer_expires =3D 0;
-@@ -787,8 +789,6 @@ static int rpm_resume(struct device *dev, int rpmflags=
-)
- 	struct device *parent =3D NULL;
- 	int retval =3D 0;
-=20
--	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	trace_rpm_resume(dev, rpmflags);
-=20
-  repeat:
-@@ -815,7 +815,7 @@ static int rpm_resume(struct device *dev, int rpmflags=
-)
- 	 * future.
- 	 */
- 	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
-+		dev_info(dev, "%s %d dev =3D %px\n", __func__, __LINE__, dev);
- 	dev->power.request =3D RPM_REQ_NONE;
- 	if (!dev->power.timer_autosuspends)
- 		pm_runtime_deactivate_timer(dev);
-@@ -1231,22 +1231,16 @@ int __pm_runtime_resume(struct device *dev, int rp=
-mflags)
- {
- 	unsigned long flags;
- 	int retval;
--	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
-=20
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
- 			dev->power.runtime_status !=3D RPM_ACTIVE);
-=20
--	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	if (rpmflags & RPM_GET_PUT)
- 		atomic_inc(&dev->power.usage_count);
-=20
--	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
- 	spin_lock_irqsave(&dev->power.lock, flags);
- 	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s %d\n", __func__, __LINE__);
-+		dev_info(dev, "%s %d dev =3D %px\n", __func__, __LINE__, dev);
- 	retval =3D rpm_resume(dev, rpmflags);
- 	spin_unlock_irqrestore(&dev->power.lock, flags);
-=20
-diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpi=
-php_glue.c
-index e56ab308da20..e21255b97251 100644
-=2D-- a/drivers/pci/hotplug/acpiphp_glue.c
-+++ b/drivers/pci/hotplug/acpiphp_glue.c
-@@ -484,7 +484,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
-l bridge)
- 	struct pci_dev *dev;
- 	struct pci_bus *bus =3D slot->bus;
- 	struct acpiphp_func *func;
--	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
-=20
- 	if (bridge && bus->self && hotplug_is_native(bus->self)) {
- 		/*
-@@ -495,14 +494,11 @@ static void enable_slot(struct acpiphp_slot *slot, b=
-ool bridge)
- 		 * as a Thunderbolt host controller.
- 		 */
- 		for_each_pci_bridge(dev, bus) {
--			dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
- 			if (PCI_SLOT(dev->devfn) =3D=3D slot->device) {
--				dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
- 				acpiphp_native_scan_bridge(dev);
- 			}
- 		}
- 	} else {
--		printk(KERN_INFO "%s %d\n", __func__, __LINE__);
- 		LIST_HEAD(add_list);
- 		int max, pass;
-=20
-@@ -510,15 +506,12 @@ static void enable_slot(struct acpiphp_slot *slot, b=
-ool bridge)
- 		max =3D acpiphp_max_busnr(bus);
- 		for (pass =3D 0; pass < 2; pass++) {
- 			for_each_pci_bridge(dev, bus) {
--				dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
- 				if (PCI_SLOT(dev->devfn) !=3D slot->device) {
--					printk(KERN_INFO "%s %d\n", __func__, __LINE__);
- 					continue;
- 				}
-=20
- 				max =3D pci_scan_bridge(bus, dev, max, pass);
- 				if (pass && dev->subordinate) {
--					dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
- 					check_hotplug_bridge(slot, dev);
- 					pcibios_resource_survey_bus(dev->subordinate);
- 					__pci_bus_size_bridges(dev->subordinate,
-@@ -535,7 +528,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
-l bridge)
-=20
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		/* Assume that newly added devices are powered on already. */
--		dev_info(&dev->dev, "%s %d\n", __func__, __LINE__);
- 		if (!pci_dev_is_added(dev))
- 			dev->current_state =3D PCI_D0;
- 	}
-@@ -554,7 +546,6 @@ static void enable_slot(struct acpiphp_slot *slot, boo=
-l bridge)
- 		}
- 		pci_dev_put(dev);
- 	}
--	printk(KERN_INFO "%s %d\n", __func__, __LINE__);
- }
-=20
- /**
-@@ -823,7 +814,6 @@ static void hotplug_event(u32 type, struct acpiphp_con=
-text *context)
- 	switch (type) {
- 	case ACPI_NOTIFY_BUS_CHECK:
- 		/* bus re-enumerate */
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_BUS_CHECK\n", __func__, __LINE__);
- 		acpi_handle_debug(handle, "Bus check in %s()\n", __func__);
- 		if (bridge)
- 			acpiphp_check_bridge(bridge);
-@@ -834,7 +824,6 @@ static void hotplug_event(u32 type, struct acpiphp_con=
-text *context)
-=20
- 	case ACPI_NOTIFY_DEVICE_CHECK:
- 		/* device check */
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_DEVICE_CHECK\n", __func__, __LINE_=
-_);
- 		acpi_handle_debug(handle, "Device check in %s()\n", __func__);
- 		if (bridge) {
- 			acpiphp_check_bridge(bridge);
-@@ -850,23 +839,19 @@ static void hotplug_event(u32 type, struct acpiphp_c=
-ontext *context)
-=20
- 	case ACPI_NOTIFY_EJECT_REQUEST:
- 		/* request device eject */
--		printk(KERN_INFO "%s %d: ACPI_NOTIFY_EJECT_REQUEST\n", __func__, __LINE=
-__);
- 		acpi_handle_debug(handle, "Eject request in %s()\n", __func__);
- 		acpiphp_disable_and_eject_slot(slot);
- 		break;
- 	}
-=20
- 	pci_unlock_rescan_remove();
--	printk(KERN_INFO "%s %d:\n", __func__, __LINE__);
- 	if (bridge)
- 		put_bridge(bridge);
--	printk(KERN_INFO "%s %d:\n", __func__, __LINE__);
- }
-=20
- static int acpiphp_hotplug_notify(struct acpi_device *adev, u32 type)
- {
- 	struct acpiphp_context *context;
--	dev_info(&adev->dev, "%s %d: %s =3D %px\n", __func__, __LINE__, __func__=
-, (void *) acpiphp_hotplug_notify);
-=20
- 	context =3D acpiphp_grab_context(adev);
- 	if (!context)
-diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index 0888b0d5ec73..d88d6b6ccf5b 100644
-=2D-- a/include/linux/pm_runtime.h
-+++ b/include/linux/pm_runtime.h
-@@ -508,8 +508,6 @@ static inline int pm_runtime_get(struct device *dev)
-  */
- static inline int pm_runtime_get_sync(struct device *dev)
- {
--	if (!strcmp(dev_name(dev), "0000:00:01.1"))
--		dev_info(dev, "%s\n", __func__);
- 	return __pm_runtime_resume(dev, RPM_GET_PUT);
- }
-=20
-This is the message from 6.17.0-rc6-next-20250917-gpudebug-00028-gf99cf81b=
-1da7 crashing,
-captured via netconsole:
 
-2025-10-06T04:52:35.932429+02:00 [T248]evmisc-0132 ev_queue_notify_reques:=
- Dispatching Notify on [GPP0] (Device) Value 0x00 (Bus Check) Node 0000000=
-069c9623b
-2025-10-06T04:52:35.932429+02:00 [T177395]pcieport 0000:00:01.1: acpiphp_c=
-heck_bridge 708#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [T177395]pcieport 0000:00:01.1: __pm_runt=
-ime_resume 1243 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D=
-+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
- 818 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:0=
-0:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: pm_runtime=
-_deactivate_timer 146#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
- 930#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
- 959#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
- 818 dev =3D ffff97c001c930c8#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:0=
-0:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: pm_runtime=
-_deactivate_timer 146#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
-2025-10-06T04:52:35.932429+02:00 [177395]pcieport 0000:00:01.1: rpm_resume=
- 965#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+---- On Mon, 29 Sep 2025 12:34:02 -0300 Randy Dunlap <rdunlap@infradead.org> wrote ---
 
-So the crash seems to happen in this part of rpm_resume():
+ > Hi, 
+ >  
+ > On 9/29/25 4:40 AM, Gustavo Padovan wrote: 
+ > > Hi Randy, 
+ > > 
+ > > 
+ > > ---- On Mon, 29 Sep 2025 01:15:24 -0300 Denys Fedoryshchenko <denys.f@collabora.com> wrote --- 
+ > > 
+ > >  > Hi Randy, 
+ > >  > 
+ > >  > On Sun, 2025-09-28 at 18:13 -0700, Randy Dunlap wrote: 
+ > >  > > Hi, 
+ > >  > > 
+ > >  > > On 9/26/25 9:59 AM, KernelCI bot wrote: 
+ > >  > > > 
+ > >  > > > 
+ > >  > > > 
+ > >  > > > 
+ > >  > > > Hello, 
+ > >  > > > 
+ > >  > > > New build issue found on next/master: 
+ > >  > > > 
+ > >  > > > --- 
+ > >  > > >  undefined reference to `pm_hibernation_mode_is_suspend' in 
+ > >  > > > vmlinux.unstripped (drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c) 
+ > >  > > > [logspec:kbuild,kbuild.compiler.linker_error] 
+ > >  > > > --- 
+ > >  > > > 
+ > >  > > > - dashboard: 
+ > >  > > > https://d.kernelci.org/i/maestro:74f8fe195e9e78290f1dae54754bf5b8d4b2a893 
+ > >  > > > - giturl: 
+ > >  > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
+ > >  > > > - commit HEAD:  262858079afde6d367ce3db183c74d8a43a0e83f 
+ > >  > > > - tags: next-20250926 
+ > >  > > > 
+ > >  > > > 
+ > >  > > > Log excerpt: 
+ > >  > > > ===================================================== 
+ > >  > > >   LD      .tmp_vmlinux1 
+ > >  > > > ld: drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o: in function 
+ > >  > > > `amdgpu_pmops_thaw': 
+ > >  > > > /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:2677: 
+ > >  > > > undefined reference to `pm_hibernation_mode_is_suspend' 
+ > >  > > > 
+ > >  > > > ===================================================== 
+ > >  > > > 
+ > >  > > > 
+ > >  > > > # Builds where the incident occurred: 
+ > >  > > > 
+ > >  > > > ## cros://chromeos-6.6/x86_64/chromeos-amd- 
+ > >  > > > stoneyridge.flavour.config+lab-setup+x86- 
+ > >  > > > board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on 
+ > >  > > > (x86_64): 
+ > >  > > > - compiler: gcc-12 
+ > >  > > > - dashboard: 
+ > >  > > > https://d.kernelci.org/build/maestro:68d6bd56aabea828fddae00b 
+ > >  > > > 
+ > >  > > > ## cros://chromeos-6.6/x86_64/chromeos-intel- 
+ > >  > > > pineview.flavour.config+lab-setup+x86- 
+ > >  > > > board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on 
+ > >  > > > (x86_64): 
+ > >  > > > - compiler: gcc-12 
+ > >  > > > - dashboard: 
+ > >  > > > https://d.kernelci.org/build/maestro:68d6bd59aabea828fddae00e 
+ > >  > > > 
+ > >  > > 
+ > >  > > Is there a URL for the .config file that causes the 
+ > >  > > build error? 
+ > >  > Yes, 
+ > >  > https://files.kernelci.org/kbuild-gcc-12-x86-chromeos-intel-68d6bd59aabea828fddae00e/.config 
+ > > 
+ > > Out of curiosity,  have you tried to find the config in our Dashboard? We added basic information in 
+ > > the email report and then the Dashboard link take you to our comprehensive report. 
+ > > 
+ >  
+ > I did look at the Dashboard first but it seems that I overlooked the config file info. 
+ >  
+ > > 
+ > > Any feedback here? 
+ > I would rather not use the Dashboard until I need to dig deeperinto the problem. IOW, I prefer to have the config file URL 
+ > in the email report. 
 
-[...]
- skip_parent:
+Thanks for the feedback. We will work on it this week.
 
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__); // this is the last report=
-ed line
-	if (dev->power.no_callbacks)
-		goto no_callback;	/* Assume success. */
+I created https://github.com/kernelci/dashboard/issues/1551 for following the progress.
 
-	__update_runtime_status(dev, RPM_RESUMING);
 
-	callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
+Best,
 
-	dev_pm_disable_wake_irq_check(dev, false);
-	retval =3D rpm_callback(callback, dev);
-	if (retval) {
-		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-			dev_info(dev, "%s %d\n", __func__, __LINE__);
-		__update_runtime_status(dev, RPM_SUSPENDED);
-		pm_runtime_cancel_pending(dev);
-		dev_pm_enable_wake_irq_check(dev, false);
-	} else {
- no_callback:
-		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-			dev_info(dev, "%s %d\n", __func__, __LINE__);
-[...]
+- Gus
 
-Bert Karwatzki
