@@ -1,216 +1,320 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67030243376
-	for <regressions@lists.linux.dev>; Tue,  7 Oct 2025 06:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE38257846
+	for <regressions@lists.linux.dev>; Tue,  7 Oct 2025 08:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759819884; cv=none; b=F1Oc98F5qrtZVXXQWj9aqcCALlJP+vkKpYmwKVry7K9JRoLXPpyaEGpXi/0OAN1tvOh9NgRNvtXta6ZWGnU+Jym4/Rzh583aBr8uSzODsv3HQuttc3crNa0jJVRGY9C61rwey2CYqgF9o+r7VDoaBdRP5P7wW8hLp7bmzE7b7dc=
+	t=1759827094; cv=none; b=CvNrJXXmf1wjF7l0nR+j73epU565uMwUYrbSmvmgtgT3XUrVnFgc1FA/C+fMCbsh1l+sHA+rUMjjFUZDdJWlhG6RloScIcDpJO2KEEeKDvs6owk1KBfVrqMINmFRkVI+Yoaxausn7cd/gndv8Xb2GvBqN5iD42GKcSb2qekT2mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759819884; c=relaxed/simple;
-	bh=GtbhvKiArLsYQIx3MfRsDS+EuExg22K9a2ED8U/fIoE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VKC0O1FELLMRStAnyyt51AZ2kfvO//NUQjUJc6MqDUguVRwQh5fSL2heSY4zcK07/XOHEFzN67EvDBjgQUjokf5JiHTUzdduggWM4pPOExMdTXw+KUQRMBYuF+hJrfPXuUG4E2URpK4pdWpcs9aFUWxggzk+Tmz8M7podTFnc8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=O8fkMZJ9; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1759827094; c=relaxed/simple;
+	bh=WdQKlHrMRDYAtjdTeGd7SclqIrQ77gUxSh3tafOSeOo=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=ZVxuwz0WCmH4i3r9HGJFUzN49j4Or4tuKW2ptCVcJy8mBqL98bO0HewSmJVyAh5J+WkwX4NDR0zbPvdATv7WeqyRXjwEeZWNdvf/sVRt0r6DBZlQk6Nl8RdWhd4sfhpR01CIXM2qcPoyKED3u6jnHryZQDpyhaxohfmqjsjMQEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NSa1fb+m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5oCTVcZK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NSa1fb+m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5oCTVcZK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="O8fkMZJ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1759819832; x=1760424632; i=spasswolf@web.de;
-	bh=hMv2KA500eT5A2cLBEJygRRyPv5VC2X953xjqw/qJNg=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=O8fkMZJ9iKSTLRbKEjVrQJYeyqxGIZG/OkmsO4QTCNmzIczsdh8pYQ5jsaZd90v9
-	 O+73Yu5QME1Bft9jEUqifhgN6QMdZ8FbJ01K3rZc23YcKgDzAyTApnYs7G/Arifmc
-	 txmD09y/UoL4GX/wCY/8ZfOa/j6aofbcCBcFgYR1T1krj/lprCkeONiG0nuP8+LT+
-	 1e2WgdpZaCQHaREo+pLQLan+UePvUt+aNmhVXE64Df5JzgkHnM0EU+vArWDAFZsdq
-	 3qXRU6XjuluvZbEInTGY0J1/yGZ7j2qQOdZS/WoGcYU1kaE+xUVwA1lBdivVeQLX+
-	 D+UpsLS4dk/WXzRHUw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MXGKA-1ulgqU07l0-00VCMN; Tue, 07
- Oct 2025 08:50:32 +0200
-Message-ID: <93d21bb6887310d331fa67a3766e47af9669dfc3.camel@web.de>
-Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
-From: Bert Karwatzki <spasswolf@web.de>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
-	linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, Mario Limonciello
-	 <superm1@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, 
-	spasswolf@web.de
-Date: Tue, 07 Oct 2025 08:50:30 +0200
-In-Reply-To: <e60d2cf59666b6f670996bac80cb948acb1d7b5c.camel@web.de>
-References: <20251006120944.7880-1-spasswolf@web.de>
-		 <232324a9-e82d-40b3-b88b-538947411a24@amd.com>
-	 <e60d2cf59666b6f670996bac80cb948acb1d7b5c.camel@web.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NSa1fb+m";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5oCTVcZK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NSa1fb+m";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5oCTVcZK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F7541F7B7;
+	Tue,  7 Oct 2025 08:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759827090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tbJTJpLwjBmXuAyfWKpVEI1MdnKtyIlz2dYDnFjI3gQ=;
+	b=NSa1fb+mroZbWuVXq6mZWIU5oS5c7U1Wk207zvfWPHTGbvMp8usgqkU/VVJ0xtKMJxCzVB
+	D+NJDP2EVPWiqarCiFlnxFBcjww1Q0ozeipCWjCzWMCZJQRePgUUxtbvH/LJJDsjRRe77H
+	8KnhlifmhERrFIOZirHK1rJ+XOwbzsg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759827090;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tbJTJpLwjBmXuAyfWKpVEI1MdnKtyIlz2dYDnFjI3gQ=;
+	b=5oCTVcZK4x7g2SpV47mf3wL9bi/YYKBhz1U36JYYo8xMXG2k2qFVZGDNa0icOqm0Pb3pX3
+	HECwi8r4Mu0aTXBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1759827090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tbJTJpLwjBmXuAyfWKpVEI1MdnKtyIlz2dYDnFjI3gQ=;
+	b=NSa1fb+mroZbWuVXq6mZWIU5oS5c7U1Wk207zvfWPHTGbvMp8usgqkU/VVJ0xtKMJxCzVB
+	D+NJDP2EVPWiqarCiFlnxFBcjww1Q0ozeipCWjCzWMCZJQRePgUUxtbvH/LJJDsjRRe77H
+	8KnhlifmhERrFIOZirHK1rJ+XOwbzsg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1759827090;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tbJTJpLwjBmXuAyfWKpVEI1MdnKtyIlz2dYDnFjI3gQ=;
+	b=5oCTVcZK4x7g2SpV47mf3wL9bi/YYKBhz1U36JYYo8xMXG2k2qFVZGDNa0icOqm0Pb3pX3
+	HECwi8r4Mu0aTXBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2258813693;
+	Tue,  7 Oct 2025 08:51:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HDT0BpLU5GjZQwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 07 Oct 2025 08:51:30 +0000
+Content-Type: multipart/mixed; boundary="------------BKHzetE687peU8NbqM0brEVV"
+Message-ID: <e0104f10-9230-41e5-acd1-4ca95c38220e@suse.de>
+Date: Tue, 7 Oct 2025 10:51:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:P2lTxUYjpSJLpmPegmqbkcyB6sbH+UfSUmWzVDV9JBVg0nVP1n/
- 4H6Fk4fTK58n9InB522qyqur+nTI1XA/dDROjtVjyqHKcqj8W+3D2Jyfm0mLVFiCZSUjI5A
- Dq8UH/Fz5BPV5irPojc8TuSv5pS3OWW2fNpyUx1MCzPUMsninR4iLgSGs++3WrCQ5iy8Ccr
- rU1NZuRNoGfd26MWYN/VQ==
+User-Agent: Mozilla Thunderbird
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+ <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+ <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
+ <ef6558a9-c44a-4c66-967c-187f260f73e1@suse.de>
+ <xeipdyk2i2lpkg4rrvz4cl2l3ch62sl4zoa73qvlms3ek3zkci@y7xqbgjulaet>
+ <cox6kpackepnunrlhpsssvgdmjd24477cc7mide52xptmmoxyr@ijjotb3xju3v>
+ <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
+ <5949fd73-3ca4-4bd9-8092-2d9923dcbfd3@suse.de>
+ <qjyncqymjja57h2wxxv3ebuqpip5qu7yjalccons5xmtzfw5h5@m3u4rvbqzcxt>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <qjyncqymjja57h2wxxv3ebuqpip5qu7yjalccons5xmtzfw5h5@m3u4rvbqzcxt>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.20 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo];
+	HAS_ATTACHMENT(0.00)[]
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Dpnenm5dL5I=;6Bd1JKSW2d9/a+Z1liuNly437rD
- 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
+X-Spam-Score: -3.20
 
-Am Montag, dem 06.10.2025 um 18:22 +0200 schrieb Bert Karwatzki:
->=20
-> >=20
-> Even versions that did crash can be stable for 24h of uptime so I think =
-this=C2=A0
-> will take too long.
-> I think I've already chased down the crash to this part of rpm_resume()
-> (I'm currently doing a testrun with more dev_info()s in this part):
->=20
->  skip_parent:
->=20
-> 	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-> 		dev_info(dev, "%s %d\n", __func__, __LINE__); // this is the last repo=
-rted line in netconsole
-> 	if (dev->power.no_callbacks)
-> 		goto no_callback;	/* Assume success. */
->=20
-> 	__update_runtime_status(dev, RPM_RESUMING);
->=20
-> 	callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
->=20
-> 	dev_pm_disable_wake_irq_check(dev, false);
-> 	retval =3D rpm_callback(callback, dev);
-> 	if (retval) {
-> 		__update_runtime_status(dev, RPM_SUSPENDED);
-> 		pm_runtime_cancel_pending(dev);
-> 		dev_pm_enable_wake_irq_check(dev, false);
-> 	} else {
->  no_callback:
->=20
->=20
-> Bert Karwatzki
+This is a multi-part message in MIME format.
+--------------BKHzetE687peU8NbqM0brEVV
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The testrun is already finished the crash occured after 10h and ~700 GPP0 =
-notifies,
-the part of rpm_resume() above was monitored like this:
+Hi
 
- skip_parent:
+Am 04.10.25 um 02:31 schrieb Nick Bowler:
+> On Wed, Oct 01, 2025 at 09:26:28AM +0200, Thomas Zimmermann wrote:
+>> Am 18.09.25 um 13:17 schrieb Thomas Zimmermann:
+>>> Am 18.09.25 um 04:04 schrieb Nick Bowler:
+>>>> On Wed, Sep 17, 2025 at 11:14:45AM -0400, Nick Bowler wrote:
+>>>>> On Fri, Aug 29, 2025 at 03:07:14PM +0200, Thomas Zimmermann wrote:
+>>>>>> The ast driver doesn't do much during shutdown. Could you
+>>>>>> please out-comment the lines at either [2] xor [3] and report
+>>>>>> on either effect?
+> [...]
+>>>>>> [2] https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L835
+>>>>>> [3] https://elixir.bootlin.com/linux/v6.16.3/source/drivers/gpu/drm/ast/ast_mode.c#L839
+> [...]
+>>>>     - Deleting [3] (only) appears sufficient to make things work again,
+>>>>       that is, deleting the following line in ast_mode.c:
+>>>>
+>>>>         ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xb6, 0xfc, vgacrb6);
+>>> Please test if the attached patch fixes the problem for you.
+>> Have you been able to test the patch?
+> In the normal scenario where everything is working and I reboot, then
+> the display remains on for the firmware (this would seem to be an
+> improvement).
+>
+> But it introduces a new problem: the screen no longer turns back on if
+> I boot the patched kernel from the "display off" state.  The unpatched
+> 6.17 kernel would at least turn the display back on from this.
+> Furthermore, rebooting from this state keeps the display off.
+>
+> The earlier change [3] above has no such problems.
 
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	if (dev->power.no_callbacks)
-		goto no_callback;	/* Assume success. */
+Thanks again for testing. Looks like your BMC is especially picky about 
+these settings. :)
 
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	__update_runtime_status(dev, RPM_RESUMING);
+Attached are two patches; each trying to eliminate one of the possible 
+causes. Could you please test them individually and report the results?
 
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	callback =3D RPM_GET_CALLBACK(dev, runtime_resume);
+Best regards
+Thomas
 
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d callback =3D %px\n", __func__, __LINE__, (void *) c=
-allback);
-	dev_pm_disable_wake_irq_check(dev, false);
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__);   // This is the last repo=
-rted line!
-	retval =3D rpm_callback(callback, dev);
-	if (!strcmp(dev_name(dev), "0000:00:01.1"))
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	if (retval) {
-		if (!strcmp(dev_name(dev), "0000:00:01.1"))
-			dev_info(dev, "%s %d\n", __func__, __LINE__);
-		__update_runtime_status(dev, RPM_SUSPENDED);
-		pm_runtime_cancel_pending(dev);
-		dev_pm_enable_wake_irq_check(dev, false);
-	} else {
- no_callback:
+>
+> Thanks,
+>    Nick
 
-The result is that in the case of the crash rpm_callback() didn't return, =
-so
-I'll continue the investigation in rpm_callback().
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-The whole calltrace is:
-acpiphp_check_bridge()->pm_runtime_get_sync()->__pm_runtime_resume()->rpm_=
-resume()->rpm_callback()
 
-Bert Karwatzki
+--------------BKHzetE687peU8NbqM0brEVV
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ast-Use-VGACR17-sync-enable-and-VGACRB6-sync-off.patch"
+Content-Disposition: attachment;
+ filename*0="0001-ast-Use-VGACR17-sync-enable-and-VGACRB6-sync-off.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAzZWE5MTc2MmFkMDc3ZjQ5MTQzYWU2Y2JmNDgwMjAzODZhMmVjYzY1IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogVGh1LCAxOCBTZXAgMjAyNSAwOTo1MDoyOCArMDIwMApTdWJqZWN0
+OiBbUEFUQ0hdIGFzdDogVXNlIFZHQUNSMTcgc3luYyBlbmFibGUgYW5kIFZHQUNSQjYgc3lu
+YyBvZmYKCkJsYW5rIHRoZSBkaXNwbGF5IGJ5IGRpc2FibGluZyBzeW5jIHB1bHNlcyB3aXRo
+IFZHQUNSMTc8Nz4uIFNvbWUKQk1DJ3MgZG9uJ3QgaGFuZGxlIFZHQUNSQjYgY29ycmVjdGx5
+LiBBbmQgZG9uJ3QgbW9kaWZ5IFZHQVNSMSdzIFNECmJpdCwgd2hpY2ggb25seSBkaXNhYmxl
+cyBHUFUgYWNjZXNzIHRvIFZSQU0uCi0tLQogZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9k
+ZS5jIHwgMTggKysrKysrKysrKy0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9y
+ZWcuaCAgfCAgMSArCiAyIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDggZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5j
+IGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCmluZGV4IDZiOWQ1MTBjNTA5ZC4u
+ZmU4MDg5MjY2ZGI1IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9tb2Rl
+LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCkBAIC04MzYsMjIgKzgz
+NiwyNCBAQCBhc3RfY3J0Y19oZWxwZXJfYXRvbWljX2ZsdXNoKHN0cnVjdCBkcm1fY3J0YyAq
+Y3J0YywKIHN0YXRpYyB2b2lkIGFzdF9jcnRjX2hlbHBlcl9hdG9taWNfZW5hYmxlKHN0cnVj
+dCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0YXRlKQogewog
+CXN0cnVjdCBhc3RfZGV2aWNlICphc3QgPSB0b19hc3RfZGV2aWNlKGNydGMtPmRldik7CisJ
+dTggdmdhY3IxNyA9IDB4MDA7CisJdTggdmdhY3JiNiA9IDB4MDA7CiAKLQlhc3Rfc2V0X2lu
+ZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQUNSSSwgMHhiNiwgMHhmYywgMHgwMCk7Ci0J
+YXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FTUkksIDB4MDEsIDB4ZGYs
+IDB4MDApOworCXZnYWNyMTcgfD0gQVNUX0lPX1ZHQUNSMTdfU1lOQ19FTkFCTEU7CisJdmdh
+Y3JiNiAmPSB+KEFTVF9JT19WR0FDUkI2X1ZTWU5DX09GRiB8IEFTVF9JT19WR0FDUkI2X0hT
+WU5DX09GRik7CisKKwlhc3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQUNS
+SSwgMHgxNywgMHg3ZiwgdmdhY3IxNyk7CisJYXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3Qs
+IEFTVF9JT19WR0FDUkksIDB4YjYsIDB4ZmMsIHZnYWNyYjYpOwogfQogCiBzdGF0aWMgdm9p
+ZCBhc3RfY3J0Y19oZWxwZXJfYXRvbWljX2Rpc2FibGUoc3RydWN0IGRybV9jcnRjICpjcnRj
+LCBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUpCiB7CiAJc3RydWN0IGRybV9jcnRj
+X3N0YXRlICpvbGRfY3J0Y19zdGF0ZSA9IGRybV9hdG9taWNfZ2V0X29sZF9jcnRjX3N0YXRl
+KHN0YXRlLCBjcnRjKTsKIAlzdHJ1Y3QgYXN0X2RldmljZSAqYXN0ID0gdG9fYXN0X2Rldmlj
+ZShjcnRjLT5kZXYpOwotCXU4IHZnYWNyYjY7CisJdTggdmdhY3IxNyA9IDB4ZmY7CiAKLQlh
+c3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQVNSSSwgMHgwMSwgMHhkZiwg
+QVNUX0lPX1ZHQVNSMV9TRCk7Ci0KLQl2Z2FjcmI2ID0gQVNUX0lPX1ZHQUNSQjZfVlNZTkNf
+T0ZGIHwKLQkJICBBU1RfSU9fVkdBQ1JCNl9IU1lOQ19PRkY7Ci0JYXN0X3NldF9pbmRleF9y
+ZWdfbWFzayhhc3QsIEFTVF9JT19WR0FDUkksIDB4YjYsIDB4ZmMsIHZnYWNyYjYpOworCXZn
+YWNyMTcgJj0gfkFTVF9JT19WR0FDUjE3X1NZTkNfRU5BQkxFOworCWFzdF9zZXRfaW5kZXhf
+cmVnX21hc2soYXN0LCBBU1RfSU9fVkdBQ1JJLCAweDE3LCAweDdmLCB2Z2FjcjE3KTsKIAog
+CS8qCiAJICogSFcgY3Vyc29ycyByZXF1aXJlIHRoZSB1bmRlcmx5aW5nIHByaW1hcnkgcGxh
+bmUgYW5kIENSVEMgdG8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X3Jl
+Zy5oIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfcmVnLmgKaW5kZXggZTE1YWRhZjNhODBl
+Li4zMDU3OGUzYjA3ZTQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X3Jl
+Zy5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X3JlZy5oCkBAIC0yOSw2ICsyOSw3
+IEBACiAjZGVmaW5lIEFTVF9JT19WR0FHUkkJCQkoMHg0RSkKIAogI2RlZmluZSBBU1RfSU9f
+VkdBQ1JJCQkJKDB4NTQpCisjZGVmaW5lIEFTVF9JT19WR0FDUjE3X1NZTkNfRU5BQkxFCUJJ
+VCg3KSAvKiBjYWxsZWQgIkhhcmR3YXJlIHJlc2V0IiBpbiBkb2NzICovCiAjZGVmaW5lIEFT
+VF9JT19WR0FDUjgwX1BBU1NXT1JECQkoMHhhOCkKICNkZWZpbmUgQVNUX0lPX1ZHQUNSOTlf
+VkdBTUVNX1JTUlZfTUFTSwlHRU5NQVNLKDEsIDApCiAjZGVmaW5lIEFTVF9JT19WR0FDUkEx
+X1ZHQUlPX0RJU0FCTEVECUJJVCgxKQotLSAKMi41MS4wCgo=
+--------------BKHzetE687peU8NbqM0brEVV
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ast-Use-VGACR17-sync-enable-and-VGASR01-screen-disab.patch"
+Content-Disposition: attachment;
+ filename*0="0001-ast-Use-VGACR17-sync-enable-and-VGASR01-screen-disab.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA2N2U5Y2JiNjZiZTQ3ZmQyYWVhZGQyYWQ5MWZlMTVlMDc2MzQwMTQwIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogVGh1LCAxOCBTZXAgMjAyNSAwOTo1MDoyOCArMDIwMApTdWJqZWN0
+OiBbUEFUQ0hdIGFzdDogVXNlIFZHQUNSMTcgc3luYyBlbmFibGUgYW5kIFZHQVNSMDEgc2Ny
+ZWVuIGRpc2FibGUKCkJsYW5rIHRoZSBkaXNwbGF5IGJ5IGRpc2FibGluZyBzeW5jIHB1bHNl
+cyB3aXRoIFZHQUNSMTc8Nz4uIFNvbWUKQk1DJ3MgZG9uJ3QgaGFuZGxlIFZHQUNSQjYgY29y
+cmVjdGx5LiBLZWVwIHRoZSBjaGFuZ2UgdG8gVkdBU1IxJ3MKU0QgYml0LCBhcyBzb21lIEJN
+Q3MgZGlzYWJsZSBHUFUgYWNjZXNzIHRvIFZSQU0uCi0tLQogZHJpdmVycy9ncHUvZHJtL2Fz
+dC9hc3RfbW9kZS5jIHwgMTggKysrKysrKysrKy0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0v
+YXN0L2FzdF9yZWcuaCAgfCAgMSArCiAyIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMo
+KyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FzdC9h
+c3RfbW9kZS5jIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCmluZGV4IDZiOWQ1
+MTBjNTA5ZC4uOGUzZDU2Nzk4ZTllIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXN0
+L2FzdF9tb2RlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCkBAIC04
+MzYsMjIgKzgzNiwyNCBAQCBhc3RfY3J0Y19oZWxwZXJfYXRvbWljX2ZsdXNoKHN0cnVjdCBk
+cm1fY3J0YyAqY3J0YywKIHN0YXRpYyB2b2lkIGFzdF9jcnRjX2hlbHBlcl9hdG9taWNfZW5h
+YmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0
+YXRlKQogewogCXN0cnVjdCBhc3RfZGV2aWNlICphc3QgPSB0b19hc3RfZGV2aWNlKGNydGMt
+PmRldik7CisJdTggdmdhY3IxNyA9IDB4MDA7CisJdTggdmdhc3IwMSA9IDB4MDA7CiAKLQlh
+c3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQUNSSSwgMHhiNiwgMHhmYywg
+MHgwMCk7Ci0JYXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FTUkksIDB4
+MDEsIDB4ZGYsIDB4MDApOworCXZnYWNyMTcgfD0gQVNUX0lPX1ZHQUNSMTdfU1lOQ19FTkFC
+TEU7CisJdmdhc3IwMSAmPSB+QVNUX0lPX1ZHQVNSMV9TRDsKKworCWFzdF9zZXRfaW5kZXhf
+cmVnX21hc2soYXN0LCBBU1RfSU9fVkdBQ1JJLCAweDE3LCAweDdmLCB2Z2FjcjE3KTsKKwlh
+c3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQVNSSSwgMHgwMSwgMHhkZiwg
+dmdhc3IwMSk7CiB9CiAKIHN0YXRpYyB2b2lkIGFzdF9jcnRjX2hlbHBlcl9hdG9taWNfZGlz
+YWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpz
+dGF0ZSkKIHsKIAlzdHJ1Y3QgZHJtX2NydGNfc3RhdGUgKm9sZF9jcnRjX3N0YXRlID0gZHJt
+X2F0b21pY19nZXRfb2xkX2NydGNfc3RhdGUoc3RhdGUsIGNydGMpOwogCXN0cnVjdCBhc3Rf
+ZGV2aWNlICphc3QgPSB0b19hc3RfZGV2aWNlKGNydGMtPmRldik7Ci0JdTggdmdhY3JiNjsK
+LQotCWFzdF9zZXRfaW5kZXhfcmVnX21hc2soYXN0LCBBU1RfSU9fVkdBU1JJLCAweDAxLCAw
+eGRmLCBBU1RfSU9fVkdBU1IxX1NEKTsKKwl1OCB2Z2FjcjE3ID0gMHhmZjsKIAotCXZnYWNy
+YjYgPSBBU1RfSU9fVkdBQ1JCNl9WU1lOQ19PRkYgfAotCQkgIEFTVF9JT19WR0FDUkI2X0hT
+WU5DX09GRjsKLQlhc3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZHQUNSSSwg
+MHhiNiwgMHhmYywgdmdhY3JiNik7CisJdmdhY3IxNyAmPSB+QVNUX0lPX1ZHQUNSMTdfU1lO
+Q19FTkFCTEU7CisJYXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FDUkks
+IDB4MTcsIDB4N2YsIHZnYWNyMTcpOwogCiAJLyoKIAkgKiBIVyBjdXJzb3JzIHJlcXVpcmUg
+dGhlIHVuZGVybHlpbmcgcHJpbWFyeSBwbGFuZSBhbmQgQ1JUQyB0bwpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfcmVnLmggYi9kcml2ZXJzL2dwdS9kcm0vYXN0L2Fz
+dF9yZWcuaAppbmRleCBlMTVhZGFmM2E4MGUuLjMwNTc4ZTNiMDdlNCAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfcmVnLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL2Fz
+dC9hc3RfcmVnLmgKQEAgLTI5LDYgKzI5LDcgQEAKICNkZWZpbmUgQVNUX0lPX1ZHQUdSSQkJ
+CSgweDRFKQogCiAjZGVmaW5lIEFTVF9JT19WR0FDUkkJCQkoMHg1NCkKKyNkZWZpbmUgQVNU
+X0lPX1ZHQUNSMTdfU1lOQ19FTkFCTEUJQklUKDcpIC8qIGNhbGxlZCAiSGFyZHdhcmUgcmVz
+ZXQiIGluIGRvY3MgKi8KICNkZWZpbmUgQVNUX0lPX1ZHQUNSODBfUEFTU1dPUkQJCSgweGE4
+KQogI2RlZmluZSBBU1RfSU9fVkdBQ1I5OV9WR0FNRU1fUlNSVl9NQVNLCUdFTk1BU0soMSwg
+MCkKICNkZWZpbmUgQVNUX0lPX1ZHQUNSQTFfVkdBSU9fRElTQUJMRUQJQklUKDEpCi0tIAoy
+LjUxLjAKCg==
+
+--------------BKHzetE687peU8NbqM0brEVV--
