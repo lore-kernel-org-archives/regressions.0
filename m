@@ -1,164 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4EB29DB96;
-	Wed,  8 Oct 2025 03:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BBD190685
+	for <regressions@lists.linux.dev>; Wed,  8 Oct 2025 06:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759893535; cv=none; b=AM6Uo9KPUra1q+ZfzI1mv9cXpuRjmBEkvUkckAsHl0IjqyAUXuRHvaobtw4drbMOkb4P90lzBis+hgpmHNRDR/SfsDE3V8u/IoXshOE8DT/e5XWfz5Fa7Xe1nh5TQ5cKbrNkQtReFyUoOj4NXQLrFZ/hYpOaqhIMyeEbf6ndCd4=
+	t=1759904465; cv=none; b=ZX+mRjpVj8Jupv/v5u/iM/7zI1Ve/fzsOLu27m/d05KEa2211r7ssddP+1cZpLw9DpBoeijW89YstcEfYX5UBiwHl5ZD18Y3lZokNxvqJ+6UfId7zcQQxoHZwGpNZIVoVoQqeBC84dDRjnTZqfj0Chgv1/7NKLiWQ8WYJ43nFc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759893535; c=relaxed/simple;
-	bh=hfwxsf91UOa/ZzCi0wOKakAi9bfyZrL6KPmJfVnQy3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRi62e9IYZYstNqaXs0sUwZtmCVVsOxtVXPiIWX09RYrPj4idM/fMazvIAgjcd01/00jjEUDI2X7hAQcktmLDQQbqoFl68t8yRn76IJa5npf/hOBF+OBrBOoP25q7m/5E2L0mx0ra4vycl6jJ5UOMqUGxK22RG3Rs+80pDVZvio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lopGO4rX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759904465; c=relaxed/simple;
+	bh=N126oxfU8CB/Z/KfJJ25j5usrLom9As8SZR0QXbXq6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BLqYwrEHCsufLPlcP+ps0vTTC7CspQ4vZjnvre39dUm9diw67XMXx5eETN8TdKjkPPzghyE01hrsuS6TtNlk2LVJK/IqFMo+meOjSmsbihc72+k428nvvAnywoEt2+05GYtESWo7YLMyTdO5dQ0VUcDLve+LuaokS3KWsEAuwug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ebo3cg2X; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lopGO4rX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 446D8C4CEF1;
-	Wed,  8 Oct 2025 03:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759893534;
-	bh=hfwxsf91UOa/ZzCi0wOKakAi9bfyZrL6KPmJfVnQy3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lopGO4rXzPmAj7esZ7EHkgOaI6vc3YjsCSEKhVi20wTl++1OzV80nC8EMRVtOZITO
-	 x915bnQJtSRKGSH4LqFqyLXoQ6p348NcEBgmfDKZEoV6hURd2PLK5TZX+Gt27u5oGr
-	 kbKZZGZniUsUd935iky6Pgu6eyXXvXEySsFQrq5tng9rKkLfuhk4ALq4v11s50nTwA
-	 8plJG2hywZw1OIspNp5xRbP1+YG+QHieS/eNh3GYeuhSa+R0CTDtxs/42oX4pmCN13
-	 SxSPDvMTYAMN2svXR27OtknYp9K/KD4YmFFBtaJ9IuN1dbk2ijWXl0BGayONJdD6Sw
-	 p5cr8lVKlOg0A==
-Date: Tue, 7 Oct 2025 20:18:49 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Alexey Gladkov <legion@kernel.org>, linux-s390@vger.kernel.org,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: next-20251002: S390: gcc-8-defconfig: symbol `.modinfo' required
- but not present - no symbols
-Message-ID: <20251008031849.GA509861@ax162>
-References: <CA+G9fYvVktRhFtZXdNgVOL8j+ArsJDpvMLgCitaQvQmCx=hwOQ@mail.gmail.com>
- <20251006174740.13659A33-hca@linux.ibm.com>
- <20251006234114.GA659425@ax162>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ebo3cg2X"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-578ecc56235so4587995e87.0
+        for <regressions@lists.linux.dev>; Tue, 07 Oct 2025 23:21:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759904462; x=1760509262; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wXdeOIlNt41GOXTqIXLtw7txEKMs3lnhagD2W9H46L4=;
+        b=Ebo3cg2XrvXLxhBX32fc1jnOxpD7/hWFfWqYiQp1+E224JV/EkH8cUh9I36kxLLwG4
+         q8Q0biRqQi0ragI71RUr1HN419r+yMDmwGYttBCsYzhYNofR+HEsRUh2ytSoPim8wJZ/
+         xQX4dbJactVFIEtfkHrLQ1o5EHz0eucnmqMPhSLMkO2huDKH+RT7z9uxiLZifEwY8uj9
+         hCNtUE1x7eU9VPlQtjHZmP6deFzDvWGPL8QpCxP2Wf9szZzzUZKXpTeZ5Blkae6OG4Py
+         0QM6TiZvouoShfrOvcvkeBikz/PZxMNt3Q6sEtx1tbrEgw+Y1FZgYg4F3eqBAiSBKSmK
+         GcyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759904462; x=1760509262;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wXdeOIlNt41GOXTqIXLtw7txEKMs3lnhagD2W9H46L4=;
+        b=lWbztDB6IQjokMLx5YltNrhSihiZMiVin3O0cW1IJwP8EQpMnEDaa6HKgoOviaWmCx
+         zm2Ak0PypkdrWCfJCbdUE1cCpvkl0getq9KPZzSZYKNLrH0qgPGrC3l2g/mos09arVFj
+         pSL15vRwpqvH1CpWo9CIfHI9oeNUBSlGN/NxREA2DO90/jTyfN9RZs+nUXvw7voBdZAu
+         YqHhN2DZiGaGdiIgIHYyyBgsKpzb2HHrbLqwVwJGVFTXXnTK1w3md1swkW2UYnI7nnBs
+         mj2yS1+mIz6C3ZgZmcxA2lHJ0vt6UboSjMe1K54YJr/36d5h7m5Dk+1ANxrwqrYf2jCu
+         Tk9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQtl6CsDPuorMI1ACB5XxjjQ0tl/CInwg2KcB/EM0XsY0S4ehgohkkQC79kuyCwXhVbHd/aqQoW2NYjg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwFJ7eAzDs5nDH9na1seGXVRzjgLt7zYAXdb47yvM3FD0cTrjzJ
+	qaEKIO006irIRXDpFAcnHl5FN9H18K58loTqM7WH72WU8vZPkoUc66Av
+X-Gm-Gg: ASbGncttv5L77vjNHS96uXpPWRHBV1xzpvQLcOH5oZMLgbatxBqMC1/KgLk7JsyGdXv
+	tUue9or3pcHNPcg90o5j2q3hN2c/+AdCHqnkoJWzy2t10J05nL7ZU2NEA4hBHGXSvrXtfBbslxX
+	Yfh0CjOq5BMATKsT6HvtXadtnUxBrgDe2Mj5FOP28ygvmZ5qaDiI42Tb4/qlfony69bTyo5y7Vm
+	JlTwcigJouAdtPXq9B2+42LTVd5eVmW7EhVg2JFfHhIsFXPVRaWjGdCnxB5X1rwPpz1bbvNh6AP
+	MxrDEJ+SmWFlYUafCpCSAGznje4UOBrdVgglrpxbV2uN8dobkloUzOuSCEBUdsrHXdACWXlRrgS
+	83Gd9px1zq+yFiLA9Ic5MizsxHfwRc+IEbZkmL1Wq81VAdGOMjAKDpM5uAoO9Te1pB9iFJg==
+X-Google-Smtp-Source: AGHT+IHrUy7H4L08z4Ynpc01XEkFnHjSGub5khCTp8fN/0b+zp5Kbo0V86XJg4KUOk4WoDFiTUAU6Q==
+X-Received: by 2002:a05:6512:4015:b0:57b:517c:bf19 with SMTP id 2adb3069b0e04-5906d88ec80mr616662e87.19.1759904461503;
+        Tue, 07 Oct 2025 23:21:01 -0700 (PDT)
+Received: from foxbook (bff184.neoplus.adsl.tpnet.pl. [83.28.43.184])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0113f16esm6908182e87.46.2025.10.07.23.20.59
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 07 Oct 2025 23:21:01 -0700 (PDT)
+Date: Wed, 8 Oct 2025 08:20:55 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Arisa Snowbell <arisa.snowbell@gmail.com>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev, Niklas Neronin
+ <niklas.neronin@linux.intel.com>, Mathias Nyman
+ <mathias.nyman@linux.intel.com>
+Subject: Re: [REGRESSION] USB-A devices not working on boot after recent USB
+ merge
+Message-ID: <20251008082055.5646dadc.michal.pecio@gmail.com>
+In-Reply-To: <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
+References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
+	<20251007231709.6c16802e.michal.pecio@gmail.com>
+	<CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
+	<CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251006234114.GA659425@ax162>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 06, 2025 at 04:41:19PM -0700, Nathan Chancellor wrote:
-...
-> > > ### Build error log
-> > > s390x-linux-gnu-ld: .tmp_vmlinux1: warning: allocated section `.got.plt' not in segment
-> > > s390x-linux-gnu-ld: .tmp_vmlinux2: warning: allocated section `.got.plt' not in segment
-> > > s390x-linux-gnu-ld: vmlinux.unstripped: warning: allocated section `.got.plt' not in segment
-> > > s390x-linux-gnu-objcopy: vmlinux: warning: allocated section `.got.plt' not in segment
-> > > s390x-linux-gnu-objcopy: stM7JmYX: warning: allocated section `.got.plt' not in segment
+On Wed, 8 Oct 2025 03:15:31 +0200, Arisa Snowbell wrote:
+> The first bad commit seems to be
+> [719de070f764e079cdcb4ddeeb5b19b3ddddf9c1] usb: xhci-pci: add support
+> for hosts with zero USB3 ports. All USB-A devices stop being
+> visible/detected.
 
-So these warnings should be fixed with:
+Hmm, OK. Copying xHCI people.
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index feecf1a6ddb4..d74d4c52ccd0 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -214,6 +214,28 @@ SECTIONS
- 	DWARF_DEBUG
- 	ELF_DETAILS
- 
-+	/*
-+	 * Make sure that the .got.plt is either completely empty or it
-+	 * contains only the three reserved double words.
-+	 */
-+	.got.plt : {
-+		*(.got.plt)
-+	}
-+	ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-+
-+	/*
-+	 * Sections that should stay zero sized, which is safer to
-+	 * explicitly check instead of blindly discarding.
-+	 */
-+	.plt : {
-+		*(.plt) *(.plt.*) *(.iplt) *(.igot .igot.plt)
-+	}
-+	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
-+	.rela.dyn : {
-+		*(.rela.*) *(.rela_*)
-+	}
-+	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-+
- 	/*
- 	 * uncompressed image info used by the decompressor
- 	 * it should match struct vmlinux_info
-@@ -244,28 +266,6 @@ SECTIONS
- #endif
- 	} :NONE
- 
--	/*
--	 * Make sure that the .got.plt is either completely empty or it
--	 * contains only the three reserved double words.
--	 */
--	.got.plt : {
--		*(.got.plt)
--	}
--	ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
--
--	/*
--	 * Sections that should stay zero sized, which is safer to
--	 * explicitly check instead of blindly discarding.
--	 */
--	.plt : {
--		*(.plt) *(.plt.*) *(.iplt) *(.igot .igot.plt)
--	}
--	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
--	.rela.dyn : {
--		*(.rela.*) *(.rela_*)
--	}
--	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
--
- 	/* Sections to be discarded */
- 	DISCARDS
- 	/DISCARD/ : {
+So the issue is that there are some USB ports on the motherboard where
+devices work when they are hotplugged, but nothing is enumerated during
+boot, correct?
 
-I am unsure why newer binutils does not show this but I did not care
-enough to actually bisect.
+Are all USB-A ports affected or only those limited to USB 2.0 speed?
 
-> > > s390x-linux-gnu-objcopy: stM7JmYX: symbol `.modinfo' required but not present
-> > > s390x-linux-gnu-objcopy:stM7JmYX: no symbols
+If you look at hotplug notifications like
+[    4.612030] usb 18-2: new high-speed USB device number 2 using xhci_hcd
 
-I did bisect binutils to figure out that commit c12d9fa2afe ("Support
-objcopy --remove-section=.relaFOO") [1] in binutils 2.32 resolves this
-error.
+the first number (18) is the USB bus number. You can then find the PCI
+address of the xHCI controller by looking at the root hub (device 1):
 
-I can fix this for those older binutils with:
+$ lsusb -vs 18:1 |grep iSerial
+  iSerial                 1 0000:0c:00.0
 
-diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index 7c6ae9886f8f..9ea92c3317dc 100644
---- a/scripts/Makefile.vmlinux
-+++ b/scripts/Makefile.vmlinux
-@@ -82,7 +82,7 @@ endif
- # ---------------------------------------------------------------------------
- 
- remove-section-y                                   := .modinfo
--remove-section-$(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS) += '.rel*'
-+remove-section-$(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS) += '.rel*' '.rel.*'
- 
- remove-symbols := -w --strip-symbol='__mod_device_table__*'
- 
 
-I can send a patch series tomorrow.
+Can you reproduce the bug without rebooting by connecting some device
+and then reloading the xhci driver on this particular controller?
 
-[1]: https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=c12d9fa2afe7abcbe407a00e15719e1a1350c2a7
+echo 0000:0c:00.0 |tee /sys/bus/pci/drivers/xhci_hcd/unbind /sys/bus/pci/drivers/xhci_hcd/bind
 
-Cheers,
-Nathan
+Regards,
+Michal
