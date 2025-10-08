@@ -1,114 +1,111 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BBD190685
-	for <regressions@lists.linux.dev>; Wed,  8 Oct 2025 06:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F882309B9
+	for <regressions@lists.linux.dev>; Wed,  8 Oct 2025 09:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759904465; cv=none; b=ZX+mRjpVj8Jupv/v5u/iM/7zI1Ve/fzsOLu27m/d05KEa2211r7ssddP+1cZpLw9DpBoeijW89YstcEfYX5UBiwHl5ZD18Y3lZokNxvqJ+6UfId7zcQQxoHZwGpNZIVoVoQqeBC84dDRjnTZqfj0Chgv1/7NKLiWQ8WYJ43nFc8=
+	t=1759914177; cv=none; b=rTGRmZgdsNZpGu90B8TprXiXmU7AmlU9nUhJHlUnCRRVa4fhsz1tRXk15Nt3nZRBCi2CrGI9a9IO5IAGHirgg7+HtLGsgAVm284WmVSnbjW8JEquqfcWY6neqnx7Z1Ywb6gh8EX06Iu3eujYImpn4fdkjtWpyFfCDINxbkpzTdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759904465; c=relaxed/simple;
-	bh=N126oxfU8CB/Z/KfJJ25j5usrLom9As8SZR0QXbXq6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BLqYwrEHCsufLPlcP+ps0vTTC7CspQ4vZjnvre39dUm9diw67XMXx5eETN8TdKjkPPzghyE01hrsuS6TtNlk2LVJK/IqFMo+meOjSmsbihc72+k428nvvAnywoEt2+05GYtESWo7YLMyTdO5dQ0VUcDLve+LuaokS3KWsEAuwug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ebo3cg2X; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1759914177; c=relaxed/simple;
+	bh=kF1TctwsFK2boTjPaOPq4WDnTfl9gvF+EoHMxWRsNws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GiESkJgJGZ+hh4Xt89RieYYyYxDT+IkP3fFOFG6aRpSLw/gTHzwuXia9OanSlHqw5jReYMSeNPEWDZPpDgaWFJekAgJ1laQ+Swur0TwqP1CE98Mb2uWdFYT3zZ5dBh22t32NrjVhlTbSxGdDxVqcDpBOED62VVutUfBpWUvknm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fgdzdeos; arc=none smtp.client-ip=209.85.221.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ebo3cg2X"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-578ecc56235so4587995e87.0
-        for <regressions@lists.linux.dev>; Tue, 07 Oct 2025 23:21:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fgdzdeos"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-54a80b26f88so2739471e0c.0
+        for <regressions@lists.linux.dev>; Wed, 08 Oct 2025 02:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759904462; x=1760509262; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wXdeOIlNt41GOXTqIXLtw7txEKMs3lnhagD2W9H46L4=;
-        b=Ebo3cg2XrvXLxhBX32fc1jnOxpD7/hWFfWqYiQp1+E224JV/EkH8cUh9I36kxLLwG4
-         q8Q0biRqQi0ragI71RUr1HN419r+yMDmwGYttBCsYzhYNofR+HEsRUh2ytSoPim8wJZ/
-         xQX4dbJactVFIEtfkHrLQ1o5EHz0eucnmqMPhSLMkO2huDKH+RT7z9uxiLZifEwY8uj9
-         hCNtUE1x7eU9VPlQtjHZmP6deFzDvWGPL8QpCxP2Wf9szZzzUZKXpTeZ5Blkae6OG4Py
-         0QM6TiZvouoShfrOvcvkeBikz/PZxMNt3Q6sEtx1tbrEgw+Y1FZgYg4F3eqBAiSBKSmK
-         GcyA==
+        d=gmail.com; s=20230601; t=1759914174; x=1760518974; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UNISjFhZVOyxNmzWk6Oc8rzemD97BELUfRbJibpGUYw=;
+        b=FgdzdeosdOAMsO1kQJKT4UiU3D34GIAam6fhJS8rFdUgAlO2A93YnjvaI9hpFuL+D6
+         ggYY8pEDy1CkTPSEKA67Ex5ulNOa+HG4LIj6g11pqLNLsSYS4F7erpKtjuSor4F7fNDw
+         KM1TyPBbeLHA1sT1q5zAfgsER5SZNOZ6FmBZhPIVLaZ0KE1PVCSU3A21dWdfsddo71mg
+         pI0hJGxmgmIq+khMYlcYz1dInWk9NSrNGbyim6FqePwxJYZGqOuOQ8p1raoSz83/zz/n
+         YuSSIn14wjbEDCaBOF3RW0Vv+nVC9G8Gi8WSSqoKnSUFhh289+LizudBFFRRGE12beYN
+         p17w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759904462; x=1760509262;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wXdeOIlNt41GOXTqIXLtw7txEKMs3lnhagD2W9H46L4=;
-        b=lWbztDB6IQjokMLx5YltNrhSihiZMiVin3O0cW1IJwP8EQpMnEDaa6HKgoOviaWmCx
-         zm2Ak0PypkdrWCfJCbdUE1cCpvkl0getq9KPZzSZYKNLrH0qgPGrC3l2g/mos09arVFj
-         pSL15vRwpqvH1CpWo9CIfHI9oeNUBSlGN/NxREA2DO90/jTyfN9RZs+nUXvw7voBdZAu
-         YqHhN2DZiGaGdiIgIHYyyBgsKpzb2HHrbLqwVwJGVFTXXnTK1w3md1swkW2UYnI7nnBs
-         mj2yS1+mIz6C3ZgZmcxA2lHJ0vt6UboSjMe1K54YJr/36d5h7m5Dk+1ANxrwqrYf2jCu
-         Tk9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQtl6CsDPuorMI1ACB5XxjjQ0tl/CInwg2KcB/EM0XsY0S4ehgohkkQC79kuyCwXhVbHd/aqQoW2NYjg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwFJ7eAzDs5nDH9na1seGXVRzjgLt7zYAXdb47yvM3FD0cTrjzJ
-	qaEKIO006irIRXDpFAcnHl5FN9H18K58loTqM7WH72WU8vZPkoUc66Av
-X-Gm-Gg: ASbGncttv5L77vjNHS96uXpPWRHBV1xzpvQLcOH5oZMLgbatxBqMC1/KgLk7JsyGdXv
-	tUue9or3pcHNPcg90o5j2q3hN2c/+AdCHqnkoJWzy2t10J05nL7ZU2NEA4hBHGXSvrXtfBbslxX
-	Yfh0CjOq5BMATKsT6HvtXadtnUxBrgDe2Mj5FOP28ygvmZ5qaDiI42Tb4/qlfony69bTyo5y7Vm
-	JlTwcigJouAdtPXq9B2+42LTVd5eVmW7EhVg2JFfHhIsFXPVRaWjGdCnxB5X1rwPpz1bbvNh6AP
-	MxrDEJ+SmWFlYUafCpCSAGznje4UOBrdVgglrpxbV2uN8dobkloUzOuSCEBUdsrHXdACWXlRrgS
-	83Gd9px1zq+yFiLA9Ic5MizsxHfwRc+IEbZkmL1Wq81VAdGOMjAKDpM5uAoO9Te1pB9iFJg==
-X-Google-Smtp-Source: AGHT+IHrUy7H4L08z4Ynpc01XEkFnHjSGub5khCTp8fN/0b+zp5Kbo0V86XJg4KUOk4WoDFiTUAU6Q==
-X-Received: by 2002:a05:6512:4015:b0:57b:517c:bf19 with SMTP id 2adb3069b0e04-5906d88ec80mr616662e87.19.1759904461503;
-        Tue, 07 Oct 2025 23:21:01 -0700 (PDT)
-Received: from foxbook (bff184.neoplus.adsl.tpnet.pl. [83.28.43.184])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0113f16esm6908182e87.46.2025.10.07.23.20.59
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 07 Oct 2025 23:21:01 -0700 (PDT)
-Date: Wed, 8 Oct 2025 08:20:55 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Arisa Snowbell <arisa.snowbell@gmail.com>
-Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev, Niklas Neronin
- <niklas.neronin@linux.intel.com>, Mathias Nyman
- <mathias.nyman@linux.intel.com>
-Subject: Re: [REGRESSION] USB-A devices not working on boot after recent USB
- merge
-Message-ID: <20251008082055.5646dadc.michal.pecio@gmail.com>
-In-Reply-To: <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
-References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
-	<20251007231709.6c16802e.michal.pecio@gmail.com>
-	<CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
-	<CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1759914174; x=1760518974;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UNISjFhZVOyxNmzWk6Oc8rzemD97BELUfRbJibpGUYw=;
+        b=pHwYv+7STpnMDm1QO3M0MqUg3ar8HQ3xiB+yfy8lnf0hUH5UPTg4q2ym8a14CwYJOw
+         G0oz29IV9XWoezyFkE9nlqw79t0BB26stJKR4Ex+1v9vksM6N3WxxESiWzCw+b8bm1KF
+         3EumBk1t0u2Ji7u4x2jf8rIkBiLYTbkpCoWn5H3os3CGF085fk4j2NLXkJbQTA0cI3wg
+         l6g7bJpAelPL+atJxE6j+G6eC8BOQ+z18+ilaFuBw/Zq6yfUvb8AjtwDzhiPoeGWzQjp
+         0Nxz+roZli+JiF7osjTGHqBL/hADKlMtb/u/5NR/+uO1gTVyIBne04sbWor1CKG938eq
+         O8WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVN55K1U9IhtGrdQ4JZkcU4P70DSWC9SxjYY+5HvmzpZQ+UNLcvHKLu05s908gddpP0kkof/ZGe05Rgsw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzt+geWQQRgauGzohxzqBgTIwd7c+slWTiaYnppoJbzzVb88SQi
+	gpAB/cBbzehUiVRMsf6YsBpZIZwi36OVkY4E50zPyJpXtPE5AuUozzssp0pW1NBj2igWb4UfT38
+	ZMQfpYMoHswXTs8ojfW9pirIO9DLs9jM=
+X-Gm-Gg: ASbGnctAGUFcXvV/tT7uP3tMh8F8LSrtuF0kIZywOuQpg1SwsbsvWH9nyh7PoqGg1ir
+	i7arLd2CyFIqAYRIh8oi5MOTakJhd6ItRtnJtwH2Arj4UL/73E8ktxAv7jMAxkFPeQi1SryIp/x
+	0fkYopJYISEEAtrl3GWqQjbYNxIN3RcJ3waTaMyiImCMvO4ua83P/yRPA0Y7EUpE31uoAfwDuup
+	wJ1NhVBWEC3kLILw5RcqBU60ClQMsA=
+X-Google-Smtp-Source: AGHT+IGXBLTVg0GZ4k7Ne4HnzkIHCspOdJBHBxUkydXCzxxJtFtgkwkOq9pkNh3HOnTuK5M+tBY6pKsALsEm8wucb/0=
+X-Received: by 2002:a05:6122:1d04:b0:54b:bcf7:69f5 with SMTP id
+ 71dfb90a1353d-554b8af1c5dmr923583e0c.8.1759914174573; Wed, 08 Oct 2025
+ 02:02:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
+ <20251007231709.6c16802e.michal.pecio@gmail.com> <CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
+ <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com> <20251008082055.5646dadc.michal.pecio@gmail.com>
+In-Reply-To: <20251008082055.5646dadc.michal.pecio@gmail.com>
+From: Arisa Snowbell <arisa.snowbell@gmail.com>
+Date: Wed, 8 Oct 2025 11:02:43 +0200
+X-Gm-Features: AS18NWDS6Dn8ycOWuXPvCmeT8vfwMyrjN9hBZW0G9KxUQ0-xsrdIjuyKmIj-qyM
+Message-ID: <CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com>
+Subject: Re: [REGRESSION] USB-A devices not working on boot after recent USB merge
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: linux-usb@vger.kernel.org, regressions@lists.linux.dev, 
+	Niklas Neronin <niklas.neronin@linux.intel.com>, 
+	Mathias Nyman <mathias.nyman@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 8 Oct 2025 03:15:31 +0200, Arisa Snowbell wrote:
-> The first bad commit seems to be
-> [719de070f764e079cdcb4ddeeb5b19b3ddddf9c1] usb: xhci-pci: add support
-> for hosts with zero USB3 ports. All USB-A devices stop being
-> visible/detected.
+Morning,
 
-Hmm, OK. Copying xHCI people.
+> So the issue is that there are some USB ports on the motherboard where
+> devices work when they are hotplugged, but nothing is enumerated during
+> boot, correct?
 
-So the issue is that there are some USB ports on the motherboard where
-devices work when they are hotplugged, but nothing is enumerated during
-boot, correct?
+By testing a little bit more now in the morning I found new information.
+If I replug in the USB 2.0 port, no, it doesn't work. Only if I plug
+it into the 3.0 port.
 
-Are all USB-A ports affected or only those limited to USB 2.0 speed?
+> Are all USB-A ports affected or only those limited to USB 2.0 speed?
 
-If you look at hotplug notifications like
-[    4.612030] usb 18-2: new high-speed USB device number 2 using xhci_hcd
+From what I can test, yes, seems to be only USB 2.0 speeds.
+Tried USB 3 flash drive and works on boot, if I plug the mice into USB
+3.0 it works.
 
-the first number (18) is the USB bus number. You can then find the PCI
-address of the xHCI controller by looking at the root hub (device 1):
+> If you look at hotplug notifications like
+> [    4.612030] usb 18-2: new high-speed USB device number 2 using xhci_hcd
+>
+> the first number (18) is the USB bus number. You can then find the PCI
+> address of the xHCI controller by looking at the root hub (device 1):
+>
+> $ lsusb -vs 18:1 |grep iSerial
+>   iSerial                 1 0000:0c:00.0
+>
+>
+> Can you reproduce the bug without rebooting by some device
+> and then reloading the xhci driver on this particular controller?
+>
+> echo 0000:0c:00.0 |tee /sys/bus/pci/drivers/xhci_hcd/unbind /sys/bus/pci/drivers/xhci_hcd/bind
 
-$ lsusb -vs 18:1 |grep iSerial
-  iSerial                 1 0000:0c:00.0
+With my new discovery about the issue, I don't think I can do this.
 
-
-Can you reproduce the bug without rebooting by connecting some device
-and then reloading the xhci driver on this particular controller?
-
-echo 0000:0c:00.0 |tee /sys/bus/pci/drivers/xhci_hcd/unbind /sys/bus/pci/drivers/xhci_hcd/bind
-
-Regards,
-Michal
+Thanks,
+Arisa
