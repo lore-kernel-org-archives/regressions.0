@@ -1,42 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29F3EEC0;
-	Thu,  9 Oct 2025 17:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2C119EED3
+	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 23:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760031686; cv=none; b=a0daEExQ5uVBqdLeU/WLUWX3IqIqBRX3I0wpWHaH56S5hozVmk7CZfliS297w84IddD5M9ScAjnWdOIsyTXrWuxb83+Vvh0af+YbsoCSytilcm+A4X6hmkJsTJo/jHYJgEl68KQAPuUszXqAo+CoqChnaw72FkLCNJ5dQx7whKw=
+	t=1760054168; cv=none; b=n/EiKMRlzqFwW24+zg5pk2ltgfkwF29eFvIZ43e8vefECn0BOyiPav9eqaP49mTnBYKfwk9tfcW8LJPtfGN1Q65tCF5VUdJp+w6mvmO2l6ZrjVle5+r7/wrWY2NlFNbJOf7/Kkd8dV8XkDm3rrPpDcI/0jMHRjY+z0hVKRt6pAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760031686; c=relaxed/simple;
-	bh=K23L2usRO9cloxuukdxyKgJDZionsYzMB3U1+Yzhy30=;
+	s=arc-20240116; t=1760054168; c=relaxed/simple;
+	bh=RDNvFhXMLtxlMPAmEwgJ5B25rN9h8pzeMm/QC1MG2K4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IGJlLnOXYw3yuOTCum9q4Z/2/ugL21l/zbwcEElnvmH8wrei8ZbmpjcSbT5JFL96rVgFRFN45I1eSvHGKMgztDt4IsJY0r3/dajPPGLjlx5U4IZPkE75AawHmyQvr9qGyCEIj3CsY6srgzUWfzYpwemWFL7q5c08S5e0GaIZLc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilPXDzl9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YUOKHB1gd5OdAl3bqxrvBxYzHS61eizQLg/7jHRndGbhOxFbtsdMqCBihO7D4fo5tv7t0df4TuKnHfKrzPkZB0TYfI11zQYE+wZaAj4eyzl+JNcOMg5AeYZeHqmqTMkwBiChbb5XmM9l+pPs7dq1f2WzUt01uM9rcoClFMRpcbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=VPGisGqB; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilPXDzl9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1576BC4CEE7;
-	Thu,  9 Oct 2025 17:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760031685;
-	bh=K23L2usRO9cloxuukdxyKgJDZionsYzMB3U1+Yzhy30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilPXDzl9inaHuOpMWGvhmY+g5lALkpQvwcS3EjjxZ8qbRtZjibA2BuwnUYE4GTGWa
-	 ROSh9/863YI2HCxPdSb52bI7mFhiDEPjJETfUukumlDjwYHLTOvHaDRC/9UV30ltBr
-	 llNtSakZhlnZEChmqSyZYQYBL22Ce8AOvYL9D2rOFi4ZhGv7T2VwGF7b0XozMGPvpY
-	 Uq4Ovdr2/AfpKVCHPsb5qTsmWtOLBBKozxI7iWFqvbXq5C3urjWJM6H+5HnW8QcAaT
-	 mR42c7qiIOy3JEZZ8PwfTTGuSZXa8l3WzI6gsaZ1vnd5p5WKcEyTWLHLJ9C7E6mOCG
-	 PzP5eylm3STIA==
-Date: Thu, 9 Oct 2025 10:41:20 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	miguel.ojeda.sandonis@gmail.com, nsc@kernel.org, ojeda@kernel.org,
-	sam@gentoo.org, thomas.weissschuh@linutronix.de,
-	Daniel Xu <dxu@dxuuu.xyz>
-Subject: Re: [REGRESSION][BISECTED] kbuild: CFLAGS=-w no longer works
-Message-ID: <20251009174120.GA442207@ax162>
-References: <20251009075149.1083040-1-safinaskar@gmail.com>
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="VPGisGqB"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-795be3a3644so9567026d6.0
+        for <regressions@lists.linux.dev>; Thu, 09 Oct 2025 16:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1760054165; x=1760658965; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTFpCR/KI1F13hy7CFFNjYUFOgplKs84/KujihK2OhQ=;
+        b=VPGisGqBjLanfUtNkpt2e3z4Q8eDN+4KKa04od9WJJNpvYPx4bs+reikXHg8Pr8tgT
+         TttpCmO1gw8DQfqEvLVq28UbAYG7TBxO8drQM/ndEQix09GvoeWds58Eh4U7fooMaqor
+         sv6QlWIi9J/QthZaJh5V2WRfQyUkjIzv6PpU6WNlraP+JGGEDowXXiGr6bHdcfIUSSRg
+         jO+h1DAJtgE53G5JLS76FXN1iEhr+mE5qNU5eohCPSVI/sENjv2hZudbM6hq5gCE+EhE
+         yIJFUWyWm0xMcS3O1Q+sDV/5vQWhhc0uxDi7d4AXATQiPC2rd+ygGUj+xhV1HfiW9G+q
+         FyHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760054165; x=1760658965;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bTFpCR/KI1F13hy7CFFNjYUFOgplKs84/KujihK2OhQ=;
+        b=dEjsOUUHkDFIkeaucwYzV9ACorW+nNZlkY2UP1TYldC3bHKb+ry2Kr0w0G46ha7IIZ
+         MT3bOYKOuUmbn8EMF8plgIUOklG1bzE7q7Itbc9P4Rtx6NL1MPZ0gXkmuMjHifM01svX
+         K1oy+wgkOkKparaVDAmqbpOY0V9ywIK49FgLxxAMlBjbFTEKZ8FjH+NbFKoSnavb4rbc
+         59EqPjDLprCx3Pq8453Ll1XtrVT5Pi6u4gvD0rxnDVcHdAsEKe5i6HVpw8gD/73KzUp6
+         CMBwzp+QpY9dCBzuSelk7mGYPtoKmTw4zQ70HY/aK5WWZpzZGIr3A8mfFHUWuJvTAdnE
+         Jb8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWV8nlA03losgF4IQMbCl9/zUSKE8Vd9QVhUhWMOJZzBtxMaUqBNc97sGO8ShodApLIjOE5lAy/B88jOw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy76IR250J0Fbyhqslj1Y8QMMrs/jpWald5yTKzGNMNXXUulzZP
+	jHn/sIOtUvewpOsGBMVTCgcZidP4JahFSuRkmR2bg38l8c+/HNLOoOQsBf8OGEhyoXY=
+X-Gm-Gg: ASbGncvZtHmy9JF/LTVdWHT08OkuaA/bP642iPtXeAthq6F/7SyjGSaM9jH+3gEmQM8
+	1Pnj5FWOE4DGm/Ooi9TkB7oFcBaVjKtI+VeNJRRED4qbxn/+ZNkbtzz+zwttIkCJds7qlSFJN8k
+	74NCcHVRR46snbR5AseS9J5OfVcXLg+Q+sKm/mmqdEybj0hHKfJXNLTxSk3Uebb4cs/AWHqJHq1
+	ldCKQxGUez1PwQTbjYVuzgoSSNjqQQ6cN2ToJWKHHZ3Ii6NAYb6LFxxZQMnI1FBbUQQVEyL+qgu
+	Y9pGLRlpuLlGBbMUjV+MEyd+hCNwNrHqoDH7ElXytMdURrDwCHomu8ZT8wUKv2GWJ39ezQnwZLD
+	T+tKqByUSX0BMcnqyYfgt/A/1kyYfTYEq89KwqO9ss+/lyc6DpkC8BbttitkubosKVLL8K+qlpt
+	6I
+X-Google-Smtp-Source: AGHT+IH6Ltx5J9UQ1h01zMMBVoitoSRQwM7F5bZvt3pvVezHa8vMsYH7ROgPUCpj3UYMdCE/cK73yw==
+X-Received: by 2002:a05:6214:f23:b0:80f:abfe:819b with SMTP id 6a1803df08f44-87b2102679amr124997606d6.26.1760054165314;
+        Thu, 09 Oct 2025 16:56:05 -0700 (PDT)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4e706b97ba7sm7574841cf.4.2025.10.09.16.56.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Oct 2025 16:56:04 -0700 (PDT)
+Date: Thu, 9 Oct 2025 19:56:03 -0400
+From: Nick Bowler <nbowler@draconx.ca>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+Message-ID: <hyyyuqsyf7c3ed2ku57fp4sjwkpcacygtrwnkgupn2xdq7ez4u@sg6xeg4shkdd>
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+ <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+ <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
+ <ef6558a9-c44a-4c66-967c-187f260f73e1@suse.de>
+ <xeipdyk2i2lpkg4rrvz4cl2l3ch62sl4zoa73qvlms3ek3zkci@y7xqbgjulaet>
+ <cox6kpackepnunrlhpsssvgdmjd24477cc7mide52xptmmoxyr@ijjotb3xju3v>
+ <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
+ <5949fd73-3ca4-4bd9-8092-2d9923dcbfd3@suse.de>
+ <qjyncqymjja57h2wxxv3ebuqpip5qu7yjalccons5xmtzfw5h5@m3u4rvbqzcxt>
+ <e0104f10-9230-41e5-acd1-4ca95c38220e@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,35 +83,30 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251009075149.1083040-1-safinaskar@gmail.com>
+In-Reply-To: <e0104f10-9230-41e5-acd1-4ca95c38220e@suse.de>
 
-Hi Askar,
+Hello,
 
-On Thu, Oct 09, 2025 at 10:51:49AM +0300, Askar Safin wrote:
-> #regzbot introduced: d1d0963121769d8d16150b913fe886e48efefa51
+On Tue, Oct 07, 2025 at 10:51:29AM +0200, Thomas Zimmermann wrote:
+> Am 04.10.25 um 02:31 schrieb Nick Bowler:
+> > But it introduces a new problem: the screen no longer turns back on if
+> > I boot the patched kernel from the "display off" state.  The unpatched
+> > 6.17 kernel would at least turn the display back on from this.
+> > Furthermore, rebooting from this state keeps the display off.
+[...]
+> Thanks again for testing. Looks like your BMC is especially picky about
+> these settings. :)
 > 
-> As well as I understand, if you want to disable warnings, you
-> should pass "CFLAGS=-w" to "make". Starting with d1d096312176,
-> this no longer works.
-> 
-> Steps to reproduce:
-> 
-> $ cd linux
-> $ git clean -f -q -d -x  # To clean everything not controlled by git
-> $ echo 'CONFIG_64BIT=y' > /tmp/minimini
-> $ make allnoconfig KCONFIG_ALLCONFIG=/tmp/minimini
-> $ make -j32 CFLAGS=-w
+> Attached are two patches; each trying to eliminate one of the possible
+> causes. Could you please test them individually and report the results?
 
-As Nicolas pointed out, CFLAGS has not be hooked into Kbuild for a long
-time, see commit 69ee0b352242 ("kbuild: do not pick up CFLAGS from the
-environment"). You would need to use KCFLAGS=-w to accomplish the same
-thing. KCFLAGS is only for the kernel build though, you would need
-HOSTCFLAGS=-w as well to ignore warnings when building the host
-programs such as objtool.
+0001-ast-Use-VGACR17-sync-enable-and-VGACRB6-sync-off.patch
+  ^ Everything appears to work fine with this patch applied on
+    top of 6.17.
 
-It does seem like the objtool Makefile should be hardened against CFLAGS
-being passed in from the command line so that the build does not break
-like this though.
+0001-ast-Use-VGACR17-sync-enable-and-VGASR01-screen-disab.patch
+  ^ This one has the same problem as the last patch: the screen
+    does not turn back on if it was previously off during bootup.
 
-Cheers,
-Nathan
+Thanks,
+  Nick
