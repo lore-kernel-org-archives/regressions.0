@@ -1,154 +1,124 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879810957
-	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 02:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6DB24501C
+	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 06:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759977864; cv=none; b=Q3gTv0nkUchJaNfi6yzTmDw/bAVYnaVRNVfOGRXLG5GnmpLw3d7lW/ooMtSAC8CBp2mA9NYEqHw3lPTQWhNuFrH19zBUFdehJ7rzqJvFG+IyZHzTXqBtfUm+V98Ie1ww+TkLESKiee6HKdeQuTtnN1VdjvugORpFEFWiwAfxVZs=
+	t=1759992638; cv=none; b=FwL+WwxWf7D4w2qkblKqFbI87+iKR/NSc7+rPxnSLlVrip0UAuPmlp8fHesQJT3RmW+MRscbFm/A+w6G2rXYlVEOQyiiJrBrz6mqW5rKne89ozZhRNfT9/O5tG0ky4iziTO6+zIkGy6Cu6nxG3q8e4FBjLJSVArsfJOic4yqlKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759977864; c=relaxed/simple;
-	bh=oI1Jn0YBXYu5KtHxXso48hxSMGUIWA/7qeScAetrKB0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=noiOM96fAz6xdc4rEy65ECY0y3Djm7938miua/B63PmZd0tiy1/eyeysvNipXJsQa+Gpwj/+qacIf2laIZ1BHGd/hp68WfQOBJz1IeEJKPBeJCgD/7N3Bm5FD8apwg8d60ZQS65F3orv5A1gFTOuf2m6Y6MuXsOuLxVxPxw9qao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=gY5jZI3D; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1759992638; c=relaxed/simple;
+	bh=EjW0hP5FbYNYPJ9yWAHL7ZiHj76ewphEw9EXSJMEoCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UhjK0Pn6FZmo6teYft+qfs8z59PMRwsHQWtcYpa+ggjzj3jUNYcBVduMmvqr8jSVE6FzaWul0Qxn7214O6KGCNtZZR+DtvL4oFmZJPZGUXAyXsDXBkS7E+BQAGN9ESrxNKyiiBCv6GhxY66HuBx0f0iS7Sa+Dh9IKiQvrW2iW5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dBtwaCmH; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="gY5jZI3D"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=DUtRzioJH+QUbhN03m+2mQKjKOgAi2V22A0inzZfaP0=;
-	b=gY5jZI3Dl9eP8xnDevz5IURg8lPq+NdA24WkPtua6nrnuFrhRbKBojNudrtVR81+asS0ov9k5
-	0zNaPcJfJr/j2F+WYBwrHvhwEfszWZruCr7/HikfB1ecuj9MIw494N2wu2r5W/nBz440+wAG7hG
-	GeQGLubkuWkbIU8+i0FteC8=
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4chvM670Lpz12LJY;
-	Thu,  9 Oct 2025 10:43:30 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9F24E180064;
-	Thu,  9 Oct 2025 10:44:19 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Oct 2025 10:44:19 +0800
-Message-ID: <296837df-b8ed-466a-8694-dbd69aad8bb0@huawei.com>
-Date: Thu, 9 Oct 2025 10:44:19 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBtwaCmH"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6394b4ff908so1075036a12.3
+        for <regressions@lists.linux.dev>; Wed, 08 Oct 2025 23:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759992635; x=1760597435; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9K3jcLU+F0b0kSwu1qTzDutZ00flbA5j0Seew04z2kw=;
+        b=dBtwaCmHfJG4H+DoUDFvKVBbDD09KgEKdsuK9/T+4HEK+clTYxKiBX6MLnpzZW0GEN
+         YLwkwp2Uc6nkmtb2y2OLPey3jTSvudayRi7bo+zgvYrYGevgszvmfwDqaE0e3v9exoPL
+         KnKtMp5dufhcrn+wMd6AsdmU/NJXndGvlqfK6v+Q3r6LpNiN2KDLezZ2c+pRPLHI5bKK
+         erfXBC1OT19jRkEZiWpxxCkaaKqbXrVSDss7qXDW8BCDtANRC10dpy6V1cwY02QMOcm0
+         M5afjt8FxFilrVbMPBVQZp6MzlFiMJdzXkKIrDVuoXhknWgrT8UqAh5lcXrBwXzR/3af
+         DmIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759992635; x=1760597435;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9K3jcLU+F0b0kSwu1qTzDutZ00flbA5j0Seew04z2kw=;
+        b=er5XIqKVD6PaIJGGyX86/DPqKUdxJsKIt7/BB+lnATlJWqCRP3aM5vfiVZodwG7tcJ
+         C2VwMfysewLJmVUBSuGMhhA8wWy0mImjScNqecE7CCTyndhrGW5ipvvm949yj5Ik47en
+         PudhvzDnbAa+53loaC4UFAASmr3nwb4D6qg8wV0yGbX7Cc8oVZ3uoPB3mNfK++OMFg7l
+         MDSh9sb2QApqDx8arAkd0mMjvBd92BLsLDWExWSy/5c9xN8Qi3VxvgURq8gDnC4i8POM
+         3t8hZP6JpK7TxyFScKkcIf0t8jEmvQ5TlCfrUUW+e/lbDPhp5uN4Ek3kxDSh5Ezdx1Uj
+         GWyA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0yanhEVXo+3G/NKp//BmSw8VopyxUoiNkFZu0cPoH2tgLLvMmPaOB2JHlac4asMCMi4BykA7LmPq+Ng==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxij5D0XqjfuBlEmbZx5Ya3Wm/uez4PRVzNtsiGvxjnNmgNC+aS
+	14de+iToAwrHPNclEc31FShLCSXwo4FFYNv8zc3HyinJ6dq13f26ytGn
+X-Gm-Gg: ASbGncvNnT1QwxgJqCmBKIpX6hPSy0QeTbUvP2jvtZHOUx/M3Gyu17vlL7/JKTPaN+Q
+	gZOjyHU2kfFmJU8Qjrz7yOcG0rOJPTFYWWbcqAC32D//WBa4vIf3VGrE5+c28Qbhuumcw1yV5TQ
+	+EB4LmLpLGyRkD1XLe+qqGI1A9sEJz9dSt+f2B6PaGaISEFYQ8wPQdIwRtZqZEycDN7CbmyxVDL
+	rLZzGZiy8JJo//JEc8v7vLSN1D4RiupLaoei6g0PXAU1FuT/CLOQFrxzWlkrYMzhpYKjI8zdu4O
+	sVw5wmLmFcxu6irVWF7/7fwr7rtJVEjIAR8vlGg6Kq1sdz+d55dc1oXpmOm1Qd+024Ust+t1Sk4
+	S90DRuB5Vk3E0wUFlob5Vl4VCOeb71LAjkwBWJygFCG2M09fA+PxUkhAqzTU=
+X-Google-Smtp-Source: AGHT+IG8Ud5fo/RqGDQh+pFaXna1RgG6zPI71+duC2ptc9c7lcQdelbdLg9f2SiIK3mM5gHnQpaK4Q==
+X-Received: by 2002:a05:6402:510e:b0:633:d65a:af0e with SMTP id 4fb4d7f45d1cf-639d5c59a53mr6110460a12.28.1759992635029;
+        Wed, 08 Oct 2025 23:50:35 -0700 (PDT)
+Received: from foxbook (bff184.neoplus.adsl.tpnet.pl. [83.28.43.184])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-639f3cdbec1sm1715007a12.20.2025.10.08.23.50.33
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 08 Oct 2025 23:50:34 -0700 (PDT)
+Date: Thu, 9 Oct 2025 08:50:30 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Angel4005 <ooara1337@gmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-media@vger.kernel.org,
+ linux-uvc-devel@lists.sourceforge.net, Linux Regressions
+ <regressions@lists.linux.dev>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [REGRESSION] uvcvideo: Grandstream GUV3100 (2bab:0011) broken
+ on recent kernels (including LTS)
+Message-ID: <20251009085030.2d360284.michal.pecio@gmail.com>
+In-Reply-To: <aObw4BRRheGO3_cg@archie.me>
+References: <CAOzBiVuS7ygUjjhCbyWg-KiNx+HFTYnqH5+GJhd6cYsNLT=DaA@mail.gmail.com>
+	<aObw4BRRheGO3_cg@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: regression in hostfs (ARCH=um)
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-To: Geoffrey Thorpe <geoff@geoffthorpe.net>, <stable@vger.kernel.org>
-CC: Christian Brauner <brauner@kernel.org>, <regressions@lists.linux.dev>
-References: <CAH2n15x389Uv_PuQ8Crm7gg4VC0UZ3kJg+eEfHMy8A6rzUtUAA@mail.gmail.com>
- <75a53a17-b5fe-441e-8953-8c1d5e7ca47a@huawei.com>
-In-Reply-To: <75a53a17-b5fe-441e-8953-8c1d5e7ca47a@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemr500015.china.huawei.com (7.202.195.162)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 9 Oct 2025 06:16:48 +0700, Bagas Sanjaya wrote:
+> On Wed, Oct 08, 2025 at 03:56:20PM +0300, Angel4005 wrote:
+> > Hello,
+> >=20
+> > I encountered regression (breakage) for the Grandstream GUV3100
+> > webcam (ID 2bab:0011) in the uvcvideo driver.
+> >=20
+> > Testing showed that the camera WORKS on kernel 6.16.8.arch3-1.
+> >=20
+> > However, it does NOT WORK on newer kernel versions, including the
+> > latest stable version (6.17.1.arch1-1) and the latest LTS kernel
+> > version (6.12.51-1).
+> >=20
+> > Problem: The driver finds the device but cannot start the video
+> > stream, resulting in an error in dmesg: =E2=80=9CNo streaming interface
+> > found for terminal 65535.=E2=80=9D
 
+Hi Angel4005,
 
-On 2025/10/9 10:42, Hongbo Li wrote:
-> 
-> Hi Geoffrey,
-> 
-> On 2025/10/9 7:22, Geoffrey Thorpe wrote:
->> Any trivial usage of hostfs seems to be broken since commit cd140ce9 
->> ("hostfs: convert hostfs to use the new mount API") - I bisected it 
->> down to this commit to make sure.
->>
-> 
-> Sorry to trouble you, can you provide your information about mount 
-> version and kernel version (use mount -v and uname -ar) ?
+As you are on Arch, can you try v6.12.48 LTS from the package archive?
+It was released on the same day as v6.16.8 so it's hopefully good too.
 
-Sorry, is mount --version
+If you can find the exact v6.12 series release which introduced the
+breakage things may get easier, because there are much fewer commits
+to worry about between releases in those LTS series.
 
-> 
-> Thanks,
-> Hongbo
-> 
->> Steps to reproduce;
->>
->> The following assumes that the ARCH=um kernel has already been 
->> compiled (and the 'vmlinux' executable is in the local directory, as 
->> is the case when building from the top directory of a source tree). I 
->> built mine from a fresh clone using 'defconfig'. The uml_run.sh script 
->> creates a bootable root FS image (from debian, via docker) and then 
->> boots it with a hostfs mount to demonstrate the regression. This 
->> should be observable with any other bootable image though, simply pass 
->> "hostfs=<hostpath>" to the ./vmlinux kernel and then try to mount it 
->> from within the booted VM ("mount -t hostfs none <guestpath>").
->>
->> The following 3 text files are used, and as they're small enough for 
->> copy-n-paste I figured (hoped) it was best to inline them rather than 
->> post attachments.
->>
->> uml_run.sh:
->> #!/bin/bash
->> set -ex
->> cat Dockerfile | docker build -t foobar:foobar -
->> docker export -o foobar.tar \
->>      `docker run -d foobar:foobar /bin/true`
->> dd if=/dev/zero of=rootfs.img \
->>      bs=$(expr 2048 \* 1024 \* 1024 / 512) count=512
->> mkfs.ext4 rootfs.img
->> sudo ./uml_root.sh
->> cp rootfs.img temp.img
->> dd if=/dev/zero of=swapfile bs=1M count=1024
->> chmod 600 swapfile
->> mkswap swapfile
->> ./vmlinux mem=4G ubd0=temp.img rw ubd1=swapfile \
->>      hostfs=$(pwd)
->>
->> uml_root.sh:
->> #!/bin/bash
->> set -ex
->> losetup -D
->> LOOPDEVICE=$(losetup -f)
->> losetup ${LOOPDEVICE} rootfs.img
->> mkdir -p tmpmnt
->> mount -t auto ${LOOPDEVICE} tmpmnt/
->> (cd tmpmnt && tar xf ../foobar.tar)
->> umount tmpmnt
->> losetup -D
->>
->> Dockerfile:
->> FROM debian:trixie
->> RUN echo 'debconf debconf/frontend select Noninteractive' | \
->>      debconf-set-selections
->> RUN apt-get update
->> RUN apt-get install -y apt-utils
->> RUN apt-get -y full-upgrade
->> RUN echo "US/Eastern" > /etc/timezone
->> RUN chmod 644 /etc/timezone
->> RUN cd /etc && rm -f localtime && \
->>      ln -s /usr/share/zoneinfo/$$MYTZ localtime
->> RUN apt-get install -y systemd-sysv kmod
->> RUN echo "root:root" | chpasswd
->> RUN echo "/dev/ubdb swap swap defaults 0 0" >> /etc/fstab
->> RUN mkdir /hosthack
->> RUN echo "none /hosthack hostfs defaults 0 0" >> /etc/fstab
->> RUN systemctl set-default multi-user.target
->>
->> Execute ./uml_run.sh to build the rootfs image and boot the VM. This 
->> requires a system with docker, and will also require a sudo password 
->> when creating the rootfs. The boot log indicates whether the hostfs 
->> mount succeeds or not - the boot should degrade to emergency mode if 
->> the mount fails, otherwise a login prompt should indicate success. 
->> (Login is root:root, e.g. if you prefer to go in and shutdown the VM 
->> gracefully.)
->>
->> Please let me know if I can/should provide anything else.
->>
->> Cheers,
->> Geoff
->>
+These are the only drivers/media changes between v6.12.48 and v6.12.51:
+
+000b2a6bed7f media: uvcvideo: Mark invalid entities with id UVC_INVALID_ENT=
+ITY_ID
+fd5d3e6b149e media: rc: fix races with imon_disconnect()
+effb1c19583b media: tuner: xc5000: Fix use-after-free in xc5000_release
+514a519baa9e media: b2c2: Fix use-after-free causing by irq_check_work in f=
+lexcop_pci_remove
+
+Perhaps the first one? Consider this dmesg line:
+
+[  363.700829] usb 1-1.3: No streaming interface found for terminal 65535.
+
+There is also a few drivers/usb changes, but I doubt they are relevant.
+
+Regards,
+Michal
