@@ -1,140 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34196241CB7;
-	Thu,  9 Oct 2025 08:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4022D4816
+	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 09:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759999739; cv=none; b=ZsDiRFJJ1CbVwUphlhMfN37ynbavjJqhvkmmF8WiFLokBtqjy/uo3WnExD54fOn5n/v0NAT6H8NhBEawDsWyDSMMd+PdVIjNDIZCTep7GaZxeyfWz4QXIdZsPQhU/KCM6ffHayqikz5Nz2lk9T5S6CQ07Hq9GoWZ6Bn8HH4n46k=
+	t=1760001835; cv=none; b=gY7fwWDCoZS6PvtI25zihju28xMAZM2kYCFOA8ef//6oIvX0B+CJepxGwcPUn+sE6OqTMIWZrVPQFNFV1FknS1mIk0rio5SiNpx91uZxWXvUmJzZZhoF1iuQHvubxHm2at0gN4j17pS4+7j+q6Sz86IYeiSyyKk+BzfOGWuBioM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759999739; c=relaxed/simple;
-	bh=XcVzGEG7wl6bThfY5lOeGukSt2PGXHScZ9EbqkTi7js=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJ1pVYi6ZupmW6+RlWn0ehP14rtLeFD+gKNoKmG9VqG0rGzAbz/gybmFb/tagGvN8QF0mPpnVD8xbk+Bk8qZ/qP87XcwcLUvsjPjlDhGiPSy0gn/QGTcodwACNeOcBO1x5BGtzUleNCP7w/CMv5nh5NGBtoKhId1sOIEmxyWiwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2/7XxzM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760001835; c=relaxed/simple;
+	bh=Fcp0jPHuTaTEqj1AeQwmDUWdnPD+3eJn9JS0FEQIwCI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JBUTS0G1fc220UhPYAaBhoZOP6k5xtmfVo24XeIN/kSBcwFSvmmesEFUNXNuawUPQxZpyBFtGAFbTpbQid1c8uGWyzLK7TYlRJ2CHWZ1Grr/u8RHybzHyoYv31ECzcAXTIzvSFtpxTeKacf2abs1S2su6CFoDJg5tQkXNehwbwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QZY/vbHr; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2/7XxzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EAFC4CEE7;
-	Thu,  9 Oct 2025 08:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759999738;
-	bh=XcVzGEG7wl6bThfY5lOeGukSt2PGXHScZ9EbqkTi7js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e2/7XxzM1HLb+pyFzIpz+xZ0yy4SzrCmR7PDLo6q1mnriFsw1HUFajJmocPwXS5ZZ
-	 ZwbNoMLUWfNRG6i76FGSUpdGIsEllwR3JB/la68MYg2F3B6TAoqbwu90oMDLgNwJvb
-	 n5CJpL4FIqyV27qYqN/QYDPDYIexuMVMjaZxSJ5k7QbOJykcjKT1NA5hklrmFTASwP
-	 5FIN6F0iWwPE9g7p+jffU+4BEKaoh+eEcFXGMpuwYMRE1rlIObNag63WaFsxK10IdX
-	 7sMkSAm5BVR4Z4+JiswasTUIe7DmJT4spXt8LRlO+Kgx3ZsFEMPVuFVQZiM6SzRlp9
-	 muaHoPZlQEiKA==
-Date: Thu, 9 Oct 2025 10:48:45 +0200
-From: Nicolas Schier <nsc@kernel.org>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	regressions@lists.linux.dev, nathan@kernel.org,
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
-	ojeda@kernel.org, sam@gentoo.org, thomas.weissschuh@linutronix.de,
-	Daniel Xu <dxu@dxuuu.xyz>
-Subject: Re: [REGRESSION][BISECTED] kbuild: CFLAGS=-w no longer works
-Message-ID: <aOd27ViaWbsdwNDR@levanger>
-References: <20251009075149.1083040-1-safinaskar@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QZY/vbHr"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760001818;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4+ivuVc0pjauohQnwAnQmgWCo18q7rQO//Il1Z5pDkI=;
+	b=QZY/vbHrRB/rCyBfesv9Z2RDIxgEjgiKiecm/PF/eZ0F33H1eP6amKz82mDHDXU4/9P4ga
+	vkSqMr8hps/8zuw3sbm342wB2l6WpbcRz/o1xhTNfuxMqj6s22Fa4Kl4f6VbiQKH1DVA1X
+	o3MPT8V0d3yCRnPrg0nTnGzDHq3De60=
+From: Matthew Schwartz <matthew.schwartz@linux.dev>
+To: harry.wentland@amd.com,
+	christian.koenig@amd.com,
+	sunpeng.li@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alexander.deucher@amd.com
+Cc: linux-kernel@vger.kernel.org,
+	mario.limonciello@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: [PATCH] Revert "drm/amd/display: Only restore backlight after amdgpu_dm_init or dm_resume"
+Date: Thu,  9 Oct 2025 11:23:01 +0200
+Message-ID: <20251009092301.13212-1-matthew.schwartz@linux.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251009075149.1083040-1-safinaskar@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Oct 09, 2025 at 10:51:49AM +0300, Askar Safin wrote:
-> #regzbot introduced: d1d0963121769d8d16150b913fe886e48efefa51
-> 
-> As well as I understand, if you want to disable warnings, you
-> should pass "CFLAGS=-w" to "make". Starting with d1d096312176,
-> this no longer works.
-> 
-> Steps to reproduce:
-> 
-> $ cd linux
-> $ git clean -f -q -d -x  # To clean everything not controlled by git
-> $ echo 'CONFIG_64BIT=y' > /tmp/minimini
-> $ make allnoconfig KCONFIG_ALLCONFIG=/tmp/minimini
-> $ make -j32 CFLAGS=-w
+This fix regressed the original issue that commit d83c747a1225
+("drm/amd/display: Fix brightness level not retained over reboot") solved,
+so revert it until a different approach to solve the regression that
+it caused with AMD_PRIVATE_COLOR is found.
 
-If you want to hand-over additional CFLAGS to kbuild you need to use
-KCFLAGS or other variations, see Documentation/kbuild/kbuild.rst.
-When I intentionally introduce a warning in e.g. init/main.c, I can
-suppress the compiler warning by calling
+Fixes: a490c8d77d50 ("drm/amd/display: Only restore backlight after amdgpu_dm_init or dm_resume")
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4620
+Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++--------
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h |  7 -------
+ 2 files changed, 4 insertions(+), 15 deletions(-)
 
-    make KCFLAGS=-w
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 8e1622bf7a42..21281e684b84 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2081,8 +2081,6 @@ static int amdgpu_dm_init(struct amdgpu_device *adev)
+ 
+ 	dc_hardware_init(adev->dm.dc);
+ 
+-	adev->dm.restore_backlight = true;
+-
+ 	adev->dm.hpd_rx_offload_wq = hpd_rx_irq_create_workqueue(adev);
+ 	if (!adev->dm.hpd_rx_offload_wq) {
+ 		drm_err(adev_to_drm(adev), "failed to create hpd rx offload workqueue.\n");
+@@ -3438,7 +3436,6 @@ static int dm_resume(struct amdgpu_ip_block *ip_block)
+ 		dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D0);
+ 
+ 		dc_resume(dm->dc);
+-		adev->dm.restore_backlight = true;
+ 
+ 		amdgpu_dm_irq_resume_early(adev);
+ 
+@@ -9965,6 +9962,7 @@ static void amdgpu_dm_commit_streams(struct drm_atomic_state *state,
+ 	bool mode_set_reset_required = false;
+ 	u32 i;
+ 	struct dc_commit_streams_params params = {dc_state->streams, dc_state->stream_count};
++	bool set_backlight_level = false;
+ 
+ 	/* Disable writeback */
+ 	for_each_old_connector_in_state(state, connector, old_con_state, i) {
+@@ -10084,6 +10082,7 @@ static void amdgpu_dm_commit_streams(struct drm_atomic_state *state,
+ 			acrtc->hw_mode = new_crtc_state->mode;
+ 			crtc->hwmode = new_crtc_state->mode;
+ 			mode_set_reset_required = true;
++			set_backlight_level = true;
+ 		} else if (modereset_required(new_crtc_state)) {
+ 			drm_dbg_atomic(dev,
+ 				       "Atomic commit: RESET. crtc id %d:[%p]\n",
+@@ -10140,16 +10139,13 @@ static void amdgpu_dm_commit_streams(struct drm_atomic_state *state,
+ 	 * to fix a flicker issue.
+ 	 * It will cause the dm->actual_brightness is not the current panel brightness
+ 	 * level. (the dm->brightness is the correct panel level)
+-	 * So we set the backlight level with dm->brightness value after initial
+-	 * set mode. Use restore_backlight flag to avoid setting backlight level
+-	 * for every subsequent mode set.
++	 * So we set the backlight level with dm->brightness value after set mode
+ 	 */
+-	if (dm->restore_backlight) {
++	if (set_backlight_level) {
+ 		for (i = 0; i < dm->num_of_edps; i++) {
+ 			if (dm->backlight_dev[i])
+ 				amdgpu_dm_backlight_set_level(dm, i, dm->brightness[i]);
+ 		}
+-		dm->restore_backlight = false;
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+index 009f206226f0..db75e991ac7b 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+@@ -630,13 +630,6 @@ struct amdgpu_display_manager {
+ 	 */
+ 	u32 actual_brightness[AMDGPU_DM_MAX_NUM_EDP];
+ 
+-	/**
+-	 * @restore_backlight:
+-	 *
+-	 * Flag to indicate whether to restore backlight after modeset.
+-	 */
+-	bool restore_backlight;
+-
+ 	/**
+ 	 * @aux_hpd_discon_quirk:
+ 	 *
+-- 
+2.51.0
 
-Your log output below does not contain any warning, so I assume that you
-actually want to point to something different.
-
-
-[...]
->   CC      /rbt/linux/tools/objtool/libsubcmd/exec-cmd.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/help.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/pager.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/parse-options.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/run-command.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/sigchain.o
->   CC      /rbt/linux/tools/objtool/libsubcmd/subcmd-config.o
-> exec-cmd.c:2:10: fatal error: linux/compiler.h: No such file or directory
->     2 | #include <linux/compiler.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[5]: *** [/rbt/linux/tools/build/Makefile.build:86: /rbt/linux/tools/objtool/libsubcmd/exec-cmd.o] Error 1
-> make[5]: *** Waiting for unfinished jobs....
-> parse-options.c:2:10: fatal error: linux/compiler.h: No such file or directory
->     2 | #include <linux/compiler.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[5]: *** [/rbt/linux/tools/build/Makefile.build:86: /rbt/linux/tools/objtool/libsubcmd/parse-options.o] Error 1
-> In file included from sigchain.c:3:
-> subcmd-util.h:8:10: fatal error: linux/compiler.h: No such file or directory
->     8 | #include <linux/compiler.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[5]: *** [/rbt/linux/tools/build/Makefile.build:86: /rbt/linux/tools/objtool/libsubcmd/sigchain.o] Error 1
->   MKELF   scripts/mod/elfconfig.h
-> In file included from help.c:12:
-> subcmd-util.h:8:10: fatal error: linux/compiler.h: No such file or directory
->     8 | #include <linux/compiler.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
->   HOSTCC  scripts/mod/modpost.o
-> make[5]: *** [/rbt/linux/tools/build/Makefile.build:85: /rbt/linux/tools/objtool/libsubcmd/help.o] Error 1
->   HOSTCC  scripts/mod/sumversion.o
-> In file included from run-command.c:11:
-> subcmd-util.h:8:10: fatal error: linux/compiler.h: No such file or directory
->     8 | #include <linux/compiler.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
->   HOSTCC  scripts/mod/symsearch.o
-> make[5]: *** [/rbt/linux/tools/build/Makefile.build:85: /rbt/linux/tools/objtool/libsubcmd/run-command.o] Error 1
->   UPD     scripts/mod/devicetable-offsets.h
->   HOSTCC  scripts/mod/file2alias.o
-> make[4]: *** [Makefile:78: /rbt/linux/tools/objtool/libsubcmd/libsubcmd-in.o] Error 2
-> make[3]: *** [Makefile:83: /rbt/linux/tools/objtool/libsubcmd/libsubcmd.a] Error 2
-> make[2]: *** [Makefile:73: objtool] Error 2
-> make[1]: *** [/rbt/linux/Makefile:1430: tools/objtool] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-
-This is reproducible on my machine:
-
-    make -C tools objtool CFLAGS=-w
-
-But is doesn't matter which CFLAGS you add here, as they overwrite
-objtool's include paths.
-
-According to tools/build/Documentation/Build.txt you should use
-different variables for everything below tools/, e.g.:
-
-    make -C tools objtool CFLAGS_objtool=-w
-
-Does this help for your specific issue?
-
-Kind regards,
-Nicolas
