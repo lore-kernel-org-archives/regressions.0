@@ -1,121 +1,198 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7466B78F59
-	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 14:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F242DF70E
+	for <regressions@lists.linux.dev>; Thu,  9 Oct 2025 14:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760018697; cv=none; b=RAkWPYArUvP6nwhHgfJyTAL1K3KlRkEzofl2OgbZfPYASVfuDUn6oiNkLWJYrnvk2gwKeHVfiCz6QoUUaN0f869f3sawiDBviLp2mwVvOR8XtITLQYhAN1Xbt3okOTkuyFlD1mSk8LbWSOiD9X7izwN/Ta02PhXqJ7LEfxzucvk=
+	t=1760021861; cv=none; b=Sz86+NQX6yTnIvdHI8D1lxp878UPfmriWRi/NhTpuKQNwfBKMZWJhrd1c9D9m7uPHed/jKBRHS39CR3qX5YEfpUVTcY9RBbYZ2pNL4C1329JhOJsvI5kx//lYSV0l8ZjkGVWAtdDF3s/evTywG7Smrclr1a2pPIzY+EUVrE+kWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760018697; c=relaxed/simple;
-	bh=HFz+DzsAHHYBSi6GUFx67A7OgctCJkmIJ99bn/U5o6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iAJfK2kdhkE7yojleLHK22c1vKHosAH+Khoisy/mvZ6Xhq9wRS3nVB0DFCVoaiSfI95ofY2RYYJroqdd3HA6QLjThNs/7UxZXeHtikbtpfyQDQr2NV4EPwMDoUo7saRmmG8SexCydvUZyg5pUYCiLNcvJ4vjL1OqCDG9uVNzWiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=geoffthorpe.net; spf=pass smtp.mailfrom=qclibre.com; dkim=pass (1024-bit key) header.d=geoffthorpe.net header.i=@geoffthorpe.net header.b=RLjzq7Fx; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=geoffthorpe.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qclibre.com
+	s=arc-20240116; t=1760021861; c=relaxed/simple;
+	bh=eYCZccLznnn/IyOVzFPzUuPMjYtFcRA6hZtrGO03olU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E6BIDHCKU1xEVZ9k+7wDZ2AqJGVmepT8mVjPS5j8m39qHu4Gdl16FN3v7amwkkTVaCCoWuKMDV6sjsSAkugF3qcYhSYQHTnGXUJgv58//ixwGCWhwY0ti7JjOoW3h8mTeG7CKo1hEl3VbZAeM8kUgdrJx2HppdWkdtpuzyCUrD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhpltK2s; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=geoffthorpe.net header.i=@geoffthorpe.net header.b="RLjzq7Fx"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-77fac63ba26so9799917b3.3
-        for <regressions@lists.linux.dev>; Thu, 09 Oct 2025 07:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhpltK2s"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-33450918e4fso218625a91.1
+        for <regressions@lists.linux.dev>; Thu, 09 Oct 2025 07:57:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=geoffthorpe.net; s=myprefix; t=1760018694; x=1760623494; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RdqKy9G6bRtRu/wXq/+0Le+P5mZ0KkhEVzNICvjTdJs=;
-        b=RLjzq7FxvKU2ku+r588UBWtUUwlAb0va5otPd+bSpo+g8LgEfccEYDYebG8mRgzGLH
-         29lGn5zMzGcS11hwrMkALalcjjGyfeNHQZ9Kk7+bZDE1RCUvvS7kJDcy3wjzfrfPE0zx
-         goIZ3wYLQAqh/LwYFVIPBcXsjCPOJrls4HV9o=
+        d=gmail.com; s=20230601; t=1760021858; x=1760626658; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R6XdlmW98KtilytItO4ixKc8ZfXZSoJOArSFuikw+5k=;
+        b=XhpltK2svfrRlnOtGY/LNwSfSWokYrBTTWsXqjn1NX6dtYnp4YV+d6BZ29YtAHRuKo
+         LrP/V6QJbsnGLzMWNEvPA0ID/TA4FPKWpZXSz+hOrmyzXPlO1CGGZVr+1KGRLqF97pvN
+         LbRdnJJNl08R0/VHqT4ycVspuRSDMGAJEUukl6oV4F4jdSiH7Gvyce2Hy707rh5pXSTn
+         E8+tgec8wpOiKjSzzoTCA8iRgAIc2mGPq4CYrzmAzQukpbQWMmSyHgiXITcZhAdP0vV7
+         WH4XfAZMPhpYvrgmwzEDyRSSpBEJ2MP6tIUtZczxuGSmdL3PNYGVmSh1gWJgnyK/sCee
+         1MJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760018694; x=1760623494;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdqKy9G6bRtRu/wXq/+0Le+P5mZ0KkhEVzNICvjTdJs=;
-        b=RFvQaeI13UMml9C3fmisp9EO+6oXKU3UKdmHr43/8oRWhn7Y88fU9Lxf9jt8mr9H0E
-         jold6073UC9ey4Eh9s1O2csI7o/gH6SLPGRmKRTi5yRDNxxfaIQJ4nB4M5cYvLSF2Y/r
-         +bVmHyTvW4DXQfqQzcS6DhDcQp/AXItnWo8N/F/MECgTmuNM8mTDPjjGMMa3ckqyxE3r
-         E7wDfvt1GfkUuGZSHS/12ZRFMj6NRNrgn1LgL8MUabqdbnrWX1KqPi+lAHskjGAmJtCM
-         VlzHwm+ccjrDDRIERMKmtJ4jZaFaUqdzImEN3OWM/8TDVf2UjMHQuzvwiwy1nCPdbclZ
-         f8xw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7rRWfrZl15pqMR0L+pX0i/Q0wU6W/1x88aH9PdM5C4D14HZzW0nvpAMcgsYTV+U2cwWIruZA4QDZU3A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKvxHFJ4/xjSLzNzxX73ITDWvlwE2H6YdjOY68115Pbyzhp3h8
-	yydSXByUX5jJx2e4HzdAhc5047aS9BAVtVObRdlKAEmPU6pKLPM86eEldvVbXL2mJgHa/gv3R1F
-	QF34pP6TVBQ==
-X-Gm-Gg: ASbGncsiPu7LL2eoCWs0FvJsgQWhzcjsiORcFczVAMqTeP7O93lFRcyri0TZq//JI//
-	MNFJhVgJKO+LeowRCUtmHjQvpQILhIusk7Le8Qi2HIQDoa84t/Nk9xWbJGUy5wE4RAhG6bTd6Zg
-	aTevUfXCra3M2uRStcorZWmk7Cs4TpGQbj9uRiXoTQ5h4eCC1nR0ZelKKbmBr7wH6MxXs5GNSH6
-	qZSXn9u8fWk66OIndJiCx+lf8h0mMhUkmkbm2rtJuPSumMO3QUJ+foI9bUpGzF81zPUwogOlwbV
-	jkygJWjnwjqZJAmityTo2Cen6QTqHREF9/uMmU1JAnX/a2NO+xTZkhov9BDm5dvjaD6bkGCzIaG
-	+cYTLmw/XXcVEsL6vqQDr3p6ZCrgNZMl2Q2fpG3VDWp8qs4xP95210zuGpzJMZREBaYOJDMfCbm
-	bInYxIhkNYlyN3Dg==
-X-Google-Smtp-Source: AGHT+IEy3Zpk1t7I8Y9go0VYl6eLttKJfqUkxmv9wH5m56XMkNIzUJ4aTQJcvW0kxxWmFap74ApUMg==
-X-Received: by 2002:a05:690c:46c5:b0:772:2b5e:1f10 with SMTP id 00721157ae682-780e13f4996mr97210717b3.1.1760018694426;
-        Thu, 09 Oct 2025 07:04:54 -0700 (PDT)
-Received: from [10.0.0.3] (modemcable155.19-201-24.mc.videotron.ca. [24.201.19.155])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8849f2e1db1sm200301485a.4.2025.10.09.07.04.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Oct 2025 07:04:53 -0700 (PDT)
-Message-ID: <028786fa-8964-4dd1-8721-62a5b757237c@geoffthorpe.net>
-Date: Thu, 9 Oct 2025 10:04:52 -0400
+        d=1e100.net; s=20230601; t=1760021858; x=1760626658;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R6XdlmW98KtilytItO4ixKc8ZfXZSoJOArSFuikw+5k=;
+        b=ly2DvrW7RE0SbFzkTKW0GYsyq5TNbciALGHMvupxRYMg5Hi1vl8XVgOWsd+gxNxNR6
+         S6gtz6OH+6wtHqEoupn1W0R0mj0xK2Ax+GjWwh1C4g+iwe8QXVWv6R00jkeLcqr0J7sb
+         OVfIII3/Nqn0DzSoR21nu3CZzqI5nuDxQuLuTFrjVahKkClRZLZkpEb+ZOVqeLS82/cs
+         5a24fKsMEF7Pi4frKP5sVTKBtqBQgMIjXazemE791mpXiMNHj6j/ArJTW7HAoanzMPuP
+         FEAcxdwTQeQt5MvkZjun6f0vi4VQJVSVjTsqMbxALWWmLVPVTm8yJflpJ6ZV3gK6DJLH
+         74NA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZmO9UzTFaqur6kaA1W25zZcO/Wc6c4GS7lNI537VPhs/Y3lnVU+m+W1/rn8gKTtuW+exmIY1Qcm1Eqw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx1Pep8q7G9Bu47hn7Q6leRRFqbR9/OaOJI2V40lnTbD7rZlupS
+	NcaELu1cGZtK1fdk6uTRf6xMQSBrQGzZH9XUze2TDpiGj1iJ720RPILaefjBkKfTw9aI4ka97P7
+	y43p/YLmiMX7Z5sveP20hlev2qy01SPM=
+X-Gm-Gg: ASbGncvn+pn4a4wbQ+JXWdl6k8h79UaVuQEvDQdG7I6I+2vpBi/c8eFQ9kYwfj3Sb1C
+	q8JZavhXhL+bI1Qe4OtWqB72YOXAfd1lwq56FqrtOZC6FLy9QpKYk/ztgTWqU7KhY4DhQStLkDV
+	StExh6UegJZMeaWX6jO86zUzt3Qd6lnWNAcg6Cc0c1gb/Kmn7AR0SYWZzvH8y2aDyoA2AUQINnx
+	fJENsVGsFcamv5z64oITWEmjXGV8CrywUfb1o/saA==
+X-Google-Smtp-Source: AGHT+IF5nY+/zS7XE+U3ljAWwxUkr3ItMRcUh2ZrRrJhs5g+6GaXHyt+rQpZjkZPESw2KD1IdoLsSC3inYtQoPTKMPA=
+X-Received: by 2002:a17:902:f54b:b0:274:506d:7fe5 with SMTP id
+ d9443c01a7336-290273e1e23mr53282705ad.4.1760021858358; Thu, 09 Oct 2025
+ 07:57:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: regression in hostfs (ARCH=um)
-To: Hongbo Li <lihongbo22@huawei.com>, stable@vger.kernel.org
-Cc: Christian Brauner <brauner@kernel.org>, regressions@lists.linux.dev
-References: <CAH2n15x389Uv_PuQ8Crm7gg4VC0UZ3kJg+eEfHMy8A6rzUtUAA@mail.gmail.com>
- <75a53a17-b5fe-441e-8953-8c1d5e7ca47a@huawei.com>
-Content-Language: en-US
-From: Geoffrey Thorpe <geoff@geoffthorpe.net>
-In-Reply-To: <75a53a17-b5fe-441e-8953-8c1d5e7ca47a@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251009121900.12777-1-matthew.schwartz@linux.dev>
+In-Reply-To: <20251009121900.12777-1-matthew.schwartz@linux.dev>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 9 Oct 2025 10:57:27 -0400
+X-Gm-Features: AS18NWCqAqPtByWTZAk7O2nj3raD72Gwfu7-I05PFv7BPT8i-MRFM-Zyva2YcIA
+Message-ID: <CADnq5_NauQ3YSngQ4mtx=L1t5yuxWZYHLRn-Je8rL3yYhYOqMA@mail.gmail.com>
+Subject: Re: [PATCH v2] Revert "drm/amd/display: Only restore backlight after
+ amdgpu_dm_init or dm_resume"
+To: Matthew Schwartz <matthew.schwartz@linux.dev>
+Cc: harry.wentland@amd.com, christian.koenig@amd.com, sunpeng.li@amd.com, 
+	airlied@gmail.com, simona@ffwll.ch, alexander.deucher@amd.com, 
+	linux-kernel@vger.kernel.org, mario.limonciello@amd.com, 
+	amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-10-08 22:42, Hongbo Li wrote:
+Applied.  Thanks.
+
+Alex
+
+On Thu, Oct 9, 2025 at 8:51=E2=80=AFAM Matthew Schwartz
+<matthew.schwartz@linux.dev> wrote:
 >
-> Hi Geoffrey,
+> This fix regressed the original issue that commit d83c747a1225
+> ("drm/amd/display: Fix brightness level not retained over reboot") solved=
+,
+> so revert it until a different approach to solve the regression that
+> it caused with AMD_PRIVATE_COLOR is found.
 >
-> On 2025/10/9 7:22, Geoffrey Thorpe wrote:
->> Any trivial usage of hostfs seems to be broken since commit cd140ce9 
->> ("hostfs: convert hostfs to use the new mount API") - I bisected it 
->> down to this commit to make sure.
->>
+> Fixes: a490c8d77d50 ("drm/amd/display: Only restore backlight after amdgp=
+u_dm_init or dm_resume")
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4620
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+> ---
+> v1 -> v2:
+> - Fix missing stable tag
+> ---
+>  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 12 ++++--------
+>  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h |  7 -------
+>  2 files changed, 4 insertions(+), 15 deletions(-)
 >
-> Sorry to trouble you, can you provide your information about mount 
-> version and kernel version (use mount -v and uname -ar) ?
-
-
-root@localhost:~# mount --version
-mount from util-linux 2.41 (libmount 2.41.0: selinux, smack, btrfs, 
-verity, namespaces, idmapping, fd-based-mount, statmount, statx, assert, 
-debug)
-
-As for the kernel version, I have been bisecting different kernel 
-versions to find the culprit commit. The problem occurs with the commit 
-id I mentioned (cd140ce9: "hostfs: convert hostfs to use the new mount 
-API"). This appears to be between v6.10 and v6.11. The most recent 
-kernel releases all seem to exhibit the problem. My own code has been 
-using kernel v6.6 up till now and that works fine.
-
-By the way, did you try using the steps to reproduce? No pressure to do 
-so, I am just curious if the instructions I provided work OK for other 
-people (or whether I missed something essential). If you do follow those 
-steps, you should be able to see success if you use v6.6 or older, and 
-you should see failure with anything newer.
-
-(Side note: when bisecting, I noticed that a number of commits had to be 
-skipped because they seg-faulted during early boot. Fortunately, that 
-didn't prevent me from finding the culprit. I mention this just in case 
-you stumble across a commit that seg-faults too - it appears that's 
-unrelated to the current regression.)
-
-Regards,
-Geoff
-
-
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/=
+gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 8e1622bf7a42..21281e684b84 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -2081,8 +2081,6 @@ static int amdgpu_dm_init(struct amdgpu_device *ade=
+v)
+>
+>         dc_hardware_init(adev->dm.dc);
+>
+> -       adev->dm.restore_backlight =3D true;
+> -
+>         adev->dm.hpd_rx_offload_wq =3D hpd_rx_irq_create_workqueue(adev);
+>         if (!adev->dm.hpd_rx_offload_wq) {
+>                 drm_err(adev_to_drm(adev), "failed to create hpd rx offlo=
+ad workqueue.\n");
+> @@ -3438,7 +3436,6 @@ static int dm_resume(struct amdgpu_ip_block *ip_blo=
+ck)
+>                 dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D0);
+>
+>                 dc_resume(dm->dc);
+> -               adev->dm.restore_backlight =3D true;
+>
+>                 amdgpu_dm_irq_resume_early(adev);
+>
+> @@ -9965,6 +9962,7 @@ static void amdgpu_dm_commit_streams(struct drm_ato=
+mic_state *state,
+>         bool mode_set_reset_required =3D false;
+>         u32 i;
+>         struct dc_commit_streams_params params =3D {dc_state->streams, dc=
+_state->stream_count};
+> +       bool set_backlight_level =3D false;
+>
+>         /* Disable writeback */
+>         for_each_old_connector_in_state(state, connector, old_con_state, =
+i) {
+> @@ -10084,6 +10082,7 @@ static void amdgpu_dm_commit_streams(struct drm_a=
+tomic_state *state,
+>                         acrtc->hw_mode =3D new_crtc_state->mode;
+>                         crtc->hwmode =3D new_crtc_state->mode;
+>                         mode_set_reset_required =3D true;
+> +                       set_backlight_level =3D true;
+>                 } else if (modereset_required(new_crtc_state)) {
+>                         drm_dbg_atomic(dev,
+>                                        "Atomic commit: RESET. crtc id %d:=
+[%p]\n",
+> @@ -10140,16 +10139,13 @@ static void amdgpu_dm_commit_streams(struct drm=
+_atomic_state *state,
+>          * to fix a flicker issue.
+>          * It will cause the dm->actual_brightness is not the current pan=
+el brightness
+>          * level. (the dm->brightness is the correct panel level)
+> -        * So we set the backlight level with dm->brightness value after =
+initial
+> -        * set mode. Use restore_backlight flag to avoid setting backligh=
+t level
+> -        * for every subsequent mode set.
+> +        * So we set the backlight level with dm->brightness value after =
+set mode
+>          */
+> -       if (dm->restore_backlight) {
+> +       if (set_backlight_level) {
+>                 for (i =3D 0; i < dm->num_of_edps; i++) {
+>                         if (dm->backlight_dev[i])
+>                                 amdgpu_dm_backlight_set_level(dm, i, dm->=
+brightness[i]);
+>                 }
+> -               dm->restore_backlight =3D false;
+>         }
+>  }
+>
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h b/drivers/=
+gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+> index 009f206226f0..db75e991ac7b 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.h
+> @@ -630,13 +630,6 @@ struct amdgpu_display_manager {
+>          */
+>         u32 actual_brightness[AMDGPU_DM_MAX_NUM_EDP];
+>
+> -       /**
+> -        * @restore_backlight:
+> -        *
+> -        * Flag to indicate whether to restore backlight after modeset.
+> -        */
+> -       bool restore_backlight;
+> -
+>         /**
+>          * @aux_hpd_discon_quirk:
+>          *
+> --
+> 2.51.0
+>
