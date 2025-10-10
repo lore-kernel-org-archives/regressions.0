@@ -1,102 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D551991D2
-	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 08:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0590D1ADC83
+	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 09:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760084161; cv=none; b=uh/ESb8GfCYHtLUXozGzkE4mhrOjrnF4ROsd4rVAKNHaqGX9yug+DKIgr3nrtj5zTbe6NL1S6e5niKGC06tk2lBm5jOufdtL8iLCiWFGekM1pgK8TbUI6PXOgpYmqFX5dI+Yg77Tz5L6wXnPX09b25qixucfNuglRBrM1nmfm1Y=
+	t=1760087214; cv=none; b=dmFbxrSRzr2KJ/afKAcm1vj62oJ/LWJmNgWnkO1TU8hrGroNgS9mQ6/M6/j0164wsZMaqqv5pVks8YYUnr8nGtxQU3JrzZuUVe8MQt3lwFDXGTlW0ji+OzeNUBzm0J9ZLYs7OFmse9HqxrC6DxmfF3X17q89Tpa6g/Rh2gucnFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760084161; c=relaxed/simple;
-	bh=jOQ+1EB+xZR2bI8fkSuX+MnkwloxTSge0juOR5vXepY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D/IfIAYfmETko1AwmLktSiNj3OkpRSGovxOKOY5eLPl/AHEdeiH4/EnZ3O2KSQJDueG0xDMUOtdP1EF279sHVy9MRtlHT51vutPbvD6i528cmKo/dMTH3d7uj4C0a72EAfV0skDhUaosFfVBQnSCpgD6teQF9DUpaDLsaVfLlfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7y/2xMO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760087214; c=relaxed/simple;
+	bh=IsGhKN+ISwmoiMVLqUMbSvJDHuVQmWBmnBcq6oPhEk8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=a/wlyhxi/wfO+8k4a9FLoZ6h6yZBCbooM8JPafKu12Q5FXzuvPTMAQzlweZ+SGDOJdTi7tFB2Hglmg4TqAGcClAxjQ5bmUNBZPa6sxjj69UFViTrIe5D0ub72uTV38DWjmiBrxuBAPQDLcAS3cZ6cKO0IksYcTFuCF6ZglWpCmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lCpSXtoa; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7y/2xMO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760084159; x=1791620159;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jOQ+1EB+xZR2bI8fkSuX+MnkwloxTSge0juOR5vXepY=;
-  b=d7y/2xMOvjBhjOPXZ7IwK6dIUTSSMv/DpiKpvcBkCMfXk4pF+fn2qzta
-   e1dL2xHNyBholFeh8bFRJ4EI6UG9DVihBi+p/XRsuDGoSjFjjgTTyw306
-   KGfO69fVxueQ0FRpjCt7BUqBJbFwGQ/oOuGAz4aBoDoG5HAWzwbrU4Ewh
-   QiL3Dxs7UaqGivXrNvZO7WUZJ/n7FU2vmFlJ/EwLmn15kRJY46slpQ5oW
-   bQRvK0+3WRVYyaxUnkPsL8ZBCFNqGPqw3JA/p3/3ZslNpR8AtzfuLKZOn
-   sQKb5cfgRyoMyC5DaUe51SYJbAuQdEQDjghgS01WAnWcjTysHwW9K+x5D
-   A==;
-X-CSE-ConnectionGUID: 266NyOiKSGGmtL1u+YM/+A==
-X-CSE-MsgGUID: nm9JoZIoQGae490cxNQZ6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73403648"
-X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="73403648"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 01:15:59 -0700
-X-CSE-ConnectionGUID: Iw3WUnGJSM2ZEYhV1HRhAw==
-X-CSE-MsgGUID: atdz71oCTLyaFVtYe5a3tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="186192650"
-Received: from abityuts-desk.ger.corp.intel.com (HELO [10.245.245.149]) ([10.245.245.149])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 01:15:57 -0700
-Message-ID: <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
-Date: Fri, 10 Oct 2025 11:15:55 +0300
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lCpSXtoa"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6B00F25BEF;
+	Fri, 10 Oct 2025 11:06:48 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id qfkyY6bSuux8; Fri, 10 Oct 2025 11:06:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1760087207; bh=IsGhKN+ISwmoiMVLqUMbSvJDHuVQmWBmnBcq6oPhEk8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=lCpSXtoaz3RJPNla8lj0QnJ5eQJbkh0edD1TJy/oBGZSqE3IXiIW/AgCOYjjY2L2E
+	 K0cMOGQVKd1p0eWir7wm4AIxKQ8aqDdz3gG9gxuweeNgT8dfzeofZEwNXIABQDOXSB
+	 losjUGppk9rvYW2gfXA9p3D5xZidQBtYgljd1VA5zToyvRAlVtixxyzqyBRozPeFEr
+	 KdM4ogcydiyy/VFVDjg0kX54iPvuxUutJ6Uxq/d1kgSFZfMir/DJS3CkancvrV0Eo6
+	 0kx297XTzy4Y4XoytCWYeUXFlp6N39IsqQMtw6ZJKigchD6iDtqPDoy1RUoo5x7p4W
+	 /bwgBrB2X8NZA==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] [REPRO] USB-A devices not working on boot after
- recent USB merge
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Arisa Snowbell <arisa.snowbell@gmail.com>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, Niklas Neronin <niklas.neronin@linux.intel.com>
-References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
- <20251007231709.6c16802e.michal.pecio@gmail.com>
- <CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
- <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
- <20251008082055.5646dadc.michal.pecio@gmail.com>
- <CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com>
- <20251008130532.49922d58.michal.pecio@gmail.com>
- <CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com>
- <20251008223406.13f16f19.michal.pecio@gmail.com>
- <CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com>
- <CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com>
- <20251009131444.2c221922.michal.pecio@gmail.com>
- <90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com>
- <20251009152703.72e780b4.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20251009152703.72e780b4.michal.pecio@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Date: Fri, 10 Oct 2025 11:06:47 +0200
+From: machion@disroot.org
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com,
+ christian.koenig@amd.com
+Subject: Re: Unplayable framerates in game but specific kernel versions work,
+ maybe amdgpu problem
+In-Reply-To: <fadf714ecdc2e3bd5bed0c3ee69177a1@disroot.org>
+References: <c415d9e0b08bcba068b01700225bf560@disroot.org>
+ <CADnq5_PX1dYF2Jd3q7ghaBjpPhNLq9EmFJtN1w6YOSfVo++7sA@mail.gmail.com>
+ <69b5ebaa719355994a383fa026dc3fba@disroot.org>
+ <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
+ <fadf714ecdc2e3bd5bed0c3ee69177a1@disroot.org>
+Message-ID: <748446b7fa6a53f31c69a4e40257adae@disroot.org>
+X-Sender: machion@disroot.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10/9/25 16:27, Michal Pecio wrote:
-> On Thu, 9 Oct 2025 14:30:20 +0300, Mathias Nyman wrote:
->> Maybe the xhci->allow_single_roothub = 1; flag could be set in xhci_pci_setup()
->> when called for primary hcd
+Hi again,
+
+I have a question:
+
+Would it be possible to make the "memory management/buffering" methodes 
+switchable through a conf file (obviously amdgpu.conf)?
+So that I don't have to keep an old kernel version installed just to 
+play my game.
+
+Marion
+
+
+Am 2025-06-17 11:42, schrieb machion@disroot.org:
+> I feared that.
 > 
-> Oops, I put it at the beginning so it is now executing twice on
-> two-speed controllers.
+> It seems a crazy problem, when many people are affected and in opposite 
+> ways.
+> This ReBAR/UEFI thing is also new to me, but I don't have this on my 
+> system either (using BIOS/MBR).
 > 
-> I only understood this remark when I saw my confirmation printk()
-> appearing twice after removing the "hide USB3 ports" hack.
+> I hope, it can be fixed for all scenarios.
 > 
+> Marion
 > 
-> Should I do a v2 or leave cleaning it up for later?
-> I suspect that imod_interval should also be moved a few lines down.
-
-I'll happily take a v2 instead if Arisa has time to test it.
-
-You're right about the imod_interval as well, but that is a minor cleanup
-for a separate usb-next patch.
-
-Thanks
-Mathias
-
+> Am 2025-06-16 15:29, schrieb Alex Deucher:
+>> On Fri, Jun 13, 2025 at 3:38 PM <machion@disroot.org> wrote:
+>>> 
+>>> Hi,
+>>> sorry for the delay.
+>>> Besides less time, I had to make myself familiar with bisecting and
+>>> again kernel compiling. Last time I compiled the kernel myself was
+>>> around 2010 I think.
+>>> 
+>>> Anyway it seems I found the bad commit. The result after bisecting 10
+>>> commits is:
+>>> 
+>>> a53d959fe660341788cb8dbc3ac3330d90a09ecf is the first bad commit
+>>> commit a53d959fe660341788cb8dbc3ac3330d90a09ecf
+>>> Author: Christian König <christian.koenig@amd.com>
+>>> Date:   Thu Mar 20 14:46:18 2025 +0100
+>>> 
+>>>      drm/amdgpu: immediately use GTT for new allocations
+>>> 
+>>>      commit a755906fb2b8370c43e91ba437ae1b3e228e8b02 upstream.
+>>> 
+>>>      Only use GTT as a fallback if we already have a backing store. 
+>>> This
+>>>      prevents evictions when an application constantly allocates and
+>>> frees new
+>>>      memory.
+>>> 
+>>>      Partially fixes
+>>>      
+>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2833985.
+>>> 
+>>>      Signed-off-by: Christian König <christian.koenig@amd.com>
+>>>      Fixes: 216c1282dde3 ("drm/amdgpu: use GTT only as fallback for
+>>> VRAM|GTT")
+>>>      Acked-by: Alex Deucher <alexander.deucher@amd.com>
+>>>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>>>      Cc: stable@vger.kernel.org
+>>>      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> 
+>>>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> Unfortunately reverting that commit will reintroduce a similar
+>> performance issue for lots of other uses.  See:
+>> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2827990
+>> for a description of the fundemental problem.
+>> 
+>> Alex
+>> 
+>>> 
+>>> Marion
+>>> 
+>>> 
+>>> Am 2025-05-08 15:18, schrieb Alex Deucher:
+>>> > On Thu, May 8, 2025 at 9:13 AM <machion@disroot.org> wrote:
+>>> >>
+>>> >> Hello kernel/driver developers,
+>>> >>
+>>> >> I hope, with my information it's possible to find a bug/problem in the
+>>> >> kernel. Otherwise I am sorry, that I disturbed you.
+>>> >> I only use LTS kernels, but I can narrow it down to a hand full of
+>>> >> them,
+>>> >> where it works.
+>>> >>
+>>> >> The PC: Manjaro Stable/Cinnamon/X11/AMD Ryzen 5 2600/Radeon HD
+>>> >> 7790/8GB
+>>> >> RAM
+>>> >> I already asked the Manjaro community, but with no luck.
+>>> >>
+>>> >> The game: Hellpoint (GOG Linux latest version, Unity3D-Engine v2021),
+>>> >> uses vulkan
+>>> >>
+>>> >> ---
+>>> >>
+>>> >> I came a long road of kernels. I had many versions of 5.4, 5.10, 5.15,
+>>> >> 6.1 and 6.6 and and the game was always unplayable, because the frames
+>>> >> where around 1fps (performance of PC is not the problem).
+>>> >> I asked the mesa and cinnamon team for help in the past, but also with
+>>> >> no luck.
+>>> >> It never worked, till on 2025-03-29 when I installed 6.12.19 for the
+>>> >> first time and it worked!
+>>> >>
+>>> >> But it only worked with 6.12.19, 6.12.20 and 6.12.21
+>>> >> When I updated to 6.12.25, it was back to unplayable.
+>>> >
+>>> > Can you bisect to see what fixed it in 6.12.19 or what broke it in
+>>> > 6.12.25?  For example if it was working in 6.12.21 and not working in
+>>> > 6.12.25, you can bisect between 6.12.21 and .25.
+>>> >
+>>> > Alex
+>>> >
+>>> >>
+>>> >> For testing I installed 6.14.4 with the same result. It doesn't work.
+>>> >>
+>>> >> I also compared file /proc/config.gz of both kernels (6.12.21 <>
+>>> >> 6.14.4), but can't seem to see drastic changes to the graphical part.
+>>> >>
+>>> >> I presume it has something to do with amdgpu.
+>>> >>
+>>> >> If you need more information, I would be happy to help.
+>>> >>
+>>> >> Kind regards,
+>>> >> Marion
