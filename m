@@ -1,80 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ED91F03D8
-	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 07:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D551991D2
+	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 08:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760080252; cv=none; b=MLR2PY7yuiyeNMfm3wNXfvXCH9OTmIhBfFyAtK9ETPlMbUH3QIxsjSenlCQ8drw943rs3EiEXus0ntCDj7n2fFMA88zkjFpb2K6so6UG+0dpKrW9dgQbUkKgPxpnFYu8DIMJcOskppiK74QubW44t1maTXefDDK2dAwBjQKh8Jc=
+	t=1760084161; cv=none; b=uh/ESb8GfCYHtLUXozGzkE4mhrOjrnF4ROsd4rVAKNHaqGX9yug+DKIgr3nrtj5zTbe6NL1S6e5niKGC06tk2lBm5jOufdtL8iLCiWFGekM1pgK8TbUI6PXOgpYmqFX5dI+Yg77Tz5L6wXnPX09b25qixucfNuglRBrM1nmfm1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760080252; c=relaxed/simple;
-	bh=Z4vUjXYBCIWhFZcLWPtw6BwvOL175Oy414ENP10QQCk=;
+	s=arc-20240116; t=1760084161; c=relaxed/simple;
+	bh=jOQ+1EB+xZR2bI8fkSuX+MnkwloxTSge0juOR5vXepY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lJ6ofg8bWBPrMYmK3v1oEbTfb8+qRIpSZ5aEIL36/XYRJi5uC3cfhxnpR7J6GAMl+xLkGos6IXcteQ2xa1FxJ/V+We4oHQ8sJ46U2lhLdSgaUo1UAr+zbA1TNcugwGA93+5G3iGwgrM+Wia/czM/Ptf+/mQHQd95/Cm1UP1LdGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j1JVPi6c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ezsahyT0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j1JVPi6c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ezsahyT0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=D/IfIAYfmETko1AwmLktSiNj3OkpRSGovxOKOY5eLPl/AHEdeiH4/EnZ3O2KSQJDueG0xDMUOtdP1EF279sHVy9MRtlHT51vutPbvD6i528cmKo/dMTH3d7uj4C0a72EAfV0skDhUaosFfVBQnSCpgD6teQF9DUpaDLsaVfLlfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7y/2xMO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j1JVPi6c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ezsahyT0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j1JVPi6c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ezsahyT0"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D156223CF;
-	Fri, 10 Oct 2025 07:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760080249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=93jeYJ+ATJ5FvA+6WngIEwTUuSMPnvlLkuJb6VwS8cs=;
-	b=j1JVPi6cKZLXSHwutUuSfV8Fgy27X1a/780SzF25I6oeaZxYLDodIJNZYUc5dX8f6lT3lM
-	Nd2KqZycO0D+kTo339k7EDqxYCn1Hyqizc27o52khU2ohWZtPQ0uV5sBqf04NFNDfdGLHx
-	MwMzSUR1W7NJaFLpeHYcfNQZ/0u+PAU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760080249;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=93jeYJ+ATJ5FvA+6WngIEwTUuSMPnvlLkuJb6VwS8cs=;
-	b=ezsahyT0dpXkX8vAxC71u0WjXl586e36+Ng0cyOszR3g1y0jcGVXBCnvYbnIfZ7wVh0QlM
-	8ONsgQQvKHaoZACw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760080249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=93jeYJ+ATJ5FvA+6WngIEwTUuSMPnvlLkuJb6VwS8cs=;
-	b=j1JVPi6cKZLXSHwutUuSfV8Fgy27X1a/780SzF25I6oeaZxYLDodIJNZYUc5dX8f6lT3lM
-	Nd2KqZycO0D+kTo339k7EDqxYCn1Hyqizc27o52khU2ohWZtPQ0uV5sBqf04NFNDfdGLHx
-	MwMzSUR1W7NJaFLpeHYcfNQZ/0u+PAU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760080249;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=93jeYJ+ATJ5FvA+6WngIEwTUuSMPnvlLkuJb6VwS8cs=;
-	b=ezsahyT0dpXkX8vAxC71u0WjXl586e36+Ng0cyOszR3g1y0jcGVXBCnvYbnIfZ7wVh0QlM
-	8ONsgQQvKHaoZACw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E999413A40;
-	Fri, 10 Oct 2025 07:10:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id c4iON3ix6GhyawAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 10 Oct 2025 07:10:48 +0000
-Message-ID: <22de3e4b-bce4-43ec-8c62-55a7fbbf3baa@suse.de>
-Date: Fri, 10 Oct 2025 09:10:48 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7y/2xMO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760084159; x=1791620159;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jOQ+1EB+xZR2bI8fkSuX+MnkwloxTSge0juOR5vXepY=;
+  b=d7y/2xMOvjBhjOPXZ7IwK6dIUTSSMv/DpiKpvcBkCMfXk4pF+fn2qzta
+   e1dL2xHNyBholFeh8bFRJ4EI6UG9DVihBi+p/XRsuDGoSjFjjgTTyw306
+   KGfO69fVxueQ0FRpjCt7BUqBJbFwGQ/oOuGAz4aBoDoG5HAWzwbrU4Ewh
+   QiL3Dxs7UaqGivXrNvZO7WUZJ/n7FU2vmFlJ/EwLmn15kRJY46slpQ5oW
+   bQRvK0+3WRVYyaxUnkPsL8ZBCFNqGPqw3JA/p3/3ZslNpR8AtzfuLKZOn
+   sQKb5cfgRyoMyC5DaUe51SYJbAuQdEQDjghgS01WAnWcjTysHwW9K+x5D
+   A==;
+X-CSE-ConnectionGUID: 266NyOiKSGGmtL1u+YM/+A==
+X-CSE-MsgGUID: nm9JoZIoQGae490cxNQZ6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73403648"
+X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
+   d="scan'208";a="73403648"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 01:15:59 -0700
+X-CSE-ConnectionGUID: Iw3WUnGJSM2ZEYhV1HRhAw==
+X-CSE-MsgGUID: atdz71oCTLyaFVtYe5a3tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
+   d="scan'208";a="186192650"
+Received: from abityuts-desk.ger.corp.intel.com (HELO [10.245.245.149]) ([10.245.245.149])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 01:15:57 -0700
+Message-ID: <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
+Date: Fri, 10 Oct 2025 11:15:55 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -82,115 +52,51 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
-References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
- <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
- <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
- <ef6558a9-c44a-4c66-967c-187f260f73e1@suse.de>
- <xeipdyk2i2lpkg4rrvz4cl2l3ch62sl4zoa73qvlms3ek3zkci@y7xqbgjulaet>
- <cox6kpackepnunrlhpsssvgdmjd24477cc7mide52xptmmoxyr@ijjotb3xju3v>
- <f1de37ae-2ae4-4513-98fd-18617016704a@suse.de>
- <5949fd73-3ca4-4bd9-8092-2d9923dcbfd3@suse.de>
- <qjyncqymjja57h2wxxv3ebuqpip5qu7yjalccons5xmtzfw5h5@m3u4rvbqzcxt>
- <e0104f10-9230-41e5-acd1-4ca95c38220e@suse.de>
- <hyyyuqsyf7c3ed2ku57fp4sjwkpcacygtrwnkgupn2xdq7ez4u@sg6xeg4shkdd>
+Subject: Re: [REGRESSION] [REPRO] USB-A devices not working on boot after
+ recent USB merge
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Arisa Snowbell <arisa.snowbell@gmail.com>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, Niklas Neronin <niklas.neronin@linux.intel.com>
+References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
+ <20251007231709.6c16802e.michal.pecio@gmail.com>
+ <CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
+ <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
+ <20251008082055.5646dadc.michal.pecio@gmail.com>
+ <CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com>
+ <20251008130532.49922d58.michal.pecio@gmail.com>
+ <CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com>
+ <20251008223406.13f16f19.michal.pecio@gmail.com>
+ <CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com>
+ <CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com>
+ <20251009131444.2c221922.michal.pecio@gmail.com>
+ <90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com>
+ <20251009152703.72e780b4.michal.pecio@gmail.com>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <hyyyuqsyf7c3ed2ku57fp4sjwkpcacygtrwnkgupn2xdq7ez4u@sg6xeg4shkdd>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20251009152703.72e780b4.michal.pecio@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
 
-Hi
+On 10/9/25 16:27, Michal Pecio wrote:
+> On Thu, 9 Oct 2025 14:30:20 +0300, Mathias Nyman wrote:
+>> Maybe the xhci->allow_single_roothub = 1; flag could be set in xhci_pci_setup()
+>> when called for primary hcd
+> 
+> Oops, I put it at the beginning so it is now executing twice on
+> two-speed controllers.
+> 
+> I only understood this remark when I saw my confirmation printk()
+> appearing twice after removing the "hide USB3 ports" hack.
+> 
+> 
+> Should I do a v2 or leave cleaning it up for later?
+> I suspect that imod_interval should also be moved a few lines down.
 
-Am 10.10.25 um 01:56 schrieb Nick Bowler:
-> Hello,
->
-> On Tue, Oct 07, 2025 at 10:51:29AM +0200, Thomas Zimmermann wrote:
->> Am 04.10.25 um 02:31 schrieb Nick Bowler:
->>> But it introduces a new problem: the screen no longer turns back on if
->>> I boot the patched kernel from the "display off" state.  The unpatched
->>> 6.17 kernel would at least turn the display back on from this.
->>> Furthermore, rebooting from this state keeps the display off.
-> [...]
->> Thanks again for testing. Looks like your BMC is especially picky about
->> these settings. :)
->>
->> Attached are two patches; each trying to eliminate one of the possible
->> causes. Could you please test them individually and report the results?
-> 0001-ast-Use-VGACR17-sync-enable-and-VGACRB6-sync-off.patch
->    ^ Everything appears to work fine with this patch applied on
->      top of 6.17.
+I'll happily take a v2 instead if Arisa has time to test it.
 
-That's great news. I'll prepare the patch so that it can go into the 
-kernel. Thanks again for testing.
+You're right about the imod_interval as well, but that is a minor cleanup
+for a separate usb-next patch.
 
-Best regards
-Thomas
-
->
-> 0001-ast-Use-VGACR17-sync-enable-and-VGASR01-screen-disab.patch
->    ^ This one has the same problem as the last patch: the screen
->      does not turn back on if it was previously off during bootup.
->
-> Thanks,
->    Nick
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Thanks
+Mathias
 
