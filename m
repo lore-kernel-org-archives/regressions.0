@@ -1,187 +1,87 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0590D1ADC83
-	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 09:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C49283FDA
+	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 09:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760087214; cv=none; b=dmFbxrSRzr2KJ/afKAcm1vj62oJ/LWJmNgWnkO1TU8hrGroNgS9mQ6/M6/j0164wsZMaqqv5pVks8YYUnr8nGtxQU3JrzZuUVe8MQt3lwFDXGTlW0ji+OzeNUBzm0J9ZLYs7OFmse9HqxrC6DxmfF3X17q89Tpa6g/Rh2gucnFs=
+	t=1760087752; cv=none; b=uQ9VIR5XSLgYuoWbHoiFJ7ZsTP9FYojK8DTsiiggTUyJ0DLqhFXdL/IJYQixWzH7BDu8QaMgxVd1bfbORel/tec3oH2/I0YduPEBtWy7tGYt1IY+TG5nIIRcUL3N0LNBU77vclfgauHsWjH7qOfKSGuDZtvPDuUEUCQM4lmLVK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760087214; c=relaxed/simple;
-	bh=IsGhKN+ISwmoiMVLqUMbSvJDHuVQmWBmnBcq6oPhEk8=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=a/wlyhxi/wfO+8k4a9FLoZ6h6yZBCbooM8JPafKu12Q5FXzuvPTMAQzlweZ+SGDOJdTi7tFB2Hglmg4TqAGcClAxjQ5bmUNBZPa6sxjj69UFViTrIe5D0ub72uTV38DWjmiBrxuBAPQDLcAS3cZ6cKO0IksYcTFuCF6ZglWpCmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lCpSXtoa; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1760087752; c=relaxed/simple;
+	bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=BTsUjYs8gXU6P2F0qreS28PdXMgoBAp06aUalB2E8tNTZzH+XIF4IvsmJ+qmRQwJ5kGwG0mXKgQA0931gNiqgDEczy4ycbN8N8kjrj1MTBaCqmzG+063BQ+Np4ct0VJdUWMe695xu/elGoqLvo3rdWZUBephOgYoKAZ+8lfKAsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae7Vmvrd; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lCpSXtoa"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6B00F25BEF;
-	Fri, 10 Oct 2025 11:06:48 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id qfkyY6bSuux8; Fri, 10 Oct 2025 11:06:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1760087207; bh=IsGhKN+ISwmoiMVLqUMbSvJDHuVQmWBmnBcq6oPhEk8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=lCpSXtoaz3RJPNla8lj0QnJ5eQJbkh0edD1TJy/oBGZSqE3IXiIW/AgCOYjjY2L2E
-	 K0cMOGQVKd1p0eWir7wm4AIxKQ8aqDdz3gG9gxuweeNgT8dfzeofZEwNXIABQDOXSB
-	 losjUGppk9rvYW2gfXA9p3D5xZidQBtYgljd1VA5zToyvRAlVtixxyzqyBRozPeFEr
-	 KdM4ogcydiyy/VFVDjg0kX54iPvuxUutJ6Uxq/d1kgSFZfMir/DJS3CkancvrV0Eo6
-	 0kx297XTzy4Y4XoytCWYeUXFlp6N39IsqQMtw6ZJKigchD6iDtqPDoy1RUoo5x7p4W
-	 /bwgBrB2X8NZA==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae7Vmvrd"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-639fb035066so2908479a12.0
+        for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 02:15:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760087749; x=1760692549; darn=lists.linux.dev;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
+        b=Ae7VmvrdagZcOhNPq5wqRJTwpdaHOlcNY0p2iJ4mn7qXOqzxhn82red5VchazrrYvz
+         nW1ZShXQcx45lpRu36AZKQdT8C8eQNF4YLqdw5SJ3KxbB9RSXI/eQOZaVeNNvY9qIB0j
+         EN7ynK6kq/7kgf4KEWELa0wMKCORcUlLSG4Om0pX9gWt0zVnMFVBePOPyXLbAzWcU/li
+         KdJnUacf9TYSfhjdVxKmz7xBZ+r+sVxstcnI66lLp67Ji6EAD1KHl85EYdeMgVAmyU2j
+         d/gehKn5MLirEXDo7gxbhQSvy0+yJ1GGXezWO6eTOeBGfpKTKgr9agDsNTdnFjmW9fKa
+         sMAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760087749; x=1760692549;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
+        b=YOPcghaNB764ivjurhNLOJBtRAy71j0KL+Pp9iUZtAbmMqP7v138yb4nJ2crAIh8Za
+         q0VIyc2U/aOO1GIXbn72y/VRVJYWPbao6MVjFSxkxPoU5GfZUGJHzTrxito4sfXIpkCN
+         CufB0vw/EV9vN4sDTUciSE3LPm4ksA8tFXMN0uQMPA53uuvirEbEL34zIInfG5iwulT9
+         W5qv1oO6HJhSYFlmmnpcjZ2LdnalYyvVFKGcK9ZpvHagPu6N/9GBGHPmVwebrnnHh/+Q
+         DJbKqnEvcPD4CqJAddXyPfqR6gwiSKnHIRl9jYThVCztVx6eSmWOA1CyQLLcRCKXIMDi
+         Topg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXoHZgUinVq1wzzx9F+F2mc+Q1zoc/7YBqXPlGIOpybGsVU9wV+I7rtCAeoCG3ioFNE9SANlgmb11ejw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw95EArLWLw4ogwhinpDQMwRGWysVFW0nma333qBNpqkcTMgnVu
+	2/iiYlrUmWvHk5fylJT4fOD+tqire5LvEDrG7Ernye75oD9bsSSReerw
+X-Gm-Gg: ASbGnctfjSAIWc57WK/fI0shUD6Pics4a9OYYwXsWtvJDNRdV0II0DpvI4NPwZfv7F4
+	RvA74Mo1m4ukg7wPTfrUczuaWaJwmjZRju99ImN3TXAiyaJqasXf4osoVJegOL2znJ+Lxfr57sD
+	gKnyyUCO73jDBZtg+ouWU6mPmcWo6HIgS1eeDqvTD59FVwm4aSXtUfGCIGZ8RaaX9asWqj//dNh
+	HUGxDaqra/L0mNhqL8uXyUDcryzbLwwL3h04Fcoweg0LMx7P5VwKKOYqTDWagtHUUGq3fCMqv2m
+	F0yWxlBLDe+D2Wwk/gEI/WcQzmZoYwolTkHMMZS8OABJSdrHtm3zccw04+0EnceZKBjpqAUbqhZ
+	hElQ+mbNg1BCTRxl2lGYQsuOifM8vDLbrV3ki0tlSTv5ivQ9SQGpkNxblSaKxQxNiV66VU9GHtI
+	eEpoVz47qafyvOhYywQkOMccg=
+X-Google-Smtp-Source: AGHT+IGWQFNdHpuCNBUeiUNxPRG6gP9B1LAj+/qRnDzEfFPA7WgmtjSYYnA19Y9QTFoVh8fDL8lwOw==
+X-Received: by 2002:a17:907:1b1f:b0:b3f:fcc7:6ed8 with SMTP id a640c23a62f3a-b50aae98249mr1081604166b.29.1760087749039;
+        Fri, 10 Oct 2025 02:15:49 -0700 (PDT)
+Received: from localhost (91-139-16-234.customers.tmcz.cz. [91.139.16.234])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d8c12b62sm184019466b.48.2025.10.10.02.15.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Oct 2025 02:15:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Fri, 10 Oct 2025 11:06:47 +0200
-From: machion@disroot.org
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, alexander.deucher@amd.com,
- christian.koenig@amd.com
-Subject: Re: Unplayable framerates in game but specific kernel versions work,
- maybe amdgpu problem
-In-Reply-To: <fadf714ecdc2e3bd5bed0c3ee69177a1@disroot.org>
-References: <c415d9e0b08bcba068b01700225bf560@disroot.org>
- <CADnq5_PX1dYF2Jd3q7ghaBjpPhNLq9EmFJtN1w6YOSfVo++7sA@mail.gmail.com>
- <69b5ebaa719355994a383fa026dc3fba@disroot.org>
- <CADnq5_PkOuAHuDjMNXABEcenaZFZgU044G=9pTu=EgMr_grXbw@mail.gmail.com>
- <fadf714ecdc2e3bd5bed0c3ee69177a1@disroot.org>
-Message-ID: <748446b7fa6a53f31c69a4e40257adae@disroot.org>
-X-Sender: machion@disroot.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 10 Oct 2025 11:15:47 +0200
+Message-Id: <DDEJ18VY6I4W.1CDEOV6MAH04A@gmail.com>
+From: "Arisa Snowbell" <arisa.snowbell@gmail.com>
+To: "Mathias Nyman" <mathias.nyman@linux.intel.com>, "Michal Pecio"
+ <michal.pecio@gmail.com>
+Cc: "Arisa Snowbell" <arisa.snowbell@gmail.com>,
+ <linux-usb@vger.kernel.org>, <regressions@lists.linux.dev>, "Niklas
+ Neronin" <niklas.neronin@linux.intel.com>
+Subject: Re: [REGRESSION] [REPRO] USB-A devices not working on boot after
+ recent USB merge
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com> <20251007231709.6c16802e.michal.pecio@gmail.com> <CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com> <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com> <20251008082055.5646dadc.michal.pecio@gmail.com> <CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com> <20251008130532.49922d58.michal.pecio@gmail.com> <CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com> <20251008223406.13f16f19.michal.pecio@gmail.com> <CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com> <CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com> <20251009131444.2c221922.michal.pecio@gmail.com> <90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com> <20251009152703.72e780b4.michal.pecio@gmail.com> <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
+In-Reply-To: <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
 
-Hi again,
-
-I have a question:
-
-Would it be possible to make the "memory management/buffering" methodes 
-switchable through a conf file (obviously amdgpu.conf)?
-So that I don't have to keep an old kernel version installed just to 
-play my game.
-
-Marion
+I am fine with testing another patch.
 
 
-Am 2025-06-17 11:42, schrieb machion@disroot.org:
-> I feared that.
-> 
-> It seems a crazy problem, when many people are affected and in opposite 
-> ways.
-> This ReBAR/UEFI thing is also new to me, but I don't have this on my 
-> system either (using BIOS/MBR).
-> 
-> I hope, it can be fixed for all scenarios.
-> 
-> Marion
-> 
-> Am 2025-06-16 15:29, schrieb Alex Deucher:
->> On Fri, Jun 13, 2025 at 3:38 PM <machion@disroot.org> wrote:
->>> 
->>> Hi,
->>> sorry for the delay.
->>> Besides less time, I had to make myself familiar with bisecting and
->>> again kernel compiling. Last time I compiled the kernel myself was
->>> around 2010 I think.
->>> 
->>> Anyway it seems I found the bad commit. The result after bisecting 10
->>> commits is:
->>> 
->>> a53d959fe660341788cb8dbc3ac3330d90a09ecf is the first bad commit
->>> commit a53d959fe660341788cb8dbc3ac3330d90a09ecf
->>> Author: Christian König <christian.koenig@amd.com>
->>> Date:   Thu Mar 20 14:46:18 2025 +0100
->>> 
->>>      drm/amdgpu: immediately use GTT for new allocations
->>> 
->>>      commit a755906fb2b8370c43e91ba437ae1b3e228e8b02 upstream.
->>> 
->>>      Only use GTT as a fallback if we already have a backing store. 
->>> This
->>>      prevents evictions when an application constantly allocates and
->>> frees new
->>>      memory.
->>> 
->>>      Partially fixes
->>>      
->>> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2833985.
->>> 
->>>      Signed-off-by: Christian König <christian.koenig@amd.com>
->>>      Fixes: 216c1282dde3 ("drm/amdgpu: use GTT only as fallback for
->>> VRAM|GTT")
->>>      Acked-by: Alex Deucher <alexander.deucher@amd.com>
->>>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>>      Cc: stable@vger.kernel.org
->>>      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> 
->>>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> Unfortunately reverting that commit will reintroduce a similar
->> performance issue for lots of other uses.  See:
->> https://gitlab.freedesktop.org/drm/amd/-/issues/3844#note_2827990
->> for a description of the fundemental problem.
->> 
->> Alex
->> 
->>> 
->>> Marion
->>> 
->>> 
->>> Am 2025-05-08 15:18, schrieb Alex Deucher:
->>> > On Thu, May 8, 2025 at 9:13 AM <machion@disroot.org> wrote:
->>> >>
->>> >> Hello kernel/driver developers,
->>> >>
->>> >> I hope, with my information it's possible to find a bug/problem in the
->>> >> kernel. Otherwise I am sorry, that I disturbed you.
->>> >> I only use LTS kernels, but I can narrow it down to a hand full of
->>> >> them,
->>> >> where it works.
->>> >>
->>> >> The PC: Manjaro Stable/Cinnamon/X11/AMD Ryzen 5 2600/Radeon HD
->>> >> 7790/8GB
->>> >> RAM
->>> >> I already asked the Manjaro community, but with no luck.
->>> >>
->>> >> The game: Hellpoint (GOG Linux latest version, Unity3D-Engine v2021),
->>> >> uses vulkan
->>> >>
->>> >> ---
->>> >>
->>> >> I came a long road of kernels. I had many versions of 5.4, 5.10, 5.15,
->>> >> 6.1 and 6.6 and and the game was always unplayable, because the frames
->>> >> where around 1fps (performance of PC is not the problem).
->>> >> I asked the mesa and cinnamon team for help in the past, but also with
->>> >> no luck.
->>> >> It never worked, till on 2025-03-29 when I installed 6.12.19 for the
->>> >> first time and it worked!
->>> >>
->>> >> But it only worked with 6.12.19, 6.12.20 and 6.12.21
->>> >> When I updated to 6.12.25, it was back to unplayable.
->>> >
->>> > Can you bisect to see what fixed it in 6.12.19 or what broke it in
->>> > 6.12.25?  For example if it was working in 6.12.21 and not working in
->>> > 6.12.25, you can bisect between 6.12.21 and .25.
->>> >
->>> > Alex
->>> >
->>> >>
->>> >> For testing I installed 6.14.4 with the same result. It doesn't work.
->>> >>
->>> >> I also compared file /proc/config.gz of both kernels (6.12.21 <>
->>> >> 6.14.4), but can't seem to see drastic changes to the graphical part.
->>> >>
->>> >> I presume it has something to do with amdgpu.
->>> >>
->>> >> If you need more information, I would be happy to help.
->>> >>
->>> >> Kind regards,
->>> >> Marion
+- Arisa
