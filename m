@@ -1,87 +1,110 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C49283FDA
-	for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 09:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAAD17A2FB
+	for <regressions@lists.linux.dev>; Sat, 11 Oct 2025 02:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760087752; cv=none; b=uQ9VIR5XSLgYuoWbHoiFJ7ZsTP9FYojK8DTsiiggTUyJ0DLqhFXdL/IJYQixWzH7BDu8QaMgxVd1bfbORel/tec3oH2/I0YduPEBtWy7tGYt1IY+TG5nIIRcUL3N0LNBU77vclfgauHsWjH7qOfKSGuDZtvPDuUEUCQM4lmLVK0=
+	t=1760148225; cv=none; b=K+r6ebd6oWKJQPmSJ9JAJEtA8ZCzuq2Dsz6IyOlCNCJDP7nG5YLEPW+8Z2yfXNV+jHz2NgypOypIvHIihpXN9kvxBQGq38n6d6zdXko58o4iz9IzMi4ukTMl/mt2u5NYFKZHh5skFn20vSru4peWI1b7feKI0xP/QL5c3jaMslQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760087752; c=relaxed/simple;
-	bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=BTsUjYs8gXU6P2F0qreS28PdXMgoBAp06aUalB2E8tNTZzH+XIF4IvsmJ+qmRQwJ5kGwG0mXKgQA0931gNiqgDEczy4ycbN8N8kjrj1MTBaCqmzG+063BQ+Np4ct0VJdUWMe695xu/elGoqLvo3rdWZUBephOgYoKAZ+8lfKAsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae7Vmvrd; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760148225; c=relaxed/simple;
+	bh=J6f6D5SVGpsnY4yP8EqgefwChZvPqHmOfrrHo5VD59U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=U9osoDy4Ja20OTfppMR9dze84nfP98hPlho3usENgINCOjWlX/YP2q1PAOz1G/ZVsgYDnn9yJ0zS/IN+y292g1jDm9WOCK+fbfYjt/Bn3S8Ec8dgreIEKurwBjRojWqWTwdPwp1H7U9moPhuN+sOde477TNX36SNxHYCz2tmKzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=jMnCmS8Q; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae7Vmvrd"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-639fb035066so2908479a12.0
-        for <regressions@lists.linux.dev>; Fri, 10 Oct 2025 02:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760087749; x=1760692549; darn=lists.linux.dev;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
-        b=Ae7VmvrdagZcOhNPq5wqRJTwpdaHOlcNY0p2iJ4mn7qXOqzxhn82red5VchazrrYvz
-         nW1ZShXQcx45lpRu36AZKQdT8C8eQNF4YLqdw5SJ3KxbB9RSXI/eQOZaVeNNvY9qIB0j
-         EN7ynK6kq/7kgf4KEWELa0wMKCORcUlLSG4Om0pX9gWt0zVnMFVBePOPyXLbAzWcU/li
-         KdJnUacf9TYSfhjdVxKmz7xBZ+r+sVxstcnI66lLp67Ji6EAD1KHl85EYdeMgVAmyU2j
-         d/gehKn5MLirEXDo7gxbhQSvy0+yJ1GGXezWO6eTOeBGfpKTKgr9agDsNTdnFjmW9fKa
-         sMAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760087749; x=1760692549;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3V1GT6HyCfVAzf6UNmjb6RIU/RQP8szx5cPwRQyaiE8=;
-        b=YOPcghaNB764ivjurhNLOJBtRAy71j0KL+Pp9iUZtAbmMqP7v138yb4nJ2crAIh8Za
-         q0VIyc2U/aOO1GIXbn72y/VRVJYWPbao6MVjFSxkxPoU5GfZUGJHzTrxito4sfXIpkCN
-         CufB0vw/EV9vN4sDTUciSE3LPm4ksA8tFXMN0uQMPA53uuvirEbEL34zIInfG5iwulT9
-         W5qv1oO6HJhSYFlmmnpcjZ2LdnalYyvVFKGcK9ZpvHagPu6N/9GBGHPmVwebrnnHh/+Q
-         DJbKqnEvcPD4CqJAddXyPfqR6gwiSKnHIRl9jYThVCztVx6eSmWOA1CyQLLcRCKXIMDi
-         Topg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXoHZgUinVq1wzzx9F+F2mc+Q1zoc/7YBqXPlGIOpybGsVU9wV+I7rtCAeoCG3ioFNE9SANlgmb11ejw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw95EArLWLw4ogwhinpDQMwRGWysVFW0nma333qBNpqkcTMgnVu
-	2/iiYlrUmWvHk5fylJT4fOD+tqire5LvEDrG7Ernye75oD9bsSSReerw
-X-Gm-Gg: ASbGnctfjSAIWc57WK/fI0shUD6Pics4a9OYYwXsWtvJDNRdV0II0DpvI4NPwZfv7F4
-	RvA74Mo1m4ukg7wPTfrUczuaWaJwmjZRju99ImN3TXAiyaJqasXf4osoVJegOL2znJ+Lxfr57sD
-	gKnyyUCO73jDBZtg+ouWU6mPmcWo6HIgS1eeDqvTD59FVwm4aSXtUfGCIGZ8RaaX9asWqj//dNh
-	HUGxDaqra/L0mNhqL8uXyUDcryzbLwwL3h04Fcoweg0LMx7P5VwKKOYqTDWagtHUUGq3fCMqv2m
-	F0yWxlBLDe+D2Wwk/gEI/WcQzmZoYwolTkHMMZS8OABJSdrHtm3zccw04+0EnceZKBjpqAUbqhZ
-	hElQ+mbNg1BCTRxl2lGYQsuOifM8vDLbrV3ki0tlSTv5ivQ9SQGpkNxblSaKxQxNiV66VU9GHtI
-	eEpoVz47qafyvOhYywQkOMccg=
-X-Google-Smtp-Source: AGHT+IGWQFNdHpuCNBUeiUNxPRG6gP9B1LAj+/qRnDzEfFPA7WgmtjSYYnA19Y9QTFoVh8fDL8lwOw==
-X-Received: by 2002:a17:907:1b1f:b0:b3f:fcc7:6ed8 with SMTP id a640c23a62f3a-b50aae98249mr1081604166b.29.1760087749039;
-        Fri, 10 Oct 2025 02:15:49 -0700 (PDT)
-Received: from localhost (91-139-16-234.customers.tmcz.cz. [91.139.16.234])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d8c12b62sm184019466b.48.2025.10.10.02.15.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Oct 2025 02:15:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="jMnCmS8Q"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Fmq1hzAjqTB3zEn3i0QtA4ds365s1BcSK6+vhRUry4w=;
+	b=jMnCmS8Q0ypCIwGT9fM0Cq5RpSRXuk5wuX9WqEoY+V0HL6EXiVBDWdtT41ZcA3e7TgSyucRUi
+	SxE1xKtM1FfvOiimLYtCuIPjSmSRJZ9JcZ32V3+rdrld1h5WmrSEXitul3OCd8Mfc8h+3UOL8Gl
+	5OxRD9U4bBDiASdxjAekLPo=
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4ck6Mn1Vd2z1prPt;
+	Sat, 11 Oct 2025 10:03:17 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id 261A5180495;
+	Sat, 11 Oct 2025 10:03:35 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 11 Oct 2025 10:03:34 +0800
+Message-ID: <96be24b3-8fe0-4660-ad5e-7fd6199ff6c7@huawei.com>
+Date: Sat, 11 Oct 2025 10:03:37 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 10 Oct 2025 11:15:47 +0200
-Message-Id: <DDEJ18VY6I4W.1CDEOV6MAH04A@gmail.com>
-From: "Arisa Snowbell" <arisa.snowbell@gmail.com>
-To: "Mathias Nyman" <mathias.nyman@linux.intel.com>, "Michal Pecio"
- <michal.pecio@gmail.com>
-Cc: "Arisa Snowbell" <arisa.snowbell@gmail.com>,
- <linux-usb@vger.kernel.org>, <regressions@lists.linux.dev>, "Niklas
- Neronin" <niklas.neronin@linux.intel.com>
-Subject: Re: [REGRESSION] [REPRO] USB-A devices not working on boot after
- recent USB merge
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com> <20251007231709.6c16802e.michal.pecio@gmail.com> <CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com> <CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com> <20251008082055.5646dadc.michal.pecio@gmail.com> <CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com> <20251008130532.49922d58.michal.pecio@gmail.com> <CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com> <20251008223406.13f16f19.michal.pecio@gmail.com> <CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com> <CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com> <20251009131444.2c221922.michal.pecio@gmail.com> <90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com> <20251009152703.72e780b4.michal.pecio@gmail.com> <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
-In-Reply-To: <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
-
-I am fine with testing another patch.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: regression in hostfs (ARCH=um)
+Content-Language: en-US
+To: Geoffrey Thorpe <geoff@geoffthorpe.net>, <stable@vger.kernel.org>
+CC: Christian Brauner <brauner@kernel.org>, <regressions@lists.linux.dev>
+References: <CAH2n15x389Uv_PuQ8Crm7gg4VC0UZ3kJg+eEfHMy8A6rzUtUAA@mail.gmail.com>
+ <75a53a17-b5fe-441e-8953-8c1d5e7ca47a@huawei.com>
+ <028786fa-8964-4dd1-8721-62a5b757237c@geoffthorpe.net>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <028786fa-8964-4dd1-8721-62a5b757237c@geoffthorpe.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
 
 
-- Arisa
+
+On 2025/10/9 22:04, Geoffrey Thorpe wrote:
+> On 2025-10-08 22:42, Hongbo Li wrote:
+>>
+>> Hi Geoffrey,
+>>
+>> On 2025/10/9 7:22, Geoffrey Thorpe wrote:
+>>> Any trivial usage of hostfs seems to be broken since commit cd140ce9 
+>>> ("hostfs: convert hostfs to use the new mount API") - I bisected it 
+>>> down to this commit to make sure.
+>>>
+>>
+>> Sorry to trouble you, can you provide your information about mount 
+>> version and kernel version (use mount -v and uname -ar) ?
+> 
+> 
+> root@localhost:~# mount --version
+> mount from util-linux 2.41 (libmount 2.41.0: selinux, smack, btrfs, 
+> verity, namespaces, idmapping, fd-based-mount, statmount, statx, assert, 
+> debug)
+> 
+> As for the kernel version, I have been bisecting different kernel 
+> versions to find the culprit commit. The problem occurs with the commit 
+> id I mentioned (cd140ce9: "hostfs: convert hostfs to use the new mount 
+> API"). This appears to be between v6.10 and v6.11. The most recent 
+> kernel releases all seem to exhibit the problem. My own code has been 
+> using kernel v6.6 up till now and that works fine.
+> 
+> By the way, did you try using the steps to reproduce? No pressure to do 
+
+I can reproduce this with my own rootfs (not your docker built one). Let 
+me try to investigate more.
+
+Thanks,
+Hongbo
+
+> so, I am just curious if the instructions I provided work OK for other 
+> people (or whether I missed something essential). If you do follow those 
+> steps, you should be able to see success if you use v6.6 or older, and 
+> you should see failure with anything newer.
+> 
+> (Side note: when bisecting, I noticed that a number of commits had to be 
+> skipped because they seg-faulted during early boot. Fortunately, that 
+> didn't prevent me from finding the culprit. I mention this just in case 
+> you stumble across a commit that seg-faults too - it appears that's 
+> unrelated to the current regression.)
+> 
+> Regards,
+> Geoff
+> 
+> 
