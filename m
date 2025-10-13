@@ -1,188 +1,90 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mail.cock.li (mail.cock.li [37.120.193.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8175227FB2A
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 16:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1BB2C0286
+	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 17:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.193.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760373019; cv=none; b=VB7Qj2gAqrlgkxbYYHiNMSRS9CU4j4rJhAgk2r+wpsmSlhTr/87imr5vVKmJKK8DLY+w4nI2xsbnsHMHhoiZWEbS/2n1zahameAMTxJ1HZT8/zKEDCZ6s3Thcuk9zVfGSAcxfiTlvIu2GqQvJEHXLcimTzGcRXQgqzx/t2GGkcw=
+	t=1760375963; cv=none; b=NcqX/zLafEMKfQ2XtCSMcgBlSvQLw34iS6KpUMvwrMwapQLklJCpk5mc8cleDPIYh7F4RuXNoUmtGuD83Ee8plWS6uPPg3ObeozsPgPOaxkRlR5z9u9NRt9dC/YNwf8aHsKj/yeKQwyvB27I6+LeR6vLaozHl4TFCxvGazvuvn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760373019; c=relaxed/simple;
-	bh=45x2Jb4bOksiYc+/gQKshlBk0WTvXWQ0lxteCKoIgwk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aeVI27/j//lImR+pvUoAk818Y7+R8IL4zPieVFSL25a4FTC6DPsnn2G988jpVX4+CBI7WeEbyjLljYg6RXtcvl14DBHdVk0PI1Y0R7f7zHWey3VWp84vYx9WF9wXp0jcdJPtRFwY0j4Mx2ytxvRYxHCnVsSX2/MwhDyku0zWXqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ea0H0SUR; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1760375963; c=relaxed/simple;
+	bh=yBeX7+xYvuvL245QvTu3U+HIfEbuBqyLnMr+8/cVvxk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=NJEP9z8f/i4GnboM7MuppmDtgDF9jQFlaFnHDdd1xpygMp9KkHYN7dxPXLR7rhD+bU1zkVg0JBBgMccAJFd1GxWeeEesrgah/ilIviDb4KWkuqi1pRQOsQbL/CmhiPx7DEsGHR4ASxhSKOXpEkuFa0IUoU4JHiqG/A5UD3VGzMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=airmail.cc; spf=pass smtp.mailfrom=airmail.cc; dkim=pass (2048-bit key) header.d=airmail.cc header.i=@airmail.cc header.b=g3B465ij; arc=none smtp.client-ip=37.120.193.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=airmail.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airmail.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ea0H0SUR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1760372988; x=1760977788; i=spasswolf@web.de;
-	bh=nqMyNCBrL+BlSohWKUpwCMTnwvgKLIa0I7oU0sG2VfE=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ea0H0SURKVpCNhu8yHfSl6Utd505xo6U+lCaCKtLD/TmSC4qc6YSZIGVBeRK0TAL
-	 LIwmjjJI/OYuLO6HPZaKgQ8VInZ+GzU7/WDFqkicE37BY156qL41xUuhi325QZd2G
-	 Cb5d1IIOpgVe7IWioTYQLLSZD1gasuJP1tKvHjxmy1GdbTbSZ2dYOWwt3K6rAhbSF
-	 1iYeGcFB6q0OtD9/IJxt3v2DqISKhV4PcGshG+rPShlfDECLa79IHMWJf3EMVaqgh
-	 0OD/z8do1dSRCCdfkEJNd78wW2QrF1SE/8l6I2e4wL5l4kFfLsDft0U19G84Wauay
-	 sH7OnA3tgXER5pt+yw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIyeG-1up9qo21ko-00R4KJ; Mon, 13
- Oct 2025 18:29:48 +0200
-Message-ID: <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
-Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
-From: Bert Karwatzki <spasswolf@web.de>
-To: Mario Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, Christian
- =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, 	spasswolf@web.de
-Date: Mon, 13 Oct 2025 18:29:46 +0200
-In-Reply-To: <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-References: <20251006120944.7880-1-spasswolf@web.de>
-	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (2048-bit key) header.d=airmail.cc header.i=@airmail.cc header.b="g3B465ij"
+Message-ID: <34d27471-80a4-49f8-b6cb-f2e51518d9ea@airmail.cc>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=airmail.cc; s=mail;
+	t=1760375395; bh=yBeX7+xYvuvL245QvTu3U+HIfEbuBqyLnMr+8/cVvxk=;
+	h=Date:To:Cc:References:Subject:Reply-To:From:In-Reply-To:From;
+	b=g3B465ijR/cbeWZIBKYaqD+buxy0DTQLyaYNl8Iw2jlHUJNFlVqlQVfIqERoQRNXJ
+	 yKPYAde0G9V6kGp3WlU95NdWUmSIoOWPXvlht8nv2L+yjm5qVvh7BSeysMI5csjpxe
+	 dByXL9Hva+xWq2zHY8+qRzKlX1mE2bllI+f+pgyuMTpsKE0l+eT4xZGhzw+vWllVbm
+	 W+00nA9ljWFR50RmiwEg1Gf8DjG0y9CvGxuS2qDj5kDb1YyMQo3GHOvuQPDWwCkMmU
+	 PGCVqRfaNwpPE9MCJrCV6sA8nd2/cypjC2DueycZuZGv01gL9svbYcBjxXe1Ml3D/u
+	 idUB8ADhuoG8g==
+Date: Mon, 13 Oct 2025 17:09:00 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:43GG+RGVT3i3a/y83/W1ei+fO9suSrJwpqVV1suZxFJViRLeSqz
- xkBmfjtGrawI3i77v66zpjlxaTET2VHe0liHMuANDp46wTq5VsbFu4dkdOSEjIBBuBdyzW+
- GtT6/7XQzzqmO97rSNUkJ1gNA363HI/h1ag0hmN3qQa2OS/y9nRRV8xLNzVnnHXEQNSCP2o
- kuRJnuuqodWaC4/haH2Ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LoPZVms++YQ=;gATdQA/iUlFHEQDdx2TUmwSgu67
- TwPCLdGqGaCdSO3a/sUB/rw7uHaDCmMug/PVZlR+tCem5RuGsJOdr4E41J2PclgFT89x1PDaW
- ab+BJPwgriURFSgbBXPZ87vHXEG4bYDqScg10/Olv2cVFF7OUACbgCbqCZ+URRLlCg6n+44Wl
- 5edZsbpJtUUrp7bojxaUtGm2QWd5q/aWspdsxBQgzVzrcOvRBp9ekuscDxZHDc4WT2mM5pKUP
- dtBh9JW3UGDHcE3qtaF+a1rgzTWtOKuiv0/meUJN04IXVRt2nGFl6SWKKhFxuImuLD6sk2dEH
- 6P/Tq7JZHoYarQunNW85hQlndzdABS0mL6QeFvFUl0XfeYaxi8J7i9MekKn5JUHLvMDR8LqKI
- sKNeIweWoZ1fSO/xmRXod1XzDDPmICsiL269CvvFxWfYnADGmguOGufCX5JYqGFbAAP82Q7R6
- hGmNIZzW3HY9eZyvo5sE5GHBVa7dU6GpB5I8YE2gxO4Qgh6vQ1TorN06rcEi64A3KBTJJZj12
- TsX4aF+REUgrNLABMPVXkuFG7V/DgfX+8t6Gkevw6Xeaz1pBYWf6p0w6vW+eWaKK7zNasdCDH
- 5nikD41rZj8PnQ74J+uFpvSFogBQEHxlXdkbRZdIrxzH3bUXyKHqsLGyE7tqbq0UjA2nN8Kls
- AaK9dy+/H9BC6gofyg51uKN1bHx/qK/uV/xsSca1W2ctTG2bwPCf5pl4EWgwhiqzOdjq2judu
- HUt8kdHJvvgl4LLjVAah+hEffRF142kA4UuFkQZiyBKcCd7FALDrX/nDAnOLU9Hwo3WrAf2Wz
- g5jVdkkCIwhQFwHj66ZtdICBYnV2WxaLuuKZBh2zkqbo/pI6z7Ow7P5+QUyirW4tIy4jZLVpP
- mM/CIIKgUlgpApzIegloIaRNDfyme8A4iP0KVvMKRQCWyjMWHIDLmDF/DoaE8fqizOVzp5J9A
- Q6JP5I6nlEOIpB96SbUe7fGHyvIQ8UQvAv4J7Htl7tj8he2+Ij1A9QlPtuhyNQCqniUcwtvO+
- HMfJNfA9IetUvjlRNkKHRSX7uLOVFJDxYmbOKXzXxJvvh33T3e95pgem9Ouy8n21/Ohyy28RZ
- v3+4NN5TMyJbwep2kKO5wrSzegpSSFN7G6CfId3U9+9vDC1nHEFAR45hjt4a79Hi84rzgWdGX
- CSur6IOODCkB8RZLqhEaLMbn9esgcDNE0f3p68TWeH2l1BsdXkRiBLftmojwqHAQWuNa9hmFJ
- zzrtaINM5RSYCoivL5CaOi2ME2EwSuBFg4bKbW6amnRirwwupT/OlTOoJwrERaghgbechjC1b
- Ns+gOLibEdj+5DSym5v5latjNkJTjwSBkcaVil1XoV2GEuahdypsgcqdtNpcZqDMcipj/yiOa
- jB2XJ2WgTwNsOihwSSxLRc5zN8rJZJ/lejgtIozqAHMmtSnp7XDWWflBjxhCwKbfSyHV6TlVF
- oHEQoEU7G7w+g0+O6yZpxOI6aa/CHUgLqg2x4I1bO0k2nCmF/5k4P1J8ky0dVa+O0wo9EJbep
- mjr8MiAtNfGJ1VcYsp4mUcQKSBk/1giGGmcyxBOWDs5H/LbgrwEWv81LfRw77IPpcNTWXqJJm
- pw+JTEHnK5fUDvuR4FB2zGkQ6/C0T9hcVs0eDY9+cAQs5h32meIPh1nrEEK4B34/zwBZThdQ0
- C82yIxQ04zZa49Xb7C7yRJfhv/BL1aAzVWAzYRRKzX1aZxEG3BYyK+Fu8IdNxBF4JV9lnbbOY
- ddGdtI2oXelaAPMSpUfUustj5X9WUCb1ljdBsu8c5Rdh5d4VNSUbKdKRJHO5SmflCqU7rMcSQ
- OnPUK7J9y8BD5ZKhIGfGZQAVTIpTaApDl+vdjEYk1zpnJGCwvLRaLhVcBbGfDSFxHVTfmmsBq
- OMh7Ijj3v7B9zsLhkpd7Ta+1BBf7osQE5IXADxCvzUixvV0b1mSl9dKjkaegRhONBDnYLex9L
- sN34o3JWdwTRIkZkCspXEGpLAT6Wcg6ZwBlJT2XBAmLmu4s8z+0nOHm9zcIULjDsC53wE2LcT
- 58DlzfLaGiuOtWGPGHIFsxKnaq42sfV3oR+5fdDjW4hTPmb0CezMllvihcxCnwSWZXFEkH0p6
- HHBSUT6vIh51dt58J2EJx4ieM8T8wO+QLAqkyPGUHQ98CC2CV1JoXpe/PufAe05cE/RZMKhjp
- 9SRGGbUX0Yb2hCkBwqzj7lmMx8BEvuxp5PO7UGjNl+zM3A+xmDtVMlBfDVBnG1mVdgf2h8kMU
- xTnzKvFTOfYleREOOFcOBXKsTbHswFnKkq0P7gaA82CuDJJodRqpmYbnZj80IgFBIV9XQAmq4
- FWifDyq+30eCihtkrwHIXzMzwYe0ysSeUkfSe5KIrCqjlwVMUrTCq3GjUmlKYyN0IUdyXYg3H
- XcRh5lh84tTaHKDm/B0EEJm7Bz5+ELBPNC3A7wfeJK9j2+07JByBewInFnHoDC9Ow476eDe2o
- 4dZtSRQFAW9NICuySR3xH3/n0Fws4KRvKPRI10ysveLwhKj/YzgiSD1P3me6Kv9vmJ4HiXGiO
- hRdSdV7nYhdHj1ndG9qCuKtJunebgljlZQwq/bxrQ5FarQJmUHUqSgFqYPIszLCWVLzVjFtU0
- mr62jdNy7ktJNkAcT055HPCSPutXrmjmFdyaT30hFu+6iQ76dIxGo6YF6YRHpnfy9BHe1HBnH
- ncOLHWTXmIsTEH+ETAKoMdePp+ezcM8PW72GcS8er8ho0mf6H2LY3bl6W+6SvIWw3fbYtjG4o
- f/jm1txl8+qM+LaiIuhoydpTA/m/nnDc3D72L4AweFecN4ir/Ml5HXs4pQlTNEIBNskMXLThV
- apyHLGVgCaS/EsuLlmsIe3jbLj6oEQTUGCcm0n53bZ7CURwgW/uZuz96Y12+D/DbvsuFNwVNR
- UoU2wOPtZVxMeZ3EhAr6NH8PWBLhX2Hvn664XLhM07Ji+jv0clUHqZvJykMTqhJaReACNxXIZ
- WWGknRF9FEYzA+tSNkghyBZSEATvq/QyY94o4DH1HxDIO7AQu5ntFrVjl92C2v34q9Z2KBvV8
- YrTcpuSoNzcPLpm0/PtA8khwuAHgweq7Lng9yfF4VQoRRGKTSnCb0/lozpPDDPO3i3PJoe10k
- zVGU3oiiRSPT7/KJo9p73EHu+lQvhH6N/BC8zFr4IOGbFEMcu6L8ih9m/sfLWUUa8e0XB8qPU
- bWuwGIUTYudxZJcXzHO476MjpLM3DrarQf1Ok3KhRKBbXAh0WA6ZagDnh/+zLQK1XoajIRR9R
- 1xJf4G5eFkUZx7/DYDe07Ns81DzNm+h8nFIzd12Asbm/u77DCCKhfGVI8joVezQRjkqRYfYm4
- LPJ+8VYL5T5nnDblZf1SbFSCibrzGUqS9Ev4hiWkwxEr/SVczy0wrVyG25aGrghK4FmyPEL9L
- hHqI1MggHQDMbeofpjsch6VzU4DijuPNSlhO9Or3t81h0RbS5lr8EYUkhRmg4yKzMc0lNh2Sm
- THwLYCZYlgy1+oqY2EFryD/3T7OzfQy2pxhAtUOzuruhcfyKwSYR1JScR8Q3FYFnriha+TIsf
- EPABUiytnUzJFuO3m7jhuBJ7RuIN8+g9OdYSFM8u/93iaTTr5ipOlbsF18gz2vWStXdS4J4jo
- 4Q1lxdpH+PpQmQXdsjFgURoZqEeCPcAhIoKHMPwAme9w+nvfy4v8ao1oIDF0WX8A7zniQnHJQ
- o5KlPNaHSLPNgdiiUBqJu11rXJ/XXTIfO0vB2b6tx+xxJ6H7yzuoz04L4smtbTvzNdNdwKgrG
- X32cDkALUgQNBnDDzBjfkM/tMbuF4QjuzARoZdID5ZC2GlRVdEjikgetGmEiGrcxnMs1g3lXr
- BL3dIrImU26iBhqYLoYiRLM7XoYr4ZRKwsL9UZuCWPKEI2o0dmKebURQswdtfAX2raoUqoNCk
- Iebj11XRgXZgmojoQhZR+1C3J4AdDTt8QqejafOOaZjiuN27TC9PDsDFqqubQ2yJcfJISyWnM
- dwxHNI7KkPw5ci+j61qYg4QoCtPQO1yekePOUjrQ/DQLyu8eAFtksT2Mn83i3ROvtDESLgW9/
- NUY9+i6skw7Tjc5vIOHshyaPgWzI/7QzPUXPrIPM3zUY+RuXc6ISMppgWoCyumYPZPnKmoOjW
- ty6cb3js7Wqt1wvNCD7x7rw1CITmn0eDJy/mBxRTPVm+Txbc5WCiIWCZQE5e/Y3fPRf59bMU3
- 7GxsI/vCWdGg8gRya1lO5RgKVjqWxzZ41N8gAuDe7rCKkMFIHwurZdzbex4qvz0KOpQ45Sy7p
- kucDUWuQxfc+e51QxaxHFgZpEgbWWnEV3gyLArNKq7QSBQufSv3Mqj5Ok5Z5Zyx+jDCwRtPt5
- IATg/4w6ns7GKQCSOFHBVocxLC3pIBUOyMCyTYc5tnHN+W66AaWSZY/70+n/jq/Oky2gLLZDZ
- +c0CBXKAhliUMI9vRlLzSIK9o73Ir2Xk27nrACdW5pFDRZOAdDKVGUU27kGwlDYZ4aR6hFIWG
- vofju1mASbZamCYfmRnJlmXd86/Cq4jLudgAbMo0RWM1MvAI2t2WD3Amc3KvMBrkGCB/BdNHm
- 4bZrWBHQJzChe6n1KemiPRYfK4z2Qcu6Ic54sUaeJjc757NHrMaztTLTXWLS1CNG5GR6Lxtka
- EhEv5wjo9n53wMB2nj31YE+cs+Ta2TCOSp05ppnQal7SdGevCDmRs4K0mjvY+MHHgKo3cj57M
- +7r/5tIblZ4f59a5QwX+p4gvg0vQDC+1uqFqqaS9AJi/AqaInS4ERBEHWgSPAqZDgBxwo67Eh
- EEOZhEWYAjNnhu16YqFpyz446FkSYbpbc/erUhfw4f4wQpi9fk1DaK2he7y3G7fBrXhSA0C2E
- 7mPape/uQaS+Y/VZjqiSdoNYqra/kiN3e2mFhszIY/GF8OBxULKpTcqNJ3BjAFIyA7EX2bvJy
- 9DQS1o4MQEYuJsZpCN5+8W+ozbI0wFxye75xyE/s0HGO1YEY3pQxJgicFOeZI+YKf/M2McRsL
- 8WoxRtNFZip1pzH9LyRHqs8Nza/Bba7veSql6S+svn1zbklzqrDXZf/sGG7nqxoUlHnl5wcB6
- DqH4Q==
+To: david@redhat.com
+Cc: akpm@linux-foundation.org, chengming.zhou@linux.dev,
+ craftfever@murena.io, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ regressions@lists.linux.dev, xu.xin16@zte.com.cn
+References: <423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com>
+Subject: Re: [Regerssion] [KSM] KSM CPU overhead in 6.16+ kernel compared to
+ <=6.15 versions ("folio_walk_start" kernel object overhead)
+Reply-To: 423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com
+From: craftfever <craftfever@airmail.cc>
+In-Reply-To: <423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am Dienstag, dem 07.10.2025 um 16:33 -0500 schrieb Mario Limonciello:
->=20
-> Can you still reproduce with amd_iommu=3Doff?
+ > Looking again, no, that's not the case. We do a cond_resched() after 
+every page we looked up.
+ >
+ > Also, b1d3e9bbccb4 was introduced in v6.12 already. Regarding 
+folio_walk_start(), also nothing major changed ever since v6.12.
+ >
+ > Looking at scan_get_next_rmap_item(). I guess we might hold the mmap 
+lock for quite a long time (if we're iterating large areas where there 
+are no suitable pages mapped -- very large sparse areas).
+ >
+ > That would explain why we end up calling folio_walk_start() that 
+frequently.
+ >
+ > But nothing really changed in that regard lately in KSM code.
+ >
+ > What we probably should be doing, is give up the mmap lock after 
+scanning a certain size. Or better, switch to per-VMA locks if possible.
+ >
+ > Also, looking up each address is highly inefficient if we end up having
+ > large empty areas. A range-walk function would be much better suited 
+for that, so we can just jump over holes completely.
+ >
+ > But anyhow, nothing seems to have changed ever since 6.15 AFAIKT, so 
+I'm not really sure what's going on here. Likely it's unrelated to KSM 
+changes.
+ >
+ > -- Cheers
+ >
+ > David / dhildenb
+ >
 
-Reproducing this is at all is very difficult, so I'll try to find the exac=
-t spot
-where things break (i.e. when the pci bus breaks and no more message are t=
-ransmitted
-via netconsole) first. The current state of this search is that the crash =
-occurs in
-pci_pm_runtime_resume(), before pci_fixup_device() is called:
-
-static int pci_pm_runtime_resume(struct device *dev)
-{
-	struct pci_dev *pci_dev =3D to_pci_dev(dev);
-	const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : NULL;
-	pci_power_t prev_state =3D pci_dev->current_state;
-	int error =3D 0;
-	// dev_info(dev, "%s =3D %px\n", __func__, (void *) pci_pm_runtime_resume=
-); // remove this so we don't get too much delay
-										  // This was still printed in the case of a crash
-										  // so the crash must happen below
-
-	/*
-	 * Restoring config space is necessary even if the device is not bound
-	 * to a driver because although we left it in D0, it may have gone to
-	 * D3cold when the bridge above it runtime suspended.
-	 */
-	pci_pm_default_resume_early(pci_dev);
-	if (!strcmp(dev_name(dev), "0000:00:01.1")) // This is the current test.
-		dev_info(dev, "%s %d\n", __func__, __LINE__);
-	pci_resume_ptm(pci_dev);
-
-	if (!pci_dev->driver)
-		return 0;
-
-	//if (!strcmp(dev_name(dev), "0000:00:01.1"))         // This was not pri=
-nted when 6.17.0-rc6-next-20250917-gpudebug-00036-g4f7b4067c9ce
-	//	dev_info(dev, "%s %d\n", __func__, __LINE__); // crashed, so the crash=
- must happen above
-	pci_fixup_device(pci_fixup_resume_early, pci_dev);
-	pci_pm_default_resume(pci_dev);
-
-	if (prev_state =3D=3D PCI_D3cold)
-		pci_pm_bridge_power_up_actions(pci_dev);
-
-	if (pm && pm->runtime_resume)
-		error =3D pm->runtime_resume(dev);
-
-	return error;
-}
-
-
-Bert Karwatzki
+I have to make a correction, folio_start_walk is present in "perf top" 
+statistics on 6.12-6.15, it just consumes 0.5-1% of kernel time compared 
+to 11-14% on 6.16+, where it causes ksmd 100% cpu usage compared <=6.15 
+kernels. I understand, that something changed in linked function, that 
+affecting KSM behavior. Maybe, you can reproduce it with same settings, 
+especially it happens with Chromium apps, there is V8 sandbox with huge 
+VM size. Maybe, you could reproduce the problem with the same 
+MemoryKSM=yes in user@.service, that sets KSM processing for all user 
+processes, especially, when Chromium is running. KSM CPU usage really 
+differs between 6.12-6.15 and 6.16+. Maybe, it's related to your 
+explanation. Thank you.
