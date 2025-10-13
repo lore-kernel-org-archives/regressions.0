@@ -1,145 +1,153 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73D32EB5CF
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 08:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2B81B4156;
+	Mon, 13 Oct 2025 08:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760342672; cv=none; b=RGSDxOXhgQxBQjDf1vouq02fdkbVOtZdhUd3vdsGnpGsNjlCIWp70lYAIVVh140rHDRHVzJR45mSFHbQaJka1fAaMUUjsKyhWT0lB0taF0ATolbkRS1cHcSe8FIB8YVaT5iJwXKGTYY4wavFkest4UZMU1YSTsbA5uGwZ55rZ1w=
+	t=1760342743; cv=none; b=G7ZWV3S6Q7LY3IeWyj/Fbn6U2UPEK/0OUZ8VbqO5YdexZ+XHTHA3EOUedttonakDi+uKLuW+WHkm6diT7ea8/2cPYXvzngwWF2kP4t9DxLh3GA4IvMwKVaweGwCayRSaDUhyK0kM2Sbg7MrEOv5UFGGgf3/cWQr3eMrF9UJ4vRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760342672; c=relaxed/simple;
-	bh=BLo8HuhReAxGmZOqi6gBCCfDhLhZHN1x49/Tmthde5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ofrppWkhmf5MTA9VdjOe89KFQw7RaY6YYt4qrkKCRHl4FV6C2/VlyQFFXsOKRn6PiCdL4Cg1FufSGADis+A7WZu8w0wAp6bmSWpSGwONMdcQFuY0R2ODxQ0r7RPLyDONcchN1SwYnPwC0jeUG4Hk23oCuKYHxbDCwfIzUytJee0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6wKkxjJ; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760342743; c=relaxed/simple;
+	bh=EyY1vptLQ4Mh8m69V026ogvAbJnnK8hecewRxznrDdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6vAY33x2AIyL5CbeSSzxmM5Hm8bdi0rC7NMU4hwj6+R7KY4buoQ7wF4Rfr7Qsh7RSDbRbN8TDu9sDDXy7yNrPutjSEiw4uRXvCLjBy5aXlc1GbTZmMUgo1wwYb/vnSW+NkJ+FcACLhMkz3QpJxlXeZnxNW4nbX7X53QPOeRh7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eE8UCNOT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6wKkxjJ"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-634a3327ff7so7960143a12.1
-        for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 01:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760342669; x=1760947469; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RSWleg5SNuU8k4snLkQWjinhkoTu4SXIKrR4fKSJTig=;
-        b=F6wKkxjJ3HiS0XjVU2+0giJcvUATcL3eFCcKPVP2ZFsG7PzYOYSjqvdgFBHRf8OvJG
-         pO2ZuB9FdWdYJI6628mgN27SezOhi5vQ6dyLurZTwyFv0JClf/rki7WxjvIpEAZBQtuH
-         +DCIMXtxNXiJ/nSITxMBGYm4lpgpuWINY9ksyOzo6MEmRrCHqkVV4EGwyGJSxdL2a68Q
-         l2p/B0Diee3RZAwzwJN053p8HDQoZMIMy/n9Pm6xZoLJbAsBtKwIt3/Xp+OWXaC3KiCS
-         fm8Zg9HIT3uEZLuWOX5ybtFLyYRx/BnEpv7qtTp88DDUpnCGqHI6ijUgPMfMXIBHliwv
-         aGSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760342669; x=1760947469;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RSWleg5SNuU8k4snLkQWjinhkoTu4SXIKrR4fKSJTig=;
-        b=PUeAvhAudKAo4ezuT33Nd8UrYmpmVRva+j8giy7wa1bzaDPVEUMphHXGyXKZ3w9x7z
-         ouexak5bvYiFzY4lz71RQ0APoIP70n0ihlT8MuOsohO4lRttD/GSUhvXwzx8LTtOHsN1
-         wRgRrHJH5kY3LqUcOWzDtwZyWOMF4tkZuu3pHmA1VkZhFPSLvFAu6+LQvOx/4E1gYI0u
-         60W14gil98D0jmIusClFptgs+KpPOGADSIqQOhj7dRLI7ur0sM7SUgEN2Q6f+F2GYVU1
-         ggQw/wJCdeuNDVWfaGyTPXpOFChbHmiiy78hBIOsisyHSwlDReeOWdZrTAfBa0iNLwFA
-         jNag==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1q1Mw5yODq104BuC+rsa6QEvLbUcZbRgKZi+ZEoolC7E053SME9r/kUj7LCamZuB9ADXwdbuoXB2Mg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy1WX0bOs/n54xl3hU5AfN1z6uQHrA0econyv5onli76IbrumRX
-	chSFeT3R3827SFwLziG+HEzo4gJmIv8f6SG+MlTOC+SBJV14//XF4DdJ
-X-Gm-Gg: ASbGncu+u9NomtZOkASQOyyoYe4ByAcFlPA0ow0lBiuyQdUNSYTqZzgqUTKJybWAlHc
-	JEmpzJ64apbuXDp8ssmff6+ZQCpDupNmtC0cVBsMLydW8iEisw3flg0eeojOl71W1MuyJ90mxjX
-	srBii1J2mKJg68gmsg7f/jKdTsQu8E6Na5gedE5657keHXt9Nnu28XlLpqFalJ5mntnhhKqJyrY
-	1HU1DIPDF/8nqzAwvQHoJgOI78bdrU2SkHUBi/NSz2AQRFqXxyI3dUq9eVn/1K6Nc2X3yBAUbme
-	7lBdXei4m4LL4oWA7hKxWYZKIaU+XlsSz76WKHn34N7PDHcBASAoWOKB/2YxIHtgvdp/N9GlTEW
-	g7qrXHN2FK08zf2bC1PyswX5VQ8TJSUj8CwglHgniCRYAGHkJ+DqPdHYc3ufRMN+Z
-X-Google-Smtp-Source: AGHT+IHDoW9D++R2OZVwNusZrk/tUB485ZKXOiyFpPGgdo7RejEQM3utsIdE/iCJa+2LRQBwUUgQpQ==
-X-Received: by 2002:a05:6402:909:b0:62f:6759:3b09 with SMTP id 4fb4d7f45d1cf-639d5c59e04mr17273494a12.30.1760342668689;
-        Mon, 13 Oct 2025 01:04:28 -0700 (PDT)
-Received: from foxbook (bff184.neoplus.adsl.tpnet.pl. [83.28.43.184])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63a5c133f58sm8380542a12.30.2025.10.13.01.04.27
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 13 Oct 2025 01:04:27 -0700 (PDT)
-Date: Mon, 13 Oct 2025 10:04:24 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Arisa Snowbell <arisa.snowbell@gmail.com>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, Niklas Neronin
- <niklas.neronin@linux.intel.com>, Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH v2 RFT] usb: xhci-pci: Fix USB2-only root hub registration
-Message-ID: <20251013100424.42d5b9d2.michal.pecio@gmail.com>
-In-Reply-To: <21741b98-4844-4218-8bd9-10b8bf5cd869@linux.intel.com>
-References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
-	<CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
-	<CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
-	<20251008082055.5646dadc.michal.pecio@gmail.com>
-	<CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com>
-	<20251008130532.49922d58.michal.pecio@gmail.com>
-	<CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com>
-	<20251008223406.13f16f19.michal.pecio@gmail.com>
-	<CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com>
-	<CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com>
-	<20251009131444.2c221922.michal.pecio@gmail.com>
-	<90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com>
-	<20251009152703.72e780b4.michal.pecio@gmail.com>
-	<b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
-	<20251013092250.699bf60f.michal.pecio@gmail.com>
-	<21741b98-4844-4218-8bd9-10b8bf5cd869@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eE8UCNOT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=PhVyTJzr0MtR40Aa2Lc7JNLBbowuEgYIbKmkpnrAFlY=; b=eE8UCNOT/DVa91HJ1a7s7WL1gm
+	SNoAD05RaLQX4b770TFFghp723QQRsx04hi3ATZYS0dR0LjGotK4aWPQccDHPg/75ujZ7ystx3cYh
+	HeV1YJ+eR95DjLsorXEE3nPAhSZaT6Q67qAD7eJTdzxH9kMBUdJoL8A4FgvqCKi9aT1SGCicd3NLg
+	kIPYpHpkujvSgk9hAHuGbhFLx6o2mL9jV5pO0lTF1W/vKlMXZdIUM+HIlVptxFiDHJKSorK789f1h
+	cgpcGT7AuC5LB3WfyKMT8pHazGHCv4dfnWZFy9CrT/CS4gdLsPd67D/YAVdQCVYzO2AKRTzwab8Ik
+	/IwF3gNg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v8DYj-00000004Bwe-1Aii;
+	Mon, 13 Oct 2025 08:05:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C403C300212; Mon, 13 Oct 2025 10:05:31 +0200 (CEST)
+Date: Mon, 13 Oct 2025 10:05:31 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+Message-ID: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
 
-A recent change to hide USB3 root hubs of USB2-only controllers broke
-registration of USB2 root hubs - allow_single_roothub is set too late,
-and by this time xhci_run() has already deferred root hub registration
-until after the shared HCD is added, which will never happen.
+On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
 
-This makes such controllers unusable, but testers didn't notice since
-they were only bothered by warnings about empty USB3 root hubs. The bug
-causes problems to other people who actually use such HCs and I was
-able to confirm it on an ordinary HC by patching to ignore USB3 ports.
+> It looks the issue described in the link
+> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
+> happens again but in a different way. :(
+> 
+> As the commit message above link described,  cpu-clock (and task-clock) is
+> a specific SW event which rely on hrtimer. The hrtimer handler calls
+> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+> eventually call hrtimer_cancel() which traps into a dead loop which waits
+> for the calling hrtimer handler finishes.
+> 
+> As the
+> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
+> it should be enough to just disable the event and don't need an extra event
+> stop.
+> 
+> @Octavia, could you please check if the change below can fix this issue?
+> Thanks.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7541f6f85fcb..883b0e1fa5d3 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
+> *event,
+>                 ret = 1;
+>                 event->pending_kill = POLL_HUP;
+>                 perf_event_disable_inatomic(event);
+> -               event->pmu->stop(event, 0);
+> +
+> +               /*
+> +                * The cpu-clock and task-clock are two special SW events,
+> +                * which rely on the hrtimer. The __perf_event_overflow()
+> +                * is invoked from the hrtimer handler for these 2 events.
+> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+> +                * handler to finish, which would trigger a deadlock.
+> +                * Only disabling the events is enough to stop the hrtimer.
+> +                * See perf_swevent_cancel_hrtimer().
+> +                */
+> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
+> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
+> +                       event->pmu->stop(event, 0);
 
-Setting allow_single_roothub during early setup fixes things.
+This is broken though; you cannot test config without first knowing
+which PMU you're dealing with.
 
-Reported-by: Arisa Snowbell <arisa.snowbell@gmail.com>
-Closes: https://lore.kernel.org/linux-usb/CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com/
-Reported-by: Michal Kubecek <mkubecek@suse.cz>
-Closes: https://lore.kernel.org/linux-usb/lnb5bum7dnzkn3fc7gq6hwigslebo7o4ccflcvsc3lvdgnu7el@fvqpobbdoapl/
-Fixes: 719de070f764 ("usb: xhci-pci: add support for hosts with zero USB3 ports")
-Suggested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
----
+Also, that timer really should get stopped, we can't know for certain
+this overflow is of the timer itself or not, it could be a related
+event.
 
-New in v2:
-- don't set allow_single_roothub twice, it's harmless but lame
-- credit and Cc another reporter
+Something like the below might do -- but please carefully consider the
+cases where hrtimer_try_to_cancel() might fail; in those cases we'll
+have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
+NORESTART.
 
- drivers/usb/host/xhci-pci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+But I didn't check all the details.
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 13454bef14d3..d292adc65e5a 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -588,6 +588,8 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
- 	if (!usb_hcd_is_primary_hcd(hcd))
- 		return 0;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 820127536e62..a91481d57841 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
  
-+	xhci->allow_single_roothub = 1;
-+
- 	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
- 		xhci_pme_acpi_rtd3_enable(pdev);
+ 	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
  
-@@ -643,7 +645,6 @@ int xhci_pci_common_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	xhci = hcd_to_xhci(hcd);
- 	xhci->reset = reset;
+-	if (event->state != PERF_EVENT_STATE_ACTIVE)
++	if (event->state != PERF_EVENT_STATE_ACTIVE ||
++	    event->hw.state & PERF_HES_STOPPED)
+ 		return HRTIMER_NORESTART;
  
--	xhci->allow_single_roothub = 1;
- 	if (!xhci_has_one_roothub(xhci)) {
- 		xhci->shared_hcd = usb_create_shared_hcd(&xhci_pci_hc_driver, &dev->dev,
- 							 pci_name(dev), hcd);
--- 
-2.48.1
+ 	event->pmu->read(event);
+@@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
+-		hrtimer_cancel(&hwc->hrtimer);
++		hrtimer_try_to_cancel(&hwc->hrtimer);
+ 	}
+ }
+ 
+@@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
+ 
+ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ {
++	event->hw.state = 0;
+ 	local64_set(&event->hw.prev_count, local_clock());
+ 	perf_swevent_start_hrtimer(event);
+ }
+ 
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
++	event->hw.state = PERF_HES_STOPPED;
+ 	perf_swevent_cancel_hrtimer(event);
+ 	if (flags & PERF_EF_UPDATE)
+ 		cpu_clock_event_update(event);
