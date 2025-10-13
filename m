@@ -1,181 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mail3.ecloud.global (mail3.ecloud.global [135.181.139.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456212EC0B7
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 08:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760344703; cv=none; b=TD7yJSTXWtJuK34JBBfsm83thGsVTlgkFP6N5JMcM2L7bQYvcfhSZuGrrnJergtQa8uzJypJ8WyNxOPdS/fk/q7EL89beX8I5HF+5Fot0Y+E9Wm0yBkBTdGN4ona8ZTQlKl/yNex3l9DahUVrsDcoOLoX4FKI4axoc4NmqwqZr8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760344703; c=relaxed/simple;
-	bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q1jfAkSqnqLls9amXrpSEA6K8WbQIyvUc8T+K+9PNXwLdgpZxHmhWbVOpOl9Y4cx0DUnn6psA8p2L83U0MRKHgQvje4LRADtIxDW8Za+SS4DGPCyLMXv7R8hhXcvpxfrk46Gpt47vijcsi97PyP/x+7uPl+noRppjziNgwVrO2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkUIJutH; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7562FBDE2
+	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 09:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=135.181.139.185
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760347985; cv=pass; b=cPlDwqMWddIpKnOB/Eu0UsNX5g7xxDXmFQ8/xSeZ+Jda4B9oBUjqYm40GqMyj4aSdsHICo9Bi54G7NKB5vqocPxkDd/P/C7guXARHXRhpCAzFiRy8Gq2qn/wmBi9rSoZh6GFJ1utYNzV0oMGiS/y9BHrt43irhsqU3Nfwxk2BPk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760347985; c=relaxed/simple;
+	bh=7e4oPSbyT6o1XKtkgDqQchHA30cNRFihW0o+KCSVfM0=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc; b=FKN5TGM99d2/ZYL+1YCm6gOX80+NxlRNYSVB7mMSJQtcXIT0+UxbBQ4ohwGpx30fHx0LsR2gCKh76AntJoUK2YW6Xi+T2Nznul76f5DguIURlxVnv0KQrPqFoz/5oDk0ykkWfXxy1NNmDWXN7o9gLoXi1LCwN92uf44OwULWaxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io; spf=pass smtp.mailfrom=murena.io; dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b=KWZmnklH; arc=pass smtp.client-ip=135.181.139.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=murena.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkUIJutH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760344701; x=1791880701;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
-  b=lkUIJutHr9yY0H/ZYB3i2JISsNxIOfPMlTo3lDBpoVCyABBWHo6cmGGx
-   q2JXr2O9kiLGcvJiQiDo/eC0+hNpDW9uohAJN0NRsaO6CA4Mo1A7Z4rgY
-   TM3tpC5rlB2TbohWxmN79GFKSSw4aRor4+1d3Am4bf7zPk1a3icQodqmW
-   +UMR5wFNcMZ4+CLH1TotzznxNSTOkr1HB3i8DbcgWkbAEe1vyeJnk6GPP
-   1iMu5MqgrSdi0RzVMIZUGEDd/QTHqq8Po8XshtanPNHPY48ByaBfssWYE
-   ImPv9PMxp0HuThN94j4STTsiRjZHp33qCfvBgENdwqxD/LfX1vh7vT13q
-   g==;
-X-CSE-ConnectionGUID: qs52iqn4Sn6abccZjteiEw==
-X-CSE-MsgGUID: 4pm/3YC0Sb60HSx44wmaNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11580"; a="66332244"
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="66332244"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:20 -0700
-X-CSE-ConnectionGUID: NM7kJcUdShCh09p123QYuA==
-X-CSE-MsgGUID: 1AgSA781SSGWq/B2gxPzRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="212172484"
-Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:18 -0700
-Message-ID: <30c62dee-2219-4b39-94c7-b9cc81130c9e@linux.intel.com>
-Date: Mon, 13 Oct 2025 16:38:15 +0800
+	dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b="KWZmnklH"
+Received: from authenticated-user (mail3.ecloud.global [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail3.ecloud.global (Postfix) with ESMTPSA id 3988688A3EC;
+	Mon, 13 Oct 2025 09:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io; s=mail3;
+	t=1760347320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7e4oPSbyT6o1XKtkgDqQchHA30cNRFihW0o+KCSVfM0=;
+	b=KWZmnklHrgb53JpNCiU46XtaJg4zhgannNk2NRAkhanaIXcUrRdg9OCwx5WFf20Un+jGUn
+	XwOFcrLl1QQF/qN+mwIy58sIwn1dhR8+jFcSVrP6CDRnCtugphqkfaDfNsGXyqJDb8+yKP
+	0TNR9KUDxj7vKZ3J6jgAsoE0ffjkPA0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io;
+	s=mail3; t=1760347320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7e4oPSbyT6o1XKtkgDqQchHA30cNRFihW0o+KCSVfM0=;
+	b=BrzcjlUU3iNXAcHY+ElA6LJFefQR08+H1hXRQJRcng3/dP2w6jWjScGktlBbof8nhH5oFC
+	0s2lgzMiVKywXlXNrUBwHgHnV1aXr1NlW//J1Z1SskROKnaKQSckQitmms4U3GQhD/vrNa
+	vkS+UDF0drWoxNoG8EkZLtWOnWeMgYU=
+ARC-Authentication-Results: i=1;
+	mail3.ecloud.global;
+	auth=pass smtp.mailfrom=craftfever@murena.io
+ARC-Seal: i=1; s=mail3; d=murena.io; t=1760347320; a=rsa-sha256; cv=none;
+	b=PwxP0AJIGQ/zfae6OZPyxKRCEAvpNf8EfcnkrLjQIBKFO2tS2RnKuNHcH5drsPOS9Z1VhZ
+	O7NVGyHPg8bPUnXFEb+uvNtlzDvXRUz/0yXFrSTpP5uJFD83/3kfXOcg9kbSZPUHwKwHjL
+	I40Fy8Kl5ivXS/7kQUO8jMXV5qtZAzg=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
- <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Mon, 13 Oct 2025 09:22:00 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: craftfever@murena.io
+Message-ID: <020cf8de6e773bb78ba7614ef250129f11a63781@murena.io>
+TLS-Required: No
+Subject: [Regerssion] [KSM] KSM CPU overhead in 6.16+ kernel compared to
+ <=6.15 versions ("folio_walk_start" kernel object overhead)
+To: akpm@linux-foundation.org, david@redhat.com, xu.xin16@zte.com.cn,
+ chengming.zhou@linux.dev
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
 
+I've posted about that problem already on bigzilla (#220599), but maintai=
+ners asked to post issues on maillist.
+The problem with freezes during KSM page scanning with certain processes =
+like Chromium with huge virtual memory size amount was fized in 6.17.1 co=
+mpared to 6.16.x/6.17, but problem with huge CPU overhead is present ther=
+e. Compared to Linux <=3D6.15, where the overhead is much lighter anad th=
+ere no much CPU consuming during KSM scanning, there is "folio_walk_start=
+" kernel object is present (which I reviewed with "perf top" command) tha=
+t is not present in versions <=3D6.15 during KSM work and which is in wor=
+k starting from Linux 6.16. This method very resource-consuming compared =
+to algorithm used in <=3D6.15 versions. Is there a kernel parameter to di=
+sable it or it needs more optimization?
 
-On 10/13/2025 4:05 PM, Peter Zijlstra wrote:
-> On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
->
->> It looks the issue described in the link
->> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
->> happens again but in a different way. :(
->>
->> As the commit message above link described,  cpu-clock (and task-clock) is
->> a specific SW event which rely on hrtimer. The hrtimer handler calls
->> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
->> eventually call hrtimer_cancel() which traps into a dead loop which waits
->> for the calling hrtimer handler finishes.
->>
->> As the
->> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
->> it should be enough to just disable the event and don't need an extra event
->> stop.
->>
->> @Octavia, could you please check if the change below can fix this issue?
->> Thanks.
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 7541f6f85fcb..883b0e1fa5d3 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
->> *event,
->>                 ret = 1;
->>                 event->pending_kill = POLL_HUP;
->>                 perf_event_disable_inatomic(event);
->> -               event->pmu->stop(event, 0);
->> +
->> +               /*
->> +                * The cpu-clock and task-clock are two special SW events,
->> +                * which rely on the hrtimer. The __perf_event_overflow()
->> +                * is invoked from the hrtimer handler for these 2 events.
->> +                * Avoid to call event_stop()->hrtimer_cancel() for these
->> +                * 2 events since hrtimer_cancel() waits for the hrtimer
->> +                * handler to finish, which would trigger a deadlock.
->> +                * Only disabling the events is enough to stop the hrtimer.
->> +                * See perf_swevent_cancel_hrtimer().
->> +                */
->> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
->> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
->> +                       event->pmu->stop(event, 0);
-> This is broken though; you cannot test config without first knowing
-> which PMU you're dealing with.
-
-Ah, yes. Just ignore this.
-
-
->
-> Also, that timer really should get stopped, we can't know for certain
-> this overflow is of the timer itself or not, it could be a related
-> event.
->
-> Something like the below might do -- but please carefully consider the
-> cases where hrtimer_try_to_cancel() might fail; in those cases we'll
-> have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
-> NORESTART.
->
-> But I didn't check all the details.
-
-The only reason that hrtimer_try_to_cancel() could fail is that the hrtimer
-callback is currently executing, so current change should be fine. 
-
-
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 820127536e62..a91481d57841 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
->  
->  	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
->  
-> -	if (event->state != PERF_EVENT_STATE_ACTIVE)
-> +	if (event->state != PERF_EVENT_STATE_ACTIVE ||
-> +	    event->hw.state & PERF_HES_STOPPED)
->  		return HRTIMER_NORESTART;
->  
->  	event->pmu->read(event);
-> @@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
->  		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->  		local64_set(&hwc->period_left, ktime_to_ns(remaining));
->  
-> -		hrtimer_cancel(&hwc->hrtimer);
-> +		hrtimer_try_to_cancel(&hwc->hrtimer);
->  	}
->  }
->  
-> @@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
->  
->  static void cpu_clock_event_start(struct perf_event *event, int flags)
->  {
-> +	event->hw.state = 0;
->  	local64_set(&event->hw.prev_count, local_clock());
->  	perf_swevent_start_hrtimer(event);
->  }
->  
->  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->  {
-> +	event->hw.state = PERF_HES_STOPPED;
->  	perf_swevent_cancel_hrtimer(event);
->  	if (flags & PERF_EF_UPDATE)
->  		cpu_clock_event_update(event);
-
-Besides cpu-clock, task-clock should need similar change as well. I would
-post a complete change later. 
-
-
+I'm using MemoryKSM setting in systemd in user@.service for KSM process m=
+erging and it very light on <=3D6.15 ver., but CPU consuming on 6.16+ (6.=
+17.1 without freezes) due to reasons said above.
