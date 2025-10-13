@@ -1,189 +1,155 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC102E6CAE
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 06:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107BC154BE2
+	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 07:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760338524; cv=none; b=TOh2+K6xjuIqymhLttX2nSXLNCUpFL0TjeiPCC4i96PWcP9a7ZmqDtOGW3OicbqTbscSXJQYEO5pyKk3psUFhNFWEqUASAtSurTRmbnkUpOsdL/KCmKprS0An0EKjarbhXM+X0fbPBEo8XxuX2ls2n+Bjm3kOoBcYeT5NAj5du8=
+	t=1760340179; cv=none; b=jh+ZG0mI8j93AKhQAIxNGvEX0R9c4PeVTO6vBAB/sU6E/qCw26+QOEgaW9r3jTpQUtNe0apEouPjs8HCb8xFEVgpIJJBsXfAEEAzfCnwgnoeIX3Bi4TPl1a4+/RbC9LGgTlkAMzjD53AXn2rnbPRlEQwZrT2+YZvt0C6wnCxQvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760338524; c=relaxed/simple;
-	bh=Mcf4k2Eb5y4ExxZYFmPUQtYFXmFaCUqStDbFVKSkiyI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ancHuEmG3Yt4YaotI1ZK0zTK+aHySHNiO5jkYuSLqD81rrwaCn2823iw5IizeMyYiXh3znWFWuUmWh7ZdSvpLVFd32/V+zVuw17bHT4kpj6vyVmPkyqDNp0ecF1Dig42TihBIubXgzWxfQ2yPdRPO6igDgmZ9QieYqPy9v/URC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2yRTyPN; arc=none smtp.client-ip=209.85.221.180
+	s=arc-20240116; t=1760340179; c=relaxed/simple;
+	bh=RL1qx7lnDW2k+goEWt8CO7eKfJt37lqpyYCrWGhYjBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AM47Cj9/Vtel6t11YiyRoReYbmEvI2WkggiGg6RDAlOLqH/Y2KAW9YAJGW3+kZTx5xija1P6Skczp9NOzFxVKz+d20wdrgFdVqTfg/8MW11LhIt1sjHHnRALHtzgmlye90iiO8JvmzLuhCBrFRvrzWly1wE5ECxo9mMbtprBckM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5nbZQYU; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2yRTyPN"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-54c0a10990fso1164202e0c.2
-        for <regressions@lists.linux.dev>; Sun, 12 Oct 2025 23:55:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5nbZQYU"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6318855a83fso8802695a12.2
+        for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 00:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760338521; x=1760943321; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1760340175; x=1760944975; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RxpYz31WTohbhJuOp5dj13ArRLPeR7dWLB0V/ZD3iF4=;
-        b=l2yRTyPNiPrZwUYGdbEdKseERx+A5EXmxKLRfnDj2VhH9UVvj+/zUjx/9wCyQzJww2
-         zrepe7fbIQW6JL/avdh5BmM8nbLJja3ZhKsONB/9XS/aRBAmY7bWQT5Zaotg9nq77zk6
-         eqAbEpEO6EARHVQjXlU2PvgkvNcNlCd5w4mXR/zZmV52fTyuWgWvxNEQkBaSUPUMK9+h
-         XrmoB3cDKmtDrFgc+ndmwR019VHnsuwpYkzpEnoshUsg079OdZ7JMP0r+hRJCMEAAfTB
-         isJSIFU+DYkFO9EDHYF4aECTVZi1glUAaghkgKJCG0keDwEgH6HQcGY8ByET/Kr6chzk
-         Grmg==
+        bh=3gAXAJVhyEp1HKMGFh/TvbuN8pteWkQ54oK6Wcz/IpI=;
+        b=T5nbZQYULX3xOA6FxbSIfpVpmiE/jIRdfvwMcJu+WAOECtN7lge/jHeRaRMLcQpa5o
+         cM75NY/2528Nfb40qL4TF4so+t2lKA+5LtGgVm24llh+rmCseBrKXRLZRotCxoui9wls
+         Y9KSx+X2vW92LxlXrq9FEJaQBp2QyFmadjqZTGGlgMR8Yiq4m4tOfR4WTsQ+pXLdSTNJ
+         6a5IltGZ73nR0AKpZYWlwoE4VsUZObuEJF/wRxRK9Sm1H83iuF0km2CeayAxsXr+MNev
+         4pgh+cbRMQJ0u+XL/FCp8zVbcJYZoFK9DuvyIBYCBSwnAkBZtYVQlt5+HcdYLD09S6rq
+         8NUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760338521; x=1760943321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1760340175; x=1760944975;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RxpYz31WTohbhJuOp5dj13ArRLPeR7dWLB0V/ZD3iF4=;
-        b=NSkOKKv01m2X6WiTMufissHvY8bdGL5K0qpDgmJvR/TbpIDnXt9hsKsh4Gft40Fffa
-         HUATeQSisVsBpxuZTfF9Cxlqv8lb8PLVxhxvc1Ag335fsoqpZSu0SzNuC3MFUjyBPWPk
-         gQenHQantwgUiQm30LdcIP8tqxPzaZX60s97rIAolOVyMNZn0nigEMFpcM+azSNq0+Mo
-         Kfehx6ROZZsUyNRjm6Gk8M0GWgeS1Ko6sErS4NhkQ5njTyZHEKHUVmZLkEwU0rxr4L0V
-         hG5J2CikhxuO7J0rKw6Ucj4/WCnj86qbw2A/b+O7A+l4Tdjf/776slaxaTFvHFFA0ZiL
-         1jYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlSCueyq7a5hpArBq9rp4LRjH6YFd2GhE4u5ckotSwThL7B2Js88Ho3RvCSnWcFv0A4fKPHGrKqHp2/A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJrFRJTnqOJaEYFIdZbYEKb5mdHABwhpnybt+O0r//z5ApVm9U
-	uJVUg2k+fSZFT1YespJ11SdjbVJ2RQ+sB4bQG8DjnYl5KLxODnYeV3G+3o2zU1aR+B8VD9lXWPv
-	W76tpo7praAGhBwzeMrYQtIBgffYJUb0=
-X-Gm-Gg: ASbGncs8RILrAmCoI9CVi5zFqBwLZwLzLjSUxMS2Y4A0dyHlsAfI2qBJOhW2Wr7Cl4i
-	4inUGX2tOaphg9eV2zKoVsonS2PMEF9hsUNEHtlpLbfNIKXLK9WL93T3hyuic/2YLE8cCm+AXBm
-	O1swCs4hzpCJVORbCUiqnHANN/265HIZ/omI9HIAhnJshj/RZ+3hNrq57F30dqyhb+quNnNWrfp
-	WYdtY3pyWNx+1s6bHsznd/w2ymABLWB61OCe9fpF7Vb6B7fukYGydByNG6tfkxouUXmkw==
-X-Google-Smtp-Source: AGHT+IGOMc6+OPWoHO6gIAQkEJ03P+HPqmvDc5UtZHoVumqD2rBUYak0kFEk3JXPSfK/KAJ38UkZ5IpqrXXe7FWoo04=
-X-Received: by 2002:a05:6122:d93:b0:544:87b0:d1d1 with SMTP id
- 71dfb90a1353d-554b8b03084mr6224895e0c.6.1760338520677; Sun, 12 Oct 2025
- 23:55:20 -0700 (PDT)
+        bh=3gAXAJVhyEp1HKMGFh/TvbuN8pteWkQ54oK6Wcz/IpI=;
+        b=Ha5kabf4opBOZPvzisk+AVC4gLx9G5mkhr6YUkkFzz2k7doyrRBrxbb+C72ZM04AhG
+         iiaNqDr48T+usBeu6QqlgExWiYO7v0/rsfc7Q5FD8gLuT5GaA+thGLrtSOID3Cu65rvj
+         r2sf9mDB8lkMBe4tFj5tExvjZj7c7C2vOKnA6eMR7wIClsDdzbfB1XP3O4sHT5iI//RS
+         BNM2hMLn/Nwn5ICxmaFvRKPwnIc3vB7LMH8826xhZ9Uo4pw3lqBUvZhJpsGQ4uGNXAdk
+         bef05nLWsW3Fm5vmyLuqa7R6JC0+XWbi6ppb5DqZfzi9geKlrnQpO+cFRRpc4tYF9ycT
+         gWLg==
+X-Forwarded-Encrypted: i=1; AJvYcCV94briX87056KJfY6Aj1xepbFk/JbnXDnjiBhQWKvYbRu05nNbv3C/V5T/wRmLmIKCThU61L8I8grTrQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz70w3H6ZIzuJg+Q8eUr3nVCLnPTIgjt6H3qw7VnkrA4b+o8OXn
+	alJB46XuELYhWLbaqI3mrGTPitxixQ9oFrQVPSSvey98eEV/MmBVeKdo
+X-Gm-Gg: ASbGncsLkwf9pVu5PRzbgRKATz4+jXsdR0UpYFmCJ/tHVr0vFVuOScXRJq7aPCRZ9n6
+	sa76ltO36moV9v5h/JlRphW9qAI6Bl5cm3KP72jI/+qf4HCl5I6svnnrYpQ9GeG5Ge75MIzIdUC
+	w8r+5N4C5WGZs60BVRmVGmmO0dNS08BEL792G/cbsxAqjEfj/+v4JOyo9CbrNqoCWOE1ShhKEER
+	9yI+S83+zGB/v42e10pSmJDkY21E3cMZHYSKSU0rdWEwySFYSZNuOr8udzg/bBOSz/sXBBQXZJt
+	JS5n/oPJmqCPzkzSQ169tnVEUjFdxbdT6PbLjukRvcK1G7sjVvQD6yMMJ3wuyQeXvGNp2r2pFQC
+	juLC4Obmzvu3JFJcmN+LScyzMMUl1p9jt9IIG+uVspJC/UW3QZrpZ1Q==
+X-Google-Smtp-Source: AGHT+IFdNf+EnoFJ3+b6Mq1YD80Ap6/ZdahX+x7QzDtoMhFwkCwxcZCMAPQMd2MY84qPqh+jH/FUAA==
+X-Received: by 2002:a05:6402:13d1:b0:634:ab80:d84b with SMTP id 4fb4d7f45d1cf-639d5c5a3f8mr18291541a12.32.1760340175044;
+        Mon, 13 Oct 2025 00:22:55 -0700 (PDT)
+Received: from foxbook (bff184.neoplus.adsl.tpnet.pl. [83.28.43.184])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63a5235e7ebsm8195076a12.1.2025.10.13.00.22.53
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 13 Oct 2025 00:22:54 -0700 (PDT)
+Date: Mon, 13 Oct 2025 09:22:50 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Arisa Snowbell <arisa.snowbell@gmail.com>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, Niklas Neronin
+ <niklas.neronin@linux.intel.com>
+Subject: [PATCH usb-next] usb: xhci-pci: Cleanup xhci_pci_setup() for shared
+ HCD
+Message-ID: <20251013092250.699bf60f.michal.pecio@gmail.com>
+In-Reply-To: <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
+References: <CABpa4MA9unucCoKtSdzJyOLjHNVy+Cwgz5AnAxPkKw6vuox1Nw@mail.gmail.com>
+	<20251007231709.6c16802e.michal.pecio@gmail.com>
+	<CABpa4MCUnLUR_0Vzgd=rTr0+Hot=nxHirKrX6xtJWowDoLhWJw@mail.gmail.com>
+	<CABpa4MCg7yixe7O8Pp+YwvpxeC=1JPhMhAap12RjtV6pcxFYgQ@mail.gmail.com>
+	<20251008082055.5646dadc.michal.pecio@gmail.com>
+	<CABpa4MCm8hQXvtSYqUA+Dh3rCLVM5rTC1p+FsgmFemv+Vyz=RA@mail.gmail.com>
+	<20251008130532.49922d58.michal.pecio@gmail.com>
+	<CABpa4MAsvK68CyQ7bVdie1j2m2O2YAEuFJHq8D-65uFT3FzKzQ@mail.gmail.com>
+	<20251008223406.13f16f19.michal.pecio@gmail.com>
+	<CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com>
+	<CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com>
+	<20251009131444.2c221922.michal.pecio@gmail.com>
+	<90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com>
+	<20251009152703.72e780b4.michal.pecio@gmail.com>
+	<b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
-In-Reply-To: <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
-From: Octavia Togami <octavia.togami@gmail.com>
-Date: Sun, 12 Oct 2025 23:55:07 -0700
-X-Gm-Features: AS18NWAoz9Ux6LSe2hLCMxTynHVe4LPr0SYtTvRflAzfg_SGNukc-9z4G8Cp-ns
-Message-ID: <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, peterz@infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-That change appears to fix the problem on my end. I ran my reproducer
-and some other tests multiple times without issue.
+This function will be called again when/if the shared HCD is added.
+Little to do in this case and there is no need to set some de-facto
+read-only properties of the xhci again, even if it was harmless.
 
-On Sun, Oct 12, 2025 at 7:34=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 10/11/2025 4:31 PM, Octavia Togami wrote:
-> > Using async-profiler
-> > (https://github.com/async-profiler/async-profiler/) on Linux
-> > 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
-> > reported by many people at https://github.com/lucko/spark/issues/530.
-> > spark is a piece of software that uses async-profiler internally.
-> >
-> > As seen in https://github.com/lucko/spark/issues/530#issuecomment-33399=
-74827,
-> > this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
-> > Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
-> > fixed the issue for me.
-> >
-> > Steps to reproduce:
-> > 1. Get a copy of async-profiler. I tested both v3 (affects older spark
-> > versions) and v4.1 (latest at time of writing). Unarchive it, this is
-> > <async-profiler-dir>.
-> > 2. Set kernel parameters kernel.perf_event_paranoid=3D1 and
-> > kernel.kptr_restrict=3D0 as instructed by
-> > https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311f8=
-72ce9566769b006b357ecbe/docs/GettingStarted.md
-> > 3. Install a version of Java that comes with jshell, i.e. Java 9 or
-> > newer. Note: jshell is used for ease of reproduction. Any Java
-> > application that is actively running will work.
-> > 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
-> > will start an infinitely running Java process.
-> > 5. Run `jps` and take the PID next to the text RemoteExecutionControl
-> > -- this is the process that was just started.
-> > 6. Attach async-profiler to this process by running
-> > `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
-> > second, then the system should freeze entirely shortly thereafter.
-> >
-> > I triggered a sysrq crash while the system was frozen, and the output
-> > I found in journalctl afterwards is at
-> > https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
-> > I'm not sure if that text is actually from the triggered crash, but it
-> > seems relevant. If needed, please tell me how to get the actual crash
-> > report, I'm not sure where it is.
-> >
-> > I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've seen
-> > no Intel reports, it may be AMD specific. I don't have an Intel CPU on
-> > hand to test with.
-> >
-> > /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
-> > (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
-> > PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
-> > Operating System: Arch Linux
-> > uname -mi: x86_64 unknown
->
-> It looks the issue described in the link
-> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.inte=
-l.com/T/#u)
-> happens again but in a different way. :(
->
-> As the commit message above link described,  cpu-clock (and task-clock) i=
-s
-> a specific SW event which rely on hrtimer. The hrtimer handler calls
-> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
-> eventually call hrtimer_cancel() which traps into a dead loop which waits
-> for the calling hrtimer handler finishes.
->
-> As the
-> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@lin=
-ux.intel.com/T/#u),
-> it should be enough to just disable the event and don't need an extra eve=
-nt
-> stop.
->
-> @Octavia, could you please check if the change below can fix this issue?
-> Thanks.
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7541f6f85fcb..883b0e1fa5d3 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_eve=
-nt
-> *event,
->                 ret =3D 1;
->                 event->pending_kill =3D POLL_HUP;
->                 perf_event_disable_inatomic(event);
-> -               event->pmu->stop(event, 0);
-> +
-> +               /*
-> +                * The cpu-clock and task-clock are two special SW events=
-,
-> +                * which rely on the hrtimer. The __perf_event_overflow()
-> +                * is invoked from the hrtimer handler for these 2 events=
-.
-> +                * Avoid to call event_stop()->hrtimer_cancel() for these
-> +                * 2 events since hrtimer_cancel() waits for the hrtimer
-> +                * handler to finish, which would trigger a deadlock.
-> +                * Only disabling the events is enough to stop the hrtime=
-r.
-> +                * See perf_swevent_cancel_hrtimer().
-> +                */
-> +               if (event->attr.config !=3D PERF_COUNT_SW_CPU_CLOCK &&
-> +                   event->attr.config !=3D PERF_COUNT_SW_TASK_CLOCK)
-> +                       event->pmu->stop(event, 0);
->         }
->
->         if (event->attr.sigtrap) {
->
->
+Don't bother passing the unused xhci_pci_quirks in this case either.
+
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+---
+
+This is an alternative to the cleanup discussed last week, which
+doesn't require a v2 bugfix. But I also have a v2 bugfix ready if
+you think the original option was better.
+
+Both variants were tested with and without "fake USB2-only" patch.
+
+The idea here is that there will hopefully never be anything PCI
+specific to do with the shared HCD, so make it patently clear.
+
+It is actually more likely that xhci_gen_setup() might try to use
+allow_single_roothub or imod_interval, in which case this version
+avoids creating another surprise like the one last week.
+
+ drivers/usb/host/xhci-pci.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index cb7f5dd34333..e09f5fb52cf3 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -568,7 +568,7 @@ static void xhci_pme_acpi_rtd3_enable(struct pci_dev *dev) { }
+ static void xhci_find_lpm_incapable_ports(struct usb_hcd *hcd, struct usb_device *hdev) { }
+ #endif /* CONFIG_ACPI */
+ 
+-/* called during probe() after chip reset completes */
++/* called during probe() after chip reset completes and again on the shared HCD */
+ static int xhci_pci_setup(struct usb_hcd *hcd)
+ {
+ 	struct xhci_hcd		*xhci;
+@@ -576,6 +576,10 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+ 	int			retval;
+ 	u8			sbrn;
+ 
++	/* nothing PCI-specific for the shared HCD, just core setup, no quirks */
++	if (!usb_hcd_is_primary_hcd(hcd))
++		return xhci_gen_setup(hcd, NULL);
++
+ 	xhci = hcd_to_xhci(hcd);
+ 
+ 	/* imod_interval is the interrupt moderation value in nanoseconds. */
+@@ -586,9 +590,6 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+ 	if (retval)
+ 		return retval;
+ 
+-	if (!usb_hcd_is_primary_hcd(hcd))
+-		return 0;
+-
+ 	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+ 		xhci_pme_acpi_rtd3_enable(pdev);
+ 
+-- 
+2.48.1
