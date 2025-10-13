@@ -1,203 +1,188 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C6BE555
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 16:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8175227FB2A
+	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 16:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760372527; cv=none; b=kQV18lxcr5c8g1jyU7SB8kYMLgslhdeZnS8bt10qNqs/OL+3iCy3RUBIW/gfHcxqMt2/tpT2feV7x3Yzvvnr9zi4DCoCJ8HUyjWtNz0VvVmV27mrpPcSzMS7pG2ItqHQA+rET9xo4ROjAv5nmlZcgzoWC91rn3VuBPRODtQZl3M=
+	t=1760373019; cv=none; b=VB7Qj2gAqrlgkxbYYHiNMSRS9CU4j4rJhAgk2r+wpsmSlhTr/87imr5vVKmJKK8DLY+w4nI2xsbnsHMHhoiZWEbS/2n1zahameAMTxJ1HZT8/zKEDCZ6s3Thcuk9zVfGSAcxfiTlvIu2GqQvJEHXLcimTzGcRXQgqzx/t2GGkcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760372527; c=relaxed/simple;
-	bh=rVYd3MSh3MZ/3aZ7DJLPRC8DJq7DqKiA99+k9MYhq6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hrd4bd1cr8JjuIsVfvd5gnmmX73b7V3SGjqJQMUkIO2sw/tpt3Q3oGd1hO+RGhe7hB4MC+F/X6WH4TUGFGs4NWMgUH8vlneRrotWCIzFkXJeEGg5ix8lwJReIphSv7B2V2VvxINV8sjFiXERAl9S4F5cCGRAOqXf61t5ENh4NLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cWi4qd30; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=boW4uRVB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cWi4qd30; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=boW4uRVB; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1760373019; c=relaxed/simple;
+	bh=45x2Jb4bOksiYc+/gQKshlBk0WTvXWQ0lxteCKoIgwk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aeVI27/j//lImR+pvUoAk818Y7+R8IL4zPieVFSL25a4FTC6DPsnn2G988jpVX4+CBI7WeEbyjLljYg6RXtcvl14DBHdVk0PI1Y0R7f7zHWey3VWp84vYx9WF9wXp0jcdJPtRFwY0j4Mx2ytxvRYxHCnVsSX2/MwhDyku0zWXqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ea0H0SUR; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cWi4qd30";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="boW4uRVB";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cWi4qd30";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="boW4uRVB"
-Received: from lion.mk-sys.cz (unknown [10.100.225.114])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C6A4E21B5C;
-	Mon, 13 Oct 2025 16:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760372523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ivCeth8SMjaYeJ1iglN5yZRuL5l9i7tk6pf+H9260Xk=;
-	b=cWi4qd30S9/GygzOAHalnoUGPsLvWzGgqUUlTtMKuxfkKhS64+nKIDqBL50aGKgaJVaqHt
-	R3X0K1AXdfJ14m2tDHWht8zQJUpB4pPv9b94rjTUn1eW1DxvHzqTzoX5V5vJCdeALs3Yu0
-	ZcZMWeEt5+utVawPnDhHuL4n/q6ZQtE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760372523;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ivCeth8SMjaYeJ1iglN5yZRuL5l9i7tk6pf+H9260Xk=;
-	b=boW4uRVBCMFVy3DzAMNt4oemX+US9K+5XevXFQHJiO3+AUF1QXVnyIXpRKcBuy2BH0JvI3
-	JFAvyaNxMEvPUCCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760372523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ivCeth8SMjaYeJ1iglN5yZRuL5l9i7tk6pf+H9260Xk=;
-	b=cWi4qd30S9/GygzOAHalnoUGPsLvWzGgqUUlTtMKuxfkKhS64+nKIDqBL50aGKgaJVaqHt
-	R3X0K1AXdfJ14m2tDHWht8zQJUpB4pPv9b94rjTUn1eW1DxvHzqTzoX5V5vJCdeALs3Yu0
-	ZcZMWeEt5+utVawPnDhHuL4n/q6ZQtE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760372523;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ivCeth8SMjaYeJ1iglN5yZRuL5l9i7tk6pf+H9260Xk=;
-	b=boW4uRVBCMFVy3DzAMNt4oemX+US9K+5XevXFQHJiO3+AUF1QXVnyIXpRKcBuy2BH0JvI3
-	JFAvyaNxMEvPUCCQ==
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id B574220057; Mon, 13 Oct 2025 18:03:45 +0200 (CEST)
-Date: Mon, 13 Oct 2025 18:03:45 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, 
-	Arisa Snowbell <arisa.snowbell@gmail.com>, linux-usb@vger.kernel.org, regressions@lists.linux.dev, 
-	Niklas Neronin <niklas.neronin@linux.intel.com>
-Subject: Re: [PATCH v2 RFT] usb: xhci-pci: Fix USB2-only root hub registration
-Message-ID: <7jhwqwragngnswtutxn2rusleorhk4ffew3k6tnu236atgccqt@45ibtawev6h7>
-References: <20251008223406.13f16f19.michal.pecio@gmail.com>
- <CABpa4MBGW=OJi+j34TbL2g=zyTg7-rxqpHYfAW-1DXTPk=g5Fw@mail.gmail.com>
- <CABpa4MBDvgJcgJf3_E7k1dBXs7v1tW-79dmc_sQDVM1bES5YDQ@mail.gmail.com>
- <20251009131444.2c221922.michal.pecio@gmail.com>
- <90c03eeb-3913-4968-88c0-0de09023a2b5@linux.intel.com>
- <20251009152703.72e780b4.michal.pecio@gmail.com>
- <b8c2423f-aa9d-442a-ae2f-3c4d78949b38@linux.intel.com>
- <20251013092250.699bf60f.michal.pecio@gmail.com>
- <21741b98-4844-4218-8bd9-10b8bf5cd869@linux.intel.com>
- <20251013100424.42d5b9d2.michal.pecio@gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ea0H0SUR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1760372988; x=1760977788; i=spasswolf@web.de;
+	bh=nqMyNCBrL+BlSohWKUpwCMTnwvgKLIa0I7oU0sG2VfE=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ea0H0SURKVpCNhu8yHfSl6Utd505xo6U+lCaCKtLD/TmSC4qc6YSZIGVBeRK0TAL
+	 LIwmjjJI/OYuLO6HPZaKgQ8VInZ+GzU7/WDFqkicE37BY156qL41xUuhi325QZd2G
+	 Cb5d1IIOpgVe7IWioTYQLLSZD1gasuJP1tKvHjxmy1GdbTbSZ2dYOWwt3K6rAhbSF
+	 1iYeGcFB6q0OtD9/IJxt3v2DqISKhV4PcGshG+rPShlfDECLa79IHMWJf3EMVaqgh
+	 0OD/z8do1dSRCCdfkEJNd78wW2QrF1SE/8l6I2e4wL5l4kFfLsDft0U19G84Wauay
+	 sH7OnA3tgXER5pt+yw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MIyeG-1up9qo21ko-00R4KJ; Mon, 13
+ Oct 2025 18:29:48 +0200
+Message-ID: <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
+From: Bert Karwatzki <spasswolf@web.de>
+To: Mario Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, Christian
+ =?ISO-8859-1?Q?K=F6nig?=	 <christian.koenig@amd.com>, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, 	spasswolf@web.de
+Date: Mon, 13 Oct 2025 18:29:46 +0200
+In-Reply-To: <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+References: <20251006120944.7880-1-spasswolf@web.de>
+	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gwxlkycjwclgrxa6"
-Content-Disposition: inline
-In-Reply-To: <20251013100424.42d5b9d2.michal.pecio@gmail.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.40 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,vger.kernel.org,lists.linux.dev];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Score: -4.40
-
-
---gwxlkycjwclgrxa6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:43GG+RGVT3i3a/y83/W1ei+fO9suSrJwpqVV1suZxFJViRLeSqz
+ xkBmfjtGrawI3i77v66zpjlxaTET2VHe0liHMuANDp46wTq5VsbFu4dkdOSEjIBBuBdyzW+
+ GtT6/7XQzzqmO97rSNUkJ1gNA363HI/h1ag0hmN3qQa2OS/y9nRRV8xLNzVnnHXEQNSCP2o
+ kuRJnuuqodWaC4/haH2Ew==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:LoPZVms++YQ=;gATdQA/iUlFHEQDdx2TUmwSgu67
+ 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
+ DqH4Q==
 
-On Mon, Oct 13, 2025 at 10:04:24AM GMT, Michal Pecio wrote:
-> A recent change to hide USB3 root hubs of USB2-only controllers broke
-> registration of USB2 root hubs - allow_single_roothub is set too late,
-> and by this time xhci_run() has already deferred root hub registration
-> until after the shared HCD is added, which will never happen.
+Am Dienstag, dem 07.10.2025 um 16:33 -0500 schrieb Mario Limonciello:
 >=20
-> This makes such controllers unusable, but testers didn't notice since
-> they were only bothered by warnings about empty USB3 root hubs. The bug
-> causes problems to other people who actually use such HCs and I was
-> able to confirm it on an ordinary HC by patching to ignore USB3 ports.
->=20
-> Setting allow_single_roothub during early setup fixes things.
->=20
-> Reported-by: Arisa Snowbell <arisa.snowbell@gmail.com>
-> Closes: https://lore.kernel.org/linux-usb/CABpa4MA9unucCoKtSdzJyOLjHNVy+C=
-wgz5AnAxPkKw6vuox1Nw@mail.gmail.com/
-> Reported-by: Michal Kubecek <mkubecek@suse.cz>
-> Closes: https://lore.kernel.org/linux-usb/lnb5bum7dnzkn3fc7gq6hwigslebo7o=
-4ccflcvsc3lvdgnu7el@fvqpobbdoapl/
-> Fixes: 719de070f764 ("usb: xhci-pci: add support for hosts with zero USB3=
- ports")
-> Suggested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+> Can you still reproduce with amd_iommu=3Doff?
 
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
+Reproducing this is at all is very difficult, so I'll try to find the exac=
+t spot
+where things break (i.e. when the pci bus breaks and no more message are t=
+ransmitted
+via netconsole) first. The current state of this search is that the crash =
+occurs in
+pci_pm_runtime_resume(), before pci_fixup_device() is called:
 
-> ---
->=20
-> New in v2:
-> - don't set allow_single_roothub twice, it's harmless but lame
-> - credit and Cc another reporter
->=20
->  drivers/usb/host/xhci-pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 13454bef14d3..d292adc65e5a 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -588,6 +588,8 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
->  	if (!usb_hcd_is_primary_hcd(hcd))
->  		return 0;
-> =20
-> +	xhci->allow_single_roothub =3D 1;
-> +
->  	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
->  		xhci_pme_acpi_rtd3_enable(pdev);
-> =20
-> @@ -643,7 +645,6 @@ int xhci_pci_common_probe(struct pci_dev *dev, const =
-struct pci_device_id *id)
->  	xhci =3D hcd_to_xhci(hcd);
->  	xhci->reset =3D reset;
-> =20
-> -	xhci->allow_single_roothub =3D 1;
->  	if (!xhci_has_one_roothub(xhci)) {
->  		xhci->shared_hcd =3D usb_create_shared_hcd(&xhci_pci_hc_driver, &dev->=
-dev,
->  							 pci_name(dev), hcd);
-> --=20
-> 2.48.1
+static int pci_pm_runtime_resume(struct device *dev)
+{
+	struct pci_dev *pci_dev =3D to_pci_dev(dev);
+	const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : NULL;
+	pci_power_t prev_state =3D pci_dev->current_state;
+	int error =3D 0;
+	// dev_info(dev, "%s =3D %px\n", __func__, (void *) pci_pm_runtime_resume=
+); // remove this so we don't get too much delay
+										  // This was still printed in the case of a crash
+										  // so the crash must happen below
 
---gwxlkycjwclgrxa6
-Content-Type: application/pgp-signature; name="signature.asc"
+	/*
+	 * Restoring config space is necessary even if the device is not bound
+	 * to a driver because although we left it in D0, it may have gone to
+	 * D3cold when the bridge above it runtime suspended.
+	 */
+	pci_pm_default_resume_early(pci_dev);
+	if (!strcmp(dev_name(dev), "0000:00:01.1")) // This is the current test.
+		dev_info(dev, "%s %d\n", __func__, __LINE__);
+	pci_resume_ptm(pci_dev);
 
------BEGIN PGP SIGNATURE-----
+	if (!pci_dev->driver)
+		return 0;
 
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmjtIt4ACgkQ538sG/LR
-dpVvLgf9FKchtB/PkMMmsrp+7pKjyZklpwVepwINOSAqDRdkfKCTS5HCXkhsNeVM
-2AficNPmfAXRV3viCRLzvP2NRBbDOaV37xVXoz48IjNqWZ5pjHr4O4NwhmnUJyfD
-Fg7AhrM/3LLGBf6oHmIiIVklD9g9eLuSPYXejS+jXgD0RQNKPkx/tG/SxnkpSc4/
-IrdnMrIzHnO8Qz0MM8Iz3KyXT5ScpJvFDOKQ4NYS/i7ajWL2kkZcOsTrkxslCJj9
-+b1+aDbSGx2UgqYfREm3kWnmRCvzlMcFmZ4VLHLY3g337hwpYaq+xA+XHdBKfojZ
-yTdvTMC5anZuC2L4ENr4jr/8bexdXg==
-=s+10
------END PGP SIGNATURE-----
+	//if (!strcmp(dev_name(dev), "0000:00:01.1"))         // This was not pri=
+nted when 6.17.0-rc6-next-20250917-gpudebug-00036-g4f7b4067c9ce
+	//	dev_info(dev, "%s %d\n", __func__, __LINE__); // crashed, so the crash=
+ must happen above
+	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+	pci_pm_default_resume(pci_dev);
 
---gwxlkycjwclgrxa6--
+	if (prev_state =3D=3D PCI_D3cold)
+		pci_pm_bridge_power_up_actions(pci_dev);
+
+	if (pm && pm->runtime_resume)
+		error =3D pm->runtime_resume(dev);
+
+	return error;
+}
+
+
+Bert Karwatzki
