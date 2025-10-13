@@ -1,90 +1,254 @@
-Received: from mail.cock.li (mail.cock.li [37.120.193.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1BB2C0286
-	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 17:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.193.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C3D2C15A2
+	for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 18:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760375963; cv=none; b=NcqX/zLafEMKfQ2XtCSMcgBlSvQLw34iS6KpUMvwrMwapQLklJCpk5mc8cleDPIYh7F4RuXNoUmtGuD83Ee8plWS6uPPg3ObeozsPgPOaxkRlR5z9u9NRt9dC/YNwf8aHsKj/yeKQwyvB27I6+LeR6vLaozHl4TFCxvGazvuvn8=
+	t=1760378658; cv=none; b=Fv6Va2lDP/2AF7iC0yNZrfFSM5Z2mqOSjaTPeYJFvjudDtob3ewDx5hfvoKKrRGuVpJ20JwsV+b0gZ6VsqmXT3cg1Mq1vZhfs2GeS0YA/WFLCYSVuqmDlUwVQNYn8g7ewRGG9hliK2dvmVJjhuuxIoHpE/DFXqdLN0PiARv0TaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760375963; c=relaxed/simple;
-	bh=yBeX7+xYvuvL245QvTu3U+HIfEbuBqyLnMr+8/cVvxk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=NJEP9z8f/i4GnboM7MuppmDtgDF9jQFlaFnHDdd1xpygMp9KkHYN7dxPXLR7rhD+bU1zkVg0JBBgMccAJFd1GxWeeEesrgah/ilIviDb4KWkuqi1pRQOsQbL/CmhiPx7DEsGHR4ASxhSKOXpEkuFa0IUoU4JHiqG/A5UD3VGzMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=airmail.cc; spf=pass smtp.mailfrom=airmail.cc; dkim=pass (2048-bit key) header.d=airmail.cc header.i=@airmail.cc header.b=g3B465ij; arc=none smtp.client-ip=37.120.193.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=airmail.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airmail.cc
+	s=arc-20240116; t=1760378658; c=relaxed/simple;
+	bh=m+yXzWPZoIycghwzGcPhv/NlAyi3SuK0XhoWLox95+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d2rTebPaSl5RbOQ1zmnDEZ+H4xJAF7b9RsAobkz6619YpfjhJDmUcELekvktP4Ptae1SnQYPJ6BinXJpiKVkS8KItR0kinr2+nCozCau0modhN2EpCt+FfykZxjoGktY+kBsF5eZVrWOmVjaLcl+tEPKHkwHbIGcPojkoDH6oPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=xxYTnn6H; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=airmail.cc header.i=@airmail.cc header.b="g3B465ij"
-Message-ID: <34d27471-80a4-49f8-b6cb-f2e51518d9ea@airmail.cc>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=airmail.cc; s=mail;
-	t=1760375395; bh=yBeX7+xYvuvL245QvTu3U+HIfEbuBqyLnMr+8/cVvxk=;
-	h=Date:To:Cc:References:Subject:Reply-To:From:In-Reply-To:From;
-	b=g3B465ijR/cbeWZIBKYaqD+buxy0DTQLyaYNl8Iw2jlHUJNFlVqlQVfIqERoQRNXJ
-	 yKPYAde0G9V6kGp3WlU95NdWUmSIoOWPXvlht8nv2L+yjm5qVvh7BSeysMI5csjpxe
-	 dByXL9Hva+xWq2zHY8+qRzKlX1mE2bllI+f+pgyuMTpsKE0l+eT4xZGhzw+vWllVbm
-	 W+00nA9ljWFR50RmiwEg1Gf8DjG0y9CvGxuS2qDj5kDb1YyMQo3GHOvuQPDWwCkMmU
-	 PGCVqRfaNwpPE9MCJrCV6sA8nd2/cypjC2DueycZuZGv01gL9svbYcBjxXe1Ml3D/u
-	 idUB8ADhuoG8g==
-Date: Mon, 13 Oct 2025 17:09:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xxYTnn6H"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-42f67e91ae7so48044185ab.0
+        for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 11:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1760378655; x=1760983455; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E8igWH8DcuinLwAD/oSviw5uom79r9hVi68AOlgT+Jg=;
+        b=xxYTnn6HD6Hnjq+znWgjoZqBeM/tM8+remNM/+rD+RsWLYTakpAivfiNp6ZDETrjgK
+         qy8z/G0R6YGpAgzZF3kgDff+YWgwzAsK1zZXLgG4Olw2sNWbwF6UYIRjnbC6E0SeFcGV
+         hUyBIFaQ1eIqkrHdQZRLl4CNjVmuZbEcZAPbRW3U2++g0TzjHgV7LyJys6li2ropodPy
+         BP8DIK6mlxKSAlKQh86mxQhYPmIvfHalBiTUdZC7NPVw/NjZgDiP4RAT8MSX7ijFKN+d
+         KvFn1U/ADZkfkJOARD8pZfgb9Vhv4wWzfEo9CLbqWoIUkJkHGMy9E3zxiKjZfW+/O/Ah
+         Ue9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760378655; x=1760983455;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E8igWH8DcuinLwAD/oSviw5uom79r9hVi68AOlgT+Jg=;
+        b=HLqC8l/0P++KsKubjT151fs/SYKX/3aJeaAmZTXrtjeDO/oWpTGcgpyDE9L6Z+9Fpo
+         4YCuR4i4TZwW47Lr9nwdECwgr9m4mwzgZLSKF+OORs/vMd6U4OoI3tpoj+0npdPcHX/F
+         pDpoNvAIZR/RhoNW9kbEg9p/q8ndO7RfEzTCRHuq5MQrkG8L/jD/i2O3MpGjiol+zJVh
+         Y4h8RmGaISj31p3t2l0UnK/SrkyK+9PT9ic+9+zsguE4qMpIv2S24Gu1WRX8DJD1wYBR
+         kp7PhF11ZiZneHE7PJmW150NRwYPRP1ElkBgpTP+h7105xHHmmGjTK38zfSxwTeaV3iX
+         CwwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNwKmlUgnjEHmyTY7V3bhgLflenjGCKPTIVpBPIPe4oX4sr4z/ocJFWMg/gBZCIXfgxnJMarVxn5KvAw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwQ/28/bsr7ncifUg+GOCiqKiE9lV1pUtIbXyp73Z1xcj0aybn4
+	oK2nYkWAhWK8WnFFhs41dNRxOfsnJYUt7Hhl/88mtmaU9I7cPspWC6D+dqHZ3i36YNg=
+X-Gm-Gg: ASbGncsGiSnwLAtg1D2fLxWUmVoDPLoaEc4xGaNemhx+pzn6PhKZJV+DRdISWnuxn/y
+	oM3cNv3bJeNx+FajQ1Wgh4RwGRKD3VNE6UxPTisvKA6pUsvfFpcQnWLEEcQ/wC+zJOnLmq06Gsz
+	EQPh7wgyzSULPVtz1WO/gjgaaO6Q3mY7RpUTcwlQlsqBrBRI9qawmB2D/CbKRAYuOxcGmPQM4BC
+	NS0Cmuxr/ykOuofmHMh9G8AWWjWRtr+YRMPWhtnnFajLJm/x4ZEoLC0w0Mesx+vAdcLv14yyz6l
+	u8/5Ki3Q/p9lm7F+tblnwEsC2q4etFi4MrDfbDOL14IsPUI2eRszt5aPj1R/cJENfu/bnwIIudX
+	48WQbLNtnyQkFq37Pa/JDzZFIY/xQUV9l0lMdkQ==
+X-Google-Smtp-Source: AGHT+IGvU54cMClEuUuP3c619ZbLtmf9IdAbnaPWCwj6ZE9MHLRB1SAO44OEies2s5PJ/JmGo7Rybg==
+X-Received: by 2002:a05:6e02:16ca:b0:430:9f96:23b2 with SMTP id e9e14a558f8ab-4309f9624d6mr7417065ab.5.1760378654846;
+        Mon, 13 Oct 2025 11:04:14 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-58f6cd58e48sm4015507173.17.2025.10.13.11.04.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Oct 2025 11:04:13 -0700 (PDT)
+Message-ID: <cceb723c-051b-4de2-9a4c-4aa82e1619ee@kernel.dk>
+Date: Mon, 13 Oct 2025 12:04:12 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-To: david@redhat.com
-Cc: akpm@linux-foundation.org, chengming.zhou@linux.dev,
- craftfever@murena.io, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- regressions@lists.linux.dev, xu.xin16@zte.com.cn
-References: <423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com>
-Subject: Re: [Regerssion] [KSM] KSM CPU overhead in 6.16+ kernel compared to
- <=6.15 versions ("folio_walk_start" kernel object overhead)
-Reply-To: 423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com
-From: craftfever <craftfever@airmail.cc>
-In-Reply-To: <423de7a3-1c62-4e72-8e79-19a6413e420c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] Regression from 90bfb28d5fa8 ("io_uring/rw: drop
+ -EOPNOTSUPP check in __io_complete_rw_common()"): LVM snapshots causing I/O
+ errors in KVM guest with aio=io_uring set
+To: Salvatore Bonaccorso <carnil@debian.org>, Kevin Lumik <kevin@xf.ee>
+Cc: 1116358@bugs.debian.org, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <f6e2bd310293b720cad7d193b3fdf8369d6bb3ac.camel@xf.ee>
+ <aO07Gt9ZtECKuGkJ@eldamar.lan>
+From: Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <aO07Gt9ZtECKuGkJ@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
- > Looking again, no, that's not the case. We do a cond_resched() after 
-every page we looked up.
- >
- > Also, b1d3e9bbccb4 was introduced in v6.12 already. Regarding 
-folio_walk_start(), also nothing major changed ever since v6.12.
- >
- > Looking at scan_get_next_rmap_item(). I guess we might hold the mmap 
-lock for quite a long time (if we're iterating large areas where there 
-are no suitable pages mapped -- very large sparse areas).
- >
- > That would explain why we end up calling folio_walk_start() that 
-frequently.
- >
- > But nothing really changed in that regard lately in KSM code.
- >
- > What we probably should be doing, is give up the mmap lock after 
-scanning a certain size. Or better, switch to per-VMA locks if possible.
- >
- > Also, looking up each address is highly inefficient if we end up having
- > large empty areas. A range-walk function would be much better suited 
-for that, so we can just jump over holes completely.
- >
- > But anyhow, nothing seems to have changed ever since 6.15 AFAIKT, so 
-I'm not really sure what's going on here. Likely it's unrelated to KSM 
-changes.
- >
- > -- Cheers
- >
- > David / dhildenb
- >
+On 10/13/25 11:47 AM, Salvatore Bonaccorso wrote:
+> Hi Jens,
+> 
+> Kevin Lumik reported in Debian the following issue (not exactly a
+> minimal reproducer, but bisection results follows):
+> 
+> On Fri, Sep 26, 2025 at 10:34:22AM +0300, Kevin Lumik wrote:
+>  
+>> Dear Maintainer,
+>>
+>> After upgrading from Debian Bookworm to Trixie, an issue within KVM guests when creating an LVM snapshot of its volume
+>> has surfaced. When a LVM snapshot is taken from the host, the guest starts to get I/O errors. The issue seems to only
+>> appear when aio=io_uring is specified in the KVM drive parameters and also seems to resolve when downgrading the kernel
+>> package down to 6.1. The issue is also not reproducible when using aio=native. 
+>>
+>> KVM args for the drive: "-drive id=drive-
+>> virtio0,format=raw,file=/dev/dom/vps_testsql,cache=none,aio=io_uring,index=0,media=disk,if=virtio"
+>>
+>> An IO workload is being created in the VM using "fio --randrepeat=1 --ioengine=io_uring --direct=1 --gtod_reduce=1 --
+>> name=randwrite --filename=/root/test.bin --bs=4k --iodepth=64 --runtime=60 --numjobs=32 --readwrite=randwrite --size=1G
+>> --rwmixread=75 --group_reporting"
+>>
+>> After running "lvcreate -s /dev/dom/vps_testsql -n test -L 1G" on the host we can observe fio erroring out:
+>>
+>> ...
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=46977024, buflen=4096
+>> fio: pid=7367, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=261505024, buflen=4096
+>> fio: pid=7374, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=973840384, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=9637888, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=159965184, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=857505792, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=90787840, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=26427392, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=955621376, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=96169984, buflen=4096
+>> fio: pid=7372, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7362, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=203702272, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=814649344, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=91467776, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=948256768, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=105295872, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=75247616, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=1062293504, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=111955968, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=942563328, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=117354496, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=1050402816, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=125419520, buflen=4096
+>> fio: io_u error on file /root/test.bin: Input/output error: write offset=129044480, buflen=4096
+>> fio: pid=7369, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7373, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7348, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7375, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7358, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>> fio: pid=7359, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+>>
+>> randwrite: (groupid=0, jobs=32): err= 5 (file:io_u.c:1876, func=io_u error, error=Input/output error): pid=7344: Thu Sep
+>> 25 16:28:30 2025
+>>   write: IOPS=194k, BW=758MiB/s (795MB/s)(3976MiB/5244msec); 0 zone resets
+>>    bw (  KiB/s): min=657104, max=1009816, per=100.00%, avg=785345.80, stdev=4331.73, samples=320
+>>    iops        : min=164276, max=252454, avg=196336.40, stdev=1082.93, samples=320
+>>   cpu          : usr=0.33%, sys=1.07%, ctx=18912, majf=0, minf=455
+>>   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=99.8%
+>>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>>      complete  : 0=0.1%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
+>>      issued rwts: total=0,1019955,0,0 short=0,0,0,0 dropped=0,0,0,0
+>>      latency   : target=0, window=0, percentile=100.00%, depth=64
+>>
+>> Run status group 0 (all jobs):
+>>   WRITE: bw=758MiB/s (795MB/s), 758MiB/s-758MiB/s (795MB/s-795MB/s), io=3976MiB (4169MB), run=5244-5244msec
+>>
+>> Disk stats (read/write):
+>>   vda: ios=1/1001361, merge=0/2, ticks=0/10314531, in_queue=10314549, util=97.82%
+>> Bus error
+>>
+>> ---
+>>
+>> And the error is also visible in the kernel error log of the VM:
+>> [  361.962970] I/O error, dev vda, sector 83277192 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.963945] I/O error, dev vda, sector 83067480 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964489] I/O error, dev vda, sector 82881208 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964499] I/O error, dev vda, sector 83031976 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964501] I/O error, dev vda, sector 83089832 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964503] I/O error, dev vda, sector 83156184 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964522] I/O error, dev vda, sector 83183384 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964524] I/O error, dev vda, sector 83310704 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964525] I/O error, dev vda, sector 83311144 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>> [  361.964532] I/O error, dev vda, sector 83315272 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+>>
+>> The host does not generate any erros, they only seem to occur within the VM.
+> 
+> Now I asked Kevin if a bisection is possible, and the following
+> results was found (https://bugs.debian.org/1116358#41):
+> 
+> I've identified the first bad commit using git bisect:
+> 
+> 90bfb28d5fa8127a113a140c9791ea0b40ab156a is the first bad commit
+> commit 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Tue Sep 10 08:57:04 2024 -0600
+> 
+>     io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
+> 
+>     A recent change ensured that the necessary -EOPNOTSUPP -> -EAGAIN
+>     transformation happens inline on both the reader and writer side,
+>     and hence there's no need to check for both of these anymore on
+>     the completion handler side.
+> 
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+>  io_uring/rw.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> 
+> Here is the git bisect log as well:
+> 
+> git bisect start
+> # status: waiting for both good and bad commits
+> # good: [98f7e32f20d28ec452afb208f9cffc08448a2652] Linux 6.11
+> git bisect good 98f7e32f20d28ec452afb208f9cffc08448a2652
+> # status: waiting for bad commit, 1 good commit known
+> # bad: [59b723cd2adbac2a34fc8e12c74ae26ae45bf230] Linux 6.12-rc6
+> git bisect bad 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+> # bad: [de848da12f752170c2ebe114804a985314fd5a6a] Merge tag 'drm-next-2024-09-19' of https://gitlab.freedesktop.org/drm/kernel
+> git bisect bad de848da12f752170c2ebe114804a985314fd5a6a
+> # bad: [7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf] Merge tag 'soc-dt-6.12' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> git bisect bad 7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf
+> # good: [64dd3b6a79f0907d36de481b0f15fab323a53e5a] Merge tag 'for-linus-non-x86' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+> git bisect good 64dd3b6a79f0907d36de481b0f15fab323a53e5a
+> # bad: [daa394f0f9d3cb002c72e2d3db99972e2ee42862] Merge tag 'core-debugobjects-2024-09-16' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad daa394f0f9d3cb002c72e2d3db99972e2ee42862
+> # good: [effdcd5275ed645f6e0f8e8ce690b97795722197] Merge tag 'affs-for-6.12-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> git bisect good effdcd5275ed645f6e0f8e8ce690b97795722197
+> # bad: [26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4] Merge tag 'for-6.12/block-20240913' of git://git.kernel.dk/linux
+> git bisect bad 26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4
+> # bad: [3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2] Merge tag 'for-6.12/io_uring-20240913' of git://git.kernel.dk/linux
+> git bisect bad 3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2
+> # good: [df2825e98507d10cb037a308087ecd7cb3f6688d] btrfs: always pass readahead state to defrag
+> git bisect good df2825e98507d10cb037a308087ecd7cb3f6688d
+> # good: [69a3a0a45a2f72412c2ba31761cc9193bb746fef] Merge tag 'erofs-for-6.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+> git bisect good 69a3a0a45a2f72412c2ba31761cc9193bb746fef
+> # good: [ecd5c9b29643f383d39320e30d21b8615bd893da] io_uring/kbuf: add io_kbuf_commit() helper
+> git bisect good ecd5c9b29643f383d39320e30d21b8615bd893da
+> # good: [f011c9cf04c06f16b24f583d313d3c012e589e50] io_uring/sqpoll: do not allow pinning outside of cpuset
+> git bisect good f011c9cf04c06f16b24f583d313d3c012e589e50
+> # bad: [84eacf177faa605853c58e5b1c0d9544b88c16fd] io_uring/io-wq: inherit cpuset of cgroup in io worker
+> git bisect bad 84eacf177faa605853c58e5b1c0d9544b88c16fd
+> # bad: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop - EOPNOTSUPP check in __io_complete_rw_common()
+> git bisect bad 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> # good: [c0a9d496e0fece67db777bd48550376cf2960c47] io_uring/rw: treat - EOPNOTSUPP for IOCB_NOWAIT like -EAGAIN
+> git bisect good c0a9d496e0fece67db777bd48550376cf2960c47
+> # first bad commit: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
+> 
+> #regzbot introduced: 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> #regzbot link: https://bugs.debian.org/1116358
+> 
+> Does thi ring any bell?
 
-I have to make a correction, folio_start_walk is present in "perf top" 
-statistics on 6.12-6.15, it just consumes 0.5-1% of kernel time compared 
-to 11-14% on 6.16+, where it causes ksmd 100% cpu usage compared <=6.15 
-kernels. I understand, that something changed in linked function, that 
-affecting KSM behavior. Maybe, you can reproduce it with same settings, 
-especially it happens with Chromium apps, there is V8 sandbox with huge 
-VM size. Maybe, you could reproduce the problem with the same 
-MemoryKSM=yes in user@.service, that sets KSM processing for all user 
-processes, especially, when Chromium is running. KSM CPU usage really 
-differs between 6.12-6.15 and 6.16+. Maybe, it's related to your 
-explanation. Thank you.
+Thanks to both of you, this is very useful! I guess the original commit
+is mistaken, there's still a bubbling up of EOPNOTSUPP there. I'd say
+let's just revert that commit, I will do that upstream and have it buble
+down to the stable kernels too.
+
+I can always look into this later and reintroduce it, if need be.
+
+-- 
+Jens Axboe
