@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D99F219E8;
-	Mon, 13 Oct 2025 21:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BF71A9F9B;
+	Mon, 13 Oct 2025 21:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760389564; cv=none; b=U7SIgOrczD/gV4hBMKFicp+IGmCjqQ/BCpPIGER1ZPVuHPmmT1zAxbvHC4R6QMZKyFVt0PEHTYJaKkHAtGKp9b8ADoURFy+Jt+bvpQISewssaXFMM4ksRDNNGGlDVtqne8KKhefEaBpuw288zgxtYUhYuRjlOtDiJr3qGLFydy0=
+	t=1760390380; cv=none; b=FxgEKD3dlTItYWRBPh07qXoZCneLEZTnV+baQUnXdX2Nyc8cBhG9STsz+Rgs2EZt9coJRIZJ227GP+ORixuMtDdQRYDY7i0CeoSM6beRZpb8U6Bc8p3wE2OqwFbIXYR0e+uyt1jxeK7hcam7FBh2imoaccjOqS2rMgA9hIgVyog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760389564; c=relaxed/simple;
-	bh=gMimZXT46hTusGjQg/yFAkmHwf6pf0yukMIhp3DOs2U=;
+	s=arc-20240116; t=1760390380; c=relaxed/simple;
+	bh=EHxxQD8og20F9+fhPoBt6CNX+siyDlnUuz0TQTdudXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=GztzFPlY/QYwaScptTUrLJsLBUhEmMs1oPgs3aeOAQGkNfATWNSLKd3eKLdQeu+i+tfGy59MAcG4iOFC9U/dBRds8JjVsRwRUT2WvSC8Zy5tqyFjKfug9b5Z58g9hMdcVJZHhvZErQZhr42Cbs/hoNo5Mtny0Dzo8q2RwxuK1ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/2LXsON; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition:In-Reply-To; b=Nzst2+5CNFSXkT3Z1pRoyF4mpheTmi718xwssBm38xJ1MuLzvpDT2O30DpUBrjSwv2NmKpyju64j+85bYdG267SCTNRPguiPCe0Ym0w40O1VMxRQaCevRHSUA/oESEaxtTkscji+TEaOvR40IJ2UCqoZZSIyZK0izYJJB1j8owg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fACKrjqG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/2LXsON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61775C4CEE7;
-	Mon, 13 Oct 2025 21:06:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fACKrjqG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E22C4CEE7;
+	Mon, 13 Oct 2025 21:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760389563;
-	bh=gMimZXT46hTusGjQg/yFAkmHwf6pf0yukMIhp3DOs2U=;
+	s=k20201202; t=1760390380;
+	bh=EHxxQD8og20F9+fhPoBt6CNX+siyDlnUuz0TQTdudXg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=u/2LXsONWeMP2R8o7bZWhH9Q3uuAAPPdKPvYNpUDOneecaltzuMuzXFL4E6m7ZXxO
-	 nB864Z2TSdkOrZdJSHYjZxzwCAzlETz+2jlVI6v/kQ/1bgevxKiH7cvMdSE7+m3a83
-	 sIG632DRHu5kae8igKX3UUpcAjdarU1ZgVckLJ5GjFq+RHNXFX9QnBW6FoILU8Cy7v
-	 bJe6E8VIO3uLfKjo+qJfq/zsCFKl3dV1A5YcivupeoiFJ0TSdUT9u5BrSKW5HHcwCx
-	 jUX35n6WZmN89qcJ5tYAo1y7G3yTgchmiNqT/+aB+WTiOef1FIT7z8VTaBQ3U1B/PO
-	 CwAsatACY/+rQ==
-Date: Mon, 13 Oct 2025 16:06:02 -0500
+	b=fACKrjqGKL2ovU/hV7m1N7RHvCE9PFpOcx20JFMgHDxO251tiiQCgxM0mBo2F2ANa
+	 6vqXUl3tUE5k0y3NM6ihlpFAIcuol7PVROnpAYkOgp7M0ndd7WTA9iOmrqaELmRj45
+	 vFxHQQGqXtZYKYcEO7Qkzvkw29Ve8RDUnbjcN6MRyuMzjyk6GyViz/8tlbx5kTvSvB
+	 G7qZDCuizhMyJjF3F8WqmPOtMlI0xV1SRHidU95Y31J4LkbTjUVUMIorCbuGRshQ2a
+	 QWnCwIYzAXee2TLSbwgFjmwCwjy2DsMIqVseqjI20Xi9z+lQWL5ZBDvjVhIhUhyDM9
+	 xRFxvwSZPBUKw==
+Date: Mon, 13 Oct 2025 16:19:39 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	mad skateman <madskateman@gmail.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	"debian-powerpc@lists.debian.org" <debian-powerpc@lists.debian.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lukas Wunner <lukas@wunner.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	regressions@lists.linux.dev
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <20251013210602.GA864364@bhelgaas>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: inochiama@gmail.com, tglx@linutronix.de, bhelgaas@google.com,
+	unicorn_wang@outlook.com, linux-pci@vger.kernel.org,
+	Genes Lists <lists@sapience.com>, Jens Axboe <axboe@kernel.dk>,
+	Todd Brandt <todd.e.brandt@intel.com>, regressions@lists.linux.dev
+Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
+ domains") causing boot hangs on my laptop
+Message-ID: <20251013211939.GA865451@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,32 +44,29 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db5c95a1-cf3e-46f9-8045-a1b04908051a@xenosoft.de>
+In-Reply-To: <20251013211815.GA864904@bhelgaas>
 
-[+cc Adrian, Lukas, Mani, regressions]
+[+cc regressions like I meant to do the first time]
 
-On Wed, Oct 08, 2025 at 06:35:42PM +0200, Christian Zigotzky wrote:
-> Hello,
+On Mon, Oct 13, 2025 at 04:18:16PM -0500, Bjorn Helgaas wrote:
+> [+cc Gene, Jens, Todd]
 > 
-> Our PPC boards [1] have boot problems since the pci-v6.18-changes. [2]
-> 
-> Without the pci-v6.18-changes, the PPC boards boot without any problems.
-> 
-> Boot log with error messages: https://github.com/user-attachments/files/22782016/Kernel_6.18_with_PCI_changes.log
-> 
-> Further information: https://github.com/chzigotzky/kernels/issues/17
-> 
-> Please check the pci-v6.18-changes. [2]
-> 
-> Thanks,
-> Christian
-> 
-> 
-> [1]
-> - https://wiki.amiga.org/index.php/X5000
-> - https://en.wikipedia.org/wiki/AmigaOne_X1000
-> 
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
+> On Thu, Oct 02, 2025 at 10:04:17AM -0700, Kenneth Crudup wrote:
+> > 
+> > I'm running Linus' master (as of 7f7072574).
+> > 
+> > I bisected it to the above named commit (but had to back out ba9d484ed3
+> > (""PCI/MSI: Remove the conditional parent [un]mask logic") and then
+> > 727e914bbfbbd ("PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
+> > cond_[startup|shutdown]_parent()") first for a clean revert.)
+> > 
+> > I have a Dell XPS-9320 laptop, and booting would hang before it switched to
+> > the xe video driver from the EFI FB driver (not sure if this is a symptom or
+> > partial cause) and I'd see a message akin to "not being able to set up DP
+> > tunnels, destroying" as the last thing printed before it hangs. (If it's
+> > important to see those messages I believe I can force a pstore crash to get
+> > them where they can be saved off, let me know).
 
-#regzbot introduced: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
-
+#regzbot introduced: 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device domains")
+#regzbot link: https://lore.kernel.org/all/3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com/
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=220658
