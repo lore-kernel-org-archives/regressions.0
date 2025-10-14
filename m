@@ -1,271 +1,268 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFE5305968
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 20:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610D22ECD14
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 22:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760472799; cv=none; b=hRyIK8nJnR29LSuZ/wGmhjfXPT3jiGPZHo5wF5LQ/g87vXQbjvh+gC0K6b+KmHFXNHEETqBTXd09qIwyPqWaxvr1OvEY7r+Ma3WzVbSm4D18WRgD4CFK5sEDf9YdQoeMS9rQsztM/gueZZ8Zm5g3Fl7UEkCHFnhEWIcq4XTT9OQ=
+	t=1760481712; cv=none; b=CcQS6jDSDfFUBnhjuHfx0O6sjyEpzWlgTONGLWmdKT0Je+q8Cw5EMRhIiby8Jo2mrFTv0RThxUMEg9gIqFUKhKht6YR1/AksaRbM3RH/zPNhXKL7l7d7uypWRL10FvlgOnnYL8r0q1YnfIg7MtuIBvYUWT+TctmhPFlX1tacXN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760472799; c=relaxed/simple;
-	bh=/cutkUyT9TzRXiISSRXINEB2viiQ8pGyNBaZSSMuOtg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j7BzpThZMc53Nkl4paqrxldrhZohXquoGhHZHGYdua6c3tkmmjGwztLIY2wCrcr7DKwaaX1ZK/jMT+GiYxDkcoG95vUC2IsksQg+6SSHCviszE2hKXZyJaPgLiwKLaw052DbilMjFNg0mT3zx3OyuV5CCx4TcXxM+bGZvBHXnUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hL7b6W2I; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760481712; c=relaxed/simple;
+	bh=MbRQFribj+5STwgaWMFF3WBwk/TcGInw+Ndx6s4fwT0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P0IvXxjOksIE/b0hoksaTDgEo8UmY/rFAvIl6gKBakILKjAIEm6aCLZ6O/f8eMjex67RHCfy+INgyvVYnkOe5a5Jjs05g9ZCYj+O5YBeVtDnhmBTYdHDdBwSbQZYcFRNAyrU3HpI5FNxlknZ2XI0Y9O1jo3g6f0FNBq7f80IO4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=i6D/lyue; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hL7b6W2I"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5a7b2a6b13bso4527730137.3
-        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 13:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760472796; x=1761077596; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P6UhijKgUcN+fj0joxI9PxxfblSymYfYP7njUr+44ck=;
-        b=hL7b6W2ICfklGHp/11JaxPz6GRZTVO7kDz1I9gIevUoUw1cQ/WPqaAHMHER6vwv4yu
-         4by3/xDZEwPDXw3tV+h6YgbAPz7W+kfHZAw8iKfNtONp8DrOPSjBC9ZKnCPiWnd8HDw7
-         8MVOnbdgrKwmlTi9hEG4d5+ueDS4kBhFA1b6Wlh8bWfv1mlrXt2Eace1gPvnnBD4R4KC
-         AHlKZDR8erUk3T4hADGgaIlwzsulfccSml2A9ifzVnaEqqx/PJIjuOPkBb/dcsYqXULh
-         0DKAzAG67ioixjg5dtWeDGAL4vxkzY5ehu7/x4hEFP/l0fDfdhOgPugydm2UzP1DAsHD
-         Za0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760472796; x=1761077596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P6UhijKgUcN+fj0joxI9PxxfblSymYfYP7njUr+44ck=;
-        b=F+e0bS1vD3Gf/wYUBnK8PNOxRTzjAReEhvDyQvGpg9PFV1TQvg392pXnYJiNbYq75l
-         naUhdz2msSmTGF+jBxg0RtvyF0Rc9L6ochI+aH+hsktDRusvrRkfX7f4Xm/hQMrqMl8P
-         I3vl3e73PO8QHWrFczey0ki1y6JEgL3pN2yI4ajtEQmnWZAsdHtNRepzxyUfpbnEAPvU
-         Qz7pBgTU8yF0g8+AGl6OAyWhQelUgiZhYZsQ01sCNzf0kF3n4Hn/1a8CMzdaW8DPA/IH
-         44BzR6g4sgJUctWaYPHNL2IkDFUrqlZrGjfvv2cXK2lHhSPLprvnngQiLEqV6Kbs2WA7
-         GpGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUosF3J4WW5kFuV3GdaQOTxjln5cNy8v3SQAiE9zhQ0AUspkQB1SVoLYZCZTKSw3ktS6KGNmbRPz+/NIw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwhgyPtL2INrh//FHRgNxDAAEeP3Yhu2zeAiSlrxzRIUylXk7pM
-	8xpJlMNBF35HohwVEtl8nszuWWCRnPJOWk8IC2lkANjkREk7thZkszL8j76tZb0kVnIgjtXS55C
-	3kzw3fKqknLFCT6N4W1MfJL0I9Xd8ueA=
-X-Gm-Gg: ASbGncvp/Yv0+TndO0asYqQ7Zk1t9/cwhoxbxl5JKGAqsg+h+t5wGNeOoMkqXlaA7KY
-	w8yEkvBgjeK7vU2zKH6hHsf9pCWXGzmr7L3JwbKZ9Xy5V6NGvcGgodvj72W2mQjUQZD/Gw7qYgX
-	mPrxgjtH0r+lRWykTQOuN2ao6CcBlkPGIh6U9Zq1ihIRlt3DC7Buq47N/yhkCnQuyydQ+nXu4O9
-	2FcN4/rD1D+lfdIRB1gx+J2kke+qsZ6WTR5WbudEKFSZKyvf1Oo7BjXj8Y=
-X-Google-Smtp-Source: AGHT+IH4K2DgTClVeZ9XiY7Y0e4sIzBbX+qBGQyiLw3YUv9MNAM6xIwxW8sgShmKrvQfr9ZnTQhHrg4oCI51vtgcC/A=
-X-Received: by 2002:a05:6102:a4e:b0:528:92b8:6c3e with SMTP id
- ada2fe7eead31-5d5e21ce95amr11293034137.1.1760472795886; Tue, 14 Oct 2025
- 13:13:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="i6D/lyue"
+Received: from eig-obgw-6004b.ext.cloudfilter.net ([10.0.30.210])
+	by cmsmtp with ESMTPS
+	id 8jmfvDSsdjzfw8niCvNQFO; Tue, 14 Oct 2025 22:41:44 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 8niBvOODs25G78niBva695; Tue, 14 Oct 2025 22:41:43 +0000
+X-Authority-Analysis: v=2.4 cv=LuqSymdc c=1 sm=1 tr=0 ts=68eed1a7
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7vwVE5O1G3EA:10 a=HaFmDPmJAAAA:8
+ a=vM3gs7XVnYeaolmWJR8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1h7AsFu1o7hpH/VvaWjvJ1mc5DROWm0EZY2CZM9c6zk=; b=i6D/lyueiejs9mWI6IaG7hUb+J
+	2faXEfA4RxC6kvu0ivMYfsr+3oxGVfXG6GQ5bGQF0CgA7ui0oiT1DI+Ufd5vshTByeRDqiliatBq5
+	/YcaiOoilHu0W9qKrpui1ePxqTNdKFkxF3tG6Ker2Nwo2EwbSRrBKAmrKNCWdx5eiafV7y4ebuSgW
+	hAULpIqQIa65mKFINvYwVR8HpIiDZHPO+cv/ehYAp0JbUaDRTe9Hei3zu8FqSPWEO/gS42GYANZQO
+	NA4srgXt2rmNCNKdq/rei3UnBCf9KtLzrF+LY5OXZLXugyP1SKoPTx52MfM6ESp0ZGp8ruY9lRtPd
+	IeWNzTag==;
+Received: from c-73-92-56-26.hsd1.ca.comcast.net ([73.92.56.26]:53688 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98.2)
+	(envelope-from <re@w6rz.net>)
+	id 1v8ni9-00000000nz7-3GFL;
+	Tue, 14 Oct 2025 16:41:41 -0600
+Message-ID: <18ef2c73-fb10-47b3-838f-bc9d3fd2dbc2@w6rz.net>
+Date: Tue, 14 Oct 2025 15:41:39 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com> <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
- <ad3ef789-3f12-4107-abad-cf7b4775e38d@linux.intel.com>
-In-Reply-To: <ad3ef789-3f12-4107-abad-cf7b4775e38d@linux.intel.com>
-From: Octavia Togami <octavia.togami@gmail.com>
-Date: Tue, 14 Oct 2025 13:13:03 -0700
-X-Gm-Features: AS18NWBIAx4E_zYNl4uSTgPaysqtlF63sUqPuVdyfBWUpeSLNWk5hHfxyt-i2YI
-Message-ID: <CAHPNGSTmv7qxMYOs6h1uevB4Rjiy9R+-YTt0gZ2D1tVh7-cuxQ@mail.gmail.com>
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, peterz@infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>,
+ bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv <linux-riscv@lists.infradead.org>,
+ Paul Walmsley <pjw@kernel.org>, Greentime Hu <greentime.hu@sifive.com>,
+ Samuel Holland <samuel.holland@sifive.com>, regressions@lists.linux.dev
+References: <20251013212801.GA865570@bhelgaas>
+ <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
+ <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
+ <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
+ <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
+ <yxdwo4hppd7c7lrv5pybjtu22aqh3lbk34qxdxmkubgwukvgwq@i4i45fdgm6sw>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <yxdwo4hppd7c7lrv5pybjtu22aqh3lbk34qxdxmkubgwukvgwq@i4i45fdgm6sw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.92.56.26
+X-Source-L: No
+X-Exim-ID: 1v8ni9-00000000nz7-3GFL
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-92-56-26.hsd1.ca.comcast.net ([10.0.1.116]) [73.92.56.26]:53688
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 1
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKQ3IDKZFHaD29l8SFp6jtLI1e2gCe87421/A/3G0ukeq+m0XlGoDwmvou6YyODgwMGbKyGCzPn3y3IeGrCl0NJAsezHtYxXEFRoAenMhdiXNMCxj+Hi
+ 91cEc9oAUDakj9wRyQF1u5IXfzw2bzACB3xua7LBGtXNdqORtdQk41gv+F8/jUH83kbo3gy34dCjShs505uf9JHVskvEdjP06C8=
 
-That patch is also working fine.
+On 10/14/25 09:25, Manivannan Sadhasivam wrote:
+> On Mon, Oct 13, 2025 at 10:52:48PM -0700, Ron Economos wrote:
+>> On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
+>>>
+>>> On 10/14/2025 10:56 AM, Ron Economos wrote:
+>>>> On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
+>>>>>
+>>>>> On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
+>>>>>> [+cc FU740 driver folks, Conor, regressions]
+>>>>>>
+>>>>>> On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
+>>>>>>> The SiFive FU740 PCI driver fails on the HiFive
+>>>>>>> Unmatched board with Linux
+>>>>>>> 6.18-rc1. The error message is:
+>>>>>>>
+>>>>>>> [    3.166624] fu740-pcie e00000000.pcie: host bridge
+>>>>>>> /soc/pcie@e00000000
+>>>>>>> ranges:
+>>>>>>> [    3.166706] fu740-pcie e00000000.pcie:       IO
+>>>>>>> 0x0060080000..0x006008ffff -> 0x0060080000
+>>>>>>> [    3.166767] fu740-pcie e00000000.pcie:      MEM
+>>>>>>> 0x0060090000..0x007fffffff -> 0x0060090000
+>>>>>>> [    3.166805] fu740-pcie e00000000.pcie:      MEM
+>>>>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
+>>>>>>> [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
+>>>>>>> 0xdf0000000-0xdffffffff] for [bus 00-ff]
+>>>>>>> [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
+>>>>>>> [    3.579552] fu740-pcie e00000000.pcie: Failed to
+>>>>>>> configure iATU in ECAM
+>>>>>>> mode
+>>>>>>> [    3.579655] fu740-pcie e00000000.pcie: probe with
+>>>>>>> driver fu740-pcie
+>>>>>>> failed with error -22
+>>>>>>>
+>>>>>>> The normal message (on Linux 6.17.2) is:
+>>>>>>>
+>>>>>>> [    3.381487] fu740-pcie e00000000.pcie: host bridge
+>>>>>>> /soc/pcie@e00000000
+>>>>>>> ranges:
+>>>>>>> [    3.381584] fu740-pcie e00000000.pcie:       IO
+>>>>>>> 0x0060080000..0x006008ffff -> 0x0060080000
+>>>>>>> [    3.381682] fu740-pcie e00000000.pcie:      MEM
+>>>>>>> 0x0060090000..0x007fffffff -> 0x0060090000
+>>>>>>> [    3.381724] fu740-pcie e00000000.pcie:      MEM
+>>>>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
+>>>>>>> [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll
+>>>>>>> T, 8 ob, 8 ib, align
+>>>>>>> 4K, limit 4096G
+>>>>>>> [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
+>>>>>>> [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+>>>>>>> [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+>>>>>>> [    3.988164] fu740-pcie e00000000.pcie: PCI host
+>>>>>>> bridge to bus 0000:00
+>>>>>>>
+>>>>>>> Reverting the following commits solves the issue.
+>>>>>>>
+>>>>>>> 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc:
+>>>>>>> Support ECAM mechanism by
+>>>>>>> enabling iATU 'CFG Shift Feature'
+>>>>>>>
+>>>>>>> 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom:
+>>>>>>> Prepare for the DWC ECAM
+>>>>>>> enablement
+>>>>>>>
+>>>>>>> f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc:
+>>>>>>> Prepare the driver for
+>>>>>>> enabling ECAM mechanism using iATU 'CFG Shift Feature'
+>>>>>> As Conor pointed out, we can't fix a code regression with a DT change.
+>>>>>>
+>>>>>> #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the
+>>>>>> driver for enabling ECAM mechanism using iATU 'CFG Shift
+>>>>>> Feature'")
+>>>>> Hi Conor,
+>>>>>
+>>>>> Can you try with this patch and see if it is fixing the issue.
+>>>>> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c
+>>>>> b/drivers/pci/controller/dwc/pcie-fu740.c
+>>>>> index 66367252032b..b5e0f016a580 100644
+>>>>> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+>>>>> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+>>>>> @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct
+>>>>> platform_device *pdev)
+>>>>>
+>>>>>          platform_set_drvdata(pdev, afp);
+>>>>>
+>>>>> +       pci->pp.native_ecam = true;
+>>>>> +
+>>>>>          return dw_pcie_host_init(&pci->pp);
+>>>>>   }
+>>>>>
+>>>>> - Krishna Chaitanya.
+>>>>>
+>>>> I've already tried it. It doesn't work. Same error message as before.
+>>> Can you share us dmesg logs for this change.
+>>>
+>>> - Krishna Chaitanya.
+>> [    3.159763] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
+>> ranges:
+>> [    3.159853] fu740-pcie e00000000.pcie:       IO
+>> 0x0060080000..0x006008ffff -> 0x0060080000
+>> [    3.159916] fu740-pcie e00000000.pcie:      MEM
+>> 0x0060090000..0x007fffffff -> 0x0060090000
+>> [    3.159953] fu740-pcie e00000000.pcie:      MEM
+>> 0x2000000000..0x3fffffffff -> 0x2000000000
+>> [    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem
+>> 0xdf0000000-0xdffffffff] for [bus 00-ff]
+>> [    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
+>> [    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in ECAM
+>> mode
+>> [    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie
+>> failed with error -22
+>>
+>> Same as before the change. The entire log is here:
+>>
+>> https://www.w6rz.net/dmesg.txt
+>>
+> Weird that the driver still creates ECAM even after skipping it using the flag.
+> The flag is not meant for that purpose, but it should've worked anyway.
+>
+> Can you try this diff and share the dmesg log?
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 20c9333bcb1c..58080928df9f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -523,8 +523,12 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+>          pp->cfg0_size = resource_size(res);
+>          pp->cfg0_base = res->start;
+>
+> +       dev_info(dev, "%s: %d native_ecam: %d", __func__, __LINE__,
+> +pp->native_ecam);
+> +
+>          pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
+>          if (pp->ecam_enabled) {
+> +               dev_info(dev, "%s: %d ECAM ENABLED", __func__, __LINE__);
+>                  ret = dw_pcie_create_ecam_window(pp, res);
+>                  if (ret)
+>                          return ret;
+> @@ -533,6 +537,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+>                  pp->bridge->sysdata = pp->cfg;
+>                  pp->cfg->priv = pp;
+>          } else {
+> +               dev_info(dev, "%s: %d ECAM DISABLED", __func__, __LINE__);
+>                  pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
+>                  if (IS_ERR(pp->va_cfg0_base))
+>                          return PTR_ERR(pp->va_cfg0_base);
+>
+> - Mani
+>
+After testing with this patch, I must have transferred the wrong image 
+to the target when testing before. The "pci->pp.native_ecam = true;" 
+patch to pcie-fu740.c does work. Here's the message with the debug prints:
 
-On Mon, Oct 13, 2025 at 11:41=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel=
-.com> wrote:
->
->
-> On 10/13/2025 2:55 PM, Octavia Togami wrote:
-> > That change appears to fix the problem on my end. I ran my reproducer
-> > and some other tests multiple times without issue.
->
-> @Octavia Thanks for checking this patch. But following Peter's comments, =
-we
-> need to update the fix. So could you please re-test the below changes? Th=
-anks.
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7541f6f85fcb..ed236b8bbcaa 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11773,7 +11773,8 @@ static enum hrtimer_restart
-> perf_swevent_hrtimer(struct hrtimer *hrtimer)
->
->         event =3D container_of(hrtimer, struct perf_event, hw.hrtimer);
->
-> -       if (event->state !=3D PERF_EVENT_STATE_ACTIVE)
-> +       if (event->state !=3D PERF_EVENT_STATE_ACTIVE ||
-> +           event->hw.state & PERF_HES_STOPPED)
->                 return HRTIMER_NORESTART;
->
->         event->pmu->read(event);
-> @@ -11827,7 +11828,7 @@ static void perf_swevent_cancel_hrtimer(struct
-> perf_event *event)
->                 ktime_t remaining =3D hrtimer_get_remaining(&hwc->hrtimer=
-);
->                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
->
-> -               hrtimer_cancel(&hwc->hrtimer);
-> +               hrtimer_try_to_cancel(&hwc->hrtimer);
->         }
->  }
->
-> @@ -11871,12 +11872,14 @@ static void cpu_clock_event_update(struct
-> perf_event *event)
->
->  static void cpu_clock_event_start(struct perf_event *event, int flags)
->  {
-> +       event->hw.state =3D 0;
->         local64_set(&event->hw.prev_count, local_clock());
->         perf_swevent_start_hrtimer(event);
->  }
->
->  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->  {
-> +       event->hw.state =3D PERF_HES_STOPPED;
->         perf_swevent_cancel_hrtimer(event);
->         if (flags & PERF_EF_UPDATE)
->                 cpu_clock_event_update(event);
-> @@ -11950,12 +11953,14 @@ static void task_clock_event_update(struct
-> perf_event *event, u64 now)
->
->  static void task_clock_event_start(struct perf_event *event, int flags)
->  {
-> +       event->hw.state =3D 0;
->         local64_set(&event->hw.prev_count, event->ctx->time);
->         perf_swevent_start_hrtimer(event);
->  }
->
->  static void task_clock_event_stop(struct perf_event *event, int flags)
->  {
-> +       event->hw.state =3D PERF_HES_STOPPED;
->         perf_swevent_cancel_hrtimer(event);
->         if (flags & PERF_EF_UPDATE)
->                 task_clock_event_update(event, event->ctx->time);
->
->
-> >
-> > On Sun, Oct 12, 2025 at 7:34=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
-tel.com> wrote:
-> >>
-> >> On 10/11/2025 4:31 PM, Octavia Togami wrote:
-> >>> Using async-profiler
-> >>> (https://github.com/async-profiler/async-profiler/) on Linux
-> >>> 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
-> >>> reported by many people at https://github.com/lucko/spark/issues/530.
-> >>> spark is a piece of software that uses async-profiler internally.
-> >>>
-> >>> As seen in https://github.com/lucko/spark/issues/530#issuecomment-333=
-9974827,
-> >>> this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
-> >>> Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
-> >>> fixed the issue for me.
-> >>>
-> >>> Steps to reproduce:
-> >>> 1. Get a copy of async-profiler. I tested both v3 (affects older spar=
-k
-> >>> versions) and v4.1 (latest at time of writing). Unarchive it, this is
-> >>> <async-profiler-dir>.
-> >>> 2. Set kernel parameters kernel.perf_event_paranoid=3D1 and
-> >>> kernel.kptr_restrict=3D0 as instructed by
-> >>> https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311=
-f872ce9566769b006b357ecbe/docs/GettingStarted.md
-> >>> 3. Install a version of Java that comes with jshell, i.e. Java 9 or
-> >>> newer. Note: jshell is used for ease of reproduction. Any Java
-> >>> application that is actively running will work.
-> >>> 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
-> >>> will start an infinitely running Java process.
-> >>> 5. Run `jps` and take the PID next to the text RemoteExecutionControl
-> >>> -- this is the process that was just started.
-> >>> 6. Attach async-profiler to this process by running
-> >>> `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
-> >>> second, then the system should freeze entirely shortly thereafter.
-> >>>
-> >>> I triggered a sysrq crash while the system was frozen, and the output
-> >>> I found in journalctl afterwards is at
-> >>> https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
-> >>> I'm not sure if that text is actually from the triggered crash, but i=
-t
-> >>> seems relevant. If needed, please tell me how to get the actual crash
-> >>> report, I'm not sure where it is.
-> >>>
-> >>> I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've see=
-n
-> >>> no Intel reports, it may be AMD specific. I don't have an Intel CPU o=
-n
-> >>> hand to test with.
-> >>>
-> >>> /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
-> >>> (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
-> >>> PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
-> >>> Operating System: Arch Linux
-> >>> uname -mi: x86_64 unknown
-> >> It looks the issue described in the link
-> >> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.i=
-ntel.com/T/#u)
-> >> happens again but in a different way. :(
-> >>
-> >> As the commit message above link described,  cpu-clock (and task-clock=
-) is
-> >> a specific SW event which rely on hrtimer. The hrtimer handler calls
-> >> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) a=
-nd
-> >> eventually call hrtimer_cancel() which traps into a dead loop which wa=
-its
-> >> for the calling hrtimer handler finishes.
-> >>
-> >> As the
-> >> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@=
-linux.intel.com/T/#u),
-> >> it should be enough to just disable the event and don't need an extra =
-event
-> >> stop.
-> >>
-> >> @Octavia, could you please check if the change below can fix this issu=
-e?
-> >> Thanks.
-> >>
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index 7541f6f85fcb..883b0e1fa5d3 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_=
-event
-> >> *event,
-> >>                 ret =3D 1;
-> >>                 event->pending_kill =3D POLL_HUP;
-> >>                 perf_event_disable_inatomic(event);
-> >> -               event->pmu->stop(event, 0);
-> >> +
-> >> +               /*
-> >> +                * The cpu-clock and task-clock are two special SW eve=
-nts,
-> >> +                * which rely on the hrtimer. The __perf_event_overflo=
-w()
-> >> +                * is invoked from the hrtimer handler for these 2 eve=
-nts.
-> >> +                * Avoid to call event_stop()->hrtimer_cancel() for th=
-ese
-> >> +                * 2 events since hrtimer_cancel() waits for the hrtim=
-er
-> >> +                * handler to finish, which would trigger a deadlock.
-> >> +                * Only disabling the events is enough to stop the hrt=
-imer.
-> >> +                * See perf_swevent_cancel_hrtimer().
-> >> +                */
-> >> +               if (event->attr.config !=3D PERF_COUNT_SW_CPU_CLOCK &&
-> >> +                   event->attr.config !=3D PERF_COUNT_SW_TASK_CLOCK)
-> >> +                       event->pmu->stop(event, 0);
-> >>         }
-> >>
-> >>         if (event->attr.sigtrap) {
-> >>
-> >>
+[    3.227746] fu740-pcie e00000000.pcie: host bridge 
+/soc/pcie@e00000000 ranges:
+[    3.227833] fu740-pcie e00000000.pcie:       IO 
+0x0060080000..0x006008ffff -> 0x0060080000
+[    3.227896] fu740-pcie e00000000.pcie:      MEM 
+0x0060090000..0x007fffffff -> 0x0060090000
+[    3.227934] fu740-pcie e00000000.pcie:      MEM 
+0x2000000000..0x3fffffffff -> 0x2000000000
+[    3.227993] fu740-pcie e00000000.pcie: dw_pcie_host_get_resources: 
+526 native_ecam: 1
+[    3.228019] fu740-pcie e00000000.pcie: dw_pcie_host_get_resources: 
+539 ECAM DISABLED
+[    3.331449] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, 
+align 4K, limit 4096G
+[    3.531131] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
+[    3.731132] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+[    3.835131] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+[    3.835465] fu740-pcie e00000000.pcie: PCI host bridge to bus 0000:00
+
