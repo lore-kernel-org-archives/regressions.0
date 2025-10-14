@@ -1,144 +1,99 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32028304968;
-	Tue, 14 Oct 2025 11:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB1031063B
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 12:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760442216; cv=none; b=mNoFKSVFakJf6MEOlYpGWtL9EDJlv7vunHtaGmLJrVjXHUB3bvRrdvdFdKYsB6OxH50a1zMqKdiaxIM65TG9iP7/+Mu81+8NHwpXg9qhuiO72NBRBjmm5YyLPClwZHgMIKOwn3PxgL4H6XdTUS1V2rGnuhNu6b8Op5wBVG0aOF8=
+	t=1760444550; cv=none; b=u8yicTz0bJhUO1wD1rgbjxRxRDTi7Hzx6tz+hfxbCoGVOlSl2PsdJMa4BvJ9lqENYDezT9heP6UgqsRUSEeAfcR7KsOk1R5TlWwOi/WVteLArw37FQMmEgJx7e7ia/o9spJ4mcsidRMAIJz5KkAsef1krhELgzjA9bNnK3Fo6RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760442216; c=relaxed/simple;
-	bh=z+MOC331uVrPaK4rXD+1EutydV0Qt6VQimqpIgnxja4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=mR4+qUJmTbuBaqtbQbm3ZqjJ9DLRaw+RmprP8hqm+gLzXkRWy95EgSG4HGHpUFoQFyy92sx6OoWBE01nTekM3hzc/fIesLHSQyLxBE0Lk06bB11wIIOqqFQvvbmhXl8VzDlGOSth8k4X2nd/EYp8c8peNxMwj2B/B7c7hzFdu2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=yz3OKdHL; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1760444550; c=relaxed/simple;
+	bh=Ad+Act/vyc65p5SZBMOE8fQZgfdis66PnpmCEaRCJyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ENHxAcA55B8RAk0Vd5jyWESB7tn4/EDiIg/c2GmymSghJ1XcM0S2KyoSqJiimQdhYY14ETVtONz5+Vf2xtm6/pAtDqkI/nVWqlk3jpr9koZUOd0WbYZ1YJimwDeB+DRr1uwa2JECvWOMCOVR0JbBtrcL0c7ycnK4myuTB/bcVhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNJ/O1iS; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="yz3OKdHL"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 732CC1A136A;
-	Tue, 14 Oct 2025 11:43:32 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 44F13606EC;
-	Tue, 14 Oct 2025 11:43:32 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0217D102F2298;
-	Tue, 14 Oct 2025 13:43:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760442211; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=nCxasSvJLE/ntqOSQlVYeTt9F+Rb39yn4NlUI8d4k/M=;
-	b=yz3OKdHLUlM5a0ogcR2e1FHIeHsXztLkAOqBkLeUoqs7Om7wan+FAvJcb6nl+Tg6jJb/H8
-	D7DXXQJUDhdX9/NTTT8pCkGoc0aYJHSMfqQtbi6yYQts0yMDaZdr8cbDu5pdxfW0DIHaLd
-	RzrnVGJN95+qXdIHj7ulqmii9Sl6cgovt73I+mcpPSfRqfKYm+sc9QpOTxRCQjBZlCEbGt
-	YHoOBfIfMbARrjtVmVlTUpJt+xWYGZQIYF/t0kQxB95cgb1MMCUOdbn7qf0t+XG8QJiFym
-	7lmzea5XoYT7i9bwNM1wq/2h064mVdgEaxa7K+/rqCTnecTZ6ShzMFioJP/tnQ==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNJ/O1iS"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-637e74e9104so1264800a12.1
+        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 05:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760444547; x=1761049347; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ad+Act/vyc65p5SZBMOE8fQZgfdis66PnpmCEaRCJyk=;
+        b=HNJ/O1iSsWwbm8KVtKMfqfnjYp4j7iIONpiaiD8amrl2AAi/0NgLnujcCtW609BbaX
+         FZDTTD0P4hu3lZZevPIVZ1XN5ovU43b2BA0NU03RuTpTkT+7voz6Z715OzS3+S9nKonW
+         I13RPaGmCJNZsOPh77F+0fFe3s6yV5jbF/U1USYkVsxMluLNnCj/AQ9/L18PMs3dHikx
+         Gc1SnaRURqUZabQLvF8/cxfNpmJl/UmZXZF3TgIAyycBA5oLiaZnvKgIs4BlLjGWQ8Lc
+         SqAsgFTfkVzLAAvTs7K4zUSmh2lTQWOL8Sds4/OAcu61IHRFLnr80H+pOICWCGbze0Qu
+         rqbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760444547; x=1761049347;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ad+Act/vyc65p5SZBMOE8fQZgfdis66PnpmCEaRCJyk=;
+        b=N27ScWQN97r6CI0s9Oi929IdH02oBQdXjqB03hKkX/atrcy14LTMSnJbq0mZLBI03R
+         /pCUxuFDReHMyEm6Bl4yQD5uoe8TlIHDN6ASysjrjFXIkTnTwi6jzJpKIslKiMNSo8KJ
+         bMXwQiWzuyKfviqu34iNGFJhmBz3oS2FNgKaBeB8BsSdaWYG3utPp/DiRS1GL/TmSFKA
+         zL8KUQadxXWenoWuAOK6DwKS9zmUKKM5PLNAq0uM0u8ycCi+q5dYau7wpFbUgLSIn3ft
+         9H8TeofdcK6z7dIfXvnisOvi50yEje4pf5wNUWrRzeUJBW8PHkmlqhUY3AzE8zYlQRHC
+         5Llg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlcW2RPPGHZaXX/YD8sBJPx+eFai565ZM8X4NPPnsOTt8F99GxU6UzFE+RTCrIdDqz05v2vWEOvIcBRw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzOKm+mJyL3r81SYEjNK1XBzLXaEjQ6WhF9Rsz1koMLwsIAgbWq
+	Basy+x6ZPmbJKne4VOnuQRjGQ4VwLEVDk9xXYf1gJRgIBf0vbYTKq1yb
+X-Gm-Gg: ASbGncudU+1mGWyH7bbhEJ7wLAn7vQ82xTc1WjMtNlPR0rqRxrFOzgFl+naGWMWxHC6
+	dymMIrcZCBSqzzb8GiMxQ0hG2i7HteMLyY1Mqy/r7dS+65W7UeZihXYXyFsa5ZEU5CIQ1NcghmM
+	AcbgNNJ6qfHfBvPvLmd/GGjrGxlhhw5XqqXbVDrkWIBcZaS7xWvtXJsqv6M8/bhGYjiwoP+1Hq/
+	ZmE+3zl8hioCPcusp2UebNmeAsWmgVVizjVbsGLhFtTyGEkDbe5HMl9VelnJ8wF0ZavErCBLlXr
+	DKbLDv9RjLtn/h7b0eOZ6alwa48dFOUn8aoqQPH1VTv5QEUAnq6KCgYTC9q1ugMm17A65qVuXz4
+	3IYz9h/1RP2bBl4XCkd7NlhmHicslh88SxzZQMiUKDTyT0IxBi2v9kXrCccg04BNpDCr9dIjJfl
+	aYI/aV3jnlNwkd2Vy8Bnq8QvT7hALUJOKRxn6dpvsKNF7KbkRqeD4=
+X-Google-Smtp-Source: AGHT+IEj2JtS1ykV7+4SnCPxXcV5s4F2p8zZ4Ybts8U4kG/OqGnxgxiwp/Y8Fv2A2MsHbr+lECLEwQ==
+X-Received: by 2002:a05:6402:d0e:b0:634:5381:530b with SMTP id 4fb4d7f45d1cf-639d5b8956cmr22376195a12.13.1760444547186;
+        Tue, 14 Oct 2025 05:22:27 -0700 (PDT)
+Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63a52b0f358sm10963835a12.10.2025.10.14.05.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 05:22:26 -0700 (PDT)
+Date: Tue, 14 Oct 2025 14:22:25 +0200
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Maxime Ripard <mripard@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] drm/panel/panel-simple v6.17 WARNING regression
+Message-ID: <tguubjlh7ta7rvaq5pzzksamnc2kxy6yunsk3jeiiqz55on4yo@outv5vc3b2vl>
+References: <hlf4wdopapxnh4rekl5s3kvoi6egaga3lrjfbx6r223ar3txri@3ik53xw5idyh>
+ <DDHZ5GO9MPF0.CGYTVBI74FOZ@bootlin.com>
+ <kcunz2b2usmvadgrnnu65op5oi5ttblrc463twgxp5gqhnufav@eze53y23avel>
+ <DDI0OEMAGBI3.2WFIP0O7M73LB@bootlin.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 14 Oct 2025 13:43:21 +0200
-Message-Id: <DDI0OEMAGBI3.2WFIP0O7M73LB@bootlin.com>
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-To: "Ernest Van Hoecke" <ernestvanhoecke@gmail.com>
-Cc: "Anusha Srivatsa" <asrivats@redhat.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Andrzej Hajda" <andrzej.hajda@intel.com>, "Jessica Zhang"
- <quic_jesszhan@quicinc.com>, "Robert Foss" <rfoss@kernel.org>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Hui
- Pu" <Hui.Pu@gehealthcare.com>, "Dmitry Baryshkov"
- <dmitry.baryshkov@oss.qualcomm.com>, <dri-devel@lists.freedesktop.org>,
- <linux-kernel@vger.kernel.org>, <imx@lists.linux.dev>,
- <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] drm/panel/panel-simple v6.17 WARNING regression
-X-Mailer: aerc 0.20.1
-References: <hlf4wdopapxnh4rekl5s3kvoi6egaga3lrjfbx6r223ar3txri@3ik53xw5idyh> <DDHZ5GO9MPF0.CGYTVBI74FOZ@bootlin.com> <kcunz2b2usmvadgrnnu65op5oi5ttblrc463twgxp5gqhnufav@eze53y23avel>
-In-Reply-To: <kcunz2b2usmvadgrnnu65op5oi5ttblrc463twgxp5gqhnufav@eze53y23avel>
-X-Last-TLS-Session-Version: TLSv1.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DDI0OEMAGBI3.2WFIP0O7M73LB@bootlin.com>
 
-Hello Ernest,
+On Tue, Oct 14, 2025 at 01:43:21PM +0200, Luca Ceresoli wrote:
+> Alright. Let me know whether the series I've sent fixes 0, 1 or both
+> warnings.
 
-On Tue Oct 14, 2025 at 1:25 PM CEST, Ernest Van Hoecke wrote:
-> Hi Luca,
->
-> Thanks for your fast reply and all your work here.
->
-> On Tue, Oct 14, 2025 at 12:31:35PM +0200, Luca Ceresoli wrote:
->> Let me have a look at the DRM_IMX driver, I'll try to send a series
->> converting it to the new API within today.
->
-> I will gladly test, thanks!
+Hi Luca,
 
-Just sent:
-https://lore.kernel.org/all/20251014-drm-bridge-alloc-imx-ipuv3-v1-0-a1bb1d=
-cbff50@bootlin.com/
+Just replying to have the info in this thread as well, the series fixed
+all warnings I saw, thanks!
 
->> I recently sent a series proposing to make drm_bridge_add() mandatory
->> before drm_bridge_attach() in the docs and warn if that is violated [1].=
- If
->> you apply patch 4 of that series you should see the warning.
->
-> I gave it a quick try and did not see the warning. Some printk debugging
-> told me that `list_empty(&bridge->list)`, inside drm_bridge_attach, is
-> returning 0.
-
-Ouch, I think this is because without using devm_drm_bridge_alloc() even
-the list is uninitialized, and so list_empty will do:
-
-static inline int list_empty(const struct list_head *head)
-{
-	return READ_ONCE(head->next) =3D=3D head;
-	                        ^         ^
-                NULL (bridge->list      valid pointer
-                zeroed by kzalloc)      to bridge->list
-}
-
-So it returns false. I guess that means the series to make drm_bridge_add()
-mandatory before drm_bridge_attach() [0] will need a better check to
-trigger the warning.
-
-[0] https://lore.kernel.org/lkml/20251003-b4-drm-bridge-alloc-add-before-at=
-tach-v1-0-92fb40d27704@bootlin.com/
-
->> > However, later on, another regression seems to be introduced by
->> > commit 8fa5909400f3 ("drm/bridge: get the bridge returned by drm_bridg=
-e_chain_get_first_bridge()")
->> > so reverting 94d50c1a2ca3 on top of drm-misc-next does not solve
->> > everything. This was tested by rebasing drm-misc-next onto (260f6f4fda=
-93
->> > plus the revert of 94d50c1a2ca3) and then bisecting.
->> >
->> > So in v6.18-rc1, both regressions are present.
->> >
->> > There, I get the following additional warnings:
->> >
->> > [    9.732278] ------------[ cut here ]------------
->> > [    9.732336] WARNING: CPU: 0 PID: 38 at lib/refcount.c:22 drm_bridge=
-_get+0x10/0x18
->> > [    9.744608] refcount_t: saturated; leaking memory.
->>
->> Not sure here, but it may well be another symptom of the same bug: the
->> refcount was not initialized correctly, so it is found inconsistent late=
-r
->> when trying to increase it. Let's fix the known issue and then we'll see=
-.
->
-> Makes sense to me.
-
-Alright. Let me know whether the series I've sent fixes 0, 1 or both
-warnings.
-
-Best regards,
-Luca
-
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Kind regards,
+Ernest
