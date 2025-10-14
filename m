@@ -1,211 +1,177 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2027829ACC0
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 05:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9854830DD29
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 06:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760421177; cv=none; b=JipcDjNC5Oxi44ISGP/Xwts0cIVgZhafdGPoeSMVUFck1w182oVOuhXzTGHba1cjHU5WwtMrQGWF774FlfbEnxpZWz5L299d+YGqY+Hdimq9uqUL9m9Xc0GKmN7WvVTwI79jrROPS8SqSEBkw6I2YQvuV2+3NW869dknPbdY/m0=
+	t=1760421892; cv=none; b=u9e++5kRAdGLha3oKIpu/s7T6aIYOb6w3HoLUcX1WtYK4iTjn9qm9wW0gfa7y3p+Xs7OvhdvKhNid9iayFesCKCHAJTUEhYKsGqI+5aTTkfAPAcEOU2Pqf1BFW1GI/NFUtZwJp+GkFLUv9Z6aIHJi1s4E6zebkGFO8cWqcJr87g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760421177; c=relaxed/simple;
-	bh=G0/UGo0ozvQ4jmGDO22pHXhjbWpCehf6BxKXmQ1M/uE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QxIRQQT1i2pfbpcRo+beHnqtHUmTCLW8IFOuL9wuGI/qn65NM9JPXKPZp1lkxq/Uk/NaJC58EuLhexg3rVMxcAls1zDfKJOD7hgdbABzeBxz7vthhJaZDU1RRtrZTx3q5pcvOSYTuFauKrwIA+KNlYSSXid8HmIMFN48zE0nt6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=fs+OCGSr; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1760421892; c=relaxed/simple;
+	bh=Wt4pD5gcVyt54cySAgvxNCFQKUhVqKF+IeF69tqaBKk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JZCUqMVSacD2zIItUs8UzsNaFgor57JnzuCCqWFN8wCrNeUiDY5WTXznOLghnyDPrGc+qzvh3IY9baDbgfiIr06wQTOplN3YIIZPMi4i59f7qCXX1tCjcwceEF8t5P2urPuYXYR73snOYIbMsecGn0FBve8CZNvQvebEUD12er8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rKOuvqYb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WKHnFwml; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rKOuvqYb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WKHnFwml; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="fs+OCGSr"
-Received: from eig-obgw-6001b.ext.cloudfilter.net ([10.0.30.143])
-	by cmsmtp with ESMTPS
-	id 8UKZvvR0OaPqL8Xxuveoak; Tue, 14 Oct 2025 05:52:54 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 8Xxtv7ve1DV658XxuvQ0zT; Tue, 14 Oct 2025 05:52:54 +0000
-X-Authority-Analysis: v=2.4 cv=dLammPZb c=1 sm=1 tr=0 ts=68ede536
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=7vwVE5O1G3EA:10 a=HaFmDPmJAAAA:8
- a=rGH4yh80M_cO9nZo6tcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tjFZRGr9e1ufehZZIU8TnF6ufx2C24WBWJ4fCdRYGpU=; b=fs+OCGSrJSqmZXQAoNGP1aKdrc
-	clChslfPhCxPWvpV+0l00GWwfhcAQ0qMUErxiIMYL5kISvubmAj66dwFaeHCL2VNe0G9onknkQzns
-	St2AUPt5tVS227hzDCCXnRQevlu651pfYvbgi2ZbBZqcwx67JNHSmc8G5tM1a+c5gcAGsFpHRG1c4
-	FR5wyrBfFb+Yr9nhw+O6rU+Z/IO29NUwQG/rukoLCJgfsK0G7RfzsiYwY+4Xa/S2hJtVosxa1Fp4A
-	LDWtojpoZLj7kaHNhnwmWe5c+BCEujiasdTwpDt/s8mn/qXP1IjR/IYoEYdfNyeEqLIbn4QzQ9r92
-	mm/SRhpQ==;
-Received: from c-73-92-56-26.hsd1.ca.comcast.net ([73.92.56.26]:55152 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1v8Xxp-00000003IY1-3ScS;
-	Mon, 13 Oct 2025 23:52:49 -0600
-Message-ID: <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
-Date: Mon, 13 Oct 2025 22:52:48 -0700
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rKOuvqYb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WKHnFwml";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rKOuvqYb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WKHnFwml"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AC6721F750;
+	Tue, 14 Oct 2025 06:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1760421887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
+	b=rKOuvqYbY+2vWHxWOSIiJrWEWvsgO0iJMF3/RUpF0xaVQwQTtJC/4Ng+gDIGNeh+tAHUjv
+	f8whXn/lDYKOwoTIqAfmv6rpW5ZAfXrSqu0jSF3KyNbh01w/RPxEMZiQiWospoOhFx1Py3
+	Za3QieBw52k6lZ0yTX/LKwyoTVUlpts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1760421887;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
+	b=WKHnFwmlP5GUejtjiuIskooDQ6MrwUsJe7EZSlXjubNge5Hv+xrns2NLZgIwbWNpLody/N
+	6h4ipappDFieuIAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rKOuvqYb;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WKHnFwml
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1760421887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
+	b=rKOuvqYbY+2vWHxWOSIiJrWEWvsgO0iJMF3/RUpF0xaVQwQTtJC/4Ng+gDIGNeh+tAHUjv
+	f8whXn/lDYKOwoTIqAfmv6rpW5ZAfXrSqu0jSF3KyNbh01w/RPxEMZiQiWospoOhFx1Py3
+	Za3QieBw52k6lZ0yTX/LKwyoTVUlpts=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1760421887;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
+	b=WKHnFwmlP5GUejtjiuIskooDQ6MrwUsJe7EZSlXjubNge5Hv+xrns2NLZgIwbWNpLody/N
+	6h4ipappDFieuIAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3645113A44;
+	Tue, 14 Oct 2025 06:04:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jUbHC//n7WiHBgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 14 Oct 2025 06:04:47 +0000
+Date: Tue, 14 Oct 2025 08:04:46 +0200
+Message-ID: <875xci81dt.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Askar Safin <safinaskar@gmail.com>
+Cc: tiwai@suse.de,
+	amadeuszx.slawinski@linux.intel.com,
+	baojun.xu@ti.com,
+	bo.liu@senarytech.com,
+	cezary.rojewski@intel.com,
+	kai.vehmanen@linux.intel.com,
+	kailang@realtek.com,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	rf@opensource.cirrus.com,
+	regressions@lists.linux.dev,
+	Dell.Client.Kernel@dell.com
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
+In-Reply-To: <20251014034156.4480-1-safinaskar@gmail.com>
+References: <20250709160434.1859-6-tiwai@suse.de>
+	<20251014034156.4480-1-safinaskar@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>
-Cc: bhelgaas@google.com, mani@kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv <linux-riscv@lists.infradead.org>,
- Paul Walmsley <pjw@kernel.org>, Greentime Hu <greentime.hu@sifive.com>,
- Samuel Holland <samuel.holland@sifive.com>, regressions@lists.linux.dev
-References: <20251013212801.GA865570@bhelgaas>
- <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
- <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
- <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.92.56.26
-X-Source-L: No
-X-Exim-ID: 1v8Xxp-00000003IY1-3ScS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-92-56-26.hsd1.ca.comcast.net ([10.0.1.116]) [73.92.56.26]:55152
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 13
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfM6caMvMNp+jMMatHiu2G18LkoKlBwnn10KLvCKu6phtN7c7Xy5F+OXf1zHQzO6xHK3lsnK1JLFIBEDbFvPmETypLLXbZiuyDqQDBHMN1yNslYkLT8gU
- dVoCh9aMh8SiO1el47Da70YbncHZOJMIoPtVpA5uCrCGr2S92zwG+7VpDST33CdyIIWQ/3lhsW6B+4bOu4miiTo0eBlL5Dx4KLY=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: AC6721F750
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.51
 
-On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
->
->
-> On 10/14/2025 10:56 AM, Ron Economos wrote:
->> On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
->>>
->>>
->>> On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
->>>> [+cc FU740 driver folks, Conor, regressions]
->>>>
->>>> On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
->>>>> The SiFive FU740 PCI driver fails on the HiFive Unmatched board 
->>>>> with Linux
->>>>> 6.18-rc1. The error message is:
->>>>>
->>>>> [    3.166624] fu740-pcie e00000000.pcie: host bridge 
->>>>> /soc/pcie@e00000000
->>>>> ranges:
->>>>> [    3.166706] fu740-pcie e00000000.pcie:       IO
->>>>> 0x0060080000..0x006008ffff -> 0x0060080000
->>>>> [    3.166767] fu740-pcie e00000000.pcie:      MEM
->>>>> 0x0060090000..0x007fffffff -> 0x0060090000
->>>>> [    3.166805] fu740-pcie e00000000.pcie:      MEM
->>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
->>>>> [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
->>>>> 0xdf0000000-0xdffffffff] for [bus 00-ff]
->>>>> [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
->>>>> [    3.579552] fu740-pcie e00000000.pcie: Failed to configure iATU 
->>>>> in ECAM
->>>>> mode
->>>>> [    3.579655] fu740-pcie e00000000.pcie: probe with driver 
->>>>> fu740-pcie
->>>>> failed with error -22
->>>>>
->>>>> The normal message (on Linux 6.17.2) is:
->>>>>
->>>>> [    3.381487] fu740-pcie e00000000.pcie: host bridge 
->>>>> /soc/pcie@e00000000
->>>>> ranges:
->>>>> [    3.381584] fu740-pcie e00000000.pcie:       IO
->>>>> 0x0060080000..0x006008ffff -> 0x0060080000
->>>>> [    3.381682] fu740-pcie e00000000.pcie:      MEM
->>>>> 0x0060090000..0x007fffffff -> 0x0060090000
->>>>> [    3.381724] fu740-pcie e00000000.pcie:      MEM
->>>>> 0x2000000000..0x3fffffffff -> 0x2000000000
->>>>> [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 
->>>>> ib, align
->>>>> 4K, limit 4096G
->>>>> [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
->>>>> [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
->>>>> [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
->>>>> [    3.988164] fu740-pcie e00000000.pcie: PCI host bridge to bus 
->>>>> 0000:00
->>>>>
->>>>> Reverting the following commits solves the issue.
->>>>>
->>>>> 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc: Support ECAM 
->>>>> mechanism by
->>>>> enabling iATU 'CFG Shift Feature'
->>>>>
->>>>> 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom: Prepare for 
->>>>> the DWC ECAM
->>>>> enablement
->>>>>
->>>>> f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc: Prepare the 
->>>>> driver for
->>>>> enabling ECAM mechanism using iATU 'CFG Shift Feature'
->>>>
->>>> As Conor pointed out, we can't fix a code regression with a DT change.
->>>>
->>>> #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the driver 
->>>> for enabling ECAM mechanism using iATU 'CFG Shift Feature'")
->>> Hi Conor,
->>>
->>> Can you try with this patch and see if it is fixing the issue.
->>> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c 
->>> b/drivers/pci/controller/dwc/pcie-fu740.c
->>> index 66367252032b..b5e0f016a580 100644
->>> --- a/drivers/pci/controller/dwc/pcie-fu740.c
->>> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
->>> @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct 
->>> platform_device *pdev)
->>>
->>>         platform_set_drvdata(pdev, afp);
->>>
->>> +       pci->pp.native_ecam = true;
->>> +
->>>         return dw_pcie_host_init(&pci->pp);
->>>  }
->>>
->>> - Krishna Chaitanya.
->>>
->>>>
->> I've already tried it. It doesn't work. Same error message as before.
-> Can you share us dmesg logs for this change.
->
-> - Krishna Chaitanya.
->>
-[    3.159763] fu740-pcie e00000000.pcie: host bridge 
-/soc/pcie@e00000000 ranges:
-[    3.159853] fu740-pcie e00000000.pcie:       IO 
-0x0060080000..0x006008ffff -> 0x0060080000
-[    3.159916] fu740-pcie e00000000.pcie:      MEM 
-0x0060090000..0x007fffffff -> 0x0060090000
-[    3.159953] fu740-pcie e00000000.pcie:      MEM 
-0x2000000000..0x3fffffffff -> 0x2000000000
-[    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem 
-0xdf0000000-0xdffffffff] for [bus 00-ff]
-[    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
-[    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in 
-ECAM mode
-[    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie 
-failed with error -22
+On Tue, 14 Oct 2025 05:41:56 +0200,
+Askar Safin wrote:
+> 
+> Takashi Iwai <tiwai@suse.de>:
+> > Now HD-audio controller drivers are moved into sound/hda/controllers
+> > directory as a part of HD-audio code reorganization.  Most of drivers
+> > are independent from PCI bus, hence it makes more sense to put under
+> > sound/hda.
+> > 
+> > The hda_ prefix is dropped from most of files at moving, as it's
+> > more or less superfluous.
+> > 
+> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> 
+> This patch broke my laptop's speakers.
+> 
+> My laptop is Dell Precision 7780.
+> 
+> Here is output of "sudo lspci -vvvvv":
+> https://zerobin.net/?bb0d52d5c33a1ca8#Z4cktfC0ofZhkzBU4/AFGpYAVJFXrus46nDeLQOV22s=
+> (This output was collected on Linux 6.12.43+deb13-amd64, audio works there.)
+> 
+> My OS is Debian Trixie.
+> 
+> If you need my config, then here is my config I tested with linux-next:
+> https://zerobin.net/?989789b5698e0afe#DKjA80yFwRFnLkYwo3ZnNZEVGowGyn5N78aSy8omoGY=
+> It was tested with current linux-next:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tag/?h=next-20251013
+> (and audio didn't work).
+> 
+> #regzbot introduced: 2d9223d2d64cb5216859ced6cc33fb3b04e5f98f
 
-Same as before the change. The entire log is here:
+The oft-seen "regression" reports for 6.17 were rather the incorrect
+kconfig setup, and that's your case, too, I suppose.  In 6.17,
+HD-audio Realtek (and other) codec drivers were split, and each of
+them can be enable/disabled individually when CONFIG_EXPERT is set,
+where people often leave them off blindly.
 
-https://www.w6rz.net/dmesg.txt
+So, please check your kernel config between working and non-working
+cases.  I guess you had CONFIG_SND_HDA_CODEC_REALTEK beforehand, and
+now it's off.
 
+
+thanks,
+
+Takashi
