@@ -1,151 +1,211 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CC6311C1E
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 13:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3DE24338F;
+	Tue, 14 Oct 2025 16:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760450348; cv=none; b=gER/UGdXTi8yeTgoCAH0wxreh4ki5i24erlQJpZtr5iCHNle71qAoe7596aN/XbnrNq2VKoX2zcNrDn2dFbVMJ8TQ098MlEPQ8lYps8u2Fnrr0hQ5LQVZgbZk7bfqQu8TVMnzMz+JI/m6MkT5xz/eMonK5HP79WgVxEy7bE/hzs=
+	t=1760459164; cv=none; b=ojksO5/UAUQaDbGA3jkqFWt41eYK8BjdEvP2W+LhZ/TYfcYIDP5ajBX0jFpDFf9docxXeaA8o4I0mSf2ket+zfzVIJsOR/u6a1Fqqjd0VBuquvZ25W9MFZwNCX35vWqx+xPZZLKYzkXi1RkhONYtABDMkd8pPGckq/4Q/vOasXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760450348; c=relaxed/simple;
-	bh=lkROTrodmbJSenAHhGyFx9tlNI/DtQVmO3ov5vNaSOw=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=WMWg5YDU/nqc2rgEgVqShHTZBwxRpHTCEv/oBCLSlqAXMNXAGcdALdDqLKlxv42crwH1RNYQ3q20rJ+SRxMCWn+HtkkYlcD6lcy5pg4cuytJJSw6GGDAZL3YT69iyermwwLP8zMdlEVi1R3IrxSD2yv76FtN9WA1WfrFjCgJ/vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=m2AHnyjc; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1760459164; c=relaxed/simple;
+	bh=bxBIMlGSNC6HSyaMCqbzfCJUQB6E6GUXd6hdKLf8rz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGmJtKC//DxqPq6nnU8o95TtM1keFaJ5HxJhvk0TSrIT1WuQbcOh2s5MsKmkiWqNunX599y0X/Iw9EU9m1OGVZhiEgFLv6vpc7kkXrMkzj+wa/vpYfM0f88Bpa9lecEkWErkXHZes9NohzyC/1n+1N1ytr5YXo/HW/qYF/mT7dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dd/zP/Wm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="m2AHnyjc"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-27d3540a43fso51857895ad.3
-        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 06:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1760450345; x=1761055145; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjDMkAdvYR8QDIHBBK4om/FkCI8uG8FuR3An+D9afrc=;
-        b=m2AHnyjcZEaY4v9oH6+ns2yVta2HUfMZH71HpbryiVDNTXLRdH37d9rY18CYi5fNM6
-         VJP2Xc/w/huVi2tSs6ZkVxC5zt/03UXCYtONjm4gITxzjyJJZc6JF5JyFyvjH8lXglQz
-         oXMMxkrMtA4NhA/Qb8szQF1QsEFH+pij17yYmqpIC8r0f954+c4jaI2CT05itW6eylcE
-         ukxgF/ii3xCe2gz0O7WaGDAF7HSJs9Ut4cLgVy3I+RP2By54H0Ascl5la03htYC+l0aw
-         bLdFmMM34r8Rgqg8i4JF+cOAlJKP8urSANGua3X4RuJ8MV/OZMgSm3+LlpnF0KHFxIEd
-         u37A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760450345; x=1761055145;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yjDMkAdvYR8QDIHBBK4om/FkCI8uG8FuR3An+D9afrc=;
-        b=GcSBvDJEcazwPYnc8qz2uqG6jhAj83mpVU5/xMzFoUfm1ELcZ62B9Bgqr44zjEmzzG
-         BM2OpDI6Z6BiSwQFr3nZSpUdvUUXbWn9OoFZ2ieQ8scYPd++bitda2ontGUSdPyKe9Kx
-         IBFuiljfqaMt6ZWscLa/AITKhNiUPS13u7wz1yK7zi0DX/iHsChjCh84Y37xpIo75CjD
-         hZMo0wusU3CWHCaifHjGCNhX4YcpWPiElsfA7wRQG1gzTS9IcV4NbhTxWxZJSlsDh7eG
-         IWY/PRE3hLvhbkOQUj82dlvqpBlroeBtPZXHcZ1+uQlJtuiuLm2DGB1R1IaLdI6rz++1
-         g/TA==
-X-Gm-Message-State: AOJu0YwVJOXGxF1mLfbiVPaFmehHKz7AYE7M2Q3tZNZim23Gp93EJNZv
-	dHmBa+ONIxVy8QeXQ8vWdzujQvF/55gpOatvGG1BilvWb7s6WTFiRoZe6FQ0Eytdylk=
-X-Gm-Gg: ASbGncv3GwgPPyx0PEwbvb6G3c6Ps9yTtrtWEj3xDSJeQABChqaeCjjs7+Je1esXdrK
-	EPCY17aDUdQR5kV8F04te+coFE4qmqtD+4nu32uhHNH3hpH5L6d6giGfwz9kJSiFzlnMezmmYCV
-	SR6ln8LtdAE6q7jqT2zzA2fcMYFi4WBe+ekfJyWpsbDE++07KOyuCso1Btv9Z9pfe8NaM/IK8CZ
-	1N2Yv/RHUQc8SyzBnSYyQk108nbFVEwy83hrwBodyVkcFtuzM/WZilb6IRuKwuq9iCyTryOShTV
-	U2yRh0GLHH/MuESJHXFgVd8qjg+lUoHosusWHcOsrGnPLx6xAVgxShTaGknK8+LjSjC/cG5VLiT
-	pXVxjY4aRRgt44FVCEU70FgXCJQ0AshN10ID/fPJzyklfU/xkH8+3qJZx
-X-Google-Smtp-Source: AGHT+IHKzaxS6OOgrxr6QVGgtKNaoeHtnl0XB/OBdOYkzQrDQ8GVUCdJHn166jkKWPW3xC8+VHh/Vw==
-X-Received: by 2002:a17:903:2381:b0:28e:7ab2:811c with SMTP id d9443c01a7336-290272e4bc1mr334054785ad.45.1760450345071;
-        Tue, 14 Oct 2025 06:59:05 -0700 (PDT)
-Received: from 15dd6324cc71 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f8f9e0sm165414065ad.120.2025.10.14.06.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Oct 2025 06:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dd/zP/Wm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195D7C4CEE7;
+	Tue, 14 Oct 2025 16:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760459164;
+	bh=bxBIMlGSNC6HSyaMCqbzfCJUQB6E6GUXd6hdKLf8rz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dd/zP/WmqPShkSuYsCOw7uTVi2FyJ5f+7bWq71O/EbsBjTsAYh2R6aAHVhmQlEug/
+	 gE2h7vzVVwnFkUXItulK2FCydcKZfSSqP+k+ol51uh29y8yO8EhuvyqR/hX0io0WK0
+	 jSKgLibE+DiEDImS43Tc3+CisJAw5vJig65mhAVOWVlsc0ahEjLnw4PKi2oot23Zt1
+	 s3pWyuS5EU1w0gl1HoTGHtQDu6sWOdx6JQOySxen6KA7SUn90+nrLWwVDyggQkfRl5
+	 U28TiAo9cYmcTuBkOcYUbaPim9eHVb6DE6VCXeT5R0tLULiBU41P1icpImK+NcLyjn
+	 8zWSv81QjKNIw==
+Date: Tue, 14 Oct 2025 21:55:51 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Ron Economos <re@w6rz.net>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv <linux-riscv@lists.infradead.org>, Paul Walmsley <pjw@kernel.org>, 
+	Greentime Hu <greentime.hu@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	regressions@lists.linux.dev
+Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
+Message-ID: <yxdwo4hppd7c7lrv5pybjtu22aqh3lbk34qxdxmkubgwukvgwq@i4i45fdgm6sw>
+References: <20251013212801.GA865570@bhelgaas>
+ <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
+ <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
+ <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
+ <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) undefined reference to
- `devm_backlight_device_register' in vmlinux...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 14 Oct 2025 13:59:04 -0000
-Message-ID: <176045034384.1788.868853922191153052@15dd6324cc71>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
 
+On Mon, Oct 13, 2025 at 10:52:48PM -0700, Ron Economos wrote:
+> On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
+> > 
+> > 
+> > On 10/14/2025 10:56 AM, Ron Economos wrote:
+> > > On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
+> > > > 
+> > > > 
+> > > > On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
+> > > > > [+cc FU740 driver folks, Conor, regressions]
+> > > > > 
+> > > > > On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
+> > > > > > The SiFive FU740 PCI driver fails on the HiFive
+> > > > > > Unmatched board with Linux
+> > > > > > 6.18-rc1. The error message is:
+> > > > > > 
+> > > > > > [    3.166624] fu740-pcie e00000000.pcie: host bridge
+> > > > > > /soc/pcie@e00000000
+> > > > > > ranges:
+> > > > > > [    3.166706] fu740-pcie e00000000.pcie:       IO
+> > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
+> > > > > > [    3.166767] fu740-pcie e00000000.pcie:      MEM
+> > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
+> > > > > > [    3.166805] fu740-pcie e00000000.pcie:      MEM
+> > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
+> > > > > > [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
+> > > > > > 0xdf0000000-0xdffffffff] for [bus 00-ff]
+> > > > > > [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
+> > > > > > [    3.579552] fu740-pcie e00000000.pcie: Failed to
+> > > > > > configure iATU in ECAM
+> > > > > > mode
+> > > > > > [    3.579655] fu740-pcie e00000000.pcie: probe with
+> > > > > > driver fu740-pcie
+> > > > > > failed with error -22
+> > > > > > 
+> > > > > > The normal message (on Linux 6.17.2) is:
+> > > > > > 
+> > > > > > [    3.381487] fu740-pcie e00000000.pcie: host bridge
+> > > > > > /soc/pcie@e00000000
+> > > > > > ranges:
+> > > > > > [    3.381584] fu740-pcie e00000000.pcie:       IO
+> > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
+> > > > > > [    3.381682] fu740-pcie e00000000.pcie:      MEM
+> > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
+> > > > > > [    3.381724] fu740-pcie e00000000.pcie:      MEM
+> > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
+> > > > > > [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll
+> > > > > > T, 8 ob, 8 ib, align
+> > > > > > 4K, limit 4096G
+> > > > > > [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
+> > > > > > [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+> > > > > > [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
+> > > > > > [    3.988164] fu740-pcie e00000000.pcie: PCI host
+> > > > > > bridge to bus 0000:00
+> > > > > > 
+> > > > > > Reverting the following commits solves the issue.
+> > > > > > 
+> > > > > > 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc:
+> > > > > > Support ECAM mechanism by
+> > > > > > enabling iATU 'CFG Shift Feature'
+> > > > > > 
+> > > > > > 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom:
+> > > > > > Prepare for the DWC ECAM
+> > > > > > enablement
+> > > > > > 
+> > > > > > f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc:
+> > > > > > Prepare the driver for
+> > > > > > enabling ECAM mechanism using iATU 'CFG Shift Feature'
+> > > > > 
+> > > > > As Conor pointed out, we can't fix a code regression with a DT change.
+> > > > > 
+> > > > > #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the
+> > > > > driver for enabling ECAM mechanism using iATU 'CFG Shift
+> > > > > Feature'")
+> > > > Hi Conor,
+> > > > 
+> > > > Can you try with this patch and see if it is fixing the issue.
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c
+> > > > b/drivers/pci/controller/dwc/pcie-fu740.c
+> > > > index 66367252032b..b5e0f016a580 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-fu740.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+> > > > @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct
+> > > > platform_device *pdev)
+> > > > 
+> > > >         platform_set_drvdata(pdev, afp);
+> > > > 
+> > > > +       pci->pp.native_ecam = true;
+> > > > +
+> > > >         return dw_pcie_host_init(&pci->pp);
+> > > >  }
+> > > > 
+> > > > - Krishna Chaitanya.
+> > > > 
+> > > > > 
+> > > I've already tried it. It doesn't work. Same error message as before.
+> > Can you share us dmesg logs for this change.
+> > 
+> > - Krishna Chaitanya.
+> > > 
+> [    3.159763] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
+> ranges:
+> [    3.159853] fu740-pcie e00000000.pcie:       IO
+> 0x0060080000..0x006008ffff -> 0x0060080000
+> [    3.159916] fu740-pcie e00000000.pcie:      MEM
+> 0x0060090000..0x007fffffff -> 0x0060090000
+> [    3.159953] fu740-pcie e00000000.pcie:      MEM
+> 0x2000000000..0x3fffffffff -> 0x2000000000
+> [    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem
+> 0xdf0000000-0xdffffffff] for [bus 00-ff]
+> [    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
+> [    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in ECAM
+> mode
+> [    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie
+> failed with error -22
+> 
+> Same as before the change. The entire log is here:
+> 
+> https://www.w6rz.net/dmesg.txt
+> 
 
+Weird that the driver still creates ECAM even after skipping it using the flag.
+The flag is not meant for that purpose, but it should've worked anyway.
 
+Can you try this diff and share the dmesg log?
 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 20c9333bcb1c..58080928df9f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -523,8 +523,12 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+        pp->cfg0_size = resource_size(res);
+        pp->cfg0_base = res->start;
 
-Hello,
++       dev_info(dev, "%s: %d native_ecam: %d", __func__, __LINE__,
++pp->native_ecam);
++
+        pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
+        if (pp->ecam_enabled) {
++               dev_info(dev, "%s: %d ECAM ENABLED", __func__, __LINE__);
+                ret = dw_pcie_create_ecam_window(pp, res);
+                if (ret)
+                        return ret;
+@@ -533,6 +537,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+                pp->bridge->sysdata = pp->cfg;
+                pp->cfg->priv = pp;
+        } else {
++               dev_info(dev, "%s: %d ECAM DISABLED", __func__, __LINE__);
+                pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
+                if (IS_ERR(pp->va_cfg0_base))
+                        return PTR_ERR(pp->va_cfg0_base);
 
-New build issue found on next/master:
+- Mani
 
----
- undefined reference to `devm_backlight_device_register' in vmlinux.unstripped (drivers/gpu/drm/panel/panel-visionox-rm69299.c) [logspec:kbuild,kbuild.compiler.linker_error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  13863a59e410cab46d26751941980dc8f088b9b3
-- tags: next-20251014
-
-
-Log excerpt:
-=====================================================
-  LD      .tmp_vmlinux1
-aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected!
-aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected!
-aarch64-linux-gnu-ld: drivers/gpu/drm/panel/panel-visionox-rm69299.o: in function `visionox_rm69299_create_backlight':
-/tmp/kci/linux/drivers/gpu/drm/panel/panel-visionox-rm69299.c:343: undefined reference to `devm_backlight_device_register'
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+arm64-chromebook+CONFIG_ARM64_16K_PAGES=y on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-16k_pages-68ee4f14a6dc7c71db9fda21/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f14a6dc7c71db9fda21
-
-## defconfig+arm64-chromebook+CONFIG_ARM64_64K_PAGES=y on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-64k_pages-68ee4f17a6dc7c71db9fda24/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f17a6dc7c71db9fda24
-
-## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-mainline-big_endian-68ee4f32a6dc7c71db9fda39/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f32a6dc7c71db9fda39
-
-## defconfig+arm64-chromebook+CONFIG_RANDOMIZE_BASE=y on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-randomize-68ee4f1fa6dc7c71db9fda2a/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f1fa6dc7c71db9fda2a
-
-## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-chromebook-kcidebug-68ee4f2ba6dc7c71db9fda33/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f2ba6dc7c71db9fda33
-
-## defconfig+arm64-chromebook+kselftest on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-kselftest-16k_pages-68ee4f23a6dc7c71db9fda2d/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f23a6dc7c71db9fda2d
-
-## defconfig+arm64-chromebook+preempt_rt on (arm64):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm64-preempt_rt_chromebook-68ee4f3aa6dc7c71db9fda3f/.config
-- dashboard: https://d.kernelci.org/build/maestro:68ee4f3aa6dc7c71db9fda3f
-
-
-#kernelci issue maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+-- 
+மணிவண்ணன் சதாசிவம்
