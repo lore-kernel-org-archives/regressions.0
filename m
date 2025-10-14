@@ -1,177 +1,232 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9854830DD29
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 06:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5C22D063C
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 06:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760421892; cv=none; b=u9e++5kRAdGLha3oKIpu/s7T6aIYOb6w3HoLUcX1WtYK4iTjn9qm9wW0gfa7y3p+Xs7OvhdvKhNid9iayFesCKCHAJTUEhYKsGqI+5aTTkfAPAcEOU2Pqf1BFW1GI/NFUtZwJp+GkFLUv9Z6aIHJi1s4E6zebkGFO8cWqcJr87g=
+	t=1760424060; cv=none; b=g4mtig7wtC41VQpCr/BoQ8XY7/nLrthEDZCOohqxLmV7PJ2w0NG0a2ql2yXQ6a7Y8mEWUHqdZgXeoIAygTQjYpnzmmcP69npQAh5CwSVCcICbfUVFpuEOIG8+pH8CfMizL0S+LO0ywKx5IVmke97VvEEsOf51p9jA8WxxU1LgL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760421892; c=relaxed/simple;
-	bh=Wt4pD5gcVyt54cySAgvxNCFQKUhVqKF+IeF69tqaBKk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZCUqMVSacD2zIItUs8UzsNaFgor57JnzuCCqWFN8wCrNeUiDY5WTXznOLghnyDPrGc+qzvh3IY9baDbgfiIr06wQTOplN3YIIZPMi4i59f7qCXX1tCjcwceEF8t5P2urPuYXYR73snOYIbMsecGn0FBve8CZNvQvebEUD12er8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rKOuvqYb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WKHnFwml; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rKOuvqYb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WKHnFwml; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1760424060; c=relaxed/simple;
+	bh=UbvJP1d+EUOfRQE3e2UPylgXhug4miIG3KQOZgbFdig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YK19MDjM9ibmQ00ad3IZcTq0+84P1tH50eSBh9vY8PFOVMkObPVOu+00c7KXxAxzHmqvjsnwjwjMVec+6su8KcnKoG1NN+wBEdN8XLzT6TmVwybbKuza62sYUUfOyUitjL2BOzczs3AFxIDeVIQvLuMLJma8oAUTz7H33d4T08I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1Nxnvok; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rKOuvqYb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WKHnFwml";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rKOuvqYb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WKHnFwml"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AC6721F750;
-	Tue, 14 Oct 2025 06:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760421887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
-	b=rKOuvqYbY+2vWHxWOSIiJrWEWvsgO0iJMF3/RUpF0xaVQwQTtJC/4Ng+gDIGNeh+tAHUjv
-	f8whXn/lDYKOwoTIqAfmv6rpW5ZAfXrSqu0jSF3KyNbh01w/RPxEMZiQiWospoOhFx1Py3
-	Za3QieBw52k6lZ0yTX/LKwyoTVUlpts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760421887;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
-	b=WKHnFwmlP5GUejtjiuIskooDQ6MrwUsJe7EZSlXjubNge5Hv+xrns2NLZgIwbWNpLody/N
-	6h4ipappDFieuIAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rKOuvqYb;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WKHnFwml
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760421887; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
-	b=rKOuvqYbY+2vWHxWOSIiJrWEWvsgO0iJMF3/RUpF0xaVQwQTtJC/4Ng+gDIGNeh+tAHUjv
-	f8whXn/lDYKOwoTIqAfmv6rpW5ZAfXrSqu0jSF3KyNbh01w/RPxEMZiQiWospoOhFx1Py3
-	Za3QieBw52k6lZ0yTX/LKwyoTVUlpts=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760421887;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+nTiAhEtLhakZDaSGJLkjbBvw4HLsVtJBfeeNxtqUIo=;
-	b=WKHnFwmlP5GUejtjiuIskooDQ6MrwUsJe7EZSlXjubNge5Hv+xrns2NLZgIwbWNpLody/N
-	6h4ipappDFieuIAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3645113A44;
-	Tue, 14 Oct 2025 06:04:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jUbHC//n7WiHBgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 14 Oct 2025 06:04:47 +0000
-Date: Tue, 14 Oct 2025 08:04:46 +0200
-Message-ID: <875xci81dt.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: tiwai@suse.de,
-	amadeuszx.slawinski@linux.intel.com,
-	baojun.xu@ti.com,
-	bo.liu@senarytech.com,
-	cezary.rojewski@intel.com,
-	kai.vehmanen@linux.intel.com,
-	kailang@realtek.com,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	regressions@lists.linux.dev,
-	Dell.Client.Kernel@dell.com
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
-In-Reply-To: <20251014034156.4480-1-safinaskar@gmail.com>
-References: <20250709160434.1859-6-tiwai@suse.de>
-	<20251014034156.4480-1-safinaskar@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1Nxnvok"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760424058; x=1791960058;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UbvJP1d+EUOfRQE3e2UPylgXhug4miIG3KQOZgbFdig=;
+  b=f1NxnvokfzollGQng6BzBTU7WVgRHQTaaiKCuFr5Ex8B2U56styz3zgB
+   LAm+xEQDxhTkikFgw3LkR8NG3E0KIGyTQAYv+EetTEcG4xq268n7P4brQ
+   lxr1PmqhJfdbqzGJcOa0h4dCchHSiTfl9nRtuKy43u3YRPDUbOUmXmmQe
+   2rK1C1qul3AAmceu4fpaT3rwiQRFF0vGLoKzLVi/pvwEj4wtkQG2J0AD3
+   rSP3+jQWzmJuJXvLcbXzGPOiH46+kGE22cad+x1ZEmdNJq6VVXbWgs3UL
+   04C+HSdyFEbFrFZ8QBSXVWr6ttULulMDQ9FBuafEsv+3WAa4svSTVZPjJ
+   w==;
+X-CSE-ConnectionGUID: G1NiCDs4SGaTFR0OLNiHdQ==
+X-CSE-MsgGUID: zrI63pJTTMu30E106fdL0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="85196824"
+X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
+   d="scan'208";a="85196824"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 23:40:58 -0700
+X-CSE-ConnectionGUID: yNkqmoKJTXutIJYiHYcagQ==
+X-CSE-MsgGUID: NgXZOvb3SsO0G3f2x7KRVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
+   d="scan'208";a="186056301"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 23:40:56 -0700
+Message-ID: <ad3ef789-3f12-4107-abad-cf7b4775e38d@linux.intel.com>
+Date: Tue, 14 Oct 2025 14:40:52 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: AC6721F750
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
-
-On Tue, 14 Oct 2025 05:41:56 +0200,
-Askar Safin wrote:
-> 
-> Takashi Iwai <tiwai@suse.de>:
-> > Now HD-audio controller drivers are moved into sound/hda/controllers
-> > directory as a part of HD-audio code reorganization.  Most of drivers
-> > are independent from PCI bus, hence it makes more sense to put under
-> > sound/hda.
-> > 
-> > The hda_ prefix is dropped from most of files at moving, as it's
-> > more or less superfluous.
-> > 
-> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> 
-> This patch broke my laptop's speakers.
-> 
-> My laptop is Dell Precision 7780.
-> 
-> Here is output of "sudo lspci -vvvvv":
-> https://zerobin.net/?bb0d52d5c33a1ca8#Z4cktfC0ofZhkzBU4/AFGpYAVJFXrus46nDeLQOV22s=
-> (This output was collected on Linux 6.12.43+deb13-amd64, audio works there.)
-> 
-> My OS is Debian Trixie.
-> 
-> If you need my config, then here is my config I tested with linux-next:
-> https://zerobin.net/?989789b5698e0afe#DKjA80yFwRFnLkYwo3ZnNZEVGowGyn5N78aSy8omoGY=
-> It was tested with current linux-next:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tag/?h=next-20251013
-> (and audio didn't work).
-> 
-> #regzbot introduced: 2d9223d2d64cb5216859ced6cc33fb3b04e5f98f
-
-The oft-seen "regression" reports for 6.17 were rather the incorrect
-kconfig setup, and that's your case, too, I suppose.  In 6.17,
-HD-audio Realtek (and other) codec drivers were split, and each of
-them can be enable/disabled individually when CONFIG_EXPERT is set,
-where people often leave them off blindly.
-
-So, please check your kernel config between working and non-working
-cases.  I guess you had CONFIG_SND_HDA_CODEC_REALTEK beforehand, and
-now it's off.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+To: Octavia Togami <octavia.togami@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ peterz@infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+ <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-thanks,
+On 10/13/2025 2:55 PM, Octavia Togami wrote:
+> That change appears to fix the problem on my end. I ran my reproducer
+> and some other tests multiple times without issue.
 
-Takashi
+@Octavia Thanks for checking this patch. But following Peter's comments, we
+need to update the fix. So could you please re-test the below changes? Thanks.
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7541f6f85fcb..ed236b8bbcaa 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11773,7 +11773,8 @@ static enum hrtimer_restart
+perf_swevent_hrtimer(struct hrtimer *hrtimer)
+
+        event = container_of(hrtimer, struct perf_event, hw.hrtimer);
+
+-       if (event->state != PERF_EVENT_STATE_ACTIVE)
++       if (event->state != PERF_EVENT_STATE_ACTIVE ||
++           event->hw.state & PERF_HES_STOPPED)
+                return HRTIMER_NORESTART;
+
+        event->pmu->read(event);
+@@ -11827,7 +11828,7 @@ static void perf_swevent_cancel_hrtimer(struct
+perf_event *event)
+                ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+                local64_set(&hwc->period_left, ktime_to_ns(remaining));
+
+-               hrtimer_cancel(&hwc->hrtimer);
++               hrtimer_try_to_cancel(&hwc->hrtimer);
+        }
+ }
+
+@@ -11871,12 +11872,14 @@ static void cpu_clock_event_update(struct
+perf_event *event)
+
+ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ {
++       event->hw.state = 0;
+        local64_set(&event->hw.prev_count, local_clock());
+        perf_swevent_start_hrtimer(event);
+ }
+
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
++       event->hw.state = PERF_HES_STOPPED;
+        perf_swevent_cancel_hrtimer(event);
+        if (flags & PERF_EF_UPDATE)
+                cpu_clock_event_update(event);
+@@ -11950,12 +11953,14 @@ static void task_clock_event_update(struct
+perf_event *event, u64 now)
+
+ static void task_clock_event_start(struct perf_event *event, int flags)
+ {
++       event->hw.state = 0;
+        local64_set(&event->hw.prev_count, event->ctx->time);
+        perf_swevent_start_hrtimer(event);
+ }
+
+ static void task_clock_event_stop(struct perf_event *event, int flags)
+ {
++       event->hw.state = PERF_HES_STOPPED;
+        perf_swevent_cancel_hrtimer(event);
+        if (flags & PERF_EF_UPDATE)
+                task_clock_event_update(event, event->ctx->time);
+
+
+>
+> On Sun, Oct 12, 2025 at 7:34 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 10/11/2025 4:31 PM, Octavia Togami wrote:
+>>> Using async-profiler
+>>> (https://github.com/async-profiler/async-profiler/) on Linux
+>>> 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
+>>> reported by many people at https://github.com/lucko/spark/issues/530.
+>>> spark is a piece of software that uses async-profiler internally.
+>>>
+>>> As seen in https://github.com/lucko/spark/issues/530#issuecomment-3339974827,
+>>> this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
+>>> Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
+>>> fixed the issue for me.
+>>>
+>>> Steps to reproduce:
+>>> 1. Get a copy of async-profiler. I tested both v3 (affects older spark
+>>> versions) and v4.1 (latest at time of writing). Unarchive it, this is
+>>> <async-profiler-dir>.
+>>> 2. Set kernel parameters kernel.perf_event_paranoid=1 and
+>>> kernel.kptr_restrict=0 as instructed by
+>>> https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311f872ce9566769b006b357ecbe/docs/GettingStarted.md
+>>> 3. Install a version of Java that comes with jshell, i.e. Java 9 or
+>>> newer. Note: jshell is used for ease of reproduction. Any Java
+>>> application that is actively running will work.
+>>> 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
+>>> will start an infinitely running Java process.
+>>> 5. Run `jps` and take the PID next to the text RemoteExecutionControl
+>>> -- this is the process that was just started.
+>>> 6. Attach async-profiler to this process by running
+>>> `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
+>>> second, then the system should freeze entirely shortly thereafter.
+>>>
+>>> I triggered a sysrq crash while the system was frozen, and the output
+>>> I found in journalctl afterwards is at
+>>> https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
+>>> I'm not sure if that text is actually from the triggered crash, but it
+>>> seems relevant. If needed, please tell me how to get the actual crash
+>>> report, I'm not sure where it is.
+>>>
+>>> I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've seen
+>>> no Intel reports, it may be AMD specific. I don't have an Intel CPU on
+>>> hand to test with.
+>>>
+>>> /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
+>>> (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
+>>> PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
+>>> Operating System: Arch Linux
+>>> uname -mi: x86_64 unknown
+>> It looks the issue described in the link
+>> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
+>> happens again but in a different way. :(
+>>
+>> As the commit message above link described,  cpu-clock (and task-clock) is
+>> a specific SW event which rely on hrtimer. The hrtimer handler calls
+>> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+>> eventually call hrtimer_cancel() which traps into a dead loop which waits
+>> for the calling hrtimer handler finishes.
+>>
+>> As the
+>> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
+>> it should be enough to just disable the event and don't need an extra event
+>> stop.
+>>
+>> @Octavia, could you please check if the change below can fix this issue?
+>> Thanks.
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 7541f6f85fcb..883b0e1fa5d3 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
+>> *event,
+>>                 ret = 1;
+>>                 event->pending_kill = POLL_HUP;
+>>                 perf_event_disable_inatomic(event);
+>> -               event->pmu->stop(event, 0);
+>> +
+>> +               /*
+>> +                * The cpu-clock and task-clock are two special SW events,
+>> +                * which rely on the hrtimer. The __perf_event_overflow()
+>> +                * is invoked from the hrtimer handler for these 2 events.
+>> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+>> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+>> +                * handler to finish, which would trigger a deadlock.
+>> +                * Only disabling the events is enough to stop the hrtimer.
+>> +                * See perf_swevent_cancel_hrtimer().
+>> +                */
+>> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
+>> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
+>> +                       event->pmu->stop(event, 0);
+>>         }
+>>
+>>         if (event->attr.sigtrap) {
+>>
+>>
