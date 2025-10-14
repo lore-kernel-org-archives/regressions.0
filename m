@@ -1,105 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3B22EAB66;
-	Mon, 13 Oct 2025 21:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FB72C181
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 03:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760390883; cv=none; b=s7aswWgERGLVbVpPAzHwDX7cpLHI9KJxMZ+gPwVHeBXRIiYHCIeq4nNErRin5cLldkXw17ez/rnU8RKyUguigRb+N8l+fTIvXEzeCsdPzLqkdNjBDjiNRHUpT7V37kauqGWsejBB4MRBZXHx8kgKlcBkxGV9xL8dYJ8LL+xVsIk=
+	t=1760413531; cv=none; b=lxoNYL78vzwBiaF2VcjpcFfL3WO4WW6hLMLShgUX0z/d3Vg8lCNxMjDNJnx5PE6GQo8fCAY6tqF88li6gr1rP/E2pWdTHvkf8EVOv8L0Rag/Va/BkzVpMNct3rhfLnQ6EAr1uYBygBcvX31JBMRxzNjv5hbotwOyX3NmhB+Pj7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760390883; c=relaxed/simple;
-	bh=/vCGp4dN24zHOrwDoNn2Y3f2GKlV2uG2TwuEjOBom6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=du4jdTVDpL7jccWAyYL2cIUO1duf6sDyHhgAkix62jwj6nD1kN9v13DT+ACQ0wb+xv0Spca8jJ+XlN5QS+D2Jgogs8FJzgz23WbGqq0AnPkainUchWh0+jixF5T/BLDpc8zMXu2Lgy3A26MQ6FAuvGVog9n49ubiulCTkPZS5gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIJFx1Tr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760413531; c=relaxed/simple;
+	bh=AgkShE7uH96yWUzpH3gSmZSEzMS6r4JBwD5xtKLDn5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rsKkqvafoeFhcdABJy15nRLQFJoSOglKuyelo+Eb9r5PUMxOyZhHv73bB6JiIaeLjdOYYcsbX3L09DNBuCjIslvQOk+n8+GPKPY0hQdblrkiRDWr0KO1o7vc7+7SozSM3UCM+Lmk4fgg+zF1OZOly7K4NfTgYEIQySSLUhNFs4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAXc1Rb6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIJFx1Tr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E310C4CEE7;
-	Mon, 13 Oct 2025 21:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760390882;
-	bh=/vCGp4dN24zHOrwDoNn2Y3f2GKlV2uG2TwuEjOBom6Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZIJFx1Tri7fL9usBTJ8do1OAIl55dlPPxgGzv8879OtuSZXEQocmMJuhBTt9ZnmJZ
-	 7rr/Osh9CVL5KjyPVXe30y6i8jHTMrOZzM/6dicRhIGgNCo6fucDxBBo4A7WA3ize6
-	 KszucXDO3LlfB8d1tgRwVI/S/YkQ2nbOaD0FlrvHBk/sq9P7rv4UbAgrXVfB34G2vm
-	 OnHj3EaySJoEa2UEd6xvQk5WH8lRK/a2n3r1CBwvYomRmoqEzvgo598OEDlDfXs0EU
-	 3So5a6C258p/jGkNHSJ+oct9LfP6UAAVuhCt+7ayu4rwvYXh7e72AEbvrAjeX/Yj4A
-	 J8+UxKF35KepA==
-Date: Mon, 13 Oct 2025 16:28:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ron Economos <re@w6rz.net>
-Cc: bhelgaas@google.com, rishna.chundru@oss.qualcomm.com, mani@kernel.org,
-	helgaas@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv <linux-riscv@lists.infradead.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Conor Dooley <conor@kernel.org>, regressions@lists.linux.dev
-Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
-Message-ID: <20251013212801.GA865570@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAXc1Rb6"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-46e42deffa8so45546585e9.0
+        for <regressions@lists.linux.dev>; Mon, 13 Oct 2025 20:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760413528; x=1761018328; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s/Zf3gVNNazii8FmNwFvhySg3us0RixLL079KZ3A4LE=;
+        b=RAXc1Rb6v6ympOePfTvH+Bb7Yf34iPJQP16rJUeU0S150Eol9sk9swSAp5EalKwtDA
+         WrdfGnGkQpSsBiRI4bUZ4/e31yaRF5ZxvFM4q8+bMRmZ7Zk2ZO2AAPIPiF7kTKIG7EPF
+         bAoBI7fHKvQWFkWMFvS7Lm8O6a+PhnjHPEOoBMT4wOFfX/8x5pZeVUph2uIUMcj6bJHS
+         88FF9+TaBwnJvAyz9mGPEoEdYmgsIcFs0gzKrecA9beQqWOXrxpcQpC72PjwCs8eK5q/
+         g+x06l+NUt7PL08sBMjN2QbbOm6t+X8AWj+nD+f8fimr4OlIxjyuhWoj49hgS6EjzSkG
+         iYTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760413528; x=1761018328;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s/Zf3gVNNazii8FmNwFvhySg3us0RixLL079KZ3A4LE=;
+        b=eYU4r7fjfj160zQhnOFGilGCxOVxkduGhggmOOpcLQsjVoqNoP4RGgq4SqIeQnhq0y
+         9Yv/XJCo2z1bz3h2b0J2MyileIqy1TPVy5aVWktyLnwiEINCTFzY9p1xZVHvtd9zMVFI
+         kUNJ+ashA2mTPzJwCLK4JmOT891V3mYRx7H4V9KgkofaVfvTn41+7iz5d9WXDljKrZ8+
+         d6IhmVJ/Li11MJ7ccs8YoO15rR8sk2u7aR4Y7fsz/C6TSuSc5/AnlVAO+fmKP/nHIF+3
+         +VaOXiDqSKUvJD69rvdtbZhcCQmI6YWywjTOAhV+OuM38QvTwQtk856c3kNDcbNLTd30
+         9vjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGKuizqFE2OEOHpuNTV2AJWi8f+bNkZVVgmOKhNXVCspMAL40VlUkUjuk2Op/gSoOTHlRG4llUD1i9EQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywmi6++NADcRja97u7xzSPGMlNRHeva9CeZyj4vEIwtiRnzcRw0
+	tyTSevCDLwniVpzqMTlXcwwmvlbh+Tix0u9PXjCu/ZYytZI7j1fTmiIz
+X-Gm-Gg: ASbGncuRolBc4K1vC7uH36+NDKCP8RS86/mUoxhs9EJRaXcZwqnZydqrX63gXT0rzPx
+	+ZMh2GKlEl4JcB9DjXGNmg7tApkRC7WspcJoOMHzcsTO+xAljIgt4UtPqHAn8VpWMJzDT/PL1pR
+	7AGUypW3j9qXWy53Kr7ncxgeO9J6xduWnKaPG5Qieu2LDLbEuzOu7zhcmiY3zrfg/tlue7cNRgR
+	l1k0dLLXNeIANsl5ifXXwHk+VkNDmmwqZoh7Cj494kz49CBf+hM30ag+C6JPqWn/qu0uCVfG9xK
+	GnaOpylcnlPfo8MmwBo+NfTrcAh7KurT2i63aNW9CYcVTPUFUT2hpkOL2j8RQe5+rQSNz0Lk32f
+	4EMjcXQHoMrmTfr9jpjw9VeCE7i12khLi/CKVYSOUwf2YqK4o
+X-Google-Smtp-Source: AGHT+IEggN8xsJVVtmb8jYvbBjF9MhRjz4w96TxR6H4KvnRjXEw65+ufHxe8tiu185JOCLgglHSu5Q==
+X-Received: by 2002:a05:600c:3d87:b0:45b:7d77:b592 with SMTP id 5b1f17b1804b1-46fa9a9ede8mr159772445e9.12.1760413528030;
+        Mon, 13 Oct 2025 20:45:28 -0700 (PDT)
+Received: from localhost ([212.73.77.104])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-46fab3e3520sm150377525e9.2.2025.10.13.20.45.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Oct 2025 20:45:27 -0700 (PDT)
+From: Askar Safin <safinaskar@gmail.com>
+To: tiwai@suse.de
+Cc: amadeuszx.slawinski@linux.intel.com,
+	baojun.xu@ti.com,
+	bo.liu@senarytech.com,
+	cezary.rojewski@intel.com,
+	kai.vehmanen@linux.intel.com,
+	kailang@realtek.com,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	rf@opensource.cirrus.com,
+	regressions@lists.linux.dev,
+	Dell.Client.Kernel@dell.com
+Subject: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
+Date: Tue, 14 Oct 2025 06:41:56 +0300
+Message-ID: <20251014034156.4480-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20250709160434.1859-6-tiwai@suse.de>
+References: <20250709160434.1859-6-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eac81c57-1164-4d74-a1b4-6f353c577731@w6rz.net>
 
-[+cc FU740 driver folks, Conor, regressions]
+Takashi Iwai <tiwai@suse.de>:
+> Now HD-audio controller drivers are moved into sound/hda/controllers
+> directory as a part of HD-audio code reorganization.  Most of drivers
+> are independent from PCI bus, hence it makes more sense to put under
+> sound/hda.
+> 
+> The hda_ prefix is dropped from most of files at moving, as it's
+> more or less superfluous.
+> 
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
-On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
-> The SiFive FU740 PCI driver fails on the HiFive Unmatched board with Linux
-> 6.18-rc1. The error message is:
-> 
-> [    3.166624] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
-> ranges:
-> [    3.166706] fu740-pcie e00000000.pcie:       IO
-> 0x0060080000..0x006008ffff -> 0x0060080000
-> [    3.166767] fu740-pcie e00000000.pcie:      MEM
-> 0x0060090000..0x007fffffff -> 0x0060090000
-> [    3.166805] fu740-pcie e00000000.pcie:      MEM
-> 0x2000000000..0x3fffffffff -> 0x2000000000
-> [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
-> 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
-> [    3.579552] fu740-pcie e00000000.pcie: Failed to configure iATU in ECAM
-> mode
-> [    3.579655] fu740-pcie e00000000.pcie: probe with driver fu740-pcie
-> failed with error -22
-> 
-> The normal message (on Linux 6.17.2) is:
-> 
-> [    3.381487] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
-> ranges:
-> [    3.381584] fu740-pcie e00000000.pcie:       IO
-> 0x0060080000..0x006008ffff -> 0x0060080000
-> [    3.381682] fu740-pcie e00000000.pcie:      MEM
-> 0x0060090000..0x007fffffff -> 0x0060090000
-> [    3.381724] fu740-pcie e00000000.pcie:      MEM
-> 0x2000000000..0x3fffffffff -> 0x2000000000
-> [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, align
-> 4K, limit 4096G
-> [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
-> [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> [    3.988164] fu740-pcie e00000000.pcie: PCI host bridge to bus 0000:00
-> 
-> Reverting the following commits solves the issue.
-> 
-> 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc: Support ECAM mechanism by
-> enabling iATU 'CFG Shift Feature'
-> 
-> 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom: Prepare for the DWC ECAM
-> enablement
-> 
-> f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc: Prepare the driver for
-> enabling ECAM mechanism using iATU 'CFG Shift Feature'
+This patch broke my laptop's speakers.
 
-As Conor pointed out, we can't fix a code regression with a DT change.
+My laptop is Dell Precision 7780.
 
-#regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the driver for enabling ECAM mechanism using iATU 'CFG Shift Feature'")
+Here is output of "sudo lspci -vvvvv":
+https://zerobin.net/?bb0d52d5c33a1ca8#Z4cktfC0ofZhkzBU4/AFGpYAVJFXrus46nDeLQOV22s=
+(This output was collected on Linux 6.12.43+deb13-amd64, audio works there.)
+
+My OS is Debian Trixie.
+
+If you need my config, then here is my config I tested with linux-next:
+https://zerobin.net/?989789b5698e0afe#DKjA80yFwRFnLkYwo3ZnNZEVGowGyn5N78aSy8omoGY=
+It was tested with current linux-next:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tag/?h=next-20251013
+(and audio didn't work).
+
+#regzbot introduced: 2d9223d2d64cb5216859ced6cc33fb3b04e5f98f
+
+-- 
+Askar Safin
