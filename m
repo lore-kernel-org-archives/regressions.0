@@ -1,195 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A602BD597
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 07:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0EA30F80A
+	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 08:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760428771; cv=none; b=fkgpFZ7nDvQKbTiYxAyyfsygvUZyDfrc/tG+ZKlBXCPcNDkWX/hd1p+KnHM5E4T827UdQQs3lE9OGlDLW2np3eIW1jDgDbedLpKMYH5sHavukU7NSb3uaY0lGDqGJqejPeuHMfZ0u9EliM3HTJp0EgMvA88orCIpXNRb23kjULw=
+	t=1760429618; cv=none; b=ioGiHiCP3qd1irFoDj07qTr0a7WaQq7zp7EwCFrGulzmxL31D78L4BGqef+TzB7hrOllNjtMd0waX1xt5qbn6st1H/5jqVmRgB1FD9nmxZGH4wlmbg6ehr7VpdLV/mYK3snTNHBLE0nqfTsHwUuWumU1oE1M1OVaejgpVCfIBUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760428771; c=relaxed/simple;
-	bh=srzEV4uHOz9yBYJFcr3/HRQwSQglUYfQiebcdxSVhPc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kheMncq66eYfYfMvxfGJ05LjChimgIWMDDZNAMm6e80mZvOSSlwBlEz0rKtYx/gsJ0+il2J00S21m+c/YQjiyhFi0yViwseQFgDAyoXk4ICoyxIXYoZDE+xyMSwLtdF4fsnsrogvLCOgzll6MNWSNVFJTqrlVwbHaVZmdqKU0jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=grw0YtoQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760429618; c=relaxed/simple;
+	bh=+2LmzIVa9DmNGLrlYbtdQtzdJ1I1DZNXxMZgk2QxwOw=;
+	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=n6lbKcNFh4x9FL9rxVvHao/1Wqo23KDCCgN0PFFKBH5gQKm22pRKaqbf8x7JGzvUaqbHu/FETvhDFt3sK5Gvoi0xrrswZAe2+aYEgH7tUDpscsZ2Th6iL3M7NwBRUhot438ew6DOvOAojXLBL6EhU7MmyqIdAV8a71DnW1mTX+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5MoH2Ea; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="grw0YtoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760428768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=g+evH2w+/SD0aBvnKN9sijIvN4jHoC6G+ugKhqQCEeQ=;
-	b=grw0YtoQED+kwCppBzjzR5ROLVHE8FZUQ10xd0fxOkGnYFBNnJU3uQvvQc4qWPYmbD+Bei
-	ei0L4OoF2vRnAKjve9pUot6BOafWuIcapyp4Nfo3shl5pTToOWhkrPnN3oHbJ5aAaywBVl
-	8jsp65rXXp3SCK50nvZ5NJ1qi3JbtFI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434---QMSSDWOjqXqT472yWbIQ-1; Tue, 14 Oct 2025 03:59:27 -0400
-X-MC-Unique: --QMSSDWOjqXqT472yWbIQ-1
-X-Mimecast-MFC-AGG-ID: --QMSSDWOjqXqT472yWbIQ_1760428766
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3f030846a41so3692144f8f.2
-        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 00:59:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5MoH2Ea"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46e2e363118so42566255e9.0
+        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 01:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760429614; x=1761034414; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xhf78mDj7L6zLhIAA4NyhL+vPp3/tw4ip9YZY4CJYUQ=;
+        b=M5MoH2EaPXRr/6DuijT9KSH70wizM40aPj4Z1qVL0UZ/LdLoaN6fD0snc/XaTZFZKI
+         vxjwtdj75Mm+GE5lyGgmQ8wAYn22eYVKKaQtFwSzACkZzdLw1ZebpHA9zIWnRNTGHf+m
+         DO3vQRhcbQkxvflMFM1FjYELySX/M62+V0iVfO3HCbHCI47JayezkCismOErpKeZYL4j
+         YGOd7LKkTWobkL3DC9mDJFZjJ1Xxc4JlS7/WVrgynG++O0lTl+huZJO2FMNX+PPFN46P
+         fs5Z9fnPeQqPZoM21kax4Vxk3hNMRNqLvn37FEKvjbDlosU60iq9RVlYRkef/Y7tqQJt
+         2O9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760428766; x=1761033566;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g+evH2w+/SD0aBvnKN9sijIvN4jHoC6G+ugKhqQCEeQ=;
-        b=V4ENNFKRMsLsttV9AVQdWUXXI8Oev+/AJtgJi53Np6bpjStZWOoeLl8ZQ7X77QWGjS
-         MqGCDA3DUj1NUk2T460RgNJxPq4qWc/mIj8FxvBAIwgzOQ+x7N08WDZ/MuMgi/B7g2vm
-         VrLNx2ICkQoe3OliN8z15pQm0PrejKJtvD2Q1Jed5A+FXBWgJsCY172Ty0i3vjKgvE4V
-         TlzIFEvEUwIdB0b+XF0fS6RY5vrYSWmzB7XChrgRWCbBa43wdcRCnAKqDW43ocCZvgrH
-         o57pzASfaCxzrjQ3JK3At6HcavW/ZbzIiQ3KhcMqFK9TDN1QoUPhzvlcOm3bB3HYJXz0
-         yCkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMlQukS49yvJpP4w6aq63/X6R9uPEw535hozwegzg7R86GZk5veT051OMHr/unnlds3fjmqCpUf+lYXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzYHA28kt+AHzNb3wpkgRD2Pn/K1LWhBXmc0X7AtQJgeGmWAEk1
-	RnwDXuKkFFHGC32rBboYQp+XOW4Vx5DD1YufMnpHg49ZGBW9JIAy0QeBkkMfx+cHq5FflYbM4bu
-	hXSA5CJG7nexgrLb3aBKssTKGsqIzJlFiNI2NnG3Wmp1IsEog1muchTUSQfpZI/iO
-X-Gm-Gg: ASbGnctH8Hu/yqPv657YUoUUtHxW4cX92SHQ0pVmbcHdVtXiBd0Ai7RePXr0ZHOHb1O
-	BFKOfdsTgMUrgM6RaPI9yr/1ROwi4NDGFjXfWBC5Jj46XrnTfe2SRv760pKihGBPe5TASdWqXrg
-	H+xeXYPiz9FKPog+LTUqgzxU45VHpOFDQxhH9mMnkaNUpViBziowO++aUveYvGGp/Wb5OpCGTms
-	x/szP8DwZK72yVRq1pRDR/5yhHaerLYnZ1hQYoRHkuabUD7DFVJZXWdHhGY7xYTAUTrYeJGjGmp
-	KtxMKLYBcDzExRfClN3UZFU8MsxixX66qWHCvUC46zQP6Fk4ytAWc/Pp6NGhO+WXfdhrO5GJyg=
-	=
-X-Received: by 2002:a5d:5f54:0:b0:3ee:1586:6c73 with SMTP id ffacd0b85a97d-42667177de1mr15280673f8f.19.1760428765935;
-        Tue, 14 Oct 2025 00:59:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE68IeQzBd2dgMq8g6Muhrra3mxHKk25wfQSGnOAJFSGP9NdV805qDrZXher1hu8/MM+LRtlw==
-X-Received: by 2002:a5d:5f54:0:b0:3ee:1586:6c73 with SMTP id ffacd0b85a97d-42667177de1mr15280642f8f.19.1760428765181;
-        Tue, 14 Oct 2025 00:59:25 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426f2f72e18sm862060f8f.0.2025.10.14.00.59.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Oct 2025 00:59:24 -0700 (PDT)
-Message-ID: <57b73517-9b4a-4203-a39f-3d412ad4c7b9@redhat.com>
-Date: Tue, 14 Oct 2025 09:59:23 +0200
+        d=1e100.net; s=20230601; t=1760429614; x=1761034414;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xhf78mDj7L6zLhIAA4NyhL+vPp3/tw4ip9YZY4CJYUQ=;
+        b=FnHG4CL/kchQcrBFuXhpKsRNeDbmsMuinh1CNLc8PR2Fy3vltfvhCH7F9ioUxgcLVI
+         MsEGcScOnBn7eX2f2X0/Mcuu2Yjv9oLGaIRBqAOYefjxSeWuYpKsCJdgPyT59oLyB8Yt
+         xLUmnLf/OucwoQYNJVo25e2cMYvmHV80+Masvo0q/STpaZsVTZsEIkAzESKih2J+n3tD
+         fHcbF7fJZ4f94HvW0Eb3aKiSHEqkqgoDOweKZhmboUQQ0ayB9WwXt7yO3p1+BZxE6olC
+         bgL4T0NQjsgYETXJR3OZNaIpgCeDam50b4+PECdeVtwJhCA8JTLMRfdYk4f5DNPlZAZa
+         2aXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhXyrEay0O8C31BgncmI3EGVKahyE4c7IKQL4/MqJbVgWg3UGJCluU++A5k3OxsLohCI6eAcK05iGcTQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxF9NGcI3h9oDliXtmey+8NssuxpP42VYaYMvaebvyf4OIay809
+	RNJsHYCunXqF6DHsOS8ypm0IUNc0hPQyeLNhcm8I8C5g/Fz2BFWKocWr
+X-Gm-Gg: ASbGncvAMIhIdjvqqdcriDarqvKmuDhkV+Y8HopkmPKRCCpFL5sOUO0T+WFLvWlDPOY
+	n22EOVAbsap3Ng8dE6gtYuzGk/hGTEnrXDRTWXK5axuKnXZMNWIn2VeiqZ2Sj/WOv3qxJz7L+eL
+	ELXZZbxuij4ScLVzPtvj+G99xWGi20zY1NG76YQ7r0S9pSDHvQuZQZFfJ3n5cjGie9NwHgGcWTR
+	6OsbITXXhBRxwd6XHdWhe27OO0nN84BGrcqnMXmbgwrs8KjTdXJs4nOelOGPVkliAMFmYv12HVG
+	t4pKMjOXv4o+Ki7rsX38U8XQyCyoM8Pi3w92yhVxOhwm13J/mNs0Th5MgdLcDKG3a52Lkg/GXfb
+	EWv/0RTeg4AODZVoZHoFPofbjKOVkSEhixeFia5a3vqJY23hYmwRY4TduQgbytXLXP5aPmplOLI
+	7Q9idioF9yyf3qZwKg3xyoh080iHig+WlU8M42Z0LixdUCE5Vy4uEEYmA=
+X-Google-Smtp-Source: AGHT+IE/yvvNi7f9ywz4oKxH3zGAx/TZVEsNIIjjDV3XuFHg8dmmWzqobqnhmfB1Aan5xjCCgtdy/A==
+X-Received: by 2002:a05:600c:314b:b0:46c:adf8:c845 with SMTP id 5b1f17b1804b1-46fa9a98f32mr174482375e9.16.1760429613749;
+        Tue, 14 Oct 2025 01:13:33 -0700 (PDT)
+Received: from ernest.hoecke-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fb49c3eeasm225979145e9.14.2025.10.14.01.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 01:13:33 -0700 (PDT)
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+X-Google-Original-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Date: Tue, 14 Oct 2025 10:13:31 +0200
+To: Anusha Srivatsa <asrivats@redhat.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	regressions@lists.linux.dev
+Subject: [REGRESSION] drm/panel/panel-simple v6.17 WARNING regression
+Message-ID: <hlf4wdopapxnh4rekl5s3kvoi6egaga3lrjfbx6r223ar3txri@3ik53xw5idyh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regerssion] [KSM] KSM CPU overhead in 6.16+ kernel compared to
- <=6.15 versions ("folio_walk_start" kernel object overhead)
-From: David Hildenbrand <david@redhat.com>
-To: craftfever@murena.io
-Cc: akpm@linux-foundation.org, chengming.zhou@linux.dev,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lorenzo.stoakes@oracle.com, regressions@lists.linux.dev, xu.xin16@zte.com.cn
-References: <80b153cd-8bba-4bcd-9b56-3b2ad3f295e1@redhat.com>
- <46d26246-5bd5-43f7-b1a4-dc721f717413@airmail.cc>
- <26a8f0aa-8d67-47ba-841c-2daf7010a2aa@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <26a8f0aa-8d67-47ba-841c-2daf7010a2aa@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: XlSySG4YOBHYnQl0Tt-Ec8ARev1nKmKQG801T3JO_F0_1760428766
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13.10.25 21:58, David Hildenbrand wrote:
-> On 13.10.25 21:54, craftfever wrote:
->>
->> Unfortunately, yes I can reproduce it. And I thought that lockups does
->> not happen anymore, but I was wrong, I booted today with 6.17.2 updated
->> and KSM enabled and whole situation is back. But, it only happens, when
->> scanning pages corresponding to a process with huge VM size, like
->> Chromium with 1TB of virtual memory. The rest is alright. It's look
->> like, that the folio_walk_start called with much higher frequency, than
->> in 6.12-6.15 versions. in that version page scanning of huge VM size
->> processes is pretty fast and flawless) Right now, when Chromium is
->> running, I expecting constant 42% folio_walk_start and 15%
->> ksm_scan_thread on 6.17.2 kernel (contrary to 1% folio_walk_start and
->> even less ksm_scan_thread in 6.12-6.15). I must admin that whole system
->> is not freezing, just Chromium with high CPU usage from ksmd and kernel.
-> 
-> What about 6.16?
-> 
+Hello everyone,
 
-What you replied to in private:
+Commit 94d50c1a2ca3 ("drm/bridge: get/put the bridge reference in drm_bridge_attach/detach()")
+introduced a regression with the below warning dure probe with panel
+dpi described in the device tree.
 
-Just compared stock kernels (6.16.8 and 6.17.2) and must admit that the
-behavior pretty same, same lockup, when just starting Chromium and same
-kernel objects and ksmd overhead. No difference. (Approx 20-32% of
-"folio_walk_start" and 10% ksm_scan_thread at this time on both kernels)
+[    9.160074] ------------[ cut here ]------------
+[    9.160092] WARNING: CPU: 0 PID: 66 at /usr/src/kernel/lib/refcount.c:25 drm_bridge_attach+0x2c/0x1dc
+[    9.160138] refcount_t: addition on 0; use-after-free.
+[    9.160147] Modules linked in: coda_vpu(+) snd_soc_fsl_asrc snd_compress v4l2_jpeg pwm_imx27 imx_vdoa spi_imx imx6_media(C) imx_media_common(C) videobuf2_dma_contig etnaviv snd_soc_fsl_ssi v4l2_mem2mem imx_pcm_dma panel_simple gpio_keys gpu_sched pwm_bl loop fuse ipv6 autofs4
+[    9.160423] CPU: 0 UID: 0 PID: 66 Comm: kworker/u10:2 Tainted: G         C          6.17.0-rc5-0.0.0-devel #1 PREEMPT 
+[    9.160459] Tainted: [C]=CRAP
+[    9.160476] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[    9.160497] Workqueue: events_unbound deferred_probe_work_func
+[    9.160535] Call trace: 
+[    9.160546]  unwind_backtrace from show_stack+0x10/0x14
+[    9.160603]  show_stack from dump_stack_lvl+0x54/0x68
+[    9.160637]  dump_stack_lvl from __warn+0x7c/0xd4
+[    9.160672]  __warn from warn_slowpath_fmt+0x130/0x1c4
+[    9.160726]  warn_slowpath_fmt from drm_bridge_attach+0x2c/0x1dc
+[    9.160780]  drm_bridge_attach from imx_pd_bind+0x74/0xa0
+[    9.160836]  imx_pd_bind from component_bind_all+0xfc/0x254
+[    9.160881]  component_bind_all from imx_drm_bind+0xa8/0x154
+[    9.160903]  imx_drm_bind from try_to_bring_up_aggregate_device+0x1f8/0x2b0
+[    9.160959]  try_to_bring_up_aggregate_device from __component_add+0x9c/0x160
+[    9.161003]  __component_add from imx_pd_probe+0xa8/0x160
+[    9.161042]  imx_pd_probe from platform_probe+0x5c/0x90
+[    9.161066]  platform_probe from really_probe+0xd0/0x3a4
+[    9.161093]  really_probe from __driver_probe_device+0x8c/0x1d4
+[    9.161144]  __driver_probe_device from driver_probe_device+0x34/0xd0
+[    9.161195]  driver_probe_device from __device_attach_driver+0xa4/0x134
+[    9.161248]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[    9.161299]  bus_for_each_drv from __device_attach+0xa4/0x1cc
+[    9.161328]  __device_attach from bus_probe_device+0x84/0x88
+[    9.161354]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[    9.161395]  deferred_probe_work_func from process_one_work+0x158/0x2e0
+[    9.161434]  process_one_work from worker_thread+0x254/0x3fc
+[    9.161449]  worker_thread from kthread+0x128/0x24c
+[    9.161473]  kthread from ret_from_fork+0x14/0x28
+[    9.161494] Exception stack(0xe0aa1fb0 to 0xe0aa1ff8)
+[    9.161505] 1fa0:                                     00000000 00000000 00000000 00000000
+[    9.161517] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    9.161529] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    9.161539] ---[ end trace 0000000000000000 ]---
+
+Note that this commit was added to branch 'drm-next-2025-07-30',
+which did not contain an already mainlined fix for another regression [1].
+Without that fix [2], this new regression is masked.
+
+Reverting 94d50c1a2ca3 on top of
+commit 260f6f4fda93 ("Merge tag 'drm-next-2025-07-30' of https://gitlab.freedesktop.org/drm/kernel")
+fixes the issue. At that point, [1] was fixed in mainline, and the new
+regression reported here was merged in. v6.17-rc1 to v6.17-rc7 are in
+this state.
+
+However, later on, another regression seems to be introduced by
+commit 8fa5909400f3 ("drm/bridge: get the bridge returned by drm_bridge_chain_get_first_bridge()")
+so reverting 94d50c1a2ca3 on top of drm-misc-next does not solve
+everything. This was tested by rebasing drm-misc-next onto (260f6f4fda93
+plus the revert of 94d50c1a2ca3) and then bisecting.
+
+So in v6.18-rc1, both regressions are present.
+
+There, I get the following additional warnings:
+
+[    9.732278] ------------[ cut here ]------------
+[    9.732336] WARNING: CPU: 0 PID: 38 at lib/refcount.c:22 drm_bridge_get+0x10/0x18
+[    9.744608] refcount_t: saturated; leaking memory.
+[    9.749634] Modules linked in: nvmem_snvs_lpgpr phy_mxs_usb coda_vpu v4l2_jpeg spi_imx imx_vdoa imx6_media(C) pwm_imx27 snd_soc_fsl_asrc snd_soc_fsl_ssi snd_compress 4
+[    9.776972] CPU: 0 UID: 0 PID: 38 Comm: kworker/u8:3 Tainted: G        WC          6.18.0-rc1-00214-g1226cd7c7686 #138 PREEMPT 
+[    9.788476] Tainted: [W]=WARN, [C]=CRAP
+[    9.792320] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[    9.798858] Workqueue: events_unbound deferred_probe_work_func
+[    9.804729] Call trace: 
+[    9.804744]  unwind_backtrace from show_stack+0x10/0x14
+[    9.812532]  show_stack from dump_stack_lvl+0x68/0x74
+[    9.817614]  dump_stack_lvl from __warn+0x7c/0xe0
+[    9.822355]  __warn from warn_slowpath_fmt+0x130/0x1c0
+[    9.827526]  warn_slowpath_fmt from drm_bridge_get+0x10/0x18
+[    9.833218]  drm_bridge_get from drm_bridge_connector_init+0xc8/0x72c
+[    9.839685]  drm_bridge_connector_init from imx_pd_bind+0x80/0xa0
+[    9.845809]  imx_pd_bind from component_bind_all+0xf4/0x254
+[    9.851422]  component_bind_all from imx_drm_bind+0x98/0x128
+[    9.857109]  imx_drm_bind from try_to_bring_up_aggregate_device+0x1d0/0x29c
+[    9.864097]  try_to_bring_up_aggregate_device from __component_add+0xa0/0x164
+[    9.871263]  __component_add from imx_pd_probe+0xa8/0x164
+[    9.876690]  imx_pd_probe from platform_probe+0x5c/0x90
+[    9.881940]  platform_probe from really_probe+0xd0/0x3a4
+[    9.887280]  really_probe from __driver_probe_device+0x8c/0x1d4
+[    9.893227]  __driver_probe_device from driver_probe_device+0x30/0xc0
+[    9.899694]  driver_probe_device from __device_attach_driver+0x98/0x10c
+[    9.906337]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[    9.912634]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+[    9.918409]  __device_attach from bus_probe_device+0x88/0x8c
+[    9.924097]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[    9.930563]  deferred_probe_work_func from process_one_work+0x154/0x2dc
+[    9.937205]  process_one_work from worker_thread+0x250/0x3f0
+[    9.942883]  worker_thread from kthread+0x12c/0x24c
+[    9.947787]  kthread from ret_from_fork+0x14/0x28
+[    9.952513] Exception stack(0xe0961fb0 to 0xe0961ff8)
+[    9.957575] 1fa0:                                     00000000 00000000 00000000 00000000
+[    9.965762] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    9.973948] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    9.981052] ---[ end trace 0000000000000000 ]---
+
+[    9.985782] ------------[ cut here ]------------
+[    9.985835] WARNING: CPU: 0 PID: 38 at lib/refcount.c:28 drm_bridge_connector_init+0x328/0x72c
+[    9.999210] refcount_t: underflow; use-after-free.
+[   10.004119] Modules linked in: mux_core error nvmem_snvs_lpgpr phy_mxs_usb coda_vpu v4l2_jpeg spi_imx imx_vdoa imx6_media(C) pwm_imx27 snd_soc_fsl_asrc snd_soc_fsl_ss4
+[   10.032757] CPU: 0 UID: 0 PID: 38 Comm: kworker/u8:3 Tainted: G        WC          6.18.0-rc1-00214-g1226cd7c7686 #138 PREEMPT 
+[   10.044260] Tainted: [W]=WARN, [C]=CRAP
+[   10.048104] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[   10.054642] Workqueue: events_unbound deferred_probe_work_func
+[   10.060511] Call trace: 
+[   10.060523]  unwind_backtrace from show_stack+0x10/0x14
+[   10.068309]  show_stack from dump_stack_lvl+0x68/0x74
+[   10.073390]  dump_stack_lvl from __warn+0x7c/0xe0
+[   10.078127]  __warn from warn_slowpath_fmt+0x130/0x1c0
+[   10.083296]  warn_slowpath_fmt from drm_bridge_connector_init+0x328/0x72c
+[   10.090115]  drm_bridge_connector_init from imx_pd_bind+0x80/0xa0
+[   10.096238]  imx_pd_bind from component_bind_all+0xf4/0x254
+[   10.101843]  component_bind_all from imx_drm_bind+0x98/0x128
+[   10.107525]  imx_drm_bind from try_to_bring_up_aggregate_device+0x1d0/0x29c
+[   10.114512]  try_to_bring_up_aggregate_device from __component_add+0xa0/0x164
+[   10.121676]  __component_add from imx_pd_probe+0xa8/0x164
+[   10.127101]  imx_pd_probe from platform_probe+0x5c/0x90
+[   10.132348]  platform_probe from really_probe+0xd0/0x3a4
+[   10.137683]  really_probe from __driver_probe_device+0x8c/0x1d4
+[   10.143632]  __driver_probe_device from driver_probe_device+0x30/0xc0
+[   10.150099]  driver_probe_device from __device_attach_driver+0x98/0x10c
+[   10.156742]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[   10.163035]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+[   10.168804]  __device_attach from bus_probe_device+0x88/0x8c
+[   10.174490]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[   10.180955]  deferred_probe_work_func from process_one_work+0x154/0x2dc
+[   10.187595]  process_one_work from worker_thread+0x250/0x3f0
+[   10.193270]  worker_thread from kthread+0x12c/0x24c
+[   10.198172]  kthread from ret_from_fork+0x14/0x28
+[   10.202895] Exception stack(0xe0961fb0 to 0xe0961ff8)
+[   10.207956] 1fa0:                                     00000000 00000000 00000000 00000000
+[   10.216145] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   10.224330] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   10.231448] ---[ end trace 0000000000000000 ]---
 
 
-IIUC, 6.16.8 dos not contain a backport of Lorenzos fix, so we can rule that one out I think.
+[1]: https://lore.kernel.org/all/20250612081834.GA248237@francesco-nb/
+[2]: https://lore.kernel.org/all/20250626-drm-panel-simple-fixes-v2-0-5afcaa608bdc@kernel.org/
 
-There is another VMA merging related one in 6.16:
+#regzbot ^introduced: 94d50c1a2ca31d80f12d9c2bdbc41437751e320c
+#regzbot ^introduced: 8fa5909400f377351836419223c33f1131f0f7d3
 
-commit 879bca0a2c4f40b08d09a95a2a0c3c6513060b5c
-Author: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Date:   Tue Apr 8 10:29:31 2025 +0100
+Does this ring a bell for anyone?
 
-     mm/vma: fix incorrectly disallowed anonymous VMA merges
-     
-     Patch series "fix incorrectly disallowed anonymous VMA merges", v2.
-     
-     It appears that we have been incorrectly rejecting merge cases for 15
-     years, apparently by mistake.
-     
-     Imagine a range of anonymous mapped momemory divided into two VMAs like
-     this, with incompatible protection bits:
-     
-Could you try reverting 879bca0a2c4f40b08d09a95a2a0c3c6513060b5c on top of 6.16 and
-see if the problem goes away?
-
-Meanwhile I'll try using an ordinary pagewalk that covers a larger area
-instead of a foliowalk that walks each address.
-
--- 
-Cheers
-
-David / dhildenb
+Kind regards,
+Ernest
 
