@@ -1,211 +1,248 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3DE24338F;
-	Tue, 14 Oct 2025 16:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6E18A956;
+	Tue, 14 Oct 2025 18:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760459164; cv=none; b=ojksO5/UAUQaDbGA3jkqFWt41eYK8BjdEvP2W+LhZ/TYfcYIDP5ajBX0jFpDFf9docxXeaA8o4I0mSf2ket+zfzVIJsOR/u6a1Fqqjd0VBuquvZ25W9MFZwNCX35vWqx+xPZZLKYzkXi1RkhONYtABDMkd8pPGckq/4Q/vOasXE=
+	t=1760467748; cv=none; b=XakxO5w+zid+utaTKpftrb3vagsVAMPBLr5P4j1mjblLik+l3t/HAEtz7gwMfvsSHhbC0W1EcyuBOoDZjKoQ4+JD/+BbwHoWmoXJjk8O2cru/0SGpQLBs/Bteze14UfvRMV4YxfJNxzBd36eN0NkJI8c+IPQDqg6yqu92lZfKC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760459164; c=relaxed/simple;
-	bh=bxBIMlGSNC6HSyaMCqbzfCJUQB6E6GUXd6hdKLf8rz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rGmJtKC//DxqPq6nnU8o95TtM1keFaJ5HxJhvk0TSrIT1WuQbcOh2s5MsKmkiWqNunX599y0X/Iw9EU9m1OGVZhiEgFLv6vpc7kkXrMkzj+wa/vpYfM0f88Bpa9lecEkWErkXHZes9NohzyC/1n+1N1ytr5YXo/HW/qYF/mT7dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dd/zP/Wm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760467748; c=relaxed/simple;
+	bh=xIe/RVY9JgGbZFMDn5+9AZKmOczVweO4u+DJfrtCq4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uDfSVUCT6IjKyzt1p+y1xJ0bPjTkbDjjxVjkL3DogkXISzbjCH62CTsrkLMvv+dWPx8Tt23US6+tESgMUkQERrotFpT8z31z3Dxeuw0DcHHzZoTeAkIJANQwx4qn8sLLkXDMy3PkiChVXJVmnlkf2NMZ7bOWce2/SMeUf4kIW/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCa/9J9v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dd/zP/Wm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195D7C4CEE7;
-	Tue, 14 Oct 2025 16:25:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCa/9J9v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B580C4CEE7;
+	Tue, 14 Oct 2025 18:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760459164;
-	bh=bxBIMlGSNC6HSyaMCqbzfCJUQB6E6GUXd6hdKLf8rz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dd/zP/WmqPShkSuYsCOw7uTVi2FyJ5f+7bWq71O/EbsBjTsAYh2R6aAHVhmQlEug/
-	 gE2h7vzVVwnFkUXItulK2FCydcKZfSSqP+k+ol51uh29y8yO8EhuvyqR/hX0io0WK0
-	 jSKgLibE+DiEDImS43Tc3+CisJAw5vJig65mhAVOWVlsc0ahEjLnw4PKi2oot23Zt1
-	 s3pWyuS5EU1w0gl1HoTGHtQDu6sWOdx6JQOySxen6KA7SUn90+nrLWwVDyggQkfRl5
-	 U28TiAo9cYmcTuBkOcYUbaPim9eHVb6DE6VCXeT5R0tLULiBU41P1icpImK+NcLyjn
-	 8zWSv81QjKNIw==
-Date: Tue, 14 Oct 2025 21:55:51 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ron Economos <re@w6rz.net>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv <linux-riscv@lists.infradead.org>, Paul Walmsley <pjw@kernel.org>, 
-	Greentime Hu <greentime.hu@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	regressions@lists.linux.dev
-Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
-Message-ID: <yxdwo4hppd7c7lrv5pybjtu22aqh3lbk34qxdxmkubgwukvgwq@i4i45fdgm6sw>
-References: <20251013212801.GA865570@bhelgaas>
- <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
- <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
- <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
- <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
+	s=k20201202; t=1760467746;
+	bh=xIe/RVY9JgGbZFMDn5+9AZKmOczVweO4u+DJfrtCq4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HCa/9J9vBr5NheEAR9F1ZYa+nWbJS/qtndiJkrgqWh3gSLIApRChkPowX81HrXX7o
+	 ztxEA+yZV//7VaBQwgTMGfzpSnODn6GsPU1uzJWyBFP7i5IR7hF8HzBpqU80DFbyLr
+	 VNylT48Tcie55n4N8dAH7AEcjIxnPbSUPjVEgyuqZnScVcCMUCGrOotQKBA4o2jo5R
+	 XWR7nV/v63Xxl0xbits5Tg531kAxsNDNbB5yeWU6HrCz541Ohxpp23EdMkpowf53is
+	 yM17bi+NADLhQyKU+iJ5uS2ZwUq4b8TZTA6t8P1QJ8yFZmYoiXEbosyMMVeqcQQyHP
+	 I4xqIz6pb0AOw==
+Date: Tue, 14 Oct 2025 13:49:05 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: FUKAUMI Naoki <naoki@radxa.com>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <20251014184905.GA896847@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
+In-Reply-To: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
 
-On Mon, Oct 13, 2025 at 10:52:48PM -0700, Ron Economos wrote:
-> On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
-> > 
-> > 
-> > On 10/14/2025 10:56 AM, Ron Economos wrote:
-> > > On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
-> > > > 
-> > > > 
-> > > > On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
-> > > > > [+cc FU740 driver folks, Conor, regressions]
-> > > > > 
-> > > > > On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
-> > > > > > The SiFive FU740 PCI driver fails on the HiFive
-> > > > > > Unmatched board with Linux
-> > > > > > 6.18-rc1. The error message is:
-> > > > > > 
-> > > > > > [    3.166624] fu740-pcie e00000000.pcie: host bridge
-> > > > > > /soc/pcie@e00000000
-> > > > > > ranges:
-> > > > > > [    3.166706] fu740-pcie e00000000.pcie:       IO
-> > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
-> > > > > > [    3.166767] fu740-pcie e00000000.pcie:      MEM
-> > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
-> > > > > > [    3.166805] fu740-pcie e00000000.pcie:      MEM
-> > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
-> > > > > > [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
-> > > > > > 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> > > > > > [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
-> > > > > > [    3.579552] fu740-pcie e00000000.pcie: Failed to
-> > > > > > configure iATU in ECAM
-> > > > > > mode
-> > > > > > [    3.579655] fu740-pcie e00000000.pcie: probe with
-> > > > > > driver fu740-pcie
-> > > > > > failed with error -22
-> > > > > > 
-> > > > > > The normal message (on Linux 6.17.2) is:
-> > > > > > 
-> > > > > > [    3.381487] fu740-pcie e00000000.pcie: host bridge
-> > > > > > /soc/pcie@e00000000
-> > > > > > ranges:
-> > > > > > [    3.381584] fu740-pcie e00000000.pcie:       IO
-> > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
-> > > > > > [    3.381682] fu740-pcie e00000000.pcie:      MEM
-> > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
-> > > > > > [    3.381724] fu740-pcie e00000000.pcie:      MEM
-> > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
-> > > > > > [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll
-> > > > > > T, 8 ob, 8 ib, align
-> > > > > > 4K, limit 4096G
-> > > > > > [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
-> > > > > > [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> > > > > > [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> > > > > > [    3.988164] fu740-pcie e00000000.pcie: PCI host
-> > > > > > bridge to bus 0000:00
-> > > > > > 
-> > > > > > Reverting the following commits solves the issue.
-> > > > > > 
-> > > > > > 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc:
-> > > > > > Support ECAM mechanism by
-> > > > > > enabling iATU 'CFG Shift Feature'
-> > > > > > 
-> > > > > > 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom:
-> > > > > > Prepare for the DWC ECAM
-> > > > > > enablement
-> > > > > > 
-> > > > > > f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc:
-> > > > > > Prepare the driver for
-> > > > > > enabling ECAM mechanism using iATU 'CFG Shift Feature'
-> > > > > 
-> > > > > As Conor pointed out, we can't fix a code regression with a DT change.
-> > > > > 
-> > > > > #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the
-> > > > > driver for enabling ECAM mechanism using iATU 'CFG Shift
-> > > > > Feature'")
-> > > > Hi Conor,
-> > > > 
-> > > > Can you try with this patch and see if it is fixing the issue.
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > index 66367252032b..b5e0f016a580 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct
-> > > > platform_device *pdev)
-> > > > 
-> > > >         platform_set_drvdata(pdev, afp);
-> > > > 
-> > > > +       pci->pp.native_ecam = true;
-> > > > +
-> > > >         return dw_pcie_host_init(&pci->pp);
-> > > >  }
-> > > > 
-> > > > - Krishna Chaitanya.
-> > > > 
-> > > > > 
-> > > I've already tried it. It doesn't work. Same error message as before.
-> > Can you share us dmesg logs for this change.
-> > 
-> > - Krishna Chaitanya.
-> > > 
-> [    3.159763] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
-> ranges:
-> [    3.159853] fu740-pcie e00000000.pcie:       IO
-> 0x0060080000..0x006008ffff -> 0x0060080000
-> [    3.159916] fu740-pcie e00000000.pcie:      MEM
-> 0x0060090000..0x007fffffff -> 0x0060090000
-> [    3.159953] fu740-pcie e00000000.pcie:      MEM
-> 0x2000000000..0x3fffffffff -> 0x2000000000
-> [    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem
-> 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> [    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
-> [    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in ECAM
-> mode
-> [    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie
-> failed with error -22
+[+cc regressions]
+
+On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> Hi Manivannan Sadhasivam,
 > 
-> Same as before the change. The entire log is here:
+> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> Rockchip RK3588(S) SoC.
 > 
-> https://www.w6rz.net/dmesg.txt
+> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> MT7921E, and Intel AX210.
 > 
+> I've found that reverting the following commit (i.e., the patch I'm replying
+> to) resolves the problem:
+> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
 
-Weird that the driver still creates ECAM even after skipping it using the flag.
-The flag is not meant for that purpose, but it should've worked anyway.
+Thanks for the report, and sorry for the regression.
 
-Can you try this diff and share the dmesg log?
+Since this affects several devices from different manufacturers and (I
+assume) different drivers, it seems likely that there's some issue
+with the Rockchip end, since ASPM probably works on these devices in
+other systems.  So we should figure out if there's something wrong
+with the way we configure ASPM, which we could potentially fix, or if
+there's a hardware issue and we need some king of quirk to prevent
+usage of ASPM on the affected platforms.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 20c9333bcb1c..58080928df9f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -523,8 +523,12 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-        pp->cfg0_size = resource_size(res);
-        pp->cfg0_base = res->start;
+Can you collect a complete dmesg log when booting with
 
-+       dev_info(dev, "%s: %d native_ecam: %d", __func__, __LINE__,
-+pp->native_ecam);
-+
-        pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
-        if (pp->ecam_enabled) {
-+               dev_info(dev, "%s: %d ECAM ENABLED", __func__, __LINE__);
-                ret = dw_pcie_create_ecam_window(pp, res);
-                if (ret)
-                        return ret;
-@@ -533,6 +537,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-                pp->bridge->sysdata = pp->cfg;
-                pp->cfg->priv = pp;
-        } else {
-+               dev_info(dev, "%s: %d ECAM DISABLED", __func__, __LINE__);
-                pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
-                if (IS_ERR(pp->va_cfg0_base))
-                        return PTR_ERR(pp->va_cfg0_base);
+  ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
 
-- Mani
+and the output of "sudo lspci -vv"?
 
--- 
-மணிவண்ணன் சதாசிவம்
+When the kernel freezes, can you give us any information about where,
+e.g., a log or screenshot?
+
+Do you know if any platforms other than Radxa ROCK 5A/5B have this
+problem?
+
+#regzbot introduced: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+#regzbot dup-of: https://github.com/chzigotzky/kernels/issues/17
+
+> On 9/23/25 01:16, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > 
+> > So far, the PCI subsystem has honored the ASPM and Clock PM states set by
+> > the BIOS (through LNKCTL) during device initialization, if it relies on the
+> > default state selected using:
+> > 
+> > * Kconfig: CONFIG_PCIEASPM_DEFAULT=y, or
+> > * cmdline: "pcie_aspm=off", or
+> > * FADT: ACPI_FADT_NO_ASPM
+> > 
+> > This was done conservatively to avoid issues with the buggy devices that
+> > advertise ASPM capabilities, but behave erratically if the ASPM states are
+> > enabled. So the PCI subsystem ended up trusting the BIOS to enable only the
+> > ASPM states that were known to work for the devices.
+> > 
+> > But this turned out to be a problem for devicetree platforms, especially
+> > the ARM based devicetree platforms powering Embedded and *some* Compute
+> > devices as they tend to run without any standard BIOS. So the ASPM states
+> > on these platforms were left disabled during boot and the PCI subsystem
+> > never bothered to enable them, unless the user has forcefully enabled the
+> > ASPM states through Kconfig, cmdline, and sysfs or the device drivers
+> > themselves, enabling the ASPM states through pci_enable_link_state() APIs.
+> > 
+> > This caused runtime power issues on those platforms. So a couple of
+> > approaches were tried to mitigate this BIOS dependency without user
+> > intervention by enabling the ASPM states in the PCI controller drivers
+> > after device enumeration, and overriding the ASPM/Clock PM states
+> > by the PCI controller drivers through an API before enumeration.
+> > 
+> > But it has been concluded that none of these mitigations should really be
+> > required and the PCI subsystem should enable the ASPM states advertised by
+> > the devices without relying on BIOS or the PCI controller drivers. If any
+> > device is found to be misbehaving after enabling ASPM states that they
+> > advertised, then those devices should be quirked to disable the problematic
+> > ASPM/Clock PM states.
+> > 
+> > In an effort to do so, start by overriding the ASPM and Clock PM states set
+> > by the BIOS for devicetree platforms first. Separate helper functions are
+> > introduced to override the BIOS set states by enabling all of them if
+> > of_have_populated_dt() returns true. To aid debugging, print the overridden
+> > ASPM and Clock PM states as well.
+> > 
+> > In the future, these helpers could be extended to allow other platforms
+> > like VMD, newer ACPI systems with a cutoff year etc... to follow the path.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
+> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > Link: https://patch.msgid.link/20250916-pci-dt-aspm-v1-1-778fe907c9ad@oss.qualcomm.com
+> > ---
+> >   drivers/pci/pcie/aspm.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+> >   1 file changed, 40 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 919a05b9764791c3cc469c9ada62ba5b2c405118..cda31150aec1b67b6a48b60569222ea3d1c3d41f 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -15,6 +15,7 @@
+> >   #include <linux/math.h>
+> >   #include <linux/module.h>
+> >   #include <linux/moduleparam.h>
+> > +#include <linux/of.h>
+> >   #include <linux/pci.h>
+> >   #include <linux/pci_regs.h>
+> >   #include <linux/errno.h>
+> > @@ -235,13 +236,15 @@ struct pcie_link_state {
+> >   	u32 aspm_support:7;		/* Supported ASPM state */
+> >   	u32 aspm_enabled:7;		/* Enabled ASPM state */
+> >   	u32 aspm_capable:7;		/* Capable ASPM state with latency */
+> > -	u32 aspm_default:7;		/* Default ASPM state by BIOS */
+> > +	u32 aspm_default:7;		/* Default ASPM state by BIOS or
+> > +					   override */
+> >   	u32 aspm_disable:7;		/* Disabled ASPM state */
+> >   	/* Clock PM state */
+> >   	u32 clkpm_capable:1;		/* Clock PM capable? */
+> >   	u32 clkpm_enabled:1;		/* Current Clock PM state */
+> > -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+> > +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+> > +					   override */
+> >   	u32 clkpm_disable:1;		/* Clock PM disabled */
+> >   };
+> > @@ -373,6 +376,18 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+> >   	pcie_set_clkpm_nocheck(link, enable);
+> >   }
+> > +static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+> > +						   int enabled)
+> > +{
+> > +	struct pci_dev *pdev = link->downstream;
+> > +
+> > +	/* Override the BIOS disabled Clock PM state for devicetree platforms */
+> > +	if (of_have_populated_dt() && !enabled) {
+> > +		link->clkpm_default = 1;
+> > +		pci_info(pdev, "Clock PM state overridden: ClockPM+\n");
+> > +	}
+> > +}
+> > +
+> >   static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   {
+> >   	int capable = 1, enabled = 1;
+> > @@ -395,6 +410,7 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   	}
+> >   	link->clkpm_enabled = enabled;
+> >   	link->clkpm_default = enabled;
+> > +	pcie_clkpm_override_default_link_state(link, enabled);
+> >   	link->clkpm_capable = capable;
+> >   	link->clkpm_disable = blacklist ? 1 : 0;
+> >   }
+> > @@ -788,6 +804,26 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+> >   		aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
+> >   }
+> > +static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+> > +{
+> > +	struct pci_dev *pdev = link->downstream;
+> > +	u32 override;
+> > +
+> > +	/* Override the BIOS disabled ASPM states for devicetree platforms */
+> > +	if (of_have_populated_dt()) {
+> > +		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
+> > +		override = link->aspm_default & ~link->aspm_enabled;
+> > +		if (override)
+> > +			pci_info(pdev, "ASPM states overridden: %s%s%s%s%s%s\n",
+> > +				 (override & PCIE_LINK_STATE_L0S) ? "L0s+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1) ? "L1+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_1) ? "L1.1+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_2) ? "L1.2+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_1_PCIPM) ? "L1.1 PCI-PM+, " : "",
+> > +				 (override & PCIE_LINK_STATE_L1_2_PCIPM) ? "L1.2 PCI-PM+" : "");
+> > +	}
+> > +}
+> > +
+> >   static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   {
+> >   	struct pci_dev *child = link->downstream, *parent = link->pdev;
+> > @@ -868,6 +904,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+> >   	/* Save default state */
+> >   	link->aspm_default = link->aspm_enabled;
+> > +	pcie_aspm_override_default_link_state(link);
+> > +
+> >   	/* Setup initial capable state. Will be updated later */
+> >   	link->aspm_capable = link->aspm_support;
+> > 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
