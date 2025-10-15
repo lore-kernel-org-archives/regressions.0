@@ -1,132 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49241.qiye.163.com (mail-m49241.qiye.163.com [45.254.49.241])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E9F313E2E;
-	Wed, 15 Oct 2025 07:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FB330ACE0
+	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 09:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760514634; cv=none; b=n8OcsIVp2e4fXs/QFoeQbpilD3n2+Hb0KNz3p/q61cw/2P3C45O/qjKH42MZdkNoHAuXQn62JE+P+RFett5VZ8OCz9p4mbqdEItV4LDbkCsg6la+W9zDMdmKpi9OagTpwSJTtJDxJcnXbF+MJrpIxtFviD5XhWsXdQJMrEn0AeI=
+	t=1760519516; cv=none; b=m9qCLJkeLcW71a9GnSv32GzSuBPAecThCY0/qJLe0d62Q9gQkiXN95TuYAXiUrhXZrkqrWRbwGyKlk8snifd64/Ly9tgqHW9/hs7e+eQh3ZruJkd/wfV8F2c5d0NbxYpgadtAm9hCCQVJa6tcBE9yWBdmJVqeEL1EQV3qLbKDQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760514634; c=relaxed/simple;
-	bh=N+KdJSmTL8JhpieQRxlnbC6Rxa5LC8KfPeDrItfVC1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQw6ioCUXX2wQeQAUPRF+waqm75zuH+/Q6zmnj+rlMilQShA6bMsjn4j8GQoj01a+0CQUZjBBW6BfWVCTkCco+PGUNFL/bn9F0KVAq/eJOXhuq/PpFgQpwU4vnoIsJHl+5NTMQbE0CFhHuzLozcZ7ZMZ1JD9AZp5yt35ia+vcss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFq4PluN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760519516; c=relaxed/simple;
+	bh=zKwKkBX4XV9eaDyOL8PCXy6aURO6hN9vVivVhQGvMeI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CbUyAsLytcYyfuo8CjT4D6ky1Np2Mpua4LVWqB9PzV7JfjPMtajDNupPxY5zswOXkXwKXEsi3NtiiIaiXCI434WSIeBCECBhM4xMOUOR9BOUPLREmGOZrCUi1EXHDb7etRThRLrMdgNbHpmkKZieXKFWwqUUkPTXH/0D8nNr8YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=UpuWgW52; arc=none smtp.client-ip=45.254.49.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFq4PluN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3CDC4CEF8;
-	Wed, 15 Oct 2025 07:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760514633;
-	bh=N+KdJSmTL8JhpieQRxlnbC6Rxa5LC8KfPeDrItfVC1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SFq4PluNMb3ZTq1LSh3igXo6xNp00Fu9larjvGLpNnmxT0zX80tUE7p0BQc2oonmg
-	 u+7REggKqKVjKJDAecTZYIMF7Xjq8SkHUwHmSUnyTDMHI3FREcrYMtESr9l3kiJnQi
-	 y3FXKtVzboRvHpvEqKOfHN337IO+djyYCmcQ34qP67FK5J6VlEYMIXHL/kDe2jUuf0
-	 Nu5GCbaARvK3xRfsIMmweCuilsHJ/6nQ4TNeDtYFZWP9ypiFOxEpQ8brXEV9NBvlIB
-	 KJVqsWzD1PHI7QvPve9VKFGKcL/kSy2IGc3GNA0xXeXyFlb6vby6bpQ0wYpnvqk5DP
-	 2lZDyc5Em93Zw==
-Date: Wed, 15 Oct 2025 13:20:17 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: FUKAUMI Naoki <naoki@radxa.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>, 
-	Kai-Heng Feng <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Chia-Lin Kao <acelan.kao@canonical.com>, 
-	Dragan Simic <dsimic@manjaro.org>, linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
- set by BIOS for devicetree platforms
-Message-ID: <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
-References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
- <20251014184905.GA896847@bhelgaas>
- <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
- <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="UpuWgW52"
+Received: from [192.168.61.151] (unknown [110.83.51.2])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 25fe09fd0;
+	Wed, 15 Oct 2025 17:11:41 +0800 (GMT+08:00)
+Message-ID: <a9ca7843-b780-45aa-9f62-3f443ae06eee@rock-chips.com>
+Date: Wed, 15 Oct 2025 17:11:39 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <helgaas@kernel.org>,
+ manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>,
+ linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
+ FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+To: Manivannan Sadhasivam <mani@kernel.org>
+References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
+ <20251014184905.GA896847@bhelgaas>
+ <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
+ <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
+ <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
+X-HM-Tid: 0a99e723b5cb09cckunm9e8b9439648be5
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTEJJVk4aSRhMQ0saSE8fTVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSktVQ0hVTkpVSVlXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0tVSk
+	JLS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=UpuWgW52aHOlfv7QzqJdgKHIAtosG3wgzwhHN5rqcEzVPZvHuk8MNpCi9eh6jE+nnJUBuhEnDAt+v9PzjTnfkukeb7ou0GZtzBco7DmcUN922PskTdISP4ug3nmn20397LELaoL17SxL71wTEUpDubWJTZc9QWct9sVHaqT2MiQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=tT8mYx9r8D/U1veSLAJ/A6tOtoL3jop8kIG2H0uvwss=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, Oct 15, 2025 at 04:13:41PM +0900, FUKAUMI Naoki wrote:
-> Hi,
+Hi Mani
+
+在 2025/10/15 星期三 15:50, Manivannan Sadhasivam 写道:
+> On Wed, Oct 15, 2025 at 04:13:41PM +0900, FUKAUMI Naoki wrote:
+>> Hi,
+>>
+>> On 10/15/25 15:26, Manivannan Sadhasivam wrote:
+>>> On Tue, Oct 14, 2025 at 01:49:05PM -0500, Bjorn Helgaas wrote:
+>>>> [+cc regressions]
+>>>>
+>>>> On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+>>>>> Hi Manivannan Sadhasivam,
+>>>>>
+>>>>> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+>>>>> Rockchip RK3588(S) SoC.
+>>>>>
+>>>>> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+>>>>> freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+>>>>> different modules I've tested, including the Realtek RTL8852BE, MediaTek
+>>>>> MT7921E, and Intel AX210.
+>>>>>
+>>>>> I've found that reverting the following commit (i.e., the patch I'm replying
+>>>>> to) resolves the problem:
+>>>>> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+>>>>
+>>>> Thanks for the report, and sorry for the regression.
+>>>>
+>>>> Since this affects several devices from different manufacturers and (I
+>>>> assume) different drivers, it seems likely that there's some issue
+>>>> with the Rockchip end, since ASPM probably works on these devices in
+>>>> other systems.  So we should figure out if there's something wrong
+>>>> with the way we configure ASPM, which we could potentially fix, or if
+>>>> there's a hardware issue and we need some king of quirk to prevent
+>>>> usage of ASPM on the affected platforms.
+>>>>
+>>>
+>>> I believe it is the latter. The Root Port is having trouble with ASPM.
+>>>
+>>> FUKAUMI Naoki, could you please share the 'sudo lspci -vv' output so that we
+>>> know what kind of Root Port we are dealing with? You can revert the offending
+>>> patch and share the output.
+>>
+>> Here is dmesg/lspci output on ROCK 5A(RK3588S):
+>>   https://gist.github.com/RadxaNaoki/1355a0b4278b6e51a61d89df7a535a5d
+>>
 > 
-> On 10/15/25 15:26, Manivannan Sadhasivam wrote:
-> > On Tue, Oct 14, 2025 at 01:49:05PM -0500, Bjorn Helgaas wrote:
-> > > [+cc regressions]
-> > > 
-> > > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
-> > > > Hi Manivannan Sadhasivam,
-> > > > 
-> > > > I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
-> > > > Rockchip RK3588(S) SoC.
-> > > > 
-> > > > When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
-> > > > freezes or fails to probe M.2 Wi-Fi modules. This happens with several
-> > > > different modules I've tested, including the Realtek RTL8852BE, MediaTek
-> > > > MT7921E, and Intel AX210.
-> > > > 
-> > > > I've found that reverting the following commit (i.e., the patch I'm replying
-> > > > to) resolves the problem:
-> > > > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
-> > > 
-> > > Thanks for the report, and sorry for the regression.
-> > > 
-> > > Since this affects several devices from different manufacturers and (I
-> > > assume) different drivers, it seems likely that there's some issue
-> > > with the Rockchip end, since ASPM probably works on these devices in
-> > > other systems.  So we should figure out if there's something wrong
-> > > with the way we configure ASPM, which we could potentially fix, or if
-> > > there's a hardware issue and we need some king of quirk to prevent
-> > > usage of ASPM on the affected platforms.
-> > > 
-> > 
-> > I believe it is the latter. The Root Port is having trouble with ASPM.
-> > 
-> > FUKAUMI Naoki, could you please share the 'sudo lspci -vv' output so that we
-> > know what kind of Root Port we are dealing with? You can revert the offending
-> > patch and share the output.
+> Thanks! Could you please try the below diff with f3ac2ff14834 applied?
 > 
-> Here is dmesg/lspci output on ROCK 5A(RK3588S):
->  https://gist.github.com/RadxaNaoki/1355a0b4278b6e51a61d89df7a535a5d
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 214ed060ca1b..0069d06c282d 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+>    */
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> 
+> +
+> +static void quirk_disable_aspm_all(struct pci_dev *dev)
+> +{
+> +       pci_info(dev, "Disabling ASPM\n");
+> +       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
+> +}
+> +
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ROCKCHIP, 0x3588, quirk_disable_aspm_all);
+
+That's not true from my POV. Rockchip platform supports all ASPM policy
+after mass production verification. I also verified current upstream
+code this morning with RK3588-EVB and can check L0s/L1/L1ss work fine.
+
+The log and lspci output could be found here:
+https://pastebin.com/qizeYED7
+
+Moreover, I disscussed this issue with FUKAUMI today off-list and his
+board seems to work when only disable L1ss by patching:
+
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -813,7 +813,7 @@ static void 
+pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+
+         /* For devicetree platforms, enable all ASPM states by default */
+         if (of_have_populated_dt()) {
+-               link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
++               link->aspm_default = PCIE_LINK_STATE_L0S | 
+PCIE_LINK_STATE_L1;
+                 override = link->aspm_default & ~link->aspm_enabled;
+                 if (override)
+                         pci_info(pdev, "ASPM: DT platform,
+
+
+So, is there a proper way to just disable this feature for spec boards
+instead of this Soc?
+
+> +
+>   /*
+>    * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+>    * Link bit cleared after starting the link retrain process to allow this
+> 
+> 
+>  From your previous comment, I believe the Root Port is having the issues with
+> ASPM as you seem to have tried connecting different devices to the slot. So I
+> disabled ASPM for the Root Port with the above diff.
+> 
+> - Mani
 > 
 
-Thanks! Could you please try the below diff with f3ac2ff14834 applied?
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..0069d06c282d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2525,6 +2525,15 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-  */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-
-+
-+static void quirk_disable_aspm_all(struct pci_dev *dev)
-+{
-+       pci_info(dev, "Disabling ASPM\n");
-+       pci_disable_link_state(dev, PCIE_LINK_STATE_ALL);
-+}
-+
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ROCKCHIP, 0x3588, quirk_disable_aspm_all);
-+
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-  * Link bit cleared after starting the link retrain process to allow this
-
-
-From your previous comment, I believe the Root Port is having the issues with
-ASPM as you seem to have tried connecting different devices to the slot. So I
-disabled ASPM for the Root Port with the above diff.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
