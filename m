@@ -1,152 +1,163 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE922D2499
-	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 05:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6964D29D26E;
+	Wed, 15 Oct 2025 06:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760507500; cv=none; b=Xbd26TbgOCsrpKpYFiccFiN6hdfDjM6xSL1v5vxDYE2KBSlnGZ3K+Eno0j7wPLiQsK6VGfdI7YLunM0+0DFkHYjLx/3y0uci2J5P1V86rPr+qeni5DfLrNamCdIf4cW97kCCo57s08mMe7WJMjV5eSxRVt4RbkdLH6Kvo9zTQis=
+	t=1760509361; cv=none; b=lJ4U3pMujWBjYo+F2mxA1DCurJOg6h92WeMm/VOldHcSFpLI68cPET4Sn4/S9a6/d2S1mxodH9ZTUGK8E0apE4M505FdhL4eRoza8y6QCn6pS853MT3ET8y4GMKln0sTQj2cXYlxGpTr0ukZykS9gg2Vku4p8tzDcUrepoIvq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760507500; c=relaxed/simple;
-	bh=50blR+Qkm8n4ka6Tnj/O7El8AHE/NCmRHeMSaOMsVOk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FxnaSbYGMjQ+Re0GEdKQnW6Z3KXKT42pZP1QJQEgkPoY7rB0ijatEMp7+MjrQUHItGhX/svidSvXtQw8HCVrQHwiRPsO3y9hXtWQojAEYG8OY5OLWIdmn0smbwXfAP7mUFzhyl2SNVaBIsuo0c3ZeM1D1GolPtuixpq0ppcxV6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wdEcYq63; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=X2ziHNMh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f7F8xd2z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=76hzr1Tc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1760509361; c=relaxed/simple;
+	bh=GiBaNBK3/IViNyRFvWPC3WNeXPpoK/LfTYw7Mrnj5Bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jVexC7ii43UEBfLpPCxCIhZEW2k1NnYWVo8kXQBD/+TV+sDKv4P6bzlFbkLwZ5TLhvO2mR6V28m8x/tNQqvBRjC9juPccRgqurgl9wCbhHoe3z81ZQhkoAkaiFxdgoGx93shEyEar6ioys1Ftg/zi97LWCHWMRYR3pwFfWDav8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCjeq1O8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wdEcYq63";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="X2ziHNMh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f7F8xd2z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="76hzr1Tc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A2F3E66DF5;
-	Wed, 15 Oct 2025 05:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760507496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1PwgFEMFdLefTq8lodQq36S37p8/4E+rvPyxh24ysA=;
-	b=wdEcYq63OFOGJCBi2YELO0NLYvnC0NRQ9dlGagszYBAzAK9atj02avDMUWQ9W6lCAZQ4FD
-	+XPCZMFxYJ1FUmf1OBMB/1N1BnpxoZ6+vgb0vRyE9q/reEvtwTvOVT1gWcFAJ4ExfB2Znf
-	MOyLt7WuHnF3q4SzT1gACZApJhmsGXo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760507496;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1PwgFEMFdLefTq8lodQq36S37p8/4E+rvPyxh24ysA=;
-	b=X2ziHNMhqlArcmYM2a3BG/Fv0l+CbNbvyhib+V3P71NVape0J+igvcPdtUrx+UpA9qQAW6
-	ChazQ/g7uyQeIFDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760507495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1PwgFEMFdLefTq8lodQq36S37p8/4E+rvPyxh24ysA=;
-	b=f7F8xd2zuyv2wzm55uezYNOF4ZSR0IjFJ72FkF01Wk4ir6ZwEF6yYCoC+PFF8HKLj9bby5
-	SfhfAu/CHKU8WleLPmMmwbYSOY1w1flWUjheKGH3mBKPiLdmwcDgokRmBnL6s34Aq0X7ut
-	L1eHDLYp6CiLoAH8enVT6WyWAqc9cVU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760507495;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s1PwgFEMFdLefTq8lodQq36S37p8/4E+rvPyxh24ysA=;
-	b=76hzr1TcW/VhsG/wSyjHBRvofJgyrFipbF3Kdy7KUbuBr2UGCjV6GRVFfxoIPsq0nwDA1r
-	Tcuh8Q6prM4ap/BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 477AC136F7;
-	Wed, 15 Oct 2025 05:51:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id F5K5DGc272jeWwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 15 Oct 2025 05:51:35 +0000
-Date: Wed, 15 Oct 2025 07:51:34 +0200
-Message-ID: <871pn47lw9.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	amadeuszx.slawinski@linux.intel.com,
-	baojun.xu@ti.com,
-	bo.liu@senarytech.com,
-	cezary.rojewski@intel.com,
-	kai.vehmanen@linux.intel.com,
-	kailang@realtek.com,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	regressions@lists.linux.dev,
-	Dell.Client.Kernel@dell.com
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
-In-Reply-To: <CAPnZJGDffiY-9sBTfdOYkkmjQqb79M3d8uLdyyb6eAxU8fqbuA@mail.gmail.com>
-References: <20250709160434.1859-6-tiwai@suse.de>
-	<20251014034156.4480-1-safinaskar@gmail.com>
-	<875xci81dt.wl-tiwai@suse.de>
-	<CAPnZJGDffiY-9sBTfdOYkkmjQqb79M3d8uLdyyb6eAxU8fqbuA@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCjeq1O8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E57AC4CEF8;
+	Wed, 15 Oct 2025 06:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760509360;
+	bh=GiBaNBK3/IViNyRFvWPC3WNeXPpoK/LfTYw7Mrnj5Bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kCjeq1O8SKcnC5uwXJkMGFAUZ9N0PYCklm8+0Bb1n3G9rVunCQUf+gtkbky+uaXYR
+	 3w32PUiWGPvCOgFRW9IpLRq5HaCoXNbp2UyffHJlwR5/n1TZh3Ft1xbCq74Lt0QhbT
+	 XhfO2BHxHuKbMfAOkBBR4188Ucr22ttit/xCnc9/kND+W6Kh6D8VHKs/G7mhbruvWI
+	 VoB9OgsMdnI9kiOB08eO4bX2g9g/dpOJQQG4xuZ6s226rd1vwe9tkgN1Aalkyra9uw
+	 YuBoWXL8cvkMZ8rX8T+5j9U/+8okzV6hKGfZRCuEKEVLuQGb8/E81RPFJb012ucGOq
+	 Dmv+lTF9PlF3w==
+Date: Wed, 15 Oct 2025 11:52:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Chia-Lin Kao <acelan.kao@canonical.com>, 
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <fxakjhx7lrikgs4x3nbwgnhhcwmlum3esxp2dj5d26xc5iyg22@wkbbwysh3due>
+References: <20251014184905.GA896847@bhelgaas>
+ <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.983];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
+In-Reply-To: <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org>
 
-On Wed, 15 Oct 2025 06:37:13 +0200,
-Askar Safin wrote:
+On Wed, Oct 15, 2025 at 01:33:35AM +0200, Dragan Simic wrote:
+> Hello all,
 > 
-> On Tue, Oct 14, 2025 at 9:04 AM Takashi Iwai <tiwai@suse.de> wrote:
-> > The oft-seen "regression" reports for 6.17 were rather the incorrect
+> On Tuesday, October 14, 2025 20:49 CEST, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> > > I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> > > Rockchip RK3588(S) SoC.
+> > > 
+> > > When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> > > freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> > > different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> > > MT7921E, and Intel AX210.
+> > > 
+> > > I've found that reverting the following commit (i.e., the patch I'm replying
+> > > to) resolves the problem:
+> > > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+> > 
+> > Thanks for the report, and sorry for the regression.
+> > 
+> > Since this affects several devices from different manufacturers and (I
+> > assume) different drivers, it seems likely that there's some issue
+> > with the Rockchip end, since ASPM probably works on these devices in
+> > other systems.  So we should figure out if there's something wrong
+> > with the way we configure ASPM, which we could potentially fix, or if
+> > there's a hardware issue and we need some king of quirk to prevent
+> > usage of ASPM on the affected platforms.
+> > 
+> > Can you collect a complete dmesg log when booting with
+> > 
+> >   ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
+> > 
+> > and the output of "sudo lspci -vv"?
+> > 
+> > When the kernel freezes, can you give us any information about where,
+> > e.g., a log or screenshot?
+> > 
+> > Do you know if any platforms other than Radxa ROCK 5A/5B have this
+> > problem?
 > 
-> My config indeed didn't have CONFIG_SND_HDA_CODEC_REALTEK.
+> After thinking quite a bit about it, I think we should revert this
+> patch and replace it with another patch that allows per-SoC, or
+> maybe even per-board, opting into the forced enablement of PCIe
+> ASPM.  Let me explain, please.
 > 
-> I set it to "m" and did test again.
-> And audio still doesn't work.
 
-You have to enable CONFIG_SND_HDA_CODEC_ALC* config, too.
-(I guess CONFIG_SND_HDA_CODEC_ALC269=m alone should suffice, but you
-can set all to m.)
+ASPM is a PCIe device specific feature, nothing related to SoC/board. Even if
+you limit it to certain platforms, there is no guarantee that it will be safe as
+the users can connect a buggy device to the slot and it could lead to the same
+issue.
 
-As already mentioned, those are the new config of each Realtek codec
-driver that now became selectable individually when CONFIG_EXPERT=y
-(so you say you're an expert :)
+> When a new feature is introduced, it's expected that it may fail
+> on some hardware or with some specific setups, so quirking off such
+> instances, as time passes, is perfectly fine.  Such a new feature
+> didn't work before it was implemented, so it's acceptable that it
+> fails in some instances after the introduction, and that it gets
+> quirked off as time passes and more testing is performed.
+> 
+
+ASPM is not a new feature. It was introduced more than a decade before. But we
+somehow procastinated the enablement for so long until we realized that if we
+don't do it now, we wouldn't be able to do it anytime in the future.
+
+> However, when some widespread feature, such as PCIe, has already
+> been in production for quite a while, introducing high-risk changes
+> to it in a blanket fashion, while intending to have the incompatible
+> or not-yet-ready platforms quirked off over time, simply isn't the
+> way to go.  Breaking stuff intentionally to find out what actually
+> doesn't work is rarely a good option.
+> 
+
+The issue is due to devices exposing ASPM capability, but behaving erratically
+when enabled. Until, we enable ASPM on these devices, we cannot know whether
+they are working or not. To avoid mass chaos, we decided to enable it only for
+devicetree platforms as a start.
+
+> Thus, I'd suggest that this patch is replaced with nother patches,
+> which would introduce an additional ASPM opt-in switch to the PCI
+> binding, allowing SoCs or boards to have it enabled _after_ proper
+> testing is performed.  The PCIe driver may emit a warning that ASPM
+> is to be enabled at some point in the future, to "bug" people about
+> the need to perform the testing, etc.
+
+Even if we emit a "YOUR DEVICE MAY BREAK" warning, nobody would care as long as
+the device works for them. We didn't decide to enable this feature overnight to
+trouble users. The fact that ASPM saves runtime power, which will benefit users
+and ofc the environment as a whole, should not be kept disabled.
+
+But does that mean, we wanted to have breakages, NO. We expected breakages as
+not all devices will play nicely with ASPM, but there is only one way to find
+out. And we do want to disable ASPM only for those devices.
+
+>  With all that in place, we
+> could expect that in a year or two PCIe ASPM could eventually be
+> enabled everywhere.  Getting everything tested is a massive endeavor,
+> but that's the only way not to break stuff.
+> 
+> Biting the bullet and hoping that it all goes well, I'd say, isn't
+> the right approach here.
+> 
+
+Your two year phased approach would never work as that's what we have hoped for
+more than a decade.
+
+- Mani
 
 
-Takashi
+-- 
+மணிவண்ணன் சதாசிவம்
