@@ -1,104 +1,308 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.65.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6883126C6
-	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 06:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416172FF164
+	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 07:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.65.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760511021; cv=none; b=I0Wue5MW2gYN4faxbdZyGE2Qj9+OqF1DdcSSU7x8vnssvVGgSNvo9kfujmYPOd+yT75qzhibUMQZVY8eHKHC9qKKFt8K4OMBTKQ8tFb4fYhHW7BFAawZhCrD080cZuoWKJx39UQL9dVNAuqJ9N23Wc4MEr83i9vcuYnFXumkB/w=
+	t=1760512451; cv=none; b=g8I9qJf0R5agGMQv4r8m15lShgFYhFHJ2Gm3i0LiP7DYngu0sxyABpVEGc+KEqOGqp6tEo+NWt5lakOOrLcI8FT1EtFl63tjQ+4NI0ieJIsxE6FPnY9jkzCy3rNbLpGZBs7qiHJFsBt+U8ej9fyyxRKBuu3gLTk6317MDzcysMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760511021; c=relaxed/simple;
-	bh=b/ZmBA9vQFyoE864lb9qBg9zWcvecKvXW/0DQggOaWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=APdeBU/BU8q65gwm36tM4e4a1fazJMOLQj9F70gXM+KA3VBECtvWgCPuTbxhBrhtoGV1Uu2sxdi0h9FkO8c4q0bwZxcAFK/kn80vARcs3GMVqdnugx6rHEmI4QwzZ98/BnaSo6lqO8gNgZYNmT8A23ki1b7xXtFufUmzwzbmKMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAbo2B8s; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAbo2B8s"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7817c2d909cso445907b3.1
-        for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 23:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760511018; x=1761115818; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b/ZmBA9vQFyoE864lb9qBg9zWcvecKvXW/0DQggOaWU=;
-        b=eAbo2B8sDfdGwiF5VcDsGkEvny/P6WXIGXS5MQEd3LYMd5mT/EaGdCm/NwP9U7Nwuk
-         krZ5ymbID0mMQu0QnZTEyCf4kZDRekAatAM459kRMFrIvJoNBRPb2OlzETuAj25EYZ2V
-         ieh8P3uswtm+Y67kS/WkPh5OwXh6YmQ54etVfRJCQW2n0Y17YeCizBCa6T/n481dvKkO
-         qjauJxjvPIpr5VahztwFUHEbv8r9LZpdHrzPSOMbc1QMkONlH94nTjEiXYqcZQ7omLZV
-         8BmpPOlKcht7JtX60PggROv7g+IHmQidVP/1bRwuUBX3bpQnCY3QuJVXtXLEbeshlLFt
-         pksw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760511018; x=1761115818;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b/ZmBA9vQFyoE864lb9qBg9zWcvecKvXW/0DQggOaWU=;
-        b=uYX2CvI5C0ODgrif9SpKctc9RR4mkIOJNG81G56Rs0y4a45aa+neyjCJgm7e4qQKOL
-         JHkCqFiQ1lzKVpRyAgW9p25k3HZd17bwzgI+xmMyuY9tG1c5rB3cSeZZW9kKlo92j/e+
-         POpWSXMcUaaKZHgE+ITATKO/BzW6fK6+zuNceuPB/DA8RMeyqD1o8pBREceKyk1ORANN
-         TfPzk6Xg6DmVOiGJJh7v1uyy6CFXio5JPSm3e1oVPUys6PoM+p4cJs4CDyBylK2iB+hG
-         WWR2Q4jNJP8/yfLR3YJiNQuJA6UydtlAa4C0fjNwXRYL+9zv/xt47abGQCFB9g88qpM7
-         0luQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFCbhIZ13kfuReLCOMo8T4DJS8MyDWxq3jU6MNqEtlC7R4CNBtLnkD+N/4ZP43CFd3nPnrfs0gF3m8mA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyndwK39X6ii0etI2LWaIJ6g9feCHNfOyNWZ85NodQXOM71W7Jp
-	zFO56+DvmS/MzJFRv7zkm9K8Fv8htrYweW9P90qCkHWYDMCng1kGevPM0WWX+9SKvjU7v1sDLN7
-	aVW5QhfnpQxbQSK7YFggP/jQY4btoBps=
-X-Gm-Gg: ASbGncs/vWz/EgiMfz29BYjaQgcelCFQaFwstMSkG9G5Rp4XFWGBXrbe/UfHTBE+Vao
-	U/TTJuTLgjrCbYY4niB7TC5Nk+Uz2UJl2vEnteah7EXKtdnTOKJWtmoKVa7OM3N9Fd4wlJPuUAE
-	z+IhOgnD+m4rNgq3q5x7uWuh3nX1k+tbr7l8JsWB5N15ZsOEpZ7SyzqRTssF002NF/1HrFGZXMn
-	ZPLL0j1kTur4hRWN1+GOq0DZGVRsg==
-X-Google-Smtp-Source: AGHT+IFPNwQgBvG2Jym4k/B0G+KrQt6FSH28b6hKi+XVutdrZ3bbmlMfxAKAFdUkns70IdMazIhl2B+kzxk6tv2OQ8o=
-X-Received: by 2002:a05:690c:48ca:b0:781:64f:2b1d with SMTP id
- 00721157ae682-781064f3469mr309374147b3.63.1760511018436; Tue, 14 Oct 2025
- 23:50:18 -0700 (PDT)
+	s=arc-20240116; t=1760512451; c=relaxed/simple;
+	bh=klgC8zSc+l0Q/w9Rpn/ccXvkKdPxh+GGaj8qhQbaa44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ud7zgP6s2/F20136b9nlH+G8SQUBuw3YMOSweiuQuC3CxAdhB4bKHVwzxIXYeuE8r1xqwzPLOq+NQU02dr1fy5muJUCcCKeBPnxKrDKrtiGyMVyuQ5fdDoApHBSlef85ntW01MnRds2TFOmKG60S1LLiJ7HInYGZsygCTaqhYxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=43.155.65.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip4t1760512426t711b209d
+X-QQ-Originating-IP: 6nwnINKAFYIGvRML+7yx9lB3aMBjuHz5zLBDY+C1Tbg=
+Received: from [IPV6:240f:10b:7440:1:f559:f5f: ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 15 Oct 2025 15:13:42 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 17869260487172494319
+Message-ID: <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
+Date: Wed, 15 Oct 2025 16:13:41 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250709160434.1859-6-tiwai@suse.de> <20251014034156.4480-1-safinaskar@gmail.com>
- <875xci81dt.wl-tiwai@suse.de> <CAPnZJGDffiY-9sBTfdOYkkmjQqb79M3d8uLdyyb6eAxU8fqbuA@mail.gmail.com>
- <871pn47lw9.wl-tiwai@suse.de>
-In-Reply-To: <871pn47lw9.wl-tiwai@suse.de>
-From: Askar Safin <safinaskar@gmail.com>
-Date: Wed, 15 Oct 2025 09:49:42 +0300
-X-Gm-Features: AS18NWB4UG4JzkWf-LgevuOpXRWrqYaHmn-MyEZ2ITSOFdL1bmV2n62UlA1cib0
-Message-ID: <CAPnZJGDeJsD9CHAmF1XkHctMAuXTkE3egEgyh-WWjHo6ctoygQ@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA:
- hda: Move controller drivers into sound/hda/controllers directory)
-To: Takashi Iwai <tiwai@suse.de>
-Cc: amadeuszx.slawinski@linux.intel.com, baojun.xu@ti.com, 
-	bo.liu@senarytech.com, cezary.rojewski@intel.com, 
-	kai.vehmanen@linux.intel.com, kailang@realtek.com, 
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
-	rf@opensource.cirrus.com, regressions@lists.linux.dev, 
-	Dell.Client.Kernel@dell.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+To: Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>,
+ linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
+ <20251014184905.GA896847@bhelgaas>
+ <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MP1WLfctJNZWA8tQkYiXqhIzj2GBzGRUHl9BM2DvVl8moKnsJiBaEncf
+	5ktTniLtmCQQsOQzmiXRihjSaFjNoImXxA9TVnW0gA7nYlm7Im9RYBHTWsHNUr5PkTjhXhD
+	TW1y33+L4666aABFL6O14StJ+16/03wjQg9y+lQX5J054SoLGwRRv81zzBueuW9HtBhvgkX
+	opdMM7uTIO2TyZs00DjPjiOMALC+KuxA/qoALxC6PvuIOPRSyzaEkh824T3apZLoplKcf4O
+	XYnFD+FWdXooQ7wVSLVQnHzRwvo6t6wImnkwwIIz1TvCTE0/NGXkBCv0aa5RP4dmBu20vhM
+	1VKZhs0ygdmb7e7u4zUeB89yGMnHik0eOIE8/9yx6gUL8QAuStm5cNtLv1RN2ASq25bNQXu
+	+oaOG0S6mwZixJpUD++79YxPjhCgwpLQ29VJI7FGdcxh7Wwolq/HPWIiim+Ead7NNI0tad2
+	4useyMQyjxj6AG8VG0GISu8vp6ngCqKU1UXGWG7FkF6TvfH98qG91QXob+/h+Ik5R13+FS7
+	p3JLYzYIs8mcaX3EMpPbsLnQeHxPPTOYdxPYRsdYNRlUz/d5MkMBOANdC9jP7LbZnCswKBS
+	jvNi10FhEWLPT8GqDpf6bOQ0oelMwnINgsvpHAQRt8i1/9papDthVnB9q/DQ9jcfAzifVeY
+	USgD/a9+SeSd5xYuUrBoSBYq9anS8TuzghPfjz9mHeXDRfTO7611tlvYznXcoYsNP0yfu6h
+	FasrJIm6Z3fNRqK6cwA7YJgLMX+EVmL2AlCy3IEHTI7NYeG38ZNp7yNQGPqZ+ZXh7PffBgD
+	0riePYqlJqtdpiNmYb1ztE2UEoYrOVj3onZKFJF6xJDdEptHdWrGzhvGDY/qGe5MPZu0yYg
+	w4J/a2+pJcH5zLCIQE3dPSwv5t0FO/wMdMgWcJ8oaRrhz2iE0qmQlzwgLukHo6qtE0AH37s
+	77G1IfTE+Esuotu2lcBb+o3Gop1az9wkxFooStEoTtpTtdD8vQPsud/09rTaCTwCD5y7bcU
+	6eAqPSMxrATOIlIVA3
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-SPAM: true
+X-QQ-RECHKSPAM: 3
 
-On Wed, Oct 15, 2025 at 8:51=E2=80=AFAM Takashi Iwai <tiwai@suse.de> wrote:
-> You have to enable CONFIG_SND_HDA_CODEC_ALC* config, too.
+Hi,
 
-I just did another experiment. I enabled everything in "audio hd" menu
-in v6.18-rc1.
-And still no sound.
-Kernel version is v6.18-rc1. Config is here:
-https://zerobin.net/?e345ae7df1223a43#h3Dm4HiKvM3GWbTl3f8ErMAS5cm8gd3MOM/IZ=
-P0Ta6w=3D
+On 10/15/25 15:26, Manivannan Sadhasivam wrote:
+> On Tue, Oct 14, 2025 at 01:49:05PM -0500, Bjorn Helgaas wrote:
+>> [+cc regressions]
+>>
+>> On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+>>> Hi Manivannan Sadhasivam,
+>>>
+>>> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+>>> Rockchip RK3588(S) SoC.
+>>>
+>>> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+>>> freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+>>> different modules I've tested, including the Realtek RTL8852BE, MediaTek
+>>> MT7921E, and Intel AX210.
+>>>
+>>> I've found that reverting the following commit (i.e., the patch I'm replying
+>>> to) resolves the problem:
+>>> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+>>
+>> Thanks for the report, and sorry for the regression.
+>>
+>> Since this affects several devices from different manufacturers and (I
+>> assume) different drivers, it seems likely that there's some issue
+>> with the Rockchip end, since ASPM probably works on these devices in
+>> other systems.  So we should figure out if there's something wrong
+>> with the way we configure ASPM, which we could potentially fix, or if
+>> there's a hardware issue and we need some king of quirk to prevent
+>> usage of ASPM on the affected platforms.
+>>
+> 
+> I believe it is the latter. The Root Port is having trouble with ASPM.
+> 
+> FUKAUMI Naoki, could you please share the 'sudo lspci -vv' output so that we
+> know what kind of Root Port we are dealing with? You can revert the offending
+> patch and share the output.
 
-As you can see, all CONFIG_SND_HDA_CODEC_ALC* options are enabled there.
+Here is dmesg/lspci output on ROCK 5A(RK3588S):
+  https://gist.github.com/RadxaNaoki/1355a0b4278b6e51a61d89df7a535a5d
 
-> As already mentioned, those are the new config of each Realtek codec
-> driver that now became selectable individually when CONFIG_EXPERT=3Dy
-> (so you say you're an expert :)
+----
 
-CONFIG_EXPERT is indeed set to "y". This is because this config was
-generated using "localmodconfig" from Debian's config, which has CONFIG_EXP=
-ERT.
+I've (likely) noticed another PCIe issue on the ROCK 5B (RK3588).
 
---=20
-Askar Safin
+Reverting commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961 on top of 
+commit 331b2acbe6123dbbcb5c34698692959abbf5748b definitely gets the M.2 
+Wi-Fi working. However, reverting commit 
+f3ac2ff14834a0aa056ee3ae0e4b8c641c579961 on v6.18-rc1/next-20251014 does 
+not work. (It does work on the ROCK 5A.)
+
+Commit 331b2acbe6123dbbcb5c34698692959abbf5748b landed between 
+next-20250923 and next-20250924. I'm currently in the process of bisecting.
+
+Best regards,
+
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+> Then I could supply a patch that you can test out.
+> 
+> - Mani
+> 
+>> Can you collect a complete dmesg log when booting with
+>>
+>>    ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
+>>
+>> and the output of "sudo lspci -vv"?
+>>
+>> When the kernel freezes, can you give us any information about where,
+>> e.g., a log or screenshot?
+>>
+>> Do you know if any platforms other than Radxa ROCK 5A/5B have this
+>> problem?
+>>
+>> #regzbot introduced: f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree platforms")
+>> #regzbot dup-of: https://github.com/chzigotzky/kernels/issues/17
+>>
+>>> On 9/23/25 01:16, Manivannan Sadhasivam via B4 Relay wrote:
+>>>> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>>>
+>>>> So far, the PCI subsystem has honored the ASPM and Clock PM states set by
+>>>> the BIOS (through LNKCTL) during device initialization, if it relies on the
+>>>> default state selected using:
+>>>>
+>>>> * Kconfig: CONFIG_PCIEASPM_DEFAULT=y, or
+>>>> * cmdline: "pcie_aspm=off", or
+>>>> * FADT: ACPI_FADT_NO_ASPM
+>>>>
+>>>> This was done conservatively to avoid issues with the buggy devices that
+>>>> advertise ASPM capabilities, but behave erratically if the ASPM states are
+>>>> enabled. So the PCI subsystem ended up trusting the BIOS to enable only the
+>>>> ASPM states that were known to work for the devices.
+>>>>
+>>>> But this turned out to be a problem for devicetree platforms, especially
+>>>> the ARM based devicetree platforms powering Embedded and *some* Compute
+>>>> devices as they tend to run without any standard BIOS. So the ASPM states
+>>>> on these platforms were left disabled during boot and the PCI subsystem
+>>>> never bothered to enable them, unless the user has forcefully enabled the
+>>>> ASPM states through Kconfig, cmdline, and sysfs or the device drivers
+>>>> themselves, enabling the ASPM states through pci_enable_link_state() APIs.
+>>>>
+>>>> This caused runtime power issues on those platforms. So a couple of
+>>>> approaches were tried to mitigate this BIOS dependency without user
+>>>> intervention by enabling the ASPM states in the PCI controller drivers
+>>>> after device enumeration, and overriding the ASPM/Clock PM states
+>>>> by the PCI controller drivers through an API before enumeration.
+>>>>
+>>>> But it has been concluded that none of these mitigations should really be
+>>>> required and the PCI subsystem should enable the ASPM states advertised by
+>>>> the devices without relying on BIOS or the PCI controller drivers. If any
+>>>> device is found to be misbehaving after enabling ASPM states that they
+>>>> advertised, then those devices should be quirked to disable the problematic
+>>>> ASPM/Clock PM states.
+>>>>
+>>>> In an effort to do so, start by overriding the ASPM and Clock PM states set
+>>>> by the BIOS for devicetree platforms first. Separate helper functions are
+>>>> introduced to override the BIOS set states by enabling all of them if
+>>>> of_have_populated_dt() returns true. To aid debugging, print the overridden
+>>>> ASPM and Clock PM states as well.
+>>>>
+>>>> In the future, these helpers could be extended to allow other platforms
+>>>> like VMD, newer ACPI systems with a cutoff year etc... to follow the path.
+>>>>
+>>>> Link: https://lore.kernel.org/linux-pci/20250828204345.GA958461@bhelgaas
+>>>> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>>> Link: https://patch.msgid.link/20250916-pci-dt-aspm-v1-1-778fe907c9ad@oss.qualcomm.com
+>>>> ---
+>>>>    drivers/pci/pcie/aspm.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+>>>>    1 file changed, 40 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>>>> index 919a05b9764791c3cc469c9ada62ba5b2c405118..cda31150aec1b67b6a48b60569222ea3d1c3d41f 100644
+>>>> --- a/drivers/pci/pcie/aspm.c
+>>>> +++ b/drivers/pci/pcie/aspm.c
+>>>> @@ -15,6 +15,7 @@
+>>>>    #include <linux/math.h>
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/moduleparam.h>
+>>>> +#include <linux/of.h>
+>>>>    #include <linux/pci.h>
+>>>>    #include <linux/pci_regs.h>
+>>>>    #include <linux/errno.h>
+>>>> @@ -235,13 +236,15 @@ struct pcie_link_state {
+>>>>    	u32 aspm_support:7;		/* Supported ASPM state */
+>>>>    	u32 aspm_enabled:7;		/* Enabled ASPM state */
+>>>>    	u32 aspm_capable:7;		/* Capable ASPM state with latency */
+>>>> -	u32 aspm_default:7;		/* Default ASPM state by BIOS */
+>>>> +	u32 aspm_default:7;		/* Default ASPM state by BIOS or
+>>>> +					   override */
+>>>>    	u32 aspm_disable:7;		/* Disabled ASPM state */
+>>>>    	/* Clock PM state */
+>>>>    	u32 clkpm_capable:1;		/* Clock PM capable? */
+>>>>    	u32 clkpm_enabled:1;		/* Current Clock PM state */
+>>>> -	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
+>>>> +	u32 clkpm_default:1;		/* Default Clock PM state by BIOS or
+>>>> +					   override */
+>>>>    	u32 clkpm_disable:1;		/* Clock PM disabled */
+>>>>    };
+>>>> @@ -373,6 +376,18 @@ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+>>>>    	pcie_set_clkpm_nocheck(link, enable);
+>>>>    }
+>>>> +static void pcie_clkpm_override_default_link_state(struct pcie_link_state *link,
+>>>> +						   int enabled)
+>>>> +{
+>>>> +	struct pci_dev *pdev = link->downstream;
+>>>> +
+>>>> +	/* Override the BIOS disabled Clock PM state for devicetree platforms */
+>>>> +	if (of_have_populated_dt() && !enabled) {
+>>>> +		link->clkpm_default = 1;
+>>>> +		pci_info(pdev, "Clock PM state overridden: ClockPM+\n");
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>    static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>>>>    {
+>>>>    	int capable = 1, enabled = 1;
+>>>> @@ -395,6 +410,7 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>>>>    	}
+>>>>    	link->clkpm_enabled = enabled;
+>>>>    	link->clkpm_default = enabled;
+>>>> +	pcie_clkpm_override_default_link_state(link, enabled);
+>>>>    	link->clkpm_capable = capable;
+>>>>    	link->clkpm_disable = blacklist ? 1 : 0;
+>>>>    }
+>>>> @@ -788,6 +804,26 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+>>>>    		aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
+>>>>    }
+>>>> +static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
+>>>> +{
+>>>> +	struct pci_dev *pdev = link->downstream;
+>>>> +	u32 override;
+>>>> +
+>>>> +	/* Override the BIOS disabled ASPM states for devicetree platforms */
+>>>> +	if (of_have_populated_dt()) {
+>>>> +		link->aspm_default = PCIE_LINK_STATE_ASPM_ALL;
+>>>> +		override = link->aspm_default & ~link->aspm_enabled;
+>>>> +		if (override)
+>>>> +			pci_info(pdev, "ASPM states overridden: %s%s%s%s%s%s\n",
+>>>> +				 (override & PCIE_LINK_STATE_L0S) ? "L0s+, " : "",
+>>>> +				 (override & PCIE_LINK_STATE_L1) ? "L1+, " : "",
+>>>> +				 (override & PCIE_LINK_STATE_L1_1) ? "L1.1+, " : "",
+>>>> +				 (override & PCIE_LINK_STATE_L1_2) ? "L1.2+, " : "",
+>>>> +				 (override & PCIE_LINK_STATE_L1_1_PCIPM) ? "L1.1 PCI-PM+, " : "",
+>>>> +				 (override & PCIE_LINK_STATE_L1_2_PCIPM) ? "L1.2 PCI-PM+" : "");
+>>>> +	}
+>>>> +}
+>>>> +
+>>>>    static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>>>>    {
+>>>>    	struct pci_dev *child = link->downstream, *parent = link->pdev;
+>>>> @@ -868,6 +904,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+>>>>    	/* Save default state */
+>>>>    	link->aspm_default = link->aspm_enabled;
+>>>> +	pcie_aspm_override_default_link_state(link);
+>>>> +
+>>>>    	/* Setup initial capable state. Will be updated later */
+>>>>    	link->aspm_capable = link->aspm_support;
+>>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-rockchip mailing list
+>>> Linux-rockchip@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+
