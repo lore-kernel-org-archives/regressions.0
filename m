@@ -1,157 +1,92 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AF51F1537
-	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 15:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A112FBE1A;
+	Wed, 15 Oct 2025 15:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760541502; cv=none; b=ZrK+/rVEOZHWLeiDxansduGhLFsrIxfeSFVtYKooEBdRL040/0PyFZr4EwUp4e4QeQ4KAPfIi9aBjE5koHgJVDyMRW//l/G6d/L/yGRfco9L+WMZSSBQr9hMk1eBIyc1eP/aboWj9DcSZanScXs1TUuvyY5r1OSgZePOyyfd/20=
+	t=1760541809; cv=none; b=MO814qEK871Y6SaPhFp8FHrGhSODuqCPBxafzQaXLb9VcNQLgzNB0jma8REcVjaUFEwyK/CIiSTYeoofZEeibzQZkdYHZAAOfjlp8dKORqG0TT97TgQFfQZP1+wRQtrn0I8hEQJLcWySCevMXm07K/IiLHt6tqAeSobLeZh0ZsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760541502; c=relaxed/simple;
-	bh=ailvDsHM+R7NVeb9i7rp0XZ+WIKsuwCvSqE2OdAxsvs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a6ZY4bdqenCtSdLBaHhRaOjghpHPZKy0gbNbd+7N7/mOBaDDZhOMP7yXth1ARJ1r14Oj94zbo/04PP8tg6ihDAOjPjBEgxVJllUNN/hOqbTpF+vHlQrUF4v0GZZ+IoRUfznpzfNhkSL0WA9VOaZDUUbjsO1LPDAMW0yTDJ54tAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2HfVKUJh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XgEHxMMj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TGo1m6QW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J0n+P22x; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1760541809; c=relaxed/simple;
+	bh=l6kPATXhIfK9tJGsY5Si9o4/LJ8jrOYvZVE72ylEkQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oj3Kw32+Cw/7EnJrIiHGq38KjkVYF+gI5FQZltgVEr9gvx1Tt6uTxW/HigDnkEUD+xAu0r07blHrTrs7kXI8b7ByUcctQijeEJbi2kxs3fT6x7uviEDJQ/qOnS/Q0OH1LfG9Mvb8dbfDQsEapo5eW9NfyXYMkxA7np9Uy9XUf+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m56r7RMK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2HfVKUJh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XgEHxMMj";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TGo1m6QW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J0n+P22x"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E6B9D21079;
-	Wed, 15 Oct 2025 15:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760541499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aicJgtEFiI5176U+3eIShWmoSAsTOuO8Pe/cJ9mg3E4=;
-	b=2HfVKUJht7B03w5za9fyNp1laMpmcdgcN71syolL7bEkWlXDegbvjx5odg3g/qoGpECFxs
-	u5EAfN8Ivjsuao/Z+PKHwvvzB0QtM6oesRurdMsykuD51ytfQhuGdpEC5Yn4EXZfFgCSf1
-	0yEP3cHXiK9sp1Zl+eVtBrL5Grwr7/c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760541499;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aicJgtEFiI5176U+3eIShWmoSAsTOuO8Pe/cJ9mg3E4=;
-	b=XgEHxMMjOiB85gNJ4MbDntJzj7KSZ0IR7zLmahorCklCdsq+dUkbkMKRiUCF5d3Jbhv754
-	C0oJrt3yHKXnYzDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TGo1m6QW;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=J0n+P22x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760541498; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aicJgtEFiI5176U+3eIShWmoSAsTOuO8Pe/cJ9mg3E4=;
-	b=TGo1m6QWHtXUtkSetw13kTI03G0nGnytv5ST4Wr0wJHFZFsfwT87ap0nP7DbsW5kOCn/xm
-	2/6LDymjANUMvH7mCSdYyH7MYswduSJK+dkvwsv1bk9JT1+y6VSn5Yd26x5NFVqMzhhm83
-	QP70bIOQbhRyjUPTUWi/tmct8UtgicM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760541498;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aicJgtEFiI5176U+3eIShWmoSAsTOuO8Pe/cJ9mg3E4=;
-	b=J0n+P22x1NAnh9P6wvtxWy5EUoc39BehDOkNFAiqO3Wlt8F3RFCv9fwstmBvhqV0GoBr+h
-	XHjEMAeGCJhr70Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C09313A29;
-	Wed, 15 Oct 2025 15:18:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id P77eIDq772ibOAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 15 Oct 2025 15:18:18 +0000
-Date: Wed, 15 Oct 2025 17:18:18 +0200
-Message-ID: <878qhckxc5.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: tiwai@suse.de,
-	Dell.Client.Kernel@dell.com,
-	amadeuszx.slawinski@linux.intel.com,
-	baojun.xu@ti.com,
-	bo.liu@senarytech.com,
-	cezary.rojewski@intel.com,
-	kai.vehmanen@linux.intel.com,
-	kailang@realtek.com,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	regressions@lists.linux.dev,
-	rf@opensource.cirrus.com
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
-In-Reply-To: <20251015145749.2572-1-safinaskar@gmail.com>
-References: <87o6q8l68r.wl-tiwai@suse.de>
-	<20251015145749.2572-1-safinaskar@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m56r7RMK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA51C4CEF8;
+	Wed, 15 Oct 2025 15:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760541808;
+	bh=l6kPATXhIfK9tJGsY5Si9o4/LJ8jrOYvZVE72ylEkQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m56r7RMKJqSqhNWNldofgC9LBpvSoO9uy0ccsWg+V9BC3NJhuu5N5FVlHjHi02vl9
+	 Q5O4dn1PUTlgoJnAecjyynFt18RZenLAQ2F7bD3F3+M8lNYItYO1HUd19ZGZvFMBFd
+	 NfAuH8olcN61gpWJJtHkNB3/hgCPuYMHDXC5f0KJuoVsHjPFKAB1E9STJg08bkiggE
+	 /KBhLX6YoJGe8EgODNQm8rtxNndVVYLUJrkvN/GQt9X+yzunFmfzPf+18jliilGcgK
+	 AN8YKNhxnYZ34QJFDaECcPJ5MCNMwagbbYW56rcau3UGCLGmVpEVj+2ML23MhbDB2q
+	 w31CY1wFk0vQw==
+Date: Wed, 15 Oct 2025 17:23:21 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
+	FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <aO-8aeJdvApesEqi@ryzen>
+References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
+ <20251014184905.GA896847@bhelgaas>
+ <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
+ <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
+ <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
+ <a9ca7843-b780-45aa-9f62-3f443ae06eee@rock-chips.com>
+ <aO9tWjgHnkATroNa@ryzen>
+ <ud72uxkobylkwy5q5gtgoyzf24ewm7mveszfxr3o7tortwrvw5@kc3pfjr3dtaj>
+ <aO-Q3QsxPBXbFieG@ryzen>
+ <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: E6B9D21079
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
 
-On Wed, 15 Oct 2025 16:57:49 +0200,
-Askar Safin wrote:
-> 
-> Takashi Iwai <tiwai@suse.de>:
-> > If that's the case, try to choose HDA-Intel driver by passing
-> > snd_intel_dspcfg.dsp_driver=1 boot option.  Or disabling
-> > CONFIG_SND_SOC_INTEL_AVS could help, too.
-> 
-> Passing snd_intel_dspcfg.dsp_driver=1 indeed helped me.
+On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
+> For now, this is a acceptable option if default ASPM policy enable L1ss
+> w/o checking if the HW could supports it... But how about adding
+> supports-clkreq stuff to upstream host driver directly? That would help
+> folks enable L1ss if the HW is ready and they just need adding property
+> to the DT.
 
-Good to hear.  So a part of the problem was the incomplete kconfig
-setup.  It worked casually because HDA-Intel was probed first in the
-first, although basically SOF Alderlake driver should support it.
-Since your config disabled SOF Alderlake, the HDA-Intel was probed as
-a fallback.  Now, by some subtle change, a different driver (AVS) gets
-probed, and it failed.
+I like your idea, if you have time, please send a patch.
 
-I believe we should drop the Alderlake entries from AVS probe table
-unless the firmware becomes available publicly.  (FWIW, this case was
-RPL_S).
+However, adding (working) support for L1 substates (via 'supports-clkreq')
+is new code, and should thus be queued for next release instead of v6.18.
 
-Cezary, Amadeusz, what do you think?
+For now, pcie-dw-rockchip.c is broken for a lot of PCIe devices, so the
+fix should be minimal and target v6.18, i.e. something like:
+https://lore.kernel.org/linux-pci/20251015123142.392274-2-cassel@kernel.org/
+
+Support for L1 substates via 'supports-clkreq' can be added on top of that
+patch (while targeting v6.19).
 
 
-Takashi
+Kind regards,
+Niklas
