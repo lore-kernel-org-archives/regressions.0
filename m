@@ -1,126 +1,240 @@
-Received: from mail1.manjaro.org (mail1.manjaro.org [142.132.176.110])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366F71DF26A
-	for <regressions@lists.linux.dev>; Tue, 14 Oct 2025 23:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.176.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EB61A9B58
+	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 00:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760484824; cv=none; b=RXJst8N9UcLQDJbVy/Mav304FLDR1JmQHqH3ggp1akfZtRJldFf5Jn+wjFTA/MBhIahabFJczCUcUU9p7DmQtpXMv0GORJytsxh4e0PH5SfbULkWGKlo4BZyqRC/dEev3E1uS1HlRHKCG8HLhH6ksFiINkKS77MSBRx6FzO6p7M=
+	t=1760488082; cv=none; b=NF+2Urx5C9+U/iJU9H+JRtWfQeMJXYVjZctl0Y5t0h020OrcmL4LF0aVeg0VILPwetXYWiqsroCR/tcLpq3UDZ7Pq3G7gv89FH1/NnRr7slSsQA7BnDL8SS7/61PIcvbyL9PmmEjnl9ntrH4icx3yVjHKLRQxc/6VE19HBhkxKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760484824; c=relaxed/simple;
-	bh=FUckzT2mOKStqUfAnm09CjkDqr0yKBb2UlrR+RXVhxw=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=AjJ+r/0DftpRBgyL1PJVDymWdh/etAEaMngweZPG0k3vFu6MqwsjVrH6YZJMHCLJ7wWsAchjH4ww/IAD9djPdwOA2d5mdwBTtojwl/PjJK7Hwf8aDKgDBOaI16+dpVGDmrlqB5C/oJa7RjGtMPZH1HcxIuLV6jRi6oMtHLac7WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=vhS0cTXZ; arc=none smtp.client-ip=142.132.176.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1760488082; c=relaxed/simple;
+	bh=i8lmuL7zRjgBAL4GZ0qUh6hQZpVvIrs7ANXDRLszzgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lqWbQebcEQWF2eNrwwc5+dgwDfsrMplDAbq2/SiEL2Wx9ToU1vjjeDfw3uwSuVBFZe643wDFAjlewz9uNquUax1WLFMs79HNdQjJPekTZE457WMfS+NeUuEa8UIy1UlAvgrPyX2QnX3tAM0wxJ0bAkuFcZ2EC/E94EYFyOjLHaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbLIZOYi; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="vhS0cTXZ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPA id CB9AB40C22;
-	Wed, 15 Oct 2025 01:33:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=dkim;
-	t=1760484819; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ahRdwrjWfMe0hKH1Tt1jKBLeldYczMpX7xtNUT0Ar2o=;
-	b=vhS0cTXZ1xd5DotYvzh1ii/gTMCLq3J1q+msKWoRt8k+J3S9YpBI3ZZeFoX5RRx0tgWTIU
-	bNYT5/dNi1mETlfmNXXfBd7QXUtoWx7k6OJuA955cTp6LOB9HzI255LP7a+pMsnaxi3Alv
-	p+dhEKd2Gysxwwu5gPOPtsj1z9AIOYxo35JrBcZmhKjtw1qTFw7Vylz4gQUSPj1C3foD+4
-	8eWrst8K+SGpfXyc8AdglJF7gGgxlC+xNb3yeCzUJ1a1jzGhWBHAv3frava2krodiSW4xe
-	C6+eQ+FAQBncWvr4e17sqxI8pXinVkG/3FRbJGPJv4CnehCb0hbVAMY6I75mfg==
-From: "Dragan Simic" <dsimic@manjaro.org>
-In-Reply-To: <20251014184905.GA896847@bhelgaas>
-Content-Type: text/plain; charset="utf-8"
-References: <20251014184905.GA896847@bhelgaas>
-Date: Wed, 15 Oct 2025 01:33:35 +0200
-Cc: "FUKAUMI Naoki" <naoki@radxa.com>, manivannan.sadhasivam@oss.qualcomm.com, "Bjorn Helgaas" <bhelgaas@google.com>, "Manivannan Sadhasivam" <mani@kernel.org>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Rob Herring" <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, =?utf-8?q?David_E=2E_Box?= <david.e.box@linux.intel.com>, "Kai-Heng Feng" <kai.heng.feng@canonical.com>, =?utf-8?q?Rafael_J=2E_Wysocki?= <rafael@kernel.org>, "Heiner Kallweit" <hkallweit1@gmail.com>, "Chia-Lin Kao" <acelan.kao@canonical.com>, linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
-To: "Bjorn Helgaas" <helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbLIZOYi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760488080; x=1792024080;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i8lmuL7zRjgBAL4GZ0qUh6hQZpVvIrs7ANXDRLszzgk=;
+  b=dbLIZOYilTLzUX8zWDMRiC6pRS/OZp/ZApJF3BS2e1Sn6D+nYJUb73aV
+   wZgeSL3/XhDzcku/Aoral1VQa9Jhm151UiNWh8jGRnh4GlbJkA4R+JfqX
+   kdtVN7n2nI9ks99dzP8wCa0AhOGub9fYFvu5bAJ+x8AO2cgbFoQkyOGTA
+   z96nJkz55MTeNrqXH0za05VEkHqhp0O8SQa/axi5mV0nkjSakDuRgzQAr
+   zAFxzxzU4Ewq5l09R2HRAnnuV2H1Ir0V/Vp/ecyILH64Bqrb9v9dq4TTa
+   qNZ/VKBUnAeqBWbxE4cKJ5wLjzsDNMxOD9OnMLVo7MAdz5z0m2OBmIn53
+   g==;
+X-CSE-ConnectionGUID: i9pDmdzmR3aCDgUGMboiXA==
+X-CSE-MsgGUID: 6K3qD/WVSkmM9NWIUTtjhQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="74105547"
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="74105547"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 17:27:59 -0700
+X-CSE-ConnectionGUID: idNH5SqiRHOjmg8apePswg==
+X-CSE-MsgGUID: XPWiNgPAT6Cd8GfDge6i9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
+   d="scan'208";a="219161715"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 17:27:57 -0700
+Message-ID: <6967ca67-61c8-48c2-bf36-815ee960a318@linux.intel.com>
+Date: Wed, 15 Oct 2025 08:27:54 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org>
-Subject: =?utf-8?q?Re=3A?= [PATCH v2 1/2] =?utf-8?q?PCI/ASPM=3A?= Override the ASPM 
- and Clock PM states set by BIOS for devicetree platforms
-User-Agent: SOGoMail 5.12.3
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: None
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+To: Octavia Togami <octavia.togami@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ peterz@infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+ <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
+ <ad3ef789-3f12-4107-abad-cf7b4775e38d@linux.intel.com>
+ <CAHPNGSTmv7qxMYOs6h1uevB4Rjiy9R+-YTt0gZ2D1tVh7-cuxQ@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAHPNGSTmv7qxMYOs6h1uevB4Rjiy9R+-YTt0gZ2D1tVh7-cuxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello all,
 
-On Tuesday, October 14, 2025 20:49 CEST, Bjorn Helgaas <helgaas@kernel.=
-org> wrote:
-> On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
-> > I've noticed an issue on Radxa ROCK 5A/5B boards, which are based o=
-n the
-> > Rockchip RK3588(S) SoC.
-> >=20
-> > When running Linux v6.18-rc1 or linux-next since 20250924, the kern=
-el either
-> > freezes or fails to probe M.2 Wi-Fi modules. This happens with seve=
-ral
-> > different modules I've tested, including the Realtek RTL8852BE, Med=
-iaTek
-> > MT7921E, and Intel AX210.
-> >=20
-> > I've found that reverting the following commit (i.e., the patch I'm=
- replying
-> > to) resolves the problem:
-> > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
->=20
-> Thanks for the report, and sorry for the regression.
->=20
-> Since this affects several devices from different manufacturers and (=
-I
-> assume) different drivers, it seems likely that there's some issue
-> with the Rockchip end, since ASPM probably works on these devices in
-> other systems.  So we should figure out if there's something wrong
-> with the way we configure ASPM, which we could potentially fix, or if
-> there's a hardware issue and we need some king of quirk to prevent
-> usage of ASPM on the affected platforms.
->=20
-> Can you collect a complete dmesg log when booting with
->=20
->   ignore=5Floglevel pci=3Dearlydump dyndbg=3D"file drivers/pci/* +p"
->=20
-> and the output of "sudo lspci -vv"?
->=20
-> When the kernel freezes, can you give us any information about where,
-> e.g., a log or screenshot?
->=20
-> Do you know if any platforms other than Radxa ROCK 5A/5B have this
-> problem?
+On 10/15/2025 4:13 AM, Octavia Togami wrote:
+> That patch is also working fine.
 
-After thinking quite a bit about it, I think we should revert this
-patch and replace it with another patch that allows per-SoC, or
-maybe even per-board, opting into the forced enablement of PCIe
-ASPM.  Let me explain, please.
+Thanks for testing this patch. I would post it.
 
-When a new feature is introduced, it's expected that it may fail
-on some hardware or with some specific setups, so quirking off such
-instances, as time passes, is perfectly fine.  Such a new feature
-didn't work before it was implemented, so it's acceptable that it
-fails in some instances after the introduction, and that it gets
-quirked off as time passes and more testing is performed.
 
-However, when some widespread feature, such as PCIe, has already
-been in production for quite a while, introducing high-risk changes
-to it in a blanket fashion, while intending to have the incompatible
-or not-yet-ready platforms quirked off over time, simply isn't the
-way to go.  Breaking stuff intentionally to find out what actually
-doesn't work is rarely a good option.
-
-Thus, I'd suggest that this patch is replaced with nother patches,
-which would introduce an additional ASPM opt-in switch to the PCI
-binding, allowing SoCs or boards to have it enabled =5Fafter=5F proper
-testing is performed.  The PCIe driver may emit a warning that ASPM
-is to be enabled at some point in the future, to "bug" people about
-the need to perform the testing, etc.  With all that in place, we
-could expect that in a year or two PCIe ASPM could eventually be
-enabled everywhere.  Getting everything tested is a massive endeavor,
-but that's the only way not to break stuff.
-
-Biting the bullet and hoping that it all goes well, I'd say, isn't
-the right approach here.
-
+>
+> On Mon, Oct 13, 2025 at 11:41 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 10/13/2025 2:55 PM, Octavia Togami wrote:
+>>> That change appears to fix the problem on my end. I ran my reproducer
+>>> and some other tests multiple times without issue.
+>> @Octavia Thanks for checking this patch. But following Peter's comments, we
+>> need to update the fix. So could you please re-test the below changes? Thanks.
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 7541f6f85fcb..ed236b8bbcaa 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -11773,7 +11773,8 @@ static enum hrtimer_restart
+>> perf_swevent_hrtimer(struct hrtimer *hrtimer)
+>>
+>>         event = container_of(hrtimer, struct perf_event, hw.hrtimer);
+>>
+>> -       if (event->state != PERF_EVENT_STATE_ACTIVE)
+>> +       if (event->state != PERF_EVENT_STATE_ACTIVE ||
+>> +           event->hw.state & PERF_HES_STOPPED)
+>>                 return HRTIMER_NORESTART;
+>>
+>>         event->pmu->read(event);
+>> @@ -11827,7 +11828,7 @@ static void perf_swevent_cancel_hrtimer(struct
+>> perf_event *event)
+>>                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+>>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
+>>
+>> -               hrtimer_cancel(&hwc->hrtimer);
+>> +               hrtimer_try_to_cancel(&hwc->hrtimer);
+>>         }
+>>  }
+>>
+>> @@ -11871,12 +11872,14 @@ static void cpu_clock_event_update(struct
+>> perf_event *event)
+>>
+>>  static void cpu_clock_event_start(struct perf_event *event, int flags)
+>>  {
+>> +       event->hw.state = 0;
+>>         local64_set(&event->hw.prev_count, local_clock());
+>>         perf_swevent_start_hrtimer(event);
+>>  }
+>>
+>>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
+>>  {
+>> +       event->hw.state = PERF_HES_STOPPED;
+>>         perf_swevent_cancel_hrtimer(event);
+>>         if (flags & PERF_EF_UPDATE)
+>>                 cpu_clock_event_update(event);
+>> @@ -11950,12 +11953,14 @@ static void task_clock_event_update(struct
+>> perf_event *event, u64 now)
+>>
+>>  static void task_clock_event_start(struct perf_event *event, int flags)
+>>  {
+>> +       event->hw.state = 0;
+>>         local64_set(&event->hw.prev_count, event->ctx->time);
+>>         perf_swevent_start_hrtimer(event);
+>>  }
+>>
+>>  static void task_clock_event_stop(struct perf_event *event, int flags)
+>>  {
+>> +       event->hw.state = PERF_HES_STOPPED;
+>>         perf_swevent_cancel_hrtimer(event);
+>>         if (flags & PERF_EF_UPDATE)
+>>                 task_clock_event_update(event, event->ctx->time);
+>>
+>>
+>>> On Sun, Oct 12, 2025 at 7:34 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>>> On 10/11/2025 4:31 PM, Octavia Togami wrote:
+>>>>> Using async-profiler
+>>>>> (https://github.com/async-profiler/async-profiler/) on Linux
+>>>>> 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
+>>>>> reported by many people at https://github.com/lucko/spark/issues/530.
+>>>>> spark is a piece of software that uses async-profiler internally.
+>>>>>
+>>>>> As seen in https://github.com/lucko/spark/issues/530#issuecomment-3339974827,
+>>>>> this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
+>>>>> Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
+>>>>> fixed the issue for me.
+>>>>>
+>>>>> Steps to reproduce:
+>>>>> 1. Get a copy of async-profiler. I tested both v3 (affects older spark
+>>>>> versions) and v4.1 (latest at time of writing). Unarchive it, this is
+>>>>> <async-profiler-dir>.
+>>>>> 2. Set kernel parameters kernel.perf_event_paranoid=1 and
+>>>>> kernel.kptr_restrict=0 as instructed by
+>>>>> https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311f872ce9566769b006b357ecbe/docs/GettingStarted.md
+>>>>> 3. Install a version of Java that comes with jshell, i.e. Java 9 or
+>>>>> newer. Note: jshell is used for ease of reproduction. Any Java
+>>>>> application that is actively running will work.
+>>>>> 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
+>>>>> will start an infinitely running Java process.
+>>>>> 5. Run `jps` and take the PID next to the text RemoteExecutionControl
+>>>>> -- this is the process that was just started.
+>>>>> 6. Attach async-profiler to this process by running
+>>>>> `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
+>>>>> second, then the system should freeze entirely shortly thereafter.
+>>>>>
+>>>>> I triggered a sysrq crash while the system was frozen, and the output
+>>>>> I found in journalctl afterwards is at
+>>>>> https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
+>>>>> I'm not sure if that text is actually from the triggered crash, but it
+>>>>> seems relevant. If needed, please tell me how to get the actual crash
+>>>>> report, I'm not sure where it is.
+>>>>>
+>>>>> I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've seen
+>>>>> no Intel reports, it may be AMD specific. I don't have an Intel CPU on
+>>>>> hand to test with.
+>>>>>
+>>>>> /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
+>>>>> (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
+>>>>> PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
+>>>>> Operating System: Arch Linux
+>>>>> uname -mi: x86_64 unknown
+>>>> It looks the issue described in the link
+>>>> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
+>>>> happens again but in a different way. :(
+>>>>
+>>>> As the commit message above link described,  cpu-clock (and task-clock) is
+>>>> a specific SW event which rely on hrtimer. The hrtimer handler calls
+>>>> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+>>>> eventually call hrtimer_cancel() which traps into a dead loop which waits
+>>>> for the calling hrtimer handler finishes.
+>>>>
+>>>> As the
+>>>> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
+>>>> it should be enough to just disable the event and don't need an extra event
+>>>> stop.
+>>>>
+>>>> @Octavia, could you please check if the change below can fix this issue?
+>>>> Thanks.
+>>>>
+>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>> index 7541f6f85fcb..883b0e1fa5d3 100644
+>>>> --- a/kernel/events/core.c
+>>>> +++ b/kernel/events/core.c
+>>>> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
+>>>> *event,
+>>>>                 ret = 1;
+>>>>                 event->pending_kill = POLL_HUP;
+>>>>                 perf_event_disable_inatomic(event);
+>>>> -               event->pmu->stop(event, 0);
+>>>> +
+>>>> +               /*
+>>>> +                * The cpu-clock and task-clock are two special SW events,
+>>>> +                * which rely on the hrtimer. The __perf_event_overflow()
+>>>> +                * is invoked from the hrtimer handler for these 2 events.
+>>>> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+>>>> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+>>>> +                * handler to finish, which would trigger a deadlock.
+>>>> +                * Only disabling the events is enough to stop the hrtimer.
+>>>> +                * See perf_swevent_cancel_hrtimer().
+>>>> +                */
+>>>> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
+>>>> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
+>>>> +                       event->pmu->stop(event, 0);
+>>>>         }
+>>>>
+>>>>         if (event->attr.sigtrap) {
+>>>>
+>>>>
