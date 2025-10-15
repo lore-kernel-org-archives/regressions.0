@@ -1,231 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7454425C809;
-	Wed, 15 Oct 2025 14:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477628369D
+	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 14:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760537042; cv=none; b=doPQ/VJYm6pfa+ZUCcJo4SQ0nCec15i1kxjCJPyVNmpIfxImBhn+xpco/L6VLv/fIfVWWMp5ObAYOYrr5M4PTOmP0i8x1mtSN4bLb5jiSmo8r8/HQIPW+0Evg2rGk+oIden2Xdz/z0tChpDsClhKJ6pCBXLw5KLwXinvPFy4FPU=
+	t=1760540278; cv=none; b=fOBBLICew1rxugRdKSs9c1hum4cBJw1hzLQQm+BEbNz6z4LASk88DqdcEoP/GjowRHfYsLhhnmMuZoI6v44k6/e1oDNi6muJrS6J9lB/yWvpWjV73YpsWKKUriqMW8XvNxZRzIxeb7Tw0XpqJpTfemO1XP5H8JTb0iSob7hDDIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760537042; c=relaxed/simple;
-	bh=JRihx6K2YWVxXR6jr4X/LHHVrOZgJydZa4gAD//bPbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bv54wpWdkdBY7ZRnRblHy2pBX+q5HyHhVrDHACrYC4m8mgISDaOxoJdocJkWzO0GH59ndq/8cKUKH1s8BdFPF0OgHYzMqDFu1J6OqBSNIxaha+aEWqaFKzbQXNeSZhrO8ZgjNQ3YSAn3/Nz2O6KtA5BKk7PKE7GRTHztdNe0MTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAPqc7Yx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760540278; c=relaxed/simple;
+	bh=hhqFEZrqT+Fn3YGld2AlCsW1gwRxXhq+dTi0XOW0+iM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LZofryR1ZZRk+Hdwylo3xV3PSxtN3y97PVr6GrtZcYyQREFMzvdP9i4TMDxaJUyT7+1YZ+u/V5+oawWsQnsdqStr0W6jcRZ/ptiOiJWEBjtyAJodOMa3S14MQ2Q/nw7TMS42nOBcHXviXh6wwKBKr2GW5h57xDbUGtxElCt1y0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e31TfbWZ; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAPqc7Yx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FCEC4CEF8;
-	Wed, 15 Oct 2025 14:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760537041;
-	bh=JRihx6K2YWVxXR6jr4X/LHHVrOZgJydZa4gAD//bPbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TAPqc7YxvmZdDwPqlJf3X4nl1O+ke10dyw/JcWjw/ylW8Lkj5qJNdVXB6eXRT5t+K
-	 ir8CZNjME/V3x16Mt708lpRzzXklkLUcllL/4lHtlAncjWCSz2yVjwajg/HpR6MQY2
-	 /mBDfaQDWRHFS6wgFXpZSG4FVnXh5S8O7pt3+yU7qdoSMAfNp//QL3BtHjnCTZCCeG
-	 Db1x1bFMhU6VWoTjlbB0GNHoA1UdOwTAKIS53jqxo4IKtIq0LkrhWvhVNzJ7lSYcYb
-	 GPccSP6rCt+hlbF46PbI8pBiFpwO7yj/8+PJCBUdVRJCPiu4hpbxIr+naTtOFFnq1v
-	 DJcavv0x4RI8w==
-Date: Wed, 15 Oct 2025 19:33:49 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ron Economos <re@w6rz.net>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv <linux-riscv@lists.infradead.org>, Paul Walmsley <pjw@kernel.org>, 
-	Greentime Hu <greentime.hu@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	regressions@lists.linux.dev
-Subject: Re: SiFive FU740 PCI driver fails on 6.18-rc1
-Message-ID: <xfpqp3oign7c3336wxo5yexgitxotttrxgkyzbfknjmfk6pmdc@drsk3ardfl5t>
-References: <20251013212801.GA865570@bhelgaas>
- <bc7deb1a-5f93-4a36-bd6a-b0600b150d48@oss.qualcomm.com>
- <95a0f2a4-3ddd-4dec-a67e-27f774edb5fd@w6rz.net>
- <759e429c-b160-46ff-923e-000415c749ee@oss.qualcomm.com>
- <b203ba27-7033-41d9-9b43-aa4a7eb75f23@w6rz.net>
- <yxdwo4hppd7c7lrv5pybjtu22aqh3lbk34qxdxmkubgwukvgwq@i4i45fdgm6sw>
- <18ef2c73-fb10-47b3-838f-bc9d3fd2dbc2@w6rz.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e31TfbWZ"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-426f9ba85a2so371386f8f.2
+        for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 07:57:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760540275; x=1761145075; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V7CXQSy1xFyJqHbdJX74Wcje21ijiNP/kNa8s//JKNg=;
+        b=e31TfbWZJ17C5xIZ8Isz4FFwT9uWe87XmsSaEJsDJJ4ix7spI4o28h9s4p3Ej8nWik
+         P7jk7Vw6ezJbVM7DaG0S+JnvXZ7d/0ZKLe9gTNbyg43tfeeitKLm/F52GQ9l88+YSmVX
+         B6wHI2Xd54M59jW7JJRkr5TKLn4S7pbQ+0Wc2mF2fDgnM2Hff5Tgg98gsn/l87PB7OiB
+         tdiD3qv/v7PT+7x60UrB64d8zSOwIt1NZskhMbZGtu12TszY8Maf+fGVZVJZLHVihnhZ
+         KXhrujHPJ/h/sWvgaSapxdZXImN0dGkK4QxBOSRxuBXrsQghMMoZyghr6EEstltmU4V0
+         mCLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760540275; x=1761145075;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V7CXQSy1xFyJqHbdJX74Wcje21ijiNP/kNa8s//JKNg=;
+        b=Fb9erPQT+CsPs8Rad47KAaZtGQJdzpi3OBJV1eqpm5SkJ5bpmJM+FvHMQqc89yALLM
+         ZNSLymj9DanfJzVsxQzGwWY+vkGdYMsVN+YqQsibLVVaGKfB3xhXAbGDvNQzmiEYjYkt
+         u7XfaXRyb+r5Ui2r7EIFk2U2nPhnZ5A3rIcc0hK6N9H3KoYGyrj2feN7F8reZ7cdRCXR
+         u01rPrkyBglHBvxU6SVfeQzcomBv+xSodEtT8/4Q502LE7oTdXVVwpeiDsdkELkOpbeF
+         l/xgwumOo83da8RrrxifKivo/11u2AAFcNAYh/bV8wh4c807ntLbpiDwedLfz9mFVx1V
+         N41A==
+X-Forwarded-Encrypted: i=1; AJvYcCUiu1+mCpbPvXPb79jMrBjrpPoCKC13jIi4xNaG9AXLVFo5MuXONd4IAtxEOW3NQz+NphY4WIqGVHB1uA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxR4TPLaH0Wq71FgpSbL4xUVANtC9NDe9D/IBP7WgtYdUvjaR6Y
+	cPMWiD5E+weXgw1s3dIP/j6DB83ZukOgNusmiRMtf1Y3RImKkpsdguhl
+X-Gm-Gg: ASbGnctdWksfj0bwZKvqwYogRBcjpROxZaNuC4i/kIRoG4QpaY3pApR1lYuJCx8Z2ib
+	Hdvrt1I2ZV9qQE8RcS4Gx4qBQKts4u4pzmb/3UuLQQwAhtej9faaV6P9VRVkn8HNmjWZxcK8y6E
+	yiaXceoDstYfI5VeXokJG4hRhtGs54zgR+wmEQ0MR1FKSIZHGIT1wWzpILwm1/3jyrgkevw+o6V
+	okjaDtJbFUnqyy3Gg3IGVLGk3ibUjbvAZd5ifATY3c1nhBNfNk2TZ75QfNeMObvNGwTPLN/Y2Uo
+	olrdMSj7mUeahDwt6PgeLfpTCF10mIWyqi0KWOrOOYfy+3J68niLoVVbiDnpmxVHxTp2tE4bUX8
+	c4VqX0x3B0IiBfzRKXlcq6oUGmKnxxSbPh5IALXlUsBE=
+X-Google-Smtp-Source: AGHT+IEIgjyn2T823EOBHK74/bH5E8XubiheWOevx+dd9/z3Zim2+niS7dN8jYFnYWY5DdBRVqRRAg==
+X-Received: by 2002:a5d:588b:0:b0:425:86c2:7b4a with SMTP id ffacd0b85a97d-4266d0da0a8mr18125593f8f.24.1760540274381;
+        Wed, 15 Oct 2025 07:57:54 -0700 (PDT)
+Received: from localhost ([212.73.77.104])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-426ce5e0e70sm29440947f8f.40.2025.10.15.07.57.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Oct 2025 07:57:53 -0700 (PDT)
+From: Askar Safin <safinaskar@gmail.com>
+To: tiwai@suse.de
+Cc: Dell.Client.Kernel@dell.com,
+	amadeuszx.slawinski@linux.intel.com,
+	baojun.xu@ti.com,
+	bo.liu@senarytech.com,
+	cezary.rojewski@intel.com,
+	kai.vehmanen@linux.intel.com,
+	kailang@realtek.com,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	regressions@lists.linux.dev,
+	rf@opensource.cirrus.com,
+	safinaskar@gmail.com
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
+Date: Wed, 15 Oct 2025 17:57:49 +0300
+Message-ID: <20251015145749.2572-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <87o6q8l68r.wl-tiwai@suse.de>
+References: <87o6q8l68r.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <18ef2c73-fb10-47b3-838f-bc9d3fd2dbc2@w6rz.net>
 
-On Tue, Oct 14, 2025 at 03:41:39PM -0700, Ron Economos wrote:
-> On 10/14/25 09:25, Manivannan Sadhasivam wrote:
-> > On Mon, Oct 13, 2025 at 10:52:48PM -0700, Ron Economos wrote:
-> > > On 10/13/25 22:36, Krishna Chaitanya Chundru wrote:
-> > > > 
-> > > > On 10/14/2025 10:56 AM, Ron Economos wrote:
-> > > > > On 10/13/25 22:20, Krishna Chaitanya Chundru wrote:
-> > > > > > 
-> > > > > > On 10/14/2025 2:58 AM, Bjorn Helgaas wrote:
-> > > > > > > [+cc FU740 driver folks, Conor, regressions]
-> > > > > > > 
-> > > > > > > On Mon, Oct 13, 2025 at 12:14:54AM -0700, Ron Economos wrote:
-> > > > > > > > The SiFive FU740 PCI driver fails on the HiFive
-> > > > > > > > Unmatched board with Linux
-> > > > > > > > 6.18-rc1. The error message is:
-> > > > > > > > 
-> > > > > > > > [    3.166624] fu740-pcie e00000000.pcie: host bridge
-> > > > > > > > /soc/pcie@e00000000
-> > > > > > > > ranges:
-> > > > > > > > [    3.166706] fu740-pcie e00000000.pcie:       IO
-> > > > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
-> > > > > > > > [    3.166767] fu740-pcie e00000000.pcie:      MEM
-> > > > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
-> > > > > > > > [    3.166805] fu740-pcie e00000000.pcie:      MEM
-> > > > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
-> > > > > > > > [    3.166950] fu740-pcie e00000000.pcie: ECAM at [mem
-> > > > > > > > 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> > > > > > > > [    3.579500] fu740-pcie e00000000.pcie: No iATU regions found
-> > > > > > > > [    3.579552] fu740-pcie e00000000.pcie: Failed to
-> > > > > > > > configure iATU in ECAM
-> > > > > > > > mode
-> > > > > > > > [    3.579655] fu740-pcie e00000000.pcie: probe with
-> > > > > > > > driver fu740-pcie
-> > > > > > > > failed with error -22
-> > > > > > > > 
-> > > > > > > > The normal message (on Linux 6.17.2) is:
-> > > > > > > > 
-> > > > > > > > [    3.381487] fu740-pcie e00000000.pcie: host bridge
-> > > > > > > > /soc/pcie@e00000000
-> > > > > > > > ranges:
-> > > > > > > > [    3.381584] fu740-pcie e00000000.pcie:       IO
-> > > > > > > > 0x0060080000..0x006008ffff -> 0x0060080000
-> > > > > > > > [    3.381682] fu740-pcie e00000000.pcie:      MEM
-> > > > > > > > 0x0060090000..0x007fffffff -> 0x0060090000
-> > > > > > > > [    3.381724] fu740-pcie e00000000.pcie:      MEM
-> > > > > > > > 0x2000000000..0x3fffffffff -> 0x2000000000
-> > > > > > > > [    3.484809] fu740-pcie e00000000.pcie: iATU: unroll
-> > > > > > > > T, 8 ob, 8 ib, align
-> > > > > > > > 4K, limit 4096G
-> > > > > > > > [    3.683678] fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
-> > > > > > > > [    3.883674] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> > > > > > > > [    3.987678] fu740-pcie e00000000.pcie: PCIe Gen.3 x8 link up
-> > > > > > > > [    3.988164] fu740-pcie e00000000.pcie: PCI host
-> > > > > > > > bridge to bus 0000:00
-> > > > > > > > 
-> > > > > > > > Reverting the following commits solves the issue.
-> > > > > > > > 
-> > > > > > > > 0da48c5b2fa731b21bc523c82d927399a1e508b0 PCI: dwc:
-> > > > > > > > Support ECAM mechanism by
-> > > > > > > > enabling iATU 'CFG Shift Feature'
-> > > > > > > > 
-> > > > > > > > 4660e50cf81800f82eeecf743ad1e3e97ab72190 PCI: qcom:
-> > > > > > > > Prepare for the DWC ECAM
-> > > > > > > > enablement
-> > > > > > > > 
-> > > > > > > > f6fd357f7afbeb34a633e5688a23b9d7eb49d558 PCI: dwc:
-> > > > > > > > Prepare the driver for
-> > > > > > > > enabling ECAM mechanism using iATU 'CFG Shift Feature'
-> > > > > > > As Conor pointed out, we can't fix a code regression with a DT change.
-> > > > > > > 
-> > > > > > > #regzbot introduced: f6fd357f7afb ("PCI: dwc: Prepare the
-> > > > > > > driver for enabling ECAM mechanism using iATU 'CFG Shift
-> > > > > > > Feature'")
-> > > > > > Hi Conor,
-> > > > > > 
-> > > > > > Can you try with this patch and see if it is fixing the issue.
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > > > b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > > > index 66367252032b..b5e0f016a580 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> > > > > > @@ -328,6 +328,8 @@ static int fu740_pcie_probe(struct
-> > > > > > platform_device *pdev)
-> > > > > > 
-> > > > > >          platform_set_drvdata(pdev, afp);
-> > > > > > 
-> > > > > > +       pci->pp.native_ecam = true;
-> > > > > > +
-> > > > > >          return dw_pcie_host_init(&pci->pp);
-> > > > > >   }
-> > > > > > 
-> > > > > > - Krishna Chaitanya.
-> > > > > > 
-> > > > > I've already tried it. It doesn't work. Same error message as before.
-> > > > Can you share us dmesg logs for this change.
-> > > > 
-> > > > - Krishna Chaitanya.
-> > > [    3.159763] fu740-pcie e00000000.pcie: host bridge /soc/pcie@e00000000
-> > > ranges:
-> > > [    3.159853] fu740-pcie e00000000.pcie:       IO
-> > > 0x0060080000..0x006008ffff -> 0x0060080000
-> > > [    3.159916] fu740-pcie e00000000.pcie:      MEM
-> > > 0x0060090000..0x007fffffff -> 0x0060090000
-> > > [    3.159953] fu740-pcie e00000000.pcie:      MEM
-> > > 0x2000000000..0x3fffffffff -> 0x2000000000
-> > > [    3.160039] fu740-pcie e00000000.pcie: ECAM at [mem
-> > > 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> > > [    3.571421] fu740-pcie e00000000.pcie: No iATU regions found
-> > > [    3.571472] fu740-pcie e00000000.pcie: Failed to configure iATU in ECAM
-> > > mode
-> > > [    3.571529] fu740-pcie e00000000.pcie: probe with driver fu740-pcie
-> > > failed with error -22
-> > > 
-> > > Same as before the change. The entire log is here:
-> > > 
-> > > https://www.w6rz.net/dmesg.txt
-> > > 
-> > Weird that the driver still creates ECAM even after skipping it using the flag.
-> > The flag is not meant for that purpose, but it should've worked anyway.
-> > 
-> > Can you try this diff and share the dmesg log?
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 20c9333bcb1c..58080928df9f 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -523,8 +523,12 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-> >          pp->cfg0_size = resource_size(res);
-> >          pp->cfg0_base = res->start;
-> > 
-> > +       dev_info(dev, "%s: %d native_ecam: %d", __func__, __LINE__,
-> > +pp->native_ecam);
-> > +
-> >          pp->ecam_enabled = dw_pcie_ecam_enabled(pp, res);
-> >          if (pp->ecam_enabled) {
-> > +               dev_info(dev, "%s: %d ECAM ENABLED", __func__, __LINE__);
-> >                  ret = dw_pcie_create_ecam_window(pp, res);
-> >                  if (ret)
-> >                          return ret;
-> > @@ -533,6 +537,7 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
-> >                  pp->bridge->sysdata = pp->cfg;
-> >                  pp->cfg->priv = pp;
-> >          } else {
-> > +               dev_info(dev, "%s: %d ECAM DISABLED", __func__, __LINE__);
-> >                  pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
-> >                  if (IS_ERR(pp->va_cfg0_base))
-> >                          return PTR_ERR(pp->va_cfg0_base);
-> > 
-> > - Mani
-> > 
-> After testing with this patch, I must have transferred the wrong image to
-> the target when testing before. The "pci->pp.native_ecam = true;" patch to
-> pcie-fu740.c does work.
+Takashi Iwai <tiwai@suse.de>:
+> If that's the case, try to choose HDA-Intel driver by passing
+> snd_intel_dspcfg.dsp_driver=1 boot option.  Or disabling
+> CONFIG_SND_SOC_INTEL_AVS could help, too.
 
-Thanks! However, it was not a proper fix. The issue seems to be due the
-assumption that the whole DBI space (Root Port + misc registers) lies at the
-start of the ECAM region. This is true for Qcom, but not for all DWC glue
-platforms.
-
-Krishna is working on a patch that decouples the DBI region from ECAM so that
-the driver will continue using DBI for accessing Root Port config space and ECAM
-for bus > 0.
-
-This is one step backwards for ECAM since the driver is supposed to use ECAM for
-accessing all devices starting from the Root Port. But since DWC has clubbed
-non-Root Port specific registers in the DBI space, we have to live with this
-limitation as ECAM is supposed to access only Root Port specific registers.
-
-The patch will be posted after internal validation asap.
-
-- Mani
+Passing snd_intel_dspcfg.dsp_driver=1 indeed helped me.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Askar Safin
