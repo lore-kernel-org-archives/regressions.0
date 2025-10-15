@@ -1,92 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A112FBE1A;
-	Wed, 15 Oct 2025 15:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1345A32ED4E
+	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 15:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760541809; cv=none; b=MO814qEK871Y6SaPhFp8FHrGhSODuqCPBxafzQaXLb9VcNQLgzNB0jma8REcVjaUFEwyK/CIiSTYeoofZEeibzQZkdYHZAAOfjlp8dKORqG0TT97TgQFfQZP1+wRQtrn0I8hEQJLcWySCevMXm07K/IiLHt6tqAeSobLeZh0ZsY=
+	t=1760543176; cv=none; b=JgK9K01atPY4sm+jMk9uwLY+OA6TRToJ8LLJozwVNAtktELEUp83nSPzdSv/1/HGnxcDWuV1yBxBofcGBLLctNaTepoTAtFpPtLR2I3FUr7AwErTOXS+hWk+kZr54exZED2dmYZGeV7R813qc/VdPDJorVa+HL7uzmSd3wL8qU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760541809; c=relaxed/simple;
-	bh=l6kPATXhIfK9tJGsY5Si9o4/LJ8jrOYvZVE72ylEkQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oj3Kw32+Cw/7EnJrIiHGq38KjkVYF+gI5FQZltgVEr9gvx1Tt6uTxW/HigDnkEUD+xAu0r07blHrTrs7kXI8b7ByUcctQijeEJbi2kxs3fT6x7uviEDJQ/qOnS/Q0OH1LfG9Mvb8dbfDQsEapo5eW9NfyXYMkxA7np9Uy9XUf+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m56r7RMK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760543176; c=relaxed/simple;
+	bh=Nd5hXUmEuB5qRp8pWl35xSOUTluz6/AfHU93GdFCKoQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHSW2PtuW3We3ss9FWC9yvkDopp0YcUDxIbZYVlYGcXr6Awi50Us1mn4l/1rBzLtKump3IMYaP2iRnrzyE2GHkLKQWv0HcE10fto1Bye8yrQ0dPlfZOdrdWId+Juwnq3vC00W2U27HndcSGLBjOXcthbMk/fhr1d0zFVx9CoHDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vyw0XXR0; arc=none smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m56r7RMK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA51C4CEF8;
-	Wed, 15 Oct 2025 15:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760541808;
-	bh=l6kPATXhIfK9tJGsY5Si9o4/LJ8jrOYvZVE72ylEkQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m56r7RMKJqSqhNWNldofgC9LBpvSoO9uy0ccsWg+V9BC3NJhuu5N5FVlHjHi02vl9
-	 Q5O4dn1PUTlgoJnAecjyynFt18RZenLAQ2F7bD3F3+M8lNYItYO1HUd19ZGZvFMBFd
-	 NfAuH8olcN61gpWJJtHkNB3/hgCPuYMHDXC5f0KJuoVsHjPFKAB1E9STJg08bkiggE
-	 /KBhLX6YoJGe8EgODNQm8rtxNndVVYLUJrkvN/GQt9X+yzunFmfzPf+18jliilGcgK
-	 AN8YKNhxnYZ34QJFDaECcPJ5MCNMwagbbYW56rcau3UGCLGmVpEVj+2ML23MhbDB2q
-	 w31CY1wFk0vQw==
-Date: Wed, 15 Oct 2025 17:23:21 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	manivannan.sadhasivam@oss.qualcomm.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Chia-Lin Kao <acelan.kao@canonical.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
-	FUKAUMI Naoki <naoki@radxa.com>
-Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
- set by BIOS for devicetree platforms
-Message-ID: <aO-8aeJdvApesEqi@ryzen>
-References: <22594781424C5C98+22cb5d61-19b1-4353-9818-3bb2b311da0b@radxa.com>
- <20251014184905.GA896847@bhelgaas>
- <5ivvb3wctn65obgqvnajpxzifhndza65rsoiqgracfxl7iiimt@oym345d723o2>
- <823262AB21C8D981+8c1b9d50-5897-432b-972e-b7bb25746ba5@radxa.com>
- <7ugvxl3g5szxhc5ebxnlfllp46lhprjvcg5xp75mobsa44c6jv@h2j3dvm5a4lq>
- <a9ca7843-b780-45aa-9f62-3f443ae06eee@rock-chips.com>
- <aO9tWjgHnkATroNa@ryzen>
- <ud72uxkobylkwy5q5gtgoyzf24ewm7mveszfxr3o7tortwrvw5@kc3pfjr3dtaj>
- <aO-Q3QsxPBXbFieG@ryzen>
- <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vyw0XXR0"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-636d5cefab2so7095548d50.2
+        for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 08:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760543174; x=1761147974; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkmO8kwNPXSyL42vtuMXueXt3VwnQ3PwUmTN5CpC5Ug=;
+        b=Vyw0XXR0V4Kt+LhfyINqSmuc1Wx4W6fq4IKaoHjJUijTtawau8wdNuN89Pbn/0wzft
+         PaC9cthNjuudVms7fbxBfVAjOhvb9tA7L27Ew9E1GIBY31gS17ztZU8aQYH3AZaERyLh
+         QDOP97H96nxS58HzFTHOeSotlzROVuFDs7MJGLJJIoeAX8qAAeON3w8UO3NPMDuoc9Sp
+         APazGp8fyucV9N7jK0EFtgEHZFPuVUFOBiU7AW9K+J8otk+oZYhF28EGSU1gKEfRu6IZ
+         hotL9mlXCtibicRJzqC16QD+MHqrkAEcODZI5YAqOlh0ocHgtA5spBopqBVNT5FBKcGH
+         Ej/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760543174; x=1761147974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QkmO8kwNPXSyL42vtuMXueXt3VwnQ3PwUmTN5CpC5Ug=;
+        b=ZOcVKaZ0IgTJFCEKiIgG5oz18POk92RW0HJYSFI3d5CGB9wC9Pk6T51uMA1neV7cNp
+         RpfWovuLx3uIWc49aiENdRDquYi44S/wBaI0mz+HoJiypXJWi5aIjlIxGS3qimsGtO0/
+         V2XfRAEKULvpb2qDKsFSHjVm/ga4M1zA+iNGkdgTH9F32NcUbotv0x9ikip+B/JPzRdi
+         ON3a0AjguT/T93uHfxrO3OATFL0fqcpjxVvbPrRZfm4NQEyiAoaAuIEUwtWb8kUSgugR
+         8hGpNF6YdOBaRAEXwioL6H4pP08SDxYV3Emo2fAnSzn6716G1sjiDi3mJqV2yzCzf9Rz
+         FVzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXugbs/0Jqq1HdZ5T0t9konLxLtOTXLIWERENmZ2NYgeVPxXkBzk2BRGsnVWTULE2TNMSBtFplnNBbvgg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGnyTC5KLajnXEwnMVdI24PMyIl2XVGUWBElEpes6KFdx6Yrmi
+	U3OPJTkbXH5FHdwyS2h5KEAMGdrl/tBkQWFAlUWtBwIFiybm2q7rAbjXujYDwSVtI89n/Gk8CPo
+	LNqcIQ1MV9zBBxdrCSfnp8Wmbyoh+Q00=
+X-Gm-Gg: ASbGncuaPw3GH4X1J6h68a3B18YIN/394cnZy6ECkqw+Lj4rs6jsSU6xgx78Pg1a2cC
+	5nbw2Tgc2euopF5rx39ERtCfZv25hrO9L1x8RJTcQ8ei8EqySrYRftQOZD/cm/pfGVHL6StG6th
+	lZ8t+YhIaG99ZUTbz5/t6d3CTAzpaD3LjEXYpXH1uTfzHh7+YI+9mzlMK6i88bBAvwwiPWsozAH
+	xLyYSONmIjlHyY9ZVUgsCeUJO8szx0IaZAskURXQoHdQiEtab4=
+X-Google-Smtp-Source: AGHT+IFgFgiCn2MXat9mzlismka2yMZKZPJMj5/8ogylK7npyFOu2pzbbuaB1mNpotL/j1a2GlPY5/iLw60S1YQr77E=
+X-Received: by 2002:a05:690e:4291:20b0:63c:f5a6:f30d with SMTP id
+ 956f58d0204a3-63cf5a70755mr10874437d50.55.1760543173814; Wed, 15 Oct 2025
+ 08:46:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
+References: <87o6q8l68r.wl-tiwai@suse.de> <20251015145749.2572-1-safinaskar@gmail.com>
+ <878qhckxc5.wl-tiwai@suse.de>
+In-Reply-To: <878qhckxc5.wl-tiwai@suse.de>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Wed, 15 Oct 2025 18:45:37 +0300
+X-Gm-Features: AS18NWAiuA0FoKwp8uia1YrxNnyhxfuszDQDYT8g_Hy9a2KLASwscAn4IzjGr_Q
+Message-ID: <CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA:
+ hda: Move controller drivers into sound/hda/controllers directory)
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Dell.Client.Kernel@dell.com, amadeuszx.slawinski@linux.intel.com, 
+	baojun.xu@ti.com, bo.liu@senarytech.com, cezary.rojewski@intel.com, 
+	kai.vehmanen@linux.intel.com, kailang@realtek.com, 
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+	regressions@lists.linux.dev, rf@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
-> For now, this is a acceptable option if default ASPM policy enable L1ss
-> w/o checking if the HW could supports it... But how about adding
-> supports-clkreq stuff to upstream host driver directly? That would help
-> folks enable L1ss if the HW is ready and they just need adding property
-> to the DT.
+On Wed, Oct 15, 2025 at 6:18=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
+> Good to hear.  So a part of the problem was the incomplete kconfig
 
-I like your idea, if you have time, please send a patch.
+Another data point: Debian's experimental kernel (6.17.2-1~exp1) does conta=
+in
+culprit (2d9223d2d64c), yet it works.
+So, it seems that Debian's people somehow cope with this bug.
 
-However, adding (working) support for L1 substates (via 'supports-clkreq')
-is new code, and should thus be queued for next release instead of v6.18.
+Also, when I take vanilla stable kernel 6.17.2 and apply to it Debian patch=
+es,
+listed in this file:
+https://salsa.debian.org/kernel-team/linux/-/blob/debian/6.17.2-1_exp1/debi=
+an/patches/series?ref_type=3Dtags
+and build with Debian's config (with "localmodconfig"), then... the bug hap=
+pens.
 
-For now, pcie-dw-rockchip.c is broken for a lot of PCIe devices, so the
-fix should be minimal and target v6.18, i.e. something like:
-https://lore.kernel.org/linux-pci/20251015123142.392274-2-cassel@kernel.org/
-
-Support for L1 substates via 'supports-clkreq' can be added on top of that
-patch (while targeting v6.19).
+I. e. Debian's kernel has some unknown magic, and I cannot reproduce it by
+taking vanilla kernel, applying Debian's patches and Debian's config.
 
 
-Kind regards,
-Niklas
+--=20
+Askar Safin
