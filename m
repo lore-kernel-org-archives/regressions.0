@@ -1,282 +1,209 @@
-Received: from GVAP278CU002.outbound.protection.outlook.com (mail-switzerlandwestazon11020126.outbound.protection.outlook.com [52.101.188.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69A62FF666
-	for <regressions@lists.linux.dev>; Wed, 15 Oct 2025 20:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.188.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760559043; cv=fail; b=LQIMrbTQ0dXIdYGU7W6vC9/4JTUpsr0WZa2pq10WDLfR7hxg4t7ls/NVpO0TzKJHsQbKuydDutWa6d3iMRm7fkiSQVdbKnBbhffQioe1/WT7p0orMjemC4WMZazbxybu+T7ugjFyyyEfiP0xd3gktmbtxk/CTJ4xLv7VwLc+Qk4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760559043; c=relaxed/simple;
-	bh=NGTqNP2XXb/eNMiuqPLqDCOIuGQD/sCw7UCF+GwYqdA=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=pvGJpTLKNMcecSqlp3kdE8f5hWj333MFyqRqWvg0PX2ZX1IpQ06KqHqZAqef28jBq93V/J5ZtlPacLW9YfWLBNzrk1fHvq7wDbPVI4extsgyEEJSAaLXGnuJnfPLZllImVieGNlY5R9K5FCdZmTYKDvIJPUPxCx3l7n20tzMDn8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=onway.ch; spf=pass smtp.mailfrom=onway.ch; dkim=pass (2048-bit key) header.d=onway.ch header.i=@onway.ch header.b=R4PEmPeE; arc=fail smtp.client-ip=52.101.188.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=onway.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onway.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38C3270542;
+	Wed, 15 Oct 2025 22:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760568635; cv=none; b=TeZc/vJ0rtrwwFNWCqPeP1+XHNJeW1RfL/I6zywHP3X16DeHyEkGQ/qrj7sk2UMDmALERMk30ds9cKDcwmN33d4bXA5GG3NWNhIfhxO+SwwGp9Z6PEg5K4cFBQh8NqMAzeNEIWWsIooHaz2nmgNqhtia76SiTgxTFf/bQ6Mp/q8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760568635; c=relaxed/simple;
+	bh=YLBO0n7kCNA2DNr4AULWGXKmK1HQxkDhSaZZFEgXrjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=GIyqIQjNbU6MI6a6xawNwmYumaMhEvMpJiP/bNKQ7rn0hA9mSWDIaPBaxu5O16yVMBi019rrxBBwURRn/8r8k/ki4PidBNa0GlaR9kYcdrnPtIWoj1tjWmaR/OrS13W2+04hZKlWtzt+gfFl7dh92SXb0+6h4oke5BkqdbIcrso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUvJmCsS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=onway.ch header.i=@onway.ch header.b="R4PEmPeE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B5+2bs/wbihZok+GZmgiCSN4hnv89+bLKwA+Q2IvXh8FbGwiQqe1IjNn9yZ9ie7SQYdAakISjP8OrsvL+ueH4HVNGPt7GfAWcOdJrSblKq2U8Yb/UDkK239ZZyK5020OGuGffi6+O6pcbeaK0fJG1jTVTgO1aUL05RwDToXQK30kQVgoYvuasQsWpcqrZq7ZKJtg70ePQOK9rY1mxNdR5T1Q0hY2jVa2cb+khr013ZALFb2WnVVyQi50aSzU13jrIKhns5h6qYSLdWEqYkjpDxNHM7QTu3/KakEHdgYu68ZQFeM4TV/qFFwcAK7EqZaAlQtXe4R6l0LnVTeI+6oQaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NGTqNP2XXb/eNMiuqPLqDCOIuGQD/sCw7UCF+GwYqdA=;
- b=FTwTEz2JkQXbho2THPlqvvVQEWvCbufvfUIsox12ydZODJ1Im5qbHTXCWYPnjvjnBlDuwWZvRuLtXuyQNyQrltd1qWascvOVnFhG8/NBFoKhBlHj+2KaRAwcWLczmC0Jy9Ust+XzvFLhQlTYBBuiDCqaX7igQoufFfhPx3MLUsSdTMutH8jiTxGE5fQxm5VkEEtXY1un9isCeLESgdYgf/+y2rXQGbMujLkCTdqLCLFQi+ZQEuhmtbsZvGaOMJP4rHvxUUTZTgc4kqGTYfts9YaVX4qmJfpOsfHT5jMuDCDMEFBLh5xB9j6WAN65hzk/830P3yIbTfsAaD7igFU0+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=onway.ch; dmarc=pass action=none header.from=onway.ch;
- dkim=pass header.d=onway.ch; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onway.ch; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NGTqNP2XXb/eNMiuqPLqDCOIuGQD/sCw7UCF+GwYqdA=;
- b=R4PEmPeEVeit3d0MM0x6Sy4OhZBPNUfFyzXlEo1KXgKrkFSxq9Zjaw4/H0CkF0X/khD8WRPWT82U8nUtVEnqvNp5GyXrX45K+P0PLoidlpf4pd8NkEKiQC7+NTyBiz57SCuS0fry54Q7YzxxdkxlizbUbSBfu3kEFWoWsmCkcQ+CLFDuAvNwCsuxpRjSurhXCYbGUCAm2zVnKtLsN1/8OsBwm4+zXyMiCU3tXXeKZCKw3BBYN/5ayTqFVFqvk2jYfEnKiFRSPAJ+k4E8a6NYPyeH13aLVgmk8MS3F0jD5okiCcz2xkuCPUoPpWaczwNn59PBGg5kDNeGGymCX8y6Cg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=onway.ch;
-Received: from ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:25::12)
- by ZR0P278MB1182.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:80::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.11; Wed, 15 Oct
- 2025 20:10:35 +0000
-Received: from ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM
- ([fe80::34f9:58ab:6038:4efe]) by ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM
- ([fe80::34f9:58ab:6038:4efe%3]) with mapi id 15.20.9228.012; Wed, 15 Oct 2025
- 20:10:35 +0000
-Message-ID: <03727147-0115-4ce9-b68d-756c6e41db94@onway.ch>
-Date: Wed, 15 Oct 2025 22:10:19 +0200
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, baochen.qiang@oss.qualcomm.com
-From: Andreas Tobler <andreas.tobler@onway.ch>
-Subject: RE: wifi: ath10k: avoid unnecessary wait for service ready message
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms080304020100080803010307"
-X-ClientProxiedBy: ZR0P278CA0221.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:6a::29) To ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:25::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUvJmCsS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C64CC4CEF8;
+	Wed, 15 Oct 2025 22:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760568634;
+	bh=YLBO0n7kCNA2DNr4AULWGXKmK1HQxkDhSaZZFEgXrjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=AUvJmCsSG4A8dOgYSfL3n/ufhUIE/Ip9vzQ6rrDJrXcsR7571piThJsUq7u6K65Cd
+	 57tGEB3YaFAQ6OBlhXIhEnEYxnIl3qPqRdaXCDZlUzT36zCH6HHUDOIFC/0l86h4S/
+	 cDKUb8kw3Dgpf2E2jE6lli1G3V4seucF4/bKrhO/NOb0dkP8QLv2JdyPv3IeADCvIU
+	 F/+NJIuDi9qIn9oH407Ws30IHA1spx6HPn1NF0YsxM4gEFas8vJSZex+PFQNOfNjkG
+	 FWnT8PB5YDapki8wyOGfGRhvgXzrNTLYZQA0+XHfqBR4OKbhvYc93OI6pitZp2ABc6
+	 ZM+kxKC/7W54w==
+Date: Wed, 15 Oct 2025 17:50:33 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Diederik de Haas <diederik@cknow-tech.com>
+Cc: FUKAUMI Naoki <naoki@radxa.com>, manivannan.sadhasivam@oss.qualcomm.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Chia-Lin Kao <acelan.kao@canonical.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-rockchip@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+Message-ID: <20251015225033.GA945930@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZR0P278MB0202:EE_|ZR0P278MB1182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3643e458-9fcb-478e-2ee4-08de0c26e6b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WDJ5WHBaQUYxTmIyWFNoYkt6bGFmZEFTcDZGc2hSSTYzSmpMTFBoc01qRGtN?=
- =?utf-8?B?UW1ySCtXRldvb2hReEw2ZHMrZ0lEWng1MkZFMW1UcE8xdlZzNEg5SmtuL2Zq?=
- =?utf-8?B?d1FPZmRmand1VENUcndrOHZ1WVg5cnBJSnRKVUVJanpFQ1lOK0s0OUc0YWJz?=
- =?utf-8?B?T0YvWmdTMy9lMXA3M2JieStONW8vSmUyb2FNallqOXROUFZ1SU0weGhlUEI1?=
- =?utf-8?B?STVFNFNtclJOdzRkUWJ4dmxEYjNiU1BXS1NvMG8zaFpBV3ZRNEhNQ0JlSXg3?=
- =?utf-8?B?V0hqU09hZGpGR2xwS01DT1JsSXhWUUJuZFpndHZQY3YxOUh1SmRNZElkTkZR?=
- =?utf-8?B?K084Kzk2UHV2VXptWkVEVEVucVEvb2QwNWh0Vzd1SmNtVmdyS2xnejVrU2pm?=
- =?utf-8?B?QVRSV25TVTcwbXo3cS9sbzgxbnFKYUZJY2NOOUdwNzZxVlNPOVk5elZiTnZz?=
- =?utf-8?B?VkpCQU5QcFF0WnQvWmZnZVRFcDNBOG1qdTdTdUJDMzNCb2w1N1lJbW9uYiti?=
- =?utf-8?B?WXZDRm9DQ2tOeDNId3Y3Y3lndTQ5WHNiOGRIWlRadCtPRURaUnhmMzRMUUtQ?=
- =?utf-8?B?ejZsQU14MXFLOGNvTFE0WkZGazdINmQzdHlYQ2VGZXUwOEp2ZG5YUVhUdG1a?=
- =?utf-8?B?S1dzWEFndzNaMmZvSkgyVncwY2NwVk1HbE5JM0pJanR1SkQ2VE5pUmJKRTlr?=
- =?utf-8?B?cEorQjMzOWNSeE83VWttblkxQ0I3YWZzeHU4K2pFd0NYTHA2UmYxY05UeEx0?=
- =?utf-8?B?SzRFR2cvcm9qcEhFUEVJZFp4aXNZeHBLdnJmMC9Ha0lWQkl2eS9EeGRPbmtx?=
- =?utf-8?B?NzM1SDhzMjNNeVVKa0RRNkVVT0RobjhJbVBNMGpVOWNLQ3ptQ0FkSkV2QWZr?=
- =?utf-8?B?RU1nUndJUFc3SzNTOHIrL1BxMm9mY3RPTXlsWDdCRC9SRURHaDdIWkd4UFNJ?=
- =?utf-8?B?eWdiREsxVlZ0Ukp6TEhNWUtkZ0pScElBRmptdkJvTHI2OWJJK3pzRDJOVXFP?=
- =?utf-8?B?dmE4eW1WWCtaT2JGRkZNZVNIVTJqN1ljRWFCdkRoajFIcytQbGZZM1pZdmpv?=
- =?utf-8?B?Mk9GcFpDZENnaVJ1REo5dUtJOEhyT1JkM3UrMmxCU3p1dGs4ZnpraU90UnlT?=
- =?utf-8?B?WUJxRURVcTNOREV6OVpUZHRCSXpyc1lGb0ZuSXZvekxMNEFyT2NUSTBPSWNI?=
- =?utf-8?B?MDhVV0dMRzRtODR3aUZVblJyVVlSbHNmdGhQZjNSUHEzU3M1L0JHY0N3bFIy?=
- =?utf-8?B?WXFjR3lVWW4zSGdYOG8rR3lTTzIrZFg5cWNFSTBFcWZ0Q1VVaTZJcUhPUVlU?=
- =?utf-8?B?TzJOQ1dHQnE4N2ZMcG1CZVovZ2ZWcGtYallGSUJPWGJmTmZyclViZTd6U3Vk?=
- =?utf-8?B?M2tKL001eVJwY2RFTFJwVk9OVFp1dGcvS3pvbStXMzRtbFFNQ3ZmUkpnc0tq?=
- =?utf-8?B?Vkt1Wm5Cc3VKc1EwKzVWcC9LU2NaYjE2UVlOY3gzUVpxd2lKbHd6QWRLd1FI?=
- =?utf-8?B?c3pLSHl4RGdHTzB6ZW5rMHFQbytacDcrUkpyZk9mblBCdUhudzFRNVhreHJ1?=
- =?utf-8?B?R0NRdXU1ZFY3Z3J1MzFtRjI1VFJlcElxa2FtUnBPanRqb2dEZlU5VFdzbmNj?=
- =?utf-8?B?eEYzb2FBWGU0RGUvWEZkUDduUHpuZEpCVzA5SUtLbU15RkVPZXkwWStjNDFD?=
- =?utf-8?B?YmcxMjBoNFlxRXN0UjNjOFBFeTU3blU0SkNZYWdpMU02SFhWL2ZLMlNwMyt5?=
- =?utf-8?B?M1BXOFp2WHdMMkRGM05sWVdaUGt3YSt0dFhLdDRqekRBRUxyMzNFbG5BSnUz?=
- =?utf-8?B?bWszYncwZ21rWTBFTnV6cXh3aVlVUzB6SHRwSW55OTloTEhNeUtxOGlCL1Vn?=
- =?utf-8?B?UDRhR2lZZ3ZuYnp0UmY3VnpNVnc0YjhXKzRySTdRR3o4dHRldCtIeW5oVnVJ?=
- =?utf-8?Q?i+Ke2BK3NbNhzqe1If9mQAN4GMLXy43o?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OE9ZNXdEbFZSTUQ5d1J1RjRoNEkzM3pHbFRJRVYvNFhiYjBSNmhtK3VQRG9U?=
- =?utf-8?B?Umljb0F5b2wrUWJESStzZmRSWklKWVgzRjRuM3E3aWlFQnpmdElyTUtpVkRl?=
- =?utf-8?B?S1kxQ3JLSlJPcDVtUmZiZnlVM2VVUWxET1ViTUNNa0dDR2NqRFByR2JEVDZ0?=
- =?utf-8?B?Vm93bjFRQWZsSlVETGY4dWFpbEs5UW05T0Q5bFp6RFRjL0hMQmx5UHFPdTJi?=
- =?utf-8?B?VnpLMEdTZDhCRzU0ZEZZd3l3blVRSjM2QkNpcjhsVGdGWEdPVUtyd29ZUGxF?=
- =?utf-8?B?TjdDNjRJaENmcEVQeVA0WmlPK3hNb0JIdlpUMnNTR0pZK3ovSVZ2WU1zQklX?=
- =?utf-8?B?Zmo4djg2M2ladExhc2JSK2tia0k2UzFjdG1jNGRVeUlOUmpxZldISTBUbUJ5?=
- =?utf-8?B?bFZLc05oUTlia0VLTkR2OTFBa0MwcEVTRmdibzFNNng4N0NPTTFzdnFDWTBn?=
- =?utf-8?B?OGg0WTh2dW1YdzhnT3NQQjFYd3ljdUVhS3l1dDUvaEYzTVpzWmlXemhnbXpw?=
- =?utf-8?B?SDBQWkVQV1p4THVVclZMOWloSUZHWGhvcDJZYVhGODlTUFZlcUdpTHFCaW5s?=
- =?utf-8?B?a3BybWxqc3UxNlFtN3U0eittYWJEbFY1amhic0gvRGNuUG5oUUxzRGFwcGZp?=
- =?utf-8?B?QzhPL3VGWVhueXU0TTk3bzNYNmFKMmRvVnd3Wm1mT0FKNkh1MnNCbjBCUStC?=
- =?utf-8?B?Z2ZvSkoyakxnc054YWlOZEJWNlc4WlFqVjFITk94RGJRRGFZUXZobGpvaStp?=
- =?utf-8?B?WnpaLy9MVHJ6THRDQ0cvRHJNdlhIVWZyL0JmNFJLRmNzZSs5Rmx5cElaMy9L?=
- =?utf-8?B?SWpWd2tCNDh6WW90Szg3d3lDc3VTZnh2MnpySmVSa21vZ09BWVFWbTNCc2JT?=
- =?utf-8?B?MzlqYmxTVVU2NDFTL2ZDSGJzRXdjRkkzNEVsTHJVK0J2Zys3ZGhQVXZTTVN1?=
- =?utf-8?B?cHVFdldtRE9QSWFLcTUyRGEyNkx4ZUtxOFNUOEtPa2o1dUhyTGx2cjR5U2Fq?=
- =?utf-8?B?N29TUGpvb1g5ejlFa0V6YlczSDRONTQ2QWxnRXBtYnVNeVBla1BjektrNUVU?=
- =?utf-8?B?NHNnU3I3SVUxWERwbFBLeGVCS255UGZITnF6czMrMHFsbmZ6Tm1Eamw2WFBy?=
- =?utf-8?B?eGc5TDREN3dzdnF5OU01ZUt3ZlNlYTlOQTlWOFBRc3BrS0pSdm9rSFVOR2pS?=
- =?utf-8?B?UVdvZE1kdTY2U2RERVpLU2Q2OGdra2pyR0FXM3JpZktCUTFFb2E5VWE4M3dy?=
- =?utf-8?B?N1daVHp2KzBLTGd4NEZMZnM0YmoyVEZPL01NSTVFQjVjNTZORFBNNEJ5Vkw4?=
- =?utf-8?B?Y3VjaDVqczNXbWxQT05ieEl6UDhxY1RiYmNzUU9HZGpRZUdObkFkcGhwL0Zq?=
- =?utf-8?B?TWlXZm53YSt1a0NjMWtFdloyYllaRTlFQ0lnYVJRUGoyKzRuY05HMGlSbG9U?=
- =?utf-8?B?a0c5ZXNSWkdtWGszNnJvMGVCbE1vcU12R1FvalJDeEpTbVgzSUNCYzByRGNw?=
- =?utf-8?B?R3hUSjE3aVJxRXlEWmxoMDhGWUtLQm5DUXNRRlQwUFdkaG9GaFQycENZTmZs?=
- =?utf-8?B?MDNobmZiQnd2VnJEYjllaFNHYjJJUUxyS1JnTzJGbFZCUEQwQXBvMC9UWkpV?=
- =?utf-8?B?ZHFxMnhkb2hvZEY5VW5lU1RTdUU2M1k4VFZPUlZYMko1QmdFK3IyNWduUWM3?=
- =?utf-8?B?bExaMWJyOU45dFVGZnRFcDMvTHlkZmxibmhqNGwzcTd0OTlRck8vK3BWQ1RY?=
- =?utf-8?B?NUdxbEhUbEZFbkxVeitTeVhYMEQ2ZXdyWENjYnVzcG9KQTRDRDhVR2RYUEt6?=
- =?utf-8?B?NjJZTTJGeG5INXU4Tm92SFhJUWxOU2FLN2pGaHlNeGZPQ2xjN0R6VVEwRlRP?=
- =?utf-8?B?bEJLa1lHdTZ5cUNjZHlxWHFaS1ZDMk9kWkl2YlArY0tvVTh0OWhrTU10RXhD?=
- =?utf-8?B?TXNkM3dmeW5NT1VDK2RWUTZNUHdHckNrY1c0VzhwOGhMNitnZ1pLUVEwTklT?=
- =?utf-8?B?MEpaN2MyMlNFSitxazZzd0s4UWVQTU9tMzgvbzJaRDUvbW93aWdSZVlOS2dj?=
- =?utf-8?B?NHZiZzdLd0hVditSdFJ0bWVRaU1RRy9tZ1ZqY2hYTW5vVCttZEM3aGFJK3Ey?=
- =?utf-8?B?N2E5SmNVOTNlR0c1K0g1TldYYmc0RkxMaHAzMFEvd1N4RDZTR1orZWt5WWht?=
- =?utf-8?B?MGc9PQ==?=
-X-OriginatorOrg: onway.ch
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3643e458-9fcb-478e-2ee4-08de0c26e6b7
-X-MS-Exchange-CrossTenant-AuthSource: ZR0P278MB0202.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 20:10:35.5948
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6609f251-fcb7-49e1-90a9-db1acfa508db
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lMrR6rcXk4tP5dy0GxFgjGlvT2HDoaVdW9R1npGjFNC6bk1dAkvyIDXo3UmCKW5u0p94OoPvu1zs01QVnB7WOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB1182
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DDIW7ZP5K1VR.2I7VW56B9CZLF@cknow-tech.com>
 
---------------ms080304020100080803010307
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Wed, Oct 15, 2025 at 02:26:30PM +0200, Diederik de Haas wrote:
+> On Tue Oct 14, 2025 at 8:49 PM CEST, Bjorn Helgaas wrote:
+> > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> >> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on the
+> >> Rockchip RK3588(S) SoC.
+> >> 
+> >> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel either
+> >> freezes or fails to probe M.2 Wi-Fi modules. This happens with several
+> >> different modules I've tested, including the Realtek RTL8852BE, MediaTek
+> >> MT7921E, and Intel AX210.
+> >> 
+> >> I've found that reverting the following commit (i.e., the patch I'm replying
+> >> to) resolves the problem:
+> >> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+> >
+> > Thanks for the report, and sorry for the regression.
+> >
+> > Since this affects several devices from different manufacturers and (I
+> > assume) different drivers, it seems likely that there's some issue
+> > with the Rockchip end, since ASPM probably works on these devices in
+> > other systems.  So we should figure out if there's something wrong
+> > with the way we configure ASPM, which we could potentially fix, or if
+> > there's a hardware issue and we need some king of quirk to prevent
+> > usage of ASPM on the affected platforms.
+> >
+> > Can you collect a complete dmesg log when booting with
+> >
+> >   ignore_loglevel pci=earlydump dyndbg="file drivers/pci/* +p"
+> >
+> > and the output of "sudo lspci -vv"?
+> 
+> I have a Rock 5B as well, but I don't have a Wi-Fi module, but I do have
+> a NVMe drive connected. That boots fine with 6.17, but I end up in a
+> rescue shell with 6.18-rc1. I haven't verified that it's caused by the
+> same commit, but it does sound plausible.
 
-RGVhciBhbGwsDQoNCnRoaXMgY29tbWl0IChVcHN0cmVhbSBjb21taXQgNTFhNzNmMWIyZTU2
-YjAzMjRiNGEzYmI4Y2ViYzQyMjFiNWJlNGM3KSANCm1ha2VzIG91ciBXTEU2MDAgQ29tcGV4
-IHdpZmkgY2FyZHMgKHFjYTk4OHggYmFzZWQpIHVudXNhYmxlLiBSZXZlcnRpbmcgDQp0aGUg
-Y29tbWl0IGJyaW5ncyB0aGUgd2lmaSBjYXJkIGJhY2suDQoNClRoaXMgd2FzIGRpc2NvdmVy
-ZWQgb24gdGhlIHY2LjEyLjUzIGZyb20gdG9kYXkuDQoNCmF0aDEwayBtZXNzYWdlcyBleGNl
-cnB0Og0KLS0tLS0tLS0tLS0tLS0NCk9jdCAxNSAyMjowMDoxMyBrbG9nOiBhdGgxMGtfcGNp
-IDAwMDA6MDU6MDAuMDogcGNpIGlycSBtc2kgb3Blcl9pcnFfbW9kZSANCjIgaXJxX21vZGUg
-MCByZXNldF9tb2RlIDANCk9jdCAxNSAyMjowMDoxMyBrbG9nOiBhdGgxMGtfcGNpIDAwMDA6
-MDU6MDAuMDogcWNhOTg4eCBodzIuMCB0YXJnZXQgDQoweDQxMDAwMTZjIGNoaXBfaWQgMHgw
-NDMyMjJmZiBzdWIgMDAwMDowMDAwDQpPY3QgMTUgMjI6MDA6MTMga2xvZzogYXRoMTBrX3Bj
-aSAwMDAwOjA1OjAwLjA6IGtjb25maWcgZGVidWcgMCBkZWJ1Z2ZzIDAgDQp0cmFjaW5nIDAg
-ZGZzIDEgdGVzdG1vZGUgMA0KT2N0IDE1IDIyOjAwOjEzIGtsb2c6IGF0aDEwa19wY2kgMDAw
-MDowNTowMC4wOiBmaXJtd2FyZSB2ZXIgDQoxMC4yLjQtMS4wLTAwMDQ3IGFwaSA1IGZlYXR1
-cmVzIG5vLXAycCxyYXctbW9kZSxtZnAsYWxsb3dzLW1lc2gtYmNhc3QgDQpjcmMzMiAzNWJk
-OTI1OA0KT2N0IDE1IDIyOjAwOjEzIGtsb2c6IGF0aDEwa19wY2kgMDAwMDowNTowMC4wOiBi
-b2FyZF9maWxlIGFwaSAxIGJtaV9pZCANCk4vQSBjcmMzMiBiZWJjN2MwOA0KT2N0IDE1IDIy
-OjAwOjIwIGtsb2c6IGF0aDEwa19wY2kgMDAwMDowNTowMC4wOiB3bWkgdW5pZmllZCByZWFk
-eSBldmVudCANCm5vdCByZWNlaXZlZA0KT2N0IDE1IDIyOjAwOjIxIGtsb2c6IGF0aDEwa19w
-Y2kgMDAwMDowNTowMC4wOiBjb3VsZCBub3QgaW5pdCBjb3JlICgtMTEwKQ0KT2N0IDE1IDIy
-OjAwOjIxIGtsb2c6IGF0aDEwa19wY2kgMDAwMDowNTowMC4wOiBjb3VsZCBub3QgcHJvYmUg
-ZncgKC0xMTApDQotLS0tLS0tLS0tLS0tLQ0KDQpCZXNpZGUgcmV2ZXJ0aW5nLCBob3cgY2Fu
-IHdlIGhlbHAgZml4aW5nIHRoaXM/DQpUaGFua3MgJiByZWdhcmRzLA0KQW5kcmVhcw0K
+FWIW, my expectation is that booting with "pcie_aspm=off" should
+effectively avoid the ASPM enabling and behave similarly to reverting
+f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
+devicetree platforms").  My hope was that we could boot that way and
+incrementally enable ASPM via sysfs a device at a time for testing.
 
---------------ms080304020100080803010307
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+If hardware implements ASPM correctly, enabling it should have no
+functional impact at all, so we might be tripping over some kind of
+hardware bug or maybe a generic Linux issue (ASPM has to be enabled in
+a very specific order, and it's conceivable we messed that up).
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DhYwggaoMIIEkKADAgECAhB+h8MJLtdm7y8h4qjQp5j0MA0GCSqGSIb3DQEBDAUAMEwxIDAe
-BgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFI2MRMwEQYDVQQKEwpHbG9iYWxTaWduMRMw
-EQYDVQQDEwpHbG9iYWxTaWduMB4XDTIzMDQxOTAzNTM1M1oXDTI5MDQxOTAwMDAwMFowUjEL
-MAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKDAmBgNVBAMTH0dsb2Jh
-bFNpZ24gR0NDIFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIK
-AoICAQDCMARtKQ9xLKfbpmf1W2gT/EG/NiY1bb1tbWklnuOvMrA8mb8ZqQK/LQgiA5syzH1u
-kVqrfRfWQQlmctTO4TX+GVyFq1irI5FUF4eW/lXRBFJdjh9pHR0KQiFeGgaSdnY7RtQmK2Fw
-3UiwQAM2LNnUAkhpaxZtDi1gRiPK0R29+THPVa1fdKO15xlH73Asku3oc1riwL/9Ap2PJ+v8
-2EMLNit0jMCyyhcWeni34dwzJBOuPSukPwqQ+P3qzL1rHN6AtvO17vCBMdtYF4kanSwqDsEC
-74bRGTq147XI93vlqtsK99j81pFFAeTq2YbvWCkt0HVmE/0hw1jJ5MpciB8yHa1Ur0OdcZqS
-xgLKLpaKwlrU5r6mhSuhfYRJc7qjTeVXGIDXHJ8byVTOlQ1micZWtSOEbn4x1jXr/pvS4p6N
-kItuC7ocs+8jKp1Nv1eoXhdZYq744wOz+tbJDri/ea9JrS17lDm1yGbib0rQ970uUgoGT+Cy
-B9o4ckOniFjHjChwOvwN4Jl7l3nAIWTGgZzVyQzxmgyClRzimCRATlKHFgyYps+81E9rlgXN
-sW1wWflEyvUyO7yC3wnRz53FhyjaGLt0Rbf3UorEaG/swkFxz7THcUVOeaFT7m3r4KeQoyWu
-bPJqh5WvJFO86IfgWdM0e1UpRgOwIzQIsN0w2CjGCQIDAQABo4IBfjCCAXowDgYDVR0PAQH/
-BAQDAgGGMEwGA1UdJQRFMEMGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYB
-BAGCNwoDDAYKKwYBBAGCNwoDBAYJKwYBBAGCNxUGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYD
-VR0OBBYEFAApNp5ceroPry1QLdugI4UYsKCSMB8GA1UdIwQYMBaAFK5sBaOTE+Ki5+LXHNbH
-8H/IZ1OgMHsGCCsGAQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2Jh
-bHNpZ24uY29tL3Jvb3RyNjA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvcm9vdC1yNi5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5n
-bG9iYWxzaWduLmNvbS9yb290LXI2LmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcN
-AQEMBQADggIBAJGRR2vVogNGaQ0jmPHmCBqkZROGrQpwzZ3Oky7fXiYmd7zIpVfDN8oG2psG
-NtQ0w4OcGSG9lydsdRK26vb+e3W0/d57wrI2FjHO/gOQjQ1tX3ckKFeKl+xqftiN18STm8jY
-Wr7ClsYAvLJYGB/Lv1giBthYBMHXny28SHlQ7ySkamNj3nG/7TvRfcVi4bJ5nIi9qjbqY3zv
-YW7FHFiE0vAYcjLfw30BJrVDcFM0pKsetmeBp2h8eCUblbdMwVHXUk4Q4BQeFSCltVW+AJiA
-YDp1JfTLnPuTetdXKMU6zsoFJet0k8pp2mXi+pimEfv4/jSfMFFzEkeu/kV5eVOtv52uPJc2
-NlIKbN+Q64Ko+ykG4nu9pvT/2h40RGCfPpIsKMspwNdsxspxFeA2EUGXM3g5QGqJ5IFeTzTD
-Y3PHXYq82PvnxZq/E6xchtfRnHCjWHe7DvkAja/yrAVZc1yU7ypbZVeirqSKFal6K68OYV9I
-DBEvHDAiOBS7Mb1JpD6k6ia5oLtBMpYwjSEvRviYQ+r0aw89CrVSbCRxgUn9ngj3cNm4pxeY
-oya4A1NLrDHAgTDxDkxDrL19snEYQ6A6BgvhAio1QtvkJg+e3Yt6IiISeHxS6Hy1rCpKOdHS
-HsG/mriaCjcvVn1BC57FSe1YP3q3ijSrWNdYvKumA/tlye4LMIIHZjCCBU6gAwIBAgIMMDAf
-RsRVYvQ6rRuIMA0GCSqGSIb3DQEBCwUAMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i
-YWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBDQSAyMDIz
-MB4XDTI1MDgxNTA2MTE1NloXDTI3MDgxNjA2MTE1NlowgakxCzAJBgNVBAYTAkNIMRAwDgYD
-VQQIDAdaw7xyaWNoMRAwDgYDVQQHDAdaw7xyaWNoMR4wHAYDVQRhExVWQVRDSC1DSEUtMTE0
-LjY0Mi4wOTExDzANBgNVBAQTBlRvYmxlcjEQMA4GA1UEKhMHQW5kcmVhczERMA8GA1UEChMI
-b253YXkgYWcxIDAeBgNVBAMMF2FuZHJlYXMudG9ibGVyQG9ud2F5LmNoMIICIjANBgkqhkiG
-9w0BAQEFAAOCAg8AMIICCgKCAgEAuwiiJULkYlbYWdaku5Xgl20g5jljQhIL+WBudGHnJMDU
-x9yqy3HlD/VVEKxvhhLvw4OjHdZ2HYWW60tU1O1o/FMzOZQuYwlChx25mBCOpwWqKbzNdhQK
-D4kMbFqvAcwc54tnIgUHfb6ONMcz2Fq+ryOGkk1ILky6ZKDMxqQ9PKVArDQaLo/0KUVtFLeD
-VwxtN2cEG826TbKWeBuSmHVhpPrsRyeRu0y/5y8rdHxqoGJoBW0im/xwN8bsy6Lqb1COlhO6
-7jO5N5D0NOovZqkU5mSfcoAAOR9ZasBidrrCQq5NiDIFcgmNMBqvP9SNygu0V/0g/QEOGLQf
-yamU1T4HZnJ5aA3B7IuqvdTBnG4o4fyBQd2RJiFD2MbOQ3plmSk1ThyVhY+uPe9zI9LQqDbn
-AOs2zWoM8jAhEu5EfGSAbTH7JxbojHFGdiV5XfNEMCpvYDaR7DvbilhT3VP8wvCpgNBU2s4Y
-IGifFC3Istsm/7tizFw9KhOdiugV/MkZYPgkXcujuAJ9SdjfFiF7FzkL8gDqliqF2Bt+Jyx5
-rBfEFCfJnueyHiY4fKRJHUNrWLgn+falKN/aYlwIPwnnRdChsTzVio1rxACFD/771wChbjt3
-xiKkYYffnwoilvJiy8Byzvm6+D+ggx8/0b66HfPrbgjgtYuvsIsJLudgbrLBBbsCAwEAAaOC
-AeIwggHeMA4GA1UdDwEB/wQEAwIFoDCBkwYIKwYBBQUHAQEEgYYwgYMwRgYIKwYBBQUHMAKG
-Omh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjZzbWltZWNhMjAy
-My5jcnQwOQYIKwYBBQUHMAGGLWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjZz
-bWltZWNhMjAyMzBlBgNVHSAEXjBcMAkGB2eBDAEFAwIwCwYJKwYBBAGgMgEoMEIGCisGAQQB
-oDIKAwIwNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3Np
-dG9yeS8wCQYDVR0TBAIwADBBBgNVHR8EOjA4MDagNKAyhjBodHRwOi8vY3JsLmdsb2JhbHNp
-Z24uY29tL2dzZ2NjcjZzbWltZWNhMjAyMy5jcmwwIgYDVR0RBBswGYEXYW5kcmVhcy50b2Js
-ZXJAb253YXkuY2gwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB8GA1UdIwQYMBaA
-FAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBSZ4EILHB+qVi0PaWFCbqoGTTq2gTAN
-BgkqhkiG9w0BAQsFAAOCAgEApy32d2+MrKNLcJDLEE4W8N44PhbEf7NV1NMsIX2x5GLw+Gsz
-OyJ7p5D71Y8tjMOs9RgyEH+3abc0ANbptE5wTPvLX2Veu09SQIZj3LhMdY0YbIwLNkL0OXvh
-lo3U1d+7meM/Q7d7AJNDODbW7o1+cG0UfWa64AnNWax/hfp45lC8QT299cGV2K+/6YP0/e7w
-UYdC/xeKTVaos/P4WXn87c3H2zmnvOvJhlMIz/YXiUe+hKzRpxwrl7aiPWCQULCaOgApj4Bp
-sk7VkFc7d0oqKcL1Dcqq7rKHYc998nd/Oufy2AaCkqQ8ivR3rXc2AZ0eouXJVvzPhG6f1GRr
-fHTg2CURS5Iu9ZkN9zTRjOQbKYQpomAc94r4Diz2/AQu52h5lfORStNnrTDDCylEKJinDgHy
-YwXYp+OvEsdmxLd/FeGBtckTmYjEk32LhDh0kEyLEwNqvYpG2hVMxKwn/2Vf5G8vqjl5PsOS
-UQ6mtYmJOsolzIgAKwRTUV7eCgB6UQ4KwIEo1Jn5I8wq4nHhr+viDsVtVD5I9C/kNhuNUOcK
-YKwXEUzwOXUumnR5uonvMY/dae2TTcmfNk5GnPFvfo8fy6M+q/uzC+DEc6QLpAqfK6xVMgib
-k5rI14Nn2CKUASJw90SMnwCZsrrrL07I3JZ2NNQLiJaogaXl7SR+/wFRtIkxggVdMIIFWQIB
-ATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQD
-Ex9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBDQSAyMDIzAgwwMB9GxFVi9DqtG4gwDQYJYIZI
-AWUDBAIDBQCgggLMMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
-DTI1MTAxNTIwMTAyMFowTwYJKoZIhvcNAQkEMUIEQMhQktyxoER+q+syWP7yrVCtfm5AF1aZ
-lFcoLvunNwiHURAjT2LSWX3IP0TnZjeRbIsrovpHRTYq5eBb+TA6iYkwcQYJKwYBBAGCNxAE
-MWQwYjBSMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEoMCYGA1UE
-AxMfR2xvYmFsU2lnbiBHQ0MgUjYgU01JTUUgQ0EgMjAyMwIMMDAfRsRVYvQ6rRuIMHMGCyqG
-SIb3DQEJEAILMWSgYjBSMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTEoMCYGA1UEAxMfR2xvYmFsU2lnbiBHQ0MgUjYgU01JTUUgQ0EgMjAyMwIMMDAfRsRVYvQ6
-rRuIMIIBVwYJKoZIhvcNAQkPMYIBSDCCAUQwCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAK
-BggqhkiG9w0DBzANBggqhkiG9w0DAgIBBTANBggqhkiG9w0DAgIBBTAHBgUrDgMCBzANBggq
-hkiG9w0DAgIBBTAHBgUrDgMCGjALBglghkgBZQMEAgEwCwYJYIZIAWUDBAICMAsGCWCGSAFl
-AwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUDBAIHMAsGCWCGSAFlAwQCCDALBglghkgBZQME
-AgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEBATALBgkrgQUQhkg/AAIwCAYGK4EEAQsAMAgG
-BiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsDMAsGCSuBBRCGSD8AAzAIBgYrgQQBDgAwCAYG
-K4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMwDQYJKoZIhvcNAQEBBQAEggIAh9d7pdimLWcM
-B/3fonzt7SqbibfCVzgDVcN1WzRoh+nIZt21w+kmLS6ytsOES+jfjS2YRh7GURdUX6xUQ+Iu
-KEWMBGYSVE/z3U7GS0QqfyZfALu9AwUm0H+nj1r76kepXJC6ASrbx0/3tVE+YoPvDtIz9nxE
-OcTGC9G9FJRvhupzONexmStTnCK8R/xR1XKcjJGNsf3ZmiDOGS1nqC8jXBR42ah4lAafvqRR
-X3THYTTRRQkU0C4bPJOsKOyQnGuE/WyiS2X3tmL6BXKSGjJQq+3CtfO/FJsTq4sThp4VnUZ0
-+sbkW5G9R617GxR81ynaZuU1TEGDUKsGFYvGRYgKGcvEBw0ToC078oQ3pgLx/GbyVTgmiyZy
-Wm+70JIVNkPogyuyk0fa2P+vVKgEQICvpget7bNkYlc6ZFxoaf/UdW74ynJiR5bO4LVjD/j4
-q8QcSxSdxeYmECy8K5LcCvRNb+U4ngt3QSonoL19iv7NlNd1TSgCL7r1hgmTEHW4DnOPq8cr
-q5+bxXTdl9l6pTeDc41TyoNwRSH/qcIye6o0w43GADV1E8hHDWKl9XNkC6se5pKzurNgmMy1
-vuEw9tfbr0srbemwMFeZ9VawKy/FYKsfsN6OGk+nqtrKJF62Cmhq+3mYPcIWQpE2lDZj2Vl1
-71jiJAY2v9pRueiuFTpmrOAAAAAAAAA=
+> On this device, the NVMe isn't strictly needed (I used it to compile my
+> kernels on), so I added 'noauto' to the NVMe line in /etc/fstab ... and
+> that made it boot successfully into 6.18-rc1. Then running the 'mount'
+> command wrt that NVMe drive failed with this message:
+> 
+>   EXT4-fs (nvme0n1p1): unable to read superblock
+> 
+> The log of my attempts can be found here:
+> https://paste.sr.ht/~diederik/f435eb258dca60676f7ac5154c00ddfdc24ac0b7
+> 
+> > When the kernel freezes, can you give us any information about where,
+> > e.g., a log or screenshot?
+> 
+> For me, there is no kernel freeze. I ended up in a rescue shell as it
+> couldn't mount the NVMe drive. As described above, when not letting it
+> auto-mount that drive, the boot completed normally.
 
---------------ms080304020100080803010307--
+Thanks for the log, it's very useful.  This is pieced together from
+the serial console log and the "dmesg --level" output, but I think
+it's all the same boot:
+
+  [    2.872094] rockchip-dw-pcie a40000000.pcie: PCI host bridge to bus 0000:00
+  [    2.885904] pci 0000:00:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
+  [    2.888237] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+  [    3.143823] pci 0000:01:00.0: [144d:a80a] type 00 class 0x010802 PCIe Endpoint
+  [    3.144646] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+  [    3.162748] pci 0000:01:00.0: BAR 0 [mem 0xf0200000-0xf0203fff 64bit]: assigned
+  [    3.298198] nvme nvme0: pci function 0000:01:00.0
+  [    3.298901] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+  [    3.316695] nvme nvme0: D3 entry latency set to 10 seconds
+  ...
+  [   18.921811] rockchip-pm-domain fd8d8000.power-management:power-controller: sync_state() pending due to fdad0000.npu
+  [   18.922737] rockchip-pm-domain fd8d8000.power-management:power-controller: sync_state() pending due to fdb50000.video-codec
+  ...
+  [   39.971050] nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS read failed (134)
+  [   39.971945] nvme nvme0: Does your device have a faulty power saving mode enabled?
+  [   39.972609] nvme nvme0: Try "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off pcie_port_pm=off" and report a bug
+  [   42.357637] nvme0n1: I/O Cmd(0x2) @ LBA 0, 8 blocks, I/O Error (sct 0x3 / sc 0x71)
+  [   42.358644] I/O error, dev nvme0n1, sector 0 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
+  [   42.391612] nvme 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+  [   42.443644] nvme nvme0: Disabling device after reset failure: -19
+  [   42.459544] Buffer I/O error on dev nvme0n1, logical block 0, async page read
+  [   42.607749] EXT4-fs (nvme0n1p1): unable to read superblock
+
+The earlydump info shows the 00:00.0 Root Port had I/O+ Mem+
+BusMaster+ (0x0107) and the 01:00.0 NVMe initially had I/O- Mem-
+BusMaster- (0x0000).  We were able to enumerate the NVMe device and
+assign its BAR, and the nvme driver turned on Mem+ (0x002).
+
+  nvme_timeout
+    csts = readl(dev->bar + NVME_REG_CSTS)
+    if (nvme_should_reset(csts))
+      nvme_warn_reset(csts)
+        result = pci_read_config_word(PCI_STATUS)
+        "controller is down; will reset: CSTS=0xffffffff, ... failed (134)"
+    nvme_dev_disable
+
+But I think the NVMe device was powered down to D3cold somewhere
+before 39.971050.  I don't know if the power-controller messages at
+18.921811 have any connection, and I don't know why ASPM would be
+related.
+
+In any event, the NVME_REG_CSTS mem read returned ~0, probably because
+the device didn't respond and the RC fabricated ~0.  The PCI_STATUS
+config read failed with 134 (PCIBIOS_DEVICE_NOT_FOUND).  The config
+read should be this path, which probably failed because the link was
+down, which would happen if NVMe is in D3cold:
+
+  pci_read_config_word
+    if (pci_dev_is_disconnected())
+      return PCIBIOS_DEVICE_NOT_FOUND
+    pci_bus_read_config_word
+      ret = bus->ops->read
+        dw_pcie_rd_other_conf
+          pci_generic_config_read
+            addr = bus->ops->map_bus
+              dw_pcie_other_conf_map_bus
+                if (!dw_pcie_link_up())
+                  return pci->ops->link_up
+                    rockchip_pcie_link_up   # .link_up
+                  return NULL               # link was down
+            if (!addr)                      # .map_bus() failed b/c link down
+              return PCIBIOS_DEVICE_NOT_FOUND
+
+Your lspci shows no response, i.e., config reads to the device
+returned ~0:
+
+  0000:01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
+        Subsystem: Samsung Electronics Co Ltd SSD 980 PRO
+        !!! Unknown header type 7f
+        Interrupt: pin ? routed to IRQ 94
+
+The Root Port shows a Completion Timeout error, which might be a
+consequence of NVMe being powered off:
+
+  0000:00:00.0 PCI bridge: Rockchip Electronics Co., Ltd RK3588 (rev 01) (prog-if 00 [Normal decode])
+        Capabilities: [100 v2] Advanced Error Reporting
+                UESta:  DLP- SDES- TLP- FCP- CmpltTO+ CmpltAbrt- UnxCmplt- RxOF- MalfTLP-
+
+Bottom line, I don't think I can get any further with this particular
+issue until we confirm that f3ac2ff14834 ("PCI/ASPM: Enable all
+ClockPM and ASPM states for devicetree platforms") is the cause.
+
+Bjorn
