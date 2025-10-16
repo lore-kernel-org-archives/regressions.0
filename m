@@ -1,191 +1,189 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76862E11C7
-	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 09:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760608393; cv=none; b=MFD+Uorb1r6pbN3gTvQBsoIsKvqNayB4qyitV4/gEDjgX83uUuCt29XikDvL64+BHJnBjFAA8MFlBOxE9Tkng0DpjQwoC9zcGAMDtL+lhTFqPb6RBEHF49//TJQ5Xa7W5AiyJkPB40jIi1ZI+IjudHVlPLDy+OyfokraLgpzMow=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760608393; c=relaxed/simple;
-	bh=8aoKj6Lbokxs31NvMiHpkLe/VxKWfBvA/ZujrdNJfRQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j5XooiEJHKs+8flnsAl2Z8sI+6ftrRmWrwHiiQKJ1yBm11WtJjkcvYBVNFviftAYkAt4u4S6DEdyzcHXo0qTsspsVzfy47RhH2qXkqd/VIZ/9eqza7XapouNN65XIg9wc+HPytXAbd7rJ11/2YvtLJmiHOR+ATEDknGdStf47Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G57aejyI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Iu2M45I8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G57aejyI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Iu2M45I8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33931D750;
+	Thu, 16 Oct 2025 09:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760608773; cv=pass; b=QR985/Ob9HpTHqdqS4HvZrmItKePSqaoFvydzj29Go9ONw4T8e2PrSisOC0yZ1GTMJ/7TjCPTFqi6/ow+CJGfrdlFIwQxW0sRZPGJFvrTq9TjKo/crrn1C6DgwfgcFuynmbLmcRfMHwiyhvjf553rrPKe04idJYNmVn8Rw1wFUQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760608773; c=relaxed/simple;
+	bh=UaBllWeys3yP01+T9Ndcfu+M6xTIM+j/0LMxc+1LY5s=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=DJvN4sKsZ8aOwu5pY8duMRKyklA8oTkalD6W9EShRC9HrJV28K5O0ToY6Nagk+hk3Qg5Re47YSS4Fk6BRgFP73uzkJAsuu9EMmS529xQF+mrcFDZOxQ4szNQKuon//TdhskaR8l5PWZ6InNO8R62738y8QrPigUg/ojZr30ui8o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=JOCdKZjM; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G57aejyI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Iu2M45I8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G57aejyI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Iu2M45I8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 15D581F391;
-	Thu, 16 Oct 2025 09:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760608364; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQU63hw0/2YfMyk+rvCvHy55oTz5JTJV+aKgdNzUG5k=;
-	b=G57aejyIYeiRayn6PUSdF2pIEM+MZh6YmFxxh8IfLU+hqH5xcH/ZaVlhmynU5FUhqP+GPh
-	t3Zt8F6YlWSFW2tS01qHDbbkj9RzECD9BM8uydU7nOAzKFMlmyboYbRqBP9EaZ3T+mz02C
-	5PoCdVyzmDvLoMTOS2soi+sbOn8dRUo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760608364;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQU63hw0/2YfMyk+rvCvHy55oTz5JTJV+aKgdNzUG5k=;
-	b=Iu2M45I8CMCk5MpjSYCCPcjTtz9p8eTSCb8bMwDSplmqO9LUVlxSL0Sp+l6Bupi4Dfe+nX
-	e3/+kPDFa8cUo+DA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=G57aejyI;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Iu2M45I8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1760608364; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQU63hw0/2YfMyk+rvCvHy55oTz5JTJV+aKgdNzUG5k=;
-	b=G57aejyIYeiRayn6PUSdF2pIEM+MZh6YmFxxh8IfLU+hqH5xcH/ZaVlhmynU5FUhqP+GPh
-	t3Zt8F6YlWSFW2tS01qHDbbkj9RzECD9BM8uydU7nOAzKFMlmyboYbRqBP9EaZ3T+mz02C
-	5PoCdVyzmDvLoMTOS2soi+sbOn8dRUo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1760608364;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQU63hw0/2YfMyk+rvCvHy55oTz5JTJV+aKgdNzUG5k=;
-	b=Iu2M45I8CMCk5MpjSYCCPcjTtz9p8eTSCb8bMwDSplmqO9LUVlxSL0Sp+l6Bupi4Dfe+nX
-	e3/+kPDFa8cUo+DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 783DD1340C;
-	Thu, 16 Oct 2025 09:52:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bZP5G2vA8GjvagAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 16 Oct 2025 09:52:43 +0000
-Date: Thu, 16 Oct 2025 11:52:43 +0200
-Message-ID: <87bjm78978.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Dell.Client.Kernel@dell.com,
-	amadeuszx.slawinski@linux.intel.com,	baojun.xu@ti.com,
-	bo.liu@senarytech.com,	cezary.rojewski@intel.com,
-	kai.vehmanen@linux.intel.com,	kailang@realtek.com,
-	linux-sound@vger.kernel.org,	patches@opensource.cirrus.com,
-	regressions@lists.linux.dev,	rf@opensource.cirrus.com,	Nicolas Schier
- <nsc@kernel.org>,	linux-kbuild@vger.kernel.org,	Masahiro Yamada
- <masahiroy@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	miguel.ojeda.sandonis@gmail.com,	ojeda@kernel.org,	sam@gentoo.org,	Thomas
- =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,	Daniel Xu
- <dxu@dxuuu.xyz>
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
-In-Reply-To: <CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
-References: <87o6q8l68r.wl-tiwai@suse.de>
-	<20251015145749.2572-1-safinaskar@gmail.com>
-	<878qhckxc5.wl-tiwai@suse.de>
-	<CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
-	<875xcgkvnw.wl-tiwai@suse.de>
-	<CAPnZJGDmCnKPz2eygwDjQGXZWVctGyJxV+OeFSLLeZPOCEvvbA@mail.gmail.com>
-	<CAPnZJGBdqPhmNOes4-BRu8C-0d3yco8H93WhdORxm7MRBSw7CQ@mail.gmail.com>
-	<CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="JOCdKZjM"
+ARC-Seal: i=1; a=rsa-sha256; t=1760608768; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UPQ+aBY94US7ij1tO9uyyLy+BbQVyKqTekj1jpsjWfL1A25b2i9Dzlis52ArtMqcmYs3EmEypYleJkX3AiMnKRmwQrde0TYuqI5haONAm1ww2sC+pXN4N5GSmwyRz33A/GrdHtxXjhwTMFDQlIg71VXHTkhvVlCJ9FoXqjVW/tA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1760608768; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CVJ7y67b8YKm3o8RTHQrQS1h70ifhx7DfX3PMdznC1M=; 
+	b=JZkla3npPJIjv6/21LNKCPZ/SK0vahuWZ71eWmhgz3Hbb5C1NvN89sPjaQrixJ2caU5o9+XfroTldT0mI0CmL57VRQTHmV5EEo1X36Rhocp2xWrspnmKgeQQZLct3LeRNv0y5sRsQi+egwHtPQAxkgZxgUkNqmEgKTihSKiTZFA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=gus@collabora.com;
+	dmarc=pass header.from=<gus@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1760608768;
+	s=zohomail; d=collabora.com; i=gus@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=CVJ7y67b8YKm3o8RTHQrQS1h70ifhx7DfX3PMdznC1M=;
+	b=JOCdKZjMjN79GRhasfc7d4Hr17q8Zu10Yas+F2oSIiIvC131SZx2nE3poO8VSmt1
+	ebUi69gktLf6u8iMEaSmCY3QHTNPf4gUy6/BSX1PDvC0jNnjv+tOfanJN7iTZLTRQwv
+	5NiOhr80cQCQdzGpOKqOquWsNJ2LF+rolZlvDZQU=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1760608767219157.4044678793631; Thu, 16 Oct 2025 02:59:27 -0700 (PDT)
+Date: Thu, 16 Oct 2025 06:59:27 -0300
+From: Gustavo Padovan <gus@collabora.com>
+To: "Randy Dunlap" <rdunlap@infradead.org>
+Cc: "kernelci" <kernelci@lists.linux.dev>,
+	"kernelci-results" <kernelci-results@groups.io>,
+	=?UTF-8?Q?=22Guido_G=C3=BCnther=22?= <agx@sigxcpu.org>,
+	"Neil Armstrong" <neil.armstrong@linaro.org>,
+	"dri-devel" <dri-devel@lists.freedesktop.org>,
+	"phone-devel" <phone-devel@vger.kernel.org>,
+	"regressions" <regressions@lists.linux.dev>,
+	"linux-next" <linux-next@vger.kernel.org>
+Message-ID: <199ec75cce1.3f69ac7c921986.1695662047481478034@collabora.com>
+In-Reply-To: <73bf512e-fe5f-420c-8d47-eccfa079af99@infradead.org>
+References: <176045034384.1788.868853922191153052@15dd6324cc71> <73bf512e-fe5f-420c-8d47-eccfa079af99@infradead.org>
+Subject: Re: [REGRESSION] next/master: (build) undefined reference to
+ `devm_backlight_device_register' in vmlinux...
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 15D581F391
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.de,dell.com,linux.intel.com,ti.com,senarytech.com,intel.com,realtek.com,vger.kernel.org,opensource.cirrus.com,lists.linux.dev,kernel.org,gmail.com,gentoo.org,linutronix.de,dxuuu.xyz];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -2.01
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Thu, 16 Oct 2025 08:03:08 +0200,
-Askar Safin wrote:
-> 
-> I did another experiment.
-> This time with v6.18-rc1.
-> And I collected more info.
-> - Here is Debian config for 6.17.2: [attachment config-6.17.2-amd64]
-> - I downloaded vanilla Linux v6.18-rc1 from kernel.org
-> - I copied that Debian config (see above) as .config to Linux sources
-> - I did "LOCALVERSION=-first make --silent -j32 < /dev/null" ("< /dev/null",
-> because I don't want to answer any questions)
-> - This is output: [attachment first-out]
-> - Then I booted into it
-> - Audio works
-> - Here is config of this kernel: [attachment config-6.18.0-rc1-first]
-> - Here is "find /lib/modules/6.18.0-rc1-first": [attachment
-> find-6.18.0-rc1-first]
-> - Here is alsa-info: [attachment alsa-info-first]
-> - Here is lsmod: [attachment first-lsmod]
-> - Then I "cd" into kernel source (note that ".config" remained since last time)
-> - I typed "make localmodconfig < /dev/null"
-> - Here is output: [attachment localmodconfig-out]
-> - I did "LOCALVERSION=-second make --silent -j32"
-> - This command didn't produce any output and didn't ask any questions
-> - Then I booted into new kernel
-> - Audio doesn't work
-> - Here is config of this kernel: [attachment config-6.18.0-rc1-second]
-> - Here is "find /lib/modules/6.18.0-rc1-second": [attachment
-> find-6.18.0-rc1-second]
-> - Here is alsa-info: [attachment alsa-info-second]
-> - Here is lsmod: [attachment second-lsmod]
-> 
-> (Please, say me, if there are any missing files.)
-> 
-> If you need more experiments, ask me.
-
-Thanks for detailed logs!  Now the situation became clearer.
-
-Could you try to just enable CONFIG_SND_SOC_SOF_ALDERLAKE=m on top of
-the broken config?  If my guess is right, this should make the audio
-working again.
-
-If yes, it's a problem of a kernel tristate config that doesn't have
-the own module but referred only for constructing a probe table in
-snd-intel-dspcfg.  This is not really a fault of localmodconfig, but a
-long-standing design problem.  (I'm not sure why this surfaced
-suddenly, though.)  There are a few options to address it, and we have
-to evaluate / decide what to do.
+Hi Randy,
 
 
-Takashi
+---- On Thu, 16 Oct 2025 00:47:35 -0300 Randy Dunlap <rdunlap@infradead.org> wrote ---
+
+ > Guido, 
+ >  
+ > Looks like this driver needs 
+ >  
+ > +    depends on BACKLIGHT_CLASS_DEVICE 
+ >  
+ > to fix the build. 
+ >  
+ > @Gus- please read comments near bottom/end. 
+ >  
+ >  
+ > On 10/14/25 6:59 AM, KernelCI bot wrote: 
+ > > 
+ > > 
+ > > 
+ > > 
+ > > Hello, 
+ > > 
+ > > New build issue found on next/master: 
+ > > 
+ > > --- 
+ > >  undefined reference to `devm_backlight_device_register' in vmlinux.unstripped (drivers/gpu/drm/panel/panel-visionox-rm69299.c) [logspec:kbuild,kbuild.compiler.linker_error] 
+ > > --- 
+ > > 
+ > > - dashboard: https://d.kernelci.org/i/maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
+ > > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
+ > > - commit HEAD:  13863a59e410cab46d26751941980dc8f088b9b3 
+ > > - tags: next-20251014 
+ > > 
+ > > 
+ > > Log excerpt: 
+ > > ===================================================== 
+ > >   LD      .tmp_vmlinux1 
+ > > aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected! 
+ > > aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected! 
+ > > aarch64-linux-gnu-ld: drivers/gpu/drm/panel/panel-visionox-rm69299.o: in function `visionox_rm69299_create_backlight': 
+ > > /tmp/kci/linux/drivers/gpu/drm/panel/panel-visionox-rm69299.c:343: undefined reference to `devm_backlight_device_register' 
+ > > 
+ > > ===================================================== 
+ > > 
+ > > 
+ > > # Builds where the incident occurred: 
+ > > 
+ > > ## defconfig+arm64-chromebook+CONFIG_ARM64_16K_PAGES=y on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-16k_pages-68ee4f14a6dc7c71db9fda21/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f14a6dc7c71db9fda21 
+ > > 
+ > > ## defconfig+arm64-chromebook+CONFIG_ARM64_64K_PAGES=y on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-64k_pages-68ee4f17a6dc7c71db9fda24/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f17a6dc7c71db9fda24 
+ > > 
+ > > ## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-mainline-big_endian-68ee4f32a6dc7c71db9fda39/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f32a6dc7c71db9fda39 
+ > > 
+ > > ## defconfig+arm64-chromebook+CONFIG_RANDOMIZE_BASE=y on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-randomize-68ee4f1fa6dc7c71db9fda2a/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f1fa6dc7c71db9fda2a 
+ > > 
+ > > ## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-chromebook-kcidebug-68ee4f2ba6dc7c71db9fda33/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f2ba6dc7c71db9fda33 
+ > > 
+ > > ## defconfig+arm64-chromebook+kselftest on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-kselftest-16k_pages-68ee4f23a6dc7c71db9fda2d/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f23a6dc7c71db9fda2d 
+ > > 
+ > > ## defconfig+arm64-chromebook+preempt_rt on (arm64): 
+ > > - compiler: gcc-12 
+ > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-preempt_rt_chromebook-68ee4f3aa6dc7c71db9fda3f/.config 
+ > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f3aa6dc7c71db9fda3f 
+ > > 
+ > > 
+ > > #kernelci issue maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
+ > > 
+ > > Reported-by: kernelci.org bot <bot@kernelci.org> 
+ > > 
+ > > -- 
+ > > This is an experimental report format. Please send feedback in! 
+ > > Talk to us at kernelci@lists.linux.dev 
+ > > 
+ > > Made with love by the KernelCI team - https://kernelci.org 
+ > > 
+ >  
+ > Gus, the CI reporter needs to learn how to do a few things because developers 
+ > (other than me ?) don't scrounge mailing lists to look for problems. 
+
+Absolutely. Our goal is to automate as many steps as possible!
+ 
+ > a. find the commit that caused the problem (or the email series) 
+ >  
+ > b. send the report (Cc:) to whoever wrote the patch and to the 
+ > appropriate mailing list. 
+ >  
+ > I expect that b. is easier than a., so do it first. 
+
+b. is easier that a. yes, but I don't think we can do it first because we
+need to figure the patch first. Essentially, you are asking us for
+build bisections. Something that is already on our roadmap, but
+we didn't had the time to tackle yet, but should come to it in the
+coming months.
+
+ >  
+ > And I'm sure that I have missed a thing or two that could be 
+ > added as well. 
+
+Please keep the feedback coming!
+
+Best,
+
+- Gus
+
