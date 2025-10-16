@@ -1,266 +1,226 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984A31AF00
-	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 10:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031DA339B5A
+	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 10:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760611184; cv=none; b=KxURiVMDrQCX+A+puYLxSe7L0Dj8jmSAL7okM5ZiVLNczBM68ZS+N8XxAXo4lXOvR1g7+9UxHrUszWK4o8QaEN00E9tUo2y54D9z/ArbUMIxH53cIOv7ZhStF6YuiOVWvpKK5Y2ymyB+O5gzjNqG0r/zqOoESA+M8cOM5CcWjO4=
+	t=1760611490; cv=none; b=hJMuI4/PTRdKPUXKNptzLDKsHWDCYBPML/zTWaC8zSAmYspHPgSReECH/Iku9Bd6/cV8ETEpMkKb8/0Q2Dind0zSOFGG+xWldlQg+9DyE9+RX79+bXX+UqLIgpQXN74uiFiK5dVXwba5rmNv1ZfIxz8E56OcCctFA5139f5y+uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760611184; c=relaxed/simple;
-	bh=o6KG93bnRAiru8U6pU0HfZ6fKR0huOQZE3kUNMaJOB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f2x2O3MtEwiGoySnU/j+RgXB6saEWsTkITeNyFKFLgxdvdJqlE3+igpzB57j4Y+mwnkeatW3N3G6cu7UHEnbvN3i+ZQA0z28YOB9D96TdErwEMPIs6lamupo3I3IAb3KYh4BPDaDr7uUmyNyWHPQgjT1Yg1IckCVX5Xqd9Ejr+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LM7ZaySj; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760611490; c=relaxed/simple;
+	bh=Stuf5zf331tRxF2DePg1IzXwQbv5RQFJNJDnJFIpp0Y=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZH5ZxVV61h/Ukyp74+7T3WmFNT7arY0f5KSstLIa6ZCO+n5mYLwZxLPVA0wGWbLPzxElKGjTHd4L9mPcGy6kXyOay8vI2ZdGv10AcvKMsVmy2CdHeqlaoLZRC5rUxCBSmx5N52XN0vKnTqCMDKYoOhVn0m3BpuX+qiZPqEJ22ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hsoDxKw4; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM7ZaySj"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63b9da57cecso1048248a12.0
-        for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 03:39:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hsoDxKw4"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-269af38418aso5901095ad.1
+        for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 03:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760611180; x=1761215980; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+PyD2pId0cRD4lpdgaX4aev4MljXrDVFLeLRpaj411c=;
-        b=LM7ZaySj7ltEMRXKwMq/REuwPAqaJqIVkIxrQBFTEBiopK+nKO25V67y7GeU2BO8is
-         rLpLCVZvEJcZk6wyYVdsN0gRBsWvY3kolqIplZiY1qzYgOTuI6mCJGo4syY6TsX9GWun
-         b6AGptSPQTyvprE9E2xCE7nw4QR18EuAmX/FZ6o3szWASOqB4bYtIO4g7hSso/V/pOyO
-         OujJEnVQB0GrEOoZ+vrh0T7oLuGGSj/+5GKcjPfqsGq/VzEy/ytIfi14GHFz5CMw2ZKh
-         HMB+J74uHZ6dLu+v50Cba93CJ3vDtZtUdcqRvguwpX/lf9xS4WUe5nTI9b3/0rO1rmi4
-         VySQ==
+        d=linaro.org; s=google; t=1760611487; x=1761216287; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=idI0QB240u0sJsMGBvFXgYaH1URVwhRv/+IzbU7+Rbw=;
+        b=hsoDxKw43Y6NcicaZf673QhBuCimgrKMftOoshPF3aF7vVkiOI+6laN1X/INq4qcTa
+         qDR79BqE+osabnHA4ODp+iPMEEq7Wv/OquwMysmSu1YTg1Kg/3dRzZqTOI78LPVyy6TB
+         fVNij0DwYESM76I+g7+TKJAMb7E93AQZwCM+bRfHXnQ/RQ1ohbMHlvaw4nwYy0Lg2iO/
+         ZEpTRFESRefFJzaLaTlCSVCLTrM/OoFtWBTrAX9hvtcTHXjrTT6DyA3PNmxP1HGOr9g0
+         eOmg6aTjs6G+yJrxfsXxM1+hw8gg19LpeOIDqO7QdYi8HRVM/qxyTFGdpCKLxOoIxB1w
+         BL+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760611180; x=1761215980;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+PyD2pId0cRD4lpdgaX4aev4MljXrDVFLeLRpaj411c=;
-        b=q/70mGMtxu+Dk8/ROldbBWg14GD8hP4bRdh2pd5Lxu1puGQTECFbPJth1Mb1SqjEXB
-         3PIYZ75jVtqG9U1JiGA2BYb6j4Zg/QSofeAwANDbSVqFwL8eHQXUs+qJPKwv4QjtrgVx
-         ARgbwylJ88Tggf0zcATMs9ajThNZx3LEupr+anyIn2yYNSyoqpUwrGyQu9TH/S7g3WxN
-         j8yZhLRxqrSbBIPWbZwyIa5Mvs0mswswLh5luobHA4hQM1tdjbU05fTcu4hG/5Cc2FmL
-         i/tqw8udz0G6xcZrJMiBU1OC3JKLMqTs/mW3QFobr3XB0B/ccAUHwq487tSEObnIDE38
-         D1ng==
-X-Forwarded-Encrypted: i=1; AJvYcCUqLI1/MA5pb/lLcDCwxCbIiigQwd0Bi4+an9Bzjk4QZUptu5c8IuzzXKcAORTNzPmff24ObFgqsp/z/w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZntk/nVAROaST01lddctNo4Wl5w/NznYZSMhDY+pg3mOl6pnJ
-	7AKtgpY0BMtJo3R8xrMuw8U7bTIaEAnPZ017xaWMvfyUcnkMgnBM+1+j
-X-Gm-Gg: ASbGncuHCIP99GtzQdUUXZEKjbGqdPikby+iLhMvLChRPFSDEMSnr7yq7iEGimkVdA1
-	4s13tKFuvblVxoBhHM892Z2nObwj54XTOqwQF+qPcy9R7jeUC/kg13ldqrXEU9xMmoMRvI7hpRK
-	a0hiP6YrxIzKBS0KWXqOBy5d5m5catbaJnr2F8NZt4xMBaxajdDMVEMQYGWu1V66VABix3sZ4ZX
-	yyEFtVVln1xUDvF4tp7VTMptz0S7yyAZDYsRrbBhkRoZKK77irSArq588hT4Vm+PxMYca6azfsb
-	FAJ8Dbnu5ucFSybsNNvSNmgqLsRG3+9stbzyRhXEMG19x69EtKKF2Xecfuw7XCtnnEZSZ08JyNP
-	BYdlnbUoPCAihWzKWPzQevRkeKdNdqyFI/5lXXBN7ASpR6FONlALfcMaMPFeG4SK2Muzof8NVh0
-	CFaBE+1cndOXxSB3+DRyYPW3+l5kXWRqExfSW9pmJXL34fVQIHzXUhT1c=
-X-Google-Smtp-Source: AGHT+IEwpeLQIEArthLh+TbKTTxGx2vNT5P6HwfiGcItarmMdcoptDjdpfU+FMQFpiI8Q5JIgvPtOQ==
-X-Received: by 2002:a17:907:94c3:b0:b45:8370:eefd with SMTP id a640c23a62f3a-b50a9a6be43mr3153979966b.5.1760611179938;
-        Thu, 16 Oct 2025 03:39:39 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b5ccd6b457esm481206866b.76.2025.10.16.03.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Oct 2025 03:39:38 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 191E1BE2DE0; Thu, 16 Oct 2025 12:39:38 +0200 (CEST)
-Date: Thu, 16 Oct 2025 12:39:38 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Jens Axboe <axboe@kernel.dk>, Kevin Lumik <kevin@xf.ee>
-Cc: 1116358@bugs.debian.org, io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [regression] Regression from 90bfb28d5fa8 ("io_uring/rw: drop
- -EOPNOTSUPP check in __io_complete_rw_common()"): LVM snapshots causing I/O
- errors in KVM guest with aio=io_uring set
-Message-ID: <aPDLahi_-_GaA-tv@eldamar.lan>
-References: <f6e2bd310293b720cad7d193b3fdf8369d6bb3ac.camel@xf.ee>
- <aO07Gt9ZtECKuGkJ@eldamar.lan>
- <cceb723c-051b-4de2-9a4c-4aa82e1619ee@kernel.dk>
+        d=1e100.net; s=20230601; t=1760611487; x=1761216287;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=idI0QB240u0sJsMGBvFXgYaH1URVwhRv/+IzbU7+Rbw=;
+        b=KPlaNvlmaNv5E8ffcVjKN4zHz6WUDFYsR2AOErVp0hmjhF4WfJ/c7QbjtuO3TfTbWi
+         0U/9l57WOpFopy6IBBpj3qK7ZI5j4ElKYAGFte9tx8eV6iD6LSKFKwJ7qbEzUydAQFNl
+         96+e5SPL7KbMiRCIZrXFcgNMTuYpUDrwkrAi7smUG/qKqGMS08rnwZUQ5i9eoz101NLL
+         YB8eaf9qAMZf8opPIPrKl4/dC6YLxxjjlCWhF/tzkSDLZBfw0ds2rQqe6UxDxa00qEdQ
+         CHawK1xV9Ddm20e7LKHzdPo1nvMIrZVhRqD5MgcQZvY9UmmpY2+jFsxnlFll4IxTWPyM
+         seRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwoaXN6tnQz5mxSgfc7CzDuB+MPII46WG0vHkqphiceQBrhDV5vt/5MgddZ246HBquyj1S8CEXlFo43Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzfa34wy3hvdL/bhhU6IMO6RVlwe2VYENUGFqG/+lVLGQfozAGr
+	IhHmg3Ymowp+vQMs3jsOtCcr9pubVMZ7d7jQmS8dGAp6aBNkYtn1gVlrZP+gkg80PKQ2mgQTPH0
+	1OF0SAfw0m8qEFXuHjDVcpz682C8R86kFQNUDiYI4PQ==
+X-Gm-Gg: ASbGncu0CFODTXknoVM5Ua2h57yr2d+JgdDOkXKMUxcd50bYhxBJ8GO9a9NzudNEKGY
+	Q/1TrccYz1rbQvZmn+NMd+a/WeMha6lajKvk+pH9HfHjtOKKABfA3+aU5idgFnfm/TAw17a+f8Y
+	UPrUuvBGBgk+ITT0dtJ158/Kxi+eMpjV8dM0iLg2vvgKGQozZ2Xodr4T3gxqfnZXqkL5ZOTz5pb
+	2EJFtLoDl2NZ8d/I9sLsi+TE9NP9XkpAuYMrvGmkhW+9jW3ICOwRCbV3Bpp1HJDzsFHKxOMribv
+	JWi9U+GOwMPXapCKCSBc2pvFQS4fxCQhTjoLrRMR5NliyEs1hcIf4cp4yKZBE2ys
+X-Google-Smtp-Source: AGHT+IEPY/5S2tkggfuLp3oD5F9OLEskbq6IsVnBNsvCjw8LxAoTpzJ6R5WvQHLqebqcj6ozMCADrO0NyMZ2ygz54Us=
+X-Received: by 2002:a17:902:ec83:b0:267:d2f9:2327 with SMTP id
+ d9443c01a7336-2902739b36dmr460860835ad.27.1760611487240; Thu, 16 Oct 2025
+ 03:44:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cceb723c-051b-4de2-9a4c-4aa82e1619ee@kernel.dk>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 16 Oct 2025 16:14:36 +0530
+X-Gm-Features: AS18NWCOCPygc6MstdsohR6QGJ32VyACC4u8LK8GX7Ej2KusoZDYlUabwuiSksU
+Message-ID: <CA+G9fYuKHp3QgPKjgFY3TfkDdh5Vf=Ae5pCW+eU41Bu=D7th2g@mail.gmail.com>
+Subject: next-20251014: Internal error: Oops: drm_bridge_connector_hdmi_cec_init
+ drmm_connector_hdmi_cec_register
+To: dri-devel@lists.freedesktop.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Simona Vetter <simona@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Ben Copeland <benjamin.copeland@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jens,
+While booting and loading kernel modules on dragonboard 410c board
+with Linux next
+kernel next-20251014 and next-20251015 the following crash noticed,
 
-On Mon, Oct 13, 2025 at 12:04:12PM -0600, Jens Axboe wrote:
-> On 10/13/25 11:47 AM, Salvatore Bonaccorso wrote:
-> > Hi Jens,
-> > 
-> > Kevin Lumik reported in Debian the following issue (not exactly a
-> > minimal reproducer, but bisection results follows):
-> > 
-> > On Fri, Sep 26, 2025 at 10:34:22AM +0300, Kevin Lumik wrote:
-> >  
-> >> Dear Maintainer,
-> >>
-> >> After upgrading from Debian Bookworm to Trixie, an issue within KVM guests when creating an LVM snapshot of its volume
-> >> has surfaced. When a LVM snapshot is taken from the host, the guest starts to get I/O errors. The issue seems to only
-> >> appear when aio=io_uring is specified in the KVM drive parameters and also seems to resolve when downgrading the kernel
-> >> package down to 6.1. The issue is also not reproducible when using aio=native. 
-> >>
-> >> KVM args for the drive: "-drive id=drive-
-> >> virtio0,format=raw,file=/dev/dom/vps_testsql,cache=none,aio=io_uring,index=0,media=disk,if=virtio"
-> >>
-> >> An IO workload is being created in the VM using "fio --randrepeat=1 --ioengine=io_uring --direct=1 --gtod_reduce=1 --
-> >> name=randwrite --filename=/root/test.bin --bs=4k --iodepth=64 --runtime=60 --numjobs=32 --readwrite=randwrite --size=1G
-> >> --rwmixread=75 --group_reporting"
-> >>
-> >> After running "lvcreate -s /dev/dom/vps_testsql -n test -L 1G" on the host we can observe fio erroring out:
-> >>
-> >> ...
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=46977024, buflen=4096
-> >> fio: pid=7367, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=261505024, buflen=4096
-> >> fio: pid=7374, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=973840384, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=9637888, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=159965184, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=857505792, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=90787840, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=26427392, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=955621376, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=96169984, buflen=4096
-> >> fio: pid=7372, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7362, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=203702272, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=814649344, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=91467776, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=948256768, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=105295872, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=75247616, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=1062293504, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=111955968, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=942563328, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=117354496, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=1050402816, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=125419520, buflen=4096
-> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=129044480, buflen=4096
-> >> fio: pid=7369, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7373, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7348, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7375, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7358, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >> fio: pid=7359, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
-> >>
-> >> randwrite: (groupid=0, jobs=32): err= 5 (file:io_u.c:1876, func=io_u error, error=Input/output error): pid=7344: Thu Sep
-> >> 25 16:28:30 2025
-> >>   write: IOPS=194k, BW=758MiB/s (795MB/s)(3976MiB/5244msec); 0 zone resets
-> >>    bw (  KiB/s): min=657104, max=1009816, per=100.00%, avg=785345.80, stdev=4331.73, samples=320
-> >>    iops        : min=164276, max=252454, avg=196336.40, stdev=1082.93, samples=320
-> >>   cpu          : usr=0.33%, sys=1.07%, ctx=18912, majf=0, minf=455
-> >>   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=99.8%
-> >>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-> >>      complete  : 0=0.1%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
-> >>      issued rwts: total=0,1019955,0,0 short=0,0,0,0 dropped=0,0,0,0
-> >>      latency   : target=0, window=0, percentile=100.00%, depth=64
-> >>
-> >> Run status group 0 (all jobs):
-> >>   WRITE: bw=758MiB/s (795MB/s), 758MiB/s-758MiB/s (795MB/s-795MB/s), io=3976MiB (4169MB), run=5244-5244msec
-> >>
-> >> Disk stats (read/write):
-> >>   vda: ios=1/1001361, merge=0/2, ticks=0/10314531, in_queue=10314549, util=97.82%
-> >> Bus error
-> >>
-> >> ---
-> >>
-> >> And the error is also visible in the kernel error log of the VM:
-> >> [  361.962970] I/O error, dev vda, sector 83277192 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.963945] I/O error, dev vda, sector 83067480 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964489] I/O error, dev vda, sector 82881208 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964499] I/O error, dev vda, sector 83031976 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964501] I/O error, dev vda, sector 83089832 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964503] I/O error, dev vda, sector 83156184 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964522] I/O error, dev vda, sector 83183384 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964524] I/O error, dev vda, sector 83310704 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964525] I/O error, dev vda, sector 83311144 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >> [  361.964532] I/O error, dev vda, sector 83315272 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
-> >>
-> >> The host does not generate any erros, they only seem to occur within the VM.
-> > 
-> > Now I asked Kevin if a bisection is possible, and the following
-> > results was found (https://bugs.debian.org/1116358#41):
-> > 
-> > I've identified the first bad commit using git bisect:
-> > 
-> > 90bfb28d5fa8127a113a140c9791ea0b40ab156a is the first bad commit
-> > commit 90bfb28d5fa8127a113a140c9791ea0b40ab156a
-> > Author: Jens Axboe <axboe@kernel.dk>
-> > Date:   Tue Sep 10 08:57:04 2024 -0600
-> > 
-> >     io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
-> > 
-> >     A recent change ensured that the necessary -EOPNOTSUPP -> -EAGAIN
-> >     transformation happens inline on both the reader and writer side,
-> >     and hence there's no need to check for both of these anymore on
-> >     the completion handler side.
-> > 
-> >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > 
-> >  io_uring/rw.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > 
-> > Here is the git bisect log as well:
-> > 
-> > git bisect start
-> > # status: waiting for both good and bad commits
-> > # good: [98f7e32f20d28ec452afb208f9cffc08448a2652] Linux 6.11
-> > git bisect good 98f7e32f20d28ec452afb208f9cffc08448a2652
-> > # status: waiting for bad commit, 1 good commit known
-> > # bad: [59b723cd2adbac2a34fc8e12c74ae26ae45bf230] Linux 6.12-rc6
-> > git bisect bad 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
-> > # bad: [de848da12f752170c2ebe114804a985314fd5a6a] Merge tag 'drm-next-2024-09-19' of https://gitlab.freedesktop.org/drm/kernel
-> > git bisect bad de848da12f752170c2ebe114804a985314fd5a6a
-> > # bad: [7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf] Merge tag 'soc-dt-6.12' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> > git bisect bad 7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf
-> > # good: [64dd3b6a79f0907d36de481b0f15fab323a53e5a] Merge tag 'for-linus-non-x86' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-> > git bisect good 64dd3b6a79f0907d36de481b0f15fab323a53e5a
-> > # bad: [daa394f0f9d3cb002c72e2d3db99972e2ee42862] Merge tag 'core-debugobjects-2024-09-16' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> > git bisect bad daa394f0f9d3cb002c72e2d3db99972e2ee42862
-> > # good: [effdcd5275ed645f6e0f8e8ce690b97795722197] Merge tag 'affs-for-6.12-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> > git bisect good effdcd5275ed645f6e0f8e8ce690b97795722197
-> > # bad: [26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4] Merge tag 'for-6.12/block-20240913' of git://git.kernel.dk/linux
-> > git bisect bad 26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4
-> > # bad: [3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2] Merge tag 'for-6.12/io_uring-20240913' of git://git.kernel.dk/linux
-> > git bisect bad 3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2
-> > # good: [df2825e98507d10cb037a308087ecd7cb3f6688d] btrfs: always pass readahead state to defrag
-> > git bisect good df2825e98507d10cb037a308087ecd7cb3f6688d
-> > # good: [69a3a0a45a2f72412c2ba31761cc9193bb746fef] Merge tag 'erofs-for-6.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
-> > git bisect good 69a3a0a45a2f72412c2ba31761cc9193bb746fef
-> > # good: [ecd5c9b29643f383d39320e30d21b8615bd893da] io_uring/kbuf: add io_kbuf_commit() helper
-> > git bisect good ecd5c9b29643f383d39320e30d21b8615bd893da
-> > # good: [f011c9cf04c06f16b24f583d313d3c012e589e50] io_uring/sqpoll: do not allow pinning outside of cpuset
-> > git bisect good f011c9cf04c06f16b24f583d313d3c012e589e50
-> > # bad: [84eacf177faa605853c58e5b1c0d9544b88c16fd] io_uring/io-wq: inherit cpuset of cgroup in io worker
-> > git bisect bad 84eacf177faa605853c58e5b1c0d9544b88c16fd
-> > # bad: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop - EOPNOTSUPP check in __io_complete_rw_common()
-> > git bisect bad 90bfb28d5fa8127a113a140c9791ea0b40ab156a
-> > # good: [c0a9d496e0fece67db777bd48550376cf2960c47] io_uring/rw: treat - EOPNOTSUPP for IOCB_NOWAIT like -EAGAIN
-> > git bisect good c0a9d496e0fece67db777bd48550376cf2960c47
-> > # first bad commit: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
-> > 
-> > #regzbot introduced: 90bfb28d5fa8127a113a140c9791ea0b40ab156a
-> > #regzbot link: https://bugs.debian.org/1116358
-> > 
-> > Does thi ring any bell?
-> 
-> Thanks to both of you, this is very useful! I guess the original commit
-> is mistaken, there's still a bubbling up of EOPNOTSUPP there. I'd say
-> let's just revert that commit, I will do that upstream and have it buble
-> down to the stable kernels too.
-> 
-> I can always look into this later and reintroduce it, if need be.
+First seen on next-20251014
+Good: next-20251013
+Bad:  next-20251014
 
-Thanks a lot for that. Is this enough for you or do you want still as
-well an explicit ack from Kevin that only applying the revert on top
-of 6.12.48 fixes the issue (i.e. to exclude any other side effects
-from commits inbetween; still while the bisect points at that specific
-one)?
+Regression Analysis:
+- New regression? yes
+- Reproducibility? yes
 
-Regards,
-Salvatore
+Boot regressions: next-20251014: Internal error: Oops:
+drm_bridge_connector_hdmi_cec_init drmm_connector_hdmi_cec_register
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+The kernel modules are not built with debug_info and could not find
+the line number.
+### Boot
+[    9.830602] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000098
+[    9.841379] coresight-cpu-debug 856000.debug: Coresight debug-CPU3
+initialized
+[    9.843514] Mem abort info:
+[    9.843523]   ESR = 0x0000000096000004
+[    9.843528]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    9.843535]   SET = 0, FnV = 0
+[    9.843539]   EA = 0, S1PTW = 0
+[    9.843543]   FSC = 0x04: level 0 translation fault
+[    9.843547] Data abort info:
+[    9.843550]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    9.843554]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    9.903238] usb 1-1.2: new high-speed USB device number 3 using ci_hdrc
+[    9.908692]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    9.908700] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000834a2000
+[    9.908708] [0000000000000098] pgd=0000000000000000, p4d=0000000000000000
+[    9.951360] Internal error: Oops: 0000000096000004 [#1]  SMP
+[    9.958091] Modules linked in: coresight_cpu_debug qcom_wcnss_pil
+coresight_stm coresight_tmc stm_core coresight_tpiu coresight_cti
+coresight_replicator coresight_funnel snd_soc_lpass_apq8016 coresight
+snd_soc_lpass_cpu msm adv7511 snd_soc_lpass_platform
+snd_soc_msm8916_digital snd_soc_msm8916_analog snd_soc_apq8016_sbc
+snd_soc_qcom_common qcom_camss snd_soc_core snd_pcm_dmaengine
+llcc_qcom snd_compress venus_core qrtr snd_pcm videobuf2_dma_sg
+ubwc_config qcom_spmi_temp_alarm qcom_pon v4l2_fwnode rtc_pm8xxx
+qcom_q6v5_mss ocmem snd_timer qcom_spmi_vadc drm_gpuvm v4l2_mem2mem
+v4l2_async qcom_pil_info snd qcom_vadc_common drm_exec qcom_q6v5
+videobuf2_v4l2 gpu_sched qcom_sysmon soundcore drm_dp_aux_bus
+qcom_common videodev qcom_glink_smem drm_display_helper mdt_loader
+videobuf2_memops qmi_helpers qnoc_msm8916 qcom_stats qcom_rng cec
+videobuf2_common mc drm_client_lib socinfo phy_qcom_usb_hs rpmsg_ctrl
+rpmsg_char display_connector ramoops rmtfs_mem drm_kms_helper
+reed_solomon fuse drm backlight ipv6
+[   10.029607] CPU: 1 UID: 0 PID: 87 Comm: kworker/u16:3 Not tainted
+6.18.0-rc1-next-20251015 #1 PREEMPT
+[   10.051760] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   10.060957] Workqueue: events_unbound deferred_probe_work_func
+[   10.067812] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   10.073455] pc : drm_bridge_connector_hdmi_cec_init+0xc/0x3c
+drm_display_helper
+[   10.080320] lr : drmm_connector_hdmi_cec_register+0x104/0x1b0
+drm_display_helper
+[   10.087958] sp : ffff800082fe3640
+[   10.091389] ci_hdrc ci_hdrc.0: remove, state 1
+[   10.095399] x29: ffff800082fe3690 x28: 0000000000000001 x27: ffff00000aa97610
+[   10.095414] x26: ffff00000aa97610 x25: 0000000000000008 x24: ffff80007ab7a0a8
+[   10.095427] x23: 0000000000000003 x22: ffff0000049dd420
+[   10.098816] usb usb1: USB disconnect, device number 1
+[   10.103130]  x21: ffff000004245e10
+[   10.103138] x20: ffff00000aa59000 x19: ffff00000aa4c080 x18: 00000002425c8888
+[   10.103150] x17: 0000000000000400 x16: 00000002425c8888 x15: 0000000000000553
+[   10.110393] usb 1-1: USB disconnect, device number 2
+[   10.117450]
+[   10.117454] x14: 00000000023660af x13: 0000000000000000 x12: 0000000000000000
+[   10.117466] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   10.117478] x8 : ffff80007ab4f3a0 x7 : 000000001e237337
+[   10.126995] usb 1-1.2: USB disconnect, device number 3
+[   10.127691]  x6 : 000000001e237337
+[   10.176293] x5 : ffff8000826c5974 x4 : ffff00003fc734f0 x3 : 0000000000154401
+[   10.179619] x2 : 0000000000000003 x1 : ffff00000aa4c080 x0 : 0000000000000000
+[   10.186823] Call trace:
+[   10.193932] drm_bridge_connector_hdmi_cec_init+0xc/0x3c
+drm_display_helper (P)
+[   10.196204] drm_bridge_connector_init+0x580/0x64c drm_display_helper
+[   10.203839] msm_dsi_manager_connector_init+0xa0/0xd0 msm
+[   10.210260] msm_dsi_modeset_init+0x70/0xb4 msm
+[   10.215814] mdp5_kms_init+0xbec/0xe24 msm
+[   10.220674] msm_drm_kms_init+0x80/0x220 msm
+[   10.225018] msm_drm_init+0x1a8/0x1e0 msm
+[   10.229268] msm_drm_bind+0x34/0x40 msm
+[   10.233348]  try_to_bring_up_aggregate_device
+(/builds/linux/drivers/base/component.c:249)
+[   10.237516]  __component_add (/builds/linux/drivers/base/component.c:270)
+[   10.242894]  component_add (/builds/linux/drivers/base/component.c:807)
+[   10.246538] dsi_dev_attach+0x1c/0x28 msm
+[   10.250363] dsi_host_attach+0x64/0x98 msm
+[   10.254270]  devm_mipi_dsi_attach
+(/builds/linux/drivers/gpu/drm/drm_mipi_dsi.c:384)
+[   10.258779] adv7533_attach_dsi+0xac/0xf4 adv7511
+[   10.262708] adv7511_probe+0x700/0x75c adv7511
+[   10.262733]  i2c_device_probe (/builds/linux/drivers/i2c/i2c-core-base.c:604)
+[   10.262749]  really_probe (/builds/linux/drivers/base/dd.c:583)
+[   10.276313]  __driver_probe_device (/builds/linux/drivers/base/dd.c:?)
+[   10.279962]  driver_probe_device (/builds/linux/drivers/base/dd.c:831)
+[   10.284300]  __device_attach_driver (/builds/linux/drivers/base/dd.c:960)
+[   10.288207]  bus_for_each_drv (/builds/linux/drivers/base/bus.c:462)
+[   10.292719]  __device_attach (/builds/linux/drivers/base/dd.c:?)
+[   10.296887]  device_initial_probe (/builds/linux/drivers/base/dd.c:1081)
+[   10.300445]  bus_probe_device (/builds/linux/drivers/base/bus.c:539)
+[   10.304613]  deferred_probe_work_func (/builds/linux/drivers/base/dd.c:125)
+[   10.308780]  process_scheduled_works (/builds/linux/kernel/workqueue.c:3274)
+[   10.313035]  worker_thread (/builds/linux/include/linux/list.h:381
+/builds/linux/kernel/workqueue.c:952
+/builds/linux/kernel/workqueue.c:3428)
+[   10.317893]  kthread (/builds/linux/kernel/kthread.c:465)
+[   10.321451]  ret_from_fork (/builds/linux/arch/arm64/kernel/entry.S:861)
+[   10.324845] Code: d65f03c0 d503245f aa0003e1 f9449400 (f9404c08)
+All code
+========
+   0: d65f03c0 ret
+   4: d503245f bti c
+   8: aa0003e1 mov x1, x0
+   c: f9449400 ldr x0, [x0, #2344]
+  10:* f9404c08 ldr x8, [x0, #152] <-- trapping instruction
+
+Code starting with the faulting instruction
+===========================================
+   0: f9404c08 ldr x8, [x0, #152]
+[   10.328407] ---[ end trace 0000000000000000 ]---
+
+
+## Source
+* Kernel version: 6.18.0-rc1-next-20251015
+* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+* Git commit: 1fdbb3ff1233e204e26f9f6821ae9c125a055229
+* Architectures: arm64 db410c
+* Toolchains: gcc-13 and clang-21
+* Kconfigs: defconfig+lkftconfig
+
+## Build
+* Test log: https://lkft.validation.linaro.org/scheduler/job/8493594#L2966
+* Test details:
+https://regressions.linaro.org/lkft/linux-next-master/next-20251015/log-parser-test/oops-Oops_SMP-ad06dc06/
+* Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/346UvyvsORKa7GkJXNgOdZm4Jc9
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/346UvE5jXrKAGFTkdkd35Z9HsUM/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/346UvE5jXrKAGFTkdkd35Z9HsUM/config
+
+--
+Linaro LKFT
