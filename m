@@ -1,106 +1,162 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C1C30506E
-	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 13:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D08822068F
+	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 17:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760621776; cv=none; b=Av2cWeMr/Hepd17dTK1q1+drZ9mZWaolxXuvaBEEkbIBHMbTfmvyFzOmJwuWb4tHy4/jf5JTFXjT+O2ySoW693rra66hr88duV9BehoDsw+ueEtwRtYWzW1VW3x/A/BAAVgJb5h57j5FQWpPHb/RxNFLdoPNjBN7SUY6aOEZn9E=
+	t=1760636363; cv=none; b=Kscfph4ST72CqBeCOLbg2/pMCbOgqKJfKBMD0WfFW2VQN4dkaem9riUSgDhGRZIV9vv7w9qIWJTn1eboCHT+k0hfNUt+SC4Yn1f9DhGCReDeTxRqCxXoJbUjdAOj31xksghN/rf6yto8wuf3XuunxpxiBAmhd+Uluq+NqVvBKnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760621776; c=relaxed/simple;
-	bh=myhDTwrlDuPGYHqb1hWWIpm1yFy04723XOZCYiLG6Y4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=ULSUxRQdrRJHSV/IkbnR53c7miwr+CNS5aKOR4MXi411mViktMNAZAiJD6vxDBjSamRkf6M+VenxTOe/kJcSjP3wDn1+HgJN4kneXL39ULQTqL1ynxQQpNSRNW+O6rWm/GAhi+In9hAqNFuBQDSMKS2saqb7toxU2Y+7AH4p9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bnnSEeWh; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1760636363; c=relaxed/simple;
+	bh=LbYf6I98/WH0RIxNWHEI4QVgY4YtUTKk80hGt/CmH5k=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=dRDwO8Li3NfP98NElpvrAH8frriMjT5agCXfDKehSME9lEOgoInfZIJzWQre+FAc+Gk0GLas+7E4n4DKCwX+zujDogRhRG8xvsIsxHEaW+hVdQ/Q+jNL3iorR64cJxdAWZ8RZIFPRWjMm8OnuMAzt3viSjNnBTEIsqnp4octgD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow-tech.com; spf=pass smtp.mailfrom=cknow-tech.com; dkim=pass (2048-bit key) header.d=cknow-tech.com header.i=@cknow-tech.com header.b=QI/JRjrJ; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow-tech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bnnSEeWh"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id B29774E41103;
-	Thu, 16 Oct 2025 13:36:12 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 8656A6062C;
-	Thu, 16 Oct 2025 13:36:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 213E4102F22EF;
-	Thu, 16 Oct 2025 15:36:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760621771; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=8hlnduBps2CCSYzZqpb5CLnowbo1EYG2ZwR0jxQsXj8=;
-	b=bnnSEeWhKYEVbruz9l2dL0xE/3Ra47wG9Ly3XxMwQsX5E0GEZzTOVG6D0eVkvCDLhZyNwO
-	FvW7GTPa1KqwsikenCJTxC6ii1WYsNz/kh/NwBxWrtGhtFqqxzJ5ogrw2vXzQbSNATBjCd
-	P023c0dKp9XL756GfgsPT1nIO7zo7aLZSpo790eUDblWV6C2QpefCKVo8Ax2fx8njJBba9
-	P7jMq13dx/jhpWiIAEZ1x7Gk2Cr/s3PZq+aA6GAmYrwptE0fLfPPE4uCQWZ8srJx0/DmfX
-	QUbX7RJtQaoRupKR9vJ1oljYDIU+iTFVcmFD0/h+F1VoGzj1EsKp1Blcvdi1Cg==
+	dkim=pass (2048-bit key) header.d=cknow-tech.com header.i=@cknow-tech.com header.b="QI/JRjrJ"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow-tech.com;
+	s=key1; t=1760636348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QxNz2ubVhmwaha5Dqcv6zgBsEC/I+M6eOK/y6A/nxQo=;
+	b=QI/JRjrJcWwm7qCShTbcH1hAx/WOPeP9mCfiyD27m2c29VqT1yZhG7vae0/qHoRYSf1Icd
+	mgq+glxC/dq6OQ05VctLPoDzYQ2feuIx7C7wtpO9IRufsqnwq3TRM/epaKQtdOeiUJS8Ju
+	3FN8/dvb9cshxlJOAz1Lcf2XiGShgLp7PTQna+rg1nIS+pMBLb71oh5UUh/hwAL1YPO0bv
+	1j9bHXdIF/x15JE2q+f7P8Ao9E0guri6YdR7ny3s+la0DByxYdXb0wcb2KTpkqYG3BEkgN
+	Qq/lcGJLlVpfAWZemabMQeZjl53GCKeNqT4CrlAwoeNIl2nT8EsajYTHACCT6w==
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 16 Oct 2025 15:36:00 +0200
-Message-Id: <DDJSBQRQJTMZ.X1W4I5YOURPK@bootlin.com>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- <dri-devel@lists.freedesktop.org>, "open list"
- <linux-kernel@vger.kernel.org>, <lkft-triage@lists.linaro.org>, "Linux
- Regressions" <regressions@lists.linux.dev>
-Cc: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Simona Vetter"
- <simona@ffwll.ch>, "David Airlie" <airlied@gmail.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>, "Dan Carpenter"
- <dan.carpenter@linaro.org>, "Anders Roxell" <anders.roxell@linaro.org>,
- "Ben Copeland" <benjamin.copeland@linaro.org>
-Subject: Re: next-20251014: Internal error: Oops:
- drm_bridge_connector_hdmi_cec_init drmm_connector_hdmi_cec_register
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-X-Mailer: aerc 0.20.1
-References: <CA+G9fYuKHp3QgPKjgFY3TfkDdh5Vf=Ae5pCW+eU41Bu=D7th2g@mail.gmail.com> <CA+G9fYv_mGoDzFv33v7Y5+6yz6z=xp9FJRiFUBYDapvE_rrBXA@mail.gmail.com>
-In-Reply-To: <CA+G9fYv_mGoDzFv33v7Y5+6yz6z=xp9FJRiFUBYDapvE_rrBXA@mail.gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+Date: Thu, 16 Oct 2025 19:38:57 +0200
+Message-Id: <DDJXHRIRGTW9.GYC2ULZ5WQAL@cknow-tech.com>
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <diederik@cknow-tech.com>
+To: "Bjorn Helgaas" <helgaas@kernel.org>
+Cc: "FUKAUMI Naoki" <naoki@radxa.com>,
+ <manivannan.sadhasivam@oss.qualcomm.com>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, "Manivannan Sadhasivam" <mani@kernel.org>, "Lorenzo
+ Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, "David E. Box"
+ <david.e.box@linux.intel.com>, "Kai-Heng Feng"
+ <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>, "Chia-Lin Kao"
+ <acelan.kao@canonical.com>, "Dragan Simic" <dsimic@manjaro.org>,
+ <linux-rockchip@lists.infradead.org>, <regressions@lists.linux.dev>, "Ulf
+ Hansson" <ulf.hansson@linaro.org>
+References: <DDIW7ZP5K1VR.2I7VW56B9CZLF@cknow-tech.com>
+ <20251015225033.GA945930@bhelgaas>
+In-Reply-To: <20251015225033.GA945930@bhelgaas>
+X-Migadu-Flow: FLOW_OUT
 
-Hello Naresh,
+On Thu Oct 16, 2025 at 12:50 AM CEST, Bjorn Helgaas wrote:
+> On Wed, Oct 15, 2025 at 02:26:30PM +0200, Diederik de Haas wrote:
+>> On Tue Oct 14, 2025 at 8:49 PM CEST, Bjorn Helgaas wrote:
+>> > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+>> >> I've noticed an issue on Radxa ROCK 5A/5B boards, which are based on =
+the
+>> >> Rockchip RK3588(S) SoC.
+>> >>=20
+>> >> When running Linux v6.18-rc1 or linux-next since 20250924, the kernel=
+ either
+>> >> freezes or fails to probe M.2 Wi-Fi modules. This happens with severa=
+l
+>> >> different modules I've tested, including the Realtek RTL8852BE, Media=
+Tek
+>> >> MT7921E, and Intel AX210.
+>> >>=20
+>> >> I've found that reverting the following commit (i.e., the patch I'm r=
+eplying
+>> >> to) resolves the problem:
+>> >> commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+>> >
+>> > Can you collect a complete dmesg log when booting with
+>> >
+>> >   ignore_loglevel pci=3Dearlydump dyndbg=3D"file drivers/pci/* +p"
+>> >
+>> > and the output of "sudo lspci -vv"?
+>>=20
+>> I have a Rock 5B as well, but I don't have a Wi-Fi module, but I do have
+>> a NVMe drive connected. That boots fine with 6.17, but I end up in a
+>> rescue shell with 6.18-rc1. I haven't verified that it's caused by the
+>> same commit, but it does sound plausible.
+>
+> FWIW, my expectation is that booting with "pcie_aspm=3Doff" should
+> effectively avoid the ASPM enabling and behave similarly to reverting
+> f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states for
+> devicetree platforms").  My hope was that we could boot that way and
+> incrementally enable ASPM via sysfs a device at a time for testing.
+>
+> [Moved last lines up here]
+> Bottom line, I don't think I can get any further with this particular
+> issue until we confirm that f3ac2ff14834 ("PCI/ASPM: Enable all
+> ClockPM and ASPM states for devicetree platforms") is the cause.
 
-On Thu Oct 16, 2025 at 12:52 PM CEST, Naresh Kamboju wrote:
-> On Thu, 16 Oct 2025 at 16:14, Naresh Kamboju <naresh.kamboju@linaro.org> =
-wrote:
->>
->> While booting and loading kernel modules on dragonboard 410c board
->> with Linux next
->> kernel next-20251014 and next-20251015 the following crash noticed,
->>
->> First seen on next-20251014
->> Good: next-20251013
->> Bad:  next-20251014
->>
->> Regression Analysis:
->> - New regression? yes
->> - Reproducibility? yes
->>
->> Boot regressions: next-20251014: Internal error: Oops:
->> drm_bridge_connector_hdmi_cec_init drmm_connector_hdmi_cec_register
+I built a 6.18-rc1 kernel with that commit reverted and when booted up,
+I could mount my NVMe drive. Next I removed the 'noauto' from /etc/fstab
+and rebooted and that succeeded as well.
+So I think we can conclude that commit f3ac2ff14834 is the cause.
 
-Thanks for the report.
+>> On this device, the NVMe isn't strictly needed (I used it to compile my
+>> kernels on), so I added 'noauto' to the NVMe line in /etc/fstab ... and
+>> that made it boot successfully into 6.18-rc1. Then running the 'mount'
+>> command wrt that NVMe drive failed with this message:
+>>=20
+>>   EXT4-fs (nvme0n1p1): unable to read superblock
+>>=20
+>> The log of my attempts can be found here:
+>> https://paste.sr.ht/~diederik/f435eb258dca60676f7ac5154c00ddfdc24ac0b7
+>
+> Thanks for the log, it's very useful.  This is pieced together from
+> the serial console log and the "dmesg --level" output, but I think
+> it's all the same boot:
 
-This looks like the same issue reported here:
-https://lore.kernel.org/all/336fbfdd-c424-490e-b5d1-8ee84043dc80@samsung.co=
-m/
+Correct.
 
-I'm writing a fix right now, will send it today if all goes well.
+>   ...
+>   [   18.921811] rockchip-pm-domain fd8d8000.power-management:power-contr=
+oller: sync_state() pending due to fdad0000.npu
+>   [   18.922737] rockchip-pm-domain fd8d8000.power-management:power-contr=
+oller: sync_state() pending due to fdb50000.video-codec
+>   ...
+>
+> The earlydump info shows the 00:00.0 Root Port had I/O+ Mem+
+> BusMaster+ (0x0107) and the 01:00.0 NVMe initially had I/O- Mem-
+> BusMaster- (0x0000).  We were able to enumerate the NVMe device and
+> assign its BAR, and the nvme driver turned on Mem+ (0x002).
+>
+>   nvme_timeout
+>     csts =3D readl(dev->bar + NVME_REG_CSTS)
+>     if (nvme_should_reset(csts))
+>       nvme_warn_reset(csts)
+>         result =3D pci_read_config_word(PCI_STATUS)
+>         "controller is down; will reset: CSTS=3D0xffffffff, ... failed (1=
+34)"
+>     nvme_dev_disable
+>
+> But I think the NVMe device was powered down to D3cold somewhere
+> before 39.971050.  I don't know if the power-controller messages at
+> 18.921811 have any connection, and I don't know why ASPM would be
+> related.
 
+I highly doubt they're connected. These threads are relevant:
+https://lore.kernel.org/all/20250701114733.636510-1-ulf.hansson@linaro.org/
+https://lore.kernel.org/all/20250909111130.132976-1-ulf.hansson@linaro.org/
+https://lore.kernel.org/all/20251007094312.590819-1-ulf.hansson@linaro.org/
 
-> These three patches landed recently,
-> $ git log --oneline  next-20251013..next-20251014
-> drivers/gpu/drm/display/drm_bridge_connector.c
-> 2be300f9a0b6f drm/display: bridge_connector: get/put the stored bridges
+TL;DR: Those warnings will (likely) be downgraded to 'info'.
 
-^ This is the commit introducing the bug.
-
-Best regards,
-Luca
-
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+  Diederik
