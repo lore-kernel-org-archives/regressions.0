@@ -1,189 +1,266 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33931D750;
-	Thu, 16 Oct 2025 09:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760608773; cv=pass; b=QR985/Ob9HpTHqdqS4HvZrmItKePSqaoFvydzj29Go9ONw4T8e2PrSisOC0yZ1GTMJ/7TjCPTFqi6/ow+CJGfrdlFIwQxW0sRZPGJFvrTq9TjKo/crrn1C6DgwfgcFuynmbLmcRfMHwiyhvjf553rrPKe04idJYNmVn8Rw1wFUQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760608773; c=relaxed/simple;
-	bh=UaBllWeys3yP01+T9Ndcfu+M6xTIM+j/0LMxc+1LY5s=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=DJvN4sKsZ8aOwu5pY8duMRKyklA8oTkalD6W9EShRC9HrJV28K5O0ToY6Nagk+hk3Qg5Re47YSS4Fk6BRgFP73uzkJAsuu9EMmS529xQF+mrcFDZOxQ4szNQKuon//TdhskaR8l5PWZ6InNO8R62738y8QrPigUg/ojZr30ui8o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=JOCdKZjM; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984A31AF00
+	for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 10:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760611184; cv=none; b=KxURiVMDrQCX+A+puYLxSe7L0Dj8jmSAL7okM5ZiVLNczBM68ZS+N8XxAXo4lXOvR1g7+9UxHrUszWK4o8QaEN00E9tUo2y54D9z/ArbUMIxH53cIOv7ZhStF6YuiOVWvpKK5Y2ymyB+O5gzjNqG0r/zqOoESA+M8cOM5CcWjO4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760611184; c=relaxed/simple;
+	bh=o6KG93bnRAiru8U6pU0HfZ6fKR0huOQZE3kUNMaJOB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f2x2O3MtEwiGoySnU/j+RgXB6saEWsTkITeNyFKFLgxdvdJqlE3+igpzB57j4Y+mwnkeatW3N3G6cu7UHEnbvN3i+ZQA0z28YOB9D96TdErwEMPIs6lamupo3I3IAb3KYh4BPDaDr7uUmyNyWHPQgjT1Yg1IckCVX5Xqd9Ejr+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LM7ZaySj; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="JOCdKZjM"
-ARC-Seal: i=1; a=rsa-sha256; t=1760608768; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UPQ+aBY94US7ij1tO9uyyLy+BbQVyKqTekj1jpsjWfL1A25b2i9Dzlis52ArtMqcmYs3EmEypYleJkX3AiMnKRmwQrde0TYuqI5haONAm1ww2sC+pXN4N5GSmwyRz33A/GrdHtxXjhwTMFDQlIg71VXHTkhvVlCJ9FoXqjVW/tA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1760608768; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CVJ7y67b8YKm3o8RTHQrQS1h70ifhx7DfX3PMdznC1M=; 
-	b=JZkla3npPJIjv6/21LNKCPZ/SK0vahuWZ71eWmhgz3Hbb5C1NvN89sPjaQrixJ2caU5o9+XfroTldT0mI0CmL57VRQTHmV5EEo1X36Rhocp2xWrspnmKgeQQZLct3LeRNv0y5sRsQi+egwHtPQAxkgZxgUkNqmEgKTihSKiTZFA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=gus@collabora.com;
-	dmarc=pass header.from=<gus@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1760608768;
-	s=zohomail; d=collabora.com; i=gus@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=CVJ7y67b8YKm3o8RTHQrQS1h70ifhx7DfX3PMdznC1M=;
-	b=JOCdKZjMjN79GRhasfc7d4Hr17q8Zu10Yas+F2oSIiIvC131SZx2nE3poO8VSmt1
-	ebUi69gktLf6u8iMEaSmCY3QHTNPf4gUy6/BSX1PDvC0jNnjv+tOfanJN7iTZLTRQwv
-	5NiOhr80cQCQdzGpOKqOquWsNJ2LF+rolZlvDZQU=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1760608767219157.4044678793631; Thu, 16 Oct 2025 02:59:27 -0700 (PDT)
-Date: Thu, 16 Oct 2025 06:59:27 -0300
-From: Gustavo Padovan <gus@collabora.com>
-To: "Randy Dunlap" <rdunlap@infradead.org>
-Cc: "kernelci" <kernelci@lists.linux.dev>,
-	"kernelci-results" <kernelci-results@groups.io>,
-	=?UTF-8?Q?=22Guido_G=C3=BCnther=22?= <agx@sigxcpu.org>,
-	"Neil Armstrong" <neil.armstrong@linaro.org>,
-	"dri-devel" <dri-devel@lists.freedesktop.org>,
-	"phone-devel" <phone-devel@vger.kernel.org>,
-	"regressions" <regressions@lists.linux.dev>,
-	"linux-next" <linux-next@vger.kernel.org>
-Message-ID: <199ec75cce1.3f69ac7c921986.1695662047481478034@collabora.com>
-In-Reply-To: <73bf512e-fe5f-420c-8d47-eccfa079af99@infradead.org>
-References: <176045034384.1788.868853922191153052@15dd6324cc71> <73bf512e-fe5f-420c-8d47-eccfa079af99@infradead.org>
-Subject: Re: [REGRESSION] next/master: (build) undefined reference to
- `devm_backlight_device_register' in vmlinux...
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM7ZaySj"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63b9da57cecso1048248a12.0
+        for <regressions@lists.linux.dev>; Thu, 16 Oct 2025 03:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760611180; x=1761215980; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+PyD2pId0cRD4lpdgaX4aev4MljXrDVFLeLRpaj411c=;
+        b=LM7ZaySj7ltEMRXKwMq/REuwPAqaJqIVkIxrQBFTEBiopK+nKO25V67y7GeU2BO8is
+         rLpLCVZvEJcZk6wyYVdsN0gRBsWvY3kolqIplZiY1qzYgOTuI6mCJGo4syY6TsX9GWun
+         b6AGptSPQTyvprE9E2xCE7nw4QR18EuAmX/FZ6o3szWASOqB4bYtIO4g7hSso/V/pOyO
+         OujJEnVQB0GrEOoZ+vrh0T7oLuGGSj/+5GKcjPfqsGq/VzEy/ytIfi14GHFz5CMw2ZKh
+         HMB+J74uHZ6dLu+v50Cba93CJ3vDtZtUdcqRvguwpX/lf9xS4WUe5nTI9b3/0rO1rmi4
+         VySQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760611180; x=1761215980;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+PyD2pId0cRD4lpdgaX4aev4MljXrDVFLeLRpaj411c=;
+        b=q/70mGMtxu+Dk8/ROldbBWg14GD8hP4bRdh2pd5Lxu1puGQTECFbPJth1Mb1SqjEXB
+         3PIYZ75jVtqG9U1JiGA2BYb6j4Zg/QSofeAwANDbSVqFwL8eHQXUs+qJPKwv4QjtrgVx
+         ARgbwylJ88Tggf0zcATMs9ajThNZx3LEupr+anyIn2yYNSyoqpUwrGyQu9TH/S7g3WxN
+         j8yZhLRxqrSbBIPWbZwyIa5Mvs0mswswLh5luobHA4hQM1tdjbU05fTcu4hG/5Cc2FmL
+         i/tqw8udz0G6xcZrJMiBU1OC3JKLMqTs/mW3QFobr3XB0B/ccAUHwq487tSEObnIDE38
+         D1ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUqLI1/MA5pb/lLcDCwxCbIiigQwd0Bi4+an9Bzjk4QZUptu5c8IuzzXKcAORTNzPmff24ObFgqsp/z/w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwZntk/nVAROaST01lddctNo4Wl5w/NznYZSMhDY+pg3mOl6pnJ
+	7AKtgpY0BMtJo3R8xrMuw8U7bTIaEAnPZ017xaWMvfyUcnkMgnBM+1+j
+X-Gm-Gg: ASbGncuHCIP99GtzQdUUXZEKjbGqdPikby+iLhMvLChRPFSDEMSnr7yq7iEGimkVdA1
+	4s13tKFuvblVxoBhHM892Z2nObwj54XTOqwQF+qPcy9R7jeUC/kg13ldqrXEU9xMmoMRvI7hpRK
+	a0hiP6YrxIzKBS0KWXqOBy5d5m5catbaJnr2F8NZt4xMBaxajdDMVEMQYGWu1V66VABix3sZ4ZX
+	yyEFtVVln1xUDvF4tp7VTMptz0S7yyAZDYsRrbBhkRoZKK77irSArq588hT4Vm+PxMYca6azfsb
+	FAJ8Dbnu5ucFSybsNNvSNmgqLsRG3+9stbzyRhXEMG19x69EtKKF2Xecfuw7XCtnnEZSZ08JyNP
+	BYdlnbUoPCAihWzKWPzQevRkeKdNdqyFI/5lXXBN7ASpR6FONlALfcMaMPFeG4SK2Muzof8NVh0
+	CFaBE+1cndOXxSB3+DRyYPW3+l5kXWRqExfSW9pmJXL34fVQIHzXUhT1c=
+X-Google-Smtp-Source: AGHT+IEwpeLQIEArthLh+TbKTTxGx2vNT5P6HwfiGcItarmMdcoptDjdpfU+FMQFpiI8Q5JIgvPtOQ==
+X-Received: by 2002:a17:907:94c3:b0:b45:8370:eefd with SMTP id a640c23a62f3a-b50a9a6be43mr3153979966b.5.1760611179938;
+        Thu, 16 Oct 2025 03:39:39 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b5ccd6b457esm481206866b.76.2025.10.16.03.39.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Oct 2025 03:39:38 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 191E1BE2DE0; Thu, 16 Oct 2025 12:39:38 +0200 (CEST)
+Date: Thu, 16 Oct 2025 12:39:38 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jens Axboe <axboe@kernel.dk>, Kevin Lumik <kevin@xf.ee>
+Cc: 1116358@bugs.debian.org, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [regression] Regression from 90bfb28d5fa8 ("io_uring/rw: drop
+ -EOPNOTSUPP check in __io_complete_rw_common()"): LVM snapshots causing I/O
+ errors in KVM guest with aio=io_uring set
+Message-ID: <aPDLahi_-_GaA-tv@eldamar.lan>
+References: <f6e2bd310293b720cad7d193b3fdf8369d6bb3ac.camel@xf.ee>
+ <aO07Gt9ZtECKuGkJ@eldamar.lan>
+ <cceb723c-051b-4de2-9a4c-4aa82e1619ee@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cceb723c-051b-4de2-9a4c-4aa82e1619ee@kernel.dk>
 
-Hi Randy,
+Hi Jens,
 
+On Mon, Oct 13, 2025 at 12:04:12PM -0600, Jens Axboe wrote:
+> On 10/13/25 11:47 AM, Salvatore Bonaccorso wrote:
+> > Hi Jens,
+> > 
+> > Kevin Lumik reported in Debian the following issue (not exactly a
+> > minimal reproducer, but bisection results follows):
+> > 
+> > On Fri, Sep 26, 2025 at 10:34:22AM +0300, Kevin Lumik wrote:
+> >  
+> >> Dear Maintainer,
+> >>
+> >> After upgrading from Debian Bookworm to Trixie, an issue within KVM guests when creating an LVM snapshot of its volume
+> >> has surfaced. When a LVM snapshot is taken from the host, the guest starts to get I/O errors. The issue seems to only
+> >> appear when aio=io_uring is specified in the KVM drive parameters and also seems to resolve when downgrading the kernel
+> >> package down to 6.1. The issue is also not reproducible when using aio=native. 
+> >>
+> >> KVM args for the drive: "-drive id=drive-
+> >> virtio0,format=raw,file=/dev/dom/vps_testsql,cache=none,aio=io_uring,index=0,media=disk,if=virtio"
+> >>
+> >> An IO workload is being created in the VM using "fio --randrepeat=1 --ioengine=io_uring --direct=1 --gtod_reduce=1 --
+> >> name=randwrite --filename=/root/test.bin --bs=4k --iodepth=64 --runtime=60 --numjobs=32 --readwrite=randwrite --size=1G
+> >> --rwmixread=75 --group_reporting"
+> >>
+> >> After running "lvcreate -s /dev/dom/vps_testsql -n test -L 1G" on the host we can observe fio erroring out:
+> >>
+> >> ...
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=46977024, buflen=4096
+> >> fio: pid=7367, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=261505024, buflen=4096
+> >> fio: pid=7374, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=973840384, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=9637888, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=159965184, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=857505792, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=90787840, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=26427392, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=955621376, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=96169984, buflen=4096
+> >> fio: pid=7372, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7362, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=203702272, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=814649344, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=91467776, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=948256768, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=105295872, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=75247616, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=1062293504, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=111955968, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=942563328, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=117354496, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=1050402816, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=125419520, buflen=4096
+> >> fio: io_u error on file /root/test.bin: Input/output error: write offset=129044480, buflen=4096
+> >> fio: pid=7369, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7373, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7348, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7375, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7358, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >> fio: pid=7359, err=5/file:io_u.c:1876, func=io_u error, error=Input/output error
+> >>
+> >> randwrite: (groupid=0, jobs=32): err= 5 (file:io_u.c:1876, func=io_u error, error=Input/output error): pid=7344: Thu Sep
+> >> 25 16:28:30 2025
+> >>   write: IOPS=194k, BW=758MiB/s (795MB/s)(3976MiB/5244msec); 0 zone resets
+> >>    bw (  KiB/s): min=657104, max=1009816, per=100.00%, avg=785345.80, stdev=4331.73, samples=320
+> >>    iops        : min=164276, max=252454, avg=196336.40, stdev=1082.93, samples=320
+> >>   cpu          : usr=0.33%, sys=1.07%, ctx=18912, majf=0, minf=455
+> >>   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=99.8%
+> >>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+> >>      complete  : 0=0.1%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
+> >>      issued rwts: total=0,1019955,0,0 short=0,0,0,0 dropped=0,0,0,0
+> >>      latency   : target=0, window=0, percentile=100.00%, depth=64
+> >>
+> >> Run status group 0 (all jobs):
+> >>   WRITE: bw=758MiB/s (795MB/s), 758MiB/s-758MiB/s (795MB/s-795MB/s), io=3976MiB (4169MB), run=5244-5244msec
+> >>
+> >> Disk stats (read/write):
+> >>   vda: ios=1/1001361, merge=0/2, ticks=0/10314531, in_queue=10314549, util=97.82%
+> >> Bus error
+> >>
+> >> ---
+> >>
+> >> And the error is also visible in the kernel error log of the VM:
+> >> [  361.962970] I/O error, dev vda, sector 83277192 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.963945] I/O error, dev vda, sector 83067480 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964489] I/O error, dev vda, sector 82881208 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964499] I/O error, dev vda, sector 83031976 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964501] I/O error, dev vda, sector 83089832 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964503] I/O error, dev vda, sector 83156184 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964522] I/O error, dev vda, sector 83183384 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964524] I/O error, dev vda, sector 83310704 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964525] I/O error, dev vda, sector 83311144 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >> [  361.964532] I/O error, dev vda, sector 83315272 op 0x1:(WRITE) flags 0x8800 phys_seg 1 prio class 2
+> >>
+> >> The host does not generate any erros, they only seem to occur within the VM.
+> > 
+> > Now I asked Kevin if a bisection is possible, and the following
+> > results was found (https://bugs.debian.org/1116358#41):
+> > 
+> > I've identified the first bad commit using git bisect:
+> > 
+> > 90bfb28d5fa8127a113a140c9791ea0b40ab156a is the first bad commit
+> > commit 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> > Author: Jens Axboe <axboe@kernel.dk>
+> > Date:   Tue Sep 10 08:57:04 2024 -0600
+> > 
+> >     io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
+> > 
+> >     A recent change ensured that the necessary -EOPNOTSUPP -> -EAGAIN
+> >     transformation happens inline on both the reader and writer side,
+> >     and hence there's no need to check for both of these anymore on
+> >     the completion handler side.
+> > 
+> >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > 
+> >  io_uring/rw.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > 
+> > Here is the git bisect log as well:
+> > 
+> > git bisect start
+> > # status: waiting for both good and bad commits
+> > # good: [98f7e32f20d28ec452afb208f9cffc08448a2652] Linux 6.11
+> > git bisect good 98f7e32f20d28ec452afb208f9cffc08448a2652
+> > # status: waiting for bad commit, 1 good commit known
+> > # bad: [59b723cd2adbac2a34fc8e12c74ae26ae45bf230] Linux 6.12-rc6
+> > git bisect bad 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+> > # bad: [de848da12f752170c2ebe114804a985314fd5a6a] Merge tag 'drm-next-2024-09-19' of https://gitlab.freedesktop.org/drm/kernel
+> > git bisect bad de848da12f752170c2ebe114804a985314fd5a6a
+> > # bad: [7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf] Merge tag 'soc-dt-6.12' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> > git bisect bad 7b17f5ebd5fc5e9275eaa5af3d0771f2a7b01bbf
+> > # good: [64dd3b6a79f0907d36de481b0f15fab323a53e5a] Merge tag 'for-linus-non-x86' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+> > git bisect good 64dd3b6a79f0907d36de481b0f15fab323a53e5a
+> > # bad: [daa394f0f9d3cb002c72e2d3db99972e2ee42862] Merge tag 'core-debugobjects-2024-09-16' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> > git bisect bad daa394f0f9d3cb002c72e2d3db99972e2ee42862
+> > # good: [effdcd5275ed645f6e0f8e8ce690b97795722197] Merge tag 'affs-for-6.12-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> > git bisect good effdcd5275ed645f6e0f8e8ce690b97795722197
+> > # bad: [26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4] Merge tag 'for-6.12/block-20240913' of git://git.kernel.dk/linux
+> > git bisect bad 26bb0d3f38a764b743a3ad5c8b6e5b5044d7ceb4
+> > # bad: [3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2] Merge tag 'for-6.12/io_uring-20240913' of git://git.kernel.dk/linux
+> > git bisect bad 3a4d319a8fb5a9bbdf5b31ef32841eb286b1dcc2
+> > # good: [df2825e98507d10cb037a308087ecd7cb3f6688d] btrfs: always pass readahead state to defrag
+> > git bisect good df2825e98507d10cb037a308087ecd7cb3f6688d
+> > # good: [69a3a0a45a2f72412c2ba31761cc9193bb746fef] Merge tag 'erofs-for-6.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs
+> > git bisect good 69a3a0a45a2f72412c2ba31761cc9193bb746fef
+> > # good: [ecd5c9b29643f383d39320e30d21b8615bd893da] io_uring/kbuf: add io_kbuf_commit() helper
+> > git bisect good ecd5c9b29643f383d39320e30d21b8615bd893da
+> > # good: [f011c9cf04c06f16b24f583d313d3c012e589e50] io_uring/sqpoll: do not allow pinning outside of cpuset
+> > git bisect good f011c9cf04c06f16b24f583d313d3c012e589e50
+> > # bad: [84eacf177faa605853c58e5b1c0d9544b88c16fd] io_uring/io-wq: inherit cpuset of cgroup in io worker
+> > git bisect bad 84eacf177faa605853c58e5b1c0d9544b88c16fd
+> > # bad: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop - EOPNOTSUPP check in __io_complete_rw_common()
+> > git bisect bad 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> > # good: [c0a9d496e0fece67db777bd48550376cf2960c47] io_uring/rw: treat - EOPNOTSUPP for IOCB_NOWAIT like -EAGAIN
+> > git bisect good c0a9d496e0fece67db777bd48550376cf2960c47
+> > # first bad commit: [90bfb28d5fa8127a113a140c9791ea0b40ab156a] io_uring/rw: drop -EOPNOTSUPP check in __io_complete_rw_common()
+> > 
+> > #regzbot introduced: 90bfb28d5fa8127a113a140c9791ea0b40ab156a
+> > #regzbot link: https://bugs.debian.org/1116358
+> > 
+> > Does thi ring any bell?
+> 
+> Thanks to both of you, this is very useful! I guess the original commit
+> is mistaken, there's still a bubbling up of EOPNOTSUPP there. I'd say
+> let's just revert that commit, I will do that upstream and have it buble
+> down to the stable kernels too.
+> 
+> I can always look into this later and reintroduce it, if need be.
 
----- On Thu, 16 Oct 2025 00:47:35 -0300 Randy Dunlap <rdunlap@infradead.org> wrote ---
+Thanks a lot for that. Is this enough for you or do you want still as
+well an explicit ack from Kevin that only applying the revert on top
+of 6.12.48 fixes the issue (i.e. to exclude any other side effects
+from commits inbetween; still while the bisect points at that specific
+one)?
 
- > Guido, 
- >  
- > Looks like this driver needs 
- >  
- > +    depends on BACKLIGHT_CLASS_DEVICE 
- >  
- > to fix the build. 
- >  
- > @Gus- please read comments near bottom/end. 
- >  
- >  
- > On 10/14/25 6:59 AM, KernelCI bot wrote: 
- > > 
- > > 
- > > 
- > > 
- > > Hello, 
- > > 
- > > New build issue found on next/master: 
- > > 
- > > --- 
- > >  undefined reference to `devm_backlight_device_register' in vmlinux.unstripped (drivers/gpu/drm/panel/panel-visionox-rm69299.c) [logspec:kbuild,kbuild.compiler.linker_error] 
- > > --- 
- > > 
- > > - dashboard: https://d.kernelci.org/i/maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
- > > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
- > > - commit HEAD:  13863a59e410cab46d26751941980dc8f088b9b3 
- > > - tags: next-20251014 
- > > 
- > > 
- > > Log excerpt: 
- > > ===================================================== 
- > >   LD      .tmp_vmlinux1 
- > > aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected! 
- > > aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected! 
- > > aarch64-linux-gnu-ld: drivers/gpu/drm/panel/panel-visionox-rm69299.o: in function `visionox_rm69299_create_backlight': 
- > > /tmp/kci/linux/drivers/gpu/drm/panel/panel-visionox-rm69299.c:343: undefined reference to `devm_backlight_device_register' 
- > > 
- > > ===================================================== 
- > > 
- > > 
- > > # Builds where the incident occurred: 
- > > 
- > > ## defconfig+arm64-chromebook+CONFIG_ARM64_16K_PAGES=y on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-16k_pages-68ee4f14a6dc7c71db9fda21/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f14a6dc7c71db9fda21 
- > > 
- > > ## defconfig+arm64-chromebook+CONFIG_ARM64_64K_PAGES=y on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-64k_pages-68ee4f17a6dc7c71db9fda24/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f17a6dc7c71db9fda24 
- > > 
- > > ## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-mainline-big_endian-68ee4f32a6dc7c71db9fda39/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f32a6dc7c71db9fda39 
- > > 
- > > ## defconfig+arm64-chromebook+CONFIG_RANDOMIZE_BASE=y on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-randomize-68ee4f1fa6dc7c71db9fda2a/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f1fa6dc7c71db9fda2a 
- > > 
- > > ## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-chromebook-kcidebug-68ee4f2ba6dc7c71db9fda33/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f2ba6dc7c71db9fda33 
- > > 
- > > ## defconfig+arm64-chromebook+kselftest on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-kselftest-16k_pages-68ee4f23a6dc7c71db9fda2d/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f23a6dc7c71db9fda2d 
- > > 
- > > ## defconfig+arm64-chromebook+preempt_rt on (arm64): 
- > > - compiler: gcc-12 
- > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-preempt_rt_chromebook-68ee4f3aa6dc7c71db9fda3f/.config 
- > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f3aa6dc7c71db9fda3f 
- > > 
- > > 
- > > #kernelci issue maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
- > > 
- > > Reported-by: kernelci.org bot <bot@kernelci.org> 
- > > 
- > > -- 
- > > This is an experimental report format. Please send feedback in! 
- > > Talk to us at kernelci@lists.linux.dev 
- > > 
- > > Made with love by the KernelCI team - https://kernelci.org 
- > > 
- >  
- > Gus, the CI reporter needs to learn how to do a few things because developers 
- > (other than me ?) don't scrounge mailing lists to look for problems. 
-
-Absolutely. Our goal is to automate as many steps as possible!
- 
- > a. find the commit that caused the problem (or the email series) 
- >  
- > b. send the report (Cc:) to whoever wrote the patch and to the 
- > appropriate mailing list. 
- >  
- > I expect that b. is easier than a., so do it first. 
-
-b. is easier that a. yes, but I don't think we can do it first because we
-need to figure the patch first. Essentially, you are asking us for
-build bisections. Something that is already on our roadmap, but
-we didn't had the time to tackle yet, but should come to it in the
-coming months.
-
- >  
- > And I'm sure that I have missed a thing or two that could be 
- > added as well. 
-
-Please keep the feedback coming!
-
-Best,
-
-- Gus
-
+Regards,
+Salvatore
