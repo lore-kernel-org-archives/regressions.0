@@ -1,75 +1,76 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD2D3191B5
-	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 09:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FD1B4257
+	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 09:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760693067; cv=none; b=Ilri452vjmgkk/+Ryux8bsu50q5OchGs3m4vuQ5twcVNsVpCN3P1pNyBKlnCCfwdJ+ZTHXTZDjs1czsffQ4aMjB0pVxq2dPKAwPsAx3No/wpES9cOSkuk7KYY6iXyVbI1H6hXBuIKK2H6lG4Q7jQNwhJIKLFbSvscORLQlSQndQ=
+	t=1760693991; cv=none; b=oXlAlu9n3LBlhtTrovj5k/qvGd1wZ2xcBg9oQPJTVFuniDlusPH/uOvQBkGVynzQYu3AxEshBW07xIwvJ3FDhZdQXE5k5KPR8v1U5x7/eIAEndVj3HYKekvP1wa5qqg9d1ZuHDYsh0diAxNlZQO25bNsfkLQNcqhGhJzrDcrs5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760693067; c=relaxed/simple;
-	bh=CzRxUmZMpdqoJdJbYx8tsBe/1Zkx5cGL8TVZx6KKtKM=;
+	s=arc-20240116; t=1760693991; c=relaxed/simple;
+	bh=fUk/rh0WLjPqCjEuA4oTo6WbPH0FxjFUt1aN31cxz28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jBmkXXyrH46X8GbN1m7AuiOy2DMSu4AUdscbxtp5mApS4YhVvJbFfkh6uquQ9G2/P9yWy3oNvQgrynJsFJZfmgUGAheZuK1UxHWRlYTkREd6jyqXkcIpyX5wseXHmV9I86vUcyVRvJ7tfP89S62oib4g2Aoa6ZZvHWIAmkyL/DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oKFY8Vh8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3yWDbeVl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oKFY8Vh8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3yWDbeVl; arc=none smtp.client-ip=195.135.223.130
+	 Content-Type:Content-Disposition:In-Reply-To; b=hTwHhQKIH76MElTHwGwulUoWdzhbjS/SVRiN0Y2bkEL243ivtefqm8ZH1XmUFdlmxwd+Zv/bTjc+tgPKDv7zW3IDafE6BSeNqTjqcgpKOBsKIKJtL82XsumjR/A1hg6GF8XR1dIjGT1SbTFXCCDVCUUSirG+LCdzp1YbIx1LEgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GAoPDIcC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o/MKD3Bb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cXuafEbT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B7hzEdwA; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oKFY8Vh8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3yWDbeVl";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oKFY8Vh8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3yWDbeVl"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GAoPDIcC";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o/MKD3Bb";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cXuafEbT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B7hzEdwA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A8E6621ADB;
-	Fri, 17 Oct 2025 09:24:16 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E3D4C1FBEF;
+	Fri, 17 Oct 2025 09:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760693056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1760693988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xF4Nmh+lcrsfJ2k6MuR3XQ4K/GCNpUVcvrk/IUSwmog=;
-	b=oKFY8Vh8HdrgJWICXdGPQ225mw6C6q5EbPtYZWcw4WC6fsesTzs5bqNpJ9f0oK0egLicXe
-	cf60H9QPy5RjoTytk/ocqnmkyJDZzeD37cf6VJR1z2TIQDCqllTyC7ette2eEz6vK+LR/U
-	64KWDhUkQvy7IPtW98HtETSdlA56TKU=
+	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
+	b=GAoPDIcCV6+vpN2iDFtj/3mvkDJEFoKmHBl0/NbpADziwHIRGKrxk6WZTnuXaIj+tsCpwC
+	WCXA/uELPzNIHv90Xx2h/icyFYRnyiziC6S6WKonTkApJfTGXkOy0KyiI/sn2zYvQGZY1v
+	kIfHSL9p6TANqJwIQ1u4JI3ZEXDeJ98=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760693056;
+	s=susede2_ed25519; t=1760693988;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xF4Nmh+lcrsfJ2k6MuR3XQ4K/GCNpUVcvrk/IUSwmog=;
-	b=3yWDbeVll4eUeffk/SPEjI9XXhw0hebSLvu6Vz1D4Q0wn9dT7izbSvZ0u+f8QzRgF0NOih
-	ZWTu2oTLZeJcH5Dg==
-Authentication-Results: smtp-out1.suse.de;
-	none
+	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
+	b=o/MKD3Bbm3JaNR/TROHgWTnoVERx9RZ98wLS52tZYuyVSfVETzAzXZvjm6WE3qhhQU5x1I
+	KGxxJtV/NbOp0PBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cXuafEbT;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=B7hzEdwA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760693056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1760693987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xF4Nmh+lcrsfJ2k6MuR3XQ4K/GCNpUVcvrk/IUSwmog=;
-	b=oKFY8Vh8HdrgJWICXdGPQ225mw6C6q5EbPtYZWcw4WC6fsesTzs5bqNpJ9f0oK0egLicXe
-	cf60H9QPy5RjoTytk/ocqnmkyJDZzeD37cf6VJR1z2TIQDCqllTyC7ette2eEz6vK+LR/U
-	64KWDhUkQvy7IPtW98HtETSdlA56TKU=
+	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
+	b=cXuafEbTAX9/XZgTNg/BOLkg8giGNM+h+2RNoboAK9WVqwtwTkKDotiqMCgJsFmPrNJx1D
+	pFii51bEOdPeD0tWKFfXHNRd3nemr8T5I+8PcA9CEf/B5W25sMe41NKjCdomHjbg1Whx75
+	CKQKbFiNAPSIjyvaduIumr23JuRiRKc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760693056;
+	s=susede2_ed25519; t=1760693987;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xF4Nmh+lcrsfJ2k6MuR3XQ4K/GCNpUVcvrk/IUSwmog=;
-	b=3yWDbeVll4eUeffk/SPEjI9XXhw0hebSLvu6Vz1D4Q0wn9dT7izbSvZ0u+f8QzRgF0NOih
-	ZWTu2oTLZeJcH5Dg==
+	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
+	b=B7hzEdwAsrhSUk1zN5WRAOe2DljWClmcfy8BvsMauxdR6uwn4FPAXDkjh8Z99eMZvR/FnP
+	UEqNwwtqu0tR9rDg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 928D813A71;
-	Fri, 17 Oct 2025 09:24:16 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D078B136C6;
+	Fri, 17 Oct 2025 09:39:47 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GyMBI0AL8mjmKgAAD6G6ig
-	(envelope-from <chrubis@suse.cz>); Fri, 17 Oct 2025 09:24:16 +0000
-Date: Fri, 17 Oct 2025 11:25:10 +0200
+	id 73ROMeMO8mjeOgAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Fri, 17 Oct 2025 09:39:47 +0000
+Date: Fri, 17 Oct 2025 11:40:41 +0200
 From: Cyril Hrubis <chrubis@suse.cz>
 To: Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
@@ -87,7 +88,7 @@ Cc: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
 	Andrea Cervesato <andrea.cervesato@suse.com>
 Subject: Re: 6.18.0-rc1: LTP syscalls ioctl_pidfd05: TFAIL: ioctl(pidfd,
  PIDFD_GET_INFO_SHORT, info_invalid) expected EINVAL: ENOTTY (25)
-Message-ID: <aPILdh2XzsYgEg66@yuki.lan>
+Message-ID: <aPIPGeWo8gtxVxQX@yuki.lan>
 References: <CA+G9fYuF44WkxhDj9ZQ1+PwdsU_rHGcYoVqMDr3AL=AvweiCxg@mail.gmail.com>
  <CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com>
 Precedence: bulk
@@ -99,65 +100,100 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
+X-Rspamd-Queue-Id: E3D4C1FBEF
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	ARC_NA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
 	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,yuki.lan:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
 X-Spam-Flag: NO
-X-Spam-Score: -4.30
+X-Spam-Score: -4.51
 X-Spam-Level: 
 
 Hi!
-> > The LTP syscalls ioctl_pidfd05 test failed due to following error on
-> > the Linux mainline
-> > kernel v6.18-rc1-104-g7ea30958b305 on the arm64, arm and x86_64.
-> >
-> > The Test case is expecting to fail with EINVAL but found ENOTTY.
-> 
-> [Not a kernel regression]
-> 
-> From the recent LTP upgrade we have newly added test cases,
-> ioctl_pidfd()
-> 
-> The test case is meant to test,
-> 
-> Add ioctl_pidfd05 test
-> Verify that ioctl() raises an EINVAL error when PIDFD_GET_INFO
->  is used.
->  This happens when:
->    - info parameter is NULL
->    - info parameter is providing the wrong size
-> 
-> However, we need to investigate the reason for failure.
-> 
-> Test case: https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
+> > ## Test error log
+> > tst_buffers.c:57: TINFO: Test is using guarded buffers
+> > tst_test.c:2021: TINFO: LTP version: 20250930
+> > tst_test.c:2024: TINFO: Tested kernel: 6.18.0-rc1 #1 SMP PREEMPT
+> > @1760657272 aarch64
+> > tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
+> > tst_kconfig.c:676: TINFO: CONFIG_TRACE_IRQFLAGS kernel option detected
+> > which might slow the execution
+> > tst_test.c:1842: TINFO: Overall timeout per run is 0h 21m 36s
+> > ioctl_pidfd05.c:45: TPASS: ioctl(pidfd, PIDFD_GET_INFO, NULL) : EINVAL (22)
+> > ioctl_pidfd05.c:46: TFAIL: ioctl(pidfd, PIDFD_GET_INFO_SHORT,
+> > info_invalid) expected EINVAL: ENOTTY (25)
 
-Already fixed in:
+Looking closely this is a different problem.
 
-commit 00c3e947cece63ce81cdaf12b5a2071984aa7815
-Author: Avinesh Kumar <akumar@suse.de>
-Date:   Thu Sep 25 10:19:11 2025 +0200
+What we do in the test is that we pass PIDFD_IOCTL_INFO whith invalid
+size with:
 
-    Introduce ioctl_pidfd_get_info_supported() function
+struct pidfd_info_invalid {
+        uint32_t dummy;
+};
 
-    Check if ioctl(PIDFD_GET_INFO) is implemented or not
-    before proceeding in ioctl_pidfd05 test.
+#define PIDFD_GET_INFO_SHORT _IOWR(PIDFS_IOCTL_MAGIC, 11, struct pidfd_info_invalid)
 
+
+And we expect to hit:
+
+        if (usize < PIDFD_INFO_SIZE_VER0)
+                return -EINVAL; /* First version, no smaller struct possible */
+
+in fs/pidfs.c
+
+
+And apparently the return value was changed in:
+
+commit 3c17001b21b9f168c957ced9384abe969019b609
+Author: Christian Brauner <brauner@kernel.org>
+Date:   Fri Sep 12 13:52:24 2025 +0200
+
+    pidfs: validate extensible ioctls
+    
+    Validate extensible ioctls stricter than we do now.
+    
+    Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+    Reviewed-by: Jan Kara <jack@suse.cz>
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+diff --git a/fs/pidfs.c b/fs/pidfs.c
+index edc35522d75c..0a5083b9cce5 100644
+--- a/fs/pidfs.c
++++ b/fs/pidfs.c
+@@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
+                 * erronously mistook the file descriptor for a pidfd.
+                 * This is not perfect but will catch most cases.
+                 */
+-               return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
++               return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
+        }
+ 
+        return false;
+
+
+So kernel has changed error it returns, if this is a regression or not
+is for kernel developers to decide.
 
 -- 
 Cyril Hrubis
