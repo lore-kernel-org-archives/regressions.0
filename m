@@ -1,200 +1,143 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m32100.qiye.163.com (mail-m32100.qiye.163.com [220.197.32.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FD1B4257
-	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 09:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339042BE64F
+	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 09:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760693991; cv=none; b=oXlAlu9n3LBlhtTrovj5k/qvGd1wZ2xcBg9oQPJTVFuniDlusPH/uOvQBkGVynzQYu3AxEshBW07xIwvJ3FDhZdQXE5k5KPR8v1U5x7/eIAEndVj3HYKekvP1wa5qqg9d1ZuHDYsh0diAxNlZQO25bNsfkLQNcqhGhJzrDcrs5o=
+	t=1760694478; cv=none; b=Mgun/hPfH5HbnyN8OSM8YYXtZgg0jlJeb3L84SjfuITkT/I9fI31OuH5BXSTN3gC4XeUZt1uIPwbglsoTLs/hqgZwdqiZ0aVfNqJBtNRxfPC6i4M3Yqhiu9Lzligzy+5QYRJ+iblCaC2TXkbRLTjOFc3oErNMSwlR47AvPQvMqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760693991; c=relaxed/simple;
-	bh=fUk/rh0WLjPqCjEuA4oTo6WbPH0FxjFUt1aN31cxz28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTwHhQKIH76MElTHwGwulUoWdzhbjS/SVRiN0Y2bkEL243ivtefqm8ZH1XmUFdlmxwd+Zv/bTjc+tgPKDv7zW3IDafE6BSeNqTjqcgpKOBsKIKJtL82XsumjR/A1hg6GF8XR1dIjGT1SbTFXCCDVCUUSirG+LCdzp1YbIx1LEgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GAoPDIcC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=o/MKD3Bb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cXuafEbT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B7hzEdwA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1760694478; c=relaxed/simple;
+	bh=rrVkaR3LTUAqJg6J+NCfj8sfv1ALYesJTJ177QAbv5Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=b6b0MPmQH4+mhJrZjRzE+yoXAFFaHEY44ygGPnAfaJhU2e2Aftfep8ZrA5BfvA5HzZRSsBaR/VMV32KSXVzV0rjC0D1y3Sy55uwxAKuF/ygnZJZCR1l3hkpnHeFw0g5HgZGQcb5eGDU0j1XkvlmzgSB6pQephQshb4bu8yBMF3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Gbakgtf5; arc=none smtp.client-ip=220.197.32.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GAoPDIcC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o/MKD3Bb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cXuafEbT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B7hzEdwA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E3D4C1FBEF;
-	Fri, 17 Oct 2025 09:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760693988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
-	b=GAoPDIcCV6+vpN2iDFtj/3mvkDJEFoKmHBl0/NbpADziwHIRGKrxk6WZTnuXaIj+tsCpwC
-	WCXA/uELPzNIHv90Xx2h/icyFYRnyiziC6S6WKonTkApJfTGXkOy0KyiI/sn2zYvQGZY1v
-	kIfHSL9p6TANqJwIQ1u4JI3ZEXDeJ98=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760693988;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
-	b=o/MKD3Bbm3JaNR/TROHgWTnoVERx9RZ98wLS52tZYuyVSfVETzAzXZvjm6WE3qhhQU5x1I
-	KGxxJtV/NbOp0PBA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cXuafEbT;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=B7hzEdwA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1760693987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
-	b=cXuafEbTAX9/XZgTNg/BOLkg8giGNM+h+2RNoboAK9WVqwtwTkKDotiqMCgJsFmPrNJx1D
-	pFii51bEOdPeD0tWKFfXHNRd3nemr8T5I+8PcA9CEf/B5W25sMe41NKjCdomHjbg1Whx75
-	CKQKbFiNAPSIjyvaduIumr23JuRiRKc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1760693987;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxsh8YLpkHchYlKNshAf0z+s1yJbhAt1iJY0i+ejDYU=;
-	b=B7hzEdwAsrhSUk1zN5WRAOe2DljWClmcfy8BvsMauxdR6uwn4FPAXDkjh8Z99eMZvR/FnP
-	UEqNwwtqu0tR9rDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D078B136C6;
-	Fri, 17 Oct 2025 09:39:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 73ROMeMO8mjeOgAAD6G6ig
-	(envelope-from <chrubis@suse.cz>); Fri, 17 Oct 2025 09:39:47 +0000
-Date: Fri, 17 Oct 2025 11:40:41 +0200
-From: Cyril Hrubis <chrubis@suse.cz>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	LTP List <ltp@lists.linux.it>,
-	Andrey Albershteyn <aalbersh@kernel.org>, Jan Kara <jack@suse.cz>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	Petr Vorel <pvorel@suse.cz>,
-	Andrea Cervesato <andrea.cervesato@suse.com>
-Subject: Re: 6.18.0-rc1: LTP syscalls ioctl_pidfd05: TFAIL: ioctl(pidfd,
- PIDFD_GET_INFO_SHORT, info_invalid) expected EINVAL: ENOTTY (25)
-Message-ID: <aPIPGeWo8gtxVxQX@yuki.lan>
-References: <CA+G9fYuF44WkxhDj9ZQ1+PwdsU_rHGcYoVqMDr3AL=AvweiCxg@mail.gmail.com>
- <CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Gbakgtf5"
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 264578e33;
+	Fri, 17 Oct 2025 17:47:46 +0800 (GMT+08:00)
+Message-ID: <0dd51970-a7ac-4500-b96f-d1e328e7a3b2@rock-chips.com>
+Date: Fri, 17 Oct 2025 17:47:44 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com>
-X-Rspamd-Queue-Id: E3D4C1FBEF
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,yuki.lan:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Niklas Cassel <cassel@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>,
+ linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
+ FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
+ set by BIOS for devicetree platforms
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
+ <20251015233054.GA961172@bhelgaas>
+ <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a99f191762b09cckunm3ad1505815a4fb
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx0aQlZITEwfS01OTRgYQ09WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=Gbakgtf5juyxXLyjvNEBOoU2BvuKHnl3lmL3wESBLpY49996dwrkHEjjo9SGWwLvIF56Wsck8nli3slIooVAyKq9L+enHuUhC/q3KE9B1PuNWLmcdhnOjynCr1jz20j3T257xIWhvF/s1gJcoQBZZPpzm7az96HLHO564hDbcnw=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=35XhCoKrmzdZQlHWnzUSGhfNFUZ/Pw4yplQ4NAHi5Ic=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi!
-> > ## Test error log
-> > tst_buffers.c:57: TINFO: Test is using guarded buffers
-> > tst_test.c:2021: TINFO: LTP version: 20250930
-> > tst_test.c:2024: TINFO: Tested kernel: 6.18.0-rc1 #1 SMP PREEMPT
-> > @1760657272 aarch64
-> > tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-> > tst_kconfig.c:676: TINFO: CONFIG_TRACE_IRQFLAGS kernel option detected
-> > which might slow the execution
-> > tst_test.c:1842: TINFO: Overall timeout per run is 0h 21m 36s
-> > ioctl_pidfd05.c:45: TPASS: ioctl(pidfd, PIDFD_GET_INFO, NULL) : EINVAL (22)
-> > ioctl_pidfd05.c:46: TFAIL: ioctl(pidfd, PIDFD_GET_INFO_SHORT,
-> > info_invalid) expected EINVAL: ENOTTY (25)
+Hi Mani and Bjorn
 
-Looking closely this is a different problem.
+在 2025/10/17 星期五 11:36, Manivannan Sadhasivam 写道:
+> On Wed, Oct 15, 2025 at 06:30:54PM -0500, Bjorn Helgaas wrote:
+>> On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
+>>> ...
+>>
+>>> For now, this is a acceptable option if default ASPM policy enable
+>>> L1ss w/o checking if the HW could supports it... But how about
+>>> adding supports-clkreq stuff to upstream host driver directly? That
+>>> would help folks enable L1ss if the HW is ready and they just need
+>>> adding property to the DT.
+>>> ...
+>>
+>>> The L1ss support is quite strict and need several steps to check, so we
+>>> didn't add supports-clkreq for them unless the HW is ready to go...
+>>>
+>>> For adding supports of L1ss,
+>>> [1] the HW should support CLKREQ#, expecially for PCIe3.0 case on Rockchip
+>>> SoCs , since both  CLKREQ# of RC and EP should connect to the
+>>> 100MHz crystal generator's enable pin, as L1.2 need to disable refclk as
+>>> well. If the enable pin is high active, the HW even need a invertor....
+>>>
+>>> [2] define proper clkreq iomux to pinctrl of pcie node
+>>> [3] make sure the devices work fine with L1ss.(It's hard to check the slot
+>>> case with random devices in the wild )
+>>> [4] add supports-clkreq to the DT and enable
+>>> CONFIG_PCIEASPM_POWER_SUPERSAVE
+>>
+>> I don't understand the details of the supports-clkreq issue.
+>>
+>> If we need to add supports-clkreq to devicetree, I want to understand
+>> why we need it there when we don't seem to need it for ACPI systems.
+>>
+>> Generally the OS relies on what the hardware advertises, e.g., in Link
+>> Capabilities and the L1 PM Substates Capability, and what is available
+>> from firmware, e.g., the ACPI _DSM for Latency Tolerance Reporting.
+>>
+>> On the ACPI side, I don't think we get any specific information about
+>> CLKREQ#.  Can somebody explain why we do need it on the devicetree
+>> side?
+>>
+> 
+> I think there is a disconnect between enabling L1ss CAP and CLKREQ#
+> availability.. When L1ss CAP is enabled for the Root Port in the hardware, there
+> is no guarantee that CLKREQ# is also available. If CLKREQ# is not available,
+> then if L1ss is enabled by the OS, it is not possible to exit the L1ss states
+> (assuming that L1ss is entered due to CLKREQ# in deassert (default) state).
+> 
+> Yes, there seems to be no standard way to know CLKREQ# presence in ACPI, but
+> in devicetree, we have this 'supports-clkreq' property to tell the OS that
+> CLKREQ# is available in the platform. But unfortunately, this property is not
+> widely used by the devicetrees out there. So we cannot use it in generic
+> pci/aspm.c driver.
+> 
+> We can certainly rely on the BIOS to enable L1ss as the fw developers would
+> have the knowledge of the CLKREQ# availability. But BIOS is not a thing on
+> mobile and embedded platforms where L1ss would come handy.
+> 
+> What I would suggest is, the host controller drivers (mostly for devicetree
+> platforms) should enable L1ss CAP for the Root Port only if they know that
+> CLKREQ# is available. They can either rely on the 'supports-clkreq' property or
+> some platform specific knowledge (for instance, on all Qcom platforms, we
+> certainly know that CLKREQ# is available, but we don't set the DT property).
 
-What we do in the test is that we pass PIDFD_IOCTL_INFO whith invalid
-size with:
+While we're on the topic of ASPM, may I ask a silly question?
+I saw the ASPM would only be configured once the function driver calling
+pci_enable_device. So if the modular driver hasn't been insmoded, the
+link will be in L0 even though there is no transcation on-going. What is
+the intention behind it?
 
-struct pidfd_info_invalid {
-        uint32_t dummy;
-};
+> 
+> Then in the generic pci/aspm.c driver, we can just enable L1ss for all devices
+> if the CAP is set, which we do currently.
+> 
+> - Mani
+> 
 
-#define PIDFD_GET_INFO_SHORT _IOWR(PIDFS_IOCTL_MAGIC, 11, struct pidfd_info_invalid)
-
-
-And we expect to hit:
-
-        if (usize < PIDFD_INFO_SIZE_VER0)
-                return -EINVAL; /* First version, no smaller struct possible */
-
-in fs/pidfs.c
-
-
-And apparently the return value was changed in:
-
-commit 3c17001b21b9f168c957ced9384abe969019b609
-Author: Christian Brauner <brauner@kernel.org>
-Date:   Fri Sep 12 13:52:24 2025 +0200
-
-    pidfs: validate extensible ioctls
-    
-    Validate extensible ioctls stricter than we do now.
-    
-    Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-    Reviewed-by: Jan Kara <jack@suse.cz>
-    Signed-off-by: Christian Brauner <brauner@kernel.org>
-
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index edc35522d75c..0a5083b9cce5 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
-                 * erronously mistook the file descriptor for a pidfd.
-                 * This is not perfect but will catch most cases.
-                 */
--               return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
-+               return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
-        }
- 
-        return false;
-
-
-So kernel has changed error it returns, if this is a regression or not
-is for kernel developers to decide.
-
--- 
-Cyril Hrubis
-chrubis@suse.cz
