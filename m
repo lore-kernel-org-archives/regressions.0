@@ -1,104 +1,190 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFA6296BBA
-	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 16:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28C3354AE7;
+	Fri, 17 Oct 2025 23:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760718105; cv=none; b=YZTEF67SRdo+1WeBt+JlTc/+dZn62WG6QRfkNzZwMoBvcJh2l1PocwEoSFzbIU0CmuRG8s5oeEVhHcQCuR3ySkJrPqSyx09XsoV4K6DJrUrw1hRw1VVxnZm1nXp7eO+avohUGeiCYvhb/tE19ngG91PM1HrG3+WLVcXUuIDCO+A=
+	t=1760743433; cv=none; b=qSadDpASytR9lLFEu2Ft1r5Edpj4HplQaCo1z9okU+USe+04SXEAUtiG7s7QjtYMYsOI/xI0zYrWxrn0jXHZDzKfDpNj0QJtgmBucRFIzByg3TC0853aLkjwQhNTT6gV3NOvHVIUgw1U4RoW3nSM+YGojmy4RtDMmNuWWU01MH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760718105; c=relaxed/simple;
-	bh=RRTwAZLk/2qwdrsLFWGGbVFAHrlDdK2F4Drz9CQFSks=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=V0rd0rwNyrlnZk4ykg5TmzmQz/2jQeEmt36WcgWB8a1wTAOmqZSgZQt8GCrUW34/wL4rECPyFO6fOlpKEFc6IwTYXNClMWQ3xJHFJaBK6vTKfxi/sEGBtyBdY6IZJ98zstLnvvLIIjwjQ8d5sAosACE8UrIKdFdeXYAfYXBCe+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LjJoAxXp; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1760743433; c=relaxed/simple;
+	bh=j+T35DDmo2x9L/4MQL7KUQ2x4Cz27hhgGbZXn6ev2tA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RZrob086APeNHFfSBM/Py0Sj8YTJ/7so2gw59APKruzDUNEtIIPY42JH8XRHi20P3DUZuSXfFLdQOM7MUgqkvGB3Se24d8hqNUaUZJGVpfyOoDxTxfE6/IWyRQCol4jwURW0CRlpP99EXmBfVdNUw60DcGHXwoER6GeoTsjxcb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cATijpfp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LjJoAxXp"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 735B31A1486;
-	Fri, 17 Oct 2025 16:21:41 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 439F4606DB;
-	Fri, 17 Oct 2025 16:21:41 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 01A30102F2326;
-	Fri, 17 Oct 2025 18:21:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760718100; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=M92WI+PGFdvoEo5x/+VF/yQMrWADVhb1nigV4QXWseo=;
-	b=LjJoAxXpFtx6zaAAFyn0jnPHV3jwcS75RTNQnQL3aSoDj+iA6M0I9VAo4P4cX9+vv6t2mX
-	sGRWUlywn6/2wGFoIxFhaU2SJ2Up7Sw+t0yF9IsNRkbmOsKKHqkXydQDPtuQT2lzbzrJUW
-	LLur9aDt+drjnUsk28si/PDdwcMHgJO0mQ9ekTEq00L2TlD2iRUZg1HiJ91lyrJNwpo4v0
-	zUoEB/Kfhh8MdhzzgCSWiwGKNcF8EboAAk29M9jQCljnY4BwiGwd/36r/F38tVM8Hn33aj
-	VQ9/1jeFuf/XHTBgVIhAycea1PnNZGDOu/cg/HUwfsVc23iqgSwG6u8rOWTRhg==
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cATijpfp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=+kSTjgG+lIjQZOuH6P1ABDb8BSSN4vnO26YFIvHPP1U=; b=cATijpfpwuBU3G19ZDpYqs2/rj
+	1eNq9nzfksMCe7s6399AKG/3M0qTRvZReCfFENObbRJSwERQI70tKrWDWSFuQ+SfUOlBtextSgF1q
+	mNa19Yy1A+4VeMTZwrCg3tuIXk25siPi6QUUgWmBP+PZhIU/gFH1z1WVtR/f6LZ0cOhP5rpQ3sxLU
+	cB+IzvBndKUHNp/4yipDe8gSIsA71Hy6hdV/8wG0Det2WqcMBR7ybVFnsvzWHOXPySZETV71cMJuu
+	7fnBeYQy/XudKazK+pAZPOd7JvaHwFbUg0S7ry9W8y/F6vnfzCHRj79zxpXapsBa5hqJV3/yew0SH
+	+gQFeKqg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v9tnX-00000009BCi-1pvu;
+	Fri, 17 Oct 2025 23:23:47 +0000
+Message-ID: <022e9853-6973-4000-940f-12f3bf68b50d@infradead.org>
+Date: Fri, 17 Oct 2025 16:23:46 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] next/master: (build) undefined reference to
+ `devm_backlight_device_register' in vmlinux...
+To: Gustavo Padovan <gus@collabora.com>
+Cc: kernelci <kernelci@lists.linux.dev>,
+ kernelci-results <kernelci-results@groups.io>,
+ =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ phone-devel <phone-devel@vger.kernel.org>,
+ regressions <regressions@lists.linux.dev>,
+ linux-next <linux-next@vger.kernel.org>
+References: <176045034384.1788.868853922191153052@15dd6324cc71>
+ <73bf512e-fe5f-420c-8d47-eccfa079af99@infradead.org>
+ <199ec75cce1.3f69ac7c921986.1695662047481478034@collabora.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <199ec75cce1.3f69ac7c921986.1695662047481478034@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Oct 2025 18:21:35 +0200
-Message-Id: <DDKQH2MIHZ2S.2MPJCNHXMIT4U@bootlin.com>
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>, "Naresh Kamboju"
- <naresh.kamboju@linaro.org>, <dri-devel@lists.freedesktop.org>, "open list"
- <linux-kernel@vger.kernel.org>, <lkft-triage@lists.linaro.org>, "Linux
- Regressions" <regressions@lists.linux.dev>
-Cc: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Simona Vetter"
- <simona@ffwll.ch>, "David Airlie" <airlied@gmail.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>, "Dan Carpenter"
- <dan.carpenter@linaro.org>, "Anders Roxell" <anders.roxell@linaro.org>,
- "Ben Copeland" <benjamin.copeland@linaro.org>
-Subject: Re: next-20251014: Internal error: Oops:
- drm_bridge_connector_hdmi_cec_init drmm_connector_hdmi_cec_register
-X-Mailer: aerc 0.20.1
-References: <CA+G9fYuKHp3QgPKjgFY3TfkDdh5Vf=Ae5pCW+eU41Bu=D7th2g@mail.gmail.com> <CA+G9fYv_mGoDzFv33v7Y5+6yz6z=xp9FJRiFUBYDapvE_rrBXA@mail.gmail.com> <DDJSBQRQJTMZ.X1W4I5YOURPK@bootlin.com>
-In-Reply-To: <DDJSBQRQJTMZ.X1W4I5YOURPK@bootlin.com>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Thu Oct 16, 2025 at 3:36 PM CEST, Luca Ceresoli wrote:
-> Hello Naresh,
->
-> On Thu Oct 16, 2025 at 12:52 PM CEST, Naresh Kamboju wrote:
->> On Thu, 16 Oct 2025 at 16:14, Naresh Kamboju <naresh.kamboju@linaro.org>=
- wrote:
->>>
->>> While booting and loading kernel modules on dragonboard 410c board
->>> with Linux next
->>> kernel next-20251014 and next-20251015 the following crash noticed,
->>>
->>> First seen on next-20251014
->>> Good: next-20251013
->>> Bad:  next-20251014
->>>
->>> Regression Analysis:
->>> - New regression? yes
->>> - Reproducibility? yes
->>>
->>> Boot regressions: next-20251014: Internal error: Oops:
->>> drm_bridge_connector_hdmi_cec_init drmm_connector_hdmi_cec_register
->
-> Thanks for the report.
->
-> This looks like the same issue reported here:
-> https://lore.kernel.org/all/336fbfdd-c424-490e-b5d1-8ee84043dc80@samsung.=
-com/
->
-> I'm writing a fix right now, will send it today if all goes well.
 
-Here's the fixed version:
-https://lore.kernel.org/lkml/20251017-drm-bridge-alloc-getput-bridge-connec=
-tor-fix-hdmi_cec-v2-0-667abf6d47c0@bootlin.com/
+On 10/16/25 2:59 AM, Gustavo Padovan wrote:
+> Hi Randy,
+> 
+> 
+> ---- On Thu, 16 Oct 2025 00:47:35 -0300 Randy Dunlap <rdunlap@infradead.org> wrote ---
+> 
+>  > Guido, 
+>  >  
+>  > Looks like this driver needs 
+>  >  
+>  > +    depends on BACKLIGHT_CLASS_DEVICE 
+>  >  
+>  > to fix the build. 
+>  >  
+>  > @Gus- please read comments near bottom/end. 
+>  >  
+>  >  
+>  > On 10/14/25 6:59 AM, KernelCI bot wrote: 
+>  > > 
+>  > > 
+>  > > 
+>  > > 
+>  > > Hello, 
+>  > > 
+>  > > New build issue found on next/master: 
+>  > > 
+>  > > --- 
+>  > >  undefined reference to `devm_backlight_device_register' in vmlinux.unstripped (drivers/gpu/drm/panel/panel-visionox-rm69299.c) [logspec:kbuild,kbuild.compiler.linker_error] 
+>  > > --- 
+>  > > 
+>  > > - dashboard: https://d.kernelci.org/i/maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
+>  > > - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
+>  > > - commit HEAD:  13863a59e410cab46d26751941980dc8f088b9b3 
+>  > > - tags: next-20251014 
+>  > > 
+>  > > 
+>  > > Log excerpt: 
+>  > > ===================================================== 
+>  > >   LD      .tmp_vmlinux1 
+>  > > aarch64-linux-gnu-ld: Unexpected GOT/PLT entries detected! 
+>  > > aarch64-linux-gnu-ld: Unexpected run-time procedure linkages detected! 
+>  > > aarch64-linux-gnu-ld: drivers/gpu/drm/panel/panel-visionox-rm69299.o: in function `visionox_rm69299_create_backlight': 
+>  > > /tmp/kci/linux/drivers/gpu/drm/panel/panel-visionox-rm69299.c:343: undefined reference to `devm_backlight_device_register' 
+>  > > 
+>  > > ===================================================== 
+>  > > 
+>  > > 
+>  > > # Builds where the incident occurred: 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+CONFIG_ARM64_16K_PAGES=y on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-16k_pages-68ee4f14a6dc7c71db9fda21/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f14a6dc7c71db9fda21 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+CONFIG_ARM64_64K_PAGES=y on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-64k_pages-68ee4f17a6dc7c71db9fda24/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f17a6dc7c71db9fda24 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-mainline-big_endian-68ee4f32a6dc7c71db9fda39/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f32a6dc7c71db9fda39 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+CONFIG_RANDOMIZE_BASE=y on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-randomize-68ee4f1fa6dc7c71db9fda2a/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f1fa6dc7c71db9fda2a 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-chromebook-kcidebug-68ee4f2ba6dc7c71db9fda33/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f2ba6dc7c71db9fda33 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+kselftest on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-kselftest-16k_pages-68ee4f23a6dc7c71db9fda2d/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f23a6dc7c71db9fda2d 
+>  > > 
+>  > > ## defconfig+arm64-chromebook+preempt_rt on (arm64): 
+>  > > - compiler: gcc-12 
+>  > > - config: https://files.kernelci.org/kbuild-gcc-12-arm64-preempt_rt_chromebook-68ee4f3aa6dc7c71db9fda3f/.config 
+>  > > - dashboard: https://d.kernelci.org/build/maestro:68ee4f3aa6dc7c71db9fda3f 
+>  > > 
+>  > > 
+>  > > #kernelci issue maestro:c1e01dcc5d8b9be9ec47f44bbdb346c2464c0f02 
+>  > > 
+>  > > Reported-by: kernelci.org bot <bot@kernelci.org> 
+>  > > 
+>  > > -- 
+>  > > This is an experimental report format. Please send feedback in! 
+>  > > Talk to us at kernelci@lists.linux.dev 
+>  > > 
+>  > > Made with love by the KernelCI team - https://kernelci.org 
+>  > > 
+>  >  
+>  > Gus, the CI reporter needs to learn how to do a few things because developers 
+>  > (other than me ?) don't scrounge mailing lists to look for problems. 
+> 
+> Absolutely. Our goal is to automate as many steps as possible!
+>  
+>  > a. find the commit that caused the problem (or the email series) 
+>  >  
+>  > b. send the report (Cc:) to whoever wrote the patch and to the 
+>  > appropriate mailing list. 
+>  >  
+>  > I expect that b. is easier than a., so do it first. 
+> 
+> b. is easier that a. yes, but I don't think we can do it first because we
+> need to figure the patch first. Essentially, you are asking us for
+> build bisections. Something that is already on our roadmap, but
+> we didn't had the time to tackle yet, but should come to it in the
+> coming months.
 
-Luca
+Sometimes a bisect could be required. For cases such as this report,
+a simple git blame or git log will show the culprit. Although coding
+that is not as simple as a human looking at the screen.
 
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  >  
+>  > And I'm sure that I have missed a thing or two that could be 
+>  > added as well. 
+> 
+> Please keep the feedback coming!
+
+-- 
+~Randy
+
