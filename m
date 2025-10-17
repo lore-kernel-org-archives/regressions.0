@@ -1,143 +1,136 @@
-Received: from mail-m32100.qiye.163.com (mail-m32100.qiye.163.com [220.197.32.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339042BE64F
-	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 09:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A77D2DC784
+	for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 10:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760694478; cv=none; b=Mgun/hPfH5HbnyN8OSM8YYXtZgg0jlJeb3L84SjfuITkT/I9fI31OuH5BXSTN3gC4XeUZt1uIPwbglsoTLs/hqgZwdqiZ0aVfNqJBtNRxfPC6i4M3Yqhiu9Lzligzy+5QYRJ+iblCaC2TXkbRLTjOFc3oErNMSwlR47AvPQvMqU=
+	t=1760695355; cv=none; b=GogdAPx+3nbYLQeJosEskJeR9yKGb/gSI2OFFFUH1gEmCH5oRL14ysOi/F3mvt2nejTVu0EEK4a1uzdd3l0f/uaaa0TNP3ncDGwEpauMyp1sbi2m+RAdDw5zy29YasRvpoJIKRbyHS5fuh7wBZTy7fNl0aKq+a3/pC06dNFhIdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760694478; c=relaxed/simple;
-	bh=rrVkaR3LTUAqJg6J+NCfj8sfv1ALYesJTJ177QAbv5Q=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b6b0MPmQH4+mhJrZjRzE+yoXAFFaHEY44ygGPnAfaJhU2e2Aftfep8ZrA5BfvA5HzZRSsBaR/VMV32KSXVzV0rjC0D1y3Sy55uwxAKuF/ygnZJZCR1l3hkpnHeFw0g5HgZGQcb5eGDU0j1XkvlmzgSB6pQephQshb4bu8yBMF3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Gbakgtf5; arc=none smtp.client-ip=220.197.32.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1760695355; c=relaxed/simple;
+	bh=drZrnQKEAi0sMCaCh3X6bSQOyyKvMOxESRxUPZpCKWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/AnFK0ZckZRbkqQOTnrgYbGHbrAkykFrVBbwPSe+e/9CGHglWzeFwgjseni0yiCIdoyMuE4jVzXftiJvKl+Q5ZWyOL2U+c7EjGsuVeJEc7yKJTIsirVF4dvu2HtHtxghQMOx92FvlfIBZlVBkqjsoR0Ez1qP6MDA/2B45I6Y3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=hNHNlK7+; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Gbakgtf5"
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 264578e33;
-	Fri, 17 Oct 2025 17:47:46 +0800 (GMT+08:00)
-Message-ID: <0dd51970-a7ac-4500-b96f-d1e328e7a3b2@rock-chips.com>
-Date: Fri, 17 Oct 2025 17:47:44 +0800
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="hNHNlK7+"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-789fb76b466so1677746b3a.0
+        for <regressions@lists.linux.dev>; Fri, 17 Oct 2025 03:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1760695354; x=1761300154; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7OtZ/yQXFhjzdgsw+HJSVcKTN14IDqdEkJg8GvBN38=;
+        b=hNHNlK7+ww688LKV3m/aba+aSLrl8FZ71Oy4Tud0+uek7aVGDzw9FZVKCvKIyDCOR+
+         gsWBZ21iWgmnnc2twNQR3kym7vpkxlbAKMErP0z2AnaVfMy0lpRNEseD6b/XQP7/GQV0
+         g2TDGef2y6TbRYYCBLJTYxC52Z145lDvz781k6rApxAzjkd6h3oDayZ9BQvTZiMJeMEW
+         3p+g9QUvAI0qjbW86uHlMBmOZvojKOTchCmhVG7XZgk4uDa+SH9Y+QEf5NqAu7GY18VC
+         nEpPrW3PyZ3maiujMcz0mbQoci+i6yM+Dzenw4yhJtoAkz3aY1AG6an/hkr1mTEbw9mx
+         eafA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760695354; x=1761300154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y7OtZ/yQXFhjzdgsw+HJSVcKTN14IDqdEkJg8GvBN38=;
+        b=Stm++ZHnw9Lun4i/e9BYJElTaAzsRm4fiSSbS6qJ1OEBnUnbGHj4KBqpmqavr7U2vO
+         WcI1o5rldSyB4kh28DWB+glsbQbn3ksG50qNqLp0bkao5ECYPRK0TQXK7y5ayIQP0Fjn
+         Aa0xenvqcYyUfwmkBpTqBkHqBKNz+1oGHhNXwZMEt4vBt7+layiEQ3K/KmqepvYsx0vX
+         3HplkR4mSWv/71uXQ2RZH/MM0jKmcuF6UxMsEQDdfI08hX3450QldX990U2IlegnYa3W
+         iod4LrelMlOWcVGIL+9GpJOERJFE2tVJCA0aeWmEU3a8uCcmwQR/bY2p61JVYDH+kCC3
+         2L/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUf/rm+SMSabwtKaOTC0wykOz4LmMl5E4TguC7ZG+n0PMkoVTGVK21SSP23w/v8urngYFn27TE8+AaQNw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YycmeCp0S5tbAt4Bz8essFkPnwTAn70Bp4coUaABri45doCT3ID
+	k3fF5qhfFsRqHKB/M5j/8LcOTNuzzTqJWi80JMpA4QHmk9ehcrUXsxWK7MoOf3mms1g=
+X-Gm-Gg: ASbGncuOgGnKViFvQaXI0RJTtmpD76l9SW+jArAskpLz0ci6yq0McZLj3BK7DSuB/Ob
+	uPZyKLFmxFyY5NNGh2TyqaFS2IEC4gnx8dNWwZ64IDQZqQwAaPLKnMoTdG9Itz3EPd//VbVngjS
+	ivrTS8EaO/V2QwdJfq76LEmiJnhvmeNmvGb+5SkEJUJuecPruJka7ZGSmYblkNLgmk3Dz1PaoD2
+	u1v5m8RFZFzONXgQUOstLU8iYB9UVFEsxy0/V+ewnveVs4Ij/jB3NjoRBPCGhXkL+LIP3gCBTh1
+	AuCWyVISuP8q6y0GMG05bmPmoeSho8Ez2ZB7yia8+I4ZrXSKc0iqqWU+ExbZy6s2jeHzVJ/pgzV
+	fZyfmYvg9vP+sy/zKEj5VH2EP5GyKYgf91fB991YxvdDaDjWxdyJpR29qmQ8fprfrj6Was3Mxp+
+	dBSSDZL9BNn2XqZLp5
+X-Google-Smtp-Source: AGHT+IE+kO+0ih3otr2ilVER5YmhgcFdSR2CzWc/DSxY990pGJYLOQdsIKv6VYHabOMyYhFDg7EDug==
+X-Received: by 2002:a05:6a21:329f:b0:2ea:12b9:2dfa with SMTP id adf61e73a8af0-334a861fea6mr4543402637.40.1760695353736;
+        Fri, 17 Oct 2025 03:02:33 -0700 (PDT)
+Received: from sunil-laptop ([106.51.195.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33bd7b3173asm2358675a91.12.2025.10.17.03.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Oct 2025 03:02:33 -0700 (PDT)
+Date: Fri, 17 Oct 2025 15:32:26 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: rafael@kernel.org, regressions@lists.linux.dev, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	apatel@ventanamicro.com,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Daniele Cleri <DanieleCleri@aaeon.eu>
+Subject: Re: [REGRESSION] in 6.18-rc1, failed to query a GPIO using a name in
+ ACPI
+Message-ID: <aPIUMoDxW-yl2nPm@sunil-laptop>
+References: <c321423b-3cdb-41a5-9939-dc5c846cfcd4@bootlin.com>
+ <aPFwPR2A0CN6k1Vl@sunil-laptop>
+ <1241f2b6-9b4e-4623-8a83-77db8774ac32@bootlin.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- "David E. Box" <david.e.box@linux.intel.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Chia-Lin Kao <acelan.kao@canonical.com>, Dragan Simic <dsimic@manjaro.org>,
- linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
- FUKAUMI Naoki <naoki@radxa.com>
-Subject: Re: [PATCH v2 1/2] PCI/ASPM: Override the ASPM and Clock PM states
- set by BIOS for devicetree platforms
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-References: <7df0bf91-8ab1-4e76-83fa-841a4059c634@rock-chips.com>
- <20251015233054.GA961172@bhelgaas>
- <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <hwueivbm2taxwb2iowkvblzvdv2xqnsapx6lenv56vuz7ye6do@fugjdkoyk5gy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a99f191762b09cckunm3ad1505815a4fb
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx0aQlZITEwfS01OTRgYQ09WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=Gbakgtf5juyxXLyjvNEBOoU2BvuKHnl3lmL3wESBLpY49996dwrkHEjjo9SGWwLvIF56Wsck8nli3slIooVAyKq9L+enHuUhC/q3KE9B1PuNWLmcdhnOjynCr1jz20j3T257xIWhvF/s1gJcoQBZZPpzm7az96HLHO564hDbcnw=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=35XhCoKrmzdZQlHWnzUSGhfNFUZ/Pw4yplQ4NAHi5Ic=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1241f2b6-9b4e-4623-8a83-77db8774ac32@bootlin.com>
 
-Hi Mani and Bjorn
+On Fri, Oct 17, 2025 at 10:50:05AM +0200, Thomas Richard wrote:
+> On 10/17/25 12:22 AM, Sunil V L wrote:
+> > On Thu, Oct 16, 2025 at 02:47:40PM +0200, Thomas Richard wrote:
+> >> Hello,
+> >>
+> >> While testing the AAEON UpBoard MFD driver with the v6.18-rc1 release, I
+> >> noticed a regression. The driver does not probe anymore and I get the
+> >> following error:
+> >>
+> >> [    1.977831] upboard-fpga AANT0F01:00: error -ENOENT: Failed to
+> >> initialize FPGA common GPIOs
+> >> [    1.977854] upboard-fpga AANT0F01:00: probe with driver upboard-fpga
+> >> failed with error -2
+> >>
+> >> The driver fails to get some GPIOs using a name [1] in the ACPI tables [2].
+> >>
+> >> I did a bisect and I found the commit which introduced the regression:
+> >> e121be784d35 ("ACPI: property: Refactor acpi_fwnode_get_reference_args()
+> >> to support nargs_prop")
+> >>
+> > Hi Thomas,
+> > 
+> > Could you please try with below change and see if it resolves the issue?
+> > 
+> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> > index 1b997a5497e7..43d5e457814e 100644
+> > --- a/drivers/acpi/property.c
+> > +++ b/drivers/acpi/property.c
+> > @@ -1107,7 +1107,7 @@ int __acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
+> >                                        size_t num_args,
+> >                                        struct fwnode_reference_args *args)
+> >  {
+> > -       return acpi_fwnode_get_reference_args(fwnode, propname, NULL, index, num_args, args);
+> > +       return acpi_fwnode_get_reference_args(fwnode, propname, NULL, num_args, index, args);
+> >  }
+> > 
+> 
+> Hi Sunil,
+> 
+> Yes your change fixes the issue !!
+> 
+Hi Thomas,
 
-在 2025/10/17 星期五 11:36, Manivannan Sadhasivam 写道:
-> On Wed, Oct 15, 2025 at 06:30:54PM -0500, Bjorn Helgaas wrote:
->> On Wed, Oct 15, 2025 at 09:00:41PM +0800, Shawn Lin wrote:
->>> ...
->>
->>> For now, this is a acceptable option if default ASPM policy enable
->>> L1ss w/o checking if the HW could supports it... But how about
->>> adding supports-clkreq stuff to upstream host driver directly? That
->>> would help folks enable L1ss if the HW is ready and they just need
->>> adding property to the DT.
->>> ...
->>
->>> The L1ss support is quite strict and need several steps to check, so we
->>> didn't add supports-clkreq for them unless the HW is ready to go...
->>>
->>> For adding supports of L1ss,
->>> [1] the HW should support CLKREQ#, expecially for PCIe3.0 case on Rockchip
->>> SoCs , since both  CLKREQ# of RC and EP should connect to the
->>> 100MHz crystal generator's enable pin, as L1.2 need to disable refclk as
->>> well. If the enable pin is high active, the HW even need a invertor....
->>>
->>> [2] define proper clkreq iomux to pinctrl of pcie node
->>> [3] make sure the devices work fine with L1ss.(It's hard to check the slot
->>> case with random devices in the wild )
->>> [4] add supports-clkreq to the DT and enable
->>> CONFIG_PCIEASPM_POWER_SUPERSAVE
->>
->> I don't understand the details of the supports-clkreq issue.
->>
->> If we need to add supports-clkreq to devicetree, I want to understand
->> why we need it there when we don't seem to need it for ACPI systems.
->>
->> Generally the OS relies on what the hardware advertises, e.g., in Link
->> Capabilities and the L1 PM Substates Capability, and what is available
->> from firmware, e.g., the ACPI _DSM for Latency Tolerance Reporting.
->>
->> On the ACPI side, I don't think we get any specific information about
->> CLKREQ#.  Can somebody explain why we do need it on the devicetree
->> side?
->>
-> 
-> I think there is a disconnect between enabling L1ss CAP and CLKREQ#
-> availability.. When L1ss CAP is enabled for the Root Port in the hardware, there
-> is no guarantee that CLKREQ# is also available. If CLKREQ# is not available,
-> then if L1ss is enabled by the OS, it is not possible to exit the L1ss states
-> (assuming that L1ss is entered due to CLKREQ# in deassert (default) state).
-> 
-> Yes, there seems to be no standard way to know CLKREQ# presence in ACPI, but
-> in devicetree, we have this 'supports-clkreq' property to tell the OS that
-> CLKREQ# is available in the platform. But unfortunately, this property is not
-> widely used by the devicetrees out there. So we cannot use it in generic
-> pci/aspm.c driver.
-> 
-> We can certainly rely on the BIOS to enable L1ss as the fw developers would
-> have the knowledge of the CLKREQ# availability. But BIOS is not a thing on
-> mobile and embedded platforms where L1ss would come handy.
-> 
-> What I would suggest is, the host controller drivers (mostly for devicetree
-> platforms) should enable L1ss CAP for the Root Port only if they know that
-> CLKREQ# is available. They can either rely on the 'supports-clkreq' property or
-> some platform specific knowledge (for instance, on all Qcom platforms, we
-> certainly know that CLKREQ# is available, but we don't set the DT property).
+Thanks for confirming the fix!
 
-While we're on the topic of ASPM, may I ask a silly question?
-I saw the ASPM would only be configured once the function driver calling
-pci_enable_device. So if the modular driver hasn't been insmoded, the
-link will be in L0 even though there is no transcation on-going. What is
-the intention behind it?
+I'll send out the patch shortly and include your Tested-by tag.
 
-> 
-> Then in the generic pci/aspm.c driver, we can just enable L1ss for all devices
-> if the CAP is set, which we do currently.
-> 
-> - Mani
-> 
+Apologies for the earlier issue, and thank you for your help.
 
+Best regards,
+Sunil
