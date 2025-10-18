@@ -1,129 +1,126 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560C81B87F2
-	for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 13:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C55324E4C3
+	for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 19:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760795462; cv=none; b=D/J4f4lWP+FIc0bZduIVODkBCHbFH1GgWrwAfnwAKww5GUqnptA/8yWTBCFaimWmYlZNau9a19b0schfX++/4B8jPMCOndsj2EzHBAWKE9T0vlOonQezawL+Rl6uzk1q5gRHpqJiCNxkNx/hZ1bQKDoFLwK4VdhC9fDriwoLWCg=
+	t=1760814866; cv=none; b=bhrUS4U2Wo5Wq5QAXhTTjxmDGuu1fbeAuPdcgtP2aT0goe7cJUmW9EQ9idzCkPrqJ2YhtLJ/Z5vyb/+vbEGB5gMRecEhqQhSSuNAtHq2SlnvSAF/FsdCh2Gl3F9vQVw1ax14LIrmpf7FVEp0HzpIRLnkPSIP//gRaJ5qkDIkIkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760795462; c=relaxed/simple;
-	bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qHiGGubhIeFFGPTtrMjxIwrmcx2FRNpCN40mU/42LVY8cOdFp/faMYLmO+69QJBAx1H5a74cRW5vMjCnR96cpvUFvECk1ib47zbNcbhXWO1h+0YDWG0hFizSRk0SexkLtwgpyOGrUxCWG3yAGfyaznW/aj02HVJcKuNDkhufNgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XQ3TLNQI; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760814866; c=relaxed/simple;
+	bh=dBoaPphiu4f5Ip4gq8tI53CwbP/pBK7d8w8KBwBouuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJp2kt/pHk1U6tiFcUDDS65LHhBWlPXTcZxCcShKQ3mpT6QDQVtVP5dEbBw4MynYCct3tMYaZzUYuMuYMyUKSWfuNoBKy60XcWm5T/3iTFOAUAAJsFRs2sC6xcuicCg0JECDprgNM+dI54oII9xFSI2TfgzUVYUGlAseN1giW2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CKy1scNr; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQ3TLNQI"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-426ff4f3ad4so1566433f8f.0
-        for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 06:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760795459; x=1761400259; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
-        b=XQ3TLNQIGFSMo7A/czW5YGbvOwjJak/BvqwUFVJQ1ILU9O0g9EVOzg4RRv5oPKp9O/
-         BZGc4KqSyzhvWjTueCXW7KbWhrSCqOR6rFSQSs+tTKbG7SoGPjnSrVi4j93JyOyuXDX+
-         wYX9b0tJ9/03yXJh7GMpyHm9z4lWlaKxkKL0vVG4xwJBwmuf1XIwgpt/q//9sPlrFqFz
-         Y16kgYbCHi2+rLbLJnYejCSxCjFnrBMHIiFs5u3UaTMRqNFnCwSo4Nn7JG20DTqnPedH
-         ATPAomQDXnwgKpR8Ap5Qz1XYoxVI1mhs3HI+w6ySwRo7Ng/hqfUEqRy0913EA7JsW9no
-         SbIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760795459; x=1761400259;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
-        b=dIEyQM+1mXwLr3sVLGxF476nP69a7e0F2A98m9sHlTvSQ/2j+/6Zih5MVqG5lvAeG+
-         hTu82LZe6QEmz1dNZAjs2PijDS1QeLMU0qL9Z0NMnjTmomkBMOob+Qd6Jd4cq3B+OeLG
-         D3YOtYwjdG7uUrAMkykLq0lWrAD4Rpzeb8Non09XbfpJEDA+doSBpfcGHD2nRT2c4ANO
-         na9YMYxTxrpsPMDsdCI6RLd5txoorZrDSOhdJC+ON6R+iSx90r6+hCSxULDjT8gEm7zD
-         DeBp7hIajksafEhQ554obr0Lg+ydSRUH3iBSeDdVJwiMkz3XF0FCZbgaGjgBuL4p9gJ4
-         0Ngg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjX0GFrXQN20YUKvz6jwx5eagMvQ7z1bQXjlta5NoJLM0RQ+nQICYyGlahLxmQA+uH43v9iOcJXy1N5A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwdKmYiCJRCPstBPeHu7TiSPc1J0X1kRJLWXkBumxUhfZHQp2Fk
-	nCRhGhsIlr0cfPfjs4ezKIgTyLJ2DW8ZqBHEZ7Ept9sAS37ESxTbfo6M
-X-Gm-Gg: ASbGncvSXBa7/9eFkd93Punzg6D5fhEqvwmEbNrX4YT6tiDoNOE0yZXTMSMP1rPIhI2
-	fYAlLrJwNbY4gqO5aVrQoRgKUxA299ZE9ONNUzkFMTdWDGizC+Ta5R9ik0mF4QvkAmeQ9J1Pco/
-	bvRWBqy86IECnslzO7jbz8mfmPwrSq7digNgEmV1l4sbLpBpHQNQiVvGlgrfCcuxgRSE3JHsTdN
-	fFOxit7CNKZ/jzSmjJvrBj82RPeD2CLlEpvF9eqjVOv6cc/xUzqntDyWvg6LXMNMWGgLgO1q/8c
-	M6AgmRnMlRB3EakfpON2PcAP9nB0xf3u0pDT31VZnTrAmn88gCMMG+roBL8a6S5lYHqxoR+kZay
-	4x7k6YDHZMijnFzGYJlATaizKPbhfpTKj9P2Fj7YPH1hX8qT6IoguqKaIkzUGfnOI+3eoMDr4VN
-	aKt/7pFRTMOP8dCw4WiJahgRvsi9FTerMy3RqauV5VvdFjDpBhFzTmUms=
-X-Google-Smtp-Source: AGHT+IGCXXxrQgd1EYgtv5VJuy0v1uJ9qqFR/wWr3wDngmDs1z9Yq8rUTLutJ5vzlAyNORMZR7xTyQ==
-X-Received: by 2002:a05:600c:4715:b0:45b:9a46:69e9 with SMTP id 5b1f17b1804b1-4711791c8c3mr54887815e9.31.1760795458332;
-        Sat, 18 Oct 2025 06:50:58 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:a776:5e51:5cb5:418? ([2a02:168:6806:0:a776:5e51:5cb5:418])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47154d382d8sm48677685e9.12.2025.10.18.06.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 06:50:57 -0700 (PDT)
-Message-ID: <10919281648e306fd3f6713437b4793c50bb6692.camel@gmail.com>
-Subject: Re: [REGRESSION] ath10k fails initialization, bisected to "wifi:
- ath10k: avoid unnecessary wait for service ready message"
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Jeff Johnson
-	 <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>, Baochen Qiang
-	 <quic_bqiang@quicinc.com>, Baochen Qiang <baochen.qiang@oss.qualcomm.com>
-Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	regressions@lists.linux.dev
-Date: Sat, 18 Oct 2025 15:50:57 +0200
-In-Reply-To: <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
-References: 
-	<20250811-ath10k-avoid-unnecessary-wait-v1-1-db2deb87c39b@oss.qualcomm.com>
-	 <175823924851.3217488.17742065327824732992.b4-ty@oss.qualcomm.com>
-	 <6d41bc00602c33ffbf68781f563ff2e6c6915a3e.camel@gmail.com>
-	 <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-5 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CKy1scNr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760814865; x=1792350865;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dBoaPphiu4f5Ip4gq8tI53CwbP/pBK7d8w8KBwBouuw=;
+  b=CKy1scNrVVLL9jI/Yquix/TnSxwvCNQ29Wf7jdEszWuid8Pg4JA45nAp
+   eQdRbpTvDPmdcAYqPltBIN3OzTbpGrjun2UjC+QfJGryPmDkGd1rulexV
+   t/4V6EAa1375Hv1LmYKdCe/a7qHxZAjUdVu3FLfS+azkVbuXVOKjCkGHK
+   3o62s/5YSkDYpwKeXDzu6mnMi6/Iid/wR1s8JmWPW9Ai+9Dg0FLxYhzc7
+   wmcms9QnI98yWqDrEFKyNOH5yxU25BSYxbjK3vHiih89AT9sQopBT69X/
+   e8ckHQQ+5iqjbi25C5Yvyu1BlMqmxArhZVwTZfdL+73DK4CaGWoWJcKJP
+   A==;
+X-CSE-ConnectionGUID: 04OuCwOPQieO/ZChAbVV3A==
+X-CSE-MsgGUID: UdIy7SvRS/2vnuso9xPjwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62208804"
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="62208804"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 12:14:24 -0700
+X-CSE-ConnectionGUID: 6nNR3t4ZRxyGwAJhiKJ41w==
+X-CSE-MsgGUID: jZQvWAWFSfmAWn8X5lT6NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,239,1754982000"; 
+   d="scan'208";a="183761838"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.194])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2025 12:14:22 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vACNf-00000000xLR-24A5;
+	Sat, 18 Oct 2025 22:14:19 +0300
+Date: Sat, 18 Oct 2025 22:14:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: Thomas Richard <thomas.richard@bootlin.com>, rafael@kernel.org,
+	regressions@lists.linux.dev, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	apatel@ventanamicro.com,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Daniele Cleri <DanieleCleri@aaeon.eu>
+Subject: Re: [REGRESSION] in 6.18-rc1, failed to query a GPIO using a name in
+ ACPI
+Message-ID: <aPPnC6gSP4r46gBV@ashevche-desk.local>
+References: <c321423b-3cdb-41a5-9939-dc5c846cfcd4@bootlin.com>
+ <aPFwPR2A0CN6k1Vl@sunil-laptop>
+ <1241f2b6-9b4e-4623-8a83-77db8774ac32@bootlin.com>
+ <aPIUMoDxW-yl2nPm@sunil-laptop>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aPIUMoDxW-yl2nPm@sunil-laptop>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, 2025-10-17 at 08:57 -0700, Jeff Johnson wrote:
-> On 10/17/2025 8:37 AM, Klaus Kudielka wrote:
-> > Unfortunately, this particular commit completely breaks the ath10k driv=
-er in my setup.
-> >=20
-> >=20
-> > Hardware:
-> > - Turris Omnia (arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts)
-> > - Wifi card (output from lspci): Network controller: Qualcomm Atheros Q=
-CA986x/988x 802.11ac Wireless Network Adapter
->=20
-> This issue was previously reported with that particular chipset.
-> This is currently being tracked at:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D220671
->=20
-> It may be useful to supply your information as a separate record to that =
-bug.
->=20
-> /jeff
+On Fri, Oct 17, 2025 at 03:32:26PM +0530, Sunil V L wrote:
+> On Fri, Oct 17, 2025 at 10:50:05AM +0200, Thomas Richard wrote:
+> > On 10/17/25 12:22 AM, Sunil V L wrote:
+> > > On Thu, Oct 16, 2025 at 02:47:40PM +0200, Thomas Richard wrote:
+> > >>
+> > >> While testing the AAEON UpBoard MFD driver with the v6.18-rc1 release, I
+> > >> noticed a regression. The driver does not probe anymore and I get the
+> > >> following error:
+> > >>
+> > >> [    1.977831] upboard-fpga AANT0F01:00: error -ENOENT: Failed to
+> > >> initialize FPGA common GPIOs
+> > >> [    1.977854] upboard-fpga AANT0F01:00: probe with driver upboard-fpga
+> > >> failed with error -2
+> > >>
+> > >> The driver fails to get some GPIOs using a name [1] in the ACPI tables [2].
+> > >>
+> > >> I did a bisect and I found the commit which introduced the regression:
+> > >> e121be784d35 ("ACPI: property: Refactor acpi_fwnode_get_reference_args()
+> > >> to support nargs_prop")
+> > > 
+> > > Could you please try with below change and see if it resolves the issue?
+> > > 
+> > > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> > > index 1b997a5497e7..43d5e457814e 100644
+> > > --- a/drivers/acpi/property.c
+> > > +++ b/drivers/acpi/property.c
+> > > @@ -1107,7 +1107,7 @@ int __acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
+> > >                                        size_t num_args,
+> > >                                        struct fwnode_reference_args *args)
+> > >  {
+> > > -       return acpi_fwnode_get_reference_args(fwnode, propname, NULL, index, num_args, args);
+> > > +       return acpi_fwnode_get_reference_args(fwnode, propname, NULL, num_args, index, args);
+> > >  }
+> > 
+> > Yes your change fixes the issue !!
+> 
+> Thanks for confirming the fix!
+> 
+> I'll send out the patch shortly and include your Tested-by tag.
+> 
+> Apologies for the earlier issue, and thank you for your help.
 
-Some more observations on that topic with the hardware shown above.
+I haven't received anything. Have you sent anything? Am I Cc'ed?
 
-ath10k_core_start() calls ath10k_wmi_wait_for_service_ready(), and later at=
-h10k_wmi_wait_for_unified_ready().
-
-The now *unconditional* call to ath10k_hif_send_complete_check() inside ath=
-10k_wmi_wait_for_service_ready()
-makes the later call to ath10k_wmi_wait_for_unified_ready() fail.
-
-If I call and handle wait_for_completion_timeout()=C2=A0first (as it was be=
-fore the patch),
-ath10k_hif_send_complete_check() is *not* called, and both ath10k_wmi_wait_=
-for_service_ready() and
-ath10k_wmi_wait_for_unified_ready() succeed. Everything is back to normal.
-
-Side note:
-ath10k_wmi_wait_for_service_ready() succeeds in both cases with time_left =
-=3D=3D WMI_SERVICE_READY_TIMEOUT_HZ.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-#regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=3D220671
