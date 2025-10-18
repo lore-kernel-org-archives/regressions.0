@@ -1,75 +1,81 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F820285C98
-	for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 08:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560C81B87F2
+	for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 13:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760775292; cv=none; b=YXsaKRGdOLFCUyua87ktz0NHGxBVOiFvoJ79SIY0Ai8TZgAQyN/s8+/IA40zyJqlNszOnOFLi/liCYZHrNCqqS4VBl7B7mWugATg04IOFlSScWZRI1kz4r7SerAefDfg1HJbBoFQmzZQNrvwpknZ2xKrpZANXnx3qCUaYaUqtsE=
+	t=1760795462; cv=none; b=D/J4f4lWP+FIc0bZduIVODkBCHbFH1GgWrwAfnwAKww5GUqnptA/8yWTBCFaimWmYlZNau9a19b0schfX++/4B8jPMCOndsj2EzHBAWKE9T0vlOonQezawL+Rl6uzk1q5gRHpqJiCNxkNx/hZ1bQKDoFLwK4VdhC9fDriwoLWCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760775292; c=relaxed/simple;
-	bh=stEn61YMlDBZHmJHiQAB05JqwH06yI7RnuoevuO0ynQ=;
+	s=arc-20240116; t=1760795462; c=relaxed/simple;
+	bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rn4LZDg6P0W0Cq8OCt46fZkBhpWERho7dJ8Ick26mE3Pszho5rwd7bkUjSF7N52LaieWiaZgMQLe1qwjfXlgE+EiqVqHwxBls9d4m43jlujRdBpZn6aHqijL1a/VJ+1sjvVuz2iPAQSOyU5Ev8itBtvq4RSuJyQbbNd0p4ZlBv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hY7/+MsP; arc=none smtp.client-ip=209.85.128.44
+	 Content-Type:MIME-Version; b=qHiGGubhIeFFGPTtrMjxIwrmcx2FRNpCN40mU/42LVY8cOdFp/faMYLmO+69QJBAx1H5a74cRW5vMjCnR96cpvUFvECk1ib47zbNcbhXWO1h+0YDWG0hFizSRk0SexkLtwgpyOGrUxCWG3yAGfyaznW/aj02HVJcKuNDkhufNgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XQ3TLNQI; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hY7/+MsP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-47103b6058fso19594055e9.1
-        for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 01:14:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQ3TLNQI"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-426ff4f3ad4so1566433f8f.0
+        for <regressions@lists.linux.dev>; Sat, 18 Oct 2025 06:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760775288; x=1761380088; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1760795459; x=1761400259; darn=lists.linux.dev;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=g+8hJOPQngU4oat/u2j+gPeuDP3LFJ5IRHmNxnbE2sg=;
-        b=hY7/+MsPcE5rq164sPAw7enuCq1zFJiLm073zAMCQcqASD7I702UAHpvalHl16prMG
-         BXtgjJoSAKKMJMwubrRCQogmc7J3Ci9MtISOS6FS5RLKYooCcYAxo+qKaUCXt0//UBoc
-         PHpsDRWC7R5SH9d33YtJRE5SkvuvETBOpQWb6o4gw6zhVJX2piRXhu46ybinNRVx8fEJ
-         Cq6HNNN6PEfdsg+ojGe0iGe+eklAZpWXg8Zf28tybAdyUd52aSCPXjzPkztcotNvHtM7
-         6WGREKNfPrwN198Ahdb1bmAMcpvtWvCR31S7CGQzA33GnLIZw0USHJL718Ppm1uMHB6E
-         l6eg==
+        bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
+        b=XQ3TLNQIGFSMo7A/czW5YGbvOwjJak/BvqwUFVJQ1ILU9O0g9EVOzg4RRv5oPKp9O/
+         BZGc4KqSyzhvWjTueCXW7KbWhrSCqOR6rFSQSs+tTKbG7SoGPjnSrVi4j93JyOyuXDX+
+         wYX9b0tJ9/03yXJh7GMpyHm9z4lWlaKxkKL0vVG4xwJBwmuf1XIwgpt/q//9sPlrFqFz
+         Y16kgYbCHi2+rLbLJnYejCSxCjFnrBMHIiFs5u3UaTMRqNFnCwSo4Nn7JG20DTqnPedH
+         ATPAomQDXnwgKpR8Ap5Qz1XYoxVI1mhs3HI+w6ySwRo7Ng/hqfUEqRy0913EA7JsW9no
+         SbIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760775288; x=1761380088;
+        d=1e100.net; s=20230601; t=1760795459; x=1761400259;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=g+8hJOPQngU4oat/u2j+gPeuDP3LFJ5IRHmNxnbE2sg=;
-        b=lbu3y+NPLVEw/x3vZiRqCjvrwGvI26016Jf9ebjzSUNLhWhJMJ9XP2l1EVTpPE/WBb
-         iuAJLIlle69/ipLmv2dJ3myKXiEAljn0aKEIU+RdWRGevwdTAr0xHLDUbh8YXjJMIeGO
-         hQPJa+YsIVwea4oE62EEP9cHTX+re3ujNt3ItdNQb6//wxrlvuDQPqxnwPXc4IBSeYQZ
-         dVHTUugfSFJRSMqEUPfW9bqDDqwMGMfTobX9SfLUmUMj0VLH8prxVAYQV5XhwW84YXZ7
-         nvyGl94YJ/VcXOPaxvcEgej3eZysvZINeQXc7gTSdZKpczesS7NzGQQ2fdlVHuYcjpKQ
-         csFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKlJ4QO2QcQ9oRi+AgYaxwohECixLJYX8rkAMruRQjMgMKZYZ0ecESzyxYjk8t+xmO1ACXaBTZn5U8hQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywj9/DZSQr1h4uuA2AZo4zK6tV2QS0zOYhhfztm9KhcF1Kt46MZ
-	76pRSOEWRmtw4LVuQx1Wzj1Cbbjwq/JwX+hadvm1LI00PZNx4A02IyPA55yyttoV
-X-Gm-Gg: ASbGncu5s8wYR5zVVKrieIM3dOz9dstzPpPwq2aRSe5IBOu0IDbySNcOm1b6y9/5/tl
-	1cvRhSykJGZXHYYEMIUYJAx+I2mnY0poDIpALsNpJ3J+fW9b3rEk4csDh3OEpr6hJ76Jp/G4Emx
-	pploZV/ByKiwvCJtmBBXf40n/USS+mOqgHfuSbwhPhRmMv9Fiq/pzPYvVis0x9ZBwuKwMmnbk2W
-	KGdB9gBzbDns8Wh3/w4uJH8Xu/0Bt3oU+L9svJUuGsweFQaVB/EqMEkIFyK6LvMm3R9oxU1Qu2i
-	HDEsYW2FyB116S/uogK8KYA+imhwwYkCGXJlgTUJCHbSPI61nOlJGjecFGB6WAsMKPhq3swV7Th
-	iRyjHRaeKwbL8OhAVFlY2Ad5MfCaLW26llHukzXeuklvRn5i+QUKsKrKFxuf8IVqCp2UqfkgyeI
-	SCBjopAJ0hdBumbv7hqfozcAfQZv4jopwMJX8pLuxCVSD8zd8EYElm88s=
-X-Google-Smtp-Source: AGHT+IEMMZDB/lqLE2C50yNzfz6dfaD+4c8YbAcbUT7njlExhc7aN8j2iEPocSPr5UhqgT4Za/7hSQ==
-X-Received: by 2002:a05:600c:6384:b0:471:846:80ac with SMTP id 5b1f17b1804b1-471173460a3mr51372525e9.18.1760775287957;
-        Sat, 18 Oct 2025 01:14:47 -0700 (PDT)
+        bh=H4XC02jwzmIvWBlWZFVlD8AYAXuXdd+oXv6dBP/Y7Fw=;
+        b=dIEyQM+1mXwLr3sVLGxF476nP69a7e0F2A98m9sHlTvSQ/2j+/6Zih5MVqG5lvAeG+
+         hTu82LZe6QEmz1dNZAjs2PijDS1QeLMU0qL9Z0NMnjTmomkBMOob+Qd6Jd4cq3B+OeLG
+         D3YOtYwjdG7uUrAMkykLq0lWrAD4Rpzeb8Non09XbfpJEDA+doSBpfcGHD2nRT2c4ANO
+         na9YMYxTxrpsPMDsdCI6RLd5txoorZrDSOhdJC+ON6R+iSx90r6+hCSxULDjT8gEm7zD
+         DeBp7hIajksafEhQ554obr0Lg+ydSRUH3iBSeDdVJwiMkz3XF0FCZbgaGjgBuL4p9gJ4
+         0Ngg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjX0GFrXQN20YUKvz6jwx5eagMvQ7z1bQXjlta5NoJLM0RQ+nQICYyGlahLxmQA+uH43v9iOcJXy1N5A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwdKmYiCJRCPstBPeHu7TiSPc1J0X1kRJLWXkBumxUhfZHQp2Fk
+	nCRhGhsIlr0cfPfjs4ezKIgTyLJ2DW8ZqBHEZ7Ept9sAS37ESxTbfo6M
+X-Gm-Gg: ASbGncvSXBa7/9eFkd93Punzg6D5fhEqvwmEbNrX4YT6tiDoNOE0yZXTMSMP1rPIhI2
+	fYAlLrJwNbY4gqO5aVrQoRgKUxA299ZE9ONNUzkFMTdWDGizC+Ta5R9ik0mF4QvkAmeQ9J1Pco/
+	bvRWBqy86IECnslzO7jbz8mfmPwrSq7digNgEmV1l4sbLpBpHQNQiVvGlgrfCcuxgRSE3JHsTdN
+	fFOxit7CNKZ/jzSmjJvrBj82RPeD2CLlEpvF9eqjVOv6cc/xUzqntDyWvg6LXMNMWGgLgO1q/8c
+	M6AgmRnMlRB3EakfpON2PcAP9nB0xf3u0pDT31VZnTrAmn88gCMMG+roBL8a6S5lYHqxoR+kZay
+	4x7k6YDHZMijnFzGYJlATaizKPbhfpTKj9P2Fj7YPH1hX8qT6IoguqKaIkzUGfnOI+3eoMDr4VN
+	aKt/7pFRTMOP8dCw4WiJahgRvsi9FTerMy3RqauV5VvdFjDpBhFzTmUms=
+X-Google-Smtp-Source: AGHT+IGCXXxrQgd1EYgtv5VJuy0v1uJ9qqFR/wWr3wDngmDs1z9Yq8rUTLutJ5vzlAyNORMZR7xTyQ==
+X-Received: by 2002:a05:600c:4715:b0:45b:9a46:69e9 with SMTP id 5b1f17b1804b1-4711791c8c3mr54887815e9.31.1760795458332;
+        Sat, 18 Oct 2025 06:50:58 -0700 (PDT)
 Received: from ?IPv6:2a02:168:6806:0:a776:5e51:5cb5:418? ([2a02:168:6806:0:a776:5e51:5cb5:418])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144c82b8sm121077135e9.15.2025.10.18.01.14.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47154d382d8sm48677685e9.12.2025.10.18.06.50.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Oct 2025 01:14:47 -0700 (PDT)
-Message-ID: <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
-Subject: WARNING at drivers/pci/setup-bus.c:2373, bisected to "PCI: Use
- pbus_select_window_for_type() during mem window sizing"
+        Sat, 18 Oct 2025 06:50:57 -0700 (PDT)
+Message-ID: <10919281648e306fd3f6713437b4793c50bb6692.camel@gmail.com>
+Subject: Re: [REGRESSION] ath10k fails initialization, bisected to "wifi:
+ ath10k: avoid unnecessary wait for service ready message"
 From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Date: Sat, 18 Oct 2025 10:14:47 +0200
-In-Reply-To: <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
-References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
-	 <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Jeff Johnson
+	 <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>, Baochen Qiang
+	 <quic_bqiang@quicinc.com>, Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	regressions@lists.linux.dev
+Date: Sat, 18 Oct 2025 15:50:57 +0200
+In-Reply-To: <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
+References: 
+	<20250811-ath10k-avoid-unnecessary-wait-v1-1-db2deb87c39b@oss.qualcomm.com>
+	 <175823924851.3217488.17742065327824732992.b4-ty@oss.qualcomm.com>
+	 <6d41bc00602c33ffbf68781f563ff2e6c6915a3e.camel@gmail.com>
+	 <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.2-5 
@@ -80,289 +86,44 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Fri, 2025-08-29 at 16:11 +0300, Ilpo J=C3=A4rvinen wrote:
-> __pci_bus_size_bridges() goes to great lengths of helping pbus_size_mem()
-> in which types it should put into a particular bridge window, requiring
-> passing up to three resource type into pbus_size_mem().
+On Fri, 2025-10-17 at 08:57 -0700, Jeff Johnson wrote:
+> On 10/17/2025 8:37 AM, Klaus Kudielka wrote:
+> > Unfortunately, this particular commit completely breaks the ath10k driv=
+er in my setup.
+> >=20
+> >=20
+> > Hardware:
+> > - Turris Omnia (arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts)
+> > - Wifi card (output from lspci): Network controller: Qualcomm Atheros Q=
+CA986x/988x 802.11ac Wireless Network Adapter
 >=20
-> Instead of having complex logic in __pci_bus_size_bridges() and a
-> non-straightforward interface between those functions, use
-> pbus_select_window_for_type() and pbus_select_window() to find the correc=
-t
-> bridge window and compare if the resources belong to that window.
+> This issue was previously reported with that particular chipset.
+> This is currently being tracked at:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D220671
 >=20
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> It may be useful to supply your information as a separate record to that =
+bug.
+>=20
+> /jeff
+
+Some more observations on that topic with the hardware shown above.
+
+ath10k_core_start() calls ath10k_wmi_wait_for_service_ready(), and later at=
+h10k_wmi_wait_for_unified_ready().
+
+The now *unconditional* call to ath10k_hif_send_complete_check() inside ath=
+10k_wmi_wait_for_service_ready()
+makes the later call to ath10k_wmi_wait_for_unified_ready() fail.
+
+If I call and handle wait_for_completion_timeout()=C2=A0first (as it was be=
+fore the patch),
+ath10k_hif_send_complete_check() is *not* called, and both ath10k_wmi_wait_=
+for_service_ready() and
+ath10k_wmi_wait_for_unified_ready() succeed. Everything is back to normal.
+
+Side note:
+ath10k_wmi_wait_for_service_ready() succeeds in both cases with time_left =
+=3D=3D WMI_SERVICE_READY_TIMEOUT_HZ.
 
 
-Hi,
-
-
-this batch became mainline commit ae88d0b9c57f, and causes a warning when b=
-ooting
-on my Turris Omnia.
-
-Device tree: arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts
-PCI driver: pci-mvebu
-Hardware status: The joint mPCIe / mSATA slot carries an mSATA drive, the o=
-ther
-two mPCIe slots carry WiFi cards.
-
-As far as I can tell, hardware is operating nominally, so the warning looks=
- like
-a false positive.
-
-
-*** relevant section of the boot log, at ae88d0b9c57f (first bad commit) **=
-*
-
-[    0.024347] mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
-[    0.024372] mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> =
-0x0000080000
-[    0.024388] mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> =
-0x0000040000
-[    0.024401] mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> =
-0x0000044000
-[    0.024414] mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> =
-0x0000048000
-[    0.024427] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0100000000
-[    0.024439] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0100000000
-[    0.024452] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0200000000
-[    0.024464] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0200000000
-[    0.024476] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0300000000
-[    0.024488] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0300000000
-[    0.024500] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0400000000
-[    0.024508] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0400000000
-[    0.024698] mvebu-pcie soc:pcie: pcie1.0: Slot power limit 10.0W
-[    0.024890] mvebu-pcie soc:pcie: pcie2.0: Slot power limit 10.0W
-[    0.025099] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
-[    0.025107] pci_bus 0000:00: root bus resource [bus 00-ff]
-[    0.025114] pci_bus 0000:00: root bus resource [mem 0xf1080000-0xf1081ff=
-f] (bus address [0x00080000-0x00081fff])
-[    0.025120] pci_bus 0000:00: root bus resource [mem 0xf1040000-0xf1041ff=
-f] (bus address [0x00040000-0x00041fff])
-[    0.025125] pci_bus 0000:00: root bus resource [mem 0xf1044000-0xf1045ff=
-f] (bus address [0x00044000-0x00045fff])
-[    0.025135] pci_bus 0000:00: root bus resource [mem 0xf1048000-0xf1049ff=
-f] (bus address [0x00048000-0x00049fff])
-[    0.025139] pci_bus 0000:00: root bus resource [mem 0xe0000000-0xe7fffff=
-f]
-[    0.025143] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
-[    0.025262] pci 0000:00:02.0: [11ab:6820] type 01 class 0x060400 PCIe Ro=
-ot Port
-[    0.025277] pci 0000:00:02.0: PCI bridge to [bus 00]
-[    0.025284] pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
-[    0.025289] pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff=
-]
-[    0.025484] /soc/pcie/pcie@2,0: Fixed dependency cycle(s) with /soc/pcie=
-/pcie@2,0/interrupt-controller
-[    0.025524] pci 0000:00:03.0: [11ab:6820] type 01 class 0x060400 PCIe Ro=
-ot Port
-[    0.025537] pci 0000:00:03.0: PCI bridge to [bus 00]
-[    0.025543] pci 0000:00:03.0:   bridge window [io  0x0000-0x0fff]
-[    0.025547] pci 0000:00:03.0:   bridge window [mem 0x00000000-0x000fffff=
-]
-[    0.025665] /soc/pcie/pcie@3,0: Fixed dependency cycle(s) with /soc/pcie=
-/pcie@3,0/interrupt-controller
-[    0.026453] PCI: bus0: Fast back to back transfers disabled
-[    0.026459] pci 0000:00:02.0: bridge configuration invalid ([bus 00-00])=
-, reconfiguring
-[    0.026466] pci 0000:00:03.0: bridge configuration invalid ([bus 00-00])=
-, reconfiguring
-[    0.026538] pci 0000:01:00.0: [168c:002e] type 00 class 0x028000 PCIe Le=
-gacy Endpoint
-[    0.026577] pci 0000:01:00.0: BAR 0 [mem 0xc0000000-0xc000ffff 64bit]
-[    0.026669] pci 0000:01:00.0: supports D1
-[    0.026673] pci 0000:01:00.0: PME# supported from D0 D1 D3hot
-[    0.026783] PCI: bus1: Fast back to back transfers disabled
-[    0.026788] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
-[    0.026860] pci 0000:02:00.0: [168c:003c] type 00 class 0x028000 PCIe En=
-dpoint
-[    0.026898] pci 0000:02:00.0: BAR 0 [mem 0xc8000000-0xc81fffff 64bit]
-[    0.026909] pci 0000:02:00.0: ROM [mem 0xc8200000-0xc820ffff pref]
-[    0.026987] pci 0000:02:00.0: supports D1 D2
-[    0.027083] PCI: bus2: Fast back to back transfers disabled
-[    0.027088] pci_bus 0000:02: busn_res: [bus 02-ff] end is updated to 02
-[    0.027107] pci 0000:00:03.0: bridge window [mem 0x00200000-0x003fffff] =
-to [bus 02] add_size 200000 add_align 200000
-[    0.027115] pci 0000:00:03.0: bridge window [mem 0x00200000-0x003fffff] =
-to [bus 02] add_size 200000 add_align 200000
-[    0.027131] pci 0000:00:03.0: bridge window [mem 0xe0000000-0xe03fffff]:=
- assigned
-[    0.027138] pci 0000:00:02.0: bridge window [mem 0xe0400000-0xe04fffff]:=
- assigned
-[    0.027146] pci 0000:01:00.0: BAR 0 [mem 0xe0400000-0xe040ffff 64bit]: a=
-ssigned
-[    0.027158] pci 0000:00:02.0: PCI bridge to [bus 01]
-[    0.027165] pci 0000:00:02.0:   bridge window [mem 0xe0400000-0xe04fffff=
-]
-[    0.027178] pci 0000:02:00.0: BAR 0 [mem 0xe0000000-0xe01fffff 64bit]: a=
-ssigned
-[    0.027188] pci 0000:02:00.0: ROM [mem 0xe0200000-0xe020ffff pref]: assi=
-gned
-[    0.027194] pci 0000:00:03.0: PCI bridge to [bus 02]
-[    0.027199] pci 0000:00:03.0:   bridge window [mem 0xe0000000-0xe03fffff=
-]
-[    0.027208] ------------[ cut here ]------------
-[    0.027211] WARNING: CPU: 0 PID: 1 at drivers/pci/setup-bus.c:2373 pci_a=
-ssign_unassigned_root_bus_resources+0x1bc/0x234
-[    0.027230] Modules linked in:
-[    0.027238] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.0-rc1+=
- #49 NONE=20
-[    0.027246] Hardware name: Marvell Armada 380/385 (Device Tree)
-[    0.027250] Call trace:=20
-[    0.027258]  unwind_backtrace from show_stack+0x10/0x14
-[    0.027278]  show_stack from dump_stack_lvl+0x50/0x64
-[    0.027288]  dump_stack_lvl from __warn+0x7c/0xd4
-[    0.027301]  __warn from warn_slowpath_fmt+0x158/0x15c
-[    0.027314]  warn_slowpath_fmt from pci_assign_unassigned_root_bus_resou=
-rces+0x1bc/0x234
-[    0.027328]  pci_assign_unassigned_root_bus_resources from pci_host_prob=
-e+0x50/0xb8
-[    0.027341]  pci_host_probe from platform_probe+0x48/0x84
-[    0.027351]  platform_probe from really_probe+0xc8/0x2c8
-[    0.027364]  really_probe from driver_probe_device+0x38/0x114
-[    0.027378]  driver_probe_device from __driver_attach+0x9c/0x194
-[    0.027391]  __driver_attach from bus_for_each_dev+0x60/0x94
-[    0.027404]  bus_for_each_dev from bus_add_driver+0xc8/0x1e8
-[    0.027417]  bus_add_driver from driver_register+0x84/0x138
-[    0.027426]  driver_register from do_one_initcall+0x44/0x268
-[    0.027433]  do_one_initcall from kernel_init_freeable+0x258/0x2c8
-[    0.027445]  kernel_init_freeable from kernel_init+0x1c/0x130
-[    0.027458]  kernel_init from ret_from_fork+0x14/0x28
-[    0.027466] Exception stack(0xf0831fb0 to 0xf0831ff8)
-[    0.027472] 1fa0:                                     00000000 00000000 =
-00000000 00000000
-[    0.027477] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 =
-00000000 00000000
-[    0.027481] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.027485] ---[ end trace 0000000000000000 ]---
-[    0.027489] pci_bus 0000:00: resource 4 [mem 0xf1080000-0xf1081fff]
-[    0.027495] pci_bus 0000:00: resource 5 [mem 0xf1040000-0xf1041fff]
-[    0.027500] pci_bus 0000:00: resource 6 [mem 0xf1044000-0xf1045fff]
-[    0.027504] pci_bus 0000:00: resource 7 [mem 0xf1048000-0xf1049fff]
-[    0.027508] pci_bus 0000:00: resource 8 [mem 0xe0000000-0xe7ffffff]
-[    0.027512] pci_bus 0000:00: resource 9 [io  0x1000-0xeffff]
-[    0.027517] pci_bus 0000:01: resource 1 [mem 0xe0400000-0xe04fffff]
-[    0.027522] pci_bus 0000:02: resource 1 [mem 0xe0000000-0xe03fffff]
-
-
-
-
-*** relevant section of the boot log, at 13016e15d595 (last good commit) **=
-*
-
-[    0.024666] mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
-[    0.024690] mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> =
-0x0000080000
-[    0.024706] mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> =
-0x0000040000
-[    0.024719] mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> =
-0x0000044000
-[    0.024732] mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> =
-0x0000048000
-[    0.024745] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0100000000
-[    0.024757] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0100000000
-[    0.024770] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0200000000
-[    0.024782] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0200000000
-[    0.024794] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0300000000
-[    0.024806] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0300000000
-[    0.024818] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0400000000
-[    0.024827] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00ffffff=
-fe -> 0x0400000000
-[    0.025022] mvebu-pcie soc:pcie: pcie1.0: Slot power limit 10.0W
-[    0.025210] mvebu-pcie soc:pcie: pcie2.0: Slot power limit 10.0W
-[    0.025451] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
-[    0.025459] pci_bus 0000:00: root bus resource [bus 00-ff]
-[    0.025466] pci_bus 0000:00: root bus resource [mem 0xf1080000-0xf1081ff=
-f] (bus address [0x00080000-0x00081fff])
-[    0.025472] pci_bus 0000:00: root bus resource [mem 0xf1040000-0xf1041ff=
-f] (bus address [0x00040000-0x00041fff])
-[    0.025477] pci_bus 0000:00: root bus resource [mem 0xf1044000-0xf1045ff=
-f] (bus address [0x00044000-0x00045fff])
-[    0.025482] pci_bus 0000:00: root bus resource [mem 0xf1048000-0xf1049ff=
-f] (bus address [0x00048000-0x00049fff])
-[    0.025487] pci_bus 0000:00: root bus resource [mem 0xe0000000-0xe7fffff=
-f]
-[    0.025491] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
-[    0.025617] pci 0000:00:02.0: [11ab:6820] type 01 class 0x060400 PCIe Ro=
-ot Port
-[    0.025633] pci 0000:00:02.0: PCI bridge to [bus 00]
-[    0.025639] pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
-[    0.025644] pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff=
-]
-[    0.025794] /soc/pcie/pcie@2,0: Fixed dependency cycle(s) with /soc/pcie=
-/pcie@2,0/interrupt-controller
-[    0.025832] pci 0000:00:03.0: [11ab:6820] type 01 class 0x060400 PCIe Ro=
-ot Port
-[    0.025844] pci 0000:00:03.0: PCI bridge to [bus 00]
-[    0.025851] pci 0000:00:03.0:   bridge window [io  0x0000-0x0fff]
-[    0.025855] pci 0000:00:03.0:   bridge window [mem 0x00000000-0x000fffff=
-]
-[    0.025968] /soc/pcie/pcie@3,0: Fixed dependency cycle(s) with /soc/pcie=
-/pcie@3,0/interrupt-controller
-[    0.026757] PCI: bus0: Fast back to back transfers disabled
-[    0.026762] pci 0000:00:02.0: bridge configuration invalid ([bus 00-00])=
-, reconfiguring
-[    0.026769] pci 0000:00:03.0: bridge configuration invalid ([bus 00-00])=
-, reconfiguring
-[    0.026845] pci 0000:01:00.0: [168c:002e] type 00 class 0x028000 PCIe Le=
-gacy Endpoint
-[    0.026884] pci 0000:01:00.0: BAR 0 [mem 0xc0000000-0xc000ffff 64bit]
-[    0.026976] pci 0000:01:00.0: supports D1
-[    0.026980] pci 0000:01:00.0: PME# supported from D0 D1 D3hot
-[    0.027082] PCI: bus1: Fast back to back transfers disabled
-[    0.027087] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
-[    0.027163] pci 0000:02:00.0: [168c:003c] type 00 class 0x028000 PCIe En=
-dpoint
-[    0.027201] pci 0000:02:00.0: BAR 0 [mem 0xc8000000-0xc81fffff 64bit]
-[    0.027212] pci 0000:02:00.0: ROM [mem 0xc8200000-0xc820ffff pref]
-[    0.027290] pci 0000:02:00.0: supports D1 D2
-[    0.027381] PCI: bus2: Fast back to back transfers disabled
-[    0.027386] pci_bus 0000:02: busn_res: [bus 02-ff] end is updated to 02
-[    0.027405] pci 0000:00:03.0: bridge window [mem 0x00200000-0x003fffff] =
-to [bus 02] add_size 200000 add_align 200000
-[    0.027423] pci 0000:00:03.0: bridge window [mem 0xe0000000-0xe03fffff]:=
- assigned
-[    0.027430] pci 0000:00:02.0: bridge window [mem 0xe0400000-0xe04fffff]:=
- assigned
-[    0.027438] pci 0000:01:00.0: BAR 0 [mem 0xe0400000-0xe040ffff 64bit]: a=
-ssigned
-[    0.027450] pci 0000:00:02.0: PCI bridge to [bus 01]
-[    0.027457] pci 0000:00:02.0:   bridge window [mem 0xe0400000-0xe04fffff=
-]
-[    0.027470] pci 0000:02:00.0: BAR 0 [mem 0xe0000000-0xe01fffff 64bit]: a=
-ssigned
-[    0.027481] pci 0000:02:00.0: ROM [mem 0xe0200000-0xe020ffff pref]: assi=
-gned
-[    0.027487] pci 0000:00:03.0: PCI bridge to [bus 02]
-[    0.027492] pci 0000:00:03.0:   bridge window [mem 0xe0000000-0xe03fffff=
-]
-[    0.027502] pci_bus 0000:00: resource 4 [mem 0xf1080000-0xf1081fff]
-[    0.027507] pci_bus 0000:00: resource 5 [mem 0xf1040000-0xf1041fff]
-[    0.027511] pci_bus 0000:00: resource 6 [mem 0xf1044000-0xf1045fff]
-[    0.027515] pci_bus 0000:00: resource 7 [mem 0xf1048000-0xf1049fff]
-[    0.027519] pci_bus 0000:00: resource 8 [mem 0xe0000000-0xe7ffffff]
-[    0.027523] pci_bus 0000:00: resource 9 [io  0x1000-0xeffff]
-[    0.027528] pci_bus 0000:01: resource 1 [mem 0xe0400000-0xe04fffff]
-[    0.027532] pci_bus 0000:02: resource 1 [mem 0xe0000000-0xe03fffff]
-
-
-#regzbot introduced: ae88d0b9c57f
-
-
-Thanks, Klaus
+#regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=3D220671
