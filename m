@@ -1,197 +1,158 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE90320CDF
-	for <regressions@lists.linux.dev>; Mon, 20 Oct 2025 14:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A9296BB2;
+	Mon, 20 Oct 2025 16:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760969842; cv=none; b=X+0bESvF9BpdtOUK4dQ37Gq++J9rGK0RnkODyod3UKWFxkOllypX5GP08YF4EH9xZayqoNfPrnuMi+r1S30aR5SpMsuSKA0wNxNxzo4+vmj5wxXyL+0TtBCPiOsUR3erIUTSB3JI5vOLKt5dDUq48nHDlI9DbyBklxYk1hjkEck=
+	t=1760978265; cv=none; b=qumzpJrLuRBhnHnvVp7vnUn0p0UTz62U6AcbQss7vqjMAaOmB7WTkV+vSkB/2JJ+JmrN28IuI8ahkfVHgQKTeBU+IVHmXoxmHl83QYY7Q35n9TG1WuqIUfhzyy/FGBb3h1HaMUZot/vJLkTN+QCKlBhRyfsvdQp4ESIirBLtPVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760969842; c=relaxed/simple;
-	bh=GgaR0JF2DiNFcr+JLR+skAJBZe8ZfkbJM0uSeMUmHNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lquH2Czwfv5QQqo91tPFyaUaG7La953zlCoKq2H703vlkQgPZaUNl7qsxtzpNTq1T52aeV09neUFUuHoYYksoCZ/V6CweQyWxpwiIcLnIljG73eSPY2ZR/gjGnXsICvBujLDrePBj3soGVg2MYNDu3AvWr7TKtb2JmmH0Dr+DuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKJ+ZSGK; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760978265; c=relaxed/simple;
+	bh=3Wg+AymCy/fsBe4Too+VbMYHfF6QlP4BEeEz3nj7Ijw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rC+bV2lMIcp7amL+4lcs1bK+pjrQvLHQH8GGtr9tlJOUpT0nvERAEha/NddHFrjppLf3COwcWXp4XyyKhqxIVMDOmELGeU96k3GCNVs1L3ulxGl2DryZbbJvfc3dBgKvCHXhs8oj+4ZzHYebDAad7Bn3kggL30DAW96GJOIXczw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUYMDsZP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKJ+ZSGK"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3381f041d7fso5811155a91.0
-        for <regressions@lists.linux.dev>; Mon, 20 Oct 2025 07:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760969839; x=1761574639; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFGSwFSrgqDr9/3WMg/kXR+n60QLpJskpnlVbbXnq7E=;
-        b=ZKJ+ZSGKUlu27+kLXmVTMP5gxa4IBV1AnS2NJr5oKeZv8HkxZi035JivvSIWb7oVEi
-         xYfpW7glT6bOXDa8OIeFOJaERi7/epfo/RWsU6Vk4Hm02kj013i0CdvgQsLvh4w/+63U
-         QSmgL433s4DKo1xn/dluqNe8BaMUNY8wvLiyCj3AMe60TCvIZYtrqysIJX+wy+fwW1qR
-         Ssi92vEFhCMx1Z6BJTBn6H24g+cL+uRiYtbIOA+yvMXUQW1VVUZ+hwhnrIomyjssI0KD
-         FNBfGT0G8JxhTDnJ9yK9De0SR02dXN4u8KEc1piO24cuG2Xd+S1JPwNH8IJ99mE2l03/
-         U1cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760969839; x=1761574639;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFGSwFSrgqDr9/3WMg/kXR+n60QLpJskpnlVbbXnq7E=;
-        b=kQUBvPi0/63IAUfgiuOrb9RiU6tKeO+57H9kcsYF/5x4/DP7Ixb/x5yVWLzhgEhJxF
-         +QxDkn9TqEn7sxn+jkrhwinAcG37bxstAKJpC/X+xvfsNb5w9ETZR6/3XZOeCnHFC1hx
-         Q6iWUAuWHebaFEJQY3jrOAWLiNR9aQ74ZOtr/IjpVBSL0rceV5+Goy+1B0utcbZtmFaE
-         DQ2JOxEPE9Tw1SCZksFXwHfO3GTyO/QQM8xzWmAW2vlBVfh7glqYBiYBZd/mAr68lC6h
-         JRSYPAxD82A0si4uwz4yj3r0Tkzc9TpfC7FjrICUTOYhNc59OdMDnQ1M3jmNuLBOhv//
-         1KOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCazLRd3RlrhP3z+pZiBYi56xl5ZsAIGShOzMX7yVaCw9uTcMXz94MQ1RUreeU4ZU8+eJorbXdf32ySQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwAR+BFk94cy2GPrzRW4YI66g1Aqmwa308bC3mSLGVxtt3ZG8wl
-	jdHyA6AHcd3dMxABxEj5I9HDcOa1fHr3OUH6up5uATYu8blG2RlVDUpS
-X-Gm-Gg: ASbGnctObFMBUgj5G0O2VROB1YfzdE+bgZvXhckW6o0IF8C68pLqLvITIr+QeocHLev
-	IC6tsw8QnrcLwNfVj/MY9NcUUpcemvmGgc1rDPJILgJMfduzu4fihHtXwwFpQ7iuPKITieShrBm
-	69DNVDCLqfPLak+uNMQ9VlIeJsQNFr8zgKv43xdtGg5fuyQBR2p0f8rgyWKrqyUcp2BlNmKqUqd
-	dtEoTADWmgM3ET+45izCwYZK/Co82J6ySFIzpmnUx8PF8XLKpX0NrY7Yf7rCnl41KJtJdDZCcdu
-	kjWlwzFPMGfVoBw030QP6rlW32QSv41Lsd6XchJ+TATkKKaTN/TgGv/fqgOVa3VeioWUhFgRAjI
-	TfDtmxa2LbyRjot8OSurC7ToD+/NDSfPkh3jH/HU+wCxabfJ3P8WPSWmQn2YKgwmK8LniRkl/NZ
-	2rJrfGFtP7chxZJDEN3wF+ryWjhd5+TJ4=
-X-Google-Smtp-Source: AGHT+IEGpqCj48hSlGvE39SucbX6Ouca5PqF+VzauRnJXVW7BvicaDLem8wj36fR99ehw835dYNneQ==
-X-Received: by 2002:a17:90b:3c02:b0:33b:6bff:35fe with SMTP id 98e67ed59e1d1-33bc9d1c743mr18185739a91.16.1760969839288;
-        Mon, 20 Oct 2025 07:17:19 -0700 (PDT)
-Received: from hiagonb ([2804:1b3:a7c0:fdb0:efbb:1413:f1d2:48d9])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33d5de11601sm8126966a91.9.2025.10.20.07.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 07:17:18 -0700 (PDT)
-Date: Mon, 20 Oct 2025 11:17:04 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Beleswar Padhi <b-padhi@ti.com>
-Cc: nm@ti.com, vigneshr@ti.com, kristo@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, afd@ti.com, u-kumar1@ti.com, 
-	hnagalla@ti.com, jm@ti.com, d-gole@ti.com, b-padhi@ti.com, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, 
-	Francesco Dolcini <francesco.dolcini@toradex.com>, Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
-	Logan Bristol <logan.bristol@utexas.edu>, Josua Mayer <josua@solid-run.com>, John Ma <jma@phytec.com>, 
-	Nathan Morrisson <nmorrisson@phytec.com>, Garrett Giordano <ggiordano@phytec.com>, 
-	Matt McKee <mmckee@phytec.com>, Wadim Egorov <w.egorov@phytec.de>, 
-	Max Krummenacher <max.krummenacher@toradex.com>, Stefan Eichenberger <stefan.eichenberger@toradex.com>, 
-	Hiago De Franco <hiago.franco@toradex.com>, Diogo Ivo <diogo.ivo@siemens.com>, 
-	Li Hua Qian <huaqian.li@siemens.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Baocheng Su <baocheng.su@siemens.com>, Benedikt Niedermayr <benedikt.niedermayr@siemens.com>, 
-	regressions@lists.linux.dev
-Subject: [REGRESSION] Suspend to RAM does not work anymore with
- k3-am62-ti-ipc-firmware.dtsi
-Message-ID: <sid7gtg5vay5qgicsl6smnzwg5mnneoa35cempt5ddwjvedaio@hzsgcx6oo74l>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUYMDsZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472ADC116B1;
+	Mon, 20 Oct 2025 16:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760978264;
+	bh=3Wg+AymCy/fsBe4Too+VbMYHfF6QlP4BEeEz3nj7Ijw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KUYMDsZPFeDG2p0Fm1Q1WnnCP9ITchDnV9JG695UCNmSmPFAz4Desf2E8KXB5Z/EU
+	 DTYGZ44kDHrE+Xe0l67SxznCk9oqVOpOU9iKoET4kYtnAV7NLldrza8Xou9X7o65Dz
+	 GZJ/QLNjDkuGJ3Laui+7oNrEMoZr4veZ6e3PbyKju/+dLCw+HYmBpN64W9TSNHQqE/
+	 hsHvOROdFPc9ViVvYR3i7bHTFn1JEdubBE3c7FRrGri1qkLcM6ofpyFeqy2cbd93hk
+	 ZelbQ12+ybAM96gTIqf26gtqjmDvwep33MWbRAHNH2ddaIofPjUT9aMp+CHsgKZQxZ
+	 S93G4XQrjoWWg==
+Message-ID: <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
+Date: Mon, 20 Oct 2025 11:37:43 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
+ suspending to RAM and resuming
+To: =?UTF-8?Q?Adri=C3=A0_Vilanova_Mart=C3=ADnez?= <me@avm99963.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: regressions@lists.linux.dev, linux-pci@vger.kernel.org
+References: <owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv>
+ <d0b6105f-744f-40d9-b4b7-1fa645038d0b@kernel.org>
+ <h6wkxjrkxh3ea5aqexqrx4d6xb2t2xbirvznupnbgro64qytfs@mn2jg2c6owrj>
+ <rvep55wtk2q4j46eqcxkfgb2bwijunefyltygfyb44trbzblx2@3ou3jcybjt3p>
+ <6b3d282c-b3cd-4979-b26b-ae9b28b9d634@kernel.org>
+ <kaieqe37mjmizjv4regyw67z7hwa3ac3k2mwcjsgq2mj7redpm@xsfb4mtyjblf>
+ <a08c71e2-18ca-491b-8982-47214a35445b@kernel.org>
+ <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
+Content-Language: en-US
+From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+In-Reply-To: <lpntymy3w6ryvyo2trpqkl7i3aibofzqcp7p5jhxjlkse645iq@fepikfj4tcyk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hello all,
 
-After commit 1d6161617c10 (“arm64: dts: ti: k3-am62-ti-ipc-firmware:
-Refactor IPC cfg into new dtsi”), suspend-to-RAM stopped working on
-AM62x.
 
-When I originally tested that change, I did not test suspend-to-RAM
-functionality, but our testing infrastructure caught this regression.
+On 10/20/2025 7:56 AM, Adrià Vilanova Martínez wrote:
+> On Sun, Oct 19, 2025 at 07:25:08PM -0500, Mario Limonciello wrote:
+>> Thanks, knowing that pcie_aspm=off helps I think we should compare output
+>> for:
+>>
+>> # sudo lspci -vvnn
+> 
+> Sure, I'm attaching the outputs of this command for all the scenarios.
+> There are some differences, so it seems promising.
+> 
 
-See the log below:
+Surprisingly there is nothing different about ASPM though.  It's all 
+PCI-PM differences.
 
-root@verdin-am62-15479173:~# cat /sys/class/remoteproc/remoteproc*/state
-offline
-offline
-offline
-root@verdin-am62-15479173:~# echo mem > /sys/power/state
-[   37.798686] PM: suspend entry (deep)
-[   37.805942] Filesystems sync: 0.003 seconds
-[   37.811965] Freezing user space processes
-[   37.819214] Freezing user space processes completed (elapsed 0.002 seconds)
-[   37.826469] OOM killer disabled.
-[   37.829721] Freezing remaining freezable tasks
-[   37.835557] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-[   37.843057] printk: Suspending console(s) (use no_console_suspend to debug)
-[   37.953874] omap-mailbox 29000000.mailbox: fifo 5 has unexpected unread messages
-[   37.953909] omap-mailbox 29000000.mailbox: PM: dpm_run_callback(): platform_pm_suspend returns -16
-[   37.953941] omap-mailbox 29000000.mailbox: PM: failed to suspend: error -16
-[   37.953967] PM: Some devices failed to suspend, or early wake event detected
-[   37.973876] am65-cpsw-nuss 8000000.ethernet: set new flow-id-base 19
-[   37.984655] am65-cpsw-nuss 8000000.ethernet end0: PHY [8000f00.mdio:00] driver [TI DP83867] (irq=353)
-[   37.985655] am65-cpsw-nuss 8000000.ethernet end0: configuring for phy/rgmii-rxid link mode
-[   38.009002] usb-conn-gpio connector: repeated role: device
-[   38.013377] lt8912 1-0048: PM: dpm_run_callback(): lt8912_bridge_resume [lontium_lt8912b] returns -121
-[   38.013420] lt8912 1-0048: PM: failed to resume async: error -121
-[   38.153252] OOM killer enabled.
-[   38.156422] Restarting tasks: Starting
-[   38.163532] Restarting tasks: Done
-[   38.167252] random: crng reseeded on system resumption
-[   38.173031] PM: suspend exit
+Looking at your log again I noticed this from the bridge:
 
-The omap-mailbox driver returns -EBUSY because it detects an unexpected
-unread message on FIFO 5.  As I understand it, this FIFO corresponds to
-the communication channel between the DM R5 and the Cortex-M4 cores.
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card not present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Link Up
+...
+pcieport 0000:00:1c.0: pciehp: Slot(0): No device found
+...
+(suspend)
+...
+pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
+pcieport 0000:00:1c.0: pciehp: Slot(0): Link Up
 
-DM R5 sends a message that is never consumed, since no firmware is
-running on the M4 (the core is offline). This unhandled message prevents
-the system from entering suspend.
 
-This issue also appears on the downstream TI kernel, which I reported
-earlier [1] (for reference).
+> I'm building the Kernel on the following commits:
+> 
+> - "Kernel without 4d4c10f763 and 907a7a2e5b": 1c64efcb08, applying on
+> top reverts for these 2 commits. [locally compiled version
+> 6.18.0-rc1-local-reverted-pci-issues-00351-gbbaff7ff47dd]
+> - "Kernel with 4d4c10f763 and 907a7a2e5b": 1c64efcb08 (last commit I
+> pulled from mainline last week). [locally compiled version ???]
+> 
+>> In the following cases (all without pcie_aspm=off):
+>>
+>> 1) At bootup; a kernel without 4d4c10f763 and 907a7a2e5b
+> 
+> See 01_lspci_bootup_without_4d4c10f763_907a7a2e5b.txt
+> 
 
-The following patch resolves the problem:
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-ti-ipc-firmware.dtsi b/arch/arm64/boot/dts/ti/k3-am62-ti-ipc-firmware.dtsi
-index ea69fab9b52b..e07cf3290cc3 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-ti-ipc-firmware.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-ti-ipc-firmware.dtsi
-@@ -26,11 +26,6 @@ mbox_m4_0: mbox-m4-0 {
-                ti,mbox-rx = <0 0 0>;
-                ti,mbox-tx = <1 0 0>;
-        };
--
--       mbox_r5_0: mbox-r5-0 {
--               ti,mbox-rx = <2 0 0>;
--               ti,mbox-tx = <3 0 0>;
--       };
- };
+01:00.0 is present
 
- &mcu_m4fss {
-@@ -45,7 +40,6 @@ &wkup_r5fss0 {
- };
+>> 2) At bootup; a kernel with 4d4c10f763 and 907a7a2e5b
+> 
+> See 02_lspci_bootup_with_4d4c10f763_907a7a2e5b.txt
+> 
 
- &wkup_r5fss0_core0 {
--       mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-        memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-                        <&wkup_r5fss0_core0_memory_region>;
-        status = "okay";
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
 
-Ultimately  this issue is related to the omap driver itself:
+01:00.0 is NOT present
 
-1. We should have a functionatlly to save and restore the messages into
-the mailbox, instead of preveting it to go into suspend.
+>> 3) After suspend/resume; a kernel without 4d4c10f763 and 907a7a2e5b4
+> 
+> See 03_lspci_after_suspend_resume_without_4d4c10f763_907a7a2e5b.txt
+> 
 
-2. Or we could not check all 16 FIFOs if the kernel does not own them:
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2- ASPM_L1.1-
 
-	for (fifo = 0; fifo < mdev->num_fifos; fifo++) {
-		if (mbox_read_reg(mdev, MAILBOX_MSGSTATUS(fifo))) {
-			dev_err(mdev->dev, "fifo %d has unexpected unread messages\n",
-				fifo);
-			return -EBUSY;
-		}
-	}
+01:00.0 is present
 
-Setting the number of FIFOs to 4 in the device tree also resolves this
-issue.
+>> 4) After suspend/resume; a kernel with 4d4c10f763 and 907a7a2e5b
+> 
+> See 04_lspci_after_suspend_resume_with_4d4c10f763_907a7a2e5b.txt
+> 
 
-Do you have suggestions on how best to fix this in the driver, or should
-we consider reverting the DTS change until suspend-to-RAM works again?
+OK so the bridge at 00:1c.0:
+L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
 
-#regzbot introduced: 1d6161617c
+01:00.0 is present
 
-[1] https://e2e.ti.com/support/processors-group/processors/f/processors-forum/1557295/am62p-mailbox-channel-is-not-freed-during-r5-remoteproc-stop-call/6069413
+> Again, thank you so much! I really appreciate your help in
+> troubleshooting this.
 
-Best regards,
-Hiago.
+My interpretation is that the BIOS by default starts with PCI PM 
+enabled.  When you test without 4d4c10f763 and 907a7a2e5b it will stay 
+enabled.  But when those commits are present it gets disabled when going 
+to D0 and that causes device to drop off the bus.
+
+How about with pcie_port_pm=off instead of pcie_aspm=off?  Do things work?
+
+My current thought is that the change (setting to D0 explicitly at 
+boot-up) exposed a bug in the platform.  But the fact that it works 
+without ASPM is confusing to me.
+
+Bjorn - any thoughts here?
+
+> 
+> PS: I'm trimming the email quotes as per
+> https://subspace.kernel.org/etiquette.html#trim-your-quotes-when-replying.
+> I've never done this before and it feels wrong, but it is indeed easier
+> to follow the conversation if I do this.
+
