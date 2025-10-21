@@ -1,17 +1,17 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0F926E17A
-	for <regressions@lists.linux.dev>; Tue, 21 Oct 2025 07:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1958248F47
+	for <regressions@lists.linux.dev>; Tue, 21 Oct 2025 08:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761032235; cv=none; b=BJPDbjlUAOMAykj6K5yq6bvDyEWmpzYaZBzqxi3tRIGXa+BxY9j+ID334TvrcUmXzNxHR4fNLulJz9m3sdniYKlCM1Lo3Tb1JZEd77Whbsm278RYXy1pmHgAWNANw7Na4Fp1/4xLi1zAJLNh7sg6tzyvUsxBGcy02W+LgF0j8gs=
+	t=1761035438; cv=none; b=fznd1ej/rXnd/+dYGmuJvOmWgEORFhaRzFCHd1sc0cJcgrwu/k24SJNq51v/JVbVUqW//BiYJ03FcEvLzWD9smfb5GcaDq+qltLWbFDjG9RenBVbfcx8fkC6CjrIJrl1vRnGQq74qkJqlTw8Qqam2Qn6gsiDsgb4ysiKNi3+Dgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761032235; c=relaxed/simple;
-	bh=7SSh1YM/csH2ZXkYLwsJS3nVtXPyjmFqraaSLDNmPN4=;
+	s=arc-20240116; t=1761035438; c=relaxed/simple;
+	bh=cd/cf0vZnJ/8dBeL5n/0/0ovqa317aomJvJfCdJ6Sk8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sbLw9w38fZvdeu1e0TTNMLz+ZH/Fl73ubPXAC0RicRCT6W7n0TTIAjhoKPw+b8+gNGc/FILrmU8UXUUyMi1+Zh3MxoqcHgyFmuiGRR+IyQgzHlSHFJHZXNugVk36stMbebGNZepRq9El+e8bg6lHKpm87M59iTcr/qio8ofgz78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+	 Content-Type:Content-Disposition:In-Reply-To; b=N13wzaV/3e2RYoKSPQfwH2gYGqG2HuT5sC5YpGWRj/FYFIpbYfPRp6IaHj75PcRX2Izi4t7rzm51gsdqy0sNpl1Igz+aICI/Mj69YaZfhsIxRSYAsZQW3CXN1TvGvbBYffcn0grvw0KzBQUidkV3oCmhb+2YLaf1rgafQEdPPvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
@@ -19,11 +19,11 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8BD422008033;
-	Tue, 21 Oct 2025 09:37:10 +0200 (CEST)
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 12F8B2C02B9A;
+	Tue, 21 Oct 2025 10:30:34 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 703444A12; Tue, 21 Oct 2025 09:37:10 +0200 (CEST)
-Date: Tue, 21 Oct 2025 09:37:10 +0200
+	id E03054A12; Tue, 21 Oct 2025 10:30:33 +0200 (CEST)
+Date: Tue, 21 Oct 2025 10:30:33 +0200
 From: Lukas Wunner <lukas@wunner.de>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
@@ -32,9 +32,10 @@ Cc: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
 	linux-pci@vger.kernel.org
 Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
  suspending to RAM and resuming
-Message-ID: <aPc4JpVyhCY1Oqd-@wunner.de>
+Message-ID: <aPdEqcRnp09dwSO5@wunner.de>
 References: <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
  <20251020232510.GA1167305@bhelgaas>
+ <aPc4JpVyhCY1Oqd-@wunner.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,30 +44,10 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251020232510.GA1167305@bhelgaas>
+In-Reply-To: <aPc4JpVyhCY1Oqd-@wunner.de>
 
-On Mon, Oct 20, 2025 at 06:25:10PM -0500, Bjorn Helgaas wrote:
->   [    0.113379] pci 0000:00:1c.0: [8086:9d10] type 01 class 0x060400 PCIe Root Port
->   [    0.113403] pci 0000:00:1c.0: PCI bridge to [bus 01]
->   [    0.113409] pci 0000:00:1c.0:   bridge window [mem 0x91000000-0x910fffff]
->   [    0.115692] pci 0000:01:00.0: [8086:095a] type 00 class 0x028000 PCIe Endpoint
->   [    0.115830] pci 0000:01:00.0: BAR 0 [mem 0x91000000-0x91001fff 64bit]
->   [    0.196539] pcieport 0000:00:1c.0: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
->   [    0.196802] pcieport 0000:00:1c.0: pciehp: Slot(0): Card not present
->   [    0.196925] pcieport 0000:00:1c.0: pciehp: Slot(0): Card present
->   [    0.196927] pcieport 0000:00:1c.0: pciehp: Slot(0): Link Up
->   [    1.400127] pcieport 0000:00:1c.0: pciehp: Slot(0): No device found
+On Tue, Oct 21, 2025 at 09:37:10AM +0200, Lukas Wunner wrote:
+> Does this flap of the Presence Detect State bit also happen with
+> 4d4c10f763d7?
 
-Does this flap of the Presence Detect State bit also happen with
-4d4c10f763d7?  AFAICS, no dmesg output has been provided yet for
-the working case.  It would also be good to have debug output enabled,
-i.e. set CONFIG_DYNAMIC_DEBUG=y and add this to the command line:
-
-  pciehp.pciehp_debug=1 dyndbg="file drivers/pci/* +p"
-
-Does it help if in drivers/pci/hotplug/pciehp_hpc.c:pci_bus_check_dev(),
-the "delay" is initialized to a higher value, say, 5000 instead of 1000?
-
-Thanks,
-
-Lukas
+Sorry I meant to say "*without* 4d4c10f763d7".
