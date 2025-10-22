@@ -1,198 +1,124 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36356341644
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 12:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB2634C9A3
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 15:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761135136; cv=none; b=szjvWpJjfrKWNYVzNFBplT+guslZcohp6EHbLglmpFFzlSkcP3JT3wAA+kkQzZaR6fgea2wg7mkGgoqFuyuU4SmwsV5x58SBUJLZfV3+lNegvrhjtZRLweBPk7QyG4UdKyQI0BuFjXc/OD10vGdpA8/kixi6XXtRwHn3FBGXJ2I=
+	t=1761145335; cv=none; b=AyqAUhbkQ+WfSYbhu5KguSyY2f4UqrqwKux42nT162Ta57fHLJCV0vkiE5DjeaQVyqGZ7w29K2fLOI4sPJV448R+l9lfAp8rkcUYm2RUwkIuj/sVlPrvbVNx5wRQUIWTStG/kIyPDlZI7Q5i0Rk6We/MObvv/drIh5aXVoC0qR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761135136; c=relaxed/simple;
-	bh=KPYQHJydC+41DZNG/UQhU3NOtQQd3fs3N8308YZjraQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mycgJfu0kzdJcasu9eRWplxIY1cSe+EZXkz/Q6E2dJMcwRQie77G6ZJRaqOmPPEzGwnABsXWtSiUaNsz+Mz8q0ZAVwtBq0ZsEBH1ToRCFAVAPHFiTb0OAYgogTjH6LnaCDo98s6vpKant9OMkYeTNuszc1a0zl44eDLIFL8qhkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nMFPJTmK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=96GHO7kE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0itR3CsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=07dwfYMr; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1761145335; c=relaxed/simple;
+	bh=hdYfR8VgCU1ZspHH5xOZyDRebDxd3yGnO9egZSHcGHQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bP3Fpf0cZdBOlfkTXsxlbBqY2ZJFKvzVcrOgbPP4N9KxwssoI6vlhQO9lg8BltcPVuDla1P7eTAk0YCk1Y34dqFGXkb3+KTNiZTOFLIgh91MQ8IPvYfgA2s7RkGMCAexqxaZHQASGInfF0soozCwSSPUVhx9yuESHLJNSF53fg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IAwr8EYg; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nMFPJTmK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="96GHO7kE";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0itR3CsJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="07dwfYMr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1F30221168;
-	Wed, 22 Oct 2025 12:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1761135129;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GOATducwgjJYNf5xRUUlUigG5jvG/objCWoK3h1UNoM=;
-	b=nMFPJTmKqSCxr11/LtGHNRjCGNpQ+MLZOE+3j4M9FHGpbwDHJF0kADldkBgTCKvJmkIhzz
-	BQl+5svEUU2l1TCEhTYjTVZJTtFvzqrKNxiCkpm+8gkNtwzmi1yJkaCZncu5mi1QNuHEKR
-	C8NtJ98JlOZaT4mKdJDHDRy3CryDcs0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1761135129;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GOATducwgjJYNf5xRUUlUigG5jvG/objCWoK3h1UNoM=;
-	b=96GHO7kE//mCSmmANRBvMOvx8HaS41atmVmupWfpqbD7dZ2SgkrfgNa345n2svaY1McU7X
-	jhC14mw1l3K+vRBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=0itR3CsJ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=07dwfYMr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1761135125;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GOATducwgjJYNf5xRUUlUigG5jvG/objCWoK3h1UNoM=;
-	b=0itR3CsJ5T5nlGrp1T/WtXxreTrPSocGRF4zQ4f3XhI9YY3XPh0vWuBt8QoLXHivGvm04Y
-	PSY3NXtfF1+3fvANCWLhIVrwRw3ZnB4SYobonn3gczgNpSQFAYLoBuguoDF1jnoykizsPt
-	Co0apKLApNKYdVL75VtBLV3KZV63L9A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1761135125;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GOATducwgjJYNf5xRUUlUigG5jvG/objCWoK3h1UNoM=;
-	b=07dwfYMrkhqVWXy+i2oBY4odwxdKrwib4Px9QAmfzvsuMFsfn+fxotX1tVMR4ecTVLlKRU
-	U267ichU8LdJ9PDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91A9413AAC;
-	Wed, 22 Oct 2025 12:12:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ikGNIhTK+GjVHgAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 22 Oct 2025 12:12:04 +0000
-Date: Wed, 22 Oct 2025 14:12:03 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: ltp@lists.linux.it, lkft@linaro.org, lkft-triage@linaro.org,
-	arnd@kernel.org, dan.carpenter@linaro.org, jack@suse.cz,
-	brauner@kernel.org, chrubis@suse.cz, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org,
-	regressions@lists.linux.dev, aalbersh@kernel.org, arnd@arndb.de,
-	viro@zeniv.linux.org.uk, anders.roxell@linaro.org,
-	benjamin.copeland@linaro.org, andrea.cervesato@suse.com
-Subject: Re: [PATCH] ioctl_pidfd05: accept both EINVAL and ENOTTY as valid
- errors
-Message-ID: <20251022121203.GA481852@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20251022115704.46936-1-naresh.kamboju@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAwr8EYg"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-87bbee3ba76so2920476d6.1
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761145333; x=1761750133; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnIAOSj9hN5H1aKf2wyJor6fNQ1bM8Ks2ytqG7kDK1w=;
+        b=IAwr8EYgu8Tgh1Kj5g7NyVFKyyY6ZgFxbqUzfGTVJxof/dNHjrG1C+ZEMt6OdZWjpv
+         c7KbJ4rc/uEHb9YF8RbNNi7C2DkJ3piMLyXMWt8f2sH15cLDLZsC6lAxSspYI92HZ7y+
+         Y9cwHuRVZVlp+T9dvh1jpkDzh9DV26uoE8fA8q5qlBg+H0jMAAWltBNaiHgsAdQ7Blaz
+         h+7QsDFDzfQsDvydtAHbdV2auIj6Tg7uBv3erH0XXJJXq7nkdZ+eFJxJuM3VLoK3+u2K
+         8plggmJHknZuBBLVjyVN81YTJApnJrThIQSrAKdqSvyb0eXYyTdHn03hrQbhwHoYrkiO
+         Nq/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761145333; x=1761750133;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnIAOSj9hN5H1aKf2wyJor6fNQ1bM8Ks2ytqG7kDK1w=;
+        b=Rt/03uANmLDd+4qo5C4UZon5zpOWisLKwXdnBelaIfeyuLlxcg8ZcVhSyZ35RIZZle
+         IXiCHO536Jm4Q/PUpbRqsLx57YYBpuoLCmvydfXvV8uqQMzcZBjouvFMoVJKDa6QHms7
+         +QGBG+hMiaEEKt6E4nzdi5wHWZuczmE8uNNh3XaTSVMLFqJsMPTXM6HlSX3ldK3ZYy+1
+         gLOb32ie3idBlEAVw9mB4/hk3cMZxlUJsNHaOc8qpbrFxhtl41/eRvSoi9fwpgl591jt
+         dN8Ha1iGgrnC17rvZ3S+O9rCvsvIdCtgCzsJOgTWB1Va7NIk5+8uujgZM2qbfra24+/9
+         hPMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSNRY46X4eAs4qpcoyM8srQ7JTTAKGHhwU2GeyVSvkEwxWGfyF0jBHiYSANZ2+zAzwKxwTCHjT2pGbxQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz/v8oTyT+C8GW22JKbTnRsiact9E7ytfVz677YG8kznv33jAHD
+	8Em2AbivwXiMduPH8FnrrJVNJJfwBP0HAVGu15TOjd1hAWhi9btBuW209jVhzAH6XaTdi3QwQsG
+	VvnCnoPxZ3q7wp4vXkA+dgF5DjkhYBlDLl6vICdRzsA==
+X-Gm-Gg: ASbGnctxQD1xFd7keG3Mo63t7UUKJKNdxN0YAq/qwn48ePJ6iArcIcHoWfgMwovrrrX
+	P6/Syu2SwX7LL6hWkAt0QEoO1bODWPck39vVViwvQMmcJpWMoWVoquIY/stSi2doJ5VRhacPvOm
+	4R/pD/g6X33TQkdF2t3rmQLCKVqSlRleT42T+7p1bZcqVWR+x3twA16GQ7StvwfwT4LMpEzD+De
+	rFtl7io+fMYmSrcxhKUhC/pHVPSGLvfTRGBac9jMOcCTusr45caPrivOiaDQGkw5y3KQQ==
+X-Google-Smtp-Source: AGHT+IHDNBWFGq/lO9UqX3OiuCVmV8mj/OamM0dXHm9H8/TY++90uwy4eHmeOOO7ME2KeAOXQVNRoq9F5JuwtjkDp/g=
+X-Received: by 2002:a05:6214:19c6:b0:87d:f8d3:2456 with SMTP id
+ 6a1803df08f44-87df8d324a4mr21664096d6.2.1761145331914; Wed, 22 Oct 2025
+ 08:02:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251022115704.46936-1-naresh.kamboju@linaro.org>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 1F30221168
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.71 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-test-project.readthedocs.io:url,suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Spam-Score: -3.71
+References: <CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com>
+ <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
+In-Reply-To: <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Wed, 22 Oct 2025 17:02:00 +0200
+X-Gm-Features: AS18NWDwE4wLtG7BZRqK8s-_yLrQzlCdiI_YRXplah4qDB6dhd-o_z_6gw0x-cw
+Message-ID: <CADYN=9KxQaQMWNbwDSftj7kcBYHjAQPacE+z7AVRZwxPTpexYQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests/x86: Add selftests include path for kselftest.h
+ after centralization
+To: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
+Cc: naresh.kamboju@linaro.org, broonie@kernel.org, arnd@arndb.de, 
+	benjamin.copeland@linaro.org, bp@alien8.de, dan.carpenter@linaro.org, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	mingo@redhat.com, regressions@lists.linux.dev, richard.weiyang@gmail.com, 
+	shuah@kernel.org, surenb@google.com, tglx@linutronix.de, x86@kernel.org, 
+	linux-kernel-mentees@lists.linux.dev, 
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Naresh,
+On Wed, 22 Oct 2025 at 08:29, Bala-Vignesh-Reddy
+<reddybalavignesh9979@gmail.com> wrote:
+>
+> The previous change centralizing kselftest.h include path in lib.mk
+> caused x86 selftests to fail, as x86 Makefile overwrites CFLAGS using
+> ":=", dropping the include path added in lib.mk. Therefore, helpers.h
+> could not find kselftest.h during compilation.
+>
+> Fix this by adding the tools/testing/sefltest to CFLAGS in x86 Makefile.
+>
+> Fixes: 4d89827dfb27 ("selftests: complete kselftest include centralization")
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/lkml/CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com/T/#m83fd330231287fc9d6c921155bee16c591db7360
+>
+> Signed-off-by: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
 
-> Latest kernels return ENOTTY instead of EINVAL when invoking
-> ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid).  Update the test to
-> accept both EINVAL and ENOTTY as valid errors to ensure compatibility
-> across different kernel versions.
+Yes, works.
 
-Thanks a lot for contributing to LTP, we really appreciate it.
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-> Link: https://lore.kernel.org/all/CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com
-very nit: +1 for this. I prefer to reference it differently (e.g. [1]) as I add
-Link: for referencing your actual patch the same way how it's used in kernel.
-(e.g. Link: https://lore.kernel.org/ltp/20251022115704.46936-1-naresh.kamboju@linaro.org/)
 
-> +++ b/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
-> @@ -4,7 +4,7 @@
->   */
+Cheers,
+Anders
 
->  /*\
-> - * Verify that ioctl() raises an EINVAL error when PIDFD_GET_INFO is used. This
-> + * Verify that ioctl() raises an EINVAL or ENOTTY error when PIDFD_GET_INFO is used. This
-nit: maybe note for ENOTTY: (from v6.18)?
->   * happens when:
->   *
->   * - info parameter is NULL
-> @@ -14,6 +14,7 @@
->  #include "tst_test.h"
->  #include "lapi/pidfd.h"
->  #include "lapi/sched.h"
-> +#include <errno.h>
->  #include "ioctl_pidfd.h"
-
->  struct pidfd_info_invalid {
-> @@ -43,7 +44,22 @@ static void run(void)
->  		exit(0);
-
->  	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO, NULL), EINVAL);
-> -	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid), EINVAL);
-> +	/* Expect ioctl to fail; accept either EINVAL or ENOTTY */
-> +	TEST(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid));
-
-I'm sorry, we prefer these macros in include/tst_test_macros.h which shorten the
-code. Could you please use TST_EXP_FAIL_ARR() [1]?
-
-Kind regards,
-Petr
-
-[1] https://linux-test-project.readthedocs.io/en/latest/developers/api_c_tests.html#macro-tst-exp-fail-arr
-
-> +	if (TEST_RETURN == -1) {
-> +		if (TEST_ERRNO == EINVAL || TEST_ERRNO == ENOTTY) {
-> +			tst_res(TPASS,
-> +				"ioctl(PIDFD_GET_INFO_SHORT) failed as expected with %s",
-> +				tst_strerrno(TEST_ERRNO));
-> +		} else {
-> +			tst_res(TFAIL,
-> +				"Unexpected errno: %s (expected EINVAL or ENOTTY)",
-> +				tst_strerrno(TEST_ERRNO));
-> +		}
-> +	} else {
-> +		tst_res(TFAIL, "ioctl(PIDFD_GET_INFO_SHORT) unexpectedly succeeded");
-> +	}
-> +
-
->  	SAFE_CLOSE(pidfd);
->  }
+> ---
+>  tools/testing/selftests/x86/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+> index 83148875a12c..434065215d12 100644
+> --- a/tools/testing/selftests/x86/Makefile
+> +++ b/tools/testing/selftests/x86/Makefile
+> @@ -36,6 +36,7 @@ BINARIES_32 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
+>  BINARIES_64 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
+>
+>  CFLAGS := -O2 -g -std=gnu99 -pthread -Wall $(KHDR_INCLUDES)
+> +CFLAGS += -I $(top_srcdir)/tools/testing/selftests/
+>
+>  # call32_from_64 in thunks.S uses absolute addresses.
+>  ifeq ($(CAN_BUILD_WITH_NOPIE),1)
+> --
+> 2.43.0
+>
