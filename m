@@ -1,129 +1,276 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04A42ECE96
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 06:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADA733F3
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 06:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761114601; cv=none; b=uEv+ZUwWMWt2KMtiyvGPNvNCQ0etCbtqQu9lvsvvL35CWuoa8zJF+ihXua7O1iluAKxHxq5HtN9acHXWOO+tlWDgJNrILTWZb0GsxloDp9/xIIoMJK8id6VONSRb264GPsEuMG/FsRk2/dvO8dHqdcOL0orTGGyOsf7uzx3M0jA=
+	t=1761115909; cv=none; b=RVZjGlIu6w207yfAMHcTjTsWy8IenrX4IMAn1fxHstynRh12wBtM+XY/fwto8J6Zrtdh1UFOf9YR+gEMB/vxVq8fNENpt9IkSA1b0CrziPwEv5zoXK3v9OO9vIKR0lSCEcHfVqos+tF+/47IuteGm8mPIB+YQu0X7Z9Q9B+VlcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761114601; c=relaxed/simple;
-	bh=pxi12w+zJvC4kZodhK0Ij6Jx0cFF+FxyL/tgy3imtgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9E8yRp9JnBmdDbWhbI/99LuDZotD7upZsBP2TnJHV7MttHSjewttufyjCLrfiMd/2By6v1rmbp8IqX4aa7wZpQJuEH9wRsJX6F28OaL1eGHQptVZYODNt1Ub31dYGUo7JMEYZjfQm6aB6vBTdKxItgV4Y75WXlGtstgVB5pF9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FEEV7HNQ; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761115909; c=relaxed/simple;
+	bh=brc+Xdi3vO7FEDoJTPAXbRyYB8n3cWQpWBjlL1q6y8k=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=RDDUbfkflZvAuk2MTJRsm3sYXzBOA4cn/hcLquOBmXy+lzmKEm+OvG6MuTmaTWXqkGlRFLnw7gpbIc+bqeG02Ceik7dPQWEhGM23EqBaZ6VpAPtzqVvEqC4NdOwGcC9nuzj9IAP26mUI+gL6m6VSCZV1ciZJCGqVNbCYJpBG5E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oQGf4jIW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DaVhkWgu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AXnzepi1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=d38IKGfc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEEV7HNQ"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-77f67ba775aso8415987b3a.3
-        for <regressions@lists.linux.dev>; Tue, 21 Oct 2025 23:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761114599; x=1761719399; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRyE8t6dhAXyClNR4lT1jQASjbYPHXa83JC4TjDmfbk=;
-        b=FEEV7HNQBFQHufoYgReYZZPmsTZwfBBOHcV84hJhQYEdSnR1ZnDuQ2ady5AERIn8a9
-         GNtuPvz2VTfPyLMXHPNPvnhcnHt5R8fSQoy+LdsbMXPFR2FBGJlbASpmCmixAseGeXwr
-         4d0JIdbP6wpgq+fzXBzkJtsLQOa/ocxVdAhq9T+1MmBQb0PMJWa05SHGFm58Jh9ey6B5
-         eKzUaI6BISDRts491Unt57HpAVuO5mRWX40i4+NK5OwcRIbKEMVHsLKyNVtWJUWQ/CIS
-         yM4dbCAdXIaoeMF9yHPBiwWUyGDc96g7CnFC4sHNBToktK5VcwHHx3UKptkA498kljfk
-         hsJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761114599; x=1761719399;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yRyE8t6dhAXyClNR4lT1jQASjbYPHXa83JC4TjDmfbk=;
-        b=OElNqsyqpWVwJW1+d3W5gGGwxXS9tILxgl+zgaiHW9eU1fVCk/DYBpaELNM1yQ4Ota
-         OQjlTR2JFFqvYcyU1CUZvx84K9vv9dfZ4j8HqHBc6oT6esVyRNKAmiX3dWartR5/Jazj
-         RznykicNtUBCmswaapjcCAQNWhjwUR3jL9J37rV46nInv7sX7yAiK7pEzgSQnuz8JVo2
-         4eaid7yZOKXTg5tZu4uaXFU98ToGIqIqiUB6D5NJN2MV5Fe+b+g+gnt5kgjKq0VrZ+21
-         P2SI4SyjekWu7xgQldvXh8zpyqSruBYxdb/5MZoOxwGixF2Zekwjf/mKcDfGn6BFKJvQ
-         LleQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhDZ1FaS74GPqSyUhPMYvc6AKgst0CmstCMCV9BK4/UNY5h8sqTub/a33OoTtDObR1QKHAJpThCbeMNw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyWSEw7ivYa9HkyW65hASQ7s8oDmVZyLSZxhOwb2UWS40FfRV5i
-	pCDhV8bsaR4LEFzZV7qnr1cM5wKr9533GhYGTjMP3ToIVqnfiI2hWKiU
-X-Gm-Gg: ASbGncvuI6XoEed+2iGbdMRVu//3mOs//P7dO2LSbxqgUkgdVO0pC0oAsFiqyymlL/i
-	/s+q76QPNCmcUdkCBbJayB2AYDumJ/L7NTbl45GXRH6nK7cJF3l7wAOZCZ/Gk8a2r3hk7fvIgx1
-	gGqXl5fSYE1LSOuFNAMvQmMLSE7kxm7zDP0MX8XNI/9xy98Yc2KK4xkOHnafscNPiCS38NOqxjH
-	tRw2/5gR2ZQQmvcZ6ratL8auYg+khTf+yZHq4HIod6/4o/JG2gBDDVDV1wni3If6wmIKmdPouH2
-	z3QizW1XGkmLBtraTev+NQML4qlEujZsWOJ4OHplGn8HFggsTihPfKiNdbg9Fz/Nlx4oF9htnDs
-	Ssn36lyOmIehQW0KSrFDlpMcaqIczwOVSzPzSB5/7PmvkYgDKHfs9BWy2r0dSZfePL7ds3Paz2X
-	xcTfTnGPO0A/5siARmeP/eivUQfWoG3dI=
-X-Google-Smtp-Source: AGHT+IHCdWM1S/FVwbPmHY3O4OmTAtweU3JQt3Ila1Kmd/ZSXIEyZnlKVzKCFjwGH+txrzbmUlsmmA==
-X-Received: by 2002:a05:6a00:84a:b0:78c:985b:8d3b with SMTP id d2e1a72fcca58-7a220b29d75mr20156837b3a.23.1761114599073;
-        Tue, 21 Oct 2025 23:29:59 -0700 (PDT)
-Received: from server.. ([103.251.57.247])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a23011ec97sm13408435b3a.67.2025.10.21.23.29.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 23:29:58 -0700 (PDT)
-From: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
-To: naresh.kamboju@linaro.org,
-	broonie@kernel.org
-Cc: anders.roxell@linaro.org,
-	arnd@arndb.de,
-	benjamin.copeland@linaro.org,
-	bp@alien8.de,
-	dan.carpenter@linaro.org,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	lkft-triage@lists.linaro.org,
-	mingo@redhat.com,
-	reddybalavignesh9979@gmail.com,
-	regressions@lists.linux.dev,
-	richard.weiyang@gmail.com,
-	shuah@kernel.org,
-	surenb@google.com,
-	tglx@linutronix.de,
-	x86@kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: [PATCH] selftests/x86: Add selftests include path for kselftest.h after centralization
-Date: Wed, 22 Oct 2025 11:59:48 +0530
-Message-ID: <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com>
-References: <CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oQGf4jIW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DaVhkWgu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AXnzepi1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="d38IKGfc"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4BDDC21153;
+	Wed, 22 Oct 2025 06:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761115895; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5bBztiQKe3McWuotMfa8daU8SawULlhXGzCVd2U9PWQ=;
+	b=oQGf4jIWyYg8hPowPD1gunncA0B32wEvvYxYa/a7DoTqdaWRx8615NNap23JvpL1JfcmOE
+	DYcfN4Hr92hp00c9jzLPNMzqE2GePEHjBcdDhRGt1J+dYm642DZlE5+EiaJoMCCu/hAvOf
+	dUvMMdZFwND1yOQJd8Qc6m7AWG2Ney4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761115895;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5bBztiQKe3McWuotMfa8daU8SawULlhXGzCVd2U9PWQ=;
+	b=DaVhkWguqUtCXutsreZIvTEa+ypkUd0mGiVvCfIv0em45o0IoHM1+5qmYZw+7MosZbnb0D
+	pzon05Nk5ZXQ8kBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=AXnzepi1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=d38IKGfc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761115891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5bBztiQKe3McWuotMfa8daU8SawULlhXGzCVd2U9PWQ=;
+	b=AXnzepi11WJ4biS5HQsnFB1GSCFLGdeZBy7U9PgnAov9bP2f6pBu4OD5OfxVmcJDijwYrb
+	dhgUg12UTXdkvpeji18T8mwwB4DO0XSHO5OEB1wFkI4rYnTFHsmNVhKZx+ABwzJmR9vRfY
+	q+wc2QllXcdTGOdjtsqpEZwMxAfbuR0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761115891;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5bBztiQKe3McWuotMfa8daU8SawULlhXGzCVd2U9PWQ=;
+	b=d38IKGfcrSnptjTiDfPTEXIBtOA7pdeTyFWLxW39gsJmM0symN49RufUh9/JvLU4rmvcD3
+	zrGJemTP+ZEobgCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 03F8213A29;
+	Wed, 22 Oct 2025 06:51:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LsNgO/J++GgjcAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 22 Oct 2025 06:51:30 +0000
+Content-Type: multipart/mixed; boundary="------------IFq0UOMYTWshbPHE0miIKq0X"
+Message-ID: <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
+Date: Wed, 22 Oct 2025 08:51:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
+ 6.18-rc2
+To: Peter Schneider <pschneider1968@googlemail.com>,
+ regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+ jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
+ nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20251014084743.18242-1-tzimmermann@suse.de>
+ <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
+X-Rspamd-Queue-Id: 4BDDC21153
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.41 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	MIME_BASE64_TEXT(0.10)[];
+	MX_GOOD(-0.01)[];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:mid,suse.de:dkim];
+	FREEMAIL_TO(0.00)[googlemail.com,lists.linux.dev,vger.kernel.org];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	HAS_ATTACHMENT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:mid,suse.de:dkim]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -3.41
+X-Spam-Level: 
+
+This is a multi-part message in MIME format.
+--------------IFq0UOMYTWshbPHE0miIKq0X
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The previous change centralizing kselftest.h include path in lib.mk
-caused x86 selftests to fail, as x86 Makefile overwrites CFLAGS using
-":=", dropping the include path added in lib.mk. Therefore, helpers.h
-could not find kselftest.h during compilation.
+Hi
 
-Fix this by adding the tools/testing/sefltest to CFLAGS in x86 Makefile.
+Am 22.10.25 um 05:27 schrieb Peter Schneider:
+> #regzbot introduced: 6f719373b943a955fee6fc2012aed207b65e2854
+>
+> Hi all,
+>
+> I have encountered a serious (for me) regression with 6.18-rc2 on my 
+> 2-socket Ivy Bridge Xeon E5-2697 v2 server. After booting, my console 
+> screen goes blank and stays blank. 6.18-rc1 was still fine.
+>
+> The machine has an Asus Z9PE-D16 server mainboard with an onboard 
+> ASpeed AST2300 VGA chip with 16MB VRAM. I have attached an older HP 
+> Monitor to it via old VGA jack/cable. It also has a second graphics 
+> card in a PCI-E slot; an older NVidia GTX 560. It is not connected to 
+> a monitor, but I have configured it via kernel command line for 
+> PCI-pass-through to VMs running on this server (I use Proxmox VE, i.e. 
+> QEMU/KVM virtual machines). Currently, no VMs use this yet, and also 
+> no VMs are autostarting with machine boot. So when this regression 
+> occurs, the server is idle. Pressing a key on the keyboard does not 
+> make the screen come alive. The server is running fine though, and I 
+> can access it via SSH. It just has no graphic output anymore. In case 
+> this is important, the machine also has a ASMB6 BMC (can be used via 
+> http).
+>
+> I have attached dmesg output from both 6.18-rc1 which is fine, and 
+> 6.18-rc2 which exhibits this bug. I have bisected the issue, please 
+> see attached git bisect.log.
 
-Fixes: 4d89827dfb27 ("selftests: complete kselftest include centralization")
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Closes: https://lore.kernel.org/lkml/CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com/T/#m83fd330231287fc9d6c921155bee16c591db7360
+Thanks for the detailed bug report.
 
-Signed-off-by: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
----
- tools/testing/selftests/x86/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+Attached is a patch that partially reverts the broken commit. Could you 
+please apply it on top of the broken kernel and report on the results?
 
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index 83148875a12c..434065215d12 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -36,6 +36,7 @@ BINARIES_32 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
- BINARIES_64 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
- 
- CFLAGS := -O2 -g -std=gnu99 -pthread -Wall $(KHDR_INCLUDES)
-+CFLAGS += -I $(top_srcdir)/tools/testing/selftests/
- 
- # call32_from_64 in thunks.S uses absolute addresses.
- ifeq ($(CAN_BUILD_WITH_NOPIE),1)
+Best regards
+Thomas
+
+>
+> The bad commit is
+>
+> commit 6f719373b943a955fee6fc2012aed207b65e2854
+> Author: Thomas Zimmermann <tzimmermann@suse.de>
+> Date:   Tue Oct 14 10:46:34 2025 +0200
+>
+>     drm/ast: Blank with VGACR17 sync enable, always clear VGACRB6 sync 
+> off
+>
+>     Blank the display by disabling sync pulses with VGACR17<7>. Unblank
+>     by reenabling them. This VGA setting should be supported by all 
+> Aspeed
+>     hardware.
+>
+> When I revert this from 6.18-rc2, the issue goes away and my console 
+> screen works again.
+>
+> I just saw that Greg just yesterday evening included the offending 
+> patch already in stable RCs 6.12.55-rc1 and 6.17.5-rc1, so I'll test 
+> these seperately and send a mail to the stable mailing list, too, if 
+> affected (which I anticipate).
+>
+> Beste Grüße,
+> Peter Schneider
+>
+
 -- 
-2.43.0
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
+
+--------------IFq0UOMYTWshbPHE0miIKq0X
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ast-Set-clear-screen-disable-bit.patch"
+Content-Disposition: attachment;
+ filename="0001-ast-Set-clear-screen-disable-bit.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA1ZmRlYTJlOTkzNmE0OTkwNTkwMmUzMzllNjI3YTI3YjBhYjBhODg0IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogV2VkLCAyMiBPY3QgMjAyNSAwODo0ODo0OSArMDIwMApTdWJqZWN0
+OiBbUEFUQ0hdIGFzdDogU2V0L2NsZWFyIHNjcmVlbi1kaXNhYmxlIGJpdAoKLS0tCiBkcml2
+ZXJzL2dwdS9kcm0vYXN0L2FzdF9tb2RlLmMgfCA4ICsrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FzdC9h
+c3RfbW9kZS5jIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCmluZGV4IDljZTg3
+NGRiYTY5Yy4uYjczNDM3MDgzZGJmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXN0
+L2FzdF9tb2RlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbW9kZS5jCkBAIC04
+MjAsNiArODIwLDcgQEAgYXN0X2NydGNfaGVscGVyX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJt
+X2NydGMgKmNydGMsCiBzdGF0aWMgdm9pZCBhc3RfY3J0Y19oZWxwZXJfYXRvbWljX2VuYWJs
+ZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0
+ZSkKIHsKIAlzdHJ1Y3QgYXN0X2RldmljZSAqYXN0ID0gdG9fYXN0X2RldmljZShjcnRjLT5k
+ZXYpOworCXU4IHZnYXNyMSA9IDB4ZmY7CiAJdTggdmdhY3IxNyA9IDB4MDA7CiAJdTggdmdh
+Y3JiNiA9IDB4ZmY7CiAKQEAgLTgyOCw2ICs4MjksOSBAQCBzdGF0aWMgdm9pZCBhc3RfY3J0
+Y19oZWxwZXJfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNydGMsIHN0cnVjdCBk
+cm1fYXRvbQogCiAJYXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FDUkks
+IDB4MTcsIDB4N2YsIHZnYWNyMTcpOwogCWFzdF9zZXRfaW5kZXhfcmVnX21hc2soYXN0LCBB
+U1RfSU9fVkdBQ1JJLCAweGI2LCAweGZjLCB2Z2FjcmI2KTsKKworCXZnYXNyMSAmPSB+QVNU
+X0lPX1ZHQVNSMV9TRDsKKwlhc3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZH
+QVNSSSwgMHgwMSwgMHhkZiwgdmdhc3IxKTsKIH0KIAogc3RhdGljIHZvaWQgYXN0X2NydGNf
+aGVscGVyX2F0b21pY19kaXNhYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IGRy
+bV9hdG9taWNfc3RhdGUgKnN0YXRlKQpAQCAtODM1LDYgKzgzOSwxMCBAQCBzdGF0aWMgdm9p
+ZCBhc3RfY3J0Y19oZWxwZXJfYXRvbWljX2Rpc2FibGUoc3RydWN0IGRybV9jcnRjICpjcnRj
+LCBzdHJ1Y3QgZHJtX2F0bwogCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqb2xkX2NydGNfc3Rh
+dGUgPSBkcm1fYXRvbWljX2dldF9vbGRfY3J0Y19zdGF0ZShzdGF0ZSwgY3J0Yyk7CiAJc3Ry
+dWN0IGFzdF9kZXZpY2UgKmFzdCA9IHRvX2FzdF9kZXZpY2UoY3J0Yy0+ZGV2KTsKIAl1OCB2
+Z2FjcjE3ID0gMHhmZjsKKwl1OCB2Z2FzcjEgPSAweDAwOworCisJdmdhc3IxIHw9IEFTVF9J
+T19WR0FTUjFfU0Q7CisJYXN0X3NldF9pbmRleF9yZWdfbWFzayhhc3QsIEFTVF9JT19WR0FT
+UkksIDB4MDEsIDB4ZGYsIHZnYXNyMSk7CiAKIAl2Z2FjcjE3ICY9IH5BU1RfSU9fVkdBQ1Ix
+N19TWU5DX0VOQUJMRTsKIAlhc3Rfc2V0X2luZGV4X3JlZ19tYXNrKGFzdCwgQVNUX0lPX1ZH
+QUNSSSwgMHgxNywgMHg3ZiwgdmdhY3IxNyk7Ci0tIAoyLjUxLjAKCg==
+
+--------------IFq0UOMYTWshbPHE0miIKq0X--
