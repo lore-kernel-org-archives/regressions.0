@@ -1,124 +1,107 @@
 Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB2634C9A3
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 15:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D5B2F7443
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 15:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761145335; cv=none; b=AyqAUhbkQ+WfSYbhu5KguSyY2f4UqrqwKux42nT162Ta57fHLJCV0vkiE5DjeaQVyqGZ7w29K2fLOI4sPJV448R+l9lfAp8rkcUYm2RUwkIuj/sVlPrvbVNx5wRQUIWTStG/kIyPDlZI7Q5i0Rk6We/MObvv/drIh5aXVoC0qR4=
+	t=1761145656; cv=none; b=izcpJIRfMQy9YyhvutCPgn9Ixipr0UoZNjqz7ZP3exHCLXkUPBUxcVlaLaix0cQcj5bnoJoFfLSy2oID3yLdrDBkOCpWzD+JoZfqEnX3K4Doyv/jMTRqXPjZk5cJNRIeRhz03osxFqLcBlvjApR170N2XzQWBjHmN1IExxJYN2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761145335; c=relaxed/simple;
-	bh=hdYfR8VgCU1ZspHH5xOZyDRebDxd3yGnO9egZSHcGHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bP3Fpf0cZdBOlfkTXsxlbBqY2ZJFKvzVcrOgbPP4N9KxwssoI6vlhQO9lg8BltcPVuDla1P7eTAk0YCk1Y34dqFGXkb3+KTNiZTOFLIgh91MQ8IPvYfgA2s7RkGMCAexqxaZHQASGInfF0soozCwSSPUVhx9yuESHLJNSF53fg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IAwr8EYg; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761145656; c=relaxed/simple;
+	bh=laoIWGu4p0dTammd2Nay5qWKbVIQdGqiuFOD52Zityg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PbflYsmSp3FtnRC38DhZQGoXruMgAtj1xDUAMpJDC/pN4FQBPl8G4dNW0feTXLzA6/YRtFkopdwU4HbPi6u8sGqCyym7soqV88GzpEhlEijhabquCqJM0Z1ziIzsnevJi+Ee+5w+1UUj5RSQOtib/vwjXT9q9mrFtJ/NePyHSa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lzs0tQiB; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAwr8EYg"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-87bbee3ba76so2920476d6.1
-        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:02:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lzs0tQiB"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-87dfba1b278so7496196d6.1
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:07:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761145333; x=1761750133; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BnIAOSj9hN5H1aKf2wyJor6fNQ1bM8Ks2ytqG7kDK1w=;
-        b=IAwr8EYgu8Tgh1Kj5g7NyVFKyyY6ZgFxbqUzfGTVJxof/dNHjrG1C+ZEMt6OdZWjpv
-         c7KbJ4rc/uEHb9YF8RbNNi7C2DkJ3piMLyXMWt8f2sH15cLDLZsC6lAxSspYI92HZ7y+
-         Y9cwHuRVZVlp+T9dvh1jpkDzh9DV26uoE8fA8q5qlBg+H0jMAAWltBNaiHgsAdQ7Blaz
-         h+7QsDFDzfQsDvydtAHbdV2auIj6Tg7uBv3erH0XXJJXq7nkdZ+eFJxJuM3VLoK3+u2K
-         8plggmJHknZuBBLVjyVN81YTJApnJrThIQSrAKdqSvyb0eXYyTdHn03hrQbhwHoYrkiO
-         Nq/w==
+        d=gmail.com; s=20230601; t=1761145654; x=1761750454; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LwzTm8USs1oolFR4WnnlWLIHx/1z1zWMBPnOEps6YoA=;
+        b=Lzs0tQiB6BR/vtnWE1iI4JbCwsJv/ViaaJ2HOiPCn8ksB/nj1ZAB9DyaUhoVSmieKi
+         7I32ucM0nGUXs3vdmfRYO8AAnE9HI+NfJbzFRh1Z5wwDzWxC8Fh7cG+kMvnz+bdpF6B4
+         sdmBLQET55vrlrok8gVzuTKBKH4TrM5IFivTb7mG+IZFFoxgRdleZbte2H0mmO52JsXM
+         j50Kg5YmRj4QeYB1bXEQdHOSPOKyFj51JzTyQ4EF3Tg67/ozpJ5cGAEpgBe/hlnQJIqH
+         S6n1lsxh3SV02OpXBVqLDW1p/EAlrg22fbULqiAc9V0dwx0L1Kua5ILtHcTLx9LZ3oHq
+         RGLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761145333; x=1761750133;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1761145654; x=1761750454;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BnIAOSj9hN5H1aKf2wyJor6fNQ1bM8Ks2ytqG7kDK1w=;
-        b=Rt/03uANmLDd+4qo5C4UZon5zpOWisLKwXdnBelaIfeyuLlxcg8ZcVhSyZ35RIZZle
-         IXiCHO536Jm4Q/PUpbRqsLx57YYBpuoLCmvydfXvV8uqQMzcZBjouvFMoVJKDa6QHms7
-         +QGBG+hMiaEEKt6E4nzdi5wHWZuczmE8uNNh3XaTSVMLFqJsMPTXM6HlSX3ldK3ZYy+1
-         gLOb32ie3idBlEAVw9mB4/hk3cMZxlUJsNHaOc8qpbrFxhtl41/eRvSoi9fwpgl591jt
-         dN8Ha1iGgrnC17rvZ3S+O9rCvsvIdCtgCzsJOgTWB1Va7NIk5+8uujgZM2qbfra24+/9
-         hPMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSNRY46X4eAs4qpcoyM8srQ7JTTAKGHhwU2GeyVSvkEwxWGfyF0jBHiYSANZ2+zAzwKxwTCHjT2pGbxQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/v8oTyT+C8GW22JKbTnRsiact9E7ytfVz677YG8kznv33jAHD
-	8Em2AbivwXiMduPH8FnrrJVNJJfwBP0HAVGu15TOjd1hAWhi9btBuW209jVhzAH6XaTdi3QwQsG
-	VvnCnoPxZ3q7wp4vXkA+dgF5DjkhYBlDLl6vICdRzsA==
-X-Gm-Gg: ASbGnctxQD1xFd7keG3Mo63t7UUKJKNdxN0YAq/qwn48ePJ6iArcIcHoWfgMwovrrrX
-	P6/Syu2SwX7LL6hWkAt0QEoO1bODWPck39vVViwvQMmcJpWMoWVoquIY/stSi2doJ5VRhacPvOm
-	4R/pD/g6X33TQkdF2t3rmQLCKVqSlRleT42T+7p1bZcqVWR+x3twA16GQ7StvwfwT4LMpEzD+De
-	rFtl7io+fMYmSrcxhKUhC/pHVPSGLvfTRGBac9jMOcCTusr45caPrivOiaDQGkw5y3KQQ==
-X-Google-Smtp-Source: AGHT+IHDNBWFGq/lO9UqX3OiuCVmV8mj/OamM0dXHm9H8/TY++90uwy4eHmeOOO7ME2KeAOXQVNRoq9F5JuwtjkDp/g=
-X-Received: by 2002:a05:6214:19c6:b0:87d:f8d3:2456 with SMTP id
- 6a1803df08f44-87df8d324a4mr21664096d6.2.1761145331914; Wed, 22 Oct 2025
- 08:02:11 -0700 (PDT)
+        bh=LwzTm8USs1oolFR4WnnlWLIHx/1z1zWMBPnOEps6YoA=;
+        b=AVnrW5mm7GUXOp4vCm9J8XwoyxQHrX2ShVqD+psCV3oa8//Jd8awVmNRqEXGch5be4
+         SWwAGy1MrPRWTLTa0TiB/j+9VU6OsXtZcrzzvvWmSOpM7Z45Ma1mclxQSI6oBlkBs+KF
+         UQHUVDEVywmZm7z+dYpM63Qh1beklv31FxqADb3wQoFDFwq5QJyY02XRVjGJo97u1J14
+         CI5dwVwkPRf4vEeYslO0qep7hnitmuoGFEnmeRPUULjZWTUBzFzCgbCCdmc9P9QelRMy
+         tLijo7n8S+hxpEnyOwgouQehwWP7eMo+aewlFhe2PnZ/h+cdvcPy/kJxmDRON/ZxrZs/
+         kfhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUopB30VAJrW/The07P4YcM8bOjMWVrcNIV3OJdv5GmA1JzHwgtNhLFekuC7KbvcYkBb55Oh8ShPYtNZg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbeeDo1E7x6eCyazpJHxnCX5cnDDYii1q5t1AsaCjA4PwUD5Lo
+	FGSSxs6gpmsioX3tYt7hel118DvEmYfXhCzXkEsG2uzmBGbdid0vBMYd
+X-Gm-Gg: ASbGnct+M8tMFo9nwE9KRRl70Ub5vx1iPoInbALO4VSaYGq5YqOlT1bKAXjkeqSxs1W
+	9bIHa0x27PMC4x1T5mONPBhrKXkIJP+zjDjPCNvIUsKAEVNlVXKXKi2SYTXBihBR3cxRiU46pNB
+	+nanFUCZjluBOBXI+PhlBxONBp5bRsHAbNzIbxiMHRuTkMlXIIMLtg5c+JQlFVOVUH5zSNI/9O7
+	s3CS5llo5NPOzzs0cGGCAO5LjUGkbOKc59gdcgte9tdBZ78qnjyo0lBKXlr6YcTjIc42j8//UiG
+	yrSgoyX8NjmfgODXSMnPpSEE1t7Jlo+iVCzYUEts/bmzsFaHhclqz3Yw6VuqYFcl5DDSwoX+tkb
+	J4D6RB+uYZVEcXhVB+e6JUi0GaP5Bey2TUezzGc/uxkhAu05memiqkRXWiRBZwYicjlHOxHneUS
+	gedMw0XuOMjKKXr7Zy9/qeg0C77irhiMDV/C9INSMsknRzCz+Wdo3OStWvDhpn3qwjsOTnBWeC9
+	3mZU2Q+sXVbzHhmKko9uCCPp+rnJf32vAJAYsr+AUz0dkReJsgOY7D6oos3ySB1aQKrAmKk
+X-Google-Smtp-Source: AGHT+IHsEoy9TxGzvUXGFHK7BCWyNK142Lft2EHU0bFZvJFw5sqf9x3YTrPE8ZGiTyyaXtUe0r/i+Q==
+X-Received: by 2002:a05:6214:21e7:b0:7fa:3202:5261 with SMTP id 6a1803df08f44-87c20543291mr269537286d6.12.1761145653653;
+        Wed, 22 Oct 2025 08:07:33 -0700 (PDT)
+Received: from NEU1-L01066-Ubuntu-22.04-valeo-wsl2.vnet.valeo.com (ip1f10fd85.dynamic.kabel-deutschland.de. [31.16.253.133])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87cf521c2c7sm89448266d6.19.2025.10.22.08.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 08:07:33 -0700 (PDT)
+From: Mallikarjun Thammanavar <mallikarjunst09@gmail.com>
+To: axboe@kernel.dk
+Cc: io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Mallikarjun Thammanavar <mallikarjunst09@gmail.com>,
+	"kernelci . org bot" <bot@kernelci.org>
+Subject: [PATCH] io_uring: initialize vairable "sqe" to silence build warning
+Date: Wed, 22 Oct 2025 17:07:16 +0200
+Message-Id: <20251022150716.2157854-1-mallikarjunst09@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com>
- <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
-In-Reply-To: <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
-From: Anders Roxell <anders.roxell@linaro.org>
-Date: Wed, 22 Oct 2025 17:02:00 +0200
-X-Gm-Features: AS18NWDwE4wLtG7BZRqK8s-_yLrQzlCdiI_YRXplah4qDB6dhd-o_z_6gw0x-cw
-Message-ID: <CADYN=9KxQaQMWNbwDSftj7kcBYHjAQPacE+z7AVRZwxPTpexYQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests/x86: Add selftests include path for kselftest.h
- after centralization
-To: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
-Cc: naresh.kamboju@linaro.org, broonie@kernel.org, arnd@arndb.de, 
-	benjamin.copeland@linaro.org, bp@alien8.de, dan.carpenter@linaro.org, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	mingo@redhat.com, regressions@lists.linux.dev, richard.weiyang@gmail.com, 
-	shuah@kernel.org, surenb@google.com, tglx@linutronix.de, x86@kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, 
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 22 Oct 2025 at 08:29, Bala-Vignesh-Reddy
-<reddybalavignesh9979@gmail.com> wrote:
->
-> The previous change centralizing kselftest.h include path in lib.mk
-> caused x86 selftests to fail, as x86 Makefile overwrites CFLAGS using
-> ":=", dropping the include path added in lib.mk. Therefore, helpers.h
-> could not find kselftest.h during compilation.
->
-> Fix this by adding the tools/testing/sefltest to CFLAGS in x86 Makefile.
->
-> Fixes: 4d89827dfb27 ("selftests: complete kselftest include centralization")
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/lkml/CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com/T/#m83fd330231287fc9d6c921155bee16c591db7360
->
-> Signed-off-by: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
+clang-17 compiler throws build error when [-Werror,-Wuninitialized] are enabled
+error: variable 'sqe' is uninitialized when used here [-Werror,-Wuninitialized]
 
-Yes, works.
+Initialize struct io_uring_sqe *sqe = NULL; to have clean build
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Link: https://lore.kernel.org/regressions/176110914348.5309.724397608932251368@15dd6324cc71/
 
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Mallikarjun Thammanavar <mallikarjunst09@gmail.com>
+---
+ io_uring/fdinfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
+index d5aa64203de5..e5792b794f8b 100644
+--- a/io_uring/fdinfo.c
++++ b/io_uring/fdinfo.c
+@@ -89,7 +89,7 @@ static void __io_uring_show_fdinfo(struct io_ring_ctx *ctx, struct seq_file *m)
+ 	seq_printf(m, "CachedCqTail:\t%u\n", data_race(ctx->cached_cq_tail));
+ 	seq_printf(m, "SQEs:\t%u\n", sq_tail - sq_head);
+ 	while (sq_head < sq_tail) {
+-		struct io_uring_sqe *sqe;
++		struct io_uring_sqe *sqe = NULL;
+ 		unsigned int sq_idx;
+ 		bool sqe128 = false;
+ 		u8 opcode;
+-- 
+2.34.1
 
-Cheers,
-Anders
-
-> ---
->  tools/testing/selftests/x86/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-> index 83148875a12c..434065215d12 100644
-> --- a/tools/testing/selftests/x86/Makefile
-> +++ b/tools/testing/selftests/x86/Makefile
-> @@ -36,6 +36,7 @@ BINARIES_32 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
->  BINARIES_64 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
->
->  CFLAGS := -O2 -g -std=gnu99 -pthread -Wall $(KHDR_INCLUDES)
-> +CFLAGS += -I $(top_srcdir)/tools/testing/selftests/
->
->  # call32_from_64 in thunks.S uses absolute addresses.
->  ifeq ($(CAN_BUILD_WITH_NOPIE),1)
-> --
-> 2.43.0
->
