@@ -1,229 +1,239 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621D92FD1C6
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 07:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B65E2F28F2
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 07:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761119509; cv=none; b=Se3E2a1kFyg7mBuoXSmyYatjExQflZu4snyAZVKaUTicvGasylFiquou8roaqrQrrCzsMAIPnk2xV5QMr+jUyYSptfvW+Oe/Fe2t5/htHpMlSzNwgsSF5MxmoD4NuLGvQ7jLc+1DPsk3/gDa8sbzCptb3PhAT7vRzejShIyj+NQ=
+	t=1761119878; cv=none; b=KfSST5Owdu3W/qZsu+fB4zj86cLVyWdacphbg+5mnXpW9pvLBPU1IrYrIr7ev/MUAiqm/qiGr/2p2MQz5+m9v4PjJhzSulWCtFOw/Ngp3FfyDNzqhyDqDeECL44CjGAGpgFMZb6BCdWaIIaRlJ8Zzwv55gRay49A9cNZsNVCaKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761119509; c=relaxed/simple;
-	bh=YKZ71TcAYFCzk7LquCBHOkVCCNwK04Z3Rwp22Zmy91I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m819PlvsbMaXSGYm6RETWVyEF9qiwmnYkVf3vSq2FX47r5/IXXi6TEUtP0DW7FpHJaoh65770qoz7UGXCyuwpU9+0YBgqLWmnQnFMTcGQq5nv5cj9wM35u0UfzgHq4yxZM+5NVFbO4Yt77AyWYjZnJCDRYTWjDGDilPs09uK//4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WLXa50SG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Gp2gnW1d; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EpE1Gh4k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=S4V6uw3J; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1761119878; c=relaxed/simple;
+	bh=1MshIsOhPZZtUvhlLkXTb/ywrfXh5+dzPkN5+5Pdpmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qiv0r2UOQMT2VXhJ0JcDJAhGfdMk3+yzpIUfMLbFPWaUEr/DtlhHep3enjIN6C7HHKrG+Ycf7+TTfFp2AZO9CW67ASpg2aS4GQHsz7KP6ZlE0nv548GqajOaPCZ8wfVnIgjMQbHHqmr2hNtc96IwuDzMBqMFDKF0OqQIxcbG2QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J3FrZTvm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WLXa50SG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Gp2gnW1d";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EpE1Gh4k";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="S4V6uw3J"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 697FE1F391;
-	Wed, 22 Oct 2025 07:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1761119501;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5G+GN8XQO5NVhzF4+79I45VeDXm2lq0alql08lbGTcE=;
-	b=WLXa50SGfYw7rx7r4BN+nhQyq++ghDHg1ILi/T4sza3/QJ+Who//4+jrQgwYV1akk7mj1e
-	9Wth5U2AbZuywjMz8SsZzGeVFhkYoNIprJLooi5yCtd63A+P/FfKtMyDb68RF30DJR7NMz
-	DtRUuqFSo7684kNY44GPwwAkH2lVOx0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1761119501;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5G+GN8XQO5NVhzF4+79I45VeDXm2lq0alql08lbGTcE=;
-	b=Gp2gnW1d6NINLIIhBR2OqeKJ2ILh4BD4+Ntp3mI0DgeiMeQPjZppVQiozFYkz1maTSiKUy
-	JPHthh/9+rROq4DA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1761119497;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5G+GN8XQO5NVhzF4+79I45VeDXm2lq0alql08lbGTcE=;
-	b=EpE1Gh4kUFU/o+1PmPuBcPQ6azU+Q4iPrQLtzPMrEIQX+rcbdk4IDS2sWtGyp3FsmSmdOn
-	INwmNqPtKfDLGOO+IV2FofeD94ZxKaYTh9tL1vGSiUz3oC5nf9ro4jR/SYd4zVikQscUqQ
-	1eDWVg/r1IkQDOKbF2EmlR46J0u5BPU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1761119497;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5G+GN8XQO5NVhzF4+79I45VeDXm2lq0alql08lbGTcE=;
-	b=S4V6uw3JuJ1C9DB14S9HN2lPzawgxazhh8V4t99V+qeTHqzukUimBNO5VmcFCeaGETjmth
-	pwex/ShDkTVcsFAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B76D11339F;
-	Wed, 22 Oct 2025 07:51:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qGcUKgiN+Gj4KAAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 22 Oct 2025 07:51:36 +0000
-Date: Wed, 22 Oct 2025 09:51:34 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Jan Kara <jack@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>, Cyril Hrubis <chrubis@suse.cz>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	LTP List <ltp@lists.linux.it>,
-	Andrey Albershteyn <aalbersh@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	Andrea Cervesato <andrea.cervesato@suse.com>
-Subject: Re: 6.18.0-rc1: LTP syscalls ioctl_pidfd05: TFAIL: ioctl(pidfd,
- PIDFD_GET_INFO_SHORT, info_invalid) expected EINVAL: ENOTTY (25)
-Message-ID: <20251022075134.GA463176@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <CA+G9fYuF44WkxhDj9ZQ1+PwdsU_rHGcYoVqMDr3AL=AvweiCxg@mail.gmail.com>
- <CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com>
- <aPIPGeWo8gtxVxQX@yuki.lan>
- <qveta77u5ruaq4byjn32y3vj2s2nz6qvsgixg5w5ensxqsyjkj@nx4mgl7x7o6o>
- <20251021-wollust-biografie-c4d97486c587@brauner>
- <lguqncbotw2cu2nfaf6hwgip6wtrmeg2azvyeht7l56itlomy5@uccupuql3let>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J3FrZTvm"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59LNGpZ0004936
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 07:57:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zKCpASVkSEHOs8PWao32o2/CeR3cTvfo93uScS7Z46M=; b=J3FrZTvmZ9Iv33uH
+	TsKgWFkpwqGsAW1jEV3nW1I6Wfm3IQA9/uwQmzC4i5p9K2WLWJC3Lfa4/3vUMfPH
+	R3bDAN/vQzaI30zHGBEFkvJYS2mJdzGgezi4C5Cvmx33a7HhDxog5336xpJ2KrXb
+	JysjD7mu6ELuaFSNhP/ADnWTKv5RIxVhB0qgeChHLXFA4kdGNGdv45J1+dna+YiU
+	4PJogSEqrtZC6wR+YGLeiGmTQ5RlpB8F4PIDZNurkz+UMpTj6so+kPfjXzfV31Aa
+	8zVazreLcMDeFlX0EDsM1wo/Nfo86SzvStGfQPF4nHP+bd5bVfrby77+B47tp9gH
+	Y5JoAA==
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49xkps9a6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 07:57:56 +0000 (GMT)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b55443b4110so505668a12.1
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 00:57:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761119876; x=1761724676;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zKCpASVkSEHOs8PWao32o2/CeR3cTvfo93uScS7Z46M=;
+        b=i4DyuqLbBU1dY2LO+AytQwzSzJda0sn9Yk9FvPUTU3SncehS4WOVa4cZWPLhfoF+1D
+         U9IUNIKphJt42msHVkzvduxmp2kN6PJHpdjtj3lAYkJUQwt73dHri3VgpN4AVQTvzQrG
+         wTJY7OVV7Jcw5iiJIDFG1en+pS+rqlOwQe35Ie/c9DMjPV6xs9nnhKIWO2nR5bpUW0FQ
+         VbTh0ogF8YzQjKrjfhGPvwadxoSJwQF/Ixt8xMcN7CYFsPdMVAj/Y+N3iw4lPztXMQbP
+         AZlFNzXMmSGLD6fYBkzSMdlb/8DH1dbAG/OSXG3iDk64Zib9Lpac+wcuDl6AHKIc4PpJ
+         UkjQ==
+X-Gm-Message-State: AOJu0YwqQ7BAd+TUjv1Vp5KxKXZwnUeDUoZdAGTAS68LlxOG20eBOSeo
+	r8PNxxUkWirEmZPDW2CF6AOXIIWeOjICDVaVTYiUhqtJFdUwMhKbB1xcnLDHYCw3GCrotSzoLTM
+	7RmbuH4CoF0AZCeMchA9qq9eqYdJ1f4NhnnNhYXuIhfn8kHwwy2w6zqA3GSvD5iCCXg==
+X-Gm-Gg: ASbGncvLPv09ahzGEMwpSNLY5dUKpStFt0HA89zhj+Pz6AaYW+wu6zRpz1mL581H0OO
+	9DFaa0CbRBMxet4YA4wr29tBxZdpl96EWH2W4AQbaRj0CC6mzLWqi0N+eIA3kNLEksAEQ6OBCMq
+	PWT4ODPwvZbfizreaf4Tbpl3iSy81AQ7mEJE4dJCDKKoTTKLMgICxLFvQ4VOxzZtluNjIEW+y8i
+	riZeImdCs2sTa4cgaXrCr0LTNcajoAj6NiD8YBBIhM08Q2BCCZ9fgDI81s1JhMYClGWil/Af2Ed
+	5zgUkYRWpjGOS2PdXkDOTa8gbSfRCeL4snNFldLboMY57To1bSGjwY0T1m/kn9n/dYCz4e877fK
+	ajNeasA6HD5hOkp2q4VFur5kGwGh2GZS3mkezOEHMbTxNf6mUgQ96Plz5vbrQJ0Tcmx2lrl+O
+X-Received: by 2002:a05:6a20:158c:b0:2ca:f345:5673 with SMTP id adf61e73a8af0-33aa80b9cf0mr3343196637.27.1761119875588;
+        Wed, 22 Oct 2025 00:57:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQrMZ3+KoL7YTWqjC/NNOCSrl+HNCyBF041iti9PGb89VI8BhU1vl6m2r+vYhJ6Fc9vaaI7g==
+X-Received: by 2002:a05:6a20:158c:b0:2ca:f345:5673 with SMTP id adf61e73a8af0-33aa80b9cf0mr3343169637.27.1761119875048;
+        Wed, 22 Oct 2025 00:57:55 -0700 (PDT)
+Received: from [10.133.33.147] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a22ff5d76bsm13616866b3a.33.2025.10.22.00.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Oct 2025 00:57:54 -0700 (PDT)
+Message-ID: <29734775-71f8-48d4-8202-fc7aaca99f14@oss.qualcomm.com>
+Date: Wed, 22 Oct 2025 15:57:52 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lguqncbotw2cu2nfaf6hwgip6wtrmeg2azvyeht7l56itlomy5@uccupuql3let>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-7.50 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:replyto];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -7.50
-
-> On Tue 21-10-25 15:21:08, Christian Brauner wrote:
-> > On Fri, Oct 17, 2025 at 02:43:14PM +0200, Jan Kara wrote:
-> > > On Fri 17-10-25 11:40:41, Cyril Hrubis wrote:
-> > > > Hi!
-> > > > > > ## Test error log
-> > > > > > tst_buffers.c:57: TINFO: Test is using guarded buffers
-> > > > > > tst_test.c:2021: TINFO: LTP version: 20250930
-> > > > > > tst_test.c:2024: TINFO: Tested kernel: 6.18.0-rc1 #1 SMP PREEMPT
-> > > > > > @1760657272 aarch64
-> > > > > > tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-> > > > > > tst_kconfig.c:676: TINFO: CONFIG_TRACE_IRQFLAGS kernel option detected
-> > > > > > which might slow the execution
-> > > > > > tst_test.c:1842: TINFO: Overall timeout per run is 0h 21m 36s
-> > > > > > ioctl_pidfd05.c:45: TPASS: ioctl(pidfd, PIDFD_GET_INFO, NULL) : EINVAL (22)
-> > > > > > ioctl_pidfd05.c:46: TFAIL: ioctl(pidfd, PIDFD_GET_INFO_SHORT,
-> > > > > > info_invalid) expected EINVAL: ENOTTY (25)
-
-> > > > Looking closely this is a different problem.
-
-> > > > What we do in the test is that we pass PIDFD_IOCTL_INFO whith invalid
-> > > > size with:
-
-> > > > struct pidfd_info_invalid {
-> > > >         uint32_t dummy;
-> > > > };
-
-> > > > #define PIDFD_GET_INFO_SHORT _IOWR(PIDFS_IOCTL_MAGIC, 11, struct pidfd_info_invalid)
+User-Agent: Mozilla Thunderbird
+Subject: Re: wifi: ath10k: avoid unnecessary wait for service ready message
+To: Andreas Tobler <andreas.tobler@onway.ch>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+References: <03727147-0115-4ce9-b68d-756c6e41db94@onway.ch>
+ <fe63bbbf-3833-477e-a820-d41e621e6a41@oss.qualcomm.com>
+ <da61ce87-09c1-4992-91fe-358225e0ea1c@onway.ch>
+From: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <da61ce87-09c1-4992-91fe-358225e0ea1c@onway.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDIxMDE5MCBTYWx0ZWRfX292oQ5CgyLPm
+ AWjHftQ45ibmHIQZD1EZs4/eM9m6exQU8T1c43PKQvGTFzLYzKtALGJkGTw4oPtIMAOMCIiSntp
+ H4HrSuXkDjSmtRZf89I/iOfivLbRrCJH8td7JH7zipqBcKwTYsJXtleH9iT4xT3iRFAepC9B26S
+ 6RriQ37Mvh/rUfVeof9eC9XHj8TfHZSwpdDhd4oL0WB9F9td4yBu//Ct0ibVe07uW3bp60A+P/8
+ 4Ni2reUvQf7Q2Y/zwPL6qcdrXy+KrklYWMUg93/tn2RWkGak2r2riXMFAzqWvOYPkOrXMn1m5YF
+ Qx/XiapVCB9oWv/H50szBaHlxZn06OlkTrr6x9F767L9BLXG7N9dhPoujOminkr9LRfDzzTqrAq
+ lCT8broHWf4GfC+hkqH6RGW3jp4sJw==
+X-Authority-Analysis: v=2.4 cv=FbM6BZ+6 c=1 sm=1 tr=0 ts=68f88e84 cx=c_pps
+ a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=1lTS2cm5rUV1xho6mMkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=x9snwWr2DeNwDh03kgHS:22
+X-Proofpoint-GUID: SJHKplDRr5zD_7Kdm-BFMF7_Qmcc7kpb
+X-Proofpoint-ORIG-GUID: SJHKplDRr5zD_7Kdm-BFMF7_Qmcc7kpb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-22_02,2025-10-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510210190
 
 
-> > > > And we expect to hit:
 
-> > > >         if (usize < PIDFD_INFO_SIZE_VER0)
-> > > >                 return -EINVAL; /* First version, no smaller struct possible */
+On 10/16/2025 1:11 PM, Andreas Tobler wrote:
+> Hello Baochen,
+> 
+> thanks for responding.
+> 
+> On 16.10.2025 04:01, Baochen Qiang wrote:
+>>
+>>
+>> On 10/16/2025 4:10 AM, Andreas Tobler wrote:
+>>> Dear all,
+>>>
+>>> this commit (Upstream commit 51a73f1b2e56b0324b4a3bb8cebc4221b5be4c7) makes our WLE600
+>>> Compex wifi cards (qca988x based) unusable. Reverting the commit brings the wifi card
+>>> back.
+>>>
+>>> This was discovered on the v6.12.53 from today.
+>>>
+>>> ath10k messages excerpt:
+>>> --------------
+>>> Oct 15 22:00:13 klog: ath10k_pci 0000:05:00.0: pci irq msi oper_irq_mode 2 irq_mode 0
+>>> reset_mode 0
+>>> Oct 15 22:00:13 klog: ath10k_pci 0000:05:00.0: qca988x hw2.0 target 0x4100016c chip_id
+>>> 0x043222ff sub 0000:0000
+>>> Oct 15 22:00:13 klog: ath10k_pci 0000:05:00.0: kconfig debug 0 debugfs 0 tracing 0 dfs 1
+>>> testmode 0
+>>> Oct 15 22:00:13 klog: ath10k_pci 0000:05:00.0: firmware ver 10.2.4-1.0-00047 api 5
+>>> features no-p2p,raw-mode,mfp,allows-mesh-bcast crc32 35bd9258
+>>> Oct 15 22:00:13 klog: ath10k_pci 0000:05:00.0: board_file api 1 bmi_id N/A crc32 bebc7c08
+>>> Oct 15 22:00:20 klog: ath10k_pci 0000:05:00.0: wmi unified ready event not received
+>>> Oct 15 22:00:21 klog: ath10k_pci 0000:05:00.0: could not init core (-110)
+>>> Oct 15 22:00:21 klog: ath10k_pci 0000:05:00.0: could not probe fw (-110)
+>>> --------------
+>>>
+>>> Beside reverting, how can we help fixing this?
+>>
+>> Thank you Andreas for the report.
+>>
+>> If this 100% repro?
+> 
+> Yes, on several boards, amd, armada-385 and imx6 based.
+>> Can you try just ignore the err and see what we get? I am suspecting we are missing the
+>> interrupt for unified ready message.
+>>
+>> diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/
+>> core.c
+>> index 6f78f1752cd6..cf4cc44d0a1e 100644
+>> --- a/drivers/net/wireless/ath/ath10k/core.c
+>> +++ b/drivers/net/wireless/ath/ath10k/core.c
+>> @@ -3217,7 +3217,6 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode
+>> mode,
+>>          status = ath10k_wmi_wait_for_unified_ready(ar);
+>>          if (status) {
+>>                  ath10k_err(ar, "wmi unified ready event not received\n");
+>> -               goto err_hif_stop;
+>>          }
+>>
+>>          status = ath10k_core_compat_services(ar);
+> 
+> No changes.
+>> Anyway, please help collect verbose ath10k log, you may enable verbose log by
+>>
+>>     modprobe ath10k_core debug_mask=0xffffffff
+>>     modprobe ath10k_pci
+>>
+> 
+> I attached the compressed log, not sure if it is too big while uncompressed.
 
-> > > > in fs/pidfs.c
+Thank you Andreas for the log.
 
+Could you please try if below diff can fix this regression?
 
-> > > > And apparently the return value was changed in:
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 7bbda46cfd93..1a981d333b5c 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -1256,6 +1256,19 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int
+ce_id)
+ }
+ EXPORT_SYMBOL(ath10k_ce_per_engine_service);
 
-> > > > commit 3c17001b21b9f168c957ced9384abe969019b609
-> > > > Author: Christian Brauner <brauner@kernel.org>
-> > > > Date:   Fri Sep 12 13:52:24 2025 +0200
++void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id)
++{
++       struct ath10k_ce *ce = ath10k_ce_priv(ar);
++       struct ath10k_ce_pipe *ce_state = &ce->ce_states[ce_id];
++
++       if (ce_state->recv_cb)
++               ce_state->recv_cb(ce_state);
++
++       if (ce_state->send_cb)
++               ce_state->send_cb(ce_state);
++}
++EXPORT_SYMBOL(ath10k_ce_per_engine_check);
++
+ /*
+  * Handler for per-engine interrupts on ALL active CEs.
+  * This is used in cases where the system is sharing a
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index 27367bd64e95..9923530e51eb 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -255,6 +255,7 @@ int ath10k_ce_cancel_send_next(struct ath10k_ce_pipe *ce_state,
+ /*==================CE Interrupt Handlers====================*/
+ void ath10k_ce_per_engine_service_any(struct ath10k *ar);
+ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id);
++void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id);
+ void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id);
+ void ath10k_ce_disable_interrupts(struct ath10k *ar);
+ void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id);
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 97b49bf4ad80..ce8e0c2fb975 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1812,7 +1812,7 @@ void ath10k_pci_hif_send_complete_check(struct ath10k *ar, u8 pipe,
+                if (resources > (ar_pci->attr[pipe].src_nentries >> 1))
+                        return;
+        }
+-       ath10k_ce_per_engine_service(ar, pipe);
++       ath10k_ce_per_engine_check(ar, pipe);
+ }
 
-> > > >     pidfs: validate extensible ioctls
+static void ath10k_pci_rx_retry_sync(struct ath10k *ar)
 
-> > > >     Validate extensible ioctls stricter than we do now.
+> 
+> Thank you!
+> 
+> Andreas
 
-> > > >     Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-> > > >     Reviewed-by: Jan Kara <jack@suse.cz>
-> > > >     Signed-off-by: Christian Brauner <brauner@kernel.org>
-
-> > > > diff --git a/fs/pidfs.c b/fs/pidfs.c
-> > > > index edc35522d75c..0a5083b9cce5 100644
-> > > > --- a/fs/pidfs.c
-> > > > +++ b/fs/pidfs.c
-> > > > @@ -440,7 +440,7 @@ static bool pidfs_ioctl_valid(unsigned int cmd)
-> > > >                  * erronously mistook the file descriptor for a pidfd.
-> > > >                  * This is not perfect but will catch most cases.
-> > > >                  */
-> > > > -               return (_IOC_TYPE(cmd) == _IOC_TYPE(PIDFD_GET_INFO));
-> > > > +               return extensible_ioctl_valid(cmd, PIDFD_GET_INFO, PIDFD_INFO_SIZE_VER0);
-> > > >         }
-
-> > > >         return false;
-
-
-> > > > So kernel has changed error it returns, if this is a regression or not
-> > > > is for kernel developers to decide.
-
-> > > Yes, it's mostly a question to Christian whether if passed size for
-> > > extensible ioctl is smaller than minimal, we should be returning
-> > > ENOIOCTLCMD or EINVAL. I think EINVAL would make more sense but Christian
-> > > is our "extensible ioctl expert" :).
-
-> > You're asking difficult questions actually. :D
-> > I think it would be completely fine to return EINVAL in this case.
-> > But traditionally ENOTTY has been taken to mean that this is not a
-> > supported ioctl. This translation is done by the VFS layer itself iirc.
-
-> Now the translation is done by VFS, I agree. But in the past (when the LTP
-> test was written) extensible ioctl with too small structure passed the
-> initial checks, only later we found out the data is too short and returned
-> EINVAL for that case. I *think* we are fine with just adjusting the test to
-> accept the new world order but wanted your opinion what are the chances of
-> some real userspace finding the old behavior useful or otherwise depending
-> on it.
-
-+1, thanks! Is it ok just expect any of these two regardless kernel version?
-
-@Naresh Kamboju will you send a patch to LTP ML?
-
-Kind regards,
-Petr
-
-> 								Honza
