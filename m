@@ -1,117 +1,182 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D092BE7CC
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 16:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2110A2BF005
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 17:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761149950; cv=none; b=e1oZn976Y/k2m0WldluHjNxSK3A9D54e23v4WUCUnh1gX4knm4laK8yjOfP+NqLiKrgP6OZuZnhCZidHj/p/UFiQyuuQZXm7yjk/v0Qk7ZSMsZH3G3yW+CiJaDojwh4KZR3hFoS3k5sFAqJzmDCThoJIv59yAaGAEG0JaLJ2nbs=
+	t=1761154243; cv=none; b=DEB0CXA8ZlrAn8IIt/sobxYtGD01K2VfrsiZ9sGoik1n4WTZjIxkrovvP7BaHDLc4je1SBaMGH1MfQMKEUs+hF36cOCzFnl0tg2+0MoHQim52/l241/ttEyy+HoCd5Sac37Sci2jAVlnAqdrEFBKfiGpqz6ujSSBwva7YOwzOcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761149950; c=relaxed/simple;
-	bh=8KEqGmF4e7gzWoRPSgXKhPWtwJlmQI+DbduQT+DzD9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMOcWrv96tfMZIxPFloojmDcVNKjkmlo7lc5RuhNDonIJlz4xqDls1c66zxdJQxVh95pGkPVAUsjgoJtLNZc8Zzeq3ovASHibp8cwn/NtPl8vp+DONM5YEL70aeAjc4R04e7jH7HE8fwLeY0BkiXZxekrhp1FpOqi17Q+Quanoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id EEE792C06438;
-	Wed, 22 Oct 2025 18:19:05 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id D48114A12; Wed, 22 Oct 2025 18:19:05 +0200 (CEST)
-Date: Wed, 22 Oct 2025 18:19:05 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: =?iso-8859-1?Q?Adri=E0_Vilanova_Mart=EDnez?= <me@avm99963.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, regressions@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
- suspending to RAM and resuming
-Message-ID: <aPkD-cECjlXx3kJP@wunner.de>
-References: <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
- <20251020232510.GA1167305@bhelgaas>
- <aPc4JpVyhCY1Oqd-@wunner.de>
- <zmkurgnjb4zw7zcg6uucbtvuratxlaau5lvhkgknidpjz7vnb7@dnsyjbrqtvqw>
- <aPj4kUglHgBm4uAt@wunner.de>
+	s=arc-20240116; t=1761154243; c=relaxed/simple;
+	bh=dhyaC0ICk5isf1JAQ07TmGyf/BAWBQbKFRNYZv3i8W0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aj4ex4yiJqGhqQ/y3ENHnICqp3m98kDla+nE242EAoraXQ3Shkxjq3bud53hUA0j3SpsvS08JAFu0TBBDY6aqYcaKSQBGIlikZa/lUmar3iujNsnuPzPn4aAMHCqx0zbyQKrTFdNPyTdpIWv42zMMR7CGcs+EYjw+ukyVFddVbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ql5ut9uj; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql5ut9uj"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-426fd62bfeaso3282104f8f.2
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 10:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761154239; x=1761759039; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1nFCN9pLEfI7dNTPvL0mUSRHrfYXPoZtHDehAzFK4eA=;
+        b=Ql5ut9ujm36Qk71i+0EHLCqayayPEKIdWpsmiX5eHpCjj0ag8ZrlaW1Xu0zkgdCCmt
+         V6GOXeIlDoe9hndzpf71o063fHuzujuKyTMXUkjFOk2S4bYdwRVDSD+LqSr5dVsjAnXO
+         3gNW8Vo8EYsAByHlv0uzLTc4iD9WI/Der6bZeYhdlDSnawKT9QOVmF8nDhM2c18okh2+
+         4+oAPNsgZQWkX81llGS/PYy7nCVaLh/w+5DyB1SPr/JLnetXIXMMUOvHBcxFWHc0QfS4
+         jjfj/iyrUA1hCzzAt4t68qDXHqwN/hro4e2tr0+g9fcV9frVnncW3o18Bkhi/Hyo6cL9
+         6Qig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761154239; x=1761759039;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1nFCN9pLEfI7dNTPvL0mUSRHrfYXPoZtHDehAzFK4eA=;
+        b=jOaVI/fEDfYogtRaAjOLPckygbsjRlF847xE9nYl9S35RDUerB19YB6YmiYzIECEtg
+         V5edz6x0CIHFj/RVHdLZwxGWvBRcp/E5fHsRf8t1p4pUKHKRyisrFDVjwddOE93mZnZ+
+         pSx4k6aLeFtPuOEcLMSy9yak5Q4HCAcYUYlkt4joGMygOVw337nOZbTeCAOHvpuAeBIi
+         xdkH5JNnvd2AeCriNImvgnldO6R2rfK/RtrR/JvS7oYhdhnxAB3HmagiTgUT7fvnU415
+         wDU9DoEjAi6GCs92/VkEmCBGimjW1/3G72zxU1mWxuFHEbNEXVgj7rWKXaY8hcinI/Z8
+         dtsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeTmhO9+nBHKwM5x5JhUxo4nKzfaSeEDE5e2tYYg6eIKdOigVwv57CVPVVJ2PwgRKvMuPgGcdv5bRuCw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzmtIEbQnVObzZwZSN9pLjz6PIi2hnHGZbt/h7tugCSLCAPnGZ3
+	zbibCZqQUoo3crlGvvCsY1mZ8hVSI+UkKY2ry+9+kIZEp3r9JDhYZudO
+X-Gm-Gg: ASbGncs/B/bhNODSXODmSeJhbmO/VL218g1uYYfsUzw3OGnSgbVaxx9f1weHIjRpNEH
+	2SUjB3wkd8JcSckNK926QNvY6QID/jA66W6F0Wjxx84t0YzbxC1U30MFnVOpF5ctcbqmxtetkyn
+	3As3YGgdcwmMkwKYm5/zMFbf53HFAZ9dUWTug9cr1L7ch4pNdjzie4+flVQY2YAKt8ptOmz2T0K
+	GR700xVLMmYOU6StPaXGUgW015HYWxBFYVIqPYLR0T76+yBtBjxNrPl+uwj4Ap8yETxSj/ij6s4
+	84S6NpWdzIDnJwOw5v539x0j6kDusIpFEQkL9yYVmGGB2xD1raecPMktUHqt5PD4s3WjPoXdQJU
+	ReYnkv4GKZ1Ip4q7LAGkA7VB1+towIYGjwA7N+jOPwIHytkx7VHde1wBLyPQ0+u1/Jwj9Pd76o6
+	5r0R1jTj7dGkoEdPgy3uHVnguHPbHjzSr4utCDiFPK+TL18mJT+075a1kvRQ==
+X-Google-Smtp-Source: AGHT+IGpzLyeFOtu3WGWo07Zjf+OlCN6M5eusYAHPhvOlsQ5WxNrnoYQLWAS9/q733puojsFm3TO7g==
+X-Received: by 2002:adf:e19a:0:b0:427:613:7772 with SMTP id ffacd0b85a97d-42706137842mr12906996f8f.32.1761154239253;
+        Wed, 22 Oct 2025 10:30:39 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:5a8f:8582:c21f:f389? ([2a02:168:6806:0:5a8f:8582:c21f:f389])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427ea5b3c56sm26280266f8f.18.2025.10.22.10.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 10:30:38 -0700 (PDT)
+Message-ID: <68dd3d93509b627dbdf907332a703443f46aff6c.camel@gmail.com>
+Subject: Re: [REGRESSION] ath10k fails initialization, bisected to "wifi:
+ ath10k: avoid unnecessary wait for service ready message"
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Baochen Qiang <baochen.qiang@oss.qualcomm.com>, Jeff Johnson	
+ <jeff.johnson@oss.qualcomm.com>, Jeff Johnson <jjohnson@kernel.org>, Kalle
+ Valo	 <kvalo@kernel.org>, Baochen Qiang <quic_bqiang@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	regressions@lists.linux.dev
+Date: Wed, 22 Oct 2025 19:30:38 +0200
+In-Reply-To: <5466e122-9143-482e-a9ab-7f956e19bf86@oss.qualcomm.com>
+References: 
+	<20250811-ath10k-avoid-unnecessary-wait-v1-1-db2deb87c39b@oss.qualcomm.com>
+	 <175823924851.3217488.17742065327824732992.b4-ty@oss.qualcomm.com>
+	 <6d41bc00602c33ffbf68781f563ff2e6c6915a3e.camel@gmail.com>
+	 <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
+	 <10919281648e306fd3f6713437b4793c50bb6692.camel@gmail.com>
+	 <5466e122-9143-482e-a9ab-7f956e19bf86@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aPj4kUglHgBm4uAt@wunner.de>
 
-On Wed, Oct 22, 2025 at 05:30:25PM +0200, Lukas Wunner wrote:
-> Looking at the ASPM configuration in the lspci output you've provided,
-> I note that after booting without 4d4c10f763d7, ASPM is disabled on
-> the Root Port but L1 is enabled on the Wifi card!
-> 
-> After resuming from system sleep, ASPM is disabled on both of them
-> (with and without 4d4c10f763d7).
-> 
-> I suspect the incongruence of ASPM settings between Root Port and
-> Wifi card is the root cause of the Presence Detect Changed flaps
-> as well as the Correctable Errors.  I guess the BIOS set these
-> incorrectly.  Looking at the code in:
-> 
-> pcie_aspm_init_link_state()
->   pcie_aspm_cap_init()
-> 
-> ... it first disables L0s and L1 to initialize L1 substates,
-> then restores the register values as they were set by BIOS.
-> This feels wrong.  The safest option is probably to instead
-> disable L0s and/or L1 if either of them was only enabled
-> on one of the two link partners.
+On Wed, 2025-10-22 at 16:00 +0800, Baochen Qiang wrote:
+> Thank you Klaus, can you please try if below diff can fix this regression=
+?
+>=20
+> diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/=
+ath/ath10k/ce.c
+> index 7bbda46cfd93..1a981d333b5c 100644
+> --- a/drivers/net/wireless/ath/ath10k/ce.c
+> +++ b/drivers/net/wireless/ath/ath10k/ce.c
+> @@ -1256,6 +1256,19 @@ void ath10k_ce_per_engine_service(struct ath10k *a=
+r, unsigned int
+> ce_id)
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL(ath10k_ce_per_engine_service);
+>=20
+> +void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id)
+> +{
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ath10k_ce *ce =3D ath10k_ce_=
+priv(ar);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ath10k_ce_pipe *ce_state =3D=
+ &ce->ce_states[ce_id];
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ce_state->recv_cb)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 ce_state->recv_cb(ce_state);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ce_state->send_cb)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 ce_state->send_cb(ce_state);
+> +}
+> +EXPORT_SYMBOL(ath10k_ce_per_engine_check);
+> +
+> =C2=A0/*
+> =C2=A0 * Handler for per-engine interrupts on ALL active CEs.
+> =C2=A0 * This is used in cases where the system is sharing a
+> diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/=
+ath/ath10k/ce.h
+> index 27367bd64e95..9923530e51eb 100644
+> --- a/drivers/net/wireless/ath/ath10k/ce.h
+> +++ b/drivers/net/wireless/ath/ath10k/ce.h
+> @@ -255,6 +255,7 @@ int ath10k_ce_cancel_send_next(struct ath10k_ce_pipe =
+*ce_state,
+> =C2=A0/*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DCE Interrup=
+t Handlers=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D*/
+> =C2=A0void ath10k_ce_per_engine_service_any(struct ath10k *ar);
+> =C2=A0void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int c=
+e_id);
+> +void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id);
+> =C2=A0void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id);
+> =C2=A0void ath10k_ce_disable_interrupts(struct ath10k *ar);
+> =C2=A0void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id);
+> diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless=
+/ath/ath10k/pci.c
+> index 97b49bf4ad80..ce8e0c2fb975 100644
+> --- a/drivers/net/wireless/ath/ath10k/pci.c
+> +++ b/drivers/net/wireless/ath/ath10k/pci.c
+> @@ -1812,7 +1812,7 @@ void ath10k_pci_hif_send_complete_check(struct ath1=
+0k *ar, u8 pipe,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (resources > (ar_pci->attr[pipe].src_nentries >> 1))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ath10k_ce_per_engine_service(ar, pi=
+pe);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ath10k_ce_per_engine_check(ar, pipe=
+);
+> =C2=A0}
+>=20
+> =C2=A0static void ath10k_pci_rx_retry_sync(struct ath10k *ar)
+>=20
+>=20
 
-Below is a completely untested patch to force ASPM to the
-intersection of the two link partners, thus fixing incongruent
-BIOS settings.  Does it help on a kernel with 4d4c10f763d7?
-If it does, what's the behavior if applied to a kernel without
-4d4c10f763d7?
+Thanks for looking into this.
+I applied that patch on top of current mainline, but unfortunately the resu=
+lt is still the same:
 
-I tried to find errata on the Intel AC 7265 "Stone Peak" wifi card
-and instead found this document which explains that only L1 and
-not L0s is supported:
+[    6.094149] ath10k_pci 0000:02:00.0: pci irq msi oper_irq_mode 2 irq_mod=
+e 0 reset_mode 0
+[    6.241457] ath10k_pci 0000:02:00.0: qca988x hw2.0 target 0x4100016c chi=
+p_id 0x043202ff sub 0000:0000
+[    6.241476] ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 0 tracing 0=
+ dfs 1 testmode 0
+[    6.242901] ath10k_pci 0000:02:00.0: firmware ver 10.2.4-1.0-00047 api 5=
+ features no-p2p,raw-mode,mfp,allows-mesh-bcast crc32 35bd9258
+[    6.309202] ath10k_pci 0000:02:00.0: board_file api 1 bmi_id N/A crc32 b=
+ebc7c08
+[   12.509266] ath10k_pci 0000:02:00.0: wmi unified ready event not receive=
+d
+[   12.581057] ath10k_pci 0000:02:00.0: could not init core (-110)
+[   12.587057] ath10k_pci 0000:02:00.0: could not probe fw (-110)
 
-https://fcc.report/FCC-ID/2AVBM-GK5/5728379.pdf
-
-Thanks,
-
-Lukas
-
--- >8 --
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 7cc8281..7fd3eda 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -830,8 +830,8 @@ static void pcie_aspm_override_default_link_state(struct pcie_link_state *link)
- static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- {
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
-+	u16 parent_lnkctl, child_lnkctl, common_lnkctl;
- 	u32 parent_lnkcap, child_lnkcap;
--	u16 parent_lnkctl, child_lnkctl;
- 	struct pci_bus *linkbus = parent->subordinate;
- 
- 	if (blacklist) {
-@@ -900,6 +900,12 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	/* Restore L0s/L1 if they were enabled */
- 	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) ||
- 	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl)) {
-+		common_lnkctl = FIELD_GET(PCI_EXP_LNKCTL_ASPMC, child_lnkctl) &
-+				FIELD_GET(PCI_EXP_LNKCTL_ASPMC, parent_lnkctl);
-+		parent_lnkctl &= ~PCI_EXP_LNKCTL_ASPMC;
-+		parent_lnkctl |= common_lnkctl;
-+		child_lnkctl &= ~PCI_EXP_LNKCTL_ASPMC;
-+		child_lnkctl |= common_lnkctl;
- 		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_lnkctl);
- 		pcie_capability_write_word(child, PCI_EXP_LNKCTL, child_lnkctl);
- 	}
