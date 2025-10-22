@@ -1,92 +1,112 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41F734D4CD
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 15:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A489E221FBF
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 15:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761146787; cv=none; b=FA3Y33K+/uzz06Tjy9x9XbK4b7zrLIS0JrE4Y9ubiqA2+PP9gnlI8WYZcpfdLlwAlDpsWqzXIzCe5UVrbIRbuvOybCCJxtjosytEDotQxvjFtHwqAJ14K/rJhP7SwMS6aRAry0/tEKeHLtaXXmXjX/ItZbJaRdQPVSGnF4u7gro=
+	t=1761147035; cv=none; b=RP2CMqhFnT7ZH2jKmn+tOD2Y7kb/7f7hwvCKyJ/58ZAMnt4hbPwzqTIFBNVhPh4sm5ga+td+jwPC/VyMiIMQi48ZCvVgA3ZpYGLnSm4COQRyGfkYs1TEmvBlwHGatFCDuNsIi4xYWPnuz/NpbuU6f0qQV9/C3eFzu/Hc7TTvH5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761146787; c=relaxed/simple;
-	bh=LRcyThRZzNKckLx/U80TKVewi3+2BXLCTF+fupxbHx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YtF79wM3Ztca3mAgB3eszOb/4I3k0omEfUKFuX2bVIJCbmq7o/Vjsp0e6cBV5XyIw2PMsL1uxl3fX04fS+vOtXP47pfu9J5CiEX05RoaAt4Yg/m0y7UZGLI+YNp/NXUrdvOVwUmhM21tE19xEi/rkS39v2V2CZEFpuGhHXyqjQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=p1pKp+42; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="p1pKp+42"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-430d0cad0deso20771225ab.2
-        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1761146784; x=1761751584; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0hKPkWmq5p2r79ibLmLIZ9MOTurUfR2k5+wgsOoKVJ8=;
-        b=p1pKp+42zHRSEUHDKPv4myrTsS0i+cPZ/vw9+9pnabqMTpOntJMOj7E6/2bBCpklTC
-         vIoSWzQhMBcMIqU3QsPCDUaPKw9RYgiO4L1jxS9LxgQG9IJS7x1Pmylik/vkk/A8pkvm
-         K7hpXNaT6FkqOi9dZyOb5P+TWqWTwtM2b9ZhtNGMhDdDbBDe/i9riF6Jd/VkBRO/3lGs
-         fB14Oe2yD3D1WK/d0wb4CSGN0tb5yDF2b91T/erpsi6aD8UwsSXWaOOc+SO3dxaAikyo
-         G6XRRp1rK3lWUzI9cfylr823ofNDOlIPYVrmXeMZYeYwDYsl/1k14++4CpHErGipzves
-         rMdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761146784; x=1761751584;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0hKPkWmq5p2r79ibLmLIZ9MOTurUfR2k5+wgsOoKVJ8=;
-        b=c2pj5xHLKlic+SCj5Fc5SASGrLU4EARF9jkGrh1SeovdUOBmgKYE8txliW80OoDAfY
-         jLak3bhB3KklxmIzWtha3ijr93VDjmqIB/xb/4Duz40mJk6xWP+/NQFiVsbTqwS7GyIx
-         QcaZBn9sJKhu/IQHlCUzPIUNu5tsrzr6DoCrmInTCIjl7jNw6nTBN10OAHbL7Rv7qUFM
-         Oss4JLimYf8Stp5Ies/3INfItrrG5iUZfO81JIDhUlfC+MO0SycqHcZiwh/J6Jw9+UPR
-         G3uDU0UnvZ92Xlq5YzpHbdOy2Ldaq5/vwLaeLcLGVV1A1+ueYkjHuRUwePBfATP8MWUN
-         rwLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPg6Ju/pXUeFuYmGzE67Um+9dbT4RkqmT8N3sESvjG9N5UKLM1WAt1sOtXrDqqNNDzGASvKodHxulg1w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyPrKqEsR8EawnjYwPdxO5nkwRS/f4mfvFYM3vqN0CfjAnSacrA
-	biXINnbBaHlmRGCW9BKhrJnl6F1LaQCDcHVeGAd4T19+517VNpX9uzT7LsTuD0DzVwE=
-X-Gm-Gg: ASbGncssHUuaA8cch+HpFvBbNf6nXt1eAY1QFvAoqMwZZoX2eAJze4R/UmffMjRO7rL
-	uCUeyMe7yOoJOIiN5Z5otKFLZeMsi6EvW2WYHDV6ZM/LZnDkKXweRaTFGQWTVTOK2MW9aSmy7F4
-	j0uFlujqQFosVZ948VqbaBgR22P1mWXc4Y2uQfpsJULq1SfB19zLCxG+Mg32XEbyu7jaAYEC6bg
-	psVFl5b+X9O1n7R7Oohzni4+bp9bZW33485NfnbPXn9JIVTIx336acFAqlsVNS1luMpjlzbA/Di
-	2dfz1jmdUuvKEFqMrhLGsCuSkGhAdtpfE8ZaOavfurmFNGsEORXZgF/VSHvsCTPEe9NynkKafeR
-	H2z7wk+0XGq3zI2dPbEiqTcjUIoQ75WdCRXDH8Xu5EVXdEpATawBsVRuEaFvtKDlcJq/UEhLChD
-	1okcZlrcI=
-X-Google-Smtp-Source: AGHT+IH/AJKSnikGo5wNrnUym0lndDFMHlCN0fa2V9GweWa6rnWf9q9FmfmeJXuUbrL+yAPgextAEA==
-X-Received: by 2002:a05:6e02:1522:b0:42f:e334:5ec3 with SMTP id e9e14a558f8ab-430c527fc65mr269056205ab.26.1761146783972;
-        Wed, 22 Oct 2025 08:26:23 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5a8a979aa80sm5114331173.64.2025.10.22.08.26.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 08:26:23 -0700 (PDT)
-Message-ID: <5b78c30d-26de-4e49-9bfa-121c9f40b4e0@kernel.dk>
-Date: Wed, 22 Oct 2025 09:26:22 -0600
+	s=arc-20240116; t=1761147035; c=relaxed/simple;
+	bh=8wduVmAPO0yu/HOzcMp/89mbcuv1uxcIlZk4nH88Oyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaFUmMJEvNGJ7D4sz1XFq6NxXHUvBiRCLhtqhdcvZCIpAybqNEntPGfIeUqBs1kLRrYs6LoY9UQpgxl4Kj+QDH7xZVHbP84IToCkJ88lv7wzE2Y02M3rpRWI4AYvGFtHp+sUQr8NUr1n2/qQS0wawOaADuUqRyEBj4ZyXQrKdus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 52CA52C06430;
+	Wed, 22 Oct 2025 17:30:25 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 41EEE4A12; Wed, 22 Oct 2025 17:30:25 +0200 (CEST)
+Date: Wed, 22 Oct 2025 17:30:25 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: =?iso-8859-1?Q?Adri=E0_Vilanova_Mart=EDnez?= <me@avm99963.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, regressions@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: Re: [REGRESSION] Intel Wireless adapter is not detected until
+ suspending to RAM and resuming
+Message-ID: <aPj4kUglHgBm4uAt@wunner.de>
+References: <149b04c5-23d3-4fd8-9724-5b955b645fbb@kernel.org>
+ <20251020232510.GA1167305@bhelgaas>
+ <aPc4JpVyhCY1Oqd-@wunner.de>
+ <zmkurgnjb4zw7zcg6uucbtvuratxlaau5lvhkgknidpjz7vnb7@dnsyjbrqtvqw>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: initialize vairable "sqe" to silence build
- warning
-To: Mallikarjun Thammanavar <mallikarjunst09@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, "kernelci . org bot" <bot@kernelci.org>
-References: <20251022150716.2157854-1-mallikarjunst09@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20251022150716.2157854-1-mallikarjunst09@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zmkurgnjb4zw7zcg6uucbtvuratxlaau5lvhkgknidpjz7vnb7@dnsyjbrqtvqw>
 
-On 10/22/25 9:07 AM, Mallikarjun Thammanavar wrote:
-> clang-17 compiler throws build error when [-Werror,-Wuninitialized] are enabled
-> error: variable 'sqe' is uninitialized when used here [-Werror,-Wuninitialized]
+On Tue, Oct 21, 2025 at 03:35:42PM +0200, Adrià Vilanova Martínez wrote:
+> [    0.220045] pcieport 0000:00:1c.0: pciehp: Slot Status            : 0x0048
 
-Already fixed, and as Greg mentioned, this may silence the warning but now it'll
-cause a NULL pointer deref instead...
+In the working case (without 4d4c10f763d7), there's a stale
+Presence Detect Changed event in the Slot Status register.
+The event is cleared by pcie_init() prior to enabling interrupts.
+However the event immediately re-appears:
 
--- 
-Jens Axboe
+> [    0.220308] pcieport 0000:00:1c.0: pciehp: pcie_enable_notification: SLOTCTRL 58 write cmd 1028
+> [    0.220316] pcieport 0000:00:1c.0: pciehp: pending interrupts 0x0008 from Slot Status
 
+I also note that in the working case there are a bunch of
+Correctable Errors reported through AER several times in the log:
+
+> [    1.949940] pcieport 0000:00:1c.0: AER: Multiple Correctable error message received from 0000:00:1c.0
+> [    1.949950] pcieport 0000:00:1c.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+> [    1.949955] pcieport 0000:00:1c.0:   device [8086:9d10] error status/mask=00000001/00002000
+> [    1.949960] pcieport 0000:00:1c.0:    [ 0] RxErr                  (First)
+
+Now here's the kicker:
+
+Looking at the ASPM configuration in the lspci output you've provided,
+I note that after booting without 4d4c10f763d7, ASPM is disabled on
+the Root Port but L1 is enabled on the Wifi card!
+
+After resuming from system sleep, ASPM is disabled on both of them
+(with and without 4d4c10f763d7).
+
+I suspect the incongruence of ASPM settings between Root Port and
+Wifi card is the root cause of the Presence Detect Changed flaps
+as well as the Correctable Errors.  I guess the BIOS set these
+incorrectly.  Looking at the code in:
+
+pcie_aspm_init_link_state()
+  pcie_aspm_cap_init()
+
+... it first disables L0s and L1 to initialize L1 substates,
+then restores the register values as they were set by BIOS.
+This feels wrong.  The safest option is probably to instead
+disable L0s and/or L1 if either of them was only enabled
+on one of the two link partners.
+
+pcie_aspm_init_link_state() later does call pcie_config_aspm_path(),
+which should rectify incongruent settings.  But it's only called
+if the aspm_policy is something else than POLICY_POWERSAVE and
+POLICY_POWER_SUPERSAVE.
+
+Which policy is set in your kernel configuration?
+(Search for CONFIG_PCIEASPM_...)
+
+Does setting it to CONFIG_PCIEASPM_PERFORMANCE change the behavior?
+
+With 4d4c10f763d7, the Wifi card falls off the bus and the link never
+comes back.  I don't know why the commit is causing that.  As Mario
+suggested, it may be caused by the platform.  Could you provide an
+acpidump for further analysis?  The usual way to share large blobs
+like this (as well as dmesg and lspci output) is by opening a bug
+on bugzilla.kernel.org and attaching it there.
+
+Thanks,
+
+Lukas
