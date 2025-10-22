@@ -1,142 +1,151 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48533285C8B
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 11:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB3633DEE7
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 11:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761132210; cv=none; b=eeG2MA19UPBeu9lVL87OYHlcVybL2sRyZEujQX228l6PkHDGEpTzB6v0qS4gRp8H2h8y9nAQccHzUj2ex2VuUVOHi0A9SpD2qcsLfOhaaHnc3oiGYBj+zfSKvTY7dRuv4yQXMH3tjlHIsfYhxsdTBs9XzQuNXaAayJsn8Y/4RbU=
+	t=1761134231; cv=none; b=WhFi5HIPXRwKn5UwYA73tv1tytOeie4wyWOQWf2V5MJ+HTl1alsJ8NWnfuV4EYR7+To5jqFwNtu5xAbrsfRJxS2c8hMBZNtMqTbExXX99PAT/mKAj/kaunqCJq+xWlovfvpLKwonFfF4gMVYGilJz0zlkf3Rucptf8UNcR4Skl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761132210; c=relaxed/simple;
-	bh=pux7Gftl3kdbJdsfJg60JElS64sO0dvQBi7V8W+jdLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fs8mnvr/Oiuhh74B7ZoskH4it9jJG7UOEMMBrYtgye3CZNIgA01vfdQjUbuCggXFPcNuUvMS+3CODaWEnj4j1h42rih31NaVdIBwdz1g9XlF2Oj6h0lxRUncpKRXXZpuuQO2YvfXPox1vWH0T58Ov6fWH1lR62iZhdc/I+uINUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=LBSU+KW6; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1761134231; c=relaxed/simple;
+	bh=URTqzJkAAJFoQOPycXd7kEr7wppHxat1qLacnS1FCiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sqDhVFMhVdAMjSsmYVHLeQLcqGWE2Gn+sCrFBzp4nxB2uK4SdkcE9oHUZrnANdUwmwsbsCNf+RM9LMwLU4QT9jmrx4lYsIp9JOzL2GA9t2YAI1yesHAS+Zvg70sbJhGEDR5bxmuXRu9W/ZBrBrkTwM1mc1IM2Vj1PcCsKimNkvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iSUPNw3w; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="LBSU+KW6"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-471131d6121so51311865e9.1
-        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 04:23:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSUPNw3w"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3307de086d8so5614730a91.2
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 04:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1761132207; x=1761737007; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kjPYwjUGUBLIRYRVo/Xv8w6fNKMNsLf3PLH0iArVM50=;
-        b=LBSU+KW61YqO1WITlJSm/fEuGU1xyqosveuzB7aSjPBUXoQBjX6Ppn7ra5AqFl5AOP
-         RXrrDoYIQdJGTYKD366iG5SxbqqOF/9Is6x8naTgl88dMLs/MkJDWdbIgx7w5TwrST6g
-         kIlBe5J3w/QvVr6sKLvnn5G456shC4DFXjOz+aD/Y9TFTH34dH3xdBRHwJd2pKGPtDI1
-         edbQYzgfCzdGmMSYTeIewcmFG9KiULadtICaChRV7GHlkcHZ1grc7YMRyzcJo96zSD0r
-         Kj44Yc1OQ6CKGDNw4XX+mH3CoD5AktVXnOiuUV++vbrVM2nCg4UpFKDc0k4xMr30OxIB
-         l6IQ==
+        d=linaro.org; s=google; t=1761134229; x=1761739029; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WzfUG+BqfKD/coIQsN8R1l6DNO8bGUEyk6UsV4mKerM=;
+        b=iSUPNw3wQKTipuaBEYmkiVLn9ttlXr/NQ6ptn9cIfjo5LP1/zwdhOB034dCSvKkY3E
+         BPqc8JD0imlZPHso42Xyy5van5/oFVKjZfbWIlYQRM2J+iAbDnj/82radOjx8H9dAjjz
+         WBi3GeO7WHtQq01jiWnDNtuY4rpEusoxFoGG08Su8c9aYKuBdwNEbmdXLztBegzZrKj5
+         WnpdFH0GngWehUOxfCimsPelfpX208QqVdvA2upwNdOtYKg7UkuwcK6OV3dTjGQC7m0c
+         ZQFuIuBlrT17ZLG1PaxFio+9XMeWYK3a1H4zFjUa36FaQkmcBPYPLNKT8yZMV5mAF6xB
+         st9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761132207; x=1761737007;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjPYwjUGUBLIRYRVo/Xv8w6fNKMNsLf3PLH0iArVM50=;
-        b=jfxPWaorvwR9LAndv8PVdwq7jahq+q4tACM2X8Ot1z9KmcZjQa62LEqlTJkzLZ0lXk
-         nIN72ix9LL20fvrf8UNeP/oIAs/u12gSx6qWpJ5o1MI2jeBDXn2FgbVy0/k7op0+cq5t
-         7l+hKbQ33c0BxiDtwGC62kgmJb6pR8307TKLWqjVu3zkpp70AvQ3nckyTjVepk3/Pcyb
-         GuoLZF4L8gZ6166d9Sk0d2PSJadFoRxuhrTquzfLBYDr08lYH51G9/adVZA0lRg45DNI
-         5mJux6DW4+ZDMV21qNsuXB8yYfvsF9ZfzxYBrb9telm6hGl5F+JhBZ128JyAI0Vj7hvC
-         eM0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWCiYSxLowpAc5aTSG+LqiCJ93gURc5FbZZghNNg0xSensKucmOZCSKAxLLOHJUxX/54sBvxwV+QEi4wQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxoWmcTx/ClQhyYj+VOiEQ6Qr44by1h+mhVeVGr/AxhBH7quOH/
-	8Mz6V7vGKC0jkKyenchzfoKqkKCwGAraJfcpobcm9xbRP3/3LcTmjeU=
-X-Gm-Gg: ASbGncu4gE9oqhpRnIae6ouyF3Tr6RgfSBOyAbKoIJSOB1NAZwawFk3fc3hBQEt+vzN
-	CMxdwszjQumZ9P23bPq6lf0AyzINRsjJuif4KUsOe9frsKThL1CuWlu+UxxpPTTx2EEs8G+kLwR
-	yYNxBClllN19JEcI8bwWMIBBGz3PyL2zMCJgXAJsr+u1z8ab4DRQTjf8zoRLgmu1CrS7x+S4wKC
-	EQKcKdTsURQdY3VJ7KbLuO7K8nytS0ss0ftIHRQwdavh+OfEzOhjUPpke8BetapM58hXlljA/9e
-	FR06nC2twui08RN4uZSc6vbsYL1BH9gQTRXnoBpSWdj/Ja2hxVxv7qk1rYFsMnLTkt+fcmXsWKi
-	Md4Hm7KAO7qoWPClnlJPnoDjfl/2rbJDPJBBVvkSfkMDHdfWH7G2di/aHwHI9voOmtfJoE85OuM
-	G2pxXvym+TgVdEPsl1A50oFcudgaTmWvJpjUcTtl41neVxJWSHoJmlJ4SnhUq2Kw==
-X-Google-Smtp-Source: AGHT+IHvaWk6lF5t+4jkEZNj4fCR2v2SPRQO7ACJdqn9xWJPRqdmrWzxShh0nYRVjV+WCcz+aSXGQA==
-X-Received: by 2002:a05:600c:6291:b0:470:fcdf:418 with SMTP id 5b1f17b1804b1-47117911694mr151571175e9.27.1761132206345;
-        Wed, 22 Oct 2025 04:23:26 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057850.dip0.t-ipconnect.de. [91.5.120.80])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47496afd459sm36880475e9.1.2025.10.22.04.23.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 04:23:25 -0700 (PDT)
-Message-ID: <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
-Date: Wed, 22 Oct 2025 13:23:25 +0200
+        d=1e100.net; s=20230601; t=1761134229; x=1761739029;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WzfUG+BqfKD/coIQsN8R1l6DNO8bGUEyk6UsV4mKerM=;
+        b=ilFSOUHfZgX7BnRToi8po6f+t08txL5PuZIefNeajuYjZ1ACx4cshiCq9QGs0xhFC3
+         2YTrZcuFo3D/FnVeHU+yA8hRnxzHYLHfHwjrF0C6UBXaP8OFJJt21ycPg51zQALaLdfi
+         WGSBoOJW16M3/pYxMOSDF4Eq6B+Tem+IhBhTjSU+bgvUHtgKHfVgAtPF6rhExFShLLZl
+         qoKI9XM4YYbaRxnm3SPJ4B0tVFawSJQbuEZOFxGMU+6vQ37nKljbxdA+/EVcIohngU6E
+         vRvLoIer5iA9c2PVs2wGtlI2Oq9tSr6BcclNwB7VvskXJPEKi0SopyqrEZtE0XtU2U8l
+         J9LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5kCS3TlSX/irI0wZwQHeMZ7+b8QiHpEiJSMnNPz930cLnt1WZaZ7U6nku0NGsjrrqND3qGi+//jfuKA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyn9xnGj9duZdIGiBNjwsuNlh8+tg7b+Ac/cVKbGZJUn4r/Uhzj
+	96mKW53wflSQSWnhwQdm0V9oBMVXNTXeEi7X3zvkoaivfYacxD3Fu1OdmfCNby8sFo4=
+X-Gm-Gg: ASbGncvAmb6LtFCnEXyFfXRZAxnlUY2QB5ut6xeRldtxEPRyGyumN5Irb+DQyjC0Am6
+	8FMqmF2jtfKqqHFg+4XOT2ZWREbg0H0+jb67cXeOgdqhLWo70hpz9zEKEgA0FpCsV0JI6Hzh0Ju
+	NJ03+o/XklZQTvpPhUN4XoAbTy18DamQyC9Sn2wV1LPDWz2pCUdSuYFtOOpvZRFFFbZVxrhK6KT
+	qJl3uj7Yw56jyw6b2Lo89PHblXjZPAaTq6KcFQur9wu9D1cfhOJigRaSdoZ900CC5P+Tq2JMHMf
+	ykvd3hkWSO0WTES3c6x0YxwHYJ+OVJTA1oJgR+zZD7uzdsMYtGTnnA6DBCEKkvWUCstAMZNitBZ
+	svCAliO+UPq/eLVh56CJ0QL+XU4skioeGvSHfWYrHtVG16r8f97vz9aMcc99LS33n83gkz2f1kA
+	fytxkH22ogyRfK4vxTt7glWl216vwBL1u3EIn2Eu7HwD9u3jj5vUkFsQiTnQ==
+X-Google-Smtp-Source: AGHT+IEubD0OvI6uVVM+gnAPZHbQP3Rz7U+Y/YydXiR4UWw4SnGLju39L4qJ5sYEmZqdZYH8YZdr7g==
+X-Received: by 2002:a17:90b:1dc6:b0:339:a4ef:c8b1 with SMTP id 98e67ed59e1d1-33bcf8f7802mr26421431a91.22.1761134229471;
+        Wed, 22 Oct 2025 04:57:09 -0700 (PDT)
+Received: from localhost ([2405:201:c00c:2854:21a:7bd8:378:3750])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33e22428b1esm2401348a91.22.2025.10.22.04.57.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 04:57:08 -0700 (PDT)
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+To: ltp@lists.linux.it
+Cc: lkft@linaro.org,
+	lkft-triage@linaro.org,
+	arnd@kernel.org,
+	dan.carpenter@linaro.org,
+	pvorel@suse.cz,
+	jack@suse.cz,
+	brauner@kernel.org,
+	chrubis@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev,
+	aalbersh@kernel.org,
+	arnd@arndb.de,
+	viro@zeniv.linux.org.uk,
+	anders.roxell@linaro.org,
+	benjamin.copeland@linaro.org,
+	andrea.cervesato@suse.com,
+	Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH] ioctl_pidfd05: accept both EINVAL and ENOTTY as valid errors
+Date: Wed, 22 Oct 2025 17:27:04 +0530
+Message-ID: <20251022115704.46936-1-naresh.kamboju@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
- 6.18-rc2
-Content-Language: de-DE
-To: Thomas Zimmermann <tzimmermann@suse.de>, regressions@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>
-Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
- jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
- nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-References: <20251014084743.18242-1-tzimmermann@suse.de>
- <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
- <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
- <798ba37a-41d0-4953-b8f5-8fe6c00f8dd3@googlemail.com>
- <bf827c5c-c4dd-46f1-962d-3a8e2a0a7fdf@suse.de>
- <5f8fba3b-2ee1-4a02-9b41-e6e1de1a507a@googlemail.com>
- <e2462c92-4049-486b-92d7-e78aaec4b05d@suse.de>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <e2462c92-4049-486b-92d7-e78aaec4b05d@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Am 22.10.2025 um 12:20 schrieb Thomas Zimmermann:
-> Hi
-> 
-> Am 22.10.25 um 11:16 schrieb Peter Schneider:
->> Am 22.10.2025 um 11:11 schrieb Thomas Zimmermann:
->>> Hi
->>>
->>> Am 22.10.25 um 10:08 schrieb Peter Schneider:
->>>>
->>>> Your patch applied cleanly against 6.18-rc2 and the kernel built fine, but unfortunately it did not solve the issue: 
->>>> my console screen stays blank after booting. This is regardless whether I do a soft reboot, press the reset button 
->>>> or power cycle and do a cold boot. They are all the same.
->>>
->>> Just to be sure: you do see output at the early boot stages (BIOS, boot loader). It's at some later point during 
->>> boot, the driver loads and the display blanks out?
->>
->> Yes, that's correct.
->>
->>> There's another patch attached. does this make a difference?
->>
->> Do I have to apply that against base 6.18-rc2 or against 6.18-rc2 + your previous patch?
-> 
-> Base 6.18-rc2. All the patches are against this.
+Latest kernels return ENOTTY instead of EINVAL when invoking
+ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid).  Update the test to
+accept both EINVAL and ENOTTY as valid errors to ensure compatibility
+across different kernel versions.
 
-So with this new patch against 6.18-rc2, I first got this build error:
+Link: https://lore.kernel.org/all/CA+G9fYtUp3Bk-5biynickO5U98CKKN1nkE7ooxJHp7dT1g3rxw@mail.gmail.com
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+---
+ .../kernel/syscalls/ioctl/ioctl_pidfd05.c     | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-   CC [M]  drivers/gpu/drm/ast/ast_mode.o
-drivers/gpu/drm/ast/ast_mode.c: In function ‘ast_crtc_helper_atomic_disable’:
-drivers/gpu/drm/ast/ast_mode.c:857:12: error: unused variable ‘vgacr17’ [-Werror=unused-variable]
-   857 |         u8 vgacr17 = 0xff;
-       |            ^~~~~~~
-cc1: all warnings being treated as errors
-
-
-because I always do my kernel builds with CONFIG_WERROR=y. So then I commented out the now superfluous declaration in 
-line 857 and the build succeeded. However, unfortunately the issue still persists. The screen still gets blanked on 
-reboot (as clarified before, after BIOS/POST messages, Grub boot menu, initial boot messages).
-
-Beste Grüße,
-Peter Schneider
-
+diff --git a/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c b/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
+index d20c6f074..ec92240a1 100644
+--- a/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
++++ b/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
+@@ -4,7 +4,7 @@
+  */
+ 
+ /*\
+- * Verify that ioctl() raises an EINVAL error when PIDFD_GET_INFO is used. This
++ * Verify that ioctl() raises an EINVAL or ENOTTY error when PIDFD_GET_INFO is used. This
+  * happens when:
+  *
+  * - info parameter is NULL
+@@ -14,6 +14,7 @@
+ #include "tst_test.h"
+ #include "lapi/pidfd.h"
+ #include "lapi/sched.h"
++#include <errno.h>
+ #include "ioctl_pidfd.h"
+ 
+ struct pidfd_info_invalid {
+@@ -43,7 +44,22 @@ static void run(void)
+ 		exit(0);
+ 
+ 	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO, NULL), EINVAL);
+-	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid), EINVAL);
++	/* Expect ioctl to fail; accept either EINVAL or ENOTTY */
++	TEST(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid));
++	if (TEST_RETURN == -1) {
++		if (TEST_ERRNO == EINVAL || TEST_ERRNO == ENOTTY) {
++			tst_res(TPASS,
++				"ioctl(PIDFD_GET_INFO_SHORT) failed as expected with %s",
++				tst_strerrno(TEST_ERRNO));
++		} else {
++			tst_res(TFAIL,
++				"Unexpected errno: %s (expected EINVAL or ENOTTY)",
++				tst_strerrno(TEST_ERRNO));
++		}
++	} else {
++		tst_res(TFAIL, "ioctl(PIDFD_GET_INFO_SHORT) unexpectedly succeeded");
++	}
++
+ 
+ 	SAFE_CLOSE(pidfd);
+ }
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.43.0
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
