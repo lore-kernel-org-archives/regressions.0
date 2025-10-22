@@ -1,211 +1,144 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3909F2FF64D
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44E12FE075
+	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761120028; cv=none; b=CC8fxACCAdv6ir3chLfVH0PCRKlL7njTQrnth1aFP9/EDE3ngTwu91BF+OVRz0nyNnHcaYM3ibn2IX1nZa8/PZD0/u+UcnD1zCXDHrcDZQRXUFIkoxrp0m/Ycsj84olr2awiody6918jiSjE6EBF5GpH6YoxzaQ4axrxtHL1/x8=
+	t=1761120536; cv=none; b=Zw0CQlNZXlFL3y99f2WHCPE2K2jDJ5OMVCS6Df8C+VoZhYOSQ2BtrB7/HYPosGJIe6+UkawtGJsm00VtHoBEtXJQRpgK4JJueK4BpLHL/FSjaJ99zeYX3ltjmAxITqVP1vu5w+CJY0q4LUc7VrGu9Y/M65mcfoOVNEc7e5+Ih90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761120028; c=relaxed/simple;
-	bh=L6JYs4ivoCFvVciQgaMIR/lmHduqqGaaz0VtISeqwJw=;
+	s=arc-20240116; t=1761120536; c=relaxed/simple;
+	bh=yHZI+oRRybgwHU8EgfjqgnH/F8s2S0X03JL8R3MevwY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HQJliuGEK+Z5tvxTkrPMIuymGY5RSg1CWULCk8udauoPlG/zFkaEJLaz+OS//cO7L9jvRQEvQMsZI+ReLNjuVLMfFy/0jlHXt+20KtctjtUnLu6gRQkQCpN9isZy1K3ti3zzjBDvZOwJAo2bqPtzf77tIC/guUObTZJo55Hacp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nQ+WIKNp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=Z5GRD1Aux/XFoKH4AdpfmVKeKbi06zwXs1TZZG0CjABWWuzx0a+xhPFXO/sUXRbGnKlz/4dulJ5801mNM6rgf88oSLfCnOYNzfbjXvIR04BdA6IP646J5pGCD2Tn1aGJTKgfFpqBmyPe6XHOHeTovIFDClcOYxVwYJW9t0VTYgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=KSAC3Fzf; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nQ+WIKNp"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59M2RLws018585
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:00:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XYXVFaAaMLwr6fG2n4FdstC9bqlVQImA3Ymx6v8/8mI=; b=nQ+WIKNppkakuGoq
-	HNCN57+udiDo9ZKqUV2gpSbuppm2Gs7W6lfqPcebpF21aUqbzMPsxh399Vr7Q/XM
-	+u0aLJxhQa68vIJ1qmxla0JukMwXMSzCeKWxTPnWAU8H9khPMG2V7/Skixpdyybc
-	NqdB05mXyKXpFkC8eD+BrMiEtXBDueQQkDwnOM6JS8G4OclIQCL+mf+QEwwF+luJ
-	//eNrKanvzCpAyKY2bzUhgYg5+T+GFcNuYh4yVRSc2mibI4hvwMVag0wNq+Qwq98
-	IZs3U8YVfxfeexExDzk6fIGJYWDdpgNHWs+hkU4G/0ucAYVTOm2kc4k9IpghZlSp
-	8y9QCQ==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49v469kr1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 08:00:26 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-77f5e6a324fso12709745b3a.0
-        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 01:00:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KSAC3Fzf"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47100eae3e5so20214265e9.1
+        for <regressions@lists.linux.dev>; Wed, 22 Oct 2025 01:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1761120533; x=1761725333; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UcnB1vPCv4/5O7NSkhwvuNPMqNZtj/H/Vxellyl6lWw=;
+        b=KSAC3FzfIaJdbNEkyddtNDCgZag0tYKiIsWrG7FWI3W4pp/V5XCDhTauTGA+X2dEHg
+         vgqG0bP/TyAJIfI4RfmxW+1w71/aNFpKzsVA9hDV5gN2EXCcwPdhnTNY16UKfSitoDNq
+         0zSVhBfOgLENkJvnPnOXTjvLLiDbpRno4xO/sCYyeAzsVw9yAV2YbXWXSVBUYCawGoeN
+         mmZGhQ2ElS+Bl2yZoyIKhA94wlHGqssYpmp1KMXRYMOfQD2LruW1QQCtGMdPKcHYJSad
+         +R2eIPpZsqIT9IHfB22AIGzlm7+5dME4GgSmz+qDdZx6FiH6U4c2/qtKNq0bVsgu49Li
+         zVuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761120025; x=1761724825;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1761120533; x=1761725333;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XYXVFaAaMLwr6fG2n4FdstC9bqlVQImA3Ymx6v8/8mI=;
-        b=aaQH0VVdAgh3aKtC15k5Hs4aqwcY95pokwRws1KZs421O2h8V9WnU7idTSExEpUBqJ
-         s0ncPgpRKdOxgangXQf+mZn0/RbeAGAzIWheIXtXZs0qNIAuLeLgwOEh6eQC7PDiEExQ
-         hviU6slhgzgX5mRmiyP/9pE/Olb1du04ILi45NWE9+vETPPzP5501QU23jYimUvIwafP
-         zleUT8win0kutWy8eaDerOURrNTOqeRkff1sGWbXfzCYlxobH24vZbCoUCWEr3/Vfilo
-         gBDxCAieDWE6xcaJ3i2vPC2I8xmAUiIXBHY0I2vQXqZ9vjcCLaXk/7dwVSRRKsos0GGN
-         zuGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+YEdPHmOBZac7rB/+ohTAA7Reu6DuGzddE5dvYlccL5P031m5gngWKC7PIjgAlNjLt3b+qeECAMvVTA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxkbeYkddkS2ZpNleS/TlJVpna3bozZJDQdPnxhGkUFItBM7eEC
-	oxVcWoEkgmUWzTdKMGEBx+qmSid9KfpjMnQhIjLVLazN3sXJ18cfjQp9Z44bu0OEEV+7kHkzKiw
-	KFzVhEtVw8fbv2uUiGMUzsvwkAwkxPC/4118ylsMCksHZ8/QDWXd8piezw9AZ3SzKZg==
-X-Gm-Gg: ASbGncvU9gxIFzJ9/KMUW0/uh48rtadrWK+XlzXc9BFhg8K6Jewmg2WfXIKnCotm/Nw
-	eRvngQ/PO2SRoRsDtT9jtDapec/cHtLkhhYSBY6pE2MBL4+F9PJgguuXlDYbGyLXyhd9fUnTQrL
-	ZXEt/rVf2yQSomc7+P3livPWx+u3gSMyTqzIZ3jxeXOVc2ATdsBfF4z3s2evDPbGG2r2H1a9B5s
-	ZBV+94ZIWn8wVeAxu7UnibD5BoMq/SJOxxY6ghK9NgQ2e9VBev4CUp+/IIzdixk+7jfYx6rpThN
-	uV7ZwfiCcS3UpXwXCnmtmyNlHGf7n5g/XWGkX5X7vvKVmX+FKML3r0ge8FHBazOEWtwE7KKKBw1
-	rCns9LD1s8RawBFzq8Q04i8db8JuWy4QIMcTTkbY8ccfintMlbgxGRO0t9scZyANPpskRBVfX
-X-Received: by 2002:a05:6a00:99b:b0:793:1955:2384 with SMTP id d2e1a72fcca58-7a220ada794mr29166886b3a.17.1761120025211;
-        Wed, 22 Oct 2025 01:00:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVyRz86S4Hw9/gYeNtzxJUUmTcx16JDUBodGshnXBo7XeH/deuGV1Ia/yK2XgOqxc89Wmg0Q==
-X-Received: by 2002:a05:6a00:99b:b0:793:1955:2384 with SMTP id d2e1a72fcca58-7a220ada794mr29166840b3a.17.1761120024635;
-        Wed, 22 Oct 2025 01:00:24 -0700 (PDT)
-Received: from [10.133.33.147] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7a230121ebfsm13617531b3a.70.2025.10.22.01.00.22
+        bh=UcnB1vPCv4/5O7NSkhwvuNPMqNZtj/H/Vxellyl6lWw=;
+        b=MbieXrS4DeoBoZdRQKMlDsW/xvVCkEAAhQrJkRd1v9e0KbK8U2Sj0/adnZmk5uYdlx
+         fdOquQhHSqUr5h2M7K2YgT7h4QSUeYO+ooINgsNqG2DmhR2lkOaP1zZtvRrsN3YrioJb
+         e/VcUgiD+xaM1+rEKXMUMgY3B39fYlDg77jwNneB/fox/LlnRECPQO4bKHrwQpa1g++D
+         OQElU2ghymdLWx/Cw/1c+aiyo1KiWFb7weR7rrgJovMcjgqCgOFuhKq8crgr8znisTpB
+         dp6+Y7Dm5v9WZsxnX2+wZH1ZOvRErNY4+6HYlrbiK0whAHW3UWvHveqB2QV1hnuYwuco
+         w+Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVqLn4R1e5UpAcG8vdT6J/zw8OLrvoiPu+7oKVkXnMspFGcaNfNQhBEhWwS3jk3FUdznAp5rBdeW38bCA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwS1KU9RVgB/yfXnoz7O4M2GWOMk9J0C+jjSiOxSWnOMGiZaoOl
+	sHL7X+REenJZMsCaD/fPz8gy/vcNRaUFMH0Oq5Zb8KJWfD+F0CnYdqI=
+X-Gm-Gg: ASbGncuBKuBLcCbSF9ipGnHipyrwkTeIgSS/b3C4VCcRX1ZSPzRhLeqd9GrX3F4Pms7
+	xo0377qSHfiSrSzXxKklKJ3XtBJ7SucghclzlxpXo99ZTH99mt1GieGu+V6SlxMEz4ZxyXBDvlg
+	mIrfrHNxu2W0CoawFEyzkD5iJA3X/lLD3waAoEmUnN2hkXD+F0Ll7i9pcrdV7aYxcAjsdm/DJQQ
+	rjtlwVetykmGGNSBtG7hpFbU9c2i7Zn9lZsHeTfu96ysBmL3asIsRW+XoIfumP6rAVe33N8nSFT
+	hyghkVjo/9XwbGAYJRsrygCUZ9T132H5dyg8NZ0jxKz76a9t73sPFTGZMQ9YUzqrJYiMGv9diyb
+	jbpqQATTQc9KR3FM4ogYRHn9qAwqGKZc/HN9bQTwFmMOQey6veMIJWZp4/qddmTEx2gpnVXCb5k
+	PJyzK81It2qMY/h0lTC7EokN38Ap/UH4jceALByB+7Y8i5SSJYXb/WRaRZS4e57A==
+X-Google-Smtp-Source: AGHT+IF/cCvzRlFyWOqSA/Xn2hsqVgkC6A23PcoYB3/ncn63CK7+kyxojS9N24qzW1KCsixw1CexVg==
+X-Received: by 2002:a05:600c:6085:b0:471:133c:4b9a with SMTP id 5b1f17b1804b1-4711786c79emr171726605e9.6.1761120532780;
+        Wed, 22 Oct 2025 01:08:52 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057850.dip0.t-ipconnect.de. [91.5.120.80])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475c428a534sm35770345e9.6.2025.10.22.01.08.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Oct 2025 01:00:24 -0700 (PDT)
-Message-ID: <5466e122-9143-482e-a9ab-7f956e19bf86@oss.qualcomm.com>
-Date: Wed, 22 Oct 2025 16:00:20 +0800
+        Wed, 22 Oct 2025 01:08:52 -0700 (PDT)
+Message-ID: <798ba37a-41d0-4953-b8f5-8fe6c00f8dd3@googlemail.com>
+Date: Wed, 22 Oct 2025 10:08:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ath10k fails initialization, bisected to "wifi:
- ath10k: avoid unnecessary wait for service ready message"
-To: Klaus Kudielka <klaus.kudielka@gmail.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Jeff Johnson <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        regressions@lists.linux.dev
-References: <20250811-ath10k-avoid-unnecessary-wait-v1-1-db2deb87c39b@oss.qualcomm.com>
- <175823924851.3217488.17742065327824732992.b4-ty@oss.qualcomm.com>
- <6d41bc00602c33ffbf68781f563ff2e6c6915a3e.camel@gmail.com>
- <76d4235d-db4e-40f4-9ede-8cb536b82fbd@oss.qualcomm.com>
- <10919281648e306fd3f6713437b4793c50bb6692.camel@gmail.com>
-From: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <10919281648e306fd3f6713437b4793c50bb6692.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Betterbird (Windows)
+Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
+ 6.18-rc2
+Content-Language: de-DE
+To: Thomas Zimmermann <tzimmermann@suse.de>, regressions@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+ jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
+ nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+References: <20251014084743.18242-1-tzimmermann@suse.de>
+ <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
+ <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 44WBXBe1WIkBttTfKetwKl_WR6PUtZ78
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAzMiBTYWx0ZWRfX3Xjeb8u/diD8
- 5CXhW5yhOPwTgYhZ0A3fl6T5x6V9eewL7TjyIGl/XsKNmnM47p8GXnT/BWCHiZbxEPQbw0mn2l5
- sisvF+PAYyJ95W7fDp29vRmW5yOlOL5zJ+wUQ0+42tb28UbpIE3yDcYF9eoNLf1oMO8C32Eip/D
- 4BRfGUNMG224IlgAQaHO9eyY6f8kvdFuOT+jHAR703JzGlto7NIQh7S3HlFHDMG2DSwR4aHjnji
- 3myWKX/MClf5MIYi6mDSBEcHmXIifvVdH+pYI2h9mjiVKw2uaEFAuVtYLw7JG1iNaBwPCZIwr09
- anWUCIYK054i3LPeGfrQwhzKLWGxVbZhPAa6g3Ew1yUt5rJ1KPRPcqbxdy4e6trOd9Tr8r7A3CJ
- 6iuBgOrFmRLpYOQb/4YtSMj0kdhrfg==
-X-Authority-Analysis: v=2.4 cv=U8qfzOru c=1 sm=1 tr=0 ts=68f88f1a cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=PjCq7wsziC7u3JKYlTIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-GUID: 44WBXBe1WIkBttTfKetwKl_WR6PUtZ78
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-22_03,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- spamscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180032
+
+Hi Thomas,
+
+thanks very much for your quick response!
+
+(adding Thorsten to CC)
 
 
-
-On 10/18/2025 9:50 PM, Klaus Kudielka wrote:
-> On Fri, 2025-10-17 at 08:57 -0700, Jeff Johnson wrote:
->> On 10/17/2025 8:37 AM, Klaus Kudielka wrote:
->>> Unfortunately, this particular commit completely breaks the ath10k driver in my setup.
->>>
->>>
->>> Hardware:
->>> - Turris Omnia (arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts)
->>> - Wifi card (output from lspci): Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
+Am 22.10.2025 um 08:51 schrieb Thomas Zimmermann:
+> Hi
+> 
+> Am 22.10.25 um 05:27 schrieb Peter Schneider:
+>> #regzbot introduced: 6f719373b943a955fee6fc2012aed207b65e2854
 >>
->> This issue was previously reported with that particular chipset.
->> This is currently being tracked at:
->> https://bugzilla.kernel.org/show_bug.cgi?id=220671
+>> Hi all,
 >>
->> It may be useful to supply your information as a separate record to that bug.
+>> I have encountered a serious (for me) regression with 6.18-rc2 on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. After 
+>> booting, my console screen goes blank and stays blank. 6.18-rc1 was still fine.
 >>
->> /jeff
+>> The machine has an Asus Z9PE-D16 server mainboard with an onboard ASpeed AST2300 VGA chip with 16MB VRAM. I have 
+>> attached an older HP Monitor to it via old VGA jack/cable. It also has a second graphics card in a PCI-E slot; an 
+>> older NVidia GTX 560. It is not connected to a monitor, but I have configured it via kernel command line for PCI-pass- 
+>> through to VMs running on this server (I use Proxmox VE, i.e. QEMU/KVM virtual machines). Currently, no VMs use this 
+>> yet, and also no VMs are autostarting with machine boot. So when this regression occurs, the server is idle. Pressing 
+>> a key on the keyboard does not make the screen come alive. The server is running fine though, and I can access it via 
+>> SSH. It just has no graphic output anymore. In case this is important, the machine also has a ASMB6 BMC (can be used 
+>> via http).
+>>
+>> I have attached dmesg output from both 6.18-rc1 which is fine, and 6.18-rc2 which exhibits this bug. I have bisected 
+>> the issue, please see attached git bisect.log.
 > 
-> Some more observations on that topic with the hardware shown above.
+> Thanks for the detailed bug report.
 > 
-> ath10k_core_start() calls ath10k_wmi_wait_for_service_ready(), and later ath10k_wmi_wait_for_unified_ready().
+> Attached is a patch that partially reverts the broken commit. Could you please apply it on top of the broken kernel and 
+> report on the results?
 > 
-> The now *unconditional* call to ath10k_hif_send_complete_check() inside ath10k_wmi_wait_for_service_ready()
-> makes the later call to ath10k_wmi_wait_for_unified_ready() fail.
-> 
-> If I call and handle wait_for_completion_timeout() first (as it was before the patch),
-> ath10k_hif_send_complete_check() is *not* called, and both ath10k_wmi_wait_for_service_ready() and
-> ath10k_wmi_wait_for_unified_ready() succeed. Everything is back to normal.
-> 
-> Side note:
-> ath10k_wmi_wait_for_service_ready() succeeds in both cases with time_left == WMI_SERVICE_READY_TIMEOUT_HZ.
-> 
-> 
-> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=220671
-
-Thank you Klaus, can you please try if below diff can fix this regression?
-
-diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
-index 7bbda46cfd93..1a981d333b5c 100644
---- a/drivers/net/wireless/ath/ath10k/ce.c
-+++ b/drivers/net/wireless/ath/ath10k/ce.c
-@@ -1256,6 +1256,19 @@ void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int
-ce_id)
- }
- EXPORT_SYMBOL(ath10k_ce_per_engine_service);
-
-+void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id)
-+{
-+       struct ath10k_ce *ce = ath10k_ce_priv(ar);
-+       struct ath10k_ce_pipe *ce_state = &ce->ce_states[ce_id];
-+
-+       if (ce_state->recv_cb)
-+               ce_state->recv_cb(ce_state);
-+
-+       if (ce_state->send_cb)
-+               ce_state->send_cb(ce_state);
-+}
-+EXPORT_SYMBOL(ath10k_ce_per_engine_check);
-+
- /*
-  * Handler for per-engine interrupts on ALL active CEs.
-  * This is used in cases where the system is sharing a
-diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
-index 27367bd64e95..9923530e51eb 100644
---- a/drivers/net/wireless/ath/ath10k/ce.h
-+++ b/drivers/net/wireless/ath/ath10k/ce.h
-@@ -255,6 +255,7 @@ int ath10k_ce_cancel_send_next(struct ath10k_ce_pipe *ce_state,
- /*==================CE Interrupt Handlers====================*/
- void ath10k_ce_per_engine_service_any(struct ath10k *ar);
- void ath10k_ce_per_engine_service(struct ath10k *ar, unsigned int ce_id);
-+void ath10k_ce_per_engine_check(struct ath10k *ar, unsigned int ce_id);
- void ath10k_ce_disable_interrupt(struct ath10k *ar, int ce_id);
- void ath10k_ce_disable_interrupts(struct ath10k *ar);
- void ath10k_ce_enable_interrupt(struct ath10k *ar, int ce_id);
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 97b49bf4ad80..ce8e0c2fb975 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1812,7 +1812,7 @@ void ath10k_pci_hif_send_complete_check(struct ath10k *ar, u8 pipe,
-                if (resources > (ar_pci->attr[pipe].src_nentries >> 1))
-                        return;
-        }
--       ath10k_ce_per_engine_service(ar, pipe);
-+       ath10k_ce_per_engine_check(ar, pipe);
- }
-
- static void ath10k_pci_rx_retry_sync(struct ath10k *ar)
+> Best regards
+> Thomas
 
 
+Your patch applied cleanly against 6.18-rc2 and the kernel built fine, but unfortunately it did not solve the issue: my 
+console screen stays blank after booting. This is regardless whether I do a soft reboot, press the reset button or power 
+cycle and do a cold boot. They are all the same.
 
+
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
