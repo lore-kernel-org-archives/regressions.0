@@ -1,141 +1,207 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.manjaro.org (mail1.manjaro.org [142.132.176.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ABF3093A8
-	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 16:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1802734D4DC
+	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 18:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.176.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761237848; cv=none; b=tuHfiFN6vLQpU2PiGubhKGxNL4sNoN1PewzvJW1i7vBwXY8UzRFzPFLrdiXRQNo02VF+kSYm8kYrSkoOeGuN1KeV+34ZKJtUX5JmPqBkcuspX9LZZNvpqTQPQAfOTkfUfNgcIgkYiROmw/Zx9rg92dXOeDnTKtrqnXt1A1wC5NU=
+	t=1761245843; cv=none; b=AphKSE/E8uiacKybucoDYr757qJYEllosBHZeeOeUqgvYb+pBh3BDxXVdWslxceuSMhn7efeZfOW1zMJL1F0gb8zmv61uSd5VzyhjAY/fQ2an+mGx7ykR914Czrd8JZaxZvMHGbYnNMvfM6Es06y6G1HiFl24ml4VvoovjmCIP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761237848; c=relaxed/simple;
-	bh=8fIX7biSbEZ4B4b77XL+f4TS9/Jp/xnQ/nE2WkTPmO8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W5GmCoNDfdLsnsFnCElDdoqCeKj49Qx62ocsP/dVyqblAEx4lQ4sz1jRQHjuKNNlW6BKue161xZsSO8ZI097SGaj7/M0VouZyuNPnjMFMMWKzj0Ybq32SjKxsza/2WWhLvVKAF9gWQos7OvKjOfXGOYdSaeG+5tCRWIDcCEQ6lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZOeGkGqJ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761245843; c=relaxed/simple;
+	bh=6wX8LHFlafAw8mfqmlMLn51I+U9gs1h4LFipTaYP3fw=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=j/3gLH7d+bgp82lFiH0mC7VrMjtGk8vG/xZPS0KoTb1yiSPg30Uji2/Y3O7XBRqPacF2/5F/YoJ9bxcAOAIklO8y1vGsbIGJ/DWzn84Xa9M/N9lGleeLIKPXOEAhLBi2FJu2bACPJr6bV3vvsEqmptDgLzGfqNqPm3YDDZZQvfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=s/BqqRVh; arc=none smtp.client-ip=142.132.176.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZOeGkGqJ"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b6cf257f325so929945a12.2
-        for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 09:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761237846; x=1761842646; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WBSNSnNcjQaKaCnCJuZwnw3e0fnN82ayIMOAkE29L9Y=;
-        b=ZOeGkGqJ6/WF+2fzsoA2HCGzaZgD1bDCb1B/6y2C/MUG0JDrW0TGYVl2L6iYuo0fm0
-         kD0Avdjb6hzql4LogDaA6el5WuLx31Wr1UzICmQvSuV8KB6okuxARd3U35gVQYji5vM3
-         dsYhEVCoJej3abc7VvszkAR9FmIttsTrouZGxySoQBOB+yRZEq6D44qIDCMpvGyclLBp
-         Ec+6peGClYCjZebwWh09ic+aK4tT5BYpNfFoOUJHLCRoNxWBPiTcZ5uLNfkRmcIblS5k
-         JJTnm4EamI0YSuXnxVTqI2avLiF0e7bMTVZqEVmk3y1RFpDiAiXDD99CN+F2HRlDAQp4
-         5iMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761237846; x=1761842646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WBSNSnNcjQaKaCnCJuZwnw3e0fnN82ayIMOAkE29L9Y=;
-        b=TSTMJaZCD+uU0e79+huTxXPTGKohV3FV0h6Ed3VA/GoN5r+GU6oiOyrYpKJqinR3nX
-         ilic4s+FIdCHC6+Ht+3IM31aUcByNZBuGpFAWMuRQ2Ur5/bSx27K41a1rB/k0uRewfn+
-         PppvHYCltfZNBmPGi3h+tc0lSF8O/9HaoPl9LezKhmPQNhQUNhAVPsSstjfkR10Gs5pK
-         z+DmraqAgO1LzyGqf6zLK+36d9BWkddeIWLBrAmT8Ty3KlPhVcqmEwIJE52wCcnuVocb
-         6slKqfj2Y6i5cFnWtYu9gcsFd8UesWKWxLSFRUwN9TnBUqOxmcFAPm4tz2Bu7f5T6TS7
-         xuvA==
-X-Forwarded-Encrypted: i=1; AJvYcCV45Ws+8cd4SnxMX3uukyxY7tOdS59lactqA2Z8pW4vMfmBGnorldlVUT+Z8n3UN7A/KrJD7353vtpBRg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZKYyL6xxDmuop7mIsVVJW3kOo4aG2mBwSj0xeO25ftBKOG/IO
-	4hQ+EA7V4hO2j1Wp0OXEywXbIaBayMWBXZjsgqOzUr5jQlP0x6NJ8gcOPVsLjGqR+zE=
-X-Gm-Gg: ASbGncv19Ad+VVv8S1BL+7QrZsLe1M9JXzvqQg15mh11VPBgy/ORBxZQNOcFw1/0uvn
-	1PeKTa/nEMew0CG7hmpAxsPn7WJrS7Tu16rZICE6tNRnolo/OpGrHfiIaMCL9TwSiekb2rzpSpC
-	YTXvuEgdoi/41Pigey438vN3/C4bxVb1X8x32iA7OboSlYDpoo0ZnRiW0PvzHDvrM88tRe88l8x
-	hKHnETaJtT0bQkKH6sIRlnnuk8JosbNlQgaIH0VrJNiX6yZPvTG5YTvN52Bkte5y460g+LibIBV
-	um4WMq2+5A3yjQD9whW0ILLXzccEJ00qKHp3Hbcm+5WLgZ+3vTz7Vxr1KpMoXvqLnPr2zeslERc
-	fZrm/2Mh9fVUaWz4qIA5YEp6iaZAF+vfRzf35Hcy/nrdtg/6PRAC+w8WHzfJCkBT16BYwyGu2J0
-	X3Ep6bGsI4zEcr06WX0yKcR6pnx2D0JQJtuEHaYLJnKcoOdDL+mw==
-X-Google-Smtp-Source: AGHT+IE4pFFH1ySU5m3ad6i6VUzfPRs66wcF55zEy8vDarPljKErMuGfeUnYnh7PBCKkJQkt4U7EUg==
-X-Received: by 2002:a17:902:cec2:b0:282:eea8:764d with SMTP id d9443c01a7336-2946552521emr61649525ad.35.1761237845759;
-        Thu, 23 Oct 2025 09:44:05 -0700 (PDT)
-Received: from localhost ([2405:201:c00c:2854:d184:69e6:58bf:965c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2946de0c894sm28713685ad.47.2025.10.23.09.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Oct 2025 09:44:04 -0700 (PDT)
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-To: ltp@lists.linux.it
-Cc: lkft@linaro.org,
-	arnd@kernel.org,
-	dan.carpenter@linaro.org,
-	pvorel@suse.cz,
-	jack@suse.cz,
-	brauner@kernel.org,
-	chrubis@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	aalbersh@kernel.org,
-	arnd@arndb.de,
-	viro@zeniv.linux.org.uk,
-	anders.roxell@linaro.org,
-	benjamin.copeland@linaro.org,
-	andrea.cervesato@suse.com,
-	lkft-triage@lists.linaro.org,
-	Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH v2] ioctl_pidfd05: accept both EINVAL and ENOTTY as valid errors
-Date: Thu, 23 Oct 2025 22:14:01 +0530
-Message-ID: <20251023164401.302967-1-naresh.kamboju@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="s/BqqRVh"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPA id 704B840D1C;
+	Thu, 23 Oct 2025 20:57:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=dkim;
+	t=1761245838; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=jFoaeG/1d3oJARkrn8yECO2RwXWx0Noto3/Vpddq4gE=;
+	b=s/BqqRVhShF5evNuCamVwBbWlzR1H4GanU9Rz3oGQ2MNqRTY/lk0SrY+zf/g2KUGFl6EBy
+	hUqIaUJ45JG/vdg6Zv/XWm4i5sU88I5GXa7E0G2V9cPTtslidtZrwooba+6z2PGX6TAcu/
+	IfQX50fnCi6r8BHx6myoT+EnVzqn3515v527cJNX7CHyodhC4Y4XFSJZ2Gd4wlnf4SoAOX
+	DB8zDXT6Fbi2JWfmLmLKKnieKOQT8i5q1bIjoQ5qBZd3Gl/cOWc0wIyIuTvnOFaglSrMHQ
+	9lUDjZfl0qp6dF8fW8ne7cyHDI1YwEMfeneul+gN26u/3kaU2WDYfYwa9TZQwA==
+From: "Dragan Simic" <dsimic@manjaro.org>
+In-Reply-To: <fxakjhx7lrikgs4x3nbwgnhhcwmlum3esxp2dj5d26xc5iyg22@wkbbwysh3due>
+Content-Type: text/plain; charset="utf-8"
+References: <20251014184905.GA896847@bhelgaas>
+ <0899e629-eaaf-1000-72b5-52ad977677a8@manjaro.org> <fxakjhx7lrikgs4x3nbwgnhhcwmlum3esxp2dj5d26xc5iyg22@wkbbwysh3due>
+Date: Thu, 23 Oct 2025 20:57:13 +0200
+Cc: "Bjorn Helgaas" <helgaas@kernel.org>, "FUKAUMI Naoki" <naoki@radxa.com>, manivannan.sadhasivam@oss.qualcomm.com, "Bjorn Helgaas" <bhelgaas@google.com>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Rob Herring" <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, =?utf-8?q?David_E=2E_Box?= <david.e.box@linux.intel.com>, "Kai-Heng Feng" <kai.heng.feng@canonical.com>, =?utf-8?q?Rafael_J=2E_Wysocki?= <rafael@kernel.org>, "Heiner Kallweit" <hkallweit1@gmail.com>, "Chia-Lin Kao" <acelan.kao@canonical.com>, linux-rockchip@lists.infradead.org, regressions@lists.linux.dev, "Shawn Lin" <shawn.lin@rock-chips.com>, "Diederik de Haas" <diederik@cknow-tech.com>, "Heiko Stuebner" <heiko@sntech.de>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <b3e60f4e-6351-8303-6ad2-9e72849ccd18@manjaro.org>
+Subject: =?utf-8?q?Re=3A?= [PATCH v2 1/2] =?utf-8?q?PCI/ASPM=3A?= Override the ASPM 
+ and Clock PM states set by BIOS for devicetree platforms
+User-Agent: SOGoMail 5.12.3
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: None
 
-Newer kernels (since ~v6.18-rc1) return ENOTTY instead of EINVAL when
-invoking ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid). Update the
-test to accept both EINVAL and ENOTTY as valid errors to ensure
-compatibility across different kernel versions.
+Hello Manivannan,
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
----
- testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+On Wednesday, October 15, 2025 08:22 CEST, Manivannan Sadhasivam <mani@=
+kernel.org> wrote:
+> On Wed, Oct 15, 2025 at 01:33:35AM +0200, Dragan Simic wrote:
+> > On Tuesday, October 14, 2025 20:49 CEST, Bjorn Helgaas <helgaas@ker=
+nel.org> wrote:
+> > > On Wed, Oct 15, 2025 at 01:30:16AM +0900, FUKAUMI Naoki wrote:
+> > > > I've noticed an issue on Radxa ROCK 5A/5B boards, which are bas=
+ed on the
+> > > > Rockchip RK3588(S) SoC.
+> > > >=20
+> > > > When running Linux v6.18-rc1 or linux-next since 20250924, the =
+kernel either
+> > > > freezes or fails to probe M.2 Wi-Fi modules. This happens with =
+several
+> > > > different modules I've tested, including the Realtek RTL8852BE,=
+ MediaTek
+> > > > MT7921E, and Intel AX210.
+> > > >=20
+> > > > I've found that reverting the following commit (i.e., the patch=
+ I'm replying
+> > > > to) resolves the problem:
+> > > > commit f3ac2ff14834a0aa056ee3ae0e4b8c641c579961
+> > >=20
+> > > Thanks for the report, and sorry for the regression.
+> > >=20
+> > > Since this affects several devices from different manufacturers a=
+nd (I
+> > > assume) different drivers, it seems likely that there's some issu=
+e
+> > > with the Rockchip end, since ASPM probably works on these devices=
+ in
+> > > other systems.  So we should figure out if there's something wron=
+g
+> > > with the way we configure ASPM, which we could potentially fix, o=
+r if
+> > > there's a hardware issue and we need some king of quirk to preven=
+t
+> > > usage of ASPM on the affected platforms.
+> > >=20
+> > > Can you collect a complete dmesg log when booting with
+> > >=20
+> > >   ignore=5Floglevel pci=3Dearlydump dyndbg=3D"file drivers/pci/* =
++p"
+> > >=20
+> > > and the output of "sudo lspci -vv"?
+> > >=20
+> > > When the kernel freezes, can you give us any information about wh=
+ere,
+> > > e.g., a log or screenshot?
+> > >=20
+> > > Do you know if any platforms other than Radxa ROCK 5A/5B have thi=
+s
+> > > problem?
+> >=20
+> > After thinking quite a bit about it, I think we should revert this
+> > patch and replace it with another patch that allows per-SoC, or
+> > maybe even per-board, opting into the forced enablement of PCIe
+> > ASPM.  Let me explain, please.
+>=20
+> ASPM is a PCIe device specific feature, nothing related to SoC/board.=
+ Even if
+> you limit it to certain platforms, there is no guarantee that it will=
+ be safe as
+> the users can connect a buggy device to the slot and it could lead to=
+ the same
+> issue.
 
-diff --git a/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c b/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
-index d20c6f074..744f7def4 100644
---- a/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
-+++ b/testcases/kernel/syscalls/ioctl/ioctl_pidfd05.c
-@@ -4,8 +4,8 @@
-  */
- 
- /*\
-- * Verify that ioctl() raises an EINVAL error when PIDFD_GET_INFO is used. This
-- * happens when:
-+ * Verify that ioctl() raises an EINVAL or ENOTTY (since ~v6.18-rc1) error when
-+ * PIDFD_GET_INFO is used. This happens when:
-  *
-  * - info parameter is NULL
-  * - info parameter is providing the wrong size
-@@ -14,6 +14,7 @@
- #include "tst_test.h"
- #include "lapi/pidfd.h"
- #include "lapi/sched.h"
-+#include <errno.h>
- #include "ioctl_pidfd.h"
- 
- struct pidfd_info_invalid {
-@@ -43,7 +44,12 @@ static void run(void)
- 		exit(0);
- 
- 	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO, NULL), EINVAL);
--	TST_EXP_FAIL(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid), EINVAL);
-+
-+	/* Expect ioctl to fail; accept either EINVAL or ENOTTY (~v6.18-rc1) */
-+	int exp_errnos[] = {EINVAL, ENOTTY};
-+
-+	TST_EXP_FAIL_ARR(ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid),
-+			exp_errnos, ARRAY_SIZE(exp_errnos));
- 
- 	SAFE_CLOSE(pidfd);
- }
--- 
-2.43.0
+I'm hoping that it's clear by now that the theory and practice
+actually diverge in this case, requiring certain level of support
+for different SoCs and boards, which makes ASPM more than just
+a device feature that's simply expected to work by default.
+
+Dealing with buggy PCIe devices is, of course, another part of
+the entire endeavor.
+
+> > When a new feature is introduced, it's expected that it may fail
+> > on some hardware or with some specific setups, so quirking off such
+> > instances, as time passes, is perfectly fine.  Such a new feature
+> > didn't work before it was implemented, so it's acceptable that it
+> > fails in some instances after the introduction, and that it gets
+> > quirked off as time passes and more testing is performed.
+>=20
+> ASPM is not a new feature. It was introduced more than a decade befor=
+e. But we
+> somehow procastinated the enablement for so long until we realized th=
+at if we
+> don't do it now, we wouldn't be able to do it anytime in the future.
+
+To clarify, I referred to PCIe as the already established feature,
+which evidently became broken on some SoCs and boards with the
+initial blanket enabling of ASPM.
+
+> > However, when some widespread feature, such as PCIe, has already
+> > been in production for quite a while, introducing high-risk changes
+> > to it in a blanket fashion, while intending to have the incompatibl=
+e
+> > or not-yet-ready platforms quirked off over time, simply isn't the
+> > way to go.  Breaking stuff intentionally to find out what actually
+> > doesn't work is rarely a good option.
+>=20
+> The issue is due to devices exposing ASPM capability, but behaving er=
+ratically
+> when enabled. Until, we enable ASPM on these devices, we cannot know =
+whether
+> they are working or not. To avoid mass chaos, we decided to enable it=
+ only for
+> devicetree platforms as a start.
+
+As mentioned above, dealing with buggy PCIe devices is something
+to be covered separately, and wasn't the subject of my complaint.
+I referred to the SoC and board specifics.
+
+> > Thus, I'd suggest that this patch is replaced with nother patches,
+> > which would introduce an additional ASPM opt-in switch to the PCI
+> > binding, allowing SoCs or boards to have it enabled =5Fafter=5F pro=
+per
+> > testing is performed.  The PCIe driver may emit a warning that ASPM
+> > is to be enabled at some point in the future, to "bug" people about
+> > the need to perform the testing, etc.
+>=20
+> Even if we emit a "YOUR DEVICE MAY BREAK" warning, nobody would care =
+as long as
+> the device works for them. We didn't decide to enable this feature ov=
+ernight to
+> trouble users. The fact that ASPM saves runtime power, which will ben=
+efit users
+> and ofc the environment as a whole, should not be kept disabled.
+>=20
+> But does that mean, we wanted to have breakages, NO. We expected brea=
+kages as
+> not all devices will play nicely with ASPM, but there is only one way=
+ to find
+> out. And we do want to disable ASPM only for those devices.
+
+I see, and it has turned out rather well in the end.  I totally
+understand the frustration that may come out of people not caring
+for something until it actually breaks, but as you can see, the
+Rockchip community, including people from Rockchip itself, actually
+cares quite a lot and is willing to help in different ways.
+
+> >  With all that in place, we
+> > could expect that in a year or two PCIe ASPM could eventually be
+> > enabled everywhere.  Getting everything tested is a massive endeavo=
+r,
+> > but that's the only way not to break stuff.
+> >=20
+> > Biting the bullet and hoping that it all goes well, I'd say, isn't
+> > the right approach here.
+>=20
+> Your two year phased approach would never work as that's what
+> we have hoped for more than a decade.
+
+Totally understood, but again, perhaps you haven't knocked at the
+right doors.  The Rockchip community cares, for example. :)
 
