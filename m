@@ -1,173 +1,147 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DB13093AB
-	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 12:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E202FFDC1
+	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 13:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761223817; cv=none; b=nDNccgvDHAAcDM85cLCkCpDTJj+GAglDTZT0YjBZdmhUyD7wa0Ei8Ln1XUWl6rH0+xuxhZfEM7OqQe5uN2zRnsklbLI5LaqSvQeepT9HaREpAeTtnFYSnVl7632Nd817+/aIuEqVUcAw8KXKEIo3W90Iaq890Uyzs6ZUFtfO698=
+	t=1761226792; cv=none; b=PR4PmmIY378OWqdTAp+Oor6GrFm5gnMvOp8qmMKBrMs5LRbyjgGeVnlwUkVsj7lTeZ3dafpmBGvUBh0jA7NPpQBmIHBsicbIJMM+BsLq4P8CO3qexm6DdufVbWqWbWFMbDNjwAhrdBgDiJEUZYaT/4McZc5YUkTLkdPTylIRo4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761223817; c=relaxed/simple;
-	bh=ck68Cl+pn506WatKluQtli7MetaQC3dFQbeCPbT07DY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BXkiXvqCOBwtnnNvNefPnRS/F+FSIO9bQSso5I6zDNmncB38ZzcaURsyim8P/kLVlNXImhfsV1AVoVMMB0DRcCgGpa+Vfgfv6mWQ2qGIVEepjuF4iLX7nYsdTUfeLl90y3xFD0FONqXycVOLPCwtAGQNxRF2s6O3qNvGz0SUmBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LysCXxpU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1S8+lRF4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KzB+L0Y8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vf6qPlnJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1761226792; c=relaxed/simple;
+	bh=VlZWQP2vRd5Et2IXN3Y2jcp3joaOd6hd/WT2Ydflim0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JdceRJ0y4K/ATnmpOB0Fo0M0M2XjwUXOVIRINtvn0MPKLcnVaJ6uRVFycztDBZbk4B9iEpxFOsKXIi6P9wVe128g8QzkbpmwwYqn34u6VayfnAKq+Gr103yWiHRUXhDTJ6xiKa/HdX1Ew7jCoGLw6k+iXGjE4JFhT6Q7YmoeFlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=HaOBKiBg; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LysCXxpU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1S8+lRF4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KzB+L0Y8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vf6qPlnJ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2784321202;
-	Thu, 23 Oct 2025 12:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761223810; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mnqBhKeQKzNBh5Cx95R3BM4oFp5wlMsjj8k8riLXhQ8=;
-	b=LysCXxpUPoC+bZhXF6xLVl5dHiajZdJRknw8oQgOFJ8wRIcemsPmrO2F9HQoUysKUbVSdo
-	xiwqOKXwp3SqHiVCs7MHlnWz6mvHYeMq6EaHa5bPYdoURq+LeOWMd088WruOpxaC0B0xdv
-	fT6l9+eEIQTFynJAA7wwErSc8Trb5so=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761223810;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mnqBhKeQKzNBh5Cx95R3BM4oFp5wlMsjj8k8riLXhQ8=;
-	b=1S8+lRF40DobkPj20wtlssGKjU7X64HDI1J6TsDvV8ynKxqHI5/Cle50MbvBZLfZWC1h29
-	QvIMccBdgTWVLzDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761223806; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mnqBhKeQKzNBh5Cx95R3BM4oFp5wlMsjj8k8riLXhQ8=;
-	b=KzB+L0Y8/HF2Vr1jKdTFxJs/Hrq2pE6I483WwfiWRiKvJtCZ7Wy4Nk6TUyAOV5N2vzChcq
-	5djWXF8WvATNY0g/wZ1Nrzl9l1oUT1pXyg4gxTiGDb8CZQVoo6pHo1kejjm8EsVWGsg4eY
-	yvlpZDrU3qh3EHgLyRL3xrSU34ajbZo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761223806;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mnqBhKeQKzNBh5Cx95R3BM4oFp5wlMsjj8k8riLXhQ8=;
-	b=vf6qPlnJUsl6QrQfwiMAYbImXKmByz6iYZuTGkfrqn3bzcB9IqhwyQ47rJZjDmC6y2wdaz
-	hhyhe5Xbj5PLTEBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C848F13285;
-	Thu, 23 Oct 2025 12:50:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yaN6L30k+micBQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 23 Oct 2025 12:50:05 +0000
-Message-ID: <83945039-afb4-4cd3-b29c-e4fd5c757a95@suse.de>
-Date: Thu, 23 Oct 2025 14:50:05 +0200
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="HaOBKiBg"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-88f8e855b4eso56505685a.3
+        for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 06:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1761226789; x=1761831589; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OTdirufWMbJmlgZU7Yrv6nTsTJjgQ9dqEPOTcrYAzcQ=;
+        b=HaOBKiBgXtnjh6py/Cgpv7XhVeO2de/d0ciztrHBq7T6Y1lPvSAX0ZX0/EwizkQwMu
+         ncLQxluCtIIQ5aOier9UoVwmIczzl6WgSf1SwF0u0sbPdeiB3GuYxvVn4mDwnzRIwOJ+
+         stzxkupSbesy7aSNThkoDaaZdf4cektLtypyj5CUkWvM9PMihvcIESbMnANAxxfS3Uyj
+         oSHLqUdUsfquWPvkiit2Z7kJEQNRpf5y8EB4ngezLJmkgjXae2Qult0I2xtPcRc/XBbY
+         YJ0vDvlD/kWM48nbD4/YB65sLAR6hOONJ9zDIskt40qmxNLGNC28WSqkpUf1PWd3yeCI
+         awDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761226789; x=1761831589;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OTdirufWMbJmlgZU7Yrv6nTsTJjgQ9dqEPOTcrYAzcQ=;
+        b=KwZCy74bT4jDPBm1XAFNyLKtqJSmBvWW5E3iL88b121fb5ErvqIOk3B+gy8wGgS/In
+         VGpnlTaeMmLAE9mMsB2zraqbN66J7GAK9+1HQCY6tbzsvnopZb7OwwmSTJCewREYSadk
+         YjsJDN7YxbOfppFUeOBmc11q+8Znn+MonDTWgD2nzcPU1R4Iz1xQ7t5Ca+imvN3Hglne
+         Ko+RrKheD9s8HOPfCHWHRbGoDORrsYIAlFLpb9TjUHymq4KWNtOSoZbTRYjUbAA+H/yP
+         bP/P5+0IhvPoaqeu20+fSkUHjR2fDSV8gPw8T+8vcGD9QAGeYY96B8WZNoJtRfBbJIgy
+         RWbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbIkSeJYBYMmDraGxApcZIF/ZESGRXfWii084SkA0jJ/iuYQUiSgwO1lkswMk200LxXDIA+GcXMhPtiQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhaFdQDx0OD2rNKWaT+oM+/LmDv4hr7t3Qxn/yrXRD/oH/SeCn
+	4pMQHvpxpqPnLyUhESvIJVn1IxfVZYDwr+QZYomb4bX8JL3S+yNL0m5Mkh4pRRomWAI=
+X-Gm-Gg: ASbGncum8xOm4vgfziR9pXCaI8qNnt5bJMxKjPbNzODA+X8ELaDaiN/CmVaUNrLRN+H
+	giHPDwPZsFFmxkP44Wi/LB/yiTDCK7Q3ke14I4MzMuQZDoRfAUaODYje5hFbgAjtoVMm239lxh2
+	cc4Un0AKdWqFn2SeheRWCGxgFWI9pzb6ySZBkUvOfsXdLfx0CLN5ECaHaysH2wxBFzk8NY1xeBf
+	b+cPAjZ7O+kYaZ08NspwcWkJTqM2Qc6Z0uAR/IQcH1G/MBF3D/goBQW4Diq5+Zkl6WiJw6NWQMm
+	SS5lTutO+cCJA4BmgbHaks9eOl27z2gWMl1X+0/hOLThB+dIR3inIP3IoB9N7jKCIrmCcBe4NuE
+	n1PxAzM5zuZoDgTtpqgZoOGuvZTPb/9x1iW+S0kBFE7I0ArfW1s4B102ML6VUWlsT3/KXP4fZ4R
+	0F7L8fVkf/Cl0WX7aSPLGXeZ0dI6g9iQ==
+X-Google-Smtp-Source: AGHT+IHv+2FoyHtgNqF1DBafNAWsqVheVNr/d4qFGe2fvEd3Bm7iU47UHmaCg3qy/u+cwC/1tQZFTA==
+X-Received: by 2002:a05:620a:2a0b:b0:892:dff8:2961 with SMTP id af79cd13be357-892dff8325amr2309221685a.50.1761226789166;
+        Thu, 23 Oct 2025 06:39:49 -0700 (PDT)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-89c0e97efa6sm160831585a.24.2025.10.23.06.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Oct 2025 06:39:48 -0700 (PDT)
+Date: Thu, 23 Oct 2025 09:39:47 -0400
+From: Nick Bowler <nbowler@draconx.ca>
+To: Esben Haabendal <esben@geanix.com>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-rtc@vger.kernel.org, stable@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: PROBLEM: hwclock busted w/ M48T59 RTC (regression)
+Message-ID: <ni6gdeax2itvzagwbqkw6oj5xsbx6vqsidop6cbj2oqneovjib@mrwzqakbla35>
+References: <krmiwpwogrvpehlqdrugb5glcmsu54qpw3mteonqeqymrvzz37@dzt7mes7qgxt>
+ <DmLaDrfp-izPBqLjB9SAGPy3WVKOPNgg9FInsykhNO3WPEWgltKF5GoDknld3l5xoJxovduV8xn8ygSupvyIFOCCZl0Q0aTXwKT2XhPM1n8=@geanix.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
- 6.18-rc2
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Peter Schneider <pschneider1968@googlemail.com>,
- regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
- jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
- nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-References: <20251014084743.18242-1-tzimmermann@suse.de>
- <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
- <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
- <798ba37a-41d0-4953-b8f5-8fe6c00f8dd3@googlemail.com>
- <bf827c5c-c4dd-46f1-962d-3a8e2a0a7fdf@suse.de>
- <5f8fba3b-2ee1-4a02-9b41-e6e1de1a507a@googlemail.com>
- <e2462c92-4049-486b-92d7-e78aaec4b05d@suse.de>
- <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
- <329a9f97-dd66-49c2-bc42-470566d01539@suse.de>
-Content-Language: en-US
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <329a9f97-dd66-49c2-bc42-470566d01539@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[googlemail.com,lists.linux.dev,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DmLaDrfp-izPBqLjB9SAGPy3WVKOPNgg9FInsykhNO3WPEWgltKF5GoDknld3l5xoJxovduV8xn8ygSupvyIFOCCZl0Q0aTXwKT2XhPM1n8=@geanix.com>
 
->
-> I've been able to reproduce the problem with an AST2300 test system. 
-> The attached patch fixes the problem for me. Can you please test and 
-> report on the results?
+On Thu, Oct 23, 2025 at 07:21:21AM +0000, Esben Haabendal wrote:
+> On Thursday, 23 October 2025 at 06:45, Nick Bowler <nbowler@draconx.ca> wrote:
+> 
+> > After a stable kernel update, the hwclock command seems no longer
+> > functional on my SPARC system with an ST M48T59Y-70PC1 RTC:
+> > 
+> > # hwclock
+> > [...long delay...]
+> 
+> I assume this is 10 seconds long.
 
-On pure -rc2 without previous patches applied.
+Yeah, about that.
 
+> > hwclock: select() to /dev/rtc0 to wait for clock tick timed out
+> 
+> And this is 100% reproducible, or does it sometimes work and sometimes fail?
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+It fails every time.
 
+> Are you using the util-linux hwclock command? Which version?
 
+hwclock from util-linux 2.40.2
+
+> Do you have CONFIG_RTC_INTF_DEV_UIE_EMUL enabled?
+
+No, this option is not enabled.
+
+> Can you run `hwclock --verbose`, both with and without the reverted commit,
+> and send the output from that?
+
+6.18-rc2 (broken):
+
+  # hwclock --verbose
+  hwclock from util-linux 2.40.2
+  System Time: 1761226454.799573
+  Trying to open: /dev/rtc0
+  Using the rtc interface to the clock.
+  Last drift adjustment done at 1657523820 seconds after 1969
+  Last calibration done at 1657523820 seconds after 1969
+  Hardware clock is on UTC time
+  Assuming hardware clock is kept in UTC time.
+  Waiting for clock tick...
+  hwclock: select() to /dev/rtc0 to wait for clock tick timed out
+  ...synchronization failed
+
+6.18-rc2 w/ revert (working):
+
+  # hwclock --verbose
+  hwclock from util-linux 2.40.2
+  System Time: 1761226685.238753
+  Trying to open: /dev/rtc0
+  Using the rtc interface to the clock.
+  Last drift adjustment done at 1657523820 seconds after 1969
+  Last calibration done at 1657523820 seconds after 1969
+  Hardware clock is on UTC time
+  Assuming hardware clock is kept in UTC time.
+  Waiting for clock tick...
+  ioctl(3, RTC_UIE_ON, 0): Input/output error
+  Waiting in loop for time from /dev/rtc0 to change
+  ...got clock tick
+  Time read from Hardware Clock: 2025/10/23 13:38:06
+  Hw clock time : 2025/10/23 13:38:06 = 1761226686 seconds since 1969
+  Time since last adjustment is 103702866 seconds
+  Calculated Hardware Clock drift is 0.000000 seconds
+  2025-10-23 09:38:05.239100-04:00
+
+Thanks,
+  Nick
