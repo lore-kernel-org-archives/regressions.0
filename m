@@ -1,52 +1,77 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DC22F90EA
-	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 08:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C7EDF76
+	for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 12:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761207993; cv=none; b=JUaIbPDVT0WvibvYypO/cq51IsBpg0ynGAtrxjZlNZpYswme8hJplNL/ylFs1qipLRn0gqONgu98gKXrPDBAmdWmwSgx3gTlhbjOpTMSqe0yBi4kwlzVV+4RwTCme9fhmsQyBpdV4O/HqEQknVA8CVYZ69j265e/0VEea/xC21s=
+	t=1761223623; cv=none; b=VpV/tJ1GVZSFiKXRv8y1artwfpNIxlXapEkwBaBtabcD9NiUDyjao73Ads6+3fjEG2jd6Nxm2T0Omwz2fksvrh/Nw5Zn8ZI6SEY4N2P2VCDxsGlxP4Pq5ELYjWRLORVAgA+gRQLSuvVC11kIS12G2d1cMPbUFsBQS3zHB32Zbhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761207993; c=relaxed/simple;
-	bh=8ITcHTlrm3kX+LD6C+sylaX9MmujOF8phbcUMbMEiBo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=FzTCYWe8n6pUlVr/MkHVa7jofAy2k4DO2EkJhIZ0nGoG68aCpNc25Kte12ZP3Jftj4jomaAo+5a/N6p3LJbr9PbVoWB875PuKLdxOcEEeyJsSB2qXK9dfOloHPul9EkZBd8C2UIJUyJnfRAGaHQ3pJKhctHPoZSz6gUqntd4eU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=C9v+ynXO; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1761223623; c=relaxed/simple;
+	bh=M/KUn0pz0e34yZzDEgrZSDH668ekEqrUq491kghpSKk=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=Yk3srvXPr1tY4TylVK22zskDps9Ny4dhY/mUVSE9sNcjpHZVVLgI7KRpFAh9si6xcKQnwFMIIh3kBpJFE+B6oJm9vsooqdabyXrMI26cE9XNFuPOPdbx+qwvwfyk0hxVTnjeHFJGVwrUxJRC8S2AE76VZ31PfNXa+mYVUikigCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xCpHMp+R; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=81mpbfL3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T0zqnMWK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mRn5gSNW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C9v+ynXO"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 59N8QJIk486628;
-	Thu, 23 Oct 2025 03:26:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1761207979;
-	bh=8ITcHTlrm3kX+LD6C+sylaX9MmujOF8phbcUMbMEiBo=;
-	h=Date:Subject:From:To:CC:References:In-Reply-To;
-	b=C9v+ynXOXmMHKsDt4CsxCVhBlE4/0BKIwINqcu8lDseGOUR3UylEj9FUfHtyRji7C
-	 X3vM2t/UaUb3RM0F9CVb6+GnMUnw/xLxbCw6UohBTjEZXjnFvUDG2LKrwcrdGS8EuD
-	 8hOAEKbXRK6LP1gWh6wuwI1DHM+kMpZM4F6G/mig=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 59N8QJuu2991195
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 23 Oct 2025 03:26:19 -0500
-Received: from lewvowa02.ent.ti.com (10.180.75.80) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Thu, 23
- Oct 2025 03:25:49 -0500
-Received: from DLEE204.ent.ti.com (157.170.170.84) by lewvowa02.ent.ti.com
- (10.180.75.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.55; Thu, 23 Oct
- 2025 03:25:48 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE204.ent.ti.com
- (157.170.170.84) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Thu, 23 Oct 2025 03:25:48 -0500
-Received: from [172.24.234.212] (uda0510294.dhcp.ti.com [172.24.234.212])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 59N8PdJ32560624;
-	Thu, 23 Oct 2025 03:25:40 -0500
-Message-ID: <e7aba180-5064-4b1e-a011-8e48c5cf3083@ti.com>
-Date: Thu, 23 Oct 2025 13:55:39 +0530
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xCpHMp+R";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="81mpbfL3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T0zqnMWK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mRn5gSNW"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8293C1F79D;
+	Thu, 23 Oct 2025 12:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761223615; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=66Z5CznZ7odjpwPMy4M1I/dek6aDfSMiPt+5W7PivNI=;
+	b=xCpHMp+RuAbppEodJeitpWmIaGDRA6rWHttqmKBCGTLcKOrejYcXS+tx2Rj/Mvd+BRjXER
+	Oj+vHDFDXZlq3i9yG+5gRO/jU/u96WVQgldJGyRF5FcCtWura/l9yjcML98Dhhc+KI5Cqh
+	2vVYU9oLbwpfsUJAxalhD469hRjzwcI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761223615;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=66Z5CznZ7odjpwPMy4M1I/dek6aDfSMiPt+5W7PivNI=;
+	b=81mpbfL3PpOqyMoMpqNs13bqmkTHnCMEjAkz/kqsWDqcwJA3fvp7RdXk4s56IwItty6vqY
+	CUaoWnNgg8oczADA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761223611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=66Z5CznZ7odjpwPMy4M1I/dek6aDfSMiPt+5W7PivNI=;
+	b=T0zqnMWKPN+hTPuXFrFPDXf4U34+Wu5qFmQHpGoFZiFvcj3hY+ksScfpGvbCNm0akoFBMC
+	o9ss9ONT+iE2cJcHgFa8UeHUgqK/mdaaFNcCFAqqNdiMu8c0JvGy8ZEQt99hnRfgEK1bDd
+	pExJ/SAAnEk6UR5JqsT4GYXgMBssD3M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761223611;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=66Z5CznZ7odjpwPMy4M1I/dek6aDfSMiPt+5W7PivNI=;
+	b=mRn5gSNWAE9kBZeXYIQsOWXxBYdArcF9jAuyKnH0XzoW8vZKNq/o1wXwvID3srjLzIfNPp
+	AEwwi2eCz3qvEiAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 29EDC13285;
+	Thu, 23 Oct 2025 12:46:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yjSYB7sj+mibAgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 23 Oct 2025 12:46:51 +0000
+Content-Type: multipart/mixed; boundary="------------W3Z0M8wWf0unhfX0d2zFxBG1"
+Message-ID: <329a9f97-dd66-49c2-bc42-470566d01539@suse.de>
+Date: Thu, 23 Oct 2025 14:46:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,95 +79,183 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Suspend to RAM does not work anymore with
- k3-am62-ti-ipc-firmware.dtsi
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-To: Hiago De Franco <hiagofranco@gmail.com>, Andrew Davis <afd@ti.com>,
-        "Nagalla, Hari" <hnagalla@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
-        <jm@ti.com>, <d-gole@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
-        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-        Francesco Dolcini
-	<francesco.dolcini@toradex.com>,
-        Matthias Schiffer
-	<matthias.schiffer@ew.tq-group.com>,
-        Logan Bristol
-	<logan.bristol@utexas.edu>,
-        Josua Mayer <josua@solid-run.com>, John Ma
-	<jma@phytec.com>,
-        Nathan Morrisson <nmorrisson@phytec.com>,
-        Garrett Giordano
-	<ggiordano@phytec.com>,
-        Matt McKee <mmckee@phytec.com>, Wadim Egorov
-	<w.egorov@phytec.de>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "Stefan Eichenberger" <stefan.eichenberger@toradex.com>,
-        Hiago De Franco
-	<hiago.franco@toradex.com>,
-        Diogo Ivo <diogo.ivo@siemens.com>,
-        Li Hua Qian
-	<huaqian.li@siemens.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Baocheng Su
-	<baocheng.su@siemens.com>,
-        Benedikt Niedermayr
-	<benedikt.niedermayr@siemens.com>,
-        <regressions@lists.linux.dev>
-References: <sid7gtg5vay5qgicsl6smnzwg5mnneoa35cempt5ddwjvedaio@hzsgcx6oo74l>
- <e60dd8d6-2bd5-41f0-bf8a-b0a5822a7f88@ti.com>
+Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
+ 6.18-rc2
+To: Peter Schneider <pschneider1968@googlemail.com>,
+ regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+ jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
+ nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+References: <20251014084743.18242-1-tzimmermann@suse.de>
+ <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
+ <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
+ <798ba37a-41d0-4953-b8f5-8fe6c00f8dd3@googlemail.com>
+ <bf827c5c-c4dd-46f1-962d-3a8e2a0a7fdf@suse.de>
+ <5f8fba3b-2ee1-4a02-9b41-e6e1de1a507a@googlemail.com>
+ <e2462c92-4049-486b-92d7-e78aaec4b05d@suse.de>
+ <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
 Content-Language: en-US
-In-Reply-To: <e60dd8d6-2bd5-41f0-bf8a-b0a5822a7f88@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
+X-Spamd-Result: default: False [-3.19 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.953];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain,text/x-patch];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[googlemail.com,lists.linux.dev,vger.kernel.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	HAS_ATTACHMENT(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -3.19
+X-Spam-Level: 
+
+This is a multi-part message in MIME format.
+--------------W3Z0M8wWf0unhfX0d2zFxBG1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Hi
 
-On 21/10/25 14:33, Beleswar Prasad Padhi wrote:
-> Hi Hiago,
->
-> On 20/10/25 19:47, Hiago De Franco wrote:
->> Hello all,
+Am 22.10.25 um 13:23 schrieb Peter Schneider:
+> Am 22.10.2025 um 12:20 schrieb Thomas Zimmermann:
+>> Hi
 >>
->> After commit 1d6161617c10 (“arm64: dts: ti: k3-am62-ti-ipc-firmware:
->> Refactor IPC cfg into new dtsi”), suspend-to-RAM stopped working on
->> AM62x.
+>> Am 22.10.25 um 11:16 schrieb Peter Schneider:
+>>> Am 22.10.2025 um 11:11 schrieb Thomas Zimmermann:
+>>>> Hi
+>>>>
+>>>> Am 22.10.25 um 10:08 schrieb Peter Schneider:
+>>>>>
+>>>>> Your patch applied cleanly against 6.18-rc2 and the kernel built 
+>>>>> fine, but unfortunately it did not solve the issue: my console 
+>>>>> screen stays blank after booting. This is regardless whether I do 
+>>>>> a soft reboot, press the reset button or power cycle and do a cold 
+>>>>> boot. They are all the same.
+>>>>
+>>>> Just to be sure: you do see output at the early boot stages (BIOS, 
+>>>> boot loader). It's at some later point during boot, the driver 
+>>>> loads and the display blanks out?
+>>>
+>>> Yes, that's correct.
+>>>
+>>>> There's another patch attached. does this make a difference?
+>>>
+>>> Do I have to apply that against base 6.18-rc2 or against 6.18-rc2 + 
+>>> your previous patch?
+>>
+>> Base 6.18-rc2. All the patches are against this.
 >
-> The above commit is only refactoring changes and should not
-> cause any trouble. I think the commit you are interested in
-> should be: a49f991e740f ("arm64: dts: ti: k3-am62-verdin:
-> Add missing cfg for TI IPC Firmware").
+> So with this new patch against 6.18-rc2, I first got this build error:
+>
+>   CC [M]  drivers/gpu/drm/ast/ast_mode.o
+> drivers/gpu/drm/ast/ast_mode.c: In function 
+> ‘ast_crtc_helper_atomic_disable’:
+> drivers/gpu/drm/ast/ast_mode.c:857:12: error: unused variable 
+> ‘vgacr17’ [-Werror=unused-variable]
+>   857 |         u8 vgacr17 = 0xff;
+>       |            ^~~~~~~
+> cc1: all warnings being treated as errors
+>
+>
+> because I always do my kernel builds with CONFIG_WERROR=y. So then I 
+> commented out the now superfluous declaration in line 857 and the 
+> build succeeded. However, unfortunately the issue still persists. The 
+> screen still gets blanked on reboot (as clarified before, after 
+> BIOS/POST messages, Grub boot menu, initial boot messages).
+
+I've been able to reproduce the problem with an AST2300 test system. The 
+attached patch fixes the problem for me. Can you please test and report 
+on the results?
+
+Best regards
+Thomas
+
+
+>
+> Beste Grüße,
+> Peter Schneider
 >
 
-<snip>
-
->
->> Do you have suggestions on how best to fix this in the driver, or should
->> we consider reverting the DTS change until suspend-to-RAM works again?
->
-> List of suggestions/solutions in order of preference:
-> 1. If no intention to enable IPC on rprocs:
->       Do _not_ include k3-am62-ti-ipc-firmware.dtsi
-> 2. If intention is to enable IPC on rprocs:
->       Make sure rproc firmware is available in rootfs.
->       rproc would boot up and consume the mbox
->       msg, suspend would be successful. Tested this
->       on TI AM62x-sk with commit 1d6161617c, works
-> 3. Add support in mbox driver to flush the pending
->     queues.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
 
-Posted a RFC version for #3:
-https://lore.kernel.org/all/20251022102015.1345696-1-b-padhi@ti.com/
+--------------W3Z0M8wWf0unhfX0d2zFxBG1
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ast-clear-preserved-bits-from-output-value.patch"
+Content-Disposition: attachment;
+ filename="0001-ast-clear-preserved-bits-from-output-value.patch"
+Content-Transfer-Encoding: base64
 
-It still has open questions regarding scenarios with
-FIFO firewalling and supporting existing OMAP SoCs
-which could restore context upon resume.
+RnJvbSBiOWE5MGQ5ZWYyNjZkNWY5ZDNhZWI5NzBhZTM1ZTEwYjcxNmZjNDY2IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5A
+c3VzZS5kZT4KRGF0ZTogVGh1LCAyMyBPY3QgMjAyNSAxNDozMDoyOSArMDIwMApTdWJqZWN0
+OiBbUEFUQ0hdIGFzdDogY2xlYXIgcHJlc2VydmVkIGJpdHMgZnJvbSBvdXRwdXQgdmFsdWUK
+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfZHJ2LmggfCA5ICsrKysrLS0tLQogMSBm
+aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9h
+c3QvYXN0X2Rydi5oCmluZGV4IDdiZTM2YTM1OGU3NC4uNjAyYmZmN2Y5OGQ5IDEwMDY0NAot
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9kcnYuaAorKysgYi9kcml2ZXJzL2dwdS9k
+cm0vYXN0L2FzdF9kcnYuaApAQCAtMjk4LDEzICsyOTgsMTQgQEAgc3RhdGljIGlubGluZSB2
+b2lkIF9fYXN0X3dyaXRlOF9pKHZvaWQgX19pb21lbSAqYWRkciwgdTMyIHJlZywgdTggaW5k
+ZXgsIHU4IHZhbCkKIAlfX2FzdF93cml0ZTgoYWRkciwgcmVnICsgMSwgdmFsKTsKIH0KIAot
+c3RhdGljIGlubGluZSB2b2lkIF9fYXN0X3dyaXRlOF9pX21hc2tlZCh2b2lkIF9faW9tZW0g
+KmFkZHIsIHUzMiByZWcsIHU4IGluZGV4LCB1OCByZWFkX21hc2ssCitzdGF0aWMgaW5saW5l
+IHZvaWQgX19hc3Rfd3JpdGU4X2lfbWFza2VkKHZvaWQgX19pb21lbSAqYWRkciwgdTMyIHJl
+ZywgdTggaW5kZXgsIHU4IHByZXNlcnZlX21hc2ssCiAJCQkJCSB1OCB2YWwpCiB7Ci0JdTgg
+dG1wID0gX19hc3RfcmVhZDhfaV9tYXNrZWQoYWRkciwgcmVnLCBpbmRleCwgcmVhZF9tYXNr
+KTsKKwl1OCB0bXAgPSBfX2FzdF9yZWFkOF9pX21hc2tlZChhZGRyLCByZWcsIGluZGV4LCBw
+cmVzZXJ2ZV9tYXNrKTsKIAotCXRtcCB8PSB2YWw7Ci0JX19hc3Rfd3JpdGU4X2koYWRkciwg
+cmVnLCBpbmRleCwgdG1wKTsKKwl2YWwgJj0gfnByZXNlcnZlX21hc2s7CisKKwlfX2FzdF93
+cml0ZThfaShhZGRyLCByZWcsIGluZGV4LCB0bXAgfCB2YWwpOwogfQogCiBzdGF0aWMgaW5s
+aW5lIHUzMiBhc3RfcmVhZDMyKHN0cnVjdCBhc3RfZGV2aWNlICphc3QsIHUzMiByZWcpCi0t
+IAoyLjUxLjAKCg==
 
-Cc: Andrew, Hari
-
-Thanks,
-Beleswar
-
+--------------W3Z0M8wWf0unhfX0d2zFxBG1--
