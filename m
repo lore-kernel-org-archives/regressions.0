@@ -1,79 +1,91 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EDA1459FA
-	for <regressions@lists.linux.dev>; Fri, 24 Oct 2025 05:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F5220468D
+	for <regressions@lists.linux.dev>; Fri, 24 Oct 2025 06:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761284050; cv=none; b=eeYYYfnJf9g1EAsOrj0eh6psTRwp5Y7Pyv5SGG422Zjz6aGl4WT9EG75dftWhd7DUVs0SInufipa4R8wUoX01PGW1/XwAvzAaPPNWkUiHARSnAyvtZrtCUL9YNed9IpCFaiJeOvbdRuqawTHFNd4vcwToeTjzQLUMRWyjYkeNsY=
+	t=1761286535; cv=none; b=Uftus+g/HkSpNYShXa+wfmm8Y3fESMB6BUwXeu5h46FdiCGrPlqCK/HPfLrhHOOm30/tbi6d+3k9SX0hcpNhB7gO4P4ZROrQyczK9A0ALQRIcuUKocd2ZrTAjk3CtfDkfc8+HcV2UPDBElXTLQkzMdRVZP7L/Apv0Etdxuu8lNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761284050; c=relaxed/simple;
-	bh=UdeClZXIUWVGOl1GLOaOrjFt7x8K2F6/WYmVgfCof5o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qLxxGheJBELO2XrDi/r5g9SoOSI+xnVLJcM66xt+XEOCeG9qX76pflnwKzfB4TaFOyFvCQdUgNXNMkkfu1rkQ7Ck5gztNupkli4UzkTO73hQ0rrEe0WFMCJ3DApAzDlhDOpiwTmJYx1zcFIpcm+b/jTb/6ahM1pP/VUOqavslWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=jL5NHsJH; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1761286535; c=relaxed/simple;
+	bh=Gfijf5Cyh0CHVDy4xVKmZJ/Ybb2SjzEZvltjNszv/T8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BnQrcDvpU7vkou2DEGuIBy1PHctf8aAZfaS3E660MPW8d7vAWM1o/yT3dxi5VJ4s55gSmPRPpwBWTr8rCwxfxaoEpKfVNzcZkGuNovdLBYEWDdJhFBt8FeMDvFmWsMHlXJc+OiTAEPKpDr6UTcjpnt69AyhhU+qLT1lIdmNF8HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wQkBK2kF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vXx/+iwj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jkntidtx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R0Qqeztl; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jL5NHsJH"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-42421b1514fso1052648f8f.2
-        for <regressions@lists.linux.dev>; Thu, 23 Oct 2025 22:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1761284046; x=1761888846; darn=lists.linux.dev;
-        h=in-reply-to:autocrypt:references:cc:to:from:content-language
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UdeClZXIUWVGOl1GLOaOrjFt7x8K2F6/WYmVgfCof5o=;
-        b=jL5NHsJHDvvraPQKU7VpQkSRJM5dwvw1sTY6yNYnmdFAjT4Z+wKMDvTK7JOAqvRsv8
-         s1iKERUU3ghquHvOUPMCIxwHwdHgZx3V1M0kxB1dQidiZfCOvP32Wq3ynZLoqD2o45Nl
-         P0ak1O4Z2KlE2u7fNdJ1TesCud/NPjohII2Cih0TWg72+U5h2LTs7t9P1ySZaKMR9DyM
-         ZcSZGIhbVs26HX4tJt7RJnh7BMOZPAOycfAKgDsDOxiMpik23pg1dRKQO9jlMzTe03+H
-         Z5G+mUOIdVj/dCsjbWJvrMm+tefRUvJQ0hvmqvVtOF2VdELtkqaSc7tnfL7kz6Fz21lI
-         ifQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761284046; x=1761888846;
-        h=in-reply-to:autocrypt:references:cc:to:from:content-language
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UdeClZXIUWVGOl1GLOaOrjFt7x8K2F6/WYmVgfCof5o=;
-        b=JnLv7GXVM+4ZoP+tNosr8+B+2klMjur7gXE7tu8DVKR+yJp0SR20M41R3tSTMcB1+/
-         EnrXZCubkQvrRJj7CFY/xOgEu7KyWtSoZmRYzvSee2UZskbm86zseAloiqsqsmSzeb//
-         5bqzrkk1fxSvFkE117ELzvjeIdTpLvIDs+PM9ksDXvX5TQDrcctmAfwpLb9KGLyOOxeQ
-         B7+KmkO97N3eZ+aEqw9UMAVGDnus4IdvpY4v0Zgoae0bv181xoRCC9DVDxvR/jbbI2tN
-         PE3bPsTJ3tOMF4SiU5kW8OJ3X3siTwaHfb7zo/qabdUz+Sts8EBkmJIvFYGVfYe2MWwH
-         uwPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUy/ixHp94sPAlbQc9ztrXTEkUBCLpKkHMPwp7SCvjYTRdLSIQSvwYBrC+s12O7Qh+LJ8qb/MHnn6ZMJw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw2lJCu2pAgjXZfnwXCaS9RavPJfUvFRvp2lBgjj0MCbcM0I7cs
-	PmZ1/SvpAzOfcBcnfSGBX8ZaSeW0ibrObWtnXUdMal+1qs6me9z2fup1+hqj
-X-Gm-Gg: ASbGnctxSQzfo617IaSOq30LXMUu48T3/5eS7bb3gYg1aIuo21QFu+PS4T6S9/Q+qXa
-	oZQrICRXsYQOXr3WyUrKqGy5vSG7drI3rnuCy9jX1nrQaXkf1FRP++KjeoZu2a6flt6vFuA6Oi3
-	md15Lgcp0b8CMU0Bj1vSRICw3QT+hyjjWKhj0OaMdy4zNnFqOWWo0ZevKK0Zy99K9hyE6YwOR/3
-	4iPttImbIWN3wqQsJlAk9HLMz++Cer3SUz+fTs+4GNX/FcFxRvUOku3lq8OeZ03jAHMLS9nIoga
-	5s0K62Hffc0H9ZRVPk96sFvEzinOfrGDDyFeq4B9SYDFJOPPcBJOoPnLmDea5Kz8Dtv0H06Cjtv
-	XQBpXeQQ24gRFlFEbF3opx4Wd7XrNEwXgrj1HYDZnbVZ+nRX4izyiRn0CjswvFvWVQJfVtLs/IY
-	IK2MpNg2OMNsPFN87gikreDfCd7QF3DDiM+izBm4dTzt/jHaSFh9y6Z57fAPEWI6E=
-X-Google-Smtp-Source: AGHT+IGTb0BhNtLXZjL89zHnvhnrIYZlTtJyn9gLCubUjapXa+451SyphIYoQs9g+1Ce4F+c0arbCA==
-X-Received: by 2002:a05:6000:4011:b0:427:9d7:870f with SMTP id ffacd0b85a97d-4299070199dmr708125f8f.5.1761284045381;
-        Thu, 23 Oct 2025 22:34:05 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b41b7.dip0.t-ipconnect.de. [91.43.65.183])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898acc63sm7417423f8f.27.2025.10.23.22.34.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Oct 2025 22:34:04 -0700 (PDT)
-Message-ID: <045e6362-01db-47f3-9a4f-8a86b2c15d00@googlemail.com>
-Date: Fri, 24 Oct 2025 07:34:03 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wQkBK2kF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vXx/+iwj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jkntidtx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R0Qqeztl"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D8D191F38D;
+	Fri, 24 Oct 2025 06:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761286527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E+Ly85ktEfTco+BozgdmD2iO+52ubLh+8ub0igWQYWQ=;
+	b=wQkBK2kFHk8IgZRA9uA0/Vzb/79nLP26MPmz6v/lGvlnnuGndO6s1s2l9OZ92bhnmzGLxf
+	8hk/7TcfL9Csz1Q3N+2qH4m3ztkTwZUMuZ3lU4+dib5GqJKYPpNtMNXjNIOp0FWCNuD6PU
+	KuAce4xHZx/M9BwqKK3wMdDu4R3v/g4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761286527;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E+Ly85ktEfTco+BozgdmD2iO+52ubLh+8ub0igWQYWQ=;
+	b=vXx/+iwjfmndtmtN0p5ci4V5P+PqydfDlW2R1nvBzxARd32anWa0k8Y/dGp9iMX1CQBKNy
+	zNIJShoCXjMPehBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761286522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E+Ly85ktEfTco+BozgdmD2iO+52ubLh+8ub0igWQYWQ=;
+	b=jkntidtxbYk8NuwoKE6dTNSXrkKjfhUuhUeAYHm0p2bcHaR4u4n6fwqeeDqXnYiieXZble
+	7y8HUxXYxLlN9CfFK9l7CO7aqg0GR5Dwj4UoAIMlSlCsZXYXcTN7maw8KKVNhVXLiyikth
+	peseifeKG3yOFp/kV6nn+gGIZR3LWaU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761286522;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=E+Ly85ktEfTco+BozgdmD2iO+52ubLh+8ub0igWQYWQ=;
+	b=R0QqeztlQ8i/slviZxKgAKzdS6r4oJTOe6w5s0p/CgkmvCYu/W/S5SZSk10Ej9mkvcWFFs
+	XbrLt3LBkRh/VHBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8634813693;
+	Fri, 24 Oct 2025 06:15:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1SIGH3oZ+2ikUQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 24 Oct 2025 06:15:22 +0000
+Message-ID: <c6ea7e22-6eed-474b-8ba1-f6b9aa1a2f31@suse.de>
+Date: Fri, 24 Oct 2025 08:15:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
+User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
  6.18-rc2
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, regressions@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>
+To: Peter Schneider <pschneider1968@googlemail.com>,
+ regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
 Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
  jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
  nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
@@ -89,99 +101,93 @@ References: <20251014084743.18242-1-tzimmermann@suse.de>
  <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
  <329a9f97-dd66-49c2-bc42-470566d01539@suse.de>
  <270ce9a3-5067-4ef8-9205-414b5667cf3a@googlemail.com>
-Autocrypt: addr=pschneider1968@googlemail.com; keydata=
- xjMEY58biBYJKwYBBAHaRw8BAQdADPnoGTrfCUCyH7SZVkFtnlzsFpeKANckofR4WVLMtMzN
- L1BldGVyIFNjaG5laWRlciA8cHNjaG5laWRlcjE5NjhAZ29vZ2xlbWFpbC5jb20+wpwEExYK
- AEQCGyMFCQW15qgFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQSjgovXlszhGoyt6IZu
- OpLJLD/yRAUCY58b8AIZAQAKCRBuOpLJLD/yRIeIAQD0+/LMdKHM6AJdPCt+e9Z92BMybfnN
- RtGqkdZWtvdhDQD9FJkGh/3PFtDinimB8UOB7Gi6AGxt9Nu9ne7PvHa0KQXOOARjnxuIEgor
- BgEEAZdVAQUBAQdAw2GRwTf5HJlO6CCigzqH6GUKOjqR1xJ+3nR5EbBze0sDAQgHwn4EGBYK
- ACYWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCY58biAIbDAUJBbXmqAAKCRBuOpLJLD/yRONS
- AQCwB9qiEQoSnxHodu8kRuvUxXKIqN7701W+INXtFGtJygEAyPZH3/vSBJ4A7GUG7BZyQRcr
- ryS0CUq77B7ZkcI1Nwo=
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
 In-Reply-To: <270ce9a3-5067-4ef8-9205-414b5667cf3a@googlemail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------krXW3u9GCz73FBYeJPBWkLil"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------krXW3u9GCz73FBYeJPBWkLil
-Content-Type: multipart/mixed; boundary="------------sW3anxa1r6YezvSATKrGS7PM";
- protected-headers="v1"
-From: Peter Schneider <pschneider1968@googlemail.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, regressions@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>
-Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
- jfalempe@redhat.com, airlied@redhat.com, dianders@chromium.org,
- nbowler@draconx.ca, Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Message-ID: <045e6362-01db-47f3-9a4f-8a86b2c15d00@googlemail.com>
-Subject: Re: [REGRESSION][BISECTED] Screen goes blank with ASpeed AST2300 in
- 6.18-rc2
-References: <20251014084743.18242-1-tzimmermann@suse.de>
- <a40caf8e-58ad-4f9c-af7f-54f6f69c29bb@googlemail.com>
- <43992c88-3a3a-4855-9f46-27a7e5fdec2e@suse.de>
- <798ba37a-41d0-4953-b8f5-8fe6c00f8dd3@googlemail.com>
- <bf827c5c-c4dd-46f1-962d-3a8e2a0a7fdf@suse.de>
- <5f8fba3b-2ee1-4a02-9b41-e6e1de1a507a@googlemail.com>
- <e2462c92-4049-486b-92d7-e78aaec4b05d@suse.de>
- <3ca10b2e-fb9c-4495-9219-5e8537314751@googlemail.com>
- <329a9f97-dd66-49c2-bc42-470566d01539@suse.de>
- <270ce9a3-5067-4ef8-9205-414b5667cf3a@googlemail.com>
-In-Reply-To: <270ce9a3-5067-4ef8-9205-414b5667cf3a@googlemail.com>
-
---------------sW3anxa1r6YezvSATKrGS7PM
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[googlemail.com,lists.linux.dev,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[googlemail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
 
-SGkgVGhvbWFzLA0KDQoNCkFtIDIzLjEwLjIwMjUgdW0gMjE6MTEgc2NocmllYiBQZXRlciBT
-Y2huZWlkZXI6DQo+IEhpIFRob21hcywNCj4gDQo+IEFtIDIzLjEwLjIwMjUgdW0gMTQ6NDYg
-c2NocmllYiBUaG9tYXMgWmltbWVybWFubjoNCj4gWy4uLl0NCj4+IEkndmUgYmVlbiBhYmxl
-IHRvIHJlcHJvZHVjZSB0aGUgcHJvYmxlbSB3aXRoIGFuIEFTVDIzMDAgdGVzdCBzeXN0ZW0u
-IFRoZSBhdHRhY2hlZCBwYXRjaCBmaXhlcyB0aGUgcHJvYmxlbSBmb3IgbWUuIENhbiANCj4+
-IHlvdSBwbGVhc2UgdGVzdCBhbmQgcmVwb3J0IG9uIHRoZSByZXN1bHRzPw0KPiANCj4gR3Jl
-YXQhIC0gdGhpcyBwYXRjaCBvbiB0b3Agb2YgNi4xOC1yYzIgZml4ZXMgdGhlIGlzc3VlIGZv
-ciBtZSwgdG9vLiBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3VyIGVmZm9ydCENCj4gDQo+IFRl
-c3RlZC1ieTogUGV0ZXIgU2NobmVpZGVyIDxwc2NobmVpZGVyMTk2OEBnb29nbGVtYWlsLmNv
-bT4NCg0KTWVhbndoaWxlLCBJIGhhdmUgYWxzbyB0ZXN0ZWQgdGhpcyBhZ2FpbnN0IHN0YWJs
-ZSA2LjEyLjU1IGFuZCA2LjE3LjUsIHdoZXJlIGluIC1yYzIsIEdyZWcgZHJvcHBlZCB5b3Vy
-IG9yaWdpbmFsIHBhdGNoIA0Kd2l0aCB1cHN0cmVhbSBjb21taXQtaWQgNmY3MTkzNzNiOTQz
-YTk1NWZlZTZmYzIwMTJhZWQyMDdiNjVlMjg1NCBiZWZvcmUgdGhlIGZpbmFsIHJlbGVhc2Ug
-YmVjYXVzZSBvZiBteSByZXBvcnQuDQoNClNvIGZvciBib3RoLCBJIGJ1aWx0IHRoZW0sIG1h
-ZGUgc3VyZSBpdCB3b3JrZWQgb2suIFRoZW4gSSBkaWQgImdpdCBjaGVycnktcGljayA2Zjcx
-OTM3M2I5NDNhOTU1ZmVlNmZjMjAxMmFlZDIwN2I2NWUyODU0IiANCmFuZCB0ZXN0ZWQgdGhh
-dCBpdCBpcyBicm9rZW4gYWdhaW4uIFRoZW4gSSBhcHBsaWVkIHlvdXIgbGFzdCBwYXRjaCBv
-biB0b3Agb2YgaXQsIGFuZCBpdCB3b3JrZWQgZmluZSwgc28gd2l0aCB0aGF0IHRoZSANCmlz
-c3VlIGlzIGZpeGVkIGluIGJvdGggc3RhYmxlIHZlcnNpb25zLCB0b28uDQoNCklmIHlvdSBz
-ZW5kIGEgY29tYmluZWQgcGF0Y2ggdG8gR3JlZyBmb3Igc3RhYmxlLCBwbGVhc2UgZmVlbCBm
-cmVlIHRvIGFkZCBteQ0KDQpUZXN0ZWQtYnk6IFBldGVyIFNjaG5laWRlciA8cHNjaG5laWRl
-cjE5NjhAZ29vZ2xlbWFpbC5jb20+DQoNCg0KVGhhbmtzIGFnYWluIQ0KDQpCZXN0ZSBHcsO8
-w59lLA0KUGV0ZXIgU2NobmVpZGVyDQoNCi0tIA0KQ2xpbWIgdGhlIG1vdW50YWluIG5vdCB0
-byBwbGFudCB5b3VyIGZsYWcsIGJ1dCB0byBlbWJyYWNlIHRoZSBjaGFsbGVuZ2UsDQplbmpv
-eSB0aGUgYWlyIGFuZCBiZWhvbGQgdGhlIHZpZXcuIENsaW1iIGl0IHNvIHlvdSBjYW4gc2Vl
-IHRoZSB3b3JsZCwNCm5vdCBzbyB0aGUgd29ybGQgY2FuIHNlZSB5b3UuICAgICAgICAgICAg
-ICAgICAgICAtLSBEYXZpZCBNY0N1bGxvdWdoIEpyLg0KDQpPcGVuUEdQOiAgMHhBMzgyOEJE
-Nzk2Q0NFMTFBOENBREU4ODY2RTNBOTJDOTJDM0ZGMjQ0DQpEb3dubG9hZDogaHR0cHM6Ly93
-d3cucGV0ZXJzLW5ldHpwbGF0ei5kZS9kb3dubG9hZC9wc2NobmVpZGVyMTk2OF9wdWIuYXNj
-DQpodHRwczovL2tleXMubWFpbHZlbG9wZS5jb20vcGtzL2xvb2t1cD9vcD1nZXQmc2VhcmNo
-PXBzY2huZWlkZXIxOTY4QGdvb2dsZW1haWwuY29tDQpodHRwczovL2tleXMubWFpbHZlbG9w
-ZS5jb20vcGtzL2xvb2t1cD9vcD1nZXQmc2VhcmNoPXBzY2huZWlkZXIxOTY4QGdtYWlsLmNv
-bQ0KDQo=
+Hi
 
---------------sW3anxa1r6YezvSATKrGS7PM--
+Am 23.10.25 um 21:11 schrieb Peter Schneider:
+> Hi Thomas,
+>
+> Am 23.10.2025 um 14:46 schrieb Thomas Zimmermann:
+> [...]
+>> I've been able to reproduce the problem with an AST2300 test system. 
+>> The attached patch fixes the problem for me. Can you please test and 
+>> report on the results?
+>
+> Great! - this patch on top of 6.18-rc2 fixes the issue for me, too. 
+> Thanks very much for your effort!
+>
+> Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
---------------krXW3u9GCz73FBYeJPBWkLil
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Thanks a lot for reporting and testing. I'll prepare the patch and send 
+it out later today.
 
------BEGIN PGP SIGNATURE-----
+Best regards
+Thomas
 
-wnsEABYIACMWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCaPsPywUDAAAAAAAKCRBuOpLJLD/yRMTK
-AQDvnxYz2SoIs89+Y3maGD8FqHLRNa/qNgyLwgJi8LTPgAEAz53/dKzJ2V6mQEzWOU1q434RwUzW
-ArPxnqW9ZjujIwc=
-=oSt3
------END PGP SIGNATURE-----
+>
+> Beste Grüße,
+> Peter Schneider
+>
 
---------------krXW3u9GCz73FBYeJPBWkLil--
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
+
