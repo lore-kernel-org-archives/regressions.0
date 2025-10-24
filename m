@@ -1,106 +1,142 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0013019BD
-	for <regressions@lists.linux.dev>; Fri, 24 Oct 2025 08:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A09B303A3C
+	for <regressions@lists.linux.dev>; Fri, 24 Oct 2025 08:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761293556; cv=none; b=PzNqBrzHk4Oma2IQq6iEjObQm8gMDD1ClyyzmdFCGxCilaTVFfTbQL+yafzmdr41cp5uTufAiWIXRlRTTXSZCn59HSZWES7MTSh4asWTLy+As9Ermhkf7RNzOl5YqGPNBAwnyc98+ViJW1N/P3EGEJXzMeawLZlq7J+o0XmF9BY=
+	t=1761293776; cv=none; b=YgaS9Z2aqY5erVe4iUyfbwXLL2ql4USCZ9kjoGPgA9rRuL/9NMTU+QUf/esfFiJc3SKBNJmjoq9ODcaoiMfqB30CMhH56vf26wPJxzZXwPErYFvdBcpicYzktXYn8lxObVG/MEfOwmIntH19oOjJGCHn7DYwnNl/xUAFDvtFhD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761293556; c=relaxed/simple;
-	bh=2/OvrSThn/whOu17RzuwEzZ0hjnTVL7xcH1I+eAJTOA=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID; b=cwCAORehznu6TwIWY1Acye0Kxw+dqXE5XcS5VMOLCiE0mzBJRogKdXrmx5QLtjPrkuqS34HGWt3xLPAPakJuL4JnTibiyd979CILE45eWa9mzCHzAJMsLfOjrL5chksqoYULmgmdd7zTQolg1VUvVghacbpKk/5lVIqNlUL28ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Tg11Wq+F; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1761293776; c=relaxed/simple;
+	bh=yQDrtNvjKJr/WaX1Mv8sYjcgQzM/jpXVpNYnmYky8iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E6aui3hIMQjCML9kK0hsT4rh2ZtD3CnYvI6fzdVzfY19zPZ2o1zqJMMirqeQVp0pB1TwPt1GXv5tUIoQUB6FCAZwmV8nMqpKxWbQbtGhSxAuPYneiovoe+TidKT2mWfNXJcoDdA/9csGd2hYU6HIS0uacgYfhmZ0uBjuiW94Rpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=P3KNtUVe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gFE4XOXn; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Se5jpWc2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9ilVHeZA; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Tg11Wq+F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1761293542; bh=2/OvrSThn/whOu17RzuwEzZ0hjnTVL7xcH1I+eAJTOA=;
-	h=From:To:Cc:Subject:Date;
-	b=Tg11Wq+FYHUVJYn6pest/vkGpnF6Vy8oWzjlBRDgOb2RriNAYT/DcahzorwLDDZ9L
-	 g7jCj/vo4Jza29dKw4gvn9BmxWdZIv7vK6fg/xcVGxXa/qx8simuvu0FBL7DRZ42or
-	 ZEn4xb/Az4FHTgoYQL1N1bBDk4BcDjuBguo+2H48=
-X-QQ-FEAT: Xqh9UYnCrXDUV1KpMGkoKkdjEbplCNXE
-X-QQ-SSF: 0000000000000080000000000000
-X-QQ-XMRINFO: OJlEh3abS6gXi5NWrXbD0WI=
-X-QQ-XMAILINFO: MLJK4jN30nrK8edUrh3hatL9Gzti9JRpBMyw91u1EbFo3U6sJaF6tG41LouoxE
-	 3Cabr8yPzVUUovX8SX6bwVyqzBP6WikLe+GBDzKji5XEt7n/4QaCjvKbaW12FR7Pi2rJpoeDYUAtO
-	 QKyV7+Db9hCZdYCO6cnMmYoHxHOtrOTb4j4is/9vC2OPYzsdk+tugdicz4hcivMKbW79QFY8FQT03
-	 xBUO2PZ/69I+E2DlZGkk1DyMN1S5Rmdzq63O2SxtCBiTGOKocZVpSliIYb5dWRB9nozjPhHquCz3F
-	 OI4ci1ek2SH+d04OVxF7iMbzqYFDKul8SGywIh5jVIKE0zd/b4oB9p7qZNT/iUXWkj/2vLBQpC+Sl
-	 8JLko8+R9u8aEY/ZCIgvQeTQ5BGCUnA3+bGaUzJbOeHjtLiRmNN0qamWX5SHbNxYYCvDwStIxTWmn
-	 MMznkS7EndZ+tcgfKvbvibwsMi4YEYwy4O3BsA35Ni6lCKIFUeNyKi/cVX1SNFAfJO4opL0oAw+XF
-	 2mijknzbTmA5j/QR26OjAQgmL2YRvjH1Akn3fmNagmxC3ndos5wLmBDDMKuCdJr5n7h7XHaDJPMhG
-	 10yGtuVpTBdcmOR3ScY7nqDN8Vi6nXjfQJP/LXEATyIoZKmHFyXjMwHYjOz0aBbHmZY/Tfq2PsyXz
-	 ol2q1ZwZI2MysL7yOviB7nfT5YZU09n25ThRZN+z31htTTp2MelVeYwGZ7uAoneir7dKOiwM92LM5
-	 yevV0PGxvNNQD3Tt7CdyowH8+6vtuQcqPDSQvNy7jn4t3P21We1ZfTyHoF0utbN9cZXBTbN99O0wX
-	 wQrcz3lU+j0YNzHFpMup9XtAenF6tayCshRS11MTYVLeAPB6ScSTGlKcrs2cv9UepOhZYyVSwFGQD
-	 vnL9BadLnH0/HZe5FDsfPe9Gp+oBxdMXONdktUTBtDyFwhogzN1sAbdhE5Xxr05YvmRvqmqkrirpL
-	 Uv0wT/Fwq458JjTKVEw6FDW+caz5+0HzowF6n6lA==
-X-HAS-ATTACH: no
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-STYLE: 
-X-QQ-mid: webmail365t1761292803t667248
-From: "=?gb18030?B?1cXF9A==?=" <1805692831@qq.com>
-To: "=?gb18030?B?c3RhYmxl?=" <stable@vger.kernel.org>
-Cc: "=?gb18030?B?cmVncmVzc2lvbnM=?=" <regressions@lists.linux.dev>
-Subject: SPI flash transfer failed
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="P3KNtUVe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gFE4XOXn";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Se5jpWc2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9ilVHeZA"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 719802115D;
+	Fri, 24 Oct 2025 08:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761293768;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQDrtNvjKJr/WaX1Mv8sYjcgQzM/jpXVpNYnmYky8iM=;
+	b=P3KNtUVe0ldSy98VSM78tDn84HB2P3mLf6OFCxxGmGZzmE6AxyQ5OJlIgQF68KBRTiD5LQ
+	m8N3/y6RRFF0UwWegrrtiMB5fvVbatXWNC2jxe43dMoQ4We6FS94NkEXRc6XUc3mM2ViiS
+	2OMdXbXTBu+Wb+w20Kc1aGroWXsp5tE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761293768;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQDrtNvjKJr/WaX1Mv8sYjcgQzM/jpXVpNYnmYky8iM=;
+	b=gFE4XOXn9cXYTHuN8v6d1dMC+9tEnYU+VKr3dMyw6tgKU4YcOZm6AKLce668GR+WoNZQw2
+	kRYYxH9hRNFNBVAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1761293764;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQDrtNvjKJr/WaX1Mv8sYjcgQzM/jpXVpNYnmYky8iM=;
+	b=Se5jpWc2cAjwm0BK9VAslFH3u0dTHv0RliJcduVrRQ/y3nrEbMswBz0lz7b7C7Eg2yCW3w
+	MU19J1edMKCoWf9+fUznlzLpmPtlK7nAshTGZhu/QawwJDNlG7YHVk3OHATRm5X9Qg7lII
+	gOaJIDjYeJ7Q5Pc/UcNk4DD8KWe/Ifc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1761293764;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQDrtNvjKJr/WaX1Mv8sYjcgQzM/jpXVpNYnmYky8iM=;
+	b=9ilVHeZAI6Ljz61brD4UoVTahQP8+0e2eJAStRvnh40t4t+dqvXglwqxraU6E3QWfnvyeh
+	BgntVsYK1p7QUQCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F411313693;
+	Fri, 24 Oct 2025 08:16:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xsQdM8I1+2g8RwAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Fri, 24 Oct 2025 08:16:02 +0000
+Date: Fri, 24 Oct 2025 10:15:56 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: Anders Roxell <anders.roxell@linaro.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, ltp@lists.linux.it,
+	lkft@linaro.org, arnd@kernel.org, dan.carpenter@linaro.org,
+	jack@suse.cz, brauner@kernel.org, chrubis@suse.cz,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	regressions@lists.linux.dev, aalbersh@kernel.org, arnd@arndb.de,
+	viro@zeniv.linux.org.uk, benjamin.copeland@linaro.org,
+	andrea.cervesato@suse.com, lkft-triage@lists.linaro.org,
+	Avinesh Kumar <akumar@suse.de>
+Subject: Re: [PATCH v2] ioctl_pidfd05: accept both EINVAL and ENOTTY as valid
+ errors
+Message-ID: <20251024081556.GA570960@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20251023164401.302967-1-naresh.kamboju@linaro.org>
+ <CADYN=9J1xAgctUqwptD5C3Ss9aJZvZQ2ep=Ck2zP6X+ZrKe81Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="gb18030"
-Content-Transfer-Encoding: base64
-Date: Fri, 24 Oct 2025 16:00:02 +0800
-X-Priority: 3
-Message-ID: <tencent_787FB7889BCFB4E55EE5985A3DC22A1B1E08@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADYN=9J1xAgctUqwptD5C3Ss9aJZvZQ2ep=Ck2zP6X+ZrKe81Q@mail.gmail.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.50 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -3.50
 
-SGksCkR1cmluZyB0aGUgc3RhYmlsaXR5IHRlc3QsIEkgcmVwZWF0ZWRseSByZWJvb3RlZCAx
-MDAgZGV2aWNlcyBhbmQgdGhlbiBvYnNlcnZlZCB0aGVpciBzdGFydHVwIGxvZ3MuIFdoZW4g
-dXNpbmcga2VybmVsNC54LCB0aGV5IGFsbCB3b3JrIHZlcnkgd2VsbC4gQWZ0ZXIgMTAwMCBj
-b25zZWN1dGl2ZSB0ZXN0cywgbm8gcHJvYmxlbXMgaGF2ZSBvY2N1cnJlZC4gSG93ZXZlciwg
-d2hlbiBJIHVwZGF0ZWQgdGhlIGtlcm5lbCB2ZXJzaW9uIHRvIDUueC82LngsIGFmdGVyIHRl
-c3RpbmcgaW4gdGhlIHNhbWUgZW52aXJvbm1lbnQgZm9yIGFib3V0IHNldmVyYWwgZG96ZW4g
-dGltZXMsIHNvbWUgZGV2aWNlcyBleHBlcmllbmNlZCBhYm5vcm1hbGl0aWVzLiBJIHRlc3Rl
-ZCBtYW55IGRpZmZlcmVudCB2ZXJzaW9ucyBhbmQgYWxtb3N0IGFsbCB2ZXJzaW9ucyB3aXRo
-IGtlcm5lbCZndDs1LnggaGFkIHByb2JsZW1zLgoKCldoZW4gSSB3YXMgc2VhcmNoaW5nIGZv
-ciByZWxhdGVkIHF1ZXN0aW9ucywgSSBmb3VuZCB0aGF0IG1hbnkgcGVvcGxlIGhhZCBlbmNv
-dW50ZXJlZCB0aGlzIHNpdHVhdGlvbi4KaHR0cHM6Ly9mb3J1bS5vcGVud3J0Lm9yZy90L3Bh
-dGNoLXNxdWFzaGZzLWRhdGEtcHJvYmFibHktY29ycnVwdC83MDQ4MApodHRwczovL2dpdGh1
-Yi5jb20vb3BlbndydC9vcGVud3J0L3B1bGwvMTMxNDcKCgoKCmxvZzoKWyAmbmJzcDsgODku
-NDMxODk3XSBzcGktbm9yIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMApbICZu
-YnNwOyA4OS40MzIzNjldIHNwaV9tYXN0ZXIgc3BpMDogZmFpbGVkIHRvIHRyYW5zZmVyIG9u
-ZSBtZXNzYWdlIGZyb20gcXVldWUKWyAmbmJzcDsgODkuNDM2NTU5XSBibGtfdXBkYXRlX3Jl
-cXVlc3Q6IEkvTyBlcnJvciwgZGV2IG10ZGJsb2NrMTAsIHNlY3RvciAzOTA0IG9wIDB4MDoo
-UkVBRCkgZmxhZ3MgMHg4MDAgcGh5c19zZWcgNCBwcmlvIGNsYXNzIDAKWyAmbmJzcDsgOTAu
-NDcxMjE0XSBzcGktbm9yIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMApbICZu
-YnNwOyA5MC40NzEzNDldIHNwaV9tYXN0ZXIgc3BpMDogZmFpbGVkIHRvIHRyYW5zZmVyIG9u
-ZSBtZXNzYWdlIGZyb20gcXVldWUKWyAmbmJzcDsgOTAuNDc1NTQ0XSBibGtfdXBkYXRlX3Jl
-cXVlc3Q6IEkvTyBlcnJvciwgZGV2IG10ZGJsb2NrMTAsIHNlY3RvciAzOTEyIG9wIDB4MDoo
-UkVBRCkgZmxhZ3MgMHg4MDAgcGh5c19zZWcgMyBwcmlvIGNsYXNzIDAKWyAmbmJzcDsgOTEu
-NTExMjYwXSBzcGktbm9yIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMApbICZu
-YnNwOyA5MS41MTEzOTZdIHNwaV9tYXN0ZXIgc3BpMDogZmFpbGVkIHRvIHRyYW5zZmVyIG9u
-ZSBtZXNzYWdlIGZyb20gcXVldWUKWyAmbmJzcDsgOTEuNTE1Mzg5XSBibGtfdXBkYXRlX3Jl
-cXVlc3Q6IEkvTyBlcnJvciwgZGV2IG10ZGJsb2NrMTAsIHNlY3RvciAzOTIwIG9wIDB4MDoo
-UkVBRCkgZmxhZ3MgMHg4MDAgcGh5c19zZWcgMiBwcmlvIGNsYXNzIDAKWyAmbmJzcDsgOTIu
-NTUxMjE0XSBzcGktbm9yIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMApbICZu
-YnNwOyA5Mi41NTEzNDldIHNwaV9tYXN0ZXIgc3BpMDogZmFpbGVkIHRvIHRyYW5zZmVyIG9u
-ZSBtZXNzYWdlIGZyb20gcXVldWUKWyAmbmJzcDsgOTIuNTU1MzQzXSBibGtfdXBkYXRlX3Jl
-cXVlc3Q6IEkvTyBlcnJvciwgZGV2IG10ZGJsb2NrMTAsIHNlY3RvciAzOTI4IG9wIDB4MDoo
-UkVBRCkgZmxhZ3MgMHg4MDAgcGh5c19zZWcgMSBwcmlvIGNsYXNzIDAKWyAmbmJzcDsgOTIu
-NTYyMTY3XSBTUVVBU0hGUyBlcnJvcjogRmFpbGVkIHRvIHJlYWQgYmxvY2sgMHgxZGUwNWU6
-IC01ClsgJm5ic3A7IDkyLjU3MjgzNF0gU1FVQVNIRlMgZXJyb3I6IFVuYWJsZSB0byByZWFk
-IGZyYWdtZW50IGNhY2hlIGVudHJ5IFsxZGUwNWVdClsgJm5ic3A7IDkyLjU3ODM4OF0gU1FV
-QVNIRlMgZXJyb3I6IFVuYWJsZSB0byByZWFkIHBhZ2UsIGJsb2NrIDFkZTA1ZSwgc2l6ZSBk
-NDUwClsgJm5ic3A7IDkyLjU4NTI3Ml0gU1FVQVNIRlMgZXJyb3I6IFVuYWJsZSB0byByZWFk
-IGZyYWdtZW50IGNhY2hlIGVudHJ5IFsxZGUwNWVdClsgJm5ic3A7IDkyLjU5MTg0Nl0gU1FV
-QVNIRlMgZXJyb3I6IFVuYWJsZSB0byByZWFkIHBhZ2UsIGJsb2NrIDFkZTA1ZSwgc2l6ZSBk
-NDUw
-i
+Hi all,
+
+> On Thu, 23 Oct 2025 at 18:44, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+
+> > Newer kernels (since ~v6.18-rc1) return ENOTTY instead of EINVAL when
+> > invoking ioctl(pidfd, PIDFD_GET_INFO_SHORT, info_invalid). Update the
+> > test to accept both EINVAL and ENOTTY as valid errors to ensure
+> > compatibility across different kernel versions.
+
+I dared to add a commit which caused the change (found by Cyril Hrubis):
+3c17001b21b9f ("pidfs: validate extensible ioctls")
+
+and merged!
+
+Thanks for fix and review!
+
+Kind regards,
+Petr
