@@ -1,103 +1,132 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A1C35B130
-	for <regressions@lists.linux.dev>; Sat, 25 Oct 2025 05:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B1F2DEA62
+	for <regressions@lists.linux.dev>; Sat, 25 Oct 2025 10:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761369372; cv=none; b=LJU1FHEhocAS2s1epVbFz9XrhPunQ9s0o+dOZHP3wkCsu3k7yeTQjsRptd+0mPwAdY5laWBNz4QL6d9Qrcod0QiR8WNwzS9wN7TBNBFRRDFtT6QrgSL95/NEUxeIiWf66+1WZp0PTLmUUHxmtRWXEc9VEVH8NRILsZrsEu+iccU=
+	t=1761387083; cv=none; b=GxtmoiJ8rpDL9mQikVjK+SNAb/Jfv9HsTR4PLh+NLvjhlRq9CL9GdLeurOrLAZNex3IYOjFf7gz+xDkdDZkqt5/oTRzNPgrryopGHstjkQ12QG8qCyd8cSZ4NIzjvbo4AKf/XRdDplHiUyVtg/ATtgS0d6GlJ/KoFWDru9Cz07k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761369372; c=relaxed/simple;
-	bh=n3Y+AcN/I881f5Cyv0rcUjEkJzVPX7TxD3E/j95volA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JSt9wClqFU9hwYDmT4HGwQbDUIh+6kRrDJ6FFjHqfIzlM2pmmW3/ktiQgCCe86JGKdBD7d03LIdD3vWgZWS9K0hfbj0fbQlZvlE9ZHN1vhy2lnV0iOEYPrw09xMR8FM493LUG+4NNJXSDfcvRr2qb3BDj81lJBEOaIXa3/i1TMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDQ7+9hU; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1761387083; c=relaxed/simple;
+	bh=0nttiORIlAvHv5WtRRqjrF4cMesKYVIkYZR+vwF8Z9Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TP26syTie7Rp+YY8BH+QYPcvSDzZiFPrYTQQfKO4ejW2AYiglP2sST+ZO+GAFQBVRZQVKU7Rd75eFTh0jeyFWJsvRNqon/jdMRxhhGT5DEWc/emooCn/ajY1rKaC6bZp7K8LYoJlnEWyfWmthAhkf7vtWSuAbsMqknkNqgTr84I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k287PrCP; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDQ7+9hU"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-63c3d7e2217so5361179a12.3
-        for <regressions@lists.linux.dev>; Fri, 24 Oct 2025 22:16:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k287PrCP"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3ed20bdfdffso2986157f8f.2
+        for <regressions@lists.linux.dev>; Sat, 25 Oct 2025 03:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761369369; x=1761974169; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=apaAoIq51aRtrkFWbmPU/2WaEbN9gRF7gSr6IfYPHi8=;
-        b=DDQ7+9hUyKkqU7cKbFggN6YP5sIzkdieoOpkAp0aSY6/AfxxvwR16ReMXnm6PUWyp4
-         Gz0obg7GYvc2lyK9/7KJkCwmlPrImKBUdpEifGozvUAx7ubRkzXI5gUMXCzCdmo+Z5pK
-         xucpMa+bduCGwnTDFoozeBH+jx4pcOngJkekdj6gd+m3MZ4sZsXQJqExLgrHCvofJ+BI
-         FiQNsWspAsF8QpGwnHqQZ7jHn6WRAAC6502Qmj+S3Fa23unUgNNd3FIGOeNIbVeshiUf
-         c36NJ0jc2OZXbM/Sgz8Kpup4GyjdtDR/av2nFe4+jqz0mPFC0m2ikm3Cr6+r3J6hbnwt
-         5psQ==
+        d=gmail.com; s=20230601; t=1761387080; x=1761991880; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=egj/7WjRwjT6riGuR0koHtTyjN24c/LRgAczk/OnsWw=;
+        b=k287PrCPAk8rPd4JTZGlyLHVFaFc6jtZEcX1WJyay6qlAwLj5/tKqXFKLe0VgARCsg
+         ilh+Nu80Cmyuo5iJRMYCRAHQozgw2cW5et02klYWx2F07RIB8ehZGPYcby2764WggSMp
+         FUZIJRAkrUhb2ZtIUtq098D0VBLakZUYEAhZ0w2a6G2bC6RGCE0du3biar2wyUty72Kj
+         hzUVw/aI5REeXF3sgwjo1O80K5cZHYIL6Twju9mrKxGX1c6O+tLrRZucj/y4FJaLySHU
+         ApsJO9/UZU0+nLVh0iAd+JKPrk6ZsgQjTSk9RZQIIE3RbaZZmHiznMEy9RNTqIfT0jrn
+         +8Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761369369; x=1761974169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=apaAoIq51aRtrkFWbmPU/2WaEbN9gRF7gSr6IfYPHi8=;
-        b=bTPuIX4/vK0r322n5Be9MmhQct/kNKdgdPtgcFF39GAs7jiEjG3I6TBKuHb7wDnk9M
-         cTGz7Sk04/g1MJ17NQMsEwS7/CppSydRq2uxDodFXyWGuiinYKHXvm5Si3Z7eIP6ZM1O
-         EDEfPFzO0G86X09Jvp5R6b4pLrIHYJizoccO5VT7y2PXHF/+c1MONUecN2EObbrkoqZO
-         96RVhYJTljLQUlW6LOTvei59RIzxX7wS5qj9oMleYw2X82rRpPSaLWdAG/kIGAJ74xWt
-         w0LHg95C5nWs4278L3c9TXeuQ83sRTcoixPRmloFg8zUowF9On0307b5f56TmXCmrn0b
-         6TFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfDC2FzxmVQXI+7Ay9oW01WL01KBCX9D6ULULq2RUvxZYdFAJRruUzRe7hykZvQVsLv8+CUK6zusQ5og==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxm4TVL+mREuJPSoTdjkEDReVm1k7zjda5i1t6mnJPS1WJBg173
-	E1P2REpphvmFYmevelkw4/X8bqgp6Ln+3s52Grd+YM+oyFU12oF5FDd2
-X-Gm-Gg: ASbGncvYjSIPCPCR7r/mt+0fEs2foMOGGvYe/f/2Y8Bo7sRoZ5jOcEFKRNnMTqj/M82
-	5iS4aWF/tcXnwKmtqwBY6j6DM8+JVcCmFSCWEfG5JG7+CyPebouZOHn+XUCRZo00Ton9/zOQaRD
-	wlsPFdPtmKsIY2YcscBXe8ATr5D/ug8M5LIkVmLJ5ed2jmUzUT/e1GUTqdbzenM7qgwsNsEAscy
-	f56nzfgj8MIUJ22IdwDAU3bMIxJaqwXxKO5rnMWqnoLslSatgOmD6fAAZ5G8WzjvLtOModaUvjz
-	d+2gQlhbVu+I6ci9AFlMfO8IKY4VrAkeQPqdNj0ln0rJ2zcX6JG9dmBe4u0kFGPzj24XL7n9x47
-	ZXP94IB8QTvl/RY0pfUhfJOZpq3Wzfvf1KLNBkQl82kfhY61pJ8dVERsT7uiJkIsGoqjIQEwZg9
-	Jk
-X-Google-Smtp-Source: AGHT+IHfK/YxWnxAyIXIhhMhxrwpBPWIhtUQlBAlwL0IaxEpVGMgxfc2H8XED61ydnCh6Xfhe0uFJA==
-X-Received: by 2002:a05:6402:2111:b0:639:fb11:9935 with SMTP id 4fb4d7f45d1cf-63e60084063mr4098867a12.4.1761369368832;
-        Fri, 24 Oct 2025 22:16:08 -0700 (PDT)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-63e7efb9fa6sm826566a12.31.2025.10.24.22.16.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Oct 2025 22:16:08 -0700 (PDT)
-From: Askar Safin <safinaskar@gmail.com>
-To: safinaskar@gmail.com
-Cc: Dell.Client.Kernel@dell.com,
-	andriy.shevchenko@linux.intel.com,
-	chetan.kumar@mediatek.com,
-	chris.feng@mediatek.com,
-	hua.yang@mediatek.com,
-	len.brown@intel.com,
-	liang.lu@mediatek.com,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	mario.limonciello@amd.com,
-	pavel@ucw.cz,
-	rafael@kernel.org,
-	regressions@lists.linux.dev,
-	stable@kernel.org,
-	ting.wang@mediatek.com
-Subject: Re: [REGRESSION][BISECTED] "Wakeup event detected during hibernation" on Dell Precision 7780 (was "[PATCH v4] PM: hibernate: Avoid missing wakeup events during hibernation")
-Date: Sat, 25 Oct 2025 08:15:55 +0300
-Message-ID: <20251025051555.422427-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251021125446.4384-1-safinaskar@gmail.com>
-References: <20251021125446.4384-1-safinaskar@gmail.com>
+        d=1e100.net; s=20230601; t=1761387080; x=1761991880;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=egj/7WjRwjT6riGuR0koHtTyjN24c/LRgAczk/OnsWw=;
+        b=AngygiesZB8oCDlUgvZq0GXn7Z0kqXQgxqZ3vf+eONVQ61JOQNe3rAy7DI2JRk/Hl8
+         lBTD7fRaYuPw2DILHcRtlGI7C4bHX/VbnCgy6JJ5/GTExwRWq1yabUgCWJzNzJnWtWHz
+         +E324A5ucXJoxJnH6/KL6DB3Fbe3mWaKDiEHUWBTA120w2/n46aGmiHGMMf/N9khJUUV
+         YQVHx4mccKYuCVQvZeclt5ZF53Zc83jPwidBQGkxxvaAunF09d94Xu9T8kPLGqhRUsub
+         ZoK8aTWigsMRM2fA1tROTwv4BICusn2sHIT3ii4KIDQHc5X7tk0xwbD+twq0rMgxeFhw
+         qPBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWI1JkI+I5N0Aih6fTPCHVplj3JWBYhSXof/tjPjFhoMGo0lK9SW64ixF3vURu68fLM9+oh8pAJt50qMg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx8CGcwjC6KtqFZ382doTNAwn7JfQkBRMtlHRtU4iKyMQWerLn1
+	2eFkU1KQiB4xWzkzIMFhhBhUuAAW1tyt2hZXMTFa979rvGmT2CgtYzmZ
+X-Gm-Gg: ASbGnctlsZSOagMBPbx9e3ze8uAP6Pkg0xeCgbeBa3DM5hE0PhEyl062ToO7NEVmDmf
+	wulmYio3kPZUxL54LhS9SEhiZIPqcd0QHlAd6ey2iGfH1g7L20+YrYbRtzP9J9Tta5xqQGdl9T7
+	VngtnmG5gt+EcgDw/eR2MyAIUUlkB7gt9XbRBqORLhVYW6r37frlAnUwpLnl8EDXh7Unpiii4kl
+	pCqYXINSTRllVsIY+9Tt2Lpq63jbE+HbbHrON8Nt9TweCLurkdWN4n4fl899XG6RzL7W34cwxu1
+	45wZAgUxSH8WIf389b+h8o6+W8lffHWk4WUB7p3vCyYWEOqa6uX1YDd4AHNeVRPAUQD3uJikAFY
+	jMpKUa2f+tBy2DtN1RZndMsmnFu5MzdFnKobxa8kL9Ut4X3jhCfQrhKy/5xubFS/hPvCMYJjfrE
+	m5v4w4XcEAy3r0VCQV2hHeH6bz3GdH2+ylYFpbyebAbQslPYATPWHdz2C35Q==
+X-Google-Smtp-Source: AGHT+IG7ABSr4FtdNNEAo2tbvL9ho+vuY3QRO6VXg6V+Dbe1PORYyrFkPG6pems45nomzqTI2u5v4Q==
+X-Received: by 2002:a05:6000:2911:b0:426:d734:1378 with SMTP id ffacd0b85a97d-4299071090fmr4006603f8f.4.1761387079673;
+        Sat, 25 Oct 2025 03:11:19 -0700 (PDT)
+Received: from ?IPv6:2a02:168:6806:0:c4ec:4cfd:1e64:7a3f? ([2a02:168:6806:0:c4ec:4cfd:1e64:7a3f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952b7b22sm2915027f8f.9.2025.10.25.03.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 03:11:18 -0700 (PDT)
+Message-ID: <990fe39da66ad23df4c85ef247b274a0fc6c2336.camel@gmail.com>
+Subject: Re: WARNING at drivers/pci/setup-bus.c:2373, bisected to "PCI: Use
+ pbus_select_window_for_type() during mem window sizing"
+From: Klaus Kudielka <klaus.kudielka@gmail.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Date: Sat, 25 Oct 2025 12:11:18 +0200
+In-Reply-To: <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
+References: <20250829131113.36754-1-ilpo.jarvinen@linux.intel.com>
+		 <20250829131113.36754-20-ilpo.jarvinen@linux.intel.com>
+	 <51e8cf1c62b8318882257d6b5a9de7fdaaecc343.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-5 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Askar Safin <safinaskar@gmail.com>:
-> This is "dmesg --level=debug+" on v6.18-rc2-with-1796f808e4bb-reverted:
-> 
-> https://zerobin.net/?0459f6411446622d#8i0Ifo6o68By3+UlYUr2t2KL7YLXsKEXrkfszpE77Rw=
+On Sat, 2025-10-18 at 10:14 +0200, Klaus Kudielka wrote:
 
-This log contains WARNING. It is caused by unrelated bug, which is reproducible
-both on real hardware and in Qemu. I reported it here:
-https://lore.kernel.org/regressions/20251025050812.421905-1-safinaskar@gmail.com/
+[...]
 
--- 
-Askar Safin
+
+> Device tree: arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts
+> PCI driver: pci-mvebu
+> Hardware status: The joint mPCIe / mSATA slot carries an mSATA drive, the=
+ other
+> two mPCIe slots carry WiFi cards.
+>=20
+> As far as I can tell, hardware is operating nominally, so the warning loo=
+ks like
+> a false positive.
+
+
+In the meantime, I stared a bit at the logs, and at the code.
+
+
+WITH the offending commit, I see TWO identical lines before the WARNING:
+
+> [=C2=A0=C2=A0=C2=A0 0.027107] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+> [=C2=A0=C2=A0=C2=A0 0.027115] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+
+So, this part of  pbus_size_mem() now seems to be called *TWICE* for the sa=
+me bridge window:
+
+		add_to_list(realloc_head, bus->self, b_res, size1-size0, add_align);
+		pci_info(bus->self, "bridge window %pR to %pR add_size %llx add_align %ll=
+x\n",
+			   b_res, &bus->busn_res,
+			   (unsigned long long) (size1 - size0),
+			   (unsigned long long) add_align);
+
+
+
+WITHOUT the offending commit, I see only one line, and no WARNING.
+> [=C2=A0=C2=A0=C2=A0 0.027405] pci 0000:00:03.0: bridge window [mem 0x0020=
+0000-0x003fffff] to [bus 02] add_size 200000 add_align 200000
+
+
+This behavior change really looks suspicious to me (maybe resulting in two =
+identical entries in the realloc_list).
+Does that ring any bell?
+
+
+Thanks, Klaus
