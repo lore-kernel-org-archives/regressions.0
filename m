@@ -1,45 +1,45 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567E2C17A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820392D7DFF;
 	Sun, 26 Oct 2025 12:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761482553; cv=none; b=SWmHU1VIH5WwvuamHQoBMJgQIh7HfBYm0uCryepGQz2O7EHqp0ONGTyEvXsnjqVefffGnyXQjt/j8smmLr10NsZVWdZDnKUZCnSzAKz1jB7jBkJhsnu0JlfnKxGTzGoWEC5gV6HjA4JJF4logHPxSlTAm/JuMkXsj2W1e6ga/vc=
+	t=1761482553; cv=none; b=UpY2YN11yVaBilMjdCMiZtPtxvynybXVmgm77AAmGjGq6KNaDsEkkGPjN2NJz//OQeTW7xVbge3dyMoXDK39zIDf9QhvbELwGSO7qN3ZCfUw7qHeoYCWrJJHYFM6ccncJz7x5ajMeoP4HvSE+sYiyLhfOkQPPQmu7PpArDTTiag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761482553; c=relaxed/simple;
-	bh=vghudGEOY3L1ytcEYABOWe472CPzB9vVvZz/X1Px26A=;
+	bh=Jhphcb2eOJvYE4YvsIZauiMAEtvFpkvShA2BIkzuVJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AkNH1QkYFM0MLLUKpzPVcZA5VJs21Tne2faliEtjfIy0A1zEt8GtHhhIKv1PhENRIUMg9BbZogaojv57B9t8IeBwUBVeraCTQscQGoeeoMO1r/sPI90vlFWjHPIReSTXZGqJuvQr8so7hIYKEMYdQ4nm22NabdhcP37r2DBc/SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DcEcOzku; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=UAs9nIWVLc5Khsi0UNxNpyIgSBc+tvjhSdv2OPxhX1f4XRdnCYrI0/a62JPwq+qya8SLAM6aO65OChtmQV51X8J++7I3Dw2nqWtTVfll64/ORZmXAs4duqQMMFkkvWWrLGlrKSLHy8eOJfiHS27o4LJFvRB5agqEDLj9RSooYJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kg8udvqb; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DcEcOzku"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kg8udvqb"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=A9M9qnXAKMMmJCdLmCAyHsjy98RtFl6ZF9DFi+xuUB8=; t=1761482551;
-	x=1761914551; b=DcEcOzkuAxLLQ9iCDWvClnYTOvNO++ZqYAJygDLgZPxd5NdejNLZQbhQzRDd7
-	p0ucvKsmxYeLuZdM+yuIMoQtBP6uitMi7TwyOUWmrxf/UsSVTzoCNcW2KYu9dS7mnomM1uO7N3v/m
-	yaUUBtsd2046oKrWA1Ir+rRJGNrK6YrUViKu1xk9eYuIUMWiWnQfU8i5Ik4lR3aN2YUxxWHzjvbuE
-	AaaqDWuB5970iXOJfMcPMxp0jo5ulBzI8yHH0wPcwcpBSKGFXbOvDqdT40UJt4JgqQ5rzdBhCUxjS
-	KABWrOwpze7pg1O3rJXmfd+/CmVgBM0f9XtOfzh52hQv2XB1CQ==;
+	References; bh=lPjt0MqJvH6hs507jG7OGwNx1ZlrR2+68vhiSR2b17I=; t=1761482551;
+	x=1761914551; b=kg8udvqb6gkbHUAi0XOrwvWSuBokh3Ml3IDuq0j5XXWfr0XoaKgEBImZAPjfY
+	NgtSndcxjbS4zLOAyybriYX2qnG9zwSThnubIwgsOBF2Im0tx3CUdCgWL9wON1fdfZyCi9HSl/HPt
+	N3MDouQCIUo5utVRZt30lR+LBRRQI8L8FYQPY0Lnxa3JCR7kpRabUMJjdTXKLsY6nrwER2/+Ek4Pv
+	T//9jNaofNA01o5oYcRMhuNZ6xbi35j2l+leJ7Oglyol3IqOBis3YF0kBfMVdzbCoXkN9nfM0DUbI
+	fhakJaeG5SqLJZHYIkjveeEWF/2BdGY4nNus7hmMWrA+mj9+Sg==;
 Received: from [2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160] (helo=luggage.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	id 1vD04m-001mXP-12;
-	Sun, 26 Oct 2025 13:42:24 +0100
+	id 1vD04r-001mYe-2u;
+	Sun, 26 Oct 2025 13:42:29 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 05/30] docs: reporting-issues: outline why reporting is complicated
-Date: Sun, 26 Oct 2025 13:41:56 +0100
-Message-ID: <a6704ef5b3a8dcbaf645ddb5407e8f13553502b0.1761481839.git.linux@leemhuis.info>
+Subject: [PATCH v1 20/30] docs: reporting-issues: improve text on check other places
+Date: Sun, 26 Oct 2025 13:42:11 +0100
+Message-ID: <1a654e35cf72a349b5882b010ac9ad5f34830f9a.1761481839.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
@@ -51,94 +51,116 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482551;009d26c6;
-X-HE-SMSGID: 1vD04m-001mXP-12
+X-HE-SMSGID: 1vD04r-001mYe-2u
 
-Replace the closing words with a section that describes why reporting
-Linux kernel bugs is more complicated than in other FLOSS projects.
+Fine-tune the instructions about checking other places for existing
+reports.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../admin-guide/reporting-issues.rst          | 67 ++++++++++++++++---
- 1 file changed, 59 insertions(+), 8 deletions(-)
+ .../admin-guide/reporting-issues.rst          | 72 +++++++++++--------
+ 1 file changed, 44 insertions(+), 28 deletions(-)
 
 diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-index 745e698cb6be8b..2629fde3aa4b8f 100644
+index baee1da327d116..c34a95d5af4ac6 100644
 --- a/Documentation/admin-guide/reporting-issues.rst
 +++ b/Documentation/admin-guide/reporting-issues.rst
-@@ -1756,14 +1756,65 @@ But do not worry too much about all of this, a lot of drivers have active
- maintainers who are quite interested in fixing as many issues as possible.
+@@ -157,9 +157,24 @@ following the others is usually in your own interest.
+ 
+  [:ref:`details <maintainers_repiref>`]
+ 
+- * Search the archives of the bug tracker or mailing list in question
+-   thoroughly for reports that might match your issue. If you find anything,
+-   join the discussion instead of sending a new report.
++.. _otherplaces_repisbs:
++
++* If the developers of the affected driver or subsystem use a dedicated mailing
++  list not `archived on lore <https://lore.kernel.org/>`_, search its archives
++  for earlier reports and potential fixes; if the subsystem is among the few
++  using one of various bug trackers, search it as well.
++
++  Checking `bugzilla.kernel.org <https://bugzilla.kernel.org/>`_ might be worth
++  a shot, too. But keep in mind that for most of the kernel it is the wrong
++  place to submit bug reports: Many Linux developers do not care about the bug
++  tracker and are not even notified about bugs in their code submitted there.
++
++  If you find matching reports or fixes in either place, follow the instructions
++  provided earlier. In the case of Bugzilla, check if the appropriate developers
++  noticed the ticket -- and if not, consider sending an email to the responsible
++  people and lists pointing them to it.
++
++ [:ref:`details <otherplaces_repiref>`]
+ 
+  * Create a fresh backup and put system repair and restore tools at hand.
+ 
+@@ -851,41 +866,42 @@ about the particular driver at all.
+ [:ref:`back to step-by-step guide <maintainers_repisbs>`]
  
  
--Closing words
--=============
+-Search for existing reports, second run
+----------------------------------------
++.. _otherplaces_repiref:
+ 
+-    *Search the archives of the bug tracker or mailing list in question
+-    thoroughly for reports that might match your issue. If you find anything,
+-    join the discussion instead of sending a new report.*
 -
--Compared with other Free/Libre & Open Source Software it's hard to report
--issues to the Linux kernel developers: the length and complexity of this
--document and the implications between the lines illustrate that. But that's how
--it is for now. The main author of this text hopes documenting the state of the
--art will lay some groundwork to improve the situation over time.
-+Why reporting Linux kernel bugs is somewhat complicated
-+-------------------------------------------------------
+-As mentioned earlier already: reporting an issue that someone else already
+-brought forward is often a waste of time for everyone involved, especially you
+-as the reporter. That's why you should search for existing report again, now
+-that you know where they need to be reported to. If it's mailing list, you will
+-often find its archives on `lore.kernel.org <https://lore.kernel.org/>`_.
+-
+-But some list are hosted in different places. That for example is the case for
+-the ath10k WiFi driver used as example in the previous step. But you'll often
+-find the archives for these lists easily on the net. Searching for 'archive
+-ath10k@lists.infradead.org' for example will lead you to the `Info page for the
+-ath10k mailing list <https://lists.infradead.org/mailman/listinfo/ath10k>`_,
+-which at the top links to its
+-`list archives <https://lists.infradead.org/pipermail/ath10k/>`_. Sadly this and
+-quite a few other lists miss a way to search the archives. In those cases use a
+-regular internet search engine and add something like
++Search for existing reports in other places
++-------------------------------------------
 +
-+The Linux kernel's development model differs from typical Open Source projects
-+in a few important aspects. Four of those complicate bug reporting:
++  *If the developers of the affected driver or subsystem use a dedicated
++  mailing list not archived on lore, search its archives for earlier reports
++  and potential fixes; if the subsystem is* [:ref:`... <otherplaces_repisbs>`]
 +
-+1. Developers are free to solely focus on the latest mainline codebase.
++Now that you know where they need to be reported to, search the target for
++existing reports again. If it is a mailing list, you will often find its
++archives on `lore <https://lore.kernel.org/all/>`_.
 +
-+2. The 'stable team' maintains the stable and longterm kernel series, but is not
-+   allowed to fix many bugs just there if they happen in mainline, too.
++But some lists are hosted in different places. That, for example, is the case
++for the ath10k WiFi driver used as an example in the previous step. But you'll
++often find the archives for these lists easily on the net. Searching for
++'archive ath10k@lists.infradead.org', for example, will lead you to the `Info
++page for the ath10k mailing list <https://lists.infradead.org/mailman/listinfo/ath10k>`_,
++which at the top links to its `list archives <https://lists.infradead.org/pipermail/ath10k/>`_.
++Sadly, this and quite a few other lists miss a way to search the archives. In
++those cases, use a regular internet search engine and add something like
+ 'site:lists.infradead.org/pipermail/ath10k/' to your search terms, which limits
+ the results to the archives at that URL.
+ 
+-It's also wise to check the internet, LKML and maybe bugzilla.kernel.org again
++It is also wise to check the internet, LKML and maybe bugzilla.kernel.org again
+ at this point. If your report needs to be filed in a bug tracker, you may want
+ to check the mailing list archives for the subsystem as well, as someone might
+ have reported it only there.
+ 
+-For details how to search and what to do if you find matching reports see
+-"Search for existing reports, first run" above.
++For details on how to search and what to do if you find matching reports, see
++':ref:`Search for existing reports and fixes <checkloreone_repiref>`' above.
+ 
+ Do not hurry with this step of the reporting process: spending 30 to 60 minutes
+-or even more time can save you and others quite a lot of time and trouble.
++or even more time can save everyone, including you, quite some trouble.
 +
-+3. There is no central bug tracker.
-+
-+4. Most kernels used in Linux distributions are totally unsuitable for reporting
-+   bugs upstream.
-+
-+Due to the first aspect, some of the developers ignore or react coldly to
-+reports about bugs in, say, Linux 6.1 when 6.2-rc1 is already out.
-+
-+The combination of the first and the second aspect is why some of the
-+developers are unwilling to look into reports with stable or longterm kernels:
-+the problem might never have happened in the code they work on, for example
-+because the stable team did something wrong between 6.1.1 and 6.1.2.
-+
-+The stable team due to those two aspects is often in a similar but opposite
-+situation when it comes to bugs reported using a kernel like 6.1.2: If that
-+issue already happened in 6.1 and still happens in the latest mainline kernel,
-+then it must be fixed there first. That is among the reasons why reporters in
-+the end always have to check if mainline is affected, as the stable team often
-+is the wrong point of contact, unless it is a series specific regression.
-+
-+There are various reasons why no central bug tracker exists. They, among others,
-+were not a thing yet when Linux started, which is why reporting my email was
-+the norm initially -- and still is, as quite a few developers prefer to handle
-+all aspects of kernel development via email. Some, on the other hand, saw
-+benefits in trackers and set up bugzilla.kernel.org, which due to the
-+aforementioned aspect never became mandatory and has some problematic aspects;
-+this is why it frequently does not even forward newly filed reports to the
-+appropriate developers. Yet other developers prefer the comfort of Git forges
-+for development and issue tracking; but subsystems use various forges, so those
-+trackers are spread over the web.
-+
-+The fourth aspect is explained in the second point of the reference section
-+already: Old codebases, modified sources, and add-ons lead to bugs that were
-+fixed a long time ago already or never happened upstream in the first place.
-+These are problems for many other software packaged by Linux distributions as
-+well. But there it is usually a smaller problem, as the modifications and
-+extensions distributors apply to the kernel are often much bigger and more
-+dangerous; the kernel also changes way more quickly, is a lot more
-+complex, and naturally more fragile. Due to these aspects, many developers
-+expect reports to be based on fresh and vanilla kernels. Furthermore, most of
-+them receive way more bug reports than they are able to handle, which is
-+why they prioritize the ones that look more promising.
-+
-+Reporting a bug due to these and other unmentioned aspects is harder than in
-+other Free/Libre & Open Source Software projects -- the complexity of this
-+document proves that. But that is the state of affairs for now. The primary
-+author of this text hopes documenting it will lay some groundwork to improve
-+the situation over time.
++[:ref:`back to step-by-step guide <otherplaces_repisbs>`]
  
  
- ..
+ Prepare for emergencies
 -- 
 2.51.0
 
