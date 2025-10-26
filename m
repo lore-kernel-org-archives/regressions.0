@@ -1,45 +1,45 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EBD2DE6E3;
-	Sun, 26 Oct 2025 12:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231252DCF50;
+	Sun, 26 Oct 2025 12:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761482558; cv=none; b=ZdQC2O4MK/2VCxFbP36L2IqLZ11DNnAftxlJ9fum7kWgPXI2GqdoVh0DJKvVCMm42l2TZIFhctC44ZLHt/kyNi1gFqL9uihJ8t2LSv3KrLCDWR9vDJOHeAO97BUBrofexCG2XMBrpCUkWjwRM8qEDDltas2sHiyRRHrH/7eJjfo=
+	t=1761482559; cv=none; b=LsYCS4FtXFWPpHwIJj55sgPrb24vx6TfqDRpR175c+UVLLU5cilZ9y1rOCVcsilJsYLvtLrY4+VSorBs/8xHLZtLIDbG1j3A5j18kP66uDZRC5Akw40OH62jMe9VrDTArn7yExggy6XKwZEaUWeDCW//Rr2++Em2cdcMwXryAEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761482558; c=relaxed/simple;
-	bh=rNZIoC6pDpscutI+1aAPe3z6yjg/MlPZ7XDTm/LQhsM=;
+	s=arc-20240116; t=1761482559; c=relaxed/simple;
+	bh=YPmz9plxeC1YEcFAWI17S4yEgIf+VNJKzQ5SC6730bM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rsnDrwzXqnnLz8R1iYdLfbMWe4CiAtOuQQmaC/J4cg3MHxdVsZ8Tmc0o7NYWLNihOX+SHO+OfsW6qZSV6hjkvjH7cEGO3fqD1YlcxkihhLHTXiDIi+i2iWx59ck1zzsO9P3+efKASBCXYVQoynUv/NLjQnohzhcdFnbuOjPyQhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FQZ4C1j4; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=hIRzn0ar26uKSoN+2uaWzhubYfF2t4toJJO3cqKvyL0Ds3UoRiC43rSMsxQm+G0eOPFrByabsb8SL7tGuCMPQMGEX/9LRwm/1LXl68BXmfQTZYNFuYzM2F7v+WT67iZN6b39yJ2jWIue3hVCHRw5MO5IPXDgxbEBqhjqvruOkcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=AehCcECH; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FQZ4C1j4"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="AehCcECH"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=K7qoI4NF+hR2zU8RlYf5/2Ju3tpWLz9BGYsIERml1u8=; t=1761482555;
-	x=1761914555; b=FQZ4C1j4YrS/vJORr4XB06Pv7fNh3TBAwbekJSPHgile9OG1S7ouVVuA/ySX1
-	bAt2Cyfb828/2ZEwqrJen82hr39B1D5qXoVoY6dQIgYCYPwmr1ew+8mazds/aTTsgEs05bowL2XRC
-	wkg3FRthOUTvBwUovabvxw5eNIrSuM0/H35wZV8/L8gIPUYpashzSNVMhddWswwjsixUOXac4FVbs
-	BvpqwzGb0DkM4BIKWCTzbCk23FLFtBI4vfmiSxupATHS+6g5FHjEOOpHEqm2hWjOarCnf2Lq49bEu
-	O81ikzqxJ0bVVa0tD7h4YzAPRXyeDVfymhBTl/JxYrSDqhvPDw==;
+	References; bh=Xl7EbKxVssEXZJh8Rfnajk+ePVuHpmu9Mxi6gIB7sbs=; t=1761482554;
+	x=1761914554; b=AehCcECHHGj7CGEj59Ae1dQLU2Ijx4/jffdmjsx/fPw+ERI4S5ZNiN8GhIVST
+	pc6igRHKLLyD7czlsoeUucTe0AVXumx928Zb5prlvHi4APx+jDAhwQ8d+egcZbPFSOWSiU44sy0Yo
+	me4LsdTq+uDBuPQHRpI1ks3iJ3hSkaQeF1Z4gL5P8N+gKRZTgUHC5t8jWppxDM1mI3PQSfpiPv1zP
+	BGGwmVMSbGZCJovVRuz3/36JBB0vBOeuv2RjwtyovzjtfGqDALItZNV6DJYiktI5REWAbnoWGLY0m
+	kwA02lDXOSwXMwHXJe0le7uIufLl5yvRRGEPyFSVIRZsVMG6hw==;
 Received: from [2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160] (helo=luggage.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	id 1vD04v-001mZC-16;
-	Sun, 26 Oct 2025 13:42:33 +0100
+	id 1vD04u-001mZC-06;
+	Sun, 26 Oct 2025 13:42:32 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 29/30] docs: reporting-issues: separate steps for follow-up tasks
-Date: Sun, 26 Oct 2025 13:42:20 +0100
-Message-ID: <e3430ec1b5513a3fed6c3152202d86343e292a61.1761481839.git.linux@leemhuis.info>
+Subject: [PATCH v1 25/30] docs: reporting-issues: improve text on non-regressions in stable
+Date: Sun, 26 Oct 2025 13:42:16 +0100
+Message-ID: <0a3548a6b5d8ca87c9d81838d84afeb619a6985e.1761481839.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
@@ -49,405 +49,181 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482555;32bd3f7a;
-X-HE-SMSGID: 1vD04v-001mZC-16
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482554;2f8dc1da;
+X-HE-SMSGID: 1vD04u-001mZC-06
 
-Create three separate steps that cover things that are important for bug
-reporters to keep an eye on after submitting the report.
+Fine-tune the instructions about handling non-regressions only occurring
+in stable or longterm kernels. This removes the accompanying text in the
+reference section to shorten things somewhat: this case is rare and the
+instructions in the step-by-step guide cover all the important bits now.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../admin-guide/reporting-issues.rst          | 347 +++++++++---------
- 1 file changed, 175 insertions(+), 172 deletions(-)
+ .../admin-guide/reporting-issues.rst          | 129 ++----------------
+ 1 file changed, 9 insertions(+), 120 deletions(-)
 
 diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-index c147191a7d0987..d81d558c245953 100644
+index 9611514d10414e..a78060098c59f0 100644
 --- a/Documentation/admin-guide/reporting-issues.rst
 +++ b/Documentation/admin-guide/reporting-issues.rst
-@@ -372,12 +372,41 @@ following the others is usually in your own interest.
+@@ -299,29 +299,29 @@ supported stable or longterm series that (b) you were unable to reproduce in
+ the current mainline and (c) is not a regression. If all of that holds true,
+ follow these steps:
  
-  [:ref:`details <submit_repiref>`]
+-* Be aware: it is possible the issue will not be resolved, as the fix might be
++* Be aware: It is possible the issue will not be resolved, as the fix might be
+   too big or risky to backport.
  
-- * Wait for reactions and keep the thing rolling until you can accept the
--   outcome in one way or the other. Thus react publicly and in a timely manner
--   to any inquiries. Test proposed fixes. Do proactive testing: retest with at
--   least every first release candidate (RC) of a new mainline version and
--   report your results. Send friendly reminders if things stall. And try to
--   help yourself, if you don't get any help or if it's unsatisfying.
-+.. _keeprolling_repisbs:
-+
-+* Wait for reactions and keep the ball rolling until you can accept the outcome
-+  in one way or the other. Hence react publicly and in a timely manner to any
-+  inquiries and requests for testing patches.
-+
-+ [:ref:`details <keeprolling_repiref>`]
-+
-+.. _retest_repisbs:
-+
-+* Retest at least every first release candidate (e.g., -rc1) of a new mainline
-+  version released and report your findings in a reply to your report.
-+
-+ [:ref:`details <retest_repiref>`]
-+
-+.. _reminder_repisbs:
-+
-+* If things stall for more than three weeks, evaluate why. It can happen due to
-+  good or bad reasons -- like an inadequate report or because you
-+  missed a request for further details or testing. If it is unlikely to be
-+  something like that, send a friendly inquiry as a reply-to-self, as it might
-+  be a mundane reason like an over-eager spam filter or a developer being on
-+  vacation.
-+
-+ [:ref:`details <reminder_repiref>`]
-+
-+.. _yourself_repisbs:
-+
-+* Be aware that nobody is obliged to help you, unless it is a recent regression,
-+  a security issue, or an extremely severe problem. Hence, try to help yourself
-+  if you don't receive any or only unsatisfying help.
-+
-+ [:ref:`details <yourself_repiref>`]
-+
-+.. _readysolved_repisubs:
+-* Search Linux' mainline Git repository or `lore
++* Search Linux's mainline Git repository or `lore
+   <https://lore.kernel.org/all/>`_ for the change resolving the issue. In case
+-  you have trouble locating it, consider using a bisection; alternatively ask
++  you have trouble locating it, consider using a bisection; alternatively, ask
+   on the list of the affected subsystem for advice while CCing the relevant
+   maintainers and developers.
+ 
+ * Check if the change is already scheduled to be backported by searching the
+-  patch description for a 'stable tag' (a line like 'Cc:
+-  <stable@vger.kernel.org>' and the patch's title in lore.kernel.org:
++  patch description for a 'stable tag' (e.g., a line like 'Cc:
++  <stable@vger.kernel.org>') and the patch's title in lore.kernel.org:
+ 
+-  * If the change is already scheduled for backporting, it usually will be
+-    picked up within one or two weeks after being mainlined. Note though, plans
++  * If the change is already scheduled for backporting, it will usually be
++    picked up within one or two weeks after being mainlined. Note, though, plans
+     sometimes change; a comment next to the stable tag might also limit how far
+     the fix is backported and thus exclude the series you care about. If there
+     are good reasons for this, you are out of luck. If you can't spot any:
+ 
+     Send a reply asking the involved developers if backporting to the series is
+-    an option. Note though, the developers might greenlight backporting, but
++    an option. Note, though, the developers might greenlight backporting, but
+     unwilling to handle the work themselves -- in which case you or somebody
+-    else must test and submit the fix and everything it depends on as explained
++    else must test and submit the fix and everything it depends on, as explained
+     in Documentation/process/stable-kernel-rules.rst.
+ 
+   * If the change is not scheduled for backporting, search `lore
+@@ -1457,117 +1457,6 @@ easier. And with a bit of luck there might be someone in the team that knows a
+ bit about programming and might be able to write a fix.
  
  
- Handling non-regressions only occurring in stable or longterm kernels
-@@ -1327,193 +1356,167 @@ The step-by-step guide covers all the important details already.
- [:ref:`back to step-by-step guide <submit_repisbs>`]
- 
- 
--Duties after the report went out
----------------------------------
-+.. _keeprolling_repiref:
-+
-+Things to do after the report went out
-+--------------------------------------
- 
--    *Wait for reactions and keep the thing rolling until you can accept the
--    outcome in one way or the other. Thus react publicly and in a timely manner
--    to any inquiries. Test proposed fixes. Do proactive testing: retest with at
--    least every first release candidate (RC) of a new mainline version and
--    report your results. Send friendly reminders if things stall. And try to
--    help yourself, if you don't get any help or if it's unsatisfying.*
-+  *Wait for reactions and keep the ball rolling until you can accept the outcome* [:ref:`... <keeprolling_repisbs>`]
- 
--If your report was good and you are really lucky then one of the developers
--might immediately spot what's causing the issue; they then might write a patch
--to fix it, test it, and send it straight for integration in mainline while
--tagging it for later backport to stable and longterm kernels that need it. Then
--all you need to do is reply with a 'Thank you very much' and switch to a version
--with the fix once it gets released.
-+If your report was good and you are lucky, some developers might immediately
-+spot what is causing the issue. They then might provide a fix for you to test,
-+which you should do in a timely manner; afterwards they then send it out for
-+integration into the mainline kernel while tagging it for backporting to
-+affected stable and longterm kernels if appropriate.
- 
--But this ideal scenario rarely happens. That's why the job is only starting
--once you got the report out. What you'll have to do depends on the situations,
--but often it will be the things listed below. But before digging into the
--details, here are a few important things you need to keep in mind for this part
--of the process.
-+But frequently it is a little less straightforward. That is why the job often
-+is only starting once you send a report. What you'll have to do depends on the
-+situation. Here are a few tips:
- 
-+**Check who you deal with**: Most of the time a
-+developer for the particular area of code will respond. But as
-+issues are usually reported in public, it could be anyone --
-+including people that want to help but in the end send you off
-+track. That is why it might be wise to run a quick search on `lore <https://lore.kernel.org/all/>`_
-+to see who you are interacting with.
- 
--General advice for further interactions
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+**Inquiries for data**: Often you will be asked to test something or provide
-+additional details. Try to supply the requested information soon, as you have
-+the attention of someone willing to help and risk losing it the longer you
-+wait; that outcome is even likely if you do not provide the information within
-+a few business days.
- 
--**Always reply in public**: When you filed the issue in a bug tracker, always
--reply there and do not contact any of the developers privately about it. For
--mailed reports always use the 'Reply-all' function when replying to any mails
--you receive. That includes mails with any additional data you might want to add
--to your report: go to your mail applications 'Sent' folder and use 'reply-all'
--on your mail with the report. This approach will make sure the public mailing
--list(s) and everyone else that gets involved over time stays in the loop; it
--also keeps the mail thread intact, which among others is really important for
--mailing lists to group all related mails together.
-+**Always reply in public!** When you submitted the issue in a bug tracker,
-+always reply there and do not contact any of the developers privately; for
-+mailed reports, always use the 'Reply-all' function when replying to any emails
-+you receive. That includes emails with any additional data you might want to add
-+to your report: Go to your email application's 'Sent' folder and use 'reply-all'
-+on your email with the report. This approach will make sure the public mailing
-+lists and everyone else who becomes involved later can access everything; it
-+also keeps the email thread intact, which, among others, is really important for
-+others that later run into the same problem and check the thread for a solution.
- 
- There are just two situations where a comment in a bug tracker or a 'Reply-all'
- is unsuitable:
- 
-- * Someone tells you to send something privately.
-+* Someone tells you to send something privately.
-+
-+* You were told to supply something containing
-+  information that should not be exposed to the public. In that case, it is okay
-+  to send it in private to the person who asked for it. But note in the ticket
-+  or an email that you did so to keep the public record straight.
- 
-- * You were told to send something, but noticed it contains sensitive
--   information that needs to be kept private. In that case it's okay to send it
--   in private to the developer that asked for it. But note in the ticket or a
--   mail that you did that, so everyone else knows you honored the request.
-+**Requests for testing**: When you are asked to test a diagnostic patch or a
-+possible fix, try to test it in a timely manner, too. But do it thoroughly and
-+do not rush it: Mixing things up can happen easily and leads to a lot of
-+confusion. A common mistake, for example, is thinking a proposed fix was applied
-+when building a test kernel, when in fact it was not.
- 
--**Do research before asking for clarifications or help**: In this part of the
-+**Try to help yourself** before asking for help: During this part of the
- process someone might tell you to do something that requires a skill you might
- not have mastered yet. For example, you might be asked to use some test tools
--you never have heard of yet; or you might be asked to apply a patch to the
--Linux kernel sources to test if it helps. In some cases it will be fine sending
--a reply asking for instructions how to do that. But before going that route try
--to find the answer own your own by searching the internet; alternatively
--consider asking in other places for advice. For example ask a friend or post
--about it to a chatroom or forum you normally hang out.
+-Reference for "Reporting issues only occurring in older kernel version lines"
+------------------------------------------------------------------------------
 -
--**Be patient**: If you are really lucky you might get a reply to your report
--within a few hours. But most of the time it will take longer, as maintainers
--are scattered around the globe and thus might be in a different time zone – one
--where they already enjoy their night away from keyboard.
+-This section provides details for the steps you need to take if you could not
+-reproduce your issue with a mainline kernel, but want to see it fixed in older
+-version lines (aka stable and longterm kernels).
 -
--In general, kernel developers will take one to five business days to respond to
--reports. Sometimes it will take longer, as they might be busy with the merge
--windows, other work, visiting developer conferences, or simply enjoying a long
--summer holiday.
+-Some fixes are too complex
+-~~~~~~~~~~~~~~~~~~~~~~~~~~
 -
--The 'issues of high priority' (see above for an explanation) are an exception
--here: maintainers should address them as soon as possible; that's why you
--should wait a week at maximum (or just two days if it's something urgent)
--before sending a friendly reminder.
+-    *Prepare yourself for the possibility that going through the next few steps
+-    might not get the issue solved in older releases: the fix might be too big
+-    or risky to get backported there.*
 -
--Sometimes the maintainer might not be responding in a timely manner; other
--times there might be disagreements, for example if an issue qualifies as
--regression or not. In such cases raise your concerns on the mailing list and
--ask others for public or private replies how to move on. If that fails, it
--might be appropriate to get a higher authority involved. In case of a WiFi
--driver that would be the wireless maintainers; if there are no higher level
--maintainers or all else fails, it might be one of those rare situations where
--it's okay to get Linus Torvalds involved.
+-Even small and seemingly obvious code-changes sometimes introduce new and
+-totally unexpected problems. The maintainers of the stable and longterm kernels
+-are very aware of that and thus only apply changes to these kernels that are
+-within rules outlined in Documentation/process/stable-kernel-rules.rst.
 -
--**Proactive testing**: Every time the first pre-release (the 'rc1') of a new
--mainline kernel version gets released, go and check if the issue is fixed there
--or if anything of importance changed. Mention the outcome in the ticket or in a
--mail you sent as reply to your report (make sure it has all those in the CC
--that up to that point participated in the discussion). This will show your
--commitment and that you are willing to help. It also tells developers if the
--issue persists and makes sure they do not forget about it. A few other
--occasional retests (for example with rc3, rc5 and the final) are also a good
--idea, but only report your results if something relevant changed or if you are
--writing something anyway.
+-Complex or risky changes for example do not qualify and thus only get applied
+-to mainline. Other fixes are easy to get backported to the newest stable and
+-longterm kernels, but too risky to integrate into older ones. So be aware the
+-fix you are hoping for might be one of those that won't be backported to the
+-version line your care about. In that case you'll have no other choice then to
+-live with the issue or switch to a newer Linux version, unless you want to
+-patch the fix into your kernels yourself.
 -
--With all these general things off the table let's get into the details of how
--to help to get issues resolved once they were reported.
+-Common preparations
+-~~~~~~~~~~~~~~~~~~~
 -
--Inquires and testing request
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-    *Perform the first three steps in the section "Reporting issues only
+-    occurring in older kernel version lines" above.*
 -
--Here are your duties in case you got replies to your report:
+-You need to carry out a few steps already described in another section of this
+-guide. Those steps will let you:
 -
--**Check who you deal with**: Most of the time it will be the maintainer or a
--developer of the particular code area that will respond to your report. But as
--issues are normally reported in public it could be anyone that's replying —
--including people that want to help, but in the end might guide you totally off
--track with their questions or requests. That rarely happens, but it's one of
--many reasons why it's wise to quickly run an internet search to see who you're
--interacting with. By doing this you also get aware if your report was heard by
--the right people, as a reminder to the maintainer (see below) might be in order
--later if discussion fades out without leading to a satisfying solution for the
--issue.
-+you have never heard of yet; or you are asked to apply a patch to the
-+Linux kernel sources to test. It usually will be fine replying asking for
-+instructions on how to do that. But before going that route, try to find the
-+answer on your own by searching the internet; alternatively,
-+consider asking elsewhere for advice. For example, ask a friend or post
-+your question to a chat room or forum you normally hang out in.
- 
--**Inquiries for data**: Often you will be asked to test something or provide
--additional details. Try to provide the requested information soon, as you have
--the attention of someone that might help and risk losing it the longer you
--wait; that outcome is even likely if you do not provide the information within
--a few business days.
-+**Be patient**: If you are really lucky, you might receive a reply to your
-+report within a few hours. But most of the time it will take longer, as
-+maintainers might be in a different time zone -- one where people currently
-+take a few days off or already enjoy their night away from the keyboard. They
-+might also simply be busy with other work, on a trip to a conference, or simply
-+enjoying a long holiday.
- 
--**Requests for testing**: When you are asked to test a diagnostic patch or a
--possible fix, try to test it in timely manner, too. But do it properly and make
--sure to not rush it: mixing things up can happen easily and can lead to a lot
--of confusion for everyone involved. A common mistake for example is thinking a
--proposed patch with a fix was applied, but in fact wasn't. Things like that
--happen even to experienced testers occasionally, but they most of the time will
--notice when the kernel with the fix behaves just as one without it.
-+[:ref:`back to step-by-step guide <keeprolling_repisbs>`]
-+
-+
-+.. _retest_repiref:
-+
-+Regularly check if the bug is still present
-+-------------------------------------------
-+
-+  *Retest at least every first release candidate (e.g., -rc1) of a new mainline
-+  version released and* [:ref:`... <retest_repisbs>`]
-+
-+Every time the first pre-release of a new mainline kernel version is released
-+(the 'rc1'), go and check if the issue is fixed there or if anything of
-+importance has changed. Mention the outcome in the ticket or in a mailed reply
-+to your report (make sure to CCs everyone that up to that point participated in
-+the discussion). This will show your commitment. It also tells developers the
-+issue persists and acts as an implicit reminder.
-+
-+An occasional retest at another time (for example, with -rc4 or -rc7) is also
-+wise, but only report your results if something relevant changed or if you are
-+writing anyway.
-+
-+[:ref:`back to step-by-step guide <retest_repisbs>`]
-+
-+
-+.. _reminder_repiref:
- 
- What to do when nothing of substance happens
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- * Check if the kernel developers still maintain the Linux kernel version line
+-   you care about.
 -
--Some reports will not get any reaction from the responsible Linux kernel
--developers; or a discussion around the issue evolved, but faded out with
--nothing of substance coming out of it.
+- * Search the Linux stable mailing list for exiting reports.
 -
--In these cases wait two (better: three) weeks before sending a friendly
--reminder: maybe the maintainer was just away from keyboard for a while when
--your report arrived or had something more important to take care of. When
--writing the reminder, kindly ask if anything else from your side is needed to
--get the ball running somehow. If the report got out by mail, do that in the
--first lines of a mail that is a reply to your initial mail (see above) which
--includes a full quote of the original report below: that's on of those few
--situations where such a 'TOFU' (Text Over, Fullquote Under) is the right
--approach, as then all the recipients will have the details at hand immediately
--in the proper order.
+- * Check with the latest release.
 -
--After the reminder wait three more weeks for replies. If you still don't get a
--proper reaction, you first should reconsider your approach. Did you maybe try
--to reach out to the wrong people? Was the report maybe offensive or so
--confusing that people decided to completely stay away from it? The best way to
--rule out such factors: show the report to one or two people familiar with FLOSS
--issue reporting and ask for their opinion. Also ask them for their advice how
--to move forward. That might mean: prepare a better report and make those people
--review it before you send it out. Such an approach is totally fine; just
-+--------------------------------------------
-+
-+  *If things stall for more than two to three weeks, evaluate why. It can
-+  happen due to good or bad reasons, like* [:ref:`... <reminder_repisbs>`]
-+
-+Sometimes you will not receive any reaction from the responsible
-+developers; or a discussion around the issue evolves but ends fruitlessly.
-+
-+In these cases, wait two to three weeks before sending a friendly
-+reminder: Maybe the right developers were just away from their keyboards when
-+you sent your report or had something more important to take care of.
-+
-+When writing the reminder, kindly ask if there was anything wrong with the
-+report or if anything from your side is needed to get the ball rolling. If the
-+report was submitted by email, send a reply inserting your query after quoting
-+the intro while including a full quote of the original report below: Then all
-+the recipients will have both the gist of the problem and the details at hand
-+immediately in convenient order.
-+
-+After sending a reminder, wait three more weeks for replies. If you still don't
-+receive a proper reaction, reconsider your approach. Did you maybe try
-+to reach out to the wrong people? Was the report possibly offensive or so
-+confusing that people decided to stay away from it?
-+
-+The best way to
-+rule out such factors: Show the report to one or two people familiar with FLOSS
-+issue reporting and ask for their opinion. Also ask them for their advice on how
-+to move forward. That might mean preparing a better report and making those
-+people review it before sending it out. Such an approach is totally fine; just
- mention that this is the second and improved report on the issue and include a
- link to the first report.
- 
--If the report was proper you can send a second reminder; in it ask for advice
--why the report did not get any replies. A good moment for this second reminder
--mail is shortly after the first pre-release (the 'rc1') of a new Linux kernel
--version got published, as you should retest and provide a status update at that
--point anyway (see above).
 -
--If the second reminder again results in no reaction within a week, try to
--contact a higher-level maintainer asking for advice: even busy maintainers by
--then should at least have sent some kind of acknowledgment.
+-Check code history and search for existing discussions
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -
--Remember to prepare yourself for a disappointment: maintainers ideally should
--react somehow to every issue report, but they are only obliged to fix those
--'issues of high priority' outlined earlier. So don't be too devastating if you
--get a reply along the lines of 'thanks for the report, I have more important
--issues to deal with currently and won't have time to look into this for the
--foreseeable future'.
+-    *Search the Linux kernel version control system for the change that fixed
+-    the issue in mainline, as its commit message might tell you if the fix is
+-    scheduled for backporting already. If you don't find anything that way,
+-    search the appropriate mailing lists for posts that discuss such an issue
+-    or peer-review possible fixes; then check the discussions if the fix was
+-    deemed unsuitable for backporting. If backporting was not considered at
+-    all, join the newest discussion, asking if it's in the cards.*
 -
--It's also possible that after some discussion in the bug tracker or on a list
--nothing happens anymore and reminders don't help to motivate anyone to work out
--a fix. Such situations can be devastating, but is within the cards when it
--comes to Linux kernel development. This and several other reasons for not
--getting help are explained in 'Why some issues won't get any reaction or remain
--unfixed after being reported' near the end of this document.
+-In a lot of cases the issue you deal with will have happened with mainline, but
+-got fixed there. The commit that fixed it would need to get backported as well
+-to get the issue solved. That's why you want to search for it or any
+-discussions abound it.
 -
--Don't get devastated if you don't find any help or if the issue in the end does
--not get solved: the Linux kernel is FLOSS and thus you can still help yourself.
--You for example could try to find others that are affected and team up with
--them to get the issue resolved. Such a team could prepare a fresh report
--together that mentions how many you are and why this is something that in your
--option should get fixed. Maybe together you can also narrow down the root cause
--or the change that introduced a regression, which often makes developing a fix
--easier. And with a bit of luck there might be someone in the team that knows a
--bit about programming and might be able to write a fix.
-+If the report was proper, you can send a second reminder; in it, ask for advice
-+on why the report did not receive any replies. An ideal moment for this is
-+shortly after retesting with the first pre-release of a new mainline release
-+(the 'rc1'), as you should retest and provide a status update at that point
-+anyway (see above).
-+
-+[:ref:`back to step-by-step guide <reminder_repisbs>`]
-+
-+
-+.. _yourself_repiref:
-+
-+In most cases nobody is obliged to help
-+---------------------------------------
-+
-+*Be aware that nobody is obliged to help you, unless it is* [:ref:`... <yourself_repisbs>`]
-+
-+Developers ideally should react somehow to every issue report, but sometimes do
-+not reply or, in the end, do not address problems. This is due to reasons
-+[:ref:`Why some bugs remain unfixed and some reports are ignored <unfixedbugs_repiapdx>`]
-+explains in more detail, which also explains why some code does not even have
-+maintainers.
-+
-+Try to help yourself in that case.
-+You, for example, could team up with others affected to then create a better
-+report or narrow down the root cause of a problem. With a bit of luck, someone
-+on the team might even know a bit about programming and provide a fix.
-+
-+[:ref:`back to step-by-step guide <yourself_repisbs>`]
- 
- 
+- * First try to find the fix in the Git repository that holds the Linux kernel
+-   sources. You can do this with the web interfaces `on kernel.org
+-   <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/>`_
+-   or its mirror `on GitHub <https://github.com/torvalds/linux>`_; if you have
+-   a local clone you alternatively can search on the command line with ``git
+-   log --grep=<pattern>``.
+-
+-   If you find the fix, look if the commit message near the end contains a
+-   'stable tag' that looks like this:
+-
+-          Cc: <stable@vger.kernel.org> # 5.4+
+-
+-   If that's case the developer marked the fix safe for backporting to version
+-   line 5.4 and later. Most of the time it's getting applied there within two
+-   weeks, but sometimes it takes a bit longer.
+-
+- * If the commit doesn't tell you anything or if you can't find the fix, look
+-   again for discussions about the issue. Search the net with your favorite
+-   internet search engine as well as the archives for the `Linux kernel
+-   developers mailing list <https://lore.kernel.org/lkml/>`_. Also read the
+-   section `Locate kernel area that causes the issue` above and follow the
+-   instructions to find the subsystem in question: its bug tracker or mailing
+-   list archive might have the answer you are looking for.
+-
+- * If you see a proposed fix, search for it in the version control system as
+-   outlined above, as the commit might tell you if a backport can be expected.
+-
+-   * Check the discussions for any indicators the fix might be too risky to get
+-     backported to the version line you care about. If that's the case you have
+-     to live with the issue or switch to the kernel version line where the fix
+-     got applied.
+-
+-   * If the fix doesn't contain a stable tag and backporting was not discussed,
+-     join the discussion: mention the version where you face the issue and that
+-     you would like to see it fixed, if suitable.
+-
+-
+-Ask for advice
+-~~~~~~~~~~~~~~
+-
+-    *One of the former steps should lead to a solution. If that doesn't work
+-    out, ask the maintainers for the subsystem that seems to be causing the
+-    issue for advice; CC the mailing list for the particular subsystem as well
+-    as the stable mailing list.*
+-
+-If the previous three steps didn't get you closer to a solution there is only
+-one option left: ask for advice. Do that in a mail you sent to the maintainers
+-for the subsystem where the issue seems to have its roots; CC the mailing list
+-for the subsystem as well as the stable mailing list (stable@vger.kernel.org).
+-
+-
  Appendix: additional background information
+ ===========================================
+ 
 -- 
 2.51.0
 
