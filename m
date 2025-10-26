@@ -1,45 +1,45 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B182C0289;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0979D2D7DF1;
 	Sun, 26 Oct 2025 12:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761482552; cv=none; b=XI/yjRO5yJoTq5fmaPpBhIt92MwH6sl0gvTsgUoQ2glaa/gtdczhAcQ7iR03lX4MwbxbYMQrz3SMmBfxM0I6sbekIP0KCJ6rlXBh3XJErJjkeK45p/kSxD7sZdYpae39G5m9+Dp1bpITaP260lAgZvklZafgfBhLDuwu9k/1peQ=
+	t=1761482553; cv=none; b=b390zb8++lncefXHZ0IrpP04jiUg9EJwn4XI0DOR94lFslUqMZRN34tzCtzv0DeeKzxNp1BRbox8FoeGzfhcH42c7wjtbdprU0dixIuvbTYY8DgCFzaComLaXJ80BFzb7t4oT8hLAKcKsNZGF7teLsM7Znvt8JFqRcVUbh83lu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761482552; c=relaxed/simple;
-	bh=pigXJFEk84kaIiULbwp7KdKvqomNcO+IDSl4650sWc8=;
+	s=arc-20240116; t=1761482553; c=relaxed/simple;
+	bh=zdHVVuWMdLD/IA0oLUCz2dfrOnOXQo2D2OWsrWMT4AI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e4lqi8GSHGuCglzQ4s6ylJsBwwb6ykQpelA28yOze475B6A/YbxyApxY+bjdQAMWkorMxKQ2uxP+Mu35s1y0qpCb3EuVRqTCQ7jj0sV3e8E3T+LIbEEmHeZWwu3CWYf4gub7vWTGmH5Y1l+dnJMqm5n+Rm+7wruP43+ICCtXcFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=djlp42xb; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=FNByPIqNKBIBHEa6x3guZRE2LvSTmgBZYwWVgjkYPP4GKNTuopWXaWbqq0P53jU5sR8ojP4Br1lBsloALE5Ld0JMZy3ibwlYu+iX9GVGAek8BcUS2ul1TXqXGL9VTwib/PiC4AlPGQr4A/Zf4UwzoScUxXUH7sX4F6LVPdT2Ttc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1q8fE0lt; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="djlp42xb"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1q8fE0lt"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=2YS+YgaQrR4MfKIsndWYMCSVGSnj2HS6wx9rm7xWb7Q=; t=1761482550;
-	x=1761914550; b=djlp42xbwhGjtrFG6Jfe3jkrZLd1wb1pCa6ZpwJVjWDqzdl2fthKONBDR1nI1
-	BKs+UBsylD9nu9Feya+WmNogVciBmbNd44bZND1vgBiw+u9cO9bDMBAxYyq7Tzcy4EbMKOO1j0fpU
-	wQqTiSm+GwQ2hAyy8Cd7h37IO1JKwOOoyfGuL8vECo2EjHGogDAk41hGlK8OcxsVWADFz3P5HQ8Z9
-	xtoeEMAHsp+8qy+aJ5YoWWDM13FK3u90OuHFH8B7pryfCyEMERgBSegDc4TB+wiD5xxSMGjgpkb9J
-	xVg9yDYYKGFs9N/uDdMBMxB/f2wiGMSod38I2Hdt6KzQ5AIGEA==;
+	References; bh=fHLnuG6RM3Qg3mrCT9HfBteDN/mL5635GCoRcQ8os+0=; t=1761482551;
+	x=1761914551; b=1q8fE0ltuE1TrfIzW9wIfGzR3W6ADY1DQUrFTyNNy34vcBbfNZMEIOOoCwW2A
+	qxZVtHXmnFOpPmj9V0FysKwu1sEYgyDD1Smy+v9UNis89z0Hy/bHy7tTPcK4FtHKN0MHy+6pyh4jD
+	SN8Sz3m7HJDP+KojWsxdxDtxFBFqQd/S0IvXTsoYCVcgc4SKExVLXIITx0ziWQlAxHw1fQ0sWcTbj
+	t8lXLyFUchQ8OlNMsdP7jG4Roj/ixrFg+uOF9izFDqwVQGgq2orPxBf+wJ5rMCvREWnXJ9HcDYUkM
+	xG9TyNkSLoKm0HYTQTU9Ts+B5UNisZETsEdWBq4eW+WLNgINaQ==;
 Received: from [2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160] (helo=luggage.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	id 1vD04q-001mYF-2G;
-	Sun, 26 Oct 2025 13:42:28 +0100
+	id 1vD04r-001mYF-0z;
+	Sun, 26 Oct 2025 13:42:29 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 17/30] docs: reporting-issues: move text on 'check MAINTAINERS file' upwards
-Date: Sun, 26 Oct 2025 13:42:08 +0100
-Message-ID: <e5e8f1c554e922cbcd34a98811a8e900c72cf434.1761481839.git.linux@leemhuis.info>
+Subject: [PATCH v1 19/30] docs: reporting-issues: move text on 'check other places' upwards
+Date: Sun, 26 Oct 2025 13:42:10 +0100
+Message-ID: <ca584bfed5e0e1eb724d432a0d70c070ea608420.1761481839.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
@@ -50,219 +50,129 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482550;db804c08;
-X-HE-SMSGID: 1vD04q-001mYF-2G
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482551;009d26c6;
+X-HE-SMSGID: 1vD04r-001mYF-0z
 
 Move text around to improve diffability of a follow-up patch.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../admin-guide/reporting-issues.rst          | 162 +++++++++---------
- 1 file changed, 81 insertions(+), 81 deletions(-)
+ .../admin-guide/reporting-issues.rst          | 82 +++++++++----------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
 
 diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-index f040ca7c0a2f59..e9d304040e3b54 100644
+index 56e004ba038403..baee1da327d116 100644
 --- a/Documentation/admin-guide/reporting-issues.rst
 +++ b/Documentation/admin-guide/reporting-issues.rst
-@@ -149,6 +149,11 @@ following the others is usually in your own interest.
+@@ -157,6 +157,10 @@ following the others is usually in your own interest.
  
-  [:ref:`details <reginquiry_repiref>`]
+  [:ref:`details <maintainers_repiref>`]
  
-+ * Locate the driver or kernel subsystem that seems to be causing the issue.
-+   Find out how and where its developers expect reports. Note: most of the
-+   time this won't be bugzilla.kernel.org, as issues typically need to be sent
-+   by mail to a maintainer and a public mailing list.
++ * Search the archives of the bug tracker or mailing list in question
++   thoroughly for reports that might match your issue. If you find anything,
++   join the discussion instead of sending a new report.
 +
   * Create a fresh backup and put system repair and restore tools at hand.
  
   * Ensure your system does not enhance its kernels by building additional
-@@ -161,11 +166,6 @@ following the others is usually in your own interest.
+@@ -169,10 +173,6 @@ following the others is usually in your own interest.
     (say something broke when updating from 5.10.4 to 5.10.5), scroll down to
     'Dealing with regressions within a stable and longterm kernel line'.
  
-- * Locate the driver or kernel subsystem that seems to be causing the issue.
--   Find out how and where its developers expect reports. Note: most of the
--   time this won't be bugzilla.kernel.org, as issues typically need to be sent
--   by mail to a maintainer and a public mailing list.
+- * Search the archives of the bug tracker or mailing list in question
+-   thoroughly for reports that might match your issue. If you find anything,
+-   join the discussion instead of sending a new report.
 -
-  * Search the archives of the bug tracker or mailing list in question
-    thoroughly for reports that might match your issue. If you find anything,
-    join the discussion instead of sending a new report.
-@@ -705,73 +705,6 @@ answer these emails on a best-effort basis.
- [:ref:`back to step-by-step guide <reginquiry_repisbs>`]
+ After these preparations you'll now enter the main part:
+ 
+  * Unless you are already running the latest 'mainline' Linux kernel, better
+@@ -851,6 +851,43 @@ about the particular driver at all.
+ [:ref:`back to step-by-step guide <maintainers_repisbs>`]
  
  
--Prepare for emergencies
-------------------------
--
--    *Create a fresh backup and put system repair and restore tools at hand.*
--
--Reminder, you are dealing with computers, which sometimes do unexpected things,
--especially if you fiddle with crucial parts like the kernel of its operating
--system. That's what you are about to do in this process. Thus, make sure to
--create a fresh backup; also ensure you have all tools at hand to repair or
--reinstall the operating system as well as everything you need to restore the
--backup.
--
--
--Make sure your kernel doesn't get enhanced
--------------------------------------------
--
--    *Ensure your system does not enhance its kernels by building additional
--    kernel modules on-the-fly, which solutions like DKMS might be doing locally
--    without your knowledge.*
--
--The risk your issue report gets ignored or rejected dramatically increases if
--your kernel gets enhanced in any way. That's why you should remove or disable
--mechanisms like akmods and DKMS: those build add-on kernel modules
--automatically, for example when you install a new Linux kernel or boot it for
--the first time. Also remove any modules they might have installed. Then reboot
--before proceeding.
--
--Note, you might not be aware that your system is using one of these solutions:
--they often get set up silently when you install Nvidia's proprietary graphics
--driver, VirtualBox, or other software that requires a some support from a
--module not part of the Linux kernel. That why your might need to uninstall the
--packages with such software to get rid of any 3rd party kernel module.
--
--
--Document how to reproduce issue
---------------------------------
--
--    *Write down coarsely how to reproduce the issue.*
--
--During the reporting process you will have to test if the issue
--happens with other kernel versions. Therefore, it will make your work easier if
--you know exactly how to reproduce an issue quickly on a freshly booted system.
--
--Note: it's often fruitless to report issues that only happened once, as they
--might be caused by a bit flip due to cosmic radiation. That's why you should
--try to rule that out by reproducing the issue before going further. Feel free
--to ignore this advice if you are experienced enough to tell a one-time error
--due to faulty hardware apart from a kernel issue that rarely happens and thus
--is hard to reproduce.
--
--
--Regression in stable or longterm kernel?
------------------------------------------
--
--    *If you are facing a regression within a stable or longterm version line
--    (say something broke when updating from 5.10.4 to 5.10.5), scroll down to
--    'Dealing with regressions within a stable and longterm kernel line'.*
--
--Regression within a stable and longterm kernel version line are something the
--Linux developers want to fix badly, as such issues are even more unwanted than
--regression in the main development branch, as they can quickly affect a lot of
--people. The developers thus want to learn about such issues as quickly as
--possible, hence there is a streamlined process to report them. Note,
--regressions with newer kernel version line (say something broke when switching
--from 5.9.15 to 5.10.5) do not qualify.
--
--
- Check where you need to report your issue
- -----------------------------------------
++Search for existing reports, second run
++---------------------------------------
++
++    *Search the archives of the bug tracker or mailing list in question
++    thoroughly for reports that might match your issue. If you find anything,
++    join the discussion instead of sending a new report.*
++
++As mentioned earlier already: reporting an issue that someone else already
++brought forward is often a waste of time for everyone involved, especially you
++as the reporter. That's why you should search for existing report again, now
++that you know where they need to be reported to. If it's mailing list, you will
++often find its archives on `lore.kernel.org <https://lore.kernel.org/>`_.
++
++But some list are hosted in different places. That for example is the case for
++the ath10k WiFi driver used as example in the previous step. But you'll often
++find the archives for these lists easily on the net. Searching for 'archive
++ath10k@lists.infradead.org' for example will lead you to the `Info page for the
++ath10k mailing list <https://lists.infradead.org/mailman/listinfo/ath10k>`_,
++which at the top links to its
++`list archives <https://lists.infradead.org/pipermail/ath10k/>`_. Sadly this and
++quite a few other lists miss a way to search the archives. In those cases use a
++regular internet search engine and add something like
++'site:lists.infradead.org/pipermail/ath10k/' to your search terms, which limits
++the results to the archives at that URL.
++
++It's also wise to check the internet, LKML and maybe bugzilla.kernel.org again
++at this point. If your report needs to be filed in a bug tracker, you may want
++to check the mailing list archives for the subsystem as well, as someone might
++have reported it only there.
++
++For details how to search and what to do if you find matching reports see
++"Search for existing reports, first run" above.
++
++Do not hurry with this step of the reporting process: spending 30 to 60 minutes
++or even more time can save you and others quite a lot of time and trouble.
++
++
+ Prepare for emergencies
+ -----------------------
  
-@@ -886,18 +819,18 @@ to find all people to contact. It queries the MAINTAINERS file and needs to be
- called with a path to the source code in question. For drivers compiled as
- module if often can be found with a command like this::
- 
--       $ modinfo ath10k_pci | grep filename | sed 's!/lib/modules/.*/kernel/!!; s!filename:!!; s!\.ko\(\|\.xz\)!!'
--       drivers/net/wireless/ath/ath10k/ath10k_pci.ko
-+   $ modinfo ath10k_pci | grep filename | sed 's!/lib/modules/.*/kernel/!!; s!filename:!!; s!\.ko\(\|\.xz\)!!'
-+   drivers/net/wireless/ath/ath10k/ath10k_pci.ko
- 
- Pass parts of this to the script::
- 
--       $ ./scripts/get_maintainer.pl -f drivers/net/wireless/ath/ath10k*
--       Some Human <shuman@example.com> (supporter:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
--       Another S. Human <asomehuman@example.com> (maintainer:NETWORKING DRIVERS)
--       ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
--       linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS))
--       netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
--       linux-kernel@vger.kernel.org (open list)
-+   $ ./scripts/get_maintainer.pl --no-git -f drivers/net/wireless/ath/ath10k*
-+   Some Human <shuman@example.com> (supporter:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
-+   Another S. Human <asomehuman@example.com> (maintainer:NETWORKING DRIVERS)
-+   ath10k@lists.infradead.org (open list:QUALCOMM ATHEROS ATH10K WIRELESS DRIVER)
-+   linux-wireless@vger.kernel.org (open list:NETWORKING DRIVERS (WIRELESS))
-+   netdev@vger.kernel.org (open list:NETWORKING DRIVERS)
-+   linux-kernel@vger.kernel.org (open list)
- 
- Don't sent your report to all of them. Send it to the maintainers, which the
- script calls "supporter:"; additionally CC the most specific mailing list for
-@@ -915,6 +848,73 @@ modified during tree-wide cleanups by developers that do not care about the
- particular driver at all.
+@@ -918,43 +955,6 @@ regressions with newer kernel version line (say something broke when switching
+ from 5.9.15 to 5.10.5) do not qualify.
  
  
-+Prepare for emergencies
-+-----------------------
-+
-+    *Create a fresh backup and put system repair and restore tools at hand.*
-+
-+Reminder, you are dealing with computers, which sometimes do unexpected things,
-+especially if you fiddle with crucial parts like the kernel of its operating
-+system. That's what you are about to do in this process. Thus, make sure to
-+create a fresh backup; also ensure you have all tools at hand to repair or
-+reinstall the operating system as well as everything you need to restore the
-+backup.
-+
-+
-+Make sure your kernel doesn't get enhanced
-+------------------------------------------
-+
-+    *Ensure your system does not enhance its kernels by building additional
-+    kernel modules on-the-fly, which solutions like DKMS might be doing locally
-+    without your knowledge.*
-+
-+The risk your issue report gets ignored or rejected dramatically increases if
-+your kernel gets enhanced in any way. That's why you should remove or disable
-+mechanisms like akmods and DKMS: those build add-on kernel modules
-+automatically, for example when you install a new Linux kernel or boot it for
-+the first time. Also remove any modules they might have installed. Then reboot
-+before proceeding.
-+
-+Note, you might not be aware that your system is using one of these solutions:
-+they often get set up silently when you install Nvidia's proprietary graphics
-+driver, VirtualBox, or other software that requires a some support from a
-+module not part of the Linux kernel. That why your might need to uninstall the
-+packages with such software to get rid of any 3rd party kernel module.
-+
-+
-+Document how to reproduce issue
-+-------------------------------
-+
-+    *Write down coarsely how to reproduce the issue.*
-+
-+During the reporting process you will have to test if the issue
-+happens with other kernel versions. Therefore, it will make your work easier if
-+you know exactly how to reproduce an issue quickly on a freshly booted system.
-+
-+Note: it's often fruitless to report issues that only happened once, as they
-+might be caused by a bit flip due to cosmic radiation. That's why you should
-+try to rule that out by reproducing the issue before going further. Feel free
-+to ignore this advice if you are experienced enough to tell a one-time error
-+due to faulty hardware apart from a kernel issue that rarely happens and thus
-+is hard to reproduce.
-+
-+
-+Regression in stable or longterm kernel?
-+----------------------------------------
-+
-+    *If you are facing a regression within a stable or longterm version line
-+    (say something broke when updating from 5.10.4 to 5.10.5), scroll down to
-+    'Dealing with regressions within a stable and longterm kernel line'.*
-+
-+Regression within a stable and longterm kernel version line are something the
-+Linux developers want to fix badly, as such issues are even more unwanted than
-+regression in the main development branch, as they can quickly affect a lot of
-+people. The developers thus want to learn about such issues as quickly as
-+possible, hence there is a streamlined process to report them. Note,
-+regressions with newer kernel version line (say something broke when switching
-+from 5.9.15 to 5.10.5) do not qualify.
-+
-+
- Search for existing reports, second run
- ---------------------------------------
+-Search for existing reports, second run
+----------------------------------------
+-
+-    *Search the archives of the bug tracker or mailing list in question
+-    thoroughly for reports that might match your issue. If you find anything,
+-    join the discussion instead of sending a new report.*
+-
+-As mentioned earlier already: reporting an issue that someone else already
+-brought forward is often a waste of time for everyone involved, especially you
+-as the reporter. That's why you should search for existing report again, now
+-that you know where they need to be reported to. If it's mailing list, you will
+-often find its archives on `lore.kernel.org <https://lore.kernel.org/>`_.
+-
+-But some list are hosted in different places. That for example is the case for
+-the ath10k WiFi driver used as example in the previous step. But you'll often
+-find the archives for these lists easily on the net. Searching for 'archive
+-ath10k@lists.infradead.org' for example will lead you to the `Info page for the
+-ath10k mailing list <https://lists.infradead.org/mailman/listinfo/ath10k>`_,
+-which at the top links to its
+-`list archives <https://lists.infradead.org/pipermail/ath10k/>`_. Sadly this and
+-quite a few other lists miss a way to search the archives. In those cases use a
+-regular internet search engine and add something like
+-'site:lists.infradead.org/pipermail/ath10k/' to your search terms, which limits
+-the results to the archives at that URL.
+-
+-It's also wise to check the internet, LKML and maybe bugzilla.kernel.org again
+-at this point. If your report needs to be filed in a bug tracker, you may want
+-to check the mailing list archives for the subsystem as well, as someone might
+-have reported it only there.
+-
+-For details how to search and what to do if you find matching reports see
+-"Search for existing reports, first run" above.
+-
+-Do not hurry with this step of the reporting process: spending 30 to 60 minutes
+-or even more time can save you and others quite a lot of time and trouble.
+-
+-
+ Install a fresh kernel for testing
+ ----------------------------------
  
 -- 
 2.51.0
