@@ -1,45 +1,45 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ECB2D4814;
-	Sun, 26 Oct 2025 12:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF5C2C235D;
+	Sun, 26 Oct 2025 12:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761482554; cv=none; b=tqKKfmuvzeshZ5oCTI8nGbFyQekgOV+53HPCCVnWTiT7OFHJl8CUSBpZnEBBfzp7cQaVffDN86lfcZki/HrmLG9zhNon4I1g7j9wVhP/B64saGe0GwzcU0eyaW1PrfRSHeJ2M8r1O4Qj3n+1vaQ2aHTDgN/o05lVa0KIQQYoRMA=
+	t=1761482554; cv=none; b=Xj1WHKxJkaRu2zz5kCKRr8YvRpYrYw33Kw2GamiguBBY8J/y8aB+4tu84amfVr1mEnw8/kSIBuP5sqnOESVAaANdDj/d1lHxSQrgAwuOYQztIIEJ7z9CvxaNgxZsUtf+H+IGqEnCdAuuKDLsIGDWpY50t9RKseTAh5assFyvihc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761482554; c=relaxed/simple;
-	bh=xAI5YfEuTiDep83Xgs+jcdtCYrUUTepDFLMFVQqhTlM=;
+	bh=EB4l20CtlH/TKvx8+1SQADxqp/5ETrJBw4utKo1I1YQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPRrJQpJmQXF4+02npv2b/JbawDd8brNFh2TnW7hVXzdhOCYsFnLemOS+yHLgYO4REGRlsaDmNS5e8EoxpGqImnGR5dBE+CYymLQ9IjYoexsP6LyMgkcotbfiXzbT+/GgSbRksZ6It/hfileQdPrrv06Apie28L0aAbdJPXoCH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wJIDYZY+; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=daza3aThDYYSxRmARlcE56IXgizld1X9bJBRHr5qFGlrJHfbEtTIQmew8cR19KCjQsyHkx/7vr4rREZdVXvcG7qCqnPF2H8o/70bNddFPZ6rbeGzCJl2sdFjNuynpcg2GBSzL8zd4cISG6CTT+zWPv2VjoePOYfuvXKmcAr2Y0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aHE03fLk; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wJIDYZY+"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aHE03fLk"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=634MWhFAXgdF+Ly2EAEMkXBMHvbyAhbHlX3frr8jsXI=; t=1761482550;
-	x=1761914550; b=wJIDYZY+KjnmVBLrvThs0s9Qr5UUJfgaVUuDyqbv2BjZ/gD4i/bvCKKOWb894
-	09HTdZTrJzhow+UOLyY0+nUyI2d61skoNxHCjQyIhqCG2cUfdVcumEzkWRVliKANDEZKYYf7OwuoH
-	ee4XO24aN+EVtcOeXxLH1AIanGZ404DUtBFpU/fefUaszztjedtfvlShAA7KiZtwuYYzUEk2ZaQt6
-	oXhZKFpZwwgfL9tZGLaK/iCIByehS7KDV5L79f6DJoArfF8CPsrM7rkUh3G6Vmqxruiz1RyPs/oGh
-	UCKIQXcFtqtQoRbsuxx1JMv9wk47dQjNBNGseoefNb9mZL3F4Q==;
+	References; bh=n3DgjLvDifCmg81+qUxSYOLFkhBea1gNJNz0eht+0gI=; t=1761482552;
+	x=1761914552; b=aHE03fLkagRB7iN0nzPP8FeKZdey/YnvOPft3W0ZKk8V7wb0VTRY0f672MLFs
+	8hlxiTf8w4quWxcuPGKsSWUxvP11ssoVXq6iLtrWQaHzLWGwTh0XHYnvBardY+cRb1kbTzcrsHL+4
+	me+U8O6L15Ph1FOUYxj7VURq2IaaxcR2co8Nyd//pOkqjw5/G5r60gqbSk38WyTNzF4eqoiC5hoZo
+	SxgomC03tNdey+ENsTm8ZAZ85nNzXkW89bLvmKvCXaKOUWxNSa83wXZPgthSxo/c/y7u4ufcBNSXI
+	amsxiOevS/uGhHaU225s30EFGERwaOKugM1CzMyRx/UUypcODA==;
 Received: from [2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160] (helo=luggage.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	id 1vD04k-001mX6-1V;
-	Sun, 26 Oct 2025 13:42:22 +0100
+	id 1vD04s-001mYe-0l;
+	Sun, 26 Oct 2025 13:42:30 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 01/30] docs: reporting-issues: mention text is best viewed rendered
-Date: Sun, 26 Oct 2025 13:41:52 +0100
-Message-ID: <4f7e2de2a2336c52e55cc49dcda627a4e86b8793.1761481839.git.linux@leemhuis.info>
+Subject: [PATCH v1 21/30] docs: reporting-issues: improve text on backup et. al
+Date: Sun, 26 Oct 2025 13:42:12 +0100
+Message-ID: <13046cae22b876d818a8c49939bf5daac0437c5e.1761481839.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
@@ -50,60 +50,64 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482550;db804c08;
-X-HE-SMSGID: 1vD04k-001mX6-1V
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482552;81a32109;
+X-HE-SMSGID: 1vD04s-001mYe-0l
 
-Add a comment before the step-by-step guide explaining that the document
-is best viewed in the rendered form, as there the internal links will
-work that later patches will add.
-
-While at it change the double quotes in the license hint at the end of
-the document into single quotes, which is the preferred style.
+Fine-tune the instructions about creating a backup and preparing for
+emergencies.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- Documentation/admin-guide/reporting-issues.rst | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ .../admin-guide/reporting-issues.rst          | 25 +++++++++++++------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-index a68e6d90927471..3bc47afaf85ea0 100644
+index c34a95d5af4ac6..824b7b5394440e 100644
 --- a/Documentation/admin-guide/reporting-issues.rst
 +++ b/Documentation/admin-guide/reporting-issues.rst
-@@ -48,6 +48,16 @@ Once the report is out, answer any questions that come up and help where you
- can. That includes keeping the ball rolling by occasionally retesting with newer
- releases and sending a status update afterwards.
+@@ -176,7 +176,12 @@ following the others is usually in your own interest.
  
-+..
-+   Note: If you see this note, you are reading the text's source file. You
-+   might want to switch to a rendered version: It makes it a lot easier to
-+   read and navigate this document -- especially when you want to look something
-+   up in the reference section, then jump back to where you left off.
-+..
-+   Find the latest rendered version of this text here:
-+   https://docs.kernel.org/admin-guide/reporting-issues.html
-+
-+
- Step-by-step guide how to report issues to the kernel maintainers
- =================================================================
+  [:ref:`details <otherplaces_repiref>`]
  
-@@ -1748,13 +1758,13 @@ art will lay some groundwork to improve the situation over time.
-    you spot a typo or small mistake, feel free to let him know directly and
-    he'll fix it. You are free to do the same in a mostly informal way if you
-    want to contribute changes to the text, but for copyright reasons please CC
--   linux-doc@vger.kernel.org and "sign-off" your contribution as
--   Documentation/process/submitting-patches.rst outlines in the section "Sign
--   your work - the Developer's Certificate of Origin".
-+   linux-doc@vger.kernel.org and 'sign-off' your contribution as
-+   Documentation/process/submitting-patches.rst outlines in the section 'Sign
-+   your work - the Developer's Certificate of Origin'.
- ..
-    This text is available under GPL-2.0+ or CC-BY-4.0, as stated at the top
-    of the file. If you want to distribute this text under CC-BY-4.0 only,
--   please use "The Linux kernel developers" for author attribution and link
-+   please use 'The Linux kernel developers' for author attribution and link
-    this as source:
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/Documentation/admin-guide/reporting-issues.rst
- ..
+- * Create a fresh backup and put system repair and restore tools at hand.
++.. _backup_repisbs:
++
++* You might want to create a fresh backup and put both system repair and
++  restore tools at hand.
++
++ [:ref:`details <backup_repiref>`]
+ 
+  * Ensure your system does not enhance its kernels by building additional
+    kernel modules on-the-fly, which solutions like DKMS might be doing locally
+@@ -904,17 +909,21 @@ or even more time can save everyone, including you, quite some trouble.
+ [:ref:`back to step-by-step guide <otherplaces_repisbs>`]
+ 
+ 
++.. _backup_repiref:
++
+ Prepare for emergencies
+ -----------------------
+ 
+-    *Create a fresh backup and put system repair and restore tools at hand.*
++  *You might want to create a fresh backup and put both* [:ref:`... <backup_repisbs>`]
++
++Remember, you are dealing with computers, which sometimes do unexpected things,
++especially if you fiddle with crucial parts like their operating system kernel.
++That is what you are about to do in this process. You thus better want to create
++a fresh backup. In case you need to install a kernel during the bug reporting
++process, also ensure you have all tools at hand to repair or reinstall the
++operating system as well as everything you need to restore the backup.
+ 
+-Reminder, you are dealing with computers, which sometimes do unexpected things,
+-especially if you fiddle with crucial parts like the kernel of its operating
+-system. That's what you are about to do in this process. Thus, make sure to
+-create a fresh backup; also ensure you have all tools at hand to repair or
+-reinstall the operating system as well as everything you need to restore the
+-backup.
++[:ref:`back to step-by-step guide <backup_repisbs>`]
+ 
+ 
+ Make sure your kernel doesn't get enhanced
 -- 
 2.51.0
 
