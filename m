@@ -1,45 +1,45 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF5C2C235D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0832DA774;
 	Sun, 26 Oct 2025 12:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761482554; cv=none; b=Xj1WHKxJkaRu2zz5kCKRr8YvRpYrYw33Kw2GamiguBBY8J/y8aB+4tu84amfVr1mEnw8/kSIBuP5sqnOESVAaANdDj/d1lHxSQrgAwuOYQztIIEJ7z9CvxaNgxZsUtf+H+IGqEnCdAuuKDLsIGDWpY50t9RKseTAh5assFyvihc=
+	t=1761482554; cv=none; b=KnR2pGNPSN9Z9kQcmWNVXi64YP42X3OeCDi6eSQPKizQaVoQtiTeEBVvqr6vfN3V3IW1toz08mO/pYJ1x/GqQTxfkCbhJMN8g+UfifxLWvP6X2w5RHTTnhVLNLM2jYe0Mlo73kUzhmT1mGBlsMTIfZ2/H22yzG5gpkqHEMhVDLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761482554; c=relaxed/simple;
-	bh=EB4l20CtlH/TKvx8+1SQADxqp/5ETrJBw4utKo1I1YQ=;
+	bh=MzQ28r/dhKKX8TM4X+PZrQvHqruMDwFGroswwwsys9Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=daza3aThDYYSxRmARlcE56IXgizld1X9bJBRHr5qFGlrJHfbEtTIQmew8cR19KCjQsyHkx/7vr4rREZdVXvcG7qCqnPF2H8o/70bNddFPZ6rbeGzCJl2sdFjNuynpcg2GBSzL8zd4cISG6CTT+zWPv2VjoePOYfuvXKmcAr2Y0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aHE03fLk; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=q1FnU2YidmPL7ENumIgStOwIYgbI9dhZSUj/bLV8vOh2G7ewdc+cxhDKKTxEclL1+ZynAY4j7yhLkTiQUESoADR+TbFZ5x3LM1soLt/97pDHE+VoOYcP/35HzxA048TGbTEj4tWdSVLCNXsWUagCqqCe/kLO3aZUSsrtzow5pr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=2LjgI+Li; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aHE03fLk"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="2LjgI+Li"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=n3DgjLvDifCmg81+qUxSYOLFkhBea1gNJNz0eht+0gI=; t=1761482552;
-	x=1761914552; b=aHE03fLkagRB7iN0nzPP8FeKZdey/YnvOPft3W0ZKk8V7wb0VTRY0f672MLFs
-	8hlxiTf8w4quWxcuPGKsSWUxvP11ssoVXq6iLtrWQaHzLWGwTh0XHYnvBardY+cRb1kbTzcrsHL+4
-	me+U8O6L15Ph1FOUYxj7VURq2IaaxcR2co8Nyd//pOkqjw5/G5r60gqbSk38WyTNzF4eqoiC5hoZo
-	SxgomC03tNdey+ENsTm8ZAZ85nNzXkW89bLvmKvCXaKOUWxNSa83wXZPgthSxo/c/y7u4ufcBNSXI
-	amsxiOevS/uGhHaU225s30EFGERwaOKugM1CzMyRx/UUypcODA==;
+	References; bh=pErYh5HOsLK9BdZsfpbPa+r/6tDB+XJBSgvlVnQBtUI=; t=1761482552;
+	x=1761914552; b=2LjgI+LixOHDAk69lv8VHy1dvs69ckQrKkbienw8DcLhOVgz5wYcwCkwfDcZN
+	KUgcyP1ppE/v7aCfQ/ZD5kVU5oVQ1exQDovA2bBk31SdNeMyXap5kEd4xJCwZtDK6YD8CVXHK70ga
+	sC+N9COKxP7Sypwba+JX2QLFcTxKrXu8JQW8NVZn9IfrPcYhhpg3hzLZuU9chqgw7l39glASVJzJG
+	rno7zXKM5RafRrnklHRvBhVruTWDTgO5c7iG23ecOaFZgNKYFX0Thxt2R0NIxrKZzLAigIhy/QFiU
+	OkGmywcsAEfYHpgdh7h2TC4b+LdfBru2Gd6lz1Fsc6OumDzrsQ==;
 Received: from [2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160] (helo=luggage.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	id 1vD04s-001mYe-0l;
-	Sun, 26 Oct 2025 13:42:30 +0100
+	id 1vD04n-001mXP-0f;
+	Sun, 26 Oct 2025 13:42:25 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 21/30] docs: reporting-issues: improve text on backup et. al
-Date: Sun, 26 Oct 2025 13:42:12 +0100
-Message-ID: <13046cae22b876d818a8c49939bf5daac0437c5e.1761481839.git.linux@leemhuis.info>
+Subject: [PATCH v1 08/30] docs: reporting-issues: add step about processing issues separately
+Date: Sun, 26 Oct 2025 13:41:59 +0100
+Message-ID: <9b6e279c9d11eefe7ff01672a054783dbf651bc0.1761481839.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <cover.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
@@ -51,63 +51,94 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1761482552;81a32109;
-X-HE-SMSGID: 1vD04s-001mYe-0l
+X-HE-SMSGID: 1vD04n-001mXP-0f
 
-Fine-tune the instructions about creating a backup and preparing for
-emergencies.
+Create a separate step covering 'process and report each separately if you
+deal with multiple issues at the same time'.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../admin-guide/reporting-issues.rst          | 25 +++++++++++++------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ .../admin-guide/reporting-issues.rst          | 45 ++++++++++++-------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
 
 diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-index c34a95d5af4ac6..824b7b5394440e 100644
+index 2f387e8766f21d..73b7792d84cdf1 100644
 --- a/Documentation/admin-guide/reporting-issues.rst
 +++ b/Documentation/admin-guide/reporting-issues.rst
-@@ -176,7 +176,12 @@ following the others is usually in your own interest.
+@@ -69,6 +69,14 @@ following the others is usually in your own interest.
  
-  [:ref:`details <otherplaces_repiref>`]
+  [:ref:`details <intro_repiref>`]
  
-- * Create a fresh backup and put system repair and restore tools at hand.
-+.. _backup_repisbs:
++.. _multiple_repisbs:
 +
-+* You might want to create a fresh backup and put both system repair and
-+  restore tools at hand.
++* *You must* process and report each issue separately if you deal with multiple.
++  If there is a slim chance they are related, remember to briefly mention the
++  other problems in each of the reports, ideally cross-linking them in the end.
 +
-+ [:ref:`details <backup_repiref>`]
- 
-  * Ensure your system does not enhance its kernels by building additional
-    kernel modules on-the-fly, which solutions like DKMS might be doing locally
-@@ -904,17 +909,21 @@ or even more time can save everyone, including you, quite some trouble.
- [:ref:`back to step-by-step guide <otherplaces_repisbs>`]
- 
- 
-+.. _backup_repiref:
++ [:ref:`details <multiple_repiref>`]
 +
- Prepare for emergencies
- -----------------------
+  * Perform a rough search for existing reports with your favorite internet
+    search engine; additionally, check the archives of the `Linux Kernel Mailing
+    List (LKML) <https://lore.kernel.org/lkml/>`_. If you find matching reports,
+@@ -90,11 +98,7 @@ following the others is usually in your own interest.
+  * Check if your kernel was 'tainted' when the issue occurred, as the event
+    that made the kernel set this flag might be causing the issue you face.
  
--    *Create a fresh backup and put system repair and restore tools at hand.*
-+  *You might want to create a fresh backup and put both* [:ref:`... <backup_repisbs>`]
+- * Write down coarsely how to reproduce the issue. If you deal with multiple
+-   issues at once, create separate notes for each of them and make sure they
+-   work independently on a freshly booted system. That's needed, as each issue
+-   needs to get reported to the kernel developers separately, unless they are
+-   strongly entangled.
++ * Write down coarsely how to reproduce the issue.
+ 
+  * If you are facing a regression within a stable or longterm version line
+    (say something broke when updating from 5.10.4 to 5.10.5), scroll down to
+@@ -347,6 +351,23 @@ time.
+ [:ref:`back to step-by-step guide <intro_repisbs>`]
+ 
+ 
++.. _multiple_repiref:
 +
-+Remember, you are dealing with computers, which sometimes do unexpected things,
-+especially if you fiddle with crucial parts like their operating system kernel.
-+That is what you are about to do in this process. You thus better want to create
-+a fresh backup. In case you need to install a kernel during the bug reporting
-+process, also ensure you have all tools at hand to repair or reinstall the
-+operating system as well as everything you need to restore the backup.
++Issues must be reported one by one
++----------------------------------
++
++  *You must process and report each issue separately if you deal with
++  multiple. If there is a slim chance* [:ref:`... <multiple_repisbs>`]
++
++You will have to report issues one by one if you deal with multiple, as they
++likely will be handled by different developers; describing various issues in
++one report also makes it difficult for others to understand the situation.
++Hence, only combine issues in one report if they are very strongly
++entangled or clearly have the same cause.
++
++[:ref:`back to step-by-step guide <multiple_repisbs>`]
++
++
+ Search for existing reports, first run
+ --------------------------------------
  
--Reminder, you are dealing with computers, which sometimes do unexpected things,
--especially if you fiddle with crucial parts like the kernel of its operating
--system. That's what you are about to do in this process. Thus, make sure to
--create a fresh backup; also ensure you have all tools at hand to repair or
--reinstall the operating system as well as everything you need to restore the
--backup.
-+[:ref:`back to step-by-step guide <backup_repisbs>`]
+@@ -569,19 +590,9 @@ three things:
+ Document how to reproduce issue
+ -------------------------------
  
+-    *Write down coarsely how to reproduce the issue. If you deal with multiple
+-    issues at once, create separate notes for each of them and make sure they
+-    work independently on a freshly booted system. That's needed, as each issue
+-    needs to get reported to the kernel developers separately, unless they are
+-    strongly entangled.*
+-
+-If you deal with multiple issues at once, you'll have to report each of them
+-separately, as they might be handled by different developers. Describing
+-various issues in one report also makes it quite difficult for others to tear
+-it apart. Hence, only combine issues in one report if they are very strongly
+-entangled.
++    *Write down coarsely how to reproduce the issue.*
  
- Make sure your kernel doesn't get enhanced
+-Additionally, during the reporting process you will have to test if the issue
++During the reporting process you will have to test if the issue
+ happens with other kernel versions. Therefore, it will make your work easier if
+ you know exactly how to reproduce an issue quickly on a freshly booted system.
+ 
 -- 
 2.51.0
 
