@@ -1,205 +1,138 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592D823BD1A
-	for <regressions@lists.linux.dev>; Mon, 27 Oct 2025 12:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE862472BA
+	for <regressions@lists.linux.dev>; Mon, 27 Oct 2025 13:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569587; cv=none; b=H7UzCpgcXY1djmADoCOQHhnqIvNgwrCPzH34b7ln0zXiGCVIX286eYy9X/JyTkXXbdzPu4WfiZGJ+D8lZ3T9ER/+v4XN45Z6NfvHkiY9Yaaw1TflYdHExqrPntfiBMtJj6Dl+qDMvnvhaOB4/jyvO8IJU6A7KRl8c7iK0JYVUeE=
+	t=1761570788; cv=none; b=IMyrqOJ/aULcoNM7O/y5Ise71FOBr9CE1rPs7grkmJLICmPbKgUzqmXFsEluKjF9igcOtbDv/dkH6Zt0iYCzefPG70JI3htzxE/7uvelJbPb1Nz129fGvgXGaGuBi9avWrHgnW59czEVXmuuES8sf/S3eQVbZgcu8L38VZk0KmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569587; c=relaxed/simple;
-	bh=WyAT0cZ419zJS6+qhbXvxzs+CR/2BDzu0Df1ltpBvxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p0jQgYcaI/hLdmEhiSh8bDinC+FY5mHStx8BLofAKIFoZiMPfGmwiKt/Q3y+eTPo6HrS94MUBctjID3fJ/YNBWL6Izdl67GIgax4/0LiMu+533n233HGyuG0Ag7WwZJ/pKlyXoUBPS8UP9eUyVB7tM5/Nbzocv9TkOMNHo68szc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpip2t1761569517tb53347eb
-X-QQ-Originating-IP: nmsWUsXJgs/BC/zm7wCdDP8DQicwbQiZNInWOC/bbaA=
-Received: from [IPV6:240f:10b:7440:1:8944:4301 ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 27 Oct 2025 20:51:52 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 80477086532345862
-Message-ID: <665677F9F810B6C1+af6c83fd-f262-4721-b544-4336aaa83bfe@radxa.com>
-Date: Mon, 27 Oct 2025 21:51:52 +0900
+	s=arc-20240116; t=1761570788; c=relaxed/simple;
+	bh=4JRsrZ0EyNC76Kj9eXHalnnSKN5mK3A52nSIdisFktY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jyj2aj23LbmZBFZV72NP2xhTCSPKL2m+ys6PqLOpGYPaVR+aaXilBdxAsNj9J8TWek3TBn7nA6Dtyi+ar+m5iONKw74wfl8Q384Uv61yZSLjHHUL03dlfYEhlslxUx3Zt4/xOYwobUCxshMfYzGdEO+vHWyLcces5OwpixvplaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AgKZzRNr; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AgKZzRNr"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b6a225b7e9eso3323147a12.0
+        for <regressions@lists.linux.dev>; Mon, 27 Oct 2025 06:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761570785; x=1762175585; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gNEXNCM0epFMr+RmcnWLYaOFdjohrZT8knavBi/MqIo=;
+        b=AgKZzRNrhywOvm494U42cPYKIyg8Zo8XKBL6DeUko/zqL+YGctMkKbxGKeR7G0vX8d
+         CxAtOCMpC7aXVyRbxj4oQnA6x6ahdDsDfUIGPfhcLBICobNEZVDxRuDZbK2QAs0ChZ/J
+         8vKmjGzFMxu5AnpH0xD30Cj4Ivaj8bJOx4yTgGtwQAH3YyvFmlmaV6RHu8KIH6Tyw64h
+         7MA2RMLEEbrlYelqwjRXYZkmqRwFMiY0yuAQRxvK8eKWqW979MF43V4VAnpDYRbxyK8V
+         JhqbhTdCWPgaRUOPjxi/uwN2JdriEJYPtTEcfosJWZCp+seY7tIDsZOCyKJLU3GxmVFL
+         3lMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761570785; x=1762175585;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNEXNCM0epFMr+RmcnWLYaOFdjohrZT8knavBi/MqIo=;
+        b=qICcGX1jIGTgSw0OXDSi+9TS+CVuCwXfd0DTDWmtDVNCzUZh1q7PjXJ0MP99+3JIsg
+         VfsfYvOC9qk8O1sqKJpZgC1uQ/XjAr5bVMHAcBlngYRvKeT4BqTd0hJ7ttiC6+INK7EY
+         HIquemYoj6+XT08t8NxljdK79kYkhysvXBBuWM3nw/KIVmEkjHaJt5+gi259ZjDoEtDs
+         GbaBKrFEhDKMTmt8BMRtD+TZHRZbzFhzCzK2fd1zRahdzHJlS+RaVIfz/cYn1fpbmakS
+         6mSvBesozl+TjQqjbaN6Z4WW/LUiP5E/defd8EjSaJ1DE5uyd/UbCZC0vr+fD6f7uZi0
+         jF+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU2KXQ1uaOHdz5g40JUzVSuNG1+PEhBDzE0JUWLJr65hdp4FxoBdebjvrRzf6iiJuZsvqBhasu7cxkFfw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxv6XOCay5BZ7wkblDqVAogvFtHp4abL09D8Mbbs7dzbU/nHPap
+	IO9RJVOM0yeLEAqstkUErp5l9xblBcN9bJR3+ohab+9cZGae6FT17M8Tcb+vCrss1j46TJBL3U+
+	E3fHmvbpixvtwwRoLuiKlMupEXnLg7aPzEkN1PJ1Zjw==
+X-Gm-Gg: ASbGncteeG65WxpMpjDFHbh+1KlAXzEzfj53PPNpnoxo8jYkPoDmZJBuA+GNt/4Pod2
+	LRmuKeOnZBzMhHC2NLlDSsFjPt0Tk+b3OblNtjr0P8jrAzrBlqQxUN2dY1Y/TFN9pwrxEwPQ2s2
+	FwmoD3jYhqp7h6y8piyD0bFViv0meJvRUIj+4Apuu4dSERhQhFAIW6qirhNcfTwfoiiEAEVTXth
+	yHfElb6HsVcsOQrmYOXuIFurdXUM6CL6OjzC3AoBLccZ3i8ktUPIkd7DzlPqWiMrvoVrf/A2oTI
+	hJ8Ml0mMQ+hZ2drFDQ/33MaAb0WIpXp+r95JWtx3AC+T30KFIIVviXhuNdqN
+X-Google-Smtp-Source: AGHT+IEsdKc9R+4FlPyXgvJuUVfiubltPDZcJsLUDaYs1stlCo1Np2u3tQ9qE9+t58mdLnukcLVSUInlftA70xiEIvo=
+X-Received: by 2002:a17:902:c412:b0:24b:25f:5f81 with SMTP id
+ d9443c01a7336-2948b9758e0mr149025505ad.17.1761570785234; Mon, 27 Oct 2025
+ 06:13:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
-To: Linnaea Lavia <linnaea-von-lavia@live.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-References: <20251023164205.GA1299816@bhelgaas>
- <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
-Content-Language: en-US
-From: FUKAUMI Naoki <naoki@radxa.com>
-In-Reply-To: <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: N1sMhKjDsQuaqa0m7xhvUK7v3oLjS2bPiDUXypa/wpV4ag9cXplh6GcG
-	RoayluD7PfKAUg0W9ABZJbsyYolfuwY2IWR0dyfeF5/Bxt3RfvX5uVCepeTg3dHJqQ8rL+n
-	dTWA04C11/GJjB0WfhoWkUOBJHByDn5R8Wou5mL+8ymzD3LlLdasGpei+r+LnZ9yzM2xcvn
-	PmSZM0xNu1sOkIp9QzFg1SIw7dOqVMZzSJGeTGl0m8F9xthvusrb2RK2uPQN5gRCU/8lhmn
-	+diIc+1kl3ltpiMaZbXMiSzVYIT+orhZNcEFm2ltL1P3Qwgs7HQt5bFibRFV8NbH05GQqxp
-	iJ53Rv5Gsk+kgzDTsG7c6vwA1kFYtjWvEKE7k46PTyCOYKQ74jKwJWJuw6GDKg0yibbK8Cs
-	9I1A5APBr4vBJ0X5pTGYV000b9QqDWjSAbi1N8ebowf3Y+UN67Z60xhpao7/MjdLYhcfBBq
-	swomhUjqfX8kzubG7O8rcQIOEk4/3bYe9IETi+vFeV/QeJsbK/L4K52SyH8CRCrxDAl8gLE
-	tp8N5jgmz70iyabTlZwMQDqthFwCUruErAOsXJqzgK39/m/j5z8HtS5HZh7po2S5j/bW4m0
-	MCuGT5AIQnpyirMAgMEX/P3xJgLhDvCur7uISulhlypn+2chfq/0zeeVoaQRr3S0JVbMcvW
-	qdub8XQDAr5jOr6jFe0o6ADMYHuZsr5jiFmHDepJRfIQNRgSk1Sq3oM95bgb8IzzGuJg964
-	UupDr9AvK+Di5jAN3DBsS+lT+XMDGMnmyNGkN7t6mZa7yX6nqnidpYcw9YadPZG0LLC4keq
-	JHyDaItP6ilcCBBOqVVyxm5ehUtGFysCe8oD6WrDgCGA8DcrpNt/vl+VGt2FuIMNbFrrufN
-	LgzCkC2CJiIRl2DvURBjCY2IVELIAOZYRb5CN1naz7CWK8hF6ZRHbCWuemZrH3KfGdUBlZN
-	9FjiyNj1zAWTc0nsWGOaoiXgfR9kSCYsf2ImnIGOUGqgBWvSTjRjTYSEq
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+References: <CA+G9fYsL+w_XaOPaBaN5xMr6Ssrq_hh2_g8AgNxNmu0jCpjwxg@mail.gmail.com>
+In-Reply-To: <CA+G9fYsL+w_XaOPaBaN5xMr6Ssrq_hh2_g8AgNxNmu0jCpjwxg@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 27 Oct 2025 18:42:53 +0530
+X-Gm-Features: AWmQ_bmY-i51q19AYcQpT-sEvBW1BPIqo1n5TQLSYT-9iYht4pVG5wgMSRv46e4
+Message-ID: <CA+G9fYvzg-shL5LMmdJjJEGi6NvxHFdwbC5jQwtbFxkOFPnc4A@mail.gmail.com>
+Subject: Re: next-20251027: s390: pf1550-onkey.c:154:12: error:
+ 'pf1550_onkey_resume' defined but not used [-Werror=unused-function]
+To: Samuel Kayode <samuel.kayode@savoirfairelinux.com>, linux-s390@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Frank Li <Frank.Li@nxp.com>, 
+	Sean Nyekjaer <sean@geanix.com>, Lee Jones <lee@kernel.org>, Heiko Carstens <hca@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linnaea,
+On Mon, 27 Oct 2025 at 14:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> The following S390 allyesconfig build regressions noticed on the
+> Linux next-20251027 tag with gcc-14.
+>
+> * S390, build
+>   - gcc-14-allyesconfig
+>
+> First seen on next-20251027
+> Good: next-20251024
+> Bad: next-20251027
+>
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+>
+> Build regression: next-20251027: pf1550-onkey.c:154:12: error:
+> 'pf1550_onkey_resume' defined but not used [-Werror=unused-function]
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-On 10/24/25 12:27, Linnaea Lavia wrote:
-(snip)> With the patch on 6.18-rc2 it fails later with ASPM.
-> 
-> [    5.362080] [     T50] dw-pcie fc000000.pcie: error -ENXIO: IRQ index 
-> 1 not found
-> [    5.400163] [     T50] meson-pcie fc000000.pcie: host bridge /soc/ 
-> pcie@fc000000 ranges:
-> [    5.421350] [     T50] meson-pcie fc000000.pcie:       IO 
-> 0x00fc600000..0x00fc6fffff -> 0x0000000000
-> [    5.428902] [     T50] meson-pcie fc000000.pcie:      MEM 
-> 0x00fc700000..0x00fdffffff -> 0x00fc700000
-> [    5.436367] [     T50] meson-pcie fc000000.pcie: iATU: unroll T, 4 
-> ob, 4 ib, align 64K, limit 4G
-> [    5.485658] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.491449] [     T50] meson-pcie fc000000.pcie: PCIe Gen.2 x1 link up
-> [    5.512122] [     T50] meson-pcie fc000000.pcie: PCI host bridge to 
-> bus 0000:00
-> [    5.515375] [     T50] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    5.521523] [     T50] pci_bus 0000:00: root bus resource [io  
-> 0x0000-0xfffff]
-> [    5.528847] [     T50] pci_bus 0000:00: root bus resource [mem 
-> 0xfc700000-0xfdffffff]
-> [    5.536237] [     T50] pci 0000:00:00.0: [16c3:abcd] type 01 class 
-> 0x060400 PCIe Root Port
-> [    5.543415] [     T50] pci 0000:00:00.0: ROM [mem 
-> 0x00000000-0x0000ffff pref]
-> [    5.543432] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    5.543441] [     T50] pci 0000:00:00.0:   bridge window [io  
-> 0x0000-0x0fff]
-> [    5.543448] [     T50] pci 0000:00:00.0:   bridge window [mem 
-> 0x00000000-0x000fffff]
-> [    5.569461] [     T50] pci 0000:00:00.0:   bridge window [mem 
-> 0x00000000-0x000fffff pref]
-> [    5.587641] [     T50] pci 0000:00:00.0: supports D1
-> [    5.591578] [     T50] pci 0000:00:00.0: PME# supported from D0 D1 
-> D3hot D3cold
-> [    5.603775] [     T50] pci 0000:01:00.0: [8086:2725] type 00 class 
-> 0x028000 PCIe Endpoint
-> [    5.614373] [     T50] pci 0000:01:00.0: BAR 0 [mem 
-> 0x00000000-0x00003fff 64bit]
-> [    5.621353] [     T50] pci 0000:01:00.0: Upstream bridge's Max 
-> Payload Size set to 128 (was 256, max 256)
-> [    5.621374] [     T50] pci 0000:01:00.0: Max Payload Size set to 128 
-> (was 128, max 128)
-> [    5.623252] [     T50] pci 0000:01:00.0: PME# supported from D0 D3hot 
-> D3cold
-> [    5.651205] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
-> L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
-> [    5.664912] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
-> ClockPM
-> [    5.706596] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.748181] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.796864] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.798178] [     T50] pci 0000:00:00.0: bridge window [mem 
-> 0xfc700000-0xfc7fffff]: assigned
-> [    5.806100] [     T50] pci 0000:00:00.0: ROM [mem 
-> 0xfc800000-0xfc80ffff pref]: assigned
-> [    5.806382] [     T50] pci 0000:01:00.0: BAR 0 [mem 
-> 0xfc700000-0xfc703fff 64bit]: assigned
-> [    5.863079] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.904553] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.946013] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.987492] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    5.987517] [     T50] pci 0000:01:00.0: BAR 0: error updating 
-> (0xfc700004 != 0xffffffff)
-> [    6.028979] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    6.080320] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    6.081421] [     T50] pci 0000:01:00.0: BAR 0: error updating (high 
-> 0x00000000 != 0xffffffff)
-> [    6.131210] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [    6.132324] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    6.138215] [     T50] pci 0000:00:00.0:   bridge window [mem 
-> 0xfc700000-0xfc7fffff]
-> [    6.145683] [     T50] pci_bus 0000:00: resource 4 [io  0x0000-0xfffff]
-> [    6.151953] [     T50] pci_bus 0000:00: resource 5 [mem 
-> 0xfc700000-0xfdffffff]
-> [    6.165037] [     T50] pci_bus 0000:01: resource 1 [mem 
-> 0xfc700000-0xfc7fffff]
-> [    6.165782] [     T50] pcieport 0000:00:00.0: PME: Signaling with IRQ 25
-> [    6.181556] [     T50] pcieport 0000:00:00.0: AER: enabled with IRQ 25
-> [   11.500464] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.543334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.544875] [    T491] iwlwifi 0000:01:00.0: of_irq_parse_pci: failed 
-> with rc=134
-> [   11.593524] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.636355] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.680033] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.721230] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.722728] [    T491] iwlwifi 0000:01:00.0: Unable to change power 
-> state from D3cold to D0, device inaccessible
-> [   11.773976] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.816771] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.859334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.901868] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.944393] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
-> timeout
-> [   11.945931] [    T491] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI 
-> issues?
-> [   11.952685] [    T491] iwlwifi 0000:01:00.0: probe with driver 
-> iwlwifi failed with error -5
-> 
-> Booting with the patch and pcie_aspm=off made the PCIe card work again.(snip)
+Anders bisected this down to,
+  9acb215cbebd ("Input: pf1550 - add onkey support")
 
-Regarding the ASPM issue, could you try v6.18-rc3 (in addition to your 
-changes)?
-
-https://patchwork.kernel.org/project/linux-pci/patch/20251023180645.1304701-1-helgaas@kernel.org/
-
-Best regards,
-
---
-FUKAUMI Naoki
-Radxa Computer (Shenzhen) Co., Ltd.
+>
+> ## Build error
+> drivers/input/misc/pf1550-onkey.c:154:12: error: 'pf1550_onkey_resume'
+> defined but not used [-Werror=unused-function]
+>   154 | static int pf1550_onkey_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> drivers/input/misc/pf1550-onkey.c:133:12: error:
+> 'pf1550_onkey_suspend' defined but not used [-Werror=unused-function]
+>   133 | static int pf1550_onkey_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[6]: *** [/builds/linux/scripts/Makefile.build:287:
+> drivers/input/misc/pf1550-onkey.o] Error 1
+>
+>
+> ## Source
+> * Kernel version: 6.18.0-rc2-next-20251027
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git describe: next-20251027
+> * Git commit: 8fec172c82c2b5f6f8e47ab837c1dc91ee3d1b87
+> * Architectures: S390
+> * Toolchains: gcc-14
+> * Kconfigs: allyesconfig
+>
+> ## Build
+> * Test log:  https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/build.log
+> * Test details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20251027/log-parser-build-kernel/gcc-compiler-_drivers_input_misc_pf-onkey_c_error_pf_onkey_resume_defined_but_not_used/
+> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/config
+>
+> --
+> Linaro LKFT
