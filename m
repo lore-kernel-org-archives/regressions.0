@@ -1,187 +1,205 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E2F366
-	for <regressions@lists.linux.dev>; Mon, 27 Oct 2025 10:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592D823BD1A
+	for <regressions@lists.linux.dev>; Mon, 27 Oct 2025 12:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761562130; cv=none; b=QMr3zhdWuqAFtsArLsJw2C5CkHm5Ukt2Yxeq60+U0BEuqfGv6LD/ri/WIANeA+fZShVe4kCcq4ztzos6Mam+uj+1C6eSjpl2oFbR9Lf4OffHrJwvQrWIxAPrT3XslitVouIppGDsRCiOJBb/mv91nnG7tIsI5qGP5ZQA9x8ke7c=
+	t=1761569587; cv=none; b=H7UzCpgcXY1djmADoCOQHhnqIvNgwrCPzH34b7ln0zXiGCVIX286eYy9X/JyTkXXbdzPu4WfiZGJ+D8lZ3T9ER/+v4XN45Z6NfvHkiY9Yaaw1TflYdHExqrPntfiBMtJj6Dl+qDMvnvhaOB4/jyvO8IJU6A7KRl8c7iK0JYVUeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761562130; c=relaxed/simple;
-	bh=umtddTp0GUxsAGi2WcJAkAXnZmZ64sCaxtd5YSgfVyI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=vCtb3Iejb5dptlGguEsmO5454/O9c2x5DaGzDeciImVKyrncf3uqQ2nth1hSjd1jrJAXvEHS82RnGOb/E/MAEG7M8sG7ENu9s/Ccee0A6gNsYOIjyUM8/XJ4cVUPlVXJhssoaBpoKeaWK6cyGVQ6YsOTZ4aWXGkCKM2nDzMIx58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=Dd/rixVb; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="Dd/rixVb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1761562120; x=1762166920; i=spasswolf@web.de;
-	bh=xBBB0/r3+zMZ8FLcXBHWliMhsxPeLrTWHXQx/nJII7k=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Dd/rixVbAbFnS0xZg2eDMZbDuUW0qWq0HaLNdNMtcQ0ykVhxUz3Xi9qH6t/+JRO/
-	 s6NPbAwMb81CJY3/aEA7LYmLesVDX6I3GmfEHCvJySQDCS9HzUPStskpQt/qTTFk7
-	 KOZ19kETol21i+X2zG5ExBPyfh4dT786Kp/EJfCgUOClSkudBFasFByaSuFkqFd8m
-	 vroDxut2SJC60JSgFEU6NYv8Enq5W12/j9wxWDpLRouhEQMDACjPFnRxAedI2KkUm
-	 sFT2Zc4Uw6acaMPJlXuQ13vb2RIZ9+Xe1hSNEJBpgyJazqXZxp+kQsPhfxtvxE8K4
-	 AWvzeHfe3ERY5qlPeg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N2BHw-1u9zSO1DNm-00toae; Mon, 27
- Oct 2025 10:57:22 +0100
-Message-ID: <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
-Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
-From: Bert Karwatzki <spasswolf@web.de>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Mario
- Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
-	 <rafael.j.wysocki@intel.com>, spasswolf@web.de
-Date: Mon, 27 Oct 2025 10:57:20 +0100
-In-Reply-To: <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
-References: <20251006120944.7880-1-spasswolf@web.de>
-			 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-			 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
-			 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
-			 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1761569587; c=relaxed/simple;
+	bh=WyAT0cZ419zJS6+qhbXvxzs+CR/2BDzu0Df1ltpBvxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p0jQgYcaI/hLdmEhiSh8bDinC+FY5mHStx8BLofAKIFoZiMPfGmwiKt/Q3y+eTPo6HrS94MUBctjID3fJ/YNBWL6Izdl67GIgax4/0LiMu+533n233HGyuG0Ag7WwZJ/pKlyXoUBPS8UP9eUyVB7tM5/Nbzocv9TkOMNHo68szc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip2t1761569517tb53347eb
+X-QQ-Originating-IP: nmsWUsXJgs/BC/zm7wCdDP8DQicwbQiZNInWOC/bbaA=
+Received: from [IPV6:240f:10b:7440:1:8944:4301 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 27 Oct 2025 20:51:52 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 80477086532345862
+Message-ID: <665677F9F810B6C1+af6c83fd-f262-4721-b544-4336aaa83bfe@radxa.com>
+Date: Mon, 27 Oct 2025 21:51:52 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sOokDG2zNh3dGu6GLilMaYmINMVkmc585yxfydkehC9TH71Wm8U
- DQ3klqzHdDBMROx+mIt5UnWDBqO4Fp5N3caIp/zJRaTMvPCH67zbpO5PlEpKa7+jDGQQI8X
- Y23WC11H6R9b+8SUAjHRiGNrsKJluF9f1r9srHtYAuBl4fFaq58Mkyb5IgpFKdhgT9MUFCX
- kChNvBOkZe6yS+2J+OTjA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2LsclnQ1df4=;lrrBkC940CpUVt4ERWtmkUfNw26
- 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
+User-Agent: Mozilla Thunderbird
+Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
+To: Linnaea Lavia <linnaea-von-lavia@live.com>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+References: <20251023164205.GA1299816@bhelgaas>
+ <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <DM4PR05MB102709E0A9C0CF0D62AEC3524C7F1A@DM4PR05MB10270.namprd05.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: N1sMhKjDsQuaqa0m7xhvUK7v3oLjS2bPiDUXypa/wpV4ag9cXplh6GcG
+	RoayluD7PfKAUg0W9ABZJbsyYolfuwY2IWR0dyfeF5/Bxt3RfvX5uVCepeTg3dHJqQ8rL+n
+	dTWA04C11/GJjB0WfhoWkUOBJHByDn5R8Wou5mL+8ymzD3LlLdasGpei+r+LnZ9yzM2xcvn
+	PmSZM0xNu1sOkIp9QzFg1SIw7dOqVMZzSJGeTGl0m8F9xthvusrb2RK2uPQN5gRCU/8lhmn
+	+diIc+1kl3ltpiMaZbXMiSzVYIT+orhZNcEFm2ltL1P3Qwgs7HQt5bFibRFV8NbH05GQqxp
+	iJ53Rv5Gsk+kgzDTsG7c6vwA1kFYtjWvEKE7k46PTyCOYKQ74jKwJWJuw6GDKg0yibbK8Cs
+	9I1A5APBr4vBJ0X5pTGYV000b9QqDWjSAbi1N8ebowf3Y+UN67Z60xhpao7/MjdLYhcfBBq
+	swomhUjqfX8kzubG7O8rcQIOEk4/3bYe9IETi+vFeV/QeJsbK/L4K52SyH8CRCrxDAl8gLE
+	tp8N5jgmz70iyabTlZwMQDqthFwCUruErAOsXJqzgK39/m/j5z8HtS5HZh7po2S5j/bW4m0
+	MCuGT5AIQnpyirMAgMEX/P3xJgLhDvCur7uISulhlypn+2chfq/0zeeVoaQRr3S0JVbMcvW
+	qdub8XQDAr5jOr6jFe0o6ADMYHuZsr5jiFmHDepJRfIQNRgSk1Sq3oM95bgb8IzzGuJg964
+	UupDr9AvK+Di5jAN3DBsS+lT+XMDGMnmyNGkN7t6mZa7yX6nqnidpYcw9YadPZG0LLC4keq
+	JHyDaItP6ilcCBBOqVVyxm5ehUtGFysCe8oD6WrDgCGA8DcrpNt/vl+VGt2FuIMNbFrrufN
+	LgzCkC2CJiIRl2DvURBjCY2IVELIAOZYRb5CN1naz7CWK8hF6ZRHbCWuemZrH3KfGdUBlZN
+	9FjiyNj1zAWTc0nsWGOaoiXgfR9kSCYsf2ImnIGOUGqgBWvSTjRjTYSEq
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
->=20
-> >=20
-> > As an idea for debugging this issue, do you think maybe using kdumpst =
-[1] might be helpful to get more information on the state during the crash=
-?
-> >=20
-> > Since NVME is missing you might need to boot off of USB or SD though s=
-o that kdumpst is able to save the vmcore out of RAM.
-> >=20
-> > Link: https://blogs.igalia.com/gpiccoli/2024/07/presenting-kdumpst-or-=
-how-to-collect-kernel-crash-logs-on-arch-linux/ [1]
-> > >=20
-> >=20
+Hi Linnaea,
 
-I've tried kdump to get a dmesg from the crash but it does not work. In ca=
-se of the crash a normal reboot
-occurs. When causing a crash with "echo c > /proc/sysrq-trigger" kdump wor=
-ks as expected. I tested this
-with kernel 6.15.11 because kdump didn't work with next-20250917 at all.
+On 10/24/25 12:27, Linnaea Lavia wrote:
+(snip)> With the patch on 6.18-rc2 it fails later with ASPM.
+> 
+> [    5.362080] [     T50] dw-pcie fc000000.pcie: error -ENXIO: IRQ index 
+> 1 not found
+> [    5.400163] [     T50] meson-pcie fc000000.pcie: host bridge /soc/ 
+> pcie@fc000000 ranges:
+> [    5.421350] [     T50] meson-pcie fc000000.pcie:       IO 
+> 0x00fc600000..0x00fc6fffff -> 0x0000000000
+> [    5.428902] [     T50] meson-pcie fc000000.pcie:      MEM 
+> 0x00fc700000..0x00fdffffff -> 0x00fc700000
+> [    5.436367] [     T50] meson-pcie fc000000.pcie: iATU: unroll T, 4 
+> ob, 4 ib, align 64K, limit 4G
+> [    5.485658] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.491449] [     T50] meson-pcie fc000000.pcie: PCIe Gen.2 x1 link up
+> [    5.512122] [     T50] meson-pcie fc000000.pcie: PCI host bridge to 
+> bus 0000:00
+> [    5.515375] [     T50] pci_bus 0000:00: root bus resource [bus 00-ff]
+> [    5.521523] [     T50] pci_bus 0000:00: root bus resource [io  
+> 0x0000-0xfffff]
+> [    5.528847] [     T50] pci_bus 0000:00: root bus resource [mem 
+> 0xfc700000-0xfdffffff]
+> [    5.536237] [     T50] pci 0000:00:00.0: [16c3:abcd] type 01 class 
+> 0x060400 PCIe Root Port
+> [    5.543415] [     T50] pci 0000:00:00.0: ROM [mem 
+> 0x00000000-0x0000ffff pref]
+> [    5.543432] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    5.543441] [     T50] pci 0000:00:00.0:   bridge window [io  
+> 0x0000-0x0fff]
+> [    5.543448] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0x00000000-0x000fffff]
+> [    5.569461] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0x00000000-0x000fffff pref]
+> [    5.587641] [     T50] pci 0000:00:00.0: supports D1
+> [    5.591578] [     T50] pci 0000:00:00.0: PME# supported from D0 D1 
+> D3hot D3cold
+> [    5.603775] [     T50] pci 0000:01:00.0: [8086:2725] type 00 class 
+> 0x028000 PCIe Endpoint
+> [    5.614373] [     T50] pci 0000:01:00.0: BAR 0 [mem 
+> 0x00000000-0x00003fff 64bit]
+> [    5.621353] [     T50] pci 0000:01:00.0: Upstream bridge's Max 
+> Payload Size set to 128 (was 256, max 256)
+> [    5.621374] [     T50] pci 0000:01:00.0: Max Payload Size set to 128 
+> (was 128, max 128)
+> [    5.623252] [     T50] pci 0000:01:00.0: PME# supported from D0 D3hot 
+> D3cold
+> [    5.651205] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
+> L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
+> [    5.664912] [     T50] pci 0000:01:00.0: ASPM: DT platform, enabling 
+> ClockPM
+> [    5.706596] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.748181] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.796864] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.798178] [     T50] pci 0000:00:00.0: bridge window [mem 
+> 0xfc700000-0xfc7fffff]: assigned
+> [    5.806100] [     T50] pci 0000:00:00.0: ROM [mem 
+> 0xfc800000-0xfc80ffff pref]: assigned
+> [    5.806382] [     T50] pci 0000:01:00.0: BAR 0 [mem 
+> 0xfc700000-0xfc703fff 64bit]: assigned
+> [    5.863079] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.904553] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.946013] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.987492] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    5.987517] [     T50] pci 0000:01:00.0: BAR 0: error updating 
+> (0xfc700004 != 0xffffffff)
+> [    6.028979] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.080320] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.081421] [     T50] pci 0000:01:00.0: BAR 0: error updating (high 
+> 0x00000000 != 0xffffffff)
+> [    6.131210] [     T50] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [    6.132324] [     T50] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> [    6.138215] [     T50] pci 0000:00:00.0:   bridge window [mem 
+> 0xfc700000-0xfc7fffff]
+> [    6.145683] [     T50] pci_bus 0000:00: resource 4 [io  0x0000-0xfffff]
+> [    6.151953] [     T50] pci_bus 0000:00: resource 5 [mem 
+> 0xfc700000-0xfdffffff]
+> [    6.165037] [     T50] pci_bus 0000:01: resource 1 [mem 
+> 0xfc700000-0xfc7fffff]
+> [    6.165782] [     T50] pcieport 0000:00:00.0: PME: Signaling with IRQ 25
+> [    6.181556] [     T50] pcieport 0000:00:00.0: AER: enabled with IRQ 25
+> [   11.500464] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.543334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.544875] [    T491] iwlwifi 0000:01:00.0: of_irq_parse_pci: failed 
+> with rc=134
+> [   11.593524] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.636355] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.680033] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.721230] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.722728] [    T491] iwlwifi 0000:01:00.0: Unable to change power 
+> state from D3cold to D0, device inaccessible
+> [   11.773976] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.816771] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.859334] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.901868] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.944393] [    T491] meson-pcie fc000000.pcie: error: wait linkup 
+> timeout
+> [   11.945931] [    T491] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI 
+> issues?
+> [   11.952685] [    T491] iwlwifi 0000:01:00.0: probe with driver 
+> iwlwifi failed with error -5
+> 
+> Booting with the patch and pcie_aspm=off made the PCIe card work again.(snip)
 
-But there are some things I found out:
-(a) The temporarily missing nvme device issue can also occur when crashing=
- with "echo c > /proc/sysrq-trigger"
-(b) The crash can occur both when resuming and suspending the discrete GPU=
-.
-(c) On the current debian trixie stock kernel 6.12.48+deb13-amd64 any atte=
-mpt to use the discrete GPU
-    gives a segfault because resume is broken. It works on 6.12.52 so this=
- is a debian bug.
-(d) Using the dev_info() and examining the last messages transmitted via n=
-etconsole I found that the crash
-    occurs during a call to acpi_power_transition() with the following cal=
-ltrace
- =C2=A0
-   hotplug_event() (in drivers/pci/hotplug/acpiphp_glue.c)
--> acpiphp_check_bridge()
--> pm_runtime_get_sync()
--> __pm_runtime_resume()
--> rpm_resume()=C2=A0
--> pci_pm_runtime_resume() (This is the callback called after the skip_par=
-ent label of rpm_resume())
--> pci_pm_default_resume_early()
--> pci_pm_power_up_and_verify_state()=C2=A0
--> pci_power_up()
--> platform_pci_set_power_state()
--> acpi_pci_set_power_state()
--> acpi_device_set_power()
--> acpi_power_transition()
+Regarding the ASPM issue, could you try v6.18-rc3 (in addition to your 
+changes)?
 
-Bert Karwatzki
+https://patchwork.kernel.org/project/linux-pci/patch/20251023180645.1304701-1-helgaas@kernel.org/
+
+Best regards,
+
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
