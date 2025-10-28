@@ -1,116 +1,207 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0728A314A8D;
-	Mon, 27 Oct 2025 21:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5781B423B
+	for <regressions@lists.linux.dev>; Tue, 28 Oct 2025 07:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761599999; cv=none; b=aghSMD/d3sasozkGg2G5vfZ1JJrBsY4O7Nzm7ilNi2MiJ0ymRIfS7sTrkL1+DUDsB4dilgWAYv9P6es7R5oDD4mA3Hd8d9WjuFnIVyOVyybam2bIXXM8UJRr55AP/OO3+5JoVpxxz3s10zi6Ybr7HSP8wCyiwHQrxRucxEx6p5o=
+	t=1761637147; cv=none; b=DuqKds51wrHFuOy+yazrAY+n10FYD7onEPSY/JMBmiKyizSh/EjJCwHLlIQgMPYasdRhmyfoOdXk33aDZ0VqxuvJE/MSOWkdY9BYQ7Q9gkVZA6d1pPoMv4cQV2rPMoM7QH1fzn/VzCiyxXUs98NOnp7ofIJUs3OZFlbPFynk66g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761599999; c=relaxed/simple;
-	bh=IaKAlAq36x6FQovo76KHJGi2+lwcn8LjsjjqBNZdne4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f32cqM9Az41qCLB78G/Dih5kLqcL3GXNdkX4QhKIE3UVCpmaG7q0wYB5y18pZyyhsM/jm3I90yJAQDImcfhC8UT9SeBrz/fr3StTJA4eS+YWBg6HejX9M8vYfZhfZYbSoiApr1SE744LtnA2gtUcZJC4y2y6Klrn+/wINYmMkHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nBl+hOJt; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1761637147; c=relaxed/simple;
+	bh=sH3e7s8xPB6+HNIGAMv6PrTNEE0dGDJnlF85p02RvL0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=R6EmPDK07n6jJw1Wdv5VZD65sk0V9VjC/N+LVg6jI6S52IvltTH23Z+JtmOQXrfiJmlQzjj98One2iGh3t6wBcplHnw6qxgkjJq/b9MNfY/oBda7gWU41kBT4SndnkWGIsx4vfH7kSsZ8khmh30ofiWuuDjNoTNSeEF4Gx6eW8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WFDinqSL; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nBl+hOJt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=9Iv+ffZpjEZjAYosvgj1AxYfj8Ex0TWhrhWzH//VRvQ=; b=nBl+hOJtJiTxm7KhGiNJ/Q71dn
-	T9DUH3zO9MGalAUW4ruw7kg0OdrzIJoDdR5Egq17KkEjUo0tdXIp3flaqD5ZKGjhqpn27Qj3/ehpC
-	FcRYP6yofjDMNPd0VycSu6PaJurniVxvcYo43iWQwGpDDcxmPtmC0r+qqg7Yr7Im5R6RChjNTIgiK
-	ALQ194/8LCHUjX8neIBt/tdRkr+/Q/7oXGoANAtNxkziBF8kayvNFYbj18ENYhlhGwQyvWm6NjncX
-	zF7KHIvIlSlxpiNZjeqmh+u5aOh7Jpv65BFnJUYly7U53K4m71Ks6rj+6tSlu6hVGtbHxC9bSLNCz
-	OAkFcj5g==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vDUd8-0000000EmzQ-37s7;
-	Mon, 27 Oct 2025 21:19:54 +0000
-Message-ID: <09faee6c-4075-4eb7-bb2b-1c6650e3f053@infradead.org>
-Date: Mon, 27 Oct 2025 14:19:54 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFDinqSL"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-269639879c3so48549975ad.2
+        for <regressions@lists.linux.dev>; Tue, 28 Oct 2025 00:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761637145; x=1762241945; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fZQcAE3NiFPEWRiaaSdgMTBw653ZGnPFrSKRDHStXzg=;
+        b=WFDinqSLPbpuH/ZLv+NWriOnJsafCLbvMN+dHcB1k1AmtZUA/1ioV+8GucxitJ0qk0
+         SBuLwN+no9ERkNK2Vqf596WejT6/QpR1HXz5aZIsPNu8F2quA8f1Z7BtlhKQ8vTYWoBv
+         7so6kEdeeb0OwtCFasTWDbEDF446ObAFIot7mlUjIxZkrQdY1h2SK10aMuugnlAXtt7h
+         ZCKBBg4Mum15TKSPLZQJ/WBm7iI2M7yH/lgUisf96NC4/AQflNAjZiu4LmVAc15WPnFx
+         doRF2g+dLSQ6vQlBduHymhv7UHUIohCZNjg5OTB8MkHvTm7RfJRKZR47SfUUxHMma+dO
+         Dk4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761637145; x=1762241945;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fZQcAE3NiFPEWRiaaSdgMTBw653ZGnPFrSKRDHStXzg=;
+        b=S23YBfY39s6/RLW0Yjl9B/ntqaEsr1sDkPkrSg5XU/LP5QjxKmF92viXBcVB3C4Xsp
+         zS/WxUjkjOkjMhqdUwyW0F/+yDUGnvECOCYAdyCsskcbSYZb4Wa5AGaIaG96Hv3PNYen
+         +35vpp7Sd6yOUut1EcjUnBocKinBI8UGzHjXh7ddLRAFJn9IUdEKzuTarePR8Lc4U4OE
+         cmd7+Rd3/5oup+BROsfHz7kCJ6k9wwYBTq/NbC8EZAU/SEtK06eziHr5idw6xZ3VQZqL
+         VCJ+r3nRgg64O5BAut/9lVHKmzlS2u/APrLo3pBVjY6m5WLwbT0ojyoV2YhxQ7xOoJri
+         3BJQ==
+X-Gm-Message-State: AOJu0YwmXYkDBPY0E/GKlWO+3gV3f8PPbpjblQO78eM3rEfcyV01pXX6
+	fh+dvtqC+QREgyaiblKhW+JUNXg+1Cw6oLUlUdqavZx4ilW8hA20yvkvOt3i37Xxjp8kCzDkSEU
+	yHhF7lmldh2deqPYu5FqqIclZPtJJUik=
+X-Gm-Gg: ASbGncvUOjXknbOyEIRWncE8CS6Tyi1rXyo50z7XXxsE7gRhGmDsz0i1WftNAyDKQHQ
+	ZQvJ7LIC2+b1Kme0YPUSAiDmclRcO2vXLfxTP1ETjVtYHhhcoDebCz1bgjxUW6sU0ocy9H7DBsJ
+	aAdzsank2MeQeujZQRubiIbrbM2HeHjhE/pDJAS9ZdWliLyB9nfIaFLxQcSbJu3UwchLwpJ1XXb
+	Cx/38Di+mvq01XAUXnSae2gvHh77j+B3erm2kupHT6PxF4EcOcq5rbah5isZi0Rakiq60uc8rGP
+	TjAxnM2X8fwNMQ==
+X-Google-Smtp-Source: AGHT+IGFh2TYLasVGXUF21rpEaEF/tSw6kHufc0/I2DgN9Fg5FFpCLuzmunsuUK3bHPgMcURl/Aj5TjMj7GW+UrQwnM=
+X-Received: by 2002:a17:902:ce91:b0:27e:e1f3:f853 with SMTP id
+ d9443c01a7336-294cb35ec0emr25822415ad.8.1761637145420; Tue, 28 Oct 2025
+ 00:39:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/30] docs: reporting-issues: mention text is best
- viewed rendered
-To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <cover.1761481839.git.linux@leemhuis.info>
- <4f7e2de2a2336c52e55cc49dcda627a4e86b8793.1761481839.git.linux@leemhuis.info>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <4f7e2de2a2336c52e55cc49dcda627a4e86b8793.1761481839.git.linux@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Christopher Harris <chris.harris79@gmail.com>
+Date: Tue, 28 Oct 2025 00:38:54 -0700
+X-Gm-Features: AWmQ_bnrt0pbyscnBc_FU7k8Dqzb61ZnfyKrV__muDPkT_bA0X_pvnkmcGfo5-g
+Message-ID: <CAM+eXpdDT7KjLV0AxEwOLkSJ2QtrsvGvjA2cCHvt1d0k2_C4Cw@mail.gmail.com>
+Subject: [REGRESSION] AMD P-State fails with "_CPC object is not present" on
+ AMD Zen 4 (EPYC 4484PX) between 6.10 and 6.11
+To: linux-pm@vger.kernel.org
+Cc: regressions@lists.linux.dev, mario.limonciello@amd.com, perry.yuan@amd.com, 
+	rafael@kernel.org, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+#regzbot introduced: v6.10..v6.11
 
+[Regression precisely identified: Last working 6.10.0, first broken 6.11.0]
 
-On 10/26/25 5:41 AM, Thorsten Leemhuis wrote:
-> Add a comment before the step-by-step guide explaining that the document
-> is best viewed in the rendered form, as there the internal links will
-> work that later patches will add.
-> 
-> While at it change the double quotes in the license hint at the end of
-> the document into single quotes, which is the preferred style.
-> 
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  Documentation/admin-guide/reporting-issues.rst | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
-> index a68e6d90927471..3bc47afaf85ea0 100644
-> --- a/Documentation/admin-guide/reporting-issues.rst
-> +++ b/Documentation/admin-guide/reporting-issues.rst
-> @@ -48,6 +48,16 @@ Once the report is out, answer any questions that come up and help where you
->  can. That includes keeping the ball rolling by occasionally retesting with newer
->  releases and sending a status update afterwards.
->  
-> +..
-> +   Note: If you see this note, you are reading the text's source file. You
-> +   might want to switch to a rendered version: It makes it a lot easier to
-> +   read and navigate this document -- especially when you want to look something
-> +   up in the reference section, then jump back to where you left off.
-> +..
-> +   Find the latest rendered version of this text here:
-> +   https://docs.kernel.org/admin-guide/reporting-issues.html
-> +
-> +
->  Step-by-step guide how to report issues to the kernel maintainers
->  =================================================================
->  
-> @@ -1748,13 +1758,13 @@ art will lay some groundwork to improve the situation over time.
->     you spot a typo or small mistake, feel free to let him know directly and
->     he'll fix it. You are free to do the same in a mostly informal way if you
->     want to contribute changes to the text, but for copyright reasons please CC
-> -   linux-doc@vger.kernel.org and "sign-off" your contribution as
-> -   Documentation/process/submitting-patches.rst outlines in the section "Sign
-> -   your work - the Developer's Certificate of Origin".
-> +   linux-doc@vger.kernel.org and 'sign-off' your contribution as
-> +   Documentation/process/submitting-patches.rst outlines in the section 'Sign
-> +   your work - the Developer's Certificate of Origin'.
+## Summary
 
-Can you have a single quote (Developer's) inside single quotes?
-Anyway, nack on the quote marks changes.
+The AMD P-State driver fails to initialize on AMD EPYC 4484PX
+processors starting
+with kernel 6.11.0, returning "_CPC object is not present in SBIOS or
+ACPI disabled"
+error. The same hardware works correctly with kernel 6.10.0 and earlier.
 
->  ..
->     This text is available under GPL-2.0+ or CC-BY-4.0, as stated at the top
->     of the file. If you want to distribute this text under CC-BY-4.0 only,
-> -   please use "The Linux kernel developers" for author attribution and link
-> +   please use 'The Linux kernel developers' for author attribution and link
->     this as source:
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/Documentation/admin-guide/reporting-issues.rst
->  ..
+The regression was introduced between 6.10.0 and 6.11.0.
 
--- 
-~Randy
+## Hardware
 
+- CPU: AMD EPYC 4484PX 12-Core Processor (Zen 4 architecture)
+- Motherboard: SuperMicro (confirmed CPPC enabled in BIOS by vendor)
+- Tested on multiple identical systems
+
+Note: This issue likely affects other AMD Zen 4 processors and
+possibly other AMD
+generations, though testing has been performed specifically on EPYC
+4484PX systems.
+
+## Regression Test Results
+
+**Working** (amd-pstate loads successfully):
+- 6.8.0-84-generic (Ubuntu 24.04)
+- 6.8.0-86-generic (Ubuntu 24.04)
+- 6.9.0-060900-generic (Ubuntu mainline)
+- 6.10.0-061000-generic (Ubuntu mainline)
+- 6.10.14-061014-generic (Ubuntu mainline) **<-- LAST WORKING (latest 6.10.x)**
+
+**Broken** (falls back to acpi-cpufreq with _CPC error):
+- 6.11.0-061100-generic (Ubuntu mainline) **<-- FIRST BROKEN**
+- 6.12.0-061200-generic (Ubuntu mainline)
+- 6.13.0-061300-generic (Ubuntu mainline)
+- 6.14.0-061400-generic (Ubuntu mainline)
+- 6.16.7-061607-generic (Ubuntu mainline)
+- 6.17.1-061701-generic (Ubuntu mainline)
+- 6.17.5-061705-generic (Ubuntu mainline)
+- 6.18.0-061800rc3-generic (Ubuntu mainline RC)
+- 6.17.1-1-cachyos-server-lto (Arch Linux)
+
+## Error Message
+
+```
+[    4.508125] amd_pstate: the _CPC object is not present in SBIOS or
+ACPI disabled
+```
+
+## Steps to Reproduce
+
+1. Boot with kernel parameter: amd_pstate=passive
+2. Check driver: cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_driver
+   Expected: amd-pstate
+   Actual: acpi-cpufreq
+3. Check dmesg: dmesg | grep "_CPC"
+   Shows: "the _CPC object is not present in SBIOS or ACPI disabled"
+
+## Kernel Configuration (identical in working and broken kernels)
+
+```
+CONFIG_ACPI_CPPC_LIB=y
+CONFIG_X86_AMD_PSTATE=y
+CONFIG_X86_AMD_PSTATE_DEFAULT_MODE=3
+CONFIG_X86_AMD_PSTATE_UT=m
+```
+
+## Testing Environment
+
+- Tested with vanilla kernels from Ubuntu mainline PPA
+- No additional modules or patches
+- Kernel not tainted
+- Reproduced on both Ubuntu 24.04 and Arch Linux distributions
+
+## Impact
+
+This regression prevents affected AMD systems from using the optimized
+AMD P-State
+driver, forcing fallback to generic acpi-cpufreq with approximately 5-10%
+performance loss. While confirmed on AMD EPYC 4484PX (Zen 4), this
+likely affects
+a broader range of AMD processors that support CPPC/ACPI P-States.
+
+## Next Steps
+
+I'm prepared to:
+1. Run amd-debug-tools to capture detailed reports if needed
+2. Test any proposed patches
+3. Perform git bisect between 6.10 and 6.11 if required
+4. Provide any additional debugging information
+
+## Bisection Results
+
+Through systematic testing of Ubuntu mainline kernels, I've identified the exact
+regression window:
+
+- **Last working version**: 6.10.14-061014-generic (latest 6.10.x series)
+- **First broken version**: 6.11.0-061100-generic
+
+The regression was introduced during the 6.11 merge window. All 6.10.x versions
+work correctly (tested through 6.10.14), while all 6.11+ versions
+fail. The issue
+persists through all subsequent versions tested up to 6.18.0-rc3.
+
+The regression appears to be in ACPI _CPC object detection/parsing, as the same
+BIOS/hardware combination works with the entire 6.10.x series but
+fails with 6.11+.
+
+## Additional Information
+
+The same ACPI tables and BIOS work correctly with 6.8 kernels, confirming
+this is not a firmware issue but a kernel regression in CPPC/ACPI handling.
+
+ACPI/CPPC related messages from working system (6.8.0):
+- No error messages, driver loads successfully
+
+ACPI/CPPC messages from broken system (6.17.5):
+```
+$ zgrep "ACPI.*CPPC" /proc/config.gz
+CONFIG_ACPI_CPPC_LIB=y
+$ dmesg | grep amd_pstate
+[    0.714133] amd_pstate: the _CPC object is not present in SBIOS or
+ACPI disabled
+```
+
+I've tested on multiple identical systems with the same results. I'm available
+for testing patches or providing additional debugging information as needed.
+
+Thank you for your attention to this regression.
+
+Best regards,
+
+Chris Harris
+chris.harris79@gmail.com
