@@ -1,48 +1,48 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F6828935A
-	for <regressions@lists.linux.dev>; Tue, 28 Oct 2025 21:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680602F12C8
+	for <regressions@lists.linux.dev>; Tue, 28 Oct 2025 21:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761687802; cv=none; b=Y3OVSuvswPL1H0unn4E26AAZ1lUI8zFc4ckeTQulavPsW9LTqVG5MZpzWQtC84TMg+Eojx6BXkfG4amccUMn5BPdlLWCcMGTv695dYGqaoMXmXDXcL1VsyXhHRONe7LPyYBaQl7H7ORFtYInXwWzvU5x9gwnDeucDobAqOFtYYg=
+	t=1761688080; cv=none; b=Hkuztr8Lz7u8PrVORe3dboY5Qh41LzOr/GRXycd4ZEZLS/fIf42wRDElusBb7r7DvtQiVtbNDnuQWtvfpd2iniIBq0vDmDlaFxVoSfEziSUVxzOG7DFo8GwEhqCOFy9FgI2z5EXuHswSOI2asOmVBrPujV8O3cfNhmBsTiNopGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761687802; c=relaxed/simple;
-	bh=YDqBF/mS2A6UNJxBf/EBwvhrXjgAQntEl4RW5vB6K1M=;
+	s=arc-20240116; t=1761688080; c=relaxed/simple;
+	bh=2tsnf28ipcIAfDZPP03qHcIF+Ko8CEeFlZfoQbFw8nk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EJHD7qZgoJre+f5smuXQ9A4s0+OjcX6rCeUb5xYjg9ZJ7zM5Tyez78dEpI47DeSxo73SRIB3v4zKoF6Ja10FUDHjsBuoM/U3b1GaXOBo3Gm7gsB8wBf912QqYa8FAjsNLdCtlfXUrQlMY6wv69z/6WbERNH8qgNQ6TDPb0to8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=EGgGiaot; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version:Content-Type; b=Cq3vZX9A9dZaybJfW0w3L2Iuk0Q8+/lrhEKrsLAXPpN9F6m2aioYQR0oI2OHTN4kpRiVtKymqoaBSH0zSWLIuK+plKIWcf0qghtTSdP8zCL4WBq5mhPiTteNtKqjNWnRB7esmQkT1/UHEmsiluSTrIm6MSvddVX2wef95phdKqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=iL1MA71m; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="EGgGiaot"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 310E7406FB
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="iL1MA71m"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 93C23406FB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1761687799; bh=XaidPgkgSkogQnahzBHg15Gqlc7NpYvwYT9NzMXzVUo=;
+	t=1761688078; bh=RetlZ1LyA7XkqWfjrkbefmuL6Fe2ISzbT+EWH+N5Q0s=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=EGgGiaottSsXiH3mNpCix02G6V8zqMxsG4ljJVmWImCOOXLoWrYMWBeZct/AhdffO
-	 RzcZ9wXYCM+V7WpQaeQ41LIdjez7lZ6KFJRCZ2+T9hn1QMdiFjUAwQrldYuix+JZgJ
-	 BmRk7gDNsOSo1v4ApUUQgi/pwJg5isIh248pZxeA6ldrM9B68owDaT1tc98kJNHuV6
-	 DaKV9RDyTG8LBPM8Q/40NpHkNhyj6Y0i72QWPgYQ5mhiU838MSgzWgOFwFXMXsjbsR
-	 4NhP+P+uSlcL8qM5wKIZuf72ybS5EgZ0dQHrI3tV9aQ8VFsPMmjACrwC0TxoWYbNz8
-	 CjzZpS2yBB/kA==
+	b=iL1MA71mlM+6QFSTW/xKyGNaoov1B9qZpmheRY/HC3wDNOdnxIc8Af0NZKWTs5yNf
+	 uegJqIG+lNpRct3Iik/z/avfABu7dISzJrKH/x+4lOoX5/p9nZmiu2kVaaGKII2qFa
+	 l5YFy7ZJN3GZMvvzhiogS0EGawGpAuF1RphmZ7c9mUVm1ibQjjCLPjcn7S58p1XYVE
+	 Qyq7pCUxlBEzd1pcj6BPkosx0eTLQHR5xLAHBTnnhTF5TMnnApo46u1idnJ3GApV4r
+	 Yly/cEU3f3UJQfpSxPptzymdhY1hNNwUKoCsSr23Fs/dM/Z4uCky/9C3EmylihbfRp
+	 OjXtwsGLhmNJA==
 Received: from localhost (c-73-14-55-248.hsd1.co.comcast.net [73.14.55.248])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 310E7406FB;
-	Tue, 28 Oct 2025 21:43:19 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id 93C23406FB;
+	Tue, 28 Oct 2025 21:47:58 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: Thorsten Leemhuis <linux@leemhuis.info>
 Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
  regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 09/30] docs: reporting-issues: tell users to check
- the kernel log
-In-Reply-To: <a5be8e9822bbc1268efc3cad9485d8d926261a90.1761481839.git.linux@leemhuis.info>
+Subject: Re: [PATCH v1 10/30] docs: reporting-issues: move 'check tainted
+ flag' upwards
+In-Reply-To: <93cac5463d1e51b57b7cf74181397039137bcdb5.1761481839.git.linux@leemhuis.info>
 References: <cover.1761481839.git.linux@leemhuis.info>
- <a5be8e9822bbc1268efc3cad9485d8d926261a90.1761481839.git.linux@leemhuis.info>
-Date: Tue, 28 Oct 2025 15:43:18 -0600
-Message-ID: <87ecqmk8i1.fsf@trenco.lwn.net>
+ <93cac5463d1e51b57b7cf74181397039137bcdb5.1761481839.git.linux@leemhuis.info>
+Date: Tue, 28 Oct 2025 15:47:57 -0600
+Message-ID: <87a51ak8aa.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,14 +53,12 @@ Content-Type: text/plain
 
 Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-> Sometimes what looks like a kernel bug is actually some local problem
-> the kernel's log messages explain, thus it is best if users check it
-> early in the process.
+> Move text around to improve diffability in the follow-up patch.
 >
 > Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 > ---
->  .../admin-guide/reporting-issues.rst          | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
+>  .../admin-guide/reporting-issues.rst          | 142 +++++++++---------
+>  1 file changed, 71 insertions(+), 71 deletions(-)
 
 Seems fine.
 
