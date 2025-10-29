@@ -1,41 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16A71891AB;
-	Tue, 28 Oct 2025 22:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901292ED85D
+	for <regressions@lists.linux.dev>; Wed, 29 Oct 2025 03:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761691959; cv=none; b=agg1ERi2Rtw8aS7GXih6fqNKA9a/L9xGazGJDAcckQ2QZPpZ9IgorcbcmE5AOo4cVnp7U3nWpQ7jUZm3HAoswvFRCY37/MErd1NV2A2bnEaItBGyMKWd2VdGUY2KDgzduceePwsTv40vnJ/Hu016mu9bNrmjdCdn9d8nzxLOjA0=
+	t=1761707037; cv=none; b=T4BV2/Ihv8Am4CuP76Jra/ItqSW5Hvhq4RlW3Zs5ndbdZ94XQgKf1Hfh+v754Z9Y+Rozmub7mMwnojviiluKFWhqbtd2rIXo5c6MIoIl+oRrVwXtQzKVy5sVYj+kK/he6ui/rh/2Tp3sYak7APpPDznsVrDL5VXBgziZBkJMJX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761691959; c=relaxed/simple;
-	bh=TNnW1dnHBXsXUZ1jykN7QcAKz/sH0V9weWlESLyPygM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hcqQe6SjqPz6TkIcn3/zqs/UsE76RVQgY0HB1MzqsPIczsMLM/6cKJsmIGuzZ9IJwWSZoZCGI2l5nXQUimyY3QjtpslsQKZE7L2y6mxPerkluRnpqjC20p6Y/5+kSwOX59M5q3ca0bNeY0FXKccCMKrXwA+0pg3OTNjB0ctFqw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHxhyjNy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761707037; c=relaxed/simple;
+	bh=/Qk8PMHP4+FapWuHqJbINkiDONl0t8szjkv4nlvTxXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eYH3sq41KugOLFNm/a1LCSnFBY58ly8M/0BY35dBzdNrkJ9SOjQOKWiUyKp51/kL1uy2tOuIPdO7zaI1U0hTHASO9dg90CZQSjB0JwlR761HFEgxZQAq+8NTscB7YXj7cZ/6o94NqRo4I3L9r/EZQFkt/SGf5oEyI7Z2Nd3latg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1GFQ+LW; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHxhyjNy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492F7C4CEE7;
-	Tue, 28 Oct 2025 22:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761691958;
-	bh=TNnW1dnHBXsXUZ1jykN7QcAKz/sH0V9weWlESLyPygM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oHxhyjNyr1rkjEm1QLuow6XhjdlOr8aHUBRvxrxbty01SDtmXmHjfn/xyEehrRdee
-	 yMOgZTwvFxIOBOmBkU2B3FliAkNdnPpRTszsfiz1SM5gP+fruTwD8dSKATrP2Vzqsz
-	 41eXfhuTv7bOlq/CA28iQkA6XmMGJAQROzUVLJ0QWObaMcflOOR1ndSM4oyN8T02qF
-	 9vq8h2iY3n0M0QAReo+goNRPl6IgkNM4nrcPT1FBXV8X0fGV1nUEDfEpK9qfRx6FX4
-	 jlPHjGn+r9/2B8Xvvo6G2de+J0BcjA9j5ZtXTGr5t81C0o9niOjPLn+Dftun1FLb/7
-	 y2VP6ZfDlUXJQ==
-Date: Tue, 28 Oct 2025 17:52:37 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: inochiama@gmail.com, tglx@linutronix.de, bhelgaas@google.com,
-	unicorn_wang@outlook.com, linux-pci@vger.kernel.org,
-	Genes Lists <lists@sapience.com>, Jens Axboe <axboe@kernel.dk>,
-	Todd Brandt <todd.e.brandt@intel.com>, regressions@lists.linux.dev
-Subject: Re: commit 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device
- domains") causing boot hangs on my laptop
-Message-ID: <20251028225237.GA1539571@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1GFQ+LW"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ed101e8486so17169371cf.2
+        for <regressions@lists.linux.dev>; Tue, 28 Oct 2025 20:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761707034; x=1762311834; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K5IcEnHZoC7+7r2CTBEYXEkgFoGQnDrtNgYAFEBdR6Q=;
+        b=E1GFQ+LW8cjtGHpQXtwP9tGe0TEnzP0jJLQRICZVoZCkNb342xUbVrd97NpPFlmsCJ
+         1Mo5P0gLQfCdFY6/T0y1tIRPLP7d+b7dIluW2jDQZRxkY69cVq7Xbh6TKuM8+6/Dl134
+         O23PtJBx8+Li+vJXJnUlT9nAJcRc7tKL0pOFzzNNmRuuXKLp5dT6eb7GbWKzSUOORWQc
+         CzqAznCUw5rvgQAd0gh718kT14onsSuxWzrZA7YEBr2y1x524jkAhOjGA3LRGuaK8FqH
+         7LnuCgPGg2T8tKwy35cEWyPVPdzfzeSuw4uLqCOeiZ1VRoZeF7hIam1lTObdHrZEfsg3
+         2rww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761707034; x=1762311834;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K5IcEnHZoC7+7r2CTBEYXEkgFoGQnDrtNgYAFEBdR6Q=;
+        b=mNN1sFoZSQgweAYUFKdNmwMlBWtwambi6hClzoP1r/hpWNlM/vuTroB8ABD6dgaza3
+         ySHosQuxy1NN1lRPygs/R8ajAYtee95hPNK02z7ccXuvgytuTKkUp2FVle3RN7WJDErh
+         7htMPL5q1aJEKZE1pbMdVYUeZOYzlluU4gJcpzmOnLbw2ZFAsKpBINS4SlWdG50NWXLm
+         bnqdNllCNn7T44aXeDPiywdkHUrOUkRuA+2yeyLdfEE2H6fNy0CK+1pMwY2gcuETnkDW
+         JB1/uccmliVNcaYWE/WeysMlRZ7BYoHrspbaSxFsRhVav+v62ujcjqUJzAwbN40zMEGr
+         QhZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuxrupN+JU2oJZdEC8SuB27JaE52Kj7rBXsH5zqgZHTkdWZrY8gqfa2Vkahp1WinX0sNQPjfcoHISpTw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwUJdrLXvRNXrrhRXiIEsDFrvKczrNB3omUA9GZ/iWOgIw28Ou/
+	Rrk2Pb6pzWR75WHYOMKIq0VJNBOx+I1FI1b0yDzZlXtt61WZvJoHCeKB
+X-Gm-Gg: ASbGncte2rRHS6NMfyKlIFZTcMohzvc0v3FrNk/ZfY+4GFqEIokPImo4afC9PGBbktV
+	rehes8e4IvlqtFn9ws5POct/BCUZWiwhZJeHIhFattET9uv559yQndJllxmWIzJiM6jaErUx1i5
+	SGTdvXxaQWQ+BcSz1kOr4deVtIa2kJutwkUlg4Nhw4avDNByUHejtj6aZyOzpPm+yxX5j1TegrN
+	RfLPgXQVfNO7QGyhPZp/fIha8wECmwA1Q5yuVTnZdeyx1OEuxEJuVK+WX7uXc1675n5vXrpNLsW
+	i8DSqZKBV/NcpXOig8sMEOzC5lD3HwJbasuvzRzSCFBDeuDQQJJwtE2DsNMnBHMtDQvdyjOTe/A
+	4i8oWh31VCtVhAxOF4Znt0CY5FNETJrbyfApC7mY7Bhg5olTFDnqXKxF7tZQVOdW1xOP8YgXcv6
+	M=
+X-Google-Smtp-Source: AGHT+IGn2yY7zgfs78ubfoXvJ06VhUkyVxJ/ldXNh2L/51YFEepFFBNff1jL42/SFQQHpekm3bsxHw==
+X-Received: by 2002:a05:622a:1105:b0:4eb:7807:1816 with SMTP id d75a77b69052e-4ed15b5ab08mr18021921cf.35.1761707034388;
+        Tue, 28 Oct 2025 20:03:54 -0700 (PDT)
+Received: from sam-fedora ([142.182.130.176])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-89f254a6461sm1001074485a.30.2025.10.28.20.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Oct 2025 20:03:53 -0700 (PDT)
+Date: Tue, 28 Oct 2025 23:03:50 -0400
+From: Samuel Kayode <samkay014@gmail.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: linux-s390@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	Samuel Kayode <samuel.kayode@savoirfairelinux.com>,
+	Samuel Kayode <samkay014@gmail.com>,
+	Jerome Oufella <jerome.oufella@savoirfairelinux.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Frank Li <Frank.Li@nxp.com>, Sean Nyekjaer <sean@geanix.com>,
+	Lee Jones <lee@kernel.org>, Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: next-20251027: s390: pf1550-onkey.c:154:12: error:
+ 'pf1550_onkey_resume' defined but not used [-Werror=unused-function]
+Message-ID: <aQGEFr9aXB69_Eei@sam-fedora>
+References: <CA+G9fYsL+w_XaOPaBaN5xMr6Ssrq_hh2_g8AgNxNmu0jCpjwxg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,33 +86,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251013211939.GA865451@bhelgaas>
+In-Reply-To: <CA+G9fYsL+w_XaOPaBaN5xMr6Ssrq_hh2_g8AgNxNmu0jCpjwxg@mail.gmail.com>
 
-On Mon, Oct 13, 2025 at 04:19:39PM -0500, Bjorn Helgaas wrote:
-> [+cc regressions like I meant to do the first time]
+Hi,
+
+fix is at
+https://lore.kernel.org/r/20251028-pf1550-v1-1-c50fae56b9b1@gmail.com
+
+Thanks for reporting
+Sam
+
+On Mon, Oct 27, 2025 at 02:26:37PM +0530, Naresh Kamboju wrote:
+> The following S390 allyesconfig build regressions noticed on the
+> Linux next-20251027 tag with gcc-14.
 > 
-> On Mon, Oct 13, 2025 at 04:18:16PM -0500, Bjorn Helgaas wrote:
-> > [+cc Gene, Jens, Todd]
-> > 
-> > On Thu, Oct 02, 2025 at 10:04:17AM -0700, Kenneth Crudup wrote:
-> > > 
-> > > I'm running Linus' master (as of 7f7072574).
-> > > 
-> > > I bisected it to the above named commit (but had to back out ba9d484ed3
-> > > (""PCI/MSI: Remove the conditional parent [un]mask logic") and then
-> > > 727e914bbfbbd ("PCI/MSI: Check MSI_FLAG_PCI_MSI_MASK_PARENT in
-> > > cond_[startup|shutdown]_parent()") first for a clean revert.)
-> > > 
-> > > I have a Dell XPS-9320 laptop, and booting would hang before it switched to
-> > > the xe video driver from the EFI FB driver (not sure if this is a symptom or
-> > > partial cause) and I'd see a message akin to "not being able to set up DP
-> > > tunnels, destroying" as the last thing printed before it hangs. (If it's
-> > > important to see those messages I believe I can force a pstore crash to get
-> > > them where they can be saved off, let me know).
+> * S390, build
+>   - gcc-14-allyesconfig
 > 
-> #regzbot introduced: 54f45a30c0 ("PCI/MSI: Add startup/shutdown for per device domains")
-> #regzbot link: https://lore.kernel.org/all/3152ca947e89ee37264b90c422e77bb0e3d575b9.camel@sapience.com/
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=220658
-
-#regzbot fix: e433110eb5bf ("PCI: vmd: Override irq_startup()/irq_shutdown() in vmd_init_dev_msi_info()")
-
+> First seen on next-20251027
+> Good: next-20251024
+> Bad: next-20251027
+> 
+> Regression Analysis:
+> - New regression? yes
+> - Reproducibility? yes
+> 
+> Build regression: next-20251027: pf1550-onkey.c:154:12: error:
+> 'pf1550_onkey_resume' defined but not used [-Werror=unused-function]
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build error
+> drivers/input/misc/pf1550-onkey.c:154:12: error: 'pf1550_onkey_resume'
+> defined but not used [-Werror=unused-function]
+>   154 | static int pf1550_onkey_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> drivers/input/misc/pf1550-onkey.c:133:12: error:
+> 'pf1550_onkey_suspend' defined but not used [-Werror=unused-function]
+>   133 | static int pf1550_onkey_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[6]: *** [/builds/linux/scripts/Makefile.build:287:
+> drivers/input/misc/pf1550-onkey.o] Error 1
+> 
+> 
+> ## Source
+> * Kernel version: 6.18.0-rc2-next-20251027
+> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git describe: next-20251027
+> * Git commit: 8fec172c82c2b5f6f8e47ab837c1dc91ee3d1b87
+> * Architectures: S390
+> * Toolchains: gcc-14
+> * Kconfigs: allyesconfig
+> 
+> ## Build
+> * Test log:  https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/build.log
+> * Test details:
+> https://regressions.linaro.org/lkft/linux-next-master/next-20251027/log-parser-build-kernel/gcc-compiler-_drivers_input_misc_pf-onkey_c_error_pf_onkey_resume_defined_but_not_used/
+> * Build plan: https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/34dKrowtK5wNPnem1T5LSEjjq5o/config
+> 
+> --
+> Linaro LKFT
