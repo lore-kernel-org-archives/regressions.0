@@ -1,165 +1,73 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0041728C5D9;
-	Thu, 30 Oct 2025 12:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB742BE05B
+	for <regressions@lists.linux.dev>; Thu, 30 Oct 2025 15:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761825638; cv=none; b=Lt3lBXd8BXda7I76V9JCeb8zOmT1HGmqtR5f0TmYNPYP9iSVhBvOOzmfxghRIMMg7l1mgjyQga+24RRdntPmSJugdWJ9/90UsyiJxi65ynO0i7Yk0tUMlqNB1NA/X9Vw2jBT1QjJA82kAjW8C4hmCdGsM2yrpSN0zxVycRYQW2E=
+	t=1761837193; cv=none; b=Z7UCsZRgO38iCmCEUJPPxIkOX8bwMnhInm5Md+zSt8mCkJXJ3A1JWUi5Ecng7esD8U9vw+vdfAB1opbglw0S1tVNXGY5ILBos3rKi/ek2X9oqNqUQfYye5HPql/4Hnhn6R4lmJLmc00/YJ09MVgpnZfDEnOWdl4iXrUtAyhheWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761825638; c=relaxed/simple;
-	bh=lxKECbHONxEfh+uepSlivY+rDgIROzH5SW0S9XXEFKY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QU71N6sDvK9mZKHfxR+1vBk9ZUTeTV83s8irZd7Liq37GEioU13NGNpavJDxR5Ur1yVTDQT7Sis6RwOksiN7iqCZu6p5xnSnRtRC7tY3G0PhavMaPDP2Ql5eg827OWqZwq4TaSo6JHb52HzRIFR+7AMJDuZ+iFvXaWKOeyYHu+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=QBtxjQNr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uN/JOSbo; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
+	s=arc-20240116; t=1761837193; c=relaxed/simple;
+	bh=82jIie6nLSdGOYUxxxlQ4eHV+KfqAhiGHJCJGher8pI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=kRCknoLPejYD2IGKyhbG4V4KFOmb1mZW+6dUW7LW8oMqUkUoOWUPkmnD996s4wnoXrGLP7ubXC4s70L2GpKeEri87s99hJ4YHJghNrudBhT0ZzsrEe0TrwcwEHpS9Dzx9ncKhxF4FwKETftl6TP37FI1z0F/hWXmhaYWGlRY26s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=xBP4//6W; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="QBtxjQNr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uN/JOSbo"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id E81087A00EC;
-	Thu, 30 Oct 2025 08:00:34 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Thu, 30 Oct 2025 08:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1761825634; x=1761912034; bh=BqX5Vn+FAN
-	lCndnwOlMnd00xB8BKUwdZpfARoXmVKUE=; b=QBtxjQNrDy807pw1Fh2iWrtr19
-	w5zbArR6JNvNwzJ9nTCMujdg+flh96D3eDafenW/bdG1LnfC2fvncYwpNrTDCPLg
-	Yh1FDOO/ZJuLkAAED5kJ5+aAkQqZ5QFI4V64QZflR8hql9595Lx0+OAzf43aeBjo
-	8CAxdq0ks1Xi0K8THqrmmoDsYh/8hSEcxOuzl79ybSDfWUsiUS7QdM7u8Wc/zJDE
-	q/515ZHxKkOpHCY4CA4FvJmsdsdtpFqO0jaWjYXyBIROyJwvmPURDqYLSoL5a2CQ
-	qF17wPxvDgnuZCkcYFf4llqOvC80P2j2FhM2HZ0BdQiLj2t+ZG+NYH6VSzOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1761825634; x=1761912034; bh=BqX5Vn+FANlCndnwOlMnd00xB8BKUwdZpfA
-	RoXmVKUE=; b=uN/JOSboyappqibGCFuhO263oJxVzJElAMM8sy41DjOZU0PJlHi
-	ObNPRLBFno+gL1V2h5MwDanjx/6Wbp96O/9/v21zjcJ6AhzG1O7DAiJwGx/PpFtW
-	V4Lq8fZoLAmIG1JlveqMsBQ7+h+YZ1+elRJtYExPH06W17Pl+G4s9RMkwSPFm7T9
-	hgmb5Ma6IJJIe9y/jh/Y4yOGX0v8HqpQ0ljmnYt4XQjhpLGydSDQFDCJVQwhunOu
-	sI1Kk3A5ikq41ff3IoBzf4PALLtDkwsnf6i7vPby5OuO9G/BhsecnRp5RJuFlGU9
-	FA0uE5GCVgyOlRKhwvPh+xBoX+r9q1lElKg==
-X-ME-Sender: <xms:YlMDaa7SKXs8wsI2RNFh1v9dcowi74Gg9lZ9rCxouHcrd-H7DhahCQ>
-    <xme:YlMDae0mr6-8_7-5KI-IikuyynYGMkNbIiRr56n_I9ozPdx2OgkYR-sOVlHhNZ2vP
-    Hd3UOEyZJOTxW47_rQOOYmehef8yvAjWk4Hnz_dbDD2tf4-2sispA>
-X-ME-Received: <xmr:YlMDaYf3EKEXfMyyblERUAT6yf2Nvcd9BjLjd3baEInG0Lr_hNTH2rn1zyPFAWJWPAY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduieeiheeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefujghffffkgggtsehgtderredttdejnecuhfhrohhmpeetlhihshhsrgcu
-    tfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucggtffrrghtthgvrhhnpeefhfejhe
-    fgledtleefudduvefggfduuedugfdvjedvieekhfejffdtieehgfeiveenucffohhmrghi
-    nhepmhgrrhgtrdhinhhfohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehhihesrghlhihsshgrrdhishdpnhgspghrtghpthhtohepiedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtsh
-    drlhhinhhugidruggvvhdprhgtphhtthhopehvihhrthhurghlihiirghtihhonheslhhi
-    shhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehjrghsohifrghnghesrhgvughhrg
-    htrdgtohhmpdhrtghpthhtohepmhhsthesrhgvughhrghtrdgtohhmpdhrtghpthhtohep
-    phgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:YlMDacey3hMvra4dqrhxNpFhfjRIpwbOVQLuzrmwPtOqhHRBeZdMRg>
-    <xmx:YlMDabzEKNeFOJTba8B1nQ87_Oewy3pfkoJxLQf6UomLxwBjzyN0BQ>
-    <xmx:YlMDaT8aHDG-KZtBmWY4C-PZnXxAYisWxa60geJRjt8CJsAJ11kBbQ>
-    <xmx:YlMDaTibVETKl4fVbPoMH9O677T0qizKPEMwSShyUlFrmnIqoWKhmw>
-    <xmx:YlMDaQw9Mu4-9zE867NkVWdDFkvIEarY4IE4Y-5gmBKuYQAqbpcBShmm>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 Oct 2025 08:00:34 -0400 (EDT)
-Received: by mbp.qyliss.net (Postfix, from userid 1000)
-	id 04B6F6205407; Thu, 30 Oct 2025 12:48:51 +0100 (CET)
-From: Alyssa Ross <hi@alyssa.is>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- netdev@vger.kernel.org, virtualization@lists.linux.dev,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] virtio_net CSUM broken with Cloud
- Hypervisor
-In-Reply-To: <CACGkMEuTnLX7EPuOLb2UhrZT2oH2AcXPQrvq-uw2ZydYV_FAgQ@mail.gmail.com>
-References: <87y0ota32b.fsf@alyssa.is>
- <CACGkMEuTnLX7EPuOLb2UhrZT2oH2AcXPQrvq-uw2ZydYV_FAgQ@mail.gmail.com>
-Date: Thu, 30 Oct 2025 12:48:43 +0100
-Message-ID: <87v7jwwqxw.fsf@alyssa.is>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="xBP4//6W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=82jIie6nLSdGOYUxxxlQ4eHV+KfqAhiGHJCJGher8pI=; t=1761837191;
+	x=1762269191; b=xBP4//6WvlSPYKGnhzGJukPdMHI6FjyGzXqt1VfEbYEGdYVJjV1XycQ+XtQ9s
+	a07sndoUfz3DJ9lgg1bT26dRkLPgQP/7kauKdicAN2hSAwY1ezozpUzTeJuKc1xOzLFfRo1+DI5A2
+	WNTNBTpxQpaPfoqQUgyqLCy7jGh4f/QcgZNHdnNUSEZTHmlToZy6MMXYhwBpBguy3UssYo6fDCgDo
+	N61caDNlYEWsaaOx6a3I8PdavdoSCHbjjVljQqyTektka3usjB73k+kUWm6Wn6d9GtIfQp4m33Ss7
+	8yDkC7JQK+y3LXZmOCUlPp2o5A4SuoWxpdtNXNjqZuWhZK73AA==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vEUKm-001kYf-0i;
+	Thu, 30 Oct 2025 16:13:04 +0100
+Message-ID: <6bf2a1e7-9f07-4f8d-95c3-ab14a182b8ed@leemhuis.info>
+Date: Thu, 30 Oct 2025 16:13:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1761837191;d512566b;
+X-HE-SMSGID: 1vEUKm-001kYf-0i
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Jason Wang <jasowang@redhat.com> writes:
 
-> On Thu, Oct 30, 2025 at 4:03=E2=80=AFAM Alyssa Ross <hi@alyssa.is> wrote:
->>
->> Since 56a06bd40fab ("virtio_net: enable gso over UDP tunnel support."),
->> networking in Cloud Hypervisor is no longer working for me.
->>
->> I've narrowed down the problem to here:
->>
->> > @@ -2555,14 +2567,21 @@ static void virtnet_receive_done(struct virtne=
-t_info *vi, struct receive_queue *
->> >       if (dev->features & NETIF_F_RXHASH && vi->has_rss_hash_report)
->> >               virtio_skb_set_hash(&hdr->hash_v1_hdr, skb);
->> >
->> > -     if (flags & VIRTIO_NET_HDR_F_DATA_VALID)
->> > -             skb->ip_summed =3D CHECKSUM_UNNECESSARY;
->> > +     hdr->hdr.flags =3D flags;
->>
->> It looks like this was added because virtio_net_handle_csum_offload()
->> looks at the flags from the hdr it's given, rather than having it passed
->> separately, but it appears something later on relies on the previous
->> value of hdr->hdr.flags.
->>
->> From my tracing, hdr->hdr.flags is set to either 0 or
->> VIRTIO_NET_HDR_F_NEEDS_CSUM before this assignment, and flags is always
->> 0, so in some cases VIRTIO_NET_HDR_F_NEEDS_CSUM now ends up being unset.
->
-> Are you using XDP, if not there should be no change.
->
->>
->> > +     if (virtio_net_handle_csum_offload(skb, &hdr->hdr, vi->rx_tnl_cs=
-um)) {
->> > +             net_warn_ratelimited("%s: bad csum: flags: %x, gso_type:=
- %x rx_tnl_csum %d\n",
->> > +                                  dev->name, hdr->hdr.flags,
->> > +                                  hdr->hdr.gso_type, vi->rx_tnl_csum);
->> > +             goto frame_err;
->> > +     }
->>
->> If I change it to save the previous value of hdr->hdr.flags, and restore
->> it again here, everything works again.
->>
->> Disabling offload_csum in Cloud Hypervisor is a usable workaround,
->> because then hdr->hdr.flags is always 0 to begin with anyway.
->>
->> #regzbot introduced: 56a06bd40fab
->
-> Is mergeable rx buffer enabled, if not, I wonder if this can be fixed by:
->
-> https://marc.info/?l=3Dlinux-netdev&m=3D176170721926346&w=3D2
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-That patch does fix it, thank you!
+#regzbot report:
+https://lore.kernel.org/lkml/20251013210116.GA864145@bhelgaas/
+#rebzbot fix: 469276c06aff
 
-#regzbot fix: virtio-net: fix incorrect flags recording in big mode
+#regzbot report:
+https://lore.kernel.org/lkml/20251013212801.GA865570@bhelgaas/
+#regzbot fix: a1978b692a39
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQRV/neXydHjZma5XLJbRZGEIw/wogUCaQNQnAAKCRBbRZGEIw/w
-ohOQAQDLxZuMcKYN0k3GnM3RqtAZlaIoeA/1DoR+5ysX5/GVOwD9Hu8Nskv7B5H8
-NgvMbITEXcfnNVlo/+iQCswKTUUMYwA=
-=WiqU
------END PGP SIGNATURE-----
---=-=-=--
+#regzbot report:
+https://lore.kernel.org/lkml/20251025050812.421905-1-safinaskar@gmail.com/
+#regzbot fix: 35e4a69b2003
