@@ -1,143 +1,135 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED8B2E0B59;
-	Wed, 29 Oct 2025 20:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EA6302163
+	for <regressions@lists.linux.dev>; Thu, 30 Oct 2025 02:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761768209; cv=none; b=TtYbDx9ukQSSPZF0FhxTwww//HOcINxyqK8Ofd1OqARN4xYmL1rHXmgKnjoQX291smtNukZvYuFh82M0mREBMKGdEwAndhAKgu3uReRJFmzMnUzjjjnJNu+kj6l5r76zreKVT+E3TqDLUgK7e1ynNOK6z1He7mLhNQM71/3INdU=
+	t=1761791313; cv=none; b=j2BzPjq4HBW0Ki7xUqWkd3Hs05pHT/Z6u08gF9dYPDv80nKPbmtvPkl1RdhGJubnia/464Q6XhHiqO/T84hbJLjUKo+fz7Q7MV9zRVyjF2J3tkzIpKLbRbtN7Yyu7SVSgZiF4O6s/lpS8wLq6IkZOcQ5GDG4LgoZAOzINl7zvjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761768209; c=relaxed/simple;
-	bh=uZIKTMIh75V51hl503/yr6yTZk9EazXLa2fkJcdtBJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DcN9cngMwp5q7AJOHdGSGTq7CX6kOBj2sUKJI42HGi5B6JuwN7gNO40LobopGiB2GEmNr2OI2GeAG32MbzpuzRTf9oUFs+XqnvKTqI0wXgXtAUokmMfvWJ05l2mGOrNu1Vc6jAHncxS8uxHL0VP6kaq4vrIXtsIWY461eG/CeTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=bB92AFHl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hthmjPUC; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
+	s=arc-20240116; t=1761791313; c=relaxed/simple;
+	bh=ueYr4fDOrACBm0KAvR6isY3b4Yz0LjNUirZu7x5KA9c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r42PIbU7ldRa0xsT81AIg70AgZXKEHnLCTX14uAAUdew3uJW8BM8LFhto8GZFGK8LQNrSqIEjdXbOxdPruXIqfHmote+mxqjK/Qmuyj3PhXpJvQTgjET+zlb4DFlQAx5mpGzOFqdMylRkT6eMpb7KB+MjZKiWsHRItY+sYYJ2eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LPGsfiVg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="bB92AFHl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hthmjPUC"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 382B3140010C;
-	Wed, 29 Oct 2025 16:03:26 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 29 Oct 2025 16:03:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1761768206; x=1761854606; bh=tTlPC94CkpdB6o7aptJzF5shiceT6Kf4
-	3SfDYb87Dwg=; b=bB92AFHlUK5e1rSvSqcv/gKGV2rQWM2J6GE4zrO7O8fDZta7
-	TxMlHk5lcesxlmCKtxylaxWlOcPnlBGQLgoDo5ato71X5Sr3oj97N/19E/y3sDsH
-	FCCBT310veFANt7DqTM1sbGmxekaoU4ARiqMitleJKMlk4o7RnVjeR8clDnJo6YB
-	VQbXEFHWgtTZ1I9q09BP5eUGx06tb5dYuhm5av+ta5aCZDbdgWD+YpeVq5M3E9Qf
-	RvsPG1RZmGCWzKyJGSda6iBQWZu+14LztdxR0U0lK6urUnXm6YC5u0xTOFxkU//W
-	Vs3wQmHVdMzYkA23w/P/kZppxHWTUxMjC2r+nA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761768206; x=
-	1761854606; bh=tTlPC94CkpdB6o7aptJzF5shiceT6Kf43SfDYb87Dwg=; b=h
-	thmjPUCINnk5W/Sqc38yPLrLNJFsG0s4FjOKwsn1jNU+RmwhICNWrEnowj1iaTFD
-	TYQyCLgjnpYI01BmnmsZGpvaCnHxvL7E6mDjgXcZ8BimTj/2WwW/JoBxqm572uBl
-	3tbwsYzC6//sckD+RKuEzVR6DfaR5otdSA5IJDJh7RCqtb05sjQim9nKDyqTtly9
-	FTZljyUUsDiHmDqTna/hm9pbHcwjbG+m9fUWMSc31yOz7YxVgk/raxZIH/Gv6u8n
-	zPULBVKhUVh6w9I2o7DUWzFD5sfZGGmRB2J5A2mD+IQyW59ABcO0e/O8ynDK8wZY
-	MI+UtOHKW+ZI5dIl4zQQw==
-X-ME-Sender: <xms:DXMCaT2Dg8DswDMiBvZC9MRcIUagK5Dj7Pmi155I4_BvxpGwpCxHzA>
-    <xme:DXMCadDNU5FAijtaw-WfQB535tD7lLusJU4SwSKr_CnMaXygxlzK6FcSIvcsfvyqW
-    8ivszofOyPEtAZuEvkScDflWloTsmWmbvccPjBV13-jsUc55JE5>
-X-ME-Received: <xmr:DXMCaS74X1WUUvJnER0oCrsdbMfrsQDhXeQ0cWIKcD-E8OeIIbg-cdWV-PnUVXyEFQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduieegieegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhephffvvefufffkgggtsehgtderredttddtnecuhfhrohhmpeetlhihshhsrgcutfho
-    shhsuceohhhisegrlhihshhsrgdrihhsqeenucggtffrrghtthgvrhhnpeevvdeuheeihe
-    ejvdelgfekheefkeeiveefgeeljefgteelffehfefgvefhleekhfenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehhihesrghlhihsshgrrdhish
-    dpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgv
-    ghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehvih
-    hrthhurghlihiirghtihhonheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthho
-    pehjrghsohifrghnghesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhhsthesrhgvug
-    hhrghtrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:DXMCaeIDDEApw9FIo_vc6aY3-FPUT4bccolILXVk7_TxOVN6N0vMTg>
-    <xmx:DXMCaTuPNoxpit_-w0urIZO4xvlkIWaJJJWrewjO3JRPSk5JFbyEUg>
-    <xmx:DXMCaVJs_Xq6_twvNzBGf2A8u_aeEPjpjNsgQUfDwiUingtUHXHXgQ>
-    <xmx:DXMCaU-fhUxahQPSFErQz6HefjiOpECSKK3eZawpFegejnxQFa8B-Q>
-    <xmx:DnMCaQsziutttIqtkgotQXFw_emIEgK8P8t-3hBdcdaJHSVMdrhOsH-3>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 29 Oct 2025 16:03:25 -0400 (EDT)
-Received: by fw12.qyliss.net (Postfix, from userid 1000)
-	id D1FE153B67E; Wed, 29 Oct 2025 21:03:12 +0100 (CET)
-From: Alyssa Ross <hi@alyssa.is>
-To: Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>
-Cc: netdev@vger.kernel.org, virtualization@lists.linux.dev,
- regressions@lists.linux.dev
-Subject: [REGRESSION][BISECTED] virtio_net CSUM broken with Cloud Hypervisor
-Date: Wed, 29 Oct 2025 21:03:08 +0100
-Message-ID: <87y0ota32b.fsf@alyssa.is>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LPGsfiVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761791304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eEN+zeuhvan/3gHVWq0QoHaYVhmGbEh/guxFqXcIed0=;
+	b=LPGsfiVgldf3VkRiNZAS6Km/1pCoG9/U3McG1Gze+Fzq5LNxTak9Qp1rBe90SZ7zIrtjDf
+	iC1WBxxpfUvon3evnqUfFV6JQ0FeTL57q6YAv65q+3r0IVtwSBrj22Sbm3mDLsopcXjDjN
+	f2eXkxUO74q15r8K7jkiuotiooaycuc=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-562-D3T_Tn6sPs6A_OGybgxstg-1; Wed, 29 Oct 2025 22:28:14 -0400
+X-MC-Unique: D3T_Tn6sPs6A_OGybgxstg-1
+X-Mimecast-MFC-AGG-ID: D3T_Tn6sPs6A_OGybgxstg_1761791290
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-32edda89a37so450444a91.1
+        for <regressions@lists.linux.dev>; Wed, 29 Oct 2025 19:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761791290; x=1762396090;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eEN+zeuhvan/3gHVWq0QoHaYVhmGbEh/guxFqXcIed0=;
+        b=EiK68H40hpHZ6FF2RKM4y4Q7rNMAgJ2OuepoaFN4xEu+rFXlFWkAs4vPEgppihCghu
+         hFPVDEgiVrjX9aTViQ4b049doidWgNQZ8gdKY+XYY9NJ8S/7LLOkpBMHkLoF9pX6WQrh
+         8SgQL4GNRxllJ5wEI+7lmHQPXmOg1+YM3pM6ldQmpFINkBOJXK4pto8girmWMoGTdfFd
+         NH0VNx0Fgm2Ur6lqZhePfP21nvW04apgEFJyMNSK8jE0Xf31BViRGCgYRv9dBZ2t5d2C
+         99juYOFVujsYEXW2OntxXBR5Bba97aQv1WoiwRMTtvjTXqXl36CDABRSWLqFk+0evLOE
+         oXGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWte9olKbuuZ9Cn4Lz3oJnibSVbygZIWRCQCuETVLktdLPleJVbwcfDK6DhqZxp4pTPenGF9e60UrDrFw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzW9UB7g1ONY9zAmyzi/kPAd29qiQI/JFFN2kqQztHaxwOuaEs6
+	yqN7hiJ2yuzLJg+wugXPhlZyn1cfiSFXaCx5pv+xM/SJrpOZMpX0lajvllM1eES+gHYlsQh3z0N
+	tQRSVYzU9pGO0NiyK03RLSS5RMSkZwZ9KsOZ6BigVTnt7TlNOLDQ3EZsQflGprKjYM3KzxbZ2tw
+	vj5FH1iRpZXktBkXe0egpZj5QBhxp28b6lSthIQwk=
+X-Gm-Gg: ASbGncuuzG57XHcpOVviypD/kyCQzRpSeJmuIUI+3T7itbJ8AEl98+7HiCfh7hRMzng
+	z9RKVwf82h0MW9AZfUs22jdSKlYqL/cTYx5vaedGlZCKIfPpqpOYo/SdDrjOJql/hx0xm7fXamz
+	3oFcaqIoBDFanYBp1v150z0lPzVF0AczPeKDCcUezAq23+K8tIFQXs
+X-Received: by 2002:a17:90b:52c5:b0:33e:2d0f:4792 with SMTP id 98e67ed59e1d1-3403a291b3cmr6059394a91.28.1761791289751;
+        Wed, 29 Oct 2025 19:28:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHEWi/hchP75vr8TIP5GW4NVbW1uVRS0LdgxFaSgFw7RPLbuq2PN5WoSwups/PCd+nOV9QSlX3uJ5UVD6ygrA=
+X-Received: by 2002:a17:90b:52c5:b0:33e:2d0f:4792 with SMTP id
+ 98e67ed59e1d1-3403a291b3cmr6059377a91.28.1761791289293; Wed, 29 Oct 2025
+ 19:28:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
+References: <87y0ota32b.fsf@alyssa.is>
+In-Reply-To: <87y0ota32b.fsf@alyssa.is>
+From: Jason Wang <jasowang@redhat.com>
+Date: Thu, 30 Oct 2025 10:27:55 +0800
+X-Gm-Features: AWmQ_bmHhVnu561Asm5YRG2jN4tA7sSFzSe2trT2iThrq4EmrmxrrfR7rVVshjM
+Message-ID: <CACGkMEuTnLX7EPuOLb2UhrZT2oH2AcXPQrvq-uw2ZydYV_FAgQ@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] virtio_net CSUM broken with Cloud Hypervisor
+To: Alyssa Ross <hi@alyssa.is>
+Cc: Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org, 
+	virtualization@lists.linux.dev, regressions@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: WtlDYDu4n82m8M1iChiNBZ2tpBZYzttTUjVQ0GWy33Q_1761791290
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Since 56a06bd40fab ("virtio_net: enable gso over UDP tunnel support."),
-networking in Cloud Hypervisor is no longer working for me.
+On Thu, Oct 30, 2025 at 4:03=E2=80=AFAM Alyssa Ross <hi@alyssa.is> wrote:
+>
+> Since 56a06bd40fab ("virtio_net: enable gso over UDP tunnel support."),
+> networking in Cloud Hypervisor is no longer working for me.
+>
+> I've narrowed down the problem to here:
+>
+> > @@ -2555,14 +2567,21 @@ static void virtnet_receive_done(struct virtnet=
+_info *vi, struct receive_queue *
+> >       if (dev->features & NETIF_F_RXHASH && vi->has_rss_hash_report)
+> >               virtio_skb_set_hash(&hdr->hash_v1_hdr, skb);
+> >
+> > -     if (flags & VIRTIO_NET_HDR_F_DATA_VALID)
+> > -             skb->ip_summed =3D CHECKSUM_UNNECESSARY;
+> > +     hdr->hdr.flags =3D flags;
+>
+> It looks like this was added because virtio_net_handle_csum_offload()
+> looks at the flags from the hdr it's given, rather than having it passed
+> separately, but it appears something later on relies on the previous
+> value of hdr->hdr.flags.
+>
+> From my tracing, hdr->hdr.flags is set to either 0 or
+> VIRTIO_NET_HDR_F_NEEDS_CSUM before this assignment, and flags is always
+> 0, so in some cases VIRTIO_NET_HDR_F_NEEDS_CSUM now ends up being unset.
 
-I've narrowed down the problem to here:
+Are you using XDP, if not there should be no change.
 
-> @@ -2555,14 +2567,21 @@ static void virtnet_receive_done(struct virtnet_i=
-nfo *vi, struct receive_queue *
->  	if (dev->features & NETIF_F_RXHASH && vi->has_rss_hash_report)
->  		virtio_skb_set_hash(&hdr->hash_v1_hdr, skb);
->=20=20
-> -	if (flags & VIRTIO_NET_HDR_F_DATA_VALID)
-> -		skb->ip_summed =3D CHECKSUM_UNNECESSARY;
-> +	hdr->hdr.flags =3D flags;
+>
+> > +     if (virtio_net_handle_csum_offload(skb, &hdr->hdr, vi->rx_tnl_csu=
+m)) {
+> > +             net_warn_ratelimited("%s: bad csum: flags: %x, gso_type: =
+%x rx_tnl_csum %d\n",
+> > +                                  dev->name, hdr->hdr.flags,
+> > +                                  hdr->hdr.gso_type, vi->rx_tnl_csum);
+> > +             goto frame_err;
+> > +     }
+>
+> If I change it to save the previous value of hdr->hdr.flags, and restore
+> it again here, everything works again.
+>
+> Disabling offload_csum in Cloud Hypervisor is a usable workaround,
+> because then hdr->hdr.flags is always 0 to begin with anyway.
+>
+> #regzbot introduced: 56a06bd40fab
 
-It looks like this was added because virtio_net_handle_csum_offload()
-looks at the flags from the hdr it's given, rather than having it passed
-separately, but it appears something later on relies on the previous
-value of hdr->hdr.flags.
+Is mergeable rx buffer enabled, if not, I wonder if this can be fixed by:
 
-From=20my tracing, hdr->hdr.flags is set to either 0 or
-VIRTIO_NET_HDR_F_NEEDS_CSUM before this assignment, and flags is always
-0, so in some cases VIRTIO_NET_HDR_F_NEEDS_CSUM now ends up being unset.
+https://marc.info/?l=3Dlinux-netdev&m=3D176170721926346&w=3D2
 
-> +	if (virtio_net_handle_csum_offload(skb, &hdr->hdr, vi->rx_tnl_csum)) {
-> +		net_warn_ratelimited("%s: bad csum: flags: %x, gso_type: %x rx_tnl_csu=
-m %d\n",
-> +				     dev->name, hdr->hdr.flags,
-> +				     hdr->hdr.gso_type, vi->rx_tnl_csum);
-> +		goto frame_err;
-> +	}
+Thanks
 
-If I change it to save the previous value of hdr->hdr.flags, and restore
-it again here, everything works again.
-
-Disabling offload_csum in Cloud Hypervisor is a usable workaround,
-because then hdr->hdr.flags is always 0 to begin with anyway.
-
-#regzbot introduced: 56a06bd40fab
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQQGoGac7QfI+H5ZtFCZddwkt31pFQUCaQJy/AAKCRCZddwkt31p
-FeMVAQCCcV1aIVBGzBul9zvWkrbJiqS36VHDAoAzy0bgDvXPHAEAwkKq/FTuMNe4
-SIO7tqTHMwVVA8q3xx8FzeYI0YqqYwc=
-=OdHf
------END PGP SIGNATURE-----
---=-=-=--
