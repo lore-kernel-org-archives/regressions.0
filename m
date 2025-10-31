@@ -1,185 +1,240 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95F1346FB8
-	for <regressions@lists.linux.dev>; Fri, 31 Oct 2025 13:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3939A2F3C1D;
+	Fri, 31 Oct 2025 16:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761918463; cv=none; b=hstOTz+H6rFNheg4Z4dgUtj9YGuVk+m02MAwuPjEllFxnbY8eenKcqFZ2oE56TSXzhvKx/zxWfsQzbgMgl7pLqPv7AzRnrDKtqfRKtvASrkIRGTThMz/bpv2/AbpfQZAYHo9VQPoYZtnSzHVSpc7s8mdSKLS5Go20sjkJo7F6Fo=
+	t=1761927205; cv=none; b=dxZQBakdSj2+0YyL9JWO1wf/3AG4pJb2fx6fpNNDvWPyaiItio4Z9eH//fnlvg8lxdr7oKhAFMMJwDDrr5MfqPiBP+7Ow5dL2EbYyPc6zc2gm/nhQY6eZAIkPjpdAWubp3v3i01ui4D39SNlYL9U3+3vUOjJKcNTkyA65Et7nT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761918463; c=relaxed/simple;
-	bh=RGf9cfCIhxuq/vaRuNGbk2qeO2YTTDICUdifwVGN2Ps=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pmYgvuYw8BuuuEuI/1HbQPeuGA6TbiXbmqjPG5NiAAcvqDYMMJ85eGT/pNPd7UpjCaGn5XSfCynpr6u2IPPsab/3EU1IojrkWD9iWsfgWqWOAFESyc1ONY5E0RHsYm/QD71GmlZGWmSsfN9B5NIicc818elXd5/1h4UFntYGvpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ShO+uEFY; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1761927205; c=relaxed/simple;
+	bh=/DyHnjFO9lHU2x0F3J7nmIF9vc/TGc6bH8HE4QvBco0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PsjAdvCCLV9Zi/E/MTsCOVpEDCf+i7GUl5/5U9Urx47aDdTMZY7bzoQP2i/tZ6KwCHdngpirJgzlZ8j/inP9veRCygmVBKKhvKh3ty6vwrsGxNwD15dUTJ+TDGIQlTmisVwpghmaz+ZQN0PcATmDKdA5bVqijBgBjAb5zqaudTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzEgIL0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ShO+uEFY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1761918441; x=1762523241; i=spasswolf@web.de;
-	bh=eEf9FtMftpf7rRdhDbyeVWuCRJ8OhLV37hbp0uqbBD4=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ShO+uEFYOmYlOgvsAsuB5M2OswcdOTiSek/gSQkissa60zfCH5rz0Yb0AFxwWYQx
-	 zbT8gxIpizohDkhQGHJOlm2sf2O5t7h5mmNeEBfF8QBZUHXEdcxnJqU6oSpNNBZlW
-	 H0GXf6y9diutdl7UitbJDgmwXtAxjiiHeB9npZi9YxePYiCoHLjJUPwLpNB9PEWGf
-	 Fuy/KYO4XyetNI2Wo2EPlakQjNpwsUwLoSMzpeQMmb98bYMnxtWJSaP4CPATXzpmQ
-	 D5JhTg9sOisvEOzgWoAo2CXY9tnglwLJjkXx2PHo5GN+7dhUXdrkqJrqS95xmvA8Q
-	 fJh0lUdppUaJpZBcgA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMpCg-1vVOO52iRQ-00Tpm6; Fri, 31
- Oct 2025 14:47:21 +0100
-Message-ID: <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
-Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
-From: Bert Karwatzki <spasswolf@web.de>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Mario
- Limonciello <superm1@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
-	 <rafael.j.wysocki@intel.com>, spasswolf@web.de
-Date: Fri, 31 Oct 2025 14:47:20 +0100
-In-Reply-To: <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
-References: <20251006120944.7880-1-spasswolf@web.de>
-					 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-					 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
-					 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
-					 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
-		 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
-	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1+deb13u1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzEgIL0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84075C4CEE7;
+	Fri, 31 Oct 2025 16:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761927204;
+	bh=/DyHnjFO9lHU2x0F3J7nmIF9vc/TGc6bH8HE4QvBco0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IzEgIL0DtTQ3Ie8ZlKAIGVXVN/9B9IYEGSmtVewRUEC3Gfgn9ZW8NWbAVFUELIJua
+	 rS5zlQCPYcZO+/D0+ReyENoV3+dBMPkyjr7sl/BMDVoh8pSkDRgwk+HQFFbVuIuTe0
+	 iFMn5qDO9utK2QEbLfj7lqf5UFLc2QMtqx0vWTAJYEUQK7rvF1ZzbpBaOz3nu3Mi9U
+	 POLMW5XbhTz5aZIIbH09LGh5FDXHXj2ta+p5nTZksWb8q0cJvvC3hRQl0JfmO2k3B1
+	 plYk6Pfeh8IEFj+vTOhoUKJXXj8OUKW64bVUrtvwuV3zUihYYWQWyaRUfxoYjkjCOf
+	 V8XF0n4qm/Q6w==
+Date: Fri, 31 Oct 2025 11:13:23 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linnaea Lavia <linnaea-von-lavia@live.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
+Message-ID: <20251031161323.GA1688975@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EjRqDMd/Z70FrDVz13IfKacOJSLO+KqbIRk3DhAnL3MhjrI/TPe
- hgag+npBPbfOJsus7sL7uxfamxeJGX78r2y0RV08TjDwY9RbUMx0eV0cLT+HviCHf5bX5ld
- ZarmhKmP7UOEhrN9vI44sDiwAZiDOWNNLitwP/Gm2pGXDFL0hl9GplQdCS8BUyXTCbI2Fop
- MU5nQv5zd+LR53ljbbAJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pzeKkoOKzOQ=;+MX7KvkhiMrJ7amnBNF6vIVRSnJ
- 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
- jDYFg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM4PR05MB1027077E1F4CD8B1A7EDADF1DC7F8A@DM4PR05MB10270.namprd05.prod.outlook.com>
 
-Upon closer inspection I noticed that the PCIe bandwitdth has been reduced=
-:
+On Fri, Oct 31, 2025 at 08:26:42PM +0800, Linnaea Lavia wrote:
+> On 10/31/2025 4:50 PM, Neil Armstrong wrote:
+> > On 10/31/25 06:34, Linnaea Lavia wrote:
+> > > On 10/30/2025 1:15 AM, Bjorn Helgaas wrote:
+> > > > On Wed, Oct 29, 2025 at 06:50:46PM +0800, Linnaea Lavia wrote:
+> > > > > On 10/29/2025 6:16 AM, Bjorn Helgaas wrote:
+> > > > 
+> > > > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > > > index 214ed060ca1b..9cd12924b5cb 100644
+> > > > > > --- a/drivers/pci/quirks.c
+> > > > > > +++ b/drivers/pci/quirks.c
+> > > > > > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> > > > > >     * disable both L0s and L1 for now to be safe.
+> > > > > >     */
+> > > > > >    DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> > > > > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
+> > > > > >    /*
+> > > > > >     * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+> > > > > 
+> > > > > I have applied the patch on 6.18-rc3 but it's still trying to enable ASPM for some reasons.
+> > > > 
+> > > > Sorry, my fault, I should have made that fixup run earlier, so the
+> > > > patch should be this instead:
+> > > > 
+> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > index 214ed060ca1b..4fc04015ca0c 100644
+> > > > --- a/drivers/pci/quirks.c
+> > > > +++ b/drivers/pci/quirks.c
+> > > > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> > > >    * disable both L0s and L1 for now to be safe.
+> > > >    */
+> > > >   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> > > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
+> > > 
+> > > L1 still got enabled
 
->=20
-> [76621.870884] [    T140] pcieport 0000:01:00.0: Unable to change power =
-state from D3cold to D0, device inaccessible
-> [76621.870977] [    T140] pcieport 0000:02:00.0: Unable to change power =
-state from D3cold to D0, device inaccessible
-> [76621.876006] [    T140] pci_bus 0000:03: busn_res: [bus 03] is release=
-d
-> [76621.878237] [    T140] pci_bus 0000:02: busn_res: [bus 02-03] is rele=
-ased
-> [76621.879867] [    T140] pcieport 0000:00:01.1: pciehp: Slot(0): Card p=
-resent
-> [76621.879873] [    T140] pcieport 0000:00:01.1: pciehp: Slot(0): Link U=
-p
-> [76622.006565] [    T140] pci 0000:01:00.0: [1002:1478] type 01 class 0x=
-060400 PCIe Switch Upstream Port
-> [76622.006606] [    T140] pci 0000:01:00.0: BAR 0 [mem 0xfcc00000-0xfcc0=
-3fff]
-> [76622.006616] [    T140] pci 0000:01:00.0: PCI bridge to [bus 02-03]
-> [76622.006630] [    T140] pci 0000:01:00.0:   bridge window [mem 0xfca00=
-000-0xfcbfffff]
-> [76622.006644] [    T140] pci 0000:01:00.0:   bridge window [mem 0xfc000=
-00000-0xfe0fffffff 64bit pref]
-> [76622.006772] [    T140] pci 0000:01:00.0: PME# supported from D0 D3hot=
- D3cold
+Is that based on the output below?
 
-The PCIe band with seems to be have been reduce to PCIe 1.0 (2.5GT/s):
+  [    5.445853] [     T48] pci 0000:00:00.0: Disabling ASPM L0s/L1
+  [    5.560448] [     T48] pci 0000:01:00.0: ASPM: default states L1
 
-> [76622.006874] [    T140] pci 0000:01:00.0: 16.000 Gb/s available PCIe b=
-andwidth, limited by 2.5 GT/s PCIe x8 link at 0000:00:01.1 (capable of 126=
-.024 Gb/s with
-> 16.0 GT/s PCIe x8 link)
->=20
-> Bert Karwatzki
+If so, this doesn't necessarily mean L1 was enabled.  It means the
+quirk marked the 00:00.0 Root Port so we shouldn't ever enable L0s or
+L1, and when we enumerated 01:00.0, we set its default ASPM state to
+L1.
 
-This is the same message from system startup (here it's PCIe 3.0 (8.0GT/s)=
-, which is the PCIe version
-of the CPU (AMD Ryzen 7 5800H with Radeon Graphics)):=09
-[    0.289221] [      T1] pci 0000:01:00.0: 63.008 Gb/s available PCIe ban=
-dwidth, limited by 8.0 GT/s PCIe x8 link at 0000:00:01.1 (capable of 126.0=
-24 Gb/s with
-16.0 GT/s PCIe x8 link)
+But I don't *think* L1 should actually be enabled unless we can enable
+it for both 00:00.0 and 01:00.0, and the quirk should mean that we
+can't enable it for 00:00.0.
 
-Bert Karwatzki
+This muddle of "capable" (per Link Capabilities) vs "disabled" (either
+the Link Control shows disabled, or software said "don't ever use L1")
+is part of what makes aspm.c so confusing.
+
+> > > The card works just fine. I'm thinking the ASPM issue is
+> > > probably from the glue driver reporting the link to be down when
+> > > it's really just in low power state.
+> > 
+> > You're probably right, the meson_pcie_link_up() not only checks
+> > the LTSSM but also the speed, which is probably wrong.
+> > 
+> > Can you try removing the test for speed ?
+> > 
+> > -                 if (smlh_up && rdlh_up && ltssm_up && speed_okay)
+> > +                 if (smlh_up && rdlh_up && ltssm_up)
+> > 
+> > The other drivers just checks the link, and some only the smlh_up
+> > && rdlh_up. So you can also probably drop ltssm_up aswell.
+> 
+> I can confirm that removing the check for ltssm_up and speed_okay
+> made ASPM work.
+
+I don't think meson_pcie_link_up() should have the loop in it, so the
+ltssm_up and speed_okay checks, the loop, the delay, and the timeout
+message should probably all be removed.  That method is supposed to be
+a simple true/false check, and any waiting required should be done in
+dw_pcie_wait_for_link().
+
+The link was clearly up when we discovered 01:00.0, so the "wait
+linkup timeout" messages from meson_pcie_link_up() after that must be
+from dw_pcie_link_up() being called via the .map_bus() call in
+pci_generic_config_read() or pci_generic_config_write().
+
+When meson_pcie_link_up() returns false in those config accessors,
+the config accesses will fail (they won't even be attempted), so we'll
+see things like this:
+
+  pci 0000:01:00.0: BAR 0: error updating (0xfc700004 != 0xffffffff)
+
+and "Unknown header type 7f" from lspci.
+
+Can you drop the ASPM quirk patch and instead try the
+meson_pcie_link_up() patch below on top of v6.18-rc3?
+
+> We still need a solution to the original issue that's preventing the
+> controller from being initialized.
+> 
+> My kernel has the following patch applied, but I think it's not
+> suitable for upstream as this changes device tree bindings for PCIe
+> controller on meson.
+
+I assume the original issue is this:
+
+  meson-pcie fc000000.pcie: error -EBUSY: can't request region for resource [mem 0xfc000000-0xfc3fffff]
+
+and you confirmed that it wasn't fixed by a1978b692a39 ("PCI: dwc: Use
+custom pci_ops for root bus DBI vs ECAM config access"), which
+appeared in v6.18-rc3?
+
+If it's still broken in v6.18-rc3, and the dtsi and
+meson_pcie_get_mems() patch below makes it work, we have more work to
+do, and maybe Krishna has some ideas.
+
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> index dcc927a9da80..ca455f634834 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> @@ -138,7 +138,7 @@ pcie: pcie@fc000000 {
+>  			reg = <0x0 0xfc000000 0x0 0x400000>,
+>  			      <0x0 0xff648000 0x0 0x2000>,
+>  			      <0x0 0xfc400000 0x0 0x200000>;
+> -			reg-names = "elbi", "cfg", "config";
+> +			reg-names = "dbi", "cfg", "config";
+>  			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+>  			#interrupt-cells = <1>;
+>  			interrupt-map-mask = <0 0 0 0>;
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 787469d1b396..404c4d9e1900 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -109,10 +109,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>  {
+>  	struct dw_pcie *pci = &mp->pci;
+> -	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
+> -	if (IS_ERR(pci->dbi_base))
+> -		return PTR_ERR(pci->dbi_base);
+> -
+>  	mp->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
+>  	if (IS_ERR(mp->cfg_base))
+>  		return PTR_ERR(mp->cfg_base);
+
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 787469d1b396..13685d89227a 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -338,40 +338,10 @@ static struct pci_ops meson_pci_ops = {
+ static bool meson_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	struct meson_pcie *mp = to_meson_pcie(pci);
+-	struct device *dev = pci->dev;
+-	u32 speed_okay = 0;
+-	u32 cnt = 0;
+-	u32 state12, state17, smlh_up, ltssm_up, rdlh_up;
++	u32 state12;
+ 
+-	do {
+-		state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
+-		state17 = meson_cfg_readl(mp, PCIE_CFG_STATUS17);
+-		smlh_up = IS_SMLH_LINK_UP(state12);
+-		rdlh_up = IS_RDLH_LINK_UP(state12);
+-		ltssm_up = IS_LTSSM_UP(state12);
+-
+-		if (PM_CURRENT_STATE(state17) < PCIE_GEN3)
+-			speed_okay = 1;
+-
+-		if (smlh_up)
+-			dev_dbg(dev, "smlh_link_up is on\n");
+-		if (rdlh_up)
+-			dev_dbg(dev, "rdlh_link_up is on\n");
+-		if (ltssm_up)
+-			dev_dbg(dev, "ltssm_up is on\n");
+-		if (speed_okay)
+-			dev_dbg(dev, "speed_okay\n");
+-
+-		if (smlh_up && rdlh_up && ltssm_up && speed_okay)
+-			return true;
+-
+-		cnt++;
+-
+-		udelay(10);
+-	} while (cnt < WAIT_LINKUP_TIMEOUT);
+-
+-	dev_err(dev, "error: wait linkup timeout\n");
+-	return false;
++	state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
++	return IS_SMLH_LINK_UP(state12) && IS_RDLH_LINK_UP(state12);
+ }
+ 
+ static int meson_pcie_host_init(struct dw_pcie_rp *pp)
