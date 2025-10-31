@@ -1,166 +1,183 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AC934D3A4
-	for <regressions@lists.linux.dev>; Fri, 31 Oct 2025 08:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FAD32ED4B
+	for <regressions@lists.linux.dev>; Fri, 31 Oct 2025 09:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761900664; cv=none; b=NW3HwfVbR+H/Ykbf/PqllujJ9mAXuOt8VDE9frYhO44KXVGlEg9M3NhtyaohV53QahvheUndFhyNrurYRPJEcCjSntCxlKcXomCuqrYQrnS18I0ZpsUTDhRBKdYyCIMCMAsXKBP4W34Uoq8Q3TjN0IxaF/DYsp4W+DUgTbHuHuw=
+	t=1761904747; cv=none; b=Hy9Mq5kjuygGTD444W+qolObXnpnREw6YWGmuV+kPYxh3PC2zW2xhB4nDQnd8xAOmlPYTO+wJJ+1aOLH8M/aBR86VXeqHo9ItcSTdTKlVBLfIsuwaWD9R4swL/bufJ/Or2f6qmgGRogTk6Egy7iX73E5yfCkSF+615kem5fvAgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761900664; c=relaxed/simple;
-	bh=ocbxgDBr/NQ05/9FVwt9PJ96thby+UU01iRLKbfPELo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nWGXtjIcgZQpjf0RiLlhfaTUGyH6MXxZors93KJ9K9j9tdMTxCgxfmOhC99bVqI7l5wOpzPu+2Xl3WCPqFSAOyTnO34NDXfe2jCNLuePSXSYj9rEIISwzoFRjtnDPOr/adEMuEjm1a4qIV/aKr+pz4uf03tI5wtyFJF51iRtnGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iafEB3Y1; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761904747; c=relaxed/simple;
+	bh=x/3eBVamsc4GqUrJq5weZRDQbBkuwwO8bW175DzPy7Q=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=NV+n6ohE2SBNwqm83jTBV8ReOvcvVKHpKbbQLSBaSyiHgqfD35NtQ2aKoWhG4ls4Rh2BerxU/gxF9OFJS4JIlSFaqLTde5JBjSKtfDRq8weCzYkVD01osps+19RIGVKikVFgsqG3ml/ljdFLs5xlsOdYxpZaHi8vmypKnfB6xdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=CwiR+7CC; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iafEB3Y1"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-475dd559b0bso26026735e9.1
-        for <regressions@lists.linux.dev>; Fri, 31 Oct 2025 01:51:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="CwiR+7CC"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-294fb21b0dcso24991185ad.1
+        for <regressions@lists.linux.dev>; Fri, 31 Oct 2025 02:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761900661; x=1762505461; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VdthYQx3fPupz9VTuX9fs9tD+q8rhp/J+8kdTaSyYGI=;
-        b=iafEB3Y18rAtr+MAdX01CoDc0sT1oCT9SSvOeJzXS7lfCoQJ4RrhheeeaYm070pZjF
-         Hkuo5wli3z9Km/+7VBqrk75/uLnZZtKjRFXYVvFfeX6D32tYgxtfsY7AXuEXbRHVpK3N
-         /gToSwvnKP+Sq8VmR6zEQ+HRJ4wIHabLYVXfEtKF6DBeMqZrcyavy9qQTxDlNCHvQLob
-         nb8XBu13Rk79SJ8f38Doj5Jho8QHg6jUbUYHihCSOu3hIKsbxNnc/F3SS1ShtoMQa5HP
-         RQQxjYuzGR1f6ocf4wPtS9gwmk4K+xKGOmCC0nXy+kXVXkbT7/54nmxdL/RD46tMc0Q1
-         aBrQ==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1761904745; x=1762509545; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c+KxFg2hHmVV0FcfqSk/4uQgiBa9mkwAKfZcNRO5L08=;
+        b=CwiR+7CCWnU+uCXWhsNDcsxC552HdZFcMky6LFIETzDSyeUB7jip9V9p+O7SJg228t
+         Rts1fAUFvho7suje6JM6jsarKxE5kIUhBERPzQsAbKxb52Ttm7aeJ4Wt6uOna24sVeV8
+         ymd/3kuPCU5ako+UTuj23xElKM4RHgvlca9Esl6bR+LoAXfwoMXrkLPai/HnEUpxsXxz
+         XhouCD/4StLWhJPy7CbBJ4GqeOHN/p7+8kQZW7gJkwZb2xH/dy7oUj03tmdgRsG7OTtI
+         drOBre75edvEv3DezFLB35zsuYhIA0VuWphNLBrUkvT05xGLuGiaJDAs3oqgXpb/aoL2
+         /i4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761900661; x=1762505461;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VdthYQx3fPupz9VTuX9fs9tD+q8rhp/J+8kdTaSyYGI=;
-        b=oth/yI1qW94dXirh3jVRbFHrO+LRfiM89MVqArSh0zZdtsRzWQNJKlaFTbyVD+9bt2
-         kjLDSt56MQtV0SC+Yue7KpigUT1c5KoPRM7lxh5QNr7DlQ2st+kMsd/wDZObYlDkJPge
-         YuAJkDzb1yCKrwg1k0UzZf41rmZm4Zfh3x3iVcS6SNmWEowK+ZMsSexpt4K3zVKdsvgC
-         4MMiYhNqrSZJePDvkqruCvzo75+YmCu0o8cyQtUBpL3r7nrVWuICvbFa5UAfrbwMIHYo
-         jxu/6PfORPSXPBU9+73TiU3zudNas1mTR9cMC8MDO7nTVfXQYjEv6kjLRI6YESgwKtFK
-         J+Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgYfy/Mq8oTfcDsA1ZldGGupk7JLq6PDC30Xd8Z1JEMNDYltBcIlh7IWOi4v7osP9M7kiZlzDsPlSeZA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvjE/G4d+Rs6XEsi2cs8ObqAVrw8EdXTkNO+4H0HiLjszr9hji
-	efJOhyr2SE5YDCbqigk8thuJr++Dhrelc3SbzANm591LUR4rHiG3AFvlzEnNWkCbG3Q=
-X-Gm-Gg: ASbGncurB84QI5CUWQ42RAr/HS/D84vx/g07vAEL40U70z39MSO0C5tH+VsPdHb4ZpO
-	9bOCC25D1jIsvTMa/BdZjW8MYTnL8ZFB6wI/qT4kVkAdrURy3x9P4JYEOIdoyYYbk1dwhO4GfpH
-	oP9cSZ9wOmQENfeS5HBiVU84XTBpGalyF3LX/fJLn1KvOsFeCe1QBkzFQpdun+LlDa2WapcPe0J
-	lJ+OkiztJycYB4pk3W9dX+tIE6e0hC2lEKsp7QLzlVYlc/3wtxeCmy0IjmWEa5Th7vJSRxAji55
-	IMMnWbPpWPJ7H6PXSZ5K5SsJm5KJvwTbk6tfH/6R51IC4GnTb+2zCPGWFSSJ6Qy6QjK3E5G72xy
-	F1k5oiMiZ6m1eE+mF5ydxslr7ZSuV+p9+kl87vUZXq1mTvMSYQc2uQKONVN/MJjOpO2ngpIcoYP
-	yV+fuXMJnSMXEBVH3daTd9nw125Pi9smce5i+Rd+L0k8TZRgLu0l7YZSIDjqnjGp0=
-X-Google-Smtp-Source: AGHT+IHgzS/nF5S0MzMHbXjLp8vWzcH8CRZAK3FVflgVJ4Dnpp781CewdMABTPZNC2jy/zYIIniiPg==
-X-Received: by 2002:a05:600c:524f:b0:471:c72:c7f8 with SMTP id 5b1f17b1804b1-477308b6117mr24385315e9.21.1761900660929;
-        Fri, 31 Oct 2025 01:51:00 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:cad:2140:d967:2bcf:d2d0:b324? ([2a01:e0a:cad:2140:d967:2bcf:d2d0:b324])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477289adc18sm86749505e9.6.2025.10.31.01.51.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 01:51:00 -0700 (PDT)
-Message-ID: <59baecc0-bc28-4411-bf83-37ff9e7dd193@linaro.org>
-Date: Fri, 31 Oct 2025 09:50:59 +0100
+        d=1e100.net; s=20230601; t=1761904745; x=1762509545;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=c+KxFg2hHmVV0FcfqSk/4uQgiBa9mkwAKfZcNRO5L08=;
+        b=R4fYod5nSw1otoGwY80kBFM1RVcZp2Cwup5Cd8o2sAxlDGTLkiADcUD826QVjYwGDE
+         GWaocg4ODjLZ/0E38tbcrn5tFkuAotAv0IyR4C8OOSXGOQYIFEAHeNbuNwtmPuMcI51r
+         7aRxcd+HW08+1EhVvqWWfIa7dVI/ZyO94ZGe1mfNY/1g/vWiSi6sONMKeTdAnel+f1tT
+         1rthUUBdSRmdT82IefciQUGFnjUWRkR0Ki8C9nIRousg0lRem9PLsMBo7cmYx+Ly7vNY
+         kbr9Pi96sUNbEQhv4K1br9ndhq4ftLSyyLVglOcSk8yqR//4zLZAlEqViRFr1MdHwBog
+         Ne+Q==
+X-Gm-Message-State: AOJu0YyXYhPvI9CWWWktvPS6c/3T9E0l+ohQEwn8Li/j7HsrDVpiANfX
+	sn4HcIomVD8LzM/sf/MfcpcJ+MO6skiS6djWw9K1fXXdhlkaO+iYduuQwKrVsNOngJAgOpQJ7TX
+	/Mxz4RyE=
+X-Gm-Gg: ASbGncu/pSiHlvHqZ1kSgDHGUZYR5hzn0ATdOeOtSWzAuJwwueeVAVRLJTZqpLiaFzX
+	qYg3+Erxd/8x2VANUahNGiP+a8LTYezFxquz6oUKRQt7ionc09xUO5oU35VX8Py8MxGgvzIQE9D
+	Ty+/4tVNU469rHD7iU/t/W2kwuyqjajnW3QFAh1Momg95J1c3J6915ysF8tv+QX8+n1/bBzDlCS
+	/7nu6XN+5OH/y9WvnGd6hwnmbOE+JpQ96gvoi/4MGlaUPRLWZXJ/XHMOIQ7TNqDiH0dUiTLML8W
+	Bl8odTScWu/qVtQ5wpGb+1hfjfcgmyHUFKIBaxzcFbEFV1CE2PaYp7kBSVdUjtWYeFgAdb8InGO
+	jPWpnpKDoEKY7TBSE5uhKXPJWvfX56GKahu+NmFX0lpn9DhF/z6ub0ZiR4178s1GlaGMJzA==
+X-Google-Smtp-Source: AGHT+IGhx+G3o9Z0D8X22dILTC6yUkzqdjqbZ5enawSqrYUe8rajYu1ZzF+A8K1y7RUa/nhOEVyrvg==
+X-Received: by 2002:a17:902:d485:b0:269:6052:3536 with SMTP id d9443c01a7336-2951a4ffb0cmr38441365ad.45.1761904744850;
+        Fri, 31 Oct 2025 02:59:04 -0700 (PDT)
+Received: from efdf33580483 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-295268b52dasm17711105ad.38.2025.10.31.02.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Oct 2025 02:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
-To: Linnaea Lavia <linnaea-von-lavia@live.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: FUKAUMI Naoki <naoki@radxa.com>,
- "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
- Kevin Hilman <khilman@baylibre.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-References: <20251029171542.GA1566240@bhelgaas>
- <DM4PR05MB10270506AAC1FCE53C4915CC2C7F8A@DM4PR05MB10270.namprd05.prod.outlook.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <DM4PR05MB10270506AAC1FCE53C4915CC2C7F8A@DM4PR05MB10270.namprd05.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-
-On 10/31/25 06:34, Linnaea Lavia wrote:
-> On 10/30/2025 1:15 AM, Bjorn Helgaas wrote:
->> On Wed, Oct 29, 2025 at 06:50:46PM +0800, Linnaea Lavia wrote:
->>> On 10/29/2025 6:16 AM, Bjorn Helgaas wrote:
->>
->>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>> index 214ed060ca1b..9cd12924b5cb 100644
->>>> --- a/drivers/pci/quirks.c
->>>> +++ b/drivers/pci/quirks.c
->>>> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>>>     * disable both L0s and L1 for now to be safe.
->>>>     */
->>>>    DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
->>>>    /*
->>>>     * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->>>
->>> I have applied the patch on 6.18-rc3 but it's still trying to enable ASPM for some reasons.
->>
->> Sorry, my fault, I should have made that fixup run earlier, so the
->> patch should be this instead:
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 214ed060ca1b..4fc04015ca0c 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>    * disable both L0s and L1 for now to be safe.
->>    */
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
-> 
-> L1 still got enabled
-
-<snip>
-
-> 
-> The card works just fine. I'm thinking the ASPM issue is probably from the glue driver reporting the link to be down when it's really just in low power state.
-
-You're probbaly right, the meson_pcie_link_up() not only checks the LTSSM but also the speed, which is probably wrong.
-
-Can you try removing the test for speed ?
-
--                 if (smlh_up && rdlh_up && ltssm_up && speed_okay)
-+                 if (smlh_up && rdlh_up && ltssm_up)
-
-The other drivers just checks the link, and some only the smlh_up && rdlh_up. So you can also probably drop ltssm_up aswell.
-
-Neil
+Subject: [REGRESSION] next/master: (build)
+ ./arch/riscv/include/asm/vdso/processor.h:23:2: error: expected in...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Fri, 31 Oct 2025 09:59:03 -0000
+Message-ID: <176190474357.1783.9326055147559573063@efdf33580483>
 
 
+
+
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ ./arch/riscv/include/asm/vdso/processor.h:23:2: error: expected instruction format in arch/riscv/kernel/vdso/vgettimeofday.o (scripts/Makefile.build:287) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:cd79512a03e4fd8760092dacf80363de08e082d1
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  98bd8b16ae57e8f25c95d496fcde3dfdd8223d41
+- tags: next-20251031
+
+
+Log excerpt:
+=====================================================
+  CC      arch/riscv/kernel/vdso/vgettimeofday.o
+  AS      arch/riscv/kernel/vdso/getcpu.o
+  AS      arch/riscv/kernel/vdso/flush_icache.o
+  CC      arch/riscv/kernel/vdso/hwprobe.o
+  AS      arch/riscv/kernel/vdso/sys_hwprobe.o
+  CC      arch/riscv/kernel/vdso/getrandom.o
+  AS      arch/riscv/kernel/vdso/note.o
+  AS      arch/riscv/kernel/vdso/vgetrandom-chacha.o
+In file included from <built-in>:4:
+In file included from /tmp/kci/linux/lib/vdso/gettimeofday.c:6:
+In file included from ./include/vdso/datapage.h:21:
+In file included from ./include/vdso/processor.h:10:
+./arch/riscv/include/asm/vdso/processor.h:23:2: error: expected instruction format
+   23 |         ALT_RISCV_PAUSE();
+      |         ^
+./arch/riscv/include/asm/errata_list.h:47:3: note: expanded from macro 'ALT_RISCV_PAUSE'
+   47 |                 RISCV_PAUSE, /* Original RISC‑V pause insn */ \
+      |                 ^
+./arch/riscv/include/asm/insn-def.h:259:21: note: expanded from macro 'RISCV_PAUSE'
+  259 | #define RISCV_PAUSE     ASM_INSN_I("0x100000f")
+      |                         ^
+./arch/riscv/include/asm/asm.h:16:26: note: expanded from macro 'ASM_INSN_I'
+   16 | #define ASM_INSN_I(__x) ".insn " __x
+      |                          ^
+<inline asm>:5:7: note: instantiated into assembly here
+    5 | .insn 0x100000f
+      |       ^
+In file included from <built-in>:4:
+In file included from /tmp/kci/linux/lib/vdso/gettimeofday.c:6:
+In file included from ./include/vdso/datapage.h:21:
+In file included from ./include/vdso/processor.h:10:
+./arch/riscv/include/asm/vdso/processor.h:23:2: error: expected instruction format
+   23 |         ALT_RISCV_PAUSE();
+      |         ^
+./arch/riscv/include/asm/errata_list.h:47:3: note: expanded from macro 'ALT_RISCV_PAUSE'
+   47 |                 RISCV_PAUSE, /* Original RISC‑V pause insn */ \
+      |                 ^
+./arch/riscv/include/asm/insn-def.h:259:21: note: expanded from macro 'RISCV_PAUSE'
+  259 | #define RISCV_PAUSE     ASM_INSN_I("0x100000f")
+      |                         ^
+./arch/riscv/include/asm/asm.h:16:26: note: expanded from macro 'ASM_INSN_I'
+   16 | #define ASM_INSN_I(__x) ".insn " __x
+      |                          ^
+<inline asm>:5:7: note: instantiated into assembly here
+    5 | .insn 0x100000f
+      |       ^
+In file included from <built-in>:4:
+In file included from /tmp/kci/linux/lib/vdso/gettimeofday.c:6:
+In file included from ./include/vdso/datapage.h:21:
+In file included from ./include/vdso/processor.h:10:
+./arch/riscv/include/asm/vdso/processor.h:23:2: error: expected instruction format
+   23 |         ALT_RISCV_PAUSE();
+      |         ^
+./arch/riscv/include/asm/errata_list.h:47:3: note: expanded from macro 'ALT_RISCV_PAUSE'
+   47 |                 RISCV_PAUSE, /* Original RISC‑V pause insn */ \
+      |                 ^
+./arch/riscv/include/asm/insn-def.h:259:21: note: expanded from macro 'RISCV_PAUSE'
+  259 | #define RISCV_PAUSE     ASM_INSN_I("0x100000f")
+      |                         ^
+./arch/riscv/include/asm/asm.h:16:26: note: expanded from macro 'ASM_INSN_I'
+   16 | #define ASM_INSN_I(__x) ".insn " __x
+      |                          ^
+<inline asm>:5:7: note: instantiated into assembly here
+    5 | .insn 0x100000f
+      |       ^
+3 errors generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allnoconfig on (riscv):
+- compiler: clang-17
+- config: https://files.kernelci.org/kbuild-clang-17-riscv-defconfig-6904853b9df0fb426d143b46/.config
+- dashboard: https://d.kernelci.org/build/maestro:6904853b9df0fb426d143b46
+
+
+#kernelci issue maestro:cd79512a03e4fd8760092dacf80363de08e082d1
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
