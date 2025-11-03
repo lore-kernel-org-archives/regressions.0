@@ -1,115 +1,194 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB64314D22
-	for <regressions@lists.linux.dev>; Mon,  3 Nov 2025 17:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762189973; cv=none; b=FhziW6uS+V6H8vKEug4TuzTDnLBzLRkvqFpsAqo+p8SY4RW+rOS1eyhnjHuyQhe2xtldkyduCVr8BLpN+oWz1mkFjkxPxNoLHkL5+7fQHwvNKb/PxUXCy3Vh28KUjLp68fC3p+Hr1eyImNcy+zZN7ks3oyEV5YFqZJRAz4lV4vk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762189973; c=relaxed/simple;
-	bh=kDarkteaSnf10lfwAsM0uNbYYX1j31SFkq5885N1grs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KSeEDYD43bzxMORyqolgJopZk3Fpw0KrxD51xdEMVwf3l/AO5tS6LAypE7QnGw9bX8s0r657Tse3jZbJScjdzkLTUmA3kiabUz2yXt1r30vcz3LJg4iwHUiBAMVhgB6yMTW09xAknX1L+fSK3MnIe1SDo13Oau3w8VLiu0ozJP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XK4rAFZL; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8342B145355
+	for <regressions@lists.linux.dev>; Mon,  3 Nov 2025 18:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762194873; cv=pass; b=VEpMp70OQmE4AVOaV5f6jpxBlQBZ3lWfg14eTERpdTI8IGfTziL1ZyAwlaHvCMZwtR4k7C4RObrZDahXFbD5cdw0NRManU5tfGT7rV4Pr6EkEcWUad5GkPIJ8FjFSRfB5NwMhST56etA/IdPrMXSsaCMyVK4c0GuzCs5kTboKI4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762194873; c=relaxed/simple;
+	bh=lRbzVCs+21KTjiME0geIk/7FeCxmcuLemfuEVlGODUM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ThMm2rQk/Xhznl8OAA+V/x8uG+A62Ox4/SUKX/t+GWbCQui63xFP1wrGowrNbGj1gqTCAqonlsmkuRuQUwqYw91GGFsBOd/E2ZKugXXLvlyyiBl+XdHrRzIaQuTshla44W8jHTXFncHfimYeay1JsfAish4pPVTyYta8rO8S1Lo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=ZayjRdX4; arc=pass smtp.client-ip=85.215.255.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XK4rAFZL"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so854031766b.3
-        for <regressions@lists.linux.dev>; Mon, 03 Nov 2025 09:12:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762189970; x=1762794770; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0L+x6u92PFUYymdltbOhgzGP+ZfkmtaHqsZECM78beQ=;
-        b=XK4rAFZLtY5qON8TCYVMtRp9Tv7Ua8B/rndlRF8PALNd289sWHhPXlms5kXo5aztNx
-         +4Fbo+i+xZ02y19J5gfZPRmIjfH4XixUt8nrVLtCrnT8dtQwX3Fw30Q2xDmgIRa9+2T6
-         AJQnlEID1ERZ+QHL0hb5xpirm45JueqXoD4ZcQBjNZaYmOrtVnoBqwW2T9UWumc7HBaI
-         aM5fx4jCJ5W+HSYFJN0W2cxKQal2R3GWcH1pfFWWVShkf63e3kWrIYp/GUSFd3vlvZhE
-         2vE21iOUZ+dXEhE3pCCcr9L0zbdI6vbofmcV5cfo476LDupL14wQ3y9sN1JOvvzatd6u
-         vRqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762189970; x=1762794770;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0L+x6u92PFUYymdltbOhgzGP+ZfkmtaHqsZECM78beQ=;
-        b=Pk5DFyFkzb/dl3xAsYkiYQWKeI8uKa6JAkQYp5HfF1XqJK/vhRObGvQyLkRPHFFEno
-         bLQcyFUAqt4wGt0yZ6KwVmNZ9jj06eAhNeYbQimU3UvJ7MD1jGT3oIXBoQ3J/wKJd2Df
-         C8XM9AsOMpf71qiV22WXWbTuEQ1QoG6JQGyheQm224lEYjuj2AxcK38UFMP30RegndCG
-         oOzQT0G6pRK0PXuuaCHepm66POQddNRWgZkZBSlUn90zAzyEgoYt21RdZkushhYrFlgz
-         McZtB5Yy8Kacie6NLbDuAdzPKk86hzASCZv6J1263Sz1fOSrMmsdYClOmS+IQtbbsjLB
-         sQ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVjJUENelBmjMSVuWEFq6onpg39H+W5BAcMc/sSoQ2IITyRD1t1gQCFRIQIaZpZ+AoLEMi6i3xM9zLQ3w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwWSaRTDGkVJ4PJ5mmcjk0iGtFRoQKQSVfTby63ygb+n1nzmtPh
-	tSrazYRO5Ok6D1+tTqpIFmDvqyV0aewDrP7Nu01tCEzVcZboWJBnCz7V
-X-Gm-Gg: ASbGncs/beSD1Q6e30YeDfx0siKzC02YLXoy/qw4ViGylTsCMy0buFxHeeiDdNz+N45
-	rEKNu4GDWnn1rzlQlpCLU66cqKbwOCGMA9GNZcCgAuul28g4/gok0VhhazKB1jcRy4vyJhwdkQl
-	xEO02EIrGk7c1ZLZuAY98sfHWQ84ZBqoNuUArHjwXtxSz0TwgfWramvyFmweV9v8ZMDkeJkoQlr
-	Sb2GYRyE/J+YaRo+eo52MDHnJP/aDvTEjt5VQzMiBdrlWQYCaQCNJkPUf9AgpoRxcyq4rfidAAF
-	zMGJm8vERl7z3Eu2j/QSZ6zu74qGpXnd7U6SROKiik/O4i8dobYMJGbHfK2q5su8zobVKRbu/L5
-	JOquc61fc0xg4Pm1korbsSLKE17wRPKRqv6utUnAz/hzxAhl6ewnPq4XpMMtrywQD6XYn9rO7ry
-	xiaVRX5R+5tGsP
-X-Google-Smtp-Source: AGHT+IFYSrn3+JLLfbrsA9O3z+gFUcu1TIraVBmewJp9yIRvtZodmEr6n/k/vgTpSkGh5NZ4ce3uwg==
-X-Received: by 2002:a17:907:3cd6:b0:b6d:79fa:b166 with SMTP id a640c23a62f3a-b70708b1503mr1195109666b.63.1762189969903;
-        Mon, 03 Nov 2025 09:12:49 -0800 (PST)
-Received: from foxbook (bgu110.neoplus.adsl.tpnet.pl. [83.28.84.110])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7077c809dasm1075780866b.50.2025.11.03.09.12.48
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 03 Nov 2025 09:12:49 -0800 (PST)
-Date: Mon, 3 Nov 2025 18:12:45 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86@kernel.org, regressions@lists.linux.dev, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Mario Limonciello <mario.limonciello@amd.com>, Eric
- DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org
-Subject: Re: AMD topology broken on various 754/AM2+/AM3/AM3+ systems causes
- NB/EDAC/GART regression since 6.14
-Message-ID: <20251103181245.7745621f.michal.pecio@gmail.com>
-In-Reply-To: <20251103143851.GA8673@yaz-khff2.amd.com>
-References: <20251024204658.3da9bf3f.michal.pecio@gmail.com>
-	<20251024213204.GA311478@yaz-khff2.amd.com>
-	<20251103084021.61971a89.michal.pecio@gmail.com>
-	<20251103143851.GA8673@yaz-khff2.amd.com>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="ZayjRdX4"
+ARC-Seal: i=1; a=rsa-sha256; t=1762194501; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=AU4sy1rW+8LT55IEiSdEhOox/nGGdwtEIgBEx/VWOpxC7gv/6IHVTbMGH9GTa4Pkpw
+    UcORh/wMC2L+caR+WRNufihMy28FTGtrmVRQKU15aypqb5WB0LEkWT0F510e5nSae1Hh
+    MgqhyufKrOULj1CfFOQHgPZXyFsgPkYb94w31g9HQhkzR58/AHgATLADDr6qjK8FY85m
+    p1gpxEOOD737r2wcQL/inQCIErvPF7LDDC8LWclzb25j2p7n7grtWC22fPIVFB8M9NdG
+    IYHy31JglrxacdKxQ5SZrhk26i9HhIRwHxtaqUVif8qMznk5g8DE5Cmm2usJ98zy6/aN
+    VWZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762194501;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=o7mmj4miEk5uHrPbENwgiOkK+B4AYKwPEzssaLhx+ns=;
+    b=TR6GYXtcjPr+Z+XT7P0QkLcqM5oZtZn2FLXPHZFeE/s32VbZkOfoN0Oz0IBOTpbijJ
+    TYc3UIE38Ki1QUGNKJacfsHGnxNC3CRqgd+B7Wcav64bMA6562x11lU3am/u+aIzdFDu
+    r6DV/MLKWSe9EWxdeto3RUAKtP3b57PjiusxHTIIOqtLZ77lw9GORMDeRQbdP14Ij9xb
+    eDieTH96QfM2JYMHbwxi6kwqBgH7BKNWKF1PnQkRRgWPDZ0zcC0Ad4x/6JNuKzIpWh7y
+    3QpqE6Z3n1k5vylu2YphMjJys4vk1FEVAhuQf3dQirE+29CA6Z7EskO/AYwW40D1z+2s
+    9bAQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762194501;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=o7mmj4miEk5uHrPbENwgiOkK+B4AYKwPEzssaLhx+ns=;
+    b=ZayjRdX4ltx9V2Lvo2hCi/dnVYykNv66H3B0rrEwErP2mBtDvBf1oUPVFxrOSngBqp
+    2kYpWzMPrUlmW0mYblk/CB4QYD/VuGOqCfhnPtZ2kT/48MgiG+YhQgSyXnIDCUHBk2kC
+    65nMv6Ke6SM6ZuV+euqQbAiZRHTaxcJWz2hFJSbj45DFTTotuOypehe6GZXIif2jO1jM
+    8WkBFV6daljnPg3EVr7ql6qatXLjl+K6S1sH3sMPejeiRqTTmW5Oz7x0ayv5ECagMLsb
+    ub7kHinKTX/sRhJTfONYU3hDDz0m5JNOB8QhAuNozbSQxL4IFgtqsRqq9Fvxcc/2ILKz
+    AR5g==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIi+mgQ=="
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
+    with ESMTPSA id e288661A3ISKeHk
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 3 Nov 2025 19:28:20 +0100 (CET)
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, mad skateman <madskateman@gmail.com>,
+ "R.T.Dickinson" <rtd2@xtra.co.nz>, Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev
+References: <545ac5c9-580c-5cf7-dd22-10dd79e6aabf@xenosoft.de>
+ <AEBA92BD-B46D-4D1B-A4D1-645B276E34CF@xenosoft.de>
+ <emjne6l33e3hukef5ms7kubv6kkuvesqkw6ozojnzzdgvso7ma@rbpg2l5i3nno>
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+Organization: A-EON Open Source
+Message-ID: <d93eac4d-b382-97dd-d829-98aef6695204@xenosoft.de>
+Date: Mon, 3 Nov 2025 19:28:19 +0100
+X-Mailer: BrassMonkey/33.9.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <emjne6l33e3hukef5ms7kubv6kkuvesqkw6ozojnzzdgvso7ma@rbpg2l5i3nno>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Nov 2025 09:38:51 -0500, Yazen Ghannam wrote:
-> > I have this AM4 system with some proprietary HP BIOS:
-> > 
-> > [02Fh 0047 001h]               Local Apic ID : 10
-> > [037h 0055 001h]               Local Apic ID : 11
-> > [03Fh 0063 001h]               Local Apic ID : 12
-> > [047h 0071 001h]               Local Apic ID : 13
-> > 
-> > domain: Thread     shift: 0 dom_size:     1 max_threads:     1
-> > domain: Core       shift: 4 dom_size:    16 max_threads:    16
-> > domain: Module     shift: 4 dom_size:     1 max_threads:    16
-> > domain: Tile       shift: 4 dom_size:     1 max_threads:    16
-> > domain: Die        shift: 4 dom_size:     1 max_threads:    16
-> > domain: DieGrp     shift: 4 dom_size:     1 max_threads:    16
-> > domain: Package    shift: 4 dom_size:     1 max_threads:    16
-> > 
-> > It seems that pkgid is 0x1 here, which is not a problem because
-> > it's single socket, but dunno if HP or somebody else couldn't do
-> > similar things in an 8-socket system and end up with pkgid > 8.
-> >   
-> 
-> So is this another bogus case?
+On 11/01/2025 06:06 PM, Manivannan Sadhasivam wrote:
+ > On Sat, Nov 01, 2025 at 08:59:37AM +0100, Christian Zigotzky wrote:
+ >>
+ >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+ >>
+ >> Oops, I made that fixup run too late.  Instead of the patch above, can
+ >> you test the one below?
+ >>
+ >> You'll likely see something like this, which is a little misleading
+ >> because even though we claim "default L1" for 01:00.0 (or whatever
+ >> your Radeon is), the fact that L0s and L1 are disabled at the other
+ >> end of the link (00:00.0) should prevent us from actually enabling it:
+ >>
+ >> pci 0000:00:00.0: Disabling ASPM L0s/L1
+ >> pci 0000:01:00.0: ASPM: default states L1
+ >>
+ >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+ >> index 214ed060ca1b..27777ded9a2c 100644
+ >> --- a/drivers/pci/quirks.c
+ >> +++ b/drivers/pci/quirks.c
+ >> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct 
+pci_dev *dev)
+ >> * disable both L0s and L1 for now to be safe.
+ >> */
+ >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
+quirk_disable_aspm_l0s_l1);
+ >> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, 
+quirk_disable_aspm_l0s_l1);
+ >>
+ >> /*
+ >> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+ >>
+ >> —
+ >>
+ >> Hi Bjorn,
+ >>
+ >> Thanks for your patch. I patched the RC3 of kernel 6.18 with your 
+new patch and compiled it again. Unfortunately the FSL Cyrus+ board 
+doesn't boot with your new patch.
+ >>
+ >> Sorry,
+ >>
+ >> Christian
+ >>
+ >> --
+ >> Sent with BrassMonkey 33.9.1 
+(https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
+ >>
+ >> —-
+ >>
+ >> What about with
+ >>
+ >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, 
+quirk_disable_aspm_l0s_l1);
+ >>
+ >
+ > The issue is most likely with your Root Port rather than with the 
+Radeon device.
+ > So the quirk for Radeon won't fix the issue properly as it will 
+affect other
+ > host systems as well.
+ >
+ > I guess Bjorn's change didn't help because the fixup ran before
+ > pcie_aspm_init_link_state(). So even though the fixup disabled the 
+ASPM link
+ > state for Root Port, it got enabled by the default ASPM states enabled in
+ > pcie_aspm_init_link_state().
+ >
+ > Can you try doing fixup final as below?
+ >
+ > ```
+ > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+ > index d97335a40193..74d8596b3f62 100644
+ > --- a/drivers/pci/quirks.c
+ > +++ b/drivers/pci/quirks.c
+ > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct 
+pci_dev *dev)
+ >   * disable both L0s and L1 for now to be safe.
+ >   */
+ >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
+quirk_disable_aspm_l0s_l1);
+ > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451, 
+quirk_disable_aspm_l0s_l1);
+ >
+ >  /*
+ >   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe 
+Retrain
+ > ```
+ >
+ > Sorry, I guess we are asking for too many experiments to be done 
+which might be
+ > of trouble for you. But without direct access to the device, we had 
+to do these
+ > :(
+ >
+ > Thanks for your help in debugging.
+ >
+ > - Mani
+ >
 
-No, it isn't bogus. It's a quad-core Carrizo APU with its four LAPICs,
-but their numbers start from 0x10 rather than 0x00. And AFAIU, the
-calculated pkgid vaule will be 1.
+I tested your patch with the RC4 of kernel 6.18 today. Unfortunately it 
+doesn't solve the boot issue.
 
-If HP or other vendor would do similar thing on an 8-socket system,
-the assumption that (pkgid < 8) could no longer hold, even if the CPUs
-are completely real.
+- Christian
+
+-- 
+Sent with BrassMonkey 33.9.1 
+(https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
