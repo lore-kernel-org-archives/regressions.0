@@ -1,311 +1,279 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010012.outbound.protection.outlook.com [52.101.61.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4FF2FB0A9
-	for <regressions@lists.linux.dev>; Mon,  3 Nov 2025 09:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762163509; cv=none; b=hLCEI+nOsLk6Ydm6VRy7Bk3aE9qtGWWjvMbAtWQwaISvc0czrDDxJwAJisKKq2pqMkdj9LCGQjQ9kxUmoBsikUh8Tv9XGG4a0j+6xlmsRtYLIQDZTevENdLnE4W7tz12Y5uorVBJ0RS+6QEtwBG42mfl5AO2ZoWcLkkOgNibjrw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762163509; c=relaxed/simple;
-	bh=EJC38eDcg8YuReUlyukja+BTyZmSRBBRZUGSphXgMno=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cbe4i1EOCDqW7ejkD645UZqm+BF1FZHl+elw8ts9C1Xcmirw634w5rX912BR2esh2V5qV9NB+/zTqJ4Zb9tg/Ebs/8bHObFS95BoCXAZICpBwo036eXqf5QcEi2M/toK4b1rl+1Dm3sxIGpt8mdAsm7MP4r9IgbyDepXrIbuOyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HQmzstoX; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCFF26B75B
+	for <regressions@lists.linux.dev>; Mon,  3 Nov 2025 14:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762180744; cv=fail; b=SY6q/lBDQX8/yIJrTfgpVqSYMvS9z4ZT4DOMIwLSOzk2RxFVPC2QFodwlrkLO4J8DusdhRsLLc+laUWKd0DWC8W0SNCoTvTNsvp/P4IPeGvETuiDSY14d7t84pgl5uqGSM+QJP6KSFQyj4QF+VaaobETbYHsJXNYLkvov/n0nw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762180744; c=relaxed/simple;
+	bh=/wv8mQrcvGJQm91jKXvcY/jJiN8c2vSP0AK7V63myNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NkdJBm58XUZhAy3hjaRaEvnvSXZWvIKQ6VAC9ZXJ/Sl78lkWd8cP5lB2JDVkNzpOoi2p+ZL+DnLIUsw5tDnOKoI5OZwhKVOlQBKho1q59z5ENM3ZNoe7mcgcn9BR13dgT8Ht9Fg895EkBmG7RtXQn+pKvofe3AzMtEQdn423yjM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Jk+Q+oGx; arc=fail smtp.client-ip=52.101.61.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HQmzstoX"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42421b1514fso2428996f8f.2
-        for <regressions@lists.linux.dev>; Mon, 03 Nov 2025 01:51:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762163506; x=1762768306; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kzABgnbeDb8pzSGXIXK4gzoaq75SDM4C57TYmZw9FyM=;
-        b=HQmzstoXHO0/UE3ldmFdBaJEVy1NklSXzSqKiQ5rm3NfdYfSwdrzFSwCqnyCUAwP0G
-         igcpB0PstovdlYWamR/OrGRTqXpj4LLYSVjciUPPGozYMTkb5wFjKH2Gc9T5ct4efVDv
-         yQ6UL518GL6fzLb29906R8ao2cZPy889AfjIoRn66ZtdXZ5Xxpak8XudxXR/u0LpiG4y
-         DfhG91iwQq0CJA8YvYLX+oFEwLhKuAdPlbodwGmoN6Ndr5KfLNiLscLD6PcQQgSbXx5C
-         HRgCYyF65ajAn1v7uhsVAVFV9W0p11yJ9Zy8G6gJn5Y8JGbPHGkvH1VopyQa7iSBnTOV
-         xtlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762163506; x=1762768306;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kzABgnbeDb8pzSGXIXK4gzoaq75SDM4C57TYmZw9FyM=;
-        b=Qggc5NuGtHcsoewvBqwQ7VfR3gWoB0vmunwU+W1HZmpKUQCoYqyqI7orEKK7TwL6PI
-         klILqGEHTvkhcKsVnpnCCM7r1xm2Atz8pedp1pxBWtHBm9jR0SfMxv9YycvDs2Vp7NZ6
-         dcml9/30ZPn4YZfkcda0Snj8SPxpw+3EaemN69QGyz1KfEd/LZOjyh1x/GHBHbz02gOf
-         YV72PRGPF2rPrlPUfwpUj6x6Frc++a5SY9yoyw9SdtEEYroso3A8SSN8Fd4Kwhipjo99
-         FiMPBQpMkd/2cdJpxelVtreIFnk6NdMvdFouD58DFZVwOafYSSrYv736muGMhrVVxbA+
-         CN4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVYUxNp9t8mj8WnzkaomTv8nBcm7HC2VrkW4UvEveOka7Y2SVH/FhnnKGg1Hch7VeoCPqYTLMTUZprFYQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyMF7O2SqLZGyOqhI1Q1JmyuydJD4qcCc56Xlipw3MQUZADib5g
-	KOW+61s+MUodPtPX5RTfly/WKgAvIzK2VuhLLDgQqA+1MaluvnDgjWIBre+H0Sjso+E=
-X-Gm-Gg: ASbGncuciG2hD2J++1zD2k7P9tZ/ztugaddRpYzKg2eFsEncHwBXjLPRAnHMkhH5wb9
-	WNXKZ0xnxmP541LOdipSzvB3iYIsy5GO0PeAjR7Eg0asO6qf871hjPYT7na2HJyftH+43MOlSIG
-	kzPKOoNYospFePyxxkhFtVYDcmHZSCxUiAA3erS7wyGacjqavI2IE0en2ldwUYWZ2/ShK26RWKG
-	5wyU9lh5hCIE+c2Qisp4QG6dOE4PqYwsy4d1yWv3kcGuM0fHJ69ectfXat2ZYTIMHYopKusaURf
-	3cYZdBCJ8GHt2jAw3r9bRu99k2CoYYxbvdkLgUICLNfIYMJMpPwbQfzT30g89AIlnFP/cjdHLe8
-	XKdO+BrtLGYGYcADSmUHdbS9gr4Sr8vAqFdAI0lzBgqpeP8FXSDVxSRhp9RpEVIehx76AEr72ii
-	ufUCnVRecpDT6wJjJEsyXpCdusRvJi6cMhdA==
-X-Google-Smtp-Source: AGHT+IHI4ioHp+AFK0pCBgd1+OsciRLs4AaBA2U7IPrzAi+HZrr//ufjuw7eGBXOAXE8rH1S4TMUdw==
-X-Received: by 2002:a05:6000:460a:b0:429:c989:ceb9 with SMTP id ffacd0b85a97d-429c989d6f1mr5585823f8f.51.1762163506013;
-        Mon, 03 Nov 2025 01:51:46 -0800 (PST)
-Received: from [192.168.27.65] (home.rastines.starnux.net. [82.64.67.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429c1405fffsm19355129f8f.45.2025.11.03.01.51.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Nov 2025 01:51:45 -0800 (PST)
-Message-ID: <f0cdf43e-2569-4f24-b337-03d8e430c0cf@linaro.org>
-Date: Mon, 3 Nov 2025 10:51:46 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Jk+Q+oGx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kBfLre3h0Y+ULfdMrUDdYfTSnVLxrBxn8knkC7fSk+Ax2oOOL6FHIiIUkt5LzkxOkJd0wrYrjIzmOIMDRihZYn3Bm+XLRUU+ZZCR37IFNCDUQy8Cd3RiP0Cbdrmexccun057K7UFhS299f5skw592FH19EoSzLgS/E+2IRXVXDcH4lHYu8/53KXl4wUTzGG3CSanYnjpRZCqpml5PUigSDUE9u4tl5539WXMzHJLS/Vn0PdskIfGsiUwVhZ5DxpbxJfztkTK4jyNmy0zRzrQb6XZEeNZk64E6mrNcIzXBrmz5kocPkxljyRzgGcn5D2vkpIAUzry5vSQL7ZCoD6xNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AFxQ6VW6uI49Kl5Iwk3McZF/GYiHIMPk5FJJL69TMW4=;
+ b=veHIHuIE05lveJUyY/9eJbpfk78gVZ0P0xVgg+MG208oLYJ8oL5pkgzFoCruAWEwj6IjWbEaMS+FKZI86qkfeW+iNkG1R9c76p3iyd/PYTQjm97ord9AQY1YzJEflwi7q+3mP0xFkhq2EWR7LxPKHQ1Uu06ns9wh62z7kNVOa9sVkxK1EkbaDFDz4mfSHkpWDC3i9Zj482QfO2cJ+6VW2uccGL+7kGBFb+TqB8wP1/LGstMP4cL8b4MT6Kb8aS6MIsie19L/B5qDyRYqckxEXdVIef2y29EcejPdVGC1cDzVDvP/F88XmsmIUC4XlQM7C85nanWab6Jp9LkUiMq1wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AFxQ6VW6uI49Kl5Iwk3McZF/GYiHIMPk5FJJL69TMW4=;
+ b=Jk+Q+oGx5CV+SDZ1Da/Ljoe8Z67Ony5T5UG/pX0lkUcc3I2tm6fBjj+2FaqgWcfe4enlVmN9mVuXRvc1JK5URDglrmqkWenLnQzJAikuXCTRO5uxxqewDyNME5Wo3yKX/7y1fhvfcOdoCpz2dnDXhbi8jqaGcChBn9EEw7gyfUY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ CYXPR12MB9338.namprd12.prod.outlook.com (2603:10b6:930:e5::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9275.16; Mon, 3 Nov 2025 14:39:00 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%6]) with mapi id 15.20.9275.015; Mon, 3 Nov 2025
+ 14:39:00 +0000
+Date: Mon, 3 Nov 2025 09:38:51 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: x86@kernel.org, regressions@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: AMD topology broken on various 754/AM2+/AM3/AM3+ systems causes
+ NB/EDAC/GART regression since 6.14
+Message-ID: <20251103143851.GA8673@yaz-khff2.amd.com>
+References: <20251024204658.3da9bf3f.michal.pecio@gmail.com>
+ <20251024213204.GA311478@yaz-khff2.amd.com>
+ <20251103084021.61971a89.michal.pecio@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251103084021.61971a89.michal.pecio@gmail.com>
+X-ClientProxiedBy: BN9PR03CA0475.namprd03.prod.outlook.com
+ (2603:10b6:408:139::30) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: PCIe probe failure on AmLogic A311D after 6.18-rc1
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Linnaea Lavia <linnaea-von-lavia@live.com>
-Cc: FUKAUMI Naoki <naoki@radxa.com>,
- "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- regressions@lists.linux.dev, Yue Wang <yue.wang@amlogic.com>,
- Kevin Hilman <khilman@baylibre.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-References: <20251031161323.GA1688975@bhelgaas>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20251031161323.GA1688975@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CYXPR12MB9338:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b39c91b-e4d0-459e-3dca-08de1ae6b9d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DhHC4p4FznPdLiYmsWsVm3i37gUHqisnrlck2CNI1GOehmrerkIQsDdG0YUc?=
+ =?us-ascii?Q?bimR1PxH1RYX4F1URhIyUun3tadThHb1otcO69BAyKINQVckstW1an1N27hd?=
+ =?us-ascii?Q?5kUdqzNx3toLjNlz3b28BDbGGTceuQD8eom5mDHdDfAy43ZcrKDAo3z0dpE2?=
+ =?us-ascii?Q?hj0eBtD+D3x+x/3kk+QgvlwLqSYAb9uALj0qBhsOzwi+JmiVRo13Ml1VSsmY?=
+ =?us-ascii?Q?0ghVmJCrB33wMDQ3d1P7KhbwUjAmTSXlI/UinDVAFTIPh1pmddnzh0meOdN0?=
+ =?us-ascii?Q?t9IHBJo5Y9vbfIGxbAoLPnZx7RWFIjs79ifCjGsfKL0/WPRNAmyOqA6MF3d9?=
+ =?us-ascii?Q?4ykJ1vOW9zY5tSnP5N+rbrJfjWX4dstvRBcI1IEongNXvP8w/DVEmFUWZ9tz?=
+ =?us-ascii?Q?uUD1FaLJSz9lnJKFA4abbQqNi8KiqPTOvHo4W0d0cWs85Pjn3I/LXI0yH3Ed?=
+ =?us-ascii?Q?jbCwzhDl+1juch/eN4MtXPwz71GwDwYf8iMPHLphYFI44j7gj7qzx6qZBcR0?=
+ =?us-ascii?Q?RzbaJ/GUg9PkKuo3+hbom4DPjsZbwAVHI/qsCOXhf5/+XBvM7O3NLXgF7TH7?=
+ =?us-ascii?Q?h/g5/6AZi5NdGNL4BrJbsE9WimZbJZRTAxSQVKfKwBEBfs2uPrHZ7nlaUbIr?=
+ =?us-ascii?Q?I8+6XM4jVNE2lCQEvm1HtnToV/6bs2uUw9v758lRsXX60UEdVsZNFAjJzggv?=
+ =?us-ascii?Q?+iHIQknh6KjYt3FVGqRSXKr1RVgBls21TqurL8OUmTUJXekJ0Oou7J0rJ0aV?=
+ =?us-ascii?Q?Et3b0r3KRw+gtaXyHiPLyz5ZOntkhWYMA5KKtmwSUYeKUyRXiZjLASUdKe8+?=
+ =?us-ascii?Q?YYgDpkmITibHU4PdH54AKLZaECSMERJbzf5yShsCkSu9l5wBlQsBj1dFxcwr?=
+ =?us-ascii?Q?G4Umursq3Ky7MPGEkfKHPG04DplLeK1ODp2mVpxVr3GAah8Xu4//fMhOj+em?=
+ =?us-ascii?Q?26YBDgeJlt+uaIboAgk9TYWTLzLYzGCPISvPPRBc5WvnlfJuqRYQ3VvlBFzl?=
+ =?us-ascii?Q?qt6ahZXRu0afZzZaW5MNxmLTPwNk6grqZa8dQBT0u4wIyoghHPneumZkiq1J?=
+ =?us-ascii?Q?YrP6bnnfNg8fi/Xpt2SnXRsiAyPLae4PiI04K8AsS+MxPHeMEkZe6PHrgWDp?=
+ =?us-ascii?Q?n+c54x1gl3WVhyHrU5lkVnyTpdLCktNdGRQLnX5bTJdYZhxQCLAxXZtSFQuc?=
+ =?us-ascii?Q?pBOGUBZuCuX0jyI9W1wwIRy0anmgHFKnRlYuk1INwWa3Uel9hlWFfTOB22kf?=
+ =?us-ascii?Q?uIlEZ92g4qeR4RdSZKhgiBtg2Dv8FqCGH37DtWTyI+pVeJxRIDLLHnWewZGG?=
+ =?us-ascii?Q?7xWrPT+tBYfSZhs4N2CutwDy3aau+AiQthmGIGLjvMsGe8Px9z1PmsczpRVt?=
+ =?us-ascii?Q?s0SMR19uYBURnRhvLda3tE0WD8aucyuuJJKWFgYMkFg1tuPyjC3O/4vahE2k?=
+ =?us-ascii?Q?yiFjYtV2Ik4pqJLRr/w6NEDEu4eH2Ytb?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Om4ybgCR08t9Bx1YGX417qbehr+aKiajMsALKrxTpMJJry1iT8V6LaxrgR7T?=
+ =?us-ascii?Q?h7gyxzsLRNh/Grsx6DxERl6smX5Mmwx/uujyG2F/BydyBGz9Ws0Ph2hwlL/q?=
+ =?us-ascii?Q?VCmdYvpLBYqVgLI71hytj9xcUte2iSJmK1YiaO98hCEFpwnScOo0uipfaQH+?=
+ =?us-ascii?Q?8tWgGznX1YvSPCkSSKmbI6zr5boaQytr92DHQT2E3fUhtYEAOk6FtdYcwKmJ?=
+ =?us-ascii?Q?mdjg72u1foAF29pgd9piAJinfYVVIiuV5p3CWTaSdyC54QA8jsea/xXj+Q2A?=
+ =?us-ascii?Q?abuS2WgWHSA2zpWMgiCYsptUK6gKL982bCrQIOWEsjlRZ4QG5DmwjinF1D6K?=
+ =?us-ascii?Q?x6JriEU8jIsmLffteiAzHrCa+iTAJbp6+KOcedxlKrZxrgbxixDPezFBmFtO?=
+ =?us-ascii?Q?juBGQ0F4+YcnukvxBnZUf7UhB0LfzAXK/HJpfnyybr7c1gGMz7pB0o3s9kwp?=
+ =?us-ascii?Q?6unhWKAuOQr0cgjrVM2YNCHqAXE3E2WUSlPV/i9yWY6/PXRgx+xoCYi4ZBsH?=
+ =?us-ascii?Q?rjSYBNpUdIoz7so+AffU3BDqisECMJo9QNQJz4gLV5m0V3IXM+/i8obRGpPA?=
+ =?us-ascii?Q?C61qqv0LsLU90kHElWSJib+Od+C/IS4SY2mFKiOu0Svtnl7VyivfuWPIr3RL?=
+ =?us-ascii?Q?r/i/Nmwivf3Kn5toBtGJcakOsoWs6ojUuHntURMcxQ6hfAF7XzwrUm1D6m/m?=
+ =?us-ascii?Q?ZlDD310M2Tini0OMITB89/G91LhDNPpi+QGH/6fMh324KlWtk0TVVvG4riWd?=
+ =?us-ascii?Q?A1hdSdOcES3hCT1oGvk6VdpQ8lg9lYRu2lDjkK9dZpn0XzC2NgU2UhC+FHzw?=
+ =?us-ascii?Q?clQ/z8lJT2QwNDzQXLO8fqhfI7ZKRjsJ6+Xm9dnxCcXKqkMRSeunO+humrFt?=
+ =?us-ascii?Q?nl4P0C2gNQWSvotd46dMStkGLLQanmR1hM/r3m3FeZaK6zWEGwif7HUj6bsE?=
+ =?us-ascii?Q?4VF9iPCJKCm0Kshs6k/cJOMnG2X2k11sc7UNGlsID2y+1DGn1QckJjy1bo6E?=
+ =?us-ascii?Q?lrXLjtSgf3ILwf0ErixtG+YZa3m0yzD3jmeQ0GQVnPg70li/rpTRmsoK14WR?=
+ =?us-ascii?Q?AviXNTgDWx0uEPwirfBQ1V8nz4SX//l+gT8AI6/TwKkN8LjwRVwQUCsAK6Ex?=
+ =?us-ascii?Q?gcREgdhU9/WDLEe3OlkFwqwdlP1UABZaJ63SivHbMaMckcAQcYEBU7ACYRUN?=
+ =?us-ascii?Q?jscSYDRB1b3W6cz9DkWhJ/T31W4Jz6xKPdlmZzflpat+6npEhSnAWWAlYVvY?=
+ =?us-ascii?Q?U/ufX6HJVVthUIysNTfwYNGG3Ebpts1RPHCvYejRLQQMWwjirsiF2qhDxjAU?=
+ =?us-ascii?Q?neFXnh0EmdrRCyfhbelxwkr7qVGrg36WNKw6ESRN2IUd0NKC5x7VragGoZFv?=
+ =?us-ascii?Q?Ys2VULcyuqEEYJCB49CqXUBQqf2F61gOLd/bpfLapPBcJOSsCTRjXYPnmo3i?=
+ =?us-ascii?Q?peTj1yrlxgpj1buCzo0FZN/nrBHzUO76UXFvHOh+BG7C8rmbWh42jZYfw8j/?=
+ =?us-ascii?Q?Jd7zRKWQi+cUyvOVjzMJ3eh3W9kl0hCXBeZ1M6Dx6rz9ZdfUaGNetD5XERAn?=
+ =?us-ascii?Q?ICAECvCMlhc15hOWY/djrtJeRawFq5FrAhlR1C0C?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b39c91b-e4d0-459e-3dca-08de1ae6b9d4
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2025 14:38:59.9412
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L8LQCI02ycr77c4qGCeogZ5C7HEXt2en4MC4jXNrOcl+436dlIbBCdyKMJeyLBRCNrR2FJgq8MW6gBOXdPVfpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9338
 
-Hi Bjorn,
+On Mon, Nov 03, 2025 at 08:40:21AM +0100, Michal Pecio wrote:
+> On Fri, 24 Oct 2025 17:32:04 -0400, Yazen Ghannam wrote:
+> > So far, I think the way to go is add explicit quirk for known issues.
+> > 
+> > Please see the patch below.
+> > 
+> > Thanks,
+> > Yazen
+> > 
+> > 
+> > From eeb0745e973055d8840b536cfa842d6f2bf4ac52 Mon Sep 17 00:00:00 2001
+> > From: Yazen Ghannam <yazen.ghannam@amd.com>
+> > Date: Fri, 24 Oct 2025 21:19:26 +0000
+> > Subject: [PATCH] x86/topology: Add helper to ignore bogus MADT entries
+> > 
+> > Some older Intel and AMD systems include bogus ACPI MADT entries. These
+> > entries show as "disabled". And it's not clear if they are physically
+> > present but offline, i.e halted. Or if they are not physically present
+> > at all.
+> > 
+> > Ideally, if they are not physically present, then they should not be
+> > listed in MADT. There doesn't seem to be any explicit x86 topology info
+> > that can be used to verify if the entries are bogus or not.
+> > 
+> > Add a  helper function to collect vendor-specific checks to ignore bogus
+> > APIC IDs. Start with known quirks for an Intel SNB model and older AMD
+> > K10 models.
+> > 
+> > Fixes: f0551af02130 ("x86/topology: Ignore non-present APIC IDs in a present package")
+> > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> > ---
+> >  arch/x86/kernel/cpu/topology.c | 52 ++++++++++++++++++++++++++--------
+> >  1 file changed, 40 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
+> > index 6073a16628f9..704788b92395 100644
+> > --- a/arch/x86/kernel/cpu/topology.c
+> > +++ b/arch/x86/kernel/cpu/topology.c
+> > @@ -219,6 +219,45 @@ static unsigned int topo_unit_count(u32 lvlid, enum x86_topology_domains at_leve
+> >  	return cnt;
+> >  }
+> >  
+> > +/*
+> > + * Some older BIOSes include extra entries in MADT.
+> > + * Do some vendor-specific checks to ignore them.
+> > + */
+> > +static bool ignore_extra_apic_entry(u32 apic_id)
+> > +{
+> > +	u32 pkgid = topo_apicid(apic_id, TOPO_PKG_DOMAIN);
+> > +	struct cpuinfo_x86 *c = &boot_cpu_data;
+> > +
+> > +	/* Allow "physically not possible" cases if in a guest. */
+> > +	if (!hypervisor_is_type(X86_HYPER_NATIVE))
+> > +	       return false;
+> > +
+> > +	/* This model only supports 8 threads in a package. */
+> > +	if (c->x86_vendor == X86_VENDOR_INTEL &&
+> > +	    c->x86 == 0x6 && c->x86_model == 0x2d) {
+> > +		if (topo_unit_count(pkgid, TOPO_PKG_DOMAIN, phys_cpu_present_map) >= 8)
+> 
+> Looks like possible functional change compared to the code it replaces,
+> perhaps it should be a separate patch?
+> 
 
-On 10/31/25 17:13, Bjorn Helgaas wrote:
-> On Fri, Oct 31, 2025 at 08:26:42PM +0800, Linnaea Lavia wrote:
->> On 10/31/2025 4:50 PM, Neil Armstrong wrote:
->>> On 10/31/25 06:34, Linnaea Lavia wrote:
->>>> On 10/30/2025 1:15 AM, Bjorn Helgaas wrote:
->>>>> On Wed, Oct 29, 2025 at 06:50:46PM +0800, Linnaea Lavia wrote:
->>>>>> On 10/29/2025 6:16 AM, Bjorn Helgaas wrote:
->>>>>
->>>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>>>>> index 214ed060ca1b..9cd12924b5cb 100644
->>>>>>> --- a/drivers/pci/quirks.c
->>>>>>> +++ b/drivers/pci/quirks.c
->>>>>>> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>>>>>>      * disable both L0s and L1 for now to be safe.
->>>>>>>      */
->>>>>>>     DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->>>>>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
->>>>>>>     /*
->>>>>>>      * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->>>>>>
->>>>>> I have applied the patch on 6.18-rc3 but it's still trying to enable ASPM for some reasons.
->>>>>
->>>>> Sorry, my fault, I should have made that fixup run earlier, so the
->>>>> patch should be this instead:
->>>>>
->>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>>> index 214ed060ca1b..4fc04015ca0c 100644
->>>>> --- a/drivers/pci/quirks.c
->>>>> +++ b/drivers/pci/quirks.c
->>>>> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->>>>>     * disable both L0s and L1 for now to be safe.
->>>>>     */
->>>>>    DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->>>>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd, quirk_disable_aspm_l0s_l1);
->>>>
->>>> L1 still got enabled
-> 
-> Is that based on the output below?
-> 
->    [    5.445853] [     T48] pci 0000:00:00.0: Disabling ASPM L0s/L1
->    [    5.560448] [     T48] pci 0000:01:00.0: ASPM: default states L1
-> 
-> If so, this doesn't necessarily mean L1 was enabled.  It means the
-> quirk marked the 00:00.0 Root Port so we shouldn't ever enable L0s or
-> L1, and when we enumerated 01:00.0, we set its default ASPM state to
-> L1.
-> 
-> But I don't *think* L1 should actually be enabled unless we can enable
-> it for both 00:00.0 and 01:00.0, and the quirk should mean that we
-> can't enable it for 00:00.0.
-> 
-> This muddle of "capable" (per Link Capabilities) vs "disabled" (either
-> the Link Control shows disabled, or software said "don't ever use L1")
-> is part of what makes aspm.c so confusing.
-> 
->>>> The card works just fine. I'm thinking the ASPM issue is
->>>> probably from the glue driver reporting the link to be down when
->>>> it's really just in low power state.
->>>
->>> You're probably right, the meson_pcie_link_up() not only checks
->>> the LTSSM but also the speed, which is probably wrong.
->>>
->>> Can you try removing the test for speed ?
->>>
->>> -                 if (smlh_up && rdlh_up && ltssm_up && speed_okay)
->>> +                 if (smlh_up && rdlh_up && ltssm_up)
->>>
->>> The other drivers just checks the link, and some only the smlh_up
->>> && rdlh_up. So you can also probably drop ltssm_up aswell.
->>
->> I can confirm that removing the check for ltssm_up and speed_okay
->> made ASPM work.
-> 
-> I don't think meson_pcie_link_up() should have the loop in it, so the
-> ltssm_up and speed_okay checks, the loop, the delay, and the timeout
-> message should probably all be removed.  That method is supposed to be
-> a simple true/false check, and any waiting required should be done in
-> dw_pcie_wait_for_link().
-> 
-> The link was clearly up when we discovered 01:00.0, so the "wait
-> linkup timeout" messages from meson_pcie_link_up() after that must be
-> from dw_pcie_link_up() being called via the .map_bus() call in
-> pci_generic_config_read() or pci_generic_config_write().
-> 
-> When meson_pcie_link_up() returns false in those config accessors,
-> the config accesses will fail (they won't even be attempted), so we'll
-> see things like this:
-> 
->    pci 0000:01:00.0: BAR 0: error updating (0xfc700004 != 0xffffffff)
-> 
-> and "Unknown header type 7f" from lspci.
-> 
-> Can you drop the ASPM quirk patch and instead try the
-> meson_pcie_link_up() patch below on top of v6.18-rc3?
-> 
->> We still need a solution to the original issue that's preventing the
->> controller from being initialized.
->>
->> My kernel has the following patch applied, but I think it's not
->> suitable for upstream as this changes device tree bindings for PCIe
->> controller on meson.
-> 
-> I assume the original issue is this:
-> 
->    meson-pcie fc000000.pcie: error -EBUSY: can't request region for resource [mem 0xfc000000-0xfc3fffff]
-> 
-> and you confirmed that it wasn't fixed by a1978b692a39 ("PCI: dwc: Use
-> custom pci_ops for root bus DBI vs ECAM config access"), which
-> appeared in v6.18-rc3?
-> 
-> If it's still broken in v6.18-rc3, and the dtsi and
-> meson_pcie_get_mems() patch below makes it work, we have more work to
-> do, and maybe Krishna has some ideas.
-> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> index dcc927a9da80..ca455f634834 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> @@ -138,7 +138,7 @@ pcie: pcie@fc000000 {
->>   			reg = <0x0 0xfc000000 0x0 0x400000>,
->>   			      <0x0 0xff648000 0x0 0x2000>,
->>   			      <0x0 0xfc400000 0x0 0x200000>;
->> -			reg-names = "elbi", "cfg", "config";
->> +			reg-names = "dbi", "cfg", "config";
->>   			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
->>   			#interrupt-cells = <1>;
->>   			interrupt-map-mask = <0 0 0 0>;
->> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
->> index 787469d1b396..404c4d9e1900 100644
->> --- a/drivers/pci/controller/dwc/pci-meson.c
->> +++ b/drivers/pci/controller/dwc/pci-meson.c
->> @@ -109,10 +109,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
->>   {
->>   	struct dw_pcie *pci = &mp->pci;
->> -	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
->> -	if (IS_ERR(pci->dbi_base))
->> -		return PTR_ERR(pci->dbi_base);
->> -
->>   	mp->cfg_base = devm_platform_ioremap_resource_byname(pdev, "cfg");
->>   	if (IS_ERR(mp->cfg_base))
->>   		return PTR_ERR(mp->cfg_base);
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 787469d1b396..13685d89227a 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -338,40 +338,10 @@ static struct pci_ops meson_pci_ops = {
->   static bool meson_pcie_link_up(struct dw_pcie *pci)
->   {
->   	struct meson_pcie *mp = to_meson_pcie(pci);
-> -	struct device *dev = pci->dev;
-> -	u32 speed_okay = 0;
-> -	u32 cnt = 0;
-> -	u32 state12, state17, smlh_up, ltssm_up, rdlh_up;
-> +	u32 state12;
->   
-> -	do {
-> -		state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
-> -		state17 = meson_cfg_readl(mp, PCIE_CFG_STATUS17);
-> -		smlh_up = IS_SMLH_LINK_UP(state12);
-> -		rdlh_up = IS_RDLH_LINK_UP(state12);
-> -		ltssm_up = IS_LTSSM_UP(state12);
-> -
-> -		if (PM_CURRENT_STATE(state17) < PCIE_GEN3)
-> -			speed_okay = 1;
-> -
-> -		if (smlh_up)
-> -			dev_dbg(dev, "smlh_link_up is on\n");
-> -		if (rdlh_up)
-> -			dev_dbg(dev, "rdlh_link_up is on\n");
-> -		if (ltssm_up)
-> -			dev_dbg(dev, "ltssm_up is on\n");
-> -		if (speed_okay)
-> -			dev_dbg(dev, "speed_okay\n");
-> -
-> -		if (smlh_up && rdlh_up && ltssm_up && speed_okay)
-> -			return true;
-> -
-> -		cnt++;
-> -
-> -		udelay(10);
-> -	} while (cnt < WAIT_LINKUP_TIMEOUT);
-> -
-> -	dev_err(dev, "error: wait linkup timeout\n");
-> -	return false;
-> +	state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
-> +	return IS_SMLH_LINK_UP(state12) && IS_RDLH_LINK_UP(state12);
->   }
->   
->   static int meson_pcie_host_init(struct dw_pcie_rp *pp)
+Yes, that's right. I just wanted to put everything together as a quick
+check. We can clean it up if things work.
 
-This change looks fine, please submit it so I can CI test it.
+> > +			goto reject;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Various older models have extra entries. A common trait is that the
+> > +	 * package ID derived from the APIC ID would be more than was ever supported.
+> > +	 */
+> > +	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 < 0x17) {
+> > +		pkgid >>= x86_topo_system.dom_shifts[TOPO_PKG_DOMAIN - 1];
+> > +
+> > +		if (pkgid >= 8)
+> > +			goto reject;
+> 
+> Yes, this works. The excess entries are counted as "rejected" rather
+> than "hotpluggable", package count is correct and EDAC/GART are back.
+> 
+
+Cool, thanks for confirming.
+
+> But to be exact, the known case is (apic_id >= 0x80) rather than
+> (pkgid >= 8). The latter assumes not only that there are no more than
+> 8 packages, but also that their IDs start from zero.
+> 
+
+Yes, that's right. I see these checks as quirks for old systems only. We
+just need catch the bogus cases. These shouldn't be generally
+applicable. Though it'd be good to catch as many cases in as few
+conditions as possible. My thinking is we start with more narrow
+conditions and expand them if there are other reported cases.
+
+> I have this AM4 system with some proprietary HP BIOS:
+> 
+> [02Fh 0047 001h]               Local Apic ID : 10
+> [037h 0055 001h]               Local Apic ID : 11
+> [03Fh 0063 001h]               Local Apic ID : 12
+> [047h 0071 001h]               Local Apic ID : 13
+> 
+> domain: Thread     shift: 0 dom_size:     1 max_threads:     1
+> domain: Core       shift: 4 dom_size:    16 max_threads:    16
+> domain: Module     shift: 4 dom_size:     1 max_threads:    16
+> domain: Tile       shift: 4 dom_size:     1 max_threads:    16
+> domain: Die        shift: 4 dom_size:     1 max_threads:    16
+> domain: DieGrp     shift: 4 dom_size:     1 max_threads:    16
+> domain: Package    shift: 4 dom_size:     1 max_threads:    16
+> 
+> It seems that pkgid is 0x1 here, which is not a problem because
+> it's single socket, but dunno if HP or somebody else couldn't do
+> similar things in an 8-socket system and end up with pkgid > 8.
+> 
+
+So is this another bogus case?
+
+And, if so, it works because of the "ignore hotpluggable in present
+package" check?
+
+> 
+> By the way, do you know what's the reason I don't have /sys directories
+> for those phantom CPUs (before this patch) and should I have them if
+> they were legitimate hotplug CPUs?
+> 
+> Maybe there is already some check performed in other part of the kernel
+> which rejects those CPUs and which could be replicated here.
+> 
+
+Sorry, I don't know. Maybe others can comment if they have any pointers.
 
 Thanks,
-Neil
+Yazen
