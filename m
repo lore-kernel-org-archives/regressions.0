@@ -1,61 +1,62 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A8271479
-	for <regressions@lists.linux.dev>; Tue,  4 Nov 2025 10:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101542DA765
+	for <regressions@lists.linux.dev>; Tue,  4 Nov 2025 10:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762253947; cv=none; b=sfPKshaAwCyHeNXeG47dgxp4NpT6yFxGZ+witB2vpuTZJbsoJ4m0JtCYqDCG5bhOJZpt5YCxT/mg8bwYvaoGucBANbvIiNv8JeW0C+runaJUZKhBjmftYaesrv824k/YxN9xsua6GlikFj2ujt5j+Yn1Uflu5bfIUw3DamX3wWA=
+	t=1762253948; cv=none; b=guAi4iIuNGI3Kt+S9RDrkKShbOo3TM1wFviT+tb9KryqRzF1m0EpUnXSH5Owr936tRrVSIUkf/5ND/VU0wATQZnL5eusZeYf17ZbpP98uttg2nN6hgym2fJq6fZaFJO4j+/l2KQwbpijAQkCElKdGDRCFlB+a/3re+TpZsFvCX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762253947; c=relaxed/simple;
-	bh=X9D2ZMejeOuJYhiaf+iM2vDRfimhm1I5uplt40ZcrtE=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=BdHNSw4l9Cup31bnaElP1tFuL9Fx6iup5hJ5QHI50OpnD4q8AhOGQpRlvPBT27wl3My7mIUGVqHC+lBBh7ezfYPSc7PIluIp9X7FlaBrFBMPb8v0blrB7gJzd6cL0T9m3GLo+7k5Qgc+KFSAKSwIWApVtNwne2loZKReUWd18ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=FyHy4nES; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1762253948; c=relaxed/simple;
+	bh=b+246kCIKvKViZgcnKIa/bCv41vBI8eLjv6Ot7c0OWA=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=olYKH/tF8N4nTjumfN8kStu3LUkRCMYJp8gXnCRlJLcxe4pmqFOS38v4NMS6nBkygIgEQpEnKKNsb1Y8T8toYB1ShRUMm5VxBoDmEkzCXi/PN0wlwZ6EpA9mBA3PEFo299EBuz3fGeNv3RPxDwF7PGwPXvqgySZ+IQmuLayA5zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=vTFgH0cU; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="FyHy4nES"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b9a5b5b47bfso1530241a12.1
-        for <regressions@lists.linux.dev>; Tue, 04 Nov 2025 02:59:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="vTFgH0cU"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-78af3fe5b17so5047807b3a.2
+        for <regressions@lists.linux.dev>; Tue, 04 Nov 2025 02:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1762253945; x=1762858745; darn=lists.linux.dev;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1762253946; x=1762858746; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wjm/T/q4UFVx0GR2qhWDjx2Kam+zJ27u+3ToK37WMgQ=;
-        b=FyHy4nESEo8GAPYo12GyGnBeVqW1FgX7zDwVjOrq0fuyquklKBm7w2WR/0Oe4gLgCt
-         d+ucIRuxFGshlGCtd3D6q75eGa1XIHaVZJE8p3RPX5dBcwQUU+TQrMM7WTR5XFYPj5IM
-         TMFwTqB21xfLFQHChJDvHQU8XfRIOkLpokFLskge4i6WuWRh9WrwaMeks3h6hCdixmz7
-         lkLP8HXx89aPErYlvhyKevbrZ95PT7IDnWWUVPLWxF6KZc3uWbisWsFDeYC//5E5jlFz
-         cSMMcDPKHn2Db1QQ7arj0n2f+uxm6a2EMcCrg1YTNScAP3yxsW/VGfPUvsrln22072v0
-         ex4A==
+        bh=38YtYLLXIxSpGhW1o6dKhYtk6nEpigDTCqSUXy4bhvc=;
+        b=vTFgH0cUdhP81oebgKf7HiwLP0GXIX+15nKBMkjF0RolrF2+q4Lc6sW2uIKPL2K8oQ
+         IWsQJROxFkrJwS7poA7SGdISxrW5GImlzg/Jrx5mwo0YItXZ4Cv9hxVeyDZF23u3+FJd
+         LL0HeeYya9OMykRiXC75hCeDTZms9mK00xfux1mosZLneIXvLOadxahkrucqjd9pvciS
+         JRgt7XMg4HGDbYc9ta58vpHo0UIBWd3EwQnmQ7DOXcu6/KlQarcl0Ljnb8i0naYF/lWu
+         4EZZfP2VKAEgN7gq5QIrTVzP0vQD2NlfNnCtyU0CWx7tZ9vI3+z2j+1NqYgLrMc3Lcod
+         RTgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762253945; x=1762858745;
+        d=1e100.net; s=20230601; t=1762253946; x=1762858746;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Wjm/T/q4UFVx0GR2qhWDjx2Kam+zJ27u+3ToK37WMgQ=;
-        b=h3sKRi/f9uVuGWP6cVtD1Tu2+HyTouzYdrUVLqYCZqSni09gNNzGFaLhyjh/Gqyj9B
-         gpr3815Z0+O0isun6zlarr+PHKnc+RfIi9PZbkW/guvsoGAWCJAjZgujGKxlq9hNe7yS
-         t5id8MShajq7vwdDe6bLibxHUBnfQzrGLDZY/hKW6t94izNuOabtpTw4xbDzdpDoPtVw
-         sk+1GisflQnVCSGUJ2rTbNXmXnHswTcVU3Jpcys9K5VlIpklzERIoaZ8tlwtxOHZ8nrf
-         DazXC51/rxtEMX4v0WWIzaaglo4Z2ipJTXxaXfsx3bL3NMp8eVmL2E5LFESZ7cKq/20c
-         mH9A==
-X-Gm-Message-State: AOJu0YxUuGym9fciO4NHVsTKwzAvZDDzYPiQ9lDBdHKBcPzTQJPUMqw4
-	jPpWBMf6Pcnsonjfwr1Qwbj+hz7vGrxmgfqRokmGDvJsJTP9SNaf3qss3BsYTOse2wU=
-X-Gm-Gg: ASbGncuMc8ji+Bqvdcna09tOCVJ4JSW5rFfaw/HA1hg5ZO0HLKC+fmiOgu9T6qIH+Au
-	bFfzhfqrwxTXXgSeKJt3v877bc1PKnGi0b/njQNo30n1xNdjeCIUwwl9qU2+E3CcBYClKmhEVtP
-	i8nfvWLyLVqCF8XQ163aTn2Knt9Qpai4hGlMGRS4ZlcJEBBfKbsIO2XzhV/2ao+Jqsz8TgZ/T4F
-	Xs9/Q4Ss35QliYM3tCWu9l74iX7ePL/16wBLhchX0/nZkwWKPqFlbECjTtlosKXSeHTpaM3JyDd
-	0nsG0qbRS4xf6dgmM/GmxQr7btStuDnJIXb3n3c/0i5ztK8nVwZXAgeaNhAkjyBiF3wv6yfDiNO
-	gfWFlswXkLq1K6rlWzYezVJEwZ7HfxiTBwtMlowBGRaL3EPzZFBTbPcL2cjU/7nIVJbG9VA==
-X-Google-Smtp-Source: AGHT+IEE3tpjnfYLy2MvsRp9gnymo9WNb/VqOccqW6Wx2eS51Tu6VZ5UcpgFdCxGUETRUfl0FydykA==
-X-Received: by 2002:a17:902:f651:b0:295:1277:7920 with SMTP id d9443c01a7336-2951a43ebb3mr216891085ad.28.1762253944862;
-        Tue, 04 Nov 2025 02:59:04 -0800 (PST)
+        bh=38YtYLLXIxSpGhW1o6dKhYtk6nEpigDTCqSUXy4bhvc=;
+        b=vtjkc1nJMLZG01nR9gzdxFrxa0x1eVDWMBDUexdQjAjxCH7rt163YWUgGdtW2SCA12
+         /r0g1v1Z67SFZazTgummwJSvTTolgAd+Fj7+gpXB/Fdop6e2pCuKqoVGaSF9jDVJ90g7
+         bwaomKpJbJB9ky4prlox2QloWJzJS8o+kLJGcV+068ATY104S79ZmvYOaCQd6d7gBHzZ
+         GzKzfYFVsuD4zr3WYzSCwan6NSYVlkCtmV7b4IOaex5rXFBGo4yt3a2+cLuTFTbZ/DRN
+         DVAGtwJ+NGIO3DR4IeALGA4GwtKabR48Sd+aB65bfQCvIoKz5f9UUIzP2Y7ezP7QtRFA
+         V4Tw==
+X-Gm-Message-State: AOJu0Yz3sqg4DsxseBVaGvLOvbj+dpZRA67Szd5oqyzlfuR2+GhHcQqx
+	AkaEEZm8Pe3s8kYhTLO54Gww3UCzOzxZPd3zcE9rmzxWP9UWZKlV0LpEELh+QXDY8g5v7hIiJ0Y
+	MLHnG
+X-Gm-Gg: ASbGncuRldU06/HAH9ifgByz+GgzRBG4kGz7nLwzsZekddbfVm/buMgrK4hHFYRTOq4
+	NSVgR/eEa0w+cJp6bd/4bG0jTQw3i5WEOKYncDe8TWOaZhlEUevDX3QFaPjDYYtXGw1iZVV1LeB
+	9ydJvpDMMRaoMTdnVAMf+OGS7YSYZM63/wBe9qF/LZtldaRoGb9kfzCq0dG05wN+JNUvuiXEV+S
+	12cobqjDtynXgAb+qWa+wDQ3K30RPFtZpARZPnfD8XwkmLWT/R1y4pCKrA7xnZqYqArDoadbCjQ
+	AIvX/IdXwxvYiWoVUQ9fduBQr6YlnP8/qVV7wdrp6zxX2cTgjePitj3tO6GGhkp7UaK11WqAySx
+	zB/Bm3gAi67mO6xWg90t79VyfsoR7c4kvCHJvuBjEBmHUSey5kWLlJ5EacqrGm/8WuKLxUA==
+X-Google-Smtp-Source: AGHT+IEaCW8CR//NAOXHmykFLAmExRAqALUUcQz5Er/GWgJL6rRlZHEieutLRypaa4365FPi0ATBJA==
+X-Received: by 2002:a05:6a00:9291:b0:7ad:11c9:d643 with SMTP id d2e1a72fcca58-7ad11c9d81amr2344243b3a.21.1762253946228;
+        Tue, 04 Nov 2025 02:59:06 -0800 (PST)
 Received: from efdf33580483 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29601a7afefsm22519275ad.111.2025.11.04.02.59.03
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7acd6a15af3sm2537224b3a.69.2025.11.04.02.59.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Nov 2025 02:59:04 -0800 (PST)
+        Tue, 04 Nov 2025 02:59:05 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -63,17 +64,15 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?q?=5BREGRESSION=5D_next/master=3A_=28build=29_implicit_declaration_o?=
- =?utf-8?q?f_function_=E2=80=98topology=5Fcore=5Fhas=5Fsmt=E2=80=99=3B_did_y?=
- =?utf-8?q?ou_=2E=2E=2E?=
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) call to undeclared function
+ 'topology_core_has_smt'; ISO C99 and l...
 From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Tue, 04 Nov 2025 10:59:03 -0000
-Message-ID: <176225394342.3644.6412596085150396269@efdf33580483>
+Date: Tue, 04 Nov 2025 10:59:05 -0000
+Message-ID: <176225394505.3644.7188826232555976435@efdf33580483>
 
 
 
@@ -84,10 +83,10 @@ Hello,
 New build issue found on next/master:
 
 ---
- implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration] in drivers/perf/arm_pmu.o (drivers/perf/arm_pmu.c) [logspec:kbuild,kbuild.compiler.error]
+ call to undeclared function 'topology_core_has_smt'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration] in drivers/perf/arm_pmu.o (drivers/perf/arm_pmu.c) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+- dashboard: https://d.kernelci.org/i/maestro:998dc5815603ae4cd3767a506a6f94b75d982ffc
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  17490bd0527f59d841168457b245581f314b5fa0
 - tags: next-20251104
@@ -95,29 +94,28 @@ New build issue found on next/master:
 
 Log excerpt:
 =====================================================
-drivers/perf/arm_pmu.c:935:24: error: implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration]
+drivers/perf/arm_pmu.c:935:17: error: call to undeclared function 'topology_core_has_smt'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
   935 |         pmu->has_smt = topology_core_has_smt(cpumask_first(&pmu->supported_cpus));
-      |                        ^~~~~~~~~~~~~~~~~~~~~
-      |                        topology_core_cpumask
-  CC      drivers/iio/adc/bcm_iproc_adc.o
-  CC      drivers/devfreq/governor_simpleondemand.o
-  CC      drivers/memory/tegra/tegra124.o
-  CC      drivers/memory/brcmstb_dpfe.o
-cc1: some warnings being treated as errors
-  CC      drivers/memory/tegra/tegra20-emc.o
+      |                        ^
+1 error generated.
 
 =====================================================
 
 
 # Builds where the incident occurred:
 
-## multi_v7_defconfig+CONFIG_SMP=n on (arm):
-- compiler: gcc-12
-- config: https://files.kernelci.org/kbuild-gcc-12-arm-SMP-6909cb01f21f07610dca0839/.config
-- dashboard: https://d.kernelci.org/build/maestro:6909cb01f21f07610dca0839
+## aspeed_g5_defconfig on (arm):
+- compiler: clang-17
+- config: https://files.kernelci.org/kbuild-clang-17-arm-mainline-aspeed_g5-6909cacaf21f07610dca06ab/.config
+- dashboard: https://d.kernelci.org/build/maestro:6909cacaf21f07610dca06ab
+
+## multi_v5_defconfig on (arm):
+- compiler: clang-17
+- config: https://files.kernelci.org/kbuild-clang-17-arm-mainline-multi_v5-6909cacef21f07610dca06c7/.config
+- dashboard: https://d.kernelci.org/build/maestro:6909cacef21f07610dca06c7
 
 
-#kernelci issue maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+#kernelci issue maestro:998dc5815603ae4cd3767a506a6f94b75d982ffc
 
 Reported-by: kernelci.org bot <bot@kernelci.org>
 
