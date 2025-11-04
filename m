@@ -1,194 +1,128 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8342B145355
-	for <regressions@lists.linux.dev>; Mon,  3 Nov 2025 18:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762194873; cv=pass; b=VEpMp70OQmE4AVOaV5f6jpxBlQBZ3lWfg14eTERpdTI8IGfTziL1ZyAwlaHvCMZwtR4k7C4RObrZDahXFbD5cdw0NRManU5tfGT7rV4Pr6EkEcWUad5GkPIJ8FjFSRfB5NwMhST56etA/IdPrMXSsaCMyVK4c0GuzCs5kTboKI4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762194873; c=relaxed/simple;
-	bh=lRbzVCs+21KTjiME0geIk/7FeCxmcuLemfuEVlGODUM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ThMm2rQk/Xhznl8OAA+V/x8uG+A62Ox4/SUKX/t+GWbCQui63xFP1wrGowrNbGj1gqTCAqonlsmkuRuQUwqYw91GGFsBOd/E2ZKugXXLvlyyiBl+XdHrRzIaQuTshla44W8jHTXFncHfimYeay1JsfAish4pPVTyYta8rO8S1Lo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=ZayjRdX4; arc=pass smtp.client-ip=85.215.255.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A8271479
+	for <regressions@lists.linux.dev>; Tue,  4 Nov 2025 10:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762253947; cv=none; b=sfPKshaAwCyHeNXeG47dgxp4NpT6yFxGZ+witB2vpuTZJbsoJ4m0JtCYqDCG5bhOJZpt5YCxT/mg8bwYvaoGucBANbvIiNv8JeW0C+runaJUZKhBjmftYaesrv824k/YxN9xsua6GlikFj2ujt5j+Yn1Uflu5bfIUw3DamX3wWA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762253947; c=relaxed/simple;
+	bh=X9D2ZMejeOuJYhiaf+iM2vDRfimhm1I5uplt40ZcrtE=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=BdHNSw4l9Cup31bnaElP1tFuL9Fx6iup5hJ5QHI50OpnD4q8AhOGQpRlvPBT27wl3My7mIUGVqHC+lBBh7ezfYPSc7PIluIp9X7FlaBrFBMPb8v0blrB7gJzd6cL0T9m3GLo+7k5Qgc+KFSAKSwIWApVtNwne2loZKReUWd18ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=FyHy4nES; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="ZayjRdX4"
-ARC-Seal: i=1; a=rsa-sha256; t=1762194501; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=AU4sy1rW+8LT55IEiSdEhOox/nGGdwtEIgBEx/VWOpxC7gv/6IHVTbMGH9GTa4Pkpw
-    UcORh/wMC2L+caR+WRNufihMy28FTGtrmVRQKU15aypqb5WB0LEkWT0F510e5nSae1Hh
-    MgqhyufKrOULj1CfFOQHgPZXyFsgPkYb94w31g9HQhkzR58/AHgATLADDr6qjK8FY85m
-    p1gpxEOOD737r2wcQL/inQCIErvPF7LDDC8LWclzb25j2p7n7grtWC22fPIVFB8M9NdG
-    IYHy31JglrxacdKxQ5SZrhk26i9HhIRwHxtaqUVif8qMznk5g8DE5Cmm2usJ98zy6/aN
-    VWZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762194501;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=o7mmj4miEk5uHrPbENwgiOkK+B4AYKwPEzssaLhx+ns=;
-    b=TR6GYXtcjPr+Z+XT7P0QkLcqM5oZtZn2FLXPHZFeE/s32VbZkOfoN0Oz0IBOTpbijJ
-    TYc3UIE38Ki1QUGNKJacfsHGnxNC3CRqgd+B7Wcav64bMA6562x11lU3am/u+aIzdFDu
-    r6DV/MLKWSe9EWxdeto3RUAKtP3b57PjiusxHTIIOqtLZ77lw9GORMDeRQbdP14Ij9xb
-    eDieTH96QfM2JYMHbwxi6kwqBgH7BKNWKF1PnQkRRgWPDZ0zcC0Ad4x/6JNuKzIpWh7y
-    3QpqE6Z3n1k5vylu2YphMjJys4vk1FEVAhuQf3dQirE+29CA6Z7EskO/AYwW40D1z+2s
-    9bAQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762194501;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=o7mmj4miEk5uHrPbENwgiOkK+B4AYKwPEzssaLhx+ns=;
-    b=ZayjRdX4ltx9V2Lvo2hCi/dnVYykNv66H3B0rrEwErP2mBtDvBf1oUPVFxrOSngBqp
-    2kYpWzMPrUlmW0mYblk/CB4QYD/VuGOqCfhnPtZ2kT/48MgiG+YhQgSyXnIDCUHBk2kC
-    65nMv6Ke6SM6ZuV+euqQbAiZRHTaxcJWz2hFJSbj45DFTTotuOypehe6GZXIif2jO1jM
-    8WkBFV6daljnPg3EVr7ql6qatXLjl+K6S1sH3sMPejeiRqTTmW5Oz7x0ayv5ECagMLsb
-    ub7kHinKTX/sRhJTfONYU3hDDz0m5JNOB8QhAuNozbSQxL4IFgtqsRqq9Fvxcc/2ILKz
-    AR5g==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIi+mgQ=="
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 53.4.2 DYNA|AUTH)
-    with ESMTPSA id e288661A3ISKeHk
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 3 Nov 2025 19:28:20 +0100 (CET)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, mad skateman <madskateman@gmail.com>,
- "R.T.Dickinson" <rtd2@xtra.co.nz>, Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev
-References: <545ac5c9-580c-5cf7-dd22-10dd79e6aabf@xenosoft.de>
- <AEBA92BD-B46D-4D1B-A4D1-645B276E34CF@xenosoft.de>
- <emjne6l33e3hukef5ms7kubv6kkuvesqkw6ozojnzzdgvso7ma@rbpg2l5i3nno>
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-Organization: A-EON Open Source
-Message-ID: <d93eac4d-b382-97dd-d829-98aef6695204@xenosoft.de>
-Date: Mon, 3 Nov 2025 19:28:19 +0100
-X-Mailer: BrassMonkey/33.9.1
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="FyHy4nES"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b9a5b5b47bfso1530241a12.1
+        for <regressions@lists.linux.dev>; Tue, 04 Nov 2025 02:59:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1762253945; x=1762858745; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wjm/T/q4UFVx0GR2qhWDjx2Kam+zJ27u+3ToK37WMgQ=;
+        b=FyHy4nESEo8GAPYo12GyGnBeVqW1FgX7zDwVjOrq0fuyquklKBm7w2WR/0Oe4gLgCt
+         d+ucIRuxFGshlGCtd3D6q75eGa1XIHaVZJE8p3RPX5dBcwQUU+TQrMM7WTR5XFYPj5IM
+         TMFwTqB21xfLFQHChJDvHQU8XfRIOkLpokFLskge4i6WuWRh9WrwaMeks3h6hCdixmz7
+         lkLP8HXx89aPErYlvhyKevbrZ95PT7IDnWWUVPLWxF6KZc3uWbisWsFDeYC//5E5jlFz
+         cSMMcDPKHn2Db1QQ7arj0n2f+uxm6a2EMcCrg1YTNScAP3yxsW/VGfPUvsrln22072v0
+         ex4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762253945; x=1762858745;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wjm/T/q4UFVx0GR2qhWDjx2Kam+zJ27u+3ToK37WMgQ=;
+        b=h3sKRi/f9uVuGWP6cVtD1Tu2+HyTouzYdrUVLqYCZqSni09gNNzGFaLhyjh/Gqyj9B
+         gpr3815Z0+O0isun6zlarr+PHKnc+RfIi9PZbkW/guvsoGAWCJAjZgujGKxlq9hNe7yS
+         t5id8MShajq7vwdDe6bLibxHUBnfQzrGLDZY/hKW6t94izNuOabtpTw4xbDzdpDoPtVw
+         sk+1GisflQnVCSGUJ2rTbNXmXnHswTcVU3Jpcys9K5VlIpklzERIoaZ8tlwtxOHZ8nrf
+         DazXC51/rxtEMX4v0WWIzaaglo4Z2ipJTXxaXfsx3bL3NMp8eVmL2E5LFESZ7cKq/20c
+         mH9A==
+X-Gm-Message-State: AOJu0YxUuGym9fciO4NHVsTKwzAvZDDzYPiQ9lDBdHKBcPzTQJPUMqw4
+	jPpWBMf6Pcnsonjfwr1Qwbj+hz7vGrxmgfqRokmGDvJsJTP9SNaf3qss3BsYTOse2wU=
+X-Gm-Gg: ASbGncuMc8ji+Bqvdcna09tOCVJ4JSW5rFfaw/HA1hg5ZO0HLKC+fmiOgu9T6qIH+Au
+	bFfzhfqrwxTXXgSeKJt3v877bc1PKnGi0b/njQNo30n1xNdjeCIUwwl9qU2+E3CcBYClKmhEVtP
+	i8nfvWLyLVqCF8XQ163aTn2Knt9Qpai4hGlMGRS4ZlcJEBBfKbsIO2XzhV/2ao+Jqsz8TgZ/T4F
+	Xs9/Q4Ss35QliYM3tCWu9l74iX7ePL/16wBLhchX0/nZkwWKPqFlbECjTtlosKXSeHTpaM3JyDd
+	0nsG0qbRS4xf6dgmM/GmxQr7btStuDnJIXb3n3c/0i5ztK8nVwZXAgeaNhAkjyBiF3wv6yfDiNO
+	gfWFlswXkLq1K6rlWzYezVJEwZ7HfxiTBwtMlowBGRaL3EPzZFBTbPcL2cjU/7nIVJbG9VA==
+X-Google-Smtp-Source: AGHT+IEE3tpjnfYLy2MvsRp9gnymo9WNb/VqOccqW6Wx2eS51Tu6VZ5UcpgFdCxGUETRUfl0FydykA==
+X-Received: by 2002:a17:902:f651:b0:295:1277:7920 with SMTP id d9443c01a7336-2951a43ebb3mr216891085ad.28.1762253944862;
+        Tue, 04 Nov 2025 02:59:04 -0800 (PST)
+Received: from efdf33580483 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29601a7afefsm22519275ad.111.2025.11.04.02.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Nov 2025 02:59:04 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <emjne6l33e3hukef5ms7kubv6kkuvesqkw6ozojnzzdgvso7ma@rbpg2l5i3nno>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?q?=5BREGRESSION=5D_next/master=3A_=28build=29_implicit_declaration_o?=
+ =?utf-8?q?f_function_=E2=80=98topology=5Fcore=5Fhas=5Fsmt=E2=80=99=3B_did_y?=
+ =?utf-8?q?ou_=2E=2E=2E?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 04 Nov 2025 10:59:03 -0000
+Message-ID: <176225394342.3644.6412596085150396269@efdf33580483>
 
-On 11/01/2025 06:06 PM, Manivannan Sadhasivam wrote:
- > On Sat, Nov 01, 2025 at 08:59:37AM +0100, Christian Zigotzky wrote:
- >>
- >> Bjorn Helgaas <helgaas@kernel.org> wrote:
- >>
- >> Oops, I made that fixup run too late.  Instead of the patch above, can
- >> you test the one below?
- >>
- >> You'll likely see something like this, which is a little misleading
- >> because even though we claim "default L1" for 01:00.0 (or whatever
- >> your Radeon is), the fact that L0s and L1 are disabled at the other
- >> end of the link (00:00.0) should prevent us from actually enabling it:
- >>
- >> pci 0000:00:00.0: Disabling ASPM L0s/L1
- >> pci 0000:01:00.0: ASPM: default states L1
- >>
- >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
- >> index 214ed060ca1b..27777ded9a2c 100644
- >> --- a/drivers/pci/quirks.c
- >> +++ b/drivers/pci/quirks.c
- >> @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct 
-pci_dev *dev)
- >> * disable both L0s and L1 for now to be safe.
- >> */
- >> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
-quirk_disable_aspm_l0s_l1);
- >> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, 
-quirk_disable_aspm_l0s_l1);
- >>
- >> /*
- >> * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
- >>
- >> —
- >>
- >> Hi Bjorn,
- >>
- >> Thanks for your patch. I patched the RC3 of kernel 6.18 with your 
-new patch and compiled it again. Unfortunately the FSL Cyrus+ board 
-doesn't boot with your new patch.
- >>
- >> Sorry,
- >>
- >> Christian
- >>
- >> --
- >> Sent with BrassMonkey 33.9.1 
-(https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
- >>
- >> —-
- >>
- >> What about with
- >>
- >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID, 
-quirk_disable_aspm_l0s_l1);
- >>
- >
- > The issue is most likely with your Root Port rather than with the 
-Radeon device.
- > So the quirk for Radeon won't fix the issue properly as it will 
-affect other
- > host systems as well.
- >
- > I guess Bjorn's change didn't help because the fixup ran before
- > pcie_aspm_init_link_state(). So even though the fixup disabled the 
-ASPM link
- > state for Root Port, it got enabled by the default ASPM states enabled in
- > pcie_aspm_init_link_state().
- >
- > Can you try doing fixup final as below?
- >
- > ```
- > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
- > index d97335a40193..74d8596b3f62 100644
- > --- a/drivers/pci/quirks.c
- > +++ b/drivers/pci/quirks.c
- > @@ -2524,6 +2524,7 @@ static void quirk_disable_aspm_l0s_l1(struct 
-pci_dev *dev)
- >   * disable both L0s and L1 for now to be safe.
- >   */
- >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, 
-quirk_disable_aspm_l0s_l1);
- > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, 0x0451, 
-quirk_disable_aspm_l0s_l1);
- >
- >  /*
- >   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe 
-Retrain
- > ```
- >
- > Sorry, I guess we are asking for too many experiments to be done 
-which might be
- > of trouble for you. But without direct access to the device, we had 
-to do these
- > :(
- >
- > Thanks for your help in debugging.
- >
- > - Mani
- >
 
-I tested your patch with the RC4 of kernel 6.18 today. Unfortunately it 
-doesn't solve the boot issue.
 
-- Christian
 
--- 
-Sent with BrassMonkey 33.9.1 
-(https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration] in drivers/perf/arm_pmu.o (drivers/perf/arm_pmu.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  17490bd0527f59d841168457b245581f314b5fa0
+- tags: next-20251104
+
+
+Log excerpt:
+=====================================================
+drivers/perf/arm_pmu.c:935:24: error: implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration]
+  935 |         pmu->has_smt = topology_core_has_smt(cpumask_first(&pmu->supported_cpus));
+      |                        ^~~~~~~~~~~~~~~~~~~~~
+      |                        topology_core_cpumask
+  CC      drivers/iio/adc/bcm_iproc_adc.o
+  CC      drivers/devfreq/governor_simpleondemand.o
+  CC      drivers/memory/tegra/tegra124.o
+  CC      drivers/memory/brcmstb_dpfe.o
+cc1: some warnings being treated as errors
+  CC      drivers/memory/tegra/tegra20-emc.o
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## multi_v7_defconfig+CONFIG_SMP=n on (arm):
+- compiler: gcc-12
+- config: https://files.kernelci.org/kbuild-gcc-12-arm-SMP-6909cb01f21f07610dca0839/.config
+- dashboard: https://d.kernelci.org/build/maestro:6909cb01f21f07610dca0839
+
+
+#kernelci issue maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
