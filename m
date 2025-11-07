@@ -1,148 +1,89 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72DF1D61A3
-	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 19:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360A8303C85
+	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 20:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762543789; cv=none; b=UZ8wm3EhBPg51unzY+ok+LmtNoKk4a8BYc5WaF6vonGfMspIw9Y/Vr7Km5nRot093yCeVnGwu4f6Ac+bxX1JuDxzoPXdLCOQLAC3fSm+alDOazKzwxOVpL/74m019gBmJ5lTnDueG37J2f/F1+cnNRLZ4nrbbS+FXJT+SZnTfA8=
+	t=1762546356; cv=none; b=F5MxwN8a4jr25/z85HiSrIAjLTQZ579egTqsVsPpLqImbiccOr7+9D3gqPX+PYWHmr71Q+06XdNMK292Rdb93pZyOkEDutsvQ8XdbCOBuePmPa6q15bCQb+5Ojq0SlDAoajmSyMZyI6Ds4v7cVy+cNFc114HycYulw0cJR+sQjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762543789; c=relaxed/simple;
-	bh=v4+AN5rCF0WTHHGwiE3dw4ta/4S0WRMWYUuIPTbqaOs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=bsm6mZ6r2QiQLKV9on9R0orJzuNUEqNqDKdm/5CwKC4N+JWr6fZ+jWlLR1gN745Oz/tsDNRCxv+UhwIjg5Dp0Ao2r9ec+Jpaf/Yfds3bxuZvkwDYzrEzhSAFGi22bIckJHN6ESkcRd3YkJ0Ha3RymBXPJkasjScilHcRgHrqxG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=DvEh0tB5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xCoannFY; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1762546356; c=relaxed/simple;
+	bh=xhuY738tZl353Xy0fNRI/QG1yk1TSCZTX05qyNUVL30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B+FbFJ7qH7XiAwBSf9QrNB6Y/t/Z7JAr+tmp6XzcjfzmATAhf8VSWPQ64E+pbJlVulsJMQvzyKv+WaygO1/P6MSBoOMf303MuZMWrWatf31U48CNnnLrljbtCwfgW62Zsmg4NQOfdYGBupfmS/DYbVhl8slF9D3c+YD2cVB7Pwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=eSNQ7ct1; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="DvEh0tB5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xCoannFY"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 005F01D00175;
-	Fri,  7 Nov 2025 14:29:46 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-03.internal (MEProxy); Fri, 07 Nov 2025 14:29:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1762543786;
-	 x=1762630186; bh=uK64V1RHABwDYWcBrcO7CIMo6gQ+hXw+tDq5ENDDMdI=; b=
-	DvEh0tB5C5uwlHUN5cAgVxrM5wA8MyRL3Vg50sqnsSNlv6jU16A6OxCrqK3uKdsV
-	Xsft9Ng1z5raNgmeFMD2DNE3Z1Nn2asdG8Heo5ra40HHUuPaZQSoj+hzIyqldBJZ
-	A3kWsbYgfj3B873H4JfLFFZqqEfKwWNEKMnGk/Q2XQ2p2bYE7VTLtuuqijk/tnPE
-	vIpNHZFLysFwbmDnvBurv/B/Ws+O+GhRR5SoSGtQd5K8pVd4dZj/Er/xOAaIKe4x
-	pC6yv3Sa448czQNXTuVodxy+dkQr8+g7RbLKXsmD/JWeDUxti7r9SxMYGgibkcZb
-	BbfYBQwp1uzpOmI+ttVIeg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762543786; x=
-	1762630186; bh=uK64V1RHABwDYWcBrcO7CIMo6gQ+hXw+tDq5ENDDMdI=; b=x
-	CoannFYs5aZkDngyO/cGGTS9agZ5KL+s7dYIm74+qFkWp/kxNMVs6Vw5Z78+vFvi
-	rIQ8deTJH3UxW3QgWDABin3WxV/aVoz3gMaHhsjqMR1hsPPnm1lfiYjxflaRDhxU
-	8IahSaDnv1ynzUrkX4MF16frrj1KM80U5pjVKcOaWaAWE0U9oN2La0LANplpS9PP
-	2La2+T5Kcr0rU7LBhkGlPv7Buee11wzEAy8zi0zch1OaSnNHLl0WcEYImVzU8AUF
-	+SUFX2EucZyROZ7a9Jzrk9JSHLbRgTklp385aZMpWE87PAgdcu6rdIYt3ygwryMm
-	z+z42ccU5gOqNnBGfw5mA==
-X-ME-Sender: <xms:qkgOaQVWyrtJzFwWoX4r7UAg5bJr5Z6w9jLlYzXfQItcPBsxCIYQrQ>
-    <xme:qkgOafbxmTy71v9Zx1jxrd5Dv-8khYNupjwibHetSxoPUNYgqp0x4rbS_4y-bSt6Q
-    B6t7ZU4HzfdASVQ-74kp0sYnnU0Kx6ae-rt6cRQE8mGdvMGODCiMNKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduledthedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedflfhirgig
-    uhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhephfethfdutdeigeelueeitddtheehudevffejtedtkedvueei
-    tddujeefieejieefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdpnhgspghrtghp
-    thhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhgsohiflhgvrhesug
-    hrrggtohhngidrtggrpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdr
-    lhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmihhpshesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlh
-    drohhrgh
-X-ME-Proxy: <xmx:qkgOaeCMkX94klJR4Q6_76loyWJRnLr4vcazdF0HdgPm-FTxqdZk9Q>
-    <xmx:qkgOaR2r9xdAMRyKZ6HrI_MiBh5zsXVyNxTGxWfsyV3oIJl_bx2WPA>
-    <xmx:qkgOaY24YQObLI1sWl67QG5H72otGIfCwBtDBu1kPtCQQhpStHar2g>
-    <xmx:qkgOaeBgljORvxCmrM9LeCEdeqj7ZiwZZz9nxVScqlrtAwIb7BkEVg>
-    <xmx:qkgOacJhPZa5eNwnwgA7AWvX8_32TOYnESs8E_A9CZ1gUOVlL9pcVTfU>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 85BF72CE0067; Fri,  7 Nov 2025 14:29:46 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="eSNQ7ct1"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8b0f54370ecso122329385a.2
+        for <regressions@lists.linux.dev>; Fri, 07 Nov 2025 12:12:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1762546353; x=1763151153; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPIKY3pDWsZYiW/KD6AWR+JZdgeQXYTbfkJenmEgskU=;
+        b=eSNQ7ct1yiLNQcVemcYHqvuYPsKQg0YtNw35TnmUy/PvczBiT7YPF8iUsgzdOB4bW6
+         SxCuYW4AuIW0/k9Fl1cDJxiljlqkKCgTGGV7AZxMgTuiDICNpee0AFGaPNOubRcjQ4YZ
+         C0W/WHhQMnWGgROTnOUI0rJhCyLpqzIYL4QIH2nMoOKq82L0f0tJTLGhgLYfGHb8srsc
+         1KLzVf0/+DWeGZaWCfjhTCIqYjLLbcU0PSgrB2bN3nnTTJh0wwl5GviFD1+grxsnCf2y
+         hH1+4grKeKHiyjrftKWsie3dsT9TQy51970OXjDZr9rEPkPi2n2NasY4X5YWhQ2VzYyG
+         YVIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762546353; x=1763151153;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WPIKY3pDWsZYiW/KD6AWR+JZdgeQXYTbfkJenmEgskU=;
+        b=gxY/7ZeMcvQwaUOLtEFMsm2LA+MT7bZ8uBI6DMJXh6cC+JXiquxJiB6gCa1XsVe/dk
+         LeheXDhV+fYq92/RvEbu3SNpBIS3Etan3Dz6CDDuFZMpsiF23EigGzzlwdR+76tVX2mY
+         unJzE1GBXDRLzzZk3eXCVnlw39pLwUwxwl/fBEcFbDHzY7ZRIK1Gqj42YiBSaRgAjt34
+         /NTH3GoCtZV1JhFyQw+c2iUzqWP3ToriUvs3TK4X095Lxxk61/04yUf2gDgMA4VQCbM1
+         vQRkkBaJlw3/5ynf7JFXl+gKhCBELySo7cQzaTsq8vgUP8e1vhwWwCyc/Z2nERkzBNST
+         QUew==
+X-Forwarded-Encrypted: i=1; AJvYcCWH00zGfYZQy9TyLIdAWAxtIx+DjMhqkdvpjErexKX7/XhZNVF6rUlnyphVxt/l3W8aLnEdUehyA+Nf8Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwUTsfy5ZsnheLZD0Cykc6xSmxozQni+hTxTeL+uWAatJdrCIqO
+	EuLfx5ZiNXYOhlr5rlWbtLlMIf19chRZyjVuE3tT3GO54nAL2/wbmoNp8mBw8NBDRMA=
+X-Gm-Gg: ASbGncvX3mGcLFfZUhIC+rmpLuBKKBcT0vfEbdFPzRHuoSorKDRff2nPR7CdsNXKuZP
+	ez+acuRTXWTtSc/FMU5NQPa3AIiMYjKSP83psqUTflGcDCu0cXuEghGZuunlPzpG50y21DzrCuD
+	t2sCHaDvyyOxCPDlxVKiWp1avnd3k9oIC8rUOHDN5f3tDGOYnE8eRUyvBZ61Kvt+MmLqaSoCfu8
+	tipIxNQExddEIHG9yi6luTw7II/9tDGZNvEmXva3xH9vq86T04Bof37b6AwETgBbt5ZjAU75kZP
+	ltVWf+82rVEXTZxdRbfA5zK3Rq9obabzRdwSOh2Yrv/eyrYPFy+A7ZeWeiuasCit2FUF5UdNuz8
+	ql8nzn84lvomukU+ummMQRyO/Co1rCbwsrqS55nIshTUBVxH3t+9YMNA+vH+UpqsJ3F2kScBK5h
+	KWKsRCGA2nYNaDpMSpZhUjk/AoUQGtIg==
+X-Google-Smtp-Source: AGHT+IFsLLiomLTVAKf0UK7Kqv+I/lwIiIqePUIuZ3D8VSGGRtsZSWpNNzYLl1SSmqIrjJUQd1Y7Lg==
+X-Received: by 2002:a05:620a:44ce:b0:8b2:33bd:7331 with SMTP id af79cd13be357-8b257f68729mr69675385a.83.1762546353068;
+        Fri, 07 Nov 2025 12:12:33 -0800 (PST)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-8b2355e9bb6sm476602085a.22.2025.11.07.12.12.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 12:12:32 -0800 (PST)
+Date: Fri, 7 Nov 2025 15:12:31 -0500
+From: Nick Bowler <nbowler@draconx.ca>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: PROBLEM: boot hang on Indy R4400SC (regression)
+Message-ID: <ea6p4efuwbrlqjiwkgjcd7ofj7aahfnnvnkooo2il36ggzrlcj@n6mcofpb2jep>
+References: <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
+ <e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AIEMUPQi-EY-
-Date: Fri, 07 Nov 2025 19:29:25 +0000
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Nick Bowler" <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>
-Message-Id: <e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com>
-In-Reply-To: 
- <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
-References: <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
-Subject: Re: PROBLEM: boot hang on Indy R4400SC (regression)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com>
 
+On Fri, Nov 07, 2025 at 07:29:25PM +0000, Jiaxun Yang wrote:
+> Unfortunately my Indy won't go over ARCS prom so I'm not in a position
+> to debug this on my side. I have inspected the code again and I can't
+> see anything preventing it to work on R4000 family.
 
+I'll try adding some extra prints to at least figure out where it is
+actually hanging.
 
-On Fri, 7 Nov 2025, at 7:04 AM, Nick Bowler wrote:
-> Hi,
-
-Hi Nick,
-
-Many thanks for the issue report! It's pretty rare to get reports from
-hardware that old.
-
-Unfortunately my Indy won't go over ARCS prom so I'm not in a position
-to debug this on my side. I have inspected the code again and I can't
-see anything preventing it to work on R4000 family.
-
-Maybe we can revert this for non-MIPS64R1 system only so we can get something
-working for both old and new systems.
-
-#regzbot introduced: 35ad7e181541aa5757f9f316768d3e64403ec843
-
-Thanks
-
->
-> After a recent 6.1.y stable kernel update, my Indy (mips64 R4400SC) now
-> just stops booting early, just before when I would normally see the
-> kernel messages about mounting the root filesystem.
->
-> There are no further messages of any kind, and the boot process does not
-> appear to ever complete.  However, the kernel is not fully crashed, as
-> it does respond to sysrq commands from the keyboard (and I do get output
-> on the console from these).
->
-> I bisected to the following:
->  
->     794b679a28bb59a4533ae39a7cf945b9d5bbe336 is the first bad commit
->     commit 794b679a28bb59a4533ae39a7cf945b9d5bbe336
->     Author: Jiaxun Yang <jiaxun.yang@flygoat.com>
->     Date:   Sat Jun 7 13:43:56 2025 +0100
->    
->         MIPS: mm: tlb-r4k: Uniquify TLB entries on init
->    
->         commit 35ad7e181541aa5757f9f316768d3e64403ec843 upstream.
->
-> This reverts cleanly on top of 6.1.158 and the resulting kernel boots
-> normally.  I then reproduced this failure on 6.18-rc4.  Reverting
-> 35ad7e181541 on top of 6.18-rc4 also results in a normal boot.
->
-> Let me know if you need any more info!
->
-> Thanks,
->   Nick
-
--- 
-- Jiaxun
+Thanks,
+  Nick
