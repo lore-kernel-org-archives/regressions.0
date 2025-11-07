@@ -1,106 +1,197 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAF818E1F
-	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 07:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85C4280A5C
+	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 13:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762499084; cv=none; b=OSOGgx4Yf/wd/m5E+F59L196NNdJk1TZ8d5aJN8TRC4z3spHrP8BHUQrUMNdVPXUUP3HBmy3XtNERI0vhyZopl5NuSvia4xmyUhocsrfjL+aOgh7QscSCBJpag4tmVof/Bq/HI9RdKL/9DiCmLQMMcAjkzeJFOTbsq16Wer493I=
+	t=1762520969; cv=none; b=f3p9EeEIHMx0T6TxyEaZQRsRb3l6FbRE6wJa5bSiv9/krP2HFWx019lsYGByd+eK+Fw7UL5/5bNXAtzKVTnWXf8FF1FVPpm/dPo8E2CuDrGtQuptbJeGB4zFX04p2CK2cctPAy3oF/69KLC9g3fm7bjlbo89pVAcpOn8u6J0lZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762499084; c=relaxed/simple;
-	bh=XtzOsbt2hl6xTu2IJUUbKD60Sc3xgdEK+LN2FPoMKUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FycfPmBanhdv1WfxSqPyFbkZKd0hPhPO/QmsuGEN7k67r54bJ4jDxpIVAyPgnBZ7yD+4qbw9SyKxCMEcwxNTJcFnP5R2rfm4doOBV7uAQqE6RtQT4VEbY+0tCci1OnTwU9/n6BjEFZ8z1aKG5kFmcBw2H4JNtddUHWScq2Rm/Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=ngt9f750; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	s=arc-20240116; t=1762520969; c=relaxed/simple;
+	bh=4Ddae25sqG738EaVw5RvrZNH1hBC2JAp7XDsKznyjlg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uBDoMwjlz6AzDFRTKFx1iMV3bPT7O7wxnIjsUh4XWegxWaABwxsC+7+KB9P+EXzHZk/TG1p5lrN68KwuTuR37YNMR5rak8dBFxGPdZwIzsP5CBtWR8S/GjALwFAQnDoUVv8rbseilFaarLAQqYZjQv3jTbvDBGgbtsaHxv9II5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=wiJdXsVg; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="ngt9f750"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4ed9c19248bso807501cf.1
-        for <regressions@lists.linux.dev>; Thu, 06 Nov 2025 23:04:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1762499082; x=1763103882; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MYnIiKrQX8aCtjj//tDqMdxlWqP5fq15qVk6nPAkZoo=;
-        b=ngt9f750kOEM/XJ9ZDLa4A2SpR/JetDw/PwByEX/QUognoTgdNfYyldtJPbBO58sre
-         WH7TRNKsEF1YgcRNld+lGpLXwzl3+skfmTzqBmdv+IAMYf+d5omfcgaRAbEMmEgQHRIw
-         nRSSukTE1wdtph4Xxk3M7VMuRbc1LgfeHnj1GCMNJ9jSoQVxASl/rvijNwHivbuNHjF9
-         gctvvC/ocV+4wLqqHg6lQ1Ls584XQ4U1CeQP0/XrWuG1O8t5lEosolfEsBaID3ogYlPq
-         +d+nJsZLHM4pwCaaOyr0hnFgXuNJcSf7dZrmRC3SSkN11PwKk4l4lRuT19pzQQx4nevX
-         Obuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762499082; x=1763103882;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MYnIiKrQX8aCtjj//tDqMdxlWqP5fq15qVk6nPAkZoo=;
-        b=WEDOAQic1/HvVeIin83FLnrZpyrVW+LdtEeilGcQ6TrnlTx0sZ3LCglU0lStq0ZJUo
-         BYArSOOjbj+tbm6Iyves1cWUgr9edQcsXw1L44QfU1haOTX35Ov+JzFkKpceTgjA9mCm
-         pZoazsojEOWhjqc9R3VUuMl0jQCW9yXIG+XM57/uaImKGsxao8Tg7hu1Y16mY6hVpbbD
-         B+idWyJjCCjlK/oyyk8pi3TlMbCXIWhv1upAohNBFKaGPwlxfgI1i/p6r/CnLPj6PF4V
-         N3VdVLPoU92P1XEhBQt3PsobU6NYITx0iAgjDbDrLrYVZxzGjW6siZbCBQSzhYRbZkxx
-         c+yA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXaBMuGVpN07duxN0yakcXYZR3eLa7jRteuk/ONA+ZMZASGglJRwSXTA3DFo97ZKpaI6FEdfE37DHaOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy8i4nQYBQdN28HtFLdnJtrGRiJhqvHYwR++jyyXVBjD97OIqpK
-	bJKFyM6SMeWXGQRSwW0tVe5p8obJOr6j2fP0YwMzrgrZjBdNdhkAQpimXQhe2+AweCo=
-X-Gm-Gg: ASbGncsKFkyAItJfTQNU2CgwLMsYjGErfY/HFN1IP+q7rk1qCXRROqgWSyT27FqhvMS
-	1eNsAcTVQ1Eib3awa//EZ9x/aj+hplKi0sTpzP9d4AenSJsfTNUdcQXECcZq+WmLIJQDrd+VkHD
-	lySKKwxLhnwM0nk/RWRZPXQdmjREpbU3rGNytIEclH2xmL7GJ7DamM8feOMAF5bMQIDHqElm7rw
-	vSF0Q6dD82fkBGpFs1eAN+9phetbvj+AR1KsMgp5Yd7oi381VU8yPZsp7eO59ljTu7y/PH+EZP0
-	H9PJZbUzktATkWP/3tLuqbgvQexGgbLS/IixH2yyO7rc8LjrFurKCO9J/mHKqkNNJb4akzN/Xrf
-	nqB5BsMgSSz2f1vTTWhQD4n56470++iE1onOcnvQCabQqNlwoX3TdpFYr4+Fy/vpmb4ZJ/vkfEo
-	r4Gi6roPzFtxi5Ffaiewr7tsCPA+vgHA==
-X-Google-Smtp-Source: AGHT+IFwNzL1muZtb0IN53C7CPHVqzEIYh0SCwcsQzMl/w3PfdY3Ho9ZrT9AzNk7OQH5c7wzQoWICA==
-X-Received: by 2002:a05:622a:111:b0:4eb:9c80:f6a0 with SMTP id d75a77b69052e-4ed94a4b3bfmr30924711cf.52.1762499082271;
-        Thu, 06 Nov 2025 23:04:42 -0800 (PST)
-Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-88082a3ac4fsm34529256d6.57.2025.11.06.23.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 23:04:42 -0800 (PST)
-Date: Fri, 7 Nov 2025 02:04:40 -0500
-From: Nick Bowler <nbowler@draconx.ca>
-To: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-mips@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
-Subject: PROBLEM: boot hang on Indy R4400SC (regression)
-Message-ID: <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="wiJdXsVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1762520960; x=1763125760; i=spasswolf@web.de;
+	bh=C8JSblNcI1zOZZ07ilFFhicMfhhYHjHHDyckzH5IIxQ=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=wiJdXsVg5xGXRmSRup6oB6Yu+BJVKbDkCrbfGndCkEnamI07ZSCQbTNq8koKbF3g
+	 e8UwEwUdveVS+rN1+Jke6MInZeB5r7ZXft/QctwM5ed/EAfX4L7vwjESTdSCbyfxA
+	 YHnB4NF4xs/unnpLI9OV98ZMqDU5PHUGFfDblV+x2aqobRXxBBHf3Mqm8MjRLYR/W
+	 8HamPKJimIoQ1DqOfp/p+73Gmn3O5eW7VlZ5GrEuqosPmT3ywD/DkSm++DLiLD8nA
+	 pT2pb+fOCNiV+5cnVj1DX8QFg9Sf/ObR8r5/A7ov0CJnBuRGKOLoDZhPgZV+7dEGD
+	 lMmzXdZKyr+udcpzxQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkVwi-1vwPz732Ja-00jVXB; Fri, 07
+ Nov 2025 14:09:19 +0100
+Message-ID: <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
+From: Bert Karwatzki <spasswolf@web.de>
+To: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?=
+	 <christian.koenig@amd.com>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+	 <rafael.j.wysocki@intel.com>, spasswolf@web.de
+Date: Fri, 07 Nov 2025 14:09:17 +0100
+In-Reply-To: <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+References: <20251006120944.7880-1-spasswolf@web.de>
+	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+	 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+	 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+	 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
+	 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
+	 <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+	 <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de>
+	 <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+	 <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cwwvGof3jLSNg0rClU314UgVju483p/vCHF2hs6IGVaZu/tjpEv
+ XLagxUR8bhCzzajJaLzlAKYtzmaruWxVp4Gv1Uws9IWnKUJhmdCOJLVLKM3qUc+8Kx8hiDI
+ LN9PFB3l1bRaURgD8sYwx1QdB2z6xRj7N3kNcBSHQbRC1IxZamXN4E/p9kVNJX4FZPHPB3P
+ RvcbovRRut/r8NhgyCmwA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:I79Uwc4qfLM=;wmwGdeNP/11VC+9fY1jHMNQ9YD4
+ 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
 
-Hi,
+Am Mittwoch, dem 05.11.2025 um 15:31 -0600 schrieb Mario Limonciello (AMD)=
+ (kernel.org):
+>=20
+> Once you're done with your bisect I'd be really interested if you can=20
+> still reproduce the splats and NULL pointer on the recovery path using=
+=20
+> amd-staging-drm-next.
+> >=20
 
-After a recent 6.1.y stable kernel update, my Indy (mips64 R4400SC) now
-just stops booting early, just before when I would normally see the
-kernel messages about mounting the root filesystem.
+There are good news and bad news on this:
 
-There are no further messages of any kind, and the boot process does not
-appear to ever complete.  However, the kernel is not fully crashed, as
-it does respond to sysrq commands from the keyboard (and I do get output
-on the console from these).
+The good news: I found out that one can generate a large number of ACPI GP=
+P0 events
+and resumes by scrolling through a large pdf (1305 pages - Gravitation by =
+Wheeler, Misner and Thorne)
+using the arrow keys. This can generate these crashes quite fast.
 
-I bisected to the following:
-  
-    794b679a28bb59a4533ae39a7cf945b9d5bbe336 is the first bad commit
-    commit 794b679a28bb59a4533ae39a7cf945b9d5bbe336
-    Author: Jiaxun Yang <jiaxun.yang@flygoat.com>
-    Date:   Sat Jun 7 13:43:56 2025 +0100
-    
-        MIPS: mm: tlb-r4k: Uniquify TLB entries on init
-    
-        commit 35ad7e181541aa5757f9f316768d3e64403ec843 upstream.
+The bad news: Using the method above I could generate these crashes in v6.=
+13 and v6.14,
+so all the previous bisecting was completely useless.
 
-This reverts cleanly on top of 6.1.158 and the resulting kernel boots
-normally.  I then reproduced this failure on 6.18-rc4.  Reverting
-35ad7e181541 on top of 6.18-rc4 also results in a normal boot.
+Version v6.12 has not (yet, ...) crashed so I might be able to bisect betw=
+een v6.12 and v6.13.
 
-Let me know if you need any more info!
+Here's a short log of the recent tests and time to crash (with number of G=
+PP0 wakeup events and GPU resumes)
 
-Thanks,
-  Nick
+Retest:
+6.14.0-stable		booted 18:11:24, 6.11.2025, crashed 18:45:30 (~34min, 588 G=
+PP0 events, 210 resumes)
+
+Retest:
+6.14.11-stable		booted 19:09:33, 6.11.2025, crashed 19:17:42 (~8min (new r=
+ecord!), 122 GPP0 events, 44 resumes)
+
+Testing (this was tested by the old method of starting evolution by script=
+):	=09
+v6.13			booted 23:46:21, 6.11.2025, GPU lost 4:38, 7.11.2025 (~5h, 760 GPP=
+0 events, 807 resumes) no crash
+
+Retest:
+v6.13			booted 9:12, 7.11.2025 crashed 11:25, 7.11.2025 (~1.25h, 351 GPP0 =
+events, 330 resumes)
+
+Testing:
+v6.12.52		booted 11:27, 7.11.2025 no crash after 1h, 735 GPP0 events, 301 =
+resumes
+
+Testing:
+v6.12			booted 13:00, 7.11.2025 no crash after 1h, 890 GPP0 events, 287 re=
+sumes
+
+
+Bert Karwatzki
