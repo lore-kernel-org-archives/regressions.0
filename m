@@ -1,121 +1,106 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCF61DA60D
-	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 05:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762492028; cv=pass; b=l6w2GgQM3wqIOWk3CNE1VSrxlH8k0R5yF8ldH3PpAIq7+hf7DKw8UWmyLcxKLsyttfDbWPT8y98UGcCyumqBay3Dr7a9PhW+SXhT/KBY0nbhAi5Rhfq/igHKvpi8Q8gaCDDGEX6doAVBCSqWpKY66UMxcrFs6yntSVJRHE5fhMs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762492028; c=relaxed/simple;
-	bh=a8IeRctoRQBGsBIptHHB6HIefYInfid56jmBFlfVPJg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WDLuFNqJJRdqrZPu3R9RLrp4J5I50ElGzYPtyAxCHxXgHV7HSwU8EHEl7VaNSn/73vpqKcQifrv8CbAa6VXXJhDGLrvI+sQjjedkvwYvFOlorYjY0s3hAaPb+xkoeMVJUI43H9s8YWfO7Da1ZDOCxr3xf8V/0/MUlX7HhUUjlnI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=jEiPtVLq; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=Pumvlu3R; arc=pass smtp.client-ip=85.215.255.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAF818E1F
+	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 07:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762499084; cv=none; b=OSOGgx4Yf/wd/m5E+F59L196NNdJk1TZ8d5aJN8TRC4z3spHrP8BHUQrUMNdVPXUUP3HBmy3XtNERI0vhyZopl5NuSvia4xmyUhocsrfjL+aOgh7QscSCBJpag4tmVof/Bq/HI9RdKL/9DiCmLQMMcAjkzeJFOTbsq16Wer493I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762499084; c=relaxed/simple;
+	bh=XtzOsbt2hl6xTu2IJUUbKD60Sc3xgdEK+LN2FPoMKUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FycfPmBanhdv1WfxSqPyFbkZKd0hPhPO/QmsuGEN7k67r54bJ4jDxpIVAyPgnBZ7yD+4qbw9SyKxCMEcwxNTJcFnP5R2rfm4doOBV7uAQqE6RtQT4VEbY+0tCci1OnTwU9/n6BjEFZ8z1aKG5kFmcBw2H4JNtddUHWScq2Rm/Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=ngt9f750; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="jEiPtVLq";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="Pumvlu3R"
-ARC-Seal: i=1; a=rsa-sha256; t=1762491975; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=lr2Fvd9EGlaeuldpTTFHmLOSIU0QtaFBCZrLEwTS33Egie4G5YZQNXW1Pox45Ua4Lh
-    ePACm0cn4sZMDpqs+wzuPMGw7DNP/7wvTShxdDNnT33KBgkiNGt6YXPI3+Zt6eQiRmtP
-    HnpoEijBBbw9EfUGNdi2CW7BApfDCedipgufEpKHsx1IMeZObipX2K7ozlvWy1XLOu7o
-    YNuy5cdK6KfXHfk2xbhuU9fSb5Ha992Wttm6c3m4qScO2Uh5WAtPMSCuVATY7iLkdRnj
-    eFS0gECYeQgKJ9wH9qrfQAhLuNeZhTFM0URO+jX+/D7CqoG3DqY3juaNiDnxryq26CyR
-    V8cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762491975;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=AF11/LwkMwcLn6mwkC0qykIVuDRjIhfU25/98vK8keY=;
-    b=GbRGcPimjVYqDoLd1zTme/apAG3sx+rHlrimBcyC1NNqO50nM28xqPJ2cLQdJk3sPG
-    xaMk2cc7uYmcDbnrXirdG1kH9qqtdH4tNgcvE/pYik5lukF4ALs1Tk4F3Zn+ar1F/ZNx
-    Ejv0p3uHWHMQdc5x/ZXDsZUKA1My/aNVNVUq/Gj7RBFdgOYBORwdBi/03iqS5V+mgeob
-    dq3ODVxx3EM1OOscdVQ/xrAU8NtIRf1Z64FxXb3CHdLHze8jcsuja7iPq7LXxaowfdE9
-    2UkBfcx8Xy4qqLYglTKKVtAfTUn1SUcle2sH+45N4QuPs7VIuxA5M+337JycK1Opu8eN
-    8SPQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762491975;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=AF11/LwkMwcLn6mwkC0qykIVuDRjIhfU25/98vK8keY=;
-    b=jEiPtVLq3ixrh2Ixvwitei+s0o2akvpzJZGMsnugXnXNaUfeiN4QM9Lf6bhSrphFaw
-    SFRYOBU+jIVdUwAINkqGK27meV2y2sTshNxknH/qPN/D8b+HRXGUta9Ch/iza/bvKT9y
-    X/pGc/cjde3n1kDqFTN4ZbMLPdaWb2If7C0u5JuKEdzAtTo24R2fXhJ/jHgYveRTqS83
-    wXXTWc27tV7+IaNPkMSA2f3SS6SpyTDE/Nqwn8sm5lnYCijJmbBgVR1uLC3v7igkR4EM
-    AT2xXT9Pgdjbm8r6flUHE2+r+ZZlI/CxJo5IPOcuplmlLdnxXQ6rp1EK5obOhgmSDsWa
-    CprQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1762491975;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=AF11/LwkMwcLn6mwkC0qykIVuDRjIhfU25/98vK8keY=;
-    b=Pumvlu3RJclVgi7MOETj8jXqJpURZWC9b94ueriQ3E79KUgC9qq2ScZuqsnQqGzDOc
-    Wl5SeOy8m3jw9QgwkJBw==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIy+m7hLg"
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 54.0.0 DYNA|AUTH)
-    with ESMTPSA id ed69d81A756D1vN
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Fri, 7 Nov 2025 06:06:13 +0100 (CET)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
- luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>,
- Roland <rol7and@gmx.com>
-References: <20251105220925.GA1926619@bhelgaas>
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-Organization: A-EON Open Source
-Message-ID: <3a384a25-0256-e827-2d66-9efc5723965d@xenosoft.de>
-Date: Fri, 7 Nov 2025 06:06:12 +0100
-X-Mailer: BrassMonkey/33.9.1
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="ngt9f750"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4ed9c19248bso807501cf.1
+        for <regressions@lists.linux.dev>; Thu, 06 Nov 2025 23:04:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1762499082; x=1763103882; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MYnIiKrQX8aCtjj//tDqMdxlWqP5fq15qVk6nPAkZoo=;
+        b=ngt9f750kOEM/XJ9ZDLa4A2SpR/JetDw/PwByEX/QUognoTgdNfYyldtJPbBO58sre
+         WH7TRNKsEF1YgcRNld+lGpLXwzl3+skfmTzqBmdv+IAMYf+d5omfcgaRAbEMmEgQHRIw
+         nRSSukTE1wdtph4Xxk3M7VMuRbc1LgfeHnj1GCMNJ9jSoQVxASl/rvijNwHivbuNHjF9
+         gctvvC/ocV+4wLqqHg6lQ1Ls584XQ4U1CeQP0/XrWuG1O8t5lEosolfEsBaID3ogYlPq
+         +d+nJsZLHM4pwCaaOyr0hnFgXuNJcSf7dZrmRC3SSkN11PwKk4l4lRuT19pzQQx4nevX
+         Obuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762499082; x=1763103882;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MYnIiKrQX8aCtjj//tDqMdxlWqP5fq15qVk6nPAkZoo=;
+        b=WEDOAQic1/HvVeIin83FLnrZpyrVW+LdtEeilGcQ6TrnlTx0sZ3LCglU0lStq0ZJUo
+         BYArSOOjbj+tbm6Iyves1cWUgr9edQcsXw1L44QfU1haOTX35Ov+JzFkKpceTgjA9mCm
+         pZoazsojEOWhjqc9R3VUuMl0jQCW9yXIG+XM57/uaImKGsxao8Tg7hu1Y16mY6hVpbbD
+         B+idWyJjCCjlK/oyyk8pi3TlMbCXIWhv1upAohNBFKaGPwlxfgI1i/p6r/CnLPj6PF4V
+         N3VdVLPoU92P1XEhBQt3PsobU6NYITx0iAgjDbDrLrYVZxzGjW6siZbCBQSzhYRbZkxx
+         c+yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXaBMuGVpN07duxN0yakcXYZR3eLa7jRteuk/ONA+ZMZASGglJRwSXTA3DFo97ZKpaI6FEdfE37DHaOg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy8i4nQYBQdN28HtFLdnJtrGRiJhqvHYwR++jyyXVBjD97OIqpK
+	bJKFyM6SMeWXGQRSwW0tVe5p8obJOr6j2fP0YwMzrgrZjBdNdhkAQpimXQhe2+AweCo=
+X-Gm-Gg: ASbGncsKFkyAItJfTQNU2CgwLMsYjGErfY/HFN1IP+q7rk1qCXRROqgWSyT27FqhvMS
+	1eNsAcTVQ1Eib3awa//EZ9x/aj+hplKi0sTpzP9d4AenSJsfTNUdcQXECcZq+WmLIJQDrd+VkHD
+	lySKKwxLhnwM0nk/RWRZPXQdmjREpbU3rGNytIEclH2xmL7GJ7DamM8feOMAF5bMQIDHqElm7rw
+	vSF0Q6dD82fkBGpFs1eAN+9phetbvj+AR1KsMgp5Yd7oi381VU8yPZsp7eO59ljTu7y/PH+EZP0
+	H9PJZbUzktATkWP/3tLuqbgvQexGgbLS/IixH2yyO7rc8LjrFurKCO9J/mHKqkNNJb4akzN/Xrf
+	nqB5BsMgSSz2f1vTTWhQD4n56470++iE1onOcnvQCabQqNlwoX3TdpFYr4+Fy/vpmb4ZJ/vkfEo
+	r4Gi6roPzFtxi5Ffaiewr7tsCPA+vgHA==
+X-Google-Smtp-Source: AGHT+IFwNzL1muZtb0IN53C7CPHVqzEIYh0SCwcsQzMl/w3PfdY3Ho9ZrT9AzNk7OQH5c7wzQoWICA==
+X-Received: by 2002:a05:622a:111:b0:4eb:9c80:f6a0 with SMTP id d75a77b69052e-4ed94a4b3bfmr30924711cf.52.1762499082271;
+        Thu, 06 Nov 2025 23:04:42 -0800 (PST)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-88082a3ac4fsm34529256d6.57.2025.11.06.23.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 23:04:42 -0800 (PST)
+Date: Fri, 7 Nov 2025 02:04:40 -0500
+From: Nick Bowler <nbowler@draconx.ca>
+To: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-mips@vger.kernel.org
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
+Subject: PROBLEM: boot hang on Indy R4400SC (regression)
+Message-ID: <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251105220925.GA1926619@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
- >> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately it
- >> doesn't solve the boot issue.
- >
- > Thanks for testing that.  I see now why that approach doesn't work:
- > quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
- > updates the permissible ASPM link states, but pci_disable_link_state()
- > only works for devices at the downstream end of a link.  It doesn't
- > work at all for Root Ports, which are at the upstream end of a link.
- >
- > Christian, you originally reported that both X5000 and X1000 were
- > broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
- > df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
- > platforms"), but I would love to have confirmation of that.
+Hi,
 
-Hello Bjorn,
+After a recent 6.1.y stable kernel update, my Indy (mips64 R4400SC) now
+just stops booting early, just before when I would normally see the
+kernel messages about mounting the root filesystem.
 
-I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 of 
-kernel 6.18 and test it with the X1000.
+There are no further messages of any kind, and the boot process does not
+appear to ever complete.  However, the kernel is not fully crashed, as
+it does respond to sysrq commands from the keyboard (and I do get output
+on the console from these).
+
+I bisected to the following:
+  
+    794b679a28bb59a4533ae39a7cf945b9d5bbe336 is the first bad commit
+    commit 794b679a28bb59a4533ae39a7cf945b9d5bbe336
+    Author: Jiaxun Yang <jiaxun.yang@flygoat.com>
+    Date:   Sat Jun 7 13:43:56 2025 +0100
+    
+        MIPS: mm: tlb-r4k: Uniquify TLB entries on init
+    
+        commit 35ad7e181541aa5757f9f316768d3e64403ec843 upstream.
+
+This reverts cleanly on top of 6.1.158 and the resulting kernel boots
+normally.  I then reproduced this failure on 6.18-rc4.  Reverting
+35ad7e181541 on top of 6.18-rc4 also results in a normal boot.
+
+Let me know if you need any more info!
 
 Thanks,
-christian
-
--- 
-Sent with BrassMonkey 33.9.1 
-(https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
+  Nick
