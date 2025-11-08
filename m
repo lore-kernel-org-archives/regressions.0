@@ -1,89 +1,117 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360A8303C85
-	for <regressions@lists.linux.dev>; Fri,  7 Nov 2025 20:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A008B2D061D;
+	Sat,  8 Nov 2025 03:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762546356; cv=none; b=F5MxwN8a4jr25/z85HiSrIAjLTQZ579egTqsVsPpLqImbiccOr7+9D3gqPX+PYWHmr71Q+06XdNMK292Rdb93pZyOkEDutsvQ8XdbCOBuePmPa6q15bCQb+5Ojq0SlDAoajmSyMZyI6Ds4v7cVy+cNFc114HycYulw0cJR+sQjg=
+	t=1762571515; cv=none; b=odtQpMYN4bfaDf9YdFJQAPWLP2hsJgazHcKcsc+xEvdiz1ekOx1xZ/F30kTFW/YULv70GF8PyMTxnit0zH5yIRcySw5KvmZeeckM1z94f8mB1IbMypzqbqjM2500kzjl8boNVEBwKVo87rsZPEeSALV0Txt9gNTLuXN/xUZLr0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762546356; c=relaxed/simple;
-	bh=xhuY738tZl353Xy0fNRI/QG1yk1TSCZTX05qyNUVL30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+FbFJ7qH7XiAwBSf9QrNB6Y/t/Z7JAr+tmp6XzcjfzmATAhf8VSWPQ64E+pbJlVulsJMQvzyKv+WaygO1/P6MSBoOMf303MuZMWrWatf31U48CNnnLrljbtCwfgW62Zsmg4NQOfdYGBupfmS/DYbVhl8slF9D3c+YD2cVB7Pwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=eSNQ7ct1; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	s=arc-20240116; t=1762571515; c=relaxed/simple;
+	bh=KwBm3CuWFonyxdteWe4qUpDdFRGos477BmUdFE8Sqa4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OvsdAhVf2PKr2RC7FIktDAzjFTeW2wmoHT59L6VExW5IJwG/cVQNgOdhjEIfIC/tYJfsy7jGv68gOx60DSbFvK7H3u8IPvz/GStjrhwK42B2LUNsIrEUDPhXZpFOllklEzFrFb92HsZikmDIdU5SUauOy8PSv3eaBTdlrD6FVmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fgeyepys; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="eSNQ7ct1"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8b0f54370ecso122329385a.2
-        for <regressions@lists.linux.dev>; Fri, 07 Nov 2025 12:12:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1762546353; x=1763151153; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WPIKY3pDWsZYiW/KD6AWR+JZdgeQXYTbfkJenmEgskU=;
-        b=eSNQ7ct1yiLNQcVemcYHqvuYPsKQg0YtNw35TnmUy/PvczBiT7YPF8iUsgzdOB4bW6
-         SxCuYW4AuIW0/k9Fl1cDJxiljlqkKCgTGGV7AZxMgTuiDICNpee0AFGaPNOubRcjQ4YZ
-         C0W/WHhQMnWGgROTnOUI0rJhCyLpqzIYL4QIH2nMoOKq82L0f0tJTLGhgLYfGHb8srsc
-         1KLzVf0/+DWeGZaWCfjhTCIqYjLLbcU0PSgrB2bN3nnTTJh0wwl5GviFD1+grxsnCf2y
-         hH1+4grKeKHiyjrftKWsie3dsT9TQy51970OXjDZr9rEPkPi2n2NasY4X5YWhQ2VzYyG
-         YVIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762546353; x=1763151153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WPIKY3pDWsZYiW/KD6AWR+JZdgeQXYTbfkJenmEgskU=;
-        b=gxY/7ZeMcvQwaUOLtEFMsm2LA+MT7bZ8uBI6DMJXh6cC+JXiquxJiB6gCa1XsVe/dk
-         LeheXDhV+fYq92/RvEbu3SNpBIS3Etan3Dz6CDDuFZMpsiF23EigGzzlwdR+76tVX2mY
-         unJzE1GBXDRLzzZk3eXCVnlw39pLwUwxwl/fBEcFbDHzY7ZRIK1Gqj42YiBSaRgAjt34
-         /NTH3GoCtZV1JhFyQw+c2iUzqWP3ToriUvs3TK4X095Lxxk61/04yUf2gDgMA4VQCbM1
-         vQRkkBaJlw3/5ynf7JFXl+gKhCBELySo7cQzaTsq8vgUP8e1vhwWwCyc/Z2nERkzBNST
-         QUew==
-X-Forwarded-Encrypted: i=1; AJvYcCWH00zGfYZQy9TyLIdAWAxtIx+DjMhqkdvpjErexKX7/XhZNVF6rUlnyphVxt/l3W8aLnEdUehyA+Nf8Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwUTsfy5ZsnheLZD0Cykc6xSmxozQni+hTxTeL+uWAatJdrCIqO
-	EuLfx5ZiNXYOhlr5rlWbtLlMIf19chRZyjVuE3tT3GO54nAL2/wbmoNp8mBw8NBDRMA=
-X-Gm-Gg: ASbGncvX3mGcLFfZUhIC+rmpLuBKKBcT0vfEbdFPzRHuoSorKDRff2nPR7CdsNXKuZP
-	ez+acuRTXWTtSc/FMU5NQPa3AIiMYjKSP83psqUTflGcDCu0cXuEghGZuunlPzpG50y21DzrCuD
-	t2sCHaDvyyOxCPDlxVKiWp1avnd3k9oIC8rUOHDN5f3tDGOYnE8eRUyvBZ61Kvt+MmLqaSoCfu8
-	tipIxNQExddEIHG9yi6luTw7II/9tDGZNvEmXva3xH9vq86T04Bof37b6AwETgBbt5ZjAU75kZP
-	ltVWf+82rVEXTZxdRbfA5zK3Rq9obabzRdwSOh2Yrv/eyrYPFy+A7ZeWeiuasCit2FUF5UdNuz8
-	ql8nzn84lvomukU+ummMQRyO/Co1rCbwsrqS55nIshTUBVxH3t+9YMNA+vH+UpqsJ3F2kScBK5h
-	KWKsRCGA2nYNaDpMSpZhUjk/AoUQGtIg==
-X-Google-Smtp-Source: AGHT+IFsLLiomLTVAKf0UK7Kqv+I/lwIiIqePUIuZ3D8VSGGRtsZSWpNNzYLl1SSmqIrjJUQd1Y7Lg==
-X-Received: by 2002:a05:620a:44ce:b0:8b2:33bd:7331 with SMTP id af79cd13be357-8b257f68729mr69675385a.83.1762546353068;
-        Fri, 07 Nov 2025 12:12:33 -0800 (PST)
-Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-8b2355e9bb6sm476602085a.22.2025.11.07.12.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 12:12:32 -0800 (PST)
-Date: Fri, 7 Nov 2025 15:12:31 -0500
-From: Nick Bowler <nbowler@draconx.ca>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: PROBLEM: boot hang on Indy R4400SC (regression)
-Message-ID: <ea6p4efuwbrlqjiwkgjcd7ofj7aahfnnvnkooo2il36ggzrlcj@n6mcofpb2jep>
-References: <g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu>
- <e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fgeyepys"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=AUhKXEzeGCikYXmExWl1kA2dGxV0NSVJEQeamA4bzzI=; b=FgeyepysRo2+ivQN6pbAOkkyLB
+	55OcFUQizzTJb41eysAF8l7hdmplgV7cz1+OfD4+V546hgTQqQvFbDPRtSpjyAY+NOmx19OYpT5yD
+	Ifc4YNyvoUaa1UuFXFbfeDwHHgKH/5km5RXaOAAR/170uJx3kZ8qsmPeBEdyqPr7ZsGQf3clkF8y2
+	v4pbI7rlJeshXdEd7GeAkE09eieLd5UFrOr1heEP6TeaUNruvg1ahPI5YXnDjV4ucfSJcmd2ts4lD
+	wRhfV2bC+mPS812WMUN2igMzhUb2uReGvsmWkWgu6i5J/qf8pcqtpSb3ereZ4SzCoduZIArPeGkG+
+	oPmlykdA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vHZMk-00000002GYP-3Jce;
+	Sat, 08 Nov 2025 03:11:50 +0000
+Message-ID: <c13574f7-b13c-42e0-9b35-a2acb594af33@infradead.org>
+Date: Fri, 7 Nov 2025 19:11:49 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_next/master=3A_=28build=29_implici?=
+ =?UTF-8?Q?t_declaration_of_function_=E2=80=98topology=5Fcore=5Fhas=5Fsmt?=
+ =?UTF-8?B?4oCZOyBkaWQgeW91IC4uLg==?=
+To: kernelci@lists.linux.dev, kernelci-results@groups.io,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+References: <176225394342.3644.6412596085150396269@efdf33580483>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <176225394342.3644.6412596085150396269@efdf33580483>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 07, 2025 at 07:29:25PM +0000, Jiaxun Yang wrote:
-> Unfortunately my Indy won't go over ARCS prom so I'm not in a position
-> to debug this on my side. I have inspected the code again and I can't
-> see anything preventing it to work on R4000 family.
+[verified still present in linux-next 20251107]
+[adding CCs]
 
-I'll try adding some extra prints to at least figure out where it is
-actually hanging.
 
-Thanks,
-  Nick
+On 11/4/25 2:59 AM, KernelCI bot wrote:
+> 
+> 
+> 
+> 
+> Hello,
+> 
+> New build issue found on next/master:
+> 
+> ---
+>  implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration] in drivers/perf/arm_pmu.o (drivers/perf/arm_pmu.c) [logspec:kbuild,kbuild.compiler.error]
+> ---
+> 
+> - dashboard: https://d.kernelci.org/i/maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> - commit HEAD:  17490bd0527f59d841168457b245581f314b5fa0
+> - tags: next-20251104
+> 
+> 
+> Log excerpt:
+> =====================================================
+> drivers/perf/arm_pmu.c:935:24: error: implicit declaration of function ‘topology_core_has_smt’; did you mean ‘topology_core_cpumask’? [-Werror=implicit-function-declaration]
+>   935 |         pmu->has_smt = topology_core_has_smt(cpumask_first(&pmu->supported_cpus));
+>       |                        ^~~~~~~~~~~~~~~~~~~~~
+>       |                        topology_core_cpumask
+>   CC      drivers/iio/adc/bcm_iproc_adc.o
+>   CC      drivers/devfreq/governor_simpleondemand.o
+>   CC      drivers/memory/tegra/tegra124.o
+>   CC      drivers/memory/brcmstb_dpfe.o
+> cc1: some warnings being treated as errors
+>   CC      drivers/memory/tegra/tegra20-emc.o
+> 
+> =====================================================
+> 
+> 
+> # Builds where the incident occurred:
+> 
+> ## multi_v7_defconfig+CONFIG_SMP=n on (arm):
+> - compiler: gcc-12
+> - config: https://files.kernelci.org/kbuild-gcc-12-arm-SMP-6909cb01f21f07610dca0839/.config
+> - dashboard: https://d.kernelci.org/build/maestro:6909cb01f21f07610dca0839
+> 
+> 
+> #kernelci issue maestro:b25c03bf6acc100aaa7e71de7eb2cb32868b54f5
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> 
+> --
+> This is an experimental report format. Please send feedback in!
+> Talk to us at kernelci@lists.linux.dev
+> 
+> Made with love by the KernelCI team - https://kernelci.org
+> 
+
+-- 
+~Randy
+
