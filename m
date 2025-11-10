@@ -1,67 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4903E1CEAC2
-	for <regressions@lists.linux.dev>; Sun,  9 Nov 2025 19:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7B02E173B;
+	Mon, 10 Nov 2025 11:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762715296; cv=none; b=Rinmk/LkIF2N9kA+DQ1j9FvtELz1kDw1icYLBP/ygEiVJUqmRAKMJ1IkAnkR09vrBvCB+JY5q3lTG6qLHKqKnRZWIh7Okroo5pJ89UgrByo4MBwbhG60Xy8b3rN6aojJpb0JFs1qqiEXHa/3Fg3RIcxUcgDZm6Xp+lfkyGVkwis=
+	t=1762773733; cv=none; b=EYwCbIpJhaqtaTiyL0CODZchL69ly7ooM695kDpaBH8NWCJt9YxNodzpTvga6HBMkZbJeWq8U/U5C7Mw1RpJKJrmWEhyo3f4LTKUYTqkWJYvYaO67G0DaCTk1j4GX+BcB6etibDhhIN+e9IAzEaR3bUP5vm7l23W6gT3tqAt8kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762715296; c=relaxed/simple;
-	bh=7cBe2s53pgaq8OwYOTsVaCJ0pzgL8FXTPGbrP6ryQAA=;
+	s=arc-20240116; t=1762773733; c=relaxed/simple;
+	bh=S/6Rr5vew5ydQvjFw7Rv9F5E1IYomQauBG1EVTvft9Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KF5d3aZFECGqkrR4tTKPA6nTgwhbBMGp9fzIX/aR//0RTH4IqN6GOeiX8empWfziJFL3p/+PaNT/QzHn+LfUNf9WVe1Klj3pXyvnZoGJtuODmkHYXDHje82wilNaDDmtoolD3Iaccf+3y++528nlt1VVlSwU85snJrzxyjy+83g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCtUvERN; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCmLHC81Hb9x0NqvobrfqQsdPjmFooCeoANnHYA8wW3Oznp+6KdTz0AVPR6b9uNDpP1WvS2bIcL4Iy4paNhHcZ5wgfI16phDE8Jzj/Obm6mKhw15sbfi/ej5gnR6JrluFPXIJTHWemY+WbXw0+cxnOFTNZtH9+zrLL+dGze1vaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERdsz9v5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCtUvERN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762715294; x=1794251294;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7cBe2s53pgaq8OwYOTsVaCJ0pzgL8FXTPGbrP6ryQAA=;
-  b=TCtUvERNGJJlvJw7plDU1bqxpAQ5hdNbap0ya/FoTu3biSM9B2ngMRvT
-   FEH7naRKXT5cbdaiTtlEebNDLI3wb9cp5JbFnlKlGZMu1ISW7cP4EATP2
-   c6Y9XIb9fc4lQ755E9rsU7cJnS3FQp3UoAIHWHt/yz7Vjg/02jzp+FzSl
-   5kC/03aSxTJ7E5Xv2QHJs6NVcTTxNNY56VkcvqwoeCznDuaxKBITiZr67
-   R/je6SXF6TwD1cNi0ZOrHkswVywQApZCXvrW/q6ReixJ1VAvd26Lki4PG
-   WFG/Imx7Swu7yVU3TRlTBb7c0HHvKbioEKtezomLYQN0jCbWGrks+SUCY
-   w==;
-X-CSE-ConnectionGUID: BjE18ubuTSC05G00XrIgAw==
-X-CSE-MsgGUID: TBNplUg5Tj6Kwsr8bZDe0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="75074025"
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="75074025"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:08:14 -0800
-X-CSE-ConnectionGUID: HCBAPvSQQTaUscXcD2iPyw==
-X-CSE-MsgGUID: riu3ZDGlQcuoChPZS5rPHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="187753872"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:08:10 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vIAlj-000000076HU-35mV;
-	Sun, 09 Nov 2025 21:08:07 +0200
-Date: Sun, 9 Nov 2025 21:08:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
-	rrangel@chromium.org, safinaskar@zohomail.com, superm1@kernel.org,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-Message-ID: <aRDml95nMPeknmUM@smile.fi.intel.com>
-References: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
- <20250918183336.5633-1-safinaskar@gmail.com>
- <aRDl4tOD4CfVeSC2@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERdsz9v5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7800CC113D0;
+	Mon, 10 Nov 2025 11:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762773730;
+	bh=S/6Rr5vew5ydQvjFw7Rv9F5E1IYomQauBG1EVTvft9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ERdsz9v5AaHjd0vq+7PXumuP2I04xsTwwjLJX/tXHq6Ttima7t0QpsY9chu2IGQiW
+	 peFMpzB/Zw8Or+Gyosw7jubrETZZMVD2UJnKwbKZBQ0EXrXKr2apcxq3cR30b5gt/n
+	 k4VAJPKBtjwIkC24+4U1dTzbSH+VCzLpSrHZj4NJ1u+75nzzIsWVYVFhwNwXMiFCuf
+	 KEiPiT7we6o1Kc3qdQlbipsUv1HouHkkxOPV9ZxDMgkGoY0xWVISCe+Gx3oQHBEkfA
+	 rIGVTQ5cUtp+UMtkG71m7xisHoXrL4itx9A948jAF3LRF4Ilh14SdijXNoHCUBoBsn
+	 1LTRjosrgIlNA==
+Date: Mon, 10 Nov 2025 11:22:05 +0000
+From: Will Deacon <will@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: kernelci@lists.linux.dev, kernelci-results@groups.io,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>, regressions@lists.linux.dev,
+	gus@collabora.com, linux-next@vger.kernel.org
+Subject: Re: [REGRESSION] =?utf-8?Q?next=2Fmaster?=
+ =?utf-8?Q?=3A_=28build=29_implicit_declaration_of_function_=E2=80=98topol?=
+ =?utf-8?B?b2d5X2NvcmVfaGFzX3NtdOKAmTs=?= did you ...
+Message-ID: <aRHK3RPjNq8nbltp@willie-the-truck>
+References: <176225394342.3644.6412596085150396269@efdf33580483>
+ <c13574f7-b13c-42e0-9b35-a2acb594af33@infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -70,81 +48,14 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aRDl4tOD4CfVeSC2@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <c13574f7-b13c-42e0-9b35-a2acb594af33@infradead.org>
 
-On Sun, Nov 09, 2025 at 09:05:07PM +0200, Andy Shevchenko wrote:
-> On Thu, Sep 18, 2025 at 09:33:36PM +0300, Askar Safin wrote:
-> > Andy Shevchenko:
-> > > In other words we need to enable debug of the pin control subsystem and see
-> > > what it will print in dmesg.
-> > 
-> > You mean I should enable CONFIG_DEBUG_PINCTRL? Okay, I did this.
-> > 
-> > So, today I tested everything on fresh kernel, 6.17.0-rc6, without any
-> > patches.
-> > 
-> > My config is: https://zerobin.net/?ebecc538f6caa22b#88c2k08G8+cZoMjgU9N/WYy28qQjyBW+/H78ygujZxY=
-> > It was generated from Debian config using localmodconfig.
-> > I added few tweaks, in particular I enabled CONFIG_DEBUG_PINCTRL.
-> > 
-> > # cat /proc/cmdline 
-> > BOOT_IMAGE=/@rootfs/boot/vmlinuz-6.17.0-rc6 root=UUID=015793d4-ad51-4da7-844b-fcc3bcb13a0b ro rootflags=subvol=@rootfs log_buf_len=4M ignore_loglevel
-> > 
-> > I run this script:
-> > https://zerobin.net/?327f3aa3ef7ce845#Ycu017J9YbRga8uGaCKRzsH7J/lB8D4RudpwTll5lbo=
-> > 
-> > This script runs "rtcwake -s 6 -m mem" multiple times. Sometimes my laptop wakes on timer (because of rtcwake),
-> > and sometimes it wakes up too early on its own (and this is a bug).
-> > 
-> > My script did suspend 7 times:
-> > 
-> > # dmesg | grep s2idle
-> > [  117.934504] PM: suspend entry (s2idle)
-> > [  127.141741] PM: suspend entry (s2idle)
-> > [  131.299554] PM: suspend entry (s2idle)
-> > [  140.034802] PM: suspend entry (s2idle)
-> > [  144.592260] PM: suspend entry (s2idle)
-> > [  154.038621] PM: suspend entry (s2idle)
-> > [  163.034299] PM: suspend entry (s2idle)
-> > 
-> > Out of them my laptop woke up on timer 4 times and on its own (i. e. due to bug) 3 times:
-> > 
-> > # dmesg | grep 'woke up'
-> > [  126.087936] will-wake: attempt 0: woke up in time
-> > [  130.248820] will-wake: attempt 1: woke up early
-> > [  138.988770] will-wake: attempt 2: woke up in time
-> > [  143.545973] will-wake: attempt 3: woke up early
-> > [  152.993654] will-wake: attempt 4: woke up in time
-> > [  161.988956] will-wake: attempt 5: woke up in time
-> > [  166.329080] will-wake: attempt 6: woke up early
-> > 
-> > Here is full output of "dmesg --level=debug+":
-> > https://zerobin.net/?f704a2d56603f4ec#SRrzc2mt2FNNqcltx/ULmtLZRdRH9frdgoODU03AXwE=
-> > 
-> > /proc/interrupts:
-> > https://zerobin.net/?b7ba5047ca84ab29#TjMUjkAdhpIuKbnvPpuYyNWa/ilA/ciGKwwSbx6KRFc=
-> 
-> 
->   14:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4202          0          0          0          0          0          0          0          0          0          0          0 IR-IO-APIC   14-fasteoi   INTC1085:00
-> 
-> 
->  204:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4199          0          0          0          0          0          0          0          0          0          0          0 intel-gpio  355  VEN_0488:00
-> 
-> 
-> Sounds like it comes via GPIO, but it's not handled as touchpad IRQ. You may
-> try to add a quirk to prevent touchpad IRQ from waking the system. That should
-> help I believe.
-> Something like "ignore_wake=INTC1085:00@355" in the kernel command line.
-> If it helps, update drivers/gpio/gpiolib-acpi-quirks.c accordingly.
+On Fri, Nov 07, 2025 at 07:11:49PM -0800, Randy Dunlap wrote:
+> [verified still present in linux-next 20251107]
+> [adding CCs]
 
-It might be actually the touchpad controller name (as I see in the quirk table):
+Should be fixed by 7ab06ea41af5 ("arch_topology: Provide a stub
+topology_core_has_smt() for !CONFIG_GENERIC_ARCH_TOPOLOGY") in the Arm
+perf tree (which is merged into -next).
 
-	ignore_wake=VEN_0488:00@355
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Will
