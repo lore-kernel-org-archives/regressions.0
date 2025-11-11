@@ -1,133 +1,85 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D02127E040
-	for <regressions@lists.linux.dev>; Tue, 11 Nov 2025 05:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762838177; cv=pass; b=Fk9F31YJkuqFQs8E/NukNBNz4B7UueIfjt/eJZmjHTJHQ5t1hl0K76T8DRipDPt71hEb5K0J6rb/hXg5Y/eOhx+JgqJwceT68eUYW0yYF5PmoaKHY2E181DZOMO3dFPhRlSoUCzf759tzi5kgIoXvt5/h0srO5u6NccnONO7jr8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762838177; c=relaxed/simple;
-	bh=e0T6Eg5+354yvr2SvdbepArM/7XH7CHlBxA9pQkTOeI=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jyrXjtB6OJvkxwYgDMZf0CrOcwI8xF6mYbboIlkKrvURTYOMhGgcR82GYhsAqJNbxj+vT4GQ14r8+NiO3vgjQMKAiYi7kFhiuK6NZBV5L0vJy+5O2l8xOefweNzj+PXMsCDiKOetGe+9EB3FRQwimj9f4uWcg1gAqrF/jdHVwpw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=f8k+f7Ie; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=rDunH+4s; arc=pass smtp.client-ip=85.215.255.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72B239E70;
+	Tue, 11 Nov 2025 12:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762863603; cv=none; b=Bq+sd1in+i7lmvPMw1913qjoBFuGpQG3kcCX8IRenjOikcGZBURm36s8Fcplj4ADMbEZnwEhm0D16DBQzAw1Zs/YORQmVAbHud9Xk2BURV1clGMZ8i5zE1XbckV7kdVX2ga5z26VRQbrHP02ejVeszzkR749nDMZbCsd72IUOXc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762863603; c=relaxed/simple;
+	bh=fw4bBM14g4kHXLxHnq+oCuA8+A4FD4yo4UWJLbL05fE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JNIsvcXtp8f7wK7w6IYKshd6YR+S7+GUHCcsdSpYujIPkPAMpEBw10FELbN+PbwuOFRbQ5S7DoXDSRbHYv6GPjFHUZo1KvP0GF3+V+HWY4ziSvwUOLltotjuB2bcDBIC5XWwYDun8KFTcSJp4TyykRTWR7hUh5+iGZ6O/va4Q7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOUxslbs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="f8k+f7Ie";
-	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="rDunH+4s"
-ARC-Seal: i=1; a=rsa-sha256; t=1762838122; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=LfLIjviE1tbZSSPoCIlJKbBFhJ1YofGAtO2bpz8rGBzrhlzsRS+/I9kCe0XiUk0dzu
-    c+Uh9pZTpCFX24Z64FzLKERaFohCIJK6jd3dHUuYVV4ZMyAWtKYWoluwFUxhQ8AVRgp3
-    XRK+FbXPdj8OebACmpj7MOA7rWq1p8marOsDFn319O7h6bzvIfBXhr6R9fO+Ht6s9qEg
-    75vTRGO8vXnNubQFFQ8eaIhxxWn0sw3atZ12hcq2+SIkZ+WznfOcgkJroldWJ5Z2HRLn
-    TmBlBVS5Ao0EFhibxcVdV9Hom9tMCxIi0ltori5l1E2mk/u3OfMHPWpA5K4FkEenvUgv
-    0StA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762838122;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
-    b=kofvY7jgAIQZLhmSdoSYcxWwMFO0CRpYRXBrb8zR3BnAS1RpIkjgw2+6TL1x/L9aF8
-    ajj7Bg9pvqR6t2bFNFoBjfoSKA+qamLAfrQvLOYHcC04TBlYk/cHQF/1e/UnXaCytCiF
-    A8K81XIEBJc/fgwOul2wo8BrMXA2QduumtPUly8JbIZdFK2LBD+aqUFpEH30A+qz+q0u
-    iFQzY3KuweWY60KQZ6Lj4LV/ae5a5hSk2MfWq7ufT8CXx/rz0a7qTUXCIy5YEjkkChU+
-    c3mMmxxudNCewKvDbvSYwKR6U1wlJ86U7eFM4U1vAC/nI7vNJXxzX5FE7YRDSsvBdbwT
-    1KHw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762838122;
-    s=strato-dkim-0002; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
-    b=f8k+f7IezPmXZR+XJb6PDZnJPMgGoU+MybdSqIyBGfWYfS6ap6Fsb/SJNsTiFxmcvI
-    oVKYrGBHsTYlIXSRTHN3j1zio1TESF45LNqj4BZRpr5LcRO59bc1rlcb1/Hvzt8Imw8a
-    1UcxAybR99eR4IU+8+T7eAmwpL+FC98ybV/WqyRwfL5Alcx/PimiExW8ewmrck4+Sm7D
-    j8kaZcglFRlI7OKCxjiFIURvhYk2NAHURx/h4wV6XVdZaV2/KVeswOSlhFsIdaVIbJYD
-    t/QsCkuqjp1Vaay8okDAKa5q5vaLua0IDRCdTQHffJ1EdAlVUf4S6XLc0xRwdVv7LmoN
-    dFpg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1762838122;
-    s=strato-dkim-0003; d=xenosoft.de;
-    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
-    b=rDunH+4se3mh0PITDkhoPuUC4sZRtr2Gx3SewEDZaSZ3fstrtYXaWfQQnwVW6dD5J4
-    kp0Pj6bKkeHBMRDrFLDA==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIS+m7xLg"
-Received: from void-ppc.a-eon.tld
-    by smtp.strato.de (RZmta 54.0.0 DYNA|AUTH)
-    with ESMTPSA id ed69d81AB5FLE2r
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 11 Nov 2025 06:15:21 +0100 (CET)
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-From: Christian Zigotzky <chzigotzky@xenosoft.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOUxslbs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31C4C2BCB1;
+	Tue, 11 Nov 2025 12:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762863603;
+	bh=fw4bBM14g4kHXLxHnq+oCuA8+A4FD4yo4UWJLbL05fE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DOUxslbsCSH498vEuLR+iHlaDZ8WU5xeGprTHuH6M0tZYMLRUKY2wmjvziY09guPY
+	 h/PIEjXW6VAKPzJ88uiyJvC1/3jeefbQcFw6HAtPMyXuCvh8b2onP7SyMa64PRjmyP
+	 L6SbFpbmYsZpavVGEllVQLB8+vwxUNLmp/6bt2O7is7Iqw4GqwfMelA9NsWehCgA/H
+	 kyLHceRkVzEBRJGMHBZoM9ntLviKIgTiRmHNTVJ4L266pP3kxMp4meUZ2crhGBgPwp
+	 TJ+5B77w8hRofDlgzjbqSA6QKSmHVmxPdxEgjSf9BXH74HbcgExTqLGjQcDLIrzGUw
+	 k0QHh/PwrZkag==
+Date: Tue, 11 Nov 2025 06:20:01 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
 Cc: Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
- Christian Zigotzky <info@xenosoft.de>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
- Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
- luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
-References: <20251105220925.GA1926619@bhelgaas>
- <3a384a25-0256-e827-2d66-9efc5723965d@xenosoft.de>
-Organization: A-EON Open Source
-Message-ID: <a41d2ca1-fcd9-c416-b111-a958e92e94bf@xenosoft.de>
-Date: Tue, 11 Nov 2025 06:15:20 +0100
-X-Mailer: BrassMonkey/33.9.1
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Christian Zigotzky <info@xenosoft.de>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+	Darren Stevens <darren@stevens-zone.net>,
+	debian-powerpc@lists.debian.org,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
+	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <20251111122001.GA2168158@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <3a384a25-0256-e827-2d66-9efc5723965d@xenosoft.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a41d2ca1-fcd9-c416-b111-a958e92e94bf@xenosoft.de>
 
-On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
-> On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
-> >> I tested your patch with the RC4 of kernel 6.18 today. 
-> Unfortunately it
-> >> doesn't solve the boot issue.
-> >
-> > Thanks for testing that.  I see now why that approach doesn't work:
-> > quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
-> > updates the permissible ASPM link states, but pci_disable_link_state()
-> > only works for devices at the downstream end of a link.  It doesn't
-> > work at all for Root Ports, which are at the upstream end of a link.
-> >
-> > Christian, you originally reported that both X5000 and X1000 were
-> > broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
-> > df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
-> > platforms"), but I would love to have confirmation of that.
->
-> Hello Bjorn,
->
-> I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 
-> of kernel 6.18 and test it with the X1000.
->
-> Thanks,
-> christian
->
+On Tue, Nov 11, 2025 at 06:15:20AM +0100, Christian Zigotzky wrote:
+> On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
+> > On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
+> > >> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately
+> > it
+> > >> doesn't solve the boot issue.
+> > >
+> > > Thanks for testing that.  I see now why that approach doesn't work:
+> > > quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
+> > > updates the permissible ASPM link states, but pci_disable_link_state()
+> > > only works for devices at the downstream end of a link.  It doesn't
+> > > work at all for Root Ports, which are at the upstream end of a link.
+> > >
+> > > Christian, you originally reported that both X5000 and X1000 were
+> > > broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
+> > > df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+> > > platforms"), but I would love to have confirmation of that.
+> > 
+> > Hello Bjorn,
+> > 
+> > I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 of
+> > kernel 6.18 and test it with the X1000.
+> 
+> I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and
+> CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the boot
+> problems are still present.
 
-Hello Bjorn,
-
-I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and 
-CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the 
-boot problems are still present.
-
-Cheers,
-Christian
-
--- 
-Sent with BrassMonkey 33.9.1 (https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
-
+Thanks.  Can you post a dmesg somewhere so I can see what the relevant
+device IDs are?  Can be with any kernel, doesn't have to be v6.18.  We
+need the Vendor and Device IDs to add a quirk.
