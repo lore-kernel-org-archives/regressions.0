@@ -1,125 +1,133 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02422EA174
-	for <regressions@lists.linux.dev>; Mon, 10 Nov 2025 19:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762801442; cv=none; b=QKIy/0SNjyzKxtKR2VdFb8JZiA3RlhqMlPZVA9wTcD0rsuKcpvpGfImKrv+bXCyqz7800vPYJwB+PA4je+DLbOp1uXnLUZj+nAUDSh+lo7FipJIRVCT7jz8OyqTSNME1S3WRKT+IEZbauinuPiSODC/RoSa0WvS4hR4CaG10vy8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762801442; c=relaxed/simple;
-	bh=LGjOA09bnTGrJVEPsadzP5+xYl8mEOeOa8jYDNOt07M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MBfecslm2dyyW7AxkrYC1JPxfVOY78L07pVcsYwlzp5IT57+DpTwskZb0yGll6bgiybA0gXfBmeCduEHhhb4W4HEGX9FXAVkC4BllwAuTX+rmAQc9BqtACZqOcfB3OD4qXbX9zFMock7EE9yz2xHb6zGmKEOw0+vnydZSYfcsqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMn1Eac0; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D02127E040
+	for <regressions@lists.linux.dev>; Tue, 11 Nov 2025 05:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762838177; cv=pass; b=Fk9F31YJkuqFQs8E/NukNBNz4B7UueIfjt/eJZmjHTJHQ5t1hl0K76T8DRipDPt71hEb5K0J6rb/hXg5Y/eOhx+JgqJwceT68eUYW0yYF5PmoaKHY2E181DZOMO3dFPhRlSoUCzf759tzi5kgIoXvt5/h0srO5u6NccnONO7jr8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762838177; c=relaxed/simple;
+	bh=e0T6Eg5+354yvr2SvdbepArM/7XH7CHlBxA9pQkTOeI=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jyrXjtB6OJvkxwYgDMZf0CrOcwI8xF6mYbboIlkKrvURTYOMhGgcR82GYhsAqJNbxj+vT4GQ14r8+NiO3vgjQMKAiYi7kFhiuK6NZBV5L0vJy+5O2l8xOefweNzj+PXMsCDiKOetGe+9EB3FRQwimj9f4uWcg1gAqrF/jdHVwpw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=f8k+f7Ie; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=rDunH+4s; arc=pass smtp.client-ip=85.215.255.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMn1Eac0"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7ad1cd0db3bso2539178b3a.1
-        for <regressions@lists.linux.dev>; Mon, 10 Nov 2025 11:04:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762801440; x=1763406240; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rdr73Hf6yD7F+vTTY+eqR8iFcL2w+R5f59ccxWMaVaA=;
-        b=RMn1Eac0/A1ubHVSOMsHAOdKfFcRpvR4fGwHgsGYDYZosOb/r1vSu2PjHJmzByneW+
-         5rRf4xrDcwP1snQ60Z8YEJ42XHSazGB2v6LAKZTkCIN6uaSOSI3zc3Na+9sO73PVOA7u
-         1WcmJNOjOfERLmivqtKHmnRtnZvOoQPmmpZSoyUKSHfUCkhdCNMCxpYtmV1XBaGw7Phd
-         bPzRwsCt5f7hXf8tO7t/8pt7cUpXiRrg/X8P9GeSaQHuY+HKCVsbIFik+rMG/h948JGI
-         ODGulSiG9xCQngdhgVKD9pmm/X+uysbXZHhiU2AjTdMKuAkgLnL/bDzZJouXtdSbe/Aq
-         Sgjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762801440; x=1763406240;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Rdr73Hf6yD7F+vTTY+eqR8iFcL2w+R5f59ccxWMaVaA=;
-        b=jfoxzkGp7qXuAHOyDU2OuGScKySawMR7u455P2emDzNlzNLi3Qq927SdZZprkmV4mM
-         IZsB3mVwTlZxN1hR8/N0BrkHqhmB/c0qAysdoBB00vgLK8UNq2vk0EecXjj9HIX1j/EY
-         vkL6yaxseSJhV3gtng50pTAUU/DxBYpf+SmGw8WtYEjumheuiV/JCRkHDoMteBOdXvQi
-         KZgBR9oEqA4FVJ2/fqec8AvWLfU4UWZBMzrLjE/jY+6EpwtzQqkTEzNDEQ3eAOvNLmRH
-         X+pJC2ij3+TXDyUJX+oV+V6hXRRLECzj5SM2gywVw6rY4U1vHxDgd97HGsl8rgSWonQi
-         37og==
-X-Forwarded-Encrypted: i=1; AJvYcCX8LGqtMsz2xk70g4zs0YTRK4/xJ5TqASzNcnUQfnMXQ3jZ1d0AxdkqDTHp69bnRDSJHePynkNW8aivOQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzXZYxGykZtojk9nJZgzMTGhsD7iqTY/xMgd+imMUdCLhL7dJ+t
-	OF0a5njgXac8X4qGXgMX4Hr+HRCccsbBpI+tIbKFmiCIx88jM95PWWpH
-X-Gm-Gg: ASbGncs3p7vL0UWo30EiB4QlowUYJJ/6nUvOnfO4wkw+UQFrEDseANkIZ32+uQUystk
-	0yK36+1daBssr5IeFeo4cFd31BOjhaRxbnHa9OmqS/+hDY/iE0Xy800YOsffXQ5m06PWizmFSx7
-	Ig9OpzCz9aXWCvs8e7gCPiUnuxFUO0rIABV6y5yyWSm6DEq0zLaALCuKxzpQNH0cYQ1vXupKpCY
-	tqAYwgk+XRwtbb8+6BPmq3k0aggExakm/hpvPLPUmgl7tc59TTIrurXBIzpRB5UjJpvRZuOBTKg
-	fhc38Vhm1bsD/OOqNPr6qnn6I5lZGZ8ggyESZgkaB3ISsLZfsRf3DSmcVvgIkWCGotULe7r/ubV
-	8QVkHhC8CSD9YZP/D8w4bBm300fF6ZhFvF9aBt5zM0E6dulPWejcUPdSmqK8nKUQWZWC7J65ywP
-	k90mh64K2UsXlzswSoPNUOCHBO77OAUc7aMCdCTgP83SGd
-X-Google-Smtp-Source: AGHT+IHWdjktidRqLMlZy+27raRZ8vwSz7rzuoczgl7EjMb3laqTUYObvY0qN7E6lqkaVnfU2LzZRw==
-X-Received: by 2002:a05:6a00:22d4:b0:7ad:11c9:d643 with SMTP id d2e1a72fcca58-7b2266a5203mr10847194b3a.21.1762801439938;
-        Mon, 10 Nov 2025 11:03:59 -0800 (PST)
-Received: from joaog-nb.corp.toradex.com ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0c9c062b6sm12506475b3a.18.2025.11.10.11.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 11:03:59 -0800 (PST)
-Date: Mon, 10 Nov 2025 16:03:51 -0300
-From: 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="f8k+f7Ie";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="rDunH+4s"
+ARC-Seal: i=1; a=rsa-sha256; t=1762838122; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=LfLIjviE1tbZSSPoCIlJKbBFhJ1YofGAtO2bpz8rGBzrhlzsRS+/I9kCe0XiUk0dzu
+    c+Uh9pZTpCFX24Z64FzLKERaFohCIJK6jd3dHUuYVV4ZMyAWtKYWoluwFUxhQ8AVRgp3
+    XRK+FbXPdj8OebACmpj7MOA7rWq1p8marOsDFn319O7h6bzvIfBXhr6R9fO+Ht6s9qEg
+    75vTRGO8vXnNubQFFQ8eaIhxxWn0sw3atZ12hcq2+SIkZ+WznfOcgkJroldWJ5Z2HRLn
+    TmBlBVS5Ao0EFhibxcVdV9Hom9tMCxIi0ltori5l1E2mk/u3OfMHPWpA5K4FkEenvUgv
+    0StA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762838122;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
+    b=kofvY7jgAIQZLhmSdoSYcxWwMFO0CRpYRXBrb8zR3BnAS1RpIkjgw2+6TL1x/L9aF8
+    ajj7Bg9pvqR6t2bFNFoBjfoSKA+qamLAfrQvLOYHcC04TBlYk/cHQF/1e/UnXaCytCiF
+    A8K81XIEBJc/fgwOul2wo8BrMXA2QduumtPUly8JbIZdFK2LBD+aqUFpEH30A+qz+q0u
+    iFQzY3KuweWY60KQZ6Lj4LV/ae5a5hSk2MfWq7ufT8CXx/rz0a7qTUXCIy5YEjkkChU+
+    c3mMmxxudNCewKvDbvSYwKR6U1wlJ86U7eFM4U1vAC/nI7vNJXxzX5FE7YRDSsvBdbwT
+    1KHw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762838122;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
+    b=f8k+f7IezPmXZR+XJb6PDZnJPMgGoU+MybdSqIyBGfWYfS6ap6Fsb/SJNsTiFxmcvI
+    oVKYrGBHsTYlIXSRTHN3j1zio1TESF45LNqj4BZRpr5LcRO59bc1rlcb1/Hvzt8Imw8a
+    1UcxAybR99eR4IU+8+T7eAmwpL+FC98ybV/WqyRwfL5Alcx/PimiExW8ewmrck4+Sm7D
+    j8kaZcglFRlI7OKCxjiFIURvhYk2NAHURx/h4wV6XVdZaV2/KVeswOSlhFsIdaVIbJYD
+    t/QsCkuqjp1Vaay8okDAKa5q5vaLua0IDRCdTQHffJ1EdAlVUf4S6XLc0xRwdVv7LmoN
+    dFpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1762838122;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=jKBUuUa4oR7Nvr5P+NYccWwL8x0fRGPM+IBOcI+Nhd4=;
+    b=rDunH+4se3mh0PITDkhoPuUC4sZRtr2Gx3SewEDZaSZ3fstrtYXaWfQQnwVW6dD5J4
+    kp0Pj6bKkeHBMRDrFLDA==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIS+m7xLg"
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 54.0.0 DYNA|AUTH)
+    with ESMTPSA id ed69d81AB5FLE2r
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 11 Nov 2025 06:15:21 +0100 (CET)
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
+ luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
+References: <20251105220925.GA1926619@bhelgaas>
+ <3a384a25-0256-e827-2d66-9efc5723965d@xenosoft.de>
+Organization: A-EON Open Source
+Message-ID: <a41d2ca1-fcd9-c416-b111-a958e92e94bf@xenosoft.de>
+Date: Tue, 11 Nov 2025 06:15:20 +0100
+X-Mailer: BrassMonkey/33.9.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <3a384a25-0256-e827-2d66-9efc5723965d@xenosoft.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hello,
+On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
+> On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
+> >> I tested your patch with the RC4 of kernel 6.18 today. 
+> Unfortunately it
+> >> doesn't solve the boot issue.
+> >
+> > Thanks for testing that.  I see now why that approach doesn't work:
+> > quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
+> > updates the permissible ASPM link states, but pci_disable_link_state()
+> > only works for devices at the downstream end of a link.  It doesn't
+> > work at all for Root Ports, which are at the upstream end of a link.
+> >
+> > Christian, you originally reported that both X5000 and X1000 were
+> > broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
+> > df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+> > platforms"), but I would love to have confirmation of that.
+>
+> Hello Bjorn,
+>
+> I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 
+> of kernel 6.18 and test it with the X1000.
+>
+> Thanks,
+> christian
+>
 
-After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
-recovery mechanism"), our DSI display stopped working correctly. The
-display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and with
-the change, it keeps blinking on and off because the bridge is being
-reset by the error recovery mechanism.
+Hello Bjorn,
 
-Even before the change, it was possible to see the message below from
-the driver indicating that the bridge's internal PLL was not locked
-(register 0xE5, bit 0 in [1]):
+I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and 
+CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the 
+boot problems are still present.
 
-[ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
+Cheers,
+Christian
 
-However, it was working. After the change, it stopped working. Masking
-the PLL error makes it work again:
+-- 
+Sent with BrassMonkey 33.9.1 (https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-index 033c44326552..89a0a2ab45b1 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-@@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
-         */
-
-        ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
--       if (ret || irq_stat) {
-+       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
-                /*
-                 * IRQ acknowledged is not always possible (the bridge can be in
-                 * a state where it doesn't answer anymore). To prevent an
-
-Any suggestions on how to proceed here?
-
-#regzbot introduced: ad5c6ecef27e
-
-[1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
-
-Best Regards,
-João Paulo Gonçalves
